@@ -119,8 +119,8 @@ theorem geomFibre_flat (S : Scheme.{0}) (A B : Over S) [GrpObj A] [GrpObj B] (P 
     (la : A ⟶ B) [IsMonHom la] (hA : IsAbelianScheme A) (hB : IsAbelianScheme B) (hd : IsDual A B P)
     [LocallyQuasiFinite la.left] (K : Type) [Field K] [IsAlgClosed K] (s : Sp K ⟶ S) :
     Flat ((Over.pullback s).map la).left := by
-  letI : GrpObj ((Over.pullback s).obj A) := Functor.grpObjObj
-  letI : GrpObj ((Over.pullback s).obj B) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback s).obj A) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback s).obj B) := Functor.grpObjObj
   have hA' := GlobalTheory.isAbelianScheme_pullback_obj s A hA
   have hB' := GlobalTheory.isAbelianScheme_pullback_obj s B hB
   obtain ⟨gA, hgA⟩ := GlobalTheory.AbelianDim.exists_relDim K ((Over.pullback s).obj A) hA'
@@ -232,7 +232,7 @@ theorem surjective_of_ker_killed : ∀ (S : Scheme.{0}) (A B : Over S) [GrpObj A
         exact Finite.of_injective (β := {x : Over.mk t ⟶ A // x ^ d = 1})
           (fun x => ⟨x.1, hk _ x.1 x.2⟩) fun a b e =>
             Subtype.ext (congrArg (fun z : {x : Over.mk t ⟶ A // x ^ d = 1} => z.1) e)
-  haveI : IsMonHom la := hla
+  have : IsMonHom la := hla
   refine GlobalTheory.AbLaw.MulN.surjective_of_geomFibres la fun K _ _ s => ?_
   have hA' := GlobalTheory.isAbelianScheme_pullback_obj s A hA
   have hB' := GlobalTheory.isAbelianScheme_pullback_obj s B hB
@@ -598,7 +598,7 @@ theorem blk_jlMap (h : ℕ) (l : Fin 8) (a : Fin h ⊕ Fin h → ℤ) :
 theorem kap_jlMap (h d : ℕ) (k : Fin 8) (a : Fin h ⊕ Fin h → ℤ) :
     kap h d k (jlMap h a) = if k = 0 then a else 0 := by
   rw [kap_apply]
-  simp only [blk_jlMap, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [blk_jlMap, smul_ite, smul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   fin_cases k <;> simp [vMat, sig]
 
 end GlobalTheory.ZarhinFam.KappaEx
@@ -612,8 +612,8 @@ theorem exists_kappaOK : ∀ (h M d : ℕ), 1 ≤ h → 3 ≤ M → Odd M → 0 
   intro h M d _ _ _ hd _
   refine ⟨kap h d, fun a b => ?_, fun a => ?_, fun k hk a => ?_⟩
   · rw [formZ_kap hd]
-  · rw [kap_jlMap, if_pos rfl]
-  · rw [kap_jlMap, if_neg hk]
+  · rw [kap_jlMap, ite_eq_left rfl]
+  · rw [kap_jlMap, ite_eq_right hk]
 
 end GlobalTheory.ZarhinFam
 end -- clump:auto
@@ -869,7 +869,7 @@ theorem nsmul_pull_diag_zCls : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp 
       z • pull (lift a (b ≫ mu)).left (cls c.P c.isLB) := fun z a b => by rw [smul_comm, hk]
   simp only [smul_add, Finset.smul_sum, hk, hk', Matrix.smul_apply, Matrix.one_apply, Matrix.transpose_apply,
     zero_add, smul_eq_mul, mul_ite, mul_one, mul_zero, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, one_smul, Finset.sum_add_distrib, mul_smul, two_smul, natCast_zsmul]
+    ite_true, one_smul, Finset.sum_add_distrib, mul_smul, two_smul, natCast_zsmul]
   abel
 
 end GlobalTheory.ZarhinFam
@@ -935,7 +935,7 @@ theorem zarhinBundle_kernel : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (
   have hQd : IsDual c.A B Q := hZ.2.1
   have hQd' : IsDual B c.A (swap Q) := hZ.2.2.1
   have hs : (swap Q).IsLB := hQd'.isLB
-  haveI : IsMonHom mu := hZ.2.2.2.2.1
+  have : IsMonHom mu := hZ.2.2.2.2.1
 
   have h0 : CechPic.pull (lift (snd (Zob c.A B) T ≫ x) (fst (Zob c.A B) T)).left
       (zCls c.A B c.isLB hQ d mu) = 0 := by
@@ -958,15 +958,15 @@ theorem zarhinBundle_kernel : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (
   have z3 : ∀ {Y : Over S} (b : Y ⟶ B), evc hQ (1 : Y ⟶ c.A) b = 0 := fun b => hQd.additive.evc_one hQ b
   have s1 : (∑ k, evc hP ((snd c.A T ≫ x) ≫ pa c.A B k) ((fst c.A T ≫ inc) ≫ pa c.A B k)) =
       evc hP ((snd c.A T ≫ x) ≫ pa c.A B i) (fst c.A T) := by
-    rw [Finset.sum_eq_single i (fun k _ hk => by rw [hpa, if_neg hk, z1]) (fun hi => absurd (Finset.mem_univ i) hi),
-      hpa, if_pos rfl]
+    rw [Finset.sum_eq_single i (fun k _ hk => by rw [hpa, ite_eq_right hk, z1]) (fun hi => absurd (Finset.mem_univ i) hi),
+      hpa, ite_eq_left rfl]
   have s2 : (∑ k, ∑ j, quat d j k • evc hQ ((snd c.A T ≫ x) ≫ pa c.A B k) ((fst c.A T ≫ inc) ≫ pb c.A B j)) = 0 := by
     simp only [hpb, z2, smul_zero, Finset.sum_const_zero]
   have s3 : (∑ k, ∑ j, quat d j k • evc hQ ((fst c.A T ≫ inc) ≫ pa c.A B k) ((snd c.A T ≫ x) ≫ pb c.A B j)) =
       ∑ j, quat d j i • evc hQ (fst c.A T) ((snd c.A T ≫ x) ≫ pb c.A B j) := by
-    rw [Finset.sum_eq_single i (fun k _ hk => by simp only [hpa, if_neg hk, z3, smul_zero, Finset.sum_const_zero])
+    rw [Finset.sum_eq_single i (fun k _ hk => by simp only [hpa, ite_eq_right hk, z3, smul_zero, Finset.sum_const_zero])
       (fun hi => absurd (Finset.mem_univ i) hi)]
-    rw [hpa, if_pos rfl]
+    rw [hpa, ite_eq_left rfl]
   have s4 : (∑ j, evc hQ ((fst c.A T ≫ inc) ≫ pb c.A B j ≫ mu) ((snd c.A T ≫ x) ≫ pb c.A B j)) = 0 := by
     simp only [← Category.assoc _ (pb c.A B _) mu, hpb, MonObj.one_comp, z3, Finset.sum_const_zero]
   rw [s1, s2, s3, s4, add_zero, add_zero] at h1
@@ -1033,7 +1033,7 @@ namespace GlobalTheory.ZarhinFam.KerC
 theorem ker_zarhinPolarization_of_pullback : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway M)) (c : SiegPre h M (zetaAway M) t) (B : Over S) [GrpObj B] [IsCommMonObj B] (Q : LB (c.A ⊗ B).left) (la : c.A ⟶ B) (mu : B ⟶ c.A) (hZ : GlobalTheory.ZarhinFam.ZData c d B Q la mu) (T : Over S) (x : T ⟶ GlobalTheory.ZarhinFam.Zob c.A B), (∃ t : ((GlobalTheory.ZarhinFam.zP c.A B c.isLB hZ.2.1.isLB d mu).pull (lift (snd (GlobalTheory.ZarhinFam.Zob c.A B) T ≫ x) (fst (GlobalTheory.ZarhinFam.Zob c.A B) T)).left).Gen, t.IsGen) → (∀ j, x ≫ GlobalTheory.ZarhinFam.pb c.A B j = 1) → ∀ j, ∏ i, (x ≫ GlobalTheory.ZarhinFam.pa c.A B i) ^ GlobalTheory.ZarhinFam.quat d j i = 1 := by
   intro h M d S t c B _ _ Q la mu hZ T x hx hv j
   obtain ⟨hB, hD1, hD2, hla, hmu, hlm, hml, hPiso⟩ := id hZ
-  haveI : IsMonHom la := hla
+  have : IsMonHom la := hla
   have hQ : Q.IsLB := hD1.isLB
   have hPQ : ∀ (Y : Over S) (a a' : Y ⟶ c.A), evc c.isLB a a' = evc hQ a (a' ≫ la) := by
     have e : cls c.P c.isLB = evc hQ (fst c.A c.A) (snd c.A c.A ≫ la) :=
@@ -1054,7 +1054,7 @@ theorem ker_zarhinPolarization_of_pullback : ∀ (h M d : ℕ) (S : Scheme.{0}) 
   simp only [AdjPf.zf, Category.assoc, AdjPf.mkZ_pa, AdjPf.mkZ_pb, hv, MonObj.comp_one, MonObj.one_comp,
     evc_one_right hQ hD1.zero, hD1.additive.evc_one hQ, smul_zero, Finset.sum_const_zero, zero_add, add_zero] at h1
   simp only [apply_ite (evc hQ _), evc_one_right hQ hD1.zero, smul_ite, smul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at h1
+    Finset.mem_univ, ite_true] at h1
   refine (hD1.isPerfect hD2).ker_left T _ ((triv_ev_iff hQ _ _).2 ?_)
   let F : (T ⊗ B ⟶ c.A) →* Multiplicative (Pic (T ⊗ B).left) :=
     MonoidHom.mk' (fun a => Multiplicative.ofAdd (evc hQ a (snd T B))) fun a a' => by
@@ -1538,7 +1538,7 @@ end Sym
 theorem zarhinBundle_rigidified_symmetric₂ : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway M)) (c : SiegPre h M (zetaAway M) t) (B : Over S) [GrpObj B] [IsCommMonObj B] (Q : LB (c.A ⊗ B).left) (la : c.A ⟶ B) (mu : B ⟶ c.A) (hZ : GlobalTheory.ZarhinFam.ZData c d B Q la mu), 1 ≤ h → 3 ≤ M → Odd M → 0 < d → M.Coprime d → IsUnit ((d : ℕ) : Γ(S, ⊤)) → SiegKerBy c d → (∃ t : ((GlobalTheory.ZarhinFam.zP c.A B c.isLB hZ.2.1.isLB d mu).pull (lift (1 : (GlobalTheory.ZarhinFam.Zob c.A B) ⟶ (GlobalTheory.ZarhinFam.Zob c.A B)) (𝟙 (GlobalTheory.ZarhinFam.Zob c.A B))).left).Gen, t.IsGen) ∧ (∃ t : ((GlobalTheory.ZarhinFam.zP c.A B c.isLB hZ.2.1.isLB d mu).pull (lift (𝟙 (GlobalTheory.ZarhinFam.Zob c.A B)) (1 : (GlobalTheory.ZarhinFam.Zob c.A B) ⟶ (GlobalTheory.ZarhinFam.Zob c.A B))).left).Gen, t.IsGen) ∧ LBIso (GlobalTheory.ZarhinFam.zP c.A B c.isLB hZ.2.1.isLB d mu) ((GlobalTheory.ZarhinFam.zP c.A B c.isLB hZ.2.1.isLB d mu).pull (lift (snd (GlobalTheory.ZarhinFam.Zob c.A B) (GlobalTheory.ZarhinFam.Zob c.A B)) (fst (GlobalTheory.ZarhinFam.Zob c.A B) (GlobalTheory.ZarhinFam.Zob c.A B))).left) := by
   intro h M d S t c B _ _ Q la mu hZ _ _ _ hd _ hdu _
   have hQ := hZ.2.1
-  haveI : IsMonHom mu := hZ.2.2.2.2.1
+  have : IsMonHom mu := hZ.2.2.2.2.1
   refine ⟨(zarhinBundle_pull_trivial_iff _ _ _ _ _ _ _).2 ?_, (zarhinBundle_pull_trivial_iff _ _ _ _ _ _ _).2 ?_, ?_⟩
   · rw [pull_zCls]
     simp only [one_pa, one_pb, one_pb_assoc, MonObj.one_comp, Category.id_comp, evc_one_left c.isLB c.rig₁,

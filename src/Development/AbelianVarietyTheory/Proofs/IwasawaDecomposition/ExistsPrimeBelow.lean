@@ -56,7 +56,7 @@ theorem exists_prime_below {K L : Type} [Field K] [Field L] [NumberField K] [Num
 
   have hne : P.asIdeal.comap φ ≠ ⊥ := by
     have hZ : P.asIdeal.comap (algebraMap ℤ (𝓞 L)) ≠ ⊥ :=
-      fun hb => P.ne_bot (Ideal.eq_bot_of_comap_eq_bot hb)
+      fun hb => P.ne_bot (Ideal.eq_bot_of_under_eq_bot hb)
     obtain ⟨m, hm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hZ
     intro hbot
     have hmK : ((m : 𝓞 K)) ∈ P.asIdeal.comap φ := by

@@ -164,7 +164,7 @@ theorem exists_alg (D : Type) [CommRing D] [Algebra k D] {S : Type} [CommRing S]
       r' ≫ fst _ _ = algOverHom φ ∧ ∀ d : D, φ d =
         valR (r ≫ (fst (algOver k D) B).left) ⊤ ((Scheme.ΓSpecIso (CommRingCat.of D)).inv.hom d) := by
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (R := CommRingCat.of D) (S := CommRingCat.of S) (r ≫ (fst (algOver k D) B).left)
-  letI : Algebra k S := (ψ.hom.comp (algebraMap k D)).toAlgebra
+  let : Algebra k S := (ψ.hom.comp (algebraMap k D)).toAlgebra
   refine ⟨this, ⟨ψ.hom, fun _ => rfl⟩, Over.homMk r ?_, rfl, Over.OverMorphism.ext hψ.symm, fun d => ?_⟩
   · rw [← Over.w (fst (algOver k D) B), ← Category.assoc]
     erw [← hψ]

@@ -71,8 +71,8 @@ private theorem univ_quot {P Q : GCond O η Ψ} (V : Univ P) (J : Ideal V.R)
   obtain ⟨f₀, hf₀, -⟩ := (V.rep R₀).2 r₀ (hQP _ _ h₀)
   have hle : J ≤ RingHom.ker f₀ := (hJ R₀ f₀).1 (hf₀ ▸ h₀)
   have hne : J ≠ ⊤ := fun h => RingHom.ker_ne_top f₀ (top_le_iff.1 (h ▸ hle))
-  haveI : Nontrivial (V.R ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hne
-  haveI : IsCO O (V.R ⧸ J) :=
+  have : Nontrivial (V.R ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : IsCO O (V.R ⧸ J) :=
     co_quot O V.R (V.R ⧸ J) (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
   refine ⟨⟨V.R ⧸ J, V.r.map (Ideal.Quotient.mkₐ O J), fun R' _ _ _ => ⟨fun f => ?_, fun r' hr' => ?_⟩⟩⟩
   · rw [glift_map_map, hJ]

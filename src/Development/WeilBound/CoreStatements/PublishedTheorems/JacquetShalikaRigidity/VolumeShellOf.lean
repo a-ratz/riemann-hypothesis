@@ -132,7 +132,7 @@ theorem summ (c : ℝ) (hc : 0 < c) : Summable fun j : ℤ => Real.exp (-c * |(j
     rw [← Real.exp_zero]; exact Real.exp_lt_exp.mpr (by linarith)
   have hg : Summable fun n : ℕ => Real.exp (-c * n) :=
     (summable_geometric_of_lt_one (Real.exp_pos _).le hr).congr fun n => by
-      rw [← Real.exp_nat_mul, mul_comm]
+      rw [← Real.exp_natCast_mul, mul_comm]
   refine Summable.of_nat_of_neg ?_ ?_
   · simpa using hg
   · simpa using hg
@@ -233,7 +233,7 @@ theorem volume_shell_of : Q1 → Q2 → D0 → N3 → W0 → V1 := by
         obtain ⟨j, h1, h2⟩ := exists_shell a (Dt g) ha (hpos g)
         have hmem : g ∈ shell E k a j := by simp only [shell, Set.mem_ofPred_eq]; exact ⟨h1, h2⟩
         calc ‖min (Dt g) (Dt g)⁻¹ ^ ε‖ₑ = ENNReal.ofReal (min (Dt g) (Dt g)⁻¹ ^ ε) :=
-              Real.enorm_eq_ofReal (Real.rpow_nonneg (le_min (hpos g).le (inv_nonneg.mpr (hpos g).le)) ε)
+              Real.eNorm_eq_ofReal (Real.rpow_nonneg (le_min (hpos g).le (inv_nonneg.mpr (hpos g).le)) ε)
           _ ≤ ENNReal.ofReal (Real.exp (a * ε) * Real.exp (-(a * ε) * |(j : ℝ)|)) :=
               ENNReal.ofReal_le_ofReal (min_le_bnd a ε (Dt g) ha hε (hpos g) j h1 h2)
           _ = (shell E k a j).indicator

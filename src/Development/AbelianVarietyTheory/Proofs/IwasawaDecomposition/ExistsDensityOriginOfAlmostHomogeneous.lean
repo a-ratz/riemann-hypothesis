@@ -198,7 +198,7 @@ theorem _root_.GlobalTheory.exists_density_origin_of_almost_homogeneous : ∀ (V
     intro t ht
     have hle := VitaliFamily.measure_le_of_frequently_le (Besicovitch.vitaliFamily ν) (t • l)
       (Measure.AbsolutelyContinuous.refl ν) (Metric.ball (0 : V) δ) ?_
-    · rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hle
+    · rw [smul_apply, ENNReal.smul_def, smul_eq_mul] at hle
       exact hle
     intro x hxs
     apply ((Besicovitch.tendsto_filterAt ν x).comp
@@ -216,7 +216,7 @@ theorem _root_.GlobalTheory.exists_density_origin_of_almost_homogeneous : ∀ (V
     rw [mul_assoc, ← _root_.GlobalTheory.densHom_scale l x (by norm_num) hr0] at hlt
     have hsub : Metric.closedBall x (1 / 4 * r) ⊆ Metric.ball x ((1 - 1 / 2) * r) :=
       Metric.closedBall_subset_ball (by linarith)
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
     exact ((measure_mono hsub).trans hxr.1).trans hlt.le
   have hzero : ν (Metric.ball 0 δ) = 0 := by
     have hT : Tendsto (fun t : NNReal => (t : ENNReal) * l (Metric.ball 0 δ)) (𝓝[>] 0) (𝓝 0) := by

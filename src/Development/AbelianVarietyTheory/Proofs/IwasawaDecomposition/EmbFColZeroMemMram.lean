@@ -93,7 +93,7 @@ theorem isPrincipalIdealRing_awayFrom {R : Type} [CommRing R] [IsDedekindDomain 
     (SB : Finset (HeightOneSpectrum R)) (A : Type) [CommRing A] [IsDomain A] [Algebra R A]
     [IsLocalization (awayFrom SB) A] : IsPrincipalIdealRing A := by
   classical
-  haveI : IsDedekindDomain A := IsLocalization.isDedekindDomain R (awayFrom_le SB) A
+  have : IsDedekindDomain A := IsLocalization.isDedekindDomain R (awayFrom_le SB) A
   apply IsPrincipalIdealRing.of_finite_primes
   let T : Finset (Ideal R) := insert ⊥ (SB.image (·.asIdeal))
   have hT : ∀ Q ∈ T, Q.IsPrime := by
@@ -133,10 +133,10 @@ theorem exists_basis {R : Type} [CommRing R] [IsDedekindDomain R] (K : Type) [Fi
       ∀ x ∈ N, ∃ s ∈ awayFrom SB, s • x ∈ Submodule.span R (Set.range v) := by
   classical
   let A : Subalgebra R K := Localization.subalgebra K (awayFrom SB) (awayFrom_le SB)
-  haveI : IsLocalization (awayFrom SB) A :=
+  have : IsLocalization (awayFrom SB) A :=
     Localization.subalgebra.isLocalization_subalgebra K (awayFrom SB) (awayFrom_le SB)
-  haveI : IsPrincipalIdealRing A := isPrincipalIdealRing_awayFrom SB A
-  haveI : IsFractionRing A K :=
+  have : IsPrincipalIdealRing A := isPrincipalIdealRing_awayFrom SB A
+  have : IsFractionRing A K :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (awayFrom SB) A K
 
   have clear : ∀ (X : Set (Fin n → K)) (x : Fin n → K), x ∈ Submodule.span A X →
@@ -162,19 +162,19 @@ theorem exists_basis {R : Type} [CommRing R] [IsDedekindDomain R] (K : Type) [Fi
       rw [mul_smul, this, smul_comm]
       exact Submodule.smul_mem _ _ hsx
   let M : Submodule A (Fin n → K) := Submodule.span A (N : Set (Fin n → K))
-  haveI hMlat : Submodule.IsLattice K M := by
+  have hMlat : Submodule.IsLattice K M := by
     apply Submodule.IsLattice.of_fg K
     obtain ⟨X, hX⟩ := hN.fg
     refine ⟨X, ?_⟩
     simp only [M, ← hX]
     exact (Submodule.span_span_of_tower R A _).symm
-  haveI hM : Submodule.IsFullLattice K M := by
+  have hM : Submodule.IsFullLattice K M := by
     refine ⟨?_⟩
     simp only [M]
     rw [Submodule.span_span_of_tower]
     exact hN.span_eq_top
-  haveI : Module.Free A M := Submodule.IsLattice.free K M
-  haveI : Module.Finite A M := Module.Finite.iff_fg.2 hM.fg
+  have : Module.Free A M := Submodule.IsLattice.free K M
+  have : Module.Finite A M := Module.Finite.iff_fg.2 hM.fg
   have hrk : Module.finrank A M = n := by
     simpa using ((Submodule.IsFullLattice.finrank_eq K M).trans (Module.finrank_fintype_fun_eq_card K))
   let b : Module.Basis (Fin n) A M := Module.finBasisOfFinrankEq A M hrk
@@ -469,7 +469,7 @@ variable (sel mu cst) in
 theorem ysAt_zero (N : Submodule (𝓞 X.E) (Sp X.E (R.N 0))) : (ysAt R sel mu cst 0).ys N = {∅} := by
   have h : ¬ (0 + 1 = R.m) := by have := R.two_le_m; omega
   unfold ysAt
-  rw [if_neg h]
+  rw [ite_eq_right h]
   rfl
 
 @[reducible] def idxUnique (hL : L.Ok Ch sel mu cst G m2) : Unique (Idx sel mu L 0) where

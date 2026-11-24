@@ -74,7 +74,7 @@ theorem differentIdeal_principal_in_localSubring :
   intro F _ _ Ω _ _ R _ σ hσ
   have hinj : Function.Injective σ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     ext n
     simp [RingHom.mem_ker, Ideal.mem_comap]
   set I : Ideal (𝓞 F) := differentIdeal ℤ (𝓞 F) with hIdef

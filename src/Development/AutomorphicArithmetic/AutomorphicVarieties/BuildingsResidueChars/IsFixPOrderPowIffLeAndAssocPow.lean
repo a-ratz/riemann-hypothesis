@@ -102,7 +102,7 @@ theorem UpperTheory.isFixP_order_pow_iff_le_and_assoc_pow :
     rw [algebraMap_etau, Algebra.algebraMap_eq_smul_one]
   have hxim : algebraMap O K (π ^ n) * x.im = 1 := by
     have := congrArg QuadraticAlgebra.im hc.om
-    simp [yy, algebraMap_etau, QuadraticAlgebra.omega_im] at this
+    simp [yy, algebraMap_etau, im_omega] at this
     rw [map_pow]
     exact this.symm
   have hx0 : x.im ≠ 0 := by
@@ -236,7 +236,7 @@ theorem UpperTheory.isFixP_order_pow_iff_le_and_assoc_pow :
       rw [mul_one, ord_mem] at hω
       obtain ⟨p, q, hpq⟩ := hω
       have him := congrArg QuadraticAlgebra.im hpq
-      rw [comb_im, QuadraticAlgebra.omega_im, hy0] at him
+      rw [comb_im, im_omega, hy0] at him
       have hq : algebraMap O K (q * π ^ m) = algebraMap O K (π ^ n) := by
         apply mul_right_cancel₀ hx0
         rw [map_mul, mul_assoc, him, hxim]

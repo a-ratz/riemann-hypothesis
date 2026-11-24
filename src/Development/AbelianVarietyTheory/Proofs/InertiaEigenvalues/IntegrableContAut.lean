@@ -444,13 +444,13 @@ theorem isUnram_host' (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) : Formali
   have hu : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.host.E) := GlobalTheory.InertOfConj.unram D
   rw [GlobalTheory.LFun.isUnram_iff]
   intro P hP
-  haveI := P.isPrime
-  haveI : Algebra.IsUnramifiedAt (𝓞 D.host.F) P.asIdeal :=
+  have := P.isPrime
+  have : Algebra.IsUnramifiedAt (𝓞 D.host.F) P.asIdeal :=
     Algebra.unramified_iff_forall.1 hu ⟨P.asIdeal, P.isPrime⟩
   have hle : (P.asIdeal.under (𝓞 D.host.F)).map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ P.asIdeal :=
     Ideal.map_comap_le
   have h1 : Ideal.ramificationIdx' (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal = 1 := by
-    letI := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal
+    let := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal
     exact (Ideal.IsDedekindDomain.ramificationIdx'_eq_one_iff P.ne_bot hle).2
       ((Algebra.isUnramifiedAt_iff_map_eq (𝓞 D.host.F) (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal).1 ‹_›).2
   have hv : P.asIdeal.under (𝓞 D.host.F) = v.asIdeal := by rw [← hP]; rfl
@@ -528,7 +528,7 @@ theorem paramFun_definite {V : HSp D} (c : CoefA V) (hc : c.Is)
     funext g
     have h3 := congrFun h2 g
     have h4 := GlobalTheory.DefLiftHecke.ext_hkF c hc w (Finsupp.single d 1) f g
-    rw [he w d hw ⟨R, hR'⟩, map_smul, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton,
+    rw [he w d hw ⟨R, hR'⟩, map_smul, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton,
       Finsupp.single_eq_same, one_smul] at h4
     rw [GlobalTheory.Hk3.opOf, Finsupp.sum_single_index (by exact zero_smul _ _), one_smul, Finset.sum_apply, LinearMap.sum_apply,
       Finset.sum_apply] at h3

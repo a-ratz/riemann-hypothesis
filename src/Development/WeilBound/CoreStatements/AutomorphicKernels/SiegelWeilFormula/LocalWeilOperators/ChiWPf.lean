@@ -135,20 +135,20 @@ theorem chiW_cont_pf (w : InfinitePlace F) : ContinuousOn (d.chiW w) {z : ℂ | 
   have hU : Continuous U := by
     rw [Units.continuous_iff]
     constructor
-    · exact (KC.uW_cont d w).comp continuous_subtype_val
+    · exact (KC.uW_cont d w).comp continuous_subtypeVal
     · have e : ∀ z : {z : ℂ // z ≠ 0}, ((U z)⁻¹ : (AE F E)ˣ).1 = d.uW w (z.1)⁻¹ := fun z =>
         Units.inv_eq_of_mul_eq_one_right (by
           show d.uW w z.1 * d.uW w (z.1)⁻¹ = 1
           rw [← KC.uW_mul, mul_inv_cancel₀ z.2, KC.uW_one])
       simp only [e]
-      exact (KC.uW_cont d w).comp (continuous_subtype_val.inv₀ fun z => z.2)
+      exact (KC.uW_cont d w).comp (continuous_subtypeVal.inv₀ fun z => z.2)
   have e : Set.domRestrict {z : ℂ | z ≠ 0} (d.chiW w) = fun z => ((d.χ (U z) : Circle) : ℂ) := by
     funext z
     rw [Set.domRestrict_apply]
     unfold SD.chiW
     rw [dite_eq_left (KC.uW_isUnit d w z.2)]
   rw [e]
-  exact continuous_subtype_val.comp (d.ok.hecke.1.comp hU)
+  exact continuous_subtypeVal.comp (d.ok.hecke.1.comp hU)
 
 theorem chiW_pos_pf (w : InfinitePlace F) : ∀ r : ℝ, 0 < r → d.chiW w (r : ℂ) = 1 := by
   intro r hr
@@ -177,7 +177,7 @@ theorem chiW_pos_pf (w : InfinitePlace F) : ∀ r : ℝ, 0 < r → d.chiW w (r :
       show algebraMap (AF F) (AE F E) (Algebra.norm (AF F) (d.uW w t)) = d.uW w (r : ℂ)
       rw [hn, huw])
   have hres := d.ok.res a
-  rw [if_pos (Subgroup.mem_sup_right (MonoidHom.mem_range.mpr ⟨u, rfl⟩))] at hres
+  rw [ite_eq_left (Subgroup.mem_sup_right (MonoidHom.mem_range.mpr ⟨u, rfl⟩))] at hres
   unfold SD.chiW
   rw [dite_eq_left (KC.uW_isUnit d w hr0), ← ha]
   exact hres

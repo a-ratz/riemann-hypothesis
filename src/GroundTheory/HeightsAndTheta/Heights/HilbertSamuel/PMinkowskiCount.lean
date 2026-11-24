@@ -69,7 +69,7 @@ theorem finite_latticePoints (La : Submodule ℤ V) [DiscreteTopology La] (ρ : 
   rw [h]
   refine Metric.finite_isBounded_inter_isClosed DiscreteTopology.isDiscrete isBounded_closedBall ?_
   rw [← Submodule.coe_toAddSubgroup]
-  exact AddSubgroup.isClosed_of_discrete
+  exact AddSubgroup.isClosed_of_discreteTopology
 
 theorem unitBallVolume_pos (R : ℕ) : 0 < unitBallVolume R :=
   ENNReal.toReal_pos (measure_ball_pos volume _ one_pos).ne' measure_ball_lt_top.ne

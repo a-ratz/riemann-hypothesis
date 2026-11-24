@@ -116,7 +116,7 @@ theorem exists_isUnit_of_forall_maximal {K A : Type} [Field K] [Infinite K] [Com
     [Algebra K A] [IsArtinianRing A] (Θ : A →ₗ[K] A)
     (h : ∀ 𝔪 : Ideal A, 𝔪.IsMaximal → ∃ c, Θ c ∉ 𝔪) : ∃ c, IsUnit (Θ c) := by
   classical
-  have hfin := IsArtinianRing.setOf_isMaximal_finite A
+  have hfin := IsArtinianRing.setOfPred_isMaximal_finite A
   let s : Finset (Subspace K A) :=
     hfin.toFinset.image fun 𝔪 => (𝔪.restrictScalars K).comap Θ
   have hs : ⊤ ∉ s := by
@@ -139,8 +139,8 @@ theorem hilbert90_baseChange : ∀ (F E K : Type) [Field F] [CharZero F] [Field 
   classical
   set T := Algebra.TensorProduct.map (AlgHom.id K K) (τ : E →ₐ[F] E) with hT
   have hm0 : 0 < m := hm ▸ orderOf_pos τ
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
-  haveI : IsArtinianRing (K ⊗[F] E) := IsArtinianRing.of_finite K _
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
+  have : IsArtinianRing (K ⊗[F] E) := IsArtinianRing.of_finite K _
   have hpow : ∀ (i : ℕ) (y : K ⊗[F] E), T^[i] y = (T ^ i) y := fun i y => by
     rw [AlgHom.coe_pow]
   have htm : ∀ (i : ℕ) (k : K) (c : E), (T ^ i) (k ⊗ₜ c) = k ⊗ₜ ((τ ^ i) c) := by
@@ -182,7 +182,7 @@ theorem hilbert90_baseChange : ∀ (F E K : Type) [Field F] [CharZero F] [Field 
   obtain ⟨c, hc⟩ := exists_isUnit_of_forall_maximal Θ (fun 𝔪 h𝔪 => by
     by_contra hcon
     push_neg at hcon
-    letI : Field ((K ⊗[F] E) ⧸ 𝔪) := Ideal.Quotient.field 𝔪
+    let : Field ((K ⊗[F] E) ⧸ 𝔪) := Ideal.Quotient.field 𝔪
     let ι : E →+* (K ⊗[F] E) ⧸ 𝔪 :=
       (Ideal.Quotient.mk 𝔪).comp Algebra.TensorProduct.includeRight.toRingHom
     let φ : Fin m → (E →* (K ⊗[F] E) ⧸ 𝔪) := fun i =>
@@ -370,11 +370,11 @@ open LocStep
 
 theorem tnorm_of_tnorm_pow : ∀ (F M E K : Type) [Field F] [CharZero F] [Field M] [Field E] [Algebra F M] [Algebra M E] [Algebra F E] [IsScalarTower F M E] [FiniteDimensional F E] [IsGalois F E] [Field K] [Algebra F K], IsCyclic (E ≃ₐ[F] E) → ∀ a : F, a ≠ 0 → TNorm F E K (a ^ Module.finrank M E) → TNorm F M K a := by
   intro F M E K _ _ _ _ _ _ _ _ _ _ _ _ hc a ha ⟨x, hx⟩
-  haveI : IsAbelianGalois F E := IsAbelianGalois.of_isCyclic F E
-  haveI : IsGalois F M := (IsAbelianGalois.tower_bot F M E).toIsGalois
-  haveI : IsGalois M E := IsGalois.tower_top_of_isGalois F M E
-  haveI : FiniteDimensional M E := Module.Finite.of_restrictScalars_finite F M E
-  haveI : FiniteDimensional F M := FiniteDimensional.left F M E
+  have : IsAbelianGalois F E := IsAbelianGalois.of_isCyclic F E
+  have : IsGalois F M := (IsAbelianGalois.tower_bot F M E).toIsGalois
+  have : IsGalois M E := IsGalois.tower_top_of_isGalois F M E
+  have : FiniteDimensional M E := Module.Finite.of_restrictScalars_finite F M E
+  have : FiniteDimensional F M := FiniteDimensional.left F M E
   obtain ⟨σ, hσ⟩ := IsCyclic.exists_generator (α := E ≃ₐ[F] E)
   set d := Module.finrank F M with hd
   set m := Module.finrank M E with hm
@@ -488,13 +488,13 @@ theorem TNorm.of_tower (F M E K : Type) [Field F] [Field M] [Field E] [Algebra F
     TNorm M E K (algebraMap F M x) := by
   classical
   obtain ⟨y, hy⟩ := hx
-  haveI : FiniteDimensional M E := Module.Finite.of_restrictScalars_finite F M E
-  haveI : IsGalois M E := IsGalois.tower_top_of_isGalois F M E
+  have : FiniteDimensional M E := Module.Finite.of_restrictScalars_finite F M E
+  have : IsGalois M E := IsGalois.tower_top_of_isGalois F M E
   let π : K ⊗[F] E →ₐ[K] K ⊗[M] E := Algebra.TensorProduct.mapOfCompatibleSMul M F K K E
   let φ : (E ≃ₐ[M] E) →* (E ≃ₐ[F] E) :=
     { toFun := fun h => h.restrictScalars F, map_one' := rfl, map_mul' := fun _ _ => rfl }
   have hφ : Function.Injective φ := AlgEquiv.restrictScalars_injective F
-  haveI : Fintype ((E ≃ₐ[F] E) ⧸ φ.range) := Fintype.ofFinite _
+  have : Fintype ((E ≃ₐ[F] E) ⧸ φ.range) := Fintype.ofFinite _
   have key : ∀ (h : E ≃ₐ[M] E) (g : E ≃ₐ[F] E) (z : K ⊗[F] E),
       Algebra.TensorProduct.map (AlgHom.id K K) (h : E →ₐ[M] E)
         (π (Algebra.TensorProduct.map (AlgHom.id K K) (g : E →ₐ[F] E) z)) =
@@ -562,9 +562,9 @@ private theorem exists_eq_pow_finrank_mul_norm_of_norm_eq_cyclic (F M E : Type) 
     (he₀ : Algebra.norm M e₀ = algebraMap F M x) :
     ∃ b : F, ∃ c : E, c ≠ 0 ∧ x = b ^ Module.finrank M E * Algebra.norm F c := by
   classical
-  haveI : FiniteDimensional M E := FiniteDimensional.right F M E
-  haveI : FiniteDimensional F M := FiniteDimensional.left F M E
-  haveI : IsGalois M E := IsGalois.tower_top_of_isGalois F M E
+  have : FiniteDimensional M E := FiniteDimensional.right F M E
+  have : FiniteDimensional F M := FiniteDimensional.left F M E
+  have : IsGalois M E := IsGalois.tower_top_of_isGalois F M E
   set n := Module.finrank M E with hn
   set d := Module.finrank F M with hd
   have hdn : d * n = Module.finrank F E := Module.finrank_mul_finrank F M E
@@ -581,7 +581,7 @@ private theorem exists_eq_pow_finrank_mul_norm_of_norm_eq_cyclic (F M E : Type) 
   have hρ : Function.Injective ρ := AlgEquiv.restrictScalars_injective F
   have hρapp : ∀ (h : E ≃ₐ[M] E) (y : E), ρ h y = h y := fun _ _ => rfl
   let K := ρ.range
-  haveI : K.Normal := ⟨fun a _ g => by rwa [hcomm g a, mul_inv_cancel_right]⟩
+  have : K.Normal := ⟨fun a _ g => by rwa [hcomm g a, mul_inv_cancel_right]⟩
   have hcardK : Nat.card K = n := by
     rw [← Nat.card_congr (MonoidHom.ofInjective hρ).toEquiv, IsGalois.card_aut_eq_finrank]
   have hcardG : Nat.card (E ≃ₐ[F] E) = d * n := by rw [IsGalois.card_aut_eq_finrank, hdn]
@@ -605,7 +605,7 @@ private theorem exists_eq_pow_finrank_mul_norm_of_norm_eq_cyclic (F M E : Type) 
     obtain ⟨k, hk⟩ := Subgroup.mem_zpowers_iff.mp hmem
     refine Subgroup.mem_zpowers_iff.mpr ⟨k, hρ ?_⟩
     rw [map_zpow, hg, hk]
-  haveI : IsCyclic (E ≃ₐ[M] E) := ⟨⟨g, hgen⟩⟩
+  have : IsCyclic (E ≃ₐ[M] E) := ⟨⟨g, hgen⟩⟩
   have hordg : orderOf g = n := by
     rw [orderOf_eq_card_of_forall_mem_zpowers hgen, IsGalois.card_aut_eq_finrank]
 
@@ -682,24 +682,24 @@ theorem _root_.GlobalTheory.CNorm.np_of_cyclic_tower : ∀ (F M E : Type) [Field
     [Field E] [NumberField E] [Algebra F M] [Algebra M E] [Algebra F E] [IsScalarTower F M E]
     [IsGalois F E], IsCyclic (E ≃ₐ[F] E) → _root_.GlobalTheory.CNorm.NP M E → _root_.GlobalTheory.CNorm.NP F M → _root_.GlobalTheory.CNorm.NP F E := by
   intro F M E _ _ _ _ _ _ _ _ _ _ _ hcyc hME hMF x hx0 hloc
-  haveI : FiniteDimensional F E := inferInstance
-  haveI : FiniteDimensional F M := inferInstance
-  haveI : FiniteDimensional M E := inferInstance
-  haveI : IsGalois M E := IsGalois.tower_top_of_isGalois F M E
+  have : FiniteDimensional F E := inferInstance
+  have : FiniteDimensional F M := inferInstance
+  have : FiniteDimensional M E := inferInstance
+  have : IsGalois M E := IsGalois.tower_top_of_isGalois F M E
   have hprops := _root_.GlobalTheory.CNorm.tnorm_baseChange F E
   have hxM : algebraMap F M x ≠ 0 := (_root_.map_ne_zero _).mpr hx0
   have h1 : _root_.GlobalTheory.CNorm.LocNorm M E (algebraMap F M x) := by
     refine ⟨fun w => ?_, fun a => ?_⟩
     · obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.QNorm.exists_ringHom_adicCompletion_under F M w
-      letI : Algebra F (w.adicCompletion M) :=
+      let : Algebra F (w.adicCompletion M) :=
         ((algebraMap M (w.adicCompletion M)).comp (algebraMap F M)).toAlgebra
-      haveI : IsScalarTower F M (w.adicCompletion M) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+      have : IsScalarTower F M (w.adicCompletion M) := IsScalarTower.of_algebraMap_eq fun _ => rfl
       let ψ : (HeightOneSpectrum.under (𝓞 F) w).adicCompletion F →ₐ[F] w.adicCompletion M :=
         { φ with commutes' := fun r => (hφ r).trans rfl }
       exact _root_.GlobalTheory.CNorm.TNorm.of_tower F M E _ x
         (hprops.1 _ _ ψ x (hloc.1 _))
-    · letI : Algebra F ℝ := ((algebraMap M ℝ).comp (algebraMap F M)).toAlgebra
-      haveI : IsScalarTower F M ℝ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    · let : Algebra F ℝ := ((algebraMap M ℝ).comp (algebraMap F M)).toAlgebra
+      have : IsScalarTower F M ℝ := IsScalarTower.of_algebraMap_eq fun _ => rfl
       exact _root_.GlobalTheory.CNorm.TNorm.of_tower F M E ℝ x (hloc.2 _)
   obtain ⟨e₀, he₀⟩ := hME _ hxM h1
   obtain ⟨b, c, hc0, hxb⟩ := exists_eq_pow_finrank_mul_norm_of_norm_eq_cyclic F M E hcyc x hx0 e₀ he₀
@@ -820,13 +820,13 @@ theorem isField_tensor_of_coprime (F A B : Type) [Field F] [Field A] [Field B] [
 
 theorem coprime_finrank_cyclotomic (p : ℕ) (hp : p.Prime) (F A : Type) [Field F] [Field A]
     [Algebra F A] [IsCyclotomicExtension {p} F A] : Nat.Coprime (Module.finrank F A) p := by
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  haveI : Module.Finite F A := IsCyclotomicExtension.finite {p} F A
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : Module.Finite F A := IsCyclotomicExtension.finite {p} F A
   have hζ := IsCyclotomicExtension.zeta_spec p F A
   have hdvd : minpoly F (IsCyclotomicExtension.zeta p F A) ∣ cyclotomic p F := by
     apply minpoly.dvd
     rw [aeval_def, ← eval_map, map_cyclotomic]
-    haveI : NeZero (p : A) := hζ.neZero'
+    have : NeZero (p : A) := hζ.neZero'
     exact (isRoot_cyclotomic_iff.mpr hζ)
   have hle := natDegree_le_of_dvd hdvd (cyclotomic_ne_zero p F)
   rw [natDegree_cyclotomic, Nat.totient_prime hp] at hle
@@ -839,17 +839,17 @@ theorem coprime_finrank_cyclotomic (p : ℕ) (hp : p.Prime) (F A : Type) [Field 
 
 theorem exists_pushout_primitiveRoot : ∀ (p : ℕ) (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsGalois F E], p.Prime → p ≠ 2 → Module.finrank F E = p → ∃ (F' E' : Type) (_ : Field F') (_ : NumberField F') (_ : Field E') (_ : NumberField E') (_ : Algebra F F') (_ : Algebra F' E') (_ : Algebra E E') (_ : Algebra F E') (_ : IsScalarTower F F' E') (_ : IsScalarTower F E E') (ζ : F'), Algebra.IsPushout F F' E E' ∧ IsTotallyComplex F' ∧ IsGalois F' E' ∧ IsPrimitiveRoot ζ p ∧ Module.finrank F' E' = p ∧ Nat.Coprime (Module.finrank F F') p := by
   intro p F E _ _ _ _ _ _ hp h2 hdeg
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   let A : Type := CyclotomicField p F
-  haveI : IsCyclotomicExtension {p} F A := CyclotomicField.isCyclotomicExtension p F
-  haveI : NumberField A := IsCyclotomicExtension.numberField {p} F A
+  have : IsCyclotomicExtension {p} F A := CyclotomicField.isCyclotomicExtension p F
+  have : NumberField A := IsCyclotomicExtension.numberField {p} F A
   have hco := coprime_finrank_cyclotomic p hp F A
   have hf : IsField (A ⊗[F] E) := isField_tensor_of_coprime F A E (by rwa [hdeg])
-  letI : Field (A ⊗[F] E) := hf.toField
-  letI : Algebra E (A ⊗[F] E) := Algebra.TensorProduct.rightAlgebra
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : Module.Finite A (A ⊗[F] E) := inferInstance
-  haveI : NumberField (A ⊗[F] E) := NumberField.of_module_finite A (A ⊗[F] E)
+  let : Field (A ⊗[F] E) := hf.toField
+  let : Algebra E (A ⊗[F] E) := Algebra.TensorProduct.rightAlgebra
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite A (A ⊗[F] E) := inferInstance
+  have : NumberField (A ⊗[F] E) := NumberField.of_module_finite A (A ⊗[F] E)
   have hζ := IsCyclotomicExtension.zeta_spec p F A
   have hr : Module.finrank A (A ⊗[F] E) = p := by
     rw [Module.finrank_baseChange, hdeg]
@@ -962,7 +962,7 @@ namespace GlobalTheory.CNorm
 theorem relIndex_eq_prime_of_generated {G : Type} [CommGroup G] {p : ℕ} (hp : p.Prime)
     (E K : Subgroup G) (x : G) (hxE : x ∈ E) (hxK : x ∉ K) (hxp : x ^ p ∈ K)
     (hgen : ∀ y ∈ E, ∃ k : ℕ, y / x ^ k ∈ K) : K.relIndex E = p := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   set c : E ⧸ K.subgroupOf E := QuotientGroup.mk (⟨x, hxE⟩ : E) with hc
   have ho : orderOf c = p := by
     apply orderOf_eq_prime
@@ -1076,14 +1076,14 @@ theorem exists_not_mem_not_pow_completion :
     intro v _
     by_cases hv : v ∈ S₀
     · exact hx v hv
-    · haveI : CharZero (v.adicCompletion F) :=
+    · have : CharZero (v.adicCompletion F) :=
         charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
       obtain ⟨r, hr⟩ := hcon v hv
       rw [_root_.GlobalTheory.CNorm.kNorm_eq_top_of_pow p F _ _ u r hp.pos hu hr]
       exact Subgroup.mem_top x
   have hidx := (_root_.GlobalTheory.CNorm.pow_tNon_le_index_finNorm p F ζ u S₀ hp hζ).1
-  haveI : (finNorm p F u S₀).FiniteIndex := ⟨hidx⟩
-  haveI : Fintype (Fˣ ⧸ finNorm p F u S₀) := Fintype.ofFinite _
+  have : (finNorm p F u S₀).FiniteIndex := ⟨hidx⟩
+  have : Fintype (Fˣ ⧸ finNorm p F u S₀) := Fintype.ofFinite _
   obtain ⟨S₁, -, hS₁⟩ := exists_superset_mem_sUnits F
     (insert (Units.mk0 u hu)
       (Finset.univ.image (fun q : Fˣ ⧸ finNorm p F u S₀ => q.out))) S₀
@@ -1124,8 +1124,8 @@ theorem exists_place_pow_and_not_pow :
   intro p F _ _ _ ζ δ u S₀ hp hζ hδ hu hδs huδ
   obtain ⟨E, _, _, θ, σ, hq⟩ := exists_isKum p F ζ δ hp hζ hδs
   obtain ⟨hfd, -, -, -, -, hpow, -⟩ := _root_.GlobalTheory.CNorm.kummer_basic p F E ζ δ θ σ hq
-  haveI : NumberField E := NumberField.of_module_finite F E
-  haveI : IsTotallyComplex E := isTotallyComplex_of_algebra F E
+  have : NumberField E := NumberField.of_module_finite F E
+  have : IsTotallyComplex E := isTotallyComplex_of_algebra F E
   have huE : ∀ y : E, y ^ p ≠ algebraMap F E u := by
     intro y h
     obtain ⟨k, r, hr⟩ := hpow u y h
@@ -1179,7 +1179,7 @@ namespace GlobalTheory.CNorm
 theorem relIndex_sup_zpowers_chooseT (p : ℕ) {G : Type} [CommGroup G] (Q : Subgroup G) (d : G)
     (hp : p.Prime) (hd : d ^ p ∈ Q) (hn : d ∉ Q) :
     Q.relIndex (Q ⊔ Subgroup.zpowers d) = p := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rw [Subgroup.relIndex_sup_left]
   have h := Subgroup.relIndex_ker (Subgroup.zpowers d) (QuotientGroup.mk' Q)
   rw [QuotientGroup.ker_mk', MonoidHom.map_zpowers, Nat.card_zpowers] at h
@@ -1348,7 +1348,7 @@ theorem sUnits_union_sup_finPow_eq_top :
   have hy : ∀ v ∈ T, v.valuation F ((a * x : Fˣ) : F) = 1 := by
     intro v hv
     have hx0 : v.valuation F (x : F) ≠ 0 := by simp
-    rw [Units.val_mul, map_mul, ha v (hTS v hv), if_pos hv, WithZero.exp_neg,
+    rw [Units.val_mul, map_mul, ha v (hTS v hv), ite_eq_left hv, WithZero.exp_neg,
       WithZero.exp_log hx0, inv_mul_cancel₀ hx0]
   have key : ∀ v ∈ T, ∃ w ∈ sUnits F S,
       w⁻¹ * (a * x) ∈ powSub p (algebraMap F (v.adicCompletion F)) ∧
@@ -1456,7 +1456,7 @@ theorem mem_pows_sUnits_normThm (p : ℕ) (hp : 0 < p) (F : Type) [Field F] [Num
     have h1 := hy v hv
     have h2 : v.valuation F r ^ p = 1 := by
       rw [← map_pow, hr]; exact h1
-    exact (pow_eq_one_iff_of_nonneg zero_le' hp.ne').mp h2
+    exact (pow_eq_one_iff_of_nonneg zero_le hp.ne').mp h2
   · ext
     simp [hr]
 
@@ -1476,7 +1476,7 @@ theorem sUnit_mem_kNorm_of_mem_finNorm : ∀ (p : ℕ) (F : Type) [Field F] [Num
     unfold tNon
     congr 1
     ext v
-    simp only [Finset.mem_union, Set.mem_setOf_eq]
+    simp only [Finset.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨h | h, h'⟩
       · exact ⟨h, h'⟩
@@ -1525,9 +1525,9 @@ theorem exists_isKum_of_finrank_prime (p : ℕ) (F E : Type) [Field F] [Field E]
     [IsGalois F E] (ζ : F) (hp : p.Prime) (hζ : IsPrimitiveRoot ζ p)
     (hr : Module.finrank F E = p) :
     ∃ (δ : F) (θ : E) (σ : E ≃ₐ[F] E), IsKum p ζ δ θ σ := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (hr ▸ hp.pos)
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : IsCyclic (E ≃ₐ[F] E) :=
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (hr ▸ hp.pos)
+  have : Fact p.Prime := ⟨hp⟩
+  have : IsCyclic (E ≃ₐ[F] E) :=
     isCyclic_of_prime_card (p := p) (by rw [IsGalois.card_aut_eq_finrank, hr])
   have hK : (primitiveRoots (Module.finrank F E) F).Nonempty :=
     ⟨ζ, by rw [hr, mem_primitiveRoots hp.pos]; exact hζ⟩
@@ -1541,7 +1541,7 @@ theorem exists_isKum_of_finrank_prime (p : ℕ) (F E : Type) [Field F] [Field E]
       rw [← hmin]
       rw [map_sub, map_pow, aeval_X, aeval_C, mul_pow, ← map_pow, hζ.pow_eq_one, map_one, one_mul,
         hδ, sub_self])
-  refine ⟨δ, θ, σ, hp, hζ, (X_pow_sub_C_irreducible_iff_of_prime hp).1 hirr, hδ.symm, hσ, ?_⟩
+  refine ⟨δ, θ, σ, hp, hζ, (irreducible_X_pow_sub_C_iff_of_prime hp).1 hirr, hδ.symm, hσ, ?_⟩
   rw [← IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic
     (Algebra.IsAlgebraic.isAlgebraic θ), hθ, IntermediateField.top_toSubalgebra]
 
@@ -1585,8 +1585,8 @@ theorem tNorm_baseChange_of_ringHom (F F' E E' K K' : Type) [Field F] [Field F']
     [FiniteDimensional F E] [Field K] [Algebra F K] [Field K'] [Algebra F' K'] (φ : K →+* K')
     (hφ : ∀ x : F, φ (algebraMap F K x) = algebraMap F' K' (algebraMap F F' x)) (x : F)
     (h : TNorm F E K x) : TNorm F' E' K' (algebraMap F F' x) := by
-  letI : Algebra F K' := ((algebraMap F' K').comp (algebraMap F F')).toAlgebra
-  haveI : IsScalarTower F F' K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra F K' := ((algebraMap F' K').comp (algebraMap F F')).toAlgebra
+  have : IsScalarTower F F' K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   obtain ⟨y₀, hy₀⟩ := h
   let ψ : K →ₐ[F] K' := { φ with commutes' := hφ }
   let y : K' ⊗[F] E := Algebra.TensorProduct.map ψ (AlgHom.id F E) y₀

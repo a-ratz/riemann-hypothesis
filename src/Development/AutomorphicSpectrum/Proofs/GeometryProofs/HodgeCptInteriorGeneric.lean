@@ -122,7 +122,7 @@ theorem exists_integral_multiple_of_injective {O : Type} [CommRing O] {F : Inter
     [FiniteDimensional ℚ F] (β : O →+* F) (hβ : Function.Injective β) (u : F) :
     letI := β.toAlgebra
     ∃ a : O, a ≠ 0 ∧ _root_.IsIntegral O (a • u) := by
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have : CharZero O := β.charZero
   have hQ : IsAlgebraic ℚ u := Algebra.IsAlgebraic.isAlgebraic u
   have hZ : IsAlgebraic ℤ u := (IsFractionRing.isAlgebraic_iff ℤ ℚ F).2 hQ
@@ -134,8 +134,8 @@ theorem eq_of_specializes_of_fst {X : Scheme.{0}} {O F Ω₀ : Type} [CommRing O
     (hγ : Function.Injective g₀)
     (hF : letI := β.toAlgebra; ∀ u : F, ∃ a : O, a ≠ 0 ∧ _root_.IsIntegral O (a • u))
     {y y' : ↥(pullback s (spMap β))} (hy : pullback.fst s (spMap β) y = genPt ξ₀) (hyy : y' ⤳ y) : y' = y := by
-  letI := β.toAlgebra
-  letI := g₀.toAlgebra
+  let := β.toAlgebra
+  let := g₀.toAlgebra
   have hy' : pullback.fst s (spMap β) y' = genPt ξ₀ :=
     GlobalTheory.CompanionTheory.Ar.CptInh.nogen ξ₀ h₀ _ (hy ▸ hyy.map (pullback.fst s (spMap β)).continuous)
   have hsurj : SurjectiveOnStalks ξ₀ := by
@@ -349,7 +349,7 @@ theorem HodgeCpt.basic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     intro s s' h
     refine HodgeBasic.labelEmb_injective c (RingHom.ext fun a => hcst ?_)
     exact congrArg (fun m : 𝓞 E →+* Ω => m a) h
-  letI : Fintype (CMType H) := Fintype.ofFinite _
+  let : Fintype (CMType H) := Fintype.ofFinite _
   have hcard : Fintype.card (CMType H ⊕ CMType H) = Module.finrank ℚ E := by
     rw [Fintype.card_of_bijective (HodgeBasic.labelHom_bijective H), Embeddings.card]
   have hint := _root_.GlobalTheory.CompanionTheory.Ar.isInternal_eigSp Ω 𝔐.Li E 𝔐.ρ (CMType H ⊕ CMType H) 𝔐.emb hinj hcard

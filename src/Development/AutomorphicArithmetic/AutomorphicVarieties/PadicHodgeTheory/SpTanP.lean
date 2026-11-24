@@ -91,7 +91,7 @@ private theorem adj_mul (χ : Fin 4 → E) (θ : E) (γ : M4 E) (r : M4 (DualNum
   · rw [Matrix.mul_apply, TrivSqZeroExt.snd_sum]
     simp only [DualNumber.snd_mul, adj_apply, TrivSqZeroExt.fst_smul, TrivSqZeroExt.snd_smul, hf, hs,
       Finset.sum_add_distrib, Fin.rev_inj, smul_ite, ite_mul, mul_ite, smul_zero, zero_mul, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     simp only [sgn_sq, one_smul, zsmul_eq_mul]
     push_cast
     ring
@@ -135,7 +135,7 @@ private theorem core [CharZero E] (χ : Fin 4 → H →* Eˣ) (θ : H → E) (I 
     have e := hs (g * h) a b
     rw [map_mul r, Matrix.mul_apply, TrivSqZeroExt.snd_sum] at e
     simp only [DualNumber.snd_mul, hf, hs, Finset.sum_add_distrib, ite_mul, mul_ite, zero_mul, mul_zero,
-      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul, Units.val_mul] at e
+      Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul, Units.val_mul] at e
     have u1 := Units.ne_zero (χ b g)
     have u2 := Units.ne_zero (χ b h)
     rw [Units.val_mul, Units.val_inv_eq_inv_val]
@@ -289,8 +289,8 @@ end Loc
 theorem UpperTheory.V.Loc.spTanP :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (hD : D.Good) (q : ℕ), q ∈ D.Sb → ∀ (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra ↥c.O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ↥c.O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing ↥c.O E] (γ : D.Gp q → M4 E) (r' : D.Gp q →* M4 (DualNumber E)), IsFirstOrderDeformationOfRZero D q γ r' → (∀ a b, QCont l fun g => γ g a b) → (EqP D q r' ↔ (∀ g, γ g ∈ sp4 E) ∧ (∃ X ∈ sp4 E, ∀ (g : D.Gp q) a b, a ≠ b → γ g a b = (1 - algebraMap c.O E ((D.ps a g * (D.ps b g)⁻¹ : c.Oˣ) : c.O)) * X a b) ∧ ∀ s : D.Gp q, (s : G ℚ Ω) ∈ D.Ip q → ∀ a, γ s a a = 0) := by
   intro Ω _ _ _ l _ c D hD q hq E _ _ _ _ _ _ _ _ γ r' hr _
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
-  haveI : IsGalois ℚ Ω := {}
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
+  have : IsGalois ℚ Ω := {}
   let ι : c.Oˣ →* Eˣ := Units.map (algebraMap c.O E).toMonoidHom
   have hι : Function.Injective ι := Units.map_injective (IsFractionRing.injective c.O E)
   let χ : Fin 4 → D.Gp q →* Eˣ := fun a => ι.comp ((D.ps a).comp (D.Gp q).subtype)
@@ -317,8 +317,8 @@ theorem UpperTheory.V.Loc.spTanP :
     rw [hχ, ps_ine hD hq hg.1, MonoidHom.mem_ker.1 hg.2]
     fin_cases a <;> simp
   · intro s hs
-    haveI := Subgroup.quotient_finite_of_isOpen _ hD.psi_open
-    haveI : D.ψ.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have := Subgroup.quotient_finite_of_isOpen _ hD.psi_open
+    have : D.ψ.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     exact ⟨D.ψ.ker.index, Subgroup.FiniteIndex.index_ne_zero, pow_mem hs _, D.ψ.ker.pow_index_mem _⟩
   · intro a b hab
     have hσ := hD.sg_frob q (Finset.mem_insert_of_mem hq)

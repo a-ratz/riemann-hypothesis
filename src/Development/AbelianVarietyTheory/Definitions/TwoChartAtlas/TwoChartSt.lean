@@ -299,7 +299,7 @@ theorem toJet_X {κ : Type} [Finite κ] (m : ℕ) (j : κ) : toJet m (X j : MvPo
       rw [zero_add, pow_one]; exact Ideal.subset_span ⟨j, rfl⟩)).symm
   · congr 1
     ext e
-    rw [coeff_truncTotal_eq_ite, MvPowerSeries.coeff_X, MvPolynomial.coeff_X']
+    rw [coeff_truncTotal_eq_ite, MvPowerSeries.coeff_X, MvPolynomial.coeff_X]
     by_cases h : e = Finsupp.single j 1
     · subst h
       simp

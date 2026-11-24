@@ -99,13 +99,13 @@ theorem deRham_filtered_Ql (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAi
       y = ∑ i, AlgebraTensorModule.map (LinearMap.id : V →ₗ[ℚ_[l]] V) (LinearMap.mulLeft ℚ_[l] (b i)) (d i) := by
   let LL : FinExt l := ⟨⊥, inferInstance⟩
   let e : ↥LL.1 ≃ₐ[ℚ_[l]] ℚ_[l] := IntermediateField.botEquiv ℚ_[l] (Om l)
-  letI iM : Module ↥LL.1 V := Module.compHom V (e : ↥LL.1 →+* ℚ_[l])
-  haveI : IsScalarTower ℚ_[l] ↥LL.1 V := ⟨fun c x v => by
+  let iM : Module ↥LL.1 V := Module.compHom V (e : ↥LL.1 →+* ℚ_[l])
+  have : IsScalarTower ℚ_[l] ↥LL.1 V := ⟨fun c x v => by
     show e (c • x) • v = c • (e x • v)
     have h1 := e.toLinearEquiv.map_smul c x
     simp only [AlgEquiv.toLinearEquiv_apply] at h1
     rw [h1, smul_eq_mul, mul_smul]⟩
-  haveI : FiniteDimensional ↥LL.1 V := Module.Finite.of_restrictScalars_finite ℚ_[l] _ V
+  have : FiniteDimensional ↥LL.1 V := Module.Finite.of_restrictScalars_finite ℚ_[l] _ V
   let ρ' : Representation ↥LL.1 ↥(GK K) V :=
     { toFun := fun g =>
         { toFun := ρ g
@@ -360,7 +360,7 @@ theorem exists_adapted_family (F : ℤ → Submodule k M) (hF : Antitone F) :
     have : D ≤ F (a₀ + 1) := heq ▸ inf_le_right
     have := hmax _ this
     omega
-  haveI : FiniteDimensional k D' := Submodule.finiteDimensional_of_le hD'D
+  have : FiniteDimensional k D' := Submodule.finiteDimensional_of_le hD'D
   obtain ⟨ι, _, v, h, hli, hspan, hdeg, hfil⟩ :=
     ih _ (hn ▸ Submodule.finrank_lt_finrank_of_lt hlt) D' rfl
       (fun x hx => hex x (hD'D hx)) (fun x hx => hsep x (hD'D hx))
@@ -370,7 +370,7 @@ theorem exists_adapted_family (F : ℤ → Submodule k M) (hF : Antitone F) :
   have hdisj : Disjoint D' C := hC'.disjoint.mono_right inf_le_left
   have hsup : D' ⊔ C = D := by
     rw [hC, ← sup_inf_assoc_of_le _ hD'D, hC'.sup_eq_top, top_inf_eq]
-  haveI : FiniteDimensional k C := Submodule.finiteDimensional_of_le hCD
+  have : FiniteDimensional k C := Submodule.finiteDimensional_of_le hCD
   let bC := Module.finBasis k C
   let c : Fin (Module.finrank k C) → M := fun i => (bC i : M)
   have hcli : LinearIndependent k c := bC.linearIndependent.map' C.subtype C.ker_subtype
@@ -398,7 +398,7 @@ theorem exists_adapted_family (F : ℤ → Submodule k M) (hF : Antitone F) :
     by_cases ha : a ≤ a₀
     · have hall : {j : ι ⊕ Fin (Module.finrank k C) | a ≤ Sum.elim h (fun _ => a₀) j} = Set.univ := by
         ext j
-        simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+        simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
         rcases j with j | i
         · have := hdeg' j; simp only [Sum.elim_inl]; omega
         · simpa using ha
@@ -480,7 +480,7 @@ theorem invariant_basis_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
     have h := hQ g
     rw [toMatrix_qRep, Matrix.map_map] at h
     exact h
-  letI : Field P.R.BdR := (_root_.GlobalTheory.PMon.bdR_tied l P AI T).1.toField
+  let : Field P.R.BdR := (_root_.GlobalTheory.PMon.bdR_tied l P AI T).1.toField
   set Qm : Matrix (Fin d) (Fin d) P.R.BdR := (Q : Matrix (Fin d) (Fin d) P.R.BdR) with hQm
   have hQinj : ∀ v w : Fin d → P.R.BdR, Qm *ᵥ v = Qm *ᵥ w → v = w := by
     intro v w h
@@ -581,18 +581,18 @@ theorem exists_hodge : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (P : LocPrime
     { carrier := {c | ∀ g : ↥(GK K), M g *ᵥ (fun i => P.actQdR (g : GQ l) (c i)) = c}
       add_mem' := by
         intro u v hu hv g
-        simp only [Set.mem_setOf_eq] at hu hv ⊢
+        simp only [Set.mem_ofPred_eq] at hu hv ⊢
         have : (fun i => P.actQdR (g : GQ l) ((u + v) i)) =
             (fun i => P.actQdR (g : GQ l) (u i)) + (fun i => P.actQdR (g : GQ l) (v i)) := by
           funext i; simp
         rw [this, Matrix.mulVec_add, hu g, hv g]
       zero_mem' := by
         intro g
-        simp only [Set.mem_setOf_eq, Pi.zero_apply, map_zero]
+        simp only [Set.mem_ofPred_eq, Pi.zero_apply, map_zero]
         exact Matrix.mulVec_zero _
       smul_mem' := by
         intro k u hu g
-        simp only [Set.mem_setOf_eq] at hu ⊢
+        simp only [Set.mem_ofPred_eq] at hu ⊢
         have : (fun i => P.actQdR (g : GQ l) ((k • u) i)) = k • (fun i => P.actQdR (g : GQ l) (u i)) := by
           funext i; simp only [Pi.smul_apply, Algebra.smul_def, hKact]
         rw [this, Matrix.mulVec_smul, hu g] }
@@ -601,7 +601,7 @@ theorem exists_hodge : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (P : LocPrime
   set D : Submodule ↥K.1 (Fin d → P.R.BdR) := Submodule.span ↥K.1 (Set.range x) with hD
   have hDIv : D ≤ Iv := Submodule.span_le.2 (by rintro _ ⟨j, rfl⟩; exact (hmemIv _).2 (hxinv j))
   have hIvD : ∀ c, c ∈ Iv → c ∈ D := fun c hc => hxspan c hc
-  haveI : FiniteDimensional ↥K.1 D := FiniteDimensional.span_of_finite ↥K.1 (Set.finite_range x)
+  have : FiniteDimensional ↥K.1 D := FiniteDimensional.span_of_finite ↥K.1 (Set.finite_range x)
   have hfr : Module.finrank ↥K.1 D = d := by
     rw [hD, finrank_span_eq_card hxli, Fintype.card_fin]
   let F : ℤ → Submodule ↥K.1 (Fin d → P.R.BdR) := fun a => Submodule.pi Set.univ (fun _ => (P.PD K).Fil a)

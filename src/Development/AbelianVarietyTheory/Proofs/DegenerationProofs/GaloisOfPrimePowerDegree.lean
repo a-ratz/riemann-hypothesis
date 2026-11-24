@@ -87,7 +87,7 @@ theorem isLocalRing_of_isInvariant {A B G : Type*} [CommRing A] [CommRing B] [Is
     IsLocalRing B := by
   classical
   cases nonempty_fintype G
-  haveI : Algebra.IsIntegral A B := Algebra.IsInvariant.isIntegral A B G
+  have : Algebra.IsIntegral A B := Algebra.IsInvariant.isIntegral A B G
   obtain ⟨Q, hQ⟩ := Ideal.exists_maximal B
   have hunder : ∀ P : Ideal B, P.IsMaximal → P.under A = maximalIdeal A := fun P hP =>
     IsLocalRing.eq_maximalIdeal
@@ -95,7 +95,7 @@ theorem isLocalRing_of_isInvariant {A B G : Type*} [CommRing A] [CommRing B] [Is
         (fun x => Algebra.IsIntegral.isIntegral x) P)
   suffices hs : ∀ σ : G, σ • Q = Q by
     refine IsLocalRing.of_unique_max_ideal ⟨Q, hQ, fun P hP => ?_⟩
-    haveI := hP.isPrime
+    have := hP.isPrime
     obtain ⟨g, hg⟩ := Algebra.IsInvariant.exists_smul_of_under_eq A B G Q P
       ((hunder Q hQ).trans (hunder P hP).symm)
     rw [hg, hs]
@@ -179,7 +179,7 @@ theorem isLocalRing_of_isInvariant {A B G : Type*} [CommRing A] [CommRing B] [Is
     rw [← hunder Q hQ, ← hφ0]; rfl
   have hev : ∀ q : A[X], φ (algebraMap A B (q.eval 1)) = ((q.map (algebraMap A B)).map φ).eval 1 :=
     fun q => by rw [eval_one_map, eval_one_map]
-  haveI : Nontrivial (B ⧸ Q) := Ideal.Quotient.nontrivial_iff.mpr hQ.ne_top
+  have : Nontrivial (B ⧸ Q) := Ideal.Quotient.nontrivial_iff.mpr hQ.ne_top
   obtain ⟨a, ha1, ha2⟩ := hH.is_henselian p hp2 1
     (by rw [hmem, hev, hp1, hfφ]; simp)
     (by
@@ -208,7 +208,7 @@ theorem exists_sub_mem_maximalIdeal {A B : Type*} [CommRing A] [CommRing B] [IsL
     [IsLocalRing B] [Algebra A B] [FaithfulSMul A B] [Algebra.IsIntegral A B]
     [IsAlgClosed (ResidueField A)] (t : B) :
     ∃ a : A, t - algebraMap A B a ∈ maximalIdeal B := by
-  haveI : IsLocalHom (algebraMap A B) := inferInstance
+  have : IsLocalHom (algebraMap A B) := inferInstance
   have hint : (ResidueField.map (algebraMap A B)).IsIntegral := by
     intro x
     obtain ⟨y, rfl⟩ := residue_surjective x
@@ -228,15 +228,15 @@ theorem exists_unit_mul_pow {R : Type*} (K L : Type*) [CommRing R] [IsDomain R]
     ∃ (u : (integralClosure R L)ˣ) (ϖ : integralClosure R L),
       algebraMap R _ π = u * ϖ ^ Module.finrank K L := by
   set S := integralClosure R L
-  haveI : FaithfulSMul R L := FaithfulSMul.trans R K L
-  haveI : FaithfulSMul R S := FaithfulSMul.tower_bot R S L
-  haveI : IsDedekindDomain S := integralClosure.isDedekindDomain R K L
-  haveI : Module.Finite R S := IsIntegralClosure.finite R K L S
-  haveI : IsFractionRing S L := integralClosure.isFractionRing_of_finite_extension K L
+  have : FaithfulSMul R L := FaithfulSMul.trans R K L
+  have : FaithfulSMul R S := FaithfulSMul.tower_bot R S L
+  have : IsDedekindDomain S := integralClosure.isDedekindDomain R K L
+  have : Module.Finite R S := IsIntegralClosure.finite R K L S
+  have : IsFractionRing S L := integralClosure.isFractionRing_of_finite_extension K L
   have hp0 : maximalIdeal R ≠ ⊥ := IsDiscreteValuationRing.not_a_field R
   have hnf : ¬ IsField S := fun h => IsDiscreteValuationRing.not_isField R
     ((Algebra.IsIntegral.isField_iff_isField (FaithfulSMul.algebraMap_injective R S)).mpr h)
-  haveI : IsDiscreteValuationRing S :=
+  have : IsDiscreteValuationRing S :=
     ((IsDiscreteValuationRing.TFAE S hnf).out 1 3).mpr (inferInstance : IsDedekindDomain S)
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible S
   have hπ0 : algebraMap R S π ≠ 0 := by simpa using hπ.ne_zero
@@ -245,8 +245,8 @@ theorem exists_unit_mul_pow {R : Type*} (K L : Type*) [CommRing R] [IsDomain R]
   have h1 := Ideal.ramificationIdx_mul_inertiaDeg_of_isLocalRing S K L hp0
   have h2 : (maximalIdeal R).inertiaDeg' (maximalIdeal S) = 1 := by
     rw [Ideal.inertiaDeg'_algebraMap]
-    letI : Field (R ⧸ maximalIdeal R) := Ideal.Quotient.field _
-    letI : Field (S ⧸ maximalIdeal S) := Ideal.Quotient.field _
+    let : Field (R ⧸ maximalIdeal R) := Ideal.Quotient.field _
+    let : Field (S ⧸ maximalIdeal S) := Ideal.Quotient.field _
     refine Algebra.finrank_eq_one_iff_bijective_algebraMap.mpr ⟨RingHom.injective _, fun x => ?_⟩
     obtain ⟨t, rfl⟩ := Ideal.Quotient.mk_surjective x
     obtain ⟨a, ha⟩ := exists_sub_mem_maximalIdeal (A := R) t
@@ -270,21 +270,21 @@ theorem exists_pow_eq_of_isGalois {R : Type*} (K L M : Type*) [CommRing R] [IsDo
     [FiniteDimensional K M] (ρ : M)
     (hρ : ρ ^ Module.finrank K L = algebraMap K M (algebraMap R K π)) :
     ∃ ρ : L, ρ ^ Module.finrank K L = algebraMap K L (algebraMap R K π) := by
-  letI : Algebra R L := ((algebraMap K L).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  letI : Algebra R M := ((algebraMap K M).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K M := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R L M := IsScalarTower.of_algebraMap_eq fun x =>
+  let : Algebra R L := ((algebraMap K L).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R M := ((algebraMap K M).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K M := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R L M := IsScalarTower.of_algebraMap_eq fun x =>
     IsScalarTower.algebraMap_apply K L M (algebraMap R K x)
   set n := Module.finrank K L with hn'
   have hn0 : 0 < n := Module.finrank_pos
   set T := integralClosure R M
   set S := integralClosure R L
-  haveI : FaithfulSMul R M := FaithfulSMul.trans R K M
-  haveI : FaithfulSMul K M :=
+  have : FaithfulSMul R M := FaithfulSMul.trans R K M
+  have : FaithfulSMul K M :=
     (faithfulSMul_iff_algebraMap_injective K M).mpr (RingHom.injective (algebraMap K M))
-  haveI : FaithfulSMul R T := FaithfulSMul.tower_bot R T M
-  haveI : Algebra.IsInvariant R T (M ≃ₐ[K] M) := ⟨fun x hx => by
+  have : FaithfulSMul R T := FaithfulSMul.tower_bot R T M
+  have : Algebra.IsInvariant R T (M ≃ₐ[K] M) := ⟨fun x hx => by
     have h1 : (x : M) ∈ (⊥ : IntermediateField K M) :=
       (IsGalois.mem_bot_iff_fixed _).mpr fun σ => congrArg Subtype.val (hx σ)
     obtain ⟨z, hz⟩ := IntermediateField.mem_bot.mp h1
@@ -294,13 +294,13 @@ theorem exists_pow_eq_of_isGalois {R : Type*} (K L M : Type*) [CommRing R] [IsDo
     obtain ⟨r, hr⟩ := IsIntegrallyClosed.isIntegral_iff.mp h2
     refine ⟨r, Subtype.ext ?_⟩
     rw [← hz, ← hr]; rfl⟩
-  haveI : IsLocalRing T := isLocalRing_of_isInvariant (A := R) (G := M ≃ₐ[K] M)
+  have : IsLocalRing T := isLocalRing_of_isInvariant (A := R) (G := M ≃ₐ[K] M)
   let ι : S →+* T := ((algebraMap L M).comp (algebraMap S L)).codRestrict
     T.toSubring (fun x => (x.2 : IsIntegral R (x : L)).algebraMap)
   have hι : ∀ x : S, ((ι x : T) : M) = algebraMap L M x := fun _ => rfl
   have hunit : ∀ x : S, IsUnit (ι x) → IsUnit x := by
     intro x hx
-    haveI : FaithfulSMul L M :=
+    have : FaithfulSMul L M :=
       (faithfulSMul_iff_algebraMap_injective L M).mpr (RingHom.injective (algebraMap L M))
     obtain ⟨z, hz⟩ := hx.exists_right_inv
     have hz' : algebraMap L M x * (z : M) = 1 := congrArg Subtype.val hz
@@ -311,7 +311,7 @@ theorem exists_pow_eq_of_isGalois {R : Type*} (K L M : Type*) [CommRing R] [IsDo
       rw [← (isIntegral_algebraMap_iff (R := R) (A := L) (B := M)), h3]
       exact z.2
     exact IsUnit.of_mul_eq_one (⟨_, h4⟩ : S) (Subtype.ext (mul_inv_cancel₀ hx0))
-  haveI : IsLocalRing S := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun x => by
+  have : IsLocalRing S := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun x => by
     rcases IsLocalRing.isUnit_or_isUnit_one_sub_self (ι x) with h | h
     · exact Or.inl (hunit _ h)
     · exact Or.inr (hunit _ (by simpa using h))
@@ -329,8 +329,8 @@ theorem exists_pow_eq_of_isGalois {R : Type*} (K L M : Type*) [CommRing R] [IsDo
   set y : T := ⟨_, hyint⟩ with hydef
   have hyn : y ^ n = ι u := Subtype.ext hy
   have hyu : IsUnit y := (isUnit_pow_iff hn0.ne').mp (by rw [hyn]; exact u.isUnit.map ι)
-  haveI : IsGalois L M := IsGalois.tower_top_of_isGalois K L M
-  haveI : FiniteDimensional L M := Module.Finite.of_restrictScalars_finite K L M
+  have : IsGalois L M := IsGalois.tower_top_of_isGalois K L M
+  have : FiniteDimensional L M := Module.Finite.of_restrictScalars_finite K L M
   have hfix : ∀ σ : M ≃ₐ[L] M, σ (y : M) = y := by
     intro σ
     let τ : M ≃ₐ[K] M := σ.restrictScalars K
@@ -376,8 +376,8 @@ theorem exists_pow_eq_of_tower {R : Type*} (K L E F : Type*) [CommRing R] [IsDom
     (hρ : ρ ^ Module.finrank K L = algebraMap K E (algebraMap R K π)) :
     ∃ ρ : L, ρ ^ Module.finrank K L = algebraMap K L (algebraMap R K π) := by
   let M := IntermediateField.normalClosure K E F
-  letI : Algebra L M := ((algebraMap E M).comp (algebraMap L E)).toAlgebra
-  haveI : IsScalarTower K L M := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra L M := ((algebraMap E M).comp (algebraMap L E)).toAlgebra
+  have : IsScalarTower K L M := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply K E M, IsScalarTower.algebraMap_apply K L E]; rfl
   refine exists_pow_eq_of_isGalois K L M hH hπ hn (algebraMap E M ρ) ?_
   rw [← map_pow, hρ, ← IsScalarTower.algebraMap_apply]
@@ -389,18 +389,18 @@ theorem exists_pow_finrank_eq {R : Type} (K : Type u_1) [CommRing R] [IsDomain R
     (hn : IsUnit (Module.finrank K L : R)) :
     ∃ ρ : L, ρ ^ Module.finrank K L = algebraMap K L (algebraMap R K π) := by
   let F := SeparableClosure L
-  haveI : Algebra.IsSeparable K F := Algebra.IsSeparable.trans K L F
-  haveI : IsSepClosure K F := ⟨inferInstance, inferInstance⟩
-  haveI : IsGalois K F := inferInstance
-  haveI : NeZero ((Module.finrank K L : ℕ) : F) := ⟨by
+  have : Algebra.IsSeparable K F := Algebra.IsSeparable.trans K L F
+  have : IsSepClosure K F := ⟨inferInstance, inferInstance⟩
+  have : IsGalois K F := inferInstance
+  have : NeZero ((Module.finrank K L : ℕ) : F) := ⟨by
     simpa using ((hn.map (algebraMap R K)).map (algebraMap K F)).ne_zero⟩
   obtain ⟨ρ, hρ⟩ := IsSepClosed.exists_pow_nat_eq (algebraMap K F (algebraMap R K π))
     (Module.finrank K L)
   let E := IntermediateField.adjoin L {ρ}
-  haveI : FiniteDimensional L E :=
+  have : FiniteDimensional L E :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral ρ)
-  haveI : FiniteDimensional K E := Module.Finite.trans L E
-  haveI : IsScalarTower K E F := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FiniteDimensional K E := Module.Finite.trans L E
+  have : IsScalarTower K E F := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact exists_pow_eq_of_tower K L E F hH hπ hn
     ⟨ρ, IntermediateField.mem_adjoin_simple_self L ρ⟩ (Subtype.ext hρ)
 
@@ -441,7 +441,7 @@ theorem exists_isPrimitiveRoot {R : Type*} [CommRing R] [HenselianLocalRing R]
     [IsAlgClosed (ResidueField R)] {n : ℕ} (hn : IsUnit (n : R)) :
     ∃ v : R, IsPrimitiveRoot v n := by
   have : NeZero (n : ResidueField R) := ⟨by simpa using (hn.map (residue R)).ne_zero⟩
-  obtain ⟨c, hc⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (ResidueField R) n
+  obtain ⟨c, hc⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (ResidueField R) n
   obtain ⟨v, hv, hvc⟩ := exists_pow_eq_of_residue hn isUnit_one c (by simpa using hc.pow_eq_one)
   refine ⟨v, hv, fun d hd => hc.dvd_of_pow_eq_one d ?_⟩
   rw [← hvc, ← map_pow, hd, map_one]
@@ -458,11 +458,11 @@ theorem irreducible_X_pow_sub_C {R : Type*} (K : Type*) [CommRing R] [IsDomain R
       exact fun h => hπ.not_isUnit (isUnit_of_dvd_one h)
     · intro i hi
       rw [degree_X_pow_sub_C (Nat.pos_of_ne_zero hn), Nat.cast_lt] at hi
-      rw [coeff_sub, coeff_X_pow, if_neg hi.ne, coeff_C, Ideal.mem_span_singleton]
+      rw [coeff_sub, coeff_X_pow, ite_eq_right hi.ne, coeff_C, Ideal.mem_span_singleton]
       split_ifs <;> simp
     · rw [degree_X_pow_sub_C (Nat.pos_of_ne_zero hn)]
       exact_mod_cast Nat.pos_of_ne_zero hn
-    · rw [coeff_sub, coeff_X_pow, if_neg hn.symm, coeff_C, if_pos rfl, Ideal.span_singleton_pow,
+    · rw [coeff_sub, coeff_X_pow, ite_eq_right hn.symm, coeff_C, ite_eq_left rfl, Ideal.span_singleton_pow,
         Ideal.mem_span_singleton, zero_sub, dvd_neg]
       intro h
       have : π * π ∣ π * 1 := by simpa [sq] using h

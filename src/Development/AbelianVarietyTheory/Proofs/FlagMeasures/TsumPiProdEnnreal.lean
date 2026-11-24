@@ -62,7 +62,7 @@ theorem tsum_pi_prod_ennreal : ∀ {ι : Type} [Fintype ι] {X : ι → Type} (�
     (P := fun ι _ => ∀ {X : ι → Type} (φ : ∀ i, X i → ℝ≥0∞),
       ∑' x : ∀ i, X i, ∏ i, φ i (x i) = ∏ i, ∑' y, φ i y) ?_ ?_ ?_ ι
   · intro α β _ e h X φ
-    letI : Fintype α := Fintype.ofEquiv β e.symm
+    let : Fintype α := Fintype.ofEquiv β e.symm
     have h1 := h (X := fun a => X (e a)) (fun a => φ (e a))
     rw [← (Equiv.piCongrLeft X e).tsum_eq]
     calc ∑' x : ∀ a, X (e a), ∏ b, φ b (Equiv.piCongrLeft X e x b)

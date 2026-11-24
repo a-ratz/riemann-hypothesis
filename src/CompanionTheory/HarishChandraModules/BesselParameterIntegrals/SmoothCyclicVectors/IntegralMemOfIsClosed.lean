@@ -97,7 +97,7 @@ end General
 theorem integral_mem_of_isClosed {α V : Type*} [MeasurableSpace α] [NormedAddCommGroup V]
     [NormedSpace ℂ V] [CompleteSpace V] {μ : Measure α} (S : Submodule ℂ V)
     (hS : IsClosed (S : Set V)) {f : α → V} (hf : ∀ a, f a ∈ S) : ∫ a, f a ∂μ ∈ S := by
-  haveI : CompleteSpace S := hS.completeSpace_coe
+  have : CompleteSpace S := hS.completeSpace_coe
   have := S.subtypeₗᵢ.integral_comp_comm (μ := μ) (fun a => (⟨f a, hf a⟩ : S))
   simp only [Submodule.coe_subtypeₗᵢ, Submodule.coe_subtype] at this
   rw [this]
@@ -428,7 +428,7 @@ theorem exists_approx (hG : IsMatGroup G) (h : RepOn G σ) (hiso : ∀ g ∈ G, 
     have hc' : HasCompactSupport fun g : MG G hG => φ g.mat :=
       HasCompactSupport.intro (isCompact_supp hc) fun g hg => image_eq_zero_of_notMem_tsupport hg
     set c : ℝ := ∫ g : MG G hG, φ g.mat ∂haar with hcdef
-    have hcpos : 0 < c := hφ'.integral_pos_of_hasCompactSupport_nonneg_nonzero hc'
+    have hcpos : 0 < c := hφ'.integral_pos_of_hasCompactSupport_nonneg_ne_zero hc'
       (fun g => hφ0 _) (x := 1) (by rw [hφ1]; exact one_ne_zero)
     refine ⟨c⁻¹ • ∫ g : MG G hG, φ g.mat • J (σ g.mat x) ∂haar,
       S.smul_of_tower_mem _ (key φ hφ hc), ?_⟩

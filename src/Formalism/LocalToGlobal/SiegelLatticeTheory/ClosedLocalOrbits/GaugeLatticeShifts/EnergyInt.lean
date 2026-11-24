@@ -159,8 +159,8 @@ theorem lint_prod {D : D7} (X : HidaSetting D) (u u' : D.what₂.Word) (γ : X.B
   have hm : ∀ v, Measurable (fun x : Formalism.REAL.UJ (X.B.I.ε v) =>
       ‖X.Wloc u v x‖ₑ * ‖X.Wloc u' v ((γ v)⁻¹ * x)‖ₑ) := by
     intro v
-    exact ((X.Wloc_cont u v).enorm.measurable).mul
-      (((X.Wloc_cont u' v).comp (continuous_const.mul continuous_id)).enorm.measurable)
+    exact ((X.Wloc_cont u v).eNorm.measurable).mul
+      (((X.Wloc_cont u' v).comp (continuous_const.mul continuous_id)).eNorm.measurable)
   rw [← Formalism.L2.SG.RealObj.InfCut.ProductExactness.PiM.lintegral_pi_prod (fun v => Formalism.REAL.muG (X.B.I.ε v)) _ hm]
   simp_rw [Formalism.L2.SG.Pf.WuDec.enorm_Wu, ← Finset.prod_mul_distrib]
   rfl

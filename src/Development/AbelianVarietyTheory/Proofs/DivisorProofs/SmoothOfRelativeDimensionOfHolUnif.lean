@@ -71,8 +71,8 @@ namespace GlobalTheory.RealMult.Obj
 
 theorem holUnif_dim_eq_of_linear {A : Over (Sp ℂ)} [GrpObj A] {L L' : LB A.left} {g g' : ℕ} (u : HolUnif A L g)
     (u' : HolUnif A L' g') (F : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ)) (hF : ∀ z, u'.ex (F z) = u.ex z) : g = g' := by
-  haveI := u.discrete
-  haveI := u'.discrete
+  have := u.discrete
+  have := u'.discrete
   have hinj := AnyUnif.injective_of_ker_le_discrete u.Λ F fun z hz => by
     rw [← u.ker, ← hF, hz]
     exact (u'.ker 0).2 u'.Λ.zero_mem
@@ -110,8 +110,8 @@ namespace GlobalTheory.TorusAction
 
 theorem smoothOfRelativeDimension_of_holUnif (A : Over (Sp ℂ)) [GrpObj A] (hA : IsAbelianScheme A) {L : LB A.left}
     {g : ℕ} (u : HolUnif A L g) : SmoothOfRelativeDimension g A.hom := by
-  haveI := hA.comm
-  haveI := hA.proper
+  have := hA.comm
+  have := hA.proper
   obtain ⟨d, hd⟩ := GlobalTheory.AbelianDim.exists_relDim ℂ A hA
   obtain ⟨H, m, s, hH, hs, -⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmple ℂ A hA
   have hamp : Out.RelAmple A H :=

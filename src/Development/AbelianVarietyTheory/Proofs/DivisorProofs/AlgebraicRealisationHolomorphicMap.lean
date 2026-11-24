@@ -95,7 +95,7 @@ theorem apply_basis_eq_smul {L V κ : Type} [Field L] [AddCommGroup V] [Module L
       rcases mul_eq_zero.mp h2 with h | h
       · exact absurd (hμ (sub_eq_zero.mp h)) hj
       · exact h
-    rw [h0, map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply, if_neg (Ne.symm hj),
+    rw [h0, map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply, ite_eq_right (Ne.symm hj),
       smul_zero]
 
 theorem comm_of_eigenbasis {L V κ : Type} [Field L] [AddCommGroup V] [Module L V]
@@ -128,7 +128,7 @@ theorem comm_of_separable_algClosed {L ι : Type} [Field L] [IsAlgClosed L] [Fin
   have hli := Module.End.eigenvectors_linearIndependent f (s : Set L) v hv
   have hc : Fintype.card (s : Set L) = Module.finrank L (ι → L) := by
     simp [hcard]
-  haveI : Nonempty (s : Set L) := by
+  have : Nonempty (s : Set L) := by
     rw [← Fintype.card_pos_iff, hc, Module.finrank_fintype_fun_eq_card]; exact Fintype.card_pos
   let b := basisOfLinearIndependentOfCardEqFinrank hli hc
   have hb : ∀ k, f (b k) = (k : L) • b k := fun k => by

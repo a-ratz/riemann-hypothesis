@@ -164,7 +164,7 @@ private lemma posDef_conj (k : KG ε) {x : Matrix (Fin n) (Fin n) ℂ} (hx : x.P
 private lemma cont_phiK (μ : Fin n → ℤ) {x : Matrix (Fin n) (Fin n) ℂ} (hx : x.PosDef) :
     Continuous (phiK μ x : KG ε → ℝ) := by
   have hm : Continuous (fun k : KG ε => toMK k) :=
-    (continuous_toM ε).comp continuous_subtype_val
+    (continuous_toM ε).comp continuous_subtypeVal
   have hz : Continuous (fun k : KG ε => toMK k⁻¹ * x * toMK k) :=
     ((hm.comp continuous_inv).mul continuous_const).mul hm
   refine Complex.continuous_re.comp ?_
@@ -173,7 +173,7 @@ private lemma cont_phiK (μ : Fin n → ℤ) {x : Matrix (Fin n) (Fin n) ℂ} (h
 
 private lemma cK_mul {Λ : Fin n → ℝ} (T : KType ε Λ) (a b : KG ε) :
     cK T (a⁻¹ * b) = ‖⟪T.op a T.w, T.op b T.w⟫_ℂ‖ := by
-  rw [cK, CompactHaarProbability.op_mul, KType_op_inv_eq_adjoint, ContinuousLinearMap.mul_apply,
+  rw [cK, CompactHaarProbability.op_mul, KType_op_inv_eq_adjoint, mul_apply_eq_comp,
     ContinuousLinearMap.adjoint_inner_right]
 
 theorem hsPs : HsPs := by

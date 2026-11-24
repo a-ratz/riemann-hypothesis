@@ -61,7 +61,7 @@ theorem valuation_one_sub_pow_le {L : Type} [Field L] (v : Valuation L ℝ≥0) 
     apply Valuation.map_sum_le
     intro i _
     rw [v.map_pow]
-    exact pow_le_one₀ (zero_le') hη
+    exact pow_le_one₀ (zero_le) hη
   calc v (1 - η) * v (∑ i ∈ Finset.range n, η ^ i) ≤ v (1 - η) * 1 := by gcongr
     _ = v (1 - η) := mul_one _
 
@@ -72,7 +72,7 @@ theorem valuation_sub_one_pow_eq_prime :
   have hone : ∀ η : L, η ^ p = 1 → v η ≤ 1 := by
     intro η hη
     have h1 : v η ^ p = 1 := by rw [← v.map_pow, hη, v.map_one]
-    exact le_of_eq ((pow_eq_one_iff_of_nonneg (zero_le') hp.ne_zero).mp h1)
+    exact le_of_eq ((pow_eq_one_iff_of_nonneg (zero_le) hp.ne_zero).mp h1)
   obtain ⟨n, rfl⟩ : ∃ n, p = n + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.pos).symm⟩
   have hprod := hζ.prod_one_sub_pow_eq_order
   have hterm : ∀ k ∈ Finset.range n, v (1 - ζ ^ (k + 1)) = v (ζ - 1) := by

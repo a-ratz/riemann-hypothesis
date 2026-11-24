@@ -164,7 +164,7 @@ theorem finrank_ker_of_diag [IsDomain O] [IsPrincipalIdealRing O] [IsFractionRin
     [Module.Finite O Q] (f : Q →ₗ[O] Q) (S : Multiset F) (h : DiagWith (f.baseChange F) S) (c : O) :
     Module.finrank O (LinearMap.ker (f - c • LinearMap.id)) = S.count (algebraMap O F c) := by
   obtain ⟨m, b, e, he, rfl⟩ := h
-  haveI : Module.Flat O F := IsLocalization.flat F (nonZeroDivisors O)
+  have : Module.Flat O F := IsLocalization.flat F (nonZeroDivisors O)
   have h1 : LinearMap.ker (AlgebraTensorModule.lTensor F F (f - c • LinearMap.id)) =
       Submodule.span F (b '' {s | algebraMap O F c = e s}) := by
     have h2 : ∀ s, AlgebraTensorModule.lTensor F F (f - c • LinearMap.id) (b s) =
@@ -318,7 +318,7 @@ theorem spanIsLines_of_onto {N : Type} (L : N → ℤ → M) {r : ℕ} (u : Fin 
     have h3 := congrFun h0 k
     rw [Matrix.mulVec, dotProduct, Finset.sum_eq_single k] at h3
     · change constantCoeff (Mx k k) * v k = 0 at h3
-      rw [heq k k rfl, if_pos rfl, one_mul] at h3
+      rw [heq k k rfl, ite_eq_left rfl, one_mul] at h3
       exact (Finset.mem_filter.1 hk).2 h3
     · intro s _ hs
       change constantCoeff (Mx k s) * v s = 0
@@ -326,7 +326,7 @@ theorem spanIsLines_of_onto {N : Type} (L : N → ℤ → M) {r : ℕ} (u : Fin 
       · rw [hvs, mul_zero]
       rcases (hmax s (by simpa using hvs)).lt_or_eq with h | h
       · rw [hlt k s h, zero_mul]
-      · rw [heq k s h, if_neg (Ne.symm hs), zero_mul]
+      · rw [heq k s h, ite_eq_right (Ne.symm hs), zero_mul]
     · simp
   intro y
   constructor
@@ -774,7 +774,7 @@ theorem finsum_multV_neg (ρ : Representation LL G V) (τ : K →ₐ[Qp] LL)
       ∑ a ∈ (Finset.range N).map e, multV PD ρ τ a := by
     apply finsum_mem_eq_sum_of_inter_support_eq (s := Set.Iio (0 : ℤ))
     ext a
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Finset.coe_map, Finset.coe_range,
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Finset.coe_map, Finset.coe_range,
       Set.mem_image, Set.mem_Iio, Function.mem_support, he]
     constructor
     · rintro ⟨ha, hs⟩
@@ -850,17 +850,17 @@ end Sat
 
 theorem blochKato_dimension_saturation_unramified : ∀ D : D7, Formalism.MainNotions.tableLineDegreeTwo.adm19 D := by
   intro D l _ K LL hA
-  haveI := K.2
-  haveI := LL.2
+  have := K.2
+  have := LL.2
   refine ⟨?_, ?_, ?_⟩
   · intro V _ _ _ _ _ _ _ _ _ ρ hc hcrys
-    letI : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
+    let : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
     have hBK := GlobalTheory.BlochKatoTied.blochKatoDim_of_tied l (D.loc l) (D.locA l) (D.locT l) K LL
       (GlobalTheory.H1fGeneratorBoundAlt.splits_of_good hA.2.2) V ρ hc hcrys
     rw [hBK, finsum_eq_sum_of_fintype]
     congr 1
     refine Finset.sum_congr rfl fun τ _ => ?_
-    haveI := ((GlobalTheory.Per.Components.components_finrank l (D.loc l) (D.locA l) (D.locT l) K LL V ρ).1 τ).1
+    have := ((GlobalTheory.Per.Components.components_finrank l (D.loc l) (D.locA l) (D.locT l) K LL V ρ).1 τ).1
     exact (finsum_multV_neg _ ρ τ).symm
   · intro V _ _ _ _ _ _ _ _ _ _ _ ρ L hc _ κ a ha h
     refine mem_H1fT_of_smul _ ρ L hc κ a ?_ h
@@ -940,7 +940,7 @@ theorem genFix_of_dense (S : Sit) (hT2 : ∀ T : LocLat S.G S.Qp S.LL S.O, T2Spa
   let St : Subgroup S.G :=
     { carrier := {g | T.ρ g (t : T.V) = t}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hb, ha]
       one_mem' := by simp
       inv_mem' := fun {a} ha => by
@@ -1138,9 +1138,9 @@ theorem dense_PGen (LT : LocTheory) (HW : HWOf LT) (AI : LocAinf l (LT l)) (K LL
     rw [map_sub, map_one]
     simpa using this
   have hu : ‖χ' g₁ - 1‖ = (l : ℝ)⁻¹ := norm_of_v_one P LL _ hv
-  haveI : CompactSpace ↥(GK K) :=
+  have : CompactSpace ↥(GK K) :=
     isCompact_iff_compactSpace.1 (InfiniteGalois.fixingSubgroup_isClosed K.1).isCompact
-  have hχc : Continuous χ' := (chiQ_cont P).comp continuous_subtype_val
+  have hχc : Continuous χ' := (chiQ_cont P).comp continuous_subtypeVal
   let Pg : Subgroup ↥(GK K) := (Subgroup.closure (insert W.gamK (W.DelF : Set W.Gam))).comap W.resΓ
   have hPg : (Pg : Set ↥(GK K)) = PGen (sit LT HW l AI K 1 LL h) := rfl
   let Q := Pg.topologicalClosure

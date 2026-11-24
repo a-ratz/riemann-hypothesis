@@ -91,7 +91,7 @@ theorem sb_opU (b : R) {φ : (ι → R) → ℂ} (hφ : SB φ) : SB (opU ψ h B 
   obtain ⟨L, hL, hKL⟩ := co_cpt hD ((hL₀.1.image (continuous_const_smul (b * h))).insert (b • u))
   refine ⟨{y | y - u ∈ L₀ ⊓ perpG hD L}, isOpen_coset u (hL₀.inf (co_perp hD hL).2).2, by simp, fun y hy => ?_⟩
   obtain ⟨l, rfl⟩ : ∃ l, y = u + l := ⟨y - u, by abel⟩
-  simp only [mem_setOf_eq, add_sub_cancel_left] at hy
+  simp only [mem_ofPred_eq, add_sub_cancel_left] at hy
   have h1 : chiB ψ B (b • u) l = 1 := hy.2 _ (hKL (mem_insert _ _))
   have h2 : chiB ψ B ((b * h) • l) l = 1 := hy.2 _ (hKL (mem_insert_of_mem _ ⟨l, hy.1, rfl⟩))
   have e : b * qf h B (u + l) = b * qf h B u + (b • u) ⬝ᵥ (B *ᵥ l) + ((b * h) • l) ⬝ᵥ (B *ᵥ l) := by
@@ -151,7 +151,7 @@ theorem impl_D (a : Rˣ) {m : ℝ} (hm : 0 < m)
   · let e : (ι → R) ≃ᵐ (ι → R) := (Homeomorph.smul a).toMeasurableEquiv
     have he : μ = ENNReal.ofReal (m ^ 2) • μ.map e := by
       ext s hs
-      rw [Measure.smul_apply, e.map_apply, smul_eq_mul, ← hμ _ (e.measurable hs)]
+      rw [smul_apply, e.map_apply, smul_eq_mul, ← hμ _ (e.measurable hs)]
       exact congrArg μ (e.surjective.image_preimage s).symm
     conv_rhs => rw [he]
     rw [integral_smul_measure, integral_map_equiv, ENNReal.toReal_ofReal (sq_nonneg m), smul_eq_mul,

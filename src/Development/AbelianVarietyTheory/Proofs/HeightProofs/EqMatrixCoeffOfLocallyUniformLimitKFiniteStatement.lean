@@ -230,7 +230,7 @@ theorem exists_chart {E : Type} [NormedRing E] [NormedAlgebra ℝ E] [FiniteDime
     (hσ : ∀ a, σ (σ a) = a) (hm : ∀ a b, σ (a * b) = σ b * σ a) (h1 : σ 1 = 1) :
     ∃ (N : ℕ) (Y : Fin N → E) (Ψ : E → Fin N → ℝ), (∀ i, σ (Y i) = -Y i) ∧ Tendsto Ψ (𝓝 1) (𝓝 0) ∧
       ∀ᶠ a in 𝓝 (1 : E), σ a * a = 1 → (List.ofFn fun i => NormedSpace.exp (Ψ a i • Y i)).prod = a := by
-  have : CompleteSpace E := FiniteDimensional.complete ℝ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℝ E
   let : NormedAlgebra ℚ E := NormedAlgebra.restrictScalars ℚ ℝ E
   let S : Submodule ℝ E := LinearMap.ker (σ + LinearMap.id)
   have hS : ∀ X, X ∈ S ↔ σ X = -X := fun X => by simp [S, add_eq_zero_iff_eq_neg]
@@ -294,7 +294,7 @@ theorem exists_chart {E : Type} [NormedRing E] [NormedAlgebra ℝ E] [FiniteDime
     exact this.comp hPt
   refine ⟨_, e, fun a => Ψ (P a), he, p1.comp hPt, ?_⟩
   filter_upwards [hPt.eventually p3, hnear, ht.eventually hnear] with a q1 q2 q3 ha
-  haveI : IsArtinianRing E := IsArtinianRing.of_finite ℝ E
+  have : IsArtinianRing E := IsArtinianRing.of_finite ℝ E
   exact GlobalTheory.UnitaryChart.eq_of_skew_eq (hU _).1 (mul_eq_one_comm.1 ha) (hP3 _ _ q1) q3 q2
 
 variable {n : ℕ} {ε : Fin n → Bool}
@@ -302,8 +302,8 @@ variable {n : ℕ} {ε : Fin n → Bool}
 theorem exists_chart_UJ (ε : Fin n → Bool) :
     ∃ (N : ℕ) (Y : Fin N → Mx n) (Ψ : Mx n → Fin N → ℝ), (∀ i, Y i ∈ lieSet ε) ∧ Tendsto Ψ (𝓝 1) (𝓝 0) ∧
       ∀ᶠ a in 𝓝 (1 : Mx n), a ∈ UJset ε → (List.ofFn fun i => NormedSpace.exp (Ψ a i • Y i)).prod = a := by
-  letI : NormedRing (Mx n) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Mx n) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Mx n) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Mx n) := Matrix.linftyOpNormedAlgebra
   have h2 := Jm_mul_self ε
   have hH : (Jm ε)ᴴ = Jm ε := by
     have h : (Jm ε)ᴴ * Jm ε = 1 := (maximal_compact_facts n ε).2.2.1.1.1
@@ -509,8 +509,8 @@ theorem exists_intertwiner {L V M : Type} [AddCommGroup V] [Module ℂ V] [AddCo
       ∑ i, c i • (u i).foldr (fun y => τ y) m₀ = 0) :
     ∃ T : Fin d → (V →ₗ[ℂ] M), (∀ a v x, T a (ρ x v) = τ x (T a v)) ∧ ∑ a, T a (w a) = m₀ ∧
       ∀ a v, ∃ (m : ℕ) (c : Fin m → ℂ) (u : Fin m → List L), T a v = ∑ i, c i • (u i).foldr (fun y => τ y) m₀ := by
-  letI : Module (FreeAlgebra ℂ L) V := Module.compHom V (FreeAlgebra.lift ℂ ρ).toRingHom
-  letI : Module (FreeAlgebra ℂ L) M := Module.compHom M (FreeAlgebra.lift ℂ τ).toRingHom
+  let : Module (FreeAlgebra ℂ L) V := Module.compHom V (FreeAlgebra.lift ℂ ρ).toRingHom
+  let : Module (FreeAlgebra ℂ L) M := Module.compHom M (FreeAlgebra.lift ℂ τ).toRingHom
   have eV : ∀ (α : FreeAlgebra ℂ L) (v : V), α • v = FreeAlgebra.lift ℂ ρ α v := fun _ _ => rfl
   have eM : ∀ (α : FreeAlgebra ℂ L) (v : M), α • v = FreeAlgebra.lift ℂ τ α v := fun _ _ => rfl
   have cV : ∀ (c : ℂ) (v : V), algebraMap ℂ (FreeAlgebra ℂ L) c • v = c • v := fun c v => by
@@ -534,7 +534,7 @@ theorem exists_intertwiner {L V M : Type} [AddCommGroup V] [Module ℂ V] [AddCo
         rwa [eV, FreeAlgebra.lift_ι_apply] at this) h0
       rw [eq_top_iff] at this ⊢
       exact fun v _ => (show v ∈ W from this trivial)
-  haveI : IsSemisimpleModule (FreeAlgebra ℂ L) V := by
+  have : IsSemisimpleModule (FreeAlgebra ℂ L) V := by
     refine (isSemisimpleModule_iff _ _).2 ⟨fun N => ?_⟩
     rcases hs N with rfl | rfl
     exacts [⟨⊤, isCompl_bot_top⟩, ⟨⊥, isCompl_top_bot⟩]
@@ -850,8 +850,8 @@ theorem CSm.continuous {f : Mx n → ℂ} (h : CSm ε f) : Continuous fun g : UJ
 
 theorem cSm_of_contDiff (φ : Mx n → ℂ) (hφ : ContDiff ℝ ∞ (fun y : Fin n → Fin n → ℂ => φ (Matrix.of y))) :
     CSm ε φ := by
-  letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
   have hφ' : ContDiff ℝ ∞ φ := by
     let L : Mx n →L[ℝ] (Fin n → Fin n → ℂ) :=
       LinearMap.toContinuousLinearMap (Matrix.ofLinearEquiv ℝ).symm.toLinearMap
@@ -880,7 +880,7 @@ theorem IsTest.integrable {φ F : Mx n → ℂ} (hφ : IsTest ε φ) (hF : CSm �
 
 theorem exists_adjoint_ltr (x : Ltr ε) {φ : Mx n → ℂ} (hφ : IsTest ε φ) : ∃ ψ, IsTest ε ψ ∧ ∀ F, CSm ε F →
     ∫ g : UJ ε, φ (umat g) * ltrF x F (umat g) ∂(muG ε) = ∫ g : UJ ε, ψ (umat g) * F (umat g) ∂(muG ε) := by
-  haveI : (muG ε).IsMulRightInvariant := ⟨fun g => indefinite_unitary_unimodular n ε g⟩
+  have : (muG ε).IsMulRightInvariant := ⟨fun g => indefinite_unitary_unimodular n ε g⟩
   rcases x with ⟨X, hX⟩ | ⟨k, hk⟩
   · let c : ℝ → UJ ε := fun t => mkU (NormedSpace.exp (t • X)) (exp_mem_UJ hX t)
     have hc : Continuous c := (umat_emb ε).isInducing.continuous_iff.2 (continuous_exp_smul X)
@@ -955,7 +955,7 @@ theorem eq_zero_of_test (H : UJ ε → ℂ) (hH : Continuous H)
   have h1 := integral_re hi
   rw [integral_const_mul, h _ ht] at h1
   have h2 : 0 < ∫ g : UJ ε, φ (Matrix.of.symm (umat g)) * (star (H y) * H g).re ∂(muG ε) := by
-    refine (hψ.mul hc).integral_pos_of_hasCompactSupport_nonneg_nonzero (x := y) hψc.mul_right (fun g => ?_) ?_
+    refine (hψ.mul hc).integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := y) hψc.mul_right (fun g => ?_) ?_
     · by_cases h0 : φ (Matrix.of.symm (umat g)) = 0
       · rw [h0, zero_mul]; exact le_rfl
       · exact mul_nonneg (hφr ⟨_, rfl⟩).1 (le_of_lt (hVU (hφs (subset_tsupport _ h0))))

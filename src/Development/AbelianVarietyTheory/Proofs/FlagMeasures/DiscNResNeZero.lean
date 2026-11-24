@@ -374,7 +374,7 @@ theorem encard_le_mul {α β : Type*} (S : Set α) (T : Set β) (f : α → β) 
     ((S.encard : ℕ∞) : ℝ≥0∞) ≤ a * b := by
   have hS : S = ⋃ t : T, {s ∈ S | f s = t} := by
     ext s
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
     exact ⟨fun h => ⟨⟨f s, hm s h⟩, h, rfl⟩, fun ⟨_, h, _⟩ => h⟩
   calc ((S.encard : ℕ∞) : ℝ≥0∞) = ∑' _ : (⋃ t : T, {s ∈ S | f s = t} : Set α), (1 : ℝ≥0∞) := by
         rw [← hS, ENNReal.tsum_set_one]
@@ -406,10 +406,10 @@ theorem cf_nonneg (K : Type) [Field K] [NumberField K] : 0 ≤ cf K := by
 theorem sub_count [_root_.NumberField.IsTotallyComplex K] (N : Submodule (𝓞 K) V) (hN : N.FG) (y : ℕ) (hy : 1 ≤ y) :
     ((({M : Submodule (𝓞 K) V | M ≤ N ∧ GlobalTheory.Mass.idxN N M = y}).encard : ℕ∞) : ℝ≥0∞) ≤
       ENNReal.ofReal ((y : ℝ) ^ ((Module.finrank K V : ℝ) + cf K)) := by
-  haveI : Module.Finite (𝓞 K) N := Module.Finite.iff_fg.2 hN
-  haveI : Module.IsTorsionFree (𝓞 K) V := Module.IsTorsionFree.trans_faithfulSMul (𝓞 K) K V
-  haveI : Module.Projective (𝓞 K) N := by
-    haveI : Module.FinitePresentation (𝓞 K) N := Module.finitePresentation_of_finite _ _
+  have : Module.Finite (𝓞 K) N := Module.Finite.iff_fg.2 hN
+  have : Module.IsTorsionFree (𝓞 K) V := Module.IsTorsionFree.trans_faithfulSMul (𝓞 K) K V
+  have : Module.Projective (𝓞 K) N := by
+    have : Module.FinitePresentation (𝓞 K) N := Module.finitePresentation_of_finite _ _
     exact Module.Flat.projective_of_finitePresentation
   have hf : Module.finrank ℚ K = 2 * InfinitePlace.nrComplexPlaces K := IsTotallyComplex.finrank K
   obtain ⟨hfin, hc⟩ := Formalism.HermitianLatticeCounting.P.sublattice_count_alt K N _ y hf hy
@@ -435,8 +435,8 @@ theorem sub_count [_root_.NumberField.IsTotallyComplex K] (N : Submodule (𝓞 K
 omit [FiniteDimensional K V] in
 theorem isLattice_of_idx {L M : Submodule (𝓞 K) V} (hL : Submodule.IsFullLattice K L) (hM : M ≤ L)
     (h : idx L M ≠ 0) : Submodule.IsFullLattice K M := by
-  haveI : Submodule.IsFullLattice K L := hL
-  haveI : Submodule.IsLattice K M := Submodule.IsLattice.mono K hM
+  have : Submodule.IsFullLattice K L := hL
+  have : Submodule.IsLattice K M := Submodule.IsLattice.mono K hM
   refine ⟨?_⟩
   rw [← Submodule.IsFullLattice.span_eq_top (A := K) (M := L)]
   refine le_antisymm (Submodule.span_mono hM) ?_
@@ -516,7 +516,7 @@ theorem dat_count (H : HermSpace K V) (hK : Formalism.HermitianLatticesTheory.Is
     ((({d | IsDat H g L₀ j x d ∧ fixLat d.2 ⊓ rs (𝓞 K) U = M}).encard : ℕ∞) : ℝ≥0∞) ≤
       ENNReal.ofReal ((x : ℝ) ^ (2 * (((Module.finrank K V) - Module.finrank K U : ℕ) : ℝ) + cf K)) *
         ((x : ℝ≥0∞) * D₀) ^ (3 * (2 * j + 1)) := by
-  haveI : IsTotallyComplex K := hK.1
+  have : IsTotallyComplex K := hK.1
   refine encard_le_mul _ _ (fun d => fixLat d.2) _ _ ?_ (_root_.GlobalTheory.TraceCount.main K V L₀ M U x hL.1.toIsLattice hx) ?_
   · rintro d ⟨hd, hM⟩
     exact ⟨fixLat_le hd, hd.2.2.2.1, hM⟩
@@ -588,7 +588,7 @@ theorem prod_bound (B c : ℝ) (x x' D s e C : ℕ) (hB : 0 ≤ B) (hx : 1 ≤ x
 
 theorem main : MinkowskiBound → ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (H : HermSpace K V), Formalism.HermitianLatticesTheory.IsCMUnram K → GlobalTheory.Mass.PD H.B.flip → ∀ (L₀ : Submodule (𝓞 K) V) (g j D₀ : ℕ), GlobalTheory.Mass.IsIntLat H.B.flip L₀ → GlobalTheory.Mass.discN H.B.flip L₀ = D₀ → GenBy (Formalism.HermitianLatticesTheory.dual H.B.flip L₀) L₀ 1 → 2 ≤ g → ∀ (x x' s n : ℕ) (U : Submodule K V), 1 ≤ x → 1 ≤ x' → 1 ≤ n → Module.finrank K U + s = (Module.finrank K V) → GlobalTheory.Mass.discN (GlobalTheory.Mass.hRes H.B.flip U) (GlobalTheory.Mass.latIn U L₀) = n → ((({p ∈ Trip H g L₀ j x x' | fixSp p.2.2 = U}).encard : ℕ∞) : ℝ≥0∞) ≤ if (n : ℝ) ≤ (D₀ : ℝ) * x * x' then ENNReal.ofReal (((2 / (g : ℝ)) ^ (2 * s * (Formalism.HermitianLatticesTheory.fDeg K)) * D₀ * x * x' / n) ^ (((Module.finrank K V) : ℝ) / 2) * ((x : ℝ) * x') ^ (2 * (s : ℝ) + 2 * cf K + 1) * ((x : ℝ) * x' * (D₀ : ℝ) ^ 2) ^ (3 * (2 * j + 1)) * ((4 * s * (Formalism.HermitianLatticesTheory.fDeg K) : ℕ) : ℝ) ^ (4 * s * (Formalism.HermitianLatticesTheory.fDeg K))) else 0 := by
   intro hM K V _ _ _ _ _ _ _ _ H hK hP L₀ g j D₀ hL hD hG hg x x' s n U hx hx' hn hs hdisc
-  haveI : IsTotallyComplex K := hK.1
+  have : IsTotallyComplex K := hK.1
   have hsub : Module.finrank K V - Module.finrank K U = s := by omega
   set A : ℝ := (2 / (g : ℝ)) ^ (2 * s * (Formalism.HermitianLatticesTheory.fDeg K)) * D₀ * x * x' with hA
   set N := GlobalTheory.Mass.latIn U L₀ with hN
@@ -884,7 +884,7 @@ theorem mass_small [StarRing E] (hK : Formalism.HermitianLatticesTheory.IsCMUnra
       (20 * (Formalism.HermitianLatticesTheory.fDeg E : ℝ) * (2 * Formalism.HermitianLatticesTheory.vInv E) ^ 2) ^ (16 * Formalism.HermitianLatticesTheory.fDeg E) := by
   have htc := hK.1
   obtain ⟨σ⟩ : Nonempty (E →+* ℂ) := inferInstance
-  haveI : IsCMField E := by
+  have : IsCMField E := by
     refine LeastExponentCompare.isCMField_of_conj E star hK.2.1 ?_
     by_contra hne
     push Not at hne
@@ -1198,7 +1198,7 @@ theorem exponents (n D k s l : ℝ) (hn : 1 ≤ n) (hD : 1 ≤ D) (hs : 0 ≤ s)
 
 private theorem finrank_eq_two_mul_fDeg (K : Type) [Field K] [NumberField K] [StarRing K] (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) :
     Module.finrank ℚ K = 2 * Formalism.HermitianLatticesTheory.fDeg K := by
-  haveI := hK.1
+  have := hK.1
   rw [IsTotallyComplex.finrank]
   unfold Formalism.HermitianLatticesTheory.fDeg
   rw [NumberField.InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces, IsTotallyComplex.nrRealPlaces_eq_zero,
@@ -1570,7 +1570,7 @@ theorem exists_goodAt {A B : Submodule R W} (S : Finset (Ideal R)) (hS : ∀ P �
       rintro ⟨Q, hQ, hle⟩
       have := (hS Q (Finset.mem_insert_of_mem hQ)).eq_of_le hP.ne_top hle
       exact hPS (this ▸ hQ)
-    obtain ⟨y, hy, hyP⟩ := SetLike.not_le_iff_exists.1 hn
+    obtain ⟨y, hy, hyP⟩ := IsConcreteLE.not_le_iff_exists.1 hn
     obtain ⟨a, e, he, hae⟩ := hP.exists_inv hyP
     refine ⟨e • v + (a * y) • w, B.add_mem (B.smul_mem _ hv) (B.smul_mem _ hw), fun Q hQ => ?_⟩
     rcases Finset.mem_insert.1 hQ with rfl | hQ'
@@ -1671,7 +1671,7 @@ theorem discN_top (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (𝓞 K) V) 
 
 theorem isIntLat_latIn (h : V →ₗ⋆[K] V →ₗ[K] K) {L : Submodule (𝓞 K) V} (hL : IsIntLat h L)
     (U : Submodule K V) : IsIntLat (hRes h U) (latIn U L) := by
-  haveI : Submodule.IsLattice K (latIn U L) := by
+  have : Submodule.IsLattice K (latIn U L) := by
     apply Submodule.IsLattice.of_fg K
     apply Submodule.fg_of_fg_map_injective (U.subtype.restrictScalars (𝓞 K)) U.injective_subtype
     exact hL.1.fg.of_le (Submodule.map_comap_le _ _)
@@ -1898,12 +1898,12 @@ theorem main : MinkowskiBound → GlobalTheory.Mass.MaxMass → Formalism.Hermit
         simp only [I, Finset.coe_product, Set.mem_prod, Finset.mem_coe, Finset.mem_Ico, Finset.mem_Icc]
         refine ⟨by omega, l3, ?_⟩
         by_contra hn
-        rw [if_neg (fun a => hn (by exact_mod_cast a))] at l4
+        rw [ite_eq_right (fun a => hn (by exact_mod_cast a))] at l4
         have : ({q ∈ Trip H g L j x x' | fixSp q.2.2 = fixSp p.2.2}).encard = 0 := by simpa using l4
         exact (Set.eq_empty_iff_forall_notMem.1 (Set.encard_eq_zero.1 this)) p ⟨hp, rfl⟩
       · refine add_le_add ?_ (Finset.sum_le_sum fun i hi => encard_fibres_le _ _ _ _ fun U hU => ?_)
         · have p0 := ps 0 D ⊤ hD1 (by simp) ((discN_top _ _).trans hLd)
-          rw [if_pos (by nlinarith)] at p0
+          rw [ite_eq_left (by nlinarith)] at p0
           rw [mul_add, mul_one, ENNReal.ofReal_add (by positivity) (by positivity)]
           refine add_le_add (p0.trans (ENNReal.ofReal_le_ofReal
             (top_bound c D _ Y g k f j x x' hc hD1' rfl hX1 hY))) (pk.trans (ENNReal.ofReal_le_ofReal ?_))
@@ -1913,7 +1913,7 @@ theorem main : MinkowskiBound → GlobalTheory.Mass.MaxMass → Formalism.Hermit
           gcongr
         · simp only [I, Finset.mem_product, Finset.mem_Ico, Finset.mem_Icc] at hi
           have p1 := ps i.1 i.2 U hi.2.1 (by rw [hU.1]; omega) hU.2
-          rw [if_pos (by exact_mod_cast hi.2.2)] at p1
+          rw [ite_eq_left (by exact_mod_cast hi.2.2)] at p1
           exact p1)
   refine h1.trans ?_
   rw [← hmass, ← ENNReal.ofReal_mul hm0.le]

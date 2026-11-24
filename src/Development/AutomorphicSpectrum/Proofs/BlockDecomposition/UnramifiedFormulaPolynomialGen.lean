@@ -243,7 +243,7 @@ theorem twist {σ : R →+* R} {ϖ : R} (hσ : σ ϖ = ϖ) {n : ℕ} {T T' H : M
 theorem card_fibers {α β : Type} [Finite α] [Finite β] (f : α → β) (c : ℕ)
     (hf : ∀ b, Nat.card {a // f a = b} = c) : Nat.card α = Nat.card β * c := by
   classical
-  haveI := Fintype.ofFinite β
+  have := Fintype.ofFinite β
   rw [Nat.card_congr (Equiv.sigmaFiberEquiv f).symm, Nat.card_sigma]
   simp [hf, Nat.card_eq_fintype_card]
 
@@ -344,8 +344,8 @@ theorem dens_step {σ : R →+* R} {ϖ : R} (hfin : ∀ k, Finite (R ⧸ lev ϖ 
     (hfib : ∀ h : Matrix (Fin n) (Fin n) R, cT σ h = h → red ϖ k h = red ϖ k T →
       solCount σ ϖ S h (k + 1) = solCount σ ϖ S T (k + 1)) :
     densAt σ ϖ S T k = densAt σ ϖ S T (k + 1) := by
-  haveI := hfin
-  haveI : ∀ k a b, Finite (Matrix (Fin a) (Fin b) (R ⧸ lev ϖ k)) := fun k a b =>
+  have := hfin
+  have : ∀ k a b, Finite (Matrix (Fin a) (Fin b) (R ⧸ lev ϖ k)) := fun k a b =>
     inferInstanceAs (Finite (Fin a → Fin b → R ⧸ lev ϖ k))
   have hTm : red ϖ k T ∈ hermSub σ ϖ n k := ⟨T, hT, rfl⟩
   have h1 := card_preimage_hom (piM ϖ k m n) (piM_surj ϖ k m n) (sol σ ϖ S T k)
@@ -682,9 +682,9 @@ theorem GlobalTheory.CompanionTheory.SiegLoc.level_identity : ∀ (R : Type) [Co
     intro x
     have hmem := gram_sub_mem σ ϖ hR.inv hR.fix_ϖ k S T hS hT x
     by_cases hxe : cT (barσ σ ϖ hR.fix_ϖ k) x * red ϖ k S * x = red ϖ k T
-    · rw [if_pos hxe]
+    · rw [ite_eq_left hxe]
       exact (horth _ hmem).1 (sub_eq_zero.mpr hxe)
-    · rw [if_neg hxe]
+    · rw [ite_eq_right hxe]
       exact (horth _ hmem).2 (sub_ne_zero.mpr hxe)
   have hsplit : ∀ (B : hermMod σ ϖ n k) (x : Matrix (Fin m) (Fin n) (R ⧸ lev ϖ k)),
       ψ k (Matrix.trace (B.1 * (cT (barσ σ ϖ hR.fix_ϖ k) x * red ϖ k S * x - red ϖ k T))) =
@@ -851,11 +851,11 @@ theorem unrPoly : PositivityTheory.PfSWUS.Loc.UnrFormula → PositivityTheory.Si
     refine Nat.finite_of_card_ne_zero ?_
     rw [hR.card]
     exact pow_ne_zero _ (by have := hR.one_lt; omega)) k
-  letI : ∀ k, Fintype (R ⧸ lev ϖ k) := fun k => Fintype.ofFinite _
-  haveI : Finite (Matrix (Fin n) (Fin n) (R ⧸ lev ϖ k)) :=
+  let : ∀ k, Fintype (R ⧸ lev ϖ k) := fun k => Fintype.ofFinite _
+  have : Finite (Matrix (Fin n) (Fin n) (R ⧸ lev ϖ k)) :=
     inferInstanceAs (Finite (Fin n → Fin n → R ⧸ lev ϖ k))
-  haveI : Finite (hermMod σ ϖ n k) := Subtype.finite
-  letI : Fintype (hermMod σ ϖ n k) := Fintype.ofFinite _
+  have : Finite (hermMod σ ϖ n k) := Subtype.finite
+  let : Fintype (hermMod σ ϖ n k) := Fintype.ofFinite _
   have hq1 : 1 < q := hR.one_lt
   have hqC : (q : ℂ) ≠ 0 := by exact_mod_cast (by omega : q ≠ 0)
   have hε : (ε : ℂ) ^ 2 = 1 := by

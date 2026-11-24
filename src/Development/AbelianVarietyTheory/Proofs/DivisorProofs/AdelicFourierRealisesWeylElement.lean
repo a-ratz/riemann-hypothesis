@@ -70,11 +70,11 @@ theorem adelicHaar_piSigma_eq_const_mul_selfDual (m : MeasurableSpace (κ → Ad
     ∃ k : ℝ≥0, k ≠ 0 ∧ (∀ f : (κ → AdeleRing (𝓞 F) F) → ℂ, ∫ x, f x ∂μ = (k : ℂ) * ∫ x, f x ∂(adeleMeasurePi F)) ∧
       ∀ g : (κ → AdeleRing (𝓞 F) F) → ℝ≥0∞, ∫⁻ x, g x ∂μ = k * ∫⁻ x, g x ∂(adeleMeasurePi F) := by
   subst hm
-  letI : MeasurableSpace (AdeleRing (𝓞 F) F) := measurableSpace_adeleRing F
-  haveI : BorelSpace (AdeleRing (𝓞 F) F) := borelSpace_adeleRing F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (κ → AdeleRing (𝓞 F) F) := Pi.borelSpace
+  let : MeasurableSpace (AdeleRing (𝓞 F) F) := measurableSpace_adeleRing F
+  have : BorelSpace (AdeleRing (𝓞 F) F) := borelSpace_adeleRing F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (κ → AdeleRing (𝓞 F) F) := Pi.borelSpace
   have h := Measure.isAddLeftInvariant_eq_smul μ (adeleMeasurePi F (ι := κ))
   generalize Measure.addHaarScalarFactor μ (adeleMeasurePi F (ι := κ)) = k at h
   refine ⟨k, fun h0 => ?_, fun f => ?_, fun g => ?_⟩
@@ -88,9 +88,9 @@ theorem haar_cmp (μ : @Measure (κ → AF F) (borel _)) (hμ : @Measure.IsAddHa
     ∃ k : ℝ≥0, k ≠ 0 ∧ (∀ f : (κ → AF F) → ℂ, ∫ x, f x ∂μ = (k : ℂ) * ∫ x, f x ∂(adeleMeasurePi F)) ∧
       ∀ g : (κ → AF F) → ℝ≥0∞, ∫⁻ x, g x ∂μ = k * ∫⁻ x, g x ∂(adeleMeasurePi F) := by
   refine adelicHaar_piSigma_eq_const_mul_selfDual (borel _) ?_ μ hμ
-  letI : MeasurableSpace (AdeleRing (𝓞 F) F) := measurableSpace_adeleRing F
-  haveI : BorelSpace (AdeleRing (𝓞 F) F) := borelSpace_adeleRing F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  let : MeasurableSpace (AdeleRing (𝓞 F) F) := measurableSpace_adeleRing F
+  have : BorelSpace (AdeleRing (𝓞 F) F) := borelSpace_adeleRing F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   exact (Pi.borelSpace (X := fun _ : κ => AdeleRing (𝓞 F) F)).measurable_eq.symm
 
 theorem four_mem {φ : (κ → AF F) → ℂ} (hφ : φ ∈ schA F κ) : adelicFourierPi F φ ∈ schA F κ := by
@@ -120,13 +120,13 @@ theorem bounded_schA {φ : (κ → AF F) → ℂ} (hφ : φ ∈ schA F κ) : ∃
 theorem integral_four_mul {f g : (κ → AdeleRing (𝓞 F) F) → ℂ} (hf : Integrable f (adeleMeasurePi F))
     (hg : Integrable g (adeleMeasurePi F)) :
     ∫ y, adelicFourierPi F f y * g y ∂(adeleMeasurePi F) = ∫ x, f x * adelicFourierPi F g x ∂(adeleMeasurePi F) := by
-  letI : MeasurableSpace (AdeleRing (𝓞 F) F) := measurableSpace_adeleRing F
-  haveI : BorelSpace (AdeleRing (𝓞 F) F) := borelSpace_adeleRing F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (κ → AdeleRing (𝓞 F) F) := Pi.borelSpace
+  let : MeasurableSpace (AdeleRing (𝓞 F) F) := measurableSpace_adeleRing F
+  have : BorelSpace (AdeleRing (𝓞 F) F) := borelSpace_adeleRing F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (κ → AdeleRing (𝓞 F) F) := Pi.borelSpace
   have hc : Continuous fun p : (κ → AdeleRing (𝓞 F) F) × (κ → AdeleRing (𝓞 F) F) =>
       (adelicChar F (∑ i, p.1 i * p.2 i) : ℂ) :=
-    continuous_subtype_val.comp ((continuous_adelicChar (K := F)).comp
+    continuous_subtypeVal.comp ((continuous_adelicChar (K := F)).comp
       (continuous_finsetSum _ fun i _ => ((continuous_apply i).comp continuous_fst).mul
         ((continuous_apply i).comp continuous_snd)))
   have hi : Integrable (Function.uncurry fun x y : κ → AdeleRing (𝓞 F) F =>
@@ -156,7 +156,7 @@ theorem plancherel {φ : (κ → AF F) → ℂ} (hφ : φ ∈ schA F κ) :
     ∫⁻ x, ‖adelicFourierPi F φ x‖ₑ ^ 2 ∂(adeleMeasurePi F) = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂(adeleMeasurePi F) := by
   rw [lintegral_sq_eq hφ, lintegral_sq_eq (four_mem hφ)]
   congr 1
-  letI : MeasurableSpace (AdeleRing (𝓞 F) F) := measurableSpace_adeleRing F
+  let : MeasurableSpace (AdeleRing (𝓞 F) F) := measurableSpace_adeleRing F
   have hg : Integrable (fun y => starRingEnd ℂ (adelicFourierPi F φ y)) (adeleMeasurePi F) :=
     Complex.conjCLE.toContinuousLinearMap.integrable_comp (integrable_schA (four_mem hφ))
   have h := integral_four_mul (integrable_schA hφ) hg
@@ -228,8 +228,8 @@ theorem theta_compS (ε : κ → ℤˣ) (φ : (κ → AF F) → ℂ) : thetaSum 
 theorem haar_sgn (ε : κ → ℤˣ) (μ : @Measure (κ → AF F) (borel _)) (hμ : @Measure.IsAddHaarMeasure _ _ _ (borel _) μ) :
     ∃ ν : @Measure (κ → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) ν ∧
       ∀ g : (κ → AF F) → ℝ≥0∞, ∫⁻ x, g (sgnV ε x) ∂μ = ∫⁻ x, g x ∂ν := by
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
   have hc : Continuous (sgnV ε : (κ → AF F) → κ → AF F) :=
     continuous_pi fun i => continuous_const.mul (continuous_apply i)
   let e : (κ → AF F) ≃+ (κ → AF F) := ⟨⟨sgnV ε, sgnV ε, sgnV_sgnV ε, sgnV_sgnV ε⟩, sgnV_add ε⟩
@@ -328,8 +328,8 @@ theorem isOp_fourier : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (A
     obtain ⟨k₂, hk₂, -, e₂⟩ := haar_cmp ν hν
     refine ⟨((k ^ 2 * k₂ * k₁⁻¹ : ℝ≥0) : ℝ≥0∞), ?_, ENNReal.coe_ne_top, fun φ hφ => ?_⟩
     · exact ENNReal.coe_ne_zero.2 (mul_ne_zero (mul_ne_zero (pow_ne_zero _ hk0) hk₂) (inv_ne_zero hk₁))
-    · have hn : ‖((k : ℝ) : ℂ)‖ₑ = (k : ℝ≥0∞) := by simp [enorm_eq_nnnorm]
-      simp only [LinearMap.smul_apply, LinearMap.comp_apply, Pi.smul_apply, smul_eq_mul, compS_apply, enorm_mul,
+    · have hn : ‖((k : ℝ) : ℂ)‖ₑ = (k : ℝ≥0∞) := by simp [eNorm_eq_nnNorm]
+      simp only [LinearMap.smul_apply, LinearMap.comp_apply, Pi.smul_apply, smul_eq_mul, compS_apply, eNorm_mul,
         mul_pow, hn]
       rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top ENNReal.coe_ne_top), hνe (fun x => ‖T φ x‖ₑ ^ 2), e₂, e₁,
         hT φ hφ, plancherel hφ, ← mul_assoc, ← mul_assoc, ← ENNReal.coe_pow, ← ENNReal.coe_mul, ← ENNReal.coe_mul,

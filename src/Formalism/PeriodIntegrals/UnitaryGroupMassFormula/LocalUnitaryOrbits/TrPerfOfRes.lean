@@ -69,7 +69,7 @@ private theorem sc_of_isUnif_of_mem_integers {ϖ r : Fv F v} (hϖ : IsUnif v ϖ)
     exact hn ⟨0, Orb.oev_zero v, by simp [sc]⟩
   refine ⟨hr0, ?_⟩
   have hv0 : Valued.v r ≠ 0 := (Valuation.ne_zero_iff _).mpr hr0
-  rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_inv₀, inv_le_one₀ (zero_lt_iff.mpr hv0)]
+  rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.mpr hv0)]
   by_contra hlt
   push_neg at hlt
   apply hn
@@ -85,7 +85,7 @@ private theorem sc_of_isUnif_of_mem_integers {ϖ r : Fv F v} (hϖ : IsUnif v ϖ)
   · rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀]
     unfold IsUnif at hϖ
     rw [hϖ]
-    rw [mul_inv_le_iff₀ (zero_lt_iff.mpr (by simp)), one_mul]
+    rw [mul_inv_le_iff₀ (pos_iff_ne_zero.mpr (by simp)), one_mul]
     exact hle
   · rw [NormOneUnitFixedPoints.sc_mul_sc, mul_comm r, ← mul_assoc, mul_inv_cancel₀ hϖ0, one_mul]
 

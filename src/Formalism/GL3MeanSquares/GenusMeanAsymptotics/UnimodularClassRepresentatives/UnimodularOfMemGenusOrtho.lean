@@ -59,7 +59,7 @@ theorem loc_gmap (g : V ≃ₗ[K] V) (p : Ideal (𝓞 K)) (L : Submodule (𝓞 K
   unfold Formalism.HermitianLatticesTheory.loc Formalism.HermitianLatticesTheory.gmap Formalism.HermitianLatticesTheory.locS
   ext x
   simp only [Submodule.mem_map, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-    Set.mem_setOf_eq, LinearMap.coe_restrictScalars, LinearEquiv.coe_coe]
+    Set.mem_ofPred_eq, LinearMap.coe_restrictScalars, LinearEquiv.coe_coe]
   constructor
   · rintro ⟨s, hs, y, hy, hyx⟩
     refine ⟨g.symm x, ⟨s, hs, ?_⟩, by simp⟩

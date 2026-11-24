@@ -176,7 +176,7 @@ theorem mt_ratId : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => 
     by_cases h0 : μ = D.what₂.mu0
     · rw [(hP.ref h0).2]
     · obtain ⟨ξ, hξ, hmt⟩ := hP.tw μ h0 rfl
-      rw [hmt u, twMt, if_pos ⟨by omega, by omega⟩, MonoidHom.mul_apply, hξ]
+      rw [hmt u, twMt, ite_eq_left ⟨by omega, by omega⟩, MonoidHom.mul_apply, hξ]
       have h1 : ((t.tup μ : Chr t.X.F t.X.E t.X.K)) (ratId t.X.F t.X.E k') = 1 := by
         have hm := (t.tup μ).2
         exact hm.1.1.1.1.1 ⟨k', rfl⟩
@@ -306,7 +306,7 @@ theorem fin_mem_Qbar {L : Type} [Field L] [NumberField L] (χ : HChar L) (htame 
   obtain ⟨T, hT⟩ := exists_strictHenselian_absolutely_closed_local_ring χ
   set p : Pu L := ∏ v ∈ T, Pi.mulSingle v (y v) with hp
   have hpv : ∀ v ∈ T, p v = y v := fun v hv => by
-    rw [hp, Finset.prod_apply, Finset.prod_pi_mulSingle, if_pos hv]
+    rw [hp, Finset.prod_apply, Finset.prod_pi_mulSingle, ite_eq_left hv]
   have hsplit : y = p * (p⁻¹ * y) := by rw [mul_inv_cancel_left]
   have hrest : χ.1 (Phi L (p⁻¹ * y)) = 1 :=
     hT _ fun v hv => by rw [Pi.mul_apply, Pi.inv_apply, hpv v hv, inv_mul_cancel]
@@ -350,7 +350,7 @@ theorem mt_mem_Qbar : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a 
   · obtain ⟨ξ, hξ, hmt⟩ := hP.tw μ hμ rfl
     have e : (t.O u μ).mt (i + 1) = D.muTil (i + 1) * ξ := by
       rw [hmt u]
-      exact if_pos (⟨by omega, by omega⟩ : 1 ≤ i + 1 ∧ i + 1 ≤ D.R.m)
+      exact ite_eq_left (⟨by omega, by omega⟩ : 1 ≤ i + 1 ∧ i + 1 ≤ D.R.m)
     rw [e, MonoidHom.mul_apply, Units.val_mul, ← hx]
     refine mul_mem key ?_
     rw [hξ x, Units.coe_map]
@@ -396,7 +396,7 @@ theorem exists_gen {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum (
   have h1 : ClassGroup.mk0 ⟨P.asIdeal ^ h, hPh⟩ = 1 := by
     have e : (⟨P.asIdeal ^ h, hPh⟩ : nonZeroDivisors (Ideal (𝓞 E))) = ⟨P.asIdeal, hP⟩ ^ h := Subtype.ext (by simp)
     rw [e, map_pow, pow_card_eq_one]
-  haveI := (ClassGroup.mk0_eq_one_iff hPh).1 h1
+  have := (ClassGroup.mk0_eq_one_iff hPh).1 h1
   exact ⟨h, Fintype.card_pos, _, Ideal.span_singleton_generator _⟩
 
 theorem comp_eq_zero_iff {E : Type} [Field E] [NumberField E] (z : FiniteAdeleRing (𝓞 E) E) (hz : IsIntAd z)
@@ -416,7 +416,7 @@ theorem comp_eq_zero_iff {E : Type} [Field E] [NumberField E] (z : FiniteAdeleRi
     by_cases hQ : Q = P
     · subst hQ
       rw [h0, mul_zero, map_zero]
-      exact zero_le'
+      exact zero_le
     · have hαQ : α ∉ Q.asIdeal := by
         intro hm
         have h2 : P.asIdeal ^ h ≤ Q.asIdeal := by rw [← hα, Ideal.span_singleton_le_iff_mem]; exact hm
@@ -794,11 +794,11 @@ theorem cutU_mem_congN (x : (AfE F E)ˣ) (hx : x ∈ intU F E) {N : ℕ} (hN : 0
         rw [map_inv₀, map_inv₀, ← map_natCast (algebraMap (𝓞 E) E), GlobalTheory.TwistPlaces.valued_int,
           GlobalTheory.TwistPlaces.intValuation_eq_one P (natCast_notMem_of_under h), inv_one]
       have h4 : P ∈ {P : HeightOneSpectrum (𝓞 E) | (N : 𝓞 F) ∉ (P.under (𝓞 F)).asIdeal} := h
-      rw [if_pos h4, map_mul, h3, one_mul]
+      rw [ite_eq_left h4, map_mul, h3, one_mul]
       exact Valuation.map_sub_le _ (int_val hx P) (by rw [map_one])
     · have h4 : P ∉ {P : HeightOneSpectrum (𝓞 E) | (N : 𝓞 F) ∉ (P.under (𝓞 F)).asIdeal} := h
-      rw [if_neg h4, sub_self, mul_zero, map_zero]
-      exact zero_le'
+      rw [ite_eq_right h4, sub_self, mul_zero, map_zero]
+      exact zero_le
   · apply (afIso F E).injective
     rw [map_mul, RingEquiv.apply_symm_apply, map_natCast, GlobalTheory.Mem.ReadEx.inv_mul_mul_nat hN, map_sub, map_one]
 
@@ -851,7 +851,7 @@ theorem map_eq_one_of_one_at_ramified : ∀ (F E L : Type) [Field F] [NumberFiel
   have eu : {P : HeightOneSpectrum (𝓞 E) | P.under (𝓞 F) ∈ hT.toFinset} ∪
       {P | (N : 𝓞 F) ∉ (P.under (𝓞 F)).asIdeal} = Set.univ := by
     ext P
-    simp only [Set.mem_union, Set.mem_setOf_eq, Set.Finite.mem_toFinset, Set.mem_univ, iff_true]
+    simp only [Set.mem_union, Set.mem_ofPred_eq, Set.Finite.mem_toFinset, Set.mem_univ, iff_true]
     exact em _
   have e : cutU x hx {P | P.under (𝓞 F) ∈ hT.toFinset} * cutU x hx {P | (N : 𝓞 F) ∉ (P.under (𝓞 F)).asIdeal} = x := by
     rw [← cutU_union x hx hd, eu, cutU_univ]
@@ -909,7 +909,7 @@ namespace GlobalTheory.TieUnr
 theorem mt_eq_one_of_intUnit : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ i < D.R.m, ∀ y : (letI := D.host.cmStar; Formalism.L2.Herm.unitaryOneFiniteAdeles D.sp.cm), Matrix.GeneralLinearGroup.det y.1 ∈ intU D.host.F D.host.E → (∀ v, UnderSB t μ v → Formalism.UG.prV (E := D.host.E) v ((Matrix.GeneralLinearGroup.det y.1 : (AfE D.host.F D.host.E)ˣ) : AfE D.host.F D.host.E) = 1) → (t.O u μ).mt (i + 1) (dtU y) = 1) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a H T i hi y hint hsupp
   classical
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hzU : Matrix.GeneralLinearGroup.det y.1 ∈ U1 (sigD D) := det_in_unitary_one D.host.F D.host.E (sigD D) 1 1 (by simp) y.1 y.2
   obtain ⟨x', hx'int, hx'h90, hx'supp⟩ := _root_.GlobalTheory.TwU.IntegralHilbert90Unramified.exists_integral_h90_preimage_trivial_where_trivial D.host.F D.host.E (sigD D) (_root_.GlobalTheory.cmData_sig_isConjOf _ _ D.sp.cm)
     (GlobalTheory.HeckeAdjoint.unramified_host D) _ hzU hint
@@ -974,7 +974,7 @@ theorem mt_eq_one_of_intUnit : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St}
       have h2 := hvG P hg
       show Valued.v (GlobalTheory.Mem.Col2.afIso t.X.F t.X.E ((x : AfE t.X.F t.X.E) - 1) P) ≤ _
       rw [map_sub, map_one, hsub, h2, sub_self, map_zero]
-      exact zero_le'
+      exact zero_le
   have hxi : (t.tup μ : Chr t.X.F t.X.E t.X.K) x = 1 := by
     have hmem := (t.tup μ).2
     simp only [tupGrp, finChar, Subgroup.mem_inf] at hmem
@@ -991,7 +991,7 @@ theorem mt_eq_one_of_intUnit : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St}
   · rw [(H.ref hμ).2]
     exact hmu ⟨i, hi⟩
   · obtain ⟨ξ, hξ, hmt⟩ := H.tw μ hμ rfl
-    rw [hmt u, twMt, if_pos ⟨by omega, by omega⟩, MonoidHom.mul_apply, hmu ⟨i, hi⟩, one_mul, hξ x, hxi, map_one]
+    rw [hmt u, twMt, ite_eq_left ⟨by omega, by omega⟩, MonoidHom.mul_apply, hmu ⟨i, hi⟩, one_mul, hξ x, hxi, map_one]
 
 end GlobalTheory.TieUnr
 end -- clump:auto
@@ -1090,7 +1090,7 @@ theorem rationalIdele_mem_normOne_of_norm_eq_one {D : D7} (z : D.host.Eˣ) (hz :
   rw [U1, MonoidHom.mem_ker]
   ext
   simp only [MonoidHom.mul_apply, MonoidHom.id_apply, conjId, ratId, Units.val_mul, Units.coe_map,
-    RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_one]
+    RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Units.val_one]
   show inclE _ (z : D.host.E) * sigR (sigD D) _ (inclE _ (z : D.host.E)) = 1
   simp only [inclE, sigR, Algebra.TensorProduct.includeLeftRingHom_apply, AlgHom.toRingHom_eq_coe,
     RingHom.coe_coe, Algebra.TensorProduct.map_tmul, AlgHom.id_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_one]

@@ -96,7 +96,7 @@ theorem hB_act (k : Fin 4) :
 
   have hq0 : WeightPf.act (U.gt e) ≫ (U.gt e).q =
       snd (WeightPf.Te D.toPre I e) (thickObj R I e G) ≫ (U.gt e).q := by
-    haveI := (U.gt e).q_hom
+    have := (U.gt e).q_hom
     have hiq := (U.gt e).isKernel.w
     simp only [WeightPf.act, Category.assoc, IsMonHom.mul_hom, lift_map_assoc, hiq,
       comp_toUnit_assoc, MonObj.lift_comp_one_left]
@@ -154,7 +154,7 @@ theorem mA_snd (ta : WeightPf.Te D.toPre I e ⟶ WeightPf.Te D.toPre I e) :
 theorem act_actA (ta : WeightPf.Te D.toPre I e ⟶ WeightPf.Te D.toPre I e)
     (hia : (U.gt e).i ≫ actA ιG e a = ta ≫ (U.gt e).i) :
     WeightPf.act (U.gt e) ≫ actA ιG e a = mA ιG e a ta ≫ WeightPf.act (U.gt e) := by
-  haveI := ιG.hom a
+  have := ιG.hom a
   have hμ : μ[thickObj R I e G] ≫ actA ιG e a =
       (actA ιG e a ⊗ₘ actA ιG e a) ≫ μ[thickObj R I e G] := IsMonHom.mul_hom _
   simp only [WeightPf.act, mA, Category.assoc, hμ, lift_map_assoc, comp_lift_assoc,
@@ -179,7 +179,7 @@ theorem mA_chiP (ta : WeightPf.Te D.toPre I e ⟶ WeightPf.Te D.toPre I e)
       ta.left.appTop ≫ (fst (WeightPf.Te D.toPre I e) (thickObj R I e G)).left.appTop := by
     rw [← Scheme.Hom.comp_appTop, hF, Scheme.Hom.comp_appTop]
   have hval := congrArg Units.val (hta χ)
-  simp only [Semi.res, Semi.pullU, Units.coe_map, MonoidHom.coe_coe] at hval
+  simp only [Semi.res, Semi.pullU, Units.coe_map, MonoidHom.coe_ofClass] at hval
   simp only [Semi.TorusInj.chiP, ← hval]
   simp only [Scheme.Hom.appLE]
   have hTop' : (fst (WeightPf.Te D.toPre I e) (thickObj R I e G)).left.appTop ≫ (mA ιG e a ta).left.app ⊤ = ta.left.app ⊤ ≫ (fst (WeightPf.Te D.toPre I e) (thickObj R I e G)).left.app ⊤ := hTop

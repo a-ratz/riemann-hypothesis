@@ -344,7 +344,7 @@ theorem fdc_hc_add {μ : Fin n → ℝ} {s : Fin n} (hμ : IsHCParam μ) (hs : S
     exact hm
 
 theorem fdc_w_ne {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) : T.w ≠ 0 := by
-  letI := T.instNACG
+  let := T.instNACG
   intro h
   have h1 := T.w_norm
   rw [h, norm_zero] at h1

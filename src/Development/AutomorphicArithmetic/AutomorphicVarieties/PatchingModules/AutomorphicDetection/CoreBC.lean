@@ -146,10 +146,10 @@ open scoped TensorProduct
 private theorem free_fin_transfer {S T N N' : Type} [CommRing S] [CommRing T] [AddCommGroup N] [AddCommGroup N']
     [Module S N] [Module T N'] [Module.Free S N] [Module.Finite S N] (τ : S ≃+* T) (e : N ≃+ N')
     (he : ∀ a z, e (a • z) = τ a • e z) : Module.Free T N' ∧ Module.Finite T N' := by
-  letI : Module S N' := Module.compHom N' (τ : S →+* T)
+  let : Module S N' := Module.compHom N' (τ : S →+* T)
   let e' : N ≃ₗ[S] N' := { e with map_smul' := he }
-  haveI : Module.Free S N' := Module.Free.of_equiv e'
-  haveI : Module.Finite S N' := Module.Finite.equiv e'
+  have : Module.Free S N' := Module.Free.of_equiv e'
+  have : Module.Finite S N' := Module.Finite.equiv e'
   refine ⟨Module.Free.of_basis ((Module.Free.chooseBasis S N').mapCoeffs τ (fun _ _ => rfl)), ?_⟩
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := S) (M := N')
   refine ⟨⟨s, ?_⟩⟩
@@ -173,14 +173,14 @@ private theorem lamEmb_X (O O' : Type) [CommRing O] [CommRing O'] [Algebra O O']
 theorem UpperTheory.V.Pa.BC.base_bc :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (n : ℕ) (O O' : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] [Algebra ℤ_[l] O] [CommRing O'] [IsLocalRing O'] [Algebra ℤ_[l] O'] [Algebra O O'] [IsScalarTower ℤ_[l] O O'] [IsLocalHom (algebraMap O O')] [Module.Finite O O'] [Module.Free O O'] (r : Resid G0.frame O n) (r' : Resid G0.frame O' n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] [IsCO O' (Til O O' B)] (u : Pair r B) (u' : Pair r' (Til O O' B)) (J : Ideal B) (D : ℕ) (b : TWBase u J Empty D) (τ : Til O O' (abelian₂ O Empty D) ≃ₐ[O'] abelian₂ O' Unit D), RBC r r' → u.Maps (Til.ι O O' B) u'.D u'.ψ → (∀ a, τ (Til.ι O O' _ a) = lamEmb O O' D a) → ∃ b' : TWBase u' (J.map (Til.ι O O' B)) Unit D, Nonempty (BaseRel b b' τ) := by
   intro l _ L G0 n O O' _ _ _ _ _ _ _ _ _ _ _ _ _ r r' B _ _ _ _ u u' J D b τ hr hu hτ
-  haveI := b.free
-  haveI := b.fin
-  haveI : IsNoetherianRing (abelian₂ O Empty D) := inferInstance
-  haveI : Module.Finite B b.M := fin_of_hom b.lam b.smul_lam
+  have := b.free
+  have := b.fin
+  have : IsNoetherianRing (abelian₂ O Empty D) := inferInstance
+  have : Module.Finite B b.M := fin_of_hom b.lam b.smul_lam
   obtain ⟨e, -, he⟩ := UpperTheory.V.Pa.BC.til_mod O O' (abelian₂ O Empty D) B b.lam b.M b.smul_lam
   let lam' : abelian₂ O' Unit D →ₐ[O'] Til O O' B := (Til.map O' b.lam).comp (τ.symm : abelian₂ O' Unit D →ₐ[O'] _)
   have hlam : ∀ a, lam' (τ a) = Til.map O' b.lam a := fun a => by simp [lam']
-  letI mL : Module (abelian₂ O' Unit D) (Til O O' B ⊗[B] b.M) := Module.compHom _ (lam' : abelian₂ O' Unit D →+* Til O O' B)
+  let mL : Module (abelian₂ O' Unit D) (Til O O' B ⊗[B] b.M) := Module.compHom _ (lam' : abelian₂ O' Unit D →+* Til O O' B)
   have hff := free_fin_transfer (T := abelian₂ O' Unit D) (N' := Til O O' B ⊗[B] b.M) τ.toRingEquiv e (fun a z => by
     rw [he, ← hlam]; rfl)
   refine ⟨{ wt := ⟨b.wt.v, b.wt.i, b.wt.γ, fun k => algebraMap O O' (b.wt.c k)⟩
@@ -265,8 +265,8 @@ private theorem tens_fin {Λ B S R M : Type} [CommRing Λ] [CommRing B] [CommRin
 theorem UpperTheory.V.Pa.BC.exists_finite_spanning_taylorWiles_tensor :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (n : ℕ) (O : Type) [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (σ : Type) (D : ℕ) (b : TWBase u J σ D) (G : Glob l L) (h : G.Hom G0) (q : ℕ) (ut : Fin q → Fin n → O) (N : ℕ) (A : TWRing b h ut N) (Nq : Fin q → ℕ) (ph ta : Fin q → G.G₀) (ex : ℕ) (m : TWMaps Nq ph ta A ex), ∃ s : Finset (SpAt u (fun j => h.p₀ (ph j)) ut ⊗[B] b.M), ∀ z, ∃ c : _ → A.R, z = ∑ g ∈ s, m.θ (c g) • g := by
   intro l _ L G0 n O _ _ _ r B _ _ _ u J σ D b G h q ut N A Nq ph ta ex m
-  haveI : Module.Finite B (SpAt u (fun j => h.p₀ (ph j)) ut) := (UpperTheory.V.Pa.BC.sp_fin B q n _ _).1
-  haveI := b.fin
+  have : Module.Finite B (SpAt u (fun j => h.p₀ (ph j)) ut) := (UpperTheory.V.Pa.BC.sp_fin B q n _ _).1
+  have := b.fin
   exact tens_fin (Λ := abelian₂ O σ D) (fun a => b.lam a) b.smul_lam m.θ.toRingHom fun a =>
     ⟨A.s (MvPowerSeries.C a), by
       have := m.theta_coefficientMap_eq (MvPowerSeries.C a)
@@ -287,12 +287,12 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.BC.exists_semilinear_equiv_baseChange_tensor :
     ∀ (B P B' P₁ P' : Type) [CommRing B] [CommRing P] [CommRing B'] [CommRing P₁] [CommRing P'] [Algebra B P] [Algebra B B'] [Algebra P P₁] [Algebra B' P'] (τ : P₁ ≃+* P') (M M' : Type) [AddCommGroup M] [Module B M] [AddCommGroup M'] [Module B' M'] (_μ : B' ⊗[B] M ≃ₗ[B'] M'), (∀ b, τ (algebraMap P P₁ (algebraMap B P b)) = algebraMap B' P' (algebraMap B B' b)) → ∃ e : P₁ ⊗[P] (P ⊗[B] M) ≃+ P' ⊗[B'] M', ∀ z w, e (z • w) = τ z • e w := by
   intro B P B' P₁ P' _ _ _ _ _ _ _ _ _ τ M M' _ _ _ _ μ h
-  letI : Algebra P₁ P' := τ.toRingHom.toAlgebra
-  letI : Algebra P P' := (τ.toRingHom.comp (algebraMap P P₁)).toAlgebra
-  letI : Algebra B P' := ((algebraMap B' P').comp (algebraMap B B')).toAlgebra
-  haveI : IsScalarTower P P₁ P' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower B B' P' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower B P P' := IsScalarTower.of_algebraMap_eq (fun b => (h b).symm)
+  let : Algebra P₁ P' := τ.toRingHom.toAlgebra
+  let : Algebra P P' := (τ.toRingHom.comp (algebraMap P P₁)).toAlgebra
+  let : Algebra B P' := ((algebraMap B' P').comp (algebraMap B B')).toAlgebra
+  have : IsScalarTower P P₁ P' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower B B' P' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower B P P' := IsScalarTower.of_algebraMap_eq (fun b => (h b).symm)
   let t : P₁ ≃ₗ[P₁] P' :=
     { τ.toAddEquiv with
       map_smul' := fun a b => by
@@ -584,8 +584,8 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.BC.xmaps_bc :
     ∀ (O O' : Type) [CommRing O] [CommRing O'] [Algebra O O'] [Module.Finite O O'] (R P : Type) [CommRing R] [Algebra O R] [IsNoetherianRing R] [CommRing P] [Algebra O P] [IsNoetherianRing P] (θ : R →ₐ[O] P) (X X0 : Type) [AddCommGroup X] [Module R X] [AddCommGroup X0] [Module P X0] (f : R) (φ : X0 →+ X) (ψ : X →+ X0), (∃ s : Finset X0, ∀ z, ∃ c : X0 → R, z = ∑ g ∈ s, θ (c g) • g) → (∀ (t : R) z, φ (θ t • z) = t • φ z) → (∀ (t : R) z, ψ (t • z) = θ t • ψ z) → (∀ z, φ (ψ z) = f • z) → (∀ z, ψ (φ z) = θ f • z) → ∃ (φ' : Til O O' P ⊗[P] X0 →+ Til O O' R ⊗[R] X) (ψ' : Til O O' R ⊗[R] X →+ Til O O' P ⊗[P] X0), (∀ t z, φ' (Til.map O' θ t • z) = t • φ' z) ∧ (∀ t z, ψ' (t • z) = Til.map O' θ t • ψ' z) ∧ (∀ z, φ' (ψ' z) = Til.ι O O' R f • z) ∧ ∀ z, ψ' (φ' z) = Til.map O' θ (Til.ι O O' R f) • z := by
   intro O O' _ _ _ _ R P _ _ _ _ _ _ θ X X0 _ _ _ _ f φ ψ hgen hφ hψ hφψ hψφ
-  letI : Module R X0 := Module.compHom X0 θ.toRingHom
-  haveI : Module.Finite R X0 := by
+  let : Module R X0 := Module.compHom X0 θ.toRingHom
+  have : Module.Finite R X0 := by
     refine ⟨?_⟩
     obtain ⟨s, hs⟩ := hgen
     refine ⟨s, ?_⟩
@@ -784,7 +784,7 @@ theorem UpperTheory.V.Pa.BC.maps_bc :
     (funext fun j => by
       rw [← hu.1, ← ((UpperTheory.V.CA.d_gmap u.D).2.2.1 _ _).1, MonoidAlgebra.mapRingHom_single, map_one])
     (funext fun j => funext fun i => (Til.ι_algebraMap O O' B (ut j i)).symm)
-  haveI : IsNoetherianRing (SpAt u (fun j => h.p₀ (ph j)) ut) := (UpperTheory.V.Pa.BC.sp_fin B q n _ _).2
+  have : IsNoetherianRing (SpAt u (fun j => h.p₀ (ph j)) ut) := (UpperTheory.V.Pa.BC.sp_fin B q n _ _).2
   let θ' : A'.R →ₐ[O'] SpAt u' (fun j => h.p₀ (ph j)) (fun j i => algebraMap O O' (ut j i)) :=
     (τp.toAlgHom.comp (Til.map O' m.θ)).comp hA.ρ.symm.toAlgHom
   have hθ : ∀ t, θ' (hA.ρ t) = τp (Til.map O' m.θ t) := fun t =>
@@ -983,7 +983,7 @@ private theorem UpperTheory.V.Pa.BC.tl_option {σ R : Type} [CommRing R] (p : Mv
       ext a
       cases a with
       | none =>
-        rw [Finsupp.embDomain_notin_range _ _ _ (by simp)]
+        rw [Finsupp.embDomain_of_notMem_range _ _ _ (by simp)]
         simp
       | some v =>
         rw [show (some v : Option σ) = Function.Embedding.some v from rfl, Finsupp.embDomain_apply_self]
@@ -994,7 +994,7 @@ private theorem UpperTheory.V.Pa.BC.tl_option {σ R : Type} [CommRing R] (p : Mv
     rintro ⟨y, hy⟩
     apply hk
     have hn := congrArg (fun z : Option σ →₀ ℕ => z none) hy
-    simpa [Finsupp.mapDomain_notin_range] using hn.symm
+    simpa [Finsupp.mapDomain_of_notMem_range] using hn.symm
 
 private theorem UpperTheory.V.Pa.BC.tl_map_bij {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B) :
     Function.Bijective (PowerSeries.map (e : A →+* B)) := by
@@ -1097,14 +1097,14 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.BC.chain_tens :
     ∀ (O O' B : Type) [CommRing O] [CommRing O'] [Nontrivial O'] [IsLocalRing O] [Algebra O O'] [Module.Finite O O'] [Module.Free O O'] [CommRing B] [Algebra O B] (h : ℕ) (p : Fin (h + 1) → Ideal B) (e : Fin h → Ideal B), (∀ i, (p i).IsPrime) → (∀ i, (e i).IsPrime ∧ e i ≤ p i.castSucc ∧ e i ≤ p i.succ) → (∃ (P : Fin (h + 1) → Ideal (O' ⊗[O] B)) (E : Fin h → Ideal (O' ⊗[O] B)), (∀ i, (P i).IsPrime ∧ (P i).comap (Algebra.TensorProduct.includeRight : B →ₐ[O] O' ⊗[O] B) = p i) ∧ ∀ i, (E i).IsPrime ∧ (E i).comap (Algebra.TensorProduct.includeRight : B →ₐ[O] O' ⊗[O] B) = e i ∧ E i ≤ P i.castSucc ∧ E i ≤ P i.succ) ∧ ∀ (P : Ideal (O' ⊗[O] B)) (q : Ideal B), P.IsPrime → q.IsPrime → q ≤ P.comap (Algebra.TensorProduct.includeRight : B →ₐ[O] O' ⊗[O] B) → ∃ Q : Ideal (O' ⊗[O] B), Q.IsPrime ∧ Q.comap (Algebra.TensorProduct.includeRight : B →ₐ[O] O' ⊗[O] B) = q ∧ Q ≤ P := by
   intro O O' B _ _ _ _ _ _ _ _ _ h p e hp he
-  letI : Algebra B (O' ⊗[O] B) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra B (O' ⊗[O] B) := Algebra.TensorProduct.rightAlgebra
   let φ : B ⊗[O] O' ≃ₐ[B] O' ⊗[O] B := Algebra.TensorProduct.commRight O B O'
-  haveI : Module.Finite B (O' ⊗[O] B) := Module.Finite.equiv φ.toLinearEquiv
-  haveI : Module.Free B (O' ⊗[O] B) := Module.Free.of_equiv φ.toLinearEquiv
-  haveI : Module.FaithfullyFlat O O' := inferInstance
-  haveI : Module.FaithfullyFlat B (O' ⊗[O] B) :=
+  have : Module.Finite B (O' ⊗[O] B) := Module.Finite.equiv φ.toLinearEquiv
+  have : Module.Free B (O' ⊗[O] B) := Module.Free.of_equiv φ.toLinearEquiv
+  have : Module.FaithfullyFlat O O' := inferInstance
+  have : Module.FaithfullyFlat B (O' ⊗[O] B) :=
     Module.FaithfullyFlat.of_linearEquiv B (B ⊗[O] O') φ.symm.toLinearEquiv
-  haveI : FaithfulSMul B (O' ⊗[O] B) := inferInstance
+  have : FaithfulSMul B (O' ⊗[O] B) := inferInstance
   exact UpperTheory.V.Pa.BC.chain_lift B (O' ⊗[O] B) h p e hp he
 end -- clump:auto
 end -- clump:auto
@@ -1212,10 +1212,10 @@ theorem UpperTheory.V.Pa.BC.mem_span_map_e0ker_of_pair_maps :
     ∀ (l : ℕ) [Fact l.Prime] (F : GFrame l) (O O' : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueField O)] [CharP (ResidueField O) l] [Algebra ℤ_[l] O] [CommRing O'] [IsLocalRing O'] [Algebra ℤ_[l] O'] (n : ℕ) (r : Resid F O n) (r' : Resid F O' n) (B B' : Type) [CommRing B] [Algebra O B] [IsCO O B] [CommRing B'] [Algebra O' B'] [IsCO O' B'] (u : Pair r B) (u' : Pair r' B') (g : B →+* B') [IsLocalHom g], PhiCond F.G₀ l → (∀ w, r'.Ip w = r.Ip w) → (∀ a : ℤ_[l], g (algebraMap O B (algebraMap ℤ_[l] O a)) = algebraMap O' B' (algebraMap ℤ_[l] O' a)) → u.Maps g u'.D u'.ψ → ∀ z ∈ augmentationIdealKernel u', z ∈ TwoSidedIdeal.span (MonoidAlgebra.mapRingHom F.G₀ g '' augmentationIdealKernel u) := by
   intro l _ F O O' _ _ _ _ _ _ _ _ n r r' B B' _ _ _ _ _ _ u u' g _ hPhi hIp hg hM z hz
   obtain ⟨hD, hψ⟩ := hM
-  haveI : CompactSpace F.G₀ :=
+  have : CompactSpace F.G₀ :=
     isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
   obtain ⟨hfin, ⟨χ, h, hmap, hmf⟩, -⟩ := BC.pair_mf l F O n r B u hPhi
-  haveI := hfin
+  have := hfin
   obtain ⟨-, hstar, hoEl⟩ := BC.star_map l F O O' B B' g hg
   have hz' : z ∈ (u.D.map g).chBar (pairGens u') := by
     rw [hD]
@@ -1289,7 +1289,7 @@ private theorem op_isPrecomplete_pi {R : Type} [CommRing R] (I : Ideal R) [IsPre
 private theorem op_isPrecomplete_finite {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Finite R M] (I : Ideal R) [IsPrecomplete I R] : IsPrecomplete I M := by
   obtain ⟨r, φ, hφ⟩ := Module.Finite.exists_fin' R M
-  haveI := op_isPrecomplete_pi I r
+  have := op_isPrecomplete_pi I r
   have hmap : ∀ n, (I ^ n • ⊤ : Submodule R M) = (I ^ n • ⊤ : Submodule R (Fin r → R)).map φ := by
     intro n
     rw [Submodule.map_smul'', Submodule.map_top, LinearMap.range_eq_top.mpr hφ]
@@ -1333,7 +1333,7 @@ private theorem op_localHom (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValu
   have hne : RingHom.ker (algebraMap O K) ≠ ⊥ := by
     intro h
     have hinj : Function.Injective (algebraMap O K) := (RingHom.injective_iff_ker_eq_bot _).mpr h
-    haveI : Finite O := Finite.of_injective _ hinj
+    have : Finite O := Finite.of_injective _ hinj
     exact IsDiscreteValuationRing.not_a_field' (IsLocalRing.isField_iff_maximalIdeal_eq.mp
       (Finite.isField_of_domain O))
   have hmax : (RingHom.ker (algebraMap O K)).IsMaximal :=
@@ -1351,11 +1351,11 @@ theorem UpperTheory.V.Pa.BC.oprime :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] (K : Type) [Field K] [Finite K] [Algebra O K], ∃ (O' : Type) (_ : CommRing O') (_ : IsDomain O') (_ : IsDiscreteValuationRing O') (_ : Algebra O O') (α : O') (P : Polynomial O), IsCoef l O' ∧ Module.Finite O O' ∧ Module.Free O O' ∧ IsLocalHom (algebraMap O O') ∧ Nat.card (ResidueField O') = Nat.card K ∧ Algebra.adjoin O {α} = ⊤ ∧ P.Monic ∧ Polynomial.aeval α P = 0 ∧ ∀ (K' : Type) [Field K'] [Finite K'] [Algebra O K'], Nat.card K' = Nat.card K → (P.map (algebraMap O K')).Splits := by
   intro l _ O _ _ _ _ K _ _ _
   classical
-  haveI := op_localHom O K
-  letI : Algebra (ResidueField O) K := (IsLocalRing.ResidueField.lift (algebraMap O K)).toAlgebra
-  haveI : Finite (ResidueField O) := IsCoef.finite (l := l)
-  haveI : Fintype K := Fintype.ofFinite K
-  haveI : Fintype (ResidueField O) := Fintype.ofFinite _
+  have := op_localHom O K
+  let : Algebra (ResidueField O) K := (IsLocalRing.ResidueField.lift (algebraMap O K)).toAlgebra
+  have : Finite (ResidueField O) := IsCoef.finite (l := l)
+  have : Fintype K := Fintype.ofFinite K
+  have : Fintype (ResidueField O) := Fintype.ofFinite _
   obtain ⟨α, hα⟩ := Field.exists_primitive_element (ResidueField O) K
   have hαi : IsIntegral (ResidueField O) α := .of_finite _ α
   have hgi : Irreducible (minpoly (ResidueField O) α) := minpoly.irreducible hαi
@@ -1366,8 +1366,8 @@ theorem UpperTheory.V.Pa.BC.oprime :
       rw [Polynomial.lifts_iff_set_range,
         (Polynomial.map_surjective _ IsLocalRing.residue_surjective).range_eq]
       trivial) hgm
-  haveI : Module.Finite O (AdjoinRoot P) := (AdjoinRoot.powerBasis' hPmon).finite
-  haveI : Module.Free O (AdjoinRoot P) := Module.Free.of_basis (AdjoinRoot.powerBasis' hPmon).basis
+  have : Module.Finite O (AdjoinRoot P) := (AdjoinRoot.powerBasis' hPmon).finite
+  have : Module.Free O (AdjoinRoot P) := Module.Free.of_basis (AdjoinRoot.powerBasis' hPmon).basis
   set M : Ideal (AdjoinRoot P) := (maximalIdeal O).map (algebraMap O (AdjoinRoot P)) with hM
   let e0 : AdjoinRoot (P.map (IsLocalRing.residue O)) ≃+* AdjoinRoot (minpoly (ResidueField O) α) := by
     rw [hPmap]
@@ -1378,14 +1378,14 @@ theorem UpperTheory.V.Pa.BC.oprime :
       ((IntermediateField.equivOfEq hα).toRingEquiv.trans IntermediateField.topEquiv.toRingEquiv))
   have hMmax : M.IsMaximal :=
     Ideal.Quotient.maximal_of_isField M (MulEquiv.isField (Field.toIsField K) eK.toMulEquiv)
-  haveI hloc : IsLocalRing (AdjoinRoot P) := by
+  have hloc : IsLocalRing (AdjoinRoot P) := by
     refine IsLocalRing.of_unique_max_ideal ⟨M, hMmax, fun Q hQ => ?_⟩
     have hc : (Q.comap (algebraMap O (AdjoinRoot P))).IsMaximal :=
       Ideal.isMaximal_under_of_isIntegral_of_isMaximal Q
     have hle : M ≤ Q := Ideal.map_le_iff_le_comap.mpr (IsLocalRing.eq_maximalIdeal hc).symm.le
     exact (hMmax.eq_of_le hQ.ne_top hle).symm
   have hMeq : M = maximalIdeal (AdjoinRoot P) := IsLocalRing.eq_maximalIdeal hMmax
-  haveI : IsNoetherianRing (AdjoinRoot P) := isNoetherian_of_tower O inferInstance
+  have : IsNoetherianRing (AdjoinRoot P) := isNoetherian_of_tower O inferInstance
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   set π : AdjoinRoot P := algebraMap O (AdjoinRoot P) ϖ with hπ
   have hMspan : M = Ideal.span {π} := by
@@ -1423,26 +1423,26 @@ theorem UpperTheory.V.Pa.BC.oprime :
     apply hi
     rw [hMspan, Ideal.span_singleton_pow, Ideal.mem_span_singleton']
     exact ⟨c, by rw [← hu, ← hc]; ring⟩
-  haveI : NoZeroDivisors (AdjoinRoot P) := ⟨fun {x y} hxy => by
+  have : NoZeroDivisors (AdjoinRoot P) := ⟨fun {x y} hxy => by
     by_contra h
     push_neg at h
     obtain ⟨a, u, hu, rfl⟩ := hfac x h.1
     obtain ⟨b, v, hv, rfl⟩ := hfac y h.2
     have h0 : π ^ (a + b) * (u * v) = 0 := by rw [← hxy]; ring
     exact hπn (a + b) ((hu.mul hv).mul_left_eq_zero.mp h0)⟩
-  haveI : IsDomain (AdjoinRoot P) := NoZeroDivisors.to_isDomain _
+  have : IsDomain (AdjoinRoot P) := NoZeroDivisors.to_isDomain _
   have hnf : ¬ IsField (AdjoinRoot P) := by
     rw [IsLocalRing.isField_iff_maximalIdeal_eq, ← hMeq, hMspan, Ideal.span_singleton_eq_bot]
     simpa using hπn 1
   have hprin : (maximalIdeal (AdjoinRoot P)).IsPrincipal := ⟨⟨π, by rw [← hMeq, hMspan]⟩⟩
-  haveI : IsDiscreteValuationRing (AdjoinRoot P) :=
+  have : IsDiscreteValuationRing (AdjoinRoot P) :=
     ((IsDiscreteValuationRing.TFAE (AdjoinRoot P) hnf).out 1 5).mpr hprin
   have hsub : ∀ n : ℕ, ((maximalIdeal O ^ n • ⊤ : Submodule O (AdjoinRoot P)) : Set (AdjoinRoot P))
       = ((maximalIdeal (AdjoinRoot P) ^ n • ⊤ : Submodule (AdjoinRoot P) (AdjoinRoot P)) : Set (AdjoinRoot P)) := by
     intro n
     rw [Ideal.smul_top_eq_map, smul_eq_mul, Ideal.mul_top, ← hMeq, hM, Ideal.map_pow]
     rfl
-  haveI : IsPrecomplete (maximalIdeal O) O := (IsCoef.complete (l := l) (O := O)).toIsPrecomplete
+  have : IsPrecomplete (maximalIdeal O) O := (IsCoef.complete (l := l) (O := O)).toIsPrecomplete
   have hpre : IsPrecomplete (maximalIdeal O) (AdjoinRoot P) := op_isPrecomplete_finite (maximalIdeal O)
   have hcomp : IsAdicComplete (maximalIdeal (AdjoinRoot P)) (AdjoinRoot P) := by
     refine { haus' := ?_, prec' := ?_ }
@@ -1473,16 +1473,16 @@ theorem UpperTheory.V.Pa.BC.oprime :
       exact Ideal.mem_map_of_mem _ hxm
     exact (IsLocalRing.mem_maximalIdeal _).mp hm hx⟩
   let eR : ResidueField (AdjoinRoot P) ≃+* K := (Ideal.quotEquivOfEq hMeq.symm).trans eK
-  haveI hfin : Finite (ResidueField (AdjoinRoot P)) := Finite.of_equiv K eR.symm.toEquiv
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have hfin : Finite (ResidueField (AdjoinRoot P)) := Finite.of_equiv K eR.symm.toEquiv
+  have : CharP (ResidueField O) l := IsCoef.char
   have hchar : CharP (ResidueField (AdjoinRoot P)) l :=
     charP_of_injective_ringHom (IsLocalRing.ResidueField.map (algebraMap O (AdjoinRoot P))).injective l
   refine ⟨AdjoinRoot P, inferInstance, inferInstance, inferInstance, inferInstance, AdjoinRoot.root P, P,
     ⟨hcomp, hfin, hchar⟩, inferInstance, inferInstance, hlh, Nat.card_congr eR.toEquiv,
     AdjoinRoot.adjoinRoot_eq_top, hPmon, by rw [AdjoinRoot.aeval_eq, AdjoinRoot.mk_self], ?_⟩
   intro K' _ _ _ hK'
-  haveI := op_localHom O K'
-  haveI : Fintype K' := Fintype.ofFinite K'
+  have := op_localHom O K'
+  have : Fintype K' := Fintype.ofFinite K'
   have hφ : algebraMap O K' = (IsLocalRing.ResidueField.lift (algebraMap O K')).comp (IsLocalRing.residue O) :=
     (IsLocalRing.ResidueField.lift_comp_residue _).symm
   rw [hφ, ← Polynomial.map_map, hPmap]
@@ -1517,10 +1517,10 @@ open scoped PowerSeries.WithPiTopology in
 theorem UpperTheory.V.Pa.BC.ps_ev :
     ∀ (R K : Type) [CommRing R] [CommRing K] (x : R →+* PowerSeries K), ∃ f : PowerSeries R →+* PowerSeries K, (∀ a, f (PowerSeries.C a) = x a) ∧ f PowerSeries.X = PowerSeries.X := by
   intro R K _ _ x
-  letI : UniformSpace R := ⊥
-  letI : UniformSpace K := ⊥
-  haveI : DiscreteUniformity R := ⟨rfl⟩
-  haveI : DiscreteUniformity K := ⟨rfl⟩
+  let : UniformSpace R := ⊥
+  let : UniformSpace K := ⊥
+  have : DiscreteUniformity R := ⟨rfl⟩
+  have : DiscreteUniformity K := ⟨rfl⟩
   refine ⟨PowerSeries.eval₂Hom (φ := x) (a := PowerSeries.X) continuous_of_discreteTopology
     PowerSeries.HasEval.X, ?_, ?_⟩
   · intro a
@@ -1554,15 +1554,15 @@ private theorem surj_of_card {O' K : Type} [CommRing O'] [IsDomain O'] [IsDiscre
   have hne : RingHom.ker φ ≠ ⊥ := by
     intro h
     have hi : Function.Injective φ := (RingHom.injective_iff_ker_eq_bot φ).2 h
-    haveI : Finite O' := Finite.of_injective φ hi
+    have : Finite O' := Finite.of_injective φ hi
     exact IsDiscreteValuationRing.not_isField O' (Finite.isField_of_domain O')
-  haveI : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   have hmax : RingHom.ker φ = maximalIdeal O' :=
     IsLocalRing.eq_maximalIdeal (Ring.DimensionLEOne.maximalOfPrime hne inferInstance)
   let g : ResidueField O' →+* K := Ideal.Quotient.lift (maximalIdeal O') φ (fun a ha => by
     rw [← hmax] at ha; exact ha)
   have hg : Function.Bijective g := by
-    haveI : Finite (ResidueField O') := Finite.of_injective g g.injective
+    have : Finite (ResidueField O') := Finite.of_injective g g.injective
     exact (Nat.bijective_iff_injective_and_card g).2 ⟨g.injective, hc⟩
   intro k
   obtain ⟨a, ha⟩ := hg.2 k
@@ -1575,7 +1575,7 @@ private theorem exists_pt {O O' B K : Type} [CommRing O] [CommRing O'] [Algebra 
     (hs : (P.map (algebraMap O K)).Splits) (hQ : Q.IsPrime)
     (hc : Q.comap (Algebra.TensorProduct.includeRight : B →ₐ[O] O' ⊗[O] B) = RingHom.ker f) :
     ∃ x : O' ⊗[O] B →+* PowerSeries K, (∀ b, x (1 ⊗ₜ b) = f b) ∧ RingHom.ker x = Q := by
-  letI : Algebra B (O' ⊗[O] B) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra B (O' ⊗[O] B) := Algebra.TensorProduct.rightAlgebra
   have hB : ∀ b : B, algebraMap B (O' ⊗[O] B) b = 1 ⊗ₜ b := fun b => rfl
   have hcomp : (algebraMap B (O' ⊗[O] B)).comp (algebraMap O B) =
       (Algebra.TensorProduct.includeLeftRingHom : O' →+* O' ⊗[O] B).comp (algebraMap O O') :=
@@ -1653,7 +1653,7 @@ theorem UpperTheory.V.Pa.BC.pt_lift :
     change _ = PowerSeries.C (PowerSeries.constantCoeff (y o))
     rw [hc, PowerSeries.constantCoeff_C]
   obtain ⟨g, hg1, hg2⟩ := UpperTheory.V.Pa.BC.ps_ev (O' ⊗[O] B) K x
-  letI : Algebra O' K := φ.toAlgebra
+  let : Algebra O' K := φ.toAlgebra
   let g' : Til O O' B →+* PowerSeries K := g
   have hg1' : ∀ a, g' (Til.C O O' B a) = x a := hg1
   refine ⟨this, { g' with commutes' := fun o => ?_ }, surj_of_card φ hcard, fun b => ?_, hg2, ?_⟩
@@ -1748,9 +1748,9 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.BC.til_prime :
     ∀ (O O' B : Type) [CommRing O] [CommRing O'] [Algebra O O'] [Module.Finite O O'] [CommRing B] [Algebra O B] [IsNoetherianRing B] (Q : Ideal (O' ⊗[O] B)), Q.IsPrime → (Q.map (Til.C O O' B)).IsPrime ∧ (Q.map (Til.C O O' B)).comap (Til.ι O O' B) = Q.comap (Algebra.TensorProduct.includeRight : B →ₐ[O] O' ⊗[O] B) := by
   intro O O' B _ _ _ _ _ _ _ Q hQ
-  haveI hN : IsNoetherianRing (O' ⊗[O] B) := by
-    letI : Algebra B (O' ⊗[O] B) := Algebra.TensorProduct.rightAlgebra
-    haveI : Module.Finite B (O' ⊗[O] B) :=
+  have hN : IsNoetherianRing (O' ⊗[O] B) := by
+    let : Algebra B (O' ⊗[O] B) := Algebra.TensorProduct.rightAlgebra
+    have : Module.Finite B (O' ⊗[O] B) :=
       Module.Finite.equiv (Algebra.TensorProduct.commRight O B O').toLinearEquiv
     exact Algebra.FiniteType.isNoetherianRing B (O' ⊗[O] B)
   obtain ⟨-, -, h3, h4⟩ := UpperTheory.V.AlgebraTools.powerSeries_ker_map (O' ⊗[O] B) Q (IsNoetherian.noetherian Q)
@@ -1778,11 +1778,11 @@ theorem coreBC : CoreBC := by
   intro l _ L G0 T n O _ _ _ _ _ r B _ _ _ u J D A0 hl hP hAd hG h x hx
   obtain ⟨O', _, _, _, _, α, P, hco, hfin, hfree, hloc, hcard, hα, hPm, hPα, hsplit⟩ :=
     BC.oprime l O (x 0).x.K
-  letI : Algebra ℤ_[l] O' := ((algebraMap O O').comp (algebraMap ℤ_[l] O)).toAlgebra
-  haveI : IsScalarTower ℤ_[l] O O' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsAdicComplete (maximalIdeal O) O := IsCoef.complete (l := l)
-  haveI : Finite (ResidueField O) := IsCoef.finite (l := l)
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  let : Algebra ℤ_[l] O' := ((algebraMap O O').comp (algebraMap ℤ_[l] O)).toAlgebra
+  have : IsScalarTower ℤ_[l] O O' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsAdicComplete (maximalIdeal O) O := IsCoef.complete (l := l)
+  have : Finite (ResidueField O) := IsCoef.finite (l := l)
+  have : CharP (ResidueField O) l := IsCoef.char
   obtain ⟨⟨r', hr'⟩, hrr⟩ := BC.resid_bc l G0.frame O O' n r
   obtain ⟨hrIp, -, hrchi⟩ := hrr r' hr'
   obtain ⟨hTco, hιloc, hsm⟩ := BC.til_co O O' B

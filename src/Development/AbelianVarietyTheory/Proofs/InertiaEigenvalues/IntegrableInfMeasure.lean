@@ -198,7 +198,7 @@ theorem fderiv_rsInf {ℓ : Fin a} (F F' : Sm E a) {Φ : (Fin a → Cinf E) → 
     refine (congrArg (· v) h4).trans ?_
     have hc : ∀ β, conj (rowCoef ℓ v β y) = rowCoef ℓ v β y := fun β => Complex.conj_ofReal _
 
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+    simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply,
     fderiv_translate _ g (hΦ.2.2 hy), rsInf, smul_eq_mul, Pi.mul_apply, Function.comp_apply,
     ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply, map_sum, map_mul, hc, Finset.mul_sum, mul_add]
     rw [add_comm, add_comm (∑ _, _)]

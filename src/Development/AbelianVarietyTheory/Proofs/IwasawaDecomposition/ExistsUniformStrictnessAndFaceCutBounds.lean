@@ -237,7 +237,7 @@ theorem perModule_bound (hP : IsPolyFanOn bar φ X) : ∃ N₀ : ℕ, ∀ (m : �
   have hw : StrictWith bar φ N ℓ w := strictWith_of_ratCone hP hℓ hδ.mem hδ.nonneg hwb hwp hwδ hδw
   have hex : ∃ (N : ℕ) (ℓ : LinearMap.BilinForm ℤ X →ₗ[ℤ] ℤ), 0 < N ∧ StrictWith bar φ N ℓ (uT T) :=
     ⟨N, _, hN, StrictWith.of_pull e.symm.surjective hw⟩
-  have hD : D T = hex.choose := dif_pos hex
+  have hD : D T = hex.choose := dite_eq_left hex
   obtain ⟨ℓT, hNT, hT⟩ := hex.choose_spec
   have hT' : StrictWith bar φ hex.choose ℓT (fun t => pull e.toLinearMap (w t)) := by
     have : (fun t => pull e.toLinearMap (w t)) = uT T := funext fun t => pull_pull_symm e _
@@ -258,13 +258,13 @@ theorem uniform_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
   have key : ∀ k, letI := (hR k).1; ∃ N₀ : ℕ, ∀ (m : ℕ) (δ : Fin m → LinearMap.BilinForm ℤ (R k)),
       IsCell H.bar ψ δ → ∃ (N : ℕ) (ℓ : LinearMap.BilinForm ℤ (R k) →ₗ[ℤ] ℤ), 0 < N ∧ N ≤ N₀ ∧
         StrictWith H.bar ψ N ℓ δ := fun k => by
-    letI := (hR k).1
-    haveI := (hR k).2.1
+    let := (hR k).1
+    have := (hR k).2.1
     exact perModule_bound (hψ (R k) (hR k).2.2)
   choose N₀ hN₀ using key
   refine ⟨Finset.univ.sup N₀, fun X _ _ _ _ hX m γ hγ => ?_⟩
   obtain ⟨k, ⟨f⟩⟩ := hcls X hX
-  letI := (hR k).1
+  let := (hR k).1
   obtain ⟨N, ℓ, hN, hNle, hℓ⟩ :=
     hN₀ k m (fun i => pull f.symm.toLinearMap (γ i)) (CellClass.isCell_pull_equiv hγ f.symm)
   exact ⟨N, _, hN, hNle.trans (Finset.le_sup (Finset.mem_univ k)), StrictWith.of_pull f.symm.surjective hℓ⟩
@@ -354,7 +354,7 @@ theorem exists_strict_data : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   refine ⟨N₀, N₀, fun X _ _ _ _ hX m γ hγ => ?_⟩
   obtain ⟨N, ℓ, hN, hNle, hℓ⟩ := hN₀ X hX m γ hγ
   refine ⟨N, ℓ, hN, hNle, hℓ, fun m' s h hh => ?_⟩
-  haveI : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
+  have : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
   have hF := isCell_face_of_isFaceCut E H q ψ hψ X hX (hDom X) m γ hγ m' s h hh
   obtain ⟨NF, ℓF, -, hNFle, hℓF⟩ := hN₀ X hX m' _ hF
   obtain ⟨h1, h2, h3⟩ := faceCut_data (hψ X hX) hγ hN hℓ hh hℓF

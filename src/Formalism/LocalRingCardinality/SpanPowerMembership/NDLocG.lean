@@ -85,7 +85,7 @@ theorem exists_embAt (w : HeightOneSpectrum (𝓞 F)) (hw : ((l : ℕ) : 𝓞 F)
   have hAl : (placeOf (AlgebraicClosure F) w).valuation ((l : ℕ) : AlgebraicClosure F) < 1 := by
     have := (hA ((l : ℕ) : 𝓞 F)).mpr hw
     simpa using this
-  haveI : IsAlgClosure ℚ (AlgebraicClosure F) := isAlgClosureQ F (AlgebraicClosure F)
+  have : IsAlgClosure ℚ (AlgebraicClosure F) := isAlgClosureQ F (AlgebraicClosure F)
   obtain ⟨j, hj⟩ := exists_emb (l := l) _ hAl
   exact ⟨j.comp (algebraMap F (AlgebraicClosure F)), fun x => by
     rw [← hA x, val_lt_one_iff hj]; rfl⟩

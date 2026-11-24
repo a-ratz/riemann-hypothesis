@@ -321,7 +321,7 @@ theorem shape_jac {A B : HSp D} {c σ : ℕ} {ε : D.host.E} (d : HermitianOrtho
     · exact (one_mul _).symm
     · exact (mul_diagonal u _ _ _).trans (mul_comm _ _)
     · exact (mul_diagonal u _ _ _).trans (mul_comm _ _)
-  · rw [symStep, if_pos (even_two_mul σ), show 2 * σ / 2 = σ by omega]
+  · rw [symStep, ite_eq_left (even_two_mul σ), show 2 * σ / 2 = σ by omega]
     rintro (a | i | i) (a' | j | j) <;>
       simp only [wlev, Sum.map_inl, Sum.map_inr, Sum.elim_inl, Sum.elim_inr, Fin.val_rev, Fin.val_castLE] <;> omega
   · exact (Matrix.map_mul (f := π)).symm.trans ((congrArg (·.map π) ((jacDec d rfl).wittDecomp_anisotropicEmbedding_inclAnisotropic x)).trans Matrix.map_mul)
@@ -384,7 +384,7 @@ theorem shape_bes {A B : HSp D} {c σ : ℕ} (d : HermitianOrthogonalExtensionDa
     · exact (mul_diagonal u _ _ _).trans ((mul_comm _ _).trans (congrArg (u _ * ·) (congrFun (congrFun e r) (Sum.inr a)).symm))
     · exact (mul_diagonal u _ _ _).trans ((mul_comm _ _).trans ((congrArg (u _ * ·) (vX π r i)).trans (mul_assoc _ _ _).symm))
     · exact (mul_diagonal u _ _ _).trans ((mul_comm _ _).trans ((congrArg (u _ * ·) (vY π r i)).trans (mul_assoc _ _ _).symm))
-  · rw [symStep, if_neg (Nat.not_even_iff_odd.2 (odd_two_mul_add_one σ)), show (2 * σ + 1) / 2 = σ by omega]
+  · rw [symStep, ite_eq_right (Nat.not_even_iff_odd.2 (odd_two_mul_add_one σ)), show (2 * σ + 1) / 2 = σ by omega]
     rintro ((a | a) | i | i) ((a' | a') | j | j) <;>
       simp only [wlev, RootEx.lev, Sum.map_inl, Sum.map_inr, Sum.elim_inl, Sum.elim_inr, Fin.val_rev, Fin.val_castLE] <;> omega
   · rw [embA_apply]
@@ -446,9 +446,9 @@ theorem tilt_cols {j : ℕ} (hj₁ : j < D.R.m) {δ : GA D (G.V (.grid D.R.m j))
     have hc : σ ≤ D.R.m - 1 - j := by clear hp; omega
     refine Eq.trans ?_ (congrArg (incA D) (mul_diagonal _ _ _ _).symm)
     by_cases hp' : p.1 < σ
-    · rw [if_pos hp']
+    · rw [ite_eq_left hp']
       exact (congrFun (congrFun b r) ⟨p.1, hp'⟩).trans (congrArg (incA D) (mul_diagonal _ _ _ _))
-    · rw [if_neg hp']
+    · rw [ite_eq_right hp']
       obtain ⟨q, rfl⟩ : ∃ q : Fin σ, p = (Fin.castLE hc q).rev :=
         ⟨⟨2 * σ - 1 - p.1, by omega⟩, Fin.ext (by simp only [Fin.val_rev, Fin.val_castLE]; omega)⟩
       rw [show 2 * σ - 1 - (Fin.castLE hc q).rev.1 = q.1 by
@@ -746,7 +746,7 @@ theorem sgn_diag (t : T) (s : ℤˣ) (w : Pl D.host.E) (j : ℕ)
   have hi : (frame h (.inl i)).1 = i.1 := rfl
   have := i.2
   simp only [Function.comp_apply]
-  rw [if_neg (by omega), Units.val_one]
+  rw [ite_eq_right (by omega), Units.val_one]
 
 
 
@@ -869,14 +869,14 @@ theorem isCompact_comap_fin (V : HSp D) {K : Subgroup (GL (Fin V.rank) (Lev.EAf 
 theorem isOpen_comap_fin (V : HSp D) {K : Subgroup (GL (Fin V.rank) (Lev.EAf D))}
     (h : IsOpen ((K.comap (Lev.finE V) : Subgroup (GA D V)) : Set (GA D V))) :
     IsOpen ((K.comap ((Lev.finE V).comp (GfC V).subtype) : Subgroup (GfC V)) : Set (GfC V)) :=
-  h.preimage continuous_subtype_val
+  h.preimage continuous_subtypeVal
 
 theorem relIndex_ne_zero (V : HSp D) {K K₃ : Subgroup (GL (Fin V.rank) (Lev.EAf D))} (h : IsCO V K)
     (h₃ : IsOpen ((K₃.comap (Lev.finE V) : Subgroup (GA D V)) : Set (GA D V))) :
     (K₃.comap ((Lev.finE V).comp (GfC V).subtype)).relIndex (K.comap ((Lev.finE V).comp (GfC V).subtype)) ≠ 0 := by
   have := GlobalTheory.LocVec.finiteIndex_of_isOpen (K.comap ((Lev.finE V).comp (GfC V).subtype)) (isCompact_comap_fin V h) subset_rfl
     ((K₃.comap ((Lev.finE V).comp (GfC V).subtype)).subgroupOf (K.comap ((Lev.finE V).comp (GfC V).subtype)))
-    ((isOpen_comap_fin V h₃).preimage continuous_subtype_val)
+    ((isOpen_comap_fin V h₃).preimage continuous_subtypeVal)
   exact this.index_ne_zero
 
 theorem vol_ratio (V : HSp D) {K₁ K₂ : Subgroup (GL (Fin V.rank) (Lev.EAf D))} (h₁ : IsCO V K₁) (h₂ : IsCO V K₂)
@@ -884,26 +884,26 @@ theorem vol_ratio (V : HSp D) {K₁ K₂ : Subgroup (GL (Fin V.rank) (Lev.EAf D)
     (hμ' : Lev.IsMeasLevDef V K₂ μ') (x : ℝ≥0) (hx : μ = x • μ') :
     ν {g | Lev.finE V g.1 ∈ K₂} = ν {g | Lev.finE V g.1 ∈ K₁} * x := by
   obtain ⟨hLC, hSC, hT2, hB, hTG, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hLC; haveI := hSC; haveI := hT2; haveI := hB; haveI := hTG
-  haveI : μ.IsHaarMeasure := hμ.1
+  have := hLC; have := hSC; have := hT2; have := hB; have := hTG
+  have : μ.IsHaarMeasure := hμ.1
   have h₃ : IsOpen (((K₁ ⊓ K₂).comap (Lev.finE V) : Subgroup (GA D V)) : Set (GA D V)) := h₁.1.inter h₂.1
   have hA₁ : μ (K₁.comap (Lev.finE V)) = 1 := GlobalTheory.Mass.Levels.measure_comap_finE hμ
   have hA₂ : μ (K₂.comap (Lev.finE V)) = x := by
-    rw [hx, Measure.smul_apply, GlobalTheory.Mass.Levels.measure_comap_finE hμ', ENNReal.smul_def, smul_eq_mul, mul_one]
+    rw [hx, smul_apply, GlobalTheory.Mass.Levels.measure_comap_finE hμ', ENNReal.smul_def, smul_eq_mul, mul_one]
   have n₁ := relIndex_ne_zero V h₁ h₃
   have n₂ := relIndex_ne_zero V h₂ h₃
   rw [relIndex_comap_fin] at n₁ n₂
-  haveI : (((K₁ ⊓ K₂).comap (Lev.finE V)).subgroupOf (K₁.comap (Lev.finE V))).FiniteIndex := ⟨n₁⟩
-  haveI : (((K₁ ⊓ K₂).comap (Lev.finE V)).subgroupOf (K₂.comap (Lev.finE V))).FiniteIndex := ⟨n₂⟩
+  have : (((K₁ ⊓ K₂).comap (Lev.finE V)).subgroupOf (K₁.comap (Lev.finE V))).FiniteIndex := ⟨n₁⟩
+  have : (((K₁ ⊓ K₂).comap (Lev.finE V)).subgroupOf (K₂.comap (Lev.finE V))).FiniteIndex := ⟨n₂⟩
   have e₁ := Formalism.DoubleCosetMeasures.P.GLRed.relIndex_mul_measure _ _ (Subgroup.comap_mono inf_le_left) h₃.measurableSet μ
   have e₂ := Formalism.DoubleCosetMeasures.P.GLRed.relIndex_mul_measure _ _ (Subgroup.comap_mono inf_le_right) h₃.measurableSet μ
   rw [hA₁] at e₁
   rw [hA₂] at e₂
   have m₁ := relIndex_ne_zero V h₁ h₃
   have m₂ := relIndex_ne_zero V h₂ h₃
-  haveI : ((((K₁ ⊓ K₂).comap ((Lev.finE V).comp (GfC V).subtype))).subgroupOf
+  have : ((((K₁ ⊓ K₂).comap ((Lev.finE V).comp (GfC V).subtype))).subgroupOf
     (K₁.comap ((Lev.finE V).comp (GfC V).subtype))).FiniteIndex := ⟨m₁⟩
-  haveI : ((((K₁ ⊓ K₂).comap ((Lev.finE V).comp (GfC V).subtype))).subgroupOf
+  have : ((((K₁ ⊓ K₂).comap ((Lev.finE V).comp (GfC V).subtype))).subgroupOf
     (K₂.comap ((Lev.finE V).comp (GfC V).subtype))).FiniteIndex := ⟨m₂⟩
   have f₁ := Formalism.DoubleCosetMeasures.P.GLRed.relIndex_mul_measure _ _ (Subgroup.comap_mono inf_le_left)
     (isOpen_comap_fin V h₃).measurableSet ν
@@ -921,7 +921,7 @@ theorem vol_ratio (V : HSp D) {K₁ K₂ : Subgroup (GL (Fin V.rank) (Lev.EAf D)
 theorem vol_pos (V : HSp D) {K : Subgroup (GL (Fin V.rank) (Lev.EAf D))} (h : IsCO V K)
     (ν : Measure (GfC V)) [ν.IsHaarMeasure] : 0 < ν.real {g | Lev.finE V g.1 ∈ K} := by
   obtain ⟨hLC, hSC, hT2, hB, hTG, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hLC; haveI := hSC; haveI := hT2; haveI := hB; haveI := hTG
+  have := hLC; have := hSC; have := hT2; have := hB; have := hTG
   refine ENNReal.toReal_pos ?_ ?_
   · exact ((isOpen_comap_fin V h.1).measure_pos ν ⟨1, one_mem _⟩).ne'
   · exact ((isCompact_comap_fin V h).measure_lt_top).ne
@@ -955,12 +955,12 @@ theorem pr_vol_of (hpr : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ (s : ℤˣ)
   have h1 : Lev.IsMeasLevDef _ (ch.G.levMax (.top (j' + 1))) (M.ν (.top (j' + 1))) := by
     have := hM.vtx (.top (j' + 1)) (show j' + 1 ≤ D.R.m by omega)
     unfold Vol.IsAt at this
-    rw [if_pos (show Node.neg D.R.m (.top (j' + 1)) = 0 from rfl)] at this
+    rw [ite_eq_left (show Node.neg D.R.m (.top (j' + 1)) = 0 from rfl)] at this
     exact this.1
   have h2 : Lev.IsMeasLevDef _ (ch.S.toGridChoice.levTop t Φ β (j' + 1) hjm) (M'.ν (.top (j' + 1))) := by
     have := hM'.1 (j' + 1) hjm
     unfold Vol.IsAt at this
-    rw [if_pos (show Node.neg D.R.m (.top (j' + 1)) = 0 from rfl)] at this
+    rw [ite_eq_left (show Node.neg D.R.m (.top (j' + 1)) = 0 from rfl)] at this
     exact this.1
   have e := vol_ratio _ hMax (GridChoice.isCO_levTop _ _ t Φ β hjm) ν h1 h2 x hx
   simp only [Measure.real, e, ENNReal.toReal_mul, ENNReal.coe_toReal, mul_assoc]

@@ -120,11 +120,11 @@ def dgOf (hT : Finite T) : ℕ :=
   Finset.univ.lcm fun p : Fin m × T => (A.fam.L p.1 p.2).DG (A.fam.lvlA P0 ψ0)
 
 theorem dgOf_dvd (hT : Finite T) (j : Fin m) (t : T) : (A.fam.L j t).DG (A.fam.lvlA P0 ψ0) ∣ dgOf A P0 ψ0 hT := by
-  letI := Fintype.ofFinite T
+  let := Fintype.ofFinite T
   exact Finset.dvd_lcm (f := fun p : Fin m × T => (A.fam.L p.1 p.2).DG (A.fam.lvlA P0 ψ0)) (Finset.mem_univ (j, t))
 
 theorem dgOf_pos (hT : Finite T) : 0 < dgOf A P0 ψ0 hT := by
-  letI := Fintype.ofFinite T
+  let := Fintype.ofFinite T
   have hpos : ∀ j t, 0 < (A.fam.L j t).DG (A.fam.lvlA P0 ψ0) := by
     intro j t
     unfold BlockDat.DG

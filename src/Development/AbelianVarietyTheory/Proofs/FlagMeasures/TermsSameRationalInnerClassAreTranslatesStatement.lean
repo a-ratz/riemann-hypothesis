@@ -238,7 +238,7 @@ variable {D : D7} {T T' : D.host.E}
 theorem mem_graph_iff (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') (Λ : LV D)
     {x' l : (VS D).V} (hx' : x' ∈ Lrep Λ F') (hl : l ∈ Lrep Λ F) :
     (x', l) ∈ (gdat F F' Λ).2.2 ↔ l - x' ∈ NgX Λ (gS D) F F' := by
-  simp only [gdat, Set.mem_setOf_eq]
+  simp only [gdat, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨l', hl', l₀, hl₀, h1, h2, h3⟩
     have hx'Λ : x' ∈ Λ := (Submodule.mem_inf.1 hx').1
@@ -260,7 +260,7 @@ theorem mem_graph_iff (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R
 theorem mem_graph_of_sub (F : LFlag (D.sp.Y 0) D.R.rS T) (F' : LFlag (D.sp.Y 0) D.R.rS T') (Λ : LV D)
     {p q : (VS D).V × (VS D).V} (h1 : q.1 - p.1 ∈ Xsp F') (h2 : q.2 - p.2 ∈ Xsp F)
     (hp : p ∈ (gdat F F' Λ).2.2) : q ∈ (gdat F F' Λ).2.2 := by
-  simp only [gdat, Set.mem_setOf_eq] at hp ⊢
+  simp only [gdat, Set.mem_ofPred_eq] at hp ⊢
   obtain ⟨l', hl', l, hl, k1, k2, k3⟩ := hp
   refine ⟨l', hl', l, hl, ?_, ?_, k3⟩
   · have e : q.1 - l' = (q.1 - p.1) + (p.1 - l') := by abel
@@ -280,7 +280,7 @@ theorem mem_graph_map (ψ : GV D) (hψ : ψ ∈ Formalism.HermitianLatticesTheor
     (hF : (Xsp F).map (ψ : (VS D).V →ₗ[D.host.E] (VS D).V) = Xsp G)
     (hF' : (Xsp F').map (ψ : (VS D).V →ₗ[D.host.E] (VS D).V) = Xsp G') (Λ : LV D) (x y : (VS D).V) :
     (x, y) ∈ (gdat F F' Λ).2.2 ↔ (ψ x, ψ y) ∈ (gdat G G' (Formalism.HermitianLatticesTheory.gmap ψ Λ)).2.2 := by
-  simp only [gdat, Set.mem_setOf_eq]
+  simp only [gdat, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨l', hl', l, hl, h1, h2, h3⟩
     refine ⟨ψ l', ?_, ψ l, ?_, ?_, ?_, ?_⟩
@@ -438,7 +438,7 @@ theorem adapt_and_inv_mem : ∀ (D : D7) (T : D.host.E) (F : LFlag (D.sp.Y 0) D.
       simpa using hfl i.val _ hmem
   · refine ⟨inv_mem hiso, ?_, ?_⟩
     · intro j x hx
-      haveI := xflag_fd F (j + 1)
+      have := xflag_fd F (j + 1)
       have hy := inv_mem_of_map_le n _ (map_xflag hn' (j + 1)) x hx
       have key := hfl j _ hy
       have : n (n⁻¹ x) = x := n.apply_symm_apply x
@@ -446,7 +446,7 @@ theorem adapt_and_inv_mem : ∀ (D : D7) (T : D.host.E) (F : LFlag (D.sp.Y 0) D.
       have := neg_mem key
       simpa using this
     · intro x hx
-      haveI := xflag_fd F D.R.rS
+      have := xflag_fd F D.R.rS
       have hsp : ∀ y ∈ Xsp F, n⁻¹ y ∈ Xsp F := by
         rw [xsp_eq]; exact inv_mem_of_map_le n _ (map_xflag hn' D.R.rS)
       have hspn : ∀ y ∈ Xsp F, n y ∈ Xsp F := by
@@ -549,7 +549,7 @@ theorem map_xflag_le {T : D.host.E} {F G : LFlag (D.sp.Y 0) D.R.rS T} {g : GV D}
 
 theorem map_xflag {T : D.host.E} {F G : LFlag (D.sp.Y 0) D.R.rS T} {g : GV D} (hg : Adapt g F G) (j : ℕ) :
     (Xflag F j).map (g : (VS D).V →ₗ[D.host.E] (VS D).V) = Xflag G j := by
-  haveI : FiniteDimensional D.host.E (Xflag G j) :=
+  have : FiniteDimensional D.host.E (Xflag G j) :=
     FiniteDimensional.span_of_finite D.host.E ((Set.toFinite _).image _)
   refine Submodule.eq_of_le_of_finrank_eq (map_xflag_le hg j) ?_
   rw [LinearEquiv.finrank_map_eq]
@@ -602,7 +602,7 @@ theorem nrat_adapt {T : D.host.E} {F : LFlag (D.sp.Y 0) D.R.rS T} {n : GV D} (hn
     rw [frame_last, Fin.val_last, xflag_top]
     exact hn.2.2 _ (z_mem_orth F)
   | cast i =>
-    rw [frame_castSucc, Fin.coe_castSucc]
+    rw [frame_castSucc, Fin.val_castSucc]
     exact hn.2.1 i.1 _ (Submodule.subset_span ⟨i, by simp, rfl⟩)
 
 theorem gmap_mul (a b : GV D) (M : LV D) :
@@ -696,7 +696,7 @@ theorem Xflag_eq_Xsp {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpa
   show Submodule.span E (F.fl.e '' {i | i.1 < j}) = Submodule.span E (Set.range F.fl.e)
   congr 1
   ext v
-  simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range]
   exact ⟨fun ⟨i, _, h⟩ => ⟨i, h⟩, fun ⟨i, h⟩ => ⟨i, lt_of_lt_of_le i.2 hj, h⟩⟩
 
 theorem map_Xsp_NRat {D : D7} {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (n : GV D) (hn : n ∈ NRat F) :
@@ -708,7 +708,7 @@ theorem map_Xsp_NRat {D : D7} {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) (n 
     rw [Xflag_eq_Xsp F le_rfl] at h2
     have := (Xsp F).add_mem h2 hx
     simpa using this
-  haveI : FiniteDimensional D.host.E (Xsp F) :=
+  have : FiniteDimensional D.host.E (Xsp F) :=
     FiniteDimensional.span_of_finite _ (Set.finite_range _)
   exact Submodule.eq_of_le_of_finrank_eq hle
     (LinearEquiv.finrank_map_eq n (Xsp F))
@@ -838,7 +838,7 @@ theorem adapt_fix {T : D.host.E} {F : LFlag (D.sp.Y 0) D.R.rS T} {h : GV D} (hi 
 
 theorem frame_mapLF {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) {γ : GV D} (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT)
     (a : Fin (D.R.rS + 1)) : frame (mapLF γ F) a = γ (frame F a) := by
-  simp only [frame, mapLF, dif_pos hγ, Formalism.MainNotions.S.FlagG.fvec]
+  simp only [frame, mapLF, dite_eq_left hγ, Formalism.MainNotions.S.FlagG.fvec]
   refine Fin.lastCases ?_ (fun i => ?_) a
   · simp only [Fin.snoc_last]
     rfl
@@ -847,7 +847,7 @@ theorem frame_mapLF {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) {γ : GV D} (
 
 theorem xsp_mapLF {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) {γ : GV D} (hγ : γ ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT) :
     Xsp (mapLF γ F) = (Xsp F).map (γ : (VS D).V →ₗ[D.host.E] (VS D).V) := by
-  simp only [Xsp, mapLF, dif_pos hγ, Formalism.MainNotions.S.FlagG.X, Submodule.map_span, ← Set.range_comp]
+  simp only [Xsp, mapLF, dite_eq_left hγ, Formalism.MainNotions.S.FlagG.X, Submodule.map_span, ← Set.range_comp]
   rfl
 
 theorem adapt_mapLF {T : D.host.E} {F G : LFlag (D.sp.Y 0) D.R.rS T} {γ g : GV D}

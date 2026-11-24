@@ -267,7 +267,7 @@ theorem admissible_of_sum_translates_quadraticCharacter : ∀ (E : Type) [Field 
     · rw [add_sub_right_comm]
       generalize x - d = z
       by_cases hz : z ∈ tens Λ K
-      · rw [if_pos hz, if_pos (add_mem hz hR)]
+      · rw [ite_eq_left hz, ite_eq_left (add_mem hz hR)]
         have h1 := isIntegral_pair hΛ hy (mem_tens_mul H5 hz)
         have h2 := isIntegral_pair hΛ (mem_tens_mul H4 hz) hy
         have h3 := isIntegral_pair hΛ (mem_tens_mul H6 hy) hy
@@ -279,7 +279,7 @@ theorem admissible_of_sum_translates_quadraticCharacter : ∀ (E : Type) [Field 
           Matrix.mul_assoc]
         push_cast
         ring
-      · rw [if_neg hz, if_neg fun h => hz ((AddSubgroup.add_mem_cancel_right _ hR).1 h)]
+      · rw [ite_eq_right hz, ite_eq_right fun h => hz ((AddSubgroup.add_mem_cancel_right _ hR).1 h)]
     · rw [← exp_trace_add (t := (b * ccT (x + x - d)).trace) ((ni (2 * N')).mul hb),
         show ∀ w, x + w + (x + w) - d = x + x - d + w + w from fun w => by abel]
       generalize x + x - d = z
@@ -433,7 +433,7 @@ theorem exists_rep {D : Level X} {hn : r ≤ n} {y : Matrix (Fin n) (Fin r) E}
   · simp at hy
 
 theorem finite_J (D : Level X) : Finite D.J := by
-  haveI : Finite (𝓞 E ⧸ D.𝔪) := Ideal.finiteQuotientOfFreeOfNeBot D.𝔪 D.ne_bot
+  have : Finite (𝓞 E ⧸ D.𝔪) := Ideal.finiteQuotientOfFreeOfNeBot D.𝔪 D.ne_bot
   infer_instance
 
 theorem exists_index {D : Level X} {hn : r ≤ n} [Fintype D.J]
@@ -487,8 +487,8 @@ theorem fg_of_le {K K' : Lt E r} (h : K ≤ K') (h' : K'.FG) : K.FG :=
 
 theorem adm_dbl_phi_of_isVac : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (g : ℕ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (n : ℕ), IsSympl X bas → Even n → ∀ (D : Level X) (hn : r ≤ n) (M : ℕ), 0 < M → (M : 𝓞 E) ∈ D.𝔪 → ∀ v₀ : Lt E r → TF n g, (∀ L ∈ D.lats, IsVac X bas D.w (tens (stdL E n) (D.sh L)) (v₀ L)) → ∀ L ∈ D.lats, ∀ L' ∈ D.lats, ∃ R, admitted M R fun Λ => dbl X bas idx (D.phi bas hn v₀ L Λ) (D.phi bas hn v₀ L' Λ) := by
   intro E _ _ _ r X g bas idx n hs hev D hn M hM hMm v₀ hv₀ L hL L' hL'
-  haveI := finite_J D
-  haveI := Fintype.ofFinite D.J
+  have := finite_J D
+  have := Fintype.ofFinite D.J
   have lev := (level_laws E r X g bas idx n hs hev D hn).2.2.2.1
   have phi := _root_.GlobalTheory.SW.RecSum.phi_sum_equivariant E r X g bas idx n hs hev D hn M hM hMm v₀ hv₀
   obtain ⟨β, t, -, hu⟩ := _root_.GlobalTheory.SW.dbl_vacuum E r X g bas idx n hs hev D.w D.w_int D.w_tr _ _ (lev L hL).1

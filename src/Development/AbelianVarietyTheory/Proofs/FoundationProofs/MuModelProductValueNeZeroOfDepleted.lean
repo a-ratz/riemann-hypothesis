@@ -83,7 +83,7 @@ lemma ch_mul' {M : ℕ} (φ : DirichletCharacter ℂ M) (x y : ℤ) : ch φ (x *
   simp [ch]
 
 lemma ch_zero_of_dvd {l : ℕ} (φ : DirichletCharacter ℂ l) (hl : l.Prime) (x : ℤ) (hx : (l : ℤ) ∣ x) : ch φ x = 0 := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have : ((x : ZMod l)) = 0 := (ZMod.intCast_zmod_eq_zero_iff_dvd x l).2 hx
   simp only [ch]; rw [this]; exact MulChar.map_zero φ
 
@@ -227,7 +227,7 @@ end GlobalTheory.ZMVal
 open GlobalTheory.ZMVal in
 theorem _root_.GlobalTheory.zm_val_ne_zero : ∀ (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (ψ : DirichletCharacter ℂ l) (g : ℕ → ℂ) (α β : ℂ) (a₀ b₀ c₀ d₀ : ℤ), N * a₀ * d₀ - l * b₀ * c₀ = 1 → 1 ≤ e → 0 < N → l.Prime → ¬ l ∣ N → Prim (2 * e + 1) N χ⁻¹ (fun n => conj (g n)) → α + β = χ l * conj (g l) → α * β = χ l * (l : ℂ) ^ (2 * e) → α ≠ 0 → θ (-1) = (-1) ^ e * ψ (-1) → θ * χ⁻¹ ≠ 1 → ∀ (B : ℕ) (c : ℕ → ℂ), EigF (2 * e + 1) N l χ (fun q => χ q * conj (g q)) α B c → val B c l α 1 (Zs (2 * e + 1) l (ch θ) (hat ⇑(θ * χ⁻¹)) (fun x y => ψ x * ψ⁻¹ y * ((y : ℂ) / x) ^ e)) ≠ 0 → ∀ (B' : ℕ) (c' : ℕ → ℂ), (∀ a a', MF (2 * e + 1) (N * l) (ch χ⁻¹) a → MF (2 * e + 1) (N * l) (ch χ) a' → qs a' = slz (2 * e + 1) !![(N : ℤ) * a₀, b₀; N * l * c₀, N * d₀] (qs a) → lam B' c' a = lam B c a') → (∀ a, MF (2 * e + 1) (N * l) (ch χ⁻¹) a → lam B' c' (Uo l a) = χ⁻¹ l * α * lam B' c' a) → val B' c' l (χ⁻¹ l * α) 1 (Zm (2 * e + 1) l (hat θ) (ch (θ * χ⁻¹)) (fun A d => ψ A * ψ⁻¹ d * ((d : ℂ) / A) ^ e)) ≠ 0 := by
   intro e N l χ θ ψ g α β a₀ b₀ c₀ d₀ hdet he hN hl hlN hprim hsum hprod hα0 hpar hθχ B c hEig hval B' c' hAL hU'
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hl0 : 0 < l := hl.pos
   have hNl : 0 < N * l := Nat.mul_pos hN hl0
   have hlNl : l ∣ N * l := dvd_mul_left l N

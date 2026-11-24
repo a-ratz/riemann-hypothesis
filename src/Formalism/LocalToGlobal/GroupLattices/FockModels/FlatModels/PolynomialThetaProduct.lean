@@ -147,7 +147,7 @@ theorem map_Nv {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') (m : �
     map f (Nv R m vec c) = Nv R' m vec c := by
   simp only [Nv]
   cases vec
-  · simp only [Bool.false_eq_true, if_false]
+  · simp only [Bool.false_eq_true, ite_false]
     have h1 : (MvPolynomial.map f).mapMatrix (genM R m) = genM R' m := by
       ext i j
       simp [genM]
@@ -274,7 +274,7 @@ theorem emb_Pol {R : Type} [CommRing R] {k a : ℕ} (s : S) (P : MvPolynomial (F
     rw [← hd]
     exact Finset.sum_congr rfl fun c _ => Finsupp.mapDomain_apply_of_injective hinj ν c
   · rw [Pi.single_eq_of_ne hi]
-    exact Finset.sum_eq_zero fun c _ => Finsupp.mapDomain_notin_range _ _
+    exact Finset.sum_eq_zero fun c _ => Finsupp.mapDomain_of_notMem_range _ _
       (by rintro ⟨c', hc'⟩; exact hi (congrArg Prod.fst hc').symm)
 
 theorem prod_emb_Pol {R : Type} [CommRing R] {k : ℕ} (d : S → ℕ) (P : S → MvPolynomial (Fin k) R)

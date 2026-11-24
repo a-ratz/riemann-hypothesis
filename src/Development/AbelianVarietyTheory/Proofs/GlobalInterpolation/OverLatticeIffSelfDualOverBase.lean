@@ -221,7 +221,7 @@ theorem overLatticeAt_iff (D : D7) (Lv : LevelData D) (u : D.what₂.Word) :
     OverPlaceIntegralForm.OverLatticeAt D Lv u ↔
       (letI := D.host.cmStar
        Formalism.MainNotions.StandardLattice.SplitsF D (D.mem u).A.T → SplittingProjection.HasOverLattice (Lv u)) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   exact imp_congr_right fun _ => and_congr_right fun _ =>
     exists_congr fun N => isOverLattice_iff (Lv u) N
 

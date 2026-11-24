@@ -63,7 +63,7 @@ theorem log_le_of_le_pow_mul_pow {N g₀ g₁ d X m : ℕ} {a c P : ℝ} (ha : 0
   calc (N : ℝ) ≤ ((g₀ : ℝ) * g₁) ^ m * (d * (X : ℝ) ^ m) := hN'
     _ ≤ (Real.exp a * Real.exp a) ^ m * (Real.exp P * Real.exp c ^ m) := by gcongr
     _ = Real.exp (m * (2 * a + c) + P) := by
-      rw [← Real.exp_add, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]
+      rw [← Real.exp_add, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]
       congr 1; ring
 
 theorem frn_le_size_sub_one {D : D7} {j : ℕ} (w : WeightFamilies.Wt D j) :

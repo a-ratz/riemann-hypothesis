@@ -59,8 +59,8 @@ theorem fixed_ne_bot_of_mem_iSup_range :
       GlobalTheory.PRep.fixed σ K ≠ ⊥ := by
   intro G V X _ _ _ _ _ ι _ σ hσ ρ T K f hf hf0 hfix
   classical
-  haveI : IsSimpleOrder (Subrepresentation σ) := hσ
-  haveI : Fintype ι := Fintype.ofFinite ι
+  have : IsSimpleOrder (Subrepresentation σ) := hσ
+  have : Fintype ι := Fintype.ofFinite ι
 
   let Y : Finset ι → Submodule ℂ X := fun t => ⨆ j ∈ t, LinearMap.range (T j).toLinearMap
   have hYst : ∀ (t : Finset ι) (g : G) (x : X), x ∈ Y t → ρ g x ∈ Y t := by

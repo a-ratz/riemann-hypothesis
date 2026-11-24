@@ -77,12 +77,12 @@ theorem main (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) : Form
   intro a b b' h1 h2
   obtain ⟨B, hB0, hB⟩ := h1
   obtain ⟨C, hC0, hC⟩ := h2
-  haveI := fd a
-  haveI := fd b
-  haveI := fd b'
-  haveI : a.ρ.IsIrreducible := a.irr
-  haveI : b.ρ.IsIrreducible := b.irr
-  haveI : b'.ρ.IsIrreducible := b'.irr
+  have := fd a
+  have := fd b
+  have := fd b'
+  have : a.ρ.IsIrreducible := a.irr
+  have : b.ρ.IsIrreducible := b.irr
+  have : b'.ρ.IsIrreducible := b'.irr
   exact dual_unique B hB hB0 C hC hC0
 
 end PI.UnitaryGroupMassFormula.AlgWtDualUniq
@@ -126,7 +126,7 @@ theorem mtwInc_injective : Function.Injective (mtwInc (L := L) (n := n)) := by
   obtain ⟨p, hp₀, hp⟩ :=
     Ring.exists_maximal_of_not_isField (RingOfIntegers.not_isField (maximalRealSubfield L))
   let v : HeightOneSpectrum (𝓞 (maximalRealSubfield L)) := ⟨p, hp.isPrime, hp₀⟩
-  letI : Nontrivial (AFplus L) := (evalAt L v).toRingHom.domain_nontrivial
+  let : Nontrivial (AFplus L) := (evalAt L v).toRingHom.domain_nontrivial
   have hf : Function.Injective (Algebra.TensorProduct.includeLeftRingHom : L →+* AL L) :=
     Algebra.TensorProduct.includeLeft_injective (S := L)
       (RingHom.injective (algebraMap (maximalRealSubfield L) (AFplus L)))

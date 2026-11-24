@@ -192,7 +192,7 @@ theorem tame_of_isTameWD {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Alg
   obtain ⟨n, a, rfl, ha⟩ := hx
   refine (WD.tame_mk a).2 fun σ hσ => ha σ ⟨Wild_le_Ine hσ, fun y hy => ?_⟩
   have e : (σ : G E Ω) y - y = ((σ : G E Ω) y / y - 1) * y := by field_simp
-  have h0 : 0 < A.valuation y := zero_lt_iff.mpr (by simpa using hy)
+  have h0 : 0 < A.valuation y := pos_iff_ne_zero.mpr (by simpa using hy)
   rw [e, map_mul]
   exact mul_lt_of_lt_one_left h0 (hσ y hy)
 

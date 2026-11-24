@@ -141,7 +141,7 @@ theorem barRev_Jm {n : ℕ} (ε : Fin n → Bool) : barRev (Formalism.REAL.Jm ε
 
 theorem barRev_mem_K {n : ℕ} {ε : Fin n → Bool} {g : Mn n} (hg : g ∈ Formalism.REAL.Kset ε) :
     barRev g ∈ Formalism.REAL.Kset (fun a => ε a.rev) := by
-  simp only [Formalism.REAL.Kset, Set.mem_setOf_eq] at hg ⊢
+  simp only [Formalism.REAL.Kset, Set.mem_ofPred_eq] at hg ⊢
   obtain ⟨hu, hc⟩ := hg
   refine ⟨?_, ?_⟩
   · rw [Matrix.mem_unitaryGroup_iff] at hu ⊢

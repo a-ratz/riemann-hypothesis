@@ -109,16 +109,16 @@ theorem selE_mul_transpose (a : Fin n' → ℕ) (n : ℕ) :
       have : (i : ℕ) ≠ (b : ℕ) := fun e => hb (Fin.ext e.symm)
       simp [this]
     · intro hn; exact absurd (Finset.mem_univ _) hn
-  · rw [if_neg h, ite_self]
+  · rw [ite_eq_right h, ite_self]
     refine Finset.sum_eq_zero fun p _ => ?_
     have : ¬ ((i : ℕ) = (p : ℕ) ∧ 0 < a i) := fun ⟨e, ha⟩ => h ⟨e ▸ p.isLt, ha⟩
-    rw [if_neg this, zero_mul]
+    rw [ite_eq_right this, zero_mul]
 
 theorem halfSel_add (h2 : (2 : L) ≠ 0) (a : Fin n' → ℕ) (i j : Fin n') :
     halfSel (L := L) a i j + halfSel a j i = 1 := by
   unfold halfSel
   rcases eq_or_ne i j with rfl | hne
-  · simp only [lt_irrefl, false_or, and_false, if_false, if_true]
+  · simp only [lt_irrefl, false_or, and_false, ite_false, ite_true]
     rw [← two_mul, mul_inv_cancel₀ h2]
   have hne' : (i : ℕ) ≠ (j : ℕ) := Fin.val_ne_of_ne hne
   split_ifs <;> first | (exfalso; omega) | simp | rw [← two_mul, mul_inv_cancel₀ h2]
@@ -183,7 +183,7 @@ theorem square_diag : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
     · exact (Formalism.UG.intL L).zero_mem
   have hErow : ∀ i : Fin n', ¬ ((i : ℕ) < n ∧ 0 < a i) → ∀ p, E i p = 0 := by
     intro i h p; simp only [E, selE, Matrix.of_apply]
-    rw [if_neg]; rintro ⟨e, ha⟩; exact h ⟨e ▸ p.isLt, ha⟩
+    rw [ite_eq_right]; rintro ⟨e, ha⟩; exact h ⟨e ▸ p.isLt, ha⟩
   set A' : Matrix (Fin n') (Fin n') L := E * A * Eᵀ with hA'def
   have hA'i : ∀ i j, A' i j ∈ Formalism.UG.intL L := fun i j =>
     matMul_int (matMul_int hEi hA) (fun p k => hEi k p) i j
@@ -248,10 +248,10 @@ theorem square_diag : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
         have e1 : (i = l ∧ j = k) ↔ (j = k ∧ i = l) := and_comm
         have e2 : (j = l ∧ i = k) ↔ (i = k ∧ j = l) := and_comm
         by_cases hP : i = k ∧ j = l <;> by_cases hQ : j = k ∧ i = l
-        · rw [if_pos hP, if_pos hQ, if_pos (e1.2 hQ), if_pos (e2.2 hP), map_add (f := _), hσx, hσy]; ring
-        · rw [if_pos hP, if_neg hQ, if_neg (fun h => hQ (e1.1 h)), if_pos (e2.2 hP), map_add (f := _), hσx, map_zero]; ring
-        · rw [if_neg hP, if_pos hQ, if_pos (e1.2 hQ), if_neg (fun h => hP (e2.1 h)), map_add (f := _), hσy, map_zero]; ring
-        · rw [if_neg hP, if_neg hQ, if_neg (fun h => hQ (e1.1 h)), if_neg (fun h => hP (e2.1 h)), map_add (f := _), map_zero]; ring
+        · rw [ite_eq_left hP, ite_eq_left hQ, ite_eq_left (e1.2 hQ), ite_eq_left (e2.2 hP), map_add (f := _), hσx, hσy]; ring
+        · rw [ite_eq_left hP, ite_eq_right hQ, ite_eq_right (fun h => hQ (e1.1 h)), ite_eq_left (e2.2 hP), map_add (f := _), hσx, map_zero]; ring
+        · rw [ite_eq_right hP, ite_eq_left hQ, ite_eq_left (e1.2 hQ), ite_eq_right (fun h => hP (e2.1 h)), map_add (f := _), hσy, map_zero]; ring
+        · rw [ite_eq_right hP, ite_eq_right hQ, ite_eq_right (fun h => hQ (e1.1 h)), ite_eq_right (fun h => hP (e2.1 h)), map_add (f := _), map_zero]; ring
       have hsmall : ∀ k l, Valued.v (C k l) < 1 := by
         intro k l
         simp only [hCdef, Matrix.add_apply, Matrix.single_apply]
@@ -829,7 +829,7 @@ theorem class_fixed_phase : ∀ (L : Type) [Field L] [CharZero L] [Valued L (Wit
   intro L _ _ _ _ ϖ σ q δ n n' JS JT ψ M _ _ ρ ω hP s hs x hw
   obtain ⟨w, hw0, hwf, hwm⟩ := hw
   classical
-  letI := actCl (b := n) σ (JT : Matrix (Fin n') (Fin n') L)
+  let := actCl (b := n) σ (JT : Matrix (Fin n') (Fin n') L)
   let V : (Matrix (Fin n') (Fin n) L ⧸ intMat L n' n) → Submodule ℂ M := fun c =>
     Submodule.span ℂ {w : M | ∃ y : Matrix (Fin n') (Fin n) L,
       (QuotientAddGroup.mk y : Matrix (Fin n') (Fin n) L ⧸ intMat L n' n) = c ∧ w = ρ y s}
@@ -1055,7 +1055,7 @@ theorem exists_comp (V : ι → Submodule ℂ M) (hV : iSupIndep V) (htop : (⨆
     ∃ c : ι → M →ₗ[ℂ] M, (∀ i w, c i w ∈ V i) ∧ (∀ i v, v ∈ V i → c i v = v) ∧
       (∀ i j v, i ≠ j → v ∈ V j → c i v = 0) ∧ (∀ w, ∃ F : Finset ι, w = ∑ i ∈ F, c i w) := by
   classical
-  letI := (DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top hV htop).chooseDecomposition
+  let := (DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top hV htop).chooseDecomposition
   refine ⟨fun i => (V i).subtype ∘ₗ (DirectSum.component ℂ ι (fun i => ↥(V i)) i) ∘ₗ
     (DirectSum.decomposeLinearEquiv V).toLinearMap, ?_, ?_, ?_, ?_⟩
   · intro i w; simp
@@ -1173,7 +1173,7 @@ theorem mem_of_orbits (π : G →* Module.End ℂ M) (V : ι → Submodule ℂ M
   | insert i F hi ih =>
     intro hT u hu huF
     have hset : (⋃ j ∈ insert i F, orbit G j) = orbit G i ∪ ((⋃ j ∈ F, orbit G j) \ orbit G i) := by
-      rw [Finset.set_biUnion_insert, Set.union_diff_self]
+      rw [Finset.set_biUnion_insert, Set.union_sdiff_self]
     rw [hset, WA_union, Submodule.mem_sup] at huF
     obtain ⟨a, ha, b, hb, rfl⟩ := huF
     have hA : ∀ (g : G), ∀ j ∈ orbit G i, g • j ∈ orbit G i := fun g j hj => orbit_stable i g hj
@@ -1190,7 +1190,7 @@ theorem mem_of_orbits (π : G →* Module.End ℂ M) (V : ι → Submodule ℂ M
     have hbfix : ∀ g, π g b = b :=
       fixed_part π V hV hπ hB hA hAB.symm hb ha (fun g => by rw [add_comm]; exact hu g)
     exact add_mem (hT i (Finset.mem_insert_self i F) a hafix ha)
-      (ih (fun j hj => hT j (Finset.mem_insert_of_mem hj)) b hbfix (WA_mono V Set.diff_subset hb))
+      (ih (fun j hj => hT j (Finset.mem_insert_of_mem hj)) b hbfix (WA_mono V Set.sdiff_subset hb))
 
 end GlobalTheory.GradedFixed
 
@@ -1403,7 +1403,7 @@ theorem fixed_mem_span (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω)
     (hspan : Submodule.span ℂ (Set.range fun x => ρ x s) = ⊤) (w : M)
     (hw : ∀ h : UJ σ (JT : Matrix (Fin n') (Fin n') L), (h : GL (Fin n') L) ∈ GLint (Fin n') (intL L) → ω (1, h) w = w) :
     w ∈ Submodule.span ℂ (Set.range fun g : UJ σ (JS : Matrix (Fin n) (Fin n) L) => ω (g, 1) s) := by
-  letI := actQ (b := n) σ (JT : Matrix (Fin n') (Fin n') L)
+  let := actQ (b := n) σ (JT : Matrix (Fin n') (Fin n') L)
   let V : (Matrix (Fin n') (Fin n) L ⧸ intMat L n' n) → Submodule ℂ M := fun c =>
     Submodule.span ℂ {w : M | ∃ x : Matrix (Fin n') (Fin n) L,
       (QuotientAddGroup.mk x : Matrix (Fin n') (Fin n) L ⧸ intMat L n' n) = c ∧ w = ρ x s}

@@ -78,8 +78,8 @@ theorem exists_gl (M : Submodule O (n → K)) (hfg : M.FG)
     (hsp : Submodule.span K (M : Set (n → K)) = ⊤) :
     ∃ P : GL n K, ∀ y, y ∈ M ↔ ∀ i, (((P⁻¹ : GL n K) : Matrix n n K) *ᵥ y) i ∈ O := by
   classical
-  haveI : Module.Finite O M := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Free O M := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite O M := Module.Finite.iff_fg.mpr hfg
+  have : Module.Free O M := Module.free_of_finite_type_torsion_free'
   let ι := Module.Free.ChooseBasisIndex O M
   let bM : Module.Basis ι O M := Module.Free.chooseBasis O M
   let v : ι → (n → K) := fun i => (bM i : n → K)

@@ -148,12 +148,12 @@ theorem haar_smul {S : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn S μ
   · exact inferInstanceAs (SigmaFinite (s.toNNReal • μ))
   · intro h0
     have := congrArg (fun m : Measure (Mt k r) => m Set.univ) h0
-    simp only [Measure.smul_apply, smul_eq_mul, Measure.coe_zero, Pi.zero_apply, mul_eq_zero,
+    simp only [smul_apply, smul_eq_mul, FunLike.coe_zero, Pi.zero_apply, mul_eq_zero,
       ENNReal.ofReal_eq_zero, Measure.measure_univ_eq_zero] at this
     rcases this with h | h
     · exact absurd h (not_le.2 hs)
     · exact h2 h
-  · rw [Measure.smul_apply, h3, smul_zero]
+  · rw [smul_apply, h3, smul_zero]
   · rw [Measure.map_smul _ (meas_lmul s).aemeasurable, h4 s hs]
   · rw [Measure.map_smul _ (continuous_rmulM s).measurable.aemeasurable, h5 s hs]
   · rw [Measure.map_smul _ measurable_invM.aemeasurable, h6]

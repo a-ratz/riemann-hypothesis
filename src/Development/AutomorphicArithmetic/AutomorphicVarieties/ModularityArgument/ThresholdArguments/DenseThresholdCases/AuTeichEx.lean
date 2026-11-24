@@ -54,8 +54,8 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem au_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  haveI : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
-  haveI : PerfectRing (ResidueField O) l := inferInstance
+  have : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
+  have : PerfectRing (ResidueField O) l := inferInstance
   let j : ResidueField O →+* Perfection (O ⧸ maximalIdeal O) l :=
     Perfection.lift l (ResidueField O) (O ⧸ maximalIdeal O) (RingHom.id (ResidueField O))
   have hj : ∀ x, Perfection.coeff (O ⧸ maximalIdeal O) l 0 (j x) = x := fun x => by
@@ -66,8 +66,8 @@ private theorem au_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Is
 private theorem au_isTeich {l : ℕ} [hl : Fact l.Prime] {F : W.GFrame l} (c : Coef l) {n : ℕ} (r : Resid F c.O n) :
     ∃ t, r.IsTeich t := by
   obtain ⟨hc, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : Finite (ResidueField c.O) := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have : Finite (ResidueField c.O) := hfin
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm
@@ -91,7 +91,7 @@ theorem UpperTheory.V.Hi.automorphicHeckeSet_unitaryPointProperties_of_typeFor :
   have hop : IsOpen (τ₀.ker : Set (KT n (wt s))) :=
     au_open _ (ι.injective.comp Subtype.val_injective) τ₀ (hτ t ht).1
   have h1 := decompU l L Ω s n hn V Q c m τ₀ ι hop lam d e ξ he F hF hK hI
-  refine SetLike.le_def.1 (iSup_le fun σ => ?_) h1
+  refine IsConcreteLE.le_iff.1 (iSup_le fun σ => ?_) h1
   by_cases h0 : YOf Q ι τ₀ e ξ σ.1 = ⊥
   · rw [h0]; exact bot_le
   · obtain ⟨Y, hY, hPU, -⟩ := _root_.UpperTheory.V.Z.Desc.P.partU_alt hP l L Ω s n hn V Q c r ι m τ₀ hτ lam d e ξ he σ.1 σ.2 h0

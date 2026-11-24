@@ -134,7 +134,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem frTanBasis_holds (Xo : Moduli Dw l) (c : Coeff l) : FrTanBasisSt Xo c := by
   classical
   intro S _ _ y w hw
-  haveI : CharZero S := charZero_of_injective_algebraMap (algebraMap c.F S).injective
+  have : CharZero S := charZero_of_injective_algebraMap (algebraMap c.F S).injective
   let G := Xo.univ.t.G
   let ρ : 𝓞 E →+* Module.End S (TanM y.x G) := actL Xo.univ.t.act
   let χ : (E →+* ℂ) → (E →+* S) := fun σ => (algebraMap c.F S).comp (embF c σ)

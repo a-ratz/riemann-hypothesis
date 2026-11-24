@@ -109,9 +109,9 @@ namespace GlobalTheory
 theorem coefA_dual_coef_continuousOn :
     ∀ (D : D7) (V : HSp D) (θ : InfFam D) (c : CoefA V), IsInfFam θ → c.Is → ∀ (τ : D.what₂.Tau) (f : Module.Dual ℂ c.W) (v : c.W), ContinuousOn (fun g => f (c.ρ (atTau θ V τ g)⁻¹ v)) (Formalism.QuantumDeterminants.UH (gramAt D V τ)) := by
   intro D V θ c hθ hc τ f v
-  letI := c.nW
-  letI := c.iW
-  haveI := c.fW
+  let := c.nW
+  let := c.iW
+  have := c.fW
   have h1 : Continuous fun h : GA D V => c.ρ h v := hc.2.2.1 v
   have hinv : Continuous (fun h : GA D V => h⁻¹) := continuous_inv
   have hf : Continuous f := LinearMap.continuous_of_finiteDimensional f
@@ -489,7 +489,7 @@ theorem tensor_decomp : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (W : Type)
     rw [hmap, Submodule.map_subtype_top]
   have habs : ∀ i, AbsIrr (res a i w₀) := by
     intro i
-    haveI : Nontrivial (cyc a i w₀) :=
+    have : Nontrivial (cyc a i w₀) :=
       ⟨⟨⟨w₀, self_mem_cyc i w₀⟩, 0, fun h => hw₀ (congrArg Subtype.val h)⟩⟩
     exact absIrr_of_irr _ (hirr_i i)
   obtain ⟨e0, he0⟩ : ∃ e0 : (⨂[ℂ] i, cyc a i w₀) →ₗ[ℂ] W,
@@ -568,8 +568,8 @@ namespace GlobalTheory.CoefTensorProof
 theorem coefTensor : CoefTensor := by
   intro D V θ c hθ hc
   classical
-  haveI : Nontrivial c.W := hc.2.2.2.1
-  haveI : Nontrivial (Module.Dual ℂ c.W) := by
+  have : Nontrivial c.W := hc.2.2.2.1
+  have : Nontrivial (Module.Dual ℂ c.W) := by
     apply Module.nontrivial_of_finrank_pos (R := ℂ)
     rw [Subspace.dual_finrank_eq]
     exact Module.finrank_pos
@@ -589,7 +589,7 @@ theorem coefTensor : CoefTensor := by
   have hone : ∀ τ, atTau θ V τ 1 = 1 := fun τ => GlobalTheory.PointAtPlaceHom.atTau_one hθ V τ
   let π : ∀ τ, Matrix (Fin V.rank) (Fin V.rank) ℂ → Module.End ℂ (X τ) := fun τ g =>
     if hg : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ) then b τ ⟨g, hg⟩ else 1
-  have hπ : ∀ τ g (hg : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)), π τ g = b τ ⟨g, hg⟩ := fun τ g hg => dif_pos hg
+  have hπ : ∀ τ g (hg : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)), π τ g = b τ ⟨g, hg⟩ := fun τ g hg => dite_eq_left hg
   refine ⟨X, i1, i2, i3, π, e, fun τ => ⟨⟨?_, ?_⟩, ?_, ?_⟩, ?_⟩
   ·
     rw [hπ τ 1 (GlobalTheory.PointAtPlaceHom.one_mem_UH _)]
@@ -847,7 +847,7 @@ private theorem integrableOn_besInt_of_bounded {D : D7} {T : Type} {L : LevCh D 
       IntegrableOn (fun h => ∫ n in M.fdN, besInt W φ F h n ∂M.νN) (M.fd (.top 0)) (M.ν (.top 0)) := by
   have hψ : ∀ x, ‖W.ψ x‖ = 1 := W.ψ_std.1.2.1
   obtain ⟨-, -, hBor, -⟩ := GlobalTheory.Per.Inhab.flag_topology _ G.besTop.e_iso
-  haveI := GlobalTheory.Unf.EvalCont.firstCountable_GA (G.V (.top 0))
+  have := GlobalTheory.Unf.EvalCont.firstCountable_GA (G.V (.top 0))
   have hemb : Continuous (embTop G) :=
     GlobalTheory.Per.Inhab.emb_continuous (G.rowDec 0 (by have := D.R.two_le_m; omega)).isom
       (fun h => (GlobalTheory.FunObj.embRel_iff _ h _).2 rfl)
@@ -857,7 +857,7 @@ private theorem integrableOn_besInt_of_bounded {D : D7} {T : Type} {L : LevCh D 
       besInt W φ F q.1 q.2 := by
     unfold besInt
     refine ((hφc.comp continuous_fst).mul (hFc.comp ?_)).mul ((hχ.comp continuous_snd).star)
-    exact (continuous_subtype_val.comp continuous_snd).mul (hemb.comp continuous_fst)
+    exact (continuous_subtypeVal.comp continuous_snd).mul (hemb.comp continuous_fst)
   have hbd : ∀ h n, ‖besInt W φ F h n‖ ≤ Cφ * K := by
     intro h n
     unfold besInt
@@ -983,10 +983,10 @@ theorem setIntegral_mul_right {B : HSp D} {ρ : ℕ} {e : Matrix (Fin B.rank) (F
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B
   obtain ⟨j1, j2, j3, j4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag B he
   obtain ⟨u1, u2, u3⟩ := hN
-  haveI : DiscreteTopology (NFlagQ B e) := by
+  have : DiscreteTopology (NFlagQ B e) := by
     refine DiscreteTopology.of_continuous_injective
       (f := fun γ : NFlagQ B e => (⟨γ.1.1, γ.2⟩ : GQ B)) ?_ ?_
-    · exact Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
+    · exact Continuous.subtype_mk (continuous_subtypeVal.comp continuous_subtypeVal) _
     · intro a b hab
       exact Subtype.ext (Subtype.ext (congrArg (fun x : GQ B => (x : GA D B)) hab))
   obtain ⟨K, hK, hcov⟩ := (GlobalTheory.Mem.UnipCocompact.radicals_cocompact D B ρ e he).1
@@ -1144,8 +1144,8 @@ theorem GlobalTheory.BplusShift.bplus_rTr : ∀ {D : D7} {T : Type} {L : LevCh D
   simp only [Bplus, hshift]
   obtain ⟨hμ, h𝓕⟩ := hM.top.haar_fund
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (G.V (.top 0))
-  haveI := hμ
-  haveI : (M.ν (.top 0)).IsMulRightInvariant :=
+  have := hμ
+  have : (M.ν (.top 0)).IsMulRightInvariant :=
     GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D _ _ hμ
   have hmp : MeasurePreserving (· * a) (M.ν (.top 0)) (M.ν (.top 0)) := measurePreserving_mul_right _ a
   have hmp' : MeasurePreserving (· * a⁻¹) (M.ν (.top 0)) (M.ν (.top 0)) := measurePreserving_mul_right _ a⁻¹
@@ -1228,7 +1228,7 @@ theorem exists_compact_cover {D : D7} {A B : HSp D} {ι : A.V →ₗ[D.host.E] B
   obtain ⟨-, -, -, -, _, -, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B
   obtain rfl : t = s := funext fun h => (hs h _).1 (ht h)
   refine ⟨(fun q : GA D A × NFlag B e => (q.2 : GA D B) * s q.1) '' (K ×ˢ K'),
-    (hK.prod hK').image ((continuous_subtype_val.comp continuous_snd).mul (hc.comp continuous_fst)), fun g n => ?_⟩
+    (hK.prod hK').image ((continuous_subtypeVal.comp continuous_snd).mul (hc.comp continuous_fst)), fun g n => ?_⟩
   obtain ⟨γ, hγ, k, hk, rfl⟩ := hcov g
   obtain ⟨γ', hγ', k', hk', e⟩ := hcov' ⟨_, hnorm _ γ⁻¹ ((hs _ _).2 rfl) n n.2⟩
   have e' : s γ⁻¹ * n * (s γ⁻¹)⁻¹ = (γ' : GA D B) * k' := congrArg Subtype.val e
@@ -1317,9 +1317,9 @@ theorem mult_equiv {D : D7} (θ : InfFam D) {V : HSp D} {S : D.what₂.Tau → S
   | mem T hT => exact hT.equiv τ g hg v w hw
   | zero => rfl
   | add T₁ T₂ _ _ h₁ h₂ =>
-    simp only [MultilinearMap.add_apply, h₁, h₂]; rfl
+    simp only [add_apply, h₁, h₂]; rfl
   | smul c T _ h =>
-    simp only [MultilinearMap.smul_apply, h]; rfl
+    simp only [smul_apply, h]; rfl
 
 end
 

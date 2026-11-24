@@ -143,7 +143,7 @@ theorem dvd_nat (c : 𝓞 L) (hc : c ≠ 0) : ∃ (n : ℕ) (d : 𝓞 L), n ≠ 
 
 theorem clear_int [Module.Projective (𝓞 L) B] (j : B →ₗ[𝓞 L] T) (h : IsBaseChange L j) :
     Function.Injective j ∧ ∀ t : T, ∃ (n : ℕ) (x : B), n ≠ 0 ∧ j x = n • t := by
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 L)) j :=
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 L)) j :=
     (isLocalizedModule_iff_isBaseChange (nonZeroDivisors (𝓞 L)) L j).2 h
   constructor
   · intro x y hxy
@@ -220,7 +220,7 @@ theorem reg_of_val {a : Ω} {r : R} (h : ValAt ξ z a r) (h' : genPt ξ ⤳ cent
 theorem inv_nat_reg {F : Type} [Field F] [CharZero F] {z : Sp F ⟶ X} (h : genPt ξ ⤳ centre z) {m : ℕ} (hm : 0 < m) :
     (m : Ω)⁻¹ ∈ regAt ξ ⟨centre z, h⟩ ∧ (m : Ω) ≠ 0 := by
   let f : X.presheaf.stalk (centre z) →+* F := (Scheme.stalkClosedPointTo z).hom
-  haveI : IsLocalHom f := inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo z).hom)
+  have : IsLocalHom f := inferInstanceAs (IsLocalHom (Scheme.stalkClosedPointTo z).hom)
   have hu : IsUnit (f (m : X.presheaf.stalk (centre z))) := by
     rw [map_natCast f m]
     exact (Nat.cast_ne_zero.2 hm.ne' : (m : F) ≠ 0).isUnit
@@ -274,8 +274,8 @@ theorem exists_phi : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶
     have h1 := mul_mem hmi (hreg l e he)
     rwa [← _root_.mul_assoc, inv_mul_cancel₀ hm0, _root_.one_mul] at h1
   obtain ⟨T, _, _, ⟨MT⟩⟩ := lieModel_exists X G L zL
-  letI : Module (𝓞 L) T := Module.compHom T (algebraMap (𝓞 L) L)
-  haveI : IsScalarTower (𝓞 L) L T := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module (𝓞 L) T := Module.compHom T (algebraMap (𝓞 L) L)
+  have : IsScalarTower (𝓞 L) L T := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   subst hzL
   obtain ⟨j₀, hj₀, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts X G (𝓞 L) L (algebraMap (𝓞 L) L) z B.carrier T MB MT
   let j : B.carrier →ₗ[𝓞 L] T :=
@@ -868,7 +868,7 @@ theorem GlobalTheory.CompanionTheory.Ar.RootHt.log_index_le :
       ∑ᶠ v : FinitePlace L, (Real.log (ρ v) - Real.log (v (φ s)))| ≤ Module.finrank ℚ L * Real.log m := by
   intro L _ _ Bc _ _ F₀ F₁ φ s m ρ hfg hker hs hm hρ hρf hloc
   classical
-  haveI : Module.Finite (𝓞 L) F₁ := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite (𝓞 L) F₁ := Module.Finite.iff_fg.mpr hfg
   obtain ⟨n, g, hg⟩ := Module.Finite.exists_fin (R := 𝓞 L) (M := F₁)
   have hC : (F₀ ⊔ Submodule.span (𝓞 L) {(s : Bc)}).comap F₁.subtype =
       (Submodule.span (𝓞 L) {φ s}).comap φ := by
@@ -1182,9 +1182,9 @@ open GroundTheory.Heights₂.Heights
 theorem root_height : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) [Fintype (CMType H)] (Fl : 𝔐.Flag) (h : LieMetric 𝔐.M y) (x : CMType H × Fin (D.p + D.q) → HermLine J) (e : CMType H × Fin (D.p + D.q) → Ω), (∀ r, IsSmoothHerm (x r)) → Fl.RootLines (fun r => (x r).a) e → ∃ C : ℝ, ∀ (L : Type) [Field L] [NumberField L] (w : (Σ k, J k) → L) (z : Sp (𝓞 L) ⟶ 𝔐.X), CoordsAt 𝔐.ξ y (spMap (algebraMap (𝓞 L) L) ≫ z) w → ∀ (B : GroundTheory.Heights₂.Heights.HermitianBundle.{0} L) (MB : LieModel 𝔐.t.G z B.carrier) (A : FlagPair B (CMType H) D.p D.q), IsFibre (fun z v w c => c = h.ip z v w) z B MB → ((∀ τ i, IsSubFibre 𝔐.M (flagStep Ω (Fl.b (.inl τ)) i.val) z MB ((A.W τ).F i)) ∧ ∀ τ i, IsSubFibre 𝔐.M (flagStep Ω (Fl.b (.inr τ)) i.val) z MB ((A.S τ).F i)) → (∀ τ (i : Fin D.p), |Ht.lineHt (x (τ, Fin.castAdd D.q i)) L w - (A.W τ).grDeg i| ≤ C) ∧ ∀ τ (i : Fin D.q), |Ht.lineHt (x (τ, Fin.natAdd D.p i)) L w + (A.S τ).grDeg i.rev| ≤ C := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 _ Fl h x e hx hR
   obtain ⟨m, hm, hsw⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sandwich.lat_sandwich E H D l Xo c Y S Ω K J y 𝔐 Fl
-  haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   have hc : CharZero Ω := by
-    haveI : CharZero c.F := inferInstance
+    have : CharZero c.F := inferInstance
     exact charZero_of_injective_ringHom 𝔐.cst.injective
   have hind : ∀ s, LinearIndependent Ω (Fl.b s) := by
     obtain ⟨c', u, _, _, _, h4, _⟩ := Fl.generic

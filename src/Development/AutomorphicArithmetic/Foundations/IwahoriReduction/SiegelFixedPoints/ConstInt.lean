@@ -172,8 +172,8 @@ theorem UpperTheory.exists_isLocallyConstant_lift_to_geometric_galois :
     obtain ⟨E, hE, hEU⟩ := (krullTopology_mem_nhds_one_iff K Kb U).1 hU
     let b := Module.finBasis K E
     let S : Set Kb := Set.range (fun i => (b i : Kb))
-    haveI : Finite S := Set.finite_range _
-    haveI hE' : FiniteDimensional F (IntermediateField.adjoin F S) :=
+    have : Finite S := Set.finite_range _
+    have hE' : FiniteDimensional F (IntermediateField.adjoin F S) :=
       IntermediateField.finiteDimensional_adjoin
         (fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral)
     rw [Filter.mem_map, mem_nhds_subtype]
@@ -198,7 +198,7 @@ theorem UpperTheory.exists_isLocallyConstant_lift_to_geometric_galois :
     rw [this]
     exact hη₀.comp_continuous hrc
   · intro g g' hg hgg'
-    simp only [hg, dif_pos]
+    simp only [hg, dite_eq_left]
     congr 1
     ext z
     rw [hr]
@@ -218,7 +218,7 @@ attribute [local instance] algMdl algPoly algRat
 
 private theorem valCrit {R K : Type} [CommRing R] [Field K] (A : R →+* K) (x : K)
     (h : ∀ V : ValuationSubring K, (∀ r, A r ∈ V) → x ∈ V) : A.IsIntegralElem x := by
-  letI := A.toAlgebra
+  let := A.toAlgebra
   by_contra hx
   have hx' : x ∉ (integralClosure R K).toSubring := hx
   obtain ⟨V, hV, hxV⟩ := Subring.exists_le_valuationSubring_of_isIntegrallyClosedIn hx'
@@ -328,7 +328,7 @@ private theorem int_of_hol [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (f : X.K)
   have hinj : Function.Injective ε := ε.injective
   obtain ⟨φ, hφ, hfφ⟩ := hf
   obtain ⟨M, hM, hlev⟩ := X.level f
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   set S : Set X.K := Set.range (fun γ : SL(2, ℤ) => X.sl (ofSL γ) f) with hSdef
   have hfac : ∀ γ γ' : SL(2, ℤ), Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ =
       Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M)) γ' →
@@ -346,7 +346,7 @@ private theorem int_of_hol [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (f : X.K)
     rintro _ ⟨γ, rfl⟩
     refine ⟨red γ, ?_⟩
     have h : ∃ γ', red γ' = red γ := ⟨γ, rfl⟩
-    simp only [g, dif_pos h]
+    simp only [g, dite_eq_left h]
     exact hfac _ _ h.choose_spec
   have hhol : ∀ h ∈ S, h ∈ JInt.holR X := by
     rintro _ ⟨γ, rfl⟩
@@ -520,13 +520,13 @@ private theorem topexOf [IsAlgClosure ℚ Ω] (X : Tower Ω ε) {M l n : ℕ} (h
     IsTopEta X M (topChar X M l n u) (topChar X M l n v) (topEta X M (topChar X M l n u) (topChar X M l n v)) ∧
       ∀ σ : topGal X M, ∃ w : topL X M, IsTopW (K := topL X M) (topZeta X M l n) (topChar X M l n u) (topChar X M l n v)
         (topEta X M (topChar X M l n u) (topChar X M l n v)) σ w := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hl⟩
-  haveI := isScalarTower_poly_rat X (CongruenceSubgroup.Gamma M)
-  haveI : FiniteDimensional (RatFunc Ω) (topL X M) := _root_.GlobalTheory.K4.finiteDimensional_lev Ω ε X _ M (Nat.pos_of_ne_zero hM) le_rfl
-  haveI : Normal (topF X M) (topL X M) := UpperTheory.normal_modularTowerTop X hM
-  haveI : Algebra.IsAlgebraic (topF X M) (topBar X M) := Algebra.IsAlgebraic.trans (topF X M) (topL X M) (topBar X M)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ hl⟩
+  have := isScalarTower_poly_rat X (CongruenceSubgroup.Gamma M)
+  have : FiniteDimensional (RatFunc Ω) (topL X M) := _root_.GlobalTheory.K4.finiteDimensional_lev Ω ε X _ M (Nat.pos_of_ne_zero hM) le_rfl
+  have : Normal (topF X M) (topL X M) := UpperTheory.normal_modularTowerTop X hM
+  have : Algebra.IsAlgebraic (topF X M) (topBar X M) := Algebra.IsAlgebraic.trans (topF X M) (topL X M) (topBar X M)
   have hN : 0 < l ^ n := pow_pos (Nat.pos_of_ne_zero hl) n
   have hζ := isPrimitiveRoot_topZeta X M hl n
   have hfix := topGal_topZeta X hl hd

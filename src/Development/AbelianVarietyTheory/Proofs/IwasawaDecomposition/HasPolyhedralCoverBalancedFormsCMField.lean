@@ -419,12 +419,12 @@ theorem siegel_unipotent_inv_bounded : ∀ n : ℕ, ∃ c : ℝ, ∀ u : Matrix 
   intro u hdiag hlow hup
   have hbt : u.BlockTriangular id := fun i j hij => hlow i j hij
   have hdet : u.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hbt]
+    rw [det_of_isUpperTriangular hbt]
     simp [hdiag]
   have hunit : IsUnit u.det := by rw [hdet]; exact isUnit_one
   refine ⟨u⁻¹, Matrix.nonsing_inv_mul u hunit, Matrix.mul_nonsing_inv u hunit, ?_, ?_⟩
   · intro i j hij
-    letI : Invertible u := Matrix.invertibleOfIsUnitDet u hunit
+    let : Invertible u := Matrix.invertibleOfIsUnitDet u hunit
     exact Matrix.blockTriangular_inv_of_blockTriangular hbt hij
   · intro i j
     have hinv : u⁻¹ = u.adjugate := by
@@ -811,17 +811,17 @@ end Cover
 theorem hasRedCover (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Type) [AddCommGroup X] [Module (𝓞 E) X]
     [Module.Finite (𝓞 E) X] [Module.Projective (𝓞 E) X] : HasRedCover H.bar X := by
   classical
-  haveI : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
-  haveI : Module.Projective ℤ X := by
+  have : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
+  have : Module.Projective ℤ X := by
     obtain ⟨i, hi⟩ := Module.projective_def'.1 (inferInstance : Module.Projective (𝓞 E) X)
     exact Module.Projective.of_split (i.restrictScalars ℤ) ((Finsupp.linearCombination (𝓞 E) id).restrictScalars ℤ)
       (LinearMap.ext fun x => LinearMap.congr_fun hi x)
-  haveI : Module.Free ℤ X := inferInstance
+  have : Module.Free ℤ X := inferInstance
   obtain ⟨n, hn⟩ : ∃ n, Module.finrank ℤ X = n := ⟨_, rfl⟩
   obtain ⟨B₀, hB₀, hB₀'⟩ := _root_.GlobalTheory.DefForm.exists_posDef_realForm E H X
   have hF := _root_.GlobalTheory.RedTh.finite_balanced_actions E H n
   obtain ⟨S, hS⟩ := _root_.GlobalTheory.SiegelCone.gram_mem_cone n
-  haveI : Nonempty (Module.Basis (Fin n) ℤ X) := ⟨Module.finBasisOfFinrankEq ℤ X hn⟩
+  have : Nonempty (Module.Basis (Fin n) ℤ X) := ⟨Module.finBasisOfFinrankEq ℤ X hn⟩
   let ref : (𝓞 E →+* Matrix (Fin n) (Fin n) ℤ) → Module.Basis (Fin n) ℤ X := fun ρ => Classical.epsilon fun b => actMat b = ρ
   let ι := ↥hF.toFinset × ↥S
   refine hasRedCover_of_fintype (ι := ι) _ (fun x => sqForm (ref x.1.1) x.2.1) (fun x y z => ?_) (fun x y => ?_) fun B hB => ?_
@@ -845,7 +845,7 @@ theorem hasRedCover (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host
     simp [Matrix.sum_apply, vecMulVec_apply]
   simp only [pullR_apply, LinearEquiv.coe_coe, he, hl, LinearMap.sum_apply, LinearMap.smul_apply, toReal_apply, smul_eq_mul]
   rw [Fintype.sum_prod_type, Finset.sum_eq_single (⟨ρ, hρ⟩ : ↥hF.toFinset)]
-  · simp only [if_true, sqForm_basis]
+  · simp only [ite_true, sqForm_basis]
     rw [← Finset.sum_coe_sort S]
     push_cast
     rfl

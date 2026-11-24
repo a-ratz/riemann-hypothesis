@@ -77,7 +77,7 @@ def quotEquiv (H : Subgroup G) (hH : ∀ g, g ∈ H) (K : Subgroup H) : H ⧸ K 
 
 theorem finite_cosets [TopologicalSpace G] [IsTopologicalGroup G] (K : Subgroup G) (hK : IsOpen (K : Set G)) (f : G → ℂ)
     (hc : HasCompactSupport f) : {q : G ⧸ K | f q.out ≠ 0}.Finite := by
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
   have h1 : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' tsupport f) := hc.image continuous_quotient_mk'
   refine h1.finite_of_discrete.subset fun q hq => ?_
   exact ⟨q.out, subset_tsupport _ hq, QuotientGroup.out_eq' q⟩
@@ -140,7 +140,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
 theorem mem_UL {w : Pl E} (hw : IsSplitAt w) (g : GLw n w) : g ∈ UL n w := by
   unfold UL
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
   exact Subgroup.mem_top g
 
 theorem splitDict : PositivityTheory.Rg.BcB.F.Eig.SplitDict := by

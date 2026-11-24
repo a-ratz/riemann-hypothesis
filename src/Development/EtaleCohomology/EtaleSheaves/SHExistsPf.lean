@@ -60,7 +60,7 @@ theorem SHExists_of (hL : SHLoc) (hA : LocAt) (hC : Comp) : t_E3Cut.SHExists := 
   intro A r hr
   let L : CommRingCat.{0} := CommRingCat.of (Localization.AtPrime r)
   let g : A ⟶ L := CommRingCat.ofHom (algebraMap A (Localization.AtPrime r))
-  haveI : IsLocalRing L := inferInstanceAs (IsLocalRing (Localization.AtPrime r))
+  have : IsLocalRing L := inferInstanceAs (IsLocalRing (Localization.AtPrime r))
   obtain ⟨O, h, hIE, hSH, hloc⟩ := hL L
   refine ⟨O, g ≫ h, hC g h (hA A r) hIE, hSH, fun a => ?_⟩
   have key : IsUnit (algebraMap A (Localization.AtPrime r) a) ↔ a ∈ r.primeCompl :=

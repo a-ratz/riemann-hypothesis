@@ -87,7 +87,7 @@ theorem exists_perm_lower_upper {L : Type} [Field L] {n : ℕ} (g : Matrix (Fin 
       (∀ i j : Fin n, i < j → u (σ i) j = 0) ∧ (∀ i, u (σ i) i = 1) ∧
       (b.BlockTriangular id ∧ ∀ i, b i i ≠ 0) ∧ g = u * b := by
   have hli : LinearIndependent L g.transpose :=
-    Matrix.linearIndependent_cols_iff_isUnit.mpr ((Matrix.isUnit_iff_isUnit_det g).mpr hg)
+    Matrix.linearIndependent_col_iff_isUnit.mpr ((Matrix.isUnit_iff_isUnit_det g).mpr hg)
   obtain ⟨m, u, b, -, h0, h1, hb, hd, e⟩ := GlobalTheory.exists_integral_pivot_decomposition L ⊤ n n g hli
   exact ⟨Equiv.ofBijective m (Finite.injective_iff_bijective.mp m.injective), u, b, h0, h1, ⟨hb, hd⟩, e⟩
 

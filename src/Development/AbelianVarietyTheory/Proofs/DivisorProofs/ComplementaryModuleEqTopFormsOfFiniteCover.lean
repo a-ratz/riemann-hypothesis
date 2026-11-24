@@ -119,8 +119,8 @@ theorem height_under_eq_one {A B : Type} [CommRing A] [IsDomain A] [CommRing B]
     [Algebra A B] [Algebra.HasGoingDown A B] (Q : Ideal B) [Q.IsPrime] (hQ : Q.height = 1)
     (hne : Q.comap (algebraMap A B) ≠ ⊥) : (Q.comap (algebraMap A B)).height = 1 := by
   set p : Ideal A := Q.comap (algebraMap A B) with hp
-  haveI : p.IsPrime := Ideal.comap_isPrime _ Q
-  haveI : Q.LiesOver p := ⟨rfl⟩
+  have : p.IsPrime := Ideal.comap_isPrime _ Q
+  have : Q.LiesOver p := ⟨rfl⟩
   apply le_antisymm
   · rw [show ((1 : ℕ∞)) = ((1 : ℕ) : ℕ∞) from rfl, Ideal.height_le_iff]
     intro r hr hrp
@@ -128,20 +128,20 @@ theorem height_under_eq_one {A B : Type} [CommRing A] [IsDomain A] [CommRing B]
     have hr0 : r ≠ ⊥ := by
       rintro rfl
       simp at hcon
-    haveI := hr
+    have := hr
     obtain ⟨P₁, hP₁Q, hP₁, hP₁o⟩ := Ideal.exists_ideal_lt_liesOver_of_lt (p := r) (q := p) Q hrp
-    haveI := hP₁
-    haveI : (⊥ : Ideal A).IsPrime := Ideal.isPrime_bot
+    have := hP₁
+    have : (⊥ : Ideal A).IsPrime := Ideal.isPrime_bot
     obtain ⟨P₀, hP₀P₁, hP₀, -⟩ := Ideal.exists_ideal_lt_liesOver_of_lt (p := ⊥) (q := r) P₁
       (bot_lt_iff_ne_bot.mpr hr0)
-    haveI := hP₀
+    have := hP₀
     have h1 := Ideal.height_add_one_le_of_lt_of_isPrime hP₀P₁
     have h2 := Ideal.height_add_one_le_of_lt_of_isPrime hP₁Q
     rw [hQ] at h2
     have h4 : (1 : ℕ∞) ≤ P₁.height := le_trans le_add_self h1
     have h3 : (1 : ℕ∞) + 1 ≤ 1 := le_trans (by gcongr) h2
     exact absurd h3 (by decide)
-  · haveI : (⊥ : Ideal A).IsPrime := Ideal.isPrime_bot
+  · have : (⊥ : Ideal A).IsPrime := Ideal.isPrime_bot
     have := Ideal.height_add_one_le_of_lt_of_isPrime (bot_lt_iff_ne_bot.mpr hne)
     simpa using this
 
@@ -155,17 +155,17 @@ theorem exists_basis_D (k F K : Type) [Field k] [Field F] [Field K] [Algebra k F
   let P := MvPolynomial (Fin d) k
   let A := Algebra.adjoin k (Set.range v)
   let L := IntermediateField.adjoin k (Set.range v)
-  letI : Algebra P A := hv.aevalEquiv.toAlgHom.toRingHom.toAlgebra
-  haveI : IsScalarTower k P A := .of_algebraMap_eq fun r => (hv.aevalEquiv.commutes r).symm
-  haveI : Algebra.FormallyEtale P A :=
+  let : Algebra P A := hv.aevalEquiv.toAlgHom.toRingHom.toAlgebra
+  have : IsScalarTower k P A := .of_algebraMap_eq fun r => (hv.aevalEquiv.commutes r).symm
+  have : Algebra.FormallyEtale P A :=
     .of_equiv (AlgEquiv.ofBijective (Algebra.ofId P A) hv.aevalEquiv.bijective)
-  haveI : Algebra.FormallyEtale A L := .of_isLocalization (nonZeroDivisors _)
-  haveI : Algebra.IsSeparable L F := ⟨fun a => by
+  have : Algebra.FormallyEtale A L := .of_isLocalization (nonZeroDivisors _)
+  have : Algebra.IsSeparable L F := ⟨fun a => by
     have ha : a ∈ L := by rw [show L = ⊤ from hgen]; trivial
     exact (show algebraMap L F ⟨a, ha⟩ = a from rfl) ▸ isSeparable_algebraMap _⟩
-  haveI : Algebra.FormallyEtale L F := Algebra.FormallyEtale.of_isSeparable _ F
-  haveI : Algebra.FormallyEtale A F := .comp A L F
-  haveI : Algebra.FormallyEtale F K := Algebra.FormallyEtale.of_isSeparable F K
+  have : Algebra.FormallyEtale L F := Algebra.FormallyEtale.of_isSeparable _ F
+  have : Algebra.FormallyEtale A F := .comp A L F
+  have : Algebra.FormallyEtale F K := Algebra.FormallyEtale.of_isSeparable F K
   let b₁ : Module.Basis (Fin d) A Ω[A⁄k] :=
     ((mvPolynomialBasis k (Fin d)).baseChange A).map (tensorKaehlerEquivOfFormallyEtale k P A)
   let b₂ : Module.Basis (Fin d) F Ω[F⁄k] := (b₁.baseChange F).map (tensorKaehlerEquivOfFormallyEtale k A F)
@@ -198,7 +198,7 @@ theorem local_frame (k K : Type) [Field k] [Field K] [Algebra k K] (B : Subalgeb
   have key : ∀ v, φ v = τ (ExteriorAlgebra.ιMulti K d (fun j => D k K (u' j : K))) * b.det v := by
     intro v
     conv_lhs => rw [AlternatingMap.eq_smul_basis_det b φ]
-    rw [AlternatingMap.smul_apply, smul_eq_mul, hφ, hb']
+    rw [smul_apply, smul_eq_mul, hφ, hb']
   set g := τ (ExteriorAlgebra.ιMulti K d (fun j => D k K (u' j : K))) with hg
   refine ⟨fun h0 => ?_, fun y hy => ?_⟩
   · have := key w
@@ -250,14 +250,14 @@ open GlobalTheory.PD GlobalTheory.CechDR KaehlerDifferential
 theorem complementary_eq_topForms : ∀ (k F K : Type) [Field k] [CharZero k] [Field F] [Field K] [Algebra k F] [Algebra k K] [Algebra F K] [IsScalarTower k F K] [FiniteDimensional F K] (d : ℕ) (u : Fin d → F), AlgebraicIndependent k u → ∀ (A : Subalgebra k F) [IsFractionRing A F], A = Algebra.adjoin k (Set.range u) → ∀ (B : Subalgebra k K), B = (integralClosure A K).restrictScalars k → Algebra.Smooth k B → ∀ τ : DR k K →ₗ[K] K, τ (ExteriorAlgebra.ιMulti K d fun j => D k K (algebraMap F K (u j))) = 1 → ∀ z : K, (∀ b : B, Algebra.trace F K (z * b) ∈ A) ↔ ∃ y ∈ omB k K B d, τ y = z := by
   intro k F K _ _ _ _ _ _ _ _ _ d u hu A _ hA B hB hsm τ hτ z
   classical
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap k F).injective
-  haveI : Algebra.IsSeparable F K := inferInstance
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap k F).injective
+  have : Algebra.IsSeparable F K := inferInstance
 
-  haveI : IsNoetherianRing A := by
+  have : IsNoetherianRing A := by
     subst hA; exact isNoetherianRing_of_ringEquiv _ hu.aevalEquiv.toRingEquiv
-  haveI : UniqueFactorizationMonoid A := by
+  have : UniqueFactorizationMonoid A := by
     subst hA; exact hu.aevalEquiv.toMulEquiv.uniqueFactorizationMonoid inferInstance
-  haveI : IsIntegrallyClosed A := inferInstance
+  have : IsIntegrallyClosed A := inferInstance
   have hgen : IntermediateField.adjoin k (Set.range u) = ⊤ := by
     rw [eq_top_iff]
     intro x _
@@ -272,9 +272,9 @@ theorem complementary_eq_topForms : ∀ (k F K : Type) [Field k] [CharZero k] [F
     simpa using Module.finrank_eq_card_basis b
 
   let C := integralClosure A K
-  haveI : IsFractionRing C K := integralClosure.isFractionRing_of_finite_extension F K
-  haveI : IsIntegrallyClosed C := integralClosure.isIntegrallyClosedOfFiniteExtension F
-  haveI : IsNoetherianRing C := IsIntegralClosure.isNoetherianRing A F K C
+  have : IsFractionRing C K := integralClosure.isFractionRing_of_finite_extension F K
+  have : IsIntegrallyClosed C := integralClosure.isIntegrallyClosedOfFiniteExtension F
+  have : IsNoetherianRing C := IsIntegralClosure.isNoetherianRing A F K C
   have hmem : ∀ x : K, x ∈ B ↔ x ∈ C := by subst hB; exact fun x => Iff.rfl
   let e : C ≃+* B :=
     { toFun := fun x => ⟨x.1, (hmem _).2 x.2⟩
@@ -283,22 +283,22 @@ theorem complementary_eq_topForms : ∀ (k F K : Type) [Field k] [CharZero k] [F
       right_inv := fun _ => rfl
       map_mul' := fun _ _ => rfl
       map_add' := fun _ _ => rfl }
-  haveI : IsNoetherianRing B := isNoetherianRing_of_ringEquiv C e
-  haveI : IsFractionRing B K := by subst hB; exact inferInstanceAs (IsFractionRing C K)
-  haveI : IsIntegrallyClosed B := by subst hB; exact inferInstanceAs (IsIntegrallyClosed C)
-  haveI : Algebra.Smooth k B := hsm
-  haveI : FaithfulSMul A C := by
+  have : IsNoetherianRing B := isNoetherianRing_of_ringEquiv C e
+  have : IsFractionRing B K := by subst hB; exact inferInstanceAs (IsFractionRing C K)
+  have : IsIntegrallyClosed B := by subst hB; exact inferInstanceAs (IsIntegrallyClosed C)
+  have : Algebra.Smooth k B := hsm
+  have : FaithfulSMul A C := by
     refine (faithfulSMul_iff_algebraMap_injective A C).mpr fun a a' h => ?_
     have h' : algebraMap F K (a : F) = algebraMap F K (a' : F) := congrArg (fun x : C => (x : K)) h
     exact Subtype.val_injective ((algebraMap F K).injective h')
-  haveI : Algebra.HasGoingDown A C := inferInstance
+  have : Algebra.HasGoingDown A C := inferInstance
 
   have hunder : ∀ Q : Ideal B, Q.IsPrime → Q.height = 1 →
       ∃ p : Ideal A, p.IsPrime ∧ p.height = 1 ∧
         ∀ a : A, ∀ b : B, (b : K) = algebraMap F K a → (b ∈ Q ↔ a ∈ p) := by
     intro Q hQ hQ1
     set Q' : Ideal C := Q.comap (e : C →+* B)
-    haveI : Q'.IsPrime := Ideal.comap_isPrime _ Q
+    have : Q'.IsPrime := Ideal.comap_isPrime _ Q
     have hQ'1 : Q'.height = 1 := (RingEquiv.height_comap e Q).trans hQ1
     have hne : Q'.comap (algebraMap A C) ≠ ⊥ := by
       have hQ'0 : Q' ≠ ⊥ := by
@@ -306,7 +306,7 @@ theorem complementary_eq_topForms : ∀ (k F K : Type) [Field k] [CharZero k] [F
         rw [h, Ideal.height_bot] at hQ'1
         exact zero_ne_one hQ'1
       obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hQ'0
-      exact Ideal.comap_ne_bot_of_integral_mem hx0 hx (integralClosure.isIntegral x)
+      exact Ideal.under_ne_bot_of_integral_mem hx0 hx (integralClosure.isIntegral x)
     refine ⟨Q'.comap (algebraMap A C), Ideal.comap_isPrime _ _, height_under_eq_one Q' hQ'1 hne, ?_⟩
     intro a b hab
     have : b = e (algebraMap A C a) := by
@@ -334,7 +334,7 @@ theorem complementary_eq_topForms : ∀ (k F K : Type) [Field k] [CharZero k] [F
       exact ⟨y, hy, by simpa using h⟩
     by_contra hJ
     obtain ⟨P, hPmax, hJP⟩ := Ideal.exists_le_maximal J (fun h => hJ (h ▸ Submodule.mem_top))
-    haveI := hPmax.isPrime
+    have := hPmax.isPrime
     obtain ⟨f, u', bP, hfP, hb, hc⟩ := GlobalTheory.T.exists_local_kaehlerD_basis_smooth_subalgebra k K B d hrank P
     obtain ⟨hg0, hloc⟩ := local_frame k K B d τ _ hτ f u' bP hb hc
     set g := τ (ExteriorAlgebra.ιMulti K d (fun j => D k K (u' j : K))) with hg

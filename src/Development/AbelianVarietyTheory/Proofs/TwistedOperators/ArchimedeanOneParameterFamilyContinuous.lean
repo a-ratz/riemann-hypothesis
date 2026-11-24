@@ -95,7 +95,7 @@ theorem continuous_family : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
       refine ⟨g 0 • ((BoundedContinuousFunction.evalCLM ℂ y).comp
         (SchwartzMap.toBoundedContinuousFunctionCLM ℂ _ ℂ)), fun f' => ?_⟩
       show pureA F (⇑f') g (liftV y) = _
-      simp only [pureA, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+      simp only [pureA, smul_apply, ContinuousLinearMap.comp_apply,
         BoundedContinuousFunction.evalCLM_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply, smul_eq_mul]
       have e1 := hev y
       have e2 := hfin y
@@ -111,8 +111,8 @@ theorem continuous_family : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
     rw [h3]
     exact h2.div_const _
   ·
-    haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := inferInstance
-    haveI : μ.HasTemperateGrowth := MeasureTheory.Measure.IsAddHaarMeasure.instHasTemperateGrowth
+    have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := inferInstance
+    have : μ.HasTemperateGrowth := MeasureTheory.Measure.IsAddHaarMeasure.instHasTemperateGrowth
     let Tφ : SInf F (Fin n × Fin d) →L[ℂ] ℂ :=
       (innerSL ℂ (φ.toLp 2 μ)).comp (SchwartzMap.toLpCLM ℂ ℂ 2 μ)
     have hTφ : ∀ g : SInf F (Fin n × Fin d), Tφ g = ∫ x, g x * starRingEnd ℂ (φ x) ∂μ := by
@@ -142,7 +142,7 @@ theorem continuous_family : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
         have e1 := hev x
         have e2 := hfin x
         simp only [evI] at e1
-        simp only [LinearMap.funLeft_apply, Function.comp_apply, pureA, SchwartzMap.smul_apply, smul_eq_mul]
+        simp only [LinearMap.funLeft_apply, Function.comp_apply, pureA, smul_apply, smul_eq_mul]
         rw [e1, e2, mul_comm]
       show L (LinearMap.funLeft ℂ ℂ liftV (pureA F (⇑f') g)) = _
       rw [e, hLc, map_smul]
@@ -156,7 +156,7 @@ theorem continuous_family : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
       have e : (LinearMap.funLeft ℂ ℂ liftV (tens (evI F) ⇑(T t f) R) :
           (Fin n × Fin d → mixedEmbedding.mixedSpace F) → ℂ) = ⇑(R 0 • T t f) := by
         funext x
-        simp only [LinearMap.funLeft_apply, Function.comp_apply, SchwartzMap.smul_apply, smul_eq_mul]
+        simp only [LinearMap.funLeft_apply, Function.comp_apply, smul_apply, smul_eq_mul]
         rw [htl, mul_comm]
       show _ = L (LinearMap.funLeft ℂ ℂ liftV (tens (evI F) ⇑(T t f) R)) / R 0
       rw [e, hLc, map_smul, smul_eq_mul, hTφ, mul_div_cancel_left₀ _ hR0]

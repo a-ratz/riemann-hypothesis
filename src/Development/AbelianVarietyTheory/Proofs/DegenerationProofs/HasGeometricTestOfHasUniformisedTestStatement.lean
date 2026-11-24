@@ -238,7 +238,7 @@ theorem mem_span_iff {p : ℕ} [Fact p.Prime] {J A : Type} [Fintype J] [Nonempty
 
 theorem mem_lattice_iff : GlobalTheory.UT.LL → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀) (l : u.Lab) (σ : S.J → (u.H S.N).Sec) (cls : S.J → u.D.toPre.X) (md : Mod p u.j u.G S.g S.N l.q (u.H S.N) σ cls) (b : Matrix S.J S.J (FractionRing u.V)) (κ : ℝ), S.Big → (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) → u.Link σ b → b.det ≠ 0 → 0 < κ → (∀ a ∈ l.yy.ker, IsGreatest (Set.range fun i => ‖(b.map (algebraMap _ (PadicAlgCl p))).mulVec (fun i => y₀ ⟨S.ev a i, S.ev_mem a i⟩) i‖) κ) → ∀ e : S.J → PadicAlgCl p, e ∈ Submodule.span (OO p) (Set.range (b.map (algebraMap _ (PadicAlgCl p)))) ↔ ∀ a ∈ l.yy.ker, ‖e ⬝ᵥ (fun i => y₀ ⟨S.ev a i, S.ev_mem a i⟩)‖ ≤ κ := by
   intro L o Ω _ _ _ _ S ρ p _ y₀ u l σ cls md b κ hBig hy hL hb hκ hmax e
-  haveI : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
+  have : IsAlgClosed (kb p) := (GlobalTheory.ZJ.kb_isAlgClosed_and_conj p).1
   have hB : Big S.g S.N (S.r * S.N) := ⟨(GlobalTheory.T.uniformisedTest_dimensions_and_split_fibre L o Ω S ρ p y₀ u).2.2.2.1, hBig.1, hBig.2.1⟩
   obtain ⟨hN, htor, -⟩ := GlobalTheory.T.specialFibre_torsion_eq_reductions L o Ω S ρ p y₀ u l σ cls md hy
   have pb : IsPullback md.r md.Φ.G.hom u.G.hom (rPt p ≫ spMap u.j) := md.cart.1
@@ -399,7 +399,7 @@ theorem exists_zpow_mul_isUnit_of_mem {X : Scheme.{0}} {t : Γ(X, ⊤)} {ξ : X}
     rw [algebraMap_germ, ← germ_res (le_top : X.basicOpen t ≤ ⊤) hD, ← hτ]
     let φ : Γ(X, X.basicOpen t) →+* X.functionField := (X.presheaf.germ _ _ hD).hom
     change φ _ = φ _ ^ n
-    rw [← MonoidHom.coe_coe, ← Units.coe_map, map_zpow, Units.val_zpow_eq_zpow_val]
+    rw [← MonoidHom.coe_ofClass, ← Units.coe_map, map_zpow, Units.val_zpow_eq_zpow_val]
     rfl
   obtain ⟨n, ⟨u, hu, hn⟩, -⟩ :=
     GlobalTheory.PrimeElement.existsUnique_zpow_mul_eq_unit (K := X.functionField) hirr hx₀
@@ -1273,7 +1273,7 @@ theorem E_eq_bdd [ArithBase o Ω] (φ : o →+* OO p) (hφ : ∀ a, (φ a : Padi
   rw [he']
   refine Submodule.sum_mem _ fun c _ => ?_
   obtain ⟨α, hα, rfl⟩ := (test_weights o Ω S p y₀ τ).1 c
-  have hPP : S.proj _ (τ.wt α) * S.proj _ (τ.wt α) = S.proj _ (τ.wt α) := by rw [hmul, if_pos rfl]
+  have hPP : S.proj _ (τ.wt α) * S.proj _ (τ.wt α) = S.proj _ (τ.wt α) := by rw [hmul, ite_eq_left rfl]
   have hfix : (ψ.mapMatrix (S.proj _ (τ.wt α))).mulVec ((ψ.mapMatrix (S.proj _ (τ.wt α))).mulVec e) =
       (ψ.mapMatrix (S.proj _ (τ.wt α))).mulVec e := by
     rw [Matrix.mulVec_mulVec, ← map_mul, hPP]

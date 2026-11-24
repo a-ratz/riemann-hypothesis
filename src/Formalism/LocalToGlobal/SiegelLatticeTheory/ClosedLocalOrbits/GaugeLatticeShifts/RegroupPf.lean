@@ -106,11 +106,11 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
   have hFeq' : ∀ (n : N) (j : J) (y : H), F (act n (r j)) y = F (r j) (n⁻¹ • y) := by
     intro n j y; rw [hFeq, hsm]
   have hrinj : Function.Injective r := fun j j' h => huniq j j' 1 (by rw [h1, h])
-  haveI : Countable J := hrinj.countable
-  haveI : MeasurableConstSMul N H := by
+  have : Countable J := hrinj.countable
+  have : MeasurableConstSMul N H := by
     first
       | infer_instance
-  haveI : SMulInvariantMeasure N H μ := by
+  have : SMulInvariantMeasure N H μ := by
     first
       | infer_instance
 
@@ -171,18 +171,18 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
     subst hΨdef
     by_cases h : p.2⁻¹ • y ∈ ΩJ p.1
     · first
-        | simp only [Set.indicator_apply, Set.mem_setOf_eq, h, ↓reduceIte, hFeq']
+        | simp only [Set.indicator_apply, Set.mem_ofPred_eq, h, ↓reduceIte, hFeq']
     · first
-        | simp only [Set.indicator_apply, Set.mem_setOf_eq, h, ↓reduceIte]
+        | simp only [Set.indicator_apply, Set.mem_ofPred_eq, h, ↓reduceIte]
   have hΨe : ∀ y p, ‖Ψ p y‖ₑ = ({p : J × N | p.2⁻¹ • y ∈ ΩJ p.1} : Set (J × N)).indicator
       (fun p => ‖F (act p.2 (r p.1)) y‖ₑ) p := by
     intro y p
     rw [hΨ y p]
     by_cases h : p.2⁻¹ • y ∈ ΩJ p.1
     · first
-        | simp only [Set.indicator_apply, Set.mem_setOf_eq, h, ↓reduceIte]
+        | simp only [Set.indicator_apply, Set.mem_ofPred_eq, h, ↓reduceIte]
     · first
-        | simp only [Set.indicator_apply, Set.mem_setOf_eq, h, ↓reduceIte, enorm_zero]
+        | simp only [Set.indicator_apply, Set.mem_ofPred_eq, h, ↓reduceIte, eNorm_zero]
   have hΨm : ∀ p, Measurable (Ψ p) := by
     intro p
     subst hΨdef
@@ -193,7 +193,7 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
   have sumE : ∀ y, ∑' p, ‖Ψ p y‖ₑ = ∑' c, ‖F c y‖ₑ := fun y =>
     (tsum_congr (hΨe y)).trans (key y (fun c => ‖F c y‖ₑ))
   have hT : ∑' p : J × N, ∫⁻ x in Ω, ‖Ψ p x‖ₑ ∂μ = ∫⁻ x in Ω, ∑' c, ‖F c x‖ₑ ∂μ := by
-    rw [← lintegral_tsum (fun p => (hΨm p).enorm.aemeasurable)]
+    rw [← lintegral_tsum (fun p => (hΨm p).eNorm.aemeasurable)]
     exact lintegral_congr (fun x => sumE x)
   have hTfin : ∑' p : J × N, ∫⁻ x in Ω, ‖Ψ p x‖ₑ ∂μ ≠ ⊤ := by
     rw [hT]
@@ -239,26 +239,26 @@ theorem orbit_unfold (μ : Measure H) [μ.IsMulLeftInvariant]
         (ENNReal.summable_toReal hTfin))
       have h0 := norm_integral_le_lintegral_norm (μ := μ.restrict Ω) (Ψ p)
       first
-        | simpa only [ofReal_norm_eq_enorm] using h0
+        | simpa only [ofReal_norm] using h0
     exact ((hasum.hasSum.prod_fiberwise fun j => (hasum.prod_factor j).hasSum).tsum_eq).symm
   refine ⟨?_, ?_⟩
   · have hEm : Measurable fun y => ∑' c, ‖F c y‖ₑ :=
-      Measurable.tsum fun c => (hFm c).enorm
+      Measurable.tsum fun c => (hFm c).eNorm
     have hfin_ae : ∀ᵐ y ∂(μ.restrict Ω), ∑' c, ‖F c y‖ₑ < ⊤ := ae_lt_top hEm hint.ne
     have hsN : ∀ y, ∑' c, ‖F c y‖ₑ < ⊤ → Summable fun c => ‖F c y‖ := by
       intro y hy
       have h0 := ENNReal.summable_toReal hy.ne
       first
-        | simpa only [toReal_enorm] using h0
+        | simpa only [toReal_eNorm] using h0
     have hgint : Integrable (fun y => (∑' c, ‖F c y‖ₑ).toReal) (μ.restrict Ω) :=
       integrable_toReal_of_lintegral_ne_top hEm.aemeasurable hint.ne
     have hbound : ∀ᵐ y ∂(μ.restrict Ω), ‖∑' c, F c y‖ ≤ (∑' c, ‖F c y‖ₑ).toReal := by
       filter_upwards [hfin_ae] with y hy
-      rw [ENNReal.tsum_toReal_eq (fun c => by first | exact enorm_ne_top | simp)]
-      simp only [toReal_enorm]
+      rw [ENNReal.tsum_toReal_eq (fun c => by first | exact eNorm_ne_top | simp)]
+      simp only [toReal_eNorm]
       exact norm_tsum_le_tsum_norm (hsN y hy)
     have hgm : AEStronglyMeasurable (fun y => ∑' c, F c y) (μ.restrict Ω) := by
-      haveI : Encodable C := Encodable.ofCountable C
+      have : Encodable C := Encodable.ofCountable C
       have hlim : ∀ᵐ y ∂(μ.restrict Ω), Filter.Tendsto (fun s : Finset C => ∑ c ∈ s, F c y)
           Filter.atTop (nhds (∑' c, F c y)) := by
         filter_upwards [hfin_ae] with y hy
@@ -403,7 +403,7 @@ theorem psiFinU_one : X.psiFinU u 1 = 1 := by
     rw [hf, Matrix.one_mulVec]
     unfold Formalism.L2.SG.HidaSetting.nxt
     split_ifs with h
-    · rw [hA_f_e X, if_neg]
+    · rw [hA_f_e X, ite_eq_right]
       intro hc
       have := congrArg Fin.val hc
       simp at this
@@ -447,7 +447,7 @@ theorem ph_col (hK : X.LevelSubgroupCharacter) (hWD : PhWellDef X u hK) (T : Cu 
   have hdec : IsDec X u ((h : X.B.I.Gf) * X.xu u * k) 1 h k := ⟨h1, hk, by rw [one_mul]⟩
   have hex : ∃ n h' k', IsDec X u ((x, (h : X.B.I.Gf) * X.xu u * k) : X.B.I.GA).2 n h' k' := ⟨1, h, k, hdec⟩
   have hPh : Ph X u hK T (x, (h : X.B.I.Gf) * X.xu u * k) =
-      phVal X u hK T x hex.choose hex.choose_spec.choose hex.choose_spec.choose_spec.choose := dif_pos hex
+      phVal X u hK T x hex.choose hex.choose_spec.choose hex.choose_spec.choose_spec.choose := dite_eq_left hex
   rw [hPh, hWD T x _ _ _ _ _ _ _ hex.choose_spec.choose_spec.choose_spec hdec]
   simp only [phVal, psiFinU_one, one_mul]
 
@@ -459,7 +459,7 @@ theorem termVal_of (hK : X.LevelSubgroupCharacter) (hWD : PhWellDef X u hK) (hWD
     (hOI : OOIntAll X u u' F0 F0' what₂ rows') : TermVal F0 F0' cs cs' FdN FdN' hK := by
   intro T T' t ρ ρ' ht
   have hk := ht.2.2
-  have := FiniteDimensional.complete ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
   set k := kOf X u u' (cs.h ρ : X.B.I.Gf) (cs'.h ρ' : X.B.I.Gf) t.pt with hkdef
   have hF : ∀ x, Fterm cs hK T T' t ρ x = conj (X.chi2 k) *
       (inner ℂ (X.Wu u x) (sharp hK cs T ρ) * inner ℂ (sharp hK cs' T' ρ') (X.Wu u' (t.pt.1⁻¹ * x))) := by
@@ -487,7 +487,7 @@ theorem termVal_of (hK : X.LevelSubgroupCharacter) (hWD : PhWellDef X u hK) (hWD
   rw [integral_const_mul]
   have hb : blk cs cs' FdN FdN' t ρ ρ' =
       ((scl FdN FdN' (X := X) (u := u) (u' := u') * X.volK2 : ℝ) : ℂ) • (X.chi2 k • OOt t) := by
-    unfold blk; exact if_pos ht
+    unfold blk; exact ite_eq_left ht
   rw [hb, _root_.smul_apply, _root_.smul_apply, inner_smul_left, inner_smul_left,
     Complex.conj_ofReal]
   congr 2
@@ -594,7 +594,7 @@ theorem supportReindex_of (hK : X.LevelSubgroupCharacter) (Dt' : Set X.B.I.GA) (
   have h2 := reindex_tsum _ (Srat X u') Dt' hD' p hp hinj (fun γ => ‖Ph X u' hK T' (γ * x)‖ₑ)
     (fun s hs γ => congrArg (‖·‖ₑ) (hinvF s hs γ))
     (fun γ hγ hne => hcov (fun γ => Ph X u' hK T' (γ * x)) hsupp γ hγ (by
-      intro h0; apply hne; simp only [h0, enorm_zero]))
+      intro h0; apply hne; simp only [h0, eNorm_zero]))
   have hfin : ∑' i, ‖Ph X u' hK T' ((p i)⁻¹ * x)‖ₑ ≠ ⊤ := by
     rw [← h2]
     have e : ∑' δ : Dt', ‖Ph X u' hK T' ((δ : X.B.I.GA) * x)‖ₑ =
@@ -604,7 +604,7 @@ theorem supportReindex_of (hK : X.LevelSubgroupCharacter) (Dt' : Set X.B.I.GA) (
     rw [e]
     exact ENNReal.ofReal_ne_top
   have hsI : Summable fun i => Ph X u' hK T' ((p i)⁻¹ * x) := by
-    refine Summable.of_nnnorm ?_
+    refine Summable.of_nnNorm ?_
     exact ENNReal.tsum_coe_ne_top_iff_summable.1 hfin
   refine ⟨?_, ?_⟩
   · rw [h1]
@@ -746,7 +746,7 @@ theorem orbitUnfold_of (hK : X.LevelSubgroupCharacter) (hWD : PhWellDef X u hK) 
     intro t
     have h := hFE t.1
     unfold FundOf
-    rw [dif_pos h]
+    rw [dite_eq_left h]
     exact h.choose_spec
   have hstabJ : ∀ (t : J) (n : N), act n (r t) = r t ↔ (n : X.B.I.Ginf) ∈ ROinf t.1 := by
     intro t n
@@ -770,7 +770,7 @@ theorem orbitUnfold_of (hK : X.LevelSubgroupCharacter) (hWD : PhWellDef X u hK) 
   have hint : ∫⁻ y in Ωs ρ, ∑' c, ‖F c y‖ₑ ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) < ⊤ := by
     refine lt_of_le_of_lt (le_of_eq ?_) hbound
     refine lintegral_congr fun y => ?_
-    simp only [F, enorm_mul, RCLike.enorm_conj]
+    simp only [F, eNorm_mul, RCLike.eNorm_conj]
     rw [ENNReal.tsum_mul_left]
   obtain ⟨hI, hE⟩ := orbit_unfold (Formalism.L2.SG.ProjRows.muInf X.B.I) N act h1 hmul F hFm hFeq (Ωs ρ) hΩ'.1
     (fun x => by
@@ -842,9 +842,9 @@ theorem inner_tsum_blk (hK : X.LevelSubgroupCharacter) (hA : AbsConvT F0 F0' TR 
   funext t
   rw [← e]
   by_cases ht : TermOn cs cs' t ρ ρ'
-  · rw [if_pos ht, hTV T T' t ρ ρ' ht]
-  · rw [if_neg ht, mul_zero]
-    have : blk cs cs' FdN FdN' t ρ ρ' = 0 := by unfold blk; exact if_neg ht
+  · rw [ite_eq_left ht, hTV T T' t ρ ρ' ht]
+  · rw [ite_eq_right ht, mul_zero]
+    have : blk cs cs' FdN FdN' t ρ ρ' = 0 := by unfold blk; exact ite_eq_right ht
     rw [this]; simp
 
 theorem regroup_of (hK : X.LevelSubgroupCharacter) (Dt' : Set X.B.I.GA) (hA : AbsConvT F0 F0' TR cs cs' FdN FdN')

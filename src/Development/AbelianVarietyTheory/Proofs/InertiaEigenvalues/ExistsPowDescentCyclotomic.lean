@@ -94,9 +94,9 @@ theorem exists_aut {E K : Type} [Field E] [NumberField E] [Field K] [Algebra E K
     [NeZero M] [IsCyclotomicExtension {M} E K] {ζ : K} (hζ : IsPrimitiveRoot ζ M) {g : ℕ}
     (hg : g.Coprime M) :
     ∃ τ : K ≃ₐ[E] K, τ ζ = ζ ^ (g ^ (Module.finrank ℚ E).factorial) := by
-  haveI := IsCyclotomicExtension.finiteDimensional {M} E K
-  haveI := IsCyclotomicExtension.isGalois {M} E K
-  haveI : NumberField K := NumberField.of_module_finite E K
+  have := IsCyclotomicExtension.finiteDimensional {M} E K
+  have := IsCyclotomicExtension.isGalois {M} E K
+  have : NumberField K := NumberField.of_module_finite E K
   set H := (hζ.autToPow E).range with hH
   have hcard : Nat.card H = Module.finrank E K := by
     rw [← IsGalois.card_aut_eq_finrank]
@@ -129,8 +129,8 @@ theorem descent {E K : Type} [Field E] [Field K] [Algebra E K] {M : ℕ}
     (hw : w ^ M = algebraMap E K u) :
     ∃ (α : K) (v : E), α ^ M = 1 ∧ α ^ (∑ i ∈ Finset.range n, (k + 1) ^ i) = 1 ∧
       algebraMap E K v * α = w ^ k := by
-  haveI := IsCyclotomicExtension.finiteDimensional {M} E K
-  haveI := IsCyclotomicExtension.isGalois {M} E K
+  have := IsCyclotomicExtension.finiteDimensional {M} E K
+  have := IsCyclotomicExtension.isGalois {M} E K
   have hext : ∀ σ σ' : K ≃ₐ[E] K, σ ζ = σ' ζ → σ = σ' := by
     intro σ σ' h
     apply hζ.autToPow_injective E
@@ -212,10 +212,10 @@ theorem exists_pow_descent_cyclotomic :
   rw [hk] at hN1 hN2
   refine ⟨l ^ (r + s), pow_pos hl.pos _, pow_dvd_pow _ (by omega), ?_⟩
   intro Ω _ _ ζ hζ u w hwK hw
-  haveI : NeZero (l ^ (r + s)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ (r + s)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hint : IsIntegral E ζ := (hζ.isIntegral (NeZero.pos _)).tower_top
   set K := IntermediateField.adjoin E {ζ} with hK
-  haveI : IsCyclotomicExtension {l ^ (r + s)} E K := by
+  have : IsCyclotomicExtension {l ^ (r + s)} E K := by
     change IsCyclotomicExtension {l ^ (r + s)} E K.toSubalgebra
     rw [hK, IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic hint.isAlgebraic]
     exact hζ.adjoin_isCyclotomicExtension E

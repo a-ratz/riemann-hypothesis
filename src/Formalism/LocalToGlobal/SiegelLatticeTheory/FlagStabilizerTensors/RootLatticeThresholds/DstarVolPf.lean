@@ -396,7 +396,7 @@ theorem measAt (hcd : cdScaleTie D) {n : ℕ} {ε : Fin n → Bool} (e : Fin P �
   have hS : MeasurableSet (PI.UnitaryGroupMassFormula.CdHaarScale.Main.phi e h1 h2 '' B) :=
     (PI.UnitaryGroupMassFormula.CdHaarScale.Main.phi e h1 h2).toHomeomorph.measurableEmbedding.measurableSet_image.2 hB
   have hcm : Measurable (fun g : Formalism.REAL.UJ ε => c * g * c⁻¹) := (measurable_const_mul c).mul_const c⁻¹
-  rw [Measure.smul_apply, ← Measure.map_apply hcm hS, map_conj_muG, ← Measure.smul_apply]
+  rw [smul_apply, ← Measure.map_apply hcm hS, map_conj_muG, ← smul_apply]
   rw [hcd n ε P Q e h1 h2 _ hS]
   have ht := PI.UnitaryGroupMassFormula.CdHaarScale.Main.tie_set e h1 h2 (PI.UnitaryGroupMassFormula.CdHaarScale.Main.phi e h1 h2 '' B)
   rw [Set.preimage_image_eq _ (PI.UnitaryGroupMassFormula.CdHaarScale.Main.phi e h1 h2).injective] at ht
@@ -505,14 +505,14 @@ theorem isVolMeas_muV (hcd : cdScaleTie D) (hΛ : fr.Λ = Formalism.IndefR.Eqv.U
       ∀ ρ, ∃ b ∈ B ρ, UpqT.mat b * A ρ = A ρ * infMat D.sp.cm.sig V.gram (Formalism.IndefR.Eqv.thetaC D ρ) h} =
       cdProd fr * ((∏ v : InfinitePlace D.host.F, Formalism.REAL.muG (fr.ε v) (S' v)) *
         μf (Formalism.IndefR.Eqv.UI.instV fr).Kset) := by
-    rw [muV, Measure.smul_apply, smul_eq_mul]
+    rw [muV, smul_apply, smul_eq_mul]
     congr 1
     refine (hmap.trans (congrArg _ hpre)).trans ?_
     exact (Measure.prod_prod _ _).trans (congrArg (· * μf (Formalism.IndefR.Eqv.UI.instV fr).Kset) (Measure.pi_pi _ _))
   rw [hmeas, hK, mul_one, cdProd, ← Finset.prod_mul_distrib]
   have hv : ∀ v, (D.s.cdScale V.rank (fr.ε v) : ENNReal) * Formalism.REAL.muG (fr.ε v) (S' v) =
       D.cd.cd P Q (B ((Formalism.L2.Host.tauPl D).symm v)) := fun v => by
-    rw [← ZsCovInf.measAt hcd (e v) (h1 v) (h2 v) (c v) _ (hB _), Measure.smul_apply, smul_eq_mul]
+    rw [← ZsCovInf.measAt hcd (e v) (h1 v) (h2 v) (c v) _ (hB _), smul_apply, smul_eq_mul]
   calc _ = ∏ v, D.cd.cd P Q (B ((Formalism.L2.Host.tauPl D).symm v)) := Finset.prod_congr rfl fun v _ => hv v
     _ = _ := Fintype.prod_equiv (Formalism.L2.Host.tauPl D).symm _ _ fun v => rfl
 
@@ -609,9 +609,9 @@ theorem isFD_image (μf : Measure I.Gf) [SigmaFinite μf] [μf.IsHaarMeasure] (f
     (hf : I.IsFundDom (I.muA μf) fund) (ν : Measure (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) I.cm.sig I.J))
     (hν : ν ≪ (I.muA μf).map (toHA I hb)) :
     IsFundamentalDomain (HFinIn (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) I.cm.sig I.J) (toHA I hb '' fund) ν := by
-  haveI hBor : BorelSpace (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) I.cm.sig I.J) := ⟨rfl⟩
-  haveI : (I.muA μf).IsHaarMeasure := Formalism.L2.SG.PoincareInHH.Cut.muA_isHaar' I μf
-  haveI : (I.muA μf).IsMulLeftInvariant := inferInstance
+  have hBor : BorelSpace (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) I.cm.sig I.J) := ⟨rfl⟩
+  have : (I.muA μf).IsHaarMeasure := Formalism.L2.SG.PoincareInHH.Cut.muA_isHaar' I μf
+  have : (I.muA μf).IsMulLeftInvariant := inferInstance
   have hfd0 : IsFundamentalDomain (Formalism.MainNotions.LeviCoordinates.rr_GF I) fund (I.muA μf) :=
     Formalism.MainNotions.LeviCoordinates.rr_isFD ⟨hf.1, hf.2.1, hf.2.2⟩
   let Γ : Subgroup (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) I.cm.sig I.J) := HFinIn (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF I.F) I.cm.sig I.J
@@ -653,16 +653,16 @@ theorem covol_gen (hVM : VolMeasOf D) (hVol : VolTie D) (I : Formalism.MainNotio
   have hfin : μf (IV D).Kset < ⊤ := hKc.measure_lt_top
   set c := μf (IV D).Kset with hc
   let μ' : Measure (IV D).Gf := c⁻¹ • μf
-  haveI : μ'.IsHaarMeasure := Measure.IsHaarMeasure.smul _ (ENNReal.inv_ne_zero.2 hfin.ne) (ENNReal.inv_ne_top.2 hpos.ne')
+  have : μ'.IsHaarMeasure := Measure.IsHaarMeasure.smul _ (ENNReal.inv_ne_zero.2 hfin.ne) (ENNReal.inv_ne_top.2 hpos.ne')
   have hfs : ∀ n, μ' (spanningSets μf n) < ⊤ := fun n => by
     show (c⁻¹ • μf) _ < ⊤
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top (ENNReal.inv_lt_top.2 hpos) (measure_spanningSets_lt_top μf n)
-  haveI : SigmaFinite μ' :=
+  have : SigmaFinite μ' :=
     ⟨⟨{ set := spanningSets μf, set_mem := fun _ => Set.mem_univ _, finite := hfs, spanning := iUnion_spanningSets μf }⟩⟩
   have hK1 : μ' (IV D).Kset = 1 := by
     show (c⁻¹ • μf) (IV D).Kset = 1
-    rw [Measure.smul_apply, smul_eq_mul, ← hc, ENNReal.inv_mul_cancel hpos.ne' hfin.ne]
+    rw [smul_apply, smul_eq_mul, ← hc, ENNReal.inv_mul_cancel hpos.ne' hfin.ne]
   have hV := hVM μ' hK1
   have hsig : (VS D).SigOK := D.sp.Y_sig 0
   have hsv : ∀ τ, (VS D).sig τ = (D.R.k + D.R.rS, D.R.rS + 1) := fun τ => D.sp.baseSpace_signature_eq τ
@@ -673,7 +673,7 @@ theorem covol_gen (hVM : VolMeasOf D) (hVol : VolTie D) (I : Formalism.MainNotio
   have hμA : (IV D).muA μ' = c⁻¹ • (IV D).muA μf := by
     show (Measure.pi fun v => Formalism.REAL.muG ((IV D).ε v)).prod (c⁻¹ • μf) = c⁻¹ • (Measure.pi fun v => Formalism.REAL.muG ((IV D).ε v)).prod μf
     exact Measure.prod_smul_right _
-  haveI : BorelSpace (HAd (IV D)) := ⟨rfl⟩
+  have : BorelSpace (HAd (IV D)) := ⟨rfl⟩
   have hν : muVI D μ' ≪ ((IV D).muA μf).map (toHA (IV D) hb) := by
     unfold muVI
     rw [hbrg, hμA, Measure.map_smul]
@@ -686,14 +686,14 @@ theorem covol_gen (hVM : VolMeasOf D) (hVol : VolTie D) (I : Formalism.MainNotio
   have hS : MeasurableSet (toHA (IV D) hb '' fund) := (e.measurableSet_image).2 hf.1
   have hmap : muVI D μ' (toHA (IV D) hb '' fund) = cdProdI D * (c⁻¹ * (IV D).muA μf fund) := by
     unfold muVI
-    rw [Measure.smul_apply, smul_eq_mul, hbrg, hμA]
+    rw [smul_apply, smul_eq_mul, hbrg, hμA]
     congr 1
     erw [Measure.map_apply hmeas hS]
-    rw [Set.preimage_image_eq _ (toHA (IV D) hb).injective, Measure.smul_apply, smul_eq_mul]
+    rw [Set.preimage_image_eq _ (toHA (IV D) hb).injective, smul_apply, smul_eq_mul]
   set_option synthInstance.maxHeartbeats 200000 in
   have hA0 : (IV D).muA μf fund ≠ 0 := by
-    haveI : ((IV D).muA μf).IsHaarMeasure := Formalism.L2.SG.PoincareInHH.Cut.muA_isHaar' (IV D) μf
-    haveI : ((IV D).muA μf).IsMulLeftInvariant := inferInstance
+    have : ((IV D).muA μf).IsHaarMeasure := Formalism.L2.SG.PoincareInHH.Cut.muA_isHaar' (IV D) μf
+    have : ((IV D).muA μf).IsMulLeftInvariant := inferInstance
     have hfd0 : IsFundamentalDomain (Formalism.MainNotions.LeviCoordinates.rr_GF (IV D)) fund ((IV D).muA μf) :=
       Formalism.MainNotions.LeviCoordinates.rr_isFD ⟨hf.1, hf.2.1, hf.2.2⟩
     exact hfd0.measure_ne_zero (NeZero.ne _)

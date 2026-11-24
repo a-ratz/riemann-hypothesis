@@ -221,11 +221,11 @@ theorem relationsLift_of_square {B C D : Type*} [CommRing B] [CommRing C] [CommR
     (hp : Function.Surjective p) (hq : Function.Surjective q) (hpI : RingHom.ker p = I)
     (hqI : RingHom.ker q = I.map (algebraMap A B)) (hsq : ψ.comp p = q.comp (algebraMap A B))
     (hψ : ψ.Flat) : RelationsLift I B := by
-  letI := p.toAlgebra
-  letI := ψ.toAlgebra
-  letI := (q.comp (algebraMap A B)).toAlgebra
-  haveI : IsScalarTower A C D := IsScalarTower.of_algebraMap_eq' hsq.symm
-  haveI : Module.Flat C D := hψ
+  let := p.toAlgebra
+  let := ψ.toAlgebra
+  let := (q.comp (algebraMap A B)).toAlgebra
+  have : IsScalarTower A C D := IsScalarTower.of_algebraMap_eq' hsq.symm
+  have : Module.Flat C D := hψ
   let q' : B →ₐ[A] D := { q with commutes' := fun _ => rfl }
   refine relationsLift_of_flat (C := C) hp hpI q'.toLinearMap hq ?_
   rw [Ideal.smul_top_eq_map, ← hqI]
@@ -242,7 +242,7 @@ variable {A B : Type*} [CommRing A] [CommRing B] [IsNoetherianRing A] [IsNoether
 theorem ringHom_flat_of_flat_quotientMap_pow (φ : A →+* B) {I : Ideal A} {J : Ideal B}
     (hIJ : I.map φ = J) (hJ : J ≤ Ideal.jacobson ⊥) (hle : ∀ n : ℕ, I ^ n ≤ (J ^ n).comap φ)
     (h : ∀ n : ℕ, (Ideal.quotientMap (J ^ n) φ (hle n)).Flat) : φ.Flat := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   refine LocalFlat.flat_of_relationsLift B (I := I) (hIJ.le.trans hJ) fun n => ?_
   refine LocalFlat.relationsLift_of_square (Ideal.Quotient.mk (I ^ n)) (Ideal.Quotient.mk (J ^ n))
     _ Ideal.Quotient.mk_surjective Ideal.Quotient.mk_surjective Ideal.mk_ker ?_ ?_ (h n)
@@ -256,7 +256,7 @@ theorem ringHom_flat_of_flat_reduction {C D : Type*} [CommRing C] [CommRing D] (
     (hp : Function.Surjective p) (hq : Function.Surjective q)
     (hpπ : RingHom.ker p = Ideal.span {π}) (hqπ : RingHom.ker q = Ideal.span {φ π})
     (hsq : ψ.comp p = q.comp φ) (hψ : ψ.Flat) : φ.Flat := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have hmap : (Ideal.span {π}).map (algebraMap A B) = Ideal.span {φ π} := by
     rw [Ideal.map_span, Set.image_singleton]
     rfl
@@ -421,7 +421,7 @@ theorem ringHom_flat_of_square_of_isLocalHom [IsLocalRing B] [IsLocalRing B'] {�
     (hsq : φ'.comp α = β.comp φ) (hα : α.Flat) (hβ : β.Flat) (hφ' : φ'.Flat) : φ.Flat := by
   refine ringHom_flat_of_square hsq hα ?_ hφ'
   algebraize [β]
-  haveI : IsLocalHom (algebraMap B B') := ‹IsLocalHom β›
+  have : IsLocalHom (algebraMap B B') := ‹IsLocalHom β›
   exact Module.FaithfullyFlat.of_flat_of_isLocalHom
 
 theorem ringHom_faithfullyFlat_comp {f : A →+* B} {g : B →+* B'} (hf : f.FaithfullyFlat)

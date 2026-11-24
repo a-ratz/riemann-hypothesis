@@ -173,7 +173,7 @@ theorem finrank_span_finset_le_of_indep {G : Type} [AddCommGroup G] [IsAddTorsio
     (hr : ∀ (n : ℕ) (e : Fin n → G), LinearIndependent ℤ e → (∀ j, e j ∈ (T : Set G)) → n ≤ r) :
     Module.finrank ℤ (Submodule.span ℤ (T : Set G)) ≤ r := by
   classical
-  haveI : HasUniqueDiv G := IsAddTorsionFree.hasUniqueDiv
+  have : HasUniqueDiv G := IsAddTorsionFree.hasUniqueDiv
   obtain ⟨s, hs, hmax⟩ := exists_maximal_linearIndepOn ℤ (Subtype.val : ↥(T : Set G) → G)
   have ha : ∀ i : (T : Set G), ∃ a : ℤ, a ≠ 0 ∧ a • (i : G) ∈ Submodule.span ℤ (Subtype.val '' s) := by
     intro i
@@ -206,10 +206,10 @@ theorem finrank_span_finset_le_of_indep {G : Type} [AddCommGroup G] [IsAddTorsio
     have e := congrArg Subtype.val hxy
     exact Subtype.ext (smul_right_injective G hM0 e)
   have hsfin : (Subtype.val '' s : Set G).Finite := (Set.toFinite s).image _
-  haveI : Module.Finite ℤ (Submodule.span ℤ (Subtype.val '' s)) := Module.Finite.span_of_finite ℤ hsfin
+  have : Module.Finite ℤ (Submodule.span ℤ (Subtype.val '' s)) := Module.Finite.span_of_finite ℤ hsfin
   have h1 := LinearMap.finrank_le_finrank_of_injective hf
   have hli : LinearIndepOn ℤ id (Subtype.val '' s) := hs.id_image
-  haveI := hsfin.fintype
+  have := hsfin.fintype
   rw [finrank_span_set_eq_card hli, Set.toFinset_card] at h1
   let eqv := Fintype.equivFin (Subtype.val '' s : Set G)
   have h2 := hr _ (fun j => (eqv.symm j : G)) (hli.comp _ eqv.symm.injective) (by
@@ -224,12 +224,12 @@ theorem encard_finset_le_pow_mul {G : Type} [AddCommGroup G] [IsAddTorsionFree G
     (T : Finset G) (hT : (T : Set G) ⊆ B R) :
     (T : Set G).encard ≤ ((q ^ r : ℕ) : ℕ∞) * (B (2 * R / q)).encard := by
   classical
-  haveI : HasUniqueDiv G := IsAddTorsionFree.hasUniqueDiv
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : HasUniqueDiv G := IsAddTorsionFree.hasUniqueDiv
+  have : NeZero q := ⟨hq.ne'⟩
   set L := Submodule.span ℤ (T : Set G) with hLdef
   have hd : Module.finrank ℤ L ≤ r :=
     finrank_span_finset_le_of_indep T r (fun n e he hmem => hr n e he (fun j => hT (hmem j)))
-  haveI : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
   set d := Module.finrank ℤ L with hddef
   let b := Module.finBasis ℤ L
   let v : G → (Fin d → ℤ) := fun x => if hx : x ∈ L then b.equivFun ⟨x, hx⟩ else 0
@@ -243,8 +243,8 @@ theorem encard_finset_le_pow_mul {G : Type} [AddCommGroup G] [IsAddTorsionFree G
       apply (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).1
       push_cast
       exact sub_eq_zero.2 e
-    have hvx : v x = b.equivFun ⟨x, hx⟩ := dif_pos hx
-    have hvy : v y = b.equivFun ⟨y, hy⟩ := dif_pos hy
+    have hvx : v x = b.equivFun ⟨x, hx⟩ := dite_eq_left hx
+    have hvy : v y = b.equivFun ⟨y, hy⟩ := dite_eq_left hy
     have e : q • (b.equivFun.symm (fun i => (v x i - v y i) / (q : ℤ)) : L) = ⟨x, hx⟩ - ⟨y, hy⟩ := by
       apply b.equivFun.injective
       rw [map_nsmul, LinearEquiv.apply_symm_apply, map_sub, ← hvx, ← hvy]
@@ -302,7 +302,7 @@ theorem encard_ball_le_pow_mul : ∀ (G : Type) [AddCommGroup G] [IsAddTorsionFr
   have hC := hlt.ne_top
   obtain ⟨t, hts, htc⟩ := Set.exists_subset_encard_eq (Order.add_one_le_of_lt hlt)
   obtain ⟨m, hm⟩ := ENat.ne_top_iff_exists.1 hC
-  have htfin : t.Finite := Set.encard_ne_top_iff.1 (by rw [htc, ← hm]; exact ENat.coe_ne_top (m + 1))
+  have htfin : t.Finite := Set.encard_ne_top_iff.1 (by rw [htc, ← hm]; exact ENat.natCast_ne_top (m + 1))
   have h := encard_finset_le_pow_mul Λ B hB R q r hq hr htfin.toFinset (by simpa using hts)
   rw [Set.Finite.coe_toFinset, htc, ← hm] at h
   norm_cast at h
@@ -470,7 +470,7 @@ theorem log_ncard_unit_ball_le_of_indep_bound :
     intro x hx
     by_contra hx0
     have hli : LinearIndependent ℤ (fun _ : Fin 1 => x) := by
-      letI : HasUniqueDiv G := ⟨by
+      let : HasUniqueDiv G := ⟨by
         intro n hn a b h
         exact eq_of_nsmul_eq_nsmul_of_addCommute hn (AddCommute.all _ _) h⟩
       rw [linearIndependent_unique_iff]; exact hx0
@@ -618,7 +618,7 @@ theorem le_shift_of_isFS_sub : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsI
   · rw [← h0, zero_mul]; exact zero_le_one
   have hSpos : 0 < S := lt_of_lt_of_le (by positivity) hineq
   have hE : Real.exp (-(Real.log S - (Real.log S' + 2 * Δ)) / 2) ^ 2 = S' * Real.exp (2 * Δ) / S := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     have : ((2 : ℕ) : ℝ) * (-(Real.log S - (Real.log S' + 2 * Δ)) / 2) = (Real.log S' + 2 * Δ) - Real.log S := by
       push_cast; ring
     rw [this, Real.exp_sub, Real.exp_add, Real.exp_log hS'pos, Real.exp_log hSpos]
@@ -748,7 +748,7 @@ theorem rank_le_gdeg_of_isNef : GlobalTheory.Published.ArCalc → AmpleHS → �
         have hnn' : 0 ≤ Q.nu ((n * m : ℕ) * 1) ((n * m : ℕ) * 0) σ y (v0 (Fin.cast hcard.symm i)) := by
           unfold Pair.nu; exact mul_nonneg (norm_nonneg _) (Real.exp_pos _).le
         have hexp : Real.exp t₀ ^ (n * m) = Real.exp ((t₀ * n) * m) := by
-          rw [← Real.exp_nat_mul]; push_cast; ring_nf
+          rw [← Real.exp_natCast_mul]; push_cast; ring_nf
         calc _ ≤ Real.exp t₀ ^ (n * m) * 1 := mul_le_mul hA1 hB1 (pow_nonneg (by unfold Pair.nu; exact mul_nonneg (norm_nonneg _) (Real.exp_pos _).le) _) (pow_nonneg (Real.exp_pos _).le _)
           _ = _ := by rw [mul_one, hexp]
     have := _root_.GlobalTheory.HSNef.factorial_mul_le_gdeg_of_indep hAr hHS k X p D hX Q n 1 _ hrep hamp hsp (Fintype.card J * n ^ D) (t₀ * n) hvec
@@ -854,7 +854,7 @@ theorem levels_le_selfInter (hC : GlobalTheory.Published.ArCalc) (hA : AmpleHS) 
       obtain ⟨rfl, rfl⟩ := h
       rfl
     have hbox : boxFam e' x = boxFam e x ∘ ι := rfl
-    haveI : Nonempty (J' × Finset (Fin D)) := ⟨(⟨j₀, Nat.one_le_iff_ne_zero.2 hj₀⟩, ∅)⟩
+    have : Nonempty (J' × Finset (Fin D)) := ⟨(⟨j₀, Nat.one_le_iff_ne_zero.2 hj₀⟩, ∅)⟩
     have ht' : Total (boxFam e' x) := hbox ▸ ht.comp ι
     obtain ⟨M', hM'⟩ := _root_.GlobalTheory.HSNef.exists_isFS k X p (J' × Finset (Fin D)) (boxFam e' x) (fun c => (n' c.1 : ℝ) * Δ) ht'
     obtain ⟨h', hh'⟩ := (hC.arExists k X p D hX).1 M'
@@ -1385,7 +1385,7 @@ theorem GlobalTheory.HSNef.le_shift_of_isFS : ∀ (k : Type) [CommRing k] (X : S
       rwa [mul_assoc, ← Real.exp_add, show -φB / 2 + φB / 2 = 0 by ring, Real.exp_zero, mul_one] at this
     have h3 := pow_le_pow_left₀ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) h2 2
     have e1 : (Real.exp (-w l) * Real.exp (φB / 2)) ^ 2 * Real.exp (2 * w l) = Real.exp φB := by
-      rw [mul_pow, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]
+      rw [mul_pow, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]
       congr 1; push_cast; ring
     calc Q ^ 2 * (‖ratVal (f l * (ρ j : X.functionField)) y‖ ^ 2 * Real.exp (2 * w l))
         = (Q * ‖ratVal (f l * (ρ j : X.functionField)) y‖) ^ 2 * Real.exp (2 * w l) := by ring
@@ -1400,7 +1400,7 @@ theorem GlobalTheory.HSNef.le_shift_of_isFS : ∀ (k : Type) [CommRing k] (X : S
   rw [hφi, hφj]
   have hE : Real.exp (-(φB + 2 * (Real.log (Fintype.card J) / 2) - Real.log S) / 2) ^ 2 =
       S / (Fintype.card J * Real.exp φB) := by
-    rw [← Real.exp_nat_mul, show ((2 : ℕ) : ℝ) * (-(φB + 2 * (Real.log (Fintype.card J) / 2) - Real.log S) / 2)
+    rw [← Real.exp_natCast_mul, show ((2 : ℕ) : ℝ) * (-(φB + 2 * (Real.log (Fintype.card J) / 2) - Real.log S) / 2)
         = Real.log S - (Real.log (Fintype.card J) + φB) by push_cast; ring,
       Real.exp_sub, Real.exp_add, Real.exp_log hSpos, Real.exp_log (by linarith)]
   have hpos : 0 ≤ Q * Real.exp (-(φB + 2 * (Real.log (Fintype.card J) / 2) - Real.log S) / 2) :=
@@ -1580,7 +1580,7 @@ theorem key_ineq : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull → �
     refine mul_ne_zero (he.ne_zero c.1) ?_
     exact Finset.prod_ne_zero_iff.2 fun i _ => hx.ne_zero i
   obtain ⟨Y, hY, π, φ, hvarY, hmod, htot⟩ := _root_.GlobalTheory.HSNef.exists_model_total k X p D hX (J × Finset (Fin D)) (boxFam e x) hne
-  haveI := hY
+  have := hY
   set q := π ≫ p with hq
   set f : J × Finset (Fin D) → Y.functionField := fun c => φ (boxFam e x c) with hf
   have hbox : f = boxFam (φ ∘ e) (φ ∘ x) := by
@@ -1688,8 +1688,8 @@ open GlobalTheory GlobalTheory.ArInt GlobalTheory.CxPts GlobalTheory.Cartier Glo
 
 theorem GlobalTheory.HSNef.lc_le_bound : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (P : Pair p) (x : Fin D → X.functionField) (β : ℝ) (q : ℕ), AlgebraicIndependent ℤ x → (∀ S : Finset (Fin D), ∏ i ∈ S, x i ∈ P.Bl 0 1 1) → (P.L.tens P.A).IsNef D → (P.L.tens P.A).IsSelfInter β → 3 ≤ q → P.lc 1 0 1 ≤ bound D q β (gdeg (P.L.tens P.A) D) := by
   intro hC hA hS k _ X _ p D hX P x β q hx hxB hNef hSI hq
-  haveI := hX.charZero
-  haveI hcz : CharZero X.functionField :=
+  have := hX.charZero
+  have hcz : CharZero X.functionField :=
     charZero_of_injective_ringHom (f := (X.germToFunctionField ⊤).hom) (X.germToFunctionField_injective ⊤)
   have hβ : 0 ≤ β := by
     obtain ⟨h, hh, rfl⟩ := hSI
@@ -1712,7 +1712,7 @@ theorem GlobalTheory.HSNef.lc_le_bound : GlobalTheory.Published.ArCalc → Ample
     intro m
     have e1 : (2 / q : ℝ) = Real.exp (-Δ) := by
       rw [Real.exp_neg, hΔdef, Real.exp_log (by positivity), inv_div]
-    rw [e1, ← Real.exp_nat_mul]
+    rw [e1, ← Real.exp_natCast_mul]
     congr 1
     ring
   have key : ∀ (r : ℕ) (e : Fin r → X.functionField) (n : Fin r → ℕ), LinearIndependent ℤ e →
@@ -1721,7 +1721,7 @@ theorem GlobalTheory.HSNef.lc_le_bound : GlobalTheory.Published.ArCalc → Ample
     intro r e n he hB
     rcases Nat.eq_zero_or_pos r with rfl | hr
     · simpa using hT
-    haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+    have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
     have hsmall : SmallFam (P.L.tens P.A) (boxFam e x) (fun c => n c.1 * Δ) := by
       apply _root_.GlobalTheory.HSNef.smallFam_pair_tens k X p P
       rintro ⟨j, S⟩

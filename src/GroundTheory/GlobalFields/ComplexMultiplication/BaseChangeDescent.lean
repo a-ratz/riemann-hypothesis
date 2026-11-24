@@ -64,7 +64,7 @@ theorem exists_free_compositum :
       ι.comp (algebraMap k L) = j.comp σ ∧
         ∀ u : L, Transcendental k u → Transcendental j.fieldRange (ι u) := by
   classical
-  letI : Algebra k M := σ.toAlgebra
+  let : Algebra k M := σ.toAlgebra
   obtain ⟨B, hB⟩ := exists_isTranscendenceBasis k M
   let A := MvPolynomial B L
   let L₁ := FractionRing A
@@ -96,10 +96,10 @@ theorem exists_free_compositum :
     show toL' (MvPolynomial.mapAlgHom (Algebra.ofId k L) (e.symm (e p))) = _
     rw [e.symm_apply_apply]
     exact DFunLike.congr_fun this p
-  letI : Algebra R L' := f₀.toRingHom.toAlgebra
-  haveI : IsScalarTower k R L' := IsScalarTower.of_algebraMap_eq (fun a => (f₀.commutes a).symm)
-  haveI : Module.IsTorsionFree R L' := Module.isTorsionFree_iff_algebraMap_injective.mpr hf₀inj
-  haveI : Algebra.IsAlgebraic R M := hB.isAlgebraic
+  let : Algebra R L' := f₀.toRingHom.toAlgebra
+  have : IsScalarTower k R L' := IsScalarTower.of_algebraMap_eq (fun a => (f₀.commutes a).symm)
+  have : Module.IsTorsionFree R L' := Module.isTorsionFree_iff_algebraMap_injective.mpr hf₀inj
+  have : Algebra.IsAlgebraic R M := hB.isAlgebraic
   let j₀ : M →ₐ[R] L' := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -141,8 +141,8 @@ theorem exists_free_compositum :
     intro z hz
     obtain ⟨m, hm⟩ := hle hz
     exact ⟨m, hm⟩
-  letI : Algebra R' K₁ := (Subring.inclusion hR'K).toAlgebra
-  haveI : IsScalarTower R' K₁ L' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra R' K₁ := (Subring.inclusion hR'K).toAlgebra
+  have : IsScalarTower R' K₁ L' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hmem : ∀ r : R, f₀ r ∈ R' := by
     intro r
     obtain ⟨p, rfl⟩ := e.surjective r
@@ -166,7 +166,7 @@ theorem exists_free_compositum :
   have hcomp : (algebraMap R' K₁).comp f = g.comp (algebraMap R M) := by
     ext r
     exact (hjR r).symm
-  haveI : Algebra.IsAlgebraic R' K₁ := by
+  have : Algebra.IsAlgebraic R' K₁ := by
     refine ⟨fun z => ?_⟩
     obtain ⟨m, hm⟩ := z.2
     have hz : g m = z := Subtype.ext hm
@@ -194,8 +194,8 @@ theorem respectsAdd_of_map (ψ : Isogeny (E.map σ) (E'.map σ))
   rw [respectsAdd_iff]
   intro L _ _ _ P₁ P₂ h₁ h₂ h₃
   obtain ⟨L', _, ι, j, hcomm, htr⟩ := exists_free_compositum σ L
-  letI : Algebra F' L' := j.toAlgebra
-  letI : Algebra F L' := ((algebraMap F' L').comp σ).toAlgebra
+  let : Algebra F' L' := j.toAlgebra
+  let : Algebra F L' := ((algebraMap F' L').comp σ).toAlgebra
   let ιA : L →ₐ[F] L' := { ι with commutes' := fun a => DFunLike.congr_fun hcomm a }
   let pm : (E.baseChange L).toAffine.Point →+ ((E.map σ).baseChange L').toAffine.Point :=
     Point.map (W' := E) ιA

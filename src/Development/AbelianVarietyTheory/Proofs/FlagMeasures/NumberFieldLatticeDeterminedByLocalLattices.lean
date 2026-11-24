@@ -138,7 +138,7 @@ theorem exists_coeffs (Λ : Submodule (𝓞 E) (Fin n → E))
         if i = x then algebraMap (𝓞 E) E (b x) * algebraMap (𝓞 E) E D else 0 := by
       intro x
       split_ifs <;> simp
-    simp only [h4, Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul]
+    simp only [h4, Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul]
     rw [hb'' i]
     ring
   have h2 := congrArg φ h1
@@ -160,9 +160,9 @@ theorem exists_coeffs (Λ : Submodule (𝓞 E) (Fin n → E))
 
 theorem exists_dual_basis (Λ : Submodule (𝓞 E) (Fin n → E)) (h : Submodule.IsLattice E Λ) :
     ∃ (m : ℕ) (g : Fin m → Λ) (φ : Fin m → Λ →ₗ[𝓞 E] 𝓞 E), ∀ y, y = ∑ i, φ i y • g i := by
-  haveI := h
+  have := h
   have := Module.IsTorsionFree.trans_faithfulSMul (𝓞 E) E (Fin n → E)
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 h.fg
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 h.fg
   have : Module.FinitePresentation (𝓞 E) Λ := Module.finitePresentation_of_finite (𝓞 E) Λ
   have : Module.Flat (𝓞 E) Λ := inferInstance
   have : Module.Projective (𝓞 E) Λ := Module.Flat.projective_of_finitePresentation
@@ -322,7 +322,7 @@ theorem lattice_local : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     refine (h1.union (hfin (D : E)⁻¹)).subset fun p hp => ?_
     by_contra hnot
     apply hp
-    simp only [Set.mem_union, Set.mem_iUnion, Set.mem_setOf_eq, not_or, not_exists, not_not] at hnot
+    simp only [Set.mem_union, Set.mem_iUnion, Set.mem_ofPred_eq, not_or, not_exists, not_not] at hnot
     obtain ⟨hn1, hn2⟩ := hnot
     apply le_antisymm
     · rw [← hS, lat_span]

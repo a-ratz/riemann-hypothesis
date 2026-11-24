@@ -409,7 +409,7 @@ theorem satV_of_comp {N : ℕ} {V : Submodule ℂ (Sm E N)} (hV : IsDiscrete V) 
       (hmem ψ hψ) (GlobalTheory.LGrp.mem_fixed.2 hψK) hψ0⟩
   obtain ⟨x, hx⟩ := hs.exists_vec
   obtain ⟨f, h0, hfV, hf⟩ := h
-  haveI := σ.irred
+  have := σ.irred
   have hi : Function.Injective f := by
     rcases Representation.IsIrreducible.injective_or_eq_zero
       (f.intertwiningMap_of_isIntertwiningMap σ.ρ ((finRep E N).comp (locGL E N w)) hf) with hi | hz
@@ -538,14 +538,14 @@ theorem core {G : Type} [Group G] {W U : Type} [AddCommGroup W] [Module ℂ W] [
     (hW : ∀ y : W, y ∈ ⨆ F : {F : U →ₗ[ℂ] W // ∀ g v, F (σ g v) = τ g (F v)}, LinearMap.range F.1)
     (x : W) (hx : x ≠ 0) : ∃ L : W →ₗ[ℂ] U, (∀ g y, L (τ g y) = σ g (L y)) ∧ L x ≠ 0 := by
   classical
-  letI iW : Module (MonoidAlgebra ℂ G) W :=
+  let iW : Module (MonoidAlgebra ℂ G) W :=
     Module.compHom W (MonoidAlgebra.lift ℂ (Module.End ℂ W) G τ).toRingHom
-  letI iU : Module (MonoidAlgebra ℂ G) U :=
+  let iU : Module (MonoidAlgebra ℂ G) U :=
     Module.compHom U (MonoidAlgebra.lift ℂ (Module.End ℂ U) G σ).toRingHom
-  haveI tW : IsScalarTower ℂ (MonoidAlgebra ℂ G) W := ⟨fun c r w => by
+  have tW : IsScalarTower ℂ (MonoidAlgebra ℂ G) W := ⟨fun c r w => by
     show (MonoidAlgebra.lift ℂ (Module.End ℂ W) G τ (c • r)) w = c • (MonoidAlgebra.lift ℂ (Module.End ℂ W) G τ r w)
     rw [map_smul]; rfl⟩
-  haveI tU : IsScalarTower ℂ (MonoidAlgebra ℂ G) U := ⟨fun c r w => by
+  have tU : IsScalarTower ℂ (MonoidAlgebra ℂ G) U := ⟨fun c r w => by
     show (MonoidAlgebra.lift ℂ (Module.End ℂ U) G σ (c • r)) w = c • (MonoidAlgebra.lift ℂ (Module.End ℂ U) G σ r w)
     rw [map_smul]; rfl⟩
   have gW : ∀ g (w : W), (MonoidAlgebra.single g (1 : ℂ) : MonoidAlgebra ℂ G) • w = τ g w := fun g w => by
@@ -571,8 +571,8 @@ theorem core {G : Type} [Group G] {W U : Type} [AddCommGroup W] [Module ℂ W] [
       map_add' := F.1.map_add
       map_smul' := lin F.1 F.2 }
   obtain ⟨hnt, hirr⟩ := (GlobalTheory.CuspRep.isIrreducible_iff σ).1 hσ
-  haveI sU : IsSimpleModule (MonoidAlgebra ℂ G) U := by
-    haveI : Nontrivial (Submodule (MonoidAlgebra ℂ G) U) := (Submodule.nontrivial_iff _).2 hnt
+  have sU : IsSimpleModule (MonoidAlgebra ℂ G) U := by
+    have : Nontrivial (Submodule (MonoidAlgebra ℂ G) U) := (Submodule.nontrivial_iff _).2 hnt
     exact
       { eq_bot_or_eq_top := fun N => by
           have h := hirr (N.restrictScalars ℂ) (fun g v hv => by
@@ -592,7 +592,7 @@ theorem core {G : Type} [Group G] {W U : Type} [AddCommGroup W] [Module ℂ W] [
     · exact zero_mem _
     · intro a b ha hb
       exact add_mem ha hb
-  haveI : IsSemisimpleModule (MonoidAlgebra ℂ G) W :=
+  have : IsSemisimpleModule (MonoidAlgebra ℂ G) W :=
     isSemisimpleModule_of_isSemisimpleModule_submodule' (fun F => IsSemisimpleModule.range (FR F)) htop
   obtain ⟨D, hD⟩ := exists_isCompl (Submodule.span (MonoidAlgebra ℂ G) {x})
   have hDt : D ≠ ⊤ := by
@@ -613,7 +613,7 @@ theorem core {G : Type} [Group G] {W U : Type} [AddCommGroup W] [Module ℂ W] [
     apply hC.1
     rw [eq_top_iff, ← htop]
     exact iSup_le h
-  haveI : IsSimpleModule (MonoidAlgebra ℂ G) (W ⧸ C) := isSimpleModule_iff_isCoatom.2 hC
+  have : IsSimpleModule (MonoidAlgebra ℂ G) (W ⧸ C) := isSimpleModule_iff_isCoatom.2 hC
   have hφ : C.mkQ ∘ₗ FR F ≠ 0 := by
     intro h0
     apply hF

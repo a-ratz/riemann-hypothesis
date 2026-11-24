@@ -155,7 +155,7 @@ private theorem isCompact_of_subset_affineOpen {Y : Scheme.{u}} [IsLocallyNoethe
   have : IsNoetherianRing Γ(Y, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
   have : NoetherianSpace ↥U := noetherianSpace_of_isAffineOpen U hU
   have h1 : IsCompact ((Subtype.val : ↥U → ↥Y) ⁻¹' S) := NoetherianSpace.isCompact _
-  have h2 := h1.image continuous_subtype_val
+  have h2 := h1.image continuous_subtypeVal
   have hsub : S ⊆ Set.range (Subtype.val : ↥U → ↥Y) := fun x hx => ⟨⟨x, hS hx⟩, rfl⟩
   rwa [Set.image_preimage_eq_of_subset hsub] at h2
 

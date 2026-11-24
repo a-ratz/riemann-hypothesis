@@ -79,8 +79,8 @@ theorem phi_notReal (v : InfinitePlace X.B.I.F) : ¬ ∀ e : X.B.I.E, conj (X.B.
 theorem emb_trace (v : InfinitePlace X.B.I.F) (e : X.B.I.E) :
     v.embedding (Algebra.trace X.B.I.F X.B.I.E e) = X.B.I.φ v e + conj (X.B.I.φ v e) := by
   classical
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  letI : Algebra X.B.I.F ℂ := v.embedding.toAlgebra
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  let : Algebra X.B.I.F ℂ := v.embedding.toAlgebra
   let φA : X.B.I.E →ₐ[X.B.I.F] ℂ := { X.B.I.φ v with commutes' := X.B.I.φ_over v }
   let ψA : X.B.I.E →ₐ[X.B.I.F] ℂ :=
     { (starRingEnd ℂ).comp (X.B.I.φ v) with
@@ -118,7 +118,7 @@ theorem evInf_alg (v : InfinitePlace X.B.I.F) (a : X.B.I.F) :
 theorem trace_one_tmul (e : X.B.I.E) :
     Algebra.trace (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) ((1 : Ainf X.B.I.F) ⊗ₜ[X.B.I.F] e) =
       algebraMap X.B.I.F (Ainf X.B.I.F) (Algebra.trace X.B.I.F X.B.I.E e) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   rw [Algebra.trace_apply, ← Algebra.baseChange_lmul, LinearMap.trace_baseChange, ← Algebra.trace_apply]
 
 theorem evInf_trace (v : InfinitePlace X.B.I.F) (z : Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) :
@@ -167,7 +167,7 @@ theorem form_Jm {n : ℕ} (ε : Fin n → Bool) (p q : Fin n → ℂ) :
     (∑ i, ∑ j, conj (p i) * Formalism.REAL.Jm ε i j * q j).re =
       ∑ i, (if ε i then 1 else -1 : ℝ) * ((p i).re * (q i).re + (p i).im * (q i).im) := by
   simp only [Formalism.REAL.Jm, Matrix.diagonal_apply, mul_ite, ite_mul, mul_zero, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, Complex.re_sum]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, Complex.re_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   split_ifs <;> simp [Complex.mul_re, Complex.conj_re, Complex.conj_im]
 

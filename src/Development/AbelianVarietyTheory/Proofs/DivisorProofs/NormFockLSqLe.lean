@@ -150,7 +150,7 @@ theorem fock_extremal (hla : Antitone la) {f : Pol N ℂ} (hf : f ∈ nabla la �
     exact Formalism.GradedWeylDivisibility.fockWeightOrth _ _ _ μ la _ _ hμ hw' (extremal_rowWeight hla)
 
 theorem exists_form_eq (ψ : Pol N ℂ →ₗ[ℂ] ℂ) : ∃ h ∈ nabla la ℂ, ∀ f ∈ nabla la ℂ, form la f h = ψ f := by
-  have : CompleteSpace (Space la) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (Space la) := FiniteDimensional.completeSpace ℂ _
   let φ : Space la →ₗ[ℂ] ℂ := ψ ∘ₗ (nabla la ℂ).subtype ∘ₗ (toSpace la).symm.toLinearMap
   let v : Space la := (InnerProductSpace.toDual ℂ (Space la)).symm (LinearMap.toContinuousLinearMap φ)
   refine ⟨((toSpace la).symm v).1, ((toSpace la).symm v).2, fun f hf => ?_⟩

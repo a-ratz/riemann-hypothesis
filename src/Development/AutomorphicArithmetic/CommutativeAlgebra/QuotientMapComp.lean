@@ -121,7 +121,7 @@ private theorem factor (n' : QMap o u₂ (f ≫ g) c) (m : ObjMap u₁ u₂ g) :
 
 private theorem bridge [IsIso f] (n : QMap o u₁ f c) (n' : QMap o u₂ (f ≫ g) c) :
     ∃ m : ObjMap u₁ u₂ g, n'.φ = n.φ ≫ m.φ := by
-  haveI hiso : IsIso n.φ := n.cart.1.isIso_fst_of_isIso
+  have hiso : IsIso n.φ := n.cart.1.isIso_fst_of_isIso
   have hinvw : inv n.φ ≫ o.A.hom = u₁.A.hom ≫ inv f := by
     rw [IsIso.inv_comp_eq, ← Category.assoc, n.cart.1.w, Category.assoc, IsIso.hom_inv_id,
       Category.comp_id]

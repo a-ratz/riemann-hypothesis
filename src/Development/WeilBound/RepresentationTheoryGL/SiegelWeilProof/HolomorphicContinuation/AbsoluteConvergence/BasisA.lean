@@ -132,7 +132,7 @@ def toK (u : uSet n) : KR n :=
 theorem continuous_toK : Continuous (toK (n := n)) := by
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
   rw [Units.continuous_iff]
-  exact ⟨continuous_subtype_val, continuous_subtype_val.matrix_conjTranspose⟩
+  exact ⟨continuous_subtypeVal, continuous_subtypeVal.matrix_conjTranspose⟩
 
 instance compactKR (n : ℕ) : CompactSpace (KR n) := by
   have : CompactSpace (uSet n) := isCompact_iff_compactSpace.1 (isCompact_uSet n)

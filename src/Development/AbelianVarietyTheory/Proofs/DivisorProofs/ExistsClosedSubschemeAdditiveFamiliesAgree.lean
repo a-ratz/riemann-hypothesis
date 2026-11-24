@@ -65,9 +65,9 @@ theorem exists_ideal_locTriv_noeth (hG : GlobalFnsSt) (R : Type) [CommRing R] [I
       (f' : X' ⟶ Spec (CommRingCat.of R')), IsPullback π f' B.hom (Spec.map (CommRingCat.ofHom g)) →
       ((∀ p : Spec (CommRingCat.of R'), ∃ U : (Spec (CommRingCat.of R')).Opens, p ∈ U ∧
         Triv ((F.pull π).pull (f' ⁻¹ᵁ U).ι)) ↔ I ≤ RingHom.ker g) := by
-  haveI := hB.proper
-  haveI := hB.geomConnected
-  haveI := hB.smooth
+  have := hB.proper
+  have := hB.geomConnected
+  have := hB.smooth
   have hP := ProperFinite.nonempty_perf_of_isProper (R := R) B.hom hF
   have hQ := ProperFinite.nonempty_perf_of_isProper (R := R) B.hom (isLB_pw hF (-1))
   have hC := GlobalTheory.TrivLocus.isClosed_trivLocus R _ B.hom F hF hP hQ hB.proper
@@ -86,11 +86,11 @@ theorem exists_ideal_locTriv_noeth (hG : GlobalFnsSt) (R : Type) [CommRing R] [I
       · rcases subsingleton_or_nontrivial S with _ | _
         · exact fun a _ => Subsingleton.elim _ _
         obtain ⟨m, hm⟩ := Ideal.exists_maximal S
-        letI := Ideal.Quotient.field m
+        let := Ideal.Quotient.field m
         let g' := (Ideal.Quotient.mk m).comp g
         refine (hU (a := ⟨RingHom.ker g', RingHom.ker_isPrime g'⟩) (hu.map (Ideal.Quotient.mk m)).ne_zero ?_).elim
         exact ⟨S ⧸ m, inferInstance, g', _, _, _, rfl, IsPullback.of_hasPullback _ _, ht.comp B.hom F S g _ _⟩
-      · haveI : Subsingleton S := subsingleton_of_zero_eq_one
+      · have : Subsingleton S := subsingleton_of_zero_eq_one
           ((h (Submodule.mem_top (x := 1))).symm.trans (map_one g))
         exact TrivRep.trivOn_of_subsingleton B.hom F S g)
   refine ⟨I, fun S _ g X' π f' h => ?_⟩
@@ -120,7 +120,7 @@ theorem exists_closed_locTriv_noeth (hG : GlobalFnsSt) {T : Over S} [GrpObj A] [
     IsPullback.of_hasPullback A.hom T.hom
   obtain ⟨I, hI⟩ := TrivSubscheme.exists_idealSheaf (TrivSubscheme.LocTrivOver (snd A T).left F)
     TrivSubscheme.LocTrivOver.comp TrivSubscheme.locTrivOver_of_affine (fun U => by
-      haveI := IsLocallyNoetherian.component_noetherian U
+      have := IsLocallyNoetherian.component_noetherian U
       let t : Spec (CommRingCat.of Γ(T.left, U)) ⟶ S := U.2.fromSpec ≫ T.hom
       have h₁ : IsPullback (pullback.fst A.hom t) (pullback.snd A.hom t) A.hom (U.2.fromSpec ≫ T.hom) :=
         IsPullback.of_hasPullback _ _

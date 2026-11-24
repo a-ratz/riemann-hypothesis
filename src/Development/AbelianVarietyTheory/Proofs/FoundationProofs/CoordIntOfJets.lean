@@ -59,7 +59,7 @@ theorem split_of_dvd {D : D7} {Q Q' p : ℕ} [hp : Fact p.Prime] (hQ : GoodLevel
   have hpp : p.Prime := hp.out
   obtain ⟨hQ0, hQs⟩ := hQ
   have h1 : 1 ≤ padicValNat p Q' := by
-    simpa only [Nat.padicValNat_def] using one_le_padicValNat_of_dvd h0.ne' hd
+    simpa only [Nat.padicValNat_def] using one_le_multiplicity_of_dvd h0.ne' hd
   have hpQ : p ^ 1 ∣ Q := ((by simpa only [_root_.Nat.padicValNat_def] using @_root_.multiplicity_dvd_iff_le : ∀ {p : _root_.Nat} [hp : _root_.Fact (_root_.Nat.Prime p)] {a n : _root_.Nat} (ha : a ≠ 0), p ^ n ∣ a ↔ n ≤ _root_.padicValNat p a) hQ0.ne').2 (h1.trans h)
   exact hQs p hpp (by simpa using hpQ)
 
@@ -81,7 +81,7 @@ theorem term_bound_of_jets (hJ : type_of% @_root_.GlobalTheory.ProductJets.jets_
   have hM0' : M ≠ 0 := hM0.ne'
   have hpM : ¬ p ∣ M := fun h => hpp.one_lt.ne' (hMp.symm.eq_one_of_dvd h)
   have hvM : padicValNat p M = 0 := by
-    simpa only [Nat.padicValNat_def] using padicValNat.eq_zero_of_not_dvd hpM
+    simpa only [Nat.padicValNat_def] using multiplicity_eq_zero_of_not_dvd hpM
   have hnQ : ‖(Q : ℂ_[p])‖⁻¹ = (p : ℝ) ^ (padicValNat p Q : ℝ) := norm_natCast_inv p hQ0
   have hnMQ : ‖((M * Q : ℕ) : ℂ_[p])‖⁻¹ = (p : ℝ) ^ (padicValNat p Q : ℝ) := by
     rw [norm_natCast_inv p (Nat.mul_ne_zero hM0' hQ0), (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) hM0' hQ0, hvM, zero_add]

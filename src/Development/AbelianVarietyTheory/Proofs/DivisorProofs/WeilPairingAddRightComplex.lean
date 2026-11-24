@@ -74,12 +74,12 @@ theorem weilEq_mul_right_add : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     WeilEq B.t.PP.L f g₂ A.t.PP.L (A.t.act.act r₂) (𝟙 _) (spMap (σ₁.comp (algebraMap (𝓞 K) K))) →
     WeilEq B.t.PP.L f (g₁ * g₂) A.t.PP.L (A.t.act.act (r₁ + r₂)) (𝟙 _) (spMap (σ₁.comp (algebraMap (𝓞 K) K))) := by
   intro E _ _ _ H K _ _ σ₁ A B f g₁ g₂ _ _ _ r₁ r₂ h₁ h₂ n x y c hn hx hy
-  haveI : IsCommMonObj A.pol.A := A.ab.comm
+  have : IsCommMonObj A.pol.A := A.ab.comm
   have hL : Out.Laws := GlobalTheory.firstFiveLaws.1
   have ex : ∀ r : 𝓞 E, ∃ u : ℂˣ,
       Out.WeilIs A.t.G A.t.PP.L n (x ≫ A.t.act.act r) (y ≫ 𝟙 _) (unitOn u) := by
     intro r
-    haveI := A.t.act.hom r
+    have := A.t.act.hom r
     have hxr : (x ≫ A.t.act.act r) ^ n = 1 := by
       rw [← MonObj.pow_comp, hx, MonObj.one_comp]
     have hy' : (y ≫ 𝟙 _) ^ n = 1 := by rw [Category.comp_id]; exact hy

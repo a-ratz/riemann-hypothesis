@@ -70,12 +70,12 @@ theorem cmap_add_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {κ :
   funext k
   simp [_root_.PositivityTheory.SiegelWeilFormula.KTunit.cmap_k, _root_.PositivityTheory.SiegelWeilFormula.SD_k.crd, map_add (f := _)]
 theorem cont_cmap_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {κ : Type} (τ : κ ≃ _root_.PositivityTheory.SiegelWeilFormula.TBij_k.Adp.Ix d) : Continuous (_root_.PositivityTheory.SiegelWeilFormula.KTunit.cmap_k d τ) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have hr := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ d.ok.good.cm (AF F)).2.2.2.2.2.2.1 2 d.bs
   refine continuous_pi fun k => ?_
   exact (continuous_apply (τ k).2.2).comp (hr.continuous.comp (continuous_id.matrix_elem (τ k).1 (τ k).2.1))
 theorem cont_cinv_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {κ : Type} (τ : κ ≃ _root_.PositivityTheory.SiegelWeilFormula.TBij_k.Adp.Ix d) : Continuous (_root_.PositivityTheory.SiegelWeilFormula.KTunit.cinv_k d τ) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have hr := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ d.ok.good.cm (AF F)).2.2.2.2.2.2.1 2 d.bs
   set h := hr.homeomorph with hh
   have e : ∀ c i j, _root_.PositivityTheory.SiegelWeilFormula.KTunit.cinv_k d τ c i j = h.symm (fun l => c (τ.symm (i, j, l))) := fun c i j => by
@@ -98,11 +98,11 @@ theorem map_haar_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) {κ :
     (hν : ν.IsAddHaarMeasure) :
     (ν.map (_root_.PositivityTheory.SiegelWeilFormula.KTunit.cmap_k d τ)).IsAddHaarMeasure ∧
       ∀ f : (κ → AF F) → ℂ, ∫ X, f (_root_.PositivityTheory.SiegelWeilFormula.KTunit.cmap_k d τ X) ∂ν = ∫ y, f y ∂(ν.map (_root_.PositivityTheory.SiegelWeilFormula.KTunit.cmap_k d τ)) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   have P := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ d.ok.good.cm (AF F)
-  haveI : IsTopologicalRing (AE F E) := P.1
-  haveI : BorelSpace (Mx F E d.m d.n) := P.2.2.2.2.2.2.2.1 d.m d.n
-  haveI : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstance
+  have : IsTopologicalRing (AE F E) := P.1
+  have : BorelSpace (Mx F E d.m d.n) := P.2.2.2.2.2.2.2.1 d.m d.n
+  have : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstance
   refine ⟨?_, fun f => ?_⟩
   · exact ContinuousAddEquiv.isAddHaarMeasure_map ν (_root_.PositivityTheory.SiegelWeilFormula.KTunit.cEquiv_k d τ)
   · have h := integral_map_equiv (μ := ν) (_root_.PositivityTheory.SiegelWeilFormula.KTunit.cEquiv_k d τ).toHomeomorph.toMeasurableEquiv f

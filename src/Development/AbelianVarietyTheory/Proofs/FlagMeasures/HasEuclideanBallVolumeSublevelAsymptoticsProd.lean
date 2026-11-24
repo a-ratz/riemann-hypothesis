@@ -84,13 +84,13 @@ theorem SublevelLe.prod {X X' Y Y' : Type} [MeasurableSpace X] [MeasurableSpace 
     rw [Measure.prod_apply_symm m1, Measure.prod_apply_symm m2, ← lintegral_const_mul' _ _ hc]
     refine lintegral_mono fun y => ?_
     have := h1 (t - p y) (by linarith [hp0 y])
-    simpa only [Set.preimage_setOf_eq, le_sub_iff_add_le] using this
+    simpa only [Set.preimage_ofPred_eq, le_sub_iff_add_le] using this
   have s2 : (μ'.prod ν) {z : X' × Y | q' z.1 + p z.2 ≤ t}
       ≤ c * (μ'.prod ν') {z : X' × Y' | q' z.1 + p' z.2 ≤ t} := by
     rw [Measure.prod_apply m2, Measure.prod_apply m3, ← lintegral_const_mul' _ _ hc]
     refine lintegral_mono fun x => ?_
     have := h2 (t - q' x) (by linarith [hq0 x])
-    simpa only [Set.preimage_setOf_eq, le_sub_iff_add_le'] using this
+    simpa only [Set.preimage_ofPred_eq, le_sub_iff_add_le'] using this
   calc _ ≤ _ := s1
     _ ≤ c * (c * _) := by gcongr
     _ = _ := by rw [mul_assoc]
@@ -132,7 +132,7 @@ theorem exists_one_lt_mul_mul_lt {a b : ℝ≥0∞} (h : a < b) :
   simp only [one_mul] at t1
   have e1 := t1.eventually (gt_mem_nhds h)
   have e2 : ∀ᶠ c : ℝ≥0∞ in 𝓝 1, c < ⊤ := gt_mem_nhds (by simp)
-  haveI : (𝓝[>] (1 : ℝ≥0∞)).NeBot := nhdsGT_neBot_of_exists_gt ⟨⊤, by simp⟩
+  have : (𝓝[>] (1 : ℝ≥0∞)).NeBot := nhdsGT_neBot_of_exists_gt ⟨⊤, by simp⟩
   obtain ⟨c, ⟨h1, h2⟩, h3⟩ := (((e1.and e2).filter_mono nhdsWithin_le_nhds).and
     (self_mem_nhdsWithin (s := Set.Ioi (1 : ℝ≥0∞)) (a := 1))).exists
   exact ⟨c, h3, h2.ne, h1⟩
@@ -165,7 +165,7 @@ theorem IsRadial.sublevelLe {X : Type} [MeasurableSpace X] {μ : Measure X} {q :
   have tg : Tendsto (fun r : ℝ => μ {x | √(q x) ≤ r}) (𝓝[>] 0) (𝓝 (μ {x | √(q x) ≤ 0})) := by
     have hI : {x | √(q x) ≤ 0} = ⋂ r > (0 : ℝ), {x | √(q x) ≤ r} := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
       exact ⟨fun h r hr => h.trans hr.le, fun h => le_of_forall_gt_imp_ge_of_dense h⟩
     rw [hI]
     refine tendsto_measure_biInter_gt (s := fun r : ℝ => {x | √(q x) ≤ r})

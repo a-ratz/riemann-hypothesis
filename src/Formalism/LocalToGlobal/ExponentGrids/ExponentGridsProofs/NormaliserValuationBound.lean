@@ -124,7 +124,7 @@ theorem val_int (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) (hx : x ≠ 0) :
   rw [neg_inj]
   symm
   unfold vw
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K w (by simpa using hx)]
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K w (by simpa using hx)]
 
 theorem val_eq (w : HeightOneSpectrum (𝓞 K)) (a : K) (ha : a ≠ 0) :
     w.valuation K a = WithZero.exp (-(vw w a)) := by

@@ -82,10 +82,10 @@ theorem sec_sum (G : Shv R) {X : Scheme.{0}} {r : ℕ} {Y : Fin r → Scheme.{0}
     intro x s t Z gs gt h
     by_cases hst : s = t
     · subst hst
-      haveI := hopen s
+      have := hopen s
       rw [cancel_mono] at h
       rw [h]
-    · haveI : IsEmpty Z := ⟨fun z => by
+    · have : IsEmpty Z := ⟨fun z => by
         have h1 : (j s) (gs z) = (j t) (gt z) := by
           rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, h]
         exact Set.disjoint_left.1 (hdisj s t hst) ⟨gs z, rfl⟩ ⟨gt z, h1.symm⟩⟩

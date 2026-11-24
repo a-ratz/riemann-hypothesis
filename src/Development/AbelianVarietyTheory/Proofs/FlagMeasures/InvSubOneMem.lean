@@ -112,7 +112,7 @@ def algSub (ε : Fin n → Bool) (A : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ)
 theorem isClosed_algSub (A : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ))
     (hA : ∀ X ∈ A, ∀ Y ∈ A, X * Y ∈ A) : IsClosed (algSub ε A hA : Set (Formalism.REAL.UJ ε)) := by
   have hc : Continuous (fun g : Formalism.REAL.UJ ε => uMat g - 1) :=
-    (Units.continuous_val.comp continuous_subtype_val).sub continuous_const
-  exact A.closed_of_finiteDimensional.preimage hc
+    (Units.continuous_val.comp continuous_subtypeVal).sub continuous_const
+  exact A.isClosed_of_finiteDimensional.preimage hc
 
 end GlobalTheory.GaugeSubLoc

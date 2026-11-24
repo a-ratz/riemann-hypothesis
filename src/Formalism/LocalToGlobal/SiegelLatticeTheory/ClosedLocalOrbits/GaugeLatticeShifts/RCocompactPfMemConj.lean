@@ -95,7 +95,7 @@ theorem mc_gr_unitary (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ
 
 theorem memConjOf_holds : MemConjOf := by
   intro D X M hM
-  letI : Invertible (2 : X.B.I.E) := invertibleOfNonzero two_ne_zero
+  let : Invertible (2 : X.B.I.E) := invertibleOfNonzero two_ne_zero
   have h1 : Gr X (M : Matrix _ _ _) * Gr X (↑M⁻¹ : Matrix _ _ _) = 1 := mc_gr_mul_inv X M
   have h2 : Gr X (↑M⁻¹ : Matrix _ _ _) * Gr X (M : Matrix _ _ _) = 1 := by
     have := mc_gr_mul_inv X M⁻¹

@@ -146,7 +146,7 @@ namespace GlobalTheory.ThetaReal
 
 theorem exists_nsmul_eq {κ : Type} {r N : ℕ} (h : 1 ≤ r * N) (a : κ → ZMod (r * N)) (ha : N • a = 0) :
     ∃ c : κ → ZMod (r * N), a = r • c := by
-  haveI : NeZero (r * N) := ⟨by omega⟩
+  have : NeZero (r * N) := ⟨by omega⟩
   have hN : 0 < N := Nat.pos_of_mul_pos_left h
   have key : ∀ i, r ∣ (a i).val := fun i => by
     have e : ((N * (a i).val : ℕ) : ZMod (r * N)) = 0 := by
@@ -201,8 +201,8 @@ theorem exists_real_of_univBasis (hL : Laws) [ArithBase o Ω] (R : Subalgebra o 
         spMap (Subalgebra.inclusion h).toRingHom ≫ (x₀ i₁ ^ (S.r * S.N)).left ∧
       (ρ.pt (Pi.single (.inr i) 1)).left ≫ φ =
         spMap (Subalgebra.inclusion h).toRingHom ≫ (x₀ i₂ ^ (S.r * S.N)).left := by
-  haveI := isNoetherian_of_fg fg
-  haveI : IsAffine (baseOver (Sp R)).left := inferInstanceAs (IsAffine (Sp R))
+  have := isNoetherian_of_fg fg
+  have : IsAffine (baseOver (Sp R)).left := inferInstanceAs (IsAffine (Sp R))
   have hn2 : 2 ≤ n := hp.two_le
   have hn1 : 1 ≤ n := by omega
   have hm1 : 1 ≤ n ^ k := Nat.one_le_pow _ _ hn1
@@ -215,7 +215,7 @@ theorem exists_real_of_univBasis (hL : Laws) [ArithBase o Ω] (R : Subalgebra o 
   have hMo : Odd (n ^ j * (n ^ k) ^ 2) := hM ▸ ho.pow
   let f : o →+* Γ((baseOver (Sp R)).left, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom.comp (algebraMap o R)
   have hf : Function.Injective f := fn_injective.comp (algebraMap_injective R)
-  haveI : Nontrivial Γ((baseOver (Sp R)).left, ⊤) := (fn_injective (R := R)).nontrivial
+  have : Nontrivial Γ((baseOver (Sp R)).left, ⊤) := (fn_injective (R := R)).nontrivial
   have un : ∀ q e : ℕ, q = n ^ e → IsUnit (q : Γ(Sp R, ⊤)) := fun q e hq => by
     have := (hu.pow e).map f
     rw [map_pow, map_natCast] at this
@@ -319,13 +319,13 @@ end GlobalTheory.ThetaReal
 open GlobalTheory.ThetaReal in
 theorem GlobalTheory.ThetaReal.exists_thetaSys_real : Laws → Laws2 → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (R : Subalgebra o Ω), R.FG → (∀ x : Ω, ∃ a ∈ R, ∃ b ∈ R, x = a / b) → ∀ (P : PolAV (Sp R)) (n k j : ℕ) (ze : oˣ), n.Prime → Odd n → 2 ≤ k → 1 ≤ j → IsUnit (n : o) → HypS P.A P.L → ∀ lev : Out.Level P ((n ^ j * (n ^ k) ^ 2) ^ 2) (unitOn (Units.map (algebraMap o R).toMonoidHom ze)), ∃ (S : ThetaSys o Ω) (ρ : S.Real) (h : R ≤ S.R) (φ : ρ.P.A.left ⟶ P.A.left), S.ζ = ze ∧ S.N = (n ^ k) ^ 2 ∧ S.r = n ^ j ∧ S.g = P.g ∧ IsGrpPullback ρ.P.A P.A (spMap (Subalgebra.inclusion h).toRingHom) φ ∧ LBIso ρ.P.L (P.L.pull φ) ∧ ∀ (i : Fin S.g) (i₁ i₂ : Fin (2 * P.g)), (i₁ : ℕ) = i → (i₂ : ℕ) = i + P.g → (ρ.pt (Pi.single (.inl i) 1)).left ≫ φ = spMap (Subalgebra.inclusion h).toRingHom ≫ (lev.pt i₁ ^ (S.r * S.N)).left ∧ (ρ.pt (Pi.single (.inr i) 1)).left ≫ φ = spMap (Subalgebra.inclusion h).toRingHom ≫ (lev.pt i₂ ^ (S.r * S.N)).left := by
   intro hL hL₂ o Ω _ _ _ _ R fg frac P n k j ze hp ho hk hj hu hS lev
-  haveI := isNoetherian_of_fg fg
+  have := isNoetherian_of_fg fg
   let p : Sp R := (⊥ : PrimeSpectrum R)
   obtain ⟨V₁, m₁, b₁, hb₁⟩ := exists_univBasis hL₂.secBaseChangeAny P 1 le_rfl p
   obtain ⟨V₂, m₂, b₂, hb₂⟩ := exists_univBasis hL₂.secBaseChangeAny P ((n ^ k) ^ 2)
     (Nat.one_le_pow _ _ (Nat.one_le_pow _ _ hp.pos)) p
   obtain ⟨R', h, fg', τ, hτ⟩ := GlobalTheory.T.exists_fg_subalgebra_spec_factor_through_open o Ω R fg (V₁ ⊓ V₂) ⟨p, m₁, m₂⟩
-  haveI := isNoetherian_of_fg fg'
+  have := isNoetherian_of_fg fg'
   obtain ⟨P', φ, hg, hφ, hiso⟩ := exists_isPolFibre hL.polBaseChange (Subalgebra.inclusion h).toRingHom P
   have hiso' := LBIso.symm hiso
   have w : ∀ (V : (Sp R).Opens) (hV : V₁ ⊓ V₂ ≤ V), (τ ≫ (Sp R).homOfLE hV) ≫ (overRes (T := baseOver (Sp R)) V).hom =
@@ -339,7 +339,7 @@ theorem GlobalTheory.ThetaReal.exists_thetaSys_real : Laws → Laws2 → ∀ (o 
     (congrArg (fun q => q.hom (algebraMap o R ze))
       (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (Subalgebra.inclusion h).toRingHom))).symm
     ((prim_iff R' ze _).2 ((prim_iff R ze _).1 lev.prim)) lev
-  haveI hU : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
+  have hU : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
   let e := finCongr (congrArg (((n ^ k) ^ 2) ^ ·) hg)
   refine exists_real_of_univBasis hL R' fg' (fun x => ?_) P' n k j ze hp ho hk hj hu
     (SymBaseChange.hypS_baseChange _ _ _ _ _ φ _ _ P.isLB P'.isLB hφ hiso' hS) lev' (SecM.toSec P'.A (c₁ hU.default))

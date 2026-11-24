@@ -72,18 +72,18 @@ theorem _root_.GlobalTheory.SpreadSep.exists_isClosed_preimage_diff {I : Type u}
   have hpre : ∀ {a b : I} (g : a ⟶ b) (W : (D.obj b).Opens), IsCompact (W : Set (D.obj b)) →
       IsCompact ((D.map g ⁻¹ᵁ W : (D.obj a).Opens) : Set (D.obj a)) :=
     fun g W hW => QuasiCompact.isCompact_preimage (f := D.map g) _ W.isOpen hW
-  haveI := Scheme.compactSpace_of_isLimit D c hc
+  have := Scheme.compactSpace_of_isLimit D c hc
   let C : c.pt.Opens := ⟨_, H.isOpen_compl⟩
   have hCmem : ∀ x, x ∈ C ↔ (c.π.app i x ∈ O → c.π.app i x ∈ O') := by
     intro x
     change x ∉ c.π.app i ⁻¹' ((O : Set (D.obj i)) \ O') ↔ _
-    simp only [Set.mem_preimage, Set.mem_diff, SetLike.mem_coe, not_and, not_not]
+    simp only [Set.mem_preimage, Set.mem_sdiff, SetLike.mem_coe, not_and, not_not]
   let K : Set c.pt := ((c.π.app i ⁻¹ᵁ O : c.pt.Opens) : Set c.pt)ᶜ
   have hK : IsCompact K := IsClosed.isCompact (X := c.pt) (c.π.app i ⁻¹ᵁ O).isOpen.isClosed_compl
   let P : c.pt.Opens → Prop := fun A => (∃ (k : I) (_ : k ⟶ i) (W : (D.obj k).Opens),
     IsCompact (W : Set (D.obj k)) ∧ c.π.app k ⁻¹ᵁ W = A) ∧ A ≤ C
   let ι := {A : c.pt.Opens // P A}
-  haveI : Nonempty ι := ⟨⟨⊥, ⟨i, 𝟙 i, ⊥, by simp, by ext x; simp⟩, bot_le⟩⟩
+  have : Nonempty ι := ⟨⟨⊥, ⟨i, 𝟙 i, ⊥, by simp, by ext x; simp⟩, bot_le⟩⟩
   have hdir : Directed (· ⊆ ·) (fun A : ι => (A.1 : Set c.pt)) := by
     rintro ⟨A₁, ⟨k₁, f₁, W₁, hW₁, rfl⟩, hA₁⟩ ⟨A₂, ⟨k₂, f₂, W₂, hW₂, rfl⟩, hA₂⟩
     let l₁ := IsCofiltered.minToLeft k₁ k₂
@@ -137,7 +137,7 @@ theorem _root_.GlobalTheory.SpreadSep.exists_isClosed_preimage_diff {I : Type u}
   have hset : D.map (h ≫ g ≫ f) ⁻¹' ((O : Set (D.obj i)) \ O') =
       ((D.map (h ≫ g) ⁻¹ᵁ W ⊔ D.map (h ≫ g ≫ f) ⁻¹ᵁ O' : (D.obj m).Opens) : Set (D.obj m))ᶜ := by
     ext y
-    simp only [Functor.map_comp, Set.mem_preimage, Set.mem_diff, SetLike.mem_coe, Set.mem_compl_iff,
+    simp only [Functor.map_comp, Set.mem_preimage, Set.mem_sdiff, SetLike.mem_coe, Set.mem_compl_iff,
       Scheme.Hom.preimage_sup, TopologicalSpace.Opens.coe_sup, Set.mem_union, Scheme.Hom.comp_apply]
     have h1 := ht y
     have h2 := hle y
@@ -226,21 +226,21 @@ theorem _root_.GlobalTheory.SpreadSep.exists_fg_isSeparated (k V : Type) [CommRi
     [Algebra k V] (X : Scheme.{0}) (p : X ⟶ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k) (h₁ : LocallyOfFiniteType p) (h₂ : QuasiCompact p)
     (h : IsSeparated (pullback.snd p (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap k V)))) :
     ∃ R : Subalgebra k V, R.FG ∧ IsSeparated (pullback.snd p (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap k R))) := by
-  haveI := h₁
-  haveI := h₂
+  have := h₁
+  have := h₂
   let pB : pullback p p ⟶ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k := pullback.snd p p ≫ p
-  haveI : IsLocallyNoetherian (pullback p p) := LocallyOfFiniteType.isLocallyNoetherian pB
-  haveI : CompactSpace ↥(_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k) := by unfold _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp; infer_instance
-  haveI : CompactSpace ↥(pullback p p) := QuasiCompact.compactSpace_of_compactSpace pB
-  haveI : QuasiSeparated pB := inferInstance
-  haveI : AlgebraicGeometry.IsNoetherian (pullback p p) := {}
+  have : IsLocallyNoetherian (pullback p p) := LocallyOfFiniteType.isLocallyNoetherian pB
+  have : CompactSpace ↥(_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp k) := by unfold _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp; infer_instance
+  have : CompactSpace ↥(pullback p p) := QuasiCompact.compactSpace_of_compactSpace pB
+  have : QuasiSeparated pB := inferInstance
+  have : AlgebraicGeometry.IsNoetherian (pullback p p) := {}
   let D := _root_.GlobalTheory.Spread.bcDiagram pB V
   let c := _root_.GlobalTheory.Spread.bcCone pB V
   have hc := _root_.GlobalTheory.Spread.isLimitBcCone pB V
-  haveI : ∀ {i j : (Finset V)ᵒᵖ} (f : i ⟶ j), IsAffineHom (D.map f) :=
+  have : ∀ {i j : (Finset V)ᵒᵖ} (f : i ⟶ j), IsAffineHom (D.map f) :=
     fun f => _root_.GlobalTheory.Spread.instIsAffineHomMapOppositeFinsetSchemeBcDiagram pB V f
-  haveI : ∀ i, CompactSpace (D.obj i) := _root_.GlobalTheory.Spread.instCompactSpaceCarrierCarrierCommRingCatObjOppositeFinsetSchemeBcDiagramOfQuasiCompact pB V
-  haveI : ∀ i, QuasiSeparatedSpace (D.obj i) := _root_.GlobalTheory.Spread.instQuasiSeparatedSpaceCarrierCarrierCommRingCatObjOppositeFinsetSchemeBcDiagramOfQuasiSeparated pB V
+  have : ∀ i, CompactSpace (D.obj i) := _root_.GlobalTheory.Spread.instCompactSpaceCarrierCarrierCommRingCatObjOppositeFinsetSchemeBcDiagramOfQuasiCompact pB V
+  have : ∀ i, QuasiSeparatedSpace (D.obj i) := _root_.GlobalTheory.Spread.instQuasiSeparatedSpaceCarrierCarrierCommRingCatObjOppositeFinsetSchemeBcDiagramOfQuasiSeparated pB V
   have hπ : ∀ (j : (Finset V)ᵒᵖ) (x : c.pt),
       pullback.fst pB (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap k (Algebra.adjoin k (↑(Opposite.unop j) : Set V))))
         (c.π.app j x) = pullback.fst pB (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap k V)) x := by

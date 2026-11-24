@@ -274,7 +274,7 @@ theorem Refines.coe_leviIncl (h : Refines β γ) (m : levi F n γ) :
     ((h.leviIncl F m : levi F n β) : GL (Fin n) F) = m := rfl
 
 theorem Refines.continuous_leviIncl (h : Refines β γ) : Continuous (h.leviIncl F) :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 
 
 variable (β γ) in
@@ -313,7 +313,7 @@ theorem isSmooth_leviJacquetRep (h : Refines β γ) {σ : Representation ℂ (le
     rw [mem_stabilizerOf, leviJacquetRep_mk, hw, hc, one_smul]
   · rw [Subgroup.coe_inf, Subgroup.coe_comap]
     exact ((hσ w).preimage h.continuous_leviIncl).inter
-      ((isOpen_integralGL F n).preimage continuous_subtype_val)
+      ((isOpen_integralGL F n).preimage continuous_subtypeVal)
 
 end LeviJacquet
 
@@ -337,7 +337,7 @@ theorem mk_mk_apply_of_mem (h : Refines β γ) {u : GL (Fin n) F}
       split_ifs
       · exact huP hij
       · rfl
-    · rw [leviProj_apply, if_pos (h.eq_of_eq hij)]
+    · rw [leviProj_apply, ite_eq_left (h.eq_of_eq hij)]
       exact hu1 i j hij
   have hn' := leviProj_inv_mul_mem p
   have hu' : u = ((m : levi F n β) : GL (Fin n) F) *

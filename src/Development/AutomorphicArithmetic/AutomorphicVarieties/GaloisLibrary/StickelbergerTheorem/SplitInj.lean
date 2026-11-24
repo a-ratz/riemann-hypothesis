@@ -53,7 +53,7 @@ theorem UpperTheory.V.Stick.splitInj :
     ∀ (M : ℕ) [NeZero M] (K : Type) [Field K] [NumberField K] [IsCyclotomicExtension {M} ℚ K] (p : ℕ) [Fact p.Prime] (π : 𝓞 K →+* ZMod p), p.Coprime M →
     Function.Injective (conjI M K (RingHom.ker π)) := by
   intro M _ K _ _ _ p _ π hp a b hab
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   have hz := (IsCyclotomicExtension.zeta_spec M ℚ K).toInteger_isPrimitiveRoot
   obtain ⟨hπz, -⟩ := redRoot (𝓞 K) p π M _ hp hz
   have key : ∀ x : 𝓞 K, π (sgO M K a x) = π (sgO M K b x) := by

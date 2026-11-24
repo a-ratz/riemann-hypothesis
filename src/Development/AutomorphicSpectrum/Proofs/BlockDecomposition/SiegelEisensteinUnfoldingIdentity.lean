@@ -77,7 +77,7 @@ theorem repr_map (f : R →ₐ[F] R') {d : ℕ} (b : Module.Basis (Fin d) F E) (
 theorem trace_map (f : R →ₐ[F] R') {d : ℕ} (b : Module.Basis (Fin d) F E) (x : R ⊗[F] E) :
     Algebra.trace R' (R' ⊗[F] E) (Algebra.TensorProduct.map f (AlgHom.id F E) x) =
       ∑ k, f ((Algebra.TensorProduct.basis R b).repr x k) * algebraMap F R' (Algebra.trace F E (b k)) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have h1 : ∀ e : E, Algebra.trace R' (R' ⊗[F] E) ((1 : R') ⊗ₜ[F] e) = algebraMap F R' (Algebra.trace F E e) := by
     intro e
     rw [Algebra.trace_apply, Algebra.trace_apply, ← Algebra.baseChange_lmul, LinearMap.trace_baseChange]
@@ -153,11 +153,11 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
 
 theorem continuous_entry (σ : E →ₐ[F] E) {n : ℕ} (i j : Fin n) :
     Continuous fun y : HermR (AF F) σ n => (y : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)) i j :=
-  continuous_subtype_val.matrix_elem i j
+  continuous_subtypeVal.matrix_elem i j
 
 theorem continuous_cf (v : HeightOneSpectrum (𝓞 F)) {d : ℕ} (b : Module.Basis (Fin d) F E) (k : Fin d) :
     Continuous fun x : AF F ⊗[F] E => cf v b x k := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   have h1 : Continuous fun x : AF F ⊗[F] E => (Algebra.TensorProduct.basis (AF F) b).repr x k :=
     IsModuleTopology.continuous_of_linearMap ((Algebra.TensorProduct.basis (AF F) b).coord k)
   have h2 : Continuous fun a : AF F => sndA F a := continuous_snd
@@ -166,7 +166,7 @@ theorem continuous_cf (v : HeightOneSpectrum (𝓞 F)) {d : ℕ} (b : Module.Bas
 
 theorem measurableSet_latH (σ : E →ₐ[F] E) {d : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F))
     {n : ℕ} : MeasurableSet {y : HermR (AF F) σ n | hermV σ v (hermFin σ y) ∈ latH σ b v n} := by
-  haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
+  have : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
   have hO : IsOpen (v.adicCompletionIntegers F : Set (Fv F v)) := Valued.isOpen_valuationSubring _
   have hc : ∀ (i j : Fin n) (k : Fin d), Continuous fun y : HermR (AF F) σ n =>
       cf v b ((y : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)) i j) k :=
@@ -190,7 +190,7 @@ theorem measurableSet_latH (σ : E →ₐ[F] E) {d : ℕ} (b : Module.Basis (Fin
 theorem measurableSet_intH (σ : E →ₐ[F] E) {d : ℕ} (b : Module.Basis (Fin d) F E) {n : ℕ}
     (S : Finset (HeightOneSpectrum (𝓞 F))) :
     MeasurableSet {y : HermR (AF F) σ n | hermFin σ y ∈ intH σ b n S} := by
-  haveI := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
+  have := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
   have hset : {y : HermR (AF F) σ n | hermFin σ y ∈ intH σ b n S} =
       ⋂ v : HeightOneSpectrum (𝓞 F), ⋂ _ : v ∉ S,
         {y : HermR (AF F) σ n | hermV σ v (hermFin σ y) ∈ latH σ b v n} := by
@@ -201,7 +201,7 @@ theorem measurableSet_intH (σ : E →ₐ[F] E) {d : ℕ} (b : Module.Basis (Fin
 
 theorem continuous_chiT (σ : E →ₐ[F] E) {n : ℕ} (ψ : AddChar (AF F) ℂ) (hψ : Continuous ψ)
     (T : Matrix (Fin n) (Fin n) E) : Continuous (chiT σ ψ T) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   have hl : ∀ t : AF F ⊗[F] E, Continuous fun x : AF F ⊗[F] E =>
       Algebra.trace (AF F) (AF F ⊗[F] E) (t * x) := fun t =>
     IsModuleTopology.continuous_of_linearMap
@@ -224,8 +224,8 @@ end Cont
 
 theorem coefSN_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (hJ : IsHermND σ J) (n : ℕ), 2 * n < M → ∀ ψ : AddChar (AF F) ℂ, IsCharAF F ψ → ∀ (dx : Measure (Fin n → Fin M → AF F ⊗[F] E)) (db : Measure (HermR (AF F) σ n)) (Φ : (Fin n → Fin M → AF F ⊗[F] E) → ℂ), Integrable (starN σ J ψ dx Φ) db → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (T : Matrix (Fin n) (Fin n) E), Filter.Tendsto (fun S => coefSN σ b J ψ dx db Φ T S) Filter.atTop (nhds (coefN σ J ψ dx db Φ T)) := by
   intro F E _ _ _ _ _ σ _ M J _ n _ ψ hψ dx db Φ hI d b T
-  haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
-  haveI := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
+  have : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
+  have := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
   obtain ⟨hψc, hψn, -, -⟩ := hψ
   have hchar : AEStronglyMeasurable (chiT σ ψ T) db := (continuous_chiT σ ψ hψc T).aestronglyMeasurable
   have hf : AEStronglyMeasurable (fun y => starN σ J ψ dx Φ y * chiT σ ψ T y) db :=

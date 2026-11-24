@@ -70,7 +70,7 @@ theorem exists_leviInvSqrtModular_eq_one :
     ∃ U : Subgroup (levi F n γ), IsOpen (U : Set (levi F n γ)) ∧
       ∀ u ∈ U, leviInvSqrtModular (F := F) γ u = 1 :=
   ⟨(integralGL F n).subgroupOf (levi F n γ),
-    (isOpen_integralGL F n).preimage continuous_subtype_val,
+    (isOpen_integralGL F n).preimage continuous_subtypeVal,
     fun u hu => invSqrtModular_leviIncl_of_mem u (Subgroup.mem_subgroupOf.1 hu)⟩
 
 theorem cellCoinvEquiv_twist (w : Equiv.Perm (Fin n)) (b : cellLeviSub F β γ w)

@@ -121,7 +121,7 @@ theorem exists_c_eq (TB : TopBasis s I ι) (hS : IsHausdorff I S) (z : ι → S)
   classical
   let F : ℕ → Finset ι := fun n => (hz n).toFinset
   have hFm : ∀ {m n : ℕ}, m ≤ n → F m ⊆ F n := fun {m n} hmn i hi => by
-    simp only [F, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hi ⊢
+    simp only [F, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hi ⊢
     exact fun h => hi (Ideal.pow_le_pow_right hmn h)
   have hFc : ∀ n i, i ∉ F n → z i ∈ I ^ n := fun n i hi => by
     simpa [F] using hi

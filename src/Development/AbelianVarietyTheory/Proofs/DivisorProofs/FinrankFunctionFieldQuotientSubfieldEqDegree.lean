@@ -58,9 +58,9 @@ namespace GlobalTheory.HSAmp
 
 theorem finrank_ratF_eq_gdeg : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (P : Pair p), IsAmpleLB P.L.B → ∀ (e : ℕ) (x : Fin (D + 1) → X.functionField), Gens P D e x → (Module.finrank (ratF x) X.functionField : ℝ) = (e : ℝ) ^ D * gdeg P.L D := by
   intro hA k _ X _ p D hX P hamp e x hg
-  haveI := hX.isDomain
-  haveI := hX.finite
-  haveI := hX.charZero_base
+  have := hX.isDomain
+  have := hX.finite
+  have := hX.charZero_base
   obtain ⟨hI, π, hπ, hgen, hr0, hr, hiso⟩ := _root_.GlobalTheory.HSAmp.toProj_gens k X p D hX P hamp e x hg
   obtain ⟨B, -, hB⟩ := _root_.GlobalTheory.HSAmp.exists_isCan_bdd k X p D hX P e x hg
   obtain ⟨u, hu, -⟩ := hB 1 le_rfl

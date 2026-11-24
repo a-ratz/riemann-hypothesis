@@ -93,7 +93,7 @@ private theorem eq_of_isLow_of_isUp_adj_mul_of_isUnit_det {k : Type} [Field k] {
     rw [hC]
     have a1 : Matrix.BlockTriangular (adj m * B) id := fun i j hij => h2 i j hij
     have a2 : Matrix.BlockTriangular (adj n * B) id := fun i j hij => h1 i j hij
-    haveI := Matrix.invertibleOfIsUnitDet _ hXu
+    have := Matrix.invertibleOfIsUnitDet _ hXu
     have a3 := a1.mul (Matrix.blockTriangular_inv_of_blockTriangular a2)
     exact fun i j hij => a3 hij
   have hC1 : adj m * n = 1 := by
@@ -137,7 +137,7 @@ private theorem inv_mul_mem_dec_of_both_map_place {Ω F : Type} [Field Ω] [Fiel
     {g₁ g₂ : G F Ω} (h1 : ∀ x, g₁ x ∈ A' ↔ x ∈ A) (h2 : ∀ x, g₂ x ∈ A' ↔ x ∈ A) :
     g₁⁻¹ * g₂ ∈ Dec (F := F) A := by
   unfold Dec
-  letI : MulAction (G F Ω) (ValuationSubring Ω) := ValuationSubring.pointwiseMulAction
+  let : MulAction (G F Ω) (ValuationSubring Ω) := ValuationSubring.pointwiseMulAction
   rw [MulAction.mem_stabilizer_iff]
   ext x
   rw [ValuationSubring.mem_pointwise_smul_iff_inv_smul_mem]
@@ -308,8 +308,8 @@ private theorem residue_mul_inv_eq_one_of_map_eq {O k : Type} [CommRing O] [IsLo
 
 private theorem charP_of_ringHom_kills_maxIdeal {l : ℕ} [Fact l.Prime] (c : Coef l) {k : Type} [Field k] (a : c.O →+* k)
     (ha : ∀ x ∈ IsLocalRing.maximalIdeal c.O, a x = 0) : CharP k l := by
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   have hl : ((l : ℕ) : c.O) ∈ IsLocalRing.maximalIdeal c.O := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     intro hu
@@ -320,7 +320,7 @@ private theorem charP_of_ringHom_kills_maxIdeal {l : ℕ} [Fact l.Prime] (c : Co
         rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] (PadicAlgCl l)]
         exact (algebraMap ℚ_[l] (PadicAlgCl l)).injective.comp (FaithfulSMul.algebraMap_injective ℤ_[l] ℚ_[l])
       exact h3 (by simpa using h2)
-    haveI : FaithfulSMul ℤ_[l] c.O := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
+    have : FaithfulSMul ℤ_[l] c.O := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
     have h4 : IsUnit (algebraMap ℤ_[l] c.O (l : ℤ_[l])) := by simpa using hu
     exact PadicInt.p_nonunit ((isUnit_map_iff (algebraMap ℤ_[l] c.O) _).mp h4)
   rw [CharP.charP_iff_prime_eq_zero (Fact.out)]
@@ -378,7 +378,7 @@ theorem UpperTheory.V.Ws.overFacts :
         (Supp nM s.r → (Ent s.r (-wAl) → Ent s'.r (-wAl)) ∧ (Ent s.r (-wBe) → Ent s'.r (-wBe))) ∧
         ∀ (s₀ : PD Unit (G ℚ Ω) k) (g0 : G ℚ Ω), (frQ D T.pr g0).IsPair a s₀ → T.OverQ s₀ s → ∀ u, (T'.fr W').IsRes a u → T'.OverQ s₀ u → u = s' := by
   intro Ω _ _ _ l _ c D hD T T' hT hF k _ a ha W W' s t s' t' hs ht hs' ht' hss' htt'
-  haveI := charP_of_ringHom_kills_maxIdeal c a ha
+  have := charP_of_ringHom_kills_maxIdeal c a ha
   have hvT : ∀ (v' : T'.ι) (v₁ v₂ : T.ι) (g₁ g₂ : G T.F Ω), (∀ x, g₁ x ∈ T'.pl v' ↔ x ∈ T.pl v₁) →
       (∀ x, g₂ x ∈ T'.pl v' ↔ x ∈ T.pl v₂) → v₁ = v₂ := by
     intro v' v₁ v₂ g₁ g₂ h1 h2

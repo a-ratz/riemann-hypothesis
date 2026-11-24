@@ -188,13 +188,13 @@ theorem mem_normGroup_of_isComplex (e : Module.Basis (Fin 2) K L) (h0 : e 0 = 1)
     (z : (w.Completion)ˣ) : z ∈ normGroup K L w.Completion := by
   rw [mem_normGroup_iff_form e h0 h1]
   let f := InfinitePlace.Completion.ringEquivComplexOfIsComplex h
-  have h2 : IsSquare (f z) := IsAlgClosed.exists_eq_mul_self _
+  have h2 : IsSquare (f z) := IsAlgClosed.isSquare _
   exact Nm.of_isSquare _ (by simpa using h2.map f.symm)
 
 theorem mem_normGroup_of_isSquare [CharZero K] (e : Module.Basis (Fin 2) K L) (h0 : e 0 = 1) {δ : K}
     (hδ : δ ≠ 0) (h1 : e 1 * e 1 = algebraMap K L δ) {A : Type} [Field A] [Algebra K A]
     (h : IsSquare (algebraMap K A δ)) (z : Aˣ) : z ∈ normGroup K L A := by
-  haveI : CharZero A := charZero_of_injective_algebraMap (algebraMap K A).injective
+  have : CharZero A := charZero_of_injective_algebraMap (algebraMap K A).injective
   rw [mem_normGroup_iff_form e h0 h1]
   exact Nm.of_isSquare_left two_ne_zero ((map_ne_zero _).2 hδ) h _
 
@@ -219,7 +219,7 @@ theorem exists_everywhereNorm_div_of_etaProd_eq_one :
   obtain ⟨δ, e, hδ, h0, h1⟩ := AlmostNorm.exists_basis_sq K L
   have hδ0 : δ ≠ 0 := fun h => hδ (h ▸ IsSquare.zero)
   lift δ to Kˣ using hδ0.isUnit
-  haveI : Fintype (K →+* ℝ) := Fintype.ofFinite _
+  have : Fintype (K →+* ℝ) := Fintype.ofFinite _
   have hA' : {v | x v ∉ normGroup K L (v.adicCompletion K)}.Finite := hA
   have hinf : ∏ σ : K →+* ℝ, eta K L (realPlace σ).Completion (y (realPlace σ)) =
       ∏ w : InfinitePlace K, eta K L w.Completion (y w) := by

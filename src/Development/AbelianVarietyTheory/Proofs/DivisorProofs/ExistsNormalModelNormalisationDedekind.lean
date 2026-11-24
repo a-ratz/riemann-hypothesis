@@ -68,14 +68,14 @@ theorem exists_ratModel_normalization : ∀ (A o Ω : Type) [CommRing A] [IsDede
     (p.stalkMap (genericPoint (Sp Ω))).hom.Finite → ∃ (M : RatModel o Ω) (π : M.Z ⟶ Z), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z ∧
     IsFinite π ∧ M.pt ≫ π = p := by
   intro A o Ω _ _ _ _ _ _ κ hκ Z z _ _ _ p hp hfin
-  haveI : CharZero Ω := ArithBase.char (o := o)
-  haveI : CharZero (Sp Ω).functionField :=
+  have : CharZero Ω := ArithBase.char (o := o)
+  have : CharZero (Sp Ω).functionField :=
     charZero_of_injective_ringHom (((Scheme.ΓSpecIso (CommRingCat.of Ω)).inv ≫
       (Sp Ω).germToFunctionField ⊤).hom).injective
-  haveI : IsFinite p.fromNormalization :=
+  have : IsFinite p.fromNormalization :=
     GlobalTheory.isFinite_fromNormalization_of_genericallyFinite (o := CommRingCat.of A) p z hfin
-  haveI : GlobalTheory.IsNormalScheme p.normalization := GlobalTheory.IsNormalScheme.normalization_of_isIntegral p
-  haveI : IsFinite (spMap κ) := by rw [IsFinite.SpecMap_iff]; exact hκ
+  have : GlobalTheory.IsNormalScheme p.normalization := GlobalTheory.IsNormalScheme.normalization_of_isIntegral p
+  have : IsFinite (spMap κ) := by rw [IsFinite.SpecMap_iff]; exact hκ
   have hl : p ≫ z = spMap (algebraMap o Ω) ≫ spMap κ := by
     rw [hp, ← Spec.map_comp]; rfl
   let l : Sp Ω ⟶ pullback z (spMap κ) := pullback.lift p (spMap (algebraMap o Ω)) hl
@@ -108,18 +108,18 @@ theorem exists_ratModel_normalization : ∀ (A o Ω : Type) [CommRing A] [IsDede
     have hsub : ∀ w : Sp Ω, w = ξ := fun w => Subsingleton.elim _ _
     have hpV : ⊤ ≤ p ⁻¹ᵁ V := fun w _ => by rw [hsub w]; exact hxV
     have hξB : ξ ∈ p ⁻¹ᵁ V := hxV
-    letI := (p.app V).hom.toAlgebra
+    let := (p.app V).hom.toAlgebra
 
     let gB := (Sp Ω).presheaf.germ (p ⁻¹ᵁ V) ξ hξB
     let gR := Z.presheaf.germ V (p ξ) hxV
     have hsq : gR ≫ p.stalkMap ξ = p.app V ≫ gB := p.germ_stalkMap V ξ hxV
-    letI alO : Algebra Γ(Z, V) (Z.presheaf.stalk (p ξ)) :=
+    let alO : Algebra Γ(Z, V) (Z.presheaf.stalk (p ξ)) :=
       TopCat.Presheaf.algebra_section_stalk Z.presheaf ⟨p ξ, hxV⟩
-    letI alS : Algebra (Z.presheaf.stalk (p ξ)) ((Sp Ω).presheaf.stalk ξ) := (p.stalkMap ξ).hom.toAlgebra
-    letI alRS : Algebra Γ(Z, V) ((Sp Ω).presheaf.stalk ξ) := (gR ≫ p.stalkMap ξ).hom.toAlgebra
-    haveI : IsScalarTower Γ(Z, V) (Z.presheaf.stalk (p ξ)) ((Sp Ω).presheaf.stalk ξ) :=
+    let alS : Algebra (Z.presheaf.stalk (p ξ)) ((Sp Ω).presheaf.stalk ξ) := (p.stalkMap ξ).hom.toAlgebra
+    let alRS : Algebra Γ(Z, V) ((Sp Ω).presheaf.stalk ξ) := (gR ≫ p.stalkMap ξ).hom.toAlgebra
+    have : IsScalarTower Γ(Z, V) (Z.presheaf.stalk (p ξ)) ((Sp Ω).presheaf.stalk ξ) :=
       IsScalarTower.of_algebraMap_eq' rfl
-    haveI hloc : IsLocalization.AtPrime (Z.presheaf.stalk (p ξ)) (hV.primeIdealOf ⟨p ξ, hxV⟩).asIdeal :=
+    have hloc : IsLocalization.AtPrime (Z.presheaf.stalk (p ξ)) (hV.primeIdealOf ⟨p ξ, hxV⟩).asIdeal :=
       hV.isLocalization_stalk ⟨p ξ, hxV⟩
 
     have h1 : ⊤ ≤ (𝟙 (Sp Ω)) ⁻¹ᵁ (p ⁻¹ᵁ V) := hpV
@@ -131,7 +131,7 @@ theorem exists_ratModel_normalization : ∀ (A o Ω : Type) [CommRing A] [IsDede
         rw [GlobalTheory.Points.valMap, Scheme.Hom.appLE]
         simp
         rfl
-      haveI : Nonempty (⊤ : (Sp Ω).Opens) := ⟨⟨ξ, trivial⟩⟩
+      have : Nonempty (⊤ : (Sp Ω).Opens) := ⟨⟨ξ, trivial⟩⟩
       show Function.Injective (GlobalTheory.Points.valMap (𝟙 (Sp Ω)) (p ⁻¹ᵁ V) h1).hom
       rw [e1]
       exact (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of Ω)).hom).1.comp
@@ -206,9 +206,9 @@ theorem exists_ratModel_normalization : ∀ (A o Ω : Type) [CommRing A] [IsDede
     rw [eq_inv_of_mul_eq_one_right h4]
     show E (c' * y') * (E c')⁻¹ = x
     rw [map_mul, mul_comm, ← mul_assoc, inv_mul_cancel₀ hEc, one_mul, hy']
-  haveI := IsSeparated.of_comp s (spMap κ)
-  haveI := locallyOfFiniteType_of_comp s (spMap κ)
-  haveI := QuasiCompact.of_comp s (spMap κ)
+  have := IsSeparated.of_comp s (spMap κ)
+  have := locallyOfFiniteType_of_comp s (spMap κ)
+  have := QuasiCompact.of_comp s (spMap κ)
   let M : RatModel o Ω :=
     { Z := p.normalization
       s := s

@@ -288,9 +288,9 @@ theorem cast_cancel {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] (k
 
 theorem thetaNu : ThetaNuSt := by
   intro E _ _ _ H V _ _ _ _ _ t P _ ϖ hϖ Q hQ vK hvK tK m w _ θ θK htie
-  haveI := t.semi.smooth
-  haveI := t.semi.separated
-  haveI := t.semi.quasiCompact
+  have := t.semi.smooth
+  have := t.semi.separated
+  have := t.semi.quasiCompact
   let σ' : LB.Sec (LB.LinComb P.U.LG.L (K := Fin 1) (fun _ => 𝟙 t.G.left) (fun _ => ((1 : ℕ) : ℤ))) :=
     P.bundle.symm ▸ θ
   let s : P.U.SecK 1 := TG.secK P.U.toUnifPre σ'

@@ -387,7 +387,7 @@ theorem exists_basis_matrixRep [Module.Finite K V] {h : ℕ} (ρ : Matrix (Fin (
     (LinearMap.pi fun u => (e 0 u).codRestrict V₀ fun y => ⟨e 0 u y, by simp [he]⟩)
     (LinearMap.ext fun y => by
       refine (LinearMap.sum_apply _ _ _).trans (Eq.trans (Finset.sum_congr rfl fun u _ => ?_) (hs y))
-      exact (he u 0 0 u y).trans (if_pos rfl))
+      exact (he u 0 0 u y).trans (ite_eq_left rfl))
     (LinearMap.ext fun z => funext fun u => Subtype.ext (by
       show e 0 u ((∑ u, e u 0 ∘ₗ V₀.subtype ∘ₗ LinearMap.proj u : (Fin (n + 1) → V₀) →ₗ[K] V) z) = z u
       simp [he, h₀]))
@@ -446,7 +446,7 @@ theorem exists_isLieBasis_kronecker {K : Type} [Field K] {S : Scheme.{0}} {A C :
   have hπ : ∀ u y, π u y = Additive.ofMul (pushHom hφ _ y.hom ≫ pr u) := fun _ _ => rfl
   obtain ⟨v₀, hv₀⟩ := GlobalTheory.KeyPow.exists_isLieBasis A₀ hd
   let b₀ := Lie.basis (intAct A₀) hv₀
-  haveI := Module.Finite.of_basis b₀
+  have := Module.Finite.of_basis b₀
   obtain ⟨b, hb⟩ := exists_basis_matrixRep (h := h) (matrixRep π
     (fun y y' e => Lie.ext (push_inj hφ (hinj _ _ _ fun u => Additive.ofMul.injective (e u))))
     (fun m => Lie.map (intAct A₀) (intAct A₀) (f₀ m)) fun m u y => by
@@ -486,8 +486,8 @@ theorem prim_pull {o : Type} [CommRing o] {g k : ℕ} {J : Type} {b : TBase o k}
     {s : S ⟶ Sp o} {s' : S' ⟶ Sp o} {f : S' ⟶ S} {t : TObj g k J b s} {t' : TObj g k J b s'} (m : TMap t' t f)
     (H : t.Prim w w') : t'.Prim w w' := by
   obtain ⟨φ, h, hL, -, hact⟩ := m
-  letI := t.ab.comm
-  letI := t'.ab.comm
+  let := t.ab.comm
+  let := t'.ab.comm
   refine ⟨push_inj h ?_, ?_, ?_⟩
   · have e : ∀ j, pushHom h _ (t'.act j) = pushHom h _ (𝟙 t'.A) ≫ t.act j := fun j => by
       rw [← push_comp h (hact j), Category.id_comp]
@@ -560,7 +560,7 @@ theorem main : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Out.PolAV S
     have := bas.finrank_eq
     simp [Module.finrank_pi_fintype] at this
     omega
-  letI := t.ab.comm
+  let := t.ab.comm
   simp only [List.prod_ofFn] at ha
   have hinj : ∀ (T : Over _) (y y' : T ⟶ t.A), (∀ u, y ≫ pr u = y' ≫ pr u) → y = y' := fun T y y' e =>
     (hu T fun u => y' ≫ pr u).unique e fun _ => rfl
@@ -583,7 +583,7 @@ theorem main : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Out.PolAV S
   obtain ⟨t₀, φ₀, hφ, hL₀, hp₀, ha₀⟩ := GlobalTheory.tObj_pull o _ k J b _ _ _ (spMap β)
     (spMap (TrivSqZeroExt.fstHom K K (Fin r → K)).toRingHom) t
     ((spMap_comp _ _).symm.trans (congrArg spMap (RingHom.ext fun z => by simp)))
-  letI := t₀.ab.comm
+  let := t₀.ab.comm
   obtain ⟨v, f₀, hv, hf₀, hF⟩ := exists_isLieBasis_kronecker (n := 7) hφ pr hpr hinj f hf t₀.dim
   obtain ⟨Θ, hs, hcomm, hzero⟩ := _root_.GlobalTheory.KSField.exists_ksMatrix L1 L2 hT K r t.pol t₀.pol φ₀ _ v hφ hL₀ hv
   let Θ' := (Matrix.reindexLinearEquiv K K finProdFinEquiv.symm finProdFinEquiv.symm).toLinearMap ∘ₗ Θ

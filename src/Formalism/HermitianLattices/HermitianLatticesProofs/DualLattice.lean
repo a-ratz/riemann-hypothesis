@@ -71,8 +71,8 @@ omit [IsFractionRing R K] in
 theorem finitely_generated_projective_coords (L : Submodule R V) (hL : L.FG) (hK : Function.Injective (algebraMap R K)) :
     ∃ (n : ℕ) (g : Fin n → L) (f : Fin n → (L →ₗ[R] R)), ∀ y : L, y = ∑ i, f i y • g i := by
   classical
-  haveI : Module.Finite R L := Module.Finite.iff_fg.mpr hL
-  haveI : Module.FinitePresentation R L := Module.finitePresentation_of_finite R L
+  have : Module.Finite R L := Module.Finite.iff_fg.mpr hL
+  have : Module.FinitePresentation R L := Module.finitePresentation_of_finite R L
   have htor : Submodule.torsion R L = ⊥ := by
     rw [Submodule.eq_bot_iff]
     intro x hx
@@ -84,8 +84,8 @@ theorem finitely_generated_projective_coords (L : Submodule R V) (hL : L.FG) (hK
       rw [Ne, ← map_zero (algebraMap R K)]
       exact fun h0 => nonZeroDivisors.ne_zero a.2 (hK h0)
     exact Subtype.ext ((smul_eq_zero.mp ha').resolve_left hne)
-  haveI : Module.Flat R L := IsDedekindDomain.flat_iff_torsion_eq_bot.mpr htor
-  haveI : Module.Projective R L := Module.Flat.projective_of_finitePresentation
+  have : Module.Flat R L := IsDedekindDomain.flat_iff_torsion_eq_bot.mpr htor
+  have : Module.Projective R L := Module.Flat.projective_of_finitePresentation
   obtain ⟨n, π, hπ⟩ := Module.Finite.exists_fin' R L
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property π LinearMap.id hπ
   refine ⟨n, fun i => π (Pi.single i 1), fun i => (LinearMap.proj i) ∘ₗ σ, fun y => ?_⟩
@@ -135,7 +135,7 @@ theorem dualLattice_dualBasis {ι : Type*} [Fintype ι] [DecidableEq ι] (h : V 
     (hnd : h.Nondegenerate) (b : Basis ι K V) :
     ∃ bs : ι → V, ∀ i j, h (b i) (bs j) = if i = j then 1 else 0 := by
   classical
-  haveI := Module.Finite.of_basis b
+  have := Module.Finite.of_basis b
   let T : V →ₗ[K] (ι → K) := LinearMap.pi fun i => h (b i)
   have hinj : Function.Injective T := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']

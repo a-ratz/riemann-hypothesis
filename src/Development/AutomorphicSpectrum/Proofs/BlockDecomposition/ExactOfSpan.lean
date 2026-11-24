@@ -347,14 +347,14 @@ theorem rf_nat (f : Γ(X, W.1)) (T T' : Pᵒᵖ) (φ : T ⟶ T') :
 theorem loc1 (f : Γ(X, W.1)) (T : Pᵒᵖ) (y' : (FF s (uf s W u hle f)).obj T) :
     ∃ (N : ℕ) (y : (FF s u).obj T), rho s W u hle f T y =
       rho s W u hle f T (gF s W u hle f T) ^ N * y' := by
-  haveI := IsAffineOpen.isLocalization_basicOpen (u T.unop).2 (rf s W u hle f T.unop)
+  have := IsAffineOpen.isLocalization_basicOpen (u T.unop).2 (rf s W u hle f T.unop)
   obtain ⟨n, a, h⟩ := IsLocalization.Away.surj (S := Γ(X, X.basicOpen (rf s W u hle f T.unop)))
     (rf s W u hle f T.unop) y'
   exact ⟨n, a, (h.symm.trans (mul_comm _ _))⟩
 
 theorem loc2 (f : Γ(X, W.1)) (T : Pᵒᵖ) (y : (FF s u).obj T) (hy : rho s W u hle f T y = 0) :
     ∃ N : ℕ, gF s W u hle f T ^ N * y = 0 := by
-  haveI := IsAffineOpen.isLocalization_basicOpen (u T.unop).2 (rf s W u hle f T.unop)
+  have := IsAffineOpen.isLocalization_basicOpen (u T.unop).2 (rf s W u hle f T.unop)
   obtain ⟨⟨_, N, rfl⟩, h⟩ := (IsLocalization.map_eq_zero_iff (Submonoid.powers (rf s W u hle f T.unop))
     Γ(X, X.basicOpen (rf s W u hle f T.unop)) y).1 hy
   exact ⟨N, h⟩
@@ -380,8 +380,8 @@ theorem pos [Finite P] (hC : CxSt) (hH : HtpySt) (hinf : ∀ a b, (u (a ⊓ b)).
     obtain ⟨a, ha⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
     obtain ⟨f, hf, hxf⟩ := IsAffineOpen.exists_basicOpen_le W.2 (V := (u a).1) ⟨x, ha⟩ (hle a ha)
     exact TopologicalSpace.Opens.mem_iSup.2 ⟨⟨f, a, hf⟩, hxf⟩
-  haveI := finite_chain (P := P) (n + 1)
-  haveI := finite_chain (P := P) (n + 2)
+  have := finite_chain (P := P) (n + 1)
+  have := finite_chain (P := P) (n + 2)
   refine exact_of_span (FF s u) (fun T ↦ (Sec.res s (hle T.unop)).toRingHom)
     (fun T T' φ b ↦ (Sec.res_res _ _ _ b).symm) _ hS n z ?_
   rintro f ⟨a₀, hf⟩

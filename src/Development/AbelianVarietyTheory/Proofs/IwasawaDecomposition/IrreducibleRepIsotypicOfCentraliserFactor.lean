@@ -71,8 +71,8 @@ theorem isotypic : ∀ (G H V W W' : Type) [Group G] [Group H] [AddCommGroup V] 
       rfl
     · exact h
   refine ⟨hP, fun f' hf' => ?_⟩
-  haveI := hσ
-  haveI := hσ'
+  have := hσ
+  have := hσ'
   exact GlobalTheory.CuspRep.LocUniq.equiv_of_isoPart σ σ' (ρ.comp s) hP f' hf'
 
 end GlobalTheory.CuspRep.CompUniq

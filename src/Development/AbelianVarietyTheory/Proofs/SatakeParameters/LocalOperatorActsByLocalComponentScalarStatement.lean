@@ -109,10 +109,10 @@ theorem GlobalTheory.Cong.opOf_locU_eq_smul : ∀ (E : Type) [Field E] [NumberFi
   let ρ' : Representation ℂ (GL (Fin a) (w.adicCompletion E)) (UA E a → ℂ) := (RU E a).comp j
   have hcj : ∀ g, cLoc w (j g) = g := fun g => e.apply_symm_apply g
   have hinj : Function.Injective j := Subtype.val_injective.comp e.symm.injective
-  haveI : CompactSpace Kw := isCompact_iff_compactSpace.1 hKc
+  have : CompactSpace Kw := isCompact_iff_compactSpace.1 hKc
   have hfin : ∀ N : Subgroup (GL (Fin a) (w.adicCompletion E)), IsOpen (N : Set (GL (Fin a) (w.adicCompletion E))) →
       Finite (Kw ⧸ N.subgroupOf Kw) := fun N hN =>
-    Subgroup.quotient_finite_of_isOpen _ (by rw [Subgroup.coe_subgroupOf]; exact hN.preimage continuous_subtype_val)
+    Subgroup.quotient_finite_of_isOpen _ (by rw [Subgroup.coe_subgroupOf]; exact hN.preimage continuous_subtypeVal)
   refine ⟨f.mapDomain j, ?_, ?_⟩
   · intro g hg
     obtain ⟨h, -, rfl⟩ := Finset.mem_image.1 (Finsupp.mapDomain_support hg)
@@ -144,8 +144,8 @@ theorem GlobalTheory.Cong.opOf_locU_eq_smul : ∀ (E : Type) [Field E] [NumberFi
           T (GroundTheory.Automorphic.cosetSum ρ' Kw N' ψ) = 0) key ?_ ?_ ?_
       · rintro F _ ⟨v, rfl⟩
         refine ⟨GroundTheory.Automorphic.stabilizerOf σ.ρ v, σ.smooth v, fun N' hN' hle => ?_⟩
-        haveI := hfin N' hN'
-        haveI := Fintype.ofFinite (Kw ⧸ N'.subgroupOf Kw)
+        have := hfin N' hN'
+        have := Fintype.ofFinite (Kw ⧸ N'.subgroupOf Kw)
         have hv : v ∈ GroundTheory.Automorphic.fixedVectors σ.ρ N' := fun n hn => hle hn
         have hu := GlobalTheory.LocOpAct.cosetSum_mem_fixed σ.ρ (K := Kw) hv
         have hcs : GroundTheory.Automorphic.cosetSum ρ' Kw N' (F.1 v) = F.1 (GroundTheory.Automorphic.cosetSum σ.ρ Kw N' v) := by
@@ -161,8 +161,8 @@ theorem GlobalTheory.Cong.opOf_locU_eq_smul : ∀ (E : Type) [Field E] [NumberFi
         refine ⟨N₁ ⊓ N₂, by rw [Subgroup.coe_inf]; exact h₁.inter h₂, fun N' hN' hle => ?_⟩
         rw [map_add (f := _), map_add (f := _), hx N' hN' (hle.trans inf_le_left), hy N' hN' (hle.trans inf_le_right), add_zero]
     obtain ⟨N, hN, hNφ⟩ := hC
-    haveI := hfin N hN
-    haveI := Fintype.ofFinite (Kw ⧸ N.subgroupOf Kw)
+    have := hfin N hN
+    have := Fintype.ofFinite (Kw ⧸ N.subgroupOf Kw)
     have hφ : φ ∈ GroundTheory.Automorphic.fixedVectors ρ' Kw := fun k hk => by
       have := hφK (j k) (e.symm k).2 (by rw [hcj]; exact hk)
       exact this

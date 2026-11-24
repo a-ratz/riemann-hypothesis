@@ -92,8 +92,8 @@ theorem idem_cases {k : Type} [Field k] {a : k} (ha : a * a = a) : a = 0 ∨ a =
 
 theorem qSplit_of (hP : QProd σ J ψ v) : QSplit σ J ψ v := by
   intro hstd hun hp
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
   obtain ⟨e, he⟩ := hP hstd hun hp
   refine ⟨e, ?_⟩
   set z : QE (E := E) v := e.symm (1, 0) with hz
@@ -166,16 +166,16 @@ set_option linter.deprecated false
 
 theorem card_QE (h : IsCMExt F E σ) [Finite (𝓞 F ⧸ v.asIdeal)] :
     Nat.card (QE (E := E) v) = Nat.card (𝓞 F ⧸ v.asIdeal) ^ 2 := by
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
   have hr : Module.finrank (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) = 2 := by
     rw [← h.2.2.1]
     exact Ideal.finrank_quotient_map v.asIdeal F E
-  haveI : Module.Finite (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) :=
+  have : Module.Finite (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) :=
     Module.finite_of_finrank_pos (by rw [hr]; norm_num)
-  haveI : Finite (QE (E := E) v) := Module.finite_of_finite (𝓞 F ⧸ v.asIdeal)
-  letI := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
-  letI := Fintype.ofFinite (QE (E := E) v)
+  have : Finite (QE (E := E) v) := Module.finite_of_finite (𝓞 F ⧸ v.asIdeal)
+  let := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
+  let := Fintype.ofFinite (QE (E := E) v)
   rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card,
     Module.card_eq_pow_finrank (K := 𝓞 F ⧸ v.asIdeal) (V := QE (E := E) v), hr]
 
@@ -189,8 +189,8 @@ theorem bij_of_card {A B : Type} [Finite A] [Finite B] (f : A → B) (hf : Funct
 theorem qProd_holds : QProd σ J ψ v := by
   intro hS hU hnp
   have hcm : IsCMExt F E σ := hS.1
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
   have hI : IE (E := E) v ≠ ⊥ := Ideal.map_ne_bot_of_ne_bot v.ne_bot
   set ι := (UniqueFactorizationMonoid.factors (IE (E := E) v)).toFinset with hι
   have hmem : ∀ P : ι, (P : Ideal (𝓞 E)) ∈ UniqueFactorizationMonoid.factors (IE (E := E) v) :=
@@ -204,14 +204,14 @@ theorem qProd_holds : QProd σ J ψ v := by
   have hcomap : ∀ P : ι,
       Ideal.comap (algebraMap (𝓞 F) (𝓞 E)) (P : Ideal (𝓞 E)) = v.asIdeal := by
     intro P
-    haveI := hprime P
+    have := hprime P
     exact (v.isMaximal.eq_of_le (Ideal.IsPrime.comap _).ne_top
       (Ideal.map_le_iff_le_comap.mp (hle P))).symm
   have hcount : ∀ P : ι, (P : Ideal (𝓞 E)) ^ Multiset.count (P : Ideal (𝓞 E))
       (UniqueFactorizationMonoid.factors (IE (E := E) v)) = P := by
     intro P
-    haveI := hprime P
-    haveI : (P : Ideal (𝓞 E)).LiesOver v.asIdeal := ⟨(hcomap P).symm⟩
+    have := hprime P
+    have : (P : Ideal (𝓞 E)).LiesOver v.asIdeal := ⟨(hcomap P).symm⟩
     rw [← Ideal.IsDedekindDomain.ramificationIdx_eq_factors_count v.asIdeal (P : Ideal (𝓞 E)) hI,
       hU P (hprime P) (hne P) (hcomap P), pow_one]
   let eqv : QE (E := E) v ≃+* ∀ P : ι, 𝓞 E ⧸ (P : Ideal (𝓞 E)) :=
@@ -219,12 +219,12 @@ theorem qProd_holds : QProd σ J ψ v := by
       (RingEquiv.piCongrRight fun P => Ideal.quotEquivOfEq (hcount P))
   have heqv : ∀ (y : 𝓞 E) (P : ι), eqv (Ideal.Quotient.mk _ y) P = Ideal.Quotient.mk _ y :=
     fun y P => rfl
-  haveI hfinE : ∀ P : ι, Finite (𝓞 E ⧸ (P : Ideal (𝓞 E))) :=
+  have hfinE : ∀ P : ι, Finite (𝓞 E ⧸ (P : Ideal (𝓞 E))) :=
     fun P => Ideal.finiteQuotientOfFreeOfNeBot _ (hne P)
-  haveI : Finite (QE (E := E) v) := Finite.of_equiv _ eqv.symm.toEquiv
+  have : Finite (QE (E := E) v) := Finite.of_equiv _ eqv.symm.toEquiv
   have hinj : ∀ P : ι, Function.Injective (gP v (P : Ideal (𝓞 E)) (hle P)) := by
     intro P
-    haveI := hprime P
+    have := hprime P
     exact (gP v _ (hle P)).injective
   set q := Nat.card (𝓞 F ⧸ v.asIdeal) with hq
   have hq2 : 1 < q := Finite.one_lt_card
@@ -240,12 +240,12 @@ theorem qProd_holds : QProd σ J ψ v := by
     rcases Nat.lt_or_ge (Fintype.card ι) 2 with hlt | hge
     · exfalso
       interval_cases hc : Fintype.card ι
-      · haveI := Fintype.card_eq_zero_iff.mp hc
+      · have := Fintype.card_eq_zero_iff.mp hc
         rw [Finset.univ_eq_empty, Finset.prod_empty] at hprod
         nlinarith
       · obtain ⟨P0, hP0⟩ := Fintype.card_eq_one_iff.mp hc
         apply hnp
-        haveI := hprime P0
+        have := hprime P0
         have h0 : ∀ z : 𝓞 E, z ∈ IE (E := E) v ↔
             Ideal.Quotient.mk (P0 : Ideal (𝓞 E)) z = 0 := by
           intro z
@@ -340,8 +340,8 @@ private theorem sigma_sigma_eq_of_isCMExt (h : IsCMExt F E σ) (x : E) : σ (σ 
 theorem resAlg_of' (hQ : ResQ σ J ψ v) (hE : EtaLink σ J ψ v) : ResAlg σ J ψ v := by
   intro hS hU ϖ hϖ
   have hcm : IsCMExt F E σ := hS.1
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
   obtain ⟨ρ, hρ⟩ := hQ hS hU ϖ hϖ
   have hη : etaV (E := E) v = 1 ∨ etaV (E := E) v = -1 := by
     unfold etaV
@@ -357,8 +357,8 @@ theorem resAlg_of' (hQ : ResQ σ J ψ v) (hE : EtaLink σ J ψ v) : ResAlg σ J 
       · exact absurd hp (hlink.mp h)
       · exact h
     refine ⟨hm1, ?_⟩
-    haveI : (IE (E := E) v).IsMaximal := hp.isMaximal (Ideal.map_ne_bot_of_ne_bot v.ne_bot)
-    letI : Field (QE (E := E) v) := Ideal.Quotient.field _
+    have : (IE (E := E) v).IsMaximal := hp.isMaximal (Ideal.map_ne_bot_of_ne_bot v.ne_bot)
+    let : Field (QE (E := E) v) := Ideal.Quotient.field _
     have hinv : ∀ z, sigQ σ v (sigQ σ v z) = z := by
       intro z
       obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective z
@@ -395,9 +395,9 @@ theorem resAlg_of' (hQ : ResQ σ J ψ v) (hE : EtaLink σ J ψ v) : ResAlg σ J 
       fun x => sq_mem σ v hcm x (hfix x)
     have hall : ∀ x : QE (E := E) v, ∃ c, algebraMap (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) c = x := by
       by_cases h2 : (2 : QE (E := E) v) = 0
-      · haveI : Module.Finite (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) :=
+      · have : Module.Finite (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) :=
           Module.finite_of_finrank_pos (by rw [hr]; norm_num)
-        haveI : Finite (QE (E := E) v) := Module.finite_of_finite (𝓞 F ⧸ v.asIdeal)
+        have : Finite (QE (E := E) v) := Module.finite_of_finite (𝓞 F ⧸ v.asIdeal)
         have hinjsq : Function.Injective (fun y : QE (E := E) v => y * y) := by
           intro a b hab
           have hab' : a * a = b * b := hab

@@ -89,8 +89,8 @@ theorem alg_part (k K : Type) [Field k] [Field K] [Algebra k K] (S : Finset K)
     have hnot : (⟨a, hTB ▸ haT⟩ : B) ∉ {i : B | (i : K) ≠ a} := by simp
     have htr := hind.transcendental_adjoin hnot
     have himg : (Subtype.val '' {i : B | (i : K) ≠ a}) = (T' : Set K) := by
-      ext y; simp only [Set.mem_image, Set.mem_setOf_eq, Subtype.exists, exists_and_right,
-        exists_eq_right, hT', Finset.coe_erase, Set.mem_diff, Set.mem_singleton_iff, ← hTB]
+      ext y; simp only [Set.mem_image, Set.mem_ofPred_eq, Subtype.exists, exists_and_right,
+        exists_eq_right, hT', Finset.coe_erase, Set.mem_sdiff, Set.mem_singleton_iff, ← hTB]
       tauto
     rw [himg, ← IntermediateField.transcendental_adjoin_iff] at htr
     exact htr
@@ -179,7 +179,7 @@ theorem dimX_eq (k : Type) [Field k] {X : Scheme.{0}} [IsIntegral X] (p : X ⟶ 
 
 theorem LeafFibreField_of : LateralTheory.E.LeafCurveVCut.LeafFibreField := by
   intro k _ X _ p _ hd
-  letI := (Spec.preimage (X.fromSpecStalk (genericPoint X) ≫ p)).hom.toAlgebra
+  let := (Spec.preimage (X.fromSpecStalk (genericPoint X) ≫ p)).hom.toAlgebra
   obtain ⟨A, _, _, _, _, _, j, _, hx, hj, htr⟩ := GlobalTheory.exists_affine_chart_trdeg_eq p (genericPoint X)
   obtain ⟨e, -, he2⟩ := GlobalTheory.exists_ringKrullDim_eq_and_trdeg_eq k A
   have hdim := dimX_eq k p e (htr.symm.trans he2)

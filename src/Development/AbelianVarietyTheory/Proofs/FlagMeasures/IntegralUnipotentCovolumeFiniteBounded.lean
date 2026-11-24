@@ -226,7 +226,7 @@ theorem measure_le {ι : Type} [Fintype ι] {k r : ℕ} (μ : Measure (ι → Fo
     (hinv : ∀ m ∈ Γ, invP m ∈ Γ) (hu : ∀ m ∈ Γ, ∀ v, IsUnit (Matrix.of (m v)).det)
     (hpres : ∀ m ∈ Γ, μ.map (fun x => mulP m x) = μ)
     (h₁ : IsFund Γ R Ω₁) (h₂ : IsFund Γ R Ω₂) : μ Ω₁ ≤ μ Ω₂ := by
-  haveI : Countable Γ := hΓ.to_subtype
+  have : Countable Γ := hΓ.to_subtype
   have e1 := measure_eq_tsum μ R Γ Ω₂ Ω₁ hR h₂.1 h₁.1 h₂.2
   have e2 := measure_eq_tsum μ R Γ Ω₁ Ω₂ hR h₁.1 h₂.1 h₁.2
   have hterm : ∀ a : Γ, μ ((fun x => mulP (a : ι → Formalism.QuantumDeterminants.Mt k r) x) ⁻¹' Ω₂ ∩ Ω₁) =
@@ -259,14 +259,14 @@ theorem measure_eq : ∀ (ι : Type) [Fintype ι] (k r : ℕ) (Γ Ω₁ Ω₂ : 
     Measure.pi (fun _ : ι => GlobalTheory.Amp.lebN k r) Ω₁ = Measure.pi (fun _ : ι => GlobalTheory.Amp.lebN k r) Ω₂ := by
   intro ι _ k r Γ Ω₁ Ω₂ hΓ _ _ hinv hN h₁ h₂
   have hH := GlobalTheory.Amp.NHaar.isHaarOn_lebN k r
-  haveI : SigmaFinite (GlobalTheory.Amp.lebN k r) := hH.1
+  have : SigmaFinite (GlobalTheory.Amp.lebN k r) := hH.1
   have hu : ∀ m ∈ Γ, ∀ v, IsUnit (Matrix.of (m v)).det := fun m hm v =>
     GlobalTheory.DegVol.RealMat.isUnit_det (hN m hm v).1
   have hnull : Measure.pi (fun _ : ι => GlobalTheory.Amp.lebN k r) (GlobalTheory.DegVol.RP k r (fun _ => 1))ᶜ = 0 := by
     refine measure_mono_null (t := ⋃ v : ι, Function.eval v ⁻¹' {x : Formalism.QuantumDeterminants.Mt k r | Matrix.of x ∉ Formalism.QuantumDeterminants.Nset k r}) ?_
       (measure_iUnion_null fun v => Measure.pi_eval_preimage_null _ hH.2.2.1)
     intro x hx
-    simp only [RP, Set.mem_compl_iff, Set.mem_setOf_eq, not_forall] at hx
+    simp only [RP, Set.mem_compl_iff, Set.mem_ofPred_eq, not_forall] at hx
     obtain ⟨v, hv'⟩ := hx
     refine Set.mem_iUnion.2 ⟨v, ?_⟩
     intro hxN
@@ -277,7 +277,7 @@ theorem measure_eq : ∀ (ι : Type) [Fintype ι] (k r : ℕ) (Γ Ω₁ Ω₂ : 
       Measure.pi fun _ : ι => GlobalTheory.Amp.lebN k r := fun m hm => by
     have e : ∀ v, (GlobalTheory.Amp.lebN k r).map (Formalism.QuantumDeterminants.lmulM (Matrix.of (m v))) = GlobalTheory.Amp.lebN k r :=
       fun v => hH.2.2.2 _ (hN m hm v)
-    haveI : ∀ v, SigmaFinite ((GlobalTheory.Amp.lebN k r).map (Formalism.QuantumDeterminants.lmulM (Matrix.of (m v)))) := fun v => by
+    have : ∀ v, SigmaFinite ((GlobalTheory.Amp.lebN k r).map (Formalism.QuantumDeterminants.lmulM (Matrix.of (m v)))) := fun v => by
       rw [e]; infer_instance
     have := Measure.pi_map_pi (μ := fun _ : ι => GlobalTheory.Amp.lebN k r)
       (f := fun v => Formalism.QuantumDeterminants.lmulM (Matrix.of (m v))) fun v => (GlobalTheory.DegVol.Cov.continuous_lmulM _).measurable.aemeasurable
@@ -340,7 +340,7 @@ theorem coord_span_zero (Q : Matrix (Fin n) (Fin (2 * r + k + 1)) ℂ) (Qi : Mat
     unfold Formalism.L2.SG.HidaSetting.spanLt
     rw [Submodule.span_le]
     rintro _ ⟨b, hb, rfl⟩
-    simp only [Set.mem_setOf_eq] at hb
+    simp only [Set.mem_ofPred_eq] at hb
     have hne : lam ^ (r - (b : ℕ)) ≠ 0 := by
       intro h0
       have h1 := congrArg (fun w => Qi *ᵥ w) (he b)
@@ -675,7 +675,7 @@ theorem range_trI : Set.range (trI C) = Sg C := by
     exact ⟨back C x, trI_back C hx⟩
 
 theorem cont_uMat {n : ℕ} {ε : Fin n → Bool} : Continuous (fun γ : Formalism.REAL.UJ ε => Formalism.MainNotions.S.uMat γ) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem measurable_trI : Measurable (trI C) := by
   refine Measurable.of_eval (fun τ => ?_)
@@ -708,8 +708,8 @@ theorem measurable_mkUJ' {n m : ℕ} (ε : Fin n → Bool) (Q : Matrix (Fin n) (
   have hf : Continuous (fun y : S => mkUJ (ε := ε) (Q * Matrix.of (y : Fin m → Fin m → ℂ) * Qi) y.2) := by
     apply Continuous.subtype_mk
     rw [Units.continuous_iff]
-    refine ⟨hm.comp continuous_subtype_val, ?_⟩
-    exact ((continuous_const.matrix_mul (hm.comp continuous_subtype_val).matrix_conjTranspose).matrix_mul
+    refine ⟨hm.comp continuous_subtypeVal, ?_⟩
+    exact ((continuous_const.matrix_mul (hm.comp continuous_subtypeVal).matrix_conjTranspose).matrix_mul
       continuous_const)
   have e : (fun y : (Fin m → Fin m → ℂ) => mkUJ' ε (Q * Matrix.of y * Qi)) =
       fun y => if hy : y ∈ S then mkUJ (ε := ε) (Q * Matrix.of y * Qi) hy else (fun _ : (Sᶜ : Set _) => (1 : Formalism.REAL.UJ ε)) ⟨y, hy⟩ := by
@@ -799,14 +799,14 @@ theorem covN_muNB_one (D : D7) : muNB D 1 =
 
 theorem covN_pi_smul {ι : Type} [Fintype ι] {α : Type} [MeasurableSpace α] (μ : Measure α) [SigmaFinite μ]
     (c : ℝ≥0) : Measure.pi (fun _ : ι => (c : ℝ≥0∞) • μ) = ((c : ℝ≥0∞) ^ Fintype.card ι) • Measure.pi (fun _ : ι => μ) := by
-  haveI : SigmaFinite ((c : ℝ≥0∞) • μ) := by
+  have : SigmaFinite ((c : ℝ≥0∞) • μ) := by
     first
     | (have h : ((c : ℝ≥0∞) • μ) = c • μ := (ENNReal.smul_def c μ).symm
        rw [h]; infer_instance)
     | (rw [← ENNReal.smul_def]; infer_instance)
   refine (Measure.pi_eq fun s hs => ?_)
-  rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul]
-  simp only [Measure.smul_apply, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ]
+  rw [smul_apply, Measure.pi_pi, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ]
 
 theorem covN_arith (v : ℝ) (hv : 1 ≤ v) (r k f : ℕ) :
     1 ≤ ((2 * v) ^ (-((r : ℝ) * k)) * 1 * 2 ^ (r * (k + 1) + r * (r - 1))) ^ f * v ^ (k * r * f) := by
@@ -847,7 +847,7 @@ theorem covNC_holds : CovNC := by
   rw [hsw, hj, hv, hcard, Nat.sub_zero] at hlo hhi
   obtain ⟨hc, h1, hmul, hinv, hNs⟩ := GlobalTheory.T.realIntegralUnipotent_besselModels_countable_subgroup D X Y u C
   have heq := GlobalTheory.T.measure_eq_of_strictFundamentalSetsPlacewise D.what₂.Tau D.R.k D.R.rS _ _ _ hc h1 hmul hinv hNs hΩ (GlobalTheory.T.strictFundamentalSet_unipotent_on_besselModels D X Y u C)
-  haveI : SigmaFinite (GlobalTheory.Amp.lebN D.R.k D.R.rS) := (_root_.GlobalTheory.Amp.NHaar.isHaarOn_lebN D.R.k D.R.rS).1
+  have : SigmaFinite (GlobalTheory.Amp.lebN D.R.k D.R.rS) := (_root_.GlobalTheory.Amp.NHaar.isHaarOn_lebN D.R.k D.R.rS).1
   set c : ℝ≥0 := ((2 * D.host.v) ^ (-((D.R.rS : ℝ) * D.R.k)) * 1).toNNReal *
     2 ^ (D.R.rS * (D.R.k + 1) + D.R.rS * (D.R.rS - 1)) with hc_def
   have hk : kapN D 1 * 2 ^ (D.R.rS * (D.R.k + 1) + D.R.rS * (D.R.rS - 1)) = (c : ℝ≥0∞) := by
@@ -855,7 +855,7 @@ theorem covNC_holds : CovNC := by
     push_cast
     rfl
   have hcov : covN C Y u = (c : ℝ≥0∞) ^ D.R.f * Measure.pi (fun _ : D.what₂.Tau => GlobalTheory.Amp.lebN D.R.k D.R.rS) Ω := by
-    rw [covN, covN_muNB_one, hk, covN_pi_smul, Measure.smul_apply, smul_eq_mul, hcard, ← heq]
+    rw [covN, covN_muNB_one, hk, covN_pi_smul, smul_apply, smul_eq_mul, hcard, ← heq]
   have hfinΩ : Measure.pi (fun _ : D.what₂.Tau => GlobalTheory.Amp.lebN D.R.k D.R.rS) Ω ≠ ⊤ :=
     ne_top_of_le_ne_top ENNReal.ofReal_ne_top hhi
   have hne : covN C Y u ≠ ⊤ := by

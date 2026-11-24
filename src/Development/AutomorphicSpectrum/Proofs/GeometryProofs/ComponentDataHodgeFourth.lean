@@ -105,7 +105,7 @@ theorem val_eig {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} 
     (ht : genMap 𝔐.ξ ⟨centre z, hg⟩ t = 𝔐.emb s a) {e : 𝔐.Li} (he : e ∈ 𝔐.Vgen s)
     {v : epsAt z ⟶ 𝔐.t.G} (hv : 𝔐.M.ValAt z e v) :
     v ≫ 𝔐.t.act.act a = LieTangent.epsScale z ((Scheme.stalkClosedPointTo z).hom t) ≫ v := by
-  haveI := 𝔐.t.act.hom a
+  have := 𝔐.t.act.hom a
   have h1 := valAt_diff (𝔐.act a) hv
   have h2 := hv.smul hg t
   have e1 : 𝔐.ρ a e = genMap 𝔐.ξ ⟨centre z, hg⟩ t • e := by
@@ -120,7 +120,7 @@ theorem hodgeInnerProduct_blocks_eq_zero : ∀ (E : Type) [Field E] [NumberField
   intro E _ _ _ H D l Xo c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or z τ e e' v v' a hz he he' hv hv' hI
   have hβ : Function.Injective (algebraMap (𝓞 c.F) c.F) := RingOfIntegers.coe_injective
   obtain ⟨-, -, hc0, -, -, -, -, hreg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeCpt.basic E H D l Xo c (𝓞 c.F) (algebraMap (𝓞 c.F) c.F) Y S₀ Ω K J Dc.y Or.𝔐 hβ
-  haveI := hc0
+  have := hc0
   have hP := _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.polarisedAt_of_interior E H D l Xo c Y S₀ Ω K J Dc.y Or.𝔐 z hz
   have hg : genPt Or.𝔐.ξ ⤳ centre z := Or.𝔐.all _
   have hξ : IsCptGen Or.𝔐.ξ := Or.𝔐.tie.gen

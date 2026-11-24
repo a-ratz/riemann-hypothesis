@@ -215,7 +215,7 @@ theorem UpperTheory.V.Hi.decompU :
   let J : UA L n →* Ga l L n × GV n (fun v : V.frame.Vl => s.w v.1) :=
     MonoidHom.prod (away l L n).rangeRestrict (Pi.monoidHom fun v : V.frame.Vl => cLoc (s.w v.1))
   obtain ⟨hinj, haut, htr, hsurj, hsur⟩ := UpperTheory.V.Hi.formU l L Ω s n hn V Q c m τ₀ ι lam d e ξ hξ J (fun _ => rfl)
-  haveI := e.finiteDimensional
+  have := e.finiteDimensional
   let tf : (Ga l L n × GV n (fun v : V.frame.Vl => s.w v.1) → Fin d → ℂ) →ₗ[ℂ]
       Module.Dual ℂ (⨂[ℂ] e : Emb l (fun v : V.frame.Vl => s.w v.1), nablaSq ℂ n (lam e.res)) →ₗ[ℂ] (UA L n → ℂ) :=
     LinearMap.mk₂ ℂ (toForm ι e)

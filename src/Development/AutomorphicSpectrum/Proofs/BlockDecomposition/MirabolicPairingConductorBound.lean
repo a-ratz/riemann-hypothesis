@@ -62,8 +62,8 @@ namespace GlobalTheory.CompanionTheory.MirPair
 
 theorem JJ_preimage_box_eq_JJ_box : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasure] (ψ : AddChar k Circle) (c : kˣ) {n : ℕ} {V V' : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup V'] [Module ℂ V'] (T : Representation ℂ (Mir k (n + 1)) V) (T' : Representation ℂ (Mir k (n + 1)) V') (B : V →ₗ[ℂ] V' →ₗ[ℂ] ℂ) (s : ℕ), Continuous ψ → HasConductor ψ c → IsSmooth T → IsSmooth T' → TwInv T T' B s → ∀ (g : GL (Fin (n + 1)) k) (v : V) (v' : V'), ∃ r : kˣ, ∀ t : kˣ, valuation k ((c * t⁻¹ : kˣ) : k) ≤ valuation k (r : k) → ∀ t' : kˣ, (∀ x ∈ box (n + 1) t, (g : Matrix (Fin (n + 1)) (Fin (n + 1)) k) *ᵥ x ∈ box (n + 1) t') → JJ ν ψ T B {x | (g : Matrix (Fin (n + 1)) (Fin (n + 1)) k) *ᵥ x ∈ box (n + 1) t'} v v' = JJ ν ψ T B (box (n + 1) t : Set (Fin (n + 1) → k)) v v' := by
   intro k _ _ _ _ _ _ ν _ ψ c n V V' _ _ _ _ T T' B s hψ hc hT hT' hB g v v'
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hmono : ∀ {a a' : kˣ}, valuation k (a : k) ≤ valuation k (a' : k) →
       ∀ b ∈ GlobalTheory.CompanionTheory.BZOnto.PerpSmall.box (n + 1) a, b ∈ GlobalTheory.CompanionTheory.BZOnto.PerpSmall.box (n + 1) a' := by
     intro a a' haa' b hb
@@ -102,7 +102,7 @@ theorem JJ_preimage_box_eq_JJ_box : ∀ {k : Type} [Field k] [ValuativeRel k] [T
   have hMm : MeasurableSet M := hMc.isClosed.measurableSet
   have hw : Continuous (GlobalTheory.CompanionTheory.MirPair.wt ψ n) := by
     unfold GlobalTheory.CompanionTheory.MirPair.wt
-    exact continuous_subtype_val.comp (hψ.comp (continuous_apply (Fin.last n)).neg)
+    exact continuous_subtypeVal.comp (hψ.comp (continuous_apply (Fin.last n)).neg)
   have hf : Continuous fun x =>
       GlobalTheory.CompanionTheory.MirPair.wt ψ n x * GlobalTheory.CompanionTheory.MirPair.coef T B v v' x :=
     hw.mul (_root_.GlobalTheory.CompanionTheory.MirPair.continuous_coef T B hT v v')

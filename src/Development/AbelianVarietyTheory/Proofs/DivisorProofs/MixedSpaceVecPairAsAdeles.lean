@@ -161,16 +161,16 @@ theorem exists_schwartz_slice {κ : Type} [Fintype κ] (Φ : (κ → AdeleRing (
   | mem x hx =>
     obtain ⟨f, g, -, rfl⟩ := hx
     refine ⟨g y • f, fun z => ?_⟩
-    simp only [SchwartzMap.smul_apply, smul_eq_mul, slice, GlobalTheory.WeilM.pureA, RingEquiv.apply_symm_apply]
+    simp only [smul_apply, smul_eq_mul, slice, GlobalTheory.WeilM.pureA, RingEquiv.apply_symm_apply]
     exact mul_comm _ _
   | zero => exact ⟨0, fun z => rfl⟩
   | add x x' _ _ hx hx' =>
     obtain ⟨s, hs⟩ := hx
     obtain ⟨s', hs'⟩ := hx'
-    exact ⟨s + s', fun z => by rw [SchwartzMap.add_apply, hs, hs']; rfl⟩
+    exact ⟨s + s', fun z => by rw [add_apply, hs, hs']; rfl⟩
   | smul a x _ hx =>
     obtain ⟨s, hs⟩ := hx
-    exact ⟨a • s, fun z => by rw [SchwartzMap.smul_apply, hs]; rfl⟩
+    exact ⟨a • s, fun z => by rw [smul_apply, hs]; rfl⟩
 
 end GlobalTheory.WeilAdm
 

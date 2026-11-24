@@ -63,7 +63,7 @@ variable {G G' : Glob l L} (h : G.Hom G')
 
 @[simp] theorem coe_p₀ (g : G.G₀) : (h.p₀ g : G'.Γ) = h.p g := rfl
 
-theorem p₀_cont : Continuous h.p₀ := (h.cont.comp continuous_subtype_val).subtype_mk _
+theorem p₀_cont : Continuous h.p₀ := (h.cont.comp continuous_subtypeVal).subtype_mk _
 
 theorem p₀_surj : Function.Surjective h.p₀ := fun g => by
   obtain ⟨a, ha⟩ := h.surj g
@@ -172,9 +172,9 @@ def π0 (N : ℕ) : Λ.Ph0 →* (T.GN N).G₀ :=
 
 def πo0 : Λ.Ph0 →* Λ.G.G₀ := (Λ.πo.comp (Subgroup.subtype _)).codRestrict _ fun g => g.2
 
-theorem π0_cont (N : ℕ) : Continuous (Λ.π0 N) := ((Λ.π_cont N).comp continuous_subtype_val).subtype_mk _
+theorem π0_cont (N : ℕ) : Continuous (Λ.π0 N) := ((Λ.π_cont N).comp continuous_subtypeVal).subtype_mk _
 
-theorem πo0_cont : Continuous Λ.πo0 := (Λ.πo_cont.comp continuous_subtype_val).subtype_mk _
+theorem πo0_cont : Continuous Λ.πo0 := (Λ.πo_cont.comp continuous_subtypeVal).subtype_mk _
 
 theorem π0_surj (N : ℕ) : Function.Surjective (Λ.π0 N) := fun g => by
   obtain ⟨a, ha⟩ := Λ.π_surj N g

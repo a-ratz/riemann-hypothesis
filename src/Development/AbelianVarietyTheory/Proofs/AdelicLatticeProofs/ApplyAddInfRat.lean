@@ -178,7 +178,7 @@ theorem vacUniqueO : ∀ D : D7, VacUniqueO D := by
     intro g hg hl v hv z
     have hv' : finRat S T (-v) ∈ Λ := (Λ.comap (finRat S T)).neg_mem hv
     rw [apply_add_infRat h hψ hg v (hε2 _ hv' g hl) z, ← j2]
-    simp only [c, dif_pos hv']
+    simp only [c, dite_eq_left hv']
   have hli := _root_.GlobalTheory.VacuumLine.not_linearIndependent (RW T S) (jO S T sS sT) (omO S T) j1 j2 j3 j4 (Matrix (Fin T.rank) (Fin S.rank) D.host.E)
     (infRat S T) (infRat_injective S T) hsp (Λ.comap (finRat S T))
     (fun x => by

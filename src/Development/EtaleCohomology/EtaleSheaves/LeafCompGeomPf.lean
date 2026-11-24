@@ -64,13 +64,13 @@ lemma desc_split {n : ℕ} (Z : Fin (n + 1) → Scheme.{0}) {X : Scheme.{0}} (ι
   apply Sigma.hom_ext
   intro j
   refine Fin.cases ?_ ?_ j
-  · rw [Sigma.ι_desc, splitIso]
+  · rw [Sigma.ι_comp_desc, splitIso]
     erw [IsColimit.comp_coconePointUniqueUpToIso_hom_assoc]
     simp only [extendCofan_ι_app]
     erw [Fin.cases_zero]
     exact (coprod.inl_desc _ _).symm
   · intro i
-    rw [Sigma.ι_desc, splitIso]
+    rw [Sigma.ι_comp_desc, splitIso]
     erw [IsColimit.comp_coconePointUniqueUpToIso_hom_assoc]
     simp only [extendCofan_ι_app]
     erw [Fin.cases_succ, Category.assoc, coprod.inr_desc]

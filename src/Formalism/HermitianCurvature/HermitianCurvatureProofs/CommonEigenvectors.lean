@@ -67,7 +67,7 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 
 theorem eig_in [FiniteDimensional ℂ V] (T : Module.End ℂ V) (G : Submodule ℂ V) (hG : G ≠ ⊥)
     (hT : ∀ x ∈ G, T x ∈ G) : ∃ (μ : ℂ) (x : V), x ∈ G ∧ x ≠ 0 ∧ T x = μ • x := by
-  haveI : Nontrivial G := Submodule.nontrivial_iff_ne_bot.2 hG
+  have : Nontrivial G := Submodule.nontrivial_iff_ne_bot.2 hG
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue (T.restrict hT)
   obtain ⟨x, hx⟩ := hμ.exists_hasEigenvector
   refine ⟨μ, x, x.2, fun h => hx.2 (Subtype.ext h), ?_⟩
@@ -125,7 +125,7 @@ theorem hop_move {n : ℕ} {E : Fin n → Fin n → Module.End ℂ V} (hE : GlRe
 
   simp only [LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, diag_move hE, smul_add, smul_sub,
   smul_ite, smul_zero, Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.sum_ite_eq', Finset.sum_ite_eq,
-  Finset.mem_univ, if_true]
+  Finset.mem_univ, ite_true]
   rw [← sub_smul]
   congr 2
   ring
@@ -193,7 +193,7 @@ theorem exists_singular_maximal_vector : Qr.ExistsSingMax := by
     rw [← hval_re, ← hval_re, k3]
     simp
   have hba : ((a : ℕ) : ℝ) < ((b : ℕ) : ℝ) := by
-    have := Fin.lt_iff_val_lt_val.1 hab
+    have := Fin.lt_def.1 hab
     exact_mod_cast this
   linarith
 

@@ -154,8 +154,8 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem split_or_inert (D : D7) (w : HeightOneSpectrum (𝓞 D.host.E)) :
     IsSplit (E := D.host.E) (w.under (𝓞 D.host.F)) ∨ IsInertAt D.host.F D.host.E (w.under (𝓞 D.host.F)) w := by
-  haveI := D.host.isCMField_hostE
-  haveI := GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
+  have := D.host.isCMField_hostE
+  have := GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
   set v := w.under (𝓞 D.host.F) with hv
   rcases (GlobalTheory.quadratic_unramified_iff_inert_or_split D.host.F D.host.E (isCMExt_host D).2.2.1 v).1
     (fun u _ => Algebra.unramified_iff_forall.1 inferInstance ⟨u.asIdeal, u.isPrime⟩) with h | h

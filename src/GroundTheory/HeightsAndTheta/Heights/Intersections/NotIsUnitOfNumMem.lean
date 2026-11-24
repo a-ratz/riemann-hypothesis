@@ -172,7 +172,7 @@ theorem chart_field_card {W : Ideal (MRing ι)} [W.IsPrime] (hWmh : IsMultiHomog
       Module.finrank (ZMod p) (MRingOver (ZMod p) ι ⧸ ReciprocityTheory.ChartRestriction.G.AI.I1.chartIdeal Wb T) := by
     rw [LinearEquiv.length_eq eC.toAddEquiv.toIntLinearEquiv,
       Module.length_eq_of_surjective (R := ZMod p) ZMod.intCast_surjective, Module.length_eq_finrank]
-  haveI := Fintype.ofFinite (MRingOver (ZMod p) ι ⧸ ReciprocityTheory.ChartRestriction.G.AI.I1.chartIdeal Wb T)
+  have := Fintype.ofFinite (MRingOver (ZMod p) ι ⧸ ReciprocityTheory.ChartRestriction.G.AI.I1.chartIdeal Wb T)
   rw [hlen, ENat.toNat_natCast, Nat.card_congr eC.toEquiv, Nat.card_eq_fintype_card,
     Module.card_eq_pow_finrank (K := ZMod p), ZMod.card]
 
@@ -314,7 +314,7 @@ theorem regularityLocalResidue_holds.proof : regularityLocalResidue_holds.Statem
   have hgeo : geoNum 0 W b = ((Module.length ℤ (MRing ι ⧸ J)).toNat : ℤ) := by
     rw [geoNum, dite_eq_left hWrel]
   obtain ⟨hCf, hCfin, hCcard⟩ := chart_field_card hWmh hT hdim (charOf W) hp
-  letI : Field (MRing ι ⧸ J) := hCf.toField
+  let : Field (MRing ι ⧸ J) := hCf.toField
   let g := chartMap hPW T hT
   let χ := (IsLocalRing.residue (locRing P W)).comp g
   have hJχ : J ≤ RingHom.ker χ := by

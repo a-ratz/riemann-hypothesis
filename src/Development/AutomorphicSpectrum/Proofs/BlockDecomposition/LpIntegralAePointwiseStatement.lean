@@ -77,13 +77,13 @@ variable {Y V : Type} [MeasurableSpace Y] {ν : Measure Y}
 
 theorem integrableOn_of_memLp_two {h : Y → V} (hh : MemLp h 2 ν) {s : Set Y} (hs : ν s ≠ ⊤) :
     IntegrableOn h s ν := by
-  haveI : IsFiniteMeasure (ν.restrict s) := ⟨by simpa using hs.lt_top⟩
+  have : IsFiniteMeasure (ν.restrict s) := ⟨by simpa using hs.lt_top⟩
   have h2 : MemLp h 2 (ν.restrict s) := hh.restrict s
   exact memLp_one_iff_integrable.1 (h2.mono_exponent (by norm_num))
 
 theorem integral_norm_restrict_le {h : Y → V} (hh : MemLp h 2 ν) {s : Set Y} (hs : ν s ≠ ⊤) :
     ∫ y in s, ‖h y‖ ∂ν ≤ ((ν s) ^ (1 / 2 : ℝ)).toReal * (eLpNorm h 2 ν).toReal := by
-  haveI : IsFiniteMeasure (ν.restrict s) := ⟨by simpa using hs.lt_top⟩
+  have : IsFiniteMeasure (ν.restrict s) := ⟨by simpa using hs.lt_top⟩
   have hm : AEStronglyMeasurable h (ν.restrict s) := hh.aestronglyMeasurable.restrict
   have h1 := eLpNorm_le_eLpNorm_mul_rpow_measure_univ (μ := ν.restrict s) (p := 1) (q := 2)
     (by norm_num) hm

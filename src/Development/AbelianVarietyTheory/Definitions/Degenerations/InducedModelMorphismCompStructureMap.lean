@@ -72,7 +72,7 @@ abbrev cPt (p : ℕ) [Fact p.Prime] : Sp (OO p) := IsLocalRing.closedPoint (OO p
 abbrev gPt (p : ℕ) [Fact p.Prime] : Sp (PadicAlgCl p) ⟶ Sp (OO p) := spMap (OO p).subtype
 
 theorem mem_OO_iff {p : ℕ} [Fact p.Prime] (x : PadicAlgCl p) : x ∈ OO p ↔ ‖x‖ ≤ 1 := by
-  rw [OO, Valuation.mem_valuationSubring_iff, PadicAlgCl.valuation_def, ← NNReal.coe_le_one, coe_nnnorm]
+  rw [OO, Valuation.mem_valuationSubring_iff, PadicAlgCl.valuation_def, ← NNReal.coe_le_one, coe_nnNorm]
 
 theorem not_isUnit_OO_iff {p : ℕ} [Fact p.Prime] (x : OO p) : ¬ IsUnit x ↔ ‖(x : PadicAlgCl p)‖ < 1 := by
   have hx : ‖(x : PadicAlgCl p)‖ ≤ 1 := (mem_OO_iff _).1 x.2
@@ -323,7 +323,7 @@ variable (M) in
 theorem stalkHom_injective (z : M.Z) : Function.Injective (M.stalkHom z) := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro a ha
-  obtain ⟨U, hz, f, rfl⟩ := M.Z.presheaf.germ_exist a
+  obtain ⟨U, hz, f, rfl⟩ := M.Z.presheaf.exists_germ_eq a
   rw [stalkHom_germ hz f] at ha
   have hf : f = 0 := M.valF_injective ⟨z, hz⟩ (by rw [ha, ← M.res_apply U ⟨z, hz⟩ 0, map_zero])
   rw [hf, map_zero]

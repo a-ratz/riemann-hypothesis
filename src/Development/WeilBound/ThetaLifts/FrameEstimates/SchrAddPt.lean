@@ -164,7 +164,7 @@ theorem coef_near {n d : ℕ} {X : Spc F E n} {W : Spc F E d} (M : Model σ X W)
   have hV := schr_near hψ hg (hC.image he)
   have hm : Continuous fun z : UA σ W.J × Ten F E n d => M.co.e (z.2 * (mat z.1 - 1)ᵀ) :=
     he.comp (continuous_snd.matrix_mul
-      (((Units.continuous_val.comp continuous_subtype_val).comp continuous_fst).sub continuous_const).matrix_transpose)
+      (((Units.continuous_val.comp continuous_subtypeVal).comp continuous_fst).sub continuous_const).matrix_transpose)
   have h1 := hC.eventually_forall_of_forall_eventually (x₀ := (1 : UA σ W.J))
     (P := fun u c => M.co.e (c * (mat u - 1)ᵀ) ∈ _) fun c _ => hm.continuousAt.preimage_mem_nhds (by
       rwa [show mat (1 : UA σ W.J) = 1 from rfl, sub_self, Matrix.transpose_zero, Matrix.mul_zero, map_zero])
@@ -198,7 +198,7 @@ theorem level_of (hC : CoefEq) (hF : FourierInj) (hB : CoefBd) : Level := by
   have h1 := coef_near M hp.base.std hφ hCc
   have := LatticeQuotientMeasure.ring_AE F E
   have hi : Continuous fun u : UA σ W.J => u⁻¹ :=
-    ((continuous_inv (G := GL (Fin d) (AE F E))).comp continuous_subtype_val).subtype_mk fun u => (u⁻¹).2
+    ((continuous_inv (G := GL (Fin d) (AE F E))).comp continuous_subtypeVal).subtype_mk fun u => (u⁻¹).2
   have h2 := (hi.tendsto' 1 1 inv_one).eventually h1
   have hc : Continuous fun u : UA σ W.J => ‖om (1, u) (pureA F f₀ φ) y / pureA F f₀ φ y - 1‖ :=
     ((((hs.cont _ (ev_adm y) _ (mem f₀)).comp (continuous_const.prodMk continuous_id)).div_const _).sub
@@ -225,8 +225,8 @@ theorem level_of (hC : CoefEq) (hF : FourierInj) (hB : CoefBd) : Level := by
         Matrix.transpose_one, Matrix.mul_one]
     have b := hb f f₀ z
     have b' := hb f f₀ (z * (mat u⁻¹)ᵀ)
-    rw [maj, if_neg a, mul_zero, norm_le_zero_iff] at b
-    rw [maj, if_neg a', mul_zero, norm_le_zero_iff] at b'
+    rw [maj, ite_eq_right a, mul_zero, norm_le_zero_iff] at b
+    rw [maj, ite_eq_right a', mul_zero, norm_le_zero_iff] at b'
     rw [b, b']
   have h4 : (starRingEnd ℂ) (om (1, u) (pureA F f₀ φ) y) ≠ 0 := fun h => by
     have := key f₀ y

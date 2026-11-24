@@ -123,7 +123,7 @@ theorem diag_apply_of_weight (hE : IsGlRep E) {ω : Fin n → ℝ} {w : M}
 theorem le_span_weightVecs (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVf : FiniteDimensional ℂ V)
     (hVK : IsKStableSub ε E V) :
     V ≤ Submodule.span ℂ {v | v ∈ V ∧ ∃ ν : Fin n → ℝ, ∀ a, E a a v = (ν a : ℂ) • v} := by
-  haveI := hVf
+  have := hVf
   have hst : ∀ a, ∀ v ∈ V, E a a v ∈ V := fun a v hv => hVK a a rfl v hv
   let T : Fin n → Module.End ℂ V := fun a => (E a a).restrict (hst a)
   have hsym : ∀ a, (T a).IsSymmetric := by
@@ -241,7 +241,7 @@ theorem exists_weight_bound (hU : IsInfUnitary ε E) (hVf : FiniteDimensional �
     ∃ R : ℝ, 0 ≤ R ∧ ∀ v ∈ V, v ≠ 0 → ∀ ν : Fin n → ℝ, (∀ a, E a a v = (ν a : ℂ) • v) →
       √(nsq (ν + rhoC ε)) ≤ R := by
   classical
-  haveI := hVf
+  have := hVf
   have hT : ∀ a, {r : ℝ | Module.End.HasEigenvalue ((E a a).restrict (hVK a a rfl)) (r : ℂ)}.Finite := by
     intro a
     have hf : {μ : ℂ | Module.End.HasEigenvalue ((E a a).restrict (hVK a a rfl)) μ}.Finite := by

@@ -101,7 +101,7 @@ theorem chartTransport_indicator_memLp_two {E : Type*} [NormedAddCommGroup E] [T
     (hsub : tsupport f ⊆ e.source) :
     MemLp (e.target.indicator (f ∘ e.symm)) 2 volume := by
   have hae := chT_aesm hz he f hf.1
-  apply (eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top
+  apply (eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top
     two_ne_zero ENNReal.ofNat_ne_top hae).2
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two]
   have hz0 : ∀ x, x ∉ tsupport f → f x = 0 := fun x hx => image_eq_zero_of_notMem_tsupport hx
@@ -113,7 +113,7 @@ theorem chartTransport_indicator_memLp_two {E : Type*} [NormedAddCommGroup E] [T
     rw [← lintegral_indicator e.open_target.measurableSet]
     congr 1; funext y
     by_cases hy : y ∈ e.target <;> simp [hy]
-  rw [e1, ← chT_lint hz he (fun x => ‖f x‖ₑ ^ 2) (hf.1.enorm.pow_const 2) hs]
+  rw [e1, ← chT_lint hz he (fun x => ‖f x‖ₑ ^ 2) (hf.1.eNorm.pow_const 2) hs]
   calc ∫⁻ x, ‖f x‖ₑ ^ 2 ∂vol n z = ∫⁻ x in tsupport f, ‖f x‖ₑ ^ 2 ∂vol n z := by
         rw [setLIntegral_eq_of_support_subset]
         intro x hx

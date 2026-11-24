@@ -51,7 +51,7 @@ theorem finIntermediate : FinIntermediate := by
 
   let f : AddSubgroup W → AddSubgroup (Q ⧸ P.addSubgroupOf Q) := fun M =>
     (M.addSubgroupOf Q).map (QuotientAddGroup.mk' (P.addSubgroupOf Q))
-  haveI : Finite (AddSubgroup (Q ⧸ P.addSubgroupOf Q)) :=
+  have : Finite (AddSubgroup (Q ⧸ P.addSubgroupOf Q)) :=
     Finite.of_injective (β := Set (Q ⧸ P.addSubgroupOf Q))
       (fun H : AddSubgroup (Q ⧸ P.addSubgroupOf Q) => (H : Set (Q ⧸ P.addSubgroupOf Q)))
       SetLike.coe_injective

@@ -62,7 +62,7 @@ namespace GlobalTheory.LKCx.PolyArch
 
 theorem roots_eig_any (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlace G.F) (γ : G.C) (w : ℂ)
     (hw : (minpoly G.F γ).eval₂ v.embedding w = 0) : ∃ x : Fin G.n → ℂ, x ≠ 0 ∧ G.psi v γ *ᵥ x = w • x := by
-  letI : Algebra G.F ℂ := v.embedding.toAlgebra
+  let : Algebra G.F ℂ := v.embedding.toAlgebra
   have hτ : algebraMap G.F ℂ = v.embedding := rfl
   let ψF : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) ℂ :=
     { G.psi v with
@@ -72,8 +72,8 @@ theorem roots_eig_any (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : InfinitePlac
         rfl }
   let Ψ : ℂ ⊗[G.F] G.C →ₐ[ℂ] Matrix (Fin G.n) (Fin G.n) ℂ :=
     Algebra.TensorProduct.lift (Algebra.ofId ℂ _) ψF (fun a _ => Algebra.commute_algebraMap_left a _)
-  haveI : Nontrivial (Matrix (Fin G.n) (Fin G.n) ℂ) := by
-    haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  have : Nontrivial (Matrix (Fin G.n) (Fin G.n) ℂ) := by
+    have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
     infer_instance
   have hinj : Function.Injective Ψ := RingHom.injective (Ψ : ℂ ⊗[G.F] G.C →+* Matrix (Fin G.n) (Fin G.n) ℂ)
   set Γ := G.psi v γ with hΓ

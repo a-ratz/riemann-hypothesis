@@ -116,7 +116,7 @@ theorem exists_scalar_of_forall_eigen {V : Type*} [AddCommGroup V] [Module ℂ V
 theorem schur_theta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (M : Module.End ℂ (WO S T → ℂ)), (∀ f, IsThetaFunO ψ S T f → IsThetaFunO ψ S T (M f)) → (∀ w f, IsThetaFunO ψ S T f → M (heisO ψ S T w f) = heisO ψ S T w (M f)) → (∀ (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratL T S) 𝓕 μ → ∀ f, IsThetaFunO ψ S T f → ∫⁻ w in 𝓕, ‖M f w‖ₑ ^ 2 ∂μ = ∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ) → ∃ c : ℂ, ‖c‖ = 1 ∧ ∀ f, IsThetaFunO ψ S T f → M f = c • f := by
   intro D ψ hψ S T M hM hcomm hiso
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WA T S) := ⟨rfl⟩
+  have : BorelSpace (WA T S) := ⟨rfl⟩
   obtain ⟨⟨μ, 𝓕, hμ, h𝓕, -⟩, -⟩ := GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (WA T S) (ratL T S) K hK hc
   refine exists_scalar_of_forall_eigen _ (fun f g hf hg => GlobalTheory.OrientedHeis.theta_add hf hg) M fun f hf => ?_
   refine GlobalTheory.T.thetaFunction_eq_unitSmul_of_diagonalCoefficient_eq D ψ hψ S T μ 𝓕 hμ h𝓕 f (M f) hf (hM f hf) fun w => ?_

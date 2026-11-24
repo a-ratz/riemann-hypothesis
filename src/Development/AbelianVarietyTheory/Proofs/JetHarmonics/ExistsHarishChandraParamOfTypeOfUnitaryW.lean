@@ -73,7 +73,7 @@ theorem besType_hcParam : ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [I
   have hgg' : g⁻¹ * g = 1 := PI.HwUniqW.inv_mul_UH' hg.1
   have hc : Continuous (fun x : Matrix (Fin k) (Fin k) ℂ => g * PI.UpqRep.blockW k r x * g⁻¹) :=
     (continuous_const.matrix_mul (besType_continuous_blockW k r)).matrix_mul continuous_const
-  haveI := hnt
+  have := hnt
   obtain ⟨u₀, hu₀⟩ := _root_.GlobalTheory.UnitaryHighestWeight.exists_isHCTypeU k Wp (fun x => π (g * PI.UpqRep.blockW k r x * g⁻¹))
     (by
       refine ⟨⟨?_, ?_⟩, ?_, ?_⟩

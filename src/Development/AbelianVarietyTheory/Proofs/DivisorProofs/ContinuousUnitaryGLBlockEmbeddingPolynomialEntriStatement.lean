@@ -67,9 +67,9 @@ theorem isBlockEmb_continuous : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
       Continuous ι := by
   intro F E _ _ _ _ _ _ σ hσ n J _ r Xf Yf _ l d h ι hι
   obtain ⟨Φ, j, _, hΦs, -, -, hform⟩ := hι
-  haveI : Module.Finite F E := Module.finite_of_finrank_eq_succ hσ.2.2.1
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : Module.Finite F E := Module.finite_of_finrank_eq_succ hσ.2.2.1
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hsig : Continuous (sigR (AF F) σ) := by
     have hc := IsModuleTopology.continuous_of_linearMap (R := AF F) (LinearMap.baseChange (AF F) σ.toLinearMap)
     refine hc.congr fun x => ?_

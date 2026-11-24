@@ -116,9 +116,9 @@ theorem exists_isMonomial_symm : ∀ (W : Type) [CommRing W] [IsDomain W] [IsLoc
       IsMonomial D.toPre ![ϖ] ![β] := by
   intro W _ _ _ hW ϖ hϖ D
   obtain ⟨hdvr, hcomp, hchar⟩ := hW
-  haveI := hdvr
-  haveI := hcomp
-  haveI := hchar
+  have := hdvr
+  have := hcomp
+  have := hchar
   choose Q hQ using QForm.exists_QVal (ϖ := ϖ) hϖ D
   have hQ' : QForm.IsQ D.toPre ϖ Q := hQ
   have hex : ∀ χ, ∃ r, PsiCoord D.toPre χ r := fun χ =>
@@ -207,17 +207,17 @@ theorem exists_cdvr_map_of_finite : ∀ (V : Type) [CommRing V] [IsDomain V] [Is
   have hchF : CharZero F := charZero_of_injective_algebraMap (algebraMap K F).injective
 
   obtain ⟨m, hm⟩ := Ideal.exists_maximal R₁
-  letI : Field (R₁ ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite K (R₁ ⧸ m) :=
+  let : Field (R₁ ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite K (R₁ ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ K m).toLinearMap (Ideal.Quotient.mkₐ_surjective K m)
-  haveI : Algebra.IsAlgebraic K (R₁ ⧸ m) := Algebra.IsAlgebraic.of_finite K (R₁ ⧸ m)
+  have : Algebra.IsAlgebraic K (R₁ ⧸ m) := Algebra.IsAlgebraic.of_finite K (R₁ ⧸ m)
   let t : R₁ →ₐ[K] F := (IsAlgClosed.lift : (R₁ ⧸ m) →ₐ[K] F).comp (Ideal.Quotient.mkₐ K m)
 
-  haveI : IsScalarTower V K F := inferInstance
-  haveI : FaithfulSMul V F := (faithfulSMul_iff_algebraMap_injective V F).2 (by
+  have : IsScalarTower V K F := inferInstance
+  have : FaithfulSMul V F := (faithfulSMul_iff_algebraMap_injective V F).2 (by
     rw [IsScalarTower.algebraMap_eq V K F]
     exact (algebraMap K F).injective.comp (IsFractionRing.injective V K))
-  haveI : Algebra.IsAlgebraic V F :=
+  have : Algebra.IsAlgebraic V F :=
     (IsFractionRing.comap_isAlgebraic_iff (A := V) (K := K) (C := F)).mpr inferInstance
   obtain ⟨n, b, hb⟩ := Module.Finite.exists_fin (R := K) (M := R₁)
   let s : Finset F := Finset.univ.image (fun i => t (b i))
@@ -328,16 +328,16 @@ theorem exists_sqOf_of_dim (hL : Out.Laws) (h k : ℕ) (o : Type) [CommRing o] (
   have m'' := m'
   obtain ⟨φ', -, g', -⟩ := m''
   obtain ⟨i₀, hi₀⟩ := H₁ c'.A φ' g'
-  letI : Algebra ℚ R' := ((algebraMap R R').comp (algebraMap ℚ R)).toAlgebra
-  haveI : IsNoetherianRing R' := Algebra.FiniteType.isNoetherianRing R R'
+  let : Algebra ℚ R' := ((algebraMap R R').comp (algebraMap ℚ R)).toAlgebra
+  have : IsNoetherianRing R' := Algebra.FiniteType.isNoetherianRing R R'
   obtain ⟨R₁, _, _, ⟨f₂, e₂, l₂⟩, H₂⟩ := GlobalTheory.T.exists_symmetric_linearisation_square_diagonalBundle hL h k o ζ R' _ c' h i₀ hc'
   obtain ⟨c₁, m₁, hc₁⟩ := pull_sieg (spMap ((algebraMap R' R₁).comp ((algebraMap R R').comp β)))
     (spMap (algebraMap R' R₁)) (SiegelRingChange.spMap_comp' _ _).symm c' hc'
   have m₁' := m₁
   obtain ⟨φ₁, φ₂, g₁, sq₁, w₁, -⟩ := m₁'
   obtain ⟨i, hi, li⟩ := exists_pull_labels g₁ 2 i₀ hi₀
-  letI : Algebra ℚ R₁ := ((algebraMap R' R₁).comp (algebraMap ℚ R')).toAlgebra
-  haveI : IsNoetherianRing R₁ := Algebra.FiniteType.isNoetherianRing R' R₁
+  let : Algebra ℚ R₁ := ((algebraMap R' R₁).comp (algebraMap ℚ R')).toAlgebra
+  have : IsNoetherianRing R₁ := Algebra.FiniteType.isNoetherianRing R' R₁
   obtain ⟨u, j, huj⟩ := H₂ c₁.A φ₁ i _ g₁ hi rfl
   obtain ⟨p₁, p₂, p₃, p₄⟩ := GlobalTheory.abelianScheme_id_pow_finite_etale_surjective _ c₁.A 2 c₁.ab (isUnit_two_sections R₁)
   have hψ : ∀ {T : Over (Sp R₁)} (x : T ⟶ c₁.A), x ≫ ((𝟙 c₁.A) ^ 2 : c₁.A ⟶ c₁.A) = x ^ 2 := fun x => by
@@ -359,8 +359,8 @@ theorem exists_sqOf_of_dim (hL : Out.Laws) (h k : ℕ) (o : Type) [CommRing o] (
   obtain ⟨P, φ, hP⟩ := GlobalTheory.T.exists_principalPolarization_symmetric_squareRoot hL h k o ζ R₁ _ c₁ M hc₁ hd₁ hM
     (GlobalTheory.T.lam_iso_of_doubling_pullback_eq_diagonal_sq hL h k o ζ R₁ _ c₁ M hc₁ hM iM') sM
   obtain ⟨ψ, hψ'⟩ := sqOf_of_pb hP (pb_comp m' m₁)
-  letI : Algebra R R₁ := ((algebraMap R' R₁).comp (algebraMap R R')).toAlgebra
-  haveI : IsScalarTower R R' R₁ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R R₁ := ((algebraMap R' R₁).comp (algebraMap R R')).toAlgebra
+  have : IsScalarTower R R' R₁ := IsScalarTower.of_algebraMap_eq fun _ => rfl
   refine ⟨R₁, inferInstance, inferInstance, P, ψ,
     ⟨Module.Finite.trans R' R₁, Algebra.Etale.comp R R' R₁, Module.FaithfullyFlat.trans R R' R₁⟩, ?_⟩
   have e : spMap (algebraMap R R₁) = 𝟙 _ ≫ spMap (algebraMap R' R₁) ≫ spMap (algebraMap R R') := by
@@ -393,7 +393,7 @@ theorem exists_sqrt_field : ∀ (h k : ℕ) (o : Type) [CommRing o] (ζ : o) (S 
   obtain ⟨hφ, -, φ₂, hs', hw'⟩ := hP
   have lam : (abelian₂ P.A P.L).IsLB := LB.isLB_linComb P.isLB _ _
   refine ⟨R₁, inferInstance, inferInstance, hfin, ?_, P, φ ≫ χ, φ₂ ≫ χ₂, hφ.comp hχ, ⟨?_, ?_⟩, ?_⟩
-  · haveI := Module.FaithfullyFlat.lTensor_nontrivial K R₁ K
+  · have := Module.FaithfullyFlat.lTensor_nontrivial K R₁ K
     exact (TensorProduct.lid K R₁).injective.nontrivial
   · rw [Category.assoc, hs.1, ← Category.assoc, hs'.1, Category.assoc]
   · rw [Category.assoc, hs.2, ← Category.assoc, hs'.2, Category.assoc]
@@ -481,8 +481,8 @@ theorem exists_polAV_semiAbelian : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ :
             IsSemiAbelian G ∧ IsMonHom gen.hom := by
   intro g n o _ ζ F V _ _ _ hB hV y
   have hC : GlobalTheory.LN.CDvr V := ⟨hV, hB.1.2.2.2, hB.2⟩
-  haveI : CharZero V := hB.2
-  haveI : CharZero (FractionRing V) := inferInstance
+  have : CharZero V := hB.2
+  have : CharZero (FractionRing V) := inferInstance
   obtain ⟨R₁, _, _, hfin, hnt, P, α, α₂, hα, hsq, hlam⟩ := GlobalTheory.T.exists_lambdaPolarisation_siegelObject_charZeroField g n o ζ F.X F.s F.univ F.princ (FractionRing V) y
   obtain ⟨W₁, _, _, _, f₁, ψ, hW₁, hi₁, hl₁, hf₁, hc₁⟩ := GlobalTheory.T.exists_completeDVR_finite_map_of_finiteAlgebra V hC R₁ hfin hnt
   obtain ⟨P₁, φ₁, hP₁, -, hL₁⟩ := GlobalTheory.KeyFam.SameLam.exists_polPB P ψ
@@ -550,10 +550,10 @@ namespace GlobalTheory.MumExt
 
 theorem exists_extLam : ∀ (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R], ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ L : LB ((Over.pullback (jK R)).obj G).left, L.IsLB → ∃ PP : LB (G2 G).left, ExtLam G L PP := by
   intro R _ _ _ G _ _ hG L hL
-  haveI := hG.smooth
-  haveI := hG.separated
-  haveI := hG.quasiCompact
-  haveI : GeometricallyIntegral G.hom :=
+  have := hG.smooth
+  have := hG.separated
+  have := hG.quasiCompact
+  have : GeometricallyIntegral G.hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hG.smooth hG.geomConnected
   obtain ⟨L', hL', hb⟩ := GlobalTheory.T.lineBundle_generic_fibre_extends_over_dvr R G L hL
   refine ⟨abelian₂ G L', DVR.linComb_isLB _ hL' _ _, fun κ₂ hκ => ?_⟩
@@ -607,7 +607,7 @@ theorem exists_unif_finExt : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F
           IsSemiAbelian G' ∧ IsGrpPullback A'.A F.univ.A (spMap fK ≫ y₁) α' ∧ IsSquare α' α₂' ∧
           LBIso (abelian₂ A'.A A'.L) (F.univ.P.pull α₂') := by
   intro g n o _ ζ F V₁ _ _ _ hV y₁ A α α₂ hα hsq hL G _ _ gen hG hgen
-  haveI : IsMonHom gen.hom := hgen
+  have : IsMonHom gen.hom := hgen
   have hdvr : IsDiscreteValuationRing V₁ := hV.1
   have hLgen : (A.L.pull gen.hom.left).IsLB := pull_isLB A.isLB _
   obtain ⟨PP, hPP⟩ := GlobalTheory.MumExt.exists_extLam V₁ G hG _ hLgen
@@ -615,8 +615,8 @@ theorem exists_unif_finExt : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F
     GlobalTheory.T.exists_uniformisation_finiteExt_sameMumfordBundle V₁ hV G hG A gen hgen PP hPP
   obtain ⟨-, hinj, hfin⟩ := hρ
   have hloc : IsLocalHom ρ := by
-    letI := ρ.toAlgebra
-    haveI : Module.Finite V₁ R' := hfin
+    let := ρ.toAlgebra
+    have : Module.Finite V₁ R' := hfin
     exact ReciprocityTheory.ChartRestriction.G.Pdiv.FiniteLocalHoms.isLocalHom_algebraMap
   have hinj' : Function.Injective ((algebraMap R' (FractionRing R')).comp ρ) :=
     (IsFractionRing.injective R' (FractionRing R')).comp hinj
@@ -691,7 +691,7 @@ theorem exists_unif_finExt : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F
   have t6 := LBIso.trans (lamLB _ A₁.isLB) (pull_isLB (lamLB _ A.isLB) _) (pull_isLB F.univ.isLB _) t5 s8
   have hG₁ : IsSemiAbelian G₁ := by
     obtain ⟨bc, mbc, -⟩ := grpPullback_iso hβ (isGrpPullback_pullback G (spMap ρ))
-    haveI := mbc
+    have := mbc
     exact GlobalTheory.isSemiAbelian_of_grpIso bc (IsSemiAbelian.pullback (spMap ρ) G hG)
   exact ⟨R', inferInstance, inferInstance, inferInstance, ρ, fK, hR', hinj, hloc, hfin, hfK, G₁, inferInstance,
     inferInstance, D₁, A₁, U₁, ι ≫ α, _, hG₁, hα', hsq', t6⟩

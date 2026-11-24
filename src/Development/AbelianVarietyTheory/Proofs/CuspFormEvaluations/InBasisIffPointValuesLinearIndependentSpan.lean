@@ -72,8 +72,8 @@ theorem SameLin.indep_mod {W : Q → Prop} {f : Q → V} {g : Q → V'} (h : Sam
     (hi : ∀ c : Fin n → K, ∑ i, c i • f (a i) ∈ Submodule.span K (Set.range fun i => f (b i)) → ∀ i, c i = 0)
     (c : Fin n → K') (hc : ∑ i, c i • g (a i) ∈ Submodule.span K' (Set.range fun i => g (b i))) : ∀ i, c i = 0 := by
   obtain ⟨κ, φ, hφ, hsp, hli⟩ := exists_linearIndependent' K (fun i => f (b i))
-  haveI : Finite κ := Finite.of_injective φ hφ
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective φ hφ
+  let : Fintype κ := Fintype.ofFinite κ
   have h1 : LinearIndependent K (fun i : Fin n ⊕ κ => f (Sum.elim a (b ∘ φ) i)) := by
     rw [Fintype.linearIndependent_iff]
     intro d hd

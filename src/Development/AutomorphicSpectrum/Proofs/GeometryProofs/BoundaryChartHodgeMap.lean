@@ -358,11 +358,11 @@ theorem exists_fibre_lift {R : Type} [CommRing R] {t : SAB H (Sp R)} {T : Scheme
   obtain ⟨Γ₀, hΓ, hd, -, -⟩ := Flat.FamExp.per_discrete R t.G g n M B₀ ψ e b hb
   have hcount : (e.per b).Countable := by
     rw [← hΓ]
-    haveI := hd
+    have := hd
     have : Countable Γ₀ := countable_of_Lindelof_of_discrete
     exact Set.countable_coe_iff.1 this
   have hcount' : (u'.Λ : Set (Fin g' → ℂ)).Countable := by
-    haveI := u'.discrete
+    have := u'.discrete
     have : Countable u'.Λ := countable_of_Lindelof_of_discrete
     exact Set.countable_coe_iff.1 this
   have e0 : e.ex b 0 = 1 := by

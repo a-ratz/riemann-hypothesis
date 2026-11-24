@@ -88,7 +88,7 @@ theorem compactSpace_pts {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMul
     simp [h] at this
   have hS : IsCompact S := by
     apply Metric.isCompact_of_isClosed_isBounded
-    · simp only [S, Set.setOf_and, Set.setOf_forall]
+    · simp only [S, Set.ofPred_and, Set.ofPred_forall]
       refine IsClosed.inter (isClosed_iInter fun k => isClosed_eq (by fun_prop) continuous_const)
         (isClosed_iInter fun f => isClosed_iInter fun _ =>
           isClosed_eq (MvPolynomial.continuous_eval f) continuous_const)
@@ -130,7 +130,7 @@ theorem isOpen_alt_bis (p : (k : K) → ι k) : IsOpen (src P p) := by
   have : src P p = ⋂ k, {x : Pts P | x.1 ⟨k, (p k, p k)⟩ ≠ 0} := by
     ext x; simp [mem_src_iff]
   rw [this]
-  exact isOpen_iInter_of_finite fun k => isOpen_ne_fun ((continuous_apply _).comp continuous_subtype_val) continuous_const
+  exact isOpen_iInter_of_finite fun k => isOpen_ne_fun ((continuous_apply _).comp continuous_subtypeVal) continuous_const
 
 theorem affCoord_rep (p : (k : K) → ι k) (x : Pts P) (hx : x ∈ src P p) (q : Σ k, ι k) :
     affCoord p (rep x) q = x.1 ⟨q.1, (q.2, p q.1)⟩ / x.1 ⟨q.1, (p q.1, p q.1)⟩ := by
@@ -155,14 +155,14 @@ theorem isEmbedding_affCoord (p : (k : K) → ι k) :
     refine continuous_pi fun q => ?_
     simp only [affCoord_rep p _ (Subtype.prop _)]
     have hv : ∀ r : (Σ k, ι k × ι k), Continuous fun a : src P p => a.1.1 r := fun r =>
-      (continuous_apply r).comp (continuous_subtype_val.comp continuous_subtype_val)
+      (continuous_apply r).comp (continuous_subtypeVal.comp continuous_subtypeVal)
     exact Continuous.div (hv _) (hv _) fun x => (mem_src_iff p x.1).1 x.2 q.1
   let U : Set ((Σ k, ι k) → ℂ) := {z | ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0}
   have hU : ∀ x : src P p, affCoord p (rep x.1) ∈ U := fun x k =>
     ⟨p k, by simpa [affCoord] using x.2 k⟩
   let f : src P p → U := fun x => ⟨_, hU x⟩
   have hf : Continuous f := hc.subtype_mk _
-  have hg : Continuous (U.restrict proj) := continuousOn_proj.restrict
+  have hg : Continuous (U.restrict proj) := continuousOn_proj.domRestrict
   have hgf : U.restrict proj ∘ f = Subtype.val ∘ Subtype.val := by
     funext x; exact proj_affCoord p x.1 x.2
   have he : Topology.IsEmbedding f :=

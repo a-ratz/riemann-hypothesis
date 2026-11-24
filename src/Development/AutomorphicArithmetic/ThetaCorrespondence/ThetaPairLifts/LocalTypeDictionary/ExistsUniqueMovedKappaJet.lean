@@ -178,8 +178,8 @@ theorem applyAt0_monomial' (D : D7) {N N' : ℕ} (α : Mono D N N') (G : VC D N 
       = (α.prod fun _ n => (n.factorial : ℂ)) * Formalism.MainNotions.TaylorLogMetric.taylor D G α := by
   classical
   unfold Formalism.MainNotions.GL3Theta.applyAt0
-  rw [MvPolynomial.support_monomial, if_neg one_ne_zero, Finset.sum_singleton, MvPolynomial.coeff_monomial,
-    if_pos rfl, one_mul]
+  rw [MvPolynomial.support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton, MvPolynomial.coeff_monomial,
+    ite_eq_left rfl, one_mul]
 
 theorem unitAt_mul {q : ℕ} [Fact q.Prime] {a b : ℂ} (ha : Mod1All a) (hb : Mod1All b) (hua : UnitAt q a)
     (hub : UnitAt q b) : UnitAt q (a * b) := by
@@ -434,7 +434,7 @@ private theorem mem_globLat_mul {F E : Type} [Field F] [NumberField F] [Field E]
     rw [hg]
     exact RingHom.map_mulVec _ _ _ i
   unfold Formalism.UG.CS.globLat
-  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
+  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
   rw [e, _root_.mul_inv_rev, Matrix.mulVec_mulVec, Units.val_mul, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
 private theorem latAt_rat {T : Type} {L : LevCh D T} {sc : Consts} {G : GlobalTheory.ChiGrid.GridData L sc} {W : G.Weil}
     (S : GridChoice W Set.univ) (X : Node) (r : FinPt G X) (U : Matrix.unitaryGroup (Fin (G.V X).rank) D.host.E)
@@ -1230,7 +1230,7 @@ theorem pullB_move (hC : Crv D cc δ) {r : ℕ} (b : Fin r → Matrix (Fin N') (
   rw [symm_emb, one_smul, one_smul] at h
   have ha : ((area (tor0 D cc δ).abelian₂ : ℝ) : ℂ) ≠ 0 :=
     Complex.ofReal_ne_zero.2 (GlobalTheory.UnitaryTheta.area_pos D cc δ hC).ne'
-  exact ((div_left_inj' ha).1 h).symm
+  exact ((div_left_inj₀ ha).1 h).symm
 
 theorem iop_move (hI : GlobalTheory.NormSum.Inp D) {t0 : ℂ} (hC : Crv D cc δ) (ht : GL3Theta.IsTwoTorsionPointUnkilled D (lamOf D cc δ) t0)
     {e0 : VC D N N' → ℂ} (hE : ThetaVectorUpToUnits D (tor0 D cc δ) t0 (stdL D N) (stdL D N') e0)
@@ -1500,9 +1500,9 @@ private theorem isOpen_principal_level_subgroup {D : D7} (T : HSp D) {N : ℕ} (
     IsOpen (((GlobalTheory.Member.PrincLevel.levelGroup T N).subgroupOf (GfC T) : Subgroup (GfC T)) : Set (GfC T)) := by
   let F : GfC T → Formalism.IndefR.Bridge.Gf T := fun x => (finHom T).rangeRestrict x.1
   have hG : Continuous fun x : GfC T => (finHom T x.1 : GL (Fin T.rank) (Formalism.L2.Herm.Af D.host.F ⊗[D.host.F] D.host.E)) := by
-    refine Units.continuous_iff.2 ⟨(GlobalTheory.Member.continuous_finHom_val D T).comp continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨(GlobalTheory.Member.continuous_finHom_val D T).comp continuous_subtypeVal, ?_⟩
     have h := ((GlobalTheory.Member.continuous_finHom_val D T).comp continuous_inv).comp
-      (continuous_subtype_val (p := fun x => x ∈ GfC T))
+      (continuous_subtypeVal (p := fun x => x ∈ GfC T))
     refine h.congr fun x => ?_
     simp [Function.comp_def, map_inv]
   have hF : Continuous F := hG.subtype_mk _
@@ -1527,17 +1527,17 @@ private theorem isOpen_principal_level_subgroup {D : D7} (T : HSp D) {N : ℕ} (
 private theorem exists_pow_mem_open_subgroup {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (H K U : Subgroup G)
     (hKH : K ≤ H) (hK : IsCompact (K : Set G)) (hU : IsOpen ((U.subgroupOf H : Subgroup H) : Set H)) {k : G} (hk : k ∈ K) :
     ∃ m : ℕ, 0 < m ∧ k ^ m ∈ U := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have ho : IsOpen ((U.subgroupOf K : Subgroup K) : Set K) := by
     have hc : Continuous (Subgroup.inclusion hKH) := continuous_inclusion hKH
     exact hU.preimage hc
-  haveI := Subgroup.quotient_finite_of_isOpen _ ho
+  have := Subgroup.quotient_finite_of_isOpen _ ho
   obtain ⟨m, hm, -, h⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
     (H := U.subgroupOf K) Subgroup.index_ne_zero_of_finite ⟨k, hk⟩
   exact ⟨m, hm, h⟩
 private theorem selfDual_full {D : D7} (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
     (hΛ : IsSelfDualC V Λ) : Submodule.IsFullLattice D.host.E Λ := by
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr

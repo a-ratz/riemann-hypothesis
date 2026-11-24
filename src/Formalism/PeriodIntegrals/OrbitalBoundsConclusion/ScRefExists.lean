@@ -175,14 +175,14 @@ private theorem algebraMapSubmonoid_primeCompl_le_nonZeroDivisors (p : ℕ) [Fac
   simpa using h2
 
 theorem isDedekind {p : ℕ} [Fact p.Prime] : IsDedekindDomain (Ap I p) := by
-  haveI := isLoc I (p := p)
+  have := isLoc I (p := p)
   exact IsLocalization.isDedekindDomain (𝓞 I.E) (algebraMapSubmonoid_primeCompl_le_nonZeroDivisors I p) (Ap I p)
 
 theorem principal_ideal_ring_at_prime : ApPID := by
   intro I p hp
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI := isLoc I (p := p)
-  haveI := isDedekind I (p := p)
+  have : Fact p.Prime := ⟨hp⟩
+  have := isLoc I (p := p)
+  have := isDedekind I (p := p)
   exact IsDedekindDomain.isPrincipalIdealRing_localization_over_prime (𝓞 I.E) (Pz p) (pz_ne_bot hp)
 
 end PI.ScRefExists.ApP
@@ -730,7 +730,7 @@ theorem span_Ap_le {p : ℕ} (s : Set (Fin I.n → I.E)) {x : Fin I.n → I.E}
 theorem WA_finite {p r : ℕ} (e f : Fin r → Fin I.n → I.E) [IsPrincipalIdealRing (Ap I p)] :
     Module.Finite (Ap I p) (WA I p r e f) := by
   have hle : WA I p r e f ≤ LA I p := fun x hx => (mem_WA I).mp hx |>.1
-  haveI : IsNoetherian (Ap I p) (LA I p) := isNoetherian_of_fg_of_noetherian _ (LA_fg I p)
+  have : IsNoetherian (Ap I p) (LA I p) := isNoetherian_of_fg_of_noetherian _ (LA_fg I p)
   have hfg : ((WA I p r e f).comap (LA I p).subtype).FG := IsNoetherian.noetherian _
   have hmap : ((WA I p r e f).comap (LA I p).subtype).map (LA I p).subtype = WA I p r e f := by
     rw [Submodule.map_comap_subtype, inf_eq_right.mpr hle]
@@ -739,13 +739,13 @@ theorem WA_finite {p r : ℕ} (e f : Fin r → Fin I.n → I.E) [IsPrincipalIdea
 
 theorem weil_basis_existence : WBasis := by
   intro I p r k e f M hp hPID hn hee hff hef hM hMe
-  haveI := hPID
+  have := hPID
   have hfe : ∀ a b, hG I (f a) (e b) = if a = b then 1 else 0 := by
     intro a b
     rw [hG_symm, hef]
     by_cases h : b = a
     · subst h; simp
-    · rw [if_neg h, if_neg (Ne.symm h), star_zero]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h), star_zero]
   let φ : (Fin I.n → I.E) →ₗ[I.E] (Fin r → I.E) × (Fin r → I.E) :=
     { toFun := fun x => (fun a => hG I (e a) x, fun a => hG I (f a) x)
       map_add' := fun x y => by
@@ -776,9 +776,9 @@ theorem weil_basis_existence : WBasis := by
     rcases smul_eq_zero.1 h2 with h3 | h3
     · left; exact Subtype.ext h3
     · right; exact Subtype.ext h3
-  haveI := hNZ
-  haveI := WA_finite I (p := p) e f
-  haveI : Module.Free (Ap I p) (WA I p r e f) := Module.free_of_finite_type_torsion_free'
+  have := hNZ
+  have := WA_finite I (p := p) e f
+  have : Module.Free (Ap I p) (WA I p r e f) := Module.free_of_finite_type_torsion_free'
   have hLI : ∀ {ι : Type} [Fintype ι] (bb : Module.Basis ι (Ap I p) (WA I p r e f)),
       LinearIndependent I.E (fun j => ((bb j : WA I p r e f) : Fin I.n → I.E)) := by
     intro ι _ bb

@@ -57,7 +57,7 @@ private theorem sp_subsingleton (Ω : Type) [Field Ω] : Subsingleton ↑(UpperT
 private theorem exists_factor_ι {J : Type} {W : Scheme.{0}} (Ω : Type) [Field Ω]
     (u : UpperTheory.Gal.G3.sp Ω ⟶ ∐ (fun _ : J => W)) :
     ∃ (j : J) (x : UpperTheory.Gal.G3.sp Ω ⟶ W), x ≫ Sigma.ι (fun _ : J => W) j = u := by
-  haveI := sp_subsingleton Ω
+  have := sp_subsingleton Ω
   have p : ↑(UpperTheory.Gal.G3.sp Ω) := show PrimeSpectrum Ω from ⟨⊥, Ideal.isPrime_bot⟩
   obtain ⟨⟨j, y⟩, hq⟩ : ∃ q, (sigmaMk (fun _ : J => W)).symm (u p) = q := ⟨_, rfl⟩
   have hy : Sigma.ι (fun _ : J => W) j y = u p := by
@@ -79,12 +79,12 @@ theorem UpperTheory.Gal.G3.pPtsOfSplits :
     PtsOfSplits := by
   intro Z Y W s c J σ hs Ω _ x y hxy
   obtain ⟨hσ, hiso⟩ := hs
-  haveI := hiso
+  have := hiso
   let e := Limits.Sigma.desc (fun j : J =>
     pullback.lift (σ j) (𝟙 W) (by rw [Category.id_comp]; exact hσ j))
   have hι : ∀ j, Sigma.ι (fun _ : J => W) j ≫ e =
       pullback.lift (σ j) (𝟙 W) (by rw [Category.id_comp]; exact hσ j) :=
-    fun j => Sigma.ι_desc _ _
+    fun j => Sigma.ι_comp_desc _ _
   obtain ⟨j, x', hx'⟩ := exists_factor_ι Ω (pullback.lift y x hxy ≫ inv e)
   have h1 : x' ≫ Sigma.ι (fun _ : J => W) j ≫ e = pullback.lift y x hxy := by
     rw [← Category.assoc, hx', Category.assoc, IsIso.inv_hom_id, Category.comp_id]

@@ -125,7 +125,7 @@ theorem UpperTheory.V.Af.csdOf :
     UpperTheory.V.Af.HypothesesH → UpperTheory.V.Af.CsdOf := by
   intro hP F₀ F Ω _ _ _ _ _ _ _ _ _ _ _ _ l _ ι n hn r c P hc haut hpair
   obtain ⟨π, hreg, hatt⟩ := ((UpperTheory.V.Af.autBridge hP F Ω l ι n r).2.1).1 haut
-  haveI : IsAlgClosure (maximalRealSubfield F) Ω :=
+  have : IsAlgClosure (maximalRealSubfield F) Ω :=
     ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans (maximalRealSubfield F) F Ω⟩
   obtain ⟨art, hart⟩ : ∃ art : Neutral.B1.Ideles (maximalRealSubfield F) →* Gab (maximalRealSubfield F) Ω,
       IsGlobalArtin art := hP.toClassicalTheorems.litN.aut.art _ Ω
@@ -207,7 +207,7 @@ private theorem cls_frob {A : ValuationSubring Ω} {q N : ℕ} [NeZero N] (hq : 
 
 private theorem cyc_frob {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {q : ℕ} (hp : q.Prime) (hq : A.valuation (q : Ω) < 1)
     (h : q.Coprime l) {t : G ℚ Ω} (ht : IsFrob (F := ℚ) A q t) : ((cycBar ℚ Ω l t : (Qbar l)ˣ) : Qbar l) = q := by
-  haveI : Fact q.Prime := ⟨hp⟩
+  have : Fact q.Prime := ⟨hp⟩
   obtain ⟨v, hv⟩ := (places ℚ Ω q A).1 fun hA => ((places ℚ Ω q A).2.1 hA).2 hq
   have hl : ((l : ℕ) : 𝓞 ℚ) ∉ v.asIdeal := fun hm =>
     not_lt_of_coprime A hq h (((places ℚ Ω l A).2.2.1 v hv).2 hm)
@@ -218,7 +218,7 @@ private theorem cyc_frob {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} {q :
 
 private theorem continuous_cyc (l : ℕ) [Fact l.Prime] :
     Continuous fun t : G ℚ Ω => ((cycBar ℚ Ω l t : (Qbar l)ˣ) : Qbar l) :=
-  ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val).comp
+  ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal).comp
     ((Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ ℚ Ω l))
 
 variable (K : Type) [Field K] [NumberField K] [Algebra K Ω]
@@ -252,11 +252,11 @@ private theorem exists_chi [IsAlgClosure K Ω] (hK : Module.finrank ℚ K = 2) (
   let δ : G ℚ Ω →* ℂˣ := MonoidHom.mk' (fun s => if s ∈ galOf ℚ K Ω then 1 else -1) fun a b => by
     by_cases ha : a ∈ galOf ℚ K Ω <;> by_cases hb : b ∈ galOf ℚ K Ω <;>
       simp [Subgroup.mul_mem_iff_of_index_two hi, ha, hb]
-  have hδ : (Chr.cls ℚ Ω N).ker ≤ δ.ker := fun s hs => if_pos (hker hs)
+  have hδ : (Chr.cls ℚ Ω N).ker ≤ δ.ker := fun s hs => ite_eq_left (hker hs)
   have hs := (Chr.clsOnto Ω N).1
   have e : ∀ t, (Chr.cls ℚ Ω N).liftOfSurjective hs ⟨δ, hδ⟩ (Chr.cls ℚ Ω N t) = δ t := fun t =>
     MonoidHom.liftOfRightInverse_comp_apply _ _ _ _ t
-  refine ⟨hker, (Chr.cls ℚ Ω N).liftOfSurjective hs ⟨δ, hδ⟩, MonoidHom.ext fun u => ?_, fun t ht => (e t).trans (if_neg ht)⟩
+  refine ⟨hker, (Chr.cls ℚ Ω N).liftOfSurjective hs ⟨δ, hδ⟩, MonoidHom.ext fun u => ?_, fun t ht => (e t).trans (ite_eq_right ht)⟩
   obtain ⟨t, rfl⟩ := hs u
   rw [MonoidHom.pow_apply, e]
   change (if t ∈ galOf ℚ K Ω then (1 : ℂˣ) else -1) ^ 2 = 1
@@ -294,14 +294,14 @@ open UpperTheory.V.Sd.Tw in
 theorem UpperTheory.V.Sd.twist :
     UpperTheory.V.Af.Hypotheses₂ → UpperTheory.V.Sd.Twist := by
   intro hP K Ω _ _ _ _ _ _ _ hK l hl hl2 hld ι c hc
-  haveI : IsAlgClosure K Ω :=
+  have : IsAlgClosure K Ω :=
     ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   set N := (discr K).natAbs with hN
   have hN3 : 3 ≤ N := by
     have := abs_discr_gt_two (K := K) (by omega)
     rw [Int.abs_eq_natAbs] at this
     omega
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   obtain ⟨hker, χ, hχ2, hχ⟩ := exists_chi (Ω := Ω) K hK N hN
   have hχ1 : χ (-1) = -1 := by
     rw [← (Chr.clsFacts ℚ Ω N).2.2.2.1 c hc]
@@ -379,7 +379,7 @@ private theorem charpoly_flag' {H k : Type} [Group H] [CommRing k] {n : ℕ} (r 
   have h1 := Matrix.charpoly_units_conj g (Pr.gm r s)
   have h2 : ((g * r s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular id :=
     fun i j hij => (hg s).1 i j hij
-  have h3 := Matrix.charpoly_of_upperTriangular _ h2
+  have h3 := charpoly_of_isUpperTriangular _ h2
   rw [← h1]
   simp only [Units.val_mul, Matrix.coe_units_inv] at h3
   rw [h3]
@@ -397,8 +397,8 @@ theorem UpperTheory.V.Th.nice0small :
     · exact Nat.prime_three
   have h3 : n ≤ 3 := by omega
   obtain ⟨-, A, _, j, φ, hj, hred, hlift⟩ := Th.Det.redB x ρ hA.rep
-  haveI : V.frame.G'.Normal := MonoidHom.normal_ker _
-  haveI : CompactSpace V.frame.G₀ :=
+  have : V.frame.G'.Normal := MonoidHom.normal_ker _
+  have : CompactSpace V.frame.G₀ :=
     isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ V.frame.η_open).isCompact
   have key := Th.Det.irrSmall hp V.frame.G' ρ j φ r.chib (V.frame.φ v) (x.psi v) (r.psib v) hirr hj hred
     (hA.flag v) (hlift v) (hfree v) hne
@@ -434,7 +434,7 @@ private theorem ap_field {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [Algeb
     (φ : R →ₐ[ℤ_[l]] PadicAlgCl l) :
     ∃ E : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] E ∧ ∀ x, φ x ∈ E ∧ ‖φ x‖ ≤ 1 := by
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := ℤ_[l]) (M := R)
-  haveI := (s.finite_toSet.image φ).to_subtype
+  have := (s.finite_toSet.image φ).to_subtype
   refine ⟨IntermediateField.adjoin ℚ_[l] (φ '' (s : Set R)),
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x, fun x =>
     ⟨?_, ap_norm _ ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) x).map φ)⟩⟩
@@ -449,7 +449,7 @@ private theorem ap_field {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [Algeb
 
 private theorem ap_coef {l : ℕ} [Fact l.Prime] (c c₁ : Coef l) (A : Subalgebra c.O (PadicAlgCl l)) [Module.Finite c.O A] :
     ∃ c₂ : Coef l, c₁.O ≤ c₂.O ∧ ∀ x ∈ A, x ∈ c₂.O := by
-  haveI : Module.Finite ℤ_[l] A := Module.Finite.trans c.O A
+  have : Module.Finite ℤ_[l] A := Module.Finite.trans c.O A
   obtain ⟨E₁, f₁, m₁⟩ := ap_field c₁.O.val
   obtain ⟨E₂, f₂, m₂⟩ := ap_field (A.val.restrictScalars ℤ_[l])
   obtain ⟨c₂, hc⟩ := UpperTheory.V.X.So.coefOf l (E₁ ⊔ E₂)
@@ -477,7 +477,7 @@ private theorem ap_det {n : ℕ} {A B G H : Type} [CommRing A] [CommRing B] [Gro
     (ρ : G →* Matrix (Fin n) (Fin n) A) (f : A →+* B) (p : H →* G) (τ : H →* Matrix (Fin n) (Fin n) B)
     (h : ∀ g, τ g = (ρ (p g)).map f) : ((W.GDet.ofRep ρ).map f).comap p = W.GDet.ofRep τ := by
   refine W.GDet.ext fun C _ _ x => ?_
-  letI : Algebra A C := ((algebraMap B C).comp f).toAlgebra
+  let : Algebra A C := ((algebraMap B C).comp f).toAlgebra
   change (W.GDet.repAlg ρ C (MonoidAlgebra.mapDomainRingHom C p x)).det = (W.GDet.repAlg τ C x).det
   congr 1
   induction x using MonoidAlgebra.induction_linear with
@@ -505,7 +505,7 @@ private theorem ap_locAlg (hG : GlobalTheory.Published.GlobalArtinReciprocity) {
   have h2 := (Loc.laMul h).2.1 _ _ _ m (Loc.laCyc hG h hw)
   have h3 := (Loc.laMul h).2.2 (χ.comp (Dec (F := L) A).subtype) (χ.comp (Ine (F := L) A).subtype)⁻¹
     (Subgroup.isOpen_mono (H₁ := χ.ker.comap (Ine (F := L) A).subtype) (fun x hx => inv_eq_one.2 hx)
-      (hχ.preimage continuous_subtype_val)) fun s => mul_inv_cancel _
+      (hχ.preimage continuous_subtypeVal)) fun s => mul_inv_cancel _
   have h4 := ((Loc.laMul h).1 _ _ _ _ _ _ ((Loc.laMul h).1 _ _ _ _ _ _ h2 h3).1 h1).1
   refine ⟨_, h4.1, fun b hb s => ?_⟩
   have h5 := h4.2 b hb s
@@ -679,8 +679,8 @@ private theorem rp_cont {l : ℕ} [Fact l.Prime] {c₁ c₂ : Coef l}
     Continuous (K.tw (ρ.map j)).toHomUnits := by
   have h1 : Continuous (K.tw (ρ.map j)) := by
     refine continuous_matrix fun a b => ?_
-    have h2 := continuous_subtype_val.comp (((X.So.adicCont l c₁).2 _ _).1 K.κ_cont)
-    have h3 := (continuous_subtype_val.comp (((X.So.adicCont l c₂).2 _ _).1 (h.1 a b))).comp K.π_cont
+    have h2 := continuous_subtypeVal.comp (((X.So.adicCont l c₁).2 _ _).1 K.κ_cont)
+    have h3 := (continuous_subtypeVal.comp (((X.So.adicCont l c₂).2 _ _).1 (h.1 a b))).comp K.π_cont
     convert h2.mul h3 using 1
     funext g
     exact congrArg (_ * ·) (hj _)
@@ -739,12 +739,12 @@ theorem UpperTheory.V.Th.rigPtOf :
     GlobalTheory.Published.GlobalArtinReciprocity → AdL → RigPtOf := by
   intro hG hAd Ω _ _ _ l _ ι c _ N _ e ψ η σ g₁ B M H L _ _ _ _ _ Φ k c₁ _ f n ka R hL hka A _ _ _ ρ hρ hψ r hr hirr haut hfree
   obtain ⟨c₂, h₁, h₂⟩ := ap_coef c c₁ A
-  letI : Algebra c₁.O c₂.O := (Subalgebra.inclusion h₁).toRingHom.toAlgebra
+  let : Algebra c₁.O c₂.O := (Subalgebra.inclusion h₁).toRingHom.toAlgebra
   let φ : A →+* c₂.O := A.val.toRingHom.codRestrict c₂.O fun x => h₂ x.1 x.2
-  haveI : IsLocalHom φ := ap_local c₂ φ (fun a => rfl) fun a b h => Subtype.ext (congrArg (fun t : c₂.O => t.1) h)
-  haveI hl : IsLocalHom (algebraMap c₁.O c₂.O) := ap_local c₂ _ (fun a => rfl) (Subalgebra.inclusion_injective h₁)
+  have : IsLocalHom φ := ap_local c₂ φ (fun a => rfl) fun a b h => Subtype.ext (congrArg (fun t : c₂.O => t.1) h)
+  have hl : IsLocalHom (algebraMap c₁.O c₂.O) := ap_local c₂ _ (fun a => rfl) (Subalgebra.inclusion_injective h₁)
   obtain ⟨hc, hf, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c₂.O
-  haveI : IsCD c₁.O c₂.O := { complete := hc, isLocalHom := hl, fin := hf }
+  have : IsCD c₁.O c₂.O := { complete := hc, isLocalHom := hl, fin := hf }
   let j : c₂.O →ₐ[c₁.O] Qbar l := { c₂.O.val.toRingHom with commutes' := fun _ => rfl }
   let ρ₂ : Fr.NRep (Φ.ext f) n c₂.O := apExt f (ρ.map φ)
   have hlift : IsLiftA c₁.O ρ₂ := ap_lift f φ (fun a => by
@@ -864,12 +864,12 @@ theorem UpperTheory.V.Th.linkedRig :
     ext s
     rw [MonoidHom.mem_ker, MonoidHom.mem_ker, ← Units.val_eq_one, ← Units.val_eq_one, hη s]
     exact_mod_cast Iff.rfl
-  haveI := hD.imag
+  have := hD.imag
   obtain ⟨κ, hκ⟩ := Sd.twist hP K Ω hD.quad l hok.l_odd hdisc ι σ hD.cc
   obtain ⟨hk3, hk2⟩ := Pr.kaOf (Sd.algCyc hP) (Sd.algRes hP) Ω l ι c N e ψ η σ g₁ B M H L Φ k
   obtain ⟨ka, hk2, -⟩ := hk2 K hker κ hκ
   obtain ⟨c₁, hle, hL, hv3, hv2, f, hf⟩ := Pr.coefEx l c L Ω _ _ hk3.alg.1 hk2.alg.1
-  haveI := Pr.coefIs l c₁
+  have := Pr.coefIs l c₁
   obtain ⟨R₂⟩ := Pr.cRealEx hA hLoc W.levEx hB0 Ω l ι c N e ψ η σ g₁ B M H L Φ k c₁ f 2 ka C₀ (Or.inl rfl)
     hok hbig hle hf hk2 hv2
   obtain ⟨R₃⟩ := Pr.cRealEx hA hLoc W.levEx hB0 Ω l ι c N e ψ η σ g₁ B M H L Φ k c₁ f 3 _ C₀ (Or.inr rfl)
@@ -924,7 +924,7 @@ theorem algClo (L Ω : Type) [Field L] [CharZero L] [Field Ω] [CharZero Ω] [Is
 theorem cyc_cont (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] (l : ℕ) [Fact l.Prime] :
     Continuous (cycBar F Ω l) :=
   (Continuous.units_map _ (show Continuous (fun x : ℤ_[l] => algebraMap ℚ_[l] (Qbar l) (x : ℚ_[l])) from
-    (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ F Ω l)
+    (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ F Ω l)
 
 private theorem cyc_conj {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime]
     {c c' : G F Ω} (h : Af.IsConjEl c) (h' : Af.IsConjEl c') : cycBar F Ω l c = cycBar F Ω l c' := by
@@ -939,9 +939,9 @@ theorem upCsd (hP : Af.HypothesesH) (K L Ω : Type) [Field K] [NumberField K] [I
     (hPr : Sd.IsPair σ r (cycBar K Ω l ^ (1 - (n : ℤ))) P) (hirr : Af.IsIrr (r.comp (galEmb K L Ω)))
     (haut : Af.IsAut ι r) : Af.IsAutCsd ι (r.comp (galEmb K L Ω)) := by
   obtain ⟨j, hj⟩ := hσ
-  haveI : IsAlgClosure K Ω := algClo K Ω
-  haveI : IsAlgClosure L Ω := algClo L Ω
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω := algClo (maximalRealSubfield K) Ω
+  have : IsAlgClosure K Ω := algClo K Ω
+  have : IsAlgClosure L Ω := algClo L Ω
+  have : IsAlgClosure (maximalRealSubfield K) Ω := algClo (maximalRealSubfield K) Ω
   let c : G (maximalRealSubfield K) Ω := AlgEquiv.ofRingEquiv (f := σ.toRingEquiv) fun x => by
     apply j.injective
     refine (hj _).trans ?_
@@ -1007,7 +1007,7 @@ theorem h1fZero_conjBy {l : ℕ} [Fact l.Prime] {F Ω : Type} [Field F] [NumberF
   have hf : ∀ X, f X = GG.ad m (PadicAlgCl l) (GG.ofGL h) X := fun X => rfl
   refine h1fZero_equiv _ _ f ?_ (fun g X => ?_) H
   · have : (f : _ → _) = fun X => h.val * X * (h⁻¹).val := funext fun X => by
-      rw [hf, GG.ad_apply, GG.adFun, if_pos (by rfl)]
+      rw [hf, GG.ad_apply, GG.adFun, ite_eq_left (by rfl)]
       rfl
     rw [this]
     fun_prop
@@ -1162,7 +1162,7 @@ theorem sub_facts {l : ℕ} [Fact l.Prime] (c : Coef l) (A : Subalgebra c.O (Pad
         Continuous fun g => (f g : PadicAlgCl l) := by
   let c' : Coef l := ⟨A.restrictScalars ℤ_[l], ‹IsDiscreteValuationRing A›,
     (Module.Finite.trans (R := ℤ_[l]) c.O A :)⟩
-  haveI := (abelian₂.dvr_finite l c.O).1
+  have := (abelian₂.dvr_finite l c.O).1
   refine ⟨AlgebraTools.Conn.cplFinite (A := c.O) _ (maximalIdeal.isMaximal A).ne_top, Db.locHom c A, fun Γ _ f hf => ((UpperTheory.integrality_of_norm_coefficients l).2 c' Γ f).1 hf⟩
 
 theorem matIrr_conj {Γ k : Type} [Group Γ] [Field k] {n : ℕ} {U : Subgroup Γ} {a a' : Γ → Matrix (Fin n) (Fin n) k}
@@ -1220,7 +1220,7 @@ private theorem aut_up (hH : Af.HypothesesH) (hab : IsAbelianGalois ℚ L) (ι :
     (haut : Af.IsAutCsd ι (Af.tw ρ₀ (cycBar K Ω l)⁻¹)) :
     Af.IsAutCsd ι (Af.tw (ρ.comp (galEmb K L Ω)) (cycBar L Ω l)⁻¹) := by
   obtain ⟨_, hsol⟩ := Db.galKL K L hab
-  haveI : Group.IsSolvable (L ≃ₐ[K] L) := hsol
+  have : Group.IsSolvable (L ≃ₐ[K] L) := hsol
   obtain ⟨h', hiso⟩ := hiso
   have et : Af.tw (ρ.comp (galEmb K L Ω)) (cycBar L Ω l)⁻¹ = (Af.tw ρ (cycBar K Ω l)⁻¹).comp (galEmb K L Ω) :=
     MonoidHom.ext fun s => Units.ext <| by
@@ -1254,11 +1254,11 @@ private theorem ad_down [IsAlgClosure L Ω] (hK2 : Module.finrank ℚ K = 2) (h�
   · rw [MonoidHom.one_apply, Units.val_one, one_smul]
     exact pair_of hρ hK hc hatc s s' hs
   · show (R (galEmb ℚ K Ω s)).adFun X = _
-    rw [GG.adFun, if_pos (hK s), hρ]
+    rw [GG.adFun, ite_eq_left (hK s), hρ]
     rfl
   · have hl1 : (R σ).left = 1 := Units.ext hatc
     show (R σ).adFun X = _
-    rw [GG.adFun, hc, if_neg (by decide), hatc, hl1, inv_one, Units.val_one, Matrix.one_mul, Matrix.mul_one]
+    rw [GG.adFun, hc, ite_eq_right (by decide), hatc, hl1, inv_one, Units.val_one, Matrix.one_mul, Matrix.mul_one]
     rfl
   · obtain rfl : galEmb K L Ω g = t := AlgEquiv.ext fun x => DFunLike.congr_fun ht x
     exact t1 g
@@ -1278,8 +1278,8 @@ theorem UpperTheory.V.Th.rigEnd3 :
     Af.HypothesesH → AdL → RigEnd3 := by
   intro hH hAd Ω _ _ _ l _ ι c _ N _ e ψ η σ g₁ B M H hΨ hF A _ _ r hr hirr K _ _ _ _ hK2 hker ρ hρ haut hfree
   obtain ⟨L, _, _, _, _, g₂, Φ, C₀, ⟨k⟩, hok, hbig, hseed⟩ := hF
-  haveI := algClo K Ω
-  haveI := algClo L Ω
+  have := algClo K Ω
+  have := algClo L Ω
   obtain ⟨hcpl, hloc, hcont⟩ := sub_facts c A
   have hl : l ∣ M := (dvd_mul_right l N).trans H.dvd
   have hσ : σ * σ = 1 := Db.cc_sq H.cc
@@ -1329,7 +1329,7 @@ theorem UpperTheory.V.Th.rigEnd3 :
     rfl
   have n5 : ∀ v i, ∀ g ∈ Φ.Iv v, (ν.ψ v i g).val =
       algebraMap c.O A (Chr.Psi l e (Chr.dirG ℚ Ω ψ) (k.j v g) ^ Fr.w 3 i).val := fun v i g hg => by
-    rw [n3 v i g hg, Fr.w, if_pos rfl]
+    rw [n3 v i g hg, Fr.w, ite_eq_left rfl]
     rfl
   exact ad_down hK2 H.cc hρ' hK hc hatc hρc
     (key A ν n1 n5 _ n4 (isIrr_of_matIrr _ hiL) hautL (freeAt_res (freeAt_iso hfree ⟨h', hiso⟩)))

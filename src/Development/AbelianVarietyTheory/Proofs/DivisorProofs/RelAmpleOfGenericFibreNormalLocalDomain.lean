@@ -88,8 +88,8 @@ theorem exists_sec_fibre {O K : Type} [CommRing O] [IsDomain O] [IsNoetherianRin
     (φ : A'.left ⟶ A.left) (hpb : IsPullback φ A'.hom A.hom (spMap (algebraMap O K))) (N : LB A.left)
     (hN : N.IsLB) (t : (N.pull φ).Sec) (ht : ∃ j, t.f j ≠ 0) (K' : Type) [Field K'] (y : Sp K' ⟶ Sp O) :
     ∃ (s : (N.pull (pullback.fst A.hom y)).Sec) (j : _), s.f j ≠ 0 := by
-  haveI := hA.proper
-  haveI := hA.smooth
+  have := hA.proper
+  have := hA.smooth
   obtain ⟨F⟩ := GlobalTheory.ProperFinite.nonempty_perf_of_isProper A.hom (pull_isLB hN (𝟙 A.left))
   have hinj : Function.Injective (algebraMap O K) := IsFractionRing.injective O K
   obtain ⟨v, hv0, hv⟩ := (GlobalTheory.GenericSection.exists_sec_iff F (algebraMap O K) hpb
@@ -112,7 +112,7 @@ theorem exists_sections_cube_cover {K : Type} [Field K] [IsAlgClosed K] (B : Ove
     (s : N.Sec) (hN : N.IsLB) (hs : ∃ j, s.f j ≠ 0) :
     ∃ (r : ℕ) (u : Fin r → (lbPow N 3).Sec), ⨆ i, Out.nonzeroLocus (u i) = ⊤ := by
   obtain ⟨j, hj⟩ := hs
-  haveI := hB.comm
+  have := hB.comm
   obtain ⟨t, ht⟩ := GlobalTheory.HkFam.cube_of_exists_relAmple hB hH hamp hN
   have := hB.smooth
   have := hB.proper
@@ -173,10 +173,10 @@ end Cube
 theorem relAmple_of_generic : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsLocalRing O] [IsNoetherianRing O] [IsIntegrallyClosed O] [Field K] [Algebra O K] [IsFractionRing O K] (A : Over (Sp O)) [GrpObj A] (A' : Over (Sp K)) [GrpObj A'] (φ : A'.left ⟶ A.left), IsAbelianScheme A → IsGrpPullback A' A (spMap (algebraMap O K)) φ → ∀ (M : LB A.left) (M' : LB A'.left), M.IsLB → M'.IsLB → LBIso M' (M.pull φ) → Out.RelAmple A' M' → Out.RelAmple A M := by
   intro O K _ _ _ _ _ _ _ _ A _ A' _ φ hA hpb M M' hM hM' e hamp
   obtain ⟨L, hL, hLa⟩ := exists_relAmple O A hA
-  haveI := hA.proper
-  haveI := hA.smooth
+  have := hA.proper
+  have := hA.smooth
   have hpb' : IsPullback φ A'.hom A.hom (spMap (algebraMap O K)) := hpb.1
-  haveI hA'p : IsProper A'.hom := MorphismProperty.of_isPullback hpb' hA.proper
+  have hA'p : IsProper A'.hom := MorphismProperty.of_isPullback hpb' hA.proper
   have hampφ : Out.RelAmple A' (M.pull φ) :=
     (GlobalTheory.relAmple_iff_isAmpleLB_of_isAffine A' (pull_isLB hM φ)).2
       ((GlobalTheory.isAmpleLB_congr hM' (pull_isLB hM φ) e).1 ((GlobalTheory.relAmple_iff_isAmpleLB_of_isAffine A' hM').1 hamp))

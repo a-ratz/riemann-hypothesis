@@ -591,10 +591,10 @@ theorem containsRayField_up {K L L' : Type} [Field K] [NumberField K] [Field L] 
     (φ : K →+* L) (τ : L →+* L') (n : ℕ) (h : GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField φ n) :
     GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField (τ.comp φ) n := by
   intro P hP
-  letI : Algebra L L' := τ.toAlgebra
+  let : Algebra L L' := τ.toAlgebra
   let Q : HeightOneSpectrum (𝓞 L) := P.under (𝓞 L)
   have hQ : Q.asIdeal = P.asIdeal.comap (RingOfIntegers.mapRingHom τ) := rfl
-  haveI hPo : P.asIdeal.LiesOver Q.asIdeal := ⟨rfl⟩
+  have hPo : P.asIdeal.LiesOver Q.asIdeal := ⟨rfl⟩
   have hn : ((n : ℕ) : 𝓞 L) ∉ Q.asIdeal := fun h' => hP (by
     rw [hQ, Ideal.mem_comap, map_natCast] at h'
     exact h')
@@ -661,7 +661,7 @@ theorem comap_eq_of_le_one_iff {K L : Type} [Field K] [NumberField K] [Field L] 
   have h1 : la.valuation L (φ y) ≠ 0 := by simpa using hy
   have h2 : p.valuation K y ≠ 0 := by simpa using hy
   have := h y⁻¹
-  rw [map_inv₀, map_inv₀, map_inv₀, inv_le_one₀ (zero_lt_iff.2 h1), inv_le_one₀ (zero_lt_iff.2 h2)] at this
+  rw [map_inv₀, map_inv₀, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 h1), inv_le_one₀ (pos_iff_ne_zero.2 h2)] at this
   rw [← not_le, ← not_le, this]
 
 variable {D : D7}
@@ -669,7 +669,7 @@ variable {D : D7}
 theorem containsRayField_of_rayIn {N : ℕ} {L : Type} [Field L] [NumberField L] (σ : L →+* ℂ) (h : RayIn D N σ.fieldRange) :
     ∃ φ : D.host.K →+* L, GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField φ N := by
   obtain ⟨H, _, _, _, i4, ⟨hun, -, hart⟩, jj, -, hv⟩ := h
-  haveI : IsGalois D.host.K H := i4.toIsGalois
+  have : IsGalois D.host.K H := i4.toIsGalois
   have hc : GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField (algebraMap D.host.K H) N :=
     GlobalTheory.FieldSize.RayNorm.containsRayField_of_ray (K := D.host.K) (L := H) N hun (fun I hI hc hχ => (hart I hI hc).1 hχ)
   let τ : H →+* L := (σ.rangeRestrictFieldEquiv.symm : σ.fieldRange →+* L).comp (jj.codRestrict σ.fieldRange hv)
@@ -856,8 +856,8 @@ theorem exists_cover_coprime (hRF : GlobalTheory.NT.RayField) (hT : LawsJ T) (ha
       rcases pDel_cases (D := D) (D.ntw.l i) with e | e <;> rw [e]
       · exact dvd_mul_right _ _
       · rw [mul_right_comm _ D.host.pde]; exact dvd_mul_right _ _) hN0 hNl
-  haveI : Normal ℚ L₀ := (i2 hgal).to_normal
-  haveI : ∀ PP : Pl D.host.E, Finite (kP PP) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot PP.asIdeal PP.ne_bot
+  have : Normal ℚ L₀ := (i2 hgal).to_normal
+  have : ∀ PP : Pl D.host.E, Finite (kP PP) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot PP.asIdeal PP.ne_bot
   have hord : ∀ {H : Type} [Group H] [Finite H] (f : H →* ℂˣ) (x : H), IsOfFinOrder ((f x : ℂˣ) : ℂ) := fun f x =>
     MonoidHom.isOfFinOrder ((Units.coeHom ℂ).comp f) (isOfFinOrder_of_finite x)
   obtain ⟨L, i3, i4, h5, h6, h7⟩ := exists_field_adjoin_roots (ρ.e i b).fieldRange
@@ -1011,7 +1011,7 @@ theorem placeIn_unique : ∀ (Λ : Subring ℂ) [IsDiscreteValuationRing Λ] (l 
         have hr0 : la.valuation L (algebraMap (𝓞 L) L r) ≠ 0 :=
           (Valuation.ne_zero_iff _).2 ((map_ne_zero_iff _ (IsFractionRing.injective (𝓞 L) L)).2 hr0')
         rw [map_inv₀] at h3
-        have := one_lt_inv_iff₀.2 ⟨zero_lt_iff.2 hr0, h5⟩
+        have := one_lt_inv_iff₀.2 ⟨pos_iff_ne_zero.2 hr0, h5⟩
         exact absurd h3 (not_le.2 this)
       have hEq : la.asIdeal = la'.asIdeal := la.isMaximal.eq_of_le la'.isPrime.ne_top hle
       exact HeightOneSpectrum.ext hEq.symm
@@ -1153,7 +1153,7 @@ theorem exists_sum_fibres {T : CoreJ D} {j : Fin D.R.m} {C : Cover T ((j : ℕ) 
   refine ⟨_, sum_mem_intForms' C _ _ _ _ fun a' => intForms_fibre hRF hT hU hray hu hQ a' _ _ _ (hφ (a - a')), fun g => ?_⟩
   change (∑ a', _ : GA D _ → ℂ) g = φ _ g
   rw [Finset.sum_apply, Finset.sum_eq_single (Multiplicative.toAdd (detChar _ (u.delQ Q) g))
-    (fun a' _ ha' => by rw [if_neg (Ne.symm ha'), zero_mul]) (fun h0 => absurd (Finset.mem_univ _) h0), if_pos rfl, one_mul]
+    (fun a' _ ha' => by rw [ite_eq_right (Ne.symm ha'), zero_mul]) (fun h0 => absurd (Finset.mem_univ _) h0), ite_eq_left rfl, one_mul]
 
 section Main
 
@@ -1197,7 +1197,7 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
   let Λ : Subring ℂ := (ρ.eO i b).range
   let eΛ : D.ntw.O i ≃+* Λ := RingEquiv.ofBijective (ρ.eO i b).rangeRestrict
     ⟨fun x y e => ρ.eO_injective i b (congrArg Subtype.val e), (ρ.eO i b).rangeRestrict_surjective⟩
-  haveI : IsDiscreteValuationRing Λ := IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing eΛ
+  have : IsDiscreteValuationRing Λ := IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing eΛ
   have hlu : ¬ IsUnit ((D.ntw.l i : ℕ) : Λ) := fun e => by
     have := e.map eΛ.symm
     rw [map_natCast] at this
@@ -1293,7 +1293,7 @@ theorem xi_int_of_ties (hRF : GlobalTheory.NT.RayField) (hSI : GlobalTheory.Inde
   have hk : ∀ {H : Type} [Group H] [Finite H] (f : H →* ℂˣ) (x : H), ((f x : ℂˣ) : ℂ) ∈ C.σ₂.fieldRange →
       ((f x : ℂˣ) : ℂ) ∈ k := fun {H} _ _ f x hx => ⟨hx, mem_of_pow_eq_one (m := Nat.card H) Nat.card_pos
     (by rw [← Units.val_pow_eq_pow_val, ← map_pow, pow_card_eq_one', map_one, Units.val_one]) (hΛ _ (hLe hx))⟩
-  haveI : ∀ PP : Pl D.host.E, Finite (kP PP) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot PP.asIdeal PP.ne_bot
+  have : ∀ PP : Pl D.host.E, Finite (kP PP) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot PP.asIdeal PP.ne_bot
 
   have hser : ∀ a', ∃ φ ∈ C.intForms (wtA (κ j)) (κ j).n {la}, castDict hV φ =
       (((D.ntw.l i : ℕ) : ℂ) ^ c₂ * (ph * c₀)) • series (ρ.B i j b).F (ρ.om i j b 1)

@@ -354,7 +354,7 @@ theorem hasFDerivAt_integrand {K : Mat n → (V →L[ℂ] V)} (hK : ContDiffOn �
 theorem hasFDerivAt_Lk [CompleteSpace V] (hL : LgFacts) {K : Mat n → (V →L[ℂ] V)} (hK : ContDiffOn ℝ ∞ K (GLs n))
     (hc : Cpt K) {f : Mat n → V} (hf : ContinuousOn f (GLs n)) {x₀ : Mat n} (hx₀ : x₀ ∈ GLs n) :
     HasFDerivAt (Lk μ K f) (∫ z, Dk K f x₀ z ∂μ) x₀ := by
-  haveI : ProperSpace (Mat n) := FiniteDimensional.proper ℝ (Mat n)
+  have : ProperSpace (Mat n) := FiniteDimensional.proper ℝ (Mat n)
   obtain ⟨r, hr, hB⟩ := Metric.nhds_basis_closedBall.mem_iff.1 (isOpen_GLs.mem_nhds hx₀)
   have hBc : IsCompact (Metric.closedBall x₀ r) := isCompact_closedBall x₀ r
   obtain ⟨R₀, hR₀⟩ := (hBc.image_of_continuousOn ((hL n).2.2.2.1.continuousOn.mono hB)).bddAbove
@@ -421,7 +421,7 @@ theorem Rel.add (hL : LgFacts) {f : Mat n → V} (hf : ContinuousOn f (GLs n))
     refine ⟨max R R', fun y hy hl => ?_⟩
     simp [hR y hy (lt_of_le_of_lt (le_max_left _ _) hl), hR' y hy (lt_of_le_of_lt (le_max_right _ _) hl)]
   · rw [Pi.add_apply, h.2.2 x hx, h'.2.2 x hx]
-    simp only [Lk, Pi.add_apply, ContinuousLinearMap.add_apply]
+    simp only [Lk, Pi.add_apply, add_apply]
     exact (integral_add (integrable_Lk μ hL h.1.continuousOn h.2.1 hf hx)
       (integrable_Lk μ hL h'.1.continuousOn h'.2.1 hf hx)).symm
 
@@ -431,7 +431,7 @@ theorem Rel.smul {f : Mat n → V} {K : Mat n → (V →L[ℂ] V)} {B : Mat n �
   · obtain ⟨R, hR⟩ := h.2.1
     exact ⟨R, fun y hy hl => by simp [hR y hy hl]⟩
   · rw [Pi.smul_apply, h.2.2 x hx]
-    simp only [Lk, Pi.smul_apply, ContinuousLinearMap.smul_apply]
+    simp only [Lk, Pi.smul_apply, smul_apply]
     exact (integral_smul c _).symm
 
 theorem Rel.sum (hL : LgFacts) {f : Mat n → V} (hf : ContinuousOn f (GLs n)) {ι : Type} (s : Finset ι)
@@ -525,7 +525,7 @@ theorem act_eq_Lk [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)
 
 theorem kerW : KerW := by
   rintro n _ _ μ _ E w g hL hU hR ⟨k₀, hs, ⟨R, hR0⟩, heq, hact⟩
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   have hKs : ContDiffOn ℝ ∞ (fun y : Mat n => k₀ y⁻¹) (GLs n) :=
     hs.comp GlobalTheory.CompanionTheory.LengthGL.contDiffOn_inv fun _ hy => inv_mem hy
   have hKc : Cpt (fun y : Mat n => k₀ y⁻¹) :=

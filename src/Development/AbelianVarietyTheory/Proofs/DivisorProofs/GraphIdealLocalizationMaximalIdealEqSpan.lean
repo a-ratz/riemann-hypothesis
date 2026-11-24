@@ -60,7 +60,7 @@ theorem ringHom_eq_of_trBasis {F κ D ι : Type} [Field F] [Field κ] [CharZero 
     (hc : ∀ a, α (algebraMap F κ a) = β (algebraMap F κ a)) (hzz : ∀ i, α (z i) = β (z i))
     (hm : ∀ x, ¬ IsUnit (α x - β x)) : α = β := by
   let F₀ := IntermediateField.adjoin F (Set.range z)
-  haveI : Algebra.IsAlgebraic F₀ κ := hz.isAlgebraic_field
+  have : Algebra.IsAlgebraic F₀ κ := hz.isAlgebraic_field
   have hle : F₀ ≤ (RingHom.eqLocusField α β).toIntermediateField hc := by
     refine IntermediateField.adjoin_le_iff.2 ?_
     rintro _ ⟨i, rfl⟩
@@ -84,10 +84,10 @@ theorem exists_extension {R κ k' : Type} [CommRing R] [Field κ] [Field k'] (π
     (r : R →+* k') (hker : ∀ a, π a = 0 ↔ r a = 0)
     (hfr : ∀ f : κ, ∃ a b : R, π b ≠ 0 ∧ f * π b = π a) :
     ∃ ι : κ →+* k', ∀ a, ι (π a) = r a := by
-  letI : Algebra (R ⧸ RingHom.ker π) κ := (RingHom.kerLift π).toAlgebra
-  haveI : FaithfulSMul (R ⧸ RingHom.ker π) κ :=
+  let : Algebra (R ⧸ RingHom.ker π) κ := (RingHom.kerLift π).toAlgebra
+  have : FaithfulSMul (R ⧸ RingHom.ker π) κ :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.kerLift_injective π)
-  haveI : IsFractionRing (R ⧸ RingHom.ker π) κ := by
+  have : IsFractionRing (R ⧸ RingHom.ker π) κ := by
     refine IsFractionRing.of_field _ _ fun f => ?_
     obtain ⟨a, b, hb, e⟩ := hfr f
     exact ⟨Ideal.Quotient.mk _ a, Ideal.Quotient.mk _ b, (eq_div_iff hb).2 e⟩
@@ -100,7 +100,7 @@ theorem exists_extension {R κ k' : Type} [CommRing R] [Field κ] [Field k'] (π
 
 theorem exists_mul_mem_radical {R : Type} [CommRing R] {I p : Ideal R} (hp : p ∈ I.minimalPrimes)
     {x : R} (hx : x ∈ p) : ∃ s, s ∉ p ∧ x * s ∈ I.radical := by
-  haveI := hp.isPrime
+  have := hp.isPrime
   have h := IsLocalization.AtPrime.radical_map_of_mem_minimalPrimes
     (A := Localization.AtPrime p) p I hp
   obtain ⟨n, hn⟩ : algebraMap R (Localization.AtPrime p) x ∈
@@ -161,7 +161,7 @@ theorem exists_tens_lift (E : Place (algebraMap ℂ K)) {T : Type} [CommRing T] 
     (v : κ' →+* T) (h : ∀ a, u (E.const a) = v (algebraMap ℂ κ' a)) :
     ∃ θ : tens (κ' := κ') (placeAlg E) →+* T,
       (∀ e, θ (inl κ' E e) = u e) ∧ ∀ b, θ (inr E b) = v b := by
-  letI : Algebra ℂ T := (v.comp (algebraMap ℂ κ')).toAlgebra
+  let : Algebra ℂ T := (v.comp (algebraMap ℂ κ')).toAlgebra
   let u' : placeAlg E →ₐ[ℂ] T :=
     { toFun := fun e => u ⟨e.1, e.2⟩
       map_one' := map_one u
@@ -203,7 +203,7 @@ theorem map_eq_zero_of_gens {k : ℕ} (R : Subring K) (π : R →+* κ) (ρ : κ
     {D : Type} [CommRing D] [IsLocalRing D] (μ : tens (κ' := κ') (placeAlg E) →+* D)
     (hμ : ∀ b, IsUnit (μ b) ↔ b ∉ 𝔭) (hg : ∀ i, μ (gens E R π ρ hER t zR i) = 0) :
     ∀ b ∈ 𝔭, μ b = 0 := by
-  haveI : CharZero κ := charZero_of_injective_algebraMap (algebraMap ℂ κ).injective
+  have : CharZero κ := charZero_of_injective_algebraMap (algebraMap ℂ κ).injective
   let j : R →+* E.ring := R.subtype.codRestrict E.ring fun r => hER r r.2
   obtain ⟨ι, hι⟩ := exists_extension π ((IsLocalRing.residue E.ring).comp j) (fun a => by
     by_cases ha : (a : K) = 0
@@ -246,10 +246,10 @@ theorem map_eq_zero_of_gens {k : ℕ} (R : Subring K) (π : R →+* κ) (ρ : κ
         ring
       rw [e'] at hu'
       exact (sub_mem (hmR a) (Ideal.mul_mem_left _ _ (hmR b))) hu'
-  letI : Algebra κ (IsLocalRing.ResidueField E.ring) := ι.toAlgebra
-  letI : Algebra κ κ' := ρ.toRingHom.toAlgebra
-  letI : Algebra κ D := α.toAlgebra
-  haveI : IsReduced (IsLocalRing.ResidueField E.ring ⊗[κ] κ') :=
+  let : Algebra κ (IsLocalRing.ResidueField E.ring) := ι.toAlgebra
+  let : Algebra κ κ' := ρ.toRingHom.toAlgebra
+  let : Algebra κ D := α.toAlgebra
+  have : IsReduced (IsLocalRing.ResidueField E.ring ⊗[κ] κ') :=
     GlobalTheory.ReducedAlg.isReduced_field_tensor _ _
   let φ' : IsLocalRing.ResidueField E.ring →ₐ[κ] D := { φ with commutes' := fun _ => rfl }
   let ψ' : κ' →ₐ[κ] D := { ψ with commutes' := fun x => (RingHom.congr_fun heq x).symm }
@@ -306,7 +306,7 @@ theorem maximalIdeal_locAt_eq_span : ∀ {K κ κ' L : Type} [Field K] [Field κ
     Ideal.span (Set.range fun i => toQ 𝔭 (gens E R π ρ hER t zR i)) := by
   intro K κ κ' L _ _ _ _ _ iκ _ _ _ k R π ρ E hER t zR 𝔭 _ _ hπc hRc hfr hker ht hz h𝔭
   have hinj := IsFractionRing.injective (K ⊗[ℂ] κ') L
-  letI := isLocalRing_locAt (L := L) 𝔭 hinj
+  let := isLocalRing_locAt (L := L) 𝔭 hinj
   have hz' : IsTranscendenceBasis ℂ fun i => π (zR i) := by
     have e : (algebraMap ℂ κ).toAlgebra = iκ := Algebra.algebra_ext _ _ fun _ => rfl
     unfold TrBasis at hz
@@ -322,10 +322,10 @@ theorem maximalIdeal_locAt_eq_span : ∀ {K κ κ' L : Type} [Field K] [Field κ
     · exact Or.inl ⟨t, by rw [E.ord_irreducible ht]; exact one_pos, rfl⟩
     · exact Or.inr ⟨zR i, rfl⟩
   have hne : J ≠ ⊤ := fun h => (IsLocalRing.maximalIdeal.isMaximal _).ne_top (top_le_iff.1 (h ▸ hle))
-  haveI : Nontrivial (locAt (L := L) 𝔭 ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hne
-  haveI : IsLocalRing (locAt (L := L) 𝔭 ⧸ J) :=
+  have : Nontrivial (locAt (L := L) 𝔭 ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : IsLocalRing (locAt (L := L) 𝔭 ⧸ J) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom (Ideal.Quotient.mk J) :=
+  have : IsLocalHom (Ideal.Quotient.mk J) :=
     IsLocalHom.of_surjective (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
   have key := map_eq_zero_of_gens R π ρ E hER t zR 𝔭 hπc hRc hfr hker ht hz' h𝔭
     ((Ideal.Quotient.mk J).comp (toQ 𝔭))

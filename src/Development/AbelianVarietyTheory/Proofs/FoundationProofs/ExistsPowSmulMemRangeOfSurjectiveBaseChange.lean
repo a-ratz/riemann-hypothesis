@@ -339,19 +339,19 @@ theorem QuotientsFreeAway.step {B : Type*} {T : Type*} [CommRing B] [CommRing T]
     (ht : Algebra.adjoin B {t} = ⊤) (H : QuotientsFreeAway.{_, v} R A B) :
     QuotientsFreeAway.{_, v} R A T := by
   intro M _ _ _ _ _ _ _ N hN
-  letI : Algebra R B := ((algebraMap A B).comp (algebraMap R A)).toAlgebra
-  haveI : IsScalarTower R A B := .of_algebraMap_eq' rfl
-  letI : Module B M := Module.compHom M (algebraMap B T)
-  haveI : IsScalarTower B T M := IsScalarTower.of_compHom B T M
-  haveI : IsScalarTower A B M := .of_algebraMap_smul fun r x => by
+  let : Algebra R B := ((algebraMap A B).comp (algebraMap R A)).toAlgebra
+  have : IsScalarTower R A B := .of_algebraMap_eq' rfl
+  let : Module B M := Module.compHom M (algebraMap B T)
+  have : IsScalarTower B T M := IsScalarTower.of_compHom B T M
+  have : IsScalarTower A B M := .of_algebraMap_smul fun r x => by
     change algebraMap B T (algebraMap A B r) • x = _
     rw [← IsScalarTower.algebraMap_apply, algebraMap_smul]
-  haveI : IsScalarTower R B M := .of_algebraMap_smul fun r x => by
+  have : IsScalarTower R B M := .of_algebraMap_smul fun r x => by
     rw [IsScalarTower.algebraMap_apply R A B, algebraMap_smul, algebraMap_smul]
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := T) (M := M)
   obtain ⟨s', rfl⟩ := hN
   let M₀ : Submodule B M := span B (s ∪ s' : Set M)
-  haveI : Module.Finite B M₀ :=
+  have : Module.Finite B M₀ :=
     Module.Finite.span_of_finite B (s.finite_toSet.union s'.finite_toSet)
   let τ : Module.End B M := (LinearMap.lsmul T M t).restrictScalars B
   obtain ⟨a, ha0, ha⟩ := exists_hasBasisAway_powerChain (R := R) τ M₀ fun K => by
@@ -424,8 +424,8 @@ theorem quotientsFreeAway_of_finiteType [IsNoetherianRing A]
       have : y ∈ Algebra.adjoin A (Set.range f) := hf ▸ Algebra.mem_top
       rw [Set.range_eq_empty, Algebra.adjoin_empty] at this
       exact Algebra.mem_bot.1 this
-    haveI : Module.Finite A T := Module.Finite.of_surjective (Algebra.linearMap A T) hsurj
-    haveI : Module.Finite A M := Module.Finite.trans T M
+    have : Module.Finite A T := Module.Finite.of_surjective (Algebra.linearMap A T) hsurj
+    have : Module.Finite A M := Module.Finite.trans T M
     obtain ⟨a, ha0, ha⟩ := H (M ⧸ N)
     refine ⟨a, ha0, ?_⟩
     have e1 : LinearMap.ker (N.mkQ.restrictScalars R) = N.restrictScalars R := by
@@ -440,8 +440,8 @@ theorem quotientsFreeAway_of_finiteType [IsNoetherianRing A]
       congr 1
       ext x
       simp [g, Subtype.ext_iff]
-    haveI : Algebra.FiniteType A B := ⟨⟨(Set.finite_range g).toFinset, by simpa using hg⟩⟩
-    haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing A B
+    have : Algebra.FiniteType A B := ⟨⟨(Set.finite_range g).toFinset, by simpa using hg⟩⟩
+    have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing A B
     refine QuotientsFreeAway.step (B := B) (f 0) ?_ (ih B g hg)
     apply Subalgebra.restrictScalars_injective A
     rw [← Algebra.adjoin_union_eq_adjoin_adjoin, Subalgebra.restrictScalars_top, ← hf,
@@ -470,8 +470,8 @@ theorem IsBasisAway.exists_basis_tensor {a : R} {s : Set M}
     (ha : IsUnit (algebraMap R R' a)) : Nonempty (Module.Basis s R' (R' ⊗[R] M)) := by
   obtain ⟨b⟩ := h.exists_basis (.powers a) (Submonoid.mem_powers a) (Localization.Away a)
     (TensorProduct.mk R (Localization.Away a) M 1)
-  letI : Algebra (Localization.Away a) R' := (IsLocalization.Away.lift a ha).toAlgebra
-  haveI : IsScalarTower R (Localization.Away a) R' :=
+  let : Algebra (Localization.Away a) R' := (IsLocalization.Away.lift a ha).toAlgebra
+  have : IsScalarTower R (Localization.Away a) R' :=
     .of_algebraMap_eq fun r => (IsLocalization.Away.lift_eq a ha r).symm
   exact ⟨(b.baseChange R').map (AlgebraTensorModule.cancelBaseChange R _ R' R' M)⟩
 
@@ -514,9 +514,9 @@ theorem exists_hasBasisAway_coker {A₀ : Type*} [CommRing A₀] [Algebra R A₀
     (φ : A₀ →ₐ[R] A) :
     ∃ a : R, a ≠ 0 ∧
       HasBasisAway a (⊥ : Submodule R (A ⧸ LinearMap.range φ.toLinearMap)) ⊤ := by
-  letI : Algebra A₀ A := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower R A₀ A := .of_algebraMap_eq fun r => (φ.commutes r).symm
-  haveI : Algebra.FiniteType A₀ A := .of_restrictScalars_finiteType R A₀ A
+  let : Algebra A₀ A := φ.toRingHom.toAlgebra
+  have : IsScalarTower R A₀ A := .of_algebraMap_eq fun r => (φ.commutes r).symm
+  have : Algebra.FiniteType A₀ A := .of_restrictScalars_finiteType R A₀ A
   obtain ⟨a, ha0, ha⟩ := exists_hasBasisAway_quotient R A₀ A (span A₀ {(1 : A)})
     (fg_span_singleton _)
   have e : (span A₀ {(1 : A)}).restrictScalars R = LinearMap.range φ.toLinearMap := by
@@ -552,7 +552,7 @@ theorem free_of_chain (F : ℕ → Submodule R M) (hF : Monotone F) (htop : ⨆ 
     (h0 : Module.Free R (F 0))
     (h : ∀ d, Module.Free R (F (d + 1) ⧸ (F d).submoduleOf (F (d + 1)))) :
     Module.Free R M := by
-  haveI := free_quotient_of_chain F hF htop h
+  have := free_quotient_of_chain F hF htop h
   have h1 := (hasBasisAway_of_free (M := M ⧸ F 0) (1 : R)).comap (F 0).mkQ (mkQ_surjective _)
   rw [ker_mkQ] at h1
   have h2 := HasBasisAway.map (a := 1) (F 0).subtype ⊥ (by
@@ -607,7 +607,7 @@ theorem exists_pow_smul_mem_range_of_surjective_baseChange.{w}
   obtain ⟨a, ha0, ha⟩ := exists_hasBasisAway_coker φ
   obtain ⟨K, _, _, _, hK, hsurj⟩ := h a ha0
   refine ⟨a, ha0, fun y => ?_⟩
-  haveI : Subsingleton (K ⊗[R] (A ⧸ LinearMap.range φ.toLinearMap)) := by
+  have : Subsingleton (K ⊗[R] (A ⧸ LinearMap.range φ.toLinearMap)) := by
     refine subsingleton_of_forall_eq 0 fun z => ?_
     obtain ⟨z, rfl⟩ := LinearMap.lTensor_surjective K
       (LinearMap.range φ.toLinearMap).mkQ_surjective z

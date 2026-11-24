@@ -235,15 +235,15 @@ theorem GlobalTheory.HTRho.finrank_homO_eq_sum_quot : ∀ {k O C Idx W V : Type*
         simpa [Φ, Submodule.Quotient.mk_eq_zero] using this
       rw [hsum v]
       exact Finset.sum_eq_zero fun i _ =>
-        actC_mSub_eq_zero τ χ hJ i (e i) (fun l hl => by rw [he, if_neg hl]) v (hv' i)
+        actC_mSub_eq_zero τ χ hJ i (e i) (fun l hl => by rw [he, ite_eq_right hl]) v (hv' i)
     · intro q
       choose w hw using fun i => Submodule.Quotient.mk_surjective (mSub τ (χ i) ⊤) (q i)
       refine ⟨∑ j, actC τ (e j) (w j), funext fun i => ?_⟩
       simp only [Φ, LinearMap.pi_apply, Submodule.mkQ_apply]
       rw [← hw i, Submodule.Quotient.eq, ← Finset.add_sum_erase _ _ (Finset.mem_univ i), add_sub_right_comm]
       refine add_mem ?_ (Submodule.sum_mem _ fun j hj => actC_mem_mSub τ (χ i) _
-        (by rw [he, if_neg (Finset.ne_of_mem_erase hj).symm]) (w j))
-      have h3 := actC_mem_mSub τ (χ i) (e i - 1) (by rw [map_sub, he, if_pos rfl, map_one, sub_self]) (w i)
+        (by rw [he, ite_eq_right (Finset.ne_of_mem_erase hj).symm]) (w j))
+      have h3 := actC_mem_mSub τ (χ i) (e i - 1) (by rw [map_sub, he, ite_eq_left rfl, map_one, sub_self]) (w i)
       simpa [map_sub] using h3
   let Φe := LinearEquiv.ofBijective Φ hΦ
   let Ψ : homO σW τ →ₗ[k] ((i : Idx) → homO σW (qAct τ (mSub τ (χ i) ⊤)
@@ -389,7 +389,7 @@ theorem finrank_ksSub_map_cls_eq_homO {k O H : Type*} [Field k] [AddCommGroup H]
       have hf : ∀ x (hx : x ∈ G), G.mkQ (f x) = (S : (G ⧸ Zc) →ₗ[k] H ⧸ G) (Zc.mkQ ⟨x, hx⟩) := by
         intro x hx
         have hp : Submodule.linearProjOfIsCompl G G' hG' x = ⟨x, hx⟩ :=
-          Submodule.linearProjOfIsCompl_apply_left hG' ⟨x, hx⟩
+          Submodule.projectionOnto_apply_left hG' ⟨x, hx⟩
         simp only [f, LinearMap.comp_apply, hp, hs']
         rfl
       refine ⟨f, ⟨?_, ?_, ?_⟩, ?_⟩
@@ -524,7 +524,7 @@ theorem exists_idem_local_of_character :
       (φ : A →ₐ[k] k), ∃ e : A, IsIdempotentElem e ∧ φ e = 1 ∧
         ∀ a, φ a = 0 → IsNilpotent (e * a) := by
   intro k _ A _ _ _ φ
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
   set m : Ideal A := RingHom.ker φ with hm
   obtain ⟨n, hn⟩ := IsArtinian.monotone_stabilizes (R := A) (M := A)
     ⟨fun n => OrderDual.toDual (m ^ n), fun _ _ h => Ideal.pow_le_pow_right h⟩
@@ -632,10 +632,10 @@ theorem finrank_quot_one_sub_idem_eq_mul : ∀ (k : Type) [Field k] (A : Type) [
   have h4 : Module.finrank k (H ⧸ (RingHom.ker φ • ⊤ : Submodule A H)) = Module.finrank B T := by
     have hsurj : Function.Surjective φ := fun c => ⟨algebraMap k A c, φ.commutes c⟩
     let φB : B →ₐ[k] k := Ideal.Quotient.liftₐ I φ hIφ
-    letI : Algebra A k := φ.toRingHom.toAlgebra
-    letI : Algebra B k := φB.toRingHom.toAlgebra
-    haveI : IsScalarTower A B k := IsScalarTower.of_algebraMap_eq (fun x => rfl)
-    haveI : IsScalarTower k A k := IsScalarTower.of_algebraMap_eq (fun c => (φ.commutes c).symm)
+    let : Algebra A k := φ.toRingHom.toAlgebra
+    let : Algebra B k := φB.toRingHom.toAlgebra
+    have : IsScalarTower A B k := IsScalarTower.of_algebraMap_eq (fun x => rfl)
+    have : IsScalarTower k A k := IsScalarTower.of_algebraMap_eq (fun c => (φ.commutes c).symm)
     let f := Ideal.quotientKerAlgEquivOfSurjective hsurj
     let g : (A ⧸ RingHom.ker φ) ≃ₗ[A] k :=
       { f.toLinearEquiv with
@@ -820,13 +820,13 @@ theorem finrank_fix {k A M : Type*} [Field k] [CommRing A] [Algebra k A] [AddCom
 
 theorem weight_finrank_eq : ∀ (k : Type) [Field k] [IsAlgClosed k] (C : Type) [CommRing C] [Module.Free ℤ C] [Module.Finite ℤ C] (H : Type 1) [AddCommGroup H] [Module k H] [FiniteDimensional k H] (σ : C →+* Module.End k H), (letI : Module (k ⊗[ℤ] C) H := Module.compHom H (Algebra.TensorProduct.lift (Algebra.ofId k (Module.End k H)) σ.toIntAlgHom (fun _ _ => Algebra.commutes _ _)).toRingHom; Module.Projective (k ⊗[ℤ] C) H) → ∀ χ : C →+* k, Module.finrank k ↥(⨅ c : C, (σ c).maxGenEigenspace (χ c)) = Module.finrank k (H ⧸ GlobalTheory.HTRho.mSub σ χ ⊤) * Module.finrank k ↥(⨅ c : C, (((Algebra.lmul k (k ⊗[ℤ] C)).toRingHom.comp (Algebra.TensorProduct.includeRight : C →ₐ[ℤ] k ⊗[ℤ] C).toRingHom) c).maxGenEigenspace (χ c)) := by
   intro k _ _ C _ _ _ H _ _ _ σ
-  letI inst : Module (k ⊗[ℤ] C) H := Module.compHom H (Algebra.TensorProduct.lift
+  let inst : Module (k ⊗[ℤ] C) H := Module.compHom H (Algebra.TensorProduct.lift
     (Algebra.ofId k (Module.End k H)) σ.toIntAlgHom (fun _ _ => Algebra.commutes _ _)).toRingHom
   intro hP χ
   have hP' : Module.Projective (k ⊗[ℤ] C) H := hP
   have hact : ∀ (a : k ⊗[ℤ] C) (h : H), a • h = (Algebra.TensorProduct.lift
       (Algebra.ofId k (Module.End k H)) σ.toIntAlgHom (fun _ _ => Algebra.commutes _ _)) a h := fun _ _ => rfl
-  haveI : IsScalarTower k (k ⊗[ℤ] C) H := ⟨fun l a h => by
+  have : IsScalarTower k (k ⊗[ℤ] C) H := ⟨fun l a h => by
     rw [hact, hact, map_smul, LinearMap.smul_apply]⟩
   obtain ⟨e, he, h1, hn⟩ := GlobalTheory.T.exists_idempotent_local_of_character k (k ⊗[ℤ] C) (chr k C χ)
   have hσ : ∀ c, σ c = DistribSMul.toLinearMap k H ((1 : k) ⊗ₜ[ℤ] c) := by
@@ -896,7 +896,7 @@ theorem weightSpace_tensor_ringHom_pos : ∀ (k : Type) [Field k] [IsAlgClosed k
   have hφs : Function.Surjective φ := fun a => ⟨algebraMap k (k ⊗[ℤ] C) a, by rw [φ.commutes]; rfl⟩
   let m : Ideal (k ⊗[ℤ] C) := RingHom.ker φ
   have hm : m.IsMaximal := RingHom.ker_isMaximal_of_surjective φ hφs
-  haveI : IsArtinianRing (k ⊗[ℤ] C) := IsArtinianRing.of_finite k (k ⊗[ℤ] C)
+  have : IsArtinianRing (k ⊗[ℤ] C) := IsArtinianRing.of_finite k (k ⊗[ℤ] C)
   obtain ⟨N, hN⟩ := IsArtinian.monotone_stabilizes
     (⟨fun j => OrderDual.toDual (m ^ j), fun a b h => Ideal.pow_le_pow_right h⟩ :
       ℕ →o (Ideal (k ⊗[ℤ] C))ᵒᵈ)
@@ -979,9 +979,9 @@ theorem finrank_quot : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Da
   have H := GlobalTheory.abelianDeRham
   obtain ⟨g, hg⟩ := GlobalTheory.AbVarRelDim.exists_relDim k o₀.A o₀.ab
   obtain ⟨hfd, -, -⟩ := GlobalTheory.finrank_HdR_Fil_of_field H.1 H.2.1 k o₀.A g o₀.ab hg
-  haveI := hfd
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := hfd
+  have := D.freeLa
+  have := D.finLa
   obtain ⟨l, hlp, hl⟩ := Nat.exists_infinite_primes (p + 1)
   have hcop : l.Coprime p := (Nat.coprime_primes hl (Fact.out : p.Prime)).2 (by omega)
   have hcopj : ∀ j : ℕ, (l ^ j).Coprime p := fun j => Nat.Coprime.pow_left j hcop
@@ -994,7 +994,7 @@ theorem finrank_quot : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Da
   have hc : ∀ c : 𝓞 D.F, LinearMap.charpoly (GlobalTheory.HTCount.crysAct o₀ (algebraMap (𝓞 D.F) D.O c)) =
       ((LinearMap.charpoly (LinearMap.mulLeft ℤ c)) ^ (D.m * D.n)).map (Int.castRingHom k) := by
     intro c
-    haveI := o₀.act.hom (algebraMap (𝓞 D.F) D.O c)
+    have := o₀.act.hom (algebraMap (𝓞 D.F) D.O c)
     have e := GlobalTheory.T.charpoly_deRhamHomology_endomorphism_eq_map_ladic k o₀.A o₀.ab (o₀.act.act (algebraMap (𝓞 D.F) D.O c)) D.La
       (DistribSMul.toLinearMap ℤ D.La (algebraMap (𝓞 D.F) D.O c)) l hl hlk (fun j => I.ev (l ^ j))
       (fun j x y => I.add (l ^ j) x y) (fun j x => I.lin (l ^ j) _ x)
@@ -1199,7 +1199,7 @@ theorem exists_delta {Idx : Type*} [Fintype Idx] [DecidableEq Idx] (χ : Idx →
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply]
       rw [← h1]
       refine Finset.sum_congr rfl fun j _ => ?_
-      simp only [v, smul_eq_mul, MonoidHom.coe_coe]
+      simp only [v, smul_eq_mul, MonoidHom.coe_ofClass]
       rw [mul_comm]
       congr 2
       funext j'
@@ -1316,7 +1316,7 @@ theorem inf_le_sup {Idx : Type*} [Fintype Idx] (σ : O →+* Module.End k H) (χ
     have : p - E p = -∑ d ∈ S, lam d • (σ (algebraMap C O d) p - χ i d • p) := by
       rw [hEapp]
       simp only [smul_sub, Finset.sum_sub_distrib, smul_smul]
-      rw [← Finset.sum_smul, hδ i, if_pos rfl, one_smul]
+      rw [← Finset.sum_smul, hδ i, ite_eq_left rfl, one_smul]
       abel
     rw [this]
     exact neg_mem (Submodule.sum_mem _ fun d _ => Submodule.smul_mem _ _ (mSub_gen σ (χ i) d hpG))
@@ -1550,7 +1550,7 @@ theorem rhoCount : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum 
     have h1' : (1 : R) ∈ RingHom.ker β := hle (by rw [h1]; trivial)
     simp at h1'
   have hFil : ∀ a, ∀ x ∈ Fil o₀.A, σ a x ∈ Fil o₀.A := fun a x hx => by
-    haveI := o₀.act.hom a
+    have := o₀.act.hom a
     rw [hσ, GlobalTheory.HTCount.crysAct_apply]
     exact push_mem_Fil _ hx
   have hχω : ∀ i, χ i D.ω = β b.ρ := fun i => by simp [χ, b.t_ω]
@@ -1938,9 +1938,9 @@ theorem ksDim_at_point : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.
   have hnd := _root_.GlobalTheory.HTPolPair.nondeg p D R b N hN hNp k t o₀ β ht φ hφ
   have hadj := GlobalTheory.T.harrisTaylor_crystal_action_adjoint p D R b N hN hNp k t o₀ β ht φ hφ
   have hcount := GlobalTheory.T.harrisTaylor_rho_part_deformation_dim p D R b N hN hNp k t o₀ β ht
-  haveI := hfd
+  have := hfd
   have hstab : ∀ a, ∀ x ∈ Fil o₀.A, crysAct o₀ a x ∈ Fil o₀.A := fun a x hx => by
-    haveI := o₀.act.hom a
+    have := o₀.act.hom a
     rw [crysAct_apply]; exact push_mem_Fil _ hx
   have hcomm : ∀ a, crysAct o₀ (algebraMap (𝓞 D.F) D.O D.ω) * crysAct o₀ a = crysAct o₀ a * crysAct o₀ (algebraMap (𝓞 D.F) D.O D.ω) := fun a => by
     rw [← map_mul, ← map_mul, Algebra.commutes]

@@ -67,7 +67,7 @@ theorem continuousOn_deriv_family (P : Type) [TopologicalSpace P] (U : Set ℂ) 
     refine (Metric.closedBall_subset_ball ?_).trans hball
     rw [hRdef]; linarith
   let K : Set ℂ := Metric.closedBall z0 (2 * R)
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 (isCompact_closedBall z0 (2 * R))
+  have : CompactSpace K := isCompact_iff_compactSpace.1 (isCompact_closedBall z0 (2 * R))
   have hFc : Continuous (fun x : P × K => H x.1 x.2) := by
     have : Continuous (fun x : P × K => ((x.1, (x.2 : ℂ)) : P × ℂ)) := by fun_prop
     exact hc.comp_continuous this (fun x => ⟨Set.mem_univ _, hKU x.2.2⟩)

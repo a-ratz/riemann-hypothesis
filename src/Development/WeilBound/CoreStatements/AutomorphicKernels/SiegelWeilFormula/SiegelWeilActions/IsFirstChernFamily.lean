@@ -66,7 +66,7 @@ theorem latHaar : LatHaar := by
   have hc := Measure.isAddLeftInvariant_eq_smul (μ.map φ) μ
   have hqmp : Measure.QuasiMeasurePreserving φ μ μ := by
     refine ⟨hmeas.aemeasurable, fun t ht => ?_⟩
-    rw [hc, Measure.smul_apply, ht, smul_zero]
+    rw [hc, smul_apply, ht, smul_zero]
   let e : Γ → Γ := fun g => ⟨φ.symm g, (hΓ _).1 (by simp)⟩
   have he : Function.Bijective e := by
     constructor

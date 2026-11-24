@@ -73,8 +73,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem integral_below (T : CDVR) (io : c.F →+* T.Fr) (io₂ : d.c₂.F →+* T.Fr) (hio : ∀ a : c.F, io₂ (d.eF a) = io a)
     (y : letI := io.toAlgebra; FrPt Xo c T.Fr) (y₂ : letI := io₂.toAlgebra; FrPt d.Xo₂ d.c₂ T.Fr)
     (hy : letI := io.toAlgebra; letI := io₂.toAlgebra; FrOver d y₂ y) (h : Integral T io₂ y₂) : Integral T io y := by
-  letI := io.toAlgebra
-  letI := io₂.toAlgebra
+  let := io.toAlgebra
+  let := io₂.toAlgebra
   obtain ⟨G, t', m1, m2, ⟨ub, b1, b2, b3, b4⟩, θ, hθ, w1, w2, σ, s1, θ2, r1, r2, i1, i2, p2, hg⟩ := h
   obtain ⟨e, hu, w, p, hw, p₁, p₂, R⟩ := (FrameLift.frOver_iff d y₂ y).1 hy
   obtain ⟨m', e₁⟩ := LiftBaseChange.exists_comp' d.m m1 y.x e.symm
@@ -119,8 +119,8 @@ theorem evR_eq_of_pull {d : DeltaDat Xo c 0} {a : (E →+* ℂ) × ℕ → ℕ} 
     [Algebra c.F K] [Algebra d.c₂.F K] (hc : ∀ a : c.F, algebraMap d.c₂.F K (d.eF a) = algebraMap c.F K a)
     {y₂ : FrPt d.Xo₂ d.c₂ K} {y : FrPt Xo c K} (hy : FrOver d y₂ y) : evR d.Xo₂ d.c₂ g y₂ = evR Xo c f y := by
   let j : K →+* AlgebraicClosure K := algebraMap _ _
-  letI : Algebra c.F (AlgebraicClosure K) := (j.comp (algebraMap c.F K)).toAlgebra
-  letI : Algebra d.c₂.F (AlgebraicClosure K) := (j.comp (algebraMap d.c₂.F K)).toAlgebra
+  let : Algebra c.F (AlgebraicClosure K) := (j.comp (algebraMap c.F K)).toAlgebra
+  let : Algebra d.c₂.F (AlgebraicClosure K) := (j.comp (algebraMap d.c₂.F K)).toAlgebra
   let ψ : K →ₐ[c.F] AlgebraicClosure K := ⟨j, fun _ => rfl⟩
   let ψ₂ : K →ₐ[d.c₂.F] AlgebraicClosure K := ⟨j, fun _ => rfl⟩
   obtain ⟨z, hz⟩ := GlobalTheory.TransferCompare.frBC_framed Xo c K _ ψ y
@@ -140,8 +140,8 @@ open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberFie
 theorem exists_intFr_below : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (d : DeltaDat Xo c 0), 1 ≤ Dw.p + Dw.q → d.IsLev → ((Dw.p ≠ Dw.q ∧ l.A = 1) ∨ GlobalTheory.ClsVal.Cmp.OverBase d) → ∀ (T : CDVR) (io₂ : d.c₂.F →+* T.Fr) (y₂ : IntFr d.Xo₂ d.c₂ T io₂), y₂.IsAlg → ∃ y : IntFr Xo c T (io₂.comp (d.eF : c.F →+* d.c₂.F)), y.IsAlg ∧ (∀ φ : ℝ, HasPhi y₂ φ → HasPhi y φ) ∧ ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), ∀ f ∈ sec Xo c a n, ∀ g ∈ sec d.Xo₂ d.c₂ a n, GlobalTheory.LevPull.Pull d f g → evI y₂ g = evI y f := by
   intro E _ _ _ H Dw l Xo c d _ hlev hO T io₂ y₂ halg
   have hO' : GlobalTheory.ClsVal.Cmp.OverBase d := hO.elim (fun h => GlobalTheory.ClsVal.Cmp.overBase_of_ne h.1 h.2 d) id
-  letI := io₂.toAlgebra
-  letI := (io₂.comp (d.eF : c.F →+* d.c₂.F)).toAlgebra
+  let := io₂.toAlgebra
+  let := (io₂.comp (d.eF : c.F →+* d.c₂.F)).toAlgebra
   obtain ⟨y, hy⟩ := GlobalTheory.CovPull.below_exists d hO' (GlobalTheory.IndefiniteRowSideFullHecke.RelativeGroupHatForm.KA_le hlev.1) (S := T.Fr) (fun _ => rfl) y₂.1
   refine ⟨⟨y, GlobalTheory.TransferCompare.allTest_framed Xo c T.Fr y,
     integral_below d T _ io₂ (fun _ => rfl) y y₂.1 hy y₂.2.2⟩, halg, ?_, fun a n f hf g hg h => ?_⟩

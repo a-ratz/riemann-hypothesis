@@ -294,8 +294,8 @@ theorem exists_pow_eq_of_card {G : Type} [CommGroup G] {m g : ℕ} (hm : 0 < m)
         left_inv := fun y => rfl
         right_inv := fun x => rfl }
   have hpos : 0 < m ^ (2 * g) := pow_pos hm _
-  haveI : Finite H2 := Nat.finite_of_card_ne_zero (by rw [cH2]; positivity)
-  haveI : Finite H1 := Nat.finite_of_card_ne_zero (by rw [cH1]; positivity)
+  have : Finite H2 := Nat.finite_of_card_ne_zero (by rw [cH2]; positivity)
+  have : Finite H1 := Nat.finite_of_card_ne_zero (by rw [cH1]; positivity)
   have cR : Nat.card f.range = m ^ (2 * g) := by
     have e := Subgroup.card_mul_index f.ker
     rw [Subgroup.index_ker, cK, cH2, show (m ^ 2) ^ (2 * g) = m ^ (2 * g) * m ^ (2 * g) by ring] at e
@@ -323,7 +323,7 @@ theorem th_ne_zero : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj 
   intro S G _ _ L ρ hL hρ g m N K _ x c hm hm3 hmK hpol H
   obtain ⟨hLaws, hLaws2⟩ := abelianSchemeLaws_all
   obtain ⟨P, α, -, hα, hPL⟩ := hpol
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨ρ', hρ'⟩ := P.rigid
   have H' : HasTh P.A P.L ρ' m (𝟙 (Sp K)) c := by
     rw [hasTh_iff] at H ⊢
@@ -463,13 +463,13 @@ theorem exists_sub_mem_of_under_eq_bot [IsIntegrallyClosed R] [CharZero R]
   have hRK : Function.Injective (algebraMap R K₀) := by
     rw [IsScalarTower.algebraMap_eq R A K₀]
     exact (IsFractionRing.injective A K₀).comp hRA
-  haveI : FaithfulSMul R K₀ := (faithfulSMul_iff_algebraMap_injective R K₀).2 hRK
-  letI : Algebra F K₀ := FractionRing.liftAlgebra R K₀
-  haveI : IsScalarTower R F K₀ := FractionRing.isScalarTower_liftAlgebra R K₀
-  haveI : FaithfulSMul R A := (faithfulSMul_iff_algebraMap_injective R A).2 hRA
-  haveI : Algebra.IsAlgebraic R A := Algebra.IsIntegral.isAlgebraic
-  haveI : Algebra.IsAlgebraic R K₀ := (IsFractionRing.isAlgebraic_iff' R A K₀).1 inferInstance
-  haveI : Algebra.IsAlgebraic F K₀ :=
+  have : FaithfulSMul R K₀ := (faithfulSMul_iff_algebraMap_injective R K₀).2 hRK
+  let : Algebra F K₀ := FractionRing.liftAlgebra R K₀
+  have : IsScalarTower R F K₀ := FractionRing.isScalarTower_liftAlgebra R K₀
+  have : FaithfulSMul R A := (faithfulSMul_iff_algebraMap_injective R A).2 hRA
+  have : Algebra.IsAlgebraic R A := Algebra.IsIntegral.isAlgebraic
+  have : Algebra.IsAlgebraic R K₀ := (IsFractionRing.isAlgebraic_iff' R A K₀).1 inferInstance
+  have : Algebra.IsAlgebraic F K₀ :=
     ⟨fun x => (IsFractionRing.isAlgebraic_iff R F K₀).1 (Algebra.IsAlgebraic.isAlgebraic x)⟩
   let π : R₁ →+* K₀ := (algebraMap A K₀).comp (Ideal.Quotient.mk Q)
   have hπ : ∀ r : R, π (algebraMap R R₁ r) = algebraMap F K₀ (algebraMap R F r) := by
@@ -511,17 +511,17 @@ theorem eq_of_sub_mem [Algebra.IsIntegral R R₁] (s : R₁)
   have hRM : Function.Injective (algebraMap R M) := by
     rw [IsScalarTower.algebraMap_eq R F M]
     exact (algebraMap F M).injective.comp (IsFractionRing.injective R F)
-  haveI : FaithfulSMul R M := (faithfulSMul_iff_algebraMap_injective R M).2 hRM
-  haveI : Module.IsTorsionFree R M := by
+  have : FaithfulSMul R M := (faithfulSMul_iff_algebraMap_injective R M).2 hRM
+  have : Module.IsTorsionFree R M := by
     rw [Module.isTorsionFree_iff_algebraMap_injective]; exact hRM
   have key : ∀ (P : Ideal R₁) [P.IsPrime], P.comap (algebraMap R R₁) = ⊥ →
       ∃ j : R₁ →+* M, j.comp (algebraMap R R₁) = algebraMap R M ∧ ∀ x ∈ P, j x = 0 := by
     intro P _ hP
     have hRA : Function.Injective (algebraMap R (R₁ ⧸ P)) := injective_quotient P hP
-    haveI : FaithfulSMul R (R₁ ⧸ P) := (faithfulSMul_iff_algebraMap_injective R _).2 hRA
-    haveI : Module.IsTorsionFree R (R₁ ⧸ P) := by
+    have : FaithfulSMul R (R₁ ⧸ P) := (faithfulSMul_iff_algebraMap_injective R _).2 hRA
+    have : Module.IsTorsionFree R (R₁ ⧸ P) := by
       rw [Module.isTorsionFree_iff_algebraMap_injective]; exact hRA
-    haveI : Algebra.IsAlgebraic R (R₁ ⧸ P) := Algebra.IsIntegral.isAlgebraic
+    have : Algebra.IsAlgebraic R (R₁ ⧸ P) := Algebra.IsIntegral.isAlgebraic
     let l : (R₁ ⧸ P) →ₐ[R] M := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -555,9 +555,9 @@ theorem exists_eq_algebraMap_of_forall_ringHom_eq : ∀ (R R₁ : Type) [CommRin
       i₁.comp (algebraMap R R₁) = i₂.comp (algebraMap R R₁) → i₁ s = i₂ s) →
     ∃ e : R, ∀ (K : Type) [Field K] (i₁ : R₁ →+* K), i₁ s = i₁ (algebraMap R R₁ e) := by
   intro R R₁ _ _ _ _ _ _ hfin hff s hs
-  haveI := hfin
-  haveI := hff
-  haveI : Algebra.IsIntegral R R₁ := Algebra.IsIntegral.of_finite R R₁
+  have := hfin
+  have := hff
+  have : Algebra.IsIntegral R R₁ := Algebra.IsIntegral.of_finite R R₁
   have hinj : Function.Injective (algebraMap R R₁) := FaithfulSMul.algebraMap_injective R R₁
   have hker : Ideal.comap (algebraMap R R₁) (⊥ : Ideal R₁) ≤ ⊥ := by
     intro r hr
@@ -565,12 +565,12 @@ theorem exists_eq_algebraMap_of_forall_ringHom_eq : ∀ (R R₁ : Type) [CommRin
     rw [Ideal.mem_bot]
     exact hinj (by rw [hr, map_zero])
   obtain ⟨Q₀, -, hQ₀, hQ₀b⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (⊥ : Ideal R) ⊥ hker
-  haveI := hQ₀
+  have := hQ₀
   obtain ⟨e, he⟩ := SymDesc.exists_sub_mem_of_under_eq_bot s hs Q₀ hQ₀b
   refine ⟨e, fun K _ i₁ => ?_⟩
   let P := RingHom.ker i₁
-  haveI : P.IsPrime := RingHom.ker_isPrime i₁
-  haveI : P.LiesOver (P.under R) := ⟨rfl⟩
+  have : P.IsPrime := RingHom.ker_isPrime i₁
+  have : P.LiesOver (P.under R) := ⟨rfl⟩
   obtain ⟨Q, hQP, hQ, hQo⟩ :=
     Ideal.exists_ideal_le_liesOver_of_le (p := (⊥ : Ideal R)) (q := P.under R) P bot_le
   have hQb : Q.comap (algebraMap R R₁) = ⊥ := hQo.over.symm
@@ -740,16 +740,16 @@ theorem toUnit_left {X : Scheme.{0}} (T : Over X) : (toUnit T).left = T.hom :=
 theorem exists_cover_torsion_list : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (L : LB G.left) (g m N : ℕ) (R : Type) [CommRing R] [IsNoetherianRing R] (x : Sp R ⟶ S), Odd m → IsUnit (m : R) → N = m ^ (4 * g) → PolFib G L g x → ∃ (R₁ : Type) (_ : CommRing R₁) (_ : Algebra R R₁) (q : Fin N → (Over.mk (spMap (algebraMap R R₁) ≫ x) ⟶ G)), Module.Finite R R₁ ∧ Module.FaithfullyFlat R R₁ ∧ (∀ a, q a ^ (m ^ 2) = 1) ∧ ∀ (K : Type) [Field K] (i₁ : R₁ →+* K) (pt : Fin N → (Over.mk (spMap (i₁.comp (algebraMap R R₁)) ≫ x) ⟶ G)), (∀ a, (pt a).left = spMap i₁ ≫ (q a).left) → Function.Injective pt ∧ ∀ (K' : Type) [Field K'] [IsAlgClosed K'] (i' : K →+* K') (p : Over.mk (spMap i' ≫ spMap (i₁.comp (algebraMap R R₁)) ≫ x) ⟶ G), p ^ (m ^ 2) = 1 → ∃ a, p.left = spMap i' ≫ (pt a).left := by
   intro S G _ _ L g m N R _ _ x hm hmu hN hP
   obtain ⟨P, α, hg, hp, -⟩ := hP
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   have hm0 : m ≠ 0 := by rintro rfl; exact absurd hm (by decide)
-  haveI : NeZero (m ^ 2) := ⟨pow_ne_zero _ hm0⟩
+  have : NeZero (m ^ 2) := ⟨pow_ne_zero _ hm0⟩
   have hsm : SmoothOfRelativeDimension g P.A.hom := hg ▸ P.smoothDim
   have hu : IsUnit (((m ^ 2 : ℕ)) : R) := by rw [Nat.cast_pow]; exact hmu.pow 2
   obtain ⟨R₁, _, _, ⟨hfin, -, hff⟩, H⟩ :=
     GlobalTheory.TorsionCover.exists_torsion_basis_cover R P.A g (m ^ 2) P.isAb hsm hu
   let b := spMap (algebraMap R R₁)
   let A₁ := (Over.pullback b).obj P.A
-  haveI : IsCommMonObj A₁ := Functor.isCommMonObj_obj
+  have : IsCommMonObj A₁ := Functor.isCommMonObj_obj
   have h₁ := isGrpPullback_pullback P.A b
   obtain ⟨ψ, hψ⟩ := H A₁ _ h₁
   have hc := h₁.comp hp
@@ -865,7 +865,7 @@ theorem exists_local : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonOb
   intro S G _ _ L ρ hL hρ g m R _ _ x θ R₁ _ _ _ N q hm hmu hP hq p hp
   obtain ⟨P, α, -, hpb, w, hw⟩ := hP
   have hL₁ := P.isLB
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨ρ₁, hρ₁, hr⟩ := exists_rigidificationPullbackCompatibleIso hpb hw hL hL₁ hρ
   have hG : GlobalFnsSt := GlobalTheory.abelianSchemeLaws_all.1.globalFns
   have cg := GlobalTheory.AbLaw.CubeAssembly.cube_gen
@@ -1048,7 +1048,7 @@ theorem glue_field_points (R : Type) [CommRing R]
     intro k l
     rw [← mem_nilradical, nilradical_eq_sInf, Ideal.mem_sInf]
     intro q hq
-    haveI : q.IsPrime := hq
+    have : q.IsPrime := hq
     by_cases hk : f k ∈ q
     · exact q.mul_mem_right _ (q.mul_mem_right _ hk)
     by_cases hl : f l ∈ q
@@ -1210,7 +1210,7 @@ namespace GlobalTheory.UMin
 theorem thList_cover : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (L : LB G.left) (ρ : LB.Gen (L.pull (eSec G))), L.IsLB → ρ.IsGen → ∀ (g m N : ℕ) (R : Type) [CommRing R] [IsNoetherianRing R] (x : Sp R ⟶ S) (θ : SecAt G L x), Odd m → IsUnit (m : R) → N = m ^ (4 * g) → PolFib G L g x → ∃ (R₁ : Type) (_ : CommRing R₁) (_ : Algebra R R₁) (c : Fin N → R₁), Module.Finite R R₁ ∧ Module.FaithfullyFlat R R₁ ∧ ∀ (K : Type) [Field K] (i : R →+* K) (i₁ : R₁ →+* K), i₁.comp (algebraMap R R₁) = i → ∃ pt : Fin N → (Over.mk (spMap i ≫ x) ⟶ G), ThList G L ρ m (spMap i ≫ x) (SecAt.pull G L θ i) pt (fun a => i₁ (c a)) := by
   intro S G _ _ L ρ hL hρ g m N R _ _ x θ hm hu hN hP
   obtain ⟨R₁, _, _, q, hfin, hff, hq, hpts⟩ := GlobalTheory.T.exists_finite_flat_cover_m_sq_torsion_sections S G L g m N R x hm hu hN hP
-  haveI : IsNoetherianRing R₁ := Algebra.FiniteType.isNoetherianRing R R₁
+  have : IsNoetherianRing R₁ := Algebra.FiniteType.isNoetherianRing R R₁
   have hcomp : ∀ {K : Type} [Field K] (i₁ : R₁ →+* K),
       spMap i₁ ≫ spMap (algebraMap R R₁) = spMap (i₁.comp (algebraMap R R₁)) := by
     intro K _ i₁; simp [spMap]
@@ -1278,10 +1278,10 @@ namespace GlobalTheory.UMin.SymRing
 
 theorem exists_common_field : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁] [Algebra R R₁], Module.FaithfullyFlat R R₁ → ∀ (K : Type) [Field K] (i : R →+* K), ∃ (K' : Type) (_ : Field K') (φ : K →+* K') (i₁ : R₁ →+* K'), i₁.comp (algebraMap R R₁) = φ.comp i := by
   intro R R₁ _ _ _ hff K _ i
-  letI : Algebra R K := i.toAlgebra
-  haveI : Nontrivial (K ⊗[R] R₁) := Module.FaithfullyFlat.rTensor_nontrivial R R₁ K
+  let : Algebra R K := i.toAlgebra
+  have : Nontrivial (K ⊗[R] R₁) := Module.FaithfullyFlat.rTensor_nontrivial R R₁ K
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (K ⊗[R] R₁)
-  letI : Field ((K ⊗[R] R₁) ⧸ M) := Ideal.Quotient.field M
+  let : Field ((K ⊗[R] R₁) ⧸ M) := Ideal.Quotient.field M
   refine ⟨(K ⊗[R] R₁) ⧸ M, inferInstance,
     (Ideal.Quotient.mk M).comp (Algebra.TensorProduct.includeLeft (R := R) (S := R) (A := K) (B := R₁)).toRingHom,
     (Ideal.Quotient.mk M).comp (Algebra.TensorProduct.includeRight (R := R) (A := K) (B := R₁)).toRingHom, ?_⟩
@@ -1369,7 +1369,7 @@ theorem theta_map_aff : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonO
   have hspan : Ideal.span (Set.range e) = ⊤ := by
     by_contra hne
     obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne
-    letI := Ideal.Quotient.field M
+    let := Ideal.Quotient.field M
     let i : R →+* AlgebraicClosure (R ⧸ M) := (algebraMap (R ⧸ M) (AlgebraicClosure (R ⧸ M))).comp (Ideal.Quotient.mk M)
     have hmK : ((m : ℕ) : AlgebraicClosure (R ⧸ M)) ≠ 0 := by
       have := hmu.map i
@@ -1469,11 +1469,11 @@ theorem exists_nbhd_thetaMap : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsC
   let Rr := Localization.Away r
   have hr0 : r ≠ 0 := fun h => hr (h ▸ p.asIdeal.zero_mem)
   have hle : Submonoid.powers r ≤ nonZeroDivisors R := powers_le_nonZeroDivisors_of_noZeroDivisors hr0
-  haveI : IsDomain Rr := IsLocalization.isDomain_localization hle
-  haveI : IsNoetherianRing Rr := IsLocalization.isNoetherianRing (Submonoid.powers r) Rr hN
-  haveI : IsIntegrallyClosed Rr := isIntegrallyClosed_of_isLocalization Rr _ hle
+  have : IsDomain Rr := IsLocalization.isDomain_localization hle
+  have : IsNoetherianRing Rr := IsLocalization.isNoetherianRing (Submonoid.powers r) Rr hN
+  have : IsIntegrallyClosed Rr := isIntegrallyClosed_of_isLocalization Rr _ hle
   have hinj : Function.Injective (algebraMap R Rr) := IsLocalization.injective Rr hle
-  haveI : CharZero Rr := charZero_of_injective_algebraMap hinj
+  have : CharZero Rr := charZero_of_injective_algebraMap hinj
   let β' : o →+* Rr := (algebraMap R Rr).comp β
   have hu' : IsUnit (m : Rr) := by
     have := hu.map β'

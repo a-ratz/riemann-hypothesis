@@ -115,7 +115,7 @@ private theorem trace_ind (m : Measure G) [m.IsHaarMeasure] {ρ : Representation
   have hr : LinearMap.range A = fixedVectors ρ U := by
     refine le_antisymm (by rintro _ ⟨v, rfl⟩; exact h1 v) fun v hv => ⟨(m.real U : ℂ)⁻¹ • v, ?_⟩
     rw [map_smul, h2 v hv, smul_smul, inv_mul_cancel₀ hc, one_smul]
-  haveI : FiniteDimensional ℂ (fixedVectors ρ U) := hr ▸ hfin
+  have : FiniteDimensional ℂ (fixedVectors ρ U) := hr ▸ hfin
   refine ⟨this, ?_⟩
   rw [trace_congr hr _ _ (fun v _ => h1 v)]
   have : A.restrict (p := fixedVectors ρ U) (q := fixedVectors ρ U) (fun v _ => h1 v) = (m.real U : ℂ) • LinearMap.id :=
@@ -137,7 +137,7 @@ private theorem ex_norm (m : Measure G) [m.IsHaarMeasure] {U : Subgroup G} (hU :
   have h1 : m U ≠ ⊤ := hU.1.measure_lt_top.ne
   have hc : (m U).toNNReal ≠ 0 := ENNReal.toNNReal_ne_zero.2 ⟨h0, h1⟩
   refine ⟨(m U).toNNReal, (m U).toNNReal⁻¹ • m, hc, Measure.IsHaarMeasure.nnreal_smul m (inv_ne_zero hc), ?_, ?_⟩
-  · rw [Measure.smul_apply, ENNReal.smul_def, ENNReal.coe_inv hc, ENNReal.coe_toNNReal h1, smul_eq_mul,
+  · rw [smul_apply, ENNReal.smul_def, ENNReal.coe_inv hc, ENNReal.coe_toNNReal h1, smul_eq_mul,
       ENNReal.inv_mul_cancel h0 h1]
   · rw [smul_smul, mul_inv_cancel₀ hc, one_smul]
 
@@ -157,12 +157,12 @@ private theorem term {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
     (hV : IsSummand μ V) (hne : eigIn V 𝔣.toAmp.A x ≠ ⊥) :
     ∃ (c : ℝ) (Z : Multiset ℂ), 0 < c ∧ 0 ∉ Z ∧ Z ≠ 0 ∧ ∀ j : ℕ,
       trOn (eigIn V 𝔣.toAmp.A x) ((𝔣.Uq 0 ^ j) ∘L Rop μ 𝔣.g ∘L (Twist.id μ).U) = c * (Z.map (· ^ j)).sum := by
-  letI : ∀ v : Pl F, MeasurableSpace (Gw n v) := fun v => borel _
-  haveI : ∀ v : Pl F, BorelSpace (Gw n v) := fun v => ⟨rfl⟩
+  let : ∀ v : Pl F, MeasurableSpace (Gw n v) := fun v => borel _
+  have : ∀ v : Pl F, BorelSpace (Gw n v) := fun v => ⟨rfl⟩
   have hK : ∀ v : Pl F, CO (GLnLocal.integralGL (v.adicCompletion F) n) := fun v =>
     (UpperTheory.iwahori_compactOpen_and_iwCoset_indicator_test F n v).2.1 _ (GLnLocal.isOpen_integralGL _ _) le_rfl
   choose m hm using fun v : Pl F => ex_haar (hK v)
-  haveI := fun v => (hm v).1
+  have := fun v => (hm v).1
   obtain ⟨κ, hκ, H⟩ := UpperTheory.ConvolutionTheory.C.termF F E σ n l hn μ ν m hm
   choose τ hτ using fun v : Pl F => (_root_.PositivityTheory.TfC.OccursBasics_holds F n μ V v (m v) hV).1
   obtain ⟨N, hN, H⟩ := H a q w₀ L.S V τ x hV hx fun v _ => hτ v
@@ -220,7 +220,7 @@ theorem UpperTheory.ConvolutionTheory.T.posSide :
   have hfin : {W : Submodule ℂ (LL μ) | (IsSummand μ W ∧ eigIn W 𝔣.toAmp.A x ≠ ⊥) ∧ p W}.Finite :=
     ((T.ampFin F n hn μ 𝔣.toAmp).1 x hx).subset fun W hW => hW.1
   let ι := {W : Submodule ℂ (LL μ) | (IsSummand μ W ∧ eigIn W 𝔣.toAmp.A x ≠ ⊥) ∧ p W}
-  haveI : Fintype ι := hfin.fintype
+  have : Fintype ι := hfin.fintype
   choose c Z hc hZ0 hZ hT using fun W : ι => term hn he hF hf hx W.1 W.2.1.1 W.2.1.2
   have htr : ∀ j, 𝔣.tr p x j = ∑ W : ι, (c W : ℂ) * ((Z W).map (· ^ j)).sum := fun j => by
     simp only [← hT]

@@ -68,7 +68,7 @@ theorem extLine_of_holShape : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SP
   have hW : WtIs M w := fun ρ c => hw ρ c
   obtain ⟨hsm, hk⟩ := GlobalTheory.T.baseFrameBorel_acts_extremalVector_by_weight D θ V S M w v hθ hM hW hv τ
   obtain ⟨hC, hU, hI, hO⟩ := GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ
-  haveI := hC
+  have := hC
   have hOF := (hO hM).1
 
   have hdet : (x0Mat M τ).det ≠ 0 := by

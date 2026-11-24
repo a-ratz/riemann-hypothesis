@@ -86,7 +86,7 @@ theorem sub_lt_of_wild {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] (A : Va
   have h := hτ y hy
   have e : τ y / y - 1 = (τ y - y) / y := by field_simp
   rw [e, map_div₀] at h
-  have hpos : 0 < A.valuation y := zero_lt_iff.mpr hv
+  have hpos : 0 < A.valuation y := pos_iff_ne_zero.mpr hv
   calc A.valuation (τ y - y) = A.valuation (τ y - y) / A.valuation y * A.valuation y := by
         rw [div_mul_cancel₀ _ hv]
     _ < 1 * A.valuation y := by
@@ -99,7 +99,7 @@ theorem pow_sub_lt {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] (A : Valuat
   have hv : A.valuation y ≠ 0 := by simpa using hy
   intro i
   induction i with
-  | zero => simpa using zero_lt_iff.mpr hv
+  | zero => simpa using pos_iff_ne_zero.mpr hv
   | succ i ih =>
     have hne : (τ ^ i) y ≠ 0 := fun h0 => hy ((τ ^ i).injective (h0.trans (map_zero _).symm))
     have heq : A.valuation ((τ ^ i) y) = A.valuation y := Valuation.map_eq_of_sub_lt _ ih
@@ -170,7 +170,7 @@ theorem main : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F
     have h := pow_sub_lt A σ hσ y hy (p ^ a)
     have e : τ y / y - 1 = (τ y - y) / y := by field_simp
     rw [e, map_div₀]
-    exact (div_lt_one₀ (zero_lt_iff.mpr hv)).mpr h
+    exact (div_lt_one₀ (pos_iff_ne_zero.mpr hv)).mpr h
   have hτE : τ ∈ E.fixingSubgroup := by
     rw [IntermediateField.mem_fixingSubgroup_iff]
     intro b hb
@@ -302,7 +302,7 @@ theorem residue_ne_one (N : NData R H what₂) (i : N.Loc)
     (hDel : Nat.card ((Ine (F := H.E) (N.plOm.1 w)).map (N.chi i 1)) = 15) :
     IsLocalRing.residue (N.O i) (chi1 N i (N.gam0 i w)) ≠ 1 := by
   intro h1
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hval : (N.plOm.1 w).valuation (q : N.Om) < 1 := by
     have := ((N.plOm.2 w) ((q : ℕ) : 𝓞 H.E)).2 hw
     simpa using this

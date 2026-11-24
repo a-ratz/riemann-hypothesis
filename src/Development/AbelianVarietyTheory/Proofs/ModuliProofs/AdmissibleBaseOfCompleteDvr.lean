@@ -662,7 +662,7 @@ theorem exists_geoIso_rel : Laws → ∀ (V : Type) [CommRing V] [IsDomain V] [I
   obtain ⟨I, hX, hA, hh, hR⟩ := exists_iso_om e hL.globalFns (RingHom.Flat.id V) hF ν ν' z
   refine ⟨invIso I, ?_, fun k p p' q q' hq hq' hC => ⟨?_, rel_invIso I (hR _ _ _ _ hq.2 hq'.2 ?_)⟩⟩
   · have gp := pull_grp e
-    haveI : IsMonHom (Iso.refl D.P.A).hom := inferInstanceAs (IsMonHom (𝟙 D.P.A))
+    have : IsMonHom (Iso.refl D.P.A).hom := inferInstanceAs (IsMonHom (𝟙 D.P.A))
     obtain ⟨Ψ, -, hΨ⟩ := grpPullback_iso
       ((isGrpPullback_of_iso (Iso.refl D.P.A)).congr (Spec.map_id _).symm rfl) gp
     replace hΨ : Ψ.hom.left ≫ proj e = 𝟙 _ := hΨ
@@ -1367,12 +1367,12 @@ theorem admissible_base_of_complete_dvr (hV : GlobalTheory.LN.CDvr V) : AdmBase 
   exact ⟨inferInstance, inferInstance, inferInstance, h₂⟩
 
 theorem charZero_of (hV : GlobalTheory.LN.CDvr V) : CharZero C := by
-  haveI := hV.2.2
+  have := hV.2.2
   exact (RingHom.charZero_iff (ϕ := (algebraMap (FractionRing V) C).comp (algebraMap V _))
     ((algebraMap (FractionRing V) C).injective.comp (IsFractionRing.injective V _))).1 inferInstance
 
 theorem exists_one_lt_norm (hV : GlobalTheory.LN.CDvr V) (hC : CExt V (IsLocalRing.maximalIdeal V) C) : ∃ x : C, 1 < ‖x‖ := by
-  haveI := hV.1
+  have := hV.1
   obtain ⟨a, ha, h0⟩ := (Submodule.ne_bot_iff _).1 (IsDiscreteValuationRing.not_a_field V)
   refine ⟨(algebraMap (FractionRing V) C (algebraMap V _ a))⁻¹, ?_⟩
   rw [norm_inv]
@@ -1484,8 +1484,8 @@ theorem exists_pullDeg {C : Type} [Field C] [IsAlgClosed C] [CharZero C] [Algebr
       ν'.QPt p' (qMap (TateInh.homOfIso J) k q) → ν'.QPt pσ' qσ' → N'.QEq (qMap (TateInh.homOfIso J) k qσ) qσ') :
     ∃ e : IsPullDeg (RingHom.id V) D D', ∀ (k : ℕ) (p : QkPt D C k) (p' : QkPt D' C k) (q : N.QT k),
       ν.QPt p q → ν'.QPt p' (qMap (TateInh.homOfIso J) k q) → Carries e p p' := by
-  haveI := hV.1
-  haveI := hV.2.2
+  have := hV.1
+  have := hV.2.2
   have hL := firstFiveLaws.1
   have hL2 := firstFiveLaws.2.1
   have hk0 : k ≠ 0 := by omega
@@ -1499,11 +1499,11 @@ theorem exists_pullDeg {C : Type} [Field C] [IsAlgClosed C] [CharZero C] [Algebr
       s ▷ D.P.A ≫ φ.hom ≫ snd _ _ = φ.hom ≫ snd _ _ := fun σ s hs => by
     have hf : (σ : C →+* C).comp (algebraMap (FractionRing V) C) = algebraMap (FractionRing V) C :=
       RingHom.ext σ.commutes
-    haveI : IsIso s.left := by
+    have : IsIso s.left := by
       rw [hs]
       exact inferInstanceAs (IsIso (Spec.map σ.toRingEquiv.toCommRingCatIso.hom))
     haveI : IsIso ((Over.forget _).map s) := this
-    haveI : IsIso s := isIso_of_reflects_iso s (Over.forget _)
+    have : IsIso s := isIso_of_reflects_iso s (Over.forget _)
     refine GlobalTheory.T.polarisedIso_commutes_fieldAutomorphism_of_torsion hL _ D.P D'.P C _ φ g₁ h1 ⟨w, g₂⟩ k hk (Nat.cast_ne_zero.2 hk0) (asIso s) fun x hx => ?_
     obtain ⟨b, rfl⟩ := ν.eA.surjective x
     obtain ⟨g, rfl, hg⟩ := QStr.root_over N hk0 1 b (ν.eA.injective (by rw [map_pow, hx]; exact (map_one _).symm))
@@ -1542,7 +1542,7 @@ variable {C : Type} [NormedField C] [IsAlgClosed C] [Algebra (FractionRing V) C]
 theorem inducedBy_of_onQ (hn : 2 ≤ n) (h : SameMatch mt w) {j : ℕ} (hj : 1 ≤ j) (hr : w.RationalAt ν ν' j)
     (H : ∃ J : NumD.Iso N N', mt.OnQ J ∧ GeoIso ν ν' J.toIso) :
     ∃ e : IsPullDeg (RingHom.id V) D D', w.InducedBy ν ν' e := by
-  haveI : CharZero C := charZero_of hV
+  have : CharZero C := charZero_of hV
   obtain ⟨J, hQ, hJ⟩ := H
   have a : ∀ i (q : N.QT ((n ^ i) ^ 2)), N'.QEq (w.io i q) (qMap (TateInh.homOfIso J) _ q) := fun i q => by
     refine (h i _ _).1 ?_
@@ -1577,7 +1577,7 @@ omit he hb he' hb' [IsAlgClosed C] in
 theorem onQ_of_inducedBy (hn : n ≠ 0) (h : SameMatch mt w)
     (H : ∃ e : IsPullDeg (RingHom.id V) D D', w.InducedBy ν ν' e) :
     ∃ J : NumD.Iso N N', mt.OnQ J ∧ GeoIso ν ν' J.toIso := by
-  haveI := hV.1
+  have := hV.1
   obtain ⟨e, he⟩ := H
   obtain ⟨J, hJ, hc⟩ := GlobalTheory.T.exists_geometric_values_iso_of_identification_dvr firstFiveLaws.1 V D D' e C N N' ν ν'
   refine ⟨J, fun j p p' h₁ h₂ => ?_, hJ⟩
@@ -1625,8 +1625,8 @@ theorem recognition_iff : RecognitionSt ↔ URecDvrSt := by
       (hw.proportional (fun j p => summable_txT hq (pow_ne_zero _ hn.ne_zero) p)
         fun j p => summable_txT hq' (pow_ne_zero _ hn.ne_zero) p) ⟨j, hj, (hw.rational_iff ν ν' j).1 hr⟩)
   · rintro h V _ _ _ hV D D' n hn ho hu C _ _ _ _ _ hC N N' ν ν' w c₀ hw ⟨j, hj, hr⟩
-    letI : NontriviallyNormedField C := ⟨exists_one_lt_norm hV hC⟩
-    haveI := hV.1
+    let : NontriviallyNormedField C := ⟨exists_one_lt_norm hV hC⟩
+    have := hV.1
     have hL := firstFiveLaws.1
     have h1 := (isUnit_iff_norm hC n).1 hu
     have hnC : (n : C) ≠ 0 := fun h => by rw [h, norm_zero] at h1; exact zero_ne_one h1

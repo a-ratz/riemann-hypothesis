@@ -183,7 +183,7 @@ private theorem card_id (y : X) : (Nat.card {x // id x = y} : A) = 1 := by simp
 private theorem tr_cob [Fintype X] {a : G → X → X} {c c' : G → X → M} (h : IsCoc a c) (h' : IsCoc a c') (b : X → M)
     (hb : ∀ g x, c' g x = (b x)⁻¹ * c g x * b (a g x)) {m : ℕ} {z : Ch A G (m + 1)} (hz : Cyc z) :
     Bd (tr A a c' (m + 1) z - tr A a c (m + 1) z) := by
-  letI : MulAction G X :=
+  let : MulAction G X :=
     { smul := fun g x => a g⁻¹ x
       one_smul := fun x => show a 1⁻¹ x = x by rw [inv_one, h.a_one]
       mul_smul := fun g g' x => show a (g * g')⁻¹ x = a g⁻¹ (a g'⁻¹ x) by rw [mul_inv_rev, h.a_mul] }
@@ -227,14 +227,14 @@ private theorem exists_homog (k V : Type) [Field k] [AddCommGroup V] [Module k V
   choose l hl using h
   refine ⟨fun v => if hv : v = 0 then 1 else l v hv, fun u v hv => ?_⟩
   have huv : u • v ≠ 0 := (smul_ne_zero_iff_ne u).2 hv
-  simp only [dif_neg hv, dif_neg huv]
+  simp only [dite_eq_right hv, dite_eq_right huv]
   have e : Projectivization.mk k (u • v) huv = Projectivization.mk k v hv :=
     (Projectivization.mk_eq_mk_iff k _ _ _ _).2 ⟨u, rfl⟩
   have h1 := hl _ huv
   rw [e] at h1
   have h2 : (u * l v hv) • (Projectivization.mk k v hv).rep = u • v := by rw [mul_smul, hl]
   apply Units.ext
-  exact smul_left_injective k (Projectivization.rep_nonzero _) (h1.trans h2.symm)
+  exact smul_left_injective k (Projectivization.rep_ne_zero _) (h1.trans h2.symm)
 
 private def lam (k V : Type) [Field k] [AddCommGroup V] [Module k V] : V → kˣ := (exists_homog k V).choose
 
@@ -332,7 +332,7 @@ private theorem theta_one [Finite k] {m : ℕ} {t : Ch A kˣ (m + 1) →ₗ[A] A
   classical
   have hl : Homog fun v : k => if hv : v = 0 then (1 : kˣ) else Units.mk0 v hv := fun u v hv => by
     have huv : u • v ≠ 0 := (smul_ne_zero_iff_ne u).2 hv
-    simp only [dif_neg hv, dif_neg huv]
+    simp only [dite_eq_right hv, dite_eq_right huv]
     ext; simp [Units.smul_def]
   rw [theta_cm ht _ hl hz, tr_pull (MonoidHom.id _) (fun _ => ()) (a := la (scal k)) (a' := fun _ _ => ()) (c' := fun g _ => g)
     (fun _ _ => rfl), cm_id]
@@ -366,7 +366,7 @@ private theorem projection_smul_invariant (u : kˣ) (v : V × W) (hv : v ≠ 0) 
   by_cases h : v.1 = 0
   · rw [dite_eq_left h, dite_eq_left (by simp [h])]
     exact congrArg _ ((Projectivization.mk_eq_mk_iff k _ _ _ _).2 ⟨u, rfl⟩)
-  · rw [dif_neg h, dif_neg (show ¬(u • v).1 = 0 from (smul_ne_zero_iff_ne u).2 h)]
+  · rw [dite_eq_right h, dite_eq_right (show ¬(u • v).1 = 0 from (smul_ne_zero_iff_ne u).2 h)]
     exact congrArg _ ((Projectivization.mk_eq_mk_iff k _ _ _ _).2 ⟨u, rfl⟩)
 
 private def pr (x : ℙ k (V × W)) : ℙ k V ⊕ ℙ k W := pr0 x.rep x.rep_nonzero
@@ -378,7 +378,7 @@ private theorem pr_mk (v : V × W) (hv : v ≠ 0) : pr (Projectivization.mk k v 
   exact hu.symm
 
 private theorem pr_inl {v : V × W} (hv : v ≠ 0) (h : v.1 ≠ 0) :
-    pr (Projectivization.mk k v hv) = Sum.inl (Projectivization.mk k v.1 h) := by rw [pr_mk, pr0, dif_neg h]
+    pr (Projectivization.mk k v hv) = Sum.inl (Projectivization.mk k v.1 h) := by rw [pr_mk, pr0, dite_eq_right h]
 
 private theorem pr_inr {v : V × W} (hv : v ≠ 0) (h : v.1 = 0) (h2 : v.2 ≠ 0) :
     pr (Projectivization.mk k v hv) = Sum.inr (Projectivization.mk k v.2 h2) := by rw [pr_mk, pr0, dite_eq_left h]
@@ -424,9 +424,9 @@ private theorem theta_add [Finite k] [Finite V] [Finite W] (hk : (Nat.card k : A
   classical
   have hl : Homog fun y : V × W => if y.1 = 0 then lam k W y.2 else lam k V y.1 := fun u y hy => by
     by_cases h : y.1 = 0
-    · simp only [if_pos h, if_pos (show (u • y).1 = 0 by simp [h])]
+    · simp only [ite_eq_left h, ite_eq_left (show (u • y).1 = 0 by simp [h])]
       exact lam_homog _ _ fun h2 => hy (Prod.ext h h2)
-    · simp only [if_neg h, if_neg (show ¬(u • y).1 = 0 from (smul_ne_zero_iff_ne u).2 h)]
+    · simp only [ite_eq_right h, ite_eq_right (show ¬(u • y).1 = 0 from (smul_ne_zero_iff_ne u).2 h)]
       exact lam_homog _ _ h
   have hs : ∀ g (y : V × W), (sumRep ρ σ g)⁻¹ y = ((ρ g)⁻¹ y.1, (σ g)⁻¹ y.2) := fun g y => rfl
   rw [theta_cm ht _ hl hz, theta_cm ht _ lam_homog hz, theta_cm ht _ lam_homog hz, ← map_add (f := _), ← tr_sum,

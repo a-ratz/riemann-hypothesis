@@ -76,8 +76,8 @@ theorem intValuation_exp_neg_one {L : Type} [Field L] [NumberField L]
   omega
 
 theorem one_lt_normV {E : Type} [Field E] [NumberField E] (v : HeightOneSpectrum (𝓞 E)) : 1 < normV v := by
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI := Ideal.Quotient.field v.asIdeal
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let := Ideal.Quotient.field v.asIdeal
   exact Finite.one_lt_card
 
 theorem main : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] (v : HeightOneSpectrum (𝓞 E))
@@ -144,8 +144,8 @@ theorem main : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E
     rw [this, ← IsScalarTower.algebraMap_apply]
   have hPW : IsPlaceOver A W := fun x => (hWmem x).symm
 
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  haveI hLO : W.asIdeal.LiesOver v.asIdeal := ⟨hWv.symm⟩
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  have hLO : W.asIdeal.LiesOver v.asIdeal := ⟨hWv.symm⟩
   have hprW : Prime W.asIdeal := Ideal.prime_of_isPrime W.ne_bot W.isPrime
   have hconds : Prime v.asIdeal := Ideal.prime_of_isPrime v.ne_bot v.isPrime
   have hspan0 : Ideal.span {ϖ} ≠ ⊥ := by
@@ -234,7 +234,7 @@ theorem main : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E
     by_contra hne'
     have hne2 : W'.asIdeal ≠ W.asIdeal := fun h => hne' (HeightOneSpectrum.ext h)
     exact hrest _ (Finset.mem_erase.2 ⟨hne2, hmem⟩)
-  · letI := Ideal.Quotient.field v.asIdeal
+  · let := Ideal.Quotient.field v.asIdeal
     have hfr : Module.finrank (𝓞 E ⧸ v.asIdeal) (𝓞 K ⧸ W.asIdeal) = 1 := by
       rw [← Ideal.inertiaDeg'_algebraMap]; exact hf1
     show Nat.card (𝓞 K ⧸ W.asIdeal) = Nat.card (𝓞 E ⧸ v.asIdeal)

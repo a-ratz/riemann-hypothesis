@@ -125,7 +125,7 @@ theorem core_inj {p : ℕ} [Fact p.Prime] (D : Datum p) {R : Type} [CommRing R] 
       rw [← hd, map_mul, Module.End.mul_apply, hv, map_zero]
     rw [L_nat] at h
     exact (smul_eq_zero.mp h).resolve_left hNk
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero hpr).mpr hp
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero hpr).mpr hp
   set Tω := L D.ω with hTω
   set ρ1 := β b.ρ with hρ1
   set ρ2 := (D.tr : k) - ρ1 with hρ2
@@ -329,12 +329,12 @@ theorem card_ker_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
     [IsAlgClosed k] (x : Sp k ⟶ S), Nat.card {g : Over.mk x ⟶ o.A // ∀ c ∈ w0,
       g ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1} = Nat.card (𝓞 D.F ⧸ w0) ^ (D.m * D.n) := by
   intro p _ D R _ b N w0 hw S s o k _ _ x
-  letI : CommGroup (Over.mk x ⟶ o.A) := Hom.commGroup
+  let : CommGroup (Over.mk x ⟶ o.A) := Hom.commGroup
   have act0 : o.act.act 0 = 1 := by
     have h := o.act.add 0 0
     rw [add_zero] at h
     exact mul_eq_left.mp h.symm
-  letI : Module (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) :=
+  let : Module (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) :=
     { smul := fun c g => Additive.ofMul (g.toMul ≫ o.act.act (algebraMap (𝓞 D.F) D.O c))
       one_smul := fun g => by
         show Additive.ofMul (g.toMul ≫ o.act.act (algebraMap (𝓞 D.F) D.O 1)) = g
@@ -344,11 +344,11 @@ theorem card_ker_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
           Additive.ofMul ((g.toMul ≫ o.act.act (algebraMap (𝓞 D.F) D.O b)) ≫ o.act.act (algebraMap (𝓞 D.F) D.O a))
         rw [map_mul, o.act.mul, Category.assoc]
       smul_zero := fun c => by
-        haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c)
+        have := o.act.hom (algebraMap (𝓞 D.F) D.O c)
         show Additive.ofMul ((1 : Over.mk x ⟶ o.A) ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)) = Additive.ofMul 1
         rw [MonObj.one_comp]
       smul_add := fun c g g' => by
-        haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c)
+        have := o.act.hom (algebraMap (𝓞 D.F) D.O c)
         show Additive.ofMul ((g.toMul * g'.toMul) ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)) =
           Additive.ofMul ((g.toMul ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)) *
             (g'.toMul ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)))
@@ -434,7 +434,7 @@ theorem card_ker_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
       apply Nat.finite_of_card_ne_zero
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ne, Ideal.absNorm_eq_zero_iff]
       exact hne
-    letI := Ideal.Quotient.field w0
+    let := Ideal.Quotient.field w0
     exact Finite.one_lt_card
 
   have hTHfin : Finite (Submodule.torsionBySet (𝓞 D.F) (Additive (Over.mk x ⟶ o.A))
@@ -447,8 +447,8 @@ theorem card_ker_place : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
     Submodule.torsionBySet_le_torsionBySet_of_subset (Ideal.pow_le_self hH0.ne')
   have hT1fin : Finite (Submodule.torsionBySet (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) (w0 : Set (𝓞 D.F))) :=
     Finite.of_injective _ (Submodule.inclusion_injective hsub)
-  letI := Ideal.Quotient.field w0
-  haveI : Module.Finite (𝓞 D.F ⧸ w0)
+  let := Ideal.Quotient.field w0
+  have : Module.Finite (𝓞 D.F ⧸ w0)
       (Submodule.torsionBySet (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) (w0 : Set (𝓞 D.F))) :=
     Module.Finite.of_finite
   set h' := Module.finrank (𝓞 D.F ⧸ w0)
@@ -553,8 +553,8 @@ theorem free_torsion_geomPt : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
     Function.Injective f ∧
     ∀ g : Over.mk x ⟶ o.A, (∀ c ∈ w0 ^ r, g ≫ o.act.act (algebraMap (𝓞 D.F) D.O c) = 1) → ∃ a, f a = g := by
   intro p _ D R _ b N w0 r hw S s o k _ _ x
-  letI : CommGroup (Over.mk x ⟶ o.A) := Hom.commGroup
-  letI : Module (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) := ptModule o.act (Over.mk x)
+  let : CommGroup (Over.mk x ⟶ o.A) := Hom.commGroup
+  let : Module (𝓞 D.F) (Additive (Over.mk x ⟶ o.A)) := ptModule o.act (Over.mk x)
   have hsm : ∀ (c : 𝓞 D.F) (g : Additive (Over.mk x ⟶ o.A)),
       c • g = Additive.ofMul (g.toMul ≫ o.act.act (algebraMap (𝓞 D.F) D.O c)) := fun _ _ => rfl
   have hmax : w0.IsMaximal := hw.1

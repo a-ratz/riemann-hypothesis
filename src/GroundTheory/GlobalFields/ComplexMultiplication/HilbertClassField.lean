@@ -74,7 +74,7 @@ theorem mem_fixingSubgroup_adjoin_simple_iff {F E : Type*} [Field F] [Field E] [
       rw [adjoin_simple_le_iff, mem_fixedField_iff]
       intro f hf
       exact (Subgroup.zpowers_le.2 hst) hf
-    exact (le_iff_le _ _).1 hle (Subgroup.mem_zpowers τ)
+    exact (le_fixedField_iff_le_fixingSubgroup _ _).1 hle (Subgroup.mem_zpowers τ)
 
 
 include hK in

@@ -111,7 +111,7 @@ namespace GlobalTheory.FinSchemeRank
 
 theorem length_self_eq_of_ringEquiv {R S : Type*} [CommRing R] [CommRing S] (e : R ≃+* S) :
     Module.length R R = Module.length S S := by
-  letI : Algebra R S := e.toRingHom.toAlgebra
+  let : Algebra R S := e.toRingHom.toAlgebra
   let f : R ≃ₗ[R] S :=
     { e with map_smul' := fun r x => by simp [Algebra.smul_def, RingHom.algebraMap_toAlgebra] }
   rw [f.length_eq]
@@ -120,9 +120,9 @@ theorem length_self_eq_of_ringEquiv {R S : Type*} [CommRing R] [CommRing S] (e :
 theorem finrank_eq_length_of_isLocalRing (k : Type*) [Field k] [IsAlgClosed k] (A : Type*) [CommRing A]
     [IsLocalRing A] [Algebra k A] [Module.Finite k A] :
     (Module.finrank k A : ℕ∞) = Module.length A A := by
-  haveI : IsLocalHom (algebraMap k A) :=
+  have : IsLocalHom (algebraMap k A) :=
     ⟨fun a ha => isUnit_iff_ne_zero.mpr fun h => by simp [h] at ha⟩
-  haveI : Module.Finite k (IsLocalRing.ResidueField A) :=
+  have : Module.Finite k (IsLocalRing.ResidueField A) :=
     Module.Finite.of_surjective (IsScalarTower.toAlgHom k A (IsLocalRing.ResidueField A)).toLinearMap
       IsLocalRing.residue_surjective
   have hb : Function.Bijective (algebraMap k (IsLocalRing.ResidueField A)) :=
@@ -140,11 +140,11 @@ theorem finrank_eq_card_mul (k : Type) [Field k] [IsAlgClosed k] (B : Type) [Com
     (hm : ∀ p : PrimeSpectrum B,
       Module.length (Localization.AtPrime p.asIdeal) (Localization.AtPrime p.asIdeal) = m) :
     (Module.finrank k B : ℕ∞) = Nat.card (PrimeSpectrum B) * m := by
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite k B
-  letI := Fintype.ofFinite (PrimeSpectrum B)
+  have : IsArtinianRing B := IsArtinianRing.of_finite k B
+  let := Fintype.ofFinite (PrimeSpectrum B)
   have h : ∀ p : PrimeSpectrum B, (Module.finrank k (Localization.AtPrime p.asIdeal) : ℕ∞) = m := by
     intro p
-    haveI : Module.Finite k (Localization.AtPrime p.asIdeal) :=
+    have : Module.Finite k (Localization.AtPrime p.asIdeal) :=
       Module.Finite.of_surjective (Algebra.algHom k B (Localization.AtPrime p.asIdeal)).toLinearMap
         (IsArtinianRing.localization_surjective p.asIdeal.primeCompl (Localization.AtPrime p.asIdeal))
     rw [← hm p, finrank_eq_length_of_isLocalRing k]
@@ -154,7 +154,7 @@ theorem finrank_eq_card_mul (k : Type) [Field k] [IsAlgClosed k] (B : Type) [Com
 theorem card_algHom_eq_card_primeSpectrum (k : Type) [Field k] [IsAlgClosed k] (B : Type) [CommRing B]
     [Algebra k B] [Module.Finite k B] :
     Nat.card (B →ₐ[k] k) = Nat.card (PrimeSpectrum B) := by
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite k B
+  have : IsArtinianRing B := IsArtinianRing.of_finite k B
   let F : (B →ₐ[k] k) → PrimeSpectrum B := fun φ => ⟨RingHom.ker φ, RingHom.ker_isPrime _⟩
   refine Nat.card_congr (Equiv.ofBijective F ⟨?_, ?_⟩)
   · intro φ ψ h
@@ -164,8 +164,8 @@ theorem card_algHom_eq_card_primeSpectrum (k : Type) [Field k] [IsAlgClosed k] (
     rw [h', RingHom.mem_ker, map_sub, AlgHom.commutes, sub_eq_zero] at this
     exact this.symm
   · intro p
-    haveI : p.asIdeal.IsMaximal := Ideal.isMaximal_of_isPrime p.asIdeal
-    letI : Field (B ⧸ p.asIdeal) := Ideal.Quotient.field _
+    have : p.asIdeal.IsMaximal := Ideal.isMaximal_of_isPrime p.asIdeal
+    let : Field (B ⧸ p.asIdeal) := Ideal.Quotient.field _
     have hb : Function.Bijective (algebraMap k (B ⧸ p.asIdeal)) :=
       IsAlgClosed.algebraMap_bijective_of_isIntegral
     let e := AlgEquiv.ofBijective (Algebra.ofId k (B ⧸ p.asIdeal)) hb
@@ -178,18 +178,18 @@ theorem finrank_eq_card_sections_mul : ∀ (k : Type) [Field k] [IsAlgClosed k] 
     IsFinite q → ∀ (m : ℕ∞), (∀ x : P, Module.length (P.presheaf.stalk x) (P.presheaf.stalk x) = m) →
     ∀ z : Sp k, (q.finrank z : ℕ∞) = (Nat.card {s : Sp k ⟶ P // s ≫ q = 𝟙 _} : ℕ∞) * m := by
   intro k _ _ P q hq m hm z
-  haveI := hq
-  haveI : IsAffine P := isAffine_of_isAffineHom q
+  have := hq
+  have : IsAffine P := isAffine_of_isAffineHom q
   let B : Type := Γ(P, ⊤)
-  letI : Algebra k B := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ q.appTop).hom.toAlgebra
+  let : Algebra k B := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ q.appTop).hom.toAlgebra
   let q' : Spec (CommRingCat.of B) ⟶ Sp k := Spec.map (CommRingCat.ofHom (algebraMap k B))
   have hq1 : P.isoSpec.hom ≫ q' = q := GlobalTheory.IwLevel.FiberCard.isoSpec_hom_specMap_appTop' q
   have hq2 : q' = P.isoSpec.inv ≫ q := by rw [← hq1, Iso.inv_hom_id_assoc]
-  haveI : IsFinite q' := by rw [hq2]; infer_instance
-  haveI : Module.Finite k B :=
+  have : IsFinite q' := by rw [hq2]; infer_instance
+  have : Module.Finite k B :=
     RingHom.finite_algebraMap.mp ((IsFinite.SpecMap_iff _).mp (inferInstanceAs (IsFinite q')))
-  haveI : Flat q' := Flat.SpecMap_iff.mpr (RingHom.flat_algebraMap_iff.mpr inferInstance)
-  haveI : Flat q := by rw [← hq1]; infer_instance
+  have : Flat q' := Flat.SpecMap_iff.mpr (RingHom.flat_algebraMap_iff.mpr inferInstance)
+  have : Flat q := by rw [← hq1]; infer_instance
   have hrk : q.finrank z = Module.finrank k B := by
     rw [← hq1, Scheme.Hom.finrank_comp_left_of_isIso]
     refine (Scheme.Hom.finrank_SpecMap_algebraMap k B z).trans ?_
@@ -231,9 +231,9 @@ theorem finrank_eq_card_sections_mul : ∀ (k : Type) [Field k] [IsAlgClosed k] 
     intro p
     have hU := isAffineOpen_top P
     have hp : hU.fromSpec p ∈ (⊤ : P.Opens) := by simp
-    letI : Algebra B (P.presheaf.stalk (hU.fromSpec p)) :=
+    let : Algebra B (P.presheaf.stalk (hU.fromSpec p)) :=
       TopCat.Presheaf.algebra_section_stalk P.presheaf ⟨hU.fromSpec p, hp⟩
-    haveI : IsLocalization p.asIdeal.primeCompl (P.presheaf.stalk (hU.fromSpec p)) :=
+    have : IsLocalization p.asIdeal.primeCompl (P.presheaf.stalk (hU.fromSpec p)) :=
       hU.isLocalization_stalk' p hp
     rw [← hm (hU.fromSpec p)]
     exact length_self_eq_of_ringEquiv (IsLocalization.algEquiv p.asIdeal.primeCompl

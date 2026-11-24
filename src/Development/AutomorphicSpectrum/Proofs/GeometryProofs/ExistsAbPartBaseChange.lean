@@ -124,8 +124,8 @@ def eBC (f : Sp L' ⟶ Sp L) {G : Over (Sp L)} [GrpObj G] (T : TorusExtension G)
 theorem eBC_hom (f : Sp L' ⟶ Sp L) {G : Over (Sp L)} [GrpObj G] (T : TorusExtension G) {B' : Over (Sp L)}
     [GrpObj B'] (e : T.B ≅ B') (h : letI := T.grpB; IsMonHom e.hom) :
     letI := (torusExtBC f T).grpB; IsMonHom (eBC f T e).hom := by
-  letI := T.grpB
-  haveI := h
+  let := T.grpB
+  have := h
   exact (inferInstance : IsMonHom ((Over.pullback f).map e.hom))
 
 theorem map_left_fst {S S' : Scheme.{0}} (f : S' ⟶ S) {X Y : Over S} (a : X ⟶ Y) :
@@ -148,7 +148,7 @@ theorem iB_point (e : L →+* L') {G : Over (Sp L)} [GrpObj G] {X : Type} [AddCo
 
 theorem torusOver_torusExtBC (e : L →+* L') {G : Over (Sp L)} [GrpObj G] (T : TorusExtension G) :
     TorusOver e T (torusExtBC (spMap e) T) (pullback.fst G.hom (spMap e)) := by
-  letI := T.addCommGroup
+  let := T.addCommGroup
   exact ⟨AddEquiv.refl _, fun A _ a t' t h => iB_point e T.i a t' t h⟩
 
 theorem lbIso_square {X X' Y Y' : Scheme.{0}} {φ : X' ⟶ X} {β : Y' ⟶ Y} {ψ : X ⟶ Y} {ψ' : X' ⟶ Y'}

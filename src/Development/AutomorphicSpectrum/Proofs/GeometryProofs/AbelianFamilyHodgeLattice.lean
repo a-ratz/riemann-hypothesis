@@ -125,8 +125,8 @@ theorem UpperTheory.formally_smooth_section_stalk :
     rw [Spec.map_comp, Category.assoc, h, Scheme.SpecMap_stalkMap_fromSpecStalk]
   · exact Scheme.SpecMap_stalkMap_fromSpecStalk s
   · intro R R' _ π φ v hπ hk hv
-    haveI : IsLocalHom π.hom := UpperTheory.isLocalHom_of_square_zero π.hom hπ hk
-    haveI : IsLocalRing R' := π.hom.domain_isLocalRing
+    have : IsLocalHom π.hom := UpperTheory.isLocalHom_of_square_zero π.hom hπ hk
+    have : IsLocalRing R' := π.hom.domain_isLocalRing
     have hsp : v (IsLocalRing.closedPoint R') ⤳ s p := by
       have h1 : v (IsLocalRing.closedPoint R') =
           s (X.fromSpecStalk p (Spec.map φ (IsLocalRing.closedPoint R))) := by
@@ -159,7 +159,7 @@ private theorem UpperTheory.universal_derivation_surjective {A B : Type} [CommRi
     ∃ (n : ℕ) (d : Derivation A B (Fin n → A)), Function.Surjective d ∧
       ∀ (R : Type) [AddCommGroup R] [Module A R] [Module B R] [IsScalarTower B A R]
         (δ : Derivation A B R), ∃ c : Fin n → R, ∀ b, δ b = ∑ i, d b i • c i := by
-  haveI : Module.Free A (A ⊗[B] Ω[B⁄A]) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free A (A ⊗[B] Ω[B⁄A]) := Module.free_of_flat_of_isLocalRing
   let e := Module.finBasis A (A ⊗[B] Ω[B⁄A])
   let D0 : Derivation A B (A ⊗[B] Ω[B⁄A]) :=
     (TensorProduct.mk B A Ω[B⁄A] 1).compDer (KaehlerDifferential.D A B)
@@ -194,7 +194,7 @@ private theorem UpperTheory.universal_derivation_surjective {A B : Type} [CommRi
   refine ⟨_, (e.equivFun.toLinearMap.restrictScalars B).compDer D0,
     e.equivFun.surjective.comp hsurj, ?_⟩
   intro R _ _ _ _ δ
-  haveI : IsScalarTower A B R := ⟨fun a b r => by
+  have : IsScalarTower A B R := ⟨fun a b r => by
     rw [← algebraMap_smul A (a • b) r, ← algebraMap_smul A b r, ← mul_smul]
     congr 1
     rw [Algebra.algebraMap_eq_smul_one, smul_assoc, ← Algebra.algebraMap_eq_smul_one, smul_eq_mul]⟩
@@ -220,11 +220,11 @@ theorem UpperTheory.formally_smooth_surjective_derivation :
                 ∃ c : Fin n → R, ∀ b, (g b).snd = ∑ i, φ (d b i) * c i := by
   intro A B _ _ _ α σ hσ hfs hft
   have hσ' : ∀ a, σ (α a) = a := fun a => RingHom.congr_fun hσ a
-  letI : Algebra A B := α.toAlgebra
-  letI : Algebra B A := σ.toAlgebra
-  haveI : IsScalarTower A B A := IsScalarTower.of_algebraMap_eq fun a => (hσ' a).symm
-  haveI : Algebra.FormallySmooth A B := hfs
-  haveI : Algebra.EssFiniteType A B := hft
+  let : Algebra A B := α.toAlgebra
+  let : Algebra B A := σ.toAlgebra
+  have : IsScalarTower A B A := IsScalarTower.of_algebraMap_eq fun a => (hσ' a).symm
+  have : Algebra.FormallySmooth A B := hfs
+  have : Algebra.EssFiniteType A B := hft
   obtain ⟨n, d, hd, H⟩ := UpperTheory.universal_derivation_surjective (A := A) (B := B)
   have hmul : ∀ x y i, d (x * y) i = σ x * d y i + σ y * d x i := fun x y i => by
     rw [d.leibniz]; rfl
@@ -248,9 +248,9 @@ theorem UpperTheory.formally_smooth_surjective_derivation :
       simp
     · intro b
       simp
-  · letI : Algebra A R := φ.toAlgebra
-    letI : Algebra B R := (φ.comp σ).toAlgebra
-    haveI : IsScalarTower B A R := IsScalarTower.of_algebraMap_eq fun b => rfl
+  · let : Algebra A R := φ.toAlgebra
+    let : Algebra B R := (φ.comp σ).toAlgebra
+    have : IsScalarTower B A R := IsScalarTower.of_algebraMap_eq fun b => rfl
     let δ : Derivation A B R := Derivation.mk'
       { toFun := fun b => (g b).snd
         map_add' := fun x y => by simp
@@ -505,7 +505,7 @@ private def ValueChart.Rep (C : ValueChart G p) {R : Type} [CommRing R] (φ : X.
 
 private theorem ValueChart.cancel (C : ValueChart G p) {R : CommRingCat.{0}} {g g' : C.B ⟶ R}
     (h : Spec.map g ≫ C.j = Spec.map g' ≫ C.j) : g = g' := by
-  haveI := C.mono
+  have := C.mono
   exact Spec.map_injective ((cancel_mono C.j).1 h)
 
 variable {R : Type} [CommRing R]
@@ -789,9 +789,9 @@ theorem exists_basis_of_base {S : Scheme.{0}} {G : Over S} [GrpObj G] [Smooth G.
   have hj' : ∀ e, (M'.pt (j e)).left = spMap (GlobalTheory.CompanionTheory.Ar.dualMap φ) ≫ (M.pt e).left := fun e => by
     have := hj e
     rwa [Category.comp_id] at this
-  letI : Algebra R C := φ.toAlgebra
-  letI : Module R F := Module.compHom F φ
-  haveI : IsScalarTower R C F := ⟨fun r c f => by
+  let : Algebra R C := φ.toAlgebra
+  let : Module R F := Module.compHom F φ
+  have : IsScalarTower R C F := ⟨fun r c f => by
     show (φ r * c) • f = φ r • c • f
     rw [mul_smul]⟩
   let jl : E →ₗ[R] F :=

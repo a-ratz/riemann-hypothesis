@@ -85,7 +85,7 @@ theorem unimodular_normal : ∀ (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (�
       measure_univ_le_add_compl _
     have h3 : νW (Formalism.QuantumDeterminants.UWset k r z)ᶜ = 0 := hνW.conc
     rw [h3, add_zero] at h2
-    rw [ea, Measure.smul_apply, smul_eq_mul]
+    rw [ea, smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top a1.lt_top (h2.trans_lt h1)
   · rw [eb, Measure.map_smul _ (by
       apply Continuous.aemeasurable

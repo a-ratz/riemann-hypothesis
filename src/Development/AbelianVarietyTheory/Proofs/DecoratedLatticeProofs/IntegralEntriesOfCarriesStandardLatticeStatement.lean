@@ -73,7 +73,7 @@ namespace GlobalTheory.KJStdInt
 
 theorem carries_std_integral : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n : ℕ) (k : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)), Formalism.L2.Herm.Carries k (Formalism.L2.Col.stdLat E n) (Formalism.L2.Col.stdLat E n) → (∀ i j, k.1 i j ∈ Formalism.L2.Herm.intAf F E) ∧ ∀ i j, (k⁻¹).1 i j ∈ Formalism.L2.Herm.intAf F E := by
   intro F E _ _ _ _ _ n k hk
-  letI : StarRing E := starRingOfComm
+  let : StarRing E := starRingOfComm
   have hm : ∀ z : Fin n → E ⊗[F] Formalism.L2.Herm.Af F,
       z ∈ Formalism.L2.Herm.hatL (F := F) (Formalism.L2.Col.stdLat E n) ↔ ∀ i, z i ∈ Formalism.L2.Herm.intAf F E :=
     fun z => Formalism.L2.Col.mem_latS_std z

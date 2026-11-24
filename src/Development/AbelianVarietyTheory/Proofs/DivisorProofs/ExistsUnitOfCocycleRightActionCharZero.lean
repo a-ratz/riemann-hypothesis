@@ -92,7 +92,7 @@ theorem exists_unit_of_cocycle_rightAction_charZero :
     ∃ f : Kˣ, ∀ γ, σ γ f = c γ * f := by
   intro K _ _ Γ _ _ σ hσ c hc htriv
   classical
-  haveI := Fintype.ofFinite Γ
+  have := Fintype.ofFinite Γ
   have h1 : ∀ a, σ 1 a = a := by
     intro a
     have e := hσ 1 1 a

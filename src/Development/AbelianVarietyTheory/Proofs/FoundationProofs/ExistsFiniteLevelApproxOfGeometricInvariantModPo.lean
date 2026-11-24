@@ -84,7 +84,7 @@ theorem fixes_ggens (T : Tower p Ω) (N : ℕ) (g : Gal p Ω)
 theorem exists_level_of_fixed (hClo : IsClo p Ω) (T : Tower p Ω) (y : Ω)
     (hy : ∀ h ∈ Ggeo p Ω ⊓ ⨅ n, Gn T n, h y = y) :
     ∃ N, ∀ g ∈ Ggeo p Ω ⊓ MulAction.stabilizer (Gal p Ω) (T.qq N), g y = y := by
-  haveI := GlobalTheory.K5.FinLevel.charZero_of_tower T
+  have := GlobalTheory.K5.FinLevel.charZero_of_tower T
   let L : IntermediateField ℚ Ω := IntermediateField.adjoin ℚ (⋃ n, ggens T n)
   have hmemL : ∀ a ∈ ⋃ n, ggens T n, a ∈ L := fun a ha => IntermediateField.subset_adjoin ℚ _ ha
   have hO : ∀ r : O0 p, algebraMap (O0 p) Ω r ∈ L := fun r =>
@@ -95,7 +95,7 @@ theorem exists_level_of_fixed (hClo : IsClo p Ω) (T : Tower p Ω) (y : Ω)
     intro a b hab
     apply hClo.inj
     rw [← hφ a, ← hφ b, hab]
-  haveI halg : Algebra.IsAlgebraic L Ω := by
+  have halg : Algebra.IsAlgebraic L Ω := by
     constructor
     intro z
     obtain ⟨P, hP0, hPz⟩ := hClo.alg.isAlgebraic z
@@ -104,8 +104,8 @@ theorem exists_level_of_fixed (hClo : IsClo p Ω) (T : Tower p Ω) (y : Ω)
     rw [Polynomial.aeval_def] at hPz
     convert hPz using 2
     exact RingHom.ext hφ
-  haveI : IsAlgClosure L Ω := ⟨hClo.clo, halg⟩
-  haveI : IsGalois L Ω := IsAlgClosure.isGalois L Ω
+  have : IsAlgClosure L Ω := ⟨hClo.clo, halg⟩
+  have : IsGalois L Ω := IsAlgClosure.isGalois L Ω
   have hyL : y ∈ L := by
     have : y ∈ Set.range (algebraMap L Ω) := by
       rw [InfiniteGalois.mem_range_algebraMap_iff_fixed]

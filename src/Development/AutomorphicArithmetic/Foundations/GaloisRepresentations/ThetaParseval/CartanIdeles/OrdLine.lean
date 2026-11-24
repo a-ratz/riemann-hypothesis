@@ -69,7 +69,7 @@ theorem UpperTheory.Gal.TP.Skew.ordLine :
   intro hCA hIS hOE hIF hOA F E _ _ _ _ _ σ hc hu
   classical
   obtain ⟨hG, s, hsσ, hs1, hss, hall, δ₀, hδ0, hδσ⟩ := hCA F E σ hc
-  haveI := hG
+  have := hG
   let m : HeightOneSpectrum (𝓞 E) → ℤ := fun w =>
     FractionalIdeal.count E w (FractionalIdeal.dual ℤ ℚ (1 : FractionalIdeal (𝓞 E)⁰ E)) - ordE w δ₀
   have hcof : ∀ᶠ w in Filter.cofinite, m w = 0 :=

@@ -131,10 +131,10 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.kerFromU_of :
   have cpos := h1.pos
   obtain ⟨⟨e, rfl⟩, hm1, hl1, -, -, ψ₁', hm1', hψ₁a, hψ₁b⟩ := id h1
   obtain ⟨-, hm2, hl2, -, -, ψ₂', hm2', hψ₂a, hψ₂b⟩ := id h2
-  haveI := hm1
-  haveI := hm1'
-  haveI := hm2
-  haveI := hm2'
+  have := hm1
+  have := hm1'
+  have := hm2
+  have := hm2'
   obtain ⟨α, hα1, hα2, -⟩ := hU p D r w hw hle e
   have kill : ∀ {T' : Over (Sp k)} (u : T' ⟶ o.A), u ^ (p ^ e) = 1 → ∀ t : 𝓞 D.F,
       t ∈ Ideal.span {(p : 𝓞 D.F) ^ e} → u ≫ sc o t = 1 := by
@@ -173,7 +173,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.kerFromU_of :
         rw [← powc, ht, one_comp_monHom']
       have h' := ((hiff T' _).2 (uk o₂ ψ₂ hl2 T' _ hu2 hu3)).1
       simpa only [Category.assoc] using h')
-  haveI := hν
+  have := hν
   have hfac : ν ≫ ψ₁' = ψ₂' ≫ sc o α := by
     refine (hD (Sp k) o₂.A o.A o₂.ab (p ^ e) cpos).2 _ _ inferInstance inferInstance ?_
     rw [← powc, hνc]

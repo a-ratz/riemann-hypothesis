@@ -111,7 +111,7 @@ theorem UpperTheory.V.Bern.b_raabe :
 
     rw [map_sum] at h2
     simp only [F, PowerSeries.coeff_mk] at h2
-    rw [← Finset.sum_div, div_left_inj' (by positivity)] at h2
+    rw [← Finset.sum_div, div_left_inj₀ (by positivity)] at h2
     exact h2
   apply mul_right_cancel₀ hE0
   calc F N a * E = F N a * (y - 1) * ∑ j ∈ range m, y ^ j := by rw [hE]; ring

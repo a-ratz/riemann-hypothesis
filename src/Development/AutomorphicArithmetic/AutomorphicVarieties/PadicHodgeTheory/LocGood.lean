@@ -124,15 +124,15 @@ theorem IY_le_It : GlobalTheory.OrdLoc.IY D U ≤ GlobalTheory.OrdLoc.It D U :=
 theorem reg (hP : LocalPublishedTheorems) {x : U.R →ₐ[O] O} (hx : IsBase D.η D.Ψ U.r.hom x) :
     ∃ y, x y ≠ 0 ∧ ∀ a ∈ GlobalTheory.OrdLoc.It D U, y * a ∈ GlobalTheory.OrdLoc.IY D U := by
   have hi := inj_ZO (l := l) (O := O)
-  haveI : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
+  have : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
   have hi2 : Function.Injective (algebraMap ℤ_[l] (FractionRing O)) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] O (FractionRing O)]
     exact (IsFractionRing.injective O _).comp hi
-  letI : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
+  let : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
+  have : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
     IsScalarTower.of_algebraMap_eq fun x => (IsFractionRing.lift_algebraMap hi2 x).symm
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid O ℤ_[l]⁰) (FractionRing O) := inferInstance
-  haveI : Module.Finite ℚ_[l] (FractionRing O) := Module.Finite.of_isLocalization ℤ_[l] O ℤ_[l]⁰
+  have : IsLocalization (Algebra.algebraMapSubmonoid O ℤ_[l]⁰) (FractionRing O) := inferInstance
+  have : Module.Finite ℚ_[l] (FractionRing O) := Module.Finite.of_isLocalization ℤ_[l] O ℤ_[l]⁰
   obtain ⟨-, n, P, φ, -, -, ⟨y, hy, hyP⟩, hPt, -⟩ := _root_.GlobalTheory.OrdLoc.saturatedOrdinaryIdeal_smooth_at_residualRep hP D U (FractionRing O) x hx
   exact ⟨y, hy, fun a ha => hyP a (hPt ▸ ha)⟩
 
@@ -210,9 +210,9 @@ theorem qcont_dual {X E : Type} [TopologicalSpace X] [Field E] [Algebra ℚ_[l] 
       (((TrivSqZeroExt.inrHom E E).restrictScalars ℚ_[l]) (f x).snd) :=
     funext fun x => (TrivSqZeroExt.inl_fst_add_inr_snd_eq _).symm
   unfold QCont
-  letI : TopologicalSpace (DualNumber E) := moduleTopology ℚ_[l] _
-  haveI : IsModuleTopology ℚ_[l] (DualNumber E) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd ℚ_[l] (DualNumber E)
+  let : TopologicalSpace (DualNumber E) := moduleTopology ℚ_[l] _
+  have : IsModuleTopology ℚ_[l] (DualNumber E) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd ℚ_[l] (DualNumber E)
   rw [e]
   exact ((IsModuleTopology.continuous_of_linearMap _).comp h1).add
     ((IsModuleTopology.continuous_of_linearMap _).comp h2)
@@ -233,8 +233,8 @@ theorem GlobalTheory.OrdLoc.rtTangent :
     rwa [← eq_moduleTopology ℚ_[l] E] at h
   have hm : HasMult D.η (D.rz E) := fun g => rfl
   have hdc := dualCr D E (D.rz E) hm hc γ hγ r' hr'
-  haveI : Module.Finite E (DualNumber E) := inferInstanceAs (Module.Finite E (E × E))
-  haveI : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
+  have : Module.Finite E (DualNumber E) := inferInstanceAs (Module.Finite E (E × E))
+  have : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
   have hred : (GG.map (TrivSqZeroExt.fstHom E E E : DualNumber E →+* E)).comp r' = D.rz E := by
     refine MonoidHom.ext fun g => SemidirectProduct.ext (Units.ext (Matrix.ext fun a b => ?_)) (hr' g).1
     exact congrArg TrivSqZeroExt.fst ((hr' g).2 a b)
@@ -347,9 +347,9 @@ private theorem exists_coc {G E : Type} [Group G] [CommRing E]
 theorem UpperTheory.V.Loc.chartCount :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing O E] (x : U.R →ₐ[O] O), IsBase D.η D.Ψ U.r.hom x → ∀ (n : ℕ) (w : Fin n → ℤ) (φ : U.R →ₐ[O] MvPowerSeries (Fin n) E) (u : Fin n → GQ l × Fin 3 × Fin 3), UpperTheory.V.Loc.IsCompl (D.It U) x φ → (∀ g a b, φ ((U.r.hom g).mat a b) ∈ wtPart E w (wt a b)) → (∀ i j, MvPowerSeries.coeff (Finsupp.single j 1) (φ ((U.r.hom (u i).1).mat (u i).2.1 (u i).2.2)) = if i = j then 1 else 0) → ∀ j, Nat.card {i // w i = j} ≤ locDims j := by
   intro hP l _ O _ _ _ _ _ _ _ D U E _ _ _ _ _ _ _ _ x hx n w φ u hφ hg hu j
-  letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+  let : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
   have hxe : ∀ g a b, algebraMap O E (x ((U.r.hom g).mat a b)) = (D.rz E g).mat a b := fun g a b =>
     congrArg (fun r : GQ l →* GG (m := 3) (R := O) => algebraMap O E ((r g).mat a b)) hx
   let d : GQ l → Fin 3 → E := fun g b => algebraMap O E ((D.Ψ g ^ wt1 b : Oˣ) : O)
@@ -376,10 +376,10 @@ theorem UpperTheory.V.Loc.chartCount :
     · refine continuous_pi fun a => continuous_pi fun b => ?_
       simp only [he]
       refine Continuous.mul ?_ ((hdc b).comp continuous_inv)
-      haveI : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
+      have : Module.Finite ℚ_[l] (DualNumber E) := inferInstanceAs (Module.Finite ℚ_[l] (E × E))
       have hq := (ptCont (l := l) U.R (DualNumber E) F).1 _ _ (U.r.cont a b)
-      letI : TopologicalSpace (DualNumber E) := moduleTopology ℚ_[l] _
-      haveI : IsModuleTopology ℚ_[l] (DualNumber E) := ⟨rfl⟩
+      let : TopologicalSpace (DualNumber E) := moduleTopology ℚ_[l] _
+      have : IsModuleTopology ℚ_[l] (DualNumber E) := ⟨rfl⟩
       exact (IsModuleTopology.continuous_of_linearMap
         ((TrivSqZeroExt.sndHom E E).restrictScalars ℚ_[l])).comp hq
     · rw [← hφ.ker, RingHom.mem_ker] at hy
@@ -485,7 +485,7 @@ private theorem cg_ext {O R E : Type} [CommRing O] [IsDomain O] [CommRing R] [Al
       have hcp : AddMonoidAlgebra.coeff p d = k d := by
         rw [hp, MvPolynomial.coeff_sum]
         simp only [MvPolynomial.coeff_monomial]
-        rw [Finset.sum_ite_eq' s d (fun e => k e), if_pos hds]
+        rw [Finset.sum_ite_eq' s d (fun e => k e), ite_eq_left hds]
       rw [hy, map_sub, map_smul, hP, map_sub, MvPolynomial.coeff_coe, MvPolynomial.coeff_map, hcp,
         hk d hds]
       exact sub_eq_zero.mpr rfl
@@ -739,7 +739,7 @@ theorem UpperTheory.V.Loc.chartSpan :
   obtain ⟨b, hb, hbs, hbi⟩ := exists_linearIndependent E (Set.range fun s => L (φ (e s)))
   rw [hspan] at hbs
   have hfin : b.Finite := hbi.set_finite_of_isNoetherian
-  haveI := hfin.fintype
+  have := hfin.fintype
   let B : Module.Basis b E (Fin n → E) := Module.Basis.mk hbi (by simp [hbs])
   have hcard : Fintype.card b = n := by
     rw [← Module.finrank_eq_card_basis B]; simp
@@ -838,8 +838,8 @@ theorem UpperTheory.V.Loc.torAut :
     · rw [hxe, GG.mat, unitaryThreeReflection_left, tor_val, Matrix.diagonal_apply_ne _ hab, mul_zero]
   · by_cases hI : D.It U = ⊤
     · rw [hI]; trivial
-    haveI : Nontrivial (U.R ⧸ D.It U) := Ideal.Quotient.nontrivial_iff.2 hI
-    haveI : IsCO O (U.R ⧸ D.It U) := co_quot O U.R _ (Ideal.Quotient.mkₐ O _) (Ideal.Quotient.mkₐ_surjective O _)
+    have : Nontrivial (U.R ⧸ D.It U) := Ideal.Quotient.nontrivial_iff.2 hI
+    have : IsCO O (U.R ⧸ D.It U) := co_quot O U.R _ (Ideal.Quotient.mkₐ O _) (Ideal.Quotient.mkₐ_surjective O _)
     obtain ⟨f, hf, hfI⟩ := rtConj hP D U (U.R ⧸ D.It U) (push (Ideal.Quotient.mkₐ O _) U.r.hom)
       (tor _ (Units.map (algebraMap O (U.R ⧸ D.It U) : O →* _) t)) (fun a b => by
         rw [← res_eq_zero_iff O, Matrix.sub_apply, tor_val]
@@ -875,10 +875,10 @@ private theorem count_weights_eq_local_dims (w : Fin 12 → ℤ) (h : ∀ j, Nat
     by_contra hn
     have h1 := h (w i)
     have h2 : 0 < Nat.card {k // w k = w i} := by
-      haveI : Nonempty {k // w k = w i} := ⟨⟨i, rfl⟩⟩
+      have : Nonempty {k // w k = w i} := ⟨⟨i, rfl⟩⟩
       exact Nat.card_pos
     simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hn
-    simp only [locDims, hn, if_false] at h1
+    simp only [locDims, hn, ite_false] at h1
     omega
   have hs := Finset.card_eq_sum_card_fiberwise (s := Finset.univ) (t := ({-2, -1, 0, 1, 2} : Finset ℤ)) (f := w)
     (fun i _ => hm i)
@@ -902,7 +902,7 @@ theorem UpperTheory.V.Loc.rtChart :
   obtain ⟨t, θ, ht, hθx, hθI, hθ⟩ := torAut hP D U x hx
   let e : GQ l × Fin 3 × Fin 3 → U.R := fun s =>
     (U.r.hom s.1).mat s.2.1 s.2.2 - algebraMap O U.R (x ((U.r.hom s.1).mat s.2.1 s.2.2))
-  haveI : IsCO O (DualNumber O) := co_sqz O O O fun _ => rfl
+  have : IsCO O (DualNumber O) := co_sqz O O O fun _ => rfl
   obtain ⟨u, hu⟩ := chartSpan 12 (D.It U) x φ₀ _ e h₀ (fun f f' h => by
     obtain ⟨F, -, hF⟩ := (U.rep (DualNumber O)).2 (U.r.map f') trivial
     refine (hF f ?_).trans (hF f' rfl).symm
@@ -926,7 +926,7 @@ theorem UpperTheory.V.Loc.rtChart :
   refine ⟨w, φ, hφ, count_weights_eq_local_dims w (chartCount hP D U E x hx 12 w φ u hφ hg fun i j => ?_), hg⟩
   have h1 := hz i
   simp only [e, map_sub, AlgHom.commutes, sub_eq_iff_eq_add] at h1
-  rw [h1, map_add (f := _), MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, if_neg (by simp), add_zero,
+  rw [h1, map_add (f := _), MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, ite_eq_right (by simp), add_zero,
     MvPowerSeries.coeff_X]
   simp [Finsupp.single_left_inj, eq_comm]
 end -- clump:auto
@@ -1034,15 +1034,15 @@ theorem UpperTheory.V.Loc.locGood :
     obtain ⟨f', hf', hI'⟩ := rtConj hP D U R r.hom h hh ⟨f, congrArg GLift.hom hf, hI⟩
     exact ⟨f', GLift.ext (hf'.trans e.symm), hI'⟩
   · have hi := zl_inj l O
-    haveI : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
+    have : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
     have hi2 : Function.Injective (algebraMap ℤ_[l] (FractionRing O)) := by
       rw [IsScalarTower.algebraMap_eq ℤ_[l] O (FractionRing O)]
       exact (IsFractionRing.injective O _).comp hi
-    letI : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
-    haveI : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
+    let : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
+    have : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
       IsScalarTower.of_algebraMap_eq fun x => (IsFractionRing.lift_algebraMap hi2 x).symm
-    haveI : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
-    haveI : Module.Finite ℚ_[l] (FractionRing O) :=
+    have : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
+    have : Module.Finite ℚ_[l] (FractionRing O) :=
       Module.Finite.of_isLocalization ℤ_[l] O (nonZeroDivisors ℤ_[l])
     obtain ⟨x, hx, -⟩ := univEx D U
     obtain ⟨w, φ, hc, hd, hg⟩ := rtChart hP D U (FractionRing O) x hx
@@ -1054,8 +1054,8 @@ theorem UpperTheory.V.Loc.locGood :
         rw [map_sub, sub_eq_zero, ← algebraMap_smul (FractionRing O) c, map_smul, coeff_lin_X] at this
         rw [← this]
         split_ifs <;> simp
-      refine ⟨a, ?_, fun j hj => by rw [key, if_neg hj]⟩
-      rw [key, if_pos rfl]
+      refine ⟨a, ?_, fun j hj => by rw [key, ite_eq_right hj]⟩
+      rw [key, ite_eq_left rfl]
       exact (map_ne_zero_iff _ (IsFractionRing.injective O _)).2 hc0
     · exact hc.inj 2 f (mem_sq_of_coeff (by rw [hc.const, hf, map_zero]) h1)
 end -- clump:auto

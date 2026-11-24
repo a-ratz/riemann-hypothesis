@@ -162,19 +162,19 @@ theorem fou_eq_pi (Φ : Matrix (Fin n) (Fin r) k → ℂ) (x : Matrix (Fin r) (F
 theorem integrable_fou (hψ : Continuous ψ) {f : Matrix (Fin n) (Fin r) k → ℂ}
     (hf : f ∈ SB (Matrix (Fin n) (Fin r) k)) (x : Matrix (Fin r) (Fin n) k) :
     Integrable (fun y => f y * (ψ (trace (x * y)) : ℂ)) (volM ν (Fin n) (Fin r)) := by
-  haveI := secondCountable k
-  letI : MeasurableSpace (Matrix (Fin n) (Fin r) k) := GlobalTheory.SplitWeil.matrixMeasurableSpace
-  haveI : BorelSpace (Matrix (Fin n) (Fin r) k) := inferInstanceAs (BorelSpace (Fin n → Fin r → k))
-  haveI : (volM ν (Fin n) (Fin r)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : IsFiniteMeasureOnCompacts (volM ν (Fin n) (Fin r)) := inferInstance
+  have := secondCountable k
+  let : MeasurableSpace (Matrix (Fin n) (Fin r) k) := GlobalTheory.SplitWeil.matrixMeasurableSpace
+  have : BorelSpace (Matrix (Fin n) (Fin r) k) := inferInstanceAs (BorelSpace (Fin n → Fin r → k))
+  have : (volM ν (Fin n) (Fin r)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : IsFiniteMeasureOnCompacts (volM ν (Fin n) (Fin r)) := inferInstance
   have hc : Continuous fun y : Matrix (Fin n) (Fin r) k => f y * (ψ (trace (x * y)) : ℂ) :=
-    hf.1.continuous.mul (continuous_subtype_val.comp
+    hf.1.continuous.mul (continuous_subtypeVal.comp
       (hψ.comp ((continuous_const.matrix_mul continuous_id).matrix_trace)))
   exact hc.integrable_of_hasCompactSupport (μ := volM ν (Fin n) (Fin r)) hf.2.mul_right
 
 theorem fou_mem (hψ : Continuous ψ) (h1 : ψ ≠ 1) {f : Matrix (Fin n) (Fin r) k → ℂ}
     (hf : f ∈ SB (Matrix (Fin n) (Fin r) k)) : fou ψ ν n r f ∈ SB (Matrix (Fin r) (Fin n) k) := by
-  haveI := secondCountable k
+  have := secondCountable k
   obtain ⟨c, hc⟩ := (conductor_exists k).1 ψ hψ h1
   have h2 := FourierPi.fourier_mem_SB (Measure.pi fun _ : Fin n × Fin r => ν) hc
     (comp_mem_SB (flat n r).symm hf)
@@ -268,11 +268,11 @@ end GlobalTheory.LinearModelFourier
 
 theorem GlobalTheory.linearModel_fourier : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n r : ℕ), ∃ τ : GlobalTheory.SplitWeil.SB (Matrix (Fin n) (Fin r) k) →ₗ[ℂ] GlobalTheory.SplitWeil.SB (Matrix (Fin r) (Fin n) k), Function.Surjective τ ∧ ∀ (μ : kˣ →* ℂˣ) (gk : GL (Fin n) k) (hk : GL (Fin r) k) (Φ Φ' : GlobalTheory.SplitWeil.SB (Matrix (Fin n) (Fin r) k)), Φ'.1 = GlobalTheory.SplitWeil.om μ hk gk Φ.1 → (τ Φ').1 = GlobalTheory.SplitWeil.om μ⁻¹ gk hk (τ Φ).1 := by
   intro k _ _ _ _ n r
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   obtain ⟨ψ, hψ, h1, -⟩ := (conductor_exists k).2.1
   obtain ⟨ν, hν⟩ := (selfDual_measure k ψ hψ h1).1
-  haveI := hν.1
+  have := hν.1
   refine ⟨GlobalTheory.LinearModelFourier.fouL ν hψ h1, GlobalTheory.LinearModelFourier.fouL_surjective ν hψ h1 hν,
     fun μ gk hk Φ Φ' hΦ => ?_⟩
   show GlobalTheory.LinearModelFourier.fou ψ ν n r Φ'.1 = om μ⁻¹ gk hk (GlobalTheory.LinearModelFourier.fou ψ ν n r Φ.1)
@@ -331,7 +331,7 @@ theorem Place.isComp_of_chrEq : ∀ (D : D7) (s : SplitPlace D.host.E) (p : Glob
     rw [this]
     exact hj0.comp Units.continuous_coe_inv
   have hcc : Continuous c := hc.1.1
-  have hF2 : Continuous fun u => ((c (j u) : Circle) : ℂ) := (continuous_subtype_val.comp hcc).comp hj
+  have hF2 : Continuous fun u => ((c (j u) : Circle) : ℂ) := (continuous_subtypeVal.comp hcc).comp hj
   have hμc : Continuous μw := by
     refine continuous_of_continuousAt_one μw ?_
     have hker : (μw.ker : Set (s.w.adicCompletion D.host.E)ˣ) ∈ nhds 1 := hμ.1.mem_nhds (by simp)
@@ -524,9 +524,9 @@ theorem mem_half_iff {D : D7} {S T : HSp D} (e : AE D) (u : WO S T) : u ∈ half
 
 theorem nhdsNE_neBot (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] :
     (𝓝[≠] (0 : k)).NeBot := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
@@ -549,7 +549,7 @@ theorem exists_smul_int_mem (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     have hc : Continuous fun z : k × Matrix Y Y' k => z.1 • z.2 := continuous_fst.smul continuous_snd
     have : (fun z : k × Matrix Y Y' k => z.1 • z.2) (0, y) ∈ A := by simpa using h0
     exact hc.continuousAt.preimage_mem_nhds (hA.mem_nhds this)
-  haveI := nhdsNE_neBot k
+  have := nhdsNE_neBot k
   obtain ⟨c, hc1, hc2⟩ := ((hev.filter_mono (nhdsWithin_le_nhds (s := {(0 : k)}ᶜ))).and (self_mem_nhdsWithin (s := {(0 : k)}ᶜ))).exists
   exact ⟨c, hc2, fun x hx => hc1 x hx⟩
 
@@ -626,7 +626,7 @@ theorem exists_split_lattices : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel 
     have hint : IsOpen {x : Matrix Y Y' k | ∀ i j, x i j ∈ 𝒪[k]} := by
       have : {x : Matrix Y Y' k | ∀ i j, x i j ∈ 𝒪[k]} =
           ⋂ i, ⋂ j, (fun x : Matrix Y Y' k => x i j) ⁻¹' (𝒪[k] : Set k) := by
-        ext x; simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
+        ext x; simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
       rw [this]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         (Valuation.isOpen_integer (v := valuation k)).preimage ((continuous_apply j).comp (continuous_apply i))
@@ -831,12 +831,12 @@ theorem mem_span_translates_of_fixed {G V : Type} [AddCommGroup G] [AddCommGroup
       have := L'.sub_mem t.2 (hLL' htr)
       simpa using this
     refine ⟨⟨r, hr⟩, ?_⟩
-    simp only [φ, dif_pos hrL']
+    simp only [φ, dite_eq_left hrL']
     rw [QuotientAddGroup.eq, AddSubgroup.mem_addSubgroupOf, AddSubgroup.coe_add, AddSubgroup.coe_neg]
     convert htr using 1
     simp only
     abel
-  letI : Fintype (L' ⧸ L.addSubgroupOf L') := Fintype.ofFinite _
+  let : Fintype (L' ⧸ L.addSubgroupOf L') := Fintype.ofFinite _
   set n := Fintype.card (L' ⧸ L.addSubgroupOf L') with hn_def
   have hn : 0 < n := Fintype.card_pos
   have powQ : ∀ y ∈ P, ∀ u : L', χ u y ^ n = 1 := by
@@ -852,7 +852,7 @@ theorem mem_span_translates_of_fixed {G V : Type} [AddCommGroup G] [AddCommGroup
     (Polynomial.nthRoots n (1 : ℂ)).toFinset.finite_toSet.subset fun z hz => by
       simp only [Finset.mem_coe, Multiset.mem_toFinset]
       exact (Polynomial.mem_nthRoots hn).2 hz
-  haveI := finS.to_subtype
+  have := finS.to_subtype
   have finQ' : Finite (P ⧸ K.addSubgroupOf P) := by
     let Φ : (P ⧸ K.addSubgroupOf P) → ((L' ⧸ L.addSubgroupOf L') → ({z : ℂ | z ^ n = 1} : Set ℂ)) :=
       fun q' q => ⟨χ (q.out : L') (q'.out : P), powQ _ (q'.out).2 _⟩
@@ -870,7 +870,7 @@ theorem mem_span_translates_of_fixed {G V : Type} [AddCommGroup G] [AddCommGroup
     rw [ea, eb] at e
     rw [AddSubgroup.coe_add, AddSubgroup.coe_neg, hχ.right, ← e]
     exact negR _ _
-  letI : Fintype (P ⧸ K.addSubgroupOf P) := Fintype.ofFinite _
+  let : Fintype (P ⧸ K.addSubgroupOf P) := Fintype.ofFinite _
 
   have hKh : ∀ r ∈ L', ∀ k ∈ K, ρ k (ρ (-r) f) = ρ (-r) f := by
     intro r hr k hk

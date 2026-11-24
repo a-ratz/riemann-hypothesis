@@ -68,7 +68,7 @@ theorem collapse {A : Type*} [AddCommGroup A] [Module ℂ A] {N r m : ℕ} (hm :
       have := hφ hb'
       rw [this] at hb
       exact lt_irrefl _ hb)
-    rw [h, if_pos rfl]
+    rw [h, ite_eq_left rfl]
   rw [Finset.sum_eq_single (fun j => φ (Fin.castLE hm j))]
   · simp only [hone, Finset.prod_const_one, one_smul]
   · intro c _ hc
@@ -96,7 +96,7 @@ theorem collapse {A : Type*} [AddCommGroup A] [Module ℂ A] {N r m : ℕ} (hm :
           have hne := hall ⟨k, hk⟩
           rw [hw'] at hne
           by_contra hcon
-          exact hne (if_neg hcon)
+          exact hne (ite_eq_right hcon)
       obtain ⟨j, hj⟩ := hex
       rw [Finset.prod_eq_zero (Finset.mem_univ j) hj, zero_smul]
     · rw [hq c hinj, smul_zero]
@@ -145,7 +145,7 @@ theorem grouping {A : Type*} [Ring A] [Algebra ℂ A] {t N : ℕ} (κ : Fin N �
       exact congrArg κ (congrFun heq' x)
     have e2 : (fun l => κ (C l)) = (fun l => κ (C' l)) := by
       first
-      | exact (StrictMono.range_inj hC hC').1 e1
+      | exact (StrictMono.range_inj_of_wellFoundedLT hC hC').1 e1
       | exact (WellFounded.eq_strictMono_iff_eq_range wellFounded_lt hC hC').1 e1
     have e3 : C = C' := funext fun l => hκ (congrFun e2 l)
     subst e3
@@ -166,7 +166,7 @@ theorem grouping {A : Type*} [Ring A] [Algebra ℂ A] {t N : ℕ} (κ : Fin N �
     refine ⟨(d ∘ Tuple.sort (fun l => κ (d l)), (Tuple.sort (fun l => κ (d l))).symm),
       Finset.mem_univ _, ?_, ?_⟩
     · dsimp only
-      rw [if_pos hsm, hcomp]
+      rw [ite_eq_left hsm, hcomp]
       exact hd
     · exact hcomp
   · rintro ⟨C, σ⟩ _ h1
@@ -174,7 +174,7 @@ theorem grouping {A : Type*} [Ring A] [Algebra ℂ A] {t N : ℕ} (κ : Fin N �
       by_contra hc
       exact h1 (by simp [hc])
     dsimp only
-    rw [if_pos hC]
+    rw [ite_eq_left hC]
 
 theorem det_mul_expand {m N : ℕ} (X : Matrix (Fin m) (Fin N) ℂ) (Y : Matrix (Fin N) (Fin m) ℂ) :
     (X * Y).det = ∑ d : Fin m → Fin N, (∏ l, Y (d l) l) • (Matrix.of fun a l => X a (d l)).det := by

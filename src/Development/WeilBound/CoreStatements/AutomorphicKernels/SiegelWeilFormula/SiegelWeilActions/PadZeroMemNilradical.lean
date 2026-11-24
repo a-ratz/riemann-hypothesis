@@ -69,22 +69,22 @@ theorem nA_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     IsClosed (nA σ Y b : Set (Matrix (Fin n) (Fin n) (AE F E))) ∧ IsTopologicalAddGroup (nA σ Y b) ∧
     LocallyCompactSpace (nA σ Y b) ∧ SecondCountableTopology (nA σ Y b) ∧ T2Space (nA σ Y b) ∧ BorelSpace (nA σ Y b) := by
   intro F E _ _ _ _ _ σ n Y b ε h
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : LocallyCompactSpace (AE F E) := e.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AE F E) := e.secondCountableTopology
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
-  haveI : BorelSpace (AE F E) := ⟨rfl⟩
-  haveI : BorelSpace (Matrix (Fin n) (Fin n) (AE F E)) :=
+  have : LocallyCompactSpace (AE F E) := e.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AE F E) := e.secondCountableTopology
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : BorelSpace (AE F E) := ⟨rfl⟩
+  have : BorelSpace (Matrix (Fin n) (Fin n) (AE F E)) :=
     inferInstanceAs (BorelSpace (Fin n → Fin n → AE F E))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E)) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → AE F E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E)) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → AE F E))
   have hc : Continuous (cA σ) :=
     IsModuleTopology.continuous_of_linearMap (R := AF F) (cA σ).toLinearMap
@@ -96,8 +96,8 @@ theorem nA_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     have h2 : Continuous fun β : Matrix (Fin n) (Fin n) (AE F E) => ((ε : ℤ) : AE F E) • β.map (cA σ) :=
       (continuous_const_smul (((ε : ℤ) : AE F E))).comp h1
     exact isClosed_eq (continuous_id.matrix_transpose.add h2) continuous_const
-  haveI : LocallyCompactSpace (nA σ Y b) := hC.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (nA σ Y b) :=
+  have : LocallyCompactSpace (nA σ Y b) := hC.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (nA σ Y b) :=
     TopologicalSpace.Subtype.secondCountableTopology _
   exact ⟨hC, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance⟩
 
@@ -130,12 +130,12 @@ def pad0 (β : Matrix (Fin L.n) (Fin L.n) (AE F E)) : Matrix (Fin d.n) (Fin d.n)
 
 theorem pad_zero_embedding_alt (β : Matrix (Fin L.n) (Fin L.n) (AE F E)) (a c : Fin L.n) : pad0 L β (L.em a) (L.em c) = β a c := by
   have h : (∃ a', L.em a' = L.em a) ∧ ∃ c', L.em c' = L.em c := ⟨⟨a, rfl⟩, ⟨c, rfl⟩⟩
-  simp only [pad0, dif_pos h]
+  simp only [pad0, dite_eq_left h]
   rw [L.inj h.1.choose_spec, L.inj h.2.choose_spec]
 
 theorem pad_zero_outside_range (β : Matrix (Fin L.n) (Fin L.n) (AE F E)) (i k : Fin d.n)
     (h : ¬ ((∃ a, L.em a = i) ∧ ∃ c, L.em c = k)) : pad0 L β i k = 0 := by
-  simp only [pad0, dif_neg h]
+  simp only [pad0, dite_eq_right h]
 
 theorem pad_zero_symm_cases (β : Matrix (Fin L.n) (Fin L.n) (AE F E)) (P : AE F E → AE F E → Prop) (h0 : P 0 0)
     (h1 : ∀ a c, P (β a c) (β c a)) (i k : Fin d.n) : P (pad0 L β i k) (pad0 L β k i) := by
@@ -191,7 +191,7 @@ theorem continuous_padN : Continuous (padN L) := by
   by_cases h : (∃ a, L.em a = i) ∧ ∃ c, L.em c = k
   · obtain ⟨⟨a, rfl⟩, ⟨c, rfl⟩⟩ := h
     simp only [pad_zero_embedding_alt]
-    exact (continuous_apply c).comp ((continuous_apply a).comp continuous_subtype_val)
+    exact (continuous_apply c).comp ((continuous_apply a).comp continuous_subtypeVal)
   · simp only [pad_zero_outside_range L _ i k h]
     exact continuous_const
 
@@ -219,10 +219,10 @@ theorem padN_nF {β : nA σ L.Y L.b} (h : β ∈ nF σ L.Y L.b) : padN L β ∈ 
   ext i k
   show pad0 L β.1 i k = _
   by_cases h : (∃ a, L.em a = i) ∧ ∃ c, L.em c = k
-  · rw [pad0, dif_pos h, hT]
-    simp only [incM, Matrix.map_apply, Matrix.of_apply, dif_pos h]
-  · rw [pad0, dif_neg h]
-    simp only [incM, Matrix.map_apply, Matrix.of_apply, dif_neg h, map_zero]
+  · rw [pad0, dite_eq_left h, hT]
+    simp only [incM, Matrix.map_apply, Matrix.of_apply, dite_eq_left h]
+  · rw [pad0, dite_eq_right h]
+    simp only [incM, Matrix.map_apply, Matrix.of_apply, dite_eq_right h, map_zero]
 
 theorem nA_inst (n : ℕ) (Y : Spc F E n) (b : GL (Fin n ⊕ Fin n) E) (ε : ℤˣ)
     (hε : b.1ᵀ * dbl Y.J * b.1.map σ = Matrix.fromBlocks 0 1 (((ε : ℤ) : E) • 1) 0) :

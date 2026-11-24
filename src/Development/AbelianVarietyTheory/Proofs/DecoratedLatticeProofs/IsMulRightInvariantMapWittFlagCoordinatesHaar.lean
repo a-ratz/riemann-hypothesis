@@ -83,7 +83,7 @@ theorem coord_mul {D : D7} {V V₀ : HSp D} {ρ : ℕ} (d : HypDec V V₀ ρ) (c
 
 theorem measurableAdd₂_addSubgroup {A : Type*} [AddGroup A] [MeasurableSpace A] [MeasurableAdd₂ A] (H : AddSubgroup A) :
     MeasurableAdd₂ H :=
-  ⟨Measurable.subtype_mk ((measurable_subtype_coe.comp measurable_fst).add (measurable_subtype_coe.comp measurable_snd))⟩
+  ⟨Measurable.subtype_mk ((measurable_subtypeVal.comp measurable_fst).add (measurable_subtypeVal.comp measurable_snd))⟩
 
 theorem measurePreserving_triple {A B U : Type*} [AddGroup A] [MeasurableSpace A] [MeasurableAdd₂ A] [AddGroup B]
     [MeasurableSpace B] [MeasurableAdd₂ B] [Mul U] [MeasurableSpace U] [MeasurableMul U]
@@ -98,7 +98,7 @@ theorem measurePreserving_triple {A B U : Type*} [AddGroup A] [MeasurableSpace A
   exact T3.comp (T2.comp T1)
 
 theorem continuous_UX_val (D : D7) (ρ : ℕ) : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_UX_mul {D : D7} {ρ n : ℕ} (b' : Mx D ρ n) : Continuous fun u : UX D ρ => (u.1.1 ⬝ b' : Mx D ρ n) :=
   (continuous_UX_val D ρ).matrix_mul continuous_const

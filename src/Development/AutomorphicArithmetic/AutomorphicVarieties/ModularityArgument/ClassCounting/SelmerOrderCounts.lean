@@ -235,8 +235,8 @@ theorem UpperTheory.V.ZK.Ct.cardW :
     · intro h
       obtain ⟨a, ⟨y, -, rfl⟩, t, ht, hat⟩ := Submodule.mem_sup.1 h
       exact Submodule.mem_sup.2 ⟨D.del y, LinearMap.mem_range_self _ _, t, ht, hat⟩
-  haveI : Finite (I ⧸ p) := hC
-  haveI : Finite D.EQ := hE
+  have : Finite (I ⧸ p) := hC
+  have : Finite D.EQ := hE
   have hr : LinearMap.range f = Submodule.map p.mkQ (LinearMap.range D.delI) :=
     calc LinearMap.range f = LinearMap.range (f ∘ₗ p.mkQ) :=
           (LinearMap.range_comp_of_range_eq_top f (Submodule.range_mkQ p)).symm
@@ -564,10 +564,10 @@ private theorem card_tors (W : Type) [AddCommGroup W] [Finite W] (l : ℤ) (s : 
 theorem UpperTheory.V.ZK.Ct.pCount :
     ∀ (W Z : Type) [AddCommGroup W] [AddCommGroup Z] [Finite W] (f : W →ₗ[ℤ] Z) (l s g : ℕ) (u : ℤ), l.Prime → ¬(l : ℤ) ∣ u → (∀ w, f w = 0 → (u * (l : ℤ) ^ s) • w = 0) → Nat.card {w : W // (l : ℤ) • w = 0} ≤ l ^ g → l ^ (Nat.card W).factorization l ≤ Nat.card (LinearMap.range f) * l ^ (s * g) := by
   intro W Z _ _ _ f l s g u hl hlu hker hW
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   let K := LinearMap.ker f
   let gm : K →ₗ[ℤ] K := ((l : ℤ) ^ s) • LinearMap.id
-  haveI : Finite (LinearMap.range f) := Finite.of_surjective _ f.surjective_rangeRestrict
+  have : Finite (LinearMap.range f) := Finite.of_surjective _ f.surjective_rangeRestrict
   have hWc : Nat.card W = Nat.card (LinearMap.range f) * Nat.card K := by
     have h : Nat.card W = Nat.card (W ⧸ LinearMap.ker f) * Nat.card (LinearMap.ker f) :=
       AddSubgroup.card_eq_card_quotient_mul_card_addSubgroup (LinearMap.ker f).toAddSubgroup
@@ -653,14 +653,14 @@ private theorem card_addMonoidHom_zmod_le_card (H : Type) [AddCommGroup H] [Fini
 
 private theorem card_addMonoidHom_zmod_prime_pow_le_pow_factorization (G : Type) [AddCommGroup G] [Finite G] (l ν : ℕ) (hl : l.Prime) :
     Nat.card (G →+ ZMod (l ^ ν)) ≤ l ^ (Nat.card G).factorization l := by
-  haveI : NeZero (l ^ ν) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ ν) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hn0 : Nat.card G ≠ 0 := Nat.card_pos.ne'
   have hcop : l.Coprime (Nat.card G / l ^ (Nat.card G).factorization l) := Nat.coprime_ordCompl hl hn0
   have hnm := Nat.ordProj_mul_ordCompl_eq_self (Nat.card G) l
   set e := (Nat.card G).factorization l
   set m := Nat.card G / l ^ e
   let H := (nsmulAddMonoidHom (α := G) m).range
-  haveI : Finite (H →+ ZMod (l ^ ν)) := Finite.of_injective _ DFunLike.coe_injective
+  have : Finite (H →+ ZMod (l ^ ν)) := Finite.of_injective _ DFunLike.coe_injective
   have hres : Function.Injective (fun ψ : G →+ ZMod (l ^ ν) => ψ.comp H.subtype) := by
     intro ψ₁ ψ₂ h
     ext x
@@ -683,7 +683,7 @@ private theorem card_addMonoidHom_zmod_prime_pow_le_pow_factorization (G : Type)
   have hcopH : (Nat.card H).Coprime m := by
     apply Nat.coprime_of_dvd
     intro k hk hkH hkm
-    haveI := Fact.mk hk
+    have := Fact.mk hk
     obtain ⟨h, hh⟩ := exists_prime_addOrderOf_dvd_card' k hkH
     have hk' : k ∣ l ^ e := hh ▸ addOrderOf_dvd_of_nsmul_eq_zero (hkill h)
     have : k = l := (Nat.prime_dvd_prime_iff_eq hk hl).1 (hk.dvd_of_dvd_pow hk')
@@ -699,7 +699,7 @@ theorem UpperTheory.V.ZK.Ct.eqHomLe :
     ∀ (L F : Type) [Field L] [NumberField L] [Field F] [NumberField F] [Algebra L F] (γ : F ≃ₐ[L] F) (a l ν : ℕ) (D : Dat (Additive Fˣ) (HeightOneSpectrum (𝓞 F) →₀ ℤ)), l.Prime → IsDat γ a D → Finite D.ClQ → Finite (EqHom γ a (l ^ ν)) ∧ Nat.card (EqHom γ a (l ^ ν)) ≤ l ^ (Nat.card D.ClQ).factorization l := by
   classical
   intro L F _ _ _ _ _ γ a l ν D hl hD hfin
-  haveI : NeZero (l ^ ν) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ ν) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hinv : ∀ Q, actP γ⁻¹ (actP γ Q) = Q := fun Q => by
     simpa using actP_actP_inv' γ⁻¹ Q
   have hsingle : ∀ (P : HeightOneSpectrum (𝓞 F)) (n : ℤ),
@@ -759,7 +759,7 @@ theorem UpperTheory.V.ZK.Ct.eqHomLe :
     funext P
     have := DFunLike.congr_fun h (Submodule.Quotient.mk (Finsupp.single P 1))
     simpa [f, hψs] using this
-  haveI : Finite (D.ClQ →+ ZMod (l ^ ν)) := Finite.of_injective _ DFunLike.coe_injective
+  have : Finite (D.ClQ →+ ZMod (l ^ ν)) := Finite.of_injective _ DFunLike.coe_injective
   refine ⟨Finite.of_injective f hf, ?_⟩
   exact (Nat.card_le_card_of_injective f hf).trans (card_addMonoidHom_zmod_prime_pow_le_pow_factorization D.ClQ l ν hl)
 end -- clump:auto
@@ -883,7 +883,7 @@ private theorem finite_setOf_ordP_ne_zero {F : Type} [Field F] [NumberField F] (
     have h1 : ordP P (1 : Fˣ) = 0 := by simp [ordP]
     rw [mul_inv_cancel, h1] at h
     omega
-  simp only [Set.mem_setOf_eq] at hP
+  simp only [Set.mem_ofPred_eq] at hP
   rcases lt_or_gt_of_ne hP with h | h
   · left
     exact (one_lt_valuation_iff_ordP_neg P α).2 h
@@ -1016,7 +1016,7 @@ theorem UpperTheory.V.ZK.Ct.clFin :
         FractionalIdeal.spanSingleton (𝓞 F)⁰ x := by
       apply FractionalIdeal.coeToSubmodule_injective
       dsimp only
-      rw [FractionalIdeal.coe_spanSingleton]
+      rw [FractionalIdeal.coeToSubmodule_spanSingleton]
       exact hx
     have hx0 : x ≠ 0 := by
       rintro rfl
@@ -1047,7 +1047,7 @@ open NumberField IsDedekindDomain UpperTheory.V UpperTheory.V.ZK UpperTheory.V.Z
 private theorem padic_val_one_add_pow_sub_one (l c m : ℕ) (hl : l.Prime) (hc : 1 ≤ c) (h2 : l = 2 → 2 ≤ c)
     (hm : m ≠ 0) : padicValNat l ((1 + l ^ c) ^ m - 1) = c + padicValNat l m := by
   simp only [Nat.padicValNat_def]
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have hpow1 : 1 ≤ l ^ c := Nat.one_le_pow c l hl.pos
   have hx1 : 1 < 1 + l ^ c := by omega
   have hdvd : l ∣ (1 + l ^ c) - 1 := by
@@ -1061,7 +1061,7 @@ private theorem padic_val_one_add_pow_sub_one (l c m : ℕ) (hl : l.Prime) (hc :
   rcases hl.eq_two_or_odd' with rfl | hodd
   · obtain ⟨d, rfl⟩ : ∃ d, c = d + 2 := ⟨c - 2, by have := h2 rfl; omega⟩
     have h4 : 2 ^ (d + 2) = 4 * 2 ^ d := by ring
-    have h := padicValNat.pow_two_sub_pow (x := 1 + 2 ^ (d + 2)) (y := 1) hx1 hdvd hnd
+    have h := Nat.multiplicity_pow_two_sub_pow (x := 1 + 2 ^ (d + 2)) (y := 1) hx1 hdvd hnd
       (n := 2 * m) (by omega) (even_two_mul m)
     rw [one_pow] at h
     have hA : multiplicity 2 (1 + 2 ^ (d + 2) + 1) = 1 := by
@@ -1091,13 +1091,13 @@ private theorem padic_val_one_add_pow_sub_one (l c m : ℕ) (hl : l.Prime) (hc :
       rw [this, Nat.add_sub_cancel]
     rw [hfac, Nat.multiplicity_mul (by omega) (by omega), hD, hA, hB, hC] at h
     omega
-  · have := padicValNat.pow_sub_pow hodd hx1 hdvd hnd hm
+  · have := Nat.multiplicity_pow_sub_pow hodd hx1 hdvd hnd hm
     rwa [one_pow, Nat.add_sub_cancel_left, Nat.multiplicity_prime_pow] at this
 
 theorem UpperTheory.V.ZK.Ct.lte :
     ∀ l c ν E : ℕ, l.Prime → 1 ≤ c → (l = 2 → 2 ≤ c) → c ≤ ν → 1 ≤ E → 2 ≤ (1 + l ^ c) ^ E ∧ ((1 + l ^ c) ^ E - 1).factorization l = c + E.factorization l ∧ (((1 + l ^ c) ^ E) ^ l ^ (ν - c) - 1).factorization l = ν + E.factorization l := by
   intro l c ν E hl hc h2 hcν hE
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have hE0 : E ≠ 0 := by omega
   refine ⟨?_, ?_, ?_⟩
   · have : 2 ≤ 1 + l ^ c := by have := Nat.one_le_pow c l hl.pos; omega
@@ -1151,8 +1151,8 @@ theorem UpperTheory.V.ZK.Ct.fewLe :
     ∀ (L F : Type) [Field L] [NumberField L] [Field F] [NumberField F] [Algebra L F] (γ : F ≃ₐ[L] F) (a s q B : ℕ) (D : Dat (Additive Fˣ) (HeightOneSpectrum (𝓞 F) →₀ ℤ)), IsDat γ a D → Few γ a s q B → ∀ f : D.W →ₗ[ℤ] Additive Fˣ ⧸ mt (Additive Fˣ) q, (∀ y : D.U, f (Submodule.Quotient.mk y) = Submodule.Quotient.mk ((s : ℤ) • D.nm y)) → Finite D.W → Nat.card (LinearMap.range f) ≤ B := by
   intro L F _ _ _ _ _ γ a s q B D hD hF f hf hW
   classical
-  haveI : Finite (LinearMap.range f) := Finite.of_surjective _ f.surjective_rangeRestrict
-  haveI := Fintype.ofFinite (LinearMap.range f)
+  have : Finite (LinearMap.range f) := Finite.of_surjective _ f.surjective_rangeRestrict
+  have := Fintype.ofFinite (LinearMap.range f)
   choose w hw using fun z : LinearMap.range f => LinearMap.mem_range.mp z.2
   choose u hu using fun z : LinearMap.range f => Submodule.Quotient.mk_surjective _ (w z)
   have hφ : ∀ z, f (Submodule.Quotient.mk (u z)) = z := by
@@ -1271,12 +1271,12 @@ private theorem primes_card (L : Type) [Field L] [NumberField L] {l : ℕ} (hl :
   have hp : Prime (l : ℤ) := Nat.prime_iff_prime_int.mp hl
   have hne : Ideal.span {(l : ℤ)} ≠ ⊥ := by
     rw [ne_eq, Ideal.span_singleton_eq_bot]; exact hp.ne_zero
-  haveI hm : (Ideal.span {(l : ℤ)}).IsMaximal :=
+  have hm : (Ideal.span {(l : ℤ)}).IsMaximal :=
     ((Ideal.span_singleton_prime hp.ne_zero).mpr hp).isMaximal hne
   let f : {p : HeightOneSpectrum (𝓞 L) // (l : 𝓞 L) ∈ p.asIdeal} →
       IsDedekindDomain.primesOverFinset (Ideal.span {(l : ℤ)}) (𝓞 L) := fun p =>
     ⟨p.1.asIdeal, (IsDedekindDomain.mem_primesOverFinset_iff hne (𝓞 L)).mpr ⟨p.1.isPrime, ⟨by
-      haveI := p.1.isPrime
+      have := p.1.isPrime
       refine hm.eq_of_le (Ideal.IsPrime.ne_top inferInstance) ?_
       rw [Ideal.span_singleton_le_iff_mem, Ideal.under_def, Ideal.mem_comap, map_natCast]
       exact p.2⟩⟩⟩
@@ -1293,7 +1293,7 @@ private theorem zpow_eq_val {Q : Type} [Group Q] {l : ℕ} [NeZero l] (x : Q) (h
 private theorem units_card (L : Type) [Field L] [NumberField L] {l : ℕ} (hl : l.Prime) {Q : Type} [CommGroup Q]
     (hQ : ∀ x : Q, x ^ l = 1) (f : (𝓞 L)ˣ →* Q) :
     Finite f.range ∧ Nat.card f.range ≤ l ^ Module.finrank ℚ L := by
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
   obtain ⟨ζ, hζ⟩ := IsCyclic.exists_generator (α := Units.torsion L)
   let g : ZMod l × (Fin (Units.rank L) → ZMod l) → f.range := fun e =>
     ⟨f ((ζ : (𝓞 L)ˣ) ^ e.1.val * ∏ i, Units.fundSystem L i ^ (e.2 i).val), _, rfl⟩
@@ -1317,7 +1317,7 @@ private theorem units_card (L : Type) [Field L] [NumberField L] {l : ℕ} (hl : 
 
 private theorem exp_card {l : ℕ} (hl : l.Prime) {C : Type} [Group C] [Finite C] (R : Subgroup C)
     (hR : ∀ x ∈ R, x ^ l = 1) : Nat.card R ≤ l ^ Nat.log 2 (Nat.card C) := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hp : IsPGroup l R := fun x => ⟨1, Subtype.ext (by rw [pow_one]; exact hR x x.2)⟩
   obtain ⟨k, hk⟩ := IsPGroup.iff_card.mp hp
   have h1 : Nat.card R ≤ Nat.card C := Nat.card_le_card_of_injective _ R.subtype_injective
@@ -1335,7 +1335,7 @@ private theorem index_le {G T : Type} [Group G] [Group T] [Finite T] (f : G →*
 theorem UpperTheory.V.ZK.Ct.selLCard :
     ∀ (L : Type) [Field L] [NumberField L] (l : ℕ), l.Prime → Finite (SelL l L) ∧ Nat.card (SelL l L) ≤ l ^ (2 * Module.finrank ℚ L + Nat.log 2 (classNumber L)) := by
   intro L _ _ l hl
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
   let P : Subgroup Lˣ := (powMonoidHom l : Lˣ →* Lˣ).range
   let q : Lˣ →* Lˣ ⧸ P := QuotientGroup.mk' P
   let ι : (𝓞 L)ˣ →* Lˣ := Units.map (algebraMap (𝓞 L) L : 𝓞 L →* L)
@@ -1461,8 +1461,8 @@ open NumberField IsDedekindDomain UpperTheory.V UpperTheory.V.ZK UpperTheory.V.Z
 theorem UpperTheory.V.ZK.Ct.h90 :
     ∀ (L F : Type) [Field L] [NumberField L] [Field F] [NumberField F] [Algebra L F] (γ : F ≃ₐ[L] F) (l : ℕ), IsGalois L F → (∀ σ : F ≃ₐ[L] F, σ ∈ Subgroup.zpowers γ) → ∀ x y : Fˣ, actU γ x = x * y ^ l → Algebra.norm L (y : F) = 1 → ∃ (x₀ : Lˣ) (z : Fˣ), x = Units.map (algebraMap L F : L →* F) x₀ * z ^ l := by
   intro L F _ _ _ _ _ γ l hG hγ x y hx hy
-  haveI : FiniteDimensional L F := Module.Finite.of_restrictScalars_finite ℚ L F
-  haveI : IsCyclic (F ≃ₐ[L] F) := ⟨⟨γ, hγ⟩⟩
+  have : FiniteDimensional L F := Module.Finite.of_restrictScalars_finite ℚ L F
+  have : IsCyclic (F ≃ₐ[L] F) := ⟨⟨γ, hγ⟩⟩
   obtain ⟨w, hw⟩ := groupCohomology.exists_div_of_norm_eq_one hγ hy
   have hx' : γ (x : F) = (x : F) * (y : F) ^ l := by
     have := congrArg (fun u : Fˣ => (u : F)) hx
@@ -1484,7 +1484,7 @@ theorem UpperTheory.V.ZK.Ct.h90 :
     exact (mul_ne_zero x.ne_zero (pow_ne_zero l hw0)) ha.symm
   refine ⟨Units.mk0 a ha0, w⁻¹, ?_⟩
   ext
-  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, Units.val_mk0, ha,
+  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, Units.val_mk0, ha,
     Units.val_pow_eq_pow_val, Units.val_inv_eq_inv_val]
   rw [mul_assoc, ← mul_pow, mul_inv_cancel₀ hw0, one_pow, mul_one]
 end -- clump:auto
@@ -1538,7 +1538,7 @@ private theorem pow_sub_dvd_of_pow_dvd_one_add_pow_pow_sub_one (l c ν j : ℕ) 
   have e : ((ν : ℕ) : ℕ∞) = (c : ℕ∞) + ((ν - c : ℕ) : ℕ∞) := by
     rw [← Nat.cast_add, Nat.add_sub_cancel' hcν]
   rw [e] at hν
-  exact (WithTop.add_le_add_iff_left (ENat.coe_ne_top c)).mp hν
+  exact (WithTop.add_le_add_iff_left (ENat.natCast_ne_top c)).mp hν
 
 theorem UpperTheory.V.ZK.Ct.pow_eq_one_of_dvd (hl : l.Prime) (h : Lay l c ν ζ γ) (j : ℕ)
     (hj : l ^ ν ∣ (1 + l ^ c) ^ j - 1) : γ ^ j = 1 := by
@@ -1549,10 +1549,10 @@ theorem UpperTheory.V.ZK.Ct.inertia_eq_bot (hl : l.Prime) (h : Lay l c ν ζ γ)
     (hP : (l : 𝓞 F) ∉ P.asIdeal) : P.asIdeal.inertia (F ≃ₐ[L] F) = ⊥ := by
   have hG := h.gal
   have : FiniteDimensional L F := Module.Finite.of_restrictScalars_finite ℚ L F
-  haveI : NeZero (l ^ ν) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ ν) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hPp : P.asIdeal.IsPrime := P.isPrime
   have hPne : P.asIdeal ≠ ⊥ := P.ne_bot
-  haveI : NeZero P.asIdeal := ⟨hPne⟩
+  have : NeZero P.asIdeal := ⟨hPne⟩
   have hz : IsPrimitiveRoot (ζ : 𝓞 F) (l ^ ν) := IsPrimitiveRoot.coe_units_iff.mpr h.prim
   have hn1 : Ideal.absNorm P.asIdeal ≠ 1 := fun e => hPp.ne_top (Ideal.absNorm_eq_one_iff.mp e)
   have hcop : (Ideal.absNorm P.asIdeal).Coprime (l ^ ν) := by
@@ -1609,7 +1609,7 @@ theorem UpperTheory.V.ZK.Ct.unram :
   have hv := HeightOneSpectrum.valuation_liesOver F p P (x : L)
   rw [Ideal.ramificationIdx'_eq_ramificationIdx p.asIdeal P.asIdeal p.ne_bot] at he
   rw [he, pow_one] at hv
-  simp only [ordP, Units.coe_map, MonoidHom.coe_coe, ← hv]
+  simp only [ordP, Units.coe_map, MonoidHom.coe_ofClass, ← hv]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ClassCounting.SelmerOrderCounts.PowEqOneOfDvd =====
@@ -1671,7 +1671,7 @@ private theorem exists_units_generator_of_finOrder_units (F : Type) [Field F] [N
   exact ⟨k, by simpa using (congrArg Subtype.val hk).symm⟩
 
 private theorem exists_heightOneSpectrum_liesOver (L F : Type) [Field L] [NumberField L] [Field F] [NumberField F] [Algebra L F] (p : HeightOneSpectrum (𝓞 L)) : ∃ P : HeightOneSpectrum (𝓞 F), P.asIdeal.LiesOver p.asIdeal := by
-  haveI := p.isMaximal
+  have := p.isMaximal
   obtain ⟨Q, hQm, hQ⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 F) p.asIdeal
   refine ⟨⟨Q, hQm.isPrime, ?_⟩, hQ⟩
   intro hQbot
@@ -1821,7 +1821,7 @@ theorem UpperTheory.V.ZK.Ct.selInvLe :
     intro x hx
     obtain ⟨t, htT, hxt⟩ := hty x hx
     have hex : ∃ x ∈ D.SelInv l, Ty x t := ⟨x, hx, hxt⟩
-    have hrep : rep t = hex.choose := dif_pos hex
+    have hrep : rep t = hex.choose := dite_eq_left hex
     obtain ⟨_, hx't⟩ := hex.choose_spec
     obtain ⟨α, v, hxα, hord, hact, hN⟩ := hxt
     obtain ⟨α', v', hxα', hord', hact', hN'⟩ := hx't
@@ -1889,9 +1889,9 @@ theorem UpperTheory.V.ZK.sCount :
     push_cast
     ring
   obtain ⟨f, hfnm, hfk⟩ := Ct.kerF _ _ D (l ^ ν) (l ^ b) _ hker
-  haveI := hWf
-  haveI := hEQf
-  haveI := hClf
+  have := hWf
+  have := hEQf
+  have := hClf
   have hrange := Ct.fewLe L F γ a (l ^ b) (l ^ ν) B D hD hF f hfnm hWf
   obtain ⟨hSLf, hSLc⟩ := Ct.selLCard L l hl
   obtain ⟨hSIf, hSIc⟩ := Ct.selInvLe L F l c ν a ζ γ D hl hL hD hSLf

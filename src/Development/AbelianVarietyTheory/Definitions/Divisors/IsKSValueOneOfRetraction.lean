@@ -293,7 +293,7 @@ theorem actAlg_tmul (r : R) (x : O) (h : Crys κ t A) :
 theorem isScalarTower_tensorModule :
     letI := tensorModule κ t a
     IsScalarTower R (R ⊗[ℤ] O) (Crys κ t A) := by
-  letI := tensorModule κ t a
+  let := tensorModule κ t a
   exact ⟨fun r z h ↦ show actAlg κ t a (r • z) h = r • actAlg κ t a z h by rw [map_smul]; rfl⟩
 
 end Push
@@ -670,7 +670,7 @@ theorem LieExact.toLie_push (H : LieExact A) (H' : LieExact B) (a : OAct O A) (b
 
 theorem LieExact.toLie_act (H : LieExact A) (a : OAct O A) (x : O) (h : HdR A) :
     H.toLie a (act (dp0 R) (𝟙 _) a x h) = x • H.toLie a h := by
-  haveI := a.hom x
+  have := a.hom x
   rw [act_apply (dp0 R) (𝟙 _) a x, H.toLie_push H a a (a.act x) h, Serre.Lie.map_act]
 
 end Hodge

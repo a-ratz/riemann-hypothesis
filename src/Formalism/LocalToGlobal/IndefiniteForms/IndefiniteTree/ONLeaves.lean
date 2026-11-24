@@ -303,7 +303,7 @@ theorem exists_row (n : ℕ) (v : Fin (n + 1) → k) (hv : v ≠ 0) :
     have hne : i ≠ j := ne_of_lt hij'
     simp [M, hi, hne]
   have hMdet : M.det ≠ 0 := by
-    rw [Matrix.det_of_lowerTriangular M hM]
+    rw [det_of_isLowerTriangular M hM]
     refine Finset.prod_ne_zero_iff.mpr fun i _ => ?_
     by_cases hi : i = Fin.last n
     · subst hi
@@ -390,7 +390,7 @@ theorem uniMat_upper {n : ℕ} (f : Pairs n → k) : (uniMat f).IsUpperTriangula
   simp [uniMat, ne_of_gt hji, not_lt.mpr hji.le]
 
 theorem uniMat_det {n : ℕ} (f : Pairs n → k) : (uniMat f).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (uniMat_upper f)]
+  rw [det_of_isUpperTriangular (uniMat_upper f)]
   simp [uniMat]
 
 noncomputable def uniGL {n : ℕ} (f : Pairs n → k) : GL (Fin (n + 1)) k :=
@@ -498,12 +498,12 @@ lemma vw_int_eq_zero (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) (hx : x ≠ 0
     exact hxw ((Ideal.span_singleton_le_iff_mem _).mp
       (Ideal.le_of_dvd ((Associates.count_ne_zero_iff_dvd hJ w.irreducible).mp hne)))
   simp only [vw]
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K w hJ]
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K w hJ]
   exact_mod_cast h0
 
 lemma plc_prime (w : HeightOneSpectrum (𝓞 K)) : (plc w).Prime := by
-  haveI : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  haveI : w.asIdeal.IsPrime := w.isPrime
+  have : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
+  have : w.asIdeal.IsPrime := w.isPrime
   rw [plc]
   exact CharP.char_is_prime (𝓞 K ⧸ w.asIdeal) _
 
@@ -514,7 +514,7 @@ lemma natCast_mem_iff (w : HeightOneSpectrum (𝓞 K)) (m : ℕ) :
 theorem part1 (w : HeightOneSpectrum (𝓞 K)) (n : ℕ) (hn : n ≠ 0) :
     vw w ((n : ℕ) : K) = ramw w * (padicValNat (plc w) n : ℤ) := by
   have hp := plc_prime w
-  haveI : Fact (plc w).Prime := ⟨hp⟩
+  have : Fact (plc w).Prime := ⟨hp⟩
   obtain ⟨m, hm⟩ := (fun {p n : ℕ} => _root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat p n)) (p := plc w) (n := n)
   have hm0 : m ≠ 0 := by
     rintro rfl
@@ -551,7 +551,7 @@ theorem part2 (w : HeightOneSpectrum (𝓞 K)) (g₁ g₂ a : ℕ) (h1 : g₁.Pr
     (vw w (((g₁ ^ a * g₂ ^ a : ℕ)) : K) : ℝ) =
       (ramw w : ℝ) * (if plc w = g₁ ∨ plc w = g₂ then (a : ℝ) else 0) := by
   have hp := plc_prime w
-  haveI : Fact (plc w).Prime := ⟨hp⟩
+  have : Fact (plc w).Prime := ⟨hp⟩
   have ha1 : g₁ ^ a ≠ 0 := pow_ne_zero _ h1.ne_zero
   have ha2 : g₂ ^ a ≠ 0 := pow_ne_zero _ h2.ne_zero
   rw [part1 w _ (mul_ne_zero ha1 ha2), Nat.padicValNat_def, Nat.multiplicity_mul ha1 ha2,
@@ -559,14 +559,14 @@ theorem part2 (w : HeightOneSpectrum (𝓞 K)) (g₁ g₂ a : ℕ) (h1 : g₁.Pr
   simp only [← Nat.padicValNat_def, pv_prime _ _ hp h1, pv_prime _ _ hp h2]
   by_cases e1 : plc w = g₁
   · have e2 : plc w ≠ g₂ := fun e => h12 (e1.symm.trans e)
-    rw [if_pos e1, if_neg e2, if_pos (Or.inl e1)]
+    rw [ite_eq_left e1, ite_eq_right e2, ite_eq_left (Or.inl e1)]
     push_cast
     ring
   · by_cases e2 : plc w = g₂
-    · rw [if_neg e1, if_pos e2, if_pos (Or.inr e2)]
+    · rw [ite_eq_right e1, ite_eq_left e2, ite_eq_left (Or.inr e2)]
       push_cast
       ring
-    · rw [if_neg e1, if_neg e2, if_neg (not_or.mpr ⟨e1, e2⟩)]
+    · rw [ite_eq_right e1, ite_eq_right e2, ite_eq_right (not_or.mpr ⟨e1, e2⟩)]
       push_cast
       ring
 

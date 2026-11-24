@@ -71,10 +71,10 @@ theorem UpperTheory.ConvolutionTheory.G.quotProd_of :
   refine ⟨hPP, fun F F' hF hFi hF' hFi' => ?_⟩
   obtain ⟨ρ, hc, hρ, -⟩ := hN G T μ j ν hP
   obtain ⟨ρ', hc', hρ', -⟩ := hN G' T' μ' j' ν' hP'
-  haveI := hP.1.1
-  haveI := hP'.1.1
-  haveI := hP.2.2.1
-  haveI := hP'.2.2.1
+  have := hP.1.1
+  have := hP'.1.1
+  have := hP.2.2.1
+  have := hP'.2.2.1
   have hj : Measurable j := hP.2.1.continuous.measurable
   have hj' : Measurable j' := hP'.2.1.continuous.measurable
   have hρρ : UpperTheory.ConvolutionTheory.G.IsNrm (j.prodMap j') (ν.prod ν')

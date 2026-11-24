@@ -78,8 +78,8 @@ theorem bijective_iff_isUnit_det (b : Basis ι A Λ) :
     Function.Bijective (AlgHom.mulLeftRight A Λ) ↔ IsUnit (structMat b).det := by
   set c := b.tensorProduct b.mulOpposite
   set f := (AlgHom.mulLeftRight A Λ).toLinearMap
-  haveI := Module.Free.of_basis c
-  haveI := Module.Finite.of_basis c
+  have := Module.Free.of_basis c
+  have := Module.Finite.of_basis c
   let e : Module.End A Λ ≃ₗ[A] Λ ⊗[A] Λᵐᵒᵖ := b.end.equiv c (Equiv.refl _)
   have hM : structMat b = LinearMap.toMatrix c c (e.toLinearMap ∘ₗ f) := by
     ext p q

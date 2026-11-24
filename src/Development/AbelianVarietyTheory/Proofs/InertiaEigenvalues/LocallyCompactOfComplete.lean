@@ -112,16 +112,16 @@ theorem unram_of_involution {E : Type} [nE : NontriviallyNormedField E] [CharZer
     (hn : ∀ y, ‖c y‖ = ‖y‖) (hu : ∀ y : E, ∃ x, c x = x ∧ ‖y‖ = ‖x‖) :
     ∃ (F : Type) (_ : NontriviallyNormedField F) (_ : NormedAlgebra F E) (st : StarRing E),
       GlobalTheory.JR.Unram F E ∧ ∀ y, st.star y = c y := by
-  letI nF : NontriviallyNormedField (fixedField c) :=
+  let nF : NontriviallyNormedField (fixedField c) :=
     { (inferInstance : NormedField (fixedField c)) with
       non_trivial := by
         obtain ⟨y, hy⟩ := NontriviallyNormedField.non_trivial (α := E)
         obtain ⟨x, hx, hxy⟩ := hu y
         exact ⟨⟨x, hx⟩, by change 1 < ‖x‖; rwa [← hxy]⟩ }
-  letI nA : NormedAlgebra (fixedField c) E :=
+  let nA : NormedAlgebra (fixedField c) E :=
     { (inferInstance : Algebra (fixedField c) E) with
       norm_smul_le := fun a y => norm_mul_le (a : E) y }
-  letI st : StarRing E :=
+  let st : StarRing E :=
     { star := c
       star_involutive := hc
       star_mul := fun a b => by rw [map_mul, mul_comm]
@@ -172,7 +172,7 @@ theorem locallyCompact_of_complete {O E : Type} [CommRing O] [IsDomain O] [IsDis
       obtain ⟨z, hz⟩ := (hball _).1 this
       refine ⟨z, hinj ?_⟩
       rw [map_mul, map_pow, hz, div_mul_cancel₀ _ (pow_ne_zero _ hπ0)]
-  letI : MetricSpace O := MetricSpace.induced (algebraMap O E) hinj inferInstance
+  let : MetricSpace O := MetricSpace.induced (algebraMap O E) hinj inferInstance
   have hdist : ∀ a b : O, dist a b = ‖algebraMap O E (a - b)‖ := by
     intro a b
     rw [map_sub, ← dist_eq_norm]; rfl
@@ -190,8 +190,8 @@ theorem locallyCompact_of_complete {O E : Type} [CommRing O] [IsDomain O] [IsDis
   have htb : TotallyBounded (Set.univ : Set O) := by
     refine Metric.totallyBounded_iff.2 fun ε hε => ?_
     obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hε hlt
-    haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) := ‹Finite (IsLocalRing.ResidueField O)›
-    haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O ^ n) :=
+    have : Finite (O ⧸ IsLocalRing.maximalIdeal O) := ‹Finite (IsLocalRing.ResidueField O)›
+    have : Finite (O ⧸ IsLocalRing.maximalIdeal O ^ n) :=
       Ideal.finite_quotient_pow (IsNoetherian.noetherian _) n
     refine ⟨Set.range (Quotient.out : O ⧸ IsLocalRing.maximalIdeal O ^ n → O), Set.finite_range _, fun x _ => ?_⟩
     refine Set.mem_biUnion (Set.mem_range_self (Ideal.Quotient.mk _ x)) ?_
@@ -199,7 +199,7 @@ theorem locallyCompact_of_complete {O E : Type} [CommRing O] [IsDomain O] [IsDis
     refine lt_of_le_of_lt ((hmem n _).1 ?_) hn
     rw [← Ideal.Quotient.eq]
     exact (Ideal.Quotient.mk_out _).symm
-  have hcpt : IsCompact (Set.univ : Set O) := isCompact_iff_totallyBounded_isComplete.2 ⟨htb, complete_univ⟩
+  have hcpt : IsCompact (Set.univ : Set O) := isCompact_iff_totallyBounded_isComplete.2 ⟨htb, isComplete_univ⟩
   have hcont : Continuous (algebraMap O E) := continuous_induced_dom
   refine (hcpt.image hcont).locallyCompactSpace_of_mem_nhds_of_addGroup (x := 0) ?_
   refine Filter.mem_of_superset (Metric.closedBall_mem_nhds 0 one_pos) fun y hy => ?_
@@ -214,8 +214,8 @@ theorem val_conj {E : Type} [Field E] (v : Valuation E (WithZero (Multiplicative
   have hle2 : ∀ a b : E, b ≠ 0 → v a ≤ v b → v (c a) ≤ v (c b) := by
     intro a b hb h
     have hb' : c b ≠ 0 := by simpa using hb
-    have h1 := hle (a / b) (by rw [map_div₀]; exact div_le_one_of_le₀ h zero_le')
-    rw [map_div₀, map_div₀, div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff v).2 hb'))] at h1
+    have h1 := hle (a / b) (by rw [map_div₀]; exact div_le_one_of_le₀ h zero_le)
+    rw [map_div₀, map_div₀, div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff v).2 hb'))] at h1
     exact h1
   have hπ0 : π ≠ 0 := by
     intro h; rw [h, map_zero] at hπ; exact exp_ne_zero hπ.symm
@@ -324,7 +324,7 @@ theorem UQ.exists_unram : ∀ K : UQ, ∃ (F : Type) (_ : NontriviallyNormedFiel
   have hball : ∀ y : K.E, absOfVal v y ≤ 1 ↔ y ∈ (algebraMap K.O K.E).range := by
     intro y
     rw [← hint, ← (absOfVal v).map_one, absOfVal_le_iff, map_one]
-  letI nE : NontriviallyNormedField K.E :=
+  let nE : NontriviallyNormedField K.E :=
     { (absOfVal v).toNormedField with
       non_trivial := by
         refine ⟨π⁻¹, not_le.1 fun h => ?_⟩
@@ -333,12 +333,12 @@ theorem UQ.exists_unram : ∀ K : UQ, ∃ (F : Type) (_ : NontriviallyNormedFiel
         rw [show v π = WithZero.exp (-1) from hπ, ← WithZero.exp_neg, ← WithZero.exp_zero,
           WithZero.exp_le_exp] at h1
         omega }
-  haveI : IsUltrametricDist K.E := IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm
+  have : IsUltrametricDist K.E := IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm
     fun x y => by
       change absOfVal v (x + y) ≤ max (absOfVal v x) (absOfVal v y)
       rw [le_max_iff, absOfVal_le_iff, absOfVal_le_iff, ← le_max_iff]
       exact v.map_add x y
-  haveI : LocallyCompactSpace K.E :=
+  have : LocallyCompactSpace K.E :=
     locallyCompact_of_complete (O := K.O) (IsFractionRing.injective K.O K.E) hball
   obtain ⟨F, nF, nA, st, h1, h2⟩ := unram_of_involution (nE := nE) K.c K.c_c hne
     (fun y => absOfVal_congr v (hv y))

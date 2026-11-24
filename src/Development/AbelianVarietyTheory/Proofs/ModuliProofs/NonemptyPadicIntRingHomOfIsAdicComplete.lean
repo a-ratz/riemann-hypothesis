@@ -93,14 +93,14 @@ theorem _root_.GlobalTheory.exists_padicInt_algebra_finite (V : Type*) [CommRing
     ∃ (p : ℕ) (_ : Fact p.Prime) (_ : Algebra ℤ_[p] V), Module.Finite ℤ_[p] V := by
   obtain ⟨q, hq⟩ := CharP.exists (ResidueField V)
   have hprime : q.Prime := CharP.char_is_prime (ResidueField V) q
-  haveI hfact : Fact q.Prime := ⟨hprime⟩
+  have hfact : Fact q.Prime := ⟨hprime⟩
   have hmem : (q : V) ∈ maximalIdeal V := by
     rw [← residue_eq_zero_iff, map_natCast]
     exact CharP.cast_eq_zero _ q
   obtain ⟨φ⟩ := _root_.GlobalTheory.nonempty_padicInt_ringHom_of_isAdicComplete (maximalIdeal V) q hmem
-  letI : Algebra ℤ_[q] V := φ.toAlgebra
+  let : Algebra ℤ_[q] V := φ.toAlgebra
   refine ⟨q, hfact, this, ?_⟩
-  haveI : Finite (V ⧸ maximalIdeal V) := ‹Finite (ResidueField V)›
+  have : Finite (V ⧸ maximalIdeal V) := ‹Finite (ResidueField V)›
   have hne : (q : V) ≠ 0 := Nat.cast_ne_zero.mpr hprime.ne_zero
   have himage : algebraMap ℤ_[q] V (q : ℤ_[q]) = (q : V) := map_natCast _ q
   refine _root_.GlobalTheory.finite_of_forall_prime_mem hne ?_ ?_ ?_
@@ -129,7 +129,7 @@ theorem _root_.GlobalTheory.exists_ringEquiv_integralClosure_padicInt (V K : Typ
     ∃ (p : ℕ) (_ : Fact p.Prime) (K₀ : IntermediateField ℚ_[p] (PadicAlgCl p)) (e : K ≃+* K₀)
       (e₀ : V ≃+* integralClosure ℤ_[p] K₀), FiniteDimensional ℚ_[p] K₀ ∧
       ∀ x, e (algebraMap V K x) = ((e₀ x : integralClosure ℤ_[p] K₀) : K₀) := by
-  haveI : CharZero V := (algebraMap V K).charZero
+  have : CharZero V := (algebraMap V K).charZero
   obtain ⟨p, hfact, _, hfin⟩ := _root_.GlobalTheory.exists_padicInt_algebra_finite V
   have hp : (p : V) ≠ 0 := Nat.cast_ne_zero.mpr hfact.out.ne_zero
   obtain ⟨L, hL, g, hg⟩ := _root_.GlobalTheory.exists_injective_algHom_integralClosure V hp
@@ -158,7 +158,7 @@ theorem _root_.GlobalTheory.exists_ringEquiv_integralClosure_padicInt (V K : Typ
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := V) x
     rw [map_div₀, hf, hf, hψ, hψ]
     exact div_mem (g a : L).2 (g b : L).2
-  haveI : FiniteDimensional ℚ_[p] K₀ := FiniteDimensional.of_injective
+  have : FiniteDimensional ℚ_[p] K₀ := FiniteDimensional.of_injective
     (IntermediateField.inclusion hle).toLinearMap (IntermediateField.inclusion_injective hle)
   let e : K ≃+* K₀ := RingEquiv.ofBijective (f.codRestrict K₀ fun x => (hK₀ _).mpr ⟨x, rfl⟩)
     ⟨fun a b h => f.injective (congrArg Subtype.val h), fun y => by
@@ -172,7 +172,7 @@ theorem _root_.GlobalTheory.exists_ringEquiv_integralClosure_padicInt (V K : Typ
   let φ : V →+* integralClosure ℤ_[p] K₀ :=
     (e.toRingHom.comp (algebraMap V K)).codRestrict (integralClosure ℤ_[p] K₀) hint
   have hφ : ∀ v, ((φ v : integralClosure ℤ_[p] K₀) : K₀) = e (algebraMap V K v) := fun v => rfl
-  haveI : IsLocalHom (g : V →+* integralClosure ℤ_[p] L) :=
+  have : IsLocalHom (g : V →+* integralClosure ℤ_[p] L) :=
     _root_.GlobalTheory.isLocalHom_of_injective_integralClosure g hg
   have hbij : Function.Bijective φ := by
     refine ⟨fun a b h => IsFractionRing.injective V K (e.injective ?_), fun y => ?_⟩
@@ -212,7 +212,7 @@ private theorem isAdicComplete_integralClosure_padicInt (p : ℕ) [Fact p.Prime]
     (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K]
     [IsLocalRing (integralClosure ℤ_[p] K)] :
     IsAdicComplete (maximalIdeal (integralClosure ℤ_[p] K)) (integralClosure ℤ_[p] K) := by
-  haveI := _root_.GlobalTheory.isDiscreteValuationRing_integralClosure_padicInt p K
+  have := _root_.GlobalTheory.isDiscreteValuationRing_integralClosure_padicInt p K
   set O := integralClosure ℤ_[p] K
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
   let nm : O → ℝ := fun x => ‖((x : K) : PadicAlgCl p)‖
@@ -275,10 +275,10 @@ private theorem isAdicComplete_integralClosure_padicInt (p : ℕ) [Fact p.Prime]
       have h2 := (hmem N _).mpr ((hsmod N _ _).mp (hf hm))
       have h3 := sub_mem h2 h1
       rwa [sub_sub_sub_cancel_left] at h3
-    haveI : FiniteDimensional ℚ_[p] (Subalgebra.toSubmodule K.toSubalgebra) :=
+    have : FiniteDimensional ℚ_[p] (Subalgebra.toSubmodule K.toSubalgebra) :=
       ‹FiniteDimensional ℚ_[p] K›
     have hKc : IsComplete (K : Set (PadicAlgCl p)) :=
-      Submodule.complete_of_finiteDimensional (Subalgebra.toSubmodule K.toSubalgebra)
+      Submodule.isComplete_of_finiteDimensional (Subalgebra.toSubmodule K.toSubalgebra)
     obtain ⟨a, haK, hlim⟩ := cauchySeq_tendsto_of_isComplete hKc (fun n => (f n : K).2) hcauchy
     have ha1 : ‖a‖ ≤ 1 := le_of_tendsto' hlim.norm fun n => hnm_le (f n)
     let L : O := ⟨⟨a, haK⟩, (_root_.GlobalTheory.mem_integralClosure_padicInt_iff K _).mpr ha1⟩
@@ -297,9 +297,9 @@ open IsLocalRing in
 theorem _root_.GlobalTheory.completeDVR_eq_integralClosure_padicInt :
     (∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [Field K] [CharZero K] [Algebra V K] [IsFractionRing V K], Finite (ResidueField V) → ∃ (p : ℕ) (_ : Fact p.Prime) (K₀ : IntermediateField ℚ_[p] (PadicAlgCl p)) (e : K ≃+* K₀) (e₀ : V ≃+* integralClosure ℤ_[p] K₀), FiniteDimensional ℚ_[p] K₀ ∧ ∀ x, e (algebraMap V K x) = ((e₀ x : integralClosure ℤ_[p] K₀) : K₀)) ∧ ∀ (p : ℕ) [Fact p.Prime] (K₀ K' : IntermediateField ℚ_[p] (PadicAlgCl p)) (h : K₀ ≤ K'), FiniteDimensional ℚ_[p] K' → IsDiscreteValuationRing (integralClosure ℤ_[p] K') ∧ IsFractionRing (integralClosure ℤ_[p] K') K' ∧ (∀ [IsLocalRing (integralClosure ℤ_[p] K')], IsAdicComplete (maximalIdeal (integralClosure ℤ_[p] K')) (integralClosure ℤ_[p] K')) ∧ ∃ f : integralClosure ℤ_[p] K₀ →+* integralClosure ℤ_[p] K', f.Finite ∧ IsLocalHom f ∧ ∀ x, ((f x : integralClosure ℤ_[p] K') : K') = IntermediateField.inclusion h x := by
   refine ⟨fun V K _ _ _ _ _ _ _ _ hres => ?_, fun p _ K₀ K' h hK' => ?_⟩
-  · haveI := hres
+  · have := hres
     exact _root_.GlobalTheory.exists_ringEquiv_integralClosure_padicInt V K
-  · haveI := hK'
+  · have := hK'
     refine ⟨_root_.GlobalTheory.isDiscreteValuationRing_integralClosure_padicInt p K',
       _root_.GlobalTheory.isFractionRing_integralClosure_padicInt p K',
       isAdicComplete_integralClosure_padicInt p K', ?_⟩
@@ -307,7 +307,7 @@ theorem _root_.GlobalTheory.completeDVR_eq_integralClosure_padicInt :
     have hF : Function.Injective F := _root_.GlobalTheory.mapIntegralClosure_padicInt_injective _
     refine ⟨(F : integralClosure ℤ_[p] K₀ →+* integralClosure ℤ_[p] K'), ?_,
       _root_.GlobalTheory.isLocalHom_of_injective_integralClosure F hF, fun x => rfl⟩
-    haveI := _root_.GlobalTheory.finite_integralClosure_padicInt p K'
+    have := _root_.GlobalTheory.finite_integralClosure_padicInt p K'
     refine RingHom.Finite.of_comp_finite (f := algebraMap ℤ_[p] (integralClosure ℤ_[p] K₀)) ?_
     rw [AlgHom.comp_algebraMap]
     exact RingHom.finite_algebraMap.mpr inferInstance

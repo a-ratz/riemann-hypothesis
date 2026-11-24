@@ -81,7 +81,7 @@ theorem v_det_le {i : C.I} {n : ℕ} {b b' : Module.Basis (Fin n) K V} {L L' : A
   rw [Module.Basis.det_apply, Matrix.det_apply']
   refine (C.v i).map_sum_le fun σ _ => ?_
   rw [map_mul, map_prod]
-  refine mul_le_one' ?_ (Finset.prod_le_one' fun q _ => (h' _).1 (hle (basis_mem h q)) _)
+  refine mul_le_one' ?_ (Finset.prod_le_one fun q _ => (h' _).1 (hle (basis_mem h q)) _)
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with e | e <;> simp [e]
 
 theorem deg_triv [FiniteDimensional K V] {n : ℕ} (b : Module.Basis (Fin n) K V)
@@ -100,7 +100,7 @@ theorem deg_mono : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [AddCommGr
   obtain ⟨hf, e⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Crv.DegFormula.deg_formula K C V L _ (Module.finBasis K V) b hL hb
   obtain ⟨hf', e'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Crv.DegFormula.deg_formula K C V L' _ (Module.finBasis K V) b' hL' hb'
   rw [e, e']
-  refine finsum_le_finsum' (hf.subset fun i hi h1 => hi (by simp [h1]))
+  refine finsum_le_finsum (hf.subset fun i hi h1 => hi (by simp [h1]))
     (hf'.subset fun i hi h1 => hi (by simp [h1])) fun i => ?_
   refine mul_le_mul_of_nonneg_left ?_ (Int.natCast_nonneg _)
   have n1 : C.v i ((Module.finBasis K V).det (b i)) ≠ 0 :=

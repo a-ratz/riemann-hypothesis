@@ -180,7 +180,7 @@ theorem UpperTheory.exists_eq_pure_vacuum_of_lattice_invariant :
     have hgen : latAtV X W v ≤ AddSubgroup.closure gen := by
       intro γ hγ
       by_cases hv : ∀ w : HeightOneSpectrum (𝓞 E), ¬ Formalism.UG.IsInertAt F E v w
-      · haveI := hB.unram
+      · have := hB.unram
         obtain ⟨t⟩ := GlobalTheory.SplitDict.nonempty_emb hB.cm v hv
         obtain ⟨γ₁, h₁, γ₂, h₂, rfl, e₁, e₂⟩ := GlobalTheory.T.tensorLatticeAtFinitePlace_eq_sum_splitPlace_parts hB.cm X W v t γ hγ
         exact add_mem (AddSubgroup.subset_closure (.inr ⟨h₁, _, e₁⟩)) (AddSubgroup.subset_closure (.inr ⟨h₂, _, e₂⟩))

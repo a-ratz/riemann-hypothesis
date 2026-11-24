@@ -137,7 +137,7 @@ theorem exists_thS_eq : ∀ (n g : ℕ) (τ : Matrix (Fin g) (Fin g) ℂ), τ �
     intro m m' hmn
     funext ⟨k, i⟩
     have h1 : (m (k, i) : ℚ) / N = (m' (k, i) : ℚ) / N := congrFun (congrFun hmn k) i
-    exact_mod_cast (div_left_inj' hNq).1 h1
+    exact_mod_cast (div_left_inj₀ hNq).1 h1
   let Q : Matrix (Fin n) (Fin g) ℚ → ℂ := fun x => ∑ k, qv (x k) ⬝ᵥ τ *ᵥ qv (x k)
   let φ : TF n g := fun x => Function.extend e a 0 x * cexp (-(π * I * Q x))
   have hφe : ∀ ν, φ (e ν) = a ν * cexp (-(π * I * Q (e ν))) := fun ν => by

@@ -144,7 +144,7 @@ theorem psiK_ne {ε : 𝓞 X.B.I.E} (hε1 : ε - 1 ∈ (wK X kv).asIdeal)
     show _ ∈ Ideal.comap _ _
     rw [Ideal.mem_comap, map_natCast]; exact gk_mem X kv
   have hun : Algebra.IsUnramifiedAt ℤ v.asIdeal := by
-    letI : Algebra X.B.I.F D.host.E := (X.ιE.toRingHom.comp (algebraMap X.B.I.F X.B.I.E)).toAlgebra
+    let : Algebra X.B.I.F D.host.E := (X.ιE.toRingHom.comp (algebraMap X.B.I.F X.B.I.E)).toAlgebra
     exact PsiCondAllPf.unram_of (D.host.g kv.1) hp v hv
       (Formalism.L2.SG.Pf.TypedLoc.tower_ef X.B.I.F D.host.E hp (D.nd.g_split kv.1) v hv).1
   obtain ⟨d, hd, hdv⟩ := PsiCondAllPf.exists_diff_not_mem v hun

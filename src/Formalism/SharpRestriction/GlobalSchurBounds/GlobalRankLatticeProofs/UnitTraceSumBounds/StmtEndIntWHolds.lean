@@ -223,7 +223,7 @@ theorem c_frob (hK : Module.finrank ℚ K = 2) (c : K →+* K) (hc : ∃ x, c x 
     (hP : (Ideal.span {(p : 𝓞 K)}).IsPrime) (a : 𝓞 K) :
     (p : 𝓞 K) ∣ RingOfIntegers.mapRingHom c a - a ^ p := by
   classical
-  haveI hmax := isMaximal_span_p (K := K) (p := p) hP
+  have hmax := isMaximal_span_p (K := K) (p := p) hP
   have hle : Ideal.span {(p : 𝓞 K)} ≤
       (Ideal.span {(p : 𝓞 K)}).comap (RingOfIntegers.mapRingHom c) := by
     rw [Ideal.span_le, Set.singleton_subset_iff]
@@ -233,9 +233,9 @@ theorem c_frob (hK : Module.finrank ℚ K = 2) (c : K →+* K) (hc : ∃ x, c x 
   let σ : (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) →+* (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) := Ideal.quotientMap _ (RingOfIntegers.mapRingHom c) hle
   have hσ : ∀ y : 𝓞 K, σ (Ideal.Quotient.mk _ y) =
       Ideal.Quotient.mk _ (RingOfIntegers.mapRingHom c y) := fun y => Ideal.quotientMap_mk
-  haveI : CharP (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) p := CharP.quotient (𝓞 K) p
+  have : CharP (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) p := CharP.quotient (𝓞 K) p
     (mem_nonunits_iff.mpr fun hu => hP.ne_top (Ideal.span_singleton_eq_top.mpr hu))
-  haveI : ExpChar (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) p := ExpChar.prime hp.out
+  have : ExpChar (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) p := ExpChar.prime hp.out
   have h2 : (2 : (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)})) ≠ 0 := by
     intro h
     have h' : ((2 : ℕ) : (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)})) = 0 := by exact_mod_cast h
@@ -279,9 +279,9 @@ theorem c_frob (hK : Module.finrank ℚ K = 2) (c : K →+* K) (hc : ∃ x, c x 
   have hex : ∃ y : (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}), y ^ p ≠ y := by
     by_contra hcon
     push_neg at hcon
-    haveI := finite_quot (K := K) (p := p) hK
-    letI := Fintype.ofFinite (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)})
-    letI : Field (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) := Ideal.Quotient.field _
+    have := finite_quot (K := K) (p := p) hK
+    let := Fintype.ofFinite (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)})
+    let : Field (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) := Ideal.Quotient.field _
     have hp1 : 1 < p := hp.out.one_lt
     have hsub : (Finset.univ : Finset (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)})) ⊆ ((Polynomial.X ^ p - Polynomial.X : Polynomial (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)})).roots.toFinset) := by
       intro y _
@@ -399,9 +399,9 @@ theorem teich_surj (hK : Module.finrank ℚ K = 2) (τ : K →+* ℂ_[p])
     ∃ a : 𝓞 K, teich τ a = ζ := by
   classical
   have : (Ideal.span {(p : 𝓞 K)}).IsMaximal := isMaximal_span_p hP
-  letI : Field (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) := Ideal.Quotient.field _
+  let : Field (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) := Ideal.Quotient.field _
   have : Finite (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) := finite_quot hK
-  letI : Fintype (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) := Fintype.ofFinite _
+  let : Fintype (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) := Fintype.ofFinite _
   set g : 𝓞 K ⧸ Ideal.span {(p : 𝓞 K)} → 𝓞 K :=
     Function.surjInv (Ideal.Quotient.mk_surjective (I := Ideal.span {(p : 𝓞 K)})) with hgdef
   have hg : ∀ x, Ideal.Quotient.mk _ (g x) = x := Function.surjInv_eq _

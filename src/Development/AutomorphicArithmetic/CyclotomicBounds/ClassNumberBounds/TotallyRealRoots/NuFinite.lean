@@ -85,7 +85,7 @@ theorem nu_ne_top {U : Subgroup ℤ_[l]ˣ} (hU : IsOpen (U : Set ℤ_[l]ˣ)) {tr
     exact pow_dvd_pow _ (by omega)
   have := nf_nu_le hm tr
   rw [emultiplicity_pow_sub_one_sq h1, nf_emult hu,
-    ← padicValNat_eq_emultiplicity htr, ← Nat.cast_add] at this
+    ← multiplicity_eq_emultiplicity htr, ← Nat.cast_add] at this
   exact ne_top_of_le_ne_top (ENat.natCast_ne_top _) this
 
 end KStar.TotallyRealRoots

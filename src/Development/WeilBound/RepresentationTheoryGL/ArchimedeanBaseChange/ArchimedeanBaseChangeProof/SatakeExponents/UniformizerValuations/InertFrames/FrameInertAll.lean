@@ -114,20 +114,20 @@ theorem gram_bM {n : ℕ} (σ : R →+* R) (d₁ d₂ : Fin n → R)
   rw [Matrix.mul_apply]
   simp only [Matrix.transpose_apply, Matrix.map_apply, bM_map]
   simp only [bM, add_mul, mul_add, Finset.sum_add_distrib, ite_mul, mul_ite, zero_mul, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   by_cases hjk : j = k
   · subst hjk
     by_cases hs : j = Fin.rev j
     · obtain ⟨h0, h1⟩ := P3 j hs
       rw [← hs]
       simp [h0, h1]
-    · simp only [if_neg hs, if_neg (Ne.symm hs), eq_self_iff_true, if_true, add_zero, zero_add]
+    · simp only [ite_eq_right hs, ite_eq_right (Ne.symm hs), eq_self_iff_true, ite_true, add_zero, zero_add]
       exact P1 j hs
   · by_cases hr : j = Fin.rev k
     · have hk : k = Fin.rev j := by rw [hr, Fin.rev_rev]
       subst hk
       have hs : j ≠ Fin.rev j := hjk
-      simp only [Fin.rev_rev, if_neg (Ne.symm hs), if_neg hs, eq_self_iff_true, if_true, zero_add,
+      simp only [Fin.rev_rev, ite_eq_right (Ne.symm hs), ite_eq_right hs, eq_self_iff_true, ite_true, zero_add,
         add_zero]
       rw [add_comm]
       exact P2 j hs
@@ -135,7 +135,7 @@ theorem gram_bM {n : ℕ} (σ : R →+* R) (d₁ d₂ : Fin n → R)
       have h2 : k ≠ Fin.rev j := fun h => hr (by rw [h, Fin.rev_rev])
       have h3 : Fin.rev k ≠ j := fun h => hr h.symm
       have h4 : Fin.rev k ≠ Fin.rev j := fun h => hjk (Fin.rev_injective h).symm
-      simp only [if_neg h1, if_neg h2, if_neg h3, if_neg h4, if_neg hr, add_zero]
+      simp only [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, ite_eq_right h4, ite_eq_right hr, add_zero]
 
 end PositivityTheory.Rg.BcB.F.Inert.WittBasisGramMatrix
 
@@ -171,18 +171,18 @@ theorem wittEx : WittEx := by
     ⟨_, fun _ => rfl⟩
   have hfirst : ∀ j : Fin n, (j : ℕ) < (Fin.rev j : ℕ) → d₁ j = 1 ∧ d₂ j = 1 - wv := by
     intro j h
-    rw [hd₁, hd₂, if_pos h, if_pos h]
+    rw [hd₁, hd₂, ite_eq_left h, ite_eq_left h]
     exact ⟨rfl, rfl⟩
   have hsecond : ∀ j : Fin n, (Fin.rev j : ℕ) < (j : ℕ) → d₁ j = -(t * wv) ∧ d₂ j = t := by
     intro j h
     have h1 : ¬ ((j : ℕ) < (Fin.rev j : ℕ)) := by omega
     have h2 : j ≠ Fin.rev j := fun e => by rw [← e] at h; exact lt_irrefl _ h
-    rw [hd₁, hd₂, if_neg h1, if_neg h1, if_neg h2, if_neg h2]
+    rw [hd₁, hd₂, ite_eq_right h1, ite_eq_right h1, ite_eq_right h2, ite_eq_right h2]
     exact ⟨rfl, rfl⟩
   have hmid : ∀ j : Fin n, j = Fin.rev j → d₁ j = 1 ∧ d₂ j = 0 := by
     intro j e
     have h1 : ¬ ((j : ℕ) < (Fin.rev j : ℕ)) := by rw [← e]; exact lt_irrefl _
-    rw [hd₁, hd₂, if_neg h1, if_neg h1, if_pos e, if_pos e]
+    rw [hd₁, hd₂, ite_eq_right h1, ite_eq_right h1, ite_eq_left e, ite_eq_left e]
     exact ⟨rfl, rfl⟩
   have hside : ∀ j : Fin n, j ≠ Fin.rev j → (j : ℕ) < (Fin.rev j : ℕ) ∨ (Fin.rev j : ℕ) < (j : ℕ) :=
     fun j hj => lt_or_gt_of_ne (fun e => hj (Fin.ext e))
@@ -327,7 +327,7 @@ theorem inertSet_infinite : (inertSet E).Infinite := by
   apply infinite_of_hasDirichletDensity_pos hd
   have h2 : Nat.card Gal(E/↥(maximalRealSubfield E)) = 2 := by
     rw [IsGalois.card_aut_eq_finrank]
-    haveI := IsCMField.isQuadraticExtension E
+    have := IsCMField.isQuadraticExtension E
     exact Algebra.IsQuadraticExtension.finrank_eq_two _ _
   rw [h2]
   simp
@@ -335,8 +335,8 @@ theorem inertSet_infinite : (inertSet E).Infinite := by
 theorem eq_of_liesOver {v : HeightOneSpectrum (𝓞 (maximalRealSubfield E))} (hv : v ∈ inertSet E)
     {w u : HeightOneSpectrum (𝓞 E)} (hw : w.asIdeal.LiesOver v.asIdeal) (hu : u.asIdeal.LiesOver v.asIdeal) :
     u = w := by
-  haveI := hw
-  haveI := hu
+  have := hw
+  have := hu
   obtain ⟨σ, hσ⟩ := Ideal.exists_smul_eq_of_isGaloisGroup v.asIdeal w.asIdeal u.asIdeal
     Gal(E/↥(maximalRealSubfield E))
   apply IsDedekindDomain.HeightOneSpectrum.ext
@@ -466,8 +466,8 @@ theorem satEx : SatEx := by
   have hac := GlobalTheory.UnitaryBC.SatEx.continuous_toAnti b hb.2
   let p : UL n w ≃* GU (cj w) n := (MulEquiv.subgroupCongr hUL).trans a
   have hp : ∀ x, (p x).1 = b⁻¹ * x.1 * b := fun x => rfl
-  have hpc : Continuous p := hac.1.comp (continuous_subtype_val.subtype_mk _)
-  have hpsc : Continuous p.symm := (continuous_subtype_val.comp hac.2).subtype_mk _
+  have hpc : Continuous p := hac.1.comp (continuous_subtypeVal.subtype_mk _)
+  have hpsc : Continuous p.symm := (continuous_subtypeVal.comp hac.2).subtype_mk _
   let hh : UL n w ≃ₜ GU (cj w) n :=
     { toEquiv := p.toEquiv, continuous_toFun := hpc, continuous_invFun := hpsc }
   let σ' : SmIrr (GU (cj w) n) :=

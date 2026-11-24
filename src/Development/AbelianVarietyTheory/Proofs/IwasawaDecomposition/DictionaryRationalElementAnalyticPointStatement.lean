@@ -151,7 +151,7 @@ theorem GlobalTheory.OneMapRef.DictPt.dict_point : ∀ (D : D7) (H : Reciprocity
     simp only [frOf, Equiv.symm_apply_apply]
     exact congrFun (congrFun this a) b
   · intro hx g bas idx e hs hM
-    letI : Algebra c.F ℂ := σ.toAlgebra
+    let : Algebra c.F ℂ := σ.toAlgebra
     intro A mk hmk hA a ha
     obtain ⟨Pm, hPm, hP, hu, hder⟩ := hD.1.2 (dict h).1 ⟨(dict h).2, hx⟩
     have hM0 : l.M ≠ 0 := by have := l.three_le; omega

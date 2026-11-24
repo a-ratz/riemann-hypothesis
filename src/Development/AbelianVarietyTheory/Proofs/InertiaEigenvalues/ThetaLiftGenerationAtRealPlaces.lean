@@ -143,7 +143,7 @@ theorem burn_span : ∀ {X ι : Type} [AddCommGroup X] [Module ℂ X] (M : Submo
     exact hle (Submodule.mul_mem_mul hx hy)
   let A : Subalgebra ℂ (Module.End ℂ M) := p.toSubalgebra h1 hm
   have hntM : Nontrivial M := Submodule.nontrivial_iff_ne_bot.2 hM
-  haveI : IsSimpleModule A M := by
+  have : IsSimpleModule A M := by
     refine { toNontrivial := ?_, eq_bot_or_eq_top := fun N => ?_ }
     · obtain ⟨x, hx⟩ := exists_ne (0 : M)
       refine ⟨⟨⊥, ⊤, fun h => hx ?_⟩⟩
@@ -202,7 +202,7 @@ theorem eq_of_orth : ∀ {X : Type} [AddCommGroup X] [Module ℂ X] (M W : Submo
     (∀ f ∈ M, (∀ g ∈ W, B f g = 0) → f = 0) → W = M := by
   intro X _ _ M W hfd hWM B hl hr horth
   classical
-  haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWM
+  have : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWM
   have hl0 : ∀ g ∈ M, B 0 g = 0 := fun g hg => by
     have := hl 1 0 0 g M.zero_mem M.zero_mem hg
     simp only [smul_zero, add_zero, star_one, one_mul] at this

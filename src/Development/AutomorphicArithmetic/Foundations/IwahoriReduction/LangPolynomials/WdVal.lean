@@ -90,7 +90,7 @@ private theorem wd_irr (R : Type) [CommRing R] [IsDomain R] (l : ℕ) [hl : Fact
         Polynomial.eval_X, Polynomial.eval_C, zero_add, Polynomial.eval_one_cyclotomic_prime_pow,
         Ideal.span_singleton_pow, Ideal.mem_span_singleton]
       rintro ⟨a, ha⟩
-      apply hp.not_unit
+      apply hp.not_isUnit
       have h1 : (l : R) * 1 = (l : R) * ((l : R) * a) := by
         rw [mul_one]
         calc (l : R) = (l : R) ^ 2 * a := ha
@@ -140,7 +140,7 @@ private theorem wd_res {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (l : ℕ
     have h1 : A.valuation z ^ (l ^ m) = 1 := by
       rw [← map_pow, hz, map_one]
     rcases lt_trichotomy (A.valuation z) 1 with h2 | h2 | h2
-    · exact absurd h1 (ne_of_lt (pow_lt_one₀ zero_le' h2 hN))
+    · exact absurd h1 (ne_of_lt (pow_lt_one₀ zero_le h2 hN))
     · exact h2
     · exact absurd h1 (ne_of_gt (one_lt_pow₀ h2 hN))
   have hzA : z ∈ A := (A.valuation_le_one_iff z).1 hvz.le
@@ -149,7 +149,7 @@ private theorem wd_res {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (l : ℕ
   have hlmax : (l : A) ∈ IsLocalRing.maximalIdeal A := by
     rw [A.valuation_lt_one_iff]
     simpa using h
-  haveI : CharP (IsLocalRing.ResidueField A) l := by
+  have : CharP (IsLocalRing.ResidueField A) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out]
     have := (IsLocalRing.residue_eq_zero_iff _).2 hlmax
     simpa using this
@@ -205,7 +205,7 @@ theorem UpperTheory.Kd.C7.pWD :
   have hval : A.valuation (l : Ω) < 1 := by
     have := (hv (l : 𝓞 ℚ)).2 hlv
     simpa using this
-  haveI := wd_val A
+  have := wd_val A
   have hroot : ∀ i : ℕ, (ζ m ^ i) ^ l ^ m = 1 := by
     intro i
     rw [← pow_mul, mul_comm, pow_mul, (hζ m).1.pow_eq_one, one_pow]
@@ -225,7 +225,7 @@ theorem UpperTheory.Kd.C7.pWD :
     obtain ⟨k, rfl⟩ : ∃ k, m = k + 1 := ⟨m - 1, by omega⟩
     have hirr := wd_irr (R0 A) l (prime_natCast_r0_of_valuation_lt_one l A j Φ hval) k
     classical
-    letI := IsBezout.toGCDDomain (R0 A)
+    let := IsBezout.toGCDDomain (R0 A)
     have hcycroot : Polynomial.aeval (ζ (k + 1)) (Polynomial.cyclotomic (l ^ (k + 1)) (R0 A)) = 0 := by
       rw [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic]
       exact (hζ (k + 1)).1.isRoot_cyclotomic (pow_pos (Fact.out : l.Prime).pos _)

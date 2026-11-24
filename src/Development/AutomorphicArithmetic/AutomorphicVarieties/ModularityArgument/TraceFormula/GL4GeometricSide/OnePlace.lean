@@ -240,7 +240,7 @@ private theorem iso_res {σ : Un n →* (V →ₗ[ℂ] V)} {σ' : Un n →* (X �
       show ((t.1 _ : X) : V) = σ k (t.1 ξ : X)
       rw [t.2 k ξ, hσ]
     exact le_iSup (fun t : invA σ E => LinearMap.range t.1) ⟨_, ht⟩ ⟨ξ, rfl⟩
-  · haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  · have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
     have heq : ∀ k v, S.starProjection (σ k v) = σ k (S.starProjection v) := by
       intro k v
       refine Submodule.eq_starProjection_of_mem_of_inner_eq_zero (hst k _ (S.starProjection_apply_mem v)) fun w hw => ?_

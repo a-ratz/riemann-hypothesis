@@ -69,7 +69,7 @@ theorem norm_apply_le_of_mem_dec {A : ValuationSubring Ω} {ι : Ω →+* PadicA
   have hs : ∀ y ∈ A, τ y ∈ A := by
     intro y hy
     have h2 := ValuationSubring.smul_mem_pointwise_smul τ y A hy
-    letI : MulAction (Ω ≃ₐ[F] Ω) (ValuationSubring Ω) := ValuationSubring.pointwiseMulAction
+    let : MulAction (Ω ≃ₐ[F] Ω) (ValuationSubring Ω) := ValuationSubring.pointwiseMulAction
     have hsA := MulAction.mem_stabilizer_iff.mp hτ
     first
     | (rw [hsA] at h2; exact h2)
@@ -238,7 +238,7 @@ theorem minpoly_aeval_of_mem_dec {A : ValuationSubring Ω} {ι : Ω →+* PadicA
 
 theorem exists_apply_eq_of_mem_dec {A : ValuationSubring Ω} {ι : Ω →+* PadicAlgCl p} (h : Compat p A ι) {τ : Ω ≃ₐ[F] Ω}
     (hτ : τ ∈ Dec (F := F) A) (x : Ω) : ∃ σ : GK F ι, σ (ι x) = ι (τ x) := by
-  haveI := isAlgClosure_Kloc (F := F) ι
+  have := isAlgClosure_Kloc (F := F) ι
   have hint : IsIntegral (Kloc F ι) (ι x) := by
     first
     | exact Algebra.IsIntegral.isIntegral _
@@ -279,7 +279,7 @@ theorem exists_res_eqOn_of_mem_dec {A : ValuationSubring Ω} {ι : Ω →+* Padi
 theorem exists_res_eq {A : ValuationSubring Ω} {ι : Ω →+* PadicAlgCl p} (h : Compat p A ι) {τ : Ω ≃ₐ[F] Ω}
     (hτ : τ ∈ Dec (F := F) A) : ∃ σ : GK F ι, res ι σ = τ := by
   classical
-  haveI := isAlgClosure_Kloc (F := F) ι
+  have := isAlgClosure_Kloc (F := F) ι
   have hclosed : ∀ a b : PadicAlgCl p, IsClosed {σ : GK F ι | σ a = b} := by
     intro a b
     rw [← isOpen_compl_iff, isOpen_iff_forall_mem_open]
@@ -287,7 +287,7 @@ theorem exists_res_eq {A : ValuationSubring Ω} {ι : Ω →+* PadicAlgCl p} (h 
     have hai : IsIntegral (Kloc F ι) a := by
       first
       | exact Algebra.IsIntegral.isIntegral _
-    haveI hfin : FiniteDimensional (Kloc F ι) (IntermediateField.adjoin (Kloc F ι) {a}) :=
+    have hfin : FiniteDimensional (Kloc F ι) (IntermediateField.adjoin (Kloc F ι) {a}) :=
       IntermediateField.adjoin.finiteDimensional hai
     have hU : IsOpen ((IntermediateField.adjoin (Kloc F ι) {a}).fixingSubgroup : Set (GK F ι)) :=
       IntermediateField.fixingSubgroup_isOpen _
@@ -313,26 +313,26 @@ theorem exists_res_eq {A : ValuationSubring Ω} {ι : Ω →+* PadicAlgCl p} (h 
     intro E
     have e : T E = ⋂ y ∈ E.1, {σ : GK F ι | σ (ι y) = ι (τ y)} := by
       ext σ
-      simp only [T, Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [T, Set.mem_ofPred_eq, Set.mem_iInter]
       refine forall₂_congr fun y _ => ?_
       rw [← res_spec, ι.injective.eq_iff]
     rw [e]
     exact isClosed_biInter fun y _ => hclosed _ _
   have hTne : ∀ E, (T E).Nonempty := by
     intro E
-    haveI := E.2
+    have := E.2
     obtain ⟨σ, hσ⟩ := exists_res_eqOn_of_mem_dec h hτ E.1
     exact ⟨σ, hσ⟩
   have hdir : Directed (· ⊇ ·) T := by
     intro E₁ E₂
-    haveI := E₁.2
-    haveI := E₂.2
+    have := E₁.2
+    have := E₂.2
     refine ⟨⟨E₁.1 ⊔ E₂.1, inferInstance⟩, ?_, ?_⟩
     · intro σ hσ y hy
       exact hσ y ((le_sup_left : E₁.1 ≤ E₁.1 ⊔ E₂.1) hy)
     · intro σ hσ y hy
       exact hσ y ((le_sup_right : E₂.1 ≤ E₁.1 ⊔ E₂.1) hy)
-  haveI : Nonempty {E : IntermediateField F Ω // FiniteDimensional F E} := ⟨⟨⊥, inferInstance⟩⟩
+  have : Nonempty {E : IntermediateField F Ω // FiniteDimensional F E} := ⟨⟨⊥, inferInstance⟩⟩
   obtain ⟨σ, hσ⟩ := IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed T hdir hTne
     (fun E => (hTcl E).isCompact) hTcl
   refine ⟨σ, ?_⟩

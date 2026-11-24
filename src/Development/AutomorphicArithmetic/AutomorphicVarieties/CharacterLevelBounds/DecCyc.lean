@@ -74,7 +74,7 @@ private noncomputable def vQ : HeightOneSpectrum (𝓞 ℚ) where
   ne_bot := by rw [Ne, Ideal.span_singleton_eq_bot]; exact (prime_l l).ne_zero
 
 private theorem normV_vQ : normV (vQ l) = l := by
-  haveI : NeZero l := ⟨hl.out.ne_zero⟩
+  have : NeZero l := ⟨hl.out.ne_zero⟩
   unfold normV
   have hJ : Ideal.span {((l : ℕ) : ℤ)} = Ideal.map (Rat.ringOfIntegersEquiv : 𝓞 ℚ →+* ℤ) (vQ l).asIdeal := by
     show _ = Ideal.map (Rat.ringOfIntegersEquiv : 𝓞 ℚ →+* ℤ) (Ideal.span {((l : ℕ) : 𝓞 ℚ)})
@@ -151,7 +151,7 @@ private theorem decomposition_cyclotomic_of_mem_dec_third {Ω : Type} [Field Ω]
     by_cases hz : z = 0
     · simp [hz]
     · have hv0 : A.valuation z ≠ 0 := by simpa using hz
-      rw [map_inv₀, inv_le_one₀ (zero_lt_iff.mpr hv0), ← lt_iff_le_not_ge]
+      rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.mpr hv0), ← lt_iff_le_not_ge]
       simp [hz]
   rw [key, key, ← map_inv₀ τ x, decomposition_cyclotomic_of_mem_dec_second A τ hτ, decomposition_cyclotomic_of_mem_dec_second A τ hτ, EmbeddingLike.map_eq_zero_iff]
 
@@ -162,7 +162,7 @@ theorem UpperTheory.V.Chr.decCyc :
           ∃ γ ∈ Dec (F := ℚ) A, Dec (F := ℚ) A ≤ (Subgroup.zpowers γ ⊔ Ine (F := ℚ) A).topologicalClosure ∧
             ∀ (l : ℕ) [Fact l.Prime], l ≠ p → ((cycZ ℚ Ω l γ : ℤ_[l]ˣ) : ℤ_[l]) = (p : ℤ_[l]) := by
   intro Ω _ _ _ p A hp hA
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hPO := isPlaceOver_vQ (l := p) A hA
   obtain ⟨σ, hσ⟩ := exists_isFrob hPO
   have hσD : σ ∈ Dec (F := ℚ) A := hσ.1

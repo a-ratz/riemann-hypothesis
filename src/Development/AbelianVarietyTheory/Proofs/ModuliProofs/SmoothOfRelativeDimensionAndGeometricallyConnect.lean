@@ -82,27 +82,27 @@ theorem mem_smoothLocus_of_smooth_fiber {R : CommRingCat.{0}} {X : Scheme.{0}} (
     rwa [← Scheme.Hom.preimage_smoothLocus_eq] at H
   obtain ⟨S, rfl⟩ := hX
   obtain ⟨φ, rfl⟩ := Spec.map_surjective f
-  letI := φ.hom.toAlgebra
-  haveI : Algebra.FinitePresentation R S :=
+  let := φ.hom.toAlgebra
+  have : Algebra.FinitePresentation R S :=
     (HasRingHomProperty.Spec_iff (P := @LocallyOfFinitePresentation) (φ := φ)).mp ‹_›
-  haveI : Module.Flat R S :=
+  have : Module.Flat R S :=
     (HasRingHomProperty.Spec_iff (P := @Flat) (φ := φ)).mp ‹_›
-  haveI : x.asIdeal.IsPrime := PrimeSpectrum.isPrime x
+  have : x.asIdeal.IsPrime := PrimeSpectrum.isPrime x
   let p : PrimeSpectrum R := Spec.map φ x
-  haveI : x.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
-  haveI : Algebra.FormallySmooth p.asIdeal.ResidueField (p.asIdeal.Fiber S) := by
+  have : x.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  have : Algebra.FormallySmooth p.asIdeal.ResidueField (p.asIdeal.Fiber S) := by
     rw [← RingHom.formallySmooth_algebraMap]
     refine RingHom.Smooth.formallySmooth ?_
     rw [← CommRingCat.hom_ofHom (algebraMap p.asIdeal.ResidueField (p.asIdeal.Fiber ↑S)),
       ← HasRingHomProperty.Spec_iff (P := @Smooth),
       ← MorphismProperty.arrow_mk_iso_iff (P := @Smooth) (Spec.fiberToSpecResidueFieldIso R S p)]
     exact h
-  haveI := Algebra.IsSmoothAt.of_formallySmooth_fiber (R := R) p.asIdeal x.asIdeal
+  have := Algebra.IsSmoothAt.of_formallySmooth_fiber (R := R) p.asIdeal x.asIdeal
   obtain ⟨g, hg, hsm⟩ := Algebra.IsSmoothAt.exists_notMem_smooth R x.asIdeal
   let j : Spec (CommRingCat.of (Localization.Away g)) ⟶ Spec S :=
     Spec.map (CommRingCat.ofHom (algebraMap S (Localization.Away g)))
-  haveI : IsOpenImmersion j := IsOpenImmersion.of_isLocalization g
-  haveI : Smooth (j ≫ Spec.map φ) := by
+  have : IsOpenImmersion j := IsOpenImmersion.of_isLocalization g
+  have : Smooth (j ≫ Spec.map φ) := by
     rw [← Spec.map_comp, HasRingHomProperty.Spec_iff (P := @Smooth)]
     exact RingHom.smooth_algebraMap.mpr hsm
   obtain ⟨y, rfl⟩ : x ∈ Set.range (PrimeSpectrum.comap (algebraMap S (Localization.Away g))) := by

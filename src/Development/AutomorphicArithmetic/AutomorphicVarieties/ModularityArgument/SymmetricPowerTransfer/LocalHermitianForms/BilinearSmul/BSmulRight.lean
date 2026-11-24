@@ -72,19 +72,19 @@ theorem multiple (L : IsLoc O Δ) {I : Type} (t : Finset I) (f : I → Lsq K Δ)
     rw [hΔ]
     field_simp
   have hdes := descent O K Δ L s⁻¹ u hs2
-  haveI := L.frac
+  have := L.frac
   obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors O)
     (t ×ˢ (Finset.univ : Finset Bool)) (fun p : I × Bool => if p.2 then (f p.1).im * s else (f p.1).re)
   refine ⟨b, nonZeroDivisors.coe_ne_zero b, fun i hi => ?_⟩
   refine (hdes _).1.2 ⟨?_, ?_⟩
   · obtain ⟨r, hr⟩ := hb (i, false) (Finset.mem_product.2 ⟨hi, Finset.mem_univ _⟩)
     refine ⟨r, ?_⟩
-    simp only [Bool.false_eq_true, if_false] at hr
+    simp only [Bool.false_eq_true, ite_false] at hr
     rw [re_smul]
     exact hr
   · obtain ⟨r, hr⟩ := hb (i, true) (Finset.mem_product.2 ⟨hi, Finset.mem_univ _⟩)
     refine ⟨r, ?_⟩
-    simp only [if_true] at hr
+    simp only [ite_true] at hr
     rw [im_smul]
     change algebraMap O K r = (b : O) • ((f i).im * s) at hr
     rw [hr, Algebra.smul_def, Algebra.smul_def]
@@ -144,7 +144,7 @@ private theorem step_lemma_3 (L : IsLoc O Δ) (z : Lsq K Δ) (hz : IsInt O z) (h
 
 private theorem sq_enorm_le_two_lintegral_add_two_lintegral_fderiv (L : IsLoc O Δ) {ϖ : O} (hϖ : Irreducible ϖ) (x : K)
     (h : ∀ k : ℕ, (algebraMap O K ϖ)⁻¹ ^ k * x ∈ (algebraMap O K).range) : x = 0 := by
-  haveI := L.frac
+  have := L.frac
   have hinj := IsFractionRing.injective O K
   have hϖ0 : algebraMap O K ϖ ≠ 0 := fun h0 => hϖ.ne_zero (hinj (by rw [h0, map_zero]))
   obtain ⟨r, hr⟩ := h 0
@@ -228,7 +228,7 @@ theorem step (L : IsLoc O Δ) (M : Submodule O (Fin 3 → Lsq K Δ)) (hfg : M.FG
     field_simp
   have hdes := descent O K Δ L t⁻¹ u hs2
   obtain ⟨v, hv⟩ := L.two
-  haveI := L.frac
+  have := L.frac
   have hinj := IsFractionRing.injective O K
   obtain ⟨w, hwdef⟩ : ∃ w : Lsq K Δ, w = ⟨0, t⁻¹⟩ := ⟨_, rfl⟩
   obtain ⟨U, hUdef⟩ : ∃ U : Lsq K Δ, U = algebraMap O (Lsq K Δ) ↑u := ⟨_, rfl⟩
@@ -401,10 +401,10 @@ theorem step (L : IsLoc O Δ) (M : Submodule O (Fin 3 → Lsq K Δ)) (hfg : M.FG
     by_cases hjk : j = k
     · subst hjk
       rw [Pi.single_eq_same] at hk
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       linear_combination hk
     · rw [Pi.single_eq_of_ne (Ne.symm hjk)] at hk
-      rw [if_neg hjk]
+      rw [ite_eq_right hjk]
       linear_combination hk
   exact exists_basis_size_reduce_column a b hrel
 

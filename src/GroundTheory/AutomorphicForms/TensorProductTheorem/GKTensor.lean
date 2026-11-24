@@ -296,7 +296,7 @@ variable (hσ : IsKFinite σ) {c : Submodule (MonoidAlgebra ℂ K) σ.asModule}
   (hc : c ∈ isotypicComponents (MonoidAlgebra ℂ K) σ.asModule)
 
 theorem kProj_apply_eq_self_iff {v : X} : kProj hσ hc v = v ↔ (v : σ.asModule) ∈ c := by
-  haveI := isSemisimpleModule_asModule hσ
+  have := isSemisimpleModule_asModule hσ
   constructor
   · intro h
     have : isoProj hc (v : σ.asModule) ∈ c := isoProj_mem_isotypicComponent hc _
@@ -305,7 +305,7 @@ theorem kProj_apply_eq_self_iff {v : X} : kProj hσ hc v = v ↔ (v : σ.asModul
     exact isoProj_apply_of_mem hc h
 
 theorem kProj_mem_component (v : X) : (kProj hσ hc v : σ.asModule) ∈ c := by
-  haveI := isSemisimpleModule_asModule hσ
+  have := isSemisimpleModule_asModule hσ
   exact isoProj_mem_isotypicComponent hc _
 
 theorem kProj_kProj (v : X) : kProj hσ hc (kProj hσ hc v) = kProj hσ hc v :=
@@ -313,13 +313,13 @@ theorem kProj_kProj (v : X) : kProj hσ hc (kProj hσ hc v) = kProj hσ hc v :=
 
 theorem kProj_comm {T : End ℂ X} (hT : ∀ k, T * σ k = σ k * T) (v : X) :
     kProj hσ hc (T v) = T (kProj hσ hc v) := by
-  haveI := isSemisimpleModule_asModule hσ
+  have := isSemisimpleModule_asModule hσ
   let f : Representation.IntertwiningMap σ σ := ⟨T, hT⟩
   exact isoProj_comm hc (Representation.IntertwiningMap.equivLinearMapAsModule σ σ f) v
 
 theorem kProj_mem {Y : Submodule ℂ X} (hY : ∀ k, ∀ y ∈ Y, σ k y ∈ Y) {y : X} (hy : y ∈ Y) :
     kProj hσ hc y ∈ Y := by
-  haveI := isSemisimpleModule_asModule hσ
+  have := isSemisimpleModule_asModule hσ
   let P : Subrepresentation σ := ⟨Y, fun k y hy => hY k y hy⟩
   exact isoProj_mem hc (Subrepresentation.subrepresentationSubmoduleOrderIso P) hy
 
@@ -332,7 +332,7 @@ theorem exists_kProj_eq_self {Y : Submodule ℂ X} (hY : ∀ k, ∀ y ∈ Y, σ 
     ∃ (c : Submodule (MonoidAlgebra ℂ K) σ.asModule)
       (hc : c ∈ isotypicComponents (MonoidAlgebra ℂ K) σ.asModule),
       ∃ y ∈ Y, y ≠ 0 ∧ kProj hσ hc y = y := by
-  haveI := isSemisimpleModule_asModule hσ
+  have := isSemisimpleModule_asModule hσ
   let P : Subrepresentation σ := ⟨Y, fun k y hy => hY k y hy⟩
   set N := Subrepresentation.subrepresentationSubmoduleOrderIso P
   have hN0 : N ≠ ⊥ := by
@@ -415,7 +415,7 @@ theorem exists_equiv_outerTensor (hirr : (prodRep ρ₁ ρ₂ hcomm).IsIrreducib
         Nonempty ((prodRep ρ₁ ρ₂ hcomm).Equiv
           (outerTensor (mGenQuotRep ρ₁ e₁ N₁) (mGenQuotRep ρ₂ e₂ N₂)))) := by
   classical
-  haveI := hirr
+  have := hirr
   set P := prodRep ρ₁ ρ₂ hcomm
   set W := LinearMap.range (e₁ * e₂)
   have hE1 : ∀ w ∈ W, e₁ w = w := by
@@ -467,7 +467,7 @@ theorem exists_equiv_outerTensor (hirr : (prodRep ρ₁ ρ₂ hcomm).IsIrreducib
   set Tp : Bool → Set (End ℂ W) := fun i => if i then range T₁ else range T₂
   have hcommTp : ∀ i j, i ≠ j → ∀ s ∈ Tp i, ∀ t ∈ Tp j, Commute s t := by
     intro i j hij s hs t ht
-    cases i <;> cases j <;> simp only [Tp, if_true, if_false] at hs ht
+    cases i <;> cases j <;> simp only [Tp, ite_true, ite_false] at hs ht
     · exact absurd rfl hij
     · obtain ⟨b, rfl⟩ := hs
       obtain ⟨a, rfl⟩ := ht
@@ -642,22 +642,22 @@ theorem exists_equiv_outerTensor (hirr : (prodRep ρ₁ ρ₂ hcomm).IsIrreducib
     exact this
   have hN₁min : ∀ N' : Submodule ℂ V, N' ≤ N₁ → N' ≠ ⊥ → (∀ a, ∀ x ∈ N', e₁ (ρ₁ a x) ∈ N') →
       N' = N₁ := fun N' hle hne' hst => hmin true N' (fun t ht w hw => by
-        simp only [Tp, if_true] at ht
+        simp only [Tp, ite_true] at ht
         obtain ⟨a, rfl⟩ := ht
         rw [hT₁]
         exact hst a w hw) hle hne'
   have hN₂min : ∀ N' : Submodule ℂ V, N' ≤ N₂ → N' ≠ ⊥ → (∀ b, ∀ x ∈ N', e₂ (ρ₂ b x) ∈ N') →
       N' = N₂ := fun N' hle hne' hst => hmin false N' (fun t ht w hw => by
-        simp only [Tp, if_false, Bool.false_eq_true] at ht
+        simp only [Tp, ite_false, Bool.false_eq_true] at ht
         obtain ⟨b, rfl⟩ := ht
         rw [hT₂]
         exact hst b w hw) hle hne'
   have hπ₁ := isIrreducible_mGenQuotRep he₁ hN₁e hN₁st hN₁0 hN₁min
   have hπ₂ := isIrreducible_mGenQuotRep he₂ hN₂e hN₂st hN₂0 hN₂min
   refine ⟨N₁, N₂, hN₁W, hN₂W, hN₁0, hN₂0, hN₁st, hN₂st, hπ₁, hπ₂, fun hschur => ?_⟩
-  haveI := hπ₁
-  haveI := hπ₂
-  haveI := isIrreducible_outerTensor hπ₁ hπ₂ hschur
+  have := hπ₁
+  have := hπ₂
+  have := isIrreducible_outerTensor hπ₁ hπ₂ hschur
 
   obtain ⟨ψ₁, hψ₁⟩ : ∃ ψ : Dual ℂ W, ψ (n true) = 1 := by
     obtain ⟨f, hf⟩ : ∃ f : Dual ℂ W, f (n true) ≠ 0 := by

@@ -134,7 +134,7 @@ open Complex Filter Topology
 
 theorem siegel_set_completeness : Complete := by
   intro f hf hper hcoef
-  haveI : Fact ((0 : ℝ) < 1) := ⟨one_pos⟩
+  have : Fact ((0 : ℝ) < 1) := ⟨one_pos⟩
   have hpr : Function.Periodic (fun x : ℝ => f x) 1 := fun x => by
     simpa using hper (x : ℂ)
   have hcont : Continuous (fun x : ℝ => f x) := hf.continuous.comp Complex.continuous_ofReal

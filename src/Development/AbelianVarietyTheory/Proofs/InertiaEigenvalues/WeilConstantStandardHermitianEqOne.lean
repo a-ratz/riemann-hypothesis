@@ -76,7 +76,7 @@ namespace GlobalTheory.JR
 
 theorem fourB_indicator_intLattice : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (r : ℕ) (j : A.L ≃ₗ[E] (Fin r → E)) (B : A.L → A.L → ℂ), (∀ y' y, B y' y = ψ (Algebra.trace F E (star (j y') ⬝ᵥ j y))) → IsOpen {y : A.L | ∀ i, ‖j y i‖ ≤ 1} → IsCompact {y : A.L | ∀ i, ‖j y i‖ ≤ 1} → ∀ μ : Measure A.L, μ.IsAddHaarMeasure → ∀ y, fourB μ B (Set.indicator {y : A.L | ∀ i, ‖j y i‖ ≤ 1} 1) y = ((μ {y : A.L | ∀ i, ‖j y i‖ ≤ 1}).toReal : ℂ) * Set.indicator {y : A.L | ∀ i, ‖j y i‖ ≤ 1} 1 y := by
   intro F E _ _ _ _ hU A ψ hψ r j B hB hO _hC μ hμ y
-  haveI := hU.ultraE
+  have := hU.ultraE
   set Λ : Set A.L := {y : A.L | ∀ i, ‖j y i‖ ≤ 1} with hΛ
   have key : ∀ z : E, (∀ e : E, ‖e‖ ≤ 1 → ψ (Algebra.trace F E (e * z)) = 1) ↔ ‖z‖ ≤ 1 :=
     ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).2.2.2
@@ -93,7 +93,7 @@ theorem fourB_indicator_intLattice : ∀ (F E : Type) [NontriviallyNormedField F
   have hBadd : ∀ a x, B (a + x) y = B a y * B x y := by
     intro a x
     rw [hB, hB, hB, map_add (f := _), star_add, add_dotProduct, map_add (f := _), AddChar.map_add_eq_mul]
-  haveI : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
+  have : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
   unfold fourB
   by_cases hy : y ∈ Λ
   · have h1 : ∀ x, Set.indicator Λ 1 x * B x y = Set.indicator Λ (fun _ => (1:ℂ)) x := by
@@ -182,16 +182,16 @@ theorem lattice_isTest : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
     IsOpen {y : A.L | ∀ i, ‖j y i‖ ≤ 1} ∧ IsCompact {y : A.L | ∀ i, ‖j y i‖ ≤ 1} ∧
       IsTest (Set.indicator {y : A.L | ∀ i, ‖j y i‖ ≤ 1} (1 : A.L → ℂ)) := by
   intro F E _ _ _ _ hU A r j
-  haveI : IsUltrametricDist E := hU.ultraE
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : LocallyCompactSpace E := hU.lcE
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
-  haveI : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
-  haveI : IsModuleTopology F (Fin r → E) := IsModuleTopology.instPi
-  haveI : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
-  haveI : ContinuousSMul F A.L := IsModuleTopology.toContinuousSMul F A.L
+  have : IsUltrametricDist E := hU.ultraE
+  have : LocallyCompactSpace F := hU.lcF
+  have : LocallyCompactSpace E := hU.lcE
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
+  have : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology F (Fin r → E) := IsModuleTopology.instPi
+  have : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
+  have : ContinuousSMul F A.L := IsModuleTopology.toContinuousSMul F A.L
   let jF : A.L ≃ₗ[F] (Fin r → E) := j.restrictScalars F
   have hc : Continuous jF := IsModuleTopology.continuous_of_linearMap jF.toLinearMap
   have hcs : Continuous jF.symm := IsModuleTopology.continuous_of_linearMap jF.symm.toLinearMap
@@ -231,12 +231,12 @@ namespace GlobalTheory.JR
 theorem Et.kerL_eq_of_isIsom : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ) (x : A.K) (r : ℕ) (j : A.L ≃ₗ[E] (Fin r → E)), A.IsIsom x j → ∀ y' y : A.L, A.kerL ψ x y' y = ψ (Algebra.trace F E (star (j y') ⬝ᵥ j y)) := by
   intro F E _ _ _ _ _ A ψ x r j hj y' y
   have h2 : Module.finrank F E = 2 := Unram.finrank_eq
-  haveI : Module.Finite F E := Module.finite_of_finrank_eq_succ h2
-  haveI : Module.Finite E A.L := Module.Finite.equiv j.symm
-  haveI : Module.Free E A.L := Module.Free.of_equiv j.symm
+  have : Module.Finite F E := Module.finite_of_finrank_eq_succ h2
+  have : Module.Finite E A.L := Module.Finite.equiv j.symm
+  have : Module.Free E A.L := Module.Free.of_equiv j.symm
   have hb : IsBaseChange A.K (IsScalarTower.toAlgHom F E A.L).toLinearMap := A.push.symm.out
-  haveI : Module.Free A.K A.L := Module.Free.of_equiv hb.equiv
-  haveI : Module.Finite A.K A.L := Module.Finite.equiv hb.equiv
+  have : Module.Free A.K A.L := Module.Free.of_equiv hb.equiv
+  have : Module.Finite A.K A.L := Module.Finite.equiv hb.equiv
   rw [hj y' y]
   unfold Et.kerL Et.psiK
   congr 1

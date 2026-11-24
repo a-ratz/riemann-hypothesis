@@ -175,11 +175,11 @@ theorem conj_rat_congr : ∀ (D : D7) (V : Formalism.BasicNotions.TH.HSp D) (Com
 
   have hγ₀' := Subgroup.mem_subgroupOf.1 (show γ₀ ∈ HFinIn (AF D.host.F) _ (HSpace.gram V) from hγ₀)
   obtain ⟨δ', hδ', hδ'e⟩ := Subgroup.mem_map.1 hγ₀'
-  haveI : Nontrivial (Af D.host.F) := by
+  have : Nontrivial (Af D.host.F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 D.host.F)
     exact (Formalism.UG.evalV D.host.F ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField D.host.F)⟩).toRingHom.domain_nontrivial
-  haveI : Nontrivial (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  have : Nontrivial (Af D.host.F ⊗[D.host.F] D.host.E) :=
     (Algebra.TensorProduct.includeLeft_injective (R := D.host.F) (S := D.host.F) (A := Af D.host.F) (B := D.host.E)
       (algebraMap D.host.F D.host.E).injective).nontrivial
   have hinj : Function.Injective (inclR (F := D.host.F) (E := D.host.E) (Af D.host.F)) :=

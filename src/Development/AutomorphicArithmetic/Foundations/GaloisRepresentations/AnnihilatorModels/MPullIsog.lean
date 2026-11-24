@@ -60,8 +60,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.pullIsog_of :
   subst hs
   have hcpos : 0 < c := hψ.pos
   obtain ⟨hk, hmon, hact, heta, ⟨hiso⟩, ψ', hmon', h₁, h₂⟩ := hψ
-  haveI := hmon
-  haveI := hmon'
+  have := hmon
+  have := hmon'
   obtain ⟨o₁', ⟨m'⟩⟩ := GlobalTheory.T.exists_harrisTaylorObject_pullback p D R b N S S' s f o'
   let ψ₁ : o₁.A ⟶ o₁'.A := Over.homMk (m'.cart.1.lift (m.φ ≫ ψ.left) o₁.A.hom
     (by rw [Category.assoc, Over.w ψ, m.cart.1.w])) (m'.cart.1.lift_snd _ _ _)

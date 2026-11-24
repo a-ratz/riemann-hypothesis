@@ -96,7 +96,7 @@ theorem isSubquotient_comp {σ : Representation ℂ G W} {ρ : Representation �
 theorem nonempty_equiv_of_isSubquotient {σ : Representation ℂ G W} {ρ : Representation ℂ G V}
     (hσ : σ.IsIrreducible) (hρ : ρ.IsIrreducible) (h : IsSubquotient σ ρ) : Nonempty (ρ.Equiv σ) := by
   obtain ⟨S, f, hf⟩ := h
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hσ
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hσ
   obtain ⟨w, hw⟩ := exists_ne (0 : W)
   obtain ⟨v, rfl⟩ := hf w
   have hS : S = ⊤ := by
@@ -161,7 +161,7 @@ theorem isSubquotient_of_span {σ : Representation ℂ G W} {ρ : Representation
       intro T hT
       obtain ⟨T₁, h1, h2, h3⟩ := hx T hT
       exact ⟨T₁, h1, h2, Submodule.smul_mem _ c h3⟩
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hσ
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hσ
   obtain ⟨w, hw⟩ := exists_ne (0 : W)
   obtain ⟨s, rfl⟩ := hf w
   obtain ⟨T, -, h2, h3⟩ := key s (hspan ▸ Submodule.mem_top) ⊥ fun s hs => by
@@ -291,11 +291,11 @@ theorem exists_sum_of_jac (hG : GeometricLemma) (hZ : ZelevinskyPolynomialRing) 
     intro i j
     by_cases hj : j = J i
     · subst hj
-      simp only [u, if_true]
+      simp only [u, ite_true]
       rw [hJ i]
       exact hasSupport_self (hx i)
     · obtain ⟨s', hs'⟩ := SupportRing.exists_hasSupport hZ (IrrGL.of (c i j).ρ (c i j).smooth (c i j).irr)
-      simp only [u, if_neg hj]
+      simp only [u, ite_eq_right hj]
       rwa [eq_zero_of_hasSupport (hJ0 i j hj) hs'] at hs'
   refine ⟨fun j => ∑ i, u i j, fun j => ?_, ?_⟩
   · have hd : ∑ i, b.1 i j = d j := by simpa using b.2.2 j
@@ -308,7 +308,7 @@ theorem exists_sum_of_jac (hG : GeometricLemma) (hZ : ZelevinskyPolynomialRing) 
       (y := fun i => IrrGL.of (c i j).ρ (c i j).smooth (c i j).irr) (fun i => hu i j) (y j).irr
       (h1.trans (.of_injective ψ.toIntertwiningMap ψ.toLinearEquiv.injective))
   · rw [Finset.sum_comm]
-    simp only [u, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [u, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [← Multiset.sum_map_singleton (Finset.univ.val.map x), Multiset.map_map]
     rfl
 
@@ -341,7 +341,7 @@ theorem exists_map_of_isCuspidal {b : ℕ} (hb : 0 < b) {ρ : Representation ℂ
   obtain ⟨ψ, hψ, hψ1⟩ := exists_root_norm hω hb
   have hc' : IsCuspidal (twist ρ (detChar (Fin b) ψ)) := isCuspidal_twist hρc hψ
   have hsc := GlobalTheory.CuspCoef.isSupercuspidal_of_isCuspidal k b V _ hc'
-  haveI : Nontrivial V := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hρi
+  have : Nontrivial V := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hρi
   obtain ⟨y, hy⟩ := exists_ne (0 : V)
   obtain ⟨l, hl, hly⟩ := GlobalTheory.SmoothForm.exists_smooth_form_ne_zero _ _ (twist ρ (detChar (Fin b) ψ)) (fun U hU => by
     obtain ⟨γ, hγ, h⟩ := GlobalTheory.CentralExponent.exists_cong_subset (n := Fin b) hU
@@ -417,7 +417,7 @@ theorem eq_singleton_of_isCusp {x : IrrGL (k := k)} (hx : x.IsCusp) {s : Multise
     (exists_scalar_multiProd e (fun a => (y a).rep) (fun a => (y a).2.rep.smooth) fun a => (y a).2.rep.irr) hsub
   have hU : unipRad k e = ⊥ := by
     by_contra hU
-    haveI := hx.2.2 h _ e hU
+    have := hx.2.2 h _ e hU
     refine hι ((GlobalTheory.SmGL.Model.evalOne_bijective e hx.2.1 _).1 ?_)
     apply Representation.IntertwiningMap.ext
     apply LinearMap.ext

@@ -61,7 +61,7 @@ private theorem vN_le_one (N : ℕ) (w : Plc E) : Valued.v (N : w.adicCompletion
   (HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 E) E w).1 (natCast_mem (w.adicCompletionIntegers E) N)
 
 private theorem vN_ne_zero {N : ℕ} (hN : 0 < N) (w : Plc E) : Valued.v (N : w.adicCompletion E) ≠ 0 := by
-  haveI : CharZero (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
   exact (Valuation.ne_zero_iff _).2 (Nat.cast_ne_zero.2 hN.ne')
 
@@ -131,9 +131,9 @@ private theorem isOpen_ball {w : Plc E} {c : w.adicCompletion E} (hc : c ≠ 0) 
       (fun x => c⁻¹ * x) ⁻¹' (w.adicCompletionIntegers E : Set (w.adicCompletion E)) := by
     ext x
     have hv : Valued.v c ≠ 0 := (Valuation.ne_zero_iff _).2 hc
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 E) E w,
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 E) E w,
       map_mul, map_inv₀]
-    rw [inv_mul_le_iff₀ (zero_lt_iff.2 hv), mul_one]
+    rw [inv_mul_le_iff₀ (pos_iff_ne_zero.2 hv), mul_one]
   rw [h1]
   exact h0.preimage (continuous_const.mul continuous_id)
 
@@ -162,7 +162,7 @@ private theorem congGrp_le_iw {N : ℕ} (w : Plc E) (hN : (N : 𝓞 E) ∈ w.asI
     rw [GlobalTheory.SmGL.SphCompletion.KO_completion]
     exact congGrp_le N w hy
   refine GlobalTheory.SmGL.mem_iwahori.2 ⟨hK, fun i j hij => ?_⟩
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E))
     (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))

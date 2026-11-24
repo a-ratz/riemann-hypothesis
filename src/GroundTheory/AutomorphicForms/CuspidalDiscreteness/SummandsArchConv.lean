@@ -166,7 +166,7 @@ theorem isHaarMeasure_map_val (ν' : Measure (archGroup K n)) [ν'.IsHaarMeasure
 theorem integral_map_val {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (ν' : Measure (archGroup K n)) (f : ArchUnits K n → E) :
     ∫ A, f A ∂(ν'.map (fun a : archGroup K n => (a : ArchUnits K n))) = ∫ a, f a ∂ν' :=
-  (MeasurableEmbedding.subtype_coe MeasurableSet.univ).integral_map f
+  (MeasurableEmbedding.subtypeVal MeasurableSet.univ).integral_map f
 
 section Conversion
 
@@ -197,7 +197,7 @@ theorem contDiff_matExt {κ : archGroup K n → ℂ} (hκ : (isExpLieAlgebra K n
   set h := isExpLieAlgebra K n with hh
   set S : Set (ArchMatrix K n) :=
     (fun a : archGroup K n => ((a : ArchUnits K n) : ArchMatrix K n)) '' tsupport κ with hSdef
-  have hS : IsCompact S := hκ.2.isCompact.image (Units.continuous_val.comp continuous_subtype_val)
+  have hS : IsCompact S := hκ.2.isCompact.image (Units.continuous_val.comp continuous_subtypeVal)
   set e := expPartialHomeomorph ℝ (ArchMatrix K n) with he
   let ι : ArchMatrix K n →L[ℝ] archLie K n :=
     LinearMap.toContinuousLinearMap
@@ -247,7 +247,7 @@ theorem contDiff_matExt {κ : archGroup K n → ℂ} (hκ : (isExpLieAlgebra K n
 
 theorem hasCompactSupport_matExt {κ : archGroup K n → ℂ} (hκ : HasCompactSupport κ) :
     HasCompactSupport (matExt K n κ) :=
-  HasCompactSupport.intro (hκ.isCompact.image (Units.continuous_val.comp continuous_subtype_val))
+  HasCompactSupport.intro (hκ.isCompact.image (Units.continuous_val.comp continuous_subtypeVal))
     fun _ hM => matExt_eq_zero hM
 
 theorem tsupport_subset_of_matExt {κ : archGroup K n → ℂ} (hκ : HasCompactSupport κ)
@@ -255,7 +255,7 @@ theorem tsupport_subset_of_matExt {κ : archGroup K n → ℂ} (hκ : HasCompact
     tsupport f ⊆ range (Units.val : ArchUnits K n → ArchMatrix K n) := by
   set S : Set (ArchMatrix K n) :=
     (fun a : archGroup K n => ((a : ArchUnits K n) : ArchMatrix K n)) '' tsupport κ
-  have hS : IsCompact S := hκ.isCompact.image (Units.continuous_val.comp continuous_subtype_val)
+  have hS : IsCompact S := hκ.isCompact.image (Units.continuous_val.comp continuous_subtypeVal)
   have hsub : tsupport f ⊆ S := by
     refine closure_minimal (fun M hM => ?_) hS.isClosed
     by_contra hMS

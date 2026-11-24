@@ -467,9 +467,9 @@ theorem fib_fst {R : Type} [CommRing R] {S : Scheme.{0}} {G : Over S} {y : Sp R 
 theorem sec_eq_zero {S : Scheme.{0}} (P : Out.PolAV S) {k : Type} [Field k] [IsAlgClosed k] (y : Sp k ⟶ S) (m : ℕ)
     (u : SecP P.L (pullback.fst P.A.hom y) m)
     (h : ∀ (x : Over.mk y ⟶ P.A) j, ⊤ ≤ x.left ⁻¹ᵁ P.L.U j → ArcPts.sval u (fib x) j = 0) (i) : u.f i = 0 := by
-  haveI := P.isAb.smooth
-  haveI := P.isAb.geomConnected
-  haveI : IsIntegral (pullback P.A.hom y) :=
+  have := P.isAb.smooth
+  have := P.isAb.geomConnected
+  have : IsIntegral (pullback P.A.hom y) :=
     (geometricallyIntegral_of_smooth_of_geometricallyConnected_fibres P.A.hom).geometrically_isIntegral y _ _
       (IsPullback.of_hasPullback P.A.hom y)
   obtain ⟨j, rfl⟩ : ∃ j, i = fun _ => j := ⟨i 0, funext fun a => by rw [Subsingleton.elim a 0]⟩
@@ -830,7 +830,7 @@ theorem valR_g_self {A : Type} [CommRing A] [IsLocalRing A] {Z : Scheme.{0}} {L 
     have hz : x z ∈ U := ht (show z ∈ (⊤ : (Sp A).Opens) from trivial)
     have e1 : ∀ c, (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom c) = c :=
       fun c => congrArg (fun f => CommRingCat.Hom.hom f c) (Iso.hom_inv_id (Scheme.ΓSpecIso (CommRingCat.of A)))
-    rw [valR, dif_pos ht, gm, dif_pos hz]
+    rw [valR, dite_eq_left ht, gm, dite_eq_left hz]
     show ((Sp A).presheaf.germ ⊤ z trivial).hom ((Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
         ((Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ ht).hom a.val))) =
       ((Sp A).presheaf.germ (x ⁻¹ᵁ U) z hz).hom ((x.app U).hom a.val)
@@ -891,7 +891,7 @@ theorem exists_charts (v : Λ.A.V) : ∃ (jM : W.P.D.toPre.P.L.ι) (j₀ : a.D�
   exact (congrArg (fun q => q (cpt ℂ⟦X⟧) ∈ a.D₀.P.L.U _) (base_comp Ξ v)).mpr (FormalValue.top_le_comp h₀ _ trivial)
 
 theorem isFrm (v : Λ.A.V) : IsFrm W.P.U.LG.L (Ξ.x v).left (Ξ.τ v) := by
-  haveI := complete
+  have := complete
   obtain ⟨jM, j₀, hj, h₀⟩ := exists_charts Ξ v
   have hw := FormalValue.isUnit_valR (A := ℂ⟦X⟧) (Ξ.g v).b.left _ hj (W.w.s (fun _ => j₀, jM))
   have hM : ⊤ ≤ FormalValue.basePt (Ξ.g v) ⁻¹ᵁ W.P.D.toPre.P.L.U jM := fun z hz => (hj hz).2
@@ -912,7 +912,7 @@ theorem isFrm (v : Λ.A.V) : IsFrm W.P.U.LG.L (Ξ.x v).left (Ξ.τ v) := by
 theorem tau_zero (hx : Ξ.x 0 = 1) (j : W.P.U.LG.L.ι) (h : ⊤ ≤ (Ξ.x 0).left ⁻¹ᵁ W.P.U.LG.L.U j) :
     Ξ.τ 0 j = valR (𝟙 (Sp ℂ⟦X⟧)) ((W.P.U.LG.L.pull (eSec W.t.G)).U (fun _ => j))
       (W.P.U.LG.rig.s (fun _ => j)).val := by
-  haveI := complete
+  have := complete
   have hs : spMap (algebraMap ℂ⟦X⟧ ℂ⟦X⟧) = 𝟙 _ := Spec.map_id _
   obtain ⟨jM, j₀, hj, h₀⟩ := exists_charts Ξ 0
   have hw := FormalValue.isUnit_valR (A := ℂ⟦X⟧) (Ξ.g 0).b.left _ hj (W.w.s (fun _ => j₀, jM))
@@ -1435,7 +1435,7 @@ theorem specPts_nonempty : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [
   classical
   obtain ⟨C⟩ := _root_.GlobalTheory.SpanFrame.nonempty_coords h1 h2 E H D l B bb S s o A y Φ hA hΦ 4 le_rfl
   obtain ⟨C'⟩ := _root_.GlobalTheory.SpanFrame.nonempty_coords h1 h2 E H D l B bb S s o A y Φ hA hΦ 5 (by norm_num)
-  haveI := o.proper
+  have := o.proper
   obtain ⟨x₀, hx₀⟩ := hΦ.1 0
   have hy₀ : spMap (algebraMap Conv.convLaurent ℂ⸨X⸩) ≫ x₀ ≫ o.t.G.hom = y := by
     rw [← Category.assoc, hx₀]
@@ -1470,7 +1470,7 @@ theorem specPts_nonempty : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [
       spMap (Γ.R w).val.toRingHom ≫ z = (Φ.x v).left ∧ IsFrm o.t.PP.L z σ ∧
       ∀ j, ⊤ ≤ z ⁻¹ᵁ o.t.PP.L.U j → (Γ.R w).val.toRingHom (σ j) = Φ.τ v j := by
     intro w hw v
-    haveI := germs_local Γ w
+    have := germs_local Γ w
     have hw₁ := hC.trans_lt hw
     have hw₂ := hC'.trans_lt hw
     obtain ⟨i, hi⟩ := C.bpf w hw₁ v
@@ -1526,12 +1526,12 @@ namespace GlobalTheory.HolomorphicArc
 theorem main : ReciprocityTheory.ChartRestriction.G.Out.Laws → ReciprocityTheory.ChartRestriction.G.Out.Laws2 → ReciprocityTheory.ChartRestriction.G.Geo.Tor.ThetaUnifAV →
     ReciprocityTheory.ChartRestriction.G.Geo.Tor.ToroidalArchimedeanCondition := by
   intro L₁ L₂ hU E _ _ _ H D l Xo c O _ β Y bF _ _ a χ W g ty Fu _ hty hrz hχ hgen
-  letI := H.starRing
-  haveI : NeZero l.A := ⟨l.A_pos.ne'⟩
-  haveI : NeZero l.M := ⟨by have := l.three_le; omega⟩
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
-  haveI : IsLocallyNoetherian Xo.X := LocallyOfFiniteType.isLocallyNoetherian Xo.s
+  let := H.starRing
+  have : NeZero l.A := ⟨l.A_pos.ne'⟩
+  have : NeZero l.M := ⟨by have := l.three_le; omega⟩
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
+  have : IsLocallyNoetherian Xo.X := LocallyOfFiniteType.isLocallyNoetherian Xo.s
   obtain ⟨Λ⟩ := GlobalTheory.ArcModel.nonempty_gtAn L₁ L₂ hU E H D l c O β _ a
   obtain ⟨C⟩ := _root_.GlobalTheory.ArcPts.nonempty_chain L₁ L₂ E H D l Xo c O β Y bF a χ W Λ hχ hgen
   choose laA hA using fun v => (GlobalTheory.GtRep.exists_rep_and_shift L₁ L₂ E H D l c O β _ a Λ l.A l.A_pos).1 (a.etaA v)

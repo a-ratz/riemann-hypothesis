@@ -128,7 +128,7 @@ theorem ramSet_finite {E : Type} [Field E] [NumberField E] (χ : Formalism.L2.Ho
   have h := GlobalTheory.HeckeSplit.eventually_unrAt χ.1 χ.2.1
   rw [Filter.eventually_cofinite] at h
   refine h.subset fun Q hQ => ?_
-  simp only [ramSet, Set.mem_setOf_eq] at hQ ⊢
+  simp only [ramSet, Set.mem_ofPred_eq] at hQ ⊢
   rwa [GlobalTheory.HeckeSplit.unrAt_iff]
 
 theorem overN_finite {E : Type} [Field E] [NumberField E] {n : ℕ} (hn : n ≠ 0) : (overN (E := E) n).Finite := by
@@ -136,7 +136,7 @@ theorem overN_finite {E : Type} [Field E] [NumberField E] {n : ℕ} (hn : n ≠ 
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hn
   refine (Ideal.finite_factors hne).subset fun Q hQ => ?_
-  simp only [overN, Set.mem_setOf_eq] at hQ ⊢
+  simp only [overN, Set.mem_ofPred_eq] at hQ ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hQ
 
@@ -145,7 +145,7 @@ theorem exists_ram {F E K : Type} [Field F] [NumberField F] [Field E] [NumberFie
     ∃ Q : HeightOneSpectrum (𝓞 E), Q.under (𝓞 F) = v ∧ ¬ ξ.UnrAt Q := by
   by_contra hne
   push_neg at hne
-  simp only [Qprime, Set.mem_setOf_eq] at hv
+  simp only [Qprime, Set.mem_ofPred_eq] at hv
   apply hv
   intro x hx
   rw [MonoidHom.mem_ker]
@@ -431,11 +431,11 @@ theorem transp : ∀ (B0 : Base) (px0 : PreX B0.toPre) (I0 : Col2.ColIn B0 px0),
   intro B0 px0 I0 hX0 hI0
   classical
   have hR : ∀ a0 : I0.ι, ∃ p, HeckePolyFor (heckeFamAll (rowPts B0.wts I0.Ch I0.sel (I0.tup a0)) ∅) p := fun a0 => by
-    haveI := GSD.finiteDimensional_EqFun _ (mtildeKOk B0.wts I0.Ch I0.sel (I0.tup a0) hX0)
+    have := GSD.finiteDimensional_EqFun _ (mtildeKOk B0.wts I0.Ch I0.sel (I0.tup a0) hX0)
     exact hfs_exists_poly _
   have hL : ∀ (a0 : I0.ι) (k : ℕ), ∃ p, HeckePolyFor (heckeFamAll (liftPts B0.wts I0.Ch I0.sel (I0.tup a0) k) ∅) p :=
     fun a0 k => by
-      haveI := GSD.finiteDimensional_EqFun _ (mtKOk B0.wts I0.Ch I0.sel (I0.tup a0) hX0 k)
+      have := GSD.finiteDimensional_EqFun _ (mtKOk B0.wts I0.Ch I0.sel (I0.tup a0) hX0 k)
       exact hfs_exists_poly _
   choose pR hpR using hR
   choose pL hpL using hL
@@ -445,8 +445,8 @@ theorem transp : ∀ (B0 : Base) (px0 : PreX B0.toPre) (I0 : Col2.ColIn B0 px0),
     Finset.univ.biUnion (fun a0 : I0.ι => rts (pR a0) ∪ (Finset.range B0.R.m).biUnion (fun k => rts (pL a0 (k + 1))))
   have hrts : ∀ p : B0.LL[X], p ≠ 0 → ∀ z ∈ rts p, IsAlgebraic ℚ z := by
     intro p hp z hz
-    letI : Algebra B0.LL ℂ := B0.embLL.toAlgebra
-    haveI : IsScalarTower ℚ B0.LL ℂ := IsScalarTower.of_algebraMap_eq fun q => by simp
+    let : Algebra B0.LL ℂ := B0.embLL.toAlgebra
+    have : IsScalarTower ℚ B0.LL ℂ := IsScalarTower.of_algebraMap_eq fun q => by simp
     have h1 : IsAlgebraic B0.LL z := ⟨p, hp, by
       have h2 : z ∈ (p.map B0.embLL).roots := Multiset.mem_toFinset.1 hz
       rw [Polynomial.mem_roots (Polynomial.map_ne_zero hp)] at h2
@@ -573,7 +573,7 @@ theorem chiC_eq {B : Base} {px : PreX B.toPre} (I : Col2.ColIn B px) (h : I.Ok) 
         intro h0
         have hy0 : y = 0 := RingOfIntegers.coe_injective (by simpa using h0)
         subst hy0
-        haveI : w.asIdeal.IsPrime := w.isPrime
+        have : w.asIdeal.IsPrime := w.isPrime
         exact hu.ne_zero (map_zero _)
       rw [dite_eq_left hw, dite_eq_left hu, dite_eq_left ⟨hv.1 hw, hy, hu⟩]
       have ht := (h.ch_tied.mu0 j).atg ⟨w, hw⟩ (Units.mk0 _ hy) y hu.unit rfl (by simp)
@@ -588,7 +588,7 @@ theorem qprime_eq_of_reads {F E K : Type} [Field F] [NumberField F] [Field E] [N
     {σ : K →+* ℂ} {μ : Chr F E K} {ξ : Formalism.L2.Host.HChar E} (h : Col2.Reads σ μ ξ) :
     Qprime μ = {v | ∃ a : Neutral.B1.Ideles E, Col2.finAf F E a ∈ inertAt E v ∧ ξ.1 a ≠ 1} := by
   ext v
-  simp only [Qprime, Set.mem_setOf_eq, SetLike.not_le_iff_exists, MonoidHom.mem_ker]
+  simp only [Qprime, Set.mem_ofPred_eq, IsConcreteLE.not_le_iff_exists, MonoidHom.mem_ker]
   constructor
   · rintro ⟨y, hy, hne⟩
     obtain ⟨a, rfl⟩ := Col2.finAf_surjective F E y
@@ -636,7 +636,7 @@ theorem qC_subset {B : Base} {px : PreX B.toPre} (I : Col2.ColIn B px) (h : I.Ok
     · obtain ⟨v, hv, rfl⟩ := Finset.mem_image.1 hQ'
       rw [Set.Finite.mem_toFinset] at hv
       unfold qBound
-      rw [if_pos (hr ▸ hfin)]
+      rw [ite_eq_left (hr ▸ hfin)]
       exact ⟨v, hr ▸ hv, h.sel_ok v⟩
     · simp at hQ'
   · simp
@@ -651,7 +651,7 @@ theorem finite_qFns {P : Pre} {Ξ : Set (Formalism.L2.Host.HChar P.host.E)} (hΞ
     {q : Formalism.L2.Host.HChar P.host.E → Finset (HeightOneSpectrum (𝓞 P.host.E)) |
       (∀ ξ, (↑(q ξ) : Set (HeightOneSpectrum (𝓞 P.host.E))) ⊆ qBound ξ) ∧ ∀ ξ ∉ Ξ, q ξ = ∅}.Finite := by
   classical
-  haveI := hΞ.to_subtype
+  have := hΞ.to_subtype
   refine Set.Finite.of_finite_image (f := fun q (ξ : Ξ) => q ξ) ?_ ?_
   · refine (Set.Finite.pi (t := fun ξ : Ξ => {s : Finset (HeightOneSpectrum (𝓞 P.host.E)) |
       (↑s : Set (HeightOneSpectrum (𝓞 P.host.E))) ⊆ qBound (ξ : Formalism.L2.Host.HChar P.host.E)}) fun ξ =>
@@ -697,7 +697,7 @@ theorem exists_finite_cfg : ∀ (P : Pre) (f : Top.Fr P) (F F₀ : IntermediateF
       exact hΞ (eq_of_heq hX ▸ Set.finite_range I.xi)
   have hch : ∀ t : T, ∃ x, admitted x ∧ HEq x.2.1.piG t.1.1 ∧ HEq (chiC x.2.2) t.1.2.1 ∧ HEq (qC x.2.2) t.1.2.2 := fun t => t.2
   choose w hwA hwR using hch
-  haveI := hT.fintype
+  have := hT.fintype
   let e := Fintype.equivFin T
   refine ⟨Fintype.card T, fun i => w (e.symm i), fun i => ⟨(hwA _).1, (hwA _).2.1⟩, ?_⟩
   intro B px I hBo hIo hP hC hK hL hX

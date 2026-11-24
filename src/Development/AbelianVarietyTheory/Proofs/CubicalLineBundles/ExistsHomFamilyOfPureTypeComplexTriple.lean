@@ -105,9 +105,9 @@ theorem exists_datum_period (hT : ThetaUnifAV) (hL : Out.Laws) (T : PAT H (Sp �
           unfold LamEq
           rw [Category.comp_id, Category.comp_id]
           exact T.t.adj a))
-  letI : SMul (𝓞 E) u.Λ := ⟨fun a x => ⟨ρ a x, hst a x x.2⟩⟩
+  let : SMul (𝓞 E) u.Λ := ⟨fun a x => ⟨ρ a x, hst a x x.2⟩⟩
   have hsm : ∀ (a : 𝓞 E) (x : u.Λ), ((a • x : u.Λ) : _ → ℂ) = ρ a x := fun _ _ => rfl
-  letI : Module (𝓞 E) u.Λ := Module.ofMinimalAxioms
+  let : Module (𝓞 E) u.Λ := Module.ofMinimalAxioms
     (fun a x y => Subtype.ext (by simp [hsm])) (fun a b x => Subtype.ext (by simp [hsm]))
     (fun a b x => Subtype.ext (by simp [hsm])) (fun x => Subtype.ext (by simp [hsm]))
   let P : u.Λ →+ (Fin g → ℂ) := h.symm.toLinearMap.toAddMonoidHom.comp u.Λ.subtype.toAddMonoidHom
@@ -120,7 +120,7 @@ theorem exists_datum_period (hT : ThetaUnifAV) (hL : Out.Laws) (T : PAT H (Sp �
   have hPd : DiscreteTopology P.range := by
     have := u.discrete
     refine DiscreteTopology.of_continuous_injective (f := fun z : P.range => (⟨h z, (hrange _).1 z.2⟩ : u.Λ))
-      ((h.toLinearMap.continuous_of_finiteDimensional.comp continuous_subtype_val).subtype_mk _) fun z w hzw => ?_
+      ((h.toLinearMap.continuous_of_finiteDimensional.comp continuous_subtypeVal).subtype_mk _) fun z w hzw => ?_
     exact Subtype.ext (h.injective (congrArg Subtype.val hzw))
   have hPf : Submodule.span ℝ (Set.range P) = ⊤ := by
     have e : Set.range P = (h.symm.toLinearMap.restrictScalars ℝ) '' u.Λ := by

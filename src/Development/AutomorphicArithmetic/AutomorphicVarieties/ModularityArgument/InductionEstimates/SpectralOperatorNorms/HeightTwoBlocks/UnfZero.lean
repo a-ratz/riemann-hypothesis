@@ -146,8 +146,8 @@ theorem absMain {G M : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup 
     (h0 : ∀ β : ℝ → ℂ, Continuous β → HasCompactSupport β →
       ∫ t, ∫ k : Kc, ∫ m, conj (β t * Complex.exp ((2 * t : ℝ) : ℂ) * f (l m * k)) * W (l m * (a t * k)) ∂ν ∂κ
         ∂(volume : Measure ℝ).withDensity (fun t => ENNReal.ofReal (Real.exp (-4 * t))) = 0) (k₀ : Kc) : I (a t₀ * k₀) = 0 := by
-  haveI : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology Kc := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology U := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology Kc := TopologicalSpace.Subtype.secondCountableTopology _
   have hK : IsCompact (Kc : Set G) := isCompact_iff_compactSpace.2 ‹_›
   have inner : ∀ (t : ℝ) (k : Kc), ∫ m, conj (f (l m * k)) * W (l m * (a t * k)) ∂ν =
       ∫ u : U, conj (I (a t₀ * ((u : G)⁻¹ * k))) * I (a t * ((u : G)⁻¹ * k)) ∂lam := by
@@ -261,7 +261,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.KX.levProj :
       map_mul' := fun p q => Prod.ext (hprod p q).1 (hprod p q).2 }
   let F : G1 K (2 + 2) → Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) 𝔸[K] := fun g =>
     (g : AdelicGLn.AdelicGL K (2 + 2)).val.submatrix finSumFinEquiv finSumFinEquiv
-  have hF : Continuous F := (Units.continuous_val.comp continuous_subtype_val).matrix_submatrix _ _
+  have hF : Continuous F := (Units.continuous_val.comp continuous_subtypeVal).matrix_submatrix _ _
   let A : S → AdelicGLn.AdelicGL K 2 := fun p => (m₁ p : AdelicGLn.AdelicGL K 2) * zt K (t p)
   let D : S → AdelicGLn.AdelicGL K 2 := fun p => (m₂ p : AdelicGLn.AdelicGL K 2) * zt K (-t p)
   have hblk : ∀ p : S, ∃ B, F p = Matrix.fromBlocks (A p).val B 0 (D p).val := by
@@ -282,7 +282,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.KX.levProj :
     rw [hB, hB', Matrix.fromBlocks_multiply, ← Matrix.fromBlocks_one, Matrix.fromBlocks_inj] at e
     simp only [Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add] at e
     exact ⟨(eq_inv_of_mul_eq_one_right (Units.ext e.1)).symm, (eq_inv_of_mul_eq_one_right (Units.ext e.2.2.2)).symm⟩
-  have hF₁ : Continuous fun p : S => F (p : G1 K (2 + 2)) := hF.comp continuous_subtype_val
+  have hF₁ : Continuous fun p : S => F (p : G1 K (2 + 2)) := hF.comp continuous_subtypeVal
   have hF₂ : Continuous fun p : S => F ((p⁻¹ : S) : G1 K (2 + 2)) := hF₁.comp continuous_inv
   have hA : Continuous A := Units.continuous_iff.2
     ⟨(hF₁.matrix_submatrix Sum.inl Sum.inl).congr fun p => by
@@ -390,7 +390,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.KX.sliceRep :
         (c : U → ℂ) (x : U → G1 K n), Continuous c → Continuous x → ∃ v ∈ τ, Reps μ v fun m => ∫ u, c u * φ (m * x u) ∂lam := by
   set_option synthInstance.maxHeartbeats 200000 in
     intro K _ _ n μ _ τ hτ φ hφ ⟨C, hC⟩ hΓ ⟨v, hvτ, hv⟩ U _ _ _ _ _ lam _ c x hc hx
-    haveI := finFd μ
+    have := finFd μ
     obtain ⟨Cc, hCc⟩ := isCompact_univ.exists_bound_of_continuousOn hc.continuousOn
     have hC0 : 0 ≤ C := (norm_nonneg _).trans (hC 1)
     have hB : ∀ (m : G1 K n) (u : U), ‖c u * φ (m * x u)‖ ≤ Cc * C := fun m u => by
@@ -407,7 +407,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.KX.sliceRep :
     obtain ⟨v', hv'⟩ := classOf μ hFc hFb (fun γ hγ m => by
       simp only [mul_assoc, hΓ γ hγ])
     refine ⟨v', ?_, hv'⟩
-    haveI : CompleteSpace τ := hτ.closed.completeSpace_coe
+    have : CompleteSpace τ := hτ.closed.completeSpace_coe
     rw [← τ.orthogonal_orthogonal, Submodule.mem_orthogonal]
     intro w hw
     have hW : Reps μ w fun y => (w : RightCosetSpace (Gam K n) → ℂ) (mk (Gam K n) y) := ae_of_all _ fun _ => rfl
@@ -470,8 +470,8 @@ theorem secEx [_root_.NumberField.IsTotallyComplex K] (μ₂ : Measure (G1 K 2))
   obtain ⟨S, π, hS, hπ, hmem, hval⟩ := levProj (K := K)
   have hK : IsCompact (KG K (2 + 2) : Set (G1 K (2 + 2))) := ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 _).1
   have hmul := (blkLaws (K := K)).2.1
-  haveI hc : CompactSpace (S ⊓ KG K (2 + 2) : Subgroup (G1 K (2 + 2))) := isCompact_iff_compactSpace.1 (hK.inter_left hS)
-  haveI : SecondCountableTopology (S ⊓ KG K (2 + 2) : Subgroup (G1 K (2 + 2))) := TopologicalSpace.Subtype.secondCountableTopology _
+  have hc : CompactSpace (S ⊓ KG K (2 + 2) : Subgroup (G1 K (2 + 2))) := isCompact_iff_compactSpace.1 (hK.inter_left hS)
+  have : SecondCountableTopology (S ⊓ KG K (2 + 2) : Subgroup (G1 K (2 + 2))) := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨lam, hp, hl⟩ := ex_prob (S ⊓ KG K (2 + 2) : Subgroup (G1 K (2 + 2)))
   have c₁ := r₁.cont
   have c₂ := r₂.cont
@@ -479,7 +479,7 @@ theorem secEx [_root_.NumberField.IsTotallyComplex K] (μ₂ : Measure (G1 K 2))
     obtain ⟨X, a, b, t, k, hk, rfl⟩ := iwa g
     exact ⟨_, (hmem _).2 ⟨X, a, b, t, rfl⟩, k, hk, rfl⟩) π hπ (fun m => φ₁ m.1 * φ₂ m.2) (by fun_prop) ψ hψ lam
   set x : (S ⊓ KG K (2 + 2) : Subgroup (G1 K (2 + 2))) → G1 K 2 × G1 K 2 := fun u => π ⟨u, u.2.1⟩ with hx
-  have hxc : Continuous x := hπ.comp (continuous_subtype_val.subtype_mk _)
+  have hxc : Continuous x := hπ.comp (continuous_subtypeVal.subtype_mk _)
   have hv' : ∀ X a b t, ∀ k ∈ KG K (2 + 2), f (nn X * lv a b t * k) =
       ∫ u, φ₁ (a * (x u).1) * φ₂ (b * (x u).2) * ψ ((u : G1 K (2 + 2))⁻¹ * k) ∂lam := by
     intro X a b t k hk
@@ -490,11 +490,11 @@ theorem secEx [_root_.NumberField.IsTotallyComplex K] (μ₂ : Measure (G1 K 2))
     intro g
     obtain ⟨X, a, b, t, k, hk, rfl⟩ := iwa g
     obtain ⟨hU, hle, -⟩ := typeFin D
-    haveI := D.prob
+    have := D.prob
     have hH : Continuous fun z : G1 K (2 + 2) × (S ⊓ KG K (2 + 2) : Subgroup (G1 K (2 + 2))) =>
         φ₁ (a * (x z.2).1) * φ₂ (b * (x z.2).2) * ψ ((z.2 : G1 K (2 + 2))⁻¹ * z.1) :=
       ((c₁.comp (continuous_const.mul (hxc.comp continuous_snd).fst)).mul (c₂.comp (continuous_const.mul (hxc.comp continuous_snd).snd))).mul
-        (hψ.comp ((continuous_subtype_val.comp continuous_snd).inv.mul continuous_fst))
+        (hψ.comp ((continuous_subtypeVal.comp continuous_snd).inv.mul continuous_fst))
     have := fix_swap D.ν _ hU D.supp D.e D.cont lam _ hH (fun C hC => by
       obtain ⟨B, hB⟩ := (hC.prod isCompact_univ).exists_bound_of_continuousOn hH.continuousOn
       exact ⟨B, ae_of_all _ fun y z hz => hB (z, y) ⟨hz, trivial⟩⟩) k fun u => by
@@ -537,14 +537,14 @@ theorem secEx [_root_.NumberField.IsTotallyComplex K] (μ₂ : Measure (G1 K 2))
     refine ⟨fun m₂ => ?_, fun m₁ => ?_⟩
     · obtain ⟨v, hv, hr⟩ := sliceRep μ₂ τ₁ h₁ φ₁ c₁ ⟨C₁, b₁⟩ r₁.rat r₁.rep _ lam
         (fun u => φ₂ (m₂ * b * (x u).2) * ψ ((u : G1 K (2 + 2))⁻¹ * k)) (fun u => a * (x u).1)
-        ((c₂.comp (continuous_const.mul hxc.snd)).mul (hψ.comp (continuous_subtype_val.inv.mul continuous_const)))
+        ((c₂.comp (continuous_const.mul hxc.snd)).mul (hψ.comp (continuous_subtypeVal.inv.mul continuous_const)))
         (continuous_const.mul hxc.fst)
       refine ⟨v, hv, ?_⟩
       simp only [hsl _ _ X a b t k hk]
       exact hr.mono fun y hy => hy.trans (integral_congr_ae (ae_of_all _ fun u => by simp only [mul_assoc]; ring))
     · obtain ⟨v, hv, hr⟩ := sliceRep μ₂ τ₂ h₂ φ₂ c₂ ⟨C₂, b₂⟩ r₂.rat r₂.rep _ lam
         (fun u => φ₁ (m₁ * a * (x u).1) * ψ ((u : G1 K (2 + 2))⁻¹ * k)) (fun u => b * (x u).2)
-        ((c₁.comp (continuous_const.mul hxc.fst)).mul (hψ.comp (continuous_subtype_val.inv.mul continuous_const)))
+        ((c₁.comp (continuous_const.mul hxc.fst)).mul (hψ.comp (continuous_subtypeVal.inv.mul continuous_const)))
         (continuous_const.mul hxc.snd)
       refine ⟨v, hv, ?_⟩
       simp only [hsl _ _ X a b t k hk]
@@ -615,7 +615,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.KX.ctBd :
       refine integral_congr_ae (Eventually.of_forall fun X => ?_)
       exact congrArg Φ (retractOne_coe (unipOne 2 X * g)).symm
     rw [e]
-    exact (UpperTheory.continuous_constantTerm K _ 2 _ (hc.comp continuous_retractOne)).comp continuous_subtype_val
+    exact (UpperTheory.continuous_constantTerm K _ 2 _ (hc.comp continuous_retractOne)).comp continuous_subtypeVal
   · intro D hD
     obtain ⟨B, M, hB⟩ := UpperTheory.hasModerateGrowth_constantTerm K (2 + 2) 2 (fun x => if h : x ∈ normOneGL (K := K) (n := (2 + 2)) then Φ ⟨x, h⟩ else 0)
       ⟨|C|, N, fun g => by
@@ -634,7 +634,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.KX.ctBd :
       beta_reduce
       rw [dite_eq_left h]
       rfl
-    obtain ⟨R, hR⟩ := exists_height_le_of_isCompact (hD.image continuous_subtype_val)
+    obtain ⟨R, hR⟩ := exists_height_le_of_isCompact (hD.image continuous_subtypeVal)
     obtain ⟨C₁, hC₁⟩ := h₁ M
     obtain ⟨C₂, hC₂⟩ := h₂ M
     have h0 : 0 ≤ heightConst K (2 + 2) := zero_le_one.trans one_le_heightConst
@@ -692,8 +692,8 @@ private theorem fixW (D : TypeDat K (2 + 2)) (Φ W : G1 K (2 + 2) → ℂ) (hΦ 
     (hW : ∀ g, W g = ∫ X in unipFundamentalDomain K (2 + 2) 2, Φ (nn X * g) ∂unipMeasure K (2 + 2) 2) : D.Fix W := by
   intro g
   obtain ⟨hU, hle, -⟩ := typeFin D
-  haveI := D.prob
-  haveI := finN (K := K)
+  have := D.prob
+  have := finN (K := K)
   obtain ⟨CN, hCN, hsub⟩ := exists_isCompact_superset_unipFundamentalDomain (K := K) (n := 2 + 2) (r := 2)
   have hnn := continuous_unipOne (K := K) (n := 2 + 2) 2
   have hH : Continuous fun z : G1 K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K]) => Φ (nn z.2 * z.1) :=
@@ -719,11 +719,11 @@ private theorem pair0 [_root_.NumberField.IsTotallyComplex K] (μ : Measure (G1 
     ∫ t, ∫ k : KG K (2 + 2), ∫ m : G1 K 2 × G1 K 2, conj (β t * Complex.exp ((2 * t : ℝ) : ℂ) * f (lv m.1 m.2 0 * k)) *
       W (lv m.1 m.2 0 * (lv 1 1 t * (k : G1 K (2 + 2)))) ∂(fd μ₂).prod (fd μ₂) ∂κ
         ∂(volume : Measure ℝ).withDensity (fun t => ENNReal.ofReal (Real.exp (-4 * t))) = 0 := by
-  haveI := finFd μ₂
-  haveI := finN (K := K)
-  haveI := sfin (fd μ₂)
-  haveI := sfin κ
-  haveI := sfin ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2))
+  have := finFd μ₂
+  have := finN (K := K)
+  have := sfin (fd μ₂)
+  have := sfin κ
+  have := sfin ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2))
   obtain ⟨⟨c, hc⟩, -⟩ := unf μ μ₂ κ
   obtain ⟨v₀, hv₀⟩ := (A.onto f).2 ⟨hsec, hff⟩
   have hS := secFun μ₂ τ₁ τ₂ D h₁ h₂ _ hsec hff
@@ -761,7 +761,7 @@ theorem unfZero [_root_.NumberField.IsTotallyComplex K] (μ : Measure (G1 K (2 +
     Integrable (fun m : G1 K 2 × G1 K 2 => conj (φ₁ m.1 * φ₂ m.2) * W (lv m.1 m.2 t₀ * k₀)) ((fd μ₂).prod (fd μ₂)) ∧
     ∫ m : G1 K 2 × G1 K 2, conj (φ₁ m.1 * φ₂ m.2) * W (lv m.1 m.2 t₀ * k₀) ∂(fd μ₂).prod (fd μ₂) = 0 := by
   obtain ⟨hWc, hbd⟩ := ctBd Φ W φ₁ φ₂ hΦ hgr hW hrat r₁.decay r₂.decay
-  haveI := finFd μ₂
+  have := finFd μ₂
   have hK : IsCompact (KG K (2 + 2) : Set (G1 K (2 + 2))) := ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 _).1
   have hmul := (blkLaws (K := K)).2.1
   have hlv := (blkLaws (K := K)).2.2.2.1
@@ -774,7 +774,7 @@ theorem unfZero [_root_.NumberField.IsTotallyComplex K] (μ : Measure (G1 K (2 +
       ‖φ₁ m.1 * φ₂ m.2‖ * ‖W (lv m.1 m.2 0 * g)‖ ≤ B := fun C hC => by
     obtain ⟨B, hB⟩ := hbd C hC
     exact ⟨B, fun m g hg => by rw [norm_mul]; exact hB m.1 m.2 g hg⟩
-  haveI := D.prob
+  have := D.prob
   obtain ⟨hIi, I, hI, hIc, hIf⟩ : (∀ g, Integrable (fun m : G1 K 2 × G1 K 2 => conj (φ₁ m.1 * φ₂ m.2) * W (lv m.1 m.2 0 * g))
       ((fd μ₂).prod (fd μ₂))) ∧ ∃ I : G1 K (2 + 2) → ℂ, (∀ g, I g =
       ∫ m : G1 K 2 × G1 K 2, conj (φ₁ m.1 * φ₂ m.2) * W (lv m.1 m.2 0 * g) ∂(fd μ₂).prod (fd μ₂)) ∧ Continuous I ∧ D.Fix I := by
@@ -788,7 +788,7 @@ theorem unfZero [_root_.NumberField.IsTotallyComplex K] (μ : Measure (G1 K (2 +
   obtain ⟨U, _, lam, _, x, f, hUK, hx, hux, hsec, hff, hv⟩ := secEx μ₂ τ₁ τ₂ D h₁ h₂ φ₁ φ₂ r₁ r₂ (fun g => I (lv 1 1 t₀ * g))
     (hIc.comp (continuous_const_mul _)) fun g =>
       (integral_congr_ae (ae_of_all _ fun k => by simp only [mul_assoc])).trans (hIf (lv 1 1 t₀ * g))
-  haveI : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.1 hK
   obtain ⟨κ, _, _⟩ := ex_prob (KG K (2 + 2))
   refine absMain ((fd μ₂).prod (fd μ₂)) (KG K (2 + 2)) U hUK κ lam (fun m => lv m.1 m.2 0) hlv0 (fun t => lv 1 1 t) hlv1
     (fun m => φ₁ m.1 * φ₂ m.2) hF W hWc hb x hx (fun u m t k => ?_) I hI hIc (fun g y => ?_) t₀ f

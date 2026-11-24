@@ -153,7 +153,7 @@ theorem exists_nat (S : Finset (HeightOneSpectrum (𝓞 E)))
       obtain ⟨c, hc⟩ := (Int.natAbs_dvd.2 (dvd_refl n) : (N₀ : ℤ) ∣ n)
       rw [hc]
       exact Ideal.mul_mem_right _ _ h2
-    haveI hp : (q v).IsPrime := Ideal.comap_isPrime _ _
+    have hp : (q v).IsPrime := Ideal.comap_isPrime _ _
     have h4 : 𝔞 ≤ q v := by rw [← hspan, Ideal.span_singleton_le_iff_mem]; exact h3
     obtain ⟨w, hw, hle⟩ := (Ideal.IsPrime.prod_le hp).1 h4
     have hmax : (q w).IsMaximal := (Ideal.comap_isPrime _ w.asIdeal).isMaximal (hq0 w)
@@ -179,7 +179,7 @@ theorem mem_natLat_iff {N : ℕ} (hN : 0 < N) (z : Af E) :
       rw [HeightOneSpectrum.mem_adicCompletionIntegers]
       change Valued.v (z v * c v) ≤ 1
       rw [map_mul, ← e', mul_comm (Valued.v (c v))]
-      exact mul_le_mul_of_nonneg_right (h v) zero_le'
+      exact mul_le_mul_of_nonneg_right (h v) zero_le
     · calc z = z * (c * (N : Af E)) := by rw [hcN, mul_one]
         _ = (N : Af E) * (z * c) := by ring
 
@@ -269,9 +269,9 @@ theorem one_lt_v_zpow {v : HeightOneSpectrum (𝓞 E)} {ϖ : v.adicCompletion E}
   have h1 : Valued.v ϖ < 1 := by
     rw [h]; exact (by decide : ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) < 1)
   rw [zpow_neg, zpow_natCast, map_inv₀, map_pow]
-  have hp : Valued.v ϖ ^ (n + 1) < 1 := pow_lt_one₀ zero_le' h1 (Nat.succ_ne_zero n)
+  have hp : Valued.v ϖ ^ (n + 1) < 1 := pow_lt_one₀ zero_le h1 (Nat.succ_ne_zero n)
   have hp0 : Valued.v ϖ ^ (n + 1) ≠ 0 := pow_ne_zero _ ((Valuation.ne_zero_iff _).2 h0)
-  exact (one_lt_inv₀ (zero_lt_iff.2 hp0)).2 hp
+  exact (one_lt_inv₀ (pos_iff_ne_zero.2 hp0)).2 hp
 
 end GlobalTheory.CellLastRow
 
@@ -373,7 +373,7 @@ theorem indN_lastRow_tl : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     have hj1 : Valued.v ((compV E (m + 1) w k).val (Fin.last m) j) = 1 :=
       le_antisymm (hint w hwS _ _) (not_lt.1 hj)
     unfold GlobalTheory.RSJ.indN
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hall
     have hz := hlat _ (hall j) w
     dsimp only at hz
@@ -422,7 +422,7 @@ theorem decomp_lastRow : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
   have hind' : ∀ i : Fin (m + 1), GlobalTheory.RSJ.pFin E (GlobalTheory.ZEul.lastRow g i) - (if (i : ℕ) + 1 = m + 1 then 1 else 0) ∈
       GlobalTheory.RSJ.natLat E N := by
     by_contra hc
-    exact hind (by rw [GlobalTheory.RSJ.indN, if_neg hc])
+    exact hind (by rw [GlobalTheory.RSJ.indN, ite_eq_right hc])
   have hf : ∀ v ∈ S, ∀ j, Valued.v ((pFin E ((Pi.single (Fin.last m) 1 ᵥ* g.val) j) -
       (Pi.single (Fin.last m) 1 : Fin (m + 1) → Af E) j) v) ≤
       WithZero.exp (-FractionalIdeal.count E v (J : FractionalIdeal (𝓞 E)⁰ E)) := by
@@ -557,7 +557,7 @@ theorem eq_zero_of_not_antitone : ∀ (E : Type) [Field E] [NumberField E] [_roo
         rw [h1]
         simp [Matrix.one_apply]
       rw [h0, map_zero]
-      exact zero_le'
+      exact zero_le
   let f : GL (Fin (m + 1)) (w.adicCompletion E) → ℂ := fun g => W (p * t' * finGL E (m + 1) (locGL E (m + 1) w g))
   have hfD : f D = W (p * t) := by
     simp only [f]
@@ -728,7 +728,7 @@ theorem uInt_cell_eval : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
       rw [Finsupp.mem_support_iff]; intro h0; rw [h0] at hw; simp at hw
     rw [hind2 ⟨w, hw⟩, hprod0 w hws ?_]
     · simp
-    · rw [GlobalTheory.ZEul.rsTerm, if_neg]; rintro ⟨h1, -⟩; exact absurd (h1 (Fin.last m)) (not_le.2 hw)
+    · rw [GlobalTheory.ZEul.rsTerm, ite_eq_right]; rintro ⟨h1, -⟩; exact absurd (h1 (Fin.last m)) (not_le.2 hw)
   rw [hind1 hlast]
   obtain ⟨u, hu, p, hp, κ, hκ, he, -, e0, -⟩ := hdec hz.1 hz.2
   rw [e0]
@@ -754,7 +754,7 @@ theorem uInt_cell_eval : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
     have hws : w ∈ l.1.support := Finsupp.mem_support_iff.2 hw0
     rw [_root_.GlobalTheory.CellVanish.eq_zero_of_not_antitone E m S J w hwS (hψ w hwS) ϖ (hϖ w) (GlobalTheory.JSW.whit φ) hNφ hKφ l.1 hw p (hp.1 w hwS), hprod0 w hws ?_]
     · simp
-    · rw [GlobalTheory.ZEul.rsTerm, if_neg]; rintro ⟨-, h2⟩; exact hw h2
+    · rw [GlobalTheory.ZEul.rsTerm, ite_eq_right]; rintro ⟨-, h2⟩; exact hw h2
   have hnn : ∀ w i, 0 ≤ l.1 w i := fun w i => le_trans (hlast w) (hanti w (Fin.le_last i))
   obtain ⟨l', hl'app⟩ : ∃ l' : HeightOneSpectrum (𝓞 E) →₀ (Fin (m + 1) → ℕ), ∀ w, l' w = fun i => (l.1 w i).toNat :=
     ⟨Finsupp.mapRange (fun v i => (v i).toNat) (funext fun _ => rfl) l.1, fun w => Finsupp.mapRange_apply⟩

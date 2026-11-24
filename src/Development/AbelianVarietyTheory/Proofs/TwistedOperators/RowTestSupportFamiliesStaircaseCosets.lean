@@ -78,11 +78,11 @@ theorem oneAt : Big fun ch => OneAt ch := by
     have e : 1 ≤ cosExp ch.G w.1 := by
       classical
       unfold cosExp
-      rw [if_pos hw0]
+      rw [ite_eq_left hw0]
       exact ch.G.pl.depth_pos _ _
     rw [depthAt, max_eq_left e]
   rw [hce] at hT
-  haveI := (isUnitVol_unitVol w.1).1
+  have := (isUnitVol_unitVol w.1).1
   have hJ : ∀ j, 0 < j → j < (locGrid ch.G t w.1).m →
       givenLevel ch.G t w.1 ((locGrid ch.G t w.1).m, j) = KO (Kw w.1) _ := fun j hj hj' =>
     givenLevel_inner ch.G t w.1 _ (by change 1 ≤ D.R.m; omega) hj

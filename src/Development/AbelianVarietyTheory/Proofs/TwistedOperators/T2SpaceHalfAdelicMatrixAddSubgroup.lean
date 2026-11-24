@@ -69,7 +69,7 @@ theorem mem_halfMx {a : AE D} {m n : ℕ} {t : Mx D m n} : t ∈ halfMx a m n �
 
 theorem isClosed_halfMx (a : AE D) (m n : ℕ) : IsClosed (halfMx a m n : Set (Mx D m n)) := by
   have : (halfMx a m n : Set (Mx D m n)) = ⋂ i, ⋂ j, {t : Mx D m n | a * t i j = t i j} := by
-    ext t; simp only [SetLike.mem_coe, mem_halfMx, IsHalf, Set.mem_iInter, Set.mem_setOf_eq]
+    ext t; simp only [SetLike.mem_coe, mem_halfMx, IsHalf, Set.mem_iInter, Set.mem_ofPred_eq]
   rw [this]
   exact isClosed_iInter fun i => isClosed_iInter fun j =>
     isClosed_eq (continuous_const.mul ((continuous_apply j).comp (continuous_apply i)))

@@ -91,10 +91,10 @@ theorem UpperTheory.V.Base.decInf :
   have hgu : cycZ k Ω l g = u ^ n := by
     change cycZ ℚ Ω l (σ ^ n) = u ^ n
     rw [map_pow, hσu]
-  haveI : Finite (G k Ω ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
-  haveI : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
-  haveI := Subgroup.finiteIndex_normalCore U
-  haveI := Subgroup.normalCore_normal U
+  have : Finite (G k Ω ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
+  have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have := Subgroup.finiteIndex_normalCore U
+  have := Subgroup.normalCore_normal U
   have hN : U.normalCore.index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero
   have hgU : g ^ U.normalCore.index ∈ U := U.normalCore_le (Subgroup.pow_index_mem _ g)
   refine ⟨g ^ U.normalCore.index, ⟨hgU, Subgroup.pow_mem (Dec (F := k) A) hg _⟩, ?_⟩

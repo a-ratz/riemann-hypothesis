@@ -89,7 +89,7 @@ theorem csub_mul_of_bdd (hs : ∀ i, Small (s i)) {S T : MvPowerSeries σ K} (hS
   ext μ
   have h3 := (_root_.GlobalTheory.ConvSer.csub_hasSum_and_bounds K σ τ s _ hs ((_root_.GlobalTheory.BddAlg.bdd_alg K σ).2.1 S T hS hT).2.2).1 μ
   refine h3.unique ?_
-  haveI : NonarchimedeanRing K := ⟨NonarchimedeanAddGroup.is_nonarchimedean⟩
+  have : NonarchimedeanRing K := ⟨NonarchimedeanAddGroup.is_nonarchimedean⟩
   have h4 : HasSum (fun p : (σ →₀ ℕ) × (σ →₀ ℕ) =>
       MvPowerSeries.coeff p.1 S * MvPowerSeries.coeff p.2 T *
         MvPowerSeries.coeff μ (∏ i, s i ^ (p.1 + p.2) i))

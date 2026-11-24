@@ -177,15 +177,15 @@ theorem UpperTheory.Gal.crystallineComparison.ordDecomp_of :
   intro hIn hOut q n P F I _ v hv
   obtain ⟨k, H, _, _, _, _, _, C, A', e, hq, hn, hC, hve⟩ := hv
   classical
-  haveI : Finite H := Module.finite_of_finite k
-  haveI : Finite (Submodule k H) :=
+  have : Finite H := Module.finite_of_finite k
+  have : Finite (Submodule k H) :=
     Finite.of_injective (fun S : Submodule k H => (S : Set H)) SetLike.coe_injective
-  haveI : Finite (H ⧸ C) := Module.finite_of_finite k
-  haveI : Finite (Submodule k (H ⧸ C)) :=
+  have : Finite (H ⧸ C) := Module.finite_of_finite k
+  have : Finite (Submodule k (H ⧸ C)) :=
     Finite.of_injective (fun S : Submodule k (H ⧸ C) => (S : Set (H ⧸ C))) SetLike.coe_injective
-  letI : Fintype (Submodule k H) := Fintype.ofFinite _
-  letI : Fintype (Submodule k (H ⧸ C)) := Fintype.ofFinite _
-  letI hG : ∀ m : ℕ, Fintype (Gr k H m) := fun m =>
+  let : Fintype (Submodule k H) := Fintype.ofFinite _
+  let : Fintype (Submodule k (H ⧸ C)) := Fintype.ofFinite _
+  let hG : ∀ m : ℕ, Fintype (Gr k H m) := fun m =>
     (inferInstance : Fintype {D : Submodule k H // Module.finrank k D = m})
   have key : ∀ j : Fin (n + 1), Multiset.map (v j) Finset.univ.val =
       ∑ D ∈ (Finset.univ.filter fun D : Submodule k H => Module.finrank k D = (j : ℕ)).filter
@@ -304,13 +304,13 @@ private theorem telescope_core {P : Type} (q n : ℕ) (F : P → P) (T A : ℕ �
     simp only [Finset.sum_range_succ _ (m + 1), key, hc, pow_add, smul_add, mul_smul]
     rcases Nat.even_or_odd m with he | ho
     · have hne : ¬ Even (m + 1) := Nat.not_even_iff_odd.mpr he.add_one
-      simp only [hne, if_false, zero_smul, add_zero, if_true]
+      simp only [hne, ite_false, zero_smul, add_zero, ite_true]
       refine ⟨fun h => h.elim, fun _ => ?_⟩
       rw [ihE he]
       abel
     · have hne : ¬ Even m := Nat.not_even_iff_odd.mpr ho
       have hev : Even (m + 1) := ho.add_one
-      simp only [hev, if_false, zero_smul, add_zero, if_true]
+      simp only [hev, ite_false, zero_smul, add_zero, ite_true]
       refine ⟨fun _ => ?_, fun h => absurd trivial h⟩
       rw [ihO hne]
       abel
@@ -320,7 +320,7 @@ theorem UpperTheory.Gal.crystallineComparison.telescope_of :
   intro q n P F T A hAn h0 hs
   let T' : ℕ → Multiset P := fun j => if h : j < n + 1 then T ⟨j, h⟩ else 0
   have hT : ∀ j : Fin (n + 1), T j = T' j := fun j => by
-    simp only [T', dif_pos j.isLt, Fin.eta]
+    simp only [T', dite_eq_left j.isLt, Fin.eta]
   have h0' : T' 0 = A 0 := by simpa [T'] using h0
   have hs' : ∀ j, j < n → T' (j + 1) = (A j).map F + q ^ (j + 1) • A (j + 1) := by
     intro j hj

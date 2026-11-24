@@ -133,7 +133,7 @@ private theorem exists_tr_mem (g : AdelicGLn.FiniteAdelicGL K n) {U : Set (Adeli
     have hvS : v ∈ S := Finset.mem_union_left _ (Finset.mem_union_left _ (hI.mem_toFinset.2 hv))
     have : w' v = 1 := Subtype.ext <| by
       change (y⁻¹ * AdelicGLn.truncate S y) v = 1
-      rw [RestrictedProduct.mul_apply, RestrictedProduct.inv_apply, AdelicGLn.truncate_apply, if_pos hvS,
+      rw [RestrictedProduct.mul_apply, RestrictedProduct.inv_apply, AdelicGLn.truncate_apply, ite_eq_left hvS,
         inv_mul_cancel]
     rw [this]
     exact mem_of_mem_nhds (ht v)
@@ -226,7 +226,7 @@ theorem restScalar : RestScalar := by
       rw [map_one, rhoF_one]
     · have h1 : b ∉ hb1.toFinset := fun H => hb (Finset.mem_union_left _ H)
       have h2 : b ∉ hb2.toFinset := fun H => hb (Finset.mem_union_right _ H)
-      simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at h1 h2
+      simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at h1 h2
       have hvb : v ∈ eigL μ b (J b) (χ b) :=
         ((iInf_le _ b).trans (iInf_le _ hbP) : (⨅ w ∉ P, eigL μ w (J w) (χ w)) ≤ eigL μ b (J b) (χ b))
           (Submodule.mem_inf.1 hv).2

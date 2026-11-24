@@ -71,7 +71,7 @@ private theorem volume_restrict_strip_eq_map_withDensity (hV : UpperTheory.V.Af.
       = Ico (0:ℝ) 1 ×ˢ Ioi 0 := by
     ext ⟨x, y⟩
     simp only [mem_inter_iff, mem_preimage, mem_prod, mem_univ, true_and, mem_Ioi, mem_Ico,
-      UpperTheory.V.Af.Rs.strip, mem_setOf_eq]
+      UpperTheory.V.Af.Rs.strip, mem_ofPred_eq]
     constructor
     · rintro ⟨h, hy⟩
       rw [(pt_re_im x y hy).1] at h

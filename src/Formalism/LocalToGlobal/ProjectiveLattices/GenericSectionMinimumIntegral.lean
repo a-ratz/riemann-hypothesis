@@ -129,7 +129,7 @@ theorem der_aeval {δ : F → F} (h : IsDer δ) {E : Type} [CommRing E] [Algebra
       · simp [MvPolynomial.pderiv_X, Pi.single_apply, hi, Ne.symm hi]
     simp only [map_mul, MvPolynomial.aeval_X, h.mul, hp, MvPolynomial.pderiv_mul, map_add (f := _), hsingle,
       add_mul, Finset.sum_add_distrib, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [Finset.mul_sum, add_comm]
     congr 1
     exact Finset.sum_congr rfl fun i _ => by ring
@@ -212,9 +212,9 @@ theorem gauss_indep {K Ω U τ : Type} [Field K] [Field Ω] [Field U] [Algebra K
       ((algebraMap _ (ResidueField V)).comp (algebraMap _ (ResidueField (V.comap (algebraMap Ω U))))).toAlgebra;
     AlgebraicIndependent (ResidueField ((V.comap (algebraMap Ω U)).comap (algebraMap K Ω)))
       (fun j => residue V ⟨T j, hT j⟩)) := by
-  letI _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra V (algebraMap Ω U)
-  letI _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (V.comap (algebraMap Ω U)) (algebraMap K Ω)
-  letI _ia : Algebra (ResidueField ((V.comap (algebraMap Ω U)).comap (algebraMap K Ω))) (ResidueField V) :=
+  let _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra V (algebraMap Ω U)
+  let _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (V.comap (algebraMap Ω U)) (algebraMap K Ω)
+  let _ia : Algebra (ResidueField ((V.comap (algebraMap Ω U)).comap (algebraMap K Ω))) (ResidueField V) :=
     ((algebraMap _ (ResidueField V)).comp
       (algebraMap _ (ResidueField (V.comap (algebraMap Ω U))))).toAlgebra
   classical
@@ -300,15 +300,15 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
       (∃ α, V.valuation (algebraMap K F (Q.coeff α)) = 1) → V.valuation (MvPolynomial.aeval T Q) = 1) :
     ∀ k, y k ∈ V := by
   classical
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap K F).injective
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap K F).injective
 
   have hT1 : ∀ q, V.valuation (T q) = 1 := by
     intro q
     have := hG (MvPolynomial.X q) (fun α => ?_) ⟨Finsupp.single q 1, ?_⟩
     · simpa using this
-    · rw [MvPolynomial.coeff_X']
+    · rw [MvPolynomial.coeff_X]
       split_ifs <;> simp
-    · rw [MvPolynomial.coeff_X', if_pos rfl]
+    · rw [MvPolynomial.coeff_X, ite_eq_left rfl]
       simp
   have hTV : ∀ q, T q ∈ V := fun q => (V.valuation_le_one_iff _).1 (hT1 q).le
 
@@ -334,7 +334,7 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
               by gcongr; exact hmax β hβ
           _ = 1 := inv_mul_cancel₀ hvc
       · rw [MvPolynomial.notMem_support_iff.mp hβ, map_zero, Valuation.map_zero, mul_zero]
-        exact zero_le'
+        exact zero_le
     · rw [MvPolynomial.coeff_C_mul, inv_mul_cancel₀ hc, map_one, Valuation.map_one]
 
   have hN : ∃ k, y k ≠ 0 := by
@@ -347,14 +347,14 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
     obtain ⟨k, hk⟩ := hN
     intro h0
     have := hj0 k (Finset.mem_univ _)
-    rw [h0, Valuation.map_zero, le_zero_iff, Valuation.zero_iff] at this
+    rw [h0, Valuation.map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at this
     exact hk this
   let a : Fin N → F := fun k => y k / y j0
   have haV : ∀ k, V.valuation (a k) ≤ 1 := by
     intro k
     show V.valuation (y k / y j0) ≤ 1
     rw [map_div₀]
-    exact div_le_one_of_le₀ (hj0 k (Finset.mem_univ _)) zero_le'
+    exact div_le_one_of_le₀ (hj0 k (Finset.mem_univ _)) zero_le
   have ha0 : a j0 = 1 := div_self hy0
   have hay : ∀ k, a k * y j0 = y k := fun k => div_mul_cancel₀ _ hy0
   have hδa : ∀ l k, δ l (a k) = 0 := by
@@ -373,7 +373,7 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
     rintro x (⟨q, rfl⟩ | ⟨k, rfl⟩)
     · exact hδs l q.1 q.2
     · exact hδa l k
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap K E).injective
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap K E).injective
   have hT0ind : AlgebraicIndependent E (fun k => T (0, k)) :=
     algIndep_of_der _ δ hδ hδE (fun l k => hδ0 l k)
 
@@ -381,11 +381,11 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
     IntermediateField.subset_adjoin K sE (Set.mem_union_left _ ⟨(i, k), rfl⟩)
   have hmema : ∀ k, a k ∈ E := fun k =>
     IntermediateField.subset_adjoin K sE (Set.mem_union_right _ ⟨k, rfl⟩)
-  haveI : FaithfulSMul K E := (faithfulSMul_iff_algebraMap_injective K E).mpr (algebraMap K E).injective
-  haveI : FaithfulSMul E F := (faithfulSMul_iff_algebraMap_injective E F).mpr (algebraMap E F).injective
+  have : FaithfulSMul K E := (faithfulSMul_iff_algebraMap_injective K E).mpr (algebraMap K E).injective
+  have : FaithfulSMul E F := (faithfulSMul_iff_algebraMap_injective E F).mpr (algebraMap E F).injective
   have hadd : Algebra.trdeg K E + Algebra.trdeg E F ≤ Algebra.trdeg K F := trdeg_add_le
   have htF : Algebra.trdeg K F ≤ (((D + 1) * N : ℕ) : Cardinal) := by
-    haveI := halg
+    have := halg
     calc Algebra.trdeg K F ≤ #(Set.range T) := Algebra.IsAlgebraic.trdeg_le_cardinalMk K (Set.range T)
       _ ≤ #(Fin (D + 1) × Fin N) := Cardinal.mk_range_le
       _ = (((D + 1) * N : ℕ) : Cardinal) := by simp [Cardinal.mk_fintype]
@@ -428,7 +428,7 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
     induction i using Fin.cases with
     | zero =>
       show (MvPolynomial.X k : MvPolynomial (Fin N) E).coeff α ∈ V.comap (algebraMap E F)
-      rw [MvPolynomial.coeff_X']
+      rw [MvPolynomial.coeff_X]
       split_ifs
       · exact (V.comap (algebraMap E F)).one_mem
       · exact (V.comap (algebraMap E F)).zero_mem
@@ -454,7 +454,7 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
   have hind := gauss_indep (Ω := E) V T hTV hG
   have RT := ReciprocityTheory.MultiplicativeHeights.Closed.residueTrdeg K E F (D * N) htr (Fin N) (fun s => T (0, s)) V
     (fun s => hTV _) (Fin (D + 1) × Fin N) u p hp hcard hpu hind
-  letI _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra V (algebraMap E F)
+  let _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra V (algebraMap E F)
   have RT3 := RT.2.2
 
   have haW : ∀ k, (⟨a k, hmema k⟩ : E) ∈ V.comap (algebraMap E F) := fun k =>
@@ -467,10 +467,10 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
   have hLp : Lp ≠ 0 := by
     intro h0
     have := congrArg (fun P => AddMonoidAlgebra.coeff P (Finsupp.single j0 1)) h0
-    simp only [Lp, MvPolynomial.coeff_sum, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X',
+    simp only [Lp, MvPolynomial.coeff_sum, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X,
       MvPolynomial.coeff_zero] at this
     rw [Finset.sum_eq_single j0] at this
-    · rw [if_pos rfl, mul_one] at this
+    · rw [ite_eq_left rfl, mul_one] at this
       have h1' : abar j0 = 1 := by
         show residue (V.comap (algebraMap E F)) ⟨⟨a j0, hmema j0⟩, haW j0⟩ = 1
         have : (⟨⟨a j0, hmema j0⟩, haW j0⟩ : ↥(V.comap (algebraMap E F))) = 1 := Subtype.ext (Subtype.ext ha0)
@@ -478,7 +478,7 @@ theorem gauss_direct {F K : Type} [Field F] [Field K] [CharZero K] [Algebra K F]
       rw [h1'] at this
       exact one_ne_zero this
     · intro b _ hb
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro hs
       exact hb ((Finsupp.single_left_inj one_ne_zero).mp hs)
     · simp
@@ -539,10 +539,10 @@ theorem isIntegral_of_quot {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
   let q : Ideal A → Polynomial R := fun m => if hm : m.IsMaximal then Classical.choose (h m hm) else 1
   have hq : ∀ m, (q m).Monic := fun m => by
     by_cases hm : m.IsMaximal
-    · simp only [q, dif_pos hm]; exact (Classical.choose_spec (h m hm)).1
-    · simp only [q, dif_neg hm]; exact Polynomial.monic_one
+    · simp only [q, dite_eq_left hm]; exact (Classical.choose_spec (h m hm)).1
+    · simp only [q, dite_eq_right hm]; exact Polynomial.monic_one
   have hqm : ∀ m, m.IsMaximal → Polynomial.aeval x (q m) ∈ m := fun m hm => by
-    have hqe : q m = Classical.choose (h m hm) := dif_pos hm
+    have hqe : q m = Classical.choose (h m hm) := dite_eq_left hm
     set p := Classical.choose (h m hm) with hp
     have e : Polynomial.eval₂ (algebraMap R (A ⧸ m)) (Ideal.Quotient.mk m x) p = 0 :=
       (Classical.choose_spec (h m hm)).2
@@ -555,7 +555,7 @@ theorem isIntegral_of_quot {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
   have hP : Pp.Monic := Polynomial.monic_prod_of_monic _ _ fun m _ => hq m
   have hmem : ∀ J : Ideal A, J.IsPrime → Polynomial.aeval x Pp ∈ J := by
     intro J hJ
-    haveI := hJ
+    have := hJ
     have hJm : J.IsMaximal := IsArtinianRing.isMaximal_of_isPrime J
     have hJS : J ∈ S := (Set.Finite.mem_toFinset _).2 hJm
     exact Ideal.mem_of_dvd _ (map_dvd _ (Finset.dvd_prod_of_mem q hJS)) (hqm J hJm)
@@ -571,13 +571,13 @@ variable {D : D7} {B : WeightFamilies.Prov D} {P : ModuliIntegralCharts.Prov D} 
 theorem isIntegral_xr (hfd : FiniteDimensional (Kp X la N) (OsK X la w)) (k : Fin N) :
     IsIntegral (Op X la N) (toOsK X la w (xr X la w k)) := by
   classical
-  haveI := hfd
-  haveI : CharZero (X.Kl la) := charZero_of_injective_algebraMap (algebraMap B.KO (X.Kl la)).injective
-  haveI : CharZero (Kp X la N) := charZero_of_injective_algebraMap (algebraMap (X.Kl la) (Kp X la N)).injective
-  haveI : IsArtinianRing (OsK X la w) := IsArtinianRing.of_finite (Kp X la N) (OsK X la w)
+  have := hfd
+  have : CharZero (X.Kl la) := charZero_of_injective_algebraMap (algebraMap B.KO (X.Kl la)).injective
+  have : CharZero (Kp X la N) := charZero_of_injective_algebraMap (algebraMap (X.Kl la) (Kp X la N)).injective
+  have : IsArtinianRing (OsK X la w) := IsArtinianRing.of_finite (Kp X la N) (OsK X la w)
   have hirr : Irreducible (unif X la) := Classical.choose_spec (IsDiscreteValuationRing.exists_irreducible (X.Ol la))
   have hirrO : Irreducible (unifO X la N) := Op.irreducible_map X la N hirr
-  haveI : Algebra.IsIntegral (Kp X la N) (OsK X la w) := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsIntegral (Kp X la N) (OsK X la w) := Algebra.IsIntegral.of_finite _ _
   have hunif : IsUnif (OsK X la w) (unifO X la N) := isUnif_of_field (Kp X la N) hirrO
   have hu : ∀ n : ℕ, 0 < n → IsUnit (n : OsK X la w) := fun n hn => by
     rw [← map_natCast (algebraMap (Kp X la N) (OsK X la w)) n]
@@ -587,8 +587,8 @@ theorem isIntegral_xr (hfd : FiniteDimensional (Kp X la N) (OsK X la w)) (k : Fi
       ∀ x, δ (toOsK X la w x) = toOsK X la w (dF X la w l x) := fun l => exists_derOsK X la w l
   choose δO hδOd hδOv using hδO
   refine isIntegral_of_quot _ fun m hm => ?_
-  haveI : m.IsMaximal := hm
-  letI : Field (OsK X la w ⧸ m) := Ideal.Quotient.field m
+  have : m.IsMaximal := hm
+  let : Field (OsK X la w ⧸ m) := Ideal.Quotient.field m
   let π : OsK X la w →+* OsK X la w ⧸ m := Ideal.Quotient.mk m
 
   have hδm : ∀ l : Fin N, ∃ δ : OsK X la w ⧸ m → OsK X la w ⧸ m, IsDer δ ∧ ∀ x, δ (π x) = π (δO l x) :=
@@ -636,7 +636,7 @@ theorem isIntegral_xr (hfd : FiniteDimensional (Kp X la N) (OsK X la w)) (k : Fi
       _ ≤ V.valuation (algebraMap (Op X la N) (OsK X la w ⧸ m) u) * 1 := by gcongr; exact hOle u'
       _ = _ := mul_one _
 
-  letI : Algebra (X.Kl la) (OsK X la w ⧸ m) :=
+  let : Algebra (X.Kl la) (OsK X la w ⧸ m) :=
     ((algebraMap (Kp X la N) (OsK X la w ⧸ m)).comp (algebraMap (X.Kl la) (Kp X la N))).toAlgebra
   let T : Fin (WeightFamilies.dimY D j + 1) × Fin N → OsK X la w ⧸ m := fun q =>
     algebraMap (Kp X la N) (OsK X la w ⧸ m) (@algebraMap (Op X la N) (Kp X la N) _ _ _ (Tv X la N q))
@@ -731,11 +731,11 @@ theorem isIntegral_xr (hfd : FiniteDimensional (Kp X la N) (OsK X la w)) (k : Fi
     rw [hδK, dK_Tv X la N (0, l) (0, k)]
     by_cases hk : k = l
     · subst hk; simp
-    · rw [if_neg (fun h => hk (Prod.mk.inj h).2), if_neg hk, map_zero]
+    · rw [ite_eq_right (fun h => hk (Prod.mk.inj h).2), ite_eq_right hk, map_zero]
   have hδs : ∀ l (i : Fin (WeightFamilies.dimY D j)) k, δ l (T (i.succ, k)) = 0 := by
     intro l i k
     show δ l (algebraMap (Kp X la N) (OsK X la w ⧸ m) (@algebraMap (Op X la N) (Kp X la N) _ _ _ (Tv X la N (i.succ, k)))) = 0
-    rw [hδK, dK_Tv X la N (0, l) (i.succ, k), if_neg (fun h => Fin.succ_ne_zero i (Prod.mk.inj h).1), map_zero]
+    rw [hδK, dK_Tv X la N (0, l) (i.succ, k), ite_eq_right (fun h => Fin.succ_ne_zero i (Prod.mk.inj h).1), map_zero]
   have hδKl : ∀ l (c : X.Kl la), δ l (algebraMap (X.Kl la) (OsK X la w ⧸ m) c) = 0 := by
     intro l c
     show δ l (algebraMap (Kp X la N) (OsK X la w ⧸ m) (algebraMap (X.Kl la) (Kp X la N) c)) = 0
@@ -757,9 +757,9 @@ theorem isIntegral_xr (hfd : FiniteDimensional (Kp X la N) (OsK X la w)) (k : Fi
       | C c => rw [MvPolynomial.aeval_C]; exact Sa.algebraMap_mem c
       | add p q hp hq => rw [map_add (f := _)]; exact Sa.add_mem hp hq
       | mul_X p q hp => rw [map_mul, MvPolynomial.aeval_X]; exact Sa.mul_mem hp (Algebra.subset_adjoin ⟨q, rfl⟩)
-    letI : Algebra (Pol X la N) (OsK X la w ⧸ m) :=
+    let : Algebra (Pol X la N) (OsK X la w ⧸ m) :=
       ((algebraMap (Op X la N) (OsK X la w ⧸ m)).comp (algebraMap (Pol X la N) (Op X la N))).toAlgebra
-    haveI : IsScalarTower (Pol X la N) (Op X la N) (OsK X la w ⧸ m) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : IsScalarTower (Pol X la N) (Op X la N) (OsK X la w ⧸ m) := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have hPS : ∀ Pp : Pol X la N, algebraMap (Pol X la N) (OsK X la w ⧸ m) Pp ∈ Sa := fun Pp => by
       show algebraMap (Op X la N) (OsK X la w ⧸ m) (algebraMap (Pol X la N) (Op X la N) Pp) ∈ Sa
       rw [← hev]
@@ -770,7 +770,7 @@ theorem isIntegral_xr (hfd : FiniteDimensional (Kp X la N) (OsK X la w)) (k : Fi
       exact (algebraMap (Kp X la N) _).injective.comp ((IsFractionRing.injective _ _).comp
         (IsLocalization.injective (Op X la N) (gI X la N).primeCompl_le_nonZeroDivisors))
     let ψ : Pol X la N →+* Sa := (algebraMap (Pol X la N) (OsK X la w ⧸ m)).codRestrict Sa hPS
-    haveI : Algebra.IsIntegral (Kp X la N) (OsK X la w ⧸ m) := Algebra.IsIntegral.of_finite _ _
+    have : Algebra.IsIntegral (Kp X la N) (OsK X la w ⧸ m) := Algebra.IsIntegral.of_finite _ _
     refine ⟨fun f => ?_⟩
     have hfK : IsAlgebraic (Kp X la N) f := (Algebra.IsIntegral.isIntegral f).isAlgebraic
     have hfO : IsAlgebraic (Op X la N) f :=
@@ -800,17 +800,17 @@ theorem generic_section_minimum_integral {D : D7} {B : WeightFamilies.Prov D} {P
     (la : HeightOneSpectrum (𝓞 B.KO)) : GenericSectionMinimumIntegral G la := by
   classical
   intro hfd hred ζ
-  haveI := hfd
-  haveI := hred
-  haveI : CharZero ((xplus X E hM).Kl la) :=
+  have := hfd
+  have := hred
+  have : CharZero ((xplus X E hM).Kl la) :=
     charZero_of_injective_algebraMap (algebraMap B.KO ((xplus X E hM).Kl la)).injective
-  haveI : CharZero (Kp (xplus X E hM) la G.N) :=
+  have : CharZero (Kp (xplus X E hM) la G.N) :=
     charZero_of_injective_algebraMap (algebraMap ((xplus X E hM).Kl la) (Kp (xplus X E hM) la G.N)).injective
-  haveI : IsDVRAt ζ := (integralClosure_dvr' (Op (xplus X E hM) la G.N) (Kp (xplus X E hM) la G.N)
+  have : IsDVRAt ζ := (integralClosure_dvr' (Op (xplus X E hM) la G.N) (Kp (xplus X E hM) la G.N)
     (OsK (xplus X E hM) la G.w)).2 ζ
   have hirr : Irreducible (unif (xplus X E hM) la) :=
     Classical.choose_spec (IsDiscreteValuationRing.exists_irreducible ((xplus X E hM).Ol la))
-  haveI : Algebra.IsIntegral (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w) := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsIntegral (Kp (xplus X E hM) la G.N) (OsK (xplus X E hM) la G.w) := Algebra.IsIntegral.of_finite _ _
   have hunif : IsUnif (OsK (xplus X E hM) la G.w) (unifO (xplus X E hM) la G.N) :=
     isUnif_of_field (Kp (xplus X E hM) la G.N) (Op.irreducible_map _ la G.N hirr)
   have hint : ∀ k, toOsK (xplus X E hM) la G.w (wRat G la k) ∈

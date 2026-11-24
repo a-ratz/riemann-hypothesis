@@ -166,12 +166,12 @@ private theorem isChart_choose_and_symm_apply {M : Type*} [TopologicalSpace M] (
 private theorem d_eq_wd_comp_chosen_chart_symm {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (j : Fin n)
     (f : M → ℂ) (x : M) (h : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source) :
     d n z j f x = wd n j (f ∘ (Classical.choose h).symm) (z x) := by
-  simp only [d, dif_pos h]
+  simp only [d, dite_eq_left h]
 
 private theorem db_eq_wdb_comp_chosen_chart_symm {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (j : Fin n)
     (f : M → ℂ) (x : M) (h : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source) :
     db n z j f x = wdb n j (f ∘ (Classical.choose h).symm) (z x) := by
-  simp only [db, dif_pos h]
+  simp only [db, dite_eq_left h]
 
 private theorem differentiableAt_comp_chart_symm_of_mem_target {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f : M → ℂ)
     (hf : Ck n z 1 f) (e : OpenPartialHomeomorph M (V n)) (he : IsChart n z e) (w : V n)
@@ -187,8 +187,8 @@ private theorem wd_wdb_add_and_mul (n : ℕ) (j : Fin n) {F G : V n → ℂ} {w 
   have h1 : HasFDerivAt (fun y => F y + G y) _ w := hF.hasFDerivAt.add hG.hasFDerivAt
   have h2 : HasFDerivAt (fun y => F y * G y) _ w := hF.hasFDerivAt.mul hG.hasFDerivAt
   refine ⟨?_, ?_, ?_, ?_⟩ <;>
-    simp only [wd, wdb, h1.fderiv, h2.fderiv, ContinuousLinearMap.add_apply,
-      ContinuousLinearMap.smul_apply, smul_eq_mul] <;> ring
+    simp only [wd, wdb, h1.fderiv, h2.fderiv, add_apply,
+      smul_apply, smul_eq_mul] <;> ring
 
 private theorem wd_wdb_const_mul (n : ℕ) (j : Fin n) (c : ℂ) {F : V n → ℂ} {w : V n}
     (hF : DifferentiableAt ℝ F w) :
@@ -196,7 +196,7 @@ private theorem wd_wdb_const_mul (n : ℕ) (j : Fin n) (c : ℂ) {F : V n → �
     wdb n j (fun y => c * F y) w = c * wdb n j F w := by
   have h1 : HasFDerivAt (fun y => c * F y) _ w := hF.hasFDerivAt.const_mul c
   refine ⟨?_, ?_⟩ <;>
-    simp only [wd, wdb, h1.fderiv, ContinuousLinearMap.smul_apply, smul_eq_mul] <;> ring
+    simp only [wd, wdb, h1.fderiv, smul_apply, smul_eq_mul] <;> ring
 
 private theorem wd_wdb_cexp (n : ℕ) (j : Fin n) {F : V n → ℂ} {w : V n}
     (hF : DifferentiableAt ℝ F w) :
@@ -204,7 +204,7 @@ private theorem wd_wdb_cexp (n : ℕ) (j : Fin n) {F : V n → ℂ} {w : V n}
     wdb n j (fun y => Complex.exp (F y)) w = Complex.exp (F w) * wdb n j F w := by
   have h1 := hF.hasFDerivAt.cexp
   refine ⟨?_, ?_⟩ <;>
-    simp only [wd, wdb, h1.fderiv, ContinuousLinearMap.smul_apply, smul_eq_mul] <;> ring
+    simp only [wd, wdb, h1.fderiv, smul_apply, smul_eq_mul] <;> ring
 
 private theorem wdb_conj_eq_conj_wd_and_wd_conj (n : ℕ) (j : Fin n) (F : V n → ℂ) (w : V n) :
     wdb n j (fun y => (starRingEnd ℂ) (F y)) w = (starRingEnd ℂ) (wd n j F w) ∧
@@ -226,7 +226,7 @@ private theorem wd_wdb_ofReal_comp_real_chain (n : ℕ) (j : Fin n) (k : ℝ →
     Complex.ofRealCLM.hasFDerivAt.comp w ((hk (P w)).hasDerivAt.comp_hasFDerivAt w hP.hasFDerivAt)
   refine ⟨?_, ?_⟩ <;>
     simp only [wd, wdb, h1.fderiv, h2.fderiv, ContinuousLinearMap.comp_apply,
-      ContinuousLinearMap.smul_apply, Complex.ofRealCLM_apply, smul_eq_mul, Complex.ofReal_mul] <;> ring
+      smul_apply, Complex.ofRealCLM_apply, smul_eq_mul, Complex.ofReal_mul] <;> ring
 
 theorem d_add {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (f g : M → ℂ) (hf : Ck n z 1 f) (hg : Ck n z 1 g) (j : Fin n) (x : M) :
     d n z j (fun y => f y + g y) x = d n z j f x + d n z j g x := by

@@ -794,7 +794,7 @@ theorem exists_immersion : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
       exact hVc c hx
     rw [Scheme.basicOpen_appLE] at h1
     exact h1.2
-  haveI := hqa
+  have := hqa
   refine ⟨U, W, hWU, hU, hWU hyf, hUW, hV.preimage q, ?_⟩
 
   let S := (φ.appLE U W hWU).hom.range

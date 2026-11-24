@@ -183,7 +183,7 @@ theorem sqRep_intertwines_of_unitary : ∀ (n : ℕ) (lam : DomWeight n) (ι : T
     intro B'
     calc M (GlobalTheory.Branching.sqRep ℂ n lam B' v) k = l (sqAct ℂ n lam B' v.1) := by
           simp only [l, π, LinearMap.comp_apply, LinearMap.proj_apply]
-          have := Submodule.linearProjOfIsCompl_apply_left hC (GlobalTheory.Branching.sqRep ℂ n lam B' v)
+          have := Submodule.projectionOnto_apply_left hC (GlobalTheory.Branching.sqRep ℂ n lam B' v)
           rw [← GlobalTheory.Branching.sqRep_coe]
           exact (congrArg (fun w => M w k) this).symm
       _ = _ := by rw [sqAct, map_smul, smul_eq_mul]
@@ -289,9 +289,9 @@ theorem hwScal_transpose {n : ℕ} (ν : Fin n → ℕ) (hν : Antitone ν) (B :
   have hf : ∀ s, f (s + 1) ≤ f s := by
     intro s
     by_cases h : s + 1 < n
-    · simp only [hfd, dif_pos h, dif_pos (show s < n by omega)]
+    · simp only [hfd, dite_eq_left h, dite_eq_left (show s < n by omega)]
       exact hν (show (⟨s, by omega⟩ : Fin n) ≤ ⟨s + 1, h⟩ from Fin.mk_le_mk.mpr (by omega))
-    · simp only [hfd, dif_neg h]
+    · simp only [hfd, dite_eq_right h]
       exact Nat.zero_le _
   have hinner : ∀ s : Fin n, (∏ a : Fin (s.val + 1),
       B.transpose (Fin.castLE (by omega) a) (Fin.castLE (by omega) a)) = ∏ k ∈ Finset.range (s.val + 1), d k := by
@@ -299,11 +299,11 @@ theorem hwScal_transpose {n : ℕ} (ν : Fin n → ℕ) (hν : Antitone ν) (B :
     rw [← Fin.prod_univ_eq_prod_range]
     refine Finset.prod_congr rfl fun a _ => ?_
     have ha : a.val < n := by omega
-    simp only [hd, dif_pos ha, Matrix.transpose_apply]
+    simp only [hd, dite_eq_left ha, Matrix.transpose_apply]
     rfl
   have hexp : ∀ s : Fin n, ν s - Formalism.GradedWeylDivisibility.nuNext ν s = f s.val - f (s.val + 1) := by
     intro s
-    simp only [hfd, dif_pos s.2, Formalism.GradedWeylDivisibility.nuNext]
+    simp only [hfd, dite_eq_left s.2, Formalism.GradedWeylDivisibility.nuNext]
   unfold Formalism.BasicNotions.Examples₂.NZ.hwScal
   simp_rw [hinner, hexp]
   rw [Fin.prod_univ_eq_prod_range (fun s => (∏ k ∈ Finset.range (s + 1), d k) ^ (f s - f (s + 1))) n]
@@ -312,7 +312,7 @@ theorem hwScal_transpose {n : ℕ} (ν : Fin n → ℕ) (hν : Antitone ν) (B :
   rw [hfn, pow_zero, mul_one] at ht
   rw [ht, ← Fin.prod_univ_eq_prod_range (fun k => d k ^ f k) n]
   refine Finset.prod_congr rfl fun i _ => ?_
-  simp only [hd, hfd, dif_pos i.2]
+  simp only [hd, hfd, dite_eq_left i.2]
 
 theorem exists_hw_upper : ∀ (n : ℕ) (lam : DomWeight n), ∃ v : nablaSq ℂ n lam, v ≠ 0 ∧
     ∀ B : GL (Fin n) ℂ, (B : Matrix (Fin n) (Fin n) ℂ).BlockTriangular id →
@@ -328,7 +328,7 @@ theorem exists_hw_upper : ∀ (n : ℕ) (lam : DomWeight n), ∃ v : nablaSq ℂ
   set M : Matrix (Fin n) (Fin n) ℂ := (B : Matrix (Fin n) (Fin n) ℂ) with hM
   have hl : ∀ i j : Fin n, i < j → M.transpose i j = 0 := fun i j hij => by
     rw [Matrix.transpose_apply]; exact hB hij
-  have hdet : M.det = ∏ i, M i i := Matrix.det_of_upperTriangular hB
+  have hdet : M.det = ∏ i, M i i := Matrix.det_of_isUpperTriangular hB
   have hne : ∀ i, M i i ≠ 0 := by
     have h0 : M.det ≠ 0 := by
       have := (Matrix.GeneralLinearGroup.det B).ne_zero
@@ -340,7 +340,7 @@ theorem exists_hw_upper : ∀ (n : ℕ) (lam : DomWeight n), ∃ v : nablaSq ℂ
     have hle : lam.detShift ≤ lam.w i := by
       unfold DomWeight.detShift
       have hn : 0 < n := Fin.pos i
-      rw [dif_pos hn]
+      rw [dite_eq_left hn]
       exact lam.anti (Fin.mk_le_mk.mpr (by omega) : i ≤ ⟨n - 1, by omega⟩)
     simp only [DomWeight.natW]
     omega
@@ -444,9 +444,9 @@ theorem coord_conjugate (τ : L →+* ℂ) (z : Cinf L) :
   unfold GlobalTheory.EmbUnitary.twist
   rw [hm]
   rcases InfinitePlace.embedding_mk_eq τ with h | h
-  · rw [if_pos h, if_neg (by rw [h]; exact hne.symm)]
+  · rw [ite_eq_left h, ite_eq_right (by rw [h]; exact hne.symm)]
     rfl
-  · rw [if_pos h, if_neg (by rw [h]; exact hne)]
+  · rw [ite_eq_left h, ite_eq_right (by rw [h]; exact hne)]
     simp
 
 theorem polyMat_embU {ι : Type} (P : ι → ι → MvPolynomial ((L →+* ℂ) × Fin n × Fin n) ℂ) (τ : L →+* ℂ)
@@ -518,7 +518,7 @@ theorem phi_mem {F : FinIso L n} {π : NG.AutRep L n} {U : Submodule ℂ (UA L n
         (γ₀ : Matrix (Fin n) (Fin n) L).map Algebra.TensorProduct.includeLeftRingHom → R γ = π.ρ γQ)
     (hcont : ∀ (v : π.W) (μ : Module.Dual ℂ π.W), Continuous fun g : UA L n => μ (R g v))
     {f : GAf L n → π.W} (hf : f ∈ π.S) (μ : Module.Dual ℂ π.W) : GlobalTheory.FormDictEx.phi F R f μ ∈ U := by
-  haveI : FiniteDimensional ℂ π.W := π.alg.1
+  have : FiniteDimensional ℂ π.W := π.alg.1
   have hmem : (fun x => μ (f x)) ∈ U.map (LinearMap.funLeft ℂ ℂ F.j) := by
     rw [hU.2]
     exact Submodule.subset_span ⟨f, hf, μ, rfl⟩
@@ -560,13 +560,13 @@ theorem weight_agree : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
       rfl
     simp only [h1]
     exact (LinearMap.continuous_of_finiteDimensional l).comp
-      (((GlobalTheory.WeightRealExt.continuous_polyMat P).comp (continuous_subtype_val.comp e.symm.continuous)).matrix_mulVec
+      (((GlobalTheory.WeightRealExt.continuous_polyMat P).comp (continuous_subtypeVal.comp e.symm.continuous)).matrix_mulVec
         continuous_const)
-  haveI : Nontrivial a.W := by
+  have : Nontrivial a.W := by
     by_contra hs
     rw [not_nontrivial_iff_subsingleton] at hs
     exact hB0 (LinearMap.ext fun w => LinearMap.ext fun z => by rw [Subsingleton.elim z 0, map_zero, map_zero])
-  haveI : Nontrivial (ι → ℂ) := b.equivFun.symm.toEquiv.nontrivial
+  have : Nontrivial (ι → ℂ) := b.equivFun.symm.toEquiv.nontrivial
   obtain ⟨lam, M₀, hM₀⟩ := GlobalTheory.UnitaryContainsType.exists_smallRep_intertwining n (ι → ℂ) σ hσc
   let M : nablaSq ℂ n lam →ₗ[ℂ] (ι → ℂ) := M₀.toLinearMap
   have hM := GlobalTheory.T.dualWeylModule_intertwines_GL_of_unitaryGroup n lam ι Φ hΦ M fun u v => Representation.IntertwiningMap.isIntertwining _ _ M₀ u v
@@ -1118,7 +1118,7 @@ theorem unitaryRead_true_alt (sw : _root_.UpperTheory.One.M.TrivialCondition) : 
 theorem cusp_read_rec_t : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (T : GlobalTheory.RowTie.WDTie D.nd D.naut),
     _root_.GlobalTheory.HeightCounting.CGTrueT hL D T → CuspReadG (_root_.GlobalTheory.FormDict.recT_alt T hL) := by
   intro hL D T C a P ha hP hg
-  haveI := host_isCMField D.host
+  have := host_isCMField D.host
   have hu : (CG.mk P).IsUnitary := CsdUnitary.isUnitary_of_isCsd _ a (CG.mk P) hP
   obtain ⟨π, hπ⟩ := _root_.UpperTheory.One.M.New.cgSurj C a ha ⟨CG.mk P, hu⟩ fun w => by
     obtain ⟨σ, hσ, -⟩ := LocEx.exists_isLocComp GlobalTheory.automorphicFormsFiniteGL D.host.E a P w

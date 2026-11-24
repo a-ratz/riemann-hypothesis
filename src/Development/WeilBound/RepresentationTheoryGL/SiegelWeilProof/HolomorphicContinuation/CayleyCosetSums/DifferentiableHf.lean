@@ -146,9 +146,9 @@ private theorem continuous_fz_mul_nU_herm_mul {X : Type} [TopologicalSpace X] (m
 theorem continuous_Hf (m : ℕ) (e : ℤ) {ψ : (Fin n → Fin n → ℝ) → ℂ} (hψ : Continuous ψ) (hψc : HasCompactSupport ψ)
     {a b : M2 n} (ha : InG a) (hb : InG b) :
     Continuous fun q : ↥(Gs n) × ℂ => Hf m e ψ a b q.2 q.1.1 := by
-  haveI : LocallyCompactSpace ↥(Gs n) := (isClosed_G (n := n)).locallyCompactSpace
+  have : LocallyCompactSpace ↥(Gs n) := (isClosed_G (n := n)).locallyCompactSpace
   have hF := continuous_fz_mul_nU_herm_mul (X := (↥(Gs n) × ℂ) × (Fin n → Fin n → ℝ)) m e hψ ha hb
-    (fun p => p.1.1.1) (continuous_subtype_val.comp (continuous_fst.comp continuous_fst))
+    (fun p => p.1.1.1) (continuous_subtypeVal.comp (continuous_fst.comp continuous_fst))
     (fun p => p.1.1.2) (fun p => p.1.2) (continuous_snd.comp continuous_fst) (fun p => p.2) continuous_snd
   have key := continuous_parametric_integral_of_continuous (μ := (volume : Measure (Fin n → Fin n → ℝ)))
     (f := fun (q : ↥(Gs n) × ℂ) t => fz m e q.2 (q.1.1 * a * nU (herm t) * b) * ψ t) hF hψc
@@ -160,7 +160,7 @@ theorem continuous_Hf (m : ℕ) (e : ℤ) {ψ : (Fin n → Fin n → ℝ) → �
 theorem differentiable_Hf (m : ℕ) (e : ℤ) {ψ : (Fin n → Fin n → ℝ) → ℂ} (hψ : Continuous ψ) (hψc : HasCompactSupport ψ)
     {a b y : M2 n} (ha : InG a) (hb : InG b) (hy : InG y) : Differentiable ℂ fun z => Hf m e ψ a b z y := by
   have hC : IsCompact (tsupport ψ) := hψc
-  haveI : IsFiniteMeasure ((volume : Measure (Fin n → Fin n → ℝ)).restrict (tsupport ψ)) :=
+  have : IsFiniteMeasure ((volume : Measure (Fin n → Fin n → ℝ)).restrict (tsupport ψ)) :=
     isFiniteMeasure_restrict.2 hC.measure_lt_top.ne
   have hnull : ((volume : Measure (Fin n → Fin n → ℝ)).restrict (tsupport ψ)) (tsupport ψ)ᶜ = 0 := by
     rw [Measure.restrict_apply' (isClosed_tsupport ψ).measurableSet, Set.compl_inter_self, measure_empty]

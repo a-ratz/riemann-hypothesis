@@ -305,7 +305,7 @@ open GlobalTheory.CM.IntCoord (sc)
 
 theorem abelian_letter_integral : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K₁ : Type) [Field K₁] [NumberField K₁] [Algebra c.F K₁] (d : ArcDatum Xo c K₁) (n' : ℕ) (La c₁ : ℝ) (s : CMIn d.a d.e d.th d.jj n' La c₁) (w : HeightOneSpectrum (𝓞 K₁)) (Tv : CDVR) (io : K₁ →+* Tv.Fr) (Wl : ValuationSubring ℂ) (M : IntModel d Tv io Wl) (ρ : 𝓞 K₁ →+* Tv.V) (ψ : M.aw.D₀.P.A.left ⟶ s.B.A.left), OverLa w Tv.V io 1 → (∀ x, algebraMap Tv.V Tv.Fr (ρ x) = io (x : K₁)) → IsPolFibre ρ s.B M.aw.D₀.P ψ → prj M.pw ≫ ψ = prj M.pK ≫ s.φB → TauCan M.aw.D₀ n' → ∀ (τ : E →+* ℂ) (k : Fin (Dw.mult τ)) (m : Fin d.a.D₀.P.g) (cl : K₁), s.kind τ k = some m → IsLocGen w cl (s.line τ k).I → ∃ (ν : Out.GtPt M.aw.D₀ (epsR Tv.V)) (ν₁ e₂ : Out.GtPt M.aK.D₀ (epsR Tv.Fr)), GtTanR ν ∧ LetBC M.pw ν ν₁ ∧ LetBC M.pK (d.e τ k) e₂ ∧ GtComb ![io ((n' : K₁) * cl)] ![e₂] ν₁ := by
   intro hK E _ _ _ H Dw l Xo c K₁ _ _ _ d n' La c₁ s w Tv io Wl M ρ ψ ho hρ hψ hsq hτ τ k m cl hk hcl
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨u, hu, he⟩ := s.eta τ k m hk
   have hcl' : IsLocGen w cl (s.L.ℓ m).I := by
     have : s.line τ k = s.L.ℓ m := by unfold CMIn.line; rw [hk]; rfl
@@ -732,7 +732,7 @@ theorem isPolFibre_prj {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [Is
 
 theorem exists_arcIn_over_valuationRing : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (c : Coeff l) (K₁ : Type) [Field K₁] [NumberField K₁] [Algebra c.F K₁] (a : ArcIn Dw l (RingHom.id c.F) K₁ (algebraMap c.F K₁)) (e : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → Out.GtPt a.D₀ (epsR K₁)) (th : a.D₀.P.L.Sec) (jj : ℤ) (n' : ℕ) (La c₁ : ℝ) (s : CMIn a e th jj n' La c₁) (Tv : CDVR) (io : K₁ →+* Tv.Fr) (ρ : 𝓞 K₁ →+* Tv.V) (O : Type) [CommRing O] (β : O →+* c.F) (b : O →+* Tv.V), (∀ x, algebraMap Tv.V Tv.Fr (ρ x) = io (x : K₁)) → (∀ x, algebraMap Tv.V Tv.Fr (b x) = io (algebraMap c.F K₁ (β x))) → ∃ (aw : ArcIn Dw l β Tv.V b) (aK : ArcIn Dw l (RingHom.id c.F) Tv.Fr (io.comp (algebraMap c.F K₁))) (pw : Out.IsPullDeg (algebraMap Tv.V Tv.Fr) aw.D₀ aK.D₀) (pK : Out.IsPullDeg io a.D₀ aK.D₀) (ψ : aw.D₀.P.A.left ⟶ s.B.A.left), InBC (algebraMap Tv.V Tv.Fr) aw (aK.restrict β) pw ∧ InBC io a aK pK ∧ IsPolFibre ρ s.B aw.D₀.P ψ ∧ prj pw ≫ ψ = prj pK ≫ s.φB ∧ TauCan aw.D₀ n' := by
   intro hK E _ _ _ H Dw l c K₁ _ _ _ a e th jj n' La c₁ s Tv io ρ O _ β b hρ hb
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨aK, pK, hBC, -⟩ := GlobalTheory.ArcPull.exists_isBC hK.laws.polBaseChange hK.laws.globalFns a io io.injective
   have hB : IsPolFibre (algebraMap (𝓞 K₁) K₁) s.B a.D₀.P s.φB :=
     (isFibreOf_iff_isPolFibre _ _ _ s.B s.toCMPart.xB s.φB).1 s.good.2.2.2.1
@@ -1190,7 +1190,7 @@ theorem bound_of_mul_mem {T : CDVR} {N x : T.Fr} (hN : N ≠ 0) (h : N * x ∈ S
 theorem exists_prime_mem (la : HeightOneSpectrum (𝓞 K)) : ∃ p : ℕ, p.Prime ∧ (p : 𝓞 K) ∈ la.asIdeal := by
   have := la.isMaximal
   have : Finite (𝓞 K ⧸ la.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ la.ne_bot
-  letI := Ideal.Quotient.field la.asIdeal
+  let := Ideal.Quotient.field la.asIdeal
   refine ⟨ringChar (𝓞 K ⧸ la.asIdeal), CharP.char_is_prime (𝓞 K ⧸ la.asIdeal) _, ?_⟩
   exact Ideal.Quotient.eq_zero_iff_mem.1 (by simpa using CharP.cast_eq_zero (𝓞 K ⧸ la.asIdeal) (ringChar _))
 
@@ -1327,7 +1327,7 @@ theorem CMIn.fin_Tl_ne_zero (s : CMIn a e th jj n' La c₁) : s.Tl.I ≠ 0 := by
 
 theorem CMIn.fin_line_ne_zero (s : CMIn a e th jj n' La c₁) (τ : E →+* ℂ) (k : Fin (Dw.mult τ)) :
     (s.line τ k).I ≠ 0 := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, h1, h2, -⟩ := s.good
   unfold CMIn.line
   cases s.kind τ k with

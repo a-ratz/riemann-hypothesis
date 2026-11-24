@@ -200,7 +200,7 @@ theorem halvesRec_of_facts (hG : GenHalves) (hLa : LaEqMap) (hMM : MMeq) (hPhi :
   have hq' := hs q hq
   obtain ⟨-, -, c3, c4, c5⟩ := HG (some ⟨q, hq⟩)
   refine ⟨good (some ⟨q, hq⟩) q.1 q.2 hq'.1 rfl, ?_, ?_, ?_⟩
-  · haveI := IO.La_index_finite cc hcc δ L₀ q.1 L₀' q.2 hAdm hq'.1
+  · have := IO.La_index_finite cc hcc δ L₀ q.1 L₀' q.2 hAdm hq'.1
     exact AddSubgroup.index_ne_zero_of_finite
   · intro a
     obtain ⟨a', ha', hΦa⟩ := AddSubgroup.mem_map.1 a.2

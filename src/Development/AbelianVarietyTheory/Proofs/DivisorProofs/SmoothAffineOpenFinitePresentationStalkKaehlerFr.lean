@@ -74,7 +74,7 @@ theorem finitePresentation_algX {k : Type} [Field k] {X : Scheme.{0}} (p : X ⟶
 
 theorem smooth_stalk : ∀ (k : Type) [Field k] (X : Scheme.{0}) (p : X ⟶ Sp k) (n : ℕ) [SmoothOfRelativeDimension n p] (U : X.affineOpens) (x : X) (hx : x ∈ U.1), letI := (algX p U.1).toAlgebra; letI := ((X.presheaf.germ U.1 x hx).hom.comp (algX p U.1)).toAlgebra; Algebra.FinitePresentation k Γ(X, U.1) ∧ Module.Free (X.presheaf.stalk x) Ω[X.presheaf.stalk x⁄k] ∧ Module.Finite (X.presheaf.stalk x) Ω[X.presheaf.stalk x⁄k] ∧ Module.finrank (X.presheaf.stalk x) Ω[X.presheaf.stalk x⁄k] = n := by
   intro k _ X p n _ U x hx
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth n p
+  have : Smooth p := SmoothOfRelativeDimension.smooth n p
   refine ⟨?_, ?_⟩
   · exact finitePresentation_algX p U
   have h := HasRingHomProperty.appLE (@SmoothOfRelativeDimension n) p ‹_› ⟨⊤, isAffineOpen_top _⟩ U le_top
@@ -92,27 +92,27 @@ theorem smooth_stalk : ∀ (k : Type) [Field k] (X : Scheme.{0}) (p : X ⟶ Sp k
     rw [← GlobalTheory.TopForm.resG_comp_algX p hVU]
     exact h₁
   have hV : IsAffineOpen V := U.2.basicOpen _
-  letI iA : Algebra k Γ(X, V) := (algX p V).toAlgebra
-  letI iS : Algebra Γ(X, V) (X.presheaf.stalk x) := (X.presheaf.germ V x hxt).hom.toAlgebra
-  letI iK : Algebra k (X.presheaf.stalk x) := ((X.presheaf.germ U.1 x hx).hom.comp (algX p U.1)).toAlgebra
+  let iA : Algebra k Γ(X, V) := (algX p V).toAlgebra
+  let iS : Algebra Γ(X, V) (X.presheaf.stalk x) := (X.presheaf.germ V x hxt).hom.toAlgebra
+  let iK : Algebra k (X.presheaf.stalk x) := ((X.presheaf.germ U.1 x hx).hom.comp (algX p U.1)).toAlgebra
   have hcomp : ((X.presheaf.germ U.1 x hx).hom.comp (algX p U.1)) = (X.presheaf.germ V x hxt).hom.comp (algX p V) := by
     rw [← GlobalTheory.TopForm.resG_comp_algX p hVU, ← RingHom.comp_assoc]
     congr 1
     rw [← X.presheaf.germ_res (homOfLE hVU) x hxt]
     rfl
-  haveI : IsScalarTower k Γ(X, V) (X.presheaf.stalk x) := IsScalarTower.of_algebraMap_eq' hcomp
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension n k Γ(X, V) := h₂
-  haveI hloc : IsLocalization.AtPrime (X.presheaf.stalk x) (hV.primeIdealOf ⟨x, hxt⟩).asIdeal :=
+  have : IsScalarTower k Γ(X, V) (X.presheaf.stalk x) := IsScalarTower.of_algebraMap_eq' hcomp
+  have : Algebra.IsStandardSmoothOfRelativeDimension n k Γ(X, V) := h₂
+  have hloc : IsLocalization.AtPrime (X.presheaf.stalk x) (hV.primeIdealOf ⟨x, hxt⟩).asIdeal :=
     hV.isLocalization_stalk ⟨x, hxt⟩
-  haveI : Algebra.FormallyEtale Γ(X, V) (X.presheaf.stalk x) :=
+  have : Algebra.FormallyEtale Γ(X, V) (X.presheaf.stalk x) :=
     Algebra.FormallyEtale.of_isLocalization (hV.primeIdealOf ⟨x, hxt⟩).asIdeal.primeCompl
   have hbc := KaehlerDifferential.isBaseChange_of_formallyEtale k Γ(X, V) (X.presheaf.stalk x)
-  haveI : Nontrivial Γ(X, V) := (X.presheaf.germ V x hxt).hom.domain_nontrivial
-  haveI : Module.Free Γ(X, V) Ω[Γ(X, V)⁄k] := by
+  have : Nontrivial Γ(X, V) := (X.presheaf.germ V x hxt).hom.domain_nontrivial
+  have : Module.Free Γ(X, V) Ω[Γ(X, V)⁄k] := by
     obtain ⟨ι, σ, _, _, P, -⟩ := ‹Algebra.IsStandardSmoothOfRelativeDimension n k Γ(X, V)›.out
     exact P.free_kaehlerDifferential
   have hr := Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (R := k) (S := Γ(X, V)) n
-  haveI : Module.Finite Γ(X, V) Ω[Γ(X, V)⁄k] := Module.finite_of_rank_eq_nat hr
+  have : Module.Finite Γ(X, V) Ω[Γ(X, V)⁄k] := Module.finite_of_rank_eq_nat hr
   have hfr : Module.finrank Γ(X, V) Ω[Γ(X, V)⁄k] = n := Module.finrank_eq_of_rank_eq hr
   let b := Module.Free.chooseBasis Γ(X, V) Ω[Γ(X, V)⁄k]
   let b' := IsBaseChange.basis b hbc

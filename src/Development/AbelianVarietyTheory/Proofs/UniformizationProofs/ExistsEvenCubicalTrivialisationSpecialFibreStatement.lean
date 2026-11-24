@@ -66,7 +66,7 @@ theorem exists_even_cubTriv_specialFibre : Laws → ∀ (V : Type) [CommRing V] 
     exact e ▸ MorphismProperty.comp_mem @IsProper gen.hom.left A.A.hom inferInstance A.isAb.proper
   have hm : (maximalIdeal V ^ (0 + 1)).IsMaximal := by
     rw [zero_add, pow_one]; infer_instance
-  letI : Field (V ⧸ maximalIdeal V ^ (0 + 1)) := Ideal.Quotient.field _
+  let : Field (V ⧸ maximalIdeal V ^ (0 + 1)) := Ideal.Quotient.field _
   have hS := IsSemiAbelian.pullback (thick V (maximalIdeal V) 0) G hG
   have := hS.smooth
   have := hS.geomConnected

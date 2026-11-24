@@ -127,7 +127,7 @@ private theorem locEmb_conj {k Ω : Type} [Field k] [NumberField k] [Field Ω] [
 
 theorem bk_locEmb : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (W : R2 Ω l) (A : ValuationSubring Ω), OverL l A → ∀ z ∈ Z1 (Loc.colRep W), IsBK l (Loc.colRep W) z → ∃ ι : GQ l →* G ℚ Ω, Continuous ι ∧ (∀ σ, ι σ ∈ Dec (F := ℚ) A) ∧ (∀ s ∈ Dec (F := ℚ) A, ∃ σ, ι σ = s) ∧ (∀ σ ∈ Loc.Iq l, ι σ ∈ Ine (F := ℚ) A) ∧ (∀ σ, cycZ ℚ Ω l (ι σ) = Loc.cyc l l σ) ∧ (fun σ => z (ι σ)) ∈ Loc.finiteCocycles (MonoidHom.id (GQ l)) ((Loc.colRep W).comp ι) := by
   intro l _ Ω _ iA _ W A hA z hz hb
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   obtain rfl : iA = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
   obtain ⟨v, hAv, hv⟩ := hA
   obtain ⟨j, -, -, x, hx⟩ := hb.above (algebraMap ℚ (Om l))
@@ -198,7 +198,7 @@ namespace GlobalTheory.NegVan
 
 private theorem fd_adjoin_range (l : ℕ) [Fact l.Prime] {ι : Type} [Finite ι] (f : ι → PadicAlgCl l) :
     FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] (Set.range f)) := by
-  haveI : Finite (Set.range f) := (Set.finite_range _).to_subtype
+  have : Finite (Set.range f) := (Set.finite_range _).to_subtype
   exact IntermediateField.finiteDimensional_adjoin fun z _ =>
       (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
 
@@ -212,8 +212,8 @@ private theorem desc {l : ℕ} [Fact l.Prime] {H : Type} [Group H] [TopologicalS
   obtain ⟨⟨hcc, hcoc⟩, x, hx⟩ := hc
   obtain ⟨S, rfl⟩ := TensorProduct.exists_finset x
   obtain ⟨T⟩ := Loc.tiedP l
-  haveI : IsDomain (Loc.Bcr l) := GlobalTheory.RegularRing.isDomain_of_tied T (Loc.botExt l)
-  haveI := fd_adjoin_range l (fun p : S => p.1.1)
+  have : IsDomain (Loc.Bcr l) := GlobalTheory.RegularRing.isDomain_of_tied T (Loc.botExt l)
+  have := fd_adjoin_range l (fun p : S => p.1.1)
   let E : IntermediateField ℚ_[l] (PadicAlgCl l) := E₀ ⊔ IntermediateField.adjoin ℚ_[l] (Set.range fun p : S => p.1.1)
   have hκE : ∀ g, (κ g : PadicAlgCl l) ∈ E := fun g => (le_sup_left : E₀ ≤ E) (hκ g)
   have hS : ∀ p ∈ S, p.1 ∈ E := fun p hp =>
@@ -289,7 +289,7 @@ theorem GlobalTheory.NegVan.crys_cocycle_coboundary_of_neg_weight :
   intro hP l _ κ hκc c hκO w hw hwt f hf
   obtain ⟨K₀, hK₀, hK⟩ := coef_finext c
   obtain ⟨E, _, κ', c', hκ, hc', hf'⟩ := desc (MonoidHom.id (GQ l)) κ K₀ (fun g => hK _ (hκO g)) f hf
-  haveI : IsModuleTopology ℚ_[l] E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology ℚ_[l] E := isModuleTopologyOfFiniteDimensional
   have hw' : Loc.HasWeight (MonoidHom.id (GQ l)) κ' w := by
     obtain ⟨U, hU, hUw⟩ := hwt
     refine ⟨U, hU, fun g hg hI => ?_⟩
@@ -297,7 +297,7 @@ theorem GlobalTheory.NegVan.crys_cocycle_coboundary_of_neg_weight :
     have hcy : Units.map ((algebraMap E (PadicAlgCl l) : E →+* PadicAlgCl l) : E →* PadicAlgCl l)
         (Loc.cycA l l E g) = Loc.cycA l l (PadicAlgCl l) g := by
       refine Units.ext ?_
-      simp only [Units.coe_map, MonoidHom.coe_coe, Loc.cycA, MonoidHom.comp_apply]
+      simp only [Units.coe_map, MonoidHom.coe_ofClass, Loc.cycA, MonoidHom.comp_apply]
       rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] E, IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (PadicAlgCl l)]
       rfl
     apply Units.map_injective (f := ((algebraMap E (PadicAlgCl l) : E →+* PadicAlgCl l) : E →* PadicAlgCl l))
@@ -335,7 +335,7 @@ theorem hasWeight_neg_of_pow_cyc_inertia : ∀ (l : ℕ) [Fact l.Prime] (κ : GQ
   have hcyc : Continuous (Loc.cyc l l) := cyclotomicCharacter.continuous l ℚ_[l] (Om l)
   have ha : Continuous (algebraMap ℤ_[l] (Qbar l)) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] (Qbar l)]
-    exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val
+    exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal
   have hA : Continuous (fun σ => (Loc.cycA l l (Qbar l) σ : Qbar l)) :=
     Units.continuous_val.comp
       ((Continuous.units_map (algebraMap ℤ_[l] (Qbar l) : ℤ_[l] →* Qbar l) ha).comp hcyc)
@@ -423,7 +423,7 @@ theorem bk_unr_gr : Loc.LocalPublishedTheorems → ∀ (l : ℕ) [Fact l.Prime] 
       simp only [mat] at h
       simp [dt, Matrix.det_fin_two, mat, h]
     have hcy : (Loc.cycA l l (Qbar l) σ : Qbar l) = eps l (ι σ) := by
-      simp only [Loc.cycA, eps, cycBar, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, hιcyc, RingHom.coe_comp, Function.comp_apply]
+      simp only [Loc.cycA, eps, cycBar, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, hιcyc, RingHom.coe_comp, Function.comp_apply]
       rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] (Qbar l)]
       rfl
     apply Units.ext
@@ -645,9 +645,9 @@ theorem finite_cocycles_of_finite_h1 {R : Type*} [CommRing R] {H : Type*} [Group
     {Q : Type*} [AddCommGroup Q] [Module R Q] [TopologicalSpace Q] [IsTopologicalAddGroup Q]
     [ContinuousConstSMul R Q] [Finite Q] (σ : Representation R H Q) [Finite (H1 σ)] :
     Finite (Z1 σ) := by
-  haveI : Finite ((B1 σ).comap (Z1 σ).subtype) := by
-    haveI : Finite (B1 σ) := by
-      haveI : Finite (Set.range (d0 σ)) := Set.finite_range _
+  have : Finite ((B1 σ).comap (Z1 σ).subtype) := by
+    have : Finite (B1 σ) := by
+      have : Finite (Set.range (d0 σ)) := Set.finite_range _
       exact Finite.of_injective (fun x : B1 σ => (⟨x.1, x.2⟩ : Set.range (d0 σ)))
         (fun x y h => Subtype.ext (congrArg Subtype.val h))
     exact Finite.of_injective (fun x : (B1 σ).comap (Z1 σ).subtype => (⟨x.1.1, x.2⟩ : B1 σ))
@@ -672,7 +672,7 @@ theorem finite_cocycles_restricted_rep (hL : GlobalTheory.Mem.LiteralAutomorphy.
     (hD : ∀ s i j, mat V s i j ∈ c.O) (hK : ∀ a ∈ (toGS Ω (S : Set Pl)).ker, V a = 1)
     (hc : Continuous V) (hS : ContainsAbove S l) : Finite (Z1 (repS S c n V hD hK)) := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
-  · haveI : Subsingleton (Red c 0) := by
+  · have : Subsingleton (Red c 0) := by
       refine ⟨fun a b => ?_⟩
       obtain ⟨x, rfl⟩ := red_surjective c 0 a
       obtain ⟨y, rfl⟩ := red_surjective c 0 b
@@ -684,7 +684,7 @@ theorem finite_cocycles_restricted_rep (hL : GlobalTheory.Mem.LiteralAutomorphy.
       rw [norm_neg] at hxy
       exact hxy.trans (max_le (norm_le_one c x) (norm_le_one c y))
     infer_instance
-  · haveI := (hL.gf ℚ Ω l n (Fin 2 → Red c n) S (repS S c n V hD hK) hn hS
+  · have := (hL.gf ℚ Ω l n (Fin 2 → Red c n) S (repS S c n V hD hK) hn hS
       (contAction_repS S c n V hD hK hc)).2.1
     exact finite_cocycles_of_finite_h1 _
 
@@ -693,7 +693,7 @@ theorem card_dualCocyclesModPrimePow_unramifiedOutsideS_bounded : GlobalTheory.M
   have hD := galoisRepRankTwoTateDual_matrix_mem_coefRing_of_normalForm l Ω e S A W hN c hW
   have hK := galoisRepRankTwoTateDual_eq_one_of_mem_ker_unramified l Ω e S A W hN
   have hc := DualCont.continuous_galoisRepRankTwoTateDual l Ω e S A W hN
-  haveI := finite_cocycles_restricted_rep S hL c n (dual1 W) hD hK hc hN.above
+  have := finite_cocycles_restricted_rep S hL c n (dual1 W) hD hK hc hN.above
   refine ⟨Nat.card (Z1 (repS S c n (dual1 W) hD hK)), fun N z hz hne => ?_⟩
   have hint : ∀ i s k, z i s k ∈ c.O := fun i => (hz i).1.2.1
   have hcont : ∀ i, Continuous (z i) := fun i => by
@@ -774,7 +774,7 @@ theorem exists_cls (c : Coef l) (m : ℕ) : ∃ (T : Type) (_ : Fintype T) (cls 
     intro h
     have h' : (((l : ℕ) : c.O) : PadicAlgCl l) = 0 := by rw [h]; rfl
     exact natCast_ne_zero' (by simpa using h'))
-  haveI hfin := (UpperTheory.V.X.So.levFacts l c.O _ hl0 (c.O ⧸ Ideal.span {((l : ℕ) : c.O) ^ m})
+  have hfin := (UpperTheory.V.X.So.levFacts l c.O _ hl0 (c.O ⧸ Ideal.span {((l : ℕ) : c.O) ^ m})
     ⟨LinearEquiv.refl _ _⟩).1
   refine ⟨Fin 2 → c.O ⧸ Ideal.span {((l : ℕ) : c.O) ^ m}, Fintype.ofFinite _,
     fun x j => Ideal.Quotient.mk _ (x j), ?_⟩
@@ -989,7 +989,7 @@ theorem cocycle_zero_on_ker_toGS : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Fie
         rw [mul_inv_cancel, h1, hg.1] at this
         simpa [mat, hg.2] using this.symm }
   have hH : ∀ g, g ∈ H ↔ Y g = 0 ∧ W g = 1 := fun g => Iff.rfl
-  haveI : H.Normal := ⟨fun g hg h => by
+  have : H.Normal := ⟨fun g hg h => by
     rw [hH] at hg ⊢
     refine ⟨?_, by rw [map_mul, map_mul, hg.2, mul_one, ← map_mul, mul_inv_cancel, map_one]⟩
     have e1 : Y (g * h⁻¹) = Y h⁻¹ := by
@@ -1567,9 +1567,9 @@ theorem ideal_eq_comap {p : ℕ} (hp : Nat.Prime p)
     v.asIdeal = Ideal.comap (Rat.ringOfIntegersEquiv : NumberField.RingOfIntegers ℚ →+* ℤ)
       (Ideal.span {(p : ℤ)}) := by
   set e := Rat.ringOfIntegersEquiv
-  haveI hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
+  have hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
-  haveI : (Ideal.comap (e : NumberField.RingOfIntegers ℚ →+* ℤ) (Ideal.span {(p : ℤ)})).IsMaximal :=
+  have : (Ideal.comap (e : NumberField.RingOfIntegers ℚ →+* ℤ) (Ideal.span {(p : ℤ)})).IsMaximal :=
     Ideal.comap_isMaximal_of_surjective _ e.surjective
   symm
   refine Ideal.IsMaximal.eq_of_le this v.isPrime.ne_top ?_
@@ -1700,7 +1700,7 @@ theorem cont_dual1 (W : R2 Ω l) (hW : Continuous W) (h2 : dt W ^ 2 = 1) : Conti
   have he : Continuous (fun s : G ℚ Ω => eps l s) := by
     have hz : Continuous (fun s : G ℚ Ω => ((cycZ ℚ Ω l s : ℤ_[l]ˣ) : ℤ_[l])) :=
       Units.continuous_val.comp (continuous_cycZ ℚ Ω l)
-    exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp (continuous_subtype_val.comp hz)
+    exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp (continuous_subtypeVal.comp hz)
   have hdv : Continuous (fun s => ((dt W s : (Qbar l)ˣ) : Qbar l)) := by
     simp only [val_dt]
     exact (Units.continuous_val.comp hW).matrix_det

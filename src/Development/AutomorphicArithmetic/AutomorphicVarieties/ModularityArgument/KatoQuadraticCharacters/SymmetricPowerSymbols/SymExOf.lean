@@ -231,7 +231,7 @@ theorem symEx_of (h1 : SecEx) (h2 : PSymb) (h3 : PCoc) (h4 : PRed) (h5 : PLev) (
   have hpos : ∀ n : ℕ, 0 < l ^ n := fun n => pow_pos hl.pos n
   let t : (n : ℕ) → X.K → X.K → Pt X (l ^ n) := fun n => Classical.choose (h1 Ω ε X (l ^ n) (hpos n))
   have ht : ∀ n, IsSec X (l ^ n) (t n) := fun n => Classical.choose_spec (h1 Ω ε X (l ^ n) (hpos n))
-  haveI : ∀ M : ℕ, Nonempty (Gal(Ω/ℚ) → Fam X M) := fun M => ⟨fun _ _ _ => 1⟩
+  have : ∀ M : ℕ, Nonempty (Gal(Ω/ℚ) → Fam X M) := fun M => ⟨fun _ _ _ => 1⟩
   let w : ℕ → (M : ℕ) → Gal(Ω/ℚ) → Fam X M := fun n M =>
     Classical.epsilon (fun w' => IsSymb X (l ^ n) c d M (t n) w')
   have hw : ∀ n M, Lv c d M → IsSymb X (l ^ n) c d M (t n) (w n M) := fun n M hM =>

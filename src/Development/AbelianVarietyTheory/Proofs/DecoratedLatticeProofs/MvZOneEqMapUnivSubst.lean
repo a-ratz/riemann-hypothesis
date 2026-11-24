@@ -226,7 +226,7 @@ theorem equivariantHom_mem_of_stable : ∀ (G H J : Type) [Group G] [Group H] [D
           simp
         rw [hh]
         exact hSH _ hb h }
-  haveI := hβ j0
+  have := hβ j0
   rcases eq_bot_or_eq_top S' with h | h
   · exfalso
     apply hS0
@@ -544,7 +544,7 @@ theorem comp_subMap {a b : ℕ} (hab : a ≤ b) (lam : Unit → DomWeight a) (n 
 
 theorem howeSpan_unit : HoweSpan Unit := by
   intro a b hab ha lam n Q hQ
-  haveI : FiniteDimensional ℂ (Vn lam n) := (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem Unit a lam n).1
+  have : FiniteDimensional ℂ (Vn lam n) := (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem Unit a lam n).1
   have hb : 1 ≤ b := le_trans ha hab
   let S := Submodule.span ℂ (subSet hab lam n)
   have h1 : ∀ T ∈ S, ∀ k F, T (vnRep lam n k F) =
@@ -829,7 +829,7 @@ theorem GlobalTheory.KJInf.howeSpan_all : ∀ (ι : Type) [Fintype ι], HoweSpan
   let V : ι → Submodule ℂ (PY Unit a) := fun τ => Vn (fun _ : Unit => lam τ) (fun _ => n τ)
   have hV : ∀ τ k, ∀ F ∈ V τ, lft (fun _ : Unit => k) F ∈ V τ := fun τ k F hF =>
     (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem Unit a (fun _ => lam τ) (fun _ => n τ)).2 (fun _ => k) F hF
-  haveI : ∀ τ, FiniteDimensional ℂ (V τ) := fun τ => (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem Unit a (fun _ => lam τ) (fun _ => n τ)).1
+  have : ∀ τ, FiniteDimensional ℂ (V τ) := fun τ => (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem Unit a (fun _ => lam τ) (fun _ => n τ)).1
   let ΦY := eY.toLinearMap ∘ₗ PiTensorProduct.map (fun τ => (V τ).subtype)
   have hrange : LinearMap.range ΦY = Vn lam n := by
     rw [(hY2 V).2]; exact span_jY lam n

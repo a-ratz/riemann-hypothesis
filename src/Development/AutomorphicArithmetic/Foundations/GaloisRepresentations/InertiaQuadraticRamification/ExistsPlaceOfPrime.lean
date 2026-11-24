@@ -83,7 +83,7 @@ private theorem exists_prime_val {Ω : Type} [Field Ω] (A : ValuationSubring Ω
       exact ⟨r, hr, hrm.trans ⟨n.minFac, by rw [mul_comm]; exact hm⟩, hrv⟩
 
 private theorem normV_pos' {F : Type} [Field F] [NumberField F] (t : HeightOneSpectrum (𝓞 F)) : 0 < normV t := by
-  haveI : Finite (𝓞 F ⧸ t.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ t.ne_bot
+  have : Finite (𝓞 F ⧸ t.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ t.ne_bot
   exact Nat.card_pos
 
 private theorem normV_mem {F : Type} [Field F] [NumberField F] (t : HeightOneSpectrum (𝓞 F)) :
@@ -99,7 +99,7 @@ private theorem exists_place_of_prime {K : Type} [Field K] [NumberField K] {q : 
     have h2 := h.map (Algebra.norm ℤ (S := 𝓞 K))
     rw [show ((q : ℕ) : 𝓞 K) = algebraMap ℤ (𝓞 K) (q : ℤ) by simp, Algebra.norm_algebraMap,
       isUnit_pow_iff Module.finrank_pos.ne'] at h2
-    exact (Nat.prime_iff_prime_int.1 hq).not_unit h2
+    exact (Nat.prime_iff_prime_int.1 hq).not_isUnit h2
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne
   have hq0 : ((q : ℕ) : 𝓞 K) ≠ 0 := Nat.cast_ne_zero.2 hq.ne_zero
   have hmem := hle (Ideal.mem_span_singleton_self ((q : ℕ) : 𝓞 K))
@@ -112,7 +112,7 @@ private theorem exists_moves {K Ω : Type} [Field K] [NumberField K] [Field Ω] 
       ∃ σ ∈ Ine (F := K) A, σ x = -x := by
   obtain ⟨u, hu⟩ := exists_place_of_prime (K := K) hq
   obtain ⟨A, hA⟩ := ReciprocityTheory.Gal.exists_isPlaceOver Ω u
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   obtain ⟨σ, hσ, h⟩ := GlobalTheory.TameKummerInertia.tame_kummer_surj K Ω A u hA q hu (hB u) 2 two_pos
     (fun hd => by have := Nat.le_of_dvd two_pos hd; omega) x (-1) hx (by norm_num)
   exact ⟨u, A, hu, hA, σ, hσ, by rw [h]; ring⟩
@@ -120,16 +120,16 @@ private theorem exists_moves {K Ω : Type} [Field K] [NumberField K] [Field Ω] 
 theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.quad0Ex :
     SqrtFix → MkQ → UnrLarge → Quad0Ex := by
   intro hS hM hU E Ω _ _ _ _ _ _ T hT
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
   obtain ⟨E', hfin, hE'⟩ : ∃ E' : IntermediateField ℚ Ω, FiniteDimensional ℚ E' ∧
       ∀ (j : E →+* Ω) (y : E), j y ∈ E' :=
     ⟨IntermediateField.normalClosure ℚ E Ω, inferInstance,
       fun j y => AlgHom.fieldRange_le_normalClosure j.toRatAlgHom ⟨y, rfl⟩⟩
-  haveI : NumberField E' := { }
-  haveI : IsAlgClosure E' Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have : NumberField E' := { }
+  have : IsAlgClosure E' Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
   obtain ⟨B1, hB1⟩ := hU E
   obtain ⟨B2, hB2⟩ := hU E'
   obtain ⟨c, hc⟩ : ∃ c : ℕ, c = ∏ t ∈ hT.toFinset, normV t := ⟨_, rfl⟩

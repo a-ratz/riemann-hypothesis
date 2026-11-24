@@ -105,9 +105,9 @@ private theorem continuous_dual_number_qcont {l : ℕ} [Fact l.Prime] {X E : Typ
     funext fun x => (TrivSqZeroExt.inl_fst_add_inr_snd_eq _).symm
   unfold QCont
   clear hf
-  letI : TopologicalSpace (DualNumber E) := moduleTopology ℚ_[l] _
-  haveI : IsModuleTopology ℚ_[l] (DualNumber E) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd ℚ_[l] (DualNumber E)
+  let : TopologicalSpace (DualNumber E) := moduleTopology ℚ_[l] _
+  have : IsModuleTopology ℚ_[l] (DualNumber E) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd ℚ_[l] (DualNumber E)
   rw [e]
   exact ((IsModuleTopology.continuous_of_linearMap _).comp h1).add
     ((IsModuleTopology.continuous_of_linearMap _).comp h2)
@@ -115,20 +115,20 @@ private theorem continuous_dual_number_qcont {l : ℕ} [Fact l.Prime] {X E : Typ
 private theorem open_subgroup_finite_index {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     (φ : G →* GQ l) (hφ : IsOpenEmbedding φ) (H : Subgroup G) (hH : IsOpen (H : Set G)) : H.FiniteIndex := by
   have hc : IsClosed (φ.range : Set (GQ l)) := φ.range.isClosed_of_isOpen hφ.isOpen_range
-  haveI : CompactSpace G := (IsClosedEmbedding.mk hφ.isEmbedding hc).compactSpace
-  haveI := H.quotient_finite_of_isOpen hH
+  have : CompactSpace G := (IsClosedEmbedding.mk hφ.isEmbedding hc).compactSpace
+  have := H.quotient_finite_of_isOpen hH
   exact Subgroup.finiteIndex_of_finite_quotient
 
 theorem UpperTheory.V.Loc.pr6 :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ l) (hφ : IsOpenEmbedding φ) {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] [TopologicalSpace E] [IsModuleTopology ℚ_[l] E] [IsTopologicalRing E] {Y : Type} [AddCommGroup Y] [Module E Y] [Module ℚ_[l] Y] [IsScalarTower ℚ_[l] E Y] [FiniteDimensional ℚ_[l] Y] [TopologicalSpace Y] [IsModuleTopology ℚ_[l] Y] [IsTopologicalAddGroup Y] [ContinuousConstSMul E Y] (ρ : Representation E G Y), ContAction ρ → ∀ y ∈ Z1 ρ, ∀ (H : Subgroup G) [H.Normal], IsOpen (H : Set G) → ∀ {n : ℕ} (r : H →* GL (Fin n) E), Continuous (fun g => (r g : Matrix (Fin n) (Fin n) E)) → ∀ (ι : Y →ₗ[E] Matrix (Fin n) (Fin n) E) (p : Matrix (Fin n) (Fin n) E →ₗ[E] Y), (∀ x, p (ι x) = x) → (∀ (g : H) x, ι (ρ g x) = adGL r g (ι x)) → (∀ (g : H) X, p (adGL r g X) = ρ g (p X)) → ∀ r' : H →* GL (Fin n) (DualNumber E), (∀ (g : H) i j, (r' g : Matrix (Fin n) (Fin n) (DualNumber E)) i j = ⟨(r g : Matrix (Fin n) (Fin n) E) i j, (ι (y g) * (r g : Matrix (Fin n) (Fin n) E)) i j⟩) → ∀ (h : GL (Fin n) (DualNumber E)) (κ : Fin n → H →* (DualNumber E)ˣ) (w : Fin n → ℤ), UpperTri (conjGL h r') κ → StrictAnti w → (∀ i (g : H), φ g ∈ Iq l → κ i g = cycA l l (DualNumber E) (φ g) ^ w i) → (∀ i j, i < j → ∃ g : H, (κ i g : DualNumber E).fst ≠ (κ j g : DualNumber E).fst * (cycA l l E (φ g) : E)) → IsCr (φ.comp H.subtype) (colRep r) ∧ IsCr (φ.comp H.subtype) (colRep r') ∧ y ∈ UpperTheory.V.Loc.finiteCocycles φ ρ := by
   intro P l _ G _ _ _ φ hφ E _ _ _ _ _ _ _ _ Y _ _ _ _ _ _ _ _ _ ρ hρ y hy H _ hH n r hr ι p hp hι hpe r' hr' h κ w
     hU hw hκ hne
-  haveI := open_subgroup_finite_index φ hφ H hH
+  have := open_subgroup_finite_index φ hφ H hH
   have hφH : IsOpenEmbedding (φ.comp H.subtype) := hφ.comp hH.isOpenEmbedding_subtypeVal
-  haveI : IsModuleTopology ℚ_[l] (Matrix (Fin n) (Fin n) E) :=
+  have : IsModuleTopology ℚ_[l] (Matrix (Fin n) (Fin n) E) :=
     inferInstanceAs (IsModuleTopology ℚ_[l] (Fin n → Fin n → E))
   have hyc : Continuous fun g : H => ι (y g) :=
-    (IsModuleTopology.continuous_of_linearMap (ι.restrictScalars ℚ_[l])).comp (hy.1.comp continuous_subtype_val)
+    (IsModuleTopology.continuous_of_linearMap (ι.restrictScalars ℚ_[l])).comp (hy.1.comp continuous_subtypeVal)
   have hy' : (fun g : H => ι (y g)) ∈ Z1 (adGL r) := ⟨hyc, fun g k => by
     simp only []
     rw [Subgroup.coe_mul, hy.2, map_add (f := _), hι]⟩
@@ -138,7 +138,7 @@ theorem UpperTheory.V.Loc.pr6 :
     exact Continuous.prodMk (hr.matrix_elem i j) ((hyc.matrix_mul hr).matrix_elem i j)
   have hcc : ∀ i j, QCont l fun g => (conjGL h r' g : Matrix (Fin n) (Fin n) (DualNumber E)) i j := fun i j =>
     continuous_dual_number_qcont _ (((continuous_const.matrix_mul hr'c).matrix_mul continuous_const).matrix_elem i j)
-  haveI : Module.Finite E (DualNumber E) := inferInstanceAs (Module.Finite E (E × E))
+  have : Module.Finite E (DualNumber E) := inferInstanceAs (Module.Finite E (E × E))
   have h1 : IsCr (φ.comp H.subtype) (colRep r') :=
     (crystalline_conj_invariant _ r' h).2 (prC P _ hφH (TrivSqZeroExt.fstHom E E E)
       (fun a ha => ⟨2, by ext <;> simp_all [pow_two]⟩) (conjGL h r') hcc κ w hU hw hκ hne)

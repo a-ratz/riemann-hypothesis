@@ -88,7 +88,7 @@ end
 universe u v w in
 theorem degSupermod_of (h : DegSupermodZ.{w}) : DegSupermod.{u, v, w} := by
   intro R V E _ _ _ _ _ _ ρ L A B hL hA hB
-  haveI := hL.2
+  have := hL.2
   have key := h E (zl ρ L) (zl ρ A) (zl ρ B) hL.2 (degSupermod_zl_mono ρ hA)
     (degSupermod_zl_mono ρ hB)
   rw [← degSupermod_zl_sup ρ A B, ← degSupermod_zl_inf ρ hL.1 hA hB] at key

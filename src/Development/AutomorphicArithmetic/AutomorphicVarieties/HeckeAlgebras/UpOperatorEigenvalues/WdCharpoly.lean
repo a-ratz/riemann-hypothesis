@@ -100,7 +100,7 @@ private theorem cong_roots {K : Type} [NormedField K] [IsUltrametricDist K] {N :
   let T := {a : O // a ^ N = 1}
   have lift : ∀ s : Multiset K, (∀ a ∈ s, a ^ N = 1) → ∃ s' : Multiset T, s = s'.map fun a => (a.1 : K) := fun s hs =>
     ⟨s.attach.map fun a => ⟨⟨a.1, show ‖a.1‖₊ ≤ 1 from
-      ((pow_eq_one_iff_left hN0).1 (by rw [← nnnorm_pow, hs _ a.2, nnnorm_one])).le⟩, Subtype.ext (hs _ a.2)⟩, by
+      ((pow_eq_one_iff_left hN0).1 (by rw [← nnNorm_pow, hs _ a.2, nnNorm_one])).le⟩, Subtype.ext (hs _ a.2)⟩, by
         simp [Multiset.map_map]⟩
   obtain ⟨s, rfl⟩ := lift s hs
   obtain ⟨t, rfl⟩ := lift t ht
@@ -138,7 +138,7 @@ private theorem cong_roots {K : Type} [NormedField K] [IsUltrametricDist K] {N :
 
 private theorem fin_range {Γ K H : Type} [Group Γ] [Field K] [Group H] {n N : ℕ} (hN : N ≠ 0) (t : Fin n → Γ →* Kˣ)
     (ht : ∀ i g, t i g ^ N = 1) (ρ : Γ →* H) (hρ : ∀ g, (∀ i, t i g = 1) → ρ g = 1) : (Set.range ρ).Finite := by
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   let T : Γ → Fin n → rootsOfUnity N K := fun g i => ⟨t i g, ht i g⟩
   refine (Set.finite_range fun z => ρ (Function.invFun T z)).subset ?_
   rintro _ ⟨g, rfl⟩
@@ -171,7 +171,7 @@ theorem diag_of_cong {l : ℕ} [Fact l.Prime] {Γ : Type} [Group Γ] {n N : ℕ}
         rw [← Units.val_pow_eq_pow_val, ← map_pow, hρ _ fun i => by rw [map_pow, ht], Units.val_one] at h1
         by_contra h2
         refine h1 ?_
-        rw [← map_one (algebraMap (Qbar l) _), resolventSet, Set.mem_setOf_eq, ← map_sub]
+        rw [← map_one (algebraMap (Qbar l) _), resolventSet, Set.mem_ofPred_eq, ← map_sub]
         exact (IsUnit.mk0 _ (sub_ne_zero.2 h2)).map _
       · obtain ⟨i, -, rfl⟩ := Multiset.mem_map.1 ha
         rw [← Units.val_pow_eq_pow_val, ht, Units.val_one]
@@ -292,7 +292,7 @@ theorem diag_pt (hn : 1 ≤ n) (hs : Formalism.MainNotions.N.IsSSRep ρ) (t : Fi
   refine diag_of_cong (N := Nat.card (ResidueField c.O) - 1) ?_ _ (fun i g => ?_) (ρ.comp I.subtype) (fun g hg => ?_) fun g k => ?_
   · have h1 : IsUnit ((Nat.card (ResidueField c.O) - 1 : ℕ) : c.O) := by
       rw [← residue_ne_zero_iff_isUnit, map_natCast, Nat.cast_pred Nat.card_pos]
-      letI := Fintype.ofFinite (ResidueField c.O)
+      let := Fintype.ofFinite (ResidueField c.O)
       simp [Nat.card_eq_fintype_card]
     have := pt_unit x (h1.map (algebraMap c.O B.B)).unit
     rwa [IsUnit.unit_spec, map_natCast, map_natCast] at this

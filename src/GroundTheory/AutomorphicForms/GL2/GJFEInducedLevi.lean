@@ -109,7 +109,7 @@ theorem localMatrixFourier_sum (ψ : AddChar F Circle) (hψ : Continuous ψ) {ι
     ring
   · intro p hp
     have hc : Continuous fun X : Matrix (Fin n) (Fin n) F => (ψ (trace (X * Z)) : ℂ) :=
-      (continuous_subtype_val.comp hψ).comp (continuous_id.matrix_mul continuous_const).matrix_trace
+      (continuous_subtypeVal.comp hψ).comp (continuous_id.matrix_mul continuous_const).matrix_trace
     exact (((hT p hp).1.continuous.const_smul (c p)).mul hc).integrable_of_hasCompactSupport
       (((hT p hp).2.smul_left (f := fun _ => c p)).mul_right)
 
@@ -128,7 +128,7 @@ theorem lintegral_lt_top_of_le_sum {X ι : Type*} [MeasurableSpace X] {μ : Meas
               rw [ENNReal.ofReal_mul (ha p), ofReal_norm]
     _ = ∑ p ∈ S, ENNReal.ofReal (a p) * ∫⁻ x, ‖g p x‖ₑ ∂μ := by
         rw [lintegral_finsetSum' _ fun p hp =>
-          ((hg p hp).aestronglyMeasurable.enorm).const_mul _]
+          ((hg p hp).aestronglyMeasurable.eNorm).const_mul _]
         refine Finset.sum_congr rfl fun p hp => ?_
         rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
     _ < ⊤ := ENNReal.sum_lt_top.2 fun p hp =>

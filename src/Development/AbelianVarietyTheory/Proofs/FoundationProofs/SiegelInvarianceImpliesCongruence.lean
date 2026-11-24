@@ -110,15 +110,15 @@ theorem hasQ_expo (c M a b : ℕ) (hM : 0 < M) (ha : a < M) (hadm : admitted c !
       funext τ
       have hz0 : qv M τ ≠ 0 := Complex.exp_ne_zero _
       have e1 : ee τ = qv M τ ^ M := by
-        rw [ee, qv, ← Complex.exp_nat_mul]; congr 1; field_simp
+        rw [ee, qv, ← Complex.exp_natCast_mul]; congr 1; field_simp
       have e2 : ee (pt ![(a : ℚ) / M, (b : ℚ) / M] τ) = qv M τ ^ a * ζ ^ b := by
-        rw [hζ, ee, ee, qv, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+        rw [hζ, ee, ee, qv, ← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, ← Complex.exp_add]
         congr 1
         simp only [pt, Matrix.cons_val_one, Matrix.cons_val_zero]
         push_cast
         ring
       have e3 : ee (-((expo c M a : ℂ) / M) * (τ : ℂ)) = qv M τ ^ (-expo c M a) := by
-        rw [ee, qv, ← Complex.exp_int_mul]
+        rw [ee, qv, ← Complex.exp_intCast_mul]
         congr 1
         push_cast
         ring
@@ -162,7 +162,7 @@ theorem exp_siegel_ord {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
     rw [shift k e _ hd] at h1
     have h2 := HasQ.coeff_unique hM hB h1
     have h3 := congrFun h2 0
-    rw [if_neg (by omega)] at h3
+    rw [ite_eq_right (by omega)] at h3
     exact hB0 h3
   have hd : (((e - k).toNat : ℕ) : ℤ) = e - k := Int.toNat_of_nonneg (by omega)
   set d := (e - k).toNat with hdd
@@ -172,12 +172,12 @@ theorem exp_siegel_ord {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ
   have hAd : A d ≠ 0 := by
     intro h0
     have h3 := congrFun h2 d
-    simp only [le_refl, if_true, Nat.sub_self, h0, map_zero] at h3
+    simp only [le_refl, ite_true, Nat.sub_self, h0, map_zero] at h3
     exact hB0 h3.symm
   have hAn : ∀ n, n < d → A n = 0 := by
     intro n hn
     have h3 := congrFun h2 n
-    simp only [if_neg (show ¬ d ≤ n by omega)] at h3
+    simp only [ite_eq_right (show ¬ d ≤ n by omega)] at h3
     exact (map_eq_zero ε).1 h3
   have hMq : (0 : ℚ) < M := by exact_mod_cast hM
   have hed : (e : ℚ) = (k : ℚ) + d := by
@@ -338,7 +338,7 @@ theorem siegel_eq_imp {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ 
   have hMq : (0 : ℚ) < M := by exact_mod_cast hM
   have e3 : (expo c M (a % M).toNat : ℚ) = expo c M (a' % M).toNat := by
     have := le_antisymm e1 e2
-    rwa [div_left_inj' hMq.ne'] at this
+    rwa [div_left_inj₀ hMq.ne'] at this
   have e4 : expo c M (a % M).toNat = expo c M (a' % M).toNat := by exact_mod_cast e3
   rcases expo_inj c M _ _ hc hcM ha ha' e4 with h5 | h5
   · left; rw [← ta, ← ta', h5]

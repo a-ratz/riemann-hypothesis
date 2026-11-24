@@ -136,8 +136,8 @@ theorem UpperTheory.V.Ws.frobIn :
   have h : ((cycZ ℚ Ω l φ : ℤ_[l]ˣ) : ℤ_[l]) = (p : ℤ_[l]) := by
     refine PadicInt.ext_of_toZModPow.1 fun n => ?_
     rw [cycZ_toZModPow_eq hlw hw (q := p) hφ.2 n]
-  haveI : IsGalois ℚ Ω := inferInstance
-  haveI : Finite (G ℚ Ω ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
+  have : IsGalois ℚ Ω := inferInstance
+  have : Finite (G ℚ Ω ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
   obtain ⟨f, hf, -, hfU⟩ := Subgroup.exists_pow_mem_of_index_ne_zero (H := U) Subgroup.index_ne_zero_of_finite φ
   refine ⟨p, A, f, φ ^ f, hp, hpM, hA, hf, hfU, frobIn_isFrob_pow hφ f, ?_⟩
   rw [map_pow, Units.val_pow_eq_pow_val, h]

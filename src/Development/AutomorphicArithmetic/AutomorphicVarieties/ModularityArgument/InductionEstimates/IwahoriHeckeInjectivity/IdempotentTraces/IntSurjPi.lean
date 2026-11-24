@@ -323,7 +323,7 @@ theorem sq_ne [κ.IsMulLeftInvariant] [ν.IsInvInvariant] {e : K → ℂ} (he : 
   rw [ec_adj κ ν he hβ' hc' hT]
   simp only [hD]
   obtain ⟨x, hx⟩ := hx
-  have hm : 0 < ∫ y, β y ∂ν := hβ.integral_pos_of_hasCompactSupport_nonneg_nonzero hc h0 hx
+  have hm : 0 < ∫ y, β y ∂ν := hβ.integral_pos_of_hasCompactSupport_nonneg_ne_zero hc h0 hx
   have key := avg_near ν hβ hc h0 hH (c := (∫ y, β y ∂ν : ℝ) * ψ 1) (r := (∫ y, β y ∂ν) * (‖ψ 1‖ / 2)) fun y hy =>
     avg_near ν hβ hc h0 (T := fun z => Ψ (y * z⁻¹)) (by fun_prop) fun z hz =>
       le_of_lt (hO (Set.mk_mem_prod (hsup y hy).1 (hsup z hz).2))
@@ -383,8 +383,8 @@ private theorem ec_smooth {K : Type} [Field K] [NumberField K] {n : ℕ} (κ : M
   set h := isExpLieAlgebra K n
   rw [IsExpLieAlgebra.isSmoothFun_iff]
   intro g
-  letI := h.chartedSpace
-  haveI := h.lieGroup ∞
+  let := h.chartedSpace
+  have := h.lieGroup ∞
   have hfg : ContMDiff 𝓘(ℝ, archLie K n) 𝓘(ℝ, ℂ) ∞ (fun x : archGroup K n => f (g * x)) :=
     ContMDiff.comp (I' := 𝓘(ℝ, archLie K n)) hf (contMDiff_const.mul contMDiff_id)
   set Φ : archLie K n → archGroup K n → ℂ := fun Y y => f (g * h.expG Y * y) with hΦdef
@@ -407,7 +407,7 @@ private theorem ec_smooth {K : Type} [Field K] [NumberField K] {n : ℕ} (κ : M
     (fun k => contDiff_const.mul (hΦY _)) (fun j => ?_) (fun Y₀ => ⟨Set.univ, Filter.univ_mem, Set.univ, isCompact_univ, fun Y _ k hy => (hy (Set.mem_univ _)).elim⟩)
   have hc := h.continuous_iteratedFDeriv_param Φ hΦ j
   have hc' : Continuous fun q : archLie K n × archCompact K n => iteratedFDeriv ℝ j (fun Y => Φ Y (q.2 : archGroup K n)⁻¹) q.1 :=
-    hc.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd).inv)
+    hc.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd).inv)
   exact ((he.comp continuous_snd).smul hc').congr fun q => (hD j q.1 q.2).symm
 
 private theorem sc_norm {G : Type} [Group G] [TopologicalSpace G] [MeasurableSpace G] {K : Subgroup G} (κ : Measure K) (e : K → ℂ)
@@ -456,8 +456,8 @@ private theorem exB {K : Type} [Field K] [NumberField K] {n : ℕ} {κ : Measure
     (h : IdemA κ e) (ν : Measure (archGroup K n)) [ν.IsHaarMeasure] {N : Set (archGroup K n)} (hN : N ∈ 𝓝 (1 : archGroup K n)) :
     ∃ (β : archGroup K n → ℝ) (b : TI K n), Continuous β ∧ HasCompactSupport β ∧ (∀ x, 0 ≤ β x) ∧ (∃ x, β x ≠ 0) ∧
       (∀ x, β x ≠ 0 → x ∈ N) ∧ (∀ g, b g = ec κ e (fun x => (β x : ℂ)) g) ∧ SmoothT b ∧ LeftFin b ∧ ∫ g, ‖b g‖ ∂ν ≤ 1 := by
-  haveI := h.haar.prob
-  haveI : κ.IsMulLeftInvariant := ⟨fun k => (h.haar.left k).map_eq⟩
+  have := h.haar.prob
+  have : κ.IsMulLeftInvariant := ⟨fun k => (h.haar.left k).map_eq⟩
   obtain ⟨ρ, hρ0, hρt, hρ1, -, hρc, hρN, -⟩ := exists_archBump ν hN
   have hρcont : Continuous ρ := Complex.continuous_re.comp hρt.continuous
   have hρcs : HasCompactSupport ρ := hρt.2.comp_left (g := Complex.re) rfl
@@ -496,15 +496,15 @@ private theorem tens_ec {κF : Measure (archCompact F n)} {eF : archCompact F n 
     {e : archCompact E n → ℂ} (hF : IdemA κF eF) (hE : IdemA κ e) (hSq : IsSq D eF e) {β : archGroup F n → ℝ} (hβ : Continuous β)
     (x : archGroup E n) :
     ec κ e (fun y => ((∏ i, β (compA D n i y) : ℝ) : ℂ)) x = ∏ i, ec κF eF (fun y => (β y : ℂ)) (compA D n i x) := by
-  haveI := hE.haar.prob
-  haveI := hF.haar.prob
-  haveI : κ.IsMulLeftInvariant := ⟨fun k => (hE.haar.left k).map_eq⟩
-  haveI : κF.IsMulRightInvariant := ⟨fun k => (hF.haar.right k).map_eq⟩
+  have := hE.haar.prob
+  have := hF.haar.prob
+  have : κ.IsMulLeftInvariant := ⟨fun k => (hE.haar.left k).map_eq⟩
+  have : κF.IsMulRightInvariant := ⟨fun k => (hF.haar.right k).map_eq⟩
   obtain ⟨hgc, hcg, hgm, hgcont, hccont, -⟩ := archBasic F E σ 1 D n
   have hcomp := (positionOf F E σ 1 D).2 n
   let s : (Fin (1 + 1) → archCompact F n) → archCompact E n := fun kk =>
     ⟨glueA D n (fun i => kk i), (hcomp _).2 fun i => by rw [hgc]; exact (kk i).2⟩
-  have hsc : Continuous s := Continuous.subtype_mk (hgcont.comp (continuous_pi fun i => continuous_subtype_val.comp (continuous_apply i))) _
+  have hsc : Continuous s := Continuous.subtype_mk (hgcont.comp (continuous_pi fun i => continuous_subtypeVal.comp (continuous_apply i))) _
   have hsm : ∀ x y, s (x * y) = s x * s y := fun x y => Subtype.ext (hgm _ _)
   have hss : Function.Surjective s := fun k => ⟨fun i => ⟨compA D n i k, (hcomp k).1 k.2 i⟩, Subtype.ext (hcg k)⟩
   have hsk : ∀ kk i, compA D n i (s kk : archGroup E n) = kk i := fun kk i => hgc _ i
@@ -513,8 +513,8 @@ private theorem tens_ec {κF : Measure (archCompact F n)} {eF : archCompact F n 
     refine hE.cont.mul (Complex.continuous_ofReal.comp (continuous_finsetProd _ fun i _ => hβ.comp ((hccont i).comp ?_)))
     fun_prop
   unfold ec
-  haveI : SecondCountableTopology (archCompact F n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology (archCompact E n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (archCompact F n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (archCompact E n) := TopologicalSpace.Subtype.secondCountableTopology _
   rw [int_surj_pi (1 + 1) κF κ s hsc hsm hss hcf]
   have e1 : ∀ kk : Fin (1 + 1) → archCompact F n,
       e (s kk) * ((∏ i, β (compA D n i ((s kk : archGroup E n)⁻¹ * x)) : ℝ) : ℂ) =
@@ -552,9 +552,9 @@ end Tens
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.ampEx :
     AmpEx := by
   intro F E _ _ _ _ _ _ _ σ D n hn κF eF κ e hF hE hSq νE _ νF _ hν φ hφ hφ0 hfix
-  haveI := hE.haar.prob
-  haveI : κ.IsMulLeftInvariant := ⟨fun k => (hE.haar.left k).map_eq⟩
-  haveI : νE.IsInvInvariant := isInvInvariant_archGroup νE
+  have := hE.haar.prob
+  have : κ.IsMulLeftInvariant := ⟨fun k => (hE.haar.left k).map_eq⟩
+  have : νE.IsInvInvariant := isInvInvariant_archGroup νE
   obtain ⟨hgc, hcg, hgm, hgcont, hccont, -, -, htens⟩ := archBasic F E σ 1 D n
   obtain ⟨g₀, hg₀⟩ : ∃ g, φ g ≠ 0 := by
     by_contra h

@@ -185,7 +185,7 @@ theorem exists_isClosed_diff_orbit {Z : Set X} (hZ : IsClosed Z) (hZne : Z.Nonem
     Subtype.val ⁻¹' ((fun h : H => h • (i.1 : X)) '' compactCovering H i.2)
   have hfc : ∀ i, IsClosed (f i) := fun i =>
     (((isCompact_compactCovering H i.2).image
-      (continuous_id.smul continuous_const)).isClosed).preimage continuous_subtype_val
+      (continuous_id.smul continuous_const)).isClosed).preimage continuous_subtypeVal
   have hfU : ⋃ i, f i = univ := by
     refine eq_univ_of_forall fun z => ?_
     obtain ⟨x, hxs, hzx⟩ := mem_iUnion₂.1 (hcov z.2)

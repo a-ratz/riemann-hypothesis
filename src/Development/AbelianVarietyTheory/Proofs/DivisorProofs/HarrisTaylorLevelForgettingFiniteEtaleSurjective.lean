@@ -112,14 +112,14 @@ theorem exists_liftHom {b : Base D R} {N : ℕ} {s : S ⟶ Sp R} (o : Obj b N s)
   have hNS : IsUnit (N' : Γ(S, ⊤)) := by
     have := (b.unit N' hc).map (s.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom)
     rwa [map_natCast] at this
-  haveI := D.freeLa
-  haveI := D.finLa
-  haveI := D.freeO
-  haveI := D.finO
+  have := D.freeLa
+  have := D.finLa
+  have := D.freeO
+  have := D.finO
   obtain ⟨Z, y, hfin, het, yadd, ypow, huniv⟩ := GlobalTheory.exists_finiteEtale_latticeTorsionHom S o.A N' D.La o.ab hNS
   have R : RepTors o.A N' D.La Z y := ⟨hfin, het, yadd, ypow, huniv⟩
-  haveI := hfin
-  haveI := het
+  have := hfin
+  have := het
   have ymod : ∀ a c, y (a + N' • c) = y a := fun a c => by
     rw [yadd, add_map_nsmul yadd, ypow, _root_.mul_one]
   have etaN : ∀ a, o.eta (N' • a) = 1 := fun a => by
@@ -166,9 +166,9 @@ theorem exists_liftHom {b : Base D R} {N : ℕ} {s : S ⟶ Sp R} (o : Obj b N s)
 theorem exists_liftScheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N N' : ℕ), N'.Coprime p → N ∣ N' → ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (s : S ⟶ Sp R) (o : Obj b N s), ∃ (Y : Over S) (ηu : D.La → (Y ⟶ o.A)), IsFinite Y.hom ∧ Etale Y.hom ∧ ∀ (T : Over S) (lv : D.La → (T ⟶ o.A)), (IsLift o N' T lv → ∃! f : T ⟶ Y, ∀ a, f ≫ ηu a = lv a) ∧ ((∃ f : T ⟶ Y, ∀ a, f ≫ ηu a = lv a) → IsLift o N' T lv) := by
   intro p _ D R _ b N N' hc hd S _ s o
   obtain ⟨Z, et, hZf, hZe, eadd, eker, elin, elev, huniv⟩ := exists_liftHom o N' hc hd
-  haveI := hZf
-  haveI := hZe
-  haveI : IsLocallyNoetherian Z.left := LocallyOfFiniteType.isLocallyNoetherian Z.hom
+  have := hZf
+  have := hZe
+  have : IsLocallyNoetherian Z.left := LocallyOfFiniteType.isLocallyNoetherian Z.hom
   have hsp : ∀ {k k' : Type} [Field k] [IsAlgClosed k] [Field k'] [IsAlgClosed k'] (x : Sp k ⟶ Z.left)
       (x' : Sp k' ⟶ Z.left) (u : Sp k) (u' : Sp k'), x'.base u' ⤳ x.base u →
       (TateAt o N' (x ≫ Z.hom) (fun a => (Over.homMk x rfl : Over.mk (x ≫ Z.hom) ⟶ Z) ≫ et a) ↔
@@ -544,9 +544,9 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 
 theorem forget_map_finite_etale_surjective : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsNoetherianRing R] (b : Base D R) (N N' : ℕ) (hd : N ∣ N') (hc : N'.Coprime p), 3 ≤ N → ∀ (M : Model b N) (M' : Model b N') (t : M'.X ⟶ M.X), t ≫ M.s = M'.s → Nonempty (ObjMap (M'.univ.forget N hd hc) M.univ t) → IsFinite t ∧ Etale t ∧ Surjective t := by
   intro p _ D R _ _ b N N' hd hc h3 M M' π hπ ⟨om⟩
-  haveI := M.smooth
-  haveI : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
-  haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have := M.smooth
+  have : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
+  have : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
   obtain ⟨Y, ηu, hYf, hYe, HY⟩ := _root_.GlobalTheory.UPel.HT.exists_liftScheme p D R b N N' hc hd M.X M.s M.univ
   let T0 : Over M.X := Over.mk π
   have hw : ∀ a, ((M'.univ.eta a).left ≫ om.φ) ≫ M.univ.A.hom = T0.hom := fun a => by
@@ -580,7 +580,7 @@ theorem forget_map_finite_etale_surjective : ∀ (p : ℕ) [Fact p.Prime] (D : D
   have e2' : h ≫ g0.left = 𝟙 Y.left := by
     have := congrArg (fun q => q.left) e2
     simpa [hY] using this
-  haveI : IsIso g0.left := ⟨⟨h, e1, e2'⟩⟩
+  have : IsIso g0.left := ⟨⟨h, e1, e2'⟩⟩
   have e : π = g0.left ≫ Y.hom := (Over.w g0).symm
   have hfe : IsFinite π ∧ Etale π := by
     rw [e]
@@ -599,7 +599,7 @@ theorem forget_map_finite_etale_surjective : ∀ (p : ℕ) [Fact p.Prime] (D : D
   have hadd : ∀ x y, lv (x + y) = lv x * lv y := fun x y => I.add N' x y
   have hker : ∀ x, lv (N' • x) = 1 := fun x => (I.ker N' hN' hc _).2 ⟨x, rfl⟩
   have hlin : ∀ (c : D.O) x, lv (c • x) = lv x ≫ M.univ.act.act c := fun c x => I.lin N' c x
-  haveI : IsLocallyNoetherian T.left := by
+  have : IsLocallyNoetherian T.left := by
     show IsLocallyNoetherian (Spec (CommRingCat.of k))
     infer_instance
   have hlv : IsLift M.univ N' T lv := by

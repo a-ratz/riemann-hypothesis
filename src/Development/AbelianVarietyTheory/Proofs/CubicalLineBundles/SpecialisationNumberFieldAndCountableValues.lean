@@ -65,9 +65,9 @@ theorem _root_.GlobalTheory.exists_ringHom_extend_of_finiteType (F A L : Type*) 
     [Nontrivial A] [Algebra F A] [Algebra.FiniteType F A] [Field L] [IsAlgClosed L]
     (σ : F →+* L) : ∃ φ : A →+* L, ∀ x, φ (algebraMap F A x) = σ x := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal A
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite F (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing F (A ⧸ m)
-  letI : Algebra F L := σ.toAlgebra
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite F (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing F (A ⧸ m)
+  let : Algebra F L := σ.toAlgebra
   let ψ : (A ⧸ m) →ₐ[F] L := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -86,7 +86,7 @@ private lemma exists_algHom_extend_of_fg_ne_zero {k L M : Type*} [Field k] [Fiel
   obtain ⟨s, hs⟩ := hR
   have hrL : (r : L) ≠ 0 := fun h => hr (Subtype.ext h)
   obtain ⟨A, hA⟩ : ∃ A : Subalgebra F L, A = Algebra.adjoin F ↑(insert ((r : L)⁻¹) s) := ⟨_, rfl⟩
-  haveI : Algebra.FiniteType F A :=
+  have : Algebra.FiniteType F A :=
     (Subalgebra.fg_iff_finiteType A).1 ⟨insert ((r : L)⁻¹) s, hA.symm⟩
   obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.exists_ringHom_extend_of_finiteType F A M σ.toRingHom
   have hgen : ∀ y ∈ insert ((r : L)⁻¹) s, y ∈ A := fun y hy => by
@@ -128,14 +128,14 @@ theorem _root_.GlobalTheory.exists_specialisation_finite {k L : Type*} [Field k]
     ∃ (K₁ : IntermediateField k L) (ρ : R →ₐ[k] K₁), FiniteDimensional k K₁ ∧ ρ r ≠ 0 ∧
       ∀ c : R, IsAlgebraic k c → (ρ c : L) = c := by
   classical
-  haveI : IsAlgClosed (algebraicClosure k L) := IsAlgClosure.isAlgClosed k
+  have : IsAlgClosed (algebraicClosure k L) := IsAlgClosure.isAlgClosed k
   obtain ⟨ρ₁, hfix, hr₁⟩ :=
     exists_algHom_extend_of_fg_ne_zero (algebraicClosure k L) (AlgHom.id k _) R hR r hr
   let ρ₀ : R →ₐ[k] L := (algebraicClosure k L).val.comp ρ₁
   have halg : ∀ x : R, IsAlgebraic k (ρ₀ x) := fun x => mem_algebraicClosure_iff.1 (ρ₁ x).2
-  haveI : Algebra.FiniteType k R := (Subalgebra.fg_iff_finiteType R).1 hR
+  have : Algebra.FiniteType k R := (Subalgebra.fg_iff_finiteType R).1 hR
   obtain ⟨t, ht⟩ := Algebra.FiniteType.out (R := k) (A := R)
-  haveI : Finite (ρ₀ '' (t : Set R)) := (t.finite_toSet.image _).to_subtype
+  have : Finite (ρ₀ '' (t : Set R)) := (t.finite_toSet.image _).to_subtype
   have hfin : FiniteDimensional k (IntermediateField.adjoin k (ρ₀ '' (t : Set R))) :=
     IntermediateField.finiteDimensional_adjoin fun y hy => by
       obtain ⟨x, -, rfl⟩ := hy

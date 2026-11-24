@@ -53,11 +53,11 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
 theorem compactSpace_UJ (E : Type) [Field E] (n : ℕ) :
     CompactSpace (UJ (starRingEnd (Cinf E)) (1 : Matrix (Fin n) (Fin n) (Cinf E))) := by
-  haveI : CompactSpace (Matrix.unitaryGroup (Fin n) (Cinf E)) := GlobalTheory.KinfCompactness.compactSpace_Kinf E n
+  have : CompactSpace (Matrix.unitaryGroup (Fin n) (Cinf E)) := GlobalTheory.KinfCompactness.compactSpace_Kinf E n
   let f : Matrix.unitaryGroup (Fin n) (Cinf E) → GL (Fin n) (Cinf E) := fun u =>
     ⟨u.1, star u.1, Matrix.mem_unitaryGroup_iff.1 u.2, Matrix.mem_unitaryGroup_iff'.1 u.2⟩
   have hf : Continuous f :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_star.comp continuous_subtype_val⟩
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, continuous_star.comp continuous_subtypeVal⟩
   have hr : Set.range f =
       (UJ (starRingEnd (Cinf E)) (1 : Matrix (Fin n) (Fin n) (Cinf E)) : Set (GL (Fin n) (Cinf E))) := by
     ext g
@@ -98,7 +98,7 @@ theorem range_infPt : Set.range (GlobalTheory.DefiniteDense.infPt (E := E) (n :=
 theorem compactSpace_infU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ),
     CompactSpace (infU E n) := by
   intro E _ _ _ n
-  haveI := compactSpace_UJ E n
+  have := compactSpace_UJ E n
   have h : IsCompact (infU E n : Set (UA E n)) :=
     range_infPt (E := E) (n := n) ▸ isCompact_range GlobalTheory.DefiniteDense.continuous_infPt
   exact isCompact_iff_compactSpace.1 h

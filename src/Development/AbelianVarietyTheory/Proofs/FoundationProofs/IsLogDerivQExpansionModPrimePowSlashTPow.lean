@@ -113,14 +113,14 @@ theorem coeff_mul_sup {x y : HahnSeries ℚ Ω} {s t : Set ℚ} (hs : s.IsPWO) (
   rw [HahnSeries.coeff_mul]
   apply Finset.sum_subset
   · intro ij hij
-    rw [Finset.mem_addAntidiagonal] at hij
-    exact Finset.mem_addAntidiagonal.2 ⟨hxs hij.1, hyt hij.2.1, hij.2.2⟩
+    rw [Finset.mem_antidiagonal] at hij
+    exact Finset.mem_antidiagonal.2 ⟨hxs hij.1, hyt hij.2.1, hij.2.2⟩
   · intro ij hij hn
     by_cases h1 : x.coeff ij.1 = 0
     · rw [h1, zero_mul]
     · by_cases h2 : y.coeff ij.2 = 0
       · rw [h2, mul_zero]
-      · exact absurd (Finset.mem_addAntidiagonal.2 ⟨h1, h2, (Finset.mem_addAntidiagonal.1 hij).2.2⟩) hn
+      · exact absurd (Finset.mem_antidiagonal.2 ⟨h1, h2, (Finset.mem_antidiagonal.1 hij).2.2⟩) hn
 
 theorem trT_mul (b : ℕ) (x y : HahnSeries ℚ Ω) : trT ε b (x * y) = trT ε b x * trT ε b y := by
   ext a
@@ -129,7 +129,7 @@ theorem trT_mul (b : ℕ) (x y : HahnSeries ℚ Ω) : trT ε b (x * y) = trT ε 
   rw [HahnSeries.coeff_mul, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro ij hij
-  rw [Finset.mem_addAntidiagonal] at hij
+  rw [Finset.mem_antidiagonal] at hij
   rw [← hij.2.2, add_mul, eOm_add']
   ring
 

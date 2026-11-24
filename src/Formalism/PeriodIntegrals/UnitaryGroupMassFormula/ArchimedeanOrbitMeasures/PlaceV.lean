@@ -153,10 +153,10 @@ theorem blk_lie (ε : Fin n → Bool) (S : Finset (Fin n)) (X : Matrix (Fin n) (
   rw [lie_entry] at h ⊢
   by_cases hij : i ∈ S ∧ j ∈ S
   · have hji : j ∈ S ∧ i ∈ S := ⟨hij.2, hij.1⟩
-    simp only [blk, if_pos hij, if_pos hji]
+    simp only [blk, ite_eq_left hij, ite_eq_left hji]
     simpa using h
   · have hji : ¬ (j ∈ S ∧ i ∈ S) := fun h' => hij ⟨h'.2, h'.1⟩
-    simp [blk, if_neg hij, if_neg hji]
+    simp [blk, ite_eq_right hij, ite_eq_right hji]
 
 end Coords
 
@@ -308,13 +308,13 @@ theorem placeChartV_of (hE : ExpProdU) : PlaceChartV := by
   have h1 : ∀ z, P₀ (L₀ z) = z := by
     intro z
     show L0'.symm (m.orthogonalProjection (rlM n (urM n (L0' z : EuclideanSpace ℝ (Fin n × Fin n × Bool))))) = z
-    rw [rl_ur, Submodule.orthogonalProjection_mem_subspace_eq_self, LinearIsometryEquiv.symm_apply_apply]
+    rw [rl_ur, Submodule.orthogonalProjectionOnto_mem_subspace_eq_self, LinearIsometryEquiv.symm_apply_apply]
   have h2 : ∀ M, InCompl ε S M → L₀ (P₀ M) = M := by
     intro M hM
     have hmem : rlM n M ∈ m := Submodule.mem_map_of_mem (p := subC ε S) hM
     show urM n (L0' (L0'.symm (m.orthogonalProjection (rlM n M))) : EuclideanSpace ℝ (Fin n × Fin n × Bool)) = M
     rw [LinearIsometryEquiv.apply_symm_apply,
-      Submodule.orthogonalProjection_mem_subspace_eq_self (⟨rlM n M, hmem⟩ : m)]
+      Submodule.orthogonalProjectionOnto_mem_subspace_eq_self (⟨rlM n M, hmem⟩ : m)]
     exact ur_rl M
   have h3 : ∀ z, InCompl ε S (L₀ z) := by
     intro z
@@ -328,13 +328,13 @@ theorem placeChartV_of (hE : ExpProdU) : PlaceChartV := by
   have h5 : ∀ z, P₁ (L₁ z) = z := by
     intro z
     show L1'.symm (h.orthogonalProjection (rlM n (urM n (L1' z : EuclideanSpace ℝ (Fin n × Fin n × Bool))))) = z
-    rw [rl_ur, Submodule.orthogonalProjection_mem_subspace_eq_self, LinearIsometryEquiv.symm_apply_apply]
+    rw [rl_ur, Submodule.orthogonalProjectionOnto_mem_subspace_eq_self, LinearIsometryEquiv.symm_apply_apply]
   have h6 : ∀ M, InBlock ε S M → L₁ (P₁ M) = M := by
     intro M hM
     have hmem : rlM n M ∈ h := Submodule.mem_map_of_mem (p := subB ε S) hM
     show urM n (L1' (L1'.symm (h.orthogonalProjection (rlM n M))) : EuclideanSpace ℝ (Fin n × Fin n × Bool)) = M
     rw [LinearIsometryEquiv.apply_symm_apply,
-      Submodule.orthogonalProjection_mem_subspace_eq_self (⟨rlM n M, hmem⟩ : h)]
+      Submodule.orthogonalProjectionOnto_mem_subspace_eq_self (⟨rlM n M, hmem⟩ : h)]
     exact ur_rl M
   have h7 : ∀ z, InBlock ε S (L₁ z) := by
     intro z

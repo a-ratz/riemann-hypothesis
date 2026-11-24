@@ -206,8 +206,8 @@ theorem relIndex_ne_zero (Λ : Submodule O V) (hΛ : Λ.FG) {c : E} (hc : c ∈ 
     (hfin : Finite (O ⧸ Ideal.span {(⟨c, hc⟩ : O)})) :
     (congSub Λ c).relIndex (MulAction.stabilizer (V ≃ₗ[E] V) Λ) ≠ 0 := by
   set I : Ideal O := Ideal.span {(⟨c, hc⟩ : O)} with hI
-  haveI : Module.Finite O Λ := Module.Finite.iff_fg.2 hΛ
-  haveI : Finite (Λ ⧸ (I • ⊤ : Submodule O Λ)) :=
+  have : Module.Finite O Λ := Module.Finite.iff_fg.2 hΛ
+  have : Finite (Λ ⧸ (I • ⊤ : Submodule O Λ)) :=
     Submodule.finite_quotient_smul I (Module.Finite.fg_top)
   have hQ : ∀ x y : Λ, (Submodule.Quotient.mk x : Λ ⧸ (I • ⊤ : Submodule O Λ)) = Submodule.Quotient.mk y →
       ∃ w ∈ Λ, (x : V) - y = c • w := by
@@ -298,8 +298,8 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchim
 
 theorem exists_pow_mul_mem (L : LocE F E) (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) (e : E) :
     ∃ a : ℕ, algebraMap F E ϖ ^ a * e ∈ L.O := by
-  haveI := L.free
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
+  have := L.free
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
   obtain ⟨y, hy, hi⟩ := ((IsFractionRing.isAlgebraic_iff 𝒪[F] F E).2
     (Algebra.IsAlgebraic.isAlgebraic e)).exists_integral_multiple
   obtain ⟨a, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hy hϖ

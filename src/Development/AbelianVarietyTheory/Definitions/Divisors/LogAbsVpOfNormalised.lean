@@ -201,9 +201,9 @@ variable {v} in
 theorem _root_.GlobalTheory.HTLat.fg_inf (hv : v.Integers O) {La : Submodule O U} (hfg : La.FG)
     (F : Submodule C U) : (La ⊓ F.restrictScalars O).FG := by
   have hinj : Function.Injective (algebraMap O C) := hv.hom_inj
-  haveI : IsDomain O := Function.Injective.isDomain (algebraMap O C) hinj
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
-  haveI : Module.Finite O La := Module.Finite.iff_fg.mpr hfg
+  have : IsDomain O := Function.Injective.isDomain (algebraMap O C) hinj
+  have : ValuationRing O := ValuationRing.of_integers v hv
+  have : Module.Finite O La := Module.Finite.iff_fg.mpr hfg
   have key : ∀ (o : O) (u : U), o ≠ 0 → o • u ∈ F → u ∈ F := by
     intro o u ho hu
     have h0 : algebraMap O C o ≠ 0 := by
@@ -225,10 +225,10 @@ theorem _root_.GlobalTheory.HTLat.fg_inf (hv : v.Integers O) {La : Submodule O U
     rw [Submodule.mem_bot]
     ext
     simpa using hu
-  haveI : Module.Flat O (LinearMap.range g) :=
+  have : Module.Flat O (LinearMap.range g) :=
     (Module.Flat.flat_iff_torsion_eq_bot_of_isBezout).2 htf
-  haveI : Module.Free O (LinearMap.range g) := Module.free_of_flat_of_isLocalRing
-  haveI : Module.FinitePresentation O (LinearMap.range g) :=
+  have : Module.Free O (LinearMap.range g) := Module.free_of_flat_of_isLocalRing
+  have : Module.FinitePresentation O (LinearMap.range g) :=
     Module.finitePresentation_of_projective _ _
   have hker := Module.FinitePresentation.fg_ker g.rangeRestrict
     (LinearMap.surjective_rangeRestrict g)

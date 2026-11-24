@@ -60,15 +60,15 @@ theorem valC_finiteDimensional {E K ι : Type} [Field E] [Field K] [CharZero K] 
     refine Submodule.sum_mem _ fun i _ => ?_
     rw [LinearMap.map_smulₛₗ]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  haveI := FiniteDimensional.span_of_finite ℂ
+  have := FiniteDimensional.span_of_finite ℂ
     (Set.finite_range fun i => evV emb (1 : Matrix (Fin n) (Fin n) E) lam σ (bVV K lam i))
   exact Submodule.finiteDimensional_of_le h2
 
 theorem GStep.fi_finiteDimensional {E K ι : Type} [Field E] [NumberField E] [StarRing E] [Field K] [NumberField K]
     [StarRing K] [Fintype ι] {n : ℕ} (S : GStep E K n) (emb : ι → E →+* K) (σ : K →+* ℂ) (lam : ι → DomWeight n)
     (_hF : FOk emb σ) (hS : S.Ok) : FiniteDimensional ℂ (S.Fi emb σ lam) := by
-  haveI := hS.fin_orb
-  haveI := valC_finiteDimensional emb σ lam
+  have := hS.fin_orb
+  have := valC_finiteDimensional emb σ lam
   let f : S.Fi emb σ lam →ₗ[ℂ] (S.Cl → ValC (Gr emb σ n) lam) :=
     { toFun := fun φ c => ⟨φ.1 c, (φ.2 c).1⟩
       map_add' := fun _ _ => rfl

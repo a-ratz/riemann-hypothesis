@@ -76,8 +76,8 @@ theorem UpperTheory.V.Alg.univ_cond :
     have h1mem : (1 : R) ∈ J := htop ▸ Submodule.mem_top
     have := hJf 1 h1mem
     simp at this
-  haveI : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJ
-  haveI hco : IsCO O (R ⧸ J) := co_quot O R (R ⧸ J) (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
+  have : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJ
+  have hco : IsCO O (R ⧸ J) := co_quot O R (R ⧸ J) (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
   have hpI : ∀ x ∈ I, Ideal.Quotient.mkₐ O J x = 0 := by
     intro x hx
     rw [Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem]

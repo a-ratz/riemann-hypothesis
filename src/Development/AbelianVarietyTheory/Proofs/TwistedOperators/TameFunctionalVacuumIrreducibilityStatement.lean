@@ -123,14 +123,14 @@ namespace GlobalTheory.MatCoefCont
 
 theorem continuous_thPair_heisO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), IsCovolOne (ratL T S) μ 𝓕 → ∀ f f₀ : WO S T → ℂ, IsThetaFunO ψ S T f → IsThetaFunO ψ S T f₀ → Continuous (fun w : WO S T => thPair μ 𝓕 f (heisO ψ S T w f₀)) := by
   intro D ψ hψ S T μ 𝓕 h𝓕 f f₀ hf hf₀
-  haveI hAE : SecondCountableTopology (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.2.2.1
-  haveI hM : SecondCountableTopology (WO S T) :=
+  have hAE : SecondCountableTopology (AE D) := (Formalism.IndefR.Eqv.ae_facts D).2.2.2.1
+  have hM : SecondCountableTopology (WO S T) :=
     inferInstanceAs (SecondCountableTopology (Fin T.rank → Fin S.rank → AE D))
-  haveI : FirstCountableTopology (WO S T) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : FirstCountableTopology (WO S T) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨C, hC⟩ := (GlobalTheory.ThetaSquare.squareIntegrable hψ f hf).2.1
   obtain ⟨C₀, hC₀⟩ := (GlobalTheory.ThetaSquare.squareIntegrable hψ f₀ hf₀).2.1
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) :=
+  have : IsFiniteMeasure (μ.restrict 𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, h𝓕.2.2]; exact ENNReal.one_lt_top⟩
   have hsc := (GlobalTheory.OrientedFormLaws.symplOH_laws D S T).2.2.2.2.1
   have hF : Continuous (fun p : WO S T × WO S T =>
@@ -216,7 +216,7 @@ theorem rat_eq_zero_of_fin {x : WO S T} (hx : x ∈ ratL T S) (h0 : ∀ i j, fin
   obtain ⟨m, rfl⟩ := hx
   ext i j
   have h : (1 : Af D.host.F) ⊗ₜ[D.host.F] m i j = 0 := h0 i j
-  haveI : Nontrivial (FiniteAdeleRing (𝓞 D.host.F) D.host.F) := by
+  have : Nontrivial (FiniteAdeleRing (𝓞 D.host.F) D.host.F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 D.host.F)
     let v : HeightOneSpectrum (𝓞 D.host.F) :=
       ⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField D.host.F)⟩
@@ -267,10 +267,10 @@ open GlobalTheory.ThetaAllChar in
 theorem sum_coef_mul_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), IsCovolOne (ratL T S) μ 𝓕 → ∀ f f₀ : WO S T → ℂ, IsThetaFunO ψ S T f → IsThetaFunO ψ S T f₀ → ∀ w x : WO S T, Summable (fun γ : ratL T S => ‖thPair μ 𝓕 f (heisO ψ S T ((γ : WO S T) + w) f₀)‖) → ∑' γ : ratL T S, thPair μ 𝓕 f (heisO ψ S T ((γ : WO S T) + w) f₀) * heisO ψ S T ((γ : WO S T) + w) f₀ x = f x * star (heisO ψ S T w f₀ x) * heisO ψ S T w f₀ x := by
   intro D ψ hψ S T μ 𝓕 hc f f₀ hf hf₀ w x hs
   obtain ⟨hμ, h𝓕, h1⟩ := hc
-  haveI := hμ
+  have := hμ
   obtain ⟨iG1, iG2, iG3, iG4, iG5, K, hK, hcov⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hn : ∀ a, ‖ψ a‖ = 1 := hψ.1.2.1
   obtain ⟨lc, lx, la, l0, ln, lker⟩ := chiR_laws (S := S) (T := T) hψ.1
   set g := heisO ψ S T w f₀ with hgdef
@@ -382,18 +382,18 @@ theorem integrable_of_tsum_translate_norm_le
     (h𝓕 : IsAddFundamentalDomain Γ 𝓕 μ) (h𝓕μ : μ 𝓕 < ⊤) (c : G → ℂ) (hc : Continuous c)
     (C : ℝ) (hC : ∀ w : G, Summable (fun γ : Γ => ‖c ((γ : G) + w)‖) ∧
       ∑' γ : Γ, ‖c ((γ : G) + w)‖ ≤ C) : Integrable c μ := by
-  haveI : VAddInvariantMeasure Γ G μ := ⟨fun g s _ => measure_preimage_add μ (g : G) s⟩
+  have : VAddInvariantMeasure Γ G μ := ⟨fun g s _ => measure_preimage_add μ (g : G) s⟩
   refine ⟨hc.aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
+  rw [hasFiniteIntegral_iff_eNorm]
   rw [h𝓕.lintegral_eq_tsum'' (fun x => ‖c x‖ₑ)]
   rw [← lintegral_tsum (f := fun (γ : Γ) x => ‖c (γ +ᵥ x)‖ₑ) fun γ : Γ =>
-    ((hc.comp (continuous_const_vadd (γ : G))).measurable.enorm).aemeasurable]
+    ((hc.comp (continuous_const_vadd (γ : G))).measurable.eNorm).aemeasurable]
   have hpt : ∀ x, ∑' γ : Γ, ‖c (γ +ᵥ x)‖ₑ ≤ ENNReal.ofReal C := by
     intro x
     have h1 : ∑' γ : Γ, ‖c (γ +ᵥ x)‖ₑ = ENNReal.ofReal (∑' γ : Γ, ‖c ((γ : G) + x)‖) := by
       rw [ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) (hC x).1]
       refine tsum_congr fun γ => ?_
-      rw [ofReal_norm_eq_enorm]
+      rw [ofReal_norm]
       rfl
     rw [h1]
     exact ENNReal.ofReal_le_ofReal (hC x).2
@@ -706,7 +706,7 @@ theorem GlobalTheory.LatticeTranslateSum.sum_translates_bounded : ∀ (D : D7) (
         exact Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => norm_nonneg _
       have hp : 0 < (1 + GlobalTheory.Unf.realSize θ x) ^ N := by positivity
       unfold GlobalTheory.Unf.maj
-      rw [if_pos (hbox x hx), ← div_eq_mul_inv, le_div_iff₀ hp, mul_comm]
+      rw [ite_eq_left (hbox x hx), ← div_eq_mul_inv, le_div_iff₀ hp, mul_comm]
       exact (hC x).trans (le_max_left _ _)
   have hinj : Function.Injective (incA D) := GlobalTheory.MixModel.incA_injective
   let e0 : Matrix (Fin T.rank) (Fin S.rank) D.host.E → ratL T S := fun ξ => ⟨rat ξ, ⟨ξ, rfl⟩⟩
@@ -1040,14 +1040,14 @@ theorem orthogonality : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar
   have hv : IsCovolOne (ratL T S) v.μ v.𝓕 := v.covol
   obtain ⟨hμ, h𝓕, h1⟩ := hv
   obtain ⟨i1, i2, i3, i4, i5, -, -, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : IsTopologicalAddGroup (WO S T) := i1
-  haveI : LocallyCompactSpace (WO S T) := i2
-  haveI : SecondCountableTopology (WO S T) := i3
-  haveI : T2Space (WO S T) := i4
-  haveI : DiscreteTopology (ratL T S) := i5
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := hμ
+  have : IsTopologicalAddGroup (WO S T) := i1
+  have : LocallyCompactSpace (WO S T) := i2
+  have : SecondCountableTopology (WO S T) := i3
+  have : T2Space (WO S T) := i4
+  have : DiscreteTopology (ratL T S) := i5
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := hμ
   obtain ⟨θ, hθ⟩ := hψ.2.1
   obtain ⟨-, -, -, -, hcont, -⟩ := GlobalTheory.OrientedFormLaws.symplOH_laws D S T
   have hcc := GlobalTheory.T.continuous_thetaMatrixCoeff_heisenbergTranslate D ψ hψ S T v.μ v.𝓕 v.covol f f₀ hf hf₀
@@ -1132,12 +1132,12 @@ theorem thPair_self_ne_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D 
     (v : VolM D T.rank S.rank) {f₀ : WO S T → ℂ} (hf : IsThetaFunO ψ S T f₀) (hne : f₀ ≠ 0) :
     thPair v.μ v.𝓕 f₀ f₀ ≠ 0 := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D T.rank S.rank
-  haveI : BorelSpace (Mx D T.rank S.rank) := ⟨rfl⟩
-  haveI : DiscreteTopology (ratMx D T.rank S.rank) := i5
-  haveI : Countable (ratMx D T.rank S.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D T.rank S.rank) := ⟨rfl⟩
+  have : DiscreteTopology (ratMx D T.rank S.rank) := i5
+  have : Countable (ratMx D T.rank S.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨hμ, hF, h1⟩ := v.covol
-  haveI := hμ
-  haveI : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
+  have := hμ
+  have : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
   obtain ⟨C, hC⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ hf
   have e : ∀ w, f₀ w * star (f₀ w) = ((‖f₀ w‖ ^ 2 : ℝ) : ℂ) := fun w => by
@@ -1157,7 +1157,7 @@ theorem thPair_self_ne_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D 
     exact_mod_cast h0
   have h3 : ∫⁻ w in v.𝓕, ‖f₀ w‖ₑ ^ 2 ∂v.μ = 0 := by
     have en : ∀ z : ℂ, ‖z‖ₑ ^ 2 = ENNReal.ofReal (‖z‖ ^ 2) := fun z => by
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     simp_rw [en]
     rw [← ofReal_integral_eq_lintegral_ofReal hint (Filter.Eventually.of_forall fun w => by positivity), h2,
       ENNReal.ofReal_zero]
@@ -1168,9 +1168,9 @@ theorem irr : ∀ D : D7, Irr D := by
   intro D ψ hψ S T Γ ℓ hℓ f₀ hf₀ hne hann f hf
   obtain ⟨v⟩ := (GlobalTheory.Unf.VolExist.measures_exist D).2.2.1 T.rank S.rank
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D T.rank S.rank
-  haveI : BorelSpace (Mx D T.rank S.rank) := ⟨rfl⟩
-  haveI := v.covol.1
-  haveI : SFinite v.μ := inferInstance
+  have : BorelSpace (Mx D T.rank S.rank) := ⟨rfl⟩
+  have := v.covol.1
+  have : SFinite v.μ := inferInstance
   obtain ⟨hint, hmoy⟩ := GlobalTheory.T.moyal_orthogonality_heisenberg_thetaFunctions D ψ hψ S T v f f₀ hf.1 hf₀.1
   have heq : (fun x => ∫ w, thPair v.μ v.𝓕 f (heisO ψ S T w f₀) * heisO ψ S T w f₀ x ∂v.μ) =
       thPair v.μ v.𝓕 f₀ f₀ • f := funext fun x => by rw [hmoy x]; rfl

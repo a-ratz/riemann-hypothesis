@@ -161,7 +161,7 @@ theorem exp_rat_mem (q : ℚ) : Complex.exp ((Real.pi : ℂ) * Complex.I * (q : 
   rw [mem_algebraicClosure_iff]
   refine IsAlgebraic.of_pow (n := 2 * q.den) (by have := q.den_pos; omega) ?_
   have : Complex.exp ((Real.pi : ℂ) * Complex.I * (q : ℂ)) ^ (2 * q.den) = 1 := by
-    rw [← Complex.exp_nat_mul, ← Complex.exp_int_mul_two_pi_mul_I q.num]
+    rw [← Complex.exp_natCast_mul, ← Complex.exp_int_mul_two_pi_mul_I q.num]
     congr 1
     have : (q.num : ℂ) = q * q.den := by exact_mod_cast (Rat.mul_den_eq_num q).symm
     rw [this]; push_cast; ring
@@ -171,7 +171,7 @@ theorem sqrt_nat_mem (n : ℕ) : ((Real.sqrt (n : ℝ) : ℝ) : ℂ) ∈ Qbar :=
   rw [mem_algebraicClosure_iff]
   refine IsAlgebraic.of_pow (n := 2) (by norm_num) ?_
   rw [← Complex.ofReal_pow, Real.sq_sqrt (Nat.cast_nonneg n)]
-  simpa using isAlgebraic_nat (R := ℚ) (A := ℂ) n
+  simpa using isAlgebraic_natCast (R := ℚ) (A := ℂ) n
 
 theorem hom_mem {E : Type} [Field E] [NumberField E] (σ : E →+* ℂ) (x : E) : σ x ∈ Qbar := by
   rw [mem_algebraicClosure_iff]
@@ -571,8 +571,8 @@ theorem Good.iop (hG : admG1 D) (hC : Crv D cc δ) (hb : OnB D b) {G : VC D N N'
       funext z; simp [Iop, hi]
     rw [e]
     exact h.const_mul (zero_mem _)
-  · haveI : Finite (A₂ ⧸ A₁.addSubgroupOf A₂) := Nat.finite_of_card_ne_zero hi
-    haveI := Fintype.ofFinite (A₂ ⧸ A₁.addSubgroupOf A₂)
+  · have : Finite (A₂ ⧸ A₁.addSubgroupOf A₂) := Nat.finite_of_card_ne_zero hi
+    have := Fintype.ofFinite (A₂ ⧸ A₁.addSubgroupOf A₂)
     unfold Iop
     simp only [finsum_eq_sum_of_fintype]
     refine Good.const_mul (Good.sum _ _ fun q _ => ?_) (inv_mem (sqrt_nat_mem _))

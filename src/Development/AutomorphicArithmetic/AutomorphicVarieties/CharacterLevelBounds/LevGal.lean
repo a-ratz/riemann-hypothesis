@@ -53,10 +53,10 @@ theorem UpperTheory.V.Chr.levGal :
           ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] [Algebra E Ω], galOf ℚ E Ω = levH ℚ Ω H ∧ (levH ℚ Ω H).index = H.index ∧ IsOpen (levH ℚ Ω H : Set (G ℚ Ω)) := by
   intro E _ _ N _ H hlev
   obtain ⟨j, ζ, hζ, hj⟩ := hlev
-  haveI : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
+  have : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
     CyclotomicField.isCyclotomicExtension N ℚ
-  haveI : IsAbelianGalois ℚ (CyclotomicField N ℚ) :=
+  have : IsAbelianGalois ℚ (CyclotomicField N ℚ) :=
     IsCyclotomicExtension.isAbelianGalois {N} ℚ (CyclotomicField N ℚ)
   have hfs : KStar.TotallyRealRoots.fieldSubgroup N (CyclotomicField N ℚ) j.fieldRange = H := by
     ext u
@@ -83,8 +83,8 @@ theorem UpperTheory.V.Chr.levGal :
     exact (Subgroup.index_map_of_bijective (MulEquiv.bijective _) _).symm
   refine ⟨IsAbelianGalois.of_algHom j, hfin, ?_⟩
   intro Ω _ _ _ _
-  haveI : IsScalarTower ℚ E Ω := inferInstance
-  haveI : IsAlgClosure E Ω :=
+  have : IsScalarTower ℚ E Ω := inferInstance
+  have : IsAlgClosure E Ω :=
     ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) E⟩
   have heq : galOf ℚ E Ω = levH ℚ Ω H := by
     ext σ

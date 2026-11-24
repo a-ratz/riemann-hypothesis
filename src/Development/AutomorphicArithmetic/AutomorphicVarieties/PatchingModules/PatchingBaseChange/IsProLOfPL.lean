@@ -59,7 +59,7 @@ private theorem isProL_of_PL (l : ℕ) (Γ : Type) [Group Γ] [TopologicalSpace 
   rw [isProL_iff]
   intro N g
   set NΓ : Set Γ := Subtype.val '' ((N.toOpenSubgroup : Subgroup H) : Set H) with hNΓ
-  have hNo : IsOpen NΓ := hH.isOpenMap_subtype_val _ N.toOpenSubgroup.isOpen
+  have hNo : IsOpen NΓ := hH.isOpenMap_subtypeVal _ N.toOpenSubgroup.isOpen
   have hKc : IsCompact NΓᶜ := hNo.isClosed_compl.isCompact
   let ι := {U : OpenNormalSubgroup Γ // ∀ x ∈ H, ∃ e, x ^ l ^ e ∈ U}
   let t : ι → Set Γ := fun U => ((U.1.toOpenSubgroup : Subgroup Γ) : Set Γ)
@@ -105,7 +105,7 @@ private theorem fg_of_open (Γ : Type) [Group Γ] [TopologicalSpace Γ] [IsTopol
     (H : Subgroup Γ) (hH : IsOpen (H : Set Γ)) (s : Set H) (hs : s.Finite) (h : TopGen s) :
     ∃ s : Finset Γ, (Subgroup.closure (s : Set Γ)).topologicalClosure = ⊤ := by
   classical
-  haveI : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+  have : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
   have hS : ((Subtype.val '' s) ∪ Set.range (Quotient.out : Γ ⧸ H → Γ)).Finite :=
     (hs.image _).union (Set.finite_range _)
   refine ⟨hS.toFinset, ?_⟩
@@ -122,7 +122,7 @@ private theorem fg_of_open (Γ : Type) [Group Γ] [TopologicalSpace Γ] [IsTopol
   have hHK : ∀ y ∈ H, y ∈ K := by
     intro y hy
     have hd : Dense ((Subgroup.closure s : Subgroup H) : Set H) := h
-    have h1 := image_closure_subset_closure_image (f := (Subtype.val : H → Γ)) continuous_subtype_val
+    have h1 := image_closure_subset_closure_image (f := (Subtype.val : H → Γ)) continuous_subtypeVal
       ⟨⟨y, hy⟩, hd ⟨y, hy⟩, rfl⟩
     exact closure_minimal himg hKc h1
   rw [eq_top_iff]
@@ -143,7 +143,7 @@ theorem UpperTheory.V.Pa.BC.phi0 :
   set HΓ : Subgroup G0.Γ := (T.H.toOpenSubgroup : Subgroup G0.Γ) with hHΓ
   have hHΓo : IsOpen (HΓ : Set G0.Γ) := T.H.toOpenSubgroup.isOpen
   have hHΓc : IsClosed (HΓ : Set G0.Γ) := T.H.toOpenSubgroup.isClosed
-  haveI : CompactSpace HΓ := isCompact_iff_compactSpace.mp hHΓc.isCompact
+  have : CompactSpace HΓ := isCompact_iff_compactSpace.mp hHΓc.isCompact
   have hpro : UpperTheory.V.AlgebraTools.IsProL l HΓ := isProL_of_PL l G0.Γ HΓ hHΓo hT.1
   have hfin : {f : HΓ →* Multiplicative (ZMod l) | IsOpen (f.ker : Set HΓ)}.Finite :=
     Set.finite_coe_iff.mp T.fin0

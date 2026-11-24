@@ -102,18 +102,18 @@ theorem exists_period_matrix_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrim
     { carrier := {c | ∀ g : ↥(GK K), M g *ᵥ (fun i => P.actQdR (g : GQ l) (c i)) = c}
       add_mem' := by
         intro x y hx hy g
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         have : (fun i => P.actQdR (g : GQ l) ((x + y) i)) =
             (fun i => P.actQdR (g : GQ l) (x i)) + (fun i => P.actQdR (g : GQ l) (y i)) := by
           funext i; simp
         rw [this, Matrix.mulVec_add, hx g, hy g]
       zero_mem' := by
         intro g
-        simp only [Set.mem_setOf_eq, Pi.zero_apply, map_zero]
+        simp only [Set.mem_ofPred_eq, Pi.zero_apply, map_zero]
         exact Matrix.mulVec_zero _
       smul_mem' := by
         intro k x hx g
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         have : (fun i => P.actQdR (g : GQ l) ((k • x) i)) = k • (fun i => P.actQdR (g : GQ l) (x i)) := by
           funext i; simp only [Pi.smul_apply, Algebra.smul_def, hKact]
         rw [this, Matrix.mulVec_smul, hx g] }
@@ -155,13 +155,13 @@ theorem exists_period_matrix_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrim
     exact h1
 
   rcases Nat.eq_zero_or_pos (Fintype.card n) with hn | hn
-  · haveI : IsEmpty n := Fintype.card_eq_zero_iff.mp hn
+  · have : IsEmpty n := Fintype.card_eq_zero_iff.mp hn
     refine ⟨1, fun g => ?_⟩
     ext i; exact isEmptyElim i
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have hKpos : 0 < Module.finrank ℚ_[l] ↥K.1 := Module.finrank_pos
-  haveI : Module.Finite ℚ_[l] ↥D := Module.finite_of_finrank_pos (by rw [hfr]; positivity)
-  haveI : Module.Finite ↥K.1 ↥D := Module.Finite.of_restrictScalars_finite ℚ_[l] ↥K.1 ↥D
+  have : Module.Finite ℚ_[l] ↥D := Module.finite_of_finrank_pos (by rw [hfr]; positivity)
+  have : Module.Finite ↥K.1 ↥D := Module.Finite.of_restrictScalars_finite ℚ_[l] ↥K.1 ↥D
   have hrank : Module.finrank ↥K.1 ↥D = Fintype.card n := by
     have := Module.finrank_mul_finrank ℚ_[l] ↥K.1 ↥D
     rw [hfr] at this
@@ -175,7 +175,7 @@ theorem exists_period_matrix_of_isDR : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrim
     have h := congrFun ((hmemD _).1 (bK j).2 g) i
     simpa [Q0, Matrix.mul_apply, Matrix.mulVec, dotProduct] using h
   have hdet : IsUnit Q0.det := by
-    letI : Field P.R.BdR := (_root_.GlobalTheory.PMon.bdR_tied l P AI T).1.toField
+    let : Field P.R.BdR := (_root_.GlobalTheory.PMon.bdR_tied l P AI T).1.toField
     refine isUnit_iff_ne_zero.mpr fun h0 => ?_
     obtain ⟨v, hv0, hQv⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr h0
     let S : Set (P.R.BdR →+* P.R.BdR) :=

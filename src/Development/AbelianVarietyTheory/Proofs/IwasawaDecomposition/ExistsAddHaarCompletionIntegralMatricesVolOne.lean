@@ -79,17 +79,17 @@ theorem exists_haar_intMat : ∀ (L : Type) [Field L] [NumberField L] (P : Heigh
     ∃ ν : Measure (Matrix (Fin n) (Fin m) (P.adicCompletion L)),
       ν.IsAddLeftInvariant ∧ SFinite ν ∧ ν (intMat (OP P) n m) = 1 := by
   intro L _ _ P n m
-  letI : MeasurableSpace (P.adicCompletion L) := borel _
-  haveI : BorelSpace (P.adicCompletion L) := ⟨rfl⟩
-  haveI : BorelSpace (Matrix (Fin n) (Fin m) (P.adicCompletion L)) :=
+  let : MeasurableSpace (P.adicCompletion L) := borel _
+  have : BorelSpace (P.adicCompletion L) := ⟨rfl⟩
+  have : BorelSpace (Matrix (Fin n) (Fin m) (P.adicCompletion L)) :=
     inferInstanceAs (BorelSpace (Fin n → Fin m → P.adicCompletion L))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin m) (P.adicCompletion L)) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin m) (P.adicCompletion L)) :=
     (isCompact_intMat P n m).locallyCompactSpace_of_mem_nhds_of_addGroup
       ((isOpen_intMat P n m).mem_nhds fun i j => (OP P).zero_mem)
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin m) (P.adicCompletion L)) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin m) (P.adicCompletion L)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin m → P.adicCompletion L))
-  haveI : SigmaCompactSpace (Matrix (Fin n) (Fin m) (P.adicCompletion L)) := inferInstance
-  haveI : SigmaFinite (Measure.addHaarMeasure (intMatK P n m)) := inferInstance
+  have : SigmaCompactSpace (Matrix (Fin n) (Fin m) (P.adicCompletion L)) := inferInstance
+  have : SigmaFinite (Measure.addHaarMeasure (intMatK P n m)) := inferInstance
   refine ⟨Measure.addHaarMeasure (intMatK P n m), inferInstance, inferInstance,
     Measure.addHaarMeasure_self⟩
 

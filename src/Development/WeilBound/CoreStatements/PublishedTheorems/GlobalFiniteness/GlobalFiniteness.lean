@@ -162,12 +162,12 @@ theorem index_cocycleKer [Finite V] (hf : ∀ g h : G, f (g * h) = f g + ρ g (f
     (cocycleKer ρ f hf).index ≠ 0 ∧
       (cocycleKer ρ f hf).index ≤ Nat.card (V × (V → V)) := by
   have hinj := injective_out_cocycleKer hf
-  haveI : Finite (G ⧸ cocycleKer ρ f hf) := Finite.of_injective _ hinj
+  have : Finite (G ⧸ cocycleKer ρ f hf) := Finite.of_injective _ hinj
   exact ⟨Subgroup.index_ne_zero_of_finite, Nat.card_le_card_of_injective _ hinj⟩
 
 theorem finite_right_invariant [Finite V] (H : Subgroup G) (hH : H.index ≠ 0) :
     {f : G → V | ∀ g, ∀ c ∈ H, f (g * c) = f g}.Finite := by
-  haveI : Finite (G ⧸ H) := Nat.finite_of_card_ne_zero hH
+  have : Finite (G ⧸ H) := Nat.finite_of_card_ne_zero hH
   refine (Set.finite_range (fun φ : G ⧸ H → V => φ ∘ (QuotientGroup.mk : G → G ⧸ H))).subset ?_
   intro f₀ hf₀
   simp only [Set.mem_ofPred_eq] at hf₀
@@ -290,7 +290,7 @@ theorem finite_cohomology_one_of_finite_cocycles :
         {f : G → A.V | IsLocallyConstant f ∧ ∀ g h : G, f (g * h) = f g + A.ρ g (f h)} :=
     fun z => ⟨oneCochainFun_isLocallyConstant A _, oneCochainFun_cocycle A _ (hd z)⟩
   have hFin : Finite ((cochainsComplex A).cycles 1) := by
-    haveI := hfin.to_subtype
+    have := hfin.to_subtype
     exact Finite.of_injective (fun z => (⟨_, hS z⟩ :
         {f : G → A.V | IsLocallyConstant f ∧ ∀ g h : G, f (g * h) = f g + A.ρ g (f h)}))
       (fun z₁ z₂ hz => hinj (oneCochainFun_injective A (congrArg Subtype.val hz)))
@@ -321,7 +321,7 @@ theorem openSubgroups_finite_of_fields_finite :
       ∀ N : ℕ, {H : Subgroup (galUnramifiedOutside F Ω S) |
         IsOpen (H : Set (galUnramifiedOutside F Ω S)) ∧ H.index ≠ 0 ∧ H.index ≤ N}.Finite := by
   intro F Ω _ _ _ _ _ S hfin N
-  haveI : IsGalois F Ω := IsSepClosure.isGalois
+  have : IsGalois F Ω := IsSepClosure.isGalois
   let K := maxUnramifiedOutside F Ω S
   let φ : Subgroup (galUnramifiedOutside F Ω S) → IntermediateField F Ω :=
     fun H => IntermediateField.lift (F := K) (IntermediateField.fixedField (H : Subgroup Gal(K/F)))
@@ -336,7 +336,7 @@ theorem openSubgroups_finite_of_fields_finite :
       (InfiniteGalois.isOpen_iff_finite _).1 (by rw [hfix]; exact hHo)
     let e : (IntermediateField.fixedField (H : Subgroup Gal(K/F))) ≃ₐ[F] (φ H) :=
       IntermediateField.equivMap _ (IntermediateField.val K)
-    haveI : FiniteDimensional F (φ H) := LinearEquiv.finiteDimensional e.toLinearEquiv
+    have : FiniteDimensional F (φ H) := LinearEquiv.finiteDimensional e.toLinearEquiv
     refine ⟨inferInstance, (isUnramifiedOutside_iff_le_maxUnramifiedOutside S).2
       (IntermediateField.lift_le _), ?_⟩
     rw [← e.toLinearEquiv.finrank_eq, IntermediateField.finrank_eq_fixingSubgroup_index, hfix]
@@ -635,7 +635,7 @@ theorem prime_pow_dvd_span_of_dvd_differentIdeal (E : Type) [Field E] [NumberFie
   · simp
   have hPD : P ∣ differentIdeal ℤ (𝓞 E) := (dvd_pow_self P hipos.ne').trans hi
   have hP0 : P ≠ ⊥ := hPp.ne_zero
-  haveI hPprime : P.IsPrime := Ideal.isPrime_of_prime hPp
+  have hPprime : P.IsPrime := Ideal.isPrime_of_prime hPp
   obtain ⟨p, hp, hpt, hpP⟩ := exists_prime_mem_of_natCast_mem P t ht (h P hPprime hP0 hPD)
   have hp0 : ((p : 𝓞 E)) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
   have hS0 : Ideal.span {((p : 𝓞 E)) ^ (Module.finrank ℚ E)} ≠ 0 := by
@@ -643,7 +643,7 @@ theorem prime_pow_dvd_span_of_dvd_differentIdeal (E : Type) [Field E] [NumberFie
     have := Ideal.span_singleton_eq_bot.1 h0
     exact pow_ne_zero _ hp0 this
   obtain ⟨J, hJ, hnd⟩ :=
-    (FiniteMultiplicity.of_not_isUnit hPp.not_unit hS0).exists_eq_pow_mul_and_not_dvd
+    (FiniteMultiplicity.of_not_isUnit hPp.not_isUnit hS0).exists_eq_pow_mul_and_not_dvd
   have hnot := _root_.GlobalTheory.CompanionTheory.Glob.not_pow_dvd_different E P J p _ hp hpP hnd hJ
   have hlt : i < multiplicity P (Ideal.span {((p : 𝓞 E)) ^ (Module.finrank ℚ E)}) := by
     by_contra hle
@@ -755,7 +755,7 @@ theorem natAbs_discr_dvd {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
     (hE : ∀ v ∉ S, Algebra.IsUnramifiedIn (𝓞 E) v.asIdeal) :
     (discr E).natAbs ∣ bound S ^ (Module.finrank ℚ E * Module.finrank ℚ E) := by
   have hdvd := _root_.GlobalTheory.CompanionTheory.Glob.differentIdeal_dvd_span_pow E (bound S) (bound_ne_zero S) fun P hP hP0 hPd => by
-    haveI := hP
+    have := hP
     exact _root_.GlobalTheory.CompanionTheory.GlobalFiniteness.natAbs_discr_mul_prod_absNorm_mem_of_dvd_differentIdeal F E S hE P hP0 hPd
   have h := map_dvd Ideal.absNorm hdvd
   rw [absNorm_differentIdeal E (𝓞 E)] at h
@@ -776,7 +776,7 @@ theorem GlobalTheory.CompanionTheory.HermiteMinkowski.finite_unramified_bounded_
         IsUnramifiedOutside (S : Set (HeightOneSpectrum (𝓞 F))) E ∧
         Module.finrank F E ≤ N}.Finite := by
   intro F Ω _ _ _ _ _ S N
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   set n := Module.finrank ℚ F * N with hn
   set M : ℕ := bound S ^ (n * n) with hM
   have hfin := (NumberField.finite_of_discr_bdd Ω M).image Subtype.val
@@ -784,13 +784,13 @@ theorem GlobalTheory.CompanionTheory.HermiteMinkowski.finite_unramified_bounded_
     IntermediateField.restrictScalars_injective ℚ
   refine (hfin.preimage hinj.injOn).subset ?_
   rintro E ⟨hfd, hun, hdeg⟩
-  haveI := hfd
-  haveI : NumberField E := NumberField.of_module_finite F E
+  have := hfd
+  have : NumberField E := NumberField.of_module_finite F E
   let e : (E.restrictScalars ℚ) ≃ₐ[ℚ] E := (RingEquiv.refl E : E ≃+* E).toRatAlgEquiv
-  haveI hfd' : FiniteDimensional ℚ (E.restrictScalars ℚ) :=
+  have hfd' : FiniteDimensional ℚ (E.restrictScalars ℚ) :=
     e.toLinearEquiv.symm.finiteDimensional
   refine ⟨⟨E.restrictScalars ℚ, hfd'⟩, ?_, rfl⟩
-  haveI : NumberField (E.restrictScalars ℚ) := @NumberField.mk _ _ inferInstance hfd'
+  have : NumberField (E.restrictScalars ℚ) := @NumberField.mk _ _ inferInstance hfd'
   show |discr (E.restrictScalars ℚ)| ≤ (M : ℤ)
   rw [discr_eq_discr_of_algEquiv _ e]
   have hdvd := natAbs_discr_dvd (E := E) S fun v hv => hun v (by simpa using hv)

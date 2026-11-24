@@ -64,7 +64,7 @@ theorem countOut_of : CountOut := by
     intro s
     constructor
     · intro hle
-      haveI : Nontrivial C := Module.nontrivial_of_finrank_eq_succ hC
+      have : Nontrivial C := Module.nontrivial_of_finrank_eq_succ hC
       obtain ⟨c, hc⟩ := exists_ne (0 : C)
       obtain ⟨e, he⟩ := LinearMap.mem_range.1 (hle c.2)
       have h1 : C.mkQ (s.1 e) = e := hsec s.1 s.2 e
@@ -98,7 +98,7 @@ theorem countOut_of : CountOut := by
         apply hnot
         intro y hy
         have hx' : (⟨x, hxC⟩ : C) ≠ 0 := fun h => hx (congrArg Subtype.val h)
-        obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hx').1 hC ⟨y, hy⟩
+        obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hx').1 hC ⟨y, hy⟩
         have : a • x = y := congrArg Subtype.val ha
         rw [← this]
         exact D.smul_mem a hxD
@@ -151,9 +151,9 @@ theorem countOut_of : CountOut := by
       intro e
       simp [G]
   have hcard : Nat.card (E →ₗ[k] C) = Nat.card k ^ Module.finrank k E := by
-    haveI : Fintype k := Fintype.ofFinite k
-    haveI : Finite (E →ₗ[k] C) := Module.finite_of_finite k
-    haveI : Fintype (E →ₗ[k] C) := Fintype.ofFinite _
+    have : Fintype k := Fintype.ofFinite k
+    have : Finite (E →ₗ[k] C) := Module.finite_of_finite k
+    have : Fintype (E →ₗ[k] C) := Fintype.ofFinite _
     rw [Nat.card_eq_fintype_card (α := E →ₗ[k] C), Nat.card_eq_fintype_card (α := k), Module.card_eq_pow_finrank (K := k) (V := E →ₗ[k] C),
       Module.finrank_linearMap k k E C, hC, mul_one]
   rw [← Nat.card_eq_of_bijective F hFb, ← Nat.card_eq_of_bijective G hGb, hcard]

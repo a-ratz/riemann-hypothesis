@@ -88,7 +88,7 @@ namespace GlobalTheory.GSep.GMem
 
 theorem exists_yy : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)), ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (t : X → V) (δ : I → X → X) (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) (mu : X), ∃ a : X₁.S.Gam, 𝔪.YY a mu := by
   intro I X₁ z₁ act V _ _ _ ev X _ t δ 𝔪 mu
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hk : 1 ≤ X₁.S.r * X₁.S.N := by
     obtain ⟨j, -, hj⟩ := X₁.ρ.r_eq
@@ -147,7 +147,7 @@ theorem torusChar_eq_weil_gen : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (
   intro I X₁ z₁ act
   refine ⟨1, ?_⟩
   intro V _ _ _ ev X _ t δ 𝔪 τ χ hχ hpt a mu hY
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hL : LL := GlobalTheory.firstFiveLaws
   have hG : GlobalFnsSt := hL.1.globalFns
@@ -190,7 +190,7 @@ theorem torusChar_eq_weil_gen : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (
     have e := unitOn_injective (GlobalTheory.CommutatorPairing.weilIs_unique hG 𝔪.A.isAb 𝔪.A.isLB W₂ W₃)
     rw [hp'y] at e
     have e' := congrArg Units.val e
-    simp only [hχ₁, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
+    simp only [hχ₁, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
       RingHom.coe_comp, Function.comp_apply, Units.val_pow_eq_pow_val, c₀, IsUnit.unit_spec] at e'
     rw [Units.val_one, one_smul]
     refine (algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V))).injective ?_
@@ -437,8 +437,8 @@ theorem sub_mem_of_sumI {V Ix : Type} [CommRing V] {I : Ideal V} {y : Ix → V} 
 
 theorem const_term_sub_mem : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (x₀ : X₁.S.Gam), X₁.M.Div X₁.S.th x₀ z₁ → ∀ (V1 : Type) [CommRing V1] [IsDomain V1] [IsLocalRing V1] (ev1 : X₁.M.Z.presheaf.stalk z₁ →+* V1) (Y1 : Type) [AddCommGroup Y1] (t1 : Y1 → V1) (δ1 : I → Y1 → Y1) (𝔪1 : GlobalTheory.GSep.GMem X₁ z₁ act V1 ev1 Y1 t1 δ1) (C : Type) (lab : C → X₁.S.Gam), (∀ c, lab c ∈ X₁.S.HH X₁.M z₁) → ∀ T : Y1 → C → V1, 𝔪1.Terms x₀ lab T → ∀ (c : C) (r : X₁.M.Z.presheaf.stalk z₁), X₁.M.stalkHom z₁ r = X₁.S.th (lab c) / X₁.S.th x₀ → ev1 r - T 0 c ∈ maximalIdeal V1 := by
   intro I X₁ z₁ act x₀ hd V _ _ _ ev X _ t δ 𝔪 C lab hlab T hT c r hr
-  haveI : IsNoetherianRing V := 𝔪.cn.1
-  haveI : IsLocalHom ev := 𝔪.loc
+  have : IsNoetherianRing V := 𝔪.cn.1
+  have : IsLocalHom ev := 𝔪.loc
   have hθ : 𝔪.yK ⟨X₁.S.th x₀, X₁.S.th_mem x₀⟩ ≠ 0 := GlobalTheory.GSep.TwistModel.yK_th_ne_zero 𝔪 hd
   have sp : ∀ w, X₁.M.Z.fromSpecStalk z₁ w ⤳ z₁ := fun w => by
     have : X₁.M.Z.fromSpecStalk z₁ w ∈ Set.range (X₁.M.Z.fromSpecStalk z₁) := ⟨w, rfl⟩
@@ -527,8 +527,8 @@ theorem twist_resid : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X�
     · subst h0
       have ha : a ∈ X₁.S.HH X₁.M z₁ := (GlobalTheory.T.mem_dividingLabels_iff_class_zero I X₁ z₁ act x₀ hx₀ V ev Y t δ 𝔪 a).2 h
       have h1 : eStd X₁.S.g _ τ a = 0 := hτ a ha
-      simp only [wt', if_pos rfl, h1, smul_zero]
-    · simp only [wt', if_neg h0]
+      simp only [wt', ite_eq_left rfl, h1, smul_zero]
+    · simp only [wt', ite_eq_right h0]
       exact hwt a mu h
   have hh : X₁.M.stalkHom z₁ (s * u * r) = algebraMap X₁.o₁ X₁.Ω₁ (X₁.S.ζ ^ e) * X₁.S.th (lab c + τ) / X₁.S.th x₀ := by
     rw [map_mul, map_mul, hs, hu, hr]
@@ -636,7 +636,7 @@ theorem pow_eq_of_sub_mem (X₁ : GSet) (z₁ : X₁.M.Z) {s₁ s₂ : X₁.M.Z.
     (h₁ : X₁.M.stalkHom z₁ s₁ = algebraMap X₁.o₁ X₁.Ω₁ (X₁.S.ζ ^ e₁))
     (h₂ : X₁.M.stalkHom z₁ s₂ = algebraMap X₁.o₁ X₁.Ω₁ (X₁.S.ζ ^ e₂))
     (hm : s₁ - s₂ ∈ maximalIdeal (X₁.M.Z.presheaf.stalk z₁)) : X₁.S.ζ ^ e₁ = X₁.S.ζ ^ e₂ := by
-  haveI : IsDomain X₁.o₁ := by haveI := X₁.ar.ded; infer_instance
+  have : IsDomain X₁.o₁ := by have := X₁.ar.ded; infer_instance
   by_contra hne
   obtain ⟨M, hM⟩ : ∃ M, M = (X₁.S.r * X₁.S.N) ^ 2 := ⟨_, rfl⟩
   have hζ : IsPrimitiveRoot X₁.S.ζ M := hM ▸ X₁.S.prim
@@ -768,7 +768,7 @@ theorem twistSum_indep : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : 
   obtain ⟨s₀, hs₀⟩ := stalk_of_base X₁ z₁ (X₁.S.ζ ^ ε₁ (lab₁ c₁) τ)
   have hA := hS₁ zt (s₁ * r) hzt (by rw [map_mul, hs₁, hr, mul_div_assoc]) wt hwt
   have hB := h1 C₁ lab₁ hlab₁ T₁ hT₁ c₁ τ hτ zt (s₀ * r) hzt (by rw [map_mul, hs₀, hr, mul_div_assoc]) wt hwt
-  haveI : IsNoetherianRing V₁ := 𝔪₁.cn.1
+  have : IsNoetherianRing V₁ := 𝔪₁.cn.1
   have hE := GlobalTheory.AdicSum.sumI_unique (IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top).ge hA hB
   rw [map_mul, map_mul] at hE
   have hE' : ev₁ s₁ = ev₁ s₀ := mul_right_cancel₀ hr0 hE

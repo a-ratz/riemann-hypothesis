@@ -69,8 +69,8 @@ theorem Eval.effective_of_cover : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (b
   intro l _ K bk d S B C N _ _ V h f hc
   obtain ⟨D, p, q, hpo⟩ := hc.stable.po C h
   obtain ⟨hinj, hrange⟩ := _root_.GlobalTheory.BSP.cover_injective_and_descent l _ B C h hc
-  haveI := V.fin
-  haveI := V.proj
+  have := V.fin
+  have := V.proj
   have hcomm : p.f.comp h.f = q.f.comp h.f := congrArg Hom.f hpo.comm
   have key := _root_.GlobalTheory.BSP.ProjDescent.descent B.A C.A D.A h.f p.f q.f hcomm hinj (hrange D p q hpo) N (Fin d → C.A) (Fin d → D.A)
     (V.v h f) (matCoordMap p.f 1) (matCoordMap q.f (S.ε (p.comp f) (q.comp f))) (V.v (p.comp h) (p.comp f))

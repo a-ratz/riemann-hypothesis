@@ -73,7 +73,7 @@ def TSet (Ψ : Finset (E →+* ℂ)) (g : Matrix (Fin r) (Fin r) E) : Set (Frame
   {x | ∀ τ : Ψ, ∀ a c : Fin r, c < a → (adjugate (mat x τ) * g.map τ.1 * mat x τ) a c = 0}
 
 theorem isClosed_TSet (Ψ : Finset (E →+* ℂ)) (g : Matrix (Fin r) (Fin r) E) : IsClosed (TSet Ψ g) := by
-  simp only [TSet, Set.setOf_forall]
+  simp only [TSet, Set.ofPred_forall]
   refine isClosed_iInter fun τ => isClosed_iInter fun a => isClosed_iInter fun c =>
     isClosed_iInter fun _ => ?_
   have hm : Continuous fun x : Frame Ψ r => mat x τ :=
@@ -117,9 +117,9 @@ theorem scalar_step {Ψ : Finset (E →+* ℂ)} (τ₀ : Ψ) (g : Matrix (Fin r)
   have hfr : Continuous fr := by
     refine continuous_pi fun τ => continuous_pi fun a => continuous_pi fun c => ?_
     by_cases h : τ = τ₀ ∧ c = i0
-    · simp only [fr, if_pos h]
+    · simp only [fr, ite_eq_left h]
       exact continuous_apply a
-    · simp only [fr, if_neg h]
+    · simp only [fr, ite_eq_right h]
       exact continuous_const
   have hfr0 : fr v₀ = y := by
     funext τ a c
@@ -148,7 +148,7 @@ theorem scalar_step {Ψ : Finset (E →+* ℂ)} (τ₀ : Ψ) (g : Matrix (Fin r)
     have hz0 : ∀ a, a ≠ i0 → z a = 0 := by
       intro a ha
       have h1 := hT τ₀ a i0 (by
-        rw [Fin.lt_iff_val_lt_val]
+        rw [Fin.lt_def]
         exact Nat.pos_of_ne_zero fun h => ha (Fin.ext h))
       have h2 : z a = (X.adjugate * M * X) a i0 := by
         rw [hz, Matrix.mulVec_mulVec]

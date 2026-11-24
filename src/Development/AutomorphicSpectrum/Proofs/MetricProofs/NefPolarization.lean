@@ -98,7 +98,7 @@ theorem PositivityTheory.Xgp.t_contract : ∀ (K : Type) [Fintype K] (ι : K →
   refine ⟨fun V hK hV => ?_, fun P hP => ⟨?_, ?_⟩⟩
   · exact GroundTheory.Heights₂.Heights.HilbertSamuel.NefAmpleGeneric.isArithVar_comap_of_isProjVarF hV
   · exact GroundTheory.Heights₂.Heights.HilbertSamuel.isProjVarF_map_of_isArithVar hP
-  · haveI : P.IsPrime := hP.2.1.1
+  · have : P.IsPrime := hP.2.1.1
     apply ReciprocityTheory.AnForm.R.IntegerToRational.comap_map_eq
     intro m hm
     have h2 : m ∈ Ideal.comap (C : ℤ →+* MRing ι) P := hm

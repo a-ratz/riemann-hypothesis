@@ -65,14 +65,14 @@ theorem ext_of_nil (π : MvPolynomial (Fin n) R →ₐ[R] B) (hπ : π.toRingHom
     {A : Type} [CommRing A] [Algebra R A] (φ₁ φ₂ : B →ₐ[R] A)
     (h : ∀ b, IsNilpotent (φ₁ b - φ₂ b))
     (hs : ∀ j : Fin n, φ₁ (π (MvPolynomial.X j)) = φ₂ (π (MvPolynomial.X j))) : φ₁ = φ₂ := by
-  letI : Algebra (MvPolynomial (Fin n) R) B := π.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin n) R) B := hπ
+  let : Algebra (MvPolynomial (Fin n) R) B := π.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin n) R) B := hπ
   let ρ : MvPolynomial (Fin n) R →ₐ[R] A := φ₁.comp π
   have hρ2 : φ₂.comp π = ρ := by
     apply MvPolynomial.algHom_ext
     intro j
     exact (hs j).symm
-  letI : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
+  let : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
   let ψ₁ : B →ₐ[MvPolynomial (Fin n) R] A :=
     { φ₁.toRingHom with commutes' := fun p => rfl }
   let ψ₂ : B →ₐ[MvPolynomial (Fin n) R] A :=
@@ -99,11 +99,11 @@ theorem exists_of_nil (π : MvPolynomial (Fin n) R →ₐ[R] B) (hπ : π.toRing
     (ha : ∀ j, IsNilpotent (a j)) :
     ∃ φ : B →ₐ[R] A, (∀ b, IsNilpotent (φ b - e b)) ∧
       ∀ j, φ (π (MvPolynomial.X j)) = e (π (MvPolynomial.X j)) + a j := by
-  letI : Algebra (MvPolynomial (Fin n) R) B := π.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin n) R) B := hπ
+  let : Algebra (MvPolynomial (Fin n) R) B := π.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin n) R) B := hπ
   let ρ : MvPolynomial (Fin n) R →ₐ[R] A :=
     MvPolynomial.aeval (fun j => e (π (MvPolynomial.X j)) + a j)
-  letI : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
+  let : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
   let J : Ideal A := Ideal.span (Set.range a)
   have hJ : IsNilpotent J := by
     rw [Ideal.FG.isNilpotent_iff_le_nilradical

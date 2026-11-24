@@ -121,19 +121,19 @@ theorem hasSum_lowSum {L s t : ℝ} (hL : 0 < L) (hs : 0 < s) (ht : 0 < t) :
           fun k : ℕ => m - (k : ℤ)) = fun i : ℕ => (Real.exp L ^ m * t) ^ s * Real.exp (-(s * L)) ^ i := by
         funext k
         simp only [Function.comp_apply]
-        rw [if_pos ((hm _).2 (by omega)), zpow_sub₀ hT0.ne', zpow_natCast]
+        rw [ite_eq_left ((hm _).2 (by omega)), zpow_sub₀ hT0.ne', zpow_natCast]
         have hk : Real.exp L ^ m / Real.exp L ^ k * t = (Real.exp L ^ m * t) * (Real.exp L ^ k)⁻¹ := by
           field_simp
         rw [hk, Real.mul_rpow (by positivity) (by positivity), Real.inv_rpow (by positivity)]
         congr 1
-        rw [← Real.exp_nat_mul, ← Real.exp_mul, ← Real.exp_nat_mul, ← Real.exp_neg]
+        rw [← Real.exp_natCast_mul, ← Real.exp_mul, ← Real.exp_natCast_mul, ← Real.exp_neg]
         congr 1
         ring
       rw [hfun]
       exact this
     · intro n hn
       have hnm : ¬ n ≤ m := fun h => hn ⟨(m - n).toNat, by simp only; omega⟩
-      rw [if_neg (fun h => hnm ((hm n).1 h))]
+      rw [ite_eq_right (fun h => hnm ((hm n).1 h))]
 
 theorem lowSum_bounds {L s u : ℝ} (hL : 0 < L) (hs : 0 < s) (hu : Real.exp (-L) < u) (hu1 : u ≤ 1) :
     Real.exp (-(s * L)) / L ≤ s * (u ^ s * (1 - Real.exp (-(s * L)))⁻¹) ∧
@@ -220,8 +220,8 @@ theorem tendsto_residue (ha : 0 < a) (μ : Measure (GA E a)) [μ.IsHaarMeasure] 
     · rintro ⟨g, hg⟩
       obtain ⟨γ, n, rfl⟩ := mem_latticeGL_iff.1 hg
       exact ⟨⟨⟨_, γ, rfl⟩, n⟩, rfl⟩
-  haveI : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have hμ' : μ 𝓕' < ⊤ := by
     rw [← GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ h𝓕']; exact measure_lt_top _ _
 
@@ -235,7 +235,7 @@ theorem tendsto_residue (ha : 0 < a) (μ : Measure (GA E a)) [μ.IsHaarMeasure] 
       intro g
       rw [lowSum, Complex.ofReal_tsum, ← tsum_mul_left]
       refine tsum_congr fun n => ?_
-      simp only [hf, Set.indicator_apply, Set.mem_setOf_eq, hδz, hinv _ (zpow_mem_latticeGL n)]
+      simp only [hf, Set.indicator_apply, Set.mem_ofPred_eq, hδz, hinv _ (zpow_mem_latticeGL n)]
       split_ifs <;> simp
     have hfm : AEStronglyMeasurable f μ :=
       ((hF.mul (Complex.continuous_ofReal.comp (hδc.rpow_const fun g => Or.inl (hδ0 g).ne'))).aestronglyMeasurable).indicator hm
@@ -246,10 +246,10 @@ theorem tendsto_residue (ha : 0 < a) (μ : Measure (GA E a)) [μ.IsHaarMeasure] 
         refine le_trans ?_ (mul_le_mul_of_nonneg_left (hBle _ (hδ0 g)) zero_le)
         rw [← ENNReal.tsum_mul_left]
         refine ENNReal.tsum_le_tsum fun n => ?_
-        simp only [hf, Set.indicator_apply, Set.mem_setOf_eq, hδz, hinv _ (zpow_mem_latticeGL n)]
+        simp only [hf, Set.indicator_apply, Set.mem_ofPred_eq, hδz, hinv _ (zpow_mem_latticeGL n)]
         split_ifs with h
         · have hp : 0 ≤ (Real.exp L ^ n * δ g) ^ s := Real.rpow_nonneg (mul_pos (zpow_pos (Real.exp_pos L) n) (hδ0 g)).le _
-          rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul hC0]
+          rw [← ofReal_norm, ← ENNReal.ofReal_mul hC0]
           refine ENNReal.ofReal_le_ofReal ?_
           rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hp]
           exact mul_le_mul_of_nonneg_right (hC g) hp
@@ -261,7 +261,7 @@ theorem tendsto_residue (ha : 0 < a) (μ : Measure (GA E a)) [μ.IsHaarMeasure] 
       (fun n : ℤ => splitCentre E a 1 ^ n) (Equiv.ofBijective φ hφ) (fun _ => rfl) h𝓕' h𝓕 f
       (by
         rintro _ ⟨γ, rfl⟩ g
-        simp only [hf, Set.indicator_apply, Set.mem_setOf_eq, hδr, hinv _ (ratGL_mem_latticeGL γ)])
+        simp only [hf, Set.indicator_apply, Set.mem_ofPred_eq, hδr, hinv _ (ratGL_mem_latticeGL γ)])
       hfm hfin
     refine ⟨?_, ?_⟩
     · exact Integrable.congr hI (ae_of_all _ hsum)
@@ -377,7 +377,7 @@ theorem resConst_ne_zero {Φ : (Fin a → Cinf E) → ℂ} (hΦ1 : ContDiff ℝ 
     exact hne (funext h)
   have hre : (Φ x).re ≠ 0 := fun h0 => hx (Complex.ext h0 (hpos x).2)
   have hpos' : 0 < ∫ u, (Φ u).re ∂(volume : Measure (Fin a → Cinf E)) :=
-    Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (Complex.continuous_re.comp hΦ1.continuous)
+    Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (Complex.continuous_re.comp hΦ1.continuous)
       (hΦ2.comp_left Complex.zero_re) (fun u => (hpos u).1) hre
   rw [e, integral_complex_ofReal, infMeasure, integral_smul_measure]
   refine Complex.ofReal_ne_zero.2 (smul_ne_zero ?_ hpos'.ne')
@@ -392,11 +392,11 @@ theorem setIntegral_rsHat_zero_of_bdd {ℓ : Fin a} {Φ : (Fin a → Cinf E) →
       (((finiteMeasurePi E (latt a J)).toReal : ℂ) * ∫ x, Φ x ∂infMeasure E a) *
         ∫ g in 𝓕', φ.1 g * conj (φ'.1 g) ∂μ := by
   have hΦ : GlobalTheory.CuspQuot.IsTest (rowSet E ℓ) Φ := ⟨hΦ1, hΦ2, hΦ3⟩
-  haveI : DiscreteTopology (latticeGL E a) := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
-  haveI : IsFiniteMeasure (μ.restrict 𝓕') :=
+  have : DiscreteTopology (latticeGL E a) := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have : IsFiniteMeasure (μ.restrict 𝓕') :=
     ⟨by rw [Measure.restrict_apply_univ, ← GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ h𝓕]; exact measure_lt_top _ _⟩
-  haveI : SFinite (infMeasure E a) := by unfold infMeasure; infer_instance
+  have : SFinite (infMeasure E a) := by unfold infMeasure; infer_instance
   obtain ⟨C, hC⟩ := hb.2.2.2
   obtain ⟨D, hD⟩ := hb'.2.2.2
   have hΦi : Integrable Φ (infMeasure E a) := by
@@ -475,7 +475,7 @@ theorem theta_integral_pole_mspanR : ∀ (E : Type) [Field E] [NumberField E] [_
   have hres := _root_.GlobalTheory.RSThetaRes.residue_geometric E a ℓ.pos μ 𝓕 𝓕' h𝓕 h𝓕' _ f1 f2 f3
   rw [setIntegral_rsHat_zero_of_bdd hΦ hc hs J η h𝓕' hω hb hb', ← hKdef] at hres
   have hδc : Continuous fun g : GA E a => (ideleModule E (GeneralLinearGroup.det g) : ℝ) :=
-    continuous_subtype_val.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
+    continuous_subtypeVal.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
   have hδ0 : ∀ g : GA E a, 0 < (ideleModule E (GeneralLinearGroup.det g) : ℝ) := fun g => (ideleModule E _).2
   have hT : MeasurableSet {g : GA E a | (ideleModule E (GeneralLinearGroup.det g) : ℝ) ≤ 1} := (isClosed_le hδc continuous_const).measurableSet
   have hsum : ∀ g : GA E a, (∑' ξ : {ξ : Fin a → E // ξ ≠ 0}, GlobalTheory.RSTheta.rsPsi ℓ φ.1 φ'.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* g.val)) = ∑' ξ : Fin a → E, GlobalTheory.RSTheta.rsPsi ℓ φ.1 φ'.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ j)) ᵥ* g.val) := fun g =>
@@ -498,7 +498,7 @@ theorem theta_integral_pole_mspanR : ∀ (E : Type) [Field E] [NumberField E] [_
   have hsplit : ∀ x : ℝ, 1 < x → ∫ g in 𝓕, (∑' ξ : {ξ : Fin a → E // ξ ≠ 0}, GlobalTheory.RSTheta.rsPsi ℓ φ.1 φ'.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* g.val)) * ((((ideleModule E (GeneralLinearGroup.det g) : ℝ) ^ (x : ℝ) : ℝ)) : ℂ) ∂μ =
       ∫ g in (𝓕 ∩ {g | (ideleModule E (GeneralLinearGroup.det g) : ℝ) ≤ 1}), GroundTheory.Automorphic.GJMatrix.adelicFourierPi E (GlobalTheory.RSTheta.rsPsi ℓ φ.1 φ'.1 Φ J η g) 0 * ((((ideleModule E (GeneralLinearGroup.det g) : ℝ) ^ (x - 1) : ℝ) : ℂ)) ∂μ + B x + U x := by
     intro x hx
-    rw [← integral_inter_add_diff hT (hint x hx)]
+    rw [← integral_inter_add_sdiff hT (hint x hx)]
     congr 1
     simp only [hsum]
     exact (l1 x hx).2.2
@@ -507,11 +507,11 @@ theorem theta_integral_pole_mspanR : ∀ (E : Type) [Field E] [NumberField E] [_
     (∑' ξ : {ξ : Fin a → E // ξ ≠ 0}, ‖GlobalTheory.RSTheta.rsPsi ℓ φ.1 φ'.1 Φ J η g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* g.val)‖) * (ideleModule E (GeneralLinearGroup.det g) : ℝ) ^ (2 : ℝ) ∂μ with hM
   have hUb : ∀ x : ℝ, x ≤ 2 → ‖U x‖ ≤ M := by
     intro x hx2
-    refine norm_integral_le_of_norm_le ((u2 2).mono_set fun g hg => ⟨hg.1, by have h := hg.2; simp only [Set.mem_setOf_eq, not_le] at h ⊢; exact h.le⟩) ?_
-    refine (ae_restrict_of_ae_restrict_of_subset (Set.diff_subset_compl _ _) (ae_restrict_mem hT.compl)).mono
+    refine norm_integral_le_of_norm_le ((u2 2).mono_set fun g hg => ⟨hg.1, by have h := hg.2; simp only [Set.mem_ofPred_eq, not_le] at h ⊢; exact h.le⟩) ?_
+    refine (ae_restrict_of_ae_restrict_of_subset (Set.sdiff_subset_compl _ _) (ae_restrict_mem hT.compl)).mono
       fun g hg => ?_
     have h1 : 1 ≤ (ideleModule E (GeneralLinearGroup.det g) : ℝ) := by
-      have h := hg; simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at h; exact h.le
+      have h := hg; simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_le] at h; exact h.le
     rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg (Real.rpow_nonneg (hδ0 g).le _)]
     exact mul_le_mul (norm_tsum_le_tsum_norm (u1 g)) (Real.rpow_le_rpow_of_exponent_le h1 hx2)
       (Real.rpow_nonneg (hδ0 g).le _) (tsum_nonneg fun _ => norm_nonneg _)

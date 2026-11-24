@@ -108,7 +108,7 @@ private theorem pow_fixes (F Ω : Type) [Field F] [Field Ω] [Algebra F Ω] {M :
   have hfin : {ζ : Ω | ζ ^ M = 1}.Finite := by
     refine ((Polynomial.nthRoots M (1 : Ω)).toFinset.finite_toSet).subset fun ζ hζ => ?_
     simpa [Polynomial.mem_nthRoots (show 0 < M by omega)] using hζ
-  haveI : Finite {ζ : Ω // ζ ^ M = 1} := hfin
+  have : Finite {ζ : Ω // ζ ^ M = 1} := hfin
   let f : G F Ω →* Equiv.Perm {ζ : Ω // ζ ^ M = 1} :=
     { toFun := fun s => Equiv.Perm.subtypePerm (s : Ω ≃ₐ[F] Ω).toEquiv fun x => by
         change s x ^ M = 1 ↔ x ^ M = 1
@@ -132,7 +132,7 @@ theorem UpperTheory.V.Z.J.freeCU :
   have hz : Continuous fun s : G F Ω => ((cycZ F Ω l s : ℤ_[l]ˣ) : ℤ_[l]) :=
     Units.continuous_val.comp (continuous_cycZ F Ω l)
   have hcyc : Continuous fun s : G F Ω => (cycBar F Ω l s : Qbar l) :=
-    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp (continuous_subtype_val.comp hz)
+    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp (continuous_subtypeVal.comp hz)
   have hχ : Continuous fun s : G F Ω => cycBar F Ω l s ^ a := (cont_units _ hcyc).zpow a
   have hc : Continuous (tw r (cycBar F Ω l ^ a)) := by
     refine cont_units _ ?_
@@ -168,7 +168,7 @@ theorem UpperTheory.V.Z.J.freeCU :
       rw [map_mul, map_mul, map_inv]; group
     show (r (t * s * t⁻¹)).val.charpoly = _
     rw [e, Units.val_mul, Units.val_mul, Matrix.coe_units_inv, Matrix.charpoly_units_conj,
-      Matrix.charpoly_of_upperTriangular _ (fun i j hij => (hg s).1 i j hij)]
+      Matrix.charpoly_of_isUpperTriangular _ (fun i j hij => (hg s).1 i j hij)]
     exact Finset.prod_congr rfl fun i _ => by rw [(hg s).2 i]
 end -- clump:auto
 end -- clump:auto
@@ -207,7 +207,7 @@ private theorem cocycle_coboundary_of_finite_index {k G W : Type} [Field k] [Cha
     (hf : ∀ g h, f (g * h) = f g + a g (f h)) (H : Subgroup G) [H.FiniteIndex] (x : W)
     (hx : ∀ h ∈ H, f h = a h x - x) : ∃ y, ∀ g, f g = a g y - y := by
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   set f' : G → W := fun g => f g - (a g x - x) with hf'
   have hc : ∀ g h, f' (g * h) = f' g + a g (f' h) := by
     intro g h
@@ -321,7 +321,7 @@ private theorem rig_above (hP : UpperTheory.V.Loc.LocalPublishedTheorems) (Ω : 
     (fun g => y (F.loc F.vl g)) ∈ UpperTheory.V.Loc.finiteCocycles φ (adRep (r.comp (F.loc F.vl))) := by
   have ok := hostFrame_ok Ω c e ψ o₁ hD S A F hF
   obtain ⟨H, hn, ho, hle, hΨ, g, hg, hu, hg1⟩ := rig_sub Ω c e ψ o₁ hD S A F hF
-  have hl : Continuous (F.loc F.vl) := ok.π_cont.comp continuous_subtype_val
+  have hl : Continuous (F.loc F.vl) := ok.π_cont.comp continuous_subtypeVal
   refine rig_loc hP φ hφ (F.ηv F.vl) (ok.η_cont.comp_continuous hl) (r.comp (F.loc F.vl)) _ (r'.comp (F.loc F.vl)) h
     (fun g => hm _) (hc.comp hl) (hyc.comp hl) (fun g k => ?_) (fun g => hd _) H ho hle hh.tri
     (fun a => (e : ℤ) * wt1 a) ?_ (fun s hs hs' a => ?_) (fun i j hij => ⟨g, hg, ?_⟩)
@@ -471,7 +471,7 @@ private theorem h1f_vanishing_conj_invariant {Ω : Type} [Field Ω] [CharZero Ω
   · have : ⇑(GG.ad (m := 3) _ (GG.ofGL h)) = fun X => (GG.ofGL h).mat * X *
         (((GG.ofGL h).left⁻¹ : GL (Fin 3) (PadicAlgCl l)) : Matrix (Fin 3) (Fin 3) (PadicAlgCl l)) := by
       funext X
-      rw [GG.ad_apply, GG.adFun, if_pos (SemidirectProduct.right_inl _)]
+      rw [GG.ad_apply, GG.adFun, ite_eq_left (SemidirectProduct.right_inl _)]
     rw [this]
     exact (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
   · rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
@@ -513,12 +513,12 @@ private theorem selmer_h1_vanishes_at_rigid_point (hH : Af.HypothesesH) (hL : Th
     (hmu : HasMult F.η r) (hc : Continuous (mats r)) (hB : BPrime K ι fun s => (r (toGS Ω _ s)).mat) :
     Af.BlochKatoSelmerVanishes l (adRep (r.comp F.π)) := by
   have hN := hH.litN
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
-  haveI : CharP (ResidueField c.O) l := by
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
+  have : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
     intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
   obtain ⟨σ, hσ, hσc⟩ := hF.cc
   have hv : (A F.vl).valuation (l : Ω) < 1 := by simpa using (hF.isOver F.vl (l : 𝓞 ℚ)).2 hF.vl
   have hfr := Fr.host_ex ⟨⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.pt⟩, hN.coh.uo, hN.coh.gw⟩
@@ -549,8 +549,8 @@ private theorem selmer_h1_vanishes_at_rigid_point (hH : Af.HypothesesH) (hL : Th
   have hk : LinkHyp c N e (UnitaryThreeInertia.eta4 Ω) σ (A F.vl) (l * N) :=
     ⟨hd.e_pos, dvd_rfl, mul_ne_zero hl.out.ne_zero (NeZero.ne N), hram, hv, hσ⟩
   obtain ⟨_, _, ρ, hρ, hAut⟩ := hB.aut
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   have hopen : IsOpen ((UnitaryThreeInertia.eta4 Ω).ker : Set (G ℚ Ω)) := by
     rw [← (UnitaryThreeInertia.gaussian_field_range_eq_ker_quartic_char.2 Ω K hK).1, Base.range_galEmb]
     exact (Base.galEmbTop ℚ K Ω).2.1

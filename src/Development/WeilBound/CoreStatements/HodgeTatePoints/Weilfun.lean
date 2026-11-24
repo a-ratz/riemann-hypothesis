@@ -60,7 +60,7 @@ theorem weil_fun : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
   · intro T T' f x z hx hz hx' hz'
     exact weilUnit_comp t.cub n f hx hz hx' hz'
   · intro k _ _ g _ x z hx hz c hw
-    haveI : Subsingleton ↥(Over.mk g).left := by
+    have : Subsingleton ↥(Over.mk g).left := by
       show Subsingleton (PrimeSpectrum k)
       infer_instance
     exact weilUnit_eq_of_weilIs t.cub n hx hz _ hw

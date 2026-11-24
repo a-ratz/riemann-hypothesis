@@ -135,7 +135,7 @@ theorem conerve_nerve : ∀ (T : Type 1) [Category.{0} T] [HasFiniteWidePushouts
       refine (congrArg Quiver.Hom.unop (Ψ.map_comp _ _).symm).trans ?_
       exact congrArg (fun k => (Ψ.map k).unop) (by apply WidePushout.head_desc)
   · have : ∀ n : SimplexCategoryᵒᵖ, IsIso (cmp Ψ g (Fin (n.unop.len + 1))) := fun n => by
-      haveI := hΨ n.unop.len
+      have := hΨ n.unop.len
       exact isIso_cmp Ψ g _
     exact (NatTrans.isIso_iff_isIso_app _).2 this
   · refine NatTrans.ext (funext fun n => ?_)
@@ -178,7 +178,7 @@ theorem chains_cech_conerve_quasiIso : ∀ (R : Type) [CommRing R] (T : Type 1) 
   have key : lev Ψ (coAug g) = e ≫ h := hc.symm
   have h2' : QuasiIso ((chains R).map h) := h2
   rw [key, Functor.map_comp]
-  haveI : IsIso ((chains R).map e) := inferInstance
+  have : IsIso ((chains R).map e) := inferInstance
   exact quasiIso_comp _ _
 end GlobalTheory.EtC
 end -- clump:auto

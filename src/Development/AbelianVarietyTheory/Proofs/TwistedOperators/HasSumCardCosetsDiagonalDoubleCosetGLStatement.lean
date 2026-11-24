@@ -89,7 +89,7 @@ theorem heckeVec_trivial_dosetInd {G : Type} [Group G] {K : Subgroup G} (hK : Is
     refine (Formalism.UG.P.finite_support_cosets hK (Formalism.UG.Final.DosetIndMem G K ℂ t).2).subset ?_
     intro a ha
     have h' : a.out ∈ D := ha
-    simp only [Set.mem_setOf_eq, dosetInd]
+    simp only [Set.mem_ofPred_eq, dosetInd]
     rw [Set.indicator_of_mem h']
     simp
   have e : (fun c : G ⧸ K => dosetInd ℂ K t c.out • (Representation.trivial ℂ G ℂ) c.out (1 : ℂ)) =

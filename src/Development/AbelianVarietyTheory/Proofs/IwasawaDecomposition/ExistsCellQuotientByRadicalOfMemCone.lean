@@ -74,7 +74,7 @@ theorem exists_cell_quot_orad_of_inRCone : ∀ (E : Type) [Field E] [NumberField
   intro E _ _ _ H ψ X _ _ _ hface β hβ hβp m γ hγ hβγ
   classical
   set K : Submodule (𝓞 E) X := orad β with hK
-  haveI : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
+  have : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
   obtain ⟨T, hT⟩ := (IsNoetherian.noetherian (K.restrictScalars ℤ) : (K.restrictScalars ℤ).FG)
   have hTK : ∀ k ∈ T, k ∈ K := fun k hk => by
     have : k ∈ K.restrictScalars ℤ := hT ▸ Submodule.subset_span hk
@@ -162,7 +162,7 @@ theorem exists_cell_quot_orad_of_inRCone : ∀ (E : Type) [Field E] [NumberField
         rw [hzero j (by rw [hs] at hj; simpa using hj), zero_smul]) (fun i => rfl)).symm
   · rw [← genRank_pull hsurj δ, hδ']
     unfold genRank
-    haveI : Module.Finite ℤ (Submodule.span ℤ (Set.range γ)) := Module.Finite.span_of_finite ℤ (Set.finite_range γ)
+    have : Module.Finite ℤ (Submodule.span ℤ (Set.range γ)) := Module.Finite.span_of_finite ℤ (Set.finite_range γ)
     exact Submodule.finrank_mono (Submodule.span_mono (Set.range_comp_subset_range s γ))
 
 end GlobalTheory.PolFan.CarDim

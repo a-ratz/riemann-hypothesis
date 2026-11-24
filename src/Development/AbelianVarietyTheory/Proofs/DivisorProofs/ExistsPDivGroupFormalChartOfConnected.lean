@@ -841,8 +841,8 @@ theorem exists_compatible_coordinates (p : ℕ) [Fact p.Prime] (C : Type) [Field
     rw [LinearMap.comp_apply, LinearEquiv.coe_coe, h, Submodule.liftQ_apply, LinearMap.comp_apply,
       Module.Basis.coord_apply, b.repr_self, Finsupp.single_apply]
     by_cases hij : i = j
-    · rw [if_pos hij, if_pos hij.symm]; rfl
-    · rw [if_neg hij, if_neg (Ne.symm hij), map_zero]
+    · rw [ite_eq_left hij, ite_eq_left hij.symm]; rfl
+    · rw [ite_eq_right hij, ite_eq_right (Ne.symm hij), map_zero]
 
 end GlobalTheory.PDiv
 end -- clump:auto
@@ -969,10 +969,10 @@ theorem trunc_dec : ∀ (p : ℕ) (O A : Type) [CommRing O] [CommRing A] [Algebr
     simp only [Finset.mem_filter]
   refine ⟨P, ?_, ?_, ?_⟩
   · intro α hα
-    rw [cP, if_neg]
+    rw [cP, ite_eq_right]
     omega
   · intro α hα
-    rw [cP, if_pos ⟨memF α (lt_of_lt_of_le hα (le_max_left _ _)), hα⟩]
+    rw [cP, ite_eq_left ⟨memF α (lt_of_lt_of_le hα (le_max_left _ _)), hα⟩]
   · have hrest : (p : A) ^ n ∣ E (f - (P : MvPowerSeries (Fin d) O) - (Q : MvPowerSeries (Fin d) O)) := by
       apply hM
       intro α hα
@@ -1016,7 +1016,7 @@ theorem maxIdeal_pow_dvd_natCast_of_integers :
   intro p hp C _ _ v O _ _ hv A _ _ _ _ a ha
 
   set J : Ideal O := (maximalIdeal A).comap (algebraMap O A) with hJdef
-  haveI : J.IsMaximal := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal A)
+  have : J.IsMaximal := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal A)
 
   have hJp : ∀ c ∈ J, ∃ k : ℕ, (p : O) ∣ c ^ k := by
     intro c hc
@@ -1049,8 +1049,8 @@ theorem maxIdeal_pow_dvd_natCast_of_integers :
     have hle : J ≤ Q.comap (algebraMap O A) := Ideal.map_le_iff_le_comap.1 hQ
     have hQc : Q.comap (algebraMap O A) = J :=
       ((inferInstance : J.IsMaximal).eq_of_le (Ideal.IsPrime.comap (algebraMap O A)).ne_top hle).symm
-    haveI : (Q.comap (algebraMap O A)).IsMaximal := by rw [hQc]; infer_instance
-    haveI : Q.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap
+    have : (Q.comap (algebraMap O A)).IsMaximal := by rw [hQc]; infer_instance
+    have : Q.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap
       (algebraMap O A) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) Q this
     rw [IsLocalRing.eq_maximalIdeal this]
     exact ha
@@ -1079,7 +1079,7 @@ theorem GlobalTheory.PDivGroup.exists_coords_of_isConn : ∀ (p : ℕ) [Fact p.P
   intro p _ C _ _ _ v O _ _ _ _ _ hv G hG
   obtain ⟨d, x, hcou, hres, hspan, hl⟩ := _root_.GlobalTheory.PDiv.exists_compatible_coordinates p C v O hv G
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : ValuationRing O := ValuationRing.of_integers v hv
   have hpm : (p : O) ∈ IsLocalRing.maximalIdeal O :=
     (IsLocalRing.mem_maximalIdeal _).2 (Fact.out : ¬IsUnit (p : O))
   have hmem : ∀ n i, ¬IsUnit (x n i) := by
@@ -1088,10 +1088,10 @@ theorem GlobalTheory.PDivGroup.exists_coords_of_isConn : ∀ (p : ℕ) [Fact p.P
     rw [Bialgebra.counitAlgHom_apply, hcou n i] at h1
     exact not_isUnit_zero h1
   have hnil : ∀ n i, ∃ N : ℕ, (p : G.A n) ∣ x n i ^ N := fun n i => by
-    haveI := hG n
+    have := hG n
     exact _root_.GlobalTheory.maxIdeal_pow_dvd_natCast_of_integers p hp0 C v O hv (G.A n) (x n i) ((IsLocalRing.mem_maximalIdeal _).2 (hmem n i))
   have hex : ∀ n, ∃ E : MvPowerSeries (Fin d) O →ₐ[O] G.A n, IsEval p (x n) E := fun n => by
-    haveI := _root_.GlobalTheory.FinProjComplete.isAdicComplete_span_natCast_of_finite_projective p O (G.A n)
+    have := _root_.GlobalTheory.FinProjComplete.isAdicComplete_span_natCast_of_finite_projective p O (G.A n)
     exact ((_root_.GlobalTheory.CEval.continuous_eval p O (G.A n) (Fin d) (x n) (hnil n)).1).exists
   choose ev hev using hex
   have hpoly : ∀ n (P : MvPolynomial (Fin d) O),
@@ -1102,7 +1102,7 @@ theorem GlobalTheory.PDivGroup.exists_coords_of_isConn : ∀ (p : ℕ) [Fact p.P
         simp [MvPolynomial.coeToMvPowerSeries.algHom_apply, (hev n).1 i]
     exact DFunLike.congr_fun h P
   refine ⟨d, x, ev, hnil, hev, hres, hcou, fun n => ?_, fun m N => ?_⟩
-  · haveI := hG n
+  · have := hG n
     intro a
     obtain ⟨P, hP⟩ := _root_.GlobalTheory.PowerIdealSurjectivity.aeval_surjective O (G.A n) (p : O) hpm (Bialgebra.counitAlgHom O (G.A n)) d (x n)
       (fun i => by rw [Bialgebra.counitAlgHom_apply]; exact hcou n i)
@@ -1234,7 +1234,7 @@ theorem exists_series_of_compatible : ∀ (p : ℕ) (O σ : Type) [CommRing O] [
   let μ : MvPowerSeries σ O := L
   have hμ : ∀ α, coeff α μ = L α := fun α => rfl
   refine ⟨μ, fun n => ?_⟩
-  haveI := hH n
+  have := hH n
   apply (IsHausdorff.eq_iff_smodEq (I := Ideal.span {(p : A n)})).2
   intro m
   rw [smod_span_iff]
@@ -1414,7 +1414,7 @@ theorem pushVars_monomial {j : σ → ι} (hj : Function.Injective j) (α : σ �
   · obtain ⟨α', rfl⟩ := h
     rw [coeff_pushVars_mapDomain hj, coeff_monomial, coeff_monomial]
     simp only [(Finsupp.mapDomain_injective hj).eq_iff]
-  · rw [coeff_pushVars_of_not _ _ h, coeff_monomial, if_neg]
+  · rw [coeff_pushVars_of_not _ _ h, coeff_monomial, ite_eq_right]
     rintro rfl
     exact h ⟨α, rfl⟩
 
@@ -1469,7 +1469,7 @@ theorem exists_eval_pushVars (p : ℕ) {A C : Type} [CommRing A] [CommRing C] [A
         · simp [Finsupp.notMem_support_iff.1 hi]
       show α i ≤ N
       omega
-    rw [map_sub, MvPolynomial.coeff_coe, coeff_trunc', if_pos hle, sub_self]
+    rw [map_sub, MvPolynomial.coeff_coe, coeff_trunc', ite_eq_left hle, sub_self]
   have hgA : (p : A) ^ m ∣ evA g := hN2 g fun α hα => hg α (lt_of_lt_of_le hα (le_max_right _ _))
   have hgE : (p : C) ^ m ∣ E (pushVars j g) := by
     apply hN1
@@ -1587,17 +1587,17 @@ theorem chart_exists : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgC
   have hE2 : ∀ n, ∃ E : MvPowerSeries (Fin d ⊕ Fin d) O →ₐ[O] G.A n ⊗[O] G.A n,
       IsEval p (Sum.elim (fun i => x n i ⊗ₜ[O] (1 : G.A n)) fun i => (1 : G.A n) ⊗ₜ[O] x n i) E := by
     intro n
-    haveI := hc2 n
+    have := hc2 n
     exact (_root_.GlobalTheory.CEval.continuous_eval p O _ _ _ (nil2 n)).1.exists
   choose E₂ hE₂ using hE2
   have hE3 : ∀ n, ∃ E : MvPowerSeries (Fin d ⊕ (Fin d ⊕ Fin d)) O →ₐ[O] G.A n ⊗[O] (G.A n ⊗[O] G.A n),
       IsEval p (Sum.elim (fun i => x n i ⊗ₜ[O] (1 : G.A n ⊗[O] G.A n)) (Sum.elim (fun i => (1 : G.A n) ⊗ₜ[O] (x n i ⊗ₜ[O] (1 : G.A n))) fun i => (1 : G.A n) ⊗ₜ[O] ((1 : G.A n) ⊗ₜ[O] x n i))) E := by
     intro n
-    haveI := hc3 n
+    have := hc3 n
     exact (_root_.GlobalTheory.CEval.continuous_eval p O _ _ _ (nil3 n)).1.exists
   choose E₃ hE₃ using hE3
   have hsurj2 : ∀ n, Function.Surjective (E₂ n) := fun n => by
-    haveI := hc2 n
+    have := hc2 n
     exact _root_.GlobalTheory.SurjTens.surjective_eval_tmul p O _ _ _ _ (x n) (x n) (ev n) (ev n) (E₂ n) (hev n) (hev n) (hE₂ n) (hsurj n) (hsurj n)
   have hker2 : ∀ m N : ℕ, ∃ n, ∀ f, E₂ n f = 0 → ∀ α : Fin d ⊕ Fin d →₀ ℕ, α.degree < N → (p : O) ^ m ∣ coeff α f := by
     intro m N
@@ -1619,7 +1619,7 @@ theorem chart_exists : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgC
     let ρ : G.A (n + 1) ⊗[O] G.A (n + 1) →ₐ[O] G.A n ⊗[O] G.A n :=
       Algebra.TensorProduct.map (AlgHomClass.toAlgHom (G.res n)) (AlgHomClass.toAlgHom (G.res n))
     have hρ : ρ.comp (E₂ (n + 1)) = E₂ n := by
-      haveI := hc2 n
+      have := hc2 n
       refine (_root_.GlobalTheory.CEval.continuous_eval p O _ _ _ (nil2 n)).1.unique ?_ (hE₂ n)
       have h1 := isEval_comp ρ (hE₂ (n + 1))
       convert h1 using 1
@@ -1638,15 +1638,15 @@ theorem chart_exists : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgC
   refine ⟨hconst, ?_, fun i => ?_, ?_⟩
   · funext i
     refine sub_eq_zero.1 (eq_zero_of_ker (p := p) ev hker fun n => ?_)
-    haveI := hcA n
+    have := hcA n
     rw [map_sub, _root_.GlobalTheory.chart_unit p O (G.A n) (x n) (ev n) (E₂ n) μ (hnil n) (haug n) (hev n) (hE₂ n) (fun i => hμ i n) i,
       (hev n).1 i, sub_self]
   · refine sub_eq_zero.1 (eq_zero_of_ker (p := p) E₂ hker2 fun n => ?_)
-    haveI := hc2 n
+    have := hc2 n
     rw [map_sub, _root_.GlobalTheory.CommSwap.eval_swap_eq p O (G.A n) (x n) (E₂ n) μ (hnil n) (hE₂ n) (fun i => hμ i n) i, sub_self]
   · funext i
     refine sub_eq_zero.1 (eq_zero_of_ker (p := p) E₃ hker3 fun n => ?_)
-    haveI := hc3 n
+    have := hc3 n
     rw [map_sub, _root_.GlobalTheory.Chart.Assoc.assoc_eval p O (G.A n) (x n) (E₂ n) (E₃ n) μ (hnil n) hconst (hE₂ n) (hE₃ n) (fun i => hμ i n) i, sub_self]
 
 end GlobalTheory.ChartEx

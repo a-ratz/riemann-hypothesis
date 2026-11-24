@@ -85,7 +85,7 @@ theorem mem_minimalPrimes_of_mem_associatedPrimes {B : Type*} [CommRing B] [IsCo
   by_cases hqp' : q = p
   · exact hqp' ▸ hq
   exfalso
-  obtain ⟨a, hap, haq⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hqp hqp')
+  obtain ⟨a, hap, haq⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hqp hqp')
   have : q.IsPrime := hq.1.1
   have hnzd : Ideal.Quotient.mk q a ∈ nonZeroDivisors (B ⧸ q) :=
     mem_nonZeroDivisors_of_ne_zero (by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem])

@@ -162,12 +162,12 @@ theorem _root_.GlobalTheory.LocalLift.exists_local_lift : ∀ (Y : Scheme.{0}) (
     exact h1.trans (key _ (hxs.trans hid.symm) _)
   have hev : ∀ a, ev (c a) = a := hconst y hys hyV'
   obtain ⟨φ, hφC, hφet, hφ0⟩ := _root_.GlobalTheory.HolChart.exists_etale_coords_vanishing c hc ev hev
-  letI : Algebra ℂ Γ(Y, V) := c.toAlgebra
-  letI : Algebra (MvPolynomial (Fin n) ℂ) Γ(Y, V) := φ.toAlgebra
-  haveI : IsScalarTower ℂ (MvPolynomial (Fin n) ℂ) Γ(Y, V) := IsScalarTower.of_algebraMap_eq fun a => by
+  let : Algebra ℂ Γ(Y, V) := c.toAlgebra
+  let : Algebra (MvPolynomial (Fin n) ℂ) Γ(Y, V) := φ.toAlgebra
+  have : IsScalarTower ℂ (MvPolynomial (Fin n) ℂ) Γ(Y, V) := IsScalarTower.of_algebraMap_eq fun a => by
     change c a = φ (MvPolynomial.C a)
     rw [← hφC]; rfl
-  haveI : Algebra.Etale (MvPolynomial (Fin n) ℂ) Γ(Y, V) := hφet
+  have : Algebra.Etale (MvPolynomial (Fin n) ℂ) Γ(Y, V) := hφet
   let evA : Γ(Y, V) →ₐ[ℂ] ℂ := { ev with commutes' := fun a => hev a }
   obtain ⟨W, σ, m, fs, ε, hWo, hW0, hσ0, hε, hσhol, hσX, hσuniq⟩ :=
     _root_.GlobalTheory.exists_holomorphic_section_of_etale n Γ(Y, V) evA hφ0
@@ -332,7 +332,7 @@ theorem _root_.GlobalTheory.LocalLift.exists_local_lift : ∀ (Y : Scheme.{0}) (
             have hm : S (a * b) = S a * S b := funext fun w => map_mul (σ w) a b
             have hd : fderiv ℂ (S (a * b)) 0 u = S a 0 * fderiv ℂ (S b) 0 u + S b 0 * fderiv ℂ (S a) 0 u := by
               rw [hm, ((hSd a).hasFDerivAt.mul (hSd b).hasFDerivAt).fderiv]
-              simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+              simp only [add_apply, smul_apply, smul_eq_mul]
             rw [hd, hS0, hS0]
             ext
             · simp
@@ -387,7 +387,7 @@ theorem _root_.GlobalTheory.LocalLift.exists_local_lift : ∀ (Y : Scheme.{0}) (
     exact hFan.differentiableAt.hasFDerivAt
   have hFc : ContDiffAt ℂ 1 F 0 := hFan.contDiffAt
   have hS : HasStrictFDerivAt F (L : (Fin g' → ℂ) →L[ℂ] (Fin n → ℂ)) 0 :=
-    hFc.hasStrictFDerivAt' hL one_ne_zero
+    hFc.hasStrictFDerivAt hL one_ne_zero
   let Finv := HasStrictFDerivAt.localInverse F L 0 hS
   have hinvc : ContDiffAt ℂ 1 Finv (F 0) := hFc.to_localInverse hL one_ne_zero
   have hinvan : AnalyticAt ℂ Finv (F 0) := _root_.GlobalTheory.SCV.analyticAt_iff_eventually_differentiableAt.2

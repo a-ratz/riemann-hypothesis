@@ -127,7 +127,7 @@ theorem eq_of_mem_cell {ϖ : kˣ} (hϖ : ord k ϖ = 1) {a b : Fin m → ℤ} {g 
   have v2 : valuation k ((y⁻¹ : kˣ) : k) ≤ 1 := h2'
   have hv : valuation k (y : k) = 1 := by
     rw [Units.val_inv_eq_inv_val, map_inv₀] at v2
-    have hpos : 0 < valuation k (y : k) := zero_lt_iff.2 (by simp)
+    have hpos : 0 < valuation k (y : k) := pos_iff_ne_zero.2 (by simp)
     exact le_antisymm v1 ((inv_le_one₀ hpos).1 v2)
   have h3 : ord k y = 0 := by simp [ord, hv]
   rw [ord_zpow, hϖ, mul_one] at h3

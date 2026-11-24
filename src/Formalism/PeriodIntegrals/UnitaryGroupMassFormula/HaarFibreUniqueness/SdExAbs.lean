@@ -76,12 +76,12 @@ theorem haar_smul_preimage (μ0 : Measure V) [μ0.IsAddHaarMeasure] (a : Fv F v)
   have hes : Continuous e.symm := by
     show Continuous fun y : V => a⁻¹ • y
     exact continuous_const_smul a⁻¹
-  haveI := AddEquiv.isAddHaarMeasure_map μ0 e he hes
+  have := AddEquiv.isAddHaarMeasure_map μ0 e he hes
   refine ⟨(Measure.addHaarScalarFactor (μ0.map e) μ0 : ℝ≥0∞), fun S hS => ?_⟩
   have hmap : μ0.map e = Measure.addHaarScalarFactor (μ0.map e) μ0 • μ0 :=
     Measure.isAddLeftInvariant_eq_smul _ _
   have h := Measure.map_apply (μ := μ0) he.measurable hS
-  rw [hmap, Measure.smul_apply] at h
+  rw [hmap, smul_apply] at h
   show μ0 (e ⁻¹' S) = _
   rw [← h]
   rfl

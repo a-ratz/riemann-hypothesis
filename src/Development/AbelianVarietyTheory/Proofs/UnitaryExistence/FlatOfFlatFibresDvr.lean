@@ -112,12 +112,12 @@ theorem ringHom_flat {A B : Type*} [CommRing A] [CommRing B] [Algebra T A] [Alge
       · rw [Algebra.TensorProduct.map_id_comp]
         exact hK.comp (RingHom.Flat.lTensor (S := T) K hl)
     · have : IsLocalHom (algebraMap T (Localization.AtPrime P)) := by
-        refine ((local_hom_TFAE (algebraMap T (Localization.AtPrime P))).out 1 3).mpr ?_
+        refine ((local_hom_tfae (algebraMap T (Localization.AtPrime P))).out 1 3).mpr ?_
         rw [hπ.maximalIdeal_eq, Ideal.map_span, Set.image_singleton,
           Ideal.span_singleton_le_iff_mem]
         exact hu
       exact flat_of_flat_residueField_baseChange_dvr _ (hbc _ hκ)
-  letI := (φ : A →+* B).toAlgebra
+  let := (φ : A →+* B).toAlgebra
   change Module.Flat A B
   refine Module.flat_of_isLocalized_maximal B B (fun P ↦ Localization.AtPrime P)
     (fun P ↦ Algebra.linearMap B _) fun P _ => ?_
@@ -215,13 +215,13 @@ theorem flat_of_flatOver (T K : Type) [CommRing T] [IsDomain T] [IsDiscreteValua
   rw [← Spec.map_comp] at h1 h2
   rw [Flat.SpecMap_iff] at h1 ⊢
   rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)] at h2 h3
-  letI : Algebra T A := g.hom.toAlgebra
-  letI : Algebra T B := (g ≫ f).hom.toAlgebra
-  haveI : Module.Flat T B := h1
-  haveI : Algebra.FiniteType T B := h2
-  haveI : Algebra.FiniteType T A := h3
-  haveI := Algebra.FiniteType.isNoetherianRing T A
-  haveI := Algebra.FiniteType.isNoetherianRing T B
+  let : Algebra T A := g.hom.toAlgebra
+  let : Algebra T B := (g ≫ f).hom.toAlgebra
+  have : Module.Flat T B := h1
+  have : Algebra.FiniteType T B := h2
+  have : Algebra.FiniteType T A := h3
+  have := Algebra.FiniteType.isNoetherianRing T A
+  have := Algebra.FiniteType.isNoetherianRing T B
   let φ : A →ₐ[T] B := { f.hom with commutes' := fun _ => rfl }
   exact ringHom_flat K φ (FlatOver.tensor φ hK) (FlatOver.tensor φ hκ)
 

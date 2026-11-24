@@ -155,7 +155,7 @@ private theorem exists_prime_dvd_eval_not_dvd_of_natDegree_pos (h : ℤ[X]) (hh 
     · exact hG1 (eq_of_infinite_eval_eq G (C 1) (by simpa using hinf))
     · exact hG2 (eq_of_infinite_eval_eq G (C (-1)) (by simpa using hinf))
   obtain ⟨t, ht⟩ := hfin.infinite_compl.nonempty
-  simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_setOf_eq, not_or] at ht
+  simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_ofPred_eq, not_or] at ht
   set g := G.eval t with hg
   have hgabs : g.natAbs ≠ 1 := by
     intro h1
@@ -198,8 +198,8 @@ private theorem span_prime_sup_span_proper_of_dvd_norm {E : Type} [Field E] [Num
       rw [← Ideal.absNorm_span_singleton]; exact (Ideal.absNorm_eq_natCard I).symm
     have hne : (Algebra.norm ℤ x).natAbs ≠ 0 := by
       rw [Int.natAbs_ne_zero, Ne, Algebra.norm_eq_zero_iff]; exact hx
-    haveI : Finite (𝓞 E ⧸ I) := Nat.finite_of_card_ne_zero (hcard ▸ hne)
-    haveI := Fact.mk hp
+    have : Finite (𝓞 E ⧸ I) := Nat.finite_of_card_ne_zero (hcard ▸ hne)
+    have := Fact.mk hp
     have hpc : p ∣ Nat.card (𝓞 E ⧸ I) := by
       rw [hcard]; simpa using Int.natAbs_dvd_natAbs.mpr hdvd
     obtain ⟨z, hz⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 E ⧸ I) p hpc
@@ -280,16 +280,16 @@ open Polynomial in
 theorem _root_.GlobalTheory.SW.SplitPrime.absNorm_prime {E : Type} [Field E] [NumberField E]
     (P : Ideal (𝓞 E)) (hP : P.IsMaximal)
     (hs : Function.Surjective (Int.castRingHom (𝓞 E ⧸ P))) : (Ideal.absNorm P).Prime := by
-  letI := Ideal.Quotient.field P
+  let := Ideal.Quotient.field P
   have hN : Ideal.absNorm P = Nat.card (𝓞 E ⧸ P) := Ideal.absNorm_eq_natCard P
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 E ⧸ P)
-  haveI := hp
+  have := hp
   have hp' : p.Prime := (CharP.char_is_prime_or_zero (𝓞 E ⧸ P) p).resolve_right (by
     rintro rfl
-    haveI : CharZero (𝓞 E ⧸ P) := CharP.charP_to_charZero _
-    haveI : Infinite (𝓞 E ⧸ P) := Infinite.of_injective _ Nat.cast_injective
+    have : CharZero (𝓞 E ⧸ P) := CharP.charP_to_charZero _
+    have : Infinite (𝓞 E ⧸ P) := Infinite.of_injective _ Nat.cast_injective
     exact not_finite (𝓞 E ⧸ P))
-  haveI := Fact.mk hp'
+  have := Fact.mk hp'
   have hbij : Function.Bijective (ZMod.castHom (dvd_refl p) (𝓞 E ⧸ P)) := by
     refine ⟨(ZMod.castHom (dvd_refl p) (𝓞 E ⧸ P)).injective, fun y => ?_⟩
     obtain ⟨n, rfl⟩ := hs y

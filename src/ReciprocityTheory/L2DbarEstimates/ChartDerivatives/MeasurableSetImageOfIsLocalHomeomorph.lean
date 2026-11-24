@@ -71,7 +71,7 @@ theorem measurableSet_image_of_chart (n : ℕ) (z : M → V n) (e : OpenPartialH
     rwa [Set.inter_eq_right.mpr hSe] at h3
   rw [h1, h2]
   have hm : MeasurableSet ((e.target).restrict e.symm ⁻¹' S) :=
-    (e.continuousOn_symm.restrict).measurable hS
+    (e.continuousOn_symm.domRestrict).measurable hS
   have h4 := e.open_target.measurableSet.subtype_image hm
   convert h4 using 1
   ext w

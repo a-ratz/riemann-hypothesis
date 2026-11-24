@@ -155,7 +155,7 @@ theorem exists_ne_zero_mem_fractionalIdeal_norm_sq_le (hf : finrank ℚ E = 2 * 
       refine (ENNReal.toReal_le_toReal (by finiteness) (by finiteness)).mp (le_of_eq ?_)
       simp only [ENNReal.toReal_mul, ENNReal.toReal_pow, ENNReal.toReal_inv, ENNReal.coe_toReal,
         ENNReal.toReal_ofNat, Units.val_mk0, ENNReal.toReal_ofReal hN, pow_zero, one_mul,
-        NNReal.coe_pow, NNReal.coe_real_pi, Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs]
+        NNReal.coe_pow, NNReal.coe_real_pi, Real.coe_sqrt, coe_nnNorm, Int.norm_eq_abs]
       rw [pow_mul (R : ℝ), hR, hB, mul_pow, Real.rpow_inv_natCast_pow hX0 hf0, hX, pow_mul,
         div_pow, show ((2 : ℝ) ^ 2) ^ f = 2 ^ f * 2 ^ f by rw [← mul_pow]; norm_num, inv_pow]
       have := Real.pi_pos
@@ -426,7 +426,7 @@ theorem anisoSmall_of_shortSmall (E : Type) [Field E] [NumberField E] [IsCMField
   refine ⟨({x : E | IsIntegral ℤ x ∧ ∀ φ : E →+* ℂ, ‖φ x‖ ≤ C} ∪ R ∪
     {((2 * (N * M) : ℤ) : E)}) \ {0}, (k₀ + k + 1) * ((2 * d + 1) * (d + 1)) * 22,
     (((Embeddings.finite_of_norm_le E ℂ C).union hR).union (Set.finite_singleton _)).subset
-      Set.diff_subset, by simp, ?_⟩
+      Set.sdiff_subset, by simp, ?_⟩
   intro V _ _ _ h Λ ν B hV H
   obtain ⟨v, hv, hv0, hvC, hvB⟩ := hC V h Λ ν B hV H
   have hs := H.symm

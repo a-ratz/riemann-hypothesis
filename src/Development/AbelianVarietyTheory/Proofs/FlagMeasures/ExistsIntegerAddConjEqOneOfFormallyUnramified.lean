@@ -69,8 +69,8 @@ private theorem algebraMap_trace_eq_add_of_ne_id {F E : Type} [Field F] [Field E
     (hσ : σ ≠ AlgHom.id F E) (x : E) :
     algebraMap F E (Algebra.trace F E x) = x + σ x := by
   classical
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
   let τ : E ≃ₐ[F] E := AlgEquiv.ofBijective σ (Algebra.IsAlgebraic.algHom_bijective σ)
   have hτ : τ ≠ 1 := by
     intro h

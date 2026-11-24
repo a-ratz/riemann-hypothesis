@@ -88,7 +88,7 @@ theorem ret_hopf : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClose
     rintro h ⟨g, hg, rfl⟩
     exact hst g hg
   refine ⟨?_, hpull, ?_⟩
-  · letI : Fintype ι.range := AddSubgroup.instFintypeSubtypeMemOfDecidablePred ι.range
+  · let : Fintype ι.range := AddSubgroup.instFintypeSubtypeMemOfDecidablePred ι.range
     obtain ⟨⟨AK, hAK⟩, -⟩ := h2 C R v hv N ι.range AA
     refine ⟨hopfPull (AddMonoidHom.ofInjective hinj) AK, ?_⟩
     show AK.carrier.map _ = _

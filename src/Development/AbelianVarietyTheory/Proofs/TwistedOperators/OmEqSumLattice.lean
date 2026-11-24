@@ -71,7 +71,7 @@ open GlobalTheory.PlaceModel GlobalTheory.PlaceDatum GlobalTheory.SplitHecke Glo
 theorem exists_reps {G : Type} [AddCommGroup G] (A B : AddSubgroup G) [Finite (B ⧸ A.addSubgroupOf B)] :
     ∃ R : Finset G, R.card = A.relIndex B ∧ (∀ u ∈ R, u ∈ B) ∧ ∀ w ∈ B, ∃! v, v ∈ R ∧ w - v ∈ A := by
   classical
-  letI := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
+  let := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
   have key : ∀ (w : B) (q : B ⧸ A.addSubgroupOf B), (w : G) - (q.out : B) ∈ A ↔ q = QuotientAddGroup.mk w := fun w q => by
     conv_rhs => rw [← q.out_eq', QuotientAddGroup.eq, AddSubgroup.mem_addSubgroupOf]
     rw [AddSubgroup.coe_add, AddSubgroup.coe_neg, neg_add_eq_sub]
@@ -151,8 +151,8 @@ theorem om_model_of_base : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : 
     exists_nsmul_mem_latO'
       (GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hS)
       (GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hT) y (infPart_of_half (infPart_cA hinf) ((isHalf_iff S T).2 hy))
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
   have s0 := isSBHalf_actO (ΛS := ΛS) (ΛT := ΛT) inferInstance inferInstance g⁻¹ h⁻¹
     (GlobalTheory.isSBHalf_halfInd e _)
   generalize latO S T ΛS ΛT (fun _ => True) = Λ at *
@@ -243,7 +243,7 @@ theorem om_eq_sum_lattice {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D 
     rwa [GlobalTheory.DualPairCheck.cA_cA] at this
   obtain ⟨r, hr, hom⟩ := om_eq_smul_sum hW he (fun u hu => (hdual u (hfin hu)).1 hu) hd hd' hg hh hx hy hR hRu hle
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨⟨μ, 𝓕, hμ⟩, c, hc⟩ := GlobalTheory.exists_normalise_meanSquare_of_cocompact (WO S T) (ratL T S) K hK hKc f hf.cont hf0
     (by
       rintro _ ⟨γ, rfl⟩ w
@@ -330,10 +330,10 @@ theorem sum_ite_reps {G : Type} [AddCommGroup G] {Λ X : AddSubgroup G} (A : G �
   by_cases hc : q
   · obtain ⟨v, ⟨hv, hv'⟩, hu⟩ := hRu (-s) (by rw [map_neg]; exact neg_mem (hq.1 hc).2) (neg_mem hs)
     have k : ∀ u : G, -s - u ∈ Λ ↔ s + u ∈ Λ := fun u => by rw [← neg_add', neg_mem_iff]
-    rw [if_pos hc, Finset.sum_eq_single_of_mem v hv fun u hu' hne =>
-      if_neg fun hh => hne (hu u ⟨hu', (k u).2 ((hp u hu').1 hh).2⟩), if_pos ((hp v hv).2 ⟨(hq.1 hc).1, (k v).1 hv'⟩)]
-  · rw [if_neg hc]
-    refine Finset.sum_eq_zero fun u hu => if_neg fun hh => hc (hq.2 ⟨((hp u hu).1 hh).1, ?_⟩)
+    rw [ite_eq_left hc, Finset.sum_eq_single_of_mem v hv fun u hu' hne =>
+      ite_eq_right fun hh => hne (hu u ⟨hu', (k u).2 ((hp u hu').1 hh).2⟩), ite_eq_left ((hp v hv).2 ⟨(hq.1 hc).1, (k v).1 hv'⟩)]
+  · rw [ite_eq_right hc]
+    refine Finset.sum_eq_zero fun u hu => ite_eq_right fun hh => hc (hq.2 ⟨((hp u hu).1 hh).1, ?_⟩)
     have := sub_mem (hle _ ((hp u hu).1 hh).2 (add_mem hs (hR u hu).2)) (hR u hu).1
     rwa [map_add, add_sub_cancel_right] at this
 
@@ -358,8 +358,8 @@ theorem finite_enlarge (hS : Submodule.IsFullLattice D.host.E ΛS) (hT : Submodu
     Finite (↥((latO S T ΛS ΛT fun _ => True).comap (actAdd S T g⁻¹ h⁻¹) ⊓ half S T e) ⧸
       ((latO S T ΛS ΛT fun _ => True) ⊓ half S T e).addSubgroupOf
         ((latO S T ΛS ΛT fun _ => True).comap (actAdd S T g⁻¹ h⁻¹) ⊓ half S T e)) := by
-  letI := hS
-  letI := hT
+  let := hS
+  let := hT
   obtain ⟨N, hN, h1⟩ := exists_nsmul_actO (ΛS := ΛS) (ΛT := ΛT) inferInstance inferInstance g h
   obtain ⟨R₀, hR₀, h2⟩ := GlobalTheory.LatFinMod.latO_finite_mod D S T _ _ hS.toIsLattice.fg hT.toIsLattice.fg (fun _ => True) N hN
   have hst := @GlobalTheory.SplitScalar.idem_smul_mem D S T (ΛS : Set _) (ΛT : Set _) _ he
@@ -394,9 +394,9 @@ theorem model_sum {Λ : AddSubgroup (WO S T)} {a : AE D} {f₀ : WO S T → ℂ}
 
 theorem om_base_enlarge : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)) (ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)) (ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)) (a : AE D) (f₀ : WO S T → ℂ) (Tm : (WO S T → ℂ) →ₗ[ℂ] (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → IsSelfDualC S ΛS → IsSelfDualC T ΛT → a * a = a → infPart D a = 0 → IsThetaFunO ψ S T f₀ → IsPlaceModel ψ (symplO S T) (heisO ψ S T) a (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) 1 f₀ Tm → a * cA D a = 0 → IsLatVac (heisO ψ S T) (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) f₀ → ∀ e : AE D, IsSplitIdem D e → a * e = e → ∀ (g : GA D S) (h : GA D T), SuppAt e S g → SuppAt e T h → ∀ x y : (AE D)ˣ, IsDetAt e S g x → IsDetAt e T h y → (∀ w ∈ (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True), IsHalf e w → actO S T g⁻¹ h⁻¹ w ∈ (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True)) → om (g, h) f₀ = ((splitFacO χS χT x y : ℂ) * ((Real.sqrt ((((latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) ⊓ GlobalTheory.PlaceModel.half S T e).relIndex ((latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True).comap (GlobalTheory.SplitHecke.actAdd S T g⁻¹ h⁻¹) ⊓ GlobalTheory.PlaceModel.half S T e) : ℕ) : ℝ) : ℝ) : ℂ)⁻¹) • Tm fun t => halfInd a (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E)) fun _ => True) (actO S T g⁻¹ h⁻¹ t) := by
   intro D ψ S T χS χT om ΛS ΛT a f₀ Tm hW hS hT ha hinf hf hTm hc hv e he hae g h hg hh x y hx hy hle
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
-  haveI := finite_enlarge inferInstance inferInstance he.1 hle
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S ΛS hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull T ΛT hT
+  have := finite_enlarge inferInstance inferInstance he.1 hle
   obtain ⟨R, r1, r2, r3⟩ := exists_reps ((latO S T ΛS ΛT fun _ => True) ⊓ half S T e)
     ((latO S T ΛS ΛT fun _ => True).comap (actAdd S T g⁻¹ h⁻¹) ⊓ half S T e)
   have hR : ∀ u ∈ R, actO S T g⁻¹ h⁻¹ u ∈ latO S T ΛS ΛT (fun _ => True) ∧ IsHalf e u := fun u hu =>

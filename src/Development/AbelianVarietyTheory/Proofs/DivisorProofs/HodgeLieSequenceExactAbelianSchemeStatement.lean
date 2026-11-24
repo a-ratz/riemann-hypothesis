@@ -97,15 +97,15 @@ theorem abelianScheme_hodgeFiltration_functional_extends' : GlobalTheory.Publish
       ∀ c : F1 (A.hom ≫ 𝟙 (Sp R)), H c = ψ c := by
   intro hC hH R _ A _ g hab hdim ψ
   obtain ⟨-, -, -, ⟨-, hproj, -⟩, ⟨-, -, hsurj⟩, -⟩ := hH R A g hab hdim
-  haveI := hab.smooth
-  haveI := hab.proper
+  have := hab.smooth
+  have := hab.proper
   have hsm : Smooth (A.hom ≫ 𝟙 (Sp R)) := by rw [Category.comp_id]; infer_instance
   have hsep : IsSeparated (A.hom ≫ 𝟙 (Sp R)) := by rw [Category.comp_id]; infer_instance
   have hqc : QuasiCompact (A.hom ≫ 𝟙 (Sp R)) := by rw [Category.comp_id]; infer_instance
   have h1 := (GlobalTheory.CechDR.cechDeRham_comparison_bijective_cup_smooth hC R A.left (A.hom ≫ 𝟙 (Sp R)) hsm hsep hqc).1.2
   have hO := _root_.GlobalTheory.CechDR.cmpO_injective R A.left (A.hom ≫ 𝟙 (Sp R))
   have hs' : Function.Surjective (toHO1 (A.hom ≫ 𝟙 (Sp R))) := by rw [Category.comp_id]; exact hsurj
-  haveI : Module.Projective R (HO1 (A.hom ≫ 𝟙 (Sp R))) := by rw [Category.comp_id]; exact hproj
+  have : Module.Projective R (HO1 (A.hom ≫ 𝟙 (Sp R))) := by rw [Category.comp_id]; exact hproj
   exact GlobalTheory.CechDR.exists_extend_hodgeFiltration_functional_split _ hO h1 hs' ψ
 
 end GlobalTheory.AbelianExtend
@@ -175,9 +175,9 @@ theorem lieExact_of_crystallineLift_hodgeDeRham : GlobalTheory.Published.Crystal
   intro hC hH R _ A _ g hab hdim
   have hP : AllPrim (dp0 R) (𝟙 _) A :=
     (GlobalTheory.AbelianPrim.abelianDeRham_free (_root_.GlobalTheory.Proof.abelianDeRhamFree_of_hodge hC hH) R A g hab hdim).1
-  have hsm : Smooth (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.smooth; infer_instance
-  have hsep : IsSeparated (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.proper; infer_instance
-  have hqc : QuasiCompact (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.proper; infer_instance
+  have hsm : Smooth (A.hom ≫ 𝟙 (Sp R)) := by have := hab.smooth; infer_instance
+  have hsep : IsSeparated (A.hom ≫ 𝟙 (Sp R)) := by have := hab.proper; infer_instance
+  have hqc : QuasiCompact (A.hom ≫ 𝟙 (Sp R)) := by have := hab.proper; infer_instance
   have hcmp : Function.Injective (GlobalTheory.CechDR.cmp1 (A.hom ≫ 𝟙 (Sp R))) :=
     (GlobalTheory.CechDR.cechDeRham_comparison_bijective_cup_smooth hC R A.left _ hsm hsep hqc).1.1
   have hcl : Function.Injective (GlobalTheory.CechDR.clForm (A.hom ≫ 𝟙 (Sp R))) :=

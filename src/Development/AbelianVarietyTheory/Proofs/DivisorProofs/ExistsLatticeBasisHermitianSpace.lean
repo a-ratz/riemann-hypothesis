@@ -254,7 +254,7 @@ theorem exists_gl {E : Type} [Field E] [NumberField E] {n : ℕ} (L : Submodule 
   obtain ⟨⟨_, k, hk0, hk, rfl⟩, b, hli, hb, hw⟩ :=
     GlobalTheory.PlaceInt.LocBasis.exists_basis_up_to (A := A) (GlobalTheory.PlaceInt.LocBasis.primeTo (𝓞 E) N) L hfg hsp
   let g : Matrix (Fin n) (Fin n) E := Matrix.of fun i j => b j i
-  have hunit : IsUnit g := Matrix.linearIndependent_cols_iff_isUnit.1 hli
+  have hunit : IsUnit g := Matrix.linearIndependent_col_iff_isUnit.1 hli
   refine ⟨k, hunit.unit, hk, hb, fun x hx i => ?_⟩
   obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 (hw x hx)
   refine ⟨a i, ?_⟩

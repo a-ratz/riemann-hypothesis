@@ -192,7 +192,7 @@ theorem cA_cAinv (σ : E →ₐ[F] E) (x : AE F E) : cA σ (cAinv σ x) = x := b
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul a y =>
-    simp only [cAinv, cA, Algebra.TensorProduct.map_tmul, AlgHom.id_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe]
+    simp only [cAinv, cA, Algebra.TensorProduct.map_tmul, AlgHom.id_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass]
     congr 1
     exact AlgEquiv.apply_symm_apply (AlgEquiv.ofBijective σ ⟨(σ : E →+* E).injective, sigma_surjective σ⟩) y
   | add x y hx hy => simp only [map_add (f := _), hx, hy]
@@ -302,13 +302,13 @@ theorem form_inc {σ : E →ₐ[F] E} {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (
   simp only [form, incV, incM, Matrix.map_apply, hc, dotProduct, Matrix.mulVec, Finset.mul_sum, map_sum, map_mul, mul_assoc]
 
 theorem trace_one_tmul (e : E) : Algebra.trace (AF F) (AE F E) ((1 : AF F) ⊗ₜ[F] e) = algebraMap F (AF F) (Algebra.trace F E e) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   rw [Algebra.trace_apply, ← Algebra.baseChange_lmul, LinearMap.trace_baseChange, ← Algebra.trace_apply]
 
 theorem eq_zero_of_psi_trace {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (a : AE F E)
     (h : ∀ t : AE F E, ψ (Algebra.trace (AF F) (AE F E) (a * t)) = 1) : a = 0 := by
   classical
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let b := Module.finBasis F E
   let bb : Module.Basis _ (AF F) (AE F E) := Algebra.TensorProduct.basis (AF F) b
   have hco : ∀ i, ∀ x : AE F E, Algebra.trace (AF F) (AE F E) (x * ((1 : AF F) ⊗ₜ[F] b.traceDual i)) = bb.repr x i := by
@@ -479,9 +479,9 @@ theorem pr_single (σ : E →ₐ[F] E) (hcc : ∀ z : AF F ⊗[F] E, cAF σ (cAF
   simp only [pr, LinearMap.coe_mk, AddHom.coe_mk, AddEquiv.symm_apply_apply]
   congr 1
   simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Matrix.of_apply,
-    apply_ite (cAF σ), map_zero, hcc, ite_mul, zero_mul, ite_and, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+    apply_ite (cAF σ), map_zero, hcc, ite_mul, zero_mul, ite_and, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
     Finset.mul_sum]
-  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Finset.sum_mul]
   refine Finset.sum_congr rfl fun a _ => ?_
   ring
@@ -540,14 +540,14 @@ theorem PositivityTheory.ThKW.PhaseFourierInjectivity.finj : ∀ (F E : Type) [F
     first
       | exact continuous_pi fun i => continuous_pi fun j => continuous_apply _
       | fun_prop
-  haveI : IsTopologicalAddGroup (AF F ⊗[F] E) := IsModuleTopology.topologicalAddGroup (AF F) (AF F ⊗[F] E)
+  have : IsTopologicalAddGroup (AF F ⊗[F] E) := IsModuleTopology.isTopologicalAddGroup (AF F) (AF F ⊗[F] E)
   let E' : WOF F E nS nT ≃ₜ+ (Fin (nT * nS) → AF F ⊗[F] E) :=
     { toAddEquiv := vecE F E nS nT, continuous_toFun := he, continuous_invFun := he' }
-  letI : MeasurableSpace (Fin (nT * nS) → AF F ⊗[F] E) := borel _
-  haveI : BorelSpace (Fin (nT * nS) → AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  let : MeasurableSpace (Fin (nT * nS) → AF F ⊗[F] E) := borel _
+  have : BorelSpace (Fin (nT * nS) → AF F ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
   let em : WOF F E nS nT ≃ᵐ (Fin (nT * nS) → AF F ⊗[F] E) := E'.toHomeomorph.toMeasurableEquiv
-  haveI := hν
+  have := hν
   have hμ : (ν.map em).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν E'
   have hpc : ∀ a : WOF F E nS nT, Continuous (pr σ JS ξ₀ a) := fun a => IsModuleTopology.continuous_of_linearMap _
   have hph : ∀ a, Continuous (phase σ JS JT ξ₀ B.ψ a) := by

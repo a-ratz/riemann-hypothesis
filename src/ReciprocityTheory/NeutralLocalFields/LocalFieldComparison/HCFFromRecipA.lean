@@ -223,7 +223,7 @@ theorem classOf_eq_one_iff (a : Ideles K) :
       apply FractionalIdeal.coeToSubmodule_injective
       show ((idealFI K a : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) =
         ((FractionalIdeal.spanSingleton (𝓞 K)⁰ x : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K)
-      rw [FractionalIdeal.coe_spanSingleton]
+      rw [FractionalIdeal.coeToSubmodule_spanSingleton]
       exact hx
     have hx0 : x ≠ 0 := by
       rintro rfl
@@ -241,7 +241,7 @@ theorem classOf_eq_one_iff (a : Ideles K) :
         FractionalIdeal.spanSingleton (𝓞 K)⁰ (k : K) := by
       show idealFI K _ = _
       rw [idealFI_mul, key, hone u hu', mul_one]
-    rw [h2, FractionalIdeal.coe_spanSingleton]
+    rw [h2, FractionalIdeal.coeToSubmodule_spanSingleton]
     exact ⟨⟨k, rfl⟩⟩
 
 private theorem isUnit_of_valued_eq_one (v : HeightOneSpectrum (𝓞 K)) (y : v.adicCompletionIntegers K)

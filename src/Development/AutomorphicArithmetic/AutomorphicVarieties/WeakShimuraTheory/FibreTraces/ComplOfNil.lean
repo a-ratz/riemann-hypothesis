@@ -111,7 +111,7 @@ private theorem co_pow {Λ A : Type} [CommRing Λ] [IsLocalRing Λ] [CommRing A]
     intro ht
     rw [ht] at hJle
     exact hI.ne_top (top_le_iff.1 hJle)
-  haveI : Nontrivial (A ⧸ I ^ (n + 1)) := ⟨⟨0, 1, fun h01 => hne ((Ideal.eq_top_iff_one _).2
+  have : Nontrivial (A ⧸ I ^ (n + 1)) := ⟨⟨0, 1, fun h01 => hne ((Ideal.eq_top_iff_one _).2
     (Ideal.Quotient.eq_zero_iff_mem.1 ((map_one (Ideal.Quotient.mk (I ^ (n + 1)))).trans h01.symm)))⟩⟩
   have hnonunit : ∀ y : A ⧸ I ^ (n + 1), ¬IsUnit y ↔ y ∈ I.map (Ideal.Quotient.mk (I ^ (n + 1))) := by
     intro y
@@ -124,7 +124,7 @@ private theorem co_pow {Λ A : Type} [CommRing Λ] [IsLocalRing Λ] [CommRing A]
       rw [Ideal.Quotient.eq] at he
       have := Ideal.sub_mem _ hz' (hJle he)
       rwa [sub_sub_cancel] at this
-  haveI hloc : IsLocalRing (A ⧸ I ^ (n + 1)) := IsLocalRing.of_nonunits_add (by
+  have hloc : IsLocalRing (A ⧸ I ^ (n + 1)) := IsLocalRing.of_nonunits_add (by
     intro a b ha hb
     rw [mem_nonunits_iff] at ha hb ⊢
     rw [hnonunit] at ha hb ⊢
@@ -160,7 +160,7 @@ private theorem co_pow {Λ A : Type} [CommRing Λ] [IsLocalRing Λ] [CommRing A]
     refine ⟨a, ?_⟩
     rw [hmax, halg, ← map_sub]
     exact Ideal.mem_map_of_mem _ ha
-  haveI hco : IsCO Λ (A ⧸ I ^ (n + 1)) := IsCO.mk hcompl hlh hrs
+  have hco : IsCO Λ (A ⧸ I ^ (n + 1)) := IsCO.mk hcompl hlh hrs
   refine ⟨hco, hpow, ?_⟩
   apply AlgHom.ext
   intro z
@@ -196,7 +196,7 @@ theorem UpperTheory.V.Ws.fibCpl :
     ext z
     rw [hx, RingHom.mem_ker]
     rfl
-  haveI hPmax : P.IsMaximal := by
+  have hPmax : P.IsMaximal := by
     rw [hPker]
     exact RingHom.ker_isMaximal_of_surjective _ hxsurj
   have hB : ∀ k : ℕ, ∃ _ : IsCO Λ (A ⧸ P ^ (k + 1)), maximalIdeal (A ⧸ P ^ (k + 1)) ^ (k + 1) = ⊥ ∧
@@ -231,9 +231,9 @@ theorem UpperTheory.V.Ws.fibCpl :
         have hle : maximalIdeal R ^ (k + 1) ≤ maximalIdeal R := Ideal.pow_le_self (Nat.succ_ne_zero k)
         rw [ht] at hle
         exact (IsLocalRing.maximalIdeal.isMaximal R).ne_top (top_le_iff.1 hle)
-      haveI : Nontrivial (R ⧸ maximalIdeal R ^ (k + 1)) := ⟨⟨0, 1, fun h01 => hne ((Ideal.eq_top_iff_one _).2
+      have : Nontrivial (R ⧸ maximalIdeal R ^ (k + 1)) := ⟨⟨0, 1, fun h01 => hne ((Ideal.eq_top_iff_one _).2
         (Ideal.Quotient.eq_zero_iff_mem.1 ((map_one (Ideal.Quotient.mk (maximalIdeal R ^ (k + 1)))).trans h01.symm)))⟩⟩
-      haveI hcoQ : IsCO Λ (R ⧸ maximalIdeal R ^ (k + 1)) :=
+      have hcoQ : IsCO Λ (R ⧸ maximalIdeal R ^ (k + 1)) :=
         co_quot Λ R _ (Ideal.Quotient.mkₐ Λ (maximalIdeal R ^ (k + 1))) (Ideal.Quotient.mkₐ_surjective Λ _)
       let j : (A ⧸ P ^ (k + 1)) →ₐ[Λ] (R ⧸ maximalIdeal R ^ (k + 1)) :=
         Ideal.quotientMapₐ (maximalIdeal R ^ (k + 1)) (IsScalarTower.toAlgHom Λ A R) (fun z hz => (hcp (k + 1)).ge hz)

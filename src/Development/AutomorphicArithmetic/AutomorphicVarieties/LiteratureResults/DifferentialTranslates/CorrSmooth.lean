@@ -138,7 +138,7 @@ theorem corrSmooth : CorrSmooth := by
   congr 1
   funext i
   have : sand (τ p) (sand (τ p)⁻¹ (v i)) = v i := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]; rfl
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]; rfl
   simp [this, smul_smul]
 
 end UpperTheory.V.Lit.Dr

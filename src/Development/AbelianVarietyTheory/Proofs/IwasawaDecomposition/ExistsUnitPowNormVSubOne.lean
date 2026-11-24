@@ -73,9 +73,9 @@ theorem exists_unit_pow_normV_sub_one (E : Type) [Field E] [NumberField E] (v : 
   have hcard : Nat.card (ResidueField (v.adicCompletionIntegers E)) = normV v := by
     simpa [Formalism.UG.qV, normV, Ideal.absNorm_apply, Submodule.cardQuot_apply] using
       Formalism.UG.P.tjcosets_card_residue v
-  haveI : Finite (ResidueField (v.adicCompletionIntegers E)) :=
+  have : Finite (ResidueField (v.adicCompletionIntegers E)) :=
     GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
-  haveI := Fintype.ofFinite (ResidueField (v.adicCompletionIntegers E))
+  have := Fintype.ofFinite (ResidueField (v.adicCompletionIntegers E))
   have hq0 : ((normV v : ℕ) : ResidueField (v.adicCompletionIntegers E)) = 0 := by
     rw [← hcard, Nat.card_eq_fintype_card]; exact FiniteField.cast_card_eq_zero _
   have hq1 : 2 ≤ normV v := by

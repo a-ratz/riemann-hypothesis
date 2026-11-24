@@ -55,7 +55,7 @@ private theorem exists_finPart {L : Type} [Field L] [NumberField L] [IsCMField L
   refine ⟨fun x => ⟨⟨finGL L n (Matrix.GeneralLinearGroup.map (pFin L) x.1),
     GlobalTheory.SplitPts.finGL_mem_UA _ fun u => GlobalTheory.SplitPts.comp_eq x u⟩, MonoidHom.mem_ker.2 (pInf_finGL _)⟩,
     Continuous.subtype_mk (Continuous.subtype_mk
-      (hfin.comp (GlobalTheory.DefU.continuous_map_pFin.comp continuous_subtype_val)) _) _, ?_, fun x => ?_⟩
+      (hfin.comp (GlobalTheory.DefU.continuous_map_pFin.comp continuous_subtypeVal)) _) _, ?_, fun x => ?_⟩
   · refine Subtype.ext (Subtype.ext ?_)
     change finGL L n (Matrix.GeneralLinearGroup.map (pFin L) 1) = 1
     rw [map_one, map_one]
@@ -75,7 +75,7 @@ private theorem continuous_infC {L : Type} [Field L] [NumberField L] [IsCMField 
       (InfinitePlace.Completion.isometryEquivComplexOfIsComplex (IsTotallyComplex.isComplex w)).continuous.comp
         ((continuous_apply w).comp continuous_fst)
     exact (Continuous.units_map _ (continuous_id.matrix_map h1)).comp
-      ((Continuous.units_map _ (continuous_id.matrix_map h2)).comp continuous_subtype_val)
+      ((Continuous.units_map _ (continuous_id.matrix_map h2)).comp continuous_subtypeVal)
   exact continuous_pi fun v => hτ v.embedding
 
 private theorem infC_of_fin {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} {k : UA L n}

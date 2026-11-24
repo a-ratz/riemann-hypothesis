@@ -101,8 +101,8 @@ theorem exists_finset_reps : ∀ {G : Type} [inst : Group G] {K : Subgroup G},
   classical
   set H : Subgroup K := (K.map (MulAut.conj g).toMonoidHom).subgroupOf K with hH
   have hidx : H.index ≠ 0 := hK g
-  haveI : Finite (K ⧸ H) := Nat.finite_of_card_ne_zero hidx
-  haveI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : Finite (K ⧸ H) := Nat.finite_of_card_ne_zero hidx
+  have : Fintype (K ⧸ H) := Fintype.ofFinite _
   have key : ∀ (q : K ⧸ H) (a : K) (b : G), b ∈ K →
       ((((q.out : K) : G) * g)⁻¹ * ((a : G) * g * b) ∈ K ↔ q = (a : K ⧸ H)) := by
     intro q a b hb
@@ -379,12 +379,12 @@ theorem isUnifV_of_centre : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     have a2 : w ((algebraMap (𝓞 E) E x)⁻¹) ≤ 1 := (hmem _).1 (not_not.1 ((hc x hx0).not.1 hx))
     rw [map_inv₀] at a2
     have hw0 : w (algebraMap (𝓞 E) E x) ≠ 0 := (Valuation.ne_zero_iff w).2 hxE
-    exact le_antisymm a1 ((inv_le_one₀ (zero_lt_iff.2 hw0)).1 a2)
+    exact le_antisymm a1 ((inv_le_one₀ (pos_iff_ne_zero.2 hw0)).1 a2)
   · have hxE : algebraMap (𝓞 E) E ϖ ≠ 0 := by simpa using hϖ0
     have a2 : ¬ w ((algebraMap (𝓞 E) E ϖ)⁻¹) ≤ 1 := (hmem _).not.1 ((hc ϖ hϖ0).1 hP)
     rw [map_inv₀, not_le] at a2
     have hw0 : w (algebraMap (𝓞 E) E ϖ) ≠ 0 := (Valuation.ne_zero_iff w).2 hxE
-    exact (one_lt_inv₀ (zero_lt_iff.2 hw0)).1 a2
+    exact (one_lt_inv₀ (pos_iff_ne_zero.2 hw0)).1 a2
   · have e : algebraMap (𝓞 E) E (algebraMap (𝓞 F) (𝓞 E) y)
         = algebraMap F E (algebraMap (𝓞 F) F y) := by
       rw [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply]

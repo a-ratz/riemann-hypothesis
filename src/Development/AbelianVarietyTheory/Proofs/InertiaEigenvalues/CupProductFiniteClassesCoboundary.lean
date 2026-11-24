@@ -204,7 +204,7 @@ theorem nontrivial_B' : Nontrivial B := by
 
 include PD in
 theorem tmul_one_injective : Function.Injective fun c : LL => c ⊗ₜ[Qp] (1 : B) := by
-  haveI := nontrivial_B' PD
+  have := nontrivial_B' PD
   exact Algebra.TensorProduct.includeLeft_injective (S := Qp) (A := LL) (B := B)
     (algebraMap Qp B).injective
 
@@ -241,7 +241,7 @@ theorem cob_of_cont (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P)
     (hχ : Continuous fun g => ((cycLL (P.PD K) LL g : LLˣ) : LL))
     (a : ↥(GK K) → A.V) (ha : a ∈ finiteCocycles (P.PD K) A.ρ) (b : ↥(GK K) → A'.V)
     (hb : b ∈ finiteCocycles (P.PD K) A'.ρ) : CobL (P.PD K) (cupL A'.ρ m a b) := by
-  haveI : IsTopologicalRing LL := hO.2.2.2.1
+  have : IsTopologicalRing LL := hO.2.2.2.1
   obtain ⟨x, hx⟩ := ha.2
   obtain ⟨y, hy⟩ := hb.2
   obtain ⟨hd1, d2, hd2, hd2'⟩ :=
@@ -362,7 +362,7 @@ theorem cob_of_cont (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P)
 
 theorem bk_orth : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (m : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDR (P.PD K) A.ρ → IsDual1 (P.PD K) A.ρ A'.ρ m → ∀ a ∈ finiteCocycles (P.PD K) A.ρ, ∀ b ∈ finiteCocycles (P.PD K) A'.ρ, CobL (P.PD K) (cupL A'.ρ m a b) := by
   intro l _ P AI hT K LL _ _ _ O _ _ hO A A' m hdR hD a ha b hb
-  haveI : IsTopologicalRing LL := hO.2.2.2.1
+  have : IsTopologicalRing LL := hO.2.2.2.1
   by_cases hV : ∃ v : A.V, v ≠ 0
   · obtain ⟨v, hv⟩ := hV
     obtain ⟨v', hv'⟩ : ∃ v', m v v' ≠ 0 := by

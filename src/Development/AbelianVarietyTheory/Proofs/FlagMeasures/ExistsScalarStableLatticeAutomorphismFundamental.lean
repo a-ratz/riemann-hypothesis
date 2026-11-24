@@ -146,9 +146,9 @@ theorem measurable_dens :
 theorem lintegral_haarGL_mul_left (γ : MatInf E j) (hγ : 0 < detNorm E j γ) (F : MatInf E j → ENNReal)
     (hF : Measurable F) : ∫⁻ x, F (γ * x) ∂(haarGL E j) = ∫⁻ x, F x ∂(haarGL E j) := by
   have hd : 0 < detNorm E j γ ^ j := pow_pos hγ j
-  haveI i1 : (volume : Measure (Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI i2 : (volume : Measure (Fin j → Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI i3 : (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)).IsAddHaarMeasure :=
+  have i1 : (volume : Measure (Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have i2 : (volume : Measure (Fin j → Fin j → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have i3 : (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure _
   have hmap := Measure.map_linearMap_addHaar_eq_smul_addHaar
     (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)) (f := (mulLin γ).restrictScalars ℝ)
@@ -239,7 +239,7 @@ theorem mem_autGL {Λ : Submodule (𝓞 E) (Fin j → E)} {x : MatInf E j} :
 theorem exists_denominator (Λ : Submodule (𝓞 E) (Fin j → E)) (hΛ : Submodule.IsFullLattice E Λ) :
     ∃ N : E, N ≠ 0 ∧ ∀ γ ∈ autSub Λ, ∀ a b, IsIntegral ℤ (N * (γ : Matrix (Fin j) (Fin j) E) a b) := by
   classical
-  letI : Submodule.IsFullLattice E Λ := hΛ
+  let : Submodule.IsFullLattice E Λ := hΛ
   obtain ⟨S, hS⟩ := Submodule.IsLattice.fg E Λ
   obtain ⟨d, hd⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors (𝓞 E))
     (S ×ˢ (Finset.univ : Finset (Fin j))) (fun p : (Fin j → E) × Fin j => p.1 p.2)
@@ -395,15 +395,15 @@ def dom (Λ : Submodule (𝓞 E) (Fin j → E)) : Set (MatInf E j) :=
   {x | 0 < detNorm E j x ∧ ∀ γ : autSub Λ, key x ≤ key (emb (γ : GL (Fin j) E) * x)}
 
 theorem countable_GL : Countable (GL (Fin j) E) := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
-  haveI : Countable (Matrix (Fin j) (Fin j) E) := inferInstanceAs (Countable (Fin j → Fin j → E))
+  have : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
+  have : Countable (Matrix (Fin j) (Fin j) E) := inferInstanceAs (Countable (Fin j → Fin j → E))
   exact Units.val_injective.countable
 
 theorem measurableSet_pos : MeasurableSet {g | 0 < detNorm E j g} :=
   measurableSet_lt measurable_const measurable_detNorm
 
 theorem measurableSet_dom (Λ : Submodule (𝓞 E) (Fin j → E)) : MeasurableSet (dom Λ) := by
-  haveI := countable_GL (E := E) (j := j)
+  have := countable_GL (E := E) (j := j)
   have : dom Λ = {g | 0 < detNorm E j g} ∩ ⋂ γ : autSub Λ, ({x | nrm x < nrm (emb (γ : GL (Fin j) E) * x)} ∪
       ({x | nrm x = nrm (emb (γ : GL (Fin j) E) * x)} ∩ {x | dir x ≤ dir (emb (γ : GL (Fin j) E) * x)})) := by
     ext x
@@ -456,8 +456,8 @@ theorem covol_eq (Λ : Submodule (𝓞 E) (Fin j → E)) (hΛ : Submodule.IsFull
     (hν : ∀ γ ∈ autSub Λ, ν.map (fun x => emb γ * x) = ν) (h0 : ν {g | 0 < detNorm E j g}ᶜ = 0)
     (A : Set (MatInf E j)) (hA : MeasurableSet A) (hAX : A ⊆ {g | 0 < detNorm E j g})
     (hinv : ∀ γ ∈ autGL E j Λ, ∀ g ∈ A, γ * g ∈ A) : covol (autGL E j Λ) ν A = ν (A ∩ dom Λ) := by
-  letI := act Λ
-  haveI := countable_GL (E := E) (j := j)
+  let := act Λ
+  have := countable_GL (E := E) (j := j)
   have : MeasurableConstSMul (autSub Λ) (MatInf E j) := ⟨fun γ => measurable_mul_left _⟩
   have : SMulInvariantMeasure (autSub Λ) (MatInf E j) ν := ⟨fun γ s hs => by
     have h := hν γ γ.2

@@ -106,7 +106,7 @@ theorem le_nullPart {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) {K : Subgr
   rw [← LocGL.idem_eq_zero_iff hρ hK, ← Submodule.mem_bot ℂ, ← h]
   refine ⟨?_, LocGL.idem_mem hρ hK _⟩
   obtain ⟨U, -, _, hU⟩ := LocGL.exists_normal_fix hρ hK (ρ g x)
-  letI := Fintype.ofFinite (K ⧸ U)
+  let := Fintype.ofFinite (K ⧸ U)
   rw [LocGL.idem_eq_cosetSum hρ hK U hU]
   exact W.smul_mem _ (W.sum_mem fun q _ => hW _ _ (hW _ _ hx))
 
@@ -236,7 +236,7 @@ theorem isContRep_sub (S : Submodule ℂ (Sm E a)) [FiniteDimensional ℂ S] (hS
     obtain ⟨g, rfl⟩ := hy
     have h1 : Continuous fun k : Kinf E a => chart x.1.1 g (toL (Unitary.toUnits k).val) :=
       (x.1.2 g).continuousOn.comp_continuous (f := fun k : Kinf E a => toL (Unitary.toUnits k).val)
-        continuous_subtype_val fun k => val_mem_invSet _
+        continuous_subtypeVal fun k => val_mem_invSet _
     simp only [chart_val] at h1
     exact h1
   | zero => exact continuous_const

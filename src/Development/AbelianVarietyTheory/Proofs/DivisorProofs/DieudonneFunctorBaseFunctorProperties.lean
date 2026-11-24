@@ -103,15 +103,15 @@ theorem map_F {G H : PDivGroup p k} (hG : P k G) (hH : P k H) (f : G ⟶ H) (m :
 
 theorem finrank_M (G : PDivGroup p k) (hG : P k G) :
     Module.finrank (WittVector p k) (B.M G hG) = G.height := by
-  haveI := B.free G hG
-  haveI := B.finite G hG
+  have := B.free G hG
+  have := B.finite G hG
   obtain ⟨_, h5⟩ := finrank_eq_of_semilinear_surjective (WittVector.constantCoeff_surjective p)
     (p_eq_zero p k) (B.red G hG) (B.red_surjective G hG) fun m => (B.red_eq_zero G hG m).1
   exact h5.symm.trans (_root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p k (p_eq_zero p k) G).2.2.1
 
 theorem eq_zero_of_pow_smul {G : PDivGroup p k} (hG : P k G) (n : ℕ) (m : B.M G hG) (h : p ^ n • m = 0) :
     m = 0 := by
-  haveI := B.free G hG
+  have := B.free G hG
   rw [← Nat.cast_smul_eq_nsmul (WittVector p k)] at h
   refine (smul_eq_zero.1 h).resolve_left ?_
   rw [Nat.cast_pow]

@@ -561,7 +561,7 @@ theorem key (A B : Type) [CommRing A] [CommRing B] [Algebra A B] [Algebra.Etale 
     (c : B) : ∃ p : Polynomial A, (∃ n, algebraMap A B (p.coeff n) ∉ Q) ∧ p.eval₂ (algebraMap A B) c ∈ Q := by
   let P := Q.comap (algebraMap A B)
   have : Q.LiesOver P := ⟨rfl⟩
-  letI := Localization.AtPrime.algebraOfLiesOver P Q
+  let := Localization.AtPrime.algebraOfLiesOver P Q
   have : Algebra.IsUnramifiedAt A Q := inferInstance
   have : Module.Finite P.ResidueField Q.ResidueField := inferInstance
   have : IsScalarTower A P.ResidueField Q.ResidueField := inferInstance
@@ -619,10 +619,10 @@ theorem etale_base_change_fraction_field_of_etale_polynomial_algebra (hC3 : C3) 
     [Field K] [Algebra T K] [IsFractionRing T K] (hA : AIC T) (hq : IsUnit (q : T))
     (C : CommRingCat.{0}) (c : CommRingCat.of (Polynomial T) ⟶ C) (hc : Et c) :
     BC q i (CommRingCat.ofHom (algebraMap T K)) (pC (CommRingCat.of T) ≫ c) := by
-  letI : Algebra (Polynomial T) C := c.hom.toAlgebra
-  haveI : Algebra.Etale (Polynomial T) C := hc
-  letI : Algebra T C := (pC (CommRingCat.of T) ≫ c).hom.toAlgebra
-  haveI : IsScalarTower T (Polynomial T) C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra (Polynomial T) C := c.hom.toAlgebra
+  have : Algebra.Etale (Polynomial T) C := hc
+  let : Algebra T C := (pC (CommRingCat.of T) ≫ c).hom.toAlgebra
+  have : IsScalarTower T (Polynomial T) C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have h3 := hC3 q T hA hq C i
   have hsq := CommRingCat.isPushout_tensorProduct T (FractionRing T) C
   let e : CommRingCat.of (FractionRing T) ≅ CommRingCat.of K :=
@@ -938,7 +938,7 @@ theorem sub_finite (A B : Type) [CommRing A] [CommRing B] [Algebra A B] [Algebra
 
 theorem sub_local (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRing A] [Nontrivial B] [Algebra A B]
     [Algebra.IsIntegral A B] (hid : ∀ e : B, IsIdempotentElem e → e = 0 ∨ e = 1) (s : Finset B) : IsLocalRing (Algebra.adjoin A (s : Set B)) := by
-  haveI := sub_finite A B s
+  have := sub_finite A B s
   refine local_of_finite A _ fun e he => ?_
   rcases hid e (by have h := congrArg Subtype.val he.eq; exact h) with h | h
   · exact Or.inl (Subtype.ext h)
@@ -947,7 +947,7 @@ theorem sub_local (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRing A] 
 theorem isLocal (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRing A] [Nontrivial B] [Algebra A B]
     [Algebra.IsIntegral A B] (hid : ∀ e : B, IsIdempotentElem e → e = 0 ∨ e = 1) : IsLocalRing B := by
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun x => ?_
-  haveI := sub_local A B hid {x}
+  have := sub_local A B hid {x}
   let y : Algebra.adjoin A ((({x} : Finset B)) : Set B) := ⟨x, Algebra.subset_adjoin (by simp)⟩
   rcases IsLocalRing.isUnit_or_isUnit_one_sub_self y with h | h
   · exact Or.inl (h.map (Algebra.adjoin A _).val)
@@ -958,9 +958,9 @@ theorem maxIdeal_comap (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRin
     letI := isLocal A B hid
     letI := sub_local A B hid s
     (maximalIdeal B).comap (Algebra.adjoin A (s : Set B)).val = maximalIdeal (Algebra.adjoin A (s : Set B)) := by
-  letI := isLocal A B hid
-  letI := sub_local A B hid s
-  haveI : Algebra.IsIntegral (Algebra.adjoin A (s : Set B)) B := Algebra.IsIntegral.tower_top A
+  let := isLocal A B hid
+  let := sub_local A B hid s
+  have : Algebra.IsIntegral (Algebra.adjoin A (s : Set B)) B := Algebra.IsIntegral.tower_top A
   have : ((maximalIdeal B).comap (algebraMap (Algebra.adjoin A (s : Set B)) B)).IsMaximal :=
     Ideal.isMaximal_comap_of_isIntegral_of_isMaximal _
       (fun x => Algebra.IsIntegral.isIntegral x) (maximalIdeal B)
@@ -969,13 +969,13 @@ theorem maxIdeal_comap (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRin
 theorem hens (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRing A] [Nontrivial B] [Algebra A B]
     [Algebra.IsIntegral A B] (hid : ∀ e : B, IsIdempotentElem e → e = 0 ∨ e = 1) : HenselianLocalRing B := by
   classical
-  letI := isLocal A B hid
+  let := isLocal A B hid
   refine ⟨fun f hf a0 h0 h1 => ?_⟩
   set s : Finset B := insert a0 f.coeffs
   let S := Algebra.adjoin A (s : Set B)
-  letI := sub_local A B hid s
-  haveI := sub_finite A B s
-  haveI : HenselianLocalRing S := GlobalTheory.henselianLocalRing_of_finite A S
+  let := sub_local A B hid s
+  have := sub_finite A B s
+  have : HenselianLocalRing S := GlobalTheory.henselianLocalRing_of_finite A S
   have hc : (↑f.coeffs : Set B) ⊆ S.toSubring := fun c hc =>
     Algebra.subset_adjoin (by simp [s, hc])
   let g : S[X] := f.toSubring S.toSubring hc
@@ -998,8 +998,8 @@ theorem hens (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRing A] [Nont
 
 theorem HensInt_of : LateralTheory.E.t_E3Cut.HensInt := by
   intro A B _ _ _ _ f hf hid
-  letI : Algebra A B := f.toAlgebra
-  haveI : Algebra.IsIntegral A B := ⟨hf⟩
+  let : Algebra A B := f.toAlgebra
+  have : Algebra.IsIntegral A B := ⟨hf⟩
   exact ⟨hens A B hid⟩
 
 end LateralTheory.E.HensIntPf
@@ -1046,7 +1046,7 @@ theorem intMul {A C : Type} [CommRing A] [CommRing C] [IsDomain C] [Algebra A C]
     (hp : ∃ n, algebraMap A C (p.coeff n) ≠ 0) (hz : Polynomial.aeval z p = 0) :
     ∃ a : A, algebraMap A C a ≠ 0 ∧ IsIntegral A (algebraMap A C a * z) := by
   let A' := (algebraMap A C).range
-  letI : Algebra A A' := (algebraMap A C).rangeRestrict.toAlgebra
+  let : Algebra A A' := (algebraMap A C).rangeRestrict.toAlgebra
   have : IsScalarTower A A' C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hsurj : Function.Surjective (algebraMap A A') := (algebraMap A C).rangeRestrict_surjective
   have : Algebra.IsIntegral A A' := ⟨fun x => by
@@ -1075,7 +1075,7 @@ theorem intMul {A C : Type} [CommRing A] [CommRing C] [IsDomain C] [Algebra A C]
 theorem IntClos_of (hH : HensInt) : IntClos := by
   intro A C c _ hSH hAIC hAR
   obtain ⟨hHA, -⟩ := hSH
-  letI : Algebra A C := c.hom.toAlgebra
+  let : Algebra A C := c.hom.toAlgebra
   let B := integralClosure A C
   refine ⟨CommRingCat.of B, CommRingCat.ofHom (algebraMap A B), CommRingCat.ofHom B.val.toRingHom, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · ext x; rfl
@@ -1156,7 +1156,7 @@ theorem LocEt_of : LocEt := by
     convert h2 using 1
     ext a
     simp only [RingHom.coe_comp, Function.comp_apply, CommRingCat.hom_comp, RingEquiv.toRingHom_eq_coe,
-      RingEquiv.coe_toRingHom, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes, halg]
+      RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes, halg]
     rfl
   obtain ⟨n, g, hgC, hg⟩ := hs.exists_etale_mvPolynomial
   refine ⟨X.basicOpen t, n, hxt, fun V hV hVU => ?_⟩
@@ -1223,8 +1223,8 @@ theorem pushout_pi {D Y' : CommRingCat.{0}} (φ' : D ⟶ Y') {ι : Type} [Fintyp
     IsPushout φ' (piMap D₁ e) (CommRingCat.ofHom (Pi.ringHom fun k => (u k).hom))
       (CommRingCat.ofHom (Pi.ringHom fun k => (φ₁ k).hom.comp (Pi.evalRingHom (fun k => D₁ k) k))) := by
   classical
-  letI : Algebra D Y' := φ'.hom.toAlgebra
-  letI : ∀ k, Algebra D (D₁ k) := fun k => (e k).hom.toAlgebra
+  let : Algebra D Y' := φ'.hom.toAlgebra
+  let : ∀ k, Algebra D (D₁ k) := fun k => (e k).hom.toAlgebra
   have hT : IsPushout φ' (piMap D₁ e) _ _ := CommRingCat.isPushout_tensorProduct D Y' (∀ k, D₁ k)
   have hTk : ∀ k, IsPushout φ' (e k) _ _ := fun k => CommRingCat.isPushout_tensorProduct D Y' (D₁ k)
   let isk : ∀ k, CommRingCat.of (Y' ⊗[D] D₁ k) ≅ Y₁ k := fun k => IsPushout.isoIsPushout _ _ (hTk k) (hpo k)
@@ -1369,7 +1369,7 @@ open LateralTheory.E.t_E3Cut
 theorem spS_of_integral_injective {C D : CommRingCat.{0}} (g : C ⟶ D) (hi : g.hom.IsIntegral)
     (hj : Function.Injective g.hom) : SpS g := by
   intro r hr
-  letI := g.hom.toAlgebra
+  let := g.hom.toAlgebra
   have : Algebra.IsIntegral C D := ⟨hi⟩
   have hk : RingHom.ker (algebraMap C D) ≤ r := by
     rw [(RingHom.injective_iff_ker_eq_bot (algebraMap C D)).1 hj]; exact bot_le
@@ -1407,8 +1407,8 @@ theorem ULA_of (hS : Stalk) (hP : AlgResProps) (hE : AICExt) (hD : DomCover) (hL
     refine ⟨CommRingCat.of (Localization.AtPrime r), o, IsLocalRing.maximalIdeal _,
       hL D (Localization.AtPrime r) r.primeCompl, inferInstance,
       IsLocalization.AtPrime.under_maximalIdeal _ r, ?_⟩
-    haveI : IsDomain (CommRingCat.of (Localization.AtPrime r)) := hdom
-    haveI : IsLocalRing (CommRingCat.of (Localization.AtPrime r)) :=
+    have : IsDomain (CommRingCat.of (Localization.AtPrime r)) := hdom
+    have : IsLocalRing (CommRingCat.of (Localization.AtPrime r)) :=
       inferInstanceAs (IsLocalRing (Localization.AtPrime r))
     exact hU H q i h hq hA hX hIE hloc _ (c ≫ (g0 ≫ g1) ≫ o) haic
       (p1 c _ hc (p1 _ o (p5 _ hgi) ho))
@@ -1599,11 +1599,11 @@ theorem etaleAlgebras_have_small_model_set : LateralTheory.EWeil.AbsorbPf.Model 
     fun x => CommRingCat.of (MvPolynomial (Fin x.1) A ⧸ x.2.1),
     fun x => CommRingCat.ofHom (algebraMap A (MvPolynomial (Fin x.1) A ⧸ x.2.1)), fun x => x.2.2, ?_⟩
   intro B g hg
-  letI := g.hom.toAlgebra
-  haveI : Algebra.Etale A B := (RingHom.etale_algebraMap (R := A) (S := B)).mp hg
+  let := g.hom.toAlgebra
+  have : Algebra.Etale A B := (RingHom.etale_algebraMap (R := A) (S := B)).mp hg
   obtain ⟨n, f, hf⟩ := (Algebra.FiniteType.iff_quotient_mvPolynomial'' (R := A) (S := B)).mp inferInstance
   let eq : (MvPolynomial (Fin n) A ⧸ RingHom.ker f) ≃ₐ[A] B := Ideal.quotientKerAlgEquivOfSurjective hf
-  haveI : Algebra.Etale A (MvPolynomial (Fin n) A ⧸ RingHom.ker f) := Algebra.Etale.of_equiv eq.symm
+  have : Algebra.Etale A (MvPolynomial (Fin n) A ⧸ RingHom.ker f) := Algebra.Etale.of_equiv eq.symm
   have hE : (algebraMap A (MvPolynomial (Fin n) A ⧸ RingHom.ker f)).Etale :=
     (RingHom.etale_algebraMap).mpr inferInstance
   refine ⟨⟨n, RingHom.ker f, hE⟩, (eq.symm.toRingEquiv).toCommRingCatIso, ?_⟩
@@ -1628,10 +1628,10 @@ namespace LateralTheory.EWeil.AbsorbPf4
 
 theorem etaleNeighborhoods_equalize_parallel_maps : LateralTheory.EWeil.AbsorbPf.Coeq := by
   intro A B C Ω _ ι gB gC hB hC φB φC hφB hφC u v hu hv hφu hφv
-  letI := gB.hom.toAlgebra
-  letI := gC.hom.toAlgebra
-  letI := ι.toAlgebra
-  haveI : Algebra.Etale A B := (RingHom.etale_algebraMap (R := A) (S := B)).mp hB
+  let := gB.hom.toAlgebra
+  let := gC.hom.toAlgebra
+  let := ι.toAlgebra
+  have : Algebra.Etale A B := (RingHom.etale_algebraMap (R := A) (S := B)).mp hB
   let uA : B →ₐ[A] C := { u.hom with commutes' := fun a => RingHom.congr_fun (congrArg CommRingCat.Hom.hom hu) a }
   let vA : B →ₐ[A] C := { v.hom with commutes' := fun a => RingHom.congr_fun (congrArg CommRingCat.Hom.hom hv) a }
   let φB' : B →ₐ[A] Ω := { φB with commutes' := fun a => RingHom.congr_fun hφB a }
@@ -1691,11 +1691,11 @@ namespace LateralTheory.EWeil.AbsorbPf2
 
 theorem etaleNeighborhoods_have_common_refinement : LateralTheory.EWeil.AbsorbPf.Pair := by
   intro A B C Ω _ ι gB gC hB hC φB φC hφB hφC
-  letI := gB.hom.toAlgebra
-  letI := gC.hom.toAlgebra
-  letI := ι.toAlgebra
-  haveI : Algebra.Etale A B := (RingHom.etale_algebraMap (R := A) (S := B)).mp hB
-  haveI : Algebra.Etale A C := (RingHom.etale_algebraMap (R := A) (S := C)).mp hC
+  let := gB.hom.toAlgebra
+  let := gC.hom.toAlgebra
+  let := ι.toAlgebra
+  have : Algebra.Etale A B := (RingHom.etale_algebraMap (R := A) (S := B)).mp hB
+  have : Algebra.Etale A C := (RingHom.etale_algebraMap (R := A) (S := C)).mp hC
   let φB' : B →ₐ[A] Ω := { φB with commutes' := fun a => RingHom.congr_fun hφB a }
   let φC' : C →ₐ[A] Ω := { φC with commutes' := fun a => RingHom.congr_fun hφC a }
   let L := Algebra.TensorProduct.lift φB' φC' (fun _ _ => Commute.all _ _)
@@ -1703,8 +1703,8 @@ theorem etaleNeighborhoods_have_common_refinement : LateralTheory.EWeil.AbsorbPf
     CommRingCat.ofHom Algebra.TensorProduct.includeLeftRingHom,
     CommRingCat.ofHom (Algebra.TensorProduct.includeRight (R := A) (A := B) (B := C)).toRingHom,
     ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · haveI : Algebra.Etale B (B ⊗[A] C) := inferInstance
-    haveI : Algebra.Etale A (B ⊗[A] C) := Algebra.Etale.comp A B (B ⊗[A] C)
+  · have : Algebra.Etale B (B ⊗[A] C) := inferInstance
+    have : Algebra.Etale A (B ⊗[A] C) := Algebra.Etale.comp A B (B ⊗[A] C)
     exact (RingHom.etale_algebraMap (R := A) (S := B ⊗[A] C)).mpr inferInstance
   · ext a; exact L.commutes a
   · ext a

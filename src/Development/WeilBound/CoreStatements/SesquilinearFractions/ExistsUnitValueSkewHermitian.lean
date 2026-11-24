@@ -171,13 +171,13 @@ open PositivityTheory.Xgf.Aniso in
 theorem PositivityTheory.Xgf.exists_unit_value_skew_hermitian : ∀ (R : Type) [CommRing R] [StarRing R] [Finite (MaximalSpectrum R)] (I : Type) [Fintype I] [DecidableEq I] [Nonempty I] (G : Matrix I I R), Gᴴ = -G → IsUnit G.det → (∀ m : Ideal R, m.IsMaximal → ∃ a : R, a - star a ∉ m) → ∃ x : I → R, IsUnit (x ⬝ᵥ G.mulVec (star x)) := by
   intro R _ _ _ I _ _ _ G hG hdet hm
   classical
-  haveI := Fintype.ofFinite (MaximalSpectrum R)
+  have := Fintype.ofFinite (MaximalSpectrum R)
   have crt : ∀ t : MaximalSpectrum R → R, ∃ r : R, ∀ P : MaximalSpectrum R, r - t P ∈ P.asIdeal := by
     intro t
     have hcop : Pairwise (Function.onFun IsCoprime fun P : MaximalSpectrum R => P.asIdeal) := by
       intro P Q hPQ
-      haveI := P.isMaximal
-      haveI := Q.isMaximal
+      have := P.isMaximal
+      have := Q.isMaximal
       exact Ideal.isCoprime_of_isMaximal (fun h => hPQ (MaximalSpectrum.ext h))
     obtain ⟨r, hr⟩ := Ideal.quotientInfToPiQuotient_surj hcop (fun P => Ideal.Quotient.mk P.asIdeal (t P))
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective r
@@ -273,8 +273,8 @@ theorem crt_entry [Finite (MaximalSpectrum R)] (t : MaximalSpectrum R → R) :
     ∃ r : R, ∀ P : MaximalSpectrum R, r - t P ∈ P.asIdeal := by
   have hI : Pairwise (Function.onFun IsCoprime fun P : MaximalSpectrum R => P.asIdeal) := by
     intro P Q hPQ
-    haveI := P.isMaximal
-    haveI := Q.isMaximal
+    have := P.isMaximal
+    have := Q.isMaximal
     exact Ideal.isCoprime_of_isMaximal (fun h => hPQ (MaximalSpectrum.ext h))
   exact Ideal.exists_forall_sub_mem_ideal hI t
 
@@ -316,7 +316,7 @@ theorem unitCoord [Finite (MaximalSpectrum R)] {n : ℕ} (x : Fin (n + 1) → R)
     have hd : ∀ i, B i i = 1 := by
       intro i
       by_cases h : i = 0 <;> simp [B, c', h]
-    rw [Matrix.det_of_lowerTriangular B hB]
+    rw [det_of_isLowerTriangular B hB]
     simp [hd]
   · have hy : (x ᵥ* B) 0 = ∑ i, x i * c' i := by
       simp [Matrix.vecMul, dotProduct, B]
@@ -329,13 +329,13 @@ theorem unitCoord [Finite (MaximalSpectrum R)] {n : ℕ} (x : Fin (n + 1) → R)
       by_cases hi : i = 0
       · subst hi
         by_cases h0 : (0 : Fin (n + 1)) = k P
-        · rw [if_pos h0]
+        · rw [ite_eq_left h0]
           simp [c']
-        · rw [if_neg h0]
+        · rw [ite_eq_right h0]
           simpa [c'] using hk0 P (Ne.symm h0)
       · have h : x i * (c i - if i = k P then 1 else 0) ∈ M := Ideal.mul_mem_left _ (x i) (hc i P)
         have he : x i * c' i - (if i = k P then x i else 0) = x i * (c i - if i = k P then 1 else 0) := by
-          simp only [c', if_neg hi]
+          simp only [c', ite_eq_right hi]
           split_ifs <;> ring
         rw [he]
         exact h
@@ -364,7 +364,7 @@ theorem step {n : ℕ} (G : Matrix (Fin (n + 1)) (Fin (n + 1)) R) (hG : Gᴴ = -
     if i = k then 1 else if k = 0 then -(hf G (Pi.single i 1) x * ainv) else 0
   let P : Matrix (Fin (n + 1)) (Fin (n + 1)) R := fun i => if i = 0 then x else Pi.single i 1
   have hL : L.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular L]
+    rw [det_of_isLowerTriangular L]
     · exact Finset.prod_eq_one fun i _ => by simp [L]
     · intro i k hik
       have hik' : i < k := OrderDual.toDual_lt_toDual.mp hik
@@ -374,7 +374,7 @@ theorem step {n : ℕ} (G : Matrix (Fin (n + 1)) (Fin (n + 1)) R) (hG : Gᴴ = -
         exact absurd hik' (Fin.not_lt_zero _)
       simp [L, hne, hk]
   have hP : P.det = x 0 := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [det_of_isUpperTriangular]
     · rw [Fin.prod_univ_succ]
       simp [P, Fin.succ_ne_zero]
     · intro i k hki

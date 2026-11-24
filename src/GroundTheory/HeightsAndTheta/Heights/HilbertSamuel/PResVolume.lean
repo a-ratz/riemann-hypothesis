@@ -317,7 +317,7 @@ variable [MeasurableSpace X] [BorelSpace X]
 theorem measurableSet_chart_preimage (A : FinHolAtlas e X) (j : Fin A.n) {S : Set X}
     (hS : MeasurableSet S) : MeasurableSet ((A.chart j).target ∩ (A.chart j).symm ⁻¹' S) := by
   have hc : Continuous ((A.chart j).target.restrict (A.chart j).symm) :=
-    (A.chart j).continuousOn_symm.restrict
+    (A.chart j).continuousOn_symm.domRestrict
   have h := MeasurableSet.subtype_image (A.chart j).open_target.measurableSet (hc.measurable hS)
   convert h using 1
   ext y
@@ -394,7 +394,7 @@ theorem vol_apply_chart (A : FinHolAtlas e X) (ψ : ChartPartition A) (j : Fin A
     (hS : MeasurableSet S) (hSj : S ⊆ (A.chart j).source) :
     vol A ψ S = ∫⁻ y in (A.chart j).target ∩ (A.chart j).symm ⁻¹' S,
       ENNReal.ofReal (dens A ψ j y) := by
-  rw [vol, Measure.finsetSum_apply]
+  rw [vol, sum_apply]
   simp_rw [piece_apply A ψ _ hS, lintegral_piece A ψ j _ hS hSj]
   rw [← lintegral_finsetSum']
   · refine setLIntegral_congr_fun (measurableSet_chart_preimage A j hS) fun y _ => ?_
@@ -450,18 +450,18 @@ theorem exists_isSmoothVolume [CompactSpace X] [T2Space X] [Nonempty X] (A : Fin
   obtain ⟨x⟩ := ‹Nonempty X›
   obtain ⟨j0, hj0⟩ := A.cover x
   have hfin : vol A ψ univ ≠ ⊤ := by
-    rw [vol, Measure.finsetSum_apply]
+    rw [vol, sum_apply]
     exact (ENNReal.sum_lt_top.mpr fun i _ => piece_univ_lt_top A ψ i).ne
   have hpos : vol A ψ univ ≠ 0 := fun h =>
     vol_source_ne_zero A ψ j0 ⟨x, hj0⟩ (measure_mono_null (subset_univ _) h)
   refine ⟨(vol A ψ univ)⁻¹ • vol A ψ, ⟨?_⟩, fun j =>
     ⟨fun y => (vol A ψ univ).toReal⁻¹ * dens A ψ j y, ?_, ?_, ?_⟩⟩
-  · rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin]
+  · rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin]
   · exact contDiffOn_const.mul (contDiffOn_dens A ψ j)
   · intro y hy
     exact mul_pos (inv_pos.mpr (ENNReal.toReal_pos hpos hfin)) (dens_pos A ψ j hy)
   · intro S hS hSj
-    rw [Measure.smul_apply, smul_eq_mul, vol_apply_chart A ψ j hS hSj]
+    rw [smul_apply, smul_eq_mul, vol_apply_chart A ψ j hS hSj]
     simp_rw [ENNReal.ofReal_mul (inv_nonneg.mpr ENNReal.toReal_nonneg)]
     rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
       ENNReal.ofReal_inv_of_pos (ENNReal.toReal_pos hpos hfin), ENNReal.ofReal_toReal hfin]

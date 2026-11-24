@@ -328,8 +328,8 @@ theorem isotropic_of_sig {r p : ℕ} (G : Matrix (Fin r) (Fin r) E) (hG : ∀ a 
   let d : Fin r → E := fun a => if a = m then G.det * π else ε a
   have hdet : (diagonal d).det = G.det := by
     rw [det_diagonal, ← Finset.mul_prod_erase _ _ (Finset.mem_univ m), Finset.prod_congr rfl
-      (g := fun a => (ε a : E)) fun a ha => if_neg (Finset.ne_of_mem_erase ha)]
-    simp only [d, if_true]
+      (g := fun a => (ε a : E)) fun a ha => ite_eq_right (Finset.ne_of_mem_erase ha)]
+    simp only [d, ite_true]
     rw [← Int.cast_prod, mul_assoc, ← Int.cast_mul, hπ, Int.cast_one, mul_one]
   have hcd : ∀ a, cc (d a) = d a := fun a => by
     have := GlobalTheory.Published.cc_det_of_herm hG
@@ -362,7 +362,7 @@ theorem isotropic_of_sig {r p : ℕ} (G : Matrix (Fin r) (Fin r) E) (hG : ∀ a 
         by_cases h : a = m
         · subst h
           have hπ' : (π : ℂ) * π = 1 := by exact_mod_cast hπ
-          simp only [d, if_true, map_mul, map_intCast]
+          simp only [d, ite_true, map_mul, map_intCast]
           linear_combination (π : ℂ) * h2 + (ε m : ℂ) * hπ'
         · simp [d, h]⟩)
     ⟨1, by rw [hdet, div_self hd]; simp [cc]⟩
@@ -962,7 +962,7 @@ theorem ballMat_ren (q q' : Ψ × Fin j × Fin j' ≃ Fin n) (t : Fin n → ℂ)
   simp [ballMat, ren_apply]
 
 theorem ren_mem (q q' : Ψ × Fin j × Fin j' ≃ Fin n) (t : Fin n → ℂ) : ren q q' t ∈ ballDom q ↔ t ∈ ballDom q' := by
-  simp only [ballDom, Set.mem_setOf_eq, ballMat_ren]
+  simp only [ballDom, Set.mem_ofPred_eq, ballMat_ren]
 
 theorem moeb_ren (q q' : Ψ × Fin j × Fin j' ≃ Fin n) (u : Ψ → Matrix (Sg j j') (Sg j j') ℂ) (t : Fin n → ℂ) :
     moebBall q u (ren q q' t) = ren q q' (moebBall q' u t) := by
@@ -983,8 +983,8 @@ theorem core (q : Ψ × Fin j × Fin j' ≃ Fin n) {G : Type} [Group G] [Countab
     (hm : ∀ x y τ, ρ (x * y) τ = ρ x τ * ρ y τ) (hU : ∀ γ ∈ U, ∀ τ, IsSgU (ρ γ τ)) (hΓ : Γ ≤ U) (hΓ' : Γ' ≤ U)
     (hI : EqIdx Γ Γ') (hS : MFund q ρ Γ S) (hS' : MFund q ρ Γ' S') : ballMeas q S = ballMeas q S' := by
   have hD : MeasurableSet (ballDom q) := (BallInverse.isOpen_ballDom q).measurableSet
-  have hemb : MeasurableEmbedding (Subtype.val : ballDom q → Fin n → ℂ) := MeasurableEmbedding.subtype_coe hD
-  letI act : MulAction U (ballDom q) :=
+  have hemb : MeasurableEmbedding (Subtype.val : ballDom q → Fin n → ℂ) := MeasurableEmbedding.subtypeVal hD
+  let act : MulAction U (ballDom q) :=
     { smul := fun γ t => ⟨moebBall q (ρ γ) t, moeb_maps q (hU γ γ.2) t.2⟩
       one_smul := fun t => Subtype.ext (by
         show moebBall q (ρ 1) t = t
@@ -992,12 +992,12 @@ theorem core (q : Ψ × Fin j × Fin j' ≃ Fin n) {G : Type} [Group G] [Countab
       mul_smul := fun a b t => Subtype.ext
         (moeb_mul q (hU a a.2) (hU b b.2) (fun τ => (hm a b τ).symm) t.2).symm }
   have sm : ∀ (γ : U) (t : ballDom q), ((γ • t : ballDom q) : Fin n → ℂ) = moebBall q (ρ γ) t := fun _ _ => rfl
-  haveI : MeasurableConstSMul U (ballDom q) := ⟨fun γ =>
-    (Continuous.subtype_mk (continuousOn_iff_continuous_restrict.1
+  have : MeasurableConstSMul U (ballDom q) := ⟨fun γ =>
+    (Continuous.subtype_mk (continuousOn_iff_continuous_domRestrict.1
       (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Moeb.moebBall_props Ψ j j' n q (ρ γ) (hU γ γ.2)).1.continuousOn) _).measurable⟩
   let μ : Measure (ballDom q) := (ballMeas q).comap Subtype.val
   have hμ : ∀ s, μ s = ballMeas q (Subtype.val '' s) := fun s => hemb.comap_apply _ s
-  haveI : SMulInvariantMeasure U (ballDom q) μ := ⟨fun γ s hs => by
+  have : SMulInvariantMeasure U (ballDom q) μ := ⟨fun γ s hs => by
     rw [hμ, hμ, ← (moeb_meas q (hU _ (γ⁻¹).2) (hemb.measurableSet_image.2 hs) (Subtype.coe_image_subset _ _)).2]
     congr 1
     ext t
@@ -1447,7 +1447,7 @@ theorem spec_map_factorisation {X : Scheme.{0}} {A A' B B' : CommRingCat.{0}} (u
 
 theorem exists_factor {X : Scheme.{0}} {Ω₀ Ω₁ : Type} [Field Ω₀] [Field Ω₁] {ξ₀ : Sp Ω₀ ⟶ X} (ξ₁ : Sp Ω₁ ⟶ X)
     (h₀ : IsCptGen ξ₀) (h : genPt ξ₁ ⤳ genPt ξ₀) : ∃ i : Ω₀ →+* Ω₁, spMap i ≫ ξ₀ = ξ₁ := by
-  haveI : IsIso (Scheme.stalkClosedPointTo ξ₀) := (ConcreteCategory.isIso_iff_bijective _).2 h₀.bij
+  have : IsIso (Scheme.stalkClosedPointTo ξ₀) := (ConcreteCategory.isIso_iff_bijective _).2 h₀.bij
   refine ⟨(inv (Scheme.stalkClosedPointTo ξ₀) ≫ X.presheaf.stalkSpecializes h ≫ Scheme.stalkClosedPointTo ξ₁).hom, ?_⟩
   exact spec_map_factorisation (Scheme.stalkClosedPointTo ξ₀) (X.presheaf.stalkSpecializes h) (Scheme.stalkClosedPointTo ξ₁) _ _ ξ₀ ξ₁
     (Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ₀) (Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ₁)
@@ -1461,7 +1461,7 @@ theorem constClosed_of {F Ω₀ Ω₁ Ω₂ : Type} [Field F] [NumberField F] [F
     (i : Ω₀ →+* Ω₁) (g : Ω₁ →+* Ω₂) (cst : F →+* Ω₂) (h : (g.comp i).comp (algebraMap F Ω₀) = cst)
     (halg : ∀ a : Ω₁, IsAlgebraic ℤ a → g a ∈ cst.range) : ConstClosed F Ω₀ := by
   intro a ha
-  haveI : Algebra.IsAlgebraic ℤ F := (IsFractionRing.comap_isAlgebraic_iff (A := ℤ) (K := ℚ)).2 inferInstance
+  have : Algebra.IsAlgebraic ℤ F := (IsFractionRing.comap_isAlgebraic_iff (A := ℤ) (K := ℚ)).2 inferInstance
   have h1 : IsAlgebraic ℤ a := ha.restrictScalars ℤ
   obtain ⟨x, hx⟩ := halg (i a) (h1.algHom i.toIntAlgHom)
   refine ⟨x, 1, one_ne_zero, ?_⟩
@@ -1485,13 +1485,13 @@ theorem onePiece : OnePiece := by
   intro hgiven E _ _ _ H D l Xo c Y sm j j' n B Ω₀ _ ξ₀ Ω₁ Ω₂ _ _ ξ₁ g cst U hloc hξ₀ hpt hover halg hU hUc κ
   classical
   obtain ⟨-, -, -, -, hRes, -⟩ := hgiven
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := {}
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := {}
   obtain ⟨i, hi⟩ := exists_factor ξ₁ hξ₀ (hpt ▸ specializes_rfl)
-  haveI : CharZero Ω₂ := (RingHom.charZero_iff cst.injective).1 inferInstance
-  haveI : CharZero Ω₀ := (g.comp i).charZero
+  have : CharZero Ω₂ := (RingHom.charZero_iff cst.injective).1 inferInstance
+  have : CharZero Ω₀ := (g.comp i).charZero
   obtain ⟨b, ξF, hF1, hF2, hFg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GenFibre.exists_point c.F Y.X Y.s Ω₀ ξ₀ hξ₀
-  letI : Algebra c.F Ω₀ := b.toAlgebra
+  let : Algebra c.F Ω₀ := b.toAlgebra
   have hb : (g.comp i).comp b = cst := by
     refine ext_int (spMap_inj ?_)
     rw [← hover, ← hi, ← hF1, spMap_comp', spMap_comp', spMap_comp', ← hF2]
@@ -1499,13 +1499,13 @@ theorem onePiece : OnePiece := by
   have hcl : ConstClosed c.F Ω₀ := constClosed_of i g cst hb halg
   have hβ := int_frac c.F
   obtain ⟨hnoeth, X', f, d, W', jW, hiso, hjW, -, -, hsm, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_resolution_genericFibre hRes E H D l Xo c _ _ Y hβ
-  haveI := Y.jQ_open
-  haveI hpre : IsPreimmersion (pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F))) := by
+  have := Y.jQ_open
+  have hpre : IsPreimmersion (pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F))) := by
     have h : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
       IsPreimmersion.of_isLocalization (R := 𝓞 c.F) (S := c.F) (nonZeroDivisors (𝓞 c.F))
     infer_instance
   have hsurj := _root_.GlobalTheory.CompanionTheory.Ar.Flat.stalkMap_comp_surjective_of_open_part _ _ _ _ _ f W' jW Y.jQ hpre inferInstance hiso hjW
-  haveI hopen : IsOpenImmersion (W'.ι ≫ f) := by rw [← hjW]; infer_instance
+  have hopen : IsOpenImmersion (W'.ι ≫ f) := by rw [← hjW]; infer_instance
   have hrange : Set.range (W'.ι ≫ f) = Set.range Y.jQ := by
     rw [← hjW, Scheme.Hom.comp_base, TopCat.coe_comp, Set.range_comp,
       Set.range_eq_univ.2 (show Function.Surjective jW from jW.homeomorph.surjective), Set.image_univ]
@@ -1519,7 +1519,7 @@ theorem onePiece : OnePiece := by
     exact hz
   obtain ⟨π, hπ⟩ : ∃ π, π = f ≫ pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F)) := ⟨_, rfl⟩
   obtain ⟨s', hs'⟩ : ∃ s', s' = f ≫ pullback.snd Y.s (spMap (algebraMap (𝓞 c.F) c.F)) := ⟨_, rfl⟩
-  haveI hemb : IsPreimmersion (W'.ι ≫ π) := by
+  have hemb : IsPreimmersion (W'.ι ≫ π) := by
     rw [hπ, ← Category.assoc]
     infer_instance
   rw [← hπ] at hsurj

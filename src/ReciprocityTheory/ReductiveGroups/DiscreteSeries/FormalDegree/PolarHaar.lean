@@ -332,7 +332,7 @@ theorem rmulPR_polarPR {ε : Fin n → Bool} {G : Matrix (Fin n) (Fin n) ℂ} (h
     funext ab
     have h1 : plog (NormedSpace.exp (pmat z) * G) = pmat w := by
       rw [← hkw, plog_polarM]
-    simp only [actR, h1, pmat, dif_pos ab.2]
+    simp only [actR, h1, pmat, dite_eq_left ab.2]
   refine ⟨k', fun k => ?_⟩
   rw [hw]
   simp only [rmulPR, polarPR, polarM] at hkw ⊢
@@ -367,7 +367,7 @@ theorem muPolarMat_mul_right (ε : Fin n → Bool) {G : Matrix (Fin n) (Fin n) �
     have hset : {k | polarPR (k, z) ∈ rmulPR G ⁻¹' S} =
         (fun k => k * k') ⁻¹' {k | polarPR (k, actR G z) ∈ S} := by
       ext k
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, hk']
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, hk']
     rw [hset, measure_preimage_mul_right]
   simp_rw [step]
   have hφ : Measurable fun w : PCoord ε → ℂ => dk ε {k | polarPR (k, w) ∈ S} :=
@@ -381,8 +381,8 @@ theorem muPolar_mul_right (ε : Fin n → Bool) (g : UJ ε) :
   by_cases h : Function.Injective (intMuCD_eM ε) ∧
       ∀ s, MeasurableSet s → NullMeasurableSet (intMuCD_eM ε '' s) (muPolarMat ε)
   swap
-  · simp only [Measure.comap, dif_neg h, Measure.map_zero]
-  haveI : BorelSpace (UJ ε) := ⟨rfl⟩
+  · simp only [Measure.comap, dite_eq_right h, Measure.map_zero]
+  have : BorelSpace (UJ ε) := ⟨rfl⟩
   have hRm : Measurable (fun x : UJ ε => x * g) := (continuous_mul_const g).measurable
   have hG : inUJ ε (toM g) := g.2
   have h4 := muPolarMat_mul_right ε hG
@@ -433,9 +433,9 @@ open ReciprocityTheory.ChartRestriction.DS.S7
 variable {n : ℕ}
 
 theorem muPolar_isHaar (ε : Fin n → Bool) : (muPolar ε).IsHaarMeasure := by
-  haveI hR : (muPolar ε).IsMulRightInvariant := ⟨fun g => muPolar_mul_right ε g⟩
+  have hR : (muPolar ε).IsMulRightInvariant := ⟨fun g => muPolar_mul_right ε g⟩
   have hinv : (muPolar ε).inv = muPolar ε := muPolar_inv ε
-  haveI hL : (muPolar ε).IsMulLeftInvariant := by
+  have hL : (muPolar ε).IsMulLeftInvariant := by
     rw [← hinv]; infer_instance
 
   have hsurj : Function.Surjective (fdphPhi ε) := by
@@ -445,13 +445,13 @@ theorem muPolar_isHaar (ε : Fin n → Bool) : (muPolar ε).IsHaarMeasure := by
     have h := fdph_toM_phi ε (polarInv ε ⟨toM g, hg⟩)
     rw [polarM_polarInv] at h
     exact Subtype.ext (Units.ext h)
-  haveI hF : IsFiniteMeasureOnCompacts (muPolar ε) := by
+  have hF : IsFiniteMeasureOnCompacts (muPolar ε) := by
     refine ⟨fun K hK => ?_⟩
     have hKm : MeasurableSet K := hK.isClosed.measurableSet
     rw [fdph_apply ε hKm, ← fdph_preimage]
     exact ((polarM_isClosedEmbedding ε).isCompact_preimage
       (hK.image (by fun_prop))).measure_lt_top
-  haveI hO : (muPolar ε).IsOpenPosMeasure := by
+  have hO : (muPolar ε).IsOpenPosMeasure := by
     refine ⟨fun U hU hne => ?_⟩
     rw [fdph_apply ε hU.measurableSet]
     exact ((hU.preimage (fdph_phi_continuous ε)).measure_ne_zero _

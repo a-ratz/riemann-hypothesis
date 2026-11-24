@@ -75,9 +75,9 @@ private theorem op_eig {A K M W ι : Type} [CommRing A] [Field K] [AddCommGroup 
     (opC : ι → Module.End K W) (hop : ∀ i, ∀ f ∈ Y, sp (op i f) = opC i (sp f))
     (z : heckeAlg Y op →+* K) (hz : z.comp (algebraMap A _) = χ) :
     ∃ F ∈ Submodule.span K (sp '' Y), F ≠ 0 ∧ ∀ i, opC i F = z (heckeGen Y op i) • F := by
-  letI : Algebra A K := χ.toAlgebra
-  letI : Module A W := Module.compHom W χ
-  haveI : IsScalarTower A K W := ⟨fun a k w => mul_smul (χ a) k w⟩
+  let : Algebra A K := χ.toAlgebra
+  let : Module A W := Module.compHom W χ
+  have : IsScalarTower A K W := ⟨fun a k w => mul_smul (χ a) k w⟩
   let s : Y →ₗ[A] W :=
     { toFun := fun f => sp f
       map_add' := fun f g => hadd _ f.2 _ g.2
@@ -121,7 +121,7 @@ theorem UpperTheory.V.Hi.levelUR2OrdPt :
   rw [hsp.span K c0 le_rfl, (clParts L Ω l n c H hH A θ hθ ι P hP x lam d ξ c0 sp hsp hlam K c0 le_rfl).2] at hF
   obtain ⟨Y, hY⟩ := levelUR2EigPart ℂ _ (H.Wp × Fin n) {Y : H.Part ι lam ξ // P lam Y.r}
     (fun i => H.opC ι lam d (.inl i)) (fun Y => Y.1.Y) (fun Y i => Y.1.a i.1 (i.2 + 1))
-    (fun Y i G hG => Y.1.sph i.1 _ G hG) F (SetLike.le_def.1 (iSup_mono fun _ => inf_le_left) hF) hF0
+    (fun Y i G hG => Y.1.sph i.1 _ G hG) F (IsConcreteLE.le_iff.1 (iSup_mono fun _ => inf_le_left) hF) hF0
     (fun i => ι (z (heckeGen _ (H.op A) (.inl i)))) (fun i => h (.inl i))
   exact ⟨Y.1, fun w k => congrFun hY (w, k)⟩
 end -- clump:auto
@@ -150,7 +150,7 @@ private theorem hecke_poly_coeff_zero {A : Type} [CommRing A] (n q : ℕ) (a : �
     (heckePol n q a).coeff i = 0 := by
   rw [Hi.heckePol, finsetSum_coeff]
   refine Finset.sum_eq_zero fun j _ => ?_
-  rw [coeff_C_mul_X_pow, if_neg]
+  rw [coeff_C_mul_X_pow, ite_eq_right]
   omega
 
 private theorem norm_lt_one_of_residue_zero {l : ℕ} [Fact l.Prime] (c : Coef l) (b : c.O) (hb : residue c.O b = 0) :
@@ -240,7 +240,7 @@ theorem UpperTheory.V.Hi.levelUR2H3Abs :
     IsDomain A → ∀ (ι : Qbar l ≃+* ℂ) (P : Wt L l n → (H.Gq →* GL (Fin n) (Qbar l)) → Prop), H.Aut ι P → ∀ lam0 ∈ H.admitted, H.DenseWt θ lam0 → ∀ (a : H.Op → c.O) (K : H.Lev) (φ : H.Gq → (ResidueField c.O)[X]), IsLocallyConstant φ → (∀ (w : H.Wp) (B : ValuationSubring Ω) (σ : G L Ω), IsPlaceOver B w.1 → IsFrob B (normV w.1) σ → φ (H.prj σ⁻¹) = heckePol n (normV w.1) fun j => if h : 0 < j ∧ j - 1 < n then residue c.O (a (.inl (w, ⟨j - 1, h.2⟩))) else 1) → ∀ (ι' : Type) (j : ι' → H.Op), (∀ x, Sum.inr x ∈ Set.range j) → Dense {g : H.Gq | ∃ w : H.Wp, (∀ k, Sum.inl (w, k) ∈ Set.range j) ∧ ∃ (B : ValuationSubring Ω) (σ : G L Ω), IsPlaceOver B w.1 ∧ IsFrob B (normV w.1) σ ∧ g = H.prj σ⁻¹} → locPart (H.X.Ord (H.τA A) θ (H.lev K)) (fun i => H.op A (j i)) (fun i => algebraMap c.O A (a (j i))) = H.MK θ a K := by
   intro _ L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ hA ι P hP lam0 _ hd a K φ hφ hφ2 ι' j hj hD
   obtain ⟨hC, hfi, hfr, -⟩ := hiComm L Ω l n c H hH A θ hθ K
-  haveI : Fact (CommOn (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A)) := ⟨hC⟩
+  have : Fact (CommOn (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A)) := ⟨hC⟩
   obtain ⟨x, hx⟩ : ∃ x : A →ₐ[c.O] Qbar l, H.Good θ x lam0 := by
     by_contra h
     exact one_ne_zero (hd 1 fun x hx => absurd ⟨x, hx⟩ h)

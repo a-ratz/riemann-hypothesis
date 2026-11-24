@@ -168,8 +168,8 @@ end Definite
 
 theorem unram_of_cm (D : D7) (hc : @CMData D.host.F D.host.E _ _ _ _ D.host.cmStar _) (w : PlE D.host) :
     Algebra.IsUnramifiedAt (𝓞 D.host.F) w.asIdeal := by
-  letI := D.host.cmStar
-  haveI := D.host.isCMField_hostE
+  let := D.host.cmStar
+  have := D.host.isCMField_hostE
   have hU : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.host.E) :=
     Formalism.L2.Pj.unramBridge_holds D.host.E fun P hP => by
       obtain ⟨θ, t, ht, hθ⟩ := hc.cmUnram.2.2 P hP

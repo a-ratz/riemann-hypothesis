@@ -67,7 +67,7 @@ theorem ind_sub {G : Type} [Group G] [Finite G] (T : Subgroup G) (a b : T → �
 theorem ind_const {G : Type} [Group G] [Finite G] (T : Subgroup G) (c : ℂ) (g : G) :
     ind T (fun _ => c) g = c * ind T (fun _ => 1) g := by
   classical
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   simp only [ind, finsum_eq_sum_of_fintype, ext0]
   rw [Finset.mul_sum, Finset.mul_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun x _ => ?_
@@ -76,10 +76,10 @@ theorem ind_const {G : Type} [Group G] [Finite G] (T : Subgroup G) (c : ℂ) (g 
 theorem ind_apply_one {G : Type} [Group G] [Finite G] (T : Subgroup G) (ψ : T → ℂ) :
     ind T ψ 1 = (T.index : ℂ) * ψ 1 := by
   classical
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   have h1 : ∀ x : G, ext0 T ψ (x⁻¹ * 1 * x) = ψ 1 := fun x => by
     have e : x⁻¹ * 1 * x = 1 := by group
-    simp only [ext0, e, dif_pos T.one_mem]
+    simp only [ext0, e, dite_eq_left T.one_mem]
     rfl
   simp only [ind, finsum_eq_sum_of_fintype]
   rw [Finset.sum_congr rfl (fun x _ => h1 x), Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
@@ -91,7 +91,7 @@ theorem ind_apply_one {G : Type} [Group G] [Finite G] (T : Subgroup G) (ψ : T �
 theorem ind_top {G : Type} [Group G] [Finite G] (F : G → ℂ) (hF : ∀ g x : G, F (x⁻¹ * g * x) = F g) :
     ind (⊤ : Subgroup G) (fun h => F h) = F := by
   classical
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   funext g
   simp only [ind, finsum_eq_sum_of_fintype, ext0, Subgroup.mem_top, dite_true, hF]
   have hc : Nat.card {x : G // True} = Nat.card G := Nat.card_congr (Equiv.subtypeUnivEquiv (fun _ => trivial))

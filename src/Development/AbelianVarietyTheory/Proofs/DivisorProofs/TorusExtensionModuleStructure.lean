@@ -225,8 +225,8 @@ theorem openp : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (r₂ : Gr G 1),
     letI : TopologicalSpace (ℚ_[p] ⊗[ℚ] G.C) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C);
     ∃ O : Set ((ℚ_[p] ⊗[ℚ] G.C)ˣ × ℚ_[p]ˣ), IsOpen O ∧ 1 ∈ O ∧ ∀ z ∈ O, r₂⁻¹ * psiP G z * r₂ ∈ KHT p G.m G.n 1 G.Fw := by
   intro p _ G r₂
-  letI : TopologicalSpace (ℚ_[p] ⊗[ℚ] G.C) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C)
-  haveI : IsModuleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C) := ⟨rfl⟩
+  let : TopologicalSpace (ℚ_[p] ⊗[ℚ] G.C) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C)
+  have : IsModuleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C) := ⟨rfl⟩
   choose ε hε hM using fun w : Fin G.m => exists_conj_entries_mem p (G.Fw w) 1 (r₂.2 w)
   let e : ∀ (w : Fin G.m) (i j : Fin G.n), ℚ_[p] ⊗[ℚ] G.C → PadicAlgCl p :=
     fun w i j g => (((G.locW w g - 1) i j : G.Fw w) : PadicAlgCl p)
@@ -252,7 +252,7 @@ theorem openp : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (r₂ : Gr G 1),
   · have hball : IsOpen {x : ℚ_[p] | ‖x‖ ≤ 1} := by
       have := IsUltrametricDist.isOpen_closedBall (0 : ℚ_[p]) (one_ne_zero : (1 : ℝ) ≠ 0)
       simpa [Metric.closedBall, dist_zero_right] using this
-    simp only [Set.setOf_and, Set.setOf_forall]
+    simp only [Set.ofPred_and, Set.ofPred_forall]
     refine (hball.preimage ((Units.continuous_val (M := ℚ_[p])).comp (continuous_snd (X := (ℚ_[p] ⊗[ℚ] G.C)ˣ) (Y := ℚ_[p]ˣ)))).inter
       ((hball.preimage ((Units.continuous_coe_inv (M := ℚ_[p])).comp (continuous_snd (X := (ℚ_[p] ⊗[ℚ] G.C)ˣ) (Y := ℚ_[p]ˣ)))).inter ?_)
     refine isOpen_iInter_of_finite fun w => isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_

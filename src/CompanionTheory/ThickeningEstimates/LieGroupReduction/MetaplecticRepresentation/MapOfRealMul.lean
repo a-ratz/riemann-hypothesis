@@ -120,7 +120,7 @@ theorem sympl_sp (s : Sp l) (w w' : l ⊕ l → ℝ) : sympl (s.1 *ᵥ w) (s.1 *
 theorem sec_apply_zero (s : Mat l) (hA : IsUnit (bl Sum.inl Sum.inl s)) (f : Sch l) :
     sec s f 0 = (((√|s.toBlocks₁₁.det|)⁻¹ : ℝ) : ℂ) *
       fou l (ph (-(Ring.inverse (bl Sum.inl Sum.inl s) * bl Sum.inl Sum.inr s)) (fouInv l f)) 0 := by
-  simp only [sec, big, ContinuousLinearMap.mul_apply, ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply, ph_apply,
+  simp only [sec, big, mul_apply_eq_comp, smul_apply, smul_apply, ph_apply,
     dil_apply hA.ringInverse, map_zero, inner_zero_left, mul_zero, ofReal_zero, zero_mul, Complex.exp_zero, one_mul,
     smul_eq_mul]
 
@@ -176,14 +176,14 @@ theorem secEx_of (h1 : MkElt l) (h2 : NrmUp l) : SecEx l := by
   have hI : Impl (fun w => s.1 *ᵥ w) (z • sec s.1).toLinearMap := by
     refine ⟨fun f => ?_, fun w => (intw_of_sympl (sympl_sp s) hA c w).smul z⟩
     show ‖schwartzToL2 l ((z • sec s.1) f)‖ = ‖schwartzToL2 l f‖
-    rw [ContinuousLinearMap.smul_apply, map_smul, norm_smul, hz1, one_mul]
+    rw [smul_apply, map_smul, norm_smul, hz1, one_mul]
     exact hiso f
   have hN : Nrm s.1 (z • sec s.1) := by
     intro s' f hf
     have key := h2 _ (isSymm_inv_mul s hd) s' f hf
     have ev : (z • sec s.1) f 0 = z * ((c : ℂ) *
         fou l (ph (-(Matrix.toEuclideanCLM (𝕜 := ℝ) (n := l) (s.1.toBlocks₁₁⁻¹ * s.1.toBlocks₁₂))) (fouInv l f)) 0) := by
-      rw [ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply, smul_eq_mul, sec_apply_zero s.1 hA f, hAiB]
+      rw [smul_apply, smul_apply, smul_eq_mul, sec_apply_zero s.1 hA f, hAiB]
     rw [ev, dd_mul_eq s.1 s'.1 hd, ← key]
     calc _ = (z ^ 2 * ((c : ℂ) ^ 2 * (s.1.toBlocks₁₁.det : ℂ))) *
           ((fou l (ph (-(Matrix.toEuclideanCLM (𝕜 := ℝ) (n := l) (s.1.toBlocks₁₁⁻¹ * s.1.toBlocks₁₂))) (fouInv l f)) 0) ^ 2 *

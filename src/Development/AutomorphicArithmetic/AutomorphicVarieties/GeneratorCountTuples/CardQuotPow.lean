@@ -47,7 +47,7 @@ open GlobalTheory.TateLimit
 private theorem step (l : ℕ) [Fact l.Prime] (X : Type) [AddCommGroup X] [Module ℤ_[l] X] [Finite X]
     (c : ℕ) : Nat.card (X ⧸ lpow l X (c + 1)) ≤
       Nat.card (X ⧸ lpow l X 1) * Nat.card (X ⧸ lpow l X c) := by
-  haveI : ∀ P : Submodule ℤ_[l] X, Finite (X ⧸ P) := fun P =>
+  have : ∀ P : Submodule ℤ_[l] X, Finite (X ⧸ P) := fun P =>
     Finite.of_surjective _ P.mkQ_surjective
   let f : X →ₗ[ℤ_[l]] X ⧸ lpow l X (c + 1) :=
     (lpow l X (c + 1)).mkQ ∘ₗ LinearMap.lsmul ℤ_[l] X ((l : ℤ_[l]) ^ c)

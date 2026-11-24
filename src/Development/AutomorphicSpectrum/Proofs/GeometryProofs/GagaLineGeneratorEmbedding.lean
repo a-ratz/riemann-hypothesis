@@ -284,11 +284,11 @@ theorem tensor_inj {O K Ω C B : Type} [CommRing O] [IsDomain O] [Field K] [Alge
     [IsScalarTower O K C] [CommRing B] [Algebra O B] (ev : B →ₐ[O] Ω) (hev : Function.Injective ev) :
     ∃ ι : B ⊗[O] C →+* Ω ⊗[K] C, Function.Injective ι ∧ ∀ b c, ι (b ⊗ₜ[O] c) = ev b ⊗ₜ[K] c := by
   classical
-  haveI : Module.Flat O K := IsLocalization.flat K (nonZeroDivisors O)
-  haveI : Module.Flat O C := Module.Flat.trans O K C
+  have : Module.Flat O K := IsLocalization.flat K (nonZeroDivisors O)
+  have : Module.Flat O C := Module.Flat.trans O K C
   have hcs := IsLocalization.tensorProduct_compatibleSMul (nonZeroDivisors O) K Ω C
   let e := TensorProduct.equivOfCompatibleSMul O K Ω Ω C
-  letI : Algebra O (Ω ⊗[K] C) := ((algebraMap K (Ω ⊗[K] C)).comp (algebraMap O K)).toAlgebra
+  let : Algebra O (Ω ⊗[K] C) := ((algebraMap K (Ω ⊗[K] C)).comp (algebraMap O K)).toAlgebra
   let g1 : B →ₐ[O] Ω ⊗[K] C :=
     { toRingHom := (Algebra.TensorProduct.includeLeftRingHom : Ω →+* Ω ⊗[K] C).comp ev.toRingHom
       commutes' := fun o => by
@@ -326,8 +326,8 @@ theorem affine_domain_gen (ξ : Spec (CommRingCat.of Ω) ⟶ X) (hg : IsCptGen �
     (hW : IsAffineOpen W) (hne : genPt ξ ∈ W) [IsDomain Γ(X, W)] :
     (∀ q ∈ W, genPt ξ ⤳ q) ∧ Function.Injective (val ξ W hne) := by
   let x : W := ⟨genPt ξ, hne⟩
-  letI := X.presheaf.algebra_section_stalk x
-  haveI hloc := hW.isLocalization_stalk x
+  let := X.presheaf.algebra_section_stalk x
+  have hloc := hW.isLocalization_stalk x
   have hinj : Function.Injective (algebraMap Γ(X, W) (X.presheaf.stalk x.1)) :=
     IsLocalization.injective _ (hW.primeIdealOf x).asIdeal.primeCompl_le_nonZeroDivisors
   have hfac : ∀ g, val ξ W hne g =
@@ -365,8 +365,8 @@ theorem exists_frac (ξ : Spec (CommRingCat.of Ω) ⟶ X) (hg : IsCptGen ξ) (W 
     (hW : IsAffineOpen W) (hne : genPt ξ ∈ W) (ω : Ω) :
     ∃ b₁ b₂ : Γ(X, W), val ξ W hne b₂ ≠ 0 ∧ ω * val ξ W hne b₂ = val ξ W hne b₁ := by
   let x : W := ⟨genPt ξ, hne⟩
-  letI := X.presheaf.algebra_section_stalk x
-  haveI hloc := hW.isLocalization_stalk x
+  let := X.presheaf.algebra_section_stalk x
+  have hloc := hW.isLocalization_stalk x
   have hfac : ∀ g, val ξ W hne g =
       (Scheme.stalkClosedPointTo ξ).hom (algebraMap Γ(X, W) (X.presheaf.stalk x.1) g) :=
     fun g => (germ_closedPoint ξ W hne g).symm
@@ -415,13 +415,13 @@ theorem chart (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of
         x ∈ AddSubmonoid.closure {z : Ω ⊗[K] C | ∃ (a : Ω) (c : C),
           (∀ p : Cpt ξ, p.1 ∈ W → a ∈ regAt ξ p) ∧ z = a ⊗ₜ[K] c} := by
   classical
-  letI : Algebra O Γ(X, W) := (algX s W).toAlgebra
+  let : Algebra O Γ(X, W) := (algX s W).toAlgebra
   let W' : X'.Opens := f ⁻¹ᵁ W ⊓ s' ⁻¹ᵁ ⊤
   have hmemW' : ∀ q' : X', q' ∈ W' ↔ f q' ∈ W := fun q' => ⟨fun h => h.1, fun h => ⟨h, trivial⟩⟩
   have hWW' : W' = f ⁻¹ᵁ W := by
     ext q'
     exact (hmemW' q').trans Iff.rfl
-  haveI : IsAffineHom f :=
+  have : IsAffineHom f :=
     MorphismProperty.of_isPullback (P := @IsAffineHom) hpb.flip inferInstance
   have hW' : IsAffineOpen W' := by
     rw [hWW']
@@ -441,8 +441,8 @@ theorem chart (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of
       commutes' := fun o => val_algX h1 W hne o }
   obtain ⟨ι, hιinj, hι⟩ := tensor_inj (K := K) (C := C) evA hvinj
   let E := eTens s s' f hpb W hW
-  haveI : IsDomain (Γ(X, W) ⊗[O] C) := hιinj.isDomain ι
-  haveI : IsDomain Γ(X', W') := E.symm.injective.isDomain (E.symm : Γ(X', W') →+* Γ(X, W) ⊗[O] C)
+  have : IsDomain (Γ(X, W) ⊗[O] C) := hιinj.isDomain ι
+  have : IsDomain Γ(X', W') := E.symm.injective.isDomain (E.symm : Γ(X', W') →+* Γ(X, W) ⊗[O] C)
   obtain ⟨hspec, hvinj'⟩ := affine_domain_gen ξ' hg' W' hW' hne'
   have hvE : ∀ z : Γ(X, W) ⊗[O] C, val ξ' W' hne' (E z) = φ (ι z) := by
     intro z
@@ -528,11 +528,11 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (X : Scheme.{0}) (Ω : Type) [Field 
       exact hcomp0 o
     exact congrArg (fun g => g k) this
   obtain ⟨φ, hφ⟩ : ∃ φ : Ω ⊗[K] C →+* Ω', ∀ a c, φ (a ⊗ₜ[K] c) = i a * algebraMap C Ω' c := by
-    letI : Algebra K Ω' := ((algebraMap C Ω').comp (algebraMap K C)).toAlgebra
+    let : Algebra K Ω' := ((algebraMap C Ω').comp (algebraMap K C)).toAlgebra
     let fΩ : Ω →ₐ[K] Ω' := { i with commutes' := fun k => hcomp k }
     let fC : C →ₐ[K] Ω' := { algebraMap C Ω' with commutes' := fun k => rfl }
     exact ⟨(Algebra.TensorProduct.productMap fΩ fC).toRingHom, fun a c => by simp [fΩ, fC]⟩
-  haveI : CharZero K := ((algebraMap K Ω).charZero_iff (algebraMap K Ω).injective).2 inferInstance
+  have : CharZero K := ((algebraMap K Ω).charZero_iff (algebraMap K Ω).injective).2 inferInstance
 
   have hfrac : ∀ (x y : O) (a b : Ω), y ≠ 0 → a * algebraMap O Ω y = algebraMap O Ω x * b →
       a = algebraMap K Ω (algebraMap O K x / algebraMap O K y) * b := by
@@ -540,16 +540,16 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (X : Scheme.{0}) (Ω : Type) [Field 
     have hy' : algebraMap O Ω y ≠ 0 := fun h => hy (hO (h.trans (map_zero _).symm))
     rw [map_div₀, ← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply, div_mul_eq_mul_div,
       eq_div_iff hy', e]
-  haveI hT : IsDomain (Ω ⊗[K] C) := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isDomain_tensor_of_algebraically_closed_constants K Ω C (fun a ha => by
+  have hT : IsDomain (Ω ⊗[K] C) := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isDomain_tensor_of_algebraically_closed_constants K Ω C (fun a ha => by
     obtain ⟨x, y, hy, e⟩ := hcc a ((IsFractionRing.isAlgebraic_iff O K Ω).2 ha)
     exact ⟨algebraMap O K x / algebraMap O K y, by
       have := hfrac x y a 1 hy (by rw [e, mul_one])
       rw [mul_one] at this
       exact this.symm⟩)
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
-  haveI : LocallyOfFiniteType s' :=
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : LocallyOfFiniteType s' :=
     MorphismProperty.of_isPullback (P := @LocallyOfFiniteType) hpb inferInstance
-  haveI : IsLocallyNoetherian X' := LocallyOfFiniteType.isLocallyNoetherian s'
+  have : IsLocallyNoetherian X' := LocallyOfFiniteType.isLocallyNoetherian s'
   obtain ⟨Z, hZ, -, -⟩ := cpt_open_integral X Ω ξ hg
   have hfib : ∀ (q' : X') (h : genPt ξ ⤳ f q'), (⟨f q', h⟩ : Cpt ξ) ∈ genFibre O ξ :=
     genFibre_of_field_point X Ω ξ O s h1 X' C s' f hOC hpb.w
@@ -662,10 +662,10 @@ end GlobalTheory.CompanionTheory.Ar.Flat.Descend
 open GlobalTheory.CompanionTheory.Ar.Flat.Descend in
 theorem GlobalTheory.CompanionTheory.Ar.Flat.exists_gen_of_extension : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) [CharZero Ω] (O : Type) [CommRing O] [IsDomain O] [Algebra O Ω] (s : X ⟶ Spec (CommRingCat.of O)) [IsNoetherianRing O] [IsProper s] (X' : Scheme.{0}) (Ω' : Type) [Field Ω'] (ξ' : Spec (CommRingCat.of Ω') ⟶ X') (f : X' ⟶ X) (i : Ω →+* Ω') (C : Type) [Field C] [Algebra O C] [Algebra C Ω'] (s' : X' ⟶ Spec (CommRingCat.of C)), ξ ≫ s = Spec.map (CommRingCat.ofHom (algebraMap O Ω)) → Function.Injective (algebraMap O Ω) → Function.Injective (algebraMap O C) → IsPullback f s' s (Spec.map (CommRingCat.ofHom (algebraMap O C))) → ξ' ≫ s' = Spec.map (CommRingCat.ofHom (algebraMap C Ω')) → Dominates ξ' ξ f i → IsCptGen ξ → IsCptGen ξ' → ConstClosed O Ω → ∀ (L : Lat ξ Ω) (t' : Ω'), L.IsVBOn (genFibre O ξ) 1 ⊤ → (∀ p' : Cpt ξ', (L.pull ξ' f i.toAddMonoidHom).IsGenAt p' t') → ∃ (t : Ω) (c : C), (∀ p ∈ genFibre O ξ, L.IsGenAt p t) ∧ t' = algebraMap C Ω' c * i t := by
   intro X Ω _ ξ _ O _ _ _ s _ _ X' Ω' _ ξ' f i C _ _ _ s' h1 hO hOC hpb h2 hdom hg hg' hcc L t' hVB hgen
-  haveI : FaithfulSMul O Ω := (faithfulSMul_iff_algebraMap_injective O Ω).2 hO
-  haveI : FaithfulSMul O C := (faithfulSMul_iff_algebraMap_injective O C).2 hOC
-  letI : Algebra (FractionRing O) Ω := FractionRing.liftAlgebra O Ω
-  letI : Algebra (FractionRing O) C := FractionRing.liftAlgebra O C
+  have : FaithfulSMul O Ω := (faithfulSMul_iff_algebraMap_injective O Ω).2 hO
+  have : FaithfulSMul O C := (faithfulSMul_iff_algebraMap_injective O C).2 hOC
+  let : Algebra (FractionRing O) Ω := FractionRing.liftAlgebra O Ω
+  let : Algebra (FractionRing O) C := FractionRing.liftAlgebra O C
   exact finiteRing_sq_sub_mul_sq_eq_of_card X Ω ξ O s X' Ω' ξ' f i C s' (FractionRing O) h1 hO hOC hpb h2 hdom hg hg' hcc L t' hVB hgen
 end -- clump:auto
 end -- clump:auto
@@ -834,7 +834,7 @@ theorem exists_chart {K C : Type} [Field K] [CommRing C] [Algebra K C] (s : X �
         spMap (Algebra.TensorProduct.includeRight (R := K) (A := A) (B := C)).toRingHom ∧
       Set.range j = pullback.fst s (spMap (algebraMap K C)) ⁻¹' (U : Set X) := by
   let ψ : CommRingCat.of K ⟶ Γ(X, U) := Spec.preimage (hU.fromSpec ≫ s)
-  letI alg : Algebra K Γ(X, U) := ψ.hom.toAlgebra
+  let alg : Algebra K Γ(X, U) := ψ.hom.toAlgebra
   have hψ : hU.fromSpec ≫ s = Spec.map (CommRingCat.ofHom (algebraMap K Γ(X, U))) := (Spec.map_preimage _).symm
   let y : Sp C ⟶ Sp K := spMap (algebraMap K C)
   let m : pullback (hU.fromSpec ≫ s) y ⟶ pullback s y :=
@@ -978,7 +978,7 @@ theorem cpt_base_change_dominates (K C : Type) [Field K] [CharZero K] [Field C] 
       Dominates ξ' ξ (pullback.fst s (spMap (algebraMap K C))) i ∧ IsCptGen ξ' ∧
       ∀ p' : ↥(pullback s (spMap (algebraMap K C))),
         genPt ξ ⤳ pullback.fst s (spMap (algebraMap K C)) p' → genPt ξ' ⤳ p' := by
-  haveI hdom : IsDomain (Ω ⊗[K] C) := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isDomain_tensor_of_algebraically_closed_constants K Ω C fun a ha => by
+  have hdom : IsDomain (Ω ⊗[K] C) := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isDomain_tensor_of_algebraically_closed_constants K Ω C fun a ha => by
     obtain ⟨x, y, hy, h⟩ := hCC a ha
     exact ⟨x / y, by rw [map_div₀, ← h, mul_div_cancel_right₀ _ ((map_ne_zero _).2 hy)]⟩
   let aT := algebraMap (Ω ⊗[K] C) (FractionRing (Ω ⊗[K] C))
@@ -986,7 +986,7 @@ theorem cpt_base_change_dominates (K C : Type) [Field K] [CharZero K] [Field C] 
     aT.comp (Algebra.TensorProduct.includeLeftRingHom (R := K) (A := Ω) (B := C))
   let ic : C →+* FractionRing (Ω ⊗[K] C) :=
     aT.comp (Algebra.TensorProduct.includeRight (R := K) (A := Ω) (B := C)).toRingHom
-  letI alg' : Algebra C (FractionRing (Ω ⊗[K] C)) := ic.toAlgebra
+  let alg' : Algebra C (FractionRing (Ω ⊗[K] C)) := ic.toAlgebra
   have hcond : (spMap i ≫ ξ) ≫ s = spMap ic ≫ spMap (algebraMap K C) := by
     rw [Category.assoc, hξs, spMap_comp, spMap_comp]
     have e : i.comp (algebraMap K Ω) = ic.comp (algebraMap K C) := by
@@ -1020,7 +1020,7 @@ theorem cpt_base_change_dominates (K C : Type) [Field K] [CharZero K] [Field C] 
     refine local_transfer ξ' j _ hjξ P fun b hb => ?_
     have hb' : Algebra.TensorProduct.map φ (AlgHom.id K C) b = 0 :=
       IsFractionRing.injective (Ω ⊗[K] C) (FractionRing (Ω ⊗[K] C)) (by simpa using hb)
-    haveI hprime : (spMap (Algebra.TensorProduct.includeLeftRingHom (R := K) (A := A) (B := C)) P).asIdeal.IsPrime :=
+    have hprime : (spMap (Algebra.TensorProduct.includeLeftRingHom (R := K) (A := A) (B := C)) P).asIdeal.IsPrime :=
       PrimeSpectrum.isPrime _
     obtain ⟨d, hd, h⟩ := tensor_ker φ
       (spMap (Algebra.TensorProduct.includeLeftRingHom (R := K) (A := A) (B := C)) P).asIdeal.primeCompl
@@ -1194,7 +1194,7 @@ theorem isHolTo_comp {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] {B : 
   obtain ⟨h1, h2⟩ := h (f ⁻¹ᵁ U) ((f.app U).hom g)
   have e : {b ∈ B | ⊤ ≤ (y b ≫ f) ⁻¹ᵁ U} = {b ∈ B | ⊤ ≤ y b ⁻¹ᵁ (f ⁻¹ᵁ U)} := by
     ext b
-    simp only [Set.mem_setOf_eq, GlobalTheory.top_le_preimage_comp]
+    simp only [Set.mem_ofPred_eq, GlobalTheory.top_le_preimage_comp]
   rw [e]
   exact ⟨h1, h2.congr fun b _ => (GlobalTheory.valAt'_comp (y b) f U g).symm⟩
 
@@ -1237,7 +1237,7 @@ theorem cpt_base_change : ∀ (K : Type) [Field K] [CharZero K] (σ : K →+* �
       Dominates ξ' ξ (pullback.fst s (spMap σ)) i ∧ IsCptGen ξ' ∧
       ∀ p' : ↥(pullback s (spMap σ)), genPt ξ ⤳ pullback.fst s (spMap σ) p' → genPt ξ' ⤳ p' := by
   intro K _ _ σ X s Ω _ _ ξ h1 h2 h3
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   exact cpt_base_change_dominates K ℂ s ξ h1 h2 h3
 
 theorem constClosed_complex (Ω' : Type) [Field Ω'] [Algebra ℂ Ω'] : ConstClosed ℂ Ω' := fun a ha => by
@@ -1254,8 +1254,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat
 open GagaRat in
 theorem gaga_rat : GagaSections → ∀ (K : Type) [Field K] (σ : K →+* ℂ) (X : Scheme.{0}) (s : X ⟶ Sp K) (Ω : Type) [Field Ω] [Algebra K Ω] (ξ : Sp Ω ⟶ X) (L : Lat ξ Ω) (W : X.Opens) (F : (Sp ℂ ⟶ X) → ℂ), IsProper s → Smooth s → ξ ≫ s = spMap (algebraMap K Ω) → IsCptGen ξ → ConstClosed K Ω → L.IsVB 1 ⊤ → genPt ξ ∈ W → (∀ p : Cpt ξ, p.1 ∈ W → L.IsGenAt p 1) → (∀ (x : Sp ℂ ⟶ X) (h : genPt ξ ⤳ centre x), x ≫ s = spMap σ → ∃ t : Ω, L.IsGenAt ⟨centre x, h⟩ t ∧ ExtendsUnitAt s σ ξ W F t x) → ∃ (f : Ω) (κ : ℂ), κ ≠ 0 ∧ (∀ p : Cpt ξ, L.IsGenAt p f) ∧ ∀ y : Sp ℂ ⟶ X, y ≫ s = spMap σ → ⊤ ≤ y ⁻¹ᵁ W → genPt ξ ⤳ centre y → ValAt ξ y f (κ * F y) := by
   intro hG K _ σ X s Ω _ _ ξ L W F hP hS hξs hξ hCC hVB hW hW1 hext
-  haveI : CharZero K := σ.charZero
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
+  have : CharZero K := σ.charZero
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
   obtain ⟨Ω', _, _, i, ξ', h1, hD, hξ', hsp⟩ := cpt_base_change K σ X s Ω ξ hξs hξ hCC
   have hc : pullback.fst s (spMap σ) ≫ s = pullback.snd s (spMap σ) ≫ spMap σ := pullback.condition
   generalize hf : pullback.fst s (spMap σ) = f at *
@@ -1294,8 +1294,8 @@ theorem gaga_rat : GagaSections → ∀ (K : Type) [Field K] (σ : K →+* ℂ) 
     exact ⟨i t, hg L t ht, extends_pull hc hD hξ' hVB hW1 x hcx ht hE⟩
   obtain ⟨f', κ, hκ, hgen, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.gaga_rat_C hG _ s' Ω' ξ' (L.pull ξ' f i.toAddMonoidHom) (f ⁻¹ᵁ W)
     (fun y => F (y ≫ f)) hP' hS' h1 hξ' (constClosed_complex Ω') hVB' hW' hW1' hext'
-  letI : Algebra K ℂ := σ.toAlgebra
-  haveI : IsProper s := hP
+  let : Algebra K ℂ := σ.toAlgebra
+  have : IsProper s := hP
   obtain ⟨t, c, hgt, hft⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_gen_of_extension X Ω ξ K s _ Ω' ξ' f i ℂ s' hξs (algebraMap K Ω).injective
     (algebraMap K ℂ).injective hpb h1 hD hξ hξ' hCC L f'
     (fun p _ => by

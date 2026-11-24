@@ -250,7 +250,7 @@ theorem co_map [IsCommMonObj G] (τ : ℂ →+* ℂ) (M : LieModel G ξ Li) (B :
         (Smooth G.hom → ∀ (n : ℕ) (b : Module.Basis (Fin n) A E),
           Submodule.span R (Set.range fun k => j (b k)) = ⊤) := by
     subst hz
-    letI := φ.toAlgebra
+    let := φ.toAlgebra
     obtain ⟨j, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G A R x E F M N
     exact ⟨j, h1, h2, fun hs n b => (h3 hs n b).2⟩
   obtain ⟨V', _, _, ⟨M'⟩⟩ := lieModel_exists X G ℂ z'
@@ -308,7 +308,7 @@ theorem co_val [IsCommMonObj G] [Smooth G.hom] (hξ : IsCptGen ξ) (M : LieModel
         (Smooth G.hom → ∀ (n : ℕ) (b : Module.Basis (Fin n) A E),
           Submodule.span R (Set.range fun k => j (b k)) = ⊤) := by
     subst hz
-    letI := φ.toAlgebra
+    let := φ.toAlgebra
     obtain ⟨j, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G A R x E F M N
     exact ⟨j, h1, h2, fun hs n b => (h3 hs n b).2⟩
   obtain ⟨V, _, _, ⟨Mz⟩⟩ := lieModel_exists X G ℂ z

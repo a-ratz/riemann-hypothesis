@@ -620,7 +620,7 @@ theorem exists_fixed_all {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ 
       rcases Finset.mem_insert.1 hi with rfl | hi
       · exact Or.inr hu
       · exact Or.inl ⟨i, hi, hu⟩
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   obtain ⟨f, hf, f0, h⟩ := key Finset.univ
   exact ⟨f, hf, f0, fun i => h i (Finset.mem_univ i)⟩
 
@@ -746,7 +746,7 @@ theorem exists_qstep (hψ : IsStdChar D ψ (-1)) (S : Dbl2 ψ σ) {k : Type} [Fi
       γ₀ ∈ A₁ ∧ β₀ ∈ A₂ ∧ ∃ Q : QStep S, Q = QStep.mk k ν hν q ψk hk hc n₀ n₁ n₂ c F gl₀ gl₁ gl₂ loc₀ loc₁ loc₂ μ₁ μ₂ c₁ c₂ o₁ o₂
         L₀ L₁ L₂ co₁ co₂ le₁ le₂ Φ₁ Φ₂ ty₁ ty₂ D₁ D₂ dat₁ dat₂ α A₁ A₂ cov₁ cov₂ d₁ d₂ ent₁ ent₂ e₀ e₂ one₀ one₂
         m₁ m₂ haar₁ haar₂ vol₁ vol₂ := by
-  haveI := hν.1
+  have := hν.1
   have hc2 : c + 1 = 2 * σ + 1 := F.bes'.1
   obtain ⟨gl₀, l₀⟩ := Model.exists_gl q _ F.G₀
   obtain ⟨gl₁, l₁⟩ := Model.exists_gl q _ F.G₁
@@ -803,7 +803,7 @@ theorem core {D : D7} {c : Comm D} {v : VCom c} {t : Tup c} (hψ : IsStdChar D c
         ∃ τ ∈ T, ∃ r, Q'.gl (j + 1) (2 * σ + 2) (by have := Q'.hs; omega) r ∈ jacGrp (c.jac j (σ + 1) h).d ∧
           ∃ κ ∈ (Q'.T.lev (j + 1) (2 * σ + 2) (by have := Q'.hs; omega)).J, x = r * τ * κ := by
   classical
-  haveI := Q'.unitVol.1
+  have := Q'.unitVol.1
   have e0 : j + (2 * σ + 2 + 1) = Q'.s + 1 := by have := Q'.hs; omega
   have e1 : j + 1 + (2 * σ + 2) = Q'.s + 1 := by have := Q'.hs; omega
   have e2 : j + 1 + 1 + (2 * σ + 1) = Q'.s + 1 := by have := Q'.hs; omega
@@ -1348,11 +1348,11 @@ theorem loc_facts {c : Comm D} {v : VCom c} {t : Tup c} (F : QFam v t) (j σ : �
   · rw [← hr]; intro x hx; obtain ⟨g, -, rfl⟩ := Subgroup.mem_map.1 hx; exact ⟨g, rfl⟩
   · rw [GlobalTheory.QuotientFiniteLevel.locK, Subgroup.coe_map]; exact hJc.image hce.continuous
   · obtain ⟨U, hU, hUe⟩ := hce.isInducing.isOpen_iff.1 hJo
-    convert hU.preimage continuous_subtype_val using 1
+    convert hU.preimage continuous_subtypeVal using 1
     ext ⟨x, hx⟩
     rw [← hr] at hx
     obtain ⟨g, rfl⟩ := hx
-    simp only [Set.mem_setOf_eq, Set.mem_preimage]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage]
     rw [GlobalTheory.QuotientFiniteLevel.locK, Subgroup.mem_map]
     constructor
     · rintro ⟨g', hg', e⟩
@@ -1391,8 +1391,8 @@ theorem qK_grp : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t)
         funext x
         simp [Subgroup.noncommPiCoprod, MonoidHom.noncommPiCoprod, Finset.noncommProd, List.ofFn_eq_map]
       rw [e]
-      exact continuous_list_prod _ fun i _ => continuous_subtype_val.comp (continuous_apply i)
-    haveI : ∀ i, CompactSpace (GlobalTheory.QuotientFiniteLevel.locK F j σ h i) := fun i => isCompact_iff_compactSpace.1 (hloc i).2.1
+      exact continuous_list_prod _ fun i _ => continuous_subtypeVal.comp (continuous_apply i)
+    have : ∀ i, CompactSpace (GlobalTheory.QuotientFiniteLevel.locK F j σ h i) := fun i => isCompact_iff_compactSpace.1 (hloc i).2.1
     have : (GlobalTheory.QuotientFiniteLevel.qK F j σ h : Set (GA D (c.V (j + 1)))) = Set.range (Subgroup.noncommPiCoprod hcomm) := by
       rw [hqK, ← hrange, MonoidHom.coe_range]
     rw [this]; exact isCompact_range hcont
@@ -1408,7 +1408,7 @@ theorem qK_grp : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t)
     have he' : ∀ i (z : GfC V), (z : GA D V) = (((e i).symm z).1 : GA D V) * (((e i).symm z).2 : GA D V) := by
       intro i z; rw [← he i, Homeomorph.apply_symm_apply]
     let ι : grpAt V (· ∈ w.Q) → GfC V := fun x => ⟨x.1, hQf x.2⟩
-    have hι : Continuous ι := continuous_subtype_val.subtype_mk _
+    have hι : Continuous ι := continuous_subtypeVal.subtype_mk _
     let U : Set (grpAt V (· ∈ w.Q)) := ⋂ i, {x | ((((e i).symm (ι x)).1 : _) : GA D V) ∈ K i}
     have hUo : IsOpen U := isOpen_iInter_of_finite fun i =>
       (hloc i).2.2.preimage (continuous_fst.comp ((e i).symm.continuous.comp hι))
@@ -1582,7 +1582,7 @@ theorem GlobalTheory.QColLaws.laws_resc_alt : GlobalTheory.Published.DiscreteSer
     (∀ p, p ∈ w₀.Q ↔ ∃ PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Q t, p = PP.under (𝓞 (I.rec7 l Z).host.F)) →
     QLaw a.v (GlobalTheory.QTw.resc w₀ s) ∧ QLast a.v (GlobalTheory.QTw.resc w₀ s) ∧ QFin a.v (GlobalTheory.QTw.resc w₀ s) := by
   intro hDS hHC B X I l Z L hT Gi Gl Kc Yd cX ex W hW u a ha _haT row col hr hc t F w₀ s hs hPin hQ
-  letI := a.fld; letI := a.val; letI := a.top; haveI := a.loc
+  let := a.fld; let := a.val; let := a.top; have := a.loc
   have hsh := ha.shape
   have hIs := _root_.GlobalTheory.T.famCh_is_and_tuples_is_of_colOK hDS hHC W u hW.pk (a.fam row col) hr
   have hweil := _root_.GlobalTheory.T.weilOK_of_rank_one_gram' W u hW.pk (a.fam row col) a.v hr hc (ha.tie row col).1

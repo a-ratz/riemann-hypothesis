@@ -94,12 +94,12 @@ theorem isFiniteMeasure_chartPartMeasure [CompactSpace X] [T2Space X] [BorelSpac
     continuousOn_const.mul ((chiCont A P j).mul (locDensCont A Φ hΦ j))
   have hi : IntegrableOn (fun y => s * (P.χ j ((A.chart j).symm y) * locDens A Φ j y))
       (A.chart j).target := by
-    refine IntegrableOn.of_forall_diff_eq_zero ((hw.mono hCT).integrableOn_compact hC)
+    refine IntegrableOn.of_forall_sdiff_eq_zero ((hw.mono hCT).integrableOn_compact hC)
       (A.chart j).open_target.measurableSet ?_
     intro y hy
     simp [hz y hy.1 hy.2]
   unfold chartPartMeasure
-  haveI : IsFiniteMeasure ((volume.restrict (A.chart j).target).withDensity fun y =>
+  have : IsFiniteMeasure ((volume.restrict (A.chart j).target).withDensity fun y =>
       ENNReal.ofReal (s * (P.χ j ((A.chart j).symm y) * locDens A Φ j y))) :=
     isFiniteMeasure_withDensity_ofReal hi.2
   infer_instance
@@ -146,7 +146,7 @@ private theorem integrableOn_part [CompactSpace X] [T2Space X] [BorelSpace X]
     calc |g ((A.chart j).symm y)| * |max (s * (P.χ j ((A.chart j).symm y) * locDens A Φ j y)) 0|
         ≤ |g ((A.chart j).symm y)| * (|s| * |locDens A Φ j y|) := by gcongr
       _ = |s| * (|g ((A.chart j).symm y)| * |locDens A Φ j y|) := by ring
-  refine IntegrableOn.of_forall_diff_eq_zero hCi (A.chart j).open_target.measurableSet ?_
+  refine IntegrableOn.of_forall_sdiff_eq_zero hCi (A.chart j).open_target.measurableSet ?_
   intro y hy
   simp [hz y hy.1 hy.2]
 

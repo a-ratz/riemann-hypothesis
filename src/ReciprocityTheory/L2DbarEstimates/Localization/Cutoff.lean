@@ -240,7 +240,7 @@ theorem locL2_of_weighted_bound {M E : Type*} [TopologicalSpace M] [T2Space M] [
     have hq' := hq x
     have hb : ‖u x‖ ^ 2 ≤ (c * Real.exp K) * (q x * Real.exp (-ph x)) := by
       nlinarith [hEF', hprod, hq']
-    rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _),
+    rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _),
       ← ENNReal.ofReal_mul (mul_nonneg hc (Real.exp_pos _).le)]
     exact ENNReal.ofReal_le_ofReal hb
   calc ∫⁻ x in C, ‖u x‖ₑ ^ 2 ∂μ

@@ -114,11 +114,11 @@ theorem parseval_adelic_pair_fundamental : ∀ {F E : Type} [Field F] [NumberFie
           ∫ w in 𝓕, thV B.ψ Φ₁ w * starRingEnd ℂ (thV B.ψ Φ₂ w) ∂ν =
             (c : ℂ) * ∫ x, Φ₁ x * starRingEnd ℂ (Φ₂ x) ∂μ := by
   intro F E _ _ _ _ _ σ B hB N
-  letI mA : MeasurableSpace (Fin N → AF F) := borel _
-  letI mV : MeasurableSpace (VA F N) := borel _
+  let mA : MeasurableSpace (Fin N → AF F) := borel _
+  let mV : MeasurableSpace (VA F N) := borel _
   intro ν hν 𝓕 h𝓕
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : BorelSpace (Fin N → AF F) := ⟨rfl⟩
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : BorelSpace (Fin N → AF F) := ⟨rfl⟩
   have hR : IsTotallyReal F := hB.cm.1
   have hψ : IsCharAF F B.ψ := (GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood F E σ B hB).1
   let μ : Measure (Fin N → AF F) := Measure.addHaar
@@ -133,14 +133,14 @@ theorem parseval_adelic_pair_fundamental : ∀ {F E : Type} [Field F] [NumberFie
     intro Φ hΦ
     have hm := GlobalTheory.T.measurable_theta_sum_of_schrodinger F B.ψ hψ (Fin N) Φ hΦ
     have hG : @Measurable _ _ (borel _) _ (fun w : (Fin N → AF F) × (Fin N → AF F) =>
-        ‖GlobalTheory.WeilM.thetaSum F (GlobalTheory.WeilM.schr B.ψ w Φ)‖ₑ ^ 2) := Measurable.pow_const (measurable_enorm.comp hm) 2
+        ‖GlobalTheory.WeilM.thetaSum F (GlobalTheory.WeilM.schr B.ψ w Φ)‖ₑ ^ 2) := Measurable.pow_const (measurable_eNorm.comp hm) 2
     show ∫⁻ w in 𝓕, ‖GlobalTheory.WeilM.thetaSum F (GlobalTheory.WeilM.schr B.ψ w Φ)‖ₑ ^ 2 ∂ν = _
     rw [hc _ hG (fun γ hγ w => by
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, GlobalTheory.T.norm_adelicThetaSum_schroedinger_rationalPair_invariant F B.ψ hψ (Fin N) Φ γ hγ w])]
+      rw [← ofReal_norm, ← ofReal_norm, GlobalTheory.T.norm_adelicThetaSum_schroedinger_rationalPair_invariant F B.ψ hψ (Fin N) Φ γ hγ w])]
     simp_rw [GlobalTheory.T.lintegral_adelicThetaSum_sq_parseval_second_variable F B.ψ hψ (Fin N) μ hμ 𝓕₁ h𝓕₁ htop Φ hΦ]
     rw [lintegral_const_mul' _ _ htop, GlobalTheory.T.parseval_fundamental_domain_theta F (Fin N) μ hμ 𝓕₁ h𝓕₁ Φ hΦ, hK, mul_assoc]
   have henorm : ∀ z : ℂ, ‖‖z‖ ^ 2‖ₑ = ‖z‖ₑ ^ 2 := fun z => by
-    rw [Real.enorm_eq_ofReal (by positivity), ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [Real.eNorm_eq_ofReal (by positivity), ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
 
   have hΦint : ∀ Φ ∈ schA F (Fin N), Integrable (fun x => ‖Φ x‖ ^ 2) μ := fun Φ hΦ =>
     (GlobalTheory.WeilM.schA_memLp_two F (Fin N) μ hμ Φ hΦ).integrable_norm_pow two_ne_zero
@@ -162,7 +162,7 @@ theorem parseval_adelic_pair_fundamental : ∀ {F E : Type} [Field F] [NumberFie
         (hthint Φ hΦ).aestronglyMeasurable,
       integral_eq_lintegral_of_nonneg_ae (ae_of_all _ fun _ => sq_nonneg _) (hΦint Φ hΦ).aestronglyMeasurable]
     have e1 : ∀ z : ℂ, ENNReal.ofReal (‖z‖ ^ 2) = ‖z‖ₑ ^ 2 := fun z => by
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     simp_rw [e1]
     rw [hpar Φ hΦ, ENNReal.toReal_mul]
   refine ⟨μ, K.toReal, hμ, ENNReal.toReal_pos hK0 hKt, fun Φ₁ hΦ₁ Φ₂ hΦ₂ => ?_⟩

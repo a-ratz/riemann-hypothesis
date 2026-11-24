@@ -67,7 +67,7 @@ theorem conj_pow_mul_pow_polar (r θ : ℝ) (a b : ℕ) :
     starRingEnd ℂ (((r : ℂ) * Complex.exp (θ * I)) ^ a) * ((r : ℂ) * Complex.exp (θ * I)) ^ b =
       ((r ^ (a + b) : ℝ) : ℂ) * Complex.exp ((((b : ℂ) - a) * I) * θ) := by
   rw [map_pow, map_mul, Complex.conj_ofReal, ← Complex.exp_conj, map_mul, Complex.conj_ofReal,
-    Complex.conj_I, mul_pow, mul_pow, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul]
+    Complex.conj_I, mul_pow, mul_pow, ← exp_natCast_mul, ← exp_natCast_mul]
   have : Complex.exp (((b : ℂ) - a) * I * θ) =
       Complex.exp (a * (θ * -I)) * Complex.exp (b * (θ * I)) := by
     rw [← Complex.exp_add]; congr 1; ring

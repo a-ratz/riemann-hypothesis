@@ -359,7 +359,7 @@ end General
 
 theorem main : ∀ (D : D7) (u : D.what₂.Word), letI := D.host.cmStar; ∀ F0 : FlagG (VS D) D.R.rS ((Lat.Tu D u : ℕ) : D.host.E), F0.e = D.sp.hypE → F0.z = D.zmOf u → (PD (D.sp.X 0).hT ∧ Module.finrank D.host.E (D.sp.X 0).V = D.R.k) ∧ ∀ Λ : Cnt.LatV D, IsRowLat D F0 Λ → IsIntLat (D.sp.X 0).hT (Lat.L0X D Λ (lf D F0)) ∧ Nonempty ((↥(dual (D.sp.X 0).hT (Lat.L0X D Λ (lf D F0))) ⧸ (Lat.L0X D Λ (lf D F0)).comap (dual (D.sp.X 0).hT (Lat.L0X D Λ (lf D F0))).subtype) ≃ₗ[𝓞 D.host.E] (𝓞 D.host.E ⧸ Ideal.span {((Lat.Tu D u : ℕ) : 𝓞 D.host.E)})) := by
   intro D u
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro F0 he hz
   have hm : 0 < D.R.m := lt_of_lt_of_le (by norm_num) D.R.two_le_m
   refine ⟨⟨fun τ v hv => ?_, ?_⟩, fun Λ hΛ => ?_⟩

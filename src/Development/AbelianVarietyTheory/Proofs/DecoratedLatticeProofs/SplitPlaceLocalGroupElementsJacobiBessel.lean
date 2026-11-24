@@ -264,7 +264,7 @@ theorem strict_inv (l : Y → ℕ) (q : GL Y K) (h : ∀ r s, l s ≤ l r → (q
     have := h r s hrs.le
     rwa [Matrix.sub_apply, Matrix.one_apply_ne (fun e => hrs.ne (by rw [e])), sub_zero] at this
   have h2 : (q⁻¹).val.BlockTriangular l := by
-    letI := q.invertible
+    let := q.invertible
     rw [Matrix.coe_units_inv]
     exact Matrix.blockTriangular_inv_of_blockTriangular h1
   intro r s hrs
@@ -404,7 +404,7 @@ theorem mem_jacGrp (J : JacLev D ρ) (s hh : k) (F₀ : Frame k J.W₀.rank n) (
       · rfl
       · simp [l, wlev]
       · simp only [l, wlev, Sum.map_inr, Sum.elim_inr]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
         omega
   obtain ⟨g₁, h₁⟩ := Witness.exists_isLoc p F (colE (2 * ρ) (ρ + 1) β)
   obtain ⟨g₂, h₂⟩ := Witness.exists_isLoc p F q
@@ -414,7 +414,7 @@ theorem mem_jacGrp (J : JacLev D ρ) (s hh : k) (F₀ : Frame k J.W₀.rank n) (
     · simp [colE, upU, Matrix.one_apply]
     · have : j.val ≠ ρ := by
         rintro h
-        simp only [l, Sum.elim_inl, Sum.elim_inr, h, lt_irrefl, if_false] at hrs
+        simp only [l, Sum.elim_inl, Sum.elim_inr, h, lt_irrefl, ite_false] at hrs
         omega
       simp [colE, upU, this]
     · simp [colE, upU]

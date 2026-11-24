@@ -351,7 +351,7 @@ theorem exists_scale_cover {F E : Type} [Field F] [NumberField F] [Field E] [Num
         ∀ a i l, p ^ k * (Algebra.TensorProduct.basis (Fv F v) b).repr (X a i) l ∈
           v.adicCompletionIntegers F := by
     intro k X
-    simp only [latV, Set.mem_setOf_eq, repr_scaleB, map_pow, hp]
+    simp only [latV, Set.mem_ofPred_eq, repr_scaleB, map_pow, hp]
   let U : ℕ → Set (Fin n → Fin M → Fv F v ⊗[F] E) :=
     fun k => latV (scaleB b (π ^ k) (pow_ne_zero k hπ0)) v
   have hUo : ∀ k, IsOpen (U k) := fun k =>
@@ -388,7 +388,7 @@ theorem fibre_compact_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field
   obtain ⟨c, hc, hCc⟩ := exists_scale_cover σ hcm b n M v C hC
   set b' := scaleB b c hc with hb'
   have hrV : ∀ w, IsLocR (Fv F w) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI : ∀ w, BorelSpace (Fv F w) := fun _ => ⟨rfl⟩
+  have : ∀ w, BorelSpace (Fv F w) := fun _ => ⟨rfl⟩
   obtain ⟨k, hk0, hk⟩ := coord_rescale σ hcm J (Fv F v) (hrV v) b b' (lam v) (hv v).1 n m hm
   have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨-, hWi, hHi⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm (Ainf F) _ b' laminf hinf.1
@@ -423,7 +423,7 @@ theorem fibre_compact_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field
     by_contra hx
     have hs : (k • m (hermOf (Fv F v) σ T hT)) (latV b' v) =
         (k : ℝ≥0∞) * m (hermOf (Fv F v) σ T hT) (latV b' v) := by
-      rw [Measure.smul_apply]
+      rw [smul_apply]
       rfl
     rw [hs, not_lt_top_iff.1 hx, ENNReal.mul_top (by exact_mod_cast hk0)] at h1
     exact lt_irrefl _ h1
@@ -572,41 +572,41 @@ end Tuples
 theorem theta_stage_frames : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ t : F, t ≠ 0 → ∀ (n : ℕ) (T : Matrix (Fin n) (Fin n) E) (μ : Measure (HA (AF F) σ (blockOne (algebraMap F E t) J))) 𝓕, IsHaarH F E σ (M + 1) _ μ → IsFDH F E σ (M + 1) _ μ 𝓕 → ∀ (μ₁ : Measure (HA (AF F) σ J)) 𝓕₁, IsHaarH F E σ M J μ₁ → IsFDH F E σ M J μ₁ 𝓕₁ → ∀ (Φ : (Fin (n + 1) → Fin (M + 1) → AF F ⊗[F] E) → ℝ≥0∞) (Ψ : (Fin 1 → Fin (M + 1) → AF F ⊗[F] E) → ℝ≥0∞), Measurable Φ → Measurable Ψ → (∀ h : HA (AF F) σ (blockOne (algebraMap F E t) J), Ψ (actW (AF F) σ _ h (fun _ => Fin.cons 1 (fun _ => 0))) = ∫⁻ X, Φ (actW (AF F) σ _ h (consTup X)) ∂(thetaMeas σ J μ₁ 𝓕₁ (framesE σ J T))) → ∫⁻ X, Φ X ∂(thetaMeas σ _ μ 𝓕 (framesE σ (blockOne (algebraMap F E t) J) (blockOne (algebraMap F E t) T))) = ∫⁻ y, Ψ y ∂(thetaMeas σ _ μ 𝓕 {y : Fin 1 → Fin (M + 1) → E | gramE σ (blockOne (algebraMap F E t) J) y = fun _ _ => algebraMap F E t}) := by
   intro F E _ _ _ _ _ σ hσ M J hJ t ht n T μ 𝓕 hμ h𝓕 μ₁ 𝓕₁ hμ₁ h𝓕₁ Φ Ψ hΦ hΨ hyp
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   have ht' : algebraMap F E t ≠ 0 := by simpa using ht
   obtain ⟨b1, b2, -, -⟩ := BlockAlg.block_alg F E σ hσ M J t
   have hJb : IsHermND σ (blockOne (algebraMap F E t) J) :=
     ⟨b2 hJ.1, by rw [b1]; exact mul_ne_zero ht' hJ.2⟩
   obtain ⟨tg, lc, sc, t2, bs, act⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ (M + 1) _ hJb (AF F)
   obtain ⟨tg₁, lc₁, sc₁, t2₁, bs₁, act₁⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
-  haveI := tg
-  haveI := lc
-  haveI := sc
-  haveI := t2
-  haveI := bs
-  haveI := tg₁
-  haveI := lc₁
-  haveI := sc₁
-  haveI := t2₁
-  haveI := bs₁
+  have := tg
+  have := lc
+  have := sc
+  have := t2
+  have := bs
+  have := tg₁
+  have := lc₁
+  have := sc₁
+  have := t2₁
+  have := bs₁
   obtain ⟨-, -, -, -, -, -, -, hB, -, -⟩ := TopK.topTens_props F E σ hσ (AF F)
-  haveI := hB (n + 1) (M + 1)
-  haveI := hB 1 (M + 1)
-  haveI := hB n M
-  haveI := hB n (M + 1)
-  haveI : μ.IsHaarMeasure := hμ
-  haveI : μ₁.IsHaarMeasure := hμ₁
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
-  haveI hc : Countable (HFinIn (AF F) σ (blockOne (algebraMap F E t) J)) :=
+  have := hB (n + 1) (M + 1)
+  have := hB 1 (M + 1)
+  have := hB n M
+  have := hB n (M + 1)
+  have : μ.IsHaarMeasure := hμ
+  have : μ₁.IsHaarMeasure := hμ₁
+  have : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
+  have hc : Countable (HFinIn (AF F) σ (blockOne (algebraMap F E t) J)) :=
     (rational_countable_discrete F E σ hσ (M + 1) _ hJb).1
-  haveI hc₁ : Countable (HFinIn (AF F) σ J) := (rational_countable_discrete F E σ hσ M J hJ).1
+  have hc₁ : Countable (HFinIn (AF F) σ J) := (rational_countable_discrete F E σ hσ M J hJ).1
   let Γ : Subgroup (HA (AF F) σ (blockOne (algebraMap F E t) J)) :=
     HFinIn (AF F) σ (blockOne (algebraMap F E t) J)
   let Γ₁ : Subgroup (HA (AF F) σ J) := HFinIn (AF F) σ J
-  haveI hc' : Countable Γ := hc
-  haveI hc₁' : Countable Γ₁ := hc₁
+  have hc' : Countable Γ := hc
+  have hc₁' : Countable Γ₁ := hc₁
   have hfin : μ₁ 𝓕₁ < ⊤ := ((finVol_unitaryGroup F E σ hσ M J hJ).2 μ₁ hμ₁).2 𝓕₁ h𝓕₁
   obtain ⟨ι, hιc, -, hιrange, hιF, hιcons⟩ :=
     StabFirst.stab_first F E σ hσ M J hJ t ht (AF F)
@@ -802,7 +802,7 @@ theorem good_mass_free : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   obtain ⟨hring, -, -, -, -, -, -, hB, -, -⟩ := TopK.topTens_props F E σ hCM (Fv F v)
   have hlat : ∀ n' M' : ℕ, MeasurableSet (latV b v : Set (Fin n' → Fin M' → Fv F v ⊗[F] E)) := by
     intro n' M'
-    haveI := hB n' M'
+    have := hB n' M'
     exact ((MeasProj.proj_props F E σ hCM d b n' M').2.2.2.1 v).2.measurableSet
   obtain ⟨Ψ, -, hΨ, hint⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeStage.fibre_block_stages_free F E σ hCM M J hJ t ht n T hT hT' (Fv F v) hLoc d b lam hlam
     m m₁ m' hm hm₁ hm' c hc ((latV b v).indicator 1) (measurable_one.indicator (hlat _ _))
@@ -817,8 +817,8 @@ theorem good_mass_free : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     obtain ⟨h, rfl⟩ := _root_.GlobalTheory.CompanionTheory.SW.WittTuples.exists_actW_eq_of_gramR_eq F E σ hCM (M + 1) _ hND (Fv F v) 1 _ y hg
       (by rw [hg]; exact hy2)
     rw [hΨ h]
-    haveI := hB n M
-    haveI := hB (n + 1) (M + 1)
+    have := hB n M
+    have := hB (n + 1) (M + 1)
     have hS : MeasurableSet {X : Fin n → Fin M → Fv F v ⊗[F] E |
         actW (Fv F v) σ _ h (consTup X) ∈ latV b v} :=
       (GoodMass.continuous_act_consTup (Fv F v) hring σ _ h).measurable (hlat _ _)
@@ -853,8 +853,8 @@ theorem aniso_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   classical
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   have hta : algebraMap F E t ≠ 0 := by simpa using ht
   obtain ⟨hdetb, hhermb, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.BlockAlg.block_alg F E σ hCM M J t
   have hJ' : IsHermND σ (blockOne (algebraMap F E t) J) :=
@@ -992,7 +992,7 @@ theorem fibre_transport {μ : Measure V} {ν : Measure X} {f f' : V → Y} {ι :
     simpa using this.symm
   have hmap : ∀ b, (fib b).map e.symm = (fib b).map es := fun _ => rfl
   refine ⟨fun b => ?_, fun φ hφ => ?_, fun φ hc hcs hts => ?_⟩
-  · rw [Measure.smul_apply, hmap, MeasurableEquiv.map_apply]
+  · rw [smul_apply, hmap, MeasurableEquiv.map_apply]
     have : es ⁻¹' (f' ⁻¹' {ι b} ∩ U)ᶜ = (f ⁻¹' {ι b} ∩ U)ᶜ := by
       ext x
       have h1 : f' (e.symm x) = f x := by rw [hf, e.apply_symm_apply]
@@ -1039,7 +1039,7 @@ theorem fibre_scale {μ : Measure V} {ν : Measure X} {f : V → Y} {ι : X → 
     (hfib : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily μ f ι U ν B fib) :
     Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily (a • μ) f ι U (k • ν) B (fun b => r • fib b) := by
   refine ⟨fun b => ?_, fun φ hφ => ?_, fun φ hc hcs hts => ?_⟩
-  · rw [Measure.smul_apply, hfib.1 b, smul_zero]
+  · rw [smul_apply, hfib.1 b, smul_zero]
   · have e1 : ∀ b, ∫⁻ x, φ x ∂(r • fib b) = (r : ℝ≥0∞) * ∫⁻ x, φ x ∂(fib b) := by
       intro b
       rw [lintegral_smul_measure, ENNReal.smul_def, smul_eq_mul]
@@ -1116,11 +1116,11 @@ theorem local_transport (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J
       ∀ S (A : Set (Fin n → Fin M → R ⊗[F] E)),
         m' S (actTup R (bc (inclR R) g) ⁻¹' A) = a * m S A := by
   obtain ⟨r1, r2, r3, r4, -⟩ := hR
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
-  haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) :=
+  have := r1
+  have := r2
+  have := r3
+  have := r4
+  have : BorelSpace (Fin n → Fin M → R ⊗[F] E) :=
     (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R).2.2.2.2.2.2.2.1 n M
   set e : (Fin n → Fin M → R ⊗[F] E) ≃ₜ (Fin n → Fin M → R ⊗[F] E) :=
     actHomeo σ hCM R (bc (inclR R) g) with he
@@ -1132,7 +1132,7 @@ theorem local_transport (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J
   · rw [Measure.map_smul _ (hee ▸ e.continuous.measurable.aemeasurable), ← hee,
       Measure.map_map e.continuous.measurable e.symm.continuous.measurable]
     simp
-  · rw [Measure.smul_apply]
+  · rw [smul_apply]
     have h1 : ((m S).map e.symm) (actTup R (bc (inclR R) g) ⁻¹' A) = m S A := by
       change ((m S).map e.symm.toMeasurableEquiv) _ = _
       rw [MeasurableEquiv.map_apply]
@@ -1154,29 +1154,29 @@ theorem local_rescale (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J :
   have h1 := haar_of_loc σ hCM R hR b lam hlam n M
   have h2 := haar_of_loc σ hCM R hR b' lam hlam n M
   obtain ⟨r1, r2, r3, r4, -⟩ := hR
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
+  have := r1
+  have := r2
+  have := r3
+  have := r4
   obtain ⟨t1, t2, t3, t4, -, -, -, t8, t9, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) := t8 n M
-  haveI : BorelSpace (HermR R σ n) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have : BorelSpace (Fin n → Fin M → R ⊗[F] E) := t8 n M
+  have : BorelSpace (HermR R σ n) := ⟨rfl⟩
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R ⊗[F] E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → R ⊗[F] E))
-  haveI : LocallyCompactSpace (HermR R σ n) :=
+  have : LocallyCompactSpace (HermR R σ n) :=
     (t9 n).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (HermR R σ n) :=
+  have : SecondCountableTopology (HermR R σ n) :=
     (t9 n).isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
-  haveI := h1.1
-  haveI := h1.2
-  haveI := h2.1
-  haveI := h2.2
+  have := h1.1
+  have := h1.2
+  have := h2.1
+  have := h2.2
   set a := Measure.addHaarScalarFactor (coordW R b' lam n M) (coordW R b lam n M) with ha
   set k := Measure.addHaarScalarFactor (coordHerm R σ b' lam n) (coordHerm R σ b lam n) with hk
   have ea : coordW R b' lam n M = a • coordW R b lam n M := Measure.isAddLeftInvariant_eq_smul _ _
@@ -1299,11 +1299,11 @@ theorem theta_map_frames (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M n : ℕ}
   have hJ' := isHermND_conj σ hCM J hJ g
   obtain ⟨tg, -, -, -, bs, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
   obtain ⟨tg', -, -, -, bs', hact'⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M _ hJ' (AF F)
-  haveI := tg
-  haveI := tg'
-  haveI := bs
-  haveI := bs'
-  haveI : BorelSpace (Fin n → Fin M → AF F ⊗[F] E) :=
+  have := tg
+  have := tg'
+  have := bs
+  have := bs'
+  have : BorelSpace (Fin n → Fin M → AF F ⊗[F] E) :=
     (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)).2.2.2.2.2.2.2.1 n M
   set G : GL (Fin M) (AF F ⊗[F] E) := bc (inclR (AF F)) g with hG
   have hmG := measurable_actTup (n := n) σ hCM (AF F) G
@@ -1346,17 +1346,17 @@ theorem swFree_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   have hJ' := isHermND_conj σ hCM J hJ g
   intro d b laminf lam hinf hlam μ 𝓕 hμ h𝓕 minf m hminf hm
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   obtain ⟨e, hmat, hrat⟩ := GlobalTheory.CompanionTheory.SW.HIsom.unitaryIsom_of_isometry F E σ hCM M J hJ g _ rfl (AF F)
   obtain ⟨tg, -, -, -, bs, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
   obtain ⟨tg', -, -, -, bs', -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M _ hJ' (AF F)
-  haveI := tg
-  haveI := tg'
-  haveI := bs
-  haveI := bs'
-  haveI : μ.IsHaarMeasure := hμ
+  have := tg
+  have := tg'
+  have := bs
+  have := bs'
+  have : μ.IsHaarMeasure := hμ
   let He := e.toHomeomorph.toMeasurableEquiv
   have hμ' : IsHaarH F E σ M _ (μ.map He.symm) := ContinuousMulEquiv.isHaarMeasure_map μ e.symm
   have hmm : (μ.map He.symm).map He = μ := by
@@ -1368,8 +1368,8 @@ theorem swFree_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     isFD_pull σ e.toMulEquiv hrat hq h𝓕
   have hLi : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hWi := haar_of_loc σ hCM (Ainf F) hLi b laminf hinf.1 n M
   have hWv := fun v => haar_of_loc σ hCM (Fv F v) (hLv v) b (lam v) (hlam v).1 n M
   obtain ⟨cinf, c, hUP, hci, hcv⟩ := _root_.GlobalTheory.CompanionTheory.SW.PfAct.product_formula_actTup F E σ hCM n M g
@@ -1391,7 +1391,7 @@ theorem swFree_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       rw [h0, zero_smul] at h2
       have h3 := (Measure.map_eq_zero_iff
         (measurable_of_loc σ hCM (Fv F v) (hLv v) (bc (inclR (Fv F v)) g)).aemeasurable).1 h2
-      haveI := (hWv v).1
+      have := (hWv v).1
       exact NeZero.ne (coordW (Fv F v) b (lam v) n M) h3
     have h2 : (c v : ℝ≥0∞) * m v (hermOf (Fv F v) σ T hT) (latV b v) ≤
         m' v (hermOf (Fv F v) σ T hT) (latV b' v) := by
@@ -1400,7 +1400,7 @@ theorem swFree_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     have h3 : m' v (hermOf (Fv F v) σ T hT) (latV b' v) < ⊤ := by
       by_contra h
       rw [not_lt, top_le_iff] at h
-      rw [Measure.smul_apply, h] at h1
+      rw [smul_apply, h] at h1
       have h4 : r v • (⊤ : ℝ≥0∞) = ⊤ := by
         rw [ENNReal.smul_def, smul_eq_mul]
         exact ENNReal.mul_top (by simpa using hr0 v)

@@ -60,10 +60,10 @@ theorem form_pow_smul_eq_zero_of_basicOpen {R' : Type} [CommRing R'] {X' : Schem
   let A := (OAff s').obj (op W)
   let B := (OAff s').obj (op (⟨X'.basicOpen f, hU⟩ : X'.affineOpens))
   let ψ : A →ₐ[R'] B := mp (OAff s') (homOfLE hle).op
-  letI : Algebra A B := (ψ : A →+* B).toAlgebra
-  haveI : IsScalarTower R' A B :=
+  let : Algebra A B := (ψ : A →+* B).toAlgebra
+  have : IsScalarTower R' A B :=
     IsScalarTower.of_algebraMap_eq fun r ↦ (ψ.commutes r).symm
-  haveI : IsLocalization.Away (show A from f) B := W.2.isLocalization_basicOpen f
+  have : IsLocalization.Away (show A from f) B := W.2.isLocalization_basicOpen f
   have e := (semiHom_mp (OAff s') (homOfLE hle).op).oneFormMap_eq_kaehlerDifferential_map (R := R') (B := A) (B' := B)
     (fun b ↦ rfl) ω
   have h' : KaehlerDifferential.map R' R' A B ω = 0 := e.symm.trans h

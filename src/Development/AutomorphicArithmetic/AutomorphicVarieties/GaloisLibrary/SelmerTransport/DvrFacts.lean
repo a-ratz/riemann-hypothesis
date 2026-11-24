@@ -70,8 +70,8 @@ private theorem length_quot [Module.Free ℤ_[l] O] : Module.length ℤ_[l] (O �
   have hspan : Ideal.span {(l : O)} = (IsLocalRing.maximalIdeal ℤ_[l]).map (algebraMap ℤ_[l] O) := by
     rw [PadicInt.maximalIdeal_eq_span_p, Ideal.map_span, Set.image_singleton, map_natCast]
   rw [hspan, ← IsLocalRing.finrank_quotient_map (R := ℤ_[l]) (S := O)]
-  letI : Field (ℤ_[l] ⧸ IsLocalRing.maximalIdeal ℤ_[l]) := Ideal.Quotient.field _
-  haveI : Module.Finite (ℤ_[l] ⧸ IsLocalRing.maximalIdeal ℤ_[l])
+  let : Field (ℤ_[l] ⧸ IsLocalRing.maximalIdeal ℤ_[l]) := Ideal.Quotient.field _
+  have : Module.Finite (ℤ_[l] ⧸ IsLocalRing.maximalIdeal ℤ_[l])
       (O ⧸ (IsLocalRing.maximalIdeal ℤ_[l]).map (algebraMap ℤ_[l] O)) :=
     Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
   rw [← Module.length_eq_finrank]
@@ -88,10 +88,10 @@ theorem UpperTheory.V.Base.dvrFacts :
       ∀ n : ℕ, ¬ l ∣ n → IsUnit (n : O) := by
   intro l _ O _ _ _ _ _
   have hinj : Function.Injective (algebraMap ℤ_[l] O) := algebraMap_inj O
-  haveI : CharZero O := charZero_of_injective_algebraMap hinj
+  have : CharZero O := charZero_of_injective_algebraMap hinj
   obtain ⟨hcomp, -, hlm, -, hfree, hloc⟩ := UpperTheory.V.abelian₂.dvr_finite l O
-  haveI := hfree
-  haveI := hloc
+  have := hfree
+  have := hloc
   have hspan : Ideal.span {(l : O)} =
       (IsLocalRing.maximalIdeal ℤ_[l]).map (algebraMap ℤ_[l] O) := by
     rw [PadicInt.maximalIdeal_eq_span_p, Ideal.map_span, Set.image_singleton, map_natCast]

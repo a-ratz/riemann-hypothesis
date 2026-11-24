@@ -71,7 +71,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarR
 theorem exists_disc_notMem (hc : Formalism.BasicNotions.CMData F E) (p : HeightOneSpectrum (𝓞 F)) :
     ∃ (θ t : 𝓞 E) (d : 𝓞 F), (t : E) = star (θ : E) ∧ d ∉ p.asIdeal ∧
       algebraMap F E (d : F) = ((θ : E) - (t : E)) ^ 2 := by
-  haveI := p.isMaximal
+  have := p.isMaximal
   obtain ⟨P, hP, hPp⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 E) p.asIdeal
     (by
       rw [(RingHom.injective_iff_ker_eq_bot _).1 (FaithfulSMul.algebraMap_injective (𝓞 F) (𝓞 E))]
@@ -114,7 +114,7 @@ omit [StarRing E] in
 theorem mem_integer_of_isIntegral {sig : E →ₐ[F] E} {p : HeightOneSpectrum (𝓞 F)}
     (A : LocAt F E sig p) (a : A.Fp) (h : IsIntegral 𝒪[A.Fp] (algebraMap A.Fp A.Ep a)) :
     a ∈ 𝒪[A.Fp] := by
-  haveI : Nontrivial A.Ep := Module.nontrivial_of_finrank_pos (R := A.Fp) (by rw [A.rank]; norm_num)
+  have : Nontrivial A.Ep := Module.nontrivial_of_finrank_pos (R := A.Fp) (by rw [A.rank]; norm_num)
   have h1 : IsIntegral 𝒪[A.Fp] a :=
     (isIntegral_algHom_iff (IsScalarTower.toAlgHom 𝒪[A.Fp] A.Fp A.Ep)
       (algebraMap A.Fp A.Ep).injective).1 h
@@ -210,26 +210,26 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem secondCountable_localField (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] : SecondCountableTopology k := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
   open scoped Valued in
-  haveI : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
+  have : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
   exact secondCountable_of_proper
 
 theorem t2Space_of_nonarchimedeanLocalField (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] : T2Space k := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
   infer_instance
 
 theorem isOpen_integer_localField (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] : IsOpen (𝒪[k] : Set k) := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
   exact Valued.isOpen_integer k
 
 theorem val_le_iff (T : LocAt F E sig p) (x y : F) :
@@ -238,7 +238,7 @@ theorem val_le_iff (T : LocAt F E sig p) (x y : F) :
 
 theorem mem_closure_int (T : LocAt F E sig p) (c : T.Fp) (hc : c ∈ 𝒪[T.Fp]) :
     c ∈ closure (Set.range fun a : 𝓞 F => T.ιF (algebraMap (𝓞 F) F a)) := by
-  haveI := T.lf
+  have := T.lf
   have hc' : valuation T.Fp c ≤ 1 := hc
   rw [mem_closure_iff_nhds]
   intro U hU
@@ -281,23 +281,23 @@ theorem mem_closure_int (T : LocAt F E sig p) (c : T.Fp) (hc : c ∈ 𝒪[T.Fp])
 theorem locAt_topology : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E], Formalism.BasicNotions.CMData F E → ∀ (sig : E →ₐ[F] E), (∀ x, sig x = star x) → ∀ (p : HeightOneSpectrum (𝓞 F)) (A : LocAt F E sig p), IsTopologicalRing A.Ep ∧ T2Space A.Ep ∧ LocallyCompactSpace A.Ep ∧ SecondCountableTopology A.Ep ∧ IsOpen (A.O : Set A.Ep) ∧ IsCompact (A.O : Set A.Ep) ∧ DenseRange A.ιE ∧ Function.Injective A.ιE ∧ (∀ x : E, x ≠ 0 → IsUnit (A.ιE x)) ∧ closure (Set.range fun x : 𝓞 E => A.ιE (x : E)) = (A.O : Set A.Ep) := by
   intro F E _ _ _ _ _ _ hc sig hsig p A
   have hO := _root_.GlobalTheory.LocSpan.mem_O_iff hc sig hsig p A
-  haveI := A.lf
-  haveI := A.char0
-  haveI := A.free
-  haveI := A.top
-  haveI : Module.Finite A.Fp A.Ep := Module.finite_of_finrank_pos (by rw [A.rank]; norm_num)
-  haveI : Nontrivial A.Ep := Module.nontrivial_of_finrank_pos (R := A.Fp) (by rw [A.rank]; norm_num)
-  haveI := secondCountable_localField A.Fp
-  haveI := t2Space_of_nonarchimedeanLocalField A.Fp
-  haveI hR : IsTopologicalRing A.Ep := IsModuleTopology.isTopologicalRing A.Fp A.Ep
-  haveI : ContinuousSMul A.Fp A.Ep := IsModuleTopology.toContinuousSMul A.Fp A.Ep
+  have := A.lf
+  have := A.char0
+  have := A.free
+  have := A.top
+  have : Module.Finite A.Fp A.Ep := Module.finite_of_finrank_pos (by rw [A.rank]; norm_num)
+  have : Nontrivial A.Ep := Module.nontrivial_of_finrank_pos (R := A.Fp) (by rw [A.rank]; norm_num)
+  have := secondCountable_localField A.Fp
+  have := t2Space_of_nonarchimedeanLocalField A.Fp
+  have hR : IsTopologicalRing A.Ep := IsModuleTopology.isTopologicalRing A.Fp A.Ep
+  have : ContinuousSMul A.Fp A.Ep := IsModuleTopology.toContinuousSMul A.Fp A.Ep
   have hcont : Continuous (algebraMap A.Fp A.Ep) := continuous_algebraMap _ _
   let b := Module.finBasis A.Fp A.Ep
   let h : A.Ep ≃ₜ (Fin (Module.finrank A.Fp A.Ep) → A.Fp) :=
     { toEquiv := b.equivFun.toEquiv
       continuous_toFun := IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap
       continuous_invFun := IsModuleTopology.continuous_of_linearMap b.equivFun.symm.toLinearMap }
-  haveI hT2 : T2Space A.Ep := h.symm.t2Space
+  have hT2 : T2Space A.Ep := h.symm.t2Space
   have hLC : LocallyCompactSpace A.Ep := h.isClosedEmbedding.locallyCompactSpace
   have hSC : SecondCountableTopology A.Ep := h.secondCountableTopology
   let w := RingOfIntegers.basis E

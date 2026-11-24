@@ -450,7 +450,7 @@ theorem continuous_conj {ε : Fin n → Bool} {X : Type} [TopologicalSpace X] {f
     {g : X → Matrix (Fin n) (Fin n) ℂ} (hf : Continuous f) (hg : Continuous g) :
     Continuous (fun p => (toMK (f p))⁻¹ * g p * toMK (f p)) := by
   have hK : Continuous (fun k : KG ε => toMK k) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hinv : ∀ k : KG ε, (toMK k)⁻¹ = toMK k⁻¹ := fun k => by
     simp [toMK, toM, Matrix.coe_units_inv]
   have e : (fun p => (toMK (f p))⁻¹ * g p * toMK (f p)) = fun p => toMK (f p)⁻¹ * g p * toMK (f p) := by
@@ -470,7 +470,7 @@ private lemma continuous_inner_tau_toMK {ε : Fin n → Bool} {abelian₂ : Fin 
     [InnerProductSpace ℂ W] {τ : Matrix (Fin n) (Fin n) ℂ → (W →L[ℂ] W)} {w : W} (h : IsTau ε abelian₂ τ w)
     (u v : W) : Continuous (fun k : KG ε => ⟪u, τ (toMK k) v⟫_ℂ) := by
   have hK : Continuous (fun k : KG ε => toMK k) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hd := h.2.2.1 u v
   exact hd.continuousOn.comp_continuous hK fun k =>
     ⟨((k : UJ ε) : (Matrix (Fin n) (Fin n) ℂ)ˣ).isUnit, ((mem_KG ε _).1 k.2).2⟩
@@ -478,7 +478,7 @@ private lemma continuous_inner_tau_toMK {ε : Fin n → Bool} {abelian₂ : Fin 
 private lemma continuous_tau_toMK_apply {ε : Fin n → Bool} {abelian₂ : Fin n → ℝ} {W : Type} [NormedAddCommGroup W]
     [InnerProductSpace ℂ W] {τ : Matrix (Fin n) (Fin n) ℂ → (W →L[ℂ] W)} {w : W} (h : IsTau ε abelian₂ τ w)
     (v : W) : Continuous (fun k : KG ε => τ (toMK k) v) := by
-  haveI : FiniteDimensional ℂ W := h.1
+  have : FiniteDimensional ℂ W := h.1
   let b := stdOrthonormalBasis ℂ W
   have e : (fun k : KG ε => τ (toMK k) v) = fun k => ∑ i, ⟪b i, τ (toMK k) v⟫_ℂ • b i := by
     funext k; exact (b.sum_repr' _).symm
@@ -496,7 +496,7 @@ theorem inner_ps_eq {ε : Fin n → Bool} (lam : Fin n → ℝ) {abelian₂ : Fi
     {z : Matrix (Fin n) (Fin n) ℂ} (hz : z ∈ U1 ε) (y u : W) :
     ⟪y, ps ε lam τ w z u⟫_ℂ = (Module.finrank ℂ W : ℂ) * ∫ k : KG ε, Phi lam ((toMK k)⁻¹ * z * toMK k) *
       (⟪y, τ (toMK k) w⟫_ℂ * ⟪τ (toMK k) w, u⟫_ℂ) ∂(muK ε) := by
-  haveI : FiniteDimensional ℂ W := h.1
+  have : FiniteDimensional ℂ W := h.1
   have hv : Continuous (fun k : KG ε => τ (toMK k) w) := continuous_tau_toMK_apply h w
   have hR : Continuous (fun k : KG ε => (innerSL ℂ (τ (toMK k) w)).smulRight (τ (toMK k) w)) := by
     have h1 := ((StrongDual.smulRightL ℂ W W).continuous.comp
@@ -508,17 +508,17 @@ theorem inner_ps_eq {ε : Fin n → Bool} (lam : Fin n → ℝ) {abelian₂ : Fi
   have hGi := integrable_of_continuous_compact' (muK ε) hG
   have hGu := hGi.apply_continuousLinearMap u
   simp only [ps]
-  rw [ContinuousLinearMap.smul_apply, inner_smul_right, ContinuousLinearMap.integral_apply hGi u,
+  rw [smul_apply, inner_smul_right, ContinuousLinearMap.integral_apply hGi u,
     ← integral_inner hGu y]
   congr 1
   refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply,
+  simp only [smul_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply,
     inner_smul_right]
   ring
 
 theorem inner_fderiv_ps : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ) (W : Type) [NormedAddCommGroup W] [InnerProductSpace ℂ W] (τ : Matrix (Fin n) (Fin n) ℂ → (W →L[ℂ] W)) (w : W), IsHCParam lam → IsTau ε (lowK ε lam) τ w → ∀ z ∈ U1 ε, ∀ (A : Matrix (Fin n) (Fin n) ℂ) (y x : W), Integrable (fun k : KG ε => fderiv ℂ (Phi lam) ((toMK k)⁻¹ * z * toMK k) ((toMK k)⁻¹ * A * toMK k) * (⟪y, τ (toMK k) w⟫_ℂ * ⟪τ (toMK k) w, x⟫_ℂ)) (muK ε) ∧ ⟪y, fderiv ℂ (ps ε lam τ w) z A x⟫_ℂ = (Module.finrank ℂ W : ℂ) * ∫ k : KG ε, fderiv ℂ (Phi lam) ((toMK k)⁻¹ * z * toMK k) ((toMK k)⁻¹ * A * toMK k) * (⟪y, τ (toMK k) w⟫_ℂ * ⟪τ (toMK k) w, x⟫_ℂ) ∂(muK ε) := by
   intro n ε lam W _ _ τ w hHC hTau z hz A y x
-  haveI : FiniteDimensional ℂ W := hTau.1
+  have : FiniteDimensional ℂ W := hTau.1
   obtain ⟨hopen, -, hdiff, -⟩ := psBasic n ε lam W τ w hHC hTau
   have hU : IsOpen (U1 ε) := hopen
   have hSn : {t : ℂ | z + t • A ∈ U1 ε} ∈ 𝓝 (0 : ℂ) := by
@@ -845,7 +845,7 @@ lemma isURepOn_of_isTau (h : IsTau ε abelian₂ τ w) : IsURepOn (Kset ε) τ :
   · have h1 := hadj g (K_KC hg) v (τ g v)
     have h2 : gᴴ * g = 1 := Unitary.star_mul_self_of_mem hg.1
     rw [← ContinuousLinearMap.comp_apply, ← hrep.2 gᴴ (K_KC (Kset_star ε hg)) g (K_KC hg), h2, hrep.1,
-      ContinuousLinearMap.one_apply] at h1
+      one_apply_eq_self] at h1
     rw [@norm_eq_sqrt_re_inner ℂ, h1, ← @norm_eq_sqrt_re_inner ℂ]
   · let b := stdOrthonormalBasis ℂ W
     have e : (fun k => τ k v) = fun k => ∑ i, ⟪b i, τ k v⟫_ℂ • b i :=
@@ -858,7 +858,7 @@ lemma schur_norm (h : IsTau ε abelian₂ τ w) (x : W) :
     (Module.finrank ℂ W : ℝ) * ∫ k : KG ε, ‖⟪x, τ (toMK k) w⟫_ℂ‖ ^ 2 ∂(muK ε) = ‖x‖ ^ 2 := by
   have hU := isURepOn_of_isTau h
   obtain ⟨hW, -, -, -, hirr, hw, -⟩ := h
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
   obtain ⟨c, -, hc⟩ := avgSchur n ε W τ w hW hU hirr (by rintro rfl; simp at hw)
   have h1 : Continuous (fun k : KG ε => τ (toMK k) w) :=
     (hU.2.2 w).comp_continuous (toMK_cont ε) fun k => k.2
@@ -889,8 +889,8 @@ lemma ps_entry (h : IsTau ε abelian₂ τ w) (lam : Fin n → ℝ) {x : Matrix 
     (u y : W) :
     ⟪y, ps ε lam τ w x u⟫_ℂ = (Module.finrank ℂ W : ℂ) * ∫ k : KG ε, Phi lam ((toMK k)⁻¹ * x * toMK k) *
       (⟪y, τ (toMK k) w⟫_ℂ * ⟪τ (toMK k) w, u⟫_ℂ) ∂(muK ε) := by
-  haveI := h.1
-  haveI := FiniteDimensional.complete ℂ W
+  have := h.1
+  have := FiniteDimensional.completeSpace ℂ W
   have hk := toMK_cont ε
   have h1 : Continuous (fun k : KG ε => τ (toMK k) w) :=
     ((isURepOn_of_isTau h).2.2 w).comp_continuous hk fun k => k.2
@@ -910,7 +910,7 @@ lemma ps_entry (h : IsTau ε abelian₂ τ w) (lam : Fin n → ℝ) {x : Matrix 
       ((innerSL ℂ).continuous.comp h1)).clm_apply h1)
   have h4 := h3.integrable_of_hasCompactSupport (μ := muK ε) (HasCompactSupport.of_compactSpace _)
   unfold ps
-  rw [ContinuousLinearMap.smul_apply, inner_smul_right, ContinuousLinearMap.integral_apply h4,
+  rw [smul_apply, inner_smul_right, ContinuousLinearMap.integral_apply h4,
     ← integral_inner (h4.apply_continuousLinearMap u)]
   congr 2
   funext k
@@ -1008,8 +1008,8 @@ theorem ps_exp_pos_bound_analytic : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : F
     nlinarith
   ·
     obtain ⟨hopen, hpos, hdiff, -⟩ := psBasic n ε lam W τ w hlam hτ
-    haveI : FiniteDimensional ℂ W := hτ.1
-    haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+    have : FiniteDimensional ℂ W := hτ.1
+    have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
     let e : (Fin n → Fin n → ℂ) ≃L[ℂ] Matrix (Fin n) (Fin n) ℂ :=
       (Matrix.ofLinearEquiv ℂ).toContinuousLinearEquiv
     have hg : AnalyticAt ℂ (fun z : Fin n → Fin n → ℂ => ps ε lam τ w (Matrix.of z))
@@ -1148,8 +1148,8 @@ theorem single_comm_Jm {a b : Fin n} (h : ε a = ε b) :
   rw [Formalism.REAL.Jm, Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.single_apply]
   by_cases h1 : a = i ∧ b = k
   · rcases h1 with ⟨rfl, rfl⟩
-    rw [if_pos ⟨rfl, rfl⟩, h, one_mul, mul_one]
-  · rw [if_neg h1, zero_mul, mul_zero]
+    rw [ite_eq_left ⟨rfl, rfl⟩, h, one_mul, mul_one]
+  · rw [ite_eq_right h1, zero_mul, mul_zero]
 
 theorem inK_of_skew {Y : Matrix (Fin n) (Fin n) ℂ} (h : Yᴴ = -Y) (h' : Y * Jm ε = Jm ε * Y) : inK ε Y := by
   refine ⟨?_, h'⟩
@@ -1224,11 +1224,11 @@ theorem fderiv_tau_thE {abelian₂ Λ : Fin n → ℝ} {u : V} (hτ : IsTau ε a
     split_ifs <;> simp <;> ring
   have hthE : thE ε (a, b) = -((1 / 2 : ℂ) • ((S - T) - Complex.I • (Complex.I • (S + T)))) := by
     rw [smul_smul, Complex.I_mul_I]
-    simp only [thE, Formalism.REAL.sgn, hab, if_true, Complex.ofReal_one]
+    simp only [thE, Formalism.REAL.sgn, hab, ite_true, Complex.ofReal_one]
     module
   rw [hthE, map_neg, map_smul, map_sub, map_smul]
-  simp only [ContinuousLinearMap.neg_apply, ContinuousLinearMap.smul_apply,
-    ContinuousLinearMap.sub_apply]
+  simp only [neg_apply, smul_apply,
+    sub_apply]
   rw [hDA, hDB]
   simp only [map_neg, map_smul, map_sub]
   have hxA' : j xA = actM E ((S - T).map star) (j v) := hxA
@@ -1249,11 +1249,11 @@ theorem psFunEquiv : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ) (
     simp only [thE, smul_mul_assoc, mul_smul_comm, single_comm_Jm hab.symm]
   filter_upwards [eventually_fderiv_ps hl hτ hY] with z hz
   refine ⟨fun x x' hx => ?_, fun y y' x hy => ?_⟩
-  · rw [hz.1, ContinuousLinearMap.mul_apply]
+  · rw [hz.1, mul_apply_eq_comp]
     congr 1
     apply j.injective
     rw [fderiv_tau_thE hτ hL hT hab x, hx]
-  · rw [hz.2, ContinuousLinearMap.mul_apply, ← j.inner_map_map y, fderiv_tau_thE hτ hL hT hab,
+  · rw [hz.2, mul_apply_eq_comp, ← j.inner_map_map y, fderiv_tau_thE hτ hL hT hab,
       ← j.inner_map_map y', hy, hL.2.1 b a]
     simp [Formalism.REAL.sgn, hab]
 
@@ -1410,8 +1410,8 @@ theorem compress_eq {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     (hlow : ∀ a b : Fin n, a < b → ε a ≠ ε b → ∀ x : V, KHighest ε E (lowK ε lam - root a b) x → x = 0)
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : inP ε X) (y x : W) :
     ⟪ι (j y), σ (NormedSpace.exp X) (ι (j x))⟫_ℂ = ⟪y, ps ε lam τ w (NormedSpace.exp Xᵀ) x⟫_ℂ := by
-  haveI := hτ.1
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have := hτ.1
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have han : ∀ Y, inP ε Y → AnalyticAt ℂ (ps ε lam τ w) (NormedSpace.exp Y) := fun Y hY =>
     (_root_.GlobalTheory.SphJet.ps_exp_pos_bound_analytic n ε lam W τ w hl hτ _ hg Y hY).2.2
   have h1 : AnalyticAt ℂ (ps ε lam τ w) 1 := by simpa using han _ (smul_transpose_mem_noncompactPart hX 0)
@@ -1556,7 +1556,7 @@ theorem int_of_isWtOn {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H
     simpa using this.symm
   obtain ⟨m, hm⟩ := Complex.exp_eq_one_iff.1 e2
   refine ⟨m, ?_⟩
-  simp only [Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at hm
+  simp only [Pi.single_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at hm
   have h3 : ((μ i : ℝ) : ℂ) = m := by
     refine mul_right_cancel₀ Complex.two_pi_I_ne_zero ?_
     rw [← hm]; push_cast; ring
@@ -1684,8 +1684,8 @@ theorem of_trivial (R : DSRep T) (hker : ∀ x, T.cov x = 1 → R.U.π x = 1) {l
     rwa [Rat.cast_sub, hle, hle] at this
   have hexp : ∀ X ∈ upq p q, R.U.π (T.expt X) = σ (NormedSpace.exp (Matrix.reindex e e X)) := fun X hX => by
     rw [hσ, T.expt_cov X hX, reindex_exp]
-  letI : NormedAddCommGroup R.HK.V := NormedAddCommGroup.induced _ _ R.ι R.ι_inj
-  letI : InnerProductSpace ℂ R.HK.V := InnerProductSpace.induced R.ι
+  let : NormedAddCommGroup R.HK.V := NormedAddCommGroup.induced _ _ R.ι R.ι_inj
+  let : InnerProductSpace ℂ R.HK.V := InnerProductSpace.induced R.ι
   let ι : R.HK.V →ₗᵢ[ℂ] R.U.H := ⟨R.ι, fun _ => rfl⟩
   set E := unitOp e R.HK.act with hE
   have hder : DerTie P.sgn σ E ι := by
@@ -1794,8 +1794,8 @@ theorem of_trivial (R : DSRep T) (hker : ∀ x, T.cov x = 1 → R.U.π x = 1) {l
     rw [hσ]
     exact hK.2.1 _ (KStabLie.mem_Kset hb T hki) y (hiso y hy)
   have r3 := r2 _ hk2
-  rw [R.U.isom, ← DerivedAdjoint.inner_map T R.U k, ← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel,
-    map_one, ← ContinuousLinearMap.mul_apply, ← map_mul, ContinuousLinearMap.one_apply] at r3
+  rw [R.U.isom, ← DerivedAdjoint.inner_map T R.U k, ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel,
+    map_one, ← mul_apply_eq_comp, ← map_mul, one_apply_eq_self] at r3
   have e1 : GlobalTheory.Count.rkR P.sgn = min p q := congrArg₂ min hsig.1 hsig.2
   have e2 : Real.sqrt (Formalism.REAL.hs (Matrix.reindex e e Y)) = hsNorm Y := by
     unfold Formalism.REAL.hs hsNorm

@@ -107,7 +107,7 @@ theorem uJset_not : Formalism.MainNotions.S.UJset (fun a => !ε a) = Formalism.M
 
 theorem kset_not : Formalism.REAL.Kset (fun a => !ε a) = Formalism.REAL.Kset ε := by
   ext g
-  simp only [Formalism.REAL.Kset, Set.mem_setOf_eq, jm_not, Matrix.mul_neg, Matrix.neg_mul, neg_inj]
+  simp only [Formalism.REAL.Kset, Set.mem_ofPred_eq, jm_not, Matrix.mul_neg, Matrix.neg_mul, neg_inj]
 
 theorem rhoC_not : Formalism.REAL.rhoC (fun a => !ε a) = Formalism.REAL.rhoC ε := by
   funext a; simp [Formalism.REAL.rhoC]
@@ -137,14 +137,14 @@ def flipU : Formalism.REAL.UJ (fun a => !ε a) ≃* Formalism.REAL.UJ ε where
   map_mul' g h := rfl
 
 theorem flipU_cont : Continuous (flipU ε) :=
-  Continuous.subtype_mk continuous_subtype_val _
+  Continuous.subtype_mk continuous_subtypeVal _
 
 theorem flipU_symm_cont : Continuous (flipU ε).symm :=
-  Continuous.subtype_mk continuous_subtype_val _
+  Continuous.subtype_mk continuous_subtypeVal _
 
 theorem memLp_flip {F : Formalism.REAL.UJ ε → ℂ} (hF : MemLp F 2 (Formalism.REAL.muG ε)) :
     MemLp (F ∘ flipU ε) 2 (Formalism.REAL.muG (fun a => !ε a)) := by
-  haveI : ((Formalism.REAL.muG (fun a => !ε a)).map (flipU ε)).IsHaarMeasure :=
+  have : ((Formalism.REAL.muG (fun a => !ε a)).map (flipU ε)).IsHaarMeasure :=
     MulEquiv.isHaarMeasure_map _ (flipU ε) (flipU_cont ε) (flipU_symm_cont ε)
   refine MemLp.comp_of_map ?_ (flipU_cont ε).measurable.aemeasurable
   rw [Measure.isMulLeftInvariant_eq_smul ((Formalism.REAL.muG (fun a => !ε a)).map (flipU ε)) (Formalism.REAL.muG ε)]

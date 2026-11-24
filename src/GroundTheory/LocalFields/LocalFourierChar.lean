@@ -101,7 +101,7 @@ theorem eq_one_of_forall_norm_sub_one_lt (χ : AddChar K Circle) (H : AddSubgrou
 theorem setOf_norm_sub_one_lt_mem_nhds :
     {z : Circle | ‖(z : ℂ) - 1‖ < 1 / 2} ∈ 𝓝 (1 : Circle) := by
   have hc : Continuous fun z : Circle ↦ ‖(z : ℂ) - 1‖ :=
-    (continuous_subtype_val.sub continuous_const).norm
+    (continuous_subtypeVal.sub continuous_const).norm
   exact (isOpen_lt hc continuous_const).mem_nhds (by simp)
 
 variable (ψ : AddChar K Circle)

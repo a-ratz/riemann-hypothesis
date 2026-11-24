@@ -173,7 +173,7 @@ theorem ae_simple_col {n N : ℕ} (U : Set (EuclideanSpace ℂ (Fin n))) (hU : I
     have : S (A y) y = S t y + (y - colProj j0 t) := by
       ext k
       simp only [hS, hA, Pi.add_apply, colInc_apply, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true, PiLp.add_apply]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true, PiLp.add_apply]
       field_simp
     simp only [hG, hπA, this]
     simp only [hA, map_add (f := _)]
@@ -418,7 +418,7 @@ theorem forms_le_generic_comb : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   choose Q d hQ0 hQd hQ using hrel.1
   let Z : Set (Fin Xa.N → ℂ) := {ζ | ∀ jj, MvPolynomial.eval₂ σ (fun a => ζ (jj a)) (Q jj) = 0}
   have hZ : IsClosed Z := by
-    simp only [Z, Set.setOf_forall]
+    simp only [Z, Set.ofPred_forall]
     refine isClosed_iInter fun jj => isClosed_eq ?_ continuous_const
     simp only [MvPolynomial.eval₂_eq']
     fun_prop
@@ -452,7 +452,7 @@ theorem subset_closure_forall_ne_zero {E : Type*} [NormedAddCommGroup E] [Normed
     [FiniteDimensional ℂ E] {U : Set E} (hU : IsOpen U) (hc : IsPreconnected U)
     {J : Type*} [Countable J] (f : J → E → ℂ) (hf : ∀ j, DifferentiableOn ℂ (f j) U)
     (hne : ∀ j, ∃ x ∈ U, f j x ≠ 0) : U ⊆ closure {x | x ∈ U ∧ ∀ j, f j x ≠ 0} := by
-  have : CompleteSpace E := FiniteDimensional.complete ℂ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
   set W : J → Set E := fun j => (U ∩ f j ⁻¹' {0}ᶜ) ∪ (closure U)ᶜ with hW
   have hWo : ∀ j, IsOpen (W j) := fun j =>
     ((hf j).continuousOn.isOpen_inter_preimage hU isOpen_compl_singleton).union
@@ -617,8 +617,8 @@ theorem decay_le : ∃ C : ℝ, ∀ x ∈ X.dom, ‖Xa.et x * Xa.th1 x ^ (Xa.i *
     rw [this, OW.phla_add_nsmul X hx, h0, zero_add]
   have hid : ‖Xa.et x * Xa.th1 x ^ n1‖ ^ 2 * e ^ (2 * n1) =
       X.pnorm (n1 • Xa.de) Xa.et x ^ 2 * (X.pnorm (2 • Xa.L - Xa.de) Xa.th1 x ^ 2) ^ n1 := by
-    rw [OW.pnorm_sq X _ _ hx, OW.pnorm_sq X _ _ hx, he, ← Real.exp_nat_mul, mul_neg, ← hph, neg_add, Real.exp_add,
-      ← mul_neg, Real.exp_nat_mul, ← Complex.sq_norm, ← Complex.sq_norm, norm_mul, norm_pow]
+    rw [OW.pnorm_sq X _ _ hx, OW.pnorm_sq X _ _ hx, he, ← Real.exp_natCast_mul, mul_neg, ← hph, neg_add, Real.exp_add,
+      ← mul_neg, Real.exp_natCast_mul, ← Complex.sq_norm, ← Complex.sq_norm, norm_mul, norm_pow]
     ring
   have hpt : X.pnorm (2 • Xa.L - Xa.de) Xa.th1 x ^ 2 ≤ B ^ 2 :=
     pow_le_pow_left₀ (BoundedSectionAlgebra.pnorm_nonneg X _ _ _) (hB x hx) 2
@@ -628,7 +628,7 @@ theorem decay_le : ∃ C : ℝ, ∀ x ∈ X.dom, ‖Xa.et x * Xa.th1 x ^ (Xa.i *
       rw [hn1, hm, ← two_mul, Nat.mul_div_cancel_left _ two_pos]; ring
     rw [this]; push_cast; rfl
   have hexp : Real.exp (-(2 * Xa.i * Xa.ph x)) ≤ Real.exp (-(2 * Xa.c * Xa.ph x)) ^ (2 * n1 + 1) := by
-    rw [← Real.exp_nat_mul, Real.exp_le_exp, Nat.cast_add, hk]
+    rw [← Real.exp_natCast_mul, Real.exp_le_exp, Nat.cast_add, hk]
     have hT : (2 : ℝ) ≤ Xa.T := by
       have h1 := Xa.T_ge
       have h2 := Xa.n_ge

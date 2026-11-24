@@ -88,7 +88,7 @@ variable {E : Type} [Field E] [NumberField E] {r : ℕ}
 theorem isIntegral_of_mapsTo_lattice (Λ : Submodule (𝓞 E) (Fin r → E)) (hfg : Λ.FG)
     (hspan : Submodule.span E (Λ : Set (Fin r → E)) = ⊤) (Y : Matrix (Fin r) (Fin r) E)
     (hY : ∀ x ∈ Λ, Y *ᵥ x ∈ Λ) : IsIntegral (𝓞 E) Y := by
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.mpr hfg
   let f : Module.End (𝓞 E) Λ :=
     { toFun := fun x => ⟨Y *ᵥ (x : Fin r → E), hY _ x.2⟩
       map_add' := fun x y => by ext1; simp [mulVec_add]

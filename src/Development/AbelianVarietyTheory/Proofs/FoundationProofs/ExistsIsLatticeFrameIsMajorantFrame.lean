@@ -206,7 +206,7 @@ theorem exists_rational_frame (L : Submodule (𝓞 E) (Fin n → E)) [hL : Submo
     rw [← Module.finrank_eq_card_basis (Module.Basis.mk hli hspan), Module.finrank_fin_fun]
   let e := Fintype.equivFinOfCardEq hcard
   let P : Matrix (Fin n) (Fin n) E := Matrix.of fun a j => (u ∘ e.symm) j a
-  have hP : IsUnit P := Matrix.linearIndependent_cols_iff_isUnit.mp (hli.comp _ e.symm.injective)
+  have hP : IsUnit P := Matrix.linearIndependent_col_iff_isUnit.mp (hli.comp _ e.symm.injective)
   refine ⟨hP.unit, fun j => exists_smul_mem_of_mem_span v.asIdeal.primeCompl hA (b (e.symm j)).2, fun x hx =>
     exists_smul_mem_of_mem_span v.asIdeal.primeCompl hA ?_⟩
   have hx' : x ∈ Submodule.span A (Set.range (u ∘ e.symm)) := by
@@ -271,12 +271,12 @@ theorem exists_isLatticeFrame_of_arch (L : Submodule (𝓞 E) (Fin n → E)) [Su
   obtain ⟨S, hS⟩ := exists_finset_latLoc_eq (F := F) L
   choose P h1 h2 using exists_rational_frame (F := F) L
   obtain ⟨a, ha, hc⟩ := exists_GL_of_components S (fun v => if v ∈ S then bc (inclR (Fv F v)) (P v) else 1)
-    (fun v hv => if_neg hv) c
+    (fun v hv => ite_eq_right hv) c
   refine ⟨a, fun v y => ?_, hc⟩
   rw [ha v]
   by_cases hv : v ∈ S
-  · rw [if_pos hv]; exact frame_of_rational _ (h1 v) (h2 v) y
-  · rw [if_neg hv, Units.val_one, Matrix.one_mulVec]; exact hS v hv y
+  · rw [ite_eq_left hv]; exact frame_of_rational _ (h1 v) (h2 v) y
+  · rw [ite_eq_right hv, Units.val_one, Matrix.one_mulVec]; exact hS v hv y
 
 theorem exists_isLatticeFrame (L : Submodule (𝓞 E) (Fin n → E)) [Submodule.IsFullLattice E L] :
     ∃ a : GL (Fin n) (AF F ⊗[F] E), IsLatticeFrame L a :=
@@ -357,8 +357,8 @@ theorem isCompact_UJ_one (h : IsCMExt F E σ) (w : InfinitePlace F) :
   obtain ⟨τ⟩ : Nonempty (EmbOver E w) := inferInstance
   let e := RingEquiv.ofBijective _ (infEmb_bijective h τ)
   have hc : Continuous fun u : Matrix.unitaryGroup (Fin n) ℂ => bc e.symm.toRingHom (Unitary.toUnits u) :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val.matrix_map (continuous_infEmb_symm h τ),
-      continuous_subtype_val.star.matrix_map (continuous_infEmb_symm h τ)⟩
+    Units.continuous_iff.2 ⟨continuous_subtypeVal.matrix_map (continuous_infEmb_symm h τ),
+      continuous_subtypeVal.star.matrix_map (continuous_infEmb_symm h τ)⟩
   convert isCompact_range hc using 1
   ext g
   constructor

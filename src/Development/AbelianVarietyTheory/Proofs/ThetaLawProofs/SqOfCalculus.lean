@@ -66,8 +66,8 @@ theorem LamIs.comp {S S' S'' : Scheme.{0}} {A' : Over S''} [GrpObj A'] {A : Over
 
 theorem PolPB.lamIs {S S' : Scheme.{0}} {P' : Out.PolAV S'} {P : Out.PolAV S} {f : S' ⟶ S}
     {φ : P'.A.left ⟶ P.A.left} (h : PolPB P' P f φ) : LamIs P'.A P'.L P.A (abelian₂ P.A P.L) φ := by
-  letI := P.isAb.comm
-  letI := P'.isAb.comm
+  let := P.isAb.comm
+  let := P'.isAb.comm
   obtain ⟨φ₂, s⟩ := exists_isSquare h.1.1.w
   exact ⟨φ₂, s, lbIso_lam_pull h.1 h.2.2 s⟩
 

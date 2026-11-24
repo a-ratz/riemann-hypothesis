@@ -59,17 +59,17 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 theorem UpperTheory.V.Hi.levelUR2BasePack :
     ∀ (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (V₀ : s.Lev) (O : Type) [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O] (n : ℕ) (r : Resid V₀.frame O n) (B : UniversalOrdinaryDeterminantRing r) (J : Ideal B.B) (D : ℕ) (wt : Pa.WtVars (Pa.locOf r) O n D) (A : Type) [CommRing A] [Algebra O A] (e : Pa.abelian₂ O Empty D ≃ₐ[O] A) (lam : A →ₐ[O] B.B), (∀ k, residue O (wt.c k) * (r.psib (wt.v k) (wt.i k) (wt.γ k) : ResidueField O) = 1) → (∀ k, lam (e (MvPowerSeries.X (.inr k))) = algebraMap O B.B (wt.c k) * (B.u.ψ (wt.v k) (wt.i k) (wt.γ k) : B.B) - 1) → ∀ (M : Type) [AddCommGroup M] [Module A M] [Module.Finite A M] [Module.Free A M] (μ : B.B →+* Module.End A M), (∀ a y, μ (lam a) y = a • y) → RingHom.ker μ = J → ∃ (b : Pa.TWBase (Pa.pairOf B.u) J Empty D) (eb : M ≃+ b.M), b.wt = wt ∧ ∀ t y, eb (μ t y) = t • eb y := by
   intro l _ L Ω _ _ _ _ _ _ s V₀ O _ _ _ n r B J D wt A _ _ e lam hres hlam M _ _ _ _ μ hμ hker
-  letI mB : Module B.B M := Module.compHom M μ
-  letI mL : Module (Pa.abelian₂ O Empty D) M := Module.compHom M (e : Pa.abelian₂ O Empty D →+* A)
+  let mB : Module B.B M := Module.compHom M μ
+  let mL : Module (Pa.abelian₂ O Empty D) M := Module.compHom M (e : Pa.abelian₂ O Empty D →+* A)
   have hsm : ∀ (a : Pa.abelian₂ O Empty D) (m : M), a • m = (lam.comp e.toAlgHom) a • m := by
     intro a m
     exact (hμ (e a) m).symm
-  haveI : Nontrivial A := e.injective.nontrivial
+  have : Nontrivial A := e.injective.nontrivial
   let bL := (Module.Free.chooseBasis A M).mapCoeffs e.symm.toRingEquiv (fun c x => by
     show e (e.symm c) • x = c • x
     rw [AlgEquiv.apply_symm_apply])
-  haveI : Module.Free (Pa.abelian₂ O Empty D) M := Module.Free.of_basis bL
-  haveI : Module.Finite (Pa.abelian₂ O Empty D) M := Module.Finite.of_basis bL
+  have : Module.Free (Pa.abelian₂ O Empty D) M := Module.Free.of_basis bL
+  have : Module.Finite (Pa.abelian₂ O Empty D) M := Module.Finite.of_basis bL
   have hann : Module.annihilator B.B M = J := by
     rw [← hker]
     ext b

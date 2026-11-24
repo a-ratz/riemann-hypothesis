@@ -224,7 +224,7 @@ theorem ratV_single (v : HeightOneSpectrum (𝓞 F)) (i : Fin n) (e : E) :
 theorem single_mem_Bint (i : Fin n) (k : Fin (Module.finrank F E)) :
     (Pi.single i (Module.finBasis F E k) : Fin n → E) ∈ Bint (F := F) n := by
   unfold Bint
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   intro i' k'
   rcases eq_or_ne i' i with rfl | h
   · rw [Pi.single_eq_same, Module.Basis.repr_self, Finsupp.single_apply]
@@ -466,7 +466,7 @@ private theorem isClosed_kf [FiniteDimensional F E] (L : Submodule (𝓞 E) (Fin
   have hS := MassDataLevelSSteps.LatTop.isClosed_matStab hM
   rw [kf_eq_preimage_stabGLHat]
   exact ((hS.preimage Units.continuous_val).inter (hS.preimage Units.continuous_coe_inv)).preimage
-    (continuous_subtype_val : Continuous (incAf σ J))
+    (continuous_subtypeVal : Continuous (incAf σ J))
 
 theorem kf_compact_open (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.IsFullLattice E L) :
     IsCompact (Kf σ J (L : Set (Fin n → E)) : Set (HA (Af F) σ J)) ∧
@@ -476,12 +476,12 @@ theorem kf_compact_open (L : Submodule (𝓞 E) (Fin n → E)) (hL : Submodule.I
     MassDataMassesW.KCptW.latHatOpen_of @MassDataMassesW.KCptW.stdHatOpen_holds
   have hC : MassDataMassesW.KCptW.LatHatCompact :=
     MassDataMassesW.KCptW.latHatCompact_of @MassDataMassesW.KCptW.stdHatCompact_holds
-  letI : Submodule.IsFullLattice E L := hL
+  let : Submodule.IsFullLattice E L := hL
   have hspan : Submodule.span E (L : Set (Fin n → E)) = ⊤ :=
     Submodule.IsFullLattice.span_eq_top
   have hMo := hO (F := F) L hspan hL.fg
   have hMc := hC (F := F) L hspan hL.fg
-  have hinc : Continuous (incAf σ J) := continuous_subtype_val
+  have hinc : Continuous (incAf σ J) := continuous_subtypeVal
   rw [kf_eq_preimage_stabGLHat]
   refine ⟨?_, (MassDataMassesW.KCptW.isOpen_stabGLHat L hMc hMo).preimage hinc⟩
   exact (PI.AdicCompletionValuation.isClosed_HR (Af F) σ J).isClosedEmbedding_subtypeVal.isCompact_preimage
@@ -493,7 +493,7 @@ theorem isClosed_stabT (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R
   have : T2Space (R ⊗[F] E) := PI.VolStabS.RestrProdG.t2_tensor_product R
   have hmat : Continuous (fun g : HA R σ J =>
       ((HA.mat R σ J g : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hact : Continuous (fun g : HA R σ J => g • ratTup (F := F) R X) := by
     refine continuous_pi fun b => ?_
     show Continuous (fun g : HA R σ J =>
@@ -568,7 +568,7 @@ theorem admissible_tuple_holds : AdTup := by
     obtain ⟨hKc, hKo⟩ := compact_open_of_haar_pos_finite _ (isClosed_kf σ J L hL.fg) μf hpos hfin
     have hcl : IsClosed (Hsub (Af F) σ J P : Set (HA (Af F) σ J)) := isClosed_stabT σ J (Af F) (tupH P)
     have := hμ
-    refine ⟨hKo.preimage continuous_subtype_val |>.measure_pos μ ⟨1, (Kf σ J _).one_mem⟩, ?_⟩
+    refine ⟨hKo.preimage continuous_subtypeVal |>.measure_pos μ ⟨1, (Kf σ J _).one_mem⟩, ?_⟩
     exact (hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hKc).measure_lt_top
 
 end Formalism.L2.SG.Pf.NcS.AdTupPf

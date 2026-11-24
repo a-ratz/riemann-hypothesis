@@ -297,7 +297,7 @@ theorem exists_isONBasis {k : ℕ} {G s B : Matrix (Fin k) (Fin k) ℂ} {ε : Fi
 open Matrix GlobalTheory.Grid GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle in
 theorem exists_rig_of_frame {D : D7} {V : HSp D} (A : Fr V) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E))
     (hΛ : IsSelfDualC V Λ) : ∃ r : Rig V, r.Λ = Λ ∧ r.s = A.cart ∧ r.Is := by
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   have hfull : Submodule.IsFullLattice D.host.E Λ := by
     refine ⟨?_⟩
     obtain ⟨s, hs⟩ := hΛ.1.fg
@@ -1336,10 +1336,10 @@ theorem tied_pair_square_relation (hH : GlobalTheory.Published.HoweDualityReal) 
     fun t τ => ⟨GlobalTheory.SquareRel.hasInfExp_alpha G i j hL μ₀ t τ (ha τ), hb τ⟩
   have hqi : Function.Surjective (q ∘ₗ ι) := hq.comp hι
   have hqi' : Function.Surjective (q' ∘ₗ ι') := hq'.comp hι'
-  haveI hPr : Nontrivial Pr := by
+  have hPr : Nontrivial Pr := by
     obtain ⟨⟨ωA, ωB, Pi, rf, rl, p, p', hm⟩, H2⟩ := H _ _ (hT μ₀) (hexp μ₀)
     obtain ⟨Pf, -, -, e, -⟩ := H2 ωA ωB Pi rf rl p p' hm
-    haveI : Nontrivial Pi := hm.irred.1
+    have : Nontrivial Pi := hm.irred.1
     exact GlobalTheory.SquareRel.nontrivial_of_tensor e
   refine ⟨GlobalTheory.SquareRel.relOf (q ∘ₗ ι) (q' ∘ₗ ι'), GlobalTheory.SquareRel.relOf_fst hqi', GlobalTheory.SquareRel.relOf_snd hqi,
     GlobalTheory.SquareRel.relOf_ne_top hqi, ?_⟩
@@ -1428,21 +1428,21 @@ theorem exists_tied_pair_of_standing_hypotheses (hP : _root_.GlobalTheory.FunPr.
   let rel' : ∀ i j : ℕ, Submodule ℂ (PolRoute G (.grid i (j + 1)) (.grid (i + 1) (j + 1)) (.grid (i + 1) j) ×
       PolRoute G (.grid i (j + 1)) (.grid i j) (.grid (i + 1) j)) := fun i j =>
     if h : i < D.R.m ∧ j < D.R.m then r ⟨i, h.1⟩ ⟨j, h.2⟩ else rm.rel i j
-  have e : ∀ i j : Fin D.R.m, rel' i j = r i j := fun i j => dif_pos ⟨i.2, j.2⟩
+  have e : ∀ i j : Fin D.R.m, rel' i j = r i j := fun i j => dite_eq_left ⟨i.2, j.2⟩
   let ρ : RealMatch W := { rm with
     rel := rel'
     onto_big := fun i j a => by
       by_cases h : i < D.R.m ∧ j < D.R.m
-      · simp only [rel', dif_pos h]; exact hr1 ⟨i, h.1⟩ ⟨j, h.2⟩ a
-      · simp only [rel', dif_neg h]; exact rm.onto_big i j a
+      · simp only [rel', dite_eq_left h]; exact hr1 ⟨i, h.1⟩ ⟨j, h.2⟩ a
+      · simp only [rel', dite_eq_right h]; exact rm.onto_big i j a
     onto_small := fun i j b => by
       by_cases h : i < D.R.m ∧ j < D.R.m
-      · simp only [rel', dif_pos h]; exact hr2 ⟨i, h.1⟩ ⟨j, h.2⟩ b
-      · simp only [rel', dif_neg h]; exact rm.onto_small i j b
+      · simp only [rel', dite_eq_left h]; exact hr2 ⟨i, h.1⟩ ⟨j, h.2⟩ b
+      · simp only [rel', dite_eq_right h]; exact rm.onto_small i j b
     proper := fun i j => by
       by_cases h : i < D.R.m ∧ j < D.R.m
-      · simp only [rel', dif_pos h]; exact hr3 ⟨i, h.1⟩ ⟨j, h.2⟩
-      · simp only [rel', dif_neg h]; exact rm.proper i j }
+      · simp only [rel', dite_eq_left h]; exact hr3 ⟨i, h.1⟩ ⟨j, h.2⟩
+      · simp only [rel', dite_eq_right h]; exact rm.proper i j }
   refine ⟨ρ, rfl, rfl, fun i j A A₁ AV AV₁ hA hA₁ hV hV₁ t ωA ωB Pi rf rl p p' hm B n Φ τ τ' hn hF => ?_, fun B i j t => ?_⟩
   · obtain ⟨c, hc⟩ := hr4 i j ρ A A₁ AV AV₁ hA hA₁ hV hV₁ t ωA ωB Pi rf rl p p' hm B
     exact ⟨c, fun a b hab => hc n Φ τ τ' hn hF a b (e i j ▸ hab)⟩
@@ -1573,7 +1573,7 @@ theorem theta_tower_top_stage_norm_eq : _root_.GlobalTheory.FunPr.ThetaLocalInpu
   obtain ⟨X, hT, hX⟩ := hex W i j
   obtain ⟨lam, hl⟩ := hfac W S hstd hN i j (pp D j) (qq D j) _ _ _ X hX
   obtain ⟨κ, hκ, hc⟩ := hcmp W S hstd hN ρ i j X lam hT hX hl
-  haveI : Nonempty T := ⟨μ₀⟩
+  have : Nonempty T := ⟨μ₀⟩
   exact ⟨_, _, _, X, lam, κ, hX, hl.isConst, hκ, hc⟩
 end GlobalTheory.SqTower
 end

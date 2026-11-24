@@ -106,8 +106,8 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.S Formal
 namespace GlobalTheory.TypeAsm
 
 theorem locDatC_of_besselOfW (hBW : Formalism.L2.SG.LocWSOf.BesselOfW) : LocDatC := by
-  haveI : Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc := ⟨GlobalTheory.Sloc.CoefWeighted.coefWeightedLoc_uncond⟩
-  haveI : Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow := ⟨GlobalTheory.DecTransport.decLow_main⟩
+  have : Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc := ⟨GlobalTheory.Sloc.CoefWeighted.coefWeightedLoc_uncond⟩
+  have : Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow := ⟨GlobalTheory.DecTransport.decLow_main⟩
   intro D X hne hG hT
   obtain ⟨C⟩ := Formalism.L2.SG.Pf.choiceExists X 1 one_pos
   have hB : WuBessel C := Formalism.L2.SG.Pf.wuBesselOfLoc_all C hG hBW
@@ -559,7 +559,7 @@ theorem isIntLat_gmap {s : V ≃ₗ[K] V} (hs : ∀ x y, H.B (s x) (s y) = H.B x
   obtain ⟨hL, hI⟩ := hM
   have hfull : Submodule.IsFullLattice K (Formalism.HermitianLatticesTheory.gmap s M) := by
     rw [gmap_eq]
-    haveI : Submodule.IsLattice K (M.map (lin s)) :=
+    have : Submodule.IsLattice K (M.map (lin s)) :=
       Submodule.IsLattice.of_fg K (hL.fg.map _)
     refine ⟨?_⟩
     change Submodule.span K ((s : V →ₗ[K] V) '' (M : Set V)) = ⊤
@@ -857,7 +857,7 @@ theorem parith_small (k f g : ℕ) (b e : ℝ) (hb : 2 ≤ b) (hk : 9 ≤ k) (hf
   have hk1 : (1 : ℝ) ≤ k := by exact_mod_cast (by omega : 1 ≤ k)
   have hfk' : (f : ℝ) ≤ k := by exact_mod_cast hfk
   have h1 : (b ^ (e * f)) ^ 42 = (Real.exp (42 * (e * Real.log b))) ^ f := by
-    rw [Real.rpow_def_of_pos hb0, ← Real.exp_nat_mul, ← Real.exp_nat_mul]
+    rw [Real.rpow_def_of_pos hb0, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul]
     congr 1; push_cast; ring
   rw [h1, pow_mul, pow_mul, ← mul_pow, ← mul_pow]
   have hb8 : (256 : ℝ) ≤ b ^ 8 := by
@@ -882,7 +882,7 @@ theorem parith_small (k f g : ℕ) (b e : ℝ) (hb : 2 ≤ b) (hk : 9 ≤ k) (hf
       _ = _ := by ring
   have h5 : Real.exp (42 * (e * Real.log b)) ≤ 4 ^ k := by
     calc _ ≤ Real.exp (k * 1) := Real.exp_le_exp.2 (by linarith)
-      _ = Real.exp 1 ^ k := Real.exp_nat_mul _ _
+      _ = Real.exp 1 ^ k := Real.exp_natCast_mul _ _
       _ ≤ 4 ^ k := by
         gcongr
         have := Real.exp_one_lt_d9
@@ -1172,7 +1172,7 @@ theorem sum_pairBd_mul_datBd_le : ∀ Ca : ℝ, 1 ≤ Ca → ∃ Ch Cl : ℝ, 0 
     have hs : Real.sqrt r ≤ r := by rw [Real.sqrt_le_left (by linarith)]; nlinarith
     calc (f : ℝ) = Real.exp (Real.log f) := (Real.exp_log (by linarith)).symm
       _ ≤ Real.exp (r * 1) := Real.exp_le_exp.2 (by linarith)
-      _ = Real.exp 1 ^ r := Real.exp_nat_mul _ _
+      _ = Real.exp 1 ^ r := Real.exp_natCast_mul _ _
       _ ≤ (b ^ 2) ^ r := by
         gcongr
         have := Real.exp_one_lt_d9

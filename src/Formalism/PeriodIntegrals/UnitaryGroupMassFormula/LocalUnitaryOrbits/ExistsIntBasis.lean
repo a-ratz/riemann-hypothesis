@@ -74,7 +74,7 @@ theorem inclR_mem_oev (x : 𝓞 E) : inclR (F := F) (Fv F v) (x : E) ∈ OEv (E 
   Submodule.subset_span ⟨x, Set.mem_univ _, rfl⟩
 
 theorem exists_int_basis : ∃ (d : ℕ) (b : Module.Basis (Fin d) F E), ∀ k, IsIntegral ℤ (b k) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   classical
   obtain ⟨y, hy, hint⟩ := exists_integral_multiples ℤ ℚ (Finset.univ.image (Module.finBasis F E))
   have hyF : IsUnit ((y : F)) := by
@@ -102,7 +102,7 @@ theorem isOpen_oev : IsOpen (OEv (E := E) v) := by
   exact AddSubgroup.isOpen_mono (latA_le_oevS v b hb) (isOpen_latA v b)
 
 theorem isCompact_oev : IsCompact (OEv (E := E) v) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨m, s, hs⟩ := Module.Finite.exists_fin (R := ℤ) (M := 𝓞 E)
   set g : Fin m → Fv F v ⊗[F] E := fun i => inclR (F := F) (Fv F v) ((s i : 𝓞 E) : E) with hg
   have e : OEv (E := E) v = (fun c : Fin m → Fv F v => ∑ i, c i • g i) ''
@@ -160,7 +160,7 @@ theorem coe_HO (a : ℕ) : (HO σ v a : Set (HermR (Fv F v) σ a)) =
     exact fun i j => h i (Set.mem_univ _) j (Set.mem_univ _)
 
 theorem topH_holds (a : ℕ) : TopH σ v a := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have hK : IsCompact (Set.pi Set.univ fun _ : Fin a => Set.pi Set.univ fun _ : Fin a => OEv (E := E) v) :=
     isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => isCompact_oev v
   have := locallyCompact_Fv F v
@@ -169,7 +169,7 @@ theorem topH_holds (a : ℕ) : TopH σ v a := by
     exact (isClosed_HermR (Fv F v) σ a).isClosedEmbedding_subtypeVal.isCompact_preimage hK
   · rw [coe_HO]
     exact (isOpen_set_pi Set.finite_univ fun _ _ =>
-      isOpen_set_pi Set.finite_univ fun _ _ => isOpen_oev v).preimage continuous_subtype_val
+      isOpen_set_pi Set.finite_univ fun _ _ => isOpen_oev v).preimage continuous_subtypeVal
 
 end Top
 

@@ -79,7 +79,7 @@ noncomputable def divisibleUnits (F : Type) [Field F] [IsAlgClosed F] :
 theorem exists_extension {H M F : Type} [CommGroup H] [CommGroup M] [Field F] [IsAlgClosed F]
     (Φ : H →* M) (hΦ : Function.Injective Φ) (χ : H →* Fˣ) :
     ∃ κ : M →* Fˣ, ∀ x : H, κ (Φ x) = χ x := by
-  letI := divisibleUnits F
+  let := divisibleUnits F
   obtain ⟨h, hh⟩ := (Module.Baer.of_divisible (Additive Fˣ)).extension_property_addMonoidHom
     (MonoidHom.toAdditive Φ) hΦ (MonoidHom.toAdditive χ)
   refine ⟨MonoidHom.toAdditive.symm h, fun x => ?_⟩
@@ -131,18 +131,18 @@ theorem exists_ptMap {A R : Type} [CommRing A] [Algebra O A] [CommRing R] [Algeb
 theorem exists_finite_free [IsLocalRing O] (Z : Over (Spec (CommRingCat.of O))) [IsFinite Z.hom] [Flat Z.hom] :
     ∃ (A : Type) (_ : CommRing A) (_ : Algebra O A), Module.Finite O A ∧ Module.Free O A ∧
       Nonempty (specO O A ≅ Z) := by
-  haveI : IsAffine Z.left := isAffine_of_isAffineHom Z.hom
+  have : IsAffine Z.left := isAffine_of_isAffineHom Z.hom
   let g : CommRingCat.of O ⟶ Γ(Z.left, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of O)).inv ≫ Z.hom.appTop
-  letI : Algebra O Γ(Z.left, ⊤) := g.hom.toAlgebra
+  let : Algebra O Γ(Z.left, ⊤) := g.hom.toAlgebra
   have hw : Z.left.isoSpec.inv ≫ Z.hom = Spec.map g := by
     rw [Iso.inv_comp_eq, Spec.map_comp, ← Category.assoc, Scheme.isoSpec_hom_naturality, Category.assoc,
       ← Scheme.isoSpec_Spec_inv, Iso.hom_inv_id, Category.comp_id]
-  haveI h1 : IsFinite (Spec.map g) := hw ▸ inferInstance
-  haveI h2 : Flat (Spec.map g) := hw ▸ inferInstance
+  have h1 : IsFinite (Spec.map g) := hw ▸ inferInstance
+  have h2 : Flat (Spec.map g) := hw ▸ inferInstance
   have h3 : g.hom.Finite := (IsFinite.SpecMap_iff g).1 h1
   have h4 : g.hom.Flat := (HasRingHomProperty.Spec_iff (P := @Flat)).1 h2
-  haveI : Module.Finite O Γ(Z.left, ⊤) := h3
-  haveI : Module.Flat O Γ(Z.left, ⊤) := h4
+  have : Module.Finite O Γ(Z.left, ⊤) := h3
+  have : Module.Flat O Γ(Z.left, ⊤) := h4
   exact ⟨Γ(Z.left, ⊤), inferInstance, inferInstance, inferInstance, Module.free_of_flat_of_isLocalRing,
     ⟨Over.isoMk Z.left.isoSpec.symm hw⟩⟩
 
@@ -160,10 +160,10 @@ theorem exists_algHom_valuationSubring {F : Type} [Field F] (W : ValuationSubrin
 
 theorem isAdicComplete_of_pow_le {I J : Ideal O} [IsAdicComplete I O] {a b : ℕ} (h₁ : I ^ a ≤ J) (h₂ : J ^ b ≤ I) :
     IsAdicComplete J O := by
-  letI : TopologicalSpace O := I.adicTopology
-  haveI : IsTopologicalRing O := (I.ringFilterBasis).isTopologicalRing
-  letI : UniformSpace O := IsTopologicalAddGroup.rightUniformSpace O
-  haveI : IsUniformAddGroup O := isUniformAddGroup_of_addCommGroup
+  let : TopologicalSpace O := I.adicTopology
+  have : IsTopologicalRing O := (I.ringFilterBasis).isTopologicalRing
+  let : UniformSpace O := IsTopologicalAddGroup.rightUniformSpace O
+  have : IsUniformAddGroup O := isUniformAddGroup_of_addCommGroup
   have hI : IsAdic I := rfl
   have hJ : IsAdic J := by
     rw [isAdic_iff] at hI ⊢

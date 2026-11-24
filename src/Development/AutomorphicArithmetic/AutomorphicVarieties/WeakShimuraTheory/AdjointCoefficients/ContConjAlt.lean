@@ -81,7 +81,7 @@ private theorem inf_pow_bot (R : Type) [CommRing R] [IsLocalRing R] [IsNoetheria
 theorem UpperTheory.V.Ws.X1.contLift :
     ∀ {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] {A R : Type} [CommRing A] [Algebra Λ A] [IsCO Λ A] [CommRing R] [Algebra Λ R] [IsCO Λ R] (p : A →ₐ[Λ] R), Function.Surjective p → maximalIdeal A * RingHom.ker p = ⊥ → (∀ (S : Type) [TopologicalSpace S] (x : S → R), AdicCont (maximalIdeal R) x → ∃ y : S → A, AdicCont (maximalIdeal A) y ∧ ∀ s, p (y s) = x s) ∧ ∀ (S : Type) [TopologicalSpace S] (y : S → A), AdicCont (maximalIdeal A) y → (∀ s, p (y s) = 0) → IsLocallyConstant y := by
   intro Λ _ _ _ _ A R _ _ _ _ _ _ p hp hK
-  haveI : IsNoetherianRing A := IsCO.toIsNoetherian Λ
+  have : IsNoetherianRing A := IsCO.toIsNoetherian Λ
   obtain ⟨N0, hN0⟩ := inf_pow_bot A (RingHom.ker p) hK
   have hm : ∀ a : A, a ∈ maximalIdeal A ↔ p a ∈ maximalIdeal R := by
     intro a
@@ -217,15 +217,15 @@ theorem UpperTheory.V.Ws.X1.gspLift :
   let y0 : S → M4 A := fun s => Matrix.of fun i j => if ∀ t, x t i j = 0 then 0 else z i j s
   have b0 : ∀ i j, AdicCont (maximalIdeal A) fun s => y0 s i j := fun i j => by
     by_cases e : ∀ t, x t i j = 0
-    · simp only [y0, Matrix.of_apply, if_pos e]
+    · simp only [y0, Matrix.of_apply, ite_eq_left e]
       exact fun _ => IsLocallyConstant.const _
-    · simp only [y0, Matrix.of_apply, if_neg e]
+    · simp only [y0, Matrix.of_apply, ite_eq_right e]
       exact z1 i j
   have b1 : ∀ s, (y0 s).map p = x s := fun s => by
     ext i j
     by_cases e : ∀ t, x t i j = 0
-    · simp only [y0, Matrix.map_apply, Matrix.of_apply, if_pos e, map_zero, e s]
-    · simp only [y0, Matrix.map_apply, Matrix.of_apply, if_neg e, z2]
+    · simp only [y0, Matrix.map_apply, Matrix.of_apply, ite_eq_left e, map_zero, e s]
+    · simp only [y0, Matrix.map_apply, Matrix.of_apply, ite_eq_right e, z2]
   obtain ⟨u, hu⟩ := h2.exists_right_inv
   have hk : ∀ a b : A, p a = 0 → p b = 0 → a * b = 0 := fun a b ha hb => by
     have ha' : a ∈ maximalIdeal A := fun h => by
@@ -273,7 +273,7 @@ theorem UpperTheory.V.Ws.X1.gspLift :
     have g := hg s
     unfold IsGSp at g
     rw [this, b1, corr, g, p.commutes (ν s), sub_self, smul_zero, sub_zero, mul_one]
-  · simp only [y0, Matrix.of_apply, if_pos fun t => h t i j e]
+  · simp only [y0, Matrix.of_apply, ite_eq_left fun t => h t i j e]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.AdjointCoefficients.GspLift =====
@@ -358,8 +358,8 @@ theorem UpperTheory.V.Ws.X1.slEx :
     ∀ {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ], IsUnit (2 : Λ) → ∀ {Γ V : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] {Gv : V → Type} [∀ v, Group (Gv v)] [∀ v, TopologicalSpace (Gv v)] [∀ v, IsTopologicalGroup (Gv v)] (loc : ∀ v, Gv v →* Γ), (∀ v, Continuous (loc v)) → ∀ {A R : Type} [CommRing A] [Algebra Λ A] [IsCO Λ A] [CommRing R] [Algebra Λ R] [IsCO Λ R] (p : A →ₐ[Λ] R), Function.Surjective p → maximalIdeal A * RingHom.ker p = ⊥ → ∀ (ν : Γ →* Λˣ) (r : Γ →* M4 R) (n : V → M4 R), AdicCont (maximalIdeal Λ) (fun g => (ν g : Λ)) → WP loc (fun g => algebraMap Λ R (ν g)) r n → (∀ i j, AdicCont (maximalIdeal R) fun g => r g i j) → ∃ D : SL loc ν r n p, ∀ (A' : Type) [CommRing A'] [Algebra Λ A'] [IsCO Λ A'] (p' : A →ₐ[Λ] A') (p'' : A' →ₐ[Λ] R), p''.comp p' = p → ∃ D' : SL loc ν r n p'', (∀ s t, D'.om s t = (D.om s t).map p') ∧ ∀ v s, D'.de v s = (D.de v s).map p' := by
   intro Λ _ _ _ _ h2 Γ V _ _ _ Gv _ _ _ loc hloc A R _ _ _ _ _ _ p hp hker ν r n hν hW hr
   obtain ⟨yr, hyc, hym, hyp, -⟩ := X1.gspLift h2 p hp hker Γ (fun g => ν g) (fun g => r g) hν hr hW.mult
-  letI : TopologicalSpace V := ⊥
-  haveI : DiscreteTopology V := ⟨rfl⟩
+  let : TopologicalSpace V := ⊥
+  have : DiscreteTopology V := ⟨rfl⟩
   obtain ⟨yn, -, hnm, hnp, -⟩ := X1.gspLift h2 p hp hker V (fun _ => 1) n
     (by intro N; exact IsLocallyConstant.of_discrete _)
     (by intro i j N; exact IsLocallyConstant.of_discrete _)

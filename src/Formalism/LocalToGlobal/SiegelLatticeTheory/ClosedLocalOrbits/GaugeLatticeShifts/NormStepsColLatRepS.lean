@@ -181,7 +181,7 @@ theorem af_nontriv (F : Type) [Field F] [NumberField F] : Nontrivial (Af F) := b
 
 theorem inclE_inj :
     Function.Injective (Formalism.UG.inclE (F := X.B.I.F) (Af X.B.I.F) : X.B.I.E → X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) := by
-  haveI := af_nontriv X.B.I.F
+  have := af_nontriv X.B.I.F
   exact Algebra.TensorProduct.includeLeft_injective (S := X.B.I.F) (RingHom.injective _)
 
 theorem gamIsom (u : D.what₂.Word) (g : Gam X u) :

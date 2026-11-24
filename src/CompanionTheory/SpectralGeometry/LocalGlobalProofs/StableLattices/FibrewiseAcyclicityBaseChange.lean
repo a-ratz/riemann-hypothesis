@@ -81,10 +81,10 @@ theorem fibAc_of_closed_fibres : ∀ {k : Type} [Field k] [IsAlgClosed k] {X T Z
     exact (ProjSpace.isProjBy_iff_isProjOver f).2
       (ProjSpace.isProjOver_of_isPullback_spMap c.hom HP'
         ((ProjSpace.isProjBy_iff_isProjOver a).1 ha))
-  haveI : IsSeparated f := MorphismProperty.of_isPullback (P := @IsSeparated) HP inferInstance
-  haveI : Flat f := MorphismProperty.of_isPullback (P := @Flat) HP inferInstance
-  haveI hN : IsNoetherianRing R := by
-    haveI : IsLocallyNoetherian (Spec (CommRingCat.of R)) :=
+  have : IsSeparated f := MorphismProperty.of_isPullback (P := @IsSeparated) HP inferInstance
+  have : Flat f := MorphismProperty.of_isPullback (P := @Flat) HP inferInstance
+  have hN : IsNoetherianRing R := by
+    have : IsLocallyNoetherian (Spec (CommRingCat.of R)) :=
       LocallyOfFiniteType.isLocallyNoetherian (t ≫ b)
     exact (isLocallyNoetherian_Spec (R := CommRingCat.of R)).1 inferInstance
   have hM := LB.isLB_pull hG π
@@ -101,7 +101,7 @@ theorem fibAc_of_closed_fibres : ∀ {k : Type} [Field k] [IsAlgClosed k] {X T Z
   let u := pullback.fst f (Spec.map (CommRingCat.ofHom χ))
   let v := pullback.snd f (Spec.map (CommRingCat.ofHom χ))
   let e := u ≫ π ≫ p
-  haveI : IsIso e := P1.isIso_fst_of_isIso
+  have : IsIso e := P1.isIso_fst_of_isIso
   have he : e ≫ a = v := P1.w.trans (Category.comp_id _)
   let σ : X ⟶ Z := inv e ≫ u ≫ π
   have hσp : σ ≫ p = 𝟙 X := by

@@ -146,7 +146,7 @@ theorem _root_.GlobalTheory.PoincareUnfold.unfold_poincare_fourier : ∀ (V : Ty
     ext y; simp only [SetLike.mem_coe, hmemL, Set.mem_image]
   have hj0 : ∀ c, j c = 0 ↔ c = 0 := fun c => ⟨fun h => hj (by rw [h, map_zero]), fun h => by
     rw [h, map_zero]⟩
-  haveI : DiscreteTopology L := by
+  have : DiscreteTopology L := by
     rw [discreteTopology_iff_isOpen_singleton_zero, Metric.isOpen_singleton_iff]
     set T : Finset ℝ := insert 1 (((hfin 1).toFinset.filter (· ≠ 0)).image fun c => ‖j c‖)
     have hTne : T.Nonempty := Finset.insert_nonempty _ _
@@ -169,15 +169,15 @@ theorem _root_.GlobalTheory.PoincareUnfold.unfold_poincare_fourier : ∀ (V : Ty
         have hmem : ‖j c‖ ∈ T := Finset.mem_insert_of_mem (Finset.mem_image.2
           ⟨c, Finset.mem_filter.2 ⟨(Set.Finite.mem_toFinset _).2 ⟨hc, by linarith⟩, hc0⟩, rfl⟩)
         exact absurd (Finset.min'_le _ _ hmem) (not_le.2 hlt)
-  haveI : IsZLattice ℝ L := ⟨by rw [hLset]; exact hspan⟩
-  haveI : VAddInvariantMeasure L V μ := ⟨fun c s _ => measure_preimage_add μ (c : V) s⟩
+  have : IsZLattice ℝ L := ⟨by rw [hLset]; exact hspan⟩
+  have : VAddInvariantMeasure L V μ := ⟨fun c s _ => measure_preimage_add μ (c : V) s⟩
   set ψ : C → L := fun c => ⟨j c, (hmemL _).2 ⟨c, c.2, rfl⟩⟩ with hψ
   have hψinj : Function.Injective ψ := fun c c' h => Subtype.ext (hj (congrArg Subtype.val h))
   have hψsurj : Function.Surjective ψ := fun y => by
     obtain ⟨c, hc, hcy⟩ := (hmemL y).1 y.2
     exact ⟨⟨c, hc⟩, Subtype.ext hcy⟩
-  haveI : Countable L := (Module.Free.chooseBasis ℤ L).repr.injective.countable
-  haveI : Countable C := hψinj.countable
+  have : Countable L := (Module.Free.chooseBasis ℤ L).repr.injective.countable
+  have : Countable C := hψinj.countable
   set D := ZSpan.fundamentalDomain ((Module.Free.chooseBasis ℤ L).ofZLatticeBasis ℝ L) with hDdef
   have hD : IsAddFundamentalDomain L D μ := ZLattice.isAddFundamentalDomain _ μ
   have hDfin : μ D < ⊤ := (ZSpan.fundamentalDomain_isBounded _).measure_lt_top
@@ -189,7 +189,7 @@ theorem _root_.GlobalTheory.PoincareUnfold.unfold_poincare_fourier : ∀ (V : Ty
     set E : Γ → V → ℂ := fun x v => Complex.exp (2 * Real.pi * Complex.I * (l x v : ℝ)) with hE
     have hEnorm : ∀ x v, ‖E x v‖ₑ = 1 := by
       intro x v
-      rw [← ofReal_norm_eq_enorm]
+      rw [← ofReal_norm]
       simp only [hE]
       rw [show (2 * Real.pi * Complex.I * ((l x v : ℝ) : ℂ)) = ((2 * Real.pi * l x v : ℝ) : ℂ) *
         Complex.I by push_cast; ring, Complex.norm_exp_ofReal_mul_I, ENNReal.ofReal_one]
@@ -198,7 +198,7 @@ theorem _root_.GlobalTheory.PoincareUnfold.unfold_poincare_fourier : ∀ (V : Ty
       fun_prop
     set s := Function.support a with hs
     have hscount : s.Countable := ha.of_norm.countable_support
-    haveI : Countable s := hscount.to_subtype
+    have : Countable s := hscount.to_subtype
     have hsub : ∀ v, ∑' x, a x * E x v = ∑' x : s, a x * E x v := fun v =>
       (tsum_subtype_eq_of_support_subset fun x hx => by
         simp only [Function.mem_support] at hx ⊢
@@ -232,10 +232,10 @@ theorem _root_.GlobalTheory.PoincareUnfold.unfold_poincare_fourier : ∀ (V : Ty
         · exact absurd rfl hx
     · intro x
       exact ((hEcont x).const_mul (a x) |>.aestronglyMeasurable)
-    · simp_rw [enorm_mul, hEnorm, mul_one, lintegral_const, Measure.restrict_apply_univ]
+    · simp_rw [eNorm_mul, hEnorm, mul_one, lintegral_const, Measure.restrict_apply_univ]
       rw [ENNReal.tsum_mul_right]
       refine ENNReal.mul_ne_top ?_ hDfin.ne
-      simp_rw [enorm_eq_nnnorm]
+      simp_rw [eNorm_eq_nnNorm]
       refine ENNReal.tsum_coe_ne_top_iff_summable.2 ?_
       rw [← NNReal.summable_coe]
       exact ha.subtype (· ∈ s)
@@ -276,20 +276,20 @@ theorem _root_.GlobalTheory.PoincareUnfold.unfold_poincare_fourier : ∀ (V : Ty
       rw [Equiv.trans_apply, Equiv.neg_apply, neg_neg]
       rfl
     have hfinite : ∑' p, ∫⁻ v in D, ‖g p v‖ₑ ∂μ ≠ ⊤ := by
-      simp_rw [hg, enorm_mul]
-      simp_rw [lintegral_const_mul' _ _ enorm_ne_top]
+      simp_rw [hg, eNorm_mul]
+      simp_rw [lintegral_const_mul' _ _ eNorm_ne_top]
       rw [ENNReal.tsum_prod (f := fun k (c : C) =>
         ‖Q (t k)‖ₑ * ∫⁻ v in D, ‖F (j (t k) + (j c + v))‖ₑ ∂μ), tsum_fintype]
       refine (ENNReal.sum_lt_top.2 fun k _ => ?_).ne
       rw [ENNReal.tsum_mul_left, ← hunfl (fun v => ‖F (j (t k) + v)‖ₑ)]
-      exact ENNReal.mul_lt_top enorm_lt_top (hF.comp_add_left (j (t k))).hasFiniteIntegral
+      exact ENNReal.mul_lt_top eNorm_lt_top (hF.comp_add_left (j (t k))).hasFiniteIntegral
     have hmeas : ∀ p, AEStronglyMeasurable (g p) (μ.restrict D) := fun p =>
       (((hF.comp_add_left (j (t p.1))).comp_add_left (j p.2)).aestronglyMeasurable.const_mul
         _).restrict
     have hsumm : Summable (fun p => ∫ v in D, g p v ∂μ) := by
       refine Summable.of_norm_bounded (ENNReal.summable_toReal hfinite) fun p => ?_
       refine (norm_integral_le_lintegral_norm _).trans_eq ?_
-      simp_rw [ofReal_norm_eq_enorm]
+      simp_rw [ofReal_norm]
     simp_rw [hrw]
     rw [integral_tsum hmeas hfinite, hsumm.tsum_prod, tsum_fintype, Finset.sum_mul]
     refine Finset.sum_congr rfl fun k _ => ?_

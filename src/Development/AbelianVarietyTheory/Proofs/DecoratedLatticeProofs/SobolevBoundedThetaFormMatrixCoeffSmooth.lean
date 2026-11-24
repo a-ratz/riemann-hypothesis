@@ -302,10 +302,10 @@ theorem continuous_form (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {ℓ : (
     (hℓ : IsSobForm ψ θ S T ℓ) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) :
     Continuous fun u => ℓ (heisO ψ S T u f) := by
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
-  haveI : IsTopologicalAddGroup (Formalism.L2.Theta.AE D) := IsTopologicalRing.to_topologicalAddGroup
-  haveI : IsTopologicalAddGroup (WO S T) := Pi.topologicalAddGroup
-  haveI : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
-  haveI : ContinuousAdd (WO S T) := inferInstance
+  have : IsTopologicalAddGroup (Formalism.L2.Theta.AE D) := IsTopologicalRing.isTopologicalAddGroup
+  have : IsTopologicalAddGroup (WO S T) := Pi.isTopologicalAddGroup
+  have : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
+  have : ContinuousAdd (WO S T) := inferInstance
   refine continuous_iff_continuousAt.2 fun u₀ => ?_
   have hg : IsThetaFunO ψ S T (heisO ψ S T u₀ f) := theta_heisO_any hψ hθ hf u₀
   obtain ⟨U, hU, hl⟩ := hg.level
@@ -344,7 +344,7 @@ theorem continuous_form (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {ℓ : (
     have hm : heisO ψ S T (r a) (heisO ψ S T u₀ f) ∈ GlobalTheory.Size.thetaLevel ψ S T U :=
       ⟨theta_heisO_real hθ hψ (h.real_iota T S _) hg, fun u hu h0 => heisO_comm_fin_real h0 (h.real_iota T S _) (hl u hu h0)⟩
     show edist _ _ ≤ _
-    rw [edist_eq_enorm_sub, ← form_sub hℓ hm.1 hg]
+    rw [eDist_eq_eNorm_sub, ← form_sub hℓ hm.1 hg]
     exact hC _ (sub_mem hm hgU)
   have hlim : Filter.Tendsto (fun a => ℓ (heisO ψ S T (u₀ + a) f)) (𝓝 0) (𝓝 (ℓ (heisO ψ S T u₀ f))) := by
     have := hphase.mul hmain

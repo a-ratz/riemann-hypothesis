@@ -110,7 +110,7 @@ theorem charpoly_eq_prod_of_iSup_eigenspace {K V : Type} [Field K] [AddCommGroup
     rw [hy, hev, ← hy, map_smul, bb.repr_self, Matrix.diagonal_apply]
     by_cases hxy : x = y
     · subst hxy; simp
-    · rw [Finsupp.smul_apply, Finsupp.single_apply, if_neg (Ne.symm hxy), if_neg hxy, smul_zero]
+    · rw [Finsupp.smul_apply, Finsupp.single_apply, ite_eq_right (Ne.symm hxy), ite_eq_right hxy, smul_zero]
   refine ⟨Finset.univ.val.map (fun x : (Σ r : s, Module.Free.ChooseBasisIndex K (E r)) => ((x.1 : s) : K)), ?_⟩
   rw [← LinearMap.charpoly_toMatrix f bb, hdiag, Matrix.charpoly_diagonal, Multiset.map_map,
     Finset.prod_eq_multiset_prod]
@@ -150,7 +150,7 @@ theorem charpoly_restrict_map_eq_prod {O V : Type} [CommRing O] [IsDomain O] [Ad
       exact V'.smul_mem a hx
   let f' := f.restrict hV'
   let bK : Module.Basis (Module.Free.ChooseBasisIndex O B) (FractionRing O) V' := Module.Basis.span hli
-  haveI : FiniteDimensional (FractionRing O) V' := Module.Finite.of_basis bK
+  have : FiniteDimensional (FractionRing O) V' := Module.Finite.of_basis bK
   set g := (f.restrictScalars O).restrict hf with hgdef
   have hmat : LinearMap.toMatrix bK bK f' = (LinearMap.toMatrix b b g).map (algebraMap O (FractionRing O)) := by
     ext i j
@@ -204,7 +204,7 @@ theorem piKop_fix : ∀ (D : D7) (T : TwR D.LL0 D.nd) (S : RatDat D.ntw) (In : R
     ∀ y ∈ Fm0T D T S In.rho In.chi In.θ i j b, piKop D T S In i j b y = y := by
   intro D T S In i j b y hy
   classical
-  haveI : Fintype (Formalism.IndefR.NX.U D.nd) := Fintype.ofFinite _
+  have : Fintype (Formalism.IndefR.NX.U D.nd) := Fintype.ofFinite _
   have hu : ∀ u : Formalism.IndefR.NX.U D.nd, (actGT D T S In.rho In.chi i j b (u : G0g D.nd)) y =
       ((psiUT D T In.θ i b u : (FractionRing (T.O i))ˣ) : FractionRing (T.O i)) • y := by
     intro u
@@ -221,7 +221,7 @@ theorem piKop_fix : ∀ (D : D7) (T : TwR D.LL0 D.nd) (S : RatDat D.ntw) (In : R
     congr 1
     unfold piCoef psiUT
     simp only [MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, RingHom.toMonoidHom_eq_coe,
-      MonoidHom.coe_coe, ← map_mul, mul_assoc, Units.inv_mul, mul_one]
+      MonoidHom.coe_ofClass, ← map_mul, mul_assoc, Units.inv_mul, mul_one]
   rw [Finset.sum_congr rfl (fun u _ => hterm u), Finset.sum_const, Finset.card_univ, ← Nat.card_eq_fintype_card]
   rw [← Nat.cast_smul_eq_nsmul (FractionRing (T.O i)), smul_smul]
   have hne : (Nat.card (Formalism.IndefR.NX.U D.nd) : ↥D.LL0) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
@@ -272,7 +272,7 @@ theorem transfer_piLop (D : D7) (T : TwR D.LL0 D.nd) (S : RatDat D.ntw) (In : Ra
     (hc : ∀ (c : ↥D.LL0) (x : S.WL j), Φ ((c : D.what₂.LL) • x) = readT D T i b c • Φ x)
     (ha : ∀ (g : G0g D.nd) (x : S.WL j), Φ (actL D S j g x) = actGT D T S In.rho In.chi i j b g (Φ x))
     (x : S.WL j) : Φ (piLop D S In.θ j x) = piKop D T S In i j b (Φ x) := by
-  haveI : Fintype (Formalism.IndefR.NX.U D.nd) := Fintype.ofFinite _
+  have : Fintype (Formalism.IndefR.NX.U D.nd) := Fintype.ofFinite _
   unfold piLop piKop
 
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, LinearMap.sum_apply, LinearMap.sum_apply, map_sum]
@@ -365,7 +365,7 @@ theorem actAlg_of (j : ℕ) (g : G0g D.nd) : actAlg D S j (MonoidAlgebra.of _ _ 
   simp [actAlg, MonoidAlgebra.of_apply, actLHom]
 
 theorem actAlg_eL (j : ℕ) : actAlg D S j (eL D) = eLop D S j := by
-  letI := Fintype.ofFinite (G0g D.nd)
+  let := Fintype.ofFinite (G0g D.nd)
   rw [eLop, finsum_eq_sum_of_fintype]
   simp [actAlg, eL, MonoidAlgebra.lift_apply, actLHom]
   rw [Finsupp.sum_fintype _ (fun a (b : D.what₂.LL) => b • actL D S j a) (fun _ => zero_smul _ _)]
@@ -389,7 +389,7 @@ theorem actL_piLop (θ : ∀ kk : Fin 2, Multiplicative (ZMod (D.host.g kk)) →
     (u : Formalism.IndefR.NX.U D.nd) :
     actL D S j u * piLop D S θ j =
       ((((psiUOf D.nd (NX.xiRed D) θ u : (↥D.LL0)ˣ) : ↥D.LL0) : D.what₂.LL)) • piLop D S θ j := by
-  letI := Fintype.ofFinite (Formalism.IndefR.NX.U D.nd)
+  let := Fintype.ofFinite (Formalism.IndefR.NX.U D.nd)
   rw [piLop, finsum_eq_sum_of_fintype, Finset.mul_sum, Finset.smul_sum]
   have h1 : ∀ v : Formalism.IndefR.NX.U D.nd,
       actL D S j u * (((piCoef D θ v : ↥D.LL0) : D.what₂.LL) • actL D S j (v : G0g D.nd)) =

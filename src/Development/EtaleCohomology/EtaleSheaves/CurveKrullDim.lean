@@ -97,7 +97,7 @@ theorem finite_of_closed [IrreducibleSpace X] [T0Space X] [QuasiSober X] [Noethe
   have hfin := NoetherianSpace.finite_irreducibleComponents (α := Z)
   have hsub : ∀ S ∈ irreducibleComponents Z, (Subtype.val '' S).Subsingleton := by
     intro S hS
-    have hirr : IsIrreducible (Subtype.val '' S) := hS.1.image _ continuous_subtype_val.continuousOn
+    have hirr : IsIrreducible (Subtype.val '' S) := hS.1.image _ continuous_subtypeVal.continuousOn
     obtain ⟨g, hg⟩ := QuasiSober.sober hirr.closure isClosed_closure
     have hgZ : g ∈ Z := closure_minimal (by rintro _ ⟨x, -, rfl⟩; exact x.2) hZ (hg.mem)
     have : closure (Subtype.val '' S) = {g} := by

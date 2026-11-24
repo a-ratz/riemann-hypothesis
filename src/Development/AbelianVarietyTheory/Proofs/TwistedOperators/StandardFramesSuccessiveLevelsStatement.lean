@@ -151,7 +151,7 @@ theorem exists_mem_modul {D : D7} {T : Type} {L : LevCh D T} (P : Places L) (sc 
     by_cases hu : u ∈ P.S0
     · have hne : ¬ u.asIdeal ≤ v.asIdeal := fun hle =>
         hv ((HeightOneSpectrum.ext (u.isMaximal.eq_of_le v.isPrime.ne_top hle)) ▸ hu)
-      obtain ⟨t, h1, h2⟩ := SetLike.not_le_iff_exists.1 hne
+      obtain ⟨t, h1, h2⟩ := IsConcreteLE.not_le_iff_exists.1 hne
       exact ⟨t, h2, fun _ => h1⟩
     · exact ⟨1, (Ideal.ne_top_iff_one _).1 v.isPrime.ne_top, fun h => absurd h hu⟩
   choose t ht1 ht2 using h
@@ -247,7 +247,7 @@ theorem GlobalTheory.ColsFB.cols_fb : OnStd fun {D} _ _ {sc} {G} W F => ∀ σ (
       rw [← mul_assoc]
     | cast j =>
       simp only [FinPl.colMul, xFB, xLast, Matrix.of_apply, Fin.snoc_castSucc, HypDec.jX, GlobalTheory.MixModel.rat, he', colsOf,
-        Matrix.map_apply, map_mul, ht, Fin.coe_castSucc]
+        Matrix.map_apply, map_mul, ht, Fin.val_castSucc]
       rw [← mul_assoc]
       rfl
   rw [hL, hR]
@@ -321,7 +321,7 @@ theorem GlobalTheory.AscFin.primAt_jac_std : OnStd fun {D} _ _ {sc} {G} W F => �
     have e2 : G.Λ (.grid (2 * ρ + 1) 0) = (G.colDec (2 * ρ + 1) (by omega) (by omega)).lat (G.Λ (.core (2 * ρ + 1)))
         (stairId (G.pl.stA sc) (G.pl.stAbar sc) (2 * ρ + 1 - 1)) := hlat
     rw [e2]
-    exact line_mem_iff _ _ _ _ (by simp only [Fin.coe_castLE]; omega)
+    exact line_mem_iff _ _ _ _ (by simp only [Fin.val_castLE]; omega)
       (pow_ne_zero _ (neg_ne_zero.2 cmHost_imaginaryGenerator_ne_zero)) v a
   intro i j hij s hs
   have hN : ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FI D) ≠ 0 :=
@@ -347,7 +347,7 @@ theorem GlobalTheory.AscFin.primAt_jac_std : OnStd fun {D} _ _ {sc} {G} W F => �
   rw [key, GlobalTheory.T.mul_fractionalIdealCompletion_subset_iff_mem_quotient D v _ _ (hne j) (hne i) s hs, ← DiffDual.idV_dI_iff D W.ψ W.ψ_std v s hs]
   have hid : 𝔟 i * (𝔟 j)⁻¹ * (((G.pl.modul sc * G.pl.modulBar sc : Ideal (𝓞 D.host.E))) : FI D) = dI D := by
     have hst := stairId_succ (𝔞 := G.pl.stA sc) (c := 2 * ρ + 1 - 1) hB (Fin.castLE (by omega) i) (Fin.castLE (by omega) j)
-      (by simp only [Fin.coe_castLE]; exact hij)
+      (by simp only [Fin.val_castLE]; exact hij)
     have hSj : stairId (G.pl.stA sc) (G.pl.stAbar sc) (2 * ρ + 1 - 1) (Fin.castLE (by omega) j) ≠ 0 := by
       unfold stairId
       exact mul_ne_zero (pow_ne_zero _ hA) (inv_ne_zero (pow_ne_zero _ hB))

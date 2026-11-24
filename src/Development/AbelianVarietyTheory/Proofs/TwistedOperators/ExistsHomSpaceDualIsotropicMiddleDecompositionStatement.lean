@@ -158,7 +158,7 @@ theorem decomp_exists : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin
   have cont : ∀ {k l m : ℕ} (Q : Mx D l m), Continuous fun z : Mx D k l => z * Q := by
     intro k l m Q
     exact continuous_id.matrix_mul continuous_const
-  haveI := (GlobalTheory.MixModel.lattice_Mx D W.rank V.rank).1
+  have := (GlobalTheory.MixModel.lattice_Mx D W.rank V.rank).1
   let e : (Mx D W.rank r × Mx D W.rank r × WO V' W) ≃ₜ+ WO V W :=
     { toFun := fun q => isoPart V W C' q.1 + isoPart V W C q.2.1 + midPart V V' W B q.2.2
       invFun := fun w => (w * u, w * u', w * b)

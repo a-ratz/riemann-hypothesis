@@ -150,13 +150,13 @@ theorem projLineChart0_symm_apply (w : Fin 1 → ℂ) : projectiveLineChartAtZer
 private theorem projLineChart1_symm_of_eq_zero {w : Fin 1 → ℂ} (h : w 0 = 0) : projectiveLineChartAtInfinity.symm w = ∞ := by
   show projectiveLineChartAtInfinity.invFun w = ∞
   dsimp only [projectiveLineChartAtInfinity]
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 private theorem projLineChart1_symm_of_ne_zero {w : Fin 1 → ℂ} (h : w 0 ≠ 0) :
     projectiveLineChartAtInfinity.symm w = (((w 0)⁻¹ : ℂ) : OnePoint ℂ) := by
   show projectiveLineChartAtInfinity.invFun w = _
   dsimp only [projectiveLineChartAtInfinity]
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 @[simp] theorem infiniteCoord_projLineChart1_symm (w : Fin 1 → ℂ) : crd1 (projectiveLineChartAtInfinity.symm w) = w 0 := by
   by_cases h : w 0 = 0

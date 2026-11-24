@@ -118,7 +118,7 @@ theorem cj_inv (hU : L.UData uM ν 𝓤) (hN : IsNMap d.b nb) (u : Fin L.n → A
 
 theorem continuous_cj (hU : L.UData uM ν 𝓤) (hN : IsNMap d.b nb) (u : Fin L.n → AE F E) :
     Continuous (cj hU hN u) :=
-  ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const).subtype_mk _
+  ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const).subtype_mk _
 
 def cjE (hU : L.UData uM ν 𝓤) (hN : IsNMap d.b nb) (u : Fin L.n → AE F E) : nA σ d.Y d.b ≃ₜ+ nA σ d.Y d.b where
   toFun := cj hU hN u

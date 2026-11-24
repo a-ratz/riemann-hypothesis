@@ -196,11 +196,11 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
   simp only [mul_one] at hxsS
   have hxsσ₀ : σ₀ xs < 0 := by
     have h := hxsσ σ₀
-    rw [if_pos rfl] at h
+    rw [ite_eq_left rfl] at h
     linarith
   have hxsσ' : ∀ σ, σ ≠ σ₀ → 0 < σ xs := fun σ hσ => by
     have h := hxsσ σ
-    rwa [if_neg hσ, mul_one] at h
+    rwa [ite_eq_right hσ, mul_one] at h
   set X : Fˣ := Units.mk0 xs hxs0 with hX
   have hXnot : X ∉ U ⊔ M := by
     intro hXmem
@@ -240,7 +240,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
     (fun _ => one_ne_zero)
   have hav₀ : ∃ n : ℤ, v₀.valuation F xa = WithZero.exp (2 * n + 1) := by
     have h := hxaS v₀ hv₀S
-    rw [if_pos rfl, ← map_mul] at h
+    rw [ite_eq_left rfl, ← map_mul] at h
     obtain ⟨n, hn⟩ :=
       exists_valuation_eq_exp_two_mul_of_isSquare_completion F v₀ (xa * ϖ) (mul_ne_zero hxa0 hϖ0) h
     have hva : v₀.valuation F xa ≠ 0 := (Valuation.ne_zero_iff _).mpr hxa0
@@ -252,7 +252,7 @@ theorem _root_.GlobalTheory.QNorm.exists_odd_order_at_even_elsewhere : ∀ (F : 
     omega
   have haS : ∀ v ∈ S, v ≠ v₀ → IsSquare (algebraMap F (v.adicCompletion F) xa) := fun v hv hne => by
     have h := hxaS v hv
-    rwa [if_neg hne, mul_one] at h
+    rwa [ite_eq_right hne, mul_one] at h
   set A : Fˣ := Units.mk0 xa hxa0 with hA
   obtain ⟨B, hBmem, hBv₀, hBS⟩ : ∃ B : Fˣ, B ∈ U ⊔ M ∧
       (∃ n : ℤ, v₀.valuation F (B : F) = WithZero.exp (2 * n + 1)) ∧
@@ -329,7 +329,7 @@ theorem exists_eq_mul_map {R : Type} [CommRing R] [IsDedekindDomain R] (s : R �
   have hQ : Prime Q := Ideal.prime_of_isPrime hQ0 hQm.isPrime
   have hQ'0 : Q.map s ≠ ⊥ := fun h => hQ0 (by rw [← hss Q, h, Ideal.map_bot])
   have hQ' : Prime (Q.map s) := Ideal.prime_of_isPrime hQ'0 (by
-    haveI := hQm.isPrime
+    have := hQm.isPrime
     exact Ideal.map_isPrime_of_equiv s)
   have hd : Q ∣ I := Ideal.dvd_iff_le.2 hIQ
   have hd' : Q.map s ∣ I := Ideal.dvd_iff_le.2 (hfix ▸ Ideal.map_mono hIQ)
@@ -353,7 +353,7 @@ theorem exists_eq_mul_map {R : Type} [CommRing R] [IsDedekindDomain R] (s : R �
   obtain ⟨J, rfl⟩ := hdd
   have hJ : J ≠ 0 := right_ne_zero_of_mul hI
   have hQQ : Q * Q.map s ≠ 0 := mul_ne_zero hQ0 hQ'0
-  obtain ⟨B, hB⟩ := ih J ⟨hJ, Q * Q.map s, fun h => hQ.not_unit (isUnit_of_mul_isUnit_left h),
+  obtain ⟨B, hB⟩ := ih J ⟨hJ, Q * Q.map s, fun h => hQ.not_isUnit (isUnit_of_mul_isUnit_left h),
     mul_comm _ _⟩ hJ (by
       rw [Ideal.map_mul, Ideal.map_mul, hss, mul_comm (Q.map s) Q] at hfix
       exact mul_left_cancel₀ hQQ hfix) (fun P hP hP0 hPf => by
@@ -364,9 +364,9 @@ theorem exists_eq_mul_map {R : Type} [CommRing R] [IsDedekindDomain R] (s : R �
         Multiset.count_singleton, Multiset.count_singleton] at this
       by_cases h : P = Q
       · subst h
-        rw [if_pos rfl, if_pos hPf.symm] at this
+        rw [ite_eq_left rfl, ite_eq_left hPf.symm] at this
         exact (Nat.even_add.1 this).1 (by decide)
-      · rw [if_neg h, if_neg (fun h' => h (by rw [← hPf, h', hss]))] at this
+      · rw [ite_eq_right h, ite_eq_right (fun h' => h (by rw [← hPf, h', hss]))] at this
         simpa using this)
   exact ⟨Q * B, by rw [Ideal.map_mul, hB]; ring⟩
 
@@ -394,10 +394,10 @@ theorem exists_eq_prime_mul_mul_map {R : Type} [CommRing R] [IsDedekindDomain R]
     exact mul_left_cancel₀ hP0 hfix) (fun Q hQ hQ0 hQf => by
     by_cases h : Q = P
     · subst h
-      rw [hc, if_pos rfl] at hodd
+      rw [hc, ite_eq_left rfl] at hodd
       exact (Nat.odd_add.1 hodd).1 (by decide)
     · have := hev Q hQ hQ0 hQf h
-      rw [hc, if_neg h] at this
+      rw [hc, ite_eq_right h] at this
       simpa using this)
   exact ⟨B, by rw [hB, mul_assoc]⟩
 
@@ -554,7 +554,7 @@ theorem exists_span_eq (hq : IsQuad δ θ σ) (s : 𝓞 E ≃+* 𝓞 E)
     obtain ⟨n, hn⟩ := h.resolve_left (not_isSquare_of_fixed hq s hs w hw)
     obtain ⟨k, hk⟩ := hv _ _ hn
     obtain ⟨e, he⟩ := count_eq_mul (F := F) w
-    rw [← Int.even_coe_nat, he _ u _ hu0 hu hk]
+    rw [← Int.even_natCast, he _ u _ hu0 hu hk]
     exact ⟨-(e * (n + k)), by ring⟩
   let w₀ : HeightOneSpectrum (𝓞 E) := ⟨P, hP, hP0⟩
   obtain ⟨t, ht, ⟨n, hn⟩, hrest⟩ := exists_odd_order_at_even_elsewhere F (Units.mk0 δ hδ) σ₀
@@ -591,7 +591,7 @@ theorem exists_span_eq (hq : IsQuad δ θ σ) (s : 𝓞 E ≃+* 𝓞 E)
         have h3 : Odd ((e : ℤ) * WithZero.log ((w₀.under (𝓞 F)).valuation F x)) := ⟨-1, by linarith⟩
         exact (Int.odd_mul.1 h3).1
       have h2 := he _ u _ hu0 hu' hk
-      rw [← Int.odd_coe_nat]
+      rw [← Int.odd_natCast]
       erw [h2]
       exact (hodd.mul ⟨n + k, by ring⟩).neg)
     (fun Q hQ hQ0 hQf hne => heven t b u hu0 hu' hval ⟨Q, hQ, hQ0⟩ hQf (by
@@ -617,7 +617,7 @@ end Quad
 
 theorem exists_span_eq_prime_mul_norm : ∀ (D : D7) (P : Ideal (𝓞 D.host.E)), P.IsPrime → P ≠ ⊥ → D.host.conj • P = P → ∃ (t : 𝓞 D.host.E) (B : Ideal (𝓞 D.host.E)), t ≠ 0 ∧ D.host.conj (t : D.host.E) = t ∧ Ideal.span {t} = P * B * (D.host.conj • B) := by
   intro D P hP hP0 hPf
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hcc : ∀ x, IsCMField.complexConj D.host.E x = D.host.conj x := fun x => by
     apply D.host.φ₀.injective
     rw [IsCMField.complexEmbedding_complexConj]

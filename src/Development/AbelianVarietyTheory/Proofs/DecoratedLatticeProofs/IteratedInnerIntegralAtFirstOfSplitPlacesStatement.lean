@@ -123,7 +123,7 @@ def combL (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (c : WO S T →₀ ℂ)
 theorem comb_single_one (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (y : WO S T) (f : WO S T → ℂ) :
     comb ψ S T (Finsupp.single y 1) f = heisO ψ S T y f := by
   unfold comb
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
+  rw [Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
 
 theorem vac_comb : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (σ : ℕ) (S : Dbl2 ψ σ) (Q₀ : QStep S) (c₁ : WO S.B.V S.J.W →₀ ℂ) (c₂ : WO S.J.W S.B'.V →₀ ℂ), IsFinComb c₁ → IsFinComb c₂ → Q₀.Away c₁ → Q₀.Away c₂ → ∀ f₁ f₂, IsThetaFunO ψ _ _ f₁ → IsThetaFunO ψ _ _ f₂ → Q₀.Vac f₁ f₂ → Q₀.Vac (comb ψ _ _ c₁ f₁) (comb ψ _ _ c₂ f₂) := by
   intro D ψ hψ σ S Q₀ c₁ c₂ hc₁ hc₂ ha₁ ha₂ f₁ f₂ _ _ hv
@@ -628,12 +628,12 @@ theorem valOne_all : ∀ D : D7, ValOne D := by
       rw [hτ]; funext z; simp only [rTrans, hFdef]; rw [mul_assoc z (Q.gl₂ y) h₂, cm₂ y h₂ hh₂]
     rw [m1, m2, r, Module.End.mul_apply, Module.End.mul_apply]
     exact GlobalTheory.T.doubleStep_local_weil_action_line_characters_cancel D ψ hψ σ S Q _ _ hT₁' hT₂' c₁ c₂ φ _ a x y Q.Φ₁ (Φa a x) Q.Φ₂ (Φb x y) rfl rfl
-  haveI i1 : Q.m₁.IsHaarMeasure := Q.haar₁
-  haveI i2 : Q.m₂.IsHaarMeasure := Q.haar₂
+  have i1 : Q.m₁.IsHaarMeasure := Q.haar₁
+  have i2 : Q.m₂.IsHaarMeasure := Q.haar₂
   have t1 : Q.m₁.IsHaarMeasure := inferInstance
   have t2 := @_root_.GlobalTheory.PosOne.symDbl_existsUnique Q.k _ _ _ _ _ _ Q.n₀ Q.n₁ Q.n₂ _ _ _ _ _ _ (Q.c+1) (σ+1) hcQ Q.ψk hψc hψ1 Q.ν hsd Q.μ₁ Q.μ₂ Q.open₁ Q.open₂ Q.m₁ Q.haar₁
-  haveI := hG₁
-  haveI := hG₂
+  have := hG₁
+  have := hG₂
   have ex := fun a => @t2 G₁ hG₁ Q.m₂ Q.haar₂ G₂ hG₂ A _ _ τ hsm T htri F (Φa a 1) Q.Φ₂
   choose z hz _ using ex
   obtain ⟨u, hu1, hu2⟩ := GlobalTheory.T.symmetricDoubleIntegral_finite_combination Q.k Q.n₀ Q.n₁ Q.n₂ (Q.c + 1) (σ + 1) hcQ Q.ψk hψc hψ1 Q.ν hsd Q.μ₁ Q.μ₂ Q.m₁ G₁ Q.m₂ G₂
@@ -645,7 +645,7 @@ theorem valOne_all : ∀ D : D7, ValOne D := by
   let e₂' : GL (Q.n₂ ⊕ Fin (Q.c + 1)) Q.k → (GL (Q.n₂ ⊕ Fin (Q.c + 1)) Q.k →₀ ℂ) :=
     fun β => if h : β ∈ Q.A₂ then Q.e₂ ⟨β, h⟩ else 0
   have he₂ : ∀ β ∈ Q.A₂, IsOneComb Q.ψk Q.ν (σ + 1) Q.L₂ β (e₂' β) := by
-    intro β hβ; simp only [e₂', dif_pos hβ]; exact Q.one₂ ⟨β, hβ⟩
+    intro β hβ; simp only [e₂', dite_eq_left hβ]; exact Q.one₂ ⟨β, hβ⟩
   have hFty : ∀ j : Q.L₂.J, τ (j : GL (Q.n₂ ⊕ Fin (Q.c + 1)) Q.k) F = (Q.L₂.lam j : ℂ) • F := by
     intro j; apply Subtype.ext; rw [hτ, Submodule.coe_smul]; exact hTy' j
   have R := GlobalTheory.T.symmetricDoubleIntegrals_positionOne_eq_cellSum Q.k Q.n₀ Q.n₁ Q.n₂ (Q.c + 1) (σ + 1) hcQ Q.ψk hψc Q.cond Q.ν Q.unitVol Q.μ₁ Q.μ₂ Q.open₁ Q.open₂
@@ -675,7 +675,7 @@ theorem valOne_all : ∀ D : D7, ValOne D := by
   refine Finset.sum_congr rfl fun γ _ => ?_
   rw [← Finset.sum_coe_sort Q.A₂]
   refine Finset.sum_congr rfl fun β _ => ?_
-  simp only [e₂', dif_pos β.2, Subtype.coe_eta]
+  simp only [e₂', dite_eq_left β.2, Subtype.coe_eta]
   rw [← FIN γ β]
   simp only [QStep.w₁, QStep.w₂]
   push_cast

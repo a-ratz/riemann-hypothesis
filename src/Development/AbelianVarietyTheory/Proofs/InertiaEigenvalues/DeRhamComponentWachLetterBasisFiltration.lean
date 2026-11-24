@@ -548,7 +548,7 @@ theorem mem_FilV_local [IsDomain P.R.BdR] (K LL : FinExt l) (T : Lt K LL) (τ : 
     (y : T.V ⊗[ℚ_[l]] P.R.BdR) (hy : y ∈ DdRE (P.PD K) T.ρ τ)
     (h : y ∈ compKer T ι ⊔ FilV (P.PD K) (LL := ↥LL.1) (V := T.V) a) :
     y ∈ FilV (P.PD K) (LL := ↥LL.1) (V := T.V) a := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have hE := AlgHom.card ℚ_[l] ↥LL.1 (Om l)
   obtain ⟨σ₀, hσ₀⟩ := exists_factor hE ι
   refine mem_FilV_of_comp (P.PD K) T hE τ ι a (om_mul_mem_Fil _ K a) (fun σ hσ => ?_) y hy h
@@ -564,8 +564,8 @@ theorem ddR_le {AI : LocAinf l P} (ht : LocTied l P AI) (K LL : FinExt l) (T : L
     (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) :
     DdR (P.PD K) T.ρ ≤ (DcrisL (P.PD K) T.ρ (τ.comp (IsScalarTower.toAlgHom ℚ_[l] ↥(K0 K) ↥K.1))).map
       (ιV (P.PD K) (LL := ↥LL.1) (V := T.V)) ⊔ others (P.PD K) T τ := by
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
   rw [Nat.card_eq_fintype_card] at hc hc0
   intro y hy
   obtain ⟨m, c, d, hd, rfl⟩ := (GlobalTheory.Per.CrisDR.isDR_of_isCrys l _ _ ht K LL T.V T.ρ hT).2 y hy
@@ -588,15 +588,15 @@ theorem component_tied {AI : LocAinf l P} (ht : LocTied l P AI) (K LL : FinExt l
     (∀ w ∈ DdRE (P.PD K) T.ρ τ, ∃ d ∈ DcrisL (P.PD K) T.ρ τ₀,
       ιV (P.PD K) (LL := ↥LL.1) (V := T.V) d - w ∈ others (P.PD K) T τ) ∧
     finrank ↥LL.1 ↥(DcrisL (P.PD K) T.ρ τ₀) = finrank ↥LL.1 T.V := by
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have hdim := (GlobalTheory.Per.LetterDim.tied_letter_component_finrank l _ _ ht K LL T.V T.ρ).1 hc0 hT τ₀
   have hle := ddR_le ht K LL T hc hc0 hT τ
   rw [hτ] at hle
   rw [Nat.card_eq_fintype_card] at hc
   have hspan := GlobalTheory.Per.DeRhamSpan.tied_deRham_span l _ _ ht K LL T.V T.ρ
     (GlobalTheory.Per.CrisDR.isDR_of_isCrys l _ _ ht K LL T.V T.ρ hT).1
-  haveI := finite_DcrisL (P.PD K) T.ρ hT τ₀
-  haveI : IsDomain P.R.BdR := (GlobalTheory.RegularRing.isField_of_tied ht).isDomain
+  have := finite_DcrisL (P.PD K) T.ρ hT τ₀
+  have : IsDomain P.R.BdR := (GlobalTheory.RegularRing.isField_of_tied ht).isDomain
   exact ⟨indep (P.PD K) T τ ι hι _ hdim hle hspan,
     fun d hd a => filAt_iff (P.PD K) T hc τ ι hι a (mem_FilV_local P K LL T τ ι hι a) τ₀ d hd,
     exists_lift (P.PD K) T τ _ hle, hdim⟩

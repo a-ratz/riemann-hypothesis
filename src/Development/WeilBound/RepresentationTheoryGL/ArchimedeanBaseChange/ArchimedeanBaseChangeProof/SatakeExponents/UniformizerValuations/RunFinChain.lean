@@ -307,7 +307,7 @@ theorem restr (S : StarSubalgebra ℂ E) (hS : ∀ x ∈ S, ∀ y ∈ S, x * y =
       star (ψ (StarSubalgebra.inclusion S.le_topologicalClosure y))
     rw [map_star, map_star]
   · change ‖ψ (StarSubalgebra.inclusion S.le_topologicalClosure y)‖ ≤ ‖(y : E)‖
-    exact (AlgHom.norm_apply_le_self ψ _).trans_eq rfl
+    exact (NonUnitalAlgHom.norm_apply_le_self ψ _).trans_eq rfl
 
 theorem norm_le_of_chars (S : StarSubalgebra ℂ E) (hS : ∀ x ∈ S, ∀ y ∈ S, x * y = y * x)
     (x : E) (hx : x ∈ S) (c : ℝ) (hc : 0 ≤ c)
@@ -338,7 +338,7 @@ theorem finite_cover (S : StarSubalgebra ℂ E) (hS : ∀ x ∈ S, ∀ y ∈ S, 
   have : CompleteSpace S.topologicalClosure := S.isClosed_topologicalClosure.completeSpace_coe
   have hev : ∀ a : S.topologicalClosure,
       Continuous (fun φ : WeakDual.characterSpace ℂ S.topologicalClosure => φ a) :=
-    fun a => (WeakDual.eval_continuous a).comp continuous_subtype_val
+    fun a => (WeakDual.eval_continuous a).comp continuous_subtypeVal
   let K : Set (WeakDual.characterSpace ℂ S.topologicalClosure) :=
     {φ | ε ≤ ‖φ (StarSubalgebra.inclusion S.le_topologicalClosure ⟨b, hb⟩)‖}
   have hK : IsClosed K := isClosed_le continuous_const (hev _).norm

@@ -378,7 +378,7 @@ theorem Mv_mk (v : InfinitePlace X.B.I.F) (s : X.B.I.Ginf) (C : Matrix (Kap X) (
 
 theorem Mv_continuous (v : InfinitePlace X.B.I.F) : Continuous fun s : X.B.I.Ginf => Mv X v s := by
   have hu : Continuous fun s : X.B.I.Ginf => uMat (s v) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply v))
+    Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply v))
   exact (continuous_const.matrix_mul hu).matrix_mul continuous_const
 
 def Sset (ρ : ℝ) : Set X.B.I.Ginf :=
@@ -476,7 +476,7 @@ theorem noCocompactC_of (hL : LatStepC) : NOCocompactC := fun D X u => noCocompa
 theorem ninf_closed : IsClosed (X.NinfU u) := by
   have e : X.NinfU u = ⋂ v, ⋂ i, ⋂ j, ⋂ (_ : lvk X j < lvk X i + 1), {s : X.B.I.Ginf | (Mv X v s - 1) i j = 0} := by
     ext s
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     exact ⟨fun hs v i j h => pat_of_mem X u v hs i j h, fun h v => inN_of_pat X u v _ (fun i j hij => h v i j hij)⟩
   rw [e]
   exact isClosed_iInter fun v => isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>

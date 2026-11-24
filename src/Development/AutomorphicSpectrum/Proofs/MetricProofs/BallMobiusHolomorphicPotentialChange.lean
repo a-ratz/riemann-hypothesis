@@ -206,7 +206,7 @@ theorem posDef_iff_norm (Z : Matrix a b ℂ) :
 theorem convex_ball_mat : Convex ℝ {Z : Matrix a b ℂ | (1 - Zᴴ * Z).PosDef} := by
   rw [convex_iff_forall_pos]
   intro Z₁ h₁ Z₂ h₂ s r hs hr hsr
-  simp only [Set.mem_setOf_eq, posDef_iff_norm] at h₁ h₂ ⊢
+  simp only [Set.mem_ofPred_eq, posDef_iff_norm] at h₁ h₂ ⊢
   intro x hx
   have e : WithLp.toLp 2 ((s • Z₁ + r • Z₂) *ᵥ x) =
       s • WithLp.toLp 2 (Z₁ *ᵥ x) + r • WithLp.toLp 2 (Z₂ *ᵥ x) := by

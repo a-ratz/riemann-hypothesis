@@ -162,7 +162,7 @@ theorem prod_local (k : Fˣ) (T : Finset (HeightOneSpectrum (𝓞 F))) :
         if v ∈ insert u T then _ else 1
       by_cases h : v = u
       · subst h
-        rw [localIdele_snd_self, if_neg hu, if_pos (Finset.mem_insert_self _ _), mul_one]; rfl
+        rw [localIdele_snd_self, ite_eq_right hu, ite_eq_left (Finset.mem_insert_self _ _), mul_one]; rfl
       · rw [localIdele_snd_ne F u v h, one_mul]; simp [h]
 
 theorem tendsto_prod_local (k : Fˣ) :

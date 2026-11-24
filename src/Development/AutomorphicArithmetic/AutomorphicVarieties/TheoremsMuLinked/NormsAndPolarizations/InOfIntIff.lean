@@ -89,7 +89,7 @@ theorem UpperTheory.V.Th.Nm.inOf :
   intro l _ c
   have hle : ∀ x ∈ c.O, ‖x‖ ≤ 1 := by
     intro x hx
-    haveI := c.fin
+    have := c.fin
     have hi : IsIntegral ℤ_[l] (⟨x, hx⟩ : c.O) := Algebra.IsIntegral.isIntegral _
     exact (inOf_intIff x).mp (hi.map c.O.val)
   have hl1 : ‖((l : ℕ) : PadicAlgCl l)‖ < 1 := by
@@ -98,7 +98,7 @@ theorem UpperTheory.V.Th.Nm.inOf :
     rw [e, Padic.norm_p]
     exact inv_lt_one_of_one_lt₀ (by exact_mod_cast (Fact.out : l.Prime).one_lt)
   have hlO : ((l : ℕ) : c.O) ∈ maximalIdeal c.O := by
-    haveI := c.dvr
+    have := c.dvr
     rw [mem_maximalIdeal, mem_nonunits_iff]
     rintro ⟨u, hu⟩
     have h1 : ((u : c.O) : PadicAlgCl l) * ((u⁻¹ : c.Oˣ) : c.O) = 1 := by
@@ -112,7 +112,7 @@ theorem UpperTheory.V.Th.Nm.inOf :
   refine ⟨?_, hle, ?_, ?_⟩
   · intro ι _ x hx
     classical
-    haveI := Fintype.ofFinite ι
+    have := Fintype.ofFinite ι
     obtain ⟨c', hc', hs⟩ := inOf_fin c (Finset.univ.image x) (by
       intro y hy
       obtain ⟨i, -, rfl⟩ := Finset.mem_image.mp hy
@@ -128,7 +128,7 @@ theorem UpperTheory.V.Th.Nm.inOf :
     apply Subtype.ext
     simp [hx0]
   · intro Γ _ f hf N
-    haveI := c.dvr
+    have := c.dvr
     rw [IsLocallyConstant.iff_eventually_eq]
     intro g0
     have hr : 0 < ‖((l : ℕ) : PadicAlgCl l)‖ ^ N := by

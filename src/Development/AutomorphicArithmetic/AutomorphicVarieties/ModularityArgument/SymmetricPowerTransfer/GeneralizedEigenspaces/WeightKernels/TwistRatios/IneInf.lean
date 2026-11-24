@@ -77,12 +77,12 @@ private theorem ine_of_emb {L Ω : Type} [Field L] [NumberField L] [Field Ω] [A
 theorem UpperTheory.V.Z.Sym.Ga.ineInf :
     ∀ (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (l : ℕ) [Fact l.Prime] (A : ValuationSubring Ω), A.valuation (l : Ω) < 1 → ∀ H : Subgroup (G L Ω), IsOpen (H : Set (G L Ω)) → ∃ s ∈ H, s ∈ Ine (F := L) A ∧ ¬ IsOfFinOrder (cycBar L Ω l s) := by
   intro L Ω _ _ _ _ _ l _ A hA H hH
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
-  haveI : IsScalarTower ℚ L Ω := inferInstance
-  haveI : Algebra.IsAlgebraic L Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed L, Algebra.IsAlgebraic.trans ℚ L Ω⟩
-  haveI : IsGalois L Ω := IsAlgClosure.isGalois L Ω
-  haveI : Finite (G L Ω ⧸ H) := H.quotient_finite_of_isOpen hH
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : IsScalarTower ℚ L Ω := inferInstance
+  have : Algebra.IsAlgebraic L Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed L, Algebra.IsAlgebraic.trans ℚ L Ω⟩
+  have : IsGalois L Ω := IsAlgClosure.isGalois L Ω
+  have : Finite (G L Ω ⧸ H) := H.quotient_finite_of_isOpen hH
   obtain ⟨hemb, -, hidx⟩ := Base.galEmbTop ℚ L Ω
   have hrange : (Base.galEmb ℚ L Ω).range = Base.galOf ℚ L Ω := by
     apply le_antisymm
@@ -96,7 +96,7 @@ theorem UpperTheory.V.Z.Sym.Ga.ineInf :
   have hfin : (H.map (Base.galEmb ℚ L Ω)).index ≠ 0 := by
     rw [H.index_map_of_injective hemb.injective, hrange, hidx]
     exact mul_ne_zero Subgroup.index_ne_zero_of_finite Module.finrank_pos.ne'
-  haveI : (H.map (Base.galEmb ℚ L Ω)).FiniteIndex := ⟨hfin⟩
+  have : (H.map (Base.galEmb ℚ L Ω)).FiniteIndex := ⟨hfin⟩
   have hu : IsUnit ((1 : ℤ_[l]) + l) := by
     by_contra h
     have h1 : (l : ℤ_[l]) ∣ 1 + l :=

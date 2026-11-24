@@ -120,7 +120,7 @@ theorem hasFiniteLength_of_injective {α : Representation F G U} {β : Represent
 
 theorem hasFiniteLength_of_subsingleton [Subsingleton V] (β : Representation F G V) :
     HasFiniteLength β := by
-  haveI : Subsingleton (Subrepresentation β) := ⟨fun S T => by
+  have : Subsingleton (Subrepresentation β) := ⟨fun S T => by
     ext v
     rw [Subsingleton.elim v 0]
     exact ⟨fun _ => T.toSubmodule.zero_mem, fun _ => S.toSubmodule.zero_mem⟩⟩
@@ -148,8 +148,8 @@ theorem hasFiniteLength_extTensor_left (A : Representation ℂ G V) (B : Represe
     intro T ihT hTS
     rcases eq_or_lt_of_le hTS with hEq | hlt
     · subst hEq
-      haveI := subsingleton_subQuot_self T
-      haveI := tensor_subsingleton_left (F := ℂ)
+      have := subsingleton_subQuot_self T
+      have := tensor_subsingleton_left (F := ℂ)
         (V := ↥T.toSubmodule ⧸ Submodule.comap T.toSubmodule.subtype T.toSubmodule) (W := W)
       exact hasFiniteLength_of_subsingleton _
     by_cases hc : T ⋖ S
@@ -180,8 +180,8 @@ theorem hasFiniteLength_extTensor_right (A : Representation ℂ G V) (B : Repres
     intro T ihT hTS
     rcases eq_or_lt_of_le hTS with hEq | hlt
     · subst hEq
-      haveI := subsingleton_subQuot_self T
-      haveI := tensor_subsingleton_right (F := ℂ) (V := V)
+      have := subsingleton_subQuot_self T
+      have := tensor_subsingleton_right (F := ℂ) (V := V)
         (W := ↥T.toSubmodule ⧸ Submodule.comap T.toSubmodule.subtype T.toSubmodule)
       exact hasFiniteLength_of_subsingleton _
     by_cases hc : T ⋖ S

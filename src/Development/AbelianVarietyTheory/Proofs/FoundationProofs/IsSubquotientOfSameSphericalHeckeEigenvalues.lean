@@ -130,7 +130,7 @@ theorem isSubquot_of_hecke_eigenvalues (G V W : Type) [Group G] [TopologicalSpac
       intro g'
       simpa using hv (g' * g)⟩
   have hT : T = ⊥ := by
-    haveI := hπ.2
+    have := hπ.2
     refine (eq_bot_or_eq_top T).resolve_right fun e => hx0 ?_
     have : x ∈ T := e ▸ trivial
     have h2 : idem hπ.1 hc (π 1 x) = 0 := (Submodule.mem_iInf _).1 this 1

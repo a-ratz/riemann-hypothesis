@@ -57,9 +57,9 @@ def FamilyClassConnected (ℰ : FamClass) : Prop :=
 
 theorem vvRecord (D : D7) (B : ℝ) (h : VVle D.host.E D.R.t B) :
     ShaFinOdd D ∧ Summable (vvTerm D) ∧ ∑' l, vvTerm D l ≤ B := by
-  letI := D.nd.instOm
-  letI := D.nd.algOm
-  haveI := D.nd.acOm
+  let := D.nd.instOm
+  let := D.nd.algOm
+  have := D.nd.acOm
   obtain ⟨h1, h2⟩ := h D.nd.Om D.nd.ldat
   have key : ∀ (p : ℕ) [Fact p.Prime], ((∑ e ∈ Finset.Ico 1 D.R.t, D.what₂.shaLen p e : ℚ) : ℝ) =
       ∑ e ∈ Finset.Ico 1 D.R.t, ((Formalism.GaloisCohomology.shaLen (D.nd.ldat p) (e : ℤ)).toNat : ℝ) := by
@@ -67,13 +67,13 @@ theorem vvRecord (D : D7) (B : ℝ) (h : VVle D.host.E D.R.t B) :
     push_cast
     refine Finset.sum_congr rfl fun e he => ?_
     obtain ⟨a, b⟩ := Finset.mem_Ico.1 he
-    rw [D.nd.sha_eq p e a b _ (ENat.coe_toNat (h1 p e a b)).symm]
+    rw [D.nd.sha_eq p e a b _ (ENat.natCast_toNat (h1 p e a b)).symm]
     norm_cast
   have bd : ∀ l : ℕ, 0 ≤ vvTerm D l ∧ ∀ hl : l.Prime, vvTerm D l ≤ Real.log l *
       ∑ e ∈ Finset.Ico 1 D.R.t, ((@Formalism.GaloisCohomology.shaLen _ D.nd.Om _ _ _ _ _ l ⟨hl⟩ (@Formalism.BasicNotions.NData.ldat _ _ _ D.nd l ⟨hl⟩) (e : ℤ)).toNat : ℝ) := by
     intro l
     by_cases hl : l.Prime
-    · haveI : Fact l.Prime := ⟨hl⟩
+    · have : Fact l.Prime := ⟨hl⟩
       have hk := key l
       have hn : 0 ≤ Real.log l * ∑ e ∈ Finset.Ico 1 D.R.t, ((Formalism.GaloisCohomology.shaLen (D.nd.ldat l) (e : ℤ)).toNat : ℝ) :=
         mul_nonneg (Real.log_natCast_nonneg _) (Finset.sum_nonneg fun _ _ => Nat.cast_nonneg _)

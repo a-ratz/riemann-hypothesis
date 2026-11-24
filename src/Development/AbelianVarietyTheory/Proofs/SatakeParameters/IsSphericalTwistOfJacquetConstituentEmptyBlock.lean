@@ -155,7 +155,7 @@ theorem twKer_eq_bot (f : (Σ j, Fin (c j)) ≃ Fin t) (hc : c false = 0)
 
 theorem deltaHalf_eq_one (hc : c false = 0) (g : SmGL.Levi k (fun j => Fin (c j))) :
     SmGL.deltaHalf k (fun j => Fin (c j)) g = 1 := by
-  haveI : IsEmpty (Fin (c false)) := by rw [hc]; infer_instance
+  have : IsEmpty (Fin (c false)) := by rw [hc]; infer_instance
   rw [SmGL.deltaHalf_apply, Fintype.prod_bool]
   have h1 : SmGL.modExp (fun j => Fin (c j)) true = 0 := by
     simp only [SmGL.modExp, Finset.sum_filter, Fintype.sum_bool]
@@ -227,7 +227,7 @@ theorem reindexGL_mem_KO {m n : Type} [Fintype m] [DecidableEq m] [Fintype n] [D
 
 theorem isSpherical_twist_of_empty_block : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (t : ℕ) (W : Type) [AddCommGroup W] [Module ℂ W] (π : Representation ℂ (GL (Fin t) k) W) (c : Bool → ℕ) (f : (Σ j, Fin (c j)) ≃ Fin t) (s : ∀ j, IrrRep (GL (Fin (c j)) k)) (χ : kˣ →* ℂˣ) (z : (s true).V), IsSmooth π → π.IsIrreducible → c false = 0 → IsSubquotient (piTensor fun j => (s j).ρ) (jac f π) → z ≠ 0 → (∀ g ∈ KO k (Fin (c true)), (s true).ρ g z = (χ (Matrix.GeneralLinearGroup.det g) : ℂ) • z) → IsSpherical (twist π (detChar (Fin t) χ⁻¹)) := by
   intro k _ _ _ _ t W _ _ π c f s χ z _ hπ hc hsub hz0 hz
-  haveI := nontrivial_of_irreducible (s false).irr
+  have := nontrivial_of_irreducible (s false).irr
   obtain ⟨w0, hw0⟩ := exists_ne (0 : (s false).V)
   let x : ∀ j, (s j).V := fun j => Bool.rec (motive := fun j => (s j).V) w0 z j
   have hx : ∀ j, x j ≠ 0 := by

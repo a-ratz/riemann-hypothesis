@@ -194,7 +194,7 @@ theorem vandermonde_mul_compMat (E : Type) [Field E] (P : E[X]) (hm : P.Monic) (
   ring
 
 theorem charpoly_compMat {E : Type} [Field E] (P : E[X]) (hm : P.Monic) : (compMat P hm).charpoly = P := by
-  haveI : Module.Finite E (AdjoinRoot P) := Module.Finite.of_basis (powBasis P hm)
+  have : Module.Finite E (AdjoinRoot P) := Module.Finite.of_basis (powBasis P hm)
   have h1 : (compMat P hm).charpoly = (Algebra.lmul E (AdjoinRoot P) (AdjoinRoot.root P)).charpoly :=
     LinearMap.charpoly_toMatrix _ _
   have h2 : (Algebra.leftMulMatrix (AdjoinRoot.powerBasis hm.ne_zero).basis (AdjoinRoot.root P)).charpoly =
@@ -445,10 +445,10 @@ theorem factor_alt (hU : Unr E) {S : Set (Pl E)} (hS : IsSection S) {n : ℕ} {�
     by_cases hs : IsSplitAt (wv v)
     · have h1' : X v = 1 := by simp [hXdef, hx2 v hs]
       rw [h1', (GlobalTheory.QuadSymbol.eta_eq_one_iff).2 (one_mem _)]
-      simp [hRdef, if_pos hs]
+      simp [hRdef, ite_eq_left hs]
     · have key := Lem.sign_rel E hU (wv v) hs v (hwv v) n γ₀ hP H₀ h1 h2 h3 hpos (mw (wv v)) r Q hQ (x v) (hx1 v hs)
       rw [← hmw _ hs] at key
-      simp only [hRdef, if_neg hs]
+      simp only [hRdef, ite_eq_right hs]
       rw [key, mul_assoc, sgnOn_mul_self, mul_one]
 
   have hwvw : ∀ w ∈ S, wv (w.under (𝓞 (maximalRealSubfield E))) = w := fun w hw => sec_eq hS hw (hwvS _) (hwv _)

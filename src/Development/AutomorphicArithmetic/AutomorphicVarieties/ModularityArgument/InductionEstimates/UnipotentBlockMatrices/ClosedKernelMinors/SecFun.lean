@@ -123,7 +123,7 @@ private theorem ray_bound (K : Type) [Field K] [NumberField K] (R : ℝ) : ∃ M
   have hlc : Continuous fun t : ℝ => lv (1 : G1 K 2) 1 t :=
     (blkLaws (K := K)).2.2.2.1.comp (f := fun t : ℝ => ((1 : G1 K 2), (1 : G1 K 2), t)) (by fun_prop)
   obtain ⟨M, hM⟩ := exists_height_le_of_isCompact
-    ((isCompact_Icc (a := -R) (b := R)).image (continuous_subtype_val.comp hlc))
+    ((isCompact_Icc (a := -R) (b := R)).image (continuous_subtypeVal.comp hlc))
   exact ⟨M, fun t ht => (hM _ ⟨t, abs_le.1 ht, rfl⟩).trans (le_abs_self _)⟩
 
 private theorem unip_bound (K : Type) [Field K] [NumberField K] : ∃ M : ℝ, ∀ X : UPos (2 + 2) 2 → 𝔸[K],
@@ -131,7 +131,7 @@ private theorem unip_bound (K : Type) [Field K] [NumberField K] : ∃ M : ℝ, �
       AutomorphicForm.height ((nn (ξ.1 + X) : G1 K (2 + 2)) : AdelicGLn.AdelicGL K (2 + 2)) ≤ |M| := by
   obtain ⟨D, hD, hsub⟩ := exists_isCompact_superset_unipFundamentalDomain (K := K) (n := 2 + 2) (r := 2)
   obtain ⟨M, hM⟩ := exists_height_le_of_isCompact
-    (hD.image (continuous_subtype_val.comp (continuous_unipOne (K := K) (n := 2 + 2) 2)))
+    (hD.image (continuous_subtypeVal.comp (continuous_unipOne (K := K) (n := 2 + 2) 2)))
   refine ⟨M, fun X => ?_⟩
   choose q hq _ using fun p => GroundTheory.Global.existsUnique_sub_mem_fundamentalSet K (X p)
   let ξ : unipLattice K (2 + 2) 2 := ⟨fun p => algebraMap K 𝔸[K] (-q p), fun p => -q p, rfl⟩

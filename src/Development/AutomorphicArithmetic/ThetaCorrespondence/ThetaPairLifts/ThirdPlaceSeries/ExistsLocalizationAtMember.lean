@@ -76,8 +76,8 @@ theorem exists_loc_of_thetaT {D : D7} {M : MtFam D} (T : NormalizedLocalCompatib
     rw [Set.range_eq_empty, Submodule.span_empty] at h3
     exact hf ((Submodule.mem_bot ℂ).1 (h3 ▸ Submodule.mem_top))
   obtain ⟨k⟩ := hidx
-  haveI : Nontrivial (T.B.V j v) := ⟨⟨_, 0, (T.B.iV_basis j v b).1.ne_zero k⟩⟩
-  haveI : Nontrivial (Formalism.L2.heckeAlg T.B j v) := inferInstance
+  have : Nontrivial (T.B.V j v) := ⟨⟨_, 0, (T.B.iV_basis j v b).1.ne_zero k⟩⟩
+  have : Nontrivial (Formalism.L2.heckeAlg T.B j v) := inferInstance
   obtain ⟨I, hI⟩ := Ideal.exists_maximal (Formalism.L2.heckeAlg T.B j v)
   obtain ⟨i, hi, -⟩ := T.mx_all j v h1 h2 hv I hI
   obtain ⟨ej, ew⟩ := (D.nd.locs_mem _ _ _).1 hi

@@ -423,7 +423,7 @@ theorem setIntegral_infDomain_eq (g : (ι → InfiniteAdeleRing K) → ℂ) :
     rw [hme.map_apply, hpre, volume_cube]
   have hc : (ν.addHaarScalarFactor μ : ℝ) * (μ (infDomain K ι)).toReal = 1 := by
     have h := hνA
-    rw [hν, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+    rw [hν, smul_apply, ENNReal.smul_def, smul_eq_mul] at h
     have h2 := congrArg ENNReal.toReal h
     rwa [ENNReal.toReal_mul, ENNReal.coe_toReal, ENNReal.toReal_one] at h2
   have hint : ∫ y in infDomain K ι, g y ∂ν = ∫ t in cube K ι, g (coordEquiv t) := by

@@ -155,12 +155,12 @@ theorem exists_basis_eigSp_quot : ∀ (E : Type) [Field E] [NumberField E] (k : 
     rw [← hs₁, finrank_span_eq_card hb₁, Fintype.card_fin]
   have hn : Module.finrank k (eigSp ρ₂ τ) = n := by
     rw [← hs₂, finrank_span_eq_card hb₂, Fintype.card_fin]
-  haveI : FiniteDimensional k (eigSp ρ₂ τ) := by
+  have : FiniteDimensional k (eigSp ρ₂ τ) := by
     rw [← hs₂]
     exact FiniteDimensional.span_of_finite k (Set.finite_range b₂)
   have hsum := finrank_map_add_inf_ker g (eigSp ρ₂ τ)
   rw [map_eigSp_eq hg hgρ τ, eigSp_inf_ker hf hfg hfρ τ, ← (Submodule.equivMapOfInjective f hf (eigSp ρ₁ τ)).finrank_eq, hr, hn] at hsum
-  haveI : FiniteDimensional k (eigSp ρ₃ τ) := by
+  have : FiniteDimensional k (eigSp ρ₃ τ) := by
     rw [← map_eigSp_eq hg hgρ τ]
     infer_instance
   have h3 : Module.finrank k (eigSp ρ₃ τ) = n - r := by omega
@@ -246,7 +246,7 @@ theorem nonempty_basis_eigenHom :
   classical
   have hinj : Function.Injective τ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
     exact RingHom.injective_int _
   let σ : E →+* k := IsFractionRing.lift hinj
@@ -254,7 +254,7 @@ theorem nonempty_basis_eigenHom :
     RingHom.ext fun a => IsFractionRing.lift_algebraMap hinj a
   let b := Module.Free.chooseBasis ℤ X
   let B := GlobalTheory.Diag.dualBasis k b
-  haveI : FiniteDimensional k (X →+ k) := Module.Finite.of_basis B
+  have : FiniteDimensional k (X →+ k) := Module.Finite.of_basis B
   have hV : finrank k (X →+ k) = finrank ℤ X := by
     rw [finrank_eq_card_basis B, finrank_eq_card_basis b]
   have hmul := GlobalTheory.CompanionTheory.Ar.HT.EigDim.finrank_eigSp_mul k (X →+ k) E (pullAct X k)
@@ -263,7 +263,7 @@ theorem nonempty_basis_eigenHom :
   have hd : 0 < finrank ℚ E := Module.finrank_pos
   have hdim : finrank k (GlobalTheory.Diag.eigenHom X τ) = finrank ℤ X / finrank ℚ E := by
     rw [← hmul, Nat.mul_div_cancel _ hd]
-  haveI : FiniteDimensional k (GlobalTheory.Diag.eigenHom X τ) := inferInstance
+  have : FiniteDimensional k (GlobalTheory.Diag.eigenHom X τ) := inferInstance
   exact ⟨Module.finBasisOfFinrankEq _ _ hdim⟩
 
 end GlobalTheory.CompanionTheory.Ar.HT.LatMult
@@ -299,23 +299,23 @@ theorem lieMult_iff_family {S : Scheme.{0}} {k : Type} [Field k] {G : Over S} [G
 
 theorem lieMult_abPart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (S : Scheme.{0}) (t : SAB H S) (L : Type) [Field L] [CharZero L] (z : Sp L ⟶ S) (P : AbPart t z), ∃ r : ℕ, ∀ (k : Type) [Field k] [IsAlgClosed k] (g : L →+* k) (τ : 𝓞 E →+* k) (n : ℕ), LieMult P.tK.act (spMap g) τ n → r ≤ n ∧ LieMult P.tB.act (spMap g) τ (n - r) := by
   intro E _ _ _ H S t L _ _ z P
-  letI := P.τ.addCommGroup
-  letI := P.τ.grpB
-  haveI := P.τ.free
-  haveI := P.τ.finite
-  haveI := P.τ.q_hom
-  haveI := P.τ.i_hom
-  haveI := P.e_hom
-  haveI heinv : IsMonHom P.e.inv := inferInstance
+  let := P.τ.addCommGroup
+  let := P.τ.grpB
+  have := P.τ.free
+  have := P.τ.finite
+  have := P.τ.q_hom
+  have := P.τ.i_hom
+  have := P.e_hom
+  have heinv : IsMonHom P.e.inv := inferInstance
   obtain ⟨m, hm⟩ := _root_.GlobalTheory.CompanionTheory.TorusAct.exists_module_diagAct L P.tK.G P.τ (𝓞 E) P.tK.act (fun a => by
-    haveI := P.tB.act.hom a
+    have := P.tB.act.hom a
     refine ⟨P.e.hom ≫ P.tB.act.act a ≫ P.e.inv, inferInstance, ?_⟩
     refine (cancel_mono P.e.hom).1 ?_
     simpa only [Category.assoc, Iso.inv_hom_id, Category.comp_id] using P.act a)
-  letI := m
+  let := m
   refine ⟨Module.finrank ℤ P.τ.X / Module.finrank ℚ E, ?_⟩
   intro k _ _ g τ n hn
-  haveI : CharZero k := charZero_of_injective_ringHom g.injective
+  have : CharZero k := charZero_of_injective_ringHom g.injective
   obtain ⟨V₂, _, _, ⟨M₂⟩⟩ := lieModel_exists (Sp L) P.tK.G k (spMap g)
   obtain ⟨V₃, _, _, ⟨M₃⟩⟩ := lieModel_exists (Sp L) P.tB.G k (spMap g)
   let D := GlobalTheory.Diag.diagAct (Sp L) (𝓞 E) P.τ.X
@@ -328,7 +328,7 @@ theorem lieMult_abPart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨f, hf, -⟩ := lieModel_exists_unique_diff _ _ _ k (spMap g) _ _ M₁ M₂ P.τ.i
   obtain ⟨h, hh, -⟩ := lieModel_exists_unique_diff _ _ _ k (spMap g) _ _ M₂ M₃ (P.τ.q ≫ P.e.hom)
   obtain ⟨hker, hsurj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieExact.lie_exact_field L P.tK.G P.τ k g
-  haveI hmono : Mono P.τ.i := ⟨fun a b hab => P.τ.isKernel.hom_ext hab (toUnit_unique _ _)⟩
+  have hmono : Mono P.τ.i := ⟨fun a b hab => P.τ.isKernel.hom_ext hab (toUnit_unique _ _)⟩
   have finj : Function.Injective f := fun a b hab => M₁.inj ((cancel_mono P.τ.i).1 (by
     rw [← hf, ← hf, hab]))
   have hsur : Function.Surjective h := fun y => by
@@ -388,7 +388,7 @@ theorem exists_smoothOfRelativeDimension_of_geometricallyConnected :
     ∀ (X : Scheme.{0}) [ConnectedSpace X] (G : Over X) [GrpObj G], Smooth G.hom →
       GeometricallyConnected G.hom → ∃ g : ℕ, SmoothOfRelativeDimension g G.hom := by
   intro X _ G _ hs hc
-  haveI : Smooth G.hom := hs
+  have : Smooth G.hom := hs
   obtain ⟨d, W, hxW, hW⟩ : ∃ (d : G.left → ℕ) (W : G.left → G.left.Opens), (∀ x, x ∈ W x) ∧
       ∀ x, SmoothOfRelativeDimension (d x) ((W x).ι ≫ G.hom) := by
     choose d W hxW hW using fun x => ReciprocityTheory.ChartRestriction.G.H1.exists_dim G.hom x
@@ -426,7 +426,7 @@ theorem exists_smoothOfRelativeDimension_of_geometricallyConnected :
         isPreconnected_univ trivial trivial
     exact h1.trans h2
   refine ⟨d (e s₀), ?_⟩
-  haveI : IsZariskiLocalAtSource (@SmoothOfRelativeDimension (d (e s₀))) :=
+  have : IsZariskiLocalAtSource (@SmoothOfRelativeDimension (d (e s₀))) :=
     HasRingHomProperty.instIsZariskiLocalAtSource
   exact IsZariskiLocalAtSource.of_iSup_eq_top (P := @SmoothOfRelativeDimension (d (e s₀))) W
     (eq_top_iff.2 fun x _ => TopologicalSpace.Opens.mem_iSup.2 ⟨x, hxW x⟩)
@@ -452,7 +452,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 theorem exists_ext {E : Type} [Field E] [NumberField E] {K : Type} [Field K] [CharZero K] (τ : 𝓞 E →+* K) :
     ∃ ψ : E →+* K, ψ.comp (algebraMap (𝓞 E) E) = τ := by
   have hker : RingHom.ker τ = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     rw [Ideal.under_def, RingHom.comap_ker, RingHom.ker_eq_bot_iff_eq_zero]
     intro n hn
     simpa using hn
@@ -465,7 +465,7 @@ theorem charZero_of_coeff {F : IntermediateField ℚ ℂ} {k : Type} [Field k] (
 theorem exists_factor {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {l : Level H} (c : Coeff l)
     {k : Type} [Field k] [IsAlgClosed k] (φ : c.F →+* k) (ψ : E →+* k) :
     ∃ τ₁ : E →+* ℂ, φ.comp (τ₁.codRestrict c.F (c.conj τ₁)) = ψ := by
-  haveI : CharZero k := charZero_of_coeff φ
+  have : CharZero k := charZero_of_coeff φ
   let g : (E →+* ℂ) → (E →+* k) := fun τ => φ.comp (τ.codRestrict c.F (c.conj τ))
   have hg : Function.Injective g := by
     intro τ τ' h
@@ -483,7 +483,7 @@ theorem exists_label : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     (τ H.rt = φ ρ₀ → ∃ t : CMType H, φ.comp (labelEmb c (.inl t)) = τ) ∧
     (τ H.rt ≠ φ ρ₀ → ∃ t : CMType H, φ.comp (labelEmb c (.inr t)) = τ) := by
   intro E _ _ _ H l c ρ₀ hρ₀ k _ _ φ τ
-  haveI : CharZero k := charZero_of_coeff φ
+  have : CharZero k := charZero_of_coeff φ
   obtain ⟨ψ, hψ⟩ := exists_ext τ
   obtain ⟨τ₁, hτ₁⟩ := exists_factor c φ ψ
   have key : ∀ a : 𝓞 E, φ ⟨τ₁ (a : E), c.conj τ₁ (a : E)⟩ = τ a := by
@@ -555,8 +555,8 @@ theorem lieMult_label_generic : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) (y : (Σ k, J k) → Ω)
     (𝔐 : HodgeCpt Y S y) (s : CMType H ⊕ CMType H), LieMult 𝔐.t.act 𝔐.ξ (𝔐.emb s) (labelRk D s) := by
   intro E _ _ _ H D l Xo c O _ β Y S Ω _ K _ J y 𝔐 s
-  letI := 𝔐.acg
-  letI := 𝔐.mod
+  let := 𝔐.acg
+  let := 𝔐.mod
   obtain ⟨U, hU, b, hspan, hfr⟩ := 𝔐.vb s ⟨genPt 𝔐.ξ, specializes_refl _⟩ (Set.mem_univ _)
   exact (Fl.Test.lieMult_iff_exists_frame _ _ _ _).2
     ⟨_, (Fl.Test.isEigFrame_iff 𝔐.M 𝔐.t.act 𝔐.ρ 𝔐.act (𝔐.emb s) b).2
@@ -624,9 +624,9 @@ theorem rtO_sq {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {
 
 theorem detCond_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (L : Type) [Field L] [NumberField L] (z : Sp L ⟶ 𝔐.X), ∃ ρ : L, ρ ^ 2 = -(H.d : L) ∧ ∀ (k : Type) [Field k] [IsAlgClosed k] (g : L →+* k), DetCond D 𝔐.t.act (spMap g ≫ z) (g ρ) := by
   intro E _ _ _ H D l Xo c Y S Ω _ Kf _ J _ y 𝔐 L _ _ z
-  haveI : IsReduced 𝔐.X := isReduced_of_isNormalScheme 𝔐.normal
-  haveI : ConnectedSpace 𝔐.X := connectedSpace_of_specializes _ 𝔐.all
-  haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have : IsReduced 𝔐.X := isReduced_of_isNormalScheme 𝔐.normal
+  have : ConnectedSpace 𝔐.X := connectedSpace_of_specializes _ 𝔐.all
+  have : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   obtain ⟨n, hn⟩ := GlobalTheory.CompanionTheory.Ggeo.exists_smoothOfRelativeDimension_of_geometricallyConnected 𝔐.X 𝔐.t.G 𝔐.t.semi.smooth 𝔐.t.semi.geomConnected
   let s : 𝔐.X ⟶ Sp (𝓞 c.F) := 𝔐.f ≫ Y.s
   have hd : Dense {p : 𝔐.X | ∃ (K : Type) (_ : Field K) (_ : IsAlgClosed K) (_ : CharZero K) (x : Sp K ⟶ 𝔐.X)
@@ -634,8 +634,8 @@ theorem detCond_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     intro q
     refine closure_mono (Set.singleton_subset_iff.2 ?_) (specializes_iff_mem_closure.1 (𝔐.all q))
     let i : Ω →+* AlgebraicClosure Ω := algebraMap Ω (AlgebraicClosure Ω)
-    haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
-    haveI : CharZero (AlgebraicClosure Ω) := charZero_of_injective_ringHom i.injective
+    have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+    have : CharZero (AlgebraicClosure Ω) := charZero_of_injective_ringHom i.injective
     refine ⟨AlgebraicClosure Ω, inferInstance, inferInstance, inferInstance, spMap i ≫ 𝔐.ξ,
       i.comp (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)), ?_, ?_, ?_⟩
     · let y₀ : Sp (AlgebraicClosure Ω) := (default : PrimeSpectrum (AlgebraicClosure Ω))
@@ -665,7 +665,7 @@ theorem detCond_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     rw [map_pow, map_neg, map_natCast] at this
     exact this
   · intro k _ _ g
-    haveI : CharZero k := charZero_of_injective_ringHom g.injective
+    have : CharZero k := charZero_of_injective_ringHom g.injective
     refine GlobalTheory.DetSpread.detCond_of_dense E H D 𝔐.X 𝔐.t.G n 𝔐.t.act (𝓞 c.F) s (rtO c) hn (rtO_sq c) hd k
       (spMap g ≫ z) (g.comp b.hom) ?_
     rw [Category.assoc, ← hb]

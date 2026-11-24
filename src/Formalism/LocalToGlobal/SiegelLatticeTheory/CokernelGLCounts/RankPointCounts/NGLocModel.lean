@@ -80,7 +80,7 @@ theorem real_sum_le {P : FPair H r} (R : Reps P) (d0 : Datum P) (S : Term V M r 
   calc ∑ d ∈ Ds, Datum.wt d0 d * ‖amp R d S‖ ^ 2
       ≤ ∑ d ∈ Ds, (ENNReal.ofReal (Datum.wt d0 d) * ((‖amp R d S‖₊ : ENNReal) ^ 2)).toReal := by
         refine Finset.sum_le_sum fun d _ => ?_
-        rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal', ENNReal.toReal_pow, ENNReal.coe_toReal, coe_nnnorm]
+        rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal', ENNReal.toReal_pow, ENNReal.coe_toReal, coe_nnNorm]
         exact mul_le_mul_of_nonneg_right (le_max_left _ _) (by positivity)
     _ = (∑ d ∈ Ds, ENNReal.ofReal (Datum.wt d0 d) * ((‖amp R d S‖₊ : ENNReal) ^ 2)).toReal :=
         (ENNReal.toReal_sum hfin).symm

@@ -94,7 +94,7 @@ theorem layer_khw_decomp (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVfd : Finit
   have key : ∀ j : ℕ, ∃ p ∈ layer ε E V j, (∀ u ∈ layer ε E V j, inner ℂ u p = inner ℂ u w) ∧
       IsKHWVec ε E μ p ∧ (w ∈ layer ε E V j → p = w) := by
     intro j
-    haveI := finiteDimensional_layer (ε := ε) (E := E) hVfd j
+    have := finiteDimensional_layer (ε := ε) (E := E) hVfd j
     refine ⟨(layer ε E V j).starProjection w, Submodule.starProjection_apply_mem _ _, ?_,
       isKHWVec_starProjection hKU (layer_kStable hE hVk j) hμ, ?_⟩
     · intro u hu

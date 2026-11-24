@@ -72,21 +72,21 @@ theorem eqCont_of_mem {M : DSModel V S} {J : Set (GA D V)} {χ : GA D V → ℂ}
   | mem T hT => exact ⟨hT.equiv, hT.cont⟩
   | zero =>
     refine ⟨fun τ g _ v w _ => ?_, fun τ v x => ⟨0, sobCont_zero, fun w => ?_⟩⟩
-    · rw [MultilinearMap.zero_apply, MultilinearMap.zero_apply]; rfl
+    · rw [zero_apply, zero_apply]; rfl
     · simp
   | add T T' _ _ h h' =>
     refine ⟨fun τ g hg v w hw => ?_, fun τ v x => ?_⟩
-    · rw [MultilinearMap.add_apply, MultilinearMap.add_apply, h.equiv τ g hg v w hw, h'.equiv τ g hg v w hw]; rfl
+    · rw [add_apply, add_apply, h.equiv τ g hg v w hw, h'.equiv τ g hg v w hw]; rfl
     · obtain ⟨ℓ, hℓ, e⟩ := h.cont τ v x
       obtain ⟨ℓ', hℓ', e'⟩ := h'.cont τ v x
       exact ⟨ℓ + ℓ', sobCont_add hℓ hℓ', fun w => by
-        rw [LinearMap.add_apply, e, e', MultilinearMap.add_apply, Pi.add_apply]⟩
+        rw [LinearMap.add_apply, e, e', add_apply, Pi.add_apply]⟩
   | smul a T _ h =>
     refine ⟨fun τ g hg v w hw => ?_, fun τ v x => ?_⟩
-    · rw [MultilinearMap.smul_apply, MultilinearMap.smul_apply, h.equiv τ g hg v w hw]; rfl
+    · rw [smul_apply, smul_apply, h.equiv τ g hg v w hw]; rfl
     · obtain ⟨ℓ, hℓ, e⟩ := h.cont τ v x
       exact ⟨a • ℓ, sobCont_smul a hℓ, fun w => by
-        rw [LinearMap.smul_apply, e, MultilinearMap.smul_apply, Pi.smul_apply]⟩
+        rw [LinearMap.smul_apply, e, smul_apply, Pi.smul_apply]⟩
 
 
 

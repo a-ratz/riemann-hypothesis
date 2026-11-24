@@ -363,7 +363,7 @@ theorem inOK_natMul {d : ℕ} (s : ℕ) {v : ℂ} (h : InOK d v) : InOK d ((s : 
 
 theorem cmLatticeCommutatorPairing_natMul_right (d s : ℕ) (x y : ℂ) : kap1 d x ((s : ℂ) * y) = kap1 d x y ^ s := by
   unfold kap1
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   have : h1 d x ((s : ℂ) * y) = ((s : ℝ) : ℂ) * h1 d x y := by
     simp only [h1, map_mul, map_natCast, Complex.ofReal_natCast]; ring

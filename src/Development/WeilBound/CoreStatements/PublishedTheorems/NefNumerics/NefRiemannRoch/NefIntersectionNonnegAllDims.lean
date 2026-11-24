@@ -59,11 +59,11 @@ theorem GlobalTheory.kleiman_interNum_nonneg : ∀ (k : Type) [Field k] [Infinit
     induction n with
     | zero =>
       intro Y _ hpY hdim A N hA hN
-      haveI := isNoetherian_of_isProjOver hpY
+      have := isNoetherian_of_isProjOver hpY
       have hT : (tens A N).IsLB := isLB_tens hA.isLB hN.isLB
       refine isAmpleLB_of_subsingleton_coh_one Y _ hT (fun F hF => ⟨1, le_rfl, ?_⟩)
-      haveI : SheafOfModules.IsQuasicoherent F := hF.isQuasicoherent
-      haveI : SheafOfModules.IsQuasicoherent (twist F (lbPow (tens A N) 1)) :=
+      have : SheafOfModules.IsQuasicoherent F := hF.isQuasicoherent
+      have : SheafOfModules.IsQuasicoherent (twist F (lbPow (tens A N) 1)) :=
         isQuasicoherent_twist (isLB_lbPow hT 1)
       exact hA.subsingleton_coh_of_dim_lt _ (lt_of_le_of_lt hdim (by norm_num))
     | succ n ihn => exact isAmpleLB_tens_of_isNef_succ k n ihn

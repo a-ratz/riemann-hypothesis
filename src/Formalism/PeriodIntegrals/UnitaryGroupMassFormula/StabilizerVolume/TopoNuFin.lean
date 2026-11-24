@@ -97,7 +97,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] [FiniteD
 
 theorem zero_mem_latV (a M : ℕ) : (0 : Fin a → Fin M → Fv F v ⊗[F] E) ∈ latV b v := by
 
-  simp only [latV, Set.mem_setOf_eq, Pi.zero_apply, map_zero, Finsupp.zero_apply]
+  simp only [latV, Set.mem_ofPred_eq, Pi.zero_apply, map_zero, Finsupp.zero_apply]
   exact fun _ _ _ => zero_mem _
 
 
@@ -174,16 +174,16 @@ theorem nuFin_gen {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
     fun v => if Kv v ⊆ latV b v then latV b v else C v
   have hCvo : ∀ v, IsClopen (Cv v) := fun v => by
     by_cases h : Kv v ⊆ latV b v
-    · rw [show Cv v = latV b v from if_pos h]; exact isClopen_latV b v a M
-    · rw [show Cv v = C v from if_neg h]; exact hCo v
+    · rw [show Cv v = latV b v from ite_eq_left h]; exact isClopen_latV b v a M
+    · rw [show Cv v = C v from ite_eq_right h]; exact hCo v
   have hCvc : ∀ v, IsCompact (Cv v) := fun v => by
     by_cases h : Kv v ⊆ latV b v
-    · rw [show Cv v = latV b v from if_pos h]; exact isCompact_latV b v a M
-    · rw [show Cv v = C v from if_neg h]; exact hCc v
+    · rw [show Cv v = latV b v from ite_eq_left h]; exact isCompact_latV b v a M
+    · rw [show Cv v = C v from ite_eq_right h]; exact hCc v
   have hKCv : ∀ v, Kv v ⊆ Cv v := fun v => by
     by_cases h : Kv v ⊆ latV b v
-    · rw [show Cv v = latV b v from if_pos h]; exact h
-    · rw [show Cv v = C v from if_neg h]; exact hKC v
+    · rw [show Cv v = latV b v from ite_eq_left h]; exact h
+    · rw [show Cv v = C v from ite_eq_right h]; exact hKC v
   let Φv : ∀ v : HeightOneSpectrum (𝓞 F), (Fin a → Fin M → Fv F v ⊗[F] E) → ℂ :=
     fun v => (Cv v).indicator 1
   let Φf : (Fin a → Fin M → Af F ⊗[F] E) → ℂ := fun Y => ∏ᶠ v, Φv v (projV v Y)
@@ -194,7 +194,7 @@ theorem nuFin_gen {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
   have hpure : IsPureFin b Φf Φv := by
     refine ⟨hSB, ?_, fun _ => rfl⟩
     filter_upwards [hev] with v hv
-    simp only [Φv, Cv, hv, if_true]
+    simp only [Φv, Cv, hv, ite_true]
   obtain ⟨hint, -, -⟩ := key _ b Φ Φinf Φf Φv hΦic hΦis hpure (fun _ => rfl)
   have hone : ∀ X ∈ K, Φ X = 1 := by
     intro X hX
@@ -207,14 +207,14 @@ theorem nuFin_gen {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
   calc νX K ≤ νX {X | 1 ≤ ‖Φ X‖ₑ} := measure_mono fun X hX => by
         simp [hone X hX]
     _ ≤ ∫⁻ X, ‖Φ X‖ₑ ∂νX := by
-        have := mul_meas_ge_le_lintegral₀ hint.aestronglyMeasurable.enorm 1
+        have := mul_meas_ge_le_lintegral₀ hint.aestronglyMeasurable.eNorm 1
         simpa using this
     _ < ⊤ := hint.2
 
 theorem nuFin_holds : NuFin := by
 
   intro F E _ _ _ _ _ σ hCM M J hJ h1 h2 a ha haM X0 hT hdet ψ hψ νX hν K hK
-  haveI : FiniteDimensional F E := by
+  have : FiniteDimensional F E := by
     first
     | infer_instance
     | exact Module.Finite.of_restrictScalars_finite ℚ F E

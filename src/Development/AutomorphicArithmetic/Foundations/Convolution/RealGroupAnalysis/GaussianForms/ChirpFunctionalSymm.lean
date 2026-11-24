@@ -98,7 +98,7 @@ private theorem continuous_chirp {F : Type} [Field F] [NumberField F] (δ : F) (
   have hq : Continuous fun v : V4 F => q4 δ v := by
     unfold q4
     fun_prop
-  exact continuous_subtype_val.comp ((continuous_adelicChar (K := F)).comp (continuous_const.mul hq))
+  exact continuous_subtypeVal.comp ((continuous_adelicChar (K := F)).comp (continuous_const.mul hq))
 
 private theorem norm_chirp_le {F : Type} [Field F] [NumberField F] (δ : F) (b : A F) (v : V4 F) :
     ‖ψ (b * q4 δ v)‖ ≤ 1 := by

@@ -76,7 +76,7 @@ theorem classes_die_on_etale_cover : A5 := by
     rw [secMap_secRes_comm, hy, secRes_secRes]
   choose V g _ hg hmem y hy using hloc
   let f : (∐ V) ⟶ X := Sigma.desc g
-  have hιf : ∀ i, Sigma.ι V i ≫ f = g i := fun i => Sigma.ι_desc g i
+  have hιf : ∀ i, Sigma.ι V i ≫ f = g i := fun i => Sigma.ι_comp_desc g i
   refine ⟨∐ V, f, ?_, ?_, ?_⟩
   · have : IsZariskiLocalAtSource @Etale := HasRingHomProperty.instIsZariskiLocalAtSource
     exact IsZariskiLocalAtSource.sigmaDesc (P := @Etale) hg

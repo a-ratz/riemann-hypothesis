@@ -81,8 +81,8 @@ theorem exists_dvd_mul_involution_add_one {R : Type} [CommRing R] [IsDedekindDom
   have hz : ∀ P : Ideal R, ∃ z : R, P ∈ S → P.comap s = P → z * s z + 1 ∈ P ^ N := fun P => by
     by_cases h : P ∈ S ∧ P.comap s = P
     · obtain ⟨hP, hfix⟩ := h
-      haveI hM : P.IsMaximal := ((hS P).1 hP).1.isMaximal (hbot P hP)
-      haveI := hfin P hM
+      have hM : P.IsMaximal := ((hS P).1 hP).1.isMaximal (hbot P hP)
+      have := hfin P hM
       have hsP : ∀ x ∈ P, s x ∈ P := fun x hx => by rwa [← hfix] at hx
       have : ∀ k : ℕ, ∃ z : R, k = 0 ∨ z * s z + 1 ∈ P ^ k := fun k => by
         induction k with
@@ -100,14 +100,14 @@ theorem exists_dvd_mul_involution_add_one {R : Type} [CommRing R] [IsDedekindDom
     if P.comap s = P then z P else if WellOrderingRel P (P.comap s) then 1 else -1
   have ha : ∀ P ∈ S, a P * s (a (P.comap s)) + 1 ∈ P ^ N := fun P hP => by
     by_cases hfix : P.comap s = P
-    · simp only [a, hfix, if_true]
+    · simp only [a, hfix, ite_true]
       exact hz P hP hfix
     · have hfix' : ¬ P = P.comap s := fun h => hfix h.symm
-      simp only [a, hcc, if_neg hfix, if_neg hfix']
+      simp only [a, hcc, ite_eq_right hfix, ite_eq_right hfix']
       rcases trichotomous_of WellOrderingRel P (P.comap s) with h | h | h
-      · rw [if_pos h, if_neg (asymm h)]; simp
+      · rw [ite_eq_left h, ite_eq_right (asymm h)]; simp
       · exact (hfix' h).elim
-      · rw [if_pos h, if_neg (asymm h)]; simp
+      · rw [ite_eq_left h, ite_eq_right (asymm h)]; simp
   obtain ⟨l, hl⟩ := IsDedekindDomain.exists_forall_sub_mem_ideal (s := S) (fun P => P) (fun _ => N)
     hpr (fun _ _ _ _ h => h) (fun P => a P.1)
   have hmem : ∀ P ∈ S, l * s l + 1 ∈ P ^ N := fun P hP => by

@@ -85,8 +85,8 @@ namespace GlobalTheory.ClassMeanDisc
 
 theorem classMean_log_norm_disc : ∀ (D : Formalism.BasicNotions.D7) {K : Type} [Field K] [NumberField K] (φK : K →+* ℂ), Module.finrank ℚ K = 2 → discr K = -(D.host.d : ℤ) → 4 < D.host.d → ∀ (rep : ClassGroup (𝓞 K) → (FractionalIdeal (𝓞 K)⁰ K)ˣ) (L : ClassGroup (𝓞 K) → PeriodPair), (∀ c, ClassGroup.mk K (rep c) = c) → (∀ c, IsLatOf φK (rep c : FractionalIdeal (𝓞 K)⁰ K) (L c)) → (∑ c, Real.log (nrm (rep c : FractionalIdeal (𝓞 K)⁰ K) ^ 6 * ‖latDisc (L c)‖)) / (classNumber K : ℝ) = 12 * Real.log (2 * Real.pi) - 6 * Real.log D.host.d + 6 * Real.eulerMascheroniConstant - 6 * Formalism.BasicNotions.dlogL D 1 := by
   intro D K _ _ φK h2 hD hd rep L hrep hL
-  haveI : Fact D.host.d.Prime := ⟨D.host.hyp.2.1⟩
-  haveI : NeZero D.host.d := ⟨D.host.hyp.2.1.ne_zero⟩
+  have : Fact D.host.d.Prime := ⟨D.host.hyp.2.1⟩
+  have : NeZero D.host.d := ⟨D.host.hyp.2.1.ne_zero⟩
   have hd3 : D.host.d % 4 = 3 := by have := D.host.hyp.2.2.2.1; omega
   have hχ : IsKroneckerChar (Formalism.BasicNotions.chiK D) := isKroneckerChar_quadraticChar hd3
   have key := chowla_selberg_discriminant h2 hD hd hχ φK hrep hL
@@ -175,7 +175,7 @@ theorem continuous_conjFin (χ : HChar E) (σ : ℂ ≃+* ℂ) : Continuous (con
     refine (ho.preimage hc).mem_nhds ?_
     show Valued.v (((1 : Ideles E) : AdeleRing (𝓞 E) E).2 P - 1) ≤ _
     rw [show ((1 : Ideles E) : AdeleRing (𝓞 E) E).2 P = 1 from rfl, sub_self, map_zero]
-    exact zero_le'
+    exact zero_le
   refine continuous_of_continuousAt_one _ ?_
   refine (continuousAt_const (y := (1 : ℂˣ))).congr ?_
   filter_upwards [key] with a ha
@@ -1076,7 +1076,7 @@ theorem galmean : ∀ {K : Type} [Field K] [NumberField K] (φK : K →+* ℂ) (
   intro K _ _ φK j₀ 𝔞 β F hK2 hc hE hβa hβ0 hFc hFb
   classical
   obtain ⟨L, hLf, hLg, hK, hj, hβ⟩ := exists_field φK j₀ β hE.1 hβa
-  haveI : NumberField L := ⟨⟩
+  have : NumberField L := ⟨⟩
   set Fx := Finset.univ.filter (fun τ : L →+* ℂ => ∀ x : K, τ ⟨φK x, hK x⟩ = φK x) with hFx
   have hcard : 2 * Fx.card = Module.finrank ℚ L := by
     have := sum_halve φK hK2 hc L hK (fun _ => (1 : ℝ)) (fun _ => rfl)
@@ -1201,8 +1201,8 @@ theorem betaArch_of_transport : GlobalTheory.IndefiniteRowSideFullHecke.LatticeN
   have hd4 : 4 < D.host.d := hFD.2.1
   obtain ⟨K, hK2, hKd, φK, hφK, hc, hLat⟩ := _root_.GlobalTheory.QuadInHost.exists_quadField D.host.d (cmPhi D) hFD (host_d_mod' D) Λ hΛ
   obtain ⟨tt, 𝔞, Λσ, hσ, hEq, hAll⟩ := hTr K D.host.d hd4 hK2 hKd φK Λ hLat
-  haveI := iCM
-  haveI : IsGalois ℚ D.host.E := inferInstance
+  have := iCM
+  have : IsGalois ℚ D.host.E := inferInstance
   have hU : UnramFin D.host.E := hFD.2.2.1
   have hCM : IsCMType (cmPhi D) := hFD.2.2.2.2.2.2.1
   have hcard : 2 ≤ Fintype.card D.what₂.Tau := hFD.2.2.2.2.2.1

@@ -83,7 +83,7 @@ theorem ms_rkK_bot : rkK (⊥ : Submodule (𝓞 K) V) = 0 := by
   simp
 
 theorem ms_rkK_pos (b : Basis ι K V) {L : Submodule (𝓞 K) V} (hL : L ≠ ⊥) : 0 < rkK L := by
-  haveI : FiniteDimensional K V := Module.Finite.of_basis b
+  have : FiniteDimensional K V := Module.Finite.of_basis b
   obtain ⟨x, hxL, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hL
   unfold Formalism.HN.rkK
   rw [Module.finrank_pos_iff_exists_ne_zero]

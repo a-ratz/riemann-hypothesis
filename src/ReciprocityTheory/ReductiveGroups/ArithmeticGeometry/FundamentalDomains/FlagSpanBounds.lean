@@ -70,7 +70,7 @@ lemma span_le_of_upper (p : ℕ) (hp : p ≤ r) (M N : Matrix (Fin r) (Fin r) �
   refine Submodule.sum_mem _ (fun j _ => ?_)
   by_cases hj : (j : ℕ) < p
   · exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨⟨j, hj⟩, congrArg (col M) (Fin.ext rfl)⟩)
-  · have hlt : Fin.castLE hp a < j := Fin.lt_iff_val_lt_val.mpr (by show (a : ℕ) < j; omega)
+  · have hlt : Fin.castLE hp a < j := Fin.lt_def.mpr (by show (a : ℕ) < j; omega)
     have h0 : N j (Fin.castLE hp a) = 0 := hN hlt
     rw [h0, zero_smul]
     exact Submodule.zero_mem _
@@ -80,7 +80,7 @@ variable (X : Data E r)
 lemma sameFlag_rmul (z : Frame X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : X.SameFlag z (rmul z b) := by
   unfold Data.SameFlag
   unfold Bor at hb
-  rw [Set.mem_setOf_eq] at hb
+  rw [Set.mem_ofPred_eq] at hb
   intro τ
   obtain ⟨hdet, htri⟩ := hb τ
   have hmul : mat (rmul z b) τ = mat z τ * mat b τ := by
@@ -92,8 +92,8 @@ lemma sameFlag_rmul (z : Frame X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r
     first
     | exact htri a c h
     | (simp only [mat]; exact htri a c h)
-  haveI : Invertible (mat b τ).det := invertibleOfNonzero hdet
-  haveI : Invertible (mat b τ) := Matrix.invertibleOfDetInvertible _
+  have : Invertible (mat b τ).det := invertibleOfNonzero hdet
+  have : Invertible (mat b τ) := Matrix.invertibleOfDetInvertible _
   apply le_antisymm
   · have hinv : mat z τ = mat (rmul z b) τ * (mat b τ)⁻¹ := by
       rw [hmul, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hdet), Matrix.mul_one]

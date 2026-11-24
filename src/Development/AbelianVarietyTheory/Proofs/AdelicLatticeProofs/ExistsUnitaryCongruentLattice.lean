@@ -103,7 +103,7 @@ theorem exists_nat_coprime (s : 𝓞 E) (N : ℕ)
   refine ⟨a.natAbs, ?_, ?_⟩
   · refine Nat.coprime_of_dvd fun p hp hpa hpN => ?_
     have hp' : Prime (p : ℤ) := Nat.prime_iff_prime_int.1 hp
-    haveI : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp'.ne_zero).2 hp'
+    have : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp'.ne_zero).2 hp'
     have hle : I ≤ Ideal.span {(p : ℤ)} := by
       rw [ha]
       exact Ideal.span_singleton_le_span_singleton.2 (Int.natCast_dvd.2 hpa)

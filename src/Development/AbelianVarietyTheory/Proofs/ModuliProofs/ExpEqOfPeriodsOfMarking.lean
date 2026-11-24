@@ -267,7 +267,7 @@ theorem eq_self_of_isometry (D : Datum H) (l : Level H) {g : ℕ} {ty : Fin g �
       rw [← hEF, ← hσ, ha, map_zero]
       rfl
     · refine Set.Finite.of_finite_image (f := P) ((Metric.finite_isBounded_inter_isClosed
-        (s := P.range) DiscreteTopology.isDiscrete (hbd c) AddSubgroup.isClosed_of_discrete).subset ?_) hinj.injOn
+        (s := P.range) DiscreteTopology.isDiscrete (hbd c) AddSubgroup.isClosed_of_discreteTopology).subset ?_) hinj.injOn
       rintro _ ⟨a, ha, rfl⟩
       exact ⟨ha, a, rfl⟩
     · simp only [hq, hσ, hφ, ← hI]

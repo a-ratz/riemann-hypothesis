@@ -69,7 +69,7 @@ theorem appTop_eq_of_gm (τ₁ τ₂ : Z ⟶ Y) (c₁ c₂ : Γ(Y, ⊤)ˣ) (h : 
   have m1 : τ₁ z ∈ (⊤ : Y.Opens) := trivial
   have m2 : τ₂ z ∈ (⊤ : Y.Opens) := trivial
   rw [dite_eq_left m1, dite_eq_left m2] at h1
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at h1
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass] at h1
   exact h1
 
 theorem gm_comp_top (r : W ⟶ Z) (τ : Z ⟶ Y) (w : W) (c : Γ(Y, ⊤)ˣ) (c' : Γ(Z, ⊤)ˣ)
@@ -79,7 +79,7 @@ theorem gm_comp_top (r : W ⟶ Z) (τ : Z ⟶ Y) (w : W) (c : Γ(Y, ⊤)ˣ) (c' 
   have m1 : (r ≫ τ) w ∈ (⊤ : Y.Opens) := trivial
   have m2 : r w ∈ (⊤ : Z.Opens) := trivial
   rw [dite_eq_left m1, dite_eq_left m2]
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, Scheme.Hom.comp_app,
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, Scheme.Hom.comp_app,
     CommRingCat.comp_apply]
   rw [← h]
   rfl
@@ -101,9 +101,9 @@ theorem exists_ratio {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) {K : Type} [Finty
     exact fun i => hJ (r ≫ φ i)
   rw [dite_eq_left hm, dite_eq_left (show r z ∈ (⊤ : Y.Opens) from trivial)]
   apply Units.ext
-  simp only [MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+  simp only [MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
   try erw [Function.comp_apply]
-  simp only [Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass]
   erw [← Scheme.Hom.germ_stalkMap_apply, ← Scheme.Hom.germ_stalkMap_apply]
   erw [TopCat.Presheaf.germ_res_apply]
 
@@ -117,13 +117,13 @@ theorem val_charGen {S : Scheme.{0}} (X : Type) [AddCommGroup X] (G : Over S) {L
   rw [dite_eq_left hm, dite_eq_left (show (w ≫ (fst (splitTorus S X) G).left) z ∈
     (⊤ : (splitTorus S X).left.Opens) from trivial)]
   apply Units.ext
-  simp only [MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe,
+  simp only [MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_ofClass,
     Scheme.Hom.comp_app, CommRingCat.comp_apply]
   erw [Function.comp_apply]
-  simp only [Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass]
   erw [← Scheme.Hom.germ_stalkMap_apply, ← Scheme.Hom.germ_stalkMap_apply]
   erw [TopCat.Presheaf.germ_res_apply]
-  simp only [Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass]
   erw [← Scheme.Hom.germ_stalkMap_apply]
   rw [Scheme.Hom.stalkMap_comp]
   rfl

@@ -147,7 +147,7 @@ private theorem dim_charPol {rc : IrrGL (k := w.adicCompletion E) → WD h} (H :
     (x : IrrGL (k := w.adicCompletion E)) :
     (rc x).lpDim = x.1 ∧ ∃ s, HasSupport x.rep s ∧ (∀ y ∈ s, y.IsCusp) ∧
       ∀ σ, (rc x).charPol σ = (s.map fun y => (r y).charPol σ).prod := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨𝔪, hm⟩ := Pr.exh (w.adicCompletion E) x
   have hs : HasSupport x.rep (msupp 𝔪) := GlobalTheory.LocGL.hasSupport_msupp_of_isL Pr.zel _ 𝔪 x hm
   have hcp : ∀ σ, (rc x).charPol σ = ((msupp 𝔪).map fun y => (r y).charPol σ).prod := by
@@ -172,7 +172,7 @@ end UpperTheory.Zero.LLC
 theorem UpperTheory.Zero.LLC.extDim :
     UpperTheory.Zero.LLC.ExtDim := by
   intro E Ω _ _ _ _ _ A w h a ha r rc H L x
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨hd, s, hs, hc, hcp⟩ := dim_charPol H L x
   refine ⟨⟨hd, s, hs, hc, hcp⟩, fun ω hω σ => ?_⟩
   obtain ⟨f, hf, hprod⟩ := GlobalTheory.T.centralCharacter_eq_prod_supercuspidalSupport Pr.bz (w.adicCompletion E) x s ω hs hω

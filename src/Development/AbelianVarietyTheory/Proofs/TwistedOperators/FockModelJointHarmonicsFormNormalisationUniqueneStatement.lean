@@ -109,7 +109,7 @@ theorem minusPart_eq_zero_of_raise {σ : Type} (a : TH.Mat p q →ₗ[ℂ] Modul
   intro e
   rw [homogeneousComponent_of_mem (show Φ ∈ homogeneousSubmodule σ ℂ d from hΦ)]
   split_ifs with he
-  · rw [homogeneousComponent_of_mem hm, if_neg (by omega)]
+  · rw [homogeneousComponent_of_mem hm, ite_eq_right (by omega)]
   · simp
 
 theorem raise_of_minusPart {M : Matrix (Ln p q r s) (Ln p q r s) ℂ}
@@ -121,7 +121,7 @@ theorem raise_of_minusPart {M : Matrix (Ln p q r s) (Ln p q r s) ℂ}
 
 theorem isKC_Eab {a b : Ix p q} (hab : sameBlock a b) : IsKC (Eab a b) := by
   intro c d hcd
-  rw [Eab, Matrix.single_apply, if_neg]
+  rw [Eab, Matrix.single_apply, ite_eq_right]
   rintro ⟨rfl, rfl⟩
   exact hcd hab
 
@@ -166,7 +166,7 @@ theorem line (X : ProvA) {μ : Ix p q → ℚ} {μ' : Ix r s → ℚ} {P Φ : Po
   have hs : JointShape p q r s μ μ' := by
     by_contra hs
     exact h0 ((Submodule.eq_bot_iff _).1 (h2.2 hs) Φ ⟨⟨g, g'⟩, Submodule.subset_span gJ⟩)
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero'
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero'
     ⟨Φ, ⟨g, g'⟩, Submodule.subset_span gJ⟩
     (fun e => h0 (congrArg Subtype.val e))).1 (h2.1 hs) ⟨P, ⟨h, h'⟩, Submodule.subset_span hJ⟩
   exact ⟨c, (congrArg Subtype.val hc).symm⟩

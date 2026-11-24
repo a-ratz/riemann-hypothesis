@@ -239,7 +239,7 @@ private theorem fderiv2_add_lemma {D : ℕ} {g₁ g₂ : (Fin D → ℂ) → ℝ
 private theorem hessL_add_lemma_2 {D : ℕ} (H₁ H₂ : (Fin D → ℂ) →L[ℝ] (Fin D → ℂ) →L[ℝ] ℝ) :
     hessL (H₁ + H₂) = hessL H₁ + hessL H₂ := by
   funext i k
-  simp only [hessL, ContinuousLinearMap.add_apply, Pi.add_apply]
+  simp only [hessL, add_apply, Pi.add_apply]
   push_cast
   ring
 
@@ -511,7 +511,7 @@ theorem tendsto_integral_of_exhaustion {α : Type} [MeasurableSpace α] (μ : Me
       (𝓝 (∫ y in E n, Γ0 y * ρ0 y ∂μ)) := by
     intro n
     obtain ⟨C, -, hC⟩ := hB n
-    haveI : IsFiniteMeasure (μ.restrict (E n)) := ⟨by simpa using hfin n⟩
+    have : IsFiniteMeasure (μ.restrict (E n)) := ⟨by simpa using hfin n⟩
     refine tendsto_integral_filter_of_dominated_convergence (fun _ => C) ?_ ?_
       (integrable_const C) ?_
     · exact hev.mono fun t h => (h.2.1.mul h.1).restrict
@@ -769,8 +769,8 @@ theorem conv_chart_integral : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [Com
       (Real.exp 1 + n) (by have : (0 : ℝ) ≤ n := Nat.cast_nonneg n
                            linarith)
     refine ⟨((locDensCont A _ hpot j).mono hST).aestronglyMeasurable hSm, ?_, ?_, ?_, ?_⟩
-    · letI : MeasurableSpace X := borel X
-      haveI : BorelSpace X := ⟨rfl⟩
+    · let : MeasurableSpace X := borel X
+      have : BorelSpace X := ⟨rfl⟩
       have h1 : AEMeasurable (A.chart j).symm (volume.restrict S) := hsymmS.aemeasurable hSm
       have h2 : AEMeasurable (fun y => c ((A.chart j).symm y) *
           R.Yo.indicator (GT t) ((A.chart j).symm y)) (volume.restrict S) :=
@@ -820,12 +820,12 @@ theorem conv_chart_integral : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [Com
   have e1 : ∀ (g : X → ℝ) (d : (Fin e → ℂ) → ℝ),
       ∫ y in (A.chart j).target, c ((A.chart j).symm y) * g ((A.chart j).symm y) * d y =
       ∫ y in S, c ((A.chart j).symm y) * g ((A.chart j).symm y) * d y := fun g d =>
-    setIntegral_eq_of_subset_of_forall_diff_eq_zero hTm hST
+    setIntegral_eq_of_subset_of_forall_sdiff_eq_zero hTm hST
       (fun y hy => by simp [hc0 y hy.1 hy.2])
   have e2 : ∀ (g : X → ℝ) (d : (Fin e → ℂ) → ℝ),
       Integrable (fun y => c ((A.chart j).symm y) * g ((A.chart j).symm y) * d y) (volume.restrict S) →
       IntegrableOn (fun y => c ((A.chart j).symm y) * g ((A.chart j).symm y) * d y) (A.chart j).target :=
-    fun g d h => IntegrableOn.of_forall_diff_eq_zero h hTm
+    fun g d h => IntegrableOn.of_forall_sdiff_eq_zero h hTm
       (fun y hy => by simp [hc0 y hy.1 hy.2])
   refine ⟨e2 _ _ i1, i2.mono fun t h => e2 _ _ h, ?_⟩
   rw [e1 G]
@@ -890,9 +890,9 @@ theorem position_tail (e : ℕ) (X : Type) [TopologicalSpace X] [CompactSpace X]
       LocPot.ofFun (if i ∈ T then u i else 0) + Θ) := by
     intro i
     by_cases hi : i ∈ T
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact hpsh i
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       intro x j y hy w
       have h3 := ReciprocityTheory.AnForm.P.TailBoundAlt.isPsh_of_isPosPot A Θ hΘp x j y ⟨hy.1, hy.2.2⟩ w
       have h2 : (LocPot.ofFun (0 : X → ℝ) + LocPot.ofFun 0 + Θ).φ x = Θ.φ x := by
@@ -943,7 +943,7 @@ theorem expand_on {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X
     rw [ae_iff]
     refine measure_mono_null ?_ (hnull j)
     intro y hy
-    simp only [Set.mem_setOf_eq, Classical.not_imp] at hy
+    simp only [Set.mem_ofPred_eq, Classical.not_imp] at hy
     exact ⟨hy.1, hy.2⟩
   have hae : (fun y => w y * locDens A (fun i => P i + LocPot.ofFun (f i)) j y) =ᵐ[volume.restrict K]
       fun y => ∑ T : Finset (Fin e), (-1 : ℝ) ^ (e - T.card) * (w y * locDens A (fun i =>
@@ -966,8 +966,8 @@ theorem mIntegrable_of_logBound {e : ℕ} {X : Type} [TopologicalSpace X] [Compa
     (hg : @Measurable X ℝ (borel X) _ (R.Yo.indicator g))
     (hgb : ∀ x ∈ R.Yo, |g x| ≤ C + C * Real.log (R.r x)) : MIntegrable A Φ g := by
   intro j K hK hKc
-  letI : MeasurableSpace X := borel X
-  haveI : BorelSpace X := ⟨rfl⟩
+  let : MeasurableSpace X := borel X
+  have : BorelSpace X := ⟨rfl⟩
   obtain ⟨-, hnull, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.regData_open_part e X A R
   have hKm := hKc.measurableSet
   have hD : IntegrableOn (locDens A Φ j) K := ((locDensCont A Φ hΦ j).mono hK).integrableOn_compact hKc
@@ -979,7 +979,7 @@ theorem mIntegrable_of_logBound {e : ℕ} {X : Type} [TopologicalSpace X] [Compa
       rw [ae_iff]
       refine measure_mono_null ?_ (hnull j)
       intro y hy
-      simp only [Set.mem_setOf_eq, Classical.not_imp] at hy
+      simp only [Set.mem_ofPred_eq, Classical.not_imp] at hy
       exact ⟨hy.1, hy.2⟩
     filter_upwards [h0] with y hy hyK
     exact ⟨hyK, hy (hK hyK)⟩
@@ -1062,9 +1062,9 @@ theorem mixed_integral_tendsto_of_C2_off_divisor : ∀ (e : ℕ) (X : Type) [Top
         (fderiv ℝ (fderiv ℝ ((if i ∈ T then f i else 0) ∘ (A.chart j).symm))) (𝓝[>] 0) K' := by
     intro T i j K' hK' hKc
     by_cases hi : i ∈ T
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact (hC i j K' hK' hKc).2.2
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       exact Metric.tendstoUniformlyOn_iff.2 fun ε hε =>
         Eventually.of_forall fun t y _ => by simpa using hε
   have term := fun T : Finset (Fin e) => _root_.GlobalTheory.CompanionTheory.Ar.Giv.conv_chart_integral e X A R Θ
@@ -1073,8 +1073,8 @@ theorem mixed_integral_tendsto_of_C2_off_divisor : ∀ (e : ℕ) (X : Type) [Top
     (hev.mono fun t h => h T) (hC2 T) hGT hGc
   refine ⟨?_, ?_, ?_⟩
   · intro j K hK hKc
-    letI : MeasurableSpace X := borel X
-    haveI : BorelSpace X := ⟨rfl⟩
+    let : MeasurableSpace X := borel X
+    have : BorelSpace X := ⟨rfl⟩
     have hcl : IsClosed ((A.chart j).symm '' K) :=
       (hKc.image_of_continuousOn ((A.chart j).continuousOn_symm.mono hK)).isClosed
     have hcm : @Measurable X ℝ (borel X) _ (((A.chart j).symm '' K).indicator fun _ => (1 : ℝ)) :=
@@ -1110,11 +1110,11 @@ theorem mixed_integral_tendsto_of_C2_off_divisor : ∀ (e : ℕ) (X : Type) [Top
       (fun k y hy _ => locDens_nonneg_of_psh A _ hpot (hevt T).2.1 k hy) (hevt T).2.2 hg.1 hg.2
       j K hK hKc
   · have hne : Nonempty (ChartPartition A) := existsPartition A
-    simp_rw [mInt, dif_pos hne]
+    simp_rw [mInt, dite_eq_left hne]
     unfold integralWith
     refine tendsto_finsetSum _ fun j _ => ?_
-    letI : MeasurableSpace X := borel X
-    haveI : BorelSpace X := ⟨rfl⟩
+    let : MeasurableSpace X := borel X
+    have : BorelSpace X := ⟨rfl⟩
     have hSc : IsCompact ((A.chart j) '' tsupport (hne.some.χ j)) :=
       (isClosed_tsupport _).isCompact.image_of_continuousOn
         ((A.chart j).continuousOn.mono (hne.some.tsupport_subset j))

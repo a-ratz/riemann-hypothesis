@@ -133,7 +133,7 @@ theorem exists_linear_of_rel {M N : Type} [AddCommGroup M] [Module ℂ M] [AddCo
       map_smul' := fun c x => by simpa [h0] using hc c x 0 }
   obtain ⟨Q, hQ⟩ := P.exists_isCompl
   refine ⟨F' ∘ₗ P.linearProjOfIsCompl Q hQ, fun x => ⟨_, hF _⟩, fun x hx => ?_⟩
-  have e : P.linearProjOfIsCompl Q hQ x = ⟨x, hx⟩ := Submodule.linearProjOfIsCompl_apply_left hQ ⟨x, hx⟩
+  have e : P.linearProjOfIsCompl Q hQ x = ⟨x, hx⟩ := Submodule.projectionOnto_apply_left hQ ⟨x, hx⟩
   rw [LinearMap.comp_apply, e]
   exact hF ⟨x, hx⟩
 

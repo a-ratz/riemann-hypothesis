@@ -290,10 +290,10 @@ theorem key {B : Base F E} {M : Model σ X W} {M₁ : Model σ X₁ W₁} {H : P
 theorem lat_compact {B : Base F E} {r s r' s'} (hX : X.IsHerm σ B r s) (hW : W.IsSkew σ B r' s') (M : Model σ X W) (v : Pl F) :
     ∃ C, IsCompact C ∧ ∀ γ ∈ latAtV X W v, locCo M.co v γ ∈ C := by
   obtain ⟨I, _, g, hg⟩ := GlobalTheory.LatParam.latAtV_param X W hX.lat.toIsLattice hW.lat.toIsLattice v
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   refine ⟨Set.range fun a : I → v.adicCompletionIntegers F => ∑ m, (a m : Fv F v) • locCo M.co v (incM F (g m)),
     isCompact_range (continuous_finsetSum _ fun m _ => (show Continuous fun a : I → v.adicCompletionIntegers F => (a m : Fv F v) from
-      continuous_subtype_val.comp (continuous_apply m)).smul continuous_const),
+      continuous_subtypeVal.comp (continuous_apply m)).smul continuous_const),
     fun γ hγ => ?_⟩
   obtain ⟨a, rfl⟩ := (hg γ).1 hγ
   refine ⟨a, ?_⟩

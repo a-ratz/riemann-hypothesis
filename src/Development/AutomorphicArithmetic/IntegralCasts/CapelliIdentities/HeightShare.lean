@@ -50,7 +50,7 @@ theorem UpperTheory.Reformulated.B.HeightShare.star_sqrt_neg :
         Star.star x =
           -x := by
   intro D x n hn hx
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   have hc : D.host.φ₀ (star x) = starRingEnd ℂ (D.host.φ₀ x) :=
     NumberField.IsCMField.complexEmbedding_complexConj _ D.host.φ₀ x
   have h2 : star x ^ 2 = x ^ 2 := by rw [← star_pow, hx, star_neg, star_natCast]

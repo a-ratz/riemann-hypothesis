@@ -221,7 +221,7 @@ theorem continuous_cptRep (φ : Sm E a) (g : GA E a) : Continuous fun k : Kinf E
     rfl
   rw [e]
   have h3 : Continuous fun k : Kinf E a =>
-      toL ((Unitary.toUnits k : GL (Fin a) (Rinf E)) : Matrix (Fin a) (Fin a) (Rinf E)) := continuous_subtype_val
+      toL ((Unitary.toUnits k : GL (Fin a) (Rinf E)) : Matrix (Fin a) (Fin a) (Rinf E)) := continuous_subtypeVal
   exact (φ.2 g).continuousOn.comp_continuous h3 fun k => val_mem_invSet _
 
 end UpperTheory.V.TR.Cen

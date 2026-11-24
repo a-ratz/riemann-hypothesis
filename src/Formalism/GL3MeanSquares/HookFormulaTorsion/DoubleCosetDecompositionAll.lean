@@ -240,7 +240,7 @@ theorem fubini_over_orbits : Fubini_orbits := by
       have hc := count_fib pr hpr _ y0 s hT hs
       rw [hsdef, natcard_stab_smul] at hc
       have hpos : 0 < Nat.card (MulAction.stabilizer Γ y0) := by
-        haveI := hfinQ y0
+        have := hfinQ y0
         exact Nat.card_pos
       have hcq : ((Nat.card (MulAction.stabilizer Γ y0) : ℕ) : ℚ) =
           (((fib y0).filter (fun p => rep p = r)).card : ℚ) *
@@ -279,7 +279,7 @@ open Formalism.HermitianLattices.OneDimInversion
 theorem count_of_orbits : Count_orbits := by
   intro Γ A B V _ _ _ _ _ up down G RA RB hud hup hG hfA hfB hRA hRB
   classical
-  letI act : MulAction Γ {x : A × B // x.2 ∈ up x.1} :=
+  let act : MulAction Γ {x : A × B // x.2 ∈ up x.1} :=
     { smul := fun γ x => ⟨(γ • x.1.1, γ • x.1.2), hup γ x.1.1 x.1.2 x.2⟩
       one_smul := fun x => Subtype.ext (Prod.ext (one_smul Γ x.1.1) (one_smul Γ x.1.2))
       mul_smul := fun a b x => Subtype.ext (Prod.ext (mul_smul a b x.1.1) (mul_smul a b x.1.2)) }

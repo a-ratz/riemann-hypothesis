@@ -143,17 +143,17 @@ theorem i2bdeg_single {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (
   obtain ⟨k₀, i₀⟩ := p
   by_cases h : k₀ = k
   · subst h
-    simp only [i2bdeg, if_true]
+    simp only [i2bdeg, ite_true]
     rw [Finset.sum_eq_single i₀]
     · simp
     · intro b _ hb
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro e
       exact hb (by simpa using e.symm)
     · simp
-  · simp only [i2bdeg, if_neg h]
+  · simp only [i2bdeg, ite_eq_right h]
     refine Finset.sum_eq_zero fun i _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro e
     exact h (congrArg Sigma.fst e)
 
@@ -216,8 +216,8 @@ theorem exists_graphLift_monomial {g : (Σ k, ι₂ k) → MRing ι} {δ : K₂ 
     · rw [i2bdeg_add, baseDeg_add]
       exact isMultiHomog_mul' hh₁ hh₂
     · have : (monomial (m₁ + m₂) 1 : MRing (Sum.elim ι ι₂)) = monomial m₁ 1 * monomial m₂ 1 := by
-        rw [monomial_mul, one_mul]
-      rw [this, map_mul, e₁, e₂, monomial_mul, i2bdeg_add, expDeg_add]
+        rw [monomial_mul_monomial, one_mul]
+      rw [this, map_mul, e₁, e₂, monomial_mul_monomial, i2bdeg_add, expDeg_add]
   have hone : ∀ p : Σ k, Sum.elim ι ι₂ k,
       ∃ h : MRing ι, IsMultiHomog h (baseDeg δ (i2bdeg (Finsupp.single p 1))) ∧
         graphLift g (monomial (Finsupp.single p 1) 1) =
@@ -288,20 +288,20 @@ theorem coeff_graphLift_i2comp {g : (Σ k, ι₂ k) → MRing ι} {δ : K₂ →
     rw [i2comp_of_homog hm, em, coeff_monomial]
     by_cases hd : i2bdeg m = c
     · subst hd
-      rw [if_pos rfl, em, coeff_monomial]
+      rw [ite_eq_left rfl, em, coeff_monomial]
       by_cases hb : b = expDeg (i2bdeg m)
       · subst hb
         simp only [↓reduceIte, i2comp_self hnh]
       · simp [hb, Ne.symm hb]
-    · rw [if_neg hd, map_zero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
+    · rw [ite_eq_right hd, map_zero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
       by_cases hb : b = expDeg c
       · subst hb
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         by_cases he : expDeg (i2bdeg m) = expDeg c
-        · rw [if_pos he, i2comp_of_homog hnh, if_neg]
+        · rw [ite_eq_left he, i2comp_of_homog hnh, ite_eq_right]
           exact fun h' => hd (deg_injective he h')
-        · rw [if_neg he, i2comp_zero]
-      · rw [if_neg hb]
+        · rw [ite_eq_right he, i2comp_zero]
+      · rw [ite_eq_right hb]
 
 theorem i2comp_mem_graphIdeal {P : Ideal (MRing ι)} (hP : IsMultiHomogIdeal P)
     {g : (Σ k, ι₂ k) → MRing ι} {δ : K₂ → K → ℕ} (hg : ∀ q, IsMultiHomog (g q) (δ q.1))
@@ -490,7 +490,7 @@ theorem ringKrullDim_graphIdeal {P : Ideal (MRing ι)} {d : ℕ} (hP : IsArithVa
   have h1 := trdeg_graph_eq P g (FractionRing (MvPolynomial K₂ (MRing ι ⧸ P))) hne hBinj
   have h3 := trdeg_mvPolynomial_int (MRing ι ⧸ P) K₂ hA
   have hhor' := isHorizontal_graphIdeal hhor g
-  haveI : (graphIdeal P g).IsPrime := RingHom.ker_isPrime _
+  have : (graphIdeal P g).IsPrime := RingHom.ker_isPrime _
   have hdim := GroundTheory.Heights₂.Heights.IntDomainDim.proof (MRing (Sum.elim ι ι₂) ⧸ graphIdeal P g)
     (GroundTheory.Heights₂.Heights.CoordinateConeArithVar.algebraMap_injective _ hhor')
   have h4 : Algebra.trdeg ℤ (MRing (Sum.elim ι ι₂) ⧸ graphIdeal P g) =

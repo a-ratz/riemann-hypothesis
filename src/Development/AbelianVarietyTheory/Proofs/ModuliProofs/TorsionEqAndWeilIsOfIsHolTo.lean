@@ -110,7 +110,7 @@ theorem isHolTo_of_isPullback {S X Y Z : Scheme.{0}} {p : Z ⟶ X} {q : Z ⟶ Y}
     fun g => ?_⟩
   · convert (ha U₁ 0).1.inter (hb U₂ 0).1 using 1
     ext w
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, hiff]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, hiff]
     tauto
   · have hg : g ∈ Subring.closure _ := hgen.ge (Subring.mem_top g)
     induction hg using Subring.closure_induction with
@@ -134,7 +134,7 @@ theorem exists_isHolTo_lift {S X Y Z : Scheme.{0}} {p : Z ⟶ X} {q : Z ⟶ Y} {
   let c : E → (Sp ℂ ⟶ Z) := fun w =>
     if hw : w ∈ B then H.lift (a w) (a' w) (h w hw) else H.lift (a b₀) (a' b₀) (h b₀ hb₀)
   have hc : ∀ w ∈ B, c w ≫ p = a w ∧ c w ≫ q = a' w := fun w hw => by
-    simp only [c, dif_pos hw, IsPullback.lift_fst, IsPullback.lift_snd, and_self]
+    simp only [c, dite_eq_left hw, IsPullback.lift_fst, IsPullback.lift_snd, and_self]
   exact ⟨c, isHolTo_of_isPullback H (isHolTo_congr ha fun w hw => (hc w hw).1)
     (isHolTo_congr ha' fun w hw => (hc w hw).2), hc⟩
 

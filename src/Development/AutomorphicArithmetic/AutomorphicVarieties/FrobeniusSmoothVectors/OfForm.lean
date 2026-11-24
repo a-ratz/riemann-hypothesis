@@ -66,7 +66,7 @@ open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 private theorem co_sqrt {O C : Type} [CommRing O] [IsLocalRing O] [CommRing C] [Algebra O C] [IsCO O C]
     (h2 : IsUnit (2 : C)) (a : C) (z : ResidueField O) (hz : z ≠ 0) (ha : res O C a = z ^ 2) :
     ∃ ζ : C, res O C ζ = z ∧ ζ ^ 2 = a := by
-  haveI : IsAdicComplete (maximalIdeal C) C := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal C) C := IsCO.complete (O := O)
   obtain ⟨b, rfl⟩ := IsLocalRing.residue_surjective z
   set ζ₀ := algebraMap O C b
   have hr : res O C ζ₀ = residue O b := (res O C).commutes b
@@ -177,7 +177,7 @@ private theorem skew_norm {K : Type} [Field K] [IsAlgClosed K] {n : ℕ} (hn : n
   set μ : Fin n → K := fun i => (w n i : K) * ζ with hμ
   set V : Matrix (Fin n) (Fin n) K := Matrix.of fun a i => v i a with hVdef
   have hV : IsUnit V := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← linearIndependent_col_iff_isUnit]
     have : V.col = v := by
       funext i a
       rfl
@@ -236,7 +236,7 @@ private theorem skew_norm {K : Type} [Field K] [IsAlgClosed K] {n : ℕ} (hn : n
     · have hm : M 0 2 ≠ 0 := by simpa using hMr 0
       have hm' : M 2 0 = M 0 2 := hMsym 0 2
       have hq : M 1 1 ≠ 0 := by simpa using hMr 1
-      obtain ⟨z, hz⟩ := IsAlgClosed.exists_eq_mul_self (M 1 1)⁻¹
+      obtain ⟨z, hz⟩ := IsAlgClosed.isSquare (M 1 1)⁻¹
       have hz0 : z ≠ 0 := by
         rintro rfl
         simp [hq] at hz
@@ -343,7 +343,7 @@ theorem UpperTheory.V.Fr.of_form :
       field_simp
       ring
   have hk2 : (2 : ResidueField O) ≠ 0 := by
-    haveI : CharP (ResidueField O) l := IsCoef.char
+    have : CharP (ResidueField O) l := IsCoef.char
     intro h0
     have h2 : (l : ℕ) ∣ 2 := (CharP.cast_eq_zero_iff (ResidueField O) l 2).1 (by exact_mod_cast h0)
     have hl : l.Prime := Fact.out

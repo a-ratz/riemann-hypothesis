@@ -401,8 +401,8 @@ namespace GlobalTheory.HolDS
 theorem holomorphicDiscreteSeries_holds : GlobalTheory.Published.HolomorphicDiscreteSeries := by
   intro n ε lam hHC hHol H _ _ σ hDS
   obtain ⟨hc, hnt, hU, hI, -⟩ := id hDS
-  haveI := hc
-  haveI := hnt
+  have := hc
+  have := hnt
   obtain ⟨D, E, hK⟩ := _root_.GlobalTheory.CompanionTheory.KModExistsStep.kModExists_holds n ε H σ hU hI
   have low := _root_.GlobalTheory.HolDS.lowKSub_kMod n ε H σ D E lam hHC hHol hDS hK
   refine ⟨?_, ?_, ?_, ?_⟩

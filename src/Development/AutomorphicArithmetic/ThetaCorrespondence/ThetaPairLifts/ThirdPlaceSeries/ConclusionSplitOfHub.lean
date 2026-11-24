@@ -166,8 +166,8 @@ theorem block_condition_at_places_of_jump_window (i : D.nd.Loc) (N : ℕ) (hK : 
   have hcard : Nat.card (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥C.LL.1) ≤ 4 * D.R.n := by
     rw [GlobalTheory.HubLoc.card_emb _ _ fun τ x => C.le ((D.nbr i w hw).LL_split τ x)]
     exact GlobalTheory.bridge_finrank_le D i w hw
-  haveI : Finite (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥C.LL.1) := by
-    haveI := (D.nbr i w hw).Kw.2
+  have : Finite (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥C.LL.1) := by
+    have := (D.nbr i w hw).Kw.2
     infer_instance
   obtain ⟨U, h1, h2, h3⟩ := exists_union (4 * D.R.n) D.R.nV h hcard
     (fun τ a => IsJumpV (Br.PD D.loc D.nbr i w hw) (matRep (TruncatedSeriesCountingIdentities.locC C (rTwO D.nd i r π))) τ a) (fun τ => by
@@ -244,8 +244,8 @@ theorem kill_of (i : D.nd.Loc) (N : ℕ) (hK : InvariantsKilledOverCyclotomic (D
   have hcard : Nat.card (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥C.LL.1) ≤ 4 * D.R.n := by
     rw [GlobalTheory.HubLoc.card_emb _ _ fun τ x => C.le ((D.nbr i w hw).LL_split τ x)]
     exact GlobalTheory.bridge_finrank_le D i w hw
-  haveI : Finite (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥C.LL.1) := by
-    haveI := (D.nbr i w hw).Kw.2
+  have : Finite (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥C.LL.1) := by
+    have := (D.nbr i w hw).Kw.2
     infer_instance
   obtain ⟨U, h1, h2, h3⟩ := exists_union (4 * D.R.n) D.R.r h hcard
     (fun τ a => IsJumpV (Br.PD D.loc D.nbr i w hw) (matRep (TruncatedSeriesCountingIdentities.locC C M)) τ a) (fun τ => ((hM w hw C).2 τ).1)
@@ -268,8 +268,8 @@ theorem invariants_length_admissible_of_nonzero_jumps (i : D.nd.Loc) (N : ℕ) (
     fun v => (GlobalTheory.CrysChiOne.locC_cont' C _ hT2c).matrix_mulVec continuous_const
   have hkill := kill_of i N hK hC _ h hM w hw C hc L2
   unfold EmbeddingTypes.lenInvD
-  haveI : IsDiscreteValuationRing ↥(OL C.LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr C.LL
-  haveI : IsFractionRing ↥(OL C.LL) ↥C.LL.1 := Formalism.BasicNotions.Examples₂.LB.OL_frac C.LL
+  have : IsDiscreteValuationRing ↥(OL C.LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr C.LL
+  have : IsFractionRing ↥(OL C.LL) ↥C.LL.1 := Formalism.BasicNotions.Examples₂.LB.OL_frac C.LL
   refine EmbeddingTypes.len_le_of_kill (Br.PD D.loc D.nbr i w hw) L2.T hstd _ _ ?_
   intro x hx
   rw [Br.PD_p]

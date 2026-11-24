@@ -75,7 +75,7 @@ def TransExp {X₁ : GSet} {z₁ : X₁.M.Z} {act : I → (X₁.ρ.P.A ⟶ X₁.
 theorem sumF_comp_equiv {R : Type} [CommRing R] [IsDomain R] {J : Ideal R} {K : Type} [Field K]
     [Algebra (FractionRing R) K] {Ix Jx : Type} {x : Ix → K} {s : K} (e : Jx ≃ Ix) (h : SumF J K x s) :
     SumF J K (fun j => x (e j)) s := by
-  letI : Module R K := Module.compHom K (algebraMap R (FractionRing R))
+  let : Module R K := Module.compHom K (algebraMap R (FractionRing R))
   obtain ⟨N, hN, hs, hx, hlim⟩ := h
   refine ⟨N, hN, hs, fun j => hx _, fun k => ?_⟩
   classical

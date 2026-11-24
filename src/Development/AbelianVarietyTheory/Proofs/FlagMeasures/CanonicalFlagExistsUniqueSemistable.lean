@@ -318,7 +318,7 @@ theorem type_unique {a a' : ℕ} {j : Fin a → ℕ} {τ : Fin a → ℝ} {j' : 
     rw [hr, h2] at h1
     simpa using h1.symm
   subst e
-  have eτ : τ = τ' := (StrictMono.range_inj hS.2.2.2.1 hS'.2.2.2.1).1 hr
+  have eτ : τ = τ' := (StrictMono.range_inj_of_wellFoundedLT hS.2.2.2.1 hS'.2.2.2.1).1 hr
   subst eτ
   refine ⟨rfl, fun i => ?_, fun i => rfl⟩
   have h1 := hj i

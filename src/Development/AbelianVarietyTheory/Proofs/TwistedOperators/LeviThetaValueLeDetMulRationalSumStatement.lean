@@ -86,16 +86,16 @@ theorem levi_sum : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (S S₀ T : HSp
   have hsum := (GlobalTheory.HeisMixSource.heis_mixS D ψ ho.std S S₀ T r d v (om (d.levi α, 1) f) hg).2.2.2.2 0
   rw [map_zero] at hsum
   rw [← hsum.tsum_eq]
-  refine enorm_tsum_le_tsum_enorm.trans (le_of_eq ?_)
+  refine eNorm_tsum_le_tsum_eNorm.trans (le_of_eq ?_)
   rw [← ENNReal.tsum_mul_left]
   congr 1
   funext ξ
   have e := congrFun (hF.levi α (GlobalTheory.MixModel.rat ξ)) 0
   change ‖(I195MixedCoordinates_a63f0715cbf334f1e52c5d7b.source d) T ψ v.μ v.𝓕
     (om (d.levi α, 1) f) (GlobalTheory.MixModel.rat ξ) 0‖ₑ = _
-  rw [e, Pi.smul_apply, smul_eq_mul, enorm_mul, enorm_mul]
+  rw [e, Pi.smul_apply, smul_eq_mul, eNorm_mul, eNorm_mul]
   congr 1
-  rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, Circle.norm_coe, ENNReal.ofReal_one, one_mul, Complex.norm_real,
+  rw [← ofReal_norm, ← ofReal_norm, Circle.norm_coe, ENNReal.ofReal_one, one_mul, Complex.norm_real,
     Real.norm_of_nonneg (GlobalTheory.IndefiniteRowSideFullHecke.SkewGramHalfModule.halfMod_pos _ _).le]
 
 end GlobalTheory.LeviThetaSum

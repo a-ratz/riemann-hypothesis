@@ -80,12 +80,12 @@ theorem iota_int_cofinite {D : D7} (Z : LocDat D) (x : D.host.E) :
       exact_mod_cast hn0
     refine (Ideal.finite_factors hne).subset ?_
     intro p hp
-    simp only [Set.mem_setOf_eq] at hp ⊢
+    simp only [Set.mem_ofPred_eq] at hp ⊢
     rw [Ideal.dvd_span_singleton, bt_natCast_mem_iff]
     exact hp
   refine hfin.subset ?_
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   by_contra hnd
   apply hp
   obtain ⟨_, w', hw'O, hw'⟩ := bt_nat_unit Z p n hnd
@@ -120,9 +120,9 @@ theorem tri_scaled : ∀ (D : D7) (Z : LocDat D), ∀ (f g : Fin (D.R.rS + 1) �
     refine (Set.Finite.biUnion (Set.finite_univ (α := Fin (D.R.rS + 1) × Fin (D.R.rS + 1)))
       (fun ab _ => iota_int_cofinite Z (A ab.1 ab.2))).subset ?_
     intro p hp
-    simp only [Set.mem_setOf_eq, not_forall] at hp
+    simp only [Set.mem_ofPred_eq, not_forall] at hp
     obtain ⟨a, b, hab⟩ := hp
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, exists_true_left]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_univ, exists_true_left]
     refine ⟨(a, b), ?_⟩
     intro hι
     apply hab

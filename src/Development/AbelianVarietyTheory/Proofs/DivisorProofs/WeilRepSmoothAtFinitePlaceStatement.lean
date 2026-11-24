@@ -209,15 +209,15 @@ theorem exists_compact_subgroup_at_place : ∀ {F E : Type} [Field F] [NumberFie
     rw [one_smul] at h
     exact h
   let e : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UA σ X.J ≃* GAd σ (X.J.map σ) := MulEquiv.subgroupCongr heq
-  have he : Continuous e := continuous_subtype_val.subtype_mk _
-  have he' : Continuous e.symm := continuous_subtype_val.subtype_mk _
+  have he : Continuous e := continuous_subtypeVal.subtype_mk _
+  have he' : Continuous e.symm := continuous_subtypeVal.subtype_mk _
   let f : GLoc σ (X.J.map σ) v →* GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UA σ X.J := e.symm.toMonoidHom.comp (emb σ (X.J.map σ) v)
   have hf : Continuous f := he'.comp (continuous_emb σ (X.J.map σ) v)
   have hW : f ⁻¹' U ∈ 𝓝 (1 : GLoc σ (X.J.map σ) v) :=
     hf.continuousAt.preimage_mem_nhds (by rw [map_one]; exact hU)
-  haveI := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ (X.J.map σ) v
+  have := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ (X.J.map σ) v
   obtain ⟨V₀, hV₀⟩ := NonarchimedeanGroup.is_nonarchimedean _ hW
-  haveI := isLattice_stdLattice (E := E) (n := n)
+  have := isLattice_stdLattice (E := E) (n := n)
   let V₁ : Subgroup (GLoc σ (X.J.map σ) v) := (V₀ : Subgroup _) ⊓ stabLoc σ (X.J.map σ) (stdLattice E n) v
   have hV₁o : IsOpen (V₁ : Set (GLoc σ (X.J.map σ) v)) :=
     V₀.isOpen.inter (isOpen_stabLoc σ (X.J.map σ) (stdLattice E n) v)
@@ -314,7 +314,7 @@ theorem span_finiteDimensional_of_bounded_forms {V : Type} [AddCommGroup V] [Mod
       rw [← hb, Module.Basis.constr_basis]
       have h : ∃ j : ℕ, ((e j : t) : V) = ((⟨_, hmem⟩ : hli'.extend (Set.subset_univ t)) : V) :=
         ⟨k, rfl⟩
-      simp only [v, dif_pos h]
+      simp only [v, dite_eq_left h]
       have hj : h.choose = k := e.injective (Subtype.ext h.choose_spec)
       rw [hj]
     obtain ⟨k, hk⟩ := exists_nat_gt C
@@ -490,7 +490,7 @@ theorem weil_smooth_at : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
     if hx : x ∈ H then (locOp v R (om x)).restrict (fun ψ hψ => (key x hx ψ hψ).1) else LinearMap.id
   have hS : ∀ x (hx : x ∈ H) (ψ : V), ((S x ψ : V) : (Fin n × Fin d → Fv F v) → ℂ) = locOp v R (om x) ψ := by
     intro x hx ψ
-    simp only [S, dif_pos hx]
+    simp only [S, dite_eq_left hx]
     rfl
   have hmul : ∀ x ∈ H, ∀ y ∈ H, S (x * y) = S x * S y := by
     intro x hx y hy

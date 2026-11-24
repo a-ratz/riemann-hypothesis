@@ -97,7 +97,7 @@ theorem exists_finset_trivial (ψ : AddChar (AF F) ℂ) (hψ : Continuous ψ) :
     show LinearMap.inr F (Ainf F) (Af F) (intFin (n • y)) = _
     rw [intFin_nsmul, map_nsmul]
   have h := hsub hmem
-  simp only [Set.mem_setOf_eq] at h
+  simp only [Set.mem_ofPred_eq] at h
   rwa [e, AddChar.map_nsmul_eq_pow] at h
 
 end GlobalTheory.PsiProd
@@ -150,7 +150,7 @@ theorem psi_prod : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F)
     intro v hv
     by_contra hvS
     apply hv
-    simp only [S, Finset.coe_union, Set.mem_union, Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_setOf_eq,
+    simp only [S, Finset.coe_union, Set.mem_union, Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_ofPred_eq,
       not_or, not_not] at hvS
     show GlobalTheory.LatVac.psiAt ψ v (evFin F v x) = 1
     rw [hev]
@@ -170,7 +170,7 @@ theorem psi_prod : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F)
     if hw : w ∈ S then 0 else ⟨evalV F w xf, by
       have : w ∉ hT.toFinset := fun h => hw (Finset.mem_union_right _ h)
       simpa using this⟩
-  have hr : ∀ v ∈ I, r v = 0 := fun v hv => dif_pos (Finset.mem_union_left _ hv)
+  have hr : ∀ v ∈ I, r v = 0 := fun v hv => dite_eq_left (Finset.mem_union_left _ hv)
   have hdec : xf = ∑ v ∈ S, GlobalTheory.AdelicU.singleFin v (evalV F v xf) + intFin r := by
     refine GlobalTheory.AdelicU.af_ext fun w => ?_
 

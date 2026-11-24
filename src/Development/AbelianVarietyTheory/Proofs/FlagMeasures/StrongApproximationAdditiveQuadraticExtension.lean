@@ -71,7 +71,7 @@ theorem int_of (T : LocAt F E sig p) (a : 𝓞 F) :
 
 theorem small_local (T : LocAt F E sig p) (w : T.Fp) (hw : w ≠ 0) :
     ∃ a : 𝓞 F, a ≠ 0 ∧ valuation T.Fp (T.ιF (algebraMap (𝓞 F) F a)) ≤ valuation T.Fp w := by
-  haveI := T.lf
+  have := T.lf
   have hw0 : valuation T.Fp w ≠ 0 := by simpa using hw
   have hn : {z : T.Fp | valuation T.Fp (z - w) < valuation T.Fp w} ∈ nhds w :=
     IsValuativeTopology.mem_nhds_iff'.2 ⟨Units.mk0 _ hw0, fun z hz => hz⟩
@@ -110,7 +110,7 @@ theorem small (A : Places F E sig) (S : Finset (HeightOneSpectrum (𝓞 F)))
 theorem approx_local (T : LocAt F E sig p) (z : T.Fp) (hz : valuation T.Fp z ≤ 1) (h : 𝓞 F) (hh : h ≠ 0) :
     ∃ a : 𝓞 F, valuation T.Fp (z - T.ιF (algebraMap (𝓞 F) F a)) ≤
       valuation T.Fp (T.ιF (algebraMap (𝓞 F) F h)) := by
-  haveI := T.lf
+  have := T.lf
   have hhK : algebraMap (𝓞 F) F h ≠ 0 := by simpa using hh
   have hh0 : valuation T.Fp (T.ιF (algebraMap (𝓞 F) F h)) ≠ 0 := by simpa using hhK
   have hn : {x : T.Fp | valuation T.Fp (x - z) < valuation T.Fp (T.ιF (algebraMap (𝓞 F) F h))} ∈ nhds z :=
@@ -201,7 +201,7 @@ theorem approxF (A : Places F E sig) (c : ∀ p, ((A.loc p).Fp)ˣ)
     have hp' : p.valuation F (algebraMap (𝓞 F) F r) < 1 := hp
     show 1 < p.valuation F (algebraMap (𝓞 F) F r)⁻¹
     rw [map_inv₀]
-    exact one_lt_inv_iff₀.2 ⟨zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hrK), hp'⟩
+    exact one_lt_inv_iff₀.2 ⟨pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hrK), hp'⟩
   obtain ⟨h, hh, hh'⟩ := small A (hc.union hr0).toFinset
     (fun p => (A.loc p).ιF (algebraMap (𝓞 F) F r) * c p) (fun p _ => mul_ne_zero (by simpa using hrK) (c p).ne_zero)
   obtain ⟨a, ha⟩ := approx A _ hz h hh
@@ -257,7 +257,7 @@ theorem exists_place (F : Type) [Field F] [NumberField F] : Nonempty (HeightOneS
 
 theorem sig_sig (A : Places F E sig) (y : E) : sig (sig y) = y := by
   obtain ⟨p⟩ := exists_place F
-  haveI := PlacesInt.nontrivial_Ep (A.loc p)
+  have := PlacesInt.nontrivial_Ep (A.loc p)
   apply (A.loc p).ιE.injective
   rw [← (A.loc p).cj_ιE, ← (A.loc p).cj_ιE, ← A.L_cj, (A.L p).cj_cj]
 
@@ -302,7 +302,7 @@ theorem exists_d (A : Places F E sig) : ∃ d : 𝓞 E, sig (d : E) = -(d : E) �
 
 theorem mem_int_of_O (A : Places F E sig) (p : HeightOneSpectrum (𝓞 F)) (w : (A.loc p).Fp)
     (h : algebraMap (A.loc p).Fp (A.loc p).Ep w ∈ (A.L p).O) : w ∈ 𝒪[(A.loc p).Fp] := by
-  haveI := PlacesInt.nontrivial_Ep (A.loc p)
+  have := PlacesInt.nontrivial_Ep (A.loc p)
   rw [(A.L p).O_def] at h
   have h2 : IsIntegral 𝒪[(A.loc p).Fp] w :=
     (isIntegral_algHom_iff (IsScalarTower.toAlgHom 𝒪[(A.loc p).Fp] (A.loc p).Fp (A.loc p).Ep)
@@ -373,7 +373,7 @@ theorem approxE (A : Places F E sig) (c : ∀ p, ((A.loc p).Fp)ˣ)
       {p : HeightOneSpectrum (𝓞 F) | (A.loc p).ιF 2⁻¹ ∉ 𝒪[(A.loc p).Fp]} →
       a p ∈ 𝒪[(A.loc p).Fp] ∧ b p ∈ 𝒪[(A.loc p).Fp] := by
     intro p hp
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hp
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hp
     exact hint p hp.1.1 hp.1.2 hp.2
   have hfin := (hy.union hdi).union (fin_two A)
   obtain ⟨α, hα⟩ := approxF A c hc a (hfin.subset fun p hp => by_contra fun h => hp (hbad p h).1)
@@ -400,7 +400,7 @@ theorem approxTr (A : Places F E sig) (c : ∀ p, ((A.loc p).Fp)ˣ)
   have hdi := (PlacesInt.integers_local A).2.1 (d : E)⁻¹
   have ht : sig t = t := by
     obtain ⟨p⟩ := exists_place F
-    haveI := PlacesInt.nontrivial_Ep (A.loc p)
+    have := PlacesInt.nontrivial_Ep (A.loc p)
     apply (A.loc p).ιE.injective
     rw [← (A.loc p).cj_ιE, ← A.L_cj, ← hyt p, map_add (f := _), (A.L p).cj_cj, add_comm]
   choose a b hab hA hint using fun p => decomp A d hd hd0 p (y p)
@@ -408,7 +408,7 @@ theorem approxTr (A : Places F E sig) (c : ∀ p, ((A.loc p).Fp)ˣ)
       {p : HeightOneSpectrum (𝓞 F) | (A.loc p).ιF 2⁻¹ ∉ 𝒪[(A.loc p).Fp]} →
       a p ∈ 𝒪[(A.loc p).Fp] ∧ b p ∈ 𝒪[(A.loc p).Fp] := by
     intro p hp
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hp
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hp
     exact hint p hp.1.1 hp.1.2 hp.2
   have hfin := (hy.union hdi).union (fin_two A)
   obtain ⟨β, hβ⟩ := approxF A c hc b (hfin.subset fun p hp => by_contra fun h => hp (hbad p h).2)

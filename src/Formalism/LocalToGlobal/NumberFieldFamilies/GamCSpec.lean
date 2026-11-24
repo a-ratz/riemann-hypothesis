@@ -78,14 +78,14 @@ theorem tGen (hS : ∀ l, (exceptionalPlaces H l).Finite) (i : LocT B) :
   unfold TOf
   congr 1
   ext f
-  simp only [Set.mem_setOf_eq, Set.Finite.mem_toFinset]
+  simp only [Set.mem_ofPred_eq, Set.Finite.mem_toFinset]
   constructor
   · rintro ⟨v, k, h1, h2, h3, h4, h5, h6, rfl⟩
     have hg : GenAt0 H (lOf B i) (B.Qw (wOf B i)) v k := ⟨h1, h2, h3, h4, h5, h6⟩
-    exact ⟨v, k, hg, by simp [hTOf, dif_pos hg]⟩
+    exact ⟨v, k, hg, by simp [hTOf, dite_eq_left hg]⟩
   · rintro ⟨v, k, hg, rfl⟩
     obtain ⟨h1, h2, h3, h4, h5, h6⟩ := hg
-    exact ⟨v, k, h1, h2, h3, h4, h5, h6, by simp [hTOf, dif_pos (show GenAt0 H (lOf B i) (B.Qw (wOf B i)) v k from ⟨h1, h2, h3, h4, h5, h6⟩)]⟩
+    exact ⟨v, k, h1, h2, h3, h4, h5, h6, by simp [hTOf, dite_eq_left (show GenAt0 H (lOf B i) (B.Qw (wOf B i)) v k from ⟨h1, h2, h3, h4, h5, h6⟩)]⟩
 
 end Gen
 

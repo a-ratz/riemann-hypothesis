@@ -140,7 +140,7 @@ theorem measure_ext_of_compactOpen {U : Set V} (hU : IsOpen U) (m m' : Measure V
     refine (Measure.restrict_sUnion_congr hTc).2 fun K hKT => ?_
     obtain ⟨hKc, hKo, hKU⟩ := hT K hKT
     obtain ⟨hfin, heq⟩ := hK K hKc hKo hKU
-    haveI : IsFiniteMeasure (m.restrict K) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+    have : IsFiniteMeasure (m.restrict K) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
     refine ext_of_generate_finite {s | IsOpen s} BorelSpace.measurable_eq isPiSystem_isOpen ?_ ?_
     · intro O hO
       rw [Measure.restrict_apply hO.measurableSet, Measure.restrict_apply hO.measurableSet]
@@ -307,8 +307,8 @@ theorem gram_map_fibre_uniqueness : FibUniq := by
   have hA : ∀ S : Set (HermR (Fv F v) σ a), MeasurableSet S →
       MeasurableSet (gramR (Fv F v) σ J ⁻¹' (Subtype.val '' S)) := by
     intro S hS
-    letI : MeasurableSpace (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) := borel _
-    haveI : BorelSpace (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) := ⟨rfl⟩
+    let : MeasurableSpace (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) := borel _
+    have : BorelSpace (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) := ⟨rfl⟩
     have hcl : IsClosedEmbedding
         (Subtype.val : HermR (Fv F v) σ a → Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
       (isClosed_HermR (Fv F v) σ a).isClosedEmbedding_subtypeVal

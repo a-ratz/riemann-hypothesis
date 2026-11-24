@@ -66,13 +66,13 @@ theorem isClosed_of_stable (X : Scheme.{0}) [IsLocallyNoetherian X] (T : Set X)
   rw [← isOpen_compl_iff, isOpen_iff_forall_mem_open]
   intro x hx
   obtain ⟨U, hU, hxU, -⟩ := exists_isAffineOpen_mem_and_subset (X := X) (U := ⊤) (x := x) trivial
-  haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  haveI : TopologicalSpace.NoetherianSpace (U : Set X) := noetherianSpace_of_isAffineOpen U hU
+  have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have : TopologicalSpace.NoetherianSpace (U : Set X) := noetherianSpace_of_isAffineOpen U hU
   let T' : Set (U : Set X) := Subtype.val ⁻¹' T
   have key : ∀ Z : Set (U : Set X), IsIrreducible Z → (Z ∩ T').Nonempty → Z ⊆ T' := by
     rintro Z hZ ⟨t, htZ, htT⟩ z hz
     have hI : IsIrreducible (closure (Subtype.val '' Z : Set X)) :=
-      (hZ.image _ continuous_subtype_val.continuousOn).closure
+      (hZ.image _ continuous_subtypeVal.continuousOn).closure
     obtain ⟨g₀, hg₀⟩ := QuasiSober.sober hI isClosed_closure
     have h1 : g₀ ⤳ (t : X) := hg₀.specializes (subset_closure ⟨t, htZ, rfl⟩)
     have h2 : g₀ ⤳ (z : X) := hg₀.specializes (subset_closure ⟨z, hz, rfl⟩)

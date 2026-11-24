@@ -176,7 +176,7 @@ lemma zF_prB_mul (x : DegPre.BF D.toPre F ⟶ D.toPre.P.A) :
 
 lemma zF_prB_mul' (oa : D.toPre.OAct O) (a : O) (x : DegPre.BF D.toPre F ⟶ D.toPre.P.A) :
     DegPre.zF D.toPre F ≫ ((DegPre.prB D.toPre F ≫ oa.onB.act a) * x) = DegPre.zF D.toPre F ≫ x := by
-  haveI := oa.onB.hom a
+  have := oa.onB.hom a
   show DegPre.zF D.toPre F ≫ (lift (DegPre.prB D.toPre F ≫ oa.onB.act a) x ≫ μ[D.toPre.P.A]) = _
   rw [← Category.assoc, comp_lift, ← Category.assoc, zF_prB]
   rw [show (1 : TF (R := V) F ⟶ D.toPre.P.A) ≫ oa.onB.act a = 1 from ?_]
@@ -202,7 +202,7 @@ lemma one_left_TF : (1 : TF (R := V) F ⟶ D.toPre.P.A).left =
 lemma fsum_pull_zF (oa : D.toPre.OAct O) (a : O) (k N : ℕ) (hN1 : 1 ≤ N) (χ : D.toPre.X) :
     fsum (fun i => (DegPre.zF D.toPre F).left ≫ pullφ D F oa a χ i) (pullε k N) =
       ((k * (N - 1) : ℕ) : ℤ) • Finsupp.single (1 : TF (R := V) F ⟶ D.toPre.P.A).left 1 := by
-  haveI := oa.onB.hom a
+  have := oa.onB.hom a
   have h1 : (aF D F oa a).left ≫ (DegPre.prB D.toPre F).left =
       (DegPre.prB D.toPre F ≫ oa.onB.act a).left := by
     rw [← Over.comp_left, aF_prB]
@@ -322,7 +322,7 @@ theorem exists_pullGen (hL : D.toPre.P.L.IsLB) (oa : D.toPre.OAct O) (w0 : O)
 private lemma res_res_lemma {Y : Scheme.{0}} {U W Z : Y.Opens} (h₁ : W ≤ U) (h₂ : Z ≤ W) (x : Γ(Y, U)ˣ) :
     res h₂ (res h₁ x) = res (h₂.trans h₁) x := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← RingHom.comp_apply, ← CommRingCat.hom_comp, ← Functor.map_comp]
   rfl
 
@@ -458,12 +458,12 @@ theorem exists_pullAl (hL : D.toPre.P.L.IsLB) (oa : D.toPre.OAct O) (w0 : O)
       (uPull_spec D F hL oa w0 uΨ huΨ a N hN hN1 k χ).2, ?_⟩
     have hex : ∃ χ₀, star a • χ₀ = star a • χ := ⟨χ, rfl⟩
     show GeneratorPullback.SecRel _ _ _ (pullSecs D F hL oa w0 uΨ huΨ a N hN hN1 k s (star a • χ)) _ _ _ _ _ _ _
-    simp only [pullSecs, dif_pos hex]
+    simp only [pullSecs, dite_eq_left hex]
     exact secRel_pullSecs hL oa w0 uΨ huΨ a N hN hN1 k s χ hex.choose hex.choose_spec
       (smul_star_inj a N hN hN1 hex.choose_spec)
   · have : ¬ ∃ χ, star a • χ = β := fun ⟨χ, h⟩ => hβ χ h.symm
     show (pullSecs D F hL oa w0 uΨ huΨ a N hN hN1 k s β).f j = 0
-    simp only [pullSecs, dif_neg this]
+    simp only [pullSecs, dite_eq_right this]
     rfl
 
 theorem exists_XB (hL : D.toPre.P.L.IsLB) (oa : D.toPre.OAct O) (w0 : O)
@@ -505,7 +505,7 @@ theorem exists_XB (hL : D.toPre.P.L.IsLB) (oa : D.toPre.OAct O) (w0 : O)
     powGen_isGen_of_isGen _ D.toPre.rig_gen _
   refine exists_normalized_to hL _ _ X0 hX0 (toUnit D.toPre.P.A).left (eSec D.toPre.P.A) hzp _ _ _ hrig ?_
   have ha : eSec D.toPre.P.A ≫ (oa.onB.act a).left = eSec D.toPre.P.A := by
-    haveI := oa.onB.hom a
+    have := oa.onB.hom a
     simp only [eSec, ← Over.comp_left, IsMonHom.one_hom]
   simp only [fsum, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Category.comp_id,
     ha, Fintype.univ_punit, Finset.sum_singleton, ← Finsupp.single_add]

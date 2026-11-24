@@ -79,10 +79,10 @@ theorem alg {ι : Type} [Fintype ι] [DecidableEq ι] (Qs : ι → (Wq →L[ℂ]
     simp [map_sum]
   have hEv : ∀ v, E v = ∑ σ, E (Qs σ v) := by
     intro v
-    have h : (∑ σ, Qs σ) v = v := by rw [hsum, ContinuousLinearMap.one_apply]
+    have h : (∑ σ, Qs σ) v = v := by rw [hsum, one_apply_eq_self]
     conv_lhs => rw [← h]
 
-    rw [ContinuousLinearMap.sum_apply, map_sum]
+    rw [sum_apply, map_sum]
   constructor
   · intro h Y v
     have hE : ∀ w, E (Qs ρ w) = E w := fun w => congrArg (fun T : Wq →L[ℂ] Wp => T w) h

@@ -238,7 +238,7 @@ lemma one_char [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
     | add a b _ _ ha hb => rw [map_add (f := _)]; exact U.add_mem ha hb
     | smul r a _ ha => rw [LinearMap.map_smul_of_tower]; exact U.smul_mem r ha
 
-  haveI : CompleteSpace U := FiniteDimensional.complete ℝ U
+  have : CompleteSpace U := FiniteDimensional.completeSpace ℝ U
   obtain ⟨y₀, hy₀U, z, hzU, hxyz⟩ := U.exists_add_mem_mem_orthogonal (Mc σ 1 v)
   have hz : z = Mc σ 1 v - y₀ := by rw [hxyz]; abel
   have hzZ : z ∈ Zs L I ‖v‖ := by
@@ -322,7 +322,7 @@ lemma one_char [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
     exact ⟨j, y, hy, hyv, rfl⟩
   obtain ⟨b, hbS', hbspan, hbli⟩ := exists_linearIndependent ℝ S'
   have hli : LinearIndependent ℝ (fun x : b => (x : Vsp dim)) := hbli
-  haveI : Finite b := hli.finite
+  have : Finite b := hli.finite
   obtain ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin b
   obtain ⟨vv, hvvdef⟩ : ∃ vv : Fin n → Vsp dim, vv = fun i => ((e.symm i : b) : Vsp dim) :=
     ⟨_, rfl⟩
@@ -436,7 +436,7 @@ private lemma inv_step_lemma {dim : (E →+* ℂ) → ℕ} {L I : Submodule ℤ 
   obtain ⟨f, hf⟩ : ∃ f : Vsp dim → Vsp dim, ∀ y ∈ S, f y ∈ t ∧ y ∈ Metric.ball (f y) (1 / 2) := by
     refine ⟨fun y => if h : ∃ x ∈ t, y ∈ Metric.ball x (1 / 2) then h.choose else 0, fun y hy => ?_⟩
     have h := hex y hy
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     exact h.choose_spec
   have hinj : Set.InjOn f S := by
     intro y hy y' hy' hyy
@@ -510,9 +510,9 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
       inner ℂ (w j) (x - ∑ i ∈ Finset.range k, inner ℂ (w i) x • w i) = 0 := by
     intro x j hj
     rw [inner_sub_right, inner_sum, Finset.sum_eq_single j]
-    · rw [inner_smul_right, h3 j hj j hj, if_pos rfl, mul_one, sub_self]
+    · rw [inner_smul_right, h3 j hj j hj, ite_eq_left rfl, mul_one, sub_self]
     · intro i hi hij
-      rw [inner_smul_right, h3 j hj i (Finset.mem_range.mp hi), if_neg (Ne.symm hij), mul_zero]
+      rw [inner_smul_right, h3 j hj i (Finset.mem_range.mp hi), ite_eq_right (Ne.symm hij), mul_zero]
     · intro hj'
       exact absurd (Finset.mem_range.mpr hj) hj'
   obtain ⟨Wp, hWp⟩ : ∃ Wp, Wp = ∑ i ∈ Finset.range k, inner ℂ (w i) e • w i := ⟨_, rfl⟩
@@ -560,7 +560,7 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
   have hterm : ∀ i ∈ Finset.range k, (Rk : ℂ) • ((starRingEnd ℂ) (εk i) • w i) = inner ℂ (w i) e • w i := by
     intro i hi
     rw [hεk]
-    simp only [if_pos (Finset.mem_range.mp hi)]
+    simp only [ite_eq_left (Finset.mem_range.mp hi)]
     rw [smul_smul, map_div₀, Complex.conj_conj, Complex.conj_ofReal]
     congr 1
     field_simp
@@ -578,7 +578,7 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
       rw [Finset.sum_div]
       refine Finset.sum_congr rfl fun i hi => ?_
       rw [hεk]
-      simp only [if_pos (Finset.mem_range.mp hi)]
+      simp only [ite_eq_left (Finset.mem_range.mp hi)]
       rw [norm_div, Complex.norm_real, Real.norm_of_nonneg hRpos.le, RCLike.norm_conj, div_pow]
     rw [hs]
     have hle1 : ∑ i ∈ Finset.range k, ‖inner ℂ (w i) e‖ ^ 2 ≤ (K0 * ‖v‖) ^ 2 :=
@@ -630,10 +630,10 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
     · rw [Function.update_of_ne (Nat.ne_of_lt hs), Function.update_of_ne (Nat.ne_of_lt hs')]
       exact h3 s hs s' hs'
     · rw [hs', Function.update_of_ne (Nat.ne_of_lt hs), Function.update_self, hwkw s hs,
-        if_neg (Nat.ne_of_lt hs)]
+        ite_eq_right (Nat.ne_of_lt hs)]
     · rw [hs, Function.update_self, Function.update_of_ne (Nat.ne_of_lt hs'),
-        inner_eq_zero_symm.mp (hwkw s' hs'), if_neg (Nat.ne_of_lt hs').symm]
-    · rw [hs, hs', Function.update_self, if_pos rfl, inner_self_eq_norm_sq_to_K, hwkn]
+        inner_eq_zero_symm.mp (hwkw s' hs'), ite_eq_right (Nat.ne_of_lt hs').symm]
+    · rw [hs, hs', Function.update_self, ite_eq_left rfl, inner_self_eq_norm_sq_to_K, hwkn]
       norm_num
   · intro s hs
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
@@ -650,7 +650,7 @@ lemma inv_step [IsCMField E] (hNP : Ext.NearestPlane) {dim : (E →+* ℂ) → �
     · rw [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h5 s hs i hi
     · rw [hs, Function.update_self]
       simp only [hεk]
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
   · intro s hs
     rcases Nat.lt_succ_iff_lt_or_eq.mp hs with hs | hs
     · rw [Function.update_of_ne (Nat.ne_of_lt hs)]; exact h6 s hs
@@ -733,8 +733,8 @@ lemma omega_fin {E : Type} [Field E] [NumberField E] [IsCMField E] :
     rintro _ ⟨i, rfl⟩
     rw [NumberField.integralBasis_apply]
     exact hspan _
-  haveI : Finite κ := Finite.of_injective a ha
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  have : Fintype κ := Fintype.ofFinite κ
   have hcard : Fintype.card κ = Module.finrank ℚ E := by
     rw [← finrank_span_eq_card hli, htop, finrank_top]
   let e : Fin (Module.finrank ℚ E) ≃ κ := (Fintype.equivFinOfCardEq hcard).symm
@@ -814,7 +814,7 @@ theorem char_main (hx : Ext.All) : CharStatement := by
     rw [Hf_eq_inner, hort s' s'.2 s s.2]
     by_cases h : s = s'
     · subst h; simp
-    · rw [if_neg (fun e => h (Fin.ext e).symm), if_neg h]
+    · rw [ite_eq_right (fun e => h (Fin.ext e).symm), ite_eq_right h]
   · intro s
     exact (hχX s s.2).choose_spec
   · intro s s' h

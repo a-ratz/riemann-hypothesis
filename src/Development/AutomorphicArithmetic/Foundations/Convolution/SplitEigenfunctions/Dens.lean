@@ -472,7 +472,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.pairL : UpperTheory.Conv
     have h2 : (fun y : normOneGL (K := ℚ) (n := 2) => ψ y) =ᵐ[μ] 0 :=
       QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk _ μ) h1
     have h3 : starRingEnd ℂ (F (x : AdelicGLn.AdelicGL ℚ 2)) = 0 :=
-      congrFun ((Continuous.ae_eq_iff_eq μ (hψc.comp continuous_subtype_val) continuous_const).1 h2) x
+      congrFun ((Continuous.ae_eq_iff_eq μ (hψc.comp continuous_subtypeVal) continuous_const).1 h2) x
     exact hx ((map_eq_zero _).1 h3)
   obtain ⟨V, hV, f, hf, hi⟩ := exists_form0 μ hv hv0
   obtain ⟨hs, hne, hirr, -⟩ := formsIrr ℚ 2 μ V hV
@@ -709,11 +709,11 @@ open scoped Pointwise Classical ENNReal NNReal
 theorem UpperTheory.isFundamentalDomain_image_sl2Domain_prod_ideles :
     ∀ (M : Meas ℚ) (U : UMeas) (μ : Measure GG) [μ.IsHaarMeasure], IsFundamentalDomain Ga (pm '' (M.D ×ˢ Set.univ)) μ := by
   intro M U μ _
-  haveI := M.haar
+  have := M.haar
   have emb : MeasurableEmbedding pm := UpperTheory.isOpenEmbedding_projection.measurableEmbedding
   obtain ⟨c, hc⟩ := UpperTheory.exists_haar_restrict_range_sl2IdeleMap_eq_smul_prod M U μ
   have null : ∀ N : Set (G1 ℚ), M.μ N = 0 → μ (pm '' (N ×ˢ Set.univ)) = 0 := fun N hN => by
-    rw [← Measure.restrict_eq_self μ (Set.image_subset_range _ _), hc, Measure.smul_apply, emb.map_apply,
+    rw [← Measure.restrict_eq_self μ (Set.image_subset_range _ _), hc, smul_apply, emb.map_apply,
       Set.preimage_image_eq _ emb.injective, Measure.prod_prod, hN, zero_mul, smul_zero]
   have lift : ∀ s : SpecialLinearGroup (Fin 2) ℚ, ∃ γ : Ga, ∀ p : G1 ℚ × US, γ • pm p = pm (ratS ℚ s * p.1, p.2) := fun s => by
     refine ⟨⟨pm (ratS ℚ s, 1), ?_⟩, fun p => Subtype.ext ?_⟩
@@ -735,8 +735,8 @@ theorem UpperTheory.isFundamentalDomain_image_sl2Domain_prod_ideles :
     rintro ⟨⟨_, s, rfl⟩, hs⟩
     obtain ⟨δ, hδ⟩ := lift s
     exact hx ⟨δ * γ, (ratS ℚ s * p.1, p.2), ⟨hs, trivial⟩, by rw [mul_smul, ← hp, hδ]⟩
-  · haveI : Countable (Matrix (Fin 2) (Fin 2) ℚ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℚ))
-    haveI : Countable (SpecialLinearGroup (Fin 2) ℚ) := Subtype.countable
+  · have : Countable (Matrix (Fin 2) (Fin 2) ℚ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℚ))
+    have : Countable (SpecialLinearGroup (Fin 2) ℚ) := Subtype.countable
     have hN : M.μ (⋃ s : {s : SpecialLinearGroup (Fin 2) ℚ // ratS ℚ s ≠ 1},
         ((⟨ratS ℚ s.1, s.1, rfl⟩ : Gam ℚ) • M.D ∩ (1 : Gam ℚ) • M.D)) = 0 :=
       measure_iUnion_null fun s => M.fund.aedisjoint fun h => s.2 (congrArg Subtype.val h)
@@ -775,7 +775,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.fibre :
     UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.Fibre := by
   intro M μ _ Φ hΦ h0
   obtain ⟨U⟩ := UpperTheory.ConvolutionTheory.RankTwoDescent.uMeasEx_of
-  haveI := M.haar
+  have := M.haar
   have hemb : MeasurableEmbedding pm := UpperTheory.isOpenEmbedding_projection.measurableEmbedding
   set F : Set GG := pm '' (M.D ×ˢ Set.univ) with hFdef
   have hF : IsFundamentalDomain Ga F μ := UpperTheory.isFundamentalDomain_image_sl2Domain_prod_ideles M U μ
@@ -800,7 +800,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.fibre :
     refine (GroundTheory.Automorphic.RightCosetSpace.isOpenQuotientMap_mk (Γ := Ga)).isQuotientMap.continuous_iff.2 ?_
     have : Φq ∘ GroundTheory.Automorphic.RightCosetSpace.mk Ga = fun x : GG => Φ (x : GL (Fin 2) (A ℚ)) := funext hq
     rw [this]
-    exact hΦ.cont.comp continuous_subtype_val
+    exact hΦ.cont.comp continuous_subtypeVal
   change ∫ y, Φq y ∂(GroundTheory.Automorphic.RightCosetSpace.quotientMeasure Ga μ) = 0
   rw [← GroundTheory.Automorphic.RightCosetSpace.map_restrict_eq_quotientMeasure μ hF,
     integral_map (GroundTheory.Automorphic.RightCosetSpace.measurable_mk Ga).aemeasurable hqc.aestronglyMeasurable]

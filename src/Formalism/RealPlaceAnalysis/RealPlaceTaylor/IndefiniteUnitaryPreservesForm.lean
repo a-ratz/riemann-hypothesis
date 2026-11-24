@@ -251,7 +251,7 @@ lemma mul_exp_neg_polarLog_mem_compact {ε : Fin n → Bool} {g : Matrix (Fin n)
     rw [← exp_signature_conj, polar_log_anticommutes_signature hg]
   have hgJ : g * Jm ε * gᴴ = Jm ε := (indefinite_unitary_preserves_form hg).1
   unfold Kset
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨?_, ?_⟩
   · rw [Matrix.mem_unitaryGroup_iff']
     calc star (g * NormedSpace.exp (-L)) * (g * NormedSpace.exp (-L))

@@ -192,7 +192,7 @@ theorem fourier_of_reps (idx : Fin g ≃ X.Ψ × Fin r) (hs : IsSympl X bas) (hn
     exact Finite.of_injective
       (fun q => (⟨_, q, rfl⟩ : Set.range fun q => heisG X bas (Y q) p))
       (fun a b h => hinjF (congrArg Subtype.val h))
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have hproj : projA X bas w A' p =
       ((Nat.card ι : ℕ) : ℂ)⁻¹ • ∑ q, heisG X bas (Y q) p := by
     unfold projA
@@ -1106,7 +1106,7 @@ theorem theta_smul₂ {E : Type} [Field E] [NumberField E] [IsCMField E] {r g q0
   rw [h, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [iteratedFDeriv_smul_all]
-  simp only [Pi.smul_apply, ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [Pi.smul_apply, smul_apply, smul_eq_mul]
   ring
 
 theorem finite_levQ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (Dw : Datum H)
@@ -1117,8 +1117,8 @@ theorem finite_levQ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
     rw [h, Ideal.bot_mul, eq_comm, Ideal.span_singleton_eq_bot, Nat.cast_eq_zero] at hp
     have := l.three_le
     omega
-  haveI : Finite (𝓞 E ⧸ l.Mb) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
-  haveI := Dw.fin
+  have : Finite (𝓞 E ⧸ l.Mb) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
+  have := Dw.fin
   exact Submodule.finite_quotient_smul l.Mb (N := (⊤ : Submodule (𝓞 E) Dw.La)) Module.Finite.fg_top
 
 theorem vset_one {E : Type} [Field E] [NumberField E] [IsCMField E] {n M : ℕ} {Λ : Lt E n}
@@ -1140,7 +1140,7 @@ theorem shortRule_value : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartInd
   · intro Λ hΛ N hN
     obtain ⟨-, -, -, hz, hm, -⟩ := GlobalTheory.Dict.ZLat.exists_reps_sum E r X g Dc.bas Dc.idx n Dc.sympl hev _ hwi hwt
       X.Λ hΛ0 Λ (vset_one hΛ) N hN.1 (hN.2.2.trans inf_le_left)
-    haveI := finite_levQ Dw d.l₂
+    have := finite_levQ Dw d.l₂
     have hb : betaH (Dw := Dw) c (⟨Λ⟩ : GenLat E n) ≠ 0 := by
       unfold betaH
       split_ifs with h
@@ -1188,7 +1188,7 @@ theorem shortRule_value : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartInd
     exact RingHom.ext hcomp
   rw [hgt N hN Y hY, theta_smul₂, hmap] at hval
   beta_reduce
-  rw [hfv, hval, if_pos hs]
+  rw [hfv, hval, ite_eq_left hs]
   ring
 
 end GlobalTheory.Dict.ShortPt

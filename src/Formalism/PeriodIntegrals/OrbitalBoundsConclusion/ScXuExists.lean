@@ -215,7 +215,7 @@ theorem v_small {g y : K} (hg : O.valuation g < 1) (hy : y ∈ O) : O.valuation 
   calc O.valuation g * O.valuation y ≤ O.valuation g * 1 := by
         first
         | exact mul_le_mul_left' h1 _
-        | exact mul_le_mul_of_nonneg_left h1 zero_le'
+        | exact mul_le_mul_of_nonneg_left h1 zero_le
         | gcongr
     _ = O.valuation g := mul_one _
     _ < 1 := hg
@@ -1021,9 +1021,9 @@ theorem exists_adapted_first_projection (σ : E →ₐ[F] E) (hσσ : ∀ a, σ 
       _ = ε := by rw [hsum, horth, mul_one, sub_zero]
   have hfr : Module.finrank K (K ⊗[F] E) = 2 := by
     rw [Module.finrank_baseChange, h2]
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
-  haveI : FiniteDimensional K (K ⊗[F] E) := inferInstance
-  haveI : Nontrivial (K ⊗[F] E) := Module.nontrivial_of_finrank_pos (R := K) (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional K (K ⊗[F] E) := inferInstance
+  have : Nontrivial (K ⊗[F] E) := Module.nontrivial_of_finrank_pos (R := K) (by omega)
   have hε0 : ε ≠ 0 := by
     intro h0
     rw [h0, map_zero, add_zero] at hsum
@@ -1050,7 +1050,7 @@ theorem exists_adapted_first_projection (σ : E →ₐ[F] E) (hσσ : ∀ a, σ 
   have h1 : Module.finrank K (LinearMap.range (LinearMap.mulRight K ε)) = 1 := by omega
   have hex : ∀ r : K ⊗[F] E, ∃ c : K, algebraMap K (K ⊗[F] E) c * ε = r * ε := by
     intro r
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero'
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero'
       (⟨ε, hmemε⟩ : LinearMap.range (LinearMap.mulRight K ε))
       (fun h => hε0 (congrArg Subtype.val h))).mp h1 ⟨r * ε, ⟨r, rfl⟩⟩
     refine ⟨c, ?_⟩

@@ -113,7 +113,7 @@ theorem tprod_update_mulSingle (ρ : ∀ a, Representation ℂ (Γ a) (X a)) (x 
 theorem cl_eq_of_piTensor_equiv : ∀ (β : Type) [Fintype β] (Γ : β → Type) [∀ j, Group (Γ j)] [∀ j, TopologicalSpace (Γ j)] (s s' : ∀ j, GlobalTheory.SmGL.IrrRep (Γ j)), Nonempty ((GlobalTheory.SmGL.piTensor fun j => (s j).ρ).Equiv (GlobalTheory.SmGL.piTensor fun j => (s' j).ρ)) → ∀ j, (s j).cl = (s' j).cl := by
   intro β _ Γ _ _ s s' ⟨φ⟩ j
   classical
-  haveI := fun a => nontrivial_of_irreducible (s a).irr
+  have := fun a => nontrivial_of_irreducible (s a).irr
   let b := fun a => Module.Free.chooseBasis ℂ (s a).V
   let p : ∀ a, Module.Free.ChooseBasisIndex ℂ (s a).V := fun a => (b a).index_nonempty.some
   let x : ∀ a, (s a).V := fun a => b a (p a)
@@ -135,8 +135,8 @@ theorem cl_eq_of_piTensor_equiv : ∀ (β : Type) [Fintype β] (Γ : β → Type
     rw [← this]
     show _ = contr l j (φ (PiTensorProduct.tprod ℂ (Function.update x j (x j))))
     rw [Function.update_eq_self])
-  haveI := (s j).irr
-  haveI := (s' j).irr
+  have := (s j).irr
+  have := (s' j).irr
   have hb := (Representation.IsIrreducible.bijective_or_eq_zero ψ).resolve_right hψ
   exact IrrRep.cl_eq_iff.2 ⟨ψ.ofBijective hb⟩
 

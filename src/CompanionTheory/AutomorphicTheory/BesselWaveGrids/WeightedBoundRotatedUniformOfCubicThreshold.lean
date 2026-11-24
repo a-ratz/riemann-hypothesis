@@ -1284,7 +1284,7 @@ theorem omg_left_right : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)),
   intro k r z z' hz hTz hz' hTz' g hg
   refine ⟨fun h hh => ?_, fun h' hh' => ?_⟩
   · have hhU : h ∈ UH (Hpk k r) := by
-      simp only [UWset, Set.mem_setOf_eq] at hh
+      simp only [UWset, Set.mem_ofPred_eq] at hh
       exact hh.1
     have hii : h⁻¹⁻¹ = h :=
       Matrix.nonsing_inv_nonsing_inv h

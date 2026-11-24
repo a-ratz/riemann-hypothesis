@@ -163,11 +163,11 @@ theorem integrableOn_dC {ν : Measure (WOF F E nS nT)} {𝓕 : Set (WOF F E nS n
     (h𝓕 : IsAddFundamentalDomain (ratLF F E nS nT) 𝓕 ν) {f : WOF F E nS (nT + nT) → ℂ}
     (hf : IsThetaFunOF σ JS (dblG JT) ξ₀ ψ f) : IntegrableOn (fun u : WOF F E nS nT => f (dC F E nT * u)) 𝓕 ν := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI : Countable (ratLF F E nS nT) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : Countable (ratLF F E nS nT) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
   have hfin := GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WOF F E nS nT) (ratLF F E nS nT) hK hKc ν h𝓕
-  haveI : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rwa [Measure.restrict_apply_univ]⟩
+  have : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rwa [Measure.restrict_apply_univ]⟩
   have hI : Continuous fun u : WOF F E nS nT => f (dC F E nT * u) :=
     hf.cont.comp (continuous_const.matrix_mul continuous_id)
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hI.continuousOn

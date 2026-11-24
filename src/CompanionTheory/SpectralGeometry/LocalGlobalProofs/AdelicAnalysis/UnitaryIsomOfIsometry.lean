@@ -136,7 +136,7 @@ end Base
 theorem isTopologicalRing_tens (F E : Type) [Field F] [Field E] [Algebra F E] [Module.Finite F E]
     (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] :
     IsTopologicalRing (R ⊗[F] E) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   exact IsModuleTopology.isTopologicalRing R (R ⊗[F] E)
 
 end GlobalTheory.CompanionTheory.SW.HIsom
@@ -146,8 +146,8 @@ open GlobalTheory.CompanionTheory.SW.HIsom in
 theorem GlobalTheory.CompanionTheory.SW.HIsom.unitaryIsom_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (g : GL (Fin M) E) (J' : Matrix (Fin M) (Fin M) E), J' = cT (σ : E →+* E) (g : Matrix (Fin M) (Fin M) E) * J * g → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R], ∃ e : HA R σ J' ≃ₜ* HA R σ J, (∀ u, HA.mat R σ J (e u) = bc (inclR R) g * HA.mat R σ J' u * (bc (inclR R) g)⁻¹) ∧ ∀ u, HA.mat R σ J (e u) ∈ HFin R σ J ↔ HA.mat R σ J' u ∈ HFin R σ J' := by
   intro F E _ _ _ _ _ σ hCM M J _ g J' hJ' R _ _ _ _
   subst hJ'
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
-  haveI : IsTopologicalRing (R ⊗[F] E) := isTopologicalRing_tens F E R
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
+  have : IsTopologicalRing (R ⊗[F] E) := isTopologicalRing_tens F E R
   set G : GL (Fin M) (R ⊗[F] E) := bc (inclR R) g with hG
   have hJR := JR_conj R σ J g
   have h₁ : ∀ u ∈ HR R σ (cT (σ : E →+* E) (g : Matrix (Fin M) (Fin M) E) * J * (g : Matrix (Fin M) (Fin M) E)),

@@ -407,12 +407,12 @@ theorem altIdentity : AltIdentity := by
     exact hS (norm_eq_zero.mp (mul_self_eq_zero.mp this))
   have hec : e * c = c := by rw [hc, ← mul_assoc, heSs]
   have hcY : c ∈ Y := (hSZ Y le_rfl hY1 S hSY).2
-  obtain ⟨z, hz, hzn⟩ := spectrum.exists_nnnorm_eq_spectralRadius c
-  rw [hcsa.spectralRadius_eq_nnnorm] at hzn
+  obtain ⟨z, hz, hzn⟩ := spectrum.exists_eNorm_eq_spectralRadius c
+  rw [hcsa.spectralRadius_eq_nnNorm] at hzn
   have hz0 : z ≠ 0 := by
     intro h0
     apply hc0
-    rw [h0, enorm_zero, eq_comm, ENNReal.coe_eq_zero, nnnorm_eq_zero] at hzn
+    rw [h0, eNorm_zero, eq_comm, ENNReal.coe_eq_zero, nnNorm_eq_zero] at hzn
     exact hzn
   have hzr : star z = z := by
     rw [hcsa.mem_spectrum_eq_re hz]
@@ -637,10 +637,10 @@ theorem agree_of_entry_one (hl₁ : IsFunctional ψ π₁ l₁) (hl₂ : IsFunct
       (Fin.last m) b = r b := by
     intro b
     rw [hnv, Matrix.mul_apply, Finset.sum_eq_single (0 : Fin (m + 1))]
-    · rw [longElt_last, if_pos rfl, one_mul]
+    · rw [longElt_last, ite_eq_left rfl, one_mul]
       simp [M, r]
     · intro a _ ha
-      rw [longElt_last, if_neg ha, zero_mul]
+      rw [longElt_last, ite_eq_right ha, zero_mul]
     · intro h
       exact absurd (Finset.mem_univ _) h
   set p : GL (Fin (m + 1)) k := longElt (m + 1) k * n * g
@@ -1010,9 +1010,9 @@ theorem avg_exists [TopologicalSpace G] [IsTopologicalGroup G] (hsm : IsSmooth �
     refine continuous_discrete_rng.2 fun b => isOpen_iff_forall_mem_open.2 fun g hg => ?_
     refine ⟨(fun h => g⁻¹ * h) ⁻¹' {h | ρ h z = z}, fun h hh => ?_,
       (continuous_const_mul g⁻¹).isOpen_preimage _ (hsm z), ?_⟩
-    · simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_singleton_iff] at hh hg ⊢
+    · simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_singleton_iff] at hh hg ⊢
       rw [← hg, show h = g * (g⁻¹ * h) by group, rho_mul, hh]
-    · simp only [Set.mem_preimage, Set.mem_setOf_eq, inv_mul_cancel, rho_one]
+    · simp only [Set.mem_preimage, Set.mem_ofPred_eq, inv_mul_cancel, rho_one]
   have hfin : ((fun g : G => ρ g z) '' (K : Set G)).Finite := (hKc.image hf).finite_of_discrete
   set O := hfin.toFinset with hO
   have hmem : ∀ m, m ∈ O ↔ ∃ k ∈ K, ρ k z = m := fun m => by
@@ -1141,7 +1141,7 @@ theorem scalar_sa (hext : IsExtremeForm ρ B) (S : Hs B hB →L[ℂ] Hs B hB) (h
         (continuous_const.mul (continuous_fst.inner continuous_snd))
     · exact hQ' p q
   refine ⟨d, ContinuousLinearMap.ext fun v => ext_inner_left ℂ fun u => ?_⟩
-  rw [hall, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, inner_smul_right]
+  rw [hall, smul_apply, one_apply_eq_self, inner_smul_right]
 
 theorem commutant (hext : IsExtremeForm ρ B) (T : Hs B hB →L[ℂ] Hs B hB)
     (hT : ∀ g, T * pi B hB ρ hinv g = pi B hB ρ hinv g * T) : ∃ c : ℂ, T = c • 1 := by
@@ -1241,7 +1241,7 @@ theorem extremeIrred : ExtremeIrred := by
     obtain ⟨a, ⟨_, haK⟩, rfl⟩ := Submodule.mem_map.1 hv
     exact hs _ fun κ hκ => by rw [pi_iota, haK κ hκ]
   have : FiniteDimensional ℂ L := Submodule.finiteDimensional_of_le hle
-  have hcl : IsClosed (L : Set (Hs B hB)) := L.closed_of_finiteDimensional
+  have hcl : IsClosed (L : Set (Hs B hB)) := L.isClosed_of_finiteDimensional
   have hxL : iota B hB x ∈ L := by
     rw [← SetLike.mem_coe, ← hcl.closure_eq, Metric.mem_closure_iff]
     intro ε hε
@@ -1309,8 +1309,8 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem isMulRightInvariant_map :
     (Measure.map (unipHomeo e).symm (Measure.pi fun _ : Idx e => ν)).IsMulRightInvariant := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   have hΦ : Measurable (unipHomeo (R := k) e).symm := (unipHomeo e).symm.measurable
   refine ⟨fun u => ?_⟩
   have hm : Measurable (rmat e ((u : GL n k) : Matrix n n k)).mulVec :=
@@ -1329,12 +1329,12 @@ end Measure
 theorem haar_isMulRightInvariant : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (α n : Type) (m : α → Type) [Fintype α] [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n] (e : (Σ a, m a) ≃ n) [MeasurableSpace (unipRad k e)] [BorelSpace (unipRad k e)] (μ : Measure (unipRad k e)) [μ.IsHaarMeasure], μ.IsMulRightInvariant := by
   intro k _ _ _ _ α n m _ _ _ _ _ _ e _ _ μ _
   borelize k
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI : LocallyCompactSpace (unipRad k e) := (unipHomeo e).isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (unipRad k e) := (unipHomeo e).secondCountableTopology
-  haveI := isHaarMeasure_map e (Measure.addHaar : Measure k)
-  haveI := isMulRightInvariant_map e (Measure.addHaar : Measure k)
+  have := secondCountable k
+  have := t2Space k
+  have : LocallyCompactSpace (unipRad k e) := (unipHomeo e).isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (unipRad k e) := (unipHomeo e).secondCountableTopology
+  have := isHaarMeasure_map e (Measure.addHaar : Measure k)
+  have := isMulRightInvariant_map e (Measure.addHaar : Measure k)
   rw [Measure.isMulLeftInvariant_eq_smul μ
     (Measure.map (unipHomeo e).symm (Measure.pi fun _ : Idx e => (Measure.addHaar : Measure k)))]
   infer_instance
@@ -1508,8 +1508,8 @@ theorem isIrreducible_tau
       (∀ z ∈ Z, B z z = 0) ∨ ∀ x : WT (m := m) ψ, ∃ z ∈ Z, B (x - z) (x - z) = 0)
     {x₀ : WT (m := m) ψ} (hx₀ : B x₀ x₀ ≠ 0) : (tauRep hψ hI hB).IsIrreducible := by
   have hne : Wf ψ hψ I B x₀ ≠ 0 := fun h => hx₀ (by rw [← repr hψ hI hB x₀ x₀, h]; simp; exact map_zero I)
-  haveI : Nontrivial (WSp hψ hI hB) := ⟨⟨Phi hψ hI hB x₀, 0, fun h => hne (congrArg Subtype.val h)⟩⟩
-  haveI : Nontrivial (Subrepresentation (tauRep hψ hI hB)) := ⟨⊥, ⊤, fun h => by
+  have : Nontrivial (WSp hψ hI hB) := ⟨⟨Phi hψ hI hB x₀, 0, fun h => hne (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial (Subrepresentation (tauRep hψ hI hB)) := ⟨⊥, ⊤, fun h => by
     have := congrArg Subrepresentation.toSubmodule h
     exact bot_ne_top (α := Submodule ℂ (WSp hψ hI hB)) this⟩
   have hPadd : ∀ a b, Phi hψ hI hB (a + b) = Phi hψ hI hB a + Phi hψ hI hB b := fun a b =>

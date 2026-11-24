@@ -242,7 +242,7 @@ theorem ptsDown_comp {D D' : Type} [CommRing D] [Algebra R' D] [CommRing D'] [Al
 theorem fv_pull (f : Z1 (O (dp0 R) (A.hom ≫ 𝟙 _))) {D D' : Type} [CommRing D] [Algebra R' D] [CommRing D'] [Algebra R' D'] (ψ : D →ₐ[R'] D') (x : Pt A' D) :
     letI := via σ D; letI := via σ D'
     fv (m.isMor.coef.pullbackOneCocycle f) D D' ψ x = fv f D D' (down σ ψ) (ptsDown m D (fun _ ↦ rfl) x) := by
-  letI := via σ D; letI := via σ D'
+  let := via σ D; let := via σ D'
   exact ((GlobalTheory.T.crystallineCocycleOnPoints_isCocycle_and_eval_eq R A f).2 D D' (ptsDown m D (fun _ ↦ rfl) x) (ptsDown m D' (fun _ ↦ rfl) (spOver ψ ≫ x))
     (down σ ψ) (m.isMor.functor.map (trivMap ψ x)) (fun _ ↦ rfl)).2
 
@@ -329,7 +329,7 @@ theorem lift_eq_two (n : ℕ) (c : G.A n ⊗[R] G.A n) :
     letI := via σ (G'.A n ⊗[R'] G'.A n)
     Algebra.TensorProduct.lift (sL σ m t t' n) (sRt σ m t t' n) (fun _ _ ↦ Commute.all _ _) c =
       ((t'.semiHom t m).app n).two c := by
-  letI := via σ (G'.A n ⊗[R'] G'.A n)
+  let := via σ (G'.A n ⊗[R'] G'.A n)
   induction c using TensorProduct.inductionOn with
   | tmul a b =>
     rw [Algebra.TensorProduct.lift_tmul]
@@ -344,7 +344,7 @@ private theorem coc_naturality (n : ℕ) :
         toConv (Algebra.TensorProduct.includeRight : G'.A n →ₐ[R'] G'.A n ⊗[R'] G'.A n)).ofConv).comp
         (sR σ m t t' n) =
       (toConv (sL σ m t t' n) * toConv (sRt σ m t t' n)).ofConv := by
-  letI := via σ (G'.A n); letI := via σ (G'.A n ⊗[R'] G'.A n)
+  let := via σ (G'.A n); let := via σ (G'.A n ⊗[R'] G'.A n)
   apply AlgHom.ext
   intro a
   rw [AlgHom.comp_apply, down_apply, sR_apply, AlgHom.convMul_apply, AlgHom.convMul_apply,
@@ -359,8 +359,8 @@ private theorem coc_naturality_of_dat_algHom {c : primDR A} (d : Dat t c) (n : �
     letI := via σ (G'.A n); letI := via σ T
     fv (natDat (m := m) (t' := t') d).f (G'.A n) T ψ (t'.y n) + ψ ((natDat (m := m) (t' := t') d).h n) =
       fv d.f (G.A n) T ((down σ ψ).comp (sR σ m t t' n)) (t.y n) + ((down σ ψ).comp (sR σ m t t' n)) (d.h n) := by
-  letI := via σ T
-  letI := via σ (G'.A n)
+  let := via σ T
+  let := via σ (G'.A n)
   have hc := (GlobalTheory.T.crystallineCocycleOnPoints_isCocycle_and_eval_eq R A d.f).1 (G.A n) (G'.A n) T (sR σ m t t' n) (down σ ψ) (t.y n) (sm_whole _)
   have hp := fv_pull σ m d.f ψ (t'.y n)
   rw [ptsDown_y σ m t t'] at hp
@@ -373,8 +373,8 @@ private theorem coc_naturality_of_dat_algHom {c : primDR A} (d : Dat t c) (n : �
 private theorem coc_naturality_algHom {T : Type} [CommRing T] [Algebra R' T] (n : ℕ) (ψ : G'.A n →ₐ[R'] T) :
     letI := via σ (G'.A n); letI := via σ T
     ptsDown m T (fun _ ↦ rfl) (spOver ψ ≫ t'.y n) = spOver ((down σ ψ).comp (sR σ m t t' n)) ≫ t.y n := by
-  letI := via σ T
-  letI := via σ (G'.A n)
+  let := via σ T
+  let := via σ (G'.A n)
   rw [ptsDown_comp σ m ψ (t'.y n), ptsDown_y σ m t t', ← Category.assoc, ← spOver_comp]
 
 private theorem tensorProduct_lift_includeLeft_includeRight_apply (n : ℕ) (c : G'.A n ⊗[R'] G'.A n) :
@@ -409,7 +409,7 @@ variable {p : ℕ} {G : PDivGroup p R} {G' : PDivGroup p R'} {t : G.TorsionTower
 
 theorem coc_nat {c : primDR A} (d : Dat t c) (n : ℕ) :
     ((t'.semiHom t m).app n).two (d.coc n) = (natDat (m := m) (t' := t') d).coc n := by
-  letI := via σ (G'.A n); letI := via σ (G'.A n ⊗[R'] G'.A n)
+  let := via σ (G'.A n); let := via σ (G'.A n ⊗[R'] G'.A n)
   have hL := GlobalTheory.T.cocycle_tensorLift_apply_eq_twoPointValue R A p G t c d n (G'.A n ⊗[R'] G'.A n) (sL σ m t t' n) (sRt σ m t t' n)
   have hR := GlobalTheory.T.cocycle_tensorLift_apply_eq_twoPointValue R' A' p G' t' (m.pull c) (natDat (m := m) (t' := t') d) n (G'.A n ⊗[R'] G'.A n)
     Algebra.TensorProduct.includeLeft Algebra.TensorProduct.includeRight
@@ -429,7 +429,7 @@ variable {p : ℕ} {G : PDivGroup p R} {G' : PDivGroup p R'} {t : G.TorsionTower
 
 theorem om_nat {c : primDR A} (d : Dat t c) (n : ℕ) :
     ((t'.semiHom t m).app n).cot (d.om n) = (natDat (m := m) (t' := t') d).om n := by
-  letI := via σ (G'.A n)
+  let := via σ (G'.A n)
   let a : trivAt (t.y n) ⟶ m.isMor.obj (trivAt (t'.y n)) :=
     Thick.trivHom (sR σ m t t' n) (PDivGroup.TorsionTower.semiOf_y (t := t) (t' := t') m n)
   have e1 := GlobalTheory.T.crystallineCocycleCotangentValue_baseChange_natural R R' σ A A' φ m.isMor (G.A n) (G'.A n) ((t'.semiHom t m).app n) (t.y n) (t'.y n) a d.f

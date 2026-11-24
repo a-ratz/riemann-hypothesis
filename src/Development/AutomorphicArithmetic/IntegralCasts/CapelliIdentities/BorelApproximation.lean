@@ -90,7 +90,7 @@ theorem aux8 : ∀ (R : Type) [inst : CommRing R] {α n : Type}
     x⁻¹ ∈ {g : GL n R | g.val.BlockTriangular (blk e)} := by
   intro R _ α n m _ _ _ e x hx
   have hx : Matrix.BlockTriangular (x : Matrix n n R) (blk e) := hx
-  letI := x.invertible
+  let := x.invertible
   change Matrix.BlockTriangular ((x⁻¹ : GL n R) : Matrix n n R) (blk e)
   rw [Matrix.coe_units_inv]
   exact Matrix.blockTriangular_inv_of_blockTriangular hx
@@ -196,15 +196,15 @@ theorem zero_contDiffOn_supported : ∀ {F : Type} [inst : Field F]
   [inst_1 : NumberField F] (p : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F)),
   IsNonarchimedeanLocalField (IsDedekindDomain.HeightOneSpectrum.adicCompletion F p) := by
   intro F _ _ p
-  letI := complRel p
-  haveI : (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  let := complRel p
+  have : (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
-  haveI : IsValuativeTopology (p.adicCompletion F) :=
+  have : IsValuativeTopology (p.adicCompletion F) :=
     IsValuativeTopology.of_mem_nhds_zero_iff_vle
       (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ)))
       (fun {s} => Valued.is_topological_valuation s)
-  haveI := locCompact p
-  haveI : ValuativeRel.IsNontrivial (p.adicCompletion F) :=
+  have := locCompact p
+  have : ValuativeRel.IsNontrivial (p.adicCompletion F) :=
     (ValuativeRel.isNontrivial_iff_isNontrivial
       (Valued.v : Valuation (p.adicCompletion F) (WithZero (Multiplicative ℤ)))).2 inferInstance
   exact {}

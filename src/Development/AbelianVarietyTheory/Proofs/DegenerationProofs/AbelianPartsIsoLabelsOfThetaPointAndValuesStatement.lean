@@ -110,7 +110,7 @@ theorem prod_cub_pt {Z : Over S} (x x' y : Z ⟶ A) {U : Type} [CommGroup U] (h 
       h (x * x' * y) * (h (x * x'))⁻¹ * (h (x * y))⁻¹ * (h (x' * y))⁻¹ * h x * h x' * h y * (h 1)⁻¹ := by
   classical
   let h' : (Z.left ⟶ A.left) → U := fun q => if hq : q ≫ A.hom = Z.hom then h (Over.homMk q hq) else 1
-  have e : ∀ q : Z ⟶ A, h' q.left = h q := fun q => dif_pos (Over.w q)
+  have e : ∀ q : Z ⟶ A, h' q.left = h q := fun q => dite_eq_left (Over.w q)
   have p := prod_cub x x' y h'
   simp only [e] at p
   exact (Finset.prod_congr rfl fun I _ => congrArg (· ^ thε I) (e _).symm).trans p
@@ -465,7 +465,7 @@ theorem exists_th_scale : AllIso fun {_} _ _ {_} {_} {F} _ _ {N} {N'} ν ν' {_}
     refine h₁.symm.trans (H.trans (congrArg₂ (· * ·) ?_ h₂))
     rw [h₃, pow_one, p₁, p₂]
   rw [← map_mul, ← map_mul] at H'
-  haveI : Nontrivial ((TF (R := R) F).left.presheaf.stalk y) := inferInstance
+  have : Nontrivial ((TF (R := R) F).left.presheaf.stalk y) := inferInstance
   have := (sR (R := R) y).injective H'
   rw [← Units.eq_mul_inv_iff_mul_eq] at this
   rw [this]
@@ -818,8 +818,8 @@ theorem wVal_ne (w : BunIso φ) {f : N.A → N'.A} {x : N.A} (h : Carries ν ν'
         (fun _ => ν'.J (ν'.eA (f x)).left, fun _ => ν.J (ν.eA x).left) := by
     intro y _
     have : y = z := by
-      letI := y.isPrime
-      letI := z.isPrime
+      let := y.isPrime
+      let := z.isPrime
       exact PrimeSpectrum.ext ((Ideal.eq_bot_of_prime _).trans (Ideal.eq_bot_of_prime _).symm)
     subst y
     exact ⟨mem_pull.2 m₂, mem_pull.2 m₁⟩

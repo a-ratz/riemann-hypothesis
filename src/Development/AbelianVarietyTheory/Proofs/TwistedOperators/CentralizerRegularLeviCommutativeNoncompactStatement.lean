@@ -258,7 +258,7 @@ theorem exists_scale (D : D7) (V : HSp D) (Φ : WittFrame V) (u : SV (wittIndex 
     simp only [P, Matrix.mul_diagonal, Matrix.diagonal_mul, S, submatrix_apply, Matrix.one_apply, id, Equiv.prodCongr_apply, Equiv.coe_refl, Prod.map, Prod.mk.injEq, Equiv.boolNot_apply]
     by_cases hij : i = j
     · subst hij
-      cases s <;> cases t <;> simp only [true_and, and_true, Bool.not_true, Bool.not_false, Bool.false_eq_true, Bool.true_eq_false, if_true, if_false, and_self, mul_one, mul_zero, zero_mul, and_false, ite_true, ite_false, Prod.mk.injEq]
+      cases s <;> cases t <;> simp only [true_and, and_true, Bool.not_true, Bool.not_false, Bool.false_eq_true, Bool.true_eq_false, ite_true, ite_false, and_self, mul_one, mul_zero, zero_mul, and_false, ite_true, ite_false, Prod.mk.injEq]
       all_goals first | exact hσd i _ | exact congrArg _ (hσd i _) | skip
     · simp [hij]
   obtain ⟨Q, hQ⟩ : ∃ Q, Q = S * (cT σ (cols V b) * V.gram) := ⟨_, rfl⟩
@@ -282,11 +282,11 @@ theorem exists_scale (D : D7) (V : HSp D) (Φ : WittFrame V) (u : SV (wittIndex 
     ext r a; simp [cols, P, Matrix.mul_diagonal, mul_comm])
   refine ⟨w, fun x hx => ?_, fun x hx => ?_, fun z hz1 hz2 => ?_⟩
   · refine (Submodule.span_le (p := LinearMap.eqLocus (GlobalTheory.Cusp.ratAct D.sp.cm V w) ((2 : D.host.E) • LinearMap.id))).2 ?_ hx
-    rintro _ (⟨i, hi, rfl⟩ | ⟨i, hi, rfl⟩) <;> simp only [Set.mem_setOf_eq] at hi
+    rintro _ (⟨i, hi, rfl⟩ | ⟨i, hi, rfl⟩) <;> simp only [mem_ofPred_eq] at hi
     · have := hwb (i, true); simp only [b, d, hi] at this; simpa [LinearMap.mem_eqLocus] using this
     · have := hwb (i, false); simp only [b, d, hi] at this; simpa [LinearMap.mem_eqLocus] using this
   · refine (Submodule.span_le (p := LinearMap.eqLocus (GlobalTheory.Cusp.ratAct D.sp.cm V w) ((2 : D.host.E)⁻¹ • LinearMap.id))).2 ?_ hx
-    rintro _ (⟨i, hi, rfl⟩ | ⟨i, hi, rfl⟩) <;> simp only [Set.mem_setOf_eq, Pi.neg_apply, neg_eq_iff_eq_neg] at hi
+    rintro _ (⟨i, hi, rfl⟩ | ⟨i, hi, rfl⟩) <;> simp only [mem_ofPred_eq, Pi.neg_apply, neg_eq_iff_eq_neg] at hi
     · have := hwb (i, true); simp only [b, d, hi] at this; simpa [LinearMap.mem_eqLocus] using this
     · have := hwb (i, false); simp only [b, d, hi] at this; simpa [LinearMap.mem_eqLocus] using this
   · have hz : ∀ a, u a.1 ≠ 0 → V.hT (b a) z = 0 := by
@@ -294,7 +294,7 @@ theorem exists_scale (D : D7) (V : HSp D) (Φ : WittFrame V) (u : SV (wittIndex 
       have hm1 : ∀ x, x ∈ Φ.sub u ∨ x ∈ Φ.sub (-u) → V.hT x z = 0 := fun x hx => hx.elim (hz1 x) (hz2 x)
       apply hm1
       rcases (show u i = 1 ∨ u i = -1 by generalize u i = t at h; revert t; decide) with h' | h' <;> cases s <;>
-        simp only [b, if_true, if_false, Bool.false_eq_true]
+        simp only [b, ite_true, ite_false, Bool.false_eq_true]
       · exact .inr (by rw [WittFrame.sub]; exact Submodule.subset_span (.inr ⟨i, by simp [h'], rfl⟩))
       · exact .inl (by rw [WittFrame.sub]; exact Submodule.subset_span (.inl ⟨i, h', rfl⟩))
       · exact .inl (by rw [WittFrame.sub]; exact Submodule.subset_span (.inr ⟨i, h', rfl⟩))
@@ -420,7 +420,7 @@ theorem exists_ne_zero_mem_sub {D : D7} {V : HSp D} (Φ : WittFrame V) {u : SV (
     push_neg at h
     exact hu (funext h)
   have h1 := Φ.ef i i
-  rw [if_pos rfl] at h1
+  rw [ite_eq_left rfl] at h1
   rcases h : u i with _ | _ | _
   · exact absurd h hi
   · refine ⟨Φ.f i, Submodule.subset_span (Or.inr ⟨i, h, rfl⟩), fun e => ?_⟩

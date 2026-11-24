@@ -78,10 +78,10 @@ theorem measure_eq_relIndex_mul' (G : Type) [AddGroup G] [MeasurableSpace G] [Me
 theorem relIndex_ne_zero_of_isCompact_of_isOpen' {X : Type} [TopologicalSpace X] [AddCommGroup X]
     [IsTopologicalAddGroup X] (A H : AddSubgroup X) (hA : IsCompact (A : Set X)) (hH : IsOpen (H : Set X))
     (_hle : H ≤ A) : H.relIndex A ≠ 0 := by
-  haveI : CompactSpace A := isCompact_iff_compactSpace.mp hA
+  have : CompactSpace A := isCompact_iff_compactSpace.mp hA
   have hopen : IsOpen ((H.addSubgroupOf A : AddSubgroup A) : Set A) :=
-    hH.preimage continuous_subtype_val
-  haveI : Finite (A ⧸ H.addSubgroupOf A) :=
+    hH.preimage continuous_subtypeVal
+  have : Finite (A ⧸ H.addSubgroupOf A) :=
     AddSubgroup.quotient_finite_of_isOpen _ hopen
   exact AddSubgroup.index_ne_zero_of_finite
 

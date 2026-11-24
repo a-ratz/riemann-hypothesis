@@ -160,7 +160,7 @@ private theorem mem_ZK {g : GL (Fin 2) K} :
     g ∈ ZK O K ↔ ∃ s : Kˣ, ∃ k ∈ KG O K, g = Matrix.GeneralLinearGroup.scalar (Fin 2) s * k := by
   constructor
   · intro hg
-    haveI : (Matrix.GeneralLinearGroup.scalar (Fin 2) : Kˣ →* GL (Fin 2) K).range.Normal := ⟨by
+    have : (Matrix.GeneralLinearGroup.scalar (Fin 2) : Kˣ →* GL (Fin 2) K).range.Normal := ⟨by
       rintro _ ⟨s, rfl⟩ x
       refine ⟨s, ?_⟩
       have comm : x * Matrix.GeneralLinearGroup.scalar (Fin 2) s = Matrix.GeneralLinearGroup.scalar (Fin 2) s * x :=
@@ -226,7 +226,7 @@ private theorem quo_int (j : Etau K τ →ₐ[K] Matrix (Fin 2) (Fin 2) K) (ht :
 
 private theorem tr_int (h : IsLoc O Δ) {x : Etau K τ} (hx : IsIntegral O x) :
     ∃ c : O, algebraMap O K c = QuadraticAlgebra.trace x := by
-  haveI := h.frac
+  have := h.frac
   have hinj : Function.Injective (IsScalarTower.toAlgHom O K (Etau K τ)) := algebraMap_injective
   exact IsIntegrallyClosed.isIntegral_iff.1 ((isIntegral_algHom_iff _ hinj).1 (by
     change IsIntegral O (algebraMap K (Etau K τ) _)
@@ -234,7 +234,7 @@ private theorem tr_int (h : IsLoc O Δ) {x : Etau K τ} (hx : IsIntegral O x) :
 
 private theorem prim (h : IsLoc O Δ) (x y : K) (hxy : ¬ (x = 0 ∧ y = 0)) :
     ∃ (s : K) (a b : O), s ≠ 0 ∧ x = s * algebraMap O K a ∧ y = s * algebraMap O K b ∧ (a = 1 ∨ b = 1) := by
-  haveI := h.frac
+  have := h.frac
   by_cases hx : x = 0
   · have hy : y ≠ 0 := fun hy => hxy ⟨hx, hy⟩
     exact ⟨y, 0, 1, hy, by simp [hx], by simp, Or.inr rfl⟩
@@ -261,7 +261,7 @@ private theorem ent_j (j : Etau K τ →ₐ[K] Matrix (Fin 2) (Fin 2) K)
 private theorem cint_zk (h : IsLoc O Δ) (j : Etau K τ →ₐ[K] Matrix (Fin 2) (Fin 2) K) (ht : (j ω).trace = τ)
     (hent : ∀ s t, j ω s t ∈ (algebraMap O K).range) (τ₀ : O) (hτ₀ : algebraMap O K τ₀ = τ)
     (hu : IsUnit (τ₀ ^ 2 - 4)) (z : (Etau K τ)ˣ) (hz : z ∈ Cint O τ) : jU j z ∈ ZK O K := by
-  haveI := h.frac
+  have := h.frac
   have hinj : Function.Injective (algebraMap O K) := IsFractionRing.injective O K
   have hz0 : ¬ ((z : Etau K τ).re = 0 ∧ (z : Etau K τ).im = 0) := fun h0 =>
     z.ne_zero (QuadraticAlgebra.ext h0.1 h0.2)
@@ -339,7 +339,7 @@ private theorem orbit_imp (h : IsLoc O Δ) (j : Etau K τ →ₐ[K] Matrix (Fin 
     (hze : (z : Etau K τ) = algebraMap K (Etau K τ) (algebraMap O K e) + ω)
     (hν : ∃ v : Oˣ, algebraMap O K v = QuadraticAlgebra.norm (z : Etau K τ)) (y : GL (Fin 2) K)
     (hy : y⁻¹ * jU j z * y ∈ ZK O K) : ∃ t, ∃ k ∈ ZK O K, y = jU j t * k := by
-  haveI := h.frac
+  have := h.frac
   have hinj : Function.Injective (algebraMap O K) := IsFractionRing.injective O K
   obtain ⟨s, k, ⟨k₀, rfl⟩, E⟩ := mem_ZK.1 hy
   obtain ⟨v, hv⟩ := hν
@@ -453,7 +453,7 @@ end
 
 theorem oneG : OneG := by
   intro O K _ _ _ _ _ Δ τ h j ht hent ⟨u, hu⟩
-  haveI := h.frac
+  have := h.frac
   have hinj : Function.Injective (algebraMap O K) := IsFractionRing.injective O K
   obtain ⟨τ₀, hτ₀⟩ : τ ∈ (algebraMap O K).range := by
     rw [← ht, Matrix.trace_fin_two]

@@ -131,11 +131,11 @@ theorem tmul_eq (a : K') (ω : Ω) : a ⊗ₜ[Kl] ((1 : Kl) ⊗ₜ[K] ω) =
 theorem exists_lift_tensor {R : Type} [CommRing R] (a : K' →+* R) (ψ : Ω →+* R)
     (hc : ∀ c : K, ψ (algebraMap K Ω c) = a (algebraMap K K' c)) :
     ∃ f : K' ⊗[Kl] (Kl ⊗[K] Ω) →+* R, (∀ y, f (algebraMap K' _ y) = a y) ∧ ∀ ω, f (incl K Kl K' ω) = ψ ω := by
-  letI : Algebra K' R := a.toAlgebra
-  letI : Algebra Kl R := (a.comp (algebraMap Kl K')).toAlgebra
-  letI : Algebra K R := (a.comp (algebraMap K K')).toAlgebra
-  haveI : IsScalarTower Kl K' R := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower K Kl R := IsScalarTower.of_algebraMap_eq fun c => by
+  let : Algebra K' R := a.toAlgebra
+  let : Algebra Kl R := (a.comp (algebraMap Kl K')).toAlgebra
+  let : Algebra K R := (a.comp (algebraMap K K')).toAlgebra
+  have : IsScalarTower Kl K' R := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower K Kl R := IsScalarTower.of_algebraMap_eq fun c => by
     show a (algebraMap K K' c) = a (algebraMap Kl K' (algebraMap K Kl c))
     rw [← IsScalarTower.algebraMap_apply]
   let ε : Ω →ₐ[K] R := { ψ with commutes' := hc }
@@ -202,7 +202,7 @@ theorem polyImg_freeVar (j0 : Fin (N + 1)) (x : Fin N → Ω) (s : SVar D N) :
     polyImg j0 x (freeVar j0 s) = X s := by
   rcases s with ⟨⟨⟩⟩ | ⟨i, k⟩
   · show polyImg j0 x (0, j0) = _
-    rw [polyImg_same, if_pos rfl]
+    rw [polyImg_same, ite_eq_left rfl]
   · exact polyImg_succAbove j0 x i k
 
 theorem sum_polyImg (j0 : Fin (N + 1)) (v : Fin (N + 1) → Ω) (x : Fin N → Ω) (hv : v j0 ≠ 0)
@@ -217,12 +217,12 @@ theorem sum_polyImg (j0 : Fin (N + 1)) (v : Fin (N + 1) → Ω) (x : Fin N → �
 theorem sum_polyImg_succ (j0 : Fin (N + 1)) (v : Fin (N + 1) → Ω) (x : Fin N → Ω) (hv : v j0 ≠ 0)
     (hx : ∀ k, x k = v (j0.succAbove k) / v j0) (i : Fin D) :
     ∑ j, polyImg j0 x (i.succ, j) * C (v j) = 0 := by
-  rw [sum_polyImg j0 v x hv hx, polyImg_same, if_neg (Fin.succ_ne_zero i), neg_add_cancel, mul_zero]
+  rw [sum_polyImg j0 v x hv hx, polyImg_same, ite_eq_right (Fin.succ_ne_zero i), neg_add_cancel, mul_zero]
 
 theorem sum_polyImg_zero (j0 : Fin (N + 1)) (v : Fin (N + 1) → Ω) (x : Fin N → Ω) (hv : v j0 ≠ 0)
     (hx : ∀ k, x k = v (j0.succAbove k) / v j0) :
     ∑ j, polyImg (D := D) j0 x (0, j) * C (v j) ≠ 0 := by
-  rw [sum_polyImg j0 v x hv hx, polyImg_same, if_pos rfl]
+  rw [sum_polyImg j0 v x hv hx, polyImg_same, ite_eq_left rfl]
   intro h
   have := congrArg (eval (Sum.elim (fun _ => (1 : Ω)) (fun _ => 0))) h
   simp [hv] at this
@@ -232,15 +232,15 @@ theorem exists_dvd_of_algebraic {P F S L : Type} [CommRing P] [IsDomain P] [Fiel
     (φ : P →+* S) (i : S →+* L) (hi : Function.Injective i)
     (h : ∀ q, algebraMap F L (algebraMap P F q) = i (φ q)) (f : S) (hf : f ≠ 0) :
     ∃ q : P, q ≠ 0 ∧ f ∣ φ q := by
-  letI : Algebra P S := φ.toAlgebra
-  letI : Algebra S L := i.toAlgebra
-  letI : Algebra P L := (i.comp φ).toAlgebra
-  haveI : IsScalarTower P F L := IsScalarTower.of_algebraMap_eq fun q => (h q).symm
-  haveI : IsScalarTower P S L := IsScalarTower.of_algebraMap_eq fun q => rfl
+  let : Algebra P S := φ.toAlgebra
+  let : Algebra S L := i.toAlgebra
+  let : Algebra P L := (i.comp φ).toAlgebra
+  have : IsScalarTower P F L := IsScalarTower.of_algebraMap_eq fun q => (h q).symm
+  have : IsScalarTower P S L := IsScalarTower.of_algebraMap_eq fun q => rfl
   have h1 : IsAlgebraic F (algebraMap S L f) := Algebra.IsAlgebraic.isAlgebraic _
   have h2 := (IsFractionRing.isAlgebraic_iff P F L).2 h1
   have h3 := (isAlgebraic_algebraMap_iff hi).1 h2
-  exact h3.exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero hf)
+  exact h3.exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero hf)
 
 theorem exists_dvd (j0 : Fin (N + 1)) (x : Fin N → Ω)
     [Algebra (FractionRing (MvPolynomial (TVar D N) K)) (OmS Ω D N)]
@@ -276,7 +276,7 @@ theorem exists_maps (j0 : Fin (N + 1)) (v : Fin (N + 1) → Ω) (x : Fin N → �
     rintro ⟨i, j⟩
     rcases Fin.eq_self_or_eq_succAbove j0 j with rfl | ⟨k, rfl⟩
     · refine Fin.cases ?_ (fun i => ?_) i
-      · rw [polyImg_same, if_pos rfl, hX]; rfl
+      · rw [polyImg_same, ite_eq_left rfl, hX]; rfl
       · have h1 := congrArg β₀ (sum_polyImg_succ j v x hv hx i)
         have h2 := hrel i
 
@@ -392,10 +392,10 @@ theorem basis_descends (j0 : ι → Fin (N + 1)) (v : ∀ Z, Fin (N + 1) → Ω 
       ∃ p : Fin n → MvPolynomial (TVar D N) K, ∀ Z, sHom (j0 Z) (x Z) q * y Z =
         ∑ k, sHom (j0 Z) (x Z) (p k) * algebraMap (Ω Z) (OmS (Ω Z) D N) (θ k Z)) := by
   classical
-  letI iL : ∀ Z, Algebra (FractionRing (MvPolynomial (TVar D N) K)) (OmS (Ω Z) D N) := fun Z =>
+  let iL : ∀ Z, Algebra (FractionRing (MvPolynomial (TVar D N) K)) (OmS (Ω Z) D N) := fun Z =>
     ((algebraMap (IntermediateField.adjoin K (Set.range (sImg (D := D) (j0 Z) (x Z)))) (OmS (Ω Z) D N)).comp
       (hind Z).aevalEquivField.toRingEquiv.toRingHom).toAlgebra
-  haveI : ∀ Z, Module.Free (FractionRing (MvPolynomial (TVar D N) K)) (OmS (Ω Z) D N) :=
+  have : ∀ Z, Module.Free (FractionRing (MvPolynomial (TVar D N) K)) (OmS (Ω Z) D N) :=
     fun Z => Module.Free.of_divisionRing _ _
   have hL : ∀ Z (q : MvPolynomial (TVar D N) K), algebraMap (FractionRing (MvPolynomial (TVar D N) K))
       (OmS (Ω Z) D N) (algebraMap (MvPolynomial (TVar D N) K) _ q) = sHom (j0 Z) (x Z) q := fun Z q =>
@@ -403,12 +403,12 @@ theorem basis_descends (j0 : ι → Fin (N + 1)) (v : ∀ Z, Fin (N + 1) → Ω 
   have hrk : ∀ Z, Module.finrank (FractionRing (MvPolynomial (TVar D N) K)) (OmS (Ω Z) D N) =
       Module.finrank (IntermediateField.adjoin K (Set.range (sImg (D := D) (j0 Z) (x Z)))) (OmS (Ω Z) D N) :=
     fun Z => Algebra.finrank_eq_of_equiv_equiv (hind Z).aevalEquivField.toRingEquiv (RingEquiv.refl _) rfl
-  haveI hfd : ∀ Z, FiniteDimensional (FractionRing (MvPolynomial (TVar D N) K)) (OmS (Ω Z) D N) := fun Z => by
+  have hfd : ∀ Z, FiniteDimensional (FractionRing (MvPolynomial (TVar D N) K)) (OmS (Ω Z) D N) := fun Z => by
     apply Module.finite_of_finrank_pos
     rw [hrk]
     exact Module.finrank_pos
   have hinjt : Function.Injective (aeval t : MvPolynomial (TVar D N) K →ₐ[K] K').toRingHom := ht
-  letI iK : Algebra (FractionRing (MvPolynomial (TVar D N) K)) K' :=
+  let iK : Algebra (FractionRing (MvPolynomial (TVar D N) K)) K' :=
     (IsFractionRing.lift (K := FractionRing (MvPolynomial (TVar D N) K)) hinjt).toAlgebra
   have hK : ∀ q : MvPolynomial (TVar D N) K, algebraMap (FractionRing (MvPolynomial (TVar D N) K)) K'
       (algebraMap (MvPolynomial (TVar D N) K) _ q) = aeval t q := fun q => IsFractionRing.lift_algebraMap hinjt q
@@ -489,7 +489,7 @@ theorem coords_of_equiv {K' M ι : Type} [Field K'] [AddCommGroup M] [Module K' 
     (E : letI : ∀ Z, Module K' (Q Z) := fun Z => (a Z).toModule; M ≃ₗ[K'] ∀ Z, Q Z) :
     (∀ c : Fin n → K', (∀ Z, ∑ k, a Z (c k) * E (b k) Z = 0) → ∀ k, c k = 0) ∧
     ∀ y : ∀ Z, Q Z, ∃ c : Fin n → K', ∀ Z, y Z = ∑ k, a Z (c k) * E (b k) Z := by
-  letI : ∀ Z, Module K' (Q Z) := fun Z => (a Z).toModule
+  let : ∀ Z, Module K' (Q Z) := fun Z => (a Z).toModule
   have key : ∀ (c : Fin n → K') Z, E (∑ k, c k • b k) Z = ∑ k, a Z (c k) * E (b k) Z := by
     intro c Z
 

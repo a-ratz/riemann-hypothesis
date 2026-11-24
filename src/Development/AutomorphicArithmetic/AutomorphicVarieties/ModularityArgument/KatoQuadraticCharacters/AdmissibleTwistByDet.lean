@@ -195,9 +195,9 @@ namespace GlobalTheory.Ord2
 
 private theorem cls_eq_one' {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (N : ℕ) [NeZero N] (g : G ℚ Ω)
     (hg : ∀ ζ : Ω, ζ ^ N = 1 → g ζ = ζ) : Chr.cls ℚ Ω N g = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero ((N : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne N)⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero ((N : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne N)⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   have h1 := Chr.cls_spec N g ζ hζ.pow_eq_one
   rw [hg ζ hζ.pow_eq_one] at h1
   have h2 : ζ ^ (1 : ZMod N).val = ζ := by
@@ -474,7 +474,7 @@ theorem ker_open {W : R2 Ω l} (h : Continuous W) (h2 : dt W ^ 2 = 1) : IsOpen (
     have hsq : (dt W s : Qbar l) * (dt W s : Qbar l) = 1 := by
       have := congrArg (fun f : G ℚ Ω →* (Qbar l)ˣ => ((f s : (Qbar l)ˣ) : Qbar l)) h2
       simpa [pow_two] using this
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_compl_iff, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_compl_iff, Set.mem_ofPred_eq]
     constructor
     · intro h1 h2
       rw [h1] at h2
@@ -543,7 +543,7 @@ theorem admissible_twist_by_det : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Fiel
   intro l _ Ω _ _ _ ι e W h
   have hdt : dt (tw W (dt W)) = dt W := by rw [dt_tw, h.det2, one_mul]
   obtain ⟨N, hN, hNk⟩ := UpperTheory.V.CF.kwAbs Ω (dt W).ker (ker_open h.cont h.det2)
-    (Abelianization.commutator_subset_ker (dt W))
+    (Group.Abelianization.commutator_le_ker (dt W))
   have hθN : KillsMu N (dt W) := fun s hs => hNk s hs
   refine ⟨tw_cont h.cont (dt_cont h.cont), ?_, ?_, ?_, ?_, ?_, ?_⟩
   · rw [hdt]; exact h.det2

@@ -309,22 +309,22 @@ theorem algebraicIndependent_of_mem_adjoin_range :
     rw [IntermediateField.adjoin_map, ← Set.range_comp, hcomp, ← AlgHom.fieldRange_eq_map,
       IntermediateField.fieldRange_val]
     try rfl
-  haveI : Algebra.IsAlgebraic (Algebra.adjoin Ω (Set.range v')) L := by
+  have : Algebra.IsAlgebraic (Algebra.adjoin Ω (Set.range v')) L := by
     rw [← IntermediateField.isAlgebraic_adjoin_iff_top]
     refine ⟨fun x => ?_⟩
     have hx : x ∈ IntermediateField.adjoin Ω (Set.range v') := by
       rw [htop]
       exact IntermediateField.mem_top
     exact isAlgebraic_algebraMap (⟨x, hx⟩ : IntermediateField.adjoin Ω (Set.range v'))
-  haveI : FaithfulSMul Ω L :=
+  have : FaithfulSMul Ω L :=
     (faithfulSMul_iff_algebraMap_injective Ω L).mpr (algebraMap Ω L).injective
   obtain ⟨t, hts, htb⟩ := exists_isTranscendenceBasis_subset (R := Ω) (Set.range v')
   have hle : Cardinal.mk ι ≤ Cardinal.mk t :=
     hu'.cardinalMk_le_trdeg.trans htb.cardinalMk_eq_trdeg.symm.le
-  haveI : Finite t := ((Set.finite_range v').subset hts).to_subtype
+  have : Finite t := ((Set.finite_range v').subset hts).to_subtype
   have hcard : Nat.card ι ≤ Nat.card t := by
-    letI := Fintype.ofFinite ι
-    letI := Fintype.ofFinite t
+    let := Fintype.ofFinite ι
+    let := Fintype.ofFinite t
     rw [Cardinal.mk_fintype, Cardinal.mk_fintype] at hle
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     exact_mod_cast hle
@@ -581,8 +581,8 @@ open AlgebraicGeometry CategoryTheory GlobalTheory.CompanionTheory.Ar GlobalTheo
 theorem smooth_of_away_mvPolynomial {R L ι : Type} [CommRing R] [CommRing L] [Finite ι]
     (g : R →+* L) (ψ : MvPolynomial ι R →+* L) (hg : ψ.comp MvPolynomial.C = g) (f : MvPolynomial ι R)
     (hl : @IsLocalization.Away _ _ f L _ ψ.toAlgebra) : g.Smooth := by
-  letI := ψ.toAlgebra
-  haveI := hl
+  let := ψ.toAlgebra
+  have := hl
   have h1 : ψ.Smooth := (Algebra.Smooth.of_isLocalization_Away f : Algebra.Smooth (MvPolynomial ι R) L)
   have h2 : (algebraMap R (MvPolynomial ι R)).Smooth :=
     RingHom.smooth_algebraMap.2 ⟨inferInstance, inferInstance⟩
@@ -641,7 +641,7 @@ theorem smooth_locSub_closure : ∀ {Ω K : Type} [Field Ω] [Field K] [Algebra 
   · ext a
     change evalSub R v (MvPolynomial.C a) = algebraMap Ω K a
     simp [evalSub]
-  · letI := ((evalSub R v).codRestrict _ hmem).toAlgebra
+  · let := ((evalSub R v).codRestrict _ hmem).toAlgebra
     have hval : ∀ a : MvPolynomial ι R,
         ((algebraMap (MvPolynomial ι R) (locSub (evalSub R v).range ℓ) a : locSub (evalSub R v).range ℓ) : K)
           = evalSub R v a := fun a => rfl
@@ -700,15 +700,15 @@ theorem exists_lu_of_leading_minors {F : Type} [Field F] {r : ℕ} (Y : Matrix (
       (fun _ _ => Finset.mem_univ _) (fun j _ hj => ?_) (fun b _ => ?_)
     · have hjk : ¬ (j : ℕ) < (k : ℕ) + 1 := fun hlt =>
         hj ⟨⟨j, hlt⟩, by simp, by ext; simp⟩
-      simp only [C, dif_neg hjk, mul_zero]
+      simp only [C, dite_eq_right hjk, mul_zero]
     · have hb : ((Fin.castLE k.2 b : Fin r) : ℕ) < (k : ℕ) + 1 := b.2
-      simp only [C, dif_pos hb]
+      simp only [C, dite_eq_left hb]
       rfl
   refine ⟨C, Y * C, fun l k hkl => ?_, fun l k hlk => ?_, fun l => ?_, rfl⟩
   · have hn : ¬ (l : ℕ) < (k : ℕ) + 1 := by
       have : (k : ℕ) < l := hkl
       omega
-    simp only [C, dif_neg hn]
+    simp only [C, dite_eq_right hn]
   · have hlt : (l : ℕ) < (k : ℕ) + 1 := by
       have : (l : ℕ) < k := hlk
       omega
@@ -878,7 +878,7 @@ theorem exists_cell {F : Type} [Field F] (O : Subring F) [IsLocalRing O] {n r : 
 theorem big_cell_smooth : ∀ (Ω : Type) [Field Ω] (S : Type) [Fintype S] (r n : S → ℕ) (R : Subring Ω) (O : Subring (GenField Ω r)) [IsLocalRing O] (T : ∀ s, Matrix (Fin (r s)) (Fin (r s)) Ω) (M : ∀ s, Matrix (Fin (n s)) (Fin (r s)) Ω) (N : ∀ s, Matrix (Fin (r s)) (Fin (n s)) Ω) (J : (q : Σ s, Fin (r s)) → Fin ((q.2 : ℕ) + 1) → Fin (n q.1)), (∀ a ∈ R, algebraMap Ω (GenField Ω r) a ∈ O) → (∀ s, (T s).det ≠ 0) → (∀ s j l, M s j l ∈ R) → (∀ s l j, N s l j ∈ R) → (∀ s, N s * M s = 1) → (∀ q, stepMinor (flagB M T q.1) q.2 (J q) ≠ 0) → (∀ (q : Σ s, Fin (r s)) (J' : Fin ((q.2 : ℕ) + 1) → Fin (n q.1)), stepMinor (flagB M T q.1) q.2 J' / stepMinor (flagB M T q.1) q.2 (J q) ∈ O) → ∃ t ∈ ratioRing R (flagB M T) J, t ≠ 0 ∧ t ∈ O ∧ t⁻¹ ∈ O ∧ ∃ h : ∀ a ∈ R, algebraMap Ω (GenField Ω r) a ∈ locSub (ratioRing R (flagB M T) J) t, (((algebraMap Ω (GenField Ω r)).comp R.subtype).codRestrict (locSub (ratioRing R (flagB M T) J) t) (fun a => h a a.2)).Smooth := by
   intro Ω _ S _ r n R O _ T M N J hRO hT hM hN hNM hJ0 hJr
   classical
-  haveI : Finite (GenIx r) := by unfold GenIx; infer_instance
+  have : Finite (GenIx r) := by unfold GenIx; infer_instance
   set i := algebraMap Ω (GenField Ω r) with hi
   set A := ratioRing R (flagB M T) J with hAdef
   let Y : ∀ s, Matrix (Fin (r s)) (Fin (r s)) (GenField Ω r) := fun s => (T s).map i * genU Ω r s
@@ -1308,7 +1308,7 @@ theorem flag_smooth : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Co
     exact this
   obtain ⟨hPh, hdom1, -⟩ := RegAtDom.regAt_dominates X Ω ξ X' (GenField Ω r) ξ' f _ hdom P'
   have hRO : ∀ a ∈ R, algebraMap Ω (GenField Ω r) a ∈ regAt ξ' P' := fun a ha => hdom1 a (hRP a ha)
-  haveI : IsLocalRing (regAt ξ' P') := (regAt_isLocalRing_isFractionRing_stalk X' _ ξ' hT'.gen P').1
+  have : IsLocalRing (regAt ξ' P') := (regAt_isLocalRing_isFractionRing_stalk X' _ ξ' hT'.gen P').1
   have hscale : ∀ (k : κ) (J' : (q : Σ s, Fin (r s)) → Fin ((q.2 : ℕ) + 1) → Fin (n q.1)), _ :=
     fun k J' => flagCoord_eq (m := m) x hφ k J'
   have hax : algebraMap Ω (GenField Ω r) (x c₀) ≠ 0 := by simpa using hx0

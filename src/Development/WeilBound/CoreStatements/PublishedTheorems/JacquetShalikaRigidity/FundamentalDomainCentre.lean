@@ -66,7 +66,7 @@ theorem split_centre_commute (n : ℤ) (g : GA E k) : splitCentre E k 1 ^ n * g 
 
 theorem adeles_nontrivial (hD : D0) (hk : 1 ≤ k) : Nontrivial (Ad E) := by
   refine ⟨⟨0, 1, fun h01 => ?_⟩⟩
-  haveI : Subsingleton (Ad E) := subsingleton_of_zero_eq_one h01
+  have : Subsingleton (Ad E) := subsingleton_of_zero_eq_one h01
   have h1 : splitCentre E k 1 = 1 := by
     first
     | exact Units.ext (Matrix.ext fun i j => Subsingleton.elim _ _)
@@ -79,7 +79,7 @@ theorem adeles_nontrivial (hD : D0) (hk : 1 ≤ k) : Nontrivial (Ad E) := by
   linarith
 
 theorem rational_GL_injective (hD : D0) (hk : 1 ≤ k) : Function.Injective (ratGL E k) := by
-  haveI := adeles_nontrivial (E := E) hD hk
+  have := adeles_nontrivial (E := E) hD hk
   intro γ γ' h
   refine Units.ext (Matrix.ext fun i j => ?_)
   have h1 : (ratGL E k γ : Matrix (Fin k) (Fin k) (Ad E)) i j =

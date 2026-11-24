@@ -205,8 +205,8 @@ theorem surjective_covU (T : GrpData p q) : Function.Surjective T.covU := by
   exact ⟨x, Subtype.ext hx.1⟩
 
 theorem isProperMap_covU (T : GrpData p q) : IsProperMap T.covU := by
-  haveI : T2Space (UpqT p q) := inferInstanceAs (T2Space (Formalism.UG.Upq p q))
-  haveI : LocallyCompactSpace (UpqT p q) :=
+  have : T2Space (UpqT p q) := inferInstanceAs (T2Space (Formalism.UG.Upq p q))
+  have : LocallyCompactSpace (UpqT p q) :=
     (UpqUnimodular.modelEquiv p q).toHomeomorph.isClosedEmbedding.locallyCompactSpace
   refine isProperMap_iff_isCompact_preimage.2 ⟨continuous_covU T, fun K hK => ?_⟩
   have hS : IsCompact ((Units.val : ℂˣ → ℂ) ⁻¹' Metric.sphere 0 1) := by
@@ -214,16 +214,16 @@ theorem isProperMap_covU (T : GrpData p q) : IsProperMap T.covU := by
     intro z hz
     have : z ≠ 0 := by rintro rfl; simp at hz
     exact ⟨Units.mk0 z this, rfl⟩
-  have hK' : IsCompact ((fun g : Formalism.UG.Upq p q => g.1) '' K) := hK.image continuous_subtype_val
+  have hK' : IsCompact ((fun g : Formalism.UG.Upq p q => g.1) '' K) := hK.image continuous_subtypeVal
   refine ((GlobalTheory.RealPar.SqInt.isClosedEmbedding_emb T).isCompact_preimage (hK'.prod hS)).of_isClosed_subset
     (hK.isClosed.preimage (continuous_covU T)) fun x hx => ⟨⟨T.covU x, hx, rfl⟩, ?_⟩
   simpa using GlobalTheory.RealPar.Cover.norm_sq x
 
 theorem isHaarMeasure_map_covU (T : GrpData p q) : (T.haar.map T.covU).IsHaarMeasure := by
-  haveI : IsTopologicalGroup (UpqT p q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq p q))
-  haveI : BorelSpace (UpqT p q) := ⟨rfl⟩
-  haveI : T2Space (UpqT p q) := inferInstanceAs (T2Space (Formalism.UG.Upq p q))
-  haveI : LocallyCompactSpace (UpqT p q) :=
+  have : IsTopologicalGroup (UpqT p q) := inferInstanceAs (IsTopologicalGroup (Formalism.UG.Upq p q))
+  have : BorelSpace (UpqT p q) := ⟨rfl⟩
+  have : T2Space (UpqT p q) := inferInstanceAs (T2Space (Formalism.UG.Upq p q))
+  have : LocallyCompactSpace (UpqT p q) :=
     (UpqUnimodular.modelEquiv p q).toHomeomorph.isClosedEmbedding.locallyCompactSpace
   exact Measure.isHaarMeasure_map T.haar (covHom T) (continuous_covU T) (surjective_covU T)
     (isProperMap_iff_tendsto_cocompact.1 (isProperMap_covU T)).2
@@ -231,17 +231,17 @@ theorem isHaarMeasure_map_covU (T : GrpData p q) : (T.haar.map T.covU).IsHaarMea
 theorem exists_grpData_map_haar : ∀ (p q : ℕ) (μ : Measure (UpqT p q)), μ.IsHaarMeasure →
     ∃ T : GrpData p q, Measure.map T.covU T.haar = μ := by
   intro p q μ hμ
-  haveI := isHaarMeasure_map_covU (grpOf p q Measure.haar)
+  have := isHaarMeasure_map_covU (grpOf p q Measure.haar)
   obtain ⟨t, ht⟩ := GlobalTheory.CompactDualUnique.exists_eq_smul μ
     ((grpOf p q Measure.haar).haar.map (grpOf p q Measure.haar).covU)
   have h0 : t ≠ 0 := by
     rintro rfl
     rw [zero_smul] at ht
     exact isOpen_univ.measure_ne_zero μ Set.univ_nonempty (by rw [ht]; rfl)
-  haveI : (t • (Measure.haar : Measure (cover p q))).IsHaarMeasure := Measure.IsHaarMeasure.nnreal_smul _ h0
+  have : (t • (Measure.haar : Measure (cover p q))).IsHaarMeasure := Measure.IsHaarMeasure.nnreal_smul _ h0
   refine ⟨grpOf p q (t • Measure.haar), ?_⟩
   rw [ht]
-  haveI : BorelSpace (UpqT p q) := ⟨rfl⟩
+  have : BorelSpace (UpqT p q) := ⟨rfl⟩
   exact Measure.map_smul _ (continuous_covU _).aemeasurable
 
 end GlobalTheory.DetSqrtCover

@@ -83,7 +83,7 @@ theorem UpperTheory.isOpen_stabilizer_linear_map :
   let b := Module.finBasis ℂ V
   have key : {g : G | R g ∘ₗ f = f} = ⋂ i, {g : G | R g (f (b i)) = f (b i)} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     constructor
     · intro hg i
       exact LinearMap.congr_fun hg (b i)
@@ -156,10 +156,10 @@ theorem UpperTheory.Reformulated.B.Grk2.pVecU_of :
     { carrier := {u | GlobalTheory.DefU.algRep W u f₀ = f₀}
       one_mem' := by simp
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   obtain ⟨S₀, Kw, hsh₀, hO⟩ := hN E n O (isOpen_stab π W f₀ hf₀) Up hUp w₀ hw₀ hU₀

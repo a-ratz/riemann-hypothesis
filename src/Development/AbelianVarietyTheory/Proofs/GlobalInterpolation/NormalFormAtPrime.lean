@@ -67,7 +67,7 @@ theorem degOne_of_split (h2 : Module.finrank F E = 2) {v : HeightOneSpectrum (�
     have hN : Ideal.absNorm Q.asIdeal * Ideal.absNorm Q'.asIdeal = Ideal.absNorm v.asIdeal ^ 2 := by
       rw [← map_mul, ← hm, Ideal.absNorm_algebraMap, ← h2]
       congr 1
-      exact (Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E).symm
+      exact (IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E).symm
     have h1 : Ideal.absNorm Q.asIdeal ≠ 1 := fun h => Q.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
     have h1' : Ideal.absNorm Q'.asIdeal ≠ 1 := fun h => Q'.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
     have hq : Ideal.absNorm Q.asIdeal = Ideal.absNorm v.asIdeal :=

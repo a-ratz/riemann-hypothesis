@@ -63,8 +63,8 @@ namespace PositivityTheory.Xgp.c_bm_exists_period
 
 theorem exists_embedding (K k : Type) [Field K] [Field k] [Countable K] [Countable k] (β : K →+* k) (s : K →+* ℂ) :
     ∃ j : k →+* ℂ, j.comp β = s := by
-  letI := β.toAlgebra
-  letI := s.toAlgebra
+  let := β.toAlgebra
+  let := s.toAlgebra
   obtain ⟨I₁, x, hx⟩ := exists_isTranscendenceBasis' K k
   obtain ⟨κ, z, hz⟩ := exists_isTranscendenceBasis' K ℂ
   have hI₁ : Countable I₁ := hx.1.injective.countable
@@ -77,12 +77,12 @@ theorem exists_embedding (K k : Type) [Field K] [Field k] [Countable K] [Countab
     exact (Cardinal.mk_le_aleph0_iff.2 hI₁).trans Cardinal.aleph0_le_continuum
   obtain ⟨e⟩ := hle
   have hz' : AlgebraicIndependent K (z ∘ e) := hz.1.comp e e.injective
-  letI : Algebra (MvPolynomial I₁ K) k := (MvPolynomial.aeval x : MvPolynomial I₁ K →ₐ[K] k).toRingHom.toAlgebra
-  letI : Algebra (MvPolynomial I₁ K) ℂ := (MvPolynomial.aeval (z ∘ e) : MvPolynomial I₁ K →ₐ[K] ℂ).toRingHom.toAlgebra
-  haveI : FaithfulSMul (MvPolynomial I₁ K) k := (faithfulSMul_iff_algebraMap_injective _ _).2 hx.1
-  haveI : FaithfulSMul (MvPolynomial I₁ K) ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hz'
-  haveI : Algebra.IsAlgebraic (MvPolynomial I₁ K) k := by
-    haveI := hx.isAlgebraic
+  let : Algebra (MvPolynomial I₁ K) k := (MvPolynomial.aeval x : MvPolynomial I₁ K →ₐ[K] k).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial I₁ K) ℂ := (MvPolynomial.aeval (z ∘ e) : MvPolynomial I₁ K →ₐ[K] ℂ).toRingHom.toAlgebra
+  have : FaithfulSMul (MvPolynomial I₁ K) k := (faithfulSMul_iff_algebraMap_injective _ _).2 hx.1
+  have : FaithfulSMul (MvPolynomial I₁ K) ℂ := (faithfulSMul_iff_algebraMap_injective _ _).2 hz'
+  have : Algebra.IsAlgebraic (MvPolynomial I₁ K) k := by
+    have := hx.isAlgebraic
     exact Algebra.IsAlgebraic.of_ringHom_of_comp_eq (S := Algebra.adjoin K (Set.range x)) (B := k) hx.1.aevalEquiv
       (RingHom.id k) hx.1.aevalEquiv.surjective Function.injective_id
       (RingHom.ext fun p => hx.1.algebraMap_aevalEquiv p)
@@ -111,7 +111,7 @@ theorem genMap_bij (hξ : IsCptGen ξ) (q : X) (hq : q = genPt ξ) (h : genPt ξ
 
 theorem countable_of_tie {κ : Type} [Finite κ] {x : κ → Ω} (h : CoordTie ℤ ξ x) : Countable Ω := by
   obtain ⟨c, hc⟩ := h.cover ⟨genPt ξ, specializes_rfl⟩
-  haveI : Countable (MvPolynomial κ ℤ) := by
+  have : Countable (MvPolynomial κ ℤ) := by
     rw [← Cardinal.mk_le_aleph0_iff]
     exact MvPolynomial.cardinalMk_le_max.trans (max_le (max_le Cardinal.mk_le_aleph0 Cardinal.mk_le_aleph0) le_rfl)
   refine Function.Surjective.countable (f := fun a : MvPolynomial κ ℤ × MvPolynomial κ ℤ =>
@@ -154,10 +154,10 @@ theorem factor_gen (hξ : IsCptGen ξ) {R : Type} [CommRing R] [IsLocalRing R] (
 theorem hom_dual_ext {F₀ F : Type} [Field F₀] [Field F] [CharZero F] (i : F₀ →+* F)
     (hfin : 0 < (letI := i.toAlgebra; Module.finrank F₀ F)) {δ δ' : F →+* DualNumber ℂ} (h : δ.comp i = δ'.comp i)
     (h' : ∀ x, (δ x).fst = (δ' x).fst) : δ = δ' := by
-  letI := i.toAlgebra
-  letI := (δ.comp i).toAlgebra
-  haveI : CharZero F₀ := i.charZero
-  haveI : Module.Finite F₀ F := Module.finite_of_finrank_pos hfin
+  let := i.toAlgebra
+  let := (δ.comp i).toAlgebra
+  have : CharZero F₀ := i.charZero
+  have : Module.Finite F₀ F := Module.finite_of_finrank_pos hfin
   have hu : Algebra.FormallyUnramified F₀ F := Algebra.FormallyUnramified.of_isSeparable F₀ F
   have h := Algebra.FormallyUnramified.ext' (R := F₀) (A := F) (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom
     ⟨2, by

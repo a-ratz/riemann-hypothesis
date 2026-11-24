@@ -70,12 +70,12 @@ theorem exists_formOn (i : Fin (N + 1)) (u : Γ(PSpace R N, chart R N i)) :
   exact frac_eq rfl
 
 theorem isIso_str_zero : IsIso (PSpace.str R 0) := by
-  haveI : IsIso (chartι R 0 0) := by
+  have : IsIso (chartι R 0 0) := by
     refine isIso_of_isOpenImmersion_of_opensRange_eq_top _ ?_
     rw [opensRange_chartι, ← iSup_chart R 0]
     exact (iSup_unique (ι := Fin 1) (f := chart R 0)).symm
-  haveI : IsEmpty {j : Fin (0 + 1) // j ≠ 0} := ⟨fun j => j.2 (Subsingleton.elim (α := Fin 1) _ _)⟩
-  haveI : IsIso (chartι R 0 0 ≫ PSpace.str R 0) := by
+  have : IsEmpty {j : Fin (0 + 1) // j ≠ 0} := ⟨fun j => j.2 (Subsingleton.elim (α := Fin 1) _ _)⟩
+  have : IsIso (chartι R 0 0 ≫ PSpace.str R 0) := by
     rw [chartι_str]
     exact inferInstanceAs (IsIso (Spec.map
       (isEmptyRingEquiv R {j : Fin (0 + 1) // j ≠ 0}).toCommRingCatIso.inv))

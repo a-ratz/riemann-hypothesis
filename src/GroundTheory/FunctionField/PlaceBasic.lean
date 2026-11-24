@@ -72,7 +72,7 @@ theorem valuation_eq_one_of_isAlgebraic (v : Place k K) {x : K} (hx : IsAlgebrai
   have h1 := (v.ring.valuation_le_one_iff x).2 (v.mem_ring_of_isAlgebraic hx)
   have h2 := (v.ring.valuation_le_one_iff x⁻¹).2
     (v.mem_ring_of_isAlgebraic (IsAlgebraic.inv_iff.2 hx))
-  rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx0))] at h2
+  rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx0))] at h2
   exact le_antisymm h1 h2
 
 theorem ord_eq_zero_of_isAlgebraic [IsFunctionField k K] (v : Place k K) {x : K}
@@ -118,7 +118,7 @@ theorem exists_not_mem_of_transcendental {x : K} (hx : Transcendental k x) :
   refine ⟨v, fun hmem => ?_⟩
   have hx0 : x ≠ 0 := fun h => hx (h ▸ isAlgebraic_zero)
   have h1 := (v.ring.valuation_le_one_iff x).2 hmem
-  rw [map_inv₀, inv_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx0))] at hv
+  rw [map_inv₀, inv_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx0))] at hv
   exact absurd h1 (not_le.2 hv)
 
 theorem isAlgebraic_iff_forall_mem {x : K} : IsAlgebraic k x ↔ ∀ v : Place k K, x ∈ v.ring := by

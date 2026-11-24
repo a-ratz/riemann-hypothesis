@@ -66,16 +66,16 @@ theorem sum_comp_algHom (K M : Type) [Field K] [Field M] [Algebra ℚ K] [Algebr
     (F : (K →ₐ[ℚ] ℂ) → ℝ) :
     ∑ ρ : M →ₐ[ℚ] ℂ, F (ρ.comp (IsScalarTower.toAlgHom ℚ K M)) =
       (Module.finrank K M : ℝ) * ∑ φ : K →ₐ[ℚ] ℂ, F φ := by
-  haveI : FiniteDimensional K M := FiniteDimensional.right ℚ K M
-  haveI : CharZero K := algebraRat.charZero K
+  have : FiniteDimensional K M := FiniteDimensional.right ℚ K M
+  have : CharZero K := algebraRat.charZero K
   rw [← Finset.sum_fiberwise (s := Finset.univ)
     (g := fun ρ : M →ₐ[ℚ] ℂ => ρ.comp (IsScalarTower.toAlgHom ℚ K M)), Finset.mul_sum]
   refine Finset.sum_congr rfl fun φ _ => ?_
   rw [Finset.sum_congr rfl (g := fun _ => F φ)
     (fun ρ hρ => by rw [(Finset.mem_filter.1 hρ).2]), Finset.sum_const, nsmul_eq_mul]
   congr 2
-  letI : Algebra K ℂ := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ K ℂ := IsScalarTower.of_algebraMap_eq fun q => (φ.commutes q).symm
+  let : Algebra K ℂ := φ.toRingHom.toAlgebra
+  have : IsScalarTower ℚ K ℂ := IsScalarTower.of_algebraMap_eq fun q => (φ.commutes q).symm
   rw [← AlgHom.card K M ℂ, ← Finset.card_univ]
   symm
   refine Finset.card_bij (fun ψ _ => ψ.restrictScalars ℚ) ?_ ?_ ?_
@@ -131,8 +131,8 @@ theorem meanInf_posLog_le :
     ∀ (K : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] (σ : K →+* ℂ) (x : K) (M : IntermediateField ℚ ℂ) [FiniteDimensional ℚ M] [IsGalois ℚ M] (ι : Type) [Fintype ι] (w : ι → ℚ) (z : ι → M), (∀ a, σ a ∈ M) → (∀ i, 0 ≤ w i) → σ x = ∑ i, (w i : ℂ) * ((z i : ℂ) * starRingEnd ℂ (z i : ℂ)) → Formalism.PairingDivisionLocalBalance.meanInf K (fun v => Real.posLog ‖v.embedding x‖) ≤ (∑ ρ : M →ₐ[ℚ] ℂ, Real.posLog (∑ i, (w i : ℝ) * ‖ρ (z i)‖ ^ 2)) / (Module.finrank ℚ M : ℝ) := by
   intro K _ _ _ σ x M _ _ ι _ w z hσ hw hx
   let σ' : K →+* M := σ.codRestrict M hσ
-  letI : Algebra K M := σ'.toAlgebra
-  haveI : IsScalarTower ℚ K M := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra K M := σ'.toAlgebra
+  have : IsScalarTower ℚ K M := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   let j : M →ₐ[ℚ] ℂ := ((starRingEnd ℂ).toRatAlgHom).comp M.val
   have hj : ∀ y : M, starRingEnd ℂ (y : ℂ) ∈ M := fun y => by
     have : j y ∈ j.fieldRange := ⟨y, rfl⟩

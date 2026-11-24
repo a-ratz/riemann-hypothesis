@@ -53,10 +53,10 @@ theorem max_principle_global : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsI
   intro k _ X _ p D hX P s hs hs0 δ hδ
   classical
   choose W ρ hW hρ H using _root_.GlobalTheory.VolBr.Pair.max_principle_near k X p D hX P s hs hs0 δ hδ
-  haveI : Finite (k →+* ℂ) := hX.finite_emb
+  have : Finite (k →+* ℂ) := hX.finite_emb
   have hcov : ∀ σ : k →+* ℂ, ∃ t : Finset (CxPts p σ), (Set.univ : Set (CxPts p σ)) ⊆ ⋃ x ∈ t, W σ x := by
     intro σ
-    haveI : CompactSpace (CxPts p σ) := hX.compactSpace σ
+    have : CompactSpace (CxPts p σ) := hX.compactSpace σ
     obtain ⟨t, -, ht⟩ := isCompact_univ.elim_nhds_subcover (W σ) (fun x _ => hW σ x)
     exact ⟨t, ht⟩
   choose t ht using hcov

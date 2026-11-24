@@ -227,7 +227,7 @@ theorem g_chi : ∀ (l : ℕ) [Fact l.Prime] (ι : Type) [Fintype ι] (N : ℕ) 
     rw [mul_assoc, inv_mul_cancel, mul_one]
   have key' := congrArg Units.val key
   simp only [Units.val_mul, Units.coe_prod, Units.val_zpow_eq_zpow_val, Units.val_inv_eq_inv_val, m, Units.coe_map,
-    MonoidHom.coe_coe] at key'
+    MonoidHom.coe_ofClass] at key'
   have e2 : ∀ τ, emb (kap κ τ).val.det = emb ((dτ τ κ : Oˣ) : O) := fun τ => by
     simp [dτ, Matrix.GeneralLinearGroup.val_det_apply]
   simp only [e2]
@@ -241,8 +241,8 @@ theorem g_fin : ∀ (K : Type) [Field K] [NumberField K] (l : ℕ) [Fact l.Prime
   let b := Module.finBasis ℚ K
   let T : Set (PadicAlgCl l) := Set.range (fun i => e0 (b i)) ∪ ((Polynomial.nthRootsFinset M (1 : PadicAlgCl l) : Finset _) : Set _)
   have hT : T.Finite := (Set.finite_range _).union (Finset.finite_toSet _)
-  haveI : Finite T := hT.to_subtype
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] T) :=
+  have : Finite T := hT.to_subtype
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] T) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   have hle : IntermediateField.adjoin ℚ_[l] (Set.range e0 ∪ {z : PadicAlgCl l | z ^ M = 1}) ≤ IntermediateField.adjoin ℚ_[l] T := by
     rw [IntermediateField.adjoin_le_iff]
@@ -316,7 +316,7 @@ theorem frameAt_of (p : PtAt ex Csz) (j : Fin D.R.m) (P : Par) (W : Wts D.what�
   obtain ⟨M, hM, hMχ⟩ := hc
   let Lf : IntermediateField ℚ_[Formalism.EigenvalueLevelCeiling.plc w] (PadicAlgCl (Formalism.EigenvalueLevelCeiling.plc w)) :=
     IntermediateField.adjoin ℚ_[Formalism.EigenvalueLevelCeiling.plc w] (Set.range e0 ∪ {z : PadicAlgCl (Formalism.EigenvalueLevelCeiling.plc w) | z ^ M = 1})
-  haveI : FiniteDimensional ℚ_[Formalism.EigenvalueLevelCeiling.plc w] Lf := g_fin D.what₂.LL (Formalism.EigenvalueLevelCeiling.plc w) e0 M hM
+  have : FiniteDimensional ℚ_[Formalism.EigenvalueLevelCeiling.plc w] Lf := g_fin D.what₂.LL (Formalism.EigenvalueLevelCeiling.plc w) e0 M hM
   have hLf : IntermediateField.adjoin ℚ_[Formalism.EigenvalueLevelCeiling.plc w] (Set.range e0) ≤ Lf :=
     IntermediateField.adjoin.mono _ _ _ Set.subset_union_left
   have hring := g_ring (Formalism.EigenvalueLevelCeiling.plc w) Lf
@@ -1034,7 +1034,7 @@ theorem norm_int_le {E : Type} [Field E] [NumberField E] (τ : E →+* PadicAlgC
   rw [map_inv₀] at h2
   have h3 : v.valuation E (x : E) ≤ 1 := v.valuation_le_one x
   have h4 : v.valuation E (x : E) ≠ 0 := (map_ne_zero _).2 h0
-  exact absurd ((inv_lt_one₀ (zero_lt_iff.2 h4)).1 h2) (not_lt.2 h3)
+  exact absurd ((inv_lt_one₀ (pos_iff_ne_zero.2 h4)).1 h2) (not_lt.2 h3)
 
 end GlobalTheory.AdeleEv
 
@@ -1440,7 +1440,7 @@ theorem no_order_l_of_cyclotomic_irreducible :
     ∀ (E : Type) [Field E] [CharZero E] (l N : ℕ) (g : Matrix (Fin N) (Fin N) E),
       l.Prime → Irreducible (Polynomial.cyclotomic l E) → N + 1 < l → g ^ l = 1 → g = 1 := by
   intro E _ _ l N g hl hirr hN hg
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hmon : g.charpoly.Monic := Matrix.charpoly_monic g
   have hdeg : g.charpoly.natDegree = N := by
     simpa using Matrix.charpoly_natDegree_eq_dim g
@@ -1514,7 +1514,7 @@ def conjInEquiv (H J : Subgroup G) (g : G) : {γ : H // g⁻¹ * (γ : G) * g �
 theorem finite_conj (ι : Γ →* G) (J : Subgroup G) {I : Type} (y : I → G) (hrep : Bridge.IsReps ι J y)
     (hfin : ∀ i, Finite (Bridge.stab ι J (y i))) (g : G) : Finite {γ : ι.range // g⁻¹ * (γ : G) * g ∈ J} := by
   obtain ⟨c, ⟨γ₀, k, hg⟩, -⟩ := hrep g
-  haveI := hfin c
+  have := hfin c
   let f : Bridge.stab ι J (y c) → {γ : ι.range // g⁻¹ * (γ : G) * g ∈ J} := fun s =>
     ⟨⟨ι (γ₀ * s * γ₀⁻¹), γ₀ * s * γ₀⁻¹, rfl⟩, by
       have hs : (y c)⁻¹ * ι s * (y c) ∈ J := by
@@ -1597,9 +1597,9 @@ theorem tameAt_of_smallAt {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Fo
       (fun c => Finite.of_equiv _ ((p.R.B.L j (p.R.mu w)).pres.stabI c).toEquiv) g
   refine ⟨hfin, ?_⟩
   intro hdvd
-  haveI : Fact (Formalism.EigenvalueLevelCeiling.plc w).Prime := ⟨hl⟩
+  have : Fact (Formalism.EigenvalueLevelCeiling.plc w).Prime := ⟨hl⟩
   rw [Nat.card_congr (conjInEquiv _ _ g)] at hdvd
-  haveI : Finite (conjIn (Bridge.ratF (Vc D j)).range (levJ p j (p.R.mu w)) g) := Finite.of_equiv _ (conjInEquiv _ _ g)
+  have : Finite (conjIn (Bridge.ratF (Vc D j)).range (levJ p j (p.R.mu w)) g) := Finite.of_equiv _ (conjInEquiv _ _ g)
   obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' (Formalism.EigenvalueLevelCeiling.plc w) hdvd
   have hirr := GlobalTheory.cyclotomic_irreducible_of_not_dvd_discr D.host.E (Formalism.EigenvalueLevelCeiling.plc w) hl hd
   have hxl : (x : Bridge.Gf (Vc D j)) ^ (Formalism.EigenvalueLevelCeiling.plc w) = 1 := by

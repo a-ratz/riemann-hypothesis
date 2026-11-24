@@ -124,7 +124,7 @@ theorem coeff_single_X [DecidableEq τ] (q p : τ) :
   rw [coeff_X]
   by_cases h : q = p
   · simp [h]
-  · rw [if_neg, if_neg h]
+  · rw [ite_eq_right, ite_eq_right h]
     intro h'
     exact h (Finsupp.single_left_injective one_ne_zero h')
 
@@ -187,7 +187,7 @@ theorem addV_lin (G : FGLaw V d) (x y : Pt V m d) (hx : ∀ i, constantCoeff (x 
   refine ⟨(const_evC _ ha _).trans (G.const i), fun q => (coeff_evC _ ha _ q).trans ?_⟩
   rw [Fintype.sum_prod_type, Fin.sum_univ_two]
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one, PullbackSections.Pf.EigA.formal_group_coeff_first_linear, PullbackSections.Pf.EigA.formal_group_coeff_second_linear, ite_mul, _root_.one_mul,
-    zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem fold_lin (G : FGLaw V d) (l : List (Pt V m d)) (hl : ∀ x ∈ l, ∀ i, constantCoeff (x i) = 0) :
     (∀ i, constantCoeff (l.foldr (addV G.F) 0 i) = 0) ∧ ∀ i q, coeff (Finsupp.single q 1) (l.foldr (addV G.F) 0 i) =
@@ -265,7 +265,7 @@ theorem det_blocks {K O L : Type} [CommRing K] [CommRing O] [Fintype L] {d n : �
     simp only [Matrix.mulVec, dotProduct, Pi.smul_apply, smul_eq_mul] at this
     simp only [Matrix.mul_apply, Fintype.sum_prod_type, Matrix.kroneckerMap_apply, Matrix.of_apply, Matrix.one_apply, U,
       Matrix.blockDiagonal_apply, ite_mul, mul_ite, zero_mul, mul_zero, _root_.one_mul, Finset.sum_ite_irrel,
-      Finset.sum_const_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_const_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [this, _root_.mul_comm]
     rfl
   have h4 : (Matrix.of fun x q : Fin n × Fin d => M (p x.1 q.1) x.2 q.2) =
@@ -953,7 +953,7 @@ theorem GlobalTheory.PlaceInt.prod_trUnit_mul_shift_kappa : ∀ (V : Type) [Comm
     have e : ∑ i, star (mu i j) • mv mu a i = 0 := by simp only [hk0, smul_zero, Finset.sum_const_zero]
     simp only [mv, Finset.smul_sum, smul_smul] at e
     rw [Finset.sum_comm] at e
-    simp only [← Finset.sum_smul, hmu, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true] at e
+    simp only [← Finset.sum_smul, hmu, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at e
     exact e
   have hneg : ∀ j, (-1 : O) • a j + a j = 0 := fun j => by
     nth_rewrite 2 [← one_smul O (a j)]
@@ -967,8 +967,8 @@ theorem GlobalTheory.PlaceInt.prod_trUnit_mul_shift_kappa : ∀ (V : Type) [Comm
       intro f
       rw [Function.iterate_succ_apply, ih]
       simp only [ψ, evS_comp, map_add (f := _), sL_uP, ca, Nat.cast_succ, add_smul, one_smul, add_assoc]
-  haveI : IsDomain (PS V n d) := NoZeroDivisors.to_isDomain _
-  haveI : CharZero (PS V n d) := (MvPowerSeries.C : V →+* PS V n d).charZero_iff (MvPowerSeries.C_injective) |>.1 inferInstance
+  have : IsDomain (PS V n d) := NoZeroDivisors.to_isDomain _
+  have : CharZero (PS V n d) := (MvPowerSeries.C : V →+* PS V n d).charZero_iff (MvPowerSeries.C_injective) |>.1 inferInstance
   have goal := core ψ (evS fun _ => (0 : SP B n)) (evS a) (evS fun b => (-1 : O) • a b)
     (∏ b, evS ![uP B b] (u b)) κ (∏ b, evS ![uP B b, a b, a b] Θ ^ N) (∏ b, evS ![a b] jo ^ N) N hN
     (fun f => by simp only [ψ, evS_comp, map_zero]) (fun f => by simp only [ψ, evS_comp, ca])
@@ -1611,7 +1611,7 @@ variable {Xo U}
 theorem pow_eq_one_of_kills {mu mu' : Matrix (Fin n) (Fin n) (𝓞 E)} {m : ℕ}
     (h : mu' * mu = (m : 𝓞 E) • (1 : Matrix (Fin n) (Fin n) (𝓞 E))) {u : Fin n → (U ⟶ Xo.univ.t.G)}
     (hu : Kills Xo mu u) (b : Fin n) : u b ^ m = 1 := by
-  letI := ZPart.ptMod Xo U
+  let := ZPart.ptMod Xo U
   have h1 := ((ZPart.kills_iff Xo mu u).1 hu).mul mu'
   rw [h] at h1
   have h2 := h1 b
@@ -1646,7 +1646,7 @@ theorem sum_hv_primary_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   intro E _ _ _ H Dw l Xo c _ hbar T io y C hC nab hnab e ρ w n he hB ℓ hℓ hℓu N k M k₁ p q g hN hsim hkM hk hM hk₁ hg
     J _ a hinj hrange hiso F G hF hfix hG P s hP hPs
   classical
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hodd : Odd (N ^ 2) := hN.pow
   obtain ⟨B, hBT, -⟩ := GlobalTheory.T.integralChart_formalBiextension_gauge_bound E H Dw l Xo c hbar T io y C
   obtain ⟨f1, -, fmul, -, -⟩ := GlobalTheory.T.formal_group_points_of_integral_chart_spec E H Dw l Xo c hbar T io y C B hBT
@@ -1659,7 +1659,7 @@ theorem sum_hv_primary_kernel : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   let eq : J ≃ W := Equiv.ofBijective (fun i => ⟨a i, (hW _).2 ⟨i, rfl⟩⟩)
     ⟨fun i j hij => hinj (congrArg Subtype.val hij), fun u => ((hW u).1 u.2).imp fun i hi => Subtype.ext hi⟩
   have ha : ∀ u : W, a (eq.symm u) = u := fun u => congrArg Subtype.val (eq.apply_symm_apply u)
-  letI : Fintype W := Fintype.ofEquiv J eq
+  let : Fintype W := Fintype.ofEquiv J eq
   have htor : ∀ (u : W) b, u.1 b ^ (N ^ 2) = 1 := fun u b => pow_eq_one_of_kills hadj u.2.1 b
   have hG' : ∀ (u : W) b, Moves Xo (u.1 b) (F b) (G (eq.symm u) b) := fun u b => by
     have := hG (eq.symm u) b

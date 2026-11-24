@@ -79,20 +79,20 @@ theorem exists_kummer_field (E F Ω : Type) [Field E] [NumberField E] [Field F] 
     (ζ : F) (hζ : IsPrimitiveRoot ζ M) : ∃ L : IntermediateField F Ω, FiniteDimensional F L ∧ IsGalois F L ∧
       ∀ (u : Γ) (w : Ω), w ^ M = algebraMap E Ω ((u : Eˣ) : E) → w ∈ L := by
   classical
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap E F).injective
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap E F).injective
   obtain ⟨s, hs⟩ := hΓ.out
   set p : F[X] := ∏ g ∈ s, (X ^ M - C (algebraMap E F ((g : Eˣ) : E))) with hp
   have hp0 : p ≠ 0 :=
     (Polynomial.monic_prod_of_monic _ _ fun g _ => Polynomial.monic_X_pow_sub_C _ hM.ne').ne_zero
   have hsplit : (p.map (algebraMap F Ω)).Splits := IsAlgClosed.splits _
   set L : IntermediateField F Ω := IntermediateField.adjoin F (p.rootSet Ω) with hL
-  haveI : IsSplittingField F L p := IntermediateField.adjoin_rootSet_isSplittingField hsplit
-  haveI : FiniteDimensional F L := IsSplittingField.finiteDimensional L p
-  haveI : Normal F L := Normal.of_isSplittingField p
-  haveI : IsGalois F L := isGalois_iff.mpr ⟨inferInstance, inferInstance⟩
+  have : IsSplittingField F L p := IntermediateField.adjoin_rootSet_isSplittingField hsplit
+  have : FiniteDimensional F L := IsSplittingField.finiteDimensional L p
+  have : Normal F L := Normal.of_isSplittingField p
+  have : IsGalois F L := isGalois_iff.mpr ⟨inferInstance, inferInstance⟩
   refine ⟨L, inferInstance, inferInstance, ?_⟩
   have hζΩ : IsPrimitiveRoot (algebraMap F Ω ζ) M := hζ.map_of_injective (algebraMap F Ω).injective
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hunit : ∀ w : Ω, w ^ M = 1 → w ∈ L := by
     intro w hw
     obtain ⟨i, -, rfl⟩ := hζΩ.eq_pow_of_pow_eq_one hw
@@ -184,24 +184,24 @@ theorem core (E : Type) [Field E] [NumberField E] (Γ : Subgroup Eˣ) [Group.FG 
       ∀ x ∈ Γ, (∀ t ∈ T, t.valuation E ((x : E) - 1) < 1) → ∃ y : E, y ^ (l ^ r) = x := by
   classical
   obtain ⟨M, hM, -, hdesc⟩ := GlobalTheory.exists_pow_descent_cyclotomic E l r hl
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : CharZero (AlgebraicClosure E) :=
+  have : NeZero M := ⟨hM.ne'⟩
+  have : CharZero (AlgebraicClosure E) :=
     charZero_of_injective_algebraMap (algebraMap E (AlgebraicClosure E)).injective
   obtain ⟨ζ, hζr⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic M (AlgebraicClosure E))
     (Polynomial.degree_cyclotomic_pos M _ hM).ne'
   have hζ : IsPrimitiveRoot ζ M := Polynomial.isRoot_cyclotomic_iff.mp hζr
   set K : IntermediateField E (AlgebraicClosure E) := IntermediateField.adjoin E {ζ} with hK
   have hζint : IsIntegral E ζ := (Algebra.IsAlgebraic.isAlgebraic ζ).isIntegral
-  haveI : FiniteDimensional E K := IntermediateField.adjoin.finiteDimensional hζint
-  haveI : NumberField K := NumberField.of_module_finite E K
-  haveI : IsAlgClosure K (AlgebraicClosure E) := ⟨inferInstance, Algebra.IsAlgebraic.extendScalars (algebraMap E K).injective⟩
+  have : FiniteDimensional E K := IntermediateField.adjoin.finiteDimensional hζint
+  have : NumberField K := NumberField.of_module_finite E K
+  have : IsAlgClosure K (AlgebraicClosure E) := ⟨inferInstance, Algebra.IsAlgebraic.extendScalars (algebraMap E K).injective⟩
   let ζK : K := ⟨ζ, IntermediateField.mem_adjoin_simple_self E ζ⟩
   have hζK : IsPrimitiveRoot ζK M :=
     IsPrimitiveRoot.of_map_of_injective (f := algebraMap K (AlgebraicClosure E)) hζ
       (algebraMap K (AlgebraicClosure E)).injective
   obtain ⟨L, hLfin, hLgal, hLroots⟩ := exists_kummer_field E K (AlgebraicClosure E) Γ M hM ζK hζK
-  haveI := hLfin
-  haveI := hLgal
+  have := hLfin
+  have := hLgal
 
   have hSne : ∀ s : HeightOneSpectrum (𝓞 E), ∃ b ∈ s.asIdeal, b ≠ 0 :=
     fun s => Submodule.exists_mem_ne_zero_of_ne_bot s.ne_bot
@@ -318,7 +318,7 @@ theorem exists_places (E : Type) [Field E] [NumberField E] (S : Finset (HeightOn
     ∃ T : Finset (HeightOneSpectrum (𝓞 E)), Disjoint S T ∧
       ∀ x : Eˣ, (∀ v, v ∉ S → v.valuation E (x : E) = 1) → (∀ t ∈ T, t.valuation E ((x : E) - 1) < 1) →
         ∃ y : E, y ^ m = x := by
-  haveI := GlobalTheory.QNorm.sUnits_fg E S
+  have := GlobalTheory.QNorm.sUnits_fg E S
   obtain ⟨T, hST, hT⟩ := exists_places_of_fg E (GlobalTheory.QNorm.sUnits E S) S m hm
   exact ⟨T, hST, fun x hx hxT => hT x ((GlobalTheory.QNorm.mem_sUnits E S x).mpr hx) hxT⟩
 

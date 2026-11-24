@@ -166,7 +166,7 @@ theorem mem_of_vanish (L : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (𝓞
     Ideal.finite_factors (by rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot])
   set P := hfin.toFinset with hP
   have hmemP : ∀ v, v ∈ P ↔ c₁ ∈ v.asIdeal := fun v => by
-    rw [hP, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+    rw [hP, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   choose ind hind1 hind0 using (exists_ind (F := F))
   set e₁ : FiniteAdeleRing (𝓞 F) F := ∑ v ∈ P, ind v with he₁
   have hev : ∀ w, evalV F w e₁ = if w ∈ P then 1 else 0 := fun w => by
@@ -184,10 +184,10 @@ theorem mem_of_vanish (L : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (𝓞
     · rw [map_sub, map_one, hev]; split_ifs
       · rw [sub_self]; exact zero_mem _
       · rw [sub_zero]; exact one_mem _
-    · rw [map_sub, map_one, hev, if_pos ((hmemP w).2 hw), sub_self]
+    · rw [map_sub, map_one, hev, ite_eq_left ((hmemP w).2 hw), sub_self]
   · by_cases hI : 𝔪.comap (algebraMap (𝓞 F) (𝓞 E)) ≤ v.asIdeal
     · rw [hloc v hI (ind v) (hind1 v) (hind0 v)]; exact zero_mem _
-    · obtain ⟨c, hc, hcv⟩ := SetLike.not_le_iff_exists.1 hI
+    · obtain ⟨c, hc, hcv⟩ := IsConcreteLE.not_le_iff_exists.1 hI
       have hc0 : c ≠ 0 := fun h => hcv (h ▸ zero_mem _)
       refine vanish_smul_mem L 𝔪 hc0 hc (ind_int (hind1 v) (hind0 v)) (fun w hw => hind0 v w ?_) hx
       rintro rfl; exact hcv hw

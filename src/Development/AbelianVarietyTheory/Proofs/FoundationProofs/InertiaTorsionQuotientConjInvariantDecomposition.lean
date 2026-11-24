@@ -186,11 +186,11 @@ theorem exists_zsmul (B : ValuationSubring Ω) {γ : G ℚ Ω} (hγ : Formalism.
   exact this.symm
 
 theorem prime_normV (v : Pl) : (normV v).Prime := by
-  haveI := v.isPrime
-  haveI := v.isMaximal
-  haveI : Finite (𝓞 ℚ ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
+  have := v.isPrime
+  have := v.isMaximal
+  have : Finite (𝓞 ℚ ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   have hp : (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := CharP.char_is_prime (𝓞 ℚ ⧸ v.asIdeal) _
-  haveI : Fact (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := ⟨hp⟩
+  have : Fact (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := ⟨hp⟩
   have hs : Function.Surjective (ZMod.castHom (dvd_refl (ringChar (𝓞 ℚ ⧸ v.asIdeal))) (𝓞 ℚ ⧸ v.asIdeal)) := by
     intro y
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -224,7 +224,7 @@ theorem exists_residue_hom (B : ValuationSubring Ω) {g : G ℚ Ω} (hg : g ∈ 
       σ (IsLocalRing.residue B ⟨x, hx⟩) =
         IsLocalRing.residue B ⟨g x, (apply_mem_iff_of_mem_Dec hg x).2 hx⟩ := by
   let φ : B →+* B := (g : Ω →+* Ω).restrict B B fun x hx => (apply_mem_iff_of_mem_Dec hg x).2 hx
-  haveI : IsLocalHom φ := ⟨fun a ha => by
+  have : IsLocalHom φ := ⟨fun a ha => by
     by_contra hn
     have h1 : B.valuation (a : Ω) < 1 := (B.valuation_lt_one_iff a).1 hn
     have h2 := (valuation_apply_lt_one_iff (F := ℚ) hg _).2 h1
@@ -234,8 +234,8 @@ theorem exists_residue_hom (B : ValuationSubring Ω) {g : G ℚ Ω} (hg : g ∈ 
 theorem exists_frob_pow (k : Type) [Field k] (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) k] (σ : k →+* k)
     (x : k) (hx : IsAlgebraic (ZMod p) x) : ∃ i : ℕ, σ x = x ^ p ^ i := by
   let L := IntermediateField.adjoin (ZMod p) {x}
-  haveI : FiniteDimensional (ZMod p) L := IntermediateField.adjoin.finiteDimensional hx.isIntegral
-  haveI : Finite L := Module.finite_of_finite (ZMod p)
+  have : FiniteDimensional (ZMod p) L := IntermediateField.adjoin.finiteDimensional hx.isIntegral
+  have : Finite L := Module.finite_of_finite (ZMod p)
   let τ : k →ₐ[ZMod p] k :=
     { σ with commutes' := fun r => RingHom.congr_fun (Subsingleton.elim (σ.comp (algebraMap (ZMod p) k)) (algebraMap (ZMod p) k)) r }
   obtain ⟨⟨i, hi⟩, h⟩ := (FiniteField.bijective_frobeniusAlgHom_pow (ZMod p) L).2 (τ.restrictNormal L)
@@ -254,7 +254,7 @@ theorem cycZ_toZModPow_of_mem_Dec {l : ℕ} [Fact l.Prime] {n : ℕ} {w : Pl} {B
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   have hN0 : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
   set m := (((cyclotomicCharacter (Ω) l)
     (MulSemiringAction.toRingAut (G ℚ Ω) (Ω) g)) : ℤ_[l]).toZModPow n |>.val with hm
@@ -263,7 +263,7 @@ theorem cycZ_toZModPow_of_mem_Dec {l : ℕ} [Fact l.Prime] {n : ℕ} {w : Pl} {B
   have hζB : ζ ∈ B :=
     (B.valuation_le_one_iff _).1 (valuation_eq_one_of_pow_eq_one B hN0 hζ.pow_eq_one).le
   have hp := prime_normV w
-  haveI : Fact (normV w).Prime := ⟨hp⟩
+  have : Fact (normV w).Prime := ⟨hp⟩
   have hlt : B.valuation (g ζ - ζ) < 1 := by
     have hpB : B.valuation ((normV w : ℕ) : Ω) < 1 := by
       have hn : normV w = Ideal.absNorm w.asIdeal := by
@@ -274,11 +274,11 @@ theorem cycZ_toZModPow_of_mem_Dec {l : ℕ} [Fact l.Prime] {n : ℕ} {w : Pl} {B
         exact Ideal.absNorm_mem w.asIdeal
       have := (hB ((normV w : ℕ) : 𝓞 ℚ)).2 hmem
       simpa using this
-    haveI : CharP (IsLocalRing.ResidueField B) (normV w) := by
+    have : CharP (IsLocalRing.ResidueField B) (normV w) := by
       refine (CharP.charP_iff_prime_eq_zero hp).2 ?_
       rw [← map_natCast (IsLocalRing.residue B), IsLocalRing.residue_eq_zero_iff, B.valuation_lt_one_iff]
       simpa using hpB
-    letI : Algebra (ZMod (normV w)) (IsLocalRing.ResidueField B) := ZMod.algebra _ (normV w)
+    let : Algebra (ZMod (normV w)) (IsLocalRing.ResidueField B) := ZMod.algebra _ (normV w)
     obtain ⟨σ, hσ⟩ := exists_residue_hom B hg
     have hζp : ζ ^ normV w = ζ := by
       obtain ⟨k, hk⟩ := hdiv
@@ -354,7 +354,7 @@ theorem conj_invariant : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Al
       have e : t ⁻¹' {t x₀} = {τ : G ℚ Ω | τ (GlobalTheory.WeilDeligne.rootOf Ω l (a : ℚ) n) =
           x₀ (GlobalTheory.WeilDeligne.rootOf Ω l (a : ℚ) n)} := by
         ext τ
-        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq]
+        simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_ofPred_eq]
         exact GlobalTheory.WeilDeligne.toZModPow_kummer_eq_iff l a τ x₀ n
       rw [e]
       exact isOpen_setOf_apply _ (fun z => z = x₀ (GlobalTheory.WeilDeligne.rootOf Ω l (a : ℚ) n))
@@ -369,7 +369,7 @@ theorem conj_invariant : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Al
     rw [GlobalTheory.WeilDeligne.kummer_mul, GlobalTheory.WeilDeligne.cycZ_of_mem_Ine hB hl hs, Units.val_one, one_mul, map_add (f := _)]
   let F : G ℚ Ω → M × ZMod (l ^ n) := fun x => (u x, t x)
   have hFlc : IsLocallyConstant (fun s : Ine (F := ℚ) B => F s) :=
-    IsLocallyConstant.prodMk hlc (htlc.comp_continuous continuous_subtype_val)
+    IsLocallyConstant.prodMk hlc (htlc.comp_continuous continuous_subtypeVal)
   have hFadd : ∀ s ∈ Ine (F := ℚ) B, ∀ s' ∈ Ine (F := ℚ) B, F (s * s') = F s + F s' := by
     intro s hs s' hs'
     exact Prod.ext (hadd s hs s' hs') (htadd s hs s' hs')

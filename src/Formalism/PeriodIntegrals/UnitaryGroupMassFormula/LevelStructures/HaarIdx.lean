@@ -92,7 +92,7 @@ theorem toReal_eq_relIndex_mul {G : Type} [Group G] [MeasurableSpace G] [Measura
     rw [htop, ENNReal.toReal_top]
   · have hfin : Finite (K ⧸ H.subgroupOf K) :=
       Subgroup.index_ne_zero_iff_finite.mp (hrel ▸ hpos'.ne')
-    haveI := Fintype.ofFinite (K ⧸ H.subgroupOf K)
+    have := Fintype.ofFinite (K ⧸ H.subgroupOf K)
     have hU : (K : Set G) = ⋃ q : K ⧸ H.subgroupOf K,
         (fun x => ((q.out : K) : G)⁻¹ * x) ⁻¹' (H : Set G) := by
       apply Set.Subset.antisymm
@@ -126,9 +126,9 @@ theorem toReal_eq_relIndex_mul_of_haar {G : Type} [Group G] [TopologicalSpace G]
     (hc : ContinuousMul G) (hB : BorelSpace G) (μ : Measure G) (hμ : μ.IsHaarMeasure)
     (H K : Subgroup G) (hle : H ≤ K) (hH : IsOpen (H : Set G)) :
     (μ K).toReal = (H.relIndex K : ℝ) * (μ H).toReal := by
-  haveI := hc
-  haveI := hB
-  haveI := hμ
+  have := hc
+  have := hB
+  have := hμ
   exact toReal_eq_relIndex_mul_of_open μ H K hle hH
 
 end MassDataLevelSSteps

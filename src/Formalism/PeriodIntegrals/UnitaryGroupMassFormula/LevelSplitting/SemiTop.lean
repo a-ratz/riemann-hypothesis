@@ -72,7 +72,7 @@ theorem piMat_eq (g : HA R σ J) :
 theorem continuous_piMat : Continuous fun g : HA R σ J => piMat (P := P) (T := T) g := by
   have hm : Continuous fun g : HA R σ J =>
       ((HA.mat R σ J g : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have he : (fun g : HA R σ J => piMat (P := P) (T := T) g) = fun g =>
       LinearMap.toMatrix' (datR R σ J P T).pU + LinearMap.toMatrix' (datR R σ J P T).pW *
         ((HA.mat R σ J g : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E)) *
@@ -90,7 +90,7 @@ def fwdM (hP : P.IsStd σ J T) (p : Nsub R σ J P × Hsub R σ J P) : Ssub R σ 
 
 theorem continuous_fwdM (hP : P.IsStd σ J T) : Continuous (fwdM R hP) := by
   apply continuous_induced_rng.2
-  exact (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+  exact (continuous_subtypeVal.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
 
 variable (hσσ : ∀ x, σ (σ x) = x) (hJ : IsHermND σ J) (hP : P.IsStd σ J T)
 include hσσ hJ hP
@@ -98,8 +98,8 @@ include hσσ hJ hP
 theorem continuous_piG : Continuous fun s : Ssub R σ J P => piG hσσ hJ hP (s : HA R σ J) s.2 := by
   apply continuous_induced_rng.2
   refine Units.continuous_iff.mpr ⟨?_, ?_⟩
-  · exact (continuous_piMat (P := P) (T := T)).comp continuous_subtype_val
-  · exact (continuous_piMat_inv (P := P) (T := T)).comp continuous_subtype_val
+  · exact (continuous_piMat (P := P) (T := T)).comp continuous_subtypeVal
+  · exact (continuous_piMat_inv (P := P) (T := T)).comp continuous_subtypeVal
 
 
 variable (R) in
@@ -111,7 +111,7 @@ theorem continuous_bwdM : Continuous (bwdM R hσσ hJ hP) := by
   have hpi := continuous_piG (R := R) hσσ hJ hP
   refine Continuous.prodMk ?_ ?_
   · apply continuous_induced_rng.2
-    exact continuous_subtype_val.mul hpi.inv
+    exact continuous_subtypeVal.mul hpi.inv
   · apply continuous_induced_rng.2
     exact hpi
 
@@ -151,7 +151,7 @@ end Cont
 theorem semidirect_topological_all : PI.LevelKSplit.W.ExS.SemiNHSAll := by
   unfold PI.LevelKSplit.W.ExS.SemiNHSAll PI.LevelKSplit.ForAllCM PI.LevelKSplit.W.ExS.SemiNHS
   intro F E _ _ _ _ _ σ _ M J _ hJ hσσ r P T hP
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   exact semi_gen hσσ hJ hP
 
 end PI.LevelKSplit.W.SemiT

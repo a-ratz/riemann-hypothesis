@@ -57,7 +57,7 @@ private theorem prime_maximal_or_kernel (O : Type) [CommRing O] [IsDomain O] [Is
     [Module.Finite O (B ⧸ P)] :
     P = maximalIdeal B ∨ ((∀ c : O, c ≠ 0 → algebraMap O B c ∉ P) ∧ ∃ σ : B →ₐ[O] K, RingHom.ker σ = P) := by
   classical
-  haveI : Algebra.IsIntegral O (B ⧸ P) := Algebra.IsIntegral.of_finite O (B ⧸ P)
+  have : Algebra.IsIntegral O (B ⧸ P) := Algebra.IsIntegral.of_finite O (B ⧸ P)
   have hcomap : ∀ a : O, algebraMap O (B ⧸ P) a = 0 ↔ algebraMap O B a ∈ P := by
     intro a
     rw [IsScalarTower.algebraMap_apply O B (B ⧸ P), Ideal.Quotient.algebraMap_eq, Ideal.Quotient.eq_zero_iff_mem]
@@ -74,7 +74,7 @@ private theorem prime_maximal_or_kernel (O : Type) [CommRing O] [IsDomain O] [Is
     have hbot : (⊥ : Ideal (B ⧸ P)).comap (algebraMap O (B ⧸ P)) = P.comap (algebraMap O B) := by
       ext a
       rw [Ideal.mem_comap, Ideal.mem_bot, Ideal.mem_comap, hcomap]
-    haveI : (⊥ : Ideal (B ⧸ P)).IsPrime := Ideal.isPrime_bot
+    have : (⊥ : Ideal (B ⧸ P)).IsPrime := Ideal.isPrime_bot
     have hmax := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := O) (⊥ : Ideal (B ⧸ P)) (by
       change ((⊥ : Ideal (B ⧸ P)).comap (algebraMap O (B ⧸ P))).IsMaximal
       rw [hbot]
@@ -89,10 +89,10 @@ private theorem prime_maximal_or_kernel (O : Type) [CommRing O] [IsDomain O] [Is
       intro a ha
       by_contra h0
       exact hc a h0 ((hcomap a).1 ha)
-    haveI : Module.IsTorsionFree O (B ⧸ P) := Module.isTorsionFree_iff_algebraMap_injective.2 hinj
-    haveI : Module.IsTorsionFree O K :=
+    have : Module.IsTorsionFree O (B ⧸ P) := Module.isTorsionFree_iff_algebraMap_injective.2 hinj
+    have : Module.IsTorsionFree O K :=
       Module.isTorsionFree_iff_algebraMap_injective.2 (FaithfulSMul.algebraMap_injective O K)
-    haveI : Algebra.IsAlgebraic O (B ⧸ P) := Algebra.IsIntegral.isAlgebraic
+    have : Algebra.IsAlgebraic O (B ⧸ P) := Algebra.IsIntegral.isAlgebraic
     let τ : (B ⧸ P) →ₐ[O] K := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -100,7 +100,7 @@ private theorem prime_maximal_or_kernel (O : Type) [CommRing O] [IsDomain O] [Is
         @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
     refine ⟨τ.comp (Ideal.Quotient.mkₐ O P), ?_⟩
     have hτ : RingHom.ker (τ : (B ⧸ P) →+* K) = ⊥ := by
-      apply Ideal.eq_bot_of_comap_eq_bot (R := O)
+      apply Ideal.eq_bot_of_under_eq_bot (R := O)
       ext a
       rw [Ideal.mem_comap, RingHom.mem_ker, Ideal.mem_bot]
       change τ (algebraMap O (B ⧸ P) a) = 0 ↔ a = 0
@@ -128,12 +128,12 @@ theorem UpperTheory.V.Alg.M.emb_holds :
     have : LinearMap.range φ = (𝒜 0).map (Ideal.Quotient.mkₐ O I).toLinearMap := by
       rw [LinearMap.range_comp, Submodule.range_subtype]
     rw [this]; exact hM
-  haveI : Module.Finite O (LinearMap.range φ) := Module.Finite.iff_fg.2 hr
-  haveI : Module.Finite O (𝒜 0 ⧸ LinearMap.ker φ) := Module.Finite.equiv φ.quotKerEquivRange.symm
+  have : Module.Finite O (LinearMap.range φ) := Module.Finite.iff_fg.2 hr
+  have : Module.Finite O (𝒜 0 ⧸ LinearMap.ker φ) := Module.Finite.equiv φ.quotKerEquivRange.symm
   let ψ : 𝒜 0 →ₗ[O] (𝒜 0 ⧸ P) := (Ideal.Quotient.mkₐ O P).toLinearMap
   have hk : LinearMap.ker φ ≤ LinearMap.ker ψ := fun b hb =>
     Ideal.Quotient.eq_zero_iff_mem.2 (hIP b (Ideal.Quotient.eq_zero_iff_mem.1 hb))
-  haveI : Module.Finite O (𝒜 0 ⧸ P) := by
+  have : Module.Finite O (𝒜 0 ⧸ P) := by
     refine Module.Finite.of_surjective ((LinearMap.ker φ).liftQ ψ hk) fun y => ?_
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective y
     exact ⟨Submodule.Quotient.mk b, rfl⟩

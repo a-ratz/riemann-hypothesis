@@ -148,7 +148,7 @@ theorem noether_trick : ∀ (k A : Type) [Field k] [CommRing A] [Algebra k A] (t
     apply RingHom.Finite.of_comp_finite (f := AdjoinRoot.mk q)
     rw [hL]; exact hψfin
   have hof : (AdjoinRoot.of q).Finite := by
-    haveI : Module.Finite (Polynomial k) (AdjoinRoot q) := (AdjoinRoot.powerBasis' hq).finite
+    have : Module.Finite (Polynomial k) (AdjoinRoot q) := (AdjoinRoot.powerBasis' hq).finite
     exact RingHom.finite_algebraMap.mpr this
   have hφeq : L.comp (AdjoinRoot.of q) = φ := by
     ext c <;> simp [L, AdjoinRoot.lift_of]
@@ -171,14 +171,14 @@ namespace GlobalTheory
 
 theorem reduced_fibres_almost_all_sep : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [IsDedekindDomain A] [Algebra k A] (y : A), (Polynomial.aeval (R := k) y).Finite → Function.Injective (Polynomial.aeval (R := k) y) → Algebra.IsSeparable (IntermediateField.adjoin k {algebraMap A (FractionRing A) y}) (FractionRing A) → ∃ δ : k[X], δ ≠ 0 ∧ ∀ α : k, δ.eval α ≠ 0 → ∀ Q : Ideal A, Q.IsMaximal → y - algebraMap k A α ∉ Q ^ 2 := by
   intro k A _ _ _ _ _ y hfin hinj hsep
-  letI : Algebra k[X] A := (Polynomial.aeval (R := k) y).toRingHom.toAlgebra
+  let : Algebra k[X] A := (Polynomial.aeval (R := k) y).toRingHom.toAlgebra
   have hmap : ∀ p : k[X], algebraMap k[X] A p = Polynomial.aeval y p := fun p => rfl
-  haveI : IsScalarTower k k[X] A := IsScalarTower.of_algebraMap_eq (fun c => by
+  have : IsScalarTower k k[X] A := IsScalarTower.of_algebraMap_eq (fun c => by
     rw [hmap, Polynomial.algebraMap_apply, Polynomial.aeval_C]; rfl)
-  haveI : Module.Finite k[X] A := hfin
-  haveI : FaithfulSMul k[X] A := (faithfulSMul_iff_algebraMap_injective k[X] A).mpr hinj
-  letI : Algebra (FractionRing k[X]) (FractionRing A) := FractionRing.liftAlgebra k[X] (FractionRing A)
-  haveI : IsScalarTower k[X] (FractionRing k[X]) (FractionRing A) :=
+  have : Module.Finite k[X] A := hfin
+  have : FaithfulSMul k[X] A := (faithfulSMul_iff_algebraMap_injective k[X] A).mpr hinj
+  let : Algebra (FractionRing k[X]) (FractionRing A) := FractionRing.liftAlgebra k[X] (FractionRing A)
+  have : IsScalarTower k[X] (FractionRing k[X]) (FractionRing A) :=
     FractionRing.isScalarTower_liftAlgebra k[X] (FractionRing A)
   set L := FractionRing A
   set K := FractionRing k[X]
@@ -220,16 +220,16 @@ theorem reduced_fibres_almost_all_sep : ∀ (k A : Type) [Field k] [IsAlgClosed 
     rw [← hf]
     change ((RingEquiv.ofBijective f ⟨f.injective, hsurj⟩) ((RingEquiv.ofBijective f ⟨f.injective, hsurj⟩).symm x) : L) = _
     rw [RingEquiv.apply_symm_apply]; rfl
-  haveI : Algebra.IsSeparable K L := Algebra.IsSeparable.of_equiv_equiv e₁ (RingEquiv.refl L) he
+  have : Algebra.IsSeparable K L := Algebra.IsSeparable.of_equiv_equiv e₁ (RingEquiv.refl L) he
   have hD := differentIdeal_ne_bot (A := k[X]) (B := A)
   obtain ⟨d, hd, hd0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hD
-  have hc := Ideal.comap_ne_bot_of_integral_mem hd0 hd (Algebra.IsIntegral.isIntegral (R := k[X]) d)
+  have hc := Ideal.under_ne_bot_of_integral_mem hd0 hd (Algebra.IsIntegral.isIntegral (R := k[X]) d)
   obtain ⟨δ, hδ, hδ0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hc
   refine ⟨δ, hδ0, fun α hα Q hQ hmem' => hα ?_⟩
   have hmem : algebraMap k[X] A (X - C α) ∈ Q ^ 2 := by
     rw [hmap, map_sub, Polynomial.aeval_X, Polynomial.aeval_C]; exact hmem'
   set p : Ideal k[X] := Ideal.span {X - C α} with hpdef
-  haveI hpmax : p.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible (irreducible_X_sub_C α)
+  have hpmax : p.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible (irreducible_X_sub_C α)
   have hp0 : p ≠ ⊥ := by
     rw [hpdef, Ne, Ideal.span_singleton_eq_bot]; exact X_sub_C_ne_zero α
   have hP : Q ^ 2 ∣ p.map (algebraMap k[X] A) := by
@@ -332,7 +332,7 @@ theorem aeval_injective_of_finite_of_not_isField : ∀ (k A : Type) [Field k] [C
   obtain ⟨p, hp, hp0⟩ := hne
   have hyi : IsIntegral k y := (show IsAlgebraic k y from ⟨p, hp0, hp⟩).isIntegral
   set B : Subalgebra k A := (Polynomial.aeval (R := k) y).range with hB
-  haveI : Algebra.IsIntegral k B := by
+  have : Algebra.IsIntegral k B := by
     constructor
     rintro ⟨z, q, rfl⟩
     have : IsIntegral k (Polynomial.aeval y q) := by
@@ -340,7 +340,7 @@ theorem aeval_injective_of_finite_of_not_isField : ∀ (k A : Type) [Field k] [C
       refine IsIntegral.sum _ fun i _ => ?_
       exact (hyi.pow i).smul _
     exact (isIntegral_algHom_iff B.val Subtype.val_injective).1 this
-  haveI : Algebra.IsIntegral k A := by
+  have : Algebra.IsIntegral k A := by
     constructor
     intro x
     have hx : (Polynomial.aeval (R := k) y).toRingHom.IsIntegralElem x := hy.to_isIntegral x
@@ -414,7 +414,7 @@ theorem isFunctionField_fractionRing_of_ringKrullDim_eq_one (k A : Type) [Field 
 theorem exists_separable_normalisation_reduced_fibres : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [IsDedekindDomain A] [Algebra k A] [Algebra.FiniteType k A], ¬ IsField A → ∃ y : A, (Polynomial.aeval (R := k) y).Finite ∧ ∃ δ : k[X], δ ≠ 0 ∧ ∀ α : k, δ.eval α ≠ 0 → ∀ Q : Ideal A, Q.IsMaximal → y - algebraMap k A α ∉ Q ^ 2 := by
   intro k A _ _ _ _ _ _ hA
   have hdim : ringKrullDim A = 1 := ringKrullDim_eq_one_of_isDedekindDomain_of_not_isField A hA
-  haveI : IsFunctionField k (FractionRing A) :=
+  have : IsFunctionField k (FractionRing A) :=
     isFunctionField_fractionRing_of_ringKrullDim_eq_one k A hdim
   obtain ⟨t, ht⟩ := exists_aeval_finite_of_ringKrullDim_eq_one k A hdim
   obtain ⟨a, ha⟩ := exists_D_algebraMap_fractionRing_ne_zero k A
@@ -427,7 +427,7 @@ theorem exists_separable_normalisation_reduced_fibres : ∀ (k A : Type) [Field 
       exact ha
     · exact ⟨t, ht, hD⟩
   obtain ⟨y, hy, hDy⟩ := key
-  haveI := isSeparable_of_D_ne_zero hDy
+  have := isSeparable_of_D_ne_zero hDy
   exact ⟨y, hy, GlobalTheory.T.reduced_fibres_almost_all_of_separable_dedekind_curve k A y hy (aeval_injective_of_finite_of_not_isField k A y hy hA) this⟩
 
 end GlobalTheory

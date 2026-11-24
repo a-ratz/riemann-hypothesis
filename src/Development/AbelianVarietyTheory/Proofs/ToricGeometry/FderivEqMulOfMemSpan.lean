@@ -111,7 +111,7 @@ theorem IsHolFamily.fderiv_eq_zero (h : IsHolFamily ex) {U V : X.Opens} (hU : Is
   have hxU : (ex z).base pt ∈ U := hz (show pt ∈ (⊤ : (Sp ℂ).Opens) from trivial)
   have hxV : (ex z).base pt ∈ V := hV (show pt ∈ (⊤ : (Sp ℂ).Opens) from trivial)
   obtain ⟨f, hfV, hfx⟩ := hU.exists_basicOpen_le (V := V) ⟨(ex z).base pt, hxV⟩ hxU
-  letI := (X.presheaf.map (homOfLE (X.basicOpen_le f)).op).hom.toAlgebra
+  let := (X.presheaf.map (homOfLE (X.basicOpen_le f)).op).hom.toAlgebra
   have hloc := hU.isLocalization_basicOpen f
   obtain ⟨⟨a, s⟩, hq⟩ := IsLocalization.surj (Submonoid.powers f) (X.presheaf.map (homOfLE hfV).op r)
   have hsu : IsUnit (algebraMap Γ(X, U) Γ(X, X.basicOpen f) (s : Γ(X, U))) := IsLocalization.map_units _ s

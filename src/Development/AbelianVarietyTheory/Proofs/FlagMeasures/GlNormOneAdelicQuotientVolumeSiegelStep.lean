@@ -230,7 +230,7 @@ theorem latMean_add (hE : IsTotallyComplex E) (hj : 1 ≤ j) {F G : Submodule �
   rw [Measure.restrict_eq_self_of_ae_mem (s := {g | 0 < detNorm E j g}) (ae_detNorm_pos E j hj)] at H
   have hinv : ∀ γ ∈ autGL E j Λ, ∀ g ∈ {g | 0 < detNorm E j g}, γ * g ∈ {g | 0 < detNorm E j g} := by
     rintro γ ⟨c, -, hc⟩ g hg
-    simp only [Set.mem_setOf_eq, detNorm] at hg ⊢
+    simp only [Set.mem_ofPred_eq, detNorm] at hg ⊢
     refine Finset.prod_pos fun w _ => ?_
     have h1 : Matrix.of ((γ * g) w) = (c : Matrix (Fin j) (Fin j) E).map w.embedding * Matrix.of (g w) := by
       have : Matrix.of (γ w) = (c : Matrix (Fin j) (Fin j) E).map w.embedding := by

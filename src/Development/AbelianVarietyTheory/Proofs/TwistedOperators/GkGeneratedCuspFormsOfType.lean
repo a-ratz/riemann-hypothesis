@@ -164,7 +164,7 @@ theorem exists_quotient_near (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matri
     (hX : X ∈ lieAt V τ) {φ : GA D V → ℂ} (hφ : IsAutFunSm θ V φ) {C : Set (GA D V)} (hC : IsCompact C) {δ : ℝ}
     (hδ : 0 < δ) : ∃ t : ℝ, ∀ x ∈ C,
       ‖Rder θ V τ X φ x - (((t : ℂ)⁻¹) • (rTr V (oneP θ V τ X t) φ + (-1 : ℂ) • φ)) x‖ < δ := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hc := (GlobalTheory.CuspLie.isAutFunSm_Rder hθ hX hφ).cont
   have hu := GlobalTheory.Mem.Lift.continuous_oneP hθ hX
   have h0 := GlobalTheory.Mem.Lift.oneP_zero (V := V) (τ := τ) (X := X) hθ

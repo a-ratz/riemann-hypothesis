@@ -68,7 +68,7 @@ set_option autoImplicit false in
 open CategoryTheory AlgebraicGeometry TopologicalSpace in
 theorem _root_.GlobalTheory.PullbackFinitePoint.residueDegree_ne_zero_iff_finite {X Y : Scheme.{0}} (f : X ⟶ Y) (x : X) :
     f.residueDegree x ≠ 0 ↔ (f.residueFieldMap x).hom.Finite := by
-  letI := (f.residueFieldMap x).hom.toAlgebra
+  let := (f.residueFieldMap x).hom.toAlgebra
   unfold Scheme.Hom.residueDegree RingHom.Finite
   constructor
   · intro h

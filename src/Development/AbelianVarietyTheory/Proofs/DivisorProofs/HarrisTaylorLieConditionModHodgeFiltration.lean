@@ -111,7 +111,7 @@ theorem lie_mod_fil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Dat
   have H : LieExact o₀.A := (GlobalTheory.abelianDeRham.2.1 C₀ o₀.A g o₀.ab hg).1
   obtain ⟨v, hv, -⟩ := H.1 y
   set ωO := algebraMap (𝓞 D.F) D.O D.ω
-  haveI := o₀.act.hom ωO
+  have := o₀.act.hom ωO
   have hω : v ≫ o₀.act.act ωO = GlobalTheory.GrpTangent.epsScale (β b.ρ) ≫ v :=
     isLieImage_eq H (hv.push (o₀.act.act ωO)) (hv.smul (β b.ρ)) hy
   have hx : 𝟙 (Sp C₀) ≫ s = spMap β := by rw [Category.id_comp, hs]
@@ -123,7 +123,7 @@ theorem lie_mod_fil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Dat
   have hwT : ∀ i, IsTangent (epsIso.hom ≫ w i) := fun i => tan_to (hw i 0).1
   choose u hu using fun i => H.2 _ (hwT i)
   refine ⟨u, fun i c => ?_, ?_⟩
-  · haveI := o₀.act.hom (algebraMap (𝓞 D.F) D.O c)
+  · have := o₀.act.hom (algebraMap (𝓞 D.F) D.O c)
     have e : (epsIso.hom ≫ w i) ≫ o₀.act.act (algebraMap (𝓞 D.F) D.O c) =
         GlobalTheory.GrpTangent.epsScale (β (b.t i c)) ≫ epsIso.hom ≫ w i := by
       ext1

@@ -74,7 +74,7 @@ theorem bchar_ne (la : Wt X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : b
   intro i _
   have hd := (hb' τ).1
   have hbt : (mat b τ).BlockTriangular id := fun a c hca => (hb' τ).2 a c hca
-  rw [Matrix.det_of_upperTriangular hbt, Finset.prod_ne_zero_iff] at hd
+  rw [det_of_isUpperTriangular hbt, Finset.prod_ne_zero_iff] at hd
   have hi := hd i (Finset.mem_univ _)
   exact zpow_ne_zero _ hi
 
@@ -94,7 +94,7 @@ theorem phiF_meas {f0 : Frame X.Ψ r → ℂ} {W : Frame X.Ψ r → ℝ≥0∞} 
     have h1 : X.dom = ⋂ τ : X.Ψ, ({x : Frame X.Ψ r | (mat x τ).det ≠ 0} ∩
         ⋂ i : Fin (r + 1), {x | 0 < psgn X.p0 i * (dmin X.Gm x τ i).re}) := by
       ext x
-      simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_inter_iff, mem_ofPred_eq]
       rfl
     rw [h1]
     refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
@@ -155,9 +155,9 @@ theorem nfac_cont (la : Wt X.Ψ r) : ContinuousOn (fun z => X.nfac la (cpt X x0 
     refine continuous_pi fun τ => continuous_pi fun a => continuous_pi fun b => ?_
     unfold nmat
     by_cases h : b < a
-    · simp only [h, dif_pos]
+    · simp only [h, dite_eq_left]
       fun_prop
-    · simp only [h, dif_neg, not_false_eq_true]
+    · simp only [h, dite_eq_right, not_false_eq_true]
       exact continuous_const
   have hc : Continuous fun z : V (nd X) => cpt X x0 z := by
     refine continuous_pi fun τ => ?_

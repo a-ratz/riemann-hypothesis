@@ -250,8 +250,8 @@ lemma pb_mul_norm_le (A A' : B.Mat k r) : ‖A * A'‖ ≤ ((2 * r + k + 1 : ℕ
   calc ‖∑ l, A i l * A' l j‖ ≤ ∑ l, ‖A i l * A' l j‖ := norm_sum_le _ _
     _ ≤ ∑ _l : Fin (2 * r + k + 1), ‖A‖ * ‖A'‖ := Finset.sum_le_sum fun l _ => by
         rw [norm_mul]
-        exact mul_le_mul (Matrix.norm_entry_le_entrywise_sup_norm A)
-          (Matrix.norm_entry_le_entrywise_sup_norm A') (norm_nonneg _) (norm_nonneg _)
+        exact mul_le_mul (norm_apply_le_norm A)
+          (norm_apply_le_norm A') (norm_nonneg _) (norm_nonneg _)
     _ = _ := by simp
 
 lemma pb_dirL_le {x : Bool × B.Mat k r} (hx : B.unitLie k r x.2) (g : B.Mat k r) :
@@ -335,7 +335,7 @@ lemma pb_var (i : (Fin (2 * r + k + 1) × Fin (2 * r + k + 1)) ⊕ (Fin (2 * r +
     refine pb_clm (pbCo a b) (fun g => ?_)
     have e2 : pbCo a b g = g a b := by simp [pbCo] <;> rfl
     rw [e2, one_mul]
-    exact Matrix.norm_entry_le_entrywise_sup_norm g
+    exact norm_apply_le_norm g
   · have e : (fun g : B.Mat k r => pbVar g (Sum.inr (a, b))) = fun g => pbCc a b g := by
       funext g
       simp [pbVar, pbCc] <;> rfl
@@ -343,7 +343,7 @@ lemma pb_var (i : (Fin (2 * r + k + 1) × Fin (2 * r + k + 1)) ⊕ (Fin (2 * r +
     refine pb_clm (pbCc a b) (fun g => ?_)
     have e2 : pbCc a b g = star (g a b) := by simp [pbCc] <;> rfl
     rw [e2, one_mul, norm_star]
-    exact Matrix.norm_entry_le_entrywise_sup_norm g
+    exact norm_apply_le_norm g
 
 lemma pb_pow {e : ℝ} {f : B.Mat k r → ℂ} (hf : PG e f) (m : ℕ) : PG ((m : ℝ) * e) (fun g => f g ^ m) := by
   induction m with

@@ -85,13 +85,13 @@ theorem third_fderiv_symm_two_three {D : ℕ} (φ : (Fin D → ℂ) → ℝ) (z 
   have ev : (⇑(evalL x y) ∘ fderiv ℝ (fderiv ℝ φ)) =ᶠ[𝓝 z]
       (⇑(evalL y x) ∘ fderiv ℝ (fderiv ℝ φ)) := by
     filter_upwards [hev] with w hw
-    simp only [Function.comp_apply, evalL, ContinuousLinearMap.coe_comp',
+    simp only [Function.comp_apply, evalL, ContinuousLinearMap.coe_comp,
       ContinuousLinearMap.apply_apply]
     exact hw.isSymmSndFDerivAt (by first | simp | norm_num | (simp only [minSmoothness_of_isRCLikeNormedField]; norm_num)) x y
   have e := Filter.EventuallyEq.fderiv_eq (𝕜 := ℝ) ev
   rw [key x y, key y x] at e
   have e2 := congrArg (fun L => L u) e
-  simpa only [evalL, ContinuousLinearMap.coe_comp', Function.comp_apply,
+  simpa only [evalL, ContinuousLinearMap.coe_comp, Function.comp_apply,
     ContinuousLinearMap.apply_apply] using e2
 
 theorem dzEntry_symm {D : ℕ} (T : (Fin D → ℂ) →L[ℝ] BilinSp D) (hT : ∀ u x, T u x = T x u)
@@ -196,7 +196,7 @@ theorem dz_add (hf : DifferentiableAt ℝ f z) (hg : DifferentiableAt ℝ g z) :
     first
     | (exact (hf.hasFDerivAt.add hg.hasFDerivAt).fderiv)
   unfold dz
-  rw [e, ContinuousLinearMap.add_apply, ContinuousLinearMap.add_apply]
+  rw [e, add_apply, add_apply]
   ring
 
 theorem dz_mul (hf : DifferentiableAt ℝ f z) (hg : DifferentiableAt ℝ g z) :
@@ -206,7 +206,7 @@ theorem dz_mul (hf : DifferentiableAt ℝ f z) (hg : DifferentiableAt ℝ g z) :
     | (exact (hf.hasFDerivAt.mul hg.hasFDerivAt).fderiv)
   unfold dz
   rw [e]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [add_apply, smul_apply, smul_eq_mul]
   ring
 
 theorem dz_of_eventually_zero (h : f =ᶠ[𝓝 z] fun _ => 0) : dz j f z = 0 := by
@@ -320,8 +320,8 @@ private lemma mdisc_eq_inv_factorial_mul_sum_sign_prod {N : ℕ} (M : Fin N → 
         (((Equiv.Perm.sign σ : ℤ) : ℂ) * ∏ i, M (f i) (σ i) i) := by
     intro S
     by_cases h : ∀ i, f i ∈ S
-    · rw [if_pos h, if_pos ((hiff S).mp h)]
-    · rw [if_neg h, if_neg (fun h' => h ((hiff S).mpr h')), mul_zero, zero_mul]
+    · rw [ite_eq_left h, ite_eq_left ((hiff S).mp h)]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h ((hiff S).mpr h')), mul_zero, zero_mul]
   rw [Finset.sum_congr rfl fun S _ => hS S, ← Finset.sum_mul, sum_superset_neg_one_pow_fin_eq_ite_univ]
   split_ifs <;> simp
 
@@ -384,13 +384,13 @@ theorem mixedDisc_cons_eq_sum {n : ℕ} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) 
           Fin (n + 1) → Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) (f i) (σ i) i else 0) := by
     intro σ f
     by_cases hf : Finset.univ.image f = Finset.univ
-    · simp only [if_pos hf]
+    · simp only [ite_eq_left hf]
       rw [prod_cons_eq_sum_mul_prod_cons_single A B σ f hf, Finset.mul_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [Finset.mul_sum]
       refine Finset.sum_congr rfl fun k _ => ?_
       ring
-    · simp [if_neg hf]
+    · simp [ite_eq_right hf]
   rw [mdisc_eq_inv_factorial_mul_sum_sign_prod]
   simp only [mixedCof, mdisc_eq_inv_factorial_mul_sum_sign_prod]
   simp only [ht]
@@ -440,13 +440,13 @@ theorem monge_ampere_density_cofactor : MaDensCofStatement := by
         (Complex.ofRealCLM.hasFDerivAt.comp y hdy.hasFDerivAt).fderiv
       unfold dzb
       rw [hf]
-      simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, Complex.ofRealCLM_apply]
+      simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, Complex.ofRealCLM_apply]
       ring
     rw [dz_congr heq]
     unfold dz
     rw [hg.fderiv]
-    simp only [hessC, ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
-      ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.apply_apply,
+    simp only [hessC, smul_apply, add_apply,
+      ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearMap.apply_apply,
       Complex.ofRealCLM_apply, smul_eq_mul]
     push_cast
     linear_combination ((fderiv ℝ (fderiv ℝ v) z (Complex.I • Pi.single j 1)

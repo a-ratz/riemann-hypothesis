@@ -192,8 +192,8 @@ theorem exists_map_of_image (ψ : H →* G) {A : Representation ℂ H W₀} {B :
     (hdec : ∀ g, ∃ (h : H) (g' : G), g = ψ h * g' ∧ ∀ x, ψ x * g' = g' * ψ x) :
     ∃ (φ : μ.IntertwiningMap τ) (v : V), φ v ≠ 0 := by
   classical
-  haveI := hτ
-  haveI := hρ
+  have := hτ
+  have := hρ
   let W' := imageSub ψ A μ hdec
   have hWspan : W'.toSubmodule =
       Submodule.span ℂ {u | ∃ (ι : A.IntertwiningMap (μ.comp ψ)) (w : W₀), ι w = u} := rfl

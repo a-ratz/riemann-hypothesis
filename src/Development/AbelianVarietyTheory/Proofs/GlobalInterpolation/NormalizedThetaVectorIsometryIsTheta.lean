@@ -54,7 +54,7 @@ theorem isTheta_eNat_comp : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ)
   have hS : B.StdOK := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.stdOK B hcc hδ
   have hmem := (B.vec_mem_ne hcc hδ h0 hS χ hχ N N' L L' hA).1
   have hQ := Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.rational_integrality_link D cc hcc δ hδ B N N' L L' hA
-  simp only [Th, ThSp, Set.mem_setOf_eq] at hmem
+  simp only [Th, ThSp, Set.mem_ofPred_eq] at hmem
   refine ⟨?_, ?_⟩
   · have hdiff : Differentiable ℂ (fun z => B.eNat χ N N' L L' (e.symm z)) :=
       hmem.1.comp e.symm.differentiable
@@ -75,7 +75,7 @@ theorem isTheta_eNat_comp : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ)
       rw [al, hm, round_intCast]
     have hph : Complex.exp ((Real.pi : ℂ) * Complex.I * (((JMB.beta S.d S.Hm x x).re : ℝ) : ℂ)) = (-1 : ℂ) ^ m := by
       rw [hre, show (Real.pi : ℂ) * Complex.I * ((m : ℝ) : ℂ) = (m : ℂ) * ((Real.pi : ℂ) * Complex.I) by push_cast; ring,
-        Complex.exp_int_mul, Complex.exp_pi_mul_I]
+        Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
     show Complex.exp ((Real.pi : ℂ) * Complex.I * (((JMB.beta S.d S.Hm x x).re : ℝ) : ℂ)) *
         (B.eNat χ N N' L L' (e.symm (z + x)) *
           Complex.exp (-(Real.pi : ℂ) * JMB.hf S.Hm z x - (Real.pi : ℂ) / 2 * JMB.hf S.Hm x x)) =

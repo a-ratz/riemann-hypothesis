@@ -82,7 +82,7 @@ theorem jumps_finite : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (l 
   have hfin : Finite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := by
     refine Nat.finite_of_card_ne_zero ?_
     rw [hP.2.2.2.1]
-    haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+    have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
     exact Module.finrank_pos.ne'
   have hsub : Jumps (PD := (D.loc l).PD K) T ⊆
       ⋃ τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1, {a | IsJumpV ((D.loc l).PD K) T.ρ τ a} := by
@@ -125,7 +125,7 @@ theorem jumps_finite : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (l 
       have : d ∈ S a := ⟨hd, h1⟩
       rw [← heq] at this
       exact this.2
-    haveI : FiniteDimensional ↥LL.1 ↥(S a) :=
+    have : FiniteDimensional ↥LL.1 ↥(S a) :=
       Submodule.finiteDimensional_of_le (inf_le_left : S a ≤ Dm)
     exact lt_of_le_of_lt (Submodule.finrank_mono hle) (Submodule.finrank_lt_finrank_of_lt hlt')
   refine Set.Finite.of_finite_image (f := f) ((Set.finite_Iic (Module.finrank ↥LL.1 ↥Dm)).subset ?_) ?_

@@ -91,8 +91,8 @@ theorem res_tr {H : Type} [Group H] [TopologicalSpace H] (phi : H →* Γ) (hphi
   res_slH1 rho rho' (idSl σ hs) continuous_id he phi hphi x
 
 theorem of_tr_mem_ur (J : Subgroup Γ) (x : H1 rho) (hx : tr σ hs rho rho' he x ∈ H1ur rho' J) : x ∈ H1ur rho J := by
-  have h0 : resH1 rho' J.subtype continuous_subtype_val (tr σ hs rho rho' he x) = 0 := hx
-  have h1 := res_tr σ hs rho rho' he J.subtype continuous_subtype_val x
+  have h0 : resH1 rho' J.subtype continuous_subtypeVal (tr σ hs rho rho' he x) = 0 := hx
+  have h1 := res_tr σ hs rho rho' he J.subtype continuous_subtypeVal x
   exact tr_injective σ hs (rho.comp J.subtype) (rho'.comp J.subtype) (fun g m => he g.1 m)
     (h1.symm.trans (h0.trans (map_zero _).symm))
 
@@ -195,7 +195,7 @@ theorem trG_mem_selOn (Q : Finset (PlE D.host)) (x : H1 (repOn ρ κ Y)) (hx : x
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
   have hv := (mem_Sel _ _ _ _ _).1 hx v
   refine (res_tr (φ : Λ →+* Λ') (vec_smul φ hY) (repOn ρ κ Y) (repOn ρ κ' Y) (repOn_eq_repOn φ hY ρ κ κ' hκ)
-    (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtype_val x) ▸ ?_
+    (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtypeVal x) ▸ ?_
   unfold Formalism.GaloisCohomology.bkCond at hv ⊢
   split_ifs at hv ⊢ with h1 h2
   · exact trL_mem_bkOn bkP i ρ φ κ κ' hκ hY v _ hv
@@ -207,8 +207,8 @@ theorem of_trG_mem_selOn (Q : Finset (PlE D.host)) (x : H1 (repOn ρ κ Y))
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
   have hv := (mem_Sel _ _ _ _ _).1 hx v
   have e := res_tr (φ : Λ →+* Λ') (vec_smul φ hY) (repOn ρ κ Y) (repOn ρ κ' Y) (repOn_eq_repOn φ hY ρ κ κ' hκ)
-    (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtype_val x
-  have hv' : trL i ρ φ κ κ' hκ hY v (resH1 (repOn ρ κ Y) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtype_val x) ∈
+    (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtypeVal x
+  have hv' : trL i ρ φ κ κ' hκ hY v (resH1 (repOn ρ κ Y) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtypeVal x) ∈
       Formalism.GaloisCohomology.bkCond (repOn ρ κ' Y) N.plOm (X.l i) (Spl i ∪ ↑Q) (bkOn bkP i ρ κ' Y) v := e ▸ hv
   unfold Formalism.GaloisCohomology.bkCond at hv' ⊢
   split_ifs at hv' ⊢ with h1 h2

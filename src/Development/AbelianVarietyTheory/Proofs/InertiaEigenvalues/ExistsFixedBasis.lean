@@ -92,8 +92,8 @@ theorem exists_fixed_basis : ∀ (K : UQ) (B : InvAlg K) (M : Submodule K.O B.A)
     rw [hy_eq]
     exact Submodule.smul_mem _ _ (Submodule.sub_mem _ hmem2 (Submodule.smul_mem _ _ hmem1))
 
-  haveI : Module.Finite K.O M := Module.Finite.iff_fg.mpr hM.1
-  haveI : Module.IsTorsionFree K.O M := ⟨fun r hr x y hxy => by
+  have : Module.Finite K.O M := Module.Finite.iff_fg.mpr hM.1
+  have : Module.IsTorsionFree K.O M := ⟨fun r hr x y hxy => by
     have hr0 : r ≠ 0 := hr.ne_zero
     have h0 : algebraMap K.O K.E r ≠ 0 := by
       intro h; exact hr0 (IsFractionRing.injective K.O K.E (by rw [h, map_zero]))
@@ -103,10 +103,10 @@ theorem exists_fixed_basis : ∀ (K : UQ) (B : InvAlg K) (M : Submodule K.O B.A)
     simp only [Submodule.coe_smul] at this
     rw [← algebraMap_smul K.E r (x : B.A), ← algebraMap_smul K.E r (y : B.A)] at this
     exact smul_right_injective B.A h0 this⟩
-  haveI : Module.Free K.O M := Module.free_of_finite_type_torsion_free'
-  haveI : Module.FinitePresentation K.O M := Module.finitePresentation_of_finite K.O M
+  have : Module.Free K.O M := Module.free_of_finite_type_torsion_free'
+  have : Module.FinitePresentation K.O M := Module.finitePresentation_of_finite K.O M
   obtain ⟨κ, a, b, hb⟩ := Module.exists_basis_of_span_of_flat v hspan
-  haveI : Finite κ := Module.Finite.finite_basis b
+  have : Finite κ := Module.Finite.finite_basis b
   let w : κ → B.A := fun i => (b i : B.A)
   have hwO : LinearIndependent K.O w :=
     b.linearIndependent.map' M.subtype M.ker_subtype

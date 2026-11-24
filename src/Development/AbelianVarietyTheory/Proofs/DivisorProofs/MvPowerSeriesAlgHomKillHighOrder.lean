@@ -59,7 +59,7 @@ theorem mvPowerSeries_algHom_kill_high_order :
           (∀ α : σ →₀ ℕ, α.degree < N → coeff α f = 0) → φ f = 0 := by
   intro k _ σ _ A _ _ φ hφ
   classical
-  haveI := Fintype.ofFinite σ
+  have := Fintype.ofFinite σ
   choose m hm using hφ
   set M := Finset.univ.sup m with hMdef
   have hM : ∀ i, φ (X i) ^ M = 0 := fun i =>
@@ -77,10 +77,10 @@ theorem mvPowerSeries_algHom_kill_high_order :
     rw [map_sum]
     simp only [hcoeff]
     by_cases h : ∃ j, M ≤ α j
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       rw [Finset.sum_ite_eq]
       simp
-    · simp only [dif_neg h, Finset.sum_const_zero]
+    · simp only [dite_eq_right h, Finset.sum_const_zero]
       apply hf
       push_neg at h
       rw [Finsupp.degree_eq_sum]

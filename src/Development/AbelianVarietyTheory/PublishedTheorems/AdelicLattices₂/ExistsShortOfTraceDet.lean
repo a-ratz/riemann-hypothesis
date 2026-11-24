@@ -103,8 +103,8 @@ theorem minkowski_linear_forms {ι : Type} [Fintype ι] [DecidableEq ι] (A : Ma
     rw [ENNReal.ofReal_lt_ofReal_iff (by positivity)]
     rw [mul_pow, mul_comm ((2:ℝ) ^ _)]
     exact mul_lt_mul_of_pos_right hlt (by positivity)
-  haveI hcount : Countable (Submodule.span ℤ (Set.range b)) := inferInstance
-  haveI : Countable L := hcount
+  have hcount : Countable (Submodule.span ℤ (Set.range b)) := inferInstance
+  have : Countable L := hcount
   obtain ⟨x, hx0, hxs⟩ := exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure hF hsymm hconv hlt'
   have hxmem : (x : ι → ℝ) ∈ Submodule.span ℤ (Set.range b) := x.2
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun ℤ).mp hxmem
@@ -196,7 +196,7 @@ theorem exists_short_of_trace_det {F : Type} [Field F] [NumberField F] [IsTotall
     ∃ z : κ → ℤ, z ≠ 0 ∧ ∀ φ : F →+* ℂ,
       ‖φ (q (∑ i, z i • b i) (∑ i, z i • b i))‖ ≤ finrank F V * t ^ 2 := by
   classical
-  haveI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  have : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   obtain ⟨e, he⟩ := LinearMap.BilinForm.exists_orthogonal_basis hq
   set ρ : (F →+* ℂ) → (F →+* ℝ) := fun φ => (IsTotallyReal.complexEmbedding_isReal φ).embedding
     with hρ

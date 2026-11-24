@@ -243,7 +243,7 @@ theorem single_mem_iff {Fil : ℤ → Submodule K R} {t : R} (anti : Antitone Fi
     (hex : ∀ x, ex x ∈ Λ) (d : M) (m₀ : ℕ) (hfull : ∀ k : ℤ, (m₀ : ℤ) ≤ k → Pi.single k d ∈ Λ) (k : ℤ) :
     Pi.single k d ∈ Λ ↔ ∀ α, p α d ∈ Fil (-k) := by
   have hev0 : ∀ e, ev e ∈ Fil 0 := fun e => by simpa using (hdiv e 0).2 (by simp)
-  haveI : Nontrivial R := by
+  have : Nontrivial R := by
     by_contra hc
     rw [not_nontrivial_iff_subsingleton] at hc
     have h1 : ev 1 ∈ Fil ((1 : ℕ) : ℤ) := by rw [Subsingleton.elim (ev 1) 0]; exact zero_mem _
@@ -456,8 +456,8 @@ theorem mem_sup_iff (hι : ∀ c, ι c ∈ PD.Fil 0) (a : ℤ) (z : T.V ⊗[Qp] 
 
 theorem finrank_le [IsFractionRing O LL] [Nontrivial O] :
     Module.finrank O ↥T.L.T ≤ Module.finrank LL T.V := by
-  haveI := T.L.free
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
   let b := Module.finBasis O ↥T.L.T
   have h1 : LinearIndependent O (fun j => (b j : T.V)) :=
     b.linearIndependent.map' T.L.T.subtype (Submodule.ker_subtype _)
@@ -485,8 +485,8 @@ theorem lat_eq_fil : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : 
     have h1 := anti (show (0 : ℤ) ≤ ((1 : ℕ) : ℤ) by simp) (hev (PowerSeries.C c) 1)
     have h2 := (hdiv (PowerSeries.C c) 0).2 (by simp)
     simpa using sub_mem h2 h1
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI : IsFractionRing ↥(OL LL) ↥LL.1 := integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : IsFractionRing ↥(OL LL) ↥LL.1 := integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
   let bV := Module.finBasis ↥LL.1 T.V
   have hΛ : ∀ g, g ∈ Lat (Cm l) h T i ζ ↔
       ∃ e : Fin _ → PowerSeries ↥LL.1, g = ∑ j, conv (e j) (ex (Cm l) h T i ζ (nb j)) := fun g =>

@@ -197,14 +197,14 @@ private theorem span_unif {F : Type} [Field F] [NumberField F] (w : HeightOneSpe
     have h1 : Valued.v (x : w.adicCompletion F) < 1 := lt_of_le_of_ne x.2 h
     have h2 : Valued.v (x : w.adicCompletion F) ≤ WithZero.exp (-1 : ℤ) := by
       rcases eq_or_ne (Valued.v (x : w.adicCompletion F)) 0 with h0 | h0
-      · rw [h0]; exact zero_le'
+      · rw [h0]; exact zero_le
       rw [← WithZero.exp_log h0] at h1 ⊢
       rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h1
       rw [WithZero.exp_le_exp]
       omega
     refine ⟨⟨(x : w.adicCompletion F) / p, ?_⟩, Subtype.ext (div_mul_cancel₀ _ hp0)⟩
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, hp]
-    exact div_le_one_of_le₀ h2 zero_le'
+    exact div_le_one_of_le₀ h2 zero_le
   · rintro ⟨z, rfl⟩ h
     have hz : Valued.v (z : w.adicCompletion F) ≤ 1 := z.2
     have h1 : Valued.v ((z : w.adicCompletion F) * p) ≤ WithZero.exp (-1 : ℤ) := by
@@ -238,12 +238,12 @@ theorem UpperTheory.V.Sd.pStab :
   have hne : (Finset.univ.image σ).card ≠ 0 :=
     Finset.card_ne_zero.2 (Finset.univ_nonempty.image σ)
   have h0 := (uopSum F w V ρ 0 x hx).2 _ hS
-  rw [if_pos rfl, hT] at h0
+  rw [ite_eq_left rfl, hT] at h0
   rw [← hcard] at hz hb
   obtain ⟨y, hy0, hy, hU⟩ := gen (w.adicCompletionIntegers F).subtype (atFin w (unif w)) ⟨_, hmem⟩ rfl
     (span_unif w ⟨_, hmem⟩ hπ) ρ _ hne x a b hx0 hx h0.symm hz hb
   refine ⟨y, hy0, hy, ?_⟩
-  rw [(uopSum F w V ρ 1 y hy).2 _ hS, if_neg one_ne_zero, add_zero]
+  rw [(uopSum F w V ρ 1 y hy).2 _ hS, ite_eq_right one_ne_zero, add_zero]
   exact hU
 end -- clump:auto
 end -- clump:auto
@@ -269,8 +269,8 @@ private theorem hecke_eq_dc {G V : Type} [Group G] [AddCommGroup V] [Module ℂ 
     heckeVec ρ K h x = Hi.dc ρ K K a x := by
   classical
   have hfin : (MulAction.orbit K (a : G ⧸ K)).Finite := hf.subset fun c hc => by
-    rw [Set.mem_setOf_eq, h1 _ (by rwa [QuotientGroup.out_eq'])]; exact one_ne_zero
-  letI := hfin.fintype
+    rw [Set.mem_ofPred_eq, h1 _ (by rwa [QuotientGroup.out_eq'])]; exact one_ne_zero
+  let := hfin.fintype
   rw [Hi.dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply, ← finsum_eq_sum_of_fintype,
     finsum_set_coe_eq_finsum_mem (f := fun c : G ⧸ K => ρ c.out x), heckeVec]
   refine finsum_congr fun c => ?_
@@ -283,7 +283,7 @@ variable {F : Type} [Field F] [NumberField F] (w : HeightOneSpectrum (𝓞 F))
 private theorem iwahori_level_zero_eq : K1 w 0 = KGL w (n := 2) := by
   ext g
   refine ⟨fun ⟨k, _, e⟩ => ⟨k, e⟩, fun ⟨k, e⟩ => ⟨k, ?_, e⟩⟩
-  haveI : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) :=
+  have : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) :=
     Ideal.Quotient.subsingleton_iff.2 (by simp)
   exact Subsingleton.elim _ _
 

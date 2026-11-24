@@ -83,7 +83,7 @@ theorem UpperTheory.Reformulated.B.Qi17.schur_scalar :
             ∃ (c : kˣ), (↑g : Matrix (Fin n) (Fin n) k) = (↑c : k) • (1 : Matrix (Fin n) (Fin n) k) := by
   intro Γ k _ _ _ n r hr g hg
   obtain ⟨hne, -, hmin⟩ := hr
-  haveI : Nontrivial (Fin n → k) := by
+  have : Nontrivial (Fin n → k) := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     exact hne (Subsingleton.elim _ _)

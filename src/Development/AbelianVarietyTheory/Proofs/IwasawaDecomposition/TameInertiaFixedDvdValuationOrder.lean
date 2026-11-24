@@ -87,7 +87,7 @@ set_option autoImplicit false in
 private lemma eq_one_of_pow_eq_one_of_ne_zero {Γ : Type*} [LinearOrderedCommGroupWithZero Γ] {a : Γ}
     {k : ℕ} (hk : k ≠ 0) (h : a ^ k = 1) : a = 1 := by
   rcases lt_trichotomy a 1 with h1 | h1 | h1
-  · exact absurd h (pow_lt_one₀ zero_le' h1 hk).ne
+  · exact absurd h (pow_lt_one₀ zero_le h1 hk).ne
   · exact h1
   · exact absurd h (one_lt_pow₀ h1 hk).ne'
 
@@ -159,7 +159,7 @@ theorem _root_.GlobalTheory.Member.TameDivOrd.tame_fixed_dvd_ord : ∀ (W : Type
       Units.map (algebraMap W (FractionRing W) : W →* FractionRing W) u *
         _root_.GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.toUnitK ϖ h0 ^ m := by
     ext
-    simp only [Units.val_mul, Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.val_mul, Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_ofClass]
     rw [show ((_root_.GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.toUnitK ϖ h0 : (FractionRing W)ˣ) : FractionRing W) =
       algebraMap W _ ϖ from rfl, ← map_pow, ← map_mul, ← map_pow, ← map_mul, key]
   have hord : (_root_.GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.ord_vw W).toFun z + m' = m := by

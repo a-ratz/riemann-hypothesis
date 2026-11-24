@@ -147,9 +147,9 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 theorem abPart_mul {S : Scheme.{0}} {t : SAB H S} {K : Type} [Field K] {z : Sp K ⟶ S} (P : AbPart t z) {T : Over (Sp K)}
     (x y : T ⟶ P.tK.G) :
     (x * y) ≫ P.τ.q ≫ P.e.hom = (x ≫ P.τ.q ≫ P.e.hom) * (y ≫ P.τ.q ≫ P.e.hom) := by
-  letI := P.τ.grpB
-  haveI := P.τ.q_hom
-  haveI : IsMonHom P.e.hom := P.e_hom
+  let := P.τ.grpB
+  have := P.τ.q_hom
+  have : IsMonHom P.e.hom := P.e_hom
   rw [← Category.assoc, mul_comp, mul_comp, Category.assoc, Category.assoc]
 
 end GlobalTheory.CompanionTheory.Ar.TanCompare
@@ -398,8 +398,8 @@ open GroundTheory.Heights₂.Heights GlobalTheory.CompanionTheory.Ar.SlopeNorm G
 theorem GlobalTheory.CompanionTheory.Ar.SlopeNorm.sqAt_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X) (L₁ L : Type) [Field L₁] [Field L] [NumberField L] (e₂ : L₁ →+* L) (z₁ : Sp L₁ ⟶ X) (z : Sp (𝓞 L) ⟶ X) (hz : spMap (algebraMap (𝓞 L) L) ≫ z = spMap e₂ ≫ z₁) (P₁ : AbPart t z₁) (P₂ : AbPart t (spMap e₂ ≫ z₁)) (mK2 : SABMap P₂.tK P₁.tK (spMap e₂)) (mB2 : SABMap P₂.tB P₁.tB (spMap e₂)) (c1 : mK2.φ ≫ P₁.m.φ = P₂.m.φ) (c2 : mK2.φ ≫ (P₁.τ.q ≫ P₁.e.hom).left = (P₂.τ.q ≫ P₂.e.hom).left ≫ mB2.φ) (t' : SAB H (Sp (𝓞 L))) (tK : SAB H (Sp L)) (m' : SABMap tK t' (spMap (algebraMap (𝓞 L) L))) (mP : SABMap tK P₁.tB (spMap e₂)) (w : P₂.tB.G.left ⟶ tK.G.left) (hw : w ≫ mP.φ = mB2.φ) (hw' : w ≫ tK.G.hom = P₂.tB.G.hom) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (Li : Type) [AddCommGroup Li] [Module Ω Li] (M₀ : LieModel t.G ξ Li) (K : Type) (J : K → Type) (y : (Σ k, J k) → Ω) (h : LieMetric M₀ y) (K₀ : ℝ) (hQ : ∀ (zc : Sp ℂ ⟶ X) (P : AbPart t zc) (v : epsAt (𝟙 (Sp ℂ)) ⟶ P.tK.G) (v₀ : epsAt zc ⟶ t.G) (c : ℂ), IsTanAt _ _ v → v.left ≫ P.m.φ = v₀.left → HodgeIP P.tB.G P.tB.PP.L (𝟙 _) (v ≫ P.τ.q ≫ P.e.hom) (v ≫ P.τ.q ≫ P.e.hom) c → c.re ≤ K₀ * (h.ip zc v₀ v₀).re) (B B' : GroundTheory.Heights₂.Heights.HermitianBundle.{0} L) (MB : LieModel t.G z B.carrier) (MB' : LieModel t'.G (𝟙 _) B'.carrier) (hB : IsFibre (fun z v w c => c = h.ip z v w) z B MB) (hB' : IsFibre (HodgeIP t'.G t'.PP.L) (𝟙 _) B' MB') (f : B.carrier →ₗ[𝓞 L] B'.carrier) (hf : ∀ (e : B.carrier) (v : epsAt (𝟙 (Sp L)) ⟶ P₂.tK.G), (v.left ≫ P₂.m.φ = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap (𝓞 L) L)) ≫ (MB.pt e).left) → ((v ≫ P₂.τ.q).left ≫ (P₂.e.hom.left ≫ w ≫ m'.φ) = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap (𝓞 L) L)) ≫ (MB'.pt (f e)).left)) (σ : L →+* ℂ) (x : GroundTheory.Heights₂.Heights.Fibre σ B.carrier), sqAt B' σ (f.lTensor (GroundTheory.Heights₂.Heights.ComplexAt σ) x) ≤ K₀ * sqAt B σ x := by
   intro E _ _ _ H X t L₁ L _ _ _ e₂ z₁ z hz P₁ P₂ mK2 mB2 c1 c2 t' tK m' mP w hw hw' Ω _ ξ Li _ _ M₀ K J y h K₀ hQ
     B B' MB MB' hB hB' f hf σ x
-  haveI : Smooth t.G.hom := t.semi.smooth
-  haveI : Smooth t'.G.hom := t'.semi.smooth
+  have : Smooth t.G.hom := t.semi.smooth
+  have : Smooth t'.G.hom := t'.semi.smooth
   obtain ⟨Pσ, mKσ, mBσ, d1, d2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.AbPartFieldChange.exists_baseChange E H X t L₁ ℂ z₁ P₁ (σ.comp e₂)
   obtain ⟨Mσ, hMσ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieSigma.lieModel_fibre X t.G L z B.carrier MB σ
   obtain ⟨Mσ', hMσ'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieSigma.lieModel_fibre (Sp (𝓞 L)) t'.G L (𝟙 _) B'.carrier MB' σ
@@ -841,7 +841,7 @@ theorem sqAt_barMap_le (E E' : HermitianBundle.{0} K) (P : Submodule (𝓞 K) E.
     (σ : K →+* ℂ) (y : Fibre σ (E.quot P hP).carrier) :
     sqAt E' σ ((barMap E E' P hP q hq).lTensor (ComplexAt σ) y) ≤
       c * sqAt (E.quot P hP) σ y := by
-  letI := HermitianBundle.quot_projective hP
+  let := HermitianBundle.quot_projective hP
   let V := subFibre E.metric σ P
   let y' : Fibre σ (E.carrier ⧸ P) := y
   let s : Fibre σ E.carrier := fibreMap σ (HermitianBundle.quotSection E P hP) y'
@@ -1020,7 +1020,7 @@ namespace GlobalTheory.CompanionTheory.Ar.SlopeUnif
 theorem isGrpPullback_iso {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] (e : A ≅ B) [IsMonHom e.hom] :
     IsGrpPullback A B (𝟙 S) e.hom.left := by
   refine ⟨?_, fun T x y x₀ y₀ hx hy => ?_⟩
-  · haveI : IsIso e.hom.left := ((Over.forget S).mapIso e).isIso_hom
+  · have : IsIso e.hom.left := ((Over.forget S).mapIso e).isIso_hom
     exact IsPullback.of_horiz_isIso ⟨by simp⟩
   · have e₁ : (x * y) ≫ e.hom = (x ≫ e.hom) * (y ≫ e.hom) := by
       first | exact Hom.mul_comp _ _ _ | exact MonObj.mul_comp _ _ _ | exact CategoryTheory.Hom.mul_comp _ _ _
@@ -1040,7 +1040,7 @@ theorem exists_compare {S S₁ : Scheme.{0}} {f : S₁ ⟶ S} {A A' : Over S₁}
 theorem slope_unif : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.Published.SemiAbelianHomExtension → SlopeBoundSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y), 1 ≤ D.p + D.q → ∃ C : ℝ, 0 ≤ C ∧ ∀ (L₀ : Type) [Field L₀] [NumberField L₀] (z₀ : Sp (𝓞 L₀) ⟶ 𝔐.X), ∃ (L : Type) (_ : Field L) (_ : NumberField L) (e : L₀ →+* L), ∀ (B : GroundTheory.Heights₂.Heights.HermitianBundle.{0} L) (MB : LieModel 𝔐.t.G (spMap (RingOfIntegers.mapRingHom e) ≫ z₀) B.carrier), IsFibre (fun z v w c => c = h.ip z v w) _ B MB → B.slopeMax ≤ ((C * Real.log (2 + C + max (-B.normDegree ⊤) 0) + C : ℝ) : EReal) := by
   intro hN hP hR hH hS E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 h hpq
   obtain ⟨K₀, hK₀, hQ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.main hR E H D l Xo c Y S Ω K J y 𝔐 h hpq
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   obtain ⟨C₁, hC₁, hT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.torus_unif hH 𝔐.X Ω K J y 𝔐.ξ inferInstance 𝔐.all 𝔐.tie 𝔐.t.G 𝔐.t.semi 𝔐.Li 𝔐.M h
   obtain ⟨C₀, hC₀, hSl⟩ := hS
   obtain ⟨Cc, hCc1, hCcK, hCc₁, hCc₀⟩ : ∃ Cc : ℝ, 1 ≤ Cc ∧ K₀ ≤ Cc ∧ C₁ ≤ Cc ∧ C₀ ≤ Cc :=
@@ -1067,9 +1067,9 @@ theorem slope_unif : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.
   have hslope := hSl E H L t' tK m' hprK B' MB' hB'
   obtain ⟨P₂, mK2, mB2, c1, c2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.AbPartFieldChange.exists_baseChange E H 𝔐.X 𝔐.t L₁ L _ P₁ e₂
   obtain ⟨w, hw, hw', hwp⟩ := exists_compare mB2.cart mP.cart
-  letI := P₂.τ.addCommGroup
-  letI := P₂.τ.grpB
-  haveI := P₂.e_hom
+  let := P₂.τ.addCommGroup
+  let := P₂.τ.grpB
+  have := P₂.e_hom
   have hφ' : IsGrpPullback P₂.τ.B t'.G (spMap (algebraMap (𝓞 L) L)) (P₂.e.hom.left ≫ w ≫ m'.φ) := by
     have := (isGrpPullback_iso P₂.e).comp (hwp.comp m'.cart)
     simpa using this
@@ -1082,7 +1082,7 @@ theorem slope_unif : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.
   have hbd := hbs MT hMT B MB hB ε hε
   have hnb := _root_.GlobalTheory.CompanionTheory.Ar.SlopeNorm.sqAt_le E H 𝔐.X 𝔐.t L₁ L e₂ _ _ hz P₁ P₂ mK2 mB2 c1 c2 t' tK m' mP w hw hw' Ω 𝔐.ξ 𝔐.Li 𝔐.M K J y h K₀
     (fun zc P v v₀ c => (hQ zc P).2 v v₀ c) B B' MB MB' hB hB' f hf
-  haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   have hrk := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finrank_eq 𝔐.X Ω 𝔐.ξ 𝔐.all 𝔐.t.G 𝔐.Li 𝔐.M L _ B.carrier MB
   have hC₁0 : (0 : ℝ) < C₁ := by linarith
   have hCc0 : (0 : ℝ) < Cc := by linarith

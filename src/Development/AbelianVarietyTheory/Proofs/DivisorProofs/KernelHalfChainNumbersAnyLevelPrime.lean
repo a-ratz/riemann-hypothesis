@@ -134,16 +134,16 @@ theorem exists_field_holdsData : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (dl :
     (GlobalTheory.InducedType.induced_type D).1).2 cc dl hC
   choose Mi hMi hcoef using fun i : Fin R.m => hM i.1 i.2
   let M₀ : IntermediateField ℚ ℂ := σ₀.toRatAlgHom.fieldRange
-  haveI f0 : FiniteDimensional ℚ M₀ :=
+  have f0 : FiniteDimensional ℚ M₀ :=
     (AlgEquiv.ofInjectiveField σ₀.toRatAlgHom).toLinearEquiv.finiteDimensional
   let M₂ : IntermediateField ℚ ℂ := ℚ⟮TaylorLogMetric.g2 (TaylorLogMetric.tor0 D cc dl).abelian₂⟯
   let M₃ : IntermediateField ℚ ℂ := ℚ⟮TaylorLogMetric.g3 (TaylorLogMetric.tor0 D cc dl).abelian₂⟯
-  haveI f2 : FiniteDimensional ℚ M₂ :=
+  have f2 : FiniteDimensional ℚ M₂ :=
     IntermediateField.adjoin.finiteDimensional (mem_algebraicClosure_iff.mp h2).isIntegral
-  haveI f3 : FiniteDimensional ℚ M₃ :=
+  have f3 : FiniteDimensional ℚ M₃ :=
     IntermediateField.adjoin.finiteDimensional (mem_algebraicClosure_iff.mp h3).isIntegral
-  haveI f1 : FiniteDimensional ℚ M₁ := inferInstance
-  haveI f4 : FiniteDimensional ℚ (⨆ i, Mi i : IntermediateField ℚ ℂ) :=
+  have f1 : FiniteDimensional ℚ M₁ := inferInstance
+  have f4 : FiniteDimensional ℚ (⨆ i, Mi i : IntermediateField ℚ ℂ) :=
     IntermediateField.finiteDimensional_iSup_of_finite
   let M : IntermediateField ℚ ℂ := (M₀ ⊔ M₁) ⊔ (M₂ ⊔ M₃) ⊔ ⨆ i, Mi i
   have l0 : M₀ ≤ M := le_sup_of_le_left (le_sup_of_le_left le_sup_left)
@@ -197,7 +197,7 @@ theorem famIpAt_nonneg : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (W : Wts X
   have hG : ((((chF W sel mu I u j).mem b).gramV).map v.embedding).PosSemidef := by
     rw [chF_gramV]
     exact (gramB_posDef (W.lamTrue u j) v.embedding).posSemidef
-  letI := (h b).fintypeCl
+  let := (h b).fintypeCl
   exact (ipAt_eq _ (h b) v _ _).symm ▸ wForm_nonneg _ hG _
 
 end GlobalTheory.ColumnFamilyMetric
@@ -218,10 +218,10 @@ theorem card_fibre {K A B C : Type} [Field K] [Field A] [Field B] [Field C] [Cha
     (f : A →ₐ[K] C) :
     (Finset.univ.filter (fun g : B →ₐ[K] C => g.comp (IsScalarTower.toAlgHom K A B) = f)).card
       = Module.finrank A B := by
-  letI : Algebra A C := f.toRingHom.toAlgebra
-  haveI : IsScalarTower K A C := IsScalarTower.of_algebraMap_eq (fun x => (f.commutes x).symm)
-  haveI : FiniteDimensional A B := Module.Finite.of_restrictScalars_finite K A B
-  haveI : CharZero A := charZero_of_injective_algebraMap (algebraMap K A).injective
+  let : Algebra A C := f.toRingHom.toAlgebra
+  have : IsScalarTower K A C := IsScalarTower.of_algebraMap_eq (fun x => (f.commutes x).symm)
+  have : FiniteDimensional A B := Module.Finite.of_restrictScalars_finite K A B
+  have : CharZero A := charZero_of_injective_algebraMap (algebraMap K A).injective
   rw [← AlgHom.card A B C, ← Fintype.card_subtype]
   refine Fintype.card_congr
     { toFun := fun g => { g.1.toRingHom with
@@ -240,7 +240,7 @@ theorem tower {K A B C : Type} [Field K] [Field A] [Field B] [Field C] [CharZero
       (∑ g : B →ₐ[K] C, F (g.comp (IsScalarTower.toAlgHom K A B))) / (Module.finrank K B : ℝ)
         = (∑ f : A →ₐ[K] C, F f) / (Module.finrank K A : ℝ) := by
   classical
-  haveI : FiniteDimensional A B := Module.Finite.of_restrictScalars_finite K A B
+  have : FiniteDimensional A B := Module.Finite.of_restrictScalars_finite K A B
   have hpos : 0 < Module.finrank A B := Module.finrank_pos
   refine ⟨fun f => ?_, fun F => ?_⟩
   · have h := card_fibre (B := B) f
@@ -332,7 +332,7 @@ theorem exists_weights : ∀ (K : Type) [Field K] [NumberField K] [_root_.Number
     exact hw (by simp [hne])
   · intro ρ
     rw [← Finset.sum_mul, Finset.sum_ite_eq]
-    simp only [Finset.mem_univ, if_true]
+    simp only [Finset.mem_univ, ite_true]
     field_simp
 
 end GlobalTheory.PlaceWeights
@@ -366,7 +366,7 @@ theorem logThAt_eq_mul : ∀ (D : D7) (dl : ℂ) (B : Base D D.host.ccK dl) (χ 
   have hE := hT _ B.t0 _ _ _ _ hAdm
   rw [hbase] at hE
   have hs : ∀ n, StandardLatticesGL3.SD D (StandardLatticesGL3.stdL D n) := fun n => by
-    letI := D.host.cmStar
+    let := D.host.cmStar
     exact GlobalTheory.NatAtStd.isSD_pi _ n
   have h := (GlobalTheory.ConjNorm.useNorm_all D _ dl hc _ B.t0 _ _ _ _ (hs _) (hs _) ((even_rank R i).mul_right _) _ hE M ρ hD
     (hH.2.2.2 i hi) t' ht').1
@@ -397,7 +397,7 @@ open Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.B5 (brN br_meanLogOm
 theorem two_log_brN (D : D7) :
     (2 / (Module.finrank ℚ D.host.E : ℝ)) * Real.log (brN D) =
       Real.log D.host.rdE - Real.log (Real.sqrt (D.host.d : ℝ)) := by
-  haveI : Fact D.host.d.Prime := ⟨D.host.hyp.2.1⟩
+  have : Fact D.host.d.Prime := ⟨D.host.hyp.2.1⟩
   have hd0 : (0 : ℝ) < D.host.d := by exact_mod_cast D.host.hyp.2.1.pos
   have hdK : NumberField.discr D.host.K = -(D.host.d : ℤ) :=
     discr_K D.host.K D.host.d (discriminant_mod_four D) _ (br_sqrt_sq D) (br_finrank_K D)
@@ -1006,7 +1006,7 @@ theorem kerSide_chainS : ∀ CY : ℝ, ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (N 
     obtain ⟨hAdm, hbase⟩ := _root_.GlobalTheory.NatAtStd.eNat_std D _ dl B χ h4.2.1 hVe _ _ (hev i) (hev (i + 1))
     rw [← hbase]
     exact (hVe _ _ _ _ hAdm).2.2
-  haveI := hfd
+  have := hfd
   have hfac := fun ρ => hfac CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H B b hY hK hF hE h8 M hM ρ
   obtain ⟨wt, w0, w1, wup, wmean⟩ := GlobalTheory.PlaceWeights.exists_weights X.K s.σ₀ M hM.1
   choose lt hlt using _root_.GlobalTheory.ConjVacuumPower.logThAt_eq_mul D dl B χ cD X.K s.σ₀ N.R M hadm hpsi tcc h4.1 h4.2.1 hVe hM

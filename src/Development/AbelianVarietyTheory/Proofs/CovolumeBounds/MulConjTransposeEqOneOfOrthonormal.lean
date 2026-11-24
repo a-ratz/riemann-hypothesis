@@ -140,7 +140,7 @@ theorem det_mul_eq_sum_minors_of_enum {m n : Type*} [Fintype m] [DecidableEq m] 
     (A * B).det = ∑ S : Set.powersetCard n (Fintype.card m),
       (A.submatrix id (e S)).det * (B.submatrix (e S) id).det := by
   classical
-  letI : LinearOrder n := linearOrderOfSTO WellOrderingRel
+  let : LinearOrder n := linearOrderOfSTO WellOrderingRel
   let φ : Fin (Fintype.card m) ≃ m := (Fintype.equivFin m).symm
   rw [← det_submatrix_equiv_self φ (A * B), submatrix_mul A B φ id φ Function.bijective_id,
     det_mul_eq_sum_minors]

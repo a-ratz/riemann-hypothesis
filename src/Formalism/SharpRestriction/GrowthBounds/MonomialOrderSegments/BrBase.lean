@@ -121,7 +121,7 @@ theorem vQ_nat (hp : p.Prime) (S : Formalism.MainNotions.G.UniformizedDVR p O) (
   exact valuation_natCast_padicVal hp S n hn
 
 theorem dvrHyp (S : Formalism.MainNotions.G.UniformizedDVR p O) {n' : ℕ} (hG : Formalism.MainNotions.G.AdmissibleDVR p n' O) : DVRHyp (vQ p S) p := by
-  haveI := Fact.mk hG.prime
+  have := Fact.mk hG.prime
   refine ⟨hG.prime, hG.five_le, ?_⟩
   rw [vQ_nat hG.prime S p hG.prime.ne_zero, Nat.padicValNat_def, Nat.Prime.multiplicity_self]
   simp
@@ -159,7 +159,7 @@ theorem fact_ne_zero' {σ : Type} (α : σ →₀ ℕ) : fact α ≠ 0 := by
 theorem vBB_eq (hp : p.Prime) (S : Formalism.MainNotions.G.UniformizedDVR p O) {σ : Type} (F : MvPolynomial σ (Formalism.MainNotions.G.KK O)) :
     vBB (vQ p S) F = (Formalism.MainNotions.G.vBB (O := O) p F).map (fun q : ℚ => (q : ℝ)) := by
   unfold vBB Formalism.MainNotions.G.vBB
-  rw [Finset.comp_inf_eq_inf_comp (fun y : WithTop ℚ => y.map (fun q : ℚ => (q : ℝ)))
+  rw [apply_inf_eq_inf_comp (fun y : WithTop ℚ => y.map (fun q : ℚ => (q : ℝ)))
     (fun x y => map_cast_mono.map_min) (by simp)]
   refine Finset.inf_congr rfl fun α _ => ?_
   simp only [Function.comp_apply]
@@ -207,10 +207,10 @@ theorem substS_eq_twistSub {L : Type} [DecidableEq L] {r : ℕ} [NeZero r] (sg :
   funext x
   by_cases hx : x.1 ∈ S
   · have hx' : x.1 ∈ (↑S : Set L) := hx
-    rw [if_pos hx, if_pos hx']
+    rw [ite_eq_left hx, ite_eq_left hx']
     rfl
   · have hx' : x.1 ∉ (↑S : Set L) := hx
-    rw [if_neg hx, if_neg hx']
+    rw [ite_eq_right hx, ite_eq_right hx']
 
 theorem valS_eq {L : Type} [DecidableEq L] {r : ℕ} [NeZero r] (sg : L → Bool) (S : Finset L)
     (F : MvPolynomial (L × Fin r) K) :

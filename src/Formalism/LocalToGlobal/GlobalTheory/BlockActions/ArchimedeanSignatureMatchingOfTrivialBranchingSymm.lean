@@ -89,7 +89,7 @@ theorem archimedeanSignatureMatching_of_trivial_branching_symm (Tf : FormsTiedSy
 
 theorem quotient_not_in_range_symmetric (Tf : FormsTiedSym D u Ch chOf) (x : Fin (D.R.N D.R.m - 1) → D.host.E) :
     iXm D *ᵥ x ≠ fun i => Tf.til.z0 i / ((D.mem u).A.T : D.host.E) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨a, ha⟩ := Tf.til.lastCoordinateUniformizerVector_spans_orthogonal_line
   have hT : ((D.mem u).A.T : D.host.E) ≠ 0 := Nat.cast_ne_zero.mpr (D.mem u).A.T_prime.ne_zero
   have ha0 : a ≠ 0 := by

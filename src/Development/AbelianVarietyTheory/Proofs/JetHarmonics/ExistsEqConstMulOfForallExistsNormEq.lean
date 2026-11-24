@@ -103,11 +103,11 @@ theorem exists_eq_const_mul_of_forall_exists_norm_eq :
       DifferentiableOn ℂ P O → (∀ i, DifferentiableOn ℂ (Q i) O) → (∀ x ∈ O, ∃ i, ‖P x‖ = ‖Q i x‖) →
       ∃ (i : ι) (c : ℂ), ∀ x ∈ O, P x = c * Q i x := by
   intro V _ _ _ ι _ O hO hc hne P Q hP hQ h
-  haveI : CompleteSpace V := FiniteDimensional.complete ℂ V
-  haveI : BaireSpace O := hO.baireSpace
-  haveI : Nonempty O := hne.to_subtype
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
+  have : BaireSpace O := hO.baireSpace
+  have : Nonempty O := hne.to_subtype
   have hcl : ∀ i, IsClosed {x : O | ‖P x‖ = ‖Q i x‖} := fun i =>
-    isClosed_eq (hP.continuousOn.restrict.norm) ((hQ i).continuousOn.restrict.norm)
+    isClosed_eq (hP.continuousOn.domRestrict.norm) ((hQ i).continuousOn.domRestrict.norm)
   have hcov : ⋃ i, {x : O | ‖P x‖ = ‖Q i x‖} = univ := by
     refine eq_univ_of_forall fun x => ?_
     obtain ⟨i, hi⟩ := h x x.2

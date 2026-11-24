@@ -109,7 +109,7 @@ theorem exists_value_family {A : Type} [Finite A] {x : (Σ k, ι k) → Ω} {b :
   refine ⟨{t | ∀ a, eval t (map (Int.castRingHom ℂ) (h a)) ≠ 0},
     fun a t => eval t (map (Int.castRingHom ℂ) (g a)) / eval t (map (Int.castRingHom ℂ) (h a)), ?_,
     fun a => ValRing.eval_ne_zero_of_notMem (hh a) (hn a), ?_, ?_, ?_⟩
-  · rw [Set.setOf_forall]
+  · rw [Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun a => ?_
     have hc : Continuous fun t : (Σ k, ι k) → ℂ => eval t (map (Int.castRingHom ℂ) (h a)) :=
       continuous_iff_continuousAt.2 fun t => (analyticAt_eval _ t).continuousAt
@@ -170,13 +170,13 @@ theorem exists_normalised (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M
     (basePart M.blk z ⟨⟨k, h⟩, F.c ⟨k, h⟩⟩)⁻¹ else 1
   refine ⟨fun p => c p.1 * z p, ⟨c, fun k => ?_, rfl⟩, fun k => ?_⟩
   · by_cases h : ∀ q, M.blk q ≠ some k
-    · simp only [c, dif_pos h]
+    · simp only [c, dite_eq_left h]
       exact inv_ne_zero (hc ⟨k, h⟩)
-    · simp only [c, dif_neg h]
+    · simp only [c, dite_eq_right h]
       exact one_ne_zero
   · obtain ⟨k, h⟩ := k
     show c k * basePart M.blk z ⟨⟨k, h⟩, F.c ⟨k, h⟩⟩ = 1
-    simp only [c, dif_pos h]
+    simp only [c, dite_eq_left h]
     exact inv_mul_cancel₀ (hc ⟨k, h⟩)
 
 theorem good_open (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk) {b : (Σ k, baseIdx ι M.blk k) → ℂ}
@@ -194,7 +194,7 @@ theorem good_open (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk) {b
   refine ⟨W₁ ∩ W₂ ∩ (W₃ ∩ W₄) ∩ {t | ∀ k, t ⟨k, F.c k⟩ ≠ 0}, ?_, ⟨⟨⟨m₁, m₂⟩, m₃, m₄⟩,
     fun k => ne_zero_of_X_notMem (hF.1 k)⟩, ?_, ?_⟩
   · refine ((o₁.inter o₂).inter (o₃.inter o₄)).inter ?_
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun k => isOpen_ne_fun (continuous_apply _) continuous_const
   · rintro t t' ho ⟨⟨⟨h₁, h₂⟩, h₃, h₄⟩, h₅⟩
     refine ⟨⟨⟨s₁ _ _ ho h₁, s₂ _ _ ho h₂⟩, s₃ _ _ ho h₃, s₄ _ _ ho h₄⟩, fun k => ?_⟩
@@ -234,9 +234,9 @@ theorem val_inv (M : FlagModel y Ψ N j) (M' : FlagModel y' Ψ N j) (Cv : FlagCo
       rw [valAt_eq ht (hvA a c), valAt_eq ht (hvB c b)]
   rw [e, Matrix.one_apply]
   split_ifs with hab
-  · rw [if_pos hab] at hv
+  · rw [ite_eq_left hab] at hv
     exact isValueAt_one ht hv
-  · rw [if_neg hab] at hv
+  · rw [ite_eq_right hab] at hv
     exact isValueAt_zero ht hv
 
 theorem left_inv_val (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk) (hF : M.IsFrame F)
@@ -257,9 +257,9 @@ theorem left_inv_val (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk)
     Finset.sum_congr rfl fun m _ => by rw [valAt_eq hb (hv m), valAt_eq hb (hw m)]
   rw [e]
   split_ifs with hII
-  · rw [if_pos hII] at hs
+  · rw [ite_eq_left hII] at hs
     exact isValueAt_one hb hs
-  · rw [if_neg hII] at hs
+  · rw [ite_eq_right hII] at hs
     exact isValueAt_zero hb hs
 
 theorem minor_analytic {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {n : ℕ}
@@ -267,11 +267,11 @@ theorem minor_analytic {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {n 
     (h : ∀ a b, AnalyticAt ℂ (fun w => A w a b) x) : AnalyticAt ℂ (fun w => minorIJ (A w) I J) x := by
   unfold minorIJ
   by_cases e : I.card = J.card
-  · simp only [dif_pos e, Matrix.det_apply']
+  · simp only [dite_eq_left e, Matrix.det_apply']
     refine Finset.analyticAt_fun_sum _ fun σ _ => analyticAt_const.fun_mul
       (Finset.analyticAt_fun_prod _ fun a _ => ?_)
     exact h _ _
-  · simp only [dif_neg e]
+  · simp only [dite_eq_right e]
     exact analyticAt_const
 
 theorem flag_transfer (N j : ℕ) (i : Fin N) (hj : j ≤ N) {κ κ' : Type} [Fintype κ] [Fintype κ']
@@ -287,7 +287,7 @@ theorem flag_transfer (N j : ℕ) (i : Fin N) (hj : j ≤ N) {κ κ' : Type} [Fi
   have hvan : ∀ I, ¬ IsStepRows N j i I → minorIJ (T * h) I (stepCols N j i) = 0 := fun I hI => by
     rcases hvan' (T * h) I hTh hI with e | e
     · exact e
-    · refine dif_neg fun hc => hI ⟨hc, ?_⟩
+    · refine dite_eq_right fun hc => hI ⟨hc, ?_⟩
       rw [e, Finset.card_empty, Finset.card_eq_zero] at hc
       rw [hc]
       exact Finset.empty_subset _
@@ -301,10 +301,10 @@ theorem flag_transfer (N j : ℕ) (i : Fin N) (hj : j ≤ N) {κ κ' : Type} [Fi
       _ = a * minorIJ (T * h) I' (stepCols N j i) := by
           congr 1
           rw [Finset.sum_eq_single I']
-          · rw [hu I' I' hI' hI', if_pos rfl, one_mul]
+          · rw [hu I' I' hI' hI', ite_eq_left rfl, one_mul]
           · intro I _ hne
             by_cases hI : IsStepRows N j i I
-            · rw [hu I' I hI' hI, if_neg hne.symm, zero_mul]
+            · rw [hu I' I hI' hI, ite_eq_right hne.symm, zero_mul]
             · rw [hvan I hI, mul_zero]
           · simp
   have hmin : ∀ I, minorIJ h I (stepCols N j i) = a⁻¹ * ∑ I', if IsStepRows N j i I' then
@@ -315,9 +315,9 @@ theorem flag_transfer (N j : ℕ) (i : Fin N) (hj : j ≤ N) {κ κ' : Type} [Fi
     rw [hCB, Finset.mul_sum]
     refine Finset.sum_congr rfl fun I' _ => ?_
     by_cases hI' : IsStepRows N j i I'
-    · rw [if_pos hI', step I' hI']
+    · rw [ite_eq_left hI', step I' hI']
       field_simp
-    · rw [if_neg hI', hvan I' hI', mul_zero, mul_zero]
+    · rw [ite_eq_right hI', hvan I' hI', mul_zero, mul_zero]
   refine ⟨a' * a⁻¹, mul_ne_zero ha' (inv_ne_zero ha), fun m => ?_⟩
   rw [h1 m, mul_assoc]
   congr 1
@@ -462,10 +462,10 @@ theorem lift_inverse : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
         (ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : (Σ k, ι k) => ℂ) q).analyticAt w
       refine Finset.analyticAt_fun_sum _ fun I _ => (aU _).fun_mul (Finset.analyticAt_fun_sum _ fun I' _ => ?_)
       by_cases hst : IsStepRows N j p.2 I'
-      · simp only [if_pos hst]
+      · simp only [ite_eq_left hst]
         exact (minor_analytic _ _ _ _ fun a b => aT _).fun_mul
           (Finset.analyticAt_fun_sum _ fun m _ => (aV _).fun_mul (aw _))
-      · simp only [if_neg hst]
+      · simp only [ite_eq_right hst]
         exact analyticAt_const
     · have h' : ∀ p, M'.blk p ≠ some k' := fun p e => h ⟨p, e⟩
       refine ⟨fun w m => S w ⟨⟨k', h'⟩, m⟩, fun m w hw => analyticAt_pi_iff.1 (hSa w hw) ⟨⟨k', h'⟩, m⟩,

@@ -142,14 +142,14 @@ theorem entry_bound {τ : E →+* ℂ} {Y : Matrix (Fin r) (Fin r) ℂ} (hY : Y.
       ring
     simp only [hermC, col]
     simp_rw [e, hGG, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
   have h2 := IntegralBasisReduction.hermC_normal X hY _ hg (col Y b) q
   have h3 : Y⁻¹ *ᵥ col Y b = Pi.single b 1 := by
     have : col Y b = Y *ᵥ Pi.single b 1 := by funext i; simp [col]
     rw [this, mulVec_mulVec, nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr hY), one_mulVec]
   rw [h3] at h2
   simp only [Pi.single_apply, mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true] at h2
+    Finset.mem_univ, ite_true] at h2
   rw [← h1, h2, norm_mul, Complex.norm_conj]
   have hs : ‖(((sgn X.p0 (b : ℕ) : ℝ) : ℂ))‖ = 1 := by
     unfold sgn; split_ifs <;> simp
@@ -220,7 +220,7 @@ theorem _root_.GlobalTheory.FlagMahler.Kset_compact (R : ℝ) :
           diagonal (fun a : Fin r => ((_root_.ReciprocityTheory.ChartRestriction.G.FD.sgn X.p0 (a : ℕ) : ℝ) : ℂ))} ∩
           ⋂ a : Fin r, ⋂ c : Fin r, {w | ‖w τ a c‖ ≤ R}) := by
       ext w
-      simp only [_root_.GlobalTheory.FlagMahler.Kset, _root_.ReciprocityTheory.ChartRestriction.G.FD.mat, Set.mem_setOf_eq, Set.mem_iInter,
+      simp only [_root_.GlobalTheory.FlagMahler.Kset, _root_.ReciprocityTheory.ChartRestriction.G.FD.mat, Set.mem_ofPred_eq, Set.mem_iInter,
         Set.mem_inter_iff]
     rw [this]
     refine isClosed_iInter fun τ => IsClosed.inter ?_ ?_
@@ -332,7 +332,7 @@ open scoped ComplexConjugate in
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X : _root_.ReciprocityTheory.ChartRestriction.G.FD.Data E r) in
 theorem _root_.GlobalTheory.FlagMahler.finite_int_sq (D : ℝ) : {n : ℤ | (n : ℝ) ^ 2 ≤ D}.Finite := by
   refine (Set.finite_Icc (-(⌈|D|⌉ + 1)) (⌈|D|⌉ + 1)).subset fun n hn => ?_
-  simp only [Set.mem_setOf_eq] at hn
+  simp only [Set.mem_ofPred_eq] at hn
   have hc : |D| ≤ (⌈|D|⌉ : ℝ) := Int.le_ceil _
   have hD := le_abs_self D
   have h1 : (n : ℝ) ≤ ⌈|D|⌉ + 1 := by nlinarith [sq_nonneg ((n : ℝ) - 1)]
@@ -419,7 +419,7 @@ private theorem finite_setOf_reduced_bounded_invariants (C m : ℝ) (hm : 0 < m)
     exact mul_le_mul (Finset.single_le_sum (f := fun ψ : E →+* ℂ => ‖ψ (X.den : E)‖)
       (fun _ _ => norm_nonneg _) (Finset.mem_univ φ)) (hherm y hy _ _ (hfC i) (hfC j) φ)
       (norm_nonneg _) (Finset.sum_nonneg fun _ _ => norm_nonneg _)
-  · simp only [_root_.ReciprocityTheory.ChartRestriction.G.FD.HermitianLatticeMaps.ty, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq]
+  · simp only [_root_.ReciprocityTheory.ChartRestriction.G.FD.HermitianLatticeMaps.ty, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq]
     intro k i j
     refine (hfrep _ j).trans ?_
     refine div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left ?_ (by positivity)) hm.le
@@ -459,7 +459,7 @@ private theorem kset_subset_dom (R : ℝ) :
     exact (Finset.prod_ne_zero_iff.mpr fun a _ => by exact_mod_cast hs a) this.symm
   · unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.dmin _root_.ReciprocityTheory.ChartRestriction.G.FD.lminor _root_.ReciprocityTheory.ChartRestriction.G.FD.psgn
     rw [hg, submatrix_diagonal _ _ (Fin.castLE_injective _), det_diagonal, Finset.prod_range]
-    simp only [Function.comp_apply, Fin.coe_castLE]
+    simp only [Function.comp_apply, Fin.val_castLE]
     rw [← Complex.ofReal_prod, Complex.ofReal_re, ← Finset.prod_mul_distrib]
     exact Finset.prod_pos fun a _ => mul_self_pos.mpr (hs _)
 
@@ -562,7 +562,7 @@ theorem _root_.GlobalTheory.FlagMahler.mahler_compactness : _root_.ReciprocityTh
   let g : _ → Basis (Fin n) ℤ X.Λ := fun t => if h : t ∈ T then Classical.choose h else _root_.ReciprocityTheory.ChartRestriction.G.FD.RealPlaceEmbeddings.zb X
   have hg : ∀ t ∈ T, _root_.ReciprocityTheory.ChartRestriction.G.FD.HermitianLatticeMaps.ty X (g t) = t := by
     intro t ht
-    simp only [g, dif_pos ht]
+    simp only [g, dite_eq_left ht]
     exact (Classical.choose_spec ht).1
   set R : ℝ := ∑ t ∈ hT.toFinset, ∑ s ∈ S, |_root_.GlobalTheory.FlagMahler.bound X C (g t) s| with hR
   refine ⟨_root_.GlobalTheory.FlagMahler.Kset X R, _root_.GlobalTheory.FlagMahler.Kset_compact X R,

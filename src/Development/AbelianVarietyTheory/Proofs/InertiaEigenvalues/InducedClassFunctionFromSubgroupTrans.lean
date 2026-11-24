@@ -59,7 +59,7 @@ theorem ind_ind_of_le {G : Type} [Group G] [Finite G] (K A : Subgroup G) (hKA : 
     (ψ : K → ℂ) :
     ind A (ind (K.subgroupOf A) (fun k => ψ ⟨((k : A) : G), k.2⟩)) = ind K ψ := by
   classical
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   funext g
   have hcard : Nat.card (K.subgroupOf A) = Nat.card K :=
     Nat.card_congr (Subgroup.subgroupOfEquivOfLe hKA).toEquiv

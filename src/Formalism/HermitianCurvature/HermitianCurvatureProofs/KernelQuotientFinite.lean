@@ -114,9 +114,9 @@ theorem isCompact_intPairs {K : Type} [CommRing K] [TopologicalSpace K] [IsTopol
     {p | IsInt R (((p.1 : GL (Fin s.sum) K) : Matrix (Fin s.sum) (Fin s.sum) K) * pt s t *
       ((p.2 : GL (Fin s.sum) K) : Matrix (Fin s.sum) (Fin s.sum) K))}
   have hScl : IsClosed S :=
-    hMc.isClosed.preimage (((Units.continuous_val.comp (continuous_subtype_val.comp
+    hMc.isClosed.preimage (((Units.continuous_val.comp (continuous_subtypeVal.comp
       continuous_fst)).mul continuous_const).mul
-      (Units.continuous_val.comp (continuous_subtype_val.comp continuous_snd)))
+      (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_snd)))
   have hSsub : S ⊆ ι ⁻¹' (Φ '' Mset) := by
     intro p hp
     refine ⟨_, hp, ?_⟩
@@ -171,7 +171,7 @@ theorem integral_points_finite : Formalism.FourierDecayAlt.A5.IntFinite := by
     by_contra hn
     apply hp
     simp only [f]
-    rw [if_neg]
+    rw [ite_eq_right]
     exact hn
   have : (0 : Measure (lowW K w.1 w.2)).IsMulRightInvariant := ⟨fun g => by simp⟩
   have : (0 : Measure (upUniG K w.1.sum)).IsMulLeftInvariant := ⟨fun g => by simp⟩
@@ -190,7 +190,7 @@ theorem kernel_quotient_finite : Formalism.FourierDecayAlt.A5.KpFinite := by
   simp only [Function.mem_support, pairTerm] at hq
   by_contra hcon
   apply hq
-  rw [if_neg]
+  rw [ite_eq_right]
   · simp
   · intro hI
     exact hcon ⟨hI.1, hI.2⟩
@@ -213,12 +213,12 @@ theorem Kp_eq_sum {K : Type} [CommRing K] (R : Subring K) (ψ : AddChar K ℂ) (
     have h1 : IsInt R (orbZ w (rep R q)) := by simpa using hq
     have h2 : IsInt R (orbZ w' (rep R q')) := by simpa using hq'
     simp only [pairTerm]
-    rw [if_pos ⟨h1, h2⟩]
+    rw [ite_eq_left ⟨h1, h2⟩]
   · intro q hq
     simp only [Function.mem_support, pairTerm] at hq
     by_contra hcon
     apply hq
-    rw [if_neg]
+    rw [ite_eq_right]
     · simp
     · intro hI
       apply hcon
@@ -249,7 +249,7 @@ theorem BB_eq_sum {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologicalRin
     have h3 : phi R w.1 w.2 ψ C e lam (q.1.out, q.2.out) =
       (if IsInt R (orbZ w (rep R q)) then
         (Nat.card (isoSet R (orbZ w (rep R q)) C e lam) : ℂ) else 0) * phase ψ (rep R q) := rfl
-    rw [h3, if_pos h1]
+    rw [h3, ite_eq_left h1]
   · intro q hq
     have h3 : phi R w.1 w.2 ψ C e lam (q.1.out, q.2.out) =
       (if IsInt R (orbZ w (rep R q)) then
@@ -258,7 +258,7 @@ theorem BB_eq_sum {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologicalRin
     rw [h3] at hq
     by_contra hcon
     apply hq
-    rw [if_neg]
+    rw [ite_eq_right]
     · simp
     · intro hI
       apply hcon
@@ -488,10 +488,10 @@ theorem psd_of_rel {T : Type} [Fintype T] (r : Setoid T) (N : T → T → ℕ)
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     congr 1
     by_cases h : r i j
-    · rw [if_pos (Quotient.sound h),
+    · rw [ite_eq_left (Quotient.sound h),
         h1 i j (Quotient.mk r i).out h (Setoid.symm (Quotient.mk_out i))]
       simp
-    · rw [if_neg (fun e => h (Quotient.exact e)), h0 i j h]
+    · rw [ite_eq_right (fun e => h (Quotient.exact e)), h0 i j h]
       simp
   rw [key]
   refine ⟨Complex.ofReal_im _, ?_⟩

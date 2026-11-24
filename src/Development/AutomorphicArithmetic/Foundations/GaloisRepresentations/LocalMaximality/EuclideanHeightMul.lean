@@ -139,9 +139,9 @@ private theorem wd_coe [Module R M] [IsScalarTower ℂ R M]
 private theorem koszulExact_of_regular (hK : KoszulExactBelowLengthOfWeaklyRegular) {κ : Type} [LinearOrder κ] [Fintype κ] (r : κ → S) {d : ℕ}
     (f : Fin d → S) (hS : Stab act R M) (hr : ∀ l, r l ∈ R) (hReg : Reg act M f)
     (hf : ∀ j, InSp R r (f j)) : KE (kos act M r) d := by
-  letI := modR act R M hS
+  let := modR act R M hS
   have hsm : ∀ (a : R) (m : M), ((a • m : M) : E) = act a m := fun _ _ => rfl
-  haveI : IsScalarTower ℂ R M := ⟨fun c a m => Subtype.ext (by
+  have : IsScalarTower ℂ R M := ⟨fun c a m => Subtype.ext (by
     change act ((c • a : R) : S) (m : E) = c • act a m
     simp)⟩
   have hfR : ∀ j, f j ∈ R := by

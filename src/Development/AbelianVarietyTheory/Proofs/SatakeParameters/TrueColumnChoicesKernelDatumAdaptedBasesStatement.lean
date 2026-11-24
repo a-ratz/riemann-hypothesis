@@ -110,7 +110,7 @@ open GlobalTheory.Mem.Chr (finPartI finPartI_eq_self unitIdl)
 theorem mtType_of_hecke {D : D7} {C : CharFrame D} (Dt : DtTied D C) (ξ : HChar D.host.E) {n : ℕ} (hn : 0 < n) (hord : ξ.OrderDvd n)
     (mt : ℕ → D.Dt →* ℂˣ) (h : ∀ (j : Fin D.R.m) a, IsFinIdele a → mt (j.1 + 1) (Dt.eDt a) = (C.mu0 j * ξ).1 a) (u : D.what₂.Word) :
     MtType u mt := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hcm : IsCMField D.host.E := D.host.isCMField_hostE
   intro i hi
   have hun : (C.mu0 ⟨i, hi⟩ * ξ).IsUnitary := fun x => by
@@ -189,7 +189,7 @@ theorem mtType_std (hok : I.Ok) (hp : TC.Pins B X) (l : I.Laws) (Z : TC.Later B 
   have hm : 1 ≤ j.1 + 1 ∧ j.1 + 1 ≤ B.R.m := ⟨by omega, j.2⟩
   have e1 : (O u a).mt (j.1 + 1) = (I.rec7 l Z).muTil (j.1 + 1) * (show (I.rec7 l Z).Dt →* ℂˣ from tildeQ B.host I.SQ (I.xi a)) := by
     rw [hO.mt u a]
-    exact if_pos hm
+    exact ite_eq_left hm
   rw [e1, MonoidHom.mul_apply, T.muTil_eq j x hx, hT x]
   have e2 : (tildeQ B.host I.SQ (I.xi a)) (QuotientGroup.mk x) = (I.xi a).1 x :=
     (tildeQ_mk B.host I.SQ hk x).trans (congrArg _ (finPartI_eq_self hx))
@@ -224,7 +224,7 @@ theorem adaptedTh_kerEntC {D : D7} {P : Examples₂.EntPl D} {O : ∀ u μ, GL3T
     have hs0 : s ≠ 0 := by
       intro h0
       have hd := (hB u μ w (i + 1) hi c' k.1).1
-      haveI hne : Nonempty (Fin (D.R.N (i + 1))) := ⟨j.2.2⟩
+      have hne : Nonempty (Fin (D.R.N (i + 1))) := ⟨j.2.2⟩
       rw [h4 (i + 1) hi c' k.1, ← hs, h0, _root_.inv_zero, zero_pow (by omega), zero_smul] at hd
       exact hd Matrix.det_zero
     have hdet : ((Pm i c k.1).map (tauEmb D (P.lam w) k.1)).det ≠ 0 := (h1 i hi.le c k.1).1
@@ -323,7 +323,7 @@ theorem canM_ker (hfit : ∀ s c, (nu s).colLen c ≤ N) (χ : Module.Dual (Cw D
   ext i j
   have hj : (j : ℕ) < N := lt_of_lt_of_le j.2 (hfit s c)
   have hs : e.symm (tauPl D s) = s := e.symm_apply_apply s
-  simp only [Matrix.of_apply, GL3Columns.colsOf, dif_pos hj, hs]
+  simp only [Matrix.of_apply, GL3Columns.colsOf, dite_eq_left hj, hs]
 
 end GlobalTheory.KerVal
 
@@ -342,7 +342,7 @@ theorem onMin_canInv_mem (hfit : ∀ s c, (nu s).colLen c ≤ N) (F : FrP D w N 
     (J : KM.ColChoice N nu) : ∃ b : D.what₂.LL, onMin D w N nu (canInv D w N nu F) J = P.iL w b := by
   set ψ := canInv D w N nu F with hψdef
   have hψ : canM D w N nu ψ = F := canInv_spec D w N nu F hF
-  letI : Algebra D.what₂.LL (Cw D w) := (P.iL w).toAlgebra
+  let : Algebra D.what₂.LL (Cw D w) := (P.iL w).toAlgebra
   obtain ⟨π, hπ⟩ := LinearMap.exists_leftInverse_of_injective (Algebra.linearMap D.what₂.LL (Cw D w))
     (LinearMap.ker_eq_bot.2 (P.iL w).injective)
   let ρ : Cw D w → Cw D w := fun z => P.iL w (π z)
@@ -607,7 +607,7 @@ theorem evC_ratSpan_gen {D : D7} (O : ∀ u μ, GL3Theta.LiftObj D (D.chTw u μ)
     simp only [Pi.one_apply, one_mul]
     rfl
 
-  haveI hLL : Infinite D.what₂.LL := Infinite.of_injective (fun n : ℕ => (n : D.what₂.LL)) (fun a b h => by
+  have hLL : Infinite D.what₂.LL := Infinite.of_injective (fun n : ℕ => (n : D.what₂.LL)) (fun a b h => by
     have := congrArg D.what₂.embLL h; simp only [map_natCast] at this; exact_mod_cast this)
   have hmem : (secC O u μ i v : MvPolynomial (GL3Theta.FrV D (D.R.N i)) D.what₂.LL) ∈ polV D u i := (secC O u μ i v).2
   rcases i with _ | j
@@ -640,7 +640,7 @@ theorem evC_ratSpan_gen {D : D7} (O : ∀ u μ, GL3Theta.LiftObj D (D.chTw u μ)
         funext τ r
         rw [natW_lamTG M (j + 1) hi τ r, ← natW_succ (antitone_kernelChain_nuT D) u j hj τ r]
         have h1 := clause1 (antitone_kernelChain_nuT D) u (j + 1) hi τ r
-        have h2 : nn D u (j + 1) τ = nuT D u (j + 1) τ (lastI D (j + 1)) := by unfold nn; rw [if_pos hi]
+        have h2 : nn D u (j + 1) τ = nuT D u (j + 1) τ (lastI D (j + 1)) := by unfold nn; rw [ite_eq_left hi]
         omega
       rw [e]; exact hmem
     · rw [hev, hfn, MvPolynomial.eval_map]
@@ -969,7 +969,7 @@ theorem exists_unitary_at (p : ℕ) (hp : p.Prime) {N : ℕ} (L : Submodule (�
     ∃ G : Matrix (Fin N) (Fin N) D.host.E, (G.map D.host.conj).transpose * G = 1 ∧
       (∀ x ∈ L, ∃ k : ℕ, ¬ p ∣ k ∧ ∃ c : Fin N → 𝓞 D.host.E, (k : D.host.E) • x = G.mulVec (fun a => (c a : D.host.E))) ∧
       (∀ a, ∃ k : ℕ, ¬ p ∣ k ∧ (k : D.host.E) • (fun i => G i a) ∈ L) := by
-  haveI := GlobalTheory.DefiniteMass.unramified_of_isCMUnram D.sp.cm.cmUnram
+  have := GlobalTheory.DefiniteMass.unramified_of_isCMUnram D.sp.cm.cmUnram
   have hsd : (⟨L, hL.1, hL.2.1⟩ : GlobalTheory.IndefiniteRowSideFullHecke.AdmissibleHarmonicLattice.Lat D.host.E N).SelfDual := by
     intro x
     have h3 := hL.2.2 x
@@ -1431,7 +1431,7 @@ theorem kerEntHyp_scB {Dx : DivX D} {Tw : TwForms D} (ha : ∀ w u μ τ, ‖a w
     rw [prTC_scB P O B a hC u μ w i hi, k0, thAtW_scB P O B a ha hB u μ w i hi c c',
       GlobalTheory.KerRescale.applyAt0_rescale _ _ _ (fun s => a w u μ (tauPl D s)), map_smul, smul_eq_mul, prSC_scB P O B a hC u μ w i hi]
     unfold unC
-    rw [if_neg hF, if_neg hF', unF_scB]
+    rw [ite_eq_right hF, ite_eq_right hF', unF_scB]
     have key : (∏ τ, ((a w u μ τ ^ i) ^ D.R.N i) ^ ((D.chTw u μ).sSharp i τ)) *
         (∏ τ, ((a w u μ τ ^ i) ^ D.R.N i) ^ (-(D.chTw u μ).sSharp i τ)) = 1 := by
       rw [← Finset.prod_mul_distrib]
@@ -1475,7 +1475,7 @@ theorem GlobalTheory.Pdv.kerEntC_true : ∀ {B : Base} {X : PreX B.toPre} (I : T
     ⟨Pm w u μ, h1 w u μ, h2 w u μ, h3 w u μ, fun i _ c τ => by
       show GlobalTheory.KerRescale.adUnit Pl O w u μ τ ^ i • _ = _
       unfold GlobalTheory.KerRescale.adUnit
-      rw [if_pos hw]⟩
+      rw [ite_eq_left hw]⟩
   exact ⟨_, h, ⟨fun u μ w _ => kfTieOf Pl O _ hBs hC h u μ w, fun u μ w _ => kfTieOf_un Pl O _ hBs hC h u μ (hR u μ) w⟩,
     KerEntTrue.adaptedTh_kerEntC hBs hA h⟩
 

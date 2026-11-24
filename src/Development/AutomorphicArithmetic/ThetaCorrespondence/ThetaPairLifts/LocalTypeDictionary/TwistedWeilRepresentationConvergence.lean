@@ -169,7 +169,7 @@ theorem sum_mixS_le : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D
     intro ξ
     by_cases h0 : (_root_.I195MixedCoordinates_36336a34ca84d0e19c17303f.source d) X ψ μ' 𝓕' Ψ (HMul.hMul (ξ.map (incA D) : Mx D X.rank r) α) 0 = 0
     · have hz : d.mixS X ψ μ' 𝓕' Ψ (HMul.hMul (ξ.map (incA D) : Mx D X.rank r) α) 0 = 0 := h0
-      rw [hz, enorm_zero]; exact bot_le
+      rw [hz, eNorm_zero]; exact bot_le
     have hfin : (HMul.hMul (ξ.map (incA D) : Mx D X.rank r) α).map (finPart D) =
         (ξ.map (incA D) : Mx D X.rank r).map (finPart D) := by
       rw [Matrix.map_mul, hα, Matrix.mul_one]
@@ -304,7 +304,7 @@ theorem torus_bound : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam
       (GlobalTheory.Size.sobO (V := sgn ε M) (W := X) ψ θ μ 𝓕 k Ψ).toReal * ∏ i, t i ^ (Module.finrank ℚ D.host.F * X.rank)) := by
     refine hle.trans ((mul_le_mul' le_rfl h2).trans_eq ?_)
     rw [← ENNReal.ofReal_mul hP, mul_comm]
-  rw [← ofReal_norm_eq_enorm] at h3
+  rw [← ofReal_norm] at h3
   exact (ENNReal.ofReal_le_ofReal_iff (mul_nonneg hQ hP)).1 h3
 
 end GlobalTheory.SiegelTorusTheta
@@ -476,7 +476,7 @@ theorem weilConvergence_of_siegelSet (hRT : GlobalTheory.Published.SiegelSetUnit
       C₁ * (ENNReal.ofReal (max C 0 * (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ X h : ℝ) ^ N) * I) := fun h => by
     have hA : 0 ≤ max C 0 * (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ X h : ℝ) ^ N := by positivity
     calc ∫⁻ g in 𝓕, ‖thetaKO ω g h Φ‖ₑ ∂ν ≤ ∫⁻ g in S, ‖thetaKO ω g h Φ‖ₑ ∂ν :=
-          _root_.GlobalTheory.lintegral_fundamentalDomain_le_of_meets_orbits (GQ M) ν hν.2 hSm hScov (hcont h).enorm.measurable
+          _root_.GlobalTheory.lintegral_fundamentalDomain_le_of_meets_orbits (GQ M) ν hν.2 hSm hScov (hcont h).eNorm.measurable
             (fun γ hγ g => by rw [hinv h γ hγ g])
       _ ≤ C₁ * ∫⁻ t in GlobalTheory.SiegelSet.cone r c, ENNReal.ofReal (max C 0 * (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ X h : ℝ) ^ N *
             ∏ i, t i ^ (Module.finrank ℚ D.host.F * X.rank)) *
@@ -485,7 +485,7 @@ theorem weilConvergence_of_siegelSet (hRT : GlobalTheory.Published.SiegelSetUnit
           have ht0 : ∀ i, 0 < t i := ht.1
           have hP : 0 ≤ ∏ i, t i ^ (Module.finrank ℚ D.host.F * X.rank) :=
             Finset.prod_nonneg fun i _ => pow_nonneg (ht0 i).le _
-          rw [← ofReal_norm_eq_enorm]
+          rw [← ofReal_norm]
           refine ENNReal.ofReal_le_ofReal ((hC h q hq t ht a ha k hk).trans ?_)
           have hH : 0 ≤ (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ X h : ℝ) ^ N := by positivity
           gcongr
@@ -496,7 +496,7 @@ theorem weilConvergence_of_siegelSet (hRT : GlobalTheory.Published.SiegelSetUnit
           exact lintegral_congr fun t => by rw [ENNReal.ofReal_mul hA, mul_assoc]
   refine ⟨N, (C₁ : ℝ) * max C 0 * I.toReal, fun h => ⟨⟨(hcont h).aestronglyMeasurable, ?_⟩, ?_⟩⟩
   · exact (key h).trans_lt (by finiteness)
-  · rw [integral_norm_eq_lintegral_enorm (hcont h).aestronglyMeasurable]
+  · rw [integral_norm_eq_lintegral_eNorm (hcont h).aestronglyMeasurable]
     have hA : 0 ≤ max C 0 * (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraExponentialFamilies.height θ X h : ℝ) ^ N := by positivity
     refine (ENNReal.toReal_mono (by finiteness) (key h)).trans (le_of_eq ?_)
     rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_ofReal hA, ENNReal.coe_toReal]

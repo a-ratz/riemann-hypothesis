@@ -224,9 +224,9 @@ noncomputable def glueTup (Y : (Fin n → Fin M → Ainf F ⊗[F] E) × (Fin n �
       ((Algebra.TensorProduct.basis (Af F) b).repr (Y.2 a i) k)
 
 theorem continuous_glueTup : Continuous (glueTup (F := F) (E := E) b (M := M) (n := n)) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
-  haveI : ContinuousSMul (AF F) (AF F ⊗[F] E) := IsModuleTopology.toContinuousSMul (AF F) _
+  have : FiniteDimensional F E := Module.Finite.of_basis b
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : ContinuousSMul (AF F) (AF F ⊗[F] E) := IsModuleTopology.toContinuousSMul (AF F) _
   have hs : Continuous (Algebra.TensorProduct.basis (AF F) b).equivFun.symm :=
     IsModuleTopology.continuous_of_linearMap
       (Algebra.TensorProduct.basis (AF F) b).equivFun.symm.toLinearMap
@@ -260,7 +260,7 @@ end GlobalTheory.ProdCont
 open GlobalTheory.ProdCont in
 theorem GlobalTheory.prod_continuous_hasCompactSupport : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (M n : ℕ) (Φ : (Fin n → Fin M → AF F ⊗[F] E) → ℂ) (Φi : (Fin n → Fin M → Ainf F ⊗[F] E) → ℂ) (Φf : (Fin n → Fin M → Af F ⊗[F] E) → ℂ), Continuous Φi → HasCompactSupport Φi → Continuous Φf → HasCompactSupport Φf → IsProdInfFin Φ Φi Φf → Continuous Φ ∧ HasCompactSupport Φ := by
   intro F E _ _ _ _ _ M n Φ Φi Φf hci hki hcf hkf hΦ
-  haveI : FiniteDimensional F E := inferInstance
+  have : FiniteDimensional F E := inferInstance
   let b := Module.finBasis F E
   have hpf : Continuous (projFin (F := F) (E := E) (M := M) (n := n)) :=
     continuous_pi fun a => continuous_pi fun i =>
@@ -322,7 +322,7 @@ theorem meanL_eq_ofReal_meanC_re (G : Type) [MeasurableSpace G] (μ : Measure G)
   set S : G → ℝ≥0∞ := fun h => ∑' i, ENNReal.ofReal (f i h) with hSdef
   have hnorm : ∀ i h, ‖((f i h : ℝ) : ℂ)‖ₑ = ENNReal.ofReal (f i h) := by
     intro i h
-    rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_of_nonneg (h0 i h)]
+    rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg (h0 i h)]
   have hS : ∫⁻ h in 𝓕, S h ∂μ < ⊤ := by
     simpa only [hnorm] using hI
   have hSm : Measurable S := Measurable.tsum (fun i => (hm i).ennreal_ofReal)
@@ -645,7 +645,7 @@ theorem sw1b2_of_cc : GlobalTheory.GaussMean.OneVectorCc → ∀ (F E : Type) [F
       · rw [Set.indicator_of_mem hX, Pi.one_apply, hf1 hX, Pi.one_apply]; simp
       · rw [Set.indicator_of_notMem hX]; exact bot_le
     show (C • (fi βi).map eV) K < ⊤
-    rw [Measure.smul_apply, Measure.map_apply eV.continuous.measurable hK.isClosed.measurableSet, smul_eq_mul]
+    rw [smul_apply, Measure.map_apply eV.continuous.measurable hK.isClosed.measurableSet, smul_eq_mul]
     exact ENNReal.mul_lt_top hCtop (hle.trans_lt hint.2)
 
   have htest : ∀ φ : (Fin N → ℝ) → ℝ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) φ → HasCompactSupport φ →

@@ -60,7 +60,7 @@ private theorem inv_row {R : Type} [CommRing R] {n : ℕ} (m : ℕ) (k : Fin n) 
       refine (hp i hi).2 j ?_
       rw [Fin.lt_def]
       split_ifs at hij <;> omega
-    haveI : Invertible p.val := p.invertible
+    have : Invertible p.val := p.invertible
     have hq := Matrix.blockTriangular_inv_of_blockTriangular hb
     intro j hj
     rw [Matrix.coe_units_inv]
@@ -118,7 +118,7 @@ theorem UpperTheory.V.Af.Smo.colConj :
     · have : m ≠ k := fun h => by have := congrArg Fin.val h; omega
       simp [hk, vecMulVec_apply, hb1, Matrix.one_apply_ne this]
     · intro j _ hj
-      rw [if_neg fun h => hj (Fin.ext (by omega))]
+      rw [ite_eq_right fun h => hj (Fin.ext (by omega))]
     · simp
     · intro i _ hi
       refine Finset.sum_eq_zero fun j _ => ?_

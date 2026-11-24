@@ -787,8 +787,8 @@ theorem coord_conj_le : ∀ (D : D7), ∀ (cc : Ideal (𝓞 D.host.K)) (δ : ℂ
     have h1 : ‖ρ ⟨c, hcQ⟩‖ = 1 := hc1 (ρ : Qbar →+* ℂ)
     simp only [map_mul, norm_mul, h1, one_mul]
     exact hr (ρ : Qbar →+* ℂ)
-  haveI := (_root_.GlobalTheory.NormSum.cls_finite_card_le D P.a).1
-  haveI := Fintype.ofFinite (Cls D P.a (intG D P.a))
+  have := (_root_.GlobalTheory.NormSum.cls_finite_card_le D P.a).1
+  have := Fintype.ofFinite (Cls D P.a (intG D P.a))
   have e : P.coord h T = ∑ x : Cls D P.a (intG D P.a),
       ((((gam D (intG D P.a) x.out : Qbar))⁻¹ : Qbar) : ℂ) * P.term x.out h T := by
     unfold Pair.coord
@@ -1005,7 +1005,7 @@ theorem arch_grid : GlobalTheory.SqTop.GBig fun {D} _ _ {sc} G μ₀ C _ b => �
   refine ⟨0, fun ε CF _ => ⟨C0, 0, fun C hC D large₂ _ _ hR T Lc μ₀ hμ G => ?_⟩⟩
   rintro zA zA' ⟨δ, t0, h⟩
   choose P P' hB hz hz' using h
-  haveI := D.tcLL
+  have := D.tcLL
   obtain ⟨-, -, hf4, hm44, -, -, -, -, -, hrd1, hrd2, -⟩ := hR.size
   have hLpos : 0 < large₂.sc.L := Real.rpow_pos_of_pos (by linarith [large₂.sc.one_lt_alt]) _
   have hL1 : (1 : ℝ) ≤ large₂.sc.L := Real.one_le_rpow large₂.sc.one_lt_alt.le large₂.sc.eps_pos.le

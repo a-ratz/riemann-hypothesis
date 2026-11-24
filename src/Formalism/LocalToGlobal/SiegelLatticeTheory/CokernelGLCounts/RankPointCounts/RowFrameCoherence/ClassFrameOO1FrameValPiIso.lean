@@ -77,7 +77,7 @@ theorem frame_alg (u u' : D.what₂.Word) {h h' : X.B.I.Ginf} (hh : h ∈ X.Sinf
     simp only [ContinuousLinearMap.comp_apply, piU_mul_inv_apply X u' hh', piU_mul_inv_apply X u hh]
   rw [h1, hE]
   ext x
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, map_smul]
+  simp only [smul_apply, ContinuousLinearMap.comp_apply, map_smul]
 
 section Transfer
 

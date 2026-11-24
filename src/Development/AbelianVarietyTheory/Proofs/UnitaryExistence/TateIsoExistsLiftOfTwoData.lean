@@ -78,7 +78,7 @@ theorem tateIso_exists_lift_of_two_data (I : TateIso D k Q act e) (I' : TateIso 
   have hs : Function.Surjective ((LinearMap.fst (𝓞 E) D.La D'.La).comp R.subtype) := fun a => by
     obtain ⟨b, hb⟩ := (I'.onto n hn _).1 (tateIso_ev_pow I hn a)
     exact ⟨⟨(a, b), hb.symm⟩, rfl⟩
-  haveI := D.proj
+  have := D.proj
   obtain ⟨s, hs⟩ := Module.projective_lifting_property _ LinearMap.id hs
   refine ⟨((LinearMap.snd (𝓞 E) D.La D'.La).comp R.subtype).comp s, fun a => ?_⟩
   have h1 : (s a).1.1 = a := LinearMap.congr_fun hs a
@@ -105,7 +105,7 @@ theorem tateIso_similar_of_two_data
     intro n
     rcases Nat.eq_zero_or_pos n with h | hn
     · exact ⟨1, fun h' => absurd h h'.ne'⟩
-    · haveI : NeZero n := ⟨hn.ne'⟩
+    · have : NeZero n := ⟨hn.ne'⟩
       obtain ⟨i, -, hi⟩ := (I'.ζ_prim n hn).eq_pow_of_mem_rootsOfUnity
         ((mem_rootsOfUnity _ _).2 (I.ζ_prim n hn).pow_eq_one)
       exact ⟨i, fun _ => hi.symm⟩
@@ -146,7 +146,7 @@ noncomputable def expNegUnit (n : ℕ) : ℂˣ :=
 theorem expNegUnit_zpow_val (n : ℕ) (j : ℤ) :
     ((expNegUnit n ^ j : ℂˣ) : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * (j : ℂ) / n) := by
   rw [Units.val_zpow_eq_zpow_val, expNegUnit, Units.val_inv_eq_inv_val, Units.val_mk0, ← Complex.exp_neg,
-    ← Complex.exp_int_mul]
+    ← Complex.exp_intCast_mul]
   congr 1
   ring
 

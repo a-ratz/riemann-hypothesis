@@ -99,7 +99,7 @@ theorem UpperTheory.exists_locallyConstant_twistedCocycle_ne_zero_of_frameOk :
     simpa using this
   have hci : F.c⁻¹ = F.c := inv_eq_of_mul_eq_one_right h.c_sq
   refine ⟨fun g => x g * (F.Ψ g : k), ?_, fun g g' => ?_, fun g => ?_, fun v => ?_, fun e => x5 ?_⟩
-  · exact (x1.mul ((lc_of_open_ker F.Ψ h.Ψ_open).comp Units.val)).comp_continuous continuous_subtype_val
+  · exact (x1.mul ((lc_of_open_ker F.Ψ h.Ψ_open).comp Units.val)).comp_continuous continuous_subtypeVal
   · show x ((g : F.Γ) * g') * (F.Ψ ((g : F.Γ) * g') : k) = _
     rw [x2, hχ, map_mul, Units.val_mul, Units.val_inv_eq_inv_val]
     have := (F.Ψ g).ne_zero

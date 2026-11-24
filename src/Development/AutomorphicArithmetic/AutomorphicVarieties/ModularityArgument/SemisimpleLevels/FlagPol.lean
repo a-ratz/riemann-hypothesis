@@ -57,7 +57,7 @@ private theorem cont_diag {Γ : Type} [Group Γ] [TopologicalSpace Γ] {l : ℕ}
     (hf : IsFlagOn r H κ) (i : Fin n) : Continuous fun s => (κ i s : Qbar l) := by
   obtain ⟨g, hg⟩ := hf
   have h1 : Continuous fun s : ↥H => (g * r s * g⁻¹ : GL (Fin n) (Qbar l)) :=
-    (continuous_const.mul (hr.comp continuous_subtype_val)).mul continuous_const
+    (continuous_const.mul (hr.comp continuous_subtypeVal)).mul continuous_const
   exact ((Units.continuous_val.comp h1).matrix_elem i i).congr fun s => (hg s).2 i
 
 
@@ -78,13 +78,13 @@ theorem UpperTheory.V.Lev.flagPol :
       obtain ⟨hc, -, hq⟩ := Loc.cycFacts l l
       simp only [hq]
       have h0 : Continuous fun g : GQ l => ((Loc.cyc l l g : ℤ_[l]ˣ) : ℤ_[l]) := Units.continuous_val.comp hc
-      exact continuous_subtype_val.comp h0
-    exact ((continuous_algebraMap ℚ_[l] (Om l)).comp (h0.comp (continuous_subtype_val.comp Bw.e_cont))).congr
+      exact continuous_subtypeVal.comp h0
+    exact ((continuous_algebraMap ℚ_[l] (Om l)).comp (h0.comp (continuous_subtypeVal.comp Bw.e_cont))).congr
       fun s => hcyc L s
   have hψc : ∀ i, Continuous fun s => (ψ i s : Qbar l) := fun i => by
     refine ((hκc i).mul (hεc.zpow₀ (-m i) fun s => Or.inl (Units.ne_zero _))).congr fun s => ?_
     simp [ψ]
-  haveI := hV.finite
+  have := hV.finite
   have T := UpperTheory.weilDeligne_triangularizable F Ω l ι w A h O Bw hj L n _ ρ κL μ htri (fun i hi σ y => by
     refine (UpperTheory.cyclotomicWeilChar_properties F Ω l ι w A h O Bw hj L (κL i) (χL i) (m i) ?_ ⟨K', fun g hg => ?_⟩ (fun g hg => ?_) hi σ y).trans ?_
     · refine ((hκc i).comp Bw.e_symm_cont).congr fun g => ?_
@@ -116,7 +116,7 @@ theorem UpperTheory.V.Lev.flagPol :
   obtain ⟨b, hb⟩ := T
   refine ⟨ν, fun s => ?_, fun i s hs => Units.ext ?_, fun i j hij => Or.inl ?_⟩
   · rw [e, DpstMap.charPol_wdPst _ ι Bw h hj _ hV, ← LinearMap.charpoly_toMatrix _ b]
-    refine (Matrix.charpoly_of_upperTriangular _ (fun i j hlt => (hb (some s)).1 i j hlt)).trans ?_
+    refine (Matrix.charpoly_of_isUpperTriangular _ (fun i j hlt => (hb (some s)).1 i j hlt)).trans ?_
     exact Finset.prod_congr rfl fun i _ => congrArg (fun c => Polynomial.X - Polynomial.C c) ((hb (some s)).2 i)
   · have h2 := hI i (inc (ineIncl h s)) s.2
     have h3 : ψ i (inc (ineIncl h s)) = χ i s := by

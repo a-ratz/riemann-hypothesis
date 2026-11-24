@@ -122,13 +122,13 @@ theorem exists_stepLevel_conj : ∀ {F E : Type} [Field F] [NumberField F] [Fiel
         rw [hbc v x]
         exact (mem_map_conj _ _ _).symm
       U_compact := by
-        letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-        letI : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
-        haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-        haveI : Module.Finite (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
+        let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+        let : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
+        have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+        have : Module.Finite (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
           Module.Finite.equiv (Algebra.TensorProduct.commRight F (FiniteAdeleRing (𝓞 F) F) E).toLinearEquiv
-        haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-        haveI : IsTopologicalRing (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
+        have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+        have : IsTopologicalRing (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
           IsModuleTopology.isTopologicalRing (FiniteAdeleRing (𝓞 F) F) _
         have hc : Continuous (fun x : GL (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) => b * x * b⁻¹) :=
           (continuous_const.mul continuous_id).mul continuous_const
@@ -137,15 +137,15 @@ theorem exists_stepLevel_conj : ∀ {F E : Type} [Field F] [NumberField F] [Fiel
         rw [Subgroup.coe_map]
         rfl
       U_open := by
-        letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-        letI : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
-        haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-        haveI : Module.Finite (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
+        let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+        let : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
+        have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+        have : Module.Finite (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
           Module.Finite.equiv (Algebra.TensorProduct.commRight F (FiniteAdeleRing (𝓞 F) F) E).toLinearEquiv
-        haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
-        haveI : IsTopologicalRing (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
+        have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+        have : IsTopologicalRing (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
           IsModuleTopology.isTopologicalRing (FiniteAdeleRing (𝓞 F) F) _
-        haveI : ContinuousMul (UPts σ J (FiniteAdeleRing (𝓞 F) F)) :=
+        have : ContinuousMul (UPts σ J (FiniteAdeleRing (𝓞 F) F)) :=
           inferInstanceAs (ContinuousMul (UPts σ J (FiniteAdeleRing (𝓞 F) F)).toSubmonoid)
         let b' : UPts σ J (FiniteAdeleRing (𝓞 F) F) := ⟨b, hb⟩
         have hc : Continuous (fun x : UPts σ J (FiniteAdeleRing (𝓞 F) F) => b'⁻¹ * x * b') :=
@@ -153,7 +153,7 @@ theorem exists_stepLevel_conj : ∀ {F E : Type} [Field F] [NumberField F] [Fiel
         have := S.U_open.preimage hc
         convert this using 1
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_preimage, mem_map_conj]
+        simp only [Set.mem_ofPred_eq, Set.mem_preimage, mem_map_conj]
         rfl
       chi := S.chi.comp eqv.symm.toMonoidHom
       chi_triv := by
@@ -254,7 +254,7 @@ theorem chartQ_exists : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     exact hbT v ((mem_plUnder_iff_norm hc hST T hTπ v).2 hv)
   obtain ⟨S', hLb, hU, hchi⟩ := GlobalTheory.T.exists_stepLevel_conj_baseLatticeUnitary S b hbU hbV hbT' hbO
   have hlam : ∃ m : ℕ, 0 < m ∧ ∀ h, lam h ^ m = 1 := by
-    haveI : Finite (GLG (E := E) (n := n) (SG := SG)) := inferInstance
+    have : Finite (GLG (E := E) (n := n) (SG := SG)) := inferInstance
     refine ⟨Nat.card (Subgroup.pi Set.univ Hw : Subgroup (GLG (E := E) (n := n) (SG := SG))), Nat.card_pos, fun h => ?_⟩
     rw [← map_pow, pow_card_eq_one', map_one]
   obtain ⟨m, hm, hM⟩ := stepOfQ_chi_fin hc n Hw q hB hTπ hST hcard hSG hidx lam hO hQT σ₀ hlam hchr

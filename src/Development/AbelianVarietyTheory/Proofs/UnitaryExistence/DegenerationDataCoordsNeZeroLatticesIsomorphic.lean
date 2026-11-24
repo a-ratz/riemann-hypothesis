@@ -127,9 +127,9 @@ theorem subring_of_finite {R : Type} [CommRing R] [IsLocalRing R] [IsNoetherianR
     (h1 : ∀ a, ‖(φ a : C)‖ ≤ 1) (h2 : ∀ a ∈ maximalIdeal R, ‖(φ a : C)‖ < 1) :
     ∃ _ : IsLocalRing S, IsNoetherianRing S ∧ IsAdicComplete (maximalIdeal S) S ∧
       (∀ z : S, ‖(z : C)‖ ≤ 1) ∧ ∀ z : S, z ∈ maximalIdeal S ↔ ‖(z : C)‖ < 1 := by
-  letI := φ.toAlgebra
-  haveI : Module.Finite R S := hφ
-  haveI : IsLocalRing S := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := R) S
+  let := φ.toAlgebra
+  have : Module.Finite R S := hφ
+  have : IsLocalRing S := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := R) S
   have hle : ∀ z : S, ‖(z : C)‖ ≤ 1 := fun z => by
     let v := NormedField.valuation (K := C)
     let ψ : R →+* v.integer := (S.subtype.comp φ).codRestrict _ fun a => h1 a
@@ -152,7 +152,7 @@ theorem subring_of_finite {R : Type} [CommRing R] [IsLocalRing R] [IsNoetherianR
   have hP1 : P ≠ ⊤ := by
     rw [Ideal.ne_top_iff_one, hP]
     simp
-  haveI : P.IsPrime := ⟨hP1, fun {x y} hxy => by
+  have : P.IsPrime := ⟨hP1, fun {x y} hxy => by
     by_contra h
     rw [not_or, hP, hP, not_lt, not_lt] at h
     rw [hP, Subring.coe_mul, norm_mul] at hxy
@@ -173,7 +173,7 @@ theorem exists_subring_finite {R V : Type} [CommRing R] [CommRing V] {p : ℕ} [
     [Algebra ℤ_[p] V] [Module.Finite ℤ_[p] V] (f : R →+* C) (g : V →+* C) (φ : ℤ_[p] →+* R)
     (h : f.comp φ = g.comp (algebraMap ℤ_[p] V)) :
     ∃ (S : Subring C) (ψ : R →+* S), ψ.Finite ∧ (∀ a, (ψ a : C) = f a) ∧ ∀ a, g a ∈ S := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := ℤ_[p]) (M := V)
   have hint : ∀ x : V, IsIntegral R (g x) := fun x =>
     (Algebra.IsIntegral.isIntegral (R := ℤ_[p]) x).map_of_comp_eq φ g h
@@ -203,9 +203,9 @@ theorem exists_normal_subring (S : Subring C)
   let j : FractionRing S →ₐ[S] C :=
     IsFractionRing.liftAlgHom (g := Algebra.ofId S C) Subtype.val_injective
   let e := (integralClosure S (FractionRing S)).equivMapOfInjective j j.injective
-  haveI : IsFractionRing (integralClosure S (FractionRing S)) (FractionRing S) :=
+  have : IsFractionRing (integralClosure S (FractionRing S)) (FractionRing S) :=
     integralClosure.isFractionRing_of_finite_extension (FractionRing S) (FractionRing S)
-  haveI : IsIntegrallyClosed (integralClosure S (FractionRing S)) :=
+  have : IsIntegrallyClosed (integralClosure S (FractionRing S)) :=
     (isIntegrallyClosed_iff_isIntegrallyClosedIn (FractionRing S)).2 inferInstance
   exact ⟨((integralClosure S (FractionRing S)).map j).toSubring,
     algebraMap S ((integralClosure S (FractionRing S)).map j),
@@ -219,7 +219,7 @@ end CompleteJoin
 open CompleteJoin in
 theorem exists_complete_normal_subring_join : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CharZero R] (T : Formalism.L2.Pj.CDVR) (C : Type) [NormedField C] [IsUltrametricDist C] [IsAlgClosed C] [CharZero C] (f : R →+* C) (g : T.V →+* C) (p : ℕ), p.Prime → ‖(p : C)‖ < 1 → T.FinRes → IsNoetherianRing R → IsAdicComplete (maximalIdeal R) R → (∀ a, ‖f a‖ ≤ 1) → (∀ a ∈ maximalIdeal R, ‖f a‖ < 1) → (∀ a, ‖g a‖ ≤ 1) → (∀ a ∈ maximalIdeal T.V, ‖g a‖ < 1) → ∃ (S : Subring C) (_ : IsLocalRing S), IsNoetherianRing S ∧ IsIntegrallyClosed S ∧ IsAdicComplete (maximalIdeal S) S ∧ (∀ a, f a ∈ S) ∧ (∀ a, g a ∈ S) ∧ (∀ z : S, ‖(z : C)‖ ≤ 1) ∧ ∀ z : S, z ∈ maximalIdeal S ↔ ‖(z : C)‖ < 1 := by
   intro R _ _ _ _ T C _ _ _ _ f g _ _ _ hT hN hR hf1 hf2 hg1 hg2
-  haveI : Finite (ResidueField T.V) := hT
+  have : Finite (ResidueField T.V) := hT
   obtain ⟨q, hq, _, hfin⟩ := exists_padicInt_algebra_finite T.V
   have hqV : (q : T.V) ∈ maximalIdeal T.V := by
     have := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.map_maximalIdeal_le_maximal (R := ℤ_[q]) T.V _ (maximalIdeal.isMaximal _)

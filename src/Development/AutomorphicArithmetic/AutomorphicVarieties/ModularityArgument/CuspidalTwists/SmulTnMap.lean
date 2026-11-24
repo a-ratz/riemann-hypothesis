@@ -403,7 +403,7 @@ theorem UpperTheory.V.Cu.irrOf4_of : AlNe → IrrOf4 := by
   have hD : d.D.Good := d.ctx.1
   let f : d.c₁.O →+* PadicAlgCl l := algebraMap d.c₁.O (PadicAlgCl l)
 
-  haveI : IsAlgClosure T.F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) T.F⟩
+  have : IsAlgClosure T.F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) T.F⟩
   obtain ⟨hcont, -, -, -, hres, -⟩ := resFacts ℚ T.F Ω l 2 d.ρ
   have hop : IsOpen ((T.GalL ⊓ d.K'.fixingSubgroup.comap (resQ T.F) : Subgroup (G T.F Ω)) : Set (G T.F Ω)) :=
     ((IntermediateField.fixingSubgroup_isOpen T.K).preimage hcont).inter
@@ -435,10 +435,10 @@ theorem UpperTheory.V.Cu.irrOf4_of : AlNe → IrrOf4 := by
         Set (G ℚ Ω)) :=
       ((IntermediateField.fixingSubgroup_isOpen T.F).inter (IntermediateField.fixingSubgroup_isOpen T.K)).inter
         (IntermediateField.fixingSubgroup_isOpen d.K')
-    haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-    haveI : Finite (G ℚ Ω ⧸ (T.F.fixingSubgroup ⊓ T.K.fixingSubgroup ⊓ d.K'.fixingSubgroup)) :=
+    have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+    have : Finite (G ℚ Ω ⧸ (T.F.fixingSubgroup ⊓ T.K.fixingSubgroup ⊓ d.K'.fixingSubgroup)) :=
       Subgroup.quotient_finite_of_isOpen _ hU
-    haveI : (T.F.fixingSubgroup ⊓ T.K.fixingSubgroup ⊓ d.K'.fixingSubgroup).FiniteIndex :=
+    have : (T.F.fixingSubgroup ⊓ T.K.fixingSubgroup ⊓ d.K'.fixingSubgroup).FiniteIndex :=
       Subgroup.finiteIndex_of_finite_quotient
     obtain ⟨n, hn, -, h⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
       (Subgroup.FiniteIndex.index_ne_zero (H := T.F.fixingSubgroup ⊓ T.K.fixingSubgroup ⊓ d.K'.fixingSubgroup))

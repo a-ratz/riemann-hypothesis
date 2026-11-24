@@ -206,7 +206,7 @@ theorem integrable_of_decayVG {E : Type*} [NormedAddCommGroup E] (ε : Fin n →
   have hr0 : 0 ≤ r := by positivity
   have hr1 : r < 1 := by
     have e : (2 : ℝ) ^ N = Real.exp (N * Real.log 2) := by
-      rw [Real.exp_nat_mul, Real.exp_log two_pos]
+      rw [Real.exp_natCast_mul, Real.exp_log two_pos]
     show 2 ^ N * Real.exp (-(a * Real.log 2)) < 1
     rw [e, ← Real.exp_add, Real.exp_lt_one_iff]
     nlinarith
@@ -253,7 +253,7 @@ theorem integrable_of_decayVG {E : Type*} [NormedAddCommGroup E] (ε : Fin n →
         linarith
       have hexp : Real.exp (-(a * t)) ≤ A0 * y ^ j := by
         show Real.exp (-(a * t)) ≤ Real.exp (a * Real.log n / 2) * Real.exp (-(a * Real.log 2)) ^ j
-        rw [← Real.exp_nat_mul, ← Real.exp_add, Real.exp_le_exp]
+        rw [← Real.exp_natCast_mul, ← Real.exp_add, Real.exp_le_exp]
         nlinarith
       have hb : ‖f g‖ ≤ M * (A0 * y ^ j) := ht2.trans (mul_le_mul_of_nonneg_left hexp hM0)
       calc ‖f g‖ₑ ≤ c j := by
@@ -340,7 +340,7 @@ theorem hs_exp_leVG (X : Matrix (Fin n) (Fin n) ℂ) :
   calc hs (NormedSpace.exp X) = Real.sqrt (hs (NormedSpace.exp X)) ^ 2 := (Real.sq_sqrt h0).symm
     _ ≤ (Real.sqrt n * Real.exp (Real.sqrt (hs X))) ^ 2 := pow_le_pow_left₀ (Real.sqrt_nonneg _) h 2
     _ = _ := by
-        rw [mul_pow, Real.sq_sqrt (Nat.cast_nonneg n), ← Real.exp_nat_mul]
+        rw [mul_pow, Real.sq_sqrt (Nat.cast_nonneg n), ← Real.exp_natCast_mul]
         norm_num
 
 lemma hs_eq_traceVG (A : Matrix (Fin n) (Fin n) ℂ) : ((Aᴴ * A).trace).re = hs A := by

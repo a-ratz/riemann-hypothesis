@@ -68,7 +68,7 @@ theorem exists_ne_zero_ann {G : Type} [Group G] {S A : Type} [AddCommGroup S] [M
     {U : A} (hU : U ∈ ⨆ i, LinearMap.range (Φ i)) (hU0 : U ≠ 0) :
     ∃ v : S, v ≠ 0 ∧ ∀ x : MonoidAlgebra ℂ G, ρ.asAlgebraHom x U = 0 → σ.asAlgebraHom x v = 0 := by
   classical
-  haveI : Nontrivial S := by
+  have : Nontrivial S := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     apply hU0
@@ -80,8 +80,8 @@ theorem exists_ne_zero_ann {G : Type} [Group G] {S A : Type} [AddCommGroup S] [M
       simp [Subsingleton.elim x 0]
     rw [this] at hU
     exact (Submodule.mem_bot ℂ).1 hU
-  haveI : IsSimpleModule (MonoidAlgebra ℂ G) σ.asModule := by
-    haveI : Nontrivial σ.asModule := σ.asModuleEquiv.toEquiv.nontrivial
+  have : IsSimpleModule (MonoidAlgebra ℂ G) σ.asModule := by
+    have : Nontrivial σ.asModule := σ.asModuleEquiv.toEquiv.nontrivial
     refine { exists_pair_ne := exists_pair_ne _, eq_bot_or_eq_top := fun N => ?_ }
     let W : Submodule ℂ S :=
       { carrier := {s | σ.asModuleEquiv.symm s ∈ N}
@@ -302,9 +302,9 @@ theorem exists_vec_of_occRows : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {P
         rw [level_action_spec (hHas w) ⟨_, hκ g⟩ (PY.ψ (κ g)) (hκ g) x, hchi g, inv_one, one_mul]
       have hL : (∑ g, RealDat.eC (A := A) D.what₂.embLL g • principalLevelFrame.actM PY (R.MY 0) (κ g) U) w x =
           ∑ g, RealDat.eC (A := A) D.what₂.embLL g * U w (x * PY.ψ (κ g)) := by
-        rw [MultilinearMap.sum_apply, Finset.sum_apply]
+        rw [sum_apply, Finset.sum_apply]
         refine Finset.sum_congr rfl fun g _ => ?_
-        rw [MultilinearMap.smul_apply, Pi.smul_apply, principalLevelFrame.actM_apply, smul_eq_mul]
+        rw [smul_apply, Pi.smul_apply, principalLevelFrame.actM_apply, smul_eq_mul]
       have hR : R.e0 (U w) x =
           ∑ g, RealDat.eC (A := A) D.what₂.embLL g * actG0 (Yc D 0) (R.βY 0) (R.dat0 R.triv) (R.eG g) (U w) x := by
         show (∑ g, RealDat.eC (A := A) D.what₂.embLL g • actL (Yc D 0) (R.βY 0) (R.dat0 R.triv) (R.eG g)) (U w) x = _

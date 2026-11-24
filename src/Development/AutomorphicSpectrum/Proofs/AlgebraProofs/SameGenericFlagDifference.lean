@@ -72,7 +72,7 @@ theorem ck_rootNum_eq_pairNum_on_flagPair : ∀ (O : Type) [CommRing O] [IsDomai
   have hprime : (mcIdeal O x).IsPrime := hW.2.1.1
   obtain ⟨-, hB⟩ := (BundleExamples.isModelOver_iff O _ d).mp hm
   have hB' : IsModelOver (pointIdeal O (joinCoord x z)) d := hB
-  haveI hprimeB : (pointIdeal O (joinCoord x z)).IsPrime := hm.2.1.1
+  have hprimeB : (pointIdeal O (joinCoord x z)).IsPrime := hm.2.1.1
   have hI := IntNumIsFieldIntersection.full (IsLocalRing.ResidueField O) (K ⊕ K') (Sum.elim ι ι')
   refine ⟨fun k hk1 hk2 q L Q hQ => ?_, fun c G hsym hG hc q L Q hQ a ha => ?_⟩
   · obtain ⟨φ, -, -, hd, hd', hf, hg⟩ :=

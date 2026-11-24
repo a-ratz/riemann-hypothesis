@@ -55,16 +55,16 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open scoped Matrix
 
 private theorem cc_ex (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] : ∃ c : G ℚ Ω, IsConjEl c := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   let j : Ω →ₐ[ℚ] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω ℂ := j.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  let : Algebra Ω ℂ := j.toRingHom.toAlgebra
+  have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   let τ : ℂ ≃ₐ[ℚ] ℂ := AlgEquiv.ofRingEquiv (f := starRingAut) fun x => by simp
   exact ⟨τ.restrictNormal Ω, algebraMap Ω ℂ, fun x => AlgEquiv.restrictNormal_commutes τ Ω x⟩
 
@@ -85,9 +85,9 @@ private theorem kills_cc {Ω : Type} [Field Ω] [CharZero Ω] {C : Type} [CommGr
 
 private theorem kills_pow {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {C : Type} [CommGroup C] {M : ℕ} (hM : 1 ≤ M)
     {χ : G ℚ Ω →* C} (hχ : KillsMu M χ) : ∃ k : ℕ, 0 < k ∧ ∀ s, χ s ^ k = 1 := by
-  haveI : NeZero M := ⟨by omega⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : NeZero M := ⟨by omega⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   refine ⟨Fintype.card (ZMod M)ˣ, Fintype.card_pos, fun s => ?_⟩
   rw [← map_pow]
   refine hχ _ fun ζ h => ?_
@@ -129,12 +129,12 @@ private theorem via (P : HypothesesH) (cyc : Z.Bc.CycC) (cyc2 : Z.Bc.DescS) (hG 
     (W : G ℚ Ω →* GL (Fin 2) (Qbar l)) (hW : Continuous W) (hirr : IsIrr (W.comp (resG ℚ L Ω))) (hpol : Sol.Pol ι W)
     (hfin : ∃ N : ℕ, 0 < N ∧ ∀ s, Matrix.GeneralLinearGroup.det (W s) ^ N = 1)
     (haut : IsAut ι (W.comp (resG ℚ L Ω))) : IsAut ι W := by
-  haveI : IsAlgClosure K Ω := algClosure_up K Ω
-  haveI : IsAlgClosure L Ω := algClosure_up L Ω
-  haveI a : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
+  have : IsAlgClosure K Ω := algClosure_up K Ω
+  have : IsAlgClosure L Ω := algClosure_up L Ω
+  have a : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
   have e : (W.comp (resG ℚ K Ω)).comp (resG K L Ω) = W.comp (resG ℚ L Ω) := MonoidHom.ext fun _ => rfl
   rw [← e] at hirr haut
-  have h1 := (Z.Bc.solC P cyc K L Ω (isSolvable_of_comm a.is_comm.comm) hC hL l ι 2 one_le_two (W.comp (resG ℚ K Ω))
+  have h1 := (Z.Bc.solC P cyc K L Ω (Group.isSolvable_of_comm a.is_comm.comm) hC hL l ι 2 one_le_two (W.comp (resG ℚ K Ω))
     (hW.comp (continuous_restrictScalarsHom ℚ K Ω)) hirr (UpperTheory.solvable_polarized_restriction ℚ K Ω l ι 2 W hpol)).2 haut
   exact Z.Bc.downQuadS P cyc2 hG (Z.Bc.galois_rep_rank_two_of_hypotheses P) K Ω hK hC l ι W hW ((UpperTheory.galoisRep_irreducibility_criterion.1 _ _ _ 2 _).1 _ hirr) hfin h1
 

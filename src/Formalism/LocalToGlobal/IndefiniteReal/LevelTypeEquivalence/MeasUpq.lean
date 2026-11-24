@@ -157,7 +157,7 @@ theorem omegaLeb_unique {p q : ℕ} {lam lam' : Measure (lieU p q)} (h : IsOmega
   have hfin : (volume : Measure ((Fin p ⊕ Fin q) × (Fin p ⊕ Fin q) → ℂ)) (Metric.ball 0 1) ≠ ⊤ :=
     measure_ball_lt_top.ne
   have e3 := congrArg (fun ν : Measure ((Fin p ⊕ Fin q) × (Fin p ⊕ Fin q) → ℂ) => ν (Metric.ball 0 1)) e2
-  simp only [Measure.smul_apply, smul_eq_mul] at e3
+  simp only [smul_apply, smul_eq_mul] at e3
   have e4 : (a : ENNReal) * a = 1 := (ENNReal.mul_left_inj hpos.ne' hfin).mp (e3.trans (one_mul _).symm)
   have e5 : a = 1 := by
     have h2 : a ^ 2 = 1 := by
@@ -177,7 +177,7 @@ theorem isMinf_unique {p q : ℕ} {m m' : Measure (UpqT p q)} (h : Lev.IsMinf m)
       NormedSpace.exp (X : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ)} / lam (ballU p q r)) (𝓝[>] 0)
       (𝓝 ((k : ENNReal) * Formalism.L2.Theta.minfDensity (p + q))) := by
     refine h2.congr fun r => ?_
-    rw [hs, Measure.smul_apply, smul_eq_mul, mul_div_assoc]
+    rw [hs, smul_apply, smul_eq_mul, mul_div_assoc]
   have e := tendsto_nhds_unique hl' h3
   have hk : (k : ENNReal) = 1 :=
     (ENNReal.mul_left_inj (minfDensity_ne_zero (p + q)) (minfDensity_ne_top (p + q))).mp
@@ -220,7 +220,7 @@ theorem prob_exists {p q : ℕ} [CompactSpace (UpqT p q)] :
     have ht : (Measure.haar (G := UpqT p q) Set.univ) ≠ ⊤ := measure_ne_top _ _
     exact Measure.IsHaarMeasure.smul _ (ENNReal.inv_ne_zero.mpr ht) (ENNReal.inv_ne_top.mpr h0)
   · constructor
-    rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel]
+    rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel]
     · exact (Measure.measure_univ_pos.mpr (NeZero.ne _)).ne'
     · exact measure_ne_top _ _
 
@@ -231,7 +231,7 @@ theorem prob_unique {p q : ℕ} {m m' : Measure (UpqT p q)} (h : m.IsHaarMeasure
   have hs : m' = (Measure.haarScalarFactor m' m : ENNReal) • m := by
     rw [← ENNReal.smul_def]; exact Measure.isMulLeftInvariant_eq_smul m' m
   have e := congrArg (fun ν : Measure (UpqT p q) => ν Set.univ) hs
-  simp only [Measure.smul_apply, smul_eq_mul, measure_univ, mul_one] at e
+  simp only [smul_apply, smul_eq_mul, measure_univ, mul_one] at e
   rw [hs, ← e, one_smul]
 
 end Formalism.IndefR.Eqv.MU

@@ -74,7 +74,7 @@ theorem exists_den_not_mem_of_count_eq_zero {R K : Type} [CommRing R] [IsDedekin
       (FractionalIdeal.spanSingleton (nonZeroDivisors R) (algebraMap R K r)) =
       ((Associates.mk P.asIdeal).count (Associates.mk (Ideal.span {r} : Ideal R)).factors : ℤ) := by
     intro r hr
-    rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K P]
+    rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K P]
     simpa using hr
   have hmul : FractionalIdeal.spanSingleton (nonZeroDivisors R) (algebraMap R K x / algebraMap R K y)
       * FractionalIdeal.spanSingleton (nonZeroDivisors R) (algebraMap R K y) =
@@ -86,7 +86,7 @@ theorem exists_den_not_mem_of_count_eq_zero {R K : Type} [CommRing R] [IsDedekin
   have hval : P.valuation K (algebraMap R K x / algebraMap R K y) ≤ 1 := by
     rw [map_div₀, HeightOneSpectrum.valuation_of_algebraMap,
       HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_if_neg _ hx0,
-      HeightOneSpectrum.intValuation_if_neg _ hy0, div_le_one₀ (zero_lt_iff.2 WithZero.exp_ne_zero),
+      HeightOneSpectrum.intValuation_if_neg _ hy0, div_le_one₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero),
       WithZero.exp_le_exp]
     omega
   have hmem : algebraMap R K x / algebraMap R K y ∈ P.valuationSubringAtPrime K := by

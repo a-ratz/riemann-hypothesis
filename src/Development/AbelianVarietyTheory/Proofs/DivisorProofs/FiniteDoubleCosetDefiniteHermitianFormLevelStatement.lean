@@ -146,7 +146,7 @@ theorem ccf_holds : CCF :=
 theorem finite_of_cover {H : Type} [Group H] (Γ K : Subgroup H) (S : Set H) (hS : S.Finite)
     (h : ∀ g : H, ∃ γ ∈ Γ, ∃ s ∈ S, ∃ k ∈ K, g = γ * s * k) :
     Finite (DoubleCoset.Quotient (Γ : Set H) (K : Set H)) := by
-  haveI : Finite S := hS.to_subtype
+  have : Finite S := hS.to_subtype
   refine Finite.of_surjective (fun s : S => DoubleCoset.mk Γ K (s : H)) fun q => ?_
   obtain ⟨γ, hγ, s, hs, k, hk, e⟩ := h q.out
   refine ⟨⟨s, hs⟩, ?_⟩
@@ -158,7 +158,7 @@ theorem cover_of_relIndex {A B : Type} [Group A] [Group B] (Γ : Subgroup (A × 
     (K₂ K' : Subgroup B) (hK : K'.relIndex K₂ ≠ 0) (S : Set (A × B)) (hS : S.Finite)
     (h : ∀ g, ∃ γ ∈ Γ, ∃ s ∈ S, ∃ k ∈ K₁.prod K₂, g = γ * s * k) :
     ∃ S' : Set (A × B), S'.Finite ∧ ∀ g, ∃ γ ∈ Γ, ∃ s ∈ S', ∃ k ∈ K₁.prod K', g = γ * s * k := by
-  haveI : (K'.subgroupOf K₂).FiniteIndex := ⟨hK⟩
+  have : (K'.subgroupOf K₂).FiniteIndex := ⟨hK⟩
   let T : Set (A × B) := Set.range (fun c : K₂ ⧸ K'.subgroupOf K₂ => ((1 : A), ((c.out : K₂) : B)))
   have hT : T.Finite := Set.finite_range _
   refine ⟨S * T, hS.mul hT, fun g => ?_⟩
@@ -197,8 +197,8 @@ theorem cover_KHT (P : CCF) (G : HTGroup p) (L : G.Level) (B : GlobalTheory.LKDe
   set t := B.trivAf.choose_spec.choose with htdef
   have hx : Triv G (AfP p) B.β x t := B.trivAf.choose_spec.choose_spec
   have hemb : ∀ y, B.emb y = (toAfF G B.β x t hx y, toP1 G B.β y) := fun y => rfl
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  letI : TopologicalSpace (ℚ_[p] ⊗[ℚ] G.C) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C)
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  let : TopologicalSpace (ℚ_[p] ⊗[ℚ] G.C) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C)
   let U : Subgroup (((AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) × ((ℚ_[p] ⊗[ℚ] G.C)ˣ × ℚ_[p]ˣ)) :=
     (Subgroup.comap (psiAway G x) (L.K.toSubgroup.map (UPts G.star (AfP p)).subtype)).prod
       (Subgroup.comap (psiP G) (KHT p G.m G.n 1 G.Fw))
@@ -236,7 +236,7 @@ theorem cover_KHT (P : CCF) (G : HTGroup p) (L : G.Level) (B : GlobalTheory.LKDe
   have key : ∃ δ : grp G B.β, ∃ s' ∈ S₂, (z₁, z₂) = dg G.C p (δ : G.Cˣ × ℚˣ) * s' * u := by
     rcases lt_or_gt_of_ne (Units.ne_zero γ.2) with hneg | hpos
     · have hN : Neg := ⟨γ, hγ, hneg⟩
-      have hgm : gm = hN.choose := dif_pos hN
+      have hgm : gm = hN.choose := dite_eq_left hN
       obtain ⟨hgmf, hgmn⟩ := hN.choose_spec
       rw [← hgm] at hgmf hgmn
       have hδ := form_mul_inv G.star (B.β : G.C) γ.1 gm.1 γ.2 gm.2 hγ hgmf

@@ -152,7 +152,7 @@ theorem red₂_map_of_reduceFF_eq_zero
     (hR : reduceFF K W W' R = 0) :
     red₂ K W W' W' (Point.map (IsScalarTower.toAlgHom K (W.baseChange K).toAffine.FunctionField
       (liftField₂ K W W')) R) = 0 := by
-  letI : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
+  let : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
   have e := gaussCurve_map_functionField K W W'
   have h0 : reducePoint (W.baseChange K).toAffine.FunctionField (gaussCurve W W')
       (pointCongr e.symm R) = 0 := by
@@ -406,9 +406,9 @@ variable [W.IsElliptic] [W'.IsElliptic]
 
 theorem reduceFF_isogeny_ne_zero (φ : Isogeny (W.baseChange K) (W'.baseChange K)) :
     reduceFF K W W' φ.1 ≠ 0 := by
-  letI : DecidableEq (ResidueField (gaussRing (gaussCurve W W'))) := Classical.decEq _
-  letI : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
-  letI : DecidableEq K := Classical.decEq K
+  let : DecidableEq (ResidueField (gaussRing (gaussCurve W W'))) := Classical.decEq _
+  let : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
+  let : DecidableEq K := Classical.decEq K
   intro hφ
   have hP : IsGenPt (W'.baseChange K) (Point.map (IsScalarTower.toAlgHom K
       (W.baseChange K).toAffine.FunctionField (liftField₂ K W W')) φ.1) :=
@@ -455,7 +455,7 @@ theorem reduceFF_isogeny_ne_zero (φ : Isogeny (W.baseChange K) (W'.baseChange K
 theorem isGenPt_reduceFF_isogeny (φ : Isogeny (W.baseChange K) (W'.baseChange K)) :
     IsGenPt (W'.map (residue 𝒪)) (reduceFF K W W' φ.1) ∧
       RespectsAdd (W.map (residue 𝒪)) (W'.map (residue 𝒪)) (reduceFF K W W' φ.1) := by
-  letI : DecidableEq (ResidueField (gaussRing (gaussCurve W W))) := Classical.decEq _
+  let : DecidableEq (ResidueField (gaussRing (gaussCurve W W))) := Classical.decEq _
   have h := respectsAdd_reduceFF K W W' φ.1 φ.respectsAdd
   exact ⟨isGenPt_of_respectsAdd h (reduceFF_isogeny_ne_zero K W W' φ), h⟩
 

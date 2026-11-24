@@ -70,7 +70,7 @@ private theorem gl_jE (g : G1 ℚ) : gl (jE E g) = em E (gl g) := by
 
 private theorem continuous_jE : Continuous (jE E) := by
   have h : Continuous fun g : G1 ℚ => (g.1).map (am E) :=
-    continuous_subtype_val.matrix_map continuous_am
+    continuous_subtypeVal.matrix_map continuous_am
   exact h.subtype_mk _
 
 private theorem injective_jE : Function.Injective (jE E) := by

@@ -103,7 +103,7 @@ theorem UpperTheory.V.Base.kerResAb :
   intro R G M _ _ _ _ _ _ _ _ _ _ ρ _ hρ hM hc U' U h hab T hT hU
   choose c hc using hc
   have hρU : ContAction (ρ.comp U.subtype : Representation R U M) :=
-    hρ.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+    hρ.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
   let Z0 : Submodule R (Z1U ρ U) :=
     { carrier := {z | ∀ u : U, u.1 ∈ U' → z.1 u = 0}
       zero_mem' := fun _ _ => rfl

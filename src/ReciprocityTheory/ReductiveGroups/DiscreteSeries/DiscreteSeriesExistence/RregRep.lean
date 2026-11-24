@@ -117,7 +117,7 @@ theorem rregRep_one (ε : Fin n → Bool) : rreg ε 1 = 1 := by
   have h1 : (1 : Matrix (Fin n) (Fin n) ℂ) = Formalism.MainNotions.S.umat (1 : Formalism.REAL.UJ ε) := rfl
   rw [h1, rregRep_rreg_umat]
   ext1 f
-  rw [rregRep_rregG_apply, ContinuousLinearMap.one_apply]
+  rw [rregRep_rregG_apply, one_apply_eq_self]
   apply Lp.ext
   filter_upwards [Lp.coeFn_compMeasurePreserving f (measurePreserving_mul_right ε 1)] with x hx
   rw [hx]
@@ -133,19 +133,19 @@ theorem rregRep_mul (ε : Fin n → Bool) (a b : Formalism.REAL.UJ ε) :
     Lp.coeFn_compMeasurePreserving
       (Lp.compMeasurePreserving (fun x : Formalism.REAL.UJ ε => x * b)
         (measurePreserving_mul_right ε b) f) (measurePreserving_mul_right ε a),
-    (measurePreserving_mul_right ε a).quasiMeasurePreserving.ae_eq
+    (measurePreserving_mul_right ε a).quasiMeasurePreserving.ae_eq_comp
       (Lp.coeFn_compMeasurePreserving f (measurePreserving_mul_right ε b))] with x h1 h2 h3
   simp only [Function.comp_apply] at h1 h2 h3 ⊢
   rw [h1, h2, h3, mul_assoc]
 
 theorem rregRep_cont (ε : Fin n → Bool) (v : L2 ε) :
     Continuous (fun y : Formalism.REAL.UJ ε => rregG ε y v) := by
-  haveI : SMulInvariantMeasure (Formalism.REAL.UJ ε)ᵐᵒᵖ (Formalism.REAL.UJ ε) (Formalism.REAL.muG ε) := by
+  have : SMulInvariantMeasure (Formalism.REAL.UJ ε)ᵐᵒᵖ (Formalism.REAL.UJ ε) (Formalism.REAL.muG ε) := by
     refine ⟨fun c s hs => ?_⟩
     first
     | exact (measurePreserving_mul_right ε c.unop).measure_preimage hs.nullMeasurableSet
     | exact (measurePreserving_mul_right ε c.unop).measure_preimage hs
-  haveI : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by first | simp | exact ENNReal.ofNat_ne_top⟩
+  have : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by first | simp | exact ENNReal.ofNat_ne_top⟩
   have he : (fun y : Formalism.REAL.UJ ε => rregG ε y v) =
       fun y => (DomMulAct.mk (MulOpposite.op y)) • v := by
     funext y
@@ -157,7 +157,7 @@ theorem rregRep_cont (ε : Fin n → Bool) (v : L2 ε) :
     | exact DomMulAct.continuous_mk.comp MulOpposite.continuous_op
     | exact DomMulAct.mkHomeomorph.continuous.comp MulOpposite.continuous_op
     | fun_prop
-  haveI : OpensMeasurableSpace (Formalism.REAL.UJ ε)ᵐᵒᵖ :=
+  have : OpensMeasurableSpace (Formalism.REAL.UJ ε)ᵐᵒᵖ :=
     ⟨MeasurableSpace.generateFrom_le fun s hs =>
       (IsOpen.preimage MulOpposite.continuous_op hs).measurableSet⟩
   exact hm.smul continuous_const
@@ -184,14 +184,14 @@ theorem rreg_isURepOn (ε : Fin n → Bool) : IsURepOn (UJset ε) (rreg ε) := b
           apply Continuous.subtype_mk
           rw [Units.continuous_iff]
           constructor
-          · exact continuous_subtype_val
-          · exact (continuous_const.mul continuous_subtype_val.matrix_conjTranspose).mul
+          · exact continuous_subtypeVal
+          · exact (continuous_const.mul continuous_subtypeVal.matrix_conjTranspose).mul
               continuous_const,
         fun g => rfl⟩
     have he : ∀ g : UJset ε, rreg ε (g : Matrix (Fin n) (Fin n) ℂ) v = rregG ε (φ g) v := by
       intro g
       rw [← hφ g, rregRep_rreg_umat]
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     convert (rregRep_cont ε v).comp hφc using 1
     funext g
     exact he g

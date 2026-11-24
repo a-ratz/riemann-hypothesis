@@ -56,8 +56,8 @@ open NumberField IsDedekindDomain Formalism.FrobeniusOrbits Formalism.BasicNotio
 namespace Formalism.MainNotions.WeilJacquetShalikaLaw.Proof
 
 theorem sz_div_le_fact {p : ℕ} (hp : p.Prime) (n : ℕ) : n / p ≤ (n.factorial).factorization p := by
-  haveI := Fact.mk hp
-  rw [Nat.factorization_def _ hp, padicValNat_factorial (b := Nat.log p n + 2) (by omega)]
+  have := Fact.mk hp
+  rw [Nat.factorization_def _ hp, multiplicity_factorial (b := Nat.log p n + 2) (by omega)]
   have h1 : (1 : ℕ) ∈ Finset.Ico 1 (Nat.log p n + 2) := by simp
   have h2 := Finset.single_le_sum (f := fun i => n / p ^ i) (fun _ _ => Nat.zero_le _) h1
   simp only [pow_one] at h2

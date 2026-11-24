@@ -949,8 +949,8 @@ theorem universal_lift_frame [IsDomain O] (hdvr : IsDiscreteValuationRing O) (hf
       Phi W T₂ c ζ rep d ∈ Formalism.MainNotions.DeltaInvariantLattices.FilC (PD := PD) T₂ τ (-((b τ : ℤ) + S))) :
     FirstPropositionFrame W F Pt π' Eπ h' M c S η m up b β := by
   classical
-  haveI := hdvr
-  haveI := hfr
+  have := hdvr
+  have := hfr
   intro _hHyp
   obtain ⟨uE, huEΔ, uE', huE'Δ, huu, hγE'⟩ := hγE
   obtain ⟨uπ, huπΔ, hγπ'⟩ := hγπ

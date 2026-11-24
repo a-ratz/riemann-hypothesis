@@ -123,9 +123,9 @@ private lemma intertwine (v : Valuation E Γ) {A B g : Matrix (Fin n) (Fin n) E}
   rw [h, sub_self, zero_sub, Matrix.neg_apply, v.map_neg, Matrix.smul_apply, smul_eq_mul, v.map_mul] at ht
   have h0 : v ((A * g - g * B) i j) = 0 := by
     by_contra hne
-    exact absurd ht (not_le.2 (mul_lt_mul_of_pos_right hq (zero_lt_iff.2 hne)))
+    exact absurd ht (not_le.2 (mul_lt_mul_of_pos_right hq (pos_iff_ne_zero.2 hne)))
   have := hh i0 j0
-  rw [h0, le_zero_iff, v.zero_iff] at this
+  rw [h0, nonpos_iff_eq_zero, v.zero_iff] at this
   simpa using this
 
 end SlopeTestRemainingChoices

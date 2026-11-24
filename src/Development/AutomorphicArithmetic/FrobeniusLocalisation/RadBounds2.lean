@@ -297,7 +297,7 @@ theorem UpperTheory.HF.rad_bounds2 :
       have h1 : 2 ^ M.primeFactors.card ≤ ∏ p ∈ M.primeFactors, p := by
         calc 2 ^ M.primeFactors.card = ∏ p ∈ M.primeFactors, 2 := by simp
           _ ≤ ∏ p ∈ M.primeFactors, p :=
-            Finset.prod_le_prod' (fun p hp => (Nat.prime_of_mem_primeFactors hp).two_le)
+            Finset.prod_le_prod (fun p hp => (Nat.prime_of_mem_primeFactors hp).two_le)
       have h2 : ∏ p ∈ M.primeFactors, p ≤ M := Nat.le_of_dvd hM (Nat.prod_primeFactors_dvd M)
       apply Real.log_le_log (by positivity)
       exact_mod_cast h1.trans h2

@@ -140,7 +140,7 @@ theorem uni_haar {A : Type} [CommRing A] [TopologicalSpace A] [IsTopologicalRing
 theorem transvection_uni {A : Type} [CommRing A] {k : ℕ} (i j : Fin k) (hij : i ≠ j) (c : A) :
     IsLowUni (Matrix.transvection i j c) ∨ IsLowUni (Matrix.transvection i j c).transpose := by
   have key : ∀ a b : Fin k, (i = a ∧ j = b → False) → Matrix.single i j c a b = 0 := fun a b h => by
-    rw [Matrix.single_apply, if_neg (fun hh => h hh)]
+    rw [Matrix.single_apply, ite_eq_right (fun hh => h hh)]
   have tac : ∀ a b : Fin k, (a < b ∧ i = a ∧ j = b → False) ∨ True := fun _ _ => Or.inr trivial
   rcases lt_or_gt_of_ne hij with h | h
   · right
@@ -160,7 +160,7 @@ theorem transvection_uni {A : Type} [CommRing A] {k : ℕ} (i j : Fin k) (hij : 
 
 theorem transvection_preserves_haar : TransvHaar := by
   intro A _ _ _ _ _ _ _ _ k i j hij c μ hμ
-  haveI := hμ
+  have := hμ
   exact uni_haar k _ (transvection_uni i j hij c) μ
 
 end PI.VolSemiDirect.W.Cj

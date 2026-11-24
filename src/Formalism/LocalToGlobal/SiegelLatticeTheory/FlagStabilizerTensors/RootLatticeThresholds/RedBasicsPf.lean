@@ -109,17 +109,17 @@ theorem mem_iff (y : I.L) :
 
 private lemma charP_residue_of_card_eq_prime {p : ℕ} (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p) :
     CharP (𝓞 I.E ⧸ w.asIdeal) p := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Finite (𝓞 I.E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hp.ne_zero)
-  letI := Fintype.ofFinite (𝓞 I.E ⧸ w.asIdeal)
+  have : Fact p.Prime := ⟨hp⟩
+  have : Finite (𝓞 I.E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hp.ne_zero)
+  let := Fintype.ofFinite (𝓞 I.E ⧸ w.asIdeal)
   exact charP_of_card_eq_prime (by rw [← Nat.card_eq_fintype_card, hcard])
 
 theorem int_surj {p : ℕ} (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p)
     (κ : 𝓞 I.E ⧸ w.asIdeal) : ∃ c : ℤ, (c : 𝓞 I.E ⧸ w.asIdeal) = κ := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI := charP_residue_of_card_eq_prime I w hp hcard
-  haveI : Finite (𝓞 I.E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hp.ne_zero)
-  letI := Fintype.ofFinite (𝓞 I.E ⧸ w.asIdeal)
+  have : Fact p.Prime := ⟨hp⟩
+  have := charP_residue_of_card_eq_prime I w hp hcard
+  have : Finite (𝓞 I.E ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hp.ne_zero)
+  let := Fintype.ofFinite (𝓞 I.E ⧸ w.asIdeal)
   have hinj : Function.Injective (ZMod.castHom (dvd_refl p) (𝓞 I.E ⧸ w.asIdeal)) :=
     (ZMod.castHom (dvd_refl p) (𝓞 I.E ⧸ w.asIdeal)).injective
   have hbij := (Fintype.bijective_iff_injective_and_card _).mpr
@@ -130,7 +130,7 @@ theorem int_surj {p : ℕ} (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asId
 
 theorem int_mem_iff {p : ℕ} (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p) (c : ℤ) :
     (c : 𝓞 I.E) ∈ w.asIdeal ↔ (p : ℤ) ∣ c := by
-  haveI := charP_residue_of_card_eq_prime I w hp hcard
+  have := charP_residue_of_card_eq_prime I w hp hcard
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_intCast, CharP.intCast_eq_zero_iff _ p]
 
 theorem natCast_mem {p : ℕ} (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIdeal) = p) :
@@ -344,7 +344,7 @@ theorem exists_ideal_element_not_mem : ∃ t β : 𝓞 I.E, t ∈ w.asIdeal ∧ 
     have h1 := mul_left_cancel₀ h0 this
     exact w.isPrime.ne_top (by rw [h1, Ideal.one_eq_top])
   have hlt : w.asIdeal ^ 2 < w.asIdeal := lt_of_le_of_ne (Ideal.pow_le_self two_ne_zero) hne
-  obtain ⟨t, htw, ht2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨t, htw, ht2⟩ := IsConcreteLE.exists_of_lt hlt
   have ht0 : t ≠ 0 := by rintro rfl; exact ht2 (zero_mem _)
   obtain ⟨w', hw'⟩ : w.asIdeal ∣ Ideal.span {t} :=
     Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 htw)
@@ -353,7 +353,7 @@ theorem exists_ideal_element_not_mem : ∃ t β : 𝓞 I.E, t ∈ w.asIdeal ∧ 
     apply ht2
     have : Ideal.span {t} ≤ w.asIdeal ^ 2 := by rw [hw', sq]; exact Ideal.mul_mono_right h
     exact this (Ideal.mem_span_singleton_self t)
-  obtain ⟨β, hβ, hβw⟩ := SetLike.not_le_iff_exists.1 hw'w
+  obtain ⟨β, hβ, hβw⟩ := IsConcreteLE.not_le_iff_exists.1 hw'w
   refine ⟨t, β, htw, ht0, fun a ha => ?_, hβw⟩
   have : a * β ∈ Ideal.span {t} := by rw [hw']; exact Ideal.mul_mem_mul ha hβ
   obtain ⟨g, hg⟩ := Ideal.mem_span_singleton'.1 this
@@ -422,7 +422,7 @@ theorem val_sub {p : ℕ} (hp : p.Prime) (hcard : Nat.card (𝓞 I.E ⧸ w.asIde
     {z : Fin I.n → I.E} (hz : z ∈ I.L) (c : ℤ) :
     ((((c : ZMod p)).val : ℕ) : I.E ⊗[I.F] Af I.F) • iv I z - (c : I.E ⊗[I.F] Af I.F) • iv I z ∈
       lamAf (F := I.F) (wLat0 I w) := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hd : (p : ℤ) ∣ ((c : ZMod p).val : ℤ) - c := by
     rw [← ZMod.intCast_zmod_eq_zero_iff_dvd]
     simp

@@ -246,32 +246,32 @@ theorem finite_integralClosure_chRing {o : Type} [CommRing o] [Algebra.EssFinite
     ((chRing o x c).equivMapOfInjective φ hφ).trans (Subalgebra.equivOfEq _ _ hmap)
   have he : ∀ a, ((e a : chRing o (fun k => algebraMap Ω Ω' (x k)) c) : Ω') =
       algebraMap Ω Ω' (a : Ω) := fun a => rfl
-  haveI : Algebra.FiniteType o (chRing o (fun k => algebraMap Ω Ω' (x k)) c) := by
+  have : Algebra.FiniteType o (chRing o (fun k => algebraMap Ω Ω' (x k)) c) := by
     rw [← Subalgebra.fg_iff_finiteType]
     exact Subalgebra.fg_def.2 ⟨_, Set.finite_range _, rfl⟩
-  haveI : Algebra.EssFiniteType o (chRing o (fun k => algebraMap Ω Ω' (x k)) c) :=
+  have : Algebra.EssFiniteType o (chRing o (fun k => algebraMap Ω Ω' (x k)) c) :=
     Algebra.EssFiniteType.of_finiteType _ _
-  haveI : Algebra.EssFiniteType ℤ (chRing o (fun k => algebraMap Ω Ω' (x k)) c) :=
+  have : Algebra.EssFiniteType ℤ (chRing o (fun k => algebraMap Ω Ω' (x k)) c) :=
     Algebra.EssFiniteType.comp ℤ o _
-  letI : Algebra (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω :=
+  let : Algebra (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω :=
     ((chRing o x c).val.toRingHom.comp e.symm.toRingEquiv.toRingHom).toAlgebra
   have hmapΩ : ∀ a : chRing o x c,
       algebraMap (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω (e a) = (a : Ω) := by
     intro a
     change ((e.symm (e a) : chRing o x c) : Ω) = a
     rw [AlgEquiv.symm_apply_apply]
-  haveI : IsScalarTower (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω Ω' :=
+  have : IsScalarTower (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω Ω' :=
     IsScalarTower.of_algebraMap_eq fun a => by
       obtain ⟨b, rfl⟩ := e.surjective a
       rw [hmapΩ]
       exact he b
-  haveI : FaithfulSMul (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω :=
+  have : FaithfulSMul (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 fun a b h => by
       obtain ⟨a, rfl⟩ := e.surjective a
       obtain ⟨b, rfl⟩ := e.surjective b
       rw [hmapΩ, hmapΩ] at h
       rw [Subtype.ext h]
-  haveI : IsFractionRing (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω :=
+  have : IsFractionRing (chRing o (fun k => algebraMap Ω Ω' (x k)) c) Ω :=
     IsFractionRing.of_field _ _ fun z => by
       obtain ⟨u, hu, v, hv, rfl⟩ := exists_eq_div_chRing M hc z
       exact ⟨e ⟨u, hu⟩, e ⟨v, hv⟩, by rw [hmapΩ, hmapΩ]⟩
@@ -337,11 +337,11 @@ theorem exists_integral_div : ∀ {o : Type} [CommRing o] {Ω : Type} [Field Ω]
       IsIntegral (chRing o (fun k => algebraMap Ω Ω' (x k)) c) b ∧
         v ∈ chRing o (fun k => algebraMap Ω Ω' (x k)) c ∧ v ≠ 0 ∧ a = b / v := by
   intro o _ Ω _ _ κ _ x M Ω' _ _ _ _ _ c hc a
-  haveI : IsFractionRing (chRing o x c) Ω := IsFractionRing.of_field _ _ fun z => by
+  have : IsFractionRing (chRing o x c) Ω := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨u, hu, v, hv, e⟩ := exists_frac M hc z
     exact ⟨⟨u, hu⟩, ⟨v, hv⟩, e⟩
   have halg : IsAlgebraic (chRing o x c) a := by
-    haveI : Algebra.IsAlgebraic (chRing o x c) Ω' :=
+    have : Algebra.IsAlgebraic (chRing o x c) Ω' :=
       (IsFractionRing.comap_isAlgebraic_iff (A := chRing o x c) (K := Ω) (C := Ω')).2 inferInstance
     exact Algebra.IsAlgebraic.isAlgebraic a
   obtain ⟨y, hy0, hi⟩ := halg.exists_integral_multiple
@@ -540,9 +540,9 @@ instance isLocalRing_regAt {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Spec (C
 
 theorem int_trans {o K : Type} [CommRing o] [Field K] [Algebra o K] (A B : Subalgebra o K)
     (hAB : ∀ a ∈ A, a ∈ B) (hB : ∀ b ∈ B, IsIntegral A b) (a : K) (ha : IsIntegral B a) : IsIntegral A a := by
-  letI : Algebra A B := (Subalgebra.inclusion hAB).toRingHom.toAlgebra
-  haveI : IsScalarTower A B K := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsIntegral A B := ⟨fun b => by
+  let : Algebra A B := (Subalgebra.inclusion hAB).toRingHom.toAlgebra
+  have : IsScalarTower A B K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.IsIntegral A B := ⟨fun b => by
     have := hB b b.2
     exact (isIntegral_algebraMap_iff (A := B) (B := K) (x := b) ).1 this⟩
   exact isIntegral_trans a ha

@@ -271,8 +271,8 @@ namespace GlobalTheory.NL.SandJumps
 theorem main : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (Cm : CmpOf D.loc D.locA HW F), p5eL D.loc D.locA HW F := by
   intro D HW F Cm l _ K s LL h T M hh hT hJ
-  haveI := ((D.loc l).PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have := ((D.loc l).PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   have hp : p5 ((HW l).W K s LL h) T M hh := _root_.GlobalTheory.NL.Heights.heights_from_jumps D HW F Cm l K s LL h T M hh hT hJ
   obtain ⟨b⟩ := GlobalTheory.NL.N_basis D HW F l K s LL h T hT
   have hio := GlobalTheory.NL.IoXQ.main D HW F l K s LL h

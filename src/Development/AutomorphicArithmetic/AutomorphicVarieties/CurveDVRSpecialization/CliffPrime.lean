@@ -208,8 +208,8 @@ private theorem of_eig [FiniteDimensional κ V] (σ : G →* Module.End κ V) (U
     exact this hv
   choose b hb hb0 using fun x => Submodule.exists_mem_ne_zero_of_ne_bot (hE0 x)
   have hli : LinearIndependent κ b := hind.linearIndependent E hb hb0
-  haveI : Finite X := hli.finite
-  haveI : Fintype X := Fintype.ofFinite X
+  have : Finite X := hli.finite
+  have : Fintype X := Fintype.ofFinite X
   have hcard : Fintype.card X * finrank κ (eig σ μ) = n := by
     rw [← hn, ← (LinearEquiv.ofBijective (DirectSum.coeLinearMap E)
       (DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top hind htop)).finrank_eq, finrank_directSum]
@@ -219,7 +219,7 @@ private theorem of_eig [FiniteDimensional κ V] (σ : G →* Module.End κ V) (U
     rw [h, mul_one] at hcard
     let e : X ≃ Fin n := Fintype.equivFinOfCardEq hcard
     let B : Basis X κ V := Basis.mk hli (htop.ge.trans (iSup_le fun x w hw => by
-      obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨b x, hb x⟩ : E x)
+      obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨b x, hb x⟩ : E x)
         (fun h => hb0 _ (congrArg Subtype.val h))).mp ((hr _).trans h) ⟨w, hw⟩
       have ha' : a • b x = w := congrArg Subtype.val ha
       exact ha' ▸ Submodule.smul_mem _ _ (Submodule.subset_span ⟨x, rfl⟩)))
@@ -227,7 +227,7 @@ private theorem of_eig [FiniteDimensional κ V] (σ : G →* Module.End κ V) (U
     refine ⟨B.reindex e, fun i => (e.symm i).1, e.permCongrHom.toMonoidHom.comp (MulAction.toPermHom G X),
       Subtype.val_injective.comp e.symm.injective, fun i u => by rw [hB]; exact hb _ u, fun g i => ?_,
       fun i j => ?_⟩
-    · have h1 := (finrank_eq_one_iff_of_nonzero' (⟨b (g • e.symm i), hb _⟩ : E (g • e.symm i))
+    · have h1 := (finrank_eq_one_iff_of_ne_zero' (⟨b (g • e.symm i), hb _⟩ : E (g • e.symm i))
         (fun h => hb0 _ (congrArg Subtype.val h))).mp ((hr _).trans h) ⟨_, eig_smul σ _ g (hb (e.symm i))⟩
       obtain ⟨a, ha⟩ := h1
       refine ⟨a, ?_⟩
@@ -262,7 +262,7 @@ theorem UpperTheory.V.Pr.cliffPrime :
   have hirr' : ∀ W : Submodule κ (Fin n → κ), (∀ g, ∀ v ∈ W, σ g v ∈ W) → W = ⊥ ∨ W = ⊤ :=
     fun W hW => hirr W fun g _ v hv => hW g v hv
   have hn : finrank κ (Fin n → κ) = n := finrank_fin_fun κ
-  haveI : Nontrivial (Fin n → κ) := finrank_pos_iff.mp (hn.symm ▸ hp.pos)
+  have : Nontrivial (Fin n → κ) := finrank_pos_iff.mp (hn.symm ▸ hp.pos)
   obtain ⟨W, ⟨hW0, hW⟩, hmin⟩ := (wellFounded_lt (α := Submodule κ (Fin n → κ))).has_min
     {F | F ≠ ⊥ ∧ ∀ g ∈ U, ∀ v ∈ F, σ g v ∈ F} ⟨⊤, top_ne_bot, fun _ _ _ _ => trivial⟩
   have hd := min_dvd σ U hirr' W hW0 hW fun F h1 h2 => hmin F ⟨h1, h2⟩

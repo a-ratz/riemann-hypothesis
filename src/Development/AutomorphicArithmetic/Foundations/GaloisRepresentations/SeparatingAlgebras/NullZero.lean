@@ -72,19 +72,19 @@ private lemma continuous_eval_pt {n : ℕ} (p : MvPolynomial (Fin n) ℂ) :
   have h2 : Continuous fun θ : Fin n → UnitAddCircle => (fun i => (pt θ i : ℂ)) := by
     refine continuous_pi fun i => ?_
     simp only [pt_coe]
-    exact continuous_subtype_val.comp ((AddCircle.continuous_toCircle).comp (continuous_apply i))
+    exact continuous_subtypeVal.comp ((AddCircle.continuous_toCircle).comp (continuous_apply i))
   exact h1.comp h2
 
 private lemma circle_zero_null (r : Polynomial ℂ) (hr : r ≠ 0) :
     volume {s : UnitAddCircle | r.eval ((AddCircle.toCircle s : Circle) : ℂ) = 0} = 0 := by
-  haveI : NullSingletonClass (volume : Measure UnitAddCircle) := ⟨fun x => by
+  have : NullSingletonClass (volume : Measure UnitAddCircle) := ⟨fun x => by
     have h := AddCircle.volume_closedBall (T := (1 : ℝ)) (x := x) 0
     simpa using h⟩
   have hinj : Function.Injective fun s : UnitAddCircle => ((AddCircle.toCircle s : Circle) : ℂ) :=
     Circle.coe_injective.comp (AddCircle.injective_toCircle one_ne_zero)
   have hfin : ({s : UnitAddCircle | r.eval ((AddCircle.toCircle s : Circle) : ℂ) = 0}).Finite := by
     refine Set.Finite.of_finite_image (f := fun s : UnitAddCircle => ((AddCircle.toCircle s : Circle) : ℂ)) ?_ hinj.injOn
-    refine (Polynomial.finite_setOf_isRoot hr).subset ?_
+    refine (Polynomial.finite_setOfPred_isRoot hr).subset ?_
     rintro _ ⟨s, hs, rfl⟩
     exact hs
   exact hfin.measure_zero _

@@ -87,8 +87,8 @@ theorem UpperTheory.V.Ws.large₂.imgRoots :
     ∀ {O : Type} [CommRing O] [IsDomain O] (N : ℕ) [NeZero N] (χ : DirichletCharacter O N) (x : Oˣ), x ^ orderOf χ = 1 → ∃ b : (ZMod N)ˣ, χ.toUnitHom b = x := by
   intro O _ _ N _ χ x hx
   have hn : 0 < orderOf χ := orderOf_pos χ
-  haveI : NeZero (orderOf χ) := ⟨hn.ne'⟩
-  haveI : Finite χ.toUnitHom.range :=
+  have : NeZero (orderOf χ) := ⟨hn.ne'⟩
+  have : Finite χ.toUnitHom.range :=
     Finite.of_surjective χ.toUnitHom.rangeRestrict χ.toUnitHom.rangeRestrict_surjective
   have hle : χ.toUnitHom.range ≤ rootsOfUnity (orderOf χ) O := by
     rintro _ ⟨b, rfl⟩
@@ -157,7 +157,7 @@ theorem UpperTheory.V.Ws.large₂.eltOdd :
   have hdo : orderOf ψ ∣ h.o :=
     (((hostOdd h c.O ψ (h.mem_X.1 hX).1).1 hodd).1).trans (Nat.ordCompl_dvd _ _)
   have hlm : l.Coprime (orderOf ψ) := lp.coprime_iff_not_dvd.2 fun hd => hlo (hd.trans hdo)
-  haveI : NeZero l := ⟨lp.ne_zero⟩
+  have : NeZero l := ⟨lp.ne_zero⟩
   generalize UpperTheory.V.pOne h.chi = p at *
   generalize h.nIII l ψ = n at *
   have hom : ∀ g, Chr.cls ℚ Ω l g = 1 → D.om g = 1 := by
@@ -175,7 +175,7 @@ theorem UpperTheory.V.Ws.large₂.eltOdd :
     apply hne
     ext a
     rw [MulChar.one_apply_coe, ← MulChar.coe_toUnitHom, hc a, Units.val_one]
-  haveI : NeZero (l * p) := ⟨mul_ne_zero lp.ne_zero pp.ne_zero⟩
+  have : NeZero (l * p) := ⟨mul_ne_zero lp.ne_zero pp.ne_zero⟩
   have c1 : h.N.Coprime (l * p) :=
     Nat.Coprime.mul_right (lp.coprime_iff_not_dvd.2 hlN).symm (pp.coprime_iff_not_dvd.2 hpN).symm
   obtain ⟨u, hu, hu'⟩ := UpperTheory.V.Ws.large₂.clsIndep (Ω := Ω) h.N (l * p) c1 a
@@ -194,7 +194,7 @@ theorem UpperTheory.V.Ws.large₂.eltOdd :
       one_zpow]
   obtain ⟨x, hx2, hxm⟩ := half hodd hym
   obtain ⟨b, hb⟩ := UpperTheory.V.Ws.large₂.imgRoots p ξ₀ x (hord ▸ hxm)
-  haveI : NeZero (h.N * l * 2 ^ n) := ⟨mul_ne_zero (mul_ne_zero (NeZero.ne _) lp.ne_zero) (by positivity)⟩
+  have : NeZero (h.N * l * 2 ^ n) := ⟨mul_ne_zero (mul_ne_zero (NeZero.ne _) lp.ne_zero) (by positivity)⟩
   have c2 : p.Coprime (h.N * l * 2 ^ n) := by
     refine Nat.Coprime.mul_right (Nat.Coprime.mul_right (pp.coprime_iff_not_dvd.2 hpN) ?_) (Nat.Coprime.pow_right _ ?_)
     · exact (Nat.coprime_primes pp lp).2 hlp.symm
@@ -229,8 +229,8 @@ private theorem complex_conjugations_conjugate {Ω : Type} [Field Ω] [CharZero 
     ∃ g : G ℚ Ω, g * τ = σ * g := by
   obtain ⟨j, hj⟩ := hσ
   obtain ⟨j', hj'⟩ := hτ
-  letI : Algebra Ω ℂ := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra Ω ℂ := j.toAlgebra
+  have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   have key : ∀ x, j (AlgHom.restrictNormal' j'.toRatAlgHom Ω x) = j' x := fun x => AlgHom.restrictNormal_commutes j'.toRatAlgHom Ω x
   refine ⟨AlgHom.restrictNormal' j'.toRatAlgHom Ω, AlgEquiv.ext fun x => j.injective ?_⟩
   rw [AlgEquiv.mul_apply, AlgEquiv.mul_apply, key, hj, hj', key]
@@ -248,8 +248,8 @@ private theorem fieldsEx {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
     rw [MonoidHom.mem_ker, MonoidHom.mul_apply, MonoidHom.inv_apply, mul_inv_eq_one]
   have ho : IsOpen ((η * η'⁻¹).ker : Set (G ℚ Ω)) :=
     Subgroup.isOpen_mono (H₁ := η.ker ⊓ η'.ker) (fun g hg => (hk g).2 (Eq.trans hg.1 (Eq.symm hg.2))) (h.opn.inter h'.opn)
-  obtain ⟨K, _, _, hK, dK⟩ := fixAb Ω η.ker h.opn (Abelianization.commutator_subset_ker _)
-  obtain ⟨F, _, _, hF, dF⟩ := fixAb Ω (H ⊓ (η * η'⁻¹).ker) (hH.inter ho) (le_inf hc (Abelianization.commutator_subset_ker _))
+  obtain ⟨K, _, _, hK, dK⟩ := fixAb Ω η.ker h.opn (Group.Abelianization.commutator_le_ker _)
+  obtain ⟨F, _, _, hF, dF⟩ := fixAb Ω (H ⊓ (η * η'⁻¹).ker) (hH.inter ho) (le_inf hc (Group.Abelianization.commutator_le_ker _))
   have hN : H.Normal := Subgroup.Normal.of_commutator_le _ hc
   refine ⟨K, F, inferInstance, inferInstance, (fixInf Ω K).2 (fun σ hσ e => ?_) (dK.trans h.idx), (fixInf Ω F).1 fun σ hσ => ?_, inferInstance,
     η.ker ⊓ η'.ker, dK.trans h.idx, ?_, fun q hq A hA => le_inf (h.split q hq A hA) (h'.split q (Finset.mem_insert_of_mem hq) A hA),
@@ -414,7 +414,7 @@ theorem UpperTheory.V.Ws.exists_tame_tower_ok_three :
     rw [del_iff D hD, ← reduction_psi_eq_omega_pow D hD, hD.xi_odd, hD.Psi_even, ← map_pow]
     simp
   obtain ⟨K, F, _, _, _, _, _, J, hK, hev, hJS, hJ2, hJK, hFH, hFK, hunr⟩ :=
-    fieldsEx (fun p hp => ⟨_, hD.pl_over p hp⟩) D.S hD.S_prime (del D pr).ker hopen (Abelianization.commutator_subset_ker _) D.cc hD.isCC hcc
+    fieldsEx (fun p hp => ⟨_, hD.pl_over p hp⟩) D.S hD.S_prime (del D pr).ker hopen (Group.Abelianization.commutator_le_ker _) D.cc hD.isCC hcc
   have hL : ∀ g, g ∈ (del D pr).ker → g ∈ J → ∃ g' : G F Ω, resQ F g' = g ∧ resQ F g' ∈ K.fixingSubgroup := fun g a b => by
     have h : g ∈ F.fixingSubgroup ⊓ K.fixingSubgroup := hFK ▸ ⟨a, b⟩
     obtain ⟨g', rfl⟩ := exists_lift_of_mem_fixing h.1

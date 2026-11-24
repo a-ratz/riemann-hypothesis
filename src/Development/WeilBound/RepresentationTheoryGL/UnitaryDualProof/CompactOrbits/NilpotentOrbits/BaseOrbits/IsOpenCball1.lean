@@ -61,7 +61,7 @@ theorem isOpen_ball' (γ : (ValueGroupWithZero k)ˣ) : IsOpen {x : k | valuation
   intro x hx
   rw [IsValuativeTopology.mem_nhds_iff']
   refine ⟨γ, fun y hy => ?_⟩
-  simp only [Set.mem_setOf_eq] at hx hy ⊢
+  simp only [Set.mem_ofPred_eq] at hx hy ⊢
   have h := (valuation k).map_add (y - x) x
   rw [sub_add_cancel] at h
   exact lt_of_le_of_lt h (max_lt hy hx)
@@ -71,7 +71,7 @@ theorem isOpen_cball1 : IsOpen {x : k | valuation k x ≤ 1} := by
   intro x hx
   rw [IsValuativeTopology.mem_nhds_iff']
   refine ⟨1, fun y hy => ?_⟩
-  simp only [Set.mem_setOf_eq, Units.val_one] at hx hy ⊢
+  simp only [Set.mem_ofPred_eq, Units.val_one] at hx hy ⊢
   have h := (valuation k).map_add (y - x) x
   rw [sub_add_cancel] at h
   exact le_trans h (max_le hy.le hx)
@@ -135,7 +135,7 @@ theorem isOpen_L (e : Matrix (Fin n) (Fin n) k) :
     IsOpen {w : Wt e | ∀ i, valuation k (w.1 i) ≤ 1} := by
   have hO : IsOpen (Set.pi Set.univ fun _ : Fin n => {x : k | valuation k x ≤ 1}) :=
     isOpen_set_pi Set.finite_univ fun _ _ => isOpen_cball1
-  have := hO.preimage (continuous_subtype_val : Continuous (Subtype.val : Wt e → (Fin n → k)))
+  have := hO.preimage (continuous_subtypeVal : Continuous (Subtype.val : Wt e → (Fin n → k)))
   convert this using 1
   ext w
   simp

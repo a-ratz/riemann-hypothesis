@@ -72,7 +72,7 @@ theorem exists_pow_mul_mem (a : F) : ∃ M : ℕ, (uniformizer F : F) ^ M * a �
   obtain ⟨m, hm⟩ := exists_pow_lt₀ (valuation_uniformizer_lt_one F) (Units.mk0 _ hvx)⁻¹
   refine ⟨m, (Valuation.mem_integer_iff _ _).2 ?_⟩
   have h1 : ValuativeRel.valuation F (uniformizer F : F) ^ m * ValuativeRel.valuation F a < 1 := by
-    have := mul_lt_mul_of_pos_right hm (zero_lt_iff.mpr hvx)
+    have := mul_lt_mul_of_pos_right hm (pos_iff_ne_zero.mpr hvx)
     simpa [hvx] using this
   rw [map_mul, map_pow]
   exact h1.le
@@ -142,7 +142,7 @@ theorem valuation_lt_one_of_div {c : ℕ} {e t : F} (ht : t ∈ 𝒪[F])
     (he : e = (uniformizer F : F) ^ (c + 1) * t) : ValuativeRel.valuation F e < 1 := by
   have h1 : ValuativeRel.valuation F t ≤ 1 := (Valuation.mem_integer_iff _ _).1 ht
   have h2 : ValuativeRel.valuation F (uniformizer F : F) ^ (c + 1) < 1 :=
-    pow_lt_one₀ zero_le' (valuation_uniformizer_lt_one F) (Nat.succ_ne_zero c)
+    pow_lt_one₀ zero_le (valuation_uniformizer_lt_one F) (Nat.succ_ne_zero c)
   rw [he, map_mul, map_pow]
   exact lt_of_le_of_lt (mul_le_of_le_one_right' h1) h2
 
@@ -300,7 +300,7 @@ theorem integral_image_eq (hL0 : L0) (hL1 : L1) (μ : Measure F) [μ.IsAddHaarMe
     ∫ x in (fun x => (g : Matrix (Fin (k + 1)) (Fin (k + 1)) F) *ᵥ x) '' lat F (k + 1) 0,
         ψ (-x (Fin.last k)) * f x ∂(Measure.pi fun _ => μ) =
       ∫ x in lat F (k + 1) M, ψ (-x (Fin.last k)) * f x ∂(Measure.pi fun _ => μ) := by
-  haveI := Measures.sigmaCompactSpace F
+  have := Measures.sigmaCompactSpace F
   obtain ⟨hψc, hlat⟩ := hL0 F μ ψ hψ
   obtain ⟨hlat', hcv⟩ := hlat (k + 1)
   have hL1' := hL1 F μ ψ hψ (k + 1)
@@ -347,8 +347,8 @@ theorem integral_image_eq (hL0 : L0) (hL1 : L1) (μ : Measure F) [μ.IsAddHaarMe
     simp only [hΦ]
     rw [integral_mul_const, hL1' (gi *ᵥ x)]
     by_cases hx : x ∈ S
-    · rw [if_pos ((hmemS x).1 hx), Set.indicator_of_mem hx]
-    · rw [if_neg (fun h => hx ((hmemS x).2 h)), Set.indicator_of_notMem hx, zero_mul]
+    · rw [ite_eq_left ((hmemS x).1 hx), Set.indicator_of_mem hx]
+    · rw [ite_eq_right (fun h => hx ((hmemS x).2 h)), Set.indicator_of_notMem hx, zero_mul]
   have h2 : ∫ x in lat F (k + 1) M, ∫ ξ in lat F (k + 1) 0, Φ x ξ ∂ν ∂ν =
       (vol : ℂ) * ∫ x in S, G x ∂ν := by
     simp_rw [h1]

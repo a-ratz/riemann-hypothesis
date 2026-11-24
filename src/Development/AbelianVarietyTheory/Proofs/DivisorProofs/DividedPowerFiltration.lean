@@ -94,7 +94,7 @@ theorem _root_.GlobalTheory.Cris.ExpBij.mul_mem_dpFil {m n : ℕ} {a b : B} (ha 
   have key : _root_.GlobalTheory.Cris.ExpBij.dpFil δ m * _root_.GlobalTheory.Cris.ExpBij.dpFil δ n ≤
       _root_.GlobalTheory.Cris.ExpBij.dpFil δ (m + n) := by
     unfold _root_.GlobalTheory.Cris.ExpBij.dpFil
-    rw [Ideal.span_mul_span']
+    rw [Ideal.span_mul_span]
     refine Ideal.span_mono ?_
     rintro _ ⟨x, ⟨l₁, hl₁, hs₁, rfl⟩, y, ⟨l₂, hl₂, hs₂, rfl⟩, rfl⟩
     refine ⟨l₁ ++ l₂, ?_, ?_, ?_⟩

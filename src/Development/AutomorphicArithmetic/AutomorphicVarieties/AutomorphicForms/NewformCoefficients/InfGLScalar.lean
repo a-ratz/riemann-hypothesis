@@ -103,8 +103,8 @@ theorem casimir : ∀ {V : Type} [inst : AddCommGroup V]
   have cdb := c 1 1 0 1
   have cdc := c 1 1 1 0
   have cbc := c 0 1 1 0
-  simp only [LinearMap.sub_apply, Module.End.mul_apply, if_true, Fin.zero_eq_one_iff,
-    Fin.one_eq_zero_iff, OfNat.ofNat_ne_one, if_false, LinearMap.zero_apply] at cad cab cac cdb cdc cbc
+  simp only [LinearMap.sub_apply, Module.End.mul_apply, ite_true, Fin.zero_eq_one_iff,
+    Fin.one_eq_zero_iff, OfNat.ofNat_ne_one, ite_false, LinearMap.zero_apply] at cad cab cac cdb cdc cbc
   have z (a b : Fin 2) := congrArg (E a b) h1
   have w (a b : Fin 2) := congrArg (E a b) h2
   have g (a b : Fin 2) := congrArg (E a b) h3
@@ -151,7 +151,7 @@ private theorem fin_expU {F : Type} [Field F] [NumberField F] [IsTotallyReal F] 
   have e1 : expU z = expU ((n : ℝ)⁻¹ • z) ^ n := by
     refine Units.ext (funext fun i => ?_)
     have : (n : ℝ) ≠ 0 := by positivity
-    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_nat_mul, Pi.smul_apply, smul_eq_mul]
+    simp only [Units.val_pow_eq_pow_val, Pi.pow_apply, expU_val, ← Real.exp_natCast_mul, Pi.smul_apply, smul_eq_mul]
     congr 1
     field_simp
   rw [e1, map_pow, map_pow]

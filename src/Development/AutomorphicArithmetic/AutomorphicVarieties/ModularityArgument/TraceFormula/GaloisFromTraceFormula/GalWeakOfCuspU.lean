@@ -194,7 +194,7 @@ theorem isSplitAt_of_deg_one {E : Type} [Field E] [NumberField E] [IsCMField E] 
     rintro rfl
     have h0 : v.asIdeal.under (𝓞 (maximalRealSubfield E)) = ⊥ := hX.2.over.trans
       (Ideal.comap_bot_of_injective _ (FaithfulSMul.algebraMap_injective _ (𝓞 E)))
-    exact v.ne_bot (Ideal.eq_bot_of_comap_eq_bot h0)
+    exact v.ne_bot (Ideal.eq_bot_of_under_eq_bot h0)
   have := hX.1
   refine ⟨⟨X, hX.1, hXb⟩, fun h => hXv (congrArg HeightOneSpectrum.asIdeal h), ?_⟩
   ext1

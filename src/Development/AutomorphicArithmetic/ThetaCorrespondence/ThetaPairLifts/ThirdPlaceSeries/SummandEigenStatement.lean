@@ -515,7 +515,7 @@ theorem le_iSup_range (ρ : Representation ℂ (GQ L n) W) (S : Submodule ℂ (G
     S ≤ ⨆ T : {T : τ.V →ₗ[ℂ] (GAf L n → W) // LocEq s τ i T}, LinearMap.range T.1 := by
   obtain ⟨hdec, hcomm, -⟩ := _root_.GlobalTheory.SplitAdelic.main L n s
   have hnt : Nontrivial τ.V := by
-    haveI := τ.irr
+    have := τ.irr
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     apply (bot_ne_top : (⊥ : Subrepresentation τ.ρ) ≠ ⊤)
@@ -679,7 +679,7 @@ theorem main_alt_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (
     rintro _ ⟨x, hx, rfl⟩
     have hc : ∃ y ∈ Ds, (y : GAf D.host.E D.R.nV ⧸ (P.M.loc i).J) = (x : GAf D.host.E D.R.nV ⧸ (P.M.loc i).J) := ⟨x, hx, rfl⟩
     refine ⟨(x : GAf D.host.E D.R.nV ⧸ (P.M.loc i).J), ⟨x, hx, rfl⟩, ?_⟩
-    simp only [φ, dif_pos hc]
+    simp only [φ, dite_eq_left hc]
     have h1 := hc.choose_spec.2
     rw [QuotientGroup.eq] at h1
     exact QuotientGroup.eq.2 ((hJU _ hc.choose_spec.1 _ hx).1 h1)

@@ -135,7 +135,7 @@ theorem sch_hasDerivAt_line : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
       (t⁻¹ : ℂ) * (sch ψ A B ν 𝓨 (heisO ψ (dblSp A) B (L t) f) x - sch ψ A B ν 𝓨 f x) := by
     rw [zero_add, htr t, map_zero, add_zero, Complex.real_smul, Complex.ofReal_inv]
   simp only
-  rw [e2, edist_eq_enorm_sub, ← (key t).2]
+  rw [e2, eDist_eq_eNorm_sub, ← (key t).2]
   exact hb
 
 end GlobalTheory.SchLine
@@ -193,7 +193,7 @@ def volOf {A B : HSp D} (ν : Measure (WO A B)) (𝓨 : Set (WO A B)) (h : IsCov
     GlobalTheory.Unf.VolM D B.rank A.rank := ⟨ν, 𝓨, h⟩
 
 theorem continuous_finPart' : Continuous (finPart D) := by
-  letI ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
+  let ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Ainf D.host.F) (Ainf D.host.F ⊗[D.host.F] D.host.E)
   obtain ⟨e, he, hec, -⟩ : ∃ e : AE D ≃+* (Ainf D.host.F ⊗[D.host.F] D.host.E) × (Af D.host.F ⊗[D.host.F] D.host.E),
       (∀ z, (e z).1 = infPart D z ∧ (e z).2 = finPart D z) ∧ Continuous e ∧ Continuous e.symm :=

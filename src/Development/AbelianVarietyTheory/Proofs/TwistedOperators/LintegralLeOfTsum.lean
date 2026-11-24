@@ -113,21 +113,21 @@ theorem uni_bound (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ W W₀ : HSp
   have hMS := GlobalTheory.T.mixedModelFormulasWittSource_proof D ψ V V₀ W ρ dV s.χV s.χW s.om om' s.weil hW' s.vS.μ s.vS.𝓕 s.vS.covol
   have hmix := (GlobalTheory.T.weilMixedCoordinates_continuous_bounded_supNorm D ψ V V₀ W W₀ ρ σ dV dW s.vS s.vT s.χV s.χW s.om s.weil Φ hΦ).1
   obtain ⟨K, hK, hcov⟩ := GlobalTheory.UnitU.cocompact D ρ
-  obtain ⟨c, hc⟩ := exists_height_le_of_isCompact V (hK.image (dV.continuous_levi.comp continuous_subtype_val))
+  obtain ⟨c, hc⟩ := exists_height_le_of_isCompact V (hK.image (dV.continuous_levi.comp continuous_subtypeVal))
   have hc'1 : 1 ≤ max c 1 := le_max_right _ _
   have hC₀0 : 0 ≤ max C 0 := le_max_right _ _
   refine ⟨max C 0 * max c 1 ^ A, A, mul_nonneg hC₀0 (pow_nonneg (zero_le_one.trans hc'1) _), fun g h w => ?_⟩
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : Countable (UXQ D ρ) := (GlobalTheory.UnitU.rational D ρ).1
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : Countable (UXQ D ρ) := (GlobalTheory.UnitU.rational D ρ).1
   obtain ⟨hH, 𝓤, h𝓤, h1⟩ := s.vU.unit
-  have hval : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) := Units.continuous_val.comp continuous_subtype_val
+  have hval : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) := Units.continuous_val.comp continuous_subtypeVal
   have hxu : Continuous fun u : UX D ρ => (rat x : Mx D W.rank ρ) ⬝ u.1.1 := continuous_const.matrix_mul hval
   refine lintegral_le_of_tsum (UXQ D ρ) s.vU.ν h𝓤 h1 _ ?_ _ fun u => ?_
   · have hf : Continuous fun u : UX D ρ => (((g, h), ((rat x : Mx D W.rank ρ) ⬝ u.1.1, w)) :
         (GA D V × GA D W) × Mx D W.rank ρ × WO V₀ W) := continuous_const.prodMk (hxu.prodMk continuous_const)
     have h2 := hmix.comp hf
     simp only [Function.comp_def] at h2
-    exact h2.enorm.measurable
+    exact h2.eNorm.measurable
   · obtain ⟨γ₀, hγ₀, k, hk, rfl⟩ := hcov u
     have hp : ((dV.levi k.1 * g, h) : GA D V × GA D W) = (dV.levi k.1, 1) * (g, h) := by simp
     have hom : s.om (dV.levi k.1 * g, h) Φ = s.om (dV.levi k.1, 1) (s.om (g, h) Φ) := by
@@ -176,15 +176,15 @@ theorem flat_sup_growth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ 
   have hT := s.vT.covol
   obtain ⟨i1, i2, i3⟩ := GlobalTheory.UnitU.topology D ρ
   obtain ⟨j1, j2, j3, j4, -⟩ := lattice_Mx D σ V₀.rank
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D σ V₀.rank) := ⟨rfl⟩
-  haveI := s.vU.unit.1
-  haveI : IsFiniteMeasure (s.vT.μ.restrict s.vT.𝓕) := ⟨by rw [Measure.restrict_apply_univ, hT.2.2]; exact ENNReal.one_lt_top⟩
-  haveI := sfinite_haar s.vU.ν
-  haveI := sfinite_fin (s.vT.μ.restrict s.vT.𝓕)
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D σ V₀.rank) := ⟨rfl⟩
+  have := s.vU.unit.1
+  have : IsFiniteMeasure (s.vT.μ.restrict s.vT.𝓕) := ⟨by rw [Measure.restrict_apply_univ, hT.2.2]; exact ENNReal.one_lt_top⟩
+  have := sfinite_haar s.vU.ν
+  have := sfinite_fin (s.vT.μ.restrict s.vT.𝓕)
   let F : UX D ρ → Mx D σ V₀.rank → ENNReal := fun u ξ =>
     ‖dV.mixS W ψ s.vS.μ s.vS.𝓕 (s.om (g, h) Φ) ((rat x : Mx D W.rank ρ) ⬝ u.1.1) (dW.incX V₀ ξ + dW.incAdj V₀ y + dW.inc0 V₀ w)‖ₑ
-  have hval : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) := Units.continuous_val.comp continuous_subtype_val
+  have hval : Continuous fun u : UX D ρ => (u.1.1 : Mx D ρ ρ) := Units.continuous_val.comp continuous_subtypeVal
   have hxu : Continuous fun u : UX D ρ => (rat x : Mx D W.rank ρ) ⬝ u.1.1 := continuous_const.matrix_mul hval
   have hX : Continuous (dW.incX V₀) := continuous_const.matrix_mul continuous_id
   have hFm : Measurable (Function.uncurry F) := by
@@ -194,22 +194,22 @@ theorem flat_sup_growth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ 
         (((hX.comp continuous_snd).add continuous_const).add continuous_const))
     have h2 := hmix.comp hf
     simp only [Function.comp_def] at h2
-    exact h2.enorm.measurable
+    exact h2.eNorm.measurable
   have h1 : ∀ u : UX D ρ, ‖flatFun ψ dV dW s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 (rat x) y (s.om (g, h) Φ) w u‖ₑ ≤
       ∫⁻ ξ in s.vT.𝓕, F u ξ ∂s.vT.μ := by
     intro u
     unfold flatFun evalAt
     have e1 : ‖star (psiUni ψ u.1)‖ₑ = 1 := by
       rw [← ofReal_norm, norm_star, show ‖psiUni ψ u.1‖ = 1 from hn _, ENNReal.ofReal_one]
-    rw [enorm_mul, e1, one_mul]
+    rw [eNorm_mul, e1, one_mul]
     unfold _root_.I195MixedCoordinates_14b5fd3aa93c7f4842f1a892.target
-    refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun ξ => le_of_eq ?_)
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun ξ => le_of_eq ?_)
     simp only [F]
     change ‖heisO ψ V₀ W (dW.incX V₀ ξ) (heisO ψ V₀ W (dW.incAdj V₀ y) (heisO ψ V₀ W (dW.inc0 V₀ w) (dV.mixS W ψ s.vS.μ s.vS.𝓕 (s.om (g, h) Φ) ((rat x : Mx D W.rank ρ) ⬝ u.1.1)))) 0‖ₑ = _
-    rw [dW.integrandT_eq, enorm_mul, hne, one_mul]
+    rw [dW.integrandT_eq, eNorm_mul, hne, one_mul]
   have h2 : ‖flatS dV dW s (rat x) y (s.om (g, h) Φ) w‖ₑ ≤ ENNReal.ofReal (C * (height V g * height W h) ^ A) := by
     unfold flatS flatAt
-    refine (enorm_integral_le_lintegral_enorm _).trans ((lintegral_mono h1).trans ?_)
+    refine (eNorm_integral_le_lintegral_eNorm _).trans ((lintegral_mono h1).trans ?_)
     rw [lintegral_lintegral_swap hFm.aemeasurable]
     calc _ ≤ ∫⁻ _ in s.vT.𝓕, ENNReal.ofReal (C * (height V g * height W h) ^ A) ∂s.vT.μ :=
           lintegral_mono fun ξ => hC g h _

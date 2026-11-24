@@ -635,7 +635,7 @@ theorem facts_ev (eps : ℝ) (K : Consts) (hK : K.Nonneg) (C31 : ℝ) (hC31 : 0 
     have h2 : L.sc.b' = L.sc.x * Real.exp (L.sc.x ^ L.sc.eps - L.sc.x ^ (L.sc.eps / 3)) := by
       unfold Scale.b' Scale.a Scale.b Scale.X' Scale.L
       rw [Real.exp_sub]; ring
-    rw [h2, ← Real.exp_nat_mul]
+    rw [h2, ← Real.exp_natCast_mul]
     calc Real.exp (((8 : ℕ) : ℝ) * (L.sc.x ^ (23 * L.sc.eps / 48))) ≤ Real.exp (L.sc.x ^ L.sc.eps - L.sc.x ^ (L.sc.eps / 3)) := by
           apply Real.exp_le_exp.2
           push_cast
@@ -676,7 +676,7 @@ theorem facts_ev (eps : ℝ) (K : Consts) (hK : K.Nonneg) (C31 : ℝ) (hC31 : 0 
       unfold DIf
       exact (Nat.ceil_lt_add_one hval0).le
     have h13 : (Real.exp (L.sc.x ^ (23 * L.sc.eps / 48))) ^ 13 ≤ Real.exp (L.sc.x ^ (L.sc.eps / 2)) := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       apply Real.exp_le_exp.2
       push_cast
       exact f8

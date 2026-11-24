@@ -144,8 +144,8 @@ theorem etale_of_comp_etale_of_smoothOfRelativeDimension :
       Etale (h ≫ f) → Etale h := by
   intro X Y Z S h f sX sY d hs hX hY he
   subst hs
-  haveI : FormallyUnramified (h ≫ f) := inferInstance
-  haveI : FormallyUnramified h := FormallyUnramified.of_comp h f
+  have : FormallyUnramified (h ≫ f) := inferInstance
+  have : FormallyUnramified h := FormallyUnramified.of_comp h f
   exact etale_of_formallyUnramified_of_smoothOfRelativeDimension h sY d hY hX
 
 end GlobalTheory
@@ -1210,8 +1210,8 @@ theorem tate_hecke_back {b : Base D R} (g : D.La →ₗ[D.O] D.La) (c k N : ℕ)
   have hL : (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left).IsLB := pull_isLB o.isLB _
   have hL' : (o'.P.pull (lift (𝟙 o'.A) (𝟙 o'.A)).left).IsLB := pull_isLB o'.isLB _
   have hsurj : ∀ q : Over.mk x ⟶ o'.A, ∃ a : Over.mk x ⟶ o.A, a ≫ ψ = q := fun q => by
-    haveI := hGal.fin
-    haveI := hGal.onto
+    have := hGal.fin
+    have := hGal.onto
     obtain ⟨a₀, ha₀⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective ψ.left q.left
     let a : Over.mk x ⟶ o.A := Over.homMk a₀ (by
       show a₀ ≫ o.A.hom = x
@@ -1261,7 +1261,7 @@ theorem tate_hecke_back {b : Base D R} (g : D.La →ₗ[D.O] D.La) (c k N : ℕ)
       rw [Nat.cast_mul, e]
       exact GlobalTheory.WeilIsogeny.weilIs_pow hG o.ab hL j h)
     (fun n j t t' z h => by
-      haveI := isMonHom_mulA (A := o.A) j
+      have := isMonHom_mulA (A := o.A) j
       have e : ∀ u : Over.mk x ⟶ o.A, u ^ j = u ≫ Out.mulA o.A j := fun u => by
         rw [Out.mulA, MonObj.comp_pow, Category.comp_id]
       rw [e, e] at h
@@ -1332,7 +1332,7 @@ theorem exists_immersion [IsNoetherianRing R] (gb : GBase D.toG R) (N : ℕ) (h3
     (M : Model (baseAt gb) N) (X : GenModel gb N) :
     ∃ i : X.X ⟶ M.X, IsOpenImmersion i ∧ IsClosedImmersion i ∧ i ≫ M.s = X.s ∧ IsGPull X.univ M.univ i := by
   obtain ⟨j, h1, h2, h3, h4⟩ := GlobalTheory.T.exists_open_closed_immersion_genModel_to_fibre p D R (baseAt gb) R (RingHom.id R) gb rfl (fun _ => rfl) N h3 hN M X
-  haveI : IsIso (spMap (RingHom.id R)) := by rw [spMap_id']; infer_instance
+  have : IsIso (spMap (RingHom.id R)) := by rw [spMap_id']; infer_instance
   refine ⟨j ≫ pullback.fst _ _, inferInstance, inferInstance, ?_, h4⟩
   rw [Category.assoc, pullback.condition, ← Category.assoc, h3, spMap_id', Category.comp_id]
 
@@ -1377,9 +1377,9 @@ theorem exists_gHeckeMap_finite_etale_surjective : ∀ (p : ℕ) [Fact p.Prime] 
     · rw [Category.assoc, hπs]
     · exact GlobalTheory.UPel.HT.objMap_comp p D R (baseAt gb) N _ _ _ _ _ _ Z o' M.univ _ π hZ hmap
   refine ⟨πX, ⟨hπX, Y, ψ₁, ⟨hH₁.1, hH₁.2.1, hH₁.2.2.1, hH₁.2.2.2.1, hH₁.2.2.2.2⟩, ⟨hY⟩⟩, ?_, ?_, ⟨fun z => ?_⟩⟩
-  · haveI : IsFinite (πX ≫ i) := by rw [sq]; infer_instance
+  · have : IsFinite (πX ≫ i) := by rw [sq]; infer_instance
     exact IsFinite.of_comp πX i
-  · haveI : Etale (πX ≫ i) := by rw [sq]; infer_instance
+  · have : Etale (πX ≫ i) := by rw [sq]; infer_instance
     exact Etale.of_comp πX i
   obtain ⟨κ, _, _, x, hxz⟩ := GlobalTheory.FinEt.exists_algClosed_point X.X z
   obtain ⟨x', hx'⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective π (x ≫ i)

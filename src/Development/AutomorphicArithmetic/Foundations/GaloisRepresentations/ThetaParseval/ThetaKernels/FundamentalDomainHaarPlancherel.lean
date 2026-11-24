@@ -216,7 +216,7 @@ theorem cont_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   obtain ⟨l, hl, hl'⟩ := _root_.GlobalTheory.T.lagrangian_integral_theta_model F E σ B hB nS nT JT _ _ _ co hrat ν 𝓕 hν h𝓕
   let a : GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) →
       UG (cA σ) (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) := fun h => ⟨matHomF σ _ h, mem_UG h⟩
-  have ha : Continuous a := Continuous.subtype_mk continuous_subtype_val _
+  have ha : Continuous a := Continuous.subtype_mk continuous_subtypeVal _
   refine ((hc l hl Φ hΦ).comp (ha.prodMk (continuous_const (y := 1)))).congr fun h => ?_
   obtain ⟨h1, h2⟩ := hom (a h) 1 1 h rfl (by
     rw [inv_one]
@@ -299,7 +299,7 @@ theorem PositivityTheory.ThKW.PhaseFourierInjectivity.levi_k : ∀ (F E : Type) 
     { toFun := fun t => m₀ t
       map_one' := m₀.map_one
       map_mul' := m₀.map_mul }
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
   have hcont_c : Continuous (cAF (F := F) (E := E) σ) := GlobalTheory.HeisThetaF.continuous_cAF
   have hL : ∀ (f g : GL (Fin n) (AF F ⊗[F] E) → Matrix (Fin n) (Fin n) (AF F ⊗[F] E)), Continuous f → Continuous g →
       Continuous fun t => (L (cAF σ) (inclR (F := F) (AF F) rE) (JR (F := F) (AF F) JT) (f t) (g t)).submatrix
@@ -521,11 +521,11 @@ theorem lam_formula_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheo
         c * Φ (α v) := by
   classical
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := _root_.GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
-  haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5
-  haveI hBor : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI : Countable E := GlobalTheory.ThetaParsevalInner.countable_numberField E
-  haveI : Countable F := GlobalTheory.ThetaParsevalInner.countable_numberField F
-  haveI : Countable (ratLF F E nS nT) := by
+  have := i1; have := i2; have := i3; have := i4; have := i5
+  have hBor : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : Countable E := GlobalTheory.ThetaParsevalInner.countable_numberField E
+  have : Countable F := GlobalTheory.ThetaParsevalInner.countable_numberField F
+  have : Countable (ratLF F E nS nT) := by
     refine Function.Surjective.countable
       (f := fun m : Fin nT → Fin nS → E => (⟨(incAF F E).toAddMonoidHom.mapMatrix (Matrix.of m),
         AddMonoidHom.mem_range.2 ⟨_, rfl⟩⟩ : ratLF F E nS nT)) ?_
@@ -534,8 +534,8 @@ theorem lam_formula_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheo
   obtain ⟨Nn, hNn⟩ := (GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (WOF F E nS nT) (ratLF F E nS nT) K hK hKc).2
     (fun _ => (1 : ℂ)) continuous_const (fun _ _ _ => rfl)
   obtain ⟨h0, htop, -, -⟩ := hNn ν 𝓕 hν h𝓕
-  haveI : IsFiniteMeasure (ν.restrict 𝓕) := isFiniteMeasure_restrict.mpr htop
-  haveI := hν
+  have : IsFiniteMeasure (ν.restrict 𝓕) := isFiniteMeasure_restrict.mpr htop
+  have := hν
   have hstd := _root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB
   obtain ⟨hcont, hnorm, htriv, s0, hs0⟩ := hstd.1
   refine ⟨((ν 𝓕).toReal : ℂ), ?_, fun Φ hΦ v => ?_⟩
@@ -606,8 +606,8 @@ theorem lam_formula_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheo
   simp_rw [hint]
   rw [← integral_tsum_of_summable_integral_norm hFint hsumint]
   simp_rw [integral_const_mul, horth]
-  rw [tsum_eq_single 0 (fun ξ hξ => by rw [if_neg hξ, mul_zero])]
-  rw [if_pos rfl, ha, hemb]
+  rw [tsum_eq_single 0 (fun ξ hξ => by rw [ite_eq_right hξ, mul_zero])]
+  rw [ite_eq_left rfl, ha, hemb]
   have hz : (fun i : Fin N => (0 : AF F)) + x = x := by funext i; simp
   simp only [Pi.zero_apply, map_zero]
   rw [hz, Measure.real]
@@ -671,7 +671,7 @@ theorem pairing_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {JS :
     conv_lhs => rw [← (adB b').sum_repr v, ← (adB b).sum_repr u]
 
     simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, h0, smul_eq_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, dotProduct, Module.Basis.equivFun_apply]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, dotProduct, Module.Basis.equivFun_apply]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
   refine ⟨_, (adB b').equivFun, (adB b).equivFun, b'.equivFun, b.equivFun, fun v u => ?_, adB_rat b', adB_rat b⟩
   rw [← hP]
@@ -758,11 +758,11 @@ theorem parseval_rational_pairing : ∀ {F E : Type} [Field F] [NumberField F] [
           ∫ w in 𝓕, thV B.ψ Φ₁ w * starRingEnd ℂ (thV B.ψ Φ₂ w) ∂ν =
             (c : ℂ) * ∫ x, Φ₁ x * starRingEnd ℂ (Φ₂ x) ∂μ := by
   intro F E _ _ _ _ _ σ B hB N
-  letI mA : MeasurableSpace (Fin N → AF F) := borel _
-  letI mV : MeasurableSpace (VA F N) := borel _
+  let mA : MeasurableSpace (Fin N → AF F) := borel _
+  let mV : MeasurableSpace (VA F N) := borel _
   intro ν hν 𝓕 h𝓕
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : BorelSpace (Fin N → AF F) := ⟨rfl⟩
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : BorelSpace (Fin N → AF F) := ⟨rfl⟩
   have hR : IsTotallyReal F := hB.cm.1
   have hψ : IsCharAF F B.ψ := (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB).1
   let μ : Measure (Fin N → AF F) := Measure.addHaar
@@ -776,14 +776,14 @@ theorem parseval_rational_pairing : ∀ {F E : Type} [Field F] [NumberField F] [
     intro Φ hΦ
     have hm := GlobalTheory.T.measurable_theta_sum_of_schrodinger F B.ψ hψ (Fin N) Φ hΦ
     have hG : @Measurable _ _ (borel _) _ (fun w : (Fin N → AF F) × (Fin N → AF F) =>
-        ‖GlobalTheory.WeilM.thetaSum F (GlobalTheory.WeilM.schr B.ψ w Φ)‖ₑ ^ 2) := Measurable.pow_const (measurable_enorm.comp hm) 2
+        ‖GlobalTheory.WeilM.thetaSum F (GlobalTheory.WeilM.schr B.ψ w Φ)‖ₑ ^ 2) := Measurable.pow_const (measurable_eNorm.comp hm) 2
     show ∫⁻ w in 𝓕, ‖GlobalTheory.WeilM.thetaSum F (GlobalTheory.WeilM.schr B.ψ w Φ)‖ₑ ^ 2 ∂ν = _
     rw [hc _ hG (fun γ hγ w => by
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, GlobalTheory.T.norm_adelicThetaSum_schroedinger_rationalPair_invariant F B.ψ hψ (Fin N) Φ γ hγ w])]
+      rw [← ofReal_norm, ← ofReal_norm, GlobalTheory.T.norm_adelicThetaSum_schroedinger_rationalPair_invariant F B.ψ hψ (Fin N) Φ γ hγ w])]
     simp_rw [GlobalTheory.T.lintegral_adelicThetaSum_sq_parseval_second_variable F B.ψ hψ (Fin N) μ hμ 𝓕₁ h𝓕₁ htop Φ hΦ]
     rw [lintegral_const_mul' _ _ htop, GlobalTheory.T.parseval_fundamental_domain_theta F (Fin N) μ hμ 𝓕₁ h𝓕₁ Φ hΦ, hK, mul_assoc]
   have henorm : ∀ z : ℂ, ‖‖z‖ ^ 2‖ₑ = ‖z‖ₑ ^ 2 := fun z => by
-    rw [Real.enorm_eq_ofReal (by positivity), ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [Real.eNorm_eq_ofReal (by positivity), ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   have hΦint : ∀ Φ ∈ schA F (Fin N), Integrable (fun x => ‖Φ x‖ ^ 2) μ := fun Φ hΦ =>
     (GlobalTheory.WeilM.schA_memLp_two F (Fin N) μ hμ Φ hΦ).integrable_norm_pow two_ne_zero
   have hthint : ∀ Φ ∈ schA F (Fin N), Integrable (fun w => ‖thV B.ψ Φ w‖ ^ 2) (ν.restrict 𝓕) := by
@@ -804,7 +804,7 @@ theorem parseval_rational_pairing : ∀ {F E : Type} [Field F] [NumberField F] [
         (hthint Φ hΦ).aestronglyMeasurable,
       integral_eq_lintegral_of_nonneg_ae (ae_of_all _ fun _ => sq_nonneg _) (hΦint Φ hΦ).aestronglyMeasurable]
     have e1 : ∀ z : ℂ, ENNReal.ofReal (‖z‖ ^ 2) = ‖z‖ₑ ^ 2 := fun z => by
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     simp_rw [e1]
     rw [hpar Φ hΦ, ENNReal.toReal_mul]
   refine ⟨μ, K.toReal, hμ, ENNReal.toReal_pos hK0 hKt, fun Φ₁ hΦ₁ Φ₂ hΦ₂ => ?_⟩
@@ -858,15 +858,15 @@ theorem parseval_pol_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperThe
           (c : ℂ) * ∫ x, Φ₁ x * starRingEnd ℂ (Φ₂ x) ∂μN := by
   obtain ⟨μW, 𝓕W, hμW, h𝓕W⟩ := GlobalTheory.TowerFD.exists_fd_any F E nS (nT + nT)
   obtain ⟨i1, i2, -, -, -, -⟩ := _root_.GlobalTheory.AdelicMatrixLatticeF.lattice F E nS (nT + nT)
-  haveI := i1
-  haveI := i2
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  have := i1
+  have := i2
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
   have hb : (MeasurableSpace.pi : MeasurableSpace (Fin N → AF F)) = borel _ := BorelSpace.measurable_eq
-  letI mP : MeasurableSpace (VA F N) := borel _
-  haveI : BorelSpace (VA F N) := ⟨rfl⟩
-  haveI : BorelSpace (WOF F E nS (nT + nT)) := ⟨rfl⟩
+  let mP : MeasurableSpace (VA F N) := borel _
+  have : BorelSpace (VA F N) := ⟨rfl⟩
+  have : BorelSpace (WOF F E nS (nT + nT)) := ⟨rfl⟩
   let ca : WOF F E nS (nT + nT) ≃ₜ+ VA F N :=
     { e.toAddEquiv with continuous_toFun := hec, continuous_invFun := hes }
   let me : WOF F E nS (nT + nT) ≃ᵐ VA F N := ca.toHomeomorph.toMeasurableEquiv
@@ -956,8 +956,8 @@ theorem schA_facts_k {B : Base F E} {σ : E →ₐ[F] E} (hB : _root_.UpperTheor
     Continuous Φ ∧ Integrable (fun x => Φ x * starRingEnd ℂ (Φ x)) μN ∧
       ∀ b : Fin N → AF F, (fun x => B.ψ (x ⬝ᵥ b) * Φ x) ∈ schA F (Fin N) := by
   refine ⟨GlobalTheory.ThKOp.continuous_of_mem_schA hΦ, ?_, fun b => ?_⟩
-  · haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-    haveI : BorelSpace (AF F) := ⟨rfl⟩
+  · have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+    have : BorelSpace (AF F) := ⟨rfl⟩
     have hb : (MeasurableSpace.pi : MeasurableSpace (Fin N → AF F)) = borel _ := BorelSpace.measurable_eq
     have key : ∀ (m : MeasurableSpace (Fin N → AF F)), m = borel _ → ∀ μ : @Measure _ m,
         @Measure.IsAddHaarMeasure _ _ _ m μ → Integrable (fun x => Φ x * starRingEnd ℂ (Φ x)) μ := by
@@ -1105,14 +1105,14 @@ theorem PositivityTheory.ThKW.PhaseFourierInjectivity.finj_k : ∀ (F E : Type) 
     first
       | exact continuous_pi fun i => continuous_pi fun j => continuous_apply _
       | fun_prop
-  haveI : IsTopologicalAddGroup (AF F ⊗[F] E) := IsModuleTopology.topologicalAddGroup (AF F) (AF F ⊗[F] E)
+  have : IsTopologicalAddGroup (AF F ⊗[F] E) := IsModuleTopology.isTopologicalAddGroup (AF F) (AF F ⊗[F] E)
   let E' : WOF F E nS nT ≃ₜ+ (Fin (nT * nS) → AF F ⊗[F] E) :=
     { toAddEquiv := vecE F E nS nT, continuous_toFun := he, continuous_invFun := he' }
-  letI : MeasurableSpace (Fin (nT * nS) → AF F ⊗[F] E) := borel _
-  haveI : BorelSpace (Fin (nT * nS) → AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  let : MeasurableSpace (Fin (nT * nS) → AF F ⊗[F] E) := borel _
+  have : BorelSpace (Fin (nT * nS) → AF F ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
   let em : WOF F E nS nT ≃ᵐ (Fin (nT * nS) → AF F ⊗[F] E) := E'.toHomeomorph.toMeasurableEquiv
-  haveI := hν
+  have := hν
   have hμ : (ν.map em).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν E'
   have hpc : ∀ a : WOF F E nS nT, Continuous (pr σ JS ξ₀ a) := fun a => IsModuleTopology.continuous_of_linearMap _
   have hph : ∀ a, Continuous (phase σ JS JT ξ₀ B.ψ a) := by

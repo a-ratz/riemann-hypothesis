@@ -796,7 +796,7 @@ theorem secOn_add : ∀ {S : Type} [CommRing S] (Y : Scheme.{0})
     (f : Y ⟶ Spec (CommRingCat.of S)) (e e' : S), IsIdempotentElem e → IsIdempotentElem e' →
     e * e' = 0 → SecOn f e → SecOn f e' → SecOn f (e + e') := by
   intro S _ Y f e e' he he' h ⟨s, hs⟩ ⟨s', hs'⟩
-  haveI := isLocalization_prod he he' h
+  have := isLocalization_prod he he' h
   let B := Localization.Away e
   let C := Localization.Away e'
   let A := Localization.Away (e + e')
@@ -833,9 +833,9 @@ namespace GlobalTheory.CompanionTheory.SecRules
 
 theorem secOn_zero {S : Type} [CommRing S] (Y : Scheme.{0}) (f : Y ⟶ Spec (CommRingCat.of S)) :
     SecOn f 0 := by
-  haveI : Subsingleton (Localization.Away (0 : S)) :=
+  have : Subsingleton (Localization.Away (0 : S)) :=
     IsLocalization.subsingleton (M := Submonoid.powers (0 : S)) (Submonoid.mem_powers 0)
-  haveI : IsEmpty (Spec (CommRingCat.of (Localization.Away (0 : S)))) :=
+  have : IsEmpty (Spec (CommRingCat.of (Localization.Away (0 : S)))) :=
     inferInstanceAs (IsEmpty (PrimeSpectrum (Localization.Away (0 : S))))
   exact ⟨isInitialOfIsEmpty.to Y, isInitialOfIsEmpty.hom_ext _ _⟩
 

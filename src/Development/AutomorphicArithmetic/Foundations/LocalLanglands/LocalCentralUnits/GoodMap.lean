@@ -187,8 +187,8 @@ end UpperTheory.Zero.LLC
 theorem UpperTheory.Zero.LLC.nameCentral :
     UpperTheory.Zero.LLC.NameCentral := by
   intro g _ n hn K _ _ hK τ θ hcusp hreg hnames c v
-  haveI : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hn)
-  haveI : Simple τ := DiscreteGroups.sglob.DzType.Kon.simple_of_isIrr τ hcusp.2.1
+  have : Module.Finite (ZMod g) K := Module.finite_of_finrank_pos (hK ▸ hn)
+  have : Simple τ := DiscreteGroups.sglob.DzType.Kon.simple_of_isIrr τ hcusp.2.1
   obtain ⟨l, hl⟩ := UpperTheory.Zero.LLC.schur_scalar τ (GeneralLinearGroup.scalar (Fin n) c)
     (UpperTheory.Zero.LLC.scalar_comm c)
   obtain ⟨⟨z, hzdeg, hS⟩, -⟩ := UpperTheory.Zero.LLC.pin g n hn K hK θ hreg
@@ -419,7 +419,7 @@ end Scalars
 
 theorem parEx : ParEx := by
   intro E Ω _ _ _ _ _ A w h a ha g _ i hi y hy hdz
-  haveI : CharZero (HeightOneSpectrum.adicCompletion E w) :=
+  have : CharZero (HeightOneSpectrum.adicCompletion E w) :=
     (RingHom.charZero_iff (ϕ := i.toRingHom) i.injective).1 inferInstance
   obtain ⟨n, c⟩ := y
   have hcls : GlobalTheory.LocLanglands.cls c.rep = (⟨n, c⟩ : IrrGL (k := _)) := by
@@ -434,9 +434,9 @@ theorem parEx : ParEx := by
   obtain ⟨⟨R, hR⟩, hRs⟩ := resEx E Ω A w h g i hi n hn D
   have hT := hRs R hR
   have hrank := hT.rank
-  haveI : Module.Finite (ZMod g) D.K := Module.finite_of_finrank_pos (by omega)
-  haveI : Finite D.K := Module.finite_of_finite (ZMod g)
-  letI : Fintype D.K := Fintype.ofFinite _
+  have : Module.Finite (ZMod g) D.K := Module.finite_of_finrank_pos (by omega)
+  have : Finite D.K := Module.finite_of_finite (ZMod g)
+  let : Fintype D.K := Fintype.ofFinite _
   have hcard : Fintype.card D.K = g ^ n := by
     rw [Module.card_eq_pow_finrank (K := ZMod g), ZMod.card, hrank]
   have hfix : ∀ x : D.Kˣ, x ^ g ^ n = x := fun x => Units.ext (by
@@ -662,7 +662,7 @@ private theorem twist_eq_of_tw_eq {a : Weil h →* (w.adicCompletion E)ˣ} (ha :
     (e : y₀.tw χ hχ = y₁.tw χ₁ hχ₁) :
     V₀.lpTwist (χ.comp a) (ha.smooth hχ) = V₁.lpTwist (χ₁.comp a) (ha.smooth hχ₁) := by
   obtain ⟨g, hg, i, hi⟩ := hq
-  haveI := hg
+  have := hg
   have hy := eq_tw_of_tw_eq e
   have hψ : IsSmoothChar (χ * χ₁⁻¹) := hχ.mul hχ₁.inv
   have pos : 0 < y₀.1 := (clBasic _ y₀).2.2.2.1 c
@@ -680,7 +680,7 @@ private theorem ofChar_eq_of_tw_eq {a : Weil h →* (w.adicCompletion E)ˣ} (ha 
     (e : IrrGL.ofChar ψ hψ = y₀.tw χ hχ) :
     WD.lpOfChar h (ψ.comp a) (ha.smooth hψ) = V₀.lpTwist (χ.comp a) (ha.smooth hχ) := by
   obtain ⟨g, hg, i, hi⟩ := hq
-  haveI := hg
+  have := hg
   have hψ' : IsSmoothChar (ψ * χ⁻¹) := hψ.mul hχ.inv
   have po := parOne E Ω A w h a ha (ψ * χ⁻¹) hψ'
   have hy : y₀ = .ofChar (ψ * χ⁻¹) hψ' := by
@@ -722,13 +722,13 @@ private theorem rel_of_good {a : Weil h →* (w.adicCompletion E)ˣ} (ha : IsLoc
     exact ⟨_, Or.inl ⟨χ, hχ, e, rfl⟩⟩
   · have c₀ : y₀.IsCusp := (((clBasic _ y₀).2.1 χ hχ).2.1).1 c
     obtain ⟨g, hg, i, hi⟩ := id hq
-    haveI := hg
+    have := hg
     obtain ⟨V₀, p⟩ := parEx E Ω A w h a ha g i hi y₀ c₀ hfix
     exact ⟨_, Or.inr ⟨hq, y₀, V₀, χ, hχ, c₀, hfix, p, rfl, rfl⟩⟩
 
 theorem goodMap : GoodMap := by
   intro E Ω _ _ _ _ _ A w h a ha
-  haveI : Nonempty (WD h) := ⟨WD.lpOfChar h (MonoidHom.comp 1 a) (ha.smooth isSmoothChar_one)⟩
+  have : Nonempty (WD h) := ⟨WD.lpOfChar h (MonoidHom.comp 1 a) (ha.smooth isSmoothChar_one)⟩
   have key : ∀ {x V}, Rel a ha x V → Classical.epsilon (Rel a ha x) = V := fun H =>
     rel_unique ha (Classical.epsilon_spec ⟨_, H⟩) H
   refine ⟨fun x => Classical.epsilon (Rel a ha x), ?_, ?_, ?_⟩
@@ -740,7 +740,7 @@ theorem goodMap : GoodMap := by
     rw [key hV, key (rel_tw ha hV hχ)]
   · intro hq y c d
     obtain ⟨g, hg, i, hi⟩ := id hq
-    haveI := hg
+    have := hg
     obtain ⟨V, p⟩ := parEx E Ω A w h a ha g i hi y c d
     have hV : Rel a ha y V := Or.inr ⟨hq, y, V, 1, isSmoothChar_one, c, d, p, (tw_one y _).symm,
       (((wDBasic E Ω A w h V).2.2.2.2.2.2.2.2 _ _).2.2.2.2.1 (MonoidHom.one_comp a)).symm⟩

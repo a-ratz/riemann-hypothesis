@@ -157,7 +157,7 @@ private theorem flat_regular_cotangent_extension
     have h3 := congrArg (Ideal.comap (Ideal.Quotient.mk I)) (h2.trans hmap.symm)
     rw [Ideal.comap_map_quotientMk, Ideal.comap_map_quotientMk, sup_eq_right.2 hIle] at h3
     rw [h1, h3]
-  · haveI : Algebra.HasGoingDown A B := Algebra.HasGoingDown.of_flat
+  · have : Algebra.HasGoingDown A B := Algebra.HasGoingDown.of_flat
     have H := Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown (maximalIdeal A) (maximalIdeal B)
     rw [← hI, hmap] at H
     have H' := congrArg (fun a : ℕ∞ => (a : WithBot ℕ∞)) H
@@ -207,7 +207,7 @@ private theorem fibre_reg (R : Type) [CommRing R] (J n : Ideal R) [n.IsPrime] (h
   have hm : (n.map (Ideal.Quotient.mk J)).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective hJn
   have hle : J ≤ (J.map (algebraMap R A)).comap (algebraMap R A) := Ideal.le_comap_map
-  letI : Algebra (R ⧸ J) (A ⧸ J.map (algebraMap R A)) := (Ideal.quotientMap _ _ hle).toAlgebra
+  let : Algebra (R ⧸ J) (A ⧸ J.map (algebraMap R A)) := (Ideal.quotientMap _ _ hle).toAlgebra
   have hl := IsLocalization.of_surjective n.primeCompl A (S' := A ⧸ J.map (algebraMap R A))
     (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective rfl
     (by rw [Ideal.mk_ker, Ideal.mk_ker])
@@ -234,21 +234,21 @@ theorem UpperTheory.V.AlgebraTools.regular_polynomial_localization :
   have hcomp : algebraMap A (Localization.AtPrime Q) =
       (algebraMap (MvPolynomial σ A) (Localization.AtPrime Q)).comp MvPolynomial.C :=
     IsScalarTower.algebraMap_eq A (MvPolynomial σ A) (Localization.AtPrime Q)
-  haveI : IsRegularRing (MvPolynomial σ A ⧸
+  have : IsRegularRing (MvPolynomial σ A ⧸
       (maximalIdeal A).map (MvPolynomial.C : A →+* MvPolynomial σ A)) := by
-    letI := Ideal.Quotient.field (maximalIdeal A)
-    haveI : IsRegularRing (MvPolynomial σ (A ⧸ maximalIdeal A)) := inferInstance
+    let := Ideal.Quotient.field (maximalIdeal A)
+    have : IsRegularRing (MvPolynomial σ (A ⧸ maximalIdeal A)) := inferInstance
     exact IsRegularRing.of_ringEquiv
       (MvPolynomial.quotientEquivQuotientMvPolynomial (σ := σ) (maximalIdeal A)).toRingEquiv
   have hf := fibre_reg _ _ Q hQ (Localization.AtPrime Q)
   rw [Ideal.map_map, ← hcomp] at hf
-  haveI : IsNoetherianRing (Localization.AtPrime Q) :=
+  have : IsNoetherianRing (Localization.AtPrime Q) :=
     IsLocalization.isNoetherianRing Q.primeCompl _ inferInstance
-  haveI : Module.Flat (MvPolynomial σ A) (Localization.AtPrime Q) :=
+  have : Module.Flat (MvPolynomial σ A) (Localization.AtPrime Q) :=
     IsLocalization.flat _ Q.primeCompl
-  haveI : Module.Flat A (Localization.AtPrime Q) :=
+  have : Module.Flat A (Localization.AtPrime Q) :=
     Module.Flat.trans A (MvPolynomial σ A) (Localization.AtPrime Q)
-  haveI : IsLocalHom (algebraMap A (Localization.AtPrime Q)) := by
+  have : IsLocalHom (algebraMap A (Localization.AtPrime Q)) := by
     refine ⟨fun a ha => ?_⟩
     by_contra hna
     have h1 : MvPolynomial.C a ∈ Q := hQ (Ideal.mem_map_of_mem _ ((mem_maximalIdeal a).2 hna))

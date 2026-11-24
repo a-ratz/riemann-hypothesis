@@ -87,7 +87,7 @@ theorem linearDisjoint_algebraicClosure {K Ω L : Type} [Field K] [CharZero K] [
   refine Subalgebra.LinearDisjoint.of_linearDisjoint_finite_left _ _ fun B hB _ => ?_
   have halg : B.IsAlgebraic := fun x hx => (mem_algebraicClosure_iff (F := K)).1 (hB hx)
   let M : IntermediateField K L := halg.toIntermediateField
-  haveI : FiniteDimensional K M := ‹Module.Finite K B›
+  have : FiniteDimensional K M := ‹Module.Finite K B›
   change M.LinearDisjoint Ω
   obtain ⟨θ, hθ⟩ := Field.exists_primitive_element K M
   have hi : IsIntegral K (θ : L) := (Algebra.IsIntegral.isIntegral (R := K) θ).map M.val
@@ -110,13 +110,13 @@ theorem linearDisjoint_algebraicClosure {K Ω L : Type} [Field K] [CharZero K] [
 theorem exists_point (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [IsDomain A]
     [Algebra k A] [Algebra.FiniteType k A] {a : A} (ha : a ≠ 0) : ∃ φ : A →ₐ[k] k, φ a ≠ 0 := by
   let S := Localization.Away a
-  haveI : IsDomain S :=
+  have : IsDomain S :=
     IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors ha)
-  haveI : Algebra.FiniteType A S := IsLocalization.finiteType_of_monoid_fg (Submonoid.powers a) S
-  haveI : Algebra.FiniteType k S := Algebra.FiniteType.trans (S := A) inferInstance inferInstance
+  have : Algebra.FiniteType A S := IsLocalization.finiteType_of_monoid_fg (Submonoid.powers a) S
+  have : Algebra.FiniteType k S := Algebra.FiniteType.trans (S := A) inferInstance inferInstance
   obtain ⟨m, hm⟩ := Ideal.exists_maximal S
-  letI : Field (S ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite k (S ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (S ⧸ m)
+  let : Field (S ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite k (S ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (S ⧸ m)
   let ψ : (S ⧸ m) →ₐ[k] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -131,10 +131,10 @@ theorem isDomain_tensor_of_isAlgClosed (k A : Type) [Field k] [IsAlgClosed k] [C
     IsDomain (F ⊗[k] A) := by
   let b := Module.Basis.ofVectorSpace k F
   let B := Algebra.TensorProduct.basis A b
-  haveI : Nontrivial (A ⊗[k] F) :=
+  have : Nontrivial (A ⊗[k] F) :=
     (Algebra.TensorProduct.includeRight_injective (R := k) (A := A) (B := F)
       (algebraMap k A).injective).nontrivial
-  haveI : NoZeroDivisors (A ⊗[k] F) := ⟨fun {x y} hxy => by
+  have : NoZeroDivisors (A ⊗[k] F) := ⟨fun {x y} hxy => by
     by_contra hc
     rw [not_or] at hc
     obtain ⟨hx, hy⟩ := hc
@@ -161,7 +161,7 @@ theorem isDomain_tensor_of_isAlgClosed (k A : Type) [Field k] [IsAlgClosed k] [C
     apply hφ
     rw [map_mul, key, key]
     rcases mul_eq_zero.1 h0 with h | h <;> simp [h]⟩
-  haveI : IsDomain (A ⊗[k] F) := NoZeroDivisors.to_isDomain _
+  have : IsDomain (A ⊗[k] F) := NoZeroDivisors.to_isDomain _
   exact (Algebra.TensorProduct.comm k F A).toMulEquiv.isDomain
 
 theorem isDomain_tensor_of_closure (k Ω S : Type) [Field k] [Field Ω] [IsAlgClosed Ω] [Algebra k Ω]
@@ -173,10 +173,10 @@ theorem isDomain_tensor_of_closure (k Ω S : Type) [Field k] [Field Ω] [IsAlgCl
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω L := j.toRingHom.toAlgebra
-  haveI : IsScalarTower k Ω L := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
-  haveI := isDomain_tensor_of_isAlgClosed Ω (Ω ⊗[k] S) L
-  haveI : IsDomain (L ⊗[k] S) :=
+  let : Algebra Ω L := j.toRingHom.toAlgebra
+  have : IsScalarTower k Ω L := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  have := isDomain_tensor_of_isAlgClosed Ω (Ω ⊗[k] S) L
+  have : IsDomain (L ⊗[k] S) :=
     (Algebra.TensorProduct.cancelBaseChange k Ω L L S).symm.toMulEquiv.isDomain _
   let φ := Algebra.TensorProduct.map (IsScalarTower.toAlgHom k F L) (AlgHom.id k S)
   have hφ : Function.Injective φ :=
@@ -189,29 +189,29 @@ theorem isDomain_tensor {K A Ω : Type} [Field K] [CharZero K] [CommRing A] [Fie
     (h : ∀ a : Ω, IsAlgebraic K a → a ∈ (algebraMap K Ω).range) (F : Type) [Field F]
     [Algebra K F] : IsDomain (F ⊗[K] A) := by
   let N := algebraicClosure K (AlgebraicClosure Ω)
-  haveI : IsDomain (N ⊗[K] Ω) := (linearDisjoint_algebraicClosure h).isDomain
-  haveI : IsAlgClosed N := IsAlgClosure.isAlgClosed K
+  have : IsDomain (N ⊗[K] Ω) := (linearDisjoint_algebraicClosure h).isDomain
+  have : IsAlgClosed N := IsAlgClosure.isAlgClosed K
   let φ := Algebra.TensorProduct.map (AlgHom.id K N) j
   have hφ : Function.Injective φ :=
     Module.Flat.lTensor_preserves_injective_linearMap (M := N) j.toLinearMap hj
-  haveI : IsDomain (N ⊗[K] A) := Function.Injective.isDomain φ.toRingHom hφ
+  have : IsDomain (N ⊗[K] A) := Function.Injective.isDomain φ.toRingHom hφ
   exact isDomain_tensor_of_closure K N A F
 
 theorem isDomain_of_algClosed {K L F : Type} [Field K] [Field L] [Field F] [Algebra K L]
     [Algebra K F] [CharZero K] (h : ∀ a : F, IsAlgebraic K a → a ∈ (algebraMap K F).range) :
     IsDomain (L ⊗[K] F) := by
   classical
-  haveI : Nontrivial (L ⊗[K] F) :=
+  have : Nontrivial (L ⊗[K] F) :=
     (Algebra.TensorProduct.includeRight_injective (R := K) (A := L) (B := F)
       (algebraMap K L).injective).nontrivial
-  haveI : NoZeroDivisors (L ⊗[K] F) := ⟨fun {u v} huv => by
+  have : NoZeroDivisors (L ⊗[K] F) := ⟨fun {u v} huv => by
     obtain ⟨Su, rfl⟩ := TensorProduct.exists_finset u
     obtain ⟨Sv, rfl⟩ := TensorProduct.exists_finset v
     let T : Finset F := (Su ∪ Sv).image Prod.snd
     let A := Algebra.adjoin K (T : Set F)
-    haveI : Algebra.FiniteType K A :=
+    have : Algebra.FiniteType K A :=
       (Subalgebra.fg_iff_finiteType A).1 (Subalgebra.fg_adjoin_finset T)
-    haveI := isDomain_tensor A.val Subtype.val_injective h L
+    have := isDomain_tensor A.val Subtype.val_injective h L
     let φ := Algebra.TensorProduct.map (AlgHom.id K L) A.val
     have hφ : Function.Injective φ :=
       Module.Flat.lTensor_preserves_injective_linearMap (M := L) A.val.toLinearMap
@@ -234,7 +234,7 @@ end PositivityTheory.Xgn.TensorDomain
 
 theorem PositivityTheory.Xgn.tensor_algebraically_closed_domain : ∀ (K Ω C : Type) [Field K] [CharZero K] [Field Ω] [Algebra K Ω] [Field C] [Algebra K C], (∀ a : Ω, IsAlgebraic K a → a ∈ (algebraMap K Ω).range) → IsDomain (Ω ⊗[K] C) := by
   intro K Ω C _ _ _ _ _ _ h
-  haveI : IsDomain (C ⊗[K] Ω) := PositivityTheory.Xgn.TensorDomain.isDomain_of_algClosed h
+  have : IsDomain (C ⊗[K] Ω) := PositivityTheory.Xgn.TensorDomain.isDomain_of_algClosed h
   exact (Algebra.TensorProduct.comm K Ω C).toMulEquiv.isDomain
 end -- clump:auto
 end -- clump:auto

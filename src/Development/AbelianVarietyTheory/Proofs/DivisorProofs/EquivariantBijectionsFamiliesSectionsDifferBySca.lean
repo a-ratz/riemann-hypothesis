@@ -94,8 +94,8 @@ theorem eq_smul_of_commute {S : Scheme.{0}} [IsLocallyNoetherian S] (P : PolAV S
   have hN1 : 0 < N := Nat.pos_of_ne_zero fun e => hN (by rw [e, Nat.cast_zero])
   have hfr := finrank_eq P F p N hN
   have hpos : 0 < Module.finrank F (EA P p N) := by rw [hfr]; positivity
-  haveI : Module.Finite F (EA P p N) := Module.finite_of_finrank_pos hpos
-  haveI : Nontrivial (EA P p N) := Module.nontrivial_of_finrank_pos hpos
+  have : Module.Finite F (EA P p N) := Module.finite_of_finrank_pos hpos
+  have : Nontrivial (EA P p N) := Module.nontrivial_of_finrank_pos hpos
   obtain ⟨-, hirr⟩ := GlobalTheory.ThetaIrred.main GlobalTheory.allSixLaws.1 GlobalTheory.allSixLaws.2.1 S P F p N hN
   obtain ⟨ρ, hact, -, hsame, -⟩ := GlobalTheory.thetaGrp_acts_linearly GlobalTheory.allSixLaws.1.globalFns S P (N : ℤ) (Over.mk p)
   let σ := (Scheme.ΓSpecIso (CommRingCat.of F)).symm.commRingCatIsoToRingEquiv

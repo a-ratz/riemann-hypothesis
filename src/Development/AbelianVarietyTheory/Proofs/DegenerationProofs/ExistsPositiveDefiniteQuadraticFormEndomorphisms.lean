@@ -151,7 +151,7 @@ theorem centre_finite (Pl : Places k K) (B : Over (Sp k)) [IsProper B.hom]
   have hft : c.hom.FiniteType := (B.hom.finiteType_appLE (isAffineOpen_top _) hV le_top).comp
     (RingHom.FiniteType.of_surjective _
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (.of k)).inv).2)
-  letI := c.hom.toAlgebra
+  let := c.hom.toAlgebra
   obtain ⟨T, hT⟩ := hft.out
   have hfin : ∀ a : K, {i | a ∉ Pl.O i}.Finite := fun a => by
     by_cases ha : a = 0
@@ -160,7 +160,7 @@ theorem centre_finite (Pl : Places k K) (B : Over (Sp k)) [IsProper B.hom]
       exact (Pl.mem i (Units.mk0 a ha)).2 (le_of_eq (Eq.symm h0))
   refine (T.finite_toSet.biUnion fun a _ => hfin (ψ.hom a)).subset fun i hi => ?_
   by_contra hn
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, not_exists, not_not] at hn
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, not_exists, not_not] at hn
   have hall : ∀ a, ψ.hom a ∈ Pl.O i := fun a => by
     have ha : a ∈ Algebra.adjoin k (T : Set Γ(B.left, V)) := hT ▸ Algebra.mem_top
     induction ha using Algebra.adjoin_induction with
@@ -381,7 +381,7 @@ theorem fin_notIntegral {L : Type} [Field L] [Algebra F L] [FiniteDimensional F 
   refine ((minpoly F y).support.finite_toSet.biUnion
     fun n _ => fin_notMem Pl ((minpoly F y).coeff n)).subset fun i hi => ?_
   by_contra hc
-  simp only [Set.mem_iUnion, not_exists, Set.mem_setOf_eq, not_not] at hc
+  simp only [Set.mem_iUnion, not_exists, Set.mem_ofPred_eq, not_not] at hc
   apply hi
   have hl : minpoly F y ∈ lifts (algebraMap (Pl.O i) F) := by
     rw [lifts_iff_coeff_lifts]
@@ -407,12 +407,12 @@ theorem exists_local (i : Pl.I) [IsDiscreteValuationRing (Pl.O i)] :
       (∀ y : L, (∀ j, y ∈ O' j) ↔ IsIntegral (Pl.O i) y) ∧
       ∀ y : Lˣ, ∑ᶠ j, w j y = Pl.v i (Units.map (Algebra.norm F) y) := by
   obtain ⟨hD, hFin, -, -, hmax, -⟩ := ReciprocityTheory.MultiplicativeHeights.Closed.dedekindRank (Pl.O i) F L
-  haveI := hD
-  haveI := hFin
-  haveI : IsFractionRing (integralClosure (Pl.O i) L) L :=
+  have := hD
+  have := hFin
+  have : IsFractionRing (integralClosure (Pl.O i) L) L :=
     IsIntegralClosure.isFractionRing_of_finite_extension (Pl.O i) F L _
-  haveI : Finite {Q : Ideal (integralClosure (Pl.O i) L) // Q.IsMaximal} := hmax.to_subtype
-  haveI : Finite (HeightOneSpectrum (integralClosure (Pl.O i) L)) :=
+  have : Finite {Q : Ideal (integralClosure (Pl.O i) L) // Q.IsMaximal} := hmax.to_subtype
+  have : Finite (HeightOneSpectrum (integralClosure (Pl.O i) L)) :=
     Finite.of_equiv _ (ValPl.hoEquiv (Pl.O i) F L).symm
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (Pl.O i)
   have hϖ0 : (ϖ : F) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
@@ -427,7 +427,7 @@ theorem exists_local (i : Pl.I) [IsDiscreteValuationRing (Pl.O i)] :
       ((Valuation.ne_zero_iff _).2 y.ne_zero)]
     ring
   · have hx : P.valuation L x ≠ 0 := (Valuation.ne_zero_iff _).2 x.ne_zero
-    haveI := P.isPrime
+    have := P.isPrime
     have hf : (0 : ℤ) < P.asIdeal.inertiaDeg (Pl.O i) := by
       exact_mod_cast Ideal.inertiaDeg_pos P.asIdeal (Pl.O i)
     rw [Valuation.mem_valuationSubring_iff, ← WithZero.log_le_log hx one_ne_zero, WithZero.log_one,
@@ -459,13 +459,13 @@ theorem exists_ext [Algebra k L] [IsScalarTower k F L] (hD : ∀ i, IsDiscreteVa
   have hT : ∀ y : Lˣ, ∃ T : Finset Pl.I, ∀ i ∉ T, ∀ j, w i j y = 0 := fun y => by
     refine ⟨((fin_notIntegral Pl (y : L)).union (fin_notIntegral Pl ((y⁻¹ : Lˣ) : L))).toFinset,
       fun i hi j => ?_⟩
-    simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hi
+    simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hi
     have h1 := (hmem i j _).1 ((hint i _).2 hi.1 j)
     have h2 := (hmem i j _).1 ((hint i _).2 hi.2 j)
     have h3 := hmul i j y y⁻¹
     rw [mul_inv_cancel, hone] at h3
     omega
-  haveI : ∀ i, Fintype (J i) := fun i => Fintype.ofFinite _
+  have : ∀ i, Fintype (J i) := fun i => Fintype.ofFinite _
   have hsupp : ∀ (y : Lˣ) (T : Finset Pl.I), (∀ i ∉ T, ∀ j, w i j y = 0) →
       (Function.support fun p : Σ i, J i => w p.1 p.2 y) ⊆
         ((T.sigma fun _ => Finset.univ : Finset (Σ i, J i)) : Set _) := fun y T h p hp => by
@@ -553,9 +553,9 @@ theorem exists_places : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (t : 
     ∃ Pl : Places k K, ∀ x : K, (∀ i, x ∈ Pl.O i) → IsAlgebraic k x := by
   intro k K _ _ _ t ht hf hs
   let e := RatFunc.algEquivOfTranscendental t ht
-  letI : Algebra (RatFunc k) K :=
+  let : Algebra (RatFunc k) K :=
     ((algebraMap (IntermediateField.adjoin k {t}) K).comp e.toRingEquiv.toRingHom).toAlgebra
-  haveI : IsScalarTower k (RatFunc k) K := IsScalarTower.of_algebraMap_eq fun c => by
+  have : IsScalarTower k (RatFunc k) K := IsScalarTower.of_algebraMap_eq fun c => by
     change _ = algebraMap (IntermediateField.adjoin k {t}) K (e (algebraMap k _ c))
     rw [e.commutes]; rfl
   have H : RingHom.comp (algebraMap (RatFunc k) K) (e.symm.toRingEquiv : _ →+* _) =
@@ -563,8 +563,8 @@ theorem exists_places : ∀ (k K : Type) [Field k] [Field K] [Algebra k K] (t : 
     ext x
     change algebraMap (IntermediateField.adjoin k {t}) K (e (e.symm x)) = _
     rw [e.apply_symm_apply]; rfl
-  haveI : FiniteDimensional (RatFunc k) K := Module.Finite.of_equiv_equiv _ _ H
-  haveI : Algebra.IsSeparable (RatFunc k) K := Algebra.IsSeparable.of_equiv_equiv _ _ H
+  have : FiniteDimensional (RatFunc k) K := Module.Finite.of_equiv_equiv _ _ H
+  have : Algebra.IsSeparable (RatFunc k) K := Algebra.IsSeparable.of_equiv_equiv _ _ H
   obtain ⟨Pl, hPl⟩ := exists_ext K (projLinePlaces k) (projLine_dvr k)
   exact ⟨Pl, fun x hx => isAlgebraic_of_forall (projLinePlaces k) (projLine_const k) x (hPl x hx)⟩
 
@@ -620,7 +620,7 @@ theorem isAlgebraic_of_forall_erase {k K : Type} [Field k] [Field K] [Algebra k 
         refine Set.eq_empty_of_forall_notMem fun y hy => ?_
         rw [Set.mem_iInter] at hy
         exact (hy ⟨y, (hy this.some).1⟩).2 rfl
-      rw [← e, hB.indep.closure_iInter_eq_biInter_closure_of_forall_subset fun _ => Set.diff_subset]
+      rw [← e, hB.indep.closure_iInter_eq_biInter_closure_of_forall_subset fun _ => Set.sdiff_subset]
       refine Set.mem_iInter.2 fun t => ?_
       rw [AlgebraicIndependent.matroid_closure_eq]
       exact IntermediateField.isAlgebraic_adjoin_iff.1 (h t)
@@ -636,7 +636,7 @@ theorem transcendental_erase {k K : Type} [Field k] [Field K] [Algebra k K] {s :
     Transcendental (IntermediateField.adjoin k (s \ {(t : K)})) (t : K) := by
   have hB := AlgebraicIndependent.matroid_isBase_iff.2 hs
   intro h
-  refine hB.indep.notMem_closure_diff_of_mem t.2 ?_
+  refine hB.indep.notMem_closure_sdiff_of_mem t.2 ?_
   rw [AlgebraicIndependent.matroid_closure_eq]
   exact IntermediateField.isAlgebraic_adjoin_iff.1 h
 
@@ -655,7 +655,7 @@ theorem exists_places_of_fg (k : Type) [Field k] [IsAlgClosed k] (K : Type) [Fie
     intro t
     have e : IntermediateField.adjoin k (s : Set K) = (IntermediateField.adjoin
         (IntermediateField.adjoin k ((s : Set K) \ {(t : K)})) {(t : K)}).restrictScalars k := by
-      rw [IntermediateField.adjoin_adjoin_left, Set.diff_union_of_subset (by simpa using t.2)]
+      rw [IntermediateField.adjoin_adjoin_left, Set.sdiff_union_of_subset (by simpa using t.2)]
     rw [e] at hsep hfin
     exact _root_.GlobalTheory.SS.PlacesExt.exists_places _ K t (transcendental_erase hs t) hfin hsep
   choose P hP using H
@@ -799,7 +799,7 @@ theorem exists_generic {k : Type} [Field k] (B : Over (Sp k)) [IsIntegral B.left
   have hU : IsAffineOpen U := hU
   have : Nonempty U := ⟨⟨x, hxU⟩⟩
   let A : Type := Γ(B.left, U)
-  letI : Algebra k A := (cstK B U).toAlgebra
+  let : Algebra k A := (cstK B U).toAlgebra
   have hft : Algebra.FiniteType k A :=
     (B.hom.finiteType_appLE (isAffineOpen_top _) hU le_top).comp (RingHom.FiniteType.of_surjective _
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of k)).inv).2)

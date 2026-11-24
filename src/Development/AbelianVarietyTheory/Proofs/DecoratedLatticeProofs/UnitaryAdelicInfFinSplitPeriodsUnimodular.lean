@@ -94,14 +94,14 @@ theorem besGrp_isMulRightInvariant : ∀ (D : D7) (V V₀ A L : HSp D) (ρ : ℕ
   have hNc : IsClosed (flagN d : Set (GA D V)) := GlobalTheory.Mem.TrueRecord.isClosed_NFlag V (isIsoSub_e d)
   let μA : Measure (GA D A) := Measure.haar
   have hHaar := ((GlobalTheory.MixPer.jacGrp_besGrp_haar D V V₀ A L ρ d o ν 𝓝 ⟨hνH, h𝓝, h𝓝1⟩).2.2 μA inferInstance)
-  haveI : LocallyCompactSpace (flagN d) := hNc.locallyCompactSpace
-  haveI : SecondCountableTopology (flagN d) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (flagN d) := hNc.locallyCompactSpace
+  have : SecondCountableTopology (flagN d) := TopologicalSpace.Subtype.secondCountableTopology _
   have hinj : Function.Injective fun γ : NFlagQ V d.e => (⟨γ.1.1, γ.2⟩ : GQ V) :=
     fun a b h => Subtype.ext (Subtype.ext (congrArg (fun x : GQ V => (x : GA D V)) h))
-  haveI : Countable (NFlagQ V d.e) := hinj.countable
-  haveI : ν.IsMulRightInvariant :=
+  have : Countable (NFlagQ V d.e) := hinj.countable
+  have : ν.IsMulRightInvariant :=
     GlobalTheory.SemiHaar.rightInv_of_fd (NFlagQ V d.e) ν h𝓝 (by rw [h𝓝1]; exact ENNReal.one_ne_top)
-  haveI : μA.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D A μA inferInstance
+  have : μA.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D A μA inferInstance
   have hcA : Continuous (embA d o) := by
     have h1 : Continuous (fun h : GA D A => o.emb (h, 1)) := by
       have := o.continuous_emb
@@ -110,10 +110,10 @@ theorem besGrp_isMulRightInvariant : ∀ (D : D7) (V V₀ A L : HSp D) (ρ : ℕ
   have hnA : ∀ n ∈ flagN d, ∀ h, embA d o h * n * (embA d o h)⁻¹ ∈ flagN d := fun n hn h =>
     GlobalTheory.MixPer.witt_anisotropic_group_normalizes_flag_unipotent D V V₀ ρ d n hn (o.emb (h, 1))
   have hR := GlobalTheory.SemiHaar.semiMeas_rightInv (flagN d) (embA d o) hNc hcA hnA μA ν
-  haveI : LocallyCompactSpace (besGrp d o) := by
+  have : LocallyCompactSpace (besGrp d o) := by
     obtain ⟨e, -⟩ := GlobalTheory.SemiHaar.exists_homeo (flagN d) (embA d o) hnA hcA (GlobalTheory.BesProj.exists_continuous_proj D V V₀ A L ρ d o)
     exact e.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (besGrp d o) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology (besGrp d o) := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨κ, k1, k2⟩ : ∃ κ : Measure (besGrp d o), κ.IsHaarMeasure ∧ κ.IsMulRightInvariant := ⟨_, hHaar, hR⟩
   rw [Measure.isMulLeftInvariant_eq_smul μ κ]
   infer_instance
@@ -286,9 +286,9 @@ theorem jacGrp_rightInv : ∀ (D : D7) (V V₀ : HSp D) (ρ : ℕ) (d : HypDec V
   have hc := GlobalTheory.FlagModulus.map_conj_smallerUnitary_flagUnipotent_haar D V V₀ ρ d ν hνH
   let μ₀ : Measure (GA D V₀) := Measure.haar
   have hμ₀ : μ₀.IsHaarMeasure := inferInstance
-  haveI := hνH
-  haveI : μ₀.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V₀ μ₀ hμ₀
-  haveI : ν.IsMulRightInvariant := GlobalTheory.SemiHaar.rightInv_of_fd _ ν h𝓝 (by rw [h𝓝1]; exact ENNReal.one_ne_top)
+  have := hνH
+  have : μ₀.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V₀ μ₀ hμ₀
+  have : ν.IsMulRightInvariant := GlobalTheory.SemiHaar.rightInv_of_fd _ ν h𝓝 (by rw [h𝓝1]; exact ENNReal.one_ne_top)
   have a := GlobalTheory.MixPer.semiMeas_isMulLeftInvariant (flagN d) d.emb0 hNc d.continuous_embed hnorm hp μ₀ ν hμ₀ hνH hc
   obtain ⟨b, c⟩ := GlobalTheory.MixPer.semiMeas_finite_on_compacts_and_open_pos (flagN d) d.emb0 hNc d.continuous_embed hnorm hp
     μ₀ ν hμ₀ hνH hc
@@ -296,10 +296,10 @@ theorem jacGrp_rightInv : ∀ (D : D7) (V V₀ : HSp D) (ρ : ℕ) (d : HypDec V
     { toIsFiniteMeasureOnCompacts := b, toIsMulLeftInvariant := a, toIsOpenPosMeasure := c }
   have hR := GlobalTheory.SemiHaar.semiMeas_rightInv (flagN d) d.emb0 hNc d.continuous_embed hnorm μ₀ ν
   obtain ⟨e, -⟩ := GlobalTheory.SemiHaar.exists_homeo (flagN d) d.emb0 hnorm d.continuous_embed hp
-  haveI : LocallyCompactSpace (jacGrp d) := e.symm.isClosedEmbedding.locallyCompactSpace
+  have : LocallyCompactSpace (jacGrp d) := e.symm.isClosedEmbedding.locallyCompactSpace
   let κ : Measure (jacGrp d) := semiMeas (flagN d) d.emb0 μ₀ ν
-  haveI hκH : κ.IsHaarMeasure := hH
-  haveI hκR : κ.IsMulRightInvariant := hR
+  have hκH : κ.IsHaarMeasure := hH
+  have hκR : κ.IsMulRightInvariant := hR
   have hk := Measure.isMulLeftInvariant_eq_smul μ κ
   rw [hk]
   infer_instance
@@ -483,7 +483,7 @@ theorem rightInv_of_prod (h : ∀ μ : Measure (A × B), μ.IsHaarMeasure → μ
     (ν : Measure B) (hν : ν.IsHaarMeasure) : ν.IsMulRightInvariant := by
   refine ⟨fun b => ?_⟩
   let μA : Measure A := Measure.haar
-  haveI := h (μA.prod ν) inferInstance
+  have := h (μA.prod ν) inferInstance
   set c := Measure.haarScalarFactor (ν.map (· * b)) ν
   have hc : ν.map (· * b) = c • ν := Measure.isMulLeftInvariant_eq_smul _ _
   have h1 : (μA.prod ν).map (· * ((1 : A), b)) = μA.prod (ν.map (· * b)) := by
@@ -497,7 +497,7 @@ theorem rightInv_of_prod (h : ∀ μ : Measure (A × B), μ.IsHaarMeasure → μ
   have hpos : 0 < μA.prod ν K := Measure.measure_pos_of_nonempty_interior _ K.interior_nonempty
   have hfin : μA.prod ν K < ⊤ := K.isCompact.measure_lt_top
   have h4 := congrArg (fun m : Measure (A × B) => m K) h3
-  simp only [Measure.smul_apply, smul_eq_mul] at h4
+  simp only [smul_apply, smul_eq_mul] at h4
   have h5 : (c : ℝ≥0∞) = 1 :=
     (ENNReal.mul_left_inj hpos.ne' hfin.ne).1 (h4.symm.trans (one_mul _).symm)
   rw [hc, ENNReal.smul_def, h5, one_smul]
@@ -540,16 +540,16 @@ theorem rightInv_restr (P Q R : Subgroup G) (hP : IsClosed (P : Set G)) (hQ : Is
     (hs : ∀ a ∈ P, ∀ b ∈ Q, a * b ∈ R → a ∈ R ∧ b ∈ R)
     (hu : ∀ μ : Measure R, μ.IsHaarMeasure → μ.IsMulRightInvariant) :
     ∀ ν : Measure (R.subgroupOf Q), ν.IsHaarMeasure → ν.IsMulRightInvariant := by
-  haveI : LocallyCompactSpace P := hP.locallyCompactSpace
-  haveI : LocallyCompactSpace Q := hQ.locallyCompactSpace
-  haveI : LocallyCompactSpace R := hR.locallyCompactSpace
-  have hRP : IsClosed ((R.subgroupOf P : Subgroup P) : Set P) := hR.preimage continuous_subtype_val
-  have hRQ : IsClosed ((R.subgroupOf Q : Subgroup Q) : Set Q) := hR.preimage continuous_subtype_val
-  haveI : LocallyCompactSpace (R.subgroupOf P) := hRP.locallyCompactSpace
-  haveI : LocallyCompactSpace (R.subgroupOf Q) := hRQ.locallyCompactSpace
+  have : LocallyCompactSpace P := hP.locallyCompactSpace
+  have : LocallyCompactSpace Q := hQ.locallyCompactSpace
+  have : LocallyCompactSpace R := hR.locallyCompactSpace
+  have hRP : IsClosed ((R.subgroupOf P : Subgroup P) : Set P) := hR.preimage continuous_subtypeVal
+  have hRQ : IsClosed ((R.subgroupOf Q : Subgroup Q) : Set Q) := hR.preimage continuous_subtypeVal
+  have : LocallyCompactSpace (R.subgroupOf P) := hRP.locallyCompactSpace
+  have : LocallyCompactSpace (R.subgroupOf Q) := hRQ.locallyCompactSpace
   intro ν hν
   refine rightInv_of_prod (A := R.subgroupOf P) (fun μ hμ => ?_) ν hν
-  haveI := hμ
+  have := hμ
   exact GlobalTheory.UpqUnimodular.isMulRightInvariant_of_continuousMulEquiv (restrEquiv P Q R e he hs) μ
     (hu _ (ContinuousMulEquiv.isHaarMeasure_map μ (restrEquiv P Q R e he hs)))
 
@@ -607,37 +607,37 @@ theorem adelic_split : ∀ (D : D7) (V : HSp D), IsClosed (GinfC V : Set (GA D V
   intro D V
   have hi := isClosed_GinfC' V
   have hf := isClosed_GfC' V
-  haveI : LocallyCompactSpace (GinfC V) := hi.locallyCompactSpace
-  haveI : LocallyCompactSpace (GfC V) := hf.locallyCompactSpace
+  have : LocallyCompactSpace (GinfC V) := hi.locallyCompactSpace
+  have : LocallyCompactSpace (GfC V) := hf.locallyCompactSpace
   refine ⟨hi, hf, fun a ha b hb => commute_GinfC_GfC V ha hb, ⟨(splitEquiv V).toHomeomorph, fun p => rfl⟩,
     fun μ hμ => rightInv_of_prod (A := GinfC V) (fun m hm => ?_) μ hμ, fun V₀ ρ d => ?_⟩
-  · haveI := hm
+  · have := hm
     exact GlobalTheory.UpqUnimodular.isMulRightInvariant_of_continuousMulEquiv (splitEquiv V) m
       (GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V _ inferInstance)
   have hJ := GlobalTheory.jacGrp_isClosed D V V₀ ρ d
-  haveI : LocallyCompactSpace (jacGrp d) := hJ.locallyCompactSpace
+  have : LocallyCompactSpace (jacGrp d) := hJ.locallyCompactSpace
   refine ⟨⟨GlobalTheory.T.fourierJacobiGroup_split_real_finite D V V₀ ρ d, fun μ hμ => ?_, fun μ hμ => ?_⟩, fun A L o => ?_⟩
-  · haveI := hμ
-    haveI := GlobalTheory.T.fourierJacobiGroup_haar_isMulRightInvariant D V V₀ ρ d μ hμ
+  · have := hμ
+    have := GlobalTheory.T.fourierJacobiGroup_haar_isMulRightInvariant D V V₀ ρ d μ hμ
     exact GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant μ
   · have hc : IsClosed (((jacGrp d).subgroupOf (GfC V) : Subgroup (GfC V)) : Set (GfC V)) :=
-      hJ.preimage continuous_subtype_val
-    haveI : LocallyCompactSpace ((jacGrp d).subgroupOf (GfC V)) := hc.locallyCompactSpace
-    haveI := hμ
-    haveI := rightInv_restr (GinfC V) (GfC V) (jacGrp d) hi hf hJ (splitEquiv V) (splitEquiv_apply V)
+      hJ.preimage continuous_subtypeVal
+    have : LocallyCompactSpace ((jacGrp d).subgroupOf (GfC V)) := hc.locallyCompactSpace
+    have := hμ
+    have := rightInv_restr (GinfC V) (GfC V) (jacGrp d) hi hf hJ (splitEquiv V) (splitEquiv_apply V)
       (GlobalTheory.T.fourierJacobiGroup_split_real_finite D V V₀ ρ d) (GlobalTheory.T.fourierJacobiGroup_haar_isMulRightInvariant D V V₀ ρ d) μ hμ
     exact GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant μ
   have hB := GlobalTheory.BesClosed.besGrp_isClosed D V V₀ A L ρ d o
-  haveI : LocallyCompactSpace (besGrp d o) := hB.locallyCompactSpace
+  have : LocallyCompactSpace (besGrp d o) := hB.locallyCompactSpace
   refine ⟨GlobalTheory.T.besselGroup_split_real_finite D V V₀ A L ρ d o, fun μ hμ => ?_, fun μ hμ => ?_⟩
-  · haveI := hμ
-    haveI := GlobalTheory.T.besselGroup_haar_isMulRightInvariant D V V₀ A L ρ d o μ hμ
+  · have := hμ
+    have := GlobalTheory.T.besselGroup_haar_isMulRightInvariant D V V₀ A L ρ d o μ hμ
     exact GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant μ
   · have hc : IsClosed (((besGrp d o).subgroupOf (GfC V) : Subgroup (GfC V)) : Set (GfC V)) :=
-      hB.preimage continuous_subtype_val
-    haveI : LocallyCompactSpace ((besGrp d o).subgroupOf (GfC V)) := hc.locallyCompactSpace
-    haveI := hμ
-    haveI := rightInv_restr (GinfC V) (GfC V) (besGrp d o) hi hf hB (splitEquiv V) (splitEquiv_apply V)
+      hB.preimage continuous_subtypeVal
+    have : LocallyCompactSpace ((besGrp d o).subgroupOf (GfC V)) := hc.locallyCompactSpace
+    have := hμ
+    have := rightInv_restr (GinfC V) (GfC V) (besGrp d o) hi hf hB (splitEquiv V) (splitEquiv_apply V)
       (GlobalTheory.T.besselGroup_split_real_finite D V V₀ A L ρ d o) (GlobalTheory.T.besselGroup_haar_isMulRightInvariant D V V₀ A L ρ d o) μ hμ
     exact GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant μ
 

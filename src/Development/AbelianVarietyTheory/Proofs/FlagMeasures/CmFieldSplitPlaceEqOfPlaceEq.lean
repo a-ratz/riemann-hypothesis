@@ -63,7 +63,7 @@ theorem le_one_iff_frac {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K
   · intro hx
     obtain ⟨p, q, hq, rfl⟩ := IsFractionRing.div_surjective (A := R) x
     have hq0 : algebraMap R K q ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hq
-    haveI := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R hP0 (Localization.AtPrime P)
+    have := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R hP0 (Localization.AtPrime P)
     have hinj : Function.Injective (algebraMap R (Localization.AtPrime P)) :=
       IsLocalization.injective (Localization.AtPrime P) P.primeCompl_le_nonZeroDivisors
     have key : ∀ a b : R, ∀ (y : R) (s : P.primeCompl),
@@ -90,9 +90,9 @@ theorem le_one_iff_frac {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K
           have hq' : ν (algebraMap R K q) ≠ 0 := (Valuation.ne_zero_iff _).mpr hq0
           have e2 : ν (algebraMap R K p) * ν (algebraMap R K y) = ν (algebraMap R K q) := by
             rw [← map_mul, ← map_mul, e, map_mul, map_mul, hunit _ s.2, mul_one]
-          rw [map_div₀, div_le_one₀ (zero_lt_iff.mpr hq')] at hx
+          rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.mpr hq')] at hx
           have : ν (algebraMap R K p) * ν (algebraMap R K y) < ν (algebraMap R K p) * 1 :=
-            mul_lt_mul_of_pos_left ((hlt y).2 hy) (zero_lt_iff.mpr hp0)
+            mul_lt_mul_of_pos_left ((hlt y).2 hy) (pos_iff_ne_zero.mpr hp0)
           rw [e2, mul_one] at this
           exact absurd hx (not_le.mpr this)
       · refine ⟨s, y, hy, ?_⟩
@@ -126,8 +126,8 @@ theorem exists_approx (v : HeightOneSpectrum (𝓞 L⁺)) (y d : v.adicCompletio
     convert h using 2 with z
     simp [Valuation.restrict_lt_iff]
   have hy : y ∈ {z : v.adicCompletion L⁺ | Valued.v (z - y) < Valued.v d} := by
-    simp only [Set.mem_setOf_eq, sub_self, map_zero]
-    exact zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hd)
+    simp only [Set.mem_ofPred_eq, sub_self, map_zero]
+    exact pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hd)
   obtain ⟨z, hz, a, rfl⟩ := mem_closure_iff_nhds.mp (denseRange_algebraMap L⁺ v y) _ (hU.mem_nhds hy)
   refine ⟨a, ?_⟩
   rw [← Valuation.map_neg, neg_sub]
@@ -152,7 +152,7 @@ theorem eq_of_le_one_iff (v : HeightOneSpectrum (𝓞 L⁺)) (i i' : L →ₐ[L�
   have hiz : i z = (i x - a') / b' := by simp [z, a', b', map_div₀, map_sub, AlgHom.commutes]
   have hi'z : i' z = (i' x - a') / b' := by simp [z, a', b', map_div₀, map_sub, AlgHom.commutes]
   have hlt : Valued.v (i z) < 1 := by
-    rw [hiz, map_div₀, div_lt_one₀ (zero_lt_iff.mpr hb0), hbv]
+    rw [hiz, map_div₀, div_lt_one₀ (pos_iff_ne_zero.mpr hb0), hbv]
     exact ha
   have heq : Valued.v (i' z) = 1 := by
     have : i' x - a' = (i x - a') - δ := by rw [hδ]; ring
@@ -181,7 +181,7 @@ theorem splitPlace_eq_of_w_eq : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
   simp only at hv
   subst hv
   congr 1
-  haveI : (ReciprocityTheory.Aut.SplitPlace.ideal ⟨v, i⟩).IsPrime := ReciprocityTheory.Aut.SplitPlace.ideal_isPrime _
+  have : (ReciprocityTheory.Aut.SplitPlace.ideal ⟨v, i⟩).IsPrime := ReciprocityTheory.Aut.SplitPlace.ideal_isPrime _
   have hP0 := ReciprocityTheory.Aut.SplitPlace.ideal_ne_bot (⟨v, i⟩ : ReciprocityTheory.Aut.SplitPlace L)
   have H := fun (j : L →ₐ[maximalRealSubfield L] v.adicCompletion (maximalRealSubfield L))
       (hj : ReciprocityTheory.Aut.SplitPlace.ideal ⟨v, j⟩ = ReciprocityTheory.Aut.SplitPlace.ideal ⟨v, i⟩) (x : L) =>

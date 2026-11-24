@@ -137,9 +137,9 @@ def typeIdem : G → ℂ := fun g =>
   if h : g ∈ K then (Module.finrank ℂ W : ℂ) * (μ.real K : ℂ)⁻¹ * conj (τ.character (r ⟨g, h⟩)) else 0
 
 theorem typeIdem_coe (k : K) :
-    typeIdem μ r τ k = (Module.finrank ℂ W : ℂ) * (μ.real K : ℂ)⁻¹ * conj (τ.character (r k)) := dif_pos k.2
+    typeIdem μ r τ k = (Module.finrank ℂ W : ℂ) * (μ.real K : ℂ)⁻¹ * conj (τ.character (r k)) := dite_eq_left k.2
 
-theorem typeIdem_of_notMem {g : G} (h : g ∉ K) : typeIdem μ r τ g = 0 := dif_neg h
+theorem typeIdem_of_notMem {g : G} (h : g ∉ K) : typeIdem μ r τ g = 0 := dite_eq_right h
 
 theorem typeIdem_mul_ker {k : K} (hk : r k = 1) (g : G) :
     typeIdem μ r τ (k * g) = typeIdem μ r τ g ∧ typeIdem μ r τ (g * k) = typeIdem μ r τ g := by
@@ -170,7 +170,7 @@ theorem starFn_typeIdem [Finite Q] [FiniteDimensional ℂ W] : starFn (typeIdem 
 theorem typeIdem_mem_SB [TopologicalSpace G] [IsTopologicalGroup G] (ho : IsOpen (K : Set G))
     (hc : IsCompact (K : Set G)) (hr : IsOpen (r.ker : Set K)) : typeIdem μ r τ ∈ SB G := by
   refine ⟨(IsLocallyConstant.iff_exists_open _).2 fun g => ⟨(g⁻¹ * ·) ⁻¹' ((↑) '' (r.ker : Set K)),
-    (ho.isOpenMap_subtype_val _ hr).preimage (by fun_prop), ⟨1, one_mem _, by simp⟩, ?_⟩,
+    (ho.isOpenMap_subtypeVal _ hr).preimage (by fun_prop), ⟨1, one_mem _, by simp⟩, ?_⟩,
     .intro hc fun x => typeIdem_of_notMem μ r τ⟩
   rintro x ⟨k, hk, e⟩
   rw [← (typeIdem_mul_ker μ r τ hk g).2, e, mul_inv_cancel_left]

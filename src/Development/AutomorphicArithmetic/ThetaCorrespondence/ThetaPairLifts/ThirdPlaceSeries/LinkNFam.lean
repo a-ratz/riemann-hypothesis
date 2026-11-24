@@ -159,9 +159,9 @@ theorem GlobalTheory.NLink.admissible_table_of_conclusion : ∀ (D : D7) (L : Si
   · apply key _ (h23 i hi (Or.inl h2) π hπ)
     have hlen : (tab L X tf C).len i = fun _ => 0 := by
       funext lam
-      simp only [tab, if_pos h2]
+      simp only [tab, ite_eq_left h2]
     have hBB : (tab L X tf C).BB i = TwistedPlaces.sumOver D (D.nd.l i) (tf.len i) + tf.BB i := by
-      simp only [tab, if_pos h2]
+      simp only [tab, ite_eq_left h2]
     rw [hlen, hzero, hBB, zero_add]
   by_cases h3 : D.nd.l i = 3
   · apply key _ (h23 i hi (Or.inr h3) π hπ)
@@ -169,11 +169,11 @@ theorem GlobalTheory.NLink.admissible_table_of_conclusion : ∀ (D : D7) (L : Si
       have hq : ¬ (D.nd.l i = D.host.q ∨ D.nd.l i = D.host.d) := by
         rw [h3]; rintro (h | h) <;> [exact hq3 h.symm; exact hd3 h.symm]
       have hR : ¬ KillingConditions.RangeAD L X.exc (D.nd.l i) := fun h => h.1 (Or.inr h3)
-      simp only [tab, if_neg h2, if_neg hq, if_neg hR]
+      simp only [tab, ite_eq_right h2, ite_eq_right hq, ite_eq_right hR]
     have hlen : (tab L X tf C).len i =
         fun _ => (TwistedPlaces.sumOver D 3 (tf.len i) + tf.BB i) / ((placesOver D.host.E 3).ncard : ℝ) := by
       funext lam
-      simp only [tab, if_neg h2, if_pos h3]
+      simp only [tab, ite_eq_right h2, ite_eq_left h3]
     rw [hBB, hlen, h3, sumOver_const D 3 (by norm_num)]
     have hf3 := FamilyRepresentationConstants.placesOver_finite D.host.E 3 (by norm_num)
     have hpos : 0 < (placesOver D.host.E 3).ncard :=
@@ -185,9 +185,9 @@ theorem GlobalTheory.NLink.admissible_table_of_conclusion : ∀ (D : D7) (L : Si
     have hR : ¬ KillingConditions.RangeAD L X.exc (D.nd.l i) := fun h => h.2.1 hqd
     have hlen : (tab L X tf C).len i = fun _ => 0 := by
       funext lam
-      simp only [tab, if_neg h2, if_neg h3, if_neg hR]
+      simp only [tab, ite_eq_right h2, ite_eq_right h3, ite_eq_right hR]
     have hBB : (tab L X tf C).BB i = TwistedPlaces.midG L C (D.nd.l i) := by
-      simp only [tab, if_neg h2, if_pos hqd]
+      simp only [tab, ite_eq_right h2, ite_eq_left hqd]
     rw [hlen, hzero, hBB, zero_add]
   by_cases hR : KillingConditions.RangeAD L X.exc (D.nd.l i)
   · have hm := hC.mid i hi hg hR π hπ
@@ -197,9 +197,9 @@ theorem GlobalTheory.NLink.admissible_table_of_conclusion : ∀ (D : D7) (L : Si
     apply key _ hb
     have hlen : (tab L X tf C).len i = KillingConditions.lenR X.len0 i := by
       funext lam
-      simp only [tab, if_neg h2, if_neg h3, if_pos hR]
+      simp only [tab, ite_eq_right h2, ite_eq_right h3, ite_eq_left hR]
     have hBB : (tab L X tf C).BB i = KillingConditions.supZ i (X.errorBoundHub i) := by
-      simp only [tab, if_neg h2, if_neg hqd, if_pos hR]
+      simp only [tab, ite_eq_right h2, ite_eq_right hqd, ite_eq_left hR]
     rw [hlen, hBB]
     have h1 : TwistedPlaces.sumOver D (D.nd.l i) (X.len0 i π) ≤ TwistedPlaces.sumOver D (D.nd.l i) (KillingConditions.lenR X.len0 i) :=
       sumOver_mono D _ hl0 fun lam => le_supZ i (fun π => X.len0 i π lam) hπ
@@ -211,9 +211,9 @@ theorem GlobalTheory.NLink.admissible_table_of_conclusion : ∀ (D : D7) (L : Si
     apply key _ (hC.large i hi hlt.1 hg hlt.2 π hπ)
     have hlen : (tab L X tf C).len i = fun _ => 0 := by
       funext lam
-      simp only [tab, if_neg h2, if_neg h3, if_neg hR]
+      simp only [tab, ite_eq_right h2, ite_eq_right h3, ite_eq_right hR]
     have hBB : (tab L X tf C).BB i = 0 := by
-      simp only [tab, if_neg h2, if_neg hqd, if_neg hR]
+      simp only [tab, ite_eq_right h2, ite_eq_right hqd, ite_eq_right hR]
     rw [hlen, hzero, hBB, add_zero]
 
 end
@@ -262,9 +262,9 @@ theorem localBoundTableAllPrimes_conditionTwoThree : ∀ (D : D7) (L : SizeData�
   by_cases h2 : D.nd.l i ∈ D.host.small
   · have hlen : (tab L X tf C).len i = fun _ => 0 := by
       funext lam
-      simp only [tab, if_pos h2]
+      simp only [tab, ite_eq_left h2]
     have hBB : (tab L X tf C).BB i = TwistedPlaces.sumOver D (D.nd.l i) (tf.len i) + tf.BB i := by
-      simp only [tab, if_pos h2]
+      simp only [tab, ite_eq_left h2]
     show TwistedPlaces.sumOver D _ ((tab L X tf C).len i) + (tab L X tf C).BB i ≤ _
     rw [hlen, hBB]
     have h0 : TwistedPlaces.sumOver D (D.nd.l i) (fun _ => (0 : ℝ)) = 0 := by simp [TwistedPlaces.sumOver]
@@ -278,11 +278,11 @@ theorem localBoundTableAllPrimes_conditionTwoThree : ∀ (D : D7) (L : SizeData�
     have hlen : (tab L X tf C).len i =
         fun _ => (TwistedPlaces.sumOver D 3 (tf.len i) + tf.BB i) / ((placesOver D.host.E 3).ncard : ℝ) := by
       funext lam
-      simp only [tab, if_neg h2, if_pos h3]
+      simp only [tab, ite_eq_right h2, ite_eq_left h3]
     have hBB : (tab L X tf C).BB i = 0 := by
       have h1 : ¬ (D.nd.l i = D.host.q ∨ D.nd.l i = D.host.d) := by omega
       have hR : ¬ KillingConditions.RangeAD L X.exc (D.nd.l i) := fun hr => hr.1 (Or.inr h3)
-      simp only [tab, if_neg h2, if_neg h1, if_neg hR]
+      simp only [tab, ite_eq_right h2, ite_eq_right h1, ite_eq_right hR]
     show TwistedPlaces.sumOver D (D.nd.l i) ((tab L X tf C).len i) + (tab L X tf C).BB i ≤ _
     have hFi' : TwistedPlaces.sumOver D (D.nd.l i) (tf.len i) + tf.BB i ≤ _ := hFi
     rw [h3] at hFi'
@@ -317,9 +317,9 @@ theorem localBoundTableAllPrimes_ramified_typePrimes : ∀ (D : D7) (L : SizeDat
     have hR : ¬ KillingConditions.RangeAD L X.exc (D.nd.l i) := fun h => h.2.1 hl
     have hlen : (tab L X tf C).len i = fun _ => 0 := by
       funext lam
-      simp only [tab, h2, h3, hR, if_false]
+      simp only [tab, h2, h3, hR, ite_false]
     have hBB : (tab L X tf C).BB i = TwistedPlaces.midG L C (D.nd.l i) := by
-      simp only [tab, h2, hl, if_false, if_true]
+      simp only [tab, h2, hl, ite_false, ite_true]
     rw [hlen, hBB]
     simp [TwistedPlaces.sumOver]
   · intro j hj l hl
@@ -352,13 +352,13 @@ theorem localBoundTableAllPrimes_rowsAndBand : ∀ (D : D7) (L : SizeData₂ D) 
     have hs : D.nd.l i ∉ D.host.small := fun e => hr.1 (Or.inl e)
     show (if D.nd.l i ∈ D.host.small then (0 : ℝ) else if D.nd.l i = 3 then _
       else if KillingConditions.RangeAD L X.exc (D.nd.l i) then _ else 0) = _
-    rw [if_neg hs, if_neg h3, if_pos hr]; rfl
+    rw [ite_eq_right hs, ite_eq_right h3, ite_eq_left hr]; rfl
   have hN : ∀ i, D.nd.l i ≠ 3 → ¬ KillingConditions.RangeAD L X.exc (D.nd.l i) →
       (tab L X tf C).len i = fun _ => 0 := by
     intro i h3 hr; funext lam
     show (if D.nd.l i ∈ D.host.small then (0 : ℝ) else if D.nd.l i = 3 then _
       else if KillingConditions.RangeAD L X.exc (D.nd.l i) then _ else 0) = _
-    rw [if_neg h3, if_neg hr, ite_self]
+    rw [ite_eq_right h3, ite_eq_right hr, ite_self]
   have hx : 0 < L.sc.x := lt_trans one_pos L.sc.one_lt_alt
   have hb : 1 ≤ L.sc.b := Real.one_le_exp (Real.rpow_nonneg hx.le _)
   have hSc := L.Sc_pos
@@ -473,7 +473,7 @@ theorem adm5_tab : ∀ (D : D7) (L : SizeData₂ D) (P : ParameterChoice' D L) (
   show (if D.nd.l i ∈ D.host.small then TwistedPlaces.sumOver D (D.nd.l i) (tf.len i) + tf.BB i
     else if D.nd.l i = D.host.q ∨ D.nd.l i = D.host.d then TwistedPlaces.midG L C (D.nd.l i)
     else if KillingConditions.RangeAD L X.exc (D.nd.l i) then KillingConditions.supZ i (X.errorBoundHub i) else 0) ≤ _
-  rw [if_neg h2, if_neg hqd]
+  rw [ite_eq_right h2, ite_eq_right hqd]
   split_ifs with hR
   · unfold KillingConditions.supZ
     split_ifs with hne
@@ -543,9 +543,9 @@ theorem largePrimeLengthVanishing_and_exceptionalBounded_tab : ∀ (D : D7) (L :
       rintro he; rw [he] at hlt; linarith
     have hR : ¬ KillingConditions.RangeAD L X.exc (D.nd.l i) := fun hr => hr.2.2 ⟨hlt, hexc'⟩
     refine ⟨fun lam _ => ?_, ?_⟩
-    · simp only [tab, h2, h3', hR, if_false]
-    · simp only [tab, h2, hR, if_false]
-      rw [if_neg (by rintro (he | he) <;> contradiction)]
+    · simp only [tab, h2, h3', hR, ite_false]
+    · simp only [tab, h2, hR, ite_false]
+      rw [ite_eq_right (by rintro (he | he) <;> contradiction)]
   · exact h.exc.1
   · exact h.exc.2
 
@@ -1092,7 +1092,7 @@ private theorem isNoetherian_upL [IsNoetherianRing O] [Module.Finite O M]
     (hs' : ∀ x y : X, x ≠ y → ∃ f ∈ T, (f : X → O) x ≠ (f : X → O) y) (Y : Set X) :
     IsNoetherian O ↥(upL T act Y) := by
   obtain ⟨d, hd, hdu⟩ := exists_ne_zero_smul_upL_mem_lowL T act hs' Y
-  haveI hL : IsNoetherian O ↥(inL O M) :=
+  have hL : IsNoetherian O ↥(inL O M) :=
     isNoetherian_of_surjective (LinearMap.rangeRestrict (TensorProduct.mk O (FractionRing O) M 1))
       (LinearMap.range_rangeRestrict _)
   let ψ : ↥(upL T act Y) →ₗ[O] ↥(inL O M) :=
@@ -1129,7 +1129,7 @@ theorem length_le [IsPrincipalIdealRing O] [Module.Finite O M] (Z : Finset X) (Y
         (lowL (cutT T S) (cutAct T act S) Y').comap (upL (cutT T S) (cutAct T act S) Y').subtype) +
       (∑ x ∈ Z, heckeMult T act x : ℕ) * Module.length O (O ⧸ Ideal.span {A}) := by
   classical
-  haveI : IsNoetherian O ↥(upL T act (Z : Set X)) := isNoetherian_upL T act hs _
+  have : IsNoetherian O ↥(upL T act (Z : Set X)) := isNoetherian_upL T act hs _
   have hY1 : ∀ x : S, x.1 ∈ (Z : Set X) → x ∈ Y' := fun x hx => (hY x).mpr hx
   have hY2 : ∀ x : S, x.1 ∈ (Z : Set X)ᶜ → x ∈ Y'ᶜ := fun x hx hx' => hx ((hY x).mp hx')
   have hqL : ∀ l ∈ inL O M, qK T act S l ∈ inL O (cutM T act S) := by
@@ -1200,12 +1200,12 @@ theorem length_le [IsPrincipalIdealRing O] [Module.Finite O M] (Z : Finset X) (Y
       obtain ⟨y, hy⟩ := Submodule.mkQ_surjective Lo k.1
       exact ⟨⟨y, show Lo.mkQ y ∈ LinearMap.ker Φ from hy ▸ k.2⟩, Subtype.ext hy⟩
     have hA' : ∀ q, A • π q = 0 := fun q => Subtype.ext (hKA (Lo.mkQ q) q.2)
-    haveI hV : Module.IsTorsionFree O (FractionRing O ⊗[O] M) :=
+    have hV : Module.IsTorsionFree O (FractionRing O ⊗[O] M) :=
       Module.IsTorsionFree.trans_faithfulSMul O (FractionRing O) _
-    haveI : Module.IsTorsionFree O ↥P :=
+    have : Module.IsTorsionFree O ↥P :=
       Function.Injective.moduleIsTorsionFree (fun p : P => ((p : ↥U) : FractionRing O ⊗[O] M))
         (fun a b hab => Subtype.ext (Subtype.ext hab)) (fun r p => rfl)
-    haveI : Module.Free O ↥P := Module.free_of_finite_type_torsion_free'
+    have : Module.Free O ↥P := Module.free_of_finite_type_torsion_free'
     let b := Module.finBasis O ↥P
     have hlen := length_le_of_span (fun i => b i) b.span_eq π hπ A hA'
     have hr : Module.finrank O ↥P ≤ ∑ x ∈ Z, heckeMult T act x := by
@@ -1232,7 +1232,7 @@ include hs in
 theorem length_ne_top [IsDiscreteValuationRing O] [Module.Finite O M] (Z : Finset X) :
     Module.length O (↥(upL T act (Z : Set X)) ⧸ (lowL T act (Z : Set X)).comap (upL T act (Z : Set X)).subtype) ≠ ⊤ := by
   classical
-  haveI : IsNoetherian O ↥(upL T act (Z : Set X)) := isNoetherian_upL T act hs _
+  have : IsNoetherian O ↥(upL T act (Z : Set X)) := isNoetherian_upL T act hs _
   obtain ⟨d, hd, hdu⟩ := exists_ne_zero_smul_upL_mem_lowL T act hs (Z : Set X)
   obtain ⟨k, b, hb⟩ := Module.Finite.exists_fin (R := O) (M := ↥(upL T act (Z : Set X)))
   have hle := length_le_of_span b hb ((lowL T act (Z : Set X)).comap (upL T act (Z : Set X)).subtype).mkQ
@@ -1241,7 +1241,7 @@ theorem length_ne_top [IsDiscreteValuationRing O] [Module.Finite O M] (Z : Finse
       exact hdu q q.2)
   have hfin : Module.length O (O ⧸ Ideal.span {d}) ≠ ⊤ :=
     Module.length_ne_top_iff.mpr (isFiniteLength_quotient_span_singleton O (mem_nonZeroDivisors_of_ne_zero hd))
-  exact ne_top_of_le_ne_top (WithTop.mul_ne_top (ENat.coe_ne_top k) hfin) hle
+  exact ne_top_of_le_ne_top (WithTop.mul_ne_top (ENat.natCast_ne_top k) hfin) hle
 
 theorem lenUnit_le_add {O : Type} [CommRing O] (l : ℕ) {B C E : Type} [AddCommGroup B] [Module O B] [AddCommGroup C] [Module O C]
     [AddCommGroup E] [Module O E] (n : ℕ) (hE : Module.length O E ≠ ⊤) (hB : Module.length O C = ⊤ → Module.length O B = ⊤)
@@ -1259,11 +1259,11 @@ theorem lenUnit_le_add {O : Type} [CommRing O] (l : ℕ) {B C E : Type} [AddComm
       have h' : Module.length O B ≤ ((c + n * e : ℕ) : ℕ∞) := by
         push_cast
         exact h
-      obtain ⟨k, hk⟩ := ENat.ne_top_iff_exists.mp (ne_top_of_le_ne_top (ENat.coe_ne_top _) h')
+      obtain ⟨k, hk⟩ := ENat.ne_top_iff_exists.mp (ne_top_of_le_ne_top (ENat.natCast_ne_top _) h')
       rw [← hk] at h'
       rw [← hk, ← hc, ← he]
-      simp only [ENat.toNat_coe]
-      have := ENat.coe_le_coe.mp h'
+      simp only [ENat.toNat_natCast]
+      have := ENat.natCast_le_natCast.mp h'
       exact_mod_cast this
   rw [mul_div_assoc', ← add_div]
   gcongr
@@ -1344,12 +1344,12 @@ theorem etaJ_le (h : c.Good) (j : ℕ) (w : D.what₂.places.Pl) (h1 : 1 ≤ j) 
     show ∑ i ∈ Finset.subtype c.keep (D.nd.locs j w), (cut D c).nd.etaLoc i = _
     have hF : ∀ i ∈ Finset.subtype c.keep (D.nd.locs j w), (cut D c).nd.etaLoc i = F i.1 := by
       intro i _
-      simp only [F, dif_pos i.2]
+      simp only [F, dite_eq_left i.2]
     rw [Finset.sum_congr rfl hF, Finset.sum_subtype_eq_sum_filter]
     refine Finset.sum_filter_of_ne ?_
     intro i _ hne
     by_contra hk
-    exact hne (dif_neg hk)
+    exact hne (dite_eq_right hk)
   have hD := D.etaJ_tie j w h1 h2
   have hpt : ∀ i ∈ D.nd.locs j w, D.nd.etaLoc i ≤ F i +
       (∑ π ∈ D.nd.Zgood i, (D.nd.mult i π : ℚ)) * (padicValNat (D.what₂.places.resChar w) D.what₂.restRowsFiniteGroupCard : ℚ) := by
@@ -1361,14 +1361,14 @@ theorem etaJ_le (h : c.Good) (j : ℕ) (w : D.what₂.places.Pl) (h1 : 1 ≤ j) 
     rw [hl]
     by_cases hk : c.keep i
     · have hb := eta_le h (⟨i, hk⟩ : (cut D c).nd.Loc)
-      simp only [F, dif_pos hk]
+      simp only [F, dite_eq_left hk]
       push_cast at hb
       exact hb
     · have hz : D.nd.Zgood i = ∅ := by
         rw [← Finset.not_nonempty_iff_eq_empty]
         exact fun hne => hk ((h.keep i).mpr hne)
       rw [eta_zero D.nd i hz]
-      simp only [F, dif_neg hk, zero_add]
+      simp only [F, dite_eq_right hk, zero_add]
       positivity
   have hQ : D.what₂.etaJ j w ≤ (cut D c).what₂.etaJ j w +
       (∑ i ∈ D.nd.locs j w, ∑ π ∈ D.nd.Zgood i, (D.nd.mult i π : ℚ)) *

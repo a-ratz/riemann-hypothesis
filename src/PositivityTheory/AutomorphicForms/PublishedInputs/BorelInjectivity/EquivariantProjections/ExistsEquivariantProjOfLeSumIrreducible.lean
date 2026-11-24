@@ -103,9 +103,9 @@ theorem exists_equivariant_proj_of_le_sum_irreducible {M O : Type} [AddCommGroup
     · exact Disjoint.disjoint_sup_right_of_disjoint_sup_left hCd (hW ▸ hD.disjoint)
     · rw [codisjoint_iff, ← sup_assoc, ← hW, hD.sup_eq_top]
   have hl : ∀ v ∈ V, (V.linearProjOfIsCompl (C ⊔ D) hc v : M) = v := fun v hv =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨v, hv⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨v, hv⟩)
   have hr : ∀ w ∈ C ⊔ D, V.linearProjOfIsCompl (C ⊔ D) hc w = 0 := fun w hw =>
-    Submodule.linearProjOfIsCompl_apply_right hc ⟨w, hw⟩
+    Submodule.projectionOnto_apply_right hc ⟨w, hw⟩
   refine ⟨V.subtype ∘ₗ V.linearProjOfIsCompl (C ⊔ D) hc, ?_, fun x => (V.linearProjOfIsCompl _ hc x).2, hl⟩
   intro o x hx
   rw [hW] at hx

@@ -145,7 +145,7 @@ theorem GlobalTheory.Mem.R3.Rw.chiR_of_enlarged : ∀ (B B' : Base) (f : Fr B.to
   obtain rfl := eq_of_heq h3
   obtain rfl := eq_of_heq h12
   have hmu' := eq_of_heq hmu
-  letI := z.alg
+  let := z.alg
   have halg' : ∀ y : z.core.Q.c.F, ι (algebraMap z.core.Q.c.F (w.st Z).toD7.what₂.LL y) =
       @algebraMap z.core.Q.c.F (w'.st Z').toD7.what₂.LL _ _ alg' y := by
     intro y
@@ -263,7 +263,7 @@ theorem coreBaseFrames_eq_modelFrames_enlargedCoefficientBase : ∀ (B B' : Base
   have e : @Eq (type_of% (x0')) ((by with_unfolding_all exact ((z.core.x₀) :))) (x0') := (by with_unfolding_all exact ((@eq_of_heq (type_of% (x0')) (x0') (((z.core.x₀))) (((hx)))).symm : _))
   clear (hx)
   subst e))
-  letI := z.alg
+  let := z.alg
   have hia : ∀ y : z.core.Q.c.F, ι (algebraMap z.core.Q.c.F (w.st Z).toD7.what₂.LL y) = @algebraMap _ _ _ _ alg' y := fun y =>
     (w'.st Z').toD7.what₂.embLL.injective ((hι _).trans ((z.alg_eq y).trans (halg y).symm))
   have hca : σ.comp (@algebraMap _ _ _ _ alg') = (σ.comp ι).comp (algebraMap z.core.Q.c.F (w.st Z).toD7.what₂.LL) :=
@@ -448,8 +448,8 @@ theorem enlargedBase_reading_zero_without_evaluationProperty : ∀ (B B' : Base)
             hV ▸ core'.phiJ ((i : ℕ) + 1) (σ.comp (algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL)) (wtA (κ' i)) (f : core'.R ((i : ℕ) + 1))) →
         (R'.FW i).j σ = 0 := by
   intro B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hc _ Xg tr R' hRS _ ι hι κ' hκ v₀' hv e' he i' σ'
-  letI := alg'
-  letI := z.alg
+  let := alg'
+  let := z.alg
   have hm : (w'.st Z').toD7.R.m = (w.st Z).toD7.R.m := (by with_unfolding_all exact ((congrArg (fun P : Pre => P.R.m) hPre) :))
   let i : Fin (w.st Z).toD7.R.m := ⟨i'.1, hm ▸ i'.2⟩
   have hi : (i : ℕ) = i' := rfl
@@ -607,8 +607,8 @@ theorem _root_.GlobalTheory.ksForm_baseChange :
     omega
   subst hmn
   have hLL' : LinearIndependent LL' (Φ ∘ b) := by
-    have hu : IsUnit (Matrix.of b) := Matrix.linearIndependent_rows_iff_isUnit.1 hLL
-    exact Matrix.linearIndependent_rows_iff_isUnit.2 (hu.map ι.mapMatrix)
+    have hu : IsUnit (Matrix.of b) := Matrix.linearIndependent_row_iff_isUnit.1 hLL
+    exact Matrix.linearIndependent_row_iff_isUnit.2 (hu.map ι.mapMatrix)
   refine ⟨m, Φ ∘ b, fun i => (hmem _).1 (hbW i), hKs.map' Φ hker, ?_, hLL', ?_⟩
   · rw [Set.range_comp, Submodule.span_image, hspanK]
     ext x'
@@ -1004,8 +1004,8 @@ theorem UpperTheory.cuspEvalProperty_indep_of_base_same_pre :
               ((R'.HW i σ).e ((R'.FW i).j σ ((e' i f : (R'.FW i).WK) : Fin (R'.nW i) → (w'.st Z').toD7.what₂.LL))) (v₀' i σ) =
                 hV ▸ core'.phiJ ((i : ℕ) + 1) (σ.comp (algebraMap core'.Q.c.F (w'.st Z').toD7.what₂.LL)) (wtA (κ' i)) (f : core'.R ((i : ℕ) + 1)) := by
   intro B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hc _ Xg tr R' hRS _ ι hι κ' hκ v₀' hv e' he i' σ'
-  letI := alg'
-  letI := z.alg
+  let := alg'
+  let := z.alg
   have hm : (w'.st Z').toD7.R.m = (w.st Z).toD7.R.m := (by with_unfolding_all exact ((congrArg (fun P : Pre => P.R.m) hPre) :))
   let i : Fin (w.st Z).toD7.R.m := ⟨i'.1, hm ▸ i'.2⟩
   have hi : (i : ℕ) = i' := rfl
@@ -1160,7 +1160,7 @@ private theorem moved (B B' : Base) (f : Fr B.toPre) (f' : Fr B'.toPre) (T : TwD
   clear (a2)
   subst e))
   subst a3
-  letI := z.alg
+  let := z.alg
   have halg2 : ∀ y : z.core.Q.c.F, ι (algebraMap z.core.Q.c.F (w.st Z).toD7.what₂.LL y) =
       @algebraMap z.core.Q.c.F (w'.st Z').toD7.what₂.LL _ _ ((by with_unfolding_all exact (alg' :))) y := fun y =>
     (w'.st Z').toD7.what₂.embLL.injective ((hι _).trans ((by with_unfolding_all exact (((z.alg_eq y).trans ((by with_unfolding_all exact ((halg ((y))).symm : _))) : _ = (w'.st Z').toD7.what₂.embLL (@algebraMap z.core.Q.c.F (w'.st Z').toD7.what₂.LL _ _ ((by with_unfolding_all exact (alg' :))) y)) :))))
@@ -1297,8 +1297,8 @@ theorem UpperTheory.extVecPairing_indep_of_base_same_pre :
               HEq (v₀' i' σ') (z.geo.v₀ i (σ'.comp ι))) →
           ∀ (i : Fin (w'.st Z').toD7.R.m) (σ : (w'.st Z').toD7.what₂.LL →+* ℂ), Formalism.IndefR.FWT.IsChosenExtremalVector R'.toRealDat i σ (v₀' i σ) := by
   intro B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hc _ Xg tr R' hRS _ ι hι v₀' hv i' σ'
-  letI := alg'
-  letI := z.alg
+  let := alg'
+  let := z.alg
   have hm : (w'.st Z').toD7.R.m = (w.st Z).toD7.R.m := (by with_unfolding_all exact ((congrArg (fun P : Pre => P.R.m) hPre) :))
   let i : Fin (w.st Z).toD7.R.m := ⟨i'.1, hm ▸ i'.2⟩
   have hi : (i : ℕ) = i' := rfl
@@ -1438,8 +1438,8 @@ theorem UpperTheory.localCuspNorms_indep_of_base_same_pre :
           ∀ (i : Fin (w'.st Z').toD7.R.m) (la : HeightOneSpectrum (𝓞 core'.Q.c.F)) (y : (R'.FW i).Pt la) (f : core'.cuspA ((i : ℕ) + 1) (wtA (κ' i)) (κ' i).n),
             (R'.FW i).nrm la y (e' i f) = core'.nrmM ((i : ℕ) + 1) la (pt' i la y) (f : core'.R ((i : ℕ) + 1)) := by
   intro B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hc _ Xg tr R' hRS _ ι hι κ' hκ e' he pt' hpt i'
-  letI := alg'
-  letI := z.alg
+  let := alg'
+  let := z.alg
   have hm : (w'.st Z').toD7.R.m = (w.st Z).toD7.R.m := (by with_unfolding_all exact ((congrArg (fun P : Pre => P.R.m) hPre) :))
   let i : Fin (w.st Z).toD7.R.m := ⟨i'.1, hm ▸ i'.2⟩
   have hi : (i : ℕ) = i' := rfl
@@ -1534,7 +1534,7 @@ theorem UpperTheory.pointEquiv_family_transport_of_same_pre :
   have e3 : c = z.core.Q.c := eq_of_heq h3; subst e3
   have e4 : Dw = z.core.Q.Dw := eq_of_heq h4; subst e4
   have e5 : Xo = z.core.Q.Xo := eq_of_heq h5; subst e5
-  letI := z.alg
+  let := z.alg
   exact (by with_unfolding_all exact (ex_equiv_moved (fun i => (z.R.FW i).Pt) (fun i => (R'.FW i).Pt) (fun i la => z.core.PtM ((i : ℕ) + 1) la)
     (fun i => ((hR.2.2.2.2.2.2.2.2.2.2.2.2.1 i i rfl).2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2 ι hι).2.2.2.2.1) z.geo.fw.pt :))
 end -- clump:auto
@@ -1641,7 +1641,7 @@ theorem exists_fw_mu : ∀ (B B' : Base) (f : Fr B.toPre) (f' : Fr B'.toPre) (T 
         (∀ (i : Fin (w.st Z).toD7.R.m) (i' : Fin (w'.st Z').toD7.R.m), (i : ℕ) = i' → ∀ φ φ', HEq φ' φ →
           CrdOver ι (z.geo.fw.e i φ : (z.R.FW i).WK).1 (fw'.e i' φ' : (R'.FW i').WK).1) := by
   intro B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hcore hlaws Xg tr R' hRS hmu ι hι
-  letI := alg'
+  let := alg'
   obtain ⟨κ', hκ⟩ := exists_kap B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hcore hlaws Xg tr R' hRS hmu ι hι
   obtain ⟨v₀', hv⟩ := UpperTheory.cuspCoreDatum_transport_of_same_pre B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hcore hlaws Xg tr R' hRS hmu ι hι
   obtain ⟨e', he⟩ := UpperTheory.cuspFormCoords_identification_of_same_pre B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hcore hlaws Xg tr R' hRS hmu ι hι κ' hκ
@@ -1689,7 +1689,7 @@ theorem exists_fw : ∀ (B B' : Base) (f : Fr B.toPre) (f' : Fr B'.toPre) (T : T
         (∀ (i : Fin (w.st Z).toD7.R.m) (i' : Fin (w'.st Z').toD7.R.m), (i : ℕ) = i' → ∀ φ φ', HEq φ' φ →
           CrdOver ι (z.geo.fw.e i φ : (z.R.FW i).WK).1 (fw'.e i' φ' : (R'.FW i').WK).1) := by
   intro B B' f f' T T' w w' hPre Z hX Wt z Z' hX' Wt' core' alg' halg hcore hlaws Xg tr R' hRS hf hL' ι hι
-  letI := alg'
+  let := alg'
   obtain ⟨m, hm, hm'⟩ := exists_reference_characters_over_extension (a := Z) (a' := Z') hPre z.R.toLevCh.mu0
   have hC : z.R.toLevCh.C = Top.Fr.at (w.st Z) f := z.lev.C.trans (by rw [w.C_eq])
   have hC' : R'.toLevCh.C = Top.Fr.at (w'.st Z') f' := hL'.C.trans (by rw [w'.C_eq])

@@ -100,7 +100,7 @@ theorem _root_.GlobalTheory.SiegQ.hasQ_tc {F : ℂ → ℂ}
       fun n : ℕ => (n.factorial : ℂ)⁻¹ • (_root_.GlobalTheory.SiegQ.qv M τ - 0) ^ n • iteratedDeriv n F 0 := by
     funext n
     have hexp : Complex.exp (2 * Real.pi * Complex.I * n * τ / M) = _root_.GlobalTheory.SiegQ.qv M τ ^ n := by
-      rw [_root_.GlobalTheory.SiegQ.qv, ← Complex.exp_nat_mul]
+      rw [_root_.GlobalTheory.SiegQ.qv, ← Complex.exp_natCast_mul]
       congr 1
       ring
     rw [hexp, _root_.GlobalTheory.SiegQ.tc, sub_zero, smul_eq_mul, smul_eq_mul]
@@ -164,7 +164,7 @@ theorem _root_.GlobalTheory.SiegQ.tc_lin (w : ℂ) (e : ℕ) :
         -(w * ((e.descFactorial n : ℂ) * 0 ^ (e - n))) := by
       rw [iteratedDeriv_const_sub hn, iteratedDeriv_neg, iteratedDeriv_const_mul_field,
         iteratedDeriv_pow]
-    rw [_root_.GlobalTheory.SiegQ.tc, h1, if_neg hn.ne']
+    rw [_root_.GlobalTheory.SiegQ.tc, h1, ite_eq_right hn.ne']
     rcases lt_trichotomy n e with h | rfl | h
     · simp [h.ne, Nat.sub_ne_zero_of_lt h]
     · have : (n.factorial : ℂ) ≠ 0 := by exact_mod_cast n.factorial_ne_zero
@@ -196,7 +196,7 @@ theorem Good.inv {F : ℂ → ℂ} (hF : Good R F) (h0 : ∀ z : ℂ, ‖z‖ < 
     · simpa [tc_zero] using hi
     · have h := congrFun hc (n + 1)
       simp only [conv, Finset.Nat.antidiagonal_succ, Finset.sum_cons, Finset.sum_map, tc_zero,
-        Nat.succ_ne_zero, if_false] at h
+        Nat.succ_ne_zero, ite_false] at h
       have h1 := h0 0 (by simp)
       have : tc (fun z => (F z)⁻¹) (n + 1) = -(F 0)⁻¹ * ∑ p ∈ Finset.HasAntidiagonal.antidiagonal n,
           tc F (p.1 + 1) * tc (fun z => (F z)⁻¹) p.2 := by
@@ -767,12 +767,12 @@ theorem _root_.GlobalTheory.SiegQ.sg_expansion_int : ∀ (c M a : ℕ), 0 < M �
       rw [hzdef]
       exact Complex.exp_ne_zero _
     have e1 : _root_.GlobalTheory.Sieg.ee τ = z ^ M := by
-      rw [hzdef, _root_.GlobalTheory.SiegQ.qv, ← Complex.exp_nat_mul, _root_.GlobalTheory.Sieg.ee]
+      rw [hzdef, _root_.GlobalTheory.SiegQ.qv, ← Complex.exp_natCast_mul, _root_.GlobalTheory.Sieg.ee]
       congr 1
       field_simp
     have e2 : _root_.GlobalTheory.Sieg.ee (_root_.GlobalTheory.Sieg.pt ![(a : ℚ) / M, (b : ℚ) / M] τ) =
         z ^ a * v := by
-      rw [hzdef, _root_.GlobalTheory.SiegQ.qv, ← Complex.exp_nat_mul, hvdef, _root_.GlobalTheory.Sieg.ee,
+      rw [hzdef, _root_.GlobalTheory.SiegQ.qv, ← Complex.exp_natCast_mul, hvdef, _root_.GlobalTheory.Sieg.ee,
         _root_.GlobalTheory.Sieg.ee, ← Complex.exp_add, _root_.GlobalTheory.Sieg.pt]
       congr 1
       simp only [Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
@@ -780,7 +780,7 @@ theorem _root_.GlobalTheory.SiegQ.sg_expansion_int : ∀ (c M a : ℕ), 0 < M �
       ring
     have e3 : _root_.GlobalTheory.Sieg.ee (-((_root_.GlobalTheory.SiegQ.expo c M a : ℂ) / M) * (τ : ℂ)) =
         z ^ (-_root_.GlobalTheory.SiegQ.expo c M a) := by
-      rw [hzdef, _root_.GlobalTheory.SiegQ.qv, ← Complex.exp_int_mul, _root_.GlobalTheory.Sieg.ee]
+      rw [hzdef, _root_.GlobalTheory.SiegQ.qv, ← Complex.exp_intCast_mul, _root_.GlobalTheory.Sieg.ee]
       congr 1
       push_cast
       ring

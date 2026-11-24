@@ -67,7 +67,7 @@ theorem hsA_smul (c : ℂ) (A : V' →L[ℂ] V) : hsA (c • A) = ‖c‖ ^ 2 * 
   unfold Formalism.L2.SG.Pf.EnergyAbs.hsA
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
-  rw [ContinuousLinearMap.smul_apply, norm_smul, mul_pow]
+  rw [smul_apply, norm_smul, mul_pow]
 
 private theorem sum_norm_inner_stdBasis_sq_eq_norm_sq {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [FiniteDimensional ℂ E] (x : E) :
@@ -152,7 +152,7 @@ variable {HH : Type} [NormedAddCommGroup HH] [InnerProductSpace ℂ HH]
 theorem rep_mul_apply {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) (x y : G) (a : HH) :
     σ x (σ y a) = σ (x * y) a := by
   obtain ⟨-, hmul, -, -⟩ := hσ
-  rw [hmul, ContinuousLinearMap.mul_apply]
+  rw [hmul, mul_apply_eq_comp]
 
 end Rep
 

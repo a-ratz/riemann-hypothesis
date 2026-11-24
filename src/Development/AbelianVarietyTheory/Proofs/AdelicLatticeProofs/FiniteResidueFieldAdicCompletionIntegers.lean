@@ -103,7 +103,7 @@ theorem finite_residueField_adicCompletionIntegers :
     change residue _ _ = 0
     rw [residue_eq_zero_iff, mem_maximalIdeal, mem_nonunits_iff, isUnit_algebraMap_iff]
     exact fun h => h hs
-  haveI : Finite (𝓞 K ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have : Finite (𝓞 K ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
   refine Finite.of_surjective (Ideal.Quotient.lift v.asIdeal f hker) fun y => ?_
   obtain ⟨y, rfl⟩ := residue_surjective y
   obtain ⟨s, hs⟩ := Idele.exists_valued_sub_le v (a := (y : v.adicCompletion K)) y.2 1
@@ -359,7 +359,7 @@ theorem locEmb_mem_locOrder_iff (z : E) : locEmb v z ∈ locOrder v ↔ z ∈ se
 theorem exists_frame {L : Submodule (𝓞 E) (Fin r → E)} (hL : ReciprocityTheory.MultiplicativeHeights.IsLattice L) :
     ∃ g : GL (Fin r) E, ∀ x, (∃ s ∉ v.asIdeal, algebraMap (𝓞 (maximalRealSubfield E)) (𝓞 E) s • x ∈ L) ↔
       ∀ i, (((g⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) *ᵥ x) i ∈ semiLoc v := by
-  haveI : Submodule.IsFullLattice E (Submodule.span (semiLoc v) (L : Set (Fin r → E))) := {
+  have : Submodule.IsFullLattice E (Submodule.span (semiLoc v) (L : Set (Fin r → E))) := {
     toIsLattice := Submodule.IsLattice.of_fg E (by
       obtain ⟨s, rfl⟩ := hL.1
       exact ⟨s, (Submodule.span_span_of_tower (𝓞 E) _ _).symm⟩)
@@ -634,8 +634,8 @@ theorem exists_eq_transpose_mul_map_locConj {M N : Matrix (Fin r) (Fin r) (LocAl
         locOrder v) ∧
       M = (P : Matrix (Fin r) (Fin r) (LocAlg v))ᵀ *
         (P : Matrix (Fin r) (Fin r) (LocAlg v)).map (locConj v) := by
-  haveI := isAdicComplete_adicCompletionIntegers v
-  haveI := finite_residueField_adicCompletionIntegers v
+  have := isAdicComplete_adicCompletionIntegers v
+  have := finite_residueField_adicCompletionIntegers v
   let φ : locOrder v →+* LocAlg v := (locOrder v).val
   let M' : Matrix (Fin r) (Fin r) (locOrder v) := Matrix.of fun i j => ⟨M i j, hM i j⟩
   let N' : Matrix (Fin r) (Fin r) (locOrder v) := Matrix.of fun i j => ⟨N i j, hN i j⟩
@@ -868,7 +868,7 @@ theorem one_genus_of_modular (h𝔟 : 𝔟 ≠ 0) (hc : ∀ z ∈ 𝔟, cc z ∈
   classical
   choose γ hγ using exists_isLocalIsometry_of_modular h𝔟 hc hG hG hd hd hL hL' hmod hmod'
   refine ⟨fun v => if locLattice v L' = locLattice v L then 1 else γ v, fun v => ?_,
-    (finite_setOf_locLattice_ne hL' hL).subset fun v hv h => hv (if_pos h)⟩
+    (finite_setOf_locLattice_ne hL' hL).subset fun v hv h => hv (ite_eq_left h)⟩
   beta_reduce
   split_ifs with h
   exacts [(isLocalIsometry_one_iff v).2 h, hγ v]

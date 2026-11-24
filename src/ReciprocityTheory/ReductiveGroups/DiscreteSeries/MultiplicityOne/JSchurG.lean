@@ -46,11 +46,11 @@ namespace ReciprocityTheory.ChartRestriction.DS.Mult1
 
 theorem stSchurG : StSchurG := by
   intro k r Wp _ _ _ D X _ hX
-  letI := X.hN
-  letI := X.hI
-  letI := X.hC
+  let := X.hN
+  let := X.hI
+  let := X.hC
 
-  haveI : Nontrivial X.Hs := ⟨⟨X.w, 0, fun h => by
+  have : Nontrivial X.Hs := ⟨⟨X.w, 0, fun h => by
     have hw := X.w_norm
     rw [h, norm_zero] at hw
     exact zero_ne_one hw⟩⟩

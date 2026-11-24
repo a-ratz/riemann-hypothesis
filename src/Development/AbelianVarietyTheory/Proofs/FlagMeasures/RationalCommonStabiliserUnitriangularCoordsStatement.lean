@@ -201,10 +201,10 @@ theorem ptEntry_monomial {K : Type} [Field K] (bs : List (K × ℕ)) (hbs : ∀ 
     simp only [Formalism.L2.SG.RealObj.blkOf, ptEntry]
     by_cases h1 : a < m
     · have h2 : m - 1 - a < m := by omega
-      simp only [h1, h2, if_true]
+      simp only [h1, h2, ite_true]
       refine ⟨by omega, by omega, trivial, ht0, fun b hb => ?_⟩
       by_cases h3 : b < m
-      · simp only [h3, if_true, and_self]
+      · simp only [h3, ite_true, and_self]
         refine ⟨fun _ => le_refl _, fun _ => by omega, ?_⟩
         have : a + b + 1 = m ↔ b = m - 1 - a := by omega
         simp [this]
@@ -214,7 +214,7 @@ theorem ptEntry_monomial {K : Type} [Field K] (bs : List (K × ℕ)) (hbs : ∀ 
     · obtain ⟨e1, e2, e3, e0, e4⟩ := h (a - m) (by omega)
       have h2 : ¬ σ (a - m) + m < m := by omega
       have h4 : m ≤ a := by omega
-      simp only [h1, h2, if_false, Nat.add_sub_cancel, e2, e3]
+      simp only [h1, h2, ite_false, Nat.add_sub_cancel, e2, e3]
       refine ⟨by omega, by omega, trivial, e0, fun b hb => ?_⟩
       by_cases h3 : b < m
       · have h5 : ¬ m ≤ b := by omega
@@ -224,7 +224,7 @@ theorem ptEntry_monomial {K : Type} [Field K] (bs : List (K × ℕ)) (hbs : ∀ 
       · obtain ⟨f1, f2, f3⟩ := e4 (b - m) (by omega)
         have h5 : m ≤ b := by omega
         have h6 : b = σ (a - m) + m ↔ b - m = σ (a - m) := by omega
-        simp only [h3, h5, h4, if_false, h6, f3, and_self, and_false, and_true]
+        simp only [h3, h5, h4, ite_false, h6, f3, and_self, and_false, and_true]
         refine ⟨fun hab => ?_, fun hab => ?_, by simp⟩
         · have := f1 (by omega); omega
         · have := f2 (by omega); omega
@@ -293,11 +293,11 @@ theorem stab_blockDiag : ∀ {K : Type} [Field K] (sig : K →+* K), (∀ x, sig
       have hij' : i < j := OrderDual.toDual_lt_toDual.1 hij
       rw [hLapp', (hs j i).1 hij', map_zero]
     have hdet : L.det = 1 := by
-      rw [Matrix.det_of_lowerTriangular L hLT]
+      rw [Matrix.det_of_isLowerTriangular L hLT]
       refine Finset.prod_eq_one fun i _ => ?_
       rw [hLapp', (hs i i).2 rfl, map_one]
     have hu : IsUnit L.det := by rw [hdet]; exact isUnit_one
-    letI : Invertible L := Matrix.invertibleOfIsUnitDet L hu
+    let : Invertible L := Matrix.invertibleOfIsUnitDet L hu
     have hBT := Matrix.blockTriangular_inv_of_blockTriangular hLT
     have e : L⁻¹ * Z = Z * s' := by
       calc L⁻¹ * Z = L⁻¹ * (L * Z * s') := by rw [hE]
@@ -312,10 +312,10 @@ theorem stab_blockDiag : ∀ {K : Type} [Field K] (sig : K →+* K), (∀ x, sig
     · exact (hs' a b).1 (hlt _ _ h1)
   · have hs'T : s'.BlockTriangular id := fun i j hij => (hs' i j).1 hij
     have hdet : s'.det = 1 := by
-      rw [Matrix.det_of_upperTriangular hs'T]
+      rw [Matrix.det_of_isUpperTriangular hs'T]
       exact Finset.prod_eq_one fun i _ => (hs' i i).2 rfl
     have hu : IsUnit s'.det := by rw [hdet]; exact isUnit_one
-    letI : Invertible s' := Matrix.invertibleOfIsUnitDet s' hu
+    let : Invertible s' := Matrix.invertibleOfIsUnitDet s' hu
     have hUup := Matrix.blockTriangular_inv_of_blockTriangular hs'T
     have hs'β : s'.BlockTriangular (OrderDual.toDual ∘ β) := fun i j hij =>
       hbd i j (ne_of_lt (OrderDual.toDual_lt_toDual.1 hij))

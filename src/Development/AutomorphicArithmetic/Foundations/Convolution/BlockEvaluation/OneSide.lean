@@ -153,7 +153,7 @@ private theorem pres_of_comm (V : Submodule ℂ H) (hV : IsClosed (V : Set H)) (
   intro v hv
   obtain ⟨a1, a2, -⟩ := prj_facts V hV
   have := congrArg (fun S : H →L[ℂ] H => S v) h
-  simp only [ContinuousLinearMap.mul_apply, a2 v hv] at this
+  simp only [mul_apply_eq_comp, a2 v hv] at this
   rw [this]; exact a1 _
 
 private theorem eig_pres (V : Submodule ℂ H) (hV : IsClosed (V : Set H)) (A T : H →L[ℂ] H) (x : ℝ)
@@ -163,14 +163,14 @@ private theorem eig_pres (V : Submodule ℂ H) (hV : IsClosed (V : Set H)) (A T 
   have h2 : A v = (x : ℂ) • v := Module.End.mem_eigenspace_iff.1 hv.2
   refine Module.End.mem_eigenspace_iff.2 ?_
   have := congrArg (fun S : H →L[ℂ] H => S v) hA.eq
-  simp only [ContinuousLinearMap.mul_apply, h2, map_smul] at this
+  simp only [mul_apply_eq_comp, h2, map_smul] at this
   exact this.symm
 
 private theorem trOn_scalar (V : Submodule ℂ H) (hV : IsClosed (V : Set H)) (A Q B : H →L[ℂ] H) (x : ℝ) (a : ℂ)
     (hsa : IsSelfAdjoint A) (hAV : Commute A (prj V)) (hQV : Commute Q (prj V)) (hQA : Commute Q A)
     [FiniteDimensional ℂ (eigIn V A x)] (hQ : ∀ v ∈ eigIn V A x, Q v = a • v) :
     trOn (eigIn V A x) (A * Q * B) = x * a * trOn (eigIn V A x) B := by
-  have hE : IsClosed (eigIn V A x : Set H) := (eigIn V A x).closed_of_finiteDimensional
+  have hE : IsClosed (eigIn V A x : Set H) := (eigIn V A x).isClosed_of_finiteDimensional
   obtain ⟨a1, a2, a3⟩ := prj_facts _ hE
   obtain ⟨-, -, b3⟩ := prj_facts _ hV
   have hc : (eigIn V A x).topologicalClosure = eigIn V A x := hE.submodule_topologicalClosure_eq
@@ -191,12 +191,12 @@ private theorem trOn_scalar (V : Submodule ℂ H) (hV : IsClosed (V : Set H)) (A
     have h1 := congrArg (fun S : H →L[ℂ] H => S (B (prj (eigIn V A x) v))) hcomm
     have hm := a1 (B (prj (eigIn V A x) v))
     have h2 : A (prj (eigIn V A x) (B (prj (eigIn V A x) v))) = (x : ℂ) • _ := Module.End.mem_eigenspace_iff.1 hm.2
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.mul_apply, ContinuousLinearMap.smul_apply] at h1 ⊢
+    simp only [ContinuousLinearMap.comp_apply, mul_apply_eq_comp, smul_apply] at h1 ⊢
     rw [← h1, hQ _ hm, map_smul, h2, smul_smul, mul_comm]
   unfold trOn
   rw [e]
   unfold trace
-  simp only [ContinuousLinearMap.smul_apply, inner_smul_right]
+  simp only [smul_apply, inner_smul_right]
   exact tsum_mul_left
 
 private theorem final_arith (C τ u q r k zN zN' x y : ℝ) (hτ : 0 ≤ τ) (hu : 0 ≤ u) (hq : 0 ≤ q) (hr : 0 ≤ r)
@@ -283,8 +283,8 @@ theorem UpperTheory.ConvolutionTheory.Ci.oneSide :
   have hTn : (traceNorm (Pc μ * (𝔰.toAmp.A * ev Q * (𝔰.Uq 0 ^ j * Rop μ 𝔰.g)) * Pc μ)).toReal ≤
       ‖ev Q‖ * ‖𝔰.Uq 0‖ ^ j * (traceNorm (Pc μ * (𝔰.toAmp.A * Rop μ 𝔰.g) * Pc μ)).toReal := by
     rw [eT]
-    refine (ENNReal.toReal_mono (ENNReal.mul_ne_top enorm_ne_top htc.ne) (traceNorm_comp_left_le _ _)).trans ?_
-    rw [ENNReal.toReal_mul, toReal_enorm]
+    refine (ENNReal.toReal_mono (ENNReal.mul_ne_top eNorm_ne_top htc.ne) (traceNorm_comp_left_le _ _)).trans ?_
+    rw [ENNReal.toReal_mul, toReal_eNorm]
     exact mul_le_mul_of_nonneg_right ((norm_mul_le _ _).trans (mul_le_mul_of_nonneg_left hu (norm_nonneg _)))
       ENNReal.toReal_nonneg
   have k4 := hs3 (cheb η m) 1 (𝔰.toAmp.A * ev Q * (𝔰.Uq 0 ^ j * Rop μ 𝔰.g)) (cheb_cont η m) zero_le_one hb1
@@ -304,7 +304,7 @@ theorem UpperTheory.ConvolutionTheory.Ci.oneSide :
         ((𝔰.toAmp.A * ev Q * (𝔰.Uq 0 ^ j * Rop μ 𝔰.g)) ∘L θ.U) := by
     refine Finset.sum_congr rfl fun p hp => ?_
     have hV := ((hs1 p).1 hp).2.1
-    haveI := hs2 p hp
+    have := hs2 p hp
     rw [← trOn_scalar p.2 hV.closed 𝔰.toAmp.A (ev Q) _ p.1 (a p) hsa (hcV _ hAin _ hV) (hcV _ (hin Q) _ hV) (hQA Q) (ha p hp)]
     rfl
   rw [e2]

@@ -73,7 +73,7 @@ def l2Map : Sm E a →ₗ[ℂ] L2 (latticeGL E a) μ :=
 theorem l2Map_apply {ψ : Sm E a} (h : ψ ∈ squareIntegrableSmoothSubmoduleGL μ) : l2Map μ ψ = ((mem_l2Sub μ).1 h).toL2 := by
   unfold l2Map
   rw [LinearMap.comp_apply]
-  have e := Submodule.linearProjOfIsCompl_apply_left (Classical.choose_spec (Submodule.exists_isCompl (squareIntegrableSmoothSubmoduleGL μ))) ⟨ψ, h⟩
+  have e := Submodule.projectionOnto_apply_left (Classical.choose_spec (Submodule.exists_isCompl (squareIntegrableSmoothSubmoduleGL μ))) ⟨ψ, h⟩
   erw [e]
   rfl
 

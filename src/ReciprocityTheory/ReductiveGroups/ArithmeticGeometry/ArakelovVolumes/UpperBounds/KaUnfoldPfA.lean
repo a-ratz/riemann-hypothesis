@@ -325,13 +325,13 @@ theorem tl_D (X : Data E r) :
       Matrix.diagonal_apply, Matrix.one_apply, ExF.qI, Fin.ext_iff, Nat.add_left_cancel_iff]
     split_ifs <;> simp [sgn]
   · simp only [tl, Matrix.submatrix_apply, eT_inl, eT_inr, Jf, Matrix.neg_apply, Matrix.fromBlocks_apply₁₂,
-      Matrix.diagonal_apply, ExF.qI, Fin.ext_iff, Fin.coe_castLE, Matrix.zero_apply, neg_zero]
-    rw [if_neg]; have := i'.isLt; omega
+      Matrix.diagonal_apply, ExF.qI, Fin.ext_iff, Fin.val_castLE, Matrix.zero_apply, neg_zero]
+    rw [ite_eq_right]; have := i'.isLt; omega
   · simp only [tl, Matrix.submatrix_apply, eT_inl, eT_inr, Jf, Matrix.neg_apply, Matrix.fromBlocks_apply₂₁,
-      Matrix.diagonal_apply, ExF.qI, Fin.ext_iff, Fin.coe_castLE, Matrix.zero_apply, neg_zero]
-    rw [if_neg]; have := i.isLt; omega
+      Matrix.diagonal_apply, ExF.qI, Fin.ext_iff, Fin.val_castLE, Matrix.zero_apply, neg_zero]
+    rw [ite_eq_right]; have := i.isLt; omega
   · simp only [tl, Matrix.submatrix_apply, eT_inr, Jf, Matrix.neg_apply, Matrix.fromBlocks_apply₂₂,
-      Matrix.diagonal_apply, Matrix.neg_apply, Matrix.one_apply, Fin.ext_iff, Fin.coe_castLE, neg_neg]
+      Matrix.diagonal_apply, Matrix.neg_apply, Matrix.one_apply, Fin.ext_iff, Fin.val_castLE, neg_neg]
     split_ifs with h <;> simp [sgn, i.isLt]
 
 theorem gm_upq (X : Data E r) {x0 : Frame X.Ψ r} (ho : IsOrth X x0) {γ : GL (Fin r) E} (hγ : γ ∈ X.Γ)

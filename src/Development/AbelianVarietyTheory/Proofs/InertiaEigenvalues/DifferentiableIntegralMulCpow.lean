@@ -90,7 +90,7 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem continuous_absDet : Continuous fun g : GA E a => (ideleModule E (GeneralLinearGroup.det g) : ℝ) :=
-  continuous_subtype_val.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
+  continuous_subtypeVal.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
 
 theorem absDet_zpow_mul (n : ℤ) (g : GA E a) :
     (ideleModule E (GeneralLinearGroup.det (splitCentre E a 1 ^ n * g)) : ℝ) =
@@ -132,19 +132,19 @@ theorem integrableOn_absDet_rpow_neg (ha : 0 < a) (μ : Measure (GA E a)) [μ.Is
     · rintro ⟨g, hg⟩
       obtain ⟨γ, n, rfl⟩ := mem_latticeGL_iff.1 hg
       exact ⟨⟨⟨_, γ, rfl⟩, n⟩, rfl⟩
-  haveI : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hd := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom (latticeGL E a) μ
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have h1 : μ (GlobalTheory.AutomorphicL2Unitary.stdDom (latticeGL E a)) ≠ ⊤ := by
     rw [← GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ hd]; exact measure_ne_top _ _
   rw [← GlobalTheory.ThetaUnfold.lintegral_unfold μ (latticeGL E a) (ratGL E a).range (fun n : ℤ => splitCentre E a 1 ^ n)
     (Equiv.ofBijective φ hφ) (fun _ => rfl) hd h𝓕 _
-    (by rintro _ ⟨γ, rfl⟩ g; simp only [Set.indicator_apply, Set.mem_setOf_eq]; rw [show δ (ratGL E a γ * g) = δ g from hδr γ g])
+    (by rintro _ ⟨γ, rfl⟩ g; simp only [Set.indicator_apply, Set.mem_ofPred_eq]; rw [show δ (ratGL E a γ * g) = δ g from hδr γ g])
     ((hc.measurable.ennreal_ofReal.indicator hm).aemeasurable)]
   obtain ⟨B, hB, h⟩ := exists_tsum_zpow_le hT1 hs
   refine (lintegral_mono (g := fun _ => B) fun g => ?_).trans_lt ?_
   · refine le_of_eq_of_le (tsum_congr fun n => ?_) (h _ (hδ0 g))
-    simp only [Set.indicator_apply, Set.mem_setOf_eq]
+    simp only [Set.indicator_apply, Set.mem_ofPred_eq]
     rw [hδz]
   · rw [setLIntegral_const]
     exact ENNReal.mul_lt_top hB.lt_top h1.lt_top
@@ -176,7 +176,7 @@ theorem IsSmallKernel.tsum_le {Ψ : GA E a → (Fin a → Ad E) → ℂ} (hΨ : 
       ∑' ξ : {ξ : Fin a → E // ξ ≠ 0}, ‖Ψ g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* g.val)‖ ≤
         C * (ideleModule E (GeneralLinearGroup.det g) : ℝ) ^ (-(N : ℝ)) := by
   rcases Nat.eq_zero_or_pos a with rfl | ha
-  · haveI : IsEmpty {ξ : Fin 0 → E // ξ ≠ 0} := ⟨fun ξ => ξ.2 (Subsingleton.elim _ _)⟩
+  · have : IsEmpty {ξ : Fin 0 → E // ξ ≠ 0} := ⟨fun ξ => ξ.2 (Subsingleton.elim _ _)⟩
     exact ⟨0, fun g => ⟨summable_empty, by simp⟩⟩
   obtain ⟨⟨L, hL, hsupp⟩, hb⟩ := hΨ
   obtain ⟨J, hJ⟩ := exists_subset_idealFiniteAdeles (isCompact_iUnion fun i : Fin a => hL.image (continuous_apply i))
@@ -299,7 +299,7 @@ theorem IsSmallKernel.integrableOn {Ψ : GA E a → (Fin a → Ad E) → ℂ} (h
     Differentiable ℂ fun s : ℂ => ∫ g in 𝓕 ∩ {g | 1 ≤ (ideleModule E (GeneralLinearGroup.det g) : ℝ)},
       (∑' ξ : {ξ : Fin a → E // ξ ≠ 0}, Ψ g ((fun j => algebraMap E (Ad E) (ξ.1 j)) ᵥ* g.val)) *
         ((ideleModule E (GeneralLinearGroup.det g) : ℝ) : ℂ) ^ s ∂μ := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
   set δ : GA E a → ℝ := fun g => (ideleModule E (GeneralLinearGroup.det g) : ℝ) with hδ
   have hδc : Continuous δ := continuous_absDet
   have hδ0 : ∀ g, 0 < δ g := fun g => (ideleModule E _).2
@@ -313,7 +313,7 @@ theorem IsSmallKernel.integrableOn {Ψ : GA E a → (Fin a → Ad E) → ℂ} (h
       (𝓕 ∩ {g | 1 ≤ δ g}) μ := by
     intro x
     rcases Nat.eq_zero_or_pos a with rfl | ha
-    · haveI : IsEmpty {ξ : Fin 0 → E // ξ ≠ 0} := ⟨fun ξ => ξ.2 (Subsingleton.elim _ _)⟩
+    · have : IsEmpty {ξ : Fin 0 → E // ξ ≠ 0} := ⟨fun ξ => ξ.2 (Subsingleton.elim _ _)⟩
       simp
     obtain ⟨C, hC⟩ := hΨ.tsum_le (N := ⌈x⌉₊ + 1) (by omega)
     have hΘ : AEStronglyMeasurable (fun g : GA E a =>

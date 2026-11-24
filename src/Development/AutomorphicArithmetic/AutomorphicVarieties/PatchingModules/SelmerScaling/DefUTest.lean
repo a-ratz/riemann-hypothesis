@@ -75,7 +75,7 @@ private theorem trBnd_den {K : Type} [Field K] (Q : Submodule (PowerSeries K) (F
   obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finset
     (nonZeroDivisors (PowerSeries K)) T
   have hb0 : (b : PowerSeries K) ≠ 0 := nonZeroDivisors.coe_ne_zero b
-  obtain ⟨s, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hb0 PowerSeries.X_irreducible
+  obtain ⟨s, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hb0 PowerSeries.irreducible_X
   refine ⟨s, fun z hz => ?_⟩
   induction hz using Submodule.span_induction with
   | mem z hz =>
@@ -94,8 +94,8 @@ private theorem trBnd_den {K : Type} [Field K] (Q : Submodule (PowerSeries K) (F
 theorem UpperTheory.V.Pa.trBnd :
     ∀ (l : ℕ) [Fact l.Prime] (S : Ctx l), ∀ (R : Type) [CommRing R] [Algebra S.F R] (e : R →ₐ[S.F] S.F) (θ : S.U.AA →+* R), S.Test R e θ → ∀ (lam : R →ₗ[S.F] S.F) (i j : Fin S.n), BndF S.x.t fun g : S.G.G₀ => lam (θ (S.U.vr g i j)) := by
   intro l _ S R _ _ e θ hT lam i j
-  letI : Algebra S.x.A R := ((algebraMap S.F R).comp (algebraMap S.x.A S.F)).toAlgebra
-  haveI : IsScalarTower S.x.A S.F R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra S.x.A R := ((algebraMap S.F R).comp (algebraMap S.x.A S.F)).toAlgebra
+  have : IsScalarTower S.x.A S.F R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨M, -, -, -, hM, P, hP, hPm, hMP⟩ := trLat l S R e θ hT
   obtain ⟨s, hs⟩ := trBnd_den (P.map (lam.restrictScalars S.x.A)) (hP.map _)
   have hs' : ∀ z ∈ P, ∃ a : S.x.A, algebraMap S.x.A S.F a = algebraMap S.x.A S.F S.x.t ^ s * lam z :=
@@ -116,7 +116,7 @@ theorem UpperTheory.V.Pa.trBnd :
   rw [IsLocallyConstant.iff_exists_open]
   intro g
   refine ⟨{y | g⁻¹ * y ∈ V}, V.toOpenSubgroup.isOpen.preimage (continuous_const.mul continuous_id), ?_, ?_⟩
-  · simp only [Set.mem_setOf_eq, inv_mul_cancel]
+  · simp only [Set.mem_ofPred_eq, inv_mul_cancel]
     exact one_mem V
   · intro y hy
     obtain ⟨z, hz, hq⟩ := key _ (hV g _ hy)
@@ -224,7 +224,7 @@ theorem UpperTheory.V.Pa.defUTest :
     · intro v i g
       exact hψ v i g
     · intro v i g
-      simp only [ψ, MonoidHom.comp_apply, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe,
+      simp only [ψ, MonoidHom.comp_apply, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass,
         RingHom.coe_comp, Function.comp_apply, hθ, hB]
       refine ⟨?_, ?_, ?_, ?_⟩ <;>
         first

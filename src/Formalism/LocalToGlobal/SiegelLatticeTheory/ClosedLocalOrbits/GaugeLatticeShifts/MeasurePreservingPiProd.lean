@@ -122,11 +122,11 @@ theorem wtLoc_nonneg (k : ℕ) (T T' : ℝ) {c : Fin (r + 1) → ℂ} (hc : c �
 
 theorem measurableSet_goodLoc (T T' : ℝ) : MeasurableSet (GoodLoc (r := r) T T') := by
   have h1 : IsOpen {c : Fin (r + 1) → ℂ | ∀ l, c l ≠ 0} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun l => isOpen_ne_fun (continuous_apply l) continuous_const
   have h2 : IsOpen {c : Fin (r + 1) → ℂ | 0 < Gv T T' (Matrix.diagonal c)} :=
     isOpen_lt continuous_const (gv_cont T T')
-  rw [GoodLoc, Set.setOf_and]
+  rw [GoodLoc, Set.ofPred_and]
   exact (h1.inter h2).measurableSet
 
 def nuLoc (k : ℕ) (T T' C : ℝ) : Measure (Fin (r + 1) → ℂ) :=

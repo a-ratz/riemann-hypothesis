@@ -52,7 +52,7 @@ theorem jumpsCard_of_built_alt (hH : HtCard) {hL : _root_.UpperTheory.Zero.LLC.R
   intro i a r w τ hw hτ hdR
   have hdA := ((Au.wdOf i a r w).2.2.2.1).mp hdR
   have e1 := (Au.wdOf i a r w).2.2.2.2 τ
-  haveI : Fact (L.X.nd.l i).Prime := L.X.nd.lPrime i
+  have : Fact (L.X.nd.l i).Prime := L.X.nd.lPrime i
   have e2 := hp.card _ (L.Y.naut.iotaQC i) a r τ w trivial (fun x => (hτ x).symm) hdA
   show Multiset.card (L.Y.jumpsW i r τ) = a
   rw [e1, e2]

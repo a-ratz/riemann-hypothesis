@@ -67,12 +67,12 @@ open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr Uppe
 private theorem pe_const {k K : Type} [Field k] [Finite k] [Field K] (φ : k →+* PowerSeries K) (a : k) :
     φ a = PowerSeries.C (PowerSeries.constantCoeff (φ a)) := by
   classical
-  letI : Fintype k := Fintype.ofFinite k
+  let : Fintype k := Fintype.ofFinite k
   set p := ringChar k with hpdef
-  haveI : CharP k p := ringChar.charP k
-  haveI : Fact p.Prime := ⟨CharP.char_is_prime k p⟩
+  have : CharP k p := ringChar.charP k
+  have : Fact p.Prime := ⟨CharP.char_is_prime k p⟩
   obtain ⟨m, _, hcard⟩ := FiniteField.card k p
-  haveI : CharP (PowerSeries K) p := charP_of_injective_ringHom φ.injective p
+  have : CharP (PowerSeries K) p := charP_of_injective_ringHom φ.injective p
   set f := φ a with hf
   set c := PowerSeries.constantCoeff f with hc
   set g := f - PowerSeries.C c with hg
@@ -106,13 +106,13 @@ private theorem pe_curve (l : ℕ) [Fact l.Prime] (O O' R : Type) [CommRing O] [
     (hm : ∀ a ∈ maximalIdeal O, algebraMap O R a ∈ p) :
     ∃ (K : Type) (_ : Field K) (_ : Finite K) (_ : Algebra (ResidueField O) K) (_ : Algebra O K)
       (_ : IsScalarTower O (ResidueField O) K) (j : R →ₐ[O] PowerSeries K), RingHom.ker j = p ∧ IsLocalHom j := by
-  haveI : Nontrivial (R ⧸ p) := Ideal.Quotient.nontrivial_iff.mpr hp.ne_top
-  haveI : IsDomain (R ⧸ p) := (Ideal.Quotient.isDomain_iff_prime p).mpr hp
-  haveI hco : IsCO O' (R ⧸ p) := co_quot O' R (R ⧸ p) (Ideal.Quotient.mkₐ O' p) Ideal.Quotient.mk_surjective
-  haveI : IsNoetherianRing (R ⧸ p) := hco.toIsNoetherian
-  haveI : IsAdicComplete (maximalIdeal (R ⧸ p)) (R ⧸ p) := hco.complete
-  haveI : IsLocalHom (algebraMap O' (R ⧸ p)) := hco.isLocalHom
-  haveI : Finite (ResidueField (R ⧸ p)) := by
+  have : Nontrivial (R ⧸ p) := Ideal.Quotient.nontrivial_iff.mpr hp.ne_top
+  have : IsDomain (R ⧸ p) := (Ideal.Quotient.isDomain_iff_prime p).mpr hp
+  have hco : IsCO O' (R ⧸ p) := co_quot O' R (R ⧸ p) (Ideal.Quotient.mkₐ O' p) Ideal.Quotient.mk_surjective
+  have : IsNoetherianRing (R ⧸ p) := hco.toIsNoetherian
+  have : IsAdicComplete (maximalIdeal (R ⧸ p)) (R ⧸ p) := hco.complete
+  have : IsLocalHom (algebraMap O' (R ⧸ p)) := hco.isLocalHom
+  have : Finite (ResidueField (R ⧸ p)) := by
     refine Finite.of_surjective (ResidueField.map (algebraMap O' (R ⧸ p))) ?_
     intro y
     obtain ⟨z, rfl⟩ := residue_surjective y
@@ -120,7 +120,7 @@ private theorem pe_curve (l : ℕ) [Fact l.Prime] (O O' R : Type) [CommRing O] [
     refine ⟨residue O' a, ?_⟩
     rw [ResidueField.map_residue, eq_comm]
     exact Ideal.Quotient.eq.mpr ha
-  haveI : CharP (R ⧸ p) l := by
+  have : CharP (R ⧸ p) l := by
     rw [CharP.charP_iff_prime_eq_zero (Fact.out)]
     rw [← map_natCast (Ideal.Quotient.mk p), Ideal.Quotient.eq_zero_iff_mem]
     exact hl
@@ -130,9 +130,9 @@ private theorem pe_curve (l : ℕ) [Fact l.Prime] (O O' R : Type) [CommRing O] [
   let ψ : ResidueField O →+* R ⧸ p := Ideal.Quotient.lift (maximalIdeal O) g hg
   let φ : ResidueField O →+* PowerSeries k := f.comp ψ
   let c : ResidueField O →+* k := PowerSeries.constantCoeff.comp φ
-  letI ak : Algebra (ResidueField O) k := c.toAlgebra
-  letI aO : Algebra O k := (c.comp (residue O)).toAlgebra
-  haveI tw : IsScalarTower O (ResidueField O) k := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let ak : Algebra (ResidueField O) k := c.toAlgebra
+  let aO : Algebra O k := (c.comp (residue O)).toAlgebra
+  have tw : IsScalarTower O (ResidueField O) k := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let j : R →ₐ[O] PowerSeries k :=
     { toRingHom := f.comp (Ideal.Quotient.mk p)
       commutes' := by
@@ -147,7 +147,7 @@ private theorem pe_curve (l : ℕ) [Fact l.Prime] (O O' R : Type) [CommRing O] [
   · refine ⟨fun z hz => ?_⟩
     have h1 : IsUnit (f (Ideal.Quotient.mk p z)) := hz
     have h2 : IsUnit (Ideal.Quotient.mk p z) := hfl.map_nonunit _ h1
-    haveI := IsLocalHom.of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
+    have := IsLocalHom.of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
     exact IsLocalHom.map_nonunit _ h2
 
 private theorem pe_res {O B K : Type} [CommRing O] [IsLocalRing O] [CommRing B] [Algebra O B] [IsCO O B] [Field K]
@@ -155,8 +155,8 @@ private theorem pe_res {O B K : Type} [CommRing O] [IsLocalRing O] [CommRing B] 
     (hf : ∀ a, f (algebraMap O B a) = algebraMap O K a) :
     f = (algebraMap (ResidueField O) K).comp (res O B : B →+* ResidueField O) := by
   have hmax : RingHom.ker f = maximalIdeal B := by
-    haveI : (RingHom.ker f).IsPrime := RingHom.ker_isPrime f
-    haveI : Finite (B ⧸ RingHom.ker f) := Finite.of_injective _ (RingHom.kerLift_injective f)
+    have : (RingHom.ker f).IsPrime := RingHom.ker_isPrime f
+    have : Finite (B ⧸ RingHom.ker f) := Finite.of_injective _ (RingHom.kerLift_injective f)
     have hM := Ideal.Quotient.maximal_of_isField _ (Finite.isField_of_domain (B ⧸ RingHom.ker f))
     exact IsLocalRing.eq_maximalIdeal hM
   ext b
@@ -368,7 +368,7 @@ private theorem pe_ine {k : Type} [Field k] [Algebra (ResidueField O) k] [CharP 
     rw [Polynomial.map_sub, sub_eq_zero] at hd
     rw [hd]
     simp
-  haveI : CharP k l := charP_of_injective_algebraMap (algebraMap (ResidueField O) k).injective l
+  have : CharP k l := charP_of_injective_algebraMap (algebraMap (ResidueField O) k).injective l
   have hm : IsUnit ((m : ℕ) : PowerSeries k) := by
     rw [PowerSeries.isUnit_iff_constantCoeff, map_natCast, isUnit_iff_ne_zero, Ne, CharP.cast_eq_zero_iff k l]
     exact hlm
@@ -388,15 +388,15 @@ theorem UpperTheory.V.Pr.pointEx_of_le {l : ℕ} [Fact l.Prime] {O : Type} [Comm
       W.mat y.ρ = T.K.tw (L.ρ.map (j : L.R →+* y.A)) ∧ y.ψ = T.K.twψ (L.ρ.map (j : L.R →+* y.A)) ∧
       T.B.IsPt y (j.comp (T.phi Φ L)) := by
   classical
-  haveI : Finite (ResidueField O) := IsCoef.fin (l := l)
+  have : Finite (ResidueField O) := IsCoef.fin (l := l)
   have hl : ((l : ℕ) : L.R) ∈ p := by
     have h1 : ((l : ℕ) : O) ∈ maximalIdeal O := by
       rw [← IsLocalRing.residue_eq_zero_iff, map_natCast]
-      haveI := IsCoef.char (l := l) (O := O)
+      have := IsCoef.char (l := l) (O := O)
       exact CharP.cast_eq_zero _ l
     have h2 := hm _ h1
     rwa [map_natCast] at h2
-  haveI : Finite (ResidueField L.O') := IsCoef.fin (l := l)
+  have : Finite (ResidueField L.O') := IsCoef.fin (l := l)
   obtain ⟨K, _, _, _, _, _, j, hjk, hjl⟩ := pe_curve l O L.O' L.R p hp hd hl hm
   have hSu : T.S.u.map (T.S.A.val : T.S.A →+* T.S.R) = T.S.ρ :=
     NRep.ext (by ext g i j; rfl) (by funext v i; ext g; rfl)
@@ -427,7 +427,7 @@ theorem UpperTheory.V.Pr.pointEx_of_le {l : ℕ} [Fact l.Prime] {O : Type} [Comm
   have hred : (W.GDet.ofRep (T.K.tw (L.ρ.map (j : L.R →+* PowerSeries K)))).map
       (PowerSeries.constantCoeff : PowerSeries K →+* K) = T.r.Dbar.map (algebraMap (ResidueField O) K) := by
     rw [← hpt.1, (CA.d_gmap _).2.1, hres, ← (CA.d_gmap _).2.1, T.B.u.red]
-  haveI : IsLocalHom (algebraMap O (PowerSeries K)) := ⟨fun a ha => by
+  have : IsLocalHom (algebraMap O (PowerSeries K)) := ⟨fun a ha => by
     by_contra hna
     have hr : algebraMap O (ResidueField O) a = 0 :=
       (IsLocalRing.residue_eq_zero_iff a).mpr ((IsLocalRing.mem_maximalIdeal a).mpr hna)
@@ -435,7 +435,7 @@ theorem UpperTheory.V.Pr.pointEx_of_le {l : ℕ} [Fact l.Prime] {O : Type} [Comm
       rw [IsScalarTower.algebraMap_apply O (ResidueField O) K, hr, map_zero]
     rw [PowerSeries.algebraMap_apply, h0, map_zero] at ha
     exact not_isUnit_zero ha⟩
-  haveI : IsLocalHom (j : L.R →+* PowerSeries K) := ⟨fun a ha => hjl.map_nonunit a ha⟩
+  have : IsLocalHom (j : L.R →+* PowerSeries K) := ⟨fun a ha => hjl.map_nonunit a ha⟩
   have hcont : ∀ i k, AdicCont (maximalIdeal (PowerSeries K))
       fun g => (L.ρ.map (j : L.R →+* PowerSeries K)).r g i k := fun i k =>
     pe_cont (j : L.R →+* PowerSeries K) ((loc_rho T.ok T.n23 T.S x L).1.1 i k)
@@ -449,7 +449,7 @@ theorem UpperTheory.V.Pr.pointEx_of_le {l : ℕ} [Fact l.Prime] {O : Type} [Comm
   · rw [hmat]
     exact hred
   · intro u g hg
-    haveI := IsCoef.char (l := l) (O := O)
+    have := IsCoef.char (l := l) (O := O)
     apply Units.ext
     rw [MonoidHom.coe_toHomUnits]
     exact pe_ine T.K _ hred u g hg
@@ -482,7 +482,7 @@ theorem UpperTheory.V.Pr.pointEx :
   intro l _ O _ _ _ _ _ F n T Φ hΦ x L p hp hd hl
   have h0 := T.lne
   refine UpperTheory.V.Pr.pointEx_of_le T Φ hΦ x L p hp hd fun a ha => ?_
-  haveI := hp
+  have := hp
   have h1 : (l : O) ∈ p.comap (algebraMap O L.R) := by
     rw [Ideal.mem_comap, map_natCast]
     exact hl

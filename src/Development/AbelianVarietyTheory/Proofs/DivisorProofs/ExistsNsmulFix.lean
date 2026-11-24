@@ -128,9 +128,9 @@ theorem exists_nsmul_fix {e : AEF F E} (he : IsSplitIdemF σ e) {u : WOF F E nS 
   obtain ⟨he1, he2, v, ε, hpl, hsum⟩ := he
   obtain ⟨α, rfl, hα1, hα0⟩ := id hpl
   obtain ⟨U, hU, hUf⟩ := hg.level
-  haveI : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
-  haveI : ContinuousSMul (AF F) (AEF F E) := IsModuleTopology.toContinuousSMul (AF F) (AEF F E)
+  have : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have : ContinuousSMul (AF F) (AEF F E) := IsModuleTopology.toContinuousSMul (AF F) (AEF F E)
   set ε' := algebraMap (AF F) (AEF F E) (pairA F 0 α) with hε'
   have hcc : cAF σ e * cAF σ e = cAF σ e := by rw [← map_mul, he1]
   have hce : cAF σ e * ε' = cAF σ e := by

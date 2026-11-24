@@ -94,7 +94,7 @@ theorem exists_eigenframe (T : (Matrix (Fin n) (Fin n) k)ˣ) {m : ℕ} (hm : 0 <
   classical
   obtain ⟨b, d, hb⟩ := exists_eigenbasis (Matrix.toLinAlgEquiv' T.val) hm
     (by rw [← map_pow, ← Units.val_pow_eq_pow_val, hT, Units.val_one, map_one])
-  letI := (Pi.basisFun k (Fin n)).invertibleToMatrix b
+  let := (Pi.basisFun k (Fin n)).invertibleToMatrix b
   refine ⟨unitOfInvertible ((Pi.basisFun k (Fin n)).toMatrix b), d, ?_⟩
   ext i j
   rw [Matrix.mul_diagonal]
@@ -130,7 +130,7 @@ theorem charpoly_of_ker {Γ : Type} [Group Γ] (r : Γ →* (Matrix (Fin n) (Fin
   classical
   set S : Subgroup kˣ := I.map χ with hS
   have hSf : (S : Set kˣ).Finite := by rw [hS, Subgroup.coe_map]; exact hf
-  haveI : Finite S := hSf.to_subtype
+  have : Finite S := hSf.to_subtype
   obtain ⟨x, hx⟩ := IsCyclic.exists_monoid_generator (α := S)
   obtain ⟨g0, hg0I, hg0⟩ := Subgroup.mem_map.mp x.2
   set N := orderOf x with hN
@@ -146,7 +146,7 @@ theorem charpoly_of_ker {Γ : Type} [Group Γ] (r : Γ →* (Matrix (Fin n) (Fin
   have hprim : IsPrimitiveRoot ((x : kˣ) : k) N := by
     rw [IsPrimitiveRoot.coe_units_iff, hN, ← Subgroup.orderOf_coe]
     exact IsPrimitiveRoot.orderOf _
-  haveI : NeZero N := ⟨hNpos.ne'⟩
+  have : NeZero N := ⟨hNpos.ne'⟩
   have hj : ∀ i, ∃ j, ((x : kˣ) : k) ^ j = d i := fun i =>
     let ⟨j, _, h⟩ := hprim.eq_pow_of_pow_eq_one (hd i); ⟨j, h⟩
   choose j hj using hj
@@ -184,7 +184,7 @@ theorem UpperTheory.V.Z.Win.Dn.ineOfKer_of :
   obtain ⟨χ, hc, hf, hk⟩ := h A hn
   obtain ⟨j, hj⟩ := UpperTheory.V.Lib.FinChar.charpoly_of_ker r χ (Ine (F := F) A) hf hk
   refine ⟨fun i => (χ.comp (Dec (F := F) A).subtype) ^ j i, fun i => ?_, fun g hg => ?_⟩
-  · exact (hc.comp continuous_subtype_val).pow (j i)
+  · exact (hc.comp continuous_subtypeVal).pow (j i)
   · refine (hj _ hg).trans (Finset.prod_congr rfl fun i _ => ?_)
     simp
 end -- clump:auto

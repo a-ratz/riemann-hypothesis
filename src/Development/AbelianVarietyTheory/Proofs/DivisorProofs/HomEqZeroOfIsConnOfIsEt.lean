@@ -94,8 +94,8 @@ theorem exists_augIdeal_pow_eq {A : Type} [CommRing A] [Bialgebra k A] [Module.F
 theorem eq_zero_of_isConn_of_isEt {G H : PDivGroup p k} (hG : G.IsConn) (hH : H.IsEt)
     (f : G ⟶ H) : f = 0 := by
   refine eq_zero_of_app_augIdeal f fun n a ha => ?_
-  haveI := hH n
-  haveI : IsNoetherianRing (G.A n) := isNoetherian_of_tower k inferInstance
+  have := hH n
+  have : IsNoetherianRing (G.A n) := isNoetherian_of_tower k inferInstance
   obtain ⟨N, hN⟩ := (Ideal.FG.isNilpotent_iff_le_nilradical
     (IsNoetherian.noetherian (augIdeal k (G.A n)))).2 fun x hx => mem_nilradical.2 (hG n x hx)
   obtain ⟨b, hb, rfl⟩ := exists_augIdeal_pow_eq (A := H.A n) N a ha
@@ -111,7 +111,7 @@ theorem eq_zero_of_isConn_of_isEt {G H : PDivGroup p k} (hG : G.IsConn) (hH : H.
 theorem eq_zero_of_isEt_of_isConn {G H : PDivGroup p k} (hG : G.IsConn) (hH : H.IsEt)
     (f : H ⟶ G) : f = 0 := by
   refine eq_zero_of_app_augIdeal f fun n a ha => ?_
-  haveI := hH n
+  have := hH n
   exact ((hG n a ha).map (f.app n)).eq_zero
 
 end PDivGroup

@@ -238,7 +238,7 @@ private theorem di_cyc (l : ℕ) [Fact l.Prime] (G : Type) [CommGroup G] [Finite
     ∃ e : Multiplicative (ZMod (l ^ a)) ≃* G ⧸ ellC l G, e (Multiplicative.ofAdd 1) = (x : G ⧸ ellC l G) := by
   classical
   have hl' := (Fact.out : l.Prime)
-  haveI : NeZero (l ^ a) := ⟨pow_ne_zero _ hl'.ne_zero⟩
+  have : NeZero (l ^ a) := ⟨pow_ne_zero _ hl'.ne_zero⟩
   have hcard : Nat.card (G ⧸ ellC l G) = l ^ a := by rw [ha]; exact di_card l G
   let ψ : ZMod (l ^ a) →+ Additive (G ⧸ ellC l G) :=
     ZMod.lift (l ^ a) ⟨zmultiplesHom _ (Additive.ofMul (x : G ⧸ ellC l G)), by

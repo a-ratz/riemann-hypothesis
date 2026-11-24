@@ -149,7 +149,7 @@ theorem exists_openSubgroup_le_fixing (U W₀ : OpenSubgroup G) (M : Rep.{u} k (
     exact isOpen_iInter_of_finite fun m => isOpen_stabilizer M m
   have hFG : IsOpen ((F.map (U : Subgroup G).subtype : Subgroup G) : Set G) := by
     rw [Subgroup.coe_map]
-    exact U.isOpen.isOpenMap_subtype_val _ hF
+    exact U.isOpen.isOpenMap_subtypeVal _ hF
   let V : OpenSubgroup G :=
     { toSubgroup := F.map (U : Subgroup G).subtype ⊓ W₀
       isOpen' := hFG.inter W₀.isOpen }
@@ -177,7 +177,7 @@ theorem finite_cohomology_of_forall_trivial [CompactSpace G] (n R : ℕ) (W₀ :
     obtain ⟨V, hVU, hVW, hfix⟩ := exists_openSubgroup_le_fixing U W₀ M
     let V' : OpenSubgroup (U : Subgroup G) :=
       { toSubgroup := (V : Subgroup G).subgroupOf U
-        isOpen' := V.isOpen.preimage continuous_subtype_val }
+        isOpen' := V.isOpen.preimage continuous_subtypeVal }
     let B : Rep.{u} (ULift.{u} ℤ) ((V : Subgroup G).subgroupOf U) :=
       Rep.res ((V' : Subgroup (U : Subgroup G))).subtype M
     let i := coindUnit (V' : Subgroup (U : Subgroup G)) M

@@ -61,7 +61,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.convSpec :
     refine Continuous.integrable_of_hasCompactSupport ((c.continuous.comp hk.1).clm_apply ((shF V).cont u)) ?_
     refine hk.2.mono fun t ht h0 => ht ?_
     show c (κ t) (sh V t u) = 0
-    rw [h0, map_zero, ContinuousLinearMap.zero_apply]
+    rw [h0, map_zero, zero_apply]
   have hk1 : Integrable κ := hk.1.integrable_of_hasCompactSupport hk.2
   let A : L V →ₗ[ℂ] L W :=
     { toFun := fun u => ∫ t, (κ t).compLpL 2 volume (sh V t u)

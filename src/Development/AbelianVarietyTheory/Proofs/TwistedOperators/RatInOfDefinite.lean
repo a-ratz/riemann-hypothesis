@@ -94,7 +94,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open GlobalTheory.Grid GlobalTheory.IndefiniteRowSideFullHecke.UnitCharTriangle GlobalTheory.ConstRatio
 theorem _root_.GlobalTheory.Adopt.continuous_automorphic_eq_zero_of_vanish_on_finiteAdelic : ∀ (D : D7) (V : HSp D) (φ : GA D V → ℂ), (∀ τ, (gramAt D V τ).PosDef) → Continuous φ → (∀ γ ∈ GQ V, ∀ h, φ (γ * h) = φ h) → (∀ h ∈ GfC V, φ h = 0) → ∀ h, φ h = 0 := by
   intro D V φ _ hcont hleft hzero g
-  haveI := GlobalTheory.AutFunCounterexample.topGroup_GA D V
+  have := GlobalTheory.AutFunCounterexample.topGroup_GA D V
   obtain ⟨u, hu, f, hf, rfl⟩ := (GlobalTheory.UnitarySplit.real_finite_split D V).1 g
 
   set ψ : GA D V → ℂ := fun x => φ (x * f) with hψ
@@ -183,7 +183,7 @@ theorem ratPart_eq {ℓ : MvPolynomial ι ℂ →ₗ[ℂ] ℂ} {Ω : ℂ} (h : �
   ring
 
 theorem exists_dual {x : ℂ} (hx : x ≠ 0) : ∃ φ : ℂ →+ L, (∀ a y, φ (a * σ y) = φ a * y) ∧ φ x ≠ 0 := by
-  letI : Algebra L ℂ := σ.toAlgebra
+  let : Algebra L ℂ := σ.toAlgebra
   obtain ⟨φ, hφ⟩ := not_forall.1 (mt (Module.forall_dual_apply_eq_zero_iff L x).1 hx)
   refine ⟨φ.toAddMonoidHom, fun a y => ?_, hφ⟩
   have : a * σ y = y • a := by rw [Algebra.smul_def, mul_comm]; rfl

@@ -421,7 +421,7 @@ theorem contOn_pIter_avgTerm (h4 : SobChart) {G s : Matrix (Fin n) (Fin n) ℂ} 
       (((continuous_const.matrix_mul
         (continuous_id' : Continuous fun k : Fin n → Fin n → ℂ => Matrix.of k)).matrix_elem i j).sub
           continuous_const).norm
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => isOpen_lt (hcont i j) continuous_const
   have hk0V : ∀ i j, ‖(u⁻¹ * Matrix.of k0) i j - (1 : Matrix (Fin n) (Fin n) ℂ) i j‖ < δ := by
     intro i j
@@ -551,7 +551,7 @@ theorem avgSmooth_of (h4 : SobChart) : AvgSmooth := by
       dL π l v' = OrbStPf.pds L (fun r => π (oneProd Z r) v') 0 := by
     intro v' hv'
     have h := hval v' hv' 0
-    simp only [zero_smul, NormedSpace.exp_zero, hπ.1, ContinuousLinearMap.one_apply] at h
+    simp only [zero_smul, NormedSpace.exp_zero, hπ.1, one_apply_eq_self] at h
     unfold dL
     rw [h]
     rfl

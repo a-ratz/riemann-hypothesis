@@ -75,8 +75,8 @@ theorem integral_family_pos (μ : Measure G) [μ.IsHaarMeasure] (Γ : Subgroup G
     (hs : ∀ x, ∀ g ∈ O, B x g ≠ 0 → ∃ γ ∈ Γ, γ * g ∈ K) (h1 : ∀ x, ∃ g ∈ O, B x g ≠ 0) :
     (∀ x : ℝ, IntegrableOn (B x) (𝓕 ∩ O) μ) ∧
       (Continuous fun x : ℝ => ∫ g in 𝓕 ∩ O, B x g ∂μ) ∧ ∀ x : ℝ, 0 < ∫ g in 𝓕 ∩ O, B x g ∂μ := by
-  haveI : MeasurableConstSMul Γ G := ⟨fun γ => measurable_const_mul (γ : G)⟩
-  haveI : SMulInvariantMeasure Γ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
+  have : MeasurableConstSMul Γ G := ⟨fun γ => measurable_const_mul (γ : G)⟩
+  have : SMulInvariantMeasure Γ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
   set A : Set G := ⋃ γ : Γ, γ • closure K with hA
   have hAm : MeasurableSet A := .iUnion fun γ => isClosed_closure.measurableSet.const_smul γ
   have hfin : μ (A ∩ 𝓕) < ⊤ := by
@@ -179,7 +179,7 @@ theorem exists_rat_mul_entries_mem {K : Set (Ad E)} (hK : ∀ x : Ad E, ∃ y : 
           simp only [GlobalTheory.JSW.colGL, Matrix.add_apply, Matrix.of_apply, map_add (f := _), Matrix.one_apply, Fin.ext_iff]
           split_ifs <;> simp_all
         rw [Units.val_mul, e1, add_mul, one_mul, Matrix.add_apply, Matrix.mul_apply]
-        simp only [Matrix.of_apply, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        simp only [Matrix.of_apply, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         split_ifs <;> ring
       rw [e]
       have hij' : (i : ℕ) < j := hij
@@ -187,7 +187,7 @@ theorem exists_rat_mul_entries_mem {K : Set (Ad E)} (hK : ∀ x : Ad E, ∃ y : 
       · rw [h1 ⟨m, hm⟩ j hj, mul_zero, ite_self, sub_zero]
         exact h i j hij hj
       · obtain rfl : j = ⟨m, hm⟩ := Fin.ext hj
-        rw [if_pos hij', h2, mul_one]
+        rw [ite_eq_left hij', h2, mul_one]
         exact hy i
 
 theorem exists_isCompact_unip (E : Type) [Field E] [NumberField E] (a : ℕ) :
@@ -302,8 +302,8 @@ theorem exists_levelAt_subset (S : Finset (HeightOneSpectrum (𝓞 E))) (U : Sub
       Finset.sum_ite_eq, Finset.sum_ite_eq']
   refine ⟨Units.mk0 _ (Finset.prod_ne_zero_iff.2 fun w (_ : w ∈ S) => hne w), fun v hv => ?_, fun v hv => ?_,
     fun κ hκ => ?_⟩
-  · rw [Units.val_mk0, hcount, if_pos hv]; positivity
-  · rw [Units.val_mk0, hcount, if_neg hv]
+  · rw [Units.val_mk0, hcount, ite_eq_left hv]; positivity
+  · rw [Units.val_mk0, hcount, ite_eq_right hv]
   obtain ⟨h, h1, h2, h3⟩ := exists_components (T \ S) fun v => GeneralLinearGroup.map (pLoc E v) κ
   have hh : h ∈ U := h3 U fun v hv => hw v (Finset.mem_sdiff.1 hv).2 _ (hκ.1 v)
   have e1 : ∀ v ∈ T \ S, GeneralLinearGroup.map (pLoc E v) (h⁻¹ * κ) = 1 := fun v hv => by
@@ -328,20 +328,20 @@ theorem exists_levelAt_subset (S : Finset (HeightOneSpectrum (𝓞 E))) (U : Sub
     · have hS : v ∈ S := by_contra fun hS => hv' (Finset.mem_sdiff.2 ⟨hv, hS⟩)
       rw [e3, e2 v hv', ← e3]
       refine (hκ.2 v hS i j).trans (WithZero.exp_le_exp.2 ?_)
-      rw [Units.val_mk0, hcount, if_pos hS]
+      rw [Units.val_mk0, hcount, ite_eq_left hS]
       simp
 
 theorem rowGL_mem_KGL {v : HeightOneSpectrum (𝓞 E)} {ℓ : Fin a} {y : Fin a → v.adicCompletion E}
     (h : ∀ j, Valued.v (y j - if j = ℓ then 1 else 0) < 1) : IsUnit (y ℓ) ∧ rowGL ℓ y ∈ GlobalTheory.LFun.KGL v (n := a) := by
   have h1 : Valued.v (y ℓ) = 1 := by
     have := h ℓ
-    rw [if_pos rfl] at this
+    rw [ite_eq_left rfl] at this
     simpa using Valuation.map_one_add_of_lt _ this
   have h2 : ∀ j, y j ∈ v.adicCompletionIntegers E := fun j => by
     by_cases hj : j = ℓ
     · exact hj ▸ h1.le
     · have := h j
-      rw [if_neg hj, sub_zero] at this
+      rw [ite_eq_right hj, sub_zero] at this
       exact this.le
   have h0 : y ℓ ≠ 0 := fun e => by simp [e] at h1
   have h3 : IsUnit (⟨y ℓ, h2 ℓ⟩ : (v.adicCompletionIntegers E).toSubring) :=
@@ -446,8 +446,8 @@ end Main
 theorem lintegral_cell_pos_lt_top_continuous : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) (μ : Measure (GA E n)) [μ.IsHaarMeasure] (S : Finset (HeightOneSpectrum (𝓞 E))) (𝓕 : Set (GA E n)), IsFundamentalDomain (NE E n) 𝓕 μ → ∀ B : ℝ → GA E n → ℝ, Continuous (Function.uncurry B) → (∀ x g, 0 ≤ B x g) → (∀ x, 0 < B x 1) → (∀ x, ∀ u ∈ NA E n, ∀ g, B x (u * g) = B x g) → (∃ K : Set (GA E n), IsCompact K ∧ ∀ x g, g ∈ C0 E n S → B x g ≠ 0 → ∃ u ∈ NA E n, u * g ∈ K) → (∀ x, 0 < ∫⁻ g in 𝓕 ∩ C0 E n S, ENNReal.ofReal (B x g) ∂μ ∧ ∫⁻ g in 𝓕 ∩ C0 E n S, ENNReal.ofReal (B x g) ∂μ < ⊤) ∧ Continuous fun x => (∫⁻ g in 𝓕 ∩ C0 E n S, ENNReal.ofReal (B x g) ∂μ).toReal := by
   intro E _ _ n μ _ S 𝓕 h𝓕 B hc hB0 hB1 hN ⟨K, hK, hs⟩
   obtain ⟨D, hD, hDu⟩ := exists_isCompact_unip E n
-  haveI := GlobalTheory.ThetaUnfold.countable_range_ratGL (E := E) (a := n)
-  haveI : Countable (NE E n) := (Subgroup.inclusion_injective (Subgroup.map_le_range (ratGL E n) _)).countable
+  have := GlobalTheory.ThetaUnfold.countable_range_ratGL (E := E) (a := n)
+  have : Countable (NE E n) := (Subgroup.inclusion_injective (Subgroup.map_le_range (ratGL E n) _)).countable
   obtain ⟨i1, i2, i3⟩ := integral_family_pos μ (NE E n) h𝓕 (isOpen_adelicUnipotentTimesIntegralOutsideSet E n S) (hD.mul hK)
     (fun γ hγ g hg => adelicUnitriangular_mul_mem_unipotentTimesIntegral (NE_le hγ) hg) hc hB0 (fun x γ hγ => hN x γ (NE_le hγ))
     (fun x g hg h0 => by

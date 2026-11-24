@@ -113,7 +113,7 @@ theorem ConeFiniteFibreDim.proof : ConeFiniteFibreDim.Statement := by
     | bot => exact absurd h0 (by simp)
     | coe e =>
       induction e using ENat.recTopCoe with
-      | top => exact absurd hle (not_le.2 (WithBot.coe_lt_coe.2 (ENat.coe_lt_top n)))
+      | top => exact absurd hle (not_le.2 (WithBot.coe_lt_coe.2 (ENat.natCast_lt_top n)))
       | coe d => exact ⟨d, rfl⟩
   rw [hd]
   by_contra hlt

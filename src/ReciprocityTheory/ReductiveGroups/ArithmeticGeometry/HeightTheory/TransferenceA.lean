@@ -72,7 +72,7 @@ theorem gtA_countable {n : ℕ} (B : Basis (Fin n) ℝ (Fin n → ℝ)) :
 theorem gtA_mink_pi_lt {n : ℕ} (B : Basis (Fin n) ℝ (Fin n → ℝ)) {t : ℝ} (ht : 0 < t)
     (h : |(Matrix.of B).det| < t ^ n) :
     ∃ x ∈ span ℤ (Set.range B), x ≠ 0 ∧ ‖x‖ < t := by
-  haveI := gtA_countable B
+  have := gtA_countable B
   have fund := ZSpan.isAddFundamentalDomain B volume
   obtain ⟨x, hx0, hxs⟩ := MeasureTheory.exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
     (L := (span ℤ (Set.range B)).toAddSubgroup) fund (s := Metric.ball (0 : Fin n → ℝ) t) (fun y hy => by simpa using hy)
@@ -90,8 +90,8 @@ theorem gtA_mink_pi_lt {n : ℕ} (B : Basis (Fin n) ℝ (Fin n → ℝ)) {t : �
 theorem gtA_mink_pi_le {n : ℕ} (hn : 0 < n) (B : Basis (Fin n) ℝ (Fin n → ℝ)) {t : ℝ}
     (ht : 0 < t) (h : |(Matrix.of B).det| ≤ t ^ n) :
     ∃ x ∈ span ℤ (Set.range B), x ≠ 0 ∧ ‖x‖ ≤ t := by
-  haveI := gtA_countable B
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have := gtA_countable B
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   have fund := ZSpan.isAddFundamentalDomain B volume
   obtain ⟨x, hx0, hxs⟩ := MeasureTheory.exists_ne_zero_mem_lattice_of_measure_mul_two_pow_le_measure
     (L := (span ℤ (Set.range B)).toAddSubgroup) fund (s := Metric.closedBall (0 : Fin n → ℝ) t) (fun y hy => by simpa using hy)

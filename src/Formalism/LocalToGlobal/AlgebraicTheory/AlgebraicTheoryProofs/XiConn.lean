@@ -246,7 +246,7 @@ theorem norm_root (ι : ℂ ≃+* ℂ_[p]) (x : ℂ) (m : ℕ) (hm : 0 < m) (hx 
 theorem norm_phase (ι : ℂ ≃+* ℂ_[p]) (y : ℝ) (N : ℕ) (hN : 0 < N) (k : ℤ) (hy : (N : ℝ) * y = k) :
     ‖ι (Complex.exp (-(Real.pi : ℂ) * Complex.I * (y : ℂ)))‖ = 1 := by
   apply norm_root ι _ (2 * N) (by omega)
-  rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+  rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
   refine ⟨-k, ?_⟩
   have e : (N : ℂ) * (y : ℂ) = (k : ℂ) := by exact_mod_cast hy
   push_cast
@@ -352,12 +352,12 @@ theorem XiConnection.ser_eq {p : ℕ} [Fact p.Prime] (ι : ℂ ≃+* ℂ_[p]) {n
     funext i x
     simp only [Matrix.map_apply, Matrix.diagonal_apply]
     rw [Finset.sum_eq_single i]
-    · simp only [if_true, RingEquiv.coe_toRingHom]
+    · simp only [ite_true, RingEquiv.coe_toRingHom]
       unfold frameM
       rw [Finset.mul_sum]
       exact Finset.sum_congr rfl fun j _ => by ring
     · intro w _ hw
-      rw [if_neg (Ne.symm hw), map_zero, zero_mul]
+      rw [ite_eq_right (Ne.symm hw), map_zero, zero_mul]
     · intro hi; exact absurd (Finset.mem_univ i) hi
   unfold serLin
 

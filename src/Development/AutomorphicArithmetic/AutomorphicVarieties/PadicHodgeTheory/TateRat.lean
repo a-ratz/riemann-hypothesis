@@ -166,7 +166,7 @@ private noncomputable def redMap {l : ℕ} [Fact l.Prime] {X Y : Type} [AddCommG
 
 private theorem card_quotient_eq_card_of_isReps (l : ℕ) [Fact l.Prime] (k : ℕ) :
     Nat.card (ℤ_[l] ⧸ Ideal.span {(l : ℤ_[l]) ^ k}) = l ^ k := by
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hs : Function.Surjective (PadicInt.toZModPow (p := l) k) := fun z => by
     obtain ⟨a, rfl⟩ := ZMod.natCast_zmod_surjective z
     exact ⟨a, map_natCast _ a⟩
@@ -223,8 +223,8 @@ theorem UpperTheory.card_quotient_powSubmodule_grows_finrank :
   let g : N ≃ₗ[ℤ_[l]] (Fin n → ℤ_[l]) × D :=
     f.trans (LinearEquiv.prodCongr (Finsupp.linearEquivFunOnFinite ℤ_[l] ℤ_[l] (Fin n))
       (LinearEquiv.refl _ _))
-  haveI : Finite D := by
-    haveI : ∀ i, Finite (ℤ_[l] ⧸ ℤ_[l] ∙ p i ^ e i) := fun i =>
+  have : Finite D := by
+    have : ∀ i, Finite (ℤ_[l] ⧸ ℤ_[l] ∙ p i ^ e i) := fun i =>
       finite_padicInt_quot_span_of_ne_zero l (pow_ne_zero _ (hp i).ne_zero)
     exact Finite.of_injective _ (DirectSum.linearEquivFunOnFintype ℤ_[l] ι _).injective
   have hrank : finrank ℤ_[l] N = n := by
@@ -258,10 +258,10 @@ theorem UpperTheory.card_quotient_powSubmodule_grows_finrank :
     rw [← map_smul, Prod.smul_mk, hy1, hy2]
     simp [f1, f2]
   have hF := card_pi_padicInt_quot_lSub l n m
-  haveI : Finite ((Fin n → ℤ_[l]) ⧸ lSub l (Fin n → ℤ_[l]) m) :=
+  have : Finite ((Fin n → ℤ_[l]) ⧸ lSub l (Fin n → ℤ_[l]) m) :=
     Nat.finite_of_card_ne_zero (by rw [hF]; exact pow_ne_zero _ (Fact.out : l.Prime).ne_zero)
-  haveI : Finite (D ⧸ lSub l D m) := Finite.of_surjective _ (Submodule.Quotient.mk_surjective _)
-  haveI : Finite (N ⧸ lSub l N m) := Finite.of_injective _ hinj
+  have : Finite (D ⧸ lSub l D m) := Finite.of_surjective _ (Submodule.Quotient.mk_surjective _)
+  have : Finite (N ⧸ lSub l N m) := Finite.of_injective _ hinj
   have hsurj : Function.Surjective (redMap f1 m) := by
     intro q
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ q
@@ -398,11 +398,11 @@ theorem UpperTheory.exists_invariant_lattice_openEmbedding :
       | smul a x _ hx => rw [LinearMap.map_smul_of_tower]; exact Submodule.smul_mem _ a hx
   
   obtain ⟨L, hL, hst⟩ := hex
-  letI : Module.Free ℤ_[l] L := Submodule.IsLattice.free ℚ_[l] L
-  letI : Module.Finite ℤ_[l] L := Submodule.IsLattice.finite ℚ_[l] L
+  let : Module.Free ℤ_[l] L := Submodule.IsLattice.free ℚ_[l] L
+  let : Module.Finite ℤ_[l] L := Submodule.IsLattice.finite ℚ_[l] L
   have hr : finrank ℤ_[l] L = finrank ℚ_[l] V := by
     unfold Module.finrank
-    rw [Submodule.IsLattice.rank' ℚ_[l] L]
+    rw [Submodule.IsFullLattice.rank_eq ℚ_[l] L]
   let bL : Basis (Fin (finrank ℚ_[l] V)) ℤ_[l] L := Module.finBasisOfFinrankEq ℤ_[l] L hr
   let b : Basis (Fin (finrank ℚ_[l] V)) ℚ_[l] V := bL.extendOfIsFullLattice ℚ_[l]
   let j : (Fin (finrank ℚ_[l] V) → ℤ_[l]) →ₗ[ℤ_[l]] V := L.subtype ∘ₗ bL.equivFun.symm.toLinearMap
@@ -476,13 +476,13 @@ private theorem numField {v : ℕ} [Fact v.Prime] (K : FinExt v) {Ω : Type} [Fi
     have := hec (e.symm ⟨τ, h0 τ⟩) x
     rw [MulEquiv.apply_symm_apply] at this
     exact this
-  have hrc : Continuous r := continuous_subtype_val.comp (he'.comp (continuous_id.subtype_mk _))
+  have hrc : Continuous r := continuous_subtypeVal.comp (he'.comp (continuous_id.subtype_mk _))
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   have hK := K.2
   have hle : K.1 ≤ IntermediateField.adjoin ℚ_[v] (j '' {a | j a ∈ K.1}) := by
     rw [← InfiniteGalois.fixedField_fixingSubgroup (IntermediateField.adjoin ℚ_[v] _),
-      IntermediateField.le_iff_le]
+      IntermediateField.le_fixedField_iff_le_fixingSubgroup]
     intro τ hτ
     let H : ClosedSubgroup (Ω ≃ₐ[ℚ] Ω) := ⟨(GK K).map r,
       ((IntermediateField.fixingSubgroup_isClosed K.1).isCompact.image hrc).isClosed⟩
@@ -622,7 +622,7 @@ theorem UpperTheory.finiteLevel_cyclotomic_of_openEmbedding :
   have hK := K.2
   by_cases hvl : v = l
   · subst hvl
-    rw [if_pos rfl, hi]
+    rw [ite_eq_left rfl, hi]
     obtain ⟨hf, hf'⟩ := GlobalTheory.fixingSubgroupEquiv_bicontinuous ℚ_[v] (PadicAlgCl v) K.1
     let ε : G ≃* Formalism.GaloisCohomology.GK v K.1 := e.trans (IntermediateField.fixingSubgroupEquiv K.1)
     have hε : Continuous ε := hf.comp he
@@ -635,7 +635,7 @@ theorem UpperTheory.finiteLevel_cyclotomic_of_openEmbedding :
       (P.leK v K.1 hK r M σ hr hσ)
     simp only [MonoidHom.comp_apply, ← hc']
     rfl
-  · rw [if_neg hvl, pow_zero]
+  · rw [ite_eq_right hvl, pow_zero]
     let Ω := AlgebraicClosure ℚ
     have : IsAlgClosure ℚ Ω := AlgebraicClosure.instIsAlgClosure ℚ
     let j : Ω →+* PadicAlgCl v := (IsAlgClosed.lift (R := ℚ) (S := Ω) (M := PadicAlgCl v)).toRingHom
@@ -650,7 +650,7 @@ theorem UpperTheory.finiteLevel_cyclotomic_of_openEmbedding :
         rw [hA, map_inv₀, map_natCast, norm_inv, not_le]
         exact (one_lt_inv₀ h0).2 GlobalTheory.PlaceBridge.norm_l_lt_one
       rw [← A.valuation_le_one_iff, not_le, map_inv₀] at h1
-      exact (one_lt_inv₀ (zero_lt_iff.2 (by simpa using hv.ne_zero))).1 h1
+      exact (one_lt_inv₀ (pos_iff_ne_zero.2 (by simpa using hv.ne_zero))).1 h1
     obtain ⟨F, hF, hKF⟩ := numField K j A hA
     have : NumberField F := ⟨⟩
     have : IsAlgClosure F Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) F⟩
@@ -668,7 +668,7 @@ theorem UpperTheory.finiteLevel_cyclotomic_of_openEmbedding :
       (((P.le F Ω l r M A σ w hr hw hσ).2 (hwl l hl hvl)).trans (mul_one _).symm)
     have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
     have : NeZero ((l : ℕ) : PadicAlgCl v) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ r)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ r)
     have hζ' := hζ.map_of_injective j.injective
     have ha : (ε g : Ω ≃ₐ[F] Ω) ζ = ζ ^ ((cycMod F Ω l r (ε g : Ω ≃ₐ[F] Ω) : ZMod (l ^ r))).val :=
       cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (Ω ≃ₐ[F] Ω) Ω (ε g : Ω ≃ₐ[F] Ω)) ζ
@@ -873,7 +873,7 @@ private theorem card_co {G Q A V : Type} [Group G] [CommRing Q] [CommRing A] [Al
     rw [Submodule.restrictScalars_span Q A hs]
     congr 1
     ext y
-    simp only [Set.mem_setOf_eq, h, algebraMap_smul]
+    simp only [Set.mem_ofPred_eq, h, algebraMap_smul]
     rfl
   rw [e]
   exact Nat.card_congr (Submodule.Quotient.restrictScalarsEquiv Q (coSub χ' ρ)).toEquiv.symm
@@ -890,11 +890,11 @@ theorem UpperTheory.finite_level_of_finite_level_mod :
   obtain ⟨r, hr, hk⟩ := killed l M
   have hk' : ∀ x : M, (l ^ r) • x = 0 := fun x => by
     rw [← Nat.cast_smul_eq_nsmul ℤ_[l], Nat.cast_pow]; exact hk x
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨_⟩ : Nonempty (Module (ZMod (l ^ r)) M) := ⟨AddCommGroup.zmodModule hk'⟩
-  letI : Algebra ℤ_[l] (ZMod (l ^ r)) := (PadicInt.toZModPow r).toAlgebra
+  let : Algebra ℤ_[l] (ZMod (l ^ r)) := (PadicInt.toZModPow r).toAlgebra
   have hs : Function.Surjective (algebraMap ℤ_[l] (ZMod (l ^ r))) := ZMod.ringHom_surjective _
-  haveI : IsScalarTower ℤ_[l] (ZMod (l ^ r)) M := by
+  have : IsScalarTower ℤ_[l] (ZMod (l ^ r)) M := by
     refine IsScalarTower.of_algebraMap_smul fun a x => ?_
     obtain ⟨k, hk2⟩ := ZMod.natCast_zmod_surjective (PadicInt.toZModPow r a)
     have h0 : a - k ∈ RingHom.ker (PadicInt.toZModPow (p := l) r) := by
@@ -977,7 +977,7 @@ theorem UpperTheory.finrank_coinvariants_eq_finrank_lattice_coinvariants :
         rw [← algebraMap_smul ℚ_[l] (s : ℤ_[l]), smul_smul, mul_comm, hrs, algebraMap_smul]
       rw [mul_smul, this, smul_comm]
       exact Submodule.smul_mem _ _ hx
-  haveI : IsLocalizedModule (nonZeroDivisors ℤ_[l]) f := by
+  have : IsLocalizedModule (nonZeroDivisors ℤ_[l]) f := by
     refine ⟨(isLocalizedModule_id (nonZeroDivisors ℤ_[l]) (V ⧸ N) ℚ_[l]).map_units, ?_, ?_⟩
     · intro y
       obtain ⟨v, rfl⟩ := N.mkQ_surjective y
@@ -1070,7 +1070,7 @@ private theorem eq_zero_of_lSub (x : Fin n → ℤ_[l]) (hx : ∀ m, x ∈ lSub 
   rw [Pi.zero_apply, map_zero]
   cases k with
   | zero =>
-    haveI : Subsingleton (ZMod (l ^ 0)) := ZMod.subsingleton_iff.mpr (pow_zero _)
+    have : Subsingleton (ZMod (l ^ 0)) := ZMod.subsingleton_iff.mpr (pow_zero _)
     exact Subsingleton.elim _ _
   | succ k => exact mem_lSub_pi.mp (hx k) i
 
@@ -1128,10 +1128,10 @@ private theorem finH {χ : G →* ℤ_[l]ˣ} {d : ℕ} (hF : FinLevel l G χ d) 
     | 2 => exact Finite.of_equiv _ e2.symm.toEquiv
     | k + 3 =>
       obtain ⟨e, -⟩ := hN (k + 3)
-      haveI := h3 (k + 3) (by omega)
+      have := h3 (k + 3) (by omega)
       exact Finite.of_equiv _ e.symm.toEquiv
   · obtain ⟨e, -⟩ := hN k
-    haveI := h3 k (by omega)
+    have := h3 k (by omega)
     exact e.toEquiv.subsingleton
 
 end
@@ -1139,7 +1139,7 @@ end
 theorem UpperTheory.latticeCochains_finGen_of_finLevel :
     ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {χ : G →* ℤ_[l]ˣ} {d : ℕ}, FinLevel l G χ d → ∀ {n : ℕ} (ρ : Representation ℤ_[l] G (Fin n → ℤ_[l])) (h : ContAction ρ), ReciprocityTheory.Coh.Cx.FinGen (ReciprocityTheory.Coh.TRep.coch ({ V := Fin n → ℤ_[l], rho := ρ, cont := h } : ReciprocityTheory.Coh.TRep ℤ_[l] G)) 2 := by
   intro l _ G _ _ _ χ d hF n ρ h
-  haveI : IsAdicComplete (Ideal.span {(l : ℤ_[l])}) ℤ_[l] :=
+  have : IsAdicComplete (Ideal.span {(l : ℤ_[l])}) ℤ_[l] :=
     PadicInt.maximalIdeal_eq_span_p (p := l) ▸ inferInstance
   have hl : (l : ℤ_[l]) ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero
   have hT := towerLim ρ h
@@ -1184,19 +1184,19 @@ theorem UpperTheory.latticeCochains_finGen_of_finLevel :
   have hfin : ∀ m, (∀ k, Finite ((redT ρ h m).H k)) ∧ ∀ k, 2 < k → Subsingleton ((redT ρ h m).H k) :=
     fun m => finH hF (redT ρ h m)
   have hlen0 : ∀ k, IsFiniteLength ℤ_[l] ((redT ρ h 0).coch.H k) := fun k => by
-    haveI := (hfin 0).1 k
+    have := (hfin 0).1 k
     exact isFiniteLength_iff_isNoetherian_isArtinian.mpr ⟨inferInstance, inferInstance⟩
   have res := ReciprocityTheory.Coh.finGen_holds ℤ_[l] (l : ℤ_[l]) _ _ _ _ hT htors hker hlen0
   refine ⟨fun k => (res k).1, fun k hk => ?_⟩
   have ext := (ReciprocityTheory.Coh.tower_holds ℤ_[l] _ _ _ _ hT k).2 (fun j _ m => by
-    haveI := (hfin m).1 j
+    have := (hfin m).1 j
     infer_instance)
   refine ⟨fun a b => ?_⟩
   have ha := ext a (fun m => by
-    haveI := (hfin m).2 k hk
+    have := (hfin m).2 k hk
     exact Subsingleton.elim _ _)
   have hb := ext b (fun m => by
-    haveI := (hfin m).2 k hk
+    have := (hfin m).2 k hk
     exact Subsingleton.elim _ _)
   rw [ha, hb]
 end -- clump:auto
@@ -1246,7 +1246,7 @@ private theorem latGrow_card {l : ℕ} [Fact l.Prime] {M N : Type} [AddCommGroup
     (h : (length ℤ_[l] M).toNat ≤ b ∧ a ≤ (length ℤ_[l] M).toNat) :
     l ^ a ≤ Nat.card N ∧ Nat.card N ≤ l ^ b := by
   obtain ⟨k, hk, hc⟩ := UpperTheory.V.Kum.lenOfCard l N
-  rw [e.length_eq, hk, ENat.toNat_coe] at h
+  rw [e.length_eq, hk, ENat.toNat_natCast] at h
   rw [hc]
   have hp : 0 < l := (Fact.out : l.Prime).pos
   exact ⟨Nat.pow_le_pow_right hp h.2, Nat.pow_le_pow_right hp h.1⟩
@@ -1258,26 +1258,26 @@ theorem UpperTheory.lattice_cohomology_finite_and_growth_of_finGen :
   obtain ⟨-, ⟨e₀, -⟩, ⟨e₁, -⟩, e₂, -⟩ :=
     low_holds ℤ_[l] G ({ V := Fin n → ℤ_[l], rho := ρ, cont := h } : TRep ℤ_[l] G)
   have hq := fun m => low_holds ℤ_[l] G ({ V := _, rho := redRep ρ m, cont := contAction_redRep h m } : TRep ℤ_[l] G)
-  haveI := hF.1 1
-  haveI := hF.1 2
+  have := hF.1 1
+  have := hF.1 2
   refine ⟨Module.Finite.equiv e₁, Module.Finite.equiv e₂, ?_, ?_, ?_⟩
   · obtain ⟨C, hC⟩ := latGrow_bound ρ h hF 0
     refine ⟨C, fun m _ => ?_⟩
     obtain ⟨-, ⟨q, -⟩, -⟩ := hq m
     rw [e₀.finrank_eq] at hC
-    haveI : Finite (H0 (redRep ρ m)) := inferInstance
+    have : Finite (H0 (redRep ρ m)) := inferInstance
     exact latGrow_card (N := H0 (redRep ρ m)) q (hC m)
   · obtain ⟨C, hC⟩ := latGrow_bound ρ h hF 1
     refine ⟨C, fun m _ => ?_⟩
     obtain ⟨-, -, ⟨q, -⟩, -⟩ := hq m
     rw [e₁.finrank_eq] at hC
-    haveI := (hfin m).1
+    have := (hfin m).1
     exact latGrow_card (N := H1 (redRep ρ m)) q (hC m)
   · obtain ⟨C, hC⟩ := latGrow_bound ρ h hF 2
     refine ⟨C, fun m _ => ?_⟩
     obtain ⟨-, -, -, q, -⟩ := hq m
     rw [e₂.finrank_eq] at hC
-    haveI := (hfin m).2
+    have := (hfin m).2
     exact latGrow_card (N := H2 (redRep ρ m)) q (hC m)
 end -- clump:auto
 end -- clump:auto
@@ -1293,7 +1293,7 @@ open Formalism.WeaklyAdmissibleFiltrations Formalism.MainNotions.N Formalism.Bas
 theorem UpperTheory.rank_cohomology_rational_eq_rank_lattice :
     ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G] {V : Type} [AddCommGroup V] [Module ℚ_[l] V] [Module ℤ_[l] V] [IsScalarTower ℤ_[l] ℚ_[l] V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [IsTopologicalAddGroup V] [ContinuousConstSMul ℚ_[l] V] (ρ : Representation ℚ_[l] G V), ContAction ρ → ∀ {n : ℕ} (ρT : Representation ℤ_[l] G (Fin n → ℤ_[l])) (j : (Fin n → ℤ_[l]) →ₗ[ℤ_[l]] V), ContAction ρT → IsOpenEmbedding j → (∀ g x, j (ρT g x) = ρ g (j x)) → (∀ y : V, ∃ m : ℕ, (l : ℤ_[l]) ^ m • y ∈ LinearMap.range j) → Module.rank ℚ_[l] ↥(H0 ρ) = Module.rank ℤ_[l] ↥(H0 ρT) ∧ Module.rank ℚ_[l] (H1 ρ) = Module.rank ℤ_[l] (H1 ρT) ∧ Module.rank ℚ_[l] (H2 ρ) = Module.rank ℤ_[l] (H2 ρT) := by
   intro l _ G _ _ _ _ V _ _ _ _ _ _ _ _ _ ρ hρ n ρT j hT hj he hm
-  haveI : ContinuousConstSMul ℤ_[l] V := ⟨fun c => by
+  have : ContinuousConstSMul ℤ_[l] V := ⟨fun c => by
     have h : (fun x : V => c • x) = fun x => (algebraMap ℤ_[l] ℚ_[l] c) • x :=
       funext fun x => (algebraMap_smul ℚ_[l] c x).symm
     rw [h]
@@ -1385,8 +1385,8 @@ private theorem tate_Q {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Topologica
       finrank ℚ_[l] (H1 ρ) = finrank ℚ_[l] ↥(H0 ρ) + finrank ℚ_[l] (H2 ρ) + d * finrank ℚ_[l] V ∧
       finrank ℚ_[l] (H2 ρ) =
         finrank ℚ_[l] (V ⧸ coSub ((Units.map (algebraMap ℤ_[l] ℚ_[l] : ℤ_[l] →* ℚ_[l])).comp χ) ρ) := by
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   obtain ⟨ρT, j, hT, hj, he, hs⟩ := UpperTheory.exists_invariant_lattice_openEmbedding ρ h
   obtain ⟨r0, r1, r2⟩ := UpperTheory.rank_cohomology_rational_eq_rank_lattice ρ h ρT j hT hj he hs
   obtain ⟨f1, f2, e1, e2⟩ := tate_lattice hF ρT hT
@@ -1439,16 +1439,16 @@ private theorem coSub_res {Q E G V : Type} [Field Q] [Field E] [Algebra Q E] [Gr
 theorem UpperTheory.V.Loc.tateRat :
     LocalPublishedTheorems → ∀ {v l : ℕ} [Fact v.Prime] [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ v) (hφ : IsOpenEmbedding φ) {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {V : Type} [AddCommGroup V] [Module E V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] E V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [IsTopologicalAddGroup V] [ContinuousConstSMul E V] (ρ : Representation E G V), ContAction ρ → Module.Finite E (H1 ρ) ∧ Module.Finite E (H2 ρ) ∧ finrank E (H1 ρ) = finrank E ↥(H0 ρ) + finrank E (H2 ρ) + (if v = l then φ.range.index * finrank E V else 0) ∧ finrank E (H2 ρ) = finrank E ↥(H0dual ((cycA v l E).comp φ) ρ) := by
   intro hP v l _ _ G _ _ _ φ hφ E _ _ _ _ _ V _ _ _ _ _ _ _ _ _ ρ h
-  haveI : CompactSpace G := by
+  have : CompactSpace G := by
     have hc : IsClosed (φ.range : Set (GQ v)) := φ.range.isClosed_of_isOpen hφ.isOpen_range
     exact (⟨hφ.isEmbedding, hc⟩ : IsClosedEmbedding φ).compactSpace
-  haveI : ContinuousConstSMul ℚ_[l] V := ⟨fun c => by
+  have : ContinuousConstSMul ℚ_[l] V := ⟨fun c => by
     simpa only [algebraMap_smul] using continuous_const_smul (T := V) (algebraMap ℚ_[l] E c)⟩
-  haveI : FiniteDimensional E V := Module.Finite.of_restrictScalars_finite ℚ_[l] E V
+  have : FiniteDimensional E V := Module.Finite.of_restrictScalars_finite ℚ_[l] E V
   obtain ⟨f1, f2, e1, e2⟩ := tate_Q (UpperTheory.finite_level_of_finite_level_mod l G _ _ (UpperTheory.finiteLevel_cyclotomic_of_openEmbedding hP φ hφ)) (resCoef ℚ_[l] ρ) h
   obtain ⟨⟨a0⟩, ⟨a1⟩, ⟨a2⟩, -⟩ := UpperTheory.nonempty_cohomology_restrictScalars_linearEquiv ℚ_[l] ρ
-  haveI := Module.Finite.equiv a1
-  haveI := Module.Finite.equiv a2
+  have := Module.Finite.equiv a1
+  have := Module.Finite.equiv a2
   have hd : 0 < finrank ℚ_[l] E := finrank_pos
   rw [coSub_res ((Units.map (algebraMap ℤ_[l] ℚ_[l] : ℤ_[l] →* ℚ_[l])).comp ((cyc v l).comp φ))
       ((cycA v l E).comp φ)

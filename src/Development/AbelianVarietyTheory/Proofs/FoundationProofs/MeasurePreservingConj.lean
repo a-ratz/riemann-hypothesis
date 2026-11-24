@@ -140,7 +140,7 @@ theorem measurePreserving_conj (hc : Cocompact Γ N) (μ : Measure N) [μ.IsHaar
         fun δ => ⟨⟨e δ, mul_mem (mul_mem hγ δ.2) (inv_mem hγ)⟩, Subtype.ext (e.symm_apply_apply _)⟩⟩
       fun δ n => (map_mul e _ _).trans (congrArg (· * e n) (e.apply_symm_apply _))
   have h1 := h'.measure_eq h
-  rw [← Measure.map_apply hm (measurableSet_stdDom _), he, Measure.smul_apply, ENNReal.smul_def,
+  rw [← Measure.map_apply hm (measurableSet_stdDom _), he, smul_apply, ENNReal.smul_def,
     smul_eq_mul, ENNReal.mul_eq_right (h.measure_ne_zero (NeZero.ne μ)) (hc.measure_ne_top h), ENNReal.coe_eq_one] at h1
   refine ⟨hm, ?_⟩
   change μ.map e = μ
@@ -167,7 +167,7 @@ theorem integral_integral (hle : N' ≤ N) (hn : ∀ p ∈ N, ∀ n ∈ N', p * 
         (Subtype.ext (congrArg (fun z : Γ × Γ => z.2.1) h)))
   have hA := measurableSet_stdDom (Γ.subgroupOf N')
   have hB := measurableSet_stdDom (Γ.subgroupOf N)
-  have hi : Continuous (Subgroup.inclusion hle) := continuous_subtype_val.subtype_mk _
+  have hi : Continuous (Subgroup.inclusion hle) := continuous_subtypeVal.subtype_mk _
   have ht : MeasurePreserving (fun z : N' × N => (z.1, Subgroup.inclusion hle z.1 * z.2)) (μ'.prod μ) (μ'.prod μ) :=
     (MeasurePreserving.id μ').skew_product (g := fun m n => Subgroup.inclusion hle m * n)
       (Continuous.measurable (by fun_prop)) (.of_forall fun m => map_mul_left_eq_self μ _)

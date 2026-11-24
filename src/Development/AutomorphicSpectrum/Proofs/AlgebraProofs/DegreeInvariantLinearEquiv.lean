@@ -105,7 +105,7 @@ theorem deg_equiv : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [AddCommG
   · refine (hb0.union (C.fin _ ((Module.finBasis K V).isUnit_det b0).ne_zero)).subset
       fun i hi => ?_
     by_contra hn
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hn
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hn
     apply hi
     show (C.w i : ℤ) * WithZero.log (C.v i ((Module.finBasis K V).det (b i))) = 0
     rw [← Module.Basis.det_mul_det _ b0, map_mul, hn.2, Inhab.v_det C hn.1 (hb i)]

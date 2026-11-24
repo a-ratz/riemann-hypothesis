@@ -139,7 +139,7 @@ theorem pieceTop : PieceTop k := by
   · have h : piece D τ = {x | x ∈ Bz Z ∧ aeval x χ = 0} ∩ ⋂ t, {x | x ∈ {x : Matrix (Fin N) (Fin N) k |
         x ∈ Bz Z ∧ aeval x χ = 0} ∧ (∑ j : Fin D.r, D.κ t j • pe (D.a j) x).rank = τ t} := by
       ext x
-      simp only [piece, typ, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, funext_iff]
+      simp only [piece, typ, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, funext_iff]
       constructor
       · rintro ⟨h1, h2, h3⟩
         exact ⟨⟨h1, h2⟩, fun t => ⟨⟨h1, h2⟩, h3 t⟩⟩

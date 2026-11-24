@@ -123,11 +123,11 @@ variable {σ : E →ₐ[F] E}
 theorem semiLat_ne_zero {G : Type} [Group G] [TopologicalSpace G] [MeasurableSpace G]
     {N M Λ : Subgroup G} {ν : Measure N} {π : Measure M} {𝓝 : Set N} {𝓜 : Set M}
     (H : SemiLat N M Λ ν π 𝓝 𝓜) : ν 𝓝 ≠ 0 := by
-  haveI := H.haarN
-  haveI := H.count
-  haveI := H.topGrp
-  haveI := H.borel
-  haveI : Countable (Λ.subgroupOf N) := Function.Injective.countable
+  have := H.haarN
+  have := H.count
+  have := H.topGrp
+  have := H.borel
+  have : Countable (Λ.subgroupOf N) := Function.Injective.countable
     (f := fun x : Λ.subgroupOf N => (⟨x.1.1, x.2⟩ : Λ)) fun a b h => Subtype.ext (Subtype.ext (congrArg (·.1) h))
   exact H.domN.measure_ne_zero (NeZero.ne ν)
 

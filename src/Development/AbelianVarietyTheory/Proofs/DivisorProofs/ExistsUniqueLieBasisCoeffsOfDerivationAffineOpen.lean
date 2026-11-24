@@ -164,7 +164,7 @@ theorem existsUnique_coeff_affine_ring : ∀ {R : Type} [CommRing R] {G : Over (
     ∃! c : Fin n → Γ(G.left, V'), ∀ f, δ f = ∑ a, c a * rsT (dd a V f) V' := by
   intro R _ G _ _ _ n v hv dd hdd V V' hV hV' hle δ hadd hmul hbase
   obtain ⟨t, ht, et⟩ := exists_evalPt_eq (R := Γ(G.left, V')) hV' (RingHom.id _)
-  letI : Algebra R Γ(G.left, V') := (Spec.preimage (t ≫ G.hom)).hom.toAlgebra
+  let : Algebra R Γ(G.left, V') := (Spec.preimage (t ≫ G.hom)).hom.toAlgebra
   let y : ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := R) Γ(G.left, V') ⟶ G :=
     Over.homMk t (Spec.map_preimage (t ≫ G.hom)).symm
   have h : ⊤ ≤ y.left ⁻¹ᵁ V := fun s hs => hle (ht hs)

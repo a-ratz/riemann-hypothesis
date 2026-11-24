@@ -167,8 +167,8 @@ variable {A : Over (Sp K)} [GrpObj A]
 
 theorem ext2 (a b : ovO (K := K) (TrivSqZeroExt K (K × K)) ⟶ A) (h1 : ovH r1 ≫ a = ovH r1 ≫ b)
     (h2 : ovH r2 ≫ a = ovH r2 ≫ b) : a = b := by
-  haveI := isLocalHom_map (K := K) (LinearMap.fst K K K)
-  haveI := isLocalHom_map (K := K) (LinearMap.snd K K K)
+  have := isLocalHom_map (K := K) (LinearMap.fst K K K)
+  have := isLocalHom_map (K := K) (LinearMap.snd K K K)
   ext1
   refine ext_of_two (r1 (K := K)).toRingHom (r2 (K := K)).toRingHom ?_ a.left b.left
     (by simpa only [Over.comp_left, ovH_left] using congrArg CommaMorphism.left h1)
@@ -200,7 +200,7 @@ theorem eq_zeroScale_of_pow_eq_one_of_affine_fieldAction {G : Type} [CharZero K]
     (hmul : ∀ t x y, P t (x * y) = P t x * P t y) (hcomp : ∀ a b x, P a (P b x) = P (a * b) x)
     (h1 : ∀ x, P 1 x = x) (hadd : ∀ s t x, P (s + t) x * P 0 x = P s x * P t x)
     (u : G) (n : ℕ) (hn : 0 < n) (hu : u ^ n = 1) : u = P 0 u := by
-  letI : CommGroup G := { ‹Group G› with mul_comm := hc }
+  let : CommGroup G := { ‹Group G› with mul_comm := hc }
   have hone : ∀ t, P t 1 = 1 := fun t => mul_left_cancel (a := P t 1) (by rw [_root_.mul_one, ← hmul, _root_.one_mul])
   have hpow : ∀ t x (m : ℕ), P t (x ^ m) = P t x ^ m := by
     intro t x m

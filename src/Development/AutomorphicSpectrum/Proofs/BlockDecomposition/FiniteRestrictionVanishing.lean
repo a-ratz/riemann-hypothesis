@@ -62,7 +62,7 @@ theorem finite_above (v : PlF E) : Finite (Above v) := by
       (fun w => ⟨w.1, (GlobalTheory.EulerTwRestr.mem_orb_iff u.1 w.1).2 (w.2.trans u.2.symm)⟩) ?_
     intro x y hxy
     exact Subtype.ext (congrArg (fun z => z.1) hxy)
-  · haveI := not_nonempty_iff.1 h
+  · have := not_nonempty_iff.1 h
     infer_instance
 
 def pn (n : ℕ) (v : PlF E) : GL (Fin n) (Af E) →* GL (Fin n) (Av v) := GeneralLinearGroup.map (projv v)
@@ -100,7 +100,7 @@ theorem continuous_ev {v : PlF E} (w : Above v) : Continuous (ev (n := n) w) :=
   Continuous.units_map _ (Continuous.matrix_map continuous_id (continuous_apply w))
 
 theorem isOpen_Kn (v : PlF E) : IsOpen (Kn n v : Set (GL (Fin n) (Av v))) := by
-  haveI := finite_above v
+  have := finite_above v
   rw [Kn, Subgroup.coe_iInf]
   exact isOpen_iInter_of_finite fun w =>
     (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w.1 n).1.preimage (continuous_ev w)
@@ -121,7 +121,7 @@ theorem eventually_mem_Kn (g : GL (Fin n) (Af E)) : ∀ᶠ v : PlF E in cofinite
   refine eventually_cofinite.2 (((eventually_cofinite.1 hx).image
     fun w : Pl E => w.under (𝓞 (maximalRealSubfield E))).subset ?_)
   intro v hv
-  simp only [Set.mem_setOf_eq, mem_Kn, not_forall, ev_pn] at hv
+  simp only [Set.mem_ofPred_eq, mem_Kn, not_forall, ev_pn] at hv
   obtain ⟨w, hw⟩ := hv
   exact ⟨w.1, hw, w.2⟩
 

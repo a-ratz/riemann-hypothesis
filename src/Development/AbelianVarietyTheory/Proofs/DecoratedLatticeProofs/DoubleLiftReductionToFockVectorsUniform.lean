@@ -123,7 +123,7 @@ theorem exists_isotypic_uniform : ∀ (D : D7), BiAct D → CenFock D → LiftSu
     have : (fun b : ↥(GinfC S ⊓ Subgroup.center (GA D S)) => χ₃ b.1) =
         fun b => k₀.om (1, b.1) (fun u => C₁ u v₀) u₀ / C₁ u₀ v₀ := funext fun b => by rw [hv, mul_div_cancel_right₀ _ h0]
     rw [this]
-    exact ((hwa.om_cont _ (hC₁.left v₀).1 u₀).comp (continuous_const.prodMk continuous_subtype_val)).div_const _
+    exact ((hwa.om_cont _ (hC₁.left v₀).1 u₀).comp (continuous_const.prodMk continuous_subtypeVal)).div_const _
   have hm : ∀ b b' : ↥(GinfC S ⊓ Subgroup.center (GA D S)), χ₃ (b.1 * b'.1) = χ₃ b.1 * χ₃ b'.1 := fun b b' => by
     have e := hv (b * b')
     have e' : ((1, (b * b').1) : GA D A × GA D S) = (1, b.1) * (1, b'.1) := by simp
@@ -134,7 +134,7 @@ theorem exists_isotypic_uniform : ∀ (D : D7), BiAct D → CenFock D → LiftSu
   obtain ⟨hcpt, ν, hν, hν'⟩ := exists_haar hy
   obtain ⟨W, hW, hWf⟩ := hF ψ θ hθ A S x y hx hy k₀ hk₀ χ₁
   let E : Submodule ℂ (WO A S → ℂ) := Submodule.span ℂ (Set.range fun v u => C₁ u v)
-  haveI : FiniteDimensional ℂ E := by
+  have : FiniteDimensional ℂ E := by
     refine Submodule.finiteDimensional_of_le (S₂ := W.map (pureTensorO ψ θ A S x.s y.s x.B y.B k₀.vac))
       (Submodule.span_le.2 ?_)
     rintro _ ⟨v, rfl⟩
@@ -364,10 +364,10 @@ theorem exists_central_average_uniform : ∀ (D : D7), BiAct D → ∀ (ψ : Add
   have hcl : IsClosed (Subgroup.center (GA D A) : Set (GA D A)) := by
     have : (Subgroup.center (GA D A) : Set (GA D A)) = ⋂ g, {a | g * a = a * g} := by
       ext a
-      simp only [SetLike.mem_coe, Subgroup.mem_center_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, Subgroup.mem_center_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [this]
     exact isClosed_iInter fun g => isClosed_eq (continuous_const.mul continuous_id) (continuous_id.mul continuous_const)
-  haveI : CompactSpace Z := isCompact_iff_compactSpace.mp ((GlobalTheory.T.isCompact_realPoints_of_definiteHermitianSpaceData D A x hx).inter_right hcl)
+  have : CompactSpace Z := isCompact_iff_compactSpace.mp ((GlobalTheory.T.isCompact_realPoints_of_definiteHermitianSpaceData D A x hx).inter_right hcl)
   let ν : Measure Z := GlobalTheory.haarProb Z
   obtain ⟨h₀, hh₀⟩ := Function.ne_iff.1 hne
   have hh : φ₀ h₀ ≠ 0 := hh₀
@@ -384,14 +384,14 @@ theorem exists_central_average_uniform : ∀ (D : D7), BiAct D → ∀ (ψ : Add
       funext a
       rw [hc₀ _ a.2.1 a.2.2, mul_div_cancel_right₀ _ hh]
     rw [this]
-    exact (hφ₀.2.comp (continuous_const.mul continuous_subtype_val)).div_const _
+    exact (hφ₀.2.comp (continuous_const.mul continuous_subtypeVal)).div_const _
   have hj : ∀ a : Z, (a : GA D A) ∈ GinfC A := fun a => a.2.1
   have hC := GlobalTheory.FrComb.biTheta_of_vac hx.sd hy.sd hz.sd hv hs
   refine ⟨avg k₀.om ν Subtype.val (fun a => χ a) C, fun a => χ a⁻¹,
-    isBiVac_avg ν ha hb hB continuous_subtype_val hj hcont hC hv,
-    (isBiTheta_avg ν ha hb hB continuous_subtype_val hj hcont hC).smooth, fun a ha1 ha2 v => ?_, ?_⟩
+    isBiVac_avg ν ha hb hB continuous_subtypeVal hj hcont hC hv,
+    (isBiTheta_avg ν ha hb hB continuous_subtypeVal hj hcont hC).smooth, fun a ha1 ha2 v => ?_, ?_⟩
   · funext u
-    rw [om_avg ν ha hb hB continuous_subtype_val hj hcont hC]
+    rw [om_avg ν ha hb hB continuous_subtypeVal hj hcont hC]
     let a' : Z := ⟨a, ha1, ha2⟩
     simp only [Pi.smul_apply, smul_eq_mul, avg]
     rw [← integral_const_mul, ← integral_mul_left_eq_self (μ := ν)
@@ -416,7 +416,7 @@ theorem exists_central_average_uniform : ∀ (D : D7), BiAct D → ∀ (ψ : Add
     rw [hag a a.2.1 1 (GinfC S).one_mem _ (hv.left v).1]
   rw [eavg]
   have hG := GlobalTheory.FrComb.biTheta_combL ha₁.std (GlobalTheory.FrComb.biTheta_combR ha₁.std hC hk'.fin) hk.fin
-  rw [biComb_avg ν ha₁ hb₁ hB continuous_subtype_val hj hcont hC hk.fin hk'.fin]
+  rw [biComb_avg ν ha₁ hb₁ hB continuous_subtypeVal hj hcont hC hk.fin hk'.fin]
   change IsBiTheta ψ A S A' (biComb ψ A S A' k.c k'.c C) at hG
   generalize biComb ψ A S A' k.c k'.c C = G at hG
   funext h₂
@@ -432,10 +432,10 @@ theorem exists_central_average_uniform : ∀ (D : D7), BiAct D → ∀ (ψ : Add
     · exact (hB ψ A S A' _ _ _ _ _ _ ha₁ hb₁ G hG).2.2.2.comp
         (show Continuous fun h : GA D A => ((h, h₁), (h₁, h₂), (0 : WO A S), (0 : WO S A')) from
           (continuous_id.prodMk continuous_const).prodMk continuous_const)
-  rw [← integral_mean ν hx.cpt x.vol continuous_subtype_val hF]
+  rw [← integral_mean ν hx.cpt x.vol continuous_subtypeVal hF]
   congr 1
   funext h
-  rw [ker_avg ν ha₁ hb₁ hB continuous_subtype_val hj hcont hG, ← integral_const_mul]
+  rw [ker_avg ν ha₁ hb₁ hB continuous_subtypeVal hj hcont hG, ← integral_const_mul]
   congr 1
   funext a
   rw [hcφ _ a.2.1 a.2.2]

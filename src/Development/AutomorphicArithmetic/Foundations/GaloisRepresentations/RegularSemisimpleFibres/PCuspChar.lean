@@ -75,7 +75,7 @@ private theorem blk_lt_iff {m a : ℕ} (ha : a < m) (hd : ∑ b, (![a, m - a] : 
   have hj := blk_two ha hd j
   have h1 := (blk (stdBlocks (![a, m - a] : Fin 2 → ℕ) hd) i).isLt
   have h2 := (blk (stdBlocks (![a, m - a] : Fin 2 → ℕ) hd) j).isLt
-  rw [Fin.lt_iff_val_lt_val]
+  rw [Fin.lt_def]
   rw [Fin.ext_iff, Fin.val_zero] at hi hj
   omega
 
@@ -97,7 +97,7 @@ private theorem rad_le {F : Type} [Field F] {m a : ℕ} (h0 : 0 < a) (ha : a < m
 theorem cuspChar : CuspChar := by
   intro F _ _ θ hθ m hm W _ _ _ κ hirr hcusp
   classical
-  haveI : Fintype F := Fintype.ofFinite F
+  have : Fintype F := Fintype.ofFinite F
   have hc := _root_.GlobalTheory.BI.isChar_and_isIrrChar_of_rep ℂ ℂ (GL (Fin m) F) W κ
   have hprim : GlobalTheory.CuspGL.IsPrimitive
       (GlobalTheory.CuspGL.extZero (fun g : GL (Fin m) F => algebraMap ℂ ℂ (κ.character g))) := by

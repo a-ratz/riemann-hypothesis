@@ -96,7 +96,7 @@ theorem norm_det_sub_mono (π : Fin N → Fin N) (hπ : ∀ a, π (π a) = a) (c
       Formalism.L2.SG.PtCell.mono (fun a : Fin l => (⟨(π (Fin.castLE hl a)).val, hπl _ a.2⟩ : Fin l))
         (fun a => c (Fin.castLE hl a)) := by
     ext a b
-    simp only [Formalism.L2.SG.PtCell.mono, Matrix.submatrix_apply, Fin.ext_iff, Fin.coe_castLE]
+    simp only [Formalism.L2.SG.PtCell.mono, Matrix.submatrix_apply, Fin.ext_iff, Fin.val_castLE]
   rw [hsub, norm_det_mono _ (fun a => Fin.ext (by
     show (π (Fin.castLE hl _)).val = a.val
     rw [show Fin.castLE hl (⟨(π (Fin.castLE hl a)).val, hπl _ a.2⟩ : Fin l) = π (Fin.castLE hl a) from Fin.ext rfl,
@@ -109,11 +109,11 @@ theorem det_sub_mono_zero (π : Fin N → Fin N) (c : Fin N → ℂ) {l : ℕ} (
   apply Matrix.det_eq_zero_of_row_eq_zero (⟨a0.val, ha0⟩ : Fin l)
   intro b
   simp only [Formalism.L2.SG.PtCell.mono, Matrix.submatrix_apply]
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   have h1 := congrArg Fin.val h
   rw [show Fin.castLE hl (⟨a0.val, ha0⟩ : Fin l) = a0 from Fin.ext rfl] at h1
-  simp only [Fin.coe_castLE] at h1
+  simp only [Fin.val_castLE] at h1
   have hb := b.2
   omega
 
@@ -182,16 +182,16 @@ theorem norm_leadMinor_one {r : ℕ} (γ : Formalism.MainNotions.S.Point ℂ (r 
   have hcl : ∀ a : Fin (r + 1), a.val < r → (pinv γ a).val < r := by
     intro a ha
     show pperm γ.1 a.val < r
-    rw [h, pperm_append, if_pos (by omega)]
+    rw [h, pperm_append, ite_eq_left (by omega)]
     have := pperm_lt L1 hpos1 a.val (by omega)
     omega
   unfold Formalism.MainNotions.S.leadMinor
   rw [ptMat_eq_mono, norm_det_sub_mono (pinv γ) hinv _ (Nat.le_succ r) hcl]
-  simp only [Fin.coe_castLE]
+  simp only [Fin.val_castLE]
   rw [Fin.prod_univ_eq_prod_range (fun i => ‖pval γ.1 i‖) r]
   have hv : ∀ i ∈ Finset.range r, ‖pval γ.1 i‖ = ‖pval L1 i‖ := by
     intro i hi
-    rw [h, pval_append, if_pos (by rw [hS]; exact Finset.mem_range.1 hi)]
+    rw [h, pval_append, ite_eq_left (by rw [hS]; exact Finset.mem_range.1 hi)]
   rw [Finset.prod_congr rfl hv, ← hS, prod_pval]
 
 theorem leadMinor_big {r : ℕ} (γ : Formalism.MainNotions.S.Point ℂ (r + 1)) (L1 : List (ℂ × ℕ)) (c : ℂ) (s : ℕ) (hs : 2 ≤ s)
@@ -205,8 +205,8 @@ theorem leadMinor_big {r : ℕ} (γ : Formalism.MainNotions.S.Point ℂ (r + 1))
   apply det_sub_mono_zero _ _ (Nat.le_succ r) (⟨(L1.map Prod.snd).sum, by omega⟩ : Fin (r + 1))
     (by show (L1.map Prod.snd).sum < r; omega)
   show r ≤ pperm γ.1 (L1.map Prod.snd).sum
-  rw [h, pperm_append, if_neg (lt_irrefl _), Nat.sub_self]
-  simp only [pperm, if_pos (show 0 < s by omega)]
+  rw [h, pperm_append, ite_eq_right (lt_irrefl _), Nat.sub_self]
+  simp only [pperm, ite_eq_left (show 0 < s by omega)]
   omega
 
 end Lists
@@ -248,7 +248,7 @@ theorem FA_pre (k r : ℕ) (hk : 1 ≤ k) (GG : ℝ) : ∀ (L : List (ℂ × ℕ
     have htail := ih (b + s) (by omega) (by omega)
       (fun x hx => hL x (List.mem_cons_of_mem _ hx))
     simp only [FA, FH, List.map_cons, List.prod_cons, htail]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     have he : (2 * (s : ℤ) * (Formalism.FourierDecayAlt.C.Mlev k r (b + s - 1) + s - 3)) =
         ((2 * s * (2 * (r + 1 - (b + s - 1)) + s - 1) + s * (2 * (k - 1)) : ℕ) : ℤ) := by
       obtain ⟨d, hd⟩ : ∃ d, r + 1 = (b + s - 1) + d := ⟨r + 1 - (b + s - 1), by omega⟩
@@ -294,7 +294,7 @@ theorem core_wt (k r : ℕ) (hk : 1 ≤ k) (T T' : ℝ) (q : Formalism.MainNotio
     subst hs1
     have hFA1 : FA k r GG (1 + (L1.map Prod.snd).sum) [(c, 1)] = (‖c‖ ^ 2 - T * T') ^ (k - 1) := by
       simp only [FA]
-      rw [if_pos (by refine ⟨hlast, ?_⟩; trivial), hGG rfl, mul_one]
+      rw [ite_eq_left (by refine ⟨hlast, ?_⟩; trivial), hGG rfl, mul_one]
     have hFH1 : FH r (1 + (L1.map Prod.snd).sum) [(c, 1)] = 1 := by
       simp only [FH]
       rw [hr0]
@@ -317,7 +317,7 @@ theorem core_wt (k r : ℕ) (hk : 1 ≤ k) (T T' : ℝ) (q : Formalism.MainNotio
     have hFA2 : FA k r GG (1 + (L1.map Prod.snd).sum) [(c, s)] =
         ‖c‖ ^ (2 * s * (2 * 0 + s - 1)) * (‖c‖ ^ s) ^ (2 * (k - 1)) := by
       simp only [FA]
-      rw [if_neg (by omega), hlast, hx, mul_one]
+      rw [ite_eq_right (by omega), hlast, hx, mul_one]
     have hFH2 : FH r (1 + (L1.map Prod.snd).sum) [(c, s)] = ‖c‖ ^ (2 * s * (2 * 0 + s - 1)) := by
       simp only [FH]
       rw [hr0, mul_one]

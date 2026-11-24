@@ -65,7 +65,7 @@ theorem integral_sq_eq {X : Type} [MeasurableSpace X] {μ : Measure X} {f : X �
     (hm.norm.pow 2)]
   congr 1
   refine lintegral_congr fun x => ?_
-  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
 
 theorem polar_pt (a b : ℂ) : a * (starRingEnd ℂ) b =
     (1 / 4 : ℂ) * (((‖a + b‖ ^ 2 : ℝ) : ℂ) - ((‖a - b‖ ^ 2 : ℝ) : ℂ) +

@@ -255,7 +255,7 @@ theorem dim_eq {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reciproci
 
 theorem exists_pelUnif_psiCoord : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CharZero R] (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] [CharZero R'] (φ : R →+* R') (t : SAB H (Sp R)) (t' : SAB H (Sp R')) (_ : SABMap t' t (spMap φ)) (U : PELUnif (maximalIdeal R) t) (W : Set (Sp R)), IsNoetherianRing R → IsIntegrallyClosed R → IsAdicComplete (maximalIdeal R) R → IsNoetherianRing R' → IsIntegrallyClosed R' → IsAdicComplete (maximalIdeal R') R' → (∀ a ∈ maximalIdeal R, φ a ∈ maximalIdeal R') → IsOpen W → W ⊆ abLocus t.G → (∀ y, PsiUnitOn U.D.toPre y W) → (⟨RingHom.ker φ, RingHom.ker_isPrime φ⟩ : PrimeSpectrum R) ∈ W → (∃ P : PolAV (Sp (FractionRing R')), ∃ gen : (Over.pullback (jK R')).obj t'.G ≅ P.A, IsMonHom gen.hom ∧ ∃ w : LB.Iso (P.L.pull gen.hom.left) (t'.PP.L.pull (pullback.fst t'.G.hom (jK R'))), w.IsGen) → ∃ (U' : PELUnif (maximalIdeal R') t') (e : U.D.toPre.X ≃ₗ[𝓞 E] U'.D.toPre.X), ∀ χ r, PsiCoord U.D.toPre χ r → ∃ u : R'ˣ, PsiCoord U'.D.toPre (e χ) (u * φ r) := by
   intro E _ _ _ H R _ _ _ _ R' _ _ _ _ φ t t' m U W n₁ n₂ n₃ n₁' n₂' n₃' hφ hWo _ hψ hker ⟨A', eA, mE, wA₀⟩
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨-, -, -, h4, h5⟩ := GlobalTheory.firstFiveLaws
   have hR : AdmBase R (maximalIdeal R) := ⟨n₁, inferInstance, n₂, n₃⟩
   have hR' : AdmBase R' (maximalIdeal R') := ⟨n₁', inferInstance, n₂', n₃'⟩

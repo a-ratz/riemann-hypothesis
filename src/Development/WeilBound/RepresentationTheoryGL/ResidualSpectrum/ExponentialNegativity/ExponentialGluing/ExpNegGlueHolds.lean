@@ -74,10 +74,10 @@ open GroundTheory.Automorphic GroundTheory.Automorphic.AutomorphicForm in
 theorem continuous_ctn {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {N : ℕ} (r : ℕ)
     {φ : GA E N → ℂ} (hφ : Continuous φ) : Continuous (An.ctn (K := E) (n := N) r φ) := by
   set_option synthInstance.maxHeartbeats 200000 in
-    haveI : SecondCountableTopology (GA E N) := inferInstance
-    haveI : FirstCountableTopology (GA E N) := inferInstance
+    have : SecondCountableTopology (GA E N) := inferInstance
+    have : FirstCountableTopology (GA E N) := inferInstance
     obtain ⟨C, hC, hDC⟩ := exists_isCompact_superset_unipFundamentalDomain (K := E) (n := N) (r := r)
-    haveI : IsFiniteMeasure ((unipMeasure E N r).restrict (unipFundamentalDomain E N r)) :=
+    have : IsFiniteMeasure ((unipMeasure E N r).restrict (unipFundamentalDomain E N r)) :=
       isFiniteMeasure_restrict.2 (by rw [unipMeasure_unipFundamentalDomain]; exact ENNReal.one_ne_top)
     have hf : Continuous (Function.uncurry fun (g : GA E N) (X : UPos N r → AdeleRing (𝓞 E) E) =>
         φ (unipGL X * g)) :=
@@ -102,15 +102,15 @@ theorem main : ExpNegGlue := by
     subst hF₀eq
     have hφc : Continuous φ.1 := GlobalTheory.CompanionTheory.ConstTerm.continuous_of_isOpen_stab φ hA.level
     obtain ⟨hcen, μ, 𝓕, hHaar, hFD, hfin⟩ := hSq
-    haveI := hHaar
+    have := hHaar
     have hleft : ∀ γ ∈ An.lat E N, ∀ g, φ.1 (γ * g) = φ.1 g := by
       let S : Subgroup (GA E N) :=
         { carrier := {γ | ∀ g, φ.1 (γ * g) = φ.1 g}
           mul_mem' := fun {x y} hx hy g => by
-            simp only [Set.mem_setOf_eq] at hx hy ⊢; rw [mul_assoc, hx, hy]
+            simp only [Set.mem_ofPred_eq] at hx hy ⊢; rw [mul_assoc, hx, hy]
           one_mem' := fun g => by simp
           inv_mem' := fun {x} hx g => by
-            simp only [Set.mem_setOf_eq] at hx ⊢
+            simp only [Set.mem_ofPred_eq] at hx ⊢
             calc φ.1 (x⁻¹ * g) = φ.1 (x * (x⁻¹ * g)) := (hx _).symm
               _ = φ.1 g := by rw [mul_inv_cancel_left] }
       have hS : An.lat E N ≤ S := by

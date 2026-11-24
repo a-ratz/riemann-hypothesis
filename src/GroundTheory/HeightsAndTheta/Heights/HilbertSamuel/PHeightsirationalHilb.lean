@@ -222,13 +222,13 @@ theorem BlockBirationalHilbert.proof (hV : HilbFnValueSpan.Statement) : BlockBir
         (isMultiHomog_prod _ _ (fun a => blockDeg k₀ (c a.1 a.2)) fun a _ => hh a.1 a.2) ?_, ?_⟩
     · funext k
       by_cases hk : k = k₀
-      · simp only [Pi.add_apply, Finset.sum_apply, blockDeg, hk, if_true]
+      · simp only [Pi.add_apply, Finset.sum_apply, blockDeg, hk, ite_true]
         rw [← Finset.add_sum_erase _ _ hmem]
         ring
       · simp [blockDeg, hk, Finset.sum_apply]
     · have e1 : aeval y (monomial γ (1 : ℤ) : MRing ι) =
           aeval y (monomial γ₀ (1 : ℤ) : MRing ι) * aeval y (monomial α (1 : ℤ) : MRing ι) := by
-        rw [← map_mul, monomial_mul, hsplit, mul_one]
+        rw [← map_mul, monomial_mul_monomial, hsplit, mul_one]
       rw [map_mul, map_mul, e1, map_prod, map_prod, ← Finset.mul_prod_erase _ _ hmem]
       have e2 := hgh α hαS
       calc aeval y (monomial γ₀ (1 : ℤ) : MRing ι) * aeval y (g α hαS) *

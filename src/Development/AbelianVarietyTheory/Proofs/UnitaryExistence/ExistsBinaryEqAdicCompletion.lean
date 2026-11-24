@@ -81,7 +81,7 @@ theorem exists_add_mul_sq_eq_of_norm {K : Type*} [NormedField K] [IsUltrametricD
     have hx := mem_closedBall_zero_iff.1 x.2
     have hy := mem_closedBall_zero_iff.1 y.2
     rw [Subtype.dist_eq, Subtype.dist_eq, dist_eq_norm, dist_eq_norm]
-    simp only [Set.MapsTo.val_restrict_apply, coe_nnnorm]
+    simp only [Set.MapsTo.val_restrict_apply, coe_nnNorm]
     have h1 : e - c * (x : K) ^ 2 - (e - c * (y : K) ^ 2)
         = -(c * ((x : K) + y) * ((x : K) - y)) := by ring
     have h2 : ‖(x : K) + y‖ ≤ ‖e‖ := (IsUltrametricDist.norm_add_le_max _ _).trans (max_le hx hy)
@@ -98,9 +98,9 @@ theorem exists_binary_eq_adicCompletion {F : Type*} [Field F] [NumberField F]
     (hD : a ^ 2 - 4 * n ∉ v.asIdeal) (hu : u ∉ v.asIdeal) :
     ∃ r s : v.adicCompletion F, r ^ 2 + algebraMap F _ (a : F) * r * s
       + algebraMap F _ (n : F) * s ^ 2 = algebraMap F _ (u : F) := by
-  haveI := v.isMaximal
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  letI := Ideal.Quotient.field v.asIdeal
+  have := v.isMaximal
+  have : Finite (𝓞 F ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  let := Ideal.Quotient.field v.asIdeal
   obtain ⟨r, s, hrs⟩ := UnramifiedHermitian.exists_binary_eq_of_finite
     (a := Ideal.Quotient.mk v.asIdeal a) (n := Ideal.Quotient.mk v.asIdeal n)
     (by
@@ -263,7 +263,7 @@ theorem exists_mul_norm_eq (x : maximalRealSubfield E) (hx : x ≠ 0) {I J : Ide
     ∃ (z₁ z₂ : E) (u : 𝓞 (maximalRealSubfield E)), z₁ ≠ 0 ∧ u ∉ v.asIdeal ∧
       (x : E) * (z₁ * IsCMField.complexConj E z₁)
         = ((u : maximalRealSubfield E) : E) * (z₂ * IsCMField.complexConj E z₂) := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨P, hP, hPv⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 E) v.asIdeal
     (by simp [RingHom.ker_eq_bot_iff_eq_zero, (RingHom.injective_iff_ker_eq_bot _).1
       (FaithfulSMul.algebraMap_injective (𝓞 (maximalRealSubfield E)) (𝓞 E))])
@@ -350,8 +350,8 @@ theorem exists_eq_sq_add_of_notMem (H : Host E)
     {u : 𝓞 (maximalRealSubfield E)} (hu : u ∉ v.asIdeal) :
     ∃ a b : v.adicCompletion (maximalRealSubfield E),
       algebraMap (maximalRealSubfield E) _ (u : maximalRealSubfield E) = a ^ 2 + H.d * b ^ 2 := by
-  haveI := v.isMaximal
-  haveI := H.unram
+  have := v.isMaximal
+  have := H.unram
   obtain ⟨P, hP, hPv⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 E) v.asIdeal
     (by simp [RingHom.ker_eq_bot_iff_eq_zero, (RingHom.injective_iff_ker_eq_bot _).1
       (FaithfulSMul.algebraMap_injective (𝓞 (maximalRealSubfield E)) (𝓞 E))])
@@ -376,7 +376,7 @@ theorem exists_eq_sq_add_of_notMem (H : Host E)
     apply hw
     apply hP.isPrime.mem_of_pow_mem 2
     convert h using 1
-    simp only [map_sub, map_mul, map_pow, map_ofNat, ha, hn, AlgEquiv.coe_algHom]
+    simp only [map_sub, map_mul, map_pow, map_ofNat, ha, hn, AlgEquiv.coe_toAlgHom]
     ring
   obtain ⟨r, s, hrs⟩ := exists_binary_eq_adicCompletion v hD hu
   obtain ⟨α, β, hα, hβ⟩ := exists_coords H (w : E)

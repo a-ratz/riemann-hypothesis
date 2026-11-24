@@ -284,8 +284,8 @@ theorem hecke_theta_value_identity : ∀ (E : Type) [Field E] [NumberField E] [I
     Hm χl fr θ hH _ him hd hn hc h0 ha hv Hm' χl' fr' θ' _ _ him' hd' _ hc' h0' ha' hv'
   obtain ⟨ψ, ψp, n, cr, b, hk, hr, hb0, hbt, hbr, hbh, hbv⟩ := _root_.GlobalTheory.HeckeValues.hkPtC_values E H Dw l Xo c σ p (U.un k x) z C hz
   have hcard : n = Ideal.absNorm P ^ i := by
-    letI := fieldCAt σ
-    haveI := algClosedCAt σ
+    let := fieldCAt σ
+    have := algClosedCAt σ
     exact GlobalTheory.ThetaTrace.card_reps hA.2.2.1.pos hK hr
   subst hcard
   obtain ⟨hzx, -, hbc⟩ := hb
@@ -432,19 +432,19 @@ theorem exists_pointwise_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have hsq := GlobalTheory.UnitFrameGen.normSq_periodic hHq _ _ _ _ z a (hnq j _ hj') (v2.symm.trans v1) hm
     have hsq' : ∀ w : Fin g → ℂ, (‖θq w‖ * Real.exp (-(Real.pi / 2) * (hermForm Hq w w).re)) ^ 2 =
         ‖θq w‖ ^ 2 * Real.exp (-Real.pi * (hermForm Hq w w).re) := fun w => by
-      rw [mul_pow, ← Real.exp_nat_mul]; congr 2; push_cast; ring
+      rw [mul_pow, ← Real.exp_natCast_mul]; congr 2; push_cast; ring
     refine (pow_left_inj₀ (by positivity) (by positivity) two_ne_zero).1 ?_
     rw [hsq', hsq', hsq]
   have hsq' : ∀ (Hq : Matrix (Fin g) (Fin g) ℂ) (θq : (Fin g → ℂ) → ℂ) (w : Fin g → ℂ),
       (‖θq w‖ * Real.exp (-(Real.pi / 2) * (hermForm Hq w w).re)) ^ 2 =
         ‖θq w‖ ^ 2 * Real.exp (-Real.pi * (hermForm Hq w w).re) := fun Hq θq w => by
-    rw [mul_pow, ← Real.exp_nat_mul]; congr 2; push_cast; ring
+    rw [mul_pow, ← Real.exp_natCast_mul]; congr 2; push_cast; ring
   refine ⟨g, Pm.range, Pm'.range, Fd, Fd', h, fun z => ‖θ z‖ * Real.exp (-(Real.pi / 2) * (hermForm Hm z z).re),
     fun z => ‖θ' z‖ * Real.exp (-(Real.pi / 2) * (hermForm Hm' z z).re), fun m => (p : ℂ) • wm m,
     ?_, ?_, hF, hF', ?_, fun z => by positivity, fun z => by positivity, ?_, ?_, ?_, ?_, ?_⟩
-  · haveI := hp.2.2.1
+  · have := hp.2.2.1
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  · haveI := hp'.2.2.1
+  · have := hp'.2.2.1
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   · rintro _ ⟨a, rfl⟩
     obtain ⟨b, hb'⟩ := hlat a
@@ -526,7 +526,7 @@ theorem affine_fundamentalDomain_mean :
     rw [hmap, Measure.restrict_smul, integral_smul_measure, ENNReal.toReal_ofReal hc.le, smul_eq_mul] at this
     exact this.symm
   have i3 : (volume (e ⁻¹' Fd')).toReal = k * (volume Fd').toReal := by
-    rw [← e.map_apply, hmap, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_ofReal hc.le]
+    rw [← e.map_apply, hmap, smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_ofReal hc.le]
   refine ⟨hpre ▸ hF2, ?_⟩
   rw [hpre]
   have i2' : ∫ z in e ⁻¹' Fd', f (L z + c) = k * ∫ z in Fd', f z := i2
@@ -564,8 +564,8 @@ theorem mean_fundamentalDomain_of_le : ∀ (g : ℕ) (Λ Λ₁ : AddSubgroup (Fi
     show f ((l : Fin g → ℂ) + x) = f x
     rw [add_comm]; exact hper _ (hle l.2) x
   let Q := Λ₁ ⧸ Λ.addSubgroupOf Λ₁
-  haveI : Countable Λ := (AddSubgroup.inclusion_injective hle).countable
-  haveI : Countable Q := (QuotientAddGroup.mk_surjective (s := Λ.addSubgroupOf Λ₁)).countable
+  have : Countable Λ := (AddSubgroup.inclusion_injective hle).countable
+  have : Countable Q := (QuotientAddGroup.mk_surjective (s := Λ.addSubgroupOf Λ₁)).countable
   let rep : Q → Λ₁ := fun q => q.out
   have hrep : ∀ q : Q, (QuotientAddGroup.mk (rep q) : Q) = q := fun q => QuotientAddGroup.out_eq' q
   have hrepinj : Function.Injective rep := fun q q' h => by rw [← hrep q, ← hrep q', h]
@@ -621,11 +621,11 @@ theorem mean_fundamentalDomain_of_le : ∀ (g : ℕ) (Λ Λ₁ : AddSubgroup (Fi
     rw [measure_iUnion₀ hsd fun q => (hs q).nullMeasurableSet]
     simp only [hvol]
   have hEFd : volume E = volume Fd := hE.measure_eq hFd
-  haveI : Finite Q := by
+  have : Finite Q := by
     by_contra hinf
     rw [not_finite_iff_infinite] at hinf
     exact hfin (by rw [← hEFd, hvolE]; exact ENNReal.tsum_const_eq_top_of_ne_zero hD0)
-  haveI := Fintype.ofFinite Q
+  have := Fintype.ofFinite Q
   have hn : (Fintype.card Q : ℝ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
   have hintE : IntegrableOn f E volume :=
     integrableOn_finite_iUnion.2 fun q => ((hs q).integrableOn_iff hD₁ hinv₁).2 hint

@@ -175,7 +175,7 @@ theorem isFractionRing {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (CommR
     (hsub : ∀ a, algebraMap R Ω a ∈ regAt ξ q) : IsFractionRing R Ω := by
   obtain ⟨P, hP⟩ : ∃ P : PrimeSpectrum R, x P = q.1 := hq
   have hf := GlobalTheory.CompanionTheory.HtLink.regAt_frac hξ hk hx P q hP hsub
-  haveI : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective R Ω).2 hk
+  have : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective R Ω).2 hk
   refine IsFractionRing.of_field R Ω fun z => ?_
   obtain ⟨u, v, hv, rfl⟩ : ∃ u v : X.presheaf.stalk q.1, genMap ξ q v ≠ 0 ∧ z = genMap ξ q u / genMap ξ q v := by
     obtain ⟨b, c, hc, e⟩ := GlobalTheory.CompanionTheory.Ar.exists_frac_genMap ξ hξ q z
@@ -194,12 +194,12 @@ end PositivityTheory.Xgn.SequenceLocalization
 open PositivityTheory.Xgn.SequenceLocalization in
 theorem PositivityTheory.Xgn.sequence_localization_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → 0 < D.p + D.q → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω], ∀ (G : GenTors 𝔐 p) (c' : ∀ k, J k), mseg y c' ≠ 0 → ∀ (P : ChartPack G O c'), ∀ q : Cpt 𝔐.ξ, InChart 𝔐.ξ (mseg y) c' q → (∀ o : O, algebraMap O Ω o ∈ regAt 𝔐.ξ q) → HT.omP 𝔐 p q = Submodule.span (regAt 𝔐.ξ q) (P.Dh.om' : Set (Module.Dual Ω 𝔐.Li)) := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hV _ p hp hpS A _ _ _ m _ hpm O _ _ _ _ _ _ _ G c' hc' P q hq hO
-  haveI : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
   have hξ : IsCptGen 𝔐.ξ := 𝔐.tie.gen
-  haveI := 𝔐.t.semi.smooth
-  haveI := 𝔐.t.semi.separated
-  haveI := 𝔐.t.semi.comm
-  haveI := P.fin
+  have := 𝔐.t.semi.smooth
+  have := 𝔐.t.semi.separated
+  have := 𝔐.t.semi.comm
+  have := P.fin
   have hn : p ^ 𝔐.R p ≠ 0 := pow_ne_zero _ hp.out.ne_zero
   have hinj : Function.Injective (algebraMap (CR O y c') Ω) := Subtype.val_injective
   have hsub : ∀ a : CR O y c', algebraMap (CR O y c') Ω a ∈ regAt 𝔐.ξ q := fun a =>
@@ -209,7 +209,7 @@ theorem PositivityTheory.Xgn.sequence_localization_exists : ∀ (E : Type) [Fiel
     exact mem_range hξ hU _ P.x P.x_gen (fun z => (hmem _).2 ⟨𝔐.all _,
       (PositivityTheory.Xgn.exists_function_at_point E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hV p hpS A m hpm O G c' hc' P z).1⟩)
       q ((hmem _).2 ⟨q.2, hq⟩) hsub
-  haveI : IsFractionRing (CR O y c') Ω := isFractionRing hξ hinj P.x P.x_gen q hr hsub
+  have : IsFractionRing (CR O y c') Ω := isFractionRing hξ hinj P.x P.x_gen q hr hsub
   let κ : FractionRing (CR O y c') ≃+* Ω := (FractionRing.algEquiv (CR O y c') Ω).toRingEquiv
   have hκ : ∀ a, κ (algebraMap (CR O y c') _ a) = algebraMap (CR O y c') Ω a :=
     (FractionRing.algEquiv (CR O y c') Ω).commutes
@@ -224,7 +224,7 @@ theorem PositivityTheory.Xgn.sequence_localization_exists : ∀ (E : Type) [Fiel
   have hsurj : ∀ s : TorsT E (D.p + D.q) (p ^ 𝔐.R p), ∃ v, qmk (p ^ 𝔐.R p) v = s := fun s => by
     choose v hv using fun j => Ideal.Quotient.mk_surjective (Multiplicative.toAdd s j)
     exact ⟨v, congrArg Multiplicative.ofAdd (funext hv)⟩
-  haveI : Finite (𝓞 E ⧸ Ideal.span {((p ^ 𝔐.R p : ℕ) : 𝓞 E)}) :=
+  have : Finite (𝓞 E ⧸ Ideal.span {((p ^ 𝔐.R p : ℕ) : 𝓞 E)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by
       rw [Ne, Ideal.span_singleton_eq_bot]
       exact Nat.cast_ne_zero.2 hn)

@@ -124,7 +124,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.zetaFin :
     rw [e, M.wt, ← ENNReal.ofReal_mul (by positivity)]
     refine ENNReal.ofReal_le_ofReal ?_
     simpa only [G, M.ab_inv] using hr
-  haveI : (ideleMeasure F).IsInvInvariant := Measure.IsHaarMeasure.isInvInvariant_of_regular _
+  have : (ideleMeasure F).IsInvInvariant := Measure.IsHaarMeasure.isInvInvariant_of_regular _
   have h3 : ∫⁻ a : IdeleGroup F, ENNReal.ofReal (G a⁻¹) ∂(ideleMeasure F) = ∫⁻ b : IdeleGroup F, ENNReal.ofReal (G b) ∂(ideleMeasure F) :=
     lintegral_inv_eq_self (fun b => ENNReal.ofReal (G b))
   exact ne_top_of_le_ne_top (h3 ▸ hG.lintegral_lt_top.ne) (lintegral_mono key)

@@ -71,7 +71,7 @@ theorem ball_eq_image {ϖ : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) (k 
     refine ⟨(ϖ ^ k)⁻¹ * x, ?_, by field_simp⟩
     show Valued.v ((ϖ ^ k)⁻¹ * x) ≤ 1
     rw [map_mul, map_inv₀, hk]
-    exact (inv_mul_le_one₀ (zero_lt_iff.2 WithZero.exp_ne_zero)).2 hx
+    exact (inv_mul_le_one₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero)).2 hx
   · rintro ⟨y, hy, rfl⟩
     show Valued.v (ϖ ^ k * y) ≤ WithZero.exp (-k)
     rw [map_mul, hk]
@@ -86,9 +86,9 @@ theorem isOpen_vball {ϖ : L} (hϖ : Valued.v ϖ = WithZero.exp (-1 : ℤ)) (k :
 theorem isCompact_vball [CompleteSpace L] {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramInv ϖ σ q) (k : ℤ) :
     IsCompact {x : L | Valued.v x ≤ WithZero.exp (-k)} := by
   obtain ⟨-, hv, -, hϖ, -, hq, hcard⟩ := h
-  haveI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
+  have : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
     ⟨ϖ, by rw [hϖ]; exact WithZero.coe_ne_zero, by rw [hϖ, ← WithZero.coe_one, ne_eq, WithZero.coe_inj]; decide⟩
-  letI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
+  let : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
     Valuation.IsRankOneDiscrete.rankOne _ (e := 2) (by norm_num)
   have hp := (Valued.integer.compactSpace_iff_completeSpace_and_isDiscreteValuationRing_and_finite_residueField
     (K := L)).2 ⟨(Valued.isClosed_integer L).completeSpace_coe,

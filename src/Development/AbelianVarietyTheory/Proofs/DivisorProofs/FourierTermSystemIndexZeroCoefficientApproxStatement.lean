@@ -220,7 +220,7 @@ theorem map_mono_eq_zero {O : Type} [CommRing O] {bar : O → O} {q s : ℕ} {W 
   have hnk : ∀ k, φ (Φ.t y k) ≠ 0 → 1 ≤ n k ∧ addVal R (φ (Φ.t y k)) = n k := by
     intro k hk
     obtain ⟨r, hr1, hr⟩ := addVal_mem (φ (Φ.t y k)) (map_nonunit φ _ (Φ.t_mem y k).1) hk
-    have : n k = r := by simp only [n, hr, ENat.toNat_coe]
+    have : n k = r := by simp only [n, hr, ENat.toNat_natCast]
     exact ⟨this ▸ hr1, this ▸ hr⟩
   let β : LinearMap.BilinForm ℤ (Φ.X y) := ∑ k, (n k : ℤ) • Φ.δ y k
   have hβlin : ∀ mu, qW W β mu = ∑ k, (n k : ℤ) * qW W (Φ.δ y k) mu := by
@@ -389,7 +389,7 @@ theorem mono_mem_radical : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : �
   · subst hpm
     obtain ⟨k, hk⟩ := exists_qW_pos Φ.posW (Φ.δ y) hs (Φ.nonneg y) (Φ.pos y) hnu
     exact hmp (mono_mem _ _ _ _ k (Φ.t_mem y k).1 hk)
-  · haveI : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
+  · have : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
     obtain ⟨R, _, _, _, _, φ, hker, hloc⟩ := GlobalTheory.exists_complete_discreteValuationRing_ker_eq p hpm
     apply hmp
     rw [← hker, RingHom.mem_ker]
@@ -494,10 +494,10 @@ theorem pow_mem_of_radical {V : Type} [CommRing V] (J : Ideal V) {m : ℕ} (t : 
         rw [← pow_mul]
         refine pow_dvd_pow _ ?_
         by_cases h : 0 < a ν k
-        · simp only [pat, h, decide_true, if_true, Nat.one_mul]
+        · simp only [pat, h, decide_true, ite_true, Nat.one_mul]
           exact Finset.single_le_sum (f := a ν) (fun _ _ => Nat.zero_le _) (Finset.mem_univ k)
         · simp only [pat, h, decide_false]
-          simp only [Bool.false_eq_true, if_false, Nat.zero_mul]
+          simp only [Bool.false_eq_true, ite_false, Nat.zero_mul]
           omega
       obtain ⟨c, hc⟩ := hK
       have h1 : P (pat ν) ^ (∑ k, a ν k) ∈ J.radical := by
@@ -649,7 +649,7 @@ theorem coeffZero_approx : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : �
         (Finset.ne_of_mem_erase hmu)))
     convert key using 1
     ring
-  haveI : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
+  have : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
   exact UnitZero.mem_of_forall_mem_pow_sup _ _ hmem
 
 end GlobalTheory.Poinc.Sep

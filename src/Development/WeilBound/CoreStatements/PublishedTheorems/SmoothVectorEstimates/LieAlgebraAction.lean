@@ -157,7 +157,7 @@ theorem fderiv_orb (ρ : GL (Fin a) (ι → ℂ) →* (X →L[ℂ] X)) {v : X} {
   rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply]
   conv_lhs => rw [← b.sum_repr (Ring.inverse (lm M) Z)]
 
-  rw [map_sum, map_sum, ContinuousLinearMap.sum_apply]
+  rw [map_sum, map_sum, sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_smul, map_smul, ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.comp_apply,
     LinearMap.coe_toContinuousLinearMap', Module.Basis.coord_apply, orb_unit ρ _ hM]

@@ -86,7 +86,7 @@ theorem compsH_pre_isIrreducible {T C : Set α} (hCT : C ⊆ T) (hC : IsIrreduci
 
 theorem image_mem_compsH {T : Set α} {A : Set T} (hA : A ∈ irreducibleComponents T) :
     Subtype.val '' A ∈ compsH T := by
-  refine ⟨⟨hA.1.image _ continuous_subtype_val.continuousOn, by rintro _ ⟨x, _, rfl⟩; exact x.2⟩, ?_⟩
+  refine ⟨⟨hA.1.image _ continuous_subtypeVal.continuousOn, by rintro _ ⟨x, _, rfl⟩; exact x.2⟩, ?_⟩
   intro C' hC' hle
   have h1 : A ⊆ Subtype.val ⁻¹' C' := fun x hx => hle ⟨x, hx, rfl⟩
   have h2 := hA.2 (compsH_pre_isIrreducible hC'.2 hC'.1) h1
@@ -98,7 +98,7 @@ theorem pre_mem_irreducibleComponents {T C : Set α} (hC : C ∈ compsH T) :
   refine ⟨compsH_pre_isIrreducible hC.1.2 hC.1.1, ?_⟩
   intro B hB hle
   have h1 : C ⊆ Subtype.val '' B := fun c hc => ⟨⟨c, hC.1.2 hc⟩, hle hc, rfl⟩
-  have h2 := hC.2 ⟨hB.image _ continuous_subtype_val.continuousOn, by rintro _ ⟨x, _, rfl⟩; exact x.2⟩ h1
+  have h2 := hC.2 ⟨hB.image _ continuous_subtypeVal.continuousOn, by rintro _ ⟨x, _, rfl⟩; exact x.2⟩ h1
   intro x hx
   exact h2 ⟨x, hx, rfl⟩
 
@@ -252,9 +252,9 @@ theorem exists_parPrimes {U : W.Opens} (hU : IsAffineOpen U) {y : W} (hy : y ∈
     (f : Fin n → Γ(W, U)) [IsRegularLocalRing (W.presheaf.stalk y)]
     (hrsp : FinalTheorems.Rsp (W.presheaf.stalk y) n (fun i => W.presheaf.germ U y hy (f i))) :
     ∃ q, ParPrimes hU hy f q := by
-  letI : Algebra Γ(W, U) (W.presheaf.stalk y) :=
+  let : Algebra Γ(W, U) (W.presheaf.stalk y) :=
     TopCat.Presheaf.algebra_section_stalk W.presheaf ⟨y, hy⟩
-  haveI : IsLocalization.AtPrime (W.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
+  have : IsLocalization.AtPrime (W.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
     hU.isLocalization_stalk ⟨y, hy⟩
   have hrsp' : FinalTheorems.Rsp (W.presheaf.stalk y) n
       (fun i => algebraMap Γ(W, U) (W.presheaf.stalk y) (f i)) := hrsp
@@ -266,7 +266,7 @@ theorem exists_parPrimes {U : W.Opens} (hU : IsAffineOpen U) {y : W} (hy : y ∈
   · intro i
     exact (hsp i).2.2
   · intro i Q hQ
-    haveI := Q.isPrime
+    have := Q.isPrime
     exact mem_iff_parPrime_le (A := Γ(W, U)) (S := W.presheaf.stalk y)
       (p := (hU.primeIdealOf ⟨y, hy⟩).asIdeal) hrsp' i hQ
   · intro i j h
@@ -304,7 +304,7 @@ private lemma supp_lemma_5 (hZU : Z.ideal ⟨U, hU⟩ = Ideal.span {∏ i ∈ J,
     hU.fromSpec P ∈ (Z.support : Set W) ↔ ∃ i ∈ J, f i ∈ P.asIdeal := by
   rw [SetLike.mem_coe, Scheme.IdealSheafData.mem_support_iff_of_mem (U := ⟨U, hU⟩) (fromSpec_mem_of_isAffineOpen' hU P),
     hZU, fromSpec_mem_zeroLocus_iff_subset, SetLike.coe_subset_coe, Ideal.span_singleton_le_iff_mem]
-  haveI := P.isPrime
+  have := P.isPrime
   exact Ideal.IsPrime.prod_mem_iff
 
 theorem fromSpec_mem_zeroLocus (hq : ParPrimes hU hy f q) (i : Fin n) :

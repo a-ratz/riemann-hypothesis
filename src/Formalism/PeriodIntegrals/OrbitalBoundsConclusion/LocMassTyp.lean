@@ -353,7 +353,7 @@ theorem kUnip1_of (hS : SplitR) : KUnip1 := by
   have hUdiag : ∀ a, U a a = 1 := fun a => by
     simp [hU, uMat, hsc1]
   have hUlow : ∀ a b, b < a → U a b = 0 := fun a b hba => by
-    simp only [hU, Matrix.of_apply, uMat, if_neg (ne_of_gt hba), dif_neg (not_lt_of_gt hba),
+    simp only [hU, Matrix.of_apply, uMat, ite_eq_right (ne_of_gt hba), dite_eq_right (not_lt_of_gt hba),
       mul_zero]
   have hUI : ∀ a b, U a b ∈ OEv (E := E) v := by
     intro a b
@@ -429,8 +429,8 @@ theorem kUnip1_of (hS : SplitR) : KUnip1 := by
   have hlast : ∀ c, U (Fin.last r) c = if c = Fin.last r then 1 else 0 := by
     intro c
     by_cases hc : c = Fin.last r
-    · rw [if_pos hc, hc, hUdiag]
-    · rw [if_neg hc]
+    · rw [ite_eq_left hc, hc, hUdiag]
+    · rw [ite_eq_right hc]
       exact hUlow _ _ (lt_of_le_of_ne (Fin.le_last c) hc)
   have hYoff : ∀ c d, ¬ (c = Fin.last r ∧ d = Fin.last r) →
       Formalism.UG.hform (sigR (Fv F v) σ) (JR (Fv F v) J) (Y0 c) (Y0 d) = 0 := by
@@ -693,7 +693,7 @@ theorem uo_of_mem {y : HA (Fv F v) σ J}
     rw [key]
     exact kvc_mem_lat σ J v Λ hk (hy.1 b)
   have := hy.2 c hmem a
-  simp only [c, uMat, if_neg hab.ne, dif_pos hab] at this
+  simp only [c, uMat, ite_eq_right hab.ne, dite_eq_left hab] at this
   exact this
 
 end Main
@@ -724,13 +724,13 @@ theorem stepC_at {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
       ∑ a, uMat v x a b • ratV (F := F) (Fv F v) (F0 P a) := by
     intro x b
     by_cases hx : x ∈ UO (E := E) v r
-    · simp only [t, dif_pos hx]
+    · simp only [t, dite_eq_left hx]
       exact (hK0 x hx).choose_spec.1 b
-    · simp only [t, dif_neg hx]
+    · simp only [t, dite_eq_right hx]
       exact (hE0 x).choose_spec b
   have htK : ∀ x ∈ UO (E := E) v r, y * t x * y⁻¹ ∈ Formalism.L2.SG.TypedSets.Kv σ J Λ v := by
     intro x hx
-    simp only [t, dif_pos hx]
+    simp only [t, dite_eq_left hx]
     exact (hK0 x hx).choose_spec.2
   have hiff : ∀ x (s0 : S0 (Fv F v) σ J P), (s0 : HA (Fv F v) σ J) * t x ∈ C ↔
       x ∈ UO (E := E) v r ∧ s0 ∈ stabilizerConjugateCompact σ J v P Λ y := by
@@ -749,10 +749,10 @@ theorem stepC_at {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
       convert this using 1
       group
   have hL : μS (KSvT σ J v P Λ y) = ∫⁻ g, C.indicator 1 g ∂(amb μS) := by
-    rw [lintegral_indicator_one hC, Measure.map_apply measurable_subtype_coe hC]
+    rw [lintegral_indicator_one hC, Measure.map_apply measurable_subtypeVal hC]
     rfl
   rw [hL, hpu (C.indicator 1) (measurable_one.indicator hC) t ht]
-  have hs0m : MeasurableSet (stabilizerConjugateCompact σ J v P Λ y) := measurable_subtype_coe hC
+  have hs0m : MeasurableSet (stabilizerConjugateCompact σ J v P Λ y) := measurable_subtypeVal hC
   have hpt : ∀ x, ∫⁻ s0, C.indicator 1 ((s0 : HA (Fv F v) σ J) * t x) ∂μS0 =
       (UO (E := E) v r).indicator 1 x * μS0 (stabilizerConjugateCompact σ J v P Λ y) := by
     intro x
@@ -827,14 +827,14 @@ theorem isOpen_uog {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
 
 theorem unipotent_orbit_measurable : MeasUOg := by
   intro F E _ _ _ _ _ v r g _
-  haveI := PI.LocMassTypM.sc_tensV (E := E) v
-  haveI := PI.LocMassTypM.borel_tensV (E := E) v
+  have := PI.LocMassTypM.sc_tensV (E := E) v
+  have := PI.LocMassTypM.borel_tensV (E := E) v
   exact (isOpen_uog (E := E) v r g).measurableSet
 
 theorem unipotent_orbit_count : CountUOg := by
   intro F E _ _ _ _ _ v r g _
-  haveI := PI.LocMassTypM.sc_tensV (E := E) v
-  haveI : SecondCountableTopology (UIdx r → Fv F v ⊗[F] E) := inferInstance
+  have := PI.LocMassTypM.sc_tensV (E := E) v
+  have : SecondCountableTopology (UIdx r → Fv F v ⊗[F] E) := inferInstance
   have hB : IsOpen (UOgS (E := E) v g r : Set (UIdx r → Fv F v ⊗[F] E)) := isOpen_uog v r g
   rw [← Set.countable_univ_iff]
   have hd : (Set.univ : Set ((UIdx r → Fv F v ⊗[F] E) ⧸ UOgS (E := E) v g r)).PairwiseDisjoint
@@ -1015,14 +1015,14 @@ theorem kv_mul_right_iff {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
     c * κ ∈ Formalism.L2.SG.TypedSets.Kv σ J Λ v ↔ c ∈ Formalism.L2.SG.TypedSets.Kv σ J Λ v :=
   by
   unfold Formalism.L2.SG.TypedSets.Kv at hκ ⊢
-  simp only [Set.mem_setOf_eq, map_mul] at hκ ⊢
+  simp only [Set.mem_ofPred_eq, map_mul] at hκ ⊢
   exact Subgroup.mul_mem_cancel_right _ hκ
 
 theorem right_invariant_compact : RightK := by
   intro F E _ _ _ _ _ σ n J ψ v Λ μG _ hSD _ _ hLat hH κ hκ A _
-  haveI := hH
-  haveI : LocallyCompactSpace (HA (Fv F v) σ J) := PI.LocMassTypM.lc_HA σ J v
-  haveI : SecondCountableTopology (HA (Fv F v) σ J) := PI.LocMassTypM.sc_HA σ J v
+  have := hH
+  have : LocallyCompactSpace (HA (Fv F v) σ J) := PI.LocMassTypM.lc_HA σ J v
+  have : SecondCountableTopology (HA (Fv F v) σ J) := PI.LocMassTypM.sc_HA σ J v
   have hKc : IsCompact (Formalism.L2.SG.TypedSets.Kv σ J Λ v) := LocMassOrdND.isCompact_Kv σ J v Λ hSD hLat.1
   have hKo : IsOpen (Formalism.L2.SG.TypedSets.Kv σ J Λ v) := LocMassOrdND.isOpen_Kv σ J v Λ hSD hLat.1
   set e : HA (Fv F v) σ J ≃ᵐ HA (Fv F v) σ J := MeasurableEquiv.mulRight κ with he
@@ -1031,7 +1031,7 @@ theorem right_invariant_compact : RightK := by
   have hμ'app : ∀ s, μ' s = μG ((fun c => c * κ) ⁻¹' s) := fun s => by
     rw [hμ', MeasurableEquiv.map_apply]
     rfl
-  haveI : μ'.IsMulLeftInvariant := by
+  have : μ'.IsMulLeftInvariant := by
     refine ⟨fun g => ?_⟩
     ext s hs
     rw [Measure.map_apply (measurable_const_mul g) hs, hμ'app, hμ'app]
@@ -1041,7 +1041,7 @@ theorem right_invariant_compact : RightK := by
       simp only [Set.mem_preimage, mul_assoc]
     rw [hpre, ← Measure.map_apply (measurable_const_mul g) ((measurable_mul_const κ) hs),
       MeasureTheory.map_mul_left_eq_self μG g]
-  haveI : IsFiniteMeasureOnCompacts μ' := by
+  have : IsFiniteMeasureOnCompacts μ' := by
     refine ⟨fun C hC => ?_⟩
     rw [hμ'app]
     have hC' : IsCompact ((fun c => c * κ) ⁻¹' C) :=
@@ -1055,14 +1055,14 @@ theorem right_invariant_compact : RightK := by
   have hmt : μG (Formalism.L2.SG.TypedSets.Kv σ J Λ v) ≠ ⊤ := hKc.measure_lt_top.ne
   have hc1 : ((Measure.haarScalarFactor μ' μG : NNReal) : ENNReal) = 1 := by
     have h := congrArg (fun m : Measure (HA (Fv F v) σ J) => m (Formalism.L2.SG.TypedSets.Kv σ J Λ v)) hsmul
-    simp only [Measure.smul_apply, hμ'app, hKpre, ENNReal.smul_def, smul_eq_mul] at h
+    simp only [smul_apply, hμ'app, hKpre, ENNReal.smul_def, smul_eq_mul] at h
     have h2 : ((Measure.haarScalarFactor μ' μG : NNReal) : ENNReal) * μG (Formalism.L2.SG.TypedSets.Kv σ J Λ v) =
         1 * μG (Formalism.L2.SG.TypedSets.Kv σ J Λ v) := by rw [one_mul]; exact h.symm
     first
       | exact (ENNReal.mul_left_inj hm0 hmt).mp h2
       | exact ENNReal.mul_right_cancel hm0 hmt h2
       | exact (ENNReal.mul_eq_mul_right hm0 hmt).mp h2
-  rw [← hμ'app, hsmul, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, hc1, one_mul]
+  rw [← hμ'app, hsmul, smul_apply, ENNReal.smul_def, smul_eq_mul, hc1, one_mul]
 
 end PI.LocMassTypR
 end -- clump:auto

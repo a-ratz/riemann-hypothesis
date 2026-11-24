@@ -65,7 +65,7 @@ theorem e3a (hP : PullIop D B.tor) (hTL : Tr0L D B.tor) (hSm : SmulSD D) (hL : B
     TaylorLogMetric.pull D B.tor (γ : Matrix (Fin N) (Fin N) D.host.E) (1 : Matrix (Fin N') (Fin N') D.host.E) (B.thMoved N N' L X) =
       (∏ τ : D.what₂.Tau, TaylorLogMetric.embT D τ (star (γ : Matrix (Fin N) (Fin N) D.host.E).det)) ^ (N' / 2) •
         B.thMoved N N' (SDLat.smulLat (γ : Matrix (Fin N) (Fin N) D.host.E) L) X := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ L X hLs hX
   have e1 : ((1 : Matrix.unitaryGroup (Fin N') D.host.E) : Matrix (Fin N') (Fin N') D.host.E) = 1 := rfl
   have hγL := hSm N L γ hLs
@@ -97,7 +97,7 @@ theorem e3b (hP : PullIop D B.tor) (hSq : SqP D B.tor) (hTR : Tr0R D B.tor) (hSm
     TaylorLogMetric.pull D B.tor (1 : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix (Fin N') (Fin N') D.host.E) (B.thMoved N N' L L') =
       (∏ τ : D.what₂.Tau, TaylorLogMetric.embT D τ (γ' : Matrix (Fin N') (Fin N') D.host.E).det) ^ (N / 2) •
         B.thMoved N N' L (SDLat.smulLat (γ' : Matrix (Fin N') (Fin N') D.host.E) L') := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ' L L' hLs h1
   have e1 : ((1 : Matrix.unitaryGroup (Fin N) D.host.E) : Matrix (Fin N) (Fin N) D.host.E) = 1 := rfl
   have hγL' := hSm N' L' γ' h1
@@ -124,7 +124,7 @@ theorem reduction_of (hM : DetMul D) (hS : DetSmul D) (hU : NormOneUnitIdeal D) 
     (h0 : ∀ N N', Even N → Even N' → B.ThZeroMem N N')
     (hSq : SqP D B.tor) (hTL : Tr0L D B.tor) (hTR : Tr0R D B.tor) (hP : PullIop D B.tor) (hJ1 : J1 B) (hJ2 : J2 B) :
     B.EqP χ := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   refine ⟨?_, ?_, ?_⟩
   · intro N N' L L' hN hN' γ γ'
     have h1 := hSm N' L'.1 γ' L'.2

@@ -111,7 +111,7 @@ open scoped WithZero in
 theorem _root_.GlobalTheory.QNorm.isSquare_mul_of_nonsquare_units : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)), Valued.v (2 : v.adicCompletion F) = 1 → ∀ x y : v.adicCompletion F, Valued.v x = 1 → Valued.v y = 1 → ¬ IsSquare x → ¬ IsSquare y → IsSquare (x * y) := by
   intro F _ _ v h2 x y hx hy hnx hny
   classical
-  haveI : Fintype (ResidueField (v.adicCompletionIntegers F)) :=
+  have : Fintype (ResidueField (v.adicCompletionIntegers F)) :=
     @Fintype.ofFinite _ (_root_.GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v)
   let x' : v.adicCompletionIntegers F :=
     ⟨x, (HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 F) F v).2 hx.le⟩

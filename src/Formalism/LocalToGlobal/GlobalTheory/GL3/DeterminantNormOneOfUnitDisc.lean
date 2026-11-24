@@ -243,12 +243,12 @@ theorem spanPow {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algeb
     (I : Submodule R K) ^ k ≤ Submodule.span R ((fun s => s ^ k) '' S) := by
   have mmR : ∀ A B C : FractionalIdeal R⁰ K, A ≤ B → A * C ≤ B * C := by
     intro A B C h
-    rw [← FractionalIdeal.coe_le_coe, FractionalIdeal.coe_mul, FractionalIdeal.coe_mul]
+    rw [← coeToSubmodule_le_coeToSubmodule, coeToSubmodule_mul, coeToSubmodule_mul]
     exact Submodule.mul_le.2 fun x hx y hy =>
-      Submodule.mul_mem_mul (FractionalIdeal.coe_le_coe.2 h hx) hy
+      Submodule.mul_mem_mul (coeToSubmodule_le_coeToSubmodule.2 h hx) hy
   have hJle : Submodule.span R ((fun s => s ^ k) '' S) ≤
       ((I ^ k : FractionalIdeal R⁰ K) : Submodule R K) := by
-    rw [FractionalIdeal.coe_pow, Submodule.span_le]
+    rw [coeToSubmodule_pow, Submodule.span_le]
     rintro _ ⟨s, hs, rfl⟩
     have hsI : s ∈ (I : Submodule R K) := by
       rw [hIS]
@@ -258,7 +258,7 @@ theorem spanPow {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algeb
     | exact Submodule.pow_mem_pow _ hsI k
   let J : FractionalIdeal R⁰ K := ⟨_, FractionalIdeal.isFractional_of_le hJle⟩
   have hJ : (J : Submodule R K) = Submodule.span R ((fun s => s ^ k) '' S) := rfl
-  rw [← hJ, ← FractionalIdeal.coe_pow, FractionalIdeal.coe_le_coe]
+  rw [← hJ, ← coeToSubmodule_pow, coeToSubmodule_le_coeToSubmodule]
   have hIk : I ^ k ≠ 0 := pow_ne_zero _ hI
   have hJIk : J ≤ I ^ k := hJle
   have hC1 : J * (I ^ k)⁻¹ ≤ 1 := by
@@ -275,11 +275,11 @@ theorem spanPow {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algeb
       apply h1
       rw [← h𝔠, FractionalIdeal.coeIdeal_top]
     obtain ⟨P, hPmax, hcP⟩ := Ideal.exists_le_maximal 𝔠 h𝔠top
-    haveI := hPmax.isPrime
+    have := hPmax.isPrime
     have key : ∀ s ∈ S, FractionalIdeal.spanSingleton R⁰ s ≤ (P : FractionalIdeal R⁰ K) * I := by
       intro s hs
       have hsI : FractionalIdeal.spanSingleton R⁰ s ≤ I := by
-        rw [FractionalIdeal.spanSingleton_le_iff_mem, ← FractionalIdeal.mem_coe, hIS]
+        rw [FractionalIdeal.spanSingleton_le_iff_mem, ← mem_coeToSubmodule, hIS]
         exact Submodule.subset_span hs
       have hA1 : FractionalIdeal.spanSingleton R⁰ s * I⁻¹ ≤ 1 := by
         calc FractionalIdeal.spanSingleton R⁰ s * I⁻¹ ≤ I * I⁻¹ := mmR _ _ _ hsI
@@ -290,7 +290,7 @@ theorem spanPow {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algeb
           rw [FractionalIdeal.coeIdeal_pow, ha, h𝔠, mul_pow, FractionalIdeal.spanSingleton_pow,
             inv_pow]
           refine mmR _ _ _ ?_
-          rw [FractionalIdeal.spanSingleton_le_iff_mem, ← FractionalIdeal.mem_coe]
+          rw [FractionalIdeal.spanSingleton_le_iff_mem, ← mem_coeToSubmodule]
           exact Submodule.subset_span ⟨s, hs, rfl⟩
         exact le_trans ((FractionalIdeal.coeIdeal_le_coeIdeal K).1 h2) hcP
       have haP : a ≤ P := by
@@ -304,7 +304,7 @@ theorem spanPow {R K : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algeb
         _ ≤ (P : FractionalIdeal R⁰ K) * I :=
             mmR _ _ _ ((FractionalIdeal.coeIdeal_le_coeIdeal K).2 haP)
     have hIle : I ≤ (P : FractionalIdeal R⁰ K) * I := by
-      rw [← FractionalIdeal.coe_le_coe, hIS, Submodule.span_le]
+      rw [← coeToSubmodule_le_coeToSubmodule, hIS, Submodule.span_le]
       intro s hs
       exact FractionalIdeal.spanSingleton_le_iff_mem.1 (key s hs)
     have hPI : (P : FractionalIdeal R⁰ K) * I ≤ I := by
@@ -393,17 +393,17 @@ theorem unitDisc : UnitDisc D := by
       show D.host.conj (D.host.conj U0.det) ∈ vol D L
       rw [Formalism.HC.HostRaw.conj_conj]
       exact Submodule.subset_span ⟨U0, hU0, rfl⟩
-    rw [h0, FractionalIdeal.coe_zero, Submodule.mem_bot] at hm
+    rw [h0, coeToSubmodule_zero, Submodule.mem_bot] at hm
     exact hdet (by simpa using hm)
   have hI' : (I'F : Submodule (𝓞 D.host.E) D.host.E) =
       Submodule.span (𝓞 D.host.E) (D.host.conj '' {x | ∃ U : Matrix (Fin (n + 1)) (Fin (n + 1)) D.host.E, (∀ j, (fun i => U i j) ∈ L) ∧ x = U.det}) := cS_span D _
   have hinv : ∀ t ∈ ((I'F⁻¹ : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) : Submodule (𝓞 D.host.E) D.host.E),
       ∀ c ∈ CU.cS D (vol D L), t * c ∈ (1 : IdE D) := by
     intro t ht c hc
-    have h := (FractionalIdeal.mem_inv_iff hne).1 (FractionalIdeal.mem_coe.1 ht) c
-      (FractionalIdeal.mem_coe.1 (show c ∈ (I'F : Submodule (𝓞 D.host.E) D.host.E) from hc))
-    have h2 := FractionalIdeal.mem_coe.2 h
-    rwa [FractionalIdeal.coe_one] at h2
+    have h := (FractionalIdeal.mem_inv_iff hne).1 (mem_coeToSubmodule.1 ht) c
+      (mem_coeToSubmodule.1 (show c ∈ (I'F : Submodule (𝓞 D.host.E) D.host.E) from hc))
+    have h2 := mem_coeToSubmodule.2 h
+    rwa [coeToSubmodule_one] at h2
   have hclaim : ∀ U : Matrix (Fin (n + 1)) (Fin (n + 1)) D.host.E, (∀ j, (fun i => U i j) ∈ L) →
       ∀ x ∈ ((I'F⁻¹ : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) : Submodule (𝓞 D.host.E) D.host.E) ^ (n + 1),
       D.host.conj U.det ^ (n + 1 - 1) * x ∈ vol D L := by
@@ -436,13 +436,13 @@ theorem unitDisc : UnitDisc D := by
     have heq : I'F ^ (n + 1 - 1) * I'F⁻¹ ^ (n + 1) = I'F⁻¹ := by
       rw [Nat.add_sub_cancel, pow_succ, ← mul_assoc, ← mul_pow, mul_inv_cancel₀ hne, one_pow,
         one_mul]
-    rw [← heq, FractionalIdeal.coe_mul, FractionalIdeal.coe_pow, FractionalIdeal.coe_pow]
+    rw [← heq, coeToSubmodule_mul, coeToSubmodule_pow, coeToSubmodule_pow]
     exact hC
   calc (1 : IdE D)
         = ((I'F⁻¹ * I'F : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) : Submodule (𝓞 D.host.E) D.host.E) := by
-          rw [inv_mul_cancel₀ hne, FractionalIdeal.coe_one]
+          rw [inv_mul_cancel₀ hne, coeToSubmodule_one]
     _ = ((I'F⁻¹ : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) : Submodule (𝓞 D.host.E) D.host.E) *
-          (I'F : Submodule (𝓞 D.host.E) D.host.E) := FractionalIdeal.coe_mul _ _
+          (I'F : Submodule (𝓞 D.host.E) D.host.E) := coeToSubmodule_mul _ _
     _ ≤ vol D L * CU.cS D (vol D L) :=
         Submodule.mul_le.2 fun x hx y hy => Submodule.mul_mem_mul (hD hx) hy
 

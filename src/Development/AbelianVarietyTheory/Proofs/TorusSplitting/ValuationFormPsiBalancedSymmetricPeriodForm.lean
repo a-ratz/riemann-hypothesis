@@ -111,7 +111,7 @@ theorem logb_of_hasVal {a : V} {n : ℤ} (hn : 0 ≤ n) (ha : HasVal ϖ (algebra
 
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Geo.Tor.Host E) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V] [IsAdicComplete (maximalIdeal V) V] (G : SAB H (Sp V)) (P : PELUnif (maximalIdeal V) G) (ϖ : V), Irreducible ϖ → ∀ (cj : E → E), (∀ a, cj a = IsCMField.complexConj E a) → ∃ (Q : P.D.toPre.X → ℤ) (β : Formalism.MainNotions.ModuliIntegralCharts.SymB cj P.D.toPre.X), QForm.IsQ P.D.toPre ϖ Q ∧ (∀ a, 0 ≤ Q a) ∧ (∀ a b, (β : _ →ₗ[ℤ] _ →ₗ[ℤ] ℝ) a b = QForm.bOf P.D.toPre Q a b) ∧ (∀ a, (β : _ →ₗ[ℤ] _ →ₗ[ℤ] ℝ) a a = 2 * (Q a : ℝ)) ∧ ∀ (C : Type) [NormedField C] (f : V →+* C) (p : ℕ), Function.Injective f → (∀ a, ‖f a‖ ≤ 1) → ∀ a b, betaAt P.D.toPre f p a b = -Real.logb p ‖f ϖ‖ * (β : _ →ₗ[ℤ] _ →ₗ[ℤ] ℝ) a b := by
   intro E _ _ _ H V _ _ _ _ _ G P ϖ hϖ cj hcj
-  letI := H.starRing
+  let := H.starRing
   choose Q hQ using QForm.exists_QVal hϖ P.D
   have hQ' : QForm.IsQ P.D.toPre ϖ Q := hQ
   have hex : ∀ χ, ∃ r, PsiCoord P.D.toPre χ r := fun χ =>
@@ -149,7 +149,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Geo.T
     push_cast
     rfl
   · have hp : ∀ χ, vPsiAt P.D.toPre f p χ = -(Q χ * Real.logb p ‖f ϖ‖) := fun χ =>
-      (dif_pos (hex χ)).trans (by rw [logb_of_hasVal (h0 χ) (hv χ) f hf])
+      (dite_eq_left (hex χ)).trans (by rw [logb_of_hasVal (h0 χ) (hv χ) f hf])
     show _ = _ * β a b
     rw [hβ]
     simp only [betaAt, hp, QForm.bOf]

@@ -58,7 +58,7 @@ theorem cechLB_homology_finite_of_affine_cover : ∀ (R : Type) [CommRing R] (Y 
   have hfin := GlobalTheory.T.finite_cechLineBundle_homology R Y f H m s M hH hM hs n
   obtain ⟨e⟩ := GlobalTheory.T.nonempty_cechLB_homology_equiv_of_affine_covers R Y f M (Fin (m + 1)) (fun i => nonzeroLocus (s i)) κ D hM hsep
     (fun i => (hs.2 i).1) hs.1 hD hcov n
-  letI := hfin
+  let := hfin
   exact Module.Finite.equiv e
 
 end GlobalTheory.AbLaw

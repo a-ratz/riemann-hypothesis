@@ -172,7 +172,7 @@ theorem amplitude_moments_gap : GlobalTheory.GapIn.Hyp → ∀ Cg cb Cu cT CT C0
   intro hH Cg cb Cu cT CT C0 C1 Cq
   refine ⟨2 * Cg + 2 + |CT| + 10 * max 2 Cu, fun Cn => ⟨|Cn| + |Cq|, ?_⟩⟩
   intro D large₂ C' Cl hCl hBig hZ τ w w' hTT θ _ W hW lam' hlam A hA a q hq
-  haveI := FiniteDimensional.complete ℂ W.Wp
+  have := FiniteDimensional.completeSpace ℂ W.Wp
   obtain ⟨-, -, hb, hm, -, -, -, hmk, hv, -, hka, hvb, hg, hgb, hCg, -, hT, -⟩ :=
     GlobalTheory.Amp.RangeModel.sizes_of D large₂ C' Cl Cg cb Cu cT CT C0 hBig.1 hZ
   have hθ := GlobalTheory.Amp.RangeModel.theta_pos D τ w w' θ W hW
@@ -226,7 +226,7 @@ theorem amplitude_moments_gap : GlobalTheory.GapIn.Hyp → ∀ Cg cb Cu cT CT C0
     rw [← hx]; rfl
   have hfr : 0 < Module.finrank ℂ W.Wp := by
     obtain ⟨_, _, -, hρ⟩ := g3
-    haveI := hρ.1
+    have := hρ.1
     exact Module.finrank_pos
   have key := moment_of_bessel hH hS ν q hr1 hr2 R0 hR _ hB A.v0 hA6 hA7
     (by rw [← e1, hA9]; exact (ENNReal.ofReal_pos.2 (by positivity)).ne')

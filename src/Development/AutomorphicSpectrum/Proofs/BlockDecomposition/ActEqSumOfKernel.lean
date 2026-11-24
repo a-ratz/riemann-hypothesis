@@ -54,7 +54,7 @@ namespace GlobalTheory.CompanionTheory.WaveMult
 
 theorem act_eq_sum_of_kernel : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (E : KMod n) {ι : Type} [Fintype ι] (c : ι → ℂ) (ks : ι → Mat n → (E.V →L[ℂ] E.V)) (k : Mat n → (E.V →L[ℂ] E.V)) (f : Mat n → E.V), (∀ i, KReg (ks i)) → (∀ y ∈ GLs n, k y = ∑ i, c i • ks i y) → ContinuousOn f (GLs n) → ∀ x ∈ GLs n, act μ E k f x = ∑ i, c i • act μ E (ks i) f x := by
   intro hL n _ _ μ _ E ι _ c ks k f hks hk hf x hx
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   have hval : ∀ y : G n, y.val ∈ GLs n := fun y => by
     have := (Matrix.isUnit_iff_isUnit_det _).1 y.isUnit
     exact this.ne_zero
@@ -85,7 +85,7 @@ theorem act_eq_sum_of_kernel : LgFacts → ∀ (n : ℕ) [MeasurableSpace (G n)]
       = fun y : G n => ∑ i, c i • ks i y.val (f (x * y.val)) := by
     funext y
     rw [hk y.val (hval y)]
-    simp [ContinuousLinearMap.sum_apply]
+    simp [sum_apply]
   have hi : ∀ i ∈ (Finset.univ : Finset ι),
       Integrable (fun y : G n => c i • ks i y.val (f (x * y.val))) μ :=
     fun i _ => (hint i).smul (c i)

@@ -76,7 +76,7 @@ def secH : MvPolynomial (Fin n) ℂ →+* Γ(W, V) :=
 
 theorem secH_surjective : Function.Surjective (secH V K iso) := by
   have h1 : Function.Surjective V.topIso.hom.hom := (V.topIso.commRingCatIsoToRingEquiv).surjective
-  haveI : IsIso iso.hom.appTop := by
+  have : IsIso iso.hom.appTop := by
     rw [← Scheme.Γ_map_op]
     exact (Scheme.Γ.mapIso iso.op).isIso_hom
   have h2 : Function.Surjective iso.hom.appTop.hom :=
@@ -91,7 +91,7 @@ def phiH : (MvPolynomial (Fin n) ℂ ⧸ K) →+* Γ(W, V) :=
 
 theorem phiH_bijective : Function.Bijective (phiH V K iso) := by
   have h1 : Function.Bijective V.topIso.hom.hom := (V.topIso.commRingCatIsoToRingEquiv).bijective
-  haveI : IsIso iso.hom.appTop := by
+  have : IsIso iso.hom.appTop := by
     rw [← Scheme.Γ_map_op]
     exact (Scheme.Γ.mapIso iso.op).isIso_hom
   have h2 : Function.Bijective iso.hom.appTop.hom :=
@@ -121,7 +121,7 @@ theorem isUnit_germ_secH_iff (v : V) (f : MvPolynomial (Fin n) ℂ) :
     change IsUnit (V.toScheme.presheaf.germ ((TopologicalSpace.Opens.map iso.hom.base).obj ⊤) v trivial
       (iso.hom.app ⊤ ρ)) ↔ _
     rw [← Scheme.Hom.germ_stalkMap_apply iso.hom ⊤ v trivial ρ]
-    haveI : IsLocalHom (iso.hom.stalkMap v).hom := iso.hom.toLRSHom.prop v
+    have : IsLocalHom (iso.hom.stalkMap v).hom := iso.hom.toLRSHom.prop v
     exact isUnit_map_iff (iso.hom.stalkMap v).hom _
 
   have hOpen : ∀ τ, IsUnit (W.presheaf.germ V v.1 v.2 (V.topIso.hom τ)) ↔
@@ -318,7 +318,7 @@ theorem ptOf_eq_ptIdeal (x : W) (hx : x ∈ P.V) (hc : IsClosed {x}) :
       · intro h
         exact Set.mem_singleton_iff.mpr (Subtype.ext (Set.mem_singleton_iff.mp (Set.mem_preimage.mp h)))
     rw [h1]
-    exact hc.preimage continuous_subtype_val
+    exact hc.preimage continuous_subtypeVal
   have hcy : IsClosed ({P.iso.hom.base ⟨x, hx⟩} :
       Set (Spec (.of (MvPolynomial (Fin P.n) ℂ ⧸ P.K)))) := by
     have h := (Scheme.homeoOfIso P.iso).isClosedMap _ hcV
@@ -461,12 +461,12 @@ theorem isRegularLocalRing_stalk_iff (x : W) (hx : x ∈ P.V) (hc : IsClosed {x}
     IsRegularLocalRing (W.presheaf.stalk x) ↔ IsRegularLocalRing (locRing P.K (P.coord x hx)) := by
   constructor
   · intro h
-    haveI := h
+    have := h
     first
     | exact IsRegularLocalRing.of_ringEquiv (P.stalkEquiv x hx hc)
     | exact IsRegularLocalRing.of_ringEquiv (e := P.stalkEquiv x hx hc)
   · intro h
-    haveI := h
+    have := h
     first
     | exact IsRegularLocalRing.of_ringEquiv (P.stalkEquiv x hx hc).symm
     | exact IsRegularLocalRing.of_ringEquiv (e := (P.stalkEquiv x hx hc).symm)
@@ -484,7 +484,7 @@ theorem map_maximalIdeal_stalk (x : W) (hx : x ∈ P.V) (hc : IsClosed {x}) :
     show Ideal.Quotient.mk P.K h ∈ (P.iso.hom.base ⟨x, hx⟩).asIdeal
     rw [Ideal.Quotient.eq_zero_iff_mem.mpr hh]
     exact Ideal.zero_mem _
-  haveI := isLocalRing_locRing hK
+  have := isLocalRing_locRing hK
   rw [← maximalIdeal_locRing hK]
   exact IsLocalRing.eq_maximalIdeal (Ideal.map_isMaximal_of_equiv _)
 

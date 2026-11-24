@@ -275,7 +275,7 @@ theorem heckeD_eq_sum {J : Subgroup (GAf L n)} {v : HeightOneSpectrum (𝓞 L⁺
     · obtain ⟨x, hx, rfl⟩ := h
       obtain ⟨γ, ⟨hγ, e⟩, -⟩ := h2 x hx
       exact Finset.mem_coe.2 (Finset.mem_image.2 ⟨γ, hγ, QuotientGroup.eq.2 e⟩)
-    · exact absurd (dif_neg h) hc
+    · exact absurd (dite_eq_right h) hc
 
 theorem exists_int_of_normalizes {F Γ : Type} [Field F] [LinearOrderedCommGroupWithZero Γ] (w : Valuation F Γ)
     (O : Subring F) (hO : ∀ x, x ∈ O ↔ w x ≤ 1) (g : GL (Fin n) F)
@@ -325,7 +325,7 @@ theorem exists_int_of_normalizes {F Γ : Type} [Field F] [LinearOrderedCommGroup
     intro a i j b
     have := all i j a b
     simpa [Matrix.mul_apply, Matrix.single_apply, ite_and, Finset.sum_ite_eq] using this
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   obtain ⟨p, -, hp⟩ := Finset.exists_max_image (Finset.univ : Finset (Fin n × Fin n)) (fun p => w (g.1 p.1 p.2))
     Finset.univ_nonempty
   set c := g.1 p.1 p.2 with hc
@@ -343,7 +343,7 @@ theorem exists_int_of_normalizes {F Γ : Type} [Field F] [LinearOrderedCommGroup
   refine ⟨h, mem_GLint_iff.2 ⟨fun a b => ?_, fun a b => prod p.1 p.2 a b⟩, fun x => Units.ext ?_⟩
   · show c⁻¹ * g.1 a b ∈ O
     rw [hO, map_mul, map_inv₀]
-    have h0 : 0 < w c := zero_lt_iff.2 ((map_ne_zero w).2 hc0)
+    have h0 : 0 < w c := pos_iff_ne_zero.2 ((map_ne_zero w).2 hc0)
     exact (inv_mul_le_one₀ h0).2 (hp (a, b) (Finset.mem_univ _))
   · show g.1 * x.1 * (g⁻¹).1 = (c⁻¹ • g.1) * x.1 * (c • (g⁻¹).1)
     rw [Matrix.smul_mul, Matrix.smul_mul, Matrix.mul_smul, smul_smul, inv_mul_cancel₀ hc0, one_smul]
@@ -541,15 +541,15 @@ theorem q_mem (s : SplitPlace L) : ((s.q : ℕ) : 𝓞 L⁺) ∈ s.v.asIdeal := 
   exact card_nsmul_eq_zero'
 
 theorem q_ne_zero (s : SplitPlace L) : s.q ≠ 0 := by
-  haveI : Finite (𝓞 L⁺ ⧸ s.v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v.ne_bot
+  have : Finite (𝓞 L⁺ ⧸ s.v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v.ne_bot
   exact Nat.card_pos.ne'
 
 theorem not_dvd_q (s : SplitPlace L) {l : ℕ} (hl : l.Prime) (h : ¬ s.Above l) : ¬ l ∣ s.q := by
   intro hd
   apply h
-  haveI : Finite (𝓞 L⁺ ⧸ s.v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v.ne_bot
-  haveI := Fact.mk hl
-  haveI := s.v.isPrime
+  have : Finite (𝓞 L⁺ ⧸ s.v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ s.v.ne_bot
+  have := Fact.mk hl
+  have := s.v.isPrime
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 L⁺ ⧸ s.v.asIdeal) l hd
   have h1 : l • x = 0 := hx ▸ addOrderOf_nsmul_eq_zero x
   have h0 : x ≠ 0 := by
@@ -610,13 +610,13 @@ theorem exists_ring (q : ℕ) (hq : q ≠ 0) (S : Set ℂ) (hS : S.Finite) (hint
   have hM : Submonoid.powers (q : ℤ) ≤ nonZeroDivisors ℤ :=
     powers_le_nonZeroDivisors_of_noZeroDivisors (by exact_mod_cast hq)
   let R : Subalgebra ℤ ℚ := Localization.subalgebra.ofField ℚ (Submonoid.powers (q : ℤ)) hM
-  haveI : IsLocalization (Submonoid.powers (q : ℤ)) R := Localization.subalgebra.isLocalization_ofField ℚ _ hM
-  haveI : IsNoetherianRing R := IsLocalization.isNoetherianRing (Submonoid.powers (q : ℤ)) R inferInstance
+  have : IsLocalization (Submonoid.powers (q : ℤ)) R := Localization.subalgebra.isLocalization_ofField ℚ _ hM
+  have : IsNoetherianRing R := IsLocalization.isNoetherianRing (Submonoid.powers (q : ℤ)) R inferInstance
   let A : Subalgebra R ℂ := Algebra.adjoin R S
   have hint' : ∀ x ∈ S, IsIntegral R x := fun x hx => (hint x hx).tower_top
-  haveI : Algebra.FiniteType R A := (Subalgebra.fg_iff_finiteType A).1 (Subalgebra.fg_def.2 ⟨S, hS, rfl⟩)
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing R A
-  haveI : Algebra.IsIntegral R A := Algebra.IsIntegral.adjoin hint'
+  have : Algebra.FiniteType R A := (Subalgebra.fg_iff_finiteType A).1 (Subalgebra.fg_def.2 ⟨S, hS, rfl⟩)
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing R A
+  have : Algebra.IsIntegral R A := Algebra.IsIntegral.adjoin hint'
   refine ⟨A.toSubring, ‹IsNoetherianRing A›, Algebra.subset_adjoin, ?_, fun μ hμ => ?_⟩
   · have hr : (q : ℚ)⁻¹ ∈ R := ⟨1, q, Submonoid.mem_powers _, by simp⟩
     have := A.algebraMap_mem ⟨_, hr⟩

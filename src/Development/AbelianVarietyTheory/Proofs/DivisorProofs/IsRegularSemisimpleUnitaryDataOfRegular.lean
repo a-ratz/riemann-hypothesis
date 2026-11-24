@@ -66,7 +66,7 @@ theorem isRegular_of_isRegSS : ∀ {D : D7} {V : HSp D} (γ : GF V), IsRegSS γ.
   intro D V γ h
   have hHN := (GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND _ _ D.sp.cm).2 V
   refine ⟨⟨?_, D.sp.cm.deg2, ?_, ?_⟩, ?_, GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.gram_det_isUnit V, γ.2, h⟩
-  · haveI : Module.Finite (↥D.host.F) D.host.E :=
+  · have : Module.Finite (↥D.host.F) D.host.E :=
       Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
     exact ⟨Algebra.FormallyEtale.of_isSeparable _ _,
       Algebra.FinitePresentation.of_finiteType.1 inferInstance⟩

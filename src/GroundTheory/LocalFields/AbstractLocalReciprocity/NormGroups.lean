@@ -222,7 +222,7 @@ theorem normGroup_maxAbelian (hLK : L ≤ K) :
 
   have hz1 : D.reciprocity hNK hax (z : (K : Subgroup G) ⧸ (N : Subgroup G).subgroupOf K) = 1 :=
     MonoidHom.mem_ker.1
-      (Abelianization.commutator_subset_ker ((D.reciprocity hNK hax).comp (QuotientGroup.mk' _)) hz)
+      (Group.Abelianization.commutator_le_ker ((D.reciprocity hNK hax).comp (QuotientGroup.mk' _)) hz)
 
   obtain ⟨b, hb⟩ := QuotientGroup.mk_surjective (D.reciprocity hNL hax
     ((⟨y, hy⟩ : (L : Subgroup G)) : (L : Subgroup G) ⧸ (N : Subgroup G).subgroupOf L))

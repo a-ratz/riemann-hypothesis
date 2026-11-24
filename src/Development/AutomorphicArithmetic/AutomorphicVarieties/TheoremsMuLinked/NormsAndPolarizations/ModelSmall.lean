@@ -88,8 +88,8 @@ private theorem spanO_gen {O K : Type} [CommRing O] [Field K] (f : O →+* K) {n
   obtain ⟨κ, g, -, hsp, hli⟩ := exists_linearIndependent' K (fun i => (r i).map f)
   rw [h] at hsp
   let b := Module.Basis.mk hli hsp.ge
-  haveI : Finite κ := Module.Finite.finite_basis b
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Module.Finite.finite_basis b
+  let : Fintype κ := Fintype.ofFinite κ
   have hcard : Fintype.card (Fin n × Fin n) = Fintype.card κ := by
     rw [← Module.finrank_eq_card_basis b, Module.finrank_matrix]
     simp
@@ -104,7 +104,7 @@ private theorem spanO_gen {O K : Type} [CommRing O] [Field K] (f : O →+* K) {n
         rfl
       rw [heq]
       exact hl
-    exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 hli2)).ne_zero
+    exact ((Matrix.isUnit_iff_isUnit_det _).1 (linearIndependent_col_iff_isUnit.1 hli2)).ne_zero
   refine ⟨M.det, fun h0 => hM (by rw [h0, map_zero]), fun Z => ?_⟩
   let v : Fin n × Fin n → O := fun p => Z p.1 p.2
   let w := M.adjugate *ᵥ v
@@ -393,7 +393,7 @@ private theorem iw_clear (Y : Matrix (Fin n) (Fin n) K) (c : Fin n) (a : Fin n �
   ext i j
   simp [A, Matrix.mul_apply, Matrix.one_apply, sub_mul, Finset.sum_sub_distrib]
   simp only [apply_ite (fun x : V => (x : K)), ZeroMemClass.coe_zero, OneMemClass.coe_one, ite_mul,
-    one_mul, zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    one_mul, zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 private theorem iw_step (Y : Matrix (Fin n) (Fin n) K) (c : Fin n)
     (hY : ∀ i j : Fin n, j < c → j < i → Y i j = 0) :
@@ -434,7 +434,7 @@ private theorem iw_step (Y : Matrix (Fin n) (Fin n) K) (c : Fin n)
     · rw [heq] at hji ⊢
       have h1 := hmax1 i hji.le
       rw [h0, map_zero] at h1
-      exact (Valuation.zero_iff _).1 (le_antisymm h1 zero_le')
+      exact (Valuation.zero_iff _).1 (le_antisymm h1 zero_le)
   · have hmem : ∀ i, c ≤ i → Y1 i c / Y1 c c ∈ V := by
       intro i hi
       rw [← V.valuation_le_one_iff, map_div₀, div_le_one₀ ((Valuation.pos_iff _).2 h0)]
@@ -446,7 +446,7 @@ private theorem iw_step (Y : Matrix (Fin n) (Fin n) K) (c : Fin n)
     rcases lt_or_eq_of_le hjc with hlt | heq
     · rw [hY1c i j hlt hji, hY1c c j hlt hlt, mul_zero, sub_zero]
     · rw [heq] at hji ⊢
-      simp only [a, dif_pos hji]
+      simp only [a, dite_eq_left hji]
       show Y1 i c - Y1 i c / Y1 c c * Y1 c c = 0
       rw [div_mul_cancel₀ _ h0, sub_self]
 
@@ -500,7 +500,7 @@ private theorem ordInt_conj {K : Type} [Field K] {n : ℕ} (b : GL (Fin n) K) {M
       ∀ i, ((b : Matrix (Fin n) (Fin n) K) * M * ((b⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K)) i i = M i i := by
   have hi : ((b⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K).BlockTriangular id := by
     rw [Matrix.coe_units_inv]
-    letI := b.invertible
+    let := b.invertible
     exact Matrix.blockTriangular_inv_of_blockTriangular hb
   refine ⟨(hb.mul hM).mul hi, fun i => ?_⟩
   have h1 := ordInt_diag hb hi i
@@ -616,8 +616,8 @@ private theorem ri_entries {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Topolo
 theorem UpperTheory.V.Th.Nm.repIn :
     ∀ {l : ℕ} [Fact l.Prime] {n : ℕ} (F : GFrame l) (c : Coef l) (ρ : F.G₀ →* GL (Fin n) (Qbar l)) (z : F.G₀ → Matrix (Fin n) (Fin n) (Qbar l)), Continuous ρ → (∀ g, IntM (mat ρ g)) → Continuous z → (∀ g g', z (g * g') = z g + mat ρ g * z g' * mat ρ g⁻¹) → ∃ (c' : Coef l) (a : Qbar l), c.O ≤ c'.O ∧ a ≠ 0 ∧ (∀ g, InO c' (mat ρ g)) ∧ ∀ g, InO c' (a • z g) := by
   intro l hl n F c ρ z hρ hi hz hc
-  haveI : CompactSpace F.G₀ := isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
-  haveI : T2Space F.G₀ := inferInstance
+  have : CompactSpace F.G₀ := isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
+  have : T2Space F.G₀ := inferInstance
   obtain ⟨E, fE, m₁, m₂⟩ := ri_entries (l := l) ((Units.coeHom _).comp ρ) z (Units.continuous_val.comp hρ) hz hc
   obtain ⟨d, hd⟩ := UpperTheory.V.X.So.coefOf l E
   obtain ⟨c', h1, h2⟩ := (UpperTheory.V.HV.coefSup l).1 c d

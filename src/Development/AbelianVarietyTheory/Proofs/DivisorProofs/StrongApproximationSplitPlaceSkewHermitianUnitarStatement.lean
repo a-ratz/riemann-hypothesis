@@ -142,7 +142,7 @@ def toUA {n : ℕ} (J : Matrix (Fin n) (Fin n) E) {δ : E} (hδ : δ ≠ 0) :
 
 theorem continuous_toUA {n : ℕ} (J : Matrix (Fin n) (Fin n) E) {δ : E} (hδ : δ ≠ 0) :
     Continuous (toUA (σ := σ) J hδ) :=
-  Continuous.subtype_mk (continuous_subtype_val (p := fun g => g ∈ HR (AF F) σ (δ • Jᵀ))) _
+  Continuous.subtype_mk (continuous_subtypeVal (p := fun g => g ∈ HR (AF F) σ (δ • Jᵀ))) _
 
 theorem isPlacesIdem_placeIdem (v : HeightOneSpectrum (𝓞 F)) : GlobalTheory.Published.IsPlacesIdem ∅ {v} (placeIdem v) :=
   ⟨fun w hw => absurd hw (Finset.notMem_empty w), fun _ _ => rfl,

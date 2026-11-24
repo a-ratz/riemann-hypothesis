@@ -58,9 +58,9 @@ attribute [local instance 100] LieRing.ofAssociativeRing
 theorem UpperTheory.integral_unipFundamentalDomain_comp_lattice_preserving :
     ∀ (K : Type) [Field K] [NumberField K] (n r : ℕ) (α : (UPos n r → AdeleRing (𝓞 K) K) ≃ₜ+ (UPos n r → AdeleRing (𝓞 K) K)), (∀ X, α X ∈ unipLattice K n r ↔ X ∈ unipLattice K n r) → ∀ F : (UPos n r → AdeleRing (𝓞 K) K) → ℂ, (∀ ξ ∈ unipLattice K n r, ∀ X, F (ξ + X) = F X) → ∫ X in unipFundamentalDomain K n r, F (α X) ∂unipMeasure K n r = ∫ X in unipFundamentalDomain K n r, F X ∂unipMeasure K n r := by
   intro K _ _ n r α hα F hF
-  haveI : TopologicalSpace.MetrizableSpace (UPos n r → AdeleRing (𝓞 K) K) :=
+  have : TopologicalSpace.MetrizableSpace (UPos n r → AdeleRing (𝓞 K) K) :=
     TopologicalSpace.metrizableSpace_of_t3_secondCountable _
-  haveI : (unipMeasure K n r).Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure _
+  have : (unipMeasure K n r).Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure _
   have hfd : IsAddFundamentalDomain (unipLattice K n r) (unipFundamentalDomain K n r) (unipMeasure K n r) :=
     isAddFundamentalDomain_unipFundamentalDomain
   have hsm := addEquivAddHaarChar_smul_map (unipMeasure K n r) α.symm

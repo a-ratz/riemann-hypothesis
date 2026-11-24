@@ -185,7 +185,7 @@ theorem exists_unit_local (hG : GlobalFnsSt) {o : Type} [CommRing o] {g N' : ℕ
     {s : S ⟶ Sp o} (t : TObj g (N' ^ 2) J b s) {R : Type} [CommRing R] [IsLocalRing R] (x : Sp R ⟶ S)
     {v v' : Ix g (N' ^ 2) → R} (H : t.HasTh x v) (H' : t.HasTh x v') : ∃ u : Rˣ, ∀ a, v' a = u * v a := by
   let e : Γ(Sp R, ⊤) ≃+* R := (Scheme.ΓSpecIso (CommRingCat.of R)).commRingCatIsoToRingEquiv
-  haveI : IsLocalRing Γ((Over.mk x).left, ⊤) := e.symm.isLocalRing
+  have : IsLocalRing Γ((Over.mk x).left, ⊤) := e.symm.isLocalRing
   obtain ⟨u, hu⟩ := exists_unit_over hG t.pol H.1 (isThetaPtOver_of_local _ x H) (isThetaPtOver_of_local _ x H')
   refine ⟨Units.map e.toMonoidHom u, fun a => ?_⟩
   have q := (congrArg e (hu a)).trans (map_mul e _ _)

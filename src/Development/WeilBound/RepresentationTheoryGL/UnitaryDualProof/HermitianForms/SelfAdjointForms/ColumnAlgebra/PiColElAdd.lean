@@ -137,9 +137,9 @@ theorem fp_shift (ξ : Fin (m + 1) → k) {A : AddSubgroup (Fin (m + 1) → k)}
   let τ : (Fin (m + 1) → k) → (Fin (m + 1) → k) := fun t =>
     if hh : ∃ t', t' ∈ p.2 ∧ (t - y) - t' ∈ p.1 then hh.choose else t
   have hσ : ∀ t ∈ p.2, σ t ∈ p.2 ∧ (t + y) - σ t ∈ p.1 := fun t ht => by
-    simp only [σ, dif_pos (hs t ht)]; exact (hs t ht).choose_spec
+    simp only [σ, dite_eq_left (hs t ht)]; exact (hs t ht).choose_spec
   have hτ : ∀ t ∈ p.2, τ t ∈ p.2 ∧ (t - y) - τ t ∈ p.1 := fun t ht => by
-    simp only [τ, dif_pos (hr t ht)]; exact (hr t ht).choose_spec
+    simp only [τ, dite_eq_left (hr t ht)]; exact (hr t ht).choose_spec
   unfold fp
   rw [smul_comm (((ψ (ξ ⬝ᵥ y) : Circle) : ℂ)) ((p.2.card : ℂ)⁻¹)]
   congr 1
@@ -199,7 +199,7 @@ theorem avg_eq_fp (ξ : Fin (m + 1) → k) {A : AddSubgroup (Fin (m + 1) → k)}
   have hd : ∃ p, AvgData ψ h π ξ A v p := ⟨p, hp⟩
   have hp0 := hd.choose_spec
   have e : avg ψ h π ξ A v = fp ψ h π ξ hd.choose v := by
-    unfold avg; rw [dif_pos hd]; rfl
+    unfold avg; rw [dite_eq_left hd]; rfl
   rw [e]
   have h1 : fp ψ h π ξ hd.choose (fp ψ h π ξ p v) = fp ψ h π ξ p v :=
     fp_of_eigen ξ hd.choose hp0.2.2.2.2.1 (card_pos hp0) _ fun a ha => fp_eigen ξ hp ha

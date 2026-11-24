@@ -77,7 +77,7 @@ theorem toLp_cuspVecL (φ : cuspForms K n) :
 theorem isContRep_cuspToL2 (φ : cuspForms K n) :
     IsContRep μ (toLp μ (cuspVecL μ φ))
       (fun y => (φ : AdelicGLn.AdelicGL K n → ℂ) (y : AdelicGLn.AdelicGL K n)) := by
-  refine ⟨φ.2.1.continuous.comp continuous_subtype_val, fun γ hγ y => ?_, ?_⟩
+  refine ⟨φ.2.1.continuous.comp continuous_subtypeVal, fun γ hγ y => ?_, ?_⟩
   · obtain ⟨γ', hγ'⟩ := Subgroup.mem_subgroupOf.1 hγ
     change (φ : AdelicGLn.AdelicGL K n → ℂ) ((γ : AdelicGLn.AdelicGL K n) * y) = _
     rw [← hγ']

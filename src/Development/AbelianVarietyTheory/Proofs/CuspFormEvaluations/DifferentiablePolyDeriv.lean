@@ -73,9 +73,9 @@ theorem polyDeriv_mul_X (hF : ContDiff ℂ (⊤ : ℕ∞) F) (P : MvPolynomial �
   | monomial m c =>
     have h (m : σ →₀ ℕ) : (monomial m c : MvPolynomial σ ℂ) = c • monomial m 1 := by
       simp [smul_monomial]
-    rw [X, monomial_mul, mul_one, h, h]
+    rw [X, monomial_mul_monomial, mul_one, h, h]
     simp only [polyDeriv_smul, polyDeriv_monomial_one, pdTerm_eq_itD]
-    rw [fderiv_const_mul (itD_differentiable hF _ x), ContinuousLinearMap.smul_apply, smul_eq_mul,
+    rw [fderiv_const_mul (itD_differentiable hF _ x), smul_apply, smul_eq_mul,
       ← itD_cons hF, ← List.map_cons]
     refine congrArg _ (congrFun (ct_itD_perm hF (List.Perm.map u ?_)) x)
     rw [← Multiset.coe_eq_coe, ← Multiset.cons_coe, Multiset.coe_toList, Multiset.coe_toList,
@@ -83,7 +83,7 @@ theorem polyDeriv_mul_X (hF : ContDiff ℂ (⊤ : ℕ∞) F) (P : MvPolynomial �
   | add P Q hP hQ =>
     simp only [add_mul, polyDeriv_add, hP, hQ]
     rw [fderiv_fun_add (differentiable_polyDeriv hF P u x) (differentiable_polyDeriv hF Q u x),
-      ContinuousLinearMap.add_apply]
+      add_apply]
 
 theorem polyDeriv_algHom (hF : ContDiff ℂ (⊤ : ℕ∞) F) (Φ : MvPolynomial σ ℂ →ₐ[ℂ] MvPolynomial σ ℂ)
     (s : σ → ℂ) (j : σ → σ) (hΦ : ∀ l, Φ (X l) = X l + C (s l) * X (j l)) (u : σ → W)
@@ -137,12 +137,12 @@ theorem eigen_of_triangular (f : (J → V) → ℂ) (lt : J → J → Prop) (rk 
       funext j
       by_cases hj : j = a
       · subst hj
-        rw [Function.update_self, if_pos (Finset.mem_insert_self _ _), if_neg ha,
+        rw [Function.update_self, ite_eq_left (Finset.mem_insert_self _ _), ite_eq_right ha,
           ← Finset.add_sum_erase _ _ (Finset.mem_univ j)]
         congr 1
         refine Finset.sum_congr rfl fun i hi => ?_
         by_cases h : lt i j
-        · rw [if_neg fun hS => (hmin i hS).not_gt (hrk i j h)]
+        · rw [ite_eq_right fun hS => (hmin i hS).not_gt (hrk i j h)]
         · rw [hN i j (Finset.ne_of_mem_erase hi) h, zero_smul, zero_smul]
       · simp [Function.update_of_ne hj, hj]
   simpa using key Finset.univ
@@ -176,7 +176,7 @@ theorem polyDeriv_triangular {T κ W : Type*} [Fintype T] [Fintype κ] {p q : �
     by_cases e : t' = t ∧ r'' = r'
     · obtain ⟨rfl, rfl⟩ := e
       simp
-    · rw [Function.update_of_ne (by simpa using e), if_neg e]
+    · rw [Function.update_of_ne (by simpa using e), ite_eq_right e]
       simp
   · rintro ⟨t, r⟩ s w
     rw [← polyDeriv_smul_letter P (fun l => if l.1 = t ∧ l.2.1 = r then s else 1) _ fun m hm => ?_]
@@ -185,7 +185,7 @@ theorem polyDeriv_triangular {T κ W : Type*} [Fintype T] [Fintype κ] {p q : �
       by_cases e : t' = t ∧ r'' = r
       · obtain ⟨rfl, rfl⟩ := e
         simp
-      · rw [Function.update_of_ne (by simpa using e), if_neg e]
+      · rw [Function.update_of_ne (by simpa using e), ite_eq_right e]
         simp
     · rw [← hdeg t r (mem_support_iff.1 hm), Finsupp.weight_apply, Finsupp.sum,
         ← Finset.prod_pow_eq_pow_sum]

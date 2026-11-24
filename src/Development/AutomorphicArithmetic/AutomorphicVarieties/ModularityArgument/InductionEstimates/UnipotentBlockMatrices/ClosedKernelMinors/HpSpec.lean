@@ -220,14 +220,14 @@ private theorem hp_mul (p : G1 K (2 + 2)) (s : PS 𝔸[K]) (h : (p : AdelicGLn.A
 private theorem cont_hp : Continuous (HH (K := K)) := by
   let S : Subgroup (G1 K (2 + 2)) := (PS 𝔸[K]).comap (normOneGL (K := K) (n := (2 + 2))).subtype
   have c1 : Continuous fun g : G1 K (2 + 2) => (g : AdelicGLn.AdelicGL K (2 + 2)).val :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have c2 : Continuous fun g : G1 K (2 + 2) => ((g : AdelicGLn.AdelicGL K (2 + 2))⁻¹).val :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   have hS : IsClosed (S : Set (G1 K (2 + 2))) := by
     change IsClosed ({g : G1 K (2 + 2) | ∀ i j : Fin 2,
       (g : AdelicGLn.AdelicGL K (2 + 2)).val (Fin.natAdd 2 i) (Fin.castAdd 2 j) = 0} ∩ {g : G1 K (2 + 2) | ∀ i j : Fin 2,
       ((g : AdelicGLn.AdelicGL K (2 + 2))⁻¹).val (Fin.natAdd 2 i) (Fin.castAdd 2 j) = 0})
-    simp only [Set.setOf_forall]
+    simp only [ofPred_forall]
     exact (isClosed_iInter fun i => isClosed_iInter fun j => isClosed_eq (c1.matrix_elem _ _) continuous_const).inter
       (isClosed_iInter fun i => isClosed_iInter fun j => isClosed_eq (c2.matrix_elem _ _) continuous_const)
   have hsurj : Function.Surjective (HaarSK.mulMap S (KG K (2 + 2))) := fun g => by
@@ -239,9 +239,9 @@ private theorem cont_hp : Continuous (HH (K := K)) := by
     funext fun p => hp_eq _ ⟨p.1.1.1, p.1.2⟩ p.2.2 rfl
   rw [e]
   have c3 : Continuous fun p : S × KG K (2 + 2) => (top ⟨p.1.1.1, p.1.2⟩ : AdelicGLn.AdelicGL K 2) :=
-    Units.continuous_iff.2 ⟨(c1.comp (continuous_subtype_val.comp continuous_fst)).matrix_submatrix _ _,
-      (c2.comp (continuous_subtype_val.comp continuous_fst)).matrix_submatrix _ _⟩
-  exact (continuous_subtype_val.comp (continuous_detModule.comp c3)).log fun p => (detModule K 2 _).2.ne'
+    Units.continuous_iff.2 ⟨(c1.comp (continuous_subtypeVal.comp continuous_fst)).matrix_submatrix _ _,
+      (c2.comp (continuous_subtypeVal.comp continuous_fst)).matrix_submatrix _ _⟩
+  exact (continuous_subtypeVal.comp (continuous_detModule.comp c3)).log fun p => (detModule K 2 _).2.ne'
 
 end UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.UnipotentUpperLower
 

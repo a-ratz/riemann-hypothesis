@@ -144,7 +144,7 @@ theorem card_linkIdx_le : D.linkIdx.card ≤ D.J * (D.r - 1) := by
       (t := Finset.range (D.r - 1)) (fun m => m.val)
       (by
         intro m hm
-        simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hm
+        simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hm
         simp only [Finset.coe_range, Set.mem_Iio]
         omega)
       (by intro a _ b _ hab; exact Fin.ext hab)
@@ -199,7 +199,7 @@ theorem stepB_of (h1 : 1 ≤ C0) (hV2 : V2 K) (hP : PROJ K v p C0) : StepB K v p
   classical
   intro hD D hV hc F hF hF0
   obtain ⟨hr, hJ, hc1, -, -, hthl, hga, hgaε⟩ := hV
-  haveI : NeZero D.r := ⟨by omega⟩
+  have : NeZero D.r := ⟨by omega⟩
   have hp : 2 ≤ p := two_le_p hD
   have hr1 : 1 ≤ D.r := hr
   obtain ⟨⟨α0, hα0, hge0, hle0⟩, hbF⟩ := exists_of_vBB_zero v F hF0
@@ -390,13 +390,13 @@ theorem mapDomain_mlab (α : D.EA) (t : D.Tau) (a : Fin D.r) :
 
 theorem mapDomain_mw (α : D.EA) (t : D.Tau) (a : Fin D.r) :
     (α.mapDomain (Prod.map D.iotaL id)) (D.mw t, a) = 0 := by
-  apply Finsupp.mapDomain_notin_range
+  apply Finsupp.mapDomain_of_notMem_range
   rintro ⟨⟨i, a'⟩, h⟩
   rcases i with b | t' <;> simp [iotaL, mb, mlab, mw] at h
 
 theorem mapDomain_mtp (α : D.EA) (t : D.Tau) (a : Fin D.r) :
     (α.mapDomain (Prod.map D.iotaL id)) (D.mtp t, a) = 0 := by
-  apply Finsupp.mapDomain_notin_range
+  apply Finsupp.mapDomain_of_notMem_range
   rintro ⟨⟨i, a'⟩, h⟩
   rcases i with b | t' <;> simp [iotaL, mb, mlab, mtp] at h
 
@@ -681,7 +681,7 @@ theorem vala_Sp (p : ℕ) (j : Fin D.J) (m : Fin D.r) {θ : ℝ} {Z : MvPolynomi
     simp only [coefOut, Finset.sum_mul, ite_mul, zero_mul]
     rw [Finset.sum_comm, Sp, lsup_apply]
     refine Finset.sum_congr rfl fun α hα => ?_
-    rw [Finset.sum_ite_eq, if_pos (Finset.mem_image_of_mem _ hα), monomial_mul, mul_one,
+    rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_image_of_mem _ hα), monomial_mul_monomial, mul_one,
       ← splitE_eq, smul_monomial, smul_eq_mul, mul_one]
   have hle : valS D.msg (D.Yset j m) Z ≤ valS D.msg (D.Yset j m) (D.Sp p Z) := by
     rw [key]
@@ -727,7 +727,7 @@ end TwistData
 theorem stepC_of [CharZero K] {v : AddValuation K (WithTop ℚ)} {p : ℕ} (hV2 : V2 K)
     (hSeg : SegStep K v p) : StepC K v p := by
   intro hD D hr hJ θ Gt hGt hval
-  haveI : NeZero D.r := ⟨by omega⟩
+  have : NeZero D.r := ⟨by omega⟩
   obtain ⟨Z, hi, hph, hsup, hY, -⟩ := D.inv_all hSeg hD hr hJ θ Gt hGt hval Finset.univ
   have hp : 0 < p := hD.prime.pos
   refine ⟨D.Sp p Z, D.integral_Sp v p hi, ?_, by rw [D.ph_Sp, hph], ?_⟩
@@ -797,7 +797,7 @@ theorem costM_ok (D : TwistData K) : CostOK (CostM D) :=
 
 theorem costM_choose (hV2 : V2 K) (D : TwistData K) (hr : 0 < D.r) (x : D.ML × Fin D.r) (k : ℕ) :
     CostM D k (fun α => ((α x).choose k : K)) := by
-  haveI : NeZero D.r := ⟨hr.ne'⟩
+  have : NeZero D.r := ⟨hr.ne'⟩
   intro S _ θ F h
   exact vala_dg_choose hV2 x k h
 
@@ -852,7 +852,7 @@ theorem vala_dg_labels (D : TwistData K) (gg : (D.Tau → Fin D.r → ℕ) → D
     (Z : MvPolynomial (D.ML × Fin D.r) K) (hZ : vala D.msg S θ Z) :
     vala D.msg S (θ - n) (dg (fun ζ => gg (D.labF ζ) ζ) Z) := by
   set out : D.ML → Prop := fun i => ∃ t, i = D.mlab t with hout
-  letI : DecidablePred out := Classical.decPred _
+  let : DecidablePred out := Classical.decPred _
   have hoS : ∀ i ∈ S, ¬ out i := by
     rintro i hi ⟨t, rfl⟩; exact hS t hi
 
@@ -864,24 +864,24 @@ theorem vala_dg_labels (D : TwistData K) (gg : (D.Tau → Fin D.r → ℕ) → D
     have hlab : D.labF α = D.labF μ := by
       rw [mem_support_iff, coeff_monomial_mul'] at hα
       by_cases hle : μ ≤ α
-      · rw [if_pos hle, one_mul] at hα
+      · rw [ite_eq_left hle, one_mul] at hα
         have h0 := eOut_eq_zero_of_mem_support_coefOut out (mem_support_iff.mpr hα)
         funext t a
         have h1 : (α - μ) (D.mlab t, a) = 0 := by
           have := DFunLike.congr_fun h0 (D.mlab t, a)
-          rw [eOut_apply, if_pos ⟨t, rfl⟩] at this
+          rw [eOut_apply, ite_eq_left ⟨t, rfl⟩] at this
           simpa using this
         have h2 : μ (D.mlab t, a) ≤ α (D.mlab t, a) := hle _
         rw [Finsupp.tsub_apply] at h1
         simp only [TwistData.labF]
         omega
-      · rw [if_neg hle] at hα; exact absurd rfl hα
+      · rw [ite_eq_right hle] at hα; exact absurd rfl hα
     rw [hlab]
   rw [e]
   refine hgg _ S (Set.mem_univ _) θ _ ?_
   refine vala_mul_left_nonneg (valS_monomial_nonneg_of_free _ _ ?_) (vala_coefOut out hoS _ hZ)
   intro i hi a
-  rw [← eOut_of_mem_image out Z hμ, eOut_apply, if_neg (hoS i hi)]
+  rw [← eOut_of_mem_image out Z hμ, eOut_apply, ite_eq_right (hoS i hi)]
 
 theorem stepG_of (hV2 : V2 K) : StepG K v p := by
   intro _hD D hV cst gam hDig
@@ -959,10 +959,10 @@ theorem mapDomain_pullE (ζ : D.EM) :
       (D.index_embedding_injective j).prodMap Function.injective_id
     have hout : ¬ D.outSeg j (D.e0 j k) := fun h => h ⟨k, rfl⟩
     exact (Finsupp.mapDomain_apply_of_injective hinj (D.pullE j ζ) (k, a)).trans
-      ((D.pullE_apply j ζ k a).trans ((eIn_apply (out := D.outSeg j) ζ (D.e0 j k, a)).trans (if_neg hout)).symm)
+      ((D.pullE_apply j ζ k a).trans ((eIn_apply (out := D.outSeg j) ζ (D.e0 j k, a)).trans (ite_eq_right hout)).symm)
   · have hout : D.outSeg j i := hi
-    rw [Finsupp.mapDomain_notin_range]
-    · exact ((eIn_apply (out := D.outSeg j) ζ (i, a)).trans (if_pos hout)).symm
+    rw [Finsupp.mapDomain_of_notMem_range]
+    · exact ((eIn_apply (out := D.outSeg j) ζ (i, a)).trans (ite_eq_left hout)).symm
     · rintro ⟨⟨k, b⟩, hkb⟩
       exact hi ⟨k, (Prod.mk.inj hkb).1⟩
 
@@ -976,7 +976,7 @@ theorem pullE_eIn (ζ : D.EM) : D.pullE j (eIn (D.outSeg j) ζ) = D.pullE j ζ :
   apply D.pullE_congr j
   intro k a
   have hout : ¬ D.outSeg j (D.e0 j k) := fun h => h ⟨k, rfl⟩
-  exact (eIn_apply (out := D.outSeg j) ζ (D.e0 j k, a)).trans (if_neg hout)
+  exact (eIn_apply (out := D.outSeg j) ζ (D.e0 j k, a)).trans (ite_eq_right hout)
 
 theorem pullE_deg (ζ : D.EM) (h : D.PreE j ζ) (k : Fin (D.nB j + D.r)) :
     ldeg (D.pullE j ζ) k = D.dO (D.eA j k) := by
@@ -1068,7 +1068,7 @@ theorem Th_ph (p : ℕ) (Ψ : ι → MvPolynomial (Fin (D.nB j + D.r) × Fin D.r
 
   rw [Th_monomial, map_mul, map_sum]
   simp only [map_smul, hPP]
-  rw [hsum, ← map_mul, MvPolynomial.monomial_mul, one_mul, eOut_add_eIn]
+  rw [hsum, ← map_mul, monomial_mul_monomial, one_mul, eOut_add_eIn]
 
 theorem Th_supp (ζ ζ' : D.EM) (h : ζ' ∈ (D.Th j cc PP (monomial ζ 1)).support) :
     ∃ b, ∃ ξ ∈ (PP b).support, ζ' = eOut (D.outSeg j) ζ + ξ := by
@@ -1102,7 +1102,7 @@ theorem Th_post (hPP : ∀ b, ∀ ξ ∈ (PP b).support, D.PostE j ξ ∧ ∀ i,
   obtain ⟨hpost, hzero⟩ := hPP b ξ hξ
   have hO : ∀ i, ¬ D.outSeg j i → ∀ a, eOut (D.outSeg j) ζ (i, a) = 0 := by
     intro i hi a
-    exact (eOut_apply (out := D.outSeg j) ζ (i, a)).trans (if_neg hi)
+    exact (eOut_apply (out := D.outSeg j) ζ (i, a)).trans (ite_eq_right hi)
   have hmb : ∀ c, D.seg c = j → ¬ D.outSeg j (D.mb c) := by
     intro c hc hout
     obtain ⟨a, rfl⟩ := eB_surj (D := D) (j := j) c hc
@@ -1135,7 +1135,7 @@ theorem Th_post (hPP : ∀ b, ∀ ξ ∈ (PP b).support, D.PostE j ξ ∧ ∀ i,
     exact hpost.2.2.2 m hm a
   · intro i hi a
     rw [Finsupp.add_apply, hzero i hi a, add_zero]
-    exact (eOut_apply (out := D.outSeg j) ζ (i, a)).trans (if_pos (D.outSeg_of_not_segL j i hi))
+    exact (eOut_apply (out := D.outSeg j) ζ (i, a)).trans (ite_eq_left (D.outSeg_of_not_segL j i hi))
 
 theorem Th_away (hPP : ∀ b, ∀ ξ ∈ (PP b).support, ∀ i, ¬ D.SegL j i → ∀ a, ξ (i, a) = 0)
     (S : Finset D.ML) (hS : ∀ i ∈ S, ¬ D.SegL j i) (Z : MvPolynomial (D.ML × Fin D.r) K) :
@@ -1241,9 +1241,9 @@ theorem Th_eq (Z : MvPolynomial (D.ML × Fin D.r) K) :
   rw [Finset.sum_comm, Th, lsup_apply]
   refine Finset.sum_congr rfl fun α hα => ?_
   rw [Finset.sum_eq_single (eOut (D.outSeg j) α)]
-  · rw [if_pos rfl, mul_smul_comm]
+  · rw [ite_eq_left rfl, mul_smul_comm]
   · intro μ _ hμ
-    rw [if_neg (Ne.symm hμ), mul_zero]
+    rw [ite_eq_right (Ne.symm hμ), mul_zero]
   · intro h2
     exact absurd (Finset.mem_image_of_mem _ hα) h2
 
@@ -1273,7 +1273,7 @@ theorem Th_val [NeZero D.r] {v : AddValuation K (WithTop ℚ)}
     rw [h1, eOut_apply]
     simp only [YPset, Finset.mem_union, Finset.mem_image] at hi
     rcases hi with ⟨b, hb, rfl⟩ | ⟨m', -, rfl⟩
-    · rw [if_neg]
+    · rw [ite_eq_right]
       exact not_not.mpr ((D.range_first_embedding j _).mpr (Or.inl ⟨b, (Finset.mem_filter.mp hb).2, rfl⟩))
     · split_ifs
       · exact (hpre α0 hα0).2.2 m' a
@@ -1312,10 +1312,10 @@ theorem Th_val [NeZero D.r] {v : AddValuation K (WithTop ℚ)}
       intro i
       show ((th i : ℤ) : WithTop ℤ) ≤ _
       by_cases hi : i = i0
-      · simp only [th, if_pos hi]
+      · simp only [th, ite_eq_left hi]
         rw [hi]
         exact hQval
-      · simp only [th, if_neg hi]
+      · simp only [th, ite_eq_right hi]
         exact coe_untopD_le _
     obtain ⟨c, -, hc1, hc2⟩ := (h7 th Q) ⟨⟨hQK, hQint⟩, hmem⟩
     rw [D.TT_expand j cc PP Ψ hli hcc Q hQK c hc2]
@@ -1325,7 +1325,7 @@ theorem Th_val [NeZero D.r] {v : AddValuation K (WithTop ℚ)}
     · refine vala_smul _ ?_
       rw [vala_iff]
       have h2 := hc1 b hcb i0
-      simp only [th, if_true] at h2
+      simp only [th, ite_true] at h2
       exact le_trans (WithTop.coe_le_coe.mpr h2) (hPPval b m i0 rfl)
 
 end TwistData
@@ -1334,7 +1334,7 @@ theorem segStep_of {K : Type} [Field K] [CharZero K] {v : AddValuation K (WithTo
     (hS : SPAN K v p) : SegStep K v p := by
   classical
   intro hD D hr _ j
-  haveI : NeZero D.r := ⟨hr.ne'⟩
+  have : NeZero D.r := ⟨hr.ne'⟩
   obtain ⟨ι, hι, Ψ, path, ncol, col, cidx, hts, occ, h3, h4, h5, h7, h8, h10, h11,
     h14, h16, h17⟩ := hS hD (D.nB j + D.r) D.r (D.msg ∘ D.e0 j) (fun k => D.dO (D.eA j k))
   have hmon : ∀ lam : Fin (D.nB j + D.r) × Fin D.r →₀ ℕ, (∀ k, ldeg lam k = D.dO (D.eA j k)) →
@@ -1345,11 +1345,11 @@ theorem segStep_of {K : Type} [Field K] [CharZero K] {v : AddValuation K (WithTo
   have hcc : ∀ lam, (∀ k, ldeg lam k = D.dO (D.eA j k)) →
       monomial lam (1 : K) = ∑ b, cc lam b • Ψ b := by
     intro lam h
-    simp only [cc, dif_pos (hmon lam h)]
+    simp only [cc, dite_eq_left (hmon lam h)]
     exact (h5 _ (hmon lam h)).choose_spec.2
   have hccint : ∀ lam, (∀ k, ldeg lam k = D.dO (D.eA j k)) → ∀ b, 0 ≤ v (cc lam b) := by
     intro lam h b
-    simp only [cc, dif_pos (hmon lam h)]
+    simp only [cc, dite_eq_left (hmon lam h)]
     exact (h5 _ (hmon lam h)).choose_spec.1 b
   let PP : ι → MvPolynomial (D.ML × Fin D.r) K := fun b => D.PsiP j (col b) (occ b)
   have hPPint : ∀ b, Integral v (PP b) := fun b =>

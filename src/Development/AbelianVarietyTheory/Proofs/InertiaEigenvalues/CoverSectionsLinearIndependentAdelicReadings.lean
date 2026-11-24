@@ -166,7 +166,7 @@ theorem bchar_ne_zero' {E : Type} [Field E] {Ψ : Finset (E →+* ℂ)} {r : ℕ
   refine Finset.prod_ne_zero_iff.2 fun τ _ => Finset.prod_ne_zero_iff.2 fun i _ => zpow_ne_zero _ ?_
   have ht : (mat b τ).BlockTriangular id := fun a c h => (hb τ).2 a c h
   have hd := (hb τ).1
-  rw [Matrix.det_of_upperTriangular ht] at hd
+  rw [Matrix.det_of_isUpperTriangular ht] at hd
   exact Finset.prod_ne_zero_iff.1 hd i (Finset.mem_univ _)
 
 theorem indep_along {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} {Comp G : Type}

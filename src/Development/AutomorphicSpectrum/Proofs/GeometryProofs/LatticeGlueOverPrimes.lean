@@ -206,7 +206,7 @@ theorem exists_nat_mul_mem [CharZero Ω] (hξ : IsCptGen ξ) (W : X.Opens) (hW :
     rw [map_zero]
     by_contra hne
     have hφs : φ s ≠ 0 := fun h0 => hne (by rw [h0, zero_mul])
-    letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨genPt ξ, hη⟩ : W)
+    let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨genPt ξ, hη⟩ : W)
     have hloc := hW.isLocalization_stalk ⟨genPt ξ, hη⟩
     have hu : IsUnit (algebraMap Γ(X, W) (X.presheaf.stalk (genPt ξ)) s) := by
       obtain ⟨y, hy⟩ := hξ.bij.2 (φ s)⁻¹
@@ -223,7 +223,7 @@ theorem exists_nat_mul_mem [CharZero Ω] (hξ : IsCptGen ξ) (W : X.Opens) (hW :
     have h2 := h1.map hW.fromSpec.continuous
     rwa [hW.fromSpec_primeIdealOf] at h2
   let q : Cpt ξ := ⟨x.1, hspec⟩
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf x
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf x
   have hloc := hW.isLocalization_stalk x
   have hunit : ∀ s : Γ(X, W), s ∉ Q → IsUnit (X.presheaf.germ W x.1 x.2 s) := by
     intro s hs
@@ -311,7 +311,7 @@ theorem local_step [CharZero Ω] [IsLocallyNoetherian X] (hξ : IsCptGen ξ) (S 
     · exact hav q (hsub1 hq) n (Finset.mem_erase.2 ⟨hnl, hn⟩)
   let C : Set X := {x | x ∈ U₂ ∧ ∃ q : Cpt ξ, q.1 = x ∧ ¬ InFibre ξ l q}
   have hC : IsCompact C := by
-    haveI : IsNoetherianRing Γ(X, U₂) := IsLocallyNoetherian.component_noetherian ⟨U₂, hU₂aff⟩
+    have : IsNoetherianRing Γ(X, U₂) := IsLocallyNoetherian.component_noetherian ⟨U₂, hU₂aff⟩
     have hN : TopologicalSpace.NoetherianSpace (U₂ : Set X) :=
       noetherianSpace_of_isAffineOpen U₂ hU₂aff
     have hcpt := hN.isCompact (Subtype.val ⁻¹' C : Set (U₂ : Set X))
@@ -362,7 +362,7 @@ theorem lat_glue : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommR
   let L : Lat ξ E := fun q => if h : ∃ l ∈ S, InFibre ξ l q then Lp h.choose q else L₀ q
   have hL1 : ∀ q : Cpt ξ, (∀ l ∈ S, ¬ InFibre ξ l q) → L q = L₀ q := by
     intro q hq
-    exact dif_neg (by rintro ⟨l, hl, h⟩; exact hq l hl h)
+    exact dite_eq_right (by rintro ⟨l, hl, h⟩; exact hq l hl h)
   have hL2 : ∀ l ∈ S, ∀ q : Cpt ξ, InFibre ξ l q → L q = Lp l q := by
     intro l hl q hq
     have h : ∃ l ∈ S, InFibre ξ l q := ⟨l, hl, hq⟩

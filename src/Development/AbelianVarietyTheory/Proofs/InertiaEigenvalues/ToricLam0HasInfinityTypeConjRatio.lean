@@ -82,7 +82,7 @@ theorem conj_div_norm {z : ℂ} (hz : z ≠ 0) :
   rw [Complex.norm_conj, inv_div, div_eq_div_iff h1 hz, ← sq, ← Complex.mul_conj', mul_comm]
 
 theorem delAt_inf {D : D7} (C : CharFrame D) (l : ℕ) (k : D.host.Eˣ) : (C.delAt l).inf k = 1 := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   unfold CharFrame.delAt
   split_ifs
   · obtain ⟨n, hn, h⟩ := C.isDel'.fin

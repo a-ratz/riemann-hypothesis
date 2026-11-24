@@ -77,25 +77,25 @@ variable {k}
 
 theorem bz_add {n : ℕ} {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} {x y : Matrix (Fin n) (Fin n) k} (hx : x ∈ Bz Z)
     (hy : y ∈ Bz Z) : x + y ∈ Bz Z := by
-  simp only [Bz, Set.mem_setOf_eq] at hx hy ⊢
+  simp only [Bz, Set.mem_ofPred_eq] at hx hy ⊢
   intro a ha
   rw [mul_add, add_mul, hx a ha, hy a ha]
 
 theorem bz_sub {n : ℕ} {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} {x y : Matrix (Fin n) (Fin n) k} (hx : x ∈ Bz Z)
     (hy : y ∈ Bz Z) : x - y ∈ Bz Z := by
-  simp only [Bz, Set.mem_setOf_eq] at hx hy ⊢
+  simp only [Bz, Set.mem_ofPred_eq] at hx hy ⊢
   intro a ha
   rw [mul_sub, sub_mul, hx a ha, hy a ha]
 
 theorem bz_smul {n : ℕ} {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} (c : k) {x : Matrix (Fin n) (Fin n) k}
     (hx : x ∈ Bz Z) : c • x ∈ Bz Z := by
-  simp only [Bz, Set.mem_setOf_eq] at hx ⊢
+  simp only [Bz, Set.mem_ofPred_eq] at hx ⊢
   intro a ha
   rw [Matrix.mul_smul, hx a ha, Matrix.smul_mul]
 
 theorem z_bz {n : ℕ} {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} (hZ : CR Z) {c : Matrix (Fin n) (Fin n) k}
     (hc : c ∈ Z) : c ∈ Bz Z := by
-  simp only [Bz, Set.mem_setOf_eq]
+  simp only [Bz, Set.mem_ofPred_eq]
   intro a ha
   exact hZ.1 a ha c hc
 

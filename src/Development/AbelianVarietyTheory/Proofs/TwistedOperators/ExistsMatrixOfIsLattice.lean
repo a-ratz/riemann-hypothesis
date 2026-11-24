@@ -78,12 +78,12 @@ theorem exists_matrix_of_isLattice {O K : Type} [CommRing O] [IsDomain O] [IsPri
     [IsFractionRing O K] {n : ℕ} (Λ : Submodule O (Fin n → K)) (hΛ : Λ.IsFullLattice K) :
     ∃ b : Matrix (Fin n) (Fin n) K, Function.Injective b.mulVec ∧
       ∀ x : Fin n → K, (∀ i, x i ∈ (1 : Submodule O K)) ↔ b *ᵥ x ∈ Λ := by
-  letI : Λ.IsFullLattice K := hΛ
-  haveI : Module.Free O Λ := Submodule.IsLattice.free K Λ
-  haveI : Module.Finite O Λ := Module.Finite.iff_fg.2 hΛ.fg
+  let : Λ.IsFullLattice K := hΛ
+  have : Module.Free O Λ := Submodule.IsLattice.free K Λ
+  have : Module.Finite O Λ := Module.Finite.iff_fg.2 hΛ.fg
   let B := Module.finBasisOfFinrankEq O Λ ((((Submodule.IsFullLattice.finrank_eq K Λ).trans (Module.finrank_fintype_fun_eq_card K))).trans (Fintype.card_fin n))
   let B' := B.extendOfIsLattice K
-  have hB' : ∀ j, B' j = (B j : Fin n → K) := fun j => Module.Basis.extendOfIsLattice_apply K B j
+  have hB' : ∀ j, B' j = (B j : Fin n → K) := fun j => Module.Basis.extendOfIsFullLattice_apply K B j
   let b : Matrix (Fin n) (Fin n) K := Matrix.of fun i j => (B j : Fin n → K) i
   have hb : ∀ x, b *ᵥ x = ∑ j, x j • (B j : Fin n → K) := fun x => by
     funext i
@@ -219,7 +219,7 @@ theorem exists_matrix_lat {S : HSp D} {L : Lat S} (hL : IsSelfDualC S L) :
   obtain ⟨β, hβ⟩ := ((GlobalTheory.InhPt.exists_splitPt_frame_char D).2 k p).1 S (Fin S.rank) 1 1 (mul_one _) (mul_one _)
   obtain ⟨Λ, h1, h2, -⟩ := GlobalTheory.FinPl.FrameLat.exists_lat D k p S _ β L hL
   have hfull : Λ.IsFullLattice k := by
-    letI : Λ.IsLattice k := h1
+    let : Λ.IsLattice k := h1
     refine { span_eq_top := ?_ }
     apply top_unique
     intro x _
@@ -360,7 +360,7 @@ theorem sec_mem_idV_iff {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalism.
       (GlobalTheory.FinPl.SplitPt.val_le_unif q (GlobalTheory.FinPl.SplitPt.val_unif_lt_one ⟨ϖ, hϖ⟩))
   rw [hqϖ] at hq
   have hϖ0 : (ϖ : k) ≠ 0 := fun h => hϖ.ne_zero (Subtype.ext h)
-  have hγ : 0 < valuation k (ϖ : k) ^ n := pow_pos (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hϖ0)) n
+  have hγ : 0 < valuation k (ϖ : k) ^ n := pow_pos (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hϖ0)) n
   have hπv : w.valuation D.host.E ((π : D.host.E) ^ n) = WithZero.exp (-(n : ℤ)) := by
     rw [map_pow, show w.valuation D.host.E (π : D.host.E) = WithZero.exp (-1 : ℤ) from
       (w.valuation_of_algebraMap π).trans hπ, ← WithZero.exp_nsmul]
@@ -372,7 +372,7 @@ theorem sec_mem_idV_iff {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalism.
     constructor
     · rintro ⟨z, rfl⟩
       rw [Valuation.map_mul, Valuation.map_pow]
-      exact (mul_le_mul_of_nonneg_left (show valuation k (z : k) ≤ 1 from z.2) zero_le').trans_eq (mul_one _)
+      exact (mul_le_mul_of_nonneg_left (show valuation k (z : k) ≤ 1 from z.2) zero_le).trans_eq (mul_one _)
     · intro h
       refine ⟨⟨s / (ϖ : k) ^ n, ?_⟩, by field_simp⟩
       show valuation k _ ≤ 1
@@ -389,13 +389,13 @@ theorem sec_mem_idV_iff {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalism.
             incA D ((π : D.host.E) ^ n) * (incA D (a / (π : D.host.E) ^ n) * (pairA D.host.F 0 α ⊗ₜ[D.host.F] 1)) := by
           rw [GlobalTheory.UnitaryEmbeddingColumns.incA_mul_tmul', GlobalTheory.UnitaryEmbeddingColumns.incA_mul_tmul', mul_one, mul_div_cancel₀ _ hπ0]
         have a1 : valuation k (p.pr (incA D (a / (π : D.host.E) ^ n))) ≤ 1 := pr_mem_of_valuation_le p hw (by
-          rw [map_div₀, hπv, div_le_one₀ (zero_lt_iff.2 WithZero.exp_ne_zero), ← hn]
+          rw [map_div₀, hπv, div_le_one₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), ← hn]
           exact (GlobalTheory.Idele.mem_iff_valuation_le hI a).1 ha w)
         have a2 : valuation k (p.pr (pairA D.host.F 0 α ⊗ₜ[D.host.F] 1)) ≤ 1 :=
           GlobalTheory.SplitCharCond.pr_int p (AddSubgroup.subset_closure ⟨α, hα, 1, rfl⟩)
         rw [e, map_mul p.pr, map_mul p.pr, Valuation.map_mul, Valuation.map_mul, map_pow, map_pow, Valuation.map_pow, hq]
-        exact (mul_le_mul_of_nonneg_left (mul_le_one' a1 a2) zero_le').trans_eq (mul_one _)
-      | zero => rw [map_zero, map_zero]; exact zero_le'
+        exact (mul_le_mul_of_nonneg_left (mul_le_one' a1 a2) zero_le).trans_eq (mul_one _)
+      | zero => rw [map_zero, map_zero]; exact zero_le
       | add a b _ _ ha hb => rw [map_add p.pr]; exact Valuation.map_add_le _ ha hb
       | neg a _ ha => rw [map_neg p.pr, Valuation.map_neg]; exact ha
     intro h
@@ -413,7 +413,7 @@ theorem sec_mem_idV_iff {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : Formalism.
       show valuation k _ ≤ 1
       rw [div_eq_mul_inv, map_mul, map_mul p.pr, Valuation.map_mul, map_pow, map_pow, Valuation.map_pow, hq] at a1
       rw [Valuation.map_mul]
-      exact (mul_le_mul_of_nonneg_right h zero_le').trans a1
+      exact (mul_le_mul_of_nonneg_right h zero_le).trans a1
     have a3 : p.sec (t * p.pr (incA D a⁻¹)) ∈ idV (1 : FI D) p.v :=
       (GlobalTheory.SeeSaw.idV_one_eq_intAt D p.v _).2 (GlobalTheory.FinPl.FrameLat.sec_mem_intAt p _ a2)
     have key : ∀ y ∈ idV (1 : FI D) p.v, incA D a * y ∈ idV I p.v := by
@@ -461,7 +461,7 @@ theorem count_stairIdeal_at_S0 (hq : OffQ D) {μ₀ : T} (hL : L.Is μ₀) (G : 
   rw [GlobalTheory.FunObj.count_stairId h2.1 h3, Places.stA, Places.stAbar,
     FractionalIdeal.count_mul _ _ h1.1 (inv_ne_zero hmb), FractionalIdeal.count_mul _ _ (GlobalTheory.FunObj.ne_zero_of_conj h1.1 h1.2)
       (inv_ne_zero hmo), FractionalIdeal.count_inv, FractionalIdeal.count_inv, GlobalTheory.FunObj.count_modulBar G hw,
-    GlobalTheory.FunObj.count_modul, hA.1, hA.2, cosExp, if_pos hW, G.pl.under_w hv]
+    GlobalTheory.FunObj.count_modul, hA.1, hA.2, cosExp, ite_eq_left hW, G.pl.under_w hv]
   push_cast
   ring
 

@@ -152,7 +152,7 @@ theorem exists_affine_mp {ι : Type} [Fintype ι] [DecidableEq ι] (ν : Measure
     (M : Matrix ι ι k) (u : kˣ) (hu : (u : k) = M.det) (hv : valuation k (u : k) = 1) (b : ι → k) :
     ∃ φ : (ι → k) ≃ᵐ (ι → k), MeasurePreserving φ (Measure.pi fun _ => ν) (Measure.pi fun _ => ν) ∧
       ∀ e, φ e = M.mulVec e + b := by
-  haveI := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.secondCountable k
   have hm : ∀ A : Matrix ι ι k, Measurable A.mulVec := fun A =>
     (continuous_const.matrix_mulVec continuous_id).measurable
   have hdet : IsUnit M.det := hu ▸ u.isUnit

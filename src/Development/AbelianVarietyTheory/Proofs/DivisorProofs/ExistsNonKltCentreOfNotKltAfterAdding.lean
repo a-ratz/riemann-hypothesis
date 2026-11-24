@@ -102,7 +102,7 @@ theorem exists_isNkltCentre : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoet
     ∀ (Δ D : X → ℚ) (x : X), IsQCart D → KltAt p n Δ x → ¬ KltAt p n (Δ + D) x →
     ∃ z, z ⤳ x ∧ IsNkltCentre p n (Δ + D) z := by
   intro X _ _ _ p n hp hn Δ D x hD hk hnk
-  haveI : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp).1
+  have : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp).1
   obtain ⟨η, m, g, hη, hm, hg, -⟩ := hk
   obtain ⟨m', g', hm', hg'⟩ := exists_isLogEqn_add hD hm hg
   rw [hg'.kltAt_iff hn hη hm'] at hnk

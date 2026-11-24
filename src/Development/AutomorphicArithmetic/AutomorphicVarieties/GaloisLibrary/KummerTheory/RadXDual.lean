@@ -84,7 +84,7 @@ theorem UpperTheory.V.Kum.radXDual :
       have h0 : φ (s g) = 0 := hine A (s g) ((hI A (s g)).1 (by rw [hs]; exact hg))
       rw [hβ g, h0, ZMod.val_zero, pow_zero, one_mul]
   · have hz : algebraMap K Ω ζ ≠ 0 := hζ'.ne_zero (NeZero.ne n)
-    haveI : IsGalois K Ω := IsAlgClosure.isGalois K Ω
+    have : IsGalois K Ω := IsAlgClosure.isGalois K Ω
     have hfix : ∀ g : G K Ω, g (β' / β) = β' / β := fun g => by
       have e1 : g β = _ := hβ.2 (s g)
       have e2 : g β' = _ := hβ'.2 (s g)

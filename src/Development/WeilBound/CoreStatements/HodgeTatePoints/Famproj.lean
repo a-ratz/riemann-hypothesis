@@ -168,7 +168,7 @@ theorem factor_of_frame (hA : Function.Injective (algebraMap A Ω)) (m : Ideal A
     apply hA
     simpa [Algebra.smul_def] using hxy
   set M' := Submodule.span A (Set.range b) with hM'
-  haveI : Module.Free A M' := Module.Free.of_basis (Module.Basis.span hbA)
+  have : Module.Free A M' := Module.Free.of_basis (Module.Basis.span hbA)
   have hM'fg : M'.FG := Submodule.fg_span (Set.finite_range b)
   obtain ⟨t, ht, hto⟩ := exists_smul_le m hM (N := M') (fun x hx => exists_smul_mem m R hR M' (by
     have hx' : x ∈ Submodule.span R (Set.range b) := he ▸ Submodule.subset_span hx
@@ -273,7 +273,7 @@ theorem exists_emb (E : Type) [Field E] [NumberField E] (F : IntermediateField �
     (hF : ∀ (τ : E →+* ℂ) (a : E), τ a ∈ F) {Ω : Type} [Field Ω] (j : F →+* Ω) (σ : E →+* Ω) :
     ∃ τ : E →+* ℂ, σ = j.comp (τ.codRestrict F (hF τ)) := by
   classical
-  haveI : CharZero Ω := (RingHom.charZero_iff σ.injective).mp inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff σ.injective).mp inferInstance
   let Φ : (E →+* ℂ) → (E →+* Ω) := fun τ => j.comp (τ.codRestrict F (hF τ))
   have hinj : Function.Injective Φ := by
     intro τ₁ τ₂ h
@@ -327,7 +327,7 @@ private theorem integralBasis_repr_eq_trace_mul_dualInt (z : E) (k : Module.Free
 
   rw [Finset.sum_mul, map_sum]
   simp only [smul_mul_assoc, map_smul, hd, smul_eq_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 private theorem sum_dualInt_mul_integralBasis_eq_one : ∑ k, dualInt E k * integralBasis E k = 1 := by
   classical

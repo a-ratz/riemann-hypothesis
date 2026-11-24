@@ -145,7 +145,7 @@ namespace GlobalTheory
 theorem addFundamentalDomains_measure_eq : ∀ {V : Type} [AddCommGroup V] [MeasurableSpace V] [MeasurableAdd V] (μ : Measure V) [μ.IsAddLeftInvariant] (L : Submodule ℤ V) [Countable L] (D D' : Set V), MeasurableSet D → MeasurableSet D' → (∀ v, ∃! l, l ∈ L ∧ v + l ∈ D) → (∀ v, ∃! l, l ∈ L ∧ v + l ∈ D') → μ D = μ D' := by
   intro V _ _ _ μ _ L _ D D' hD hD' hu hu'
   let G : AddSubgroup V := L.toAddSubgroup
-  haveI : Countable G := inferInstanceAs (Countable L)
+  have : Countable G := inferInstanceAs (Countable L)
   have key : ∀ E : Set V, MeasurableSet E → (∀ v, ∃! l, l ∈ L ∧ v + l ∈ E) →
       IsAddFundamentalDomain G E μ := by
     intro E hE hEu
@@ -194,7 +194,7 @@ theorem ringEquiv_mem_dual (e : E ≃+* E) {x : E}
   rw [FractionalIdeal.mem_dual (one_ne_zero (α := FractionalIdeal (𝓞 E)⁰ E))] at hx ⊢
   intro a ha
   have ha' : e.symm a ∈ (1 : FractionalIdeal (𝓞 E)⁰ E) := by
-    rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_one] at ha ⊢
+    rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_one] at ha ⊢
     exact ringEquiv_mem_one e.symm ha
   have h := hx _ ha'
   let f : E ≃ₐ[ℚ] E := AlgEquiv.ofRingEquiv (f := e) (fun q => map_ratCast e q)
@@ -223,7 +223,7 @@ theorem ringEquiv_mem_dInv (e : E ≃+* E) (j : ℕ) (x : E) (hx : x ∈ dInv E 
   have hd : ((differentIdeal ℤ (𝓞 E) : FractionalIdeal (𝓞 E)⁰ E))⁻¹ =
       FractionalIdeal.dual ℤ ℚ (1 : FractionalIdeal (𝓞 E)⁰ E) := by
     rw [coeIdeal_differentIdeal ℤ ℚ E (𝓞 E), inv_inv]
-  rw [dInv, hd, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_pow] at hx ⊢
+  rw [dInv, hd, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_pow] at hx ⊢
   exact ringEquiv_mem_pow e _ (fun y hy => ringEquiv_mem_dual e hy) j x hx
 
 theorem conj_mem_dInv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
@@ -330,9 +330,9 @@ theorem re_embedding_comap {F E : Type} [Field F] [NumberField F] [Field E] [Num
 
 theorem mixedSpace_reCoords : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∃ e : mixedEmbedding.mixedSpace F ≃L[ℝ] (InfinitePlace E → ℝ), MeasurePreserving e volume volume ∧ ∀ y : F, e (mixedEmbedding F y) = reV (algebraMap F E y) := by
   intro F E _ _ _ _ _ σ h
-  haveI : IsTotallyReal F := h.1
-  haveI : IsTotallyComplex E := h.2.1
-  haveI : IsEmpty {w : InfinitePlace F // InfinitePlace.IsComplex w} :=
+  have : IsTotallyReal F := h.1
+  have : IsTotallyComplex E := h.2.1
+  have : IsEmpty {w : InfinitePlace F // InfinitePlace.IsComplex w} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.2 w.2 (IsTotallyReal.isReal w.1)⟩
   let g : InfinitePlace E ≃ {v : InfinitePlace F // InfinitePlace.IsReal v} :=
     (Equiv.ofBijective _ (comap_bij F E h.2.2.1)).trans
@@ -346,7 +346,7 @@ theorem mixedSpace_reCoords : ∀ (F E : Type) [Field F] [NumberField F] [Field 
       left_inv := fun x => Prod.ext (funext fun v => by simp) (Subsingleton.elim _ _)
       right_inv := fun f => funext fun w => by simp }
   refine ⟨L.toContinuousLinearEquiv, ?_, ?_⟩
-  · haveI : IsProbabilityMeasure (volume : Measure ({w : InfinitePlace F // InfinitePlace.IsComplex w} → ℂ)) := by
+  · have : IsProbabilityMeasure (volume : Measure ({w : InfinitePlace F // InfinitePlace.IsComplex w} → ℂ)) := by
       rw [volume_pi, Measure.pi_of_empty]; infer_instance
     have h1 : MeasurePreserving (Prod.fst : mixedEmbedding.mixedSpace F → _) volume volume :=
       measurePreserving_fst
@@ -397,7 +397,7 @@ theorem exists_fundamentalDomain_snd_of_two_smul_mem {ι : Type} [Fintype ι]
     intro x
     obtain ⟨a, ha⟩ := (hmem x).1 x.2
     exact h2 a x ha
-  haveI : DiscreteTopology L₂ := by
+  have : DiscreteTopology L₂ := by
     refine DiscreteTopology.of_continuous_injective
       (f := fun x : L₂ => (⟨((0 : ι → ℝ), (2 : ℝ) • (x : ι → ℝ)), hin x⟩ : Λ)) ?_ ?_
     · exact Continuous.subtype_mk
@@ -406,7 +406,7 @@ theorem exists_fundamentalDomain_snd_of_two_smul_mem {ι : Type} [Fintype ι]
       have h := congrArg (fun z : Λ => (z : (ι → ℝ) × (ι → ℝ)).2) hxy
       simp only at h
       exact Subtype.ext (smul_right_injective _ (two_ne_zero) h)
-  haveI : IsZLattice ℝ L₂ := by
+  have : IsZLattice ℝ L₂ := by
     refine ⟨?_⟩
     rw [eq_top_iff]
     intro y _
@@ -718,7 +718,7 @@ theorem skew_covol_dInv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       (a, (0 : InfinitePlace E → ℝ)) ∈ Λ := by
     intro a
     rw [hb1s, hΛ]
-    simp only [Set.mem_image, Set.mem_setOf_eq, he1x, Prod.mk.injEq]
+    simp only [Set.mem_image, Set.mem_ofPred_eq, he1x, Prod.mk.injEq]
     constructor
     · rintro ⟨y, hy, rfl⟩
       have h := (_root_.GlobalTheory.SnMass.SkewVol.mem_dInv_imV_iff F E σ hCM hU (2 * t) (algebraMap F E y)).2 ⟨y, hy, rfl⟩
@@ -759,7 +759,7 @@ theorem skew_covol_dInv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       exact ⟨_, x, hx, rfl, rfl⟩
   obtain ⟨θ, hθ⟩ := _root_.GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified F E σ hCM hU
   have hfin := _root_.GlobalTheory.SnMass.SkewDom.skewDom F E σ hCM (dInv E (2 * t)) (fun x hx => _root_.GlobalTheory.SnMass.VolN.conj_mem_dInv F E σ hCM _ x hx) θ hθ c hc D2 _
-    hD2m (fun y => by simpa only [Set.mem_setOf_eq, hL2] using hD2 y) rfl
+    hD2m (fun y => by simpa only [Set.mem_ofPred_eq, hL2] using hD2 y) rfl
   have hd : (1 : ℝ) ≤ |(discr F : ℝ)| := by
     have h := Int.one_le_abs (discr_ne_zero F)
     rw [← Int.cast_abs]

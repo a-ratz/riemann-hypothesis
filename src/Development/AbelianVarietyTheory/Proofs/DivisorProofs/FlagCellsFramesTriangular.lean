@@ -118,7 +118,7 @@ theorem col_tri (hZ : Cells A π g κ) (k k' : A.B × Pm Dw.mult) (σ : E →+* 
       (c : O →+* A) (v : Fin (n + 1) → A) (hv : Ideal.span (Set.range v) = ⊤) (ψ : A →+* B),
       spMap ψ ≫ pt c v hv = pt (ψ.comp c) (ψ ∘ v) (span_range_comp_eq_top v hv ψ) := by
     intro O A B _ _ _ n c v hv ψ
-    letI := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
+    let := MvPolynomial.gradedAlgebra (σ := Fin (n + 1)) (R := O)
     refine (ProjPoint.SpecMap_ofHom _ _ _ ψ).trans ?_
     unfold pt
     congr 1
@@ -201,10 +201,10 @@ theorem col_tri (hZ : Cells A π g κ) (k k' : A.B × Pm Dw.mult) (σ : E →+* 
   refine ⟨((a0⁻¹ : Lˣ) : L) • av, fun i hi => ?_, ?_⟩
   · simp only [av, Pi.smul_apply, Finset.sum_apply, Pi.single_apply, smul_eq_mul]
     rw [Finset.sum_eq_zero fun l _ => ?_, mul_zero]
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h
     have := congrArg Fin.val h
-    simp only [Fin.coe_castLE] at this
+    simp only [Fin.val_castLE] at this
     have := l.2
     omega
   · rw [Matrix.mulVec_smul, key, smul_smul, Units.inv_mul, one_smul]
@@ -216,7 +216,7 @@ theorem isReduced_of_cells (hZ : Cells A π g κ) : IsReduced Z := by
   exact isReduced_of_isReduced_stalk _
 
 theorem flagCells_frames_triangular_common (hZ : Cells A π g κ) : FlagCellFrameChangeTriangular hZ := by
-  haveI := isReduced_of_cells hZ
+  have := isReduced_of_cells hZ
   intro k k' σ
   have hle : (κ k.1 k.2).opensRange ⊓ (κ k'.1 k'.2).opensRange ≤ π ⁻¹ᵁ ((A.k k.1).M.U ⊓ (A.k k'.1).M.U) :=
     inf_le_inf (cell_le hZ k) (cell_le hZ k')

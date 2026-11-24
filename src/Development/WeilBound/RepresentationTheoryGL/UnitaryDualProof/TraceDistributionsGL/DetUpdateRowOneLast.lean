@@ -61,7 +61,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem det_updateRow_one_last {n : ℕ} (v : Fin (n + 1) → k) :
     (updateRow (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (Fin.last n) v).det = v (Fin.last n) := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · rw [Fin.prod_univ_castSucc]
     simp [Matrix.updateRow_apply, Fin.castSucc_ne_last]
   · intro i j hij
@@ -120,7 +120,7 @@ theorem slice_cj_mem {n : ℕ} {F : Mx k n × Vc k n → ℂ} (hF : F ∈ SB (Mx
 theorem phiIndep : PhiIndep k := by
   intro n Λ hΛ F hF w hw s hs
   unfold phi
-  rw [if_neg hw]
+  rw [ite_eq_right hw]
   have hrow : ∀ (g : GL (Fin (n + 1)) k) (j : Fin (n + 1)),
       (eLast k n ᵥ* (g : Matrix (Fin (n + 1)) (Fin (n + 1)) k)) j = (g : Matrix (Fin (n + 1)) (Fin (n + 1)) k) (Fin.last n) j := by
     intro g j
@@ -165,7 +165,7 @@ theorem phiEquiv : PhiEquiv k := by
       rw [← e, h0, Matrix.mulVec_zero]
     rw [phiIndep n Λ hΛ F hF _ hw' (sec w * h) ?_]
     · unfold phi
-      rw [if_neg hw]
+      rw [ite_eq_right hw]
       congr 1
       funext x
       dsimp only

@@ -217,7 +217,7 @@ theorem tensorLeft_sheaf_additive (F : Sheaf J (ModuleCat.{1} S)) : (tensorLeft 
 
 theorem tensorLeft_sheaf_linear (F : Sheaf J (ModuleCat.{1} S)) :
     (letI := tensorLeft_sheaf_additive J S F; (tensorLeft F).Linear S) := by
-  letI := tensorLeft_sheaf_additive J S F
+  let := tensorLeft_sheaf_additive J S F
   have e : tensorLeft F ≅ sheafToPresheaf J _ ⋙ tensorLeft F.obj ⋙ presheafToSheaf J _ :=
     (tensoringLeft _).mapIso (asIso ((sheafificationAdjunction J _).counit.app F)).symm ≪≫
       tensorLeftSheafifyIso J S F.obj

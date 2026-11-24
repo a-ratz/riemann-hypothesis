@@ -69,8 +69,8 @@ theorem exists_uniformizer_and_residue_representatives :
   refine ⟨?_, h2, h3, ?_⟩
   · obtain ⟨π, hπ⟩ := v.valuation_exists_uniformizer F
     exact ⟨π, hπ, (h2 π).trans hπ⟩
-  · haveI : Finite (𝓞 F ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-    letI : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
+  · have : Finite (𝓞 F ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+    let : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
     choose s hs using Ideal.Quotient.mk_surjective (I := v.asIdeal)
     refine ⟨Finset.univ.image fun q : 𝓞 F ⧸ v.asIdeal =>
       algebraMap F (v.adicCompletion F) ((s q : 𝓞 F) : F), ?_, ?_, ?_⟩

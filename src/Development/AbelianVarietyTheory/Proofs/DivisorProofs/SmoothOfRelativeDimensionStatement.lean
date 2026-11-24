@@ -404,7 +404,7 @@ theorem bijective_deRham (HR : GlobalTheory.Published.AbelianDeRham) (HD : Globa
 
   obtain ⟨B, _, Q, hB, hBg, hd, hd'⟩ := HD.1 (Sp K) A hA
   have hBg := hBg _ hg
-  haveI : IsCommMonObj B := hB.comm
+  have : IsCommMonObj B := hB.comm
 
   have hL := pull_isLB hP (lift (𝟙 A) (𝟙 A)).left
   obtain ⟨H, hH, hamp⟩ := GlobalTheory.BirigidLift.exists_relAmple_prod hA hA hL amp hL amp
@@ -420,8 +420,8 @@ theorem bijective_deRham (HR : GlobalTheory.Published.AbelianDeRham) (HD : Globa
     rw [key]
     exact (triv_ev_iff hP _ _).1 tr
   obtain ⟨μ', hμ', e₁, e₂⟩ := GlobalTheory.IsogenyQuasiInverse.exists_quasiInverse K A B g hA hB hg hBg lam hlam e he0 hkerl
-  haveI := hlam
-  haveI := hμ'
+  have := hlam
+  have := hμ'
   have hpush : Function.Bijective (push (dp0 K) (𝟙 _) lam) := by
     have hmon (X : Over (Sp K)) [GrpObj X] [IsCommMonObj X] (n : ℕ) : IsMonHom ((𝟙 X) ^ n : X ⟶ X) := by
       induction n with
@@ -432,15 +432,15 @@ theorem bijective_deRham (HR : GlobalTheory.Published.AbelianDeRham) (HD : Globa
         push (dp0 K) (𝟙 _) ((𝟙 X) ^ n : X ⟶ X) = (n : K) • LinearMap.id := by
       induction n with
       | zero =>
-        haveI := hmon X 0
+        have := hmon X 0
         rw [push_congr (dp0 K) (𝟙 _) (pow_zero (𝟙 X)), push_one, Nat.cast_zero, zero_smul]
       | succ n ih =>
-        haveI := hmon X n
-        haveI := hmon X (n + 1)
-        haveI : IsMonHom ((𝟙 X) ^ n * 𝟙 X) := inferInstanceAs (IsMonHom (lift ((𝟙 X) ^ n) (𝟙 X) ≫ μ[X]))
+        have := hmon X n
+        have := hmon X (n + 1)
+        have : IsMonHom ((𝟙 X) ^ n * 𝟙 X) := inferInstanceAs (IsMonHom (lift ((𝟙 X) ^ n) (𝟙 X) ≫ μ[X]))
         rw [push_congr (dp0 K) (𝟙 _) (pow_succ (𝟙 X) n), push_mul, ih, push_id, Nat.cast_succ, add_smul, one_smul]
-    haveI := hmon A e
-    haveI := hmon B e
+    have := hmon A e
+    have := hmon B e
     have k₁ : ∀ x, push (dp0 K) (𝟙 _) μ' (push (dp0 K) (𝟙 _) lam x) = (e : K) • x := fun x ↦ by
       rw [← LinearMap.comp_apply, ← push_comp, push_congr (dp0 K) (𝟙 _) e₁, hpow]; rfl
     have k₂ : ∀ y, push (dp0 K) (𝟙 _) lam (push (dp0 K) (𝟙 _) μ' y) = (e : K) • y := fun y ↦ by
@@ -459,7 +459,7 @@ theorem bijective_deRham (HR : GlobalTheory.Published.AbelianDeRham) (HD : Globa
   have hadj : ∀ x y, φ x (push (dp0 K) (𝟙 _) lam y) = ψ x y := fun x y ↦ by
     have k := IsCorrForm.adjoint C hd.isLB hP hφ hψ (𝟙 A) lam e' x y
     rwa [push_id] at k
-  haveI := (hperf φ hφ).1
+  have := (hperf φ hφ).1
   have hφb : Function.Bijective φ := LinearMap.IsPerfPair.bijective_left φ
   let E := LinearEquiv.ofBijective _ hpush
   have : ⇑ψ = ⇑E.dualMap ∘ ⇑φ := by
@@ -481,15 +481,15 @@ open GlobalTheory.Published.GrothendieckMessing IsLocalRing
 theorem skew_bijective : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : GlobalTheory.UPel.HT.Base D R) (N : ℕ) (C C₀ : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing C] [CommRing C₀] (π : C →+* C₀), Function.Surjective π → ∀ (hsq : RingHom.ker π ^ 2 = 0) (tR : R →+* C) (o₀ : GlobalTheory.UPel.HT.Obj b N (spMap π ≫ spMap tR)), ∀ φ : Crys (divided₂ hsq) (spMap π) o₀.A →ₗ[C] Crys (divided₂ hsq) (spMap π) o₀.A →ₗ[C] C, GlobalTheory.AbDual.IsCorrForm (divided₂ hsq) (spMap π) o₀.A o₀.A o₀.P φ → (∀ x y, φ x y = -φ y x) ∧ Function.Bijective φ := by
   intro p _ D R _ b N C C₀ _ _ _ _ π hπ hsq tR o₀ φ hφ
   have hI2 : RingHom.ker π ^ 2 = ⊥ := hsq
-  haveI : Nontrivial C₀ := by
+  have : Nontrivial C₀ := by
     refine ⟨⟨0, 1, fun h ↦ ?_⟩⟩
     have h1 : (1 : C) ∈ RingHom.ker π := by rw [RingHom.mem_ker, map_one]; exact h.symm
     have h2 : (1 : C) ∈ RingHom.ker π ^ 2 := by
       rw [pow_two]; simpa using Ideal.mul_mem_mul h1 h1
     rw [hI2] at h2
     exact one_ne_zero ((Submodule.mem_bot C).1 h2)
-  haveI : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
-  haveI : IsNoetherianRing C₀ := isNoetherianRing_of_surjective C C₀ π hπ
+  have : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
+  have : IsNoetherianRing C₀ := isNoetherianRing_of_surjective C C₀ π hπ
   let κ := divided₂ hsq
   have hκ : IsNilDP κ := isDPNilpotent_squareZero hsq
   have ADR : GlobalTheory.Published.AbelianDeRham := GlobalTheory.abelianDeRham
@@ -529,13 +529,13 @@ theorem skew_bijective : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.
   obtain ⟨bij, -, -⟩ := HC g o₀.A A' i' h' hA' hg
   let e := LinearEquiv.ofBijective (crysToDR κ h') (HC.crysToDR_bijective h' hA' hg)
   have ee : ∀ xA, crysToDR κ h' (e.symm xA) = xA := e.apply_symm_apply
-  letI : Algebra C C₀ := π.toAlgebra
+  let : Algebra C C₀ := π.toAlgebra
   have hBC := (ADR.2.2.1 C A' g hA' hg C₀ o₀.A i' h').1
   obtain ⟨hfinA, hprojA, -⟩ := ADR.1.prim hA' hg
-  haveI := hfinA
-  haveI := hprojA
-  haveI : Module.Finite C (Crys κ (spMap π) o₀.A) := Module.Finite.equiv e.symm
-  haveI : Module.Projective C (Crys κ (spMap π) o₀.A) := Module.Projective.of_equiv e.symm
+  have := hfinA
+  have := hprojA
+  have : Module.Finite C (Crys κ (spMap π) o₀.A) := Module.Finite.equiv e.symm
+  have : Module.Projective C (Crys κ (spMap π) o₀.A) := Module.Projective.of_equiv e.symm
 
   let red : Crys κ (spMap π) o₀.A →ₛₗ[π] HdR o₀.A := hBC.bcMap.comp (crysToDR κ h')
   have hm : ∀ x, (crysRedMor κ rfl o₀.A).Corr x (red x) := fun x ↦
@@ -602,7 +602,7 @@ theorem skew_bijective : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.
           exact bot_le
   have hsurj : Function.Surjective φ.flip :=
     LinearMap.range_eq_top.1 (top_le_iff.1 (htop.trans (sup_le le_rfl hIle)))
-  haveI : Module.Free C (Crys (divided₂ hsq) (spMap π) o₀.A) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free C (Crys (divided₂ hsq) (spMap π) o₀.A) := Module.free_of_flat_of_isLocalRing
   let bs := Module.finBasis C (Crys (divided₂ hsq) (spMap π) o₀.A)
   have hinj : Function.Injective φ.flip := by
     have hs' : Function.Surjective (bs.toDualEquiv.symm.toLinearMap ∘ₗ φ.flip) :=
@@ -646,8 +646,8 @@ theorem fibre_baseChange : ∀ (C₀ : Type) [CommRing C₀] [IsLocalRing C₀] 
   have hh := isGrpPullback_pullback A₀ (spMap (algebraMap C₀ (IsLocalRing.ResidueField C₀)))
   have hbc := (hBC C₀ A₀ g hA hg (IsLocalRing.ResidueField C₀) _ _ hh).1
   obtain ⟨hfin, hproj, -⟩ := hFree.prim hA hg
-  haveI := Module.finitePresentation_of_projective C₀ (primDR A₀)
-  haveI : Module.Free C₀ (primDR A₀) := Module.free_of_flat_of_isLocalRing
+  have := Module.finitePresentation_of_projective C₀ (primDR A₀)
+  have : Module.Free C₀ (primDR A₀) := Module.free_of_flat_of_isLocalRing
   refine ⟨hbc.bcMap, ?_, ?_, ?_⟩
   · intro h'
     let l : primDR A₀ →ₗ[C₀] IsLocalRing.ResidueField C₀ :=
@@ -664,8 +664,8 @@ theorem fibre_baseChange : ∀ (C₀ : Type) [CommRing C₀] [IsLocalRing C₀] 
     rw [← IsLocalRing.residue_eq_zero_iff]
     exact (hc c).symm.trans (LinearMap.zero_apply _)
   · intro x h
-    haveI := a.hom x
-    haveI := (OAct.pullback (spMap (algebraMap C₀ (IsLocalRing.ResidueField C₀))) A₀ a).hom x
+    have := a.hom x
+    have := (OAct.pullback (spMap (algebraMap C₀ (IsLocalRing.ResidueField C₀))) A₀ a).hom x
     refine hbc.corr_iff.1 ?_
     exact GrpMor.Corr.push (m := Published.AbelianDeRham.bcMor hh) (Published.AbelianDeRham.bcMor hh)
       (a.act x) ((OAct.pullback (spMap (algebraMap C₀ (IsLocalRing.ResidueField C₀))) A₀ a).act x)
@@ -746,8 +746,8 @@ theorem projective_tensor_of_fibre_projective :
       (letI := GlobalTheory.HTSummand.tensorModOf ρ'; Module.Projective (k ⊗[ℤ] B) V) →
       letI := GlobalTheory.HTSummand.tensorModOf ρ; Module.Projective (C ⊗[ℤ] B) H := by
   intro C k B _ _ _ _ _ σ hσ H V _ _ _ _ ρ ρ' f hfin hproj hf hker hcomm hV
-  letI mH : Module (C ⊗[ℤ] B) H := tensorModOf ρ
-  letI mV : Module (k ⊗[ℤ] B) V := tensorModOf ρ'
+  let mH : Module (C ⊗[ℤ] B) H := tensorModOf ρ
+  let mV : Module (k ⊗[ℤ] B) V := tensorModOf ρ'
 
   set m : Ideal C := RingHom.ker σ with hm_def
   have hmtop : m ≠ ⊤ := by
@@ -780,11 +780,11 @@ theorem projective_tensor_of_fibre_projective :
     refine le_bot_iff.1 ((Ideal.pow_right_mono hkerτ N).trans ?_)
     rw [← Ideal.map_pow, hN, Ideal.map_bot]
 
-  haveI tC : IsScalarTower C (C ⊗[ℤ] B) H := IsScalarTower.of_algebraMap_smul fun c h => by
+  have tC : IsScalarTower C (C ⊗[ℤ] B) H := IsScalarTower.of_algebraMap_smul fun c h => by
     show ((c ⊗ₜ[ℤ] (1 : B) : C ⊗[ℤ] B)) • h = c • h
     rw [tensorModOf_tmul, map_one]
     rfl
-  letI mRV : Module (C ⊗[ℤ] B) V := Module.compHom V τ
+  let mRV : Module (C ⊗[ℤ] B) V := Module.compHom V τ
   let fR : H →ₗ[C ⊗[ℤ] B] V :=
     { toFun := f
       map_add' := f.map_add
@@ -796,11 +796,11 @@ theorem projective_tensor_of_fibre_projective :
           rw [hτtmul, tensorModOf_tmul, tensorModOf_tmul, f.map_smulₛₗ, hcomm]
         | add x y hx hy => rw [add_smul, map_add (f := _), hx, hy, map_add (f := _), add_smul] }
   have hfR : Function.Surjective fR := hf
-  haveI : Module.Finite (C ⊗[ℤ] B) H := Module.Finite.of_restrictScalars_finite C (C ⊗[ℤ] B) H
-  haveI : Module.Finite (C ⊗[ℤ] B) V := Module.Finite.of_surjective fR hfR
-  haveI finSV : Module.Finite (k ⊗[ℤ] B) V := by
-    letI : Algebra (C ⊗[ℤ] B) (k ⊗[ℤ] B) := τ.toAlgebra
-    haveI : IsScalarTower (C ⊗[ℤ] B) (k ⊗[ℤ] B) V := IsScalarTower.of_algebraMap_smul fun r v => rfl
+  have : Module.Finite (C ⊗[ℤ] B) H := Module.Finite.of_restrictScalars_finite C (C ⊗[ℤ] B) H
+  have : Module.Finite (C ⊗[ℤ] B) V := Module.Finite.of_surjective fR hfR
+  have finSV : Module.Finite (k ⊗[ℤ] B) V := by
+    let : Algebra (C ⊗[ℤ] B) (k ⊗[ℤ] B) := τ.toAlgebra
+    have : IsScalarTower (C ⊗[ℤ] B) (k ⊗[ℤ] B) V := IsScalarTower.of_algebraMap_smul fun r v => rfl
     exact Module.Finite.of_restrictScalars_finite (C ⊗[ℤ] B) (k ⊗[ℤ] B) V
 
   obtain ⟨n, pb, hpb⟩ := Module.Finite.exists_fin' (k ⊗[ℤ] B) V
@@ -842,7 +842,7 @@ theorem projective_tensor_of_fibre_projective :
   have hsQ : ∀ q : Q, sQ q = q := fun q => Subtype.ext (by
     show Matrix.toLin' E (q : Fin n → C ⊗[ℤ] B) = q
     rw [Matrix.toLin'_apply, hQE])
-  haveI hQproj : Module.Projective (C ⊗[ℤ] B) Q :=
+  have hQproj : Module.Projective (C ⊗[ℤ] B) Q :=
     Module.Projective.of_split Q.subtype sQ (LinearMap.ext hsQ)
   let φ : Q →ₗ[C ⊗[ℤ] B] V :=
     { toFun := fun q => pb (fun i => τ ((q : Fin n → C ⊗[ℤ] B) i))
@@ -1058,14 +1058,14 @@ namespace GlobalTheory.HTDefLift
 theorem exists_crysForm : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : GlobalTheory.UPel.HT.Base D R) (N : ℕ) (C C₀ : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing C] [CommRing C₀] (π : C →+* C₀), Function.Surjective π → ∀ (hsq : RingHom.ker π ^ 2 = 0) (tR : R →+* C) (o₀ : GlobalTheory.UPel.HT.Obj b N (spMap π ≫ spMap tR)), ∃ φ₀ : Crys (divided₂ hsq) (spMap π) o₀.A →ₗ[C] Crys (divided₂ hsq) (spMap π) o₀.A →ₗ[C] C, GlobalTheory.AbDual.IsCorrForm (divided₂ hsq) (spMap π) o₀.A o₀.A o₀.P φ₀ ∧ (∀ φ, GlobalTheory.AbDual.IsCorrForm (divided₂ hsq) (spMap π) o₀.A o₀.A o₀.P φ → φ = φ₀) ∧ (∀ (c : D.O) x y, φ₀ (GlobalTheory.HTSummand.crysAct (divided₂ hsq) (spMap π) o₀.act c x) y = φ₀ x (GlobalTheory.HTSummand.crysAct (divided₂ hsq) (spMap π) o₀.act (D.star c).unop y)) ∧ ∃ φ' : HdR o₀.A →ₗ[C₀] HdR o₀.A →ₗ[C₀] C₀, GlobalTheory.AbDual.IsCorrForm (dp0 C₀) (𝟙 _) o₀.A o₀.A o₀.P φ' ∧ ∀ x x' y y', (GlobalTheory.Published.GrothendieckMessing.crysRedMor (divided₂ hsq) rfl o₀.A).Corr x x' → (GlobalTheory.Published.GrothendieckMessing.crysRedMor (divided₂ hsq) rfl o₀.A).Corr y y' → φ' x' y' = π (φ₀ x y) := by
   intro p _ D R _ b N C C₀ _ _ _ _ π hπ hsq tR o₀
   have hI2 : RingHom.ker π ^ 2 = ⊥ := hsq
-  haveI : Nontrivial C₀ := by
+  have : Nontrivial C₀ := by
     refine ⟨⟨0, 1, fun h ↦ ?_⟩⟩
     have h1 : (1 : C) ∈ RingHom.ker π := by rw [RingHom.mem_ker, map_one]; exact h.symm
     have h2 : (1 : C) ∈ RingHom.ker π ^ 2 := by
       rw [pow_two]; simpa using Ideal.mul_mem_mul h1 h1
     rw [hI2] at h2
     exact one_ne_zero ((Submodule.mem_bot C).1 h2)
-  haveI : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
+  have : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
   let κ := GlobalTheory.Cris.divided₂ hsq
   have hκ : GlobalTheory.Cris.IsNilDP κ := GlobalTheory.Cris.isDPNilpotent_squareZero hsq
   have ADR : GlobalTheory.Published.AbelianDeRham := GlobalTheory.abelianDeRham
@@ -1075,8 +1075,8 @@ theorem exists_crysForm : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT
   have CS := GlobalTheory.Published.AbelianDualCrystal.cupSquare_crys_prod ADR.1 ADC.2 hκ hπ rfl hA' hg hA' hg h' h'
   obtain ⟨φ₀, hφ₀⟩ := exists_isCorrForm CS o₀.isLB o₀.rig₁ o₀.rig₂
   refine ⟨φ₀, hφ₀, fun φ hφ ↦ hφ.unique CS o₀.isLB hφ₀, fun c x y ↦ ?_, ?_⟩
-  · haveI := o₀.act.hom c
-    haveI := o₀.act.hom (D.star c).unop
+  · have := o₀.act.hom c
+    have := o₀.act.hom (D.star c).unop
     have := hφ₀.adjoint CS o₀.isLB o₀.isLB hφ₀ (o₀.act.act c) (o₀.act.act (D.star c).unop) (LBIso.symm (o₀.rosati c)) x y
     exact this.symm
   · have iso : LBIso (o₀.P.pull (Over.Hom.left (𝟙 (o₀.A ⊗ o₀.A)))) o₀.P :=
@@ -1112,17 +1112,17 @@ theorem exists_summand : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.
   intro p _ D R _ b N C C₀ _ _ _ _ π hπ hsq tR o₀
   obtain ⟨red, hfin, hproj, hsurj, hker, hcorr, hpush, E', M', hE'M', hE'⟩ :=
     GlobalTheory.CrysRed.exists_crysRed C C₀ π hπ hsq o₀.A o₀.ab D.O o₀.act
-  haveI := hfin
-  haveI := hproj
+  have := hfin
+  have := hproj
   obtain ⟨φ₀, hφ₀, huniq, hadj, φ', hφ', hrel⟩ := GlobalTheory.HTDefLift.exists_crysForm p D R b N C C₀ π hπ hsq tR o₀
   obtain ⟨hskew, hbij⟩ := GlobalTheory.HTPerf.skew_bijective p D R b N C C₀ π hπ hsq tR o₀ φ₀ hφ₀
-  haveI : Nontrivial C₀ := by
+  have : Nontrivial C₀ := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     have ht : RingHom.ker π = ⊤ := eq_top_iff.2 fun x _ ↦ RingHom.mem_ker.2 (Subsingleton.elim _ _)
     rw [ht, ← Ideal.one_eq_top, one_pow] at hsq
     exact one_ne_zero hsq
-  haveI : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
+  have : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
   have hlagr := GlobalTheory.HTLagr.fil_lagrangian p D R b N C₀ _ o₀ φ' (GlobalTheory.AbelianDim.exists_relDim C₀ o₀.A o₀.ab) hφ'
   have hlie := GlobalTheory.HTSummand.lie_mod_fil p D R b N C₀ (π.comp tR) _ (GlobalTheory.Cris.spMap_comp tR π).symm o₀
   have hprojF := _root_.GlobalTheory.HTSummand.crys_projective D.F C C₀ π hπ hsq o₀.A o₀.ab D.O o₀.act
@@ -1140,7 +1140,7 @@ theorem exists_summand : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.
     intro c x hx
     show red _ ∈ Fil o₀.A
     rw [hpush]
-    haveI := o₀.act.hom c
+    have := o₀.act.hom c
     exact push_mem_Fil (o₀.act.act c) hx
   have hFiso : ∀ x ∈ F, ∀ y ∈ F, φ₀ x y ∈ RingHom.ker π := by
     intro x hx y hy
@@ -1218,7 +1218,7 @@ theorem exists_sqZero_lift : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel
     ⟨(Spec.preimage t).hom, by simp [spMap]⟩
   obtain ⟨E, hEc, hEf, hEs, hEi, hEl⟩ := _root_.GlobalTheory.HTSummand.exists_summand p D R b N C C₀ π hπ hsq tR o₀
   obtain ⟨A, _, i, h, act, hA, hE, hact⟩ := _root_.GlobalTheory.HTDeform.exists_lift_oAct p D R b N C C₀ π hπ hsq tR o₀ E hEc hEf hEs
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   subst hE
   obtain ⟨P, φ₂, hP, r1, r2, hsym, hamp, hker, hros, hsq2, hpol⟩ :=
     _root_.GlobalTheory.UPel.HT.PolLift.exists_pol_lift p D R b N C C₀ π hπ hsq tR o₀ A i h hA act hact hEi
@@ -1374,7 +1374,7 @@ theorem exists_derivation_extending : ∀ (A P R K : Type) [CommRing A] [CommRin
   have hST : S ≤ T := sup_le_sup_right hJI _
   have hSQ : S ≤ Q := sup_le (hJI.trans hIQ) (Ideal.pow_le_self (Nat.succ_ne_zero k))
   obtain ⟨hdim, hloc⟩ := krullDimLE_and_isLocalRing_quotient Q S k le_sup_right hSQ
-  haveI : IsArtinianRing (P ⧸ S) := IsNoetherianRing.isArtinianRing_of_krullDimLE_zero
+  have : IsArtinianRing (P ⧸ S) := IsNoetherianRing.isArtinianRing_of_krullDimLE_zero
   let π : P ⧸ S →+* P ⧸ T := Ideal.Quotient.factor hST
   have hπmk : ∀ x, π (Ideal.Quotient.mk S x) = Ideal.Quotient.mk T x := fun x => rfl
   have hπs : Function.Surjective π := by
@@ -1551,7 +1551,7 @@ namespace GlobalTheory
 theorem lift_ringHom_of_scheme_lift : ∀ (B : Type) [CommRing B] (X : Scheme.{0}) (s : X ⟶ Sp B), (∀ (C C₀ : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing C] [CommRing C₀] (π : C →+* C₀), Function.Surjective π → RingHom.ker π ^ 2 = ⊥ → ∀ (t : Sp C ⟶ Sp B) (x₀ : Sp C₀ ⟶ X), x₀ ≫ s = spMap π ≫ t → ∃ x : Sp C ⟶ X, spMap π ≫ x = x₀ ∧ x ≫ s = t) → ∀ (U : (Sp B).Opens), IsAffineOpen U → ∀ (V : X.Opens), IsAffineOpen V → ∀ (e : V ≤ s ⁻¹ᵁ U), (∀ (C C₀ : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing C] [CommRing C₀] (π : C →+* C₀), Function.Surjective π → RingHom.ker π ^ 2 = ⊥ → ∀ (β : Γ(Sp B, U) →+* C) (φ₀ : Γ(X, V) →+* C₀), φ₀.comp ((s.appLE U V e).hom) = π.comp β → ∃ φ : Γ(X, V) →+* C, π.comp φ = φ₀ ∧ φ.comp ((s.appLE U V e).hom) = β) := by
   intro B _ X s hlift U hU V hV e C C₀ _ _ _ _ π hπ hk β φ₀ hcomp
 
-  haveI : Nontrivial C₀ := by
+  have : Nontrivial C₀ := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     have h1 : (1 : C) ∈ RingHom.ker π := by
@@ -1626,12 +1626,12 @@ theorem smooth_of_lift (A R : Type) [CommRing A] [IsNoetherianRing A] [CommRing 
   algebraize [g]
   have : Algebra.FinitePresentation A R := Algebra.FinitePresentation.of_finiteType.mp hg
   obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp (inferInstance : Algebra.FiniteType A R)
-  letI := f.toRingHom.toAlgebra
-  haveI : IsScalarTower A (MvPolynomial (Fin n) A) R := IsScalarTower.of_algebraMap_eq fun a => (f.commutes a).symm
+  let := f.toRingHom.toAlgebra
+  have : IsScalarTower A (MvPolynomial (Fin n) A) R := IsScalarTower.of_algebraMap_eq fun a => (f.commutes a).symm
   have hs : Function.Surjective (algebraMap (MvPolynomial (Fin n) A) R) := hf
   have hmax : ∀ (m : Ideal R) [m.IsMaximal], Algebra.IsSmoothAt A m := by
     intro m _
-    letI : Field (R ⧸ m) := Ideal.Quotient.field m
+    let : Field (R ⧸ m) := Ideal.Quotient.field m
     have key := _root_.GlobalTheory.injective_cotangentComplexBaseChange_of_forms_extend A (MvPolynomial (Fin n) A) R (R ⧸ m) fun ℓ => _root_.GlobalTheory.LiftDeriv.exists_derivation_extending A (MvPolynomial (Fin n) A) R (R ⧸ m) hs Ideal.Quotient.mk_surjective H ℓ
     exact (GlobalTheory.SS.DefectZero.isSmoothAt_iff_injective A (MvPolynomial (Fin n) A) R (R ⧸ m) hs m
       (Ideal.mk_ker).symm).mpr key
@@ -1646,7 +1646,7 @@ theorem smooth_of_artinian_lift : ∀ (B : Type) [CommRing B] [IsNoetherianRing 
   intro B _ _ X s hs H
   constructor
   intro U hU V hV e
-  haveI : IsNoetherianRing Γ(Sp B, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have : IsNoetherianRing Γ(Sp B, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
   exact smooth_of_lift _ _ _ (HasRingHomProperty.appLE @LocallyOfFiniteType s hs ⟨U, hU⟩ ⟨V, hV⟩ e) (_root_.GlobalTheory.lift_ringHom_of_scheme_lift B X s H U hU V hV e)
 
 end GlobalTheory.SmoothCrit
@@ -1674,10 +1674,10 @@ theorem finrank_kaehler_eq_of_universal_tangent :
       ∃! c : (Fin d → k) →ₗ[k] k, v = (TrivSqZeroExt.map c).toRingHom.comp ψ) → d = n := by
   intro R A k _ _ _ _ n d _ _ hn φ ψ hfst hR huniv
   classical
-  haveI : Nontrivial A := φ.domain_nontrivial
-  letI : Algebra A k := φ.toAlgebra
-  letI : Algebra R k := (φ.comp (algebraMap R A)).toAlgebra
-  haveI : IsScalarTower R A k := IsScalarTower.of_algebraMap_eq (fun r => rfl)
+  have : Nontrivial A := φ.domain_nontrivial
+  let : Algebra A k := φ.toAlgebra
+  let : Algebra R k := (φ.comp (algebraMap R A)).toAlgebra
+  have : IsScalarTower R A k := IsScalarTower.of_algebraMap_eq (fun r => rfl)
   have hψf : ∀ a, (ψ a).fst = φ a := fun a => by
     simpa using RingHom.congr_fun hfst a
   have hψR : ∀ r, (ψ (algebraMap R A r)).snd = 0 := fun r => by

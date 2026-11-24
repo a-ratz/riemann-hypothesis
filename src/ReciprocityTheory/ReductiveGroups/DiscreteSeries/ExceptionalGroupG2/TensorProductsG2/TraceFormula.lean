@@ -625,7 +625,7 @@ theorem trace_ge (dual : Bool) {lam lam' : Fin n → ℝ} {H : Type*} [NormedAdd
   have hre : c.re = (∑ i, ‖wv i‖ ^ 2) / d := by rw [hc0eq, Complex.ofReal_re]
   refine ⟨by rw [hre]; exact div_le_div_of_nonneg_right hge hdpos.le, fun h => ?_⟩
   have hT : ∑ i, ‖wv i‖ ^ 2 = d' := by
-    rw [hre, div_left_inj' hdpos.ne'] at h
+    rw [hre, div_left_inj₀ hdpos.ne'] at h
     exact h
   have hle := heq hT
   refine tf_eq_case dual hσ hD hsm hgap hV hcas hVK hW hd hy0G hy0H hP hι.1 hgap' hV₂ hc₂ hVK₂ hgen1 ?_

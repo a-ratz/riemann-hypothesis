@@ -150,11 +150,11 @@ private theorem psi_map {v : F.Vl} {i : Fin n} {ψ : F.Gv v →* Rˣ} (h : r.IsP
   · exact adic_map f h.cont
   · intro g
     have := h.red g
-    simp only [pushCh, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+    simp only [pushCh, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
     rw [← this]
     exact res_map f _
   · intro g
-    simp only [pushCh, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+    simp only [pushCh, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
     rw [h.mu g]
     exact f.commutes _
 
@@ -255,7 +255,7 @@ private theorem pre_univ {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [Com
       (ψ : ∀ v, Fin n → F.Gv v →* Rˣ), IsDef O r.Dbar D ∧ (∀ v i, r.IsPsi v i (ψ v i)) ∧
       ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (p : Pair r R'),
         ∃! f : R →ₐ[O] R', D.map (f : R →+* R') = p.D ∧ ∀ v i, pushCh (f : R →+* R') (ψ v i) = p.ψ v i := by
-  haveI : CompactSpace F.G₀ := show CompactSpace F.η.ker from
+  have : CompactSpace F.G₀ := show CompactSpace F.η.ker from
     isCompact_iff_compactSpace.mp (Subgroup.isClosed_of_isOpen _ F.η_open).isCompact
   obtain ⟨R₀, iR0, iA0, iC0, D₀, hD₀⟩ := univDet_mf l O r.chib h0 r.chib_open r.chib_inj
   have hb := fun t : F.Vl × Fin n => universalDeformationRing_localCharacters r t.1 t.2 (hv t.1)
@@ -325,8 +325,8 @@ theorem UpperTheory.V.CA.universalDeformationRing_nonempty_of_nonempty_pair :
     have h1mem : (1 : R) ∈ RingHom.ker (f0 : R →+* R0) := hkill R0 p0 f0 h1 h2 (htop ▸ Submodule.mem_top)
     rw [RingHom.mem_ker, map_one] at h1mem
     exact one_ne_zero h1mem
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
-  haveI : IsCO O (R ⧸ I) := co_quot O R (R ⧸ I) (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
+  have : IsCO O (R ⧸ I) := co_quot O R (R ⧸ I) (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
   have hzero : ∀ x ∈ rels r D ψ, Ideal.Quotient.mkₐ O I x = 0 := by
     intro x hx
     rw [Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.eq_zero_iff_mem]
@@ -386,14 +386,14 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.W.b0Ex :
     PhiAll → ProModularRingExists := by
   intro h l hl L Ω _ _ _ _ _ _ s V c n r R _ _ _ hp
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
-  haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : CharP (ResidueField ℤ_[l]) l :=
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+  have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : CharP (ResidueField ℤ_[l]) l :=
     charP_of_injective_ringHom (f := (PadicInt.residueField (p := l)).symm.toRingHom)
       (PadicInt.residueField (p := l)).symm.injective l
-  haveI : CharP (ResidueField c.O) l :=
+  have : CharP (ResidueField c.O) l :=
     charP_of_injective_ringHom (algebraMap (ResidueField ℤ_[l]) (ResidueField c.O)).injective l
   obtain ⟨-, h0, hv⟩ := h l L Ω s V
   exact UpperTheory.V.CA.universalDeformationRing_nonempty_of_nonempty_pair r h0 hv ⟨R, _, _, inferInstance, hp⟩

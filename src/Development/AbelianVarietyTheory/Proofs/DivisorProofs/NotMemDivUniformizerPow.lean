@@ -57,9 +57,9 @@ namespace GlobalTheory
 theorem not_mem_div_uniformizer_pow : ∀ (R K Ω : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [PerfectField (ResidueField R)] [Field K] [Algebra R K] [IsFractionRing R K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (V : ValuationSubring Ω), IsAbove R K V.toSubring → ∀ π : R, Irreducible π → ∀ x : Ω, x ≠ 0 → ∃ n : ℕ, x / algebraMap K Ω (algebraMap R K π) ^ n ∉ V := by
   intro R K Ω _ _ _ _ _ _ _ _ _ _ V hV π hπ x hx
   classical
-  letI : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.IsSeparable K Ω := IsSepClosure.separable
+  let : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.IsSeparable K Ω := IsSepClosure.separable
 
   have hRV : ∀ r : R, algebraMap R Ω r ∈ V := by
     intro r
@@ -76,8 +76,8 @@ theorem not_mem_div_uniformizer_pow : ∀ (R K Ω : Type) [CommRing R] [IsDomain
   have halgR : IsAlgebraic R x⁻¹ := (IsFractionRing.isAlgebraic_iff R K Ω).2 halgK
   obtain ⟨d, hd0, hint⟩ := halgR.exists_integral_multiple
   let f : R →+* V := (algebraMap R Ω).codRestrict V.toSubring hRV
-  letI : Algebra R V := f.toAlgebra
-  haveI : IsScalarTower R V Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra R V := f.toAlgebra
+  have : IsScalarTower R V Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hintV : IsIntegral V (d • x⁻¹) := hint.tower_top
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hintV
   have hyV : d • x⁻¹ ∈ V := by rw [← hy]; exact y.2

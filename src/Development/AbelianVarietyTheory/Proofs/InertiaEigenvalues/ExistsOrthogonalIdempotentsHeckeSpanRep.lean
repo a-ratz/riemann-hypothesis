@@ -255,7 +255,7 @@ theorem exists_idem (l : ℕ) [Fact l.Prime] [Finite X] [Algebra ℤ_[l] A] [Mod
     (b : X → Matrix (Fin n) (Fin n) A) (hb : InRing T rep b) (hπ : b π * b π = b π) :
     ∃ E, InRing T rep E ∧ E * E = E ∧ E π = b π ∧ (∀ y, y * b = 0 → y * E = 0) ∧
       (∀ y, b * y = 0 → E * y = 0) := by
-  haveI : Module.Finite ℤ_[l] (Matrix (Fin n) (Fin n) A) :=
+  have : Module.Finite ℤ_[l] (Matrix (Fin n) (Fin n) A) :=
     inferInstanceAs (Module.Finite ℤ_[l] (Fin n → Fin n → A))
   obtain ⟨E, hE, hM⟩ := _root_.GlobalTheory.exists_idempotent_sub_mem_of_pow_sub_mem l b
   refine ⟨E, ?_, hE, ?_, fun y hy => ?_, fun y hy => ?_⟩

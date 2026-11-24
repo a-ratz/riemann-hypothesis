@@ -75,11 +75,11 @@ theorem alt_isOpen_fix {G V : Type} [Group G] [TopologicalSpace G] [IsTopologica
   let T : Subgroup G :=
     { carrier := {g | ρ g v = v}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at ha hb ⊢
         rw [hb, ha]
       one_mem' := by simp
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   exact Subgroup.isOpen_mono (H₁ := U) (H₂ := T) (fun u hu => h u hu) hU
@@ -91,8 +91,8 @@ theorem alt_star_eq {G H : Type} [Group G] [NormedAddCommGroup H] [InnerProductS
   have h1 : star (π g) * π g = 1 := by
     ext x
     refine ext_inner_left ℂ fun v => ?_
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.star_eq_adjoint,
-      ContinuousLinearMap.adjoint_inner_right, hin, ContinuousLinearMap.one_apply]
+    rw [mul_apply_eq_comp, ContinuousLinearMap.star_eq_adjoint,
+      ContinuousLinearMap.adjoint_inner_right, hin, one_apply_eq_self]
   calc star (π g) = star (π g) * (π g * π g⁻¹) := by rw [← map_mul, mul_inv_cancel, map_one, mul_one]
     _ = π g⁻¹ := by rw [← mul_assoc, h1, one_mul]
 
@@ -103,12 +103,12 @@ theorem alt_avg {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     (Z : Submodule ℂ (H →L[ℂ] H)) (hZ : ∀ κ ∈ K, ∀ z ∈ Z, π κ * z ∈ Z)
     (y : H →L[ℂ] H) (hy : y ∈ Z) (U : Subgroup G) (hUo : IsOpen (U : Set G)) (hU : ∀ u ∈ U, π u * y = y) :
     e * y ∈ Z := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   have hU'o : IsOpen ((U.subgroupOf K : Subgroup K) : Set K) := by
     rw [Subgroup.coe_subgroupOf]
-    exact hUo.preimage continuous_subtype_val
-  haveI : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hU'o
-  haveI : Fintype (K ⧸ U.subgroupOf K) := Fintype.ofFinite _
+    exact hUo.preimage continuous_subtypeVal
+  have : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hU'o
+  have : Fintype (K ⧸ U.subgroupOf K) := Fintype.ofFinite _
   let F : K ⧸ U.subgroupOf K → (H →L[ℂ] H) := fun q => Quotient.liftOn' q (fun κ : K => π κ * y) (by
     intro a b hab
     have hab' : a⁻¹ * b ∈ U.subgroupOf K := QuotientGroup.leftRel_apply.mp hab
@@ -130,7 +130,7 @@ theorem alt_avg {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     exact Equiv.sum_comp (MulAction.toPerm κ) F
   have hew : e * ∑ q, F q = ∑ q, F q := by
     ext x
-    rw [ContinuousLinearMap.mul_apply]
+    rw [mul_apply_eq_comp]
     exact hfix _ fun κ hκ => congrArg (fun T : H →L[ℂ] H => T x) (hwK ⟨κ, hκ⟩)
   have hcard : e * ∑ q, F q = (Fintype.card (K ⧸ U.subgroupOf K) : ℂ) • (e * y) := by
     rw [Finset.mul_sum]

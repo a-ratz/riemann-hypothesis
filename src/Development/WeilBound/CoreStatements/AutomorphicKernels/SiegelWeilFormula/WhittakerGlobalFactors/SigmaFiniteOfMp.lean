@@ -65,7 +65,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem hermVec_map {R R' : Type} [CommRing R] [Algebra F R] [CommRing R'] [Algebra F R'] (f : R →ₐ[F] R')
     (σ : E →ₐ[F] E) {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ) (S : HermR R σ n) (i : Idx n d) :
     hermVec R' σ b n (hermMap f σ S) i = f (hermVec R σ b n S i) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   cases i with
   | inl i =>
     simp only [hermVec, toVec, GlobalTheory.CompanionTheory.SW.HaarCoord.hermCoord, Sum.elim_inl, hermMap, Matrix.map_apply]
@@ -115,11 +115,11 @@ theorem db_split' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF 
     MeasurePreserving (fun S : HermR (AF F) σ n => (hInfR σ S, hFinR σ S)) db
       ((coordHerm (Ainf F) σ b l n).prod (coordHerm (Af F) σ b lf n)) := by
   obtain ⟨⟨hALC, hASC, hAT2⟩, hAfLC, hAfSC, hAfT2⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
-  haveI : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
-  haveI : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
+  have : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
+  have : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   obtain ⟨hinv, δ, hδ, hσδ⟩ := GlobalTheory.CompanionTheory.SW.HaarCoord.conj_facts hCM
   obtain ⟨ξ, hξ⟩ := GlobalTheory.CompanionTheory.AdeleDual.exists_eq_adelicChar_mul ψ hψ.1 hψ.2.2.1
   have hξ0 : ξ ≠ 0 := by
@@ -147,8 +147,8 @@ theorem db_split' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF 
   have hsd : db.map e = adeleMeasurePi F :=
     selfDual_eq _ hs hdet _ (selfDual_transport e (fun S T => by rw [he, he, he, hermVec_add]) _ _ hpair db hdb)
   have hEq := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.DxEuler.adele_eq l hH D hD hD1 lf hlf h1
-  haveI : SigmaFinite l := Measure.IsAddHaarMeasure.sigmaFinite l
-  haveI : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
+  have : SigmaFinite l := Measure.IsAddHaarMeasure.sigmaFinite l
+  have : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
   have hΘ := measurePreserving_arrowProdEquivProdArrow (InfiniteAdeleRing F) (FiniteAdeleRing (𝓞 F) F)
     (Idx n d) (fun _ => l) (fun _ => lf)
   have hA' : MeasurePreserving e.toMeasurableEquiv db (Measure.pi fun _ : Idx n d => l.prod lf) := by
@@ -161,8 +161,8 @@ theorem db_split' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF 
     mp_hermVec hCM (Ainf F) b n l
   have hF : MeasurePreserving eF (coordHerm (Af F) σ b lf n) (Measure.pi fun _ : Idx n d => lf) :=
     mp_hermVec hCM (Af F) b n lf
-  haveI : SigmaFinite (coordHerm (Ainf F) σ b l n) := sigmaFinite_of_mp eI hI
-  haveI : SigmaFinite (coordHerm (Af F) σ b lf n) := sigmaFinite_of_mp eF hF
+  have : SigmaFinite (coordHerm (Ainf F) σ b l n) := sigmaFinite_of_mp eI hI
+  have : SigmaFinite (coordHerm (Af F) σ b lf n) := sigmaFinite_of_mp eF hF
   let eP := eI.prodCongr eF
   have hP : MeasurePreserving eP ((coordHerm (Ainf F) σ b l n).prod (coordHerm (Af F) σ b lf n))
       ((Measure.pi fun _ : Idx n d => l).prod (Measure.pi fun _ : Idx n d => lf)) :=

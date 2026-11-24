@@ -127,7 +127,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.St
 
 private theorem host_star_eq_conj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   apply D.host.φ₀.injective
   have h1 : D.host.φ₀ (star x) = starRingEnd ℂ (D.host.φ₀ x) :=
     NumberField.IsCMField.complexEmbedding_complexConj (K := D.host.E) (φ := D.host.φ₀) (x := x)
@@ -337,7 +337,7 @@ theorem rational_unitary_extend_by_identity : ∀ (D : D7) (X : HidaSetting D) (
       rw [col_mul_eq_mulVec, hMQ]
       funext i
       erw [Matrix.mul_apply, Fintype.sum_sum_type]
-      simp only [Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₂, Matrix.zero_apply, mul_zero, Finset.sum_const_zero, zero_add, Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₂, Matrix.zero_apply, mul_zero, Finset.sum_const_zero, zero_add, Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rcases hx with (⟨a, rfl⟩ | ⟨a, rfl⟩) | hz'
     · have := key (Sum.inl a)
       have e : (fun i => Q i (Sum.inr (Sum.inl a))) = X.eR a := funext fun i => he a i
@@ -647,7 +647,7 @@ theorem GlobalTheory.transport_rational_points : ∀ (D : D7) (X : HidaSetting D
     rw [(hΦ h _).1 hr]
   have hinj : ∀ g g' : GL (Fin (D.R.N 0)) D.host.E, Formalism.UG.bc (Formalism.UG.inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) g = Formalism.UG.bc (Formalism.UG.inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) g' → g = g' := by
     intro g g' h
-    haveI : Nontrivial (FiniteAdeleRing (𝓞 D.host.F) D.host.F) := by
+    have : Nontrivial (FiniteAdeleRing (𝓞 D.host.F) D.host.F) := by
       obtain ⟨M, hM⟩ := Ideal.exists_maximal (𝓞 D.host.F)
       let v : HeightOneSpectrum (𝓞 D.host.F) :=
         ⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField D.host.F)⟩

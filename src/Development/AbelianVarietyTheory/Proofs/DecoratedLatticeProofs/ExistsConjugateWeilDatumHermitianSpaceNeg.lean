@@ -150,7 +150,7 @@ theorem weil_refl {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE 
   · intro f hf w
     exact hw.om_cont _ (theta_refl hf) (-w)
   · intro μ 𝓕 hμ h𝓕 p f hf
-    haveI : BorelSpace (WO S T) := ⟨rfl⟩
+    have : BorelSpace (WO S T) := ⟨rfl⟩
     let dE : WO S T ≃+ WO S T := AddEquiv.neg _
     set ν : Measure (WO S T) := μ.map dE with hν
     have hνH : ν.IsAddHaarMeasure := dE.isAddHaarMeasure_map μ continuous_neg continuous_neg
@@ -258,13 +258,13 @@ theorem weil_twist {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {χS χT : (AE
     simp
   · intro f hf w
     have hc : Continuous fun p : GA D S × GA D T => (((χT (detA S p.1))⁻¹ : Circle) : ℂ) :=
-      continuous_subtype_val.comp ((hH.1.comp (GlobalTheory.Eis.continuous_detA.comp continuous_fst)).inv)
+      continuous_subtypeVal.comp ((hH.1.comp (GlobalTheory.Eis.continuous_detA.comp continuous_fst)).inv)
     exact hc.mul (hw.om_cont f hf w)
   · intro μ 𝓕 hμ hF p f hf
     rw [← hw.om_unit μ 𝓕 hμ hF p f hf]
     congr 1
     funext w
-    rw [twistRep_apply, Pi.smul_apply, smul_eq_mul, enorm_mul, ← ofReal_norm_eq_enorm (((χT (detA S p.1))⁻¹ : Circle) : ℂ),
+    rw [twistRep_apply, Pi.smul_apply, smul_eq_mul, eNorm_mul, ← ofReal_norm (((χT (detA S p.1))⁻¹ : Circle) : ℂ),
       Circle.norm_coe, ENNReal.ofReal_one, one_mul]
   · intro e he g h hg hh x y hx hy
     obtain ⟨r, hr, H⟩ := hw.om_split e he g h hg hh x y hx hy

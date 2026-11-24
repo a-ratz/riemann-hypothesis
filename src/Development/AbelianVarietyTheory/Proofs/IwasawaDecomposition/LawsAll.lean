@@ -733,7 +733,7 @@ theorem exists_smul_mem_latOf {E K ι : Type} [Field E] [NumberField E] [StarRin
     [Finite S.Cl] (M : S.Cl → Submodule (𝓞 K) (VV K lam)) (hM : ∀ c, Submodule.span K (M c : Set (VV K lam)) = ⊤)
     (x : S.FormsK emb lam h) : ∃ d : 𝓞 K, d ≠ 0 ∧ d • x ∈ S.latOf emb lam h M := by
   classical
-  haveI := Fintype.ofFinite S.Cl
+  have := Fintype.ofFinite S.Cl
   have h1 : ∀ c, ∃ d : 𝓞 K, d ≠ 0 ∧ d • x.1 c ∈ M c := fun c => exists_smul_mem (by rw [hM c]; trivial)
   choose d hd hdM using h1
   refine ⟨∏ c, d c, Finset.prod_ne_zero_iff.2 fun c _ => hd c, fun c => ?_⟩
@@ -743,7 +743,7 @@ theorem exists_smul_mem_latOf {E K ι : Type} [Field E] [NumberField E] [StarRin
 
 theorem span_locW_BLat : ∀ {E K ι : Type} [Field E] [NumberField E] [StarRing E] [Field K] [NumberField K] [StarRing K] [Fintype ι] {R : Ranks} (I : ChainIn E K ι R) (J : AtIn I) (emb : ι → E →+* K) (σ : K →+* ℂ) (hc : ι → HCParam R), FOk emb σ → ∀ (hI : I.Ok), J.Ok → ∀ (Pl : Rows.Places K) i (hF : ((I.S i).fam emb (lamT hc i)).Ok) (w : Pl.Pl) P, Submodule.span K (locW Pl w (BLat J emb hc i hF P) : Set ((I.S i).hlat emb (lamT hc i) hF).V) = ⊤ := by
   intro E K ι _ _ _ _ _ _ _ R I J emb σ hc _ hI hJ Pl i hF w P
-  haveI := (hI.step i).fin_orb
+  have := (hI.step i).fin_orb
   refine span_locW_eq_top Pl w _ fun x => ?_
   exact exists_smul_mem_latOf (I.S i) emb (lamT hc i) hF _
     (fun c => by
@@ -751,8 +751,8 @@ theorem span_locW_BLat : ∀ {E K ι : Type} [Field E] [NumberField E] [StarRing
       let d := (I.S i).rep c
       have hd := (hJ.tied i).ok b d
       have hker : Submodule.IsFullLattice E ((J.A i).ker b d P) := by
-        letI := (hJ.lev i).ker_lat b d P
-        letI := (hJ.lev i).N_lat b d
+        let := (hJ.lev i).ker_lat b d P
+        let := (hJ.lev i).N_lat b d
         refine { span_eq_top := top_unique ?_ }
         rw [← (Submodule.IsFullLattice.span_eq_top (A := E) (M := (J.A i).N b d)), Submodule.span_le]
         intro x hx
@@ -768,7 +768,7 @@ theorem span_locW_BLat : ∀ {E K ι : Type} [Field E] [NumberField E] [StarRing
             Submodule.span E (((J.A i).ker b d P) : Set _) := Submodule.smul_mem _ _ hspan
         rw [← algebraMap_smul E r x, smul_smul, inv_mul_cancel₀ hrE, one_smul] at hh
         exact hh
-      letI := isLattice_delAtr emb (lamT hc i) ((J.A i).ker b d P) hker
+      let := isLattice_delAtr emb (lamT hc i) ((J.A i).ker b d P) hker
       exact Submodule.IsFullLattice.span_eq_top) x
 
 end GlobalTheory.Mem.BSpan

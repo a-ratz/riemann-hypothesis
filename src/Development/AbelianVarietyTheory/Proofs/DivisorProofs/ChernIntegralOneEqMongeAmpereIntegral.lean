@@ -54,9 +54,9 @@ namespace GlobalTheory
 
 theorem chernInt_one_eq_mInt : ∀ (Y : Var ℂ) (L : LB Y.X) (φ : Weight Y.str (RingHom.id ℂ) L), φ.IsCInf → φ.ChernIntegrableOn Y.dim Set.univ (fun _ => 1) ∧ ∀ A : FinHolAtlas Y.dim (CxPts Y.str (RingHom.id ℂ)), IsAlgAtlas A → Weight.chernInt φ Y.dim Set.univ (fun _ => 1) = mInt A (fun _ => φ.locPot) (fun _ => 1) := by
   intro Y L φ h
-  haveI : CompactSpace (CxPts Y.str (RingHom.id ℂ)) := CxPts.compactSpace _ Y.isProjOver
-  haveI : T2Space (CxPts Y.str (RingHom.id ℂ)) := t2Space_cxPts_of_isProjOver _ Y.isProjOver
-  haveI : SecondCountableTopology (CxPts Y.str (RingHom.id ℂ)) :=
+  have : CompactSpace (CxPts Y.str (RingHom.id ℂ)) := CxPts.compactSpace _ Y.isProjOver
+  have : T2Space (CxPts Y.str (RingHom.id ℂ)) := t2Space_cxPts_of_isProjOver _ Y.isProjOver
+  have : SecondCountableTopology (CxPts Y.str (RingHom.id ℂ)) :=
     secondCountableTopology_of_isProjOver _ Y.isProjOver
   have hA₀ := AnRead.isAlgAtlas_finAtlas (AnRead.all Y.str (RingHom.id ℂ) Y.dim)
   have hi : φ.ChernIntegrableOn Y.dim Set.univ (fun _ => 1) :=

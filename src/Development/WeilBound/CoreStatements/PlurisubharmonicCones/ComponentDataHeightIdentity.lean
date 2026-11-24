@@ -97,8 +97,8 @@ theorem component_data_height_identity : ∀ (E : Type) [Field E] [NumberField E
     fun h => Dc.S_prime p (hS p h)
   refine ⟨hpr, fun p hp => (Finset.mem_union.1 hp).elim (Or.𝔐.R_ge p) fun h => Or.R_ge p (hS p h),
     fun p hp => (Finset.mem_union.1 hp).elim (Or.𝔐.tors p) fun h => Or.tors p (hS p h), fun s => ?_⟩
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : IsLocallyNoetherian Or.𝔐.X :=
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : IsLocallyNoetherian Or.𝔐.X :=
     GlobalTheory.CompanionTheory.Ar.Cmp.HInterior.isLocallyNoetherian_of_coordTie Or.𝔐.ξ _ Or.𝔐.tie Or.𝔐.all
   have hvb : (Or.𝔐.V s).IsVB (labelRk D s) (Or.𝔐.Vgen s) := Or.𝔐.vb s
   obtain ⟨L, hL, h0, h1⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lat_glue Or.𝔐.X Ω Or.𝔐.ξ Or.𝔐.Li (Dc.SB B) (Or.𝔐.V s) (fun p => Or.𝔐.HT p s)

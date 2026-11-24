@@ -62,14 +62,14 @@ theorem JJ_finite_ncard {D : D7} (L : SizeData₂ D) (hb : AdmissibleParameterJ.
       linarith
     have hEq : Jm D j ρ = AdmissibleParameterJ.refl D '' Jp D j ρ := by
       ext q
-      simp only [Jm, reflS, Set.mem_setOf_eq, Set.mem_image]
+      simp only [Jm, reflS, Set.mem_ofPred_eq, Set.mem_image]
       constructor
       · intro h
         exact ⟨_, h, by simp [AdmissibleParameterJ.refl]⟩
       · rintro ⟨u, hu, rfl⟩
         have : AdmissibleParameterJ.refl D (AdmissibleParameterJ.refl D u) = u := by simp [AdmissibleParameterJ.refl]
         rwa [this]
-    simp only [JJ, Bool.false_eq_true, if_false]
+    simp only [JJ, Bool.false_eq_true, ite_false]
     rw [hEq]
     exact ⟨hf.image _, by rw [Set.ncard_image_of_injective _ hinj, hc]⟩
 

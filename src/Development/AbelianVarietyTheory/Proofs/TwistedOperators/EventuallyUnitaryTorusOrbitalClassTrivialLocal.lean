@@ -656,14 +656,14 @@ theorem eventually_unitLoc_orbCls : ∀ (F E : Type) [Field F] [NumberField F] [
       rw [hqe] at h1
       obtain ⟨e, he1, he2⟩ := _root_.GlobalTheory.TorCentTop.torEquiv_cent F E σ hE r r P J hJ (Fv F v) 1 φ₁ h₁
       rw [he2] at h1
-      haveI := hμ
-      haveI := hdt
-      haveI : (dt.map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map dt e
+      have := hμ
+      have := hdt
+      have : (dt.map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map dt e
       have hcomm : ∀ a b : cent (gam h₁), a * b = b * a := fun a b => by
         apply e.symm.injective
         rw [map_mul, map_mul]
         exact torPt_mul_comm P (Fv F v) (e.symm a) (e.symm b)
-      haveI : (dt.map e).IsMulRightInvariant := ⟨fun g => by
+      have : (dt.map e).IsMulRightInvariant := ⟨fun g => by
         have : (fun x : cent (gam h₁) => x * g) = (fun x => g * x) := funext fun x => hcomm x g
         rw [this]; exact map_mul_left_eq_self _ g⟩
       have hset : conjFn (gam h₁) (unitLoc σ J L v) =
@@ -694,7 +694,7 @@ theorem eventually_unitLoc_orbCls : ∀ (F E : Type) [Field F] [NumberField F] [
         simp [Subgroup.mem_subgroupOf, he1, hT₁]
       have hm : (dt.map e) ((stabLoc σ J L v).subgroupOf (cent (gam h₁))) = 1 := by
         rw [Measure.map_apply (show Measurable e from e.continuous.measurable) (show MeasurableSet ((stabLoc σ J L v).subgroupOf (cent (gam h₁)) : Set (cent (gam h₁))) from
-          (hK.preimage continuous_subtype_val).measurableSet), hpre, hdtK]
+          (hK.preimage continuous_subtypeVal).measurableSet), hpre, hdtK]
       simp [Measure.real, hμK, hm]
     · have hrep := q.2.choose_spec.choose_spec
       have h0 : conjFn (gam hrep.2) (unitLoc σ J L v) = 0 := by

@@ -66,23 +66,23 @@ section Helpers
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem isOpen_valLe (c : kˣ) : IsOpen {t : k | valuation k t ≤ valuation k (c : k)} := by
-  have h0 : 0 < valuation k (c : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (c : k) := pos_iff_ne_zero.2 (by simp)
   have e : {t : k | valuation k t ≤ valuation k (c : k)} = (fun t => t / (c : k)) ⁻¹' (𝒪[k] : Set k) := by
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, Valuation.mem_integer_iff, map_div₀,
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, Valuation.mem_integer_iff, map_div₀,
       div_le_one₀ h0]
   rw [e]
   exact IsOpen.preimage (continuous_id.div_const _) Valuation.isOpen_integer
 
 theorem isOpen_cosetM {n m : Type} [Fintype n] [Fintype m] (c : kˣ) (x : Matrix n m k) :
     IsOpen {y : Matrix n m k | ∀ i j, valuation k (y i j - x i j) ≤ valuation k (c : k)} := by
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
   exact (isOpen_valLe c).preimage (f := fun y : Matrix n m k => y i j - x i j) (by fun_prop)
 
 theorem isCompact_ballM {n : Type} [Fintype n] (R : kˣ) :
     IsCompact {y : Matrix n n k | ∀ i j, valuation k (y i j) ≤ valuation k (R : k)} := by
-  have h0 : 0 < valuation k (R : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (R : k) := pos_iff_ne_zero.2 (by simp)
   have e : {y : Matrix n n k | ∀ i j, valuation k (y i j) ≤ valuation k (R : k)} =
       (fun z : Matrix n n k => (R : k) • z) '' {A | ∀ i j, A i j ∈ 𝒪[k]} := by
     ext y
@@ -103,7 +103,7 @@ end Helpers
 
 theorem smallF_mem : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] {A A' D : Type} [Fintype A] [DecidableEq A] [Fintype A'] [DecidableEq A'] [Fintype D] [DecidableEq D] (F : Subfield ℂ) {J : Subgroup (GL A' k)}, IsOpen (J : Set (GL A' k)) → J ≤ KO k A' → ∀ (σ : A ⊕ A' ≃ D) (ν : kˣ →* ℂˣ) {ϖ : kˣ} {e : ℕ}, IsUnif ϖ → 1 ≤ e → CondLE ϖ e ν → ¬ IsUnram ν → (∀ u, (ν u : ℂ) ∈ F) → (∀ u : kˣ, apow u (1 / 2) ∈ F) → ∀ (c : D → kˣ) {Ψ : Matrix A' D k → ℂ}, HasDepth ϖ e (diagLat c) Ψ → (∀ X, Ψ X ∈ F) → ∀ h : GL D k, smallF (haarVol J) ν Ψ (Y0 k σ * h.val) ∈ F := by
   intro k _ _ _ _ _ _ A A' D _ _ _ _ _ _ F J hJo hJK σ ν ϖ e hϖ he hcond hram hνF hapF c Ψ hΨ hΨF h
-  haveI := isHaarMeasure_haarVol hJo hJK
+  have := isHaarMeasure_haarVol hJo hJK
   obtain ⟨R, N, hbd, hper⟩ := GlobalTheory.T.exists_valuation_bound_and_periodic_frameBlock σ hϖ c hΨ h
   set Y := Y0 k σ * h.val with hY
   set cN : kˣ := ϖ ^ N with hcN
@@ -121,7 +121,7 @@ theorem smallF_mem : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace
       Cs x = Cs y := by
     intro x y hxy
     ext g
-    simp only [Cs, Set.mem_setOf_eq]
+    simp only [Cs, Set.mem_ofPred_eq]
     constructor
     · intro hg i j
       have := Valuation.map_add_le (valuation k) (hg i j) ((Valuation.map_sub_swap _ _ _).le.trans (hxy i j))
@@ -169,7 +169,7 @@ theorem smallF_mem : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace
       have hB := hbd g.val hΨ0
       obtain ⟨y, hyT, hy⟩ := Set.mem_iUnion₂.1 (hT0 hB)
       have hqt : q g.val ∈ T := Finset.mem_image.2 ⟨y, hyT, ((hq _ _).2 hy).symm⟩
-      simp only [Set.indicator_apply, Set.mem_setOf_eq]
+      simp only [Set.indicator_apply, Set.mem_ofPred_eq]
       rw [Finset.sum_ite_eq]
       simp [hqt]
   show ∫ g, Ψ (g.val * Y) * (ν (gdet g) : ℂ) * apow (gdet g) ((Fintype.card D : ℂ) / 2) ∂(haarVol J) ∈ F
@@ -179,13 +179,13 @@ theorem smallF_mem : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace
       intro t
       obtain ⟨y, rfl⟩ := QuotientAddGroup.mk_surjective t
       have : {g : GL A' k | q g.val = q y} = Cs y := by
-        ext g; simp only [Set.mem_setOf_eq, Cs]; exact hq _ _
+        ext g; simp only [Set.mem_ofPred_eq, Cs]; exact hq _ _
       rw [this]; exact hCs_meas y
     rw [hdec, integral_finsetSum _ (fun t _ => hint.indicator (hmeas t))]
     refine sum_mem fun t _ => ?_
     obtain ⟨y, rfl⟩ := QuotientAddGroup.mk_surjective t
     have hset : {g : GL A' k | q g.val = q y} = Cs y := by
-      ext g; simp only [Set.mem_setOf_eq, Cs]; exact hq _ _
+      ext g; simp only [Set.mem_ofPred_eq, Cs]; exact hq _ _
     rw [integral_indicator (hmeas _), hset]
     have hc : ∫ g in Cs y, f g ∂(haarVol J) =
         ∫ g in Cs y, Ψ (y * Y) * ((ν (gdet g) : ℂ) * apow (gdet g) z) ∂(haarVol J) := by

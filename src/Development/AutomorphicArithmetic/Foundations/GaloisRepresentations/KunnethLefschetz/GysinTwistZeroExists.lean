@@ -157,7 +157,7 @@ end Tw
 theorem gysinTwistZero_exists : GysinCondition := by
   intro hI hB l _ k _ _ hl hT hG
   obtain ⟨GT⟩ := hG
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   choose u v huv using hT
   have hu : ∀ j : ℕ, IsUnit (((l ^ j : ℕ)) : k) := by
     intro j

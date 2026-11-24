@@ -508,7 +508,7 @@ theorem bqOrigin : BqOriginSt := by
 
   have hA : ∀ e : 𝓞 E, (1 : overAt y.x S ⟶ Xo.univ.t.G) ≫ Xo.univ.t.act.act e = 1 := by
     intro e
-    haveI := Xo.univ.t.act.hom e
+    have := Xo.univ.t.act.hom e
     first
       | (simp; done)
       | (show (toUnit _ ≫ η[Xo.univ.t.G]) ≫ _ = toUnit _ ≫ η[Xo.univ.t.G]

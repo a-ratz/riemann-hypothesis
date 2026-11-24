@@ -66,8 +66,8 @@ theorem rder_apply (hT : IsMultMap θ M J χ T) [inst : DecidableEq D.what₂.Ta
     (hw : (w : M.H τ) = dRep (trRep (M.σ τ) (M.fr τ)) X u) :
     Rder θ V τ X (T (Function.update v τ u)) = T (Function.update v τ w) := by
   obtain rfl : inst = fun a b => Classical.propDecidable (a = b) := Subsingleton.elim _ _
-  letI : DecidableEq D.what₂.Tau := fun a b => Classical.propDecidable (a = b)
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  let : DecidableEq D.what₂.Tau := fun a b => Classical.propDecidable (a = b)
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have hG := gram_unit (M.fr_unit τ) (M.fr_gram τ)
   funext x
   obtain ⟨ℓ, hℓ, hℓT⟩ := hT.cont τ v x

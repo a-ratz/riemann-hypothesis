@@ -63,8 +63,8 @@ theorem latM_coe (v : HeightOneSpectrum (𝓞 F)) {n : ℕ} (M : Matrix (Fin n) 
 
 theorem latM_isCO (v : HeightOneSpectrum (𝓞 F)) {n : ℕ} (M : Matrix (Fin n) (Fin n) (v.adicCompletion F ⊗[F] E))
     (hM : IsUnit M.det) : Gen.IsCO (latM v M) := by
-  haveI := isModuleTopology_tens (E := E) v
-  haveI : IsTopologicalRing (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have := isModuleTopology_tens (E := E) v
+  have : IsTopologicalRing (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
   obtain ⟨ho, hc⟩ := lat_isCO (E := E) v n
   set φ := GlobalTheory.ModuLR.mulVecCE M hM
   have hs : (latM v M : Set (Fin n → v.adicCompletion F ⊗[F] E)) = φ '' (lat E v n : Set _) := by
@@ -158,7 +158,7 @@ theorem ev_lat_latO {k : ℕ} (bs : Module.Basis (Fin k) F E) (n : ℕ) : ∀ᶠ
     (lat E v n : Set (Fin n → v.adicCompletion F ⊗[F] E)) = PositivityTheory.PfSWUS.Loc.latO bs v := by
   filter_upwards [ev_OE_latO bs] with v hv
   ext y
-  simp only [SetLike.mem_coe, mem_lat, PositivityTheory.PfSWUS.Loc.latO, Set.mem_setOf_eq, hv]
+  simp only [SetLike.mem_coe, mem_lat, PositivityTheory.PfSWUS.Loc.latO, Set.mem_ofPred_eq, hv]
 
 theorem fin_std (d : SD σ) (n : ℕ) (t u : GL (Fin n) (AE F E)) (η : E) (hη : η ≠ 0) :
     (∀ v : HeightOneSpectrum (𝓞 F),

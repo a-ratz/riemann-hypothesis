@@ -104,8 +104,8 @@ theorem existsUnique_resG_eq {X : Scheme.{0}} [IsIntegral X] (π : X ⟶ Sp ℤ)
     (H : ∀ (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ X), y (cPt p) ∈ W →
       Set.range (gPt p ≫ y) ⊆ U → ‖valF (gPt p ≫ y) U φ‖ ≤ 1) :
     ∃! ψ : Γ(X, W), resG X h ψ = φ := by
-  haveI : Nonempty U := hU.to_subtype
-  haveI : Nonempty W := (hU.mono h).to_subtype
+  have : Nonempty U := hU.to_subtype
+  have : Nonempty W := (hU.mono h).to_subtype
   obtain ⟨ψ, hψ⟩ := exists_germToFunctionField_eq_of_frequently_norm_le_one π U W
     (fun x _ _ _ => (hX x).2) (φ := φ) fun p _ K hK => ⟨K, hK, le_rfl, fun y hy hW _ _ => by
       obtain ⟨y', h1, h2, h3⟩ := exists_point_norm_valF_eq K y U hy φ
@@ -159,7 +159,7 @@ theorem appLE_injective {X Y : Scheme.{0}} [IsIntegral X] (f : Y ⟶ X) [IsOpenI
   rw [appLE_eq_appIso f W V h (image_le f h), appLE_eq_appIso f W V h (image_le f h)] at hab
   have h1 := (f.appIso V).commRingCatIsoToRingEquiv.injective hab
   obtain ⟨x, hx⟩ := hV
-  haveI : Nonempty (f ''ᵁ V) := ⟨⟨f x, x, hx, rfl⟩⟩
+  have : Nonempty (f ''ᵁ V) := ⟨⟨f x, x, hx, rfl⟩⟩
   exact map_injective_of_isIntegral X (homOfLE (image_le f h)) h1
 
 theorem valF_comp_appIso {F : Type} [Field F] {X Y : Scheme.{0}} (f : Y ⟶ X) [IsOpenImmersion f]
@@ -196,8 +196,8 @@ theorem unit_eq_of_gm {X Y : Scheme.{0}} [IsIntegral X] (f : Y ⟶ X) [IsOpenImm
     (hξ : ∀ O : Y.Opens, (O : Set Y).Nonempty → ξ ∈ O) {U : X.Opens} {u u' : Γ(X, U)ˣ}
     (h : f ξ ∈ U → gm f ξ U u = gm f ξ U u') : u = u' := by
   by_cases hU : (U : Set X).Nonempty
-  · haveI : Nonempty Y := ⟨ξ⟩
-    haveI : IsIntegral Y := isIntegral_of_isOpenImmersion f
+  · have : Nonempty Y := ⟨ξ⟩
+    have : IsIntegral Y := isIntegral_of_isOpenImmersion f
     have hne := preimage_nonempty f ξ hU
     have hm : f ξ ∈ U := hξ _ hne
     have e := congrArg Units.val (h hm)
@@ -283,10 +283,10 @@ theorem exists_coord (X A₀ : Scheme.{0}) [IsIntegral X] (π : X ⟶ Sp ℤ) [F
       ∀ (p : ℕ) [Fact p.Prime] (x : Sp (PadicAlgCl p) ⟶ A₀) (j : L.ι), IntAt a W x → Set.range x ⊆ L.U j →
         Set.range x ⊆ W₀ → ‖valF x _ (s j).val‖ * ν p x j = 1 := by
   obtain ⟨y₀, hy₀⟩ := hW₀
-  haveI : Nonempty A₀ := ⟨y₀⟩
-  haveI : IsIntegral A₀ := isIntegral_of_isOpenImmersion a
-  haveI : Nonempty W₀.toScheme := ⟨⟨y₀, hy₀⟩⟩
-  haveI : IsIntegral W₀.toScheme := isIntegral_of_isOpenImmersion W₀.ι
+  have : Nonempty A₀ := ⟨y₀⟩
+  have : IsIntegral A₀ := isIntegral_of_isOpenImmersion a
+  have : Nonempty W₀.toScheme := ⟨⟨y₀, hy₀⟩⟩
+  have : IsIntegral W₀.toScheme := isIntegral_of_isOpenImmersion W₀.ι
   obtain ⟨ξ, hξ⟩ := exists_generic W₀.toScheme
   have key : ∀ j, ∃ s : Γ(A₀, L.U j ⊓ a ⁻¹ᵁ W)ˣ, ∀ (Z : Scheme.{0}) (r : Z ⟶ W₀.toScheme) (z : Z),
       W₀.ι (r z) ∈ L.U j → a (W₀.ι (r z)) ∈ W →
@@ -358,8 +358,8 @@ theorem exists_lineBundle_of_normOne_generators : ∀ (X A₀ : Scheme.{0}) [IsI
   choose W W₀ gn hW hW₀ hgen hn using fun i : {w : X // IsClosed ({w} : Set X)} => H i.1 i.2
   choose s hs hsn using fun i => exists_coord X A₀ π hX a L ν hν (W i) (W₀ i) (gn i) (hW₀ i) (hgen i) (hn i)
   obtain ⟨w₀, hw₀, -⟩ := hcl (genericPoint X) PEmpty (fun k => k.elim) ⊤ trivial
-  haveI : Nonempty A₀ := ⟨(hW₀ ⟨w₀, hw₀⟩).some⟩
-  haveI : IsIntegral A₀ := isIntegral_of_isOpenImmersion a
+  have : Nonempty A₀ := ⟨(hW₀ ⟨w₀, hw₀⟩).some⟩
+  have : IsIntegral A₀ := isIntegral_of_isOpenImmersion a
   obtain ⟨ξ, hξ⟩ := exists_generic A₀
   obtain ⟨j₀, hj₀⟩ := exists_chart hL ξ
   have hξW : ∀ i, a ξ ∈ W i := fun i => hξ _ (preimage_nonempty a ξ ⟨_, hW i⟩)

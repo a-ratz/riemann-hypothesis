@@ -156,7 +156,7 @@ theorem exists_compact_mod_sim (Z S : Type) [Group Z] [TopologicalSpace Z] [IsTo
     · ext
       · exact hrr
       · simp [ha]
-  haveI : T2Space (Z × S) := inferInstance
+  have : T2Space (Z × S) := inferInstance
   obtain ⟨B, hB, hBs⟩ := GlobalTheory.InvolutionNorm.exists_compact_mod_kernel (Z × S) hcomm T hTc hTi hsqT
     (D ×ˢ {1}) (hD.prod isCompact_singleton)
   refine ⟨Prod.fst '' B, hB.image continuous_fst, fun z a hz => ?_⟩
@@ -236,22 +236,22 @@ namespace GlobalTheory
 
 theorem sqrt_fix_near_one_centralizer : ∀ (p : ℕ) [Fact p.Prime] (v : AwayP p) (B : Type) [Ring B] [Algebra (Qv v) B] [Module.Finite (Qv v) B], letI : TopologicalSpace B := moduleTopology (Qv v) B; ∀ (e : B) (σ : B →ₗ[Qv v] B), (∀ a b : B, a * e = e * a → b * e = e * b → a * b = b * a) → (∀ a : B, a * e = e * a → σ a * e = e * σ a) → (∀ a b : B, a * e = e * a → b * e = e * b → σ (a * b) = σ a * σ b) → σ 1 = 1 → ∃ W ∈ nhds (1 : B), ∀ s ∈ W, s * e = e * s → σ s = s → ∃ r : B, r * e = e * r ∧ σ r = r ∧ r * r = s := by
   intro p _ v B _ _ _
-  letI tB : TopologicalSpace B := moduleTopology (Qv v) B
-  haveI : IsModuleTopology (Qv v) B := ⟨rfl⟩
+  let tB : TopologicalSpace B := moduleTopology (Qv v) B
+  have : IsModuleTopology (Qv v) B := ⟨rfl⟩
   intro e σ _ hσe hσm hσ1
   let M : Subalgebra (Qv v) B := Subalgebra.centralizer (Qv v) {e}
   have hM : ∀ x : B, x ∈ M ↔ x * e = e * x := by
     intro x
     simp [M, Subalgebra.mem_centralizer_iff, eq_comm]
-  haveI : CharZero (Qv v) := charZero_of_injective_algebraMap (algebraMap ℚ (Qv v)).injective
-  letI : NontriviallyNormedField (Qv v) := Valued.toNontriviallyNormedField _ _
+  have : CharZero (Qv v) := charZero_of_injective_algebraMap (algebraMap ℚ (Qv v)).injective
+  let : NontriviallyNormedField (Qv v) := Valued.toNontriviallyNormedField _ _
   let d := Module.finrank (Qv v) M
   let bM := Module.finBasis (Qv v) M
   let Lm : M →ₐ[Qv v] Matrix (Fin d) (Fin d) (Qv v) :=
     (LinearMap.toMatrixAlgEquiv bM).toAlgHom.comp (Algebra.lmul (Qv v) M)
   obtain ⟨q, hq⟩ := Submodule.exists_isCompl (Subalgebra.toSubmodule M)
   let P : B →ₗ[Qv v] M := Submodule.linearProjOfIsCompl (Subalgebra.toSubmodule M) q hq
-  have hP : ∀ x : M, P x = x := fun x => Submodule.linearProjOfIsCompl_apply_left hq x
+  have hP : ∀ x : M, P x = x := fun x => Submodule.projectionOnto_apply_left hq x
   let L : B →ₗ[Qv v] Matrix (Fin d) (Fin d) (Qv v) := Lm.toLinearMap ∘ₗ P
   have hLc : Continuous L := IsModuleTopology.continuous_of_linearMap L
   have hL1 : L 1 = 1 := by
@@ -516,11 +516,11 @@ theorem isCompact_setOf_fst_mem (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : Aw
     letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C);
     ∀ K : Set (Qv v ⊗[ℚ] G.C)ˣ, IsCompact K →
       IsCompact {d : Gv G v | (d : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v)ˣ).1 ∈ K} := by
-  letI tA : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
+  let tA : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
   intro K hK
-  haveI : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) _
-  haveI : T2Space (Qv v ⊗[ℚ] G.C) := T2Space.of_injective_continuous (basV G v).equivFun.injective
+  have : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) _
+  have : T2Space (Qv v ⊗[ℚ] G.C) := T2Space.of_injective_continuous (basV G v).equivFun.injective
     (IsModuleTopology.continuous_of_linearMap (basV G v).equivFun.toLinearMap)
   have hst1 : ∀ r : Qv v, (starT G.star (Qv v) (algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) r)).unop =
       algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) r := by
@@ -675,7 +675,7 @@ theorem exists_unit_conj_baseChange : ∀ (S F B : Type) [Field S] [CharZero S] 
   obtain ⟨ι, _, L, _, _, _, Φ, ψ, hΦ1, hΦ2⟩ := GlobalTheory.T.tensor_rat_algebra_decomp_factorwise S F B
   have hcomp : ∀ i, ∃ u : (L i ⊗[F] B)ˣ, (u : L i ⊗[F] B) * ((1 : L i) ⊗ₜ[F] x₀) = Φ x i * u := by
     intro i
-    haveI : Infinite (L i) := Infinite.of_injective (Nat.cast : ℕ → L i) Nat.cast_injective
+    have : Infinite (L i) := Infinite.of_injective (Nat.cast : ℕ → L i) Nat.cast_injective
     have hn' : Module.finrank (L i) (L i ⊗[F] B) = n ^ 2 := by rw [Module.finrank_baseChange, hn]
     have h0 : minpoly (L i) ((1 : L i) ⊗ₜ[F] x₀) = (minpoly F x₀).map (algebraMap F (L i)) :=
       minpoly_one_tmul (L i) x₀
@@ -861,7 +861,7 @@ theorem eq_zero_of_isNilpotent (n : ℕ) (x₀ : B) (hsep : (minpoly F x₀).Sep
     (hdeg : (minpoly F x₀).natDegree = n) (c : Fin n → S ⊗[ℚ] F)
     (h : IsNilpotent (∑ j, cen S F B (c j) * ((1 : S) ⊗ₜ[ℚ] x₀) ^ (j : ℕ))) : c = 0 := by
   classical
-  haveI hcz : CharZero S := charZero_of_injective_algebraMap (algebraMap ℚ S).injective
+  have hcz : CharZero S := charZero_of_injective_algebraMap (algebraMap ℚ S).injective
   obtain rfl : ‹Algebra ℚ S› = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
   obtain ⟨ι, _, L, _, _, _, Φ, ψ, hΦ1, hΦ2⟩ := GlobalTheory.tensor_decomp_factorwise S F B
   have key : ∀ i (j : Fin n), ψ (c j) i = 0 := by
@@ -896,7 +896,7 @@ theorem eq_zero_of_isNilpotent (n : ℕ) (x₀ : B) (hsep : (minpoly F x₀).Sep
     rw [Finset.sum_eq_single j] at this
     · simpa using this
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       exact fun h' => hb (Fin.ext h'.symm)
     · simp
   funext j
@@ -944,9 +944,9 @@ theorem exists_conj_of_traces [Algebra.IsCentral F B] [IsSimpleRing B] (n : ℕ)
       trL S B (cen S F B z * ((1 : S) ⊗ₜ[ℚ] x₀) ^ k)) :
     ∃ g : (S ⊗[ℚ] B)ˣ, (g : S ⊗[ℚ] B) * ((1 : S) ⊗ₜ[ℚ] x₀) = y * g := by
   classical
-  haveI hcz : CharZero S := charZero_of_injective_algebraMap (algebraMap ℚ S).injective
+  have hcz : CharZero S := charZero_of_injective_algebraMap (algebraMap ℚ S).injective
   obtain rfl : ‹Algebra ℚ S› = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
-  haveI : Module.Finite ℚ B := Module.Finite.trans F B
+  have : Module.Finite ℚ B := Module.Finite.trans F B
   refine GlobalTheory.SkNoFactor.exists_unit_conj_baseChange S F B n hn x₀ y hsep hdeg hP ?_
   intro c hc
   set e₀ : S ⊗[ℚ] B := (1 : S) ⊗ₜ[ℚ] x₀ with he₀
@@ -1019,10 +1019,10 @@ theorem isClosed_conjClass [TopologicalSpace S] [IsTopologicalRing S] [T2Space S
     letI : TopologicalSpace (S ⊗[ℚ] B) := moduleTopology S (S ⊗[ℚ] B)
     IsClosed {y : (S ⊗[ℚ] B)ˣ | ∃ g : (S ⊗[ℚ] B)ˣ, y = g * e * g⁻¹} := by
   classical
-  letI : TopologicalSpace (S ⊗[ℚ] B) := moduleTopology S (S ⊗[ℚ] B)
-  haveI : IsModuleTopology S (S ⊗[ℚ] B) := ⟨rfl⟩
-  haveI : Module.Finite ℚ B := Module.Finite.trans F B
-  haveI : IsTopologicalRing (S ⊗[ℚ] B) := IsModuleTopology.isTopologicalRing S (S ⊗[ℚ] B)
+  let : TopologicalSpace (S ⊗[ℚ] B) := moduleTopology S (S ⊗[ℚ] B)
+  have : IsModuleTopology S (S ⊗[ℚ] B) := ⟨rfl⟩
+  have : Module.Finite ℚ B := Module.Finite.trans F B
+  have : IsTopologicalRing (S ⊗[ℚ] B) := IsModuleTopology.isTopologicalRing S (S ⊗[ℚ] B)
   let Pv : S ⊗[ℚ] B → S ⊗[ℚ] B := fun y =>
     ∑ i ∈ Finset.range (n + 1), ((1 : S) ⊗ₜ[ℚ] algebraMap F B ((minpoly F x₀).coeff i)) * y ^ i
   have hPe : Pv (e : S ⊗[ℚ] B) = 0 := by
@@ -1040,7 +1040,7 @@ theorem isClosed_conjClass [TopologicalSpace S] [IsTopologicalRing S] [T2Space S
       ⋂ (z : S ⊗[ℚ] F) (k : ℕ), {y : (S ⊗[ℚ] B)ˣ | trL S B (cen S F B z * (y : S ⊗[ℚ] B) ^ k) =
         trL S B (cen S F B z * (e : S ⊗[ℚ] B) ^ k)} := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     constructor
     · rintro ⟨g, rfl⟩
       have hPy : Pv ((g * e * g⁻¹ : (S ⊗[ℚ] B)ˣ) : S ⊗[ℚ] B) = 0 := by
@@ -1149,7 +1149,7 @@ theorem rat_valuation_le_one_eventually (x : ℚ) :
   have hI : Ideal.span {b} ≠ (0 : Ideal ℤ) := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact hb0
   refine Filter.eventually_cofinite.2 ((Ideal.finite_factors hI).subset fun w hw => ?_)
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   by_contra hd
   apply hw
   have h1 : w.valuation ℚ (algebraMap ℤ ℚ b) = 1 :=
@@ -1305,12 +1305,12 @@ theorem isClosed_conjClass' (G : HTGroup p) (v : AwayP p) (y : G.Cˣ) (hdeg : (m
     (hsep : (minpoly G.F (y : G.C)).Separable) (X : (Qv v ⊗[ℚ] G.C)ˣ) :
     letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
     IsClosed {z : (Qv v ⊗[ℚ] G.C)ˣ | ∃ g : (Qv v ⊗[ℚ] G.C)ˣ, z = g * (X * yV G y v * X⁻¹) * g⁻¹} := by
-  letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
+  let : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
   have he₀ : ((yV G y v : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) = (1 : Qv v) ⊗ₜ[ℚ] (y : G.C) := rfl
   have hset : {z : (Qv v ⊗[ℚ] G.C)ˣ | ∃ g : (Qv v ⊗[ℚ] G.C)ˣ, z = g * (X * yV G y v * X⁻¹) * g⁻¹} =
       {z : (Qv v ⊗[ℚ] G.C)ˣ | ∃ g : (Qv v ⊗[ℚ] G.C)ˣ, z = g * yV G y v * g⁻¹} := by
     ext z
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · rintro ⟨g, rfl⟩
       exact ⟨g * X, by group⟩
@@ -1325,9 +1325,9 @@ theorem orbA' (G : HTGroup p) (v : AwayP p) (y : G.Cˣ) (hdeg : (minpoly G.F (y 
     ∀ Ω : Set (Qv v ⊗[ℚ] G.C)ˣ, IsCompact Ω → ∃ K : Set (Qv v ⊗[ℚ] G.C)ˣ, IsCompact K ∧
       ∀ g : (Qv v ⊗[ℚ] G.C)ˣ, g⁻¹ * (X * yV G y v * X⁻¹) * g ∈ Ω →
         ∃ z : (Qv v ⊗[ℚ] G.C)ˣ, z * (X * yV G y v * X⁻¹) = (X * yV G y v * X⁻¹) * z ∧ ∃ k ∈ K, g = z * k := by
-  letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) (Qv v ⊗[ℚ] G.C)
+  let : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
+  have : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) (Qv v ⊗[ℚ] G.C)
   intro Ω hΩ
   obtain ⟨h2, hlc, hsc⟩ := GlobalTheory.T.local_units_locally_compact p G v
   set e := X * yV G y v * X⁻¹ with he
@@ -1341,7 +1341,7 @@ theorem orbA' (G : HTGroup p) (v : AwayP p) (y : G.Cˣ) (hdeg : (minpoly G.F (y 
   have hcl : IsClosed (@MulAction.orbit _ _ act.toSMul e) := by
     rw [horb]; exact isClosed_conjClass' G v y hdeg hsep X
   obtain ⟨C, hC, hCg⟩ := @GlobalTheory.OrbitSumInt.exists_compact_reach _ _ _ _ _ hlc hsc act _ h2
-    (by haveI := h2; infer_instance) hcs e hcl Ω hΩ
+    (by have := h2; infer_instance) hcs e hcl Ω hΩ
   open scoped Pointwise in
   refine ⟨C⁻¹, hC.inv, fun g hg => ?_⟩
   obtain ⟨c, hc, hce⟩ := hCg g⁻¹ (by show g⁻¹ * e * g⁻¹⁻¹ ∈ Ω; rwa [inv_inv])
@@ -1375,20 +1375,20 @@ theorem normProper (G : HTGroup p) (v : AwayP p) (g0 : Gv G v)
         (starT G.star (Qv v) (k : Qv v ⊗[ℚ] G.C)).unop) * (starT G.star (Qv v) (z : Qv v ⊗[ℚ] G.C)).unop =
         algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) (s : Qv v) →
       ∃ c ∈ GlobalTheory.BCT.twCent (MonoidHom.id (Gv G v)) g0, ∃ m ∈ K', z = (c : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v)ˣ).1 * m := by
-  letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
+  let : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
   intro K hK
-  haveI : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) _
-  haveI : ContinuousSMul (Qv v) (Qv v ⊗[ℚ] G.C) := IsModuleTopology.toContinuousSMul (Qv v) _
+  have : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) _
+  have : ContinuousSMul (Qv v) (Qv v ⊗[ℚ] G.C) := IsModuleTopology.toContinuousSMul (Qv v) _
   have hT2 : T2Space (Qv v ⊗[ℚ] G.C)ˣ := (topA p G v).1
   have hLC : LocallyCompactSpace (Qv v ⊗[ℚ] G.C)ˣ := (topA p G v).2.1
   have hSC : SigmaCompactSpace (Qv v ⊗[ℚ] G.C)ˣ := (topA p G v).2.2
-  haveI := locCpt_Qv v
-  haveI := secCount_Qv v
+  have := locCpt_Qv v
+  have := secCount_Qv v
   have hS := units_topA (Qv v) (Qv v)
-  haveI : T2Space (Qv v)ˣ := hS.1
-  haveI : LocallyCompactSpace (Qv v)ˣ := hS.2.1
-  haveI : SigmaCompactSpace (Qv v)ˣ := hS.2.2
+  have : T2Space (Qv v)ˣ := hS.1
+  have : LocallyCompactSpace (Qv v)ˣ := hS.2.1
+  have : SigmaCompactSpace (Qv v)ˣ := hS.2.2
   set e : (Qv v ⊗[ℚ] G.C)ˣ := (g0 : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v)ˣ).1 with he_def
   have hsa : ∀ r : Qv v, (starT G.star (Qv v) (algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) r)).unop =
       algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) r := by
@@ -1451,8 +1451,8 @@ theorem normProper (G : HTGroup p) (v : AwayP p) (g0 : Gv G v)
       ext z; exact Subgroup.mem_centralizer_singleton_iff
     rw [this]
     exact isClosed_eq (continuous_id.mul continuous_const) (continuous_const.mul continuous_id)
-  haveI : LocallyCompactSpace Z := hZc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SigmaCompactSpace Z := hZc.isClosedEmbedding_subtypeVal.sigmaCompactSpace
+  have : LocallyCompactSpace Z := hZc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SigmaCompactSpace Z := hZc.isClosedEmbedding_subtypeVal.sigmaCompactSpace
   have hcommZ : ∀ a b : Z, a * b = b * a := fun a b => Subtype.ext (Units.ext
     (hcomA _ _ ((hZ _).1 a.2) ((hZ _).1 b.2)))
   let τ : Z →* Z :=
@@ -1461,11 +1461,11 @@ theorem normProper (G : HTGroup p) (v : AwayP p) (g0 : Gv G v)
       map_mul' := fun a b => Subtype.ext (Units.ext (hslm _ _ ((hZ _).1 a.2) ((hZ _).1 b.2))) }
   have hτ : ∀ z : Z, (((τ z : Z) : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) = sl ((z : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) :=
     fun z => rfl
-  have hτc : Continuous τ := continuous_induced_rng.2 (hstUc.comp continuous_subtype_val)
+  have hτc : Continuous τ := continuous_induced_rng.2 (hstUc.comp continuous_subtypeVal)
   have hτi : ∀ z, τ (τ z) = z := fun z => Subtype.ext (Units.ext (hslsl _))
   have hsq : ∃ W ∈ nhds (1 : Z), ∀ s ∈ W, τ s = s → ∃ r : Z, τ r = r ∧ r * r = s := by
     refine ⟨(fun z : Z => ((z : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C)) ⁻¹' W,
-      (Units.continuous_val.comp continuous_subtype_val).continuousAt.preimage_mem_nhds (by simpa using hW), ?_⟩
+      (Units.continuous_val.comp continuous_subtypeVal).continuousAt.preimage_mem_nhds (by simpa using hW), ?_⟩
     intro s hs hτs
     have hss : sl ((s : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) = ((s : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) :=
       congrArg (fun u : Z => ((u : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C)) hτs
@@ -1497,7 +1497,7 @@ theorem normProper (G : HTGroup p) (v : AwayP p) (g0 : Gv G v)
       intro h
       have h' := congrArg (fun u : (Qv v)ˣ => (u : Qv v)) h
       simp only [Units.val_one, Units.val_neg] at h'
-      haveI : CharZero (Qv v) := charZero_of_injective_algebraMap (algebraMap ℚ (Qv v)).injective
+      have : CharZero (Qv v) := charZero_of_injective_algebraMap (algebraMap ℚ (Qv v)).injective
       have h2 : (2 : Qv v) = 0 := by linear_combination h'
       exact two_ne_zero h2
     refine ⟨{a | a ≠ -1}, isOpen_ne.mem_nhds h1, fun a ha haa => ?_⟩
@@ -1510,7 +1510,7 @@ theorem normProper (G : HTGroup p) (v : AwayP p) (g0 : Gv G v)
     (hK.image ((continuous_id.mul hstUc).inv))
   obtain ⟨B, hB, hBs⟩ := exists_compact_mod_sim Z (Qv v)ˣ hcommZ (fun a b => mul_comm a b) τ hτc hτi hsq ι hιc
     hτι hU D hD
-  refine ⟨(fun b : Z => (b : (Qv v ⊗[ℚ] G.C)ˣ)) '' B, hB.image continuous_subtype_val, ?_⟩
+  refine ⟨(fun b : Z => (b : (Qv v ⊗[ℚ] G.C)ˣ)) '' B, hB.image continuous_subtypeVal, ?_⟩
   intro z hze s k hk hzk
   have hzZ : z ∈ Z := Subgroup.mem_centralizer_singleton_iff.2 hze
   have hU' : z * (k * stU k) * stU z = ι₀ s := Units.ext hzk
@@ -1544,9 +1544,9 @@ theorem local_fin' (G : HTGroup p) (v : AwayP p) (y : G.Cˣ) (hdeg : (minpoly G.
     (hg0 : ((g0 : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v)ˣ).1 : (Qv v ⊗[ℚ] G.C)ˣ) = X * yV G y v * X⁻¹)
     (Ω : Set (Gv G v)) (hΩ : IsCompact Ω) : ∃ D : Set (Gv G v), IsCompact D ∧ ∀ g : Gv G v,
       g⁻¹ * g0 * g ∈ Ω → ∃ c ∈ GlobalTheory.BCT.twCent (MonoidHom.id (Gv G v)) g0, ∃ d ∈ D, g = c * d := by
-  letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) (Qv v ⊗[ℚ] G.C)
+  let : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
+  have : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) (Qv v ⊗[ℚ] G.C)
   have hcomA : ∀ a b : Qv v ⊗[ℚ] G.C,
       a * (((g0 : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v)ˣ).1 : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) =
         (((g0 : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v)ˣ).1 : (Qv v ⊗[ℚ] G.C)ˣ) : Qv v ⊗[ℚ] G.C) * a →
@@ -1556,7 +1556,7 @@ theorem local_fin' (G : HTGroup p) (v : AwayP p) (y : G.Cˣ) (hdeg : (minpoly G.
     rw [hg0, val_conj] at ha hb
     exact comm_of_comm G (y : G.C) hdeg hsep v X a b ha hb
   have hcont : Continuous fun d : Gv G v => (d : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v)ˣ).1 :=
-    continuous_fst.comp continuous_subtype_val
+    continuous_fst.comp continuous_subtypeVal
   obtain ⟨K, hK, hKg⟩ := orbA' G v y hdeg hsep X _ (hΩ.image hcont)
   obtain ⟨K', hK', hK'g⟩ := normProper G v g0 hcomA K hK
   set K'' : Set (Qv v ⊗[ℚ] G.C)ˣ := (fun q : (Qv v ⊗[ℚ] G.C)ˣ × (Qv v ⊗[ℚ] G.C)ˣ => q.1 * q.2) '' (K' ×ˢ K)

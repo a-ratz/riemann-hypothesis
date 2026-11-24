@@ -121,7 +121,7 @@ theorem isClosed_locIn : IsClosed (locIn 𝔉 v : Set (NA 𝔉)) := by
   have : (locIn 𝔉 v : Set (NA 𝔉)) = Subtype.val ⁻¹' Set.range (emb D.sp.cm.sig V.gram v) := by
     ext u; simp [locIn, Subgroup.mem_subgroupOf]
   rw [this]
-  exact (isClosedEmbedding_emb D.sp.cm.sig V.gram v).isClosed_range.preimage continuous_subtype_val
+  exact (isClosedEmbedding_emb D.sp.cm.sig V.gram v).isClosed_range.preimage continuous_subtypeVal
 
 theorem emb_proj_of_mem_locIn {u : NA 𝔉} (hu : u ∈ locIn 𝔉 v) :
     emb D.sp.cm.sig V.gram v (proj D.sp.cm.sig V.gram v u) = u := by
@@ -156,13 +156,13 @@ theorem unipIntegralsVanish_tensor : ∀ (D : D7) (V : HSp D) (𝔉 : IsoFlag V)
   have hcc := continuous_of_mem_ccAd (tensor_mem_ccAd ha hf)
   let φ : GAd D.sp.cm.sig V.gram ≃ₜ GAd D.sp.cm.sig V.gram := (Homeomorph.mulLeft x).trans (Homeomorph.mulRight y)
   have hcont : Continuous fun n : NA 𝔉 => f (x * n * y) :=
-    hcc.1.comp ((continuous_const.mul continuous_subtype_val).mul continuous_const)
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+    hcc.1.comp ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
   have hsupp : HasCompactSupport fun n : NA 𝔉 => f (x * n * y) :=
     (hcc.2.comp_homeomorph φ).comp_isClosedEmbedding
       (IsoFlag.isClosed_unip 𝔉 D.sp.cm _).isClosedEmbedding_subtypeVal
   refine ⟨hcont.integrable_of_hasCompactSupport hsupp, ?_⟩
-  haveI : LocallyCompactSpace (locIn 𝔉 v) := (isClosed_locIn 𝔉 v).locallyCompactSpace
+  have : LocallyCompactSpace (locIn 𝔉 v) := (isClosed_locIn 𝔉 v).locallyCompactSpace
   have key : ∀ g : NA 𝔉, ∫ u : locIn 𝔉 v, f (x * ((u : NA 𝔉) * g : NA 𝔉) * y) ∂(Measure.haar) = 0 := by
     intro g
     have e1 : ∀ u : locIn 𝔉 v, f (x * ((u : NA 𝔉) * g : NA 𝔉) * y) =

@@ -135,7 +135,7 @@ theorem thConst_liouville {g : ℕ} (lat : AddSubgroup (Fin g → ℂ))
   rw [span] at hss
   let b : Module.Basis s ℝ (Fin g → ℂ) := Module.Basis.mk hli (by rw [Subtype.range_coe]; exact hss.ge)
   have : Finite s := Module.Finite.finite_basis b
-  letI : Fintype s := Fintype.ofFinite s
+  let : Fintype s := Fintype.ofFinite s
   have hK : IsCompact (closure (ZSpan.fundamentalDomain b)) :=
     Metric.isCompact_of_isClosed_isBounded isClosed_closure (ZSpan.fundamentalDomain_isBounded b).closure
   obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn hfd.continuous.continuousOn
@@ -175,7 +175,7 @@ private theorem fac_zpow_mul_fac_add_zpow_neg_eq_exp {S : Scheme.{0}} {A : Over 
     congr 2
     ring
   rw [hq, mul_zpow, zpow_neg, mul_comm (Φ.fac a (x + z) ^ k), _root_.mul_assoc,
-    mul_inv_cancel₀ (zpow_ne_zero _ hne), _root_.mul_one, ← Complex.exp_int_mul]
+    mul_inv_cancel₀ (zpow_ne_zero _ hne), _root_.mul_one, ← Complex.exp_intCast_mul]
   congr 1
   ring
 
@@ -732,10 +732,10 @@ private theorem valAt'_prod_res_pullU_eq_prod {Z Y : Scheme.{0}} {n : ℕ} (q : 
     valAt' q W (∏ i, res (e1 i) (res (e2 i) (pullU (ψ i) (V i) (u i)))).val =
       ∏ i, valAt' (q ≫ ψ i) (V i) (u i).val := by
   unfold valAt'
-  rw [dif_pos h]
-  simp only [dif_pos (h' _)]
+  rw [dite_eq_left h]
+  simp only [dite_eq_left (h' _)]
   unfold valAt res pullU
-  simp only [Units.coe_prod, map_prod, Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_prod, map_prod, Units.coe_map, MonoidHom.coe_ofClass]
   refine Finset.prod_congr rfl (fun i _ => ?_)
   rw [exists_unit_mul_eq_mul_uniformizer_pow q (ψ i) (V i) (e1 i) (e2 i) h (h' i)]
 
@@ -786,7 +786,7 @@ theorem thConst_pow : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj
   have h1 : Φ.GenRd _ _ (LB.oneGen L.L) (ptSecT A (Φ.e 0)).left (fun e => e.elim) 1 := by
     refine ⟨fun kk => kk.elim, fun j' hj' => ?_⟩
     unfold valAt'
-    rw [dif_pos hj']
+    rw [dite_eq_left hj']
     unfold valAt LB.oneGen
     simp only [Units.val_one, Fintype.prod_empty, _root_.mul_one]
     exact (congrArg (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom (map_one _)).trans (map_one _)
@@ -821,7 +821,7 @@ theorem thConst_pow : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonObj
   rw [hper, mul_zpow, mul_zpow] at key
   have hB : Complex.exp (-((k : ℂ) * (Real.pi / 2 * ((n : ℂ) * (n : ℂ) * hermForm Φ.Hm x x)))) *
       Complex.exp (Real.pi / 2 * hermForm Φ.Hm ((n : ℂ) • x) ((n : ℂ) • x)) ^ k = 1 := by
-    rw [← Complex.exp_int_mul, ← Complex.exp_add, herm_smul_left, herm_nat_right, ← Complex.exp_zero]
+    rw [← Complex.exp_intCast_mul, ← Complex.exp_add, herm_smul_left, herm_nat_right, ← Complex.exp_zero]
     congr 1
     ring
   have hnk : Φ.fr (J (translPt A (U.pt ^ 0)).left) ((n : ℂ) • x) ^ k *

@@ -70,8 +70,8 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] (P : HeightOneSpectru
 private lemma mk_mul_reduction_eq_mk {a : E} {r s : 𝓞 E} (hs : s ∉ P.asIdeal)
     (h : algebraMap (𝓞 E) E s * a = algebraMap (𝓞 E) E r) :
     redP P a * Ideal.Quotient.mk P.asIdeal s = Ideal.Quotient.mk P.asIdeal r := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   have hs0 : Ideal.Quotient.mk P.asIdeal s ≠ 0 := fun h0 => hs (Ideal.Quotient.eq_zero_iff_mem.1 h0)
   have hex : ∃ c : 𝓞 E ⧸ P.asIdeal, ∃ r s : 𝓞 E, s ∉ P.asIdeal ∧
       algebraMap (𝓞 E) E s * a = algebraMap (𝓞 E) E r ∧
@@ -95,8 +95,8 @@ private lemma mk_mul_reduction_eq_mk {a : E} {r s : 𝓞 E} (hs : s ∉ P.asIdea
   ring
 
 theorem reduction_mul' {a b : E} (ha : IntAt P a) (hb : IntAt P b) : redP P (a * b) = redP P a * redP P b := by
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   obtain ⟨r, s, hs, h⟩ := ha
   obtain ⟨r', s', hs', h'⟩ := hb
   have hss : s * s' ∉ P.asIdeal := fun hm => (P.isPrime.mem_or_mem hm).elim hs hs'

@@ -67,7 +67,7 @@ theorem exists_basis_span_eq_of_commensurable {V κ : Type} [NormedAddCommGroup 
     rw [Nat.cast_smul_eq_nsmul]
     exact h2 x hx
   let f : L → Submodule.span ℤ (Set.range b) := fun x => ⟨(M : ℝ) • (x : V), h2' x x.2⟩
-  have hfc : Continuous f := (continuous_const.smul continuous_subtype_val).subtype_mk _
+  have hfc : Continuous f := (continuous_const.smul continuous_subtypeVal).subtype_mk _
   have hfi : Function.Injective f := by
     intro x y h
     have h' : (M : ℝ) • (x : V) = (M : ℝ) • (y : V) := congrArg Subtype.val h

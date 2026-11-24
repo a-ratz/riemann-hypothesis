@@ -58,7 +58,7 @@ theorem goodPatch_image : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X : Var F
     · rintro ⟨⟨z, hW, rfl⟩, hv⟩
       exact ⟨z, ⟨(h.mem z hW).2 hv, hW⟩, rfl⟩
   · intro K hK hKW
-    haveI : CompactSpace (CxPts X.str σ) := CxPts.compactSpace σ X.isProjOver
+    have : CompactSpace (CxPts X.str σ) := CxPts.compactSpace σ X.isProjOver
     exact hK.isCompact.image_of_continuousOn (e.continuousOn.mono (hKW.trans h.sub))
 
 end GlobalTheory.GoodTop

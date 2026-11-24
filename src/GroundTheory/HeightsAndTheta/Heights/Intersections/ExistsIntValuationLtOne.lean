@@ -64,7 +64,7 @@ theorem RegularityValuationCentre.exists_int_valuation_lt_one {F : Type*} [Field
     ∃ n : ℤ, n ≠ 0 ∧ v.valuation F (n : F) < 1 := by
   obtain ⟨x, hxv, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot v.ne_bot
   have hc : v.asIdeal.comap (algebraMap ℤ (NumberField.RingOfIntegers F)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hx0 hxv (Algebra.IsIntegral.isIntegral x)
+    Ideal.under_ne_bot_of_integral_mem hx0 hxv (Algebra.IsIntegral.isIntegral x)
   obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hc
   refine ⟨n, hn0, ?_⟩
   have e : (n : F) = algebraMap (NumberField.RingOfIntegers F) F (algebraMap ℤ _ n) := by simp

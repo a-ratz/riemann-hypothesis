@@ -67,7 +67,7 @@ theorem exists_levAut (hpq : 1 ≤ D.p + D.q) (Xo : Moduli D l) (g : Sim D)
     (hν : (l.A : ℤ) ∣ g.ν l.A - 1) : ∃ ρ : Xo.X ≅ Xo.X, Xo.LevAut g ρ := by
   have hsim := exists_obj_twist_by_similitude SimAlg.sim_group
   have hred : IsReduced Xo.X := by
-    haveI := Xo.smooth
+    have := Xo.smooth
     exact (isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _ Xo.s
       (SmoothOfRelativeDimension.smooth D.dim _)).1
   have hM : 0 < l.M := lt_of_lt_of_le (by norm_num) l.three_le

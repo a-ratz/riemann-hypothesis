@@ -100,7 +100,7 @@ theorem lt_one_iff (hc : Continuous (algebraMap k k')) (z : k) :
   · set S : Set k := {x | valuation k x ≤ 1} ∩ {x | valuation k x < 1}ᶜ with hS
     have hSc : IsCompact S :=
       (IsNonarchimedeanLocalField.isCompact_closedBall k 1).inter_right (isOpen_lt_one k).isClosed_compl
-    haveI : T2Space k' := GroundTheory.LocalField.t2Space_of_isNonarchimedeanLocalField k'
+    have : T2Space k' := GroundTheory.LocalField.t2Space_of_isNonarchimedeanLocalField k'
     have hI : IsClosed (algebraMap k k' '' S) := (hSc.image hc).isClosed
     have h0 : (0 : k') ∉ algebraMap k k' '' S := by
       rintro ⟨x, hx, hx0⟩
@@ -120,8 +120,8 @@ theorem valuativeExtension (hc : Continuous (algebraMap k k')) : ValuativeExtens
 theorem continuous_algNorm [FiniteDimensional k k'] (hc : Continuous (algebraMap k k')) :
     Continuous (Algebra.norm k : k' → k) := by
   classical
-  haveI := valuativeExtension hc
-  haveI := GroundTheory.LocalField.isModuleTopology k k'
+  have := valuativeExtension hc
+  have := GroundTheory.LocalField.isModuleTopology k k'
   let b := Module.finBasis k k'
   have h : (Algebra.norm k : k' → k) = fun t => (Algebra.leftMulMatrix b t).det := by
     funext t; exact Algebra.norm_eq_matrix_det b t

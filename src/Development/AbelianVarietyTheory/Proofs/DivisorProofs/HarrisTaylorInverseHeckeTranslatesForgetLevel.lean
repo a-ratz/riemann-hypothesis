@@ -108,7 +108,7 @@ theorem fibre_mulK : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
     rw [pow_mul, pow_right_comm, hdk, one_pow])
   have hkz : I.ev (N * k * k) (k • z) = 1 := by rw [ev_nsmul', hz, hdk]
   obtain ⟨w, hw⟩ := (I.ker (N * k * k) hpos hcop _).1 hkz
-  haveI := D.freeLa
+  have := D.freeLa
   have hzw : z = (N * k) • w := by
     apply nsmul_cancel hk
     rw [hw, smul_smul, show k * (N * k) = N * k * k by ring]
@@ -313,7 +313,7 @@ theorem nonempty_objMap_forget : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R :
   have e2 : θ ≫ φ = 𝟙 o₂.A := by
     rw [← cancel_epi (ψ₁ ≫ ψ₂), Category.comp_id, Category.assoc, reassoc_of% hθ, ← Category.assoc, hf₁, hφ]
   let e : o.A ≅ o₂.A := ⟨φ, θ, e1, e2⟩
-  haveI : IsMonHom e.hom := hφm
+  have : IsMonHom e.hom := hφm
   have hχa : ∀ c0, o.act.act c0 ≫ ψ₁ ≫ ψ₂ = (ψ₁ ≫ ψ₂) ≫ o₂.act.act c0 := fun c0 => by
     rw [reassoc_of% (ha₁ c0), ha₂ c0, Category.assoc]
   have hpol : LBIso o.P (o₂.P.pull (sq2 φ)) := by
@@ -355,7 +355,7 @@ theorem nonempty_objMap_forget : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R :
     show (o.act.act c0).left ≫ φ.left = φ.left ≫ (o₂.act.act c0).left
     rw [← Over.comp_left, ← Over.comp_left]
     congr 1
-    haveI := o.act.hom c0
+    have := o.act.hom c0
     have hKcomm : ((𝟙 o.A) ^ k) ≫ o.act.act c0 = o.act.act c0 ≫ ((𝟙 o.A) ^ k) := by
       rw [pow_comp, comp_pow, Category.id_comp, Category.comp_id]
     rw [← cancel_epi ((𝟙 o.A) ^ k), ← Category.assoc, hKcomm, Category.assoc, hφ, hχa, ← hφ,

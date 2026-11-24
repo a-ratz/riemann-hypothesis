@@ -567,7 +567,7 @@ theorem isIntegral_of_trace_integral :
   intro E _ _ _ hu w hw
   set F := maximalRealSubfield E
   have hfu : Algebra.FormallyUnramified (𝓞 F) (𝓞 E) := by
-    haveI : Algebra.Unramified (𝓞 F) (𝓞 E) := hu
+    have : Algebra.Unramified (𝓞 F) (𝓞 E) := hu
     infer_instance
   have hd : differentIdeal (𝓞 F) (𝓞 E) = ⊤ :=
     (GlobalTheory.formallyUnramified_ringOfIntegers_iff_differentIdeal_eq_top F E).1 hfu
@@ -953,7 +953,7 @@ namespace GlobalTheory
 theorem linearIndependent_real_map_of_fieldEmb {E : Type} [Field E] {r n : ℕ} (τ : E →+* ℂ)
     (e : Fin n → Matrix (Fin r) (Fin r) E) (he : LinearIndependent E e) :
     LinearIndependent ℝ (fun i => (e i).map τ) := by
-  letI : Algebra E ℂ := τ.toAlgebra
+  let : Algebra E ℂ := τ.toAlgebra
   have h1 : LinearIndependent ℂ (fun i => (1 : ℂ) ⊗ₜ[E] e i) :=
     Module.Flat.linearIndependent_one_tmul he
   let j := (matrixEquivTensor (Fin r) E ℂ).symm
@@ -1264,7 +1264,7 @@ theorem volume_eq_sqrt_gram_map {ι κ W : Type} [Fintype ι] [DecidableEq ι] [
     have : f ⁻¹' (b.parallelepiped : Set W) = Set.pi Set.univ fun _ => Set.pi Set.univ fun _ => Set.Icc 0 1 := by
       ext c
       rw [Module.Basis.coe_parallelepiped, parallelepiped_basis_eq]
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_pi, Set.mem_univ, true_imp_iff]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_pi, Set.mem_univ, true_imp_iff]
       have hr : ∀ p, b.repr (f c) p = c p.2 p.1 := by
         intro p
         rw [Module.Basis.ofEquivFun_repr_apply]
@@ -1520,7 +1520,7 @@ theorem riemLie_eq_smul_formLie (E : Type) [Field E] [NumberField E] [IsCMField 
 
     simp [Matrix.trace, map_sum, Matrix.mul_apply]
   have hcF : Continuous fun Z : (realLie X.Ψ G).comap (fromFrame x) => fromFrame x Z.1 :=
-    (fromFrame x).continuous_of_finiteDimensional.comp continuous_subtype_val
+    (fromFrame x).continuous_of_finiteDimensional.comp continuous_subtypeVal
   have hcf : Continuous f := f.toLinearMap.continuous_of_finiteDimensional
   unfold riemLie
   rw [volume_eq_sqrt_gram_map f, Measure.map_smul, Measure.map_map hcF.measurable hcf.measurable, hgram,

@@ -71,7 +71,7 @@ theorem isOpen_and_isIrreducible_sectionComponent_of_smooth_field
     have h1 : (f ⁻¹' {f x} : Set X) = Set.univ :=
       Set.eq_univ_of_forall fun y => Subsingleton.elim _ _
     have h2 : f x = p := Subsingleton.elim _ _
-    rw [Set.mem_setOf_eq, h1, h2, connectedComponentIn_univ]
+    rw [Set.mem_ofPred_eq, h1, h2, connectedComponentIn_univ]
   rw [hZ]
   have hN : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
   have hO : IsOpen (connectedComponent (e p)) := _root_.GlobalTheory.isOpen_connectedComponent_of_isLocallyNoetherian X hN (e p)

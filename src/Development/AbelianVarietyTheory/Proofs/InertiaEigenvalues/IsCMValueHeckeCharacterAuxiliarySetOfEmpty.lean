@@ -80,7 +80,7 @@ theorem isUnitOver_up {K E : Type} [Field K] [NumberField K] [Field E] [NumberFi
       show Valued.v _ = 1
       rw [Units.val_inv_eq_inv_val, map_inv₀, show Valued.v (x : v.adicCompletion K) = 1 from hx, inv_one]) P
     rw [map_inv, map_inv, ← coe_coord, Fibre.coord_inv', Units.val_inv_eq_inv_val, map_inv₀,
-      inv_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 (Units.ne_zero _)))] at h1
+      inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 (Units.ne_zero _)))] at h1
     exact h1
   · show GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.finiteCompletionMap K E P ((single v x : Af K) (P.under (𝓞 K))) = 1
     rw [suppAt_single v x _ fun h => hP ?_, map_one]

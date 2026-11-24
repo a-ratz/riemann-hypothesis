@@ -101,14 +101,14 @@ theorem sum_poly_eq_sum_torus : ∀ (F : Type) [Field F] [Finite F] (θ : Algebr
       (g := fun α => minpoly F α ^ (n / (minpoly F α).natDegree))]
   swap
   · intro α hα
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hα ⊢
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hα ⊢
     have hm := minpoly.monic (hi α)
     refine ⟨hm.pow _, ?_, ?_⟩
     · rw [hm.natDegree_pow, Nat.div_mul_cancel ((torus_iff n α (hne α hα)).1 hα)]
     · rw [coeff_zero_eq_eval_zero, eval_pow, ← coeff_zero_eq_eval_zero]
       exact pow_ne_zero _ (minpoly.coeff_zero_ne_zero (hi α) (hne α hα))
   refine Finset.sum_congr rfl fun P hP => ?_
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hP
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hP
   obtain ⟨hP, hd, h0⟩ := hP
   by_cases hex : ∃ (f : F[X]) (m : ℕ), f.Monic ∧ Irreducible f ∧ 0 < m ∧ P = f ^ m
   swap
@@ -124,7 +124,7 @@ theorem sum_poly_eq_sum_torus : ∀ (F : Type) [Field F] [Finite F] (θ : Algebr
   have hfib : Finset.filter (fun α : AlgebraicClosure F => minpoly F α ^ (n / (minpoly F α).natDegree) = f ^ m)
       (finite_torus (F := F) n hn).toFinset = (f.map (algebraMap F (AlgebraicClosure F))).roots.toFinset := by
     ext α
-    simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Multiset.mem_toFinset]
+    simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Multiset.mem_toFinset]
     rw [mem_roots (hf.map _).ne_zero, IsRoot.def, eval_map_algebraMap]
     constructor
     · rintro ⟨h1, h2⟩

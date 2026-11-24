@@ -141,8 +141,8 @@ theorem ideal_eq_span_of_germ (X : Scheme.{0}) (I : X.IdealSheafData) (U : X.aff
     (h : (I.ideal U).map (X.presheaf.germ U.1 x₀ hx).hom = Ideal.span {(X.presheaf.germ U.1 x₀ hx).hom d}) :
     ∃ s : Γ(X, U.1), x₀ ∈ X.basicOpen s ∧ ∀ t : Γ(X, U.1), X.basicOpen t ≤ X.basicOpen s →
       I.ideal (X.affineBasicOpen t) = Ideal.span {resG X (X.basicOpen_le t) d} := by
-  letI : Algebra Γ(X, U.1) (X.presheaf.stalk x₀) := (X.presheaf.germ U.1 x₀ hx).hom.toAlgebra
-  haveI hL : IsLocalization.AtPrime (X.presheaf.stalk x₀) (U.2.primeIdealOf ⟨x₀, hx⟩).asIdeal :=
+  let : Algebra Γ(X, U.1) (X.presheaf.stalk x₀) := (X.presheaf.germ U.1 x₀ hx).hom.toAlgebra
+  have hL : IsLocalization.AtPrime (X.presheaf.stalk x₀) (U.2.primeIdealOf ⟨x₀, hx⟩).asIdeal :=
     U.2.isLocalization_stalk ⟨x₀, hx⟩
   obtain ⟨s, hsM, hsd, hsJ⟩ := exists_of_map_eq_span (R := X.presheaf.stalk x₀)
     (U.2.primeIdealOf ⟨x₀, hx⟩).asIdeal.primeCompl (IsNoetherian.noetherian (I.ideal U)) d h

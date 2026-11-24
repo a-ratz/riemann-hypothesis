@@ -60,15 +60,15 @@ theorem partR_lintegral_sq_eq_const_mul_of_mem_schA : ∀ {F : Type} [Field F] [
     ∀ μ : @Measure (κ ⊕ κ' → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
       ∃ C : ℝ≥0∞, ∀ Φ ∈ schA F (κ ⊕ κ'), ∫⁻ x, ‖partR T Φ x‖ₑ ^ 2 ∂μ = C * ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ := by
   intro F _ _ κ κ' _ _ T hT hmem μ hμ
-  letI mX : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI mY : MeasurableSpace (κ' → AF F) := borel _
-  haveI : BorelSpace (κ' → AF F) := ⟨rfl⟩
-  letI mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
-  haveI : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := hμ
+  let mX : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mY : MeasurableSpace (κ' → AF F) := borel _
+  have : BorelSpace (κ' → AF F) := ⟨rfl⟩
+  let mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
+  have : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := hμ
   let μ₁ : Measure (κ → AF F) := Measure.addHaar
   let μ₂ : Measure (κ' → AF F) := Measure.addHaar
   obtain ⟨C, hC⟩ := hT μ₂ inferInstance
@@ -79,7 +79,7 @@ theorem partR_lintegral_sq_eq_const_mul_of_mem_schA : ∀ {F : Type} [Field F] [
       map_add' := fun _ _ => rfl
       continuous_toFun := e.continuous
       continuous_invFun := e.symm.continuous }
-  haveI : (μ.map eA).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map μ eA
+  have : (μ.map eA).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map μ eA
   set c := (μ.map eA).addHaarScalarFactor (μ₁.prod μ₂)
   have hprod : μ.map eA = c • μ₁.prod μ₂ := Measure.isAddLeftInvariant_eq_smul _ _
 
@@ -94,7 +94,7 @@ theorem partR_lintegral_sq_eq_const_mul_of_mem_schA : ∀ {F : Type} [Field F] [
       lintegral_prod (fun p => g (e.symm p)) (hg.comp e.symm.continuous.measurable).aemeasurable]
     rfl
   have hmeas : ∀ Φ ∈ schA F (κ ⊕ κ'), Measurable fun z => ‖Φ z‖ₑ ^ 2 := fun Φ hΦ =>
-    ((GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hΦ).measurable.enorm).pow_const 2
+    ((GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hΦ).measurable.eNorm).pow_const 2
   refine ⟨C, fun Φ hΦ => ?_⟩
   have hslice : ∀ a : κ → AF F, (fun x => Φ (Sum.elim a x)) ∈ schA F κ' := fun a =>
     GlobalTheory.ThK.Adapt.slice_mem_schA (Equiv.refl (κ ⊕ κ')) a hΦ

@@ -154,7 +154,7 @@ theorem different_quad (K : Type) [Field K] [NumberField K] (a : ℤ) (x : K)
   have hdisc : discr K = a := Formalism.HF.quadDiscr K a x hx hadj hsf h4
   have ha0 : a ≠ 0 := hsf.ne_zero
   have hirr : Irreducible (X ^ 2 - C (a : ℚ)) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two (Formalism.HF.P.quad_not_sq_rat a hsf h1)
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two (Formalism.HF.P.quad_not_sq_rat a hsf h1)
   have hmon : (X ^ 2 - C (a : ℚ)).Monic := monic_X_pow_sub_C _ two_ne_zero
   have hev : aeval x (X ^ 2 - C (a : ℚ)) = 0 := by simp [hx]
   have hmin : minpoly ℚ x = X ^ 2 - C (a : ℚ) :=
@@ -284,8 +284,8 @@ theorem cases_K (σ : H.E ≃ₐ[ℚ] H.E) :
 theorem bE_mem : H.sqd ∈ H.K := IntermediateField.mem_adjoin_simple_self ℚ H.sqd
 
 theorem isGalK : IsGalois ℚ H.K := by
-  haveI : IsGalois ℚ H.E := H.galois
-  haveI hn : (IntermediateField.fixingSubgroup H.K).Normal := by
+  have : IsGalois ℚ H.E := H.galois
+  have hn : (IntermediateField.fixingSubgroup H.K).Normal := by
     constructor
     intro n hn g
     have hc : g * n * g⁻¹ = n := H.gal.injective (by

@@ -160,7 +160,7 @@ theorem GraphAreaFibre.proof (hInt : GraphAreaIntegral.Statement) (hJac : Tangen
     congr 2
   rw [h1, hN g hg]
   simp_rw [hcount]
-  rw [hc, Measure.smul_apply, lintegral_smul_measure]
+  rw [hc, smul_apply, lintegral_smul_measure]
   simp only [ENNReal.smul_def, smul_eq_mul]
   ring
 

@@ -103,14 +103,14 @@ theorem cspan_fd (lam : ι → DomWeight a) : FiniteDimensional ℂ (CSpan lam) 
     apply fg_prodS
     intro τ
     apply Submodule.FG.map
-    haveI := (GlobalTheory.WeylUnitary.delSq_irreducible_unitary a (lam τ)).1
+    have := (GlobalTheory.WeylUnitary.delSq_irreducible_unitary a (lam τ)).1
     exact (Submodule.fg_iff_finiteDimensional _).mpr inferInstance
   have hle : CSpan lam ≤ ∏ τ, (delSq ℂ a (lam τ)).map (rename (Prod.mk τ)).toLinearMap := by
     unfold CSpan
     rw [Submodule.span_le]
     rintro p ⟨f, hf, rfl⟩
     exact ten_mem_prod lam f hf
-  haveI : FiniteDimensional ℂ ↥(∏ τ, ((delSq ℂ a (lam τ)).map (rename (Prod.mk τ)).toLinearMap : Submodule ℂ (PY ι a))) :=
+  have : FiniteDimensional ℂ ↥(∏ τ, ((delSq ℂ a (lam τ)).map (rename (Prod.mk τ)).toLinearMap : Submodule ℂ (PY ι a))) :=
     (Submodule.fg_iff_finiteDimensional _).mp hP
   exact Submodule.finiteDimensional_of_le hle
 
@@ -134,7 +134,7 @@ open GlobalTheory.KJInf.VnStable in
 theorem GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem : ∀ (ι : Type) [Fintype ι] (a : ℕ) (lam : ι → DomWeight a) (n : ι → ℕ),
     FiniteDimensional ℂ (Vn lam n) ∧ ∀ (g : ι → Matrix (Fin a) (Fin a) ℂ), ∀ F ∈ Vn lam n, lft g F ∈ Vn lam n := by
   intro ι _ a lam n
-  haveI := cspan_fd lam
+  have := cspan_fd lam
   refine ⟨?_, ?_⟩
   · unfold Vn; infer_instance
   · intro g F hF

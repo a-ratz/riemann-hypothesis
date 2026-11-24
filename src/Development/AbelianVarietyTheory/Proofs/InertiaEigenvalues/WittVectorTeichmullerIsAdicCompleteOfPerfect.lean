@@ -93,7 +93,7 @@ theorem _root_.GlobalTheory.WittTeichComplete.main : ∀ (l : ℕ) [Fact l.Prime
       IsAdicComplete (Ideal.span {((l : ℕ) : WittVector l O)} ⊔
         Ideal.span {WittVector.teichmuller l x}) (WittVector l O) := by
   intro l _ O _ _ _ _ x _ hc
-  haveI := hc
+  have := hc
   have hcc : WittVector.constantCoeff (WittVector.teichmuller l x) = x := by
     simp [WittVector.constantCoeff]
   obtain ⟨h₁, h₂⟩ := _root_.GlobalTheory.Per.AinfComplete.witt_complete (WittVector.teichmuller l x)

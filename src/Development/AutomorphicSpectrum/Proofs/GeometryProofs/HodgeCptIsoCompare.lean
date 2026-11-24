@@ -169,7 +169,7 @@ theorem flag_bundle_iff_under_isomorphism : ∀ (X X' : Scheme.{0}) (Ω : Type) 
     have hS : {t : Ω | ∃ w ∈ L' q, w - t • φ (b i) ∈ flagStep Ω (fun k => φ (b k)) i} =
         {t : Ω | ∃ v ∈ L ⟨e.hom q.1, h⟩, v - t • b i ∈ flagStep Ω b i} := by
       ext t
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · rintro ⟨w, hw, hwt⟩
         obtain ⟨v, rfl⟩ := φ.surjective w

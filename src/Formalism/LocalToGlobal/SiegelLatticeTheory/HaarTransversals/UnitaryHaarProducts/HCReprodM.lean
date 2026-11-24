@@ -90,8 +90,8 @@ theorem finsetSup_kstable (s : Finset (Submodule ℂ H))
     have h2 := ih (fun S hS => hs S (Finset.mem_insert_of_mem hS))
     rw [Finset.sup_insert]
     refine ⟨?_, ?_⟩
-    · haveI := h1.1
-      haveI := h2.1
+    · have := h1.1
+      have := h2.1
       show FiniteDimensional ℂ ↥(a ⊔ s.sup (id : Submodule ℂ H → Submodule ℂ H))
       infer_instance
     · intro g hg v hv

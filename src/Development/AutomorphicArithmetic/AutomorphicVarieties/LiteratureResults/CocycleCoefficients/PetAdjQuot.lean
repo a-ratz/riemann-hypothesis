@@ -83,10 +83,10 @@ private theorem mpSL (γ : SL(2, ℤ)) : MeasurePreserving (fun z : ℍ => γ �
 
 theorem quotInt_tower {H K : Subgroup SL(2, ℤ)} (hle : H ≤ K) [H.FiniteIndex] (φ : ℍ → ℂ)
     (hφ : ∀ γ ∈ K, ∀ z, φ (γ • z) = φ z) : quotInt H φ = (H.relIndex K : ℂ) * quotInt K φ := by
-  haveI : K.FiniteIndex := Subgroup.finiteIndex_of_le hle
-  haveI : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
-  haveI : Fintype (SL(2, ℤ) ⧸ K) := Fintype.ofFinite _
-  haveI : Fintype (K ⧸ H.subgroupOf K) := Fintype.ofFinite _
+  have : K.FiniteIndex := Subgroup.finiteIndex_of_le hle
+  have : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
+  have : Fintype (SL(2, ℤ) ⧸ K) := Fintype.ofFinite _
+  have : Fintype (K ⧸ H.subgroupOf K) := Fintype.ofFinite _
   let F : SL(2, ℤ) → ℂ := fun γ => ∫ z in ModularGroup.fd, φ (γ⁻¹ • z)
   have hF : ∀ a b : SL(2, ℤ), (a : SL(2, ℤ) ⧸ K) = b → F a = F b := fun a b h => by
     simp only [F]
@@ -180,7 +180,7 @@ private theorem intOn {φ : ℍ → ℂ} (hc : Continuous φ) {C : ℝ} (hb : �
 
 private theorem quotInt_mu (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] {φ : ℍ → ℂ} (hc : Continuous φ) {C : ℝ}
     (hb : ∀ z, ‖φ z‖ ≤ C) : quotInt H φ = ∫ w, w ∂(Measure.map φ (mu H)) := by
-  haveI : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
+  have : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
   rw [integral_map (f := fun w : ℂ => w) hc.aemeasurable aestronglyMeasurable_id, mu]
   have hi : Integrable φ (Measure.sum fun q : SL(2, ℤ) ⧸ H =>
       Measure.map (fun z : ℍ => q.out⁻¹ • z) (volume.restrict ModularGroup.fd)) := by
@@ -217,7 +217,7 @@ private theorem conj_ex (H : Subgroup SL(2, ℤ)) (α : GL (Fin 2) ℝ) {h : SL(
   exact ⟨y, ⟨hy, mem_conjGL.2 ⟨h, hh.1, by rw [e]; group⟩⟩, e⟩
 
 private theorem quotInt_one_ne (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] : quotInt H (fun _ => 1) ≠ 0 := by
-  haveI : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
+  have : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
   have h := Rs.fdPos Rs.volMap (fun _ => 1) continuous_const (fun _ => zero_le_one)
     (integrableOn_const fdFin'.2.ne) UpperHalfPlane.I (by simp [ModularGroup.fd]) one_pos
   rw [quotInt, finsum_eq_sum_of_fintype]
@@ -265,7 +265,7 @@ theorem finiteIndex_conjGL_rat (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] (g : GL
 theorem quotInt_add (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] {φ ψ : ℍ → ℂ} (hc : Continuous φ) {C : ℝ}
     (hb : ∀ z, ‖φ z‖ ≤ C) (hc' : Continuous ψ) {C' : ℝ} (hb' : ∀ z, ‖ψ z‖ ≤ C') :
     quotInt H (fun z => φ z + ψ z) = quotInt H φ + quotInt H ψ := by
-  haveI : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
+  have : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
   simp only [quotInt, finsum_eq_sum_of_fintype]
   rw [← Finset.sum_add_distrib]
   exact Finset.sum_congr rfl fun γ _ => integral_add (intOn hc hb _) (intOn hc' hb' _)
@@ -273,14 +273,14 @@ theorem quotInt_add (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] {φ ψ : ℍ → �
 theorem quotInt_sum (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] {ι : Type} (s : Finset ι) {φ : ι → ℍ → ℂ}
     (hc : ∀ i, Continuous (φ i)) (hb : ∀ i, ∃ C : ℝ, ∀ z, ‖φ i z‖ ≤ C) :
     quotInt H (fun z => ∑ i ∈ s, φ i z) = ∑ i ∈ s, quotInt H (φ i) := by
-  haveI : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
+  have : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
   simp only [quotInt, finsum_eq_sum_of_fintype]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun γ _ => integral_finsetSum _ fun i _ => intOn (hc i) (hb i).choose_spec _
 
 theorem quotInt_mul (H : Subgroup SL(2, ℤ)) [H.FiniteIndex] (c : ℂ) (φ : ℍ → ℂ) :
     quotInt H (fun z => c * φ z) = c * quotInt H φ := by
-  haveI : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
+  have : Fintype (SL(2, ℤ) ⧸ H) := Fintype.ofFinite _
   simp only [quotInt, finsum_eq_sum_of_fintype, Finset.mul_sum, integral_const_mul]
 
 end UpperTheory.V.Lit.KT

@@ -89,7 +89,7 @@ theorem isTop_exists_and_eq (k : Type) [Field k] [CharZero k] (F K : Type) [Fiel
       intro φ
       have h2 := congrArg (fun g => g m)
         (AlternatingMap.eq_smul_basis_det b (φ.compAlternatingMap (ExteriorAlgebra.ιMulti K d)))
-      simp only [LinearMap.compAlternatingMap_apply, AlternatingMap.smul_apply, smul_eq_mul] at h2
+      simp only [LinearMap.compAlternatingMap_apply, smul_apply, smul_eq_mul] at h2
       rw [map_sub, map_smul, h2, smul_eq_mul, mul_comm, sub_self]
     rw [e]
     exact key _

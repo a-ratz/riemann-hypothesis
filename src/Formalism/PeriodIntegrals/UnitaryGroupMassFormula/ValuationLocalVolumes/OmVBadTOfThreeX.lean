@@ -222,7 +222,7 @@ theorem MeasP₂
   have := PI.VolStabSW.secondCountable_Fv F v
   have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   have hOpen := (lamOC_holds v Λ a hFull hG.2.1).1
   refine ⟨inferInstance, hOpen.measurableSet, ?_⟩
@@ -343,7 +343,7 @@ theorem primDual_of (a : ℕ) (hB : Red.OBas1 σ J ψ v Λ) (hLI : LeftInvO σ J
   · have h2 : ∀ k, hR (Fv F v) σ J (∑ l, sigR (Fv F v) σ (N j l) • e l) (e k) = N j k := by
       intro k
       rw [hR_sum_smul_left]
-      simp only [hee, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [hee, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       exact PI.VolStabSW.sigR_invol (Fv F v) σ hσ (N j k)
     rw [hyM i, hR_sum_smul_right]
     simp only [h2]

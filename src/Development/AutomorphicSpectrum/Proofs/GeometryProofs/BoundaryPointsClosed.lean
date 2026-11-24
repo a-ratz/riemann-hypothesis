@@ -65,7 +65,7 @@ theorem boundary_closed_torus_conj : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω]
       exact ⟨fun h => h.2.2, fun h => ⟨hw, hw.1, h⟩⟩
     rw [e]
     refine isClosed_iInter fun f => isClosed_iInter fun _ => isClosed_eq ?_ continuous_const
-    exact (MvPolynomial.continuous_eval _).comp continuous_subtype_val
+    exact (MvPolynomial.continuous_eval _).comp continuous_subtypeVal
   · rintro w ⟨hw1, hw2⟩ c hc
     obtain ⟨z, hz, hzw⟩ := (key w).1 hw1
     have hzc : CoordsAt ξ y z (torusSmul c w) := by

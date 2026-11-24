@@ -89,10 +89,10 @@ theorem pow_fixed_of_algebraic (l : ℕ) [Fact (Nat.Prime l)] {k : Type} [Field 
     [Algebra (ZMod l) k] (y : k) (hy : IsAlgebraic (ZMod l) y) :
     ∃ N : ℕ, 0 < N ∧ y ^ l ^ N = y := by
   let F := IntermediateField.adjoin (ZMod l) {y}
-  haveI : FiniteDimensional (ZMod l) F := IntermediateField.adjoin.finiteDimensional hy.isIntegral
-  haveI : Finite F := Module.finite_of_finite (ZMod l)
-  letI := Fintype.ofFinite F
-  haveI : CharP F l := charP_of_injective_algebraMap (algebraMap (ZMod l) F).injective l
+  have : FiniteDimensional (ZMod l) F := IntermediateField.adjoin.finiteDimensional hy.isIntegral
+  have : Finite F := Module.finite_of_finite (ZMod l)
+  let := Fintype.ofFinite F
+  have : CharP F l := charP_of_injective_algebraMap (algebraMap (ZMod l) F).injective l
   obtain ⟨n, -, hcard⟩ := FiniteField.card F l
   refine ⟨n, n.pos, ?_⟩
   have h := FiniteField.pow_card (⟨y, IntermediateField.mem_adjoin_simple_self _ y⟩ : F)
@@ -124,9 +124,9 @@ theorem residue_pow_fixed (l : ℕ) [Fact (Nat.Prime l)] {Ω : Type} [Field Ω] 
   have hl0 : ((l : ℕ) : IsLocalRing.ResidueField A) = 0 := by
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff]
     exact hlm
-  haveI hchar : CharP (IsLocalRing.ResidueField A) l := by
+  have hchar : CharP (IsLocalRing.ResidueField A) l := by
     obtain ⟨q, hq⟩ := CharP.exists (IsLocalRing.ResidueField A)
-    haveI := hq
+    have := hq
     have hdvd : q ∣ l := (CharP.cast_eq_zero_iff _ q l).mp hl0
     rcases (Fact.out : l.Prime).eq_one_or_self_of_dvd q hdvd with h1 | h1
     · exfalso
@@ -138,7 +138,7 @@ theorem residue_pow_fixed (l : ℕ) [Fact (Nat.Prime l)] {Ω : Type} [Field Ω] 
       exact one_ne_zero h'
     · subst h1
       exact hq
-  letI : Algebra (ZMod l) (IsLocalRing.ResidueField A) := ZMod.algebra _ l
+  let : Algebra (ZMod l) (IsLocalRing.ResidueField A) := ZMod.algebra _ l
   apply pow_fixed_of_algebraic l
 
   have hxalg : IsAlgebraic ℚ (xA : Ω) := Algebra.IsAlgebraic.isAlgebraic _
@@ -237,7 +237,7 @@ theorem fixA_eq_pow_add_mul : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω
     (A : ValuationSubring Ω), OverL l A → ∀ a : fixA A, ∃ (b : fixA A) (z : A), (a : A) = (b : A) ^ l + (l : A) * z := by
   intro l _ Ω _ _ _ A hO a
   have hl : l.Prime := Fact.out
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hl1 : A.valuation (l : Ω) < 1 := GlobalTheory.Ord2.VanishNarrow.valuation_lt_one hO
   obtain ⟨N, hN, hr⟩ := exists_residue_pow_pow_eq l A hl1 (a : A)
   refine ⟨a ^ (l ^ (N - 1)), ?_⟩
@@ -314,7 +314,7 @@ theorem frob_cycAlg (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ
     (A : ValuationSubring Ω) (hA : OverL l A) (x : A) (hx : x ∈ cycAlg l A) :
     ∃ y ∈ cycAlg l A, ∃ z : A, x = y ^ l + (l : A) * z := by
   have hp : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   induction hx using Algebra.adjoin_induction with
   | mem x hx =>
     obtain ⟨n, hn⟩ := hx
@@ -344,14 +344,14 @@ theorem approxRoot_fix_ineCyc : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (�
   intro l _ hl2 Ω _ _ _ A hA v hv hl0 hl1
   have hp : l.Prime := Fact.out
   have hl3 : 3 ≤ l := by have := hp.two_le; omega
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
   have hF : ∀ x : A, x ∈ cycAlg l A ↔ (x : Ω) ∈ Fix Ω (ineCyc l A) := by
     intro x
     rw [GlobalTheory.T.mem_inertiaInvariantsCyclotomicAlgebra_iff l Ω A hA x]
     exact ⟨fun h g => h g g.2, fun h s hs => h ⟨s, hs⟩⟩
-  haveI : NeZero ((l ^ 2 : ℕ) : Ω) := ⟨by exact_mod_cast (pow_pos hp.pos 2).ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ 2)
+  have : NeZero ((l ^ 2 : ℕ) : Ω) := ⟨by exact_mod_cast (pow_pos hp.pos 2).ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ 2)
   have hζA : ζ ∈ A := mem_of_pow_mem A (pow_pos hp.pos 2).ne' (by rw [hζ.pow_eq_one]; exact A.one_mem)
   have hζF : ζ ∈ Fix Ω (ineCyc l A) :=
     (hF ⟨ζ, hζA⟩).1 (mem_cycAlg_of_pow (n := 2) (Subtype.ext (by simpa using hζ.pow_eq_one)))
@@ -464,7 +464,7 @@ theorem exists_real_valuation : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field 
   · exact he.eq_iff.2 (_root_.GlobalTheory.ValuationOfMemIff.valuation_apply_eq ℚ Ω A s hs x)
   · have : CharZero Ω := j.charZero
     have hl : (l : Ω) ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero
-    exact zero_lt_iff.mpr ((v.ne_zero_iff).2 hl)
+    exact pos_iff_ne_zero.mpr ((v.ne_zero_iff).2 hl)
   · exact he.lt_one_iff_lt_one.2 hA
 
 end GlobalTheory.RecOne
@@ -536,8 +536,8 @@ def fixSub {l : ℕ} [Fact l.Prime] {A : ValuationSubring Ω} (V : Subgroup (ine
 theorem exists_trData_cycAlg : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω), OverL l A → ∀ F : Finset A, ∃ (C : Subalgebra (fixA A) A) (tr : A → A) (n : ℕ) (a b : Fin n → A), (↑F : Set A) ⊆ C ∧ IsTrData (cycAlg l A) C tr a b (l : A) := by
   intro l _ hl2 Ω _ _ _ A hA F
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hpcoe : ((l : A) : Ω) = l := map_natCast A.subtype l
   obtain ⟨v, hvint, hvinv, hp0, hp1⟩ := GlobalTheory.T.exists_decomposition_invariant_real_valuation l Ω A hA
   have hint := GlobalTheory.T.mem_inertiaInvariantsCyclotomicAlgebra_iff l Ω A hA
@@ -550,9 +550,9 @@ theorem exists_trData_cycAlg : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (Ω
     (F.image Subtype.val) (fun s _ => orbit_finite _ s)
   have hl0 : (l : Ω) ≠ 0 := by
     intro h; rw [h, map_zero] at hp0; exact lt_irrefl _ hp0
-  haveI : NeZero (l : Ω) := ⟨hl0⟩
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  have : NeZero (l : Ω) := ⟨hl0⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   have hζA : ζ ∈ A := mem_of_pow_mem A (Fact.out : l.Prime).ne_zero (by rw [hζ.pow_eq_one]; exact A.one_mem)
   have hζB : (⟨ζ, hζA⟩ : A) ∈ cycAlg l A :=
     mem_cycAlg_of_pow (n := 1) (Subtype.ext (by simpa using hζ.pow_eq_one))
@@ -560,10 +560,10 @@ theorem exists_trData_cycAlg : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (Ω
     almostSep_of_normal_finiteIndex Ω v l Fact.out hp0 hp1 (ineCyc l A) hvinv' ζ hζ
       (hfixB _ hζB) (by rw [fix_top]; exact hR) U hUn hUfin hUfaith
   obtain ⟨n, a, b, c, hsep, hc⟩ := hUsep (v l) hp1
-  haveI := hUfin
-  haveI : Fintype (ineCyc l A ⧸ U) := Fintype.ofFinite _
+  have := hUfin
+  have : Fintype (ineCyc l A ⧸ U) := Fintype.ofFinite _
   have hc0 : c ≠ 0 := by
-    rintro rfl; rw [map_zero] at hc; exact (not_lt_zero' hc)
+    rintro rfl; rw [map_zero] at hc; exact (not_lt_zero hc)
   have hpfix : ∀ (g : ineCyc l A), g • (l : Ω) = l := fun g => by
     change ((g : G ℚ Ω)) (l : Ω) = l
     exact map_natCast _ l

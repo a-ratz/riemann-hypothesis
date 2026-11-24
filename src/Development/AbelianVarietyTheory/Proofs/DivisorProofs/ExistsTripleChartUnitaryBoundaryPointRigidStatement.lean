@@ -279,7 +279,7 @@ theorem exists_ramified_ext (T : CDVR) {Ω : Type} [Field Ω] [Algebra T.Fr Ω] 
       Function.Injective g ∧ IsLocalHom g ∧ Irreducible ϖ ∧
       (∀ v, κ (algebraMap T.Fr M (algebraMap T.V T.Fr v)) = algebraMap T'.V T'.Fr (g v)) ∧
       N ∣ e ∧ Associated (g ϖ₀) (ϖ ^ e) := by
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   obtain ⟨α, hα⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap T.Fr Ω (algebraMap T.V T.Fr ϖ₀)) hN
   let A := IntermediateField.adjoin T.Fr ({α} : Set Ω)
   have : FiniteDimensional T.Fr A := IntermediateField.finiteDimensional_adjoin fun y _ => Algebra.IsIntegral.isIntegral y
@@ -392,22 +392,22 @@ theorem uTrait_ramExt : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
       (∀ a, gK (algebraMap T.V _ a) = algebraMap T₂.V _ (g a)) ∧ T₂.y = spMap gK ≫ T.y ∧ 0 < q ∧
       ∀ a b, T₂.be (e a) (e b) = ((n * q : ℕ) : ℤ) * T.be a b := by
   intro E _ _ _ H Dw l Xo c T n hn
-  haveI : IsDiscreteValuationRing T.V := T.cdvr.1
-  haveI : IsAdicComplete (maximalIdeal T.V) T.V := T.cdvr.2.1
-  haveI : CharZero T.V := T.cdvr.2.2
+  have : IsDiscreteValuationRing T.V := T.cdvr.1
+  have : IsAdicComplete (maximalIdeal T.V) T.V := T.cdvr.2.1
+  have : CharZero T.V := T.cdvr.2.2
   let T0 : Formalism.L2.Pj.CDVR := { V := T.V }
   obtain ⟨T₁, g₁, κ, e₁, ϖ₁, hg₁, hl₁, hϖ₁, hκ, hne₁, hass₁⟩ :=
     GlobalTheory.ArcExt.exists_ramified_ext T0 (Ω := AlgebraicClosure T0.Fr) ⊥ n hn T.ϖ T.irr
   let gK₁ : FractionRing T.V →+* FractionRing T₁.V :=
     κ.comp (algebraMap T0.Fr (⊥ : IntermediateField T0.Fr (AlgebraicClosure T0.Fr)))
   have hgK₁ : ∀ a, gK₁ (algebraMap T.V _ a) = algebraMap T₁.V _ (g₁ a) := hκ
-  haveI : IsAdicComplete (maximalIdeal T₁.V) T₁.V := T₁.cpl
+  have : IsAdicComplete (maximalIdeal T₁.V) T₁.V := T₁.cpl
   have hB₁ : GlobalTheory.Mum.Base T₁.V := mumBase_of_cdvr T₁.V
   obtain ⟨T₂, f, fK, hf, hfl, -, hfK, hy⟩ :=
     _root_.GlobalTheory.UTraitExt.uTraitExtSt E H Dw l Xo c T₁.V hB₁ inferInstance (spMap gK₁ ≫ T.y)
-  haveI : IsDiscreteValuationRing T₂.V := T₂.cdvr.1
-  haveI : IsAdicComplete (maximalIdeal T₂.V) T₂.V := T₂.cdvr.2.1
-  haveI : CharZero T₂.V := T₂.cdvr.2.2
+  have : IsDiscreteValuationRing T₂.V := T₂.cdvr.1
+  have : IsAdicComplete (maximalIdeal T₂.V) T₂.V := T₂.cdvr.2.1
+  have : CharZero T₂.V := T₂.cdvr.2.2
 
   have hfϖ0 : f ϖ₁ ≠ 0 := fun h => hϖ₁.ne_zero (hf (by rw [h, map_zero]))
   obtain ⟨e₂, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hfϖ0 T₂.irr
@@ -571,7 +571,7 @@ theorem trait_finrank_le {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [I
   let f : R →+* K := (algebraMap (FractionRing R) K).comp (algebraMap R (FractionRing R))
   have hf : Function.Injective f :=
     (algebraMap (FractionRing R) K).injective.comp (IsFractionRing.injective R (FractionRing R))
-  haveI : CharZero K := ⟨fun a b h => Nat.cast_injective (R := R) (hf (by simpa using h))⟩
+  have : CharZero K := ⟨fun a b h => Nat.cast_injective (R := R) (hf (by simpa using h))⟩
   let x' : Sp K ⟶ Sp (FractionRing R) := spMap (algebraMap (FractionRing R) K)
   have hx : x' ≫ jK R = spMap f := by
     rw [← GlobalTheory.TorRef.DomFine.spMap_comp']
@@ -612,19 +612,19 @@ theorem spMap_comp_ {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A
 theorem exists_monoFam_through : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), 1 ≤ Dw.p + Dw.q → IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ {Z : Scheme.{0}} (zs : Z ⟶ Sp c.F) (i : Xo.XF c ⟶ Z) (OZ : LB Z) (N d : ℕ) (J : Z.IdealSheafData) {S : Scheme.{0}} (π : S ⟶ Z) (j : Xo.XF c ⟶ S) [IsOpenImmersion j] (BD : EffCartierData S), GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD → SepB Xo c φ j → ∀ x : S, x ∉ Set.range j → ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsLocalRing V) (C : MonoFam Xo c φ V) (ξV : Sp V ⟶ S), GlobalTheory.Mum.Base V ∧ C.y ≫ j = jK V ≫ ξV ∧ ξV (closedPoint V) = x := by
   intro E _ _ _ H Dw l Xo c φ hpq hpol hnsi Z zs i OZ N d J S π j _ BD hU hsep x hx
   obtain ⟨⟨-, -, -, -, hizs, -, -⟩, -, -, -, ⟨-, hproj, -, hdense, hjπ, -, -, -⟩, -⟩ := hU
-  haveI : LocallyOfFiniteType (π ≫ zs) := GlobalTheory.T.locallyOfFiniteType_of_isProjOver c.F S (π ≫ zs) hproj
-  haveI : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
+  have : LocallyOfFiniteType (π ≫ zs) := GlobalTheory.T.locallyOfFiniteType_of_isProjOver c.F S (π ≫ zs) hproj
+  have : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
   obtain ⟨W, _, _, _, _, a, y₀, hy₀, hax⟩ := exists_cdvr_through j hdense x hx
   let b₀ : c.F →+* W := (Spec.preimage (a ≫ π ≫ zs)).hom
   have hb₀ : spMap b₀ = a ≫ π ≫ zs := Spec.map_preimage _
-  haveI : CharZero W := charZero_of_injective_ringHom b₀.injective
+  have : CharZero W := charZero_of_injective_ringHom b₀.injective
   have hW : GlobalTheory.Mum.Base W := ⟨⟨inferInstance, inferInstance, inferInstance, inferInstance⟩, inferInstance⟩
   obtain ⟨T, f₁, fK₁, -, hloc₁, -, hc₁, hTy⟩ := _root_.GlobalTheory.UTraitExt.uTraitExtSt E H Dw l Xo c W hW inferInstance y₀
 
-  haveI := hloc₁
+  have := hloc₁
   obtain ⟨_, _, _⟩ := T.cdvr
-  haveI : Module.Projective (𝓞 E) T.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) T.P.D.toPre.X
-  haveI : Module.Finite (𝓞 E) T.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : Module.Projective (𝓞 E) T.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) T.P.D.toPre.X
+  have : Module.Finite (𝓞 E) T.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
   have hpolT : IsPolFanOn (H.bar : 𝓞 E → 𝓞 E) φ T.P.D.toPre.X := hpol _ (trait_finrank_le T.gen T.P)
   have hbal : T.be ∈ balForms (H.bar : 𝓞 E → 𝓞 E) T.P.D.toPre.X :=
     (balForms_eq_levelForms H T.P.D.toPre.X).symm ▸ T.lev
@@ -632,7 +632,7 @@ theorem exists_monoFam_through : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
     T.P.D.toPre.X hpolT T.be hbal (fun y hy => trait_be_pos T hy)
   have hM : 0 < l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
   obtain ⟨T₂, g, gK, e, q, -, hgloc, hgK, hT₂y, hq, hbe⟩ := _root_.GlobalTheory.UPoinc.uTrait_ramExt T (k * l.M') (Nat.mul_pos hk hM)
-  haveI := hgloc
+  have := hgloc
   obtain ⟨_, _, _⟩ := T₂.cdvr
 
   have hW₁ : spMap fK₁ ≫ jK W = jK T.V ≫ spMap f₁ := spMap_sq (algebraMap W _) f₁ fK₁ (algebraMap T.V _) hc₁
@@ -743,7 +743,7 @@ theorem nontrivial_of_not_mem_range {V : Type} [CommRing V] [IsDomain V] [IsLoca
     (hy : C.y ≫ j = jK V ≫ ξV) (hx : ξV (closedPoint V) ∉ Set.range j) : Nontrivial C.P.D.toPre.X := by
   by_contra hX
   rw [not_nontrivial_iff_subsingleton] at hX
-  haveI : IsEmpty (Fin C.m) := ⟨fun i =>
+  have : IsEmpty (Fin C.m) := ⟨fun i =>
     C.cone.linearIndependent.ne_zero i (LinearMap.ext₂ fun a b => by
       rw [Subsingleton.elim a 0]; simp)⟩
   have hprod : ∏ i, C.s i = 1 := by simp [Finset.univ_eq_empty]
@@ -764,7 +764,7 @@ theorem nontrivial_of_not_mem_range {V : Type} [CommRing V] [IsDomain V] [IsLoca
     exact hg _ (by rw [Category.assoc, hid, Category.comp_id])
   have hgen : jK V ≫ (spMap h ≫ yo) ≫ j = jK V ≫ ξV := by
     rw [← Category.assoc, hψ, hy]
-  haveI : IsDominant (jK V) := (GlobalTheory.Mum.Modif.self V).dominant
+  have : IsDominant (jK V) := (GlobalTheory.Mum.Modif.self V).dominant
   have heq : (spMap h ≫ yo) ≫ j = ξV :=
     ext_of_isDominant_of_isSeparated s (hs _ _ hgen) (jK V) hgen
   exact hx ⟨(spMap h ≫ yo) (closedPoint V), by
@@ -782,8 +782,8 @@ theorem exists_monoFam_algClosed : ∀ {E : Type} [Field E] [NumberField E] [IsC
   obtain ⟨V, _, _, _, C, ξV, hV, hy, hxV⟩ :=
     GlobalTheory.UChartTrait.exists_monoFam_through Xo c φ hpq hpf hns zs i OZ N d J π j BD hU hS x hx
   obtain ⟨Nn, ιP, hci, hι⟩ := hU.2.2.2.2.1.2.1
-  haveI : IsSeparated (π ≫ zs) := by rw [← hι]; infer_instance
-  haveI : IsDominant (jK V) := (GlobalTheory.Mum.Modif.self V).dominant
+  have : IsSeparated (π ≫ zs) := by rw [← hι]; infer_instance
+  have : IsDominant (jK V) := (GlobalTheory.Mum.Modif.self V).dominant
   have hs : ∀ f g : Sp V ⟶ S, jK V ≫ f = jK V ≫ g → f ≫ π ≫ zs = g ≫ π ≫ zs := fun f g hfg =>
     ext_of_isDominant_of_isSeparated (terminal.from (Sp c.F)) (terminal.hom_ext _ _) (jK V) (by
       rw [← Category.assoc, hfg, Category.assoc])
@@ -796,10 +796,10 @@ theorem exists_monoFam_algClosed : ∀ {E : Type} [Field E] [NumberField E] [IsC
     have hm := C.s_mem i0
     rw [(IsLocalRing.isField_iff_maximalIdeal_eq).1 hf, Ideal.mem_bot] at hm
     exact C.s_ne_zero i0 hm
-  haveI : IsNoetherianRing V := hV.1.1
-  haveI : CharZero V := hV.2
+  have : IsNoetherianRing V := hV.1.1
+  have : CharZero V := hV.2
   obtain ⟨W, _, _, _, ρ, hcomp, hac, hinj, hloc⟩ := GlobalTheory.T.exists_complete_dvr_algClosed_residue_injective_local V hnf ⟨C.b.comp (algebraMap ℚ c.F)⟩
-  haveI : CharZero W := charZero_of_injective_ringHom hinj
+  have : CharZero W := charZero_of_injective_ringHom hinj
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
   have hne : ∀ k, ρ (C.s k) ≠ 0 := fun k h0 => C.s_ne_zero k (hinj (h0.trans (map_zero ρ).symm))
   choose w u hwu using fun k => IsDiscreteValuationRing.eq_unit_mul_pow_irreducible (hne k) hϖ
@@ -918,7 +918,7 @@ theorem exists_coefficientField_of_charZero (S : Type) [CommRing S] [IsLocalRing
     obtain ⟨y, hy⟩ := hu.exists_right_inv
     exact ⟨⟨y, hle ⟨1, by rw [pow_one, hy]; exact Λ.one_mem⟩⟩, Subtype.ext hy⟩
   refine ⟨Λ, hF, fun s => ?_⟩
-  letI := hF.toField
+  let := hF.toField
   have key : ∀ a : S, (∀ f : Λ[X], aeval a f ∈ maximalIdeal S → aeval a f = 0) → a ∈ Λ := fun a ha => by
     have h' : (aeval (R := Λ) a).toRingHom.range ∈ T := by
       rintro _ ⟨f, rfl⟩ hm
@@ -928,7 +928,7 @@ theorem exists_coefficientField_of_charZero (S : Type) [CommRing S] [IsLocalRing
     (aeval_algHom_apply (IsScalarTower.toAlgHom Λ S (ResidueField S)) a f).symm
   by_cases hs : IsAlgebraic Λ (residue S s)
   · have hi := hs.isIntegral
-    haveI : CharZero Λ := RingHom.charZero (algebraMap Λ (ResidueField S))
+    have : CharZero Λ := RingHom.charZero (algebraMap Λ (ResidueField S))
     have hsep : (minpoly Λ (residue S s)).Separable := (minpoly.irreducible hi).separable
     obtain ⟨a, ha, has⟩ := HenselianRing.is_henselian (I := maximalIdeal S)
       ((minpoly Λ (residue S s)).map (algebraMap Λ S)) ((minpoly.monic hi).map _) s
@@ -1105,11 +1105,11 @@ theorem exists_ringEquiv_chartRing : ∀ (R : Type) [CommRing R] [IsRegularLocal
   intro R _ _ hc hQ m t ht hind
   classical
   obtain ⟨q⟩ := hQ
-  letI : Algebra ℚ (ResidueField R) := ((IsLocalRing.residue R).comp q).toAlgebra
-  haveI : CharZero (ResidueField R) := algebraRat.charZero _
-  haveI := hc
+  let : Algebra ℚ (ResidueField R) := ((IsLocalRing.residue R).comp q).toAlgebra
+  have : CharZero (ResidueField R) := algebraRat.charZero _
+  have := hc
   obtain ⟨Λ, hF, hΛ⟩ := GlobalTheory.CohenRegular.exists_coefficientField_of_charZero R
-  letI := hF.toField
+  let := hF.toField
 
   let v : Fin m → CotangentSpace R := fun i => (maximalIdeal R).toCotangent ⟨t i, ht i⟩
   have hv : LinearIndependent (ResidueField R) v := by
@@ -1150,7 +1150,7 @@ theorem exists_ringEquiv_chartRing : ∀ (R : Type) [CommRing R] [IsRegularLocal
     simpa using this
 
   have hb : maximalIdeal Λ = ⊥ := isField_iff_maximalIdeal_eq.1 hF
-  haveI : IsAdicComplete (maximalIdeal Λ) Λ := by rw [hb]; infer_instance
+  have : IsAdicComplete (maximalIdeal Λ) Λ := by rw [hb]; infer_instance
   let f : ChartRing Λ m (d - m) →ₐ[Λ] R := GlobalTheory.mvEvalAdic Λ (maximalIdeal R) x hx
   have hfX : ∀ j, f (X j) = x j := fun j => GlobalTheory.mvEvalAdic_X (A := Λ) (maximalIdeal R) x hx j
   have hfC : ∀ a : Λ, f (C a) = a := fun a => GlobalTheory.mvEvalAdic_C (A := Λ) (maximalIdeal R) x hx a
@@ -1191,8 +1191,8 @@ theorem exists_ringEquiv_chartRing : ∀ (R : Type) [CommRing R] [IsRegularLocal
       (h := GlobalTheory.CohenStructure.isAdicComplete_mvPowerSeries Λ (m + (d - m)))
   have hsurj : Function.Surjective (f : ChartRing Λ m (d - m) →+* R) :=
     GlobalTheory.LocalSurj.surjective_of_residue_of_cotangent _ R _ hcA hloc hres hcot
-  letI : Algebra (ChartRing Λ m (d - m)) R := (f : ChartRing Λ m (d - m) →+* R).toAlgebra
-  haveI : Module.Finite (ChartRing Λ m (d - m)) R :=
+  let : Algebra (ChartRing Λ m (d - m)) R := (f : ChartRing Λ m (d - m) →+* R).toAlgebra
+  have : Module.Finite (ChartRing Λ m (d - m)) R :=
     Module.Finite.of_surjective (Algebra.linearMap (ChartRing Λ m (d - m)) R) hsurj
   have hdA : ringKrullDim (ChartRing Λ m (d - m)) = ((m + (d - m) : ℕ) : WithBot ℕ∞) := by
     rw [GlobalTheory.FormalIsogeny.ringKrullDim_mvPowerSeries, ringKrullDim_eq_zero_of_isField hF, Nat.card_sum,
@@ -1252,7 +1252,7 @@ theorem isComplAt_ringEquiv_comp {A R S : Type} [CommRing A] [CommRing R] [CommR
   have hcomap : (maximalIdeal S).comap (σ : R →+* S) = maximalIdeal R := by
     rw [← hmap]; exact Ideal.comap_map_of_bijective _ σ.bijective
   refine ⟨isNoetherianRing_of_ringEquiv R σ, ?_, ?_, ?_, ?_⟩
-  · haveI := hC
+  · have := hC
     rw [← hmap, IsAdicComplete.congr_ringEquiv]; exact hC
   · exact RingHom.Flat.comp hF (RingHom.Flat.of_bijective σ.bijective)
   · rw [← Ideal.comap_comap, hcomap, ← Ideal.map_map, hM]; exact hmap
@@ -1269,7 +1269,7 @@ theorem exists_chartRing_factor : ∀ (W : Type) [CommRing W] [IsRegularLocalRin
   obtain ⟨R, _, _, _, ψ, θ, hψ, hθ, hθψ, hψC⟩ :=
     exists_complAt_factor_of_isAdicComplete W (Fin m ⊕ Fin N) V hV ψV hCV
   obtain ⟨hreg, -⟩ := isRegularLocalRing_and_isDomain_of_isComplAt W (Fin m ⊕ Fin N) R ψ hψ hψC
-  haveI := hreg
+  have := hreg
   let t : Fin m → R := fun i => ψ (MvPolynomial.X (.inl i))
   have ht : ∀ i, t i ∈ maximalIdeal R := by
     intro i
@@ -1330,8 +1330,8 @@ namespace GlobalTheory.UCanon
 
 theorem injective_of_flat_of_isDomain {A R : Type} [CommRing A] [IsDomain A] [CommRing R] [Nontrivial R] (ψ : A →+* R)
     (h : ψ.Flat) : Function.Injective ψ := by
-  letI := ψ.toAlgebra
-  haveI : Module.Flat A R := h
+  let := ψ.toAlgebra
+  have : Module.Flat A R := h
   refine (injective_iff_map_eq_zero ψ).2 fun a ha => ?_
   by_contra h0
   have hr := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := R) (mem_nonZeroDivisors_of_ne_zero h0)
@@ -1477,13 +1477,13 @@ theorem taut_exists_map : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
   intro E _ _ _ H Dw l Xo c φ hpq hpf hns Z zs i OZ N d J S π j _ BD hU hSep k _ m e C hT
   obtain ⟨hm, hs, -⟩ := hT
   have hcF : CharZero (ChartRing k m e) := (C.b.charZero_iff C.b.injective).1 inferInstance
-  haveI : CharZero k := (MvPowerSeries.C (σ := Fin m ⊕ Fin e) (R := k)).charZero
+  have : CharZero k := (MvPowerSeries.C (σ := Fin m ⊕ Fin e) (R := k)).charZero
   have hAdm := GlobalTheory.MumfordChart.admissibleBase_chartRing k m e
   have hBase : GlobalTheory.Mum.Base (ChartRing k m e) := ⟨hAdm, hcF⟩
-  haveI : IsIntegrallyClosed (ChartRing k m e) := hAdm.2.2.1
+  have : IsIntegrallyClosed (ChartRing k m e) := hAdm.2.2.1
   obtain ⟨⟨-, -, hi, -, -, -, -⟩, -, hext, ⟨-, -, hval⟩, ⟨hbl, -, -, -, hji, -, -, -⟩, -⟩ := hU
   obtain ⟨ξZ, hξZ, -⟩ := hext _ hBase C.t ⟨C.P⟩ C.y C.gen (spMap C.b) C.y_over.symm
-  haveI : Module.Projective (𝓞 E) C.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) C.P.D.toPre.X
+  have : Module.Projective (𝓞 E) C.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) C.P.D.toPre.X
   have hPF := hpf C.P.D.toPre.X C.rank
   have hnat : ∀ i, ∃ n : ℕ, φ.evalZ ((l.M' : ℤ) • C.δ i) = n := fun i =>
     hPF.exists_nat (Submodule.smul_mem _ _ (C.cone.mem i)) (fun y => by
@@ -1494,7 +1494,7 @@ theorem taut_exists_map : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
     (Fintype.prod_equiv (finCongr hm) _ _ (fun j => by simp [a, hs j])).symm
   have hI : idlAlong J ξZ = Ideal.span {∏ i, bdParam k m e i ^ a i} := by
     refine GlobalTheory.MonoVal.eq_span_monomial_of_forall_cdvr k m e _ a fun W _ _ _ hW ψ hψi hψl => ?_
-    haveI := hW.1
+    have := hW.1
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
     have hne : ∀ i, ψ (C.s i) ≠ 0 := fun i h0 => by
       have : C.s i = 0 := hψi (h0.trans (map_zero ψ).symm)
@@ -1551,13 +1551,13 @@ theorem spMap_isDominant_of_injective {A B : Type} [CommRing A] [CommRing B] (f 
 
 theorem spMap_ext_of_injective {A B : Type} [CommRing A] [IsDomain A] [CommRing B] {S : Scheme.{0}} [S.IsSeparated]
     (f : A →+* B) (hf : Function.Injective f) {a b : Sp A ⟶ S} (h : spMap f ≫ a = spMap f ≫ b) : a = b := by
-  haveI := spMap_isDominant_of_injective f hf
+  have := spMap_isDominant_of_injective f hf
   exact ext_of_isDominant_of_isSeparated (terminal.from S) (terminal.hom_ext _ _) (spMap f) h
 
 theorem isSeparated_of_projOver {R : Type} [CommRing R] {X : Scheme.{0}} {f : X ⟶ Sp R} (h : IsProjOver f) :
     X.IsSeparated := by
   obtain ⟨N, ci, hci, hcis⟩ := h
-  haveI := hci
+  have := hci
   have : IsSeparated f := by
     rw [← hcis, PSpace.str]
     infer_instance
@@ -1570,10 +1570,10 @@ namespace GlobalTheory.UCanon
 theorem exists_taut_through : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), 1 ≤ Dw.p + Dw.q → IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ {Z : Scheme.{0}} (zs : Z ⟶ Sp c.F) (i : Xo.XF c ⟶ Z) (OZ : LB Z) (N d : ℕ) (J : Z.IdealSheafData) {S : Scheme.{0}} (π : S ⟶ Z) (j : Xo.XF c ⟶ S) [IsOpenImmersion j] (BD : GlobalTheory.EffCartierData S), GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD → SepB Xo c φ j → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → IsAlgClosed (ResidueField V) → ∀ (C : MonoFam Xo c φ V) (ξV : Sp V ⟶ S), Nontrivial C.P.D.toPre.X → C.y ≫ j = jK V ≫ ξV → ∃ (k : Type) (_ : Field k) (m e : ℕ) (C₁ : MonoFam Xo c φ (ChartRing k m e)) (ξ : Sp (ChartRing k m e) ⟶ S) (θ : ChartRing k m e →+* V), IsTautB C₁ ∧ C₁.y ≫ j = jK _ ≫ ξ ∧ IsLocalHom θ ∧ spMap θ ≫ ξ = ξV := by
   intro E _ _ _ H Dw l Xo c φ hpq hpf hns Z zs i OZ N d J S π j _ BD hU hSep V _ _ _ hB hac C ξV hnt hCV
   obtain ⟨k, hk, m, e, C₁, θ, ⟨hcan⟩, hpar, hθ, hthr⟩ := GlobalTheory.T.exists_canonical_family_through_degenerating_family Xo c φ V hB hac C hnt
-  letI := hk
+  let := hk
   have hT : IsTautB C₁ := GlobalTheory.T.canonicalFamily_isPointRigid_tautologicalChart Xo c φ hpq hpf hns C₁ hcan hpar
   obtain ⟨ξ, hξ⟩ := GlobalTheory.UChart.taut_exists_map Xo c φ hpq hpf hns zs i OZ N d J π j BD hU hSep C₁ hT.1
-  haveI : S.IsSeparated := isSeparated_of_projOver hU.2.2.2.2.1.2.1
+  have : S.IsSeparated := isSeparated_of_projOver hU.2.2.2.2.1.2.1
   refine ⟨k, hk, m, e, C₁, ξ, θ, hT, hξ, hθ, ?_⟩
   obtain ⟨yo, κ, hgen, hκ, hκy⟩ := hthr
 
@@ -1586,7 +1586,7 @@ theorem exists_taut_through : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
   set L := Localization.Away (∏ i, C₁.s i)
   have hle : Submonoid.powers (∏ i, C₁.s i) ≤ nonZeroDivisors (ChartRing k m e) :=
     powers_le_nonZeroDivisors_of_noZeroDivisors hne
-  haveI : IsDomain L := IsLocalization.isDomain_localization hle
+  have : IsDomain L := IsLocalization.isDomain_localization hle
   have hu : IsUnit (algebraMap (ChartRing k m e) (FractionRing (ChartRing k m e)) (∏ i, C₁.s i)) :=
     IsUnit.mk0 _ ((map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 hne)
   let gR : L →+* FractionRing (ChartRing k m e) := IsLocalization.Away.lift (∏ i, C₁.s i) hu
@@ -1650,7 +1650,7 @@ theorem exists_tautB_chart_at : ∀ {E : Type} [Field E] [NumberField E] [IsCMFi
   rw [← hV, ← hξ]
   change _ = ξ.base ((spMap θ).base (closedPoint V))
   have h0 : (spMap θ).base (closedPoint V) = closedPoint (ChartRing k m e) := by
-    haveI := hθ
+    have := hθ
     exact IsLocalRing.comap_closedPoint θ
   rw [h0]
 
@@ -1759,7 +1759,7 @@ theorem mem_support_of_idlAlong_le {S : Scheme.{0}} (I : S.IdealSheafData) {R : 
       exact (Scheme.Hom.appLE_comp_appLE _ _ _ _ _ _ _).symm
     rw [e, Category.assoc, Scheme.ΓSpecIso_naturality, ← Category.assoc, CommRingCat.hom_comp]
     rfl
-  haveI : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
+  have : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
   let lo := algebraMap R (Localization.AtPrime p.asIdeal)
   have e : (spMap lo ≫ ξ) (closedPoint (Localization.AtPrime p.asIdeal)) = ξ p := by
     change ξ (spMap lo (closedPoint _)) = ξ p
@@ -1781,7 +1781,7 @@ theorem mem_range_of_away {X S : Scheme.{0}} [S.IsSeparated] (j : X ⟶ S) {R : 
     (p : Sp R) (hp : f ∉ p.asIdeal) : ξ p ∈ Set.range j := by
   have hf : f ≠ 0 := fun h => hp (h ▸ p.asIdeal.zero_mem)
   have hle : Submonoid.powers f ≤ nonZeroDivisors R := powers_le_nonZeroDivisors_of_noZeroDivisors hf
-  haveI : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
+  have : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
   have hu : ∀ x : Submonoid.powers f, IsUnit (algebraMap R (FractionRing R) x) := fun x =>
     IsLocalization.map_units (FractionRing R) (⟨x.1, hle x.2⟩ : nonZeroDivisors R)
   let lf : Localization.Away f →+* FractionRing R := IsLocalization.lift hu
@@ -1793,7 +1793,7 @@ theorem mem_range_of_away {X S : Scheme.{0}} [S.IsSeparated] (j : X ⟶ S) {R : 
   have hinj : Function.Injective lf := by
     refine (IsLocalization.lift_injective_iff hu).2 fun x x' => ?_
     rw [(IsLocalization.injective (Localization.Away f) hle).eq_iff, (IsFractionRing.injective R (FractionRing R)).eq_iff]
-  haveI hdom : IsDominant κ := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical lf).2 (by
+  have hdom : IsDominant κ := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical lf).2 (by
     rw [(RingHom.injective_iff_ker_eq_bot lf).1 hinj]; exact bot_le)⟩
   have hξ : lo ≫ ξ = yo ≫ j := by
     refine ext_of_isDominant κ ?_
@@ -1832,20 +1832,20 @@ theorem boundary_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
   have hEt := GlobalTheory.T.tautologicalChart_isEtaleCompletion_localRing Xo c φ hpq hφ hns zs i OZ N d J π j BD hP hS C hT ξ hy
   obtain ⟨-, -, -, ⟨hd, hJ, -⟩, ⟨-, hproj, -, -, -, hπ, hBD, hval⟩, -⟩ := hP
   obtain ⟨hm, hs, ⟨yo, -, -, -, hyo⟩, -⟩ := hT.1
-  haveI : CharZero (ChartRing k m e) := (C.b.charZero_iff C.b.injective).1 inferInstance
-  haveI : CharZero k := RingHom.charZero (algebraMap k (ChartRing k m e))
+  have : CharZero (ChartRing k m e) := (C.b.charZero_iff C.b.injective).1 inferInstance
+  have : CharZero k := RingHom.charZero (algebraMap k (ChartRing k m e))
   have hA := GlobalTheory.MumfordChart.admissibleBase_chartRing k m e
-  haveI : IsProper (π ≫ zs) := by
+  have : IsProper (π ≫ zs) := by
     obtain ⟨n, lo, hlo, h⟩ := hproj
     have := isProper_str c.F n
     rw [← h]
     infer_instance
-  haveI : S.IsSeparated := by
+  have : S.IsSeparated := by
     constructor
     rw [← terminal.comp_from (π ≫ zs)]
     infer_instance
 
-  haveI := GlobalTheory.PointStepCompare.projective_of_free E (X := C.P.D.toPre.X)
+  have := GlobalTheory.PointStepCompare.projective_of_free E (X := C.P.D.toPre.X)
   have hF := hφ C.P.D.toPre.X C.rank
   have hM : 0 < l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
   have hex : ∀ i, ∃ a : ℕ, 0 < a ∧ (a : ℝ) = d * φ.evalZ ((l.M' : ℤ) • C.δ i) := fun i => by
@@ -1866,7 +1866,7 @@ theorem boundary_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
     rw [hprod]
     refine GlobalTheory.T.ideal_eq_span_monomial_of_orders_along_completeDVR k m e _ _ fun W _ _ _ hW ψ hψ hψl => ?_
     rw [← hprod, ← idlAlong_comp_local]
-    haveI : IsDiscreteValuationRing W := hW.1
+    have : IsDiscreteValuationRing W := hW.1
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
     choose w hw using fun i => IsDiscreteValuationRing.associated_pow_irreducible
       ((map_ne_zero_iff ψ hψ).2 (hs0 i)) hϖ
@@ -1893,8 +1893,8 @@ theorem boundary_eq : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
     rw [← hπ] at h
     exact hJ _ h₁ h
   refine ⟨hset, ?_, a, ha, hdiv⟩
-  haveI := GlobalTheory.GenFan.essFiniteType_int_stalk c.F S (π ≫ zs) (ξ (closedPoint _))
-  haveI := hA.1
+  have := GlobalTheory.GenFan.essFiniteType_int_stalk c.F S (π ≫ zs) (ξ (closedPoint _))
+  have := hA.1
   refine GlobalTheory.PolDeg.idlAlong_vanishingIdeal_compl S j.opensRange _ ξ _ ?_ (fun p => ?_)
     (GlobalTheory.EtaleCompletionRadical.isRadical_map_of_isEtaleCompletion _ _ _ hA.2.2.2 hEt
       (GlobalTheory.GenFan.formallyUnramified_residue_comp_of_isEtaleCompletion k m e _ hEt))

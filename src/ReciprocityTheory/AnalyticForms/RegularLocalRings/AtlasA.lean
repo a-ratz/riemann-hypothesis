@@ -164,7 +164,7 @@ theorem AlgRes.exists_goodChart (R : AlgRes (ι := ι) P D e) (i : Fin R.n) (x :
   have hinv : ∀ w ∈ V, inv w ∈ R.src i ∧ R.coord i (inv w) = g w := by
     intro w hw
     have h := hex w hw
-    simp only [inv, dif_pos h]
+    simp only [inv, dite_eq_left h]
     exact h.choose_spec
   have hback : ∀ y ∈ R.src i, R.coord i y ∈ U → g (evalFam r (R.coord i y)) = R.coord i y := by
     intro y hy hyU
@@ -191,7 +191,7 @@ theorem AlgRes.exists_goodChart (R : AlgRes (ι := ι) P D e) (i : Fin R.n) (x :
         funext fun w => (hinv w w.2).2
       rw [this]
       exact hg.continuousOn.domRestrict
-    exact continuous_subtype_val.comp hf
+    exact continuous_subtypeVal.comp hf
   let ψ0 : OpenPartialHomeomorph R.M (Fin e → ℂ) :=
     { toFun := fun y => evalFam r (R.coord i y)
       invFun := inv

@@ -187,7 +187,7 @@ theorem continuous_char_of_act : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (
   have hl : ‖(l : ℚ_[l])‖ < 1 := Padic.norm_p_lt_one
   have hθpos : 0 < ‖Θ.θ (s * P.ιB x)‖ := norm_pos_iff.2 hθb
   have htv : Tendsto (fun g : ↥(GK K) => (g : GQ l)) (𝓝 1) (𝓝 1) := by
-    simpa using continuous_subtype_val.tendsto (1 : ↥(GK K))
+    simpa using continuous_subtypeVal.tendsto (1 : ↥(GK K))
   have huv : Tendsto uv (𝓝 1) (𝓝 1) := by
     rw [Metric.tendsto_nhds]
     intro ε hε
@@ -208,7 +208,7 @@ theorem continuous_char_of_act : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (
       (fun z => PadicAlgCl.norm_extends (p := l) z)).continuous
   have hχ : Tendsto χv (𝓝 1) (𝓝 1) := by
     have hcont : Continuous χv :=
-      hqc.comp ((GlobalTheory.Cyc.IsCyc.continuous P.χQ_cyc).comp continuous_subtype_val)
+      hqc.comp ((GlobalTheory.Cyc.IsCyc.continuous P.χQ_cyc).comp continuous_subtypeVal)
     simpa [χv] using hcont.tendsto 1
   have hcv1 : Tendsto cv (𝓝 1) (𝓝 1) := by
     have := huv.mul hχ
@@ -321,7 +321,7 @@ theorem inf_of_line {LL M : Type} [Field LL] [AddCommGroup M] [Module LL M] (D :
   have hx0 : x ≠ 0 := fun h => h2 (h ▸ (F (d + 1)).zero_mem)
   have hspan : ∀ y ∈ D, ∃ c : LL, c • x = y := by
     intro y hy
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨x, hx⟩ : ↥D)
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨x, hx⟩ : ↥D)
       (fun h => hx0 (congrArg Subtype.val h))).1 hD ⟨y, hy⟩
     exact ⟨c, congrArg Subtype.val hc⟩
   split_ifs with hb
@@ -343,8 +343,8 @@ theorem inf_of_line {LL M : Type} [Field LL] [AddCommGroup M] [Module LL M] (D :
 
 theorem jumps_of_exact_degree : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l), CaseA K LL → ∀ μ : ↥(GK K) →* (↥LL.1)ˣ, Continuous (fun g : ↥(GK K) => ((μ g : (↥LL.1)ˣ) : ↥LL.1)) → ∀ d : (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) → ℤ, (∀ τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1, ∃ w ∈ DcrisL (P.PD K) (charRep μ) (τ.comp (IsScalarTower.toAlgHom ℚ_[l] ↥(K0 K) ↥K.1)), ιV (P.PD K) (LL := ↥LL.1) (V := ↥LL.1) w ∈ FilV (P.PD K) (LL := ↥LL.1) (V := ↥LL.1) (d τ) ∧ ιV (P.PD K) (LL := ↥LL.1) (V := ↥LL.1) w ∉ FilV (P.PD K) (LL := ↥LL.1) (V := ↥LL.1) (d τ + 1)) → IsCrys (P.PD K) (charRep μ) → ∀ (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (b : ℤ), multV (P.PD K) (charRep μ) τ b = if b = d τ then 1 else 0 := by
   intro l _ P AI T K LL hA μ hμ d hw hcrys τ b
-  haveI := LL.2
-  haveI := K.2
+  have := LL.2
+  have := K.2
   have hdr : IsDR (P.PD K) (charRep μ) := by
     let A : GRep ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL) :=
       { V := ↥LL.1, ρ := charRep μ,
@@ -367,9 +367,9 @@ theorem jumps_of_exact_degree : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
     unfold FildR
     rw [key c]
     by_cases hc : c ≤ d τ
-    · rw [if_pos hc, if_pos hc, h1]
+    · rw [ite_eq_left hc, ite_eq_left hc, h1]
       rfl
-    · rw [if_neg hc, if_neg hc, finrank_bot]
+    · rw [ite_eq_right hc, ite_eq_right hc, finrank_bot]
       rfl
   unfold multV
   rw [fk b, fk (b + 1)]
@@ -553,8 +553,8 @@ namespace GlobalTheory.LetterCrys
 
 theorem isCrys_of_letters : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l), CaseA K LL → ∀ μ : ↥(GK K) →* (↥LL.1)ˣ, Continuous (fun g : ↥(GK K) => ((μ g : (↥LL.1)ˣ) : ↥LL.1)) → ∀ d : (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) → ℤ, (∀ τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1, ∃ w ∈ DcrisL (P.PD K) (charRep μ) (τ.comp (IsScalarTower.toAlgHom ℚ_[l] ↥(K0 K) ↥K.1)), ιV (P.PD K) (LL := ↥LL.1) (V := ↥LL.1) w ∈ FilV (P.PD K) (LL := ↥LL.1) (V := ↥LL.1) (d τ) ∧ ιV (P.PD K) (LL := ↥LL.1) (V := ↥LL.1) w ∉ FilV (P.PD K) (LL := ↥LL.1) (V := ↥LL.1) (d τ + 1)) → IsCrys (P.PD K) (charRep μ) := by
   intro l _ P AI hT K LL hA μ hμ d hw
-  haveI := LL.2
-  haveI := K.2
+  have := LL.2
+  have := K.2
   obtain ⟨hgood, -⟩ := GlobalTheory.LocalIntegers.good_integers l LL
   let A : GRep ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL) :=
     { V := ↥LL.1
@@ -563,7 +563,7 @@ theorem isCrys_of_letters : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : 
         Continuous fun g : ↥(GK K) => ((μ g : (↥LL.1)ˣ) : ↥LL.1) * x) }
   obtain ⟨⟨hfin, hle⟩, -, -⟩ :=
     GlobalTheory.Per.FontaineTied.fontCore_all_of_tied l P AI hT K ↥LL.1 ↥(OL LL) hgood A
-  haveI : Module.Finite ↥LL.1 ↥(Dcris (P.PD K) (charRep μ)) := hfin
+  have : Module.Finite ↥LL.1 ↥(Dcris (P.PD K) (charRep μ)) := hfin
   unfold IsCrys
   refine le_antisymm hle ?_
   have hcard : Nat.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) = finrank ℚ_[l] ↥K.1 :=
@@ -588,8 +588,8 @@ theorem isCrys_of_letters : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : 
     LinearIndependent.of_comp (Dcris (P.PD K) (charRep μ)).subtype hli
   have hpos : Nat.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) ≠ 0 := by
     rw [hcard]; exact Module.finrank_pos.ne'
-  haveI : Finite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Nat.finite_of_card_ne_zero hpos
-  haveI := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
+  have : Finite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Nat.finite_of_card_ne_zero hpos
+  have := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
   have h2 := hli'.fintype_card_le_finrank
   rw [← Nat.card_eq_fintype_card, hcard] at h2
   rw [Module.finrank_self, mul_one, hfr]
@@ -616,7 +616,7 @@ theorem charRep_crys_jump_one : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
   have hsurj : Function.Surjective ι0 := fun y =>
     ⟨⟨y.1, IntermediateField.mem_inf.2 ⟨y.2, hA.1 y.2⟩⟩, Subtype.ext rfl⟩
   obtain ⟨emb, hbij, hemb⟩ := GlobalTheory.HWL.exists_letters l P K 1 LL hA.2.2
-  haveI : NeZero (finrank ℚ_[l] ↥(K0 K)) := ⟨by haveI := (P.PD K).finK₀; exact Module.finrank_pos.ne'⟩
+  have : NeZero (finrank ℚ_[l] ↥(K0 K)) := ⟨by have := (P.PD K).finK₀; exact Module.finrank_pos.ne'⟩
   have hit : ∀ (j : ℕ) (i : ZMod (finrank ℚ_[l] ↥(K0 K))) (a : ↥(K0 K)),
       emb i ((⇑(P.PD K).σ)^[j] a) = emb (i - j) a := by
     intro j
@@ -703,7 +703,7 @@ theorem continuous_algHom (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (τ₀ : �
 theorem norm_le_one (l : ℕ) [Fact l.Prime] (K : FinExt l) (c : ↥(GK K) →* (↥(K0 K))ˣ)
     (hc : Continuous (fun g : ↥(GK K) => (((c g : (↥(K0 K))ˣ) : ↥(K0 K)) : Om l))) (g : ↥(GK K)) :
     ‖(((c g : (↥(K0 K))ˣ) : ↥(K0 K)) : Om l)‖ ≤ 1 := by
-  haveI := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK K
+  have := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK K
   obtain ⟨B, hB⟩ := (isCompact_univ (X := ↥(GK K))).exists_bound_of_continuousOn hc.continuousOn
   by_contra h
   push_neg at h
@@ -861,7 +861,7 @@ theorem galois_periodRatio_mem_unramified : ∀ (l : ℕ) [Fact l.Prime] (P : Lo
   obtain ⟨u, rfl⟩ := hx
   set n := finrank ℚ_[l] ↥(K0 K) with hn_def
   have npos : 0 < n := by
-    haveI := (P.PD K).finK₀
+    have := (P.PD K).finK₀
     exact Module.finrank_pos
   set y : P.R.B := ((u⁻¹ : (P.R.B)ˣ) : P.R.B) with hy
   have huy : (u : P.R.B) * y = 1 := u.mul_inv
@@ -954,7 +954,7 @@ namespace GlobalTheory.LTChar
 
 theorem exists_crystalline_char_jump_one : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l), CaseA K LL → ∀ τ₀ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1, ∃ χ : ↥(GK K) →* (↥(OL LL))ˣ, Continuous (fun g => (((χ g : (↥(OL LL))ˣ) : ↥(OL LL)) : ↥LL.1)) ∧ IsCrys (P.PD K) (charRep ((Units.map (algebraMap ↥(OL LL) ↥LL.1).toMonoidHom).comp χ)) ∧ ∀ τ b, multV (P.PD K) (charRep ((Units.map (algebraMap ↥(OL LL) ↥LL.1).toMonoidHom).comp χ)) τ b = if b = (if τ = τ₀ then 1 else 0) then 1 else 0 := by
   intro l _ P AI hT K LL hA τ₀
-  haveI := (P.PD K).finK₀
+  have := (P.PD K).finK₀
   have hn : 0 < finrank ℚ_[l] ↥(K0 K) := Module.finrank_pos
   obtain ⟨x, hxu, hxφ, hx1, hx2, hxj⟩ := _root_.GlobalTheory.LTPeriod.main l P AI hT K _ hn
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.ltChar_hom l P K x hxu (_root_.GlobalTheory.PeriodQuot.galois_periodRatio_mem_unramified l P AI hT K x hxu hxφ hx1 hx2 hxj)
@@ -1095,8 +1095,8 @@ theorem GlobalTheory.CrysCharJumps.adm20_of_fonOf :
   refine ⟨fun a => ?_, ?_⟩
   · classical
     choose ψ hψ using fun τ₀ => _root_.GlobalTheory.LTChar.exists_crystalline_char_jump_one l (D.loc l) (D.locA l) (D.locT l) K LL hA τ₀
-    haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-    haveI : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
+    have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+    have : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
     let c : (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) → ℤ := fun τ =>
       if h : ∃ i, Formalism.MainNotions.tableLineDegreeTwo.Over ((HW l).W K 1 LL hA.2.2).emb i τ then a h.choose else 0
     have hp := hasJumps_prod (D.locA l) (D.locT l) ψ (fun τ₀ => hψ τ₀) c Finset.univ
@@ -1104,7 +1104,7 @@ theorem GlobalTheory.CrysCharJumps.adm20_of_fonOf :
     rw [hp.2.2]
     have hex : ∃ i, Formalism.MainNotions.tableLineDegreeTwo.Over ((HW l).W K 1 LL hA.2.2).emb i τ := ⟨i, hi⟩
     have hc : c τ = a i := by
-      simp only [c, dif_pos hex]
+      simp only [c, dite_eq_left hex]
       congr 1
       apply ((HW l).W K 1 LL hA.2.2).emb_bij.1
       have h1 := hex.choose_spec

@@ -87,10 +87,10 @@ theorem close_scaled (f : FiniteAdeleRing (𝓞 F) F →+* FiniteAdeleRing (𝓞
   have h1 := h0 ((a - algebraMap F _ k) * algebraMap F _ m⁻¹) n (by
     rw [adele_mul_apply, adele_sub_apply, adele_algebraMap_apply, adele_algebraMap_apply, map_mul, val_algebraMap,
       map_inv₀]
-    exact (mul_inv_le_iff₀ (zero_lt_iff.2 hm1)).2 h)
+    exact (mul_inv_le_iff₀ (pos_iff_ne_zero.2 hm1)).2 h)
   rw [map_mul, map_sub, hf, hf, adele_mul_apply, adele_sub_apply, adele_algebraMap_apply, adele_algebraMap_apply,
     map_mul, val_algebraMap, map_inv₀, map_inv₀] at h1
-  exact (mul_inv_le_iff₀ (zero_lt_iff.2 hm2)).1 h1
+  exact (mul_inv_le_iff₀ (pos_iff_ne_zero.2 hm2)).1 h1
 
 theorem val_eq_one (f : FiniteAdeleRing (𝓞 F) F →+* FiniteAdeleRing (𝓞 E) E)
     (P : HeightOneSpectrum (𝓞 E)) (v : HeightOneSpectrum (𝓞 F))
@@ -150,7 +150,7 @@ theorem exists_approx (f : FiniteAdeleRing (𝓞 F) F →+* FiniteAdeleRing (�
     refine c2.trans_lt ?_
     have hm2 : P.valuation E (algebraMap F E kk) ≠ 0 :=
       (Valuation.ne_zero_iff _).2 (by simp)
-    refine mul_lt_of_lt_one_left (zero_lt_iff.2 hm2) ?_
+    refine mul_lt_of_lt_one_left (pos_iff_ne_zero.2 hm2) ?_
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp]; norm_num
   · intro P hP
     have hv : P.under (𝓞 F) ∉ S := fun h =>

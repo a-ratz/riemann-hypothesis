@@ -88,15 +88,15 @@ def tm1 (w : W) : VC σ W := by
   exact (1 : ℂ) ⊗ₜ[K] w
 
 theorem complexificationBaseChangeLinear_one_tmul (f : W →ₗ[K] W) (w : W) : bcLin σ f (tm1 σ w) = tm1 σ (f w) := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   exact LinearMap.baseChange_tmul (A := ℂ) f 1 w
 
 theorem bcLin_one : bcLin σ (1 : W →ₗ[K] W) = 1 := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   exact LinearMap.baseChange_id (R := K) (A := ℂ) (M := W)
 
 theorem bcLin_mul (f g : W →ₗ[K] W) : bcLin σ (f * g) = bcLin σ f * bcLin σ g := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   exact LinearMap.baseChange_comp (A := ℂ) g f
 
 variable {G : Type} [Group G]

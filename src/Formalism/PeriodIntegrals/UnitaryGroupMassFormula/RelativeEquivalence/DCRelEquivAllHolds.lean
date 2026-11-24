@@ -123,7 +123,7 @@ theorem Xflag_mono (F : LFlag S r T) (j : ℕ) : Xflag F j ≤ Xflag F (j + 1) :
   apply Submodule.span_mono
   rintro _ ⟨i, hi, rfl⟩
   refine ⟨i, ?_, rfl⟩
-  simp only [Set.mem_setOf_eq] at hi ⊢
+  simp only [Set.mem_ofPred_eq] at hi ⊢
   omega
 
 theorem Xflag_le_X (F : LFlag S r T) (j : ℕ) : Xflag F j ≤ Xsp F := by
@@ -190,7 +190,7 @@ theorem nlam_maps_X {F : LFlag S r T} {n : S.V ≃ₗ[E] S.V} (hn : n ∈ NLam �
 theorem nlam_inv {F : LFlag S r T} {n : S.V ≃ₗ[E] S.V} (hn : n ∈ NLam Λ F) : n⁻¹ ∈ NLam Λ F := by
   obtain ⟨hA, hF, hO⟩ := id hn
   obtain ⟨hiso, -⟩ := id hA
-  simp only [NLam, Set.mem_setOf_eq]
+  simp only [NLam, Set.mem_ofPred_eq]
   refine ⟨autLam_inv hA, ?_, ?_⟩
   · intro j x hx
     have hy : n.symm x ∈ Xflag F (j + 1) :=
@@ -217,7 +217,7 @@ theorem nlam_mul {F : LFlag S r T} {n m : S.V ≃ₗ[E] S.V} (hn : n ∈ NLam Λ
     n * m ∈ NLam Λ F := by
   obtain ⟨hnA, hnF, hnO⟩ := id hn
   obtain ⟨hmA, hmF, hmO⟩ := id hm
-  simp only [NLam, Set.mem_setOf_eq]
+  simp only [NLam, Set.mem_ofPred_eq]
   refine ⟨autLam_mul hnA hmA, ?_, ?_⟩
   · intro j x hx
     show n (m x) - x ∈ Xflag F j
@@ -312,7 +312,7 @@ theorem nLamConj_holds : NLamConj := by
       have e : x = g * (g⁻¹ * x * g) * g⁻¹ := by group
       rw [e]
       exact autLam_mul (autLam_mul hg hx) (autLam_inv hg)
-  simp only [NLam, Set.mem_setOf_eq]
+  simp only [NLam, Set.mem_ofPred_eq]
   refine and_congr hA (and_congr ?_ ?_)
   · apply forall_congr'
     intro j

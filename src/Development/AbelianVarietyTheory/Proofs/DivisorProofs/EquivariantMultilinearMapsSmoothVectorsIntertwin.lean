@@ -135,21 +135,21 @@ theorem act_list {D : D7} (θ : InfFam D) {V : HSp D} {S : D.what₂.Tau → SPa
   | nil => simp [rep_one]
   | cons p l ih =>
     have hl' : ∀ q ∈ l, q.2 ∈ Formalism.QuantumDeterminants.UH (gramAt D V q.1) := fun q hq => hl q (by simp [hq])
-    rw [List.map_cons, List.prod_cons, map_mul, ContinuousLinearMap.mul_apply, ih hl',
+    rw [List.map_cons, List.prod_cons, map_mul, mul_apply_eq_comp, ih hl',
       ← h p.1 p.2 (hl p (by simp))]
     congr 1
     funext τ
     rw [List.map_cons, List.prod_cons]
     by_cases e : p.1 = τ
     · subst e
-      rw [Function.update_self, if_pos rfl, rep_mul M _ (hl p (by simp)), ContinuousLinearMap.mul_apply]
+      rw [Function.update_self, ite_eq_left rfl, rep_mul M _ (hl p (by simp)), mul_apply_eq_comp]
       apply prod_mem
       intro g hg
       obtain ⟨q, hq, rfl⟩ := List.mem_map.1 hg
       split_ifs with e
       · exact e ▸ hl' q hq
       · exact prod_mem _ [] (by simp)
-    · rw [Function.update_of_ne (Ne.symm e), if_neg e, one_mul]
+    · rw [Function.update_of_ne (Ne.symm e), ite_eq_right e, one_mul]
 
 theorem smooth_map : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam θ → ∀ (S : D.what₂.Tau → SPar) (M : DSModel V S) (K : Type) [NormedAddCommGroup K] [InnerProductSpace ℂ K] (ρ : GA D V →* (K →L[ℂ] K)) (Φ : ContinuousMultilinearMap ℂ M.H K), (∀ τ, ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ), ∀ y, Φ (Function.update y τ (M.rep τ g (y τ))) = ρ (atTau θ V τ g) (Φ y)) → ∀ v : M.Vec, IsSmoothVector' θ V ρ (Φ fun τ => (v τ : M.H τ)) ∧ ∀ τ, ∀ X ∈ lieAt V τ, dL2 θ V ρ (τ, X) (Φ fun τ => (v τ : M.H τ)) = Φ (Function.update (fun τ => (v τ : M.H τ)) τ (dRep (M.rep τ) X (v τ))) := by
   intro D θ V _ S M K _ _ ρ Φ h v

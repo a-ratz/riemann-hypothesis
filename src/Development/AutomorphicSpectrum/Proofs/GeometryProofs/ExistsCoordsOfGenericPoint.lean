@@ -138,9 +138,9 @@ theorem exists_model_of_res (hRes : ResK.ResKStatement)
   have hmem := GlobalTheory.T.generic_point_mem_dense_open _ Ω ξF U hFg hd
   have hin : ResK.IsResInput M i U e := ⟨hi, hred, hd, by rw [his]; exact hU⟩
   obtain ⟨r, X', j, f', hj, hfj, hsm, hiso, hdense, hsnc⟩ := hRes F M e _ i U hin
-  letI algF : Algebra F Ω := b.toAlgebra
-  letI algO : Algebra (𝓞 F) Ω := (b.comp (algebraMap (𝓞 F) F)).toAlgebra
-  haveI : IsScalarTower (𝓞 F) F Ω := .of_algebraMap_eq' rfl
+  let algF : Algebra F Ω := b.toAlgebra
+  let algO : Algebra (𝓞 F) Ω := (b.comp (algebraMap (𝓞 F) F)).toAlgebra
+  have : IsScalarTower (𝓞 F) F Ω := .of_algebraMap_eq' rfl
   have hs0 : ξ₀ ≫ s = spMap (algebraMap (𝓞 F) Ω) := by
     rw [← hF1, Category.assoc, pullback.condition, ← Category.assoc, hF2]
     show _ = Spec.map (CommRingCat.ofHom (b.comp (algebraMap (𝓞 F) F)))
@@ -236,9 +236,9 @@ theorem exists_model_of_res (hRes : ResK.ResKStatement)
 
 theorem exists_sncBase : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (Ω : Type) [Field Ω] [CharZero Ω] (ξ₀ : Spec (CommRingCat.of Ω) ⟶ Y.X), IsCptGen ξ₀ → ∃ (K : Type) (_ : Fintype K) (J : K → Type) (_ : ∀ k, Fintype (J k)) (y : (Σ k, J k) → Ω) (X : Scheme.{0}) (ξ : Spec (CommRingCat.of Ω) ⟶ X) (f : X ⟶ Y.X) (bd : Ideal (MRing J)), Nonempty K ∧ (∀ q : X, genPt ξ ⤳ q) ∧ CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) ∧ ξ ≫ f = ξ₀ ∧ Cmp.IsSncModel y D.dim bd ∧ ∀ (z : Spec (CommRingCat.of ℂ) ⟶ X) w, CoordsAt ξ y z w → (w ∈ mcPts bd ↔ f (centre z) ∉ abLocus Y.t.G) := by
   intro hRes E _ _ _ H D l Xo c Y Ω _ _ ξ₀ hξ₀
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := {}
-  haveI := Y.jQ_open
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := {}
+  have := Y.jQ_open
   have hsm : SmoothOfRelativeDimension D.dim (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) := by
     exact (smoothOfRelativeDimension_isStableUnderBaseChange D.dim).of_isPullback (IsPullback.of_hasPullback _ _) Xo.smooth
   have hU : SmoothOfRelativeDimension D.dim (Y.jQ.opensRange.ι ≫ pullback.snd Y.s (spMap (algebraMap (𝓞 c.F) c.F))) := by

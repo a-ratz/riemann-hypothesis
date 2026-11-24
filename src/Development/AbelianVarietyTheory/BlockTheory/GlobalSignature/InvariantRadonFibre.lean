@@ -115,7 +115,7 @@ theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.InvariantRadonFibre.IsInv
     [SecondCountableTopology G] [IsClosed (H : Set G)] [MeasurableSpace (G ⧸ H)]
     [BorelSpace (G ⧸ H)] {μ : Measure (G ⧸ H)} (h : _root_.GlobalTheory.IndefiniteRowSideFullHecke.InvariantRadonFibre.IsInvariantRadon H μ) :
     μ.Regular := by
-  haveI := h.finiteOnCompacts
+  have := h.finiteOnCompacts
   infer_instance
 
 def ExistsUniqueInvariantRadon [MeasurableSpace (G ⧸ H)] : Prop :=

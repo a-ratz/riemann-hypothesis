@@ -199,11 +199,11 @@ theorem box_act (hG : GlobalFnsSt) {j : ℕ} {A A' : PolAV S} (pA : IsPowPolAV A
         (∀ i, IsActOf A.A A.L (k : ℤ) (θ i) (t i) (u i)) → IsActOf A'.A A'.L (k : ℤ) θ' t' t'' →
         ∀ jj, t''.f jj = liftFun A'.A _ c * u'.f jj := by
   have hP : ∀ i, translPt A'.A θ'.pt ≫ pA.pr i = T ◁ pA.pr i ≫ translPt A.A (θ i).pt := fun i => by
-    haveI := pA.hom i
+    have := pA.hom i
     rw [hθ, translPt_hom]
   have hT : ∀ i, (translT A'.A θ'.pt).left ≫ (T ◁ pA.pr i).left = (T ◁ pA.pr i).left ≫ (translT A.A (θ i).pt).left :=
     fun i => by
-      haveI := pA.hom i
+      have := pA.hom i
       rw [hθ, ← Over.comp_left, translT_hom, Over.comp_left]
   obtain ⟨a, ha⟩ := exists_box_ratio (pr := fun i => (pA.pr i).left) A.isLB A'.isLB pA.w_gen (K := Fin 2)
     (φ' := ![(snd T A'.A).left, (translPt A'.A θ'.pt).left])
@@ -246,10 +246,10 @@ end Theta
 
 theorem box_theta_act : Laws → ∀ (R : Type) [CommRing R] [IsDomain R] (j : ℕ) (A A' : PolAV (Spec (CommRingCat.of (FractionRing R)))) (pA : IsPowPolAV A' A j) (F : Type) [Field F] [Algebra (FractionRing R) F] (k : ℕ), 1 ≤ k → ∀ (θ' : ThetaGrp A'.A A'.L (k : ℤ) (TFK (R := R) F)), θ'.pt ^ k = 1 → ∃ (θ : Fin j → ThetaGrp A.A A.L (k : ℤ) (TFK (R := R) F)) (c : F), c ≠ 0 ∧ (∀ i, (θ i).pt = θ'.pt ≫ pA.pr i) ∧ ∀ (t u : Fin j → LB.Sec (LB.LinComb A.L (K := Fin 1) (fun _ => (snd (TFK (R := R) F) A.A).left) (fun _ => (k : ℤ)))) (t' u' t'' : LB.Sec (LB.LinComb A'.L (K := Fin 1) (fun _ => (snd (TFK (R := R) F) A'.A).left) (fun _ => (k : ℤ)))), (∀ (Z : Scheme.{0}) (r : Z ⟶ ((TFK (R := R) F) ⊗ A'.A).left) (z : Z) (J J'), Geo.Tor.Good A.L z J → Geo.Tor.Good A'.L z J' → (bw pA.w (r ≫ (snd (TFK (R := R) F) A'.A).left) z (fun i => J ((r ≫ (snd (TFK (R := R) F) A'.A).left) ≫ (pA.pr i).left)) (J' (r ≫ (snd (TFK (R := R) F) A'.A).left)) ^ k).val * Geo.Tor.sval t' r z J' = ∏ i, Geo.Tor.sval (t i) (r ≫ ((TFK (R := R) F) ◁ pA.pr i).left) z J) → (∀ (Z : Scheme.{0}) (r : Z ⟶ ((TFK (R := R) F) ⊗ A'.A).left) (z : Z) (J J'), Geo.Tor.Good A.L z J → Geo.Tor.Good A'.L z J' → (bw pA.w (r ≫ (snd (TFK (R := R) F) A'.A).left) z (fun i => J ((r ≫ (snd (TFK (R := R) F) A'.A).left) ≫ (pA.pr i).left)) (J' (r ≫ (snd (TFK (R := R) F) A'.A).left)) ^ k).val * Geo.Tor.sval u' r z J' = ∏ i, Geo.Tor.sval (u i) (r ≫ ((TFK (R := R) F) ◁ pA.pr i).left) z J) → (∀ i, IsActOf A.A A.L (k : ℤ) (θ i) (t i) (u i)) → IsActOf A'.A A'.L (k : ℤ) θ' t' t'' → ∀ jj, t''.f jj = liftFun A'.A _ ((Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom c) * u'.f jj := by
   intro hL R _ _ j A A' pA F _ _ k hk θ' hθ'
-  haveI : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of F)))
-  haveI : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of F)))
+  have : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of F)))
+  have : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of F)))
   choose θ hθ using fun i => exists_theta hL.kerPow A hk (T := TFK (R := R) F) (θ'.pt ≫ pA.pr i) (by
-    haveI := pA.hom i
+    have := pA.hom i
     rw [← MonObj.pow_comp, hθ', MonObj.one_comp])
   obtain ⟨c, hc, H⟩ := box_act hL.globalFns pA k θ' θ hθ
   have e : (Scheme.ΓSpecIso (CommRingCat.of F)).inv.hom ((Scheme.ΓSpecIso (CommRingCat.of F)).hom.hom c) = c :=

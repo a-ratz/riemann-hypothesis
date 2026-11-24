@@ -80,14 +80,14 @@ theorem meanC_thetaS_of_lintegral (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M
   have : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.symm.toEquiv
   have hsum : ∑' X : S, ∫⁻ h in 𝓕, ‖Φ (actW (AF F) σ J h⁻¹ (ratTup (AF F) X.1))‖ₑ ∂μ ≠ ⊤ := by
     rw [← lintegral_tsum (f := fun (X : S) h => ‖Φ (actW (AF F) σ J h⁻¹ (ratTup (AF F) X.1))‖ₑ)
-      fun X => (hm.enorm.comp (ha _)).aemeasurable]
+      fun X => (hm.eNorm.comp (ha _)).aemeasurable]
     exact hfin.ne
   have hint : Integrable Φ (Measure.sum fun X : S =>
       (μ.restrict 𝓕).map fun h => actW (AF F) σ J h⁻¹ (ratTup (AF F) (X : Fin n → Fin M → E))) := by
     refine ⟨hm.aestronglyMeasurable, ?_⟩
     change ∫⁻ X, ‖Φ X‖ₑ ∂_ < ⊤
     rw [lintegral_sum_measure]
-    simp only [lintegral_map hm.enorm (ha _)]
+    simp only [lintegral_map hm.eNorm (ha _)]
     exact hsum.lt_top
   rw [thetaMeas, integral_smul_measure, integral_sum_measure hint, meanC, ENNReal.toReal_inv]
   simp only [integral_map (ha _).aemeasurable hm.aestronglyMeasurable]
@@ -212,12 +212,12 @@ theorem ifrB_eq_thetaPartD : ∀ (D : D7) (r : ℕ) (V : HSp D) (θ : InfFam D),
   have hcont : Continuous φ :=
     (GlobalTheory.CompanionTheory.WeilTheta.schwartzA_continuous_and_dominated D θ hθ _ _ φ hφ).1
   obtain ⟨⟨lcA, scA, t2A⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top D.host.F
-  haveI := lcA
-  haveI := scA
-  haveI := t2A
+  have := lcA
+  have := scA
+  have := t2A
   obtain ⟨-, -, sc, -, -, -, -, borelK, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props D.host.F D.host.E D.sp.cm.sig hcm (AF D.host.F)
-  haveI := sc
-  haveI := borelK r V.rank
+  have := sc
+  have := borelK r V.rank
   have hrank : ∀ (δ : GL (Fin V.rank) D.host.E) (ξ : Matrix (Fin V.rank) (Fin r) D.host.E),
       (δ.1 * ξ).rank = ξ.rank := fun δ ξ =>
     Matrix.rank_mul_eq_right_of_isUnit_det _ _ ((Matrix.isUnit_iff_isUnit_det _).1 δ.isUnit)

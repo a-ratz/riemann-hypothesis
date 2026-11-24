@@ -105,7 +105,7 @@ theorem tildeD_eq_chiId : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (�
         unfold ordSub
         have he : {n : ℤ | ∃ k : H.Eˣ, (k : H.E) ∈ detSub M ∧ ordF w k = n} = ∅ := by
           ext n
-          simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+          simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
           rintro ⟨k, hk, _⟩
           exact h ⟨k, hk⟩
         rw [he]

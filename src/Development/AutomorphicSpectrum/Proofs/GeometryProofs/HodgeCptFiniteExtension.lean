@@ -387,7 +387,7 @@ theorem grNorm_down (m : SABMap t' t f) (hξ' : IsCptGen ξ') (hd : GlobalTheory
   have hφ : ∀ a : regAt ξ' p', ValAt ξ' z (a : Ω') (φ a) := fun a =>
     ⟨hq, eA.symm a, congrArg Subtype.val (eA.apply_symm_apply a), rfl⟩
   let val : Li' → Vz := fun e => if he : e ∈ M'.lat p' then ev ⟨e, he⟩ else 0
-  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dif_pos he
+  have hval : ∀ e (he : e ∈ M'.lat p'), val e = ev ⟨e, he⟩ := fun e he => dite_eq_left he
   have h0 : val 0 = 0 := by
     rw [hval 0 (zero_mem _)]
     exact map_zero ev
@@ -422,7 +422,7 @@ theorem grNorm_down (m : SABMap t' t f) (hξ' : IsCptGen ξ') (hd : GlobalTheory
   have hC : ∀ l k, k < l → C l k = 0 := fun l k hkl => by simp [C, hP0 l k hkl]
   have hCd : ∀ k, C k k ≠ 0 := fun k => ((hPu k).map φ).ne_zero
   have hdet : C.det ≠ 0 := by
-    rw [Matrix.det_of_upperTriangular (fun a c hac => hC a c hac)]
+    rw [Matrix.det_of_isUpperTriangular (fun a c hac => hC a c hac)]
     exact Finset.prod_ne_zero_iff.2 fun k _ => hCd k
   have hinj : Function.Injective C.mulVec :=
     Matrix.mulVec_injective_of_isUnit ((Matrix.isUnit_iff_isUnit_det C).2 (isUnit_iff_ne_zero.2 hdet))
@@ -498,7 +498,7 @@ theorem hodgeLine_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     rw [Lat.patch_of_not S _ _ hnot]
     exact inf_le_left
   have hb₀ : LinearIndependent Ω (Fl.b (HodgeCpt.rootIdx D r).1) := by
-    letI := A.fn.toAlgebra
+    let := A.fn.toAlgebra
     obtain ⟨_, _, _, _, _, hli, _⟩ := Fl.generic
     exact hli _
   obtain ⟨τ, ν, c₀, u, hgn, hu0, hcv, ht, hν⟩ := grNorm_down m hξ' hdom A.M A'.M j hext hpt (A.V _) _ hb₀ _ z hq hp b

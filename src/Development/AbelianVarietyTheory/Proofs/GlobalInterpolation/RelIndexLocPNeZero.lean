@@ -54,11 +54,11 @@ variable {E : Type} [Field E] [NumberField E] {W : Type} [AddCommGroup W] [Modul
 
 theorem relIndex_ne_zero {M₀ M : Submodule (𝓞 E) W} (h₀ : Full M₀) (hM : M.FG) :
     M₀.toAddSubgroup.relIndex M.toAddSubgroup ≠ 0 := by
-  haveI : Module.Finite (𝓞 E) M := Module.Finite.iff_fg.2 hM
-  haveI : Module.Finite ℤ M := Module.Finite.trans (𝓞 E) M
-  haveI : AddGroup.FG M.toAddSubgroup := Module.Finite.iff_addGroup_fg.1 ‹Module.Finite ℤ M›
+  have : Module.Finite (𝓞 E) M := Module.Finite.iff_fg.2 hM
+  have : Module.Finite ℤ M := Module.Finite.trans (𝓞 E) M
+  have : AddGroup.FG M.toAddSubgroup := Module.Finite.iff_addGroup_fg.1 ‹Module.Finite ℤ M›
   have : Finite (M.toAddSubgroup ⧸ M₀.toAddSubgroup.addSubgroupOf M.toAddSubgroup) := by
-    apply AddCommGroup.finite_of_fg_torsion
+    apply AddCommGroup.finite_of_fg_isAddTorsion
     intro q
     obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective q
     obtain ⟨n, hn, hx⟩ := h₀ x

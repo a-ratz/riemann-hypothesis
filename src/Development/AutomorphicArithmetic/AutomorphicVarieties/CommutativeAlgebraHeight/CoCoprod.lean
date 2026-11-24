@@ -59,7 +59,7 @@ private theorem co_coprod_pres (O : Type) [CommRing O] [IsLocalRing O] [IsNoethe
   obtain ⟨n, z, hz⟩ := Submodule.fg_iff_exists_fin_generating_family.1
     (IsNoetherian.noetherian (maximalIdeal R))
   have hm : ∀ s, z s ∈ maximalIdeal R := fun s => hz ▸ Submodule.subset_span ⟨s, rfl⟩
-  haveI : IsCO O (MvPowerSeries (Fin n) O) := co_mvps O O (Fin n)
+  have : IsCO O (MvPowerSeries (Fin n) O) := co_mvps O O (Fin n)
   obtain ⟨F, ⟨-, hF⟩, -⟩ := co_ev O O R (Fin n) (Algebra.ofId _ _) z hm
   refine ⟨⟨Fin n, fun _ => (), F, ?_, ?_⟩, fun s => ?_⟩
   · refine co_surj O _ R _ (le_trans ?_ le_sup_left)
@@ -71,7 +71,7 @@ private theorem co_coprod_pres (O : Type) [CommRing O] [IsLocalRing O] [IsNoethe
   · intro g hg j
     have : wcomp O (fun _ : Fin n => ()) j g = g := by
       ext a
-      rw [coeff_wcomp, if_pos (Subsingleton.elim _ _)]
+      rw [coeff_wcomp, ite_eq_left (Subsingleton.elim _ _)]
     rwa [this]
   · show F (MvPowerSeries.X s) ∈ _
     rw [hF]
@@ -80,7 +80,7 @@ private theorem co_coprod_pres (O : Type) [CommRing O] [IsLocalRing O] [IsNoethe
 theorem UpperTheory.V.CA.co_coprod :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (T : Type) [Finite T] (B : T → Type) [∀ t, CommRing (B t)] [∀ t, Algebra O (B t)] [∀ t, IsCO O (B t)], ∃ (R : Type) (_ : CommRing R) (_ : Algebra O R) (_ : IsCO O R) (j : ∀ t, B t →ₐ[O] R), ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (f : ∀ t, B t →ₐ[O] R'), ∃! g : R →ₐ[O] R', ∀ t, g.comp (j t) = f t := by
   intro O _ _ _ _ T _ B _ _ _
-  haveI := Fintype.ofFinite T
+  have := Fintype.ofFinite T
   choose WB hWB using fun t => co_coprod_pres O (B t)
   obtain ⟨R, i1, i2, i3, i, _, _, h, -⟩ := UpperTheory.V.Alg.coprod O Unit T B WB hWB
   exact ⟨R, i1, i2, i3, i, h⟩

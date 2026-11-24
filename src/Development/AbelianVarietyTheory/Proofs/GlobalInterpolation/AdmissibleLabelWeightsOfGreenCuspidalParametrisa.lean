@@ -70,8 +70,8 @@ open scoped Classical
 variable {g : ℕ} [Fact g.Prime]
 
 theorem finite_primeLab (d : ℕ) : {P : (ZMod g)[X] | IsPrimeLab d P}.Finite := by
-  haveI : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
-  haveI : Finite (Polynomial.degreeLT (ZMod g) (d + 1)) :=
+  have : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
+  have : Finite (Polynomial.degreeLT (ZMod g) (d + 1)) :=
     Finite.of_equiv _ (Polynomial.degreeLTEquiv (ZMod g) (d + 1)).symm.toEquiv
   refine (Set.toFinite (Polynomial.degreeLT (ZMod g) (d + 1) : Set (ZMod g)[X])).subset fun P hP => ?_
   have h := Polynomial.degree_eq_natDegree hP.1.ne_zero
@@ -80,14 +80,14 @@ theorem finite_primeLab (d : ℕ) : {P : (ZMod g)[X] | IsPrimeLab d P}.Finite :=
 
 theorem iso_of_char {d : ℕ} (V W : FDRep ℂ (GL (Fin d) (ZMod g))) [Simple V] [Simple W]
     (h : ∀ x, V.character x = W.character x) : Nonempty (V ≅ W) := by
-  haveI : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
-  haveI : Invertible (Fintype.card (GL (Fin d) (ZMod g)) : ℂ) := invertibleOfNonzero (by exact_mod_cast Fintype.card_ne_zero)
+  have : NeZero g := ⟨(Fact.out : g.Prime).ne_zero⟩
+  have : Invertible (Fintype.card (GL (Fin d) (ZMod g)) : ℂ) := invertibleOfNonzero (by exact_mod_cast Fintype.card_ne_zero)
   have h1 := FDRep.char_orthonormal V W
   have h2 := FDRep.char_orthonormal V V
   have e : W.character = V.character := (funext h).symm
-  rw [e, h2, if_pos ⟨Iso.refl V⟩] at h1
+  rw [e, h2, ite_eq_left ⟨Iso.refl V⟩] at h1
   by_contra hn
-  rw [if_neg hn] at h1
+  rw [ite_eq_right hn] at h1
   exact one_ne_zero h1
 
 theorem primeLab_lab {C : LabelConv (ZMod g)} (O : LabelMap (ZMod g) C) {d : ℕ} (V : FDRep ℂ (GL (Fin d) (ZMod g)))
@@ -115,22 +115,22 @@ theorem exists_perm_deg (hG : Green) (L : LabelDatum g) {C : LabelConv (ZMod g)}
     obtain ⟨i⟩ := O.lab_inj d (W P) (W Q) hd (hWs P) (hWc P) (hWs Q) (hWc Q) (congrArg Subtype.val h)
     refine Subtype.ext (h2 _ _ P.2 Q.2 (funext fun x => ?_))
     rw [← hWx, ← hWx, FDRep.char_iso i]
-  haveI : Finite {P : (ZMod g)[X] // IsPrimeLab d P} := (finite_primeLab d).to_subtype
+  have : Finite {P : (ZMod g)[X] // IsPrimeLab d P} := (finite_primeLab d).to_subtype
   let e := Equiv.ofBijective p (Finite.injective_iff_bijective.1 hinj)
   refine ⟨fun P => if h : IsPrimeLab d P then (e.symm ⟨P, h⟩).1 else P,
     fun P => if h : IsPrimeLab d P then (e ⟨P, h⟩).1 else P, fun P hP => ?_, fun V _ hs hc => ?_⟩
-  · simp only [dif_pos hP]
+  · simp only [dite_eq_left hP]
     refine ⟨(e.symm ⟨P, hP⟩).2, ?_⟩
-    rw [dif_pos (e.symm ⟨P, hP⟩).2]
+    rw [dite_eq_left (e.symm ⟨P, hP⟩).2]
     simp
   · obtain ⟨P, hP, hχ⟩ := h3 _ ((_root_.GlobalTheory.CuspCharRep.isCusp_character_iff_isCuspidal g d V hd hs).2 hc)
-    haveI := hs
-    haveI := hWs ⟨P, hP⟩
+    have := hs
+    have := hWs ⟨P, hP⟩
     have hi := iso_of_char V (W ⟨P, hP⟩) fun x => by rw [hWx]; exact congrFun hχ x
     have hl : O.lab d V = O.lab d (W ⟨P, hP⟩) := O.lab_iso d _ _ hi
     have hp := primeLab_lab O V hd hs hc
     have e1 : (⟨O.lab d V, hp⟩ : {P : (ZMod g)[X] // IsPrimeLab d P}) = e ⟨P, hP⟩ := Subtype.ext hl
-    simp only [dif_pos hp]
+    simp only [dite_eq_left hp]
     rw [e1, Equiv.symm_apply_apply, hχ]
     exact (h1 P hP).1
 
@@ -302,7 +302,7 @@ end Dict
 open Formalism.BasicNotions Formalism.MainNotions.ArithmeticCylinders in
 theorem admissibleLabelWeights_of_greenCuspidalParametrisation : Green → ∀ (D : D7) (jE : D.host.E →+* Formalism.L2.Host.Qb) (T : Formalism.L2.NormalizedTypesCompatibility D jE), admLq D := by
   intro hG D jE T k ψ hψ
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   let L : LabelDatum (D.host.g k) :=
     ⟨D.ntypes.teichC k, D.ntypes.teichC_inj k, T.ζ k, fun d hd => (T.ζ_gen k d hd).1, fun d e hd he => (T.ζ_gen k d hd).2 _ (dvd_mul_right d e) (Nat.mul_pos hd he)⟩
   obtain ⟨σ, π, hσ, h1⟩ := exists_perm hG L (T.O k)

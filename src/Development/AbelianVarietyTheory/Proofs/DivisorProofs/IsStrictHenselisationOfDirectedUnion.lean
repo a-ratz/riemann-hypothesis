@@ -61,12 +61,12 @@ theorem indEtale_of_directed_union : ∀ (R S : Type) [CommRing R] [CommRing S] 
       MorphismProperty.isFinitelyPresentable.{0} CommRingCat.{0} := by
     intro X Y f hf
     refine CommRingCat.isFinitelyPresentable_hom f ?_
-    letI := f.hom.toAlgebra
-    haveI : Algebra.Etale X Y := hf
+    let := f.hom.toAlgebra
+    have : Algebra.Etale X Y := hf
     exact RingHom.finitePresentation_algebraMap.2 inferInstance
   unfold GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale
   rw [← MorphismProperty.ind_ind hp]
-  haveI : IsFiltered ι := inferInstance
+  have : IsFiltered ι := inferInstance
   let F : ι ⥤ CommRingCat.{0} :=
     { obj := fun i => CommRingCat.of (D i)
       map := fun {i j} h => CommRingCat.ofHom
@@ -110,7 +110,7 @@ instance DivIdx.instNonempty {A : Type} [CommRing A] (M : Submonoid A) : Nonempt
 open CategoryTheory Limits in
 theorem indEtale_localization_of_etale : ∀ (R A : Type) [CommRing R] [CommRing A] [Algebra R A] [Algebra.Etale R A] (M : Submonoid A), GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap R (Localization M)) := by
   intro R A _ _ _ _ M
-  haveI : IsFiltered (DivIdx M) := inferInstance
+  have : IsFiltered (DivIdx M) := inferInstance
   have hunit : ∀ {x y : DivIdx M}, x ≤ y →
       IsUnit (algebraMap A (Localization.Away y.el) x.el) := by
     intro x y h
@@ -203,9 +203,9 @@ theorem indEtale_localization_of_etale : ∀ (R A : Type) [CommRing R] [CommRing
       apply (hpk.mul_left_eq_zero).1
       rw [← map_mul, IsLocalization.mk'_spec]
       simp [IsLocalization.Away.lift, IsLocalization.lift_eq, hak]
-  · haveI : Algebra.Etale A (Localization.Away x.el) :=
+  · have : Algebra.Etale A (Localization.Away x.el) :=
       Algebra.Etale.of_isLocalizationAway x.el
-    haveI : Algebra.Etale R (Localization.Away x.el) :=
+    have : Algebra.Etale R (Localization.Away x.el) :=
       Algebra.Etale.comp R A _
     change RingHom.Etale (algebraMap R (Localization.Away x.el))
     exact RingHom.etale_algebraMap.2 inferInstance
@@ -218,13 +218,13 @@ theorem indEtale_localization_of_etale : ∀ (R A : Type) [CommRing R] [CommRing
 open CategoryTheory in
 theorem indEtale_over_localization : ∀ (R L S : Type) [CommRing R] [CommRing L] [CommRing S] [Algebra R L] [Algebra R S] [Algebra L S] [IsScalarTower R L S] (N : Submonoid R) [IsLocalization N L], GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap R S) → GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap L S) := by
   intro R L S _ _ _ _ _ _ _ N _ hR
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid S N) S := by
+  have : IsLocalization (Algebra.algebraMapSubmonoid S N) S := by
     refine IsLocalization.self ?_
     rintro _ ⟨n, hn, rfl⟩
     rw [IsScalarTower.algebraMap_apply R L S]
     exact (IsLocalization.map_units L (⟨n, hn⟩ : N)).map (algebraMap L S)
-  haveI : Algebra.IsPushout R S L S := Algebra.isPushout_of_isLocalization N L S S
-  haveI : Algebra.IsPushout R L S S := this.symm
+  have : Algebra.IsPushout R S L S := Algebra.isPushout_of_isLocalization N L S S
+  have : Algebra.IsPushout R L S S := this.symm
   have sq := CommRingCat.isPushout_of_isPushout R L S S
   have : (RingHom.toMorphismProperty @RingHom.Etale).IsStableUnderCobaseChange :=
     RingHom.isStableUnderCobaseChange_toMorphismProperty_iff.2 RingHom.Etale.isStableUnderBaseChange
@@ -254,7 +254,7 @@ theorem isStrictHenselisation_of_directed_union : ∀ (T O : Type) [CommRing T] 
   intro T O _ _ _ _ _ _ _ _ _ hS
   obtain ⟨ι, _, _, _, Si, hmono, hcov, hA⟩ := hS
   set P : Ideal (Polynomial T) := (maximalIdeal O).comap (algebraMap (Polynomial T) O) with hP
-  haveI hPp : P.IsPrime := Ideal.comap_isPrime _ _
+  have hPp : P.IsPrime := Ideal.comap_isPrime _ _
   have hu : ∀ y : P.primeCompl, IsUnit (algebraMap (Polynomial T) O y) := by
     intro y
     have := y.2
@@ -274,8 +274,8 @@ theorem isStrictHenselisation_of_directed_union : ∀ (T O : Type) [CommRing T] 
     have h2 : IsUnit (algebraMap (Polynomial T) O a) := by
       rw [h1]; exact (hu s).mul hx
     exact (IsLocalRing.mem_maximalIdeal _).1 ha h2
-  · letI : Algebra (Localization.AtPrime P) O := φ.toAlgebra
-    haveI : IsScalarTower (Polynomial T) (Localization.AtPrime P) O :=
+  · let : Algebra (Localization.AtPrime P) O := φ.toAlgebra
+    have : IsScalarTower (Polynomial T) (Localization.AtPrime P) O :=
       IsScalarTower.of_algebraMap_eq fun x => (congrArg (fun f => f x) hφ).symm
     have hR : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap (Polynomial T) O) := by
       refine indEtale_of_directed_union (Polynomial T) O ι Si hmono hcov fun i => ?_

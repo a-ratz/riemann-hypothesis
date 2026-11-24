@@ -188,7 +188,7 @@ theorem map_ker_baseChange {σ R Hh : Type} (K : Type) [CommRing R] [CommRing K]
     (LinearMap.ker ((ev d p).baseChange K)).map θ.toLinearMap =
       part (vanIdeal d fun h i => algebraMap R K (p h i)) d := by
   classical
-  letI := Fintype.ofFinite Hh
+  let := Fintype.ofFinite Hh
   have key : ∀ z, ev d (fun h i => algebraMap R K (p h i)) (θ z) =
       TensorProduct.piScalarRight R K K Hh ((ev d p).baseChange K z) := by
     intro z
@@ -245,9 +245,9 @@ theorem forms_through_points : ∀ (R : Type) [CommRing R] [IsReduced R] (σ Hh 
     refine projective_of_veryDense hP _
       ((Nat.card Hh : ℚ) - (Nat.card {u : σ →₀ ℕ | u.degree = d} - Q.eval (d : ℚ))) fun q hq => ?_
     obtain ⟨K, _, x, I, hx, hI⟩ := hcut _ hq
-    letI := x.toAlgebra
+    let := x.toAlgebra
     classical
-    letI := Fintype.ofFinite Hh
+    let := Fintype.ofFinite Hh
     obtain ⟨θ, hθ⟩ := exists_equiv σ R K d
     have h1 := finrank_baseChange_coker_add_finrank_range K (ev d p)
     have h2 := ((ev d p).baseChange K).finrank_range_add_finrank_ker
@@ -264,7 +264,7 @@ theorem forms_through_points : ∀ (R : Type) [CommRing R] [IsReduced R] (σ Hh 
   have hmap : ∀ (K : Type) [Field K] (x : R →+* K),
       (vanIdeal d p).map (MvPolynomial.map x) = vanIdeal d (fun h i => x (p h i)) := by
     intro K _ x
-    letI := x.toAlgebra
+    let := x.toAlgebra
     obtain ⟨θ, hθ⟩ := exists_equiv σ R K d
     have h1 := map_ker_baseChange K d p θ hθ
     rw [← baseChange_ker_of_comp_comp_eq _ s hs, ker_ev, map_part_baseChange K _ d
@@ -279,7 +279,7 @@ theorem forms_through_points : ∀ (R : Type) [CommRing R] [IsReduced R] (σ Hh 
   · refine projective_of_veryDense hP _
       ((Nat.card {u : σ →₀ ℕ | u.degree = e} : ℚ) - Q.eval (e : ℚ)) fun q hq => ?_
     obtain ⟨K, _, x, I, hx, hI⟩ := hcut _ hq
-    letI := x.toAlgebra
+    let := x.toAlgebra
     obtain ⟨θ, hθ⟩ := exists_equiv σ R K e
     have h1 := Submodule.finrank_quotient_add_finrank ((part (vanIdeal d p) e).baseChange K)
     have h3 : (finrank K ((part (vanIdeal d p) e).baseChange K) : ℚ) = Q.eval (e : ℚ) := by
@@ -325,7 +325,7 @@ open MvPolynomial in
 theorem homogeneousComponent_mem_vanIdeal {R σ Hh : Type} [CommRing R] (d : ℕ) (p : Hh → σ → R)
     (F : MvPolynomial σ R) (hF : F ∈ vanIdeal d p) (e : ℕ) : homogeneousComponent e F ∈ vanIdeal d p := by
   classical
-  letI : GradedAlgebra (homogeneousSubmodule σ R) := MvPolynomial.gradedAlgebra
+  let : GradedAlgebra (homogeneousSubmodule σ R) := MvPolynomial.gradedAlgebra
   have hh : (vanIdeal d p).IsHomogeneous (homogeneousSubmodule σ R) := by
     refine Ideal.homogeneous_span _ _ ?_
     rintro G ⟨hG, -⟩
@@ -352,7 +352,7 @@ theorem exists_flat_projRep_vanIdeal : ∀ (R σ Hh : Type) [CommRing R] [IsRedu
     fun F hF e => homogeneousComponent_mem_vanIdeal d p F hF e
   obtain ⟨Z₀, s, M, th, -, hrep, hlfp, hflat⟩ := GlobalTheory.ProjFlat.exists_projRep_flat R σ (vanIdeal d p) d hhom
   have hZ := GlobalTheory.ZM.projRep_projective_ample R σ (vanIdeal d p) (Over.mk s) M th hrep
-  refine ⟨Over.mk s, M, th, hrep, hZ.1, hflat (fun e he => by haveI := hproj e he; infer_instance), hlfp hfg, ?_⟩
+  refine ⟨Over.mk s, M, th, hrep, hZ.1, hflat (fun e he => by have := hproj e he; infer_instance), hlfp hfg, ?_⟩
   intro K _ x I' X s' M' th' hGx hrep'
   obtain ⟨hI'hom, hcut⟩ := hG K x I' hGx
   have hpb := IsPullback.of_hasPullback s (spMap x)

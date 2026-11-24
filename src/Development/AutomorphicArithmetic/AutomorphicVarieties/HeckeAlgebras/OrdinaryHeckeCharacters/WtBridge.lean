@@ -90,8 +90,8 @@ private theorem art_onto (ha : IsLocalArtin h a) (y : Uo (w.adicCompletion F)) :
 
 private theorem pw_ne (wt : W.Emb l w → ℤ) (x : (w.adicCompletion F)ˣ) :
     ∏ᶠ τ : W.Emb l w, τ.1 (x : w.adicCompletion F) ^ wt τ ≠ 0 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
   rw [finprod_eq_prod_of_fintype]
   exact Finset.prod_ne_zero_iff.2 fun j _ => zpow_ne_zero _ ((map_ne_zero j.1).2 x.ne_zero)
 
@@ -121,7 +121,7 @@ private theorem locAlg_iff (H : GlobalTheory.Published.GlobalArtinReciprocity) (
     W.IsLocAlg h κ wt ↔ ∃ e, ∀ y : Uo (w.adicCompletion F), (y : (w.adicCompletion F)ˣ) ∈ Uc _ e → f y = 1 := by
   constructor
   · rintro ⟨ph, hp⟩
-    haveI := compactSpace_Ine (E := F) A
+    have := compactSpace_Ine (E := F) A
     have hC : IsClosed ((fun σ : Ine (F := F) A => a (ineIncl h σ)) '' (ph.ker : Set (Ine (F := F) A))ᶜ) :=
       (hp.1.isClosed_compl.isCompact.image ha.cont).isClosed
     have h1 : (1 : (w.adicCompletion F)ˣ) ∉ (fun σ : Ine (F := F) A => a (ineIncl h σ)) '' (ph.ker : Set (Ine (F := F) A))ᶜ := by
@@ -223,7 +223,7 @@ private theorem wt_ex {n : ℕ} (h : s.Wt n) (hh : h.Incr) : ∃ lam, WtOf h lam
     obtain ⟨v', τ'⟩ := p
     obtain rfl : v' = v := Subtype.ext (w_inj s (emb_place τ' τ h1))
     rw [emb_inj τ' τ h1]
-  simp only [htW, lowW, dif_pos H]
+  simp only [htW, lowW, dite_eq_left H]
   rw [e]
   simp [μ]
 
@@ -256,8 +256,8 @@ theorem UpperTheory.V.Hi.wtBridge :
       exact (IsScalarTower.algebraMap_apply ℤ_[l] c.O (Qbar l) _).symm
     simp only [Units.val_mul, Units.val_pow_eq_pow_val, map_mul, map_pow, Units.val_one, map_one] at h1
     rw [h2, h3] at h1
-    haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) (s.w v.1)
-    haveI := Fintype.ofFinite (W.Emb l (s.w v.1))
+    have := GlobalTheory.HeckeGal.finite_contEmb (l := l) (s.w v.1)
+    have := Fintype.ofFinite (W.Emb l (s.w v.1))
     have h0 : ∀ τ : W.Emb l (s.w v.1), τ.1 ((y : ((s.w v.1).adicCompletion L)ˣ) : (s.w v.1).adicCompletion L) ≠ 0 :=
       fun τ => (_root_.map_ne_zero _).2 (Units.ne_zero _)
     have h5 : ∏ᶠ τ : W.Emb l (s.w v.1), τ.1 ((y : ((s.w v.1).adicCompletion L)ˣ) : (s.w v.1).adicCompletion L) ^ (-h v i τ) =
@@ -278,7 +278,7 @@ theorem UpperTheory.V.Hi.wtBridge :
     simp only [fun v j => locAlg_iff H (ha v) (hf v j)]
     refine ⟨fun h1 => ?_, fun ⟨e, he⟩ v j => ⟨e, he v j⟩⟩
     choose e he using h1
-    haveI : Finite (Vl l L) := inferInstanceAs (Finite V.frame.Vl)
+    have : Finite (Vl l L) := inferInstanceAs (Finite V.frame.Vl)
     obtain ⟨E, hE⟩ := (Set.finite_range fun p : Vl l L × Fin n => e p.1 p.2).bddAbove
     refine ⟨E, fun v i y hy => he v i y ?_⟩
     rw [uc_eq] at hy ⊢

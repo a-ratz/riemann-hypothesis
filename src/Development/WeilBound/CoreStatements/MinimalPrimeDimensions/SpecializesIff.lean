@@ -77,8 +77,8 @@ abbrev qOf {U : Z.Opens} (hU : IsAffineOpen U) {z : Z} (hz : z ∈ U) : Ideal Γ
 
 theorem mem_qOf {U : Z.Opens} (hU : IsAffineOpen U) {z : Z} (hz : z ∈ U) (a : Γ(Z, U)) :
     a ∈ qOf hU hz ↔ ¬ IsUnit ((Z.presheaf.germ U z hz).hom a) := by
-  letI : Algebra Γ(Z, U) (Z.presheaf.stalk z) := (Z.presheaf.germ U z hz).hom.toAlgebra
-  haveI := hU.isLocalization_stalk ⟨z, hz⟩
+  let : Algebra Γ(Z, U) (Z.presheaf.stalk z) := (Z.presheaf.germ U z hz).hom.toAlgebra
+  have := hU.isLocalization_stalk ⟨z, hz⟩
   have h := IsLocalization.AtPrime.isUnit_to_map_iff (Z.presheaf.stalk z) (qOf hU hz) a
   rw [← not_iff_not, not_not]
   exact h.symm
@@ -288,7 +288,7 @@ theorem injective (hE : Emb p s) : Function.Injective (ptIdeal p s) := fun z z' 
 variable [IsIntegral Z]
 
 theorem qOf_generic {U : Z.Opens} (hU : IsAffineOpen U) (hz : genericPoint Z ∈ U) : qOf hU hz = ⊥ := by
-  haveI : Nonempty U := ⟨⟨_, hz⟩⟩
+  have : Nonempty U := ⟨⟨_, hz⟩⟩
   show (hU.primeIdealOf ⟨genericPoint Z, hz⟩).asIdeal = ⊥
   rw [hU.primeIdealOf_genericPoint, genericPoint_eq_bot_of_affine]
   rfl
@@ -338,7 +338,7 @@ private theorem mem_minimalPrimes_span_iff_mem_height_eq_one {A : Type} [CommRin
   · rintro ⟨hfq, hq1⟩
     refine ⟨⟨inferInstance, (Ideal.span_singleton_le_iff_mem _).mpr hfq⟩, ?_⟩
     rintro p ⟨hp, hfp⟩ hpq
-    haveI := hp
+    have := hp
     by_contra hne
     have hlt : p < q := lt_of_le_not_ge hpq hne
     have h1 := hpos p ((Ideal.span_singleton_le_iff_mem _).mp hfp)
@@ -363,8 +363,8 @@ theorem stDiv : StDiv := by
     have hη : genericPoint Z ∈ nonzeroLocus (s k) :=
       ((genericPoint_spec Z).mem_open_set_iff (nonzeroLocus (s k)).isOpen).mpr
         ⟨z, Set.mem_univ _, hz⟩
-    haveI : Nonempty (nonzeroLocus (s k)) := ⟨⟨z, hz⟩⟩
-    haveI : IsNoetherianRing Γ(Z, nonzeroLocus (s k)) :=
+    have : Nonempty (nonzeroLocus (s k)) := ⟨⟨z, hz⟩⟩
+    have : IsNoetherianRing Γ(Z, nonzeroLocus (s k)) :=
       IsLocallyNoetherian.component_noetherian ⟨_, h.aff⟩
     have hf0 : eval₂Hom (algX p (nonzeroLocus (s k))) t (GroundTheory.Heights₂.Heights.linForm u) ≠ 0 := by
       have hnm := (P.mem_iff hE hsu (genericPoint Z)).mp hu
@@ -383,9 +383,9 @@ theorem stDiv : StDiv := by
       rw [hB.cover]
       trivial
     obtain ⟨i, hi⟩ := Opens.mem_iSup.mp hzc
-    letI : Algebra Γ(Z, nonzeroLocus (s k)) (Z.presheaf.stalk z) :=
+    let : Algebra Γ(Z, nonzeroLocus (s k)) (Z.presheaf.stalk z) :=
       (Z.presheaf.germ _ z hz).hom.toAlgebra
-    haveI : IsLocalization.AtPrime (Z.presheaf.stalk z) (qOf h.aff hz) :=
+    have : IsLocalization.AtPrime (Z.presheaf.stalk z) (qOf h.aff hz) :=
       h.aff.isLocalization_stalk ⟨z, hz⟩
     have hht : Order.coheight z = (qOf h.aff hz).height := by
       have e1 := ringKrullDim_stalk_eq_coheight z
@@ -424,7 +424,7 @@ theorem stDiv : StDiv := by
       rw [hmult, hspan, ← hLM]
       refine ⟨?_, fun _ => rfl⟩
       rw [mem_minimalPrimes_span_iff_mem_height_eq_one _ hf0, ← hht, hc, and_iff_left rfl, hLM]
-      haveI : Ring.KrullDimLE 1 (Z.presheaf.stalk z) := krullDimLE_of_coheight_le hc.le
+      have : Ring.KrullDimLE 1 (Z.presheaf.stalk z) := krullDimLE_of_coheight_le hc.le
       have hne0 : algebraMap _ (Z.presheaf.stalk z)
           (eval₂Hom (algX p (nonzeroLocus (s k))) t (GroundTheory.Heights₂.Heights.linForm u)) ≠ 0 := by
         intro h0

@@ -124,9 +124,9 @@ theorem valuation_lt_one_iff_of_mem_iff {Ω : Type} [Field Ω] [Algebra E Ω] (B
   · simp
   have ha : algebraMap E Ω e ≠ 0 := (map_ne_zero _).2 he
   have h1 : B.valuation (algebraMap E Ω e) < 1 ↔ ¬ B.valuation (algebraMap E Ω e⁻¹) ≤ 1 := by
-    rw [map_inv₀, map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ha)), not_le]
+    rw [map_inv₀, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ha)), not_le]
   have h2 : w.valuation E e < 1 ↔ ¬ w.valuation E e⁻¹ ≤ 1 := by
-    rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 he)), not_le]
+    rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 he)), not_le]
   rw [h1, h2, ValuationSubring.valuation_le_one_iff, hB]
 
 end GlobalTheory.LocEmbExist

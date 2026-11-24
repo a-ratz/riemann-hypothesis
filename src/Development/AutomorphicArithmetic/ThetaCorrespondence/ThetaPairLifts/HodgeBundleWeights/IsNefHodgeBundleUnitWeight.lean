@@ -346,7 +346,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheo
   {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} (X : FlagCover Y)
 theorem isNef_hodgeBundle_unitWeight : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.NefNumerics → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → ∀ τ : Psi H, letI := algebraΓOfHom (str₀ TF.X Z); IsNef c.F (L₀ TF.X Z (GlobalTheory.NefWt.unitWt τ 1)) ∧ IsNef c.F (L₀ TF.X Z (GlobalTheory.NefWt.unitWt τ (-1))) := by
   intro hP _ E _ _ _ H Dw l Xo c TF Z hF τ
-  letI := algebraΓOfHom (str₀ TF.X Z)
+  let := algebraΓOfHom (str₀ TF.X Z)
   have hp := (VarFlag.isVariety₀_flag E H Dw l Xo c TF Z hF).2.1
   exact ⟨(isGenerated_unitWt hP.p1 TF Z hF τ 1).isNef_of_isProjOver hp,
     (isGenerated_unitWt hP.p1 TF Z hF τ (-1)).isNef_of_isProjOver hp⟩

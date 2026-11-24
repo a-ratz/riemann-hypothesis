@@ -99,8 +99,8 @@ theorem oneD (u u' : ℝ → ℂ) (hu' : Continuous u') (h : ∀ t, HasDerivAt u
   rw [intervalIntegral.integral_of_le zero_le_one] at e
   have e' : u 0 ^ 2 = ∫ t in Set.Ioc (0 : ℝ) 1, (u t ^ 2 + ((t : ℂ) - 1) * (2 * u t * u' t)) := by
     rw [e]; simp
-  rw [← enorm_pow, e', ← lintegral_const_mul' _ _ (by simp)]
-  refine (enorm_integral_le_lintegral_enorm _).trans ?_
+  rw [← eNorm_pow, e', ← lintegral_const_mul' _ _ (by simp)]
+  refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
   refine le_trans (setLIntegral_mono' measurableSet_Ioc fun t ht => ?_) (setLIntegral_le_lintegral _ _)
   have h1 : ‖(t : ℂ) - 1‖ ≤ 1 := by
     rw [← Complex.ofReal_one, ← Complex.ofReal_sub, Complex.norm_real, Real.norm_eq_abs, abs_le]
@@ -139,7 +139,7 @@ theorem foldr_mem {S : Set (X → ℂ)} {dd : W → (X → ℂ) → X → ℂ} (
 omit [AddCommGroup X] [IsTopologicalAddGroup X] in
 theorem continuous_sumSq {S : Set (X → ℂ)} (hS : ∀ Θ ∈ S, Continuous Θ) {dd : W → (X → ℂ) → X → ℂ}
     (hd : ∀ w, ∀ Θ ∈ S, dd w Θ ∈ S) (L : List (List W)) {Θ : X → ℂ} (h : Θ ∈ S) : Continuous (sumSq dd L Θ) :=
-  continuous_list_sum L fun l _ => (ENNReal.continuous_pow 2).comp (hS _ (foldr_mem hd l h)).enorm
+  continuous_list_sum L fun l _ => (ENNReal.continuous_pow 2).comp (hS _ (foldr_mem hd l h)).eNorm
 
 theorem sobAbs {S : Set (X → ℂ)} (hS : ∀ Θ ∈ S, Continuous Θ) {dd : W → (X → ℂ) → X → ℂ}
     (hd : ∀ w, ∀ Θ ∈ S, dd w Θ ∈ S) (D : ℕ) : ∀ (ws : Fin D → W) (e : Fin D → ℝ →+ X), (∀ i, Continuous (e i)) →
@@ -193,7 +193,7 @@ theorem lintegral_sumSq [MeasurableSpace X] [BorelSpace X] (μ : Measure X) {S :
   | nil => simp [sumSq]
   | cons l L ih =>
     rw [List.map_cons, List.sum_cons, ← ih,
-      ← lintegral_add_left ((hS _ (foldr_mem hd l h)).measurable.enorm.pow_const 2)]
+      ← lintegral_add_left ((hS _ (foldr_mem hd l h)).measurable.eNorm.pow_const 2)]
     rfl
 
 end PositivityTheory.ThKF0.Grow

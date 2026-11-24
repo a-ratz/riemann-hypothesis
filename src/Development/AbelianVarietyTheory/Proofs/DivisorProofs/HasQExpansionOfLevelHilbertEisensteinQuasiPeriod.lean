@@ -88,7 +88,7 @@ private lemma le_one_and_mem_latM_of_hasLevel {F : Type} [Field F] [NumberField 
   · intro b hb
     have hv : ![b, b * x] ∈ _root_.GlobalTheory.HilbFam.split A B x :=
       (mem _).2 ⟨by simpa using hb, by
-        simpa using FractionalIdeal.mem_coe.1 (Submodule.zero_mem _)⟩
+        simpa using FractionalIdeal.mem_coeToSubmodule.1 (Submodule.zero_mem _)⟩
     have := ((std _).1 (h2 hv)) 0
     simp only [Matrix.cons_val_zero] at this
     obtain ⟨y, hy⟩ := Submodule.mem_one.1 this
@@ -97,8 +97,8 @@ private lemma le_one_and_mem_latM_of_hasLevel {F : Type} [Field F] [NumberField 
     have := ((mem _).1 hv).2
     simpa [Algebra.smul_def] using this
   · have hv := h1 ![1, 0] ((std _).2 (by intro i; fin_cases i <;> simpa))
-    have := FractionalIdeal.mem_coe.1
-      (Submodule.neg_mem _ (FractionalIdeal.mem_coe.2 ((mem _).1 hv).2))
+    have := FractionalIdeal.mem_coeToSubmodule.1
+      (Submodule.neg_mem _ (FractionalIdeal.mem_coeToSubmodule.2 ((mem _).1 hv).2))
     simpa [Algebra.smul_def] using this
 
 open NumberField UpperHalfPlane in
@@ -273,7 +273,7 @@ private lemma summable_norm_qExpansion_of_hasSum_everywhere (N : ℕ) (hN : 0 < 
   let σ : ℍ := ⟨(τ : ℂ) / 2, by simpa using div_pos τ.im_pos two_pos⟩
   set w := Complex.exp (2 * ↑Real.pi * Complex.I * ↑σ / ↑N) with hw
   have hq : Complex.exp (2 * ↑Real.pi * Complex.I * ↑τ / ↑N) = w ^ 2 := by
-    rw [hw, ← Complex.exp_nat_mul]
+    rw [hw, ← Complex.exp_natCast_mul]
     congr 1
     simp only [σ, UpperHalfPlane.coe_mk]
     push_cast
@@ -344,7 +344,7 @@ private lemma hasSum_hilbertDiagonalTraceCoefficient_lemma_3 (F : Type) [Field F
   have hν : ∀ ξ, a ξ ≠ 0 → (N : ℚ) * Algebra.trace ℚ F ξ = ν ξ := by
     intro ξ hξ
     have h := hint ξ hξ
-    simp only [ν, dif_pos h]
+    simp only [ν, dite_eq_left h]
     exact h.choose_spec
   have hN0 : (N : ℂ) ≠ 0 := by exact_mod_cast hN.ne'
   have hgA : ∀ ξ, A ξ * Complex.exp (P * ((Algebra.trace ℚ F ξ : ℚ) : ℂ) * τ) = A ξ * q ^ ν ξ := by
@@ -353,7 +353,7 @@ private lemma hasSum_hilbertDiagonalTraceCoefficient_lemma_3 (F : Type) [Field F
     · simp [A, hξ]
     · have h := hν ξ hξ
       have h' : (N : ℂ) * ((Algebra.trace ℚ F ξ : ℚ) : ℂ) = (ν ξ : ℂ) := by exact_mod_cast h
-      rw [hq, ← Complex.exp_nat_mul, ← h', hP]
+      rw [hq, ← Complex.exp_natCast_mul, ← h', hP]
       congr 2
       field_simp
       done
@@ -370,7 +370,7 @@ private lemma hasSum_hilbertDiagonalTraceCoefficient_lemma_3 (F : Type) [Field F
     by_cases hξ : a ξ = 0
     · simp only [Set.indicator_apply, A, hξ, zero_mul, ite_self]
     · have h := hν ξ hξ
-      simp only [Set.indicator, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_setOf_eq, h]
+      simp only [Set.indicator, Set.mem_preimage, Set.mem_singleton_iff, Set.mem_ofPred_eq, h]
       norm_cast
   unfold _root_.GlobalTheory.HilbFam.ecoef
   rw [tsum_subtype, finsum_mem_def, hind]

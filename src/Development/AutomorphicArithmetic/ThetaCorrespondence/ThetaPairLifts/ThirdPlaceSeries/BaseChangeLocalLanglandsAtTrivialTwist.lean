@@ -800,18 +800,18 @@ theorem fV_continuous (Ad : GlobalTheory.HeightCounting.MtAd Y M) (i : Fin D.R.m
     (hρ : ∀ x, Continuous fun g => (R.cV i).ρ g x)
     (Fm : ↥(NG.AFall D.host.E D.R.nV (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.ρ)) :
     Continuous (fV Ad i Fm) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  haveI : IsTopologicalGroup (GA D (Vc D i)) :=
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have : IsTopologicalGroup (GA D (Vc D i)) :=
     inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig (Vc D i).gram))
   obtain ⟨N, hN, hlev⟩ := Fm.2.2
   let J : Subgroup (Bridge.Gf (Vc D i)) :=
     { carrier := {q | ∀ k, fFin Ad i Fm (k * q) = fFin Ad i Fm k}
-      mul_mem' := fun {a b} ha hb k => by simp only [Set.mem_setOf_eq] at ha hb ⊢; rw [← mul_assoc, hb, ha]
+      mul_mem' := fun {a b} ha hb k => by simp only [Set.mem_ofPred_eq] at ha hb ⊢; rw [← mul_assoc, hb, ha]
       one_mem' := fun k => by rw [mul_one]
       inv_mem' := fun {a} ha k => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [← ha (k * a⁻¹), inv_mul_cancel_right] }
   have hfJ : fFin Ad i Fm ∈ Bridge.AdForms ((finHom (Vc D i)).rangeRestrict.comp (GQ (Vc D i)).subtype)
       ((R.cV i).ρ.comp (GQ (Vc D i)).subtype) J 1 :=
@@ -1081,14 +1081,14 @@ theorem lamV_inv : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Typ
     simpa [valAct1_apply] using this
   have hV := hcore.models.νV i (t0 Y)
   have hWm := hcore.models.νW i
-  haveI : (R.νV i (t0 Y)).IsHaarMeasure := hV.1.1
-  haveI : (R.νV i (t0 Y)).IsMulRightInvariant :=
+  have : (R.νV i (t0 Y)).IsHaarMeasure := hV.1.1
+  have : (R.νV i (t0 Y)).IsMulRightInvariant :=
     GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D _ _ hV.1.1
-  haveI : (R.νW i).IsHaarMeasure := hWm.1.1
-  haveI : (R.νW i).IsMulRightInvariant :=
+  have : (R.νW i).IsHaarMeasure := hWm.1.1
+  have : (R.νW i).IsMulRightInvariant :=
     GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D _ _ hWm.1.1
-  haveI : Countable (Formalism.L2.Theta.GQ (Vc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Vc D i).gram
-  haveI : Countable (Formalism.L2.Theta.GQ (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Wc D i).gram
+  have : Countable (Formalism.L2.Theta.GQ (Vc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Vc D i).gram
+  have : Countable (Formalism.L2.Theta.GQ (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Wc D i).gram
   have inner : ∀ g₀, thIn (R.ωP i (t0 Y)) (RefTheta.fV Ad i) (R.νV i (t0 Y))
       (R.fdV i (t0 Y)) (valAct1 (RefTheta.omStd Ad i (t0 Y)) (h, g) φ) Fm' g₀ =
       thIn (R.ωP i (t0 Y)) (RefTheta.fV Ad i) (R.νV i (t0 Y))

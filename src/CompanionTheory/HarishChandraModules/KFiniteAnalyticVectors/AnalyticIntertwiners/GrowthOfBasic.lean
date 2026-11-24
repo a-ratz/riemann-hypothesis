@@ -136,7 +136,7 @@ theorem uIrr_of (hK : KFSm) (hC : CasScal) : UIrr := by
     obtain ⟨x, hx, hxe⟩ := Submodule.mem_map.1 h1
     refine ⟨Submodule.mem_map.2 ⟨x, hx.1, hxe⟩, ?_⟩
     exact hrange w
-  have hclosed : IsClosed (NT : Set H) := Submodule.closed_of_finiteDimensional NT
+  have hclosed : IsClosed (NT : Set H) := Submodule.isClosed_of_finiteDimensional NT
   have hsub : (P '' ((genSub (smE ε σ) V).map (smD ε σ).subtype : Set H)) ⊆ NT := by
     rintro _ ⟨_, ⟨w, hw, rfl⟩, rfl⟩
     exact hPN w (hgen hw)

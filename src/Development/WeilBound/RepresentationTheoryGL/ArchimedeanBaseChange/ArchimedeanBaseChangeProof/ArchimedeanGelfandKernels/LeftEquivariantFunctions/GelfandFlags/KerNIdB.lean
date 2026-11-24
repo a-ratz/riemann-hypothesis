@@ -107,7 +107,7 @@ theorem cptN (hLg : LgCpt) {N : Subgroup (G n)} (hNc : IsClosed (N : Set (G n)))
   hNc.isClosedEmbedding_subtypeVal.isCompact_preimage (hLg n R)
 
 theorem mul_memGL (u : G n) (y : Mat n) (hy : y ∈ GLs n) : u.val * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq] at hy ⊢
+  simp only [GLs, Set.mem_ofPred_eq] at hy ⊢
   rw [Matrix.det_mul]
   exact mul_ne_zero (by simpa [GLs] using memGL u) hy
 
@@ -116,12 +116,12 @@ theorem integrable_N (hLg : LgCpt) [MeasurableSpace (G n)] [BorelSpace (G n)] {N
     (h : Mat n → X) (hc : ContinuousOn h (GLs n)) (R : ℝ) (hR : ∀ y ∈ GLs n, R < lg y → h y = 0)
     (y : Mat n) (hy : y ∈ GLs n) : Integrable (fun u : N => h ((u : G n).val * y)) ν := by
   have hcont : Continuous (fun u : N => h ((u : G n).val * y)) :=
-    hc.comp_continuous ((Units.continuous_val.comp continuous_subtype_val).mul continuous_const)
+    hc.comp_continuous ((Units.continuous_val.comp continuous_subtypeVal).mul continuous_const)
       (fun u => mul_memGL _ y hy)
   refine hcont.integrable_of_hasCompactSupport ?_
   refine HasCompactSupport.intro (cptN hLg hNc (R + lg y)) ?_
   intro u hu
-  simp only [Set.mem_setOf_eq, not_le] at hu
+  simp only [Set.mem_ofPred_eq, not_le] at hu
   apply hR _ (mul_memGL _ y hy)
   have := lg_le_of_mul ((u : G n).val) y hy
   linarith

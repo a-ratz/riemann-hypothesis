@@ -151,7 +151,7 @@ theorem exists_sec_of_ample_sub_generated :
   have hfin := finiteCohTwists_of_isProjOver hf (GlobalTheory.structureModule X) hp
   obtain ⟨s, hs⟩ := IsGenerated.exists_mono_cutHom k (GlobalTheory.structureModule X) hB
   set G := cut (GlobalTheory.structureModule X) hB.isLB s with hG
-  haveI : IsFiniteQC G := isFiniteQC_cut (GlobalTheory.structureModule X) hB.isLB s
+  have : IsFiniteQC G := isFiniteQC_cut (GlobalTheory.structureModule X) hB.isLB s
   obtain ⟨t, ht⟩ := IsGenerated.exists_mono_cutHom k G hB
   have hGd : suppDim G ≤ (d : ℕ) := suppDim_cut_le _ hB.isLB s hsd
   have hcut := interNum_cons_eq_interNum_cut hB.isLB s (P := fun _ : Fin d => L) (fun _ => hL.isLB) hfin

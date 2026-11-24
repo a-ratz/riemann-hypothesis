@@ -152,7 +152,7 @@ theorem dc_core {Xs Ys : Type*} [NormedAddCommGroup Xs] [InnerProductSpace ℂ X
       (∀ c, (p c).eval (μ c : ℂ) = 0) → IsKHWVec ε A μ (ψ0 y - z) → False) :
     ∀ y ∈ S0, ψ0 y ∈ LX := by
   classical
-  haveI : CompleteSpace LX := FiniteDimensional.complete ℂ LX
+  have : CompleteSpace LX := FiniteDimensional.completeSpace ℂ LX
   have hcomm := fun a b (hab : ε a = ε b) x => starProjection_comm (S := LX) hU hLk hab x
   let ψ : Ys →ₗ[ℂ] Xs := ψ0 - (LX.starProjection : Xs →ₗ[ℂ] Xs) ∘ₗ ψ0
   have hψ : ∀ y, ψ y = ψ0 y - LX.starProjection (ψ0 y) := fun y => rfl
@@ -202,7 +202,7 @@ theorem dc_layer_map {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H
       simp only [LinearMap.comp_apply, LinearEquiv.coe_coe]
       rw [dc_tensX_apply, LinearEquiv.apply_symm_apply, hT a b hab]
   have h3 : FiniteDimensional ℂ ((tensSub (n := n) L).map ((dc_eqv (n := n) (D := ↥D)).symm : (Fin n → D) →ₗ[ℂ] dc_TX n D)) := by
-    haveI := dc_tensSub_fd (n := n) hLfd; infer_instance
+    have := dc_tensSub_fd (n := n) hLfd; infer_instance
   have key := dc_core (Xs := dc_TX n ↥D) (Ys := Fin n → ↥D) (A := dc_tensX dual E) (B := tensF dual E)
     (dc_tensX_isGlRep hE) (dc_tensX_isKUnitary hKU) h3 h4 (dc_tensSub_fd hVfd) (dc_tens_kStable dual hVk) _ h5 p hp
   intro y hy
@@ -302,7 +302,7 @@ theorem dc_ee_fin_stable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace �
     induction j with
     | zero => intro f hf; simpa using hf
     | succ j ih => intro f hf; rw [pow_succ', Module.End.mul_apply]; exact dc_eeF_mem dual _ (ih f hf)
-  haveI hLfd' : FiniteDimensional ℂ (tensSub (n := n) L) := dc_tensSub_fd hLfd
+  have hLfd' : FiniteDimensional ℂ (tensSub (n := n) L) := dc_tensSub_fd hLfd
   have hVg : V ≤ genSub E V := by unfold genSub; exact le_sInf fun T hT => hT.1
   have key : ∀ j, S0.map (EE ^ j) ≤ tensSub L := by
     intro j x hx

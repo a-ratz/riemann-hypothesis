@@ -73,7 +73,7 @@ private theorem hom_ext {l : ℕ} [Fact l.Prime] {k : Type} [CommRing k] [CharP 
 private theorem sqrt_discr {K : Type} [Field K] [NumberField K] (hK : Module.finrank ℚ K = 2) :
     ∃ δ : K, δ ^ 2 = (discr K : K) := by
   classical
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
   set b := NumberField.integralBasis K with hb
   have hcard : Fintype.card (Module.Free.ChooseBasisIndex ℤ (𝓞 K)) = Fintype.card Gal(K/ℚ) := by
     rw [← Module.finrank_eq_card_basis b, ← Nat.card_eq_fintype_card]
@@ -96,7 +96,7 @@ private theorem sqrt_discr {K : Type} [Field K] [NumberField K] (hK : Module.fin
 
 private theorem discr_neg {K : Type} [Field K] [NumberField K] (hK : Module.finrank ℚ K = 2) (h : IsTotallyComplex K) :
     discr K < 0 := by
-  haveI := h
+  have := h
   have h1 := NumberField.InfinitePlace.card_add_two_mul_card_eq_rank K
   rw [IsTotallyComplex.nrRealPlaces_eq_zero, hK] at h1
   have hc : NumberField.InfinitePlace.nrComplexPlaces K = 1 := by omega
@@ -168,11 +168,11 @@ private theorem kills_mono {Ω C : Type} [Field Ω] [CharZero Ω] [Monoid C] {M 
 private theorem cyc_ine (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime]
     (A : ValuationSubring Ω) (hA : ¬ A.valuation (l : Ω) < 1) {σ : G ℚ Ω} (hσ : σ ∈ Ine (F := ℚ) A) :
     cycZ ℚ Ω l σ = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hl1 : 1 ≤ A.valuation (l : Ω) := not_lt.mp hA
   have fix : ∀ (n : ℕ) (t : Ω), t ^ (l ^ n) = 1 → σ t = t := by
     intro n t ht
-    haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     have hker : σ ∈ (UpperTheory.V.Chr.cls ℚ Ω (l ^ n)).ker := by
       apply (UpperTheory.V.Chr.clsFacts ℚ Ω (l ^ n)).2.2.2.2 A
       · rw [Nat.cast_pow, map_pow, not_lt]
@@ -273,8 +273,8 @@ theorem UpperTheory.V.Fr.gen_gd :
       Hb_idx := ⟨0, by simp⟩
       Hb_l := fun _ _ => le_top
       teich := ?_ }
-  · haveI := c.dvr
-    haveI := c.fin
+  · have := c.dvr
+    have := c.fin
     exact (abelian₂.dvr_finite l c.O).2.1
   · have hl := (Fact.out : l.Prime).ne_zero
     have hN := NeZero.ne N
@@ -296,8 +296,8 @@ theorem UpperTheory.V.Fr.gen_gd :
         rw [hm, pow_mul, hζ, one_pow]
       have h1 : Chr.dirG ℚ Ω ψ s = 1 :=
         hψN s (hdiv N (Dvd.dvd.mul_right (Dvd.intro_left l rfl) _))
-      haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-      haveI : Fact (1 < l) := ⟨(Fact.out : l.Prime).one_lt⟩
+      have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+      have : Fact (1 < l) := ⟨(Fact.out : l.Prime).one_lt⟩
       have h2 : s ∈ (Chr.cls ℚ Ω l).ker := by
         rw [MonoidHom.mem_ker]
         apply (Chr.clsFacts ℚ Ω l).2.2.1

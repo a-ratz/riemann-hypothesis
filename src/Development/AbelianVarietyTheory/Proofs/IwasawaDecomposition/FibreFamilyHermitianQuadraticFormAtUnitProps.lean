@@ -92,8 +92,8 @@ theorem eq_at [T2Space V] [LocallyCompactSpace V] [SecondCountableTopology V] [B
     {fib fib' : X → Measure V} (hf : Measurable f) (hB : IsOpen B)
     (h : IsFibreFamily μ f id Set.univ ν B fib) (h' : IsFibreFamily μ f id Set.univ ν B fib')
     {β : X} (hβ : β ∈ B) : fib β = fib' β := by
-  haveI := finite_on_compacts h hβ
-  haveI := finite_on_compacts h' hβ
+  have := finite_on_compacts h hβ
+  have := finite_on_compacts h' hβ
   refine Measure.ext_of_integral_eq_on_compactlySupported_nnreal fun g => ?_
   set φ : V → ℝ := fun v => (g v : ℝ) with hφdef
   have hφ : Continuous φ := NNReal.continuous_coe.comp g.continuous
@@ -138,7 +138,7 @@ theorem continuous_qR {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
 theorem fibAt_basic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] [T2Space R] [LocallyCompactSpace R] [SecondCountableTopology R] [MeasurableSpace R] [BorelSpace R], Nice R → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (μ : Measure (Fin 1 → Fin M → R ⊗[F] E)) (ν : Measure R) (β : R) (m : Measure (Fin 1 → Fin M → R ⊗[F] E)), ν.IsAddHaarMeasure → IsUnit β → FibAt R σ J μ ν β m → m {X | qR R σ J (X 0) ≠ β} = 0 ∧ IsFiniteMeasureOnCompacts m ∧ ∀ m', FibAt R σ J μ ν β m' → m' = m := by
   intro F E _ _ _ _ _ σ R _ _ _ _ _ _ _ _ _ hN M J μ ν β m hν hβ hm
   obtain ⟨fib, h, rfl⟩ := hm
-  haveI := hN.2.2.1
+  have := hN.2.2.1
   have hB : IsOpen {c : R | IsUnit c} :=
     (IsOpenUnits.isOpenEmbedding_unitsVal (M := R)).isOpen_range
   refine ⟨?_, finite_on_compacts h hβ, ?_⟩

@@ -146,8 +146,8 @@ private abbrev Idx : Type := {E : IntermediateField K L // FiniteDimensional K E
 omit [Algebra A K] in
 private theorem idx_directed : IsDirected (Idx K L) (· ≤ ·) :=
   ⟨fun a b => by
-    haveI := a.2
-    haveI := b.2
+    have := a.2
+    have := b.2
     exact ⟨⟨a.1 ⊔ b.1, inferInstance⟩, le_sup_left (a := a.1), le_sup_right (b := b.1)⟩⟩
 
 private noncomputable def incl {E F : IntermediateField K L} (h : E ≤ F) :
@@ -170,10 +170,10 @@ private noncomputable def ringC : Cocone (ringD A K L) where
          naturality := fun _ _ _ => by ext; rfl }
 
 private theorem ringC_isColimit [Algebra.IsAlgebraic K L] : Nonempty (IsColimit (ringC A K L)) := by
-  haveI := idx_directed K L
-  haveI : Nonempty (Idx K L) := ⟨⟨⊥, inferInstance⟩⟩
-  haveI : IsFiltered (Idx K L) := inferInstance
-  haveI : ReflectsColimitsOfShape (Idx K L) (forget CommRingCat) :=
+  have := idx_directed K L
+  have : Nonempty (Idx K L) := ⟨⟨⊥, inferInstance⟩⟩
+  have : IsFiltered (Idx K L) := inferInstance
+  have : ReflectsColimitsOfShape (Idx K L) (forget CommRingCat) :=
     reflectsColimitsOfShape_of_reflectsIsomorphisms
   refine ⟨isColimitOfReflects (forget CommRingCat) ?_⟩
   refine Types.FilteredColimit.isColimitOf _ _ ?_ ?_
@@ -185,8 +185,8 @@ private theorem ringC_isColimit [Algebra.IsAlgebraic K L] : Nonempty (IsColimit 
       (isIntegral_algHom_iff (E.1.val.restrictScalars A) E.1.val.toRingHom.injective).1 x.2
     exact ⟨E, ⟨⟨x.1, hm⟩, hi⟩, rfl⟩
   · intro a b xa xb h
-    haveI := a.2
-    haveI := b.2
+    have := a.2
+    have := b.2
     refine ⟨⟨a.1 ⊔ b.1, inferInstance⟩, homOfLE (le_sup_left (a := a.1)),
       homOfLE (le_sup_right (b := b.1)), ?_⟩
     apply Subtype.ext
@@ -231,9 +231,9 @@ theorem UpperTheory.exists_finite_ext_pullback_integralClosure_eq_zero :
   intro h q _ A K _ _ _ _ _ hq m i hm x
   obtain ⟨-, -, -, -, -, -, -, -, -, -, hB1, -, -, -, hB5, -⟩ := h
   let L := AlgebraicClosure K
-  haveI : IsDirected (Idx K L) (· ≤ ·) := idx_directed K L
-  haveI : Nonempty (Idx K L) := ⟨⟨⊥, inferInstance⟩⟩
-  haveI : IsFiltered (Idx K L) := isFiltered_of_directed_le_nonempty _
+  have : IsDirected (Idx K L) (· ≤ ·) := idx_directed K L
+  have : Nonempty (Idx K L) := ⟨⟨⊥, inferInstance⟩⟩
+  have : IsFiltered (Idx K L) := isFiltered_of_directed_le_nonempty _
   obtain ⟨hc⟩ := ringC_isColimit A K L
   let j0 : Idx K L := ⟨⊥, inferInstance⟩
   have hqE : ∀ E : IntermediateField K L, IsUnit ((q : integralClosure A E)) := fun E => by
@@ -242,7 +242,7 @@ theorem UpperTheory.exists_finite_ext_pullback_integralClosure_eq_zero :
     simpa using hq.map (algebraMap A (integralClosure A L))
   have e1 := pull_of_comp q m i (algebraMap A (integralClosure A j0.1)) (toL A K L j0.1).toRingHom
     (algebraMap A (integralClosure A L)) (toL A K L j0.1).comp_algebraMap x
-  haveI := hB5 q (integralClosure A L) (aic A L) hqL m i hm
+  have := hB5 q (integralClosure A L) (aic A L) hqL m i hm
   have hzero : pull _ (spMap ((ringC A K L).ι.app j0).hom) _ m
       (pull _ (spMap (algebraMap A (integralClosure A j0.1))) _ m x) = 0 :=
     e1.trans (Subsingleton.elim _ _)
@@ -264,8 +264,8 @@ section -- clump:auto
 private theorem UpperTheory.finite_of_finite_comp_injective_noetherian {P B C : Type*} [CommRing P] [CommRing B] [CommRing C]
     [IsNoetherianRing P] (f : P →+* B) (g : B →+* C) (hg : Function.Injective g)
     (h : (g.comp f).Finite) : f.Finite := by
-  letI := f.toAlgebra
-  letI := (g.comp f).toAlgebra
+  let := f.toAlgebra
+  let := (g.comp f).toAlgebra
   have hC : Module.Finite P C := h
   let gl : B →ₗ[P] C :=
     { toFun := g
@@ -273,8 +273,8 @@ private theorem UpperTheory.finite_of_finite_comp_injective_noetherian {P B C : 
       map_smul' := fun r b => by
         simp only [Algebra.smul_def, RingHom.algebraMap_toAlgebra, map_mul, RingHom.comp_apply,
           RingHom.id_apply] }
-  haveI : IsNoetherian P C := isNoetherian_of_isNoetherianRing_of_finite P C
-  haveI : IsNoetherian P B := isNoetherian_of_injective gl hg
+  have : IsNoetherian P C := isNoetherian_of_isNoetherianRing_of_finite P C
+  have : IsNoetherian P B := isNoetherian_of_injective gl hg
   exact Module.IsNoetherian.finite P B
 
 private theorem UpperTheory.finite_iterateFrobenius_mvPolynomial_perfect (k : Type*) [Field k] (p : ℕ) [ExpChar k p] [PerfectRing k p]
@@ -301,10 +301,10 @@ private theorem UpperTheory.module_finite_integralClosure_of_frobenius_finite (P
     [ExpChar F p] (hσ : ∀ e, (iterateFrobenius P p e).Finite) :
     Module.Finite P (integralClosure P F) := by
   let E := separableClosure L F
-  haveI : FiniteDimensional E F := FiniteDimensional.right L E F
-  haveI : IsPurelyInseparable E F := separableClosure.isPurelyInseparable L F
-  haveI : ExpChar E p := IntermediateField.expChar' E p
-  haveI : IsScalarTower P E F := IsScalarTower.of_algebraMap_eq (fun r => by
+  have : FiniteDimensional E F := FiniteDimensional.right L E F
+  have : IsPurelyInseparable E F := separableClosure.isPurelyInseparable L F
+  have : ExpChar E p := IntermediateField.expChar' E p
+  have : IsScalarTower P E F := IsScalarTower.of_algebraMap_eq (fun r => by
     rw [IsScalarTower.algebraMap_apply P L E r, ← IsScalarTower.algebraMap_apply L E F,
       IsScalarTower.algebraMap_apply P L F])
   set e := IsPurelyInseparable.exponent E F
@@ -312,7 +312,7 @@ private theorem UpperTheory.module_finite_integralClosure_of_frobenius_finite (P
     obtain ⟨y, hy⟩ := IsPurelyInseparable.exponent_def' E p x
     rw [← hy]
     exact y.2
-  haveI : Module.Finite P (integralClosure P E) :=
+  have : Module.Finite P (integralClosure P E) :=
     IsIntegralClosure.finite P L E (integralClosure P E)
   have hq : p ^ e ≠ 0 := pow_ne_zero _ (expChar_pos F p).ne'
   let fr : integralClosure P F →+* integralClosure P E :=
@@ -363,33 +363,33 @@ theorem UpperTheory.module_finite_integralClosure_finiteExt_perfect :
   intros
   obtain ⟨s, g, hginj, hgfin⟩ := exists_finite_inj_algHom_of_fg k A
   obtain ⟨p, hp⟩ := ExpChar.exists k
-  letI : Algebra (MvPolynomial (Fin s) k) A := g.toRingHom.toAlgebra
-  haveI : Module.Finite (MvPolynomial (Fin s) k) A := hgfin
-  letI : Algebra (MvPolynomial (Fin s) k) F := ((algebraMap A F).comp g.toRingHom).toAlgebra
-  haveI : IsScalarTower (MvPolynomial (Fin s) k) A F := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra (MvPolynomial (Fin s) k) A := g.toRingHom.toAlgebra
+  have : Module.Finite (MvPolynomial (Fin s) k) A := hgfin
+  let : Algebra (MvPolynomial (Fin s) k) F := ((algebraMap A F).comp g.toRingHom).toAlgebra
+  have : IsScalarTower (MvPolynomial (Fin s) k) A F := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hAF : Function.Injective (algebraMap A F) := by
     rw [IsScalarTower.algebraMap_eq A K F]
     exact (algebraMap K F).injective.comp (IsFractionRing.injective A K)
-  haveI : FaithfulSMul A F := (faithfulSMul_iff_algebraMap_injective A F).mpr hAF
-  haveI : FaithfulSMul (MvPolynomial (Fin s) k) A :=
+  have : FaithfulSMul A F := (faithfulSMul_iff_algebraMap_injective A F).mpr hAF
+  have : FaithfulSMul (MvPolynomial (Fin s) k) A :=
     (faithfulSMul_iff_algebraMap_injective _ A).mpr hginj
-  haveI : FaithfulSMul (MvPolynomial (Fin s) k) F :=
+  have : FaithfulSMul (MvPolynomial (Fin s) k) F :=
     (faithfulSMul_iff_algebraMap_injective _ F).mpr (hAF.comp hginj)
-  letI : Algebra (FractionRing (MvPolynomial (Fin s) k)) F := FractionRing.liftAlgebra _ F
-  letI : Algebra (FractionRing A) F := FractionRing.liftAlgebra A F
-  letI : Algebra (FractionRing (MvPolynomial (Fin s) k)) (FractionRing A) :=
+  let : Algebra (FractionRing (MvPolynomial (Fin s) k)) F := FractionRing.liftAlgebra _ F
+  let : Algebra (FractionRing A) F := FractionRing.liftAlgebra A F
+  let : Algebra (FractionRing (MvPolynomial (Fin s) k)) (FractionRing A) :=
     FractionRing.liftAlgebra _ (FractionRing A)
-  haveI : FiniteDimensional (FractionRing (MvPolynomial (Fin s) k)) (FractionRing A) :=
+  have : FiniteDimensional (FractionRing (MvPolynomial (Fin s) k)) (FractionRing A) :=
     inferInstance
-  haveI : FiniteDimensional (FractionRing A) F := by
+  have : FiniteDimensional (FractionRing A) F := by
     refine Module.Finite.of_equiv_equiv (FractionRing.algEquiv A K).symm.toRingEquiv
       (RingEquiv.refl F) ?_
     apply IsLocalization.ringHom_ext (nonZeroDivisors A)
     ext a
     simp only [RingHom.comp_apply, RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv,
-      AlgEquiv.coe_ringEquiv, AlgEquiv.commutes, RingEquiv.refl_apply]
+      AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes, RingEquiv.refl_apply]
     rw [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply]
-  haveI : IsScalarTower (FractionRing (MvPolynomial (Fin s) k)) (FractionRing A) F := by
+  have : IsScalarTower (FractionRing (MvPolynomial (Fin s) k)) (FractionRing A) F := by
     apply IsScalarTower.of_algebraMap_eq'
     apply IsLocalization.ringHom_ext (nonZeroDivisors (MvPolynomial (Fin s) k))
     refine RingHom.ext fun r => ?_
@@ -399,15 +399,15 @@ theorem UpperTheory.module_finite_integralClosure_finiteExt_perfect :
       IsScalarTower.algebraMap_apply _ A (FractionRing A),
       ← IsScalarTower.algebraMap_apply A (FractionRing A) F,
       ← IsScalarTower.algebraMap_apply _ A F]
-  haveI : FiniteDimensional (FractionRing (MvPolynomial (Fin s) k)) F :=
+  have : FiniteDimensional (FractionRing (MvPolynomial (Fin s) k)) F :=
     Module.Finite.trans (FractionRing A) F
-  haveI : ExpChar A p := expChar_of_injective_algebraMap (algebraMap k A).injective p
-  haveI : ExpChar F p := expChar_of_injective_algebraMap hAF p
-  haveI : ExpChar (MvPolynomial (Fin s) k) p :=
+  have : ExpChar A p := expChar_of_injective_algebraMap (algebraMap k A).injective p
+  have : ExpChar F p := expChar_of_injective_algebraMap hAF p
+  have : ExpChar (MvPolynomial (Fin s) k) p :=
     expChar_of_injective_algebraMap (algebraMap k (MvPolynomial (Fin s) k)).injective p
   have hP := UpperTheory.module_finite_integralClosure_of_frobenius_finite (MvPolynomial (Fin s) k) (FractionRing (MvPolynomial (Fin s) k)) F p
     (UpperTheory.finite_iterateFrobenius_mvPolynomial_perfect k p (Fin s))
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin s) k) A := Algebra.IsIntegral.of_finite _ A
+  have : Algebra.IsIntegral (MvPolynomial (Fin s) k) A := Algebra.IsIntegral.of_finite _ A
   let φ : integralClosure (MvPolynomial (Fin s) k) F →ₗ[MvPolynomial (Fin s) k]
       integralClosure A F :=
     { toFun := fun x => ⟨x.1, x.2.tower_top⟩
@@ -415,7 +415,7 @@ theorem UpperTheory.module_finite_integralClosure_finiteExt_perfect :
       map_smul' := fun _ _ => rfl }
   have hφ : Function.Surjective φ := fun y =>
     ⟨⟨y.1, isIntegral_trans (R := MvPolynomial (Fin s) k) y.1 y.2⟩, rfl⟩
-  haveI : Module.Finite (MvPolynomial (Fin s) k) (integralClosure A F) :=
+  have : Module.Finite (MvPolynomial (Fin s) k) (integralClosure A F) :=
     Module.Finite.of_surjective φ hφ
   exact Module.Finite.of_restrictScalars_finite (MvPolynomial (Fin s) k) A (integralClosure A F)
 end -- clump:auto
@@ -470,8 +470,8 @@ private theorem locally_of_ringHom (Ω R : Type) [Field Ω] [IsAlgClosed Ω] [Co
     (ψ : Ω →+* R) (hft : ψ.FiniteType) (hic : IsIntegrallyClosed R)
     (hdim : ringKrullDim R ≤ 1) (hnf : ¬ IsField R) :
     RingHom.Locally (RingHom.IsStandardSmoothOfRelativeDimension 1) ψ := by
-  letI : Algebra Ω R := ψ.toAlgebra
-  haveI : Algebra.FiniteType Ω R := hft
+  let : Algebra Ω R := ψ.toAlgebra
+  have : Algebra.FiniteType Ω R := hft
   refine ⟨{t | RingHom.IsStandardSmoothOfRelativeDimension 1
     ((algebraMap R (Localization.Away t)).comp ψ)}, ?_, fun t ht => ht⟩
   by_contra hne
@@ -497,7 +497,7 @@ theorem UpperTheory.smooth_of_normal_curve_perfectField :
       RingHom.Locally (RingHom.IsStandardSmoothOfRelativeDimension 1)
         (c.appLE ⊤ V (by simp)).hom := by
     intro V hV a b ha hb hab
-    haveI : Nonempty V := ⟨⟨a, ha⟩⟩
+    have : Nonempty V := ⟨⟨a, ha⟩⟩
     have hdom : IsDomain Γ(C, V) := inferInstance
     let ι := (Scheme.ΓSpecIso (CommRingCat.of Ω)).commRingCatIsoToRingEquiv
     let ψ : Ω →+* Γ(C, V) := (c.appLE ⊤ V (by simp)).hom.comp ι.symm.toRingHom
@@ -516,8 +516,8 @@ theorem UpperTheory.smooth_of_normal_curve_perfectField :
       have hy : hV.fromSpec y ∈ V := by
         have : hV.fromSpec y ∈ Set.range hV.fromSpec := ⟨y, rfl⟩
         rwa [hV.range_fromSpec] at this
-      letI := TopCat.Presheaf.algebra_section_stalk C.presheaf ⟨hV.fromSpec y, hy⟩
-      haveI hloc : IsLocalization p.primeCompl (C.presheaf.stalk (hV.fromSpec y)) :=
+      let := TopCat.Presheaf.algebra_section_stalk C.presheaf ⟨hV.fromSpec y, hy⟩
+      have hloc : IsLocalization p.primeCompl (C.presheaf.stalk (hV.fromSpec y)) :=
         hV.isLocalization_stalk' y hy
       exact (hic (hV.fromSpec y)).of_equiv
         (IsLocalization.algEquiv p.primeCompl (C.presheaf.stalk (hV.fromSpec y))
@@ -527,7 +527,7 @@ theorem UpperTheory.smooth_of_normal_curve_perfectField :
       rw [← IsHomeomorph.topologicalKrullDim_eq _ hV.isoSpec.hom.homeomorph.isHomeomorph]
       exact (topologicalKrullDim_subspace_le C V).trans hdim.le
     · intro hf
-      letI := hf.toField
+      let := hf.toField
       have ha' : a ∈ Set.range hV.fromSpec := by rw [hV.range_fromSpec]; exact ha
       have hb' : b ∈ Set.range hV.fromSpec := by rw [hV.range_fromSpec]; exact hb
       obtain ⟨pa, rfl⟩ := ha'
@@ -589,7 +589,7 @@ private theorem objIso {C : Scheme.{0}} [IsIntegral C] (F : Type) [Field F] [Alg
     rw [GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Model.genericSpecMap_closedPoint]
     exact hη
   have key := GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Model.genericSpecMap_app_iso C F U hη hmem
-  letI : Algebra Γ(C, U) Γ(Spec (CommRingCat.of F), genericSpecMap C F ⁻¹ᵁ U) :=
+  let : Algebra Γ(C, U) Γ(Spec (CommRingCat.of F), genericSpecMap C F ⁻¹ᵁ U) :=
     ((genericSpecMap C F).app U).hom.toAlgebra
   let eR := ((Spec (CommRingCat.of F)).presheaf.mapIso (eqToIso
     (Scheme.preimage_eq_top_of_closedPoint_mem _ hmem).symm).op ≪≫
@@ -612,15 +612,15 @@ private theorem isFin {Ω : Type} [Field Ω] [IsAlgClosed Ω] {C : Scheme.{0}} [
     IsFinite (genericSpecMap C F).fromNormalization := by
   refine ⟨fun U hU => ?_⟩
   by_cases hN : (U : Set C).Nonempty
-  · haveI : Nonempty U := ⟨⟨hN.some, hN.some_mem⟩⟩
-    haveI : IsFractionRing Γ(C, U) C.functionField :=
+  · have : Nonempty U := ⟨⟨hN.some, hN.some_mem⟩⟩
+    have : IsFractionRing Γ(C, U) C.functionField :=
       functionField_isFractionRing_of_isAffineOpen C U hU
-    letI : Algebra Ω Γ(C, U) := (GlobalTheory.NormCurve.constHom c U).toAlgebra
-    haveI : Algebra.FiniteType Ω Γ(C, U) := GlobalTheory.NormCurve.finiteType_constHom c hU
-    letI : Algebra Γ(C, U) F :=
+    let : Algebra Ω Γ(C, U) := (GlobalTheory.NormCurve.constHom c U).toAlgebra
+    have : Algebra.FiniteType Ω Γ(C, U) := GlobalTheory.NormCurve.finiteType_constHom c hU
+    let : Algebra Γ(C, U) F :=
       ((algebraMap C.functionField F).comp (algebraMap Γ(C, U) C.functionField)).toAlgebra
-    haveI : IsScalarTower Γ(C, U) C.functionField F := IsScalarTower.of_algebraMap_eq' rfl
-    haveI : Module.Finite Γ(C, U) (integralClosure Γ(C, U) F) :=
+    have : IsScalarTower Γ(C, U) C.functionField F := IsScalarTower.of_algebraMap_eq' rfl
+    have : Module.Finite Γ(C, U) (integralClosure Γ(C, U) F) :=
       UpperTheory.module_finite_integralClosure_finiteExt_perfect Ω Γ(C, U) C.functionField F
     obtain ⟨E, hE⟩ := objIso F U hU
     have h1 : (genericSpecMap C F).fromNormalization.app U =
@@ -633,7 +633,7 @@ private theorem isFin {Ω : Type} [Field Ω] [IsAlgClosed Ω] {C : Scheme.{0}} [
   · have hb : U = ⊥ := TopologicalSpace.Opens.ext (Set.not_nonempty_iff_eq_empty.mp hN)
     subst hb
     have hb' : (genericSpecMap C F).fromNormalization ⁻¹ᵁ (⊥ : C.Opens) = ⊥ := by simp
-    haveI : Subsingleton Γ((genericSpecMap C F).normalization,
+    have : Subsingleton Γ((genericSpecMap C F).normalization,
         (genericSpecMap C F).fromNormalization ⁻¹ᵁ (⊥ : C.Opens)) :=
       CommRingCat.subsingleton_of_isTerminal
         ((genericSpecMap C F).normalization.sheaf.isTerminalOfEqEmpty hb')
@@ -646,25 +646,25 @@ private theorem stalkClosed {C : Scheme.{0}} [IsIntegral C] (F : Type) [Field F]
     IsIntegrallyClosed ((genericSpecMap C F).normalization.presheaf.stalk y) := by
   obtain ⟨U, hU, hxU, -⟩ := exists_isAffineOpen_mem_and_subset
     (x := (genericSpecMap C F).fromNormalization y) (U := ⊤) trivial
-  haveI : Nonempty U := ⟨⟨_, hxU⟩⟩
-  haveI : IsFractionRing Γ(C, U) C.functionField :=
+  have : Nonempty U := ⟨⟨_, hxU⟩⟩
+  have : IsFractionRing Γ(C, U) C.functionField :=
     functionField_isFractionRing_of_isAffineOpen C U hU
-  letI : Algebra Γ(C, U) F :=
+  let : Algebra Γ(C, U) F :=
     ((algebraMap C.functionField F).comp (algebraMap Γ(C, U) C.functionField)).toAlgebra
-  haveI : IsScalarTower Γ(C, U) C.functionField F := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsIntegrallyClosed (integralClosure Γ(C, U) F) :=
+  have : IsScalarTower Γ(C, U) C.functionField F := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsIntegrallyClosed (integralClosure Γ(C, U) F) :=
     integralClosure.isIntegrallyClosedOfFiniteExtension C.functionField
   obtain ⟨E, -⟩ := objIso F U hU
   have hV : IsAffineOpen ((genericSpecMap C F).fromNormalization ⁻¹ᵁ U) :=
     hU.preimage (genericSpecMap C F).fromNormalization
   have hy : y ∈ (genericSpecMap C F).fromNormalization ⁻¹ᵁ U := hxU
-  letI iA := TopCat.Presheaf.algebra_section_stalk (genericSpecMap C F).normalization.presheaf
+  let iA := TopCat.Presheaf.algebra_section_stalk (genericSpecMap C F).normalization.presheaf
     (⟨y, hy⟩ : (genericSpecMap C F).fromNormalization ⁻¹ᵁ U)
-  haveI := hV.isLocalization_stalk ⟨y, hy⟩
+  have := hV.isLocalization_stalk ⟨y, hy⟩
   let e := E.commRingCatIsoToRingEquiv
-  letI : Algebra (integralClosure Γ(C, U) F) ((genericSpecMap C F).normalization.presheaf.stalk y) :=
+  let : Algebra (integralClosure Γ(C, U) F) ((genericSpecMap C F).normalization.presheaf.stalk y) :=
     ((algebraMap _ _).comp e.symm.toRingHom).toAlgebra
-  haveI := IsLocalization.isLocalization_of_base_ringEquiv
+  have := IsLocalization.isLocalization_of_base_ringEquiv
     (hV.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl
     ((genericSpecMap C F).normalization.presheaf.stalk y) e
   refine isIntegrallyClosed_of_isLocalization (R := integralClosure Γ(C, U) F) _
@@ -690,12 +690,12 @@ private theorem dimOne {Ω : Type} [Field Ω] {C : Scheme.{0}} [IsIntegral C] (c
     ⟨(genericSpecMap C F).toNormalization p0, trivial⟩ fun y _ => ?_
   obtain ⟨U, hU, hxU, -⟩ := exists_isAffineOpen_mem_and_subset
     (x := (genericSpecMap C F).fromNormalization y) (U := ⊤) trivial
-  haveI : Nonempty U := ⟨⟨_, hxU⟩⟩
-  haveI : IsFractionRing Γ(C, U) C.functionField :=
+  have : Nonempty U := ⟨⟨_, hxU⟩⟩
+  have : IsFractionRing Γ(C, U) C.functionField :=
     functionField_isFractionRing_of_isAffineOpen C U hU
-  letI : Algebra Γ(C, U) F :=
+  let : Algebra Γ(C, U) F :=
     ((algebraMap C.functionField F).comp (algebraMap Γ(C, U) C.functionField)).toAlgebra
-  haveI : IsScalarTower Γ(C, U) C.functionField F := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower Γ(C, U) C.functionField F := IsScalarTower.of_algebraMap_eq' rfl
   obtain ⟨E, -⟩ := objIso F U hU
   have hV : IsAffineOpen ((genericSpecMap C F).fromNormalization ⁻¹ᵁ U) :=
     hU.preimage (genericSpecMap C F).fromNormalization
@@ -703,7 +703,7 @@ private theorem dimOne {Ω : Type} [Field Ω] {C : Scheme.{0}} [IsIntegral C] (c
     ((genericSpecMap C F).fromNormalization ⁻¹ᵁ U).isOpen, hxU, ?_⟩
   have hinj : Function.Injective (algebraMap Γ(C, U) F) :=
     (algebraMap C.functionField F).injective.comp (IsFractionRing.injective Γ(C, U) C.functionField)
-  haveI : FaithfulSMul Γ(C, U) (integralClosure Γ(C, U) F) :=
+  have : FaithfulSMul Γ(C, U) (integralClosure Γ(C, U) F) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr fun a b h => hinj (congrArg Subtype.val h)
   rw [GlobalTheory.topologicalKrullDim_eq_of_isEmbedding hV.fromSpec.isOpenEmbedding.isEmbedding
     (by rw [hV.range_fromSpec, Set.inter_univ])]
@@ -745,17 +745,17 @@ theorem UpperTheory.exists_finite_surjective_curve_cover_of_functionField_extens
           ∃ e : (γ ⁻¹ᵁ U).toScheme ≅ Sp (integralClosure Γ(C, U) F),
             (γ ∣_ U) ≫ hU.isoSpec.hom = e.hom ≫ Spec.map (CommRingCat.ofHom (algebraMap Γ(C, U) (integralClosure Γ(C, U) F))) := by
   intro Ω _ _ C c hc hI F _ _ _
-  haveI : IsProper c := hc.2.1
-  haveI : QuasiSeparatedSpace C := quasiSeparatedSpace_of_quasiSeparated c
-  haveI : IsFinite (genericSpecMap C F).fromNormalization := isFin c F
+  have : IsProper c := hc.2.1
+  have : QuasiSeparatedSpace C := quasiSeparatedSpace_of_quasiSeparated c
+  have : IsFinite (genericSpecMap C F).fromNormalization := isFin c F
   refine ⟨(genericSpecMap C F).normalization, (genericSpecMap C F).fromNormalization,
     ⟨inferInstance, inferInstance, ?_⟩, surjNorm F, inferInstance, ?_⟩
   · exact UpperTheory.smooth_of_normal_curve_perfectField Ω ((genericSpecMap C F).fromNormalization ≫ c) inferInstance inferInstance
       (stalkClosed F) (dimOne c hc F)
   · intro U hU hne alg tower
-    haveI := hne
-    letI := alg
-    haveI := tower
+    have := hne
+    let := alg
+    have := tower
     obtain ⟨E, hE⟩ := objIso F U hU
     have hV : IsAffineOpen ((genericSpecMap C F).fromNormalization ⁻¹ᵁ U) :=
       hU.preimage (genericSpecMap C F).fromNormalization
@@ -908,7 +908,7 @@ theorem UpperTheory.exists_mayerVietoris_preimage_of_restrictions_vanish :
             pull R (sch.map (f ∣_ (U ⊔ V))) F (n + 1) x = 0 := by
   intro R _ F S U V n x hx1 hx2
   obtain ⟨d, hd, hnat⟩ := mayerVietoris R F
-  haveI := sch_pres
+  have := sch_pres
   have hc := cov R (rfl : U ⊔ V = U ⊔ V) le_sup_left le_sup_right
   obtain ⟨c, hc'⟩ := ((hd _ _ hc n).2.2 x).1 ⟨hx1, hx2⟩
   have P := (pb (rfl : U ⊓ V = U ⊓ V) inf_le_left inf_le_right
@@ -1064,9 +1064,9 @@ theorem killAff (hy : Hyps) (q : ℕ) [NeZero q] (Ω : Type) [Field Ω] [IsAlgCl
     {C : Scheme.{0}} (c : C ⟶ Sp Ω) (hc : IsCurve c) (U : C.Opens) (hU : IsAffineOpen U) (hn : Nonempty U)
     (m i : ℤ) (hm : 0 < m) (x : Ht q (sch.obj U.toScheme) m i) :
     ∃ (C' : Scheme.{0}) (γ : C' ⟶ C), IsCurve (γ ≫ c) ∧ Surjective γ ∧ IsFinite γ ∧ pl q i (γ ∣_ U) m x = 0 := by
-  haveI : IsIntegral C := hc.1
-  haveI : Nonempty U := hn
-  haveI := functionField_isFractionRing_of_isAffineOpen C U hU
+  have : IsIntegral C := hc.1
+  have : Nonempty U := hn
+  have := functionField_isFractionRing_of_isAffineOpen C U hU
   have hqU : IsUnit (q : Γ(C, U)) := by
     have := hq.map ((Scheme.ΓSpecIso (CommRingCat.of Ω)).inv ≫ c.appLE ⊤ U (by simp)).hom
     simpa using this
@@ -1100,13 +1100,13 @@ theorem kill (hy : Hyps) (hH0 : H0TwistOverClosedField) (q : ℕ) [NeZero q] (Ω
       obtain ⟨n, rfl⟩ : ∃ n : ℤ, m = n + 1 := ⟨m - 1, by ring⟩
       obtain ⟨C1, γ1, hc1, hs1, hf1, h1⟩ := ih c hc W hW (n + 1) i hm
         (pl q i (C.homOfLE (le_sup_left : W ≤ W ⊔ U)) (n + 1) x)
-      haveI := hs1
-      haveI := hf1
+      have := hs1
+      have := hf1
       obtain ⟨C2, γ2, hc2, hs2, hf2, h2⟩ := killAff hy q Ω hq (γ1 ≫ c) hc1 (γ1 ⁻¹ᵁ U) (hU.preimage γ1)
         (AffU.nonempty (AffU.pre γ1 (AffU.one U hU hn))) (n + 1) i hm
         (pl q i (C1.homOfLE (pm γ1 (le_sup_right : U ≤ W ⊔ U))) (n + 1) (pl q i (γ1 ∣_ (W ⊔ U)) (n + 1) x))
-      haveI := hs2
-      haveI := hf2
+      have := hs2
+      have := hf2
       have hcγ : IsCurve ((γ2 ≫ γ1) ≫ c) := by simpa only [Category.assoc] using hc2
       have hW2 : AffU k ((γ2 ≫ γ1) ⁻¹ᵁ W ⊓ (γ2 ≫ γ1) ⁻¹ᵁ U) := AffU.pre (γ2 ≫ γ1) (AffU.inter c hc hW hU hn)
       have hA : pl q i (C2.homOfLE (pm (γ2 ≫ γ1) (le_sup_left : W ≤ W ⊔ U))) (n + 1)
@@ -1130,8 +1130,8 @@ theorem kill (hy : Hyps) (hH0 : H0TwistOverClosedField) (q : ℕ) [NeZero q] (Ω
           ∃ (C' : Scheme.{0}) (γ : C' ⟶ C), IsCurve (γ ≫ c) ∧ Surjective γ ∧ IsFinite γ ∧
             pl q i (γ ∣_ (W ⊔ U)) (n + 1) x = 0 := by
         intro C3 f hc3 hs3 hf3 h3
-        haveI := hs3
-        haveI := hf3
+        have := hs3
+        have := hf3
         refine ⟨C3, f ≫ γ2 ≫ γ1, by simpa only [Category.assoc] using hc3, inferInstance, inferInstance, ?_⟩
         rw [morphismRestrict_comp f (γ2 ≫ γ1) (W ⊔ U)]
         exact (pl_comp q i (f ∣_ ((γ2 ≫ γ1) ⁻¹ᵁ (W ⊔ U))) ((γ2 ≫ γ1) ∣_ (W ⊔ U)) (n + 1) x).trans h3
@@ -1139,8 +1139,8 @@ theorem kill (hy : Hyps) (hH0 : H0TwistOverClosedField) (q : ℕ) [NeZero q] (Ω
       · obtain ⟨C3, f, hc3, hs3, hf3, h3⟩ := ih ((γ2 ≫ γ1) ≫ c) hcγ _ hW2 n i hn0 y
         refine fin C3 f (by simpa only [Category.assoc] using hc3) hs3 hf3 ?_
         exact hyv f 0 0 (by rw [map_zero, map_zero, sub_zero]; exact h3)
-      · haveI : IsIntegral C2 := hc2.1
-        haveI : Nonempty (((γ2 ≫ γ1) ⁻¹ᵁ W ⊓ (γ2 ≫ γ1) ⁻¹ᵁ U : C2.Opens)) := AffU.nonempty hW2
+      · have : IsIntegral C2 := hc2.1
+        have : Nonempty (((γ2 ≫ γ1) ⁻¹ᵁ W ⊓ (γ2 ≫ γ1) ⁻¹ᵁ U : C2.Opens)) := AffU.nonempty hW2
         obtain ⟨z, hz⟩ := ((hH0 hy q Ω hq i).2
           (X := ((γ2 ≫ γ1) ⁻¹ᵁ W ⊓ (γ2 ≫ γ1) ⁻¹ᵁ U : C2.Opens).toScheme)
           (Scheme.Opens.ι _ ≫ (γ2 ≫ γ1) ≫ c)).2 y
@@ -1157,7 +1157,7 @@ theorem UpperTheory.Cb.curve_cohomology_killed_by_finite_cover :
   intro hH0 hy q _ Ω _ _ hq C c hc m i hm x
   have hI := hc.1
   have hP := hc.2.1
-  haveI : CompactSpace C := QuasiCompact.compactSpace_of_compactSpace c
+  have : CompactSpace C := QuasiCompact.compactSpace_of_compactSpace c
   obtain ⟨k, hk⟩ := UpperTheory.curve_cohomology_killed_by_finite_cover.exists_affU (C := C)
   obtain ⟨C', γ, h1, h2, h3, h4⟩ := UpperTheory.curve_cohomology_killed_by_finite_cover.kill hy hH0 q Ω hq k c hc ⊤ hk m i hm (pl q i (⊤ : C.Opens).ι m x)
   refine ⟨C', γ, h1, h2, ?_⟩
@@ -1167,7 +1167,7 @@ theorem UpperTheory.Cb.curve_cohomology_killed_by_finite_cover :
     rintro _ rfl
     rw [← Scheme.topIso_hom]
     infer_instance
-  haveI := hι (γ ⁻¹ᵁ (⊤ : C.Opens)) rfl
+  have := hι (γ ⁻¹ᵁ (⊤ : C.Opens)) rfl
   exact UpperTheory.curve_cohomology_killed_by_finite_cover.pl_eq_zero_of_iso q i ((γ ⁻¹ᵁ (⊤ : C.Opens)).ι) m _ h4
 
 end

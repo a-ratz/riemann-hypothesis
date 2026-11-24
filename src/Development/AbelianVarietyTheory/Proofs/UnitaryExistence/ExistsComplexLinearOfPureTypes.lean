@@ -63,8 +63,8 @@ theorem _root_.GlobalTheory.CompRat.exists_real_extension_of_lattice {A V W : Ty
     (hd : DiscreteTopology P.range) (hs : Submodule.span ℝ (Set.range P) = ⊤) (Q : A →+ W) :
     ∃ r : V →ₗ[ℝ] W, ∀ a, r (P a) = Q a := by
   set L : Submodule ℤ V := P.range.toIntSubmodule with hL
-  haveI : DiscreteTopology L := hd
-  haveI : IsZLattice ℝ L := ⟨by simpa [hL] using hs⟩
+  have : DiscreteTopology L := hd
+  have : IsZLattice ℝ L := ⟨by simpa [hL] using hs⟩
   let b := Module.Free.chooseBasis ℤ L
   let e : A ≃+ P.range := AddMonoidHom.ofInjective hi
   let r : V →ₗ[ℝ] W := (b.ofZLatticeBasis ℝ L).constr ℝ (fun i => Q (e.symm (b i)))

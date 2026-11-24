@@ -183,7 +183,7 @@ private theorem wtdeg_lemma_20 {σ : Type} (e : σ →₀ ℕ) : Finsupp.weight 
 private theorem hX_lemma_22 {σ : Type} (i : σ) : (X i : MvPolynomial σ S).IsHomogeneous 1 := by
   classical
   intro e he
-  rw [coeff_X'] at he
+  rw [coeff_X] at he
   split_ifs at he with h
   · rw [← h]
     simp [Finsupp.weight_apply, Finsupp.sum_single_index]
@@ -328,12 +328,12 @@ private theorem coeffDiag_lemma_5 {σ : Type} (s : σ → S) (h : MvPolynomial �
   rw [map_sum, coeff_sum]
   simp only [monoDiag_lemma_4, coeff_monomial]
   rw [Finset.sum_eq_single e]
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
   · intro b _ hb
-    rw [if_neg hb]
+    rw [ite_eq_right hb]
   · intro he
     simp only [MvPolynomial.mem_support_iff, not_not] at he
-    rw [if_pos rfl, he, mul_zero]
+    rw [ite_eq_left rfl, he, mul_zero]
 
 private theorem cancel_lemma_6 {a : ℕ} (ha : a ≠ 1) {c : S} (h : (2 : S) ^ a * c = 2 * c) : c = 0 := by
   have hq : ((2 : ℚ) ^ a - 2) ≠ 0 := by
@@ -466,7 +466,7 @@ theorem stepNo2 {P : MvPolynomial (Fin 2 × Fin d) S} {m j : ℕ} (hj1 : 1 ≤ j
   · exfalso
     have hxj : Finsupp.degree x = j := le_antisymm hge hle
     have hcx := congrArg (AddMonoidAlgebra.coeff · x) h0
-    rw [coeff_homogeneousComponent, if_pos hxj, AddMonoidAlgebra.coeff_zero] at hcx
+    rw [coeff_homogeneousComponent, ite_eq_left hxj, AddMonoidAlgebra.coeff_zero] at hcx
     exact (MvPolynomial.mem_support_iff.1 hx) hcx
 
 theorem eq_one_of_cube {P : MvPolynomial (Fin 2 × Fin d) S} {m : ℕ}
@@ -549,7 +549,7 @@ theorem const_one {P : MvPolynomial (Fin 2 × Fin d) S} {m : ℕ}
 
 private theorem coeffXX_lemma_15 (c : S) (a b : Fin 2 × Fin d) (e : Fin 2 × Fin d →₀ ℕ) :
     AddMonoidAlgebra.coeff (C c * (X a * X b)) e = if Finsupp.single a 1 + Finsupp.single b 1 = e then c else 0 := by
-  rw [X, X, monomial_mul, C_mul_monomial, coeff_monomial, mul_one, mul_one]
+  rw [X, X, monomial_mul_monomial, C_mul_monomial, coeff_monomial, mul_one, mul_one]
 
 private theorem one_lemma_16 (f : Fin d → ℕ) (hs : ∑ i, f i = 1) (i0 : Fin d) (h0 : f i0 ≠ 0) (i : Fin d) :
     f i = if i = i0 then 1 else 0 := by
@@ -604,9 +604,9 @@ theorem bilin_of_biadd {h : MvPolynomial (Fin 2 × Fin d) S}
           simp [Finsupp.single_apply]
         · simp [Finsupp.single_apply, hii, Ne.symm hii]
     subst hE
-    rw [Finset.sum_eq_single i0, Finset.sum_eq_single l0, if_pos rfl]
+    rw [Finset.sum_eq_single i0, Finset.sum_eq_single l0, ite_eq_left rfl]
     · intro l _ hl
-      rw [if_neg]
+      rw [ite_eq_right]
       intro heq
       have := congrArg (fun f => f ((1 : Fin 2), l)) heq
       simp [Finsupp.single_apply, Ne.symm hl] at this
@@ -614,7 +614,7 @@ theorem bilin_of_biadd {h : MvPolynomial (Fin 2 × Fin d) S}
       exact absurd (Finset.mem_univ _) h'
     · intro i _ hi
       refine Finset.sum_eq_zero (fun l _ => ?_)
-      rw [if_neg]
+      rw [ite_eq_right]
       intro heq
       have := congrArg (fun f => f ((0 : Fin 2), i)) heq
       simp [Finsupp.single_apply, Ne.symm hi] at this

@@ -78,7 +78,7 @@ theorem field_point_comp_eq_iff {Z Y : Scheme.{0}} (g g' : Z ⟶ Y) {k : Type} [
     exact (Scheme.Hom.comp_apply _ _ t).trans (Scheme.fromSpecResidueField_apply w _)
   have : Flat (Spec.map φ) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := φ.hom.toAlgebra
+    let := φ.hom.toAlgebra
     exact RingHom.flat_algebraMap_iff.mpr inferInstance
   have : Surjective (Spec.map φ) := ⟨fun t ↦ ⟨default, Subsingleton.elim _ _⟩⟩
   have : Epi (Spec.map φ) := Flat.epi_of_flat_of_surjective _

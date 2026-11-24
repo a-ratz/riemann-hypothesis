@@ -100,15 +100,15 @@ theorem isCompact_GL {A : Type} [CommRing A] [TopologicalSpace A] [IsTopological
     (h1.prod (h1.image MulOpposite.continuous_op))
   convert h2 using 1
   ext g
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod, Set.mem_image,
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod, Set.mem_image,
     MulOpposite.op_inj, exists_eq_right, forall_and]
 
 theorem exists_compact_denom (D : D7) (d : ℕ) (hd : 0 < d) :
     ∃ C : Set (Af D.host.F ⊗[D.host.F] D.host.E), IsCompact C ∧ ∀ y, d • y ∈ intAE D → y ∈ C := by
   classical
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (Af D.host.F) _
   let b := RingOfIntegers.basis D.host.E
   let O : AddSubgroup (Af D.host.F) :=
@@ -150,12 +150,12 @@ theorem exists_compact_denom (D : D7) (d : ℕ) (hd : 0 < d) :
 
 theorem exists_finset_cover : ∀ (D : D7) (V : HSp D) (U : Subgroup (GA D V)), IsOpen (U : Set (GA D V)) → ∀ d : ℕ, 0 < d → ∃ S : Finset (GA D V), ∀ k ∈ GfC V, BddDen V d k → ∃ x ∈ S, x⁻¹ * k ∈ U ∧ x⁻¹ * k ∈ GfC V := by
   intro D V U hU d hd
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
   obtain ⟨e0⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (AF D.host.F)
-  haveI : T2Space (AE D) := e0.isEmbedding.t2Space
+  have : T2Space (AE D) := e0.isEmbedding.t2Space
   obtain ⟨C, hC, hCd⟩ := exists_compact_denom D d hd
   obtain ⟨e, he, -, hc⟩ := GlobalTheory.AdSplit.exists_adele_equiv D.host.F D.host.E
   let C' : Fin V.rank → Fin V.rank → Set (AE D) := fun i j =>

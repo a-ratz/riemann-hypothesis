@@ -118,7 +118,7 @@ theorem exists_sandwich (I : AutInst) : ∃ c : ℕ, 1 ≤ c ∧ (∀ l ∈ I.L,
   obtain ⟨d, w, hw⟩ := Submodule.fg_iff_exists_fin_generating_family.1 I.L_fg
   obtain ⟨c₁, hc₁, h₁⟩ := exists_denD fun p : Fin d × Fin I.n => w p.1 p.2
   choose e he he' using fun j : Fin I.n => TraceIntegralityAlt.exists_nat_smul_mem_L I (Pi.single j 1)
-  have hp : 1 ≤ ∏ j, e j := Finset.one_le_prod' fun j _ => he j
+  have hp : 1 ≤ ∏ j, e j := Finset.one_le_prod fun j _ => he j
   refine ⟨c₁ * ∏ j, e j, Nat.mul_pos hc₁ hp, fun l hl i => ?_, fun u hu => ?_⟩
   · rw [← hw] at hl
     obtain ⟨a, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun _).1 hl

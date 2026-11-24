@@ -90,7 +90,7 @@ theorem inflation_mem_one_cocycles (hN : ∀ σ ∈ N, ∀ m, rho σ m = m) (c' 
 
 theorem apply_eq_zero_of_mem_H1ur (hN : ∀ σ ∈ N, ∀ m, rho σ m = m) (c : Z1 rho)
     (hc : (Submodule.Quotient.mk c : H1 rho) ∈ H1ur rho N) (σ : G) (hσ : σ ∈ N) : c.1 σ = 0 := by
-  have h1 : (Submodule.Quotient.mk (restrictCocycles1 rho N.subtype continuous_subtype_val c) : H1 (rho.comp N.subtype)) = 0 := hc
+  have h1 : (Submodule.Quotient.mk (restrictCocycles1 rho N.subtype continuous_subtypeVal c) : H1 (rho.comp N.subtype)) = 0 := hc
   rw [Submodule.Quotient.mk_eq_zero] at h1
   obtain ⟨m, hm⟩ := (mem_contCoboundaries1 _ _).1 h1
   have h3 : c.1 σ = rho σ m - m := hm ⟨σ, hσ⟩
@@ -163,7 +163,7 @@ theorem card_H1ur (hrho : ContAction rho) (hN : ∀ σ ∈ N, ∀ m, rho σ m = 
         (torsion_of_finite (M := M) m)
       have hZ := inflation_mem_one_cocycles hN c' hc'
       refine ⟨⟨Submodule.Quotient.mk ⟨_, hZ⟩, ?_⟩, ?_⟩
-      · change (Submodule.Quotient.mk (restrictCocycles1 rho N.subtype continuous_subtype_val ⟨_, hZ⟩) :
+      · change (Submodule.Quotient.mk (restrictCocycles1 rho N.subtype continuous_subtypeVal ⟨_, hZ⟩) :
           H1 (rho.comp N.subtype)) = 0
         rw [Submodule.Quotient.mk_eq_zero]
         refine (mem_contCoboundaries1 _ _).2 ⟨0, fun σ => ?_⟩

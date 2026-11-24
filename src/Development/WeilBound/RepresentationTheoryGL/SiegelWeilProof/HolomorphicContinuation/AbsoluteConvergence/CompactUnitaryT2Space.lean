@@ -75,7 +75,7 @@ theorem clm_circleIntegral {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℂ
 theorem banachHol : BanachHol := by
   intro X _ _ U F hU hF hd
   have hG : Continuous (fun p : U × X => F p.1.1 p.2) :=
-    hF.comp_continuous ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+    hF.comp_continuous ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
       (fun p => ⟨p.1.2, mem_univ _⟩)
   let K : C(U, C(X, ℂ)) := (⟨_, hG⟩ : C(U × X, ℂ)).curry
   classical
@@ -84,11 +84,11 @@ theorem banachHol : BanachHol := by
     intro z hz x
     simp [Φ, K, hz]
   have hc : ContinuousOn Φ U := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     convert K.continuous using 1
     funext z
     show Φ z = K z
-    simp only [Φ, dif_pos z.2, Subtype.coe_eta]
+    simp only [Φ, dite_eq_left z.2, Subtype.coe_eta]
   refine ⟨Φ, ?_, hΦ⟩
   intro w hw
   apply DifferentiableAt.differentiableWithinAt
@@ -133,9 +133,9 @@ theorem dslopeFam : DslopeFam := by
   rintro ⟨z₀, x₀⟩ hp
   have hz₀ : z₀ ∈ U := hp.1
   obtain ⟨K, hKc, hKn⟩ := exists_compact_mem_nhds x₀
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   have hF' : ContinuousOn (fun y : ℂ × K => F y.1 y.2) (U ×ˢ univ) :=
-    hF.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)).continuousOn
+    hF.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)).continuousOn
       (fun y hy => ⟨hy.1, mem_univ _⟩)
   obtain ⟨Φ, hΦd, hΦ⟩ := banachHol (↥K) U (fun z (y : ↥K) => F z y) hU hF' (fun y => hd y)
   have hD : ContinuousOn (dslope Φ s₀) U := ((differentiableOn_dslope hU0).mpr hΦd).continuousOn
@@ -152,11 +152,11 @@ theorem dslopeFam : DslopeFam := by
     · rw [dslope_of_ne _ hzs, dslope_of_ne _ hzs]
       simp [slope_def_field, hΦ z hz y, hΦ s₀ hs y]
   have hcont : ContinuousOn (fun y : ℂ × X => dslope (fun z => F z y.2) s₀ y.1) (U ×ˢ K) := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hDr : Continuous (fun q : ↥(U ×ˢ K) => dslope Φ s₀ q.1.1) :=
-      hD.comp_continuous (continuous_fst.comp continuous_subtype_val) (fun q => q.2.1)
+      hD.comp_continuous (continuous_fst.comp continuous_subtypeVal) (fun q => q.2.1)
     have hKr : Continuous (fun q : ↥(U ×ˢ K) => (⟨q.1.2, q.2.2⟩ : K)) :=
-      (continuous_snd.comp continuous_subtype_val).subtype_mk _
+      (continuous_snd.comp continuous_subtypeVal).subtype_mk _
     convert continuous_eval.comp (hDr.prodMk hKr) using 1
     funext q
     exact (hval q.1.1 q.2.1 ⟨q.1.2, q.2.2⟩).symm
@@ -197,12 +197,12 @@ theorem lam_cont (hBH : BanachHol) (hFL : FactorL) (hG : GlobData ε c sL ρ G P
   obtain ⟨L, hL⟩ := hFL G (invSub Γ) l C hCc (fun F hF => hF.1)
     (fun a F hF F' hF' => hG.Λadd l hl a F F' hF.1 hF'.1 hF.2 hF'.2)
     (fun F hF M hM => hCb F M hF.1 hF.2 hM)
-  haveI : CompactSpace C := isCompact_iff_compactSpace.mp hCc
+  have : CompactSpace C := isCompact_iff_compactSpace.mp hCc
   have hFcont : ∀ z ∈ B, Continuous (F z) := by
     intro z hzB
     exact hFc.comp_continuous (continuous_const.prodMk continuous_id) (fun g => ⟨hzB, mem_univ g⟩)
   obtain ⟨Φ, hΦd, hΦ⟩ := hBH C B (fun z x => F z x) hB
-    (hFc.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)).continuousOn
+    (hFc.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)).continuousOn
       (fun y hy => ⟨hy.1, mem_univ _⟩))
     (fun x => hFh x)
   have hfeq : ∀ z ∈ B, l (F z) = L (Φ z) := by
@@ -349,9 +349,9 @@ theorem top_theta [MeasurableSpace (KR n)] [BorelSpace (KR n)] [CompactSpace (KR
     have hcont : Continuous (fun z : KR n × (Fin n → Fin n → ℝ) =>
         (F0 p q e (z.1 : GR n))⁻¹ * (Φ ((z.1 : GR n) * a * nb z.2 * b) * ψ z.2)) := by
       refine Continuous.mul ?_ (Continuous.mul ?_ (hψc.comp continuous_snd))
-      · exact ((continuous_weight_factor hD p q e).comp (continuous_subtype_val.comp continuous_fst)).inv₀
+      · exact ((continuous_weight_factor hD p q e).comp (continuous_subtypeVal.comp continuous_fst)).inv₀
           (fun z => spherical_section_ne_zero hD p q e _)
-      · exact hΦ.comp ((((continuous_subtype_val.comp continuous_fst).mul continuous_const).mul
+      · exact hΦ.comp ((((continuous_subtypeVal.comp continuous_fst).mul continuous_const).mul
           (hnbc.comp continuous_snd)).mul continuous_const)
     have hsupp : HasCompactSupport (fun z : KR n × (Fin n → Fin n → ℝ) =>
         (F0 p q e (z.1 : GR n))⁻¹ * (Φ ((z.1 : GR n) * a * nb z.2 * b) * ψ z.2)) := by
@@ -665,12 +665,12 @@ private theorem vacOut_of'_lemma (n : ℕ) : CompactSpace (KR n) := by
 
 theorem vacOut_of' (hD : CayleyBlocksInvertible) (hLO : LocOp) (hHP : HolParam) (hTS : ThSph) : VacOut := by
   intro m n ε c t p q e sL ρ hL hGS G _ _ _ _ _ _ Pp Γ ι s₀ Ht sec I Λ hG
-  haveI := vacOut_of'_lemma n
-  letI : MeasurableSpace (KR n) := borel _
-  haveI : BorelSpace (KR n) := ⟨rfl⟩
+  have := vacOut_of'_lemma n
+  let : MeasurableSpace (KR n) := borel _
+  have : BorelSpace (KR n) := ⟨rfl⟩
   let μ : Measure (KR n) := Measure.haarMeasure ⊤
-  haveI : μ.IsHaarMeasure := by infer_instance
-  haveI : IsProbabilityMeasure μ := ⟨by simpa using Measure.haarMeasure_self (G := KR n) (K₀ := ⊤)⟩
+  have : μ.IsHaarMeasure := by infer_instance
+  have : IsProbabilityMeasure μ := ⟨by simpa using Measure.haarMeasure_self (G := KR n) (K₀ := ⊤)⟩
   obtain ⟨ψ, a, b, nb, cz, hψ, hnb, hnbc, hcz, hcz0, hid⟩ := hLO n p q e hGS μ
   obtain ⟨U, d, E, σ, hU, hR, hs, hd, hEd, hEc, hEi, hEs⟩ := hG.eis
   have hψc := hψ.1

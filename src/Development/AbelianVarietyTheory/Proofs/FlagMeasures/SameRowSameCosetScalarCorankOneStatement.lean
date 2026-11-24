@@ -94,7 +94,7 @@ lemma Xa_of_ge {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) {j : ℕ} (h : D.R
   unfold FlagG.Xa FlagG.X
   congr 1
   ext v
-  simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range]
   constructor
   · rintro ⟨i, -, rfl⟩; exact ⟨i, rfl⟩
   · rintro ⟨i, rfl⟩; exact ⟨i, lt_of_lt_of_le i.2 h, rfl⟩
@@ -329,7 +329,7 @@ theorem scalar_of_same_coset : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u 
   refine ⟨?_, ?_⟩
   · show s0T t t' = 1
     unfold s0T
-    rw [if_pos ⟨hlam, hlam'⟩]
+    rw [ite_eq_left ⟨hlam, hlam'⟩]
     exact hs0
   · show scalT t t'
     exact ⟨⟨hlam, hlam'⟩, hs0, hsc⟩

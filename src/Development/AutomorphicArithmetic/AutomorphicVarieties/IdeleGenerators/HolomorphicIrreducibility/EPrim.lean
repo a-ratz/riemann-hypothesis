@@ -46,9 +46,9 @@ theorem UpperTheory.V.Sd.ePrim :
   intro l M w φ θ χ D
   have hM := D.one_lt
   have hw := D.prime
-  haveI : NeZero M := ⟨by omega⟩
-  haveI : NeZero w := ⟨hw.ne_zero⟩
-  haveI : NeZero (M * w) := ⟨mul_ne_zero (NeZero.ne M) (NeZero.ne w)⟩
+  have : NeZero M := ⟨by omega⟩
+  have : NeZero w := ⟨hw.ne_zero⟩
+  have : NeZero (M * w) := ⟨mul_ne_zero (NeZero.ne M) (NeZero.ne w)⟩
   set A := DirichletCharacter.changeLevel (dvd_mul_right M w) φ with hA
   set B := DirichletCharacter.changeLevel (dvd_mul_left w M) θ with hB
   have hχ : χ = A * B := by

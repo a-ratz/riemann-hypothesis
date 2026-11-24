@@ -72,7 +72,7 @@ theorem hasDerivAt_of_bound (γ : ℝ → 𝓢(V, ℂ)) (b v : 𝓢(V, ℂ))
     ext x
     have hx := SchwartzMap.norm_le_seminorm ℂ (γ 0 - b) x
     have h2 : ‖(γ 0 - b) x‖ = 0 := le_antisymm (hx.trans h1) (norm_nonneg _)
-    rw [norm_eq_zero, SchwartzMap.sub_apply, sub_eq_zero] at h2
+    rw [norm_eq_zero, sub_apply, sub_eq_zero] at h2
     exact h2
   subst h0
   obtain ⟨s, C, -, hC⟩ := Seminorm.bound_of_continuous (schwartz_withSeminorms ℂ V ℂ)
@@ -81,7 +81,7 @@ theorem hasDerivAt_of_bound (γ : ℝ → 𝓢(V, ℂ)) (b v : 𝓢(V, ℂ))
   have hb : ∀ t : ℝ, |t| ≤ 1 → ‖T (γ t - γ 0 - (t : ℂ) • v)‖ ≤ (C * ∑ p ∈ s, |K p|) * t ^ 2 := by
     intro t ht
     have h1 := hC (γ t - γ 0 - (t : ℂ) • v)
-    simp only [Seminorm.comp_apply, coe_normSeminorm, ContinuousLinearMap.coe_coe, Seminorm.smul_apply,
+    simp only [Seminorm.comp_apply, coe_normSeminorm, ContinuousLinearMap.coe_coe, smul_apply,
       NNReal.smul_def, smul_eq_mul] at h1
     refine h1.trans ?_
     rw [mul_assoc]
@@ -189,7 +189,7 @@ theorem hasTemperateGrowth_phase {V : Type} [NormedAddCommGroup V] [NormedSpace 
     Function.HasTemperateGrowth (fun x => Complex.exp (-(2 * Real.pi * Complex.I) * ((t * L x + t ^ 2 * c : ℝ) : ℂ))) := by
   have e1 : (fun x : V => -(t * L x + t ^ 2 * c)) = ⇑(-(t • L)) + fun _ => -(t ^ 2 * c) := by
     funext x
-    simp only [Pi.add_apply, ContinuousLinearMap.neg_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [Pi.add_apply, neg_apply, smul_apply, smul_eq_mul]
     ring
   have h1 : Function.HasTemperateGrowth fun x : V => -(t * L x + t ^ 2 * c) := by
     rw [e1]
@@ -286,13 +286,13 @@ theorem derEx : GlobalTheory.RealLift.DerEx := by
       (1 / 2 * Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (x₁ u ⬝ᵥ y u)) f T
     rw [hT]
     refine (h.congr_deriv ?_).congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => ?_)
-    · simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply]
+    · simp only [sub_apply, smul_apply]
     · simp only
       rw [rho_pureA d ψ hψ u t f g, hT]
   · have htg : Function.HasTemperateGrowth fun x : κ → mixedEmbedding.mixedSpace F => ((trL (y u) x : ℝ) : ℂ) :=
       (Complex.ofRealCLM.comp (trL (y u))).hasTemperateGrowth
-    simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, SchwartzMap.sub_apply,
-      SchwartzMap.smul_apply, LineDeriv.lineDerivOpCLM_apply, SchwartzMap.lineDerivOp_apply_eq_fderiv,
+    simp only [sub_apply, smul_apply, sub_apply,
+      smul_apply, LineDeriv.lineDerivOpCLM_apply, SchwartzMap.lineDerivOp_apply_eq_fderiv,
       SchwartzMap.smulLeftCLM_apply_apply htg, smul_eq_mul]
     simp only [trL_apply, dotProduct, x₁, y]
     ring

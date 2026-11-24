@@ -319,14 +319,14 @@ theorem exists_aeval_lapOp_eq_zero (φ : Sm E a) (hA : IsAutForm φ) {d : ℕ}
   classical
   set Ω := omegaOp (E := E) (a := a) (⇑b) ε with hΩ
   set W := Submodule.span ℂ (Set.range fun k => cptRep E a k φ) with hWdef
-  haveI : FiniteDimensional ℂ W := hA.kfin
+  have : FiniteDimensional ℂ W := hA.kfin
   have hZ : Ω ∈ Zalg E a := by
     rw [hΩ, _root_.GlobalTheory.CompanionTheory.HCRep.TraceCas.omegaOp_eq_two_cas  E a d b ε hε horth]
     refine Subalgebra.smul_mem _ (Subalgebra.sum_mem _ fun w _ => Subalgebra.add_mem _ ?_ ?_) _
     · exact _root_.GlobalTheory.CompanionTheory.Inh.CapelliCasimir.cas_mem_Zalg E a _
     · exact _root_.GlobalTheory.CompanionTheory.Inh.CapelliCasimir.cas_mem_Zalg E a _
   set Vz := Submodule.span ℂ ((fun z : Module.End ℂ (Sm E a) => z φ) '' Zalg E a) with hVz
-  haveI : FiniteDimensional ℂ Vz := hA.zfin
+  have : FiniteDimensional ℂ Vz := hA.zfin
   have hVs : ∀ w ∈ Vz, Ω w ∈ Vz := by
     intro w hw
     refine Submodule.span_induction (p := fun w _ => Ω w ∈ Vz) ?_ ?_ ?_ ?_ hw

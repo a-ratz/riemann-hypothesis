@@ -216,7 +216,7 @@ theorem cocycle_at {V : J → A.left.Opens} {φ : ∀ a b, Γ(A.left, V a ⊓ V 
       valR P.x _ (φ a b) + valR P.x _ (φ b c) = valR P.x _ (φ a c))
     {C : Type} [CommRing C] (x : Sp C ⟶ A.left) {a b c : J} (ha : ⊤ ≤ x ⁻¹ᵁ V a) (hb : ⊤ ≤ x ⁻¹ᵁ V b)
     (hc : ⊤ ≤ x ⁻¹ᵁ V c) : valR x _ (φ a b) + valR x _ (φ b c) = valR x _ (φ a c) := by
-  letI : Algebra K C := (Spec.preimage (x ≫ A.hom)).hom.toAlgebra
+  let : Algebra K C := (Spec.preimage (x ≫ A.hom)).hom.toAlgebra
   exact hφ a b c ⟨C, x, (congrArg (x ≫ ·) (Category.comp_id _)).trans (Spec.map_preimage _).symm⟩ ha hb hc
 
 variable [GrpObj A]
@@ -345,7 +345,7 @@ theorem deriv_cocycle_isCoboundary : ∀ (K : Type) [Field K] (A : Over (Sp K)) 
       have e : q = p := Subsingleton.elim (α := ↥(Sp K)) q p
       rw [e]; exact hc⟩
   have hvc : ⊤ ≤ v.left ⁻¹ᵁ V c₀ := tangent_in hv hc₀
-  haveI := hA.proper
+  have := hA.proper
   have hsep : IsSeparated A.hom := inferInstance
   have hqc : QuasiCompact A.hom := inferInstance
   obtain ⟨Ψ, hΨ⟩ := GlobalTheory.KuennethOne.kuenneth_injective K A A η[A] η[A] hsep hqc hsep hqc

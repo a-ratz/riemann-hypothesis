@@ -604,7 +604,7 @@ theorem relNull_cast {K : Type} [CommRing K] {Y : Scheme.{0}} (q : Y ⟶ Spec (C
 theorem relKillOf : TopRes → FormUniq → OmRes → RelKillOf := by
   intro hTop hFU hOR hSL hCD hZR hAO hON hAR hFL hDW hDL hFC hC1 hDC hCK K _ _ W Z Y q _ _ i π _ D d hd hB r hr hc1 a n z hz hzr
   obtain ⟨B⟩ := hB
-  haveI := B.closed
+  have := B.closed
   obtain ⟨m, U, σ, hσ, hU, haff, hcov⟩ := hDC K W Z Y q i π D d B
   obtain ⟨-, hQ, -⟩ := hSL K (pullback i π) Y Y (π ≫ q) (pullback.snd i π) (𝟙 Y)
   exact relNull_cast (π ≫ q) _ _ _ _ r z

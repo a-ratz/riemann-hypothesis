@@ -100,8 +100,8 @@ theorem diag_of_upT_of_preserves {n : ℕ} (d : Fin n → ℂ) (hd : ∀ a, d a 
 
   have hleft : diagonal d * bᴴ * diagonal d * b = 1 := by
     rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc bᴴ, h, hDD]
-  letI : Invertible b.det := (Ne.isUnit hb.1).invertible
-  letI : Invertible b := Matrix.invertibleOfDetInvertible b
+  let : Invertible b.det := (Ne.isUnit hb.1).invertible
+  let : Invertible b := Matrix.invertibleOfDetInvertible b
   have hinv : b⁻¹ = diagonal d * bᴴ * diagonal d := Matrix.inv_eq_left_inv hleft
 
   have hbt : Matrix.BlockTriangular b id := fun i j hij => hb.2 i j hij
@@ -248,10 +248,10 @@ lemma decomp {H x : Mt n} {q : ℕ} (h : OrthFr H q x) (Z : Mt n) :
     ext a c
     simp only [hX, Matrix.add_apply, mul_diagonal, diagonal_mul, conjTranspose_apply, of_apply, Matrix.zero_apply]
     rcases lt_trichotomy a c with hac | hac | hac
-    · rw [if_pos hac, if_neg (not_lt.2 hac.le), if_pos hac]
+    · rw [ite_eq_left hac, ite_eq_right (not_lt.2 hac.le), ite_eq_left hac]
       linear_combination (-(s c * star (Y c a))) * hs2 a
     · subst hac; simp
-    · rw [if_neg (not_lt.2 hac.le), if_pos hac, if_pos hac, star_neg, star_mul, star_mul, star_star, hs3, hs3]
+    · rw [ite_eq_right (not_lt.2 hac.le), ite_eq_left hac, ite_eq_left hac, star_neg, star_mul, star_mul, star_star, hs3, hs3]
       linear_combination (-(s a * Y a c)) * hs2 c
   refine ⟨x * X * x⁻¹, ?_, Y - X, ?_, ?_⟩
   · change (x * X * x⁻¹)ᴴ * H + H * (x * X * x⁻¹) = 0
@@ -388,7 +388,7 @@ lemma upT_mul {b b' : Mt n} (hb : UpT b) (hb' : UpT b') : UpT (b * b') :=
 
 lemma upT_inv {b : Mt n} (hb : UpT b) : UpT b⁻¹ := by
   refine ⟨(isUnit_nonsing_inv_det _ hb.1.isUnit).ne_zero, fun _ _ h => ?_⟩
-  letI := invertibleOfIsUnitDet b hb.1.isUnit
+  let := invertibleOfIsUnitDet b hb.1.isUnit
   exact blockTriangular_inv_of_blockTriangular (upT_tri hb) h
 
 lemma upT_one : UpT (1 : Mt n) := ⟨by simp, fun _ _ h => one_apply_ne h.ne'⟩
@@ -403,7 +403,7 @@ lemma upT_mul_diag {b b' : Mt n} (hb : UpT b) (hb' : UpT b') (a : Fin n) : (b * 
 
 lemma upT_diag_ne {b : Mt n} (hb : UpT b) (a : Fin n) : b a a ≠ 0 := by
   have := hb.1
-  rw [det_of_upperTriangular (upT_tri hb)] at this
+  rw [det_of_isUpperTriangular (upT_tri hb)] at this
   exact Finset.prod_ne_zero_iff.1 this a (Finset.mem_univ a)
 
 variable {ι : Type} [Fintype ι] [DecidableEq ι]

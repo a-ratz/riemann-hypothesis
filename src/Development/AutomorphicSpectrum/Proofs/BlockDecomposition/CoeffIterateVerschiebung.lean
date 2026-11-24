@@ -116,7 +116,7 @@ theorem sum_teich {ι : Type} [Fintype ι] (e : ι → A.A) (he : CompleteOrthog
     ∑ i, WittVector.teichmuller l (e i) = (1 : A.W) := by
   rcases subsingleton_or_nontrivial A.A with h | h
   · exact WittVector.ext fun _ => Subsingleton.elim _ _
-  · haveI : CharP A.A l := (CharP.charP_iff_prime_eq_zero Fact.out).2 A.natCast_l
+  · have : CharP A.A l := (CharP.charP_iff_prime_eq_zero Fact.out).2 A.natCast_l
     exact sum_teichmuller e he
 
 theorem acr_ext {ι : Type} [Fintype ι] (e : ι → A.A) (he : CompleteOrthogonalIdempotents e) {x y : A.Acr n}
@@ -132,7 +132,7 @@ theorem acr_ext {ι : Type} [Fintype ι] (e : ι → A.A) (he : CompleteOrthogon
     _ = y := by rw [hs, one_mul]
 
 theorem exists_cast : ∃ c : ZMod (l ^ n) →+* A.Acr n, ∀ a, c a = (a.val : A.Acr n) := by
-  haveI : CharP (A.Acr n) (ringChar (A.Acr n)) := ringChar.charP _
+  have : CharP (A.Acr n) (ringChar (A.Acr n)) := ringChar.charP _
   have hd : ringChar (A.Acr n) ∣ l ^ n :=
     (CharP.cast_eq_zero_iff (A.Acr n) (ringChar (A.Acr n)) (l ^ n)).1 (by
       rw [Nat.cast_pow]

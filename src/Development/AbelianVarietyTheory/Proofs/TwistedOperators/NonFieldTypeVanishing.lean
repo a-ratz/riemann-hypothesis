@@ -261,10 +261,10 @@ variable {D : D7} (V : HSp D)
 theorem continuous_tensFlip :
     letI := Formalism.BasicNotions.tensTopL (F := D.host.F) (E := D.host.E) (AF D.host.F)
     Continuous (tensFlip D) := by
-  letI := Formalism.BasicNotions.tensTopL (F := D.host.F) (E := D.host.E) (AF D.host.F)
-  letI : Algebra (AF D.host.F) (D.host.E ⊗[D.host.F] AF D.host.F) := Algebra.TensorProduct.rightAlgebra
-  haveI : IsModuleTopology (AF D.host.F) (D.host.E ⊗[D.host.F] AF D.host.F) := ⟨rfl⟩
-  haveI : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  let := Formalism.BasicNotions.tensTopL (F := D.host.F) (E := D.host.E) (AF D.host.F)
+  let : Algebra (AF D.host.F) (D.host.E ⊗[D.host.F] AF D.host.F) := Algebra.TensorProduct.rightAlgebra
+  have : IsModuleTopology (AF D.host.F) (D.host.E ⊗[D.host.F] AF D.host.F) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
   let L : D.host.E ⊗[D.host.F] AF D.host.F →ₗ[AF D.host.F] AF D.host.F ⊗[D.host.F] D.host.E :=
     { toFun := tensFlip D
       map_add' := fun x y => (tensFlip D).map_add x y
@@ -276,17 +276,17 @@ theorem continuous_tensFlip :
 theorem continuous_centFlip (γ : GF V) :
     letI := Formalism.BasicNotions.tensTopL (F := D.host.F) (E := D.host.E) (AF D.host.F)
     Continuous (centFlip V γ) := by
-  letI := Formalism.BasicNotions.tensTopL (F := D.host.F) (E := D.host.E) (AF D.host.F)
+  let := Formalism.BasicNotions.tensTopL (F := D.host.F) (E := D.host.E) (AF D.host.F)
   have hf : Continuous (tensFlip D) := continuous_tensFlip
   have hbc : Continuous (Formalism.UG.bc (n := Fin V.rank) (tensFlip D).toRingHom) :=
     Units.continuous_iff.2 ⟨Units.continuous_val.matrix_map hf, Units.continuous_coe_inv.matrix_map hf⟩
   refine Continuous.subtype_mk ?_ _
   refine (GlobalTheory.AdelicU.isEmbedding_matHom (AF D.host.F) D.sp.cm.sig V.gram).continuous_iff.2 ?_
-  exact hbc.comp continuous_subtype_val
+  exact hbc.comp continuous_subtypeVal
 
 theorem compactSpace_cent (γ : GF V) (hc : GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.AdelicCompact D.sp.cm.sig V.gram γ.1) :
     CompactSpace (cent (rat V γ) ⧸ (GQ V).subgroupOf (cent (rat V γ))) := by
-  letI := Formalism.BasicNotions.tensTopL (F := D.host.F) (E := D.host.E) (AF D.host.F)
+  let := Formalism.BasicNotions.tensTopL (F := D.host.F) (E := D.host.E) (AF D.host.F)
   have hc' : CompactSpace (GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.centPts D.sp.cm.sig V.gram γ.1 (AF D.host.F) ⧸
       ((GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensorForms.centRat D.sp.cm.sig V.gram γ.1).map
         (Formalism.UG.bc (Formalism.UG.inclE (F := D.host.F) (AF D.host.F)))).subgroupOf
@@ -309,14 +309,14 @@ theorem compactSpace_cent (γ : GF V) (hc : GlobalTheory.IndefiniteRowSideFullHe
 variable {D : D7}
 
 theorem countable_GF (V : HSp D) : Countable (GF V) := by
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin V.rank) (Fin V.rank) D.host.E) :=
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin V.rank) (Fin V.rank) D.host.E) :=
     inferInstanceAs (Countable (Fin V.rank → Fin V.rank → D.host.E))
-  haveI : Countable (GL (Fin V.rank) D.host.E) := Units.val_injective.countable
+  have : Countable (GL (Fin V.rank) D.host.E) := Units.val_injective.countable
   exact Subtype.countable
 
 theorem countable_GQ (V : HSp D) : Countable (GQ V) := by
-  haveI := countable_GF V
+  have := countable_GF V
   refine Function.Surjective.countable (f := fun δ : GF V => (⟨rat V δ, Subgroup.mem_subgroupOf.2
     (Subgroup.mem_map.2 ⟨δ, δ.2, rfl⟩)⟩ : GQ V)) fun x => ?_
   obtain ⟨δ, hδ, e⟩ := Subgroup.mem_map.1 (Subgroup.mem_subgroupOf.1 x.2)
@@ -326,11 +326,11 @@ theorem covol_lt_top : GlobalTheory.IndefiniteRowSideFullHecke.CentralizerTensor
   intro hR D V γ hγ k Kf _ _ he hf dt _ 𝓣 h𝓣
   have hreg := GlobalTheory.ConjLevi.RegularData.isRegular_of_isRegSS γ hγ
   have hc := (hR.2 D.host.F D.host.E (Fin V.rank) D.sp.cm.sig V.gram γ.1 hreg k Kf he).2 hf
-  haveI := compactSpace_cent V γ hc
-  haveI : LocallyCompactSpace (cent (rat V γ)) := (isClosed_cent (rat V γ)).locallyCompactSpace
+  have := compactSpace_cent V γ hc
+  have : LocallyCompactSpace (cent (rat V γ)) := (isClosed_cent (rat V γ)).locallyCompactSpace
   obtain ⟨K, hK, hcov⟩ := exists_compact_cover ((GQ V).subgroupOf (cent (rat V γ)))
-  haveI := countable_GQ V
-  haveI : Countable ((GQ V).subgroupOf (cent (rat V γ))) :=
+  have := countable_GQ V
+  have : Countable ((GQ V).subgroupOf (cent (rat V γ))) :=
     Function.Injective.countable (f := fun x : (GQ V).subgroupOf (cent (rat V γ)) => (⟨x.1.1, x.2⟩ : GQ V))
       fun a b h => by
         have e := Subtype.mk.inj h
@@ -468,7 +468,7 @@ theorem rank_factorIdem {γ : GL (Fin n) E} (hA : ClauseAlg σ J γ) (hP : Claus
     rw [this]; exact hbij.comp (TensorProduct.comm F E P).bijective
   have hι : Function.Injective (ι.baseChange E) := by
     have h0 : Function.Injective ι := e.symm.injective.comp (Pi.single_injective i)
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_preserves_injective_linearMap ι h0
   have hΦ : Function.Injective Φ := hv.1.comp (hψb.1.comp hι)
   have hΦt : ∀ (a : E) (x : K i), Φ (a ⊗ₜ x) =
@@ -667,8 +667,8 @@ theorem exists_weight_nt (T N : Subgroup H) (hT : IsClosed (T : Set H)) (hN : Is
     (dn : Measure N) [dn.IsHaarMeasure] [dn.IsMulRightInvariant] :
     ∃ β : H → ℝ≥0∞, Measurable β ∧ (∀ x, β x ≠ ∞) ∧ (∀ n ∈ N, ∀ x, β (n * x) = β x) ∧
       ∀ x, ∫⁻ t : T, β (t * x) ∂dt = 1 := by
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
   set j : N × T → H := fun p => (p.1 : H) * p.2 with hjdef
   have hjc : Continuous j := hj.continuous
   let K := CompactExhaustion.choice H
@@ -774,9 +774,9 @@ theorem quotInt_eq_zero_of_integral_coset_eq_zero : ∀ (H : Type) [Group H] [To
     [dn.IsMulRightInvariant] (φ : H → ℂ), Measurable φ → LeftInv T φ →
     Integrable (descend T φ) (quotMeas T dt dh) → (∀ x, ∫ n : N, φ (n * x) ∂dn = 0) → quotInt T dt dh φ = 0 := by
   intro H _ _ _ _ _ _ _ _ T N hT hN hc hnorm hj dh _ dt _ dn _ _ φ hφ hφT hint h0
-  haveI : dt.IsMulRightInvariant := isMulRightInvariant_of_isMulCommutative dt
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : dt.IsMulRightInvariant := isMulRightInvariant_of_isMulCommutative dt
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
   obtain ⟨β, hβm, hβf, hβN, hβ1⟩ := exists_weight_nt T N hT hN hnorm hj dt dn
   have hν : quotMeas T dt dh = (dh.withDensity β).map (mk T) :=
     (isQuotMeasure_quotMeas dt dh hT).eq_map hβm hβ1
@@ -950,12 +950,12 @@ theorem isClosedEmbedding_mul [TopologicalSpace k] [IsTopologicalRing k] [T2Spac
     · rintro ⟨⟨n, t⟩, rfl⟩
       refine ⟨⟨t, t.2, ?_⟩, ?_⟩
       · simp only [Units.embedProduct_apply, (hdiag n t).1, (hdiag n t).2]
-      · simp only [Set.mem_setOf_eq, (hdiag n t).2]
+      · simp only [Set.mem_ofPred_eq, (hdiag n t).2]
         rw [← Units.val_mul, mul_inv_cancel_right]
         exact (hN _).1 n.2
     · rintro ⟨⟨t, ht, he⟩, hg⟩
       simp only [Units.embedProduct_apply, Prod.mk.injEq, MulOpposite.op_inj] at he
-      simp only [Set.mem_setOf_eq, ← he.2, ← Units.val_mul] at hg
+      simp only [Set.mem_ofPred_eq, ← he.2, ← Units.val_mul] at hg
       exact ⟨(⟨g * t⁻¹, (hN _).2 hg⟩, ⟨t, ht⟩), by simp⟩
   refine ⟨⟨hind, hinj⟩, ?_⟩
   rw [hrange]
@@ -1087,13 +1087,13 @@ theorem integral_twist [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLo
     (hf : ∀ (ν : Measure N) [ν.IsHaarMeasure] (x y : GL (Fin r) k), ∫ u : N, f (x * u * y) ∂ν = 0)
     {γ : GL (Fin r) k} (hγ : IsRegSS γ.1) (hγε : γ.1 * ε = ε * γ.1) (dn : Measure N) [dn.IsHaarMeasure]
     (x : GL (Fin r) k) : ∫ n : N, f (((n : GL (Fin r) k) * x)⁻¹ * γ * (n * x)) ∂dn = 0 := by
-  haveI : T2Space k := GlobalTheory.LocAtTopology.t2Space_of_nonarchimedeanLocalField k
-  haveI : SecondCountableTopology k := GlobalTheory.LocAtTopology.secondCountable_localField k
+  have : T2Space k := GlobalTheory.LocAtTopology.t2Space_of_nonarchimedeanLocalField k
+  have : SecondCountableTopology k := GlobalTheory.LocAtTopology.secondCountable_localField k
   have hNc : IsClosed (N : Set (GL (Fin r) k)) := by
     have : (N : Set (GL (Fin r) k)) = {g | ε * (g.1 - 1) * (1 - ε) = g.1 - 1} := Set.ext fun g => hN g
     rw [this]
     exact isClosed_eq (by fun_prop) (by fun_prop)
-  haveI : LocallyCompactSpace N := hNc.locallyCompactSpace
+  have : LocallyCompactSpace N := hNc.locallyCompactSpace
   have hg' : γ⁻¹.1 * ε = ε * γ⁻¹.1 := (Commute.units_inv_left (u := γ) hγε).eq
   have hmem : ∀ n ∈ N, γ⁻¹ * n⁻¹ * γ * n ∈ N := fun n hn => by
     have := conj_mem hN hg' (inv_mem hn)
@@ -1151,7 +1151,7 @@ theorem integral_twist [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLo
       continuous_invFun := hom.continuous_invFun }
   have he : ∀ n : N, ((e n : N) : GL (Fin r) k) = γ⁻¹ * (n : GL (Fin r) k)⁻¹ * γ * n := fun n => rfl
   have hemb : MeasurableEmbedding e := e.toHomeomorph.measurableEmbedding
-  haveI : (dn.map e).IsHaarMeasure := MulEquiv.isHaarMeasure_map dn e.toMulEquiv e.continuous e.symm.continuous
+  have : (dn.map e).IsHaarMeasure := MulEquiv.isHaarMeasure_map dn e.toMulEquiv e.continuous e.symm.continuous
   calc ∫ n : N, f (((n : GL (Fin r) k) * x)⁻¹ * γ * (n * x)) ∂dn
       = ∫ n : N, f (x⁻¹ * γ * ((e n : N) : GL (Fin r) k) * x) ∂dn := by
         refine integral_congr_ae (Filter.Eventually.of_forall fun n => ?_)
@@ -1166,21 +1166,21 @@ end GlobalTheory.RadicalOrb
 open GlobalTheory.RadicalOrb in
 theorem GlobalTheory.RadicalOrb.hasQuotInt_zero : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (r : ℕ) [MeasurableSpace (GL (Fin r) k)] [BorelSpace (GL (Fin r) k)] (μ : Measure (GL (Fin r) k)) [μ.IsHaarMeasure] (ε : Matrix (Fin r) (Fin r) k) (N : Subgroup (GL (Fin r) k)), ε * ε = ε → (∀ g, g ∈ N ↔ ε * (g.1 - 1) * (1 - ε) = g.1 - 1) → ∀ f : GL (Fin r) k → ℂ, Continuous f → HasCompactSupport f → (∀ (ν : Measure N) [ν.IsHaarMeasure] (x y : GL (Fin r) k), ∫ u : N, f (x * u * y) ∂ν = 0) → ∀ γ : GL (Fin r) k, IsRegSS γ.1 → γ.1 * ε = ε * γ.1 → ∀ b : GL (Fin r) k → ℂ, Continuous b → LeftInv (cent γ) b → LeftInv N b → ∀ (dt : Measure (cent γ)) [dt.IsHaarMeasure], HasQuotInt (cent γ) dt μ (fun x => b x * f (x⁻¹ * γ * x)) 0 := by
   intro k _ _ _ _ r _ _ μ _ ε N hε hN f hf hfc hnv γ hγ hγε b hb hbT hbN dt _
-  haveI : T2Space k := GlobalTheory.LocAtTopology.t2Space_of_nonarchimedeanLocalField k
-  haveI : SecondCountableTopology k := GlobalTheory.LocAtTopology.secondCountable_localField k
+  have : T2Space k := GlobalTheory.LocAtTopology.t2Space_of_nonarchimedeanLocalField k
+  have : SecondCountableTopology k := GlobalTheory.LocAtTopology.secondCountable_localField k
   have hTε : ∀ t ∈ cent γ, t.1 * ε = ε * t.1 := fun t ht =>
     hγ.commute (congrArg Units.val (mem_cent.1 ht)) hγε.symm
   have hTc : IsMulCommutative (cent γ) := isMulCommutative_cent_GL hγ
-  haveI : dt.IsMulRightInvariant := ⟨fun g => by
+  have : dt.IsMulRightInvariant := ⟨fun g => by
     have : (fun x : cent γ => x * g) = (fun x => g * x) := funext fun x => hTc.is_comm.comm x g
     rw [this, map_mul_left_eq_self]⟩
   have hNc : IsClosed (N : Set (GL (Fin r) k)) := by
     have : (N : Set (GL (Fin r) k)) = {g | ε * (g.1 - 1) * (1 - ε) = g.1 - 1} := Set.ext fun g => hN g
     rw [this]
     exact isClosed_eq (by fun_prop) (by fun_prop)
-  haveI : LocallyCompactSpace N := hNc.locallyCompactSpace
+  have : LocallyCompactSpace N := hNc.locallyCompactSpace
   let dn : Measure N := Measure.haar
-  haveI : dn.IsMulRightInvariant := ⟨fun g => by
+  have : dn.IsMulRightInvariant := ⟨fun g => by
     have : (fun x : N => x * g) = (fun x => g * x) :=
       funext fun x => Subtype.ext (mul_comm_of_mem hε hN x.2 g.2)
     rw [this, map_mul_left_eq_self]⟩
@@ -1286,9 +1286,9 @@ theorem exists_conj_diag_of_idem (k : Type) [Field k] (r : ℕ) (ε : Matrix (Fi
   refine ⟨g, Matrix.ext_of_mulVec_single fun j => ?_⟩
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hcol, Matrix.diagonal_mulVec_single]
   by_cases hj : j.val < a
-  · simp only [hj, if_true, mul_one]
+  · simp only [hj, ite_true, mul_one]
     rw [hcol, hfix _ (hbU j hj)]
-  · simp only [hj, if_false, zero_mul, Pi.single_zero, Matrix.mulVec_zero]
+  · simp only [hj, ite_false, zero_mul, Pi.single_zero, Matrix.mulVec_zero]
     exact hbK j hj
 
 theorem diag_cond_iff (k : Type) [Field k] (r a : ℕ) (S : Matrix (Fin r) (Fin r) k) :
@@ -1346,9 +1346,9 @@ theorem haar_vanish_transfer {G G' : Type} [Group G] [Group G'] [TopologicalSpac
     [ν.IsHaarMeasure] (h0 : ∀ x y : G, ∫ u : H, f (x * u * y) ∂ν = 0) :
     ∀ (ν' : Measure N) [ν'.IsHaarMeasure] (x y : G'), ∫ u : N, f (e.symm (x * u * y)) ∂ν' = 0 := by
   intro ν' _ x y
-  haveI : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
   set φ := GlobalTheory.Orb.subEquiv e hHN with hφ
-  haveI : (ν.map φ).IsHaarMeasure := φ.isHaarMeasure_map ν
+  have : (ν.map φ).IsHaarMeasure := φ.isHaarMeasure_map ν
   have hme : MeasurableEmbedding φ := φ.toHomeomorph.measurableEmbedding
   rw [Measure.isMulLeftInvariant_eq_smul ν' (ν.map φ), integral_smul_nnreal_measure, hme.integral_map]
   have : ∀ u : H, f (e.symm (x * ((φ u : N) : G') * y)) = f (e.symm x * u * e.symm y) := fun u => by
@@ -1388,15 +1388,15 @@ theorem conj_map_facts {F E K : Type} [Field F] [Field E] [Field K] [Algebra F E
 
 theorem weighted_orbital_vanish : GlobalTheory.IndefiniteRowSideFullHecke.StandardMaximalParabolic.TypeConstTermVanish → ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : AuxiliaryPlaceHermitianSpace V) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)) (ff : ∀ v, GLoc D.sp.cm.sig V.gram v → ℂ), IsTestFin T U μf ff → ∀ v : T.S, (μf v).IsHaarMeasure → ∀ (γ : GF V) (ε : Matrix (Fin V.rank) (Fin V.rank) D.host.E), IsRegSS γ.1.1 → ε * ε = ε → γ.1.1 * ε = ε * γ.1.1 → 0 < ε.rank → ε.rank < V.rank → GlobalTheory.IndefiniteRowSideFullHecke.RadicalNoFixedVectors.NoFixed (T.τ v) (GlobalTheory.IndefiniteRowSideFullHecke.RadicalNoFixedVectors.radical (ResF v.1) V.rank ε.rank) → ∀ b : GLoc D.sp.cm.sig V.gram v → ℂ, Continuous b → LeftInv (cent (proj D.sp.cm.sig V.gram v (rat V γ))) b → (∀ g, ε.map (T.frame v).emb * ((splitHom D.sp.cm.sig V.gram (T.frame v).emb g).1 - 1) * (1 - ε.map (T.frame v).emb) = (splitHom D.sp.cm.sig V.gram (T.frame v).emb g).1 - 1 → ∀ x, b (g * x) = b x) → ∀ (dt : Measure (cent (proj D.sp.cm.sig V.gram v (rat V γ)))) [dt.IsHaarMeasure], HasQuotInt (cent (proj D.sp.cm.sig V.gram v (rat V γ))) dt (μf v) (fun x => b x * ff v (x⁻¹ * proj D.sp.cm.sig V.gram v (rat V γ) * x)) 0 := by
   intro hT D V T U μf ff hf v hμ γ ε hγ hεε hγε ha0 har hnf b hb hbL hbN dt _
-  letI := GlobalTheory.LocalData.complRel v.1
-  haveI := GlobalTheory.LocalData.isLocalField v.1
+  let := GlobalTheory.LocalData.complRel v.1
+  have := GlobalTheory.LocalData.isLocalField v.1
   have he_apply : ∀ g, (((T.frame v).equiv g : GL (Fin V.rank) (Fv D.host.F v.1)) : Matrix (Fin V.rank) (Fin V.rank) (Fv D.host.F v.1)) =
       (((T.frame v).basis⁻¹ : GL (Fin V.rank) (Fv D.host.F v.1)) : Matrix (Fin V.rank) (Fin V.rank) (Fv D.host.F v.1)) *
         ((splitHom D.sp.cm.sig V.gram (T.frame v).emb g : GL (Fin V.rank) (Fv D.host.F v.1)) : Matrix (Fin V.rank) (Fin V.rank) (Fv D.host.F v.1)) * (((T.frame v).basis : GL (Fin V.rank) (Fv D.host.F v.1)) : Matrix (Fin V.rank) (Fin V.rank) (Fv D.host.F v.1)) := fun g => by
     have : (T.frame v).equiv g = (T.frame v).basis⁻¹ * splitHom D.sp.cm.sig V.gram (T.frame v).emb g * (T.frame v).basis :=
       splitEquivIn_apply (T.frame v).cm (T.frame v).herm (T.frame v).emb (T.frame v).basis g
     rw [this, Units.val_mul, Units.val_mul]
-  haveI : SecondCountableTopology (GL (Fin V.rank) (Fv D.host.F v.1)) :=
+  have : SecondCountableTopology (GL (Fin V.rank) (Fv D.host.F v.1)) :=
     (T.frame v).equiv.symm.toHomeomorph.isEmbedding.secondCountableTopology
 
   obtain ⟨e, he⟩ : ∃ e, (T.frame v).equiv = e := ⟨_, rfl⟩
@@ -1428,7 +1428,7 @@ theorem weighted_orbital_vanish : GlobalTheory.IndefiniteRowSideFullHecke.Standa
     have : (N : Set (GL (Fin V.rank) (Fv D.host.F v.1))) = e.symm ⁻¹' (H : Set (GLoc D.sp.cm.sig V.gram v)) := Set.ext hNmem
     rw [this]; exact hHc.preimage e.symm.continuous
   have hHN : ∀ x, e x ∈ N ↔ x ∈ H := fun x => by rw [hNmem, e.symm_apply_apply]
-  haveI := hν
+  have := hν
   have hvan := haar_vanish_transfer e H N hNc hHN (ff v) ν hν0
   have hffmem : ff v ∈ CcLoc D.sp.cm.sig V.gram v := hf.isFinFamily.1 v
   have hfc : Continuous fun x => ff v (e.symm x) := hffmem.1.continuous.comp e.symm.continuous
@@ -1449,8 +1449,8 @@ theorem weighted_orbital_vanish : GlobalTheory.IndefiniteRowSideFullHecke.Standa
     rw [e.apply_symm_apply] at h2
     rw [h2] at h1
     exact (hcond _).1 h1
-  haveI : ((μf v).map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map (μf v) e
-  haveI : (dt.map (subEquiv e hcent)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map dt (subEquiv e hcent)
+  have : ((μf v).map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map (μf v) e
+  have : (dt.map (subEquiv e hcent)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map dt (subEquiv e hcent)
   have key := _root_.GlobalTheory.RadicalOrb.hasQuotInt_zero (Fv D.host.F v.1) V.rank ((μf v).map e) _ N hεε' hN_iff (fun x => ff v (e.symm x)) hfc hfcs
     hvan (e (proj D.sp.cm.sig V.gram v (rat V γ))) hreg hcε (fun x => b (e.symm x)) hb'c hb'L hb'N (dt.map (subEquiv e hcent))
   have hcomm : ∀ t t' : cent (proj D.sp.cm.sig V.gram v (rat V γ)), (t : GLoc D.sp.cm.sig V.gram v) * t' = t' * t := by
@@ -1463,7 +1463,7 @@ theorem weighted_orbital_vanish : GlobalTheory.IndefiniteRowSideFullHecke.Standa
     apply Units.ext
     rw [Units.val_mul, Units.val_mul]
     exact IsRegSS.commute hreg (hc t) (hc t')
-  haveI : dt.IsMulRightInvariant := ⟨fun g => by
+  have : dt.IsMulRightInvariant := ⟨fun g => by
     have : (fun x : cent (proj D.sp.cm.sig V.gram v (rat V γ)) => x * g) = fun x => g * x := funext fun x => Subtype.ext (hcomm x g)
     rw [this]; exact map_mul_left_eq_self dt g⟩
   have hleft : LeftInv (cent (e (proj D.sp.cm.sig V.gram v (rat V γ))))
@@ -1575,9 +1575,9 @@ theorem zeroClause {T : TypeDataG V} (hH : HypH (k := fun v : T.S => ResF v.1) T
     (hL : LocalClause T μf ff γ) (hP : ProductClause μa μf μ fa ff (ratEmb D.sp.cm.sig V.gram γ)) :
     ZeroClause μ (tensor D.sp.cm.sig V.gram fa ff) (ratEmb D.sp.cm.sig V.gram γ) := by
   intro 𝓕 h𝓕
-  haveI hla : ∀ w, LocallyCompactSpace (cent (projArch D.sp.cm.sig V.gram w (ratEmb D.sp.cm.sig V.gram γ))) :=
+  have hla : ∀ w, LocallyCompactSpace (cent (projArch D.sp.cm.sig V.gram w (ratEmb D.sp.cm.sig V.gram γ))) :=
     fun _ => (isClosed_cent _).locallyCompactSpace
-  haveI hlf : ∀ v, LocallyCompactSpace (cent (proj D.sp.cm.sig V.gram v (ratEmb D.sp.cm.sig V.gram γ))) :=
+  have hlf : ∀ v, LocallyCompactSpace (cent (proj D.sp.cm.sig V.gram v (ratEmb D.sp.cm.sig V.gram γ))) :=
     fun _ => (isClosed_cent _).locallyCompactSpace
   have hR := restrGroup_cent (frameLat V) (ratEmb D.sp.cm.sig V.gram γ)
   let K0 : ∀ v, TopologicalSpace.PositiveCompacts (cent (proj D.sp.cm.sig V.gram v (ratEmb D.sp.cm.sig V.gram γ))) :=
@@ -1586,8 +1586,8 @@ theorem zeroClause {T : TypeDataG V} (hH : HypH (k := fun v : T.S => ResF v.1) T
   let dta : ∀ w, Measure (cent (projArch D.sp.cm.sig V.gram w (ratEmb D.sp.cm.sig V.gram γ))) := fun _ => Measure.haar
   let dtf : ∀ v, Measure (cent (proj D.sp.cm.sig V.gram v (ratEmb D.sp.cm.sig V.gram γ))) :=
     fun v => Measure.haarMeasure (K0 v)
-  haveI : ∀ w, (dta w).IsHaarMeasure := fun _ => inferInstance
-  haveI : ∀ v, (dtf v).IsHaarMeasure := fun _ => inferInstance
+  have : ∀ w, (dta w).IsHaarMeasure := fun _ => inferInstance
+  have : ∀ v, (dtf v).IsHaarMeasure := fun _ => inferInstance
   have h1 : ∀ᶠ v in cofinite, dtf v ((stabLoc D.sp.cm.sig V.gram (frameLat V) v).subgroupOf
       (cent (proj D.sp.cm.sig V.gram v (ratEmb D.sp.cm.sig V.gram γ)))) = 1 :=
     .of_forall fun v => Measure.haarMeasure_self (K₀ := K0 v)

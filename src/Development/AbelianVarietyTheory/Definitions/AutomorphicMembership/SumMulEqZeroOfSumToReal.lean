@@ -65,7 +65,7 @@ theorem minVal_eval (B : X → X → ℝ) : (InvFun.minVal O).eval X B = sInf {x
   change sInf _ = _
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq, map_zero]
+  simp only [Set.mem_ofPred_eq, map_zero]
   exact and_congr_left' ⟨fun ⟨y, h⟩ => ⟨r y, h⟩, fun ⟨y, h⟩ => (hr y).elim fun z e => ⟨z, e ▸ h⟩⟩
 
 theorem minVal_linearOn (γ : LinearMap.BilinForm ℤ X) : (InvFun.minVal O).LinearOn ![γ] := by
@@ -80,7 +80,7 @@ theorem minVal_linearOn (γ : LinearMap.BilinForm ℤ X) : (InvFun.minVal O).Lin
   · rw [← smul_eq_mul (c 0) (sInf _), ← Real.sInf_smul_of_nonneg (hc 0)]
     congr 1
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_smul_set, smul_eq_mul]
+    simp only [Set.mem_ofPred_eq, Set.mem_smul_set, smul_eq_mul]
     constructor
     · rintro ⟨⟨y, rfl⟩, hx⟩
       exact ⟨_, ⟨⟨y, rfl⟩, fun e => hx (by rw [e, mul_zero])⟩, rfl⟩

@@ -107,7 +107,7 @@ theorem intMvPolynomialCoeffAbsSum_mul_le (f g : MvPolynomial σ ℤ) : l1 (f * 
   have h : f * g = ∑ m ∈ f.support, ∑ k ∈ g.support,
       monomial (m + k) (AddMonoidAlgebra.coeff f m * AddMonoidAlgebra.coeff g k) := by
     conv_lhs => rw [f.as_sum, g.as_sum, Finset.sum_mul_sum]
-    simp only [monomial_mul]
+    simp only [monomial_mul_monomial]
   rw [h]
   refine (intMvPolynomialCoeffAbsSum_sum_le _ _).trans ?_
   conv_rhs => unfold l1
@@ -190,7 +190,7 @@ theorem highestWeightVector_coeff_natAbs_sum_le_factorial_pow : ∀ (n : ℕ) (�
   change l1 (Formalism.GradedWeylDivisibility.hw ℤ (le_refl n) ν) ≤ _
   unfold Formalism.GradedWeylDivisibility.hw
   refine (intMvPolynomialCoeffAbsSum_prod_le _ _).trans ?_
-  refine le_trans (Finset.prod_le_prod' (g := fun s => n.factorial ^ (ν s - Formalism.GradedWeylDivisibility.nuNext ν s))
+  refine le_trans (Finset.prod_le_prod (g := fun s => n.factorial ^ (ν s - Formalism.GradedWeylDivisibility.nuNext ν s))
     fun s _ => ?_) ?_
   · refine (intMvPolynomialCoeffAbsSum_pow_le _ _).trans (Nat.pow_le_pow_left ?_ _)
     unfold Formalism.GradedWeylDivisibility.lpMinor
@@ -220,7 +220,7 @@ theorem mfact_le_factorial_pow : ∀ (n : ℕ) (ν : Fin n → ℕ) (R : ℕ), (
     rw [Finsupp.prod_fintype _ _ (by simp), Fintype.prod_prod_type_right]
   rw [h]
   calc ∏ t : Fin n, ∏ a : Fin n, (mo (a, t)).factorial ≤ ∏ _t : Fin n, R.factorial := by
-        refine Finset.prod_le_prod' fun t _ => ?_
+        refine Finset.prod_le_prod fun t _ => ?_
         refine le_trans (Nat.le_of_dvd (Nat.factorial_pos _) (Nat.prod_factorial_dvd_factorial_sum Finset.univ fun a => mo (a, t))) ?_
         rw [hmo t]
         exact Nat.factorial_le (hR t)

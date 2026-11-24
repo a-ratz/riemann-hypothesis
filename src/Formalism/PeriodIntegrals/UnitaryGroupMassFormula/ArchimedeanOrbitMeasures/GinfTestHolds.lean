@@ -58,7 +58,7 @@ theorem ginfTest_holds : GinfTest := by
     exact continuous_fst.comp ((MassDataMassesW.continuous_splitA _ _).comp
       ((Formalism.L2.SG.AdBridge.toHA X.B.I hb).continuous.comp (continuous_id.prodMk continuous_const)))
   have hm : Measurable (X.toInf hb) := by
-    haveI : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+    have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
     exact hc.measurable
   have hG : X.measG.μGinf = (Formalism.L2.SG.ProjRows.muInf X.B.I).map (X.toInf hb) := hX.1.2.1
   have : X.measG.μGinf.IsHaarMeasure := X.measG_norm.2.1
@@ -84,14 +84,14 @@ theorem htotInf_of (hF : HinfFin) : HtotInf := by
       exact continuous_fst.comp ((MassDataMassesW.continuous_splitA _ _).comp
         ((Formalism.L2.SG.AdBridge.toHA X.B.I hb).continuous.comp (continuous_id.prodMk continuous_const)))
     have hm : Measurable (X.toInf hb) := by
-      haveI : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+      have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
       exact hc.measurable
     have h := (hX.1.2.2.2 u').2
     have h1 := congrArg (fun m => m Set.univ) h
     rw [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ] at h1
     rw [← h1]
     unfold Formalism.L2.SG.Measures.amb
-    rw [Measure.map_apply measurable_subtype_coe MeasurableSet.univ, Set.preimage_univ]
+    rw [Measure.map_apply measurable_subtypeVal MeasurableSet.univ, Set.preimage_univ]
   refine ⟨e1, Measure.measure_univ_pos.2 (X.muH_haar u').2.1, e1 ▸ hF X hb FdN FdN' u u' hX⟩
 
 theorem hinfFin_of (hC : MassDataMassesW.HinfCompact) : HinfFin := by

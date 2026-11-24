@@ -170,13 +170,13 @@ theorem UpperTheory.exists_algebraic_element_of_algebraicVectorSubspace :
   obtain ⟨-, -, hI, ⟨σ, hσ⟩, -⟩ := iqBasic l
   obtain ⟨Ti⟩ := tiedP l
   obtain ⟨u, rfl⟩ := (Matrix.isUnit_iff_isUnit_det C).2 hC
-  haveI : CompactSpace (Matrix (Fin n) (Fin n) ℤ_[l]) := inferInstanceAs (CompactSpace (Fin n → Fin n → ℤ_[l]))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) ℤ_[l]) :=
+  have : CompactSpace (Matrix (Fin n) (Fin n) ℤ_[l]) := inferInstanceAs (CompactSpace (Fin n → Fin n → ℤ_[l]))
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) ℤ_[l]) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin n → ℤ_[l]))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) ℤ_[l])ᵐᵒᵖ :=
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) ℤ_[l])ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin n) (Fin n) ℤ_[l])).symm.isEmbedding.isTotallyDisconnected_range.1
       (isTotallyDisconnected_of_totallyDisconnectedSpace _)
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) ℤ_[l])ˣ :=
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) ℤ_[l])ˣ :=
     Units.isEmbedding_embedProduct.isTotallyDisconnected_range.1
       (isTotallyDisconnected_of_totallyDisconnectedSpace _)
   obtain ⟨f, hf, hfI, hfσ⟩ := frobFree σ hσ (Matrix (Fin n) (Fin n) ℤ_[l])ˣ u⁻¹

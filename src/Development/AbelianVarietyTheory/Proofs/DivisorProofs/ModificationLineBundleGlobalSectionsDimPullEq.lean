@@ -164,16 +164,16 @@ theorem modification_lineBundleGlobalSectionsDim_pull_eq : ∀ (k : Type) [Field
     SmoothOfRelativeDimension D p → IsProjOver p → ∀ (M : Modif p U D) [IsIntegral M.X] (B : LB Y), B.IsLB →
     letI := algebraΓOfHom p; letI := algebraΓOfHom M.str; lbH0 k (B.pull M.σ) = lbH0 k B := by
   intro k _ Y _ p U D hs hp M _ B hB
-  haveI := hs
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth D p
-  haveI : GlobalTheory.IsNormalScheme Y := isNormalScheme_of_smooth p
-  haveI : IsProper (M.σ ≫ p) := GlobalTheory.CommonModel.isProper_of_isProjOver M.proj
-  haveI : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hp
-  haveI : IsProper M.σ := IsProper.of_comp M.σ p
-  haveI := M.iso
+  have := hs
+  have : Smooth p := SmoothOfRelativeDimension.smooth D p
+  have : GlobalTheory.IsNormalScheme Y := isNormalScheme_of_smooth p
+  have : IsProper (M.σ ≫ p) := GlobalTheory.CommonModel.isProper_of_isProjOver M.proj
+  have : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hp
+  have : IsProper M.σ := IsProper.of_comp M.σ p
+  have := M.iso
   have hb := (isoOver_top M.σ U M.dense.nonempty).bijective_pull (p := p) hB (W := ⊤) le_top le_top
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom M.str
+  let := algebraΓOfHom p
+  let := algebraΓOfHom M.str
   rw [← H0.finrank_top M.str (B.pull M.σ), ← H0.finrank_top p B]
   exact (LinearEquiv.ofBijective _ hb).finrank_eq.symm
 

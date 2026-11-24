@@ -165,14 +165,14 @@ theorem cptEx : CptEx := by
   have hinj : Function.Injective (algebraMap (𝓞 ↥c.F) ↥c.F) := IsFractionRing.injective _ _
   obtain ⟨hpre, hflat⟩ := GlobalTheory.CompanionTheory.Ar.Flat.spMap_flat_preimmersion (algebraMap (𝓞 ↥c.F) ↥c.F) hinj hfr
   obtain ⟨jpre, jflat⟩ := GlobalTheory.CompanionTheory.Ar.Flat.j_flat_preimmersion Y hinj hfr
-  haveI := hpre
-  haveI := jpre
-  haveI := Y.jQ_open
-  haveI : TopologicalSpace.NoetherianSpace Y.X := by
+  have := hpre
+  have := jpre
+  have := Y.jQ_open
+  have : TopologicalSpace.NoetherianSpace Y.X := by
     obtain ⟨N, i, hi, -⟩ := Y.proj
     have : TopologicalSpace.NoetherianSpace (PSpace (𝓞 ↥c.F) N) := by
       unfold PSpace
-      letI := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := 𝓞 ↥c.F)
+      let := MvPolynomial.gradedAlgebra (σ := Fin (N + 1)) (R := 𝓞 ↥c.F)
       exact noetherianSpace_projectiveSpectrum _
     exact i.isClosedEmbedding.isInducing.noetherianSpace
   have hfx : 𝔐.f (genPt 𝔐.ξ) = genPt 𝔐.ξ₀ := GlobalTheory.CompanionTheory.Ar.Dominates.map_genPt 𝔐.fn_over
@@ -246,17 +246,17 @@ namespace RootFieldNumerics.RF
 namespace Pt
 
 theorem numberField_of (L : Type) [Field L] (f : ℚ →+* L) (hf : f.FiniteType) : NumberField L := by
-  haveI : CharZero L := charZero_of_injective_ringHom f.injective
+  have : CharZero L := charZero_of_injective_ringHom f.injective
   have e : f = algebraMap ℚ L := Subsingleton.elim _ _
-  haveI : Algebra.FiniteType ℚ L := RingHom.finiteType_algebraMap.1 (e ▸ hf)
+  have : Algebra.FiniteType ℚ L := RingHom.finiteType_algebraMap.1 (e ▸ hf)
   exact { to_finiteDimensional := finite_of_finite_type_of_isJacobsonRing ℚ L }
 
 theorem exists_quot (B : Type) [CommRing B] [Nontrivial B] [Algebra ℚ B] [Algebra.FiniteType ℚ B] :
     ∃ (L : Type) (_ : Field L) (_ : NumberField L), Nonempty (B →+* L) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal B
-  letI : Field (B ⧸ m) := Ideal.Quotient.field m
+  let : Field (B ⧸ m) := Ideal.Quotient.field m
   have h1 : (algebraMap ℚ B).FiniteType := RingHom.finiteType_algebraMap.2 inferInstance
-  haveI : NumberField (B ⧸ m) := numberField_of _ ((Ideal.Quotient.mk m).comp (algebraMap ℚ B))
+  have : NumberField (B ⧸ m) := numberField_of _ ((Ideal.Quotient.mk m).comp (algebraMap ℚ B))
     (RingHom.FiniteType.comp (RingHom.FiniteType.of_surjective _ Ideal.Quotient.mk_surjective) h1)
   exact ⟨B ⧸ m, inferInstance, inferInstance, ⟨Ideal.Quotient.mk m⟩⟩
 
@@ -272,7 +272,7 @@ theorem exists_numberField {A Ω κ : Type} [CommRing A] [Field Ω] [CharZero Ω
     | algebraMap r => simpa using intCast_mem B r
     | add a b _ _ ha hb => exact add_mem ha hb
     | mul a b _ _ ha hb => exact mul_mem ha hb
-  haveI : Algebra.FiniteType ℚ B := by
+  have : Algebra.FiniteType ℚ B := by
     refine (Subalgebra.fg_iff_finiteType _).1 ⟨((Set.finite_range t).insert (e s)⁻¹).toFinset, ?_⟩
     rw [Set.Finite.coe_toFinset]
   obtain ⟨L, _, _, ⟨g⟩⟩ := exists_quot B
@@ -354,7 +354,7 @@ theorem primeOf_ne_bot {F : Type} [Field F] [NumberField F] {p : Nat.Primes} (κ
 theorem exists_frac {F : Type} [Field F] [NumberField F] {p : Nat.Primes} (κ : F →+* ℂ_[p]) {a : F} (ha : ‖κ a‖ ≤ 1) :
     ∃ u s : 𝓞 F, s ∉ primeOf κ ∧ a = (u : F) * (s : F)⁻¹ := by
   let V := Localization.subalgebra.ofField F (primeOf κ).primeCompl (primeOf κ).primeCompl_le_nonZeroDivisors
-  haveI : IsDiscreteValuationRing V :=
+  have : IsDiscreteValuationRing V :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 F) (primeOf_ne_bot κ) V
   rcases ValuationRing.isInteger_or_isInteger V a with ⟨x, hx⟩ | ⟨x, hx⟩
   · obtain ⟨u, s, hs, e⟩ := x.2
@@ -376,7 +376,7 @@ theorem exists_dvr {L : Type} [Field L] [NumberField L] {p : Nat.Primes} (j : L 
     ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsDiscreteValuationRing V) (_ : Algebra V L)
       (_ : IsFractionRing V L), ∀ a : L, ‖j a‖ ≤ 1 ↔ a ∈ (algebraMap V L).range := by
   let V := Localization.subalgebra.ofField L (primeOf j).primeCompl (primeOf j).primeCompl_le_nonZeroDivisors
-  haveI : IsDiscreteValuationRing V :=
+  have : IsDiscreteValuationRing V :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 L) (primeOf_ne_bot j) V
   refine ⟨V, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, fun a => ⟨fun ha => ?_, ?_⟩⟩
   · obtain ⟨u, s, hs, e⟩ := exists_frac j ha
@@ -396,10 +396,10 @@ theorem normalCpt_of_tie {κ : Type} {x : κ → Ω} (hT : CoordTie ℤ ξ x)
   intro p a ha
   have hξ := hT.gen
   obtain ⟨hd, hc⟩ := hX p.1
-  letI : Algebra (X.presheaf.stalk p.1) Ω := (genMap ξ p).toAlgebra
+  let : Algebra (X.presheaf.stalk p.1) Ω := (genMap ξ p).toAlgebra
   have hinj : Function.Injective (algebraMap (X.presheaf.stalk p.1) Ω) := hξ.inj p
-  haveI : FaithfulSMul (X.presheaf.stalk p.1) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : IsFractionRing (X.presheaf.stalk p.1) Ω := IsFractionRing.of_field _ _ fun z => by
+  have : FaithfulSMul (X.presheaf.stalk p.1) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+  have : IsFractionRing (X.presheaf.stalk p.1) Ω := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨c, hc⟩ := hT.cover p
     obtain ⟨U, hU, hg, hm, -, -⟩ := SheetDecomposition.BBase.chart hT c hc.1
     have hp : p.1 ∈ U := (hm _).2 ⟨p.2, hc⟩
@@ -408,9 +408,9 @@ theorem normalCpt_of_tie {κ : Type} {x : κ → Ω} (hT : CoordTie ℤ ξ x)
     refine ⟨X.presheaf.germ U p.1 hp s, X.presheaf.germ U p.1 hp t, ?_⟩
     show z = genMap ξ p _ / genMap ξ p _
     rw [SheetDecomposition.BBase.genMap_germ p U hp hg, SheetDecomposition.BBase.genMap_germ p U hp hg, ← e, mul_div_cancel_left₀ _ h0]
-  letI : Algebra (X.presheaf.stalk p.1) (regAt ξ p) := (genMap ξ p).rangeRestrict.toAlgebra
-  haveI : IsScalarTower (X.presheaf.stalk p.1) (regAt ξ p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsIntegral (X.presheaf.stalk p.1) (regAt ξ p) :=
+  let : Algebra (X.presheaf.stalk p.1) (regAt ξ p) := (genMap ξ p).rangeRestrict.toAlgebra
+  have : IsScalarTower (X.presheaf.stalk p.1) (regAt ξ p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.IsIntegral (X.presheaf.stalk p.1) (regAt ξ p) :=
     Algebra.IsIntegral.of_surjective (R := X.presheaf.stalk p.1) (A := X.presheaf.stalk p.1)
       (Algebra.ofId _ _) (genMap ξ p).rangeRestrict_surjective
   obtain ⟨b, hb⟩ := (IsIntegrallyClosed.isIntegral_iff (R := X.presheaf.stalk p.1) (K := Ω)).1
@@ -434,7 +434,7 @@ theorem exists_const (hξ : IsCptGen ξ) (hN : NormalCpt ξ) {F : Type} [Field F
     intro a
     have halg : IsAlgebraic ℤ a := (IsFractionRing.isAlgebraic_iff ℤ ℚ F).2 (Algebra.IsAlgebraic.isAlgebraic a)
     obtain ⟨n, hn, hi⟩ := halg.exists_integral_multiple
-    haveI : CharZero Ω := charZero_of_injective_ringHom ψ.injective
+    have : CharZero Ω := charZero_of_injective_ringHom ψ.injective
     have h1 := int_reg hN ψ ⟨centre z, h⟩ ⟨n • a, hi⟩
     have h2 : ValAt ξ z (n : Ω) (n : L) := ⟨h, (n : X.presheaf.stalk (centre z)), map_intCast _ _, map_intCast _ _⟩
     have h3 := inv_reg h h2 (IsUnit.mk0 _ (by exact_mod_cast hn))
@@ -464,7 +464,7 @@ theorem exists_lift_genFibre {F L : Type} [Field F] [NumberField F] [Field L] [C
     simp [r, spMap]
   have hinj : Function.Injective r := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [eq_bot_iff]
     intro n hn
     have h0 : r (algebraMap ℤ (𝓞 F) n) = 0 := hn
@@ -483,14 +483,14 @@ open Pt in
 theorem pointEx : PointEx := by
   intro E _ _ _ H D l Xo c _ Y U Z S Ω _ K _ J _ y 𝔐 F' _ _ ψ p κ' hgen
   classical
-  haveI : CharZero Ω := charZero_of_injective_ringHom ψ.injective
+  have : CharZero Ω := charZero_of_injective_ringHom ψ.injective
   have hN : NormalCpt 𝔐.ξ := normalCpt_of_tie 𝔐.tie 𝔐.normal
-  haveI : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
+  have : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
     IsPreimmersion.of_isLocalization (nonZeroDivisors (𝓞 c.F))
   have hind : Topology.IsInducing (pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F))) :=
     (pullback.fst Y.s (spMap (algebraMap (𝓞 c.F) c.F))).isEmbedding.isInducing
   have hopen : IsOpen (Set.range Y.jQ) := by
-    haveI := Y.jQ_open
+    have := Y.jQ_open
     exact Y.jQ.isOpenEmbedding.isOpen_range
   obtain ⟨C, hC, hCe⟩ := hind.isClosed_iff.1 hopen.isClosed_compl
   let W : 𝔐.X.Opens := ⟨(𝔐.f ⁻¹' C)ᶜ, (hC.preimage 𝔐.f.continuous).isOpen_compl⟩
@@ -527,9 +527,9 @@ theorem pointEx : PointEx := by
     exact hr
   obtain ⟨ψL, hψL⟩ := exists_const 𝔐.tie.gen hN ψ zL (𝔐.all _)
   obtain ⟨j, hj⟩ : ∃ j : L →+* ℂ_[p], j.comp ψL = κ' := by
-    letI := ψL.toAlgebra
-    letI := κ'.toAlgebra
-    haveI : Algebra.IsAlgebraic F' L := Algebra.IsAlgebraic.tower_top (K := ℚ) F'
+    let := ψL.toAlgebra
+    let := κ'.toAlgebra
+    have : Algebra.IsAlgebraic F' L := Algebra.IsAlgebraic.tower_top (K := ℚ) F'
     let φ : L →ₐ[F'] ℂ_[p] := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -538,7 +538,7 @@ theorem pointEx : PointEx := by
     exact ⟨φ.toRingHom, RingHom.ext fun a => φ.commutes a⟩
   obtain ⟨V, _, _, _, _, _, hV⟩ := exists_dvr j
   obtain ⟨s₀, hft, hqc, -⟩ := ChartFType.main 𝔐.X Ω 𝔐.ξ _ _ 𝔐.all 𝔐.tie
-  haveI : IsProper s₀ := LocModel.isProper_of_coordTie 𝔐.all 𝔐.tie s₀
+  have : IsProper s₀ := LocModel.isProper_of_coordTie 𝔐.all 𝔐.tie s₀
   obtain ⟨z, ⟨hz, -⟩, -⟩ := existsUnique_valuationRing_lift ℤ V L (Int.castRingHom V) 𝔐.X s₀ zL
     (specZIsTerminal.hom_ext _ _)
   subst hz
@@ -585,7 +585,7 @@ namespace RootFieldNumerics.RF
 
 theorem chiEx : ChiEx := by
   intro E _ _ _ H _
-  haveI : Fact (Nat.Prime H.d) := ⟨H.d_prime⟩
+  have : Fact (Nat.Prime H.d) := ⟨H.d_prime⟩
   have h4 : H.d % 4 = 3 := by
     have := H.d_mod
     omega
@@ -733,7 +733,7 @@ theorem deg_eq_places : ∀ (F : Type) [Field F] [NumberField F] (N : LogNorms F
     refine Set.Finite.subset hadel ?_
     intro p hp
     by_contra hc
-    simp only [Set.mem_setOf_eq, not_exists, not_not] at hc
+    simp only [Set.mem_ofPred_eq, not_exists, not_not] at hc
     exact hp (by simp [LogNorms.finSum, hc])
   have h4 : ∑ᶠ p, (LogNorms.ofElt α).finSum p = M * ∑ᶠ p, N.finSum p := by
     simp_rw [h3]
@@ -780,7 +780,7 @@ variable {O J : Type} [CommRing O] [Fintype J] [DecidableEq J]
 theorem prime_dvd_trace_of_sq (b : Module.Basis J ℤ O) (d : ℕ) (hd : d.Prime) (y z : O) (h : y ^ 2 = (d : O) * z) :
     (d : ℤ) ∣ Algebra.trace ℤ O y := by
   classical
-  haveI : Fact d.Prime := ⟨hd⟩
+  have : Fact d.Prime := ⟨hd⟩
   rw [Algebra.trace_eq_matrix_trace b y, ← ZMod.intCast_zmod_eq_zero_iff_dvd]
   have hnil : IsNilpotent ((Algebra.leftMulMatrix b y).map (Int.castRingHom (ZMod d))) := by
     refine ⟨2, ?_⟩
@@ -932,7 +932,7 @@ theorem near_of (n : ℕ) (bad : Finset ℕ) (h2 : 2 ∈ bad) (rd L h₀ : ℝ) 
   have hN0 : 0 ≤ N * Real.log 2 := mul_nonneg (Nat.cast_nonneg _) (Real.log_pos one_lt_two).le
   obtain ⟨hv2, hd2⟩ := hd 2 h2
   have hv2' := mul_nonneg hN0 hv2
-  simp only [cP, if_true, Nat.cast_ofNat] at hd2
+  simp only [cP, ite_true, Nat.cast_ofNat] at hd2
   obtain ⟨e, he, he'⟩ : ∃ e : ℝ, |e| ≤ N * Real.log 2 ∧ |d 2 - e| ≤ (N + N * v 2) * Real.log 2 := by
     rw [abs_le] at hd2
     rcases le_total 0 (d 2) with h | h
@@ -940,19 +940,19 @@ theorem near_of (n : ℕ) (bad : Finset ℕ) (h2 : 2 ∈ bad) (rd L h₀ : ℝ) 
     · exact ⟨-(N * Real.log 2), by rw [abs_neg, abs_of_nonneg hN0], abs_le.2 ⟨by nlinarith, by nlinarith⟩⟩
   refine ⟨_ + e, fun r => d r - if r = 2 then e else 0, v, (abs_add_le _ _).trans ((add_le_add le_rfl he).trans hb), ?_,
     fun r hr => ⟨(hd r hr).1, ?_⟩, hv⟩
-  · rw [Finset.sum_sub_distrib, Finset.sum_ite_eq' bad 2, if_pos h2]; ring
+  · rw [Finset.sum_sub_distrib, Finset.sum_ite_eq' bad 2, ite_eq_left h2]; ring
   · by_cases h : r = 2
     · subst h
       have : ((2 : ℕ) : ℝ) - 1 = 1 := by norm_num
-      simp only [if_true, this, div_one]
+      simp only [ite_true, this, div_one]
       exact_mod_cast he'
     · have := (hd r hr).2
-      simp only [cP, if_neg h] at this ⊢
+      simp only [cP, ite_eq_right h] at this ⊢
       rwa [sub_zero, div_eq_mul_one_div]
 
 def extP (g : Nat.Primes → ℝ) (n : ℕ) : ℝ := if h : n.Prime then g ⟨n, h⟩ else 0
 
-theorem extendFromPrimes_coe (g : Nat.Primes → ℝ) (ℓ : Nat.Primes) : extP g ℓ = g ℓ := dif_pos ℓ.2
+theorem extendFromPrimes_coe (g : Nat.Primes → ℝ) (ℓ : Nat.Primes) : extP g ℓ = g ℓ := dite_eq_left ℓ.2
 
 theorem exists_primes (bad : Finset ℕ) (hb : ∀ ℓ ∈ bad, ℓ.Prime) :
     ∃ B : Finset Nat.Primes, (∀ ℓ, ℓ ∈ B ↔ (ℓ : ℕ) ∈ bad) ∧ ∀ G : ℕ → ℝ, ∑ ℓ ∈ bad, G ℓ = ∑ ℓ ∈ B, G ℓ := by
@@ -1015,7 +1015,7 @@ theorem numerics : Numerics := by
   have hsupp : ∀ M : LogNorms F', M.IsAdelic → (Function.support M.finSum).Finite := fun M hM =>
     Set.Finite.subset hM fun ℓ hℓ => by
       by_contra hc
-      simp only [Set.mem_setOf_eq, not_exists, not_not] at hc
+      simp only [Set.mem_ofPred_eq, not_exists, not_not] at hc
       exact hℓ (by simp [LogNorms.finSum, hc])
   have hsplit : N'.deg = N.deg + ∑ ℓ ∈ bad, extP g ℓ := by
     rw [hBs, ← hext]
@@ -1271,7 +1271,7 @@ theorem exists_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     show _ ∈ abLocus Y.t.G
     rw [e]
     exact hab
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   let y₀ : Sp L ⟶ Xo.XF c := IsOpenImmersion.lift Y.jQ w hrange
   have hy : y₀ ≫ Y.jQ = w := IsOpenImmersion.lift_fac _ _ _
   have hj : y₀ ≫ Y.j = z ≫ 𝔐.f := by
@@ -1288,9 +1288,9 @@ theorem exists_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     have hp : p = IsLocalRing.closedPoint L := Subsingleton.elim _ _
     subst hp
     refine (Z.closure _).2 ?_
-    haveI : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
+    have : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
       IsPreimmersion.of_isLocalization (nonZeroDivisors (𝓞 c.F)) (S := c.F)
-    haveI : IsPreimmersion Y.j := by
+    have : IsPreimmersion Y.j := by
       show IsPreimmersion (Y.jQ ≫ pullback.fst _ _)
       infer_instance
     have hind : Topology.IsInducing Y.j := Y.j.isEmbedding.isInducing
@@ -1501,9 +1501,9 @@ theorem mem_of_period {σ : KA l →+* ℂ} {g : ℕ} {ty : Fin g → (E →+* �
   let y : (Fin (F.Di i).dim → ℂ) → (Sp ℂ ⟶ Xo.XF c) := fun b =>
     if hb : b ∈ B then pullback.lift (F.u i (Q b)) (spMap j) ((F.over_σ i _ (hQ.1 b hb)).trans hcond) else x
   have hy1 : ∀ b ∈ B, y b ≫ pullback.fst _ _ = F.u i (Q b) := fun b hb => by
-    simp only [y, dif_pos hb, pullback.lift_fst]
+    simp only [y, dite_eq_left hb, pullback.lift_fst]
   have hy2 : ∀ b ∈ B, y b ≫ pullback.snd _ _ = spMap j := fun b hb => by
-    simp only [y, dif_pos hb, pullback.lift_snd]
+    simp only [y, dite_eq_left hb, pullback.lift_snd]
   have hhol : IsHolTo B y :=
     GlobalTheory.HolFibre.isHolTo_of_isPullback (IsPullback.of_hasPullback _ _)
       (GlobalTheory.LocLift.isHolTo_congr (F.hol i _ B Q hBo hQ).1 hy1)
@@ -1558,14 +1558,14 @@ theorem periodOf : PeriodOf := by
   have hsm : SmoothOfRelativeDimension D.dim s :=
     (smoothOfRelativeDimension_isStableUnderBaseChange D.dim).of_isPullback (IsPullback.of_hasPullback _ _) Xo.smooth
   have hsm' : Smooth s := SmoothOfRelativeDimension.smooth D.dim s
-  haveI := Y.jQ_open
-  haveI : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
+  have := Y.jQ_open
+  have : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
     IsPreimmersion.of_isLocalization (nonZeroDivisors (𝓞 c.F)) (S := c.F)
-  haveI : IsPreimmersion Y.j := by
+  have : IsPreimmersion Y.j := by
     show IsPreimmersion (Y.jQ ≫ pullback.fst _ _)
     infer_instance
   have hξ : IsCptGen Z.ξ₀ := _root_.GlobalTheory.CompanionTheory.Ar.CptLift.isCptGen_of_smooth_of_surjective c.F _ _ _ _ _ Y.j s hsm' rfl Z.gen (Y.j.stalkMap_surjective _)
-  letI : Algebra c.F Z.Ω := Z.inc.toAlgebra
+  let : Algebra c.F Z.Ω := Z.inc.toAlgebra
   have hcl : ConstClosed c.F Z.Ω := by
     rintro a ⟨f, hf, hfa⟩
     obtain ⟨x, hx⟩ := hgeom a ⟨f, hf, hfa⟩

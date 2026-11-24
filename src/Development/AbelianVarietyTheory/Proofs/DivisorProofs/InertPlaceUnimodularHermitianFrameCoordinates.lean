@@ -117,7 +117,7 @@ theorem exists_basis_of_fg {n : ℕ} (M : Submodule (Formalism.UG.intL L) (Fin n
   let e : Fin n ≃ Module.Free.ChooseBasisIndex (Formalism.UG.intL L) M := Fintype.equivOfCardEq hcard
   let B : Matrix (Fin n) (Fin n) L := Matrix.of fun i j => v (e j) i
   have hli : LinearIndependent L (fun j => v (e j)) := hC.comp e e.injective
-  have hu : IsUnit B := Matrix.linearIndependent_cols_iff_isUnit.1 (by
+  have hu : IsUnit B := Matrix.linearIndependent_col_iff_isUnit.1 (by
     have hcol : B.col = fun j => v (e j) := by funext j i; rfl
     rw [hcol]; exact hli)
   have hBx : ∀ y : Fin n → L, B *ᵥ y = ∑ j, y j • v (e j) := by
@@ -1132,7 +1132,7 @@ def gens {L : Type} [Field L] (O : Subring L) (φ : E →+* L) {n : ℕ} (Lat : 
 theorem exists_mul_mem [Algebra.Unramified (𝓞 F) (𝓞 E)] (v : Pl (F := F)) (hv : ¬ differentIdeal ℤ (𝓞 F) ≤ v.asIdeal)
     (e : E) (he : ∀ o : 𝓞 E, IsIntegral ℤ (Algebra.trace ℚ E ((o : E) * e))) :
     ∃ d : 𝓞 F, d ∉ v.asIdeal ∧ algebraMap F E (algebraMap (𝓞 F) F d) * e ∈ (algebraMap (𝓞 E) E).range := by
-  obtain ⟨d, hd, hdv⟩ := SetLike.not_le_iff_exists.mp hv
+  obtain ⟨d, hd, hdv⟩ := IsConcreteLE.not_le_iff_exists.mp hv
   refine ⟨d, hdv, GlobalTheory.InertSelfDual.mem_of_trace (F := F) _ fun a => ?_⟩
   have hco : ∀ c : 𝓞 F, ((algebraMap (𝓞 F) (𝓞 E) c : 𝓞 E) : E) = algebraMap F E (algebraMap (𝓞 F) F c) := by
     intro c
@@ -1176,7 +1176,7 @@ theorem gram_skew_unimodular : ∀ (F E : Type) [Field F] [NumberField F] [Field
   classical
   obtain ⟨hσσ, hσv, -⟩ := hUI
   obtain ⟨hδv, hδσ⟩ := hδ
-  haveI := hB.unram
+  have := hB.unram
   have hvd : ¬ differentIdeal ℤ (𝓞 F) ≤ v.asIdeal :=
     GlobalTheory.DiffCoprimeP.not_le_differentIdeal_of_psiUnr hB.std v (hB.inert v w hvw).2.2
 
@@ -1677,7 +1677,7 @@ theorem GlobalTheory.InertLocSymp.psi_symp_eq :
     have : ι 1 = 0 := by
       rw [← one_smul (AF F) (ι 1), ← invOf_mul_self (2 : AF F), mul_smul, h1, smul_zero]
     exact one_ne_zero (hinj (this.trans (map_zero ι).symm))
-  haveI : NeZero (2 : L) := ⟨h2⟩
+  have : NeZero (2 : L) := ⟨h2⟩
   set z := GlobalTheory.Hk3.locH σL δ JS JT x y
   have hhalf : ⅟(2 : AF F) • ι z = ι (z / 2) := by
     have : ι z = (2 : AF F) • ι (z / 2) := by

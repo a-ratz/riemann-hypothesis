@@ -136,7 +136,7 @@ theorem finite_of_pow_mem {R : Type*} [CommRing R] {n : ℕ} (Q : Ideal (MvPolyn
       have hmk : Ideal.Quotient.mk Q (monomial (s' + Finsupp.single j (M j)) 1) =
           Ideal.Quotient.mk Q (monomial s' 1 * q j) := by
         have hmono : monomial (s' + Finsupp.single j (M j)) (1 : R) = monomial s' 1 * X j ^ M j := by
-          rw [X_pow_eq_monomial, monomial_mul, one_mul]
+          rw [X_pow_eq_monomial, monomial_mul_monomial, one_mul]
         rw [hmono, Ideal.Quotient.eq, ← mul_sub]
         exact Q.mul_mem_left _ (hQ j)
 
@@ -144,7 +144,7 @@ theorem finite_of_pow_mem {R : Type*} [CommRing R] {n : ℕ} (Q : Ideal (MvPolyn
       refine Submodule.sum_mem _ fun m hm => ?_
       have hprod : monomial s' (1 : R) * monomial m (AddMonoidAlgebra.coeff (q j) m) =
           C (AddMonoidAlgebra.coeff (q j) m) * monomial (s' + m) 1 := by
-        rw [monomial_mul, C_mul_monomial, one_mul, mul_one]
+        rw [monomial_mul_monomial, C_mul_monomial, one_mul, mul_one]
       rw [hprod, hC]
       refine Submodule.smul_mem _ _ (ih _ ?_ _ le_rfl)
       have hm' : m.degree ≤ (q j).totalDegree := le_totalDegree hm

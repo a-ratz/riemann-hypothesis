@@ -227,8 +227,8 @@ theorem measurable_secKInf_secEtaInf {Z : Type} [NormedAddCommGroup Z] [NormedSp
     (hγ₀ : ∀ i j, Measurable fun x => (γ₀ x : Matrix (Fin n) (Fin n) (Cinf E)) i j) :
     Measurable (fun p : X₀ × ((Fin n → Fin n → Cinf E) × X) => secKInf R σ₀ κ τ (γ₀ p.1) p.2) ∧
       ∀ z, Measurable fun p : X₀ × ((Fin n → Fin n → Cinf E) × X) => secEtaInf L τ (γ₀ p.1) p.2 z := by
-  letI : MeasurableSpace Z := borel Z
-  haveI : BorelSpace Z := ⟨rfl⟩
+  let : MeasurableSpace Z := borel Z
+  have : BorelSpace Z := ⟨rfl⟩
   have hq : ∀ i j, Measurable fun p : X₀ × ((Fin n → Fin n → Cinf E) × X) =>
       (γ₀ p.1 : Matrix (Fin n) (Fin n) (Cinf E)) i j :=
     fun i j => (hγ₀ i j).comp measurable_fst
@@ -260,7 +260,7 @@ theorem measurable_secKInf_secEtaInf {Z : Type} [NormedAddCommGroup Z] [NormedSp
           (F := fun g : GL (Fin n) (Cinf E) =>
             ((jacInf ((g⁻¹ : GL (Fin n) (Cinf E)) : Matrix (Fin n) (Fin n) (Cinf E)) : ℝ) : ℂ))
           (Complex.continuous_ofReal.comp (continuous_jacInf.comp Units.continuous_coe_inv)) hq
-      · exact (continuous_subtype_val.comp Real.continuous_fourierChar).measurable.comp
+      · exact (continuous_subtypeVal.comp Real.continuous_fourierChar).measurable.comp
           (measurable_clm_evalInf hτy (measurable_const.prodMk (measurable_sandCLMInf_apply hinv hx σ₀)))
   · have e : (fun p : X₀ × ((Fin n → Fin n → Cinf E) × X) => secEtaInf L τ (γ₀ p.1) p.2 z) = fun p =>
         τ p.2.2 (z, sandCLMInf (((γ₀ p.1)⁻¹ : GL (Fin n) (Cinf E)) : Matrix (Fin n) (Fin n) (Cinf E))
@@ -327,7 +327,7 @@ theorem secKInf_moment_le {Z : Type} [NormedAddCommGroup Z] [NormedSpace ℝ Z] 
     set D := jacInf ((q⁻¹ : GL (Fin n) (Cinf E)) : Matrix (Fin n) (Fin n) (Cinf E)) with hDdef
     have hD0 : 0 ≤ D := Finset.prod_nonneg fun w _ => pow_nonneg (Complex.normSq_nonneg _) _
     have hK : ‖secKInf R σ₀ κ τ q p‖ = D * ‖κ p.2‖ := by
-      simp only [secKInf, if_pos (And.intro hu hle), norm_mul, Circle.norm_coe, mul_one, Complex.norm_real,
+      simp only [secKInf, ite_eq_left (And.intro hu hle), norm_mul, Circle.norm_coe, mul_one, Complex.norm_real,
         Real.norm_eq_abs]
       rw [abs_of_nonneg hD0]
     have hD : D ≤ ((((n.factorial : ℝ) * htInf q ^ n) ^ 2) ^ n) ^ Fintype.card (InfinitePlace E) :=
@@ -393,7 +393,7 @@ theorem secKInf_moment_le {Z : Type} [NormedAddCommGroup Z] [NormedSpace ℝ Z] 
           mul_le_mul (mul_le_mul_of_nonneg_right hD k0) hpow
             (pow_nonneg (mul_nonneg (htInf_pos' _).le (by positivity)) _) (mul_nonneg (hD0.trans hD) k0)
       _ = _ := by ring
-  · have : secKInf R σ₀ κ τ q p = 0 := by simp only [secKInf, if_neg hc]
+  · have : secKInf R σ₀ κ τ q p = 0 := by simp only [secKInf, ite_eq_right hc]
     rw [this, norm_zero, zero_mul]
     exact mul_nonneg (Set.indicator_nonneg (fun _ _ => hK0) _) (by positivity)
 

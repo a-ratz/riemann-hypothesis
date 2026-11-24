@@ -63,7 +63,7 @@ theorem relIndex_conj_comm {H : Type} [Group H] [TopologicalSpace H] [IsTopologi
     (K.map (MulAut.conj g).toMonoidHom).relIndex K = K.relIndex (K.map (MulAut.conj g).toMonoidHom) := by
   set K' := K.map (MulAut.conj g).toMonoidHom with hK'
   let μ : Measure H := Measure.haar
-  haveI : μ.IsMulRightInvariant := ⟨fun g => by
+  have : μ.IsMulRightInvariant := ⟨fun g => by
     rw [GlobalTheory.AdelicUnimod.map_mul_right_eq, hmod, one_smul]⟩
   have e : (K' : Set H) = (fun x => g⁻¹ * x) ⁻¹' ((fun x => x * g) ⁻¹' (K : Set H)) := by
     ext x
@@ -83,10 +83,10 @@ theorem relIndex_conj_comm {H : Type} [Group H] [TopologicalSpace H] [IsTopologi
   have hoi : IsOpen ((K ⊓ K' : Subgroup H) : Set H) := ho.inter ho'
   have key : ∀ L : Subgroup H, IsCompact (L : Set H) → K ⊓ K' ≤ L →
       ((K ⊓ K').relIndex L : ENNReal) * μ (K ⊓ K' : Subgroup H) = μ L := fun L hL hle => by
-    haveI : CompactSpace L := isCompact_iff_compactSpace.1 hL
-    haveI : Finite (L ⧸ (K ⊓ K').subgroupOf L) :=
-      Subgroup.quotient_finite_of_isOpen _ (hoi.preimage continuous_subtype_val)
-    haveI : ((K ⊓ K').subgroupOf L).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : CompactSpace L := isCompact_iff_compactSpace.1 hL
+    have : Finite (L ⧸ (K ⊓ K').subgroupOf L) :=
+      Subgroup.quotient_finite_of_isOpen _ (hoi.preimage continuous_subtypeVal)
+    have : ((K ⊓ K').subgroupOf L).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     exact GlobalTheory.BaseModule.relIndex_mul_measure' _ _ hle hoi.measurableSet μ
   have h1 := key K hc inf_le_left
   have h2 := key K' hc' inf_le_right
@@ -244,8 +244,8 @@ theorem relIndex_conj_levelVL : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
     have := (LinearEquiv.ofBijective (Algebra.linearMap F E) ⟨(algebraMap F E).injective, hs⟩).finrank_eq
     rw [hc.deg2, Module.finrank_self] at this
     omega
-  haveI : Submodule.IsLattice E N := Submodule.IsLattice.of_fg E (Module.Finite.iff_fg.1 hN)
-  haveI : Submodule.IsFullLattice E N := ⟨hspan⟩
+  have : Submodule.IsLattice E N := Submodule.IsLattice.of_fg E (Module.Finite.iff_fg.1 hN)
+  have : Submodule.IsFullLattice E N := ⟨hspan⟩
   obtain ⟨g, rfl⟩ := exists_toGL hc.sig J v hγ
   have h := relIndex_conj_comm (GlobalTheory.HeckeDual.modular_eq_one hc.sig J (fun x => star_star x) hδ hσδ
     ⟨fun i j => congrFun (congrFun hJ i) j, hd.ne_zero⟩ v) _ (GlobalTheory.AdelicU.isOpen_stabLoc hc.sig J N v)

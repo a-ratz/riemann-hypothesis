@@ -156,13 +156,13 @@ variable {K L : Type} [Field K] [Field L] (σ : K →+* K) (τ : L →+* L) (φ 
 theorem gram_det_map (hφ : ∀ x, τ (φ x) = φ (σ x)) (H A : Matrix (Fin n) (Fin n) K) :
     ∃ t : L, t ≠ 0 ∧ (gramOn τ (H.map φ) (LinearMap.ker (Matrix.toLin' (A.map φ)))).det =
       τ t * φ (gramOn σ H (LinearMap.ker (Matrix.toLin' A))).det * t := by
-  letI := φ.toAlgebra
-  haveI : FaithfulSMul K L := (faithfulSMul_iff_algebraMap_injective K L).2 φ.injective
+  let := φ.toAlgebra
+  have : FaithfulSMul K L := (faithfulSMul_iff_algebraMap_injective K L).2 φ.injective
   set V := LinearMap.ker (Matrix.toLin' A) with hV
   set V' := LinearMap.ker (Matrix.toLin' (A.map φ)) with hV'
   have hk : Module.finrank L V' = Module.finrank K V := finrank_ker_map φ A
   rcases isEmpty_or_nonempty (Fin (Module.finrank L V')) with he | hne
-  · haveI : IsEmpty (Fin (Module.finrank K V)) := hk ▸ he
+  · have : IsEmpty (Fin (Module.finrank K V)) := hk ▸ he
     refine ⟨1, one_ne_zero, ?_⟩
     rw [Matrix.det_isEmpty, Matrix.det_isEmpty]; simp
   let b := Module.finBasis K V

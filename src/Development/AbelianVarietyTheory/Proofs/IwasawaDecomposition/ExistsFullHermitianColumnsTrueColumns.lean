@@ -147,7 +147,7 @@ theorem isOpen_ker_u1Dt : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (S
     ring
   have hnh : (((u1Dt H SQ).ker : Subgroup _) : Set (Formalism.L2.Herm.unitaryOneFiniteAdeles (host_cmData R H))) ∈ 𝓝 (1 : Formalism.L2.Herm.unitaryOneFiniteAdeles (host_cmData R H)) := by
     have hpre : (fun x : Formalism.L2.Herm.unitaryOneFiniteAdeles (host_cmData R H) => x.1) ⁻¹' W ∈ 𝓝 (1 : Formalism.L2.Herm.unitaryOneFiniteAdeles (host_cmData R H)) :=
-      (hWo.preimage continuous_subtype_val).mem_nhds hW1
+      (hWo.preimage continuous_subtypeVal).mem_nhds hW1
     exact Filter.mem_of_superset hpre fun x hx => hsub x hx
   exact Subgroup.isOpen_of_mem_nhds _ hnh
 

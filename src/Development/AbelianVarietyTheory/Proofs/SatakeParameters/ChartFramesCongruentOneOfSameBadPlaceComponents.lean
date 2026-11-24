@@ -117,7 +117,7 @@ theorem GL_inv_mul_congr_one : ∀ {K : Type} [Field K] [Valued K (WithZero (Mul
     have hlt : v (f (A'.det - 1)) < 1 := by
       rw [← hc, map_mul, map_mul]
       have hc' : v (f c) ≤ 1 := (Valuation.mem_integer_iff _ _).1 c.2
-      calc v (f c) * v (f p) ≤ 1 * v (f p) := mul_le_mul_of_nonneg_right hc' zero_le'
+      calc v (f c) * v (f p) ≤ 1 * v (f p) := mul_le_mul_of_nonneg_right hc' zero_le
         _ = v π := one_mul _
         _ < 1 := hπ
     have he : f A'.det = 1 + f (A'.det - 1) := by rw [map_sub, map_one]; ring
@@ -303,7 +303,7 @@ theorem core (hTie : AdTie A dtU a) (j : ℕ) (hj : j ≤ D.R.m) (β : (St j hj)
     exact pow_ne_zero _ (by exact_mod_cast hq0)
   have hπ : Valued.v (algebraMap D.host.E (Q.adicCompletion D.host.E) (((qOf Q : ℕ) : D.host.E) ^ (t.cst μ).D P)) < 1 := by
     rw [val_alg, map_pow]
-    refine pow_lt_one₀ zero_le' ?_ (by omega)
+    refine pow_lt_one₀ zero_le ?_ (by omega)
     have e : ((qOf Q : ℕ) : D.host.E) = algebraMap (𝓞 D.host.E) D.host.E (qOf Q : 𝓞 D.host.E) := by rw [map_natCast]
     rw [e, HeightOneSpectrum.valuation_of_algebraMap]
     exact (Q.intValuation_lt_one_iff_mem _).2 (Ideal.absNorm_mem _)

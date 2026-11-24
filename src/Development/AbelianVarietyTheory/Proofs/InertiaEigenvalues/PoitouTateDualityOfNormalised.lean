@@ -120,7 +120,7 @@ theorem exists_kummer {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebr
       have := h0.preimage (continuous_const_mul g⁻¹)
       convert this using 1
       ext σ
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, MulAction.mem_stabilizer_iff,
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, MulAction.mem_stabilizer_iff,
         mul_smul, inv_smul_eq_iff]
       rfl
     filter_upwards [ho.mem_nhds rfl] with σ hσ
@@ -128,7 +128,7 @@ theorem exists_kummer {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebr
     apply mul_right_cancel₀ hy0
     rw [← hκ, ← hκ]; exact hσ
   refine ⟨ϖ, y, fun g => κ g, ⟨fun p => κ p.1 * χ p.2,
-    ((hκc.comp continuous_subtype_val).comp continuous_fst).mul (hc.comp continuous_snd),
+    ((hκc.comp continuous_subtypeVal).comp continuous_fst).mul (hc.comp continuous_snd),
     fun g h k => ?_⟩, h1, h2, hy, fun g => hκ g, fun _ _ => rfl⟩
   show (cycMod F Ω l r g : ZMod (l ^ r)) * (κ h * χ k) - κ ((g : G F Ω) * h) * χ k
     + κ g * χ (h * k) - κ g * χ h = 0
@@ -137,9 +137,9 @@ theorem exists_kummer {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebr
 theorem exists_pow_card {k K : Type} [Field k] [Fintype k] [Field K] [Algebra k K]
     (σ : K →ₐ[k] K) (x : K) (hx : IsIntegral k x) : ∃ i, σ x = x ^ (Fintype.card k ^ i) := by
   let L := IntermediateField.adjoin k ({x} : Set K)
-  haveI : FiniteDimensional k L := IntermediateField.adjoin.finiteDimensional hx
-  haveI : Finite L := Module.finite_of_finite k
-  haveI : IsGalois k L := inferInstance
+  have : FiniteDimensional k L := IntermediateField.adjoin.finiteDimensional hx
+  have : Finite L := Module.finite_of_finite k
+  have : IsGalois k L := inferInstance
   obtain ⟨i, hi⟩ := (FiniteField.bijective_frobeniusAlgEquivOfAlgebraic_pow k L).2
     (σ.restrictNormal' L)
   refine ⟨i.1, ?_⟩
@@ -160,11 +160,11 @@ theorem exists_pow_normV {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alg
     obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 h'
     rw [← hy]; exact y.2
   let f : 𝓞 F →+* A := ((algebraMap F Ω).comp (algebraMap (𝓞 F) F)).codRestrict A.toSubring hmem
-  haveI := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  letI : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
-  letI : Algebra (𝓞 F ⧸ v.asIdeal) (IsLocalRing.ResidueField A) :=
+  have := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 F ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  let : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
+  let : Algebra (𝓞 F ⧸ v.asIdeal) (IsLocalRing.ResidueField A) :=
     (Ideal.Quotient.lift v.asIdeal ((IsLocalRing.residue A).comp f) fun a ha => by
       rw [RingHom.comp_apply, IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff]
       exact (hA a).2 ha).toAlgebra
@@ -201,14 +201,14 @@ theorem exists_unramified {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Al
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have : NeZero n := ⟨by omega⟩
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  haveI : Nontrivial (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.nontrivial_iff.2 v.isPrime.ne_top
+  have : Finite (𝓞 F ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have : Nontrivial (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.nontrivial_iff.2 v.isPrime.ne_top
   set q := normV v with hq
   have hq2 : 2 ≤ q := Finite.one_lt_card (α := 𝓞 F ⧸ v.asIdeal)
   have hqv : A.valuation (q : Ω) < 1 := by
     have : ((q : ℕ) : 𝓞 F) ∈ v.asIdeal := by
       rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-      letI : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
+      let : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
       have : q = Fintype.card (𝓞 F ⧸ v.asIdeal) := Nat.card_eq_fintype_card
       rw [this]; exact Nat.cast_card_eq_zero _
     simpa using (hA _).2 this
@@ -230,7 +230,7 @@ theorem exists_unramified {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Al
     exact lt_irrefl _ this
   have : NeZero N := ⟨hN0⟩
   have : NeZero ((N : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hN0⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   have hpw : ∀ m : ℕ, (ξ ^ m) ^ N = 1 := fun m => by
     rw [← pow_mul, mul_comm, pow_mul, hξ.pow_eq_one, one_pow]
   have hg : ∀ g : G F Ω, g ξ ^ N = 1 := fun g => by rw [← map_pow, hξ.pow_eq_one, map_one]
@@ -259,7 +259,7 @@ theorem exists_unramified {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Al
     simp only [ZMod.natCast_val, ZMod.cast_id', id]
   · refine (IsLocallyConstant.iff_eventually_eq χ).2 (fun g => ?_) |>.continuous
     have ho := (isOpen_setOf_apply (F := F) ξ (fun t => t = (g : G F Ω) ξ)).preimage
-      (continuous_subtype_val (p := fun σ => σ ∈ Dec (F := F) A))
+      (continuous_subtypeVal (p := fun σ => σ ∈ Dec (F := F) A))
     filter_upwards [ho.mem_nhds (x := g) rfl] with σ hσ
     apply inj
     rw [← hχ, ← hχ]; exact hσ
@@ -354,7 +354,7 @@ theorem cycMod_conjBack (l : ℕ) [Fact l.Prime] (r : ℕ) (g : G F Ω) :
 
 omit hA in
 theorem continuous_conjBack [Algebra.IsAlgebraic F Ω] : Continuous (conjBack σ τ hστ) := by
-  haveI : Algebra.IsIntegral F Ω := inferInstance
+  have : Algebra.IsIntegral F Ω := inferInstance
   refine continuous_of_continuousAt_one _ ?_
   rw [ContinuousAt, map_one]
   intro s hs
@@ -423,14 +423,14 @@ theorem conjCompatible (hr : 0 < r) {ζ : Ω} (hζ : IsPrimitiveRoot ζ (l ^ r))
       Function.Bijective (inv A) ∧ IsNormalised ζ A v (inv A)) :
     ConjCompatible ζ inv := by
   intro σ τ hστ c hc A A' v hAv hA z z' hz
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   let ψ : Dec (F := F) A' →* Dec (F := F) A :=
     ((conjBack σ τ hστ).comp (Dec (F := F) A').subtype).codRestrict (Dec (F := F) A)
       (fun g => conjBack_mem_Dec σ τ hστ hA g.2)
   have hψv : ∀ g : Dec (F := F) A', ((ψ g : Dec (F := F) A) : G F Ω) = conjBack σ τ hστ g := fun _ => rfl
   have hψc : Continuous ψ :=
-    (((continuous_conjBack σ τ hστ).comp continuous_subtype_val)).subtype_mk _
+    (((continuous_conjBack σ τ hστ).comp continuous_subtypeVal)).subtype_mk _
   have hψ : ∀ (g' : Dec (F := F) A') x, (g' : G F Ω) (σ x) = σ (((ψ g' : Dec (F := F) A) : G F Ω) x) :=
     fun g' x => (apply_conjBack σ τ hστ g' x).symm
   have hcyc : ∀ g' : Dec (F := F) A',

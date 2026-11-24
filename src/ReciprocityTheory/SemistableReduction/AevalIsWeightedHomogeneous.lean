@@ -123,7 +123,7 @@ theorem exists_torus_coeff_le {ι : Type*} [Fintype ι] (g : MvPolynomial ι ℂ
     exact norm_nonneg _
   obtain ⟨N, hN⟩ : ∃ N, N = g.totalDegree + 1 := ⟨_, rfl⟩
   have hN0 : N ≠ 0 := by omega
-  haveI : NeZero N := ⟨hN0⟩
+  have : NeZero N := ⟨hN0⟩
   obtain ⟨ζ, hζ⟩ : ∃ ζ : ℂ, IsPrimitiveRoot ζ N := ⟨_, Complex.isPrimitiveRoot_exp N hN0⟩
   have hζn : ‖ζ‖ = 1 := hζ.norm'_eq_one hN0
   have hlt : ∀ d ∈ g.support, ∀ i, d i < N := by
@@ -158,7 +158,7 @@ theorem exists_torus_coeff_le {ι : Type*} [Fintype ι] (g : MvPolynomial ι ℂ
               by_contra h
               push_neg at h
               exact hds (Finsupp.ext h)
-            exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+            exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
       _ = (N : ℂ) ^ Fintype.card ι * AddMonoidAlgebra.coeff g s := by
           rw [Finset.sum_eq_single s (fun d _ hd => by simp [hd]) (fun h => absurd hs h)]
           simp [mul_comm]

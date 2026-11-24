@@ -101,7 +101,7 @@ namespace GlobalTheory.CompanionTheory.SignLine
 
 theorem signOne : PositivityTheory.RgBcC.RealD.SignOne := by
   intro V _ _ S A hA hS h1
-  haveI : FiniteDimensional ℂ S := Module.finite_of_finrank_pos (by rw [h1]; exact one_pos)
+  have : FiniteDimensional ℂ S := Module.finite_of_finrank_pos (by rw [h1]; exact one_pos)
   obtain ⟨v, hv0, hv⟩ := finrank_eq_one_iff'.mp h1
   set B : S →ₗ[ℂ] S := A.restrict hS with hBdef
   obtain ⟨c, hc⟩ := hv (B v)
@@ -175,10 +175,10 @@ theorem tri_le (e : Fin n → Fin n → ℝ) (h0 : ∀ a, e a a = 0) (ha : ∀ a
     · subst hac
       simp [h0]
     · have hn : ¬ (a = a ∧ a = c) := fun h => hac h.2
-      rw [if_neg hn, h0 a]
+      rw [ite_eq_right hn, h0 a]
       rcases hs a c hac with h | h <;> rw [h] <;> norm_num
   · have hn : ¬ (a = b ∧ b = c) := fun h => hab h.1
-    rw [if_neg hn]
+    rw [ite_eq_right hn]
     by_cases hbc : b = c
     · subst hbc
       rw [h0 b]
@@ -477,8 +477,8 @@ theorem multG_of (hCp : Compress) (hM : MultFor) (hA : AdmLeast) (h1 : N1) (hC :
     obtain ⟨M⟩ := hE n lam hl _ hl0
     have hMn2 : ∀ ν, IsSecondTypeWeight lam (fun a => (l0 a : ℕ)) ν → hwSp M.F1 M.F2 ν = ⊥ := by
       intro ν hν
-      letI := M.nacg
-      letI := M.ips
+      let := M.nacg
+      let := M.ips
       rw [Submodule.eq_bot_iff]
       intro y hy
       by_contra hy0
@@ -546,20 +546,20 @@ theorem mul_sg_self (lev : Fin n → ℕ) (a b : Fin n) :
   · have h' : (lev a : ℝ) < lev b := by exact_mod_cast h
     have hs : sg lev a b = 1 := by
       unfold sg
-      rw [if_pos h, if_neg (by omega)]
+      rw [ite_eq_left h, ite_eq_right (by omega)]
       norm_num
     rw [hs, abs_of_neg (by linarith)]
     ring
   · have hs : sg lev a b = 0 := by
       unfold sg
-      rw [if_neg (by omega), if_neg (by omega)]
+      rw [ite_eq_right (by omega), ite_eq_right (by omega)]
       norm_num
     rw [hs, h]
     simp
   · have h' : (lev b : ℝ) < lev a := by exact_mod_cast h
     have hs : sg lev a b = -1 := by
       unfold sg
-      rw [if_neg (by omega), if_pos h]
+      rw [ite_eq_right (by omega), ite_eq_left h]
       norm_num
     rw [hs, abs_of_pos (by linarith)]
     ring
@@ -725,8 +725,8 @@ theorem lift_highest [AddCommGroup X] [Module ℂ X] {Kf : Fin n → Fin n → M
     (hx : KHighest (fun _ => true) KX ν (π m)) :
     ∃ y ∈ S, π y = π m ∧ KHighest (fun _ => true) Kf ν y := by
   let T : Submodule ℂ Y := S ⊓ LinearMap.ker π
-  haveI : FiniteDimensional ℂ T := Submodule.finiteDimensional_inf_left S _
-  haveI : CompleteSpace T := FiniteDimensional.complete ℂ T
+  have : FiniteDimensional ℂ T := Submodule.finiteDimensional_inf_left S _
+  have : CompleteSpace T := FiniteDimensional.completeSpace ℂ T
   have hT : ∀ a b, ∀ w ∈ T, Kf a b w ∈ T := fun a b w hw =>
     ⟨hS a b w hw.1, by
       have h0 : π w = 0 := hw.2
@@ -884,8 +884,8 @@ theorem locFin_sumF {E1 E2 : Fin n → Fin n → Module.End ℂ V} {F1 F2 : Fin 
       ∀ a b, ∀ w ∈ S, kF (sumF E1 F1) (sumF E2 F2) a b w ∈ S := by
   obtain ⟨S1, h1, m1, s1⟩ := hE y.ofLp.1
   obtain ⟨S2, h2, m2, s2⟩ := hF y.ofLp.2
-  haveI := h1
-  haveI := h2
+  have := h1
+  have := h2
   obtain ⟨S, hS, hm⟩ := exists_prod_sub S1 S2
   refine ⟨S, hS, (hm y).2 ⟨m1, m2⟩, fun a b w hw => ?_⟩
   have hw' := (hm w).1 hw
@@ -1047,10 +1047,10 @@ theorem first_summand_zero {E1 E2 : Fin n → Fin n → Module.End ℂ V} {F1 F2
   have key : ∀ u' : V, (WithLp.toLp 2 (u', 0) : 𝐘) ∈ N → ⟪u', v⟫_ℂ = 0 := by
     intro u' hu'
     obtain ⟨S', hfd, hmem, hst⟩ := hloc (WithLp.toLp 2 (u', 0))
-    haveI := hfd
+    have := hfd
     let S : Submodule ℂ 𝐘 := S' ⊓ N0
-    haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_inf_left S' N0
-    haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+    have : FiniteDimensional ℂ S := Submodule.finiteDimensional_inf_left S' N0
+    have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
     have hSst : ∀ a b, ∀ w ∈ S, kF (sumF E1 F1) (sumF E2 F2) a b w ∈ S := fun a b w hw =>
       ⟨hst a b w hw.1, hK0 a b w hw.2⟩
     obtain ⟨p, hpS, r, hr, e⟩ := S.exists_add_mem_mem_orthogonal (WithLp.toLp 2 (v, 0) : 𝐘)
@@ -1096,9 +1096,9 @@ theorem k_types_in_weight_cone : KTypeGenerationHighest := by
   obtain ⟨a2, ha2⟩ := exists_pair_of_mem_alg (F1 := M.F1) (F2 := M.F2) ha
   have hm : dsum (a, a2) vf ∈ genN A vf := ⟨_, ha2, rfl⟩
   obtain ⟨S', hfd, hmem, hst⟩ := hY.locFin (dsum (a, a2) vf)
-  haveI := hfd
+  have := hfd
   let S : Submodule ℂ (WithLp 2 (V × M.W)) := S' ⊓ genN A vf
-  haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_inf_left S' _
+  have : FiniteDimensional ℂ S := Submodule.finiteDimensional_inf_left S' _
   have hSst : ∀ i j, ∀ w ∈ S, kF (sumF E1 M.F1) (sumF E2 M.F2) i j w ∈ S := fun i j w hw =>
     ⟨hst i j w hw.1, by rw [kF_sumF]; exact genN_stable (kpair_mem i j) hw.2⟩
   have hπm : fstL (dsum (a, a2) vf) = x := hax

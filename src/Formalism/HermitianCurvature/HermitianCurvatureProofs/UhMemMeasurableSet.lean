@@ -161,8 +161,8 @@ theorem coef_ext {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1) 
     exact isClosed_eq ((hid.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul hid)
       continuous_const
   let f : C(Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r), ℂ) :=
-    ⟨fun g => ⟪v, σ g x⟫_ℂ, (continuousOn_const.inner hcont).restrict⟩
-  haveI : NormalSpace (Mx k r) :=
+    ⟨fun g => ⟪v, σ g x⟫_ℂ, (continuousOn_const.inner hcont).domRestrict⟩
+  have : NormalSpace (Mx k r) :=
     inferInstanceAs (NormalSpace (Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → ℂ))
   obtain ⟨G, hG⟩ := ContinuousMap.exists_restrict_eq hcl f
   exact ⟨⇑G, G.continuous, fun g hg => DFunLike.congr_fun hG ⟨g, hg⟩⟩

@@ -293,7 +293,7 @@ theorem unimod_mul {v₁ v₂ : σ → T} (h₁ : Ideal.span (Set.range v₁) = 
     Ideal.span (Set.range fun i : σ × σ => v₁ i.1 * v₂ i.2) = ⊤ := by
   rw [eq_top_iff, ← Ideal.top_mul ⊤]
   nth_rewrite 1 [← h₁, ← h₂]
-  rw [Ideal.span_mul_span', Ideal.span_le]
+  rw [Ideal.span_mul_span, Ideal.span_le]
   rintro _ ⟨_, ⟨i, rfl⟩, _, ⟨j, rfl⟩, rfl⟩
   exact Ideal.subset_span ⟨(i, j), rfl⟩
 
@@ -338,7 +338,7 @@ theorem rep_smul {β : R →+* T} {v : σ → T} (hv : Ideal.span (Set.range v) 
     ((loc_of_secCoord hc).smul hu))).2 F hF
   have h2 : MvPolynomial.eval₂ (Polynomial.C.comp β) (fun i => Polynomial.X * Polynomial.C (v i)) F = 0 := by
     apply IsLocalization.injective L (M := Submonoid.powers (Polynomial.X : Polynomial T))
-      (Submonoid.powers_le.2 Polynomial.X_mem_nonzeroDivisors)
+      (Submonoid.powers_le.2 Polynomial.X_mem_nonZeroDivisors)
     rw [MvPolynomial.eval₂_comp_left, map_zero, ← h1]
     congr 1
     funext i

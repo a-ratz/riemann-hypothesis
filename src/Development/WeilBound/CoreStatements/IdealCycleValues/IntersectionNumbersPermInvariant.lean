@@ -51,7 +51,7 @@ private theorem intNum_get_eq_of_perm {K : Type} [DecidableEq K] {ι : K → Typ
     intNum F P l.get = intNum F P l'.get := by
   unfold intNum mixedDiff
   rw [List.ofFn_get, List.ofFn_get]
-  haveI : LeftCommutative (diffStep (K := K)) := ⟨fun a b f => by
+  have : LeftCommutative (diffStep (K := K)) := ⟨fun a b f => by
     funext m
     simp only [diffStep]
     rw [show m - a - b = m - b - a by abel]

@@ -593,7 +593,7 @@ theorem eq_zero_of_fderiv_eq_zero {σ : Type} [Fintype σ] {n m : ℕ} (e : σ �
     exact h0.congr_of_eventuallyEq hr
   have heq := hc.unique hs
   have h1 := congrArg (fun L => L v) heq
-  simp only [ContinuousLinearMap.comp_apply, hv, map_zero, ContinuousLinearMap.smul_apply,
+  simp only [ContinuousLinearMap.comp_apply, hv, map_zero, smul_apply,
     ContinuousLinearMap.id_apply] at h1
   exact (smul_eq_zero.mp h1.symm).resolve_left hε
 
@@ -695,7 +695,7 @@ theorem sncChart_of_regular_parameters : ∀ (K : Type) [Fintype K] (J : K → T
       have h4 := h3.unique ((hasFDerivAt_const (1 : ℂ) t).congr_of_eventuallyEq h2)
       have h5 := congrArg (fun L => L v) h4
       simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply,
-        ContinuousLinearMap.zero_apply] at h5
+        zero_apply] at h5
       rw [h1] at h5
       simpa [torusSmul, (hchart t ht).2 k] using h5
     have hzero : fderiv ℂ gm t v = 0 := by
@@ -922,8 +922,8 @@ theorem snc_params : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype
     have h1 : ψ fS = θ (map (algebraMap ℚ ℂ) (F l)) := h _ _ (hF l).symm
     rw [← h1, ← map_pow, ← map_mul]
     exact h _ _ (by simpa [fS] using hZ i)
-  haveI : IsLocalRing (locRing I pt) := by subst hI hpt; assumption
-  haveI : IsNoetherianRing (locRing I pt) := by subst hI hpt; assumption
+  have : IsLocalRing (locRing I pt) := by subst hI hpt; assumption
+  have : IsNoetherianRing (locRing I pt) := by subst hI hpt; assumption
   have hev : ∀ g, eval pt (renR (Σ k, J k) g) = eval (ReciprocityTheory.AnForm.R.affCoord c w) g := by
     intro g
     rw [hpt]

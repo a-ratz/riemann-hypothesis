@@ -122,7 +122,7 @@ theorem _root_.GlobalTheory.FinWeil.adjacent_selfDual_simple : ∀ {R X M : Type
   have hrep := existsUnique_quotient_sub_smul_mem A B x P hxP hBle
   have hN : Nat.card (R ⧸ P) ≠ 0 := Nat.card_pos.ne'
   have hAB : _root_.GlobalTheory.FinWeil.idx A B = Nat.card (R ⧸ P) := by
-    haveI := Fintype.ofFinite (R ⧸ P)
+    have := Fintype.ofFinite (R ⧸ P)
     rw [Nat.card_eq_fintype_card]
     exact (_root_.GlobalTheory.FinWeil.sumOp_eq_sum_transversal hW A B hB (0 : M) (fun a _ => map_zero (W a)) (R ⧸ P)
       (fun q => Quotient.out q • x) (fun q => B.smul_mem _ hx) hrep).2

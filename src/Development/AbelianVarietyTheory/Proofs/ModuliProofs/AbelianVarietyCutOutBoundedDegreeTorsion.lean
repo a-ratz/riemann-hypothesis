@@ -124,8 +124,8 @@ theorem comp_succ_mul {h : MvPolynomial σ K} (hh : h.IsHomogeneous 1) (e : ℕ)
     have h1 := isHomogeneous_monomial (d := d) c rfl
     rw [homogeneousComponent_of_mem (hh.mul h1), homogeneousComponent_of_mem h1]
     by_cases he : e = d.degree
-    · rw [if_pos he, if_pos (by omega)]
-    · rw [if_neg he, if_neg (by omega), mul_zero]
+    · rw [ite_eq_left he, ite_eq_left (by omega)]
+    · rw [ite_eq_right he, ite_eq_right (by omega), mul_zero]
   | add p q hp hq => simp [mul_add, hp, hq]
 
 theorem comp_zero_mul {h : MvPolynomial σ K} (hh : h.IsHomogeneous 1)
@@ -133,7 +133,7 @@ theorem comp_zero_mul {h : MvPolynomial σ K} (hh : h.IsHomogeneous 1)
   induction B using MvPolynomial.induction_on' with
   | monomial d c =>
     have h1 := isHomogeneous_monomial (d := d) c rfl
-    rw [homogeneousComponent_of_mem (hh.mul h1), if_neg (by omega)]
+    rw [homogeneousComponent_of_mem (hh.mul h1), ite_eq_right (by omega)]
   | add p q hp hq => rw [mul_add, map_add (f := _), hp, hq, add_zero]
 
 theorem mem_sup_span {I : Ideal (MvPolynomial σ K)} {h F : MvPolynomial σ K} :
@@ -231,7 +231,7 @@ theorem finrank_section [Finite σ] {I : Ideal (MvPolynomial σ K)}
 theorem hom_genIn (I : Ideal (MvPolynomial σ K)) (d : ℕ) :
     ∀ F ∈ genIn I d, ∀ e, homogeneousComponent e F ∈ genIn I d := by
   intro F hF e
-  letI := MvPolynomial.gradedAlgebra (σ := σ) (R := K)
+  let := MvPolynomial.gradedAlgebra (σ := σ) (R := K)
   exact homogeneousComponent_mem_of_mem
     (Ideal.homogeneous_span (homogeneousSubmodule σ K) {G | G ∈ I ∧ G.IsHomogeneous d} fun G hG => ⟨d, hG.2⟩) hF e
 
@@ -656,7 +656,7 @@ theorem exists_uniform_regularity_bound :
   intro σ _ Q
   obtain ⟨d, hd⟩ := RegBound.bound_infinite σ (RegBound.nmon σ 1) fun e => Q.eval (e : ℚ)
   refine ⟨d, fun K _ I hI hsat hq => ?_⟩
-  haveI : Infinite (AlgebraicClosure K) := IsAlgClosed.instInfinite
+  have : Infinite (AlgebraicClosure K) := IsAlgClosed.instInfinite
   have hdim : ∀ e, finrank (AlgebraicClosure K) (RegBound.piece (RegBound.extIdeal (AlgebraicClosure K) I) e) =
       finrank K (RegBound.piece I e) := fun e => by rw [RegBound.piece_extIdeal, RegBound.finrank_extSub]
   have h := hd (AlgebraicClosure K) (RegBound.extIdeal (AlgebraicClosure K) I)
@@ -754,7 +754,7 @@ theorem regularity_comap_rename_of_surjective :
     ∀ (σ σ₀ : Type) [Finite σ] [Finite σ₀] [Nonempty σ₀] (r : σ → σ₀) (Q₀ : Polynomial ℚ), Function.Surjective r → ∃ Q : Polynomial ℚ, ∀ (K : Type) [Field K] (I₀ : Ideal (MvPolynomial σ₀ K)) (I : Ideal (MvPolynomial σ K)) (d : ℕ), I = I₀.comap (MvPolynomial.rename r) → 1 ≤ d → ∀ e ≥ d, (((Module.finrank K ↥(MvPolynomial.homogeneousSubmodule σ₀ K e ⊓ (I₀).restrictScalars K) : ℕ) : ℚ) = Q₀.eval (e : ℚ) → ((Module.finrank K ↥(MvPolynomial.homogeneousSubmodule σ K e ⊓ (I).restrictScalars K) : ℕ) : ℚ) = Q.eval (e : ℚ)) ∧ ((∀ F ∈ I₀, F.IsHomogeneous e → F ∈ Ideal.span {G | G ∈ I₀ ∧ G.IsHomogeneous d}) → ∀ F ∈ I, F.IsHomogeneous e → F ∈ Ideal.span {G | G ∈ I ∧ G.IsHomogeneous d}) := by
   intro σ σ₀ _ _ _ r Q₀ hr
   obtain ⟨s, hs⟩ := hr.hasRightInverse
-  haveI : Nonempty σ := ⟨s (Classical.arbitrary _)⟩
+  have : Nonempty σ := ⟨s (Classical.arbitrary _)⟩
   obtain ⟨P, hP⟩ := _root_.GlobalTheory.exists_polynomial_finrank_homogeneousSubmodule σ
   obtain ⟨P₀, hP₀⟩ := _root_.GlobalTheory.exists_polynomial_finrank_homogeneousSubmodule σ₀
   refine ⟨Q₀ + P - P₀, ?_⟩
@@ -767,9 +767,9 @@ theorem regularity_comap_rename_of_surjective :
     rw [hI]; exact Ideal.mem_comap
   constructor
   · intro h
-    haveI : Module.Finite K (homogeneousSubmodule σ K e) :=
+    have : Module.Finite K (homogeneousSubmodule σ K e) :=
       Module.Finite.iff_fg.mpr (homogeneousSubmodule_fg _ _ _)
-    haveI : Module.Finite K ↥(homogeneousSubmodule σ K e ⊓ I.restrictScalars K) :=
+    have : Module.Finite K ↥(homogeneousSubmodule σ K e ⊓ I.restrictScalars K) :=
       Submodule.finiteDimensional_of_le inf_le_left
     have h1 := finrank_map_add_finrank_inf_ker_of_finite
       (rename r : MvPolynomial σ K →ₐ[K] MvPolynomial σ₀ K).toLinearMap (homogeneousSubmodule σ K e)
@@ -856,7 +856,7 @@ theorem homogeneousComponent_mul_mem_span_degree {K σ : Type} [Field K] (I : Id
       · obtain ⟨m₂, hle, hdeg⟩ := Finsupp.exists_le_degree_eq m (d - d₀) (by omega)
         obtain ⟨m₁, rfl⟩ := exists_add_of_le hle
         have : (monomial (m₂ + m₁) c : MvPolynomial σ K) * G = monomial m₁ c * (monomial m₂ 1 * G) := by
-          rw [← _root_.mul_assoc, monomial_mul, _root_.mul_one, add_comm]
+          rw [← _root_.mul_assoc, monomial_mul_monomial, _root_.mul_one, add_comm]
         rw [this]
         refine Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨I.mul_mem_left _ hGI, ?_⟩)
         have h2 := (isHomogeneous_monomial (1 : K) hdeg).mul hG
@@ -876,7 +876,7 @@ theorem cutBy_of_regular_of_zeroEstimate : ∀ (K σ Hh : Type) [Field K] (I : I
     exact ⟨fun h => ⟨hzero F h.1 h.2, h.1⟩, fun h => ⟨h.2, hvan F h.1⟩⟩
   refine ⟨(hreg e (h₀.trans he)).1, fun F hF => ⟨fun hI => ?_, fun h => ?_⟩⟩
   · have h := homogeneousComponent_mul_mem_span_degree I h₀ he ((hreg e (h₀.trans he)).2 F hI hF) 1
-    rw [_root_.one_mul, MvPolynomial.homogeneousComponent_of_mem hF, if_pos rfl] at h
+    rw [_root_.one_mul, MvPolynomial.homogeneousComponent_of_mem hF, ite_eq_left rfl] at h
     rwa [hV]
   · rw [hV] at h
     exact (Ideal.span_le.2 fun G (hG : G ∈ {G : MvPolynomial σ K | G ∈ I ∧ G.IsHomogeneous d}) => hG.1) h
@@ -1087,7 +1087,7 @@ theorem cutBy_idealOf_torsion : Out.Laws → Out.Laws2 → ∀ (g C : ℕ) (σ�
   · obtain ⟨b₁, b₂⟩ := hQ K _ _ d (idealOf_comp (e.hom ≫ P.A.hom) hM th₀ r hr) (Nat.le_add_left _ _) n hn
     refine ⟨b₁ (hreg n (hd.trans hn)).1, b₂ fun F hF hFn => ?_⟩
     have h := homogeneousComponent_mul_mem_span_degree _ hd hn ((hreg n (hd.trans hn)).2 F hF hFn) 1
-    rwa [_root_.one_mul, MvPolynomial.homogeneousComponent_of_mem hFn, if_pos rfl] at h
+    rwa [_root_.one_mul, MvPolynomial.homogeneousComponent_of_mem hFn, ite_eq_left rfl] at h
   · simp only [idealOf, Ideal.mem_iInf, RingHom.mem_ker, MvPolynomial.coe_eval₂Hom] at hF
     exact hF K _ (RingHom.id K) ((y i).left ≫ e.inv) (p i)
       ⟨(hyp i).trans (Spec.map_id _).symm, by rw [Category.comp_id]; exact hp i⟩

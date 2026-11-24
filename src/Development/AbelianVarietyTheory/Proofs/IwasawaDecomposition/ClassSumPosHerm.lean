@@ -75,7 +75,7 @@ theorem classSum_pos_herm : ∀ {E K ι : Type} [Field E] [NumberField E] [StarR
   intro E K ι _ _ _ _ _ _ _ n S emb σ lam _ hS _
   refine ⟨fun φ hφ h0 => ?_, ipVal_herm emb σ lam⟩
   have hw : ∀ c : S.Cl, (0 : ℂ) < ((Nat.card (S.Stab c) : ℕ) : ℂ)⁻¹ := fun c => by
-    haveI := hS.fin_stab c.1 (S.rep c)
+    have := hS.fin_stab c.1 (S.rep c)
     have hc : (0 : ℝ) < ((Nat.card (S.Stab c) : ℕ) : ℝ)⁻¹ := inv_pos.2 (Nat.cast_pos.2 Nat.card_pos)
     have := Complex.zero_lt_real.2 hc
     simpa using this

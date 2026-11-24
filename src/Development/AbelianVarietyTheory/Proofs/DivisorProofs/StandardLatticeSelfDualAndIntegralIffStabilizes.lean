@@ -204,7 +204,7 @@ theorem GlobalTheory.NormRatio.selfDual_and_mem_intG_iff : ∀ {D : D7} (V : HSp
       ∀ y, (∀ i, y i ∈ intAE D) ↔ ∀ i, ((finHom V g).1 *ᵥ y) i ∈ intAE D := by
     have e : g ∈ openOff V (stdLat V) ∅ ↔ g ∈ GlobalTheory.AdelicU.levelOpen _ (HSpace.gram V) (stdLat V) := by
       rw [GlobalTheory.AdelicU.mem_levelOpen]; simp [openOff]
-    haveI := hSD.1
+    have := hSD.1
     rw [e, GlobalTheory.AdelicU.mem_levelOpen_iff_latHat _ _ (Submodule.IsLattice.fg D.host.E (stdLat V))]
     refine forall_congr' fun y => ?_
     rw [mem_latHat_stdLat, mem_latHat_stdLat]

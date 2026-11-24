@@ -185,12 +185,12 @@ private theorem boxes_core {M : ℕ} {eps Y X : ℝ} {q d : ℕ} (hM : 0 < M) (h
   have hq2 : q ≠ 2 := by omega
   have hd2 : d ≠ 2 := by omega
   have hqd : q ≠ d := by omega
-  haveI := ρ.ne
+  have := ρ.ne
   have h8' : ρ.N ∣ 2 ^ 3 := h8
   have hqN : ¬ q ∣ ρ.N := fun hqn =>
     hq2 ((Nat.prime_dvd_prime_iff_eq hq Nat.prime_two).mp (hq.dvd_of_dvd_pow (dvd_trans hqn h8')))
   obtain ⟨M1, ψ1, hM1, hψ1, hv1⟩ := boxes_step ρ.N q i ρ.χ ρ.prim hq hq2 hqN hi
-  haveI : NeZero M1 := ⟨by rw [hM1]; exact mul_ne_zero (NeZero.ne _) (pow_ne_zero _ hq.ne_zero)⟩
+  have : NeZero M1 := ⟨by rw [hM1]; exact mul_ne_zero (NeZero.ne _) (pow_ne_zero _ hq.ne_zero)⟩
   have hdM1 : ¬ d ∣ M1 := by
     rw [hM1]
     intro hdd
@@ -198,7 +198,7 @@ private theorem boxes_core {M : ℕ} {eps Y X : ℝ} {q d : ℕ} (hM : 0 < M) (h
     · exact hd2 ((Nat.prime_dvd_prime_iff_eq hd Nat.prime_two).mp (hd.dvd_of_dvd_pow (dvd_trans h1 h8')))
     · exact hqd ((Nat.prime_dvd_prime_iff_eq hd hq).mp (hd.dvd_of_dvd_pow h1)).symm
   obtain ⟨M2, ψ, hM2, hψ, hv2⟩ := boxes_step M1 d j ψ1 hψ1 hd hd2 hdM1 hj
-  haveI : NeZero M2 := ⟨by rw [hM2]; exact mul_ne_zero (NeZero.ne _) (pow_ne_zero _ hd.ne_zero)⟩
+  have : NeZero M2 := ⟨by rw [hM2]; exact mul_ne_zero (NeZero.ne _) (pow_ne_zero _ hd.ne_zero)⟩
   have hψv : ∀ n : ℕ, ψ n = tw ρ.val q d i j n := by
     intro n
     rw [hv2, hv1]
@@ -594,7 +594,7 @@ private theorem real_split (M p : ℕ) (h : M.Coprime p) (χ : DirichletCharacte
 private theorem real_prime (p : ℕ) (hp : p.Prime) (h2 : p ≠ 2) (η : DirichletCharacter ℂ p)
     (hη : η ^ 2 = 1) :
     ∃ a : ℕ, a ≤ 1 ∧ ∀ n : ℕ, n.Coprime p → η (n : ZMod p) = J p n ^ a := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := (ZMod p)ˣ)
   have key : ∀ θ : MulChar (ZMod p) ℂ, θ ^ 2 = 1 → θ ≠ 1 → θ g = -1 := by
     intro θ h1 hne
@@ -738,9 +738,9 @@ private theorem exists_real_pchar_twist_decomposition (N : ℕ) [NeZero N] (χ :
     · exact Or.inr (Or.inr ((Nat.prime_dvd_prime_iff_eq hp hd).1 h))
   obtain ⟨ξ, a, b, ha, hb, hξ⟩ :=
     QH.real_decomp _ q d N χ hsq hN₀ hq hd hq2 hd2 hqd hq8 hd8 hNdvd
-  haveI : NeZero (8 * ordCompl[2] S) := ⟨hN₀.ne'⟩
-  haveI : NeZero ξ.conductor := ⟨ξ.conductor_ne_zero⟩
-  haveI : NeZero (8 * ordCompl[2] S * q * d) :=
+  have : NeZero (8 * ordCompl[2] S) := ⟨hN₀.ne'⟩
+  have : NeZero ξ.conductor := ⟨ξ.conductor_ne_zero⟩
+  have : NeZero (8 * ordCompl[2] S * q * d) :=
     ⟨mul_ne_zero (mul_ne_zero hN₀.ne' hq.ne_zero) hd.ne_zero⟩
   have hprim : ∀ n : ℕ, n.Coprime (8 * ordCompl[2] S) → ξ n = ξ.primitiveCharacter n := by
     intro n hn
@@ -754,7 +754,7 @@ private theorem exists_real_pchar_twist_decomposition (N : ℕ) [NeZero N] (χ :
   obtain ⟨M1, ψ1, hM1, hψ1, hψ1eq⟩ := UpperTheory.Top.realSplit_step ξ.conductor q a
     ξ.primitiveCharacter ξ.primitiveCharacter_isPrimitive hq hq2 hqc ha
   subst hM1
-  haveI : NeZero (ξ.conductor * q ^ a) := ⟨mul_ne_zero (NeZero.ne _) (pow_ne_zero _ hq.ne_zero)⟩
+  have : NeZero (ξ.conductor * q ^ a) := ⟨mul_ne_zero (NeZero.ne _) (pow_ne_zero _ hq.ne_zero)⟩
   have hdc : ¬ d ∣ ξ.conductor * q ^ a := by
     intro h
     rcases (hd.dvd_mul).1 h with h | h
@@ -763,7 +763,7 @@ private theorem exists_real_pchar_twist_decomposition (N : ℕ) [NeZero N] (χ :
   obtain ⟨M2, ψ2, hM2, hψ2, hψ2eq⟩ :=
     UpperTheory.Top.realSplit_step (ξ.conductor * q ^ a) d b ψ1 hψ1 hd hd2 hdc hb
   subst hM2
-  haveI : NeZero (ξ.conductor * q ^ a * d ^ b) :=
+  have : NeZero (ξ.conductor * q ^ a * d ^ b) :=
     ⟨mul_ne_zero (NeZero.ne _) (pow_ne_zero _ hd.ne_zero)⟩
   have hbig : ξ.conductor ∣ 8 * ordCompl[2] S * q * d := hcN₀.trans (Dvd.intro (q * d) (by ring))
   have heq := QH.ind_unique N (ξ.conductor * q ^ a * d ^ b) (8 * ordCompl[2] S * q * d) χ ψ2
@@ -889,12 +889,12 @@ private theorem UpperTheory.Top.realBox_main (M : ℕ) (φ : Frame) (H : HostRaw
   have hdqi : ∀ k : ℕ, ¬ H.d ∣ H.q ^ k := fun k h => hdq (hd.dvd_of_dvd_pow h)
   have hjd : (if H.d ∣ χ.N then (1 : Fin 2) else 0) = j := by
     rcases hj01 with rfl | rfl
-    · rw [if_neg]
+    · rw [ite_eq_right]
       rw [hN, show H.d ^ ((0 : Fin 2) : ℕ) = 1 by simp, mul_one]
       intro h
       rcases (Nat.Prime.dvd_mul hd).1 h with h | h
       exacts [hdρ h, hdqi _ h]
-    · rw [if_pos]
+    · rw [ite_eq_left]
       rw [hN]
       exact dvd_mul_of_dvd_right (dvd_pow_self _ (by simp)) _
   have hqe : (H.q : ℝ) ≤ Real.exp (Y ^ (eps / 5)) :=
@@ -1385,7 +1385,7 @@ private theorem lt_of_classC0' {R : Ranks} (H : Host R) {p : ℕ} {y : ℝ} (hp 
       rw [Formalism.HC.HostRaw.small, Nat.mem_primeFactors]
       refine ⟨Nat.prime_two, ?_, H.QS_pos.ne'⟩
       exact dvd_trans (dvd_pow_self 2 (by omega)) H.tower_dvd
-    rw [if_pos hmem] at hc'
+    rw [ite_eq_left hmem] at hc'
     exact absurd hc' (by decide)
   · have hodd : p.factorization 2 = 0 :=
       Nat.factorization_eq_zero_of_not_dvd
@@ -1446,7 +1446,7 @@ private theorem hof_quadraticChar_induces (d M : ℕ) [Fact d.Prime] (hd : d % 4
     GlobalTheoryTheory.Induces ((quadraticChar (ZMod d)).ringHomComp (Int.castRingHom ℂ) : DirichletCharacter ℂ d)
       (GlobalTheoryTheory.chDir d) M := by
   have hp : d.Prime := Fact.out
-  haveI : NeZero d := ⟨hp.ne_zero⟩
+  have : NeZero d := ⟨hp.ne_zero⟩
   have hch : ringChar (ZMod d) ≠ 2 := by
     rw [ZMod.ringChar_zmod_n]; omega
   refine ⟨?_, fun a ha => ?_⟩
@@ -1465,8 +1465,8 @@ private theorem hof_quadraticChar_induces (d M : ℕ) [Fact d.Prime] (hd : d % 4
 
 private theorem hof_abs_dlogH_le {R : Ranks} (H : Host R) {x eps C : ℝ} (h : QDq x eps C H.q H.d) :
     |dlogH H| ≤ C * Real.log x := by
-  haveI : Fact H.d.Prime := ⟨H.hyp.2.1⟩
-  haveI : NeZero H.d := ⟨H.hyp.2.1.ne_zero⟩
+  have : Fact H.d.Prime := ⟨H.hyp.2.1⟩
+  have : NeZero H.d := ⟨H.hyp.2.1.ne_zero⟩
   have hd : H.d % 16 = 7 := H.hyp.2.2.2.1
   have h1 := (h.2.1 H.d _ (hof_quadraticChar_induces H.d (8 * H.q * H.d) (by omega) (by
     rw [mul_assoc]; omega))).2
@@ -1572,13 +1572,13 @@ private theorem hof_box {R : Ranks} (H : Host R) {M : ℕ} {eps Y X : ℝ} (hM :
   have key := a ⟨N, χ, hχ.1⟩ ((isCharH_iff H χ).1 hχ) hr
   refine ⟨fun hd => ?_, fun hq hd => ?_⟩
   · obtain ⟨k1, k2⟩ := key (Or.inr hd)
-    rw [if_pos hd] at k1 k2
+    rw [ite_eq_left hd] at k1 k2
     have e : 8 * ((ordCompl[2] H.QS : ℕ) : ℝ) * GlobalTheoryTheory.X1 Y eps * GlobalTheoryTheory.X2 Y eps = height (ordCompl[2] H.QS) eps Y 1 := by
       simp [height, GlobalTheoryTheory.X1, GlobalTheoryTheory.X2]
     rw [e]
     exact ⟨hχ.1, hr, k2, fun z z1 z2 => k1 z z1 (z2.trans (hmono _))⟩
   · obtain ⟨k1, k2⟩ := key (Or.inl hq)
-    rw [if_neg hd] at k1 k2
+    rw [ite_eq_right hd] at k1 k2
     have e : 8 * ((ordCompl[2] H.QS : ℕ) : ℝ) * GlobalTheoryTheory.X1 Y eps = height (ordCompl[2] H.QS) eps Y 0 := by
       simp [height, GlobalTheoryTheory.X1]
     rw [e]

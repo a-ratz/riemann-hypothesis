@@ -84,7 +84,7 @@ theorem twKer_twist (ρ : Representation ℂ G V) (N : Subgroup G) (θ : N →* 
   unfold twKer
   congr 1
   ext w
-  simp only [twist_apply, hN, Units.val_one, one_smul, Set.mem_setOf_eq]
+  simp only [twist_apply, hN, Units.val_one, one_smul, Set.mem_ofPred_eq]
 
 theorem twAct_twist (ρ : Representation ℂ G V) (N : Subgroup G) (θ : N →* ℂˣ) (s : M →* G)
     (hs : ∀ (m : M) (n : N), ∃ h : s m * (n : G) * (s m)⁻¹ ∈ N, θ ⟨_, h⟩ = θ n) (χ : G →* ℂˣ) (χ' : M →* ℂˣ)

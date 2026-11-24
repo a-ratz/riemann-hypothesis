@@ -159,7 +159,7 @@ theorem exists_inf_fin {D : D7} (V : HSp D) (gi : GL (Fin V.rank) (Ainf D.host.F
 
 theorem adelic_glue : ∀ (D : D7) (V : HSp D), (∀ gf : GL (Fin V.rank) (Af D.host.F ⊗[D.host.F] D.host.E), gf ∈ HR (Af D.host.F) D.sp.cm.sig V.gram → ∃ g ∈ GfC V, finHom V g = gf) ∧ ∀ (Ψ : Finset (D.host.E →+* ℂ)) (th : Ψ → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ)), (∀ τ : D.host.E →+* ℂ, τ ∈ Ψ ↔ ComplexEmbedding.conjugate τ ∉ Ψ) → (∀ τ, Formalism.MainNotions.StandardLattice.IsInfEmb τ.1 (th τ)) → (∀ g : GA D V, (∀ τ, archM V (th τ) g = 1) → g ∈ GfC V) ∧ (∀ γ ∈ GQ V, ∃ γ₀ : GL (Fin V.rank) D.host.E, (∀ τ, archM V (th τ) γ = (γ₀ : Matrix _ _ D.host.E).map τ.1) ∧ (finHom V γ).1 = (γ₀ : Matrix _ _ D.host.E).map (inclR (Af D.host.F))) ∧ (∀ τ, Continuous (archM V (th τ))) ∧ ∀ u : Ψ → Matrix (Fin V.rank) (Fin V.rank) ℂ, (∀ τ, ((u τ).map (starRingEnd ℂ)).transpose * V.gram.map τ.1 * u τ = V.gram.map τ.1) → ∃ h ∈ GinfC V, ∀ τ, archM V (th τ) h = u τ := by
   intro D V
-  letI := D.host.cmStar
+  let := D.host.cmStar
   refine ⟨fun gf hf => ?_, fun Ψ th hΨ hth => ?_⟩
   · obtain ⟨g, h1, h2⟩ := exists_inf_fin V 1 gf (one_mem _) hf
     exact ⟨g, h1, h2⟩
@@ -174,11 +174,11 @@ theorem adelic_glue : ∀ (D : D7) (V : HSp D), (∀ gf : GL (Fin V.rank) (Af D.
   classical
   let θ : (D.host.E →+* ℂ) → (Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ) :=
     fun τ => if h : τ ∈ Ψ then th ⟨τ, h⟩ else θ₀ τ
-  have hθt : ∀ τ : Ψ, θ τ.1 = th τ := fun τ => dif_pos τ.2
+  have hθt : ∀ τ : Ψ, θ τ.1 = th τ := fun τ => dite_eq_left τ.2
   obtain ⟨hcont, hconj, hbij⟩ := hall θ (fun τ => by
     by_cases h : τ ∈ Ψ
     · rw [hθt ⟨τ, h⟩]; exact hth ⟨τ, h⟩
-    · have : θ τ = θ₀ τ := dif_neg h
+    · have : θ τ = θ₀ τ := dite_eq_right h
       rw [this]; exact hθ₀ τ)
   have hb : Function.Bijective fun (z : Ainf D.host.F ⊗[D.host.F] D.host.E) (τ : Ψ) => th τ z := by
     have := hbij (Ψ : Set _) hΨ
@@ -207,7 +207,7 @@ theorem adelic_glue : ∀ (D : D7) (V : HSp D), (∀ gf : GL (Fin V.rank) (Af D.
     refine continuous_matrix fun a b => ?_
     have h1 : Continuous (th τ) := hθt τ ▸ hcont τ.1
     have h2 : Continuous fun g : GA D V => (matHom V g).1 a b :=
-      (Units.continuous_val.comp continuous_subtype_val).matrix_elem a b
+      (Units.continuous_val.comp continuous_subtypeVal).matrix_elem a b
     have h3 : (fun g : GA D V => archM V (th τ) g a b) = fun g => th τ (e ((matHom V g).1 a b)).1 := by
       funext g
       rw [(he _).1]; rfl

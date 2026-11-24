@@ -216,12 +216,12 @@ theorem vanish : ∀ (G₁ G₂ : Type) [Group G₁] [TopologicalSpace G₁] [Is
     μR₁ μG₁ ρ₁ μ₁ μR₂ μG₂ ρ₂ μ₂ i1 i2 i3 i4 i5 i6 i7 i8 i9 i10 i11 i12 i13 K C T hKB hKc hKo hCc hCB hTB
     F₁ F₂ z hF₁ hF₂ hFK hsupp hIter
   classical
-  haveI : LocallyCompactSpace B₁ := hB₁.locallyCompactSpace
-  haveI : LocallyCompactSpace B₂ := hB₂.locallyCompactSpace
+  have : LocallyCompactSpace B₁ := hB₁.locallyCompactSpace
+  have : LocallyCompactSpace B₂ := hB₂.locallyCompactSpace
   have hR₁B : IsClosed ((R₁.subgroupOf B₁ : Subgroup B₁) : Set B₁) := by
-    rw [Subgroup.coe_subgroupOf]; exact hR₁.preimage continuous_subtype_val
+    rw [Subgroup.coe_subgroupOf]; exact hR₁.preimage continuous_subtypeVal
   have hR₂B : IsClosed ((R₂.subgroupOf B₂ : Subgroup B₂) : Set B₂) := by
-    rw [Subgroup.coe_subgroupOf]; exact hR₂.preimage continuous_subtype_val
+    rw [Subgroup.coe_subgroupOf]; exact hR₂.preimage continuous_subtypeVal
 
   have FK : ∀ h, ∀ k ∈ K, F₁ (h * k) = F₁ h := fun h k hk => by
     have h1 := hF₂ (h * k)

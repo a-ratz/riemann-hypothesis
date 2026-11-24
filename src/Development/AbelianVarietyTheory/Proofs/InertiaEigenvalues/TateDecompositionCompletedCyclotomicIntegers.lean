@@ -86,7 +86,7 @@ theorem Ks_mono (K : FinExt l) {i j : ℕ} (h : i ≤ j) : Ks K i ≤ Ks K j := 
   refine sup_le_sup_left (IntermediateField.adjoin.mono _ _ _ ?_) _
   intro x hx
   obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le h
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   rw [pow_add, pow_mul, hx, one_pow]
 
 theorem Ks_le_Kinf (K : FinExt l) (i : ℕ) : Ks K i ≤ Kinf K := by
@@ -109,12 +109,12 @@ theorem exists_level (K : FinExt l) {x : Om l} (hx : x ∈ Kinf K) : ∃ i, x �
   simpa using h3
 
 theorem exists_prim (i : ℕ) : ∃ ζ : Om l, IsPrimitiveRoot ζ (l ^ i) := by
-  haveI : NeZero (l ^ i) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ i)
+  have : NeZero (l ^ i) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ i)
 
 theorem root_mem_subC (K : FinExt l) {i : ℕ} {ξ : PadicComplex l} (h : ξ ^ (l ^ i) = 1) :
     ξ ∈ subC (Ks K i) := by
-  haveI : NeZero (l ^ i) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ i) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨ζ, hζ⟩ := exists_prim (l := l) i
   obtain ⟨k, -, rfl⟩ := (hζ.map_of_injective (io l).injective).eq_pow_of_pow_eq_one h
   exact pow_mem (⟨ζ, root_mem_Ks K hζ.pow_eq_one, rfl⟩ : io l ζ ∈ subC (Ks K i)) k
@@ -201,8 +201,8 @@ theorem act_Xj {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} (ha : IsA
   exact ⟨g v, gal_Ks hg _ hv, (ha.1 g v).symm⟩
 
 theorem finite_Ks (K : FinExt l) (j : ℕ) : FiniteDimensional ℚ_[l] (Ks K j) := by
-  haveI := K.2
-  haveI : FiniteDimensional ℚ_[l] (K0 K) :=
+  have := K.2
+  have : FiniteDimensional ℚ_[l] (K0 K) :=
     Module.Finite.of_injective
       (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective (inf_le_left : K0 K ≤ K.1))
@@ -210,18 +210,18 @@ theorem finite_Ks (K : FinExt l) (j : ℕ) : FiniteDimensional ℚ_[l] (Ks K j) 
     refine (Polynomial.nthRootsFinset (l ^ j) (1 : Om l)).finite_toSet.subset fun x hx => ?_
     exact Finset.mem_coe.2 ((Polynomial.mem_nthRootsFinset
       (pow_pos (Fact.out : l.Prime).pos _) _).2 hx)
-  haveI := hf.to_subtype
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ j) = 1}) :=
+  have := hf.to_subtype
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ j) = 1}) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   exact IntermediateField.finiteDimensional_sup _ _
 
 theorem isCompact_intC (F : IntermediateField ℚ_[l] (Om l)) [FiniteDimensional ℚ_[l] F] :
     IsCompact (intC F) := by
   let M : Submodule ℚ_[l] (Om l) := Subalgebra.toSubmodule F.toSubalgebra
-  haveI : FiniteDimensional ℚ_[l] M := ‹FiniteDimensional ℚ_[l] F›
-  haveI : ProperSpace M := FiniteDimensional.proper ℚ_[l] M
+  have : FiniteDimensional ℚ_[l] M := ‹FiniteDimensional ℚ_[l] F›
+  have : ProperSpace M := FiniteDimensional.proper ℚ_[l] M
   have hc : Continuous fun x : M => ((x : Om l) : PadicComplex l) :=
-    (UniformSpace.Completion.continuous_coe _).comp continuous_subtype_val
+    (UniformSpace.Completion.continuous_coe _).comp continuous_subtypeVal
   have : intC F = (fun x : M => ((x : Om l) : PadicComplex l)) '' Metric.closedBall 0 1 := by
     ext y
     constructor
@@ -240,7 +240,7 @@ theorem Xlev_form (K : FinExt l) {i : ℕ} (hi : 1 ≤ i) {ζ : Om l} (hζ : IsP
     ∃ y : Fin l → Om l, (∀ a, y a ∈ Ks K (i - 1)) ∧ y ⟨0, (Fact.out : l.Prime).pos⟩ = 0 ∧
       x = io l (∑ a : Fin l, ζ ^ (a : ℕ) * y a) := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero (l ^ i) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ i) := ⟨pow_ne_zero _ hp.ne_zero⟩
   induction hx using AddSubgroup.closure_induction with
   | mem z hz =>
     obtain ⟨ξ, w, hξ, ⟨⟨v, hv, rfl⟩, -⟩, rfl⟩ := hz
@@ -413,7 +413,7 @@ theorem Xj_inter (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {x : PadicComplex l} (h
 
 theorem Ohat_decomp (K : FinExt l) {j : ℕ} (hj : 1 ≤ j) {z : PadicComplex l} (hz : z ∈ Ohat K) :
     ∃ y ∈ intC (Ks K j), ∃ x ∈ Xj K j, z = y + x := by
-  haveI := finite_Ks K j
+  have := finite_Ks K j
   have hc : IsClosed (intC (Ks K j) + (Xj K j : Set (PadicComplex l))) :=
     (AddSubgroup.isClosed_topologicalClosure _).add_left_of_isCompact (isCompact_intC _)
   have h : Ohat K ⊆ intC (Ks K j) + (Xj K j : Set (PadicComplex l)) := by

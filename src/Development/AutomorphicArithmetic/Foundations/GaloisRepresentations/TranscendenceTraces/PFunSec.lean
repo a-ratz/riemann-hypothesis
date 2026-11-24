@@ -80,7 +80,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.funSec_of :
       by_cases h : n = m
       · subst h
         rw [res_zsmul, res_zsmul, res_res, res_res, pullback.condition]
-      · haveI : IsEmpty ↥(pullback (V n).ι (V m).ι) := by
+      · have : IsEmpty ↥(pullback (V n).ι (V m).ι) := by
           refine ⟨fun p => h ?_⟩
           have e1 := hmem n (pullback.fst (V n).ι (V m).ι p)
           have e2 := hmem m (pullback.snd (V n).ι (V m).ι p)

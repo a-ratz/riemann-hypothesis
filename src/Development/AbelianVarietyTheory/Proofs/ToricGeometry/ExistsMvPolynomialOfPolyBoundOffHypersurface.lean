@@ -203,7 +203,7 @@ private theorem polynomial_eventually_ne_zero_lemma_3 {ρ : Polynomial ℂ} (hρ
   have ha : a ∈ ((↑(ρ.roots.toFinset.erase a) : Set ℂ)ᶜ) := by simp
   filter_upwards [self_mem_nhdsWithin, nhdsWithin_le_nhds (hU.mem_nhds ha)] with t ht htU h0
   apply htU
-  simp only [Finset.coe_erase, Set.mem_diff, Finset.mem_coe, Multiset.mem_toFinset,
+  simp only [Finset.coe_erase, Set.mem_sdiff, Finset.mem_coe, Multiset.mem_toFinset,
     Polynomial.mem_roots hρ, Polynomial.IsRoot.def, h0, Set.mem_singleton_iff, true_and]
   exact ht
 

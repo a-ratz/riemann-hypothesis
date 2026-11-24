@@ -179,7 +179,7 @@ theorem terms_eq : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 
   intro g n F W Z i X₁ z₁ act V _ _ _ ev X _ m t δ 𝔪 x₀ x₀' C C' lab lab' T T' hT hT' c c' hc mu
   obtain ⟨x, fr, th, w₀, s, p, w, hx, hfr, hth, hw₀, hs, hg, hT⟩ := hT
   obtain ⟨x', fr', th', w₀', s', p', w', hx', hfr', hth', hw₀', hs', hg', hT'⟩ := hT'
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hk : 1 ≤ X₁.S.r * X₁.S.N := by

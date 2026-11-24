@@ -65,7 +65,7 @@ theorem absIntClosed_localization_and_quotient : ∀ (T : Type) [CommRing T], (I
   intro T _ ⟨hdom, hroot⟩
   refine ⟨fun M hM => ?_, fun p hp => ?_⟩
   · have hle : M ≤ nonZeroDivisors T := le_nonZeroDivisors_of_noZeroDivisors hM
-    haveI : IsDomain (Localization M) := IsLocalization.isDomain_localization hle
+    have : IsDomain (Localization M) := IsLocalization.isDomain_localization hle
     refine ⟨inferInstance, fun f hf hdeg => ?_⟩
     have hl := IsLocalization.scaleRoots_commonDenom_mem_lifts M f
       (by rw [hf.leadingCoeff]; exact one_mem _)
@@ -83,8 +83,8 @@ theorem absIntClosed_localization_and_quotient : ∀ (T : Type) [CommRing T], (I
       rw [mul_left_comm, IsUnit.mul_val_inv, mul_one]
     rw [hsr, ← hg, eval_map, eval₂_hom, hy, map_zero] at key
     exact ((hu.pow _).mul_right_eq_zero).1 key.symm
-  · haveI := hp
-    haveI : IsDomain (T ⧸ p) := Ideal.Quotient.isDomain p
+  · have := hp
+    have : IsDomain (T ⧸ p) := Ideal.Quotient.isDomain p
     refine ⟨inferInstance, fun f hf hdeg => ?_⟩
     have hl : f ∈ lifts (Ideal.Quotient.mk p) :=
       (mem_lifts _).2 (map_surjective _ Ideal.Quotient.mk_surjective f)

@@ -341,7 +341,7 @@ theorem norm_compReal (hF : IsTotallyReal F) (v : InfinitePlace F) (x : v.Comple
     (map_zero _) x
 
 theorem secondCountable_Ainf (hF : IsTotallyReal F) : SecondCountableTopology (Ainf F) := by
-  haveI : ∀ v : InfinitePlace F, SecondCountableTopology v.Completion := fun v =>
+  have : ∀ v : InfinitePlace F, SecondCountableTopology v.Completion := fun v =>
     (InfinitePlace.Completion.isometryEquivRealOfIsReal (hF.isReal v)).toHomeomorph.secondCountableTopology
   exact inferInstanceAs (SecondCountableTopology (∀ v : InfinitePlace F, v.Completion))
 
@@ -432,11 +432,11 @@ end Coord
 theorem size_neg_pow_integrable : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E), ∀ (n M : ℕ) (μ : Measure (Fin n → Fin M → Ainf F ⊗[F] E)), μ.IsAddHaarMeasure → Continuous (sizeTup b : (Fin n → Fin M → Ainf F ⊗[F] E) → ℝ) ∧ (∀ X : Fin n → Fin M → Ainf F ⊗[F] E, 0 ≤ sizeTup b X) ∧ ∃ N : ℕ, ∫⁻ X, ENNReal.ofReal (((1 + sizeTup b X) ^ N)⁻¹) ∂μ < ⊤ := by
   intro F E _ _ _ _ _ σ hCM d b n M μ hμ
   have hF : IsTotallyReal F := hCM.1
-  haveI : SecondCountableTopology (Ainf F) := secondCountable_Ainf hF
-  haveI : T2Space (Ainf F) := inferInstanceAs (T2Space (∀ v : InfinitePlace F, v.Completion))
+  have : SecondCountableTopology (Ainf F) := secondCountable_Ainf hF
+  have : T2Space (Ainf F) := inferInstanceAs (T2Space (∀ v : InfinitePlace F, v.Completion))
   obtain ⟨hring, -, -, -, -, -, hhom, hborel, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
-  haveI := hring
-  haveI := hborel n M
+  have := hring
+  have := hborel n M
   have hc := hhom d b
   have hce := continuous_coordEquiv hF b hc
   have hcs := continuous_coordEquiv_symm hF b hc
@@ -462,12 +462,12 @@ theorem size_neg_pow_integrable : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   have hes : Continuous e.symm :=
     continuous_pi fun a => continuous_pi fun i => hcs.comp ((continuous_apply i).comp (continuous_apply a))
   let W := Fin n → Fin M → Fin d → InfinitePlace F → ℝ
-  haveI b1 : BorelSpace (Fin d → InfinitePlace F → ℝ) := inferInstance
-  haveI s1 : SecondCountableTopology (Fin d → InfinitePlace F → ℝ) := inferInstance
-  haveI b2 : BorelSpace (Fin M → Fin d → InfinitePlace F → ℝ) := Pi.borelSpace
-  haveI s2 : SecondCountableTopology (Fin M → Fin d → InfinitePlace F → ℝ) := inferInstance
-  haveI b3 : BorelSpace W := Pi.borelSpace
-  haveI : (Measure.map e μ).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
+  have b1 : BorelSpace (Fin d → InfinitePlace F → ℝ) := inferInstance
+  have s1 : SecondCountableTopology (Fin d → InfinitePlace F → ℝ) := inferInstance
+  have b2 : BorelSpace (Fin M → Fin d → InfinitePlace F → ℝ) := Pi.borelSpace
+  have s2 : SecondCountableTopology (Fin M → Fin d → InfinitePlace F → ℝ) := inferInstance
+  have b3 : BorelSpace W := Pi.borelSpace
+  have : (Measure.map e μ).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
   obtain ⟨N, hN⟩ := exists_nat_gt (Module.finrank ℝ W : ℝ)
   refine ⟨N, ?_⟩
   have hfin := finite_integral_one_add_norm (μ := Measure.map e μ) (E := W) (r := (N : ℝ)) hN
@@ -635,18 +635,18 @@ theorem fibre_rapid_eq_density : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   intro F E _ _ _ _ _ σ hσ M J hJ d b μ ν m hμ hν hfib φ hφc hφ0 hφr D hDc hD S hS
   have hLoc : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hLoc
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨hKr, hKl, hKs, hK2, -, -, -, hVb, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
-  haveI := hKr
-  haveI := hKl
-  haveI := hKs
-  haveI := hK2
-  haveI := hVb 1 M
+  have := hKr
+  have := hKl
+  have := hKs
+  have := hK2
+  have := hVb 1 M
   obtain ⟨hXl, hXs, hX2, hXb, hlift⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ (Ainf F) 1
-  haveI := hXl
-  haveI := hXs
-  haveI := hX2
-  haveI := hXb
+  have := hXl
+  have := hXs
+  have := hX2
+  have := hXb
   obtain ⟨g, hgc, hgf⟩ := hlift M J hJ
   have hKU := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ (Ainf F) hLoc
 
@@ -655,7 +655,7 @@ theorem fibre_rapid_eq_density : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have hB : IsOpen B := by
     have hdet : Continuous fun S : HermR (Ainf F) σ 1 =>
         (S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)).det :=
-      Continuous.matrix_det continuous_subtype_val
+      Continuous.matrix_det continuous_subtypeVal
     have : B = (fun S : HermR (Ainf F) σ 1 =>
         (S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)).det) ⁻¹' Set.range Units.val := by
       ext S
@@ -874,8 +874,8 @@ theorem bound_hermitian : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       exact (map_ne_zero _).2 hBd
   choose Pm hPd hPm using hP
   obtain ⟨lf, hlf, hlf1⟩ := _root_.GlobalTheory.CompanionTheory.AdeleHaar.exists_haar_integral_one F
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI := _root_.GlobalTheory.CompanionTheory.SW.BB.isProbabilityMeasure_prH F E σ hCM M J hJ μ 𝓕 hμ h𝓕
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have := _root_.GlobalTheory.CompanionTheory.SW.BB.isProbabilityMeasure_prH F E σ hCM M J hJ μ 𝓕 hμ h𝓕
   obtain ⟨hgi, hgf⟩ := _root_.GlobalTheory.CompanionTheory.SW.BB.ginf_gfin_measurable F E σ hCM M J hJ d b e he
   obtain ⟨hii, hif⟩ := _root_.GlobalTheory.CompanionTheory.SW.BB.ginf_gfin_isometry F E σ M J d b B ρ e heρ
     (fun h => ((hBR (AF F)).2 h _ (fun p q => rfl)).1)
@@ -890,7 +890,7 @@ theorem bound_hermitian : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       ∂(minf (hermScal (Ainf F) σ (algebraMap F _ β))) =
       ENNReal.ofReal ((Real.sqrt |(discr F : ℝ)|)⁻¹ ^ (2 * M - 1) * Dinf (fun w => ρ w β)) := by
     obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
     obtain ⟨hK1, hK2, hK3⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Ainf F) d b laminf hinf.1
     obtain ⟨t1, t2, t3, t4, t5, t6, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
     have hs := _root_.GlobalTheory.CompanionTheory.SW.BB.ScalTrace.trace_det F E h2 hfin σ (Ainf F) β
@@ -898,7 +898,7 @@ theorem bound_hermitian : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
         (Real.sqrt |(discr F : ℝ)|)⁻¹ ^ (2 * M - 1) * Dinf (e (algebraMap F (Ainf F) (1 / 2) *
           Algebra.trace (Ainf F) (Ainf F ⊗[F] E) ((S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) 0 0))) := by
       refine continuous_const.mul (hDc.comp (he.continuous.comp (continuous_const.mul (t6.comp ?_))))
-      exact (continuous_apply_apply 0 0).comp continuous_subtype_val
+      exact (continuous_apply_apply 0 0).comp continuous_subtypeVal
     have h := GlobalTheory.T.archimedean_gram_fiber_continuous_density F E σ hCM M J hJ d b (coordW (Ainf F) b laminf 1 M)
       (coordHerm (Ainf F) σ b laminf 1) minf (hK2 1 M) (hK3 1) hminf (gaussQ e b Pm) hgc
       (fun X => (Real.exp_pos _).le) (hgr hPd) _ hDcont

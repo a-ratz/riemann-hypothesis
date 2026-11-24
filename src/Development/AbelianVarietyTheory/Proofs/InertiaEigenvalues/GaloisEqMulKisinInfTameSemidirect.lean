@@ -405,7 +405,7 @@ theorem mem_IK_of_fix (σ : GQ l) (hσ : ∀ x ∈ MaximalUnramifiedExtension l,
 theorem exists_fix_Kur (M : IntermediateField ℚ_[l] (Om l)) (g : GQ l)
     (hg : ∀ x ∈ M, x ∈ MaximalUnramifiedExtension l → g x = x) :
     ∃ h ∈ M.fixingSubgroup, ∀ x ∈ MaximalUnramifiedExtension l, (g * h) x = x := by
-  haveI := fix_Kur_normal (l := l)
+  have := fix_Kur_normal (l := l)
   let S : Subgroup (GQ l) := M.fixingSubgroup ⊔ (MaximalUnramifiedExtension l).fixingSubgroup
   have hSc : IsClosed (S : Set (GQ l)) := by
     rw [Subgroup.mul_normal]
@@ -510,15 +510,15 @@ theorem galois_pow_frobenius : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a]
     rw [mem_resSub, ← map_pow, ← map_pow, Fq.pow_card]
   let φ : Fq l a →+* Fq l a := ((Per.σF g).comp (Fq.val l a)).codRestrict (resSub l a) hmem
   have hφ : ∀ y, Fq.val l a (φ y) = Per.σF g (Fq.val l a y) := fun _ => rfl
-  letI : Algebra (ZMod l) (Fq l a) := ZMod.algebra _ _
-  haveI : Fintype (Fq l a) := Fintype.ofFinite _
+  let : Algebra (ZMod l) (Fq l a) := ZMod.algebra _ _
+  have : Fintype (Fq l a) := Fintype.ofFinite _
   let ψ : Fq l a →ₐ[ZMod l] Fq l a :=
     { φ with
       commutes' := fun r => by
-        haveI : NeZero l := ⟨hl.out.ne_zero⟩
+        have : NeZero l := ⟨hl.out.ne_zero⟩
         obtain ⟨n, rfl⟩ := ZMod.natCast_zmod_surjective r
         simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe,
-          MonoidHom.coe_coe, map_natCast] }
+          MonoidHom.coe_ofClass, map_natCast] }
   have hb : Function.Bijective ψ := Finite.injective_iff_bijective.1 ψ.toRingHom.injective
   obtain ⟨n, hn⟩ := (FiniteField.bijective_frobeniusAlgEquivOfAlgebraic_pow (ZMod l) (Fq l a)).2
     (AlgEquiv.ofBijective ψ hb)
@@ -555,7 +555,7 @@ theorem galois_pow_frobenius : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a]
   rcases eq_or_ne x 0 with rfl | hx0
   · rw [map_zero, zero_pow (pow_pos hl.out.pos _).ne']
   · have h4 : x ^ (l ^ a - 1) = 1 := mul_right_cancel₀ hx0 (by rw [← pow_succ, Nat.sub_add_cancel h1.le, hx, one_mul])
-    haveI : NeZero (l ^ a - 1) := ⟨by omega⟩
+    have : NeZero (l ^ a - 1) := ⟨by omega⟩
     obtain ⟨k, -, rfl⟩ := hω.eq_pow_of_pow_eq_one h4
     rw [map_pow, hgω, ← pow_mul, ← pow_mul, mul_comm]
 
@@ -675,7 +675,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
   have hz : ∀ x, k x = x → x ∈ IntermediateField.fixedField (Subgroup.zpowers k) := fun x hx => by
     rintro ⟨_, m, rfl⟩
     exact MulAction.mem_fixedBy_zpow (α := Om l) (g := k) (a := x) hx m
-  rw [PiSys.GfieldInf, ← Subgroup.zpowers_le, ← IntermediateField.le_iff_le]
+  rw [PiSys.GfieldInf, ← Subgroup.zpowers_le, ← IntermediateField.le_fixedField_iff_le_fixingSubgroup]
   refine sup_le (sup_le ?_ ?_) ?_
   · exact IntermediateField.adjoin_le_iff.2 fun x hx => hz x (unr_fixed a hw hx)
   · exact IntermediateField.adjoin_le_iff.2 fun x hx => by
@@ -757,7 +757,7 @@ theorem covers_unique {k : GQ l} {γ γ' : TameGal ↥LL.1 l e a}
     by_contra hne
     have h := congrFun (key fun σ => if σ = 0 then 1 else 0) γ.shift
     simp only [ringAct_apply, sub_self] at h
-    rw [if_neg (sub_ne_zero.2 hne)] at h
+    rw [ite_eq_right (sub_ne_zero.2 hne)] at h
     simp at h
   have hl : ((γ.left : (↥LL.1)ˣ) : ↥LL.1) = ((γ'.left : (↥LL.1)ˣ) : ↥LL.1) := by
     have h := congrArg (fun F => coeff 1 (F 0)) (key fun _ => uIn _)

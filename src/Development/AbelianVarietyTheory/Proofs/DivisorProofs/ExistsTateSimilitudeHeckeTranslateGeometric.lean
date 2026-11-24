@@ -101,7 +101,7 @@ theorem exists_tateIsoO_transl : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.
   have kpos : 0 < k := Nat.pos_of_ne_zero fun h => by subst h; rw [Nat.coprime_zero_left] at hkp; omega
   have cpos : 0 < c := Nat.pos_of_ne_zero fun h => by subst h; rw [Nat.coprime_zero_left] at hcp; omega
   have Npos : 0 < N := by omega
-  haveI := D.freeLa
+  have := D.freeLa
   let Ψ : (Over.mk x ⟶ o.A) →* (Over.mk x ⟶ A') :=
     MonoidHom.mk' (fun t => t ≫ ψ) (fun a a' => MonObj.mul_comp a a' ψ)
   have hΨ : ∀ t, Ψ t = t ≫ ψ := fun _ => rfl
@@ -152,8 +152,8 @@ theorem exists_tateIsoO_transl : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.
     intro n hn hnp q
     constructor
     · intro hq
-      haveI := hGal.fin
-      haveI := hGal.onto
+      have := hGal.fin
+      have := hGal.onto
       obtain ⟨a₀, ha₀⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective ψ.left q.left
       let a : Over.mk x ⟶ o.A := Over.homMk a₀ (by
         show a₀ ≫ o.A.hom = x

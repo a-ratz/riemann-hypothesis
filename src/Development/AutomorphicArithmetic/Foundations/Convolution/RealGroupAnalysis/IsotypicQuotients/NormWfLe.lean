@@ -96,7 +96,7 @@ theorem ψ_rt (k : F) : ψ (rt k) = 1 := by simp [ψ, adelicChar_algebraMap]
 
 theorem norm_ψ (x : A F) : ‖ψ x‖ = 1 := Circle.norm_coe _
 
-theorem cont_ψ : Continuous (ψ (F := F)) := continuous_subtype_val.comp continuous_adelicChar
+theorem cont_ψ : Continuous (ψ (F := F)) := continuous_subtypeVal.comp continuous_adelicChar
 
 theorem exists_cpt : ∃ C : Set (A F), IsCompact C ∧ fundamentalSet F ⊆ C :=
   ⟨_, (isCompact_closure_fundamentalSetInfinite F).prod (isCompact_integralFiniteAdeles F),

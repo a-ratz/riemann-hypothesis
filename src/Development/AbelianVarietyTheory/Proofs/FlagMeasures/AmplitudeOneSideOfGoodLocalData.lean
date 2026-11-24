@@ -112,12 +112,12 @@ theorem continuousOn_orbit {ε : Fin (2 * r + k + 1) → Bool} {mu : Fin (2 * r 
 theorem isHaarOn_smul {S : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn S μ) {x : ℝ} (hx : 0 < x) :
     IsHaarOn S (ENNReal.ofReal x • μ) := by
   obtain ⟨h1, h2, h3, h4⟩ := h
-  refine ⟨?_, fun h0 => h2 ?_, by rw [Measure.smul_apply, h3, smul_zero], fun s hs => by
+  refine ⟨?_, fun h0 => h2 ?_, by rw [smul_apply, h3, smul_zero], fun s hs => by
     rw [Measure.map_smul, h4 s hs]
     exact (BesselUnitaryEquiv.continuous_lmulM s).measurable.aemeasurable⟩
   · exact inferInstanceAs (SigmaFinite (x.toNNReal • μ))
   · have h1 := Measure.measure_univ_eq_zero.2 h0
-    rw [Measure.smul_apply, smul_eq_mul] at h1
+    rw [smul_apply, smul_eq_mul] at h1
     exact Measure.measure_univ_eq_zero.1 ((mul_eq_zero.1 h1).resolve_left (ENNReal.ofReal_pos.2 hx).ne')
 
 theorem haarLie_eq (x : ℝ) :

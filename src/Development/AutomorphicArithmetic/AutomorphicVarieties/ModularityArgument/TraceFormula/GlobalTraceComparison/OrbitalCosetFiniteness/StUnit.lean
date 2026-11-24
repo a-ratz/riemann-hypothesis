@@ -89,8 +89,8 @@ private lemma avg_const {H : Type} [Group H] (c : ℂ) : GlobalTheory.BCT.avg (f
     simp [GlobalTheory.BCT.rStab]
   unfold GlobalTheory.BCT.avg
   rw [hS]
-  haveI : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
-  haveI : Unique (H ⧸ (⊤ : Subgroup H)) := Unique.mk' _
+  have : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
+  have : Unique (H ⧸ (⊤ : Subgroup H)) := Unique.mk' _
   simp [finsum_unique]
 
 private lemma avg_orbit {G : Type} [Group G] (K : Subgroup G) (θ : G →* G) (hθ : ∀ k ∈ K, θ k ∈ K)
@@ -497,7 +497,7 @@ private theorem Tj_lr {L : Type} [Field L] (n : ℕ) (O : Subring L) (ϖ : L) (j
     (hc : c ∈ GLint (Fin n) O) (hd : d ∈ GLint (Fin n) O) :
     Tj ℂ n O ϖ j (c * y * d) = Tj ℂ n O ϖ j y := by
   unfold Tj
-  simp only [Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply]
+  simp only [Set.indicator_apply, Set.mem_ofPred_eq, Pi.one_apply]
   refine if_congr ⟨fun ⟨a, ha, b, hb, e⟩ => ⟨c⁻¹ * a, mul_mem (inv_mem hc) ha, b * d⁻¹, mul_mem hb (inv_mem hd), ?_⟩,
     fun ⟨a, ha, b, hb, e⟩ => ⟨c * a, mul_mem hc ha, b * d, mul_mem hb hd, ?_⟩⟩ rfl rfl
   · have h : y.val = (c⁻¹).val * (c * y * d).val * (d⁻¹).val := by
@@ -520,7 +520,7 @@ private theorem Tj_top (n : ℕ) (w : Pl E) (ϖ : w.adicCompletion E) (s : (w.ad
   have hcomm : ∀ g : GLw n w, (sc n w s).val * g.val = g.val * (sc n w s).val := fun g => by
     rw [sc_val, Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one]
   unfold Tj
-  simp only [Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply]
+  simp only [Set.indicator_apply, Set.mem_ofPred_eq, Pi.one_apply]
   refine if_congr ⟨fun ⟨a, ha, b, hb, e⟩ => ⟨a * b, mul_mem ha hb, Units.ext ?_⟩,
     fun ⟨k, hk, e⟩ => ⟨1, one_mem _, k, hk, ?_⟩⟩ rfl rfl
   · rw [e, hD, Units.val_mul, Units.val_mul, ← Matrix.mul_assoc, hcomm a]
@@ -621,7 +621,7 @@ theorem genTw : GenTw := by
   have hsv : (s : w.adicCompletion E) = unif w := rfl
   have hgen : ∀ (q : Fin (a + 1) × Fin (b + 1)) (y : GLw a w × GLw b w), gen2 a b w q y =
       Tj ℂ a (Ov E w) (unif w) q.1 y.1 * Tj ℂ b (Ov E w) (unif w) q.2 y.2 := fun _ _ => rfl
-  have hth : ∀ n, thL n w = thetaGL n (cj w) := fun n => by rw [thL, if_neg hs]
+  have hth : ∀ n, thL n w = thetaGL n (cj w) := fun n => by rw [thL, ite_eq_right hs]
   have hKa : ∀ n {k : GLw n w}, k ∈ KGL w (n := n) → thetaGL n (cj w) k ∈ KGL w (n := n) := fun n _ hk =>
     GlobalTheory.CompanionTheory.IwFacts.thetaGL_mem_KGL w n hk
   set z : GLw a w × GLw b w := (sc a w s, sc b w s) with hz
@@ -657,15 +657,15 @@ theorem genTw : GenTw := by
     rw [hf, hgen, Fin.val_last, Fin.val_last, Tj_top a w _ s hsv, Tj_top b w _ s hsv]
     by_cases h : ∃ k ∈ K2 a b w, x = z * k
     · obtain ⟨k, hk, rfl⟩ := h
-      rw [if_pos ⟨k.1, hk.1, rfl⟩, if_pos ⟨k.2, hk.2, rfl⟩, if_pos ⟨k, hk, rfl⟩, one_mul]
-    · rw [if_neg h]
+      rw [ite_eq_left ⟨k.1, hk.1, rfl⟩, ite_eq_left ⟨k.2, hk.2, rfl⟩, ite_eq_left ⟨k, hk, rfl⟩, one_mul]
+    · rw [ite_eq_right h]
       by_cases h1 : ∃ k ∈ KGL w (n := a), x.1 = sc a w s * k
       · by_cases h2 : ∃ k ∈ KGL w (n := b), x.2 = sc b w s * k
         · obtain ⟨k1, hk1, e1⟩ := h1
           obtain ⟨k2, hk2, e2⟩ := h2
           exact absurd ⟨(k1, k2), ⟨hk1, hk2⟩, Prod.ext e1 e2⟩ h
-        · rw [if_neg h2, mul_zero]
-      · rw [if_neg h1, zero_mul]
+        · rw [ite_eq_right h2, mul_zero]
+      · rw [ite_eq_right h1, zero_mul]
   funext y
   have hinv : ∀ k ∈ K2 a b w, ∀ x, (fun x => f x * g (x⁻¹ * y)) (x * k) = (fun x => f x * g (x⁻¹ * y)) x := by
     intro k hk x
@@ -677,7 +677,7 @@ theorem genTw : GenTw := by
   · obtain ⟨k, e⟩ := QuotientGroup.mk_out_eq_mul (K2 a b w) z
     have e2 := hinv k k.2 z
     simp only at e2
-    rw [e, e2, hfz z, if_pos ⟨1, one_mem _, (mul_one _).symm⟩, one_mul, hg, Function.comp_apply, hgen, hgen]
+    rw [e, e2, hfz z, ite_eq_left ⟨1, one_mem _, (mul_one _).symm⟩, one_mul, hg, Function.comp_apply, hgen, hgen]
     have hp1 : ((p.1.rev : Fin (a + 1)) : ℕ) = a - p.1 := by rw [Fin.val_rev]; omega
     have hp2 : ((p.2.rev : Fin (b + 1)) : ℕ) = b - p.2 := by rw [Fin.val_rev]; omega
     rw [hp1, hp2, ← Tj_twist w a p.1 (by omega) _ hu s hsv, ← Tj_twist w b p.2 (by omega) _ hu s hsv]
@@ -686,7 +686,7 @@ theorem genTw : GenTw := by
     rfl
   · intro q hq
     have : f q.out = 0 := by
-      rw [hfz, if_neg]
+      rw [hfz, ite_eq_right]
       rintro ⟨k, hk, e⟩
       apply hq
       rw [← QuotientGroup.out_eq' q, e]
@@ -789,14 +789,14 @@ theorem stUnit_of :
   unfold stTw2 clSum
   refine finsum_congr fun q => ?_
   by_cases hS : q.rep ∈ {y : GLw a w × GLw b w | (nrmL a w y.1).val.charpoly = Q₁ ∧ (nrmL b w y.2).val.charpoly = Q₂}
-  · rw [if_pos hS, if_pos hS]
+  · rw [ite_eq_left hS, ite_eq_left hS]
     have h1 : (nrmL a w q.rep.1).val.charpoly = Q₁ := hS.1
     have h2 : (nrmL b w q.rep.2).val.charpoly = Q₂ := hS.2
     have hy := hfin q.rep (h1 ▸ s₁) (h2 ▸ s₂)
     have key := orbit_unitary_compact_open hTw hLin hRing hComm hGen hUnr w hw a b hc hi hk hO hC q.rep hy he _ H1
     rw [((hRing _ (K2 a b w) hO hC) _ _ _ HE HE HE).2.2.1] at key
     exact congrArg _ key
-  · rw [if_neg hS, if_neg hS]
+  · rw [ite_eq_right hS, ite_eq_right hS]
 
 end UpperTheory.V.Z.Tf.GlobalTraceComparison.Th
 end -- clump:auto
@@ -887,7 +887,7 @@ private lemma card_fiber {X Y : Type} [MulAction T X] [MulAction T Y] (x : X) (y
   have h3 : orbit (stabilizer T x) y0 =
       ((S.filter fun y => omk T ((x, y) : X × Y) = omk T ((x, y0) : X × Y) : Finset Y) : Set Y) := by
     ext y
-    simp only [Finset.coe_filter, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨⟨h, hh0⟩, rfl⟩
       have hh : h • x = x := mem_stabilizer_iff.1 hh0
@@ -935,7 +935,7 @@ private lemma one_side {X Y : Type} [MulAction T X] [MulAction T Y] (C : Subgrou
         push_neg at hno
         exact hs (by simp [hno])
       obtain ⟨y, hy⟩ := this
-      simp only [Finset.coe_image, Set.mem_image, Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+      simp only [Finset.coe_image, Set.mem_image, Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
       refine ⟨omk T ((Quotient.out q, y) : X × Y), ?_, ?_⟩
       · rw [hFp]; exact hy
       · rw [hπ]; exact Quotient.out_eq q)
@@ -949,13 +949,13 @@ private lemma one_side {X Y : Type} [MulAction T X] [MulAction T Y] (C : Subgrou
   rw [h1, Finset.mul_sum]
   have maps : ∀ y ∈ (hfin x).toFinset, omk T ((x, y) : X × Y) ∈ hP.toFinset.filter fun p => π p = q := by
     intro y hy
-    simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hy ⊢
+    simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hy ⊢
     refine ⟨?_, ?_⟩
     · rw [hFp]; exact hy
     · rw [hπ]; exact hq
   rw [← Finset.sum_fiberwise_of_maps_to maps]
   refine Finset.sum_congr rfl fun p hp => ?_
-  simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hp
+  simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hp
   obtain ⟨hpP, hpq⟩ := hp
   obtain ⟨t, ht⟩ : ∃ t : T, t • (Quotient.out p).1 = x := (omk_eq_iff _ _).1 (hq.trans hpq.symm)
   have hp0 : omk T ((x, t • (Quotient.out p).2) : X × Y) = p := by
@@ -981,7 +981,7 @@ private lemma one_side {X Y : Type} [MulAction T X] [MulAction T Y] (C : Subgrou
     simp only [Prod.smul_mk, Prod.mk.injEq] at hs
     have := hF s x y0
     rw [hs.1, hs.2] at this
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     rw [this]
     exact hne)
   rw [Finset.sum_congr rfl hconst, Finset.sum_const, hcard, hGp, nsmul_eq_mul,
@@ -1004,7 +1004,7 @@ theorem orbFub : OrbFub := by
     obtain ⟨t, ht⟩ := exists_smul_out (T := T) (Quotient.out p).1
     have hne : F (Quotient.out (omk T (Quotient.out p).1)) (t • (Quotient.out p).2) ≠ 0 := by
       rw [← ht, hF]; exact hp
-    simp only [Set.mem_iUnion, Set.mem_image, Set.mem_setOf_eq, exists_prop]
+    simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, exists_prop]
     refine ⟨omk T (Quotient.out p).1, ⟨_, hne⟩, _, hne, ?_⟩
     exact Eq.trans ((omk_eq_iff _ _).2 ⟨t, Prod.ext ht rfl⟩) (Quotient.out_eq p)
   let e : orbitRel.Quotient T (X × Y) ≃ orbitRel.Quotient T (Y × X) :=

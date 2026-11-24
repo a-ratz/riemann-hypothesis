@@ -59,7 +59,7 @@ theorem zeta_mem_of_dvd {l : Level H} (c : Coeff l) {g : ℕ} (hg : g ∣ l.M') 
     rintro h'; apply h0; rw [hk, Nat.cast_eq_zero.1 h', mul_zero]
   have e : zeta g = zeta l.M' ^ k := by
     unfold zeta
-    rw [← Complex.exp_nat_mul, hk]
+    rw [← Complex.exp_natCast_mul, hk]
     congr 1
     push_cast
     field_simp

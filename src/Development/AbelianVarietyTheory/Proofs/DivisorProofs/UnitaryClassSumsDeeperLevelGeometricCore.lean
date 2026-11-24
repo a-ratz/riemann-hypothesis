@@ -119,7 +119,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem GlobalTheory.UPoinc.cPt_eq_of_norm_val_lt_one : ∀ (o₁ Ω₁ o₂ Ω₂ : Type) [CommRing o₁] [Field Ω₁] [Algebra o₁ Ω₁] [CommRing o₂] [Field Ω₂] [Algebra o₂ Ω₂] [Algebra Ω₁ Ω₂] (M₁ : RatModel o₁ Ω₁) (M₂ : RatModel o₂ Ω₂) (q : M₂.Z ⟶ M₁.Z), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M₂.Z → IsFinite q → M₂.pt ≫ q = spMap (algebraMap Ω₁ Ω₂) ≫ M₁.pt → ∀ z₁ : M₁.Z, letI : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra; ∀ (𝔷 : Ideal (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂)), 𝔷.IsMaximal → ∀ z₂ : M₂.Z, q z₂ = z₁ → (∀ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂, b ∈ 𝔷 ↔ ((b : Ω₂) = 0 ∨ (b : Ω₂)⁻¹ ∉ M₂.O z₂)) → ∀ (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ M₂.Z), q (y (cPt p)) = z₁ → (∀ b ∈ 𝔷, ‖M₂.val (gPt p ≫ y) (b : Ω₂)‖ < 1) → y (cPt p) = z₂ := by
   intro o₁ Ω₁ o₂ Ω₂ _ _ _ _ _ _ _ M₁ M₂ q hN hF hg z₁
-  letI : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra
+  let : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra
   intro 𝔷 h𝔷 z₂ hz₂ hmem p _ y hy hsmall
   obtain ⟨h1, -, h3, -⟩ := GlobalTheory.Poinc.integralClosure_stalk_fibre o₁ Ω₁ o₂ Ω₂ M₁ M₂ q hN hF hg z₁
   have hO : ∀ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂, (b : Ω₂) ∈ M₂.O (y (cPt p)) :=
@@ -486,7 +486,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   have hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme D.X.M.Z :=
     fun x => ⟨D.X.normal.isDomain_stalk x, D.X.normal.isIntegrallyClosed_stalk x⟩
   have hσ : σ' (f a κ) ∈ D.X.M.O z₂ := by
-    letI : Algebra (X₁.M.Z.presheaf.stalk z₁) D.X.Ω₁ :=
+    let : Algebra (X₁.M.Z.presheaf.stalk z₁) D.X.Ω₁ :=
       ((algebraMap X₁.Ω₁ D.X.Ω₁).comp (X₁.M.stalkHom z₁)).toAlgebra
     have halg : ∀ x, algebraMap (X₁.M.Z.presheaf.stalk z₁) D.X.Ω₁ x =
       algebraMap X₁.Ω₁ D.X.Ω₁ (X₁.M.stalkHom z₁ x) := fun _ => rfl
@@ -601,12 +601,12 @@ namespace GlobalTheory.UPoinc
 
 theorem intClosure_aut_extends : ∀ (o₁ Ω₁ : Type) [CommRing o₁] [Field Ω₁] [Algebra o₁ Ω₁] (Ω₂ : Type) [Field Ω₂] [Algebra Ω₁ Ω₂] [FiniteDimensional Ω₁ Ω₂] (M₁ : RatModel o₁ Ω₁) (z₁ : M₁.Z), letI : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra; ∀ σ : (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂) ≃ₐ[M₁.Z.presheaf.stalk z₁] (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂), ∃ σ' : Ω₂ ≃ₐ[Ω₁] Ω₂, ∀ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂, σ' (b : Ω₂) = ((σ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂) : Ω₂) := by
   intro o₁ Ω₁ _ _ _ Ω₂ _ _ _ M₁ z₁ σ
-  letI : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra
-  letI : Algebra (M₁.Z.presheaf.stalk z₁) Ω₁ := (M₁.stalkHom z₁).toAlgebra
-  haveI : IsDomain (M₁.Z.presheaf.stalk z₁) := (M₁.stalkHom_injective z₁).isDomain _
-  haveI : FaithfulSMul (M₁.Z.presheaf.stalk z₁) Ω₁ :=
+  let : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra
+  let : Algebra (M₁.Z.presheaf.stalk z₁) Ω₁ := (M₁.stalkHom z₁).toAlgebra
+  have : IsDomain (M₁.Z.presheaf.stalk z₁) := (M₁.stalkHom_injective z₁).isDomain _
+  have : FaithfulSMul (M₁.Z.presheaf.stalk z₁) Ω₁ :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (M₁.stalkHom_injective z₁)
-  haveI : IsFractionRing (M₁.Z.presheaf.stalk z₁) Ω₁ := by
+  have : IsFractionRing (M₁.Z.presheaf.stalk z₁) Ω₁ := by
     refine IsFractionRing.of_field _ _ fun x => ?_
     obtain ⟨a, b, -, hx⟩ := IsFractionRing.div_surjective (A := M₁.O z₁) x
     refine ⟨(M₁.stalkEquiv z₁).symm a, (M₁.stalkEquiv z₁).symm b, ?_⟩
@@ -615,8 +615,8 @@ theorem intClosure_aut_extends : ∀ (o₁ Ω₁ : Type) [CommRing o₁] [Field 
       rw [← RatModel.coe_stalkEquiv, RingEquiv.apply_symm_apply]
     rw [h, h, ← hx]
     rfl
-  haveI : IsScalarTower (M₁.Z.presheaf.stalk z₁) Ω₁ Ω₂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsAlgebraic Ω₁ Ω₂ := inferInstance
+  have : IsScalarTower (M₁.Z.presheaf.stalk z₁) Ω₁ Ω₂ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.IsAlgebraic Ω₁ Ω₂ := inferInstance
   refine ⟨(galRestrict (M₁.Z.presheaf.stalk z₁) Ω₁ Ω₂ (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂)).symm σ, fun b => ?_⟩
   have := algebraMap_galRestrict_apply (M₁.Z.presheaf.stalk z₁)
     ((galRestrict (M₁.Z.presheaf.stalk z₁) Ω₁ Ω₂ (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂)).symm σ) b
@@ -687,7 +687,7 @@ theorem exists_level (X₁ : USetup C) (K : ℕ) (hK : 0 < K) (hKu : IsUnit (K :
         (∀ x : Ω₂, ∃ a ∈ R, ∃ b ∈ R, x = a / b) ∧ (∀ a, ((h a : R) : Ω₂) = algebraMap X₁.Ω₁ Ω₂ a) ∧ P.g = X₁.ρ.P.g ∧
         IsGrpPullback P.A X₁.ρ.P.A (spMap h) ψ ∧ LBIso P.L (X₁.ρ.P.L.pull ψ) ∧
         Nonempty (Out.Level P K (unitOn ((Units.map (algebraMap o₂ R : o₂ →* R)) ze))) := by
-  haveI : CharZero X₁.Ω₁ := ArithBase.char X₁.o₁
+  have : CharZero X₁.Ω₁ := ArithBase.char X₁.o₁
   obtain ⟨Ω₂, _, _, Q, φ, ζ, hfd, hgal, hζ, hg, hpb, hlb, hlev⟩ := GlobalTheory.T.exists_symplecticLevel_genericFibre_galoisExtension X₁.S.R.val.toRingHom X₁.ρ.P K hK
   obtain ⟨o₂, _, _, _, κ, ze, hfin, hcomp, hze⟩ := GlobalTheory.T.exists_arithBase_finite_containing_rootOfUnity (o₁ := X₁.o₁) (Ω₁ := X₁.Ω₁) Ω₂ K ζ hK hζ
   have hKu₂ : IsUnit (K : o₂) := by simpa using hKu.map κ
@@ -732,7 +732,7 @@ theorem isProjOver_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     simp only [USetup.uΩ, UCompact.i, Category.assoc] at h ⊢
     rw [h]
     exact (Spec.map_comp (CommRingCat.ofHom κ) (CommRingCat.ofHom (algebraMap X.o₁ X.Ω₁))).symm
-  haveI := C.ded
+  have := C.ded
   exact GlobalTheory.FiniteOverProj.isProjOver_of_isFinite_over C.o X.o₁ κ X.M.Z C.Z C.z X.π X.M.s C.proj X.fin inferInstance hs
 
 end GlobalTheory.UPoinc.ProjOverBase
@@ -763,7 +763,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
   {Xo : Moduli Dw l} {cf : Coeff l} {C : UCompact Xo cf}
 
 theorem isUnit_n (X₁ : USetup C) : IsUnit ((X₁.ρ.n : ℕ) : C.o) := by
-  haveI := C.ded
+  have := C.ded
   set n := X₁.ρ.n with hn
   have hdvd : n ∣ X₁.S.r * X₁.S.N := by
     rw [X₁.ρ.N_eq]
@@ -785,8 +785,8 @@ theorem isUnit_n (X₁ : USetup C) : IsUnit ((X₁.ρ.n : ℕ) : C.o) := by
     have h3 : g y ∈ (Sp C.o).basicOpen ((Scheme.ΓSpecIso (CommRingCat.of C.o)).inv.hom (n : C.o)) := h2
     rw [basicOpen_eq_of_affine] at h3
     exact (PrimeSpectrum.mem_basicOpen _ _).1 h3
-  haveI : IsProper C.z := GlobalTheory.ProperFamily.isProper_of_isProjOver C.proj
-  haveI := X₁.fin
+  have : IsProper C.z := GlobalTheory.ProperFamily.isProper_of_isProjOver C.proj
+  have := X₁.fin
   have hcl : IsClosed (Set.range g) := by
     have := g.isClosedMap
     simpa [Set.image_univ] using this _ isClosed_univ
@@ -855,12 +855,12 @@ theorem exists_rebase {o₂ o₃ Ω : Type} [CommRing o₂] [CommRing o₃] [Fie
   obtain ⟨R₃, hR₃, hle⟩ := exists_fg_over (o₃ := o₃) b₂.ft R hR
   let ι : R →+* R₃ := R.val.toRingHom.codRestrict R₃ fun x => hle _ x.2
   have hι : Function.Injective ι := fun a b h => Subtype.ext (congrArg Subtype.val h :)
-  haveI := b₂.ded
-  haveI := b₃.ded
-  haveI := (Subalgebra.fg_iff_finiteType R).1 hR
-  haveI := (Subalgebra.fg_iff_finiteType R₃).1 hR₃
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing o₂ R
-  haveI : IsNoetherianRing R₃ := Algebra.FiniteType.isNoetherianRing o₃ R₃
+  have := b₂.ded
+  have := b₃.ded
+  have := (Subalgebra.fg_iff_finiteType R).1 hR
+  have := (Subalgebra.fg_iff_finiteType R₃).1 hR₃
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing o₂ R
+  have : IsNoetherianRing R₃ := Algebra.FiniteType.isNoetherianRing o₃ R₃
   obtain ⟨P₃, φ, hg, hpb, hlb⟩ := exists_isPolFibre GlobalTheory.laws_without_cohomology.2.2.1 ι P
   have e : Units.map ι.toMonoidHom (Units.map (algebraMap o₂ R : o₂ →* R) ze) =
       Units.map (algebraMap o₃ R₃).toMonoidHom ze₃ := Units.ext (Subtype.ext hz.symm)
@@ -876,11 +876,11 @@ theorem exists_base (X₁ : USetup C) (Ω₂ : Type) [Field Ω₂] [Algebra X₁
     ∃ (o₃ : Type) (_ : CommRing o₃) (_ : Algebra o₃ Ω₂) (_ : ArithBase o₃ Ω₂) (κ : C.o →+* o₃) (ze : o₃ˣ), κ.Finite ∧
       algebraMap o₃ Ω₂ ze = ζ ∧
       (spMap (algebraMap X₁.Ω₁ Ω₂) ≫ X₁.uΩ) ≫ C.i ≫ C.z = spMap ((algebraMap o₃ Ω₂).comp κ) := by
-  haveI := C.ded
-  haveI : CharZero X₁.Ω₁ := ArithBase.char X₁.o₁
-  haveI : CharZero Ω₂ := charZero_of_injective_algebraMap (algebraMap X₁.Ω₁ Ω₂).injective
-  letI := C.b.toAlgebra
-  haveI := C.isFractionRing
+  have := C.ded
+  have : CharZero X₁.Ω₁ := ArithBase.char X₁.o₁
+  have : CharZero Ω₂ := charZero_of_injective_algebraMap (algebraMap X₁.Ω₁ Ω₂).injective
+  let := C.b.toAlgebra
+  have := C.isFractionRing
   obtain ⟨β, hβ⟩ := Spec.map_surjective
     ((spMap (algebraMap X₁.Ω₁ Ω₂) ≫ X₁.uΩ) ≫ pullback.snd _ _ : Sp Ω₂ ⟶ Sp cf.F)
   obtain ⟨o₃, _, _, κ, ze, hded, hκ, hinj, hc, hze⟩ := GSetup.exists_base_root C.o cf.F Ω₂ β.hom ζ K hK hζ
@@ -900,9 +900,9 @@ theorem exists_model (X₁ : USetup C) (o₃ Ω₂ : Type) [CommRing o₃] [Fiel
     (hc : (spMap (algebraMap X₁.Ω₁ Ω₂) ≫ X₁.uΩ) ≫ C.i ≫ C.z = spMap ((algebraMap o₃ Ω₂).comp κ)) :
     ∃ (M : RatModel o₃ Ω₂) (q : M.Z ⟶ X₁.M.Z), GlobalTheory.IsNormalScheme M.Z ∧ IsFinite q ∧
       M.pt ≫ q = spMap (algebraMap X₁.Ω₁ Ω₂) ≫ X₁.M.pt := by
-  haveI := C.ded
-  haveI : IsProper C.z := GlobalTheory.ProperFamily.isProper_of_isProjOver C.proj
-  haveI := X₁.fin
+  have := C.ded
+  have : IsProper C.z := GlobalTheory.ProperFamily.isProper_of_isProjOver C.proj
+  have := X₁.fin
   have hp : (spMap (algebraMap X₁.Ω₁ Ω₂) ≫ X₁.M.pt) ≫ X₁.π ≫ C.z = spMap ((algebraMap o₃ Ω₂).comp κ) := by
     rw [← hc, Category.assoc, ← Category.assoc X₁.M.pt, X₁.comp]
     simp only [Category.assoc]
@@ -994,8 +994,8 @@ theorem exists_udeep_proj : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     rw [hpt, Scheme.Hom.comp_apply]
     exact X₁.gen _
   obtain ⟨M₂, q, hMn, hq, hqgen⟩ := exists_model X₁ o₂ Ω₂ κ hκ hc
-  haveI := hq
-  haveI := X₁.fin
+  have := hq
+  have := X₁.fin
   have hcomp : M₂.pt ≫ q ≫ X₁.π = spMap (ratHull S₂.R).val.toRingHom ≫ (spMap τ ≫ X₁.u) ≫ C.i := by
     rw [← Category.assoc, hqgen, Category.assoc, X₁.comp, ← Category.assoc (spMap (algebraMap X₁.Ω₁ Ω₂)), ← key]
     simp only [Category.assoc]
@@ -1106,10 +1106,10 @@ theorem GLab.conj [IsNoetherianRing o] (hM : ReciprocityTheory.ChartRestriction.
   obtain ⟨P₀, a, a', ha, ha', hL, hL', hlab, -⟩ := GalTrans.spread M hM ρ' ρ'' σ s hs y hR hR₁ y₀ y₁ hy₀ hy₁ u u' Q
     hb' hb'' l' l''
   obtain ⟨e, hψ, htor⟩ := GlobalTheory.T.exists_latticeIso_of_two_padicAlgCl_uniformisations _ _ ρ' ρ'' p y₀ y₁ u u' P₀ a a' ha ha' hL hL'
-  haveI : CharZero (FractionRing u.V) := (algebraMap (FractionRing u.V) (PadicAlgCl p)).charZero
-  haveI : CharZero u.V := (algebraMap u.V (FractionRing u.V)).charZero
-  haveI : CharZero (FractionRing u'.V) := (algebraMap (FractionRing u'.V) (PadicAlgCl p)).charZero
-  haveI : CharZero u'.V := (algebraMap u'.V (FractionRing u'.V)).charZero
+  have : CharZero (FractionRing u.V) := (algebraMap (FractionRing u.V) (PadicAlgCl p)).charZero
+  have : CharZero u.V := (algebraMap u.V (FractionRing u.V)).charZero
+  have : CharZero (FractionRing u'.V) := (algebraMap (FractionRing u'.V) (PadicAlgCl p)).charZero
+  have : CharZero u'.V := (algebraMap u'.V (FractionRing u'.V)).charZero
   have hrN : 1 ≤ S.r * S.N := NeZero.one_le
   refine ⟨(j.symm.trans e).trans j', fun v => ?_, fun k ν hν => ?_⟩
   · obtain ⟨χ, rfl⟩ := j.surjective v
@@ -1389,7 +1389,7 @@ theorem exists_eq_smul_of_smul_eq_zero {L k : ℕ} (hL : 0 < L) (hk : k ∣ L) (
     ∃ x : ZMod L, (L / k) • x = a := by
   obtain ⟨d, rfl⟩ := hk
   have hk : 0 < k := Nat.pos_of_ne_zero (by rintro rfl; simp at hL)
-  haveI : NeZero (k * d) := ⟨hL.ne'⟩
+  have : NeZero (k * d) := ⟨hL.ne'⟩
   rw [Nat.mul_div_cancel_left _ hk]
   have h : ((k * a.val : ℕ) : ZMod (k * d)) = 0 := by
     rw [Nat.cast_mul, ZMod.natCast_zmod_val, ← nsmul_eq_mul, ha]
@@ -1418,8 +1418,8 @@ theorem prime_eq_of_cen {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {M 
 
 theorem exists_div_torsion (hpq : 1 ≤ Dw.p + Dw.q) (X : USetup C) (z : X.M.Z) {k : ℕ} (hk : 2 ≤ k)
     (hd : k ∣ X.S.r * X.S.N) : ∃ a : X.S.Gam, k • a = 0 ∧ X.M.Div X.S.th a z := by
-  haveI := X.M.qc
-  haveI : CompactSpace X.M.Z := QuasiCompact.compactSpace_of_compactSpace X.M.s
+  have := X.M.qc
+  have : CompactSpace X.M.Z := QuasiCompact.compactSpace_of_compactSpace X.M.s
   obtain ⟨z', hz', hcl⟩ := (isClosed_closure (s := {z})).exists_closed_singleton ⟨z, subset_closure rfl⟩
   have hsp : z ⤳ z' := specializes_iff_mem_closure.2 hz'
   obtain ⟨p, _, y₀, hy₀, -⟩ := exists_cen_main _ _ X.M z' hcl ⊤ ⟨z, trivial⟩
@@ -1598,12 +1598,12 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     refine ⟨t, ht₁, ht₂, fun y h hy yy h₂ hc a ν κ ha => ?_⟩
     obtain ⟨-, k₂⟩ := uIsLab_onto_and_ker E H Dw hpq l Xo cf C D.X p _ (D.lift ct y h) yy h₂
     replace k₂ : yy.ker = D.X.S.HH D.X.M z₂ := k₂.trans (congrArg _ hy)
-    haveI := D.fd
-    haveI := D.gal
+    have := D.fd
+    have := D.gal
     obtain ⟨σ, s', hs', e, hv⟩ := GlobalTheory.T.exists_galois_aut_conjugate_field_points_cover _ _ _ _ X₁.M D.X.M D.q (normal X₁) (normal D.X) D.fin D.gen (PadicAlgCl p)
       (gPt p ≫ y₀) (gPt p ≫ y) (by rw [Category.assoc, Category.assoc, h₀, h])
     obtain ⟨g, hg, hgl, hgf⟩ := hf₃ σ σ.surjective (RingHom.ext σ.commutes)
-    haveI := D.X.ar.ded
+    have := D.X.ar.ded
     have g₂ : GLab D.X.ρ D.X.M (qf ct) (gPt p ≫ y) yy := gLab_lift D ct h₂
     obtain ⟨κ', hκq, hκ⟩ := g₀.conj (normal D.X) hg hs' (by rw [e]; exact g₂)
     obtain ⟨d, hd, e₁, e₂⟩ := exists_cofactor D
@@ -1630,7 +1630,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
       exact mul_mem (Subalgebra.algebraMap_mem _ _) (mul_mem (root_mem_O D.X z' hk' hu) ((div_deep D hpq hx₀ hz').2 b))
     · simp only [hf₀ _ _ he]
       exact zero_mem _
-  · simp only [dif_pos hl]
+  · simp only [dite_eq_left hl]
     exact (key ct yy₁ hl).choose_spec
 
 end GlobalTheory.UPoinc.USum
@@ -1693,9 +1693,9 @@ theorem classSums_core : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨hB, hmax, -, hlift⟩ := GlobalTheory.Poinc.integralClosure_stalk_fibre X₁.o₁ X₁.Ω₁ D.X.o₁ D.X.Ω₁ X₁.M D.X.M D.q
     hN D.fin D.gen z₁
   obtain ⟨z₂, hz₂, h𝔷z⟩ := hmax 𝔷 h𝔷
-  haveI := D.fd
-  haveI := D.gal
-  letI : Algebra (X₁.M.Z.presheaf.stalk z₁) D.X.Ω₁ := ((algebraMap X₁.Ω₁ D.X.Ω₁).comp (X₁.M.stalkHom z₁)).toAlgebra
+  have := D.fd
+  have := D.gal
+  let : Algebra (X₁.M.Z.presheaf.stalk z₁) D.X.Ω₁ := ((algebraMap X₁.Ω₁ D.X.Ω₁).comp (X₁.M.stalkHom z₁)).toAlgebra
   have hl : ∀ y, ∃ y₂ : Sp (OO p) ⟶ D.X.M.Z, y₂ ≫ D.q = (ct y).y ∧
       ∀ b, ev' y b = D.X.M.val (gPt p ≫ y₂) (b : D.X.Ω₁) :=
     fun y => hlift p (ct y).y (ct y).cen (ev' y) (fun a => by rw [hev', hev]; rfl)
@@ -1717,7 +1717,7 @@ theorem classSums_core : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     intro y a x hax
     by_cases h : y = y₀
     · subst h; simpa [hk0] using hax
-    · simp only [k, dif_neg h, LinearEquiv.trans_apply, LinearEquiv.apply_symm_apply]
+    · simp only [k, dite_eq_right h, LinearEquiv.trans_apply, LinearEquiv.apply_symm_apply]
       exact hd y a _ hax
   have hsurj := (GlobalTheory.UPoinc.uIsLab_onto_and_ker E H Dw hpq l Xo cf C D.X p z₂ (ct₂ y₀) (yy y₀) (hyy₂ y₀).uIsLab).1
   choose A hA using fun x : (ct y₀).T.P.D.toPre.X =>

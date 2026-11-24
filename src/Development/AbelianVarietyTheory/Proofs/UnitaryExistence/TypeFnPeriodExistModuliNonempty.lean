@@ -118,7 +118,7 @@ lemma exists_isPeriod_of_equiv {H : Host E} {D : Datum H} {g g' : ℕ} {ty : Fin
   · let f : P'.range → P.range := fun z => ⟨L.symm z.1, by
       obtain ⟨_, x, rfl⟩ := z
       exact ⟨x, by simp [hP']⟩⟩
-    have hf : Continuous f := (L.symm.continuous.comp continuous_subtype_val).subtype_mk _
+    have hf : Continuous f := (L.symm.continuous.comp continuous_subtypeVal).subtype_mk _
     exact DiscreteTopology.of_continuous_injective hf fun z w hzw =>
       Subtype.ext (L.symm.injective (congrArg Subtype.val hzw))
   · have : Set.range P' = L.toLinearEquiv.toLinearMap '' Set.range P := by

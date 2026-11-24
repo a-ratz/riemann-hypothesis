@@ -88,8 +88,8 @@ theorem exists_sec_of_flat_pull [Module.Flat R S] [CompactSpace X]
     ∃ σ : LB.Sec L, φ y ∈ Out.nonzeroLocus σ := by
   classical
   obtain ⟨n, V, c, hVa, hVc, hcov⟩ := exists_affine_chart_cover L hL
-  letI instV : ∀ k, Algebra R Γ(X, V k) := fun k => (algX p (V k)).toAlgebra
-  letI instW : ∀ kl : Fin n × Fin n, Algebra R Γ(X, V kl.1 ⊓ V kl.2) := fun kl => (algX p _).toAlgebra
+  let instV : ∀ k, Algebra R Γ(X, V k) := fun k => (algX p (V k)).toAlgebra
+  let instW : ∀ kl : Fin n × Fin n, Algebra R Γ(X, V kl.1 ⊓ V kl.2) := fun kl => (algX p _).toAlgebra
   let δ : (∀ k, Γ(X, V k)) →ₗ[R] (∀ kl : Fin n × Fin n, Γ(X, V kl.1 ⊓ V kl.2)) :=
     { toFun := fun f kl => dfun L V c hVc f kl.1 kl.2
       map_add' := fun f g => by
@@ -198,7 +198,7 @@ namespace CoverDenseAlt
 theorem isAmpleLB_desc {K K' : Type} [Field K] [Field K'] (e : K →+* K') {X X' : Scheme.{0}} (p : X ⟶ Sp K)
     (p' : X' ⟶ Sp K') (φ : X' ⟶ X) (H : IsPullback φ p' p (spMap e)) [IsProper p] (L : LB X) (hL : L.IsLB)
     (h : GlobalTheory.IsAmpleLB (L.pull φ)) : GlobalTheory.IsAmpleLB L := by
-  letI := e.toAlgebra
+  let := e.toAlgebra
   have hp' : IsProper p' := MorphismProperty.of_isPullback (P := @IsProper) H inferInstance
   have hc : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
   have hs : X.IsSeparated := ⟨by rw [← terminal.comp_from p]; infer_instance⟩

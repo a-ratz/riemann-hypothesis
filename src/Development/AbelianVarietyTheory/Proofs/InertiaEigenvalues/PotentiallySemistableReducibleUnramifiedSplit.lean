@@ -135,7 +135,7 @@ theorem exists_invariant_rightInverse_field {L : Type} [Field L] (G : Type)
 theorem exists_invariant_rightInverse :
     ∀ (L : Type) [inst : CommRing L], IsField L → ∀ (G : Type) (act : G → L →+* L) (N b : Type) [inst_1 : Fintype N] [DecidableEq N] [Fintype b] [inst_4 : DecidableEq b] (κ : Matrix b N L) (Y : Matrix N b L), κ * Y = (1 : Matrix b b L) → (∀ (g : G), Matrix.map κ (⇑(act g) : L → L) = κ) → ∃ (Λ : Matrix N b L), κ * Λ = (1 : Matrix b b L) ∧ ∀ (g : G), Matrix.map Λ (⇑(act g) : L → L) = Λ := by
   intro L _ hL G act N b _ _ _ _ κ Y h hκ
-  letI : Field L := hL.toField
+  let : Field L := hL.toField
   exact exists_invariant_rightInverse_field G act N b κ Y h hκ
 
 end GlobalTheory.InvariantRightInverse
@@ -700,7 +700,7 @@ theorem coef_unr_continuous : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r → 
     funext i
     exact Fintype.linearIndependent_iff.1 hliv g hg i
   let e := LinearEquiv.ofInjective ψ hinj
-  haveI : FiniteDimensional ℚ_[l] ↥(LinearMap.range ψ) := LinearEquiv.finiteDimensional e
+  have : FiniteDimensional ℚ_[l] ↥(LinearMap.range ψ) := LinearEquiv.finiteDimensional e
   have hmem : ∀ t, ((x t : ↥(MaximalUnramifiedExtension l)) : Om l) ∈ LinearMap.range ψ := by
     intro t
     obtain ⟨a, ha⟩ := hspan (x t) (hx t)
@@ -830,9 +830,9 @@ theorem exists_ratForm : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype n] [De
     rintro ⟨i, m⟩ ⟨j, k⟩
     rw [Matrix.mul_apply, Matrix.mul_apply, Fintype.sum_prod_type, Fintype.sum_prod_type]
     simp only [hp, B, T, Matrix.map_apply, Matrix.blockDiagonal_apply, ite_mul, zero_mul, mul_ite, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [Fintype.sum_eq_single i (fun x hx => by simp [Ne.symm hx])]
-    simp only [if_true]
+    simp only [ite_true]
     refine (show _ = ∑ x, (W : Matrix (Fin r) (Fin r) ↥(MaximalUnramifiedExtension l)) m x * algebraMap ℚ_[l] ↥(MaximalUnramifiedExtension l) (A i j k g x)
       from rfl).trans ?_
     rw [← hA i j k g m, map_mul]
@@ -863,7 +863,7 @@ theorem exists_ratForm : ∀ (l : ℕ) [Fact l.Prime] (n : Type) [Fintype n] [De
     rw [Matrix.mulVec, dotProduct, Fintype.sum_prod_type]
     simp only [hp, ite_mul, zero_mul]
     rw [Fintype.sum_eq_single i (fun x hx => by simp [Ne.symm hx])]
-    simp only [if_true]
+    simp only [ite_true]
     rw [ha i g m]
 
 end GlobalTheory.PMon
@@ -1122,7 +1122,7 @@ theorem extCoc_rat_cont_cocycle : ∀ (l : ℕ) [Fact l.Prime] (a b : Type) [Fin
         (ρ (ι g)⁻¹ : Matrix (a ⊕ b) (a ⊕ b) ↥(MaximalUnramifiedExtension l)) (Sum.inr k) (Sum.inr i.2) := by
     intro g i
     simp only [extCoc, vecM, MonoidHom.comp_apply, Matrix.mul_apply, hent, hinv]
-  have hcι : Continuous ι := Continuous.subtype_mk continuous_subtype_val _
+  have hcι : Continuous ι := Continuous.subtype_mk continuous_subtypeVal _
   refine ⟨?_, ?_, ?_⟩
   · intro g i
 
@@ -1174,7 +1174,7 @@ theorem isRat_homRep_restrict : ∀ (l : ℕ) [Fact l.Prime] (a b : Type) [Finty
     intro g' p q
     rw [homRep_apply, homUnit_val, Matrix.kroneckerMap_apply, Matrix.transpose_apply, ← map_inv, MonoidHom.comp_apply,
       MonoidHom.comp_apply, e1, e2, map_inv ι]
-  have hιc : Continuous ι := continuous_subtype_val.subtype_mk _
+  have hιc : Continuous ι := continuous_subtypeVal.subtype_mk _
   refine ⟨hρ.pos, fun x hx => hK (hρ.le x hx), ?_, ?_⟩
   · intro g p q
     rw [key, map_mul, hρ.rat, hρ.rat]
@@ -1204,8 +1204,8 @@ theorem extStep_holds : ExtStep := by
   intro l _ P AI T a b _ _ _ _ K r ρ ρ₁ ρ₂ c hρ hblk hdR h₁ h₂
   obtain ⟨K₁, hK₁, Q₁, hQ₁⟩ := h₁
   obtain ⟨K₂, hK₂, Q₂, hQ₂⟩ := h₂
-  haveI := K₁.2
-  haveI := K₂.2
+  have := K₁.2
+  have := K₂.2
   let K' : FinExt l := ⟨K₁.1 ⊔ K₂.1, inferInstance⟩
   have h1' : K₁.1 ≤ K'.1 := le_sup_left
   have h2' : K₂.1 ≤ K'.1 := le_sup_right

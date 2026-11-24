@@ -178,7 +178,7 @@ theorem canonical_of_abelianDeRham (P : AbelianDeRham) (hκ : IsNilDP κ)
     (hπ : Function.Surjective π) (hI : RingHom.ker π = I) : Canonical κ π := by
   intro g A₀ _ A _ i h hA hg
   obtain ⟨PF, PH, PB, PR, -⟩ := P
-  letI : Algebra R R₀ := π.toAlgebra
+  let : Algebra R R₀ := π.toAlgebra
   obtain ⟨-, ⟨N, hN⟩, -⟩ := PH R A g hA hg
   have hF : PrimitiveSubmodule A₀ = Submodule.span R₀ ((redMor h).pull '' (PrimitiveSubmodule A)) :=
     (PB R A g hA hg R₀ A₀ i h).2

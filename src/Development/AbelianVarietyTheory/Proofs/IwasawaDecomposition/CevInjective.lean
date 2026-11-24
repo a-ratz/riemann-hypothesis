@@ -238,11 +238,11 @@ theorem period_eq (hI : I.Ok) (h : Q.Ok) (hc : ι → HCParam R) (w : Q.S'.Cl �
 omit hE in
 theorem re_petersson_self_pos (h : Q.Ok) (z : Q.S'.Cl → Fr emb σ (R.N R.m - 1) → ℂ) (hz : z ∈ Q.S'.Fi emb σ Q.sgT) (h0 : z ≠ 0) :
     0 < (Q.ipP emb σ h z z).re := by
-  letI := Q.clFin h
+  let := Q.clFin h
   refine (Complex.lt_def.mp ?_ : (0 : ℂ).re < _ ∧ _).1
   rw [petersson_apply]
   have hw : ∀ c, 0 < Q.wt c := fun c => by
-    haveI := h.step.fin_stab c.1 (Q.S'.rep c)
+    have := h.step.fin_stab c.1 (Q.S'.rep c)
     exact inv_pos.2 (Nat.cast_pos.2 Nat.card_pos)
   obtain ⟨c, hc⟩ := Function.ne_iff.1 h0
   refine Finset.sum_pos' (fun c _ => ?_) ⟨c, Finset.mem_univ _, mul_pos (hw c) (ipVal_pos emb σ _ (hz c).1 hc)⟩

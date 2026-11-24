@@ -72,7 +72,7 @@ theorem exists_eq_smul_of_smul_eq_zero {L k : ℕ} (hL : 0 < L) (hk : k ∣ L) (
     ∃ x : ZMod L, (L / k) • x = a := by
   obtain ⟨d, rfl⟩ := hk
   have hk : 0 < k := Nat.pos_of_ne_zero (by rintro rfl; simp at hL)
-  haveI : NeZero (k * d) := ⟨hL.ne'⟩
+  have : NeZero (k * d) := ⟨hL.ne'⟩
   rw [Nat.mul_div_cancel_left _ hk]
   have h : ((k * a.val : ℕ) : ZMod (k * d)) = 0 := by
     rw [Nat.cast_mul, ZMod.natCast_zmod_val, ← nsmul_eq_mul, ha]
@@ -120,9 +120,9 @@ theorem exists_div_of_isLab (X : Setup F W i) {ε} {p : ℕ} [Fact p.Prime] {z :
 
 theorem exists_div_torsion (X : Setup F W i) {ε} (hε : IsDiagEnd F W X.ρ.P X.u ε) (z : X.M.Z) {k : ℕ} (hk : 2 ≤ k)
     (hd : k ∣ X.S.r * X.S.N) : ∃ a : X.S.Gam, k • a = 0 ∧ X.M.Div X.S.th a z := by
-  haveI := X.M.qc
-  haveI := X.imm
-  haveI : CompactSpace X.M.Z := QuasiCompact.compactSpace_of_compactSpace X.M.s
+  have := X.M.qc
+  have := X.imm
+  have : CompactSpace X.M.Z := QuasiCompact.compactSpace_of_compactSpace X.M.s
   obtain ⟨z', hz', hcl⟩ := (isClosed_closure (s := {z})).exists_closed_singleton ⟨z, subset_closure rfl⟩
   have hsp : z ⤳ z' := specializes_iff_mem_closure.2 hz'
   obtain ⟨p, _, y, hy, hU⟩ := exists_cen_main _ _ X.M z' hcl (X.π ⁻¹ᵁ i.opensRange)
@@ -158,7 +158,7 @@ theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (
   have h₄ := left_ne_zero_of_mul h₃
   have h₅ := right_ne_zero_of_mul h₃
   have hN : IsIntegrallyClosed (D.X.M.O z') := RatModel.isIntegrallyClosed_O (fun z => by
-    haveI := D.X.normal
+    have := D.X.normal
     exact ⟨D.X.normal.isDomain_stalk z, GlobalTheory.IsNormalScheme.isIntegrallyClosed_stalk z⟩) z'
   have m₁ : D.X.S.th (D.lab b) * φ (X₁.S.th x₀) / (D.X.S.th (D.lab x₀) * φ (X₁.S.th b)) ∈ D.X.M.O z' :=
     root_mem_O hN hk (by rw [div_pow, e, div_self (pow_ne_zero k (mul_ne_zero h₂ h₁))])

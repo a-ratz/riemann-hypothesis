@@ -118,12 +118,12 @@ theorem injective_of_canonicalCommutation {ι X : Type} (M : Submodule ℂ (X �
   have h1 : E 1 = f := by
     rw [MvPolynomial.one_def, hm, one_smul]
     simp
-  haveI : LeftCommutative fun (i : ι) (g : M) => a i g := ⟨haa⟩
+  have : LeftCommutative fun (i : ι) (g : M) => a i g := ⟨haa⟩
   have hX : ∀ Q v, E (Q * MvPolynomial.X v) = a v (E Q) := by
     intro Q v
     induction Q using MvPolynomial.induction_on' with
     | monomial k r =>
-      rw [MvPolynomial.X, MvPolynomial.monomial_mul, mul_one, hm, hm, map_smul]
+      rw [MvPolynomial.X, MvPolynomial.monomial_mul_monomial, mul_one, hm, hm, map_smul]
       congr 1
       refine List.Perm.foldr_eq (l₂ := v :: (Finsupp.toMultiset k).toList) ?_ f
       rw [← Multiset.coe_eq_coe, ← Multiset.cons_coe, Multiset.coe_toList, Multiset.coe_toList, map_add (f := _),
@@ -266,15 +266,15 @@ theorem pureTensorO_injective : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (�
     refine (omO_single V W τ τ' _ _).trans ?_
     by_cases hτ : τ = τ'
     · subst hτ
-      rw [if_pos rfl, Matrix.conjTranspose_smul, Matrix.mul_smul, Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_mul,
+      rw [ite_eq_left rfl, Matrix.conjTranspose_smul, Matrix.mul_smul, Matrix.mul_smul, Matrix.smul_mul, Matrix.smul_mul,
         Matrix.trace_smul, Matrix.trace_smul, trace_unitMap (sq τ) (hG τ) (hG' τ)]
       by_cases hk : i = k ∧ j = l
-      · rw [if_pos hk, if_pos (by rw [hk.1, hk.2])]
+      · rw [ite_eq_left hk, ite_eq_left (by rw [hk.1, hk.2])]
         simp only [η, smul_eq_mul, Complex.ofReal_mul, mul_assoc]
         rfl
-      · rw [if_neg hk, if_neg (by simpa using hk)]
+      · rw [ite_eq_right hk, ite_eq_right (by simpa using hk)]
         simp
-    · rw [if_neg hτ, if_neg fun hh => hτ (congrArg Prod.fst hh)]
+    · rw [ite_eq_right hτ, ite_eq_right fun hh => hτ (congrArg Prod.fst hh)]
   have hJ : ∀ k : FVar D W.rank V.rank, cplxO (sV k.1) (s k.1) (unitMap (BV k.1) (BW k.1) k.2.1 k.2.2) =
       (I * η k) • unitMap (BV k.1) (BW k.1) k.2.1 k.2.2 := fun k => by
     rw [cplxO_unitMap (hdet _) (hs _) (hs' _)]
@@ -306,7 +306,7 @@ theorem pureTensorO_injective : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (�
     refine congrArg (fun c : ℂ => _ + c • g) ?_
     by_cases hh : k = l
     · subst hh
-      simp only [hom, if_true]
+      simp only [hom, ite_true]
       refine congrArg _ ?_
       rcases hη k with e | e <;> simp [e, hre] <;> ring_nf <;> simp only [I_sq] <;> ring1
     · simp [hom, hh]

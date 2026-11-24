@@ -84,7 +84,7 @@ theorem exists_int_approx (x : F) (hx : p.valuation F x ≤ 1) :
   dsimp only at hx ⊢
   have hs0 : (s : 𝓞 F) ≠ 0 := nonZeroDivisors.coe_ne_zero s
   have hvs : p.intValuation (s : 𝓞 F) ≠ 0 := p.intValuation_ne_zero _ hs0
-  rw [HeightOneSpectrum.valuation_of_mk', div_le_one₀ (zero_lt_iff.mpr hvs)] at hx
+  rw [HeightOneSpectrum.valuation_of_mk', div_le_one₀ (pos_iff_ne_zero.mpr hvs)] at hx
   have hp0 : p.asIdeal ≠ ⊥ := p.ne_bot
   have htop : p.asIdeal ≠ ⊤ := p.isPrime.ne_top
   have hex : ∃ n : ℕ, (s : 𝓞 F) ∉ p.asIdeal ^ (n + 1) := by
@@ -125,7 +125,7 @@ theorem exists_int_approx (x : F) (hx : p.valuation F x ≤ 1) :
     rw [IsFractionRing.mk'_eq_div, IsFractionRing.mk'_eq_div, ← hyr, map_add (f := _), map_mul]
     field_simp
     ring
-  rw [key, HeightOneSpectrum.valuation_of_mk', div_lt_one₀ (zero_lt_iff.mpr hvs)]
+  rw [key, HeightOneSpectrum.valuation_of_mk', div_lt_one₀ (pos_iff_ne_zero.mpr hvs)]
   have hr' := (HeightOneSpectrum.intValuation_le_pow_iff_mem p r (n + 1)).2 hr
   have hs' : ¬ p.intValuation (s : 𝓞 F) ≤ WithZero.exp (-((n + 1 : ℕ) : ℤ)) := fun h =>
     hn1 ((HeightOneSpectrum.intValuation_le_pow_iff_mem p _ _).1 h)
@@ -159,12 +159,12 @@ theorem card_res_le (L : Formalism.MainNotions.S.Loc.LocAt F E sig p) :
       rw [IsValuativeTopology.mem_nhds_iff]
       refine ⟨1, ?_⟩
       rintro _ ⟨z, hz, rfl⟩
-      simp only [Set.mem_setOf_eq, Units.val_one] at hz hz0 ⊢
+      simp only [Set.mem_ofPred_eq, Units.val_one] at hz hz0 ⊢
       have : z0 + z - (y : L.Fp) = (z0 - y) + z := by ring
       rw [this]
       exact Valuation.map_add_lt _ hz0 hz
     obtain ⟨x, hx⟩ := L.dense.exists_mem_open hU ⟨(y : L.Fp), by simp⟩
-    simp only [Set.mem_setOf_eq] at hx
+    simp only [Set.mem_ofPred_eq] at hx
     have hxI : valuation L.Fp (L.ιF x) ≤ 1 := by
       have : L.ιF x = (L.ιF x - y) + y := by ring
       rw [this]
@@ -187,7 +187,7 @@ theorem card_res_le (L : Formalism.MainNotions.S.Loc.LocAt F E sig p) :
     intro w
     obtain ⟨a, ha⟩ := hsurj w
     exact ⟨Ideal.Quotient.mk _ a, by rw [Ideal.Quotient.lift_mk]; exact ha⟩
-  haveI : Finite (𝓞 F ⧸ p.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ p.ne_bot
+  have : Finite (𝓞 F ⧸ p.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ p.ne_bot
   calc Nat.card (IsLocalRing.ResidueField 𝒪[L.Fp]) ≤ Nat.card (𝓞 F ⧸ p.asIdeal) :=
         Nat.card_le_card_of_surjective ρq hsurjq
     _ = Ideal.absNorm p.asIdeal := by rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]

@@ -73,7 +73,7 @@ private theorem fix_lift {K : Type} [Field K] [CharZero K] (B : Finset (Algebrai
       ∃ σ : RingAut (AlgebraicClosure K), (∀ f, σ (algebraMap K _ f) = algebraMap K _ (τ f)) ∧ ∀ b ∈ B, σ b = b := by
   classical
   set E := IntermediateField.adjoin K (B : Set (AlgebraicClosure K)) with hE
-  haveI : FiniteDimensional K E :=
+  have : FiniteDimensional K E :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   obtain ⟨α, hα⟩ := Field.exists_primitive_element K E
   have hβ : IntermediateField.adjoin K {(α : AlgebraicClosure K)} = E := by
@@ -110,8 +110,8 @@ theorem UpperTheory.V.Z.Kato.Sym.mvNear :
     UpperTheory.V.Z.Kato.Sym.MvNear := by
   classical
   intro Ω _ _ _ ε X m hm u v P hP
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
   obtain ⟨hz, -, l3, -, -, l6, -⟩ := lgB Ω ε X m hm
   obtain ⟨B, hB⟩ := hP.lc
   obtain ⟨S, hS⟩ := fix_lift (K := X.K) ({P.a, P.b, zt X m} ∪ B.biUnion fun b => ((minpoly X.K b).aroots (Kb X)).toFinset)

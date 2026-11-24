@@ -58,7 +58,7 @@ variable {D : D7}
 
 theorem finPart_section (D : D7) : Continuous (finPart D) ∧
     ∃ s : (Af D.host.F ⊗[D.host.F] D.host.E) → AE D, Continuous s ∧ ∀ z, finPart D (s z) = z := by
-  letI ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
+  let ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Ainf D.host.F) (Ainf D.host.F ⊗[D.host.F] D.host.E)
   obtain ⟨e, he, hec, hes⟩ : ∃ e : AE D ≃+* (Ainf D.host.F ⊗[D.host.F] D.host.E) × (Af D.host.F ⊗[D.host.F] D.host.E),
       (∀ z, (e z).1 = infPart D z ∧ (e z).2 = finPart D z) ∧ Continuous e ∧ Continuous e.symm :=
@@ -74,8 +74,8 @@ theorem maj_mono (θ : InfFam D) {m n : ℕ} {K K' : Set (Mx D m n)} (h : K ⊆ 
   by_cases hx : GlobalTheory.Unf.InBox K x
   · have hx' : GlobalTheory.Unf.InBox K' x := let ⟨k, hk, h0⟩ := hx; ⟨k, h hk, h0⟩
     unfold GlobalTheory.Unf.maj
-    rw [if_pos hx, if_pos hx']
-  · have h0 : GlobalTheory.Unf.maj θ K N x = 0 := by unfold GlobalTheory.Unf.maj; rw [if_neg hx]
+    rw [ite_eq_left hx, ite_eq_left hx']
+  · have h0 : GlobalTheory.Unf.maj θ K N x = 0 := by unfold GlobalTheory.Unf.maj; rw [ite_eq_right hx]
     rw [h0]
     exact GlobalTheory.Unf.maj_nonneg θ K' N x
 
@@ -163,7 +163,7 @@ theorem hasMaj_pure {θ : InfFam D} (hθ : IsInfFam θ) {m n : ℕ} (f : Schwart
       rw [(finPart D).map_sub, hsec, sub_self]
     have hr := GlobalTheory.Unf.realSize_nonneg θ x
     unfold GlobalTheory.Unf.maj
-    rw [if_pos hin, le_mul_inv_iff₀ (by positivity), norm_mul]
+    rw [ite_eq_left hin, le_mul_inv_iff₀ (by positivity), norm_mul]
     have h1 := hc x
     have h2 := hS (fun τ i j => compAt θ τ x i j)
     have h3 := hG (fun i j => finPart D (x i j))

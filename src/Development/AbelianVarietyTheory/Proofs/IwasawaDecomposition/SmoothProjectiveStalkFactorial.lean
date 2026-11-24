@@ -51,7 +51,7 @@ open NumberField
 theorem isDedekindDomain_closure {Ω K : Type} [Field Ω] [CharZero Ω] [Field K] [CharZero K] {n : ℕ} [NeZero n]
     [IsCyclotomicExtension {n} ℚ K] (φ : K →+* Ω) {ζ : K} (hζ : IsPrimitiveRoot ζ n) :
     IsDedekindDomain (Subring.closure {φ ζ, (n : Ω)⁻¹}) := by
-  haveI : NumberField K := IsCyclotomicExtension.numberField {n} ℚ _
+  have : NumberField K := IsCyclotomicExtension.numberField {n} ℚ _
   have h0 : (n : Ω) ≠ 0 := Nat.cast_ne_zero.mpr (NeZero.ne n)
   set T : Subring Ω := Subring.closure {φ ζ, (n : Ω)⁻¹} with hTdef
   let io : 𝓞 K →+* Ω := φ.comp (algebraMap _ K)
@@ -72,7 +72,7 @@ theorem isDedekindDomain_closure {Ω K : Type} [Field Ω] [CharZero Ω] [Field K
     have h3 : io x = φ y := congrArg φ hy.symm
     rw [h3]
     exact h2 h1
-  letI : Algebra (𝓞 K) T := (io.codRestrict _ hmem).toAlgebra
+  let : Algebra (𝓞 K) T := (io.codRestrict _ hmem).toAlgebra
   have hL : IsLocalization (Submonoid.powers (n : 𝓞 K)) T := by
     refine GlobalTheory.CycAway.isLocalization_of_le_closure h0 _ _ (fun x y h => hio (congrArg (fun z : T => (z : Ω)) h))
       (Subring.subset_closure (Or.inr rfl)) (Subring.closure_mono ?_)
@@ -83,7 +83,7 @@ theorem isDedekindDomain_closure {Ω K : Type} [Field Ω] [CharZero Ω] [Field K
   exact IsLocalization.isDedekindDomain _ (powers_le_nonZeroDivisors_of_noZeroDivisors hn') _
 
 theorem isDedekindDomain_cycAway_of_ne_zero {n : ℕ} (hn : n ≠ 0) : IsDedekindDomain (cycAway n) := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   let K := CyclotomicField n ℚ
   let φ : K →+* ℂ := (IsAlgClosed.lift (R := ℚ) (S := K) (M := ℂ)).toRingHom
   have hζ := IsCyclotomicExtension.zeta_spec n ℚ K

@@ -381,7 +381,7 @@ theorem jhMult_cell_colour : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
   let τ : IrrRep (Levi k fun j => Fin (W.get j).1) :=
     ⟨_, piTensor fun j => (W.get j).rep, isSmooth_piTensor fun j => (W.get j).2.rep.smooth, hirr⟩
   refine (hT τ).trans ?_
-  have hzero : ∀ i j, c j ≠ i → b i j = 0 := fun i j hij => by rw [hb, if_neg hij]
+  have hzero : ∀ i j, c j ≠ i → b i j = 0 := fun i j hij => by rw [hb, ite_eq_right hij]
 
   have hcolumn : ∀ (s : ∀ i j, IrrCl (GL (Fin (b i j)) k)) (j : Fin W.length),
       ∃ z : IrrCl (GL (Fin (W.get j).1) k), (⟨_, z⟩ : IrrGL (k := k)) = ⟨b (c j) j, s (c j) j⟩ ∧
@@ -394,7 +394,7 @@ theorem jhMult_cell_colour : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
       c j = i → (⟨b i j, u⟩ : IrrGL (k := k)) = W.get j := by
     intro i j
     by_cases hij : c j = i
-    · obtain ⟨u, hu⟩ := exists_class_of_degree (b i j) (W.get j) (by rw [hb, if_pos hij])
+    · obtain ⟨u, hu⟩ := exists_class_of_degree (b i j) (W.get j) (by rw [hb, ite_eq_left hij])
       exact ⟨u, fun _ => hu⟩
     · exact ⟨(IrrRep.det (Fin (b i j)) 1 isSmoothChar_one).cl, fun h' => absurd h' hij⟩
   choose s₀ hs₀ using hex
@@ -434,7 +434,7 @@ theorem jhMult_cell_colour : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
       have h1 : (⟨b (c j) j, s (c j) j⟩ : IrrGL (k := k)) = ⟨b (c j) j, s₀ (c j) j⟩ := by
         rw [hs₀ (c j) j rfl, ← hz j, ← hcl j]
       exact eq_of_heq (Sigma.mk.inj_iff.1 h1).2
-    · haveI := subsingleton_irrCl_of_eq_zero (k := k) (b i j) (hzero i j hij)
+    · have := subsingleton_irrCl_of_eq_zero (k := k) (b i j) (hzero i j hij)
       exact Subsingleton.elim _ _
   · intro hs
     obtain ⟨i, hi⟩ := hT0 s₀ hs
@@ -573,7 +573,7 @@ theorem GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr : ∀ {k : Type} [Fiel
     simp
   let m : Fin h → Type := fun i => Fin (x i).1
   let m' : Fin W.length → Type := fun j => Fin (W.get j).1
-  haveI : Fintype (SizeMatrix m m') := Fintype.ofFinite _
+  have : Fintype (SizeMatrix m m') := Fintype.ofFinite _
   have hr : ∀ (b : SizeMatrix m m') i, ∑ j, b.1 i j = (x i).1 := fun b i => by
     simpa [m] using b.2.1 i
   have hc : ∀ (b : SizeMatrix m m') j, ∑ i, b.1 i j = (W.get j).1 := fun b j => by
@@ -643,7 +643,7 @@ theorem GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr : ∀ {k : Type} [Fiel
         congrFun (congrFun (congrArg Subtype.val he) (c j)) j
       by_contra hne
       have h2 : c' j ≠ c j := fun e => hne e.symm
-      simp only [colourMat, if_true, if_neg h2] at h1
+      simp only [colourMat, ite_true, ite_eq_right h2] at h1
       exact (hpos j).ne' h1
     · intro b hb
       obtain ⟨c, hc, hbc⟩ := (Finset.mem_filter.1 hb).2

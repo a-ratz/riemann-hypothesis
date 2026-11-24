@@ -342,10 +342,10 @@ theorem cls_eq_of_uniq : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : Infin
     exact ((Subgroup.mem_centralizer_iff.1 hη) y₀ (Set.mem_singleton _)).symm
   by_cases hpos : ∃ z : Fin G.n → ℂ, 0 < (star z ⬝ᵥ (herm G v β *ᵥ z)).re ∧ FixL G v β y₀ z
   swap
-  · rw [if_neg hpos]
+  · rw [ite_eq_right hpos]
     refine finsum_eq_zero_of_forall_eq_zero fun o => ?_
-    rw [cxF, if_neg (fun h => hpos ⟨_, h⟩), mul_zero]
-  rw [if_pos hpos]
+    rw [cxF, ite_eq_right (fun h => hpos ⟨_, h⟩), mul_zero]
+  rw [ite_eq_left hpos]
   obtain ⟨z₀, hz₀pos, hz₀fix⟩ := hpos
   by_cases hf0 : ∃ h, f (h⁻¹ * toAfF G β x t hx y₀ * h) ≠ 0
   swap
@@ -377,11 +377,11 @@ theorem cls_eq_of_uniq : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : Infin
     rw [Projectivization.mk_eq_mk_iff']
     exact ⟨c, by rw [Matrix.toLin'_apply]; exact hc.symm⟩
 
-  obtain ⟨a, ha⟩ := (Projectivization.mk_eq_mk_iff' ℂ _ _ (Projectivization.rep_nonzero (l₀ : Projectivization ℂ (Fin G.n → ℂ))) hz₀ne).1
+  obtain ⟨a, ha⟩ := (Projectivization.mk_eq_mk_iff' ℂ _ _ (Projectivization.rep_ne_zero (l₀ : Projectivization ℂ (Fin G.n → ℂ))) hz₀ne).1
     (Projectivization.mk_rep (l₀ : Projectivization ℂ (Fin G.n → ℂ)))
   have ha0 : a ≠ 0 := by
     rintro rfl
-    exact Projectivization.rep_nonzero (l₀ : Projectivization ℂ (Fin G.n → ℂ)) (by rw [← ha, zero_smul])
+    exact Projectivization.rep_ne_zero (l₀ : Projectivization ℂ (Fin G.n → ℂ)) (by rw [← ha, zero_smul])
   set F : Ys G v β x t hx Kf K' → ℂ := fun b => cxF G v wt β x t hx Kf f K' f' b y₀ with hF
   set c : LeftCosets ((toAfF G β x t hx).prod (toP1 G β)) (Kf.prod K') → ℂ := fun u =>
     cosetVal (toAfF G β x t hx) (toP1 G β) Kf K' (toAfF G β x t hx y₀) (toP1 G β y₀) f f' u *
@@ -389,16 +389,16 @@ theorem cls_eq_of_uniq : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : Infin
   have hF0 : ∀ u l, l ≠ l₀ → F (u, l) = 0 := by
     intro u l hl
     simp only [hF]
-    rw [cxF, if_neg]
+    rw [cxF, ite_eq_right]
     rintro ⟨hp, hfx⟩
     obtain ⟨d, hd⟩ := huniq _ hp hfx
     apply hl
     exact (Projectivization.mk_rep (l : Projectivization ℂ (Fin G.n → ℂ))).symm.trans
-      ((Projectivization.mk_eq_mk_iff' ℂ _ _ (Projectivization.rep_nonzero _) hz₀ne).2 ⟨d, hd.symm⟩)
+      ((Projectivization.mk_eq_mk_iff' ℂ _ _ (Projectivization.rep_ne_zero _) hz₀ne).2 ⟨d, hd.symm⟩)
   have hF1 : ∀ u, F (u, l₀) = c u := by
     intro u
     simp only [hF, hc]
-    rw [cxF, if_pos]
+    rw [cxF, ite_eq_left]
     · rfl
     refine ⟨?_, ?_⟩
     · have hp := (GlobalTheory.LKCx.pos_iff_smul_toV p G v β 1 z₀ a ha0).1 hz₀pos

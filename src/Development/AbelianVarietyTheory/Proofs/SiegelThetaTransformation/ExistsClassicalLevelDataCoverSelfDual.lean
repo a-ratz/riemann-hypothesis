@@ -142,9 +142,9 @@ theorem exists_matrix (e : Q ≃ₗ[R] (Fin r → R ⧸ I)) (z x : Fin r → Q)
 
 theorem four_le_card {S : Type} [CommRing S] [Finite S] (N : ℕ) (h2 : Odd N) (h3 : ¬ 3 ∣ N) (hN : (N : S) = 0)
     (𝔪 : Ideal S) (h : 𝔪.IsMaximal) : 4 ≤ Nat.card (S ⧸ 𝔪) := by
-  haveI : Nontrivial (S ⧸ 𝔪) := Ideal.Quotient.nontrivial_iff.2 h.ne_top
-  haveI : Finite (S ⧸ 𝔪) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
-  haveI : Fintype (S ⧸ 𝔪) := Fintype.ofFinite _
+  have : Nontrivial (S ⧸ 𝔪) := Ideal.Quotient.nontrivial_iff.2 h.ne_top
+  have : Finite (S ⧸ 𝔪) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
+  have : Fintype (S ⧸ 𝔪) := Fintype.ofFinite _
   have h1 : 1 < Nat.card (S ⧸ 𝔪) := Finite.one_lt_card
   have h0 : ((Nat.card (S ⧸ 𝔪) : ℕ) : S ⧸ 𝔪) = 0 := by
     rw [Nat.card_eq_fintype_card]; exact Nat.cast_card_eq_zero _
@@ -165,10 +165,10 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} {X : Data 
 
 theorem nonempty_equiv_lat (X : Data E r) (I : Ideal (𝓞 E)) (hI : I ≠ ⊥) :
     Nonempty ((X.Λ ⧸ (I • ⊤ : Submodule (𝓞 E) X.Λ)) ≃ₗ[𝓞 E] (Fin r → 𝓞 E ⧸ I)) := by
-  haveI : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
-  haveI : Module.Finite (𝓞 E) X.Λ := Module.Finite.iff_fg.2 X.Λ_fg
-  haveI : Module.FinitePresentation (𝓞 E) X.Λ := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 E) X.Λ := Module.Flat.projective_of_finitePresentation
+  have : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
+  have : Module.Finite (𝓞 E) X.Λ := Module.Finite.iff_fg.2 X.Λ_fg
+  have : Module.FinitePresentation (𝓞 E) X.Λ := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 E) X.Λ := Module.Flat.projective_of_finitePresentation
   refine nonempty_equiv_quot I r ?_
   have h := (X.Λ.tensorEquivSpan E).finrank_eq
   rw [IsLocalization.finrank_eq E (nonZeroDivisors (𝓞 E)) le_rfl,
@@ -438,9 +438,9 @@ theorem exists_levTie : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have hle : Mfr d.l₂ ≤ Jd d := hprod ▸ Ideal.mul_le_right
   have hle' : Mfr d.l₂ ≤ Mfr l := hprod ▸ Ideal.mul_le_left
   have hJ : Jd d ≠ ⊥ := fun h => hbot (le_bot_iff.1 (h ▸ hle))
-  haveI : Finite (𝓞 E ⧸ Jd d) := Ideal.finiteQuotientOfFreeOfNeBot _ hJ
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have : Finite (𝓞 E ⧸ Jd d) := Ideal.finiteQuotientOfFreeOfNeBot _ hJ
+  have := Dw.fin
+  have := Dw.proj
   obtain ⟨e⟩ : Nonempty (LaJ Xo c d ≃ₗ[𝓞 E] (Fin (Dw.p + Dw.q) → 𝓞 E ⧸ Jd d)) :=
     nonempty_equiv_quot (N := Dw.La) (Jd d) _ Dw.rank
   rw [image_lt_eq_range hn] at px
@@ -449,7 +449,7 @@ theorem exists_levTie : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     (MonoidHom.mk' (fun g => (ψ (adj g))⁻¹) fun g g' => by rw [hadj, map_mul, mul_inv, mul_comm])
   let ext : (Fin (Dw.p + Dw.q) → LaJ Xo c d) → Fin n → LaJ Xo c d := fun x b =>
     if h : b.val < Dw.p + Dw.q then x ⟨b, h⟩ else 0
-  have hext : ∀ x i, ext x (Fin.castLE hn i) = x i := fun x i => dif_pos i.2
+  have hext : ∀ x i, ext x (Fin.castLE hn i) = x i := fun x i => dite_eq_left i.2
   let f : (Fin (Dw.p + Dw.q) → LaJ Xo c d) → ℂ := fun x => σ (ph (ext x))
   have hf : ∀ x, σ (ph x) = f fun i => x (Fin.castLE hn i) := fun x =>
     congrArg σ (pa _ _ fun b hb => (hext (fun i => x (Fin.castLE hn i)) ⟨b, hb⟩).symm)
@@ -506,8 +506,8 @@ theorem exists_levTie : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   · change ((Ideal.Quotient.factor hle).mapMatrix _).det = 1
     rw [← RingHom.map_det]
     exact (congrArg _ hk).trans (map_one _)
-  · haveI : Finite (LaJ Xo c d) := Finite.of_equiv _ e.symm.toEquiv
-    haveI : Finite (LaJ Xo c d ≃ₗ[𝓞 E] LaJ Xo c d) :=
+  · have : Finite (LaJ Xo c d) := Finite.of_equiv _ e.symm.toEquiv
+    have : Finite (LaJ Xo c d ≃ₗ[𝓞 E] LaJ Xo c d) :=
       Finite.of_injective (fun g => (g : LaJ Xo c d → LaJ Xo c d)) DFunLike.coe_injective
     obtain ⟨t, ht, H⟩ := tie_core D hprod hcop (fun k => (hG k).2) e f
       (fun x hx => by

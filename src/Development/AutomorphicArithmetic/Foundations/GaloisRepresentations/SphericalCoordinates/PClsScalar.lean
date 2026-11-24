@@ -157,7 +157,7 @@ private lemma genus_nontrivial {O : Type} [Ring O] {bar : O → O} {p N : ℕ} {
 theorem clsScalar_of : ClsScalar := by
   intro p _ D N N' D' t D'' t'' hD' hD'' w r hr hEF
   have hp : p.Prime := Fact.out
-  haveI : Nontrivial D.plat.La := by
+  have : Nontrivial D.plat.La := by
     show Nontrivial D.La
     refine Module.nontrivial_of_finrank_pos (R := ℤ) ?_
     rw [D.rankLa]
@@ -165,8 +165,8 @@ theorem clsScalar_of : ClsScalar := by
     have h2 := D.n_pos
     have h3 : 0 < Module.finrank ℚ D.F := Module.finrank_pos
     positivity
-  haveI : Nontrivial D'.La := genus_nontrivial hp hD'.1
-  haveI : Nontrivial D''.La := genus_nontrivial hp hD''.1
+  have : Nontrivial D'.La := genus_nontrivial hp hD'.1
+  have : Nontrivial D''.La := genus_nontrivial hp hD''.1
   let X : D''.La × D''.La → ℤ := fun u => D'.EF (w u.1) (w u.2)
   let Y : D''.La × D''.La → ℤ := fun u => D''.EF u.1 u.2
   have hXall : ∀ m : ℤ, (∀ u, m ∣ X u) ↔ ∀ x y, m ∣ D'.EF x y := fun m =>

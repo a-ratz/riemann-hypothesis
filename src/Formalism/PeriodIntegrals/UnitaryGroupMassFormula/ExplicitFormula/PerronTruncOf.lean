@@ -61,9 +61,9 @@ lemma kernel_le_kb (hK : PerronKernel) (y c T : ℝ) (hy : 0 < y) (hc : 0 < c) (
     ‖perronK y c T - (if 1 ≤ y then 1 else 0)‖ ≤ y ^ c * kb T y := by
   obtain ⟨h1, h2⟩ := hK y c T hy hc hT
   by_cases h : T * |Real.log y| ≤ 1
-  · rw [kb, if_pos h]
+  · rw [kb, ite_eq_left h]
     linarith
-  · rw [kb, if_neg h]
+  · rw [kb, ite_eq_right h]
     push_neg at h
     rw [mul_one_div, le_div_iff₀ (by linarith)]
     linarith

@@ -278,7 +278,7 @@ theorem exists_int_primitive {F E : Type*} [Field F] [Field E] [Algebra F E] [Ch
     [CharZero E] [FiniteDimensional F E] {ι : Type*} [Fintype ι] (v : ι → E)
     (hv : adjoin F (Set.range v) = ⊤) : ∃ c : ι → ℤ, F⟮∑ i, (c i : E) * v i⟯ = ⊤ := by
   classical
-  haveI hfinite : Finite (IntermediateField F E) := by
+  have hfinite : Finite (IntermediateField F E) := by
     first
     | exact inferInstance
     | exact Field.finite_intermediateField_of_exists_primitive_element F E

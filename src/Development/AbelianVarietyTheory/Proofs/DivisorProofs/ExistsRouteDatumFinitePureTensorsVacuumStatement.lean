@@ -156,7 +156,7 @@ theorem IsPureSum.smul {κ : Type} [Fintype κ] {vac : ∀ v : GlobalTheory.Inde
   rw [Finset.smul_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_eq_mul, SchwartzMap.smul_apply]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_eq_mul, smul_apply]
   ring
 
 theorem IsPureSum.add {κ : Type} [Fintype κ] {vac : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), (κ → Fv F v) → ℂ}
@@ -297,7 +297,7 @@ theorem isPureSum_of_slices {F : Type} [Field F] [NumberField F] {κ : Type} [Fi
       have := congrFun (hr' k φ₀) x
       unfold GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.tens GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure at this
       unfold GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure
-      rw [SchwartzMap.smul_apply, smul_eq_mul, mul_assoc, ← this]
+      rw [smul_apply, smul_eq_mul, mul_assoc, ← this]
       ring
     rw [Finset.sum_apply, Finset.sum_congr rfl fun k _ => e3 k, ← Finset.sum_mul, ← e2, e1]
     field_simp
@@ -390,13 +390,13 @@ theorem exists_bases (hL : L.Is μ₀) (h : IsTripleOf W M t i j e Bs Γ X) (hT 
   have hsd := (node_isV G hL (X := .grid i j) ⟨i.2.le, j.2.le⟩).sd
   have hV := (node_isV G hL (X := .grid i (j + 1)) ⟨i.2.le, j.2⟩).sd
   have hV₁ := (node_isV G hL (X := .grid (i + 1) j) ⟨i.2, j.2.le⟩).sd
-  haveI hl₁ : (latSmall G i j).IsFullLattice D.host.E :=
+  have hl₁ : (latSmall G i j).IsFullLattice D.host.E :=
     GlobalTheory.TripleSpaceW.conjSub_isFullLattice (GlobalTheory.FunObj.selfDual_isFullLattice _ _ hsd)
   have hAA : D.host.AA ≠ 0 := fun h => by
     have := Formalism.IndefR.Fin.factPrincipalDatum D.R D.host
     rw [h, mul_zero, zero_mul, zero_mul] at this
     exact zero_ne_one this
-  haveI hl₂ : (latSkew e).IsFullLattice D.host.E :=
+  have hl₂ : (latSkew e).IsFullLattice D.host.E :=
     GlobalTheory.SkewLat.pairLat_isFull (GlobalTheory.SkewLat.scLat_isFull hAA (GlobalTheory.FunObj.selfDual_isFullLattice _ _ hV))
       (GlobalTheory.TripleSpaceW.conjSub_isFullLattice (GlobalTheory.SkewLat.scLat_isFull hAA
         (GlobalTheory.TripleSpaceW.conjSub_isFullLattice (GlobalTheory.FunObj.selfDual_isFullLattice _ _ hV₁)))) e
@@ -695,7 +695,7 @@ theorem vacuum_unique : ∀ {D : D7} {a a' : ℕ} (Bs : GlobalTheory.IndefiniteR
     have h : ∃ γ ∈ Λ, GlobalTheory.LatVac.locCo co v γ = l := AddSubgroup.mem_map.mp hl
     obtain ⟨r, hr, x₀, hx₀⟩ := GlobalTheory.T.exists_nonzero_complementary_adelicSchwartz_function v f hf
     have key := GlobalTheory.T.heisenbergEigen_latticePointAtPlace_localIdentity v co Bs.ψ h.choose f _ (hAt _ h.choose_spec.1) (hA _ h.choose_spec.1) r hr x₀ hx₀ ξ
-    simp only [χ, dif_pos h]
+    simp only [χ, dite_eq_left h]
     rw [h.choose_spec.2] at key
     exact key
   obtain ⟨c, hc0, hcb⟩ := GlobalTheory.T.tensorLattice_localDarbouxCoords_bounded {Γ.V' with L := L₁} {Γ.W with L := L₂} v co hL₁ hL₂

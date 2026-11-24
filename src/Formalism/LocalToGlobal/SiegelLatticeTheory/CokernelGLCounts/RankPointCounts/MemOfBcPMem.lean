@@ -129,8 +129,8 @@ theorem locF'_last (p : PlF D) {T' : D.host.E} (F' : LFlag (D.sp.Y 0) D.R.rS T')
 theorem mem_of_baseChange_mem {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submodule.IsFullLattice D.host.E Λ) {x : (VS D).V}
     (h : ∀ p, baseChange₂ D p x ∈ lattice₂ D Zd.M p Λ) : x ∈ Λ := by
   refine PI.UnitaryGroupMassFormula.UJClassMass.interLocF (F := D.host.F) Λ hΛ.toIsLattice x fun v => ?_
-  haveI := v.isPrime
-  letI := hΛ
+  have := v.isPrime
+  let := hΛ
   have h2 := (Formalism.L2.SG.Pf.LocalDenominators.baseChangeAt_mem_localLattice_iff Zd v (Λ := Λ) (by infer_instance) x).1 (h v)
   exact (Formalism.HermitianLattices.Ext.L3.LocalSpans.mem_locF v.asIdeal Λ x).1 h2
 

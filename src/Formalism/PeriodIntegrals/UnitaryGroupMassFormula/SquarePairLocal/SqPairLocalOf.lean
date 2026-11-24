@@ -744,7 +744,7 @@ theorem star_coe (t : 𝓞 E) : star (t : E) = ((cj E t : 𝓞 E) : E) := by
 theorem inertAsm : InertAsm := by
   unfold InertAsm InertPlace
   intro hLCP hME hD hLM hPL E _ _ _ hE N L' L'' hN hL' hL'' Q hQ hcj c hc
-  haveI : Q.IsPrime := hQ.isPrime
+  have : Q.IsPrime := hQ.isPrime
   obtain ⟨M⟩ := hME E hE Q hQ hcj
   obtain ⟨G', hG'1, hG'2, hD'⟩ := hD E hE N L' hL' Q hQ hcj
   obtain ⟨G'', hG''1, hG''2, hD''⟩ := hD E hE N L'' hL'' Q hQ hcj
@@ -873,7 +873,7 @@ theorem exists_conjugation_fixed_uniformizer (hE : PI.IsCMUnram E) (Q : Ideal (�
   have hlt : Q ^ 2 < Q := by
     have := @Ideal.pow_succ_lt_pow _ _ _ Q hQ.isPrime hQ0 1
     rwa [pow_one] at this
-  obtain ⟨x, hxQ, hx2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨x, hxQ, hx2⟩ := IsConcreteLE.exists_of_lt hlt
   obtain ⟨θ, t, ht, hθt⟩ := hE.2.2 Q hQ
   have htc : t = cj E θ := by
     apply RingOfIntegers.ext
@@ -1107,7 +1107,7 @@ private theorem exists_one_sub_pow_mul_pow_eq_mul {E : Type} [Field E] [NumberFi
     ∃ m k : ℕ, ∃ v : 𝓞 E, (1 - ϖ ^ (m + 1)) * ϖ ^ k = b * v := by
   have hne : Ideal.span {b} ≠ ⊥ := by
     rwa [Ne, Ideal.span_singleton_eq_bot]
-  haveI : Finite (𝓞 E ⧸ Ideal.span {b}) := by
+  have : Finite (𝓞 E ⧸ Ideal.span {b}) := by
     first
     | exact (Ideal.absNorm_ne_zero_iff _).mp (fun h0 => hne (Ideal.absNorm_eq_zero_iff.mp h0))
     | exact Ideal.finiteQuotientOfFreeOfNeBot _ hne
@@ -1144,7 +1144,7 @@ theorem locMat : LocMat := by
   classical
   unfold LocMat
   intro E _ _ _ Q hQ M hC N hN u hu1 hu2 K
-  haveI hQp : Q.IsPrime := hQ.isPrime
+  have hQp : Q.IsPrime := hQ.isPrime
   have hone : (1 : 𝓞 E) ∉ Q := fun h1 => hQ.ne_top ((Ideal.eq_top_iff_one Q).mpr h1)
   have hϖ0 : M.ϖ ≠ 0 := by
     first
@@ -1385,7 +1385,7 @@ theorem isUnimodular_of_isSDG {N : ℕ} {L : Submodule (𝓞 E) (Fin N → E)} (
 
 theorem mem_hcompl_of_inert {Q : Ideal (𝓞 E)} (hQ : Q.IsPrime) (hc : Q.comap (cj E) = Q) (s : 𝓞 E) :
     s ∈ hcompl (K := E) Q ↔ s ∉ Q := by
-  haveI := hQ
+  have := hQ
   constructor
   · intro h
     have hle : hcompl (K := E) Q ≤ Q.primeCompl := Submonoid.closure_le.mpr fun s hs => hs.1
@@ -1418,7 +1418,7 @@ theorem mem_loc_stdLat {Q : Ideal (𝓞 E)} (hQ : Q.IsPrime) (hc : Q.comap (cj E
     rw [hw, Pi.smul_apply, Algebra.smul_def]
   · intro h
     choose s hs w hw using h
-    haveI := hQ
+    have := hQ
     refine ⟨∏ i, s i, ?_, ?_⟩
     · have : (∏ i, s i) ∈ Q.primeCompl := Submonoid.prod_mem _ fun i _ => hs i
       exact this
@@ -1617,7 +1617,7 @@ open FixD in
 theorem fixedDVR : FixedDVR := by
   intro R _ _ _ _ _ σ hσ ϖ hϖ hσϖ
   have h : ϖ ∈ fixSub σ := (mem_fixSub σ ϖ).2 hσϖ
-  haveI hd := dvr_sub σ hϖ h
+  have hd := dvr_sub σ hϖ h
   exact ⟨hd, hens_sub σ, finite_sub σ, fun h' => irr_sub σ hϖ h'⟩
 
 end PI.SqPairLocal
@@ -1695,7 +1695,7 @@ theorem splitPlace_of (hP : PowLoc) : SplitPlace := by
     exact star_star _
   set Q' := Ideal.comap (cj E) Q with hQ'def
   have hsurj : Function.Surjective (cj E) := fun y => ⟨cj E y, cjcj y⟩
-  haveI := hQ
+  have := hQ
   have hQ' : Q'.IsMaximal := Ideal.comap_isMaximal_of_surjective (cj E) hsurj
   have hcc : Ideal.comap (cj E) Q' = Q := by
     ext x
@@ -1734,8 +1734,8 @@ theorem splitPlace_of (hP : PowLoc) : SplitPlace := by
     hK x (Ideal.pow_le_pow_right (le_max_left K K') hx)
   have dvQ' : ∀ x, x ∈ Q' ^ M → Dv Q' c x := fun x hx =>
     hK' x (Ideal.pow_le_pow_right (le_max_right K K') hx)
-  haveI := hQ.isPrime
-  haveI := hQ'.isPrime
+  have := hQ.isPrime
+  have := hQ'.isPrime
   refine ⟨(b : E) • (1 : Matrix (Fin N) (Fin N) E), pres_integer_smul_one b, pres_integer_smul_one b, ?_, ?_⟩
   · apply good_scal
     · exact dvQ _ (Ideal.mul_mem_left _ b hb1)

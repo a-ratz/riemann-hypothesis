@@ -82,7 +82,7 @@ noncomputable def indLine (ι : K → Type) [∀ k, Fintype (ι k)] : HermLine �
     simp
 
 theorem indLine_smooth : IsSmoothHerm (indLine ι) :=
-  (contDiffOn_const (c := (1 : ℝ))).congr fun _ hz => if_pos hz
+  (contDiffOn_const (c := (1 : ℝ))).congr fun _ hz => ite_eq_left hz
 
 theorem tensor_indLine {A B : HermLine ι} (ha : A.a = B.a)
     (hh : ∀ z : (Σ k, ι k) → ℂ, (∀ k, ∃ i, z ⟨k, i⟩ ≠ 0) → A.h z = B.h z) :
@@ -91,7 +91,7 @@ theorem tensor_indLine {A B : HermLine ι} (ha : A.a = B.a)
   by_cases hz : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0
   · show A.h z * _ = B.h z * _
     rw [hh z hz]
-  · have : (indLine ι).h z = 0 := if_neg hz
+  · have : (indLine ι).h z = 0 := ite_eq_right hz
     show A.h z * _ = B.h z * _
     rw [this, mul_zero, mul_zero]
 

@@ -103,8 +103,8 @@ theorem cxHessian_lin {D : ℕ} {f g ψ : (Fin D → ℂ) → ℝ} {y : Fin D �
     rw [h1.fderiv_eq]
     exact ((df.hasFDerivAt.const_smul a).add (dg.hasFDerivAt.const_smul b)).fderiv
   ext i j
-  simp only [cxHessian, hH, Matrix.add_apply, Matrix.smul_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [cxHessian, hH, Matrix.add_apply, Matrix.smul_apply, add_apply,
+    smul_apply, smul_eq_mul]
   push_cast
   ring
 
@@ -134,13 +134,13 @@ theorem sheetDensity_congr {e : ℕ} (Q : Ideal (MRing ι))
     (w : ((k : K) → ι k) → ℂ) :
     sheetDensity Q Ψ φ g y w = sheetDensity Q Ψ φ' g y w := by
   by_cases hγ : ∃ γ, IsSheet Q Ψ y w γ
-  · simp only [sheetDensity, dif_pos hγ]
+  · simp only [sheetDensity, dite_eq_left hγ]
     have hmc : ∀ᶠ y' in 𝓝 y, hγ.choose y' ∈ mcPts Q := hγ.choose_spec.2.mono fun _ h => h.2.1
     have hH : (fun k => cxHessian (fun y' => φ k (hγ.choose y')) y) =
         fun k => cxHessian (fun y' => φ' k (hγ.choose y')) y :=
       funext fun k => cxHessian_congr (hmc.mono fun y' hy' => h k _ hy')
     simp only [maDensity, hH]
-  · simp only [sheetDensity, dif_neg hγ]
+  · simp only [sheetDensity, dite_eq_right hγ]
 
 theorem ptsIntegral_congr {e : ℕ} (Q : Ideal (MRing ι)) {φ φ' : Fin e → ((Σ k, ι k) → ℂ) → ℝ}
     (h : ∀ j, ∀ z ∈ mcPts Q, φ j z = φ' j z) (g : ((Σ k, ι k) → ℂ) → ℝ) :
@@ -167,7 +167,7 @@ theorem sheetDensity_pencil {e : ℕ} (Q : Ideal (MRing ι))
     sheetDensity Q Ψ φ g y w = ∑ i ∈ Finset.range (e + 1),
       (e.choose i : ℝ) * b ^ i * a ^ (e - i) * sheetDensity Q Ψ (mixW α β i) g y w := by
   by_cases hγ : ∃ γ, IsSheet Q Ψ y w γ
-  · simp only [sheetDensity, dif_pos hγ]
+  · simp only [sheetDensity, dite_eq_left hγ]
     have hs : IsSheet Q Ψ y w hγ.choose := hγ.choose_spec
     have hmc : ∀ᶠ y' in 𝓝 y, hγ.choose y' ∈ mcPts Q := hs.2.mono fun _ h => h.2.1
     have hHφ : (fun k => cxHessian (fun y' => φ k (hγ.choose y')) y) = fun _ =>
@@ -190,7 +190,7 @@ theorem sheetDensity_pencil {e : ℕ} (Q : Ideal (MRing ι))
         (((e.choose i : ℝ) * b ^ i * a ^ (e - i) : ℝ) : ℂ) := by push_cast; ring
     rw [hc, Complex.re_ofReal_mul]
     ring
-  · simp only [sheetDensity, dif_neg hγ, mul_zero, Finset.sum_const_zero]
+  · simp only [sheetDensity, dite_eq_right hγ, mul_zero, Finset.sum_const_zero]
 
 theorem fibreSum_pencil {e : ℕ} {Q : Ideal (MRing ι)} (hQ : IsArithVar Q (e + 1))
     {Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ)} (hΨ : IsGoodProj Q Ψ)

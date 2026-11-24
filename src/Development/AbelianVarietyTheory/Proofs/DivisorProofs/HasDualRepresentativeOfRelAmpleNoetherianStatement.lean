@@ -135,9 +135,9 @@ end
 
 theorem inj_of_quotient : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (L : LB A.left) (hL : L.IsLB), Out.RelAmple A L → ∀ (B : Over (Sp R)) (P : LB (A ⊗ B).left) (q : A ⟶ B) (hP : Fam A P), IsFinite q.left → Flat q.left → Surjective q.left → (∀ (Y : Over (Sp R)) (a x : Y ⟶ A), evc hP.isLB a (x ≫ q) = GlobalTheory.CechPic.pull (a * x).left (cls L hL) - GlobalTheory.CechPic.pull a.left (cls L hL) - GlobalTheory.CechPic.pull x.left (cls L hL) + GlobalTheory.CechPic.pull (1 : Y ⟶ A).left (cls L hL)) → (∀ (Y : Over (Sp R)) (x y : Y ⟶ A), x ≫ q = y ≫ q ↔ GlobalTheory.MemKL A L (x * y⁻¹)) → Inj A P := by
   intro R _ _ A _ g hA _ L hL _ B P q hP _ hflat hsurj hev hKL
-  haveI : IsCommMonObj A := hA.comm
-  haveI : Flat q.left := hflat
-  haveI : Surjective q.left := hsurj
+  have : IsCommMonObj A := hA.comm
+  have : Flat q.left := hflat
+  have : Surjective q.left := hsurj
   intro Y u u' hs
   rw [same_iff hP.isLB hP.isLB] at hs
   let s₁ := pullback.snd q.left u.left
@@ -329,7 +329,7 @@ theorem exists_glue {X : Scheme.{0}} (S : Set X.Opens) (hcov : ∀ x : X, ∃ U 
       exact ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec
     · intro s m _ h2
       rw [← cancel_mono (c U), h2, ((H U V h _ s.snd).2 ⟨s.fst, s.condition⟩).choose_spec]
-  letI := locallyDirected S hcov hinf
+  let := locallyDirected S hcov hinf
   let d : (coverOfSet S hcov).RelativeGluingData :=
     { functor :=
         { obj := C
@@ -826,7 +826,7 @@ theorem exists_cover : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Ove
       ∀ (Y : Over (Sp R)) (u : Y ⟶ A) (t : Y ⟶ Over.mk (V.1.ι ≫ T.hom)),
         Same A (abelian₂ A L) N u (t ≫ Over.homMk V.1.ι rfl) ↔ ∃ z : Y ⟶ H, z ≫ h = lift u t := by
     intro V
-    haveI : IsAffine (Over.mk (V.1.ι ≫ T.hom)).left := V.2
+    have : IsAffine (Over.mk (V.1.ι ≫ T.hom)).left := V.2
     set j : Over.mk (V.1.ι ≫ T.hom) ⟶ T := Over.homMk V.1.ι rfl
     have hNV : (ev N (fst A (Over.mk (V.1.ι ≫ T.hom))) (snd A _ ≫ j)).IsLB := pull_isLB hN.isLB _
     have eV : ∀ (Y : Over (Sp R)) (a : Y ⟶ A) (t : Y ⟶ Over.mk (V.1.ι ≫ T.hom)),
@@ -886,7 +886,7 @@ namespace GlobalTheory.DualCon
 theorem lam_triv_of_memKL : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbelianScheme A → ∀ L : LB A.left,
     L.IsLB → ∀ (T : Over S) (x : T ⟶ A), GlobalTheory.MemKL A L x → Triv (ev (abelian₂ A L) (fst A T) (snd A T ≫ x)) := by
   intro S A _ hA L hL T x hx
-  haveI := hA.comm
+  have := hA.comm
   have hP : (abelian₂ A L).IsLB := LB.isLB_linComb hL _ _
   have e : ∀ (Y : Over S) (a b : Y ⟶ A), evc hP a b = lam (cls L hL) a b := fun Y a b ↦ by
     rw [evc, show cls _ hP = lam (cls L hL) (fst A A) (snd A A) from cls_cube_two hL _ _ hP, pull_lam, lift_fst,
@@ -1149,7 +1149,7 @@ theorem finAff_of_isAmpleLB {Y : Scheme.{0}} (f : X ⟶ Y) [IsAffine Y] [Univers
   obtain ⟨N, hN, t, ht⟩ := exists_common_pow n hn s
   let tt : X → (lbPow L N).Sec := fun x => if hx : x ∈ F' then t ⟨x, hx⟩ else DVR.SecOps.secZero
   have htt : ∀ x (hx : x ∈ F'), nonzeroLocus (tt x) = nonzeroLocus (s ⟨x, hx⟩) := fun x hx => by
-    simp only [tt, dif_pos hx, ht]
+    simp only [tt, dite_eq_left hx, ht]
   obtain ⟨g, hg⟩ := exists_sec_forall_mem F' tt (fun x hx => (htt x hx).symm ▸ hs ⟨x, hx⟩)
     (fun x hx y hy hyx hmem => hV' x hx y hy hyx (hsV ⟨x, hx⟩ ((htt x hx) ▸ hmem)))
   refine ⟨nonzeroLocus g, h.isAffineOpen_nonzeroLocus f hN g, fun x hx => ?_⟩
@@ -1586,9 +1586,9 @@ theorem hasRepAF_of_relAmple : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] 
         rw [e₁, e₂, hkh]
       have := congrArg (fun t => t.left) (hinj Z' _ _ hs)
       simpa [k₁, k₂] using this
-    haveI : Flat h.left := hhf
-    haveI : Surjective h.left := hhs
-    haveI : QuasiCompact h.left := hhq
+    have : Flat h.left := hhf
+    have : Surjective h.left := hhs
+    have : QuasiCompact h.left := hhq
     let d : T.left ⟶ B.left := EffectiveEpi.desc h.left (x ≫ q).left hc
     have hd : h.left ≫ d = (x ≫ q).left := EffectiveEpi.fac h.left (x ≫ q).left hc
     have hdB : d ≫ B.hom = T.hom := by

@@ -180,7 +180,7 @@ theorem isOpen_stab_ind {G W : Type} [Group G] [TopologicalSpace G] [IsTopologic
   have h : IsOpen {g : G | ind H σ g v.1 = v.1} := v.2
   convert h using 1
   ext x
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · intro hx
     exact Subtype.ext (funext hx)
@@ -197,7 +197,7 @@ theorem continuous_sEmb (n : ℕ) : Continuous (sEmb k n) :=
   GlobalTheory.CompanionTheory.LeibPhi.continuous_iotaM k n
 
 theorem isOpen_dpowM_eq_one (n : ℕ) (s : ℝ) : IsOpen {g : Mir k n | dpowM n s g = 1} :=
-  (GlobalTheory.CompanionTheory.LeibPhi.isOpen_ker_dpow k (n + 1) s).preimage continuous_subtype_val
+  (GlobalTheory.CompanionTheory.LeibPhi.isOpen_ker_dpow k (n + 1) s).preimage continuous_subtypeVal
 
 variable {i t : ℕ} {τ : MRep k (i + 1)} {σ : GRep k (t + 1)}
 
@@ -304,7 +304,7 @@ def rowB {ι : Type} [Fintype ι] [DecidableEq ι] (ρ : ι → k) (c j : ι) : 
 
 theorem rowB_val {ι : Type} [Fintype ι] [DecidableEq ι] (ρ : ι → k) (c j : ι) (hc : ρ c ≠ 0) :
     (rowB ρ c j).val = rowM ρ c j := by
-  rw [rowB, dif_pos (rowM_det_ne ρ c j hc)]
+  rw [rowB, dite_eq_left (rowM_det_ne ρ c j hc)]
   rfl
 
 end Alg
@@ -315,7 +315,7 @@ variable {k : Type} [Field k] [TopologicalSpace k] [IsTopologicalDivisionRing k]
 
 theorem continuousOn_GL {X ι : Type} [TopologicalSpace X] [Fintype ι] [DecidableEq ι] (f : X → GL ι k) (V : Set X)
     (hf : ContinuousOn (fun x => (f x).val) V) : ContinuousOn f V := by
-  rw [continuousOn_iff_continuous_restrict] at hf ⊢
+  rw [continuousOn_iff_continuous_domRestrict] at hf ⊢
   refine Units.continuous_iff.2 ⟨hf, ?_⟩
   have hdet : Continuous fun x : V => ((f x).val).det := hf.matrix_det
   have hne : ∀ x : V, ((f x).val).det ≠ 0 := fun x => (Matrix.GeneralLinearGroup.det (f x)).ne_zero
@@ -467,11 +467,11 @@ theorem chart :
     intro p hp
     obtain ⟨hM, -⟩ := key p hp
     show ((μ p : Mir k ((i + 1) + t)) : GL _ k) = W p
-    simp only [μ, dif_pos hM]
+    simp only [μ, dite_eq_left hM]
   · intro p hp
     obtain ⟨hM, h, hh, d, e⟩ := key p hp
     refine ⟨h, hh, d, ?_⟩
-    have hμ : μ p = ⟨W p, hM⟩ := dif_pos hM
+    have hμ : μ p = ⟨W p, hM⟩ := dite_eq_left hM
     rw [hμ]
     exact e
 
@@ -677,8 +677,8 @@ theorem entry_zero (i t : ℕ) (r : Mir k ((i + 1) + t)) (d d' : Fin (t + 1) →
   have hc : (GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t y : ℕ) < i + 1 := by omega
   have hz := GlobalTheory.CompanionTheory.BZPhiPG.Grp.hpg_entry h hh
     (Fin.castSucc (GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t x))
-    (by rw [Fin.coe_castSucc]; exact hx)
-    (by rw [Fin.coe_castSucc]; exact Nat.ne_of_lt (GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t x).isLt)
+    (by rw [Fin.val_castSucc]; exact hx)
+    (by rw [Fin.val_castSucc]; exact Nat.ne_of_lt (GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t x).isLt)
     ⟨(GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t y : ℕ), hc⟩
   have e₂ : (Fin.castLE (by omega) (⟨(GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t y : ℕ), hc⟩ : Fin (i + 1)) :
       Fin ((i + 1) + t + 1 + 1)) = Fin.castSucc (GlobalTheory.CompanionTheory.BZPhiPG.piPerm i t y) := Fin.ext rfl
@@ -1273,17 +1273,17 @@ section
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem muD_fin (n : ℕ) : @MeasureTheory.IsFiniteMeasureOnCompacts (Fin n → k) (borel _) _ (muD k n) := by
-  letI : MeasurableSpace (Fin n → k) := borel _
-  haveI : BorelSpace (Fin n → k) := ⟨rfl⟩
+  let : MeasurableSpace (Fin n → k) := borel _
+  have : BorelSpace (Fin n → k) := ⟨rfl⟩
   unfold muD
   infer_instance
 
 theorem smInt_lin {n : ℕ} {W W' : Type} [AddCommGroup W] [Module ℂ W] [AddCommGroup W'] [Module ℂ W']
     (T : W →ₗ[ℂ] W') {F : (Fin n → k) → W} (l : IsLocallyConstant F) (c : HasCompactSupport F) :
     @GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k n) (T ∘ F) = T (@GlobalTheory.CompanionTheory.Rodier.smInt _ _ (borel _) _ _ (muD k n) F) := by
-  letI : MeasurableSpace (Fin n → k) := borel _
-  haveI : BorelSpace (Fin n → k) := ⟨rfl⟩
-  haveI := muD_fin (k := k) n
+  let : MeasurableSpace (Fin n → k) := borel _
+  have : BorelSpace (Fin n → k) := ⟨rfl⟩
+  have := muD_fin (k := k) n
   exact GlobalTheory.CompanionTheory.Rodier.SmIntEl.smInt_linear _ T l c
 
 theorem smInt_zero' {n : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W] :
@@ -1402,7 +1402,7 @@ theorem memOAlt (i t : ℕ) (ψ : AddChar k Circle) (τ : MRep k (i + 1)) (σ : 
     show IsOpen {g | ind (HPG k i (t + 1)) (sigO τ σ ψ) g F = F}
     convert _root_.GlobalTheory.CompanionTheory.BZPhiPG.isOpen_eO_rightPeriods k i t ψ τ σ f using 1
     ext g
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro h m
       exact congrFun (congrArg Subtype.val h) m

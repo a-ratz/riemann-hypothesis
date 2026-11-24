@@ -64,7 +64,7 @@ theorem UpperTheory.Gal.Gen.ell_pf :
       rw [GlobalTheory.EllU.finPart_of_infU hx]; exact C.one_mem)
   let f : D →* C := (GlobalTheory.EllU.finPart.comp D.subtype).codRestrict C (fun d => hDC d.2)
   let lam' : D →* H := lam.comp f
-  haveI := GlobalTheory.InfUCompact.compactSpace_infU E n
+  have := GlobalTheory.InfUCompact.compactSpace_infU E n
   have hI : IsCompact (infU E n : Set (UA E n)) := isCompact_iff_compactSpace.2 inferInstance
   have hDc : IsCompact (D : Set (UA E n)) := by
     rw [hDdef, Subgroup.mul_normal]
@@ -137,7 +137,7 @@ theorem UpperTheory.Gal.Gen.ell_pf :
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl }
     change IsOpen (S : Set (finU (E := E) (n := n)))
     refine Subgroup.isOpen_of_mem_nhds S (g := 1) ?_
-    have ho : IsOpen ((Subtype.val : finU (E := E) (n := n) → UA E n) ⁻¹' Wn) := hWo.preimage continuous_subtype_val
+    have ho : IsOpen ((Subtype.val : finU (E := E) (n := n) → UA E n) ⁻¹' Wn) := hWo.preimage continuous_subtypeVal
     refine Filter.mem_of_superset (ho.mem_nhds hW1) fun k hk => ?_
     change RU E n k _ = _
     funext g

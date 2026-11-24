@@ -113,10 +113,10 @@ theorem lamDet_of (hB : BetaIso) (hM : MuBridge) (hN : NuBridge) (hD : DKForm) (
     (hP : PlaceJacAll) : LamDet := by
   intro D X u' ψ hT μinf νinf fibInf hPH η _ eH cν hadd hν hb c S ι _ L hc hL
   classical
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : BorelSpace (TupI X) :=
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : BorelSpace (TupI X) :=
     PI.AprimeInfT.borelSpace_tup (F := X.B.I.F) (E := X.B.I.E) (Ainf X.B.I.F) (D.R.rS + 1 + D.R.rS)
-  haveI : BorelSpace (HmI X) := ⟨rfl⟩
+  have : BorelSpace (HmI X) := ⟨rfl⟩
   obtain ⟨Bc, hBc⟩ := hB X
   obtain ⟨κ, _, Hh, Tc, hH1, hH2, hH3, hTcadd, hHθ, hνT⟩ := hN X u' ψ hT μinf νinf fibInf hPH
   have hμT := densMu_holds X u' ψ hT μinf νinf fibInf hPH

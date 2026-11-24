@@ -158,7 +158,7 @@ theorem finite_V : Module.Finite C V := by
   rw [← Submodule.span_span_of_tower O, hs, P.free.2.1]
 include P in
 theorem two_mul_finrank : 2 * finrank C Ω = finrank C V := by
-  haveI := finite_V P
+  have := finite_V P
   have hrefl : LinearMap.BilinForm.IsRefl P.e := fun x y h => by rw [e_skew P y x, h, neg_zero]
   have horth : LinearMap.BilinForm.orthogonal P.e (LinearMap.ker P.ht) = LinearMap.ker P.ht := by
     ext x

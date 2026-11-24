@@ -203,7 +203,7 @@ theorem level_mem_nhds : ∀ (D : D7) (V : HSp D) (N : ℕ) (Kf : Subgroup (GA D
   have hn := congr_mem_nhds D.host.F D.host.E V.rank L hfg hL N hN
   rw [hhat] at hn
   have hm : Continuous fun g : GA D V => (matHom V g).1 :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hf : Continuous fun g : GA D V => (finHom V g).1 := hm.matrix_map (continuous_fin D.host.F D.host.E)
   have hc : Continuous fun g : GA D V => (finHom V (g₀⁻¹ * g)).1 := hf.comp (continuous_const_mul g₀⁻¹)
   have h1 := hc.continuousAt.preimage_mem_nhds (x := g₀) (by rw [inv_mul_cancel, map_one]; exact hn)

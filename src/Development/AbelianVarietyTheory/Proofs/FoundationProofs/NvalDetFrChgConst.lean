@@ -90,7 +90,7 @@ theorem nval_det_frChg_const : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   obtain ⟨O, _, β, Y, -, hY, hb⟩ :=
     modelAtSt_of_good GlobalTheory.partI_closed GlobalTheory.Moduli.moduli_scheme_exists E H Dw l Xo c hr hg w
   obtain ⟨b₀, hb₀⟩ := hb T₀ io₀ 1 ho₀
-  letI := io₀.toAlgebra
+  let := io₀.toAlgebra
   obtain ⟨z₀, hz₀⟩ :=
     GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c c.F T₀.Fr (Algebra.ofId c.F T₀.Fr) y₀
   obtain ⟨y₁, t, hbor⟩ := intFr_of_model (GlobalTheory.intFrames_of_laws hB hT E H Dw l Xo c) T₀ io₀ Y hY b₀ hb₀ z₀
@@ -99,7 +99,7 @@ theorem nval_det_frChg_const : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   intro T io e ho
   obtain ⟨φ, χ, -, hio, hχ, hϖ⟩ := hini T io e ho
   subst hio
-  letI := (χ.comp io₀).toAlgebra
+  let := (χ.comp io₀).toAlgebra
   intro y z g a hy hz hc
   let ψ : T₀.Fr →ₐ[c.F] T.Fr := { χ with commutes' := fun _ => rfl }
   obtain ⟨y₂, hy₂⟩ :=

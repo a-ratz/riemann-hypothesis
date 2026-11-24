@@ -145,7 +145,7 @@ theorem matH_hOne (L : PeriodPair) (z w : n → ℂ) :
     matH (hOne L n) z w = (∑ τ, z τ * conj (w τ)) / ((Formalism.L2.Th1.F.area L : ℝ) : ℂ) := by
   show (∑ i, ∑ j, z i * hOne L n i j * conj (w j)) = _
   simp only [hOne, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_div]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_div]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [div_eq_mul_inv]; ring
 
@@ -208,7 +208,7 @@ theorem al_eq (D : D7) (T : TaylorLogMetric.Tor D) {N N' : ℕ} (x : TaylorLogMe
   unfold TaylorLogMetric.al alphaQ
   rw [h, h', round_intCast]
   rw [show (Real.pi : ℂ) * Complex.I * ((m : ℝ) : ℂ) = (m : ℂ) * ((Real.pi : ℂ) * Complex.I) by push_cast; ring,
-    Complex.exp_int_mul, Complex.exp_pi_mul_I]
+    Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
 
 section Kap
 

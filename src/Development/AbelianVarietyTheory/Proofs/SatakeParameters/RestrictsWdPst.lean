@@ -351,8 +351,8 @@ theorem restricts_wdPst {l : ℕ} [Fact l.Prime] (P : LocPrime l) (ι : Qbar l �
     (ρ : Representation ↥LL.1 ↥(GK Bw.Kw) V) (hV : IsPst P ρ) :
     Restricts (wdPst P ι Bw h hj ρ) (wdPst P ι Bw' h' hj' (GlobalTheory.Pst.resTo ρ hle)) := by
   have hV' := (GlobalTheory.PstLaws.isPst_resTo_iff P ρ hle).2 hV
-  haveI := hV.finite
-  haveI := hV'.finite
+  have := hV.finite
+  have := hV'.finite
   rw [wdPst_of_isPst ι Bw h hj hV, wdPst_of_isPst ι Bw' h' hj' hV']
   obtain ⟨e, he1, he2⟩ := GlobalTheory.T.fontaineWeilDeligneSpace_restriction_equiv l P ι K L Ω A v v' h h' O O' Bw Bw' hj hj' hle
     (fun σ σ' hσ => weilToGK_eq Bw Bw' hjj hle h h' σ σ' hσ) LL V ρ hV

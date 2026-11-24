@@ -282,7 +282,7 @@ theorem UpperTheory.V.AlgebraTools.exists_tower_limit :
     simpa using this
   have hP0 : ∀ v : P 0, v = 0 := fun v => by simpa using hz 0 1 v (by simp)
   obtain ⟨r, ψ1, hψ1⟩ := Module.Finite.exists_fin' R (P 1)
-  haveI := tf_isPrecomplete_pi a r
+  have := tf_isPrecomplete_pi a r
   have lift : ∀ n (g : (Fin r → R) →ₗ[R] P n), ∃ h : (Fin r → R) →ₗ[R] P (n + 1), (π n).comp h = g :=
     fun n g => Module.projective_lifting_property (π n) g (hsurj n)
   choose L hL using lift
@@ -325,12 +325,12 @@ theorem UpperTheory.V.AlgebraTools.exists_tower_limit :
     ⟨{ carrier := {x | ∀ k, π k (x (k + 1)) = x k}
        add_mem' := by
          intro x y hx hy
-         simp only [Set.mem_setOf_eq] at hx hy ⊢
+         simp only [Set.mem_ofPred_eq] at hx hy ⊢
          intro k; simp [hx k, hy k]
        zero_mem' := by simp
        smul_mem' := by
          intro c x hx
-         simp only [Set.mem_setOf_eq] at hx ⊢
+         simp only [Set.mem_ofPred_eq] at hx ⊢
          intro k; simp [hx k] }, fun x => Iff.rfl⟩
   have hφmem : ∀ v, LinearMap.pi (fun k => ψ k) v ∈ Msub :=
     fun v => (hmem _).2 fun k => by simpa using hcomp k v
@@ -440,8 +440,8 @@ private theorem tc_mod (R : Type) [CommRing R] (a : Ideal R) (k : ℕ) (N : Type
       Submodule.smul_mem_smul b.2 Submodule.mem_top
     rw [h] at hb
     exact (Submodule.mem_bot R).mp hb
-  letI iq : Module (R ⧸ a ^ k) N := ht.module
-  letI inst : Module (AdicCompletion a R) N :=
+  let iq : Module (R ⧸ a ^ k) N := ht.module
+  let inst : Module (AdicCompletion a R) N :=
     Module.compHom N (AdicCompletion.evalₐ a k).toRingHom
   refine ⟨inst, fun s r hs x => ?_⟩
   show (AdicCompletion.evalₐ a k s) • x = r • x
@@ -473,10 +473,10 @@ theorem UpperTheory.V.AlgebraTools.exists_tower_limit_completion :
         (∀ k, LinearMap.ker (q k) = a ^ k • ⊤) ∧ (∀ k x, π k (q (k + 1) x) = q k x) ∧
         ∀ x : M, (∀ k, q k x = 0) → x = 0 := by
   intro R _ a ha P _ _ π hπ hker hkill hfin
-  haveI : IsAdicComplete (a.map (algebraMap R (AdicCompletion a R))) (AdicCompletion a R) :=
+  have : IsAdicComplete (a.map (algebraMap R (AdicCompletion a R))) (AdicCompletion a R) :=
     AdicCompletion.isAdicComplete_self a ha
   choose inst hinst using fun k => tc_mod R a k (P k) (hkill k)
-  haveI tow : ∀ k, IsScalarTower R (AdicCompletion a R) (P k) := fun k => ⟨fun r s x => by
+  have tow : ∀ k, IsScalarTower R (AdicCompletion a R) (P k) := fun k => ⟨fun r s x => by
     obtain ⟨r₀, h₀⟩ := Ideal.Quotient.mk_surjective (AdicCompletion.evalₐ a k s)
     have h1 : AdicCompletion.evalₐ a k (r • s) = Ideal.Quotient.mk _ (r * r₀) := by
       rw [map_smul, ← h₀, Algebra.smul_def, Ideal.Quotient.algebraMap_eq, ← map_mul]
@@ -506,8 +506,8 @@ theorem UpperTheory.V.AlgebraTools.exists_tower_limit_completion :
   obtain ⟨M, _, _, q, hfinM, hsurj, hkerq, hcompat, hsep⟩ :=
     UpperTheory.V.AlgebraTools.exists_tower_limit (AdicCompletion a R) (a.map (algebraMap R (AdicCompletion a R)))
       P π' (fun k => hπ k) hker' hkill' hfin'
-  letI : Module R M := Module.compHom M (algebraMap R (AdicCompletion a R))
-  haveI : IsScalarTower R (AdicCompletion a R) M := ⟨fun r s m => by
+  let : Module R M := Module.compHom M (algebraMap R (AdicCompletion a R))
+  have : IsScalarTower R (AdicCompletion a R) M := ⟨fun r s m => by
     show (r • s) • m = (algebraMap R (AdicCompletion a R) r) • (s • m)
     rw [Algebra.smul_def, mul_smul]⟩
   refine ⟨M, inferInstance, inferInstance, inferInstance, inferInstance,
@@ -656,13 +656,13 @@ private theorem ker_tensor (a : Ideal R) (t : X →ₗ[R] X') (ht : Function.Sur
     Function.Surjective (t.baseChange S) ∧
       LinearMap.ker (t.baseChange S) = a.map (algebraMap R S) • ⊤ := by
   refine ⟨?_, ?_⟩
-  · rw [LinearMap.baseChange_eq_ltensor]
+  · rw [LinearMap.baseChange_eq_lTensor]
     exact LinearMap.lTensor_surjective S ht
   · have hex := lTensor_exact S (LinearMap.exact_subtype_ker_map t) ht
     ext w
     constructor
     · intro hw
-      rw [LinearMap.mem_ker, LinearMap.baseChange_eq_ltensor] at hw
+      rw [LinearMap.mem_ker, LinearMap.baseChange_eq_lTensor] at hw
       obtain ⟨v, rfl⟩ := (hex w).mp hw
       clear hw
       induction v using TensorProduct.induction_on with
@@ -701,7 +701,7 @@ theorem UpperTheory.V.AlgebraTools.exists_patched_module :
           ∀ x : MM, algebraMap R S r • x = 0 := by
   intro R σ _ _ F hF y m f M _ _ S _ _ _ 𝔶 h𝔶 hreg Y _ _ _ _ g _ hfin
   classical
-  haveI : Module.Flat R S := IsLocalization.flat S (Submonoid.powers f)
+  have : Module.Flat R S := IsLocalization.flat S (Submonoid.powers f)
   have haFG : (Ideal.span (Set.range y)).FG := Submodule.fg_span (Set.finite_range y)
   have hFG : 𝔶.FG := h𝔶 ▸ haFG.map _
   have anti : Antitone (fun j : ℕ => m ^ j) := fun i j hij => Ideal.pow_le_pow_right hij
@@ -719,8 +719,8 @@ theorem UpperTheory.V.AlgebraTools.exists_patched_module :
     rintro I rfl
     exact ⟨(IsLocalizedModule.isBaseChange (Submonoid.powers f) S g).equiv⟩
   obtain ⟨e1⟩ := key (fun j => Ideal.span (Set.range y) ^ 1 ⊔ m ^ j) (by funext j; rw [pow_one])
-  haveI := hfin
-  haveI : Module.Finite S (S ⊗[R] ULim F (fun j => Ideal.span (Set.range y) ^ 1 ⊔ m ^ j) M) :=
+  have := hfin
+  have : Module.Finite S (S ⊗[R] ULim F (fun j => Ideal.span (Set.range y) ^ 1 ⊔ m ^ j) M) :=
     Module.Finite.equiv e1.symm
   obtain ⟨MM, i1, i2, i3, i4, qq, hfinMM, hsurj, hker, -, hzero⟩ :=
     exists_tower_limit_completion S 𝔶 hFG
@@ -739,7 +739,7 @@ theorem UpperTheory.V.AlgebraTools.exists_patched_module :
       (fun k => by rw [hker k, hspan]) ?_
     intro b k hbk
     have h1 := qRegAt_uLim R σ F hF (fun j => m ^ j) M y b k anti hbk (fun j => hreg b j)
-    haveI : IsLocalizedModule (Submonoid.powers f)
+    have : IsLocalizedModule (Submonoid.powers f)
         (TensorProduct.mk R S (ULim F (fun j => Ideal.span (Set.range y) ^ k ⊔ m ^ j) M) 1) :=
       (isLocalizedModule_iff_isBaseChange (Submonoid.powers f) S _).mpr
         (TensorProduct.isBaseChange R _ S)
@@ -827,7 +827,7 @@ theorem UpperTheory.Reformulated.B.FiniteModuleMaximalIdealAnnihilation.exists_p
     [inst_2 : AddCommGroup Q] [inst_3 : _root_.Module R Q] [Finite Q],
     ∃ (c : ℕ), ∀ a ∈ IsLocalRing.maximalIdeal R ^ c, ∀ (z : Q), a • z = (0 : Q) := by
   intro R Q _ _ _ _ _
-  haveI : Finite (Submodule R Q) :=
+  have : Finite (Submodule R Q) :=
     Finite.of_injective (fun N : Submodule R Q => (N : Set Q)) SetLike.coe_injective
   obtain ⟨i, j, hij, h⟩ : ∃ i j : ℕ, i < j ∧
       (IsLocalRing.maximalIdeal R ^ i • (⊤ : Submodule R Q)) =
@@ -870,9 +870,9 @@ private theorem finite_quotient_of_power_maximal_ideal_le (Λ R X : Type) [CommR
     [Finite (ResidueField Λ)] [AddCommGroup X] [Module R X] [Module Λ X] [Module.Finite Λ X] (t : Λ →+* R)
     (ht : ∀ (a : Λ) (x : X), a • x = t a • x) (j : ℕ) (K : Ideal R) (hK : (maximalIdeal Λ).map t ^ j ≤ K) :
     Finite (X ⧸ (K • ⊤ : Submodule R X)) := by
-  haveI h0 : Finite (Λ ⧸ maximalIdeal Λ) := ‹Finite (ResidueField Λ)›
-  haveI h1 : Finite (Λ ⧸ maximalIdeal Λ ^ j) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) j
-  haveI h2 : Finite (X ⧸ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ X)) :=
+  have h0 : Finite (Λ ⧸ maximalIdeal Λ) := ‹Finite (ResidueField Λ)›
+  have h1 : Finite (Λ ⧸ maximalIdeal Λ ^ j) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) j
+  have h2 : Finite (X ⧸ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ X)) :=
     Submodule.finite_quotient_smul _ (Module.Finite.fg_top)
   have hle : ∀ x ∈ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ X), x ∈ (K • ⊤ : Submodule R X) := by
     intro x hx
@@ -895,7 +895,7 @@ theorem UpperTheory.V.Pa.Core.finite_quotient_of_ultrafilter_limit_module :
     ∀ (Λ R σ : Type) [CommRing Λ] [IsLocalRing Λ] [CommRing R] [Fintype σ] (s : MvPowerSeries σ Λ →+* R) [IsNoetherianRing Λ] [Finite (ResidueField Λ)] [IsLocalRing R] (U : Ultrafilter ℕ) (f : R) (M : ℕ → Type) [∀ N, AddCommGroup (M N)] [∀ N, Module R (M N)] (X : Type) [AddCommGroup X] [Module R X] [Module Λ X] [Module.Finite Λ X], (∀ (a : Λ) (x : X), a • x = s (MvPowerSeries.C a) • x) → (∀ a (x : X), s (MvPowerSeries.X a) • x = 0) → (∀ j, ∀ᶠ N in (U : Filter ℕ), ∃ (φ : (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X)) →ₗ[R] (M N ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R (M N)))) (ψ : (M N ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R (M N))) →ₗ[R] (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X))), (∀ z, φ (ψ z) = f • z) ∧ ∀ z, ψ (φ z) = f • z) → ∀ k j : ℕ, ∃ c : ℕ, ∀ᶠ N in (U : Filter ℕ), ∀ a ∈ maximalIdeal R ^ c, ∀ x : M N, (f ^ k * a) • x ∈ ((Ideal.span (Set.range (fun a => s (MvPowerSeries.X a))) ^ k ⊔ ((maximalIdeal Λ).map (s.comp MvPowerSeries.C)) ^ j) • ⊤ : Submodule R (M N)) := by
   intro Λ R σ _ _ _ _ s _ _ _ U f M _ _ X _ _ _ _ hC _ h k j
   have hK := kjMap Λ R σ s 1 j
-  haveI : Finite (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X)) :=
+  have : Finite (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X)) :=
     finite_quotient_of_power_maximal_ideal_le Λ R X (s.comp MvPowerSeries.C) hC j _ (hK ▸ le_sup_right)
   obtain ⟨c, hc⟩ := exists_pow_maximalIdeal_smul_finite_eq_zero R (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X))
   refine ⟨c * k, (h j).mono ?_⟩
@@ -940,7 +940,7 @@ theorem UpperTheory.V.AlgebraTools.ULim.const_bijective :
   · obtain ⟨p, rfl⟩ := ULim.mk_surjective _ _ _ x
     have hz : ∀ j : ℕ, ∃ z : Z, ∀ᶠ i in (U : Filter ι), p i ≡ z [SMOD (m ^ j • ⊤ : Submodule R Z)] := by
       intro j
-      haveI := hfin j
+      have := hfin j
       obtain ⟨q, hq⟩ := Ultrafilter.eq_pure_of_finite
         (U.map fun i => (Submodule.Quotient.mk (p i) : Z ⧸ (m ^ j • ⊤ : Submodule R Z)))
       obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ q
@@ -1112,8 +1112,8 @@ theorem UpperTheory.V.Pa.Core.exists_ultraLimit_pair_of_eventual_quotient_maps :
     ∀ (Λ R σ : Type) [CommRing Λ] [IsLocalRing Λ] [CommRing R] [Fintype σ] (s : MvPowerSeries σ Λ →+* R) [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] [Finite (ResidueField Λ)] (U : Ultrafilter ℕ) (f : R) (M : ℕ → Type) [∀ N, AddCommGroup (M N)] [∀ N, Module R (M N)] (X : Type) [AddCommGroup X] [Module R X] [Module Λ X] [Module.Finite Λ X], (U : Filter ℕ) ≤ atTop → (∀ (a : Λ) (x : X), a • x = s (MvPowerSeries.C a) • x) → (∀ a (x : X), s (MvPowerSeries.X a) • x = 0) → (∀ j, ∀ᶠ N in (U : Filter ℕ), ∃ (φ : (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X)) →ₗ[R] (M N ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R (M N)))) (ψ : (M N ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R (M N))) →ₗ[R] (X ⧸ ((kjIdeal Λ σ 1 j).map s • ⊤ : Submodule R X))), (∀ z, φ (ψ z) = f • z) ∧ ∀ z, ψ (φ z) = f • z) → ∃ (Φ : X →ₗ[R] ULim (U : Filter ℕ) (fun j => Ideal.span (Set.range (fun a => s (MvPowerSeries.X a))) ⊔ ((maximalIdeal Λ).map (s.comp MvPowerSeries.C)) ^ j) M) (Ψ : ULim (U : Filter ℕ) (fun j => Ideal.span (Set.range (fun a => s (MvPowerSeries.X a))) ⊔ ((maximalIdeal Λ).map (s.comp MvPowerSeries.C)) ^ j) M →ₗ[R] X), (∀ z, Φ (Ψ z) = f • z) ∧ ∀ z, Ψ (Φ z) = f • z := by
   intro Λ R σ _ _ _ _ s _ _ _ U f M _ _ X _ _ _ _ hU hs hy h
   classical
-  letI : Algebra Λ R := (s.comp MvPowerSeries.C).toAlgebra
-  haveI : IsScalarTower Λ R X := IsScalarTower.of_algebraMap_smul fun a x => (hs a x).symm
+  let : Algebra Λ R := (s.comp MvPowerSeries.C).toAlgebra
+  have : IsScalarTower Λ R X := IsScalarTower.of_algebraMap_smul fun a x => (hs a x).symm
   set m : Ideal R := (maximalIdeal Λ).map (s.comp MvPowerSeries.C) with hm
   set I : ℕ → Ideal R := fun j => Ideal.span (Set.range (fun a => s (MvPowerSeries.X a))) ⊔ m ^ j with hIdef
   have hkj : ∀ j, (kjIdeal Λ σ 1 j).map s = I j := fun j => by rw [kjMap, pow_one]
@@ -1139,9 +1139,9 @@ theorem UpperTheory.V.Pa.Core.exists_ultraLimit_pair_of_eventual_quotient_maps :
     (IsAdicComplete.map_algebraMap_iff (S := R) (maximalIdeal Λ) X).2 (AnnihilatorQuotientFinite.finCompl Λ X _)
   have hf : ∀ j : ℕ, Finite (X ⧸ (m ^ j • ⊤ : Submodule R X)) := by
     intro j
-    haveI : Finite (Λ ⧸ maximalIdeal Λ) := inferInstanceAs (Finite (ResidueField Λ))
-    haveI : Finite (Λ ⧸ maximalIdeal Λ ^ j) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) j
-    haveI : Finite (X ⧸ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ X)) :=
+    have : Finite (Λ ⧸ maximalIdeal Λ) := inferInstanceAs (Finite (ResidueField Λ))
+    have : Finite (Λ ⧸ maximalIdeal Λ ^ j) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) j
+    have : Finite (X ⧸ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ X)) :=
       Submodule.finite_quotient_smul _ Module.Finite.fg_top
     have hle : (maximalIdeal Λ ^ j • ⊤ : Submodule Λ X) ≤ (m ^ j • ⊤ : Submodule R X).restrictScalars Λ := by
       refine Submodule.smul_le.2 fun a ha x _ => ?_
@@ -1149,7 +1149,7 @@ theorem UpperTheory.V.Pa.Core.exists_ultraLimit_pair_of_eventual_quotient_maps :
       refine Submodule.smul_mem_smul ?_ Submodule.mem_top
       rw [hm, ← Ideal.map_pow]
       exact Ideal.mem_map_of_mem (s.comp MvPowerSeries.C) ha
-    haveI : Finite (X ⧸ (m ^ j • ⊤ : Submodule R X).restrictScalars Λ) :=
+    have : Finite (X ⧸ (m ^ j • ⊤ : Submodule R X).restrictScalars Λ) :=
       Finite.of_surjective _ (Submodule.factor_surjective hle)
     exact Finite.of_equiv _ (Submodule.Quotient.restrictScalarsEquiv Λ _).toEquiv
   have hI : ∀ j, (I j • ⊤ : Submodule R X) = m ^ j • ⊤ := by
@@ -1455,7 +1455,7 @@ theorem UpperTheory.V.AlgebraTools.qRegAt_mvPowerSeries :
       QRegAt (MvPowerSeries σ Λ) (MvPowerSeries.X : σ → MvPowerSeries σ Λ) (I.map (MvPowerSeries.C : Λ →+* MvPowerSeries σ Λ)) a := by
   intro Λ σ _ _ I a c hc α
   classical
-  haveI := Fintype.ofFinite σ
+  have := Fintype.ofFinite σ
   rw [smul_eq_mul, Ideal.mul_top] at hc ⊢
   obtain ⟨u, hu, v, hv, huv⟩ := Submodule.mem_sup.1 hc
   have h0 : MvPowerSeries.coeff α.1 u = 0 := by
@@ -1468,7 +1468,7 @@ theorem UpperTheory.V.AlgebraTools.qRegAt_mvPowerSeries :
     · rw [monoVal_X_eq, smul_eq_mul, MvPowerSeries.coeff_monomial_mul]
       simp
     · intro β _ hβ
-      rw [monoVal_X_eq, smul_eq_mul, MvPowerSeries.coeff_monomial_mul, if_neg]
+      rw [monoVal_X_eq, smul_eq_mul, MvPowerSeries.coeff_monomial_mul, ite_eq_right]
       intro hle
       exact hβ (Subtype.ext (eq_of_le_of_degree_eq hle (β.2.trans α.2.symm)))
     · simp
@@ -1656,7 +1656,7 @@ theorem UpperTheory.V.Pa.Core.pmodEx :
   obtain ⟨Φ, Ψ, h1, h2⟩ := exists_ultraLimit_pair_of_eventual_quotient_maps Λ R σ s U f M X hU hΛ hX hpair
   let S := Localization.Away f
   let g := (TensorProduct.mk R S X 1) ∘ₗ Ψ
-  haveI : IsLocalizedModule (Submonoid.powers f) g :=
+  have : IsLocalizedModule (Submonoid.powers f) g :=
     loc_of_pair f (TensorProduct.mk R S X 1) Φ Ψ h1 h2
   obtain ⟨MM, i1, i2, i3, i4, q, hfin, hsurj, hker, hqr, hann⟩ :=
     exists_patched_module R σ (U : Filter ℕ) hU y m f M S _ rfl hq (S ⊗[R] X) g inferInstance

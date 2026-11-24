@@ -294,7 +294,7 @@ theorem outerLeib_of (hP : PairAtDeriv) : OuterLeib := by
         simp only [hF0def, Finset.sum_apply]
       have e2 : F' s c' = wtI l.succ c' • ∑ i, wl (A i s c') (Bf i s c') := by
         refine ContinuousLinearMap.ext fun h => ?_
-        simp only [hF'def, wl_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.coe_sum', Finset.sum_apply,
+        simp only [hF'def, wl_apply, smul_apply, FunLike.coe_sum, Finset.sum_apply,
           smul_eq_mul]
         have alg : ∀ (f g : Ix S → ℂ) (w h : ℂ), w * (∑ a, f a) * h + w * (∑ a, g a) * conj h =
             w * ∑ a, (f a * h + g a * conj h) := by

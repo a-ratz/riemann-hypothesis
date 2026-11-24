@@ -86,7 +86,7 @@ theorem torsor_G_gener (s : Formalism.L2.SG.TermOp.GTerm X u u' (X.Fu u) (X.Fu u
   unfold Formalism.L2.SG.Full.Full.tO Formalism.L2.SG.TermOp.tOf
   dsimp only
   unfold Formalism.L2.SG.TermOp.Gt
-  rw [if_neg (show s.G ≠ 0 from h.2)]
+  rw [ite_eq_right (show s.G ≠ 0 from h.2)]
   exact one_ne_zero
 
 theorem torsor_elig {R : Formalism.L2.SG.TermOp.Rw (Y.what₂ u) (Y.what₂ u') Y.TR} {ρ : ℕ} (s : LiftT X Y u u' κ R ρ) :
@@ -96,7 +96,7 @@ theorem torsor_elig {R : Formalism.L2.SG.TermOp.Rw (Y.what₂ u) (Y.what₂ u') 
   dsimp only at hG
   unfold Formalism.L2.SG.TermOp.Gt at hG
   refine ⟨s.2.2.1, fun h0 => hG ?_⟩
-  exact if_pos (show s.1.G = 0 from h0)
+  exact ite_eq_left (show s.1.G = 0 from h0)
 
 theorem torsor_lam {R : Formalism.L2.SG.TermOp.Rw (Y.what₂ u) (Y.what₂ u') Y.TR} {ρ : ℕ} (s : LiftT X Y u u' κ R ρ) :
     s.1.lam = R.1.1 ∧ s.1.lam' = R.2.1.1 := by
@@ -159,7 +159,7 @@ theorem torsorC_of (hRL : Formalism.L2.SG.DataInst.RowLabel κ) (hI : LiftIotaFr
               Formalism.L2.SG.PairVal.cTerm vR s.1.toTerm) := by
         rw [Real.sqrt_mul (hw _), hl]; push_cast; ring
       exact key
-    · haveI : IsEmpty (LiftT X Y u u' κ R ρ) := not_nonempty_iff.mp h
+    · have : IsEmpty (LiftT X Y u u' κ R ρ) := not_nonempty_iff.mp h
       unfold liftVal
       exact tsum_empty
   by_cases hcl : Nonempty (ClassT X Y u u' κ ρ)
@@ -198,7 +198,7 @@ theorem torsorC_of (hRL : Formalism.L2.SG.DataInst.RowLabel κ) (hI : LiftIotaFr
       have h1 : ∑' R, g R = ∑' x : S, Formalism.MainNotions.S.wRow D (X.Fu u') x.1.2.1.1 := by
         rw [tsum_subtype S (fun R => Formalism.MainNotions.S.wRow D (X.Fu u') R.2.1.1)]
         refine tsum_congr fun R => ?_
-        simp only [g, S, Set.indicator_apply, Set.mem_setOf_eq]
+        simp only [g, S, Set.indicator_apply, Set.mem_ofPred_eq]
       rw [h1, ← e2.tsum_eq]
       exact hmass
     have hg0 : ∀ R, 0 ≤ g R := fun R => by
@@ -214,12 +214,12 @@ theorem torsorC_of (hRL : Formalism.L2.SG.DataInst.RowLabel κ) (hI : LiftIotaFr
       exact hsum.mul_right _
     · simp_rw [hnorm]
       rw [tsum_mul_right, hsumg, one_mul]
-  · haveI : IsEmpty (ClassT X Y u u' κ ρ) := not_nonempty_iff.mp hcl
+  · have : IsEmpty (ClassT X Y u u' κ ρ) := not_nonempty_iff.mp hcl
     have hC0 : clsVec X Y u u' vR i0 i0' νq κ ρ = 0 := by
       unfold clsVec; exact tsum_empty
     have hF0 : ∀ R, liftVal X Y u u' vR i0 i0' νq κ R ρ = 0 := by
       intro R
-      rw [hF R, if_neg]
+      rw [hF R, ite_eq_right]
       rintro ⟨s⟩
       exact hcl ⟨torsor_toCls s⟩
     simp [hF0, hC0]

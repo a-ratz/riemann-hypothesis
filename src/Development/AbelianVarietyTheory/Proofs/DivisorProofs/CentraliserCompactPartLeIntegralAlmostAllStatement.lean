@@ -86,7 +86,7 @@ theorem bdd_entries_of_isCompact_closure_zpowers : ∀ (E : Type) [Field E] [Num
   intro E _ _ _ n w t hK
   have hO : IsOpen ((Ov E w : Set (w.adicCompletion E))) := Valued.isOpen_valuationSubring _
   have hNe : (nhdsWithin (0 : w.adicCompletion E) {0}ᶜ).NeBot := by
-    letI : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
+    let : NontriviallyNormedField (w.adicCompletion E) := Valued.toNontriviallyNormedField _ _
     exact NormedField.nhdsNE_neBot 0
   have hev : ∀ᶠ a in nhds (0 : w.adicCompletion E),
       ∀ s ∈ closure (Subgroup.zpowers t : Set (UL n w)), ∀ i j, a * s.1.1 i j ∈ Ov E w := by
@@ -356,7 +356,7 @@ theorem trace_mem_valuationSubring_of_pow_bounded {K : Type} [Field K] (O : Valu
   let N : Submodule O (Matrix (Fin n) (Fin n) K) :=
     Submodule.span O (Set.range fun p : Fin n × Fin n => a⁻¹ • Matrix.single p.1 p.2 (1 : K))
   have hNfg : N.FG := Submodule.fg_span (Set.finite_range _)
-  haveI : IsNoetherian O N := isNoetherian_of_fg_of_noetherian N hNfg
+  have : IsNoetherian O N := isNoetherian_of_fg_of_noetherian N hNfg
   have hpow : ∀ k : ℕ, y ^ k ∈ N := by
     intro k
     rw [Matrix.matrix_eq_sum_single (y ^ k)]

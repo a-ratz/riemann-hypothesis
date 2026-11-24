@@ -99,8 +99,8 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem pic_inj_field : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (T : TorusExtension G) (Y : Over (Sp k)), Smooth Y.hom → GeometricallyConnected Y.hom → ∀ (y₀ : 𝟙_ (Over (Sp k)) ⟶ Y) (c : Pic (T.B ⊗ Y).left), pull (lift (fst G Y ≫ T.q) (snd G Y)).left c = 0 → pull (lift (𝟙 T.B) (toUnit T.B ≫ y₀)).left c = 0 → c = 0 := by
   intro k _ G _ _ hG T Y hYs hYc y₀ c h₁ h₂
   obtain ⟨N, hN, rfl⟩ := cls_surj c
-  letI := T.addCommGroup
-  letI := T.grpB
+  let := T.addCommGroup
+  let := T.grpB
   have := T.free
   have := T.q_hom
   have := T.i_hom
@@ -158,7 +158,7 @@ theorem pic_inj_field : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G] [I
 theorem exists_desc {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : TorusExtension G)
     {Y : Over (Sp k)} [GrpObj Y] (f : G ⟶ Y) [IsMonHom f] (hf : T.i ≫ f = 1) :
     ∃ f' : T.B ⟶ Y, T.q ≫ f' = f := by
-  letI := T.grpB
+  let := T.grpB
   have := T.q_hom
   have := T.q_flat
   have := T.q_surjective
@@ -174,7 +174,7 @@ theorem exists_desc {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : Torus
 
 theorem i_comp_eq_one {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : TorusExtension G)
     {B : Over (Sp k)} [GrpObj B] (hB : IsAbelianScheme B) (f : G ⟶ B) [IsMonHom f] : T.i ≫ f = 1 := by
-  letI := T.addCommGroup
+  let := T.addCommGroup
   have := T.free
   have := T.finite
   have := T.i_hom
@@ -189,7 +189,7 @@ theorem exists_act {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] {O : Type} 
     (a : OAct O G) (T : TorusExtension G) :
     letI := T.grpB
     ∃ b : OAct O T.B, ∀ r, a.act r ≫ T.q = T.q ≫ b.act r := by
-  letI := T.grpB
+  let := T.grpB
   have hB := T.isAbelian
   have := T.q_hom
   have := T.q_flat
@@ -310,8 +310,8 @@ end Coc
 theorem exists_bundle {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] [IsCommMonObj G] (hG : IsSemiAbelian G)
     (T : TorusExtension G) (N : LB G.left) (hN : N.IsLB) :
     ∃ M : LB T.B.left, M.IsLB ∧ LBIso N (M.pull T.q.left) := by
-  letI := T.addCommGroup
-  letI := T.grpB
+  let := T.addCommGroup
+  let := T.grpB
   have := T.free
   have := T.finite
   have := T.q_hom
@@ -320,7 +320,7 @@ theorem exists_bundle {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] [IsCommM
   have := T.q_surjective
   have := T.q_quasiCompact
   have hB := T.isAbelian
-  haveI := hB.comm
+  have := hB.comm
   have := hG.smooth
   have := hG.geomConnected
   have hk := T.isKernel
@@ -402,9 +402,9 @@ theorem theta_quot {k : Type} [Field k] {H : Host E} (tK : SAB H (Sp k)) (T : To
     (M : LB T.B.left) (hM : M.IsLB) (hbun : LBIso tK.PP.L (M.pull T.q.left)) :
     letI := T.grpB
     ∃ t : LB.Gen (Theta T.B M), t.IsGen := by
-  letI := T.grpB
+  let := T.grpB
   have hB := T.isAbelian
-  haveI := hB.comm
+  have := hB.comm
   have := T.q_hom
   have hL := tK.PP.isLB
   have hGs := tK.semi
@@ -522,9 +522,9 @@ theorem adj_quot {k : Type} [Field k] {H : Host E} (tK : SAB H (Sp k)) (T : Toru
     ∀ (act : OAct (𝓞 E) T.B), (∀ r, tK.act.act r ≫ T.q = T.q ≫ act.act r) → ∀ a,
       LBIso (cubeLB T.B ![fst T.B T.B ≫ act.act a, snd T.B T.B] M)
         (cubeLB T.B ![fst T.B T.B, snd T.B T.B ≫ act.act (H.bar a)] M) := by
-  letI := T.grpB
+  let := T.grpB
   have hB := T.isAbelian
-  haveI := hB.comm
+  have := hB.comm
   have := T.q_hom
   intro act hact a
   have := act.hom a
@@ -606,9 +606,9 @@ theorem adj_quot {k : Type} [Field k] {H : Host E} (tK : SAB H (Sp k)) (T : Toru
 
 theorem exists_triple : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (L : Type) [Field L] [CharZero L] (tK : SAB H (Sp L)) (τ : TorusExtension tK.G), ∃ (tB : SAB H (Sp L)) (e : τ.B ≅ tB.G), (letI := τ.grpB; IsMonHom e.hom) ∧ (∀ a, tK.act.act a ≫ τ.q ≫ e.hom = τ.q ≫ e.hom ≫ tB.act.act a) ∧ LBIso tK.PP.L (tB.PP.L.pull (τ.q ≫ e.hom).left) := by
   intro E _ _ _ H L _ _ tK T
-  letI := T.grpB
+  let := T.grpB
   have hB := T.isAbelian
-  haveI := hB.comm
+  have := hB.comm
   have hq := T.q_hom
   have hL : tK.PP.L.IsLB := tK.PP.isLB
   obtain ⟨M, hM, hbun⟩ := exists_bundle tK.semi T tK.PP.L hL

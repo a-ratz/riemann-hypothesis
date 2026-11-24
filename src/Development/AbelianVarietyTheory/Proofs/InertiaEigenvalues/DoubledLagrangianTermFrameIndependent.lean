@@ -66,7 +66,7 @@ theorem covolOne_integral_ratMul {m n : ℕ} {μ : Measure (Mx D m n)} {𝓕 : S
     (h2 : c * c' = 1) (φ : Mx D m n → ℂ) (hφ : ∀ γ ∈ GlobalTheory.MixModel.ratMx D m n, ∀ a, φ (γ + a) = φ a) :
     ∫ a in 𝓕, φ (ratMul c a) ∂μ = ∫ a in 𝓕, φ a ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   have hl : ∀ a : Mx D m n, ratMul c' (ratMul c a) = a := fun a => by
     rw [ratMul_ratMul, h1, ratMul_one]
   have hr : ∀ a : Mx D m n, ratMul c (ratMul c' a) = a := fun a => by
@@ -85,7 +85,7 @@ theorem covolOne_integral_ratMul {m n : ℕ} {μ : Measure (Mx D m n)} {𝓕 : S
       continuous_toFun := continuous_const.matrix_mul continuous_id
       continuous_invFun := continuous_const.matrix_mul continuous_id }
   let e : Mx D m n ≃ᵐ Mx D m n := L.toHomeomorph.toMeasurableEquiv
-  haveI := hμ.1
+  have := hμ.1
   have hH : (μ.map e).IsAddHaarMeasure := L.isAddHaarMeasure_map μ
   have hmp : MeasurePreserving e μ (μ.map e) := e.measurable.measurePreserving μ
   let r : GlobalTheory.MixModel.ratMx D m n ≃ GlobalTheory.MixModel.ratMx D m n :=

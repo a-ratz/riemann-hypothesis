@@ -76,7 +76,7 @@ theorem sum_mapDomain_apply (a : ι → σ →₀ ℕ) (j : ι) (s : σ) :
   rw [Finsupp.finsetSum_apply, Finset.sum_eq_single j]
   · exact Finsupp.mapDomain_apply_of_injective (Prod.mk_right_injective j) _ _
   · intro i _ hi
-    refine Finsupp.mapDomain_notin_range _ _ ?_
+    refine Finsupp.mapDomain_of_notMem_range _ _ ?_
     rintro ⟨t, ht⟩
     exact hi (congrArg Prod.fst ht)
   · simp

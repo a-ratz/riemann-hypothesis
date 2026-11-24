@@ -171,7 +171,7 @@ theorem unif_mul_lt_one_iff {ϖ : kˣ} (h : IsUnif ϖ) (z : k) :
     valuation k ((ϖ : k) * z) < 1 ↔ valuation k z ≤ 1 := by
   rw [h, map_mul]
   have h0 : 0 < valuation k (ϖ : k) := by
-    rw [zero_lt_iff]
+    rw [pos_iff_ne_zero]
     exact (Valuation.ne_zero_iff _).mpr (Units.ne_zero ϖ)
   exact mul_le_iff_le_one_right h0
 
@@ -340,7 +340,7 @@ private theorem mulVec_y0_sub_y0_mem_box_of_embX_mem_J (hP : S.Pattern t) (γ : 
   have hu : valuation k ((S.ϖ⁻¹ : kˣ) : k) = (valuation k (S.ϖ : k))⁻¹ := by
     rw [Units.val_inv_eq_inv_val, map_inv₀]
   rw [hu, ← div_eq_mul_inv, div_le_one₀ (by
-    rw [zero_lt_iff]; exact (Valuation.ne_zero_iff _).mpr (Units.ne_zero S.ϖ))]
+    rw [pos_iff_ne_zero]; exact (Valuation.ne_zero_iff _).mpr (Units.ne_zero S.ϖ))]
   exact (S.unif _).mp h2
 
 theorem SymData.oneCoupling_of_pattern (hP : S.Pattern t) : S.OneCoupling t := by
@@ -805,7 +805,7 @@ theorem oneClass (hc : 1 ≤ c) {ϖ : 𝒪[k]} (hϖ : Irreducible ϖ) {ψ : AddC
   obtain ⟨u, hu, huΛ⟩ := GlobalTheory.RootEx.UnfoldFlag.exists_unipotent k n c hc ϖ h0 Λ h1 h2
   refine ⟨h1, h2, ⟨u, hu, huΛ⟩, ?_⟩
   have hfull : (Λ.comap (inX k n c)).IsFullLattice k := by
-    letI := (GlobalTheory.RootEx.ChainLattice.isLattice_chainLat_and_comap k n c).2 Λ hΛ
+    let := (GlobalTheory.RootEx.ChainLattice.isLattice_chainLat_and_comap k n c).2 Λ hΛ
     constructor
     refine Submodule.eq_top_iff'.2 fun v => ?_
     -- Vary the column acting on the first scaled basis vector while Ψ stays constant.
@@ -822,7 +822,7 @@ theorem oneClass (hc : 1 ≤ c) {ϖ : 𝒪[k]} (hϖ : Irreducible ϖ) {ψ : AddC
     have hnear := (hloc.comp_continuous hcont).eventually_eq (0 : k)
     obtain ⟨γ, hγ, hγnear⟩ := (IsValuativeTopology.hasBasis_nhds_zero' k).mem_iff.mp hnear
     obtain ⟨δ, hδ, hδ1⟩ := ValuativeRel.IsNontrivial.exists_lt_one (R := k)
-    have hγpos : 0 < γ := zero_lt_iff.mpr hγ
+    have hγpos : 0 < γ := pos_iff_ne_zero.mpr hγ
     obtain ⟨a, ha⟩ := ValuativeRel.valuation_surjective (γ * δ)
     have ha0 : a ≠ 0 := by
       intro e
@@ -830,7 +830,7 @@ theorem oneClass (hc : 1 ≤ c) {ϖ : 𝒪[k]} (hϖ : Irreducible ϖ) {ψ : AddC
     have haq : Ψ (x + a • B) = Ψ x := by
       have hav : valuation k a < γ := by
         simpa only [ha, mul_one] using mul_lt_mul_of_pos_left hδ1 hγpos
-      simpa only [Set.mem_setOf_eq, Function.comp_apply, zero_smul, add_zero] using hγnear hav
+      simpa only [Set.mem_ofPred_eq, Function.comp_apply, zero_smul, add_zero] using hγnear hav
     have hw := scaled_basis_mem_chainLattice ϖ L' (0 : Fin (c + 1))
     simp only [Fin.val_zero, zero_add, pow_one] at hw
     have hbase := hmap _ hw
@@ -921,7 +921,7 @@ theorem irreducible_of_unif {ϖ : kˣ} (h : GlobalTheory.IndefiniteRowSideFullHe
   have ha : valuation k (a : k) < 1 := Valuation.Integer.not_isUnit_iff_valuation_lt_one.1 hn.1
   have hb : valuation k (b : k) < 1 := Valuation.Integer.not_isUnit_iff_valuation_lt_one.1 hn.2
   have e : (ϖ : k) = (a : k) * b := congrArg Subtype.val hab
-  have h0 : 0 < valuation k (ϖ : k) := by simp [zero_lt_iff]
+  have h0 : 0 < valuation k (ϖ : k) := by simp [pos_iff_ne_zero]
   have : valuation k (ϖ : k) < valuation k (ϖ : k) := by
     calc valuation k (ϖ : k) = valuation k (a : k) * valuation k (b : k) := by rw [e, map_mul]
       _ ≤ valuation k (ϖ : k) * valuation k (b : k) := mul_le_mul_left ((h _).1 ha) _
@@ -940,7 +940,7 @@ theorem chainLat_eq_latOf (ϖ : kˣ) (p : 𝒪[k]) (hp : (p : k) = ϖ) (o : ι �
   rw [mem_chainLat, mem_latOf_typeFrame, mem_stdLat, hp]
   refine and_congr Iff.rfl (forall_congr' fun i => ?_)
   have h0 : ((ϖ : k) ^ (i.val + 1)) ≠ 0 := pow_ne_zero _ ϖ.ne_zero
-  have hv : 0 < valuation k ((ϖ : k) ^ (i.val + 1)) := by simp [zero_lt_iff]
+  have hv : 0 < valuation k ((ϖ : k) ^ (i.val + 1)) := by simp [pos_iff_ne_zero]
   constructor
   · rintro ⟨a, ha⟩
     rw [ha, map_mul]

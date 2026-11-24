@@ -185,9 +185,9 @@ theorem span_MK_good (hK : A.IsKsForm) (hρ : ∀ g, ∀ f ∈ A.WK, A.ρ g f �
   have sOKL : ∀ (c : 𝓞 Ks) (x : LL), c • x = algebraMap Ks LL (c : Ks) * x := by
     intro c x
     rw [Algebra.smul_def, IsScalarTower.algebraMap_apply (𝓞 Ks) Ks LL]
-  haveI : Module.Finite Ks LL := Module.Finite.of_restrictScalars_finite ℚ Ks LL
-  haveI : Module.Finite LL WL := Module.Finite.of_basis B
-  haveI : Module.Finite Ks WL := Module.Finite.trans LL WL
+  have : Module.Finite Ks LL := Module.Finite.of_restrictScalars_finite ℚ Ks LL
+  have : Module.Finite LL WL := Module.Finite.of_basis B
+  have : Module.Finite Ks WL := Module.Finite.trans LL WL
   set Wg : Submodule Ks WL := (A.Wgood J0 lam0 eC).restrictScalars Ks with hWg
   set v := Module.finBasis Ks (WL ⧸ Wg) with hv
   set l := Module.finBasis Ks LL with hl'
@@ -239,7 +239,7 @@ theorem span_MK_good (hK : A.IsKsForm) (hρ : ∀ g, ∀ f ∈ A.WK, A.ρ g f �
     | smul c x _ hx =>
       rw [sOKL]
       exact ((RingOfIntegers.isIntegral_coe c).algebraMap).mul hx
-  haveI : Module.IsTorsionFree (𝓞 Ks) I := ⟨fun c hc x y hxy => by
+  have : Module.IsTorsionFree (𝓞 Ks) I := ⟨fun c hc x y hxy => by
     have hc0 : algebraMap (𝓞 Ks) Ks c ≠ 0 :=
       (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 Ks) Ks)).2 hc.ne_zero
     apply Subtype.ext
@@ -325,7 +325,7 @@ theorem fg_MK_good (hM : A.MKFull) (J0 : Subgroup G0) (lam0 : J0 →* LLˣ) (eC 
   let N : Submodule (𝓞 Ks) WL :=
     A.MK ⊓ ((A.Wgood J0 lam0 eC).restrictScalars Ks).restrictScalars (𝓞 Ks)
   have hN : N.FG := by
-    haveI := isNoetherian_of_fg_of_noetherian A.MK hfg
+    have := isNoetherian_of_fg_of_noetherian A.MK hfg
     have h1 : (N.comap A.MK.subtype).FG := IsNoetherian.noetherian _
     have h2 := h1.map A.MK.subtype
     rwa [Submodule.map_comap_subtype, inf_of_le_right inf_le_left] at h2

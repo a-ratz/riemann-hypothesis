@@ -235,7 +235,7 @@ theorem cab_key (c gA : ℕ) (q t0 : ℝ) (hq : 2 ≤ q) (dst : ℝ) (hd : 0 ≤
     · subst h0; simp
     · have hc1 : (1 : ℝ) ≤ c := by exact_mod_cast h0
       have hqc : 0 < q * c := by positivity
-      rw [Real.exp_nat_mul, Real.exp_log hqc]
+      rw [Real.exp_natCast_mul, Real.exp_log hqc]
       apply pow_le_pow_left₀ (by positivity)
       rw [div_le_iff₀ Real.pi_pos]; nlinarith
   have hlog : 0 ≤ c * Real.log (q * c) := by
@@ -248,7 +248,7 @@ theorem cab_key (c gA : ℕ) (q t0 : ℝ) (hq : 2 ≤ q) (dst : ℝ) (hd : 0 ≤
     rw [this]
     apply mul_le_mul_of_nonneg_left _ (by positivity)
     calc (1.28 : ℝ) ^ gA ≤ Real.exp (1 / 4) ^ gA := pow_le_pow_left₀ (by norm_num) cab_exp_quarter gA
-      _ = Real.exp (gA / 4) := by rw [← Real.exp_nat_mul]; ring_nf
+      _ = Real.exp (gA / 4) := by rw [← Real.exp_natCast_mul]; ring_nf
   have hexp : Real.exp (gA / 4) * Real.exp (c * Real.log (q * c)) * Real.exp (5 * Real.pi * c) *
       Real.exp (-((Real.pi - 2) * t0)) ≤ 1 := by
     rw [← Real.exp_add, ← Real.exp_add, ← Real.exp_add, Real.exp_le_one_iff]
@@ -286,7 +286,7 @@ theorem cab_numeric (c G gA g' dst : ℕ) (q t0 : ℝ) (hq : 2 ≤ q) (hG : G �
   have e2 : (2 * (c + 1) / Real.pi) ^ c = (2 / (q * Real.pi)) ^ c * (q * (c + 1)) ^ c := by
     rw [← mul_pow]; congr 1; field_simp
   have hY2 : Y ^ 2 = (q * (c + 1)) ^ c * Real.exp (5 * Real.pi * c) * (4 * 81 ^ g' * Real.exp (-(Real.pi * t0))) := by
-    rw [hY, mul_pow, mul_pow, hr, mul_pow, mul_pow, ← Real.exp_nat_mul, ← Real.exp_nat_mul,
+    rw [hY, mul_pow, mul_pow, hr, mul_pow, mul_pow, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul,
       show (81 : ℝ) ^ g' = (9 ^ g') ^ 2 by rw [← pow_mul, mul_comm, pow_mul]; norm_num]
     ring_nf
   have hBY : Bsq * Y ^ 2 = 48 * c.factorial * 81 ^ g' * Real.exp (-2 * t0) *
@@ -303,7 +303,7 @@ theorem cab_numeric (c G gA g' dst : ℕ) (q t0 : ℝ) (hq : 2 ≤ q) (hG : G �
     rw [hBY]
     have hRHS2 : RHS ^ 2 = 49 * c.factorial * c.factorial * 18.49 ^ dst * Real.exp (-2 * t0) * 4 ^ gA := by
       rw [hRHS, show (18.49 : ℝ) ^ dst = ((4.3 : ℝ) ^ dst) ^ 2 by rw [← pow_mul, mul_comm, pow_mul]; norm_num,
-        show Real.exp (-2 * t0) = Real.exp (-t0) ^ 2 by rw [← Real.exp_nat_mul]; ring_nf,
+        show Real.exp (-2 * t0) = Real.exp (-t0) ^ 2 by rw [← Real.exp_natCast_mul]; ring_nf,
         show (4 : ℝ) ^ gA = ((2 : ℝ) ^ gA) ^ 2 by rw [← pow_mul, mul_comm, pow_mul]; norm_num]
       ring
     rw [hRHS2]

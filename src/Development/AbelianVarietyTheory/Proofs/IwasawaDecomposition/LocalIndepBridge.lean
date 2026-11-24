@@ -62,7 +62,7 @@ theorem kw_eq_adjoin (B : LocBridge l E Ω Gw O) :
   have hfin : FiniteDimensional ℚ_[l] S :=
     GlobalTheory.PlaceBridge.finiteDimensional_adjoin_range (B.j.comp (algebraMap E Ω))
   have hcl : IsClosed (S : Set (Om l)) :=
-    Submodule.closed_of_finiteDimensional (S.toSubalgebra.toSubmodule)
+    Submodule.isClosed_of_finiteDimensional (S.toSubalgebra.toSubmodule)
   refine le_antisymm (fun x hx => ?_) ?_
   · have h1 := B.j_dense hx
     have h2 : closure (Set.range fun x : E => B.j (algebraMap E Ω x)) ⊆ (S : Set (Om l)) :=
@@ -203,7 +203,7 @@ theorem conjdR_actVdR (h : ↥(GK K)) (h' : ↥(GK K')) (hh : (h' : GQ l) = g * 
   | tmul v b =>
     simp only [conjdR, actVdR, AlgebraTensorModule.congr_tmul, AlgebraTensorModule.map_tmul,
       LinearEquiv.refl_apply, AlgEquiv.toLinearEquiv_apply, LinearMap.coe_restrictScalars,
-      AlgHom.toLinearMap_apply, AlgEquiv.coe_algHom]
+      AlgHom.toLinearMap_apply, AlgEquiv.coe_toAlgHom]
     rw [hρ h h' hh, P.PD_actdR, P.PD_actdR, hh]
     congr 1
     rw [← AlgEquiv.mul_apply, ← AlgEquiv.mul_apply, ← map_mul, ← map_mul, inv_mul_cancel_right]

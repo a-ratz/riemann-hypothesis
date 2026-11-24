@@ -1004,8 +1004,8 @@ theorem exists_idem_intAd (x : intAd F) : ∃ μ : intAd F, (μ * x) * (μ * x) 
       rwa [HeightOneSpectrum.mem_adicCompletionIntegers] at this
     show Valued.v ((1 - ((μ * x : intAd F) : Af F) v) * (x : Af F) v * (y : Af F) v + 1) = 1
     by_cases h : Valued.v ((x : Af F) v) = 1
-    · rw [hprod v, if_pos h, sub_self, zero_mul, zero_mul, zero_add, map_one]
-    · rw [hprod v, if_neg h, sub_zero, one_mul, add_comm]
+    · rw [hprod v, ite_eq_left h, sub_self, zero_mul, zero_mul, zero_add, map_one]
+    · rw [hprod v, ite_eq_right h, sub_zero, one_mul, add_comm]
       apply Valuation.map_one_add_of_lt
       rw [map_mul]
       calc Valued.v ((x : Af F) v) * Valued.v ((y : Af F) v) ≤ Valued.v ((x : Af F) v) * 1 :=
@@ -1050,7 +1050,7 @@ theorem intAdIncl_jacobson {x : intAd F} (hx : x ∈ Ideal.jacobson (⊥ : Ideal
   rw [Submodule.mem_sInf] at hx ⊢
   rintro M ⟨-, hM⟩
   have := hM
-  exact hx _ ⟨bot_le, Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' _ intAdIncl_isIntegral M⟩
+  exact hx _ ⟨bot_le, Ideal.isMaximal_comap_of_isIntegral_of_isMaximal _ intAdIncl_isIntegral M⟩
 
 theorem exists_map_psi_eq_span (𝔞 : Ideal (𝓞 E)) (h : 𝔞 ≠ ⊥) :
     ∃ t : IntAf F E, IsUnit (t : E ⊗[F] Af F) ∧ 𝔞.map (psi F E) = Ideal.span {t} := by

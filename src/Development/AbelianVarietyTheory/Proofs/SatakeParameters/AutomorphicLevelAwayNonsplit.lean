@@ -85,7 +85,7 @@ theorem intCast_mem_iff {E : Type} [Field E] [NumberField E] (w : HeightOneSpect
     (hp : (Ideal.absNorm w.asIdeal).Prime) (n : ℤ) :
     ((n : 𝓞 E) ∈ w.asIdeal ↔ ((Ideal.absNorm w.asIdeal : ℕ) : ℤ) ∣ n) := by
   set p := Ideal.absNorm w.asIdeal
-  letI : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
+  let : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
   have hc : Fintype.card (𝓞 E ⧸ w.asIdeal) = p := by
     rw [← Nat.card_eq_fintype_card]
     show _ = Ideal.absNorm w.asIdeal
@@ -101,7 +101,7 @@ namespace GlobalTheory.DenseUsable
 theorem exists_int_sub_mem {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
     (hp : (Ideal.absNorm w.asIdeal).Prime) (y : 𝓞 E) : ∃ a : ℤ, y - (a : 𝓞 E) ∈ w.asIdeal := by
   set p := Ideal.absNorm w.asIdeal
-  letI : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
+  let : Fintype (𝓞 E ⧸ w.asIdeal) := Fintype.ofFinite _
   have hc : Fintype.card (𝓞 E ⧸ w.asIdeal) = p := by
     rw [← Nat.card_eq_fintype_card]
     show _ = Ideal.absNorm w.asIdeal
@@ -145,7 +145,7 @@ theorem usPl_of_absNorm_prime {E : Type} [Field E] [NumberField E] [IsCMField E]
     have := (intCast_mem_iff w hp (2 * d)).2 (by rw [hpq]; exact h)
     simpa using this
   have hqz : Prime (q : ℤ) := Nat.prime_iff_prime_int.1 hq
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   refine isSquare_neg_padic q d a h1 fun h => ?_
   rcases hqz.dvd_or_dvd h with h' | h'
   · exact hnd (dvd_mul_of_dvd_left h' _)
@@ -203,11 +203,11 @@ theorem finite_not_sph (a : ℕ) (U : Submodule ℂ (UA E a → ℂ)) (hU : IsAu
       one_mem' := by simp
       mul_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Subgroup.coe_mul, map_mul, Module.End.mul_apply, hy, hx]
       inv_mem' := by
         intro x hx
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, Subgroup.coe_inv, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hLo : IsOpen (L : Set (finU (E := E) (n := a))) := (hU.aut φ hφ).level
@@ -241,7 +241,7 @@ theorem dense_frob_usable_off (E Ω : Type) [Field E] [NumberField E] [IsCMField
   have hdense := GlobalTheory.Published.chebotarevDegreeOne'.dense (F := E) (Ω := Ω) hS
   refine hdense.mono ?_
   rintro g ⟨w, hwS, hdeg, A, hA, hg⟩
-  simp only [hSdef, Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hwS
+  simp only [hSdef, Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hwS
   obtain ⟨hM', hram⟩ := hwS
   have hMw : ((M : ℕ) : 𝓞 E) ∉ w.asIdeal := fun h => hM' (Ideal.dvd_span_singleton.2 h)
   have hp := ((GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramified E).1 w).2 hdeg

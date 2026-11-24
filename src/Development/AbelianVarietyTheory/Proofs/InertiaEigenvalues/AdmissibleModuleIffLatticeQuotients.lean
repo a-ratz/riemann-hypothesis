@@ -155,7 +155,7 @@ theorem finrank_eq_zero_of_hom
         · simp [e₂]
         · exact e₁.symm }
   let b := Module.finBasis k (V × W)
-  haveI : IsSemisimpleModule A (V × W) := by
+  have : IsSemisimpleModule A (V × W) := by
     have hs := IsSemisimpleModule.sup (IsSemisimpleModule.range (LinearMap.inl A V W))
       (IsSemisimpleModule.range (LinearMap.inr A V W))
     rw [LinearMap.sup_range_inl_inr] at hs
@@ -199,9 +199,9 @@ theorem nonempty_linear_equiv_of_charpoly_eq (n : ℕ) : ∀ (V W : Type) [AddCo
       Nonempty (V ≃ₗ[A] W) := by
     intro V W _ _ _ _ _ _ _ _ _ _ _ _ hn h f hf
     obtain ⟨P, Q, S, ⟨e₁⟩, ⟨e₂⟩, hP, hQ⟩ := split_of_hom (k := k) f hf
-    haveI := finiteDimensional_sub (k := k) P
-    haveI := finiteDimensional_sub (k := k) Q
-    haveI := finiteDimensional_sub (k := k) S
+    have := finiteDimensional_sub (k := k) P
+    have := finiteDimensional_sub (k := k) Q
+    have := finiteDimensional_sub (k := k) S
     obtain ⟨e⟩ := ih (finrank k P + finrank k Q) (by omega) P Q le_rfl fun a => by
       have := h a
       rw [cp_congr e₁, cp_congr e₂, cp_prod, cp_prod] at this
@@ -211,8 +211,8 @@ theorem nonempty_linear_equiv_of_charpoly_eq (n : ℕ) : ∀ (V W : Type) [AddCo
   intro V W _ _ _ _ _ _ _ _ _ _ _ _ hn h
   by_cases h₁ : ∀ f : V →ₗ[A] W, f = 0
   · by_cases h₂ : ∀ f : W →ₗ[A] V, f = 0
-    · haveI : Subsingleton V := Module.finrank_zero_iff.1 (finrank_eq_zero_of_hom h h₁ h₂)
-      haveI : Subsingleton W :=
+    · have : Subsingleton V := Module.finrank_zero_iff.1 (finrank_eq_zero_of_hom h h₁ h₂)
+      have : Subsingleton W :=
         Module.finrank_zero_iff.1 (finrank_eq_zero_of_hom (fun a => (h a).symm) h₂ h₁)
       exact ⟨LinearEquiv.ofSubsingleton V W⟩
     · push_neg at h₂
@@ -227,7 +227,7 @@ theorem cp_asModule {Γ V : Type} [Monoid Γ] [AddCommGroup V] [Module k V] [Fin
     (ρ : Representation k Γ V) (a : MonoidAlgebra k Γ) :
     haveI : FiniteDimensional k ρ.asModule := ρ.asModuleEquiv.symm.finiteDimensional
     cp k ρ.asModule a = LinearMap.charpoly (ρ.asAlgebraHom a) := by
-  haveI : FiniteDimensional k ρ.asModule := ρ.asModuleEquiv.symm.finiteDimensional
+  have : FiniteDimensional k ρ.asModule := ρ.asModuleEquiv.symm.finiteDimensional
   unfold cp
   rw [← LinearEquiv.charpoly_conj ρ.asModuleEquiv.symm (ρ.asAlgebraHom a)]
   congr 1
@@ -239,10 +239,10 @@ theorem exists_equiv_of_charpoly_eq {Γ V W : Type} [Monoid Γ] [AddCommGroup V]
     (h : ∀ a : MonoidAlgebra k Γ,
       LinearMap.charpoly (ρ.asAlgebraHom a) = LinearMap.charpoly (σ.asAlgebraHom a)) :
     ∃ e : V ≃ₗ[k] W, ∀ g v, e (ρ g v) = σ g (e v) := by
-  haveI := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule ρ).1 hρ
-  haveI := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule σ).1 hσ
-  haveI : FiniteDimensional k ρ.asModule := ρ.asModuleEquiv.symm.finiteDimensional
-  haveI : FiniteDimensional k σ.asModule := σ.asModuleEquiv.symm.finiteDimensional
+  have := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule ρ).1 hρ
+  have := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule σ).1 hσ
+  have : FiniteDimensional k ρ.asModule := ρ.asModuleEquiv.symm.finiteDimensional
+  have : FiniteDimensional k σ.asModule := σ.asModuleEquiv.symm.finiteDimensional
   have key : ∀ a : MonoidAlgebra k Γ, cp k ρ.asModule a = cp k σ.asModule a := fun a => by
     rw [cp_asModule, cp_asModule, h]
   obtain ⟨e⟩ := nonempty_linear_equiv_of_charpoly_eq (k := k) (A := MonoidAlgebra k Γ) _ ρ.asModule σ.asModule le_rfl key
@@ -512,13 +512,13 @@ theorem exists_semisimple_sameFactors : ∀ (d : ℕ) (M : Type) [AddCommGroup M
   · exact ⟨M, _, _, _, inferInstance, inferInstance, (isSemisimpleModule_iff A M).2
       (have := (Submodule.subsingleton_iff A).2 h0; Subsingleton.instComplementedLattice),
       SameFactors.refl hfl⟩
-  · haveI : IsNoetherian A M := isNoetherian_of_tower k inferInstance
+  · have : IsNoetherian A M := isNoetherian_of_tower k inferInstance
     obtain ⟨N, hN, -⟩ := (eq_top_or_exists_le_coatom (⊥ : Submodule A M)).resolve_left bot_ne_top
     have hlt : Module.finrank k N < d := by
       rw [← hd]
       exact Submodule.finrank_lt (s := N.restrictScalars k) fun h => hN.1 (by simpa using h)
     obtain ⟨S, _, _, _, _, _, hS, hf⟩ := ih _ hlt N rfl
-    haveI : IsSimpleModule A (M ⧸ N) := isSimpleModule_iff_isCoatom.2 hN
+    have : IsSimpleModule A (M ⧸ N) := isSimpleModule_iff_isCoatom.2 hN
     exact ⟨S × (M ⧸ N), _, _, _, inferInstance, inferInstance,
       isSemisimpleModule_of_isSemisimpleModule_submodule' (p := fun b : Bool =>
         cond b (LinearMap.range (LinearMap.inl A S (M ⧸ N))) (LinearMap.range (LinearMap.inr A S (M ⧸ N))))
@@ -830,8 +830,8 @@ theorem sameSS_iff_charpoly {V W : Type} [AddCommGroup V] [Module k V] [FiniteDi
     [AddCommGroup W] [Module k W] [FiniteDimensional k W] (ρ : Representation k G V) (σ : Representation k G W) :
     SameSS ρ σ ↔ ∀ g, LinearMap.charpoly (ρ g) = LinearMap.charpoly (σ g) := by
   refine ⟨fun h g => ?_, fun h => GlobalTheory.ConsCompare.sameSS_of_charpoly_eq brauerNesbitt ρ σ h⟩
-  haveI : FiniteDimensional k ρ.asModule := inferInstanceAs (FiniteDimensional k V)
-  haveI : FiniteDimensional k σ.asModule := inferInstanceAs (FiniteDimensional k W)
+  have : FiniteDimensional k ρ.asModule := inferInstanceAs (FiniteDimensional k V)
+  have : FiniteDimensional k σ.asModule := inferInstanceAs (FiniteDimensional k W)
   rw [charpoly_eq_cpOn, charpoly_eq_cpOn]
   exact GlobalTheory.ConsCompare.cpOn_eq_of_sameFactors _ h
 
@@ -901,7 +901,7 @@ theorem sameSS_modRep_iff {O G M M' : Type} [CommRing O] [Nontrivial O] [Group G
     (π : Representation O G M) (π' : Representation O G M') (c : O) (hc : (Ideal.span {c}).IsMaximal) :
     SameSS (modRep π c) (modRep π' c) ↔
       ∀ g j, c ∣ (LinearMap.charpoly (π g) - LinearMap.charpoly (π' g)).coeff j := by
-  letI := Ideal.Quotient.field (Ideal.span {c})
+  let := Ideal.Quotient.field (Ideal.span {c})
   refine (sameSS_iff_map_charpoly (k := O ⧸ Ideal.span {c}) Ideal.Quotient.mk_surjective π π' _ _
     (QuotSMulTop.equivQuotTensor c M) (QuotSMulTop.equivQuotTensor c M') (equivQuotTensor_modRep π c)
     (equivQuotTensor_modRep π' c)).trans ?_

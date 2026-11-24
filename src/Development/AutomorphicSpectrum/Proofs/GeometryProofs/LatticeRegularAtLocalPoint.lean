@@ -148,13 +148,13 @@ theorem exists_lieFunctional : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsC
   intro X G _ _ _ Ω _ ξ Li _ _ M R _ _ z h ER _ _ MR f hξ hf
   obtain ⟨ev, hev, hlin, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X G Ω ξ Li M R z h ER MR hξ inferInstance
   let ψ : X.presheaf.stalk (centre z) →+* R := (Scheme.stalkClosedPointTo z).hom
-  letI : Algebra (X.presheaf.stalk (centre z)) R := ψ.toAlgebra
-  letI : Module (X.presheaf.stalk (centre z)) ER := Module.compHom ER ψ
-  haveI : IsScalarTower (X.presheaf.stalk (centre z)) R ER :=
+  let : Algebra (X.presheaf.stalk (centre z)) R := ψ.toAlgebra
+  let : Module (X.presheaf.stalk (centre z)) ER := Module.compHom ER ψ
+  have : IsScalarTower (X.presheaf.stalk (centre z)) R ER :=
     ⟨fun s r x => by
       change (ψ s * r) • x = ψ s • r • x
       rw [mul_smul]⟩
-  letI : Module (X.presheaf.stalk (centre z)) (Stalk M ⟨centre z, h⟩) := Stalk.module M ⟨centre z, h⟩
+  let : Module (X.presheaf.stalk (centre z)) (Stalk M ⟨centre z, h⟩) := Stalk.module M ⟨centre z, h⟩
   have hgi : Function.Injective (genMap ξ ⟨centre z, h⟩) := hξ.inj ⟨centre z, h⟩
 
   let j : Stalk M ⟨centre z, h⟩ →ₗ[X.presheaf.stalk (centre z)] ER :=

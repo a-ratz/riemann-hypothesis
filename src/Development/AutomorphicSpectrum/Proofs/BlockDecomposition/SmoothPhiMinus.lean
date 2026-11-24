@@ -275,7 +275,7 @@ theorem smPhiMinus (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
     SmPhiMinus k := by
   intro ψ n V _ _ τ hτ
   exact isSmooth_twAct τ (MirUin k (n + 1)) (mirChar k ψ n) ((levi k (n + 1)).comp (Mir k n).subtype) (levi_stab ψ n)
-    ((continuous_levi (n + 1)).comp continuous_subtype_val) hτ
+    ((continuous_levi (n + 1)).comp continuous_subtypeVal) hτ
 
 end GlobalTheory.CompanionTheory.BZMirSmooth
 

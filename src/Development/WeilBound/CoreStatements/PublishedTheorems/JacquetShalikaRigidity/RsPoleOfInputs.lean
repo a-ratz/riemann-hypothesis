@@ -376,9 +376,9 @@ theorem kir_of : jumpWindows.S2 → jumpWindows.G0 → jumpWindows.G2a → jumpW
     have hc : ∀ (g : GL (Fin k) (Cinf E)) z, ρ hf ((ρ.comp (infGL E k)) g z) = (ρ.comp (infGL E k)) g (ρ hf z) := by
       intro g z
       simp only [MonoidHom.comp_apply]
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, g7 hf hcf g, map_mul, ContinuousLinearMap.mul_apply]
+      rw [← mul_apply_eq_comp, ← map_mul, g7 hf hcf g, map_mul, mul_apply_eq_comp]
     have := hSg y _ (hST (ρ hf) hc x₀ hsm₀)
-    simpa only [MonoidHom.comp_apply, ← ContinuousLinearMap.mul_apply, ← map_mul, hf, mul_inv_cancel_left] using this
+    simpa only [MonoidHom.comp_apply, ← mul_apply_eq_comp, ← map_mul, hf, mul_inv_cancel_left] using this
 
   obtain ⟨Yg, hYgc, hYgi, hYgm⟩ := hG2a E k ψ hψ
   have hw := fun w : Off E S => hG2c E k w.1 (Finset.univ.val.map (α w)) (by simp)
@@ -559,7 +559,7 @@ end PKY
 theorem ky_of : W0 → KY := by
   intro hW E _ _ _ k μ _ hk β hβ φ'
   have hfin : (μ.withDensity β) (band E k) < ⊤ := (hW E k μ hk).2 β hβ
-  haveI hνf : IsFiniteMeasure ((μ.withDensity β).restrict (band E k)) :=
+  have hνf : IsFiniteMeasure ((μ.withDensity β).restrict (band E k)) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
   have hLR : ∀ (h a : GlobalTheory.CuspRep.GA E k) (x : PositivityTheory.jumpWindows.XB E k),
       PKY.L ((μ.withDensity β).restrict (band E k)) φ' h (PositivityTheory.jumpWindows.Rt E k a x) =
@@ -594,7 +594,7 @@ theorem ky_of : W0 → KY := by
           {x : PositivityTheory.jumpWindows.XB E k | x (GlobalTheory.UnitaryBC.splitCentre E k t * g) = x g}) ∩
         ⋂ h, {x : PositivityTheory.jumpWindows.XB E k | PKY.L ((μ.withDensity β).restrict (band E k)) φ' h x = 0} := by
       ext x
-      simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
       exact hmemL x
     rw [hset]
     exact (isClosed_iInter fun t => isClosed_iInter fun g =>
@@ -884,10 +884,10 @@ theorem rspole_of : GlobalTheory.Published.JacquetShalikaBound → jumpWindows.G
       have hx' : ∀ g, x g = φ₁.1 g := congrFun hx
       refine (hYm x).2 ⟨fun t g => by rw [hx', hx']; exact hπ φ₁ hφ₁ t g, fun h => ?_⟩
       by_cases he : π = π'
-      · have e0 : φ'' = 0 := if_pos he
+      · have e0 : φ'' = 0 := ite_eq_left he
         rw [e0]
         simp
-      · have e1 : φ'' = φ' := if_neg he
+      · have e1 : φ'' = φ' := ite_eq_right he
         have hO := hORT E k μ hk b hb π π' hπ hπ' he φ₁ hφ₁ φ₀' hφ₀' h h'
         rw [e1]
         simp only [hx', hφ'e]
@@ -902,7 +902,7 @@ theorem rspole_of : GlobalTheory.Published.JacquetShalikaBound → jumpWindows.G
     refine ⟨Z, ZS, max 1 σ₀, hZd, hZSd.differentiableOn, fun σ _ => hZS0 σ, fun s hs => ?_, fun hne => hZ1 ?_⟩
     · rw [hZe s (lt_of_le_of_lt (le_max_left _ _) hs), hZSe s (lt_of_le_of_lt (le_max_right _ _) hs), mul_assoc]
     · have hne' : π ≠ π' := fun e => hne (by rw [e])
-      have e1 : φ'' = φ' := if_neg hne'
+      have e1 : φ'' = φ' := ite_eq_right hne'
       have hz := hYz φ hφY ψ S U η s hcut
       rw [e1] at hz
       exact hz
@@ -1211,7 +1211,7 @@ theorem int_rho (Φ : GA E k → ℂ) (hΦ : Measurable Φ) (g : GA E k) :
     have h1 : Summable fun ξ : RowT E k k => ‖Φ (ratGL E k (gam ξ) * g)‖₊ :=
       NNReal.summable_coe.mp (by simpa using hs.norm)
     have h2 := ENNReal.tsum_coe_ne_top_iff_summable.mpr h1
-    simpa [enorm_eq_nnnorm] using h2.lt_top
+    simpa [eNorm_eq_nnNorm] using h2.lt_top
 
 end RhoSigmaFinite
 
@@ -1356,7 +1356,7 @@ theorem rows_compact_of_bound : D0 → N0 → H0 → ThetaSeriesBound → K1 →
     have hne : ∑' ξ : RowT E k k, C₀.indicator (fun _ => (1 : ℝ≥0∞)) (lastRow (ratGL E k (gam ξ) * g)) ≠ ⊤ :=
       ne_top_of_le_ne_top ENNReal.ofReal_ne_top hfin
     refine (ENNReal.finite_const_le_of_tsum_ne_top hne one_ne_zero).subset fun ξ hξ => ?_
-    simp only [Set.mem_setOf_eq] at hξ ⊢
+    simp only [Set.mem_ofPred_eq] at hξ ⊢
     rw [Set.indicator_of_mem hξ]
   · obtain ⟨B, C, hB, hC, h⟩ := RowsCompactSum.sum_le hN hG3 hk C₀ hC₀ a ha
     refine ⟨B * C, fun g => ?_⟩
@@ -1531,7 +1531,7 @@ theorem spherical_function_of : jumpWindows.G0 → jumpWindows.G5 → C0 → K7 
     have h2 := right_ne_zero_of_mul hg
     by_contra hA
     apply h2
-    rw [sphericalWhittaker, if_neg hA]
+    rw [sphericalWhittaker, ite_eq_right hA]
 
 end PositivityTheory.AdelicQuotientData
 
@@ -1575,10 +1575,10 @@ theorem integ {X : Type} [MeasurableSpace X] {ν : Measure X} {f φ : X → ℂ}
   show ∫⁻ g, ‖f g * conj (φ g)‖ₑ ∂ν < ∞
   calc ∫⁻ g, ‖f g * conj (φ g)‖ₑ ∂ν ≤ ∫⁻ g, (‖f g‖ₑ ^ 2 + ‖φ g‖ₑ ^ 2) ∂ν := by
         refine lintegral_mono fun g => ?_
-        have hc : ‖conj (φ g)‖ₑ = ‖φ g‖ₑ := by simp [enorm_eq_nnnorm]
-        rw [enorm_mul, hc]
+        have hc : ‖conj (φ g)‖ₑ = ‖φ g‖ₑ := by simp [eNorm_eq_nnNorm]
+        rw [eNorm_mul, hc]
         exact mul_le_sq_add _ _
-    _ = ∫⁻ g, ‖f g‖ₑ ^ 2 ∂ν + ∫⁻ g, ‖φ g‖ₑ ^ 2 ∂ν := lintegral_add_left' (hf.enorm.pow_const 2) _
+    _ = ∫⁻ g, ‖f g‖ₑ ^ 2 ∂ν + ∫⁻ g, ‖φ g‖ₑ ^ 2 ∂ν := lintegral_add_left' (hf.eNorm.pow_const 2) _
     _ < ∞ := ENNReal.add_lt_top.2 ⟨h1, h2⟩
 
 theorem pre_of_good {E : Type} [Field E] [NumberField E] {k : ℕ} {ψ : AddChar (Ad E) ℂ} {m : ℕ}

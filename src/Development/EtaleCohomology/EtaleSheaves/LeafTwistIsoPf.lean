@@ -210,7 +210,7 @@ namespace LateralTheory.E.LeafTwInjPf
 theorem prim_field {q : ℕ} [NeZero q] {A : Type} [CommRing A] {K : Type} [Field K] (π : A →+* K)
     (ξ : Prim q A) : IsPrimitiveRoot (π ξ.1) q := by
   have hq : (q : K) ≠ 0 := by simpa using (ξ.2.1.map π).ne_zero
-  haveI : NeZero (q : K) := ⟨hq⟩
+  have : NeZero (q : K) := ⟨hq⟩
   rw [← Polynomial.isRoot_cyclotomic_iff]
   have h := Polynomial.aeval_algHom_apply π.toIntAlgHom ξ.1 (Polynomial.cyclotomic q ℤ)
   rw [ξ.2.2, map_zero] at h
@@ -228,7 +228,7 @@ theorem key {q : ℕ} [NeZero q] {A : Type} [CommRing A] [Nontrivial A] (i : ℤ
     (h : c • (Submodule.Quotient.mk (p := twRel q i A) (Finsupp.single ζ (1 : ULift.{1} (ZMod q)))) = 0) :
     c = 0 := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal A
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
   let π : A →+* A ⧸ m := Ideal.Quotient.mk m
   have hμ := prim_field π ζ
   have hex : ∀ ξ : Prim q A, ∃ u : (ZMod q)ˣ, π ξ.1 = π ζ.1 ^ (u : ZMod q).val := by
@@ -280,7 +280,7 @@ theorem LeafTwInj_of : LeafTwInj := by
   refine ⟨fun {X} x y h => ?_⟩
   change ULift.{1} (ZMod q) at x y
   by_cases hX : Nonempty X.unop.left
-  · haveI : Nontrivial Γ(X.unop.left, ⊤) := by
+  · have : Nontrivial Γ(X.unop.left, ⊤) := by
       obtain ⟨p⟩ := hX
       exact RingHom.domain_nontrivial (X.unop.left.presheaf.germ ⊤ p trivial).hom
     have h0 : x • gen ζ k X.unop = y • gen ζ k X.unop := h
@@ -288,7 +288,7 @@ theorem LeafTwInj_of : LeafTwInj := by
     subst hxy
     rw [Presheaf.equalizerSieve_self_eq_top]
     exact GrothendieckTopology.top_mem _ _
-  · haveI : IsEmpty X.unop.left := not_nonempty_iff.1 hX
+  · have : IsEmpty X.unop.left := not_nonempty_iff.1 hX
     rw [GrothendieckTopology.mem_over_iff]
     refine GrothendieckTopology.superset_covering _ bot_le ?_
     first
@@ -555,7 +555,7 @@ lemma lanMono (R : Type) [CommRing R] (X : Scheme.{0}) :
 
 theorem PullMono_of : LateralTheory.E.LocSlicePf.PullMono := by
   intro R _ X
-  haveI := lanMono R X
+  have := lanMono R X
   have h1 : (sheafToPresheaf (Scheme.etaleTopology.{0}.over X) (ModuleCat.{1} (ULift.{1} R))).PreservesMonomorphisms :=
     inferInstance
   have h3 : (presheafToSheaf Scheme.etaleTopology.{0} (ModuleCat.{1} (ULift.{1} R))).PreservesMonomorphisms :=

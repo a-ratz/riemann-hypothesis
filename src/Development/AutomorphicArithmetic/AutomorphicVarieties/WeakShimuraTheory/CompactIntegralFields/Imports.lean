@@ -206,7 +206,7 @@ theorem UpperTheory.V.Ws.nePure :
   set ρ := mapRep φ r with hρ
   have hb' : ∀ g, IsBlock (ρ g) := fun g i j h => by rw [hρ, mapRep_apply, hb g i j h, map_zero]
   have hc : Continuous ρ := smallCont 𝔞 e he _ hp.small
-  haveI : CharZero 𝔞.V := φ.charZero
+  have : CharZero 𝔞.V := φ.charZero
   have hu : adj u * u = 1 := by simpa [IsGSp] using hp.sp
   have hdet : ∀ s ∈ D.Ip l, ((r s).submatrix ixA ixA).det = 𝔞.a c (D.ps 0 s) * 𝔞.a c (D.ps 2 s) ∧
       ((r s).submatrix ixB ixB).det = 𝔞.a c (D.ps 1 s) * 𝔞.a c (D.ps 3 s) := fun s hs => by
@@ -426,9 +426,9 @@ private theorem con_trace {K : Type} [Field K] [IsAlgClosed K] {l : ℕ} [Fact l
     (M : M4 V) (d : Fin 4 → V) (m N : ℕ) (hm : 0 < m) (hN : 0 < N) (hd : ∀ i, d i ^ m = 1)
     (hr : ∀ i, M i i - d i ∈ maximalIdeal V)
     (hc : ((M.map V.subtype) ^ N).charpoly = ∏ i, (X - C ((d i : K) ^ N))) : M.trace = ∑ i, d i := by
-  haveI : CharP V l := RingHom.charP V.subtype Subtype.val_injective l
-  letI : Algebra (ZMod l) V := ZMod.algebra V l
-  letI : Algebra (ZMod l) K := ZMod.algebra K l
+  have : CharP V l := RingHom.charP V.subtype Subtype.val_injective l
+  let : Algebra (ZMod l) V := ZMod.algebra V l
+  let : Algebra (ZMod l) K := ZMod.algebra K l
   let φ : V →ₐ[ZMod l] K := { V.subtype with commutes' := fun x => RingHom.congr_fun (RingHom.ext_zmod (V.subtype.comp (algebraMap _ _)) (algebraMap _ _)) x }
   have hdi : ∀ i, IsIntegral (ZMod l) (d i : K) := fun i => IsIntegral.of_pow hm (by
     have : (d i : K) ^ m = 1 := by exact_mod_cast congrArg Subtype.val (hd i)
@@ -458,7 +458,7 @@ private theorem con_trace {K : Type} [Field K] [IsAlgClosed K] {l : ℕ} [Fact l
 
 private theorem con_kill {l : ℕ} [Fact l.Prime] (𝔞 : Amb l) [CharP 𝔞.K l] (c : Coef l) (x y : c.O)
     (h : residue c.O x = residue c.O y) : 𝔞.a c x = 𝔞.a c y := by
-  haveI : CharP 𝔞.V l := RingHom.charP 𝔞.V.subtype Subtype.val_injective l
+  have : CharP 𝔞.V l := RingHom.charP 𝔞.V.subtype Subtype.val_injective l
   have h1 : RingHom.ker (𝔞.a c) ≠ ⊥ := fun h0 => by
     have h2 : (l : c.O) ∈ RingHom.ker (𝔞.a c) := by rw [RingHom.mem_ker, map_natCast, CharP.cast_eq_zero]
     rw [h0, Ideal.mem_bot] at h2
@@ -521,8 +521,8 @@ theorem UpperTheory.V.Ws.con :
   intro Ω _ _ _ l _ c D _ ι 𝔞 hch r u hk hp
   obtain ⟨T, hok, hc⟩ := con_const hp
   have hlab : Function.Bijective (lab T.pr) := by cases T.pr <;> decide
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
-  haveI : IsGalois ℚ Ω := {}
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : IsGalois ℚ Ω := {}
   have htr : ∀ g, (r g).trace = ∑ i, 𝔞.a c (D.ps i g) := fun g => by
     have hi : T.F.fixingSubgroup.index ≠ 0 := by
       rw [← IntermediateField.finrank_eq_fixingSubgroup_index]
@@ -851,9 +851,9 @@ private theorem last_step (hC : CohomologyHyp) (hPM : PMEx) {Ω : Type} [Field �
   obtain ⟨c', b₁, b₂⟩ := (coefSup l).1 d₁ d₂
   have e₁ : c₁.O ≤ c'.O := a₁.trans b₁
   have h : c.O ≤ c'.O := h₁.trans e₁
-  haveI : Finite (ResidueField c'.O) := by
-    haveI : IsLocalHom (algebraMap ℤ_[l] c'.O) := (dvrFacts l c'.O).2.2.1
-    haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c'.O) := by
+    have : IsLocalHom (algebraMap ℤ_[l] c'.O) := (dvrFacts l c'.O).2.2.1
+    have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
     exact Module.finite_of_finite (ResidueField ℤ_[l])
   have hS := (std hC D T hF ∅ c' h).1 (Finset.notMem_empty 0)
   obtain ⟨X⟩ := spaceEx (T.fr ∅) l (inc h) hS

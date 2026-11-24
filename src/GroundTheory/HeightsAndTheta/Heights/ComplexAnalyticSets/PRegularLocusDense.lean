@@ -75,7 +75,7 @@ theorem eventually_zero_of_iteratedFDeriv_diag {ψ : E → ℂ} {y₀ : E} (hψ 
   obtain ⟨p, r, hp⟩ := hψ
   filter_upwards [Metric.eball_mem_nhds y₀ hp.r_pos] with u hu
   have hmem : u - y₀ ∈ Metric.eball (0 : E) r := by
-    simpa [Metric.mem_eball, edist_eq_enorm_sub] using hu
+    simpa [Metric.mem_eball, eDist_eq_eNorm_sub] using hu
   have hs := hp.hasSum_iteratedFDeriv hmem
   simp only [h0, smul_zero, add_sub_cancel] at hs
   exact hs.unique hasSum_zero

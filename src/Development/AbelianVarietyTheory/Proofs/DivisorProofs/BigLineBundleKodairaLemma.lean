@@ -90,7 +90,7 @@ open GlobalTheory.QuotSep
 
 theorem exists_nsmul_cls_eq_add_toPic_of_isBig : ∀ (k : Type) [Field k] [Infinite k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k), IsProjOver p → ∀ (M A : LB X) (hM : letI := algebraΓOfHom p; IsBig k M) (hA : IsAmpleLB A), ∃ (a : ℕ) (D : CartierDiv X), 0 < a ∧ D.Eff ∧ a • cls M (letI := algebraΓOfHom p; hM.isLB) = cls A hA.isLB + toPic D := by
   intro k _ _ X _ p hp M A hM hA
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   have hp' : IsProjOver (strHom k (X := X)) := by rwa [strHom_eq (f := p) fun _ => rfl]
   have := isNoetherian_of_isProjOver hp'
   suffices h : ∃ a : ℕ, 0 < a ∧ ∃ (N : LB X) (hN : N.IsLB),
@@ -111,13 +111,13 @@ theorem exists_nsmul_cls_eq_add_toPic_of_isBig : ∀ (k : Type) [Field k] [Infin
     hr' _ hE (by rw [cls_tens (isLB_dual hA.isLB) hP, cls_lbPow hAq.isLB])
   obtain ⟨t, ht⟩ := hasNonzeroSec_iff.1 hPs
   have ht0 : t ≠ 0 := sec_ne_zero_of_mem ht
-  letI := algebraΓAlong k (secIdeal hP t).subschemeι
+  let := algebraΓAlong k (secIdeal hP t).subschemeι
   obtain ⟨m, hm, hlt⟩ : ∃ m : ℕ, 0 < m ∧
       lbH0 k ((lbPow M m).pull (secIdeal hP t).subschemeι) < lbH0 k (lbPow M m) := by
     obtain ⟨D, hD, c, hc, hfreq⟩ := hM.growth
     rcases D with _ | d
     · have hd0 : topologicalKrullDim X ≤ 0 := by rw [hD]; rfl
-      haveI := isEmpty_zeroScheme hd0 hP t ht
+      have := isEmpty_zeroScheme hd0 hP t ht
       obtain ⟨m, hcm, hm⟩ := (hfreq.and_eventually (eventually_ge_atTop 1)).exists
       refine ⟨m, hm, ?_⟩
       rw [lineBundleGlobalSectionsDim_eq_zero_of_isEmpty]

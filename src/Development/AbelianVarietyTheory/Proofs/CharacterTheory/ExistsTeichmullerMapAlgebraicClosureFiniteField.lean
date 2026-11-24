@@ -89,7 +89,7 @@ theorem _root_.GlobalTheory.CuspGL.TeichEmb.exists_teichmuller :
   have : PerfectRing (AlgebraicClosure F) p := inferInstance
   let W := WittVector p (AlgebraicClosure F)
   have : IsDomain W := inferInstance
-  letI : Algebra (ZMod p) (AlgebraicClosure F) := ZMod.algebra _ p
+  let : Algebra (ZMod p) (AlgebraicClosure F) := ZMod.algebra _ p
   have hW : CharZero W := by
     let f : ℤ_[p] →+* W := (WittVector.map (algebraMap (ZMod p) (AlgebraicClosure F))).comp
       (WittVector.equiv p).symm.toRingHom

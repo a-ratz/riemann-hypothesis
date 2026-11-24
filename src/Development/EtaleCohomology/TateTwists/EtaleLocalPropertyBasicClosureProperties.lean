@@ -100,7 +100,7 @@ theorem loc_finset (U : Scheme.{0}) (ι : Type) (P : ι → ∀ V : Scheme.{0}, 
 
 theorem loc_finite (U : Scheme.{0}) (ι : Type) [Finite ι] (P : ι → ∀ V : Scheme.{0}, (V ⟶ U) → Prop)
     (h : ∀ i, Loc U (P i)) : Loc U fun V g => ∀ i, P i V g := by
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   exact loc_mono U _ _ (loc_finset U ι P h Finset.univ) (fun V g hg i => hg i (Finset.mem_univ i))
 
 theorem loc_empty (U : Scheme.{0}) [IsEmpty U] (P : ∀ V : Scheme.{0}, (V ⟶ U) → Prop) : Loc U P :=

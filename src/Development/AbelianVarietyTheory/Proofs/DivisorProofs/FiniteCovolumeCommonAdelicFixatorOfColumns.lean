@@ -108,22 +108,22 @@ theorem fixFrames_equiv_core : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hme : ∀ x, e (me.symm x) = x.1 := fun x => congrArg Subtype.val (me.apply_symm_apply x)
   have cM : Continuous (matHom (AF F) σ J) := (isEmbedding_matHom (AF F) σ J).continuous
   have contInv : Continuous me.symm := by
-    haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-    haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+    have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+    have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
     rw [(isEmbedding_matHom (AF F) σ J₀).continuous_iff, Units.continuous_iff]
     constructor
     · have : (Units.val ∘ (matHom (AF F) σ J₀ ∘ me.symm)) =
           fun x => p0 * (matHom _ σ J x.1).1 * adMat F Z := funext fun x => by
         simp only [Function.comp_apply]; rw [hrec, hme]
       rw [this]
-      exact (continuous_const.matrix_mul (Units.continuous_val.comp (cM.comp continuous_subtype_val))).matrix_mul
+      exact (continuous_const.matrix_mul (Units.continuous_val.comp (cM.comp continuous_subtypeVal))).matrix_mul
         continuous_const
     · have : (fun x => (((matHom (AF F) σ J₀ ∘ me.symm) x)⁻¹ : GL _ _).val) =
           fun x => p0 * ((matHom _ σ J x.1)⁻¹ : GL _ _).1 * adMat F Z := funext fun x => by
         simp only [Function.comp_apply]
         rw [← map_inv (matHom _ σ J₀), ← map_inv me.symm, hrec, hme, Subgroup.coe_inv, map_inv]
       rw [this]
-      exact (continuous_const.matrix_mul (Units.continuous_coe_inv.comp (cM.comp continuous_subtype_val))).matrix_mul
+      exact (continuous_const.matrix_mul (Units.continuous_coe_inv.comp (cM.comp continuous_subtypeVal))).matrix_mul
         continuous_const
   refine ⟨{ toMulEquiv := me, continuous_toFun := continuous_induced_rng.2 econt, continuous_invFun := contInv }, ?_⟩
   intro g
@@ -162,8 +162,8 @@ theorem finCovol_fixG : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   obtain ⟨e, he⟩ := _root_.GlobalTheory.SphEis.fixFrames_equiv_core F E σ n J j m C D Z J₀ hF
   have hcl : IsClosed ((fixG σ J C ⊓ fixG σ J D : Subgroup (GAd σ J)) : Set (GAd σ J)) :=
     (isClosed_fixG σ J C).inter (isClosed_fixG σ J D)
-  haveI : LocallyCompactSpace (fixG σ J C ⊓ fixG σ J D : Subgroup (GAd σ J)) := hcl.locallyCompactSpace
-  haveI : Countable (ratPts σ J₀) := inferInstance
+  have : LocallyCompactSpace (fixG σ J C ⊓ fixG σ J D : Subgroup (GAd σ J)) := hcl.locallyCompactSpace
+  have : Countable (ratPts σ J₀) := inferInstance
   exact _root_.GlobalTheory.SphEis.covolume_ne_top_of_continuousMulEquiv (GAd σ J₀) _ e (ratPts σ J₀) _ (fun g => by rw [he g]; rfl)
     (fun μ hμ 𝓕 h𝓕 => _root_.GlobalTheory.Mem.VolFin.finVol F E σ hF.cm m J₀ hF.herm₀ μ hμ 𝓕 h𝓕) π DM hπ hDM
 

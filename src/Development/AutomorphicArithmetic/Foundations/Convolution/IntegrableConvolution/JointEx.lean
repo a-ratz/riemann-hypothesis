@@ -157,7 +157,7 @@ theorem UpperTheory.ConvolutionTheory.L1.jointNe :
           exact hmemZ k w
         rw [this]
         exact hcl.inter h2
-      haveI : CompleteSpace Z := hZcl.completeSpace_coe
+      have : CompleteSpace Z := hZcl.completeSpace_coe
       have hZA : ∀ j, ∀ z ∈ Z, A j z ∈ Z := by
         intro j z hz
         obtain ⟨hzVE, hzA⟩ := (hmemZ k z).1 hz
@@ -310,7 +310,7 @@ private lemma list_comm_A (h : Slots π V m ι E A U) (k : Fin (m + 1)) (L : Lis
   induction L generalizing v with
   | nil => simp
   | cons a L ih =>
-    simp only [List.map_cons, List.prod_cons, ContinuousLinearMap.mul_apply]
+    simp only [List.map_cons, List.prod_cons, mul_apply_eq_comp]
     rw [h.A_A, ih]
 
 private lemma list_comm_π (h : Slots π V m ι E A U) {k : Fin (m + 1)} {L : List (Fin (m + 1))}
@@ -319,7 +319,7 @@ private lemma list_comm_π (h : Slots π V m ι E A U) {k : Fin (m + 1)} {L : Li
   induction L generalizing v with
   | nil => simp
   | cons a L ih =>
-    simp only [List.map_cons, List.prod_cons, ContinuousLinearMap.mul_apply]
+    simp only [List.map_cons, List.prod_cons, mul_apply_eq_comp]
     have hka : a ≠ k := fun e => hk (by simp [e])
     have hkL : k ∉ L := fun e => hk (by simp [e])
     rw [ih hkL, h.A_ι a k hka]
@@ -329,7 +329,7 @@ private lemma list_mem (h : Slots π V m ι E A U) (L : List (Fin (m + 1))) {v :
   induction L with
   | nil => simpa using hv
   | cons a L ih =>
-    simp only [List.map_cons, List.prod_cons, ContinuousLinearMap.mul_apply]
+    simp only [List.map_cons, List.prod_cons, mul_apply_eq_comp]
     exact A_cut h a ih
 
 private lemma list_sa (h : Slots π V m ι E A U) (L : List (Fin (m + 1))) :
@@ -339,7 +339,7 @@ private lemma list_sa (h : Slots π V m ι E A U) (L : List (Fin (m + 1))) :
   | cons a L ih =>
     have hc : (L.map A).prod * A a = A a * (L.map A).prod := by
       ext v
-      simp only [ContinuousLinearMap.mul_apply]
+      simp only [mul_apply_eq_comp]
       exact (list_comm_A h a L v).symm
     simp only [List.map_cons, List.prod_cons]
     rw [isSelfAdjoint_iff, star_mul, ih.star_eq, (IsSelfAdjoint.of_nonneg (h.A_pos a)).star_eq, hc]
@@ -349,7 +349,7 @@ private lemma list_zero (h : Slots π V m ι E A U) {k : Fin (m + 1)} {L : List 
   induction L with
   | nil => simp at hk
   | cons a L ih =>
-    simp only [List.map_cons, List.prod_cons, ContinuousLinearMap.mul_apply]
+    simp only [List.map_cons, List.prod_cons, mul_apply_eq_comp]
     rcases List.mem_cons.1 hk with e | e
     · subst e
       rw [list_comm_A h, hw, map_zero]
@@ -366,7 +366,7 @@ private lemma list_ne (h : Slots π V m ι E A U) (hall : ∀ j, ∃ v ∈ eigIn
     obtain ⟨hcl, hinv, hirr⟩ := cutIrr Γ G H π V m ι E A U h
     by_contra hcon
     push_neg at hcon
-    simp only [List.map_cons, List.prod_cons, ContinuousLinearMap.mul_apply] at hcon
+    simp only [List.map_cons, List.prod_cons, mul_apply_eq_comp] at hcon
     let M : Submodule ℂ H :=
       { carrier := {w | w ∈ eigIn V E 1 ∧ ∀ g, A k (π (ι k g) w) = 0}
         add_mem' := fun {a b} ha hb => ⟨Submodule.add_mem _ ha.1 hb.1, fun g => by
@@ -494,7 +494,7 @@ theorem UpperTheory.ConvolutionTheory.L1.jointEx :
     exact Submodule.smul_mem _ _ (hQmem _ (hPm _))
   rw [prj_fix hvm] at hTv
   have hmemP : bj ∈ prodEig V E A lj := mem_eigIn.2 ⟨hvm, hTv⟩
-  haveI := hfd lj hj
+  have := hfd lj hj
   have hinv : ∀ w ∈ prodEig V E A lj, (A 0 : H →ₗ[ℂ] H) w ∈ prodEig V E A lj := by
     intro w hw
     obtain ⟨h1, h2⟩ := mem_eigIn.1 hw
@@ -503,7 +503,7 @@ theorem UpperTheory.ConvolutionTheory.L1.jointEx :
     rw [← hofn] at this
     change (List.ofFn A).prod (A 0 w) = (lj : ℂ) • A 0 w
     rw [← this, h2, map_smul]
-  haveI : Nontrivial (prodEig V E A lj) :=
+  have : Nontrivial (prodEig V E A lj) :=
     ⟨⟨⟨bj, hmemP⟩, 0, fun e => hv0 (congrArg Subtype.val e)⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue ((A 0 : H →ₗ[ℂ] H).restrict hinv)
   obtain ⟨w, hw⟩ := hc.exists_hasEigenvector

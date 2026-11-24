@@ -97,8 +97,8 @@ theorem thetaInf_tmul {D : D7} (X : HidaSetting D) (v : InfinitePlace X.B.I.F) (
 theorem thetaInf_inj {D : D7} (X : HidaSetting D) (y : Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)
     (h : ∀ v, PI.AprimeInfU.thetaInf X v y = 0) : y = 0 := by
   classical
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
   let b : Module.Basis (Fin 2) X.B.I.F X.B.I.E := Module.finBasisOfFinrankEq X.B.I.F X.B.I.E X.B.I.cm.deg2
   let B := Algebra.TensorProduct.basis (Ainf X.B.I.F) b
   have hy : y = ∑ i, B.repr y i ⊗ₜ[X.B.I.F] b i := by
@@ -154,7 +154,7 @@ theorem uMat_toInf {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (x : X.
 
 theorem stabInfV_holds : StabInfV := by
   intro D X u' hb x
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   set Mm : Matrix (Fin X.B.I.n) (Fin X.B.I.n) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) :=
     ((HA.mat (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (X.toInf hb x) : GL (Fin X.B.I.n) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) :
       Matrix (Fin X.B.I.n) (Fin X.B.I.n) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) with hMm

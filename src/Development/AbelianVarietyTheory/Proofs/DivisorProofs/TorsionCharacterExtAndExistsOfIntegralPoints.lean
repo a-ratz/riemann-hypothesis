@@ -83,17 +83,17 @@ open scoped TensorProduct in
 private lemma eq_zero_of_forall_algHom_apply_eq_zero_of_isReduced {C V : Type} [Field C] [IsAlgClosed C] [CommRing V]
     [Algebra C V] [Module.Finite C V] [IsReduced V] (v : V) (hv : ∀ z : V →ₐ[C] C, z v = 0) :
     v = 0 := by
-  haveI : IsArtinianRing V := IsArtinianRing.of_finite C V
+  have : IsArtinianRing V := IsArtinianRing.of_finite C V
   have hmem : v ∈ (⊥ : Ideal V).jacobson := by
     rw [Ideal.jacobson, Ideal.mem_sInf]
     rintro m ⟨-, hm⟩
-    letI : Field (V ⧸ m) := Ideal.Quotient.field m
+    let : Field (V ⧸ m) := Ideal.Quotient.field m
     have hsurj : Function.Surjective (algebraMap C (V ⧸ m)) := IsSepClosed.algebraMap_surjective C _
     let eqv : C ≃ₐ[C] V ⧸ m := AlgEquiv.ofBijective (Algebra.ofId C (V ⧸ m))
       ⟨(algebraMap C (V ⧸ m)).injective, hsurj⟩
     have h := hv (eqv.symm.toAlgHom.comp (Ideal.Quotient.mkₐ C m))
     simp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, AlgEquiv.coe_toAlgHom,
-      AlgHom.coe_coe] at h
+      AlgHom.coe_ofClass] at h
     exact Ideal.Quotient.eq_zero_iff_mem.mp ((map_eq_zero_iff _ eqv.symm.injective).mp h)
   rw [IsArtinianRing.jacobson_eq_radical] at hmem
   obtain ⟨n, hn⟩ := hmem
@@ -117,7 +117,7 @@ private lemma exists_eq_one_and_eq_zero_of_ne_algHom {C V : Type} [Field C] [Com
   have hu : ∀ z', z (u z') = 1 := by
     intro z'
     by_cases h : z' ≠ z
-    · simp only [u, dif_pos h, map_smul, map_sub, AlgHom.commutes, Algebra.algebraMap_self,
+    · simp only [u, dite_eq_left h, map_smul, map_sub, AlgHom.commutes, Algebra.algebraMap_self,
         RingHom.id_apply, smul_eq_mul]
       exact inv_mul_cancel₀ (sub_ne_zero.mpr (hsep z' h).choose_spec)
     · simp only [u]
@@ -125,7 +125,7 @@ private lemma exists_eq_one_and_eq_zero_of_ne_algHom {C V : Type} [Field C] [Com
   have hu' : ∀ z', z' ≠ z → z' (u z') = 0 := by
     intro z' h
     simp only [u]
-    rw [dif_pos h]
+    rw [dite_eq_left h]
     simp
   refine ⟨∏ z' ∈ Finset.univ.erase z, u z', ?_, ?_⟩
   · rw [map_prod]
@@ -182,8 +182,8 @@ theorem _root_.GlobalTheory.exists_eval_eq_of_multiplicative_on_points : ∀ (O 
     funext i
     have hi := congrArg (fun v => eC.repr v i) hv
     simpa [Finsupp.single_apply] using hi
-  haveI : Finite (C ⊗[O] A →ₐ[C] C) := (linearIndependent_toLinearMap C (C ⊗[O] A) C).finite
-  letI : Fintype (C ⊗[O] A →ₐ[C] C) := Fintype.ofFinite _
+  have : Finite (C ⊗[O] A →ₐ[C] C) := (linearIndependent_toLinearMap C (C ⊗[O] A) C).finite
+  let : Fintype (C ⊗[O] A →ₐ[C] C) := Fintype.ofFinite _
   choose w hw1 hw0 using fun z : C ⊗[O] A →ₐ[C] C => exists_eq_one_and_eq_zero_of_ne_algHom z
   let b' : C ⊗[O] A := ∑ z, κ (res z) • w z
   let c := eC.repr b'

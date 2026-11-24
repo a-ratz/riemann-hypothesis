@@ -104,7 +104,7 @@ theorem isAlgClosed_residueField_of_aic {T : Type} [CommRing T] [IsLocalRing T] 
   rw [← hqp, Polynomial.eval_map, Polynomial.eval₂_at_apply, ha, map_zero]
 
 theorem sh_of_aic {T : Type} [CommRing T] [IsLocalRing T] (hT : AIC T) : SH T := by
-  haveI := isAlgClosed_residueField_of_aic hT
+  have := isAlgClosed_residueField_of_aic hT
   exact ⟨henselianLocalRing_of_aic hT, inferInstance⟩
 
 end GlobalTheory.GenusTwoPureComparison.Cmp

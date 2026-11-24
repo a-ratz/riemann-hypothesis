@@ -117,8 +117,8 @@ theorem omS_finite (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
     letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra;
     FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) ∧
       Module.finrank (KTf K d.D d.N) (OmS (Ω c) d.D d.N) = d.delc c := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  haveI := d.KT_finiteDimensional hd c
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  have := d.KT_finiteDimensional hd c
   have hfr := d.KTtoS_fieldRange h c
   let e : (KTf K d.D d.N) ≃+* (d.KT c) :=
     ((d.KTtoS h c).rangeRestrictFieldEquiv).trans (RingEquiv.subfieldCongr hfr)

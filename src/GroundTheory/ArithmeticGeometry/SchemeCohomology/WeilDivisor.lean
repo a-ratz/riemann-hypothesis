@@ -198,7 +198,7 @@ theorem PrimeDivisor.finite_ord_ne_zero {f : X.functionField} (hf : f ≠ 0) :
       ∃ hT : IsIrreducible (closure (Subtype.val '' C)), x.point = hT.genericPoint := by
     intro x hx C hC hxC
     have hT : IsIrreducible (closure (Subtype.val '' C)) :=
-      (hC.1.image _ continuous_subtype_val.continuousOn).closure
+      (hC.1.image _ continuous_subtypeVal.continuousOn).closure
     refine ⟨hT, x.eq_genericPoint_of_mem hT isClosed_closure ?_ ?_⟩
     · intro hg
       have : closure (Subtype.val '' C) ⊆ Z :=

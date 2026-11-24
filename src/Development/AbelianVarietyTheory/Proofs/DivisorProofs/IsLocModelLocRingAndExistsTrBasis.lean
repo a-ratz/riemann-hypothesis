@@ -94,7 +94,7 @@ theorem isLocModel_locRing_and_exists_trBasis {k : Type} [Field k] (X : Scheme.{
     exact_mod_cast this
   subst hdn
   rw [preimage_fromSpecStalk_eq_constFn] at h₂
-  letI := (Cartier.constFn p).toAlgebra
+  let := (Cartier.constFn p).toAlgebra
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis k X.functionField
   have hc : Cardinal.mk s = (d : Cardinal) := hs.cardinalMk_eq_trdeg.trans h₂
   have hfin : Fintype s := (Cardinal.lt_aleph0_iff_fintype.mp (hc ▸ Cardinal.natCast_lt_aleph0 (n := d))).some

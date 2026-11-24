@@ -69,7 +69,7 @@ theorem eC_int (k : ℤ) : eC (k : ℂ) = 1 := by
 theorem eC_neg_half_int (k : ℤ) : eC (-(k : ℂ) / 2) = (-1) ^ k := by
   unfold eC
   rw [show (2 * (Real.pi : ℂ) * Complex.I * (-(k : ℂ) / 2)) = (k : ℂ) * (-(Real.pi * Complex.I)) by ring,
-    Complex.exp_int_mul, Complex.exp_neg, Complex.exp_pi_mul_I]
+    exp_intCast_mul, Complex.exp_neg, Complex.exp_pi_mul_I]
   norm_num
 
 variable {ι : Type*} [Fintype ι]

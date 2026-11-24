@@ -302,7 +302,7 @@ theorem leaf : LeafSpec := by
   have hqA : IsUnit (q : A) := unit_of hq b t
   let res : Sp (IsLocalRing.ResidueField A) ⟶ Sp A := Spec.map (CommRingCat.ofHom (IsLocalRing.residue A))
   have hqκ : IsUnit (q : IsLocalRing.ResidueField A) := unit_of hq b (res ≫ t)
-  haveI : IsPurelyInseparable (IsLocalRing.ResidueField A) (AlgebraicClosure (IsLocalRing.ResidueField A)) :=
+  have : IsPurelyInseparable (IsLocalRing.ResidueField A) (AlgebraicClosure (IsLocalRing.ResidueField A)) :=
     (isSepClosed_iff_isPurelyInseparable_algebraicClosure _ _).mp hsc
   let alg : Sp (AlgebraicClosure (IsLocalRing.ResidueField A)) ⟶ Sp (IsLocalRing.ResidueField A) :=
     Spec.map (CommRingCat.ofHom (algebraMap (IsLocalRing.ResidueField A) (AlgebraicClosure (IsLocalRing.ResidueField A))))

@@ -148,7 +148,7 @@ theorem jac_iff (Δ : Segment k) (σ : IrrRep (GL (Fin Δ.d) k)) (hσ : σ.cl = 
     obtain ⟨f, hf⟩ := (Model.evalOne_bijective e π.smooth (piTensor (segTerm σ.ρ Δ.len))).2
       ψ.toIntertwiningMap
     refine (embeds_iff h Δ σ hσ e π).1 ⟨f, ?_⟩
-    haveI := π.irr
+    have := π.irr
     refine (Representation.IsIrreducible.injective_or_eq_zero f).resolve_right fun h0 => ?_
     haveI : Nontrivial (⨂[ℂ] _ : Fin Δ.len, σ.V) :=
       GlobalTheory.ProdSupport.nontrivial_piTensor _ fun _ => Model.nontrivial_of_isIrreducible σ.irr

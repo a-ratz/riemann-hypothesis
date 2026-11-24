@@ -77,7 +77,7 @@ theorem isUnit_q_of_associated {m : ℕ} (h : Associated W.π₀₁ (X ^ m)) :
   have hu : IsUnit (algebraMap (LetA O n) W.EE W.π₀) := by
     rw [e, map_mul, map_pow]
     exact (W.EE_π.pow _).mul (IsUnit.map _ (Pi.isUnit_iff.2 fun _ => w.isUnit))
-  haveI := W.EE_complete
+  have := W.EE_complete
   have hJ := IsAdicComplete.le_jacobson_bot (Ideal.span {((PD.p : ℕ) : W.EE)})
     (Ideal.mem_span_singleton_self _)
   obtain ⟨u, hu⟩ := hu
@@ -106,7 +106,7 @@ theorem exists_subst_invariants (ξ : O⟦X⟧) (hξ : Associated ξ (X ^ W.DelF
   have hfa : ∀ p : ℤ_[l]ˣ → Prop, (∀ δ ∈ Δ, p δ) ↔ ∀ δ ∈ W.DelF, p (χ δ) := by
     intro p
     simp only [← SetLike.mem_coe, hΔ, Finset.coe_image, Set.forall_mem_image]
-  haveI : Finite Δ := by
+  have : Finite Δ := by
     change Finite (Δ : Set ℤ_[l]ˣ)
     rw [hΔ]; infer_instance
   have hcard : Nat.card Δ = W.DelF.card := by

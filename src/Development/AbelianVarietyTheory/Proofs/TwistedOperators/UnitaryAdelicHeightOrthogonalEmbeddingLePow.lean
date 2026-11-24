@@ -61,7 +61,7 @@ theorem exists_opNorm_le (J : Matrix n m ℂ) (P : Matrix m n ℂ) (K : Matrix n
   refine ⟨‖J‖₊ * ‖P‖₊ + ‖K‖₊, fun x h h1 hx => ?_⟩
   have hx' : ‖x‖₊ ≤ h := hx
   calc opNorm (J * x * P + K) = ‖J * x * P + K‖₊ := rfl
-    _ ≤ ‖J * x * P‖₊ + ‖K‖₊ := nnnorm_add_le _ _
+    _ ≤ ‖J * x * P‖₊ + ‖K‖₊ := nnNorm_add_le _ _
     _ ≤ ‖J‖₊ * ‖x‖₊ * ‖P‖₊ + ‖K‖₊ := by
         gcongr
         exact (Matrix.l2_opNNNorm_mul _ _).trans (by gcongr; exact Matrix.l2_opNNNorm_mul _ _)
@@ -180,11 +180,11 @@ theorem exists_heightGL_le (J : Matrix n m (AF F ⊗[F] E)) (P : Matrix m n (AF 
   have hI : ∏ w, htInf F w (Formalism.UG.bc (compInf F E w) X) ≤
       (∏ w, c w) * ∏ w, htInf F w (Formalism.UG.bc (compInf F E w) x) := by
     rw [← Finset.prod_mul_distrib]
-    exact Finset.prod_le_prod' fun w _ => key_inf w
+    exact Finset.prod_le_prod fun w _ => key_inf w
   have hF : ∏ᶠ v, htFin F v (Formalism.UG.bc (compFin F E v) X) ≤
       (∏ᶠ v, M v) * ∏ᶠ v, htFin F v (Formalism.UG.bc (compFin F E v) x) := by
     rw [← finprod_mul_distrib hMfin hfinx]
-    exact finprod_le_finprod' hfinX ((hMfin.union hfinx).subset (Function.mulSupport_mul _ _)) fun v => key_fin v
+    exact finprod_le_finprod hfinX ((hMfin.union hfinx).subset (Function.mulSupport_mul _ _)) fun v => key_fin v
   unfold heightGL
   calc _ ≤ ((∏ w, c w) * ∏ w, htInf F w (Formalism.UG.bc (compInf F E w) x)) *
         ((∏ᶠ v, M v) * ∏ᶠ v, htFin F v (Formalism.UG.bc (compFin F E v) x)) := mul_le_mul' hI hF

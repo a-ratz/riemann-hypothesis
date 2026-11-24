@@ -246,11 +246,11 @@ theorem quotIntegral_unfold (hle : Γ₀ ≤ Γ) (hFd : IsFundamentalDomain Γ F
     quotIntegral μ Γ₀ Measure.count F =
       ∫ x in Fd, ∑' q : Γ ⧸ Γ₀.subgroupOf Γ, F (((q.out : Γ) : G)⁻¹ * x) ∂μ := by
   classical
-  haveI : Countable (Γ ⧸ Γ₀.subgroupOf Γ) :=
+  have : Countable (Γ ⧸ Γ₀.subgroupOf Γ) :=
     Function.Surjective.countable (f := (QuotientGroup.mk : Γ → _)) QuotientGroup.mk_surjective
-  haveI : Countable Γ₀ := (Subgroup.inclusion_injective hle).countable
-  haveI : MeasurableSingletonClass Γ₀ := ⟨fun h => (isOpen_discrete ({h} : Set Γ₀)).measurableSet⟩
-  haveI := count_isInvInvariant Γ₀
+  have : Countable Γ₀ := (Subgroup.inclusion_injective hle).countable
+  have : MeasurableSingletonClass Γ₀ := ⟨fun h => (isOpen_discrete ({h} : Set Γ₀)).measurableSet⟩
+  have := count_isInvInvariant Γ₀
   obtain ⟨D, hDm, hD⟩ := exists_strict_domain Γ₀
   have hρ : IsQuotNormaliser Γ₀ Measure.count (D.indicator (1 : G → ℝ≥0∞)) := by
     refine ⟨measurable_one.indicator hDm, fun g => ?_⟩
@@ -275,13 +275,13 @@ theorem quotIntegral_unfold (hle : Γ₀ ≤ Γ) (hFd : IsFundamentalDomain Γ F
     hFd.lintegral_eq_tsum'' (fun x => ‖D.indicator F x‖ₑ)
   have hl : ∫⁻ x, ‖D.indicator F x‖ₑ ∂μ =
       ∫⁻ x in Fd, ∑' q : Γ ⧸ Γ₀.subgroupOf Γ, ‖F (((q.out : Γ) : G)⁻¹ * x)‖ₑ ∂μ := by
-    rw [hl0, ← lintegral_tsum fun γ => (hmγ γ).enorm.aemeasurable]
+    rw [hl0, ← lintegral_tsum fun γ => (hmγ γ).eNorm.aemeasurable]
     refine lintegral_congr fun x => ?_
     simp only [hne]
     exact tsum_enorm_eq hle hD (fun g => ‖F g‖ₑ) hFe x
   have hfi : Integrable (D.indicator F) μ :=
     ⟨hfm.aestronglyMeasurable, by
-      rw [hasFiniteIntegral_iff_enorm, hl]
+      rw [hasFiniteIntegral_iff_eNorm, hl]
       exact lt_top_iff_ne_top.2 hint⟩
   have hsum : ∑' γ : Γ, ∫⁻ x in Fd, ‖D.indicator F ((γ : G) * x)‖ₑ ∂μ ≠ ∞ := by
     rw [← hl0, hl]
@@ -292,24 +292,24 @@ theorem quotIntegral_unfold (hle : Γ₀ ≤ Γ) (hFd : IsFundamentalDomain Γ F
   rw [key]
   refine integral_congr_ae ?_
   have hmq : Measurable fun x => ∑' q : Γ ⧸ Γ₀.subgroupOf Γ, ‖F (((q.out : Γ) : G)⁻¹ * x)‖ₑ :=
-    Measurable.tsum fun q => (hF.comp (measurable_const_mul _)).enorm
+    Measurable.tsum fun q => (hF.comp (measurable_const_mul _)).eNorm
   filter_upwards [ae_lt_top hmq hint] with x hx
   refine tsum_complex_eq hle hD F hFH x ?_
   have h2 : ∑' γ : Γ, ‖D.indicator F ((γ : G) * x)‖ₑ ≠ ∞ := by
     simp only [hne]
     rw [tsum_enorm_eq hle hD (fun g => ‖F g‖ₑ) hFe x]
     exact hx.ne
-  exact Summable.of_nnnorm (ENNReal.tsum_coe_ne_top_iff_summable.1 h2)
+  exact Summable.of_nnNorm (ENNReal.tsum_coe_ne_top_iff_summable.1 h2)
 
 theorem integrableOn_unfold (hF : Measurable F)
     (hint : ∫⁻ x in Fd, ∑' q : Γ ⧸ Γ₀.subgroupOf Γ, ‖F (((q.out : Γ) : G)⁻¹ * x)‖ₑ ∂μ ≠ ∞) :
     IntegrableOn (fun x => ∑' q : Γ ⧸ Γ₀.subgroupOf Γ, F (((q.out : Γ) : G)⁻¹ * x)) Fd μ := by
-  haveI : Countable (Γ ⧸ Γ₀.subgroupOf Γ) :=
+  have : Countable (Γ ⧸ Γ₀.subgroupOf Γ) :=
     Function.Surjective.countable (f := (QuotientGroup.mk : Γ → _)) QuotientGroup.mk_surjective
   refine ⟨AEStronglyMeasurable.tsum fun q =>
     (hF.comp (measurable_const_mul _)).aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
-  exact lt_of_le_of_lt (lintegral_mono fun x => enorm_tsum_le_tsum_enorm)
+  rw [hasFiniteIntegral_iff_eNorm]
+  exact lt_of_le_of_lt (lintegral_mono fun x => eNorm_tsum_le_tsum_eNorm)
     (lt_top_iff_ne_top.2 hint)
 
 end Main

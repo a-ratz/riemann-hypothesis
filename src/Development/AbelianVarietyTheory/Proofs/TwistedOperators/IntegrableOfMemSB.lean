@@ -211,7 +211,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem integrable_of_mem_SB {f : (n → k) → ℂ} (hf : f ∈ SB (n → k)) :
     Integrable f (Measure.pi fun _ => ν) := by
-  haveI := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.secondCountable k
   exact hf.1.continuous.integrable_of_hasCompactSupport hf.2
 
 def avg (T : (n → k) → A →ₗ[ℂ] A) (l : A →ₗ[ℂ] ℂ) (h : ∀ v, (fun u => l (T u v)) ∈ SB (n → k)) :
@@ -241,7 +241,7 @@ theorem isNEquiv_integral {ψ : AddChar k Circle} {p q : ℕ} {σ : Representati
     (hE : ∀ g ∈ N k n c q, ∃ w : n → k, ∀ u : n → k, ∃ h ∈ N k n c p, simpleSum h = simpleSum g ∧
       E u * g = h * E (u + w)) :
     IsNEquiv ψ q σ fun v => ∫ u, l (σ (E u) v) ∂(Measure.pi fun _ => ν) := by
-  haveI := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.secondCountable k
   intro g hg v
   obtain ⟨w, hw⟩ := hE g hg
   have : ∀ u, l (σ (E u) (σ g v)) = (ψ (simpleSum g) : ℂ) * l (σ (E (u + w)) v) := fun u => by

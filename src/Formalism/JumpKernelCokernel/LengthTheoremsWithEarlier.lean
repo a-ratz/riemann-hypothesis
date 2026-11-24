@@ -1352,7 +1352,7 @@ theorem Formalism.KernelCokernelLengths.row_degree_joint_form : Formalism.Kernel
     have he5 : (100:ℝ) ≤ Real.exp 5 := by
       have e1 := Real.exp_one_gt_d9
       have e2 : (2.7:ℝ) ^ 5 < Real.exp 1 ^ 5 := pow_lt_pow_left₀ (by linarith) (by norm_num) (by norm_num)
-      rw [← Real.exp_nat_mul] at e2
+      rw [← Real.exp_natCast_mul] at e2
       norm_num at e2
       linarith
     have hlog : ∀ y : ℝ, 0 < y → Real.log y ≤ y / 100 + 4 := by
@@ -1364,7 +1364,7 @@ theorem Formalism.KernelCokernelLengths.row_degree_joint_form : Formalism.Kernel
     have hl11 : (2:ℝ) < Real.log ℓ := by
       rw [Real.lt_log_iff_exp_lt (by linarith)]
       have e1 := Real.exp_one_lt_d9
-      have : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_nat_mul]; norm_num
+      have : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_natCast_mul]; norm_num
       rw [this]
       nlinarith [Real.exp_pos 1]
     have hlam : Formalism.TruncatedSeriesCounting.RamifiedCoefficientChains.lam ℓ (h + η') ≤ ((h + η' : ℕ) : ℝ) / 100 + 3 := by
@@ -1805,7 +1805,7 @@ theorem mem_span_of_C_pow_mul : CancelC := by
     intro n hn
     have h1 := congrArg (PowerSeries.coeff n) hpq
     simp only [map_add (f := _), PowerSeries.coeff_mul_C, PowerSeries.coeff_C_mul, PowerSeries.coeff_mul_X_pow',
-      if_neg (show ¬ b ≤ n by omega), add_zero] at h1
+      ite_eq_right (show ¬ b ≤ n by omega), add_zero] at h1
     rw [map_sub, PowerSeries.coeff_mul_C, sub_eq_zero]
     apply mul_left_cancel₀ (pow_ne_zero v ha)
     rw [← h1]

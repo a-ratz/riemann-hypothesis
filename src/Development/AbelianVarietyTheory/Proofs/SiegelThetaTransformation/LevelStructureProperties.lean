@@ -632,7 +632,7 @@ theorem span_lats {L : Lt E r} (hL : L ∈ D.lats) :
   exact fun v hv => (Submodule.smul_mem_iff _ h0).1 (Submodule.subset_span (h4 v hv))
 
 theorem norm_lam (k : D.J) : ‖((D.lam k : ℂˣ) : ℂ)‖ = 1 := by
-  haveI : Finite (𝓞 E ⧸ D.𝔪) := Ideal.finiteQuotientOfFreeOfNeBot _ D.ne_bot
+  have : Finite (𝓞 E ⧸ D.𝔪) := Ideal.finiteQuotientOfFreeOfNeBot _ D.ne_bot
   refine Complex.norm_eq_one_of_pow_eq_one (n := Nat.card D.J) ?_ Nat.card_pos.ne'
   rw [← Units.val_pow_eq_pow_val, ← map_pow, pow_card_eq_one', map_one, Units.val_one]
 

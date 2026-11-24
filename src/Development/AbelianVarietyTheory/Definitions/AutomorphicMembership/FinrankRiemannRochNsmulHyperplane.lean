@@ -344,7 +344,7 @@ theorem inter_projHyp : (proj F n).inter (fun _ => projHyp F n) = 1 := by
   have e : p = Polynomial.preHilbertPoly ℚ n 0 :=
     Polynomial.eq_of_infinite_eval_eq _ _ (Set.infinite_of_injective_forall_mem
       (f := fun m : ℤ => (m : ℚ)) Int.cast_injective fun m => by
-        rw [Set.mem_setOf_eq, h₂, zero_add, chi_zsmul_projHyp, ← ProjCoh.chi_sheafO F,
+        rw [Set.mem_ofPred_eq, h₂, zero_add, chi_zsmul_projHyp, ← ProjCoh.chi_sheafO F,
           ProjCoh.chi_sheafO_eq_eval])
   replace h₃ : p.coeff n = (n.factorial : ℚ)⁻¹ * (proj F n).inter fun _ => projHyp F n := h₃
   rw [e, Polynomial.coeff_preHilbertPoly_self, eq_comm,

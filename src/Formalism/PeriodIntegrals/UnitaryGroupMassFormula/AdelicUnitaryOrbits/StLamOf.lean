@@ -253,8 +253,8 @@ namespace PIW.AdelicOrbitU
 
 theorem quadGen : QuadGen := by
   intro F E _ _ _ _ σ hfin hfix
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hfin
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hfin
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
   obtain ⟨e, he⟩ : ∃ e : E, e ∉ (algebraMap F E).range := by
     by_contra h
     push_neg at h

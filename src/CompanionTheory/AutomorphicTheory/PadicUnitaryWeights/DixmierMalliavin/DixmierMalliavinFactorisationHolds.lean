@@ -350,7 +350,7 @@ theorem exists_lie (H : Subgroup 𝔸ˣ) (hH : IsClosed (H : Set 𝔸ˣ)) : ∃ 
 theorem mem_ccSmooth_iff {H : Subgroup 𝔸ˣ} {𝔤 : Submodule ℝ 𝔸} (h : IsExpLieAlgebra H 𝔤) (f : H → ℂ) :
     f ∈ CcSmooth (fun x : H => ((x : 𝔸ˣ) : 𝔸)) ↔
       (letI := h.chartedSpace; ContMDiff 𝓘(ℝ, 𝔤) 𝓘(ℝ, ℂ) ∞ f) ∧ HasCompactSupport f := by
-  letI := h.chartedSpace
+  let := h.chartedSpace
   constructor
   · rintro ⟨hc, Φ, hΦ, e⟩
     refine ⟨?_, hc⟩
@@ -381,12 +381,12 @@ theorem factor_abs {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
   let e : G ≃* H := MonoidHom.ofInjective hι.injective
   have he : ∀ g, (((e g : H) : 𝔸ˣ) : 𝔸) = ι g := fun g => rfl
   have c1 : Continuous e := hι.continuous.subtype_mk _
-  have c2 : Continuous e.symm := hι.isEmbedding.continuous_iff.2 (continuous_subtype_val.congr fun x =>
+  have c2 : Continuous e.symm := hι.isEmbedding.continuous_iff.2 (continuous_subtypeVal.congr fun x =>
     (congrArg Subtype.val (e.apply_symm_apply x)).symm)
   let E : G ≃ₜ H := ⟨e.toEquiv, c1, c2⟩
-  letI : MeasurableSpace H := borel H
-  haveI : BorelSpace H := ⟨rfl⟩
-  haveI := e.isHaarMeasure_map μ c1 c2
+  let : MeasurableSpace H := borel H
+  have : BorelSpace H := ⟨rfl⟩
+  have := e.isHaarMeasure_map μ c1 c2
   have hf' : f ∘ E.symm ∈ CcSmooth (fun x : H => ((x : 𝔸ˣ) : 𝔸)) := by
     obtain ⟨hc, Φ, hΦ, e'⟩ := hf
     refine ⟨hc.comp_homeomorph E.symm, Φ, hΦ, fun x => ?_⟩
@@ -416,9 +416,9 @@ end CompanionTheory.DM
 open GlobalTheory.Orb in
 theorem CompanionTheory.DM.dixmierMalliavinFactorisation_holds : GlobalTheory.Published.DixmierMalliavinFactorisation := by
   intro G _ _ _ _ _ n _ _ ι hι μ _ V hV f hf
-  letI := Matrix.linftyOpNormedRing (n := n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := n) (α := ℂ)
-  haveI : CompleteSpace (Matrix n n ℂ) := FiniteDimensional.complete ℝ _
+  let := Matrix.linftyOpNormedRing (n := n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := n) (α := ℂ)
+  have : CompleteSpace (Matrix n n ℂ) := FiniteDimensional.completeSpace ℝ _
   let T : (n → n → ℂ) ≃L[ℝ] Matrix n n ℂ := (Matrix.ofLinearEquiv ℝ).toContinuousLinearEquiv
   have e : CcMat ι = CcSmooth fun g => ι g :=
     le_antisymm (ccSmooth_le (p := T.symm) T.symm.contDiff fun _ => rfl) (ccSmooth_le (p := T) T.contDiff fun _ => rfl)

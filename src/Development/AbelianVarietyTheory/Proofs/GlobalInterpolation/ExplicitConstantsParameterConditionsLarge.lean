@@ -192,7 +192,7 @@ theorem rpow_mul_X'_le_b (eps c : ℝ) (he : 0 < eps) : ∃ x0 : ℝ, ∀ s : Sc
   · rw [Real.rpow_def_of_pos hx0, Scale.X', Scale.b, Scale.L, ← Real.exp_add]
     exact Real.exp_le_exp.2 (by linarith)
   · have e : s.x ^ 10 = Real.exp (10 * Real.log s.x) := by
-      rw [show (10 : ℝ) = ((10 : ℕ) : ℝ) by norm_num, Real.exp_nat_mul, Real.exp_log hx0]
+      rw [show (10 : ℝ) = ((10 : ℕ) : ℝ) by norm_num, Real.exp_natCast_mul, Real.exp_log hx0]
     rw [e, Scale.X']
     exact Real.exp_le_exp.2 h3
 
@@ -1067,7 +1067,7 @@ theorem szRow_primes_conductor : SzRow (fun C D L => (L.sc.x ^ (2 * L.Ct + 5) < 
           Real.exp (L.sc.x ^ (L.sc.eps / 5)) ^ 150 := by gcongr
       _ ≤ L.sc.b ^ ((1 : ℝ) / 2) := by
         unfold Scale.b Scale.L
-        rw [← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_mul]
+        rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_mul]
         apply Real.exp_le_exp.mpr
         push_cast
         linarith
@@ -1286,7 +1286,7 @@ theorem szRow_typePrimes : SzRow (fun C D L => (∃ Y : ℝ, ((D.R.k : ℝ) * L.
     have hB : (D.R.N D.R.m : ℝ) ^ 4 ≤ L.sc.b := by
       calc (D.R.N D.R.m : ℝ) ^ 4 ≤ (L.sc.x ^ (402 : ℝ)) ^ 4 := pow_le_pow_left₀ (Nat.cast_nonneg _) hN 4
         _ = Real.exp (1608 * Real.log L.sc.x) := by
-            rw [Real.rpow_def_of_pos hx0, ← Real.exp_nat_mul]; congr 1; push_cast; ring
+            rw [Real.rpow_def_of_pos hx0, ← Real.exp_natCast_mul]; congr 1; push_cast; ring
         _ ≤ L.sc.b := by rw [hb]; exact Real.exp_le_exp.mpr h3'
     calc (D.R.N D.R.m : ℝ) ^ 4 * (condE D : ℝ) ^ C.P.CY ≤ L.sc.b * L.sc.b :=
           mul_le_mul hB hA (Real.rpow_nonneg (by linarith) _) hbpos.le
@@ -1398,7 +1398,7 @@ theorem szRow_windowLength : SzRow (fun C D L => (∀ l : ℕ, 11 ≤ l → ∃ 
       _ = Real.exp (7 * Real.log L.sc.x) := by rw [Real.rpow_def_of_pos hx0, mul_comm]
       _ ≤ Real.exp ((⌈7 * Real.log L.sc.x⌉₊ : ℕ) * 1) := by
           rw [mul_one]; exact Real.exp_le_exp.2 (Nat.le_ceil _)
-      _ = Real.exp 1 ^ ⌈7 * Real.log L.sc.x⌉₊ := Real.exp_nat_mul _ _
+      _ = Real.exp 1 ^ ⌈7 * Real.log L.sc.x⌉₊ := Real.exp_natCast_mul _ _
       _ ≤ ((l : ℝ) - 1) ^ ⌈7 * Real.log L.sc.x⌉₊ := by gcongr
   · have : ⌈7 * Real.log L.sc.x⌉₊ ≤ ⌈(405 : ℝ) * Real.log L.sc.x⌉₊ := Nat.ceil_mono (by linarith)
     rw [hLw, Lwv]; omega

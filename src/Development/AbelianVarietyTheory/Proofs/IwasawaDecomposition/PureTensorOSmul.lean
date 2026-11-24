@@ -160,7 +160,7 @@ theorem exists_not_orth {lam : Fin n → ℝ} {x : H} (hx : x ∈ lowKSub ε lam
 theorem cdom_of_mem (hσ : IsURepOn (UJset ε) σ) {lam ν : Fin n → ℝ} {x : H} (hx : x ∈ lowKSub ε lam σ)
     (h0 : x ≠ 0) (hw : IsWtOn (Formalism.REAL.Kset ε) σ ν x) : CDom ε ν (Formalism.QuantumDeterminants.lowK ε lam) := by
   obtain ⟨S, hS, s, hs, hne⟩ := exists_not_orth hx h0
-  haveI := hS.1
+  have := hS.1
   obtain ⟨E, hE, hc⟩ := exists_proj_comm hσ S hS.2.1
   refine hS.2.2.2.2 ν (E x) (GlobalTheory.LowKProj.apply_mem hE x) (fun h => hne ?_) (isWtOn_proj hc hw)
   rw [← GlobalTheory.LowKProj.fix_of_mem hE s hs, ← hE.2.1, h, inner_zero_left]
@@ -242,7 +242,7 @@ theorem form_anti (a b : Fin n) (hab : a < b) (h : ε a = ε b) :
   simp only [eps_symm]
   cases ha : ε a
   · have hb : ε b = false := h ▸ ha
-    simp only [hb, Bool.false_eq_true, if_false, Nat.cast_lt]
+    simp only [hb, Bool.false_eq_true, ite_false, Nat.cast_lt]
     rcases lt_trichotomy ((revNeg ε).symm b) ((revNeg ε).symm a) with h1 | h1 | h1
     · exact h1
     · exact absurd ((revNeg ε).symm.injective h1) hab.ne'
@@ -252,7 +252,7 @@ theorem form_anti (a b : Fin n) (hab : a < b) (h : ε a = ε b) :
   · have hb : ε b = true := h ▸ ha
     have e1 : (revNeg ε).symm a = a := (Equiv.symm_apply_eq _).2 (revNeg_of_pos ε ha).symm
     have e2 : (revNeg ε).symm b = b := (Equiv.symm_apply_eq _).2 (revNeg_of_pos ε hb).symm
-    simp only [hb, if_true, e1, e2, neg_lt_neg_iff, Nat.cast_lt]
+    simp only [hb, ite_true, e1, e2, neg_lt_neg_iff, Nat.cast_lt]
     exact hab
 
 theorem wt_eq (hσ : IsURepOn (UJset ε) σ) {lam μ : Fin n → ℝ} {x : H} (hx : x ∈ lowKSub ε lam σ)
@@ -306,7 +306,7 @@ theorem exists_extremal_same_image : ∀ (n : ℕ) (H : Type) [NormedAddCommGrou
     have h1 : φ w = 0 := hw.2
     show φ (σ k w) = 0
     rw [hφ k hk w (hUL hw.1), h1, map_zero]
-  haveI : FiniteDimensional ℂ ↥(U ⊓ LinearMap.ker φ) := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ ↥(U ⊓ LinearMap.ker φ) := Submodule.finiteDimensional_of_le inf_le_left
   obtain ⟨E, hE, hc⟩ := exists_proj_comm hσ (U ⊓ LinearMap.ker φ) hU0s
   have hU1s : IsKStableOn ε σ (U ⊓ LinearMap.ker (E : H →ₗ[ℂ] H)) := by
     intro k hk w hw
@@ -314,7 +314,7 @@ theorem exists_extremal_same_image : ∀ (n : ℕ) (H : Type) [NormedAddCommGrou
     have h1 : E w = 0 := hw.2
     show E (σ k w) = 0
     rw [hc k hk, h1, map_zero]
-  haveI : FiniteDimensional ℂ ↥(U ⊓ LinearMap.ker (E : H →ₗ[ℂ] H)) :=
+  have : FiniteDimensional ℂ ↥(U ⊓ LinearMap.ker (E : H →ₗ[ℂ] H)) :=
     Submodule.finiteDimensional_of_le inf_le_left
   have hinj : ∀ w ∈ U ⊓ LinearMap.ker (E : H →ₗ[ℂ] H), φ w = 0 → w = 0 := by
     intro w hw h
@@ -508,7 +508,7 @@ theorem smoothVec_apply {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddCom
       funext i
       rw [Function.comp_apply, ← Matrix.exp_conj' _ _ hgu, Matrix.mul_smul, Matrix.smul_mul]
     have e2 := list_prod_conj hgg (List.ofFn fun i => NormedSpace.exp (t i • Xs i))
-    rw [← ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, ← hmul _ (hmem Xs hX t) _ hk,
+    rw [← mul_apply_eq_comp, ← mul_apply_eq_comp, ← hmul _ (hmem Xs hX t) _ hk,
       ← hmul _ hk _ (hmem _ hY t), e1]
     congr 2
     have e3 : P⁻¹ * k = g * P⁻¹ := by rw [hg, Matrix.mul_assoc _ P, hPP, Matrix.mul_one]
@@ -894,7 +894,7 @@ theorem thPVec_ne_zero {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : H
           GlobalTheory.PlaceVec.omegaQ_congr Q _ ξ _ fun PP hPP => h PP (Finset.mem_union_right _ hPP)])
     fun hz => h3 ?_
   have := congrFun hz x
-  rwa [if_pos ⟨h1, h2⟩] at this
+  rwa [ite_eq_left ⟨h1, h2⟩] at this
 
 abbrev sub {m n : ℕ} (c : D.what₂.Tau → Matrix (Fin m) (Fin m) ℂ) : PolF D m n →ₐ[ℂ] PolF D m n :=
   MvPolynomial.aeval fun v : FVar D m n => ∑ b, c v.1 b v.2.1 • (MvPolynomial.X (v.1, b, v.2.2) : PolF D m n)
@@ -950,7 +950,7 @@ theorem tw_block {m p : ℕ} {ε : Fin m → Bool} (hε : ∀ a, ε a = decide (
   have e2 : ε b = true := by simp [hε, hb]
   simp only [Formalism.REAL.Jm, mul_diagonal, diagonal_mul, e1, e2] at h
   have : k b a = 0 := by
-    simp only [Bool.false_eq_true, if_false, if_true] at h
+    simp only [Bool.false_eq_true, ite_false, ite_true] at h
     linear_combination (-1 / 2) * h
   simp [tw, this]
 
@@ -1025,7 +1025,7 @@ theorem det_pow {m : ℕ} {P : Matrix (Fin m) (Fin m) ℂ} (hP : IsUnit P) (ε :
   rw [det_half hP, h2, ← Finset.prod_zpow, ← Finset.prod_zpow, ← Finset.prod_mul_distrib, Complex.ofReal_sum,
     Finset.sum_mul, Complex.exp_sum]
   refine Finset.prod_congr rfl fun a _ => ?_
-  cases ε a <;> simp [← Complex.exp_int_mul, mul_assoc]
+  cases ε a <;> simp [← Complex.exp_intCast_mul, mul_assoc]
 
 
 open Classical in
@@ -1109,9 +1109,9 @@ theorem sub_diag {m n : ℕ} (τ : D.what₂.Tau) (l : Fin m → ℂ) :
   dsimp only
   by_cases e : ρ = τ
   · subst e
-    rw [Function.update_self, if_pos rfl, Finset.sum_eq_single a (fun b _ hb => by rw [diagonal_apply_ne _ hb, zero_smul])
+    rw [Function.update_self, ite_eq_left rfl, Finset.sum_eq_single a (fun b _ hb => by rw [diagonal_apply_ne _ hb, zero_smul])
       (fun h => (h (Finset.mem_univ _)).elim), diagonal_apply_eq]
-  · rw [Function.update_of_ne e, if_neg e, Finset.sum_eq_single a (fun b _ hb => by rw [Matrix.one_apply_ne hb, zero_smul])
+  · rw [Function.update_of_ne e, ite_eq_right e, Finset.sum_eq_single a (fun b _ hb => by rw [Matrix.one_apply_ne hb, zero_smul])
       (fun h => (h (Finset.mem_univ _)).elim), Matrix.one_apply_eq]
 
 
@@ -1134,7 +1134,7 @@ theorem delta_weights {m n : ℕ} (p q : D.what₂.Tau → ℕ) (ap am : D.what�
   refine ⟨fun a => κ a + (if ε a then 1 else -1) * e a, fun t => ?_, fun ν y hy hy0 hw => ?_⟩
   · rw [hπ, tw_diag, h1 _ _ (fun ρ hρ => Function.update_of_ne hρ _ _) (Function.update_self _ _ _), hχ, smul_smul]
     congr 1
-    simp only [← Complex.exp_nat_mul]
+    simp only [← Complex.exp_natCast_mul]
     rw [← Complex.exp_sum, ← Complex.exp_add]
     congr 1
     push_cast
@@ -1165,7 +1165,7 @@ theorem delta_weights {m n : ℕ} (p q : D.what₂.Tau → ℕ) (ap am : D.what�
       rw [Finsupp.prod_fintype _ _ (fun _ => pow_zero _), Fintype.prod_prod_type,
         Finset.prod_eq_single τ (fun ρ _ hρ => by simp [hρ]) (fun h => (h (Finset.mem_univ _)).elim),
         Fintype.prod_prod_type] at h'
-      simp only [if_true, ← Complex.exp_nat_mul, ← Complex.exp_sum, ← Complex.exp_add] at h'
+      simp only [ite_true, ← Complex.exp_natCast_mul, ← Complex.exp_sum, ← Complex.exp_add] at h'
       refine Eq.trans ?_ (h'.symm.trans ?_)
       · simp only [Finset.mul_sum, mul_left_comm]
       · congr 1

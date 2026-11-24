@@ -151,7 +151,7 @@ theorem latNorm_eq (L : Submodule O V) (x : V) : latNorm v L x = GlobalTheory.HT
   unfold latNorm GlobalTheory.HTLat.latNorm
   congr 1
   ext r
-  simp only [Set.mem_setOf_eq, GlobalTheory.HTLat.mem_scaleLat]
+  simp only [Set.mem_ofPred_eq, GlobalTheory.HTLat.mem_scaleLat]
   constructor
   · rintro ⟨a, h, y, hy, e⟩; exact ⟨a, ⟨y, hy, e.symm⟩, h⟩
   · rintro ⟨a, ⟨y, hy, e⟩, h⟩; exact ⟨a, h, y, hy, e.symm⟩
@@ -262,7 +262,7 @@ theorem repr_eq_trace (a : 𝓞 E) (k) :
 theorem eigProj_mem (ρ : 𝓞 E →+* Module.End K V) (σ : E →+* K) (x : V) :
     eigProj ρ σ x ∈ eigSp ρ σ := by
   classical
-  haveI : CharZero K := (RingHom.charZero_iff σ.injective).1 inferInstance
+  have : CharZero K := (RingHom.charZero_iff σ.injective).1 inferInstance
   rw [mem_eigSp]
   intro a
   set b := RingOfIntegers.basis E

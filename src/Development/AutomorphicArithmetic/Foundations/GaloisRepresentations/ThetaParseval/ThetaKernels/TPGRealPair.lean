@@ -157,7 +157,7 @@ private theorem key_succ {m d : ℕ} (h : m + 1 ≤ d) (ν μ : Fin (m + 1) → 
       ν (Fin.castSucc i) - Formalism.GradedWeylDivisibility.nuNext ν (Fin.castSucc i) := by
     intro i
     have hi : (Fin.castSucc i : ℕ) + 1 < m + 1 := by simp
-    simp only [Formalism.GradedWeylDivisibility.nuNext, dif_pos hi, hν]
+    simp only [Formalism.GradedWeylDivisibility.nuNext, dite_eq_left hi, hν]
     omega
   have e2 : Formalism.GradedWeylDivisibility.nuNext μ (Fin.last m) = 0 := by simp [Formalism.GradedWeylDivisibility.nuNext]
   have e3 : Formalism.GradedWeylDivisibility.nuNext ν (Fin.last m) = 0 := by simp [Formalism.GradedWeylDivisibility.nuNext]
@@ -206,7 +206,7 @@ theorem UpperTheory.TP.RP.exists_act1_equivariant_nablaSq_map_hitting_joint :
   | succ m =>
     have hd : lam.detShift = lam.w (Fin.last m) := by
       unfold DomWeight.detShift
-      rw [dif_pos (by omega)]
+      rw [dite_eq_left (by omega)]
       congr 1
     have hk : ∀ k, ((lam.natW k : ℕ) : ℤ) = (μ k : ℤ) - μ (Fin.last m) := by
       intro k
@@ -340,7 +340,7 @@ private theorem hw_eq {d : ℕ} (ν μ : Fin d → ℕ) (t : ℕ) (hν : ∀ k, 
       intro k
       unfold Formalism.GradedWeylDivisibility.nuNext
       have hk : (k.castSucc : ℕ) + 1 < m + 1 := by simp
-      rw [dif_pos hk, dif_pos hk]
+      rw [dite_eq_left hk, dite_eq_left hk]
       have h1 := hν k.castSucc
       have h2 := hν ⟨(k.castSucc : ℕ) + 1, hk⟩
       omega
@@ -367,7 +367,7 @@ theorem UpperTheory.TP.RP.exists_act2_equivariant_nablaSq_map_hitting_joint :
     rcases h.lt_or_eq with hlt | rfl
     · have hs : lam'.detShift = c := by
         have h0 : 0 < d := by omega
-        simp only [DomWeight.detShift, dif_pos h0]
+        simp only [DomWeight.detShift, dite_eq_left h0]
         rw [hμ]
         simp [show ¬ (d - 1 < n) by omega]
       rw [hs]
@@ -378,9 +378,9 @@ theorem UpperTheory.TP.RP.exists_act2_equivariant_nablaSq_map_hitting_joint :
       simp only [DomWeight.natW, hs]
       rw [hμ]
       split_ifs <;> simp
-    · have hμ' : ∀ k, lam'.w k = (μ k : ℤ) + c := fun k => by rw [hμ, dif_pos k.2]
+    · have hμ' : ∀ k, lam'.w k = (μ k : ℤ) + c := fun k => by rw [hμ, dite_eq_left k.2]
       have hsh : ∀ h0 : 0 < n, lam'.detShift = (μ ⟨n - 1, by omega⟩ : ℤ) + c := fun h0 => by
-        simp only [DomWeight.detShift, dif_pos h0, hμ']
+        simp only [DomWeight.detShift, dite_eq_left h0, hμ']
       refine ⟨fun g => ?_, ?_⟩
       · rw [rightSub_dTop, mul_pow, ← C_pow, ← mul_assoc, ← C_mul]
         congr 2
@@ -601,7 +601,7 @@ private theorem exists_equivariant {I : Type} [Fintype I] (emb : I → (E →+* 
     (π : GlobalTheory.DefU.AutSub E n) (hw : ∀ i, GlobalTheory.UnitaryBC.HasWeightAt π.V (emb i) (lam i)) :
     ∃ μ : ((i : I) → nablaSq ℂ n (lam i)) →ₘₗ[ℂ] π.V, μ ≠ 0 ∧ ∀ x ∈ GlobalTheory.UnitaryBC.infU E n, ∀ v,
       π.rep x (μ v) = μ fun i => GlobalTheory.Branching.sqRep ℂ n (lam i) (GlobalTheory.UnitaryBC.cEmb (emb i) x) (v i) := by
-  haveI : Nontrivial π.V := Submodule.nontrivial_iff_ne_bot.2 π.isAut.ne_bot
+  have : Nontrivial π.V := Submodule.nontrivial_iff_ne_bot.2 π.isAut.ne_bot
   obtain ⟨hgen, hcomm⟩ := UpperTheory.archimedeanUnitary_le_iSup_embU_and_commute E n
   -- Inline the finite-family intertwiner argument with the current multilinear map API.
   have intertwiner (G : Type) [Group G] (H : I → Subgroup G)
@@ -766,7 +766,7 @@ theorem UpperTheory.TP.RP.formEx :
     have := LinearMap.congr_fun h (PiTensorProduct.tprod ℂ v)
     rw [PiTensorProduct.lift.tprod] at this
     simpa using this)
-  haveI : Nontrivial (⨂[ℂ] i, nablaSq ℂ n (lam i)) := by
+  have : Nontrivial (⨂[ℂ] i, nablaSq ℂ n (lam i)) := by
     by_contra hs
     rw [not_nontrivial_iff_subsingleton] at hs
     exact hl (LinearMap.ext fun x => by rw [Subsingleton.elim x 0, map_zero, map_zero])

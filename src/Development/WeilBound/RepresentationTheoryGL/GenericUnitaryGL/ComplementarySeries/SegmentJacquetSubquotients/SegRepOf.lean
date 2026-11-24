@@ -362,7 +362,7 @@ theorem isSmooth_sub {G V : Type} [Group G] [TopologicalSpace G] [AddCommGroup V
   have h := hπ (v : V)
   convert h using 1
   ext g
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · intro hg
     exact congrArg Subtype.val hg
@@ -542,14 +542,14 @@ theorem entries_zero_or_d {d l : ℕ} (hd : 0 < d) (σ : IrrRep (GL (Fin d) k)) 
   obtain ⟨S, g, hg⟩ := hs i
   have hnt : ∀ j, Nontrivial (s i j).V := by
     intro j
-    haveI := (s i j).irr
+    have := (s i j).irr
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     apply (bot_ne_top : (⊥ : Subrepresentation (s i j).ρ) ≠ ⊤)
     ext x
     rw [Subsingleton.elim x 0]
     exact ⟨fun _ => Submodule.zero_mem _, fun _ => Submodule.zero_mem _⟩
-  haveI := GlobalTheory.ProdSupport.nontrivial_piTensor (fun j => (s i j).V) hnt
+  have := GlobalTheory.ProdSupport.nontrivial_piTensor (fun j => (s i j).V) hnt
   obtain ⟨x, y, hxy⟩ := exists_pair_ne (PiTensorProduct ℂ fun j => (s i j).V)
   obtain ⟨x', rfl⟩ := hg x
   obtain ⟨y', rfl⟩ := hg y

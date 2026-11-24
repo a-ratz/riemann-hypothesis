@@ -113,9 +113,9 @@ theorem exists_sqrt (n : ℕ) : ∀ (R : Type) [CommRing R] [Algebra ℚ R] (a :
   | succ n ih =>
     intro R _ _ a
     obtain ⟨R₁, _, _, ⟨h₁, h₂, h₃⟩, b, hb⟩ := exists_sqrt_one R (a 0)
-    letI : Algebra ℚ R₁ := ((algebraMap R R₁).comp (algebraMap ℚ R)).toAlgebra
+    let : Algebra ℚ R₁ := ((algebraMap R R₁).comp (algebraMap ℚ R)).toAlgebra
     obtain ⟨R₂, _, _, ⟨k₁, k₂, k₃⟩, hc⟩ := ih R₁ fun i => Units.map (algebraMap R R₁).toMonoidHom (a i.succ)
-    letI : Algebra R R₂ := ((algebraMap R₁ R₂).comp (algebraMap R R₁)).toAlgebra
+    let : Algebra R R₂ := ((algebraMap R₁ R₂).comp (algebraMap R R₁)).toAlgebra
     have : IsScalarTower R R₁ R₂ := IsScalarTower.of_algebraMap_eq' rfl
     refine ⟨R₂, inferInstance, inferInstance, ⟨Module.Finite.trans R₁ R₂, Algebra.Etale.comp R R₁ R₂,
       Module.FaithfullyFlat.trans R R₁ R₂⟩, fun i => ?_⟩

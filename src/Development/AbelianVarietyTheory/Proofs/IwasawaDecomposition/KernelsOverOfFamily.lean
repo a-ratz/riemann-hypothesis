@@ -271,13 +271,13 @@ theorem sum_step {E K M β : Type} [Field E] [NumberField E] [Field K] [NumberFi
     (F : S.Cl → M) (f : ∀ a, (T a).D → M) (hF : ∀ a q, F ⟨e a, q⟩ = f a (π a (S.rp _ q)))
     (hf : ∀ a (g : (T a).G) d, f a (g • d) = f a d) :
     ∑ c, ((Nat.card (S.Stab c) : ℕ) : K)⁻¹ • F c = ∑ a, (T a).csOf (hT a) (T a).outSec (f a) := by
-  letI : ∀ b, Fintype (MulAction.orbitRel.Quotient (S.G b) (S.D b)) :=
+  let : ∀ b, Fintype (MulAction.orbitRel.Quotient (S.G b) (S.D b)) :=
     fun b => @Fintype.ofFinite _ (Finite.of_injective (@Sigma.mk _ (fun b => MulAction.orbitRel.Quotient (S.G b) (S.D b)) b)
       sigma_mk_injective)
   rw [sum_cl]
   refine (Fintype.sum_equiv e _ _ fun a => ?_).symm
   rw [csOf_eq]
-  letI := (hT a).fintypeCl
+  let := (hT a).fintypeCl
   refine (sum_cover (π a) (hs a) (h1 a) (h2 a) (h3 a) (S.rp _) (S.rp_spec _) _ (T a).outSec.spec (f a) (hf a)).symm.trans ?_
   exact Finset.sum_congr rfl fun q _ => congrArg _ (hF a q).symm
 
@@ -480,7 +480,7 @@ theorem colAt_low {j : ℕ} (hj : j ≤ m2) (al : L.β j) (p : PtAt R sel mu cst
         ((chKerC W Ch sel mu cst L A u m2 b hY P hK).kk.colTo hF j (startC hL u φ) a) g d p.1.1).trans ?_
     · rw [← ih hj'.le]
       refine LinearMap.congr_fun ((kAt_mat W Ch A u hL (by omega) a al _ p).trans ?_) _
-      have e : (chKerC W Ch sel mu cst L A u m2 b hY P hK).kk j a al = ⟨_, hK.1 j hj' a al⟩ := dif_pos hj'
+      have e : (chKerC W Ch sel mu cst L A u m2 b hY P hK).kk j a al = ⟨_, hK.1 j hj' a al⟩ := dite_eq_left hj'
       rw [e]
     · show _ = ((∑ a, (((chKerC W Ch sel mu cst L A u m2 b hY P hK).kk j a al).opOf (hF j a) _) ∘ₗ (LinearMap.proj a))
         ((chKerC W Ch sel mu cst L A u m2 b hY P hK).kk.colTo hF j (startC hL u φ))).1 p.1.1

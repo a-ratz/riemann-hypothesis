@@ -133,12 +133,12 @@ theorem eq_blkMat_of_isBlock {N n : ℕ} (hN : N = n + 1) {kt : Matrix (Fin N) (
     have := (H.2.1 ⟨i.1, hi⟩).1
     rw [ej]
     simpa [Formalism.L2.Col.Br.iC] using this
-  · rw [dite_eq_right hi, if_pos hj]
+  · rw [dite_eq_right hi, ite_eq_left hj]
     have ei : i = Formalism.L2.Col.Br.iL hN := Fin.ext (by simp [Formalism.L2.Col.Br.iL]; omega)
     have := (H.2.1 ⟨j.1, hj⟩).2
     rw [ei]
     simpa [Formalism.L2.Col.Br.iC] using this
-  · rw [dite_eq_right hi, if_neg hj]
+  · rw [dite_eq_right hi, ite_eq_right hj]
     have ei : i = Formalism.L2.Col.Br.iL hN := Fin.ext (by simp [Formalism.L2.Col.Br.iL]; omega)
     have ej : j = Formalism.L2.Col.Br.iL hN := Fin.ext (by simp [Formalism.L2.Col.Br.iL]; omega)
     rw [ei, ej]
@@ -233,7 +233,7 @@ theorem eq_smul_of_unitary_equivariant : ∀ (N n : ℕ) (hN : N = n + 1) (lam :
     fun u => (delSq ℂ n sg).subtype ∘ₗ u ∘ₗ π
   have hE : ∀ u (f : delSq ℂ N lam), E u f.1 = (u f).1 := fun u f => by
     show (u (π f.1)).1 = (u f).1
-    exact congrArg (fun x => (u x).1) (Submodule.linearProjOfIsCompl_apply_left hC f)
+    exact congrArg (fun x => (u x).1) (Submodule.projectionOnto_apply_left hC f)
   have hN' : Formalism.BasicNotions.nablaSq ℂ N lam = delSq ℂ N lam := Formalism.L2.Col.nablaSq_eq_delSq ℂ lam
   have hn' : Formalism.BasicNotions.nablaSq ℂ n sg = delSq ℂ n sg := Formalism.L2.Col.nablaSq_eq_delSq ℂ sg
   have key : ∀ s, s = E t ∨ s = E t₀ → (∀ f ∈ Formalism.BasicNotions.nablaSq ℂ N lam, s f ∈ Formalism.BasicNotions.nablaSq ℂ n sg) ∧
@@ -570,7 +570,7 @@ theorem mult_one_families : ∀ (ι : Type) [Fintype ι] (N n : ℕ) (hN : N = n
     rw [hQ', emb_update G' sg en hen τ k hku (Q' x) z z' hz, hQ']
     exact hT'.2 _ _ hU hB (emb G lam eN x) (by rw [← rN]; exact LinearMap.mem_range_self _ x) _
       (fun y y' hy => emb_update G lam eN heN τ kt hktu x y y' hy) z z' hz
-  haveI : ∀ τ, FiniteDimensional ℂ (delSq ℂ N (lam τ)) := fun τ => Formalism.L2.GlobalTheoryTheory.TraceIntegrality.delSq_fd _
+  have : ∀ τ, FiniteDimensional ℂ (delSq ℂ N (lam τ)) := fun τ => Formalism.L2.GlobalTheoryTheory.TraceIntegrality.delSq_fd _
   let C : ∀ τ, Set (delSq ℂ N (lam τ) →ₗ[ℂ] delSq ℂ n (sg τ)) := fun τ => {t | ∀ p ∈ R τ, t ∘ₗ p.1 = p.2 ∘ₗ t}
   have hC : ∀ τ, ∀ t ∈ C τ, ∀ t₀ ∈ C τ, t₀ ≠ 0 → ∃ c : ℂ, t = c • t₀ := by
     intro τ t ht t₀ ht₀ hne
@@ -733,7 +733,7 @@ theorem cont_val {ι : Type} [Fintype ι] {X : Type} [TopologicalSpace X] {a : �
 theorem cont_blkfam {ι : Type} [Fintype ι] {n : ℕ} (y : ι → Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) :
     Continuous fun (u : ι → Matrix.unitaryGroup (Fin n) ℂ) (τ : ι) => blk (u τ).1 * y τ :=
   continuous_pi fun τ => blk_mul_cont (fun u : ι → Matrix.unitaryGroup (Fin n) ℂ => (u τ).1)
-    (continuous_subtype_val.comp (continuous_apply τ)) (y τ)
+    (continuous_subtypeVal.comp (continuous_apply τ)) (y τ)
 
 theorem uniH {m : ℕ} {u : Matrix (Fin m) (Fin m) ℂ} (hu : u ∈ Matrix.unitaryGroup (Fin m) ℂ) :
     u * uᴴ = 1 ∧ uᴴ * u = 1 := by
@@ -762,7 +762,7 @@ theorem avg_eq_mul_branch : ∀ (ι : Type) [Fintype ι] (N n : ℕ) (hN : N = n
   have hfd' : FiniteDimensional ℂ (ValC G' sg) := (GlobalTheory.T.frame_values_polynomial_det_stable_homogeneous ι n G' sg).2.1
   have stab' := (GlobalTheory.T.frame_values_polynomial_det_stable_homogeneous ι n G' sg).2.2.1
   have stab := (GlobalTheory.T.frame_values_polynomial_det_stable_homogeneous ι (n + 1) G lam).2.2.1
-  haveI := cptU n
+  have := cptU n
   have invH : ∀ (u : ι → Matrix.unitaryGroup (Fin n) ℂ) (z : Frames G') τ, IsUnit (((u τ).1)ᴴ * z.1 τ).det := by
     intro u z τ
     rw [Matrix.det_mul]
@@ -797,7 +797,7 @@ theorem avg_eq_mul_branch : ∀ (ι : Type) [Fintype ι] (N n : ℕ) (hN : N = n
   have hjU : Continuous jU := by
     refine Continuous.subtype_mk (continuous_pi fun z => ?_) _
     exact cont_val hJ (fun u τ => ((u τ).1)ᴴ * z.1 τ)
-      (continuous_pi fun τ => ((continuous_apply τ).subtype_val.matrix_conjTranspose).matrix_mul
+      (continuous_pi fun τ => ((continuous_apply τ).subtypeVal.matrix_conjTranspose).matrix_mul
         continuous_const) (fun u τ => invH u z τ)
   have he : Continuous e := LinearMap.continuous_of_finiteDimensional e.toLinearMap
   have hint : ∀ Ψ ∈ ValC G lam, MeasureTheory.Integrable (fun k => Ψ (yk k) • e (jU (r' k))) ν := by

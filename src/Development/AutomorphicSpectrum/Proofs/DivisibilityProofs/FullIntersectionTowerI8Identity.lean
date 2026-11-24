@@ -194,8 +194,8 @@ theorem ht_cancel {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
 
 theorem stHt : SquareStatements.StHt := by
   intro E _ _ _ H D l Xo c Y S Ω Ω' _ _ K K' _ _ J J' _ _ y y' A A' h i j ⟨hdom, hf, hcst, hext, hjo⟩ hR _ hvb
-  haveI : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
-  haveI : CharZero Ω' := charZero_of_injective_ringHom i.injective
+  have : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
+  have : CharZero Ω' := charZero_of_injective_ringHom i.injective
   have hmono : Mono (spMap (algebraMap (𝓞 c.F) c.F)) := by
     have := c.fin
     have : NumberField c.F := {}
@@ -499,12 +499,12 @@ theorem exists_base' (hRes : ResK.ResKStatement) (E : Type) [Field E] [NumberFie
       (∀ p ∈ S, FullTorsion Y.t.G (M₁.ξ ≫ f₁) (p ^ 4)) ∧ (∀ p ∈ S, ∃ ζ : Ω, IsPrimitiveRoot ζ (p ^ 4)) ∧
       SncPts M₁.ξ D.dim {p | Char0 M₁.ξ p ∧ p.1 ∉ f₁ ⁻¹' abLocus Y.t.G} ∧
       Algebra.trdeg ℤ Ω = ((D.dim : ℕ) : Cardinal) := by
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := {}
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := {}
   have hgen₀ := _root_.GlobalTheory.CompanionTheory.Ar.GenPtModel.genPt_mem_genericPoints E H D l Xo c Y Ω₀ ξ₀ hg
   obtain ⟨w₀, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChangeGeo.exists_factor_XF_of_genericPoint E H D l Xo c Y Ω₀ ξ₀ hgen₀
   obtain ⟨cst, -⟩ := exists_cst (Y := Y) w₀
-  haveI : CharZero Ω₀ := charZero_of_injective_ringHom cst.injective
+  have : CharZero Ω₀ := charZero_of_injective_ringHom cst.injective
   obtain ⟨Ω, _, _, i, hfin, htors, hroot⟩ := ChgField.exists_field E H D l Xo c Y Ω₀ ξ₀ S hgen₀ hS
   obtain ⟨K₀, _, J₀, _, yc, X₀, ξ', f₀, bd₀, -, hall₀, htie₀, hf₀, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.SncBase.exists_sncBase hRes E H D l Xo c Y Ω₀ ξ₀ hg
   obtain ⟨K₁, _, J₁, _, y₁, bk, bx, M, h, -, -, hdom, hnorm, hsm⟩ :=
@@ -521,10 +521,10 @@ theorem exists_base' (hRes : ResK.ResKStatement) (E : Type) [Field E] [NumberFie
   have hinj : Function.Injective (algebraMap (𝓞 c.F) c.F) := RingOfIntegers.coe_injective
   have hA := _root_.GlobalTheory.CompanionTheory.Ar.CptTrdeg.trdeg_eq_dim E H D l Xo c _ _ Y Ω₀ ξ₀ Ω y₀ i hinj hg (hy₀ ▸ hMξ)
   have htr : Algebra.trdeg ℤ Ω = ((D.dim : ℕ) : Cardinal) := by
-    letI : Algebra Ω₀ Ω := i.toAlgebra
-    haveI : FiniteDimensional Ω₀ Ω := hfin
-    haveI : FaithfulSMul ℤ Ω₀ := (faithfulSMul_iff_algebraMap_injective ℤ Ω₀).mpr Int.cast_injective
-    haveI : FaithfulSMul Ω₀ Ω := (faithfulSMul_iff_algebraMap_injective Ω₀ Ω).mpr i.injective
+    let : Algebra Ω₀ Ω := i.toAlgebra
+    have : FiniteDimensional Ω₀ Ω := hfin
+    have : FaithfulSMul ℤ Ω₀ := (faithfulSMul_iff_algebraMap_injective ℤ Ω₀).mpr Int.cast_injective
+    have : FaithfulSMul Ω₀ Ω := (faithfulSMul_iff_algebraMap_injective Ω₀ Ω).mpr i.injective
     have htow := trdeg_add_eq ℤ Ω₀ (A := Ω)
     rw [hA, trdeg_eq_zero_iff.2 (Algebra.IsAlgebraic.of_finite Ω₀ Ω), add_zero] at htow
     exact htow.symm
@@ -573,9 +573,9 @@ theorem stBase : StBase := by
     {p | Char0 A.ξ p ∧ g p.1 ∉ f₁ ⁻¹' abLocus Y.t.G} A.tie (fun p hp' => hp'.1) hsncA
   have hab : abLocus A.t.G = A.f ⁻¹' abLocus Y.t.G :=
     (Set.ext fun x => abLocus_pullback abLocusOne Y.t.semi A.m.cart.1 x).symm
-  letI algi : Algebra Ω₀ Ω := i.toAlgebra
-  haveI : FiniteDimensional Ω₀ Ω := hfin
-  haveI : Nonempty K₂ := ⟨bk k₁⟩
+  let algi : Algebra Ω₀ Ω := i.toAlgebra
+  have : FiniteDimensional Ω₀ Ω := hfin
+  have : Nonempty K₂ := ⟨bk k₁⟩
   refine ⟨Ω, inferInstance, inferInstance, K₂, inferInstance, J₂, inferInstance, y₂, overCpt A ξ₀ hξ₀ i hi,
     Module.finrank Ω₀ Ω, inferInstance, rfl, ⟨Module.finrank_pos, rfl⟩,
     (_root_.GlobalTheory.CompanionTheory.Ar.coordTie_birational_isArithVar A.X Ω A.ξ K₂ J₂ y₂ _ A.tie htr).2, ⟨bd, hbd, fun z w hw => ?_⟩, fun p _ => congrFun hR₂ p, hfree⟩
@@ -636,14 +636,14 @@ theorem isMultiHomog_rename_baseInc {β : MRing (baseIdx ι blk)} {b : NonPlucke
   by_cases h : ∀ p, blk p ≠ some k
   · have e : ∀ i : ι k, (Finsupp.mapDomain (baseInc blk) m₀) ⟨k, i⟩ = m₀ ⟨⟨k, h⟩, i⟩ := fun i =>
       Finsupp.mapDomain_apply_of_injective (baseInc_injective blk) m₀ (⟨⟨k, h⟩, i⟩ : Σ k, baseIdx ι blk k)
-    simp only [e, extDeg, dif_pos h]
+    simp only [e, extDeg, dite_eq_left h]
     exact hβ m₀ hm₀ ⟨k, h⟩
   · have e : ∀ i : ι k, (Finsupp.mapDomain (baseInc blk) m₀) ⟨k, i⟩ = 0 := fun i =>
       Finsupp.mapDomain_of_notMem_range _ _ (by
         rintro ⟨q, hq⟩
         have : q.1.1 = k := congrArg Sigma.fst hq
         exact h (this ▸ q.1.2))
-    simp only [e, extDeg, dif_neg h, Finset.sum_const_zero]
+    simp only [e, extDeg, dite_eq_right h, Finset.sum_const_zero]
 
 omit [Fintype K] [∀ k, Fintype (ι k)] in
 theorem evC_rename_baseInc (z : (Σ k, ι k) → ℂ) (β : MRing (baseIdx ι blk)) :
@@ -792,7 +792,7 @@ theorem valEq_of_lineIso {y : (Σ k, ι k) → Ω} (hy : ∀ k, ∃ i, y ⟨k, i
     rw [h0, map_zero] at this
     exact hi ((Valuation.zero_iff _).1 (le_antisymm this zero_le))
   have hO : ∀ k i, y ⟨k, i⟩ / y ⟨k, c k⟩ ∈ O := fun k i => by
-    rw [← O.valuation_le_one_iff, map_div₀, div_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 (hc0 k)))]
+    rw [← O.valuation_le_one_iff, map_div₀, div_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 (hc0 k)))]
     exact hc k i
   let w : (Σ k, ι k) → O := fun p => ⟨ratioPt y c p, hO p.1 p.2⟩
   let φ : MRing ι →+* O := eval₂Hom (Int.castRingHom O) w
@@ -1105,8 +1105,8 @@ theorem stXB : StX := by
   let cl : ℝ → ℝ := fun t => if 0 < t ∧ t ≤ S.t₀ then t else S.t₀
   have hcl : ∀ t, 0 < cl t ∧ cl t ≤ S.t₀ := fun t => by
     by_cases h : 0 < t ∧ t ≤ S.t₀
-    · simp only [cl, if_pos h]; exact h
-    · simp only [cl, if_neg h]; exact ⟨h0, le_rfl⟩
+    · simp only [cl, ite_eq_left h]; exact h
+    · simp only [cl, ite_eq_right h]; exact ⟨h0, le_rfl⟩
   refine ⟨fun t r => Top.combLine (fun a => Re.line a (cl t)) (Cmp.rootOnFund r), fun t r => ?_,
     fun t r => smooth_comb _ _ fun a => Re.line_smooth a _ (hcl t).1 (hcl t).2, fun t r z => ?_, ?_⟩
   · funext k
@@ -1124,7 +1124,7 @@ theorem stXB : StX := by
   · show ∏ a, _ = ∏ a, _
     exact Finset.prod_congr rfl fun a _ => by rw [hc a (cl t) z]
   · filter_upwards [Ioo_mem_nhdsGT h0] with t ht r z _
-    have : cl t = t := if_pos ⟨ht.1, ht.2.le⟩
+    have : cl t = t := ite_eq_left ⟨ht.1, ht.2.le⟩
     rw [this]
 
 end SquareStatements

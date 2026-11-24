@@ -100,12 +100,12 @@ theorem acycF_of_isIntegral : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary 
   intro x
   obtain ⟨j, y, hy⟩ := (_root_.GlobalTheory.EtC.RingContH.main R F hF (Finset B) (finDiag A B) (finCocone A B)
     (finCoconeIsColimit A B) n).1 x
-  haveI := finite_finDiag A B j
+  have := finite_finDiag A B j
   obtain ⟨ι, hι, T, hT, hAl, e, hH, hS⟩ :=
     GlobalTheory.finite_algebra_strictly_henselian_pi A (Algebra.adjoin A (j : Set B))
   have hac : AcycF R (sp ((finDiag A B).obj j)) F :=
     _root_.GlobalTheory.EtC.acycF_of_pi_sh R F ι T ((finDiag A B).obj j) ⟨e.toRingEquiv⟩ (fun i => ⟨hH i, (hS i).1⟩)
-  haveI := hac n hn
+  have := hac n hn
   have hy0 : y = 0 := Subsingleton.elim _ _
   rw [← hy, hy0]
   exact map_zero _

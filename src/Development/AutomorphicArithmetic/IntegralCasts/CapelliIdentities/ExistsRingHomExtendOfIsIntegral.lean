@@ -62,7 +62,7 @@ theorem UpperTheory.Reformulated.B.RingHomExtensionOfIntegral.exists_ringHom_ext
     simp [this]
   obtain ⟨Q, -, hQ, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (RingHom.ker f) ⊥ hle
   have hlies : Q.LiesOver (RingHom.ker f) := (Ideal.liesOver_iff _ _).2 hQc.symm
-  letI : Algebra (R ⧸ RingHom.ker f) K := (RingHom.kerLift f).toAlgebra
+  let : Algebra (R ⧸ RingHom.ker f) K := (RingHom.kerLift f).toAlgebra
   have hK : Module.IsTorsionFree (R ⧸ RingHom.ker f) K :=
     Module.isTorsionFree_iff_algebraMap_injective.2 (RingHom.kerLift_injective f)
   have hS : Module.IsTorsionFree (R ⧸ RingHom.ker f) (S ⧸ Q) := by

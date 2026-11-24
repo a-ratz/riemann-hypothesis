@@ -161,8 +161,8 @@ namespace GlobalTheory.ProdLocUnit
 theorem prod_locUnit_eq_one : ∀ (F : Type) [Field F] [NumberField F] [_root_.NumberField.IsTotallyComplex F] (B : Type) [CommGroup B] (ψ : Ideles F →* B), IsOpen (ψ.ker : Set (Ideles F)) → (∀ k : Fˣ, ψ (diagUnits F k) = 1) → ∀ (a : Fˣ) (T : Finset (HeightOneSpectrum (𝓞 F))), (∀ v ∉ T, ψ (locUnit F v a) = 1) → ∏ v ∈ T, ψ (locUnit F v a) = 1 := by
   intro F _ _ _ B _ ψ hker hd a T hT
   classical
-  letI : TopologicalSpace B := ⊥
-  haveI : DiscreteTopology B := ⟨rfl⟩
+  let : TopologicalSpace B := ⊥
+  have : DiscreteTopology B := ⟨rfl⟩
   have hψ : Continuous ψ := continuous_of_isOpen_ker' ψ hker
   let ι : (InfiniteAdeleRing F)ˣ →* Ideles F :=
     Units.map (MonoidHom.inl (InfiniteAdeleRing F) (FiniteAdeleRing (𝓞 F) F))
@@ -237,7 +237,7 @@ theorem restrictScalarsHom_continuous_krull (E Ω : Type) [Field E] [Field Ω] [
     ((IsIntegral.of_finite E (b i)).map (IsScalarTower.toAlgHom E L Ω)).tower_top
   have hN : ⋂ i, ((IntermediateField.adjoin K {((b i : L) : Ω)}).fixingSubgroup : Set (G K Ω))
       ∈ nhds (1 : G K Ω) := Filter.iInter_mem.mpr fun i => by
-    haveI := IntermediateField.adjoin.finiteDimensional (hint i)
+    have := IntermediateField.adjoin.finiteDimensional (hint i)
     exact (IntermediateField.fixingSubgroup_isOpen _).mem_nhds (Subgroup.one_mem _)
   rw [Filter.mem_map]
   refine Filter.mem_of_superset hN ?_
@@ -299,8 +299,8 @@ theorem res_art_eq_art_norm : ∀ (E Ω : Type) [Field E] [NumberField E] [_root
             (Units.map (Algebra.norm E (S := K)) y))) := by
   intro E Ω _ _ _ _ _ _ K _ _ _ art artK ha haK v W hW hWu y τ hτ
   classical
-  haveI : IsTotallyComplex K := _root_.GlobalTheory.isTotallyComplex_of_algebra E K
-  haveI : IsClosed ((commutator (G E Ω)).topologicalClosure : Set (G E Ω)) :=
+  have : IsTotallyComplex K := _root_.GlobalTheory.isTotallyComplex_of_algebra E K
+  have : IsClosed ((commutator (G E Ω)).topologicalClosure : Set (G E Ω)) :=
     Subgroup.isClosed_topologicalClosure _
   let r : G K Ω →* Gab E Ω := (toAb E Ω).comp (AlgEquiv.restrictScalarsHom E)
   have hr : Continuous r := QuotientGroup.continuous_mk.comp (_root_.GlobalTheory.restrictScalarsHom_continuous_krull E Ω K)
@@ -491,7 +491,7 @@ theorem exists_frob_fix_of_eisenstein : GlobalTheory.Published.GlobalArtinRecipr
     congr 2
     ext
     rw [hc]
-    simp only [Units.coe_map, MonoidHom.coe_coe, hyK, Units.val_mk0]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, hyK, Units.val_mk0]
     rw [hnorm]
     simp
 
@@ -552,7 +552,7 @@ theorem GlobalTheory.TameRecip.exists_ine_of_unit : GlobalTheory.Published.Globa
   obtain ⟨z, hz1, hz⟩ := _root_.GlobalTheory.OneUnitRoot.exists_unit_pow_normV_sub_one E v (x * uc⁻¹) hy
   obtain ⟨ρ, hρ, hρz⟩ := (ha.ine v A hA _).mp ⟨z, hz1, rfl⟩
   obtain ⟨τ, hτF, hτπ, hτc⟩ := _root_.GlobalTheory.TameRecip.exists_frob_fix_of_eisenstein H E Ω art ha v A hA ϖ hϖ1 hϖ2 π hπ
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   obtain ⟨t, ht⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap E Ω (u : E)) hn
   have h1' : u * ϖ ∈ v.asIdeal := Ideal.mul_mem_left _ _ hϖ1
   have h2' : u * ϖ ∉ v.asIdeal ^ 2 := by

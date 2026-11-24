@@ -113,7 +113,7 @@ theorem exists_mul_of_flat {W B : Type} [CommRing W] [CommRing B] {t : W} (ht : 
 
 theorem natCast_mem_nonZeroDivisors (l : ℕ) [Fact l.Prime] (k : Type) [Field k] [CharP k l] :
     (l : WittVector l k) ∈ nonZeroDivisors (WittVector l k) := by
-  exact mem_nonZeroDivisors_of_ne_zero (WittVector.p_nonzero l k)
+  exact mem_nonZeroDivisors_of_ne_zero (WittVector.p_ne_zero l k)
 
 set_option backward.isDefEq.respectTransparency false in
 theorem flatL_Kt : ∀ (l : ℕ) [Fact l.Prime] (k : Type) [Field k] [CharP k l] [PerfectRing k l] (O : Type) [CommRing O] (F : B.Fn O) (ρ : O →+* k) (m : ℕ), FlatL l m (Kt l F ρ m) := by

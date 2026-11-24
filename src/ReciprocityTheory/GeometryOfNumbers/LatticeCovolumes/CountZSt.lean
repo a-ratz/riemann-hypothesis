@@ -60,8 +60,8 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimension
 
 theorem finite_inter_lattice (L : Submodule ℤ E) [DiscreteTopology L] [IsZLattice ℝ L] (S : Set E)
     (hb : Bornology.IsBounded S) : (S ∩ (L : Set E)).Finite := by
-  haveI : ProperSpace E := FiniteDimensional.proper_real E
-  haveI : DiscreteTopology L.toAddSubgroup := ‹DiscreteTopology L›
+  have : ProperSpace E := FiniteDimensional.proper_real E
+  have : DiscreteTopology L.toAddSubgroup := ‹DiscreteTopology L›
   have hc : IsClosed (L : Set E) := (L.toAddSubgroup).isClosed_of_discreteTopology
   exact Metric.finite_isBounded_inter_isClosed ⟨(‹DiscreteTopology L› : DiscreteTopology L)⟩ hb hc
 
@@ -116,7 +116,7 @@ theorem measure_div_le_ncard_inter_lattice (μ : Measure E) [μ.IsAddHaarMeasure
     (hm : MeasurableSet S) :
     (μ S).toReal / (2 ^ finrank ℝ E * ZLattice.covolume L μ) ≤ ((S ∩ (L : Set E)).ncard : ℝ) := by
   classical
-  haveI : MeasureTheory.VAddInvariantMeasure L E μ :=
+  have : MeasureTheory.VAddInvariantMeasure L E μ :=
     ⟨fun g s _ => by simp only [Submodule.vadd_def, vadd_eq_add]; exact measure_preimage_add μ (g : E) s⟩
   have hF : MeasureTheory.IsAddFundamentalDomain L
       (ZSpan.fundamentalDomain ((Module.Free.chooseBasis ℤ L).ofZLatticeBasis ℝ L)) μ :=

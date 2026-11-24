@@ -130,7 +130,7 @@ lemma embed (hP : Pres G μ) (g : G) : MeasurableEmbedding (fun y : Y => g • y
 
 lemma enorm_cut {b : Y → ℝ} (hb : IsCut G b) (y : Y) (x : ℂ) :
     ‖b y • x‖ₑ = ENNReal.ofReal (b y) * ‖x‖ₑ := by
-  rw [enorm_smul, Real.enorm_eq_ofReal (hb.nonneg y)]
+  rw [eNorm_smul, Real.eNorm_eq_ofReal (hb.nonneg y)]
 
 lemma lint_split [Countable G] (hP : Pres G μ) {b b' : Y → ℝ} (hb : IsCut G b) (hb' : IsCut G b')
     (u : Y → ℝ≥0∞) (hu : Measurable u) :
@@ -170,7 +170,7 @@ lemma integrable_swap [Countable G] (hP : Pres G μ) {b b' : Y → ℝ} (hb : Is
     (hi : Integrable (fun y => b y • u y) μ) : Integrable (fun y => b' y • u y) μ := by
   refine ⟨(hb'.meas.smul hu).aestronglyMeasurable, ?_⟩
   have h := hi.hasFiniteIntegral
-  have e := lint_eq hP hb hb' (fun y => ‖u y‖ₑ) hu.enorm (fun g y => by simp only [hinv])
+  have e := lint_eq hP hb hb' (fun y => ‖u y‖ₑ) hu.eNorm (fun g y => by simp only [hinv])
   simp only [HasFiniteIntegral, enorm_cut hb, enorm_cut hb'] at h ⊢
   rwa [← e]
 
@@ -184,7 +184,7 @@ lemma int_split [Countable G] (hP : Pres G μ) {b b' : Y → ℝ} (hb : IsCut G 
   · intro g
     exact ((hb'.meas.comp (hP g).measurable).smul (hb.meas.smul hu)).aestronglyMeasurable
   · have h := hi.hasFiniteIntegral
-    have e := lint_split hP hb hb' (fun y => ‖u y‖ₑ) hu.enorm
+    have e := lint_split hP hb hb' (fun y => ‖u y‖ₑ) hu.eNorm
     simp only [HasFiniteIntegral, enorm_cut hb, enorm_cut hb'] at h e ⊢
     rw [← e]
     exact h.ne
@@ -308,7 +308,7 @@ theorem UpperTheory.Esk.actions_preserve_measures_proof : UpperTheory.Esk.B1a �
     rw [hset]
     refine ⟨MeasurableSet.univ_pi fun v => hS (z v), ?_⟩
     rw [volume_pi, Measure.pi_pi, ENNReal.coe_pow, ← Finset.card_univ, ← Finset.prod_const]
-    exact Finset.prod_le_prod' fun v _ => hball (z v)
+    exact Finset.prod_le_prod fun v _ => hball (z v)
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -445,9 +445,9 @@ def B1 (C c : ℝ) : Set {z : ℂ // z.im ≠ 0} := {w | |w.1.re| ≤ C ∧ c �
 
 theorem measurableSet_cusp_region (C c : ℝ) : MeasurableSet (B1 C c) := by
   have h1 : Measurable fun w : {z : ℂ // z.im ≠ 0} => |w.1.re| :=
-    (continuous_abs.comp (Complex.continuous_re.comp continuous_subtype_val)).measurable
+    (continuous_abs.comp (Complex.continuous_re.comp continuous_subtypeVal)).measurable
   have h2 : Measurable fun w : {z : ℂ // z.im ≠ 0} => |w.1.im| :=
-    (continuous_abs.comp (Complex.continuous_im.comp continuous_subtype_val)).measurable
+    (continuous_abs.comp (Complex.continuous_im.comp continuous_subtypeVal)).measurable
   exact (measurableSet_le h1 measurable_const).inter (measurableSet_le measurable_const h2)
 
 theorem pt_bound (C c : ℝ) (hc : 0 < c) (t : ℂ) (h1 : |t.re| ≤ C) (h2 : c ≤ |t.im|) :
@@ -521,10 +521,10 @@ theorem UpperTheory.Esk.cusp_region_volume_finite_proof : UpperTheory.Esk.B1a �
   intro F I Gf _ _ _ D hD b hb
   obtain ⟨hcnt, hsf, -, hPY, -, -, -, -⟩ := hE0a F I Gf D hD
   obtain ⟨-, hsm, -, -, -, -, -, -, -, hsurj, -⟩ := hE0d F I Gf D hD
-  haveI : Countable (PG F) := hcnt
-  haveI : SigmaFinite (volume : Measure D.Xs) := hsf
-  haveI : SigmaFinite (volume : Measure P) := hB1a.1
-  haveI : Countable D.Om := hD.cO
+  have : Countable (PG F) := hcnt
+  have : SigmaFinite (volume : Measure D.Xs) := hsf
+  have : SigmaFinite (volume : Measure P) := hB1a.1
+  have : Countable D.Om := hD.cO
   obtain ⟨c₀, hc₀, hmink⟩ := hD.mink
   obtain ⟨S, C, c, hc, hnorm⟩ := hD.normal c₀ hc₀
   have h01 : (![0, 1] : Fin 2 → F) ≠ 0 := fun h => by simpa using congrFun h 1
@@ -609,7 +609,7 @@ theorem UpperTheory.Esk.e6_of_linear_trace_identity : UpperTheory.Esk.E0a → Up
   have hE5' := hE5 F I Gf D hH.ax k hH.four hH.compat b hb
   have hbm : Measurable fun y => (b y).toNNReal := hb.meas.real_toNNReal
   obtain ⟨ν, hν⟩ : ∃ ν : Measure D.Y, ν = D.μY.withDensity fun y => ((b y).toNNReal : ℝ≥0∞) := ⟨_, rfl⟩
-  haveI : IsFiniteMeasure ν := by
+  have : IsFiniteMeasure ν := by
     rw [hν]
     exact MeasureTheory.isFiniteMeasure_withDensity (hE3 F I Gf D hH.ax b hb).ne
   have hint : ∀ g : D.Y → ℂ, ∫ y, g y ∂ν = ∫ y, b y • g y ∂D.μY := by
@@ -623,7 +623,7 @@ theorem UpperTheory.Esk.e6_of_linear_trace_identity : UpperTheory.Esk.E0a → Up
     unfold nrm
     refine Finset.measurable_prod _ fun v _ => ?_
     exact (continuous_abs.measurable.comp
-      (Complex.measurable_im.comp (measurable_subtype_coe.comp (measurable_pi_apply v)))).pow_const _
+      (Complex.measurable_im.comp (measurable_subtypeVal.comp (measurable_pi_apply v)))).pow_const _
   have hn_meas : Measurable fun y : D.Y => nrm k y.2 := hn0.comp measurable_snd
   have hn_pos : ∀ y : D.Y, 0 < nrm k y.2 := fun y =>
     Finset.prod_pos fun v _ => Real.rpow_pos_of_pos (abs_pos.mpr (y.2 v).2) _
@@ -634,7 +634,7 @@ theorem UpperTheory.Esk.e6_of_linear_trace_identity : UpperTheory.Esk.E0a → Up
   have hf_meas : ∀ f : D.M k, Measurable fun y : D.Y => f.1 (y.2, D.rep y.1) := by
     intro f
     have hF := (hM f.1).1 f.2
-    haveI : Countable D.Om := hH.ax.cO
+    have : Countable D.Om := hH.ax.cO
     refine measurable_from_prod_countable_right fun ω => ?_
     have hc : Measurable fun z : X I => f.1 (z, D.rep ω) := ((hF.hol (D.rep ω)).1).measurable
     exact hc
@@ -773,7 +773,7 @@ theorem image_pre (g : GL (Fin 2) ℝ) (s : Set P) :
     rw [F_eq]
 
 theorem cont (g : GL (Fin 2) ℝ) : Continuous (fun z : P => g • z) := by
-  have hv : Continuous (fun z : P => z.1) := continuous_subtype_val
+  have hv : Continuous (fun z : P => z.1) := continuous_subtypeVal
   have h : Continuous (fun z : P => (g • z).1) := by
     change Continuous (fun z : P => num g z.1 / den g z.1)
     refine Continuous.div ?_ ?_ (fun z => den_ne g z.2)
@@ -831,7 +831,7 @@ open scoped ENNReal
 namespace UpperTheory.Esk.InverseSeriesLemmas
 
 theorem enorm_smul_nonneg (r : ℝ) (hr : 0 ≤ r) (x : ℂ) : ‖r • x‖ₑ = ENNReal.ofReal r * ‖x‖ₑ := by
-  rw [enorm_smul, Real.enorm_eq_ofReal hr]
+  rw [eNorm_smul, Real.eNorm_eq_ofReal hr]
 
 theorem hasSum_inv {G Y : Type} [Group G] [MeasurableSpace Y] [MulAction G Y] (b : Y → ℝ)
     (hb : IsCut G b) (y : Y) : HasSum (fun g : G => b (g⁻¹ • y)) 1 := by
@@ -868,7 +868,7 @@ theorem UpperTheory.Esk.inverse_series_summable : UpperTheory.Esk.C3 := by
     lintegral_congr (fun z => by rw [hΨ, UpperTheory.Esk.InverseSeriesLemmas.enorm_smul_nonneg _ (hb.nonneg _)])
   have hΦl : ∀ g, ∫⁻ y, ‖Φ g y‖ₑ ∂μ = ∫⁻ z, ‖Ψ g z‖ₑ ∂μ := by
     intro g
-    rw [← (hμ' g).lintegral_comp (hΨm g).enorm]
+    rw [← (hμ' g).lintegral_comp (hΨm g).eNorm]
     exact lintegral_congr (fun y => by rw [hΦ, hΨ, inv_smul_smul])
   have hfin : ∫⁻ z, ‖f z‖ₑ ∂μ < ⊤ := hfi.2
   have hsumΨ : ∑' g, ∫⁻ z, ‖Ψ g z‖ₑ ∂μ = ∫⁻ z, ‖f z‖ₑ ∂μ := by
@@ -876,7 +876,7 @@ theorem UpperTheory.Esk.inverse_series_summable : UpperTheory.Esk.C3 := by
           tsum_congr hΨl
       _ = ∫⁻ z, ∑' g : G, ENNReal.ofReal (b (g⁻¹ • z)) * ‖f z‖ₑ ∂μ :=
           (lintegral_tsum (fun g =>
-            ((hb.meas.comp (hμ' g⁻¹).measurable).ennreal_ofReal.mul hf.enorm).aemeasurable)).symm
+            ((hb.meas.comp (hμ' g⁻¹).measurable).ennreal_ofReal.mul hf.eNorm).aemeasurable)).symm
       _ = ∫⁻ z, ‖f z‖ₑ ∂μ := lintegral_congr (fun z => by
           rw [ENNReal.tsum_mul_right, UpperTheory.Esk.InverseSeriesLemmas.tsum_ofReal_inv b hb z, one_mul])
   have hsumΦ' : ∑' g, ∫⁻ y, ‖Φ g y‖ₑ ∂μ = ∫⁻ z, ‖f z‖ₑ ∂μ := (tsum_congr hΦl).trans hsumΨ
@@ -909,9 +909,9 @@ theorem UpperTheory.Esk.inverse_series_summable : UpperTheory.Esk.C3 := by
   have hint : Integrable (fun y => ∑' g, Φ g y) μ := by
     refine ⟨AEStronglyMeasurable.tsum (fun g => (hΦm g).aestronglyMeasurable), ?_⟩
     have hle : ∫⁻ y, ‖∑' g, Φ g y‖ₑ ∂μ ≤ ∫⁻ y, ∑' g, ‖Φ g y‖ₑ ∂μ :=
-      lintegral_mono (fun y => enorm_tsum_le_tsum_enorm)
+      lintegral_mono (fun y => eNorm_tsum_le_tsum_eNorm)
     have hsum_eq : ∫⁻ y, ∑' g, ‖Φ g y‖ₑ ∂μ = ∑' g, ∫⁻ y, ‖Φ g y‖ₑ ∂μ :=
-      lintegral_tsum (fun g => (hΦm g).enorm.aemeasurable)
+      lintegral_tsum (fun g => (hΦm g).eNorm.aemeasurable)
     exact lt_of_le_of_lt (hle.trans hsum_eq.le) (lt_top_iff_ne_top.mpr hsumΦ)
   exact ⟨by rw [hfun]; exact hint, heq⟩
 end -- clump:auto
@@ -960,7 +960,7 @@ theorem bound (D : Dat F I Gf) (k : I → ℕ) (a : ι → Gf) (C₀ : ℝ)
     by_cases h0 : D.Te a γ.out (D.rep y.1) = 0
     · have hz : D.kk k a γ y = 0 := by
         simp only [Dat.kk, Dat.kt, h0, zero_mul]
-      rw [hz, enorm_zero]
+      rw [hz, eNorm_zero]
       exact zero_le
     · obtain ⟨i, hi⟩ := hsupp γ y.1 h0
       calc ‖D.kk k a γ y‖ₑ = ENNReal.ofReal ‖D.kk k a γ y‖ := (ofReal_norm _).symm
@@ -1017,7 +1017,7 @@ theorem UpperTheory.Esk.kernel_sum_bounded_proof : UpperTheory.Esk.KernelTermsIn
     have hfin : ∑' γ : UpperTheory.Esk.PG F, ‖D.kk k a γ y‖ₑ ≠ ⊤ :=
       ne_top_of_le_ne_top (ENNReal.mul_ne_top (ENNReal.natCast_ne_top _)
         (ENNReal.mul_ne_top ENNReal.ofReal_ne_top ENNReal.ofReal_ne_top)) (key T₀ y (hT₀ T₀ le_rfl))
-    exact (ENNReal.summable_toReal hfin).congr fun γ => toReal_enorm _
+    exact (ENNReal.summable_toReal hfin).congr fun γ => toReal_eNorm _
   · refine (key T y hy).trans (le_of_eq ?_)
     rw [ENNReal.coe_mul, ENNReal.coe_mul, ENNReal.coe_natCast]
     all_goals rfl
@@ -1198,10 +1198,10 @@ open UpperTheory.Esk.SummedOrbitIntegrals in
 theorem UpperTheory.Esk.pf_Fsum : UpperTheory.Esk.E0a → UpperTheory.Esk.Fsum := by
   intro h0 F I Gf _ _ _ D hax
   obtain ⟨hcG, hsig, -⟩ := h0 F I Gf D hax
-  haveI : Countable D.Cj := hcG
-  haveI : Countable D.Om := hax.cO
-  haveI : SigmaFinite (volume : Measure D.Xs) := hsig
-  haveI : SFinite D.μY := by unfold UpperTheory.Esk.Dat.μY; infer_instance
+  have : Countable D.Cj := hcG
+  have : Countable D.Om := hax.cO
+  have : SigmaFinite (volume : Measure D.Xs) := hsig
+  have : SFinite D.μY := by unfold UpperTheory.Esk.Dat.μY; infer_instance
   intro b hb
   refine ⟨⟨hb.meas.comp (measurable_fst.snd.prodMk measurable_snd), fun p => hb.nonneg _,
     fun p => hb.sum (p.1.2, p.2)⟩, ?_⟩
@@ -1212,12 +1212,12 @@ theorem UpperTheory.Esk.pf_Fsum : UpperTheory.Esk.E0a → UpperTheory.Esk.Fsum :
       ∫⁻ y, ENNReal.ofReal (b y) * ∑' γ, ‖u γ y‖ₑ ∂D.μY := by
     calc ∫⁻ q, ‖b q.2 • u (D.el q.1) q.2‖ₑ ∂(Measure.count.prod D.μY)
         = ∑' c : D.Cj, ∫⁻ y, ‖b y • u (D.el c) y‖ₑ ∂D.μY :=
-          lint_pair D.μY (fun q : D.Cj × D.Y => ‖b q.2 • u (D.el q.1) q.2‖ₑ) hgm.enorm
+          lint_pair D.μY (fun q : D.Cj × D.Y => ‖b q.2 • u (D.el q.1) q.2‖ₑ) hgm.eNorm
       _ = ∫⁻ y, ∑' c : D.Cj, ‖b y • u (D.el c) y‖ₑ ∂D.μY :=
-          (lintegral_tsum fun c => ((hb.meas.smul (hu (D.el c))).enorm).aemeasurable).symm
+          (lintegral_tsum fun c => ((hb.meas.smul (hu (D.el c))).eNorm).aemeasurable).symm
       _ = ∫⁻ y, ENNReal.ofReal (b y) * ∑' γ, ‖u γ y‖ₑ ∂D.μY := by
           refine lintegral_congr fun y => ?_
-          simp only [enorm_smul, Real.enorm_of_nonneg (hb.nonneg y)]
+          simp only [eNorm_smul, Real.eNorm_of_nonneg (hb.nonneg y)]
           exact ENNReal.tsum_mul_left
   have hgi : Integrable (fun q : D.Cj × D.Y => b q.2 • u (D.el q.1) q.2) (Measure.count.prod D.μY) := by
     refine ⟨hgm.aestronglyMeasurable, ?_⟩
@@ -1287,7 +1287,7 @@ theorem lint_prod {I : Type} [Fintype I] [SigmaFinite (volume : Measure P)]
   rw [← ofReal_integral_eq_lintegral_ofReal hP (ae_of_all _ hnn),
     integral_fintype_prod_volume_eq_prod,
     ENNReal.ofReal_prod_of_nonneg (fun v _ => integral_nonneg (hf0 v)), ENNReal.ofNNReal_finsetProd]
-  refine Finset.prod_le_prod' fun v _ => ?_
+  refine Finset.prod_le_prod fun v _ => ?_
   rw [ofReal_integral_eq_lintegral_ofReal (hint v) (ae_of_all _ (hf0 v))]
   exact hC v
 
@@ -1320,7 +1320,7 @@ theorem har2 (hB : B1c) (z w w' : P) (h : 1 / 2 ≤ kap w w') :
         Real.mul_rpow (by norm_num) (div_nonneg hz hw'.le)
 
 theorem meas_abs_im : Measurable fun x : P => |x.1.im| := by
-  exact (continuous_abs.comp (Complex.continuous_im.comp continuous_subtype_val)).measurable
+  exact (continuous_abs.comp (Complex.continuous_im.comp continuous_subtypeVal)).measurable
 
 end UpperTheory.Esk.KappaIntegralLemmas
 
@@ -1332,7 +1332,7 @@ theorem UpperTheory.Esk.pf_KapInt : UpperTheory.Esk.B1a → UpperTheory.Esk.B1b 
   have hσ : SigmaFinite (volume : Measure P) := by
     unfold B1a at hA
     exact hA.1
-  haveI := hσ
+  have := hσ
   have hB' := hB
   unfold B1c at hB'
   obtain ⟨h1, -, -, -, h5, -⟩ := hB'
@@ -1465,7 +1465,7 @@ theorem near_smul (hB : B1b) (δ : ℝ) (g : PG F) (z w : D.Xs) :
 
 theorem mem_conj (hB : B1b) (δ : ℝ) (g γ : PG F) (y : D.Y) :
     g * γ * g⁻¹ ∈ A D δ (g • y) ↔ γ ∈ A D δ y := by
-  simp only [A, Set.mem_setOf_eq, Prod.smul_fst, Prod.smul_snd, mul_smul, inv_smul_smul,
+  simp only [A, Set.mem_ofPred_eq, Prod.smul_fst, Prod.smul_snd, mul_smul, inv_smul_smul,
     smul_left_cancel_iff, near_smul D hB]
 
 theorem A_conj (hB : B1b) (δ : ℝ) (g : PG F) (y : D.Y) :

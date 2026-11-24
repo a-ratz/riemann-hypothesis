@@ -85,7 +85,7 @@ theorem constPts_add_smul : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] 
   have r₂ := r (Λ.A.actV e v)
   have x₁ := Ξ.x_pt v
   have x₂ := Ξ.x_pt (Λ.A.actV e v)
-  letI := H.starRing
+  let := H.starRing
   exact x₂.unique (x₁.smul hG W.P.lin e
     (isSmulPt_of_rel hG hw' hc W.e.surjective W.P.oD a.oa (fun s x => W.e.map_smul s x) ho e r₁ r₂ hs))
 

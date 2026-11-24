@@ -136,21 +136,21 @@ private theorem low_coord {K : Type} [Field K] [NumberField K] :
   obtain ⟨hlv, -, -, hc, hdet, -⟩ := blkLaws (K := K)
   let F : G1 K (2 + 2) → Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) 𝔸[K] := fun g =>
     (g : AdelicGLn.AdelicGL K (2 + 2)).val.submatrix finSumFinEquiv finSumFinEquiv
-  have hF : Continuous F := (Units.continuous_val.comp continuous_subtype_val).matrix_submatrix _ _
+  have hF : Continuous F := (Units.continuous_val.comp continuous_subtypeVal).matrix_submatrix _ _
   have hF' : Continuous fun g => F g⁻¹ := hF.comp continuous_inv
   let C : Set (G1 K (2 + 2)) := {g | (F g).toBlocks₂₁ = 0 ∧ (F g⁻¹).toBlocks₂₁ = 0}
   have hC : IsClosed C := (isClosed_eq (hF.matrix_submatrix Sum.inr Sum.inl) continuous_const).inter
     (isClosed_eq (hF'.matrix_submatrix Sum.inr Sum.inl) continuous_const)
   choose a d ha hd X hX using fun s : C => dec (s.1 : AdelicGLn.AdelicGL K (2 + 2)) s.2.1 s.2.2
   have hac : Continuous a := Units.continuous_iff.2
-    ⟨((hF.matrix_submatrix Sum.inl Sum.inl).comp continuous_subtype_val).congr fun s => (ha s).1.symm,
-      ((hF'.matrix_submatrix Sum.inl Sum.inl).comp continuous_subtype_val).congr fun s => (ha s).2.symm⟩
+    ⟨((hF.matrix_submatrix Sum.inl Sum.inl).comp continuous_subtypeVal).congr fun s => (ha s).1.symm,
+      ((hF'.matrix_submatrix Sum.inl Sum.inl).comp continuous_subtypeVal).congr fun s => (ha s).2.symm⟩
   have hdc : Continuous d := Units.continuous_iff.2
-    ⟨((hF.matrix_submatrix Sum.inr Sum.inr).comp continuous_subtype_val).congr fun s => (hd s).1.symm,
-      ((hF'.matrix_submatrix Sum.inr Sum.inr).comp continuous_subtype_val).congr fun s => (hd s).2.symm⟩
+    ⟨((hF.matrix_submatrix Sum.inr Sum.inr).comp continuous_subtypeVal).congr fun s => (hd s).1.symm,
+      ((hF'.matrix_submatrix Sum.inr Sum.inr).comp continuous_subtypeVal).congr fun s => (hd s).2.symm⟩
   let t : C → ℝ := fun s => Real.log (detModule K 2 (a s)).1
   have htc : Continuous t :=
-    (continuous_subtype_val.comp (continuous_detModule.comp hac)).log fun s => (detModule K 2 (a s)).2.ne'
+    (continuous_subtypeVal.comp (continuous_detModule.comp hac)).log fun s => (detModule K 2 (a s)).2.ne'
   have key : ∀ s : C, (s : G1 K (2 + 2)) = nn (X s) * lv (retractOne (a s)) (retractOne (d s)) (t s) := by
     intro s
     have h1 : detModule K 2 (a s) * detModule K 2 (d s) = 1 := by
@@ -177,9 +177,9 @@ private theorem low_coord {K : Type} [Field K] [NumberField K] :
     simpa only [Function.comp_def] using hc.comp hP
   have hN : Continuous fun s : C => unipMatrix (X s) := by
     have : Continuous fun s : C => (nn (X s) : G1 K (2 + 2)) :=
-      (continuous_subtype_val.mul hL.inv).congr fun s => mul_inv_eq_of_eq_mul (key s)
+      (continuous_subtypeVal.mul hL.inv).congr fun s => mul_inv_eq_of_eq_mul (key s)
     have h2 : Continuous fun g : G1 K (2 + 2) => (g : AdelicGLn.AdelicGL K (2 + 2)).val :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     exact h2.comp this
   have hXc : Continuous X := continuous_pi fun p => by
     refine ((hN.matrix_elem p.1.1 p.1.2).sub (continuous_const (y := (1 : Matrix (Fin (2 + 2)) (Fin (2 + 2)) 𝔸[K]) p.1.1 p.1.2))).congr fun s => ?_
@@ -237,7 +237,7 @@ private theorem par_homeo {K : Type} [Field K] [NumberField K] :
       left_inv := fun p => ?_
       right_inv := fun s => Subtype.ext (hkey ⟨s.1, hSC _ s.2⟩).symm
       continuous_toFun := (hN.mul hL).subtype_mk _
-      continuous_invFun := hψ.comp (continuous_subtype_val.subtype_mk _) }, hS ▸ hC, fun _ => Iff.rfl, fun _ _ _ _ => rfl⟩
+      continuous_invFun := hψ.comp (continuous_subtypeVal.subtype_mk _) }, hS ▸ hC, fun _ => Iff.rfl, fun _ _ _ _ => rfl⟩
   obtain ⟨h1, h2, h3, h4⟩ := hinj _ _ _ _ _ _ _ _ (hkey ⟨_, hSC _ ⟨p.2.2.2, p.1, p.2.1, p.2.2.1, rfl⟩⟩)
   exact Prod.ext h2.symm (Prod.ext h3.symm (Prod.ext h4.symm h1.symm))
 
@@ -585,11 +585,11 @@ private theorem psi_cont {K : Type} [Field K] [NumberField K] (Ψ : G1 K (2 + 2)
       Ψ (lv (p.1 : G1 K 2) (p.2.1 : G1 K 2) 0 * (p.2.2 : G1 K (2 + 2))) := by
   obtain ⟨-, -, -, hlc, -, -, -, -, -, -, hlvK, -⟩ := blkLaws (K := K)
   have h00 : Continuous fun p : KG K 2 × KG K 2 × KG K (2 + 2) => ((p.1 : G1 K 2), (p.2.1 : G1 K 2), (0 : ℝ)) :=
-    (continuous_subtype_val.comp continuous_fst).prodMk
-      (((continuous_subtype_val.comp (continuous_fst.comp continuous_snd))).prodMk continuous_const)
+    (continuous_subtypeVal.comp continuous_fst).prodMk
+      (((continuous_subtypeVal.comp (continuous_fst.comp continuous_snd))).prodMk continuous_const)
   have h0 : Continuous fun p : KG K 2 × KG K 2 × KG K (2 + 2) =>
       lv (p.1 : G1 K 2) (p.2.1 : G1 K 2) 0 * (p.2.2 : G1 K (2 + 2)) :=
-    (hlc.comp h00).mul (continuous_subtype_val.comp (continuous_snd.comp continuous_snd))
+    (hlc.comp h00).mul (continuous_subtypeVal.comp (continuous_snd.comp continuous_snd))
   exact hΨ.comp (h0.subtype_mk fun p => (KG K (2 + 2)).mul_mem (hlvK _ p.1.2 _ p.2.1.2) p.2.2.2)
 
 private noncomputable def abelian₂ {K : Type} [Field K] [NumberField K] (ρ : Measure (KG K 2)) (Ψ : G1 K (2 + 2) → ℂ)
@@ -651,18 +651,18 @@ private theorem lam_all {K : Type} [Field K] [NumberField K] (ρ : Measure (KG K
       ∀ d : G1 K 2 × G1 K 2 × KG K (2 + 2), Integrable (fun v₁ : KG K 2 => ∫ v₂ : KG K 2,
         Ψ (lv (v₁ : G1 K 2) (v₂ : G1 K 2) 0 * (d.2.2 : G1 K (2 + 2))) * φ₁ (d.1 * (v₁ : G1 K 2)⁻¹) *
           φ₂ (d.2.1 * (v₂ : G1 K 2)⁻¹) ∂ρ) ρ := by
-  haveI : CompactSpace (KG K 2) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 2).1
+  have : CompactSpace (KG K 2) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 2).1
   exact dbl ρ (fun (d : G1 K 2 × G1 K 2 × KG K (2 + 2)) (v₁ v₂ : KG K 2) =>
       Ψ (lv (v₁ : G1 K 2) (v₂ : G1 K 2) 0 * (d.2.2 : G1 K (2 + 2))) * φ₁ (d.1 * (v₁ : G1 K 2)⁻¹) *
         φ₂ (d.2.1 * (v₂ : G1 K 2)⁻¹))
-    (cont_A _ (psi_cont Ψ hΨ) (fun v : KG K 2 => (v : G1 K 2)) continuous_subtype_val φ₁ φ₂ hc₁ hc₂)
+    (cont_A _ (psi_cont Ψ hΨ) (fun v : KG K 2 => (v : G1 K 2)) continuous_subtypeVal φ₁ φ₂ hc₁ hc₂)
 
 private theorem lam_bd {K : Type} [Field K] [NumberField K] (ρ : Measure (KG K 2)) [IsProbabilityMeasure ρ]
     (Ψ : G1 K (2 + 2) → ℂ) (hΨ : Continuous fun k : KG K (2 + 2) => Ψ k) (φ₁ φ₂ : G1 K 2 → ℂ)
     (hb₁ : ∃ B : ℝ, ∀ m, ‖φ₁ m‖ ≤ B) (hb₂ : ∃ B : ℝ, ∀ m, ‖φ₂ m‖ ≤ B) :
     ∃ C : ℝ, ∀ m₁ m₂, ∀ k ∈ KG K (2 + 2), ‖abelian₂ ρ Ψ φ₁ φ₂ m₁ m₂ k‖ ≤ C := by
   have hlvK := (blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.1
-  haveI : CompactSpace (KG K (2 + 2)) :=
+  have : CompactSpace (KG K (2 + 2)) :=
     isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
   obtain ⟨B₁, hB₁⟩ := hb₁
   obtain ⟨B₂, hB₂⟩ := hb₂
@@ -761,7 +761,7 @@ private theorem sec_ray {K : Type} [Field K] [NumberField K] (Λ : G1 K 2 → G1
 theorem UpperTheory.exists_cuspidal_section_from_levi_average :
     ∀ {K : Type} [Field K] [NumberField K] (μ₂ : Measure (G1 K 2)) [μ₂.IsHaarMeasure] (τ₁ τ₂ : Submodule ℂ (L2 μ₂)), CuspIrr μ₂ τ₁ → CuspIrr μ₂ τ₂ → ∀ ρ : Measure (KG K 2), IsProbabilityMeasure ρ → (∀ u : KG K 2, MeasurePreserving (· * u) ρ ρ) → ∀ Ψ : G1 K (2 + 2) → ℂ, (Continuous fun k : KG K (2 + 2) => Ψ k) → (∀ X, nn X ∈ KG K (2 + 2) → ∀ k ∈ KG K (2 + 2), Ψ (nn X * k) = Ψ k) → ∀ φ₁ φ₂ : G1 K 2 → ℂ, Continuous φ₁ → Continuous φ₂ → (∃ B : ℝ, ∀ m, ‖φ₁ m‖ ≤ B) → (∃ B : ℝ, ∀ m, ‖φ₂ m‖ ≤ B) → (∃ v ∈ τ₁, Reps μ₂ v φ₁) → (∃ v ∈ τ₂, Reps μ₂ v φ₂) → FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : KG K 2 => fun m => φ₁ (m * k))) → FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : KG K 2 => fun m => φ₂ (m * k))) → ∃ f : G1 K (2 + 2) → ℂ, Continuous f ∧ (∃ C : ℝ, ∀ g, ‖f g‖ ≤ C) ∧ (∀ X g, f (nn X * g) = f g) ∧ (∀ t g, f (lv 1 1 t * g) = f g) ∧ Slices τ₁ τ₂ f ∧ ∀ X m₁ m₂ t, ∀ k ∈ KG K (2 + 2), f (nn X * lv m₁ m₂ t * k) = ∫ v₁ : KG K 2, ∫ v₂ : KG K 2, Ψ (lv (v₁ : G1 K 2) (v₂ : G1 K 2) 0 * k) * φ₁ (m₁ * (v₁ : G1 K 2)⁻¹) * φ₂ (m₂ * (v₂ : G1 K 2)⁻¹) ∂ρ ∂ρ := by
   intro K _ _ μ₂ _ τ₁ τ₂ h₁ h₂ ρ hp hρ Ψ hΨ hN φ₁ φ₂ hc₁ hc₂ hb₁ hb₂ hr₁ hr₂ hf₁ hf₂
-  haveI := hp
+  have := hp
   obtain ⟨f, hf, hfv⟩ := mkSec K (abelian₂ ρ Ψ φ₁ φ₂) (lam_all ρ Ψ hΨ φ₁ φ₂ hc₁ hc₂).1
     (fun m₁ m₂ u₁ hu₁ u₂ hu₂ k _ => lam_eq ρ hρ Ψ φ₁ φ₂ m₁ m₂ u₁ u₂ hu₁ hu₂ k)
     (fun m₁ m₂ X hX k hk => lam_un ρ Ψ hN φ₁ φ₂ m₁ m₂ X hX k hk)

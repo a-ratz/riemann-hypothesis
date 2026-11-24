@@ -65,7 +65,7 @@ theorem ramificationIdx_eq_one_iff_fix (k E N : Type) [Field k] [NumberField k] 
     (Q : Ideal (𝓞 N)) [Q.IsPrime] :
     (Q.under (𝓞 E)).ramificationIdx (𝓞 k) = 1 ↔
       ∀ τ : N ≃ₐ[k] N, (∀ x : 𝓞 N, τ • x - x ∈ Q) → ∀ y : E, τ (algebraMap E N y) = algebraMap E N y := by
-  haveI : IsGalois E N := IsGalois.tower_top_of_isGalois k E N
+  have : IsGalois E N := IsGalois.tower_top_of_isGalois k E N
   have h1 := card_inertia k N Q
   have h2 := card_inertia E N Q
   have h3 : Q.ramificationIdx (𝓞 k) = (Q.under (𝓞 E)).ramificationIdx (𝓞 k) * Q.ramificationIdx (𝓞 E) :=
@@ -106,8 +106,8 @@ theorem exists_valuation_eq (F F' K : Type) [Field F] [NumberField F] [Field F']
     (hw : ((q : ℕ) : 𝓞 F) ∈ w.asIdeal) :
     ∃ 𝔭 : HeightOneSpectrum (𝓞 K), ∀ a : F, 𝔭.valuation K (algebraMap F K a) = w.valuation F a := by
   obtain ⟨N, _, _, _, hN⟩ := exists_galois_above K
-  letI : Algebra F N := ((algebraMap K N).comp (algebraMap F K)).toAlgebra
-  letI : Algebra F' N := ((algebraMap K N).comp (algebraMap F' K)).toAlgebra
+  let : Algebra F N := ((algebraMap K N).comp (algebraMap F K)).toAlgebra
+  let : Algebra F' N := ((algebraMap K N).comp (algebraMap F' K)).toAlgebra
   have : IsScalarTower F K N := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have : IsGalois F N := IsGalois.tower_top_of_isGalois ℚ F N
   have := w.isMaximal
@@ -141,8 +141,8 @@ theorem exists_vLa_eq : ∀ (F F' K : IntermediateField ℚ ℂ) [NumberField F]
       ∀ a : F, vLa 𝔭 (IntermediateField.inclusion hF a) = vLa w a := by
   intro F F' K _ _ _ hF hK q hq hd w hw
   have hF' : F' ≤ K := hK ▸ le_sup_right
-  letI : Algebra F K := (IntermediateField.inclusion hF).toRingHom.toAlgebra
-  letI : Algebra F' K := (IntermediateField.inclusion hF').toRingHom.toAlgebra
+  let : Algebra F K := (IntermediateField.inclusion hF).toRingHom.toAlgebra
+  let : Algebra F' K := (IntermediateField.inclusion hF').toRingHom.toAlgebra
   obtain ⟨𝔭, h⟩ := exists_valuation_eq F F' K (fun N _ f g h1 h2 => by
     let T : Subfield ℂ := (RingHom.eqLocusField f g).map (K.val : K →+* ℂ)
     let S : IntermediateField ℚ ℂ := T.toIntermediateField fun x => by

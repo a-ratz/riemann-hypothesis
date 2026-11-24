@@ -61,7 +61,7 @@ variable {E : Type} [Field E] [NumberField E]
 theorem injective_of_charZero {F : Type} [Field F] [CharZero F] (f : 𝓞 E →+* F) :
     Function.Injective f := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   rw [Ideal.under_def, RingHom.comap_ker]
   rw [RingHom.ker_eq_bot_iff_eq_zero]
   intro n hn
@@ -301,7 +301,7 @@ theorem colength_dvd : ∀ (E F T : Type) [Field E] [NumberField E] [Field F] [C
       Finset.prod_congr rfl fun i _ => by
         by_cases h0 : δ i = 0
         · rw [hz i h0, pow_zero, pow_zero]
-        · simp only [δ', if_neg h0]
+        · simp only [δ', ite_eq_right h0]
     rw [hp]
     exact h
 

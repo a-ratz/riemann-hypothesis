@@ -69,7 +69,7 @@ theorem initSpan_eq_of_lowerTri {R : Type} [CommRing R] {m : ℕ} {M : Type} [Ad
     (e : ∀ i, u i = ∑ j, A i j • w j) (k : ℕ) : initSpan R u k = initSpan R w k := by
   have hB : A.BlockTriangular OrderDual.toDual := fun i j h => hA i j (OrderDual.toDual_lt_toDual.1 h)
   have hdet : IsUnit A.det := by
-    rw [Matrix.det_of_lowerTriangular A hB]
+    rw [Matrix.det_of_isLowerTriangular A hB]
     exact IsUnit.prod_univ_iff.2 hd
   have : Invertible A := Matrix.invertibleOfIsUnitDet A hdet
   have hB' := Matrix.blockTriangular_inv_of_blockTriangular hB
@@ -80,7 +80,7 @@ theorem initSpan_eq_of_lowerTri {R : Type} [CommRing R] {m : ℕ} {M : Type} [Ad
   simp only [← Finset.sum_smul]
   have e2 : ∀ l, (∑ j, A⁻¹ i j * A j l) = (1 : Matrix _ _ R) i l := fun l => by
     rw [← Matrix.nonsing_inv_mul A hdet, Matrix.mul_apply]
-  simp only [e2, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [e2, Matrix.one_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
   {Xo : Moduli Dw l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β}
@@ -153,7 +153,7 @@ theorem eq_of_cellCoord_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hrg : Set.range (z₁ ≫ inc₀ TF.X Z) ⊆ Set.range TF.X.inc := by
     rintro _ ⟨s, rfl⟩; exact (opensRange_inc TF.X).ge (o₁ (Set.mem_univ s))
   obtain ⟨w, hw⟩ : ∃ w, w ≫ TF.X.inc = z₁ ≫ inc₀ TF.X Z := ⟨_, IsOpenImmersion.lift_fac TF.X.inc _ hrg⟩
-  letI : Algebra c.F S := ((ev (w ≫ pullback.snd TF.X.π TF.Y.j ≫ pullback.snd _ _) ⊤ le_top).comp (toΓ c.F)).toAlgebra
+  let : Algebra c.F S := ((ev (w ≫ pullback.snd TF.X.π TF.Y.j ≫ pullback.snd _ _) ⊤ le_top).comp (toΓ c.F)).toAlgebra
   have hy : (w ≫ pullback.snd TF.X.π TF.Y.j) ≫ pullback.snd _ _ = spMap (algebraMap c.F S) :=
     (Category.assoc _ _ _).trans (spMap_ev_top _).symm
   have hx₁ : (z₁ ≫ inc₀ TF.X Z) ≫ TF.X.π = z₁ ≫ toBase TF Z := Category.assoc _ _ _

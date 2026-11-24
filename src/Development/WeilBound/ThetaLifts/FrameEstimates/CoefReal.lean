@@ -232,7 +232,7 @@ theorem main (N : ℕ) : ∃ p : Seminorm ℂ (SchwartzMap V ℂ), Continuous p 
   rw [e]
   refine h1.trans (le_of_eq ?_)
   have hc : (c : ℝ) * c = K := Real.mul_self_sqrt hK
-  simp only [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+  simp only [smul_apply, NNReal.smul_def, smul_eq_mul]
   rw [← hc]; ring
 
 end PositivityTheory.ThKEst.RealFourierCoefficientBounds

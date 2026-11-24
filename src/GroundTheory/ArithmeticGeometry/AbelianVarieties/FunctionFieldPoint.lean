@@ -142,7 +142,7 @@ theorem evalAt_injective (h : (W.baseChange L).toAffine.Equation u v) (hu : Tran
     Function.Injective (evalAt W h) := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   have hker : RingHom.ker (evalAt W h) = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := F[X])
+    apply Ideal.eq_bot_of_under_eq_bot (R := F[X])
     ext p
     simp only [Ideal.mem_comap, RingHom.mem_ker, Ideal.mem_bot]
     rw [evalAt_algebraMap]

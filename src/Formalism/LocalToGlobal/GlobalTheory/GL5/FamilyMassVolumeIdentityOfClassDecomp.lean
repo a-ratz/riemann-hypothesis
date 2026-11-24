@@ -132,7 +132,7 @@ theorem measure_fd_eq_sum {Γ K : Subgroup G} [Countable Γ] (μ : Measure G) [�
           smul_eq_mul, SetLike.mem_coe, Pi.one_apply]
         by_cases h : (g i)⁻¹ * ((γ : G) * ((δ : G) * g j * k)) ∈ K <;> simp [h]
       rw [e, ← tsum_subtype]
-      haveI := hfin'.fintype
+      have := hfin'.fintype
       rw [tsum_fintype]
       simp only [Pi.one_apply, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one,
         Fintype.card_eq_nat_card]
@@ -178,7 +178,7 @@ theorem measure_fd_toReal {Γ K : Subgroup G} [Countable Γ] (μ : Measure G) [�
     apply ENNReal.inv_ne_top.mpr
     have h1 : (1 : Γ) ∈ stab Γ K (g i) := by simp [stab]
     have hpos : 0 < Nat.card (stab Γ K (g i)) := by
-      haveI := (hfin i).to_subtype
+      have := (hfin i).to_subtype
       exact Nat.card_pos_iff.mpr ⟨⟨⟨1, h1⟩⟩, inferInstance⟩
     exact_mod_cast hpos.ne'
 
@@ -193,15 +193,15 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem isModTop : IsModuleTopology (AF F) (AF F ⊗[F] E) := by first | exact ⟨rfl⟩ | infer_instance
 
 theorem isTopRing : IsTopologicalRing (AF F ⊗[F] E) := by
-  haveI := isModTop (F := F) (E := E)
+  have := isModTop (F := F) (E := E)
   first
     | exact IsModuleTopology.isTopologicalRing (AF F) _
     | exact IsModuleTopology.topologicalRing (AF F) _
 
 theorem topGroupHA : IsTopologicalGroup (HA (AF F) σ J) := by
-  haveI := isTopRing (F := F) (E := E)
-  haveI h1 : IsTopologicalGroup (Matrix (Fin M) (Fin M) (AF F ⊗[F] E))ˣ := inferInstance
-  haveI h2 : IsTopologicalGroup (GL (Fin M) (AF F ⊗[F] E)) := h1
+  have := isTopRing (F := F) (E := E)
+  have h1 : IsTopologicalGroup (Matrix (Fin M) (Fin M) (AF F ⊗[F] E))ˣ := inferInstance
+  have h2 : IsTopologicalGroup (GL (Fin M) (AF F ⊗[F] E)) := h1
   first
     | exact Subgroup.isTopologicalGroup _
     | exact @Subgroup.isTopologicalGroup _ _ _ h2 _
@@ -211,8 +211,8 @@ theorem topGroupHA : IsTopologicalGroup (HA (AF F) σ J) := by
 theorem borelHA : BorelSpace (HA (AF F) σ J) := by first | exact ⟨rfl⟩ | infer_instance | (unfold HA; infer_instance)
 
 theorem measurableMulHA : MeasurableMul (HA (AF F) σ J) := by
-  haveI := topGroupHA σ J
-  haveI := borelHA σ J
+  have := topGroupHA σ J
+  have := borelHA σ J
   first | infer_instance | (unfold HA; infer_instance)
 
 theorem countableE : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
@@ -228,17 +228,17 @@ private theorem countable_subgroupOf_of_countable' {G' : Type*} [Group G'] (H K 
 
 private theorem countable_subgroup_map_of_countable {A B : Type*} [Group A] [Group B] (f : A →* B) (H : Subgroup A)
     (hH : Countable H) : Countable (H.map f) := by
-  haveI := hH
+  have := hH
   exact (f.subgroupMap_surjective H).countable
 
 private theorem countable_GL_fin_of_countable {R : Type*} [CommRing R] [Countable R] (n : ℕ) : Countable (GL (Fin n) R) := by
-  haveI : Countable (Fin n → Fin n → R) := inferInstance
+  have : Countable (Fin n → Fin n → R) := inferInstance
   exact Function.Injective.countable (α := GL (Fin n) R) (β := Fin n → Fin n → R)
     (f := fun u => (u : Matrix (Fin n) (Fin n) R)) (fun a b h => Units.ext h)
 
 theorem countableGamma : Countable (HFinIn (AF F) σ J) := by
-  haveI := countableE (E := E)
-  haveI := countable_GL_fin_of_countable (R := E) M
+  have := countableE (E := E)
+  have := countable_GL_fin_of_countable (R := E) M
   unfold HFinIn HFin
   exact countable_subgroupOf_of_countable' _ _ (countable_subgroup_map_of_countable _ _ inferInstance)
 
@@ -352,7 +352,7 @@ theorem measure_KSub (D : D7) (W : HSpace D.host.E) (P : ℕ)
     μ (KSub D W P 0 θ A) = 1 := by
   have h := hμ.2.2 θ hθ |>.2 A hA (fun _ => Set.univ) (fun _ => MeasurableSet.univ)
   have hp : D.cd.cd P 0 Set.univ = 1 := by
-    haveI := D.cd.prob P; exact measure_univ
+    have := D.cd.prob P; exact measure_univ
   change μ (KSet D W P 0 θ A) = 1
   unfold KSet
   rw [h]
@@ -389,9 +389,9 @@ theorem mass_volume_identity_of_class_decomp (D : D7) (hT : VolTie D) (hG : Genu
   obtain ⟨⟨A, hA⟩, -⟩ := hθall θ hθ
   obtain ⟨hKm, n, g, hcov, hdisj, hfin, hsum⟩ := hC W hW hdef θ hθ A hA
   have hK1 := measure_KSub D W W.rank μ hμ θ hθ A hA
-  haveI := hHaar
-  haveI := Unfold.measurableMulHA D.sp.cm.sig W.gram
-  haveI hcnt : Countable ↥(GamA D W) := Unfold.countableGamma D.sp.cm.sig W.gram
+  have := hHaar
+  have := Unfold.measurableMulHA D.sp.cm.sig W.gram
+  have hcnt : Countable ↥(GamA D W) := Unfold.countableGamma D.sp.cm.sig W.gram
   have key := Unfold.measure_fd_toReal μ hKm hK1 g hcov hdisj hfin h𝓕
   have hpos : 0 < ∑ i, ((Nat.card (Unfold.stab (GamA D W) (KSub D W W.rank 0 θ A) (g i)) : ℝ))⁻¹ := by
     obtain ⟨i0, -, -, -⟩ := hcov 1
@@ -399,7 +399,7 @@ theorem mass_volume_identity_of_class_decomp (D : D7) (hT : VolTie D) (hG : Genu
     · intro i _
       have h1 : (1 : GamA D W) ∈ Unfold.stab (GamA D W) (KSub D W W.rank 0 θ A) (g i) := by
         simp [Unfold.stab]
-      haveI := (hfin i).to_subtype
+      have := (hfin i).to_subtype
       have hc : 0 < Nat.card (Unfold.stab (GamA D W) (KSub D W W.rank 0 θ A) (g i)) :=
         Nat.card_pos_iff.mpr ⟨⟨⟨1, h1⟩⟩, inferInstance⟩
       exact inv_pos.mpr (by exact_mod_cast hc)

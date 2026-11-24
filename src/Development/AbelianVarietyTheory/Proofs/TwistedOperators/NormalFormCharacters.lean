@@ -251,11 +251,11 @@ theorem algType_of_hasInf {L : Type} [Field L] [NumberField L] {I : Type} [Finty
   refine Finset.prod_congr rfl fun i _ => ?_
   rw [Finset.prod_mul_distrib, Finset.prod_inv_distrib]
   have p1 : ∏ ψ : L →+* ℂ, ψ (k : L) ^ (if φ i = ψ then a i else 0) = φ i (k : L) ^ a i := by
-    rw [Finset.prod_eq_single (φ i) (fun b _ hb => by rw [if_neg (Ne.symm hb), zpow_zero]) (by simp), if_pos rfl]
+    rw [Finset.prod_eq_single (φ i) (fun b _ hb => by rw [ite_eq_right (Ne.symm hb), zpow_zero]) (by simp), ite_eq_left rfl]
   have p2 : ∏ ψ : L →+* ℂ, ψ (k : L) ^ (if (starRingEnd ℂ).comp (φ i) = ψ then a i else 0) =
       (starRingEnd ℂ (φ i (k : L))) ^ a i := by
-    rw [Finset.prod_eq_single ((starRingEnd ℂ).comp (φ i)) (fun b _ hb => by rw [if_neg (Ne.symm hb), zpow_zero]) (by simp),
-      if_pos rfl, RingHom.comp_apply]
+    rw [Finset.prod_eq_single ((starRingEnd ℂ).comp (φ i)) (fun b _ hb => by rw [ite_eq_right (Ne.symm hb), zpow_zero]) (by simp),
+      ite_eq_left rfl, RingHom.comp_apply]
   rw [p1, p2, zpow_mul, sq_div_norm (hne _), div_zpow, div_eq_mul_inv]
 
 end GlobalTheory.RowExNF
@@ -273,7 +273,7 @@ theorem locIn_fin {L : Type} [Field L] [NumberField L] (χ : HChar L) (n : ℕ) 
       simpa [S, Polynomial.mem_nthRoots hn] using hz
     refine ⟨Polynomial.X ^ n - 1, Polynomial.monic_X_pow_sub_C 1 hn.ne', ?_⟩
     simp [hz']
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (S : Set ℂ)) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (S : Set ℂ)) :=
     IntermediateField.finiteDimensional_adjoin hint
   refine ⟨IntermediateField.adjoin ℚ (S : Set ℂ), inferInstance, fun w x => IntermediateField.subset_adjoin _ _ ?_⟩
   have e : ((χ ^ n).loc w x) = (χ.loc w x) ^ n := by
@@ -298,7 +298,7 @@ theorem unr_vals' (L : Type) [Field L] [NumberField L] (χ : HChar L) (m : (L �
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_add' := fun _ _ => rfl }
-  haveI := hC
+  have := hC
   refine ⟨M, LinearEquiv.finiteDimensional { e.toAddMonoidHom.toRatLinearMap with invFun := e.symm, left_inv := e.left_inv, right_inv := e.right_inv }, fun v hu => ?_⟩
   obtain ⟨y, hy⟩ := hv v hu
   have : ((χ.val v : ℂˣ) : ℂ) = y := by
@@ -329,8 +329,8 @@ theorem locIn_alg (L : Type) [Field L] [NumberField L] (χ : HChar L) (m : (L �
       exact (_root_.GlobalTheory.heckeChar_val_isAlgebraic L χ m hm w).isIntegral
     · have hz' : z ^ N = 1 := by simpa [Polynomial.mem_nthRoots hN] using hz
       exact ⟨Polynomial.X ^ N - 1, Polynomial.monic_X_pow_sub_C 1 hN.ne', by simp [hz']⟩
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (Z : Set ℂ)) := IntermediateField.finiteDimensional_adjoin hint
-  haveI := hM0
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (Z : Set ℂ)) := IntermediateField.finiteDimensional_adjoin hint
+  have := hM0
   refine ⟨M0 ⊔ IntermediateField.adjoin ℚ (Z : Set ℂ), inferInstance, fun w x => ?_⟩
   have hZ : ∀ z ∈ Z, z ∈ M0 ⊔ IntermediateField.adjoin ℚ (Z : Set ℂ) := fun z hz =>
     le_sup_right (a := M0) (IntermediateField.subset_adjoin ℚ _ hz)
@@ -424,8 +424,8 @@ theorem charsIn_nf {D : D7} {T : Type} [Finite T] {L : LevCh D T} {μ0 : T} (hL 
   obtain ⟨Mp, hMp, hp⟩ := hpsi
   obtain ⟨Md, hMd, hd⟩ := hdel
   obtain ⟨Md', hMd', hd'⟩ := hdel'
-  haveI := hMe; haveI := hMp; haveI := hMd; haveI := hMd'
-  haveI := fun j => hMmu j; haveI := fun t => hMxi t; haveI := fun i => hMchi i
+  have := hMe; have := hMp; have := hMd; have := hMd'
+  have := fun j => hMmu j; have := fun t => hMxi t; have := fun i => hMchi i
   refine ⟨(⨆ j, Mmu j) ⊔ (⨆ t, Mxi t) ⊔ (⨆ i, Mchi i) ⊔ Me ⊔ Mp ⊔ Md ⊔ Md', inferInstance, ?_⟩
   refine ⟨fun j => locIn_of_mem (hmu j) ?_, fun t => locIn_of_mem (hxi t) ?_, fun i h1 h2 => ?_,
     valuesIn_mono he ?_, (locIn_of_mem hp ?_).valuesIn, (locIn_of_mem hd ?_).valuesIn, (locIn_of_mem hd' ?_).valuesIn⟩
@@ -447,7 +447,7 @@ end GlobalTheory.RowExNF
 open GlobalTheory.RowExNF in
 theorem GlobalTheory.RowEx.nfChars : NFChars :=
   ⟨0, fun _ _ _ => ⟨0, fun _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hS ch _ _ => by
-    haveI := hS.fin
+    have := hS.fin
     exact charsIn_nf hS.core.lev ch.G⟩⟩
 
 end

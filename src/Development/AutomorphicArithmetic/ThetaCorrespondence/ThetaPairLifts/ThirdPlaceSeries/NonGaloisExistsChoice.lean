@@ -708,16 +708,16 @@ namespace GlobalTheory.PlaceRead
 theorem exists_extend_fractionRing {A B : Type} [CommRing A] [IsDomain A] [CommRing B] [IsDomain B] [Algebra A B] [Module.Finite A B]
     (hinj : Function.Injective (algebraMap A B)) (e : FractionRing A →+* ℂ) :
     ∃ ε : FractionRing B →+* ℂ, ε.comp (algebraMap A (FractionRing B)) = e.comp (algebraMap A (FractionRing A)) := by
-  letI : Algebra A ℂ := (e.comp (algebraMap A (FractionRing A))).toAlgebra
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinj
-  haveI : FaithfulSMul A ℂ := (faithfulSMul_iff_algebraMap_injective A ℂ).2
+  let : Algebra A ℂ := (e.comp (algebraMap A (FractionRing A))).toAlgebra
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinj
+  have : FaithfulSMul A ℂ := (faithfulSMul_iff_algebraMap_injective A ℂ).2
     (e.injective.comp (IsFractionRing.injective A (FractionRing A)))
-  haveI : FaithfulSMul A (FractionRing B) := (faithfulSMul_iff_algebraMap_injective A _).2 (by
+  have : FaithfulSMul A (FractionRing B) := (faithfulSMul_iff_algebraMap_injective A _).2 (by
     rw [IsScalarTower.algebraMap_eq A B (FractionRing B)]
     exact (IsFractionRing.injective B (FractionRing B)).comp hinj)
-  haveI : Algebra.IsAlgebraic A B := inferInstance
-  haveI : Algebra.IsAlgebraic B (FractionRing B) := IsLocalization.isAlgebraic _ (nonZeroDivisors B)
-  haveI : Algebra.IsAlgebraic A (FractionRing B) := Algebra.IsAlgebraic.trans A B _
+  have : Algebra.IsAlgebraic A B := inferInstance
+  have : Algebra.IsAlgebraic B (FractionRing B) := IsLocalization.isAlgebraic _ (nonZeroDivisors B)
+  have : Algebra.IsAlgebraic A (FractionRing B) := Algebra.IsAlgebraic.trans A B _
   let φ : FractionRing B →ₐ[A] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -728,7 +728,7 @@ theorem exists_extend_fractionRing {A B : Type} [CommRing A] [IsDomain A] [CommR
 theorem exists_extends_and_emb : ∀ (D : D7) (c : NChoice D) (w : D.what₂.places.Pl) (ρ : Setup D.ntw), ρ.Good → (∃ ε : KE c w →+* ℂ, Extends ρ ε) ∧
   (NChTie D c → ∀ ε : KE c w →+* ℂ, Extends ρ ε → ∀ x : D.LL0, ε (c.embW w (x : D.what₂.LL)) = embLL0 D x) := by
   intro D c w ρ hρ
-  haveI := c.Oe_fin w
+  have := c.Oe_fin w
   refine ⟨exists_extend_fractionRing (c.Oe_inj w) (ρ.ek (c.twI w) (c.sd w) (c.k' w)), fun hT ε hε x => ?_⟩
   obtain ⟨y, z, hz, hyz⟩ := IsFractionRing.div_surjective (A := D.ntw.O0 (c.twI w))
     ((if c.sd w = true then D.ntw.emb0 (c.twI w) else D.ntw.emb0b (c.twI w)) x)
@@ -806,7 +806,7 @@ theorem unit_of_unitOff : ∀ (O : Type) [CommRing O] [IsDomain O] [IsIntegrally
   have hε : Function.Injective ε := ε.injective
   have key : ∀ s : FractionRing O, IsIntegral ℤ (ε s) → ∃ a : O, algebraMap O (FractionRing O) a = s := by
     intro s hs
-    letI : Algebra ℤ (FractionRing O) := Ring.toIntAlgebra _
+    let : Algebra ℤ (FractionRing O) := Ring.toIntAlgebra _
     have hs' : IsIntegral ℤ s := (isIntegral_algHom_iff (ε.toIntAlgHom) hε).mp hs
     have hO : IsIntegral O s := by
       have := IsIntegral.map_of_comp_eq (Int.castRingHom O) (RingHom.id (FractionRing O)) (RingHom.ext_int _ _) hs'

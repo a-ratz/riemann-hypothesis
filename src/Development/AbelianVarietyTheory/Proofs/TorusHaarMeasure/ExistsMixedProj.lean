@@ -68,7 +68,7 @@ private theorem det_mat_cpt_ne_zero_iff_det_nmat (h : _root_.ReciprocityTheory.C
     (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt X x0 z) τ).det ≠ 0 ↔ (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.nmat X z) τ).det ≠ 0 := by
   have hx := _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.IW.orth_mem_dom X x0 h
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.dom _root_.ReciprocityTheory.ChartRestriction.G.FD.GG at hx
-  have hdet := (Set.mem_setOf_eq ▸ hx) τ |>.1
+  have hdet := (Set.mem_ofPred_eq ▸ hx) τ |>.1
   rw [show _root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt X x0 z) τ = _root_.ReciprocityTheory.ChartRestriction.G.FD.mat x0 τ * _root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.AR.Inst.nmat X z) τ from rfl,
     Matrix.det_mul]
   exact ⟨fun hne ↦ right_ne_zero_of_mul hne, fun hne ↦ mul_ne_zero hdet hne⟩
@@ -97,7 +97,7 @@ theorem _root_.GlobalTheory.Up.PoleValue.OmF_eq (h0 : _root_.ReciprocityTheory.C
     _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.OmF X x1 = _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.OmF X x0 := by
   ext z
   unfold _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.OmF _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.dom _root_.ReciprocityTheory.ChartRestriction.G.FD.GG
-  simp only [Set.mem_setOf_eq, det_mat_cpt_ne_zero_iff_det_nmat h0, det_mat_cpt_ne_zero_iff_det_nmat h1,
+  simp only [Set.mem_ofPred_eq, det_mat_cpt_ne_zero_iff_det_nmat h0, det_mat_cpt_ne_zero_iff_det_nmat h1,
     dmin_cpt_eq_of_isOrth h0 h1]
 
 open NumberField MeasureTheory Topology in
@@ -212,7 +212,7 @@ theorem _root_.GlobalTheory.Up.polePoint_holds : _root_.GlobalTheory.Up.PolePoin
       (_root_.ReciprocityTheory.ChartRestriction.G.AR.Up.muF X x0).restrict (Metric.ball 0 ρ) := by
     rw [Measure.le_iff]
     intro s hs
-    rw [Measure.smul_apply, smul_eq_mul, Measure.restrict_apply hs, Measure.restrict_apply hs]
+    rw [smul_apply, smul_eq_mul, Measure.restrict_apply hs, Measure.restrict_apply hs]
     unfold _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.muF
     rw [withDensity_apply _ (hs.inter measurableSet_ball),
       Measure.restrict_restrict (hs.inter measurableSet_ball)]

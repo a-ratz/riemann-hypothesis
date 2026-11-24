@@ -149,7 +149,7 @@ theorem dGen_ne_zero (a : ℕ) : DGen a ≠ 0 := by
     split_ifs with h
     · exact one_ne_zero
     · push_neg at h
-      rw [X_pow_eq_monomial, X, X, monomial_mul, one_mul]
+      rw [X_pow_eq_monomial, X, X, monomial_mul_monomial, one_mul]
       refine hm _ _ fun e => ?_
       have := DFunLike.congr_fun e j
       simp [Finsupp.single_apply, Ne.symm h.1, Ne.symm h.2] at this

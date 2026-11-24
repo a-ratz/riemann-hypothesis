@@ -165,7 +165,7 @@ theorem exists_isMonHom_of_map_lattice :
   obtain ⟨rig, hrig⟩ := Q.rigid
   obtain ⟨v, -, -, -, -, -, hv1, hv2, -⟩ := thetaUnifAV_all Q rig hrig
   have hu := TorusTransfer.tangent_bijective u hgA
-  haveI := hi; haveI := hr; haveI := hi'; haveI := hr'
+  have := hi; have := hr; have := hi'; have := hr'
   obtain ⟨J, hJ, hJΛ, -, -⟩ := HomLinear.exists_linear_of_isMonHom A Q.A hA Q.isAb L Q.L g Q.g u v
     hv1 hv2 (i ≫ i') inferInstance
   obtain ⟨R, hR, hRΛ, -, -⟩ := HomLinear.exists_linear_of_isMonHom Q.A A Q.isAb hA Q.L L Q.g g v u
@@ -225,7 +225,7 @@ theorem exists_isMonHom_of_map_lattice :
 
   obtain ⟨β, hβ, hβe⟩ := _root_.GlobalTheory.exists_isMonHom_of_map_lattice thetaUnifAV_all hL Q Q Q.g v v (J ∘ₗ M ∘ₗ R)
     rfl rfl (fun l hl => hJΛ _ (hM _ (hRΛ _ hl)))
-  haveI := hβ
+  have := hβ
   have hφ : ∀ z, u.ex z ≫ (i ≫ i') ≫ β ≫ (r' ≫ r) = u.ex ((m * m) • M z) := by
     intro z
     have e := hβe (J z)

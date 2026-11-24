@@ -712,8 +712,8 @@ lemma ringInt_residues {K : Type} [Field K] [NumberField K] (N : ℕ) (hN : 0 < 
   have hI : I ≠ ⊥ := by
     rw [hIdef, Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hN.ne'
-  haveI : Finite (𝓞 K ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
-  haveI := Fintype.ofFinite (𝓞 K ⧸ I)
+  have : Finite (𝓞 K ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  have := Fintype.ofFinite (𝓞 K ⧸ I)
   refine ⟨Finset.univ.image (fun q : 𝓞 K ⧸ I => q.out), fun x => ?_⟩
   refine ⟨(Ideal.Quotient.mk I x).out, Finset.mem_image_of_mem _ (Finset.mem_univ _), ?_⟩
   have h : x - (Ideal.Quotient.mk I x).out ∈ I :=
@@ -854,7 +854,7 @@ lemma exists_finset_half_decomp {S T : HSp D} {ΛS : Submodule (𝓞 D.host.E) (
   refine ⟨(RL.filter G).image pick, fun u hu hhalf => ?_⟩
   obtain ⟨ρ, hρ, Z, hZ, hEq⟩ := hRL (c' • u) (hup u hu)
   have hG : G ρ := ⟨u, hu, hhalf, Z, hZ, hEq⟩
-  have hpick : pick ρ = hG.choose := dif_pos hG
+  have hpick : pick ρ = hG.choose := dite_eq_left hG
   obtain ⟨hu₀, hh₀, Z₀, hZ₀, hEq₀⟩ := hG.choose_spec
   have hZZ : ∀ i j, IntF ((Z - Z₀) i j) := fun i j => by
     rw [Matrix.sub_apply, sub_eq_add_neg]; exact intF_add (hZ i j) (intF_neg (hZ₀ i j))

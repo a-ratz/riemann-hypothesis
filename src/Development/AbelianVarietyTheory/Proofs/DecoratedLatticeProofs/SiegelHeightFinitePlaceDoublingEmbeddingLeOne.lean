@@ -101,7 +101,7 @@ theorem exists_single_mem_latLoc : ∀ {F E : Type} [inst : Field F] [inst_1 : N
   intro F E _ _ _ _ _ n L _ v
   choose N hN hmem using fun i : Fin n => exists_int_smul_mem L (Pi.single i (1 : E))
   have hP : (∏ i, N i) ≠ 0 := Finset.prod_ne_zero_iff.2 fun i _ => hN i
-  haveI : CharZero (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v) :=
+  have : CharZero (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v) :=
     charZero_of_injective_algebraMap (algebraMap F (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v)).injective
   refine ⟨((∏ i, N i : ℤ) : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v), Int.cast_ne_zero.2 hP, fun i => ?_⟩
   obtain ⟨k, hk⟩ : N i ∣ ∏ j, N j := Finset.dvd_prod_of_mem N (Finset.mem_univ i)
@@ -204,7 +204,7 @@ theorem absFin_det_le (v : HeightOneSpectrum (𝓞 F)) {n : ℕ} (M : Matrix (Fi
   have hp : absFin F v (∏ i, M (s i) i) ≤ normFin F v M ^ n :=
     calc absFin F v (∏ i, M (s i) i) ≤ ∏ i, absFin F v (M (s i) i) :=
           Finset.le_prod_of_submultiplicative _ (absFin_one F v).le (absFin_mul_le F v) _ _
-      _ ≤ ∏ _i : Fin n, normFin F v M := Finset.prod_le_prod' fun i _ => absFin_le_normFin F v M _ _
+      _ ≤ ∏ _i : Fin n, normFin F v M := Finset.prod_le_prod fun i _ => absFin_le_normFin F v M _ _
       _ = normFin F v M ^ n := by simp
   rcases Int.units_eq_one_or (Equiv.Perm.sign s) with h | h
   · rw [h, one_smul]; exact hp
@@ -226,7 +226,7 @@ theorem normDet_le_one {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) {n : ℕ} (L 
     rw [Matrix.mulVec_single] at h1
     change absFin F v ((M ^ k) i j * c ⊗ₜ[F] (1 : E)) ≤ C at h1
     rw [mul_comm, absFin_tmul_one_mul] at h1
-    rw [le_div_iff₀ (nnnorm_pos.2 hc), mul_comm]
+    rw [le_div_iff₀ (nnNorm_pos.2 hc), mul_comm]
     exact h1
   have hdet : ∀ k : ℕ, absFin F v (M.det ^ k) ≤ (C / ‖c‖₊) ^ n := fun k => by
     rw [← Matrix.det_pow]
@@ -277,7 +277,7 @@ namespace GlobalTheory.Core.Rk.IP
 
 theorem hgtFin_ioAt_le_one : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (v : FinPl D) (y : Gv A v), hgtFin D.sp.cm.sig (dblSp A).gram L v (ioAt A v y) ≤ 1 := by
   intro D A L hL v y
-  haveI := GlobalTheory.ProjXCols.selfDual_isFullLattice A L hL
+  have := GlobalTheory.ProjXCols.selfDual_isFullLattice A L hL
   exact GlobalTheory.Core.Rk.HgtFin.hgtFin_ioH_le_one (isCMExt_host D) (gram_hdbl A) L v y
 
 end GlobalTheory.Core.Rk.IP

@@ -81,7 +81,7 @@ theorem proj_apply (R : Γ →* Module.End ℂ V) (χ : Γ →* ℂˣ) (v : V) :
   simp [proj, LinearMap.sum_apply]
 
 theorem card_ne_zero' : (Fintype.card Γ : ℂ) ≠ 0 := by
-  haveI : Nonempty Γ := ⟨1⟩
+  have : Nonempty Γ := ⟨1⟩
   exact Nat.cast_ne_zero.mpr Fintype.card_ne_zero
 
 omit [AddCommGroup V] [Module ℂ V] in
@@ -234,7 +234,7 @@ theorem isSmooth_Phi (a : WDRep h V) {m : ℕ} (ψ : Fin m → Weil h →* ℂˣ
   have h1 : IsSmooth (Pi.monoidHom ψ) := by
     have : {σ : Ine (F := E) A | Pi.monoidHom ψ (ineIncl h σ) = 1} = ⋂ b, {σ | ψ b (ineIncl h σ) = 1} := by
       ext σ
-      simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
       exact funext_iff
     unfold IsSmooth
     rw [this]
@@ -349,8 +349,8 @@ theorem key : ∀ (s : ℕ) {V : Type*} [AddCommGroup V] [Module ℂ V] [FiniteD
       ⟨LinearEquiv.ofFinrankEq _ _ (by simp [h0]), fun _ _ => Subsingleton.elim _ _, fun _ => Subsingleton.elim _ _⟩
   | succ s ih =>
     intro V _ _ _ a hN d ψ hψ hdist hchar
-    haveI := finite_Gam a ψ hψ
-    letI : Fintype (Gam a ψ) := Fintype.ofFinite _
+    have := finite_Gam a ψ hψ
+    let : Fintype (Gam a ψ) := Fintype.ofFinite _
     have hinj : Function.Injective (chig a ψ) := by
       intro b c hbc
       by_contra hne

@@ -298,11 +298,11 @@ theorem isStrictlySemistable (C : SSAtlas ϖ X q ι A) : GlobalTheory.Et.IsStric
 open Classical in
 theorem isSSFun_logFun (C : SSAtlas ϖ X q ι A) : IsSSFun ϖ X q κ (C.logFun κ) := by
   refine ⟨C.isStrictlySemistable, fun B => Equiv.refl _, C.U, C.F, C.G, C.affine, C.cover, C.prod_F, C.F_eq, C.nzd,
-    C.chart, fun φ y => rfl, fun {B} y => ⟨rfl, fun α => ⟨Iff.rfl, fun h => ⟨fun i => dif_pos h, fun β h' i => ?_⟩⟩⟩⟩
+    C.chart, fun φ y => rfl, fun {B} y => ⟨rfl, fun α => ⟨Iff.rfl, fun h => ⟨fun i => dite_eq_left h, fun β h' i => ?_⟩⟩⟩⟩
   change ((if h : ⊤ ≤ y.1.2 ⁻¹ᵁ (C.U α ⊓ C.U β) then
       Units.map (GlobalTheory.Cris.evalAt (B := B) y.1.2 (C.U α ⊓ C.U β) h : Γ(X, C.U α ⊓ C.U β) →* B) (C.G α β i)
       else 1 : Bˣ) : B) = _
-  rw [dif_pos (show ⊤ ≤ y.1.2 ⁻¹ᵁ (C.U α ⊓ C.U β) from h')]
+  rw [dite_eq_left (show ⊤ ≤ y.1.2 ⁻¹ᵁ (C.U α ⊓ C.U β) from h')]
   rfl
 
 end SSAtlas

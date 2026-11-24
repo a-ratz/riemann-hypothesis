@@ -169,10 +169,10 @@ private theorem UpperTheory.Reformulated.B.Gr38.orbit_finite {G W : Type} [Group
     (K : Subgroup G) (hK : IsCompact (K : Set G)) (w : W)
     (hw : IsOpen (UpperTheory.Reformulated.B.Gr38.fixer R w : Set G)) :
     (Set.range fun k : ↥K => R (k : G) w).Finite := by
-  haveI : CompactSpace ↥K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace ↥K := isCompact_iff_compactSpace.mp hK
   let U : Subgroup ↥K := (UpperTheory.Reformulated.B.Gr38.fixer R w).subgroupOf K
-  have hU : IsOpen (U : Set ↥K) := hw.preimage continuous_subtype_val
-  haveI : Finite (↥K ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
+  have hU : IsOpen (U : Set ↥K) := hw.preimage continuous_subtypeVal
+  have : Finite (↥K ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
   refine (Set.finite_range (fun c : ↥K ⧸ U => R ((c.out : ↥K) : G) w)).subset ?_
   rintro _ ⟨k, rfl⟩
   obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul U k
@@ -192,7 +192,7 @@ private theorem UpperTheory.Reformulated.B.Gr38.stab_open {E : Type} [Field E] [
       ⋂ i, {k : ↥(GlobalTheory.UnitaryBC.finU (E := E) (n := n)) |
         GlobalTheory.UnitaryBC.RU E n (k : ↥(GlobalTheory.UnitaryBC.UA E n)) (f (b i)) = f (b i)} := by
     ext k
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     refine ⟨fun h i => h _, fun h v => ?_⟩
     have : (GlobalTheory.UnitaryBC.RU E n (k : ↥(GlobalTheory.UnitaryBC.UA E n))) ∘ₗ f = f := b.ext h
     exact LinearMap.congr_fun this v
@@ -466,7 +466,7 @@ theorem UpperTheory.mem_iSup_automorphicReps_of_invariant_form :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (B : (UA E n → ℂ) →ₗ⋆[ℂ] (UA E n → ℂ) →ₗ[ℂ] ℂ), (∀ φ, IsAutFormU φ → B φ φ = 0 → φ = 0) → (∀ x φ ψ, IsAutFormU φ → IsAutFormU ψ → B (RU E n x φ) (RU E n x ψ) = B φ ψ) → ∀ φ : UA E n → ℂ, IsAutFormU φ → φ ∈ ⨆ σ : {σ : Submodule ℂ (UA E n → ℂ) // IsAutRepU σ}, σ.1 := by
   intro E _ _ _ n B hdef hinv φ hφ
   classical
-  haveI : FiniteDimensional ℂ (admitted.X φ) := hφ.kfin
+  have : FiniteDimensional ℂ (admitted.X φ) := hφ.kfin
   have hXA : admitted.X φ ≤ autU E n := Submodule.span_le.2 (by
     rintro _ ⟨k, rfl⟩
     exact RU_mem_autU _ _ (mem_autU.2 hφ))

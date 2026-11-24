@@ -413,7 +413,7 @@ theorem applyAt0_scale {N N' : ℕ} (G : Formalism.MainNotions.TaylorLogMetric.V
     unfold Formalism.MainNotions.TaylorLogMetric.taylor
     have e : (fun z : Formalism.MainNotions.TaylorLogMetric.VC D N N' => c * G (a • z)) = c • (fun z => G (a • z)) := rfl
     rw [e, iteratedFDeriv_const_smul_apply (hc.contDiffAt)]
-    simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul, mul_div_assoc]
+    simp only [smul_apply, smul_eq_mul, mul_div_assoc]
   rw [applyAt0_monomial', applyAt0_monomial', h1, taylor_comp_smul' D G hG a k]
   ring
 

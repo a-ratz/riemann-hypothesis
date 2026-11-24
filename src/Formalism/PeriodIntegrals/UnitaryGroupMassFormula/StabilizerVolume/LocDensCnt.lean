@@ -109,7 +109,7 @@ theorem exists_appr {x : Fv F v} (hx : x ∈ v.adicCompletionIntegers F) :
   have hnhds : {y : Fv F v | Valued.v (y - x) < 1} ∈ 𝓝 x :=
     Valued.mem_nhds.mpr ⟨1, fun y hy => by simpa using hy⟩
   obtain ⟨_, hy, k, rfl⟩ := mem_closure_iff_nhds.mp (hd x) _ hnhds
-  simp only [Set.mem_setOf_eq] at hy
+  simp only [Set.mem_ofPred_eq] at hy
   have hk' : Valued.v (algebraMap F (Fv F v) k) ≤ 1 := by
     have e : algebraMap F (Fv F v) k = (algebraMap F (Fv F v) k - x) + x := by ring
     rw [e]
@@ -248,7 +248,7 @@ theorem ev_int (x : F) : ∀ᶠ v in cofinite,
   have hfin := IsDedekindDomain.HeightOneSpectrum.Support.finite (𝓞 F) x
   refine Filter.eventually_cofinite.mpr (hfin.subset ?_)
   intro w hw
-  simp only [Set.mem_setOf_eq] at hw
+  simp only [Set.mem_ofPred_eq] at hw
   rw [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 F) F w, vcoe, not_le] at hw
   exact hw
 
@@ -282,7 +282,7 @@ theorem measure_count {G V : Type} [AddCommGroup G] [MeasurableSpace G] [Measura
     exact h1
   have hset : {x | x ∈ L ∧ φ x ∈ S} = ⋃ w ∈ hS.toFinset, (fun n => -xw w + n) ⁻¹' (N : Set G) := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_preimage, Set.Finite.mem_toFinset, exists_prop]
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_preimage, Set.Finite.mem_toFinset, exists_prop]
     constructor
     · rintro ⟨hxL, hxS⟩
       refine ⟨φ x, hxS, ?_⟩
@@ -792,7 +792,7 @@ theorem exists_quadAlg (k : Type) [Field k] [Finite k] (h2 : (2 : k) ≠ 0) (D :
         linear_combination e1 - s * hb0
   · have hroot : ∀ b : k, b ^ 2 ≠ D := fun b hb => hsq ⟨b, by rw [← hb, sq]⟩
     have hirr : Irreducible (X ^ 2 - C D : k[X]) := by
-      exact X_pow_sub_C_irreducible_of_prime Nat.prime_two hroot
+      exact irreducible_X_pow_sub_C_of_prime Nat.prime_two hroot
     have : Fact (Irreducible (X ^ 2 - C D : k[X])) := ⟨hirr⟩
     have hf0 : (X ^ 2 - C D : k[X]) ≠ 0 := hirr.ne_zero
     have hfin : Module.finrank k (AdjoinRoot (X ^ 2 - C D : k[X])) = 2 := by
@@ -954,7 +954,7 @@ theorem cnt_meas [Finite K] (hσ : ∀ x, σ (σ x) = x) {M a d : ℕ} [Measurab
   have rsu := rho_surj v A hD r hr hbij
   generalize rho v A hD r hr = ρ at rs rz rsu ⊢
   obtain ⟨rT, rT_eq⟩ : ∃ f : Fv F v ⊗[F] E → K, ∀ z (h : z ∈ lamC v A hD), f z = ρ ⟨z, h⟩ :=
-    ⟨fun z => if h : z ∈ lamC v A hD then ρ ⟨z, h⟩ else 0, fun z h => dif_pos h⟩
+    ⟨fun z => if h : z ∈ lamC v A hD then ρ ⟨z, h⟩ else 0, fun z h => dite_eq_left h⟩
   have memL : ∀ Y, Y ∈ latSub b v a M ↔ ∀ i p, Y i p ∈ lamC v A hD := by
     intro Y
     show (∀ i p k, _ ∈ _) ↔ _
@@ -1173,10 +1173,10 @@ theorem cntAA_holds : CntAA := by
     eventually_all.2 fun j => ev_int (F := F) (c.repr ((gramE σ J X0).det)⁻¹ j)]
     with v hD hDu h2 hbc hcb hJi hTi hJu hTu
   intro μ hμ
-  haveI := hμ
+  have := hμ
   have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   have hNm : MeasurableSet (lamF b v a M 0 : Set (Fin a → Fin M → Fv F v ⊗[F] E)) :=
     ((latFacts_holds F E σ d b a M v).1 0).measurableSet
   obtain ⟨k, K, i1, i2, i3, i4, σ', J', T', hQ, h2k, hJ', hJu', hT', hTu', hcard, hmeas⟩ :=

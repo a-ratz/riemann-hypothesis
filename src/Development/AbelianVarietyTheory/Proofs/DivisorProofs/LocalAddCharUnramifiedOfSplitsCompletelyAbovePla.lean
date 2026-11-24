@@ -72,7 +72,7 @@ theorem ramificationIdx_eq_one_of_splitsFully (v : HeightOneSpectrum (𝓞 F))
   set P : Ideal ℤ := v.asIdeal.under ℤ with hP
   have hn : 0 < Module.finrank ℚ E := Module.finrank_pos
   have hfin : (P.primesOver (𝓞 E)).Finite := Set.finite_of_ncard_pos (by rw [h]; exact hn)
-  letI : Fintype (P.primesOver (𝓞 E)) := hfin.fintype
+  let : Fintype (P.primesOver (𝓞 E)) := hfin.fintype
   have hcard : Fintype.card (P.primesOver (𝓞 E)) = Module.finrank ℚ E := by
     rw [Fintype.card_eq_nat_card, Nat.card_coe_set_eq]; exact h
   have hsum := Ideal.sum_ramification_inertia_eq_finrank P (𝓞 E)

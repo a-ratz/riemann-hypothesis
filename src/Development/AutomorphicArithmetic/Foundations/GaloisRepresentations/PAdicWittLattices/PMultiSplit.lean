@@ -65,12 +65,12 @@ theorem UpperTheory.Gal.G3.pMultiSplit :
     refine ⟨W2, c2 ≫ c, e * Nat.card G, Nat.mul_pos he Nat.card_pos,
       hF.2.1 c2 c e (Nat.card G) hc2 hc, ?_⟩
     refine Fin.lastCases ?_ (fun i => ?_)
-    · haveI := (hs (Fin.last n)).1
-      haveI := (hs (Fin.last n)).2.1
+    · have := (hs (Fin.last n)).1
+      have := (hs (Fin.last n)).2.1
       exact ⟨fun j => σ j ≫ pullback.fst _ _,
         (hS.2 (pullback.fst _ _) (pullback.snd _ _) (s (Fin.last n)) c
           (IsPullback.of_hasPullback _ _) c2 (Fin (d (Fin.last n))) σ hσ.1).mp hσ⟩
     · obtain ⟨τ, hτ⟩ := hspl i
-      haveI := (hs i.castSucc).1
-      haveI := (hs i.castSucc).2.1
+      have := (hs i.castSucc).1
+      have := (hs i.castSucc).2.1
       exact ⟨fun j => c2 ≫ τ j, hS.1 (s i.castSucc) c _ τ c2 hτ⟩

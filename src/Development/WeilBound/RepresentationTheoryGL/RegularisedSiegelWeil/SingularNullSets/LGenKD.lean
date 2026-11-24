@@ -95,7 +95,7 @@ theorem core {R : Type} [CommRing R] (σ : R →+* R) (hσ : ∀ x, σ (σ x) = 
     (h2 : IsUnit (2 : R)) (hU : ∀ x, x ∉ 𝔭 → σ x ∉ 𝔭 → IsUnit x) (a b0 c d : Matrix n n R)
     (R1 : a * cj σ d - b0 * cj σ c = 1) (R2 : c * cj σ d = d * cj σ c) (R3 : d * cj σ a - c * cj σ b0 = 1) :
     ∃ b : Matrix n n R, cj σ b = b ∧ IsUnit (d + c * b).det := by
-  letI : Field (R ⧸ 𝔭) := Ideal.Quotient.field 𝔭
+  let : Field (R ⧸ 𝔭) := Ideal.Quotient.field 𝔭
   set π : R →+* R ⧸ 𝔭 := Ideal.Quotient.mk 𝔭 with hπ
   have hsurj : Function.Surjective π := Ideal.Quotient.mk_surjective
   set lift : R ⧸ 𝔭 → R := Function.surjInv hsurj with hlift
@@ -246,7 +246,7 @@ theorem isUnit_of_absBar (y : intLoc F E v) (h : ∀ τ : E →ₐ[F] FvBar F v,
     refine le_antisymm (Finset.sup_le fun τ _ => ?_) bot_le
     have h1 := congrArg (finEmb F v τ) hz
     rw [map_mul, map_zero] at h1
-    rw [le_zero_iff, absBar_eq_zero]
+    rw [nonpos_iff_eq_zero, absBar_eq_zero]
     exact (mul_eq_zero.1 h1).resolve_left (hne τ)
   obtain ⟨z, hz⟩ := (LinearMap.injective_iff_surjective.1 hinj) 1
   rw [LinearMap.mulLeft_apply] at hz

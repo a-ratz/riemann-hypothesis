@@ -208,7 +208,7 @@ theorem sigC_eq {j : ℕ} {z : T.G} (hz : T.cov z = 1 ∧ T.sq z = -1) (hP : πU
     unfold liftC; rw [dite_eq_left hex]; exact hex.choose_spec
   have hc : T.cov (liftC (T := T) (rx (covC T x))) = T.cov x := Units.ext (rx_injC hl)
   unfold sigC
-  rw [if_pos hex]
+  rw [ite_eq_left hex]
   set y := liftC (T := T) (rx (covC T x))
   rcases sq_or_negC T hc with h | h
   · rw [eq_of_covC T hc h]
@@ -216,7 +216,7 @@ theorem sigC_eq {j : ℕ} {z : T.G} (hz : T.cov z = 1 ∧ T.sq z = -1) (hP : πU
     rw [h]
     rw [hy, map_mul πU.π, hP]
     ext v
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.mul_apply, ContinuousLinearMap.one_apply,
+    simp only [smul_apply, mul_apply_eq_comp, one_apply_eq_self,
       smul_smul, Units.val_neg]
     congr 1
     rw [inv_neg, neg_pow, mul_comm ((-1 : ℂ) ^ j), mul_assoc, ← mul_pow, show (-1 : ℂ) * -1 = 1 by norm_num, one_pow, mul_one]
@@ -290,12 +290,12 @@ theorem exists_contLiftC {p q : ℕ} (T : GrpData p q) (A : Set (Matrix (Fin (p 
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
     · have e : (fun g : A => ((T.cov (xs g) : GL _ ℂ) : Formalism.BasicNotions.TH.Mat p q)) = fun g => ixC g.1 := funext h1
       show Continuous fun g : A => ((T.cov (xs g) : GL _ ℂ) : Formalism.BasicNotions.TH.Mat p q)
-      rw [e]; exact (continuous_id.matrix_reindex _ _).comp continuous_subtype_val
+      rw [e]; exact (continuous_id.matrix_reindex _ _).comp continuous_subtypeVal
     · have e : (fun g : A => (((T.cov (xs g))⁻¹ : GL _ ℂ) : Formalism.BasicNotions.TH.Mat p q)) =
           fun g => ixC (Formalism.REAL.Jm (epq p q) * g.1ᴴ * Formalism.REAL.Jm (epq p q)) := funext h2
       show Continuous fun g : A => (((T.cov (xs g))⁻¹ : GL _ ℂ) : Formalism.BasicNotions.TH.Mat p q)
       rw [e]
-      exact ((continuous_const.mul continuous_subtype_val.matrix_conjTranspose).mul continuous_const).matrix_reindex _ _
+      exact ((continuous_const.mul continuous_subtypeVal.matrix_conjTranspose).mul continuous_const).matrix_reindex _ _
   have hc2 : Continuous fun g : A => T.sq (xs g) := by
     have e : (fun g : A => T.sq (xs g)) = W := funext fun g => (hxs g).2
     rw [e]
@@ -329,7 +329,7 @@ theorem sigC_contC {p q : ℕ} {T : GrpData p q} (πU : URep T) {j : ℕ} {σ : 
     rw [Ne, Complex.cpow_eq_zero_iff]; exact fun h => Complex.slitPlane_ne_zero (hmem g) h.1)
   have hWc : Continuous Wf := continuous_const.mul (continuous_iff_continuousAt.2 fun g =>
     ((continuousAt_cpow_const (hmem g)).comp (f := fun g : A => g.1.det / d₀)
-      ((((continuous_id.matrix_det).div_const _).comp continuous_subtype_val).continuousAt)))
+      ((((continuous_id.matrix_det).div_const _).comp continuous_subtypeVal).continuousAt)))
   have hW2 : ∀ g : A, ((Units.mk0 (Wf g) (hW0 g) : ℂˣ) : ℂ) ^ 2 = g.1.det := fun g => by
     simp only [Units.val_mk0, Wf]
     rw [mul_pow, Complex.cpow_ofNat_inv_pow, sq_sqC, ← det_rxC, ← hd₀def]
@@ -337,7 +337,7 @@ theorem sigC_contC {p q : ℕ} {T : GrpData p q} (πU : URep T) {j : ℕ} {σ : 
   obtain ⟨xs, hxc, hxs⟩ := exists_contLiftC T A (fun g h => h.1) (fun g => Units.mk0 (Wf g) (hW0 g))
     (by simpa using hWc) hW2
   have hon : ContinuousOn (fun g => σ g v) A := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have e1 : A.restrict (fun g => σ g v) = fun g : A => ((((T.sq (xs g) : ℂˣ) : ℂ))⁻¹ ^ j) • πU.π (xs g) v := by
       funext g
       show σ g.1 v = _
@@ -361,12 +361,12 @@ theorem harish_chandra_descent : Descend := by
     have hinv : ∀ g, ∀ x ∈ S, πU.π g x ∈ S := fun g x hx => by
       have hx' : πU.π z x = x := sub_eq_zero.1 hx
       show πU.π z (πU.π g x) - πU.π g x = 0
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, hzc, map_mul, ContinuousLinearMap.mul_apply, hx', sub_self]
+      rw [← mul_apply_eq_comp, ← map_mul, hzc, map_mul, mul_apply_eq_comp, hx', sub_self]
     rcases hirr.2 S hS hinv with h | h
     · refine ⟨1, ContinuousLinearMap.ext fun v => ?_⟩
       have h1 : v + πU.π z v ∈ S := by
         show πU.π z (v + πU.π z v) - (v + πU.π z v) = 0
-        rw [map_add (f := _), ← ContinuousLinearMap.mul_apply, ← map_mul, hzz, map_one]
+        rw [map_add (f := _), ← mul_apply_eq_comp, ← map_mul, hzz, map_one]
         simp [add_comm]
       rw [h, Submodule.mem_bot] at h1
       simp [eq_neg_of_add_eq_zero_right h1]
@@ -390,7 +390,7 @@ theorem harish_chandra_descent : Descend := by
         Units.val_mul, mul_inv, mul_pow, ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, smul_smul]
       rfl
     · obtain ⟨x, rfl⟩ := exists_lift'C T hg
-      rw [hσ, ContinuousLinearMap.smul_apply, norm_smul, norm_pow, norm_inv, norm_sqC, inv_one, one_pow, one_mul,
+      rw [hσ, smul_apply, norm_smul, norm_pow, norm_inv, norm_sqC, inv_one, one_pow, one_mul,
         πU.isom]
     · exact sigC_contC πU hσ v
   refine ⟨j, σ, ⟨hrep, hπ⟩, ?_, ?_, ?_⟩
@@ -477,7 +477,7 @@ theorem harish_chandra_descent : Descend := by
     have hφe : ∀ s, φ s = Complex.exp (s * X.trace / 2) := by
       let ψ : ℝ → ℂ := fun s => φ s * Complex.exp (-(s * X.trace / 2))
       have hψ2 : ∀ s, ψ s ^ 2 = 1 := fun s => by
-        simp only [ψ, mul_pow, hφ2, ← Complex.exp_nat_mul, ← Complex.exp_add]
+        simp only [ψ, mul_pow, hφ2, ← Complex.exp_natCast_mul, ← Complex.exp_add]
         push_cast; ring_nf; simp
       have hψc : Continuous ψ := hφc.mul (Complex.continuous_exp.comp (by fun_prop))
       have hψ0 : ψ 0 = 1 := by
@@ -486,7 +486,7 @@ theorem harish_chandra_descent : Descend := by
       have hcl : IsClopen {s | ψ s = 1} := by
         refine ⟨isClosed_eq hψc continuous_const, ?_⟩
         have : {s | ψ s = 1} = {s | ‖ψ s - 1‖ < 1} := by
-          ext s; simp only [Set.mem_setOf_eq]; constructor
+          ext s; simp only [Set.mem_ofPred_eq]; constructor
           · intro h; rw [h]; simp
           · intro h
             have h2 : ψ s * ψ s = 1 := by rw [← _root_.sq]; exact hψ2 s
@@ -501,7 +501,7 @@ theorem harish_chandra_descent : Descend := by
         Complex.exp_zero, one_mul]
     rw [hπ, show covC T (T.expt (t • X)) = NormedSpace.exp (t • X) from T.expt_cov _ (hmem t), rx_expC]
     show (φ t ^ j) • _ = _
-    rw [hφe, ← Complex.exp_nat_mul]
+    rw [hφe, ← Complex.exp_natCast_mul]
     congr 2
 
 end CompanionTheory.D.gk.HC

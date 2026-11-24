@@ -125,12 +125,12 @@ private lemma splitting {F E K A : Type} [Field F] [Field E] [Algebra F E] [Fiel
 private lemma cyclic {F E K L : Type} [Field F] [Field E] [Algebra F E] [Normal F E]
     [IsCyclic (E ≃ₐ[F] E)] [Field K] [Algebra F K] [Field L] [Algebra K L]
     (f : K ⊗[F] E →ₐ[K] L) (hf : Function.Surjective f) : IsCyclic (L ≃ₐ[K] L) := by
-  letI : Algebra F L := ((algebraMap K L).comp (algebraMap F K)).toAlgebra
-  haveI : IsScalarTower F K L := .of_algebraMap_eq' rfl
+  let : Algebra F L := ((algebraMap K L).comp (algebraMap F K)).toAlgebra
+  have : IsScalarTower F K L := .of_algebraMap_eq' rfl
   let ι : E →+* L := (f : K ⊗[F] E →+* L).comp
     (Algebra.TensorProduct.includeRight : E →ₐ[F] K ⊗[F] E).toRingHom
-  letI : Algebra E L := ι.toAlgebra
-  haveI : IsScalarTower F E L := .of_algebraMap_eq' (comp_eq f).symm
+  let : Algebra E L := ι.toAlgebra
+  have : IsScalarTower F E L := .of_algebraMap_eq' (comp_eq f).symm
   let φ : (L ≃ₐ[K] L) →* (E ≃ₐ[F] E) :=
     (AlgEquiv.restrictNormalHom E).comp (AlgEquiv.restrictScalarsHom F)
   refine isCyclic_of_injective φ ((injective_iff_map_eq_one φ).2 fun g hg ↦ ?_)
@@ -152,12 +152,12 @@ theorem UpperTheory.exists_cyclic_galois_tensor_algEquiv_pi :
     ∀ (F E K : Type) [Field F] [Field E] [Algebra F E] [FiniteDimensional F E] [IsGalois F E] [IsCyclic (E ≃ₐ[F] E)] [Field K] [Algebra F K], ∃ (L : Type) (_ : Field L) (_ : Algebra K L) (_ : FiniteDimensional K L) (_ : IsGalois K L) (I : Type) (_ : Fintype I) (_ : DecidableEq I) (_ : Nonempty I), IsCyclic (L ≃ₐ[K] L) ∧ Nonempty (K ⊗[F] E ≃ₐ[K] (I → L)) := by
   intro F E K _ _ _ _ _ _ _ _
   obtain ⟨p, hp⟩ := Normal.exists_isSplittingField F E
-  haveI : Algebra.FormallyEtale F E := Algebra.FormallyEtale.of_isSeparable F E
-  haveI : Algebra.FormallyEtale K (K ⊗[F] E) := inferInstance
+  have : Algebra.FormallyEtale F E := Algebra.FormallyEtale.of_isSeparable F E
+  have : Algebra.FormallyEtale K (K ⊗[F] E) := inferInstance
   obtain ⟨I, hI, Ai, iF, iA, e, hs⟩ :=
     (Algebra.FormallyEtale.iff_exists_algEquiv_prod K (K ⊗[F] E)).1 inferInstance
-  haveI : Nontrivial (K ⊗[F] E) := inferInstance
-  haveI hne : Nonempty I := by
+  have : Nontrivial (K ⊗[F] E) := inferInstance
+  have hne : Nonempty I := by
     by_contra h
     rw [not_nonempty_iff] at h
     exact not_subsingleton (K ⊗[F] E) e.toEquiv.subsingleton
@@ -165,13 +165,13 @@ theorem UpperTheory.exists_cyclic_galois_tensor_algEquiv_pi :
   let fi : ∀ i, K ⊗[F] E →ₐ[K] Ai i := fun i ↦ (Pi.evalAlgHom K Ai i).comp (e : K ⊗[F] E →ₐ[K] _)
   have hfi : ∀ i, Function.Surjective (fi i) := fun i ↦
     (Function.surjective_eval i).comp e.surjective
-  haveI hsp : ∀ i, IsSplittingField K (Ai i) (p.map (algebraMap F K)) := fun i ↦
+  have hsp : ∀ i, IsSplittingField K (Ai i) (p.map (algebraMap F K)) := fun i ↦
     splitting p (fi i) (hfi i)
   let eqv : ∀ i, Ai i ≃ₐ[K] Ai i0 := fun i ↦
     (IsSplittingField.algEquiv (Ai i) (p.map (algebraMap F K))).trans
       (IsSplittingField.algEquiv (Ai i0) (p.map (algebraMap F K))).symm
-  haveI hfd : FiniteDimensional K (Ai i0) := IsSplittingField.finiteDimensional _ (p.map (algebraMap F K))
-  haveI hgal : IsGalois K (Ai i0) :=
+  have hfd : FiniteDimensional K (Ai i0) := IsSplittingField.finiteDimensional _ (p.map (algebraMap F K))
+  have hgal : IsGalois K (Ai i0) :=
     { to_isSeparable := hs i0, to_normal := Normal.of_isSplittingField (p.map (algebraMap F K)) }
   exact ⟨Ai i0, inferInstance, inferInstance, hfd, hgal, I, Fintype.ofFinite I, Classical.decEq I,
     ⟨i0⟩, cyclic (fi i0) (hfi i0), ⟨e.trans (AlgEquiv.piCongrRight eqv)⟩⟩
@@ -242,8 +242,8 @@ private theorem local_step (F E K L I A F' T : Type) [Field F] [Field E] [Algebr
     [Algebra K T] (e : K ⊗[F] E ≃ₐ[K] (I → L)) (π : A →ₐ[F] K) (ψ : F' →+* T)
     (hψ : ∀ a : F, ψ (algebraMap F F' a) = algebraMap K T (algebraMap F K a)) (x : A)
     (h : IsNm F E ((1 : F') ⊗ₜ[F] x)) : GlobalTheory.CNorm.TNorm K L T (π x) := by
-  letI : Algebra F T := ((algebraMap K T).comp (algebraMap F K)).toAlgebra
-  haveI : IsScalarTower F K T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra F T := ((algebraMap K T).comp (algebraMap F K)).toAlgebra
+  have : IsScalarTower F K T := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact norm_down F E K L I T e _ (transfer F E A F' T { ψ with commutes' := hψ }
     ((IsScalarTower.toAlgHom F K T).comp π) x h)
 
@@ -253,13 +253,13 @@ private theorem field_case (F E K A : Type) [Field F] [NumberField F] [Field E] 
     (hf : ∀ v : HeightOneSpectrum (𝓞 F), IsNm F E ((1 : v.adicCompletion F) ⊗ₜ[F] x))
     (hi : ∀ v : InfinitePlace F, IsNm F E ((1 : v.Completion) ⊗ₜ[F] x)) :
     ∃ z : K ⊗[F] E, Algebra.norm K z = π x := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨L, _, _, _, _, I, _, _, _, hC, ⟨e⟩⟩ := UpperTheory.exists_cyclic_galois_tensor_algEquiv_pi F E K
-  haveI : NumberField L := NumberField.of_module_finite K L
+  have : NumberField L := NumberField.of_module_finite K L
   refine norm_up F E K L I e _ (_root_.GlobalTheory.CNorm.np_cyclic K L inferInstance hC (π x) hx ⟨fun w => ?_, fun a => ?_⟩)
   · obtain ⟨φ, hφ⟩ := GlobalTheory.QNorm.exists_ringHom_adicCompletion_under F K w
     exact local_step F E K L I A _ _ e π φ hφ x (hf _)
-  · letI := a
+  · let := a
     obtain ⟨v, hv, hσ⟩ := GlobalTheory.CNorm.exists_isReal_embedding_eq_hom
       ((algebraMap K ℝ).comp (algebraMap F K))
     refine local_step F E K L I A v.Completion ℝ e π
@@ -274,14 +274,14 @@ open UpperTheory.ConvolutionTheory.D in
 theorem UpperTheory.ConvolutionTheory.D.hasseEt : UpperTheory.ConvolutionTheory.D.HasseEt := by
   intro F E _ _ _ _ _ _ _ A _ _ _ _ x hf hi
   classical
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite F A
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsArtinianRing A := IsArtinianRing.of_finite F A
   have key : ∀ m : MaximalSpectrum A, ∃ y : (A ⧸ m.asIdeal) ⊗[F] E,
       Algebra.norm (A ⧸ m.asIdeal) y = Ideal.Quotient.mk m.asIdeal (x : A) := by
     intro m
-    haveI := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
-    haveI : NumberField (A ⧸ m.asIdeal) := NumberField.of_module_finite F _
+    have := m.isMaximal
+    let := Ideal.Quotient.field m.asIdeal
+    have : NumberField (A ⧸ m.asIdeal) := NumberField.of_module_finite F _
     exact field_case F E (A ⧸ m.asIdeal) A (Ideal.Quotient.mkₐ F m.asIdeal) x
       (x.isUnit.map (Ideal.Quotient.mkₐ F m.asIdeal)).ne_zero hf hi
   choose y hy using key
@@ -436,7 +436,7 @@ end UpperTheory.ConvolutionTheory.D
 theorem UpperTheory.ConvolutionTheory.D.normProd :
     UpperTheory.ConvolutionTheory.D.NormProd := by
   intro k R _ _ _ _ σ q h r
-  haveI := UpperTheory.ConvolutionTheory.D.fin h
+  have := UpperTheory.ConvolutionTheory.D.fin h
   have h1 : algebraMap k R (Algebra.norm k r) = Algebra.norm R ((1 : R) ⊗ₜ[k] r) := by
     rw [Algebra.norm_apply, Algebra.norm_apply, ← LinearMap.det_baseChange]
     congr 1
@@ -494,7 +494,7 @@ private theorem core {k R A T : Type} [Field k] [CommRing R] [Algebra k R] [Comm
     (h0 : P.eval₂ j (algebraMap A T α) = 0) (φ : T →+* AdjoinRoot P)
     (hφj : ∀ r, φ (j r) = AdjoinRoot.of P r) (hφα : φ (algebraMap A T α) = AdjoinRoot.root P) :
     (∃ a : GL (Fin n) R, nm σ q a = up R γ ∧ Commute a (up R γ)) ↔ ∃ z : T, Algebra.norm A z = α := by
-  haveI := (galBase k R k σ q hσ).1
+  have := (galBase k R k σ q hσ).1
   set χ := eval₂RingHom j (algebraMap A T α) with hχ
   have hch : (up R γ).val.charpoly = P := by
     rw [hP, cp, ← Matrix.charpoly_map]; rfl
@@ -698,9 +698,9 @@ theorem UpperTheory.ConvolutionTheory.D.nmHasse :
     UpperTheory.ConvolutionTheory.D.NmHasse := by
   intro F E _ _ _ _ _ _ σ hσ n γ hγ hf hi
   have hG := galField F E σ hσ
-  haveI : IsCyclic (E ≃ₐ[F] E) := ⟨⟨σ, hσ⟩⟩
-  haveI := root_reduced _ hγ
-  haveI : Module.Finite F (AdjoinRoot (cp γ)) := (Matrix.charpoly_monic _).finite_adjoinRoot
+  have : IsCyclic (E ≃ₐ[F] E) := ⟨⟨σ, hσ⟩⟩
+  have := root_reduced _ hγ
+  have : Module.Finite F (AdjoinRoot (cp γ)) := (Matrix.charpoly_monic _).finite_adjoinRoot
   have hu : IsUnit (AdjoinRoot.root (cp γ)) := by
     refine root_isUnit _ fun h0 => ?_
     have h1 := Matrix.det_eq_sign_charpoly_coeff γ.val

@@ -147,7 +147,7 @@ variable [TopologicalSpace G] [IsTopologicalGroup G]
 theorem isOpen_stabKer {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (L : Subgroup G)
     (θ : L →* ℂˣ) (hθ : IsOpen (θ.ker : Set L)) (x : V) :
     IsOpen (stabKer ρ L θ x : Set L) := by
-  have h1 : IsOpen {l : L | ρ (l : G) x = x} := (hρ x).preimage continuous_subtype_val
+  have h1 : IsOpen {l : L | ρ (l : G) x = x} := (hρ x).preimage continuous_subtypeVal
   have h2 : (stabKer ρ L θ x : Set L) = {l : L | ρ (l : G) x = x} ∩ (θ.ker : Set L) := by
     ext l
     simp [stabKer, MonoidHom.mem_ker]
@@ -157,8 +157,8 @@ theorem isOpen_stabKer {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (L : Su
 theorem finiteIndex_stabKer {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) {L : Subgroup G}
     (hL : IsCompact (L : Set G)) (θ : L →* ℂˣ) (hθ : IsOpen (θ.ker : Set L)) (x : V) :
     (stabKer ρ L θ x).FiniteIndex := by
-  haveI : CompactSpace L := isCompact_iff_compactSpace.mp hL
-  haveI : Finite (L ⧸ stabKer ρ L θ x) :=
+  have : CompactSpace L := isCompact_iff_compactSpace.mp hL
+  have : Finite (L ⧸ stabKer ρ L θ x) :=
     Subgroup.quotient_finite_of_isOpen _ (isOpen_stabKer hρ L θ hθ x)
   exact Subgroup.finiteIndex_of_finite_quotient
 
@@ -205,8 +205,8 @@ theorem mem_twKer_iff_average (ρ : Representation ℂ G V) (hρ : IsSmooth ρ) 
   constructor
   · intro hv
     obtain ⟨M, hM, hsum⟩ := exists_sum_eq_zero hρ hL θ hθ hv
-    haveI hK : (stabKer ρ L θ v).FiniteIndex := finiteIndex_stabKer hρ hL θ hθ v
-    haveI : Fintype (L ⧸ stabKer ρ L θ v) := Fintype.ofFinite _
+    have hK : (stabKer ρ L θ v).FiniteIndex := finiteIndex_stabKer hρ hL θ hθ v
+    have : Fintype (L ⧸ stabKer ρ L θ v) := Fintype.ofFinite _
     refine ⟨stabKer ρ L θ v, (Finset.univ : Finset (L ⧸ stabKer ρ L θ v)).image Quotient.out,
       isOpen_stabKer hρ L θ hθ v,
       fun x hx => hx.1, fun x hx => hx.2, ?_, ?_⟩
@@ -222,12 +222,12 @@ theorem mem_twKer_iff_average (ρ : Representation ℂ G V) (hρ : IsSmooth ρ) 
         rw [this]
     · rw [Finset.sum_image (fun a _ b _ h => Quotient.out_injective h)]
       set C : Subgroup L := (M ⊓ stabKer ρ L θ v).normalCore with hC
-      haveI : C.Normal := Subgroup.normalCore_normal _
-      haveI : C.FiniteIndex := inferInstance
-      haveI : Fintype (L ⧸ C) := Fintype.ofFinite _
+      have : C.Normal := Subgroup.normalCore_normal _
+      have : C.FiniteIndex := inferInstance
+      have : Fintype (L ⧸ C) := Fintype.ofFinite _
       have hCM : C ≤ M ⊓ stabKer ρ L θ v := Subgroup.normalCore_le _
-      haveI : Finite (stabKer ρ L θ v ⧸ C.subgroupOf (stabKer ρ L θ v)) := inferInstance
-      haveI : Fintype (stabKer ρ L θ v ⧸ C.subgroupOf (stabKer ρ L θ v)) := Fintype.ofFinite _
+      have : Finite (stabKer ρ L θ v ⧸ C.subgroupOf (stabKer ρ L θ v)) := inferInstance
+      have : Fintype (stabKer ρ L θ v ⧸ C.subgroupOf (stabKer ρ L θ v)) := Fintype.ofFinite _
       have h0 := hsum C (hCM.trans inf_le_left)
       rw [sum_out_refine (hCM.trans inf_le_right) (twOrbit ρ L θ v)
         (fun x k hk => twOrbit_mul_right ρ L θ v x k hk)] at h0

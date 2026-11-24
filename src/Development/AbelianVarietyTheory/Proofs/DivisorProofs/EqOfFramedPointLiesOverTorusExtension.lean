@@ -136,7 +136,7 @@ theorem eq_of_liesOver : LL → AllU fun {R} _ _ {I} {D} {A} {G} _ _ U => ∀ (F
     rw [e] at p q
     rw [p, q, hrel j]
     have hinv := Units.inv_mul (val (powFrame A.A A.L x fr 4) (𝟙 _) z J)
-    simp only [Units.val_mul, Units.coe_map, Units.val_mk0, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe,
+    simp only [Units.val_mul, Units.coe_map, Units.val_mk0, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass,
       hκ, map_mul, id] at hinv ⊢
     linear_combination (-(κ c * (val (powFrame A.A A.L x' fr' 4) (𝟙 _) z J).val * κ (a j))) * hinv
   have := congrArg (fun q => q ≫ (A.A.hom ⁻¹ᵁ ⊤).ι) key2

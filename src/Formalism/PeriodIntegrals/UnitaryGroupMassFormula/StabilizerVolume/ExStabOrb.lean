@@ -87,7 +87,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Local
 theorem meas_avg (H : Subgroup G) (ν : Measure H) [SFinite ν] {f : G → ℝ≥0∞} (hf : Measurable f) :
     Measurable (fun g : G => ∫⁻ h, f (g * (h : G)) ∂ν) := by
   have hc : Continuous (fun p : G × H => p.1 * (p.2 : G)) :=
-    continuous_fst.mul (continuous_subtype_val.comp continuous_snd)
+    continuous_fst.mul (continuous_subtypeVal.comp continuous_snd)
   exact (hf.comp hc.measurable).lintegral_prod_right'
 
 theorem avg_mul_mem (H : Subgroup G) (ν : Measure H) [ν.IsMulLeftInvariant] (f : G → ℝ≥0∞)
@@ -132,7 +132,7 @@ theorem induced_eq (H : Subgroup G) (hcl : IsClosed (H : Set G)) (μ : Measure G
   have : SigmaCompactSpace H := sigmaCompactSpace_of_locallyCompact_secondCountable
   have : SFinite ν := inferInstance
   have hmulc : ∀ x : G, Measurable (fun h : H => x * (h : G)) := fun x =>
-    (continuous_const.mul continuous_subtype_val).measurable
+    (continuous_const.mul continuous_subtypeVal).measurable
   set κ : G ⧸ H → Measure G := fun q => ν.map (fun h : H => q.out * (h : G)) with hκdef
   have hκA : ∀ (q : G ⧸ H) (A : Set G), MeasurableSet A →
       κ q A = ∫⁻ h, A.indicator 1 (q.out * (h : G)) ∂ν := by
@@ -229,7 +229,7 @@ theorem induced_eq (H : Subgroup G) (hcl : IsClosed (H : Set G)) (μ : Measure G
     intro h0
     have hu := hmA Set.univ MeasurableSet.univ
     simp only [Set.indicator_univ, Pi.one_apply, lintegral_const, one_mul, lintegral_one] at hu
-    rw [h0, Measure.coe_zero, Pi.zero_apply] at hu
+    rw [h0, FunLike.coe_zero, Pi.zero_apply] at hu
     have hν : ν Set.univ ≠ 0 := isOpen_univ.measure_ne_zero ν Set.univ_nonempty
     have hρ : ρ' Set.univ ≠ 0 := by
       intro h; exact hne (Measure.measure_univ_eq_zero.1 h)
@@ -501,7 +501,7 @@ theorem orbTup_holds : OrbTup := by
     (by simp) (hform sE T) hh
   set P : Matrix (Fin a) (Fin a) E := tM v with hP
   have hPu : IsUnit P.det := by
-    have h1 : IsUnit (Matrix.of v) := Matrix.linearIndependent_rows_iff_isUnit.mp hvli
+    have h1 : IsUnit (Matrix.of v) := linearIndependent_row_iff_isUnit.mp hvli
     have h2 : P = (Matrix.of v)ᵀ := rfl
     rw [h2, det_transpose]
     exact (Matrix.isUnit_iff_isUnit_det _).mp h1

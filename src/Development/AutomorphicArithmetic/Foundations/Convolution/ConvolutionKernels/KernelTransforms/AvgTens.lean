@@ -62,8 +62,8 @@ theorem UpperTheory.ConvolutionTheory.Tf.avgTens :
       have h1 : Continuous (tensFun β e) := by
         unfold tensFun
         exact ((continuous_kbar hn β.continuous β.hasCompactSupport).comp
-          (continuous_infPart.comp continuous_subtype_val)).mul
-          (e.continuous.comp (continuous_finPart.comp continuous_subtype_val))
+          (continuous_infPart.comp continuous_subtypeVal)).mul
+          (e.continuous.comp (continuous_finPart.comp continuous_subtypeVal))
       have hfin : Continuous (MultiplicityOne.finProj (K := K) (n := n)) :=
         continuous_retractOne.comp continuous_finEmb
       have hfinC : IsCompact (MultiplicityOne.finProj (K := K) (n := n) '' tsupport e) :=

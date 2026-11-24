@@ -421,8 +421,8 @@ theorem hs_one {z : Fin (2 * r + k + 1) → ℂ} {c : ℂ} {π : Mx k r → (Wp 
         ⟪v, σ (sM p * x) u⟫_ℂ * star ⟪ξ, Aop z c π μW μN σ u v (sM p * x) ξ⟫_ℂ from rfl]
     rw [show beF z c π σ (σ x u) v p = (⟪v, σ (Matrix.of p.1 * Matrix.of p.2) (σ x u)⟫_ℂ *
         star (psi k r z c (Matrix.of p.2))) • π (Matrix.of p.1)⁻¹ from rfl]
-    rw [heq, hσ', ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.smul_apply, inner_smul_right, inner_smul_right, star_mul', hc,
+    rw [heq, hσ', ContinuousLinearMap.comp_apply, smul_apply,
+      smul_apply, inner_smul_right, inner_smul_right, star_mul', hc,
       ← hadj _ h1]
     ring
   have hae : (fun p => Fx z c π μW μN σ u v ξ (sM p * x)) =ᵐ[μW.prod μN]
@@ -474,9 +474,9 @@ theorem weilGen {μG μW μN ν : Measure (Mt k r)} [SFinite μW] [SFinite μN]
     (∀ᵐ x ∂ν, Integrable (fun p => F (sM p * Matrix.of x)) (μW.prod μN)) ∧
     Integrable (fun x : Mt k r => ∫ p, F (sM p * Matrix.of x) ∂(μW.prod μN)) ν ∧
     ∫ x, F (Matrix.of x) ∂μG = ∫ x, (∫ p, F (sM p * Matrix.of x) ∂(μW.prod μN)) ∂ν := by
-  haveI : SigmaFinite μG := hHaar.1
-  haveI : SFinite (muSof μW μN) := by unfold muSof; infer_instance
-  haveI : SFinite ν := sfinite_quot hHaar.2.1 hq
+  have : SigmaFinite μG := hHaar.1
+  have : SFinite (muSof μW μN) := by unfold muSof; infer_instance
+  have : SFinite ν := sfinite_quot hHaar.2.1 hq
   have hmap := quot_map hq
   rw [hmap] at hF
   have hF' : Integrable ((fun x : Mt k r => F (Matrix.of x)) ∘ psiMap) (ν.prod (μW.prod μN)) :=
@@ -798,7 +798,7 @@ theorem normIdSm_of (hGS : Formalism.FourierDecayAlt.ThreeDimData.GrowthS) (hGG 
     rw [← heq, ofReal_integral_eq_lintegral_ofReal hint (ae_of_all _ fun _ => by positivity)]
     apply lintegral_congr
     intro y
-    simp only [ENNReal.ofReal_pow, norm_nonneg, ofReal_norm, enorm_eq_nnnorm]
+    simp only [ENNReal.ofReal_pow, norm_nonneg, ofReal_norm, eNorm_eq_nnNorm]
 
 end PI.WBL.NIS
 end -- clump:auto

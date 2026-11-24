@@ -158,7 +158,7 @@ theorem conj_coordIn_toric : ∀ (hC : LatConj) {K : Type} [Field K] [NumberFiel
   classical
   obtain ⟨hAux, hVal, -, S, hS, rfl⟩ := hV
   obtain ⟨⟨hlam, hInf'⟩, hfin', S'', hS'', rfl⟩ := hV'
-  haveI : Fintype (PicO (condQ 𝔣 Q)) := Fintype.ofFinite _
+  have : Fintype (PicO (condQ 𝔣 Q)) := Fintype.ofFinite _
   have hunit' : ∀ u ∈ hatOUnits (condQ 𝔣 Q), finPart χ' u = 1 := by
     intro u hu
     have h1 : lamF s χ' u = 1 := by
@@ -240,8 +240,8 @@ theorem card_ext_mul_finrank (L M : IntermediateField ℚ ℂ) (hML : M ≤ L) [
   let E := IntermediateField.extendScalars hML
   have hEL : Module.finrank ℚ E = Module.finrank ℚ L := rfl
   have hEpos : 0 < Module.finrank ℚ E := by rw [hEL]; exact Module.finrank_pos
-  haveI : FiniteDimensional ℚ E := Module.finite_of_finrank_pos hEpos
-  haveI : FiniteDimensional M E := FiniteDimensional.right ℚ M E
+  have : FiniteDimensional ℚ E := Module.finite_of_finrank_pos hEpos
+  have : FiniteDimensional M E := FiniteDimensional.right ℚ M E
   let ι : L →+* E :=
     { toFun := fun x => ⟨x.1, x.2⟩, map_one' := rfl, map_mul' := fun _ _ => rfl, map_zero' := rfl,
       map_add' := fun _ _ => rfl }
@@ -271,14 +271,14 @@ theorem card_ext_mul_finrank (L M : IntermediateField ℚ ℂ) (hML : M ≤ L) [
 
 theorem equidistributed_of_hilbertClassFieldJ : ∀ (hH : GlobalTheory.Published.HilbertClassFieldJ) {K : Type} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] (h2 : Module.finrank ℚ K = 2) (φK : K →+* ℂ) (ΛK : PeriodPair) (hΛ : IsLatOf φK 1 ΛK) (𝔞 : (ℂ ≃+* ℂ) → (FractionalIdeal (𝓞 K)⁰ K)ˣ) (h𝔞 : ∀ σ : ℂ ≃+* ℂ, Fixes φK σ → ∃ Λ : PeriodPair, IsLatOf φK (𝔞 σ : FractionalIdeal (𝓞 K)⁰ K) Λ ∧ jLat Λ = σ (jLat ΛK)), Equidistributed φK (jLat ΛK) 𝔞 := by
   intro hH K _ _ _ h2 φK ΛK hΛ 𝔞 h𝔞
-  letI : Algebra K ℂ := φK.toAlgebra
+  let : Algebra K ℂ := φK.toAlgebra
   have hj : ∀ Λ : PeriodPair, jLat Λ = (latticeCurve Λ).j := fun Λ => by rw [latticeCurve_j_eq]; rfl
   have hlat : ∀ (𝔟 : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (Λ : PeriodPair),
       IsLatOf φK (𝔟 : FractionalIdeal (𝓞 K)⁰ K) Λ → IsIdealLattice 𝔟 Λ := fun _ _ h => h
   obtain ⟨-, hfin, hcl, -, hrange⟩ := hH K h2 ΛK (hlat 1 ΛK hΛ)
   set H : IntermediateField K ℂ := K⟮(latticeCurve ΛK).j⟯ with hHdef
   have hpos : 0 < Module.finrank K H := hfin ▸ Fintype.card_pos
-  haveI : FiniteDimensional K H := Module.finite_of_finrank_pos hpos
+  have : FiniteDimensional K H := Module.finite_of_finrank_pos hpos
   have hj0 : (latticeCurve ΛK).j ∈ H := IntermediateField.mem_adjoin_simple_self K _
   have hj0' : jLat ΛK ∈ H := by rw [hj]; exact hj0
   have halg : IsAlgebraic ℚ (jLat ΛK) := by
@@ -299,8 +299,8 @@ theorem equidistributed_of_hilbertClassFieldJ : ∀ (hH : GlobalTheory.Published
   have hinv : (latticeCurve Lb).j ∈ idealInvariants K := ⟨_, Lb, hLb, rfl⟩
   rw [← hrange] at hinv
   obtain ⟨g, hg⟩ := hinv
-  haveI : NumberField H := NumberField.of_module_finite K H
-  haveI : Countable H := (Module.finBasis ℚ H).equivFun.injective.countable
+  have : NumberField H := NumberField.of_module_finite K H
+  have : Countable H := (Module.finBasis ℚ H).equivFun.injective.countable
   obtain ⟨σC, hσC⟩ := GlobalTheory.GaloisDescent.exists_complex_ringEquiv_comp_eq H.val.toRingHom
     (H.val.toRingHom.comp g.toAlgHom.toRingHom)
   have hfixC : Fixes φK σC := fun x => by
@@ -317,8 +317,8 @@ theorem equidistributed_of_hilbertClassFieldJ : ∀ (hH : GlobalTheory.Published
     rw [← hj, hjl, hσCj, hj]
   let L' : IntermediateField K ℂ := L.toSubfield.toIntermediateField hKL
   have hHL : H ≤ L' := IntermediateField.adjoin_simple_le_iff.2 (by rw [← hj]; exact hjL)
-  haveI : FiniteDimensional ℚ L := hLf
-  haveI : Countable L := (Module.finBasis ℚ L).equivFun.injective.countable
+  have : FiniteDimensional ℚ L := hLf
+  have : Countable L := (Module.finBasis ℚ L).equivFun.injective.countable
   have hcount := card_ext_mul_finrank L (H.restrictScalars ℚ) (fun x hx => hHL hx) σC
   have hM : Module.finrank ℚ (H.restrictScalars ℚ) = Module.finrank ℚ K * Module.finrank K H := by
     rw [Module.finrank_mul_finrank ℚ K H]
@@ -376,7 +376,7 @@ theorem modF_rat : ∀ {E : Type} [Field E] [NumberField E] (y : (Af E)ˣ), ∃ 
   refine ⟨∏ᶠ v : HeightOneSpectrum (𝓞 E), ((Ideal.absNorm v.asIdeal : ℕ) : ℚ) ^ (WithZero.log (Valued.v ((y : Af E) v))), ?_⟩
   have h := MonoidHom.map_finprod_of_injective ((Rat.castHom ℝ : ℚ →+* ℝ) : ℚ →* ℝ) Rat.cast_injective
     (fun v : HeightOneSpectrum (𝓞 E) => ((Ideal.absNorm v.asIdeal : ℕ) : ℚ) ^ (WithZero.log (Valued.v ((y : Af E) v))))
-  simp only [MonoidHom.coe_coe, Rat.coe_castHom, Rat.cast_zpow, Rat.cast_natCast] at h
+  simp only [MonoidHom.coe_ofClass, Rat.coe_castHom, Rat.cast_zpow, Rat.cast_natCast] at h
   rw [h]
   rfl
 
@@ -465,8 +465,8 @@ namespace GlobalTheory
 theorem exists_sq_eq_neg_of_discr_eq_neg : ∀ (K : Type) [Field K] [NumberField K] (d : ℕ) (h2 : Module.finrank ℚ K = 2) (hd : discr K = -(d : ℤ)), ∃ δ : K, δ ^ 2 = -(d : K) := by
   classical
   intro K _ _ d h2 hd
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h2⟩
-  haveI : IsGalois ℚ K := inferInstance
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h2⟩
+  have : IsGalois ℚ K := inferInstance
   have hcard : Nat.card (K ≃ₐ[ℚ] K) = 2 := by rw [IsGalois.card_aut_eq_finrank, h2]
   obtain ⟨σ, hσ, huniq⟩ := (Nat.card_eq_two_iff' (1 : K ≃ₐ[ℚ] K)).1 hcard
   have huniv : (Finset.univ : Finset (K ≃ₐ[ℚ] K)) = {1, σ} := by
@@ -698,9 +698,9 @@ theorem transport_of (hH : GlobalTheory.Published.HilbertClassFieldJ) (hA : LatA
       TorsTransport φK σ t ΛK Λ Ω₀ Ω ∧ IsInvIdealOf t (𝔞 : FractionalIdeal (𝓞 K)⁰ K) ∧
         IsLatOf φK (𝔞 : FractionalIdeal (𝓞 K)⁰ K) Λ := by
     intro σ hσ
-    letI : Algebra K ℂ := φK.toAlgebra
+    let : Algebra K ℂ := φK.toAlgebra
     obtain ⟨X, hX, ξ, hξ, hTr⟩ := GlobalTheory.LatVal.CurveTransport.exists_curve_torsTransport h2 φK ΛK Ω₀ hΛ hΩ₀0
-    haveI := hX
+    have := hX
     let σK : ℂ ≃ₐ[K] ℂ := AlgEquiv.ofRingEquiv (f := σ) hσ
     obtain ⟨t, ht⟩ := GlobalTheory.EllipticCM.exists_transports h2 σK one_ne_zero hξ
     obtain ⟨Λ₁, Ω₁, h1⟩ := hTr σK t ht
@@ -714,7 +714,7 @@ theorem transport_of (hH : GlobalTheory.Published.HilbertClassFieldJ) (hA : LatA
       rw [hx0, map_zero] at hx'
       exact (by simpa using Λ₁.indep.ne_zero 0 : Λ₁.ω₁ ≠ 0) hx'.symm
     exact ⟨t, Units.mk0 𝔞 h𝔞0, Λ₁, Ω₁, h1, h𝔞t, h𝔞Λ⟩
-  haveI : Nonempty PeriodPair := ⟨ΛK⟩
+  have : Nonempty PeriodPair := ⟨ΛK⟩
   choose! t 𝔞 Λ Ω hT using key
   refine ⟨t, 𝔞, Λ, fun σ hσ => ⟨(hT σ hσ).2.1, (hT σ hσ).2.2, (disc_j_of_torsTransport (hT σ hσ).1 hΩ₀).2⟩,
     equidistributed_of_j hH h2 φK ΛK hΛ 𝔞
@@ -761,7 +761,7 @@ theorem finprod_val_nu_eq_one : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : G
       (_ : ¬ (Lc.xiH t).UnrAt w ∧ (nuH G μ₀ i j).UnrAt w), (((nuH G μ₀ i j).val w : ℂˣ) : ℂ) = 1 := by
   intro D T Lc sc G μ₀ hL i j t
   classical
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   set ν := nuH G μ₀ i j with hν
   have hT : TrivOnF ν := (GlobalTheory.FunObj.SqNum.Model.isValChar_nu hL G i j (s := 0) (Nat.zero_le _)).1.2.1
   set c : HeightOneSpectrum (𝓞 D.host.E) → HeightOneSpectrum (𝓞 D.host.E) := fun P => Formalism.DivisionValues.conjPl P with hcdef
@@ -789,7 +789,7 @@ theorem finprod_val_nu_eq_one : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : G
   set Q' := (Lc.Q t).filter fun P => ν.UnrAt P with hQ'
   have hset : {w | ¬ (Lc.xiH t).UnrAt w ∧ ν.UnrAt w} = (↑(Q' ∪ Q'.image c) : Set (HeightOneSpectrum (𝓞 D.host.E))) := by
     ext w
-    simp only [Set.mem_setOf_eq, Finset.coe_union, Finset.coe_image, Set.mem_union, Set.mem_image, Finset.mem_coe, hQ',
+    simp only [Set.mem_ofPred_eq, Finset.coe_union, Finset.coe_image, Set.mem_union, Set.mem_image, Finset.mem_coe, hQ',
       Finset.mem_filter]
     constructor
     · rintro ⟨h1, h2⟩
@@ -872,7 +872,7 @@ theorem gaussSumAt_unr_mul {χ ξ : HChar E} {w : HeightOneSpectrum (𝓞 E)} (h
   have h1 : χ.locK w (Units.mk0 _ hz0) = 1 := by
     refine hχ _ ?_
     show Valued.v (((atFin w (Units.mk0 _ hz0)) : (w.adicCompletion E)ˣ) : w.adicCompletion E) = 1
-    simp only [atFin, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, Units.val_mk0]
+    simp only [atFin, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, Units.val_mk0]
     have hval : ∀ x : E, Valued.v (algebraMap E (w.adicCompletion E) x) = w.valuation E x := fun x =>
       HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w x
     rw [hval, hy1]
@@ -891,7 +891,7 @@ theorem exists_gaussSumAt_dvd {K : Type} [Field K] [NumberField K] (σ : K →+*
     ∃ g : 𝓞 K, σ (g : K) = gaussSumAt ξ w 1 (unif w ^ (1 + diffExp w)) ∧ g ∣ (q : 𝓞 K) := by
   classical
   set c : Eˣ := unif w ^ (1 + diffExp w) with hc
-  haveI : Fintype (𝓞 E ⧸ w.asIdeal ^ 1)ˣ := Fintype.ofFinite _
+  have : Fintype (𝓞 E ⧸ w.asIdeal ^ 1)ˣ := Fintype.ofFinite _
   have hval : ∀ x : E, Valued.v (algebraMap E (w.adicCompletion E) x) = w.valuation E x := fun x =>
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w x
   have hqv : w.valuation E ((q : 𝓞 E) : E) ≤ WithZero.exp (-((1 : ℕ) : ℤ)) := by
@@ -915,7 +915,7 @@ theorem exists_gaussSumAt_dvd {K : Type} [Field K] [NumberField K] (σ : K →+*
       have e : ((q : ℕ) : w.adicCompletion E) * algebraMap E (w.adicCompletion E) ((z : E) / c) =
           algebraMap E (w.adicCompletion E) (((q : 𝓞 E) : E) * ((z : E) / c)) := by simp
       rw [e, hval, map_mul, map_div₀, hy1, hc, valuation_unif_pow, one_div, ← div_eq_mul_inv,
-        div_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
+        div_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
       convert hqv using 2
       push_cast
       ring
@@ -991,7 +991,7 @@ theorem locEps_tame_twist : ∀ (E : Type) [Field E] [NumberField E] (K : Type) 
       show χ.locK w (unif w ^ (1 + diffExp w)) * ξ.locK w (unif w ^ (1 + diffExp w)) = _
       rw [pow_add, pow_one, map_mul, zero_add]
       rfl
-    rw [locEps, locEps, if_neg one_ne_zero, if_pos rfl, gaussSumAt_unr_mul hχ one_ne_zero, hqw, e1, e2, map_mul, map_mul,
+    rw [locEps, locEps, ite_eq_right one_ne_zero, ite_eq_left rfl, gaussSumAt_unr_mul hχ one_ne_zero, hqw, e1, e2, map_mul, map_mul,
       hx1, hgG, map_pow σ, map_natCast σ]
     simp only [Units.val_mul, Units.val_pow_eq_pow_val]
     ring
@@ -1109,7 +1109,7 @@ theorem gaussTerm_mul_one_add (χ : HChar E) (w : HeightOneSpectrum (𝓞 E)) (c
   have h1 : r * (1 + z) ≠ 0 := by rw [← he]; exact mul_ne_zero hr e.ne_zero
   have hu : Units.mk0 _ h1 = Units.mk0 r hr * e := by ext; simp [he]
   have hψ : r * (1 + z) / c = r / c + r * z / c := by ring
-  rw [gaussTerm, gaussTerm, dif_neg h1, dif_neg hr, hu, map_mul, hψ, map_add (f := _), psiAt_add]
+  rw [gaussTerm, gaussTerm, dite_eq_right h1, dite_eq_right hr, hu, map_mul, hψ, map_add (f := _), psiAt_add]
   simp only [mul_inv, Units.val_mul]
   ring
 
@@ -1125,7 +1125,7 @@ theorem psiAt_mul_congr {w : HeightOneSpectrum (𝓞 E)} {c : Eˣ}
   have hval : ∀ x : E, Valued.v (algebraMap E (w.adicCompletion E) x) = w.valuation E x := fun x =>
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w x
   rw [hval, map_div₀, hc,
-    div_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
+    div_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
   rw [show ((0 : 𝓞 E) : E) = 0 from rfl, sub_zero] at hv
   convert hv using 2
   push_cast
@@ -1169,7 +1169,7 @@ theorem mem_of_psiAt_eq_one {w : HeightOneSpectrum (𝓞 E)} {c : Eˣ}
     have h1 : Valued.v (r - algebraMap (𝓞 E) (w.adicCompletion E) r₀) < 1 := hr₀
     generalize Valued.v (r - algebraMap (𝓞 E) (w.adicCompletion E) r₀) = x at h1 ⊢
     by_cases hx : x = 0
-    · rw [hx]; exact zero_le'
+    · rw [hx]; exact zero_le
     rw [← WithZero.exp_log hx] at h1 ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h1
     rw [WithZero.exp_le_exp]; omega
@@ -1226,7 +1226,7 @@ theorem gaussSumAt_mul_tame {χ ξ : HChar E} {w : HeightOneSpectrum (𝓞 E)} (
   have hg : ∀ u, ∀ k ∈ H, g (u * k) = g u := by
     intro u k hk
     show twInv ξ w (rep ↑(u * k)) = twInv ξ w (rep ↑u)
-    rw [twInv, twInv, dif_neg (hne (u * k)), dif_neg (hne u)]
+    rw [twInv, twInv, dite_eq_right (hne (u * k)), dite_eq_right (hne u)]
     have hd := valuation_sub_le (E := E) (w := w) (a := 1) (y := rep ↑(u * k)) (y' := rep ↑u)
       (by rw [pow_one]; exact hH' u k hk)
     have hξ1 : ξ.LevelLe w 1 := hξ
@@ -1296,7 +1296,7 @@ theorem gaussSumAt_mul_tame {χ ξ : HChar E} {w : HeightOneSpectrum (𝓞 E)} (
   rw [gaussSumAt, gaussSumAt, finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   simp_rw [gaussTerm_mul]
   have hg0 : g u₀ = (((ξ.locK w (Units.mk0 _ (hne u₀)))⁻¹ : ℂˣ) : ℂ) := by
-    simp only [g, twInv, dif_neg (hne u₀)]
+    simp only [g, twInv, dite_eq_right (hne u₀)]
   rw [← hg0]
   exact hu₀
 
@@ -1328,7 +1328,7 @@ theorem locEps_mul_tame : ∀ (E : Type) [Field E] [NumberField E] (χ ξ : HCha
     exact absurd ((hχ 1).1 h2) (by omega)
   · obtain ⟨x₀, hx₀⟩ := gaussSumAt_mul_tame hχ2 hξ (valuation_unif_pow w (2 + diffExp w))
     refine ⟨unif w ^ (2 + diffExp w) * x₀⁻¹, ?_⟩
-    rw [locEps, locEps, if_neg two_ne_zero, if_neg two_ne_zero, hx₀]
+    rw [locEps, locEps, ite_eq_right two_ne_zero, ite_eq_right two_ne_zero, hx₀]
     have hm : ∀ x, (χ * ξ).locK w x = χ.locK w x * ξ.locK w x := fun x => rfl
     rw [hm, map_mul, map_inv]
     simp only [Units.val_mul, Units.val_inv_eq_inv_val]
@@ -1374,7 +1374,7 @@ theorem twist_ram_prime_dvd_Qn : ∀ {D : D7} {T : Type} {Lc : LevCh D T} {sc : 
     have hv := (Model.isValChar_nu hL G i j (s := 0) (Nat.zero_le _)).1
     have hE := hv.2.2.2 (w.under (𝓞 D.host.F)) w rfl
     have hexp := (hE.2 (Finset.notMem_empty _) 0).1 ((Formalism.L2.Host.HChar.unrAt_iff _ _).1 hnu)
-    rw [Model.expIn_condF, if_pos hS, condExp] at hexp
+    rw [Model.expIn_condF, ite_eq_left hS, condExp] at hexp
     split_ifs at hexp <;> omega
 
   obtain ⟨PP, hPP, hw⟩ : ∃ PP ∈ Lc.Q t, w = PP ∨ Formalism.IndefR.Lev.IsConjPl PP w := by
@@ -1756,7 +1756,7 @@ theorem exists_rep_trivial_above : ∀ (E : Type) [Field E] [NumberField E] [IsC
   · rw [QuotientGroup.mk_mul, QuotientGroup.mk_inv, hy1, QuotientGroup.mk_mul,
       (QuotientGroup.eq_one_iff A).2 hA, (QuotientGroup.eq_one_iff u).2 hu, one_mul, inv_one, mul_one]
   · have hwT : w ∈ hfin.toFinset := hfin.mem_toFinset.2 hw
-    rw [Units.val_mul, mul_coord', inv_coord', hudef, prod_single_coord, if_pos hwT, coe_coord]
+    rw [Units.val_mul, mul_coord', inv_coord', hudef, prod_single_coord, ite_eq_left hwT, coe_coord]
     exact mul_inv_cancel₀ (by rw [← coe_coord]; exact (coord w y1).ne_zero)
 
 end GlobalTheory.CMVal.TrivAbove

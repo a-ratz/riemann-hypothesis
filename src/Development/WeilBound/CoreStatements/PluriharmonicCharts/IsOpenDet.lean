@@ -123,8 +123,8 @@ theorem dM_mul {s : Set X} {A : X → Matrix I J ℂ} {B : X → Matrix J K ℂ}
       (∑ j, (A u a j • fderiv ℂ (fun x => B x j c) u + B u j c • fderiv ℂ (fun x => A x a j) u)) u :=
     HasFDerivAt.fun_sum fun j _ => (hd a j).hasFDerivAt.mul (he j c).hasFDerivAt
   rw [key.fderiv]
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, smul_eq_mul, Finset.sum_add_distrib]
+  simp only [FunLike.coe_sum, Finset.sum_apply, add_apply,
+    smul_apply, smul_eq_mul, Finset.sum_add_distrib]
   rw [add_comm]
   congr 1 <;> refine Finset.sum_congr rfl fun j _ => by ring
 

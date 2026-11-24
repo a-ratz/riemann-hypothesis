@@ -62,8 +62,8 @@ theorem weilIs_adj_eq : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonO
   intro S A _ _ P hA hP α β hα hβ hiso n T a b c c' h h'
   let ψ₁ : G2 A ⟶ G2 A := lift (fst A A ≫ α) (snd A A)
   let ψ₂ : G2 A ⟶ G2 A := lift (fst A A) (snd A A ≫ β)
-  haveI : IsMonHom ψ₁ := inferInstanceAs (IsMonHom (lift (fst A A ≫ α) (snd A A)))
-  haveI : IsMonHom ψ₂ := inferInstanceAs (IsMonHom (lift (fst A A) (snd A A ≫ β)))
+  have : IsMonHom ψ₁ := inferInstanceAs (IsMonHom (lift (fst A A ≫ α) (snd A A)))
+  have : IsMonHom ψ₂ := inferInstanceAs (IsMonHom (lift (fst A A) (snd A A ≫ β)))
   have hAA : IsAbelianScheme (G2 A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA
   have hL : (P.pull ψ₁.left).IsLB := pull_isLB hP _
   have hx₁ : lift a 1 ≫ ψ₁ = lift (a ≫ α) 1 := by ext <;> simp [ψ₁]

@@ -292,7 +292,7 @@ theorem integralClosure_fg (O E A : Type) [CommRing O] [IsDomain O] [IsDiscreteV
       rw [smul_smul, ← algebraMap_smul E (v j) (D⁻¹ • b j), smul_smul, mul_comm]
     rw [hx2]
     exact Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
-  haveI : IsNoetherian O S := isNoetherian_of_fg_of_noetherian S hS
+  have : IsNoetherian O S := isNoetherian_of_fg_of_noetherian S hS
   exact isNoetherian_submodule.1 this _ hle
 
 end GlobalTheory.IntegralClosureFG

@@ -53,15 +53,15 @@ namespace GlobalTheory.TanJac
 
 theorem derivation_eq_zero {F N : Type} [Field F] [NumberField F] [AddCommGroup N] [Module F N]
     (δ : Derivation ℤ F N) (a : F) : δ a = 0 := by
-  haveI : Algebra.FormallyEtale ℤ ℚ := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors ℤ)
-  haveI : Algebra.FormallyEtale ℚ F := Algebra.FormallyEtale.of_isSeparable ℚ F
-  haveI : Algebra.FormallyUnramified ℤ F := Algebra.FormallyUnramified.comp ℤ ℚ F
+  have : Algebra.FormallyEtale ℤ ℚ := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors ℤ)
+  have : Algebra.FormallyEtale ℚ F := Algebra.FormallyEtale.of_isSeparable ℚ F
+  have : Algebra.FormallyUnramified ℤ F := Algebra.FormallyUnramified.comp ℤ ℚ F
   rw [← δ.liftKaehlerDifferential_comp_D, Subsingleton.elim (KaehlerDifferential.D ℤ F a) 0,
     map_zero]
 
 theorem snd_eq_zero {F K : Type} [Field F] [NumberField F] [Field K] (χ : F →+* DualNumber K)
     (a : F) : (χ a).snd = 0 := by
-  letI : Module F K := ((TrivSqZeroExt.fstHom K K K).toRingHom.comp χ).toModule
+  let : Module F K := ((TrivSqZeroExt.fstHom K K K).toRingHom.comp χ).toModule
   let δ : Derivation ℤ F K := Derivation.mk'
     { toFun := fun x => (χ x).snd
       map_add' := fun x y => by rw [map_add (f := _), TrivSqZeroExt.snd_add]
@@ -79,10 +79,10 @@ theorem exists_forms_map {k A K : Type} [CommRing k] [CommRing A] [Field K] {D :
     (hφ : ∀ b x, (φ b x).fst = ψ x) (hc : ∀ b a, (φ b (α a)).snd = 0) :
     ∃ Λ : Forms α D →ₛₗ[ψ] K,
       ∀ f, Λ (dForm α f) = (Matrix.of fun a b => (φ b (f a)).snd).det := by
-  letI := α.toAlgebra
-  letI := ψ.toAlgebra
-  letI : Algebra k K := (ψ.comp α).toAlgebra
-  haveI : IsScalarTower k A K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := α.toAlgebra
+  let := ψ.toAlgebra
+  let : Algebra k K := (ψ.comp α).toAlgebra
+  have : IsScalarTower k A K := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let δ (f : A) : Fin D → K := fun b => (φ b f).snd
   have hmul (f g : A) : δ (f * g) = f • δ g + g • δ f := by
     funext b

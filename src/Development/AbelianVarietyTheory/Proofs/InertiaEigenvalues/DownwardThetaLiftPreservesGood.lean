@@ -433,8 +433,8 @@ theorem goodMem_of_given : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T 
           rw [thF_translate_low R F hR i t g _ (hLV g).choose_spec y (yg g) (hyg g) v]
     _ = R.thF i t (∑ g, RealDat.eC (A := A) (sg0 D A) g • yg g) (fun ρ => v ρ) := by
 
-        rw [map_sum, MultilinearMap.sum_apply]
-        simp only [map_smul, MultilinearMap.smul_apply]
+        rw [map_sum, sum_apply]
+        simp only [map_smul, smul_apply]
     _ = R.thF i t y (fun ρ => v ρ) := thF_low_eq R hR.thP i t y _ hz v
 
 end GlobalTheory.GoodLift

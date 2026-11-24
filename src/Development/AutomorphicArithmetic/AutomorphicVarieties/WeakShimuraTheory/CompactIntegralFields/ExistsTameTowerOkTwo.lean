@@ -280,7 +280,7 @@ private theorem tot_dvd (k : ℕ) : Nat.totient (2 ^ k) ∣ 2 ^ k := by
 
 private theorem pow_cond {O : Type} [CommRing O] {N : ℕ} [NeZero N] (χ : DirichletCharacter O N) {k : ℕ}
     (h : χ.conductor = 2 ^ k) : χ ^ 2 ^ k = 1 := by
-  haveI : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
   have h1 : χ.primitiveCharacter ^ Nat.totient χ.conductor = 1 := by
     ext u
     rw [MulChar.pow_apply_coe, ← map_pow, ← Units.val_pow_eq_pow_val, ZMod.pow_totient, Units.val_one, map_one,
@@ -382,7 +382,7 @@ variable {O : Type} [CommRing O] [IsDomain O] {N : ℕ} [NeZero N]
 
 private theorem kx_kapL (ψ : DirichletCharacter O N) {s : G ℚ Ω} (h : cycZ ℚ Ω l s = 1) :
     kapL l ψ ((Chr.cls ℚ Ω N s : (ZMod N)ˣ) : ZMod N) = 1 := by
-  haveI : NeZero (ordProj[l] N) := ⟨(Nat.ordProj_pos N l).ne'⟩
+  have : NeZero (ordProj[l] N) := ⟨(Nat.ordProj_pos N l).ne'⟩
   have h3 : proj l N (Chr.cls ℚ Ω N s) = 1 := by
     rw [← MonoidHom.mem_ker, (projFacts N l hl.out).2.2.2.2.2.2.1, MonoidHom.mem_ker, ← MonoidHom.comp_apply,
       (Chr.clsFacts ℚ Ω N).2.1]
@@ -880,12 +880,12 @@ theorem UpperTheory.V.Ws.exists_tame_tower_ok_two :
   let X : Set2 D := ⟨κ, p₃, p, p', φ, η, η', hκ, hφ, hη, hη', x3, x1, x2, ev2 D hC κ j hj, exists_decomposition_element_at_l_xi_pow_four_ne_one D hC κ j hj, exists_inertia_element_at_two_xi_pow_four_ne_one D hC κ j hj⟩
   obtain ⟨b1, b2, b3, b4, b5⟩ := characterSubgroup_open_even_index_tame_power D hD X
   obtain ⟨F, _, _, hF, dF⟩ := fixAb Ω X.H b1 b2
-  obtain ⟨K, _, _, hK, dK⟩ := fixAb Ω η.ker hη.opn (Abelianization.commutator_subset_ker η)
-  obtain ⟨k₀, _, _, hk, dk⟩ := fixAb Ω φ.ker hφ.opn (Abelianization.commutator_subset_ker φ)
+  obtain ⟨K, _, _, hK, dK⟩ := fixAb Ω η.ker hη.opn (Group.Abelianization.commutator_le_ker η)
+  obtain ⟨k₀, _, _, hk, dk⟩ := fixAb Ω φ.ker hφ.opn (Group.Abelianization.commutator_le_ker φ)
   rw [hη.idx] at dK
   rw [hφ.idx] at dk
-  haveI : IsTotallyReal F := (fixInf Ω F).1 (hF ▸ b3)
-  haveI : IsCMField K := (fixInf Ω K).2 (fun σ hσ h => by
+  have : IsTotallyReal F := (fixInf Ω F).1 (hF ▸ b3)
+  have : IsCMField K := (fixInf Ω K).2 (fun σ hσ h => by
     rw [hK, MonoidHom.mem_ker, hη.cc σ hσ] at h
     exact absurd h (by decide)) dK
   have rk : IsTotallyReal k₀ := (fixInf Ω k₀).1 fun σ hσ => hk ▸ hφ.cc σ hσ

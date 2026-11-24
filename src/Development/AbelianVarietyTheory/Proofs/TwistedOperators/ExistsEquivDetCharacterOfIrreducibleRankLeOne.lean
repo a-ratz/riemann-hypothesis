@@ -60,7 +60,7 @@ theorem scalar_det_of_subsingleton {k : Type} [CommRing k] {c : Type} [Fintype c
     (g : GL c k) : Matrix.GeneralLinearGroup.scalar c (Matrix.GeneralLinearGroup.det g) = g := by
   ext i j
   obtain rfl : i = j := Subsingleton.elim i j
-  haveI : Unique c := uniqueOfSubsingleton i
+  have : Unique c := uniqueOfSubsingleton i
   rw [Matrix.GeneralLinearGroup.coe_scalar, Matrix.scalar_apply, Matrix.diagonal_apply_eq,
     Matrix.GeneralLinearGroup.val_det_apply, Matrix.det_unique, Subsingleton.elim default i]
 
@@ -193,7 +193,7 @@ theorem exists_equiv_detRep (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     (σ : Representation ℂ (GL c k) V) (hs : IsSmooth σ) (hi : σ.IsIrreducible) :
     ∃ ψ : kˣ →* ℂˣ, IsSmoothChar ψ ∧ Nonempty (σ.Equiv (detRep c ψ)) := by
   classical
-  haveI := hi
+  have := hi
   have hcomm : ∀ g h : GL c k, g * h = h * g := by
     intro g h
     calc g * h = Matrix.GeneralLinearGroup.scalar c (Matrix.GeneralLinearGroup.det g) *
@@ -208,7 +208,7 @@ theorem exists_equiv_detRep (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   obtain ⟨v, hv⟩ : ∃ v : V, v ≠ 0 := by
     by_contra hcon
     push_neg at hcon
-    haveI : Subsingleton V := ⟨fun x y => by rw [hcon x, hcon y]⟩
+    have : Subsingleton V := ⟨fun x y => by rw [hcon x, hcon y]⟩
     apply (bot_ne_top : (⊥ : Subrepresentation σ) ≠ ⊤)
     apply Subrepresentation.toSubmodule_injective
     exact (Submodule.eq_bot_of_subsingleton (p := (⊤ : Submodule ℂ V))).symm
@@ -231,9 +231,9 @@ theorem exists_equiv_detRep (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       exact absurd hvm hv
     · exact congrArg Subrepresentation.toSubmodule h0
 
-  haveI : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
-  haveI : SecondCountableTopology kᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : SecondCountableTopology kˣ := Units.isEmbedding_embedProduct.isInducing.secondCountableTopology
+  have : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
+  have : SecondCountableTopology kᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : SecondCountableTopology kˣ := Units.isEmbedding_embedProduct.isInducing.secondCountableTopology
   obtain ⟨D, hDc, hD⟩ := TopologicalSpace.exists_countable_dense kˣ
   have hsc : Continuous (Matrix.GeneralLinearGroup.scalar c : kˣ → GL c k) := by
     unfold Matrix.GeneralLinearGroup.scalar
@@ -304,7 +304,7 @@ theorem exists_equiv_detRep (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     have hker : (((χ.comp (Matrix.GeneralLinearGroup.scalar c)).toHomUnits).ker : Set kˣ) =
         (Matrix.GeneralLinearGroup.scalar c) ⁻¹' {g | σ g v = v} := by
       ext x
-      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_ofPred_eq]
       rw [Units.ext_iff, MonoidHom.coe_toHomUnits, Units.val_one]
       show a (Matrix.GeneralLinearGroup.scalar c x) = 1 ↔ _
       rw [← ha]

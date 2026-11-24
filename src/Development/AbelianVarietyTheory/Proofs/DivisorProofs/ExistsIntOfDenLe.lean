@@ -105,7 +105,7 @@ theorem psi_smul_F (G : HTGroup p) (w : InfinitePlace G.F) (x : G.F) (c : G.C) :
 
 theorem psi_finBasis_linearIndependent (G : HTGroup p) (w : InfinitePlace G.F) :
     LinearIndependent ℂ (fun s => G.psi w (Module.finBasis G.F G.C s)) := by
-  letI alg : Algebra G.F ℂ := w.embedding.toAlgebra
+  let alg : Algebra G.F ℂ := w.embedding.toAlgebra
   have halg : ∀ a : G.F, algebraMap G.F ℂ a = w.embedding a := fun a => rfl
   let ψF : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) ℂ :=
     { G.psi w with
@@ -118,7 +118,7 @@ theorem psi_finBasis_linearIndependent (G : HTGroup p) (w : InfinitePlace G.F) :
     Algebra.TensorProduct.lift (Algebra.ofId ℂ _) ψF (fun a _ => Algebra.commute_algebraMap_left a _)
   have hinj : Function.Injective Θ :=
     (IsSimpleRing.injective_ringHom_or_subsingleton_codomain Θ.toRingHom).resolve_right
-      (by haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩; exact not_subsingleton _)
+      (by have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩; exact not_subsingleton _)
   have hΘ : ∀ c : G.C, Θ ((1 : ℂ) ⊗ₜ[G.F] c) = G.psi w c := by
     intro c
     erw [Algebra.TensorProduct.lift_tmul, map_one, one_mul]
@@ -154,7 +154,7 @@ def towerBasis (G : HTGroup p) :
 
 theorem psiAll_towerBasis_linearIndependent (G : HTGroup p) :
     LinearIndependent ℝ (fun b => psiAll G (towerBasis G b)) := by
-  haveI : IsTotallyComplex G.F := IsCMField.to_isTotallyComplex
+  have : IsTotallyComplex G.F := IsCMField.to_isTotallyComplex
   rw [Fintype.linearIndependent_iff]
   intro r hr
   have hw : ∀ w : InfinitePlace G.F, ∑ s, (∑ i, (r (i, s) : ℂ) * w.embedding (integralBasis G.F i)) •
@@ -249,9 +249,9 @@ theorem finite_of_bounded_image_closure_finset :
     have := hY hy
     rw [← Submodule.span_int_eq_addSubgroupClosure] at this
     exact this
-  haveI : Module.Finite ℤ M := Module.Finite.span_of_finite ℤ S.finite_toSet
-  haveI : Module.IsTorsionFree ℤ V := .trans_faithfulSMul ℤ ℚ V
-  haveI : Module.Free ℤ M := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite ℤ M := Module.Finite.span_of_finite ℤ S.finite_toSet
+  have : Module.IsTorsionFree ℤ V := .trans_faithfulSMul ℤ ℚ V
+  have : Module.Free ℤ M := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis ℤ M
   set n := Module.finrank ℤ M
   let e : Fin n → V := fun j => (b j : V)

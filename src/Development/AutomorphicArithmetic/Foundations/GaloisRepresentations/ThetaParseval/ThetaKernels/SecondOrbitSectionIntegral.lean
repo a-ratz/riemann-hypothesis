@@ -91,13 +91,13 @@ theorem second_orbit_section_integral {f : d.G → ℂ} {s₁ z : ℂ} {lam : Me
     refine integral_congr_ae (ae_of_all _ fun p => ?_)
     simp only [g, _root_.PositivityTheory.SiegelWeilFormula.Act.kq_k, _root_.PositivityTheory.SiegelWeilFormula.Act.C5.eisensteinSecondTerm, _root_.PositivityTheory.SiegelWeilFormula.Act.C5.th_k]
     rw [tsum_mul_right]
-  · have hm : ∀ q, AEMeasurable (fun p => ‖g q p‖ₑ) μ := fun q => (hgi q).aemeasurable.enorm
+  · have hm : ∀ q, AEMeasurable (fun p => ‖g q p‖ₑ) μ := fun q => (hgi q).aemeasurable.eNorm
     have e1 : ∫⁻ p, ∑' q : {q : _root_.PositivityTheory.SiegelWeilFormula.Act.Cs_k d // ¬ _root_.PositivityTheory.SiegelWeilFormula.Act.FirstOrbit L (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q)}, ‖_root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q.1 * (nb p.2 * (uM p.1 * x))) * _root_.PositivityTheory.SiegelWeilFormula.Act.C5.th_k T p.2‖ₑ ∂μ =
         ∑' q, ENNReal.ofReal (∫ p, ‖g q p‖ ∂μ) := by
       rw [show (fun p => ∑' q : {q : _root_.PositivityTheory.SiegelWeilFormula.Act.Cs_k d // ¬ _root_.PositivityTheory.SiegelWeilFormula.Act.FirstOrbit L (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q)},
           ‖_root_.PositivityTheory.SiegelWeilFormula.Act.phz_k d f s₁ z (_root_.PositivityTheory.SiegelWeilFormula.Act.rep_k q.1 * (nb p.2 * (uM p.1 * x))) * _root_.PositivityTheory.SiegelWeilFormula.Act.C5.th_k T p.2‖ₑ) = fun p => ∑' q, ‖g q p‖ₑ from rfl,
         lintegral_tsum hm]
-      exact tsum_congr fun q => (ofReal_integral_norm_eq_lintegral_enorm (hgi q)).symm
+      exact tsum_congr fun q => (ofReal_integral_norm_eq_lintegral_eNorm (hgi q)).symm
     rw [e1, ← ENNReal.ofReal_tsum_of_nonneg (fun q => integral_nonneg fun p => norm_nonneg _) hgs]
     exact ENNReal.ofReal_lt_top
 end PositivityTheory.SiegelWeilFormula.Act.C5

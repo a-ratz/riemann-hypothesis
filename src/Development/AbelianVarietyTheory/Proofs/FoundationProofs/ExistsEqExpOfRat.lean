@@ -63,18 +63,18 @@ namespace GlobalTheory.KZ
 theorem exists_eq_exp_of_rat {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ)
     (hε : Function.Injective ε) (x : ℚ) :
     ∃ a : Ω, ε a = Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
   set n := x.den with hn
   have hn0 : 0 < n := x.den_pos
-  haveI : NeZero n := ⟨hn0.ne'⟩
-  haveI : NeZero (n : Ω) := ⟨by exact_mod_cast hn0.ne'⟩
+  have : NeZero n := ⟨hn0.ne'⟩
+  have : NeZero (n : Ω) := ⟨by exact_mod_cast hn0.ne'⟩
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic n Ω)
     (Polynomial.degree_cyclotomic_pos n Ω hn0).ne'
   have hp : IsPrimitiveRoot ζ n := (Polynomial.isRoot_cyclotomic_iff).mp hζ
   have hp' : IsPrimitiveRoot (ε ζ) n := hp.map_of_injective hε
   have hpow : Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) ^ n = 1 := by
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨x.num, ?_⟩
     have h := Rat.mul_den_eq_num x
     have h' : ((x : ℂ) * (n : ℂ)) = (x.num : ℂ) := by exact_mod_cast h

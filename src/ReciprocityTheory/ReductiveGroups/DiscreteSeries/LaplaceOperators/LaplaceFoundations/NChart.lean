@@ -139,7 +139,7 @@ theorem shear_preserving (μ : Measure E) [μ.IsAddHaarMeasure] (G : ℕ → Sub
       simpa using (hΦ x).hasFDerivAt
     have hd := h2.comp_hasDerivAt (0 : ℝ) h1
     have hS : IsClosed {w : E | w - v ∈ G (j + 1)} :=
-      (Submodule.closed_of_finiteDimensional (G (j + 1))).preimage (continuous_id.sub continuous_const)
+      (Submodule.isClosed_of_finiteDimensional (G (j + 1))).preimage (continuous_id.sub continuous_const)
     refine hS.mem_of_tendsto hd.tendsto_slope_zero (eventually_nhdsWithin_of_forall fun t ht => ?_)
     have ht0 : t ≠ 0 := Set.mem_compl_singleton_iff.mp ht
     have hmem := hsh j (x + t • v) x (by rw [add_sub_cancel_left]; exact (G j).smul_mem t hv)
@@ -478,9 +478,9 @@ theorem mem_lieN {Y : A} : Y ∈ lieN F st ↔ Y ∈ F 0 ∧ st Y = -Y := by
 
 theorem exp_neg_mul (Y : A) : NormedSpace.exp (-Y) * NormedSpace.exp Y = 1 ∧
     NormedSpace.exp Y * NormedSpace.exp (-Y) = 1 := by
-  haveI : CompleteSpace A := FiniteDimensional.complete ℝ A
-  letI : Algebra ℚ A := Algebra.compHom A (algebraMap ℚ ℝ)
-  letI : NormedAlgebra ℚ A :=
+  have : CompleteSpace A := FiniteDimensional.completeSpace ℝ A
+  let : Algebra ℚ A := Algebra.compHom A (algebraMap ℚ ℝ)
+  let : NormedAlgebra ℚ A :=
     { norm_smul_le := fun q x => by
         show ‖(algebraMap ℚ ℝ q) • x‖ ≤ ‖q‖ * ‖x‖
         rw [norm_smul, eq_ratCast, Rat.norm_cast_real] }
@@ -627,7 +627,7 @@ theorem exp_chart_invariant (hF : IsFil F L) (hst : IsAdj F st)
   let π : A →L[ℝ] lieN F st :=
     LinearMap.toContinuousLinearMap (Submodule.linearProjOfIsCompl (lieN F st) q hq)
   have hπ : ∀ Y : lieN F st, π (Y : A) = Y := fun Y =>
-    Submodule.linearProjOfIsCompl_apply_left hq Y
+    Submodule.projectionOnto_apply_left hq Y
   have hΦd : Differentiable ℝ Φ := by
     have e : Φ = fun Y : lieN F st => π (iter E' L (s * (E' (Y : A) + 1) - 1)) := by
       funext Y
@@ -688,9 +688,9 @@ theorem exp_chart_embedding (hF : IsFil F L) :
       funext Y
       exact hF.exp_eq (hY0 Y)
     rw [e]
-    exact continuous_const.add (continuous_subtype_val.add (continuous_finsetSum _ fun k _ =>
-      (continuous_subtype_val.pow _).const_smul _))
-  haveI : ProperSpace (lieN F st) := FiniteDimensional.proper_real _
+    exact continuous_const.add (continuous_subtypeVal.add (continuous_finsetSum _ fun k _ =>
+      (continuous_subtypeVal.pow _).const_smul _))
+  have : ProperSpace (lieN F st) := FiniteDimensional.proper_real _
   exact hcont.measurableEmbedding fun Y Y' h => Subtype.ext (exp_injOn hF (hY0 Y) (hY0 Y') h)
 
 theorem exp_chart_haar (hF : IsFil F L) (hst : IsAdj F st) (μ : Measure (lieN F st))
@@ -710,7 +710,7 @@ theorem exp_chart_haar (hF : IsFil F L) (hst : IsAdj F st) (μ : Measure (lieN F
     rw [hemb.map_apply]
     have e : (fun Y : lieN F st => NormedSpace.exp (Y : A)) ⁻¹' {x | x ∉ grpN F st} = ∅ := by
       ext Y
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
       exact exp_mem_grpN hF hst Y.2
     rw [e, measure_empty]
   · intro s hs
@@ -834,21 +834,21 @@ theorem Hpk_sq : Hpk k r * Hpk k r = 1 := by
   rw [Hpk_mul_apply, Hpk_apply, flipB_flipB, sgnB_flip, Matrix.one_apply]
   by_cases h : i = j
   · subst h
-    rw [if_pos rfl, if_pos rfl]
+    rw [ite_eq_left rfl, ite_eq_left rfl]
     unfold sgnB
     split_ifs <;> norm_num
-  · rw [if_neg (Ne.symm h), if_neg h, mul_zero]
+  · rw [ite_eq_right (Ne.symm h), ite_eq_right h, mul_zero]
 
 theorem Hpk_herm : (Hpk k r)ᴴ = Hpk k r := by
   ext i j
   rw [conjTranspose_apply, Hpk_apply, Hpk_apply]
   by_cases h : j = flipB k r i
   · have h' : i = flipB k r j := by rw [h, flipB_flipB]
-    rw [if_pos h, if_pos h', h, sgnB_flip]
+    rw [ite_eq_left h, ite_eq_left h', h, sgnB_flip]
     unfold sgnB
     split_ifs <;> simp
   · have h' : ¬ i = flipB k r j := fun h' => h (by rw [h', flipB_flipB])
-    rw [if_neg h, if_neg h', star_zero]
+    rw [ite_eq_right h, ite_eq_right h', star_zero]
 
 private lemma levB_add_levB_flipB_eq_two_mul (a : Fin (2 * r + k + 1)) :
     levB k r a + levB k r (flipB k r a) = 2 * r := by
@@ -907,21 +907,21 @@ theorem Nset_eq : Nset k r = grpN (levF (levB k r)) (adjH (Hpk k r)) := by
         intro ha hja
         have h1 := congrFun (congrFun hU (eI k r ⟨a, ha⟩)) j
         rw [Matrix.mul_assoc, Matrix.mul_apply, Finset.sum_eq_single (eI k r ⟨a, ha⟩)] at h1
-        · rw [conjTranspose_apply, he ⟨a, ha⟩ _ le_rfl, if_pos rfl, Hpk_mul_apply, Hpk_apply] at h1
+        · rw [conjTranspose_apply, he ⟨a, ha⟩ _ le_rfl, ite_eq_left rfl, Hpk_mul_apply, Hpk_apply] at h1
           have e1 : flipB k r (eI k r ⟨a, ha⟩) = ⟨2 * r + k - a, by omega⟩ :=
             Fin.ext (by rw [flipB_val]; simp [eI, ha])
           have e2 : sgnB k r (eI k r ⟨a, ha⟩) = 1 := by
-            unfold sgnB; rw [if_neg]; simp only [eI]; omega
+            unfold sgnB; rw [ite_eq_right]; simp only [eI]; omega
           rw [e1, e2] at h1
           simpa [eq_comm] using h1
         · intro c _ hc
           rw [conjTranspose_apply]
           by_cases hca : c.val < a
           · have e1 : flipB k r c = ⟨2 * r + k - c.val, by omega⟩ :=
-              Fin.ext (by rw [flipB_val, if_pos (Or.inl (by omega))])
-            rw [Hpk_mul_apply, e1, ih c.val hca (by omega) (by omega), if_neg, mul_zero, mul_zero]
+              Fin.ext (by rw [flipB_val, ite_eq_left (Or.inl (by omega))])
+            rw [Hpk_mul_apply, e1, ih c.val hca (by omega) (by omega), ite_eq_right, mul_zero, mul_zero]
             intro h; have := congrArg Fin.val h; simp only at this; omega
-          · rw [he ⟨a, ha⟩ c (by simp only; omega), if_neg hc, star_zero, zero_mul]
+          · rw [he ⟨a, ha⟩ c (by simp only; omega), ite_eq_right hc, star_zero, zero_mul]
         · simp
     intro a b h
     have hal := a.isLt
@@ -960,7 +960,7 @@ theorem lieOf_Nset_eq : Formalism.MainNotions.S.lieOf (Nset k r) =
       fun t => by have := h t; rw [Complex.coe_smul] at this; exact this
     refine mem_lieN.mpr ⟨?_, ?_⟩
     · have h2 := hasDerivAt_iff_tendsto_slope_zero.mp hd
-      refine (levF (levB k r) 0).closed_of_finiteDimensional.mem_of_tendsto h2
+      refine (levF (levB k r) 0).isClosed_of_finiteDimensional.mem_of_tendsto h2
         (Filter.Eventually.of_forall fun t => (levF (levB k r) 0).smul_mem _ ?_)
       simp only [zero_add, zero_smul, NormedSpace.exp_zero]
       exact (h' t).1

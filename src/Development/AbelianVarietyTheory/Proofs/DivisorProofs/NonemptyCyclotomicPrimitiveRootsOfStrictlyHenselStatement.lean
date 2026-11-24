@@ -66,7 +66,7 @@ theorem prim_of_strictlyHenselian : ∀ (q : ℕ) (A : Type) [CommRing A], SH A 
   have hqk : IsUnit ((q : ℕ) : k) := by
     have := hq.map (IsLocalRing.residue A)
     rwa [map_natCast] at this
-  haveI : NeZero ((q : ℕ) : k) := ⟨hqk.ne_zero⟩
+  have : NeZero ((q : ℕ) : k) := ⟨hqk.ne_zero⟩
   have hq0 : 0 < q := by
     rcases Nat.eq_zero_or_pos q with h | h
     · subst h; simp at hqk

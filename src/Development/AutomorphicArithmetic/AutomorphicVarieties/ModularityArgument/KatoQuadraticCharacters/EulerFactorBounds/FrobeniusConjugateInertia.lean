@@ -117,7 +117,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 open scoped Matrix MatrixGroups Classical
 
 private theorem fin_places (S : Finset ℕ) : {v : HeightOneSpectrum (𝓞 ℚ) | normV v ∈ S}.Finite := by
-  have h : {I : Ideal (𝓞 ℚ) | Ideal.absNorm I ≤ S.sup id}.Finite := Ideal.finite_setOf_absNorm_le _
+  have h : {I : Ideal (𝓞 ℚ) | Ideal.absNorm I ≤ S.sup id}.Finite := Ring.HasFiniteQuotients.finite_absNorm_le _
   refine (h.preimage (f := fun v : HeightOneSpectrum (𝓞 ℚ) => v.asIdeal)
     (fun a _ b _ hab => HeightOneSpectrum.ext hab)).subset fun v hv => ?_
   have : normV v ≤ S.sup id := Finset.le_sup (f := id) hv
@@ -406,11 +406,11 @@ private theorem pow_card_div_orderOf_eq_one_of_mem_ker_commutator {E G : Type} [
   have hidx : A.index = Nat.card G / orderOf g := by
     rw [hAdef, Subgroup.index_comap_of_surjective _ hπ, ← Nat.card_zpowers,
       ← (Subgroup.zpowers g).card_mul_index, Nat.mul_div_cancel_left _ Nat.card_pos]
-  haveI : A.FiniteIndex := ⟨by
+  have : A.FiniteIndex := ⟨by
     rw [hAdef, Subgroup.index_comap_of_surjective _ hπ]; exact Subgroup.index_ne_zero_of_finite⟩
   rw [← hidx]
-  letI : CommGroup A := { (inferInstance : Group A) with mul_comm := hA }
-  have h1 := Abelianization.commutator_subset_ker ((MonoidHom.id A).transfer (H := A)) hc
+  let : CommGroup A := { (inferInstance : Group A) with mul_comm := hA }
+  have h1 := Group.Abelianization.commutator_le_ker ((MonoidHom.id A).transfer (H := A)) hc
   rw [MonoidHom.mem_ker, MonoidHom.transfer_eq_pow (MonoidHom.id A) x] at h1
   · simpa using congrArg Subtype.val h1
   · intro k g₀ _
@@ -422,7 +422,7 @@ open Matrix in
 private theorem exists_card_ker_red_eq_prime_pow (p b : ℕ) [Fact p.Prime] :
     ∃ k, Nat.card (_root_.GlobalTheory.SLTwoCentral.red p b).ker = p ^ k := by
   have hp : p.Prime := Fact.out
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   have hdiv : ∀ z : ZMod (p ^ (b + 1)),
       ZMod.castHom (dvd_pow_self p (Nat.succ_ne_zero b)) (ZMod p) z = 0 →
         ∃ w : ZMod (p ^ (b + 1)), z = p * w := by
@@ -522,7 +522,7 @@ private theorem exists_orderOf_eq_succ_sl2_zmod (p : ℕ) [Fact p.Prime] :
   have hp := (Fact.out : p.Prime)
   classical
   set K := GaloisField p 2
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Fintype K := Fintype.ofFinite K
   have hcard : Nat.card K = p ^ 2 := GaloisField.card p 2 (by norm_num)
   have hsq : p ^ 2 - 1 = (p - 1) * (p + 1) := by
     have := hp.one_le
@@ -594,8 +594,8 @@ theorem _root_.GlobalTheory.sl2_zmod_central_ext_commutator_sq_eq_one :
       π.ker ≤ Subgroup.center E → (∀ x ∈ π.ker, x ^ (l ^ n) = 1) →
       ∀ x ∈ π.ker, x ∈ commutator E → x ^ 2 = 1 := by
   intro l n p a hl hp hp5 hpl E _ π hπ hK hexp x hx hc
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hpow := fun g => pow_card_div_orderOf_eq_one_of_mem_ker_commutator π hπ hK g x hx hc
   have hd : orderOf x ∣ l ^ n := orderOf_dvd_of_pow_eq_one (hexp x hx)
   obtain ⟨j, -, hj⟩ := (Nat.dvd_prime_pow hl).mp hd
@@ -603,8 +603,8 @@ theorem _root_.GlobalTheory.sl2_zmod_central_ext_commutator_sq_eq_one :
     rw [hj]; exact Nat.Coprime.pow _ _ ((Nat.coprime_primes hl hp).mpr hpl.symm)
   rcases a with _ | b
   · have h1 := hpow 1
-    haveI : Subsingleton (ZMod (p ^ 0)) := by rw [pow_zero]; infer_instance
-    haveI : Subsingleton (Matrix.SpecialLinearGroup (Fin 2) (ZMod (p ^ 0))) :=
+    have : Subsingleton (ZMod (p ^ 0)) := by rw [pow_zero]; infer_instance
+    have : Subsingleton (Matrix.SpecialLinearGroup (Fin 2) (ZMod (p ^ 0))) :=
       ⟨fun A B => Subtype.ext (funext fun i => funext fun j => Subsingleton.elim _ _)⟩
     rw [orderOf_one, Nat.div_one, Nat.card_of_subsingleton (1 : Matrix.SpecialLinearGroup (Fin 2) (ZMod (p ^ 0))), pow_one] at h1
     rw [h1, one_pow]
@@ -949,12 +949,12 @@ theorem exists_cocycle {Q A : Type} [Group Q] [CommGroup A] (φ : Q →* MulAut 
       one_mem' := by simp
       mul_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         simp only [SemidirectProduct.mul_right, SemidirectProduct.mul_left, map_mul, MulAut.mul_apply, hy, hx,
           map_pow, mul_pow, mul_assoc]
       inv_mem' := by
         intro x hx
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         simp only [SemidirectProduct.inv_right, SemidirectProduct.inv_left]
         have h := congrArg (φ x.right⁻¹) hx
         rw [← MulAut.mul_apply, ← map_mul, inv_mul_cancel, map_one, MulAut.one_apply, map_mul, map_pow] at h
@@ -1163,10 +1163,10 @@ theorem sl_root [IsAlgClosed Ω] (X : Tower Ω ε) {m : ℕ} (hm : 0 < m) {a : X
 
 theorem descent : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), ∀ (l n Ma Mb : ℕ), l.Prime → 0 < Ma → 0 < Mb → 6 * l ∣ Ma → Nat.Coprime Ma Mb → ∀ f : X.Kˣ, Lev X (Ma * Mb) f → (∀ γ ∈ CongruenceSubgroup.Gamma Ma, ∃ g : X.Kˣ, Lev X (Ma * Mb) g ∧ X.sl (ofSL γ) (f : X.K) = f * (g : X.K) ^ (l ^ n)) → ∃ h : X.Kˣ, Lev X Ma ((f : X.K) ^ 4 * (h : X.K) ^ (l ^ n)) := by
   intro Ω _ _ _ ε X l n Ma Mb hl hMa hMb h6 hco f hf hinv
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
-  haveI : NeZero Mb := ⟨hMb.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
+  have : NeZero Mb := ⟨hMb.ne'⟩
   let ρ : SL(2, ℤ) →* SL(2, ZMod Mb) := SpecialLinearGroup.map (Int.castRingHom (ZMod Mb))
   choose s hs1 hs2 using exists_lift hco
   have hs2' : ∀ q, ρ (s q) = q := hs2
@@ -1279,7 +1279,7 @@ theorem GlobalTheory.KZ.ES.desc_pow_four : ∀ {Ω : Type} [Field Ω] [Algebra �
   intro Ω _ _ _ ε X l n M hl hM h6 f hf
   classical
   obtain ⟨M'', hM''pos, hM''⟩ := X.level (f : X.K)
-  haveI : NeZero M'' := ⟨hM''pos.ne'⟩
+  have : NeZero M'' := ⟨hM''pos.ne'⟩
 
   have hex : ∀ r : SL(2, ZMod M''), ∃ (g : X.Kˣ) (L : ℕ), 0 < L ∧ Lev X L (g : X.K) ∧
       ∀ γ ∈ CongruenceSubgroup.Gamma M,
@@ -1620,7 +1620,7 @@ private theorem es_of (h1 : SEsLev) (h2 : SEsFrob) (h3 : SEsT)
   have hMpos : 0 < M := by have := hl.out.pos; positivity
   have hcM : Nat.Coprime q M := Nat.Coprime.mul_right hc (hcl.pow_right k)
   obtain ⟨γ, hγ⟩ : ∃ γ : SL(2, ℤ), DiagMod M q γ := by
-    haveI : NeZero M := ⟨hMpos.ne'⟩
+    have : NeZero M := ⟨hMpos.ne'⟩
     let t := ZMod.unitOfCoprime q hcM
     obtain ⟨γ, hγ⟩ := _root_.GlobalTheory.specialLinearGroup_map_intCast_zmod_surjective M (⟨!![((t⁻¹ : (ZMod M)ˣ) : ZMod M), 0; 0, (t : ZMod M)], by simp [Matrix.det_fin_two_of]⟩ : SL(2, ZMod M))
     have e := fun i j => congrArg (fun m : SL(2, ZMod M) => (m : Matrix (Fin 2) (Fin 2) (ZMod M)) i j) hγ
@@ -1720,7 +1720,7 @@ variable {l : ℕ} [Fact l.Prime] {Ω : Type} [Field Ω] [Algebra ℚ Ω]
 
 private theorem cont_bar : Continuous (cycBar ℚ Ω l) :=
   (Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ ℚ Ω l)
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ ℚ Ω l)
 
 private theorem cont_hom {M : Type} [Monoid M] [TopologicalSpace M] (f : G ℚ Ω →* Mˣ) (h : Continuous fun s => (f s : M)) :
     Continuous f :=
@@ -1882,7 +1882,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sEuler :
         rw [mul_inv_cancel_left₀ hq]
         simp only [rhoK, Matrix.trace_smul, Matrix.det_smul, h2, h3, h4, and_self]
   refine ⟨S ∪ ((finite_normV S0).union (finite_dvd hn0)).toFinset, Finset.subset_union_left, fun w hw => ?_⟩
-  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_union, Set.mem_setOf_eq, not_or] at hw
+  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_union, Set.mem_ofPred_eq, not_or] at hw
   have hcop := (normV_prime w).coprime_iff_not_dvd.2 hw.2.2
   have hw' : Nat.Coprime (normV w) (l * N) := hcop.coprime_mul_right_right.coprime_mul_right_right
   obtain ⟨a, δ, h1, h2⟩ := key w hw.1 hw.2.1 hw'

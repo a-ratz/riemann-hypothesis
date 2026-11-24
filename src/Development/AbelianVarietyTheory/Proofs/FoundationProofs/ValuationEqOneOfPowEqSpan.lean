@@ -77,9 +77,9 @@ theorem valuation_eq_one_of_pow_eq_span :
         rintro z₁ z₂ ⟨c₁, hc₁, h₁⟩ ⟨c₂, hc₂, h₂⟩
         rcases le_total (v c₁) (v c₂) with h | h
         · refine ⟨c₂, hc₂, (v.map_add z₁ z₂).trans (max_le ?_ h₂)⟩
-          exact h₁.trans (pow_le_pow_left₀ zero_le' h _)
+          exact h₁.trans (pow_le_pow_left₀ zero_le h _)
         · refine ⟨c₁, hc₁, (v.map_add z₁ z₂).trans (max_le h₁ ?_)⟩
-          exact h₂.trans (pow_le_pow_left₀ zero_le' h _)
+          exact h₂.trans (pow_le_pow_left₀ zero_le h _)
       smul_mem' := by
         rintro r z ⟨c, hc, h⟩
         exact ⟨c, hc, (hsm r z).trans h⟩ }
@@ -100,7 +100,7 @@ theorem valuation_eq_one_of_pow_eq_span :
       rcases le_total (v c) (v z') with h' | h'
       · refine ⟨z', hz', ?_⟩
         rw [pow_succ]
-        exact mul_le_mul' (h.trans (pow_le_pow_left₀ zero_le' h' _)) le_rfl
+        exact mul_le_mul' (h.trans (pow_le_pow_left₀ zero_le h' _)) le_rfl
       · refine ⟨c, hc, ?_⟩
         rw [pow_succ]
         exact mul_le_mul' h h'

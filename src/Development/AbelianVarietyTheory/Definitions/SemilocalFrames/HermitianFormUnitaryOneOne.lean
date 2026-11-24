@@ -213,7 +213,7 @@ theorem isHaarSub_univ {G : Type} [Group G] [TopologicalSpace G] [MeasurableSpac
 theorem isHaarSub_map {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G]
     [MeasurableSpace G] [BorelSpace G] (N : Subgroup G) (hN : IsClosed (N : Set G))
     (ν : Measure N) [ν.IsHaarMeasure] : IsHaarSub (N : Set G) (ν.map Subtype.val) := by
-  have hval : Measurable (Subtype.val : N → G) := measurable_subtype_coe
+  have hval : Measurable (Subtype.val : N → G) := measurable_subtypeVal
   refine ⟨(Measure.map_ne_zero_iff hval.aemeasurable).mpr (NeZero.ne ν), ⟨fun K hK => ?_⟩, ?_, fun m hm => ?_⟩
   · rw [Measure.map_apply hval hK.measurableSet]
     exact (hN.isClosedEmbedding_subtypeVal.isCompact_preimage hK).measure_lt_top
@@ -282,10 +282,10 @@ def nwSub {n : ℕ} (ε : Fin n → Bool) (W : Submodule ℂ (Fin n → ℂ)) : 
     ((nwSub ε W : Subgroup (UJ ε)) : Set (UJ ε)) = NW ε W := rfl
 
 theorem isClosed_NW {n : ℕ} (ε : Fin n → Bool) (W : Submodule ℂ (Fin n → ℂ)) : IsClosed (NW ε W) := by
-  have hc : Continuous fun g : UJ ε => umat g := Units.continuous_val.comp continuous_subtype_val
+  have hc : Continuous fun g : UJ ε => umat g := Units.continuous_val.comp continuous_subtypeVal
   have hv : ∀ y, Continuous fun g : UJ ε => (umat g - 1) *ᵥ y := fun y =>
     (hc.sub continuous_const).matrix_mulVec continuous_const
-  have hW : IsClosed (W : Set (Fin n → ℂ)) := W.closed_of_finiteDimensional
+  have hW : IsClosed (W : Set (Fin n → ℂ)) := W.isClosed_of_finiteDimensional
   have e : NW ε W = (⋂ x ∈ W, {g : UJ ε | (umat g - 1) *ᵥ x = 0}) ∩
       (⋂ y ∈ {y | ∀ x ∈ W, herm (Jm ε) x y = 0}, (fun g : UJ ε => (umat g - 1) *ᵥ y) ⁻¹' (W : Set (Fin n → ℂ))) ∩
       (⋂ y, ⋂ x ∈ W, {g : UJ ε | herm (Jm ε) x ((umat g - 1) *ᵥ y) = 0}) := by

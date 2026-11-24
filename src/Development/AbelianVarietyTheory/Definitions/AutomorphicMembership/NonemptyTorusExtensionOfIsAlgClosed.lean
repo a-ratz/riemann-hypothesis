@@ -373,7 +373,7 @@ instance (P : PELUnif I t) (hρ : ∀ x ∈ I, ρ x = 0) (m : SABMap t₀ t (spM
 theorem torus_comp_act (P : PELUnif I t) (hρ : ∀ x ∈ I, ρ x = 0) (m : SABMap t₀ t (spMap ρ))
     (a : 𝓞 E) : torus P hρ m ≫ t₀.act.act a =
       torusMap (Sp A) (DistribSMul.toAddMonoidHom P.D.toPre.X (H.bar a)) ≫ torus P hρ m := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨τ, hτ, hi⟩ := P.lin.i_lin 0 a
   have e : τ = torusMap _ (DistribSMul.toAddMonoidHom P.D.toPre.X (H.bar a)) :=
     (SplitTorus.eq_torusMap_iff _ _).2 fun x =>

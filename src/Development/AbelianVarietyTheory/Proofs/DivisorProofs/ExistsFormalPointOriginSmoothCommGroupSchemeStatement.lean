@@ -393,11 +393,11 @@ theorem derivation_extends : ∀ (R A : Type) [CommRing R] [IsLocalRing R] [IsNo
     have e_one : e 1 = 0 := by simp [he]
     let Q : Subring A :=
       { carrier := {f | e f = 0}
-        mul_mem' := fun {f g} hf hg => by simp only [Set.mem_setOf_eq] at *; rw [e_mul, hf, hg]; ring
+        mul_mem' := fun {f g} hf hg => by simp only [Set.mem_ofPred_eq] at *; rw [e_mul, hf, hg]; ring
         one_mem' := e_one
-        add_mem' := fun {f g} hf hg => by simp only [Set.mem_setOf_eq] at *; rw [e_add, hf, hg]; ring
+        add_mem' := fun {f g} hf hg => by simp only [Set.mem_ofPred_eq] at *; rw [e_add, hf, hg]; ring
         zero_mem' := by simp [he]
-        neg_mem' := fun {f} hf => by simp only [Set.mem_setOf_eq] at *; rw [e_neg, hf, neg_zero] }
+        neg_mem' := fun {f} hf => by simp only [Set.mem_ofPred_eq] at *; rw [e_neg, hf, neg_zero] }
     have hQ : Subring.closure (Set.range inc ∪ Set.range z) ≤ Q := by
       rw [Subring.closure_le]
       rintro _ (⟨r, rfl⟩ | ⟨i, rfl⟩)
@@ -611,7 +611,7 @@ theorem degree_eq_one {n : ℕ} {D : Fin n →₀ ℕ} (h : D.degree = 1) : ∃ 
     simp only [Finsupp.single_eq_same]
     omega
   · have := hle t ht
-    simp only [Finsupp.single_apply, if_neg (Ne.symm ht)]
+    simp only [Finsupp.single_apply, ite_eq_right (Ne.symm ht)]
     omega
 
 section Rel
@@ -1156,7 +1156,7 @@ def evHom (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) : Γ(X, U) �
 theorem valR_eq_evHom (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U)) :
     valR x U f = evHom x U h f := by
   unfold valR
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   rfl
 
 theorem top_le_spMap {A' : Type} [CommRing A'] (ψ : A →+* A') (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) :
@@ -1186,7 +1186,7 @@ theorem valR_fromSpecStalk {x : X} {U : X.Opens} (hU : x ∈ U) (a : Γ(X, U)) :
     exact congrArg (_ ≫ ·) ((congrArg (_ ≫ ·) ((Spec (X.presheaf.stalk x)).presheaf.map_id _)).trans
       (Category.comp_id _))
   unfold valR
-  refine (dif_pos h).trans ?_
+  refine (dite_eq_left h).trans ?_
   change ((X.fromSpecStalk x).appLE U ⊤ h ≫ (Scheme.ΓSpecIso _).hom).hom a = _
   rw [e, Category.assoc, Iso.inv_hom_id, Category.comp_id]
 
@@ -1508,7 +1508,7 @@ theorem exists_formalPoint : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   obtain ⟨dA, hdA⟩ := GlobalTheory.T.exists_stalk_derivation_of_vectorFieldOnOpen G.left W d hd.1 (origin G) hx0W
   have hcomm : ∀ a b s, δ a (δ b s) = δ b (δ a s) := by
     intro a b s
-    obtain ⟨O, hO, f, rfl⟩ := TopCat.Presheaf.germ_exist G.left.presheaf s
+    obtain ⟨O, hO, f, rfl⟩ := TopCat.Presheaf.exists_germ_eq G.left.presheaf s
     rw [hδ b O hO le_top, hδ a O hO le_top, hδ a O hO le_top, hδ b O hO le_top,
       GlobalTheory.T.invariantVectorFields_commute_of_commGroupScheme R G (v a) (v b) (dd a) (dd b) (hdd a) (hdd b)]
   have hconst : ∀ a r, δ a (constO G r) = 0 := by
@@ -1528,7 +1528,7 @@ theorem exists_formalPoint : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
     show (∏ i, (((0 : Fin n →₀ ℕ) i).factorial : ℚ))⁻¹ • evO G (iterOp _ 0 s) = _
     rw [iterOp_zero]
     simp
-  haveI : IsLocalHom (evO G) := Scheme.isLocalHom_stalkClosedPointTo (R := CommRingCat.of R) (η[G]).left
+  have : IsLocalHom (evO G) := Scheme.isLocalHom_stalkClosedPointTo (R := CommRingCat.of R) (η[G]).left
   have : IsLocalHom T := ⟨fun s hs => by
     have h1 : IsUnit (evO G s) := by rw [← hT0]; exact (MvPowerSeries.isUnit_iff_constantCoeff).1 hs
     exact (isUnit_map_iff (evO G) s).1 h1⟩

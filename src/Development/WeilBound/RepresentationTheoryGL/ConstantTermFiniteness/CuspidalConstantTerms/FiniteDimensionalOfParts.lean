@@ -93,7 +93,7 @@ theorem ind_block_eq {A : Type} [CommRing A] {r : ℕ} (T : Finset (Fin r)) (k :
   classical
   funext i
   have e : i ∈ block T k ↔ i ∈ {i | i ≤ k} ∧ ¬ i ∈ upTo (T.filter (· < k)) := by
-    simp only [block, upTo, Set.mem_setOf_eq, Finset.mem_filter]
+    simp only [block, upTo, Set.mem_ofPred_eq, Finset.mem_filter]
     constructor
     · rintro ⟨h1, h2⟩
       refine ⟨h1, ?_⟩
@@ -109,7 +109,7 @@ theorem ind_upTo_insert {A : Type} [CommRing A] {r : ℕ} (S : Finset (Fin r)) (
   classical
   funext i
   have e : i ∈ upTo (insert a S) ↔ i ∈ {i | i ≤ a} ∨ i ∈ upTo S := by
-    simp only [upTo, Set.mem_setOf_eq, Finset.mem_insert]
+    simp only [upTo, Set.mem_ofPred_eq, Finset.mem_insert]
     constructor
     · rintro ⟨k, hk | hk, hik⟩
       · exact Or.inl (hk ▸ hik)
@@ -143,12 +143,12 @@ theorem sum_ind_block {A : Type} [CommRing A] {r : ℕ} (T : Finset (Fin r)) :
         exact absurd (h2 k0 hk0T (lt_of_not_ge hlt)) (not_lt.2 hik0)
       · rintro rfl
         exact ⟨hik0, fun t ht htk => lt_of_not_ge fun hit => absurd (hmin t ht hit) (not_le.2 htk)⟩
-    rw [Finset.sum_eq_single_of_mem k0 hk0T, ind_apply, ind_apply, if_pos ((hb k0 hk0T).2 rfl), if_pos hi]
+    rw [Finset.sum_eq_single_of_mem k0 hk0T, ind_apply, ind_apply, ite_eq_left ((hb k0 hk0T).2 rfl), ite_eq_left hi]
     intro k hk hkk
-    rw [ind_apply, if_neg fun h => hkk ((hb k hk).1 h)]
-  · rw [ind_apply, if_neg hi]
+    rw [ind_apply, ite_eq_right fun h => hkk ((hb k hk).1 h)]
+  · rw [ind_apply, ite_eq_right hi]
     refine Finset.sum_eq_zero fun k hk => ?_
-    rw [ind_apply, if_neg fun h => hi ⟨k, hk, h.1⟩]
+    rw [ind_apply, ite_eq_right fun h => hi ⟨k, hk, h.1⟩]
 
 theorem ind_block_mul_ind_block {A : Type} [CommRing A] {r : ℕ} (T : Finset (Fin r)) {k l : Fin r} (hk : k ∈ T) (hl : l ∈ T) (hkl : k ≠ l) :
     (ind (block T k) : Fin r → A) * ind (block T l) = 0 := by
@@ -161,8 +161,8 @@ theorem ind_block_mul_ind_block {A : Type} [CommRing A] {r : ℕ} (T : Finset (F
       rcases lt_or_gt_of_ne hkl with h | h
       · exact absurd (h2.2 k hk h) (not_lt.2 h1.1)
       · exact absurd (h1.2 l hl h) (not_lt.2 h2.1)
-    · rw [if_neg h2, mul_zero]
-  · rw [if_neg h1, zero_mul]
+    · rw [ite_eq_right h2, mul_zero]
+  · rw [ite_eq_right h1, zero_mul]
 
 theorem prX_ind_le {A : Type} [CommRing A] (s : A →+* A) {n r : ℕ} (J : Matrix (Fin n) (Fin n) A) (Z W : Matrix (Fin n) (Fin r) A)
     (k : Fin r) : prX s J Z W (ind {i | i ≤ k}) =
@@ -226,7 +226,7 @@ theorem prX_mulVec_eq_zero {Z W : Matrix (Fin n) (Fin r) A} {I : Set (Fin r)} {y
     rw [mulVec_diagonal, ind_apply]
     by_cases hi : i ∈ I
     · rw [hy i hi, mul_zero]; rfl
-    · rw [if_neg hi, zero_mul]; rfl
+    · rw [ite_eq_right hi, zero_mul]; rfl
   rw [prX, Matrix.mul_assoc (Z * diagonal _), ← mulVec_mulVec, ← mulVec_mulVec, this, mulVec_zero]
 
 theorem mulVec_col {m : ℕ} (M : Matrix (Fin n) (Fin n) A) (N : Matrix (Fin n) (Fin m) A) (i : Fin m) :
@@ -462,7 +462,7 @@ theorem exists_uPart {T : Finset (Fin r)} {g : GAd σ J} (hg : g ∈ levi σ J X
     funext a
     rw [Matrix.transpose_apply, Matrix.sub_apply]
     erw [Matrix.mul_diagonal]
-    rw [ind_apply, if_pos hi, mul_one, sub_self]
+    rw [ind_apply, ite_eq_left hi, mul_one, sub_self]
     rfl
   have hX : P * adMat F X = adMat F X * diagonal (ind (upTo T)) := by
     simp only [P, prj, Matrix.add_mul, prX_mul_X fyx, prY_mul_X fxx, add_zero]
@@ -694,7 +694,7 @@ theorem iwasawa_majorant (n r : ℕ) (J P : Matrix (Fin n) (Fin n) ℂ) (X Y : M
     have hd : IsUnit (Rᴴ * R).det := by rw [hR]; exact (Matrix.isUnit_iff_isUnit_det _).1 hG.isUnit
     rw [Matrix.det_mul] at hd
     exact isUnit_of_mul_isUnit_right hd
-  letI := Matrix.invertibleOfIsUnitDet R hRu
+  let := Matrix.invertibleOfIsUnitDet R hRu
   have hBt : (R⁻¹).BlockTriangular id := blockTriangular_inv_of_blockTriangular hRt
   have hRi : R⁻¹ * R = 1 := Matrix.nonsing_inv_mul R hRu
   have hRi' : R * R⁻¹ = 1 := Matrix.mul_nonsing_inv R hRu
@@ -1088,7 +1088,7 @@ theorem exists_finset_sep_levi : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.ho
   intro D θ hθ V U hU ε fr hfr W _ _ _ ρ hρ c m X Y hW T hT
   classical
   obtain ⟨C, hC⟩ := exists_decomp D θ hθ V U hU ε fr hfr m X Y hW T
-  haveI := fun τ => finiteDimensional_coeffSpan (ρ τ)
+  have := fun τ => finiteDimensional_coeffSpan (ρ τ)
   choose S hS using fun τ => exists_finset_sep (GlobalTheory.Published.AutFin.coeffSpan (ρ τ))
   refine ⟨(C ×ˢ Fintype.piFinset S).image fun p => p.1 * kInf θ V ε fr p.2, fun φ hφ h0 => ?_⟩
   funext g
@@ -1149,7 +1149,7 @@ theorem finiteDimensional_of_parts {G : Type} [Group G] {ι : Type} [Fintype ι]
 
   let R : G → (G → ℂ) →ₗ[ℂ] ((∀ i, H i) → ℂ) := fun b => LinearMap.funLeft ℂ ℂ fun x => P x * b
   have hfin : ∀ b, FiniteDimensional ℂ (Submodule.span ℂ (R b '' 𝓒)) := fun b => by
-    haveI := fun i => hcore i b
+    have := fun i => hcore i b
     refine finiteDimensional_of_slices (fun i => Submodule.span ℂ (sliceSet 𝓒 (H i) L b)) _ ?_
     rintro _ ⟨φ, hφ, rfl⟩ i x
     have e : ∀ t : H i, Function.update x i t = Pi.mulSingle i t * Function.update x i 1 := fun t => by
@@ -1169,7 +1169,7 @@ theorem finiteDimensional_of_parts {G : Type} [Group G] {ι : Type} [Fintype ι]
     exact Submodule.mem_map_of_mem hφ
   let Ψ : Submodule.span ℂ 𝓒 →ₗ[ℂ] (∀ b : B, Submodule.span ℂ (R b.1 '' 𝓒)) :=
     LinearMap.pi fun b => ((R b.1).comp (Submodule.span ℂ 𝓒).subtype).codRestrict _ fun φ => hmap b.1 φ.1 φ.2
-  haveI := fun b : B => hfin b.1
+  have := fun b : B => hfin b.1
   refine FiniteDimensional.of_injective Ψ ((injective_iff_map_eq_zero Ψ).2 fun φ hφ => ?_)
   refine Subtype.ext (hB φ.1 φ.2 fun b hb g hg => ?_)
   obtain ⟨x, rfl⟩ : g ∈ P.range := hrange ▸ hg

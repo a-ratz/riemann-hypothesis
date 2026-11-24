@@ -72,9 +72,9 @@ theorem nabs_lt_one_of_tendsto_pow : ∀ (k : Type) [Field k] [ValuativeRel k] [
     Tendsto (fun n : ℕ => (t : k) ^ n) atTop (𝓝 0) → nabs k t < 1 := by
   intro k _ _ _ _ t ht
   have hv := GlobalTheory.CompanionTheory.NabsContract.valuation_lt_one_of_tendsto_pow t ht
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
+  have := GlobalTheory.SplitWeil.t2Space k
   set ν : Measure k := Measure.addHaar with hν
   set O : Set k := ((valuation k).integer : Set k) with hO_def
   set B : Set k := GlobalTheory.SplitWeil.cball t with hB_def

@@ -62,7 +62,7 @@ namespace GlobalTheory
 theorem isProjOver_locallyOfFiniteType : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R),
     IsProjOver s → LocallyOfFiniteType s := by
   rintro R _ X s ⟨N, i, hi, rfl⟩
-  haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N
+  have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N
   infer_instance
 
 end GlobalTheory

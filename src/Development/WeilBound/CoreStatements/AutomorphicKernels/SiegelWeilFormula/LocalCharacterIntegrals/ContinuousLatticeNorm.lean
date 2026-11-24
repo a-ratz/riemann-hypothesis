@@ -66,7 +66,7 @@ theorem isCompact_ballH (R : ℝ) : IsCompact {b : HermR (Fv F v) σ n | nM v b.
 
 theorem measurableSet_ballH (R : ℝ) : MeasurableSet {b : HermR (Fv F v) σ n | nM v b.1 ≤ R} := by
   have hc : IsClosed {b : HermR (Fv F v) σ n | nM v b.1 ≤ R} :=
-    isClosed_le ((continuous_nM (v := v) (p := n) (q := n)).comp continuous_subtype_val) continuous_const
+    isClosed_le ((continuous_nM (v := v) (p := n) (q := n)).comp continuous_subtypeVal) continuous_const
   exact hc.measurableSet
 
 theorem lattice_norm_ge_one (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) (b : HermR (Fv F v) σ n) :
@@ -127,7 +127,7 @@ theorem continuous_lattice_norm (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv
     simp only [nu2, e]
   refine continuous_iff_continuousAt.2 fun b => ?_
   have ht : Tendsto (fun c : HermR (Fv F v) σ n => c.1 - b.1) (𝓝 b) (𝓝 0) := by
-    have h1 : Tendsto (fun c : HermR (Fv F v) σ n => c.1) (𝓝 b) (𝓝 b.1) := continuous_subtype_val.tendsto b
+    have h1 : Tendsto (fun c : HermR (Fv F v) σ n => c.1) (𝓝 b) (𝓝 b.1) := continuous_subtypeVal.tendsto b
     have h2 := h1.sub_const b.1
     rwa [sub_self] at h2
   have hb := ht.eventually hev
@@ -178,8 +178,8 @@ theorem continuous_uu (h : Hyp σ M J n ψ v μv νv lam L₁ L₂ Φv g T) :
     · exact Eventually.of_forall fun Y => by rw [norm_mul, norm_psiV h.chr, mul_one]
     · exact hΦc.norm.integrable_of_hasCompactSupport h.sb.2.norm
     · exact Eventually.of_forall fun Y =>
-        continuous_const.mul (hψc.comp (auxc_trPair continuous_subtype_val continuous_const))
+        continuous_const.mul (hψc.comp (auxc_trPair continuous_subtypeVal continuous_const))
   unfold uu
-  exact hjt.mul (hψc.comp (auxc_trPair continuous_const continuous_subtype_val).neg)
+  exact hjt.mul (hψc.comp (auxc_trPair continuous_const continuous_subtypeVal).neg)
 
 end PositivityTheory.SiegelWeilFormula.SwLocFin

@@ -118,8 +118,8 @@ def degProj (A : Cube.{v} ι R) (p : ℕ) : Module.End R (∀ s, A.obj s) :=
 theorem degProj_apply (A : Cube.{v} ι R) (p : ℕ) (x : ∀ s, A.obj s) (s : Finset ι) :
     degProj A p x s = if s.card = p then x s else 0 := by
   by_cases h : s.card = p
-  · rw [if_pos h]; exact extend_apply_of_eq A _ h
-  · rw [if_neg h]; exact extend_apply_of_ne A _ h
+  · rw [ite_eq_left h]; exact extend_apply_of_eq A _ h
+  · rw [ite_eq_right h]; exact extend_apply_of_ne A _ h
 
 def degSign (A : Cube.{v} ι R) : Module.End R (∀ s, A.obj s) :=
   LinearMap.pi fun s => (-1 : ℤ) ^ s.card • LinearMap.proj s
@@ -264,7 +264,7 @@ theorem nonempty_cubeHomology_equiv_of_homotopy (A : Cube.{v} ι R) (n : ℕ)
   have hPP : ∀ x, P (P x) = P x := fun x => Φ.injective (by
     rw [← hP, ← hP]
     have := degProj_mul_degProj A n n
-    rw [if_pos rfl] at this
+    rw [ite_eq_left rfl] at this
     exact congr($this (Φ x)))
   have hI : ∀ w, e (P (I w)) = I w := fun w => by rw [← hIQ, hQI]
   refine nonempty_cubeHomology_equiv_of_retract A n (Φ.toLinearMap ∘ₗ I) (Q ∘ₗ Φ.symm.toLinearMap)
@@ -407,7 +407,7 @@ theorem rangeRestrict_comp_subtype_of_orthogonal {f : ℕ → Module.End K V}
   refine LinearMap.ext ?_
   rintro ⟨_, x, rfl⟩
   have := hf p p
-  rw [if_pos rfl] at this
+  rw [ite_eq_left rfl] at this
   exact Subtype.ext congr($this x)
 
 theorem rangeRestrict_comp_subtype_of_orthogonal_of_ne {f : ℕ → Module.End K V}
@@ -416,7 +416,7 @@ theorem rangeRestrict_comp_subtype_of_orthogonal_of_ne {f : ℕ → Module.End K
   refine LinearMap.ext ?_
   rintro ⟨_, x, rfl⟩
   have := hf p q
-  rw [if_neg h] at this
+  rw [ite_eq_right h] at this
   exact Subtype.ext congr($this x)
 
 theorem exists_retraction_tensor_ranges {f : ℕ → Module.End K V} {g : ℕ → Module.End K V'}
@@ -588,12 +588,12 @@ theorem degProj_totalTensorEquiv (n : ℕ) (z : (∀ s, A.obj s) ⊗[K] (∀ t, 
         degProj_apply]
       by_cases h1 : (part (inlEmb ι κ) w).card = p.1
       · by_cases h2 : (part (inrEmb ι κ) w).card = p.2
-        · rw [if_pos h1, if_pos h2]
-          exact (if_pos (Prod.ext h1 h2)).symm
-        · rw [if_neg h2, tmul_zero]
-          exact (if_neg fun h => h2 (congrArg Prod.snd h)).symm
-      · rw [if_neg h1, zero_tmul]
-        exact (if_neg fun h => h1 (congrArg Prod.fst h)).symm
+        · rw [ite_eq_left h1, ite_eq_left h2]
+          exact (ite_eq_left (Prod.ext h1 h2)).symm
+        · rw [ite_eq_right h2, tmul_zero]
+          exact (ite_eq_right fun h => h2 (congrArg Prod.snd h)).symm
+      · rw [ite_eq_right h1, zero_tmul]
+        exact (ite_eq_right fun h => h1 (congrArg Prod.fst h)).symm
     rw [Finset.sum_congr rfl fun p _ => h p, Finset.sum_ite_eq]
     simp only [Finset.HasAntidiagonal.mem_antidiagonal]
 
@@ -672,7 +672,7 @@ theorem nonempty_trunc₂_iso_extTensor (C : Cube.{v} (ι ⊕ₗ κ) K)
       fun {w w'} h x => by
         by_cases hw : w ∈ partsIn (inlEmb ι κ) (inrEmb ι κ) {s | s.Nonempty} {t | t.Nonempty}
         · have hw' := isUpperSet_partsIn_nonempty _ _ h hw
-          simp only [dif_pos hw, dif_pos hw', LinearMap.comp_apply, LinearEquiv.coe_coe]
+          simp only [dite_eq_left hw, dite_eq_left hw', LinearMap.comp_apply, LinearEquiv.coe_coe]
           rw [suppEquiv_res h hw hw', hν h hw hw']
         · have := subsingleton_supp (extTensor A B) hP hw
           rw [Subsingleton.elim x 0]
@@ -681,7 +681,7 @@ theorem nonempty_trunc₂_iso_extTensor (C : Cube.{v} (ι ⊕ₗ κ) K)
     trunc₂Iso (trunc₂Incl (extTensor A B)) fun s t hs ht => trunc₂Incl_bijective _ hs ht⟩
   have hw : sumVertex s t ∈ partsIn (inlEmb ι κ) (inrEmb ι κ) {s | s.Nonempty} {t | t.Nonempty} := by
     simp [hs, ht]
-  have : (φ.app (sumVertex s t)).hom = ν _ hw ∘ₗ (suppEquiv _ hP hw).toLinearMap := dif_pos hw
+  have : (φ.app (sumVertex s t)).hom = ν _ hw ∘ₗ (suppEquiv _ hP hw).toLinearMap := dite_eq_left hw
   rw [this]
   exact ((hb (sumVertex_part _) _).comp (hμ _ _ hw.1 hw.2)).comp (suppEquiv _ hP hw).bijective
 
@@ -897,9 +897,9 @@ theorem exists_mul_eq (hM : M.IsLB) (hH : H.IsLB) (p : M.ι) (k : H.ι) (hp : V 
 theorem secMulHom_bijective (hM : M.IsLB) (hH : H.IsLB) (hV : IsAffineOpen V) :
     Function.Bijective (secMulHom M H V) := by
   have hT := isLB_tw hM hH 1
-  haveI := invertible hM hV
-  haveI := invertible hH hV
-  haveI := invertible hT hV
+  have := invertible hM hV
+  have := invertible hH hV
+  have := invertible hT hV
   refine Module.Invertible.bijective_of_surjective fun x => ?_
   let S : Set Γ(X, V) := {a | ∃ p k, X.basicOpen a ≤ M.U p ∧ X.basicOpen a ≤ H.U k}
   have hS : Ideal.span S = ⊤ := by
@@ -964,22 +964,22 @@ open ExtProd in
 theorem exists_secOnR_tensor_equiv : ∀ (R : Type) [CommRing R] (Y Y' Z : Scheme.{0}) (f : Y ⟶ Spec (CommRingCat.of R)) (f' : Y' ⟶ Spec (CommRingCat.of R)) (p₁ : Z ⟶ Y) (p₂ : Z ⟶ Y') (M : LB Y) (M' : LB Y'), IsPullback p₁ p₂ f f' → M.IsLB → M'.IsLB → ∀ (U : Y.Opens) (W : Y'.Opens) (O : Z.Opens) (e₁ : O ≤ p₁ ⁻¹ᵁ U) (e₂ : O ≤ p₂ ⁻¹ᵁ W), IsAffineOpen U → IsAffineOpen W → O = p₁ ⁻¹ᵁ U ⊓ p₂ ⁻¹ᵁ W → ∃ E : SecOnR f M U ⊗[R] SecOnR f' M' W ≃ₗ[R] SecOnR (p₁ ≫ f) (tw (M.pull p₁) (M'.pull p₂) 1) O, ∀ (a : SecOn M U) (b : SecOn M' W) (p : (M.pull p₁).ι) (l : (M'.pull p₂).ι), SecOn.twCoord ((SecOnR.of _ _ O).symm (E (SecOnR.of f M U a ⊗ₜ SecOnR.of f' M' W b))) p l = rs Z (inf_le_inf_left O inf_le_left) (GlobalTheory.LB.coord (SecOn.pullLE M p₁ U O e₁ a) p) * rs Z (inf_le_inf_left O inf_le_right) (GlobalTheory.LB.coord (SecOn.pullLE M' p₂ W O e₂ b) l) := by
   intro R _ Y Y' Z f f' p₁ p₂ M M' H hM hM' U W O e₁ e₂ hU hW e
   have hO : IsAffineOpen O := e ▸ isAffineOpen_inf H hU hW
-  letI := cstAlgebra f U
-  letI := cstAlgebra f' W
-  letI := cstAlgebra (p₁ ≫ f) O
-  letI : Algebra Γ(Y, U) Γ(Z, O) := (p₁.appLE U O e₁).hom.toAlgebra
-  letI : Algebra Γ(Y', W) Γ(Z, O) := (p₂.appLE W O e₂).hom.toAlgebra
-  haveI : IsScalarTower R Γ(Y, U) Γ(Z, O) :=
+  let := cstAlgebra f U
+  let := cstAlgebra f' W
+  let := cstAlgebra (p₁ ≫ f) O
+  let : Algebra Γ(Y, U) Γ(Z, O) := (p₁.appLE U O e₁).hom.toAlgebra
+  let : Algebra Γ(Y', W) Γ(Z, O) := (p₂.appLE W O e₂).hom.toAlgebra
+  have : IsScalarTower R Γ(Y, U) Γ(Z, O) :=
     .of_algebraMap_eq fun r => (appLE_cst (g := RingHom.id R) (by simp) e₁ r).symm
-  haveI : IsScalarTower R Γ(Y', W) Γ(Z, O) :=
+  have : IsScalarTower R Γ(Y', W) Γ(Z, O) :=
     .of_algebraMap_eq fun r => (appLE_cst (g := RingHom.id R) (by simp [H.w]) e₂ r).symm
-  haveI : Algebra.IsPushout R Γ(Y', W) Γ(Y, U) Γ(Z, O) :=
+  have : Algebra.IsPushout R Γ(Y', W) Γ(Y, U) Γ(Z, O) :=
     CommRingCat.isPushout_iff_isPushout.mp (isPushout_prod H e₁ e₂ hU hW e)
-  letI : Module Γ(Y, U) (SecOn (M.pull p₁) O) := Module.compHom _ (p₁.appLE U O e₁).hom
-  haveI : IsScalarTower Γ(Y, U) Γ(Z, O) (SecOn (M.pull p₁) O) :=
+  let : Module Γ(Y, U) (SecOn (M.pull p₁) O) := Module.compHom _ (p₁.appLE U O e₁).hom
+  have : IsScalarTower Γ(Y, U) Γ(Z, O) (SecOn (M.pull p₁) O) :=
     .of_algebraMap_smul fun _ _ => rfl
-  letI : Module Γ(Y', W) (SecOn (M'.pull p₂) O) := Module.compHom _ (p₂.appLE W O e₂).hom
-  haveI : IsScalarTower Γ(Y', W) Γ(Z, O) (SecOn (M'.pull p₂) O) :=
+  let : Module Γ(Y', W) (SecOn (M'.pull p₂) O) := Module.compHom _ (p₂.appLE W O e₂).hom
+  have : IsScalarTower Γ(Y', W) Γ(Z, O) (SecOn (M'.pull p₂) O) :=
     .of_algebraMap_smul fun _ _ => rfl
   let j₁ : SecOnR f M U →ₗ[Γ(Y, U)] SecOn (M.pull p₁) O :=
     { toFun := SecOn.pullLE M p₁ U O e₁

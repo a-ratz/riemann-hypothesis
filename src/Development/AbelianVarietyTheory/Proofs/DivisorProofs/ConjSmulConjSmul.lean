@@ -64,7 +64,7 @@ abbrev FI (D : D7) : Type := FractionalIdeal (𝓞 D.host.E)⁰ D.host.E
 
 theorem star_eq_conj (x : D.host.E) : (letI := D.host.cmStar; star x) = D.host.conj x := by
   apply D.host.φ₀.injective
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   show D.host.φ₀ (IsCMField.complexConj D.host.E x) = _
   rw [NumberField.IsCMField.complexEmbedding_complexConj, Formalism.HC.HostAx.conjE_apply]
 
@@ -122,11 +122,11 @@ theorem skewLat_SD {𝔪 : Ideal (𝓞 D.host.E)} (h𝔪 : 𝔪 ≠ ⊥) (N : �
     have := conj_mem_div h𝔪 hz
     rwa [h𝔪𝔫] at this
   have memL : ∀ v : Fin N → D.host.E, v ∈ skewLat D 𝔪 N ↔ ∀ i, v i ∈ I := mem_skewLat
-  letI := D.host.cmStar
+  let := D.host.cmStar
   show IsSDLat D.host.E N (skewLat D 𝔪 N)
   refine ⟨Submodule.fg_pi fun _ => FractionalIdeal.fg_of_isNoetherianRing le_rfl _, ?_, fun y => ⟨fun hy x hx => ?_, fun h => ?_⟩⟩
   · obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot (p := (I : Submodule (𝓞 D.host.E) D.host.E))
-      (fun h => hI0 (FractionalIdeal.coeToSubmodule_injective (h.trans FractionalIdeal.coe_zero.symm)))
+      (fun h => hI0 (FractionalIdeal.coeToSubmodule_injective (h.trans FractionalIdeal.coeToSubmodule_zero.symm)))
     have hs : ∀ i : Fin N, (Pi.single i a : Fin N → D.host.E) ∈ skewLat D 𝔪 N := fun i => by
       rw [memL]
       intro j

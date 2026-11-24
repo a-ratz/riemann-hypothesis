@@ -466,7 +466,7 @@ theorem sup_orthRel_of_finite {H : Type*} [NormedAddCommGroup H] [InnerProductSp
         FiniteDimensional ℂ S :=
     fun U₀ _ P hP hPd S hS => finiteDimensional_of_eigen b P hP hPd 0
       ((U₀ : Subgroup (AdelicGLn.FiniteAdelicGL K n)).comap (AdelicGLn.integralFiniteGL K n).subtype)
-      (U₀.isOpen.preimage continuous_subtype_val) S fun φ hφ =>
+      (U₀.isOpen.preimage continuous_subtypeVal) S fun φ hφ =>
         ⟨(hS φ hφ).1, by rw [zero_smul]; exact (hS φ hφ).2.1, fun u hu => (hS φ hφ).2.2 _ hu⟩
   refine sup_orthRel_eq_of_symmetric (ι := ι) hU hinj hΔV hT hUΔ (fun v hv => ?_)
   obtain ⟨U₀, hU₀sub, hU₀⟩ := exists_openSubgroup_rightInvariant v.2.1.isSmooth v.2.1.isKFinite
@@ -571,7 +571,7 @@ theorem le_topologicalClosure_map [CompleteSpace V] (hirr : ((cuspRepT μ).restr
   have hYinv := isInvariant_topologicalClosure_map μ (hWU.trans inf_le_left) hWρ hWσ hWτ
   set Y' : Submodule ℂ V := Y.comap V.subtype with hY'def
   have hY'c : IsClosed (Y' : Set V) :=
-    (Submodule.isClosed_topologicalClosure _).preimage continuous_subtype_val
+    (Submodule.isClosed_topologicalClosure _).preimage continuous_subtypeVal
   have hY'inv : ((cuspRepT μ).restrict V hV).IsInvariant Y' := by
     intro g v hv
     show (((cuspRepT μ).restrict V hV g v : V) : CuspL2 μ) ∈ Y

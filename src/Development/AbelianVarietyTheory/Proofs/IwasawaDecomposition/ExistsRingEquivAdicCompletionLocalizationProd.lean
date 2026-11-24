@@ -187,7 +187,7 @@ theorem exists_ringEquiv_completion_prod : ∀ (T C A : Type) [CommRing T] [IsLo
       AdicCompletion (maximalIdeal A) A,
       φ.comp (algebraMap (AdicCompletion (maximalIdeal T) T) _) = α ∧
         ∀ c, φ (1 ⊗ₜ[T] c) = g c := by
-    letI : Algebra T (AdicCompletion (maximalIdeal A) A) := (g.comp (algebraMap T C)).toAlgebra
+    let : Algebra T (AdicCompletion (maximalIdeal A) A) := (g.comp (algebraMap T C)).toAlgebra
     let α' : AdicCompletion (maximalIdeal T) T →ₐ[T] AdicCompletion (maximalIdeal A) A :=
       { α with commutes' := fun t => congr($hα t) }
     let g' : C →ₐ[T] AdicCompletion (maximalIdeal A) A := { g with commutes' := fun t => rfl }

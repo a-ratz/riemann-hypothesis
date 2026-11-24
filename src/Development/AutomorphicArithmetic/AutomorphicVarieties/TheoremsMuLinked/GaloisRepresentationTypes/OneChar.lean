@@ -114,10 +114,10 @@ private theorem exists_unram {l : ℕ} [Fact l.Prime] (c : Coef l) {N : ℕ} [Ne
   have hn : orderOf ψ ≠ 0 := by
     intro h0
     exact h (h0 ▸ dvd_zero l)
-  haveI : NeZero (orderOf ψ) := ⟨hn⟩
+  have : NeZero (orderOf ψ) := ⟨hn⟩
   have hl : ¬ l ∣ orderOf ψ := h
   obtain ⟨c', hc'e, hroots⟩ := (coefSup l).2.1 (orderOf ψ) hl
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (↥c'.O) (orderOf ψ)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (↥c'.O) (orderOf ψ)
   have hζ' : IsPrimitiveRoot (ζ : PadicAlgCl l) (orderOf ψ) :=
     hζ.map_of_injective (f := c'.O.val) Subtype.val_injective
   have mem : ∀ u : (ZMod N)ˣ, (((ψ.toUnitHom u : c.O) : PadicAlgCl l)) ∈ c'.O := by

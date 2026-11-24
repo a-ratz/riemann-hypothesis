@@ -152,7 +152,7 @@ lemma length_self_top : Module.length O O = ⊤ := by
   by_contra h
   have hfl : IsFiniteLength O O := Module.length_ne_top_iff.mp h
   rw [isFiniteLength_iff_isNoetherian_isArtinian] at hfl
-  haveI : IsArtinianRing O := hfl.2
+  have : IsArtinianRing O := hfl.2
   exact IsDiscreteValuationRing.not_isField O (IsArtinianRing.isField_of_isDomain O)
 
 end Matlis

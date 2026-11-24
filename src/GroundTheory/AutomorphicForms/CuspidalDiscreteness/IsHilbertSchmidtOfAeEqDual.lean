@@ -90,7 +90,7 @@ theorem isHilbertSchmidt_of_ae_eq_dual (T : H →L[ℂ] Lp ℂ 2 ν) (e : X → 
           rw [← ofReal_norm, hkn]
           exact ENNReal.ofReal_le_ofReal (hB x)
   have hmeas : ∀ i, AEMeasurable (fun x => ‖e x (b i)‖ₑ ^ 2) ν := fun i =>
-    ((Lp.aestronglyMeasurable (T (b i))).enorm.pow_const 2).congr
+    ((Lp.aestronglyMeasurable (T (b i))).eNorm.pow_const 2).congr
       ((hT (b i)).mono fun x hx => by simp only [hx])
   unfold IsHilbertSchmidt
   calc hsNormSq T = ∑' i, ‖T (b i)‖ₑ ^ 2 := rfl
@@ -115,7 +115,7 @@ theorem norm_le_of_enorm_sq_le {E F : Type*} [SeminormedAddCommGroup E] [Seminor
     ‖z‖ ≤ √A.toReal * ‖v‖ := by
   have h' : ‖z‖ ^ 2 ≤ A.toReal * ‖v‖ ^ 2 := by
     have := ENNReal.toReal_mono (ENNReal.mul_ne_top hA (by simp)) h
-    simpa [ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_enorm] using this
+    simpa [ENNReal.toReal_mul, ENNReal.toReal_pow, toReal_eNorm] using this
   rw [← Real.sqrt_sq (norm_nonneg z), ← Real.sqrt_sq (norm_nonneg v), ← Real.sqrt_mul
     ENNReal.toReal_nonneg]
   exact Real.sqrt_le_sqrt h'
@@ -198,13 +198,13 @@ theorem lintegral_lift_sq_le (φ : Lp ℂ 2 (quotientMeasure Γ μ)) {E : Set G}
     ∫⁻ g in E, ‖φ (mk Γ g)‖ₑ ^ 2 ∂μ ≤ N * ‖φ‖ₑ ^ 2 := by
   rw [Lp.eNorm_def, eLpNorm_two_sq_of_aestronglyMeasurable (Lp.aestronglyMeasurable φ)]
   exact lintegral_indicator_le Γ μ hE hN
-    ((Lp.stronglyMeasurable φ).measurable.enorm.pow_const 2)
+    ((Lp.stronglyMeasurable φ).measurable.eNorm.pow_const 2)
 
 theorem lintegral_lift_sq_lt_top (φ : Lp ℂ 2 (quotientMeasure Γ μ)) {C : Set G} (hC : IsCompact C) :
     ∫⁻ g in C, ‖φ (mk Γ g)‖ₑ ^ 2 ∂μ < ⊤ := by
   obtain ⟨N, hN⟩ := exists_encard_le_of_isCompact Γ hC
   refine (lintegral_lift_sq_le Γ μ φ hC.measurableSet hN).trans_lt ?_
-  exact ENNReal.mul_lt_top (by simp) (ENNReal.pow_lt_top enorm_lt_top)
+  exact ENNReal.mul_lt_top (by simp) (ENNReal.pow_lt_top eNorm_lt_top)
 
 variable [IsFiniteMeasureOnCompacts μ]
 
@@ -248,7 +248,7 @@ theorem rconv_add (f : CompactlySupportedContinuousMap G ℂ) (φ ψ : Lp ℂ 2 
   unfold rconv
   rw [← integral_add (integrable_rconv Γ μ f φ x) (integrable_rconv Γ μ f ψ x)]
   refine integral_congr_ae ?_
-  filter_upwards [Measure.QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk Γ μ) (Lp.coeFn_add φ ψ)] with y hy
+  filter_upwards [QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk Γ μ) (Lp.coeFn_add φ ψ)] with y hy
   simp only [comp_apply, Pi.add_apply] at hy
   rw [hy, mul_add]
 
@@ -258,7 +258,7 @@ theorem rconv_smul (f : CompactlySupportedContinuousMap G ℂ) (c : ℂ)
   unfold rconv
   rw [← integral_const_mul]
   refine integral_congr_ae ?_
-  filter_upwards [Measure.QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk Γ μ) (Lp.coeFn_smul c φ)] with y hy
+  filter_upwards [QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk Γ μ) (Lp.coeFn_smul c φ)] with y hy
   simp only [comp_apply, Pi.smul_apply, smul_eq_mul] at hy
   rw [hy]
   ring
@@ -268,17 +268,17 @@ theorem enorm_rconv_sq_le (f : CompactlySupportedContinuousMap G ℂ)
     (hfS : ∀ y ∉ S, f (x⁻¹ * y) = 0) {N : ℕ} (hN : ∀ g : G, {γ : Γ | γ • g ∈ S}.encard ≤ N) :
     ‖rconv Γ μ f φ x‖ₑ ^ 2 ≤ (∫⁻ y, ‖f y‖ₑ ^ 2 ∂μ) * (N * ‖φ‖ₑ ^ 2) := by
   have hm1 : AEMeasurable (fun y => ‖f (x⁻¹ * y)‖ₑ) μ :=
-    (f.continuous.comp (continuous_const_mul x⁻¹)).measurable.enorm.aemeasurable
+    (f.continuous.comp (continuous_const_mul x⁻¹)).measurable.eNorm.aemeasurable
   have hm2 : AEMeasurable (S.indicator fun y => ‖φ (mk Γ y)‖ₑ) μ :=
-    ((stronglyMeasurable_lift Γ μ φ).measurable.enorm.indicator hS).aemeasurable
+    ((stronglyMeasurable_lift Γ μ φ).measurable.eNorm.indicator hS).aemeasurable
   calc ‖rconv Γ μ f φ x‖ₑ ^ 2
       ≤ (∫⁻ y, ‖f (x⁻¹ * y)‖ₑ * S.indicator (fun y => ‖φ (mk Γ y)‖ₑ) y ∂μ) ^ 2 := by
         gcongr
-        refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+        refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
         congr 1
         ext y
         by_cases hy : y ∈ S
-        · rw [indicator_of_mem hy, enorm_mul]
+        · rw [indicator_of_mem hy, eNorm_mul]
         · rw [indicator_of_notMem hy, hfS y hy]
           simp
     _ ≤ (∫⁻ y, ‖f (x⁻¹ * y)‖ₑ ^ 2 ∂μ) *
@@ -379,14 +379,14 @@ theorem integrable_prod_rightMul (f : CompactlySupportedContinuousMap G ℂ)
   have hφ1 : ∫⁻ x, ‖φ x‖ₑ ∂quotientMeasure Γ μ < ⊤ := ((Lp.memLp φ).integrable one_le_two).2
   have hf1 : ∫⁻ g, ‖f g‖ₑ ∂μ < ⊤ :=
     (f.continuous.integrable_of_hasCompactSupport f.hasCompactSupport).2
-  rw [hasFiniteIntegral_iff_enorm, lintegral_prod _ hmeas.aestronglyMeasurable.enorm]
+  rw [hasFiniteIntegral_iff_eNorm, lintegral_prod _ hmeas.aestronglyMeasurable.eNorm]
   calc ∫⁻ g, ∫⁻ x, ‖uncurry (fun g x => f g * φ (rightMul Γ g x)) (g, x)‖ₑ ∂quotientMeasure Γ μ ∂μ
       = ∫⁻ g, ‖f g‖ₑ * ∫⁻ x, ‖φ x‖ₑ ∂quotientMeasure Γ μ ∂μ := by
         congr 1
         ext g
-        simp only [uncurry_apply_pair, enorm_mul]
-        rw [lintegral_const_mul' _ _ enorm_ne_top,
-          (measurePreserving_rightMul μ g).lintegral_comp (Lp.stronglyMeasurable φ).measurable.enorm]
+        simp only [uncurry_apply_pair, eNorm_mul]
+        rw [lintegral_const_mul' _ _ eNorm_ne_top,
+          (measurePreserving_rightMul μ g).lintegral_comp (Lp.stronglyMeasurable φ).measurable.eNorm]
     _ = (∫⁻ g, ‖f g‖ₑ ∂μ) * ∫⁻ x, ‖φ x‖ₑ ∂quotientMeasure Γ μ := lintegral_mul_const' _ _ hφ1.ne
     _ < ⊤ := ENNReal.mul_lt_top hf1 hφ1
 

@@ -53,8 +53,8 @@ private theorem toZMod_one_iff {l : ℕ} [Fact l.Prime] (x : ℤ_[l]) :
 private theorem fix_iff {l : ℕ} [Fact l.Prime] {Ω : Type} [Field Ω] {ζ : Ω} (hζ : IsPrimitiveRoot ζ l) (x : ℤ_[l]) :
     ζ ^ (PadicInt.toZModPow 1 x).val = ζ ↔ PadicInt.toZMod x = 1 := by
   have h1 : 1 < l ^ 1 := by simpa using (Fact.out : l.Prime).one_lt
-  haveI : Fact (1 < l ^ 1) := ⟨h1⟩
-  haveI : NeZero (l ^ 1) := ⟨by omega⟩
+  have : Fact (1 < l ^ 1) := ⟨h1⟩
+  have : NeZero (l ^ 1) := ⟨by omega⟩
   rw [toZMod_one_iff]
   constructor
   · intro h
@@ -89,7 +89,7 @@ theorem UpperTheory.V.W.muL :
   · intro hn
     by_contra hc
     push Not at hc
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
     have hm : ζ ∈ (⊥ : IntermediateField L Ω) := by
       rw [InfiniteGalois.mem_bot_iff_fixed]
       exact fun σ => (key σ ζ hζ).2 (hc _)

@@ -122,10 +122,10 @@ end Generic
 open TensorProduct in
 theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.PointRingCommRing.letters_neZero {l : ℕ} [Fact l.Prime] (K : _root_.Formalism.BasicNotions.Loc.FinExt l) :
     NeZero (Module.finrank ℚ_[l] ↥(_root_.Formalism.BasicNotions.Loc.K0 K)) := by
-  haveI : FiniteDimensional ℚ_[l] ↥(K : IntermediateField ℚ_[l] (_root_.Formalism.BasicNotions.Loc.Om l)) := K.2
+  have : FiniteDimensional ℚ_[l] ↥(K : IntermediateField ℚ_[l] (_root_.Formalism.BasicNotions.Loc.Om l)) := K.2
   have hle : _root_.Formalism.BasicNotions.Loc.K0 K ≤ (K : IntermediateField ℚ_[l] (_root_.Formalism.BasicNotions.Loc.Om l)) := by
     unfold _root_.Formalism.BasicNotions.Loc.K0; exact inf_le_left
-  haveI : FiniteDimensional ℚ_[l] ↥(_root_.Formalism.BasicNotions.Loc.K0 K) :=
+  have : FiniteDimensional ℚ_[l] ↥(_root_.Formalism.BasicNotions.Loc.K0 K) :=
     Module.Finite.of_injective (IntermediateField.inclusion hle).toLinearMap
       (IntermediateField.inclusion_injective hle)
   exact ⟨Module.finrank_pos.ne'⟩

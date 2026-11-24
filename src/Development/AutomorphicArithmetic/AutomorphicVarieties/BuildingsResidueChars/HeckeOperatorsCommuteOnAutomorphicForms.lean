@@ -92,7 +92,7 @@ private theorem automorphic_form_translate (φ : TR.Sm F a) (g : GL (Fin a) (Af 
   · have e : {k | TR.finRep F a k (TR.finRep F a g φ) = TR.finRep F a g φ} =
         (fun k => g⁻¹ * k * g) ⁻¹' {k | TR.finRep F a k φ = φ} := by
       ext k
-      simp only [Set.mem_setOf_eq, Set.mem_preimage]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage]
       constructor
       · intro hk
         rw [finite_translation_mul, finite_translation_mul, hk, ← finite_translation_mul, inv_mul_cancel, map_one]

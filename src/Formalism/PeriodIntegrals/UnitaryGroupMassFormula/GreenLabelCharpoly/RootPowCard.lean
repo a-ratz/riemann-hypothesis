@@ -75,9 +75,9 @@ theorem root_pow_card {P : K[X]} (hm : P.Monic) (hi : Irreducible P) (hX : P ≠
   have hint : IsIntegral K w := ⟨P, hm, hw⟩
   have hmin : P = minpoly K w := minpoly.eq_of_irreducible_of_monic hi hw hm
   have hw0 := root_ne_zero hm hi hX hw
-  haveI : FiniteDimensional K K⟮w⟯ := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite K⟮w⟯ := Module.finite_of_finite K
-  letI : Fintype K⟮w⟯ := Fintype.ofFinite _
+  have : FiniteDimensional K K⟮w⟯ := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite K⟮w⟯ := Module.finite_of_finite K
+  let : Fintype K⟮w⟯ := Fintype.ofFinite _
   have hcard : Fintype.card K⟮w⟯ = Fintype.card K ^ P.natDegree := by
     rw [Module.card_eq_pow_finrank (K := K), IntermediateField.adjoin.finrank hint, ← hmin]
   have h1 := FiniteField.pow_card_sub_one_eq_one (⟨w, IntermediateField.mem_adjoin_simple_self K w⟩ : K⟮w⟯)

@@ -174,8 +174,8 @@ theorem y_br_lat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : R
     have hn := n.2
     unfold towerWt
     split_ifs with hp
-    · rw [hab τ.1 n (by rw [Datum.mult, if_pos τ.2]; exact hp)]
-    · rw [hab (conjEmb τ.1) _ (by rw [Datum.mult, if_neg (GlobalTheory.AllWt.conj_not_mem τ)]; omega)]
+    · rw [hab τ.1 n (by rw [Datum.mult, ite_eq_left τ.2]; exact hp)]
+    · rw [hab (conjEmb τ.1) _ (by rw [Datum.mult, ite_eq_right (GlobalTheory.AllWt.conj_not_mem τ)]; omega)]
   · unfold Rec.latOn; rw [h4 Z]
 
 end PositivityTheory.UnitarySelfGeneration
@@ -497,7 +497,7 @@ theorem bounded_section_smooth_metric (y : (Σ k, ι k) → Ω) (A : HermLine ι
         split_ifs with hc'
         · exact mul_nonneg (hB0 c' hc') (pow_nonneg hM0 τ)
         · exact le_rfl) (Finset.mem_univ c)
-    simpa only [dif_pos hyc] using this
+    simpa only [dite_eq_left hyc] using this
   have hAh : 0 ≤ A.h z ^ τ := pow_nonneg (A.pos z hz.1).le τ
   calc ‖eval z (map (Int.castRingHom ℂ) g)‖
       ≤ B c hyc * ‖eval z (map (Int.castRingHom ℂ) h)‖ * ∏ k, ‖z ⟨k, c k⟩‖ ^ ((τ : ℤ) * A.a k) := h1
@@ -571,7 +571,7 @@ theorem small_shift {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι
   have hq' : (q : ℝ) ≠ 0 := by positivity
   have e1 : (Small.shiftH A ((q : ℝ) * (Real.log c / (τ * q)))).h z ^ τ = c * A.h z ^ τ := by
     show (Real.exp ((q : ℝ) * (Real.log c / (τ * q))) * A.h z) ^ τ = _
-    rw [mul_pow, ← Real.exp_nat_mul]
+    rw [mul_pow, ← Real.exp_natCast_mul]
     have : (τ : ℝ) * ((q : ℝ) * (Real.log c / (τ * q))) = Real.log c := by field_simp
     rw [this, Real.exp_log hc]
   rw [e1]
@@ -610,7 +610,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Plug.many_sections : GlobalTheory.Compan
   obtain ⟨n, hn1, hn2⟩ := (hnef.and hev).exists
   obtain ⟨P0, hP0, hsp⟩ := hn1.semipos
   have harith := (T.M B b).arith
-  haveI : CharZero (T.M B b).Ω := charZero_of_arith (T.M B b).y harith
+  have : CharZero (T.M B b).Ω := charZero_of_arith (T.M B b).y harith
   obtain ⟨hfd, hlim⟩ := GlobalTheory.T.section_count_tendsto_geomDeg hRR hG II hII (T.M B b).K (T.M B b).ι (T.M B b).Ω (T.M B b).y
     (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Top.combLine ((T.M B b).line (Top.scale (s n))) (m n)) hD harith
     (T.M B b).birational hsp.1
@@ -630,7 +630,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Plug.many_sections : GlobalTheory.Compan
   refine ⟨τ * q n, ?_, ?_⟩
   · have := Nat.le_mul_of_pos_right τ (hq n).1
     omega
-  haveI := hfd τ
+  have := hfd τ
   obtain ⟨v, hvS, -, hli⟩ := Submodule.exists_fun_fin_finrank_span_eq ℚ
     (chartLatNm (T.M B b).y (Top.combLine ((T.M B b).line (Top.scale (s n))) (m n)).a τ : Set (T.M B b).Ω)
   refine ⟨_, fun i => v i * θ n ^ τ, indep_mul v hli (pow_ne_zero _ (hq n).2.2), fun i => ?_, ?_⟩
@@ -702,9 +702,9 @@ theorem card_le_of_intIndep {F V : Type} [Field F] [NumberField F] [AddCommGroup
     (n : ℕ∞) ≤ ((Module.finrank ℚ F * d : ℕ) : ℕ∞) * Cardinal.toENat (Module.rank F V) := by
   classical
   by_cases hfin : Module.Finite F V
-  · letI : Module ℚ V := Module.compHom V (algebraMap ℚ F)
-    haveI : IsScalarTower ℚ F V := IsScalarTower.of_algebraMap_smul (fun _ _ => rfl)
-    haveI : Module.Finite ℚ V := Module.Finite.trans F V
+  · let : Module ℚ V := Module.compHom V (algebraMap ℚ F)
+    have : IsScalarTower ℚ F V := IsScalarTower.of_algebraMap_smul (fun _ _ => rfl)
+    have : Module.Finite ℚ V := Module.Finite.trans F V
     have hq : LinearIndependent ℚ g := (LinearIndependent.iff_fractionRing ℤ ℚ).1 hg
     have hn := hq.fintype_card_le_finrank
     rw [Fintype.card_fin, Module.finrank_pi_fintype] at hn
@@ -992,7 +992,7 @@ theorem count_le {K R Om Ω : Type} [Field K] [NumberField K] [AddCommGroup R] [
     Cardinal.toENat (Module.rank K V) * ((Module.finrank ℚ K * d : ℕ) : ℕ∞) ≤
       ((Module.finrank ℚ (Submodule.span ℚ (L : Set Ω)) : ℕ) : ℕ∞) := by
   classical
-  haveI : CharZero Om := charZero_of_injective_algebraMap (algebraMap K Om).injective
+  have : CharZero Om := charZero_of_injective_algebraMap (algebraMap K Om).injective
   let bK := Module.finBasis ℚ K
   let ψ : K →+* Ω := φ.comp (algebraMap K Om)
   have hmemW : ∀ v ∈ V, ∀ i, w * φ (ev v) * f i ∈ Submodule.span ℚ (L : Set Ω) := by
@@ -1052,7 +1052,7 @@ theorem count_le {K R Om Ω : Type} [Field K] [NumberField K] [AddCommGroup R] [
     have := key s _ hs
     rw [Fintype.card_coe] at this
     exact (Nat.le_mul_of_pos_right _ hpos).trans this
-  haveI : Module.Finite K V := Module.rank_lt_aleph0_iff.1 (hrank.trans_lt Cardinal.natCast_lt_aleph0)
+  have : Module.Finite K V := Module.rank_lt_aleph0_iff.1 (hrank.trans_lt Cardinal.natCast_lt_aleph0)
   rw [← Module.finrank_eq_rank, Cardinal.toENat_nat]
   have := key _ (Module.finBasis K V) (Module.finBasis K V).linearIndependent
   rw [Fintype.card_fin] at this
@@ -1276,10 +1276,10 @@ theorem GlobalTheory.CompanionTheory.Ar.Plug.growth_le_vol_deg : GlobalTheory.Co
     · subst hZ; exact h0
     · exact GlobalTheory.AllWt.evC_eq_zero h hZ hv.2
   let M := T.M B (κ Z)
-  letI : Algebra c.F M.Ω := (Rd.φ.comp (algebraMap c.F (Om Z))).toAlgebra
-  haveI : CharZero M.Ω := charZero_of_injective_algebraMap (algebraMap c.F M.Ω).injective
+  let : Algebra c.F M.Ω := (Rd.φ.comp (algebraMap c.F (Om Z))).toAlgebra
+  have : CharZero M.Ω := charZero_of_injective_algebraMap (algebraMap c.F M.Ω).injective
   have hN2 : 2 ≤ Dw.p + Dw.q := by omega
-  haveI := nonempty_cmType H
+  have := nonempty_cmType H
   have hD : 1 ≤ Top.dimFl (CMType H) (Dw.p + Dw.q) := dimFl_pos hN2
   have hsm : IsSmoothHerm (Top.combLine (M.line 1) (nOf u)) := by
     rw [← PB.combLine_eq_top]

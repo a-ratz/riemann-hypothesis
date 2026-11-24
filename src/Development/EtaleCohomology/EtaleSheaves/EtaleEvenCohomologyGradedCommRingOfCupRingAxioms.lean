@@ -185,7 +185,7 @@ def mapOf {E E' : Spc} (f : E ⟶ E') (h : Inv q E) (h' : Inv q E') :
 include hn in
 theorem mapOf_of {E E' : Spc} (f : E ⟶ E') (h : Inv q E) (h' : Inv q E') (k : ℕ) (a : A q E' k) :
     mapOf hn hr f h h' (DirectSum.of (A q E') k a) = DirectSum.of (A q E) k (pull (ZMod q) f (tw q k) (2 * (k : ℤ)) a) := by
-  letI := gcr hr h; letI := gcr hr h'
+  let := gcr hr h; let := gcr hr h'
   exact DirectSum.toSemiring_of _ _ _ k a
 
 end
@@ -206,10 +206,10 @@ theorem etale_even_cohomology_graded_commRing_of_cup_ring_axioms (hn : DivisorNa
       exact DirectSum.of_eq_same (β := A q E) k a
     ι_one := fun {E} _ => rfl
     ι_mul := fun {E} h k l a b => by
-      letI := gcr hr h
+      let := gcr hr h
       exact (DirectSum.of_mul_of (A := A q E) a b).symm
     ι_cpow := fun {E} h k x => by
-      letI := gcr hr h
+      let := gcr hr h
       induction k with
       | zero => rw [pow_zero, cpow_zero]; rfl
       | succ k ih =>
@@ -220,7 +220,7 @@ theorem etale_even_cohomology_graded_commRing_of_cup_ring_axioms (hn : DivisorNa
     map_ι := fun {E E'} f h h' k a => by
       exact mapOf_of hn hr f h h' k a
     π_map := fun {E E'} f h h' k r => by
-      letI := gcr hr h; letI := gcr hr h'
+      let := gcr hr h; let := gcr hr h'
       induction r using DirectSum.induction_on with
       | zero => simp only [map_zero]
       | of j a =>

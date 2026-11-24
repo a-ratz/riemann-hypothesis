@@ -70,12 +70,12 @@ def cutIdem (T : Finset (HeightOneSpectrum (𝓞 F))) : Af F :=
 theorem evalV_cutIdem_of_mem {T : Finset (HeightOneSpectrum (𝓞 F))} {v : HeightOneSpectrum (𝓞 F)} (h : v ∈ T) :
     Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (cutIdem T) = 1 := by
   classical
-  exact if_pos h
+  exact ite_eq_left h
 
 theorem evalV_cutIdem_of_notMem {T : Finset (HeightOneSpectrum (𝓞 F))} {v : HeightOneSpectrum (𝓞 F)} (h : v ∉ T) :
     Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.evalV F v (cutIdem T) = 0 := by
   classical
-  exact if_neg h
+  exact ite_eq_right h
 
 theorem tendsto_cutIdem_mul (a : Af F) :
     Tendsto (fun T : Finset (HeightOneSpectrum (𝓞 F)) => cutIdem T * a) atTop (𝓝 a) := by
@@ -104,8 +104,8 @@ theorem tendsto_cutIdem_mul (a : Af F) :
 
 theorem tendsto_cutIdem_smul (z : Af F ⊗[F] E) :
     Tendsto (fun T : Finset (HeightOneSpectrum (𝓞 F)) => (cutIdem T : Af F) • z) atTop (𝓝 z) := by
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (Af F ⊗[F] E) := IsModuleTopology.toContinuousAdd (Af F) _
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (Af F ⊗[F] E) := IsModuleTopology.toContinuousAdd (Af F) _
   induction z using TensorProduct.induction_on with
   | zero => simpa using tendsto_const_nhds
   | add x y hx hy => simpa only [smul_add] using hx.add hy
@@ -149,8 +149,8 @@ theorem cutPt_entry (T : Finset (HeightOneSpectrum (𝓞 F))) (g : GAd σ J) (i 
 
 theorem tendsto_projFin_cutPt (g : GAd σ J) :
     Tendsto (fun T : Finset (HeightOneSpectrum (𝓞 F)) => projFin σ J (cutPt σ J T g)) atTop (𝓝 (projFin σ J g)) := by
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (Af F ⊗[F] E) := IsModuleTopology.toContinuousAdd (Af F) _
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (Af F ⊗[F] E) := IsModuleTopology.toContinuousAdd (Af F) _
   have h : ∀ g : GAd σ J, Tendsto (fun T : Finset (HeightOneSpectrum (𝓞 F)) =>
       (matHom _ σ J (projFin σ J (cutPt σ J T g))).1) atTop (𝓝 (matHom _ σ J (projFin σ J g)).1) := fun g => by
     refine tendsto_pi_nhds.2 fun i => tendsto_pi_nhds.2 fun j => ?_

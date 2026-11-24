@@ -119,8 +119,8 @@ theorem subSplit_of : SliceFacts → SubSplit := by
     rfl
   · intro μ' hμ' g φ hφ
     obtain ⟨φ₁, hφ₁, h1, hn1, hbox⟩ := hg g
-    letI : MeasurableSpace (κ'' → AF F) := borel _
-    haveI : BorelSpace (κ'' → AF F) := ⟨rfl⟩
+    let : MeasurableSpace (κ'' → AF F) := borel _
+    have : BorelSpace (κ'' → AF F) := ⟨rfl⟩
     obtain ⟨μ'', hμ''⟩ : ∃ μ'' : Measure (κ'' → AF F), μ''.IsAddHaarMeasure :=
       ⟨Measure.addHaar, inferInstance⟩
     obtain ⟨μ, hμ, hprod⟩ := hmeas μ' μ'' hμ' hμ''

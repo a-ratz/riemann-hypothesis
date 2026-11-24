@@ -55,9 +55,9 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem exists_primitiveRoot_algClosure_numberField (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] (M : ℕ) [NeZero M] : ∃ ζ : Ω, IsPrimitiveRoot ζ M := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
 
 private theorem cycN_apply_primitiveRoot_eq_pow (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] (N : ℕ) [NeZero N] (g : G F Ω) {ζ : Ω} (hζ : IsPrimitiveRoot ζ N) :
@@ -87,7 +87,7 @@ theorem UpperTheory.V.B1.cycCompat :
   intro F Ω _ _ _ _ _ N _
   obtain ⟨ζ, hζ⟩ := exists_primitiveRoot_algClosure_numberField F Ω N
   refine ⟨?_, ?_, ?_⟩
-  · haveI : FiniteDimensional F (IntermediateField.adjoin F {ζ}) :=
+  · have : FiniteDimensional F (IntermediateField.adjoin F {ζ}) :=
       IntermediateField.adjoin.finiteDimensional (Algebra.IsAlgebraic.isAlgebraic ζ).isIntegral
     refine Subgroup.isOpen_mono (H₁ := (IntermediateField.adjoin F {ζ}).fixingSubgroup) ?_
       (IntermediateField.fixingSubgroup_isOpen _)
@@ -118,7 +118,7 @@ theorem UpperTheory.V.B1.cycCompat :
     have hcz : c ζ = ζ⁻¹ := by
       apply j.injective
       have := hj ζ
-      simp only [AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv] at this
+      simp only [AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_toRingEquiv] at this
       rw [this, map_inv₀]
       have hn : ‖j ζ‖ = 1 :=
         Complex.norm_eq_one_of_pow_eq_one (by rw [← map_pow, hN, map_one]) (NeZero.ne N)

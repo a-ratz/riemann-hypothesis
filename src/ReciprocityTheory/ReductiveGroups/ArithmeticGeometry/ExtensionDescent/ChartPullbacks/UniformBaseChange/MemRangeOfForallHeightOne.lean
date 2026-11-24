@@ -102,7 +102,7 @@ theorem exists_clear [IsNoetherianRing A] [IsIntegrallyClosed A] {ι : Type*} [F
     exact ⟨a, ha⟩
   obtain ⟨p, hpP, u, hu, huP⟩ := hex
   refine ⟨P, hP, ?_, p * d, P.mul_mem_right d hpP, fun j => ?_, i0, u, huP, ?_⟩
-  · haveI : Submodule.IsPrincipal (Ideal.span {p}) := ⟨⟨p, rfl⟩⟩
+  · have : Submodule.IsPrincipal (Ideal.span {p}) := ⟨⟨p, rfl⟩⟩
     have hmin : P ∈ (Ideal.span {p}).minimalPrimes := by
       refine ⟨⟨hP, (Ideal.span_singleton_le_iff_mem P).2 hpP⟩, fun Q hQ hQP => ?_⟩
       intro q hq
@@ -180,6 +180,6 @@ theorem finite_height_one [IsNoetherianRing A] {a : A} (ha : a ≠ 0) :
       (lt_of_le_of_lt (Order.height_mono (le_of_lt hne')) (lt_trans hQ1 ENat.one_lt_top))
     have hQz : Order.height (⟨Q, hQprime⟩ : PrimeSpectrum A) = 0 := ENat.lt_one_iff_eq_zero.mp hQ1
     rw [hQz] at hQ0
-    exact absurd hQ0 (not_lt_zero')
+    exact absurd hQ0 (not_lt_zero)
 
 end ReciprocityTheory.ChartRestriction.G.Out.KrullAlg

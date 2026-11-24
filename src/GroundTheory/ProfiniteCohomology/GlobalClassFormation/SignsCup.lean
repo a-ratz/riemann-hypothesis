@@ -103,13 +103,13 @@ theorem exists_units_neg_iff_mem (S : Set {v : InfinitePlace K // v.IsReal}) :
   refine ⟨Units.mk0 x hx0, fun v => ?_⟩
   have h := hclose v.1
   rw [apply_eq_abs_embedding_of_isReal v.2, map_sub] at h
-  have hcv : c v.1 = if v ∈ S then -1 else 1 := by rw [hcdef]; exact dif_pos v.2
+  have hcv : c v.1 = if v ∈ S then -1 else 1 := by rw [hcdef]; exact dite_eq_left v.2
   rw [hcv] at h
   rw [Units.val_mk0]
   by_cases hv : v ∈ S
-  · rw [if_pos hv, map_neg, map_one, sub_neg_eq_add, abs_lt] at h
+  · rw [ite_eq_left hv, map_neg, map_one, sub_neg_eq_add, abs_lt] at h
     exact ⟨⟨fun _ => hv, fun _ => by linarith [h.2]⟩, ⟨fun h' => by linarith [h.2], fun h' => absurd hv h'⟩⟩
-  · rw [if_neg hv, map_one, abs_lt] at h
+  · rw [ite_eq_right hv, map_one, abs_lt] at h
     exact ⟨⟨fun h' => by linarith [h.1], fun h' => absurd h' hv⟩, ⟨fun _ => hv, fun _ => by linarith [h.1]⟩⟩
 
 
@@ -177,7 +177,7 @@ theorem mem_range_norm_iff_mem_normSubgroup {F : GroundTheory.Global.FiniteSubfi
 
 theorem not_isAlgClosed_of_ringHom_real {L : Type*} [Field L] (f : L →+* ℝ) : ¬ IsAlgClosed L := by
   intro hL
-  obtain ⟨z, hz⟩ := IsAlgClosed.exists_eq_mul_self (-1 : L)
+  obtain ⟨z, hz⟩ := IsAlgClosed.isSquare (-1 : L)
   have h := congrArg f hz
   rw [map_neg, map_one, map_mul] at h
   nlinarith [mul_self_nonneg (f z)]
@@ -225,7 +225,7 @@ section IChar
 def sqrtNegOne : ℚ̄ := (IsAlgClosed.exists_eq_mul_self (-1 : ℚ̄)).choose
 
 theorem sqrtNegOne_mul_self : sqrtNegOne * sqrtNegOne = -1 :=
-  (IsAlgClosed.exists_eq_mul_self (-1 : ℚ̄)).choose_spec.symm
+  (IsAlgClosed.isSquare (-1 : ℚ̄)).choose_spec.symm
 
 theorem sqrtNegOne_sq : sqrtNegOne ^ 2 = -1 := by
   rw [sq, sqrtNegOne_mul_self]
@@ -277,7 +277,7 @@ theorem continuous_iCharFun : Continuous (iCharFun K) := by
     stabilizer_isOpen_of_isIntegral sqrtNegOne
   have hopen : IsOpen ((fun h : G => g'⁻¹ * h) ⁻¹' ((G.subtype : G → ℚ̄ ≃ₐ[ℚ] ℚ̄) ⁻¹'
       (MulAction.stabilizer (ℚ̄ ≃ₐ[ℚ] ℚ̄) sqrtNegOne : Set (ℚ̄ ≃ₐ[ℚ] ℚ̄)))) :=
-    (hstab.preimage continuous_subtype_val).preimage (continuous_const_mul _)
+    (hstab.preimage continuous_subtypeVal).preimage (continuous_const_mul _)
   refine ⟨(fun h : G => g'⁻¹ * h) ⁻¹' ((G.subtype : G → ℚ̄ ≃ₐ[ℚ] ℚ̄) ⁻¹'
       (MulAction.stabilizer (ℚ̄ ≃ₐ[ℚ] ℚ̄) sqrtNegOne : Set (ℚ̄ ≃ₐ[ℚ] ℚ̄))), hopen, ?_, ?_⟩
   · change (g'⁻¹ * g' : G).1 • sqrtNegOne = sqrtNegOne
@@ -347,7 +347,7 @@ theorem placeInv_brauerLocal_globalCupClass_iChar_of_neg (v : InfinitePlace K.1)
     intro hmem
     have hu := (infAlgClosure_mem_range_norm_iff_of_isReal v hv
       (Units.map (algebraMap K.1 v.Completion : K.1 →* v.Completion) a)).1 hmem
-    rw [Units.coe_map, MonoidHom.coe_coe, extensionEmbeddingOfIsReal_algebraMap] at hu
+    rw [Units.coe_map, MonoidHom.coe_ofClass, extensionEmbeddingOfIsReal_algebraMap] at hu
     exact lt_asymm ha hu
   have hσ1 : σ ≠ 1 := fun h => hσ (by rw [h]; rfl)
   rw [placeInv_brauerLocal_globalCupClass_inl ι v (iChar K) a σ (iff_of_false hσ1 hnorm)]
@@ -362,15 +362,15 @@ theorem placeInv_brauerLocal_globalCupClass_iChar_of_pos (v : InfinitePlace K.1)
   refine placeInv_brauerLocal_globalCupClass_iChar_of_mem_range_norm ι a v ?_
   have h := (infAlgClosure_mem_range_norm_iff_of_isReal v hv
     (Units.map (algebraMap K.1 v.Completion : K.1 →* v.Completion) a)).2
-    (by rw [Units.coe_map, MonoidHom.coe_coe, extensionEmbeddingOfIsReal_algebraMap]; exact ha)
-  rwa [Units.coe_map, MonoidHom.coe_coe] at h
+    (by rw [Units.coe_map, MonoidHom.coe_ofClass, extensionEmbeddingOfIsReal_algebraMap]; exact ha)
+  rwa [Units.coe_map, MonoidHom.coe_ofClass] at h
 
 theorem placeInv_brauerLocal_globalCupClass_iChar_of_isComplex (v : InfinitePlace K.1) (hv : v.IsComplex) :
     placeInv (.inl v) (brauerLocal ι (globalCupClass (iChar K) a) (.inl v)) = 0 := by
   refine placeInv_brauerLocal_globalCupClass_iChar_of_mem_range_norm ι a v ?_
   have h := infAlgClosure_mem_range_norm_of_isComplex v hv
     (Units.map (algebraMap K.1 v.Completion : K.1 →* v.Completion) a)
-  rwa [Units.coe_map, MonoidHom.coe_coe] at h
+  rwa [Units.coe_map, MonoidHom.coe_ofClass] at h
 
 
 open Classical in
@@ -380,9 +380,9 @@ theorem placeInv_brauerLocal_globalCupClass_iChar (v : InfinitePlace K.1) :
   by_cases hv : v.IsReal
   · rw [dite_eq_left hv]
     by_cases ha : embedding_of_isReal hv (a : K.1) < 0
-    · rw [if_pos ha]
+    · rw [ite_eq_left ha]
       exact placeInv_brauerLocal_globalCupClass_iChar_of_neg ι a v hv ha
-    · rw [if_neg ha]
+    · rw [ite_eq_right ha]
       have hpos : 0 < embedding_of_isReal hv (a : K.1) :=
         lt_of_le_of_ne (not_lt.1 ha) (fun h => a.ne_zero ((map_eq_zero _).1 h.symm))
       exact placeInv_brauerLocal_globalCupClass_iChar_of_pos ι a v hv hpos

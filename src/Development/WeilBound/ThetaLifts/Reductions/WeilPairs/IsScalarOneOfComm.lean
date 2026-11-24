@@ -160,8 +160,8 @@ theorem latRepF_cont : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     | zero => exact Filter.Eventually.of_forall fun p => map_zero _
     | add u v _ _ hu hv => filter_upwards [hu, hv] with p h3 h4 using by rw [map_add (f := _), h3, h4]
     | smul c u _ hu => filter_upwards [hu] with p h3 using by rw [map_smul, h3]
-  haveI : IsTopologicalGroup (GAF σ JS) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : IsTopologicalGroup (GAF σ JT) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GAF σ JS) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GAF σ JT) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   refine continuous_iff_continuousAt.2 fun q => ?_
   have h1 : Filter.Tendsto (fun p => q⁻¹ * p) (𝓝 q) (𝓝 1) :=
     (continuous_const.mul continuous_id).tendsto' q 1 (inv_mul_cancel q)
@@ -260,10 +260,10 @@ theorem exists_fin_A (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ JS JT �
   · rw [ho p f hf]
     exact (thetaSubF σ JS JT ξ₀ B.ψ).smul_mem _ (Om p ⟨f, hf⟩).2
   · simp only [ho _ f hf, Pi.smul_apply, smul_eq_mul]
-    exact (continuous_subtype_val.comp z3).mul (hcont ⟨f, hf⟩ u)
+    exact (continuous_subtypeVal.comp z3).mul (hcont ⟨f, hf⟩ u)
   · rw [← hunit μ 𝓕 hμ h𝓕 p ⟨f, hf⟩, ho p f hf]
     refine lintegral_congr fun u => ?_
-    rw [Pi.smul_apply, enorm_smul, ← ofReal_norm_eq_enorm (z p : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
+    rw [Pi.smul_apply, eNorm_smul, ← ofReal_norm (z p : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
   · rw [ho _ f hf, hreal g hg k hk, show z (g, k) = 1 by
       simp [z, zF, GlobalTheory.SplitDetCharF.cutDet_real ε hε.idem hε.fin g hg, GlobalTheory.SplitDetCharF.cutDet_real ε hε.idem hε.fin k hk],
       Circle.coe_one, one_smul]
@@ -310,9 +310,9 @@ theorem continuous_product_A (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ
     (hof : ∀ p, ∃ z : ℂ, ∀ f : thetaSubF σ JS JT ξ₀ B.ψ, of p f = z • (Om p f : WOF F E nS nT → ℂ))
     (hi : IsInfWeilF σ JS JT ξ₀ B.ψ oi) {f : WOF F E nS nT → ℂ} (h1 : IsThetaFunOF σ JS JT ξ₀ B.ψ f)
     (u : WOF F E nS nT) : Continuous fun p : GAF σ JS × GAF σ JT => of p (oi p f) u := by
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
-  haveI : IsTopologicalGroup (GAF σ JS) := inferInstanceAs (IsTopologicalGroup (HR (AF F) σ JS))
-  haveI : IsTopologicalGroup (GAF σ JT) := inferInstanceAs (IsTopologicalGroup (HR (AF F) σ JT))
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have : IsTopologicalGroup (GAF σ JS) := inferInstanceAs (IsTopologicalGroup (HR (AF F) σ JS))
+  have : IsTopologicalGroup (GAF σ JT) := inferInstanceAs (IsTopologicalGroup (HR (AF F) σ JT))
   refine continuous_iff_continuousAt.2 fun q => ?_
   have h2 : Filter.Tendsto (fun p => p * q⁻¹) (𝓝 q) (𝓝 1) :=
     (continuous_id.mul continuous_const).tendsto' q 1 (mul_inv_cancel q)
@@ -498,7 +498,7 @@ theorem rat_subst (C : Ctx σ B JS JT ξ₀ θ ι) {γ : GAF σ JS} (hγ : γ �
       have h7 : ‖f (ratWF y + x)‖ = ‖f x‖ := by
         rw [hf.quasi y x, norm_mul, hψ, one_mul]
       show ‖f (ratWF y + x)‖ₑ ^ 2 = ‖f x‖ₑ ^ 2
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, h7]
+      rw [← ofReal_norm, ← ofReal_norm, h7]
 
 theorem schur_norm (C : Ctx σ B JS JT ξ₀ θ ι) (M : Module.End ℂ (WOF F E nS nT → ℂ))
     (h1 : ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → IsThetaFunOF σ JS JT ξ₀ B.ψ (M f))
@@ -514,12 +514,12 @@ theorem schur_norm (C : Ctx σ B JS JT ξ₀ θ ι) (M : Module.End ℂ (WOF F E
     obtain ⟨μ, 𝓕, hμ, h𝓕, hI0, hIt⟩ := GlobalTheory.ThetaSchurUnitF.exists_fd_pos_fin hψ hf hy
     have h := h3 μ 𝓕 hμ h𝓕 f hf
     rw [hc f hf] at h
-    simp only [Pi.smul_apply, smul_eq_mul, enorm_mul, mul_pow] at h
-    rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top enorm_ne_top)] at h
+    simp only [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow] at h
+    rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top eNorm_ne_top)] at h
     have e1 : ‖c‖ₑ ^ 2 = 1 := by
       have := congrArg (· / ∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ) h
       rwa [ENNReal.mul_div_cancel_right hI0 hIt, ENNReal.div_self hI0 hIt] at this
-    have e2 : (‖c‖₊ : ENNReal) ^ 2 = 1 := by rwa [enorm_eq_nnnorm] at e1
+    have e2 : (‖c‖₊ : ENNReal) ^ 2 = 1 := by rwa [eNorm_eq_nnNorm] at e1
     have e3 : ‖c‖₊ ^ 2 = 1 := by exact_mod_cast e2
     have e4 : ‖c‖ ^ 2 = 1 := by
       have := congrArg (fun t : NNReal => (t : ℝ)) e3

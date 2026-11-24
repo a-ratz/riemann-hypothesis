@@ -69,10 +69,10 @@ theorem fix_of_mem {R B B₀ : Type} [CommRing R] [CommRing B] [Algebra R B] [Co
     simpa using this
   let T : Ideal B :=
     { carrier := {x | ∀ y, e (x * y) = x * y}
-      add_mem' := fun {a b} ha hb y ↦ by simp only [Set.mem_setOf_eq] at *; rw [add_mul, map_add (f := _), ha, hb]
+      add_mem' := fun {a b} ha hb y ↦ by simp only [Set.mem_ofPred_eq] at *; rw [add_mul, map_add (f := _), ha, hb]
       zero_mem' := fun y ↦ by simp
       smul_mem' := fun c {a} ha y ↦ by
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at *
         rw [mul_assoc, mul_left_comm, ha, mul_left_comm] }
   have hIT : J ≤ T := by
     rw [hJdef, Ideal.map_le_iff_le_comap]
@@ -112,7 +112,7 @@ theorem exists_iso {R R₀ B B' B₀ : Type} [CommRing R] [CommRing R₀] [CommR
     (hk : ∀ b, p b = 0 ↔ b ∈ I.map (algebraMap R B)) (hk' : ∀ b, p' b = 0 ↔ b ∈ I.map (algebraMap R B'))
     [Algebra.FormallySmooth R B] [Algebra.FormallySmooth R B'] :
     ∃ φ : B ≃ₐ[R] B', ∀ b, p' (φ b) = p b := by
-  letI : Algebra R B₀ := ((algebraMap R₀ B₀).comp π).toAlgebra
+  let : Algebra R B₀ := ((algebraMap R₀ B₀).comp π).toAlgebra
   let P : B →ₐ[R] B₀ := { p with commutes' := fun r ↦ hp.map_algebraMap r }
   let P' : B' →ₐ[R] B₀ := { p' with commutes' := fun r ↦ hp'.map_algebraMap r }
   have hJ := map_sq hI B
@@ -138,8 +138,8 @@ theorem locIso_nonempty : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : 
     ∀ S S' : Sys I π s₀, Nonempty (S.LocIso S') := by
   intro R R₀ _ _ I hI π _ _ X₀ s₀ S S'
   have h : ∀ U, ∃ φ : S.F.obj U ≃ₐ[R] S'.F.obj U, ∀ b, S'.p U (φ b) = S.p U b := fun U ↦ by
-    haveI := (S.smooth U).formallySmooth
-    haveI := (S'.smooth U).formallySmooth
+    have := (S.smooth U).formallySmooth
+    have := (S'.smooth U).formallySmooth
     exact LocalIsomorphism.exists_iso I hI π (S.p U) (S'.p U) (S.semi U) (S'.semi U) (S.surj U) (S'.surj U)
       (S.ker U) (S'.ker U)
   exact ⟨⟨fun U ↦ (h U).choose, fun U ↦ (h U).choose_spec⟩⟩

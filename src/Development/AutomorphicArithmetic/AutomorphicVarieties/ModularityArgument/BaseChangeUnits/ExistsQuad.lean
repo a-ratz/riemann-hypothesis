@@ -44,7 +44,7 @@ open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal GlobalTheory.
 theorem UpperTheory.V.Z.Bc.exists_quad (L Ω : Type) [Field L] [NumberField L] [IsGalois ℚ L] [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] [Algebra L Ω]
     (η : G ℚ Ω →* ℤˣ) (c : G ℚ Ω) (hc : IsConjEl c) (hη : η c = -1) (hL : ∀ s : G L Ω, η (resG ℚ L Ω s) = 1) :
     ∃ K : IntermediateField ℚ L, Module.finrank ℚ K = 2 ∧ IsCMField K := by
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   let p : (Ω ≃ₐ[ℚ] Ω) →* (L ≃ₐ[ℚ] L) := AlgEquiv.restrictNormalHom L
   have hp : Function.Surjective p := AlgEquiv.restrictNormalHom_surjective Ω
   have hpx : ∀ (s : Ω ≃ₐ[ℚ] Ω) (x : L), algebraMap L Ω (p s x) = s (algebraMap L Ω x) := fun s x => AlgEquiv.restrictNormal_commutes s L x
@@ -66,7 +66,7 @@ theorem UpperTheory.V.Z.Bc.exists_quad (L Ω : Type) [Field L] [NumberField L] [
     exact Nat.eq_of_mul_eq_mul_right Nat.card_pos h
   refine ⟨_, h2, ?_⟩
   set K := IntermediateField.fixedField θ.ker
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h2⟩
   obtain ⟨j, hj⟩ := hc
   let φ : K →+* ℂ := j.comp ((algebraMap L Ω).comp (algebraMap K L))
   have hφ : ¬ ComplexEmbedding.IsReal φ := fun h => by
@@ -77,7 +77,7 @@ theorem UpperTheory.V.Z.Bc.exists_quad (L Ω : Type) [Field L] [NumberField L] [
       exact RingHom.congr_fun (ComplexEmbedding.isReal_iff.1 h) ⟨x, hx⟩
     rw [IntermediateField.fixingSubgroup_fixedField, MonoidHom.mem_ker, hθ, hη] at this
     exact absurd this (by decide)
-  haveI : IsTotallyComplex K := by
+  have : IsTotallyComplex K := by
     classical
     have h1 := InfinitePlace.card_add_two_mul_card_eq_rank K
     have h3 : 0 < InfinitePlace.nrComplexPlaces K := Fintype.card_pos_iff.2 ⟨⟨InfinitePlace.mk φ, by

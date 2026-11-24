@@ -85,7 +85,7 @@ private theorem exists_ext {ι α : Type} {P : α → Type} (f : ι → α) (hf 
     obtain rfl := hf e
     rfl
   have h : ∃ j, f j = f i := ⟨i, rfl⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   exact aux _ _
 
 private theorem prod_mem_of {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] (W : Submodule ℂ H)
@@ -181,19 +181,19 @@ theorem UpperTheory.archimedean_baseChange_trace_comparison :
       simp [hpr]
     rw [e, Finset.prod_image (fun _ _ _ _ h => hpinj h)]
   have h0 : ∀ u, m u (T.J u) ≠ 0 := fun u => by
-    haveI := hm u
+    have := hm u
     exact ((T.co u).2.measure_pos (m u) ⟨1, Subgroup.one_mem _⟩).ne'
   have ht0 : ∀ u, m u (T.J u) ≠ ⊤ := fun u => by
-    haveI := hm u
+    have := hm u
     exact (T.co u).1.measure_lt_top.ne
   have hd0 : ∀ u, (m u (T.J u))⁻¹ ≠ 0 := fun u => ENNReal.inv_ne_zero.2 (ht0 u)
   have hdt : ∀ u, (m u (T.J u))⁻¹ ≠ ⊤ := fun u => ENNReal.inv_ne_top.2 (h0 u)
   have hmm : ∀ u, (mm u).IsHaarMeasure := fun u => by
-    haveI := hm u
+    have := hm u
     rw [hmmdef u]
     exact Measure.IsHaarMeasure.smul _ (hd0 u) (hdt u)
   have hmm1 : ∀ u, mm u (T.J u) = 1 := fun u => by
-    rw [hmmdef u, Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel (h0 u) (ht0 u)]
+    rw [hmmdef u, smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel (h0 u) (ht0 u)]
   obtain ⟨bb, hbb, htr⟩ : ∃ bb : Pl E → ℂ, (∀ u, bb u ≠ 0) ∧
       ∀ (u : Pl E) (X : Type) [AddCommGroup X] [Module ℂ X] (ρ : Representation ℂ (Gw n u) X) (f : Gw n u → ℂ) (z : ℂ),
         HasTrace (m u) ρ f z → HasTrace (mm u) ρ f (bb u * z) := by
@@ -308,7 +308,7 @@ theorem UpperTheory.archimedean_baseChange_trace_comparison :
   have h3 : ∀ i, IsOloc μ (w i) (mm (w i)) (φ i) (T' i) := by
     intro i
     refine Fin.cases ?_ (fun i => ?_) i
-    · haveI := hmm w₀.1
+    · have := hmm w₀.1
       exact UpperTheory.ConvolutionTheory.C.hopOloc E n μ w₀.1 (mm w₀.1) (GLnLocal.iwahori (w₀.1.adicCompletion E) n)
         (Cartan.diagPow (w₀.1.adicCompletion E) n (j • e)) hCO (by rw [← hJq]; exact hmm1 _)
     · exact hB i

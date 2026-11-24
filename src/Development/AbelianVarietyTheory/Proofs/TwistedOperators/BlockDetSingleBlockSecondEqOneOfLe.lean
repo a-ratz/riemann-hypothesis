@@ -53,16 +53,16 @@ theorem mem_blockTriangular_singleBlock_of_le {κ : Type} [CommRing κ] {n r : �
   rw [Formalism.L2.DIV.mem_blockTri]
   intro i j hij
   have hi : Formalism.L2.DIV.blk2 r i = 0 := by
-    unfold Formalism.L2.DIV.blk2; exact if_pos (lt_of_lt_of_le i.isLt h)
+    unfold Formalism.L2.DIV.blk2; exact ite_eq_left (lt_of_lt_of_le i.isLt h)
   have hj : Formalism.L2.DIV.blk2 r j = 0 := by
-    unfold Formalism.L2.DIV.blk2; exact if_pos (lt_of_lt_of_le j.isLt h)
+    unfold Formalism.L2.DIV.blk2; exact ite_eq_left (lt_of_lt_of_le j.isLt h)
   rw [hi, hj] at hij
   exact absurd hij (lt_irrefl 0)
 
 theorem blockDet_singleBlock_second_eq_one_of_le {κ : Type} [CommRing κ] {n r : ℕ} (h : n ≤ r) (g : GL (Fin n) κ) :
     Formalism.L2.DIV.dBlk (κ := κ) (n := n) (Formalism.L2.DIV.blk2 r) 1 g = 1 := by
   have hm := mem_blockTriangular_singleBlock_of_le (κ := κ) h g
-  haveI : IsEmpty {a : Fin n // Formalism.L2.DIV.blk2 r a = 1} := by
+  have : IsEmpty {a : Fin n // Formalism.L2.DIV.blk2 r a = 1} := by
     refine ⟨fun a => ?_⟩
     have h1 := a.2
     have h2 := a.1.isLt

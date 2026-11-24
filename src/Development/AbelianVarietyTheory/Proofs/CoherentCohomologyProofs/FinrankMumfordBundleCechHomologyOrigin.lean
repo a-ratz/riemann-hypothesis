@@ -326,7 +326,7 @@ theorem coker_dualMap_equiv_residueField_of_origin : ∀ (K : Type) [Field K] [I
   intro K _ _ P R _ t₀ χ₀ O _ _ _ _ _ t Y π f H ht₀ hχ ht κ _ _ D C φ hD hc hC hφ
   obtain ⟨-, hsep, -, hcl, hsurj, HA⟩ := (AbProj.abelian_projective_baseChange K P).2 O t Y π f H
   have hM : ((translDiff P.A P.L (𝟙 P.A)).pull π).IsLB := LB.isLB_pull (LB.isLB_linComb P.isLB _ _) π
-  haveI : Y.IsSeparated := ⟨by
+  have : Y.IsSeparated := ⟨by
     rw [← terminal.comp_from f]
     infer_instance⟩
   have hD' : ∀ s : Finset κ, s.Nonempty → IsAffineOpen (⨅ i ∈ s, D i) := fun s hs => by
@@ -335,8 +335,8 @@ theorem coker_dualMap_equiv_residueField_of_origin : ∀ (K : Type) [Field K] [I
     | cons i s hi _ ih =>
       rw [Finset.cons_eq_insert, Finset.iInf_insert]
       exact (hD i).inf ih
-  haveI := fun p => (hC p).1
-  haveI := fun p => (hC p).2
+  have := fun p => (hC p).1
+  have := fun p => (hC p).2
   let χ : O →+* K := IsLocalization.lift (M := (RingHom.ker χ₀).primeCompl) (g := χ₀)
     fun y => Ne.isUnit y.2
   have hχ₀ : χ.comp (algebraMap R O) = χ₀ := IsLocalization.lift_comp _

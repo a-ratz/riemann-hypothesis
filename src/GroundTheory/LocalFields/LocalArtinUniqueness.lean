@@ -137,7 +137,7 @@ theorem eq_localArtinMap_of
       split_ifs
       · exact dvd_rfl
       · exact dvd_zero ϖ
-  haveI (n : ℕ) : IsGalois K (lubinTateField Ω hϖ hf n) :=
+  have (n : ℕ) : IsGalois K (lubinTateField Ω hϖ hf n) :=
     IsGalois.of_card_aut_eq_finrank K _
       ((Nat.card_congr (lubinTateGalEquiv (Ω := Ω) hϖ hf n).toEquiv).trans
         (card_units_quotient_eq_finrank (Ω := Ω) (hπ := hϖ) hf n))

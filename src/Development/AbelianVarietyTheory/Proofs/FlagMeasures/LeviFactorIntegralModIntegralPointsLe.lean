@@ -499,8 +499,8 @@ theorem measurePreserving_rearrange (V V' V'' : Type) [Fintype V] [Fintype V'] [
       simp only [Equiv.symm_apply_apply]
     · rw [← σ.forall_congr_right]
       simp only [hu']
-  rw [hpre, Measure.smul_apply, Measure.prod_prod]
-  simp only [hs', Measure.prod_prod, Measure.pi_pi, Measure.smul_apply, smul_eq_mul,
+  rw [hpre, smul_apply, Measure.prod_prod]
+  simp only [hs', Measure.prod_prod, Measure.pi_pi, smul_apply, smul_eq_mul,
     Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ]
   have h1 : ∏ i, ∏ v', m i (t (β.symm v') i) = ∏ v, ∏ i, m i (t v i) := by
     rw [Finset.prod_comm]
@@ -602,7 +602,7 @@ theorem satIn_of_trace (I : AutInst) (x : I.GA) (S : Submodule (𝓞 I.E) (Fin I
   let φ : (Fin I.n → I.E) →ₗ[I.E] (Fin I.n → I.E) := q.subtype ∘ₗ Submodule.linearProjOfIsCompl q _ hq.symm
   have hker : LinearMap.ker φ = Submodule.span I.E (S : Set (Fin I.n → I.E)) := by
     rw [LinearMap.ker_comp_of_ker_eq_bot _ q.ker_subtype]
-    exact Submodule.linearProjOfIsCompl_ker _
+    exact Submodule.ker_projectionOnto _
   have hX : ∀ v, IsUnit (frm I x v).det := GlobalTheory.StepDualityCompare.frm_det I x
   have hfg : (lamX I x).FG := (GlobalTheory.PointLattice.lamX_selfDual I x).2.1
 
@@ -889,7 +889,7 @@ theorem lintegral_rpow_neg_change_of_variable :
     have hdiv : x / s = y / s := by
       rw [← Real.rpow_rpow_inv (div_pos hx hs).le ha, ← Real.rpow_rpow_inv (div_pos hy hs).le ha,
         hxy']
-    exact (div_left_inj' hs.ne').mp hdiv
+    exact (div_left_inj₀ hs.ne').mp hdiv
   have himage : (fun t : ℝ => (t / s) ^ a) '' Set.Ioi 0 = Set.Ioi 0 := by
     ext τ
     constructor
@@ -1059,7 +1059,7 @@ theorem covol_ne_zero {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
   refine (lt_of_lt_of_le hpos ?_).ne'
   unfold covol
   refine le_iInf fun D => le_iInf fun hD => le_iInf fun hcov => ?_
-  haveI : Countable Γ := hc.to_subtype
+  have : Countable Γ := hc.to_subtype
   let S : Γ → Set G := fun γ => D ∩ {y | (γ : G)⁻¹ * y ∈ U ∩ U⁻¹}
   have hSm : ∀ γ, MeasurableSet (S γ) := fun γ =>
     hD.inter ((hUo.inter hUo.inv).preimage (continuous_const.mul continuous_id)).measurableSet
@@ -1145,9 +1145,9 @@ theorem measurable_detNorm : Measurable (detNorm E j) := by
   exact hc.measurable
 
 theorem sigmaFinite_haarGL : SigmaFinite (haarGL E j) := by
-  haveI h1 : SigmaFinite (volume : Measure (Fin j → ℂ)) := by rw [volume_pi]; infer_instance
-  haveI h2 : SigmaFinite (volume : Measure (Fin j → Fin j → ℂ)) := by rw [volume_pi]; infer_instance
-  haveI h3 : SigmaFinite (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)) := by
+  have h1 : SigmaFinite (volume : Measure (Fin j → ℂ)) := by rw [volume_pi]; infer_instance
+  have h2 : SigmaFinite (volume : Measure (Fin j → Fin j → ℂ)) := by rw [volume_pi]; infer_instance
+  have h3 : SigmaFinite (volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)) := by
     rw [volume_pi]; infer_instance
   show SigmaFinite ((volume : Measure (InfinitePlace E → Fin j → Fin j → ℂ)).withDensity
     fun x => ENNReal.ofReal ((∏ w, ‖(Matrix.of (x w)).det‖ ^ 2)⁻¹ ^ j))
@@ -1198,11 +1198,11 @@ theorem detNorm_aut_mul (hE : IsTotallyComplex E) {Λ : Submodule (𝓞 E) (Fin 
     rw [hΛ.span_eq_top] at hle
     exact eq_top_iff.2 fun x _ => hle Submodule.mem_top
 
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hΛ.fg
-  haveI : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 E) Λ
-  haveI : NoZeroSMulDivisors ℤ Λ :=
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hΛ.fg
+  have : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 E) Λ
+  have : NoZeroSMulDivisors ℤ Λ :=
     Subtype.val_injective.noZeroSMulDivisors _ rfl fun c x => rfl
-  haveI : Module.Free ℤ Λ := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ Λ := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis ℤ Λ
   let f : Λ →ₗ[ℤ] (Fin j → E) := Λ.subtype.toAddMonoidHom.toIntLinearMap
   have hvZ : LinearIndependent ℤ (fun k => (b k : Fin j → E)) :=
@@ -1274,7 +1274,7 @@ theorem detNorm_aut_mul (hE : IsTotallyComplex E) {Λ : Submodule (𝓞 E) (Fin 
       exact hγw w a c
     have h2 : ∀ w : InfinitePlace E, w.mult = 2 := fun w => by
       unfold InfinitePlace.mult
-      rw [if_neg (InfinitePlace.not_isReal_iff_isComplex.2 (hE.isComplex w))]
+      rw [ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.2 (hE.isComplex w))]
     simp_rw [h1, InfinitePlace.norm_embedding_eq]
     rw [← hnorm, ← InfinitePlace.prod_eq_abs_norm]
     simp_rw [h2]
@@ -1323,12 +1323,12 @@ end GenLin
 theorem covol_leviGroup_le : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf : I.Gf) (a : ℕ) (j : Fin a → ℕ) (S : Fin (a + 1) → Submodule (𝓞 I.E) (Fin I.n → I.E)) (Λ : ∀ i, Submodule (𝓞 I.E) (Fin (j i) → I.E)) (x₀ : I₀.Gf) (T T' : ∀ i, Matrix (Fin I.n) (Fin (j i)) I.E) (T₀ : Matrix (Fin I.n) (Fin I₀.n) I.E), (∀ i, 1 ≤ j i) → IsAdapted I I₀ e xf j S Λ x₀ T T' T₀ → ∀ (μM : ∀ v, Measure (Formalism.REAL.UJ (I.ε v))) [∀ v, SigmaFinite (μM v)] (c₀ : InfinitePlace I₀.F → ℝ), (∀ v, IsGaugeSub (flagM (I.ε v) (flagAt I S v)) ((I.n - 2 * ∑ i, j i) ^ 2 + 2 * ∑ i, j i ^ 2) (μM v)) → IsGaugeAll I₀ c₀ → ∀ F : (Fin a → ℝ) → ENNReal, Measurable F → covol (leviGroup I xf S) ((Measure.pi μM).withDensity fun m => F (sizesAt I xf S m)) {m | ∀ v, m v ∈ flagM (I.ε v) (flagAt I S v)} ≤ (∏ i, ENNReal.ofReal (2 ^ (I.f * j i ^ 2)) * slabVol I.E (j i) (Λ i)) * (ENNReal.ofReal (∏ v, c₀ v) * covol (latGroup I₀ x₀) (Measure.pi fun v => Formalism.REAL.muG (I₀.ε v)) Set.univ) * ∫⁻ τ in {τ : Fin a → ℝ | ∀ i, 0 < τ i}, F τ * ENNReal.ofReal (∏ i, 2 * (I.f : ℝ) * j i / τ i) := by
   intro I I₀ e xf a j S Λ x₀ T T' T₀ hj hA μM _ c₀ hM hc₀ F hF
   have hPol : ∀ (n : ℕ) (ε : Fin n → Bool), PolishSpace (Formalism.REAL.UJ ε) := fun n ε => by
-    haveI : PolishSpace (Matrix (Fin n) (Fin n) ℂ) :=
+    have : PolishSpace (Matrix (Fin n) (Fin n) ℂ) :=
       inferInstanceAs (PolishSpace (Fin n → Fin n → ℂ))
     exact (Formalism.REAL.isClosedEmbeddingMatrix n ε).1.polishSpace
   have hSB : ∀ i, StandardBorelSpace (MatInf I.E (j i)) := fun i =>
     inferInstanceAs (StandardBorelSpace (InfinitePlace I.E → Fin (j i) → Fin (j i) → ℂ))
-  haveI : ∀ i, SigmaFinite (haarGL I.E (j i)) := fun i => sigmaFinite_haarGL
+  have : ∀ i, SigmaFinite (haarGL I.E (j i)) := fun i => sigmaFinite_haarGL
   have hE : IsTotallyComplex I.E := I.cm.cmUnram.1
   have hfpos : (0 : ℝ) < I.f := by
     unfold AutInst.f
@@ -1359,7 +1359,7 @@ theorem covol_leviGroup_le : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf :
   have hmeas : Measure.pi μM = ((∏ i, ENNReal.ofReal (2 ^ (I.f * j i ^ 2))) *
       ENNReal.ofReal (∏ v, c₀ v)) • Measure.map Θ ρ := by
     ext S hS
-    rw [Measure.smul_apply, Measure.map_apply hΘm hS, smul_eq_mul]
+    rw [smul_apply, Measure.map_apply hΘm hS, smul_eq_mul]
     have h1 := hΘint (S.indicator 1) (measurable_one.indicator hS)
     rw [lintegral_indicator_one hS] at h1
     rw [h1]
@@ -1428,7 +1428,7 @@ theorem covol_leviGroup_le : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf :
           refine le_trans (lintegral_map_le _ hΘm.aemeasurable) (lintegral_mono_ae ?_)
           have hae : ∀ᵐ z ∂ρ, ∀ i, 0 < detNorm I.E (j i) (z.1 i) := by
             rw [hρ]
-            exact Measure.QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst
+            exact QuasiMeasurePreserving.ae Measure.quasiMeasurePreserving_fst
               (ae_restrict_mem hPosm)
           filter_upwards [hae] with z hz
           by_cases hzD : Θ z ∈ Θ '' ((Set.univ.pi D) ×ˢ D₀)
@@ -1438,7 +1438,7 @@ theorem covol_leviGroup_le : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf :
             rw [Set.indicator_of_mem (Set.mem_image_of_mem Θ hz''), Set.indicator_of_mem hz'', hψdef]
             exact le_of_eq (congrArg F (funext fun i => hΘsz z'' hz i))
           · rw [Set.indicator_of_notMem hzD]
-            exact zero_le'
+            exact zero_le
         exact mul_le_mul' le_rfl hle
     _ ≤ C * ((∫⁻ z₁, (Set.univ.pi D).indicator ψ z₁ ∂(Measure.pi fun i => haarGL I.E (j i))) *
           (Measure.pi fun v => Formalism.REAL.muG (I₀.ε v)) D₀) := by

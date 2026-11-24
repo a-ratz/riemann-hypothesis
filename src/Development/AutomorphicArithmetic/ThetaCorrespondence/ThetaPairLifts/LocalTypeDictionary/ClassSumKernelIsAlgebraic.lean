@@ -165,7 +165,7 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
   have hS' : V'.SigOK := fun τ => GlobalTheory.Proof.GenusMassSignature.hasSignature_of_posDef (hV τ)
   have hD' : V'.IsDefinite := fun τ => Or.inl rfl
   have hGc : IsCompact (GinfC A : Set (GA D A)) := Formalism.IndefR.Eqv.isCompact_GinfC (V := V') hS' hD'
-  haveI : CompactSpace (GinfC A) := isCompact_iff_compactSpace.1 hGc
+  have : CompactSpace (GinfC A) := isCompact_iff_compactSpace.1 hGc
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D A
   have hLC := hT.1
   have hSC := hT.2.1
@@ -175,7 +175,7 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
   obtain ⟨K'', hK'', hr⟩ := level_all μ₀ hX
   have hfin0 : Finite (FinCl A K'') := (finite_finCl_and_gamOrd A K'' hV hK'').1
   let μ := X.m
-  haveI : μ.IsHaarMeasure := hX.is.meas.1
+  have : μ.IsHaarMeasure := hX.is.meas.1
   have hfd : IsFundamentalDomain (GQ A) X.fd μ := hX.is.meas.2
   let J : Subgroup (GA D A) := K''.comap (Lev.finE A)
   have hJo : IsOpen (J : Set (GA D A)) := hK''.1
@@ -190,11 +190,11 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
     rw [GlobalTheory.Mass.Levels.comap_finE]
     exact le_sup_right
   let κ : Measure (GinfC A) := Measure.haarMeasure (⊤ : TopologicalSpace.PositiveCompacts (GinfC A))
-  haveI hκH : κ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
+  have hκH : κ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
   have hκ1 : κ Set.univ = 1 := by
     have := Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (GinfC A)))
     simpa using this
-  haveI : IsProbabilityMeasure κ := ⟨hκ1⟩
+  have : IsProbabilityMeasure κ := ⟨hκ1⟩
   let e := finEquiv A
   have he : ∀ γ, e (((finPt A).comp (GQ A).subtype) γ) = Bridge.ratF A γ := fun γ => e.apply_symm_apply _
   have hJe : ∀ a, e a ∈ GlobalTheory.IndefiniteRowSideFullHecke.ClassFunctionSumIntegral.levelFin A K'' ↔ a ∈ K''.comap (finG A) := fun a => Iff.rfl
@@ -215,7 +215,7 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
       Subtype.val '' {γ : GQ A | (z l)⁻¹ * (γ : GA D A) * z l ∈ J} := by
     intro l
     ext γ
-    simp only [Set.mem_setOf_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
+    simp only [Set.mem_ofPred_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
     exact ⟨fun h => ⟨h.1, h.2⟩, fun ⟨h, h'⟩ => ⟨h, h'⟩⟩
   have hfin : ∀ l, {γ : GA D A | γ ∈ GQ A ∧ (z l)⁻¹ * γ * z l ∈ J}.Finite := fun l =>
     him l ▸ (hfinΓ l).image _
@@ -232,7 +232,7 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
   · have hcont : Continuous (X.ker W.ψ W.θ t P h) :=
       continuous_of_level A K'' hK''.1 _ (fun k hk g => hr t P h k hk g) (ker_cont hX t P h)
     obtain ⟨-, heq⟩ := integral_eq_sum_avg (GA D A) μ (GQ A) J (Lev.levA A K'') X.fd hfd hJo hJtop (GinfC A) κ
-      (GinfC A).subtype continuous_subtype_val hrt hdec hcomm (Fin N) z hu hfin (X.ker W.ψ W.θ t P h) hcont
+      (GinfC A).subtype continuous_subtypeVal hrt hdec hcomm (Fin N) z hu hfin (X.ker W.ψ W.θ t P h) hcont
       (ker_left hX t P h) (fun k hk g => hr t P h k hk g)
     exact heq
 end GlobalTheory.RowTest.BottomClassSumNeg
@@ -673,11 +673,11 @@ theorem eq_sum_mon {D : D7} {m n : ℕ} {d : D.what₂.Tau →₀ ℕ} (P : MvPo
   by_cases hk : k' ∈ Mon D m n d
   · rw [Finset.sum_eq_single ⟨k', hk⟩]
     · simp
-    · intro b _ hb; rw [if_neg]; intro h; exact hb (Subtype.ext h)
+    · intro b _ hb; rw [ite_eq_right]; intro h; exact hb (Subtype.ext h)
     · simp
   · rw [Finset.sum_eq_zero]
     · by_contra h; exact hk (hP k' h)
-    · intro b _; rw [if_neg]; rintro rfl; exact hk b.2
+    · intro b _; rw [ite_eq_right]; rintro rfl; exact hk b.2
 
 variable {D : D7}
 
@@ -827,7 +827,7 @@ theorem substMat_cont {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (m : ℕ) 
   have hc := (_root_.GlobalTheory.SubstCoeff.coeff_substF_monomial_continuous_algebraic (ι := D.what₂.Tau) (N := m) (n := V.rank) k.1 k'.1).1
   have hm : Continuous fun g : GinfC V => (fun τ : D.what₂.Tau => compAt θ τ (Formalism.L2.Theta.mt V g.1)) :=
     continuous_pi fun τ =>
-      (GlobalTheory.RealWeil.continuous_compAt hθ τ _ _).comp ((GlobalTheory.RealWeil.continuous_mt V).1.comp continuous_subtype_val)
+      (GlobalTheory.RealWeil.continuous_compAt hθ τ _ _).comp ((GlobalTheory.RealWeil.continuous_mt V).1.comp continuous_subtypeVal)
   have hp : Continuous fun g : GinfC V => ((fun _ : D.what₂.Tau => (1 : Matrix (Fin m) (Fin m) ℂ)),
       (fun τ : D.what₂.Tau => compAt θ τ (Formalism.L2.Theta.mt V g.1))) := continuous_const.prodMk hm
   have := hc.comp hp
@@ -849,8 +849,8 @@ theorem substMat_central (θ : InfFam D) (V : HSp D) (m : ℕ) (d : D.what₂.Ta
       fun ρ => if ρ = τ₀ then ζ • (1 : Matrix (Fin V.rank) (Fin V.rank) ℂ) else 1 := by
     funext ρ
     by_cases hρ : ρ = τ₀
-    · subst hρ; rw [if_pos rfl, h1]
-    · rw [if_neg hρ, h2 ρ hρ]
+    · subst hρ; rw [ite_eq_left rfl, h1]
+    · rw [ite_eq_right hρ, h2 ρ hρ]
   ext k' k
   simp only [substMat, e, _root_.GlobalTheory.CompactHowe.substF_scalar_monomial, MvPolynomial.coeff_smul, coeff_monomial, Matrix.smul_apply, Matrix.one_apply,
     smul_eq_mul]
@@ -944,7 +944,7 @@ theorem continuous_detChar {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp
     Continuous (detChar θ V e) := by
   refine continuous_finsetProd _ fun τ _ => Continuous.zpow₀ ?_ _ fun g => Or.inl fun h0 => ?_
   · exact (((GlobalTheory.RealWeil.continuous_compAt hθ τ _ _).comp
-      ((GlobalTheory.RealWeil.continuous_mt V).1.comp continuous_subtype_val))).matrix_det
+      ((GlobalTheory.RealWeil.continuous_mt V).1.comp continuous_subtypeVal))).matrix_det
   · have := congrArg Matrix.det (GlobalTheory.OrientedHeis.compAt_mt_mul_inv (θ := θ) τ g.1)
     rw [Matrix.det_mul, h0, zero_mul, Matrix.det_one] at this
     exact zero_ne_one this
@@ -1098,10 +1098,10 @@ theorem real_average_kernel_isAlgebraic : ∀ {D : D7} {T : Type} [Finite T] {L 
   have hI := hX.is
   have hθ : IsInfFam W.θ := hI.isVac.2.inf
   have hgA : A.gram = 1 := hX.std.1
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig A.gram
-  haveI : BorelSpace (GA D A) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA D.sp.cm.sig A.gram
-  haveI : CompactSpace (GinfC A) := isCompact_iff_compactSpace.1 (GlobalTheory.T.isCompact_unitaryRealPoints_of_gram_eq_one D A hgA)
-  haveI : BorelSpace (GinfC A) := Subtype.borelSpace _
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig A.gram
+  have : BorelSpace (GA D A) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA D.sp.cm.sig A.gram
+  have : CompactSpace (GinfC A) := isCompact_iff_compactSpace.1 (GlobalTheory.T.isCompact_unitaryRealPoints_of_gram_eq_one D A hgA)
+  have : BorelSpace (GinfC A) := Subtype.borelSpace _
   obtain ⟨χ, hχc, hχ, hχa⟩ := _root_.GlobalTheory.T.exists_real_character_twist hPr hN hL hX
   have hΓ := GlobalTheory.T.dense_unitaryRealPoints_algebraicEntries D W.θ hθ A
   let ρ : ∀ d : D.what₂.Tau →₀ ℕ, GinfC A →* Matrix (Mon D WW.rank A.rank d) (Mon D WW.rank A.rank d) ℂ := fun d =>
@@ -1161,7 +1161,7 @@ theorem real_average_kernel_isAlgebraic : ∀ {D : D7} {T : Type} [Finite T] {L 
     · push_neg at hex
       exact ⟨0, fun d _ => hex d⟩
   refine ⟨dg, fun κ hκ hκp t x _ h _ k => ?_⟩
-  haveI := hκp
+  have := hκp
   set d := Finsupp.mapDomain Prod.fst k with hd
   let kM : Mon D WW.rank A.rank d := ⟨k, hd.symm⟩
   have hexp := integral_expand κ (fun g => ρ d g) (hρc d) (fun k'' => X.ker W.ψ W.θ t (monomial k''.1 1) h x)

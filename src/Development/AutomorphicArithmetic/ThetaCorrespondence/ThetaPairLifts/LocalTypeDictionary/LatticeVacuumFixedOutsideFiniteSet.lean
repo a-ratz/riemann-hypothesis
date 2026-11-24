@@ -453,10 +453,10 @@ theorem scalar_eq_one_of_split_left : _root_.GlobalTheory.FunPr.ThetaLocalInputs
     { carrier := {g | omd g (GlobalTheory.InertDbl.dblFun Ψ) = GlobalTheory.InertDbl.dblFun Ψ}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hgen := (_root_.GlobalTheory.SplitDblGenLeft.inlD_mem_closure_left) F E σ B a a' G X om om' hTr v hsp hψ h2 k hk
@@ -558,7 +558,7 @@ theorem vacuum_fixed_by_split_spherical_left : _root_.GlobalTheory.FunPr.ThetaLo
     exact Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hv)
   refine ⟨X.T ∪ hfin1.toFinset ∪ hfin2.toFinset ∪ hfin3.toFinset, ?_⟩
   intro v hv _ k hk
-  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not] at hv
+  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or, not_not] at hv
   obtain ⟨⟨⟨hvT, hstd⟩, hdiff⟩, h2⟩ := hv
   rcases GlobalTheory.LFun.InertChart.isSplit_or_isInertAt (GlobalTheory.SphOffFinite.isUnram_of_unramified hTr.base.unram v) with hs | ⟨w, hw⟩
   · have hψ := GlobalTheory.StdCharUnrF.psiUnr_of_not_le F B.ψ hTr.base.std v hdiff
@@ -686,7 +686,7 @@ theorem cm_sigma_sigma (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (x : E) : σ (�
   rw [h.2.2.2, h.2.2.2, star_star]
 
 theorem cm_exists_moved (σ : E →ₐ[F] E) (h : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
-  haveI : IsTotallyComplex E := h.2.1
+  have : IsTotallyComplex E := h.2.1
   obtain ⟨w⟩ : Nonempty (InfinitePlace E) := inferInstance
   have hc := InfinitePlace.isComplex_iff.1 (IsTotallyComplex.isComplex w)
   by_contra hne
@@ -905,7 +905,7 @@ theorem split_dict_herm : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
   have h := hB.cm
   obtain ⟨P, Q, hPQ, hP, hQ⟩ := hv
   obtain ⟨τ, -⟩ := (existsUnique_splitPrime_eq h hPQ (HeightOneSpectrum.ext hP) (HeightOneSpectrum.ext hQ)).exists
-  haveI := hV.lat
+  have := hV.lat
   obtain ⟨b₁, hb₁⟩ := exists_isSplitBasis τ V.L h
   have hdet : V.J.det ≠ 0 := by
     intro h0
@@ -1081,8 +1081,8 @@ theorem exists_linearMap_injective_add_comp {k V : Type} [Field k] [AddCommGroup
   obtain ⟨w, hw, w', hw', hsum⟩ := Submodule.mem_sup.1 (hW.sup_eq_top ▸ Submodule.mem_top : c v ∈ W ⊔ W')
   have hxw : x (c v) = ((e ⟨w, hw⟩ : R) : V) := by
     rw [← hsum, map_add (f := _)]
-    have hl := LinearMap.ofIsCompl_left_apply (φ := R.subtype ∘ₗ e.toLinearMap) (ψ := (0 : W' →ₗ[k] V)) hW ⟨w, hw⟩
-    have hr := LinearMap.ofIsCompl_right_apply (φ := R.subtype ∘ₗ e.toLinearMap) (ψ := (0 : W' →ₗ[k] V)) hW ⟨w', hw'⟩
+    have hl := LinearMap.ofIsCompl_apply_left (φ := R.subtype ∘ₗ e.toLinearMap) (ψ := (0 : W' →ₗ[k] V)) hW ⟨w, hw⟩
+    have hr := LinearMap.ofIsCompl_apply_right (φ := R.subtype ∘ₗ e.toLinearMap) (ψ := (0 : W' →ₗ[k] V)) hW ⟨w', hw'⟩
     simp only at hl hr
     rw [hl, hr]; simp
   have hv' : a v + ((e ⟨w, hw⟩ : R) : V) = 0 := by
@@ -1682,10 +1682,10 @@ theorem split_vacuum_eigenvalue_eq_one : _root_.GlobalTheory.FunPr.ThetaLocalInp
     { carrier := {g | omd g S = S}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hD : ∀ p ∈ GlobalTheory.DblVac.KD σ G.V v, p ∈ GlobalTheory.DblVac.PDiag σ G.V → p ∈ H := fun p hp hpd => by
@@ -1777,7 +1777,7 @@ theorem vacuum_fixed_by_split_spherical_left : _root_.GlobalTheory.FunPr.ThetaLo
     exact Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hv)
   refine ⟨X.T ∪ hfin1.toFinset ∪ hfin2.toFinset ∪ hfin3.toFinset, ?_⟩
   intro v hv _ k hk
-  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or, not_not] at hv
+  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or, not_not] at hv
   obtain ⟨⟨⟨hvT, hstd⟩, hdiff⟩, h2⟩ := hv
   rcases GlobalTheory.LFun.InertChart.isSplit_or_isInertAt
       (GlobalTheory.SplitSphLeft.isUnram_of_unramified' hTr.base.unram v) with hs | ⟨w, hw⟩

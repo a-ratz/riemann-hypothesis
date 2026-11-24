@@ -817,7 +817,7 @@ theorem two_mul_deg_eigLat : ThetaUnifAV → Out.Laws → ∀ (E : Type) [Field 
   obtain rfl := hku hK hKF
   obtain ⟨c1, c2, c3, c4, c5, -⟩ := integral_tangent_coordinates K T.pol F
   obtain ⟨r, hr, hr'⟩ := _root_.GlobalTheory.CM.GenFib.exists_lieRep_eigLat K T.pol F (𝓞 E) T.t.act
-  letI : Algebra (OK H) (𝓞 K) := τ₀.toAlgebra
+  let : Algebra (OK H) (𝓞 K) := τ₀.toAlgebra
   obtain ⟨hfin, hproj, -⟩ := (OK_isDedekindDomain_and_projective E H).2.2.2.2.2 D.La D.fin D.proj
   obtain ⟨f, -, f2, f3, f4, f5⟩ := lie_tensor_line (𝓞 K) (OK H) C.P.A T.t.G C.act _ D.La t.ten C.v hfin hproj C.basis hτ₀
   choose co hco hcou using fun z => c1 (f z) ((f2 _).2 ⟨z, rfl⟩)

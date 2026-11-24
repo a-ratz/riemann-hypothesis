@@ -87,10 +87,10 @@ theorem dim_le_of_isIntegralHom {X Y : Scheme.{0}} (π : Y ⟶ X) [IsIntegralHom
   refine ⟨(π ⁻¹ᵁ U : Y.Opens), (π ⁻¹ᵁ U).isOpen, hy, ?_⟩
   refine le_trans ?_ (topologicalKrullDim_subspace_le X (U : Set X))
   rw [dim_affineOpen (hU.preimage π), dim_affineOpen hU]
-  letI := (π.app U).hom.toAlgebra
+  let := (π.app U).hom.toAlgebra
   have : Algebra.IsIntegral Γ(X, U) Γ(Y, π ⁻¹ᵁ U) := ⟨IsIntegralHom.isIntegral_app π U hU⟩
   exact Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap Γ(X, U) Γ(Y, π ⁻¹ᵁ U)))
-    fun I J h => Ideal.IsIntegral.comap_lt_comap (I := I.asIdeal) (J := J.asIdeal) h
+    fun I J h => Ideal.IsIntegral.under_lt_under (I := I.asIdeal) (J := J.asIdeal) h
 
 theorem exists_algClosed_baseChange {k : Type} [Field k] {X : Scheme.{0}} [a : Algebra k Γ(X, ⊤)]
     (hp : IsProjOver (strHom k (X := X))) :
@@ -104,12 +104,12 @@ theorem exists_algClosed_baseChange {k : Type} [Field k] {X : Scheme.{0}} [a : A
           interNum k (structureModule X) L := by
   obtain ⟨f, rfl⟩ : ∃ f : X ⟶ Sp k, a = algebraΓOfHom f :=
     ⟨strHom k X, Algebra.algebra_ext _ _ (algebraMap_eq_strHom k X)⟩
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   rw [strHom_eq (f := f) fun _ => rfl] at hp
   have H := IsPullback.of_hasPullback f (spMap (algebraMap k (AlgebraicClosure k)))
   set π := pullback.fst f (spMap (algebraMap k (AlgebraicClosure k)))
   set f' := pullback.snd f (spMap (algebraMap k (AlgebraicClosure k)))
-  letI := algebraΓOfHom f'
+  let := algebraΓOfHom f'
   obtain ⟨hpr, A, hA⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB f).1 hp
   have : IsIntegralHom (spMap (algebraMap k (AlgebraicClosure k))) :=
     IsIntegralHom.SpecMap_iff.mpr (algebraMap_isIntegral_iff.mpr inferInstance)

@@ -85,11 +85,11 @@ private theorem unit_of_red {l : ℕ} [Fact l.Prime] (c : HV.Coef l) {k : Type} 
 private theorem red_chi (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {O k : Type} [CommRing O]
     [Algebra ℤ_[l] O] [Field k] [CharP k l] (red : O →+* k) {N : ℕ} [NeZero N] (hN : l ∣ N) (g : G ℚ Ω) (a : ℕ)
     (ha : (a : ZMod N) = Chr.cls ℚ Ω N g) : red (chiO ℚ Ω l O g : O) = a := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  haveI hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   set x : ℤ_[l] := (cyclotomicCharacter Ω l g.toRingEquiv).val with hx
   have hζN : ζ ^ N = 1 := by
     obtain ⟨d, rfl⟩ := hN
@@ -281,7 +281,7 @@ theorem UpperTheory.V.X.residual_bernoulli_nonvanishing :
   have hz1 : ∀ g, γ g = 1 → ∀ h, z (g * h) = z g + z h := fun g hg h => by
     rw [hz.2, hg, Units.val_one, one_smul]
   have hφ : (fun u : fixMu ℚ Ω N => z u) ∈ Kum.XDual 1 (fixMu ℚ Ω N) k k := by
-    refine ⟨hz.1.comp_continuous continuous_subtype_val, fun u v => hz1 _ (hfix _ u.2) _, fun A u hu => ?_,
+    refine ⟨hz.1.comp_continuous continuous_subtypeVal, fun u v => hz1 _ (hfix _ u.2) _, fun A u hu => ?_,
       fun A hA => absurd hA (by simp)⟩
     obtain ⟨H, hH, h0⟩ := hunr A
     exact zero_of_unr l _ H hH z (fun g hg => hz1 g hg.2) (fun g hg hg' => h0 g hg hg'.1 hg'.2) u ⟨hu, hfix _ u.2⟩

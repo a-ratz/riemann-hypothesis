@@ -198,7 +198,7 @@ variable (hD : IsDerivedOn ε σ D E) {S : Submodule ℂ (TensorProduct ℂ D (F
 
 theorem tOp_apply {k : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Kset ε) (x : TSub S) :
     tsubVal S (tOp hD hSK k x) = wK hD hk (tsubVal S x) := by
-  simp only [tOp, dif_pos hk]
+  simp only [tOp, dite_eq_left hk]
   rfl
 
 theorem tOp_isURepOn (hσ : IsURepOn (UJset ε) σ) :
@@ -242,8 +242,8 @@ theorem tOp_isURepOn (hσ : IsURepOn (UJset ε) σ) :
       funext g
       refine (e.symm_apply_apply (tOp hD hSK g v)).symm.trans ?_
       congr 1
-    rw [hfe, continuousOn_iff_continuous_restrict]
-    exact hcont.comp ((continuousOn_iff_continuous_restrict.1 hc).subtype_mk _)
+    rw [hfe, continuousOn_iff_continuous_domRestrict]
+    exact hcont.comp ((continuousOn_iff_continuous_domRestrict.1 hc).subtype_mk _)
 
 end Op
 
@@ -255,7 +255,7 @@ variable (hD : IsDerivedOn ε σ D E) {S : Submodule ℂ (TensorProduct ℂ D (F
 theorem tOp_trace {k : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Kset ε) :
     LinearMap.trace ℂ (TSub S) (tOp hD hSK k : TSub S →ₗ[ℂ] TSub S) =
       LinearMap.trace ℂ S ((wK hD hk).restrict (hSK k hk)) := by
-  simp only [tOp, dif_pos hk]
+  simp only [tOp, dite_eq_left hk]
   rfl
 
 theorem tOp_isKTypeOf (hσ : IsURepOn (UJset ε) σ) {γ : Fin n → ℝ}

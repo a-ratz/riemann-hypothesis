@@ -66,7 +66,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem eq_one_of_smul [IsGalois ℚ E] {v : Pl F} (hv : SplitsFully E v) (P : Ideal (𝓞 E)) [P.IsPrime] [P.LiesOver v.asIdeal]
     (g : Gal(E/ℚ)) (h : g • P = P) : g = 1 := by
-  haveI : P.LiesOver (v.asIdeal.under ℤ) := ⟨by rw [P.over_def v.asIdeal, Ideal.under_under]⟩
+  have : P.LiesOver (v.asIdeal.under ℤ) := ⟨by rw [P.over_def v.asIdeal, Ideal.under_under]⟩
   have h1 := MulAction.index_stabilizer Gal(E/ℚ) P
   rw [Algebra.IsInvariant.orbit_eq_primesOver ℤ (𝓞 E) Gal(E/ℚ) (v.asIdeal.under ℤ) P, hv,
     ← IsGalois.card_aut_eq_finrank] at h1
@@ -140,7 +140,7 @@ theorem exists_pow_eq_one {w : HeightOneSpectrum (𝓞 E)} (f : (w.adicCompletio
   obtain ⟨n, hn⟩ := exists_level f hf
   have hu : w.valuation E (π : E) = 1 := by
     rw [HeightOneSpectrum.valuation_of_algebraMap]; exact HeightOneSpectrum.intValuation_eq_one_iff.2 h
-  haveI : Finite (𝓞 E ⧸ w.asIdeal ^ n) := Ideal.finiteQuotientOfFreeOfNeBot _ (pow_ne_zero _ w.ne_bot)
+  have : Finite (𝓞 E ⧸ w.asIdeal ^ n) := Ideal.finiteQuotientOfFreeOfNeBot _ (pow_ne_zero _ w.ne_bot)
   have key : ∀ i j : ℕ, i < j → Ideal.Quotient.mk (w.asIdeal ^ n) (π ^ i) = Ideal.Quotient.mk _ (π ^ j) →
       ∃ N : ℕ, 0 < N ∧ f (atFin w x) ^ N = 1 := fun i j hij e => by
     refine ⟨j - i, by omega, ?_⟩
@@ -169,8 +169,8 @@ def finId : Ideles E →* (AF F ⊗[F] E)ˣ :=
     (Units.map (RingHom.snd (InfiniteAdeleRing E) (FiniteAdeleRing (𝓞 E) E)).toMonoidHom))
 
 theorem continuous_finId : Continuous (finId F E) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
   have h : Continuous fun y : AdeleRing (𝓞 E) E => 1 - extZero F E 1 + extZero F E ((finAdEquiv F E).symm y.2) :=
     continuous_const.add (continuous_extZero.comp (continuous_finAdEquiv_symm.comp continuous_snd))
   exact Units.continuous_iff.2 ⟨h.comp Units.continuous_val, h.comp Units.continuous_coe_inv⟩
@@ -288,7 +288,7 @@ theorem not_prod [IsGalois ℚ E] (h : IsCMExt F E σ) {v : Pl F} (hv : SplitsFu
 theorem nu_statement : NuSt := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hT v hv t e
   classical
-  haveI := hT.base.galois
+  have := hT.base.galois
   set w := splitPrime t with hw
   have hC := hT.chars
   have hH : IsHecke F E X.ν := ⟨hC.heckeα.1.div' hC.heckeβ.1, fun x => by
@@ -349,7 +349,7 @@ theorem nu_statement : NuSt := by
           change u.valuation E (algebraMap (𝓞 E) E π₀) = 1
           rw [HeightOneSpectrum.valuation_of_algebraMap]
           exact HeightOneSpectrum.intValuation_eq_one_iff.2 fun h => huw (HeightOneSpectrum.ext (only _ u.isPrime h))), one_pow]
-  haveI := w.isMaximal
+  have := w.isMaximal
   refine not_prod hT.base.cm hv.2 w.asIdeal (π₀ ^ M) (Ideal.pow_mem_of_mem _ hin _ hM0) (pow_ne_zero _ hne)
     (fun Q hQ h => only Q hQ (hQ.mem_of_pow_mem _ h)) B.emb (B.mα - B.mβ) (fun u => ?_) ?_
   · have := hT.geo.kappa u

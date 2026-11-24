@@ -162,7 +162,7 @@ theorem homL_conj {N N' : ℕ} (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Mat
     {L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)} {A : Matrix (Fin N') (Fin N) D.host.E}
     (hA : A ∈ TaylorLogMetric.homL D L L') :
     (letI := D.host.cmStar; γ' * A * star γ) ∈ TaylorLogMetric.homL D (SDLat.smulLat γ L) (SDLat.smulLat γ' L') := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   induction hA using Submodule.span_induction with
   | mem A hA =>
     refine Submodule.subset_span fun y hy => ?_
@@ -178,7 +178,7 @@ theorem yy_conj {N N' : ℕ} (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matri
     {L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)} {A : Matrix (Fin N') (Fin N) D.host.E}
     (hA : A ∈ TaylorLogMetric.YYl D L L') :
     (letI := D.host.cmStar; γ' * A * star γ) ∈ TaylorLogMetric.YYl D (SDLat.smulLat γ L) (SDLat.smulLat γ' L') := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   induction hA using Submodule.span_induction with
   | mem B hB =>
     obtain ⟨a, ha, A₀, hA₀, rfl⟩ := hB
@@ -194,7 +194,7 @@ theorem embV_conj {N N' : ℕ} (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Mat
     (h1 h2 h1' h2') (A : Matrix (Fin N') (Fin N) D.host.E) :
     TaylorLogMetric.embV D (TaylorLogMetric.tor0 D cc δ) (letI := D.host.cmStar; γ' * A * star γ) =
       phiL γ γ' h1 h2 h1' h2' (TaylorLogMetric.embV D (TaylorLogMetric.tor0 D cc δ) A) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   funext τ
   have e : ((γ' * A * star γ).map (TaylorLogMetric.embT D τ)) = gM γ' τ * A.map (TaylorLogMetric.embT D τ) * (gM γ τ)ᴴ := by
     rw [gM_conjTranspose]
@@ -207,7 +207,7 @@ theorem la_img {N N' : ℕ} (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix
     imgLat ((phiL γ γ' h1 h2 h1' h2' : TaylorLogMetric.VC D N N' ≃ₗ[ℂ] TaylorLogMetric.VC D N N') : TaylorLogMetric.VC D N N' →ₗ[ℂ] TaylorLogMetric.VC D N N')
         (TaylorLogMetric.La D (TaylorLogMetric.tor0 D cc δ) L L') =
       TaylorLogMetric.La D (TaylorLogMetric.tor0 D cc δ) (SDLat.smulLat γ L) (SDLat.smulLat γ' L') := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   unfold imgLat TaylorLogMetric.La
   rw [AddMonoidHom.map_closure]
   congr 1
@@ -270,7 +270,7 @@ theorem pull_core {B : Ker.Base D cc δ} (hL : B.LatAll) {N N' : ℕ} (φ : Tayl
     exact this
 
 theorem pullIop_of {B : Ker.Base D cc δ} (hL : B.LatAll) : PullIop D B.tor := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro N N' L L₁ L' L₁' γ γ' hN hN' s1 s2 s3 s4 G hG
   have h1 : star (γ : Matrix (Fin N) (Fin N) D.host.E) * γ = 1 := Matrix.mem_unitaryGroup_iff'.mp γ.2
   have h2 : (γ : Matrix (Fin N) (Fin N) D.host.E) * star (γ : Matrix (Fin N) (Fin N) D.host.E) = 1 :=

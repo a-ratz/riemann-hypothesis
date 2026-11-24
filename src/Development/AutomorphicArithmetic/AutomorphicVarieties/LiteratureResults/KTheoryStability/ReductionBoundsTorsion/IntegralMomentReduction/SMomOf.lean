@@ -211,7 +211,7 @@ theorem primal_place (hN : 1 ≤ N) {g : GL (Fin N) L} {z : InfinitePlace L → 
       have h1 := hc w
       rw [h, zero_smul] at h1
       have h2 : (mt c w).det = 1 := (c w).prop
-      haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+      have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
       rw [h1, Matrix.det_zero] at h2
       exact zero_ne_one h2
     have hgg : (g : Matrix (Fin N) (Fin N) L) * gi g = 1 := g.mul_inv
@@ -474,7 +474,7 @@ theorem sHtB : SHtB := by
   set A2 := (M⁻¹) ^ 2 * (∑ w : InfinitePlace L, ‖z w‖⁻¹ ^ 2 + 1)⁻¹ * ((d : ℝ) ^ 2)⁻¹ with hA2def
   refine ⟨(A1 * A2)⁻¹, ?_⟩
   intro p hp s hs k hk
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   obtain ⟨imax, himax⟩ := Finite.exists_max s
   obtain ⟨imin, himin⟩ := Finite.exists_min s
   have hM : M ≠ 0 := by
@@ -653,7 +653,7 @@ theorem local_decomp {ι : Type*} [Fintype ι] [Nonempty ι] {N : ℕ} (hN : 1 �
     intro w
     have h := congrArg norm (hdet w)
     have hk1 : ‖(k w).det‖ = 1 := CStarRing.norm_of_mem_unitary (Matrix.det_of_mem_unitary (hk w))
-    rw [Matrix.det_smul, Matrix.det_mul, Matrix.det_mul, Matrix.det_of_upperTriangular (hb w),
+    rw [Matrix.det_smul, Matrix.det_mul, Matrix.det_mul, det_of_isUpperTriangular (hb w),
       Matrix.det_diagonal] at h
     simp only [norm_mul, norm_pow, norm_prod, Fintype.card_fin, hk1, mul_one, norm_one,
       Complex.norm_real, Real.norm_eq_abs] at h
@@ -804,7 +804,7 @@ theorem local_decomp {ι : Type*} [Fintype ι] [Nonempty ι] {N : ℕ} (hN : 1 �
     rw [hpn, Real.exp_add, Real.exp_log (hbpos w i)]
   have hdetp : ∀ w, (b w * diagonal (d w)).det = 1 := by
     intro w
-    rw [Matrix.det_mul, Matrix.det_of_upperTriangular (hb w), Matrix.det_diagonal,
+    rw [Matrix.det_mul, det_of_isUpperTriangular (hb w), Matrix.det_diagonal,
       ← Finset.prod_mul_distrib]
     have h1 : ∀ j, b w j j * d w j = ((‖a w‖ * ‖b w j j‖ * (r j * Real.exp (-s j)) : ℝ) : ℂ) := by
       intro j
@@ -1012,7 +1012,7 @@ theorem discrete_specialLinearGroup_ringOfIntegers : SDisc := by
     let U : Set (Sp L N) :=
       {x | ∀ w i j, ‖mt x w i j - (1 : Matrix (Fin N) (Fin N) ℂ) i j‖ < 1}
     have hU : IsOpen U := by
-      simp only [U, Set.setOf_forall]
+      simp only [U, Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun w => isOpen_iInter_of_finite fun i =>
         isOpen_iInter_of_finite fun j =>
           isOpen_lt ((continuous_entry w i j).sub continuous_const).norm continuous_const
@@ -1045,10 +1045,10 @@ theorem discrete_specialLinearGroup_ringOfIntegers : SDisc := by
       have hone : mt (1 : Sp L N) w = 1 := rfl
       rw [hone, sub_self, norm_zero]
       exact one_pos
-  · haveI := countable_O L
-    haveI : Countable (Matrix (Fin N) (Fin N) (𝓞 L)) :=
+  · have := countable_O L
+    have : Countable (Matrix (Fin N) (Fin N) (𝓞 L)) :=
       inferInstanceAs (Countable (Fin N → Fin N → 𝓞 L))
-    haveI : Countable (SpecialLinearGroup (Fin N) (𝓞 L)) :=
+    have : Countable (SpecialLinearGroup (Fin N) (𝓞 L)) :=
       inferInstanceAs (Countable {A : Matrix (Fin N) (Fin N) (𝓞 L) // A.det = 1})
     exact (MonoidHom.rangeRestrict_surjective
       (MonoidHom.pi fun w : InfinitePlace L => SpecialLinearGroup.map (n := Fin N) (embO w))).countable
@@ -1108,9 +1108,9 @@ theorem continuous_ofS : Continuous (ofS L N) := by
   refine continuous_pi fun w => ?_
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · change Continuous fun x : Sp L N => ((x w : Matrix.SpecialLinearGroup (Fin N) ℂ) : Matrix (Fin N) (Fin N) ℂ)
-    exact continuous_subtype_val.comp (continuous_apply w)
+    exact continuous_subtypeVal.comp (continuous_apply w)
   · change Continuous fun x : Sp L N => (((x w)⁻¹ : Matrix.SpecialLinearGroup (Fin N) ℂ) : Matrix (Fin N) (Fin N) ℂ)
-    exact continuous_subtype_val.comp ((continuous_apply w).inv)
+    exact continuous_subtypeVal.comp ((continuous_apply w).inv)
 
 omit [NumberField L] in
 theorem ofS_latS_mul {γ : Sp L N} (hγ : γ ∈ latS L N) (x : Sp L N) :
@@ -1134,11 +1134,11 @@ theorem sMom_of_parts (hD : SDisc) (hH : SHtB) (hI : SIntB) (hR : SRed) (h : SHt
   refine ⟨A + 2, fun N hN => ?_⟩
   have hN1 : 1 ≤ N := by omega
   obtain ⟨hdisc, hcount⟩ := hD L N
-  haveI := hdisc
-  haveI := hcount
+  have := hdisc
+  have := hcount
   obtain ⟨hcont, hinv, ⟨c0, hc0, hge⟩, -⟩ := h L hL N hN1
   obtain ⟨ι, hfin, c, M, T, hrat, hcov⟩ := hR L hL N hN1
-  haveI := hfin
+  have := hfin
   let μ : Measure (Sp L N) := Measure.haar
   have hF : IsFundamentalDomain (latS L N)
       (GroundTheory.Automorphic.RightCosetSpace.fundamentalDomain (latS L N)) μ :=
@@ -1178,7 +1178,7 @@ theorem sMom_of_parts (hD : SDisc) (hH : SHtB) (hI : SIntB) (hR : SRed) (h : SHt
         max C 0 ^ n * Real.exp (((2 * n : ℕ) : ℝ) * W s) := by
       calc _ ≤ (max C 0 * Real.exp (2 * W s)) ^ n := pow_le_pow_left₀ (hpos _) h1 n
         _ = max C 0 ^ n * Real.exp (((2 * n : ℕ) : ℝ) * W s) := by
-          rw [mul_pow, ← Real.exp_nat_mul]
+          rw [mul_pow, ← Real.exp_natCast_mul]
           congr 2
           push_cast
           ring
@@ -1190,7 +1190,7 @@ theorem sMom_of_parts (hD : SDisc) (hH : SHtB) (hI : SIntB) (hR : SRed) (h : SHt
   have hvol : μ (GroundTheory.Automorphic.RightCosetSpace.fundamentalDomain (latS L N)) < ∞ := by
     have := key 0 (by omega)
     simpa using this
-  haveI : IsFiniteMeasure (GroundTheory.Automorphic.RightCosetSpace.quotientMeasure (latS L N) μ) := by
+  have : IsFiniteMeasure (GroundTheory.Automorphic.RightCosetSpace.quotientMeasure (latS L N) μ) := by
     refine ⟨?_⟩
     have h0 := GroundTheory.Automorphic.RightCosetSpace.lintegral_quotientMeasure (latS L N) μ (fun _ => 1)
     rw [lintegral_one, setLIntegral_one] at h0
@@ -1350,7 +1350,7 @@ theorem exists_finset_cosets {C : Set (AdelicGLn.FiniteAdelicGL L N)} (hC : IsCo
   refine ⟨t.image g, fun γ hγ => ?_⟩
   obtain ⟨c, hct, hc⟩ := Set.mem_iUnion₂.1 (ht hγ)
   have hex : ∃ γ : GL (Fin N) L, p γ ∈ C ∧ p γ ∈ V c := ⟨γ, hγ, hc⟩
-  have hg : g c = hex.choose := dif_pos hex
+  have hg : g c = hex.choose := dite_eq_left hex
   have hgV : p (g c) ∈ V c := by
     rw [hg]
     exact hex.choose_spec.2
@@ -1584,7 +1584,7 @@ open MomentRationality MomentRationality.RedGL MomentRationality.Cz.Arch
 
 theorem sRedGL2 : SRedGL := by
   intro L _ _ hTC N hN
-  haveI := hTC
+  have := hTC
   obtain ⟨ω, hωc, hωB, t, ht, hS⟩ := Reduction.exists_siegelSet (K := L) N
   obtain ⟨M0, hM0, hM⟩ := exists_bound_omega hωc
   let C : Set (AdelicGLn.FiniteAdelicGL L N) :=

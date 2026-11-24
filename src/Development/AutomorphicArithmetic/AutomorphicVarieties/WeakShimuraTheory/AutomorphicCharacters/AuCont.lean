@@ -53,7 +53,7 @@ theorem UpperTheory.V.Ws.auCont :
   intro l _ c Γ _ _ _ κ h
   have h1 : Continuous fun g => (κ g : c.O) := ((UpperTheory.V.X.So.adicCont l c).2 Γ _).1 h
   have h2 : Continuous fun g => ((W.pushCh (algebraMap c.O (PadicAlgCl l)) κ g : (PadicAlgCl l)ˣ) : PadicAlgCl l) :=
-    continuous_subtype_val.comp h1
+    continuous_subtypeVal.comp h1
   refine Units.continuous_iff.2 ⟨h2, ?_⟩
   refine (h2.comp continuous_inv).congr fun g => ?_
   simp only [Function.comp, map_inv]

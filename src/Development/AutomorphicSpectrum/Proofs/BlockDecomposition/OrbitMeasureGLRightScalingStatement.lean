@@ -104,8 +104,8 @@ theorem map_char {A : Type} [AddCommGroup A] [TopologicalSpace A] [IsTopological
     [SecondCountableTopology A] [T2Space A]
     [MeasurableSpace A] [BorelSpace A] (μ : Measure A) [μ.IsAddHaarMeasure] (φ : A ≃ₜ+ A) (c : ℝ≥0) (hc0 : c ≠ 0)
     (hc : addEquivAddHaarChar φ = c) : μ.map φ = c⁻¹ • μ := by
-  haveI : TopologicalSpace.PseudoMetrizableSpace A := inferInstance
-  haveI : μ.Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure _
+  have : TopologicalSpace.PseudoMetrizableSpace A := inferInstance
+  have : μ.Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure _
   have h4 := addEquivAddHaarChar_smul_map μ φ
   rw [hc] at h4
   conv_rhs => rw [← h4]
@@ -116,14 +116,14 @@ theorem map_char {A : Type} [AddCommGroup A] [TopologicalSpace A] [IsTopological
 theorem map_right (a b : ℕ) (μ : Measure (Mx D a b)) (hμ : μ.IsAddHaarMeasure) (g : GL (Fin b) (AE D)) :
     μ.map (fun y => mm y g.1) =
       ((absA D (Matrix.GeneralLinearGroup.det g))⁻¹ ^ a : ℝ≥0) • μ := by
-  haveI := hμ
+  have := hμ
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D a b
-  haveI : IsTopologicalAddGroup (Mx D a b) := i1
-  haveI : LocallyCompactSpace (Mx D a b) := i2
-  haveI : SecondCountableTopology (Mx D a b) := i3
-  haveI : T2Space (Mx D a b) := i4
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have : IsTopologicalAddGroup (Mx D a b) := i1
+  have : LocallyCompactSpace (Mx D a b) := i2
+  have : SecondCountableTopology (Mx D a b) := i3
+  have : T2Space (Mx D a b) := i4
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   have hc : addEquivAddHaarChar (GlobalTheory.ModuLR.lrCE (1 : GL (Fin a) (AE D)) g) = absA D (Matrix.GeneralLinearGroup.det g) ^ a := by
     have := GlobalTheory.ResidueEisenstein.ModMat.addEquivAddHaarChar_lrCE D.host.F D.host.E D.sp.cm.sig (isCMExt_host D) a b
       (1 : GL (Fin a) (AE D)) g

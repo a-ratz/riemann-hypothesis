@@ -544,14 +544,14 @@ noncomputable def realPlaceEquiv : w.Completion ⊗[K] E ≃+* ℂ :=
 
 theorem realPlaceEquiv_conjBase (z : w.Completion ⊗[K] E) :
     realPlaceEquiv hw hE (conjBase K E w.Completion z) = starRingEnd ℂ (realPlaceEquiv hw hE z) := by
-  simp only [realPlaceEquiv, RingEquiv.trans_apply, AlgEquiv.coe_ringEquiv]
+  simp only [realPlaceEquiv, RingEquiv.trans_apply, AlgEquiv.coe_toRingEquiv]
   rw [realPlaceTensorEquiv, tensorQuadEquiv_conjBase (R := w.Completion) (quadPsi_conj w)]
   exact quadComplexEquiv_star _ _ _
 
 theorem realPlaceEquiv_algebraMap (t : w.Completion) :
     realPlaceEquiv hw hE (algebraMap w.Completion (w.Completion ⊗[K] E) t) =
       (ringEquivRealOfIsReal hw t : ℂ) := by
-  simp only [realPlaceEquiv, RingEquiv.trans_apply, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes]
+  simp only [realPlaceEquiv, RingEquiv.trans_apply, AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes]
   exact quadComplexEquiv_algebraMap _ _ t
 
 theorem realPlaceEquiv_smul (t : w.Completion) (z : w.Completion ⊗[K] E) :
@@ -656,7 +656,7 @@ theorem isNonsplitAt_of_isTotallyComplex (u : InfinitePlace F) : IsNonsplitAt E 
   by_contra hnn
   push Not at hnn
   let ρ := ringEquivRealOfIsReal hu
-  letI : Algebra u.Completion ℝ := (ρ : u.Completion →+* ℝ).toAlgebra
+  let : Algebra u.Completion ℝ := (ρ : u.Completion →+* ℝ).toAlgebra
   have hs : Real.sqrt (ρ (algebraMap F u.Completion (quadD F E u))) *
       Real.sqrt (ρ (algebraMap F u.Completion (quadD F E u))) =
       algebraMap F u.Completion (quadD F E u) • (1 : ℝ) +

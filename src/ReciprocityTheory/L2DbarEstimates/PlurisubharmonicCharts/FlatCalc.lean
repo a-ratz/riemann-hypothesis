@@ -119,14 +119,14 @@ theorem lintegral_flat {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y] [
     let U : A.Mset w0 s De → Set (A.Mset w0 s De) := fun x =>
       (e x).source ∩ Subtype.val ⁻¹' (A.chart (A.pick x)).source
     have hUo : ∀ x, IsOpen (U x) := fun x =>
-      (e x).open_source.inter ((A.chart _).open_source.preimage continuous_subtype_val)
+      (e x).open_source.inter ((A.chart _).open_source.preimage continuous_subtypeVal)
     obtain ⟨T, hTc, hTU⟩ := TopologicalSpace.isOpen_iUnion_countable U hUo
     have huniv : ⋃ t : T, U t = Set.univ := by
       refine Set.eq_univ_of_forall fun x => ?_
       have hx : x ∈ ⋃ i ∈ T, U i := hTU ▸ Set.mem_iUnion.2 ⟨x, hxe x, A.mem_pick _⟩
       obtain ⟨t, ht, hxt⟩ := Set.mem_iUnion₂.1 hx
       exact Set.mem_iUnion.2 ⟨⟨t, ht⟩, hxt⟩
-    haveI := hTc.to_subtype
+    have := hTc.to_subtype
     refine Measure.ext_of_iUnion_eq_univ huniv fun t => ?_
     ext B hB
     rw [Measure.restrict_apply hB, Measure.restrict_apply hB,
@@ -134,7 +134,7 @@ theorem lintegral_flat {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y] [
     exact fc_mu_piece A hD hF (e t) (he t) (A.pick (t : Y)) (B ∩ U t)
       (hB.inter (hUo t).measurableSet) (fun m hm => hm.2.1) (fun m hm => hm.2.2)
   rw [← lintegral_subtype_comap hMm, hmeas]
-  exact (lintegral_withDensity_eq_lintegral_mul _ hρ (hφ.comp measurable_subtype_coe)).trans
+  exact (lintegral_withDensity_eq_lintegral_mul _ hρ (hφ.comp measurable_subtypeVal)).trans
     (lintegral_congr fun x => mul_comm _ _)
 
 end

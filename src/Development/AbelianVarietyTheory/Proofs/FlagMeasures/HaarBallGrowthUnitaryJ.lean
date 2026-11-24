@@ -353,7 +353,7 @@ theorem ballVol : ∀ (n : ℕ) (ε : Fin n → Bool), ∃ C : ℝ, (∀ R : ℝ
     have h1 := h ((n + 1) * Real.exp r) (one_le_mul_of_one_le_of_one_le hn he)
     refine (measure_mono fun g hg => ?_).trans (h1.trans (le_of_eq ?_))
     · exact hs_le_of_dOp hg
-    · rw [mul_pow, ← Real.exp_nat_mul, ← mul_assoc]
+    · rw [mul_pow, ← Real.exp_natCast_mul, ← mul_assoc]
       push_cast
       rfl
 

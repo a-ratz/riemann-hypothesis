@@ -192,8 +192,8 @@ theorem core [IsLocalRing V₁] (hV : IsCN V₁) (H : Desc f q ev k₀ u) {N : �
           val (Z := Sp K) t (toUnit (Over.mk (spMap ev))).left z J).val = toStk z c) (mu : X) (c : C) :
     ∃ R R₀ : V₁, algebraMap V₁ (FractionRing V₁) (T mu c * R₀) = algebraMap V₁ (FractionRing V₁) R * y mu ∧
       ev R₀ ≠ 0 ∧ ∃ r ∈ k₀, ev R = r * ev R₀ := by
-  haveI : IsNoetherianRing V₁ := hV.1
-  haveI : IsIntegrallyClosed V₁ := hV.2.1
+  have : IsNoetherianRing V₁ := hV.1
+  have : IsIntegrallyClosed V₁ := hV.2.1
   obtain ⟨th, g, b, w, h₁, h₂, h₃, h₄, h₅, c₀, h₆⟩ := hT
   obtain ⟨θ, hθ, hnz, hlam, -, -⟩ := ThetaOne.main hV D
   obtain ⟨lam, hlam, -⟩ := hlam (FractionRing V₁) th
@@ -276,7 +276,7 @@ theorem coef_monomial : ∀ (g l : ℕ), l.Prime → Odd l → ∀ W : Matrix (F
   intro g l hl _ W _
   refine ⟨1, ?_⟩
   intro j hj V V₁ _ _ _ _ _ hV hlu Q _ ρ hρ D e hS C u mo hmo hT K _ _ ev k₀ hk₀ τ₀ m N s ε hs hε hτ hmono W₀ _ ib hB hk mu c
-  haveI : IsNoetherianRing V₁ := hV.1
+  have : IsNoetherianRing V₁ := hV.1
   obtain ⟨pr, w, hpr, huniv, hw, hc, B₀, iG, iC, M₀, c₀, τ₁, β, β₂, w₀, -, hM₀, hβ, hsq, hw₀, hβc, hτ₁, -, hψ⟩ :=
     PsiMono.psi_val_of W Q ρ hρ D e hS τ₀ _ _ hτ ib hB
   obtain ⟨Ω, hΩ, vΩ⟩ := exists_omega W ρ Q D pr B₀ β₂ w hw M₀ hM₀ w₀ hw₀
@@ -675,7 +675,7 @@ theorem ray {γ : Fin m → LinearMap.BilinForm ℤ X} {γ' : Fin m' → LinearM
   have Z : ∀ l, l ≠ i → ∀ j, d j ≠ 0 → f l (g' j) = 0 := by
     intro l hl
     have s := congrArg (f l) H1
-    rw [map_nsmul, apply_sum_nsmul, hf, if_neg hl, smul_zero] at s
+    rw [map_nsmul, apply_sum_nsmul, hf, ite_eq_right hl, smul_zero] at s
     have hnn : ∀ j ∈ Finset.univ, 0 ≤ (d j : ℤ) * f l (g' j) := fun j _ => by
       by_cases hd : d j = 0
       · simp [hd]
@@ -690,7 +690,7 @@ theorem ray {γ : Fin m → LinearMap.BilinForm ℤ X} {γ' : Fin m' → LinearM
     push_neg at hc
     have : k • g i = 0 := by rw [H1]; simp [hc]
     have s := congrArg (f i) this
-    rw [map_nsmul, hf, if_pos rfl, map_zero] at s
+    rw [map_nsmul, hf, ite_eq_left rfl, map_zero] at s
     simp at s
     omega
   obtain ⟨kj, e, hkj, he, hc⟩ := coord j hj
@@ -701,7 +701,7 @@ theorem ray {γ : Fin m → LinearMap.BilinForm ℤ X} {γ' : Fin m' → LinearM
   have he' : kj • g' j = e i • g i := by
     rw [he, Finset.sum_eq_single i (fun l _ hl => by rw [hel l hl, zero_smul]) (by simp)]
   have t := congrArg (f' j) he'
-  rw [map_nsmul, map_nsmul, hf', if_pos rfl] at t
+  rw [map_nsmul, map_nsmul, hf', ite_eq_left rfl] at t
   simp only [nsmul_eq_mul, mul_one] at t
   have hx := hc i
   have hx0 : 0 ≤ f i (g' j) := (mul_nonneg_iff_of_pos_left (by exact_mod_cast hkj)).1 (hx ▸ Int.natCast_nonneg _)
@@ -733,7 +733,7 @@ theorem mem_of_coeff_ne_zero {γ : Fin m → LinearMap.BilinForm ℤ X} {γ' : F
   have := LinearMap.congr_fun₂ hkd a b
   simp only [LinearMap.smul_apply, LinearMap.sum_apply, toReal_apply, nsmul_eq_mul] at this ⊢
   simp only [Pi.single_apply, ite_smul, zero_smul, LinearMap.smul_apply, toReal_apply, smul_eq_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, Nat.cast_ite, Nat.cast_zero, ite_mul, zero_mul]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, Nat.cast_ite, Nat.cast_zero, ite_mul, zero_mul]
   exact_mod_cast this.symm
 
 end ConeMeet
@@ -759,17 +759,17 @@ theorem cone_meet : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : InvFun O) 
         g, g', hrel, add_neg_cancel])
   rw [Fintype.sum_sum_type] at s
   simp only [Sum.elim_inl, Sum.elim_inr, Pi.neg_apply, neg_mul, Finset.sum_neg_distrib, hf', Int.cast_ite,
-    Int.cast_one, Int.cast_zero, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true] at s
+    Int.cast_one, Int.cast_zero, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at s
   have h1 : ∑ l, c l * (f' j (g l) : ℝ) = c i := by
     rw [Finset.sum_eq_single i]
     · have : g i = g' j := Subtype.ext hj
-      rw [this, hf', if_pos rfl, Int.cast_one, mul_one]
+      rw [this, hf', ite_eq_left rfl, Int.cast_one, mul_one]
     · intro l _ hl
       by_cases hcl : c l = 0
       · rw [hcl, zero_mul]
       · obtain ⟨p, hp⟩ := mem_of_coeff_ne_zero hγ hγ' hc hc' hrel l hcl
         have : g l = g' p := Subtype.ext hp
-        rw [this, hf', if_neg, Int.cast_zero, mul_zero]
+        rw [this, hf', ite_eq_right, Int.cast_zero, mul_zero]
         rintro rfl
         exact hl (hγ.injective (hp.trans hj.symm))
     · simp
@@ -938,7 +938,7 @@ theorem prod_zpow_eq {K ιt : Type} [Field K] {x : K} (hx : x ≠ 0) (s : Finset
 
 theorem mem_of_pow_mem {K : Type} [Field K] (k₀ : Subfield K) (hk : IsAlgClosed k₀) (x : K) (p : ℕ) (hp : 0 < p)
     (h : x ^ p ∈ k₀) : x ∈ k₀ := by
-  haveI := hk
+  have := hk
   have hint : IsIntegral k₀ x := by
     refine ⟨Polynomial.X ^ p - Polynomial.C ⟨x ^ p, h⟩, Polynomial.monic_X_pow_sub_C _ (by omega), ?_⟩
     simp [Polynomial.eval₂_sub]
@@ -979,8 +979,8 @@ theorem mem_of_ratio {K : Type} [Field K] (k₀ : Subfield K) (hk : IsAlgClosed 
   have hxp : x k ^ p = r * Rr' / Rr := by
     have e1 : x k ^ p = ∏ k', x k' ^ (lin W a (gm' k') - lin W a' (gm' k')) := by
       simp_rw [hlin]
-      rw [Finset.prod_eq_single k (fun b _ hb => by rw [if_neg hb, zpow_zero]) (by simp)]
-      rw [if_pos rfl]
+      rw [Finset.prod_eq_single k (fun b _ hb => by rw [ite_eq_right hb, zpow_zero]) (by simp)]
+      rw [ite_eq_left rfl]
     have e2 : ∏ k', x k' ^ (lin W a (gm' k') - lin W a' (gm' k')) =
         (∏ k', x k' ^ lin W a (gm' k')) / ∏ k', x k' ^ lin W a' (gm' k') := by
       rw [← Finset.prod_div_distrib]
@@ -1015,7 +1015,7 @@ theorem GlobalTheory.Poinc.Sep.sepSt : SepSt := by
   intro g hg n hn hodd F Z z i hTC φ hpol hnsi d J S π j hd hJ hval hbl hji V _ _ _ Q ξ hU m N s ε τ₀ hrk hcone hdef
     hsl hsr hτ K _ _ ev k₀ hk₀ hcen hdefo
   obtain ⟨hproj, hnorm, hoi, hiz, hdense, W, hE8, hTI⟩ := hTC
-  haveI := hoi
+  have := hoi
   let ga : Fin m → LinearMap.BilinForm ℤ Q.X := fun k => (ε (.inl k) : LinearMap.BilinForm ℤ Q.X)
   let t : Fin m → V := fun k => s (.inl k)
   let δ : Fin m → LinearMap.BilinForm ℤ Q.X := fun k => (n : ℤ) • ga k
@@ -1128,8 +1128,8 @@ theorem GlobalTheory.Poinc.Sep.sepSt : SepSt := by
             hlamε, smul_eq_mul]
         rw [htr, htr, this, hl2]
         rcases eq_or_ne k' k with rfl | hk
-        · simp only [if_true]
-        · simp only [hk, if_false, Sum.inr.injEq, mul_zero]
+        · simp only [ite_true]
+        · simp only [hk, ite_false, Sum.inr.injEq, mul_zero]
       have hxk := mem_of_ratio k₀ hk₀ ev₁ u W (fun k => ev (s (.inr k))) (fun k => ((hsr k).map ev).ne_zero)
         (fun k => εn (.inr k)) (fun mu c => by
           obtain ⟨r, hr, he⟩ := hsb mu c

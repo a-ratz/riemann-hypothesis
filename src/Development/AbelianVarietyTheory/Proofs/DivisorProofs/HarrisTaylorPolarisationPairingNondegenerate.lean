@@ -108,12 +108,12 @@ theorem finite_invKer {A B : AbVar K} (f : A ⟶ B) (hf : IsIsogeny f) : Finite 
 
 theorem card_invKer_ne_zero {A B : AbVar K} (f : A ⟶ B) (hf : IsIsogeny f) :
     ((Nat.card (invKer f) : ℕ) : K) ≠ 0 := by
-  haveI := finite_invKer f hf
+  have := finite_invKer f hf
   intro h0
   have hpos : 0 < Nat.card (invKer f) := Nat.card_pos
   have hpd : ringChar K ∣ Nat.card (invKer f) := (ringChar.spec K _).1 h0
   rcases CharP.char_is_prime_or_zero K (ringChar K) with hpp | hp0
-  · haveI := Fact.mk hpp
+  · have := Fact.mk hpp
     obtain ⟨y, hy⟩ := exists_prime_orderOf_dvd_card' (ringChar K) hpd
     obtain ⟨_, k, hk, hyk⟩ := y.2
     have : ringChar K ∣ k := by
@@ -174,14 +174,14 @@ theorem exists_kerPow_finrank_ne_zero {A B : AbVar k} (f : A ⟶ B) (e : ℕ) (h
         rw [hp0, zero_dvd_iff] at h1
         exact hn (h1 ▸ dvd_zero p)
   obtain ⟨p, hp, hpe, hpk⟩ := key
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨H, _, _, i, hi, hH⟩ := exists_kerPow_not_dvd p k A B f e hepos hpe
   exact ⟨H, inferInstance, inferInstance, i, hi, hpk _ hH⟩
 
 theorem finite_ker_of_kerPow {A B : AbVar k} (f : A ⟶ B) (e : ℕ) {H : Type} [CommRing H] [Algebra k H]
     {i : ptOver k H ⟶ A.X} (hi : KerPow f e H i) (hH : Module.finrank k H ≠ 0)
     (hkill : ∀ (T : Over (Sp k)) (x : T ⟶ A.X), x ≫ f.hom = 1 → x ^ e = 1) : Finite (ptMap f).ker := by
-  haveI : Module.Finite k H := Module.finite_of_finrank_pos (Nat.pos_of_ne_zero hH)
+  have : Module.Finite k H := Module.finite_of_finrank_pos (Nat.pos_of_ne_zero hH)
   have hx : ∀ x : (ptMap f).ker, x.1 ≫ f.hom = 1 := fun x => MonoidHom.mem_ker.mp x.2
   let φ : (ptMap f).ker → (H →ₐ[k] AlgebraicClosure k) := fun x =>
     (hi.2 (AlgebraicClosure k) x.1 (hx x) (hkill _ x.1 (hx x))).exists.choose
@@ -204,7 +204,7 @@ theorem exists_comp_eq_nsmul (A B : AbVar k) (f : A ⟶ B) (hdim : A.dim = B.dim
     obtain ⟨H0, _, _, i0, hi0, h0⟩ := exists_kerPow_zero_finrank_eq_deg k A B f hf
     rw [← h0, finrank_eq_of_kerPow hi0 hi (fun R _ _ x hx => ⟨fun _ => hkill _ x hx, fun _ => pow_zero x⟩)]
     exact hH
-  haveI hGfin := finite_invKer f hf
+  have hGfin := finite_invKer f hf
   obtain ⟨C, q, hq, hdq, hker, huniv⟩ := GlobalTheory.T.exists_quotient_of_galoisStable_finite_subgroup k A (invKer f) hGfin (card_invKer_ne_zero f hf)
     (galPts_mem_invKer f)
   obtain ⟨h, hqh⟩ := huniv B f (fun x hx => hx.1)
@@ -215,7 +215,7 @@ theorem exists_comp_eq_nsmul (A B : AbVar k) (f : A ⟶ B) (hdim : A.dim = B.dim
   have hdeg : deg f = deg q * deg h := hcomp.2
   have hv : ∀ l : ℕ, l.Prime → (l : k) ≠ 0 → padicValNat l (deg f) = padicValNat l (deg q) := by
     intro l hl hlK
-    haveI := Fact.mk hl
+    have := Fact.mk hl
     have e1 := GlobalTheory.T.card_lPowerTorsion_kernel_eq_lPart_isogenyDegree k l hlK A B f hf
     have e2 := GlobalTheory.T.card_lPowerTorsion_kernel_eq_lPart_isogenyDegree k l hlK A C q hq
     have hset : Nat.card {x : A.Pt // x ≫ f.hom = 1 ∧ ∃ n : ℕ, x ^ l ^ n = 1} =
@@ -248,10 +248,10 @@ theorem exists_comp_eq_nsmul (A B : AbVar k) (f : A ⟶ B) (hdim : A.dim = B.dim
     · apply hd
       obtain ⟨c, hc⟩ : l ∣ deg f := hdeg ▸ dvd_mul_of_dvd_right hdvd _
       rw [hc]; push_cast; rw [hlK, zero_mul]
-    · haveI := Fact.mk hl
+    · have := Fact.mk hl
       have e' := hv l hl hlK
       rw [hdeg, (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) hq0 hh0] at e'
-      have h1 := one_le_padicValNat_of_dvd hh0 hdvd
+      have h1 := one_le_multiplicity_of_dvd hh0 hdvd
       rw [← Nat.padicValNat_def] at h1
       omega
   have hiso : IsIso h := (GlobalTheory.AV.AbVar.isIso_iff_deg_eq_one k C B h).2 hh1
@@ -484,12 +484,12 @@ theorem nondeg : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p)
       rw [push_congr (dp0 k) (𝟙 _) (pow_zero (𝟙 o₀.A)), push_one]
       simp
     | succ n ih =>
-      haveI := hpowM n
-      haveI : IsMonHom (𝟙 o₀.A ^ n * 𝟙 o₀.A) := by rw [← pow_succ]; exact hpowM (n + 1)
+      have := hpowM n
+      have : IsMonHom (𝟙 o₀.A ^ n * 𝟙 o₀.A) := by rw [← pow_succ]; exact hpowM (n + 1)
       rw [push_congr (dp0 k) (𝟙 _) (pow_succ (𝟙 o₀.A) n), push_mul, ih, push_id]
       push_cast
       rw [add_smul, one_smul]
-  haveI := hpowM e
+  have := hpowM e
   have key : push (dp0 k) (𝟙 _) m (push (dp0 k) (𝟙 _) l x) = (e : k) • x := by
     rw [← LinearMap.comp_apply, ← push_comp, push_congr (dp0 k) (𝟙 _) hlm, hpush]
     rfl

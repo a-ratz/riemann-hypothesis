@@ -102,7 +102,7 @@ theorem exists_nat_mul_intAd {F : Type} [Field F] [NumberField F] (t : Formalism
       = t v * algebraMap (𝓞 F) (v.adicCompletion F) b * algebraMap (𝓞 F) (v.adicCompletion F) c by ring]
     exact mul_mem hbt ((HeightOneSpectrum.coe_mem_adicCompletionIntegers (v := v) c))
   choose mv hmv hmt using hloc
-  refine ⟨∏ v ∈ hfin.toFinset, mv v, Finset.one_le_prod' fun v _ => hmv v, fun v => ?_⟩
+  refine ⟨∏ v ∈ hfin.toFinset, mv v, Finset.one_le_prod fun v _ => hmv v, fun v => ?_⟩
   have hev : ((((∏ w ∈ hfin.toFinset, mv w : ℕ) : Formalism.MainNotions.S.Af F) * t) v) =
       ((∏ w ∈ hfin.toFinset, mv w : ℕ) : v.adicCompletion F) * t v := by
     show evalAt v (((∏ w ∈ hfin.toFinset, mv w : ℕ) : Formalism.MainNotions.S.Af F) * t) = _
@@ -133,7 +133,7 @@ theorem uniform_nat_mul {A : Type} [CommRing A] (R : Subring A) {ι : Type} [Fin
     (h : ∀ i, ∃ m : ℕ, 1 ≤ m ∧ (m : A) * f i ∈ R) : ∃ m : ℕ, 1 ≤ m ∧ ∀ i, (m : A) * f i ∈ R := by
   classical
   choose m hm hmf using h
-  refine ⟨∏ i, m i, Finset.one_le_prod' fun i _ => hm i, fun i => ?_⟩
+  refine ⟨∏ i, m i, Finset.one_le_prod fun i _ => hm i, fun i => ?_⟩
   rw [← Finset.mul_prod_erase _ _ (Finset.mem_univ i)]
   push_cast
   rw [show (m i : A) * (∏ j ∈ Finset.univ.erase i, (m j : A)) * f i =
@@ -276,7 +276,7 @@ theorem uniform_nat {ι : Type} [Fintype ι] (P : ι → ℕ → Prop) (hP : ∀
     (h : ∀ i, ∃ m : ℕ, 1 ≤ m ∧ P i m) : ∃ m : ℕ, 1 ≤ m ∧ ∀ i, P i m := by
   classical
   choose m hm hmP using h
-  refine ⟨∏ i, m i, Finset.one_le_prod' fun i _ => hm i, fun i => ?_⟩
+  refine ⟨∏ i, m i, Finset.one_le_prod fun i _ => hm i, fun i => ?_⟩
   rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ i)]
   exact hP i _ _ (hmP i)
 
@@ -367,8 +367,8 @@ theorem Lf_lower : ∃ d : ℕ, 1 ≤ d ∧ ∀ y : Fin I.n → I.E ⊗[I.F] For
     funext k
     simp only [Pi.smul_apply, smul_eq_mul, Finset.sum_apply, Subring.smul_def, Pi.single_apply,
       mul_ite, mul_one, mul_zero]
-    rw [Finset.sum_eq_single k (fun b _ hb => by rw [if_neg (Ne.symm hb), map_zero, mul_zero])
-      (fun h => absurd (Finset.mem_univ k) h), if_pos rfl, map_natCast, mul_comm]
+    rw [Finset.sum_eq_single k (fun b _ hb => by rw [ite_eq_right (Ne.symm hb), map_zero, mul_zero])
+      (fun h => absurd (Finset.mem_univ k) h), ite_eq_left rfl, map_natCast, mul_comm]
   rw [heq]
   exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _
     (Submodule.subset_span ⟨⟨_, hdi i⟩, rfl⟩)

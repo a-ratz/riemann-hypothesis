@@ -75,7 +75,7 @@ theorem exists_integral_trace_one (σ : E →ₐ[F] E) (B : Base F E) (hB : B.Is
 
 theorem exists_good_norm_character (σ : E →ₐ[F] E) (B : Base F E) (hB : B.IsGood σ) : ∃ lam : ℕ →* ℂ, GoodNorm (sgOF σ) lam ∧
     ∀ n : ℕ, n ≠ 0 → (∀ q : ℕ, q.Prime → InertQF σ q → ¬ q ∣ n) → lam n = (Real.sqrt n : ℂ) := by
-  haveI := hB.galois
+  have := hB.galois
   exact LatB.exists_goodNorm hB.cm hB.unram
 
 theorem lattice_stable_under_idempotents (σ : E →ₐ[F] E) (B : Base F E) (hB : B.IsGood σ) {nS nT : ℕ}
@@ -138,7 +138,7 @@ theorem smooth_theta (hg : GoodLat Λ) {hc : HeisClosedF σ JS JT ξ₀ ψ} {w :
     (f : GlobalTheory.WeilPartsF.thetaSubF σ JS JT ξ₀ ψ) :
     ∃ B : Submodule (𝓞 E) (XFF F E nS nT), idx (latF F E nS nT Λ) B ≠ 0 ∧
       ∀ a ∈ latF F E nS nT Λ, (∀ t ∈ B, gamFF σ JS JT ξ₀ ψ a t = 1) → opFF hc w a f = f := by
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
   obtain ⟨U, hU, hf⟩ := IsThetaFunOF.level f.2
   obtain ⟨N, hN, hNU⟩ := lat_lev hg U hU
   have hN2 : 0 < 2 * N := by omega

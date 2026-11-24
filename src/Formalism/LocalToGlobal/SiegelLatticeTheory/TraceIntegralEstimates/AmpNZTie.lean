@@ -391,7 +391,7 @@ theorem be_dil (L : LocBessel k r) (ka : ℝ) (hka : 0 < ka) [SigmaFinite L.μN]
       ⟪w, (turnL L ka).σ (Matrix.of a * Matrix.of b) v⟫_ℂ := by
     rw [← inner_iso ((turnL L ka).σ (dM k r ka⁻¹ 1)) (hiso' _ hdM)]
     rw [← ContinuousLinearMap.comp_apply ((turnL L ka).σ (dM k r ka⁻¹ 1)) ((turnL L ka).σ (dMi k r ka⁻¹ 1)),
-      ← hmul' _ hdM _ hdMi, dM_mul_dMi hκ one_pos, h1', ContinuousLinearMap.one_apply]
+      ← hmul' _ hdM _ hdMi, dM_mul_dMi hκ one_pos, h1', one_apply_eq_self]
     congr 1
     have hcab := WeylGroupFacts.uh_mul hca hcb
     have hmat : dM k r ka⁻¹ 1 * (cj k r ka⁻¹ 1 (Matrix.of a) * cj k r ka⁻¹ 1 (Matrix.of b)) * dMi k r ka⁻¹ 1 =
@@ -493,7 +493,7 @@ theorem be_dil' (L : LocBessel k r) (ka : ℝ) (hka : 0 < ka) [SigmaFinite L.μN
       ⟪w, (turnL L ka).σ (Matrix.of a * Matrix.of b) v⟫_ℂ := by
     rw [← inner_iso ((turnL L ka).σ (dM k r ka⁻¹ 1)) (hiso' _ hdM)]
     rw [← ContinuousLinearMap.comp_apply ((turnL L ka).σ (dM k r ka⁻¹ 1)) ((turnL L ka).σ (dMi k r ka⁻¹ 1)),
-      ← hmul' _ hdM _ hdMi, dM_mul_dMi hκ one_pos, h1', ContinuousLinearMap.one_apply]
+      ← hmul' _ hdM _ hdMi, dM_mul_dMi hκ one_pos, h1', one_apply_eq_self]
     congr 1
     have hcab := WeylGroupFacts.uh_mul hca hcb
     have hmat : dM k r ka⁻¹ 1 * (cj k r ka⁻¹ 1 (Matrix.of a) * cj k r ka⁻¹ 1 (Matrix.of b)) * dMi k r ka⁻¹ 1 =
@@ -643,7 +643,7 @@ theorem smooth_turn (L : LocBessel k r) (ka : ℝ) {v : L.Hs} (hv : v ∈ PI.Upq
       map_smul' := by intro c a; simp [Matrix.mul_smul, Matrix.smul_mul] }
   have hcont : Continuous fun g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ => tT k r * g * tTi k r :=
     (LinearMap.toContinuousLinearMap Φ).continuous
-  simp only [PI.UpqRep.smoothVecs, Set.mem_setOf_eq, PI.UpqRep.IsSmoothVec] at hv ⊢
+  simp only [PI.UpqRep.smoothVecs, Set.mem_ofPred_eq, PI.UpqRep.IsSmoothVec] at hv ⊢
   intro g₀ hg₀
   obtain ⟨U, F, hU, hgU, hF, hEq⟩ := hv (tT k r * g₀ * tTi k r) (hconj g₀ hg₀)
   refine ⟨(fun g => tT k r * g * tTi k r) ⁻¹' U, fun g => F (tT k r * g * tTi k r), hU.preimage hcont, hgU, ?_, ?_⟩

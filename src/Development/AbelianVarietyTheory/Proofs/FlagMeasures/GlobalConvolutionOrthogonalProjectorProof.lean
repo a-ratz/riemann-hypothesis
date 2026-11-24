@@ -86,8 +86,8 @@ private lemma inner_apply_eq_inner_apply_inv_of_isometric {G : Type} [Group G] {
 
   let L : Hp →ₗᵢ[ℂ] Hp := { toLinearMap := (π a : Hp →ₗ[ℂ] Hp), norm_map' := hiso a }
   have hback : π a (π a⁻¹ w) = w := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   have hL : ⟪L u, L (π a⁻¹ w)⟫_ℂ = ⟪u, π a⁻¹ w⟫_ℂ := L.inner_map_map _ _
   rw [← hL]
   show ⟪π a u, w⟫_ℂ = ⟪π a u, π a (π a⁻¹ w)⟫_ℂ
@@ -102,18 +102,18 @@ theorem integratedOperator_isStarProjection_and_sandwich :
     ext1 v
     refine ext_inner_left ℂ fun u => ?_
     rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply,
-      ContinuousLinearMap.smul_apply, inner_smul_right, hP, hP]
+      smul_apply, inner_smul_right, hP, hP]
 
     have step : ∀ g : G, ⟪u, π g (π x (P v))⟫_ℂ
         = ∫ k, φ (x⁻¹ * g⁻¹ * k) * ⟪u, π k v⟫_ℂ ∂μ := by
       intro g
       have e1 : ⟪u, π g (π x (P v))⟫_ℂ = ⟪π (g * x)⁻¹ u, P v⟫_ℂ := by
         rw [inner_apply_eq_inner_apply_inv_of_isometric π hiso, inv_inv]
-        simp only [map_mul, ContinuousLinearMap.mul_apply]
+        simp only [map_mul, mul_apply_eq_comp]
       have e2 : ∀ h : G, ⟪π (g * x)⁻¹ u, π h v⟫_ℂ = ⟪u, π (g * x * h) v⟫_ℂ := by
         intro h
         rw [inner_apply_eq_inner_apply_inv_of_isometric π hiso, inv_inv]
-        simp only [map_mul, ContinuousLinearMap.mul_apply]
+        simp only [map_mul, mul_apply_eq_comp]
       rw [e1, hP]
       simp_rw [e2]
       have htr := integral_mul_left_eq_self (μ := μ)
@@ -197,8 +197,8 @@ theorem inner_isometricRep_inv {G : Type} [Group G] {H : Type} [NormedAddCommGro
     [InnerProductSpace ℂ H] (σ : G →* (H →L[ℂ] H)) (hσ : ∀ g x, ‖σ g x‖ = ‖x‖)
     (g : G) (u v : H) : ⟪u, σ g⁻¹ v⟫_ℂ = ⟪σ g u, v⟫_ℂ := by
   have hv : σ g (σ g⁻¹ v) = v := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   let f : H →ₗᵢ[ℂ] H := { toLinearMap := (σ g : H →ₗ[ℂ] H), norm_map' := hσ g }
   have hf : ∀ x, f x = σ g x := fun _ => rfl
   calc ⟪u, σ g⁻¹ v⟫_ℂ = ⟪f u, f (σ g⁻¹ v)⟫_ℂ := (f.inner_map_map _ _).symm
@@ -218,7 +218,7 @@ theorem matrixCoeff_idempotent_of_orthogonality : ∀ (G : Type) [Group G] [Meas
   · intro x y
     have key : ∀ g : G, star ⟪w, σ (x⁻¹ * g⁻¹ * y) w⟫_ℂ = ⟪σ y w, σ g (σ x w)⟫_ℂ := by
       intro g
-      rw [map_mul, map_mul, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply,
+      rw [map_mul, map_mul, mul_apply_eq_comp, mul_apply_eq_comp,
         adj, adj, hc]
     calc ∫ g, ((d : ℂ) * star ⟪w, σ g w⟫_ℂ) * ((d : ℂ) * star ⟪w, σ (x⁻¹ * g⁻¹ * y) w⟫_ℂ) ∂μ
         = ∫ g, ((d : ℂ) * d) * (⟪σ y w, σ g (σ x w)⟫_ℂ * star ⟪w, σ g w⟫_ℂ) ∂μ := by
@@ -414,19 +414,19 @@ theorem sigmaFinite_and_isInvInvariant_of_continuous_integrable :
       Continuous f → f 1 ≠ 0 → Integrable f μ → SigmaFinite μ ∧ μ.IsInvInvariant := by
   intro G _ _ _ _ _ _ μ _ _ f hfc hf1 hfi
 
-  have hf1' : ‖f 1‖ₑ ≠ 0 := enorm_ne_zero.2 hf1
+  have hf1' : ‖f 1‖ₑ ≠ 0 := eNorm_ne_zero.2 hf1
   have hc0 : ‖f 1‖ₑ / 2 ≠ 0 := by simp [hf1']
-  have hcT : ‖f 1‖ₑ / 2 ≠ ⊤ := (ENNReal.div_lt_top enorm_ne_top two_ne_zero).ne
+  have hcT : ‖f 1‖ₑ / 2 ≠ ⊤ := (ENNReal.div_lt_top eNorm_ne_top two_ne_zero).ne
 
-  have hUo : IsOpen {x : G | ‖f 1‖ₑ / 2 < ‖f x‖ₑ} := isOpen_lt continuous_const hfc.enorm
+  have hUo : IsOpen {x : G | ‖f 1‖ₑ / 2 < ‖f x‖ₑ} := isOpen_lt continuous_const hfc.eNorm
   have h1U : (1 : G) ∈ {x : G | ‖f 1‖ₑ / 2 < ‖f x‖ₑ} :=
-    ENNReal.half_lt_self hf1' enorm_ne_top
+    ENNReal.half_lt_self hf1' eNorm_ne_top
 
   have hUfin : μ {x : G | ‖f 1‖ₑ / 2 < ‖f x‖ₑ} < ⊤ := by
     calc μ {x : G | ‖f 1‖ₑ / 2 < ‖f x‖ₑ} ≤ μ {x : G | ‖f 1‖ₑ / 2 ≤ ‖f x‖ₑ} :=
-          measure_mono (Set.setOf_subset_setOf.2 fun _ hx => hx.le)
+          measure_mono (Set.ofPred_subset_ofPred.2 fun _ hx => hx.le)
       _ ≤ (∫⁻ x, ‖f x‖ₑ ∂μ) / (‖f 1‖ₑ / 2) :=
-          meas_ge_le_lintegral_div hfi.aestronglyMeasurable.enorm hc0 hcT
+          meas_ge_le_lintegral_div hfi.aestronglyMeasurable.eNorm hc0 hcT
       _ < ⊤ := ENNReal.div_lt_top hfi.2.ne hc0
 
   have hσ : SigmaFinite μ := by
@@ -481,7 +481,7 @@ theorem projAbs_holds : ProjAbs := by
   have hww : ⟪w, w⟫_ℂ = 1 := by
     rw [inner_self_eq_norm_sq_to_K, hw]; simp
   have hm1 : ⟪w, σ 1 w⟫_ℂ = 1 := by
-    rw [map_one, ContinuousLinearMap.one_apply, hww]
+    rw [map_one, one_apply_eq_self, hww]
   obtain ⟨hsf, hinv⟩ := GlobalTheory.sigmaFinite_and_isInvInvariant_of_continuous_integrable G μ (fun g => ⟪w, σ g w⟫_ℂ) (hcont w w)
     (by show ⟪w, σ 1 w⟫_ℂ ≠ 0; rw [hm1]; exact one_ne_zero) hint
   have hpol := GlobalTheory.polarised_schur_relations G μ H σ d (fun x y => (hcont x y).aestronglyMeasurable) hS
@@ -594,7 +594,7 @@ theorem weak_integral_prod {X Y H : Type} [MeasurableSpace X] [MeasurableSpace Y
     rw [← ContinuousLinearMap.adjoint_inner_left (A g) (E y) x, hE]
     congr 1
     funext k
-    rw [ContinuousLinearMap.adjoint_inner_left, hR, ContinuousLinearMap.mul_apply]
+    rw [ContinuousLinearMap.adjoint_inner_left, hR, mul_apply_eq_comp]
   rw [h1, ← integral_const_mul]
   congr 1
   funext k
@@ -605,7 +605,7 @@ theorem conv_prod (B : RowsAut) (a : B.I.Ginf → ℂ) (P : B.I.L2 B.μf B.fund 
     B.I.IsRConv B.μf B.fund B.R (fun x => a x.1 * B.e x.2) (P.comp B.Re) ∧
       ∀ T, B.I.IsRConv B.μf B.fund B.R (fun x => a x.1 * B.e x.2) T → T = P.comp B.Re := by
   obtain ⟨-, hmul, hnorm, hcont, -⟩ := GlobalTheory.RightRegFund.rightReg_unitary_continuous B
-  haveI : SFinite (muInf B.I) := by unfold muInf; infer_instance
+  have : SFinite (muInf B.I) := by unfold muInf; infer_instance
   have hE := B.Re_spec
   have key : ∀ x y : B.I.L2 B.μf B.fund, ⟪x, (P.comp B.Re) y⟫_ℂ =
       ∫ g, (fun z : B.I.GA => a z.1 * B.e z.2) g * ⟪x, B.R g y⟫_ℂ ∂(B.I.muA B.μf) := by
@@ -705,10 +705,10 @@ theorem globalProj_holds : GlobalProj := by
   obtain ⟨hReP, hReC, -⟩ := GlobalTheory.IdemProj.re_orth_proj B
   obtain ⟨hU, -, hF, hnw, hph⟩ := _root_.GlobalTheory.Dec.tensorRep B d hd
   obtain ⟨h1, hmul, hnorm, hcont, -⟩ := GlobalTheory.RightRegFund.rightReg_unitary_continuous B
-  haveI : (muInf B.I).IsHaarMeasure := by unfold muInf; infer_instance
-  haveI : ∀ v, (muG (B.I.ε v)).IsMulRightInvariant := fun v =>
+  have : (muInf B.I).IsHaarMeasure := by unfold muInf; infer_instance
+  have : ∀ v, (muG (B.I.ε v)).IsMulRightInvariant := fun v =>
     ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular _ (B.I.ε v) g⟩
-  haveI : (muInf B.I).IsMulRightInvariant := by unfold muInf; infer_instance
+  have : (muInf B.I).IsMulRightInvariant := by unfold muInf; infer_instance
   let σh : B.I.Ginf →* (B.Hs →L[ℂ] B.Hs) :=
     { toFun := B.σs, map_one' := hU.1, map_mul' := hU.2.1 }
   let πh : B.I.Ginf →* (B.I.L2 B.μf B.fund →L[ℂ] B.I.L2 B.μf B.fund) :=
@@ -757,7 +757,7 @@ theorem globalProj_holds : GlobalProj := by
   have hr : ∀ v, (∃ y, P y = v) ↔ ∃ io : B.Hs →L[ℂ] B.I.L2 B.μf B.fund,
       (∀ g : B.I.Ginf, io ∘L B.σs g = B.R (g, 1) ∘L io) ∧ v = io (B.tens B.w) := fun v => by
     have h := Set.ext_iff.1 hrange v
-    simp only [SetLike.mem_coe, LinearMap.mem_range, ContinuousLinearMap.coe_coe, Set.mem_setOf_eq] at h
+    simp only [SetLike.mem_coe, LinearMap.mem_range, ContinuousLinearMap.coe_coe, Set.mem_ofPred_eq] at h
     exact h
   have hS : ∀ A, A ∈ B.I.eHom B.σs B.μf B.fund B.R B.Re ↔
       ∃ A₀ : B.Hs →L[ℂ] B.I.L2 B.μf B.fund, (∀ g : B.I.Ginf, A₀ ∘L B.σs g = B.R (g, 1) ∘L A₀) ∧
@@ -780,7 +780,7 @@ theorem globalProj_holds : GlobalProj := by
   obtain rfl := hconv.2 T hT
   obtain ⟨h1', h2', h3', ⟨eq⟩⟩ := hAC
   refine ⟨h1', h2', h3', fun hfd => ?_, (LinearEquiv.finrank_eq eq).symm⟩
-  haveI := hfd
+  have := hfd
   exact LinearEquiv.finiteDimensional eq
 
 end GlobalTheory.GlobProj

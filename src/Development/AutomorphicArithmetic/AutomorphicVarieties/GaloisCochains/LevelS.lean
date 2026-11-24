@@ -56,9 +56,9 @@ private theorem ine_le_open (F Ω : Type) [Field F] [NumberField F] [Field Ω] [
     ∃ T : Finset (HeightOneSpectrum (𝓞 F)), ∀ v, v ∉ T → ∀ A : ValuationSubring Ω, IsPlaceOver A v →
       Ine (F := F) A ≤ K := by
   obtain ⟨E, hE, hEK⟩ := (krullTopology_mem_nhds_one_iff F Ω (K : Set (G F Ω))).1 (hK.mem_nhds K.one_mem)
-  haveI : NumberField E := NumberField.of_module_finite F E
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : IsAlgClosure E Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) E⟩
+  have : NumberField E := NumberField.of_module_finite F E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosure E Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) E⟩
   obtain ⟨T, hT⟩ := (Base.ramFinite F F E Ω).1
   refine ⟨T, fun v hv A hA g hg => hEK ?_⟩
   have h := hT v hv A hA (show g ∈ Base.galOf F F Ω ⊓ Ine (F := F) A from ⟨fun x => g.commutes x, hg⟩)
@@ -93,7 +93,7 @@ theorem UpperTheory.V.GC.levelS :
   generalize hN : (Subgroup.normalClosure (⋃ q : {v // v ∈ S ∪ T ∧ v ∉ S}, (((Ine (F := F) (A q.1) ⊓ K).map
     (toGS Ω ((S ∪ T : Finset _) : Set (HeightOneSpectrum (𝓞 F)))) : Subgroup _) :
       Set (GS Ω ((S ∪ T : Finset _) : Set (HeightOneSpectrum (𝓞 F))))))).topologicalClosure = N
-  haveI hNn : N.Normal := by
+  have hNn : N.Normal := by
     rw [← hN]
     exact Subgroup.is_normal_topologicalClosure _
   have hNc : IsClosed (N : Set (GS Ω ((S ∪ T : Finset _) : Set (HeightOneSpectrum (𝓞 F))))) := by

@@ -158,10 +158,10 @@ theorem exists_lower (Y : Matrix (Fin r) (Fin r) ℂ) (hY : ∀ i, lminor Y i �
 theorem finite_lminor (Y : Matrix (Fin r) (Fin r) ℂ) (i : Fin (r + 1)) :
     {s : ℂ | lminor (Y + s • (1 : Matrix (Fin r) (Fin r) ℂ)) i = 0}.Finite := by
   have hi := Nat.le_of_lt_succ i.isLt
-  refine (Polynomial.finite_setOf_isRoot
+  refine (Polynomial.finite_setOfPred_isRoot
     (Matrix.charpoly_monic (-(Y.submatrix (Fin.castLE hi) (Fin.castLE hi)))).ne_zero).subset ?_
   intro s hs
-  simp only [Set.mem_setOf_eq, Polynomial.IsRoot.def, Matrix.eval_charpoly] at hs ⊢
+  simp only [Set.mem_ofPred_eq, Polynomial.IsRoot.def, Matrix.eval_charpoly] at hs ⊢
   rw [← hs, lminor]
   congr 1
   ext a b
@@ -231,7 +231,7 @@ theorem eq_zero_lower (la : Wt X.Ψ r) (x₀ : Frame X.Ψ r)
     have h : (mat x₀ τ * mat L τ).det ≠ 0 := (hLd τ).1
     rw [det_mul] at h
     have h' := right_ne_zero_of_mul h
-    rw [det_of_lowerTriangular (mat L τ) (fun a c hac => hL τ a c (by simpa using hac))] at h'
+    rw [det_of_isLowerTriangular (mat L τ) (fun a c hac => hL τ a c (by simpa using hac))] at h'
     exact Finset.prod_ne_zero_iff.1 h' a (Finset.mem_univ _)
   have hF0 : F 0 = rmul x₀ fun τ => (diagonal fun a => L τ a a : Matrix (Fin r) (Fin r) ℂ) := by
     simp only [hF]

@@ -59,7 +59,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem exists_nat_mul_mem (x : k) : ∃ N : ℕ, 0 < N ∧ (N : k) * x ∈ 𝒪[k] := by
   classical
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[k]
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField 𝒪[k])
+  let := Fintype.ofFinite (IsLocalRing.ResidueField 𝒪[k])
   set Q := Fintype.card (IsLocalRing.ResidueField 𝒪[k])
   have hQ : (Q : 𝒪[k]) ∈ IsLocalRing.maximalIdeal 𝒪[k] := by
     rw [← IsLocalRing.residue_eq_zero_iff, map_natCast]

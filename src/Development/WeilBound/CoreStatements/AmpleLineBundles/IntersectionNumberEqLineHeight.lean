@@ -170,7 +170,7 @@ theorem CoverDenseAlt.intersection_number_eq_line_height : ∀ (K : Type) [Finty
   intro K _ ι _ II hII W hW
   classical
   obtain ⟨hK, ⟨-, hhomW, hrelW⟩, -, -⟩ := id hW
-  haveI := hK
+  have := hK
   obtain ⟨-, hadd, hrec⟩ : IsIntersectionFamily (II K ι) := hII K ι
   have hne : ∀ k, Nonempty (ι k) := fun k => let ⟨i, _⟩ := hrelW k; ⟨i⟩
   obtain ⟨n, hn⟩ : ∃ n : K → ℕ, ∀ k, Fintype.card (ι k) = n k + 1 :=

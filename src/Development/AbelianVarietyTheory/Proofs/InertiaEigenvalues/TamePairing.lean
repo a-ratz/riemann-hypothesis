@@ -63,13 +63,13 @@ theorem eq_zero_of_isProGen {F Ω : Type} [Field F] [NumberField F] [Field Ω] [
     (hγ : IsProGen F A l (γ₀ : G F Ω)) (f : Dec (F := F) A → ZMod (l ^ n)) (hf : Continuous f)
     (hadd : ∀ g h, f (g * h) = f g + f h) (h0 : f γ₀ = 0) (σ : Dec (F := F) A)
     (hσ : (σ : G F Ω) ∈ Ine (F := F) A) : f σ = 0 := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   let φ : Dec (F := F) A →* Multiplicative (ZMod (l ^ n)) :=
     MonoidHom.mk' (fun g => Multiplicative.ofAdd (f g)) (fun g h => by rw [hadd, ofAdd_add])
   let ψ : Ine (F := F) A →* Multiplicative (ZMod (l ^ n)) :=
     φ.comp (Subgroup.inclusion (Ine_le_Dec A))
   have hc : Continuous fun g : Ine (F := F) A => f (Subgroup.inclusion (Ine_le_Dec A) g) :=
-    hf.comp (continuous_induced_rng.2 continuous_subtype_val)
+    hf.comp (continuous_induced_rng.2 continuous_subtypeVal)
   have hker : (ψ.ker : Set (Ine (F := F) A)) =
       (fun g : Ine (F := F) A => f (Subgroup.inclusion (Ine_le_Dec A) g)) ⁻¹' {0} := by
     ext g; rfl
@@ -135,9 +135,9 @@ open scoped Pointwise in
 private theorem apply_eq_self_of_cycMod_eq_one_of_pow_eq_one {F Ω : Type} [Field F] [NumberField F] [Field Ω]
     [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {g : _root_.Formalism.ConjugateSelfDual.G F Ω}
     (hg : _root_.ReciprocityTheory.Gal.cycMod F Ω l 1 g = 1) {t : Ω} (ht : t ^ l ^ 1 = 1) : g t = t := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   have h := cyclotomicCharacter.spec (L := Ω) l (n := 1) (MulSemiringAction.toRingAut _ Ω g) t ht
   have h1 : PadicInt.toZModPow 1
       ((cyclotomicCharacter Ω l (MulSemiringAction.toRingAut _ Ω g) : ℤ_[l])) = 1 :=
@@ -191,7 +191,7 @@ private theorem isClosed_setOf_pred_map_apply_of_isOpen_ker {F Ω : Type} [Field
     rw [mem_leftCoset_iff, SetLike.mem_coe, MonoidHom.mem_ker, map_mul, map_inv,
       inv_mul_eq_one] at hσ
     apply hτ
-    simp only [Set.mem_setOf_eq] at hσx hPσ ⊢
+    simp only [Set.mem_ofPred_eq] at hσx hPσ ⊢
     rw [hσ, ← hσx]
     exact hPσ
   · rw [mem_leftCoset_iff, inv_mul_cancel]
@@ -203,12 +203,12 @@ open scoped Pointwise in
 theorem _root_.GlobalTheory.TamePairing.tame_pairing : _root_.GlobalTheory.Published.TameLocal → ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 F)), _root_.Formalism.ConjugateSelfDual.IsPlaceOver A v → ((l : ℕ) : 𝓞 F) ∉ v.asIdeal → _root_.Formalism.ConjugateSelfDual.normV v ≡ 1 [MOD l ^ 1] → (∀ g : _root_.ReciprocityTheory.Gal.Dec (F := F) A, _root_.ReciprocityTheory.Gal.cycMod F Ω l 1 g = 1) → ∀ e : _root_.ReciprocityTheory.Gal.H2 (_root_.GlobalTheory.Published.PoitouTate.muLoc F l 1 A) →ₗ[ZMod (l ^ 1)] ZMod (l ^ 1), Function.Bijective e → ∀ (M : ℕ), 1 ≤ M → ∀ d : _root_.Formalism.ConjugateSelfDual.G F Ω →* Multiplicative (ZMod (l ^ M)), IsOpen (d.ker : Set (_root_.Formalism.ConjugateSelfDual.G F Ω)) → ∀ γ φ : _root_.ReciprocityTheory.Gal.Dec (F := F) A, (γ : _root_.Formalism.ConjugateSelfDual.G F Ω) ∈ _root_.ReciprocityTheory.Gal.Ine (F := F) A → d γ = Multiplicative.ofAdd 1 → _root_.Formalism.ConjugateSelfDual.IsFrob A (_root_.Formalism.ConjugateSelfDual.normV v) (φ : _root_.Formalism.ConjugateSelfDual.G F Ω) → ∃ u : (ZMod (l ^ 1))ˣ, ∀ z y : _root_.ReciprocityTheory.Gal.Dec (F := F) A → ZMod (l ^ 1), Continuous z → Continuous y → (∀ g h, z (g * h) = z g + z h) → (∀ g h, y (g * h) = y g + y h) → (∀ g : _root_.ReciprocityTheory.Gal.Dec (F := F) A, (g : _root_.Formalism.ConjugateSelfDual.G F Ω) ∈ _root_.ReciprocityTheory.Gal.Ine (F := F) A → y g = 0) → ∀ w : _root_.ReciprocityTheory.Gal.Z2 (_root_.GlobalTheory.Published.PoitouTate.muLoc F l 1 A), (∀ g h, w.1 (g, h) = z g * y h) → e (Submodule.Quotient.mk w) = (u : ZMod (l ^ 1)) * (z γ * y φ) := by
   intro TL F Ω _ _ _ _ _ l _ A v hA hl hnorm hcyc e he M hM d hd γ φ hγ hdγ hφ
   obtain ⟨hS, hT⟩ := TL
-  haveI : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : Algebra.IsIntegral F Ω := inferInstance
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ 1)
+  have : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : Algebra.IsIntegral F Ω := inferInstance
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ 1)
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.TameQuot.exists_isUnifRoot (Ω := Ω) v (N := l ^ 1) (NeZero.pos _)
   have hx0 := ne_zero_of_isUnifRoot hx
   have hζfix : ∀ g : _root_.ReciprocityTheory.Gal.Dec (F := F) A, (g : _root_.Formalism.ConjugateSelfDual.G F Ω) ζ = ζ := fun g =>
@@ -236,12 +236,12 @@ theorem _root_.GlobalTheory.TamePairing.tame_pairing : _root_.GlobalTheory.Publi
   have hKd : ∀ σ : _root_.Formalism.ConjugateSelfDual.G F Ω, σ ∈ _root_.GlobalTheory.TameQuot.ineKer F A l → d σ = 1 := by
     intro σ hσ
     exact map_eq_one_of_mem_ine_kernel (σ := ⟨σ, _root_.GlobalTheory.TameQuot.ineKer_le_Ine A l hσ⟩)
-      (d.comp (_root_.ReciprocityTheory.Gal.Ine (F := F) A).subtype) (hd.preimage continuous_subtype_val) hσ
+      (d.comp (_root_.ReciprocityTheory.Gal.Ine (F := F) A).subtype) (hd.preimage continuous_subtypeVal) hσ
   have hkerχ : ((χ.comp (Subgroup.inclusion (_root_.ReciprocityTheory.Gal.Ine_le_Dec (F := F) A))).ker : Set (_root_.ReciprocityTheory.Gal.Ine (F := F) A)) =
       Subtype.val ⁻¹' {τ : _root_.Formalism.ConjugateSelfDual.G F Ω | τ x = x} := by
     ext σ
     simp only [SetLike.mem_coe, MonoidHom.mem_ker, MonoidHom.comp_apply, Set.mem_preimage,
-      Set.mem_setOf_eq]
+      Set.mem_ofPred_eq]
     show Multiplicative.ofAdd (χ0 _) = Multiplicative.ofAdd 0 ↔ _
     rw [EmbeddingLike.apply_eq_iff_eq]
     constructor
@@ -256,7 +256,7 @@ theorem _root_.GlobalTheory.TamePairing.tame_pairing : _root_.GlobalTheory.Publi
     have hσI := _root_.GlobalTheory.TameQuot.ineKer_le_Ine A l hσ
     have h1 := map_eq_one_of_mem_ine_kernel (σ := ⟨σ, hσI⟩)
       (χ.comp (Subgroup.inclusion (_root_.ReciprocityTheory.Gal.Ine_le_Dec (F := F) A)))
-      (by rw [hkerχ]; exact (_root_.ReciprocityTheory.Gal.isOpen_setOf_apply x (· = x)).preimage continuous_subtype_val) hσ
+      (by rw [hkerχ]; exact (_root_.ReciprocityTheory.Gal.isOpen_setOf_apply x (· = x)).preimage continuous_subtypeVal) hσ
     have hmem : (⟨σ, hσI⟩ : _root_.ReciprocityTheory.Gal.Ine (F := F) A) ∈ (χ.comp (Subgroup.inclusion (_root_.ReciprocityTheory.Gal.Ine_le_Dec (F := F) A))).ker := h1
     rw [← SetLike.mem_coe, hkerχ] at hmem
     exact hmem
@@ -281,7 +281,7 @@ theorem _root_.GlobalTheory.TamePairing.tame_pairing : _root_.GlobalTheory.Publi
         sup_le (Subgroup.zpowers_le.2 ha) (fun σ hσ => hΦK σ hσ)
       exact this
     have hW := closure_minimal hle (isClosed_setOf_pred_map_apply_of_isOpen_ker d hd x (fun h _ => Φ h = 1)) hγcl
-    simp only [Set.mem_setOf_eq, hΦγ] at hW
+    simp only [Set.mem_ofPred_eq, hΦγ] at hW
     exact one_ne_zero (Multiplicative.ofAdd.injective (hW.trans ofAdd_zero.symm))
 
   set k : ZMod (l ^ 1) := χ0 γ0' * (Multiplicative.toAdd (Φ (d γ0)))⁻¹ with hk
@@ -310,7 +310,7 @@ theorem _root_.GlobalTheory.TamePairing.tame_pairing : _root_.GlobalTheory.Publi
     rfl
   have hZ := closure_minimal hle (isClosed_setOf_pred_map_apply_of_isOpen_ker d hd x
     (fun h y => y = ζ ^ (k * Multiplicative.toAdd (Φ h)).val * x)) hγcl
-  simp only [Set.mem_setOf_eq, hΦγ, toAdd_ofAdd, mul_one] at hZ
+  simp only [Set.mem_ofPred_eq, hΦγ, toAdd_ofAdd, mul_one] at hZ
   have hcγ : χ0 γ = k := hχuniq γ k hZ
   have hcU : IsUnit (χ0 γ) := by
     rw [hcγ]

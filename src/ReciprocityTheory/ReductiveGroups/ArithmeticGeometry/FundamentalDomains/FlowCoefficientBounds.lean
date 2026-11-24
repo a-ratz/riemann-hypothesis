@@ -181,7 +181,7 @@ theorem fj_bound (la : Wt X.Ψ r) (P : Frame X.Ψ r → ℂ) (C : ℝ)
       obtain ⟨hd, hn⟩ := flow_real X hξ hx s la
       rw [norm_mul, norm_cexp_I _ (by rw [Complex.im_sum]; simp), mul_one, le_div_iff₀ hpos, ← hn]
       exact hP _ hd
-    haveI : IsFiniteMeasure (volume.restrict h2.choose) :=
+    have : IsFiniteMeasure (volume.restrict h2.choose) :=
       ⟨by rw [Measure.restrict_apply_univ]; exact hDt⟩
     have hI := norm_integral_le_of_norm_le_const (μ := volume.restrict h2.choose) (ae_of_all _ hpt)
     rw [measureReal_def, Measure.restrict_apply_univ] at hI

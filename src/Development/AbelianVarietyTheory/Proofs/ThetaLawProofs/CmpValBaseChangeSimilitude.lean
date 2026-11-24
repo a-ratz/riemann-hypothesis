@@ -299,7 +299,7 @@ theorem cmpVal_baseChange {R' : Type} [CommRing R'] {x : KeyIn R} {x' : KeyIn R'
     · have E := congrArg T E₁
       rw [map_zpow, vr] at E
       exact cancel_mu m _ _ _ ((vm η[x.P.A] η[x'.P.A] he (eSec_pow x' m)).symm.trans E)
-    · haveI := x'.P.isAb.comm
+    · have := x'.P.isAb.comm
       have hm' : m ≠ 0 := hm (fun h => by subst h; exact (I 0).elim0)
       have hk : ∀ r, ξ' I r ^ m = 1 := SimilUnit.pow_eq_one_of_similitude m hm' al hal (ξ' I) fun c => by
         simpa only [List.prod_ofFn] using h₂' I c

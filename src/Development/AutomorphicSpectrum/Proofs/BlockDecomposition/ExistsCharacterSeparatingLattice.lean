@@ -73,12 +73,12 @@ theorem fourier_sub_translate_eq_zero [MeasurableSpace k] [BorelSpace k] {n : �
     (hx : ∀ η : Fin n → k, (∀ a ∈ A, ψ (η ⬝ᵥ a) = 1) → ψ (η ⬝ᵥ x) = 1) (y : Fin n → k) :
     ∫ z, ((A : Set (Fin n → k)).indicator (fun _ => (1 : ℂ)) z -
         (A : Set (Fin n → k)).indicator (fun _ => (1 : ℂ)) (z + x)) * (ψ (z ⬝ᵥ y) : ℂ) ∂μ = 0 := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   set g : (Fin n → k) → ℂ := (A : Set (Fin n → k)).indicator (fun _ => (1 : ℂ)) with hgdef
   have hg : g ∈ SB (Fin n → k) := indicator_mem_SB A hAc hAo
   have hc : Continuous fun z : Fin n → k => (ψ (z ⬝ᵥ y) : ℂ) :=
-    continuous_subtype_val.comp (hψ.comp (continuous_id.dotProduct continuous_const))
+    continuous_subtypeVal.comp (hψ.comp (continuous_id.dotProduct continuous_const))
   have hi1 : Integrable (fun z => g z * (ψ (z ⬝ᵥ y) : ℂ)) μ :=
     (hg.1.continuous.mul hc).integrable_of_hasCompactSupport hg.2.mul_right
   have hgx : HasCompactSupport fun z => g (z + x) := hg.2.comp_homeomorph (Homeomorph.addRight x)
@@ -132,10 +132,10 @@ theorem exists_annihilator_ne : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
   by_contra hcon
   push Not at hcon
   obtain ⟨c, hc⟩ := exists_hasConductor_of_continuous ψ hψ h1
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
-  haveI := secondCountable k
-  haveI := t2Space k
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
+  have := secondCountable k
+  have := t2Space k
   let μ : Measure (Fin n → k) := Measure.addHaar
   set g : (Fin n → k) → ℂ := (A : Set (Fin n → k)).indicator (fun _ => (1 : ℂ)) with hgdef
   have hg : g ∈ SB (Fin n → k) := indicator_mem_SB A hAc hAo

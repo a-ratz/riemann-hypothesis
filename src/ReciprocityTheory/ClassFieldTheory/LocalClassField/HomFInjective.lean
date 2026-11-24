@@ -231,7 +231,7 @@ theorem retr_mul' (n : G) (hn : n ∈ N) (g : G) : (retr N (n * g) : G) = n * re
 theorem rep_mul' (n : G) (hn : n ∈ N) (g : G) : rep N (n * g) = rep N g := rep_mul N ⟨n, hn⟩ g
 
 theorem continuous_retr' (hN : IsOpen (N : Set G)) : Continuous fun g => (retr N g : G) :=
-  continuous_subtype_val.comp (continuous_retr N hN)
+  continuous_subtypeVal.comp (continuous_retr N hN)
 
 theorem norm0 (hN : IsOpen (N : Set G)) (x : M.coch.X 2)
     (hres : (Pair.res M N.subtype continuous_subtype_val).hom.f 2 x ∈ (M.resSub N).coch.B 2) :
@@ -252,7 +252,7 @@ theorem norm0 (hN : IsOpen (N : Set G)) (x : M.coch.X 2)
   rw [cur_sub, curried_coboundary_eq]
   have h1 := oneDifferential_val (M.resSub N) y ⟨n, hn⟩ ⟨m, hm⟩
   rw [hy] at h1
-  have h2 : ((Pair.res M N.subtype continuous_subtype_val).hom.f 2 x).1 ![⟨n, hn⟩, ⟨m, hm⟩] = cur M x n m := by
+  have h2 : ((Pair.res M N.subtype continuous_subtypeVal).hom.f 2 x).1 ![⟨n, hn⟩, ⟨m, hm⟩] = cur M x n m := by
     refine congrArg x.1 (funext fun i => ?_)
     fin_cases i <;> rfl
   rw [h2] at h1
@@ -285,7 +285,7 @@ theorem normB [N.Normal] (hN : IsOpen (N : Set G)) (h1 : Subsingleton ((M.resSub
     · exact ⟨0, fun _ => rfl, fun n _ => by rw [h0 g hg, map_zero, sub_zero]⟩
     · let θ : (M.resSub N).coch.X 1 := ⟨fun v => cur M x g (g⁻¹ * (v 0 : G) * g),
         continuous_cur M x continuous_const
-          ((continuous_const.mul (continuous_subtype_val.comp (continuous_apply 0))).mul continuous_const)⟩
+          ((continuous_const.mul (continuous_subtypeVal.comp (continuous_apply 0))).mul continuous_const)⟩
       have hθ : (M.resSub N).coch.d 1 θ = 0 := by
         rw [wach_d1_eq_zero_iff]
         intro a b
@@ -416,7 +416,7 @@ theorem exact2 (hN : IsOpen (N : Set G)) (hP : IsInvRep M N Q P) (h1 : Subsingle
     refine ⟨mk1 (M.resSub N) (fun _ => P.u (cur Q z.1 1 1)) continuous_const, ?_⟩
     refine ext2 (M.resSub N) fun a b => ?_
     refine (curried_coboundary_eq (M.resSub N) _ continuous_const a b).trans ?_
-    have e : cur (M.resSub N) ((Pair.res M N.subtype continuous_subtype_val).hom.Z 2 (P.hom.Z 2 z)).1 a b =
+    have e : cur (M.resSub N) ((Pair.res M N.subtype continuous_subtypeVal).hom.Z 2 (P.hom.Z 2 z)).1 a b =
         cur M (P.hom.f 2 z.1) a b := by
       refine congrArg (P.hom.f 2 z.1).1 (funext fun i => ?_)
       fin_cases i <;> rfl

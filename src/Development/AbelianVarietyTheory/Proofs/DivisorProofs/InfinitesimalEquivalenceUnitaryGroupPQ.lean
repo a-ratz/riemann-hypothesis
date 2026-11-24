@@ -113,13 +113,13 @@ theorem decomp : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGr
       have hex : ∃ m, ∃ S : Submodule ℂ H, S ≤ F ∧ S ≠ ⊥ ∧ IsKStableOn ε ρ S ∧ Module.finrank ℂ S = m :=
         ⟨_, F, le_rfl, hF0, hFK, rfl⟩
       obtain ⟨S, hSF, hS0, hSK, hSm⟩ := Nat.find_spec hex
-      haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSF
+      have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSF
       have hirrS : ∀ S' : Submodule ℂ H, S' ≤ S → IsKStableOn ε ρ S' → S' = ⊥ ∨ S' = S := by
         intro S' hS' hS'K
         by_cases h0 : S' = ⊥
         · exact Or.inl h0
         right
-        haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'
+        have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'
         have h1 := Nat.find_min' hex ⟨S', hS'.trans hSF, h0, hS'K, rfl⟩
         exact Submodule.eq_of_le_of_finrank_le hS' (hSm ▸ h1)
       obtain ⟨Λ, hΛ⟩ := hirr S inferInstance hS0 hSK hirrS
@@ -135,7 +135,7 @@ theorem decomp : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGr
         rw [star_star] at h1
         rw [← h1]
         exact (Submodule.mem_orthogonal S v).1 hv.1 _ (hSK _ (Formalism.REAL.Kset_star ε hk) u hu)
-      haveI : FiniteDimensional ℂ (Sᗮ ⊓ F : Submodule ℂ H) := Submodule.finiteDimensional_of_le inf_le_right
+      have : FiniteDimensional ℂ (Sᗮ ⊓ F : Submodule ℂ H) := Submodule.finiteDimensional_of_le inf_le_right
       have hsup : S ⊔ Sᗮ ⊓ F = F := Submodule.sup_orthogonal_inf_of_hasOrthogonalProjection hSF
       have hinf : S ⊓ (Sᗮ ⊓ F) = ⊥ :=
         eq_bot_iff.2 ((inf_le_inf_left S inf_le_left).trans (Submodule.inf_orthogonal_eq_bot S).le)
@@ -186,7 +186,7 @@ theorem map_kIso_le {T : H →ₗ[ℂ] V} (hT : ∀ k ∈ Kset ε, ∀ y, IsKFin
   rw [Submodule.map_le_iff_le_comap]
   refine sSup_le fun S hS => ?_
   rw [← Submodule.map_le_iff_le_comap]
-  haveI := hS.1
+  have := hS.1
   set Q : S →L[ℂ] V := LinearMap.toContinuousLinearMap (T ∘ₗ S.subtype) with hQdef
   have hR : S.map T = LinearMap.range (Q : S →ₗ[ℂ] V) := by
     rw [hQdef, LinearMap.coe_toContinuousLinearMap, LinearMap.range_comp, Submodule.range_subtype]
@@ -338,7 +338,7 @@ theorem etr_conj_scalar_matrix {A : Type} [Ring A] [Algebra ℂ A] {n : ℕ} (E 
   refine Finset.sum_congr rfl fun c _ => ?_
   rw [Finset.sum_comm]
   simp only [← Finset.sum_smul, ← Matrix.mul_apply, h1, Matrix.one_apply, ite_smul, one_smul,
-    zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 end GlobalTheory
 end -- clump:auto
@@ -692,13 +692,13 @@ theorem le_iSup_vIso (hU : IsURepOn (Kset ε) ρ)
       have hex : ∃ m, ∃ S : Submodule ℂ H, S ≤ F ∧ S ≠ ⊥ ∧ IsKStableOn ε ρ S ∧ Module.finrank ℂ S = m :=
         ⟨_, F, le_rfl, hF0, hFK, rfl⟩
       obtain ⟨S, hSF, hS0, hSK, hSm⟩ := Nat.find_spec hex
-      haveI : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSF
+      have : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hSF
       have hirrS : ∀ S' : Submodule ℂ H, S' ≤ S → IsKStableOn ε ρ S' → S' = ⊥ ∨ S' = S := by
         intro S' hS' hS'K
         by_cases h0 : S' = ⊥
         · exact Or.inl h0
         right
-        haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'
+        have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'
         have h1 := Nat.find_min' hex ⟨S', hS'.trans hSF, h0, hS'K, rfl⟩
         exact Submodule.eq_of_le_of_finrank_le hS' (hSm ▸ h1)
       obtain ⟨Λ, hΛ⟩ := hirr S inferInstance hS0 hSK hirrS
@@ -715,7 +715,7 @@ theorem le_iSup_vIso (hU : IsURepOn (Kset ε) ρ)
         rw [star_star] at h1
         rw [← h1]
         exact (Submodule.mem_orthogonal S v).1 hv.1 _ (hSK _ (Formalism.REAL.Kset_star ε hk) u hu)
-      haveI : FiniteDimensional ℂ (Sᗮ ⊓ F : Submodule ℂ H) := Submodule.finiteDimensional_of_le inf_le_right
+      have : FiniteDimensional ℂ (Sᗮ ⊓ F : Submodule ℂ H) := Submodule.finiteDimensional_of_le inf_le_right
       have hsup : S ⊔ Sᗮ ⊓ F = F := Submodule.sup_orthogonal_inf_of_hasOrthogonalProjection hSF
       have hinf : S ⊓ (Sᗮ ⊓ F) = ⊥ :=
         eq_bot_iff.2 ((inf_le_inf_left S inf_le_left).trans (Submodule.inf_orthogonal_eq_bot S).le)
@@ -726,7 +726,7 @@ theorem le_iSup_vIso (hU : IsURepOn (Kset ε) ρ)
       exact hle
   intro v hv
   obtain ⟨S, hS, hvS, hSK⟩ := hV.kFin v hv
-  haveI : FiniteDimensional ℂ (S ⊓ V : Submodule ℂ H) := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ (S ⊓ V : Submodule ℂ H) := Submodule.finiteDimensional_of_le inf_le_left
   exact key _ (S ⊓ V) inferInstance le_rfl (fun k hk u hu => ⟨hSK k hk u hu.1, hV.kStable k hk u hu.2⟩)
     inf_le_right ⟨hvS, hv⟩
 
@@ -742,8 +742,8 @@ theorem mem_of_mem_closure [CompleteSpace H] (hU : IsURepOn (UJset ε) ρ) (hV :
   have hty := kType_exists hU
   obtain ⟨s, hs⟩ := GlobalTheory.KFinDual.exists_finset (GlobalTheory.KFinDual.decomp n ε H ρ hUK hty) w hk
   set A : Submodule ℂ H := s.sup (vIso ε ρ V) with hAdef
-  haveI : ∀ Λ, FiniteDimensional ℂ (vIso ε ρ V Λ) := fun Λ => hA Λ
-  haveI : FiniteDimensional ℂ A := Submodule.finiteDimensional_finset_sup _ _
+  have : ∀ Λ, FiniteDimensional ℂ (vIso ε ρ V Λ) := fun Λ => hA Λ
+  have : FiniteDimensional ℂ A := Submodule.finiteDimensional_finset_sup _ _
   have hAV : A ≤ V := Finset.sup_le fun Λ _ => vIso_le Λ
   have hAK : A ≤ s.sup (GlobalTheory.KFinDual.kIso ε ρ) :=
     Finset.sup_le fun Λ hΛ => (vIso_le_kIso Λ).trans (Finset.le_sup hΛ)
@@ -774,7 +774,7 @@ theorem mem_of_mem_closure [CompleteSpace H] (hU : IsURepOn (UJset ε) ρ) (hV :
 theorem casimir_eq_etr {M : Type} [AddCommGroup M] [Module ℂ M] (E : Fin n → Fin n → Module.End ℂ M) :
     ReciprocityTheory.ChartRestriction.DS.casimir E = etr E 2 := by
   simp only [ReciprocityTheory.ChartRestriction.DS.casimir, etr, Formalism.REAL.epow, Finset.sum_mul, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 def vK (hV : IsGKSub ε ρ V) (κ : Matrix (Fin n) (Fin n) ℂ) (hκ : κ ∈ Kset ε) : Module.End ℂ V :=
   (ρ κ : H →ₗ[ℂ] H).restrict (fun x hx => hV.kStable κ hκ x hx)
@@ -849,7 +849,7 @@ theorem casimir_mem_vIso (hρ : Formalism.QuantumDeterminants.IsCRepOn (UJset ε
     refine sSup_le ?_
     rintro S ⟨hSV, hS⟩ y hy
     refine ⟨⟨y, hSV hy⟩, ?_, rfl⟩
-    haveI := hS.1
+    have := hS.1
     let ι : S →ₗ[ℂ] V := Submodule.inclusion hSV
     let T : S →L[ℂ] H := LinearMap.toContinuousLinearMap (V.subtype ∘ₗ C ∘ₗ ι)
     have hT : ∀ s : S, T s = ((C (ι s) : V) : H) := fun _ => rfl
@@ -877,8 +877,8 @@ theorem rep_mem_closure_of_vIso [CompleteSpace H] (hU : IsURepOn (UJset ε) ρ) 
   have hD := isDerivedOn_vE hU.1 hV
   set C : Module.End ℂ V := ReciprocityTheory.ChartRestriction.DS.casimir (vE hU.1 hV) with hC
   let A' : Submodule ℂ V := (vIso ε ρ V Λ).comap V.subtype
-  haveI hfin : FiniteDimensional ℂ (vIso ε ρ V Λ) := hA Λ
-  haveI : FiniteDimensional ℂ A' := by
+  have hfin : FiniteDimensional ℂ (vIso ε ρ V Λ) := hA Λ
+  have : FiniteDimensional ℂ A' := by
     have e := Submodule.equivMapOfInjective V.subtype Subtype.val_injective A'
     have : FiniteDimensional ℂ (A'.map V.subtype) :=
       Submodule.finiteDimensional_of_le (Submodule.map_comap_le _ _)
@@ -1010,9 +1010,9 @@ theorem form_prop [Nontrivial H₁] (hU₁ : IsURepOn (UJset ε) σ₁) (hI₁ :
   have hG₂ := isGKSub_kFinVec hU₂ hI₂
   obtain ⟨Λ₀, hΛ₀⟩ := exists_kIso_ne_bot hU₁
   set A : Submodule ℂ H₁ := GlobalTheory.KFinDual.kIso ε σ₁ Λ₀ with hAdef
-  haveI : FiniteDimensional ℂ A := finiteDimensional_kIso' hU₁ hI₁ Λ₀
+  have : FiniteDimensional ℂ A := finiteDimensional_kIso' hU₁ hI₁ Λ₀
   have hAK : ∀ x ∈ A, IsKFin ε σ₁ x := fun x hx => GlobalTheory.KFinDual.kIso_le Λ₀ hx
-  haveI : Nontrivial A := Submodule.nontrivial_iff_ne_bot.2 hΛ₀
+  have : Nontrivial A := Submodule.nontrivial_iff_ne_bot.2 hΛ₀
   let L : A →L[ℂ] H₂ := LinearMap.toContinuousLinearMap (T ∘ₗ A.subtype)
   have hL' : ∀ x : A, L x = T x := fun _ => rfl
   let P : A →L[ℂ] A := (ContinuousLinearMap.adjoint L) ∘L L

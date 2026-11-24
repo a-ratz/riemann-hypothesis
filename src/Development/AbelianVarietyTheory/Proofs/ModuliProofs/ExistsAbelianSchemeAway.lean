@@ -229,7 +229,7 @@ theorem grpObj_of_dominant {Z U : Scheme.{0}} (j : U ⟶ Z) [QuasiCompact j] [Is
   have hM := fun {T : Over U} => pushPt_mul h.w hm (T := T)
   have hI := fun {T : Over U} => pushPt_inv h.w hi (T := T)
   have hE := pushPt_one h.w he
-  letI : MonObj G :=
+  let : MonObj G :=
     { one := e
       mul := m
       one_mul := hom_ext_of_points j fun T t => by
@@ -250,7 +250,7 @@ theorem grpObj_of_dominant {Z U : Scheme.{0}} (j : U ⟶ Z) [QuasiCompact j] [Is
           ext <;> simp [hx, hy, hz]
         rw [lift_whiskerRight_assoc, lift_lift_associator_hom_assoc, lift_whiskerLeft_assoc, hM, hM, hM, hM,
           _root_.mul_assoc] }
-  letI : GrpObj G :=
+  let : GrpObj G :=
     { inv := i
       left_inv := hom_ext_of_points j fun T t => by
         obtain ⟨x, rfl⟩ := pushPt_surjective h T t

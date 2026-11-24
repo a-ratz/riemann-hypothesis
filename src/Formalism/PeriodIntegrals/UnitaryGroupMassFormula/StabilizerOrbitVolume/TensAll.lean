@@ -157,7 +157,7 @@ theorem linIndep_iff (R : Type) [CommRing R] [Algebra F R] {a M : ℕ}
 
     simp only [crd, hb, map_sum, map_smul, Module.Basis.repr_self, Finsupp.coe_finsetSum,
     Finset.sum_apply, Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one,
-    mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Fintype.linearIndependent_iff]
   constructor
   · intro h c hc
@@ -204,7 +204,7 @@ theorem isOpen_linIndep (hU : IsOpen {r : R | IsUnit r}) (hL : LIP R) {a M : ℕ
   have hset : {X : Fin a → Fin M → R ⊗[F] E | LinearIndependent (R ⊗[F] E) X} =
       ⋃ P : Matrix (Fin a × Fin d) (Fin M × Fin d) R, {X | IsUnit (P * wMat b R X).det} := by
     ext X
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion]
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion]
     rw [linIndep_iff b R X]
     constructor
     · intro h

@@ -75,7 +75,7 @@ theorem pol_countable_and_tangent_ext (hT : ThetaUnifAV) (Q Q' : Out.PolAV (Sp �
   · choose F hF hΛ hd hu using key
     have := u.discrete
     have := u'.discrete
-    have : Countable u'.Λ := Finsupp.Countable.of_moduleFinite (R := ℤ)
+    have : Countable u'.Λ := Countable.of_moduleFinite (R := ℤ)
     obtain ⟨n, s, hs⟩ := Module.Finite.exists_fin (R := ℤ) (M := u.Λ)
     rw [← Set.countable_coe_iff]
     refine Function.Injective.countable

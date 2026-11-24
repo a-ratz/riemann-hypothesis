@@ -85,7 +85,7 @@ theorem UpperTheory.Reformulated.B.Qe27.closure_upperUni :
   | inv y _ hy =>
     rw [UpperTheory.Reformulated.B.Qe27.mem_iff] at hy ⊢
     have hinv : ((y⁻¹ : GL (Fin k) A) : Matrix (Fin k) (Fin k) A).BlockTriangular id := by
-      letI : Invertible (y : Matrix (Fin k) (Fin k) A) := y.invertible
+      let : Invertible (y : Matrix (Fin k) (Fin k) A) := y.invertible
       rw [Matrix.coe_units_inv]
       exact Matrix.blockTriangular_inv_of_blockTriangular hy.1
     refine ⟨hinv, fun i => ?_⟩

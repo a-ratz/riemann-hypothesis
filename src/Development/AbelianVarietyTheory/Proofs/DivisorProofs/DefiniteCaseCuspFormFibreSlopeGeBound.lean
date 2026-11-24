@@ -375,7 +375,7 @@ theorem val_nonneg {Z : Comp Xo c} (P : PtData Z) {a : (E →+* ℂ) × ℕ → 
   swap
   · rw [h f hr.1]; exact le_top
   obtain ⟨⟨q, T, io, e, ho, y, hy, η, hη, rfl⟩, rfl⟩ := h
-  letI := io.toAlgebra
+  let := io.toAlgebra
   show 0 ≤ nval T.V e (evR Xo c f y.1)
   obtain ⟨z, hz⟩ := exists_bc (Algebra.ofId c.F T.Fr) P.y₀
   obtain ⟨ha, hB, hl⟩ := P.loc w
@@ -428,7 +428,7 @@ theorem cabs_le_matNorm_conj (hpq : 1 ≤ Dw.p + Dw.q) {Z : Comp Xo c} (P : PtDa
     rw [hy'.1, hy, ← Category.assoc, ← ReciprocityTheory.ChartRestriction.G.PullbackSections.spMap_comp]
     rfl
   have hb := cabs_le_matNorm P hd hr hx (isMetric_conj_one hpq hy' hm)
-  haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
+  have : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
   have hev := evR_frMap (GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c).2.2.1 f hf.1
     (GlobalTheory.FrameNorm.conjAlg σ) y (GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c (CAt σ) y) y' hy'
   rw [hev] at hb
@@ -495,7 +495,7 @@ theorem exists_ortho {σ : c.F →+* ℂ} {r : ℕ} {U : Unf Xo c σ r} {ξ : �
     have hs : ρ = Real.exp (-(1 / 2) * Real.log (2 * Real.pi * ξ)) := by
       rw [hρ, Real.sqrt_eq_rpow, Real.rpow_def_of_pos hκ, ← Real.exp_neg]
       congr 1; ring
-    simp only [hs, ← Real.exp_nat_mul]
+    simp only [hs, ← Real.exp_natCast_mul]
     rw [← Real.exp_sum, lieFac, ← Finset.sum_mul]
     congr 1
     rw [Fintype.sum_sigma]
@@ -508,7 +508,7 @@ theorem exists_ortho {σ : c.F →+* ℂ} {r : ℕ} {U : Unf Xo c σ r} {ξ : �
     rw [h2]
     rfl
   have hrd : ‖rdU U f k z‖ = cabs (evR Xo c f (U.un k ⟨z, hz⟩)) := by
-    have e : rdU U f k z = toC (evR Xo c f (U.un k ⟨z, hz⟩)) := dif_pos hz
+    have e : rdU U f k z = toC (evR Xo c f (U.un k ⟨z, hz⟩)) := dite_eq_left hz
     rw [e]; rfl
   rw [ReciprocityTheory.ChartRestriction.G.PullbackSections.PfSupAtUnit.pnorm_unit _ _ _ (ReciprocityTheory.ChartRestriction.G.PullbackSections.PfSupAtUnit.dmin_ortho _ ho), hrd] at hp
   rw [hev, GlobalTheory.FrameNorm.Comparison₂.cabs_mul, hw, homN, lieFacZ_wtZ, modelWt_wtZ, hp]
@@ -525,10 +525,10 @@ theorem integral_and_norm_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   refine le_trans (le_of_eq hn) ?_
   clear hn hy hZ
   by_cases hσ : GoodEmb c σ
-  · have e : goodOf c σ = σ := if_pos hσ
+  · have e : goodOf c σ = σ := ite_eq_left hσ
     have := cabs_le_matNorm P hd hr hx hm
     exact this.trans (le_of_eq (by rw [e]))
-  · have e : goodOf c σ = (starRingEnd ℂ).comp σ := if_neg hσ
+  · have e : goodOf c σ = (starRingEnd ℂ).comp σ := ite_eq_right hσ
     exact cabs_le_matNorm_conj hpq P hd hf hr (by rw [e]; ext b; simp) hx hm
 
 end GlobalTheory.DefPt.IntNorm
@@ -673,7 +673,7 @@ theorem exists_notMem_mul_le (P u : HeightOneSpectrum (𝓞 K)) (y : K) (h : u �
   have hy0 : u.valuation K y ≠ 0 := fun h0 => hy (by rw [h0]; exact zero_le_one)
   have hnle : ¬ u.asIdeal ≤ P.asIdeal := fun hle =>
     hne (HeightOneSpectrum.ext (u.isMaximal.eq_of_le P.isPrime.ne_top hle))
-  obtain ⟨π, hπu, hπP⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨π, hπu, hπP⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   have hlt : u.valuation K (π : K) < 1 := (HeightOneSpectrum.valuation_lt_one_iff_mem u π).2 hπu
   obtain ⟨N, hN⟩ := exists_pow_lt₀ hlt (Units.mk0 _ hy0)⁻¹
   refine ⟨π ^ N, fun hm => hπP (P.isPrime.mem_of_pow_mem N hm), ?_⟩
@@ -687,7 +687,7 @@ theorem exists_denom_notMem {ι : Type} [Fintype ι] (B : HeightOneSpectrum (�
     (h : {w | ¬ IntAt w (B w)}.Finite) (P : HeightOneSpectrum (𝓞 K)) (hP : IntAt P (B P)) :
     ∃ s : 𝓞 K, s ∉ P.asIdeal ∧ ∀ w, IntAt w ((s : K) • B w) := by
   classical
-  haveI : Fintype {w | ¬ IntAt w (B w)} := h.fintype
+  have : Fintype {w | ¬ IntAt w (B w)} := h.fintype
   have hex : ∀ p : {w | ¬ IntAt w (B w)} × ι × ι, ∃ s : 𝓞 K, s ∉ P.asIdeal ∧
       p.1.1.valuation K ((s : K) * B p.1.1 p.2.1 p.2.2) ≤ 1 := fun p =>
     exists_notMem_mul_le P _ _ (Or.inl fun e => p.1.2 (by rw [e]; exact hP))
@@ -714,7 +714,7 @@ theorem finite_not_intAt {ι : Type} [Fintype ι] (M : Matrix ι ι K) :
     {w : HeightOneSpectrum (𝓞 K) | ¬ IntAt w M}.Finite := by
   refine (Set.finite_iUnion fun p : ι × ι => HeightOneSpectrum.Support.finite (𝓞 K) (M p.1 p.2)).subset ?_
   intro w hw
-  simp only [IntAt, Set.mem_setOf_eq, not_forall, not_le] at hw
+  simp only [IntAt, Set.mem_ofPred_eq, not_forall, not_le] at hw
   obtain ⟨i, j, hij⟩ := hw
   exact Set.mem_iUnion.2 ⟨(i, j), hij⟩
 
@@ -728,7 +728,7 @@ theorem exists_locBasis_inv : ∀ (K : Type) [Field K] [NumberField K] (n : ℕ)
   obtain ⟨s, hs, hint⟩ := exists_denom_notMem (fun w => A w * (A P)⁻¹)
     ((hfin.union (finite_not_intAt (A P)⁻¹)).subset fun w hw => by
       by_contra hn
-      simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hn
+      simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hn
       exact hw (intAt_mul hn.1.1 hn.2)) P (by
       intro i j
       rw [Matrix.mul_nonsing_inv _ hu]
@@ -740,7 +740,7 @@ theorem exists_locBasis_inv : ∀ (K : Type) [Field K] [NumberField K] (n : ℕ)
   · rw [Matrix.mulVec_smul, Matrix.mulVec_mulVec, ← Matrix.smul_mulVec]
     exact GlobalTheory.LocMatLat.mulVec_le w (hint w) (hone w j) i
   · have h1 : LinearIndependent K (A P)⁻¹.col :=
-      Matrix.linearIndependent_cols_iff_isUnit.2 (Matrix.isUnit_nonsing_inv_iff.2 ((Matrix.isUnit_iff_isUnit_det _).2 hu))
+      Matrix.linearIndependent_col_iff_isUnit.2 (Matrix.isUnit_nonsing_inv_iff.2 ((Matrix.isUnit_iff_isUnit_det _).2 hu))
     have h2 : LinearIndependent K (fun j => (s : K) • (A P)⁻¹.col j) :=
       h1.units_smul fun _ => Units.mk0 (s : K) hs0
     convert h2 using 3 with j
@@ -974,7 +974,7 @@ theorem GlobalTheory.LocMatSlope.slope_sq_locLat : ∀ (K : Type) [Field K] [Num
     slope_sq (matNorm Y) (locLat A) = 2 * detDeg A Y / (Fintype.card ι : ℝ) := by
   intro K _ _ _ ι _ _ _ A Y hA hY hconj
   classical
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   set n := Fintype.card ι with hn
   set eqv : ι ≃ Fin n := Fintype.equivFin ι with heqv
   have hL := GlobalTheory.LocMatLat.isLattice_locLat K ι A hA
@@ -1161,7 +1161,7 @@ theorem matChar_transvection [CharZero K] {i j : Fin n} (hij : i ≠ j) (c : K) 
       simp only [and_self, ite_true]
       ring
     · have h' : ¬(i = a ∧ j = b) := fun h' => h ⟨h'.1.symm, h'.2.symm⟩
-      rw [if_neg h', if_neg h']
+      rw [ite_eq_right h', ite_eq_right h']
       simp only [add_zero]
       by_cases hab : a = b
       · subst hab; ring
@@ -1328,7 +1328,7 @@ theorem valuation_det_le {ι : Type} [Fintype ι] [DecidableEq ι] (w : HeightOn
   rw [Matrix.det_apply']
   refine Valuation.map_sum_le _ fun σ _ => ?_
   rw [map_mul, map_prod]
-  refine mul_le_one' ?_ (Finset.prod_le_one' fun i _ => hM _ _)
+  refine mul_le_one' ?_ (Finset.prod_le_one fun i _ => hM _ _)
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h <;> simp [h]
 
 theorem finite_vAdd_det {ι : Type} [Fintype ι] [DecidableEq ι] {A : HeightOneSpectrum (𝓞 K) → Matrix ι ι K}
@@ -1339,7 +1339,7 @@ theorem finite_vAdd_det {ι : Type} [Fintype ι] [DecidableEq ι] {A : HeightOne
   rw [Matrix.det_nonsing_inv, Ring.inverse_eq_inv', map_inv₀] at h2
   have h0 : w.valuation K (A w).det ≠ 0 := by simpa using hA.1 w
   have h3 : w.valuation K (A w).det = 1 :=
-    le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 h0)).1 h2)
+    le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 h0)).1 h2)
   simp [vAdd, h3]
 
 end Val
@@ -1393,7 +1393,7 @@ theorem slope_fibre_ge : ∀ (K : Type) [Field K] [NumberField K] [_root_.Number
   have hD : 0 < Fintype.card (TIdx la) := by
     rw [Fintype.card_pi]
     exact Finset.prod_pos fun t _ => dim_eq_card (la t) ▸ dim_pos (hla t)
-  haveI : Nonempty (TIdx la) := Fintype.card_pos_iff.1 hD
+  have : Nonempty (TIdx la) := Fintype.card_pos_iff.1 hD
   have hD' : (Fintype.card (TIdx la) : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hD.ne'
   have hK : (0 : ℝ) < finrank ℚ K := Nat.cast_pos.mpr finrank_pos
   rw [_root_.GlobalTheory.LocMatSlope.slope_sq_locLat K (TIdx la) _ _ (GlobalTheory.FibAdel.fibA_isAdelic K T N la a B ha hfa hB) (fun σ => (hY σ).1)
@@ -1684,7 +1684,7 @@ theorem loc_clause {κ : KeyRule} (hκ : IsKeyRule κ) (hr : 1 ≤ Dw.p + Dw.q) 
       4 * ∑ τ : E →+* ℂ, (Dw.mult τ : ℝ) * (ord_vw w (conjDifferent (embF c τ)) : ℝ) := by
   classical
   obtain ⟨T, io, ho, -, -⟩ := GlobalTheory.PlaceCompletion.exists_initial_completion c.F w
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨y, z, hy, hz, hx⟩ := Model.exists_integral hr hg y₀ w T io 1 ho
   obtain ⟨Y, u₀, hY, hc⟩ := h.2.2 T io 1 ho y z hy hz hx
   choose τ' hτ using fun τ : E →+* ℂ => GlobalTheory.EtaVal.exists_base_map_of_overLa (β := embK c τ)
@@ -1806,11 +1806,11 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recip
   have hsub : ∀ f : (E →+* ℂ) → ℝ, (∀ τ, Dw.mult τ = 0 → f τ = 0) → ∑ τ, f τ = ∑ τ : Psi H, f τ.1 := fun f hf => by
     rw [← Fintype.sum_subtype_add_sum_subtype (fun τ : E →+* ℂ => τ (H.rt : E) = H.rt0) f,
       Finset.sum_eq_zero (s := Finset.univ) (f := fun τ : {τ : E →+* ℂ // ¬ τ (H.rt : E) = H.rt0} => f τ.1)
-        fun τ _ => hf _ (by rw [Datum.mult, if_neg τ.2, h.q]), add_zero]
+        fun τ _ => hf _ (by rw [Datum.mult, ite_eq_right τ.2, h.q]), add_zero]
     convert rfl
   have h1 : ∑ τ, (Dw.mult τ : ℝ) = (Fintype.card (Psi H) : ℝ) * Dw.p := by
     rw [hsub _ fun τ h => by rw [h, Nat.cast_zero],
-      Finset.sum_congr rfl fun (τ : Psi H) _ => show (Dw.mult τ.1 : ℝ) = Dw.p by rw [Datum.mult, if_pos τ.2]]
+      Finset.sum_congr rfl fun (τ : Psi H) _ => show (Dw.mult τ.1 : ℝ) = Dw.p by rw [Datum.mult, ite_eq_left τ.2]]
     simp
   have h2 : (Fintype.card (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) : ℝ) = (Fintype.card (Psi H) : ℝ) * Dw.p := by
     rw [← h1]; simp [Fintype.card_sigma]
@@ -1858,7 +1858,7 @@ theorem subsingleton_idx : ∀ (N : ℕ) (la : Fin N → ℕ), N = 0 → Subsing
   exact i.elim0
 
 theorem dim_eq_one_of_zero {N : ℕ} (la : Fin N → ℕ) (hla : Antitone la) (h : N = 0) : dim la = 1 := by
-  haveI := subsingleton_idx N la h
+  have := subsingleton_idx N la h
   have h1 := dim_pos hla
   have h2 : dim la ≤ 1 := by rw [dim_eq_card]; exact Fintype.card_le_one_iff_subsingleton.2 inferInstance
   omega
@@ -1869,7 +1869,7 @@ theorem fibreAt_defCase : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       ∀ Z : Comp Xo c, FibreAt U ξ Z (wtZ a n) (defBound Dw a n c₁) := by
   intro E _ _ _ H Dw l Xo c r U ξ a n c₁ hD hDom hFl Z
   obtain ⟨P⟩ := _root_.GlobalTheory.DefPt.PtExist.main E H Dw l Xo c r U ξ hD Z
-  haveI hTC : IsTotallyComplex c.F := ⟨fun v => by
+  have hTC : IsTotallyComplex c.F := ⟨fun v => by
     rw [← InfinitePlace.not_isReal_iff_isComplex, InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff]
     exact fun e => GlobalTheory.CompHt.conj_comp_ne (c := c) v.embedding (RingHom.ext fun a => RingHom.congr_fun e a)⟩
   have hanti : ∀ τ, Antitone (part Dw a τ) := fun τ i j hij => hDom.1 τ (show (i : ℕ) ≤ j from hij)

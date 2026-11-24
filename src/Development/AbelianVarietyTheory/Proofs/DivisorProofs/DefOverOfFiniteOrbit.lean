@@ -52,7 +52,7 @@ namespace GlobalTheory.Poinc.Sep
 
 theorem mem_of_finite_conj {K : Type} [Field K] [IsAlgClosed K] (k₀ : Subfield K) (hk : IsAlgClosed k₀)
     (a : K) (h : Set.Finite {b : K | ∃ σ : K ≃+* K, (∀ c ∈ k₀, σ c = c) ∧ b = σ a}) : a ∈ k₀ := by
-  haveI := hk
+  have := hk
   by_contra ha
   have htr : Transcendental k₀ a := by
     intro halg

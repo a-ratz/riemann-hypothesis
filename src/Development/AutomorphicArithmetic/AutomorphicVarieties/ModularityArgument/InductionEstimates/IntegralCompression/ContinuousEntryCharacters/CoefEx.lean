@@ -108,7 +108,7 @@ private theorem eb_mul (π : Equiv.Perm (Fin (2 + 2))) (i j : Fin (2 + 2)) (h k 
   exact (Equiv.sum_comp π fun s => (h : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ) i s * (k : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ) s j).symm
 
 private theorem eb_cont (i j : Fin (2 + 2)) : Continuous (en i j) :=
-  (continuous_subtype_val (p := fun x => x ∈ unitaryGroup (Fin (2 + 2)) ℂ)).matrix_elem i j
+  (continuous_subtypeVal (p := fun x => x ∈ unitaryGroup (Fin (2 + 2)) ℂ)).matrix_elem i j
 
 private theorem eb_pair (j : Fin (2 + 2)) (f : Fin (2 + 2) → ℤ) : ∑ i, (Pi.single j 1 : Fin (2 + 2) → ℤ) i * f i = f j := by
   rw [Finset.sum_eq_single j]
@@ -198,14 +198,14 @@ private theorem eb_two (π : Equiv.Perm (Fin (2 + 2))) :
 private theorem eb_det_dg (δ : ℤ) (θ : Fin (2 + 2) → ℝ) :
     (dg θ : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ).det ^ δ = chi (fun _ => δ) θ := by
   unfold chi
-  rw [eb_dg, det_diagonal, ← Complex.exp_sum, ← Complex.exp_int_mul, ← Finset.mul_sum, ← Finset.mul_sum]
+  rw [eb_dg, det_diagonal, ← Complex.exp_sum, ← Complex.exp_intCast_mul, ← Finset.mul_sum, ← Finset.mul_sum]
   congr 1
   ring
 
 private theorem eb_four (π : Equiv.Perm (Fin (2 + 2))) (δ : ℤ) :
     OExp π (fun k => (k : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ).det ^ δ) fun _ => δ := by
   have hc : Continuous fun k : U4 => (k : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ).det ^ δ :=
-    (continuous_subtype_val (p := fun x => x ∈ unitaryGroup (Fin (2 + 2)) ℂ)).matrix_det.zpow₀ δ fun k =>
+    (continuous_subtypeVal (p := fun x => x ∈ unitaryGroup (Fin (2 + 2)) ℂ)).matrix_det.zpow₀ δ fun k =>
       Or.inl (Matrix.UnitaryGroup.det_isUnit k).ne_zero
   have hm : ∀ h k : U4, ((h * k : U4) : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ).det ^ δ =
       (h : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ).det ^ δ * (k : Matrix (Fin (2 + 2)) (Fin (2 + 2)) ℂ).det ^ δ := fun h k => by

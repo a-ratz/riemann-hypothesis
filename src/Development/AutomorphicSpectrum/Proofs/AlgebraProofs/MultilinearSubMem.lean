@@ -111,7 +111,7 @@ theorem mem_of_smul_le {O K : Type*} [CommRing O] [IsDedekindDomain O] [Field K]
     apply hI0
     have : (J : Submodule O K) = ((0 : FractionalIdeal (nonZeroDivisors O) K) : Submodule O K) := by
       rw [h0]
-    rw [FractionalIdeal.coe_zero] at this
+    rw [FractionalIdeal.coeToSubmodule_zero] at this
     exact this
   have hle : FractionalIdeal.spanSingleton (nonZeroDivisors O) δ * J
       ≤ (𝔞 : FractionalIdeal (nonZeroDivisors O) K) * J := by
@@ -176,7 +176,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDedekindDomain O] [Field K] [Alg
     have h1 := hI b' hb'
     rw [h0, Submodule.mem_bot, hf] at h1
     have h2 : IsUnit (Matrix.of (b' : Fin N → Fin N → K)) :=
-      Matrix.linearIndependent_rows_iff_isUnit.mp b'.linearIndependent
+      linearIndependent_row_iff_isUnit.mp b'.linearIndependent
     rw [Matrix.isUnit_iff_isUnit_det, h1] at h2
     exact not_isUnit_zero h2
   obtain ⟨a, ha, hδ⟩ := mem_of_smul_le I hfrac hI0 𝔞 (γ.det - 1) (by

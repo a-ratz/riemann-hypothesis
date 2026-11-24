@@ -70,7 +70,7 @@ private theorem pt_cg {l : ℕ} [Fact l.Prime] {n : ℕ} {ι : Type} [Fintype ι
     (k : ι → ZMod (l ^ n)) (b : ℕ) (x : Qbar l) (h : Cg n x (∑ i, o i * ((k i).val : Qbar l))) :
     Cg n ((b : Qbar l) * x) (∑ i, o i * ((((b : ZMod (l ^ n)) * k i).val : ℕ) : Qbar l)) := by
   unfold Cg at h ⊢
-  haveI : NeZero (l ^ n) := ⟨(pow_pos (Nat.Prime.pos Fact.out) n).ne'⟩
+  have : NeZero (l ^ n) := ⟨(pow_pos (Nat.Prime.pos Fact.out) n).ne'⟩
   have hc : ∀ i, (((((b : ZMod (l ^ n)) * k i).val : ℕ) : Qbar l))
       = (b : Qbar l) * ((k i).val : Qbar l) - (l : Qbar l) ^ n * (((b * (k i).val) / l ^ n : ℕ) : Qbar l) := by
     intro i
@@ -113,10 +113,10 @@ private theorem pt_cg {l : ℕ} [Fact l.Prime] {n : ℕ} {ι : Type} [Fintype ι
 theorem UpperTheory.Kd.C7.pPresTr :
     UpperTheory.Kd.C7.SPresTr := by
   intro l _ hl Ω _ _ _ A hOver c β ζ hR Z hI b hb m n P hB
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr (Nat.Prime.ne_zero Fact.out)⟩
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr (Nat.Prime.ne_zero Fact.out)⟩
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   have hbu : IsUnit (b : ℤ_[l]) := by
     rw [PadicInt.isUnit_iff]
     refine le_antisymm (PadicInt.norm_le_one _) (not_lt.mp fun h => hb ?_)
@@ -155,7 +155,7 @@ theorem UpperTheory.Kd.C7.pPresTr :
     have hcs' : cycMod ℚ Ω l m (τ⁻¹ * s * τ) = 1 := by simp [hcs]
     have hsz' : (τ⁻¹ * s * τ) (ζ n) = ζ n := fix_of_cycMod hnm hcs' hprim.pow_eq_one
     obtain ⟨k, hk, hcg⟩ := hmain _ hs' hcs' hsz'
-    haveI : NeZero (l ^ n) := ⟨(pow_pos (Nat.Prime.pos Fact.out) n).ne'⟩
+    have : NeZero (l ^ n) := ⟨(pow_pos (Nat.Prime.pos Fact.out) n).ne'⟩
     refine ⟨fun i => (b : ZMod (l ^ n)) * k i, fun i => ?_, ?_⟩
     · obtain ⟨v, hv1, hv2⟩ := hk i
       refine ⟨τ v, ?_, ?_⟩

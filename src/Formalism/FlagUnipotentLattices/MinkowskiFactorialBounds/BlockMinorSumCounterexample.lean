@@ -170,14 +170,14 @@ theorem inverse_power_integral_pi : Formalism.HermitianLatticeCounting.Expansion
 
 lemma mul_cutoff_of_le {K L y : ℝ} (hK : 0 ≤ K) (hy : 0 < y) (h : y ≤ L) : y * TruncationCutoff K L y = y := by
   have h1 : (1 : ℝ) ≤ (L / y) ^ K := Real.one_le_rpow ((one_le_div hy).2 h) hK
-  rw [TruncationCutoff, if_neg hy.ne', min_eq_left h1, mul_one]
+  rw [TruncationCutoff, ite_eq_right hy.ne', min_eq_left h1, mul_one]
 
 lemma mul_cutoff_of_gt {K L y : ℝ} (hK : 0 ≤ K) (hL : 0 < L) (h : L < y) :
     y * TruncationCutoff K L y = L ^ K * y ^ (1 - K) := by
   have hy : 0 < y := hL.trans h
   have h1 : (L / y) ^ K ≤ 1 :=
     Real.rpow_le_one (div_nonneg hL.le hy.le) ((div_le_one hy).2 h.le) hK
-  rw [TruncationCutoff, if_neg hy.ne', min_eq_right h1, Real.div_rpow hL.le hy.le, sub_eq_add_neg,
+  rw [TruncationCutoff, ite_eq_right hy.ne', min_eq_right h1, Real.div_rpow hL.le hy.le, sub_eq_add_neg,
     Real.rpow_add hy, Real.rpow_one, Real.rpow_neg hy.le, div_eq_mul_inv]
   ring
 
@@ -599,7 +599,7 @@ theorem block_end_minor_fibre_finite' : Formalism.HermitianLatticeCounting.Expan
   calc T.card ≤ (Fintype.piFinset (fun a => (Polynomial.nthRoots (s a) (t0 a ^ s a)).toFinset)).card :=
         Finset.card_le_card hsub
     _ = ∏ a, ((Polynomial.nthRoots (s a) (t0 a ^ s a)).toFinset).card := Fintype.card_piFinset _
-    _ ≤ ∏ a, s a := Finset.prod_le_prod' fun a _ =>
+    _ ≤ ∏ a, s a := prod_le_prod fun a _ =>
         (Multiset.toFinset_card_le _).trans (Polynomial.card_nthRoots _ _)
 
 end G4
@@ -615,13 +615,13 @@ lemma exp_div_e_le_two_pow (n : ℕ) : Real.exp ((n : ℝ) / Real.exp 1) ≤ 2 ^
       apply one_div_le_one_div_of_le (by norm_num) he
     have h3 : Real.exp (1 / 2) ≤ 2 := by
       have h4 : Real.exp (1 / 2) ^ 2 = Real.exp 1 := by
-        rw [← Real.exp_nat_mul]; norm_num
+        rw [← exp_natCast_mul]; norm_num
       have h5 : Real.exp 1 < 4 := by
         have := Real.exp_one_lt_d9; linarith
       nlinarith [Real.exp_pos (1 / 2 : ℝ)]
     exact (Real.exp_le_exp.mpr h2).trans h3
   have h2 : Real.exp ((n : ℝ) / Real.exp 1) = Real.exp (1 / Real.exp 1) ^ n := by
-    rw [← Real.exp_nat_mul]; congr 1; ring
+    rw [← exp_natCast_mul]; congr 1; ring
   rw [h2]
   exact pow_le_pow_left₀ (Real.exp_pos _).le h1 n
 
@@ -803,7 +803,7 @@ lemma holder_lintegral_prod_le {Ω ι : Type} [MeasurableSpace Ω] (μ : Measure
     intro x
     rw [← ENNReal.rpow_natCast, ← ENNReal.rpow_mul, mul_one_div_cancel hn.ne', ENNReal.rpow_one]
   simp only [e] at key
-  refine key.trans (Finset.prod_le_prod' fun i hi => ?_)
+  refine key.trans (prod_le_prod fun i hi => ?_)
   calc _ ≤ (B i ^ s.card) ^ ((1:ℝ) / s.card) := ENNReal.rpow_le_rpow (h i hi) (by positivity)
     _ = B i := e _
 
@@ -859,13 +859,13 @@ theorem corollary_upper_estimate_holds : Formalism.HermitianLatticeCounting.Expa
     (by
       intro i
       by_cases hi : i = 0
-      · simp only [M, hi, if_true]; exact measurable_const
-      · simp only [M, hi, if_false]; exact hm _)
+      · simp only [M, hi, ite_true]; exact measurable_const
+      · simp only [M, hi, ite_false]; exact hm _)
     (by
       intro i ω
       by_cases hi : i = 0
       · simp [M, hi]
-      · simp only [M, hi, if_false]; exact hpos _ _)
+      · simp only [M, hi, ite_false]; exact hpos _ _)
     (by
       intro i
       by_cases hi : i = 0
@@ -875,7 +875,7 @@ theorem corollary_upper_estimate_holds : Formalism.HermitianLatticeCounting.Expa
       intro i hi
       rcases Nat.eq_zero_or_pos i with rfl | hi0
       · have e0 : (⟨min (0 + 1 - 1) r, by omega⟩ : Fin (r + 1)) = 0 := Fin.ext (by simp)
-        simp only [M, B, if_true, Nat.add_eq_zero_iff, one_ne_zero, and_false, if_false, e0, div_one]
+        simp only [M, B, ite_true, Nat.add_eq_zero_iff, one_ne_zero, and_false, ite_false, e0, div_one]
         exact h0 _ hq
       · obtain ⟨k, rfl⟩ : ∃ k, i = k + 1 := ⟨i - 1, by omega⟩
         have hk : k < r := by omega
@@ -883,14 +883,14 @@ theorem corollary_upper_estimate_holds : Formalism.HermitianLatticeCounting.Expa
           Fin.ext (by simp; omega)
         have e2 : (⟨min (k + 1 - 1) r, by omega⟩ : Fin (r + 1)) = (⟨k, hk⟩ : Fin r).castSucc :=
           Fin.ext (by simp; omega)
-        simp only [M, B, Nat.add_eq_zero_iff, one_ne_zero, and_false, if_false, e1, e2]
+        simp only [M, B, Nat.add_eq_zero_iff, one_ne_zero, and_false, ite_false, e1, e2]
         exact hc _ _ hq)
   have ea : (⟨min (a.val + 1 - 1) r, by omega⟩ : Fin (r + 1)) = a := Fin.ext (by simp; omega)
-  simp only [M, Nat.add_eq_zero_iff, one_ne_zero, and_false, if_false, if_true, ea, div_one] at key
+  simp only [M, Nat.add_eq_zero_iff, one_ne_zero, and_false, ite_false, ite_true, ea, div_one] at key
   refine key.trans (le_of_eq ?_)
   congr 1
   rw [prod_range_succ']
-  simp only [B, Nat.add_eq_zero_iff, one_ne_zero, and_false, if_false, if_true, prod_const, card_range]
+  simp only [B, Nat.add_eq_zero_iff, one_ne_zero, and_false, ite_false, ite_true, prod_const, card_range]
   rw [← pow_mul, mul_comm]
 
 theorem corollary_product_estimate_holds : Formalism.HermitianLatticeCounting.ExpansionTerms.MomentProductBound := by

@@ -65,12 +65,12 @@ theorem exists_isChar_eq_add_of_pair_ne_zero : ∀ (K L : Type) [Field K] [Field
   have hex : ∃ f : Representation.IntertwiningMap σ ρ, f ≠ 0 := by
     by_contra hne
     push_neg at hne
-    haveI : Subsingleton (Representation.IntertwiningMap σ ρ) :=
+    have : Subsingleton (Representation.IntertwiningMap σ ρ) :=
       ⟨fun x y => (hne x).trans (hne y).symm⟩
     apply hp
     rw [h, Module.finrank_zero_of_subsingleton, Nat.cast_zero]
   obtain ⟨f, hf⟩ := hex
-  haveI := hσ
+  have := hσ
   have hi := (Representation.IsIrreducible.injective_or_eq_zero f).resolve_right hf
   obtain ⟨c, hc, hc'⟩ := _root_.GlobalTheory.BI.exists_isChar_eq_add_of_injective K L G (Fin n → K) (Fin m → K) ρ σ f hi
   refine ⟨c, hc, funext fun g => ?_⟩

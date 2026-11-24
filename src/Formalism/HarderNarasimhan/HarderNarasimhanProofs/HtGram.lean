@@ -274,7 +274,7 @@ theorem abs_det_amat (eS : Free.ChooseBasisIndex ℤ (𝓞 K) ≃ InfinitePlace 
   rw [hvol] at h1
   have h2 := congrArg ENNReal.toReal h1
   rw [ENNReal.toReal_mul, ENNReal.toReal_pow, ENNReal.toReal_inv, ENNReal.toReal_ofNat,
-    ENNReal.coe_toReal, ENNReal.coe_toReal, Real.coe_sqrt, coe_nnnorm, coe_nnnorm,
+    ENNReal.coe_toReal, ENNReal.coe_toReal, Real.coe_sqrt, coe_nnNorm, coe_nnNorm,
     Int.norm_eq_abs, Real.norm_eq_abs] at h2
   rw [hA, det_submatrix_equiv_self]
   convert h2 using 3
@@ -366,7 +366,7 @@ theorem htGram_of (h1 : PlLat) : HtGram := by
   have hrkN : rkK N = j := rkK_span e he
   have hmain : ht b X N = ∏ v, (gramPl b X v e).det.re := by
     obtain ⟨⟨_, hdisc⟩, _, _⟩ := h1 K V ι b X hX N hNfg
-    haveI := hdisc
+    have := hdisc
     have hli := linIndep_int (Formalism.HermitianLatticesTheory.realize b X) hρ e he
     have hsp := zl_span_eq (K := K) (Formalism.HermitianLatticesTheory.realize b X) e
     let bN : Basis _ ℤ (zl (Formalism.HermitianLatticesTheory.realize b X) N) :=
@@ -412,7 +412,7 @@ theorem htGram_of (h1 : PlLat) : HtGram := by
   intro L hLfg hNL hrkL
   obtain ⟨⟨_, hdiscN⟩, hrkNZ, _⟩ := h1 K V ι b X hX N hNfg
   obtain ⟨⟨_, hdiscL⟩, hrkLZ, _⟩ := h1 K V ι b X hX L hLfg
-  haveI := hdiscL
+  have := hdiscL
   have hle := zl_mono (Formalism.HermitianLatticesTheory.realize b X) hNL
   have hrkeq : Formalism.F.rk (zl (Formalism.HermitianLatticesTheory.realize b X) N) = Formalism.F.rk (zl (Formalism.HermitianLatticesTheory.realize b X) L) := by
     have h3 : rk (Formalism.HermitianLatticesTheory.realize b X) N = rk (Formalism.HermitianLatticesTheory.realize b X) L := by

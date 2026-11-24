@@ -93,10 +93,10 @@ theorem isRapidInf_mul_adCoef : ∀ (E : Type) [Field E] [NumberField E] [_root_
       ∀ p, IsRapidInf ν (fun x => k x * adCoef (γ x) p) γ := by
   intro E _ _ _ a X _ ν k γ hr p
   obtain ⟨hk, hγ, hint⟩ := hr
-  haveI : SecondCountableTopology (Lie E a) := inferInstance
-  haveI : BorelSpace (Lie E a) := inferInstance
-  haveI : OpensMeasurableSpace (Lie E a × Lie E a) := inferInstance
-  haveI : OpensMeasurableSpace (Cinf E × Lie E a) := inferInstance
+  have : SecondCountableTopology (Lie E a) := inferInstance
+  have : BorelSpace (Lie E a) := inferInstance
+  have : OpensMeasurableSpace (Lie E a × Lie E a) := inferInstance
+  have : OpensMeasurableSpace (Cinf E × Lie E a) := inferInstance
   have hA : Measurable fun x => toL (γ x).val := hγ
   have hdet : Measurable fun x => ((γ x).val).det := contDiff_det.continuous.measurable.comp hA
   have hc : Measurable fun x => (fun v => (((γ x).val).det v)⁻¹ : Cinf E) :=

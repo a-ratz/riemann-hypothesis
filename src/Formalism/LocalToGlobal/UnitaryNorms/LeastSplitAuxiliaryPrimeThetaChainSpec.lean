@@ -60,8 +60,8 @@ namespace Formalism.L2.Host
 theorem sqSign_eq_jacobi {q p : ℕ} (hq : q.Prime) (hp : p.Prime) (hq4 : q % 4 = 3) (hp2 : p ≠ 2)
     (v : (ZMod q)ˣ) (hv : (v : ZMod q) = (p : ZMod q)) :
     ((sqSign v : ℤˣ) : ℤ) = jacobiSym (-(q : ℤ)) p := by
-  haveI := Fact.mk hq
-  haveI := Fact.mk hp
+  have := Fact.mk hq
+  have := Fact.mk hp
   have hpq : p ≠ q := by
     rintro rfl
     have h0 : (v : ZMod p) = 0 := by
@@ -196,7 +196,7 @@ theorem split_prime_mod_conductor_eq_one : AbsolutelyIrreducibleSpan.q0 D % D.ho
   exact q0_mod_eq_one_of_dvd_condE D dvd_rfl h2
 
 theorem split_prime_splits_completely : (placesOver D.host.E (AbsolutelyIrreducibleSpan.q0 D)).ncard = Module.finrank ℚ D.host.E := by
-  haveI : Fact (AbsolutelyIrreducibleSpan.q0 D).Prime := ⟨(AbsolutelyIrreducibleSpan.auxiliary_prime_mem (D := D)).1⟩
+  have : Fact (AbsolutelyIrreducibleSpan.q0 D).Prime := ⟨(AbsolutelyIrreducibleSpan.auxiliary_prime_mem (D := D)).1⟩
   exact Formalism.BasicNotions.Examples₂.placesOver_ncard_of_split (hpm := split_prime_mod_conductor_eq_one D) ..
 
 variable {D}

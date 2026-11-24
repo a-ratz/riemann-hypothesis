@@ -64,7 +64,7 @@ theorem rulBC_sec_val_linear : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     obtain rfl : A = resAlg hle S := Algebra.algebra_ext _ _ fun x => (h x).symm
     exact evR_ruleUp hle hWD hBC hf.1 y
   · funext p y
-    letI := resAlg hle p.R
+    let := resAlg hle p.R
     have h1 : evR Xo c (t • f + g) (y.res hle (fun _ => rfl)) =
         algebraMap c.F p.R t * evR Xo c f (y.res hle (fun _ => rfl)) + evR Xo c g (y.res hle (fun _ => rfl)) := by
       unfold evR

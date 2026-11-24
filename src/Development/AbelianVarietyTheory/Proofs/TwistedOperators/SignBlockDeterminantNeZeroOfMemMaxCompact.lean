@@ -102,7 +102,7 @@ theorem exists_monomials [Finite σ] (N : ℕ) : ∃ (n : ℕ) (e : Fin n → σ
   simp only [MvPolynomial.smul_monomial, smul_eq_mul, mul_one]
   conv_lhs => rw [P.as_sum]
   refine Finset.sum_subset (fun d hd => ?_) fun d _ hd => ?_
-  · simp only [T, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  · simp only [T, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     exact (MvPolynomial.le_totalDegree hd).trans hP
   · rw [MvPolynomial.notMem_support_iff.1 hd, map_zero]
 

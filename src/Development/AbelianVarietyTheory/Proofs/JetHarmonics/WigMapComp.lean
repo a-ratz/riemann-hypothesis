@@ -64,7 +64,7 @@ theorem wigMap_comp : ∀ (V₁ : Type) [NormedAddCommGroup V₁] [InnerProductS
     show (A ω).comp (A' ω) = _
     rw [hL ω, hL' ω]
     ext x
-    simp only [ContinuousLinearMap.comp_apply, sum_apply, ContinuousLinearMap.smul_apply,
+    simp only [ContinuousLinearMap.comp_apply, sum_apply, smul_apply,
       map_sum, map_smul, Finset.smul_sum, map_mul]
     rw [Finset.sum_comm]
     apply Finset.sum_congr rfl

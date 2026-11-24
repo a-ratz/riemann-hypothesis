@@ -98,9 +98,9 @@ end
 theorem main : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ (κ : Type) [Fintype κ], ∀ Φ ∈ GlobalTheory.WeilM.schA F κ,
     @Measurable _ _ (borel _) _ (fun w : (κ → AF F) × (κ → AF F) => GlobalTheory.WeilM.thetaSum F (GlobalTheory.WeilM.schr ψ w Φ)) := by
   intro F _ _ ψ hψ κ _ Φ hΦ
-  letI : MeasurableSpace ((κ → AF F) × (κ → AF F)) := borel _
-  haveI : BorelSpace ((κ → AF F) × (κ → AF F)) := ⟨rfl⟩
-  haveI := countable_field F
+  let : MeasurableSpace ((κ → AF F) × (κ → AF F)) := borel _
+  have : BorelSpace ((κ → AF F) × (κ → AF F)) := ⟨rfl⟩
+  have := countable_field F
   have hc := continuous_of_mem_schA F hΦ
   let T : (κ → F) → (κ → AF F) × (κ → AF F) → ℂ := fun ξ w =>
     GlobalTheory.WeilM.schr ψ w Φ (fun i => algebraMap F (AF F) (ξ i))

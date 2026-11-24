@@ -126,7 +126,7 @@ private theorem tw_diag (X : ExtraV) {rc : IrrGL (k := w.adicCompletion E) → W
     (σ : SmIrr (GL (Fin n) (w.adicCompletion E))) (B : Multiset ℂˣ) (hB : GlobalTheory.LFun.HasSatGL w σ.ρ B) (t : ℝ) :
     ∃ α : Fin n → ℂˣ, B = Finset.univ.val.map α ∧
       (rc (cl σ)).lpTw t = WD.mk (WDRep.diag h fun i => (α i)⁻¹ * qPow w t) := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨α, hαB, hα⟩ := (GlobalTheory.LGrp.SatakeCompare.hasSatakeGL_iff _ _ _ σ.ρ B).1
     (GlobalTheory.LFun.SatCompare.hasSatakeGL_iff.2 ⟨⟨σ.smooth, σ.irred⟩, hB⟩)
   refine ⟨α, hαB.symm, ?_⟩
@@ -864,7 +864,7 @@ private theorem rec_spehQuotT {E Ω : Type} [Field E] [NumberField E] [Field Ω]
     (hu : IsUnitarisable σ.ρ) (hg : IsGeneric σ.ρ) (hq : IsSpehQuot hd σ σ') :
     rc (cls (ParLaws.toRep σ')) =
       sumList ((List.range d).map fun k : ℕ => (rc (cls (ParLaws.toRep σ))).lpTw (((d : ℝ) - 1) / 2 - k)) := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨m, δ, Δ, s, hΔ, hδu, hs, hd0, hφ⟩ := hTZ.exists_prod σ.smooth σ.irred hu hg
   have hA := _root_.GlobalTheory.isL_of_irreducible_prod_unitarisable_nu _ (_root_.GlobalTheory.LocGL.UnitaryOrder.add_one_le_of_precedes _) a _ σ.ρ σ.irred m δ Δ s hΔ hδu hs hd0 hφ
   have hB := _root_.GlobalTheory.speh_quotient_isL _ hLM (_root_.GlobalTheory.LocGL.UnitaryOrder.add_one_le_of_precedes _) (GlobalTheory.T.parabolicInduction_in_stages_product_of_products _) a _ σ.ρ m δ Δ s hΔ hδu hs hd0 hφ d n hd _ σ'.ρ σ'.irred hq
@@ -922,12 +922,12 @@ private theorem isPst_split {AI : LocAinf l P} (T : LocTied l P AI) {i : V₀ �
     (hs : ∀ g v, s (ρ₂ g v) = ρ₁ g (s v)) (h1 : Function.Injective i) (h2 : Function.Exact i p)
     (hps : ∀ v, p (s v) = v) (hV₀ : IsPst P ρ₀) (hV₂ : IsPst P ρ₂) : IsPst P ρ₁ := by
   obtain ⟨hdom, hfrac, -⟩ := GlobalTheory.Pst.stRegular l P AI ⟨T⟩
-  haveI := LL.2
-  haveI : FiniteDimensional ℚ_[l] V₀ := Module.Finite.trans ↥LL.1 V₀
-  haveI : FiniteDimensional ℚ_[l] V₁ := Module.Finite.trans ↥LL.1 V₁
-  haveI : FiniteDimensional ℚ_[l] V₂ := Module.Finite.trans ↥LL.1 V₂
+  have := LL.2
+  have : FiniteDimensional ℚ_[l] V₀ := Module.Finite.trans ↥LL.1 V₀
+  have : FiniteDimensional ℚ_[l] V₁ := Module.Finite.trans ↥LL.1 V₁
+  have : FiniteDimensional ℚ_[l] V₂ := Module.Finite.trans ↥LL.1 V₂
   have b₁ := _root_.GlobalTheory.PstRank.rank_DpstUr_le P hdom hfrac ρ₁
-  haveI f₁ : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ₁) :=
+  have f₁ : FiniteDimensional ↥(MaximalUnramifiedExtension l) (DpstUr P ρ₁) :=
     Module.rank_lt_aleph0_iff.mp (b₁.trans_lt (Cardinal.natCast_lt_aleph0))
   obtain ⟨f₀, c₀⟩ := (isPst_iff P ρ₀).1 hV₀
   obtain ⟨f₂, c₂⟩ := (isPst_iff P ρ₂).1 hV₂

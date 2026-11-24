@@ -166,8 +166,8 @@ theorem exists_integral_mul_eq_of_isAbove : ∀ (R K Ω : Type) [CommRing R] [Is
       ((algebraMap K Ω).comp (algebraMap R K)).IsIntegralElem a ∧
       ((algebraMap K Ω).comp (algebraMap R K)).IsIntegralElem s ∧ V.valuation s = 1 ∧ y * s = a := by
   intro R K Ω _ _ _ _ _ _ _ _ _ V hV y hy
-  letI : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hιinj : Function.Injective ((algebraMap K Ω).comp (algebraMap R K)) :=
     (algebraMap K Ω).injective.comp (IsFractionRing.injective R K)
   have hmemV : ∀ r : R, algebraMap R Ω r ∈ V := by
@@ -205,7 +205,7 @@ theorem exists_integral_mul_eq_of_isAbove : ∀ (R K Ω : Type) [CommRing R] [Is
     exact lt_irrefl _ this
 
   classical
-  haveI : Algebra.IsSeparable K Ω := IsSepClosure.separable
+  have : Algebra.IsSeparable K Ω := IsSepClosure.separable
   have halgK : IsAlgebraic K y := Algebra.IsAlgebraic.isAlgebraic y
   have halgR : IsAlgebraic R y := (IsFractionRing.isAlgebraic_iff R K Ω).2 halgK
   obtain ⟨f, hf0, hfy⟩ := halgR
@@ -338,8 +338,8 @@ namespace GlobalTheory.ResidueFixed
 theorem residue_fixed_mem : ∀ (R K Ω : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [PerfectField (ResidueField R)] [Field K] [Algebra R K] [IsFractionRing R K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (V : ValuationSubring Ω), IsAbove R K V.toSubring → ∀ x ∈ V, (∀ σ : Ω ≃ₐ[K] Ω, σ • V = V → V.valuation (σ x - x) < 1) → ∃ r : R, V.valuation (x - algebraMap K Ω (algebraMap R K r)) < 1 := by
   intro R K Ω _ _ _ _ _ _ _ _ _ _ V hV x hx hfix
   classical
-  letI : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hRV : ∀ r : R, algebraMap R Ω r ∈ V := by
     intro r
     have h : algebraMap R K r ∈ V.toSubring.comap (algebraMap K Ω) := by rw [hV]; exact ⟨r, rfl⟩
@@ -422,11 +422,11 @@ theorem residue_fixed_mem : ∀ (R K Ω : Type) [CommRing R] [IsDomain R] [IsDis
       rw [Ideal.mem_comap, map_one, hQ] at h
       simp at h
   have hQmax : Q.IsMaximal := Ideal.IsMaximal.of_liesOver_isMaximal Q (maximalIdeal R)
-  letI := Ideal.Quotient.field (maximalIdeal R)
-  letI := Ideal.Quotient.field Q
-  haveI hN : Normal (R ⧸ maximalIdeal R) (B ⧸ Q) := GlobalTheory.T.residue_normal_of_profinite_invariants G (maximalIdeal R) Q
-  haveI : PerfectField (R ⧸ maximalIdeal R) := ‹PerfectField (ResidueField R)›
-  haveI : IsGalois (R ⧸ maximalIdeal R) (B ⧸ Q) := {}
+  let := Ideal.Quotient.field (maximalIdeal R)
+  let := Ideal.Quotient.field Q
+  have hN : Normal (R ⧸ maximalIdeal R) (B ⧸ Q) := GlobalTheory.T.residue_normal_of_profinite_invariants G (maximalIdeal R) Q
+  have : PerfectField (R ⧸ maximalIdeal R) := ‹PerfectField (ResidueField R)›
+  have : IsGalois (R ⧸ maximalIdeal R) (B ⧸ Q) := {}
 
   have hBle : ∀ b : B, V.valuation (b : Ω) ≤ 1 := fun b => V.valuation_le_one (ψ b)
 
@@ -1177,7 +1177,7 @@ theorem UpperTheory.Lit.Nos.C5.hasGoodReduction_of_inertiaFixed : ∀ (R K Ω : 
   intro R K Ω _ _ _ _ _ _ _ _ _ _ V hV A _ _ hA hgood
   set K' := IntermediateField.fixedField (inertia K V) with hK'
   set W := V.comap (algebraMap K' Ω) with hW
-  haveI : IsDiscreteValuationRing W := GlobalTheory.T.isDiscreteValuationRing_fixedField_inertia_alt R K Ω V hV
+  have : IsDiscreteValuationRing W := GlobalTheory.T.isDiscreteValuationRing_fixedField_inertia_alt R K Ω V hV
   have memW : ∀ z : K', z ∈ W ↔ algebraMap K' Ω z ∈ V := fun z => ValuationSubring.mem_comap
   have e1 : ∀ a : K, algebraMap K' Ω (algebraMap K K' a) = algebraMap K Ω a :=
     fun a => (IsScalarTower.algebraMap_apply K K' Ω a).symm
@@ -1186,10 +1186,10 @@ theorem UpperTheory.Lit.Nos.C5.hasGoodReduction_of_inertiaFixed : ∀ (R K Ω : 
     rw [memW, e1]
     have h1 : algebraMap R K r ∈ V.toSubring.comap (algebraMap K Ω) := by rw [hV]; exact ⟨r, rfl⟩
     exact h1
-  letI : Algebra R W := (((algebraMap K K').comp (algebraMap R K)).codRestrict W hRW).toAlgebra
-  letI : Algebra R K' := ((algebraMap K K').comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R W K' := IsScalarTower.of_algebraMap_eq (fun r => rfl)
-  haveI : IsScalarTower R K K' := IsScalarTower.of_algebraMap_eq (fun r => rfl)
+  let : Algebra R W := (((algebraMap K K').comp (algebraMap R K)).codRestrict W hRW).toAlgebra
+  let : Algebra R K' := ((algebraMap K K').comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R W K' := IsScalarTower.of_algebraMap_eq (fun r => rfl)
+  have : IsScalarTower R K K' := IsScalarTower.of_algebraMap_eq (fun r => rfl)
   have hmax : ∀ x : W, x ∈ maximalIdeal W ↔ V.valuation (algebraMap K' Ω x) < 1 := by
     intro x
     rw [ValuationSubring.valuation_lt_one_iff]

@@ -75,7 +75,7 @@ theorem finprod_locK_mul_inf : ∀ (E : Type) [Field E] [NumberField E] (χ : HC
     intro v hv
     rw [hSdef, Set.Finite.coe_toFinset]
     by_contra h
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at h
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at h
     exact hv (locK_eq_one χ k v h.1 h.2)
   refine ⟨S.finite_toSet.subset hsub, ?_⟩
   have hS : ∀ v, v ∉ S → χ.UnrAt v := by

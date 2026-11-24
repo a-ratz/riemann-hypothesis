@@ -98,9 +98,9 @@ theorem coords_at_place : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
         ∀ y : WOF F E nS nT, (∀ i j, algebraMap (AF F) (AEF F E) ε * y i j = y i j) → y ∈ Set.range Φ := by
   intro F E _ _ _ _ _ v ε hε nS nT
   obtain ⟨α, rfl, hα1, hα0⟩ := hε
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
-  haveI := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
+  have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
   let B : Module.Basis (Fin (Module.finrank F E)) (AF F) (AEF F E) :=
     Algebra.TensorProduct.basis (AF F) (Module.finBasis F E)
   let e := Fintype.equivFin (Fin nT × Fin nS × Fin (Module.finrank F E))

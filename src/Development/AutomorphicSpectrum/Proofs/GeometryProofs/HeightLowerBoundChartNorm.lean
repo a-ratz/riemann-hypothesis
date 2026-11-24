@@ -215,7 +215,7 @@ theorem local_bound (v : FinitePlace L) (y : (Σ k, ι k) → Ω) (a : K → ℤ
       q * ∑ k, (a k : ℝ) * Real.log (⨆ i, v (w ⟨k, i⟩)) := by
   have hne : ∀ k, Nonempty (ι k) := fun k => let ⟨i, _⟩ := hw.1 k; ⟨i⟩
   have hmax : ∀ k, ∃ c : ι k, ∀ i, v (w ⟨k, i⟩) ≤ v (w ⟨k, c⟩) := fun k => by
-    haveI := hne k
+    have := hne k
     exact Finite.exists_max fun i => v (w ⟨k, i⟩)
   choose c hc using hmax
   have hzc : ∀ k, w ⟨k, c k⟩ ≠ 0 := by
@@ -226,7 +226,7 @@ theorem local_bound (v : FinitePlace L) (y : (Σ k, ι k) → Ω) (a : K → ℤ
     exact absurd h1 (not_le.2 (FinitePlace.pos_iff.2 hi))
   have hpos : ∀ k, 0 < v (w ⟨k, c k⟩) := fun k => FinitePlace.pos_iff.2 (hzc k)
   have hsup : ∀ k, (⨆ i, v (w ⟨k, i⟩)) = v (w ⟨k, c k⟩) := fun k => by
-    haveI := hne k
+    have := hne k
     exact le_antisymm (ciSup_le (hc k)) (le_ciSup (f := fun i => v (w ⟨k, i⟩)) (Set.finite_range _).bddAbove (c k))
   have hO : ∀ p : Σ k, ι k, w p / w ⟨p.1, c p.1⟩ ∈ placeRing v := by
     rintro ⟨k, i⟩
@@ -268,7 +268,7 @@ theorem support_finite (w : (Σ k, ι k) → L) (hw : ∀ k, ∃ i, w ⟨k, i⟩
     exact hnot (Set.mem_iUnion.2 ⟨⟨p, hp⟩, h1⟩)
   refine hv (Finset.sum_eq_zero fun k _ => ?_)
   obtain ⟨i, hi⟩ := hw k
-  haveI : Nonempty (ι k) := ⟨i⟩
+  have : Nonempty (ι k) := ⟨i⟩
   have h1 : (⨆ i, v (w ⟨k, i⟩)) = 1 := by
     refine le_antisymm (ciSup_le fun j => ?_) ?_
     · by_cases hj : w ⟨k, j⟩ = 0

@@ -93,7 +93,7 @@ theorem e_one_re (hK : X.LevelSubgroupCharacter) : (X.B.e 1).re = ((X.B.μf X.K2
   have h := X.e_eq 1
   have h1 : (1 : X.B.I.Gf) ∈ X.K2 := hK.1
   change X.B.e 1 = if (1 : X.B.I.Gf) ∈ X.K2 then star (X.chi2 1) / ((X.B.μf X.K2).toReal : ℂ) else 0 at h
-  rw [if_pos h1, chi2_apply_one X hK, star_one] at h
+  rw [ite_eq_left h1, chi2_apply_one X hK, star_one] at h
   rw [h, one_div, ← Complex.ofReal_inv, Complex.ofReal_re]
 
 end Vol
@@ -176,7 +176,7 @@ variable {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I)
 theorem finiteLevelVolume_of_measure (hM : X.MeasTie hb) : FiniteLevelVolumeEquality X hb := by
   unfold FiniteLevelVolumeEquality
   rw [hM.2.2.1]
-  haveI : BorelSpace (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : BorelSpace (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
   let e := (Formalism.L2.SG.Pf.Meas.eFin X.B.I hb).toHomeomorph.toMeasurableEquiv
   have he : (X.toFin hb : X.B.I.Gf → _) = e := rfl
   have hK : levelUnitary X hb = e '' X.K2 := rfl
@@ -196,9 +196,9 @@ theorem mem_rr_iff (x : X.B.I.GA) :
     rwa [← (toHA X.B.I hb).injective hyx]
 
 theorem covolTie_of (hM : X.MeasTie hb) : CovolTie X := by
-  haveI hBor : BorelSpace (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
-  haveI : (X.B.I.muA X.B.μf).IsHaarMeasure := Formalism.L2.SG.PoincareInHH.Cut.muA_isHaar' X.B.I X.B.μf
-  haveI : (X.B.I.muA X.B.μf).IsMulLeftInvariant := inferInstance
+  have hBor : BorelSpace (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : (X.B.I.muA X.B.μf).IsHaarMeasure := Formalism.L2.SG.PoincareInHH.Cut.muA_isHaar' X.B.I X.B.μf
+  have : (X.B.I.muA X.B.μf).IsMulLeftInvariant := inferInstance
   have hfd0 : IsFundamentalDomain (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I) X.B.fund (X.B.I.muA X.B.μf) :=
     Formalism.MainNotions.LeviCoordinates.rr_isFD ⟨X.B.fund_spec.1, X.B.fund_spec.2.1, X.B.fund_spec.2.2⟩
   let Γ : Subgroup (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
@@ -209,7 +209,7 @@ theorem covolTie_of (hM : X.MeasTie hb) : CovolTie X := by
       invFun := fun x => ⟨toHA X.B.I hb x, (mem_rr_iff X hb _).1 x.2⟩
       left_inv := fun g => Subtype.ext (ContinuousMulEquiv.apply_symm_apply _ _)
       right_inv := fun x => Subtype.ext (ContinuousMulEquiv.symm_apply_apply _ _) }
-  haveI : Countable Γ := Function.Injective.countable eΓ.injective
+  have : Countable Γ := Function.Injective.countable eΓ.injective
   have hqmp : Measure.QuasiMeasurePreserving e.toEquiv.symm ((X.B.I.muA X.B.μf).map e) (X.B.I.muA X.B.μf) := by
     refine (MeasurePreserving.quasiMeasurePreserving ⟨e.symm.measurable, ?_⟩)
     exact e.map_symm_map
@@ -223,12 +223,12 @@ theorem covolTie_of (hM : X.MeasTie hb) : CovolTie X := by
   have hmap : X.measG.μG (e '' X.B.fund) = X.B.I.muA X.B.μf X.B.fund := by
     have hμ : X.measG.μG = (X.B.I.muA X.B.μf).map e := hM.1
     rw [hμ, MeasurableEquiv.map_apply, Set.preimage_image_eq _ e.injective]
-  haveI : (X.measG.μG).IsHaarMeasure := by
+  have : (X.measG.μG).IsHaarMeasure := by
     have hμ : X.measG.μG = (X.B.I.muA X.B.μf).map e := hM.1
     rw [hμ]
     exact (toHA X.B.I hb).isHaarMeasure_map (X.B.I.muA X.B.μf)
-  haveI : (X.measG.μG).IsMulLeftInvariant := inferInstance
-  haveI : MeasurableConstSMul Γ (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
+  have : (X.measG.μG).IsMulLeftInvariant := inferInstance
+  have : MeasurableConstSMul Γ (HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
     ⟨fun c => (continuous_const_mul (c : HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF X.B.I.F) X.B.I.cm.sig X.B.I.J)).measurable⟩
   unfold CovolTie covolBy
   split_ifs with h

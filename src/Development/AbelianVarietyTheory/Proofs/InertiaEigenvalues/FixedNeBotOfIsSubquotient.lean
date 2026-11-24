@@ -295,9 +295,9 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (hG : GeometricLemma) (hBZ : Bernste
   induction N using Nat.strong_induction_on with
   | _ N ih =>
     rintro x rfl s hs
-    haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
+    have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
     rcases Nat.eq_zero_or_pos x.1 with h0 | hpos
-    · haveI : IsEmpty (Fin x.1) := by rw [h0]; infer_instance
+    · have : IsEmpty (Fin x.1) := by rw [h0]; infer_instance
       exact ⟨0, Fin.elim0, Equiv.equivOfIsEmpty _ _, fun a => a.elim0,
         degZero k x.1 h0 _ x.rep _ _ _ _⟩
     by_cases hc : IsCuspidal x.rep
@@ -402,7 +402,7 @@ theorem exists_fixed_mk_eq {π : Representation ℂ G V} (hπ : IsAdmissible π)
   obtain ⟨u, rfl⟩ : ∃ u, p u = y := Submodule.mkQ_surjective _ y
   obtain ⟨t, htc, ht⟩ := hcon _ ((ho.inter (hπ.1 u)).mem_nhds ⟨one_mem I, by simp⟩)
   set Y := (fixed π I).map p with hY
-  haveI := hπ.2 I ho hc
+  have := hπ.2 I ho hc
   have key : ∀ w, (∀ c ∈ C, π ((s t)⁻¹ * c * s t) w = w) → (∀ d ∈ M₀, σ d (p w) = p w) →
       σ t (p w) ∈ Y := by
     intro w h1 h2
@@ -457,7 +457,7 @@ theorem jMinus_contract (e : (Σ a, m a) ≃ n) : ∀ U ∈ 𝓝 (1 : GL n k), �
     · subst h
       rw [leviEmb_apply_same]
       simp [S, T, Matrix.scalar_apply, diagonal_pow, diagonal_apply, inv_pow]
-    · rw [leviEmb_apply_ne k e _ h, if_neg fun h' => h (congrArg Sigma.fst (e.injective h'))]
+    · rw [leviEmb_apply_ne k e _ h, ite_eq_right fun h' => h (congrArg Sigma.fst (e.injective h'))]
   have hcomm : ∀ x (d : Levi k m), d * S x = S x * d := fun x d => funext fun a => Units.ext
     ((Matrix.scalar_commute _ (fun _ => Commute.all _ _) _).eq).symm
   let F : Filter (kˣ × jMinus k e) := (comap (fun x : kˣ => (x : k)) (𝓝 0)) ×ˢ ⊤
@@ -503,7 +503,7 @@ theorem jMinus_contract (e : (Σ a, m a) ≃ n) : ∀ U ∈ 𝓝 (1 : GL n k), �
       show valuation k _ < _
       rw [this, map_mul, map_mul, map_pow]
       exact (mul_le_of_le_one_right' (mul_le_one' (pow_le_one' hp.1.2.le _) hint)).trans_lt hp.1.1
-  haveI : (comap (fun x : kˣ => (x : k)) (𝓝 0)).NeBot := by
+  have : (comap (fun x : kˣ => (x : k)) (𝓝 0)).NeBot := by
     refine comap_neBot fun s hs => ?_
     obtain ⟨γ, hγ⟩ := (IsValuativeTopology.mem_nhds_zero_iff s).1 hs
     obtain ⟨δ, hδ0, hδ⟩ : ∃ δ : ValueGroupWithZero k, δ ≠ 0 ∧ δ < γ :=
@@ -557,7 +557,7 @@ theorem fixed_ne_bot_of_isSubquotient {G : Type} [Group G] [TopologicalSpace G] 
   have hS : IsSmooth S.toRepresentation := fun v => by
     have : {g : G | S.toRepresentation g v = v} = {g : G | ρ g (v : V) = v} := by
       ext g
-      simp only [Set.mem_setOf_eq, Subtype.ext_iff]
+      simp only [Set.mem_ofPred_eq, Subtype.ext_iff]
       rfl
     rw [this]
     exact hρ v

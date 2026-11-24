@@ -639,7 +639,7 @@ theorem atUnif_unrChar (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
 
 theorem expToSat : PositivityTheory.Rg.BcB.F.Tail.PExp.ExpToSat := by
   intro E _ _ w c n N h σ P ξ hsub hmono ⟨y, hy0, hy⟩
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   have hd : ∑ _a : Fin n, 1 = n := by simp
   obtain ⟨v, hv0, hv⟩ := GlobalTheory.CompanionTheory.StandardBlocks.stdBridge (w.adicCompletion E) n hd P.V P.ρ _ y hy0 hy
   have hadm : IsAdmissible P.ρ :=

@@ -200,10 +200,10 @@ theorem eq_smul_of_left_inv (P : Subgroup G) (hPm : MeasurableSet (P : Set G)) (
     (hi : ∀ s ∈ P, ρ.map (fun g => s * g) = ρ) (hi' : ∀ s ∈ P, ρ₀.map (fun g => s * g) = ρ₀)
     (T : Set G) (hT : MeasurableSet T) (hT0 : ρ₀ T ≠ 0) (hT1 : ρ₀ T ≠ ⊤) :
     ∃ c : ENNReal, ρ = c • ρ₀ := by
-  have hemb : MeasurableEmbedding (Subtype.val : P → G) := MeasurableEmbedding.subtype_coe hPm
-  haveI : MeasurableMul₂ P := ⟨Measurable.subtype_mk
+  have hemb : MeasurableEmbedding (Subtype.val : P → G) := MeasurableEmbedding.subtypeVal hPm
+  have : MeasurableMul₂ P := ⟨Measurable.subtype_mk
     ((hemb.measurable.comp measurable_fst).mul (hemb.measurable.comp measurable_snd))⟩
-  haveI : MeasurableInv P := ⟨Measurable.subtype_mk hemb.measurable.inv⟩
+  have : MeasurableInv P := ⟨Measurable.subtype_mk hemb.measurable.inv⟩
   have hmap : ∀ τ : Measure G, τ (P : Set G)ᶜ = 0 → (τ.comap Subtype.val).map (Subtype.val : P → G) = τ := by
     intro τ h
     rw [hemb.map_comap, Subtype.range_coe]
@@ -216,11 +216,11 @@ theorem eq_smul_of_left_inv (P : Subgroup G) (hPm : MeasurableSet (P : Set G)) (
       Measure.map_map hemb.measurable (measurable_const_mul s)]
     have : (Subtype.val : P → G) ∘ (fun g => s * g) = (fun g => (s : G) * g) ∘ Subtype.val := rfl
     rw [this, ← Measure.map_map (measurable_const_mul _) hemb.measurable, hmap τ h, hτ s s.2]
-  haveI := hinv ρ h0 hi
-  haveI := hinv ρ₀ h0' hi'
-  haveI : SigmaFinite (ρ.comap (Subtype.val : P → G)) :=
+  have := hinv ρ h0 hi
+  have := hinv ρ₀ h0' hi'
+  have : SigmaFinite (ρ.comap (Subtype.val : P → G)) :=
     SigmaFinite.of_map _ hemb.measurable.aemeasurable (by rw [hmap ρ h0]; infer_instance)
-  haveI : SigmaFinite (ρ₀.comap (Subtype.val : P → G)) :=
+  have : SigmaFinite (ρ₀.comap (Subtype.val : P → G)) :=
     SigmaFinite.of_map _ hemb.measurable.aemeasurable (by rw [hmap ρ₀ h0']; infer_instance)
   have hT' : ρ₀.comap (Subtype.val : P → G) (Subtype.val ⁻¹' T) = ρ₀ T := by
     rw [← hmap ρ₀ h0', Measure.map_apply hemb.measurable hT, hmap ρ₀ h0']

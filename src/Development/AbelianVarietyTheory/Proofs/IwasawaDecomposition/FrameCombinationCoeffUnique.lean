@@ -130,8 +130,8 @@ theorem concat_frame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       intro hp
       by_cases hy : τ = ((letters Dw).get j).1
       · subst hy
-        exact (dif_pos rfl).trans (h0 _ (hp rfl))
-      · exact dif_neg hy
+        exact (dite_eq_left rfl).trans (h0 _ (hp rfl))
+      · exact dite_eq_right hy
     · rw [hc, (hτ _ _ _).1 h]
       congr 2
       have : ∀ y, (letters Dw).get (e.symm y) = y := e.apply_symm_apply
@@ -139,7 +139,7 @@ theorem concat_frame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       rw [Fintype.sum_sigma, Finset.sum_eq_single ((letters Dw).get j).1]
       · exact Finset.sum_congr rfl fun i _ => by simp [B]
       · intro σ _ hσ
-        exact Finset.sum_eq_zero fun i _ => by rw [show B ⟨σ, i⟩ = 0 from dif_neg hσ, zero_smul]
+        exact Finset.sum_eq_zero fun i _ => by rw [show B ⟨σ, i⟩ = 0 from dite_eq_right hσ, zero_smul]
       · intro h; exact absurd (Finset.mem_univ _) h
 
 end GlobalTheory.Proof.frame_combination_coeff_unique

@@ -67,7 +67,7 @@ lemma sub_le_sum_sub {n : ℕ} (ν μ : Fin n → ℤ) (h : ∀ m, μ m ≤ ν m
     (Finset.mem_univ i)
 
 lemma mem_stripsUp {n : ℕ} (μ ν : Fin n → ℤ) (b : ℕ) : ν ∈ stripsUp μ b ↔ HStrip ν μ b := by
-  letI : DecidablePred (fun ν => HStrip ν μ b) := fun ν => by
+  let : DecidablePred (fun ν => HStrip ν μ b) := fun ν => by
     unfold HStrip
     infer_instance
   unfold stripsUp
@@ -80,7 +80,7 @@ lemma mem_stripsUp {n : ℕ} (μ ν : Fin n → ℤ) (b : ℕ) : ν ∈ stripsUp
     exact ⟨fun i => ⟨h.1 i, by linarith [sub_le_sum_sub ν μ h.1 i, h.2.2]⟩, h⟩
 
 lemma mem_stripsDown {n : ℕ} (μ ν : Fin n → ℤ) (b : ℕ) : ν ∈ stripsDown μ b ↔ HStrip μ ν b := by
-  letI : DecidablePred (fun ν => HStrip μ ν b) := fun ν => by
+  let : DecidablePred (fun ν => HStrip μ ν b) := fun ν => by
     unfold HStrip
     infer_instance
   unfold stripsDown
@@ -197,7 +197,7 @@ lemma Lo_succ_le_iff {n : ℕ} (μ : Fin (n + 1) → ℤ) (κ l : Fin n → ℤ)
   constructor
   · intro h
     refine ⟨fun i => le_trans (le_max_left _ _) (h i), fun m m' hm => ?_⟩
-    have e : m.succ = m'.castSucc := Fin.ext (by simp only [Fin.val_succ, Fin.coe_castSucc]; exact hm)
+    have e : m.succ = m'.castSucc := Fin.ext (by simp only [Fin.val_succ, Fin.val_castSucc]; exact hm)
     have := h m
     unfold Lo at this
     rw [e, Fin.snoc_castSucc] at this
@@ -208,7 +208,7 @@ lemma Lo_succ_le_iff {n : ℕ} (μ : Fin (n + 1) → ℤ) (κ l : Fin n → ℤ)
     have hi0 := i.isLt
     by_cases hi : i.val + 1 < n
     · have e : i.succ = (⟨i.val + 1, hi⟩ : Fin n).castSucc :=
-        Fin.ext (by simp only [Fin.val_succ, Fin.coe_castSucc])
+        Fin.ext (by simp only [Fin.val_succ, Fin.val_castSucc])
       rw [e, Fin.snoc_castSucc]
       exact h2 i _ rfl
     · have e : i.succ = Fin.last n := Fin.ext (by simp only [Fin.val_succ, Fin.val_last]; omega)
@@ -219,11 +219,11 @@ lemma strip2_iff {n : ℕ} (μ ν : Fin (n + 1) → ℤ) :
     (∀ m m' : Fin (n + 1), m.val + 1 = m'.val → ν m' ≤ μ m) ↔ ∀ i : Fin n, ν i.succ ≤ μ i.castSucc := by
   constructor
   · intro h i
-    exact h i.castSucc i.succ (by simp only [Fin.val_succ, Fin.coe_castSucc])
+    exact h i.castSucc i.succ (by simp only [Fin.val_succ, Fin.val_castSucc])
   · intro h m m' hm
     have hlt : m.val < n := by have := m'.isLt; omega
     obtain ⟨i, rfl⟩ : ∃ i : Fin n, m = i.castSucc := ⟨⟨m.val, hlt⟩, Fin.ext rfl⟩
-    simp only [Fin.coe_castSucc] at hm
+    simp only [Fin.val_castSucc] at hm
     have e2 : m' = i.succ := Fin.ext (by simp only [Fin.val_succ]; omega)
     subst e2
     exact h i

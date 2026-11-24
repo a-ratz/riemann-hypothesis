@@ -92,7 +92,7 @@ theorem mem_span_image_eigen {K L V W Γ G : Type} [Field K] [Field L] [CharZero
     (hs : ∀ u ∈ P, ∃ γ, θ γ = u) {w : W} (hw : w ∈ Submodule.span L (Set.range π))
     (he : ∀ γ (h : θ γ ∈ P), τ γ w = σ (lam ⟨θ γ, h⟩ : Kˣ) • w) :
     w ∈ Submodule.span L (π '' {v | ∀ u : P, ρ u v = ((lam u : Kˣ) : K) • v}) := by
-  haveI := Fintype.ofFinite P
+  have := Fintype.ofFinite P
   choose s hs using fun u : P => hs u u.2
   let T : W →ₗ[L] W := ∑ u : P, σ ((lam u)⁻¹ : Kˣ) • τ (s u)
   have h1 : T w = (Fintype.card P : L) • w := by
@@ -156,7 +156,7 @@ theorem mem_span_pull_iff : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toC
       f = f' → ∀ (k : Type) [Field k] [IsAlgClosed k] [Algebra Y.d.c₂.F k] (y : FrPt Y.d.Xo₂ Y.d.c₂ k),
         evR Y.d.Xo₂ Y.d.c₂ u y = evR Y.d.Xo₂ Y.d.c₂ u' y := by
     rintro f _ u u' h h' rfl k _ _ _ y₂
-    letI := GlobalTheory.CoverSec.algBelow Y.d k
+    let := GlobalTheory.CoverSec.algBelow Y.d k
     obtain ⟨y, hy⟩ := GlobalTheory.CoverSec.exists_frOver_below Y.d (fun _ => rfl) y₂ (hO k (fun _ => rfl) y₂)
     rw [h k (fun _ => rfl) y₂ y hy, h' k (fun _ => rfl) y₂ y hy]
   let act := actLev (Xo := T.Q.Xo j) T.Q.c (fun g => (lev g, (LinearMap.id : (T.Q.Dw j).La →ₗ[𝓞 D.host.E] (T.Q.Dw j).La)))
@@ -172,7 +172,7 @@ theorem mem_span_pull_iff : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toC
     refine GlobalTheory.CoverSec.eq_of_geometric (GlobalTheory.LevelEquivCompare.actLev_mem_sec hact₂ γ (s₂ (π v).2)).1 (s₂ (π _).2).1 (geo h1 (p1 (ρ (θ γ) v)) ?_)
     refine GlobalTheory.CoverSec.eq_of_geometric (GlobalTheory.LevelEquivCompare.actLev_mem_sec hact' _ hv).1
       ((_root_.GlobalTheory.FieldBC.rulBC_sec_val_linear _ _ _ _ _ _ _ Y.hle).1 a n _ (s₁ (ρ (θ γ) v).2)).1.1 fun k _ _ _ y => ?_
-    letI := resAlg Y.hle k
+    let := resAlg Y.hle k
     exact (hbc a n (θ γ) 1 _ _ _ hv (fun _ => s₁ v.2) (GlobalTheory.LevelEquivCompare.isBC_rulBC Y.hle (s₁ v.2)) k (fun _ => rfl) y).trans
       (GlobalTheory.LevelEquivCompare.isBC_rulBC Y.hle (s₁ (ρ (θ γ) v).2) k (fun _ => rfl) y).symm
   constructor

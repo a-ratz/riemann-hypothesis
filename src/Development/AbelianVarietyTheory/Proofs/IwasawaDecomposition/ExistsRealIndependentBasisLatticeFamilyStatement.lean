@@ -73,7 +73,7 @@ theorem exists_isLatBasis_of_isLatFam : ∀ (n g : ℕ) (B : Set (Fin n → ℂ)
   let L : Submodule ℤ (Fin g → ℂ) := AddSubgroup.toIntSubmodule H
   have hL : ∀ w, w ∈ L ↔ w ∈ K b₀ := fun w => by
     rw [← hH]; rfl
-  haveI : DiscreteTopology L := by
+  have : DiscreteTopology L := by
     obtain ⟨U, hU, hUo, h0U⟩ := mem_nhds_iff.1 hev
     refine discreteTopology_of_isOpen_singleton_zero ?_
     have : ({0} : Set L) = Subtype.val ⁻¹' U := by
@@ -82,7 +82,7 @@ theorem exists_isLatBasis_of_isLatFam : ∀ (n g : ℕ) (B : Set (Fin n → ℂ)
       constructor
       · rintro rfl; exact h0U
       · intro hx; exact Subtype.ext (hU hx ((hL x).1 x.2))
-    rw [this]; exact hUo.preimage continuous_subtype_val
+    rw [this]; exact hUo.preimage continuous_subtypeVal
   let bs := Module.finBasis ℤ L
   refine ⟨Module.finrank ℤ L, fun i => (bs i : Fin g → ℂ), GlobalTheory.linearIndependent_real_coe_basis bs, fun w => ?_⟩
   have hsp := GlobalTheory.span_range_coe_basis bs

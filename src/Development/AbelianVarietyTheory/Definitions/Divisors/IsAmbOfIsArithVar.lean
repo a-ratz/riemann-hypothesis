@@ -73,8 +73,8 @@ theorem IsAmb.sub {p : X ⟶ Sp k} (h : IsAmb p) (i : Y ⟶ X) [IsClosedImmersio
 
 theorem IsAmb.isNoetherian {p : X ⟶ Sp k} (h : IsAmb p) : IsNoetherian X := by
 
-  haveI := h.finite
-  haveI : IsNoetherianRing k := isNoetherian_of_tower ℤ (inferInstance : IsNoetherian ℤ k)
+  have := h.finite
+  have : IsNoetherianRing k := isNoetherian_of_tower ℤ (inferInstance : IsNoetherian ℤ k)
   exact GlobalTheory.isNoetherian_of_isProjOver h.isProjOver
 
 def HasDim (x : X) (d : ℕ) : Prop := topologicalKrullDim (closure ({x} : Set X)) = d

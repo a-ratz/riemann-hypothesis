@@ -174,7 +174,7 @@ private theorem centralizer_compact_fundamental {G : Type*} [Group G] [Topologic
       ∃ g : Subgroup.centralizer {γ}, (g : G) ∈ Γ ∧ ∃ y ∈ C, t = g * y := by
   classical
   have hE : IsCompact ((fun y : G => y * γ * y⁻¹) '' D) := hD.image (by fun_prop)
-  have hcl : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discreteTopology
   have hfin : ((fun y : G => y * γ * y⁻¹) '' D ∩ (Γ : Set G)).Finite := by
     have h1 : IsCompact (Subtype.val ⁻¹' ((fun y : G => y * γ * y⁻¹) '' D) : Set Γ) :=
       hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hE

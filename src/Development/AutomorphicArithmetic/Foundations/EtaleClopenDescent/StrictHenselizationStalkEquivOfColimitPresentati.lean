@@ -68,12 +68,12 @@ private theorem etComp {A B C : CommRingCat.{0}} {f : A ⟶ B} {g : B ⟶ C} (hf
   exact RingHom.Etale.stableUnderComposition _ _ hf hg
 
 private theorem etRight {R S W : CommRingCat.{0}} {c : R ⟶ S} {f : S ⟶ W} (h1 : Et c) (h2 : Et (c ≫ f)) : Et f := by
-  letI := c.hom.toAlgebra
-  letI := f.hom.toAlgebra
-  letI := (c ≫ f).hom.toAlgebra
-  haveI : IsScalarTower R S W := .of_algebraMap_eq' rfl
-  haveI : Algebra.Etale R S := h1
-  haveI : Algebra.Etale R W := h2
+  let := c.hom.toAlgebra
+  let := f.hom.toAlgebra
+  let := (c ≫ f).hom.toAlgebra
+  have : IsScalarTower R S W := .of_algebraMap_eq' rfl
+  have : Algebra.Etale R S := h1
+  have : Algebra.Etale R W := h2
   have h3 : Algebra.Etale S W := {
     formallyEtale := Algebra.FormallyEtale.of_restrictScalars (R := R)
     finitePresentation := Algebra.FinitePresentation.of_restrict_scalars_finitePresentation R S W }

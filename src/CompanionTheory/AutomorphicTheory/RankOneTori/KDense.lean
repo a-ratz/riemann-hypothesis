@@ -113,7 +113,7 @@ theorem approx_id {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [Complet
   obtain ⟨φ₀, h0, h1, h01⟩ := exists_continuous_zero_one_of_isClosed hUo.isClosed_compl (isClosed_singleton (x := (1 : Γ)))
     (disjoint_singleton_right.2 fun h => h h1U)
   have hc : 0 < ∫ x, φ₀ x ∂μ :=
-    φ₀.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) (HasCompactSupport.of_compactSpace _)
+    φ₀.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) (HasCompactSupport.of_compactSpace _)
       (fun x => (h01 x).1) (by rw [h1 rfl]; exact one_ne_zero)
   set φ : C(Γ, ℝ) := (∫ x, φ₀ x ∂μ)⁻¹ • φ₀ with hφ
   have hφ0 : ∀ x, 0 ≤ φ x := fun x => mul_nonneg (inv_nonneg.2 hc.le) (h01 x).1
@@ -298,7 +298,7 @@ theorem kDense (k r : ℕ) (ε : Fin (2 * r + k + 1) → Bool) (lam : Fin (2 * r
   have hfin : IsKFinHpk (k := k) (r := r) σ (∫ g : MG K hK, p g • σ g.mat v ∂haar) :=
     fin_of_finAlg hG inter_subset_left h hv hp
   refine ⟨_, hfin, ?_⟩
-  have hle := List.sum_le_card_nsmul
+  have hle := List.sum_le_length_nsmul
     (Ws.map fun w' => ‖dsigW (k := k) (r := r) σ w' (v - ∫ g : MG K hK, p g • σ g.mat v ∂haar)‖) (e / (Ws.length + 1)) (by
       intro t ht
       obtain ⟨W, hW', rfl⟩ := List.mem_map.1 ht

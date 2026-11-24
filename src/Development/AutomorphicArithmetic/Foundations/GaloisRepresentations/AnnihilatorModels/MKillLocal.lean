@@ -76,9 +76,9 @@ private theorem away_local {B : Type} [CommRing B] (f : B) (p : PrimeSpectrum B)
 private theorem exists_eps (κ B : Type) [Field κ] [IsAlgClosed κ] [CommRing B] [Algebra κ B] [Module.Finite κ B]
     (f : B) (m : Ideal B) [hm : m.IsMaximal] (hf : f ∉ m) :
     Nonempty (Localization.Away f →ₐ[κ] κ) := by
-  haveI : Module.Finite κ (B ⧸ m) :=
+  have : Module.Finite κ (B ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ κ m).toLinearMap Ideal.Quotient.mk_surjective
-  haveI : Algebra.IsAlgebraic κ (B ⧸ m) := Algebra.IsAlgebraic.of_finite κ (B ⧸ m)
+  have : Algebra.IsAlgebraic κ (B ⧸ m) := Algebra.IsAlgebraic.of_finite κ (B ⧸ m)
   let φ : B ⧸ m →ₐ[κ] κ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -133,7 +133,7 @@ theorem killLocal_of : KillLocal := by
   obtain ⟨B, _, _, hfin, hfree, -, i, hmono, hi⟩ := hrep
   obtain ⟨y, rfl⟩ := (hi T g).2 hg
   suffices hmain : i ≫ χ = 1 by rw [Category.assoc, hmain, comp_one]
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite κ B
+  have : IsArtinianRing B := IsArtinianRing.of_finite κ B
   have hpt : ∀ p : PrimeSpectrum B, ∃ f : B, p ∈ PrimeSpectrum.basicOpen f ∧
       (PrimeSpectrum.basicOpen f : Set (PrimeSpectrum B)) ⊆ {p} := by
     intro p
@@ -148,8 +148,8 @@ theorem killLocal_of : KillLocal := by
   apply Over.OverMorphism.ext
   refine Scheme.Cover.hom_ext (Scheme.affineOpenCoverOfSpanRangeEqTop (R := .of B) s hspan).openCover _ _ fun p => ?_
   change spMap (algebraMap B (Localization.Away (s p))) ≫ _ = spMap (algebraMap B (Localization.Away (s p))) ≫ _
-  haveI := away_local (s p) p (hs p) (hs' p)
-  haveI hmax : p.asIdeal.IsMaximal := p.2.isMaximal'
+  have := away_local (s p) p (hs p) (hs' p)
+  have hmax : p.asIdeal.IsMaximal := p.2.isMaximal'
   obtain ⟨ε⟩ := exists_eps κ B (s p) p.asIdeal (hs p)
   let j : algPt κ (Localization.Away (s p)) ⟶ algPt κ B := Over.homMk (spMap (algebraMap B (Localization.Away (s p)))) (by
     change spMap (algebraMap B (Localization.Away (s p))) ≫ spMap (algebraMap κ B) = spMap (algebraMap κ (Localization.Away (s p)))

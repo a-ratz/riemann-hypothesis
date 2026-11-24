@@ -156,8 +156,8 @@ theorem exists_chart_pt' {X : Scheme.{0}} (L : LB X) (hL : L.IsLB) (y : Sp ℂ �
   obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.mp hmem
   refine ⟨j, fun q _ => ?_⟩
   have : q = p0 := by
-    haveI := q.isPrime
-    haveI := p0.isPrime
+    have := q.isPrime
+    have := p0.isPrime
     exact PrimeSpectrum.ext ((Ideal.eq_bot_of_prime q.asIdeal).trans (Ideal.eq_bot_of_prime p0.asIdeal).symm)
   rw [this]
   exact hj

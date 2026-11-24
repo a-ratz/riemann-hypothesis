@@ -118,8 +118,8 @@ private theorem cg_down {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact 
 
 private theorem unit_lift (l : ℕ) [Fact l.Prime] (m : ℕ) (hm : 1 ≤ m) (x : (ZMod (l ^ m))ˣ) :
     ∃ u : ℤ_[l]ˣ, PadicInt.toZModPow m (u : ℤ_[l]) = x := by
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI : Fact (1 < l ^ m) := ⟨Nat.one_lt_pow (by omega) (Fact.out : l.Prime).one_lt⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : Fact (1 < l ^ m) := ⟨Nat.one_lt_pow (by omega) (Fact.out : l.Prime).one_lt⟩
   have hsurj : Function.Surjective (PadicInt.toZModPow (p := l) m) := by
     intro y
     obtain ⟨k, rfl⟩ := ZMod.natCast_zmod_surjective y
@@ -133,8 +133,8 @@ theorem UpperTheory.Kd.C7.pContOf :
   intro l _ hl2 Ω _ _ _ A hA c β ζ hζ Z hZ hP
   obtain ⟨c₀, m₀, hP⟩ := hP
   intro r n
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   set m := r + (m₀ + n + c₀ + 1) with hm_def
   have hm0 : m₀ ≤ m := by omega
   obtain ⟨P, hKP⟩ := hP m hm0
@@ -143,7 +143,7 @@ theorem UpperTheory.Kd.C7.pContOf :
   have hlN : 0 < l ^ N := pow_pos (Fact.out : l.Prime).pos N
   choose w hw using fun i : Fin β.d => IsAlgClosed.exists_pow_nat_eq (pv (P i) (ζ m)) hlN
   have hfe := UpperTheory.Kd.C7.pFrobEx l hl2 Ω A hA
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hlift : ∀ y : (ZMod (l ^ m))ˣ, ∃ t ∈ Ine (F := ℚ) A, cycMod ℚ Ω l m t = y⁻¹ := by
     intro y
     obtain ⟨u, hu'⟩ := unit_lift l m (by omega) y⁻¹
@@ -154,7 +154,7 @@ theorem UpperTheory.Kd.C7.pContOf :
   choose tt htt hcyc using hlift
   let f : (ZMod (l ^ m))ˣ × Option (Fin β.d) → Ω := fun q => (tt q.1)⁻¹ (q.2.elim (ζ N) w)
   let E := IntermediateField.adjoin ℚ (Set.range f)
-  haveI : FiniteDimensional ℚ E :=
+  have : FiniteDimensional ℚ E :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => (Algebra.IsAlgebraic.isAlgebraic (R := ℚ) x).isIntegral)
   refine ⟨(cycMod ℚ Ω l m).ker ⊓ E.fixingSubgroup, ?_, ?_⟩
   · rw [Subgroup.coe_inf]
@@ -291,14 +291,14 @@ theorem UpperTheory.Kd.C7.pKumEx :
   intro l _ hl Ω _ _ _ A hA c β ζ hζ Z hZ hC b hb
   refine ⟨0, 0, fun m _ => ?_⟩
   rw [Nat.sub_zero]
-  haveI : NeZero (l : Ω) := by
-    haveI : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero (l : Ω) := by
+    have : CharZero Ω := algebraRat.charZero Ω
     exact ⟨Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨τ, hτ, hτb⟩ := exists_tau l hl Ω A hA b hb m
   obtain ⟨U, hU, hUZ⟩ := hC m m
   let w : G ℚ Ω → c.O := fun s => if h : s ∈ Ine (F := ℚ) A then ⟨Z m s 1, hZ.int m s h 1⟩ else 0
-  have hw : ∀ s ∈ Ine (F := ℚ) A, (w s : PadicAlgCl l) = Z m s 1 := fun s hs => by simp only [w, dif_pos hs]
+  have hw : ∀ s ∈ Ine (F := ℚ) A, (w s : PadicAlgCl l) = Z m s 1 := fun s hs => by simp only [w, dite_eq_left hs]
   let χ : Fin β.d → G ℚ Ω → ZMod (l ^ m) := fun i s => PadicInt.toZModPow m (β.e.repr (w s) i)
   have hex : ∀ i, ∃ u : Ω, u ≠ 0 ∧ (∀ s ∈ Hm l A m, s u = u) ∧
       ∀ s ∈ Hm l A m, KumVal (l := l) m (ζ m) u s (χ i s) := by
@@ -578,7 +578,7 @@ private lemma lam_act (Φ : Fr l A j) {c : Coef l} (β : Bas c) (a : c.O) (x : F
 private lemma tw_succ (Φ : Fr l A j) {d : ℕ} (M : Matrix (Fin d) (Fin d) ℤ_[l]) (D : Fin d → PowerSeries Φ.R)
     (h : ∀ i, Φ.tw 1 (D i) = Φ.act M D i) (m n : ℕ) (i : Fin d) :
     (Φ.tw (m + 1) (D i)).coeff n = ∑ k, algebraMap ℤ_[l] Φ.R (M i k) * (Φ.tw m (D k)).coeff n := by
-  haveI := Φ.fl.complete
+  have := Φ.fl.complete
   have h1 := congrArg (PowerSeries.coeff n) (h i)
 
   simp only [Fr.tw, Fr.act, PowerSeries.coeff_map, pow_one, map_sum, PowerSeries.coeff_C_mul] at h1 ⊢
@@ -652,7 +652,7 @@ private lemma bpres_mul [IsAlgClosure ℚ Ω] (hl : l ≠ 2) (hA : OverL l A) {c
     refine ⟨fun i => k i + k' i, fun i => ?_, ?_⟩
     · simp only [pv_mul]
       exact ((pKumAlg l hl Ω A hA ζ hζ m n h2 s ⟨hs, hc⟩).1 _ _ _ _ (hk i) (hk' i)).1
-    · haveI : NeZero (l ^ n) := ⟨(pow_pos (Fact.out : l.Prime).pos n).ne'⟩
+    · have : NeZero (l ^ n) := ⟨(pow_pos (Fact.out : l.Prime).pos n).ne'⟩
       have e : ‖∑ i, β.val i * (((k i).val : Qbar l) + ((k' i).val : Qbar l) - ((k i + k' i).val : Qbar l))‖ ≤
           ‖((l : ℕ) : Qbar l) ^ n‖ := by
         refine sum_le _ _ _ (norm_nonneg _) h4 fun i => ?_
@@ -702,7 +702,7 @@ theorem UpperTheory.Kd.C7.pClause1 :
   have uS : ∀ i, IsUnit (Φ.ser (S i)) := fun i => (hU _).2 (hS'.2.2.1 i)
   have uE : ∀ i, IsUnit (Φ.ser (Polynomial.expand (R0 A) d₀ (P i))) := fun i => (hU _).2 (hE.2.2.1 i)
   have hdl := fun i => (pPresDl l hl Ω A hA j Φ c β ζ hζ Z m n hm1 _ _ hP' hM i).2
-  haveI : NeZero (l ^ m) := ⟨(pow_pos (Fact.out : l.Prime).pos m).ne'⟩
+  have : NeZero (l ^ m) := ⟨(pow_pos (Fact.out : l.Prime).pos m).ne'⟩
   set w : Ω := ζ m ^ (b : ZMod (l ^ m)).val with hw
   have hwp : IsPrimitiveRoot w (l ^ m) := (hζ m).1.pow_of_coprime _ (ZMod.val_coe_unit_coprime b)
   have hzp : IsPrimitiveRoot (algebraMap (PadicAlgCl l) ℂ_[l] (j w)) (l ^ m) :=
@@ -906,7 +906,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem iwOps_red_un {l : ℕ} [Fact l.Prime] (b : ℕ) (hb : ¬ l ∣ b) (r : ℕ) :
     red l r (un b hb (r + 1)) = un b hb r := by
   ext
-  simp only [un, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, ZMod.coe_unitOfCoprime, map_natCast]
+  simp only [un, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, ZMod.coe_unitOfCoprime, map_natCast]
 
 private theorem iwOps_tr {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l}
     {A : ValuationSubring Ω} {Z : Sy Ω l} (h : IwI c A Z) (b : ℕ) (hb : ¬ l ∣ b) : IwI c A (tr b hb Z) := by
@@ -1106,7 +1106,7 @@ private theorem apply_root_eq_of_cycBar_eq_one {Ω : Type} [Field Ω] [Algebra �
     rw [Units.val_one]
     apply Subtype.ext
     exact h
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => ⟨⟨ζ i, (hζ i).1⟩, rootsOfUnity.isCyclic _ _⟩
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => ⟨⟨ζ i, (hζ i).1⟩, rootsOfUnity.isCyclic _ _⟩
   have h1 := cyclotomicCharacter.spec l (n := m) (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) (ζ m)
     ((hζ m).1.pow_eq_one)
   have hc : cyclotomicCharacter Ω l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) = 1 := hZ
@@ -1116,7 +1116,7 @@ private theorem apply_root_eq_of_cycBar_eq_one {Ω : Type} [Field Ω] [Algebra �
   · have h0 : ζ 0 = 1 := by simpa using (hζ 0).1
     rw [h0, map_one]
   · have hlt : 1 < l ^ (m + 1) := Nat.one_lt_pow (Nat.succ_ne_zero m) (Fact.out : l.Prime).one_lt
-    haveI : Fact (1 < l ^ (m + 1)) := ⟨hlt⟩
+    have : Fact (1 < l ^ (m + 1)) := ⟨hlt⟩
     exact h1.trans (by rw [ZMod.val_one, pow_one])
 
 private theorem lc_map' {R : Type} [CommRing R] (e : R →+* R) (l m n : ℕ) (f g : PowerSeries R)

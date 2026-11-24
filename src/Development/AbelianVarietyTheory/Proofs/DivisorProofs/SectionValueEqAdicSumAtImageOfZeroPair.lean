@@ -151,8 +151,8 @@ theorem sumF_conv (hI : AdmBase R I) {X : Type} [AddCommGroup X] {a b c : X → 
     (ha : SumF I F a r) (hb : SumF I F b r') (hc : ∀ α, SumF I F (fun χ => a χ * b (α - χ)) (c α))
     (h : SumF I F c r'') : r'' = r * r' := by
   obtain ⟨hN, -, -, hc'⟩ := hI
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
-  letI : Algebra R F := Algebra.ofModule (fun q x y => smul_mul_assoc (algebraMap R (FractionRing R) q) x y)
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Algebra R F := Algebra.ofModule (fun q x y => smul_mul_assoc (algebraMap R (FractionRing R) q) x y)
     (fun q x y => mul_smul_comm (algebraMap R (FractionRing R) q) x y)
   exact sumI_conv (IsAdicComplete.le_jacobson_bot I) ha hb hc h
 
@@ -248,8 +248,8 @@ theorem value_at_level (hB : AdmBase R I) (hG : IsSemiAbelian G) (U : Unif I D A
     ∃ κ : F, κ ≠ 0 ∧ ∀ (t : SecA A F N) s (c : F), U.ExpandsF F N w₀ t s → ValAt t x e c →
       SumF I F (coef s q.g w) (κ * c) := by
   have hL := GlobalTheory.firstFiveLaws
-  haveI : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of F)))
-  haveI : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of F)))
+  have : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of F)))
+  have : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of F)))
   obtain ⟨hxN, hθ⟩ := hx w₀ hN.1
   obtain ⟨θ, rfl⟩ := GlobalTheory.BoxTheta.exists_theta hL.1.kerPow A hN1 (T := TFK (R := R) F) x hxN
   obtain ⟨w', hw', hΦ⟩ := hθ θ rfl

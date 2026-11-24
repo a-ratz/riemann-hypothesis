@@ -80,7 +80,7 @@ theorem bkStr_quotient_equiv : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a]
   intro l _ a _ O _ _ π Ep hE hπ
   obtain ⟨hmon, -, hdvd, -⟩ := hE
   obtain ⟨h0, hsurj, hker⟩ := hπ
-  haveI : IsAdicComplete (Ideal.span {(l : Wq l a)}) (Wq l a) := WittVector.isAdicCompleteIdealSpanP
+  have : IsAdicComplete (Ideal.span {(l : Wq l a)}) (Wq l a) := WittVector.isAdicCompleteIdealSpanP
   have H : Ep.IsDistinguishedAt (Ideal.span {(l : Wq l a)}) :=
     { mem := fun hn => Ideal.mem_span_singleton.2 (hdvd _ hn)
       monic := hmon }
@@ -100,7 +100,7 @@ theorem bkStr_quotient_equiv : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a]
     apply e1.injective
     simp only [AlgEquiv.apply_symm_apply, e1]
     rfl
-  simp only [e, AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv, AlgEquiv.trans_apply, h1]
+  simp only [e, AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_toRingEquiv, AlgEquiv.trans_apply, h1]
   simp [e2, Polynomial.IsDistinguishedAt.algEquivQuotient_apply]
 
 end GlobalTheory
@@ -169,7 +169,7 @@ theorem exists_ev_of_root : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a] (�
   have hc : IsAdicComplete (Ideal.span {t}) (Ainf l) := (GlobalTheory.Per.AinfComplete.main l _ htu).2
   have hsep : ∀ x : Ainf l, (∀ n, t ^ n ∣ x) → x = 0 := fun x h =>
     GlobalTheory.Per.AinfComplete.eq_zero_of_haus _ x fun n => Ideal.mem_span_singleton.2 (h n)
-  letI : Algebra (Wq l a) (Ainf l) := (wA l a).toRingHom.toAlgebra
+  let : Algebra (Wq l a) (Ainf l) := (wA l a).toRingHom.toAlgebra
   obtain ⟨f, hfX⟩ := GlobalTheory.Cyc.IoMap.algHom_exists (R := Wq l a) t
     (GlobalTheory.Per.AinfComplete.summ_of_precomplete _) hsep
   have hfC : ∀ w, f.toRingHom (C w) = wA l a w := f.commutes
@@ -440,14 +440,14 @@ theorem sq_dvd {R O : Type*} [CommRing R] [IsDomain R] [CommRing O] [IsLocalRing
     intro i
     rw [Polynomial.coeff_sub, Polynomial.coeff_X_pow]
     rcases lt_trichotomy i E.natDegree with h | h | h
-    · rw [if_neg h.ne, sub_zero]; exact hd i h
-    · rw [if_pos h, h, hE.coeff_natDegree, sub_self]; exact dvd_zero _
-    · rw [if_neg h.ne', Polynomial.coeff_eq_zero_of_natDegree_lt h, sub_self]; exact dvd_zero _
+    · rw [ite_eq_right h.ne, sub_zero]; exact hd i h
+    · rw [ite_eq_left h, h, hE.coeff_natDegree, sub_self]; exact dvd_zero _
+    · rw [ite_eq_right h.ne', Polynomial.coeff_eq_zero_of_natDegree_lt h, sub_self]; exact dvd_zero _
   obtain ⟨g, hg⟩ := hg
   have hg0 : g.coeff 0 = w := by
     have := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q 0) hg
     simp only [Polynomial.coeff_sub, Polynomial.coeff_X_pow, Polynomial.coeff_C_mul] at this
-    rw [if_neg (by omega), sub_zero, h0] at this
+    rw [ite_eq_right (by omega), sub_zero, h0] at this
     exact (mul_left_cancel₀ hp this).symm
   have hu : IsUnit (Polynomial.aeval π g) := by
     have e : Polynomial.aeval π g
@@ -473,14 +473,14 @@ theorem exists_uniformiser : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a] (
   by_cases h : ∃ i, ¬ l ∣ i ∧ E.coeff i ≠ 0
   · exact ⟨π, E, hπ, ⟨hm, hpos, hd, w, h0⟩, h, hr, hs, hmin⟩
   push_neg at h
-  haveI : CharZero (Wq l a) := by
+  have : CharZero (Wq l a) := by
     refine charZero_of_inj_zero fun n hn => ?_
     by_contra hn0
     have hx : (n : ℤ_[l]) ≠ 0 := Nat.cast_ne_zero.2 hn0
     have e := congrArg (algebraMap ℤ_[l] (Wq l a)) (PadicInt.unitCoeff_spec hx)
     rw [map_natCast, hn, map_mul, map_pow, map_natCast] at e
     exact mul_ne_zero ((Units.isUnit _).map (algebraMap ℤ_[l] (Wq l a))).ne_zero
-      (pow_ne_zero _ (WittVector.p_nonzero l (Fq l a))) e.symm
+      (pow_ne_zero _ (WittVector.p_ne_zero l (Fq l a))) e.symm
   have hl : l.Prime := Fact.out
   have hl0 : (l : Wq l a) ≠ 0 := Nat.cast_ne_zero.2 hl.ne_zero
   have hle : l ∣ E.natDegree := by
@@ -574,7 +574,7 @@ theorem sol_mem_range {O F : Type} [CommRing O] [IsLocalRing O] [IsAdicComplete 
   have hinj : Function.Injective fun r => f (t r) := fun r s h => by
     rw [← h2 r, ← h2 s, hf h]
   set P : Polynomial F := Polynomial.X ^ Fintype.card (ResidueField O) - Polynomial.X with hP
-  have hP0 : P ≠ 0 := FiniteField.X_pow_card_sub_X_ne_zero hq
+  have hP0 : P ≠ 0 := Polynomial.X_pow_sub_X_ne_zero hq
   have hd : P.natDegree = Fintype.card (ResidueField O) := Polynomial.natDegree_X_pow_sub_X (R := F) hq
   have hm : ∀ z : F, z ^ Fintype.card (ResidueField O) = z → z ∈ P.roots.toFinset := fun z hz => by
     rw [Multiset.mem_toFinset, Polynomial.mem_roots hP0]
@@ -748,11 +748,11 @@ theorem nonempty_bk_of_finExt : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l), Non
   intro l hl K
   obtain ⟨hdvr, hfin, hunit⟩ := _root_.GlobalTheory.IntDvr.main l K
   obtain ⟨a, ha, w, hK, hw, hres⟩ := _root_.GlobalTheory.BSP.Res.exists_witt_residue l K
-  letI : Algebra (Wq l a) ↥(OL K) := w.toRingHom.toAlgebra
+  let : Algebra (Wq l a) ↥(OL K) := w.toRingHom.toAlgebra
   have halg : ∀ c, algebraMap (Wq l a) ↥(OL K) c = w c := fun _ => rfl
-  haveI : IsScalarTower ℤ_[l] (Wq l a) ↥(OL K) :=
+  have : IsScalarTower ℤ_[l] (Wq l a) ↥(OL K) :=
     IsScalarTower.of_algebraMap_eq fun z => (w.commutes z).symm
-  haveI : Module.Finite (Wq l a) ↥(OL K) := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
+  have : Module.Finite (Wq l a) ↥(OL K) := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
   obtain ⟨π, Ep, hπ, hE, hne, hmin⟩ :=
     _root_.GlobalTheory.EisShift.exists_uniformiser l a ↥(OL K) (wq_map_injective _) hres
   obtain ⟨str, hstr⟩ := _root_.GlobalTheory.bkStr_quotient_equiv l a ↥(OL K) π Ep hE hmin

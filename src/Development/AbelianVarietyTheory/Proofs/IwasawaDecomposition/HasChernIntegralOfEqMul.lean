@@ -62,7 +62,7 @@ theorem restrict_iSup_eq (μ : κ → Measure α) {S : Set α} (hS : MeasurableS
   refine le_antisymm ?_ (iSup_le fun i => Measure.restrict_mono subset_rfl (le_iSup μ i))
   have h : (⨆ i, μ i) ≤ (⨆ i, (μ i).restrict S) + (⨆ i, μ i).restrict Sᶜ := by
     refine iSup_le fun i => Measure.le_iff.2 fun B hB => ?_
-    rw [← Measure.restrict_add_restrict_compl (μ := μ i) hS, Measure.add_apply, Measure.add_apply]
+    rw [← Measure.restrict_add_restrict_compl (μ := μ i) hS, add_apply, add_apply]
     exact add_le_add (Measure.le_iff'.1 (le_iSup (fun i => (μ i).restrict S) i) B)
       (Measure.le_iff'.1 (Measure.restrict_mono subset_rfl (le_iSup μ i)) B)
   calc (⨆ i, μ i).restrict S ≤ ((⨆ i, (μ i).restrict S) + (⨆ i, μ i).restrict Sᶜ).restrict S :=
@@ -76,7 +76,7 @@ theorem smul_iSup_eq (ν : κ → Measure α) {c : ℝ≥0∞} (hc : c ≠ ⊤) 
     c • (⨆ i, ν i) = ⨆ i, c • ν i := by
   have mono : ∀ (d : ℝ≥0∞) {μ μ' : Measure α}, μ ≤ μ' → d • μ ≤ d • μ' := fun d μ μ' h =>
     Measure.le_iff.2 fun s _ => by
-      simp only [Measure.smul_apply, smul_eq_mul]
+      simp only [smul_apply, smul_eq_mul]
       exact mul_le_mul' le_rfl <| Measure.le_iff'.1 h s
   rcases eq_or_ne c 0 with rfl | h0
   · simp only [zero_smul]
@@ -94,7 +94,7 @@ theorem chartMeas_restrict_eq (e : OpenPartialHomeomorph X (V n)) {ρ ρ' : X �
     (hc : c ≠ ⊤) {S : Set X} (hS : MeasurableSet S) (h : ∀ y ∈ e.source, y ∈ S → ρ y = c * ρ' y) :
     (chartMeas e ρ).restrict S = c • (chartMeas e ρ').restrict S := by
   ext B hB
-  rw [Measure.smul_apply, Measure.restrict_apply hB, Measure.restrict_apply hB, smul_eq_mul,
+  rw [smul_apply, Measure.restrict_apply hB, Measure.restrict_apply hB, smul_eq_mul,
     chartMeas_apply e ρ (hB.inter hS), chartMeas_apply e ρ' (hB.inter hS), ← lintegral_const_mul' c _ hc]
   refine setLIntegral_congr_fun (measurableSet_image e (e.open_source.measurableSet.inter (hB.inter hS))
     Set.inter_subset_left) ?_
@@ -134,7 +134,7 @@ theorem hasChernIntegral_of_eq_mul : ∀ {F : Type} [Field F] {σ : F →+* ℂ}
         ENNReal.ofReal c • (chernTopPart E H R₀ ε').restrict (ptsIn X.str σ O) :=
       glueMeas_restrict_eq _ ENNReal.ofReal_ne_top hP fun a y hy hyS => ?_
     · have := congrArg (fun μ : Measure (CxPts X.str σ) => μ (ptsIn X.str σ O)) hm
-      simpa only [Measure.smul_apply, smul_eq_mul, Measure.restrict_apply_self] using this
+      simpa only [smul_apply, smul_eq_mul, Measure.restrict_apply_self] using this
     · have e1 := hRt y hyS a hy _ (E.nonempty (under y)).choose_spec
       beta_reduce
       rw [e1, hx, ENNReal.ofReal_mul hc]

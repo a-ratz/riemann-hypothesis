@@ -97,7 +97,7 @@ theorem valR_cocycle {X : Scheme.{0}} (L : LB X) (hL : L.IsLB) {C : Type} [CommR
   have := congrArg (fun z ↦ valR w _ (z : Γ(X, L.U a ⊓ L.U b ⊓ L.U k)ˣ).val) (hL.cocycle a b k)
   simp only [Units.val_mul] at this
   rw [GlobalTheory.Points.valR_mul w _ h] at this
-  simp only [res, Units.coe_map, MonoidHom.coe_coe] at this
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass] at this
   rwa [GlobalTheory.Points.valR_res w _ h, GlobalTheory.Points.valR_res w _ h, GlobalTheory.Points.valR_res w _ h] at this
 
 theorem isUnit_valR {X : Scheme.{0}} {C : Type} [CommRing C] (w : Sp C ⟶ X) (U : X.Opens) (h : ⊤ ≤ w ⁻¹ᵁ U)
@@ -106,7 +106,7 @@ theorem isUnit_valR {X : Scheme.{0}} {C : Type} [CommRing C] (w : Sp C ⟶ X) (U
 
 theorem evalAt_eq_valR {X : Scheme.{0}} {C : Type} [CommRing C] (x : Sp C ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
     (f : Γ(X, U)) : evalAt x U h f = valR x U f := by
-  rw [valR, dif_pos h]; rfl
+  rw [valR, dite_eq_left h]; rfl
 
 variable {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A]
 
@@ -225,13 +225,13 @@ theorem GlobalTheory.CechKS.prism_trivialised : ∀ (K : Type) [Field K] (A : Ov
       rintro x1 x2 x3 x4 _ _ _ _ rfl rfl rfl rfl
       simp
     refine (key k1' k2' k3' k4').trans ?_
-    simp only [Nf, dif_pos hP, dif_pos hQ, map_sub]
+    simp only [Nf, dite_eq_left hP, dite_eq_left hQ, map_sub]
     rw [← ha, ← hb, e4]
     ring
   · intro j j' P hj hj'
     obtain ⟨b, hb⟩ : ∃ b, b = c ⟨(P.tr v).triv, ⟨j, hj.tr hv⟩⟩ := ⟨_, rfl⟩
     have hPb : (P.tr v).In (L.U b) := hb ▸ hc ⟨(P.tr v).triv, ⟨j, hj.tr hv⟩⟩
-    simp only [Nf, dif_pos hj, dif_pos hj']
+    simp only [Nf, dite_eq_left hj, dite_eq_left hj']
     rw [← hb]
     have e3 := valR_cocycle L hL (P.trx v) b j j' ((hPb.inf (hj.tr hv)).inf (hj'.tr hv))
     have e4 : dl (valR (P.trx v) _ (L.g b j').val) =

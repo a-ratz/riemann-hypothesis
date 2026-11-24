@@ -63,7 +63,7 @@ private theorem plat_core {V : Type} [AddCommGroup V] [Module ℚ V] (p : ℕ) (
   have hf : ∀ x, f x = q • x := fun x => rfl
   set W : Submodule ℤ V := Submodule.span ℤ (f '' (s : Set V)) with hW
   have hWfg : W.FG := Submodule.fg_span ((s.finite_toSet).image f)
-  haveI : IsNoetherian ℤ W := isNoetherian_of_fg_of_noetherian W hWfg
+  have : IsNoetherian ℤ W := isNoetherian_of_fg_of_noetherian W hWfg
   have hNfg : (AddSubgroup.toIntSubmodule M ⊓ W).FG :=
     Submodule.FG.of_le_of_isNoetherian inf_le_right
   obtain ⟨t, ht⟩ := hNfg

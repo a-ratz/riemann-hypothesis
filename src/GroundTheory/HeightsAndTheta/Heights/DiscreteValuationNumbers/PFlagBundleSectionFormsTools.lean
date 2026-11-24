@@ -117,7 +117,7 @@ theorem exists_flag_dual_of_frame (y : (Σ k, ι k) → Ω) (B : ChartBundle F (
     rw [w.mem_span_image]
     intro m hm
     simp only [Finset.mem_coe, Finsupp.mem_support_iff] at hm
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     by_contra hjm
     push_neg at hjm
     apply hm
@@ -136,7 +136,7 @@ theorem exists_flag_dual_of_frame (y : (Σ k, ι k) → Ω) (B : ChartBundle F (
       intro hm
       have hS : {j : Fin N | (j : ℕ) < m + 1} = insert (⟨m, hm⟩ : Fin N) {j : Fin N | (j : ℕ) < m} := by
         ext j
-        simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Fin.ext_iff]
+        simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Fin.ext_iff]
         omega
       rw [hS, Set.image_insert_eq, Set.image_insert_eq, Submodule.span_insert, Submodule.span_insert,
         ih (by omega)]

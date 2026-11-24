@@ -55,17 +55,17 @@ private theorem smooth_sections_of_affine_open (d : ℕ) (Z : Scheme.{0}) [IsInt
 theorem UpperTheory.affineCechOpen_functionField_generic :
     ∀ (d : ℕ) (Z : Scheme.{0}) [IsIntegral Z] (p : Z ⟶ Sp ℂ) [SmoothOfRelativeDimension d p] [inst : Algebra ℂ Z.functionField] (ι : Type) (U : ι → Z.Opens) (B : Finset ι → Subalgebra ℂ Z.functionField) (hinst : inst = ffAlg p) (hU : IsAffCover p U B) (a : ℕ) (s : Finset ι) (hs : s.Nonempty) (hV : IsAffineOpen (cechOpen ⊤ U s)) (hη : genericPoint Z ∈ cechOpen ⊤ U s), letI := algΓ p; Function.Injective (formGermI p a hV hη hinst) ∧ LinearMap.range (formGermI p a hV hη hinst) = omB ℂ Z.functionField (B s) a := by
   intro d Z _ p _ inst ι U B hinst hU a s hs hV hη
-  letI := algΓ p
+  let := algΓ p
   subst hinst
-  letI : Algebra ℂ Z.functionField := ffAlg p
+  let : Algebra ℂ Z.functionField := ffAlg p
   set V := cechOpen ⊤ U s with hVdef
-  letI : Algebra (Sec p V) Z.functionField := (germSec p hη).toAlgebra
-  haveI : IsScalarTower ℂ (Sec p V) Z.functionField :=
+  let : Algebra (Sec p V) Z.functionField := (germSec p hη).toAlgebra
+  have : IsScalarTower ℂ (Sec p V) Z.functionField :=
     IsScalarTower.of_algebraMap_eq (fun r => ((semiHom_germSec p hη).map_algebraMap r).symm)
-  haveI : Nonempty V := ⟨⟨_, hη⟩⟩
-  haveI : IsFractionRing (Sec p V) Z.functionField :=
+  have : Nonempty V := ⟨⟨_, hη⟩⟩
+  have : IsFractionRing (Sec p V) Z.functionField :=
     functionField_isFractionRing_of_isAffineOpen Z V hV
-  haveI := smooth_sections_of_affine_open d Z p V hV
+  have := smooth_sections_of_affine_open d Z p V hV
   have hring : ∀ y, y ∈ B s ↔ ∃ f : Sec p V, algebraMap (Sec p V) Z.functionField f = y := by
     intro y
     rw [hU.ring s hs y]

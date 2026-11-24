@@ -547,7 +547,7 @@ theorem chartHom_pow_mul_eq {R : Type} [CommRing R] (X : Over (Sp R)) (hsm : Smo
   have hle : W ≤ X.hom ⁻¹ᵁ ⊤ := by simp
   let b := (X.hom.appLE ⊤ W hle).hom
   have hft : b.FiniteType := by
-    haveI := hsm
+    have := hsm
     exact HasRingHomProperty.appLE @LocallyOfFiniteType X.hom inferInstance
       ⟨⊤, isAffineOpen_top _⟩ ⟨W, hW⟩ hle
   have hcomp : ∀ (u : Sp S ⟶ X.left) (h : u ⁻¹ᵁ W = ⊤),
@@ -558,9 +558,9 @@ theorem chartHom_pow_mul_eq {R : Type} [CommRing R] (X : Over (Sp R)) (hsm : Smo
       rw [Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE]; rfl
     rw [e, ← Scheme.Hom.appLE_comp_appLE u X.hom ⊤ W ⊤ hle h.ge]
     rfl
-  letI : Algebra Γ(Sp R, ⊤) Γ(X.left, W) := b.toAlgebra
-  letI : Algebra Γ(Sp R, ⊤) S := ((chartHom W u₁ h₁).comp b).toAlgebra
-  haveI : Algebra.FiniteType Γ(Sp R, ⊤) Γ(X.left, W) := hft
+  let : Algebra Γ(Sp R, ⊤) Γ(X.left, W) := b.toAlgebra
+  let : Algebra Γ(Sp R, ⊤) S := ((chartHom W u₁ h₁).comp b).toAlgebra
+  have : Algebra.FiniteType Γ(Sp R, ⊤) Γ(X.left, W) := hft
   let χ₁ : Γ(X.left, W) →ₐ[Γ(Sp R, ⊤)] S := { chartHom W u₁ h₁ with commutes' := fun r => rfl }
   let χ₂ : Γ(X.left, W) →ₐ[Γ(Sp R, ⊤)] S :=
     { chartHom W u₂ h₂ with
@@ -1197,9 +1197,9 @@ theorem exists_pair_lift_comb : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀]
         ![spMap (IsLocalization.Away.awayToAwayLeft (P := Localization.Away (a * b)) b a) ≫ eb]
         ![algebraMap R (Localization.Away (a * b)) b ^ N] := by
   intro R R₀ _ _ π hπ hsq X hX g₀ hg₀ a b V hV ea hea hea₀ heaV eb heb heb₀
-  haveI := hX
-  letI : Algebra R Γ(X.left, V) := (strHom X V).toAlgebra
-  haveI : Algebra.Smooth R Γ(X.left, V) := smooth_strHom X hV
+  have := hX
+  let : Algebra R Γ(X.left, V) := (strHom X V).toAlgebra
+  have : Algebra.Smooth R Γ(X.left, V) := smooth_strHom X hV
 
   have hρ : (IsLocalization.Away.awayToAwayRight (S := Localization.Away a) (P := Localization.Away (a * b))
       a b).comp (algebraMap R (Localization.Away a)) = algebraMap R (Localization.Away (a * b)) :=
@@ -1399,7 +1399,7 @@ theorem exists_liftIn_unfolded : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀
     spMap (Localization.awayMap π f) ≫ e = spMap (algebraMap R₀ (Localization.Away (π f))) ≫ g₀ ∧
     e ⁻¹ᵁ V = ⊤ := by
   intro R R₀ _ _ π hπ hnil X hX g₀ hg p
-  haveI := hX
+  have := hX
   have hker : RingHom.ker π ≤ p.asIdeal := fun a ha => by
     obtain ⟨N, hN⟩ := hnil
     have := Ideal.pow_mem_pow ha N

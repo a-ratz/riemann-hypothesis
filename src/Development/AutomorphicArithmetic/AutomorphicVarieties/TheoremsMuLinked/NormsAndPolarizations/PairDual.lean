@@ -87,7 +87,7 @@ theorem UpperTheory.V.Th.Nm.homMu :
         rw [hadd]; rfl }
   have hcomm : ∀ x ∈ commutator G, d x = 0 := by
     intro x hx
-    have := Abelianization.commutator_subset_ker f hx
+    have := Group.Abelianization.commutator_le_ker f hx
     rw [MonoidHom.mem_ker] at this
     exact this
   have hcl : ∀ x ∈ (commutator G).topologicalClosure, d x = 0 := by
@@ -98,12 +98,12 @@ theorem UpperTheory.V.Th.Nm.homMu :
       have hsub : ((commutator G : Subgroup G) : Set G) ⊆
           {y | Ideal.Quotient.mk ((maximalIdeal c.O) ^ N) (d y) = 0} := by
         intro y hy
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         rw [hcomm y hy, map_zero]
       have hx' : x ∈ closure ((commutator G : Subgroup G) : Set G) := by
         rw [← Subgroup.topologicalClosure_coe]; exact hx
       have hfib := closure_minimal hsub hclosed hx'
-      simp only [Set.mem_setOf_eq] at hfib
+      simp only [Set.mem_ofPred_eq] at hfib
       exact Ideal.Quotient.eq_zero_iff_mem.mp hfib
     have hbot := Ideal.iInf_pow_eq_bot_of_isLocalRing (maximalIdeal c.O) (maximalIdeal.isMaximal c.O).ne_top
     have hin : d x ∈ ⨅ i, (maximalIdeal c.O) ^ i := (Submodule.mem_iInf _).mpr hmemN
@@ -418,8 +418,8 @@ private theorem pairOfRep_cont {n : ℕ} {A G : Type} [CommRing A] [Group G] [To
     (ρ : G →* Matrix (Fin n) (Fin n) A) (h : ∀ a b, AdicCont I fun g => ρ g a b) : (GDet.ofRep ρ).IsCont I := by
   intro i N
   have hl : IsLocallyConstant (fun g : G => fun a b => Ideal.Quotient.mk (I ^ N) (ρ g a b)) := by
-    letI : TopologicalSpace (A ⧸ I ^ N) := ⊥
-    haveI : DiscreteTopology (A ⧸ I ^ N) := ⟨rfl⟩
+    let : TopologicalSpace (A ⧸ I ^ N) := ⊥
+    have : DiscreteTopology (A ⧸ I ^ N) := ⟨rfl⟩
     rw [IsLocallyConstant.iff_continuous]
     exact continuous_pi fun a => continuous_pi fun b => (IsLocallyConstant.iff_continuous _).1 (h a b N)
   have key : (fun g => Ideal.Quotient.mk (I ^ N) ((GDet.ofRep ρ).lam i (MonoidAlgebra.single g 1))) =

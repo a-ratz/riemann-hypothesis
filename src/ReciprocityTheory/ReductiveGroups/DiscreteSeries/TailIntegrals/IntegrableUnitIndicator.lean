@@ -290,7 +290,7 @@ lemma psi_le {p q : ι} (hpq : p ≠ q) {k : ℕ} (hk : Fintype.card ι = k + 1)
           ∑ j, (if j = q then 0 else Complex.normSq (x j)) :=
         Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _)
           (fun j _ _ => hnnj j (Finset.mem_univ j))
-      rw [Finset.sum_pair (Ne.symm hip), if_neg hpq, if_neg hiq] at hsub
+      rw [Finset.sum_pair (Ne.symm hip), ite_eq_right hpq, ite_eq_right hiq] at hsub
       exact hsub
     have hw : ‖star (x p) / (tW q x : ℂ)‖ = ‖x p‖ / tW q x := by
       rw [norm_div, norm_star]
@@ -323,7 +323,7 @@ lemma psi_le {p q : ι} (hpq : p ≠ q) {k : ℕ} (hk : Fintype.card ι = k + 1)
     congr 1
     first
     | exact (ofReal_norm_eq_coe_nnnorm _).symm
-    | (rw [ofReal_norm_eq_enorm, enorm_eq_nnnorm])
+    | (rw [ofReal_norm, eNorm_eq_nnNorm])
     | (simp; rfl)
   rw [hP]
   apply ENNReal.ofReal_le_ofReal
@@ -386,9 +386,9 @@ lemma measurableSet_Bset (q : ι) : MeasurableSet (Bset q) := by
     unfold tW
     refine Real.continuous_sqrt.comp (continuous_finsetSum _ fun i _ => ?_)
     by_cases h : i = q
-    · simp only [h, if_true]
+    · simp only [h, ite_true]
       exact continuous_const
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
       exact Complex.continuous_normSq.comp (continuous_apply i)
   have hn : Continuous (fun x : ι → ℂ => ‖x q‖) := continuous_norm.comp (continuous_apply q)
   unfold Bset
@@ -407,7 +407,7 @@ lemma ae_good : ∀ᵐ x : ι → ℂ, ∀ i, (x i).im ≠ 0 ∧ (x i).re ≠ 0 
   have h := volume_bad ι
   convert h using 2
   ext x
-  simp only [Set.mem_setOf_eq, not_forall, not_and_or, ne_eq, not_not]
+  simp only [Set.mem_ofPred_eq, not_forall, not_and_or, ne_eq, not_not]
 
 lemma lint_Bset_lt_top {p q : ι} (hpq : p ≠ q) {k : ℕ} (hk : Fintype.card ι = k + 1) (hk1 : 1 ≤ k)
     {s : ℝ} (hs : 0 ≤ s) (hsk : s < k) : ∫⁻ x in Bset q, PsiF p q s x < ∞ := by

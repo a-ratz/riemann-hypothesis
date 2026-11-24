@@ -163,7 +163,7 @@ theorem algebraMap_letter_injective (hϖ : ϖ ≠ 0) :
 
 theorem flat_of_injective {A B : Type} [CommRing A] [IsDomain A] [IsBezout A] [CommRing B] [IsDomain B]
     (j : A →+* B) (hi : Function.Injective j) : j.Flat := by
-  letI : Algebra A B := j.toAlgebra
+  let : Algebra A B := j.toAlgebra
   change Module.Flat A B
   rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
   rintro x ⟨⟨a, ha⟩, hx⟩
@@ -224,7 +224,7 @@ theorem denominators (hϖ : ϖ ≠ 0) (φ : PowerSeries V →+* LaurentSeries K)
     (hP : algebraMap _ (ArcS Dw K) P = ψ f) :
     ∃ (N : ℕ) (G : MvPolynomial (ArcLt Dw) (PowerSeries V)),
       f * arcιR Dw V ϖ (PowerSeries.C (R := V) ϖ * PowerSeries.X) ^ N = algebraMap _ (ArcSR Dw V ϖ) G := by
-  haveI := isDomain_letter Dw V hϖ
+  have := isDomain_letter Dw V hϖ
   have hinj := algebraMap_letter_injective Dw V hϖ
   have hD : arcDet Dw K ≠ 0 := by
     rw [← map_arcDetR Dw V K φ]
@@ -261,7 +261,7 @@ theorem comp_eq_of_letters (φ : PowerSeries V →+* PowerSeries K) (ψ : ArcSR 
       simp only [RingHom.comp_apply, MvPolynomial.map_X, this]
 
 theorem flat_letter [IsBezout V] (hϖ : ϖ ≠ 0) : ((arcιR Dw V ϖ).comp (PowerSeries.C (R := V))).Flat := by
-  haveI := isDomain_letter Dw V hϖ
+  have := isDomain_letter Dw V hϖ
   refine flat_of_injective _ ?_
   rw [arcιR, RingHom.coe_comp, RingHom.coe_comp]
   exact ((algebraMap_letter_injective Dw V hϖ).comp (MvPolynomial.C_injective _ _)).comp PowerSeries.C_injective

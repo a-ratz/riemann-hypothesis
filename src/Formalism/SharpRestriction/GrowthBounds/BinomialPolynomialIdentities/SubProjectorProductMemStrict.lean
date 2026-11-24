@@ -298,11 +298,11 @@ end main
 theorem restJointDim : RestJointDim := by
   intro K V _ _ _ κ _ _ Λ X _ J lam
   classical
-  haveI : Fintype X := Fintype.ofFinite X
-  haveI hPl : FiniteDimensional K J.Pl := J.span ▸ FiniteDimensional.span_of_finite K (Set.finite_range J.b)
+  have : Fintype X := Fintype.ofFinite X
+  have hPl : FiniteDimensional K J.Pl := J.span ▸ FiniteDimensional.span_of_finite K (Set.finite_range J.b)
   set U := J.Pl ⊓ ⨅ i, J.W i (lam i) with hU
-  haveI : FiniteDimensional K U := Submodule.finiteDimensional_of_le (inf_le_left : U ≤ J.Pl)
-  haveI : FiniteDimensional K (strictJointLower J lam) :=
+  have : FiniteDimensional K U := Submodule.finiteDimensional_of_le (inf_le_left : U ≤ J.Pl)
+  have : FiniteDimensional K (strictJointLower J lam) :=
     Submodule.finiteDimensional_of_le ((strict_joint_lower_le J lam).trans inf_le_left)
   have hl : ∀ i, i ∈ (Finset.univ : Finset κ).toList := fun i => Finset.mem_toList.mpr (Finset.mem_univ i)
   set l := (Finset.univ : Finset κ).toList
@@ -354,7 +354,7 @@ theorem restJointDim : RestJointDim := by
   have hset : {x | ∀ i, J.P x i ∈ lowerLabels J lam i} =
       {x | (∀ i, J.P x i ∈ lowerLabels J lam i) ∧ J.P x ≠ lam} ∪ {x | J.P x = lam} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_union]
+    simp only [Set.mem_ofPred_eq, Set.mem_union]
     constructor
     · intro h
       by_cases hx : J.P x = lam

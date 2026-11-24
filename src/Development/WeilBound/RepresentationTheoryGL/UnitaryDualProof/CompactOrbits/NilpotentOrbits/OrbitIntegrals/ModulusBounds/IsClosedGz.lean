@@ -72,7 +72,7 @@ private theorem exists_uniformizer_pow_mul_valuation_le_one (a : k) : ∃ e : �
   · exact ⟨0, by rw [pow_zero, one_mul]; exact ha⟩
   have ha0 : a ≠ 0 := by
     rintro rfl
-    exact ha (by rw [map_zero]; exact zero_le')
+    exact ha (by rw [map_zero]; exact zero_le)
   have hinv : valuation k a⁻¹ ≤ 1 := by
     rw [map_inv₀]
     exact inv_le_one_of_one_le₀ (le_of_lt (not_le.mp ha))
@@ -198,7 +198,7 @@ theorem exists_unit (m : ℕ) (hm : 1 ≤ m) (x : Matrix (Fin n) (Fin n) k)
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at hπm
     exact Valuation.Integer.not_isUnit_iff_valuation_lt_one.mp hπm
   have hle : ∀ i j, valuation k (x i j) < 1 := fun i j =>
-    lt_of_le_of_lt (hx i j) (pow_lt_one₀ zero_le' hπ1 (by omega))
+    lt_of_le_of_lt (hx i j) (pow_lt_one₀ zero_le hπ1 (by omega))
   let X : Matrix (Fin n) (Fin n) 𝒪[k] := fun i j => ⟨x i j, (hle i j).le⟩
   have hXm : ∀ i j, X i j ∈ 𝓂[k] := fun i j => by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]

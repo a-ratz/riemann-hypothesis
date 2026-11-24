@@ -95,7 +95,7 @@ theorem finrank_fixed_eq_one (π : Representation ℂ G V) (K : Subgroup G) (hc 
       obtain ⟨c, hc₁⟩ := ha
       have : orbitMap π x₀ (r • a) = r • orbitMap π x₀ a := map_smul _ _ _
       exact ⟨r * c, by rw [this, map_smul, hc₁, smul_smul]⟩
-  refine (finrank_eq_one_iff_of_nonzero' (⟨x₀, hx₀⟩ : fixed π K) fun e => h0 (congrArg Subtype.val e)).2 ?_
+  refine (finrank_eq_one_iff_of_ne_zero' (⟨x₀, hx₀⟩ : fixed π K) fun e => h0 (congrArg Subtype.val e)).2 ?_
   rintro ⟨x, hx⟩
   obtain ⟨a, ha⟩ := orbitMap_surjective hπ.2 h0 x
   obtain ⟨c, hc₁⟩ := all a
@@ -182,7 +182,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem isClosed_UL (hU : Unr E) (n : ℕ) (w : Pl E) : IsClosed (UL n w : Set (GLw n w)) := by
   by_cases hw : IsSplitAt w
-  · have h : UL n w = ⊤ := if_pos hw
+  · have h : UL n w = ⊤ := ite_eq_left hw
     rw [h]
     exact isClosed_univ
   · rw [GlobalTheory.CompanionTheory.UnitaryWitt.UL_eq_of_not_split hw]
@@ -195,7 +195,7 @@ theorem coe_KL (n : ℕ) (w : Pl E) :
 
 theorem isOpen_KL (n : ℕ) (w : Pl E) : IsOpen (KL n w : Set (UL n w)) := by
   rw [coe_KL]
-  exact (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w n).1.preimage continuous_subtype_val
+  exact (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w n).1.preimage continuous_subtypeVal
 
 theorem isCompact_KL (hU : Unr E) (n : ℕ) (w : Pl E) : IsCompact (KL n w : Set (UL n w)) := by
   rw [coe_KL]
@@ -204,7 +204,7 @@ theorem isCompact_KL (hU : Unr E) (n : ℕ) (w : Pl E) : IsCompact (KL n w : Set
 
 theorem conv_comm_split {n : ℕ} {w : Pl E} (hw : IsSplitAt w) (f₁ f₂ : UL n w → ℂ)
     (hf₁ : IsBiInv (KL n w) f₁) (hf₂ : IsBiInv (KL n w) f₂) : conv (KL n w) f₁ f₂ = conv (KL n w) f₂ f₁ := by
-  have hT : UL n w = ⊤ := if_pos hw
+  have hT : UL n w = ⊤ := ite_eq_left hw
   have hmem : ∀ x : GLw n w, x ∈ UL n w := fun x => by
     rw [hT]
     trivial

@@ -97,9 +97,9 @@ theorem placeCoordsBasis_apply (p : Σ _ : Fin j, Free.ChooseBasisIndex ℤ (�
     placeCoordsBasis I j p q = if q.1 = p.1 then I.φ q.2 (integralBasis I.E p.2) else 0 := by
   simp [placeCoordsBasis, embeddingBasis, Pi.basis_apply]
   by_cases h : q.1 = p.1
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     simp [Function.uncurry_def, h]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     simp [Function.uncurry_def, Pi.single_eq_of_ne h]
 
 def t8B0 : Basis (Σ _ : Fin j, Free.ChooseBasisIndex ℤ (𝓞 I.E)) ℝ (EuclideanSpace ℝ (Fin (2 * I.f * j))) :=
@@ -109,7 +109,7 @@ def t8K : ℝ := volume.real (ZSpan.fundamentalDomain (t8B0 I j))
 
 theorem integral_covolume_pos : 0 < t8K I j := by
   unfold t8K
-  haveI : VAddInvariantMeasure (Submodule.span ℤ (Set.range (t8B0 I j)))
+  have : VAddInvariantMeasure (Submodule.span ℤ (Set.range (t8B0 I j)))
       (EuclideanSpace ℝ (Fin (2 * I.f * j))) volume :=
     ⟨fun c s _ => measure_preimage_add volume (c : EuclideanSpace ℝ (Fin (2 * I.f * j))) s⟩
   refine ENNReal.toReal_pos ?_ ?_

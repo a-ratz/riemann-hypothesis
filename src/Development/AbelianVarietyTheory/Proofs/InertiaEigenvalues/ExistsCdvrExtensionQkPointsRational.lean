@@ -53,7 +53,7 @@ open GlobalTheory.ArcPull GlobalTheory.TorusExt GlobalTheory.QkNumberField
 
 theorem exists_ringHom_extend {K L F : Type} [Field K] [Field L] [Field F] [Algebra K L] [Algebra.IsAlgebraic K L]
     [IsAlgClosed F] (M : IntermediateField K L) (f : M →+* F) : ∃ σ : L →+* F, σ.comp M.val.toRingHom = f := by
-  letI : Algebra M F := f.toAlgebra
+  let : Algebra M F := f.toAlgebra
   have : Algebra.IsAlgebraic M L := Algebra.IsAlgebraic.tower_top (K := K) M
   have : Module.IsTorsionFree M F := DivisionSemiring.to_moduleIsTorsionFree
   have : Module.IsTorsionFree M L := DivisionSemiring.to_moduleIsTorsionFree
@@ -121,8 +121,8 @@ theorem exists_rational_of_finite (hL : Laws) {R R' : Type} [CommRing R] [IsDoma
     {F : Type} [Field F] [IsAlgClosed F] [Algebra (FractionRing R') F] (q : QkPt D' F k) :
     ∃ p : QkPt D' (FractionRing R') k, QkExt (algebraMap (FractionRing R') F) p q := by
   have hG := hL.globalFns
-  letI : Algebra (FractionRing R) (FractionRing R') := (fracMap hφ).toAlgebra
-  letI : Algebra (FractionRing R) F := ((algebraMap (FractionRing R') F).comp (fracMap hφ)).toAlgebra
+  let : Algebra (FractionRing R) (FractionRing R') := (fracMap hφ).toAlgebra
+  let : Algebra (FractionRing R) F := ((algebraMap (FractionRing R') F).comp (fracMap hφ)).toAlgebra
   have hK : Compat φ (FractionRing R') := fracMap_algebraMap hφ
   have hF : Compat φ F := fun r => congrArg (algebraMap (FractionRing R') F) (fracMap_algebraMap hφ r)
   obtain ⟨q₀, rfl⟩ := pullQk_surjective hD hG hF hB hB' q

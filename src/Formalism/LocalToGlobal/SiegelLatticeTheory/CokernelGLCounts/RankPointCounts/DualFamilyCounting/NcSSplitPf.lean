@@ -237,7 +237,7 @@ theorem positivity_test_holds : PosTest := by
       exact measure_iUnion_null fun m => nonpos_iff_eq_zero.1 (hcon m)
     exact hUpos.ne' this
   set K : Set V := Subtype.val '' compactCovering U m
-  have hK : IsCompact K := (isCompact_compactCovering U m).image continuous_subtype_val
+  have hK : IsCompact K := (isCompact_compactCovering U m).image continuous_subtypeVal
   have hKU : K ⊆ U := by rintro _ ⟨y, _, rfl⟩; exact y.2
   obtain ⟨f, hf1, hfc, hfU, hf01⟩ := exists_continuousMap_one_of_isCompact_subset_isOpen hK hUo hKU
   have hint : Integrable f (fib t) :=
@@ -337,14 +337,14 @@ theorem box_volume_holds : BoxVol := by
       intro v
       obtain ⟨μv, hμv⟩ := hA2.1
       have hex : ∃ μ, SdW F E σ n J (Fv F v) (psiV F ψ v) a μ := ⟨μv v, hμv v⟩
-      simp only [dX, dif_pos hex]
+      simp only [dX, dite_eq_left hex]
       exact hex.choose_spec
     have hA3 := hA2.2 (fun v => dX σ J ψ v a) hdX
     have hdT : ∀ v, SdHerm F E σ (Fv F v) (psiV F ψ v) a (dT σ ψ v a) := by
       intro v
       obtain ⟨νv, hνv⟩ := hA3.1
       have hex : ∃ ν, SdHerm F E σ (Fv F v) (psiV F ψ v) a ν := ⟨νv v, hνv v⟩
-      simp only [dT, dif_pos hex]
+      simp only [dT, dite_eq_left hex]
       exact hex.choose_spec
     have hA4 := hA3.2 (fun v => dT σ ψ v a) hdT
     have hA5 := hA4.2 fibInf hfib
@@ -352,7 +352,7 @@ theorem box_volume_holds : BoxVol := by
       intro v
       obtain ⟨fibV, hfibV⟩ := hA5.1
       have hex : ∃ fib, IsOm σ J ψ v a fib := ⟨fibV v, hfibV v⟩
-      simp only [omFam, dif_pos hex]
+      simp only [omFam, dite_eq_left hex]
       exact hex.choose_spec
     have hQ := hA5.2 (fun v => omFam σ J ψ v a) hOmF
 
@@ -399,7 +399,7 @@ theorem box_volume_holds : BoxVol := by
       intro v
       have hom : omAt σ J ψ v ((gramE σ J X0).map (inclR (Fv F v))) =
           omFam σ J ψ v a (hermOf (Fv F v) σ (gramE σ J X0) hT) := by
-        simp only [omAt, dif_pos (map_mem_HermR (Fv F v) σ (gramE σ J X0) hT)]
+        simp only [omAt, dite_eq_left (map_mem_HermR (Fv F v) σ (gramE σ J X0) hT)]
         rfl
       have hnull : omFam σ J ψ v a (hermOf (Fv F v) σ (gramE σ J X0) hT)
           {X | gramR (Fv F v) σ J X = (gramE σ J X0).map (inclR (Fv F v))}ᶜ = 0 :=
@@ -1254,7 +1254,7 @@ theorem local_witt_theorem : Formalism.L2.SG.Pf.NcS.LocSBPf.WittLocT := by
   have hXind : LinearIndependent (Fv F v ⊗[F] E) X :=
     PI.VolStabS.linIndep_of_isUnit_det (Fv F v) σ J X (hX ▸ hunit)
   by_cases hK : IsField (Fv F v ⊗[F] E)
-  · letI : Field (Fv F v ⊗[F] E) := hK.toField
+  · let : Field (Fv F v ⊗[F] E) := hK.toField
     have hσ : ∀ x, σ (σ x) = x := PI.VolStabS.sigma_invol_cm σ hCM
     have hinv : ∀ x, sigR (Fv F v) σ (sigR (Fv F v) σ x) = x := by
       intro x
@@ -1262,8 +1262,8 @@ theorem local_witt_theorem : Formalism.L2.SG.Pf.NcS.LocSBPf.WittLocT := by
       | zero => simp
       | tmul r t => simp [sigR, hσ]
       | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
-    letI : StarRing (Fv F v ⊗[F] E) := PI.VolStabS.starOfInv (sigR (Fv F v) σ) hinv
-    haveI : CharZero (Fv F v ⊗[F] E) :=
+    let : StarRing (Fv F v ⊗[F] E) := PI.VolStabS.starOfInv (sigR (Fv F v) σ) hinv
+    have : CharZero (Fv F v ⊗[F] E) :=
       charZero_of_injective_algebraMap (algebraMap F (Fv F v ⊗[F] E)).injective
     have hs : starRingEnd (Fv F v ⊗[F] E) = sigR (Fv F v) σ := RingHom.ext fun _ => rfl
     have hJ' : ∀ i j, starRingEnd (Fv F v ⊗[F] E) (JR (F := F) (Fv F v) J j i) = JR (F := F) (Fv F v) J i j := by

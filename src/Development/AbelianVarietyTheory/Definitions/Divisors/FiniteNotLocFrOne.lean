@@ -414,7 +414,7 @@ theorem frChg_of_integral (T : CDVR) (io : c.F →+* T.Fr) : letI := io.toAlgebr
     ∀ y y' : FrPt Xo c T.Fr, Integral T io y → Integral T io y' → y'.x = y.x →
       ∃ (A : Mats Dw T.V) (u : T.Vˣ), (∀ τ, IsUnit (A τ).det) ∧
         FrChg (fun τ => (A τ).map (algebraMap T.V T.Fr)) (algebraMap T.V T.Fr u) y y' := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro y y' hy hy' hx
   have hA := allTest_of_secBaseChange GlobalTheory.abelianSchemeLaws_all.1.secBaseChange E H Dw l Xo c T.Fr
   obtain ⟨h1, h2⟩ := intLatU_holds E H Dw l Xo c T io ⟨y, hA y, hy⟩ ⟨y', hA y', hy'⟩ hx
@@ -436,7 +436,7 @@ theorem exists_integral (hr : 1 ≤ Dw.p + Dw.q) (hg : ∀ p : ℕ, p.Prime → 
   obtain ⟨O, _, β, Y, -, hY, hb⟩ :=
     modelAtSt_of_good GlobalTheory.partI_closed GlobalTheory.Moduli.moduli_scheme_exists E H Dw l Xo c hr hg w
   obtain ⟨b₀, hb₀⟩ := hb T io e ho
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨z₀, hz₀⟩ :=
     GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c c.F T.Fr (Algebra.ofId c.F T.Fr) y₀
   obtain ⟨y₁, t, hbor⟩ := intFr_of_model (GlobalTheory.intFrames_of_laws hB hT E H Dw l Xo c) T io Y hY b₀ hb₀ z₀
@@ -447,7 +447,7 @@ theorem exists_locFr (hr : 1 ≤ Dw.p + Dw.q) (hg : ∀ p : ℕ, p.Prime → l.G
   have hB := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
   obtain ⟨T₀, io₀, ho₀, -, hini⟩ := GlobalTheory.PlaceCompletion.exists_initial_completion c.F w
   have hD := denseIn_of_initial w T₀ io₀ hini
-  letI := io₀.toAlgebra
+  let := io₀.toAlgebra
   obtain ⟨y₁, z₀, hy₁, hz₀, hx₁⟩ := exists_integral hr hg y₀ w T₀ io₀ 1 ho₀
   obtain ⟨g₁, a₁, hg₁, hc₁⟩ := (frChg_exists_unique E H Dw l Xo c T₀.Fr z₀ y₁).1 hx₁
   choose B Y₁ hB0 hY₁ hBY using fun τ => hD.matrix (g₁ τ)ᵀ (by rw [Matrix.det_transpose]; exact (hg₁ τ).ne_zero)
@@ -458,7 +458,7 @@ theorem exists_locFr (hr : 1 ≤ Dw.p + Dw.q) (hg : ∀ p : ℕ, p.Prime → l.G
   refine ⟨a default default, B, ha, hB0, fun T io e ho => ?_⟩
   obtain ⟨φ, χ, -, hio, hχ, -⟩ := hini T io e ho
   subst hio
-  letI := (χ.comp io₀).toAlgebra
+  let := (χ.comp io₀).toAlgebra
   intro y z hy hz hx
   have hχ' : ∀ s, χ (algebraMap T₀.V T₀.Fr s) = algebraMap T.V T.Fr (φ s) := fun s => RingHom.congr_fun hχ s
   let ψ : T₀.Fr →ₐ[c.F] T.Fr := { χ with commutes' := fun _ => rfl }
@@ -501,7 +501,7 @@ theorem finite_not_locFr_one (hq : Dw.q = 0) (hp : 1 ≤ Dw.p) (hg : ∀ p : ℕ
   by_contra hn
   simp only [Set.mem_iUnion, Function.mem_support, not_exists, not_not] at hn
   refine hw ⟨one_ne_zero, fun τ => by simp, fun T io e ho => ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro y z hy hz hx
   have hz' := h T io (fun s hs => by
     have h0 : vLa w s = 0 := by exact_mod_cast hn s hs

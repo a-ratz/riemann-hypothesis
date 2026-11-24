@@ -53,10 +53,10 @@ open Formalism.MainNotions.TaylorLogMetric (lamOf)
 theorem extEmb_equiv_comp {R K L : Type} [Field R] [Field K] [Field L] [IsAlgClosed K]
     [IsAlgClosed L] (f : R →+* K) (g : R →+* L) (hR : #R ≤ ℵ₀) (hK : ℵ₀ < #K) (hKL : #K = #L) :
     ∃ σ : K ≃+* L, ∀ r : R, σ (f r) = g r := by
-  letI : Algebra R K := f.toAlgebra
-  letI : Algebra R L := g.toAlgebra
-  haveI : FaithfulSMul R K := (faithfulSMul_iff_algebraMap_injective R K).2 f.injective
-  haveI : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective R L).2 g.injective
+  let : Algebra R K := f.toAlgebra
+  let : Algebra R L := g.toAlgebra
+  have : FaithfulSMul R K := (faithfulSMul_iff_algebraMap_injective R K).2 f.injective
+  have : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective R L).2 g.injective
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis R K
   obtain ⟨t, ht⟩ := exists_isTranscendenceBasis R L
   have h1 := IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt' _ hs hR hK
@@ -72,7 +72,7 @@ theorem extEmb_equiv_comp {R K L : Type} [Field R] [Field K] [Field L] [IsAlgClo
 
 theorem extendEmb_holds : ExtendEmb := by
   intro M hM ρ
-  haveI := hM
+  have := hM
   have hR : Cardinal.mk M ≤ Cardinal.aleph0 :=
     (Algebra.IsAlgebraic.cardinalMk_le_max ℚ M).trans (max_le Cardinal.mk_le_aleph0 le_rfl)
   obtain ⟨σ, hσ⟩ := extEmb_equiv_comp (M.val.toRingHom : M →+* ℂ) (ρ.toRingHom : M →+* ℂ) hR

@@ -645,7 +645,7 @@ theorem globStep_holds (hK : X.LevelSubgroupCharacter) : GlobalCondition X u hK 
   have hδiso : δ ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := matE_isomC X M hM
   clear_value δ
   obtain ⟨Λ, hΛ, hΛlat⟩ := latOfLattice_holds X u h
-  haveI := hΛlat
+  have := hΛlat
   have hκ' : (X.xu u)⁻¹ * ((h : X.B.I.Gf)⁻¹ * ((iotaF X u γ : Hfin X u) : X.B.I.Gf) * h) * X.xu u ∈ X.K2 := by
     simpa [Ku] using hγ
   have hκ : (X.xu u)⁻¹ * ((h : X.B.I.Gf)⁻¹ * (γ : X.B.I.GA).2 * h) * X.xu u ∈ X.K2 := hκ'
@@ -726,16 +726,16 @@ theorem globStep_holds (hK : X.LevelSubgroupCharacter) : GlobalCondition X u hK 
 
   have hlat := qLat_isLattice Λ W ⊥
   have hfull : Submodule.IsFullLattice D.host.E (qLat Λ W ⊥) := by
-    letI := hlat
+    let := hlat
     refine ⟨?_⟩
     rw [eq_top_iff]
     intro q _
     induction q using Submodule.Quotient.induction_on with | H w => ?_
     let L := PIW.AdelClassFin.abelian₂ X.B.I ((h : X.B.I.Gf) * X.xu u)
-    letI : Submodule.IsLattice X.B.I.E L := Submodule.IsLattice.of_fg X.B.I.E
+    let : Submodule.IsLattice X.B.I.E L := Submodule.IsLattice.of_fg X.B.I.E
       (PIW.AdelClassFin.mLat_of PIW.AdelClassFin.lattice_intersection'
         PIW.AdelClassFin.lattice_denominator X.B.I ((h : X.B.I.Gf) * X.xu u)).1
-    letI : Submodule.IsFullLattice X.B.I.E L :=
+    let : Submodule.IsFullLattice X.B.I.E L :=
       ⟨(PIW.AdelClassFin.mLat_of PIW.AdelClassFin.lattice_intersection'
         PIW.AdelClassFin.lattice_denominator X.B.I ((h : X.B.I.Gf) * X.xu u)).2⟩
     obtain ⟨t, ht, htw⟩ := Formalism.L2.SG.Pf.exists_smul_mem L (X.crd w.val)

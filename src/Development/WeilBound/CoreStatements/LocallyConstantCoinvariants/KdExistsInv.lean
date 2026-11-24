@@ -83,7 +83,7 @@ variable [TopologicalSpace k] [ValuativeRel k] [IsNonarchimedeanLocalField k]
 
 theorem schr_mem [Invertible (2 : k)] {ψ : AddChar k ℂ} (hψ : Continuous ψ) {κ : Type} [Fintype κ] (w : (κ → k) × (κ → k))
     {φ : (κ → k) → ℂ} (h : φ ∈ SB (κ → k)) : schr ψ w φ ∈ SB (κ → k) := by
-  haveI := nonarch_field k
+  have := nonarch_field k
   have hl := GlobalTheory.WeilM.isLocallyConstant_addChar ψ hψ
   refine ⟨(hl.comp_continuous (by fun_prop)).mul (h.1.comp_continuous (by fun_prop)), ?_⟩
   exact (h.2.comp_homeomorph (Homeomorph.addRight w.1)).mul_left

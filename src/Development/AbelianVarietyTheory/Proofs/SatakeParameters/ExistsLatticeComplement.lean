@@ -348,10 +348,10 @@ theorem _root_.GlobalTheory.LatticeComplement.exists_lattice_complement : ∀ (�
         simp [τ, Matrix.trace, Fintype.sum_sum_type]
       rw [e1, e2, Matrix.trace_eq_neg_charpoly_nextCoeff,
         Matrix.trace_eq_neg_charpoly_nextCoeff ((ρ₀ g : GL (Fin r) L) : Matrix (Fin r) (Fin r) L), h1]
-      simp only [χK, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, RingHom.comp_apply,
+      simp only [χK, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, RingHom.comp_apply,
         Finset.sum_neg_distrib]
       ring
-    haveI : CharZero L := (RingHom.charZero_iff f.injective).mp inferInstance
+    have : CharZero L := (RingHom.charZero_iff f.injective).mp inferInstance
     obtain ⟨v, hv0, hv⟩ := _root_.GlobalTheory.exists_eigenvector_of_trace_eq_add_character K L Γ
       (Fin (r + (t + 1)) → K) (Fin r ⊕ Fin t) f
       (_root_.GlobalTheory.TraceConj.colRep (_root_.Formalism.MainNotions.N.mapRep (algebraMap O K) ρ)) τ χK

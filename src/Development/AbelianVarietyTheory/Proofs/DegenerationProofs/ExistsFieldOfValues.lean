@@ -73,7 +73,7 @@ theorem residue_embedding_unique {X : Scheme.{0}} {Ω : CommRingCat.{0}} [Nonemp
 theorem essFiniteType_residueField_of_locallyOfFiniteType {X : Scheme.{0}} {R : CommRingCat.{0}}
     (s : X ⟶ Spec R) [LocallyOfFiniteType s] (p : X) (ψ : R ⟶ X.residueField p)
     (h : Spec.map ψ = X.fromSpecResidueField p ≫ s) : ψ.hom.EssFiniteType := by
-  haveI : (s p).asIdeal.IsPrime := PrimeSpectrum.isPrime _
+  have : (s p).asIdeal.IsPrime := PrimeSpectrum.isPrime _
   have e : ψ = CommRingCat.ofHom (algebraMap R (s p).asIdeal.ResidueField) ≫
       (Scheme.Spec.residueFieldIso R (s p)).inv ≫ s.residueFieldMap p := by
     rw [← Spec.map_inj, h, Spec.map_comp, Spec.map_comp, Category.assoc,
@@ -119,13 +119,13 @@ theorem exists_fieldOfValues : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (x : 
     obtain ⟨ψ, hψ⟩ := Spec.map_surjective (X.fromSpecResidueField p ≫ s)
     have hess := essFiniteType_residueField_of_locallyOfFiniteType s p ψ hψ
     rw [Category.assoc, ← hψ, ← Spec.map_comp, Spec.map_inj] at hxs
-    letI : Algebra K (X.residueField p) := ψ.hom.toAlgebra
+    let : Algebra K (X.residueField p) := ψ.hom.toAlgebra
     let fa : X.residueField p →ₐ[K] Ω :=
       { f with commutes' := fun c => congrArg (fun g => g.hom c) hxs }
-    haveI : Algebra.EssFiniteType K (X.residueField p) := hess
-    haveI : Algebra.IsAlgebraic K (X.residueField p) :=
+    have : Algebra.EssFiniteType K (X.residueField p) := hess
+    have : Algebra.IsAlgebraic K (X.residueField p) :=
       Algebra.IsAlgebraic.of_injective fa f.injective
-    haveI : Module.Finite K (X.residueField p) := Algebra.finite_of_essFiniteType_of_isAlgebraic
+    have : Module.Finite K (X.residueField p) := Algebra.finite_of_essFiniteType_of_isAlgebraic
     refine ⟨fa.fieldRange, ?_, rfl⟩
     exact Module.Finite.equiv (AlgEquiv.ofInjectiveField fa).toLinearEquiv
 

@@ -112,13 +112,13 @@ theorem locW_one_tmul (G : HTGroup p) (w : Fin G.m) (c : G.C) :
 
 theorem linInd (G : HTGroup p) (w : Fin G.m) {ι : Type} (e : ι → G.C) (he : LinearIndependent G.F e) :
     LinearIndependent (G.Fw w) (fun l => G.rho w (e l)) := by
-  letI : Algebra G.F (G.Fw w) := (G.embW w).toAlgebra
+  let : Algebra G.F (G.Fw w) := (G.embW w).toAlgebra
   have hg : ∀ a, G.rho w (algebraMap G.F G.C a) = algebraMap G.F (Matrix (Fin G.n) (Fin G.n) (G.Fw w)) a :=
     fun a => by rw [G.rho_F, Matrix.algebraMap_eq_diagonal]; rfl
   let g : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) (G.Fw w) := { G.rho w with commutes' := hg }
   let L : G.Fw w ⊗[G.F] G.C →ₐ[G.Fw w] Matrix (Fin G.n) (Fin G.n) (G.Fw w) :=
     Algebra.TensorProduct.lift (Algebra.ofId (G.Fw w) _) g (fun r _ => Algebra.commute_algebraMap_left r _)
-  haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
   have hinj : Function.Injective L :=
     (IsSimpleRing.injective_ringHom_or_subsingleton_codomain L.toRingHom).resolve_right (not_subsingleton _)
   have hL : ∀ x : G.C, L ((1 : G.Fw w) ⊗ₜ x) = G.rho w x := fun x => by

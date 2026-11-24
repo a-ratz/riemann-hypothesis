@@ -76,7 +76,7 @@ theorem exists_section {R K : Type} [CommRing R] [IsDomain R] [IsIntegrallyClose
     [IsFractionRing R K] {W : Scheme.{0}} (q : W ⟶ Spec (CommRingCat.of R)) [IsFinite q]
     (y : Spec (CommRingCat.of K) ⟶ W) (h : y ≫ q = Spec.map (CommRingCat.ofHom (algebraMap R K))) :
     ∃ s : Spec (CommRingCat.of R) ⟶ W, Spec.map (CommRingCat.ofHom (algebraMap R K)) ≫ s = y ∧ s ≫ q = 𝟙 _ := by
-  haveI : IsAffine W := isAffine_of_isAffineHom q
+  have : IsAffine W := isAffine_of_isAffineHom q
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (W.isoSpec.inv ≫ q)
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (y ≫ W.isoSpec.hom)
   have hfin : IsFinite (Spec.map φ) := by rw [hφ]; infer_instance

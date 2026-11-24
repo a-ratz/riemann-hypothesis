@@ -56,7 +56,7 @@ namespace Formalism.L2.SG.Pf.LatEx
 
 theorem splitDiff_holds : SplitDiff := by
   intro F E _ _ _ _ _ p P hp hPm hpP hpP2 h
-  haveI : P.IsPrime := hPm.isPrime
+  have : P.IsPrime := hPm.isPrime
   have hDE : differentIdeal ℤ (𝓞 E) ≤ P := by
     rw [differentIdeal_eq_differentIdeal_mul_differentIdeal ℤ (𝓞 F) (𝓞 E)]
     exact le_trans Ideal.mul_le_right h
@@ -71,8 +71,8 @@ theorem splitDiff_holds : SplitDiff := by
     intro h0
     rw [h0, Ideal.mem_bot] at hpu
     exact hp.ne_zero (by exact_mod_cast hpu)
-  haveI : P.LiesOver (P.under ℤ) := ⟨rfl⟩
-  rw [← Ideal.ramificationIdx_eq_ramificationIdx' (P.under ℤ) P hne]
+  have : P.LiesOver (P.under ℤ) := ⟨rfl⟩
+  rw [← Ideal.ramificationIdx'_eq_ramificationIdx (P.under ℤ) P hne]
   apply Ideal.ramificationIdx'_spec
   · rw [pow_one]
     exact Ideal.map_comap_le

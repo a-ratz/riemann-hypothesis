@@ -122,7 +122,7 @@ theorem exists_mul_stalkSpecializes {X : Scheme.{0}} {x y : X} (h : x ⤳ y)
     ∃ a, a ∉ P ∧ ∃ c, (X.presheaf.stalkSpecializes h).hom a * b = (X.presheaf.stalkSpecializes h).hom c := by
   obtain ⟨U, hU, hyU, -⟩ := exists_isAffineOpen_mem_and_subset (x := y) (U := ⊤) trivial
   have hxU : x ∈ U := h.mem_open U.isOpen hyU
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨x, hxU⟩ : U)
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨x, hxU⟩ : U)
   have loc := hU.isLocalization_stalk ⟨x, hxU⟩
   obtain ⟨⟨r, t⟩, ht⟩ := IsLocalization.surj (hU.primeIdealOf ⟨x, hxU⟩).asIdeal.primeCompl b
   have hg : ∀ r : Γ(X, U), (X.presheaf.stalkSpecializes h).hom ((X.presheaf.germ U y hyU).hom r) =
@@ -163,7 +163,7 @@ theorem exists_generisation_of_height_eq_one : ∀ (X : Scheme.{0}) (Ω : Type) 
   let q : Cpt ξ := ⟨X.fromSpecStalk p.1 P', hgq⟩
   have hs' : q.1 ⤳ p.1 := hs
   obtain ⟨hdom, hic⟩ := (_root_.GlobalTheory.isNormalScheme_iff X).1 hnorm q.1
-  haveI := hN
+  have := hN
   let f : X.presheaf.stalk p.1 →+* X.presheaf.stalk q.1 := (X.presheaf.stalkSpecializes hs').hom
   have hcomap : (IsLocalRing.maximalIdeal (X.presheaf.stalk q.1)).comap f = P'.asIdeal :=
     comap_maximalIdeal_stalkSpecializes hs' P' rfl
@@ -176,8 +176,8 @@ theorem exists_generisation_of_height_eq_one : ∀ (X : Scheme.{0}) (Ω : Type) 
   have hfrac : ∀ b, ∃ a, a ∉ P'.asIdeal ∧ ∃ c, f a * b = f c :=
     exists_mul_stalkSpecializes hs' P'.asIdeal hcomap
   have hdim : ringKrullDim (X.presheaf.stalk q.1) = 1 := by
-    letI : Algebra (X.presheaf.stalk p.1) (X.presheaf.stalk q.1) := f.toAlgebra
-    haveI : IsLocalization.AtPrime (X.presheaf.stalk q.1) P'.asIdeal :=
+    let : Algebra (X.presheaf.stalk p.1) (X.presheaf.stalk q.1) := f.toAlgebra
+    have : IsLocalization.AtPrime (X.presheaf.stalk q.1) P'.asIdeal :=
       { map_units := fun s => hunit s.1 s.2
         surj := fun b => by
           obtain ⟨a, ha, c, hc⟩ := hfrac b
@@ -416,7 +416,7 @@ theorem exists_germ_frac {X : Scheme.{0}} {Ω : Type} [Field Ω] (ξ : Sp Ω ⟶
   obtain ⟨U, hU, hyU, -⟩ := exists_isAffineOpen_mem_and_subset (X := X) (x := y) (U := ⊤) trivial
   have hzU : ξ (IsLocalRing.closedPoint Ω) ∈ U := hs.mem_open U.isOpen hyU
   let z : U := ⟨_, hzU⟩
-  letI := X.presheaf.algebra_section_stalk z
+  let := X.presheaf.algebra_section_stalk z
   have hl := hU.isLocalization_stalk z
   obtain ⟨s, rfl⟩ := hb.2 a
   obtain ⟨⟨f, g⟩, e⟩ := IsLocalization.surj (S := X.presheaf.stalk z.1)
@@ -476,8 +476,8 @@ theorem spMap_genMap_comp (p : Cpt ξ) : spMap (genMap ξ p) ≫ X.fromSpecStalk
 theorem isFractionRing_genMap (h : IsCptGen ξ) (p : Cpt ξ) :
     letI := (genMap ξ p).toAlgebra
     IsFractionRing (X.presheaf.stalk p.1) Ω := by
-  letI := (genMap ξ p).toAlgebra
-  haveI : FaithfulSMul (X.presheaf.stalk p.1) Ω :=
+  let := (genMap ξ p).toAlgebra
+  have : FaithfulSMul (X.presheaf.stalk p.1) Ω :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (h.inj p)
   refine IsFractionRing.of_field _ _ fun z => ?_
   obtain ⟨⟨_, a, rfl⟩, ⟨_, b, rfl⟩, e⟩ := RegAtRing.exists_div h p z
@@ -533,8 +533,8 @@ theorem tan_move_of_dvr [IsDomain R] [IsDiscreteValuationRing R]
     ∃ v' : epsAt x ⟶ G', IsTanAt G' x v' ∧
       (M'.pt e).left = Spec.map (CommRingCat.ofHom (dualMap k)) ≫ v'.left := by
   subst hx
-  letI := k.toAlgebra
-  haveI : IsFractionRing R Ω := hk
+  let := k.toAlgebra
+  have : IsFractionRing R Ω := hk
   obtain ⟨G₀, _, ψ, ψ', κ, hψ, hψ', hκ, e₁, e₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.semiAbelian_commonModel R Ω X X x x G G' GΩ φ φ' hG hG' hφ hφ'
   exact tangent_transport_dvr hψ hψ' hκ.1.w e₁ e₂ M M' e tie x (Category.id_comp x) v hv hve
 
@@ -598,7 +598,7 @@ theorem lat_fin (h : IsCptGen ξ) (G : Over X) [GrpObj G] [IsCommMonObj G] [Smoo
   obtain ⟨Ep, i1, i2, Mp, j, hb, hj⟩ := exists_model h G M p
   have hr := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.lat_eq_range X Ω ξ h G E M p Ep Mp j hj
   obtain ⟨hf, hp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective X G (regAt ξ p) (regPt h p) Ep Mp
-  haveI := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.isFractionRing_regAt X Ω ξ h p
+  have := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.isFractionRing_regAt X Ω ξ h p
   have hl : IsLocalizedModule (nonZeroDivisors (regAt ξ p)) j :=
     (isLocalizedModule_iff_isBaseChange (nonZeroDivisors (regAt ξ p)) Ω j).mpr hb
   have hinj : Function.Injective j := by
@@ -626,9 +626,9 @@ theorem lat_gen (h : IsCptGen ξ) (G : Over X) [GrpObj G] [IsCommMonObj G] [Smoo
     [AddCommGroup E] [Module Ω E] (M : LieModel G ξ E) {p q : Cpt ξ} (hs : q.1 ⤳ p.1) :
     M.lat q = Submodule.span (regAt ξ q) (M.lat p : Set E) := by
   obtain ⟨Eq, i1, i2, Mq, jq, hbq, hjq⟩ := exists_model h G M q
-  letI : Algebra (regAt ξ p) (regAt ξ q) := (regIncl hs).toAlgebra
-  letI : Module (regAt ξ p) Eq := Module.compHom Eq (regIncl hs)
-  haveI : IsScalarTower (regAt ξ p) (regAt ξ q) Eq := ⟨fun a b c => by
+  let : Algebra (regAt ξ p) (regAt ξ q) := (regIncl hs).toAlgebra
+  let : Module (regAt ξ p) Eq := Module.compHom Eq (regIncl hs)
+  have : IsScalarTower (regAt ξ p) (regAt ξ q) Eq := ⟨fun a b c => by
     change (regIncl hs a * b) • c = regIncl hs a • (b • c)
     rw [mul_smul]⟩
   obtain ⟨Ep, i3, i4, Mp, j, hb, hj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.exists_isBaseChange X G (regAt ξ p) (regAt ξ q) (regPt h p) Eq
@@ -701,17 +701,17 @@ theorem mem_localizedIn_iff (h : IsCptGen ξ) (G : Over X) [GrpObj G] [IsCommMon
 theorem lat_eq_of_normal : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X), IsCptGen ξ → ∀ (G G' : Over X) [GrpObj G] [GrpObj G'] (GΩ : Over (Sp Ω)) [GrpObj GΩ] (φ : GΩ.left ⟶ G.left) (φ' : GΩ.left ⟶ G'.left), IsSemiAbelian G → IsSemiAbelian G' → IsGrpPullback GΩ G ξ φ → IsGrpPullback GΩ G' ξ φ' → ∀ (E : Type) [AddCommGroup E] [Module Ω E] (M : LieModel G ξ E) (M' : LieModel G' ξ E), (∀ e, ∃ v : epsAt (𝟙 (Sp Ω)) ⟶ GΩ, v.left ≫ φ = (M.pt e).left ∧ v.left ≫ φ' = (M'.pt e).left) → IsLocallyNoetherian X → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X → M.lat = M'.lat := by
   intro X Ω _ ξ hξ G G' _ _ GΩ _ φ φ' hS hS' hP hP' E _ _ M M' hv hN hnorm
   funext p
-  haveI := hS.comm
-  haveI := hS.smooth
-  haveI := hS'.comm
-  haveI := hS'.smooth
-  haveI := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.isFractionRing_regAt X Ω ξ hξ p
+  have := hS.comm
+  have := hS.smooth
+  have := hS'.comm
+  have := hS'.smooth
+  have := _root_.GlobalTheory.CompanionTheory.Ar.LieStalk.isFractionRing_regAt X Ω ξ hξ p
   obtain ⟨hdom, hic⟩ := hnorm p.1
-  haveI : IsDomain (regAt ξ p) := inferInstance
-  haveI : IsNoetherianRing (X.presheaf.stalk p.1) := inferInstance
-  haveI : IsNoetherianRing (regAt ξ p) := isNoetherianRing_of_ringEquiv _ (regIso hξ p)
-  haveI : IsIntegrallyClosed (regAt ξ p) := IsIntegrallyClosed.of_equiv (regIso hξ p)
-  haveI : FiniteDimensional Ω E := (_root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective X G Ω ξ E M).1
+  have : IsDomain (regAt ξ p) := inferInstance
+  have : IsNoetherianRing (X.presheaf.stalk p.1) := inferInstance
+  have : IsNoetherianRing (regAt ξ p) := isNoetherianRing_of_ringEquiv _ (regIso hξ p)
+  have : IsIntegrallyClosed (regAt ξ p) := IsIntegrallyClosed.of_equiv (regIso hξ p)
+  have : FiniteDimensional Ω E := (_root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective X G Ω ξ E M).1
   obtain ⟨f1, p1, s1⟩ := lat_fin hξ G M p
   obtain ⟨f2, p2, s2⟩ := lat_fin hξ G' M' p
   refine GroundTheory.Heights₂.Heights.Model.LatticesAgree.proof GroundTheory.Heights₂.Heights.Model.HeightOneIntersection.proof (regAt ξ p) Ω E (M.lat p) (M'.lat p) f1 p1 f2 p2 s1 s2 ?_

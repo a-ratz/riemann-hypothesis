@@ -98,7 +98,7 @@ theorem ratio_algebraic (hTR : GlobalTheory.IndefiniteRowSideFullHecke.ToricSymb
     (i j : Fin D.R.m) (t : T) (s : ℕ) (hs1 : 1 ≤ s) (hs2 : s ≤ bigN D + 1) (Λ Λ₀ : ℂ → ℂ)
     (hΛ : IsHeckeL (nuH G t i j) Λ) (hΛ₀ : IsHeckeL (nuH G μ₀ i j) Λ₀) :
     IsAlgebraic ℚ (Λ s / Λ₀ s) := by
-  haveI := hcm
+  have := hcm
   have hU : UnramFin D.host.E := hfd.2.2.1
   have hφ : IsCMType (cmPhi D) := hfd.2.2.2.2.2.2.1
   have e : ∀ τ, (kap D sc.cGap i j 0 τ : ℤ) + ((0 : ℕ) : ℤ) = kap D sc.cGap i j s τ + s := fun τ =>
@@ -118,7 +118,7 @@ theorem ratio_algebraic (hTR : GlobalTheory.IndefiniteRowSideFullHecke.ToricSymb
     if h : ∃ P ∈ GlobalTheory.SqTop.twPl G t, P.under (𝓞 D.host.F) = q then h.choose else G.pl.w G.pl.v0
   have hPq : ∀ q ∈ Q, Pq q ∈ GlobalTheory.SqTop.twPl G t ∧ (Pq q).under (𝓞 D.host.F) = q := fun q hq => by
     have h := hex q hq
-    simp only [Pq, dif_pos h]
+    simp only [Pq, dite_eq_left h]
     exact h.choose_spec
   have hov : ∀ q ∈ Q, Over (Pq q) q := fun q hq =>
     (show Over (Pq q) ((Pq q).under (OF D.host.E)) from rfl).trans (congrArg HeightOneSpectrum.asIdeal (hPq q hq).2)
@@ -156,7 +156,7 @@ theorem ratio_algebraic (hTR : GlobalTheory.IndefiniteRowSideFullHecke.ToricSymb
     exact this
   let ψ : PicO (condQ (condF G.pl) Q) →* ℂˣ := QuotientGroup.lift _ (finPart (Lc.xiH t)) hker
 
-  haveI : Nonempty D.what₂.Tau := Fintype.card_pos_iff.1 (by have := hfd.2.2.2.2.2.1; omega)
+  have : Nonempty D.what₂.Tau := Fintype.card_pos_iff.1 (by have := hfd.2.2.2.2.2.1; omega)
   let τ₀ : D.what₂.Tau := Classical.arbitrary _
   have hK2 : Module.finrank ℚ D.host.K = 2 := Formalism.MainNotions.DIV.Bridge.LogAbsNormDifferent.finrank_K D
   let δ : D.host.K := ⟨D.host.sqrtMinusD, GlobalTheory.Mem.Col2.HostK.sqrt_mem D.host⟩
@@ -190,13 +190,13 @@ theorem inNF_ratios (hTR : GlobalTheory.IndefiniteRowSideFullHecke.ToricSymbols.
     rw [h1.unique h1', h2.unique h2']
   have hSa : ∀ z ∈ S, IsAlgebraic ℚ z := by
     intro z hz
-    simp only [S, Set.mem_iUnion, Set.mem_setOf_eq] at hz
+    simp only [S, Set.mem_iUnion, Set.mem_ofPred_eq] at hz
     obtain ⟨i, j, t, s, ⟨h1, h2⟩, Λ, Λ₀, hΛ, hΛ₀, rfl⟩ := hz
     exact ratio_algebraic hTR hL G hcm hfd hbc i j t s h1 h2 Λ Λ₀ hΛ hΛ₀
-  haveI : Finite S := hS.to_subtype
+  have : Finite S := hS.to_subtype
   refine ⟨IntermediateField.adjoin ℚ S, IntermediateField.finiteDimensional_adjoin fun z hz => (hSa z hz).isIntegral,
     fun i j t Λ Λ₀ hΛ hΛ₀ s h1 h2 _ => ⟨⟨Λ s / Λ₀ s, IntermediateField.subset_adjoin ℚ S ?_⟩, rfl⟩⟩
-  simp only [S, Set.mem_iUnion, Set.mem_setOf_eq]
+  simp only [S, Set.mem_iUnion, Set.mem_ofPred_eq]
   exact ⟨i, j, t, s, ⟨h1, h2⟩, Λ, Λ₀, hΛ, hΛ₀, rfl⟩
 
 end GlobalTheory.RowEx.RatioField

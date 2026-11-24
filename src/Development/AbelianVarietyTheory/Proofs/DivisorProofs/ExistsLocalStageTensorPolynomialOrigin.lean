@@ -90,9 +90,9 @@ theorem localStage : ∀ (T O : Type) [CommRing T] [IsLocalRing T] [CommRing O] 
         γ.comp ((algebraMap (Polynomial A') (Localization.AtPrime Q')).comp Polynomial.C) =
           (algebraMap T O).comp α := by
   intro T O _ _ _ _ _ _ _ hO A _ _ i hi EA _ _ _ QA _ hQA jA hjA A' _ _ ι α hαι hα
-  letI : Algebra (Polynomial A) (Polynomial A') := (Polynomial.mapRingHom ι).toAlgebra
-  letI : Algebra (Polynomial A) O := ((algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i)).toAlgebra
-  haveI : Algebra.Etale (Polynomial A') (Polynomial A' ⊗[Polynomial A] EA) :=
+  let : Algebra (Polynomial A) (Polynomial A') := (Polynomial.mapRingHom ι).toAlgebra
+  let : Algebra (Polynomial A) O := ((algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom i)).toAlgebra
+  have : Algebra.Etale (Polynomial A') (Polynomial A' ⊗[Polynomial A] EA) :=
     Algebra.Etale.baseChange (Polynomial A) EA (Polynomial A')
   let f : Polynomial A' →ₐ[Polynomial A] O :=
     { toRingHom := (algebraMap (Polynomial T) O).comp (Polynomial.mapRingHom α)

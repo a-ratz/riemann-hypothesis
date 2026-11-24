@@ -77,7 +77,7 @@ private theorem continuous_kW (w : InfinitePlace E) : Continuous (kW (n := n) w)
   refine Continuous.subtype_mk (continuous_matrix fun i j => continuous_pi fun v => ?_) _
   simp only [atW, Matrix.of_apply]
   split_ifs
-  · exact (continuous_apply_apply i j).comp continuous_subtype_val
+  · exact (continuous_apply_apply i j).comp continuous_subtypeVal
   · exact continuous_const
 
 private theorem kW_one (w : InfinitePlace E) : kW (n := n) w 1 = 1 := by
@@ -93,7 +93,7 @@ private theorem along_eq (w : InfinitePlace E) (k : Un n) (φ : GA E n → ℂ) 
 
 private theorem exp_entry (X : Matrix (Fin n) (Fin n) ℂ) (i j : Fin n) :
     HasDerivAt (fun t : ℝ => (NormedSpace.exp ((t : ℂ) • X) : Matrix (Fin n) (Fin n) ℂ) i j) (X i j) 0 := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
   let _ : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   let _ : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
@@ -126,10 +126,10 @@ private theorem skew_of_curve (X : Matrix (Fin n) (Fin n) ℂ) (γ : ℝ → Un 
   rw [hconst] at hs
   have h := hs.unique (hasDerivAt_const _ _)
   simp only [h0, Matrix.one_apply, mul_ite, mul_one, mul_zero, ite_mul, one_mul, zero_mul, Finset.sum_add_distrib,
-    Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true] at h
+    Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h
   have e : ∑ x, star (if x = i then (1 : ℂ) else 0) * X x j = X i j := by
     simp only [apply_ite star, star_one, star_zero, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq,
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
   rw [e] at h
   show star (X j i) = -X i j
   exact eq_neg_of_add_eq_zero_left h
@@ -265,7 +265,7 @@ private theorem orb_stable (v : D.U) (γ : Kinf E n) (y : π.V) (hy : y ∈ orb 
   | smul c a _ ha => rw [map_smul]; exact Submodule.smul_mem _ _ ha
 
 private theorem fin_comap (v : D.U) : FiniteDimensional ℂ ((orb D v).comap D.i) := by
-  haveI : FiniteDimensional ℂ (orb D v) := fin_orbit π (D.i v)
+  have : FiniteDimensional ℂ (orb D v) := fin_orbit π (D.i v)
   let f : ((orb D v).comap D.i) →ₗ[ℂ] orb D v := (D.i.comp (Submodule.subtype _)).codRestrict _ fun x => x.2
   refine Module.Finite.of_injective f fun x y h => Subtype.ext (D.inj ?_)
   exact congrArg Subtype.val h
@@ -310,15 +310,15 @@ private theorem curve_deriv (X : Matrix (Fin n) (Fin n) ℂ) (γ : ℝ → Un n)
   rw [atEmb_apply]
   by_cases hv : v = w
   · subst hv
-    simp only [atW, InfinitePlace.mk_embedding, if_true]
+    simp only [atW, InfinitePlace.mk_embedding, ite_true]
     simpa only [hγ] using exp_entry X i j
-  · simp only [atW, InfinitePlace.mk_embedding, if_neg hv]
+  · simp only [atW, InfinitePlace.mk_embedding, ite_eq_right hv]
     exact hasDerivAt_const _ _
 
 private theorem deriv_σ (v : D.U) (X : Matrix (Fin n) (Fin n) ℂ) (γ : ℝ → Un n)
     (hγ : ∀ t : ℝ, (γ t).1 = NormedSpace.exp ((t : ℂ) • X)) (u : D.U) (hu : u ∈ (orb D v).comap D.i) :
     HasDerivAt (fun t : ℝ => D.σ w (γ t) u) (∑ a, ∑ b, X a b • kF (D.E1 w) (D.E2 w) a b u) 0 := by
-  haveI := fin_comap D v
+  have := fin_comap D v
   have hX := skew_of_curve X γ hγ
   have hZ := curve_deriv w X γ hγ
   have h0 : kW w (γ 0) = 1 := by

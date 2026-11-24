@@ -146,7 +146,7 @@ theorem bp_wden {K : Type*} [Field K] {n : ℕ} (ε : Fin n → Bool) (t : Fin n
   have hother : ∀ (b b' : Bool), b ≠ b' → ∀ (r : Fin (cnt ε b)) (s : Fin (cnt ε b')),
       (if blk ε b r < blk ε b' s ∧ ε (blk ε b r) = ε (blk ε b' s) then t (blk ε b r) - t (blk ε b' s) else 1) = 1 := by
     intro b b' hbb r s
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨_, h⟩
     rw [hmem b r, hmem b' s] at h
     exact hbb h
@@ -377,7 +377,7 @@ theorem sp_Jm_true (k : ℕ) : Jm (fun _ : Fin k => true) = 1 := by
 
 theorem sp_sub_Kset {ε : Fin n → Bool} (c : Bool) {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ Kset ε) :
     sp_sub ε c g ∈ Kset (fun _ : Fin (cnt ε c) => true) := by
-  simp only [Kset, Set.mem_setOf_eq] at hg ⊢
+  simp only [Kset, Set.mem_ofPred_eq] at hg ⊢
   obtain ⟨hu, hc⟩ := hg
   have hzs : ∀ a b, ε a ≠ ε b → (star g) a b = 0 := by
     intro a b h
@@ -392,10 +392,10 @@ theorem sp_sub_Kset {ε : Fin n → Bool} (c : Bool) {g : Matrix (Fin n) (Fin n)
 theorem sp_sub_exp {ε : Fin n → Bool} (c : Bool) {M : Matrix (Fin n) (Fin n) ℂ}
     (hM : M * Jm ε = Jm ε * M) :
     sp_sub ε c (NormedSpace.exp M) = NormedSpace.exp (sp_sub ε c M) := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedRing (Matrix (Fin (cnt ε c)) (Fin (cnt ε c)) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin (cnt ε c)) (Fin (cnt ε c)) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin (cnt ε c)) (Fin (cnt ε c)) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin (cnt ε c)) (Fin (cnt ε c)) ℂ) := Matrix.linftyOpNormedAlgebra
   have hs := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) M
   have hs' := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) (sp_sub ε c M)
   have hmap : HasSum (fun k => sp_sub ε c (((k.factorial : ℂ)⁻¹) • M ^ k))
@@ -419,7 +419,7 @@ theorem sp_toMK_proj (ε : Fin n → Bool) (c : Bool) (k : KG ε) :
 theorem sp_proj_cont (ε : Fin n → Bool) (c : Bool) : Continuous (sp_proj ε c) := by
   have hA : Continuous fun k : KG ε =>
       sp_sub ε c (((k : UJ ε) : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ) :=
-    (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).matrix_submatrix _ _
+    (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).matrix_submatrix _ _
   show Continuous fun k : KG ε => torepK _ (sp_sub_Kset c k.2)
   unfold torepK
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
@@ -489,9 +489,9 @@ variable {E F : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [FiniteDi
 theorem sp_mapL_one : mapL (1 : E →L[ℂ] E) (1 : F →L[ℂ] F) = 1 := mapL_id_id
 
 theorem sp_star_mapL (A : E →L[ℂ] E) (B : F →L[ℂ] F) : star (mapL A B) = mapL (star A) (star B) := by
-  have := FiniteDimensional.complete ℂ E
-  have := FiniteDimensional.complete ℂ F
-  have := FiniteDimensional.complete ℂ (E ⊗[ℂ] F)
+  have := FiniteDimensional.completeSpace ℂ E
+  have := FiniteDimensional.completeSpace ℂ F
+  have := FiniteDimensional.completeSpace ℂ (E ⊗[ℂ] F)
   simp only [ContinuousLinearMap.star_eq_adjoint, adjoint_mapL]
 
 theorem sp_mapL_unitary (A : unitary (E →L[ℂ] E)) (B : unitary (F →L[ℂ] F)) :
@@ -537,8 +537,8 @@ theorem sp_mapL_split (A : E →L[ℂ] E) (B : F →L[ℂ] F) :
 theorem sp_tensU_cont {G : Type*} [Monoid G] [TopologicalSpace G] (ρ1 : G →* unitary (E →L[ℂ] E))
     (ρ2 : G →* unitary (F →L[ℂ] F)) (h1 : Continuous ρ1) (h2 : Continuous ρ2) :
     Continuous (sp_tensU ρ1 ρ2) := by
-  have c1 : Continuous fun g => (ρ1 g : E →L[ℂ] E) := continuous_subtype_val.comp h1
-  have c2 : Continuous fun g => (ρ2 g : F →L[ℂ] F) := continuous_subtype_val.comp h2
+  have c1 : Continuous fun g => (ρ1 g : E →L[ℂ] E) := continuous_subtypeVal.comp h1
+  have c2 : Continuous fun g => (ρ2 g : F →L[ℂ] F) := continuous_subtypeVal.comp h2
   have h : Continuous fun g => mapL (ρ1 g : E →L[ℂ] E) (ρ2 g : F →L[ℂ] F) := by
     have e : (fun g => mapL (ρ1 g : E →L[ℂ] E) (ρ2 g : F →L[ℂ] F)) =
         fun g => mapL (ρ1 g : E →L[ℂ] E) (1 : F →L[ℂ] F) * mapL (1 : E →L[ℂ] E) (ρ2 g : F →L[ℂ] F) :=
@@ -924,7 +924,7 @@ theorem highest_weight_model_equiv (N : ℕ) (Λ : Fin N → ℝ) (H : Type) [No
   have hH : PI.HwIrred := highest_weight_irreducible
   obtain ⟨hfin, hstab, hirr, ⟨v0, hv0S, hv0ne, hv0w⟩, hdom⟩ := id hK
   have hK' : IsKTypeOf (allPos N) σ Λ S := ⟨hfin, hstab, hirr, ⟨v0, hv0S, hv0ne, hv0w⟩, hdom⟩
-  haveI := hfin
+  have := hfin
   obtain ⟨K, P, hP, hPσ⟩ := hA N H σ S hU hfin hstab
   choose μ hμ using hI N Λ H σ v0 hU hv0ne hv0w
   let w0 : S := ⟨v0, hv0S⟩
@@ -964,7 +964,7 @@ theorem highest_weight_model_equiv (N : ℕ) (Λ : Fin N → ℝ) (H : Type) [No
     have h2 := hν ⟨N - 1, by omega⟩
     have h3 : ν ⟨N - 1, by omega⟩ ≤ ν a := hanti (by rw [Fin.le_def]; simp; omega)
     have h3' : (ν ⟨N - 1, by omega⟩ : ℤ) ≤ ν a := by exact_mod_cast h3
-    simp only [DomWeight.natW, DomWeight.detShift, c, dif_pos hN, lam]
+    simp only [DomWeight.natW, DomWeight.detShift, c, dite_eq_left hN, lam]
     omega
   have hlast : ∀ h : 0 < N, lam.natW ⟨N - 1, by omega⟩ = 0 := by
     intro h; simp [DomWeight.natW, DomWeight.detShift, h, lam]
@@ -1080,7 +1080,7 @@ theorem highest_weight_model_equiv (N : ℕ) (Λ : Fin N → ℝ) (H : Type) [No
     by_cases hN : 0 < N
     · have hds : lam.detShift = (c : ℤ) - K := by
         have h1 := hν ⟨N - 1, by omega⟩
-        simp only [DomWeight.detShift, c, dif_pos hN, lam]
+        simp only [DomWeight.detShift, c, dite_eq_left hN, lam]
         omega
       rw [detPow, hds, _root_.zpow_sub, zpow_natCast, zpow_natCast, Units.val_mul, Units.val_inv_eq_inv_val,
         Units.val_pow_eq_pow_val, Units.val_pow_eq_pow_val, hu, mul_assoc, inv_mul_cancel₀ hdK, mul_one]

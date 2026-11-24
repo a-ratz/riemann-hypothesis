@@ -294,8 +294,8 @@ theorem hasSum_doubling_inert : GlobalTheory.IndefiniteRowSideFullHecke.Spherica
   · simp only [h0 hx0, hx0, mul_zero]
     exact hasSum_zero
   · have hw := h1 hx0
-    letI : MeasurableSpace (GU σ n) := borel _
-    haveI : BorelSpace (GU σ n) := ⟨rfl⟩
+    let : MeasurableSpace (GU σ n) := borel _
+    have : BorelSpace (GU σ n) := ⟨rfl⟩
     obtain ⟨μ, hμH, hμK⟩ := GlobalTheory.ZetaSumU.exists_haar (ϖ : L) hU n
     have hKo := (GlobalTheory.LFun.IntPtsUnitary.isOpen_isCompact_KU L ϖ σ q n hU).1
     obtain ⟨hint, -, hval⟩ := (hD L ϖ σ q n hU μ hμK χ hχ s Φ hΦ α _ hw).1 (hdom hx0)

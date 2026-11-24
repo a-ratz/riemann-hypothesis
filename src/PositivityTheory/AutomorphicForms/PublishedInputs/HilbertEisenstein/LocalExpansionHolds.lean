@@ -403,10 +403,10 @@ theorem local_int {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (H : H
     simp only [hGdef, hr, kR, inv_mul_eq_div]
     have hxc : (x : ℂ) ≠ 0 := by exact_mod_cast hx0
     rcases lt_or_gt_of_ne hx0 with hneg | hpos
-    · rw [if_neg (not_lt.2 hneg.le), abs_of_neg hneg]
+    · rw [ite_eq_right (not_lt.2 hneg.le), abs_of_neg hneg]
       push_cast
       field_simp
-    · rw [if_pos hpos, abs_of_pos hpos]
+    · rw [ite_eq_left hpos, abs_of_pos hpos]
       push_cast
       field_simp
   refine ⟨?_, ?_⟩
@@ -676,7 +676,7 @@ theorem finite_split_holds : FinSplit := by
   have hG : ∀ b b', (∀ w ∉ S, finUnitAt w b = finUnitAt w b') → G b = G b' := by
     intro b b' h
     have h1 : (b ∈ Hs) ↔ (b' ∈ Hs) := by
-      simp only [hHs, Set.mem_setOf_eq]
+      simp only [hHs, Set.mem_ofPred_eq]
       exact forall₂_congr fun w hw => by rw [h w hw]
     simp only [hGdef, Set.indicator_apply, h1, Pi.one_apply]
   have hUG : (finUnitsAt S ⁻¹' intUnitsAtS S).indicator G =
@@ -685,7 +685,7 @@ theorem finite_split_holds : FinSplit := by
     congr 1
     ext b
     simp only [Set.mem_inter_iff, Set.mem_preimage, intUnitsAtS, Set.mem_pi, Set.mem_univ, true_implies,
-      finUnitsAt_apply, hHs, Set.mem_setOf_eq, SetLike.mem_coe, mem_finiteIntegralUnits_iff_forall_finUnitAt]
+      finUnitsAt_apply, hHs, Set.mem_ofPred_eq, SetLike.mem_coe, mem_finiteIntegralUnits_iff_forall_finUnitAt]
     constructor
     · rintro ⟨h1, h2⟩ w
       by_cases hw : w ∈ S
@@ -741,7 +741,7 @@ theorem finite_split_holds : FinSplit := by
       · rw [psi_split S _ fun w hw => mem_localInvDifferent_of_mem ?_]
         · rw [← Finset.prod_coe_sort S]
           refine Finset.prod_congr rfl fun v _ => ?_
-          rw [if_pos ⟨by rw [← hc1]; exact hfk.1 v.1, by rw [← hc2]; exact hfk.2 v.1⟩]
+          rw [ite_eq_left ⟨by rw [← hc1]; exact hfk.1 v.1, by rw [← hc2]; exact hfk.2 v.1⟩]
           congr 2
         · have hbw := hb w hw
           have hξw := (hS w hw).2.2.2
@@ -774,11 +774,11 @@ theorem finite_split_holds : FinSplit := by
               exact (hne ⟨w, hw⟩).2
             · exact ((hout w hw b).2 (hb w hw)).2
         obtain ⟨v, hv⟩ := hex
-        exact (Finset.prod_eq_zero (Finset.mem_univ v) (if_neg hv)).symm
+        exact (Finset.prod_eq_zero (Finset.mem_univ v) (ite_eq_right hv)).symm
     · have hGb : G b = 0 := by rw [hGdef, Set.indicator_of_notMem hb]
       rw [hGb, mul_zero]
       unfold finK
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       intro hC
       apply hb
       intro w hw
@@ -832,8 +832,8 @@ theorem ordI_pow (v w : HeightOneSpectrum (𝓞 F)) (k : ℕ) :
   | succ k ih =>
     rw [pow_succ, Fresh.ordI_mul_of_ne_bot v (pow_ne_zero _ w.ne_bot) w.ne_bot, ih]
     by_cases h : v = w
-    · rw [if_pos h, if_pos h, h, Fresh.ordI_asIdeal_self]
-    · rw [if_neg h, if_neg h, ordI_ne h]
+    · rw [ite_eq_left h, ite_eq_left h, h, Fresh.ordI_asIdeal_self]
+    · rw [ite_eq_right h, ite_eq_right h, ordI_ne h]
 
 theorem prodS_ne_bot (T : Finset (HeightOneSpectrum (𝓞 F))) (p : HeightOneSpectrum (𝓞 F) → ℕ) :
     (∏ w ∈ T, w.asIdeal ^ p w) ≠ ⊥ := by
@@ -903,7 +903,7 @@ theorem divS_eq (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) {m : Ide
   symm
   refine Finset.sum_nbij' (fun p => ∏ w ∈ S, w.asIdeal ^ ext S p w) (fun r => fun w : S => ordI w.1 r) ?_ ?_ ?_ ?_ ?_
   · intro p hp
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     have hp' : ∀ w : S, p w ≤ ordI w.1 m := fun w => by
       have := Fintype.mem_piFinset.1 hp w
       rw [Finset.mem_range] at this
@@ -915,16 +915,16 @@ theorem divS_eq (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) {m : Ide
     refine eq_of_ordI hm hne fun v => ?_
     rw [Fresh.ordI_mul_of_ne_bot v (prodS_ne_bot _ _) (prodS_ne_bot _ _), ordI_prod_ext, ordI_prodS]
     by_cases hv : v ∈ S
-    · rw [if_pos hv]
+    · rw [ite_eq_left hv]
       have h1 : ext S p v = p ⟨v, hv⟩ := by unfold ext; rw [dite_eq_left hv]
       have h2 : p ⟨v, hv⟩ ≤ ordI v m := hp' ⟨v, hv⟩
       rw [h1]
       omega
-    · rw [if_neg hv, hS v hv]
+    · rw [ite_eq_right hv, hS v hv]
       unfold ext
       rw [dite_eq_right hv]
   · intro r hr
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hr
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hr
     rw [Fintype.mem_piFinset]
     intro w
     rw [Finset.mem_range]
@@ -935,7 +935,7 @@ theorem divS_eq (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) {m : Ide
     unfold ext
     rw [dite_eq_left w.2]
   · intro r hr
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hr
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hr
     have hr0 : r ≠ ⊥ := fun h0 => hm (by rw [h0] at hr; exact zero_dvd_iff.1 hr)
     refine eq_of_ordI (prodS_ne_bot _ _) hr0 fun v => ?_
     rw [ordI_prod_ext]
@@ -972,14 +972,14 @@ theorem coefficient_divisor_holds : CoefDiv := by
   classical
   unfold coefAt
   by_cases hpos : ∀ w ∈ S, 0 ≤ m w
-  · rw [if_pos hpos]
+  · rw [ite_eq_left hpos]
     have hex : ∃ 𝔪, GenD z 𝔪 := by
       refine ⟨∏ w ∈ S, w.asIdeal ^ (m w).toNat, prodS_ne_bot _ _, fun w => ?_⟩
       rw [hz w, ordI_prodS]
       congr 1
       by_cases hw : w ∈ S
-      · rw [if_pos hw, Int.toNat_of_nonneg (hpos w hw)]; rfl
-      · rw [if_neg hw, hS w hw]; rfl
+      · rw [ite_eq_left hw, Int.toNat_of_nonneg (hpos w hw)]; rfl
+      · rw [ite_eq_right hw, hS w hw]; rfl
     rw [dite_eq_left hex]
     have hspec := hex.choose_spec
     set 𝔪 := hex.choose
@@ -994,7 +994,7 @@ theorem coefficient_divisor_holds : CoefDiv := by
     congr 2
     have := hord w
     omega
-  · rw [if_neg hpos, dite_eq_right]
+  · rw [ite_eq_right hpos, dite_eq_right]
     rintro ⟨𝔪, -, h𝔪⟩
     apply hpos
     intro w _
@@ -1136,9 +1136,9 @@ theorem locF_subst (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) (yf :
   have hc2' := valued_le_iff x ((c v : ℤ) + dd v)
   by_cases hA : Valued.v (((tv v ξ * x⁻¹ : (v.adicCompletion F)ˣ) : v.adicCompletion F) * pLoc F v (yf : Af F)) ≤
       WithZero.exp (-(c v : ℤ)) ∧ Valued.v (x : v.adicCompletion F) ≤ WithZero.exp ((c v : ℤ) + dd v)
-  · rw [if_pos hA, if_pos ⟨hc2'.1 hA.2, hc1.1 hA.1⟩]
+  · rw [ite_eq_left hA, ite_eq_left ⟨hc2'.1 hA.2, hc1.1 hA.1⟩]
     ring
-  · rw [if_neg hA, if_neg fun h => hA ⟨hc1.2 h.2, hc2'.2 h.1⟩]
+  · rw [ite_eq_right hA, ite_eq_right fun h => hA ⟨hc1.2 h.2, hc2'.2 h.1⟩]
     ring
 
 theorem norm_loc {ω : HChar F} (hfin : IsOfFinOrder ω) (v : HeightOneSpectrum (𝓞 F)) (x : (v.adicCompletion F)ˣ) :
@@ -1149,7 +1149,7 @@ theorem continuous_chiPsi (ω : HChar F) (v : HeightOneSpectrum (𝓞 F)) :
     Continuous fun x : (v.adicCompletion F)ˣ =>
       ((ω.loc v x : ℂˣ) : ℂ) * (localAdelicChar F v (x : v.adicCompletion F) : ℂ) :=
   (Units.continuous_val.comp (LocalShellIntegral.continuous_loc ω v)).mul
-    (continuous_subtype_val.comp ((continuous_localAdelicChar v).comp Units.continuous_val))
+    (continuous_subtypeVal.comp ((continuous_localAdelicChar v).comp Units.continuous_val))
 
 theorem integrableOn_shell {ω : HChar F} (hfin : IsOfFinOrder ω) (v : HeightOneSpectrum (𝓞 F)) (k : ℤ) :
     IntegrableOn (fun x : (v.adicCompletion F)ˣ =>
@@ -1165,7 +1165,7 @@ theorem gI_eq_sum (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) (v : H
       (fun x : (v.adicCompletion F)ˣ => ((ω.loc v x : ℂˣ) : ℂ) * (localAdelicChar F v (x : v.adicCompletion F) : ℂ)) x := by
   unfold gI
   by_cases h : A ≤ ord (x : v.adicCompletion F) ∧ ord (x : v.adicCompletion F) ≤ A + m
-  · rw [if_pos h, Finset.sum_eq_single_of_mem (ord (x : v.adicCompletion F) - A).toNat
+  · rw [ite_eq_left h, Finset.sum_eq_single_of_mem (ord (x : v.adicCompletion F) - A).toNat
       (Finset.mem_range.2 (by omega))]
     · rw [Set.indicator_of_mem]
       rw [mem_ordShell]
@@ -1174,7 +1174,7 @@ theorem gI_eq_sum (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) (v : H
       rw [Set.indicator_of_notMem]
       rw [mem_ordShell]
       omega
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     symm
     refine Finset.sum_eq_zero fun j hj => ?_
     rw [Set.indicator_of_notMem]
@@ -1206,7 +1206,7 @@ theorem gI_empty (ω : HChar F) (c : HeightOneSpectrum (𝓞 F) → ℕ) (v : He
     (h : B < A) : gI ω c v A B = 0 := by
   funext x
   unfold gI
-  rw [if_neg]
+  rw [ite_eq_right]
   · rfl
   · intro h'
     omega
@@ -1234,9 +1234,9 @@ theorem local_integral_of_substitution : InvSubst → LocInt := by
         if M + dd v < 0 then 0 else
           cst ω c v * ∑ j ∈ Finset.range ((M + dd v).toNat + 1), chiW ω c v ^ j := by
     by_cases hm0 : M + dd v < 0
-    · rw [if_pos hm0, gI_empty ω c v A (A + m) (by omega)]
+    · rw [ite_eq_left hm0, gI_empty ω c v A (A + m) (by omega)]
       exact ⟨integrable_zero _ _ _, by simp⟩
-    · rw [if_neg hm0]
+    · rw [ite_eq_right hm0]
       have hm : 0 ≤ m := by omega
       obtain ⟨hI, hE⟩ := integral_gI hfin c v A m hm
       refine ⟨hI, ?_⟩
@@ -1267,21 +1267,21 @@ theorem local_integral_of_substitution : InvSubst → LocInt := by
             rw [mem_ordShell] at hx
             simp only
             rw [hψ1 x (by rw [hx, hAdef, hc]; push_cast; omega), Circle.coe_one, mul_one])]
-          rw [setIntegral_ordShell_quasiChar (LocalShellIntegral.continuous_loc ω v), if_pos hunr, ← hval, hAdef, hc,
+          rw [setIntegral_ordShell_quasiChar (LocalShellIntegral.continuous_loc ω v), ite_eq_left hunr, ← hval, hAdef, hc,
             Nat.cast_zero, zero_add, zpow_add₀ hα, zpow_natCast]
         simp only [hterm]
-        rw [← Finset.mul_sum, cst, if_pos hc]
+        rw [← Finset.mul_sum, cst, ite_eq_left hc]
         unfold chiW
-        rw [if_pos hc]
+        rw [ite_eq_left hc]
       · obtain ⟨hvan, -⟩ := local_ramified_holds F ω c H v hc
         rw [Finset.sum_eq_single_of_mem 0 (Finset.mem_range.2 (Nat.succ_pos _)) (fun j _ hj => hvan _ (by
           have : (0 : ℤ) < j := by exact_mod_cast Nat.pos_of_ne_zero hj
           omega))]
         have hsum : ∑ j ∈ Finset.range (m.toNat + 1), chiW ω c v ^ j = 1 := by
           unfold chiW
-          rw [if_neg hc, Finset.sum_eq_single_of_mem 0 (Finset.mem_range.2 (Nat.succ_pos _))
+          rw [ite_eq_right hc, Finset.sum_eq_single_of_mem 0 (Finset.mem_range.2 (Nat.succ_pos _))
             (fun j _ hj => zero_pow hj), pow_zero]
-        rw [hsum, mul_one, cst, if_neg hc, Nat.cast_zero, add_zero]
+        rw [hsum, mul_one, cst, ite_eq_right hc, Nat.cast_zero, add_zero]
   refine ⟨hiff.2 ?_, ?_⟩
   · rw [hsub]
     exact key.1.const_mul _
@@ -1484,8 +1484,8 @@ theorem fin_int (hLI : LocInt) (hFS : FinSplit) (hOP : OmegaProd) (hCD : CoefDiv
       if 0 ≤ m v then cst ω c v * ∑ j ∈ Finset.range ((m v).toNat + 1), chiW ω c v ^ j else 0 := by
     intro v _
     by_cases h0 : 0 ≤ ordAt (xiF ξ * yf) v + dd v
-    · rw [if_neg (not_lt.2 h0), if_pos h0]
-    · rw [if_pos (lt_of_not_ge h0), if_neg h0]
+    · rw [ite_eq_right (not_lt.2 h0), ite_eq_left h0]
+    · rw [ite_eq_left (lt_of_not_ge h0), ite_eq_right h0]
   rw [Finset.prod_congr rfl hite, Finset.prod_ite_zero]
   have hz : (algebraMap F (Af F) (ξ : F) * (yf : Af F)) = ((xiF ξ * yf : (Af F)ˣ) : Af F) := by
     rw [Units.val_mul]; rfl

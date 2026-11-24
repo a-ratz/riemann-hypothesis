@@ -106,8 +106,8 @@ theorem tail_split {ι : Type} [DecidableEq ι] (c : ι → ℝ) (hs : Summable 
     by_cases hi : i ∈ S <;> simp [hi]
   have hf : HasProd (fun i => if i ∈ S \ T then c i else 1) (∏ i ∈ S \ T, c i) := by
     have := hasProd_prod_of_ne_finset_one (f := fun i => if i ∈ S \ T then c i else 1)
-      (s := S \ T) (L := SummationFilter.unconditional ι) (fun b hb => if_neg hb)
-    rwa [Finset.prod_congr rfl (fun i hi => if_pos hi)] at this
+      (s := S \ T) (L := SummationFilter.unconditional ι) (fun b hb => ite_eq_right hb)
+    rwa [Finset.prod_congr rfl (fun i hi => ite_eq_left hi)] at this
   rw [key, key, ← hf.tprod_eq, ← hf.multipliable.tprod_mul hm]
   refine tprod_congr fun i => ?_
   by_cases hT : i ∈ T
@@ -140,19 +140,19 @@ theorem exists_piece {ι : Type} {V : ι → Type} [∀ i, MeasurableSpace (V i)
       (i ∉ T → ∀ y, g y = 1) ∧ ∀ f : V i → ℝ≥0∞, Measurable f →
         ∫⁻ y, f y ∂(a i) = (if i ∈ T then 1 else ENNReal.ofReal (c i)) * ∫⁻ y, g y * f y ∂P := by
     intro i
-    haveI : NeZero (a i) := ⟨h0 i⟩
+    have : NeZero (a i) := ⟨h0 i⟩
     by_cases hi : i ∈ T
     · refine ⟨(a i).toFinite, (a i).rnDeriv (a i).toFinite, inferInstance,
         Measure.measurable_rnDeriv _ _, fun h => (h hi).elim, fun f hf => ?_⟩
-      rw [if_pos hi, one_mul]
+      rw [ite_eq_left hi, one_mul]
       conv_lhs => rw [← Measure.withDensity_rnDeriv_eq (a i) (a i).toFinite
         (absolutelyContinuous_toFinite _)]
       rw [lintegral_withDensity_eq_lintegral_mul _ (Measure.measurable_rnDeriv _ _) hf]
       rfl
-    · haveI : IsFiniteMeasure (a i) := ⟨by rw [ha i hi]; exact ENNReal.ofReal_lt_top⟩
+    · have : IsFiniteMeasure (a i) := ⟨by rw [ha i hi]; exact ENNReal.ofReal_lt_top⟩
       refine ⟨(a i Set.univ)⁻¹ • a i, fun _ => 1, inferInstance, measurable_const,
         fun _ _ => rfl, fun f _ => ?_⟩
-      rw [if_neg hi, ← ha i hi, lintegral_smul_measure, smul_eq_mul, ← mul_assoc,
+      rw [ite_eq_right hi, ← ha i hi, lintegral_smul_measure, smul_eq_mul, ← mul_assoc,
         ENNReal.mul_inv_cancel (by simpa using h0 i) (measure_ne_top _ _)]
       simp
   choose P g hP hg hg1 hint using hP
@@ -181,8 +181,8 @@ theorem exists_piece {ι : Type} {V : ι → Type} [∀ i, MeasurableSpace (V i)
   have h2 : ∏ i ∈ S, (if i ∈ T then 1 else ENNReal.ofReal (c i)) =
       ∏ i ∈ S \ T, ENNReal.ofReal (c i) := by
     rw [← Finset.prod_subset (Finset.sdiff_subset (s := S) (t := T))
-      (fun i hi hi' => if_pos (by simpa [hi] using hi'))]
-    exact Finset.prod_congr rfl fun i hi => if_neg (Finset.mem_sdiff.1 hi).2
+      (fun i hi hi' => ite_eq_left (by simpa [hi] using hi'))]
+    exact Finset.prod_congr rfl fun i hi => ite_eq_right (Finset.mem_sdiff.1 hi).2
   rw [h2]
   ring
 
@@ -279,13 +279,13 @@ namespace GlobalTheory.GaugeEx
 theorem exists_isProd : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E], ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (n M : ℕ) (mi : Measure (Fin n → Fin M → Ainf F ⊗[F] E)) (mv : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fin n → Fin M → Fv F v ⊗[F] E)), Conv b mi mv → ∃ ν, IsProd b ν mi mv := by
   intro F E _ _ _ _ _ d b n M mi mv hc
   obtain ⟨hi, hv, hs⟩ := hc
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
-  haveI : Countable (𝓞 F) := Countable.of_equiv _ (RingOfIntegers.basis F).equivFun.symm.toEquiv
-  haveI : Countable (Ideal (𝓞 F)) := by
+  have : FiniteDimensional F E := Module.Finite.of_basis b
+  have : Countable (𝓞 F) := Countable.of_equiv _ (RingOfIntegers.basis F).equivFun.symm.toEquiv
+  have : Countable (Ideal (𝓞 F)) := by
     have hsurj : Function.Surjective (fun s : Finset (𝓞 F) => Ideal.span (s : Set (𝓞 F))) :=
       fun I => (IsNoetherian.noetherian I)
     exact hsurj.countable
-  haveI : Countable (HeightOneSpectrum (𝓞 F)) :=
+  have : Countable (HeightOneSpectrum (𝓞 F)) :=
     Function.Injective.countable (f := fun v : HeightOneSpectrum (𝓞 F) => v.asIdeal)
       (fun _ _ h => HeightOneSpectrum.ext h)
   obtain ⟨hint, -⟩ := _root_.GlobalTheory.GaugeEx.IntBasis.main F E (AlgHom.id F E) d b
@@ -306,10 +306,10 @@ theorem exists_isProd : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     exact MeasurableSet.univ_pi fun _ => MeasurableSet.univ_pi fun _ => (hint v).2.measurableSet
   have hsi : SigmaFinite mi := inferInstance
   have hsv : ∀ v, SigmaFinite (mv v) := fun v => by
-    haveI := hv v
+    have := hv v
     infer_instance
   obtain ⟨ν, hν0, hν⟩ := _root_.GlobalTheory.GaugeEx.AbsProd.exists_restricted_product (HeightOneSpectrum (𝓞 F)) _ _ (fun v => latV b v) mi mv hsi hsv hmeas
-    (fun v => by haveI := hv v; exact (hcpt v).measure_lt_top.ne) hs
+    (fun v => by have := hv v; exact (hcpt v).measure_lt_top.ne) hs
   set e := (fun X : (Fin n → Fin M → AF F ⊗[F] E) =>
     (projInf X, fun v : HeightOneSpectrum (𝓞 F) => projV v (projFin X))) with he
   have hmap : (ν.comap e).map e = ν := by
@@ -346,7 +346,7 @@ theorem isAddHaarMeasure_tupMeas_of_lc {S : Type} [AddCommGroup S] [TopologicalS
 theorem setOf_isUnit_ainf (F : Type) [Field F] [NumberField F] :
     {c : Ainf F | IsUnit c} = {c : Ainf F | ∀ w, c w ≠ 0} := by
   ext c
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine (Pi.isUnit_iff (x := c)).trans (forall_congr' fun w => isUnit_iff_ne_zero)
 
 theorem existsUnique_isStdX : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (s : StdMeas b) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (β : F), 3 ≤ M → IsHermND σ J → β ≠ 0 → ∃! ν, IsStdX s σ J β ν := by

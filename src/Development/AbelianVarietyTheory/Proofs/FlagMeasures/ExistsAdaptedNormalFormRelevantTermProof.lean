@@ -127,9 +127,9 @@ theorem exists_inv_lower {j : ℕ} (A : Matrix (Fin j) (Fin j) K) (h0 : ∀ a b,
     (h1 : ∀ a, A a a = 1) :
     ∃ M : Matrix (Fin j) (Fin j) K, M * A = 1 ∧ (∀ a b, a < b → M a b = 0) ∧ ∀ a, M a a = 1 := by
   have hT : A.BlockTriangular OrderDual.toDual := fun a b hab => h0 a b hab
-  have hd : A.det = 1 := by rw [Matrix.det_of_lowerTriangular A hT]; simp [h1]
+  have hd : A.det = 1 := by rw [Matrix.det_of_isLowerTriangular A hT]; simp [h1]
   have hu : IsUnit A.det := by rw [hd]; exact isUnit_one
-  letI := A.invertibleOfIsUnitDet hu
+  let := A.invertibleOfIsUnitDet hu
   have hM := Matrix.blockTriangular_inv_of_blockTriangular hT
   have hM0 : ∀ a b, a < b → A⁻¹ a b = 0 := fun a b hab => hM hab
   have hI := Matrix.nonsing_inv_mul A hu
@@ -356,7 +356,7 @@ theorem entry_cb (bs : List (K × ℕ)) (hb : ∀ b ∈ bs, b.1 ≠ 0 ∧ 1 ≤ 
     obtain ⟨t, s⟩ := b
     have h := hb (t, s) (by simp)
     have ih' := ih (fun b hb' => hb b (by simp [hb']))
-    simp only [List.map_cons, cb, dif_pos h, Formalism.MainNotions.S.Loc.ptEntryL, Formalism.MainNotions.S.ptEntry, PNat.mk_coe, Units.val_mk0]
+    simp only [List.map_cons, cb, dite_eq_left h, Formalism.MainNotions.S.Loc.ptEntryL, Formalism.MainNotions.S.ptEntry, PNat.mk_coe, Units.val_mk0]
     simp only [ih', apply_ite star, star_zero]
     exact if_congr Iff.rfl (if_congr Iff.rfl rfl rfl) (if_congr Iff.rfl rfl rfl)
 
@@ -367,7 +367,7 @@ theorem size_cb (bs : List (K × ℕ)) (hb : ∀ b ∈ bs, b.1 ≠ 0 ∧ 1 ≤ b
   | cons b bs ih =>
     have h := hb b (by simp)
     have ih' := ih (fun b hb' => hb b (by simp [hb']))
-    simp only [List.map_cons, List.sum_cons, cb, dif_pos h, PNat.mk_coe, ih']
+    simp only [List.map_cons, List.sum_cons, cb, dite_eq_left h, PNat.mk_coe, ih']
 
 end Mat
 end GlobalTheory.TypeAsm.NFEx

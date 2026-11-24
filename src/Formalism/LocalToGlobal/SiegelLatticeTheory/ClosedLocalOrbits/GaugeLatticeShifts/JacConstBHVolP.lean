@@ -84,7 +84,7 @@ theorem rhoMeas : RhoMeas := by
       fun i j => NormedSpace.exp (Formalism.MainNotions.S.unrealify (x : EuclideanSpace ℝ _)) i j : Formalism.MainNotions.S.lieE S → Mt k r) ''
         {Y | (‖(Y : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool))‖₊ : ℝ≥0∞) < t} := by
     ext x
-    simp only [Set.mem_preimage, Set.mem_Iio, rhoS, iInf_lt_iff, Set.mem_image, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_Iio, rhoS, iInf_lt_iff, Set.mem_image, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨Y, hY, hlt⟩; exact ⟨Y, hlt, hY⟩
     · rintro ⟨Y, hlt, hY⟩; exact ⟨Y, hY, hlt⟩
@@ -102,8 +102,8 @@ theorem rhoMeas : RhoMeas := by
     · have hb : {Y : Formalism.MainNotions.S.lieE S | (‖(Y : EuclideanSpace ℝ (Fin (2 * r + k + 1) × Fin (2 * r + k + 1) × Bool))‖₊ : ℝ≥0∞)
           < t} = Metric.ball 0 t.toReal := by
         ext Y
-        simp only [Set.mem_setOf_eq, Metric.mem_ball, dist_zero_right]
-        rw [← ENNReal.ofReal_coe_nnreal, coe_nnnorm, ENNReal.ofReal_lt_iff_lt_toReal (norm_nonneg _) ht]
+        simp only [Set.mem_ofPred_eq, Metric.mem_ball, dist_zero_right]
+        rw [← ENNReal.ofReal_coe_nnreal, coe_nnNorm, ENNReal.ofReal_lt_iff_lt_toReal (norm_nonneg _) ht]
         rfl
       have hpos : 0 < t.toReal := ENNReal.toReal_pos ht0 ht
       rw [hb]

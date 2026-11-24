@@ -123,7 +123,7 @@ theorem card_le_ker_transpose_eq_card_range_le :
     rw [dotProduct_comm]; exact h
   have hnd : B.Nondegenerate := by
     rw [hBdef]
-    exact Matrix.Nondegenerate.toBilin' (Matrix.nondegenerate_of_det_ne_zero (by simp))
+    exact Matrix.Nondegenerate.toBilin' (Nondegenerate.of_det_ne_zero (by simp))
   have hinv : ∀ W : Submodule k (Fin m → k), B.orthogonal (B.orthogonal W) = W :=
     fun W => LinearMap.BilinForm.orthogonal_orthogonal hnd hrefl W
   have hdim : ∀ W : Submodule k (Fin m → k),
@@ -444,7 +444,7 @@ theorem count_tgt (hp : Irreducible p) {m n j : ℕ} (hj : j ≤ m) {ι : Type} 
 theorem nKer_eq_sum {k : Type} [Field k] [Finite k] {m n t d : ℕ} (h : n = m + t) (w : Matrix (Fin m) (Fin n) k) :
     nKer d w = ∑ j ∈ Finset.range (min d m + 1),
       Nat.card k ^ ((m - j) * (d - j)) * Formalism.L2.Col.gaussBin (Nat.card k) t (d - j) * nKer j wᵀ := by
-  letI := Fintype.ofFinite k
+  let := Fintype.ofFinite k
   have h1 := _root_.GlobalTheory.KerRangeCount.card_ker_and_heckePolyOf_conv.1 k (Fin n → k) (Fin m → k) m t d w.mulVecLin (by rw [Module.finrank_fin_fun, h])
     (Module.finrank_fin_fun k)
   rw [← h] at h1

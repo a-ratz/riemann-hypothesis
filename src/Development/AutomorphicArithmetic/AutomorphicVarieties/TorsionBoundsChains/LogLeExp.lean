@@ -89,10 +89,10 @@ theorem UpperTheory.V.KH.fullEnum :
       ∃ v : ι → (ι →₀ ℤ), LinearIndependent ℤ v ∧ Set.range v = b := by
   intro ι _ b hb hn
   have hli : LinearIndependent ℤ (fun x : b => (x : ι →₀ ℤ)) := hb
-  haveI : Finite b := hli.finite
+  have : Finite b := hli.finite
   classical
-  letI := Fintype.ofFinite ι
-  letI := Fintype.ofFinite b
+  let := Fintype.ofFinite ι
+  let := Fintype.ofFinite b
   have h1 : Fintype.card b ≤ Fintype.card ι := by
     have := hli.fintype_card_le_finrank
     rwa [Module.finrank_finsupp_self] at this
@@ -104,7 +104,7 @@ theorem UpperTheory.V.KH.fullEnum :
     simp only [Finsupp.finsetSum_apply, Finsupp.smul_apply, Finsupp.single_apply, smul_eq_mul,
       Finsupp.coe_zero, Pi.zero_apply] at this
     rw [Finset.sum_eq_single i] at this
-    · simp only [if_true, mul_one] at this
+    · simp only [ite_true, mul_one] at this
       rcases mul_eq_zero.1 this with h | h
       · exact h
       · exact absurd h (hn0 i)
@@ -179,7 +179,7 @@ theorem UpperTheory.V.KH.indexLe :
       CardLe ((ι →₀ ℤ) ⧸ Submodule.span ℤ (Set.range v)) (b ^ Nat.card ι) := by
   intro ι _ v b hv hb
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   set N := Submodule.span ℤ (Set.range v)
   let bE : Module.Basis ι ℤ (ι →₀ ℤ) := Finsupp.basisSingleOne
   let bN : Module.Basis ι ℤ N := Module.Basis.span hv
@@ -393,7 +393,7 @@ theorem UpperTheory.V.KH.cokerTors :
       TorsLe ((ι →₀ ℤ) ⧸ Submodule.span ℤ L) (b ^ A) := by
   intro ι A b L hι hb hL
   obtain ⟨hfin, hA⟩ := hι
-  haveI : IsAddTorsionFree (ι →₀ ℤ) :=
+  have : IsAddTorsionFree (ι →₀ ℤ) :=
     Function.Injective.isAddTorsionFree (Finsupp.coeFnAddHom : (ι →₀ ℤ) →+ (ι → ℤ))
       DFunLike.coe_injective
   obtain ⟨b₀, -, hb₀L, hb₀i, hb₀⟩ := maxIndep (ι →₀ ℤ) ∅ L (Set.empty_subset _)
@@ -492,9 +492,9 @@ theorem UpperTheory.Reformulated.B.Qf15.torsStep :
     apply Subtype.ext
     apply Subtype.ext
     rw [← hs x, ← hs y, h]
-  haveI : Finite φ.ker := Finite.of_injective s hsi
+  have : Finite φ.ker := Finite.of_injective s hsi
   have e := (QuotientAddGroup.quotientKerEquivRange φ).toEquiv
-  haveI : Finite (AddCommGroup.torsion B ⧸ φ.ker) := Finite.of_equiv _ e.symm
+  have : Finite (AddCommGroup.torsion B ⧸ φ.ker) := Finite.of_equiv _ e.symm
   have h1 : Nat.card φ.ker ≤ a := (Nat.card_le_card_of_injective s hsi).trans hAc
   have h2 : Nat.card (AddCommGroup.torsion B ⧸ φ.ker) ≤ c := by
     rw [Nat.card_congr e]
@@ -599,7 +599,7 @@ theorem TorsLe.log_le {M : Type} [AddCommGroup M] {m A s b : ℕ} (hs : 1 ≤ s)
     Real.log (Nat.card (AddCommGroup.torsion M)) ≤
       A * Real.log b + m * A * (s : ℝ) ^ m * Real.log s := by
   rw [← log_bound m A s b hs hb]
-  haveI := h.1
+  have := h.1
   have : 0 < Nat.card (AddCommGroup.torsion M) := Nat.card_pos
   exact Real.log_le_log (by exact_mod_cast this) (by exact_mod_cast h.2)
 
@@ -622,7 +622,7 @@ theorem TorsLe.log_le_exp {M : Type} [AddCommGroup M] {m A s : ℕ} {a σ : ℝ}
   have h4 : (1 : ℝ) ≤ (s : ℝ) ^ (m + 1) := one_le_pow₀ h1
   have h5 : (s : ℝ) ^ (m + 1) ≤ Real.exp ((m + 1) * σ) := by
     have := pow_le_pow_left₀ (by positivity) hσ (m + 1)
-    rw [← Real.exp_nat_mul] at this
+    rw [← Real.exp_natCast_mul] at this
     exact_mod_cast this
   have h6 : (2 * m + 1 : ℝ) ≤ Real.exp (2 * m) := Real.add_one_le_exp _
   have h7 : (s : ℝ) ^ m * Real.log s ≤ (s : ℝ) ^ (m + 1) := by

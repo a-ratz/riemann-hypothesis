@@ -230,15 +230,15 @@ theorem exists_cut_prod (ψ : ∀ w : HeightOneSpectrum (𝓞 E), AddChar (w.adi
       by_cases hyc : GeneralLinearGroup.map ((pLoc E w).comp (pFin E)) y ∈
           cell (z w) (U w : Set (GL (Fin (m + 1)) (w.adicCompletion E)))
       · rw [act_congr T₁ (f' := W) fun k hk => ?_, hyS]
-        · simp only [Set.indicator, Set.mem_setOf_eq, Finset.forall_mem_insert, hyc, true_and]
+        · simp only [Set.indicator, Set.mem_ofPred_eq, Finset.forall_mem_insert, hyc, true_and]
         · rw [hT₂ W hN hKW (y * k) (by rw [hyh k hk]; exact hyw), Set.indicator_of_mem]
-          rw [Set.mem_setOf_eq, hyh k hk]; exact hyc
+          rw [Set.mem_ofPred_eq, hyh k hk]; exact hyc
       · rw [act_congr T₁ (f' := 0) fun k hk => ?_]
-        · simp only [Set.indicator, Set.mem_setOf_eq, Finset.forall_mem_insert, hyc, false_and, if_false]
+        · simp only [Set.indicator, Set.mem_ofPred_eq, Finset.forall_mem_insert, hyc, false_and, ite_false]
           unfold GlobalTheory.JSW.Cut.act; simp
         · rw [hT₂ W hN hKW (y * k) (by rw [hyh k hk]; exact hyw), Set.indicator_of_notMem]
           · rfl
-          · rw [Set.mem_setOf_eq, hyh k hk]; exact hyc
+          · rw [Set.mem_ofPred_eq, hyh k hk]; exact hyc
 
 end GlobalTheory.JSW.CutProd
 
@@ -344,9 +344,9 @@ theorem exists_charSum_eq_on_compact : ∀ {F : Type} [NormedField F] (ψ : AddC
       map_zero' := rfl
       map_add' := fun _ _ => rfl
       commutes' := fun _ => rfl }
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   obtain ⟨a, ha, e⟩ := mem_of_separates (A.map ρ)
-    (by rintro _ ⟨a, ha, rfl⟩; exact (hAL ha).comp_continuous continuous_subtype_val)
+    (by rintro _ ⟨a, ha, rfl⟩; exact (hAL ha).comp_continuous continuous_subtypeVal)
     (by
       intro x y hxy
       obtain ⟨i, hi⟩ := Function.ne_iff.1 (Subtype.coe_ne_coe.2 hxy)
@@ -360,7 +360,7 @@ theorem exists_charSum_eq_on_compact : ∀ {F : Type} [NormedField F] (ψ : AddC
         ring
       rw [h2, AddChar.map_add_eq_mul] at h
       exact (mul_eq_right₀ (ψ.val_isUnit _).ne_zero).1 h)
-    (hΦ.comp_continuous continuous_subtype_val)
+    (hΦ.comp_continuous continuous_subtypeVal)
   obtain ⟨T, hT⟩ := Finsupp.mem_span_range_iff_exists_finsupp.1 (hAspan a ha)
   refine ⟨T, fun r hr => ?_⟩
   have h1 := congrFun e ⟨r, hr⟩
@@ -700,7 +700,7 @@ theorem exists_finite_reps {G : Type} [Group G] [TopologicalSpace G] [IsTopologi
   obtain ⟨t, ht⟩ := compact_covered_by_mul_left_translates hK (V := (V : Set G))
     (by rw [hV.interior_eq]; exact ⟨1, V.one_mem⟩)
   let ι := {g : G // g ∈ t ∧ ∃ a ∈ A, g * a ∈ V}
-  haveI : Finite ι := Finite.of_injective (fun x : ι => (⟨x.1, x.2.1⟩ : t))
+  have : Finite ι := Finite.of_injective (fun x : ι => (⟨x.1, x.2.1⟩ : t))
     (fun x y h => Subtype.ext (congrArg (fun z : t => (z : G)) h))
   refine ⟨ι, inferInstance, fun x => x.2.2.choose, fun x => x.2.2.choose_spec.1, fun a ha => ?_⟩
   obtain ⟨g, hg, hga⟩ := Set.mem_iUnion₂.1 (ht (hA ha))
@@ -743,7 +743,7 @@ theorem pLoc_list_prod {n : ℕ} (u : ∀ w : HeightOneSpectrum (𝓞 E), GL (Fi
     rw [List.map_cons, List.prod_cons, map_mul, ih (List.nodup_cons.1 hl).2]
     by_cases h : v = w
     · subst h
-      rw [pLoc_locGL, if_neg (List.nodup_cons.1 hl).1, if_pos (by simp), mul_one]
+      rw [pLoc_locGL, ite_eq_right (List.nodup_cons.1 hl).1, ite_eq_left (by simp), mul_one]
     · rw [pLoc_locGL_of_ne h, one_mul]
       simp only [List.mem_cons, h, false_or]
 
@@ -864,10 +864,10 @@ theorem cell_decomp : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFie
       rw [pLoc_list_prod cc _ S.nodup_toList v]
       simp only [Finset.mem_toList]
     refine ⟨k i * g, mul_mem (hkA i).1 hgK, fun w hw => ?_, fun w hw => ⟨uu w, huu w hw, ?_⟩⟩
-    · rw [← mul_assoc, map_mul, hg w, if_neg hw, mul_one]
+    · rw [← mul_assoc, map_mul, hg w, ite_eq_right hw, mul_one]
       exact (hkA i).2 w hw
     · refine (heq w hw).trans ?_
-      rw [← mul_assoc qf, map_mul (GeneralLinearGroup.map (pLoc E w)) (qf * k i) g, hg w, if_pos hw, mul_assoc]
+      rw [← mul_assoc qf, map_mul (GeneralLinearGroup.map (pLoc E w)) (qf * k i) g, hg w, ite_eq_left hw, mul_assoc]
 
 end GlobalTheory.JSW.MirPatch
 end -- clump:auto
@@ -1144,7 +1144,7 @@ theorem indicator_cell_mul_left {ψ : AddChar F ℂ} {n : ℕ} {z : GL (Fin n) F
   classical
   by_cases hg : g ∈ cell z U
   · rw [Set.indicator_of_mem hg, Set.indicator_of_mem ((mul_mem_cell_iff hu g).2 hg), hf u hu]
-  · rw [Set.indicator_apply, Set.indicator_apply, if_neg hg, if_neg (fun h => hg ((mul_mem_cell_iff hu g).1 h)),
+  · rw [Set.indicator_apply, Set.indicator_apply, ite_eq_right hg, ite_eq_right (fun h => hg ((mul_mem_cell_iff hu g).1 h)),
       mul_zero]
 
 end Red
@@ -1157,7 +1157,7 @@ theorem cuts_mir_of_res : ∀ {F : Type} [NormedField F] [ProperSpace F] [IsUltr
   by_cases hz : ∃ h₀ : GL (Fin (m + 1)) F, cor h₀ ∈ cell z (U : Set (GL (Fin (m + 2)) F))
   swap
   · refine ⟨0, fun f _ _ p hp => ?_⟩
-    rw [act_zero, Set.indicator_apply, if_neg]
+    rw [act_zero, Set.indicator_apply, ite_eq_right]
     intro hpc
     obtain ⟨h, x, rfl⟩ := exists_mir hp
     rw [mir_eq, mul_mem_cell_iff (mir_mem_iff.2 (one_mem _))] at hpc
@@ -1188,7 +1188,7 @@ theorem cuts_mir_of_res : ∀ {F : Type} [NormedField F] [ProperSpace F] [IsUltr
     rw [← Finset.indicator_biUnion_apply s _ hsd, ← hsU, hzc]
     by_cases hh : h ∈ cell h₀ (B : Set (GL (Fin (m + 1)) F))
     · rw [Set.indicator_of_mem hh, Set.indicator_of_mem ((hcell h₀ h).2 hh)]
-    · rw [Set.indicator_apply, Set.indicator_apply, if_neg hh, if_neg fun h' => hh ((hcell h₀ h).1 h')]
+    · rw [Set.indicator_apply, Set.indicator_apply, ite_eq_right hh, ite_eq_right fun h' => hh ((hcell h₀ h).1 h')]
   intro p hp
   obtain ⟨h, x, rfl⟩ := exists_mir hp
   have hu : mir 1 x ∈ unipB F (Fin (m + 2)) := mir_mem_iff.2 (one_mem _)
@@ -1281,8 +1281,8 @@ theorem cuts_mir {F : Type} [NormedField F] [ProperSpace F] [IsUltrametricDist F
       fun f _ _ g hg => ?_⟩
     rw [h1 g hg, act_single, mul_one]
     by_cases h : (1 : GL (Fin (0 + 1)) F) ∈ cell z (U : Set (GL (Fin (0 + 1)) F))
-    · rw [if_pos h, one_mul, Set.indicator_of_mem h]
-    · rw [if_neg h, zero_mul, Set.indicator_of_notMem h]
+    · rw [ite_eq_left h, one_mul, Set.indicator_of_mem h]
+    · rw [ite_eq_right h, zero_mul, Set.indicator_of_notMem h]
   | succ m ih =>
     refine _root_.GlobalTheory.JSW.Cut.cuts_mir_of_res ψ hψ hψ1 m (_root_.GlobalTheory.JSW.Cut.exists_cut_cor_of_sub ψ hψ hψ1 m (fun V hVc hVo z' => ?_)) U hUc hUo z
     refine _root_.GlobalTheory.JSW.Cut.cuts_mul_open_subgroup ψ V hVo _ _ (fun x hx u hu => ?_) (ih V hVc hVo z')
@@ -1306,8 +1306,8 @@ theorem GlobalTheory.JSW.MirPatch.cut_operators : ∀ (E : Type) [Field E] [Numb
         GlobalTheory.JSW.Cut.cell (z i w) (U w : Set (GL (Fin (m + 1)) (w.adicCompletion E)))}.indicator W p := by
     intro i
     refine _root_.GlobalTheory.JSW.CutProd.cut_prod_mirS E m S ψ hψv K U (z i) (fun w hw => (hU w hw).2.2) fun w hw => ?_
-    haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion E w
-    haveI : IsUltrametricDist (w.adicCompletion E) :=
+    have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion E w
+    have : IsUltrametricDist (w.adicCompletion E) :=
       inferInstanceAs (@IsUltrametricDist (w.adicCompletion E)
         (Valued.toNormedField (w.adicCompletion E) (WithZero (Multiplicative ℤ))).toDist)
     exact cuts_mir (ψ w) (hψl w) (hψ1 w) m (U w) (hU w hw).1 (hU w hw).2.1 (z i w)
@@ -1370,9 +1370,9 @@ theorem totallyDisconnectedSpace_adicCompletion {F : Type} [Field F] [NumberFiel
   exact (lt_irrefl ((Valued.v : Valuation (v.adicCompletion F) _).restrict x)) h1
 
 theorem totallyDisconnectedSpace_Af (E : Type) [Field E] [NumberField E] : TotallyDisconnectedSpace (Af E) := by
-  haveI : ∀ v : IsDedekindDomain.HeightOneSpectrum (𝓞 E), TotallyDisconnectedSpace (v.adicCompletion E) :=
+  have : ∀ v : IsDedekindDomain.HeightOneSpectrum (𝓞 E), TotallyDisconnectedSpace (v.adicCompletion E) :=
     fun v => totallyDisconnectedSpace_adicCompletion v
-  haveI : TotallyDisconnectedSpace
+  have : TotallyDisconnectedSpace
       (Πʳ v : IsDedekindDomain.HeightOneSpectrum (𝓞 E), [v.adicCompletion E, v.adicCompletionIntegers E]) :=
     totallyDisconnectedSpace_of_injective (fun x v => x v) (continuous_pi fun v => RestrictedProduct.continuous_eval v)
       fun x y h => Subtype.ext (funext fun v => congrFun h v)
@@ -1382,12 +1382,12 @@ theorem totallyDisconnectedSpace_Af (E : Type) [Field E] [NumberField E] : Total
 theorem exists_isCompact_isClopen (E : Type) [Field E] [NumberField E] (a : ℕ) (B : Set (GL (Fin a) (Af E)))
     (hB : B ∈ nhds (1 : GL (Fin a) (Af E))) :
     ∃ U : Set (GL (Fin a) (Af E)), IsOpen U ∧ IsCompact U ∧ IsClosed U ∧ 1 ∈ U ∧ U ⊆ B := by
-  haveI := totallyDisconnectedSpace_Af E
-  haveI : TotallyDisconnectedSpace (Matrix (Fin a) (Fin a) (Af E)) :=
+  have := totallyDisconnectedSpace_Af E
+  have : TotallyDisconnectedSpace (Matrix (Fin a) (Fin a) (Af E)) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin a → Fin a → Af E))
-  haveI : TotallyDisconnectedSpace (GL (Fin a) (Af E)) :=
+  have : TotallyDisconnectedSpace (GL (Fin a) (Af E)) :=
     totallyDisconnectedSpace_of_injective _ Units.continuous_val Units.val_injective
-  haveI : LocallyCompactSpace (GL (Fin a) (Af E)) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : LocallyCompactSpace (GL (Fin a) (Af E)) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
   obtain ⟨K, hK, hKB, hc⟩ := local_compact_nhds hB
   obtain ⟨U, hU, h1, hUK⟩ := loc_compact_Haus_tot_disc_of_zero_dim.mem_nhds_iff.1 hK
   exact ⟨U, hU.2, hc.of_isClosed_subset hU.1 hUK, hU.1, h1, hUK.trans hKB⟩
@@ -1515,7 +1515,7 @@ theorem IsUT.map {M : Matrix (Fin a) (Fin a) R} (hM : IsUT M) (f : R →+* R') :
 
 theorem IsUT.inv {g : GL (Fin a) R} (hg : IsUT (g : Matrix (Fin a) (Fin a) R)) :
     IsUT ((g⁻¹ : GL (Fin a) R) : Matrix (Fin a) (Fin a) R) := by
-  letI := g.invertible
+  let := g.invertible
   have ht : ((g⁻¹ : GL (Fin a) R) : Matrix (Fin a) (Fin a) R).BlockTriangular id := by
     rw [Matrix.coe_units_inv]
     exact Matrix.blockTriangular_inv_of_blockTriangular (b := id) fun i j h => hg.1 i j h
@@ -1632,7 +1632,7 @@ theorem isClosed_Zset (S : Finset (HeightOneSpectrum (𝓞 E))) (m : ℕ) : IsCl
         ((pLoc E w).comp (pFin E)) ((c : Matrix (Fin (m + 1)) (Fin (m + 1)) (Ad E)) i j) = 0}) ∩
         ⋂ i, {c : GA E (m + 1) | ((pLoc E w).comp (pFin E)) ((c : Matrix (Fin (m + 1)) (Fin (m + 1)) (Ad E)) i i) = 1}) := by
     ext c
-    simp only [Zset, IsUT, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [Zset, IsUT, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     rfl
   rw [e]
   exact (isClosed_iInter fun j => isClosed_eq (hent _ _) continuous_const).inter
@@ -1667,7 +1667,7 @@ theorem exists_NA_of_mem_Zset {S : Finset (HeightOneSpectrum (𝓞 E))} {m : ℕ
         rw [List.nodup_cons] at hl
         rw [List.map_cons, List.prod_cons, map_mul, ih hl.2]
         by_cases h : w = v
-        · subst h; rw [pLoc_locGL, if_neg hl.1, if_pos List.mem_cons_self, mul_one]
+        · subst h; rw [pLoc_locGL, ite_eq_right hl.1, ite_eq_left List.mem_cons_self, mul_one]
         · rw [pLoc_locGL_of_ne h, one_mul]; simp [h]
     rw [key _ (Finset.nodup_toList _)]; simp
   set k := cf⁻¹ * L
@@ -1693,7 +1693,7 @@ theorem exists_NA_of_mem_Zset {S : Finset (HeightOneSpectrum (𝓞 E))} {m : ℕ
       exact FiniteAdeleRing.ext _ fun w => (hkUT w).2 i
   refine ⟨_, huNA, fun w hw => ?_, fun j => ?_⟩
   · change GeneralLinearGroup.map (pLoc E w) (GeneralLinearGroup.map (pFin E) (finGL E (m + 1) k * c)) = 1
-    rw [map_mul, pFin_finGL, map_mul, hk, if_neg hw, inv_mul_cancel]
+    rw [map_mul, pFin_finGL, map_mul, hk, ite_eq_right hw, inv_mul_cancel]
   · rw [last_row_mul huNA]; exact hc.1 j
 
 theorem exists_base {S : Finset (HeightOneSpectrum (𝓞 E))} {m : ℕ} {d : GA E (m + 1)} (hd : d ∈ Zset E S m)
@@ -1748,7 +1748,7 @@ theorem exists_cover : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFi
   have hrep : ∀ x ∈ t2, rep (cell K x) ∈ t2 ∧ cell K (rep (cell K x)) = cell K x := by
     intro x hx
     have h : ∃ y ∈ t2, cell K y = cell K x := ⟨x, hx, rfl⟩
-    simp only [rep, dif_pos h]
+    simp only [rep, dite_eq_left h]
     exact h.choose_spec
   refine ⟨K, t2.image fun x => rep (cell K x), fun x => q (dj x), hKo, hKc, ?_, ?_, ?_⟩
   · intro x hx

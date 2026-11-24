@@ -77,7 +77,7 @@ theorem coeff_mem {G : Type} [Group G] [Finite G] {N : ℕ} (hN : 0 < N) (hG : N
     (e : MonoidAlgebra ℂ G) (he : e * e = e) (hc : ∀ a, e * a = a * e) (x : G) :
     e.coeff x ∈ IntermediateField.adjoin ℚ {Complex.exp (2 * Real.pi * Complex.I / (N : ℕ))} := by
   classical
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   set K := IntermediateField.adjoin ℚ {Complex.exp (2 * Real.pi * Complex.I / (N : ℕ))} with hK
   set s : MonoidAlgebra ℂ G := MonoidAlgebra.single x⁻¹ 1 with hs
   have hsN : s ^ N = 1 := by
@@ -103,7 +103,7 @@ theorem coeff_mem {G : Type} [Group G] [Finite G] {N : ℕ} (hN : 0 < N) (hG : N
     · have h4 : μ ^ N = 1 := by
         rw [pow_succ] at h3
         exact mul_right_cancel₀ h0 (by rw [one_mul]; exact h3.symm)
-      haveI : NeZero N := ⟨hN.ne'⟩
+      have : NeZero N := ⟨hN.ne'⟩
       obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one h4
       rw [← hi]; exact pow_mem hζK i
   rw [trace_mulLeft] at htr
@@ -137,7 +137,7 @@ theorem exists_primitive (G : Type) [Group G] [Finite G] :
     · simp [h]
   · rw [ne_eq, map_eq_zero_iff _ φ.symm.injective]
     intro h
-    haveI := hd i
+    have := hd i
     have h' := congrFun h i
     rw [Pi.single_eq_same] at h'
     exact one_ne_zero h'
@@ -195,7 +195,7 @@ theorem exists_family {G S : Type} [Group G] [Finite G] (c : G → S) (hc : Func
     have := linearIndependent_le_span_aux' z hli (Set.range p) (by rintro _ ⟨s, rfl⟩; exact h6 _ (hzc s))
     exact this.trans (Fintype.card_range_le p)
   obtain ⟨ι⟩ := Function.Embedding.nonempty_of_card_le hcard
-  haveI : Nonempty S := ⟨c 1⟩
+  have : Nonempty S := ⟨c 1⟩
   obtain ⟨π, hπ⟩ : ∃ π : Fin n → S, Function.Surjective π :=
     ⟨Function.invFun ι, Function.invFun_surjective ι.injective⟩
   let q : S → MonoidAlgebra ℂ G := fun s => ∑ i ∈ Finset.univ.filter (fun i => π i = s), p i
@@ -209,16 +209,16 @@ theorem exists_family {G S : Type} [Group G] [Finite G] (c : G → S) (hc : Func
   refine ⟨q, fun s => ?_, fun s a => ?_, fun s t hst => ?_, fun s h => ?_, ?_⟩
   · conv_lhs => enter [1]; simp only [q]
     rw [Finset.sum_mul]
-    exact Finset.sum_congr rfl fun i hi => by rw [hpq, if_pos (by simpa using hi)]
+    exact Finset.sum_congr rfl fun i hi => by rw [hpq, ite_eq_left (by simpa using hi)]
   · simp only [q, Finset.sum_mul, Finset.mul_sum, h2]
   · conv_lhs => enter [1]; simp only [q]
     rw [Finset.sum_mul]
     refine Finset.sum_eq_zero fun i hi => ?_
     have : π i = s := by simpa using hi
-    rw [hpq, if_neg (this ▸ hst)]
+    rw [hpq, ite_eq_right (this ▸ hst)]
   · obtain ⟨i, rfl⟩ := hπ s
     have := hpq i (π i)
-    rw [h, mul_zero, if_pos rfl] at this
+    rw [h, mul_zero, ite_eq_left rfl] at this
     exact h4 i this.symm
   · rw [← h5]; exact Finset.sum_fiberwise _ _ _
 
@@ -240,7 +240,7 @@ theorem exists_isSer : ∀ (r g N : ℕ), g.Prime → 0 < N → Nat.card (GL (Fi
     ∃ e, IsSer r g N e := by
   intro r g N hg hN hG
   classical
-  haveI : Fact g.Prime := ⟨hg⟩
+  have : Fact g.Prime := ⟨hg⟩
   let P : (ZMod g)[X] → Prop := fun f => f.Monic ∧ f.natDegree = r ∧ f.coeff 0 ≠ 0
   let c : GL (Fin r) (ZMod g) → {f // P f} := fun x =>
     ⟨(x : Matrix (Fin r) (Fin r) (ZMod g)).charpoly, Matrix.charpoly_monic _, by simp, by
@@ -252,8 +252,8 @@ theorem exists_isSer : ∀ (r g N : ℕ), g.Prime → 0 < N → Nat.card (GL (Fi
     rintro ⟨f, h1, h2, h3⟩
     obtain ⟨x, hx⟩ := exists_charpoly f h1 h2 h3
     exact ⟨x, Subtype.ext hx⟩
-  haveI : Finite {f // P f} := Finite.of_surjective c hc
-  haveI := Fintype.ofFinite {f // P f}
+  have : Finite {f // P f} := Finite.of_surjective c hc
+  have := Fintype.ofFinite {f // P f}
   obtain ⟨q, h1, h2, h3, h4, h5⟩ := exists_family c hc (fun x y => Subtype.ext (by
     simp only [c, Units.val_mul]; exact Matrix.charpoly_mul_comm _ _))
   let e : (ZMod g)[X] → MonoidAlgebra ℂ (GL (Fin r) (ZMod g)) := fun f => if h : P f then q ⟨f, h⟩ else 0
@@ -265,7 +265,7 @@ theorem exists_isSer : ∀ (r g N : ℕ), g.Prime → 0 < N → Nat.card (GL (Fi
     fun f x => coeff_mem hN hG _ (hi f) (hce f) x⟩
   · by_cases h : P f
     · by_cases h' : P f'
-      · simp only [e, dif_pos h, dif_pos h']
+      · simp only [e, dite_eq_left h, dite_eq_left h']
         exact h3 _ _ (fun hh => hf (congrArg Subtype.val hh))
       · simp [e, h']
     · simp [e, h]

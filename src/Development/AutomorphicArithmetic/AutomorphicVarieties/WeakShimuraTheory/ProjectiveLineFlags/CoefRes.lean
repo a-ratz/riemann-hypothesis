@@ -48,13 +48,13 @@ theorem UpperTheory.V.Ws.P1.coefRes {l : ℕ} [hl : Fact l.Prime] (c : Coef l) :
     Finite (ResidueField c.O) ∧ CharP (ResidueField c.O) l ∧
       (∀ (c' : Coef l) (h : c.O ≤ c'.O), IsLocalHom (inc h)) ∧
       ∀ (m : ℕ) (x : c.O), l.Coprime m → x ^ m = 1 → residue c.O x = 1 → x = 1 := by
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   obtain ⟨-, hfin, hlm, -, -, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
   have hchar : CharP (ResidueField c.O) l := by
     obtain ⟨p, hp⟩ := CharP.exists (ResidueField c.O)
     have hp0 := CharP.char_ne_zero_of_finite (ResidueField c.O) p
-    haveI : NeZero p := ⟨hp0⟩
+    have : NeZero p := ⟨hp0⟩
     have hpp := (CharP.char_is_prime_of_pos (ResidueField c.O) p).out
     have hl0 : ((l : ℕ) : ResidueField c.O) = 0 := by
       rw [← map_natCast (residue c.O)]
@@ -65,7 +65,7 @@ theorem UpperTheory.V.Ws.P1.coefRes {l : ℕ} [hl : Fact l.Prime] (c : Coef l) :
     exact hp
   refine ⟨hfin, hchar, ?_, ?_⟩
   · intro c' h
-    haveI := c'.fin
+    have := c'.fin
     have hint : (inc h).IsIntegral := by
       intro y
       obtain ⟨p, hp, hpy⟩ := Algebra.IsIntegral.isIntegral (R := ℤ_[l]) y

@@ -58,7 +58,7 @@ theorem UpperTheory.crystalline_period_ring_properties :
     have hfin : ({x : Om l | x ^ M = 1}).Finite := by
       refine (Polynomial.nthRoots M (1 : Om l)).toFinset.finite_toSet.subset fun x hx => ?_
       simpa [Polynomial.mem_nthRoots (Nat.pos_of_ne_zero hM0)] using hx
-    haveI := hfin.to_subtype
+    have := hfin.to_subtype
     have hfd : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ M = 1}) :=
       IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
     refine ⟨⟨_, hfd⟩, fun s hs ζ hζ => Bw.j.injective ?_⟩

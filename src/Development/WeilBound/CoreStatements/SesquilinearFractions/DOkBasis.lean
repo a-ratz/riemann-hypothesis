@@ -75,7 +75,7 @@ theorem finite_primes [IsDedekindDomain R] [Module.Finite ℤ R] :
   have hint : ∀ P : Ideal R, P.IsPrime → Disjoint (primeTo R ℓ hℓ : Set R) P → P ≠ ⊥ → Ideal.span {(ℓ : R)} ≤ P := by
     intro P hP hdis hne
     obtain ⟨x, hxP, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
-    have hc := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) hx0 hxP (Algebra.IsIntegral.isIntegral x)
+    have hc := Ideal.under_ne_bot_of_integral_mem (R := ℤ) hx0 hxP (Algebra.IsIntegral.isIntegral x)
     obtain ⟨m, hmP, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hc
     have hN : ((m.natAbs : ℕ) : R) ∈ P := by
       rw [Ideal.mem_comap] at hmP
@@ -95,7 +95,7 @@ theorem finite_primes [IsDedekindDomain R] [Module.Finite ℤ R] :
   have hℓ0 : Ideal.span {(ℓ : R)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hℓ.ne_zero
-  haveI := Ideal.finiteQuotientOfFreeOfNeBot _ hℓ0
+  have := Ideal.finiteQuotientOfFreeOfNeBot _ hℓ0
   have hfinI : Finite (Ideal (R ⧸ Ideal.span {(ℓ : R)})) :=
     Finite.of_injective (fun I : Ideal (R ⧸ Ideal.span {(ℓ : R)}) => (I : Set (R ⧸ Ideal.span {(ℓ : R)}))) SetLike.coe_injective
   have hfinU : {P : Ideal R | Ideal.span {(ℓ : R)} ≤ P}.Finite := by
@@ -118,15 +118,15 @@ include hℓ in
 theorem locBasis [IsDedekindDomain R] [Module.Finite ℤ R] {M : Type} [AddCommGroup M] [Module R M] [Module.Finite R M]
     [Module.IsTorsionFree R M] : ∃ (g : ℕ) (b : Fin g → M), IsLocBasis R ℓ b := by
   classical
-  haveI : IsDomain (Localization (primeTo R ℓ hℓ)) := IsLocalization.isDomain_localization (primeTo_le R ℓ hℓ)
-  haveI : IsDedekindDomain (Localization (primeTo R ℓ hℓ)) := IsLocalization.isDedekindDomain R (primeTo_le R ℓ hℓ) _
-  haveI : IsPrincipalIdealRing (Localization (primeTo R ℓ hℓ)) := IsPrincipalIdealRing.of_finite_primes (finite_primes R ℓ hℓ)
-  haveI : Module.Finite (Localization (primeTo R ℓ hℓ)) (LocalizedModule (primeTo R ℓ hℓ) M) :=
+  have : IsDomain (Localization (primeTo R ℓ hℓ)) := IsLocalization.isDomain_localization (primeTo_le R ℓ hℓ)
+  have : IsDedekindDomain (Localization (primeTo R ℓ hℓ)) := IsLocalization.isDedekindDomain R (primeTo_le R ℓ hℓ) _
+  have : IsPrincipalIdealRing (Localization (primeTo R ℓ hℓ)) := IsPrincipalIdealRing.of_finite_primes (finite_primes R ℓ hℓ)
+  have : Module.Finite (Localization (primeTo R ℓ hℓ)) (LocalizedModule (primeTo R ℓ hℓ) M) :=
     Module.Finite.of_isLocalizedModule (primeTo R ℓ hℓ) (LocalizedModule.mkLinearMap (primeTo R ℓ hℓ) M)
-  haveI : Module.Free (Localization (primeTo R ℓ hℓ)) (LocalizedModule (primeTo R ℓ hℓ) M) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free (Localization (primeTo R ℓ hℓ)) (LocalizedModule (primeTo R ℓ hℓ) M) := Module.free_of_finite_type_torsion_free'
   have hinj : Function.Injective (algebraMap R (Localization (primeTo R ℓ hℓ))) :=
     IsLocalization.injective _ (primeTo_le R ℓ hℓ)
-  haveI : FaithfulSMul R (Localization (primeTo R ℓ hℓ)) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
+  have : FaithfulSMul R (Localization (primeTo R ℓ hℓ)) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
   set f := LocalizedModule.mkLinearMap (primeTo R ℓ hℓ) M with hf
   set v := Module.finBasis (Localization (primeTo R ℓ hℓ)) (LocalizedModule (primeTo R ℓ hℓ) M) with hv
   choose q hq using fun i => IsLocalizedModule.mk'_surjective (primeTo R ℓ hℓ) f (v i)
@@ -229,9 +229,9 @@ theorem exists_local_basis_cm_order : ∀ (E : Type) [Field E] [NumberField E] [
   classical
   intro E _ _ _ H ℓ hℓ
   obtain ⟨hD, hrep, -, -, hrank, hproj⟩ := CM.OK_isDedekindDomain_and_projective E H
-  haveI := hD
-  haveI := (hproj (𝓞 E) (Module.Finite.self (𝓞 E)) inferInstance).1
-  haveI : Module.Finite ℤ (CM.OK H) := by
+  have := hD
+  have := (hproj (𝓞 E) (Module.Finite.self (𝓞 E)) inferInstance).1
+  have : Module.Finite ℤ (CM.OK H) := by
     refine ⟨⟨({1, CM.wK H} : Finset (CM.OK H)), ?_⟩⟩
     rw [eq_top_iff]
     intro a _

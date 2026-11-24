@@ -347,9 +347,9 @@ theorem local_refl [TopologicalSpace K] [IsTopologicalRing K] (τ : K →+* K) (
         Ring.inverse (cf v.1) :=
       continuous_iff_continuousAt.2 fun v =>
         ContinuousAt.comp (f := fun v : {v : n → K // v ∈ cf ⁻¹' {a : K | IsUnit a} ∧ hform τ J v v = hform τ J u u} => cf v.1)
-          (continuousAt_ringInverse hU v.2.1) (hcf.comp continuous_subtype_val).continuousAt
+          (continuousAt_ringInverse hU v.2.1) (hcf.comp continuous_subtypeVal).continuousAt
     have hd : Continuous fun v : {v : n → K // v ∈ cf ⁻¹' {a : K | IsUnit a} ∧ hform τ J v v = hform τ J u u} =>
-        v.1 - -u := continuous_subtype_val.sub continuous_const
+        v.1 - -u := continuous_subtypeVal.sub continuous_const
     refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
     · exact reflM_cont τ hτc J hci hd
     · exact reflM_cont τ hτc J (hτc.comp hci) hd
@@ -359,14 +359,14 @@ end Local
 theorem orbit_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ x : Fin 1 → Fin M → R ⊗[F] E, IsUnit (gramR R σ J x).det → ∃ s : (Fin 1 → Fin M → R ⊗[F] E) → HA R σ J, Measurable s ∧ (∀ y, gramR R σ J y = gramR R σ J x → actW R σ J (s y) x = y) ∧ ∀ C : Set (Fin 1 → Fin M → R ⊗[F] E), IsCompact C → ∃ C' : Set (HA R σ J), IsCompact C' ∧ ∀ y ∈ C, gramR R σ J y = gramR R σ J x → s y ∈ C' := by
   intro F E _ _ _ _ _ σ hCM M J hJ R _ _ _ _ _ hLoc x hx
   obtain ⟨hTR, hLC, hSC, hT2, hArt, hRed, -, -⟩ := id hLoc
-  haveI := hTR; haveI := hLC; haveI := hSC; haveI := hT2; haveI := hArt; haveI := hRed
+  have := hTR; have := hLC; have := hSC; have := hT2; have := hArt; have := hRed
   obtain ⟨hKr, hKl, hKs, hKt, hσc, -, -, hBor, -, hgram⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI := hKr; haveI := hKl; haveI := hKs; haveI := hKt
+  have := hKr; have := hKl; have := hKs; have := hKt
   obtain ⟨hHg, -, -, -, hHb, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ R
-  haveI := hHg; haveI := hHb
+  have := hHg; have := hHb
   obtain ⟨-, -, h2, hinv, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.KAlg.algebra_tensor_invol F E σ hCM R
   have hUe := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hCM R hLoc
-  haveI := hBor 1 M
+  have := hBor 1 M
   have hZ : IsClosed {y : Fin 1 → Fin M → R ⊗[F] E | gramR R σ J y = gramR R σ J x} :=
     isClosed_eq (hgram 1 M J) continuous_const
   have hJk : ∀ i j, sigR R σ (JR R J j i) = JR R J i j := by
@@ -401,18 +401,18 @@ theorem orbit_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
           {y : Fin 1 → Fin M → R ⊗[F] E | gramR R σ J y = gramR R σ J x} : Set _) → HA R σ J :=
         fun y => t ⟨y.1 0, hmem y.1 y.2⟩
       have hg : Continuous g := ht.comp (Continuous.subtype_mk
-        ((continuous_apply 0).comp continuous_subtype_val) _)
+        ((continuous_apply 0).comp continuous_subtypeVal) _)
       refine ⟨_, hUo.preimage (continuous_apply 0), huU,
         fun y => if hy : y ∈ (fun y : Fin 1 → Fin M → R ⊗[F] E => y 0) ⁻¹' U ∩
           {y : Fin 1 → Fin M → R ⊗[F] E | gramR R σ J y = gramR R σ J x} then g ⟨y, hy⟩ * h₀ else 1,
         ?_, ?_⟩
-      · rw [continuousOn_iff_continuous_restrict]
+      · rw [continuousOn_iff_continuous_domRestrict]
         refine (hg.mul (continuous_const (y := h₀))).congr fun y => ?_
         show g y * h₀ = (if hy : y.1 ∈ (fun y : Fin 1 → Fin M → R ⊗[F] E => y 0) ⁻¹' U ∩
           {y : Fin 1 → Fin M → R ⊗[F] E | gramR R σ J y = gramR R σ J x} then g ⟨y.1, hy⟩ * h₀ else 1)
-        rw [dif_pos y.2]
+        rw [dite_eq_left y.2]
       · intro y hy
-        simp only [dif_pos hy]
+        simp only [dite_eq_left hy]
         rw [(hact 1).2.2.1, hh₀]
         funext a
         rw [Fin.fin_one_eq_zero a]

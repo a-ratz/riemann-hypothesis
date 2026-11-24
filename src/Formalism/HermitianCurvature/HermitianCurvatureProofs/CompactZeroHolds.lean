@@ -80,10 +80,10 @@ theorem lie_fix {X : B.Mat k r} {v : Fin (2 * r + k + 1) → ℂ}
   have := LieSplitPf.clm_zero (k := k) (r := r) X
     (((ContinuousLinearMap.proj i).comp (LieSplitPf.mvL v)).restrictScalars ℝ) (v i)
     (fun t => by
-      simp only [ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.coe_comp', Function.comp_apply,
+      simp only [ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.coe_comp, Function.comp_apply,
         ContinuousLinearMap.proj_apply, LieSplitPf.mvL_apply]
       rw [h t])
-  simpa only [ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.coe_comp', Function.comp_apply,
+  simpa only [ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.coe_comp, Function.comp_apply,
     ContinuousLinearMap.proj_apply, LieSplitPf.mvL_apply, Pi.zero_apply] using this
 
 theorem lieW_facts {z : Fin (2 * r + k + 1) → ℂ} {X : B.Mat k r} (hX : X ∈ JfS.lieOf (UWset k r z)) :
@@ -155,14 +155,14 @@ theorem perp_zero {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < 
     · show herm _ (Bs b) y = 0
       rw [JfS.Sym.herm_swap, hyB, star_zero]
     · show herm _ (Bs b) (Bs b') = 0
-      rw [hB.2.1 b b', if_neg (fun e => hne (by rw [e]))]
+      rw [hB.2.1 b b', ite_eq_right (fun e => hne (by rw [e]))]
   have hfs : ∀ o, herm (Hpk k r) (f o) (f o) ≠ 0 := by
     intro o
     rcases o with _ | _ | b
     · exact hzz
     · exact hyy
     · show herm _ (Bs b) (Bs b) ≠ 0
-      rw [hB.2.1 b b, if_pos rfl]
+      rw [hB.2.1 b b, ite_eq_left rfl]
       exact one_ne_zero
   have hli : LinearIndependent ℂ (fun o => psiW k r (f o)) := by
     rw [Fintype.linearIndependent_iff]
@@ -305,13 +305,13 @@ theorem cp_pow {m : ℕ} (M : Matrix (Fin m) (Fin m) ℂ)
     ext n
     rw [Polynomial.coeff_X_pow]
     rcases lt_trichotomy n m with hn | hn | hn
-    · rw [if_neg hn.ne]
+    · rw [ite_eq_right hn.ne]
       have := h (m - n) (by omega) (by omega)
       rwa [show m - (m - n) = n by omega] at this
-    · rw [if_pos hn, hn]
+    · rw [ite_eq_left hn, hn]
       have := M.charpoly_monic.leadingCoeff
       rwa [Polynomial.leadingCoeff, hdeg] at this
-    · rw [if_neg hn.ne']
+    · rw [ite_eq_right hn.ne']
       apply Polynomial.coeff_eq_zero_of_natDegree_lt
       rw [hdeg]
       exact hn

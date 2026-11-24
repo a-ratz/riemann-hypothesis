@@ -90,9 +90,9 @@ theorem UpperTheory.V.GC.globEuler :
     finrank k (H1 ρ) + ∑ w, finrank k (LinearMap.ker (ρ (toGS Ω _ (c w)) - 1)) = finrank k (H0 ρ) + finrank k (H2 ρ) + finrank ℚ F * finrank k M := by
   classical
   intro hF hE F Ω _ _ _ _ _ l _ hl hR S hS k _ _ _ M _ _ _ _ _ ρ hρ c hc
-  haveI : Finite M := Module.finite_of_finite k
-  haveI : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
-  letI : Module (ZMod (l ^ 1)) M := Module.compHom _ (ZMod.castHom (dvd_refl _) k)
+  have : Finite M := Module.finite_of_finite k
+  have : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
+  let : Module (ZMod (l ^ 1)) M := Module.compHom _ (ZMod.castHom (dvd_refl _) k)
   let ρ' : Representation (ZMod (l ^ 1)) (GS Ω (S : Set (HeightOneSpectrum (𝓞 F)))) M :=
     { toFun := fun g =>
         { toFun := ρ g
@@ -116,10 +116,10 @@ theorem UpperTheory.V.GC.globEuler :
   rw [archH0Card, IsTotallyReal.nrComplexPlaces_eq_zero, pow_zero, mul_one,
     Finset.filter_true_of_mem fun w _ => hr w, Finset.prod_congr rfl fun w _ => ec w,
     Finset.prod_pow_eq_pow_sum] at h
-  haveI : Finite (H1 ρ) := Finite.of_equiv _ e1.symm
-  haveI : Finite (H2 ρ) := Finite.of_equiv _ e2.symm
-  haveI : Module.Finite k (H1 ρ) := Module.Finite.of_finite
-  haveI : Module.Finite k (H2 ρ) := Module.Finite.of_finite
+  have : Finite (H1 ρ) := Finite.of_equiv _ e1.symm
+  have : Finite (H2 ρ) := Finite.of_equiv _ e2.symm
+  have : Module.Finite k (H1 ρ) := Module.Finite.of_finite
+  have : Module.Finite k (H2 ρ) := Module.Finite.of_finite
   have hk : 1 < Nat.card k := Finite.one_lt_card
   refine ⟨inferInstance, inferInstance, ?_⟩
   apply Nat.pow_right_injective hk
@@ -214,7 +214,7 @@ private theorem inflW_desc [CompactSpace Γ'] [T2Space Γ] (hp : Continuous p) (
         have := (inflW_mul p ρ x a a1 a⁻¹).1
         rw [mul_inv_cancel, x.2.2.1, a2, zero_add] at this
         exact this.symm }
-  haveI : N.Normal := ⟨fun n hn g => ⟨by simp [hn.1], by rw [inflW_conj p ρ x n hn.1, hn.2, map_zero]⟩⟩
+  have : N.Normal := ⟨fun n hn g => ⟨by simp [hn.1], by rw [inflW_conj p ρ x n hn.1, hn.2, map_zero]⟩⟩
   have hc : IsClosed (N : Set Γ') :=
     (isClosed_eq hp continuous_const).inter (isClosed_eq x.2.1 continuous_const)
   have hN : p.ker ≤ N := by
@@ -303,7 +303,7 @@ theorem UpperTheory.V.GC.inflKer :
     refine (Submodule.Quotient.mk_eq_zero _).2 ((mem_coboundaries1 _ _).2 ⟨m, fun g => ?_⟩)
     obtain ⟨g, rfl⟩ := hs g
     exact hm g
-  haveI hF : Module.Finite k (H1 ρ) := Module.Finite.of_injective _ hinj
+  have hF : Module.Finite k (H1 ρ) := Module.Finite.of_injective _ hinj
   let r1 : H1 (ρ.comp p) →ₗ[k] ∀ q, eqHom (ρ.comp p) (Dq q) (Jq q) :=
     Submodule.liftQ _ (r.comp (inflJ p ρ)) fun f hf => by
       obtain ⟨m, hm⟩ := (mem_coboundaries1 _ _).1 hf
@@ -359,8 +359,8 @@ private theorem hg_rank {k V W : Type} [Field k] [AddCommGroup V] [Module k V] [
     (f : V →ₗ[k] W) [Module.Finite k (LinearMap.ker f)] [Module.Finite k W] (U : Submodule k V) (U' : Submodule k W)
     (h : ∀ x ∈ U, f x ∈ U') :
     Module.Finite k V ∧ finrank k U ≤ finrank k (LinearMap.ker f) + finrank k U' := by
-  haveI : Module.Finite k V := by
-    haveI := Module.Finite.equiv f.quotKerEquivRange.symm
+  have : Module.Finite k V := by
+    have := Module.Finite.equiv f.quotKerEquivRange.symm
     exact Module.Finite.of_submodule_quotient (LinearMap.ker f)
   refine ⟨this, ?_⟩
   have e := LinearMap.finrank_range_add_finrank_ker (f.domRestrict U)
@@ -380,7 +380,7 @@ private theorem hg_eqHom {k Γ Γ' M : Type} [Field k] [Group Γ] [TopologicalSp
     Module.Finite k (eqHom ρ (D.map t) (J.map t)) ∧
       finrank k (eqHom ρ (D.map t) (J.map t)) ≤ finrank k (eqHom (ρ.comp t) D J) := by
   let u : J → J.map t := fun j => ⟨t j.1, j.1, j.2, rfl⟩
-  have hu : Continuous u := (ht.comp continuous_subtype_val).subtype_mk _
+  have hu : Continuous u := (ht.comp continuous_subtypeVal).subtype_mk _
   let φ : eqHom ρ (D.map t) (J.map t) →ₗ[k] eqHom (ρ.comp t) D J :=
     { toFun := fun f => ⟨fun j => f.1 (u j), f.2.1.comp_continuous hu, fun a b => by
           rw [← f.2.2.1]
@@ -405,17 +405,17 @@ private theorem hg_loc {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algeb
     {k : Type} [Field k] [Finite k] [CharP k l] {M : Type} [AddCommGroup M] [Module k M] [Module.Finite k M]
     [TopologicalSpace M] [DiscreteTopology M] (ρ : Representation k Γ M) (hρ : ContAction ρ) (x : H2 ρ) :
     resH2 ρ π hπ x = 0 := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsGalois F Ω := {}
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsGalois F Ω := {}
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   obtain ⟨φ, -, h2, h3⟩ := decZhat F Ω v A hA
   obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-  haveI : ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A)).Normal :=
+  have : ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A)).Normal :=
     inferInstanceAs ((Ine (F := F) A).subgroupOf (Dec (F := F) A) ⊓ K.subgroupOf _).Normal
   obtain ⟨b, hb, -, hz⟩ := H2_unramified_inflation l (Dec (F := F) A) k M (ρ.comp π) (hρ.comp (hπ.prodMap continuous_id))
     ((Ine (F := F) A).subgroupOf (Dec (F := F) A)) ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A)) φ
     (Subgroup.comap_mono inf_le_left)
-    (((isClosed_Ine A).inter (K.isClosed_of_isOpen hK)).preimage continuous_subtype_val)
+    (((isClosed_Ine A).inter (K.isClosed_of_isOpen hK)).preimage continuous_subtypeVal)
     (by
       rw [Subgroup.relIndex_subgroupOf (Ine_le_Dec _), Subgroup.inf_relIndex_left]
       exact fun h => hl (h.trans (Subgroup.relIndex_dvd_index_of_normal _ _)))
@@ -434,19 +434,19 @@ theorem UpperTheory.V.GC.H2_galois_quotient_eq :
       finrank k (H1 ρ) + ∑ w, finrank k (LinearMap.ker (ρ (π (c w)) - 1)) + finrank k (Loc.H0dual (cycF F Ω l k) (ρ.comp π)) := by
   intro P F Ω _ _ _ _ _ l _ hF S K Γ _ _ _ _ _ _ π h k _ _ _ M _ _ _ _ _ ρ hρ c hc A hA
   classical
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsGalois F Ω := {}
-  haveI := h.normal
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsGalois F Ω := {}
+  have := h.normal
   obtain ⟨A', hA', rfl⟩ : ∃ A' : HeightOneSpectrum (𝓞 F) → ValuationSubring Ω, (∀ v, IsPlaceOver (A' v) v) ∧
       A = fun v : S => A' v.1 := by
     refine ⟨fun v => if hv : v ∈ S then A ⟨v, hv⟩ else (exists_isPlaceOver Ω v).choose, fun v => ?_, funext fun v => ?_⟩
     · by_cases hv : v ∈ S
-      · simpa only [dif_pos hv] using hA ⟨v, hv⟩
-      · simpa only [dif_neg hv] using (exists_isPlaceOver Ω v).choose_spec
-    · simp only [dif_pos v.2]
+      · simpa only [dite_eq_left hv] using hA ⟨v, hv⟩
+      · simpa only [dite_eq_right hv] using (exists_isPlaceOver Ω v).choose_spec
+    · simp only [dite_eq_left v.2]
   obtain ⟨S', p, hSS, hp, hps, rfl, hker⟩ := levelS F Ω l S K Γ π h
-  haveI hcl := isClosed_NS Ω (S' : Set (HeightOneSpectrum (𝓞 F)))
-  haveI : TotallyDisconnectedSpace (GS Ω (S' : Set (HeightOneSpectrum (𝓞 F)))) :=
+  have hcl := isClosed_NS Ω (S' : Set (HeightOneSpectrum (𝓞 F)))
+  have : TotallyDisconnectedSpace (GS Ω (S' : Set (HeightOneSpectrum (𝓞 F)))) :=
     (AlgebraTools.totallyDisconnected_quot _ _ hcl).1
   have hS' : ContainsAbove S' l := fun v hv => hSS (h.above v hv)
   have hρ' : ContAction (ρ.comp p) := hρ.comp (hp.prodMap continuous_id)
@@ -473,19 +473,19 @@ theorem UpperTheory.V.GC.H2_galois_quotient_eq :
     exact ⟨b1, b2.trans a2.le⟩
   obtain ⟨g1, g2, g3⟩ := globEuler P.gf P.ge F Ω l h.odd hF S' hS' k M (ρ.comp p) hρ' c hc
   have tail := ptTail P.lf P.gf P.pt F Ω l h.odd S' hS' (fun v => A' v.1) (fun v => hA' v.1) k M (ρ.comp p) hρ'
-  letI : Fintype {v // v ∈ S' ∧ v ∉ S} := Fintype.subtype (S' \ S) fun _ => Finset.mem_sdiff
+  let : Fintype {v // v ∈ S' ∧ v ∉ S} := Fintype.subtype (S' \ S) fun _ => Finset.mem_sdiff
   obtain ⟨i1, i2, i3⟩ := inflKer l _ Γ p hp hps k M ρ hρ {v // v ∈ S' ∧ v ∉ S}
     (fun q => (Dec (F := F) (A' q.1)).map (toGS Ω _)) (fun q => (Ine (F := F) (A' q.1) ⊓ K).map (toGS Ω _))
     (hker A' hA') (fun q => (hq q).1) g1
   obtain ⟨r1, r2⟩ := hg_rank (resH2 ρ p hp)
-    (Sha2 ρ (fun v : S => (p.comp (toGS Ω _)).comp (Dec (F := F) (A' v.1)).subtype) fun v => h.cont.comp continuous_subtype_val)
+    (Sha2 ρ (fun v : S => (p.comp (toGS Ω _)).comp (Dec (F := F) (A' v.1)).subtype) fun v => h.cont.comp continuous_subtypeVal)
     (Sha2 (ρ.comp p) (fun v : S' => locHom (S' : Set (HeightOneSpectrum (𝓞 F))) (A' v.1)) fun v => continuous_locHom _ (A' v.1))
     (by
       intro x hx
       simp only [Sha2, Submodule.mem_iInf, LinearMap.mem_ker] at hx ⊢
       intro v
       have e : resH2 (ρ.comp p) (locHom (S' : Set (HeightOneSpectrum (𝓞 F))) (A' v.1)) (continuous_locHom _ _) (resH2 ρ p hp x) =
-          resH2 ρ ((p.comp (toGS Ω _)).comp (Dec (F := F) (A' v.1)).subtype) (h.cont.comp continuous_subtype_val) x := by
+          resH2 ρ ((p.comp (toGS Ω _)).comp (Dec (F := F) (A' v.1)).subtype) (h.cont.comp continuous_subtypeVal) x := by
         obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
         rfl
       refine e.trans ?_

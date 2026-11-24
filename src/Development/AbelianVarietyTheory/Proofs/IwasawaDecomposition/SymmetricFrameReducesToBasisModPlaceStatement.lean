@@ -202,7 +202,7 @@ theorem ew_not (X : HidaSetting D) (kv : Σ k : Fin 2, D.nd.PlG k)
   have hcard : Nat.card (𝓞 X.B.I.E ⧸ (wB X (D.naut.plGw kv.1 kv.2)).asIdeal) = D.host.g kv.1 := by
     rw [card_wB, card_res_host]
   have hn : 0 < X.B.I.n := by rw [X.n_eq, r_eq]; omega
-  haveI : Fact (D.host.g kv.1).Prime := ⟨hp⟩
+  have : Fact (D.host.g kv.1).Prime := ⟨hp⟩
   obtain ⟨m, hm⟩ := congW_exists hp hcard X.ew_int
   have hmm := congW_mul X.ew_int hm hm
   rw [X.ew_idem] at hmm
@@ -255,7 +255,7 @@ theorem main_kv (X : HidaSetting D) (b : Fin D.R.r → Fin X.B.I.n → X.B.I.E) 
   have hp := D.host.g_prime kv.1
   have hcard : Nat.card (𝓞 X.B.I.E ⧸ (wB X (D.naut.plGw kv.1 kv.2)).asIdeal) = D.host.g kv.1 := by
     rw [card_wB, card_res_host]
-  haveI : NeZero (D.host.g kv.1) := ⟨hp.ne_zero⟩
+  have : NeZero (D.host.g kv.1) := ⟨hp.ne_zero⟩
   have hm : D.R.r = X.B.I.n := X.n_eq.symm
   have hb0 : IsRedBasis0 X.B.I (wB X (D.naut.plGw kv.1 kv.2)) b := by
     have h := hb
@@ -286,7 +286,7 @@ theorem main_kv (X : HidaSetting D) (b : Fin D.R.r → Fin X.B.I.n → X.B.I.E) 
       (if i = j then 1 else 0) ∈ Wq X.B.I (wB X (D.naut.plGw kv.1 kv.2)) := by
     intro i j
     by_cases hE : GlobalTheory.Mem.SymFrame.EwAt X (D.naut.plGw kv.1 kv.2)
-    · simp only [epsD, GlobalTheory.Mem.SymFrame.epsW, if_pos hE]
+    · simp only [epsD, GlobalTheory.Mem.SymFrame.epsW, ite_eq_left hE]
       have h1 := zmod_Wq X kv (X.bw_dual i j)
       have h2 : (if i = j then X.ew - 1 else 0) ∈ Wq X.B.I (wB X (D.naut.plGw kv.1 kv.2)) := by
         split_ifs
@@ -298,7 +298,7 @@ theorem main_kv (X : HidaSetting D) (b : Fin D.R.r → Fin X.B.I.n → X.B.I.E) 
         split_ifs <;> ring
       rw [e]
       exact add_mem h1 h2
-    · simp only [epsD, GlobalTheory.Mem.SymFrame.epsW, if_neg hE]
+    · simp only [epsD, GlobalTheory.Mem.SymFrame.epsW, ite_eq_right hE]
       have h1 := sw X kv (X.bw_dual (Fin.rev j) (Fin.rev i))
       have h2 : (if i = j then sg X.B.I X.ew - 1 else 0) ∈ Wq X.B.I (wB X (D.naut.plGw kv.1 kv.2)) := by
         split_ifs
@@ -308,9 +308,9 @@ theorem main_kv (X : HidaSetting D) (b : Fin D.R.r → Fin X.B.I.n → X.B.I.E) 
           (hhat X.B.I (X.bw (Fin.rev i)) (X.bwd (Fin.rev j)) -
             sg X.B.I (if Fin.rev j = Fin.rev i then X.ew else 0)) + (if i = j then sg X.B.I X.ew - 1 else 0) := by
         by_cases h : i = j
-        · subst h; simp only [if_true]; ring
+        · subst h; simp only [ite_true]; ring
         · have h' : ¬ Fin.rev j = Fin.rev i := fun h' => h (Fin.rev_injective h').symm
-          simp only [h, h', if_false, map_zero, sub_zero, add_zero]
+          simp only [h, h', ite_false, map_zero, sub_zero, add_zero]
       rw [e]
       exact add_mem h1 h2
 

@@ -103,8 +103,8 @@ theorem free_iff_of_isLocalizedModule (f : A) {M N : Type*} [AddCommGroup M] [Mo
         IsLocalization.algEquiv_mk' _ _
       rw [this, Algebra.smul_def, IsLocalization.mk'_spec']
     rw [← map_smul, ← smul_assoc, h1, algebraMap_smul, ← smul_assoc, h2, algebraMap_smul, map_smul]
-  haveI := RingHomInvPair.of_ringEquiv e₁
-  haveI := RingHomInvPair.of_ringEquiv_symm e₁
+  have := RingHomInvPair.of_ringEquiv e₁
+  have := RingHomInvPair.of_ringEquiv_symm e₁
   let e : LinearEquiv (e₁ : Localization.Away f →+* Rf) (LocalizedModule (Submonoid.powers f) M) N :=
     { e₂.toAddEquiv with map_smul' := fun r x ↦ key r x }
   exact (Module.Free.iff_of_equiv e).symm
@@ -169,7 +169,7 @@ theorem free_away_mul {f : A} (g : A) {M : Type*} [AddCommGroup M] [Module A M]
   have hP : Module.Free T P :=
     Module.free_of_isLocalizedModule (Submonoid.powers (algebraMap A Ra g))
       (LocalizedModule.mkLinearMap (Submonoid.powers (algebraMap A Ra g)) N)
-  haveI := isLocalizedModule_powers_mul f g (LocalizedModule.mkLinearMap (Submonoid.powers f) M)
+  have := isLocalizedModule_powers_mul f g (LocalizedModule.mkLinearMap (Submonoid.powers f) M)
     (LocalizedModule.mkLinearMap (Submonoid.powers (algebraMap A Ra g)) N)
   exact (free_iff_of_isLocalizedModule (f * g)
     ((LocalizedModule.mkLinearMap (Submonoid.powers (algebraMap A Ra g)) N).restrictScalars A ∘ₗ
@@ -190,7 +190,7 @@ theorem isGenericallyFree_of_smul_eq_zero {M : Type*} [AddCommGroup M] [Module A
     | h m s =>
       exact LocalizedModule.eq_zero_of_smul_eq_zero a (Submonoid.mem_powers a) _
         (by rw [LocalizedModule.smul'_mk, h, LocalizedModule.zero_mk])
-  haveI : Subsingleton (LocalizedModule (Submonoid.powers a) M) := ⟨fun x y ↦ by rw [h0 x, h0 y]⟩
+  have : Subsingleton (LocalizedModule (Submonoid.powers a) M) := ⟨fun x y ↦ by rw [h0 x, h0 y]⟩
   infer_instance
 
 theorem isGenericallyFree_of_free [Nontrivial A] {M : Type*} [AddCommGroup M] [Module A M] [Module.Free A M] :
@@ -206,7 +206,7 @@ theorem IsGenericallyFree.of_injective [IsDomain A] {N M : Type*} [AddCommGroup 
   have hfree' := free_away_mul a hfree
   set F := f * a with hF
   refine ⟨F, mul_ne_zero hf ha, ?_⟩
-  haveI : IsLocalizedModule (Submonoid.powers F) (LocalizedModule.mkLinearMap (Submonoid.powers F) M ∘ₗ i) := by
+  have : IsLocalizedModule (Submonoid.powers F) (LocalizedModule.mkLinearMap (Submonoid.powers F) M ∘ₗ i) := by
     constructor
     · exact IsLocalizedModule.map_units (LocalizedModule.mkLinearMap (Submonoid.powers F) M)
     · intro y
@@ -282,8 +282,8 @@ theorem isGenericallyFree_of_primes {A : Type u} [CommRing A] [IsDomain A] {R : 
   · intro N _ _ _ p e _ _
     exact (hq p).of_linearEquiv (e.restrictScalars A).symm
   · intro N₁ _ _ _ N₂ _ _ _ N₃ _ _ _ f g hf hg hfg h₁ h₃ _ _
-    letI : Module A N₁ := Module.compHom N₁ (algebraMap A R)
-    letI : Module A N₃ := Module.compHom N₃ (algebraMap A R)
+    let : Module A N₁ := Module.compHom N₁ (algebraMap A R)
+    let : Module A N₃ := Module.compHom N₃ (algebraMap A R)
     have t₁ : IsScalarTower A R N₁ := ⟨fun a r n ↦ by
       show (a • r) • n = algebraMap A R a • r • n
       rw [Algebra.smul_def, mul_smul]⟩
@@ -335,7 +335,7 @@ theorem isGenericallyFree_quotient (hNN : GenericNoetherNormalisation.Statement.
       obtain ⟨a, ha, z, s, hspan⟩ := hNN A n q hqp hq hc
       let D := MvPolynomial (Fin (n + 1)) A ⧸ q
       let Rn := MvPolynomial (Fin n) A
-      letI : Algebra Rn D := (aeval z : Rn →ₐ[A] D).toRingHom.toAlgebra
+      let : Algebra Rn D := (aeval z : Rn →ₐ[A] D).toRingHom.toAlgebra
       have : IsScalarTower A Rn D := IsScalarTower.of_algebraMap_eq (R := A) (S := Rn) (A := D)
         fun x ↦ ((aeval z : Rn →ₐ[A] D).commutes x).symm
       let N : Submodule Rn D := Submodule.span Rn (s : Set D)
@@ -354,8 +354,8 @@ theorem GenericFreeness.proof (hNN : GenericNoetherNormalisation.Statement.{u}) 
     GenericFreeness.Statement.{u, v, w} := by
   intro A _ _ _ B _ _ _ M _ _ _ _ _
   obtain ⟨n, g, hg⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp ‹Algebra.FiniteType A B›
-  letI : Algebra (MvPolynomial (Fin n) A) B := g.toRingHom.toAlgebra
-  letI : Module (MvPolynomial (Fin n) A) M := Module.compHom M (algebraMap (MvPolynomial (Fin n) A) B)
+  let : Algebra (MvPolynomial (Fin n) A) B := g.toRingHom.toAlgebra
+  let : Module (MvPolynomial (Fin n) A) M := Module.compHom M (algebraMap (MvPolynomial (Fin n) A) B)
   have : IsScalarTower (MvPolynomial (Fin n) A) B M := ⟨fun x b m ↦ by
     show (g x * b) • m = g x • b • m
     rw [mul_smul]⟩

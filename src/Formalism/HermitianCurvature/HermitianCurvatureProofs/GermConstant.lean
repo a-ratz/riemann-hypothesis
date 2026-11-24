@@ -187,7 +187,7 @@ theorem betaZ_one (κ : ℝ) : betaZ κ 1 = 1 := by simp [betaZ]
 
 theorem prod_Ico_int_succ (f : ℤ → ℝ) (a b : ℤ) (h : a ≤ b) :
     ∏ x ∈ Finset.Ico a (b + 1), f x = (∏ x ∈ Finset.Ico a b, f x) * f b := by
-  rw [Finset.Ico_add_one_right_eq_Icc, ← Finset.Ico_insert_right h, Finset.prod_insert (by simp), mul_comm]
+  rw [Finset.Ico_add_one_right_eq_Icc, ← Finset.insert_right_Ico h, Finset.prod_insert (by simp), mul_comm]
 
 theorem betaZ_succ (κ : ℝ) (hκ : κ ≠ 0) (n : ℕ) :
     betaZ κ ((n : ℤ) + 1) = betaZ κ n * ∏ x ∈ Finset.Ico 1 ((n : ℤ) + 1), (κ ^ (1 - 2 * x) / Real.pi) := by

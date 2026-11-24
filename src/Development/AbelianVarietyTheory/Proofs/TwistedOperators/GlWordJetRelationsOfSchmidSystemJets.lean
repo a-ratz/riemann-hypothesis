@@ -97,7 +97,7 @@ theorem fderiv_linField {f : A → B} {z : A} (hf : AnalyticAt ℂ f z) (L : A �
     hf.fderiv.differentiableAt.hasFDerivAt
   have hP := hD.clm_apply L.hasFDerivAt
   rw [hP.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.flip_apply]
   exact add_comm _ _
 

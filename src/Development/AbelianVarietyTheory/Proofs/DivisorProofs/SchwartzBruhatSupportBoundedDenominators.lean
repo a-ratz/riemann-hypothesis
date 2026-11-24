@@ -83,7 +83,7 @@ theorem isOpen_denSet (κ : Type) [Finite κ] (m : ℕ) : IsOpen (denSet (F := F
       (m : FiniteAdeleRing (𝓞 F) F) * y i) ⁻¹'
       {a : FiniteAdeleRing (𝓞 F) F | ∀ v : HeightOneSpectrum (𝓞 F), a v ∈ v.adicCompletionIntegers F} := by
     ext y
-    simp only [denSet, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, natCast_mul_apply,
+    simp only [denSet, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, natCast_mul_apply,
       norm_le_one_iff_mem]
   rw [h]
   exact isOpen_iInter_of_finite fun i =>

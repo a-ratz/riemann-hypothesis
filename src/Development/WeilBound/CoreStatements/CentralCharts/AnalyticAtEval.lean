@@ -312,7 +312,7 @@ theorem exists_emb (𝔐 : HodgeCpt Y S y) {z : Spec (CommRingCat.of ℂ) ⟶ �
   have h0 : genPt 𝔐.ξ ⤳ centre z := 𝔐.all _
   have hex : ∀ a : c.F, ∃ r : ℂ, ValAt 𝔐.ξ z (𝔐.cst a) r := by
     intro a
-    haveI := c.fin
+    have := c.fin
     have hx : IsAlgebraic ℤ a := IsFractionRing.isAlgebraic_iff ℤ ℚ c.F |>.mpr (.of_finite ℚ a)
     obtain ⟨m, b, hm, hmb⟩ := hx.exists_nsmul_eq (𝓞 c.F)
     obtain ⟨r, hr⟩ := exists_cst_val_lemma 𝔐 z b
@@ -340,13 +340,13 @@ theorem exists_emb_fam (𝔐 : HodgeCpt Y S y) {n : ℕ} {gm : (Fin n → ℂ) �
     (hq : ∀ q, AnalyticAt ℂ (fun t => gm t q) 0) {z₀ : Spec (CommRingCat.of ℂ) ⟶ 𝔐.X} (hz : CoordsAt 𝔐.ξ y z₀ (gm 0)) :
     ∃ s : c.F →+* ℂ, ∀ᶠ t in 𝓝 (0 : Fin n → ℂ), ∀ z : Spec (CommRingCat.of ℂ) ⟶ 𝔐.X, CoordsAt 𝔐.ξ y z (gm t) →
       ∀ a, ValAt 𝔐.ξ z (𝔐.cst a) (s a) := by
-  haveI : NumberField c.F := @NumberField.mk _ _ inferInstance c.fin
+  have : NumberField c.F := @NumberField.mk _ _ inferInstance c.fin
   obtain ⟨s₀, hs₀⟩ := exists_emb 𝔐 hz
   have claim : ∀ a : c.F, ∀ᶠ t in 𝓝 (0 : Fin n → ℂ), ∀ z : Spec (CommRingCat.of ℂ) ⟶ 𝔐.X,
       CoordsAt 𝔐.ξ y z (gm t) → ∀ s : c.F →+* ℂ, (∀ b, ValAt 𝔐.ξ z (𝔐.cst b) (s b)) → s a = s₀ a := by
     intro a
     obtain ⟨F, hF, hF0, hev⟩ := exists_val_fam 𝔐.tie 𝔐.all hq hz (hs₀ a)
-    have hfin : (Set.range (fun σ : c.F →+* ℂ => σ a) \ {s₀ a}).Finite := (Set.finite_range _).diff
+    have hfin : (Set.range (fun σ : c.F →+* ℂ => σ a) \ {s₀ a}).Finite := (Set.finite_range _).sdiff
     have hnot : F 0 ∉ Set.range (fun σ : c.F →+* ℂ => σ a) \ {s₀ a} := by
       rw [hF0]
       simp

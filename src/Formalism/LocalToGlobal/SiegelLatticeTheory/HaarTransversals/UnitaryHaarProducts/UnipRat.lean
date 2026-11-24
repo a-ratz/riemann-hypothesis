@@ -307,7 +307,7 @@ def gA {k : ℕ} (hk : 1 ≤ k) {Y : Matrix (Kap X) (Kap X) X.B.I.E} (hY : InPat
 
 theorem gA_GF {k : ℕ} (hk : 1 ≤ k) {Y : Matrix (Kap X) (Kap X) X.B.I.E} (hY : InPat (lvk X) k Y)
     (hYs : Yᴴ * JB X = -(JB X * Y)) : gA X hk hY hYs ∈ X.B.I.GFset := by
-  simp only [Formalism.MainNotions.S.AutInst.GFset, Set.mem_setOf_eq]
+  simp only [Formalism.MainNotions.S.AutInst.GFset, Set.mem_ofPred_eq]
   refine ⟨gGL X hk hY, gGL_mem X hk hY hYs, fun v => uMat_mkUJ _ _ _, ?_⟩
   rfl
 
@@ -325,7 +325,7 @@ theorem Mv_gA {k : ℕ} (hk : 1 ≤ k) (v : InfinitePlace X.B.I.F) {Y : Matrix (
 
 theorem gA_ninf {k : ℕ} (hk : 1 ≤ k) {Y : Matrix (Kap X) (Kap X) X.B.I.E} (hY : InPat (lvk X) k Y)
     (hYs : Yᴴ * JB X = -(JB X * Y)) : (gA X hk hY hYs).1 ∈ X.NinfU u := by
-  simp only [Formalism.L2.SG.HidaSetting.HidaSetting.NinfU, Formalism.L2.SG.HidaSetting.Ninf, Set.mem_setOf_eq]
+  simp only [Formalism.L2.SG.HidaSetting.HidaSetting.NinfU, Formalism.L2.SG.HidaSetting.Ninf, Set.mem_ofPred_eq]
   intro v
   have hYv : InPat (lvk X) k (Y.map (X.B.I.φ v)) := fun i j h => by
     rw [Matrix.map_apply, hY i j h, map_zero]

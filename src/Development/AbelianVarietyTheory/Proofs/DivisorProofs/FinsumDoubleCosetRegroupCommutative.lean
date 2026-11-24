@@ -163,7 +163,7 @@ theorem normal_of_comm (hc : ∀ a b : A, a * b = b * a) (V : Subgroup A) : V.No
 
 theorem mem_sup_iff (hc : ∀ a b : A, a * b = b * a) (P Q : Subgroup A) {x : A} :
     x ∈ P ⊔ Q ↔ ∃ p ∈ P, ∃ q ∈ Q, p * q = x := by
-  haveI : Q.Normal := normal_of_comm hc Q
+  have : Q.Normal := normal_of_comm hc Q
   rw [← SetLike.mem_coe, Subgroup.mul_normal, Set.mem_mul]
   simp only [SetLike.mem_coe]
 
@@ -185,8 +185,8 @@ theorem card_quot_eq_index (hc : ∀ a b : A, a * b = b * a) (P V : Subgroup A) 
 
 theorem relIndex_split (hc : ∀ a b : A, a * b = b * a) (h u c : Subgroup A) (huc : u ≤ c) :
     u.relIndex c = (h ⊓ u).relIndex (h ⊓ c) * (h ⊔ u).relIndex (h ⊔ c) := by
-  haveI : u.Normal := normal_of_comm hc u
-  haveI : (h ⊔ u).Normal := normal_of_comm hc (h ⊔ u)
+  have : u.Normal := normal_of_comm hc u
+  have : (h ⊔ u).Normal := normal_of_comm hc (h ⊔ u)
   have hM : (h ⊔ u) ⊓ c = (h ⊓ c) ⊔ u := by
     apply le_antisymm
     · intro x hx

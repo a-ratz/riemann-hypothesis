@@ -385,11 +385,11 @@ theorem e_tf [NeZero n] [IsDomain O] (hinj : Function.Injective (algebraMap O LL
       obtain ⟨ζ₁, h₁⟩ := h₁
       obtain ⟨ζ₂, h₂⟩ := h₂
       exact ⟨ζ₁ + ζ₂, by rw [map_add (f := _), h₁, h₂, add_smul]⟩
-  haveI : Nontrivial W.EE := W.EE_inj.nontrivial
+  have : Nontrivial W.EE := W.EE_inj.nontrivial
   obtain ⟨hfree, hrank⟩ := W.DD_free W.one
   rw [finrank_one_lat W hinj] at hrank
-  haveI := hfree
-  haveI : Module.Finite W.EE (W.DD W.one) := Module.finite_of_finrank_pos (by omega)
+  have := hfree
+  have : Module.Finite W.EE (W.DD W.one) := Module.finite_of_finrank_pos (by omega)
   let bs := Module.Free.chooseBasis W.EE (W.DD W.one)
   have hcard : 0 < Fintype.card (Module.Free.ChooseBasisIndex W.EE (W.DD W.one)) := by
     rw [← Module.finrank_eq_card_chooseBasisIndex]; omega

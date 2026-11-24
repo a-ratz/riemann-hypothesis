@@ -143,14 +143,14 @@ theorem exists_colouring_maximal_ideals :
     ∃ c : Ideal (𝓞 K) → Fin (finrank ℚ K), ∀ p : ℕ, p.Prime → ∀ P Q : Ideal (𝓞 K),
       P.IsMaximal → Q.IsMaximal → (p : 𝓞 K) ∈ P → (p : 𝓞 K) ∈ Q → c P = c Q → P = Q := by
   classical
-  haveI : Nonempty (Fin (finrank ℚ K)) := ⟨⟨0, finrank_pos⟩⟩
+  have : Nonempty (Fin (finrank ℚ K)) := ⟨⟨0, finrank_pos⟩⟩
   have key : ∀ p : ℕ, ∃ e : Ideal (𝓞 K) → Fin (finrank ℚ K), p.Prime →
       Set.InjOn e {P | P.IsMaximal ∧ (p : 𝓞 K) ∈ P} := by
     intro p
     by_cases hp : p.Prime
     · have hp' : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
       have hp0 : Ideal.span {(p : ℤ)} ≠ ⊥ := by simpa using hp.ne_zero
-      haveI hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
+      have hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
         ((Ideal.span_singleton_prime hp'.ne_zero).mpr hp').isMaximal hp0
       have hc := Ideal.card_primesOverFinset_le_finrank (𝓞 K) ℚ K hp0
       have hsub : {P : Ideal (𝓞 K) | P.IsMaximal ∧ (p : 𝓞 K) ∈ P} ⊆
@@ -201,7 +201,7 @@ theorem ncard_ideal_absNorm_eq_le {n : ℕ} (hn : n ≠ 0) :
     | cons Q s ih =>
       intro hs
       obtain ⟨ih0, ih⟩ := ih fun R hR => hs R (Multiset.mem_cons_of_mem hR)
-      haveI hQ : Q.IsMaximal := hs Q (Multiset.mem_cons_self Q s)
+      have hQ : Q.IsMaximal := hs Q (Multiset.mem_cons_self Q s)
       obtain ⟨q, g, hg, hqQ, hq, H⟩ := Ideal.exists_prime_and_absNorm_eq_pow Q
       have hQ0 : Ideal.absNorm Q ≠ 0 := H ▸ pow_ne_zero _ hq.ne_zero
       by_cases hcol : c Q = c P
@@ -213,7 +213,7 @@ theorem ncard_ideal_absNorm_eq_le {n : ℕ} (hn : n ≠ 0) :
           rw [Multiset.count_cons_self, hN, hp.factorization_pow, Finsupp.single_eq_same]
           ring
         · rw [Multiset.count_cons_of_ne (Ne.symm hQP), H, hq.factorization_pow,
-            Finsupp.single_apply, if_neg, zero_add]
+            Finsupp.single_apply, ite_eq_right, zero_add]
           rintro rfl
           exact hQP (hc q hq Q P hQ hP hqQ hpP hcol)
       · rw [Multiset.filter_cons_of_neg (p := fun Q => c Q = c P) s hcol]
@@ -336,7 +336,7 @@ theorem classNumber_le_sqrt_discr_mul_pow_pred :
   · refine sum_le_sum fun n hn => le_trans ?_ (ncard_ideal_absNorm_eq_le K (mem_Ioc.mp hn).1.ne')
     rw [← Set.ncard_coe_finset]
     exact Set.ncard_le_ncard_of_injOn (fun C => (g C : Ideal (𝓞 K)))
-      (fun C hC => by simpa using hC) hginj.injOn (Ideal.finite_setOfPred_absNorm_eq n)
+      (fun C hC => by simpa using hC) hginj.injOn (Ring.HasFiniteQuotients.finite_absNorm_eq n)
   · intro C _
     rw [mem_coe, mem_Ioc]
     exact ⟨Nat.pos_of_ne_zero (Ideal.absNorm_ne_zero_of_nonZeroDivisors _),

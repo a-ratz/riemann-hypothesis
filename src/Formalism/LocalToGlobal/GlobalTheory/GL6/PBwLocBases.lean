@@ -57,7 +57,7 @@ theorem bwB_clsCrd_lat (i : ℕ) (hi : i ≤ D.R.m) (c : (D.mem u).C.cls i) :
   exact Submodule.IsLattice.of_fg D.host.E ((D.clsLat_lat u i c).fg.map _)
 
 theorem bwB_gramN_det (i : ℕ) (hi : i ≤ D.R.m) : IsUnit (gramN D i hi).det := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   unfold gramN
   rw [Matrix.det_reindex_self, isUnit_iff_ne_zero]
   intro hdet

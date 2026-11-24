@@ -394,7 +394,7 @@ theorem exists_densePart {l : Level H} {Xo : Moduli D l} {c : Coeff l} {O : Type
     IsLocallyNoetherian Y.X ∧ Mono (spMap β) ∧ Mono Y.j ∧ ∃ j : Xo.XF c ⟶ U.toScheme, j ≫ U.ι = Y.j ∧
       IsPreimmersion j ∧ Flat j ∧ IsDominant j ∧ QuasiCompact j := by
   obtain ⟨⟨_, _⟩, -, hf⟩ := hβ
-  letI := β.toAlgebra
+  let := β.toAlgebra
   obtain ⟨h₁, -, -, h₂, h₃, h₄, h₅⟩ :=
     genericPart_dense_proOpen O c.F Y.X _ Y.s Y.jQ Y.flat Y.proj Y.jQ_open Y.jQ_dense
   have h₂ : IsPreimmersion Y.j := h₂
@@ -434,8 +434,8 @@ theorem abelianLocus_finite_etale : Out.Laws → Out.Laws2 → Out.Laws3 → ∀
   have hinc' : β₁.comp b = inc.comp β := RingHom.ext fun x => Subtype.ext (hinc x)
   have hinc'' : spMap β₁ ≫ spMap b = spMap inc ≫ spMap β := by rw [← spMap_comp, ← spMap_comp, hinc']
   have R : IsPullback (spMap β₁) (spMap inc) (spMap b) (spMap β) := by
-    letI := β.toAlgebra
-    letI := β₁.toAlgebra
+    let := β.toAlgebra
+    let := β₁.toAlgebra
     have := hβ.2.2
     have := hβ₁.2.2
     exact isPullback_fraction b inc hinc' hden
@@ -585,7 +585,7 @@ theorem etale_of_semilocal_dedekind_of_birational (B S : Type*) [CommRing B] [Is
       obtain ⟨m, hmT, hmq⟩ := hqp.inf_le'.mp hle
       simp only [T, Set.Finite.mem_toFinset] at hmT
       exact hmT (m.isMaximal.eq_of_le hqp.ne_top hmq)
-    obtain ⟨s, hsT, hsq⟩ := SetLike.not_le_iff_exists.mp hT
+    obtain ⟨s, hsT, hsq⟩ := IsConcreteLE.not_le_iff_exists.mp hT
     refine ⟨s, fun P hP hPq => ?_, hsq⟩
     have hPT : (⟨P, hP⟩ : MaximalSpectrum B) ∈ T := by simpa [T] using hPq
     exact Finset.inf_le (f := fun m : MaximalSpectrum B => m.asIdeal) hPT hsT
@@ -1088,7 +1088,7 @@ theorem exists_genericPart (Y : Model Xo c β) (hβ : IsDedFrac β) (U : Y.X.Ope
       IsLocallyNoetherian U.toScheme ∧ Geo.Tor.IsNormalScheme U.toScheme ∧ IsPreimmersion j ∧ Flat j ∧
       IsDominant j ∧ QuasiCompact j := by
   obtain ⟨⟨_, hD⟩, _, hF⟩ := hβ
-  letI : Algebra O c.F := β.toAlgebra
+  let : Algebra O c.F := β.toAlgebra
   obtain ⟨hN, -, -, j₁, j₂, j₃, j₄⟩ := genericPart_dense_proOpen O c.F Y.X (Xo.XF c) Y.s Y.jQ Y.flat Y.proj
     Y.jQ_open Y.jQ_dense
   replace j₁ : IsPreimmersion Y.j := j₁
@@ -1153,7 +1153,7 @@ theorem exists_levelImage (L₁ : Out.Laws) (L₂ : Out.Laws2) (L₃ : Out.Laws3
         (g₁ ≫ m₁.φ = (Y.oF.etaA a).left ≫ Y.m.φ → g₁ ≫ m.φ = j' ≫ u ≫ (ηA' a).left) := by
   obtain ⟨j, hj, pb, hN, hnorm, j₁, j₂, j₃, j₄⟩ := exists_genericPart Y hβ U hU
   obtain ⟨⟨_, hD⟩, _, hF⟩ := hβ
-  letI : Algebra O c.F := β.toAlgebra
+  let : Algebra O c.F := β.toAlgebra
   have hn' : IsUnit ((l.M * l.A : ℕ) : Γ(T, ⊤)) := by
     simpa using hn.map (sT.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of O)).inv.hom)
   obtain ⟨Z, et, z₁, z₂, -, -, hZ⟩ := exists_finiteEtale_latticeTorsionHom T tT.G (l.M * l.A) (D.La × D.La)

@@ -67,9 +67,9 @@ theorem nonempty_lift {K L : Type} [Field K] [Field L] [Algebra K L] [Algebra K 
 
 theorem exists_algHom_ker {K : Type} [Field K] (σ : K →+* ℂ) (p : TRing K) (m : Ideal p.R) [hm : m.IsMaximal] :
     ∃ ψ : p.R →ₐ[K] CAt σ, ∀ x, ψ x = 0 ↔ x ∈ m := by
-  letI : Algebra K ℂ := σ.toAlgebra
-  letI := Ideal.Quotient.field m
-  haveI : Module.Finite K (p.R ⧸ m) := finite_of_finite_type_of_isJacobsonRing K _
+  let : Algebra K ℂ := σ.toAlgebra
+  let := Ideal.Quotient.field m
+  have : Module.Finite K (p.R ⧸ m) := finite_of_finite_type_of_isJacobsonRing K _
   obtain ⟨j⟩ := nonempty_lift (K := K) (L := p.R ⧸ m)
   refine ⟨(j.comp (Ideal.Quotient.mkₐ K m) : p.R →ₐ[K] ℂ), fun x => ?_⟩
   exact (map_eq_zero_iff j j.toRingHom.injective).trans Ideal.Quotient.eq_zero_iff_mem
@@ -77,8 +77,8 @@ theorem exists_algHom_ker {K : Type} [Field K] (σ : K →+* ℂ) (p : TRing K) 
 theorem eq_of_complex (σ : c.F →+* ℂ) {f f' : Rul Xo c} {a : (E →+* ℂ) × ℕ → ℕ} {w : ℕ} (hf : f ∈ sec Xo c a w)
     (hf' : f' ∈ sec Xo c a w) (h : ∀ y : FrPt Xo c (CAt σ), evR Xo c f y = evR Xo c f' y) : f = f' := by
   funext p y
-  haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
-  haveI : IsJacobsonRing p.R := isJacobsonRing_of_finiteType (A := c.F)
+  have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
+  have : IsJacobsonRing p.R := isJacobsonRing_of_finiteType (A := c.F)
   have hj : (⊥ : Ideal p.R).jacobson = ⊥ := IsJacobsonRing.out inferInstance (Ideal.isRadical_bot)
   rw [← sub_eq_zero, ← Ideal.mem_bot, ← hj, Ideal.jacobson, Ideal.mem_sInf]
   rintro m ⟨-, hm⟩

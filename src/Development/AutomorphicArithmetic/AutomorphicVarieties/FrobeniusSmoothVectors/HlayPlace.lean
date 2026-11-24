@@ -77,7 +77,7 @@ private theorem hlay_cop (l : ℕ) [hl : Fact l.Prime] (m : ℕ) : (l ^ m).Copri
 
 private theorem hlay_card (l : ℕ) [hl : Fact l.Prime] (m : ℕ) (h2 : l ≠ 2) :
     Nat.card ((⊤ : Subgroup (ZMod (l ^ (m + 1)))ˣ).map (powMonoidHom (l - 1))) = l ^ m := by
-  haveI := ZMod.isCyclic_units_of_prime_pow l hl.out h2 (m + 1)
+  have := ZMod.isCyclic_units_of_prime_pow l hl.out h2 (m + 1)
   rw [← MonoidHom.range_eq_map, IsCyclic.card_powMonoidHom_range, Nat.card_eq_fintype_card, ZMod.card_units_eq_totient,
     Nat.totient_prime_pow_succ hl.out]
   have hpos : 0 < l - 1 := Nat.sub_pos_of_lt hl.out.one_lt
@@ -92,7 +92,7 @@ private theorem hlay_inf {l : ℕ} [hl : Fact l.Prime] (m : ℕ) (u : ℤ_[l]ˣ)
   have hfx : f x = 1 := by
     have : f x = KStar.TotallyRealRoots.redPow l 1 u := by
       ext
-      simp only [f, hx, ZMod.unitsMap, KStar.TotallyRealRoots.redPow, Units.coe_map, MonoidHom.coe_coe]
+      simp only [f, hx, ZMod.unitsMap, KStar.TotallyRealRoots.redPow, Units.coe_map, MonoidHom.coe_ofClass]
       exact congrArg (fun g => g (u : ℤ_[l])) (PadicInt.zmod_cast_comp_toZModPow 1 (m + 1) (by omega))
     rw [this]
     exact h1
@@ -160,7 +160,7 @@ theorem UpperTheory.V.Fr.hlay :
       rfl
     rw [hset]
     exact (KStar.TotallyRealRoots.isOpen_princ (m + 1)).preimage hcont
-  · exact Abelianization.commutator_subset_ker _
+  · exact Group.Abelianization.commutator_le_ker _
   · rw [← Subgroup.relIndex_top_right]
     exact hidx ⊤ (top_unique ((hsurjIne A hA _).symm.le.trans (Subgroup.map_mono le_top)))
   · apply le_antisymm

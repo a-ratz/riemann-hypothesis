@@ -170,9 +170,9 @@ def matBall (x : Matrix A' A' k) (c : kˣ) : Set (Matrix A' A' k) :=
 
 theorem matBall_eq_preimage (x : Matrix A' A' k) (c : kˣ) :
     matBall x c = ⋂ i, ⋂ j, (fun y : Matrix A' A' k => (y i j - x i j) / (c : k)) ⁻¹' (𝒪[k] : Set k) := by
-  have h0 : 0 < valuation k (c : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (c : k) := pos_iff_ne_zero.2 (by simp)
   ext y
-  simp only [matBall, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe,
+  simp only [matBall, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe,
     Valuation.mem_integer_iff, map_div₀, div_le_one₀ h0]
 
 theorem isOpen_matBall (x : Matrix A' A' k) (c : kˣ) : IsOpen (matBall x c) := by
@@ -218,7 +218,7 @@ open MeasureTheory GlobalTheory.SplitFlip GlobalTheory.SplitWeil ValuativeRel
 
 theorem integral_glBall_mem : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] {A' : Type} [Fintype A'] [DecidableEq A'] (F : Subfield ℂ) {J : Subgroup (GL A' k)}, IsOpen (J : Set (GL A' k)) → J ≤ KO k A' → ∀ (ν : kˣ →* ℂˣ) (z : ℂ) {ϖ : kˣ} {e : ℕ}, IsUnif ϖ → CondLE ϖ e ν → (∀ u, (ν u : ℂ) ∈ F) → (∀ u : kˣ, apow u z ∈ F) → ∀ (c : kˣ) (x : Matrix A' A' k), (∀ y : Matrix A' A' k, (∀ i j, valuation k (y i j - x i j) ≤ valuation k (c : k)) → y.det ≠ 0) → ∫ g in {g : GL A' k | ∀ i j, valuation k (g.val i j - x i j) ≤ valuation k (c : k)}, (ν (gdet g) : ℂ) * apow (gdet g) z ∂(haarVol J) ∈ F := by
   intro k _ _ _ _ _ _ A' _ _ F J hJo hJK ν z ϖ e _ hcond hνF hapF c x hdet
-  haveI := isHaarMeasure_haarVol hJo hJK
+  have := isHaarMeasure_haarVol hJo hJK
   obtain ⟨hSc, hSo⟩ := isCompact_isOpen_glBall x c hdet
   set S := {g : GL A' k | ∀ i j, valuation k (g.val i j - x i j) ≤ valuation k (c : k)} with hSdef
   set K : Subgroup (GL A' k) := J ⊓ GlobalTheory.SplitFlip.glLatCong (ϖ ^ e) (stdLat k A') ⊓ rightStab S with hKdef

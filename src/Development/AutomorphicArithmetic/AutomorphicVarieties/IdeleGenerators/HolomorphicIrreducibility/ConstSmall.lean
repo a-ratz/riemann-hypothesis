@@ -322,7 +322,7 @@ private theorem sum_multiples (M w : ℕ) (hw : 0 < w) (f : ℕ → ℂ) :
   rw [Finset.sum_eq_single 0]
   · simp
   · intro b hb hb0
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     exact hb0 (Nat.eq_zero_of_dvd_of_lt ((Nat.dvd_add_left (dvd_mul_right w j)).1 h) (mem_range.1 hb))
   · intro h; exact absurd (mem_range.2 hw) h
@@ -337,7 +337,7 @@ private theorem sum_all {M w k : ℕ} (hM : 1 < M) (hw : 0 < w) (hk : 1 ≤ k) (
   simp only [h2]
   by_cases hb0 : b = 0
   · subst hb0
-    haveI : Fact (1 < M) := ⟨hM⟩
+    have : Fact (1 < M) := ⟨hM⟩
     simp [ψ.map_zero]
   have h3 : (ζ ^ b) ^ w ≠ 1 := by
     rw [← pow_mul, Ne, hζ.pow_eq_one_iff_dvd]
@@ -352,8 +352,8 @@ theorem UpperTheory.V.Sd.constSmall :
   intro l hl ι M w _ φ θ χ h k hk c hc
   have hw0 : 0 < w := h.prime.pos
   have hM0 : 0 < M := zero_lt_one.trans h.one_lt
-  haveI : NeZero M := ⟨hM0.ne'⟩
-  haveI : Fact w.Prime := ⟨h.prime⟩
+  have : NeZero M := ⟨hM0.ne'⟩
+  have : Fact w.Prime := ⟨h.prime⟩
   have hlw : ¬ l ∣ w := fun hd => hl.out.one_lt.ne' (Nat.dvd_one.1 ((Nat.dvd_sub_iff_right hw0 hd).1 h.dvd))
   have hlN : ¬ l ∣ M * w := fun hd => (hl.out.dvd_mul.1 hd).elim h.cop hlw
   set ζ : ℂ := ZMod.stdAddChar (1 : ZMod (M * w)) with hζdef

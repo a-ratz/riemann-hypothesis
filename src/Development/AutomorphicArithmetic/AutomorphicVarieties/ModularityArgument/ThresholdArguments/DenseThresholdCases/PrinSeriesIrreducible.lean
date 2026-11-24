@@ -78,7 +78,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
     GlobalTheory.Parabolic.isIrreducible_of_equiv
       (p.trans (multiProdEquiv (stdBlocks (fun i => (x i).1) hd)
         fun i => equivRep (IrrRep.det (Fin 1) (ω i) (hω i)))).symm hP
-  haveI := nontrivial_of_irreducible hM
+  have := nontrivial_of_irreducible hM
   haveI : Nontrivial (IndSp _ _) := by
     obtain ⟨S, f, hf⟩ := GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries e₀ ω
     have := hf.nontrivial
@@ -89,7 +89,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : W)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+    have : IsSimpleOrder (Subrepresentation ρ) := hρ
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : ρ.IntertwiningMap σ := f.comp (topEquiv ρ).symm.toIntertwiningMap
@@ -106,7 +106,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
 end Loc
 theorem principal_series_of_statement_w : _root_.UpperTheory.V.Z.Sym.W.PsOfAlt := by
   intro _ L _ _ n w τ hT
-  haveI : CharZero (w.adicCompletion L) := charZero_of_injective_algebraMap (algebraMap L _).injective
+  have : CharZero (w.adicCompletion L) := charZero_of_injective_algebraMap (algebraMap L _).injective
   obtain ⟨ξ, hξ, hs, hu⟩ := GlobalTheory.RoadU.plainTor_exists_chars _ _ hT
   have hs' : HasSupport τ.ρ (GlobalTheory.RoadU.chars ξ hξ) := hs.of_equiv (IrrGL.equivOf τ.ρ τ.smooth τ.irred).symm
   have hmem : ∀ i, IrrGL.ofChar (ξ i) (hξ i) ∈ GlobalTheory.RoadU.chars ξ hξ := fun i =>

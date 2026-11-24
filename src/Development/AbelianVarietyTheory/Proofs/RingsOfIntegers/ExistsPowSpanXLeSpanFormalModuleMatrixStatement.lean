@@ -114,7 +114,7 @@ theorem exists_pow_span_X_le_span_matV : ∀ (V : Type) [CommRing V] [IsDomain V
   have h1 := Ideal.mem_map_of_mem θ (hM (Ideal.pow_mem_pow (Ideal.subset_span (Set.mem_range_self (0, i))) M))
   rw [map_pow, hX] at h1
   refine ⟨M, ?_⟩
-  refine SetLike.le_def.1 ?_ h1
+  refine IsConcreteLE.le_iff.1 ?_ h1
   rw [Ideal.map_span, Ideal.span_le]
   rintro _ ⟨_, ⟨j, rfl⟩, rfl⟩
   have h2 := Ideal.mem_map_of_mem (MvPowerSeries.map (σ := Fin n × Fin d) (residue V)) (hA b j)

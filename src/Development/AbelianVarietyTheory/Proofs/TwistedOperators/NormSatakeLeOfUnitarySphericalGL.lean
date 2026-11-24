@@ -54,8 +54,8 @@ private theorem mem_adicCompletionIntegers_iff {E : Type} [Field E] [NumberField
     (x : w.adicCompletion E) :
     letI := GlobalTheory.LocalData.complRel w
     x ∈ Valuation.integer (ValuativeRel.valuation (w.adicCompletion E)) ↔ x ∈ w.adicCompletionIntegers E := by
-  letI := GlobalTheory.LocalData.complRel w
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  let := GlobalTheory.LocalData.complRel w
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have h := ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E))
     (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))
@@ -68,8 +68,8 @@ theorem resCard_completion {E : Type} [Field E] [NumberField E] (w : HeightOneSp
     letI := GlobalTheory.LocalData.complRel w
     haveI := GlobalTheory.LocalData.isLocalField w
     GlobalTheory.SplitWeil.resCard (w.adicCompletion E) = Ideal.absNorm w.asIdeal := by
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
 
   let e : Valuation.integer (ValuativeRel.valuation (w.adicCompletion E)) ≃+* w.adicCompletionIntegers E :=
     { toFun := fun x => ⟨x.1, (mem_adicCompletionIntegers_iff w x.1).1 x.2⟩
@@ -84,8 +84,8 @@ theorem resCard_completion {E : Type} [Field E] [NumberField E] (w : HeightOneSp
 
 theorem norm_le_of_hasSatGL : GlobalTheory.IndefiniteRowSideFullHecke.SatakeTrivialRangeBound.SatakeTrivialBound → ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) (n : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ (GL (Fin n) (w.adicCompletion E)) V) (B : Multiset ℂˣ), GlobalTheory.LGrp.IsIrrSmooth ρ → GlobalTheory.LGrp.IsUnitarisable ρ → HasSatGL w ρ B → ∀ b ∈ B, ‖(b : ℂ)‖ ≤ ((Ideal.absNorm w.asIdeal : ℕ) : ℝ) ^ (((n : ℝ) - 1) / 2) := by
   intro hT E _ _ w n V _ _ ρ B hirr hun hsat b hb
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   obtain ⟨hsph, hvec⟩ := hsat
 
   obtain ⟨x, hx, hx0⟩ := (Submodule.ne_bot_iff _).mp hsph

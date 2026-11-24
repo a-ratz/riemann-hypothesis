@@ -55,7 +55,7 @@ theorem exists_linearMap_of_repr_mem_range {K : Type} [Field K] (φ : K →+* �
     (L : WS →ₗ[ℂ] WT) (hL : ∀ k i, bT.repr (L (bS i)) k ∈ Set.range φ) :
     ∃ f : VS →ₗ[K] VT, ∀ u, L (mS u) = mT (f u) := by
   classical
-  haveI : FiniteDimensional K VS := Module.Finite.of_basis b0
+  have : FiniteDimensional K VS := Module.Finite.of_basis b0
   have hli : LinearIndependent K uS := by
     rw [Fintype.linearIndependent_iff]
     intro g hg i

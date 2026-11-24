@@ -60,7 +60,7 @@ namespace GlobalTheory.CompanionTheory.SobGL.HaarDom
 
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem isOpenEmbedding_valG (n : ℕ) : Topology.IsOpenEmbedding (Units.val : G n → Mat n) :=
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   Units.isOpenEmbedding_val
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
@@ -217,7 +217,7 @@ theorem lebesgue_le_haar :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ φ : Mat n → ℝ, ContinuousOn φ (GLs n) → (∀ y, 0 ≤ φ y) →
       ∫ t in Q, φ (1 + cm t) ≤ C * ∫ y in S, φ y.val ∂μ := by
   intro n m hB μ hμ Q S hQ hS h
-  letI : MeasurableSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  let : MeasurableSpace (Matrix (Fin n) (Fin n) ℂ) :=
     GroundTheory.Automorphic.matrixMeasurableSpaceComplex
   have e : m = Units.instMeasurableSpace := by
     exact hB.measurable_eq.trans

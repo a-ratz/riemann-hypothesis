@@ -151,7 +151,7 @@ theorem main : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E 
   obtain ⟨Sp, ⟨Au⟩, -⟩ := hB
   obtain ⟨-, y, hy, hcy⟩ := hc
 
-  haveI := Formalism.L2.finite_chooseBasisIndex (D := D) j w
+  have := Formalism.L2.finite_chooseBasisIndex (D := D) j w
   let b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j)
   have hjb := D.what₂.jMt_basis (D.what₂.muTw w) j b
   have hb := Sp.B.iV_basis j w b
@@ -163,7 +163,7 @@ theorem main : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E 
       rw [hjb.2]; exact Submodule.mem_top
     rw [Set.range_eq_empty, Submodule.span_empty, Submodule.mem_bot] at hy'
     exact hy'
-  haveI : Nontrivial (Sp.B.V j w) := ⟨⟨Sp.B.iV j w (b a), 0, hb.1.ne_zero a⟩⟩
+  have : Nontrivial (Sp.B.V j w) := ⟨⟨Sp.B.iV j w (b a), 0, hb.1.ne_zero a⟩⟩
   obtain ⟨I0, hI0⟩ := Ideal.exists_maximal (heckeAlg Sp.B j w)
   obtain ⟨i0, hi0, -⟩ := Sp.mx_all j w h1 h2 hw I0 hI0
 
@@ -222,7 +222,7 @@ theorem main : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E 
     if hvk : GenAt D (D.what₂.places.resChar w) (Sp.B.Qc j w) v k then Classical.choose (key v k hvk) else 0
   have hκF : ∀ v k (hvk : GenAt D (D.what₂.places.resChar w) (Sp.B.Qc j w) v k), φ (algebraMap _ _ (κF v k)) = c v k := by
     intro v k hvk
-    simp only [κF, dif_pos hvk]
+    simp only [κF, dite_eq_left hvk]
     exact Classical.choose_spec (key v k hvk)
 
   obtain ⟨e, hene, he⟩ := GlobalTheory.PtLocalEig.eig_descends D M Sp.B j w (D.what₂.muTw w) h1 h2 rfl φ hφ

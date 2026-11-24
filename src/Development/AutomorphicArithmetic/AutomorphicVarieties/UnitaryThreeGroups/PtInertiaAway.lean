@@ -126,7 +126,7 @@ theorem UpperTheory.V.U3.pt_inertia_away :
     have h2 : Finite ψ.toUnitHom.range := Finite.of_surjective _ ψ.toUnitHom.rangeRestrict_surjective
     exact Finite.of_injective _ (Subgroup.inclusion_injective this)
   have hfinQ : Finite (H ⧸ χ.ker) := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange χ).symm.toEquiv
-  letI : Fintype (H ⧸ χ.ker) := Fintype.ofFinite _
+  let : Fintype (H ⧸ χ.ker) := Fintype.ofFinite _
   have hpow : ∀ x : H ⧸ χ.ker, x ^ orderOf ψ = 1 := fun x => by
     obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective x
     rw [← QuotientGroup.mk_pow, QuotientGroup.eq_one_iff, MonoidHom.mem_ker, map_pow]

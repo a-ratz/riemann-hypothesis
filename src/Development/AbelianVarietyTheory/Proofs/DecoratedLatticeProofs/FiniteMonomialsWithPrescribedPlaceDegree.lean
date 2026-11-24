@@ -58,7 +58,7 @@ theorem finite_monomials_of_placeDegree : ∀ (D : D7) (m n : ℕ) (d : D.what�
   classical
   refine (Set.finite_Iic (Finsupp.equivFunOnFinite.symm (fun v : FVar D m n => d v.1))).subset ?_
   intro α hα
-  simp only [Set.mem_setOf_eq] at hα
+  simp only [Set.mem_ofPred_eq] at hα
   rw [Set.mem_Iic, Finsupp.le_def]
   intro v
   rw [Finsupp.coe_equivFunOnFinite_symm]

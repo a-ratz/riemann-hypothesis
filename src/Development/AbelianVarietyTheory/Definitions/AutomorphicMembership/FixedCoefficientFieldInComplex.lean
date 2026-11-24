@@ -166,7 +166,7 @@ theorem exists_gen {I : (FractionalIdeal (𝓞 E)⁰ E)ˣ} (h : ClassGroup.mk E 
   rw [toPrincipalIdeal_eq_iff]
   apply FractionalIdeal.coeToSubmodule_injective
   dsimp only
-  rw [FractionalIdeal.coe_spanSingleton, hx]
+  rw [FractionalIdeal.coeToSubmodule_spanSingleton, hx]
   simp
 
 instance : Nonempty (ClassBasis E) := by

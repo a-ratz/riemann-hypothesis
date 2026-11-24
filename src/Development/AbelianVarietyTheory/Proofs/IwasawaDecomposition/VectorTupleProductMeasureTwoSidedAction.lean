@@ -155,8 +155,8 @@ theorem smul_map_mulVec_pi [IsArtinianRing S] [IsReduced S] (ν : Measure S) [ν
   classical
   have hm : ∀ A : Matrix κ κ S, Measurable A.mulVec := fun A =>
     (continuous_const.matrix_mulVec continuous_id).measurable
-  letI := Fintype.ofFinite (MaximalSpectrum S)
-  letI : ∀ m : MaximalSpectrum S, Field (S ⧸ m.asIdeal) := fun m =>
+  let := Fintype.ofFinite (MaximalSpectrum S)
+  let : ∀ m : MaximalSpectrum S, Field (S ⧸ m.asIdeal) := fun m =>
     haveI := m.isMaximal
     Ideal.Quotient.field m.asIdeal
   refine (induction_pi (IsArtinianRing.equivPi S).toRingEquiv (fun M : Matrix κ κ S => IsUnit M.det ∧
@@ -165,7 +165,7 @@ theorem smul_map_mulVec_pi [IsArtinianRing S] [IsReduced S] (ν : Measure S) [ν
   · intro D A
     have hu' : (diagonal D).det = ((∏ i, (A i).unit : Sˣ) : S) := by simp
     refine ⟨hu' ▸ Units.isUnit _, (Measure.pi_eq fun s hs => ?_).symm⟩
-    rw [Measure.smul_apply, Measure.map_apply (hm _) (MeasurableSet.univ_pi hs)]
+    rw [smul_apply, Measure.map_apply (hm _) (MeasurableSet.univ_pi hs)]
     have : ((diagonal D).mulVec ⁻¹' Set.pi Set.univ fun i : κ => s i) =
         Set.pi Set.univ fun i : κ => ((A i).unit)⁻¹ • s i := by
       ext f

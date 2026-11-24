@@ -73,12 +73,12 @@ private theorem emb_ne (H : GlobalTheory.Published.GlobalArtinReciprocity) {L Ω
   let inc := Subgroup.inclusion (Weil_le_Dec h)
   let ε := (cycBar L Ω l).comp (Dec (F := L) A).subtype
   have hεc : Continuous ε := ((Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ L Ω l)).comp continuous_subtype_val
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ L Ω l)).comp continuous_subtypeVal
   have hε : ∀ s : Weil h, (ε (inc s) : Qbar l) = ((normV w : ℕ) : Qbar l) ^ deg s * Hi.algPow w 1 (a s : w.adicCompletion L) :=
     UpperTheory.V.Loc.epsArt H h hw a ha
   by_contra hE
-  haveI : IsEmpty (Emb l w) := not_nonempty_iff.1 hE
-  haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : IsEmpty (Emb l w) := not_nonempty_iff.1 hE
+  have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   have h1 := norm_one ε (Units.continuous_val.comp hεc) (inc (frob h))
   rw [hε, deg_frob, zpow_one, Hi.algPow, finprod_of_isEmpty, mul_one, GlobalTheory.Pst.normV_eq_pow (l := l) hw, Nat.cast_pow, norm_pow] at h1
   have h2 := (pow_eq_one_iff_of_nonneg (norm_nonneg _) (fun h0 => by
@@ -93,20 +93,20 @@ private theorem main (H : GlobalTheory.Published.GlobalArtinReciprocity) {F Ω :
     {a : Weil h →* (w.adicCompletion F)ˣ} (hw : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal) (ha : IsLocalArtin h a) {n : ℕ}
     (wt : Fin n → Emb l w → ℤ) (hm : ∀ τ, StrictMono fun j => wt j τ) (ψ : Fin n → Dec (F := F) A →* (Qbar l)ˣ)
     (hψ : ∀ j, IsLocAlg h (ψ j) (wt j)) : ∃ g, Function.Injective fun i => ψ i g := by
-  haveI := emb_ne H hw ha
-  haveI : Finite (Emb l w) := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (Emb l w)
-  haveI : CompactSpace (Ine (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Ine A).isCompact
+  have := emb_ne H hw ha
+  have : Finite (Emb l w) := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (Emb l w)
+  have : CompactSpace (Ine (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Ine A).isCompact
   choose ph hph using hψ
   let U : Subgroup (Ine (F := F) A) := ⨅ j, (ph j).ker
   have hU : IsOpen (U : Set (Ine (F := F) A)) := by
     simp only [U, Subgroup.coe_iInf]
     exact isOpen_iInter_of_finite fun j => (hph j).1
-  haveI : Finite (Ine (F := F) A ⧸ U) := U.quotient_finite_of_isOpen hU
+  have : Finite (Ine (F := F) A ⧸ U) := U.quotient_finite_of_isOpen hU
   have hN : U.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hl : ValuativeRel.valuation (w.adicCompletion F) (l : w.adicCompletion F) < 1 := by
     have e : (ValuativeRel.valuation (w.adicCompletion F)).IsEquiv (Valued.v : Valuation (w.adicCompletion F) _) := by
-      haveI := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion F) _)
+      have := Valuation.Compatible.ofValuation (Valued.v : Valuation (w.adicCompletion F) _)
       exact ValuativeRel.isEquiv _ _
     rw [e.lt_one_iff_lt_one, ← map_natCast (algebraMap (𝓞 F) (w.adicCompletion F)),
       IsScalarTower.algebraMap_apply (𝓞 F) F (w.adicCompletion F)]
@@ -122,7 +122,7 @@ private theorem main (H : GlobalTheory.Published.GlobalArtinReciprocity) {F Ω :
     omega
   have hI : (s : G F Ω) ∈ Ine (F := F) A := actsAs_zero_iff.1 (actsAs_of_deg (a := 0) (b := 0) (by simpa using hd))
   let σ : Ine (F := F) A := ⟨s, hI⟩
-  haveI : U.Normal := Subgroup.normal_iInf_normal fun j => inferInstance
+  have : U.Normal := Subgroup.normal_iInf_normal fun j => inferInstance
   have hmem : σ ^ U.index ∈ U := U.pow_index_mem σ
   have e : ((a (ineIncl h (σ ^ U.index)) : (w.adicCompletion F)ˣ) : w.adicCompletion F) = (1 + l) ^ U.index := by
     rw [map_pow, map_pow, show ineIncl h σ = s from rfl, hs]

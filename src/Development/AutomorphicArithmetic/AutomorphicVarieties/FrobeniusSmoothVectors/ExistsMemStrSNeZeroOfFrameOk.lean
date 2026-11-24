@@ -86,7 +86,7 @@ theorem UpperTheory.exists_mem_strS_ne_zero_of_frameOk :
     simpa using this
   have hci : F.c⁻¹ = F.c := inv_eq_of_mul_eq_one_right h.c_sq
   refine ⟨fun g => x g * F.Ψ g, ⟨?_, fun g g' => ?_, fun g => ?_, fun v => ?_⟩, fun e => ?_⟩
-  · exact (x1.mul ((lc_of_ker F.Ψ h.Ψ_open).comp Units.val)).comp_continuous continuous_subtype_val
+  · exact (x1.mul ((lc_of_ker F.Ψ h.Ψ_open).comp Units.val)).comp_continuous continuous_subtypeVal
   · have := (F.Ψ g).ne_zero
     simp only [Subgroup.coe_mul, x2, hχ, map_mul, Units.val_mul, smul_eq_mul, Units.val_inv_eq_inv_val]
     field_simp

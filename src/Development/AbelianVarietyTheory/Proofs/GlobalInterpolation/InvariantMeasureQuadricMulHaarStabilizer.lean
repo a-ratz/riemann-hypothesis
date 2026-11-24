@@ -96,7 +96,7 @@ theorem exists_const {G H X : Type} [Group G] [TopologicalSpace G] [IsTopologica
   have hmeas : ∀ f : G → ℝ≥0∞, Measurable f →
       Measurable fun y => ∫⁻ g', f (s₀ y * j g') ∂μ' := fun f hf =>
     (hf.comp hp).lintegral_prod_right'
-  haveI : m.IsMulLeftInvariant := by
+  have : m.IsMulLeftInvariant := by
     refine ⟨fun h => ?_⟩
     refine Measure.ext_of_lintegral _ fun f hf => ?_
     rw [lintegral_map hf (measurable_const_mul h),
@@ -113,7 +113,7 @@ theorem exists_const {G H X : Type} [Group G] [TopologicalSpace G] [IsTopologica
     filter_upwards [hS, hS'] with y h1 h2
     rw [← key f (h * s₀ y) _ (by rw [a_mul, hs₀' y h1, hs₀' _ h2])]
     simp only [mul_assoc]
-  haveI : IsFiniteMeasureOnCompacts m := by
+  have : IsFiniteMeasureOnCompacts m := by
     refine ⟨fun K hK => ?_⟩
     have hKm : MeasurableSet K := hK.measurableSet
     have hL : IsCompact ((fun g => a g x₀) '' K) := hK.image a_cont

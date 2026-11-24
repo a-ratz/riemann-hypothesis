@@ -1098,14 +1098,14 @@ theorem vol_pull [CompactSpace Y] (p : Y ⟶ Sp K) (ψ : X ⟶ Y) [IsFinite ψ]
   have hη : ∀ i, genericPoint Y ∈ W i := fun i => generic_mem (hne i).choose_spec
   have hη' : ∀ i, genericPoint X ∈ ψ ⁻¹ᵁ W i := fun i => show ψ _ ∈ W i from hψ ▸ hη i
   obtain ⟨i₀, -⟩ := hc (genericPoint Y)
-  letI : Algebra K Y.functionField := (constFF p).toAlgebra
-  letI : Algebra K X.functionField := (constFF (ψ ≫ p)).toAlgebra
-  letI : Algebra Y.functionField X.functionField := (ffMap ψ hψ).toAlgebra
+  let : Algebra K Y.functionField := (constFF p).toAlgebra
+  let : Algebra K X.functionField := (constFF (ψ ≫ p)).toAlgebra
+  let : Algebra Y.functionField X.functionField := (ffMap ψ hψ).toAlgebra
   have halg : ∀ a, algebraMap K Y.functionField a = gen ⊤ trivial (constFn p ⊤ a) := fun _ => rfl
   have halg' : ∀ a, algebraMap K X.functionField a = gen ⊤ trivial (constFn (ψ ≫ p) ⊤ a) :=
     fun _ => rfl
   have hφ : ∀ a, algebraMap Y.functionField X.functionField a = ffMap ψ hψ a := fun _ => rfl
-  haveI : IsScalarTower K Y.functionField X.functionField := by
+  have : IsScalarTower K Y.functionField X.functionField := by
     refine IsScalarTower.of_algebraMap_eq fun a => ?_
     rw [hφ, halg, halg', ffMap_gen ψ hψ ⊤ trivial trivial]
     congr 1
@@ -1138,8 +1138,8 @@ theorem vol_pull [CompactSpace Y] (p : Y ⟶ Sp K) (ψ : X ⟶ Y) [IsFinite ψ]
   have hG : ∀ i, ∃ (n : ℕ) (v : Fin n → X.functionField), ∀ t ∈ R' i,
       ∃ w : Fin n → Y.functionField, (∀ l, w l ∈ R i) ∧ t = ∑ l, w l • v l := by
     intro i
-    letI := (ψ.app (W i)).hom.toAlgebra
-    haveI : Module.Finite Γ(Y, W i) Γ(X, ψ ⁻¹ᵁ W i) := IsFinite.finite_app ψ (W i) (haff i)
+    let := (ψ.app (W i)).hom.toAlgebra
+    have : Module.Finite Γ(Y, W i) Γ(X, ψ ⁻¹ᵁ W i) := IsFinite.finite_app ψ (W i) (haff i)
     obtain ⟨n, v, hv⟩ := Module.Finite.exists_fin (R := Γ(Y, W i)) (M := Γ(X, ψ ⁻¹ᵁ W i))
     refine ⟨n, fun l => gen _ (hη' i) (v l), ?_⟩
     rintro _ ⟨t, rfl⟩
@@ -1151,20 +1151,20 @@ theorem vol_pull [CompactSpace Y] (p : Y ⟶ Sp K) (ψ : X ⟶ Y) [IsFinite ψ]
     refine Finset.sum_congr rfl fun l _ => ?_
     rw [Algebra.smul_def, Algebra.smul_def, map_mul, hφ, ffMap_gen ψ hψ _ _ (hη' i)]
     rfl
-  haveI : Module.Finite Y.functionField X.functionField := by
+  have : Module.Finite Y.functionField X.functionField := by
     obtain ⟨n, v, hv⟩ := hG i₀
     exact finite_of_frac (R' i₀) (hS i₀) v fun t ht => (hv t ht).imp fun _ h => h.2
   have hrank : Module.finrank Y.functionField X.functionField = D := by
-    haveI : Nonempty (W i₀) := ⟨⟨_, hη i₀⟩⟩
-    haveI : Nonempty (ψ ⁻¹ᵁ W i₀) := ⟨⟨_, hη' i₀⟩⟩
-    haveI := functionField_isFractionRing_of_isAffineOpen Y _ (haff i₀)
-    haveI := functionField_isFractionRing_of_isAffineOpen X _ ((haff i₀).preimage ψ)
-    letI := (ψ.app (W i₀)).hom.toAlgebra
-    letI : Algebra Γ(Y, W i₀) X.functionField :=
+    have : Nonempty (W i₀) := ⟨⟨_, hη i₀⟩⟩
+    have : Nonempty (ψ ⁻¹ᵁ W i₀) := ⟨⟨_, hη' i₀⟩⟩
+    have := functionField_isFractionRing_of_isAffineOpen Y _ (haff i₀)
+    have := functionField_isFractionRing_of_isAffineOpen X _ ((haff i₀).preimage ψ)
+    let := (ψ.app (W i₀)).hom.toAlgebra
+    let : Algebra Γ(Y, W i₀) X.functionField :=
       ((gen _ (hη' i₀)).comp (ψ.app (W i₀)).hom).toAlgebra
-    haveI : IsScalarTower Γ(Y, W i₀) Γ(X, ψ ⁻¹ᵁ W i₀) X.functionField :=
+    have : IsScalarTower Γ(Y, W i₀) Γ(X, ψ ⁻¹ᵁ W i₀) X.functionField :=
       IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : IsScalarTower Γ(Y, W i₀) Y.functionField X.functionField :=
+    have : IsScalarTower Γ(Y, W i₀) Y.functionField X.functionField :=
       IsScalarTower.of_algebraMap_eq fun a => (ffMap_gen ψ hψ _ (hη i₀) (hη' i₀) a).symm
     rw [IsFractionRing.finrank_eq Γ(Y, W i₀) Y.functionField Γ(X, ψ ⁻¹ᵁ W i₀) X.functionField]
     exact Module.finrank_eq_of_rank_eq (hD _ (haff i₀) ⟨_, hη i₀⟩)
@@ -1186,9 +1186,9 @@ namespace GlobalTheory
 
 theorem vol_pull_of_isFinite : ∀ (K : Type) [Field K] [IsAlgClosed K] (P : Out.PolAV (Sp K)) (α : P.A ⟶ P.A) (D : ℕ) (M : LB P.A.left) (δ : ℝ), IsMonHom α → IsFinite α.left → MapDeg α.left D → M.IsLB → Out.RelAmple P.A M → Vol P.A.hom M P.g δ → Vol P.A.hom (M.pull α.left) P.g (D * δ) := by
   intro K _ _ P α D M δ hα hfin hD hM hamp hv
-  haveI := polAV_isIntegral_of_isAlgClosed K P
-  haveI := P.isAb.proper
-  haveI : CompactSpace P.A.left := QuasiCompact.compactSpace_of_compactSpace P.A.hom
+  have := polAV_isIntegral_of_isAlgClosed K P
+  have := P.isAb.proper
+  have : CompactSpace P.A.left := QuasiCompact.compactSpace_of_compactSpace P.A.hom
   have hsurj := (flat_and_surjective_of_isFinite_grpEnd K P.A α).2
   have hψ : α.left (genericPoint P.A.left) = genericPoint P.A.left := by
     have := (genericPoint_spec P.A.left).image α.left.continuous
@@ -1251,7 +1251,7 @@ theorem PolyHom.sq {n : ℕ} {D : ℤ[X] → ℚ} (h : PolyHom n D) : PolyHom (2
     rw [Finset.sum_eq_single (⟨i + j, by omega⟩ : Fin (2 * r))]
     · simp [monomial_mul_monomial]
     · intro k _ hk
-      rw [if_neg, map_zero]
+      rw [ite_eq_right, map_zero]
       intro h'
       exact hk (Fin.ext h'.symm)
     · simp
@@ -1284,7 +1284,7 @@ theorem PolyHom.exists_shift {n : ℕ} {D : ℤ[X] → ℚ} (h : PolyHom n D) (F
     · rw [Finset.sum_eq_single 0]
       · simp
       · intro k _ hk
-        rw [if_neg hk, map_zero]
+        rw [ite_eq_right hk, map_zero]
       · simp
   rw [e, hD, ← Polynomial.coe_evalRingHom, MvPolynomial.aeval_def, MvPolynomial.eval₂_comp_left,
     MvPolynomial.eval₂_eq_eval_map]
@@ -1400,8 +1400,8 @@ theorem exists_matrix (hL : Out.Laws) (hL2 : Out.Laws2) (P : Out.PolAV (Sp K)) (
 
 theorem sq_vol_eq_det : Out.Laws → Out.Laws2 → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : Out.PolAV (Sp K)) (M : LB P.A.left) (s : P.A ⟶ P.A) (l : ℕ), l.Prime → (l : K) ≠ 0 → M.IsLB → Out.RelAmple P.A M → SymB M → FormIs P M s → ∃ δ : ℕ, Vol P.A.hom M P.g δ ∧ (∀ e ≥ 1, SectionsHaveFiniteDimension P.A.hom (lbPow M e) (δ * e ^ P.g)) ∧ ∀ (j : ℕ) (pt : Fin (2 * P.g) → (Out.baseOver (Sp K) ⟶ P.A)) (Mat : Matrix (Fin (2 * P.g)) (Fin (2 * P.g)) (ZMod (l ^ j))), TorsBasis P.A (l ^ j) pt → ActsBy pt s Mat → (δ : ZMod (l ^ j)) ^ 2 = Mat.det := by
   intro hL hL2 K _ _ P M s l hp hl hM hamp hsym hform
-  haveI : Fact l.Prime := ⟨hp⟩
-  haveI : IsMonHom s := hform.1
+  have : Fact l.Prime := ⟨hp⟩
+  have : IsMonHom s := hform.1
   obtain ⟨δ, -, hvol, hH⟩ := GlobalTheory.sectionsDim_symmetricAmple_pow_eq_mul_pow hL hL2 K P M hM hamp hsym
   refine ⟨δ, hvol, hH, ?_⟩
   obtain ⟨⟨ev, h1, hadd, hX⟩, hev⟩ := _root_.GlobalTheory.formPoly_bundles hL hL2 K P M s hM hform

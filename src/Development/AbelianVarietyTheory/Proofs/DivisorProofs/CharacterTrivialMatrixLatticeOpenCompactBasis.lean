@@ -107,9 +107,9 @@ theorem ker_int_lt {ψ0 : AddChar k ℂ} {t : k} (ht : ψ0 t ≠ 1) {u : k}
   rwa [div_mul_cancel₀ _ hu0] at this
 
 theorem nhdsNE_neBot' : (𝓝[≠] (0 : k)).NeBot := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
@@ -132,7 +132,7 @@ theorem exists_smul_int_mem' (n d : ℕ) (W : Set (Matrix (Fin n) (Fin d) k)) (h
     have hc : Continuous fun z : k × Matrix (Fin n) (Fin d) k => z.1 • z.2 := continuous_fst.smul continuous_snd
     have h0 : (fun z : k × Matrix (Fin n) (Fin d) k => z.1 • z.2) (0, y) = 0 := by simp
     exact hc.continuousAt.preimage_mem_nhds (by simpa using hW)
-  haveI := nhdsNE_neBot' (k := k)
+  have := nhdsNE_neBot' (k := k)
   obtain ⟨c, hc1, hc2⟩ := ((hev.filter_mono (nhdsWithin_le_nhds (s := {(0 : k)}ᶜ))).and
     (self_mem_nhdsWithin (s := {(0 : k)}ᶜ))).exists
   exact ⟨c, hc2, fun x hx => hc1 x hx⟩
@@ -175,7 +175,7 @@ theorem latt_open_compact_basis : ∀ {k : Type} [Field k] [ValuativeRel k] [Top
       have e : (GlobalTheory.LinSchur.latt ψ0 n d s : Set (Matrix (Fin n) (Fin d) k)) =
           ⋂ i, ⋂ j, ⋂ o : {o : k // valuation k o ≤ 1}, {Y | ψ0 (o.1 * (s * Y i j)) = 1} := by
         ext Y
-        simp only [SetLike.mem_coe, GlobalTheory.LinSchur.mem_latt, Set.mem_iInter, Set.mem_setOf_eq, Subtype.forall]
+        simp only [SetLike.mem_coe, GlobalTheory.LinSchur.mem_latt, Set.mem_iInter, Set.mem_ofPred_eq, Subtype.forall]
       rw [e]
       exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun o =>
         isClosed_eq (hc.comp (continuous_const.mul (continuous_const.mul (continuous_id.matrix_elem i j))))

@@ -69,7 +69,7 @@ theorem RootsBounded.proof : RootsBounded.Statement := by
     rw [eventually_all_finset]
     intro k _
     have hc : Continuous fun y => ‖a k y‖₊ :=
-      (RootsBounded.continuous_aeval (G.coeff k)).nnnorm
+      (RootsBounded.continuous_aeval (G.coeff k)).nnNorm
     exact hc.continuousAt.eventually (gt_mem_nhds (lt_add_one _)) |>.mono fun _ h => h.le
   filter_upwards [hev] with y hy t ht
   set P : Polynomial ℂ := G.map (aeval y).toRingHom
@@ -79,7 +79,7 @@ theorem RootsBounded.proof : RootsBounded.Statement := by
     rw [Polynomial.IsRoot, Polynomial.eval_map]; exact ht
   have hlt := Polynomial.IsRoot.norm_lt_cauchyBound hPm.ne_zero hroot
   have hcb : Polynomial.cauchyBound P ≤ 1 + ∑ k ∈ Finset.range m, (‖a k y₀‖₊ + 1) := by
-    rw [Polynomial.cauchyBound, hPm.leadingCoeff, nnnorm_one, div_one, add_comm]
+    rw [Polynomial.cauchyBound, hPm.leadingCoeff, nnNorm_one, div_one, add_comm]
     gcongr
     rw [hdeg]
     refine Finset.sup_le fun k hk => ?_

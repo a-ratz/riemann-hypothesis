@@ -933,8 +933,8 @@ theorem exists_basic_irreducible (ϖ : O) (hϖ : Irreducible ϖ)
       ∀ n, ϖ • n ∈ P → n ∈ P := by
   classical
   let I : Ideal O := Ideal.span {ϖ}
-  haveI hI : I.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-  letI : Field (O ⧸ I) := Ideal.Quotient.field I
+  have hI : I.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+  let : Field (O ⧸ I) := Ideal.Quotient.field I
   let B := Module.Basis.ofVectorSpace (O ⧸ I) (N ⧸ (I • ⊤ : Submodule O N))
   let q : N →ₗ[O] N ⧸ (I • ⊤ : Submodule O N) := Submodule.mkQ _
   have hq : Function.Surjective q := Submodule.mkQ_surjective _

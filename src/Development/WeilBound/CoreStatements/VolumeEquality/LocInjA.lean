@@ -66,7 +66,7 @@ theorem rigid_of_congr {Λ : Type} [AddCommGroup Λ] (B : Λ →+ Λ →+ ℝ) (
   let W : Set Λ := {z | z ≠ 0 ∧ ∃ k : ℕ, 0 < k ∧ ∃ x, k • z = γ x - x}
   have h1 : γ v - v ∈ W := ⟨sub_ne_zero.2 hv, 1, one_pos, v, one_smul _ _⟩
   obtain ⟨z, ⟨⟨hz0, k, hk, x, hx⟩, hzC⟩, hmin⟩ := Set.exists_min_image
-    (W ∩ {w | B w w ≤ B (γ v - v) (γ v - v)}) (fun w => B w w) ((fin _).inter_of_right _) ⟨_, h1, Set.mem_setOf_eq ▸ le_refl _⟩
+    (W ∩ {w | B w w ≤ B (γ v - v) (γ v - v)}) (fun w => B w w) ((fin _).inter_of_right _) ⟨_, h1, Set.mem_ofPred_eq ▸ le_refl _⟩
   obtain ⟨e, he⟩ := hγ z
   have he' : M • e = γ z - z := by rw [he]; abel
   have hz := pos z hz0

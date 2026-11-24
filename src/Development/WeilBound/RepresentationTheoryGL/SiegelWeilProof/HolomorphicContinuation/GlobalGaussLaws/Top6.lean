@@ -440,8 +440,8 @@ theorem tendsto_enorm_of_le {v : ℕ → ℂ} {a : ℂ} {s : ℕ → ℝ≥0∞}
     simpa using ENNReal.Tendsto.const_mul (a := (C : ℝ≥0∞)) hs (Or.inr ENNReal.coe_ne_top)
   have h2 : Filter.Tendsto (fun j => edist (v j) a) Filter.atTop (nhds 0) :=
     tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds h1 (fun _ => zero_le)
-      (fun j => by simpa [edist_eq_enorm_sub] using h j)
-  exact (continuous_enorm.tendsto a).comp (tendsto_iff_edist_tendsto_0.2 h2)
+      (fun j => by simpa [eDist_eq_eNorm_sub] using h j)
+  exact (continuous_eNorm.tendsto a).comp (tendsto_iff_edist_tendsto_0.2 h2)
 
 theorem sobBdd_absThetaInt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)), IsWeilDatumO ψ S T χS χT om → ∀ θ : InfFam D, IsInfFam θ → ∀ (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), IsCovolOne (ratL T S) μ 𝓕 → ∀ m : Measure (GA D T), m.IsHaarMeasure → ∀ Z : (WO S T → ℂ) → WO S T → ℂ, (∀ f f', IsThetaFunO ψ S T f → IsThetaFunO ψ S T f' → Z (f + f') = Z f + Z f') → (∀ (c : ℂ) f, IsThetaFunO ψ S T f → Z (c • f) = c • Z f) → Sobolev₂ ψ θ μ 𝓕 μ 𝓕 Z → (∀ f, IsThetaFunO ψ S T f → ∀ x, om (x, 1) (Z f) = Z (om (x, 1) f)) → (∀ f, IsThetaFunO ψ S T f → Integrable (descend (GQ T) fun h => thetaKO om 1 h (Z f)) (autMeasure T m)) → SobBdd ψ θ μ 𝓕 fun f x => ∫⁻ q, ‖descend (GQ T) (fun h => thetaKO om x h (Z f)) q‖ₑ ∂autMeasure T m :=
   UpperTheory.Lit.Rallis.ThetaDens.sobBdd_absThetaInt
@@ -513,7 +513,7 @@ theorem exists_bound (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ) 
 theorem l2_om_tendsto (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ) {μ : Measure (WO S T)} {𝓕 : Set (WO S T)}
     (hμ : IsCovolOne (ratL T S) μ 𝓕) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) :
     Tendsto (fun x : GA D S => l2O μ 𝓕 (om (x, 1) f - f)) (𝓝 1) (𝓝 0) := by
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨K, hK, hK1⟩ := exists_compact_mem_nhds (1 : GA D S)
   obtain ⟨M, hM, hb⟩ := exists_bound hom hθ hμ hK hf
   have h1K : (1 : GA D S) ∈ K := mem_of_mem_nhds hK1
@@ -524,11 +524,11 @@ theorem l2_om_tendsto (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ)
       (𝓝 (∫⁻ _, 0 ∂μ.restrict 𝓕)) := by
     refine tendsto_lintegral_filter_of_dominated_convergence (fun _ => (M + M) ^ 2)
       (Eventually.of_forall fun x => ?_) ?_ ?_ (Eventually.of_forall fun w => ?_)
-    · exact (((hom.om_pres _ f hf).cont.sub hf.cont).enorm.measurable).pow_const 2
+    · exact (((hom.om_pres _ f hf).cont.sub hf.cont).eNorm.measurable).pow_const 2
     · filter_upwards [hK1] with x hx
       refine Eventually.of_forall fun w => ?_
       gcongr
-      exact (enorm_sub_le).trans (add_le_add (hb x hx w) (hf1 w))
+      exact (eNorm_sub_le).trans (add_le_add (hb x hx w) (hf1 w))
     · rw [lintegral_const, Measure.restrict_apply_univ, hμ.2.2, mul_one]
       exact ENNReal.pow_ne_top (ENNReal.add_ne_top.2 ⟨hM, hM⟩)
     · have hc : Continuous fun x : GA D S => om (x, 1) f w :=
@@ -540,7 +540,7 @@ theorem l2_om_tendsto (hom : IsWeilDatumO ψ S T χS χT om) (hθ : IsInfFam θ)
         rw [e] at this
         simpa using this.sub_const (f w)
       have h2 := (ENNReal.continuous_pow 2).continuousAt.tendsto.comp
-        ((continuous_enorm.tendsto (0 : ℂ)).comp h0)
+        ((continuous_eNorm.tendsto (0 : ℂ)).comp h0)
       simpa [Function.comp_def] using h2
   have hz : (∫⁻ _ : WO S T, (0 : ℝ≥0∞) ∂μ.restrict 𝓕) = 0 := lintegral_zero
   rw [hz] at hsq
@@ -707,14 +707,14 @@ theorem continuous_thetaMean (hP : GlobalTheory.Published.WeilThetaConvergence) 
     rwa [show ((1 : GA D (dblSp A)), (1 : GA D B)) = 1 from rfl, map_one, Module.End.one_apply] at this
   obtain ⟨d, C, hC⟩ := hint U' hU' {g₀} isCompact_singleton
   set c : ℝ≥0∞ := ‖((autMeasure B m).real Set.univ)⁻¹‖ₑ with hc
-  have hct : c ≠ ⊤ := enorm_ne_top
+  have hct : c ≠ ⊤ := eNorm_ne_top
   have hbound : ∀ u ∈ GlobalTheory.Size.thetaLevel ψ (dblSp A) B U', ‖GlobalTheory.ThetaMean.thetaMean om m u g₀‖ₑ ≤
       c * (C * sobO ψ θ μ 𝓕 d u) := fun u hu => by
     calc ‖GlobalTheory.ThetaMean.thetaMean om m u g₀‖ₑ
         ≤ c * ∫⁻ q, ‖GlobalTheory.AutomorphicL2Unitary.descend (GQ B) (fun h => thetaKO om g₀ h u) q‖ₑ ∂autMeasure B m := by
-          rw [GlobalTheory.ThetaMean.thetaMean, average_eq, enorm_smul]
+          rw [GlobalTheory.ThetaMean.thetaMean, average_eq, eNorm_smul]
           gcongr
-          exact enorm_integral_le_lintegral_enorm _
+          exact eNorm_integral_le_lintegral_eNorm _
       _ ≤ c * (C * sobO ψ θ μ 𝓕 d u) := by
           gcongr; exact hC u hu g₀ rfl
   have hlim : Tendsto (fun x : GA D (dblSp A) => c * (C * sobO ψ θ μ 𝓕 d (om (x, 1) f - f))) (𝓝 1) (𝓝 0) := by
@@ -727,7 +727,7 @@ theorem continuous_thetaMean (hP : GlobalTheory.Published.WeilThetaConvergence) 
     refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hlim
       (Eventually.of_forall fun _ => bot_le) ?_
     filter_upwards [hK1] with x hx
-    rw [edist_eq_enorm_sub, ← thetaMean_translate m f x g₀,
+    rw [eDist_eq_eNorm_sub, ← thetaMean_translate m f x g₀,
       ← thetaMean_sub m (hi _ (hW.om_pres _ f hf) g₀) (hi f hf g₀)]
     exact hbound _ (Submodule.sub_mem _ (hlx x hx) hl1)
   rw [ContinuousAt, ← map_mul_left_nhds_one g₀, tendsto_map'_iff]
@@ -947,7 +947,7 @@ theorem UpperTheory.Reformulated.B.GaloisBoundFirst.main :
     (han.eqOn_zero_of_preconnected_of_eventuallyEq_zero isPreconnected_univ (Set.mem_univ a) h
       (Set.mem_univ z0))
   obtain ⟨k, g, hg, hga, hev⟩ :=
-    (AnalyticAt.exists_eventuallyEq_pow_smul_nonzero_iff (han a (Set.mem_univ a))).2 hnot
+    (AnalyticAt.exists_eventuallyEq_pow_smul_ne_zero_iff (han a (Set.mem_univ a))).2 hnot
   have hev' : ∀ᶠ z in 𝓝 a, z ≠ a → B z / (z - a) ^ k = g z := by
     filter_upwards [hev] with z hz hne
     have h0 : (z - a) ^ k ≠ 0 := pow_ne_zero _ (sub_ne_zero.2 hne)
@@ -1089,10 +1089,10 @@ theorem glue : Glue := by
   refine ⟨U, d, E, hUo, ⟨⟨R, subset_union_left⟩, ?_⟩, ?_, hd, ?_, ?_, ?_, fun z hz x => hEP z hz x⟩
   · rintro s (h | ⟨h1, h2, h3⟩) t ht
     · left
-      simp only [P, mem_setOf_eq, Complex.add_re, Complex.ofReal_re]
+      simp only [P, mem_ofPred_eq, Complex.add_re, Complex.ofReal_re]
       exact lt_add_of_lt_of_nonneg h ht
     · right
-      simp only [mem_setOf_eq, Complex.add_re, Complex.add_im, Complex.ofReal_re, Complex.ofReal_im, add_zero]
+      simp only [mem_ofPred_eq, Complex.add_re, Complex.add_im, Complex.ofReal_re, Complex.ofReal_im, add_zero]
       exact ⟨lt_add_of_lt_of_nonneg h1 ht, h2, h3⟩
   · by_cases h : R < s₀.re
     · exact Or.inl h
@@ -1282,7 +1282,7 @@ theorem fin_div {D : D7} {n : ℕ} {G' : Type} [Group G'] [TopologicalSpace G']
     {φ : GlobalTheory.StdUnn.G D n → ℂ} (hφ : IsKFinite (GlobalTheory.StdUnn.K D n) φ) (t : ℂ) (f : GlobalTheory.StdUnn.G D n → ℂ)
     (hf : ∀ x, f x = φ x * Complex.exp (t * η (Ψ x))) :
     FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : K' => fun x => f (x * Ψ.symm k))) := by
-  haveI : FiniteDimensional ℂ (kSpan (GlobalTheory.StdUnn.K D n) φ) := hφ
+  have : FiniteDimensional ℂ (kSpan (GlobalTheory.StdUnn.K D n) φ) := hφ
   refine Submodule.finiteDimensional_of_le (Submodule.span_le.2 ?_ :
     _ ≤ (kSpan (GlobalTheory.StdUnn.K D n) φ).map (LinearMap.mulRight ℂ (fun x => Complex.exp (t * η (Ψ x)))))
   rintro _ ⟨k, rfl⟩

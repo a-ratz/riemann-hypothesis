@@ -66,22 +66,22 @@ theorem residueField_fg_trdeg_of_isStandardSmoothOfRelativeDimension {K B : Type
     (p : Ideal B) [p.IsPrime] (hp : ∀ q : Ideal B, q.IsPrime → q ≤ p → q = p) :
     Algebra.EssFiniteType K p.ResidueField ∧ Algebra.trdeg K p.ResidueField = d := by
   obtain ⟨g, hg⟩ := Algebra.IsStandardSmoothOfRelativeDimension.exists_etale_mvPolynomial d K B
-  letI : Algebra (MvPolynomial (Fin d) K) B := g.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin d) K) B := hg
-  haveI : IsScalarTower K (MvPolynomial (Fin d) K) B :=
+  let : Algebra (MvPolynomial (Fin d) K) B := g.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin d) K) B := hg
+  have : IsScalarTower K (MvPolynomial (Fin d) K) B :=
     IsScalarTower.of_algebraMap_eq fun x => (g.commutes x).symm
-  haveI : Algebra.FiniteType K B := .trans (S := MvPolynomial (Fin d) K) inferInstance inferInstance
+  have : Algebra.FiniteType K B := .trans (S := MvPolynomial (Fin d) K) inferInstance inferInstance
   refine ⟨.comp K B _, ?_⟩
   obtain ⟨q, hqp, hq, hqo⟩ := Ideal.exists_ideal_le_liesOver_of_le
     (p := (⊥ : Ideal (MvPolynomial (Fin d) K))) (q := p.under (MvPolynomial (Fin d) K)) p bot_le
   obtain rfl := hp q hq hqp
-  haveI : FaithfulSMul (MvPolynomial (Fin d) K) q.ResidueField := by
+  have : FaithfulSMul (MvPolynomial (Fin d) K) q.ResidueField := by
     rw [faithfulSMul_iff_algebraMap_injective, injective_iff_map_eq_zero]
     intro a ha
     rw [IsScalarTower.algebraMap_apply _ B, Ideal.algebraMap_residueField_eq_zero] at ha
     have : a ∈ q.under (MvPolynomial (Fin d) K) := ha
     rwa [← hqo.over] at this
-  haveI : Algebra.IsAlgebraic (MvPolynomial (Fin d) K) q.ResidueField := by
+  have : Algebra.IsAlgebraic (MvPolynomial (Fin d) K) q.ResidueField := by
     let := Localization.AtPrime.algebraOfLiesOver (⊥ : Ideal (MvPolynomial (Fin d) K)) q
     have : Module.Finite (⊥ : Ideal (MvPolynomial (Fin d) K)).ResidueField q.ResidueField :=
       inferInstance
@@ -125,11 +125,11 @@ theorem residueField_fg_trdeg_of_smoothOfRelativeDimension {K : Type} [Field K]
     (⊤ : IntermediateField K (X.residueField x)).FG ∧ Algebra.trdeg K (X.residueField x) = d := by
   obtain ⟨B, φ, j, hj, y, rfl, hjf, hφ⟩ :=
     exists_isOpenImmersion_isStandardSmoothOfRelativeDimension f d hf x
-  letI : Algebra K (X.residueField (j y)) :=
+  let : Algebra K (X.residueField (j y)) :=
     (Spec.preimage (X.fromSpecResidueField (j y) ≫ f)).hom.toAlgebra
-  letI : Algebra K B := φ.hom.toAlgebra
-  haveI : y.asIdeal.IsPrime := y.isPrime
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension d K B := hφ
+  let : Algebra K B := φ.hom.toAlgebra
+  have : y.asIdeal.IsPrime := y.isPrime
+  have : Algebra.IsStandardSmoothOfRelativeDimension d K B := hφ
   obtain ⟨h1, h2⟩ := residueField_fg_trdeg_of_isStandardSmoothOfRelativeDimension (K := K) d
     y.asIdeal (fun q hq hqy => by
       have hs : (⟨q, hq⟩ : PrimeSpectrum B) ⤳ y := (PrimeSpectrum.le_iff_specializes _ _).mp hqy

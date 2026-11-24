@@ -212,7 +212,7 @@ namespace GlobalTheory.TwV
 
 theorem latAdLoc_of : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n p : ℕ} {G : GAtP p} (A : LocAt F E n G) (Lb : Submodule (𝓞 E) (Fin n → E)), SplAlg A → LocInt A → Module.Finite (𝓞 E) Lb → Submodule.span E (Lb : Set (Fin n → E)) = ⊤ → LatAdLoc A Lb := by
   intro F E _ _ _ _ _ n p G A Lb hS hI hfin hspan y v
-  letI : StarRing E := starRingOfComm
+  let : StarRing E := starRingOfComm
   set Y : Matrix (Fin n) (Fin n) (E ⊗[F] (A.pl v).1.adicCompletion F) :=
     Units.val (bc (prV (E := E) (A.pl v).1) y : GL (Fin n) (E ⊗[F] (A.pl v).1.adicCompletion F)) with hY
   set f : E ⊗[F] (A.pl v).1.adicCompletion F →+* G.P.Qq v :=

@@ -109,7 +109,7 @@ theorem rc_of_KO (q : parab k (blk2 d)) (hq : (q : GL (Fin (d + d)) k) ∈ KO k 
     · have e : (leviProj k (blk2 d) q a)⁻¹ = leviProj k (blk2 d) q⁻¹ a := by rw [map_inv]; rfl
       rw [e, leviProj_apply]
       exact h2 _ _
-  letI : MeasurableSpace (GL (Fin d) k) := borel _
+  let : MeasurableSpace (GL (Fin d) k) := borel _
   have hdet (a : Fin 2) : nabs k (Matrix.GeneralLinearGroup.det (leviProj k (blk2 d) q a)) = 1 :=
     GlobalTheory.LGrp.nabs_det_of_mem_KO (hK a)
   simp only [rc, hdet, inv_one, mul_one]
@@ -323,7 +323,7 @@ theorem expo (g : GL (Fin (d + d)) k) (f : IndSp (blk2 d) τ) :
   obtain ⟨i0, hi0⟩ : ∃ i0, v i0 = cc g y := ⟨S.equivFin ⟨cc g y, hy⟩, by simp [v]⟩
   rw [Fintype.sum_eq_single i0]
   · show _ = ((Real.exp (Real.log (v i0) * s) : ℝ) : ℂ) • (if cc g y = v i0 then f.1.1 (y * g) else 0)
-    rw [if_pos hi0.symm, hi0, smul_smul, ← Complex.ofReal_mul]
+    rw [ite_eq_left hi0.symm, hi0, smul_smul, ← Complex.ofReal_mul]
     congr 2
     have hpos : 0 < cc g y := div_pos (hh_pos _) (hh_pos _)
     rw [← Real.rpow_def_of_pos hpos]
@@ -331,7 +331,7 @@ theorem expo (g : GL (Fin (d + d)) k) (f : IndSp (blk2 d) τ) :
     rw [Real.div_rpow (hh_pos _).le (hh_pos _).le, div_eq_inv_mul, Real.rpow_neg (hh_pos _).le]
   · intro i hi
     show ((Real.exp (Real.log (v i) * s) : ℝ) : ℂ) • (if cc g y = v i then f.1.1 (y * g) else 0) = 0
-    rw [if_neg (fun h => hi (hv (h.symm.trans hi0.symm))), smul_zero]
+    rw [ite_eq_right (fun h => hi (hv (h.symm.trans hi0.symm))), smul_zero]
 
 end CompanionTheory.RgGu.NR.Compact
 

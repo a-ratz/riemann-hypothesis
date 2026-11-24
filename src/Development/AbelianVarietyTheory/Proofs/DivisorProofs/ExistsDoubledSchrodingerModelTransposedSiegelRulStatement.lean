@@ -137,8 +137,8 @@ theorem transpose_transport (D : D7) (S T : HSp D) (ν : Measure (Formalism.Inde
       ∀ f : Matrix (Fin T.rank) (Fin S.rank) (AF D.host.F ⊗[D.host.F] D.host.E) → ℂ,
         ∫ u in 𝓕', f u ∂ν' = ∫ w in 𝓕, f wᵀ ∂ν := by
   classical
-  haveI : BorelSpace (Formalism.IndefR.Datum.WO T S) := ⟨rfl⟩
-  haveI : BorelSpace (Formalism.IndefR.DatumF.WOF D.host.F D.host.E S.rank T.rank) := ⟨rfl⟩
+  have : BorelSpace (Formalism.IndefR.Datum.WO T S) := ⟨rfl⟩
+  have : BorelSpace (Formalism.IndefR.DatumF.WOF D.host.F D.host.E S.rank T.rank) := ⟨rfl⟩
   obtain ⟨hH, hF, -⟩ := h
   let e : Formalism.IndefR.Datum.WO T S ≃+ Formalism.IndefR.DatumF.WOF D.host.F D.host.E S.rank T.rank :=
     Matrix.transposeAddEquiv _ _ _
@@ -338,9 +338,9 @@ theorem isCovolOne_map {m n m' n' : ℕ} {μ : Measure (Mx D m n)} {𝓕 : Set (
     IsCovolOne (ratMx D m' n') (μ.map e) (e '' 𝓕) ∧ MeasurableEmbedding e := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D m' n'
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D m' n') := ⟨rfl⟩
-  haveI := h.1
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m' n') := ⟨rfl⟩
+  have := h.1
   let f : Mx D m n ≃ₜ Mx D m' n' := { e.toEquiv with continuous_toFun := he, continuous_invFun := he' }
   have hemb : MeasurableEmbedding e := f.measurableEmbedding
   refine ⟨⟨e.isAddHaarMeasure_map μ he he', ?_, ?_⟩, hemb⟩
@@ -418,7 +418,7 @@ theorem keepsDiag_of_diagCols {A : Type} [CommRing A] {n : ℕ} {M : Matrix (Fin
     rcases s with s | s <;>
       simpa only [Matrix.submatrix_apply, id, Equiv.symm_apply_apply, Matrix.fromRows_apply_inl,
         Matrix.fromRows_apply_inr, Matrix.one_apply, mul_ite, ite_mul, mul_one, one_mul, mul_zero, zero_mul,
-        Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Sum.elim_inl, Sum.elim_inr] using h1
+        Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Sum.elim_inl, Sum.elim_inr] using h1
   refine ⟨(keepsDiag_iff _).2 fun i j => (key (.inr i) j).trans (key (.inl i) j).symm, ?_⟩
   ext i j
   exact key (.inl i) j
@@ -918,11 +918,11 @@ theorem GlobalTheory.DblBoxHaar.box_integral : ∀ (D : D7) (ψ : AddChar (AF D.
   intro D ψ hψ S T
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
   obtain ⟨j1, j2, j3, j4, -, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D (GlobalTheory.Doubling.dblSp T) S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : BorelSpace (WO S (GlobalTheory.Doubling.dblSp T)) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S (GlobalTheory.Doubling.dblSp T)) := ⟨rfl⟩
   obtain ⟨μ₁, 𝓕₁, hμ₁, h𝓕₁, -⟩ :=
     (GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (WO S T) (ratL T S) K hK hKc).1
-  haveI := hμ₁
+  have := hμ₁
   let e := GlobalTheory.DblBoxHaar.blocks S T
   let eM : WO S (GlobalTheory.Doubling.dblSp T) ≃ᵐ WO S T × WO S T := e.toHomeomorph.toMeasurableEquiv
   refine ⟨(μ₁.prod μ₁).map eM.symm, eM ⁻¹' (𝓕₁ ×ˢ 𝓕₁), μ₁, 𝓕₁, ?_, ?_, hμ₁, h𝓕₁, ?_⟩
@@ -1098,9 +1098,9 @@ theorem two_families_scalar : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
       ∃ c : ℂ, ∀ i, X i = c • Y i := by
   intro D ψ hψ S T ι X Y act g hg hX hY hXa hYa μ 𝓕 hμ h𝓕 hI
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
     rw [Measure.restrict_apply_univ]
     exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WO S T) (ratL T S) hK hKc μ h𝓕⟩
   obtain ⟨l1, l2, -, l4, -⟩ := GlobalTheory.OrientedFormLaws.symplOH_laws D S T

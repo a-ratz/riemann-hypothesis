@@ -186,7 +186,7 @@ theorem finrank_mul_discr_rpow_le_sum_sq_of_mem_traceDual {x : K}
     (finrank ℚ K : ℝ) * |(discr K : ℝ)| ^ (-2 / (finrank ℚ K : ℝ))
       ≤ ∑ σ : K →+* ℂ, ‖σ x‖ ^ 2 := by
   refine finrank_mul_discr_rpow_le_sum_sq ?_ h0
-  rw [← dual_one_eq_inv_differentIdeal, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_dual_one]
+  rw [← dual_one_eq_inv_differentIdeal, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_dual_one]
   exact hx
 
 end General

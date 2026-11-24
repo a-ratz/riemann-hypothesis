@@ -116,7 +116,7 @@ theorem tup_change (t : E) (g g' p p' : Fin m → V) (u u' : Matrix (Fin m) (Fin
 
 theorem det_uni (s : Matrix (Fin m) (Fin m) E) (h0 : ∀ i j, j < i → s i j = 0) (h1 : ∀ i, s i i = 1) :
     s.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => h0 i j hij)]
+  rw [Matrix.det_of_isUpperTriangular (fun i j hij => h0 i j hij)]
   simp [h1]
 
 theorem comb_mul (g : Fin m → V) (s A : Matrix (Fin m) (Fin m) E) (j : Fin m) :

@@ -102,7 +102,7 @@ variable {L : Lat S}
 theorem exists_mul_mem (hL : IsSelfDualC S L) (v : Pl D) :
     ∃ m : ℕ, 0 < m ∧ ∀ y : Fin S.rank → AE D, (∀ i, y i ∈ intAt D (· = v)) → (m : AE D) • y ∈ latV S L (· = v) := by
   have hfull : Submodule.IsFullLattice D.host.E L := by
-    haveI : Submodule.IsLattice D.host.E L := hL.1
+    have : Submodule.IsLattice D.host.E L := hL.1
     refine ⟨?_⟩
     obtain ⟨m, s, s', hs, _, hd⟩ := GlobalTheory.FinPl.LatMem.exists_dualBasis S hL
     apply eq_top_iff.mpr

@@ -174,7 +174,7 @@ theorem exists_finiteDimensional_kill {r s : ℕ} {T₂ : GrpData r s} (R₂ : D
   rw [← Module.forall_dual_apply_eq_zero_iff ℂ]
   intro l
   obtain ⟨Y, hYfd, hyY, hYK⟩ := R₂.HK.kfin y
-  haveI := hYfd
+  have := hYfd
   obtain ⟨n, b, hbY, hfr⟩ := exists_frame R₂.ι R₂.ι_inj Y
   let φ : Pol p q r s →ₗ[ℂ] R₂.HK.V :=
     { toFun := fun Q => ∑ j, l (B Q (b j)) • b j
@@ -250,7 +250,7 @@ theorem exists_tensor_map : ∀ (p q r s : ℕ) (T₂ : GrpData r s) (R₂ : DSR
   have hex : ∀ P, ∃ t : TensorProduct ℂ N R₂.HK.V, ∀ y, B P y = contrR (m y) t := by
     intro P
     obtain ⟨E, hEfd, hE⟩ := exists_finiteDimensional_kill R₂ hA B hB P
-    haveI := hEfd
+    have := hEfd
     obtain ⟨n, a, haE, hfr⟩ := exists_frame R₂.ι R₂.ι_inj E
     refine ⟨∑ j, B P (a j) ⊗ₜ[ℂ] a j, fun y => ?_⟩
     have hperp : B P (y - ∑ j, inner ℂ (R₂.ι (a j)) (R₂.ι y) • a j) = 0 := by

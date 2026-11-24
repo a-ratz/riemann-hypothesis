@@ -67,9 +67,9 @@ theorem measurable_gl_of_matrix {X : Type} [MeasurableSpace X] {γ : X → GL (F
     (h : Measurable fun x => (γ x : Matrix (Fin a) (Fin a) (Cinf E))) : Measurable γ := by
   have hu : Continuous fun q : invSet E a =>
       (IsUnit.unit (q.2 : IsUnit (Matrix.of q.1)) : GL (Fin a) (Cinf E)) := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
     have := GlobalTheory.ConstTermSmooth.contDiffOn_invM.continuousOn.comp_continuous
-      (f := fun q : invSet E a => q.1) continuous_subtype_val fun q => q.2
+      (f := fun q : invSet E a => q.1) continuous_subtypeVal fun q => q.2
     refine Continuous.congr this fun q => ?_
     simp only [Matrix.coe_units_inv]
     rfl
@@ -103,10 +103,10 @@ theorem measurable_rsInf {ℓ : Fin a} {φ φ' : GA E a → ℂ} {Φ : (Fin a �
       have h2 : ContinuousOn (fun p : GA E a × (Fin a → Cinf E) => p.1 * (infGL E a (rowGL ℓ p.2))⁻¹) s :=
         continuous_fst.continuousOn.mul ((continuousOn_inv_rowGL ℓ).comp continuous_snd.continuousOn
           fun p hp => hp.2)
-      exact h2.restrict
+      exact h2.domRestrict
     have hm := hc.measurable
     exact ((h.comp hm).mul (Complex.continuous_conj.measurable.comp (h'.comp hm))).mul
-      (hΦ.measurable.comp (measurable_snd.comp measurable_subtype_coe))
+      (hΦ.measurable.comp (measurable_snd.comp measurable_subtypeVal))
   · convert (measurable_const (a := (0 : ℂ)) : Measurable fun _ : (sᶜ : Set (GA E a × (Fin a → Cinf E))) => (0 : ℂ)) using 1
     funext p
     have hp : p.1.2 ∉ tsupport Φ := fun hp => p.2 ⟨trivial, hs hp⟩

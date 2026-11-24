@@ -118,7 +118,7 @@ private theorem eq_interval_average_sub_weighted_deriv
     have h2 := ((ρ (c r)).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt r h1
     refine h2.congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => ?_)
     simp only [Function.comp_apply, ContinuousLinearMap.coe_restrictScalars']
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, ← hadd, add_sub_cancel]
+    rw [← mul_apply_eq_comp, ← map_mul, ← hadd, add_sub_cancel]
   have hb : ∀ r : ℝ, HasDerivAt (fun t : ℝ => (((s - t) / s : ℝ) : ℂ)) (((-(1 / s)) : ℝ) : ℂ) r := by
     intro r
     have : HasDerivAt (fun t : ℝ => (s - t) / s) (-(1 / s)) r := by
@@ -138,7 +138,7 @@ private theorem eq_interval_average_sub_weighted_deriv
   rw [intervalIntegral.integral_add (hA.intervalIntegrable 0 s) (hB.intervalIntegrable 0 s),
     intervalIntegral.integral_of_le hs.le, intervalIntegral.integral_of_le hs.le] at hE
   simp only [sub_self, zero_div, Complex.ofReal_zero, zero_smul, sub_zero, div_self hs.ne',
-    Complex.ofReal_one, one_smul, hc0, map_one, ContinuousLinearMap.one_apply] at hE
+    Complex.ofReal_one, one_smul, hc0, map_one, one_apply_eq_self] at hE
   rw [integral_Icc_eq_integral_Ioc, integral_Icc_eq_integral_Ioc]
   have hneg : ∫ r in Set.Ioc 0 s, (((-(1 / s)) : ℝ) : ℂ) • ρ (c r) w =
       -∫ r in Set.Ioc 0 s, ((1 / s : ℝ) : ℂ) • ρ (c r) w := by
@@ -178,9 +178,9 @@ theorem _root_.GlobalTheory.CubeTaylor.eq_sum_integral_cube_derivatives : ∀ (G
       fun p => if p.2 then (l p.1).map Fin.castSucc else Fin.last N :: (l p.1).map Fin.castSucc,
       ?_, ?_⟩
     · rintro ⟨j, _ | _⟩
-      · simp only [Bool.false_eq_true, if_false]
+      · simp only [Bool.false_eq_true, ite_false]
         exact ((hκ j).comp hinit).mul (by fun_prop)
-      · simp only [if_true]
+      · simp only [ite_true]
         exact ((hκ j).comp hinit).mul continuous_const
     intro d S hS v hv
     have hS' : ∀ v ∈ S, ∀ i : Fin N, d (Fin.castSucc i) v ∈ S ∧
@@ -210,13 +210,13 @@ theorem _root_.GlobalTheory.CubeTaylor.eq_sum_integral_cube_derivatives : ∀ (G
       simp
     rw [Fintype.sum_prod_type]
     refine h1.trans (Finset.sum_congr rfl fun j _ => ?_)
-    simp only [Fintype.sum_bool, if_true, Bool.false_eq_true, if_false, List.foldr_cons, hfold]
+    simp only [Fintype.sum_bool, ite_true, Bool.false_eq_true, ite_false, List.foldr_cons, hfold]
     rw [integral_cube_succ_eq_iterated N s _ (hcF (fun t => κ j (Fin.init t) * ((1 / s : ℝ) : ℂ)) _
         (((hκ j).comp hinit).mul continuous_const)),
       integral_cube_succ_eq_iterated N s _
         (hcF (fun t => κ j (Fin.init t) * -(((s - t (Fin.last N)) / s : ℝ) : ℂ)) _
         (((hκ j).comp hinit).mul (by fun_prop)))]
-    simp only [Fin.init_snoc, Fin.snoc_last, hprod, map_mul, ContinuousLinearMap.mul_apply]
+    simp only [Fin.init_snoc, Fin.snoc_last, hprod, map_mul, mul_apply_eq_comp]
     set u := (l j).foldr (fun i => d (Fin.castSucc i)) v with hu_def
     have hu : u ∈ S := hmem _
     set cl := c (Fin.last N) with hcl

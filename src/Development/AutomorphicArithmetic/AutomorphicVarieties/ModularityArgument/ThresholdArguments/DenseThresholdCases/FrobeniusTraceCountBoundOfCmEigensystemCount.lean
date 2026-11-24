@@ -238,7 +238,7 @@ private theorem dec_lt {K Ω : Type} [Field K] [NumberField K] [Field Ω] [Algeb
   have hx0 : x ≠ 0 := by
     rintro rfl
     simp at h1
-  have h0 : 0 < A.valuation x := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx0)
+  have h0 : 0 < A.valuation x := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx0)
   exact absurd hx (not_lt.2 ((inv_le_one₀ h0).1 h3))
 
 private theorem inv_mul_ine {K Ω : Type} [Field K] [NumberField K] [Field Ω] [Algebra K Ω] {A : ValuationSubring Ω} {q : ℕ}
@@ -749,7 +749,7 @@ private theorem eventually_unr {F K : Type} [Field F] [NumberField F] [Field K] 
   rw [Filter.eventually_cofinite]
   refine ((GlobalTheory.Mem.UnrAe.finite_ramified χ).preimage' (f := fun w : HeightOneSpectrum (𝓞 K) => w.under (𝓞 F))
     fun v _ => ?_).subset fun w hw => hw
-  haveI := v.isMaximal
+  have := v.isMaximal
   refine ((IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 K)).preimage
     (f := fun w : HeightOneSpectrum (𝓞 K) => w.asIdeal) fun _ _ _ _ e => HeightOneSpectrum.ext e).subset fun w hw => ?_
   exact ⟨w.isPrime, ⟨congrArg HeightOneSpectrum.asIdeal (Eq.symm hw)⟩⟩
@@ -966,7 +966,7 @@ theorem countK_alt :
   have hsys : ∀ π (v : Wd) B, (CG.mk π).HasSat v.1 B → sys π v = algSat n (normV v.1) B := by
     intro π v B hB
     have h : ∃ B, (CG.mk π).HasSat v.1 B := ⟨B, hB⟩
-    simp only [sys, dif_pos h]
+    simp only [sys, dite_eq_left h]
     rw [h.choose_spec.unique hB]
   have hsat : ∀ π ∈ SigK K m M, ∀ v : Wd, ∃ B, (CG.mk π).HasSat v.1 B := fun π hπ v =>
     _root_.UpperTheory.V.Af.satake_k_of_printed_results hP K n M π hπ.2.2 v.1 v.2
@@ -1034,7 +1034,7 @@ theorem countP_alt :
   have hsys : ∀ π (v : Wd) B, (CG.mk π).HasSat v.1 B → sys π v = algSat n (normV v.1) B := by
     intro π v B hB
     have h : ∃ B, (CG.mk π).HasSat v.1 B := ⟨B, hB⟩
-    simp only [sys, dif_pos h]
+    simp only [sys, dite_eq_left h]
     rw [h.choose_spec.unique hB]
   have hsat : ∀ π ∈ SigP K m M, ∀ v : Wd, ∃ B, (CG.mk π).HasSat v.1 B := fun π hπ v =>
     _root_.UpperTheory.V.Af.satake_k_of_printed_results hP K n M π hπ.2.2 v.1 v.2
@@ -1123,7 +1123,7 @@ private theorem normV_rat {p : ℕ} (hp : p.Prime) (w : HeightOneSpectrum (𝓞 
 private theorem exists_over (K : Type) [Field K] [NumberField K] (h2 : Module.finrank ℚ K = 2) {p : ℕ} (hp : p.Prime)
     (w : HeightOneSpectrum (𝓞 ℚ)) (hw : (p : 𝓞 ℚ) ∈ w.asIdeal) :
     ∃ (v : HeightOneSpectrum (𝓞 K)) (f : ℕ), v.under (𝓞 ℚ) = w ∧ (p : 𝓞 K) ∈ v.asIdeal ∧ 1 ≤ f ∧ f ≤ 2 ∧ normV v = p ^ f := by
-  haveI := w.isMaximal
+  have := w.isMaximal
   obtain ⟨Q, hQ, hL⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 K) w.asIdeal
   have hpQ : (p : 𝓞 K) ∈ Q := by
     have : (p : 𝓞 ℚ) ∈ Q.under (𝓞 ℚ) := hL.over ▸ hw
@@ -1144,7 +1144,7 @@ private theorem exists_avoid {N : ℕ} (d : Fin (N + 1) → ℤ) (hd : ∀ i j, 
   · obtain ⟨j, hj⟩ := h
     refine ⟨j.succAbove, Fin.succAbove_right_injective, fun i hi => ?_⟩
     have := (hd _ _ (Fin.succAbove_ne j i)).isUnit_of_dvd' hi hj
-    exact (Nat.prime_iff_prime_int.1 hp).not_unit this
+    exact (Nat.prime_iff_prime_int.1 hp).not_isUnit this
   · exact ⟨Fin.succ, Fin.succ_injective _, fun i hi => h ⟨_, hi⟩⟩
 private theorem map_inv_inv (B : Multiset ℂ) : (B.map (·⁻¹)).map (·⁻¹) = B := by
   rw [Multiset.map_map]
@@ -1172,13 +1172,13 @@ theorem countQ_alt :
     refine (Finset.sum_le_sum fun i _ => hb i).trans ?_
     simp
   intro l _ hl2 hlp Ω _ _ _ ι
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   let emb : ∀ i, K₀ (u i) →ₐ[ℚ] Ω := fun i => IsAlgClosed.lift
-  letI alg : ∀ i, Algebra (K₀ (u i)) Ω := fun i => (emb i).toRingHom.toAlgebra
-  haveI tow : ∀ i, IsScalarTower ℚ (K₀ (u i)) Ω := fun i =>
+  let alg : ∀ i, Algebra (K₀ (u i)) Ω := fun i => (emb i).toRingHom.toAlgebra
+  have tow : ∀ i, IsScalarTower ℚ (K₀ (u i)) Ω := fun i =>
     IsScalarTower.of_algebraMap_eq fun x => ((emb i).commutes x).symm
-  haveI clo : ∀ i, IsAlgClosure (K₀ (u i)) Ω := fun i => ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have clo : ∀ i, IsAlgClosure (K₀ (u i)) Ω := fun i => ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
   choose δ _ _ hδ _ using fun i => UpperTheory.exists_quadratic_sign_character ℚ (K₀ (u i)) Ω l (hK2 _)
   have hδi : Function.Injective δ := fun i j hij => by
     by_contra hne
@@ -1263,7 +1263,7 @@ theorem frobenius_trace_count_bound_of_rat_eigensystem_count_alt :
   obtain ⟨T, u, hT⟩ := traces_from_eigenvalues_rank2 p h e hp.pos D
   refine ⟨T, (Nat.card_congr u) ▸ hcard, ?_⟩
   intro l _ hl2 hlp Ω _ _ _ _ _ ι B hB σ hσ
-  haveI : IsAlgClosure ℚ Ω :=
+  have : IsAlgClosure ℚ Ω :=
     { isAlgClosed := IsAlgClosure.isAlgClosed K
       isAlgebraic := Algebra.IsAlgebraic.trans ℚ K Ω }
   obtain ⟨cl, hcl1, hcl2⟩ := hD l hl2 hlp Ω ι

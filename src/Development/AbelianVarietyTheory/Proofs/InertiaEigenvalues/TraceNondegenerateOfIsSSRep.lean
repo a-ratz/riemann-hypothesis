@@ -79,7 +79,7 @@ theorem semisimple_span {Γ k : Type} [Group Γ] [Field k] {n : ℕ}
     (ρ : Γ →* GL (Fin n) k) (h : IsSSRep ρ) : IsSemisimpleRing (spanAlg ρ) := by
   let φ : spanAlg ρ →+* Module.End k (Fin n → k) :=
     ((Matrix.toLinAlgEquiv' (R := k) (n := Fin n)).toAlgHom.comp (spanAlg ρ).val).toRingHom
-  letI : Module (spanAlg ρ) (Fin n → k) := Module.compHom _ φ
+  let : Module (spanAlg ρ) (Fin n → k) := Module.compHom _ φ
   have hs : ∀ (a : spanAlg ρ) (v : Fin n → k),
       a • v = (a : Matrix (Fin n) (Fin n) k).mulVec v := fun _ _ => rfl
   have hinv : ∀ W, IsInv ρ W → ∀ a : spanAlg ρ, ∀ v ∈ W, a • v ∈ W := by

@@ -108,14 +108,14 @@ theorem surjective_of_continuous {F E : Type} [Field F] [NumberField F] [Field E
     (φ : v.adicCompletion F →+* P.adicCompletion E) (hc : Continuous φ)
     (ψ : v.adicCompletion F ⊗[F] E →+* P.adicCompletion E)
     (hψ : ∀ a x, ψ (a ⊗ₜ x) = φ a * algebraMap E _ x) : Function.Surjective ψ := by
-  letI : Algebra (v.adicCompletion F) (P.adicCompletion E) := φ.toAlgebra
-  haveI : ContinuousSMul (v.adicCompletion F) (P.adicCompletion E) :=
+  let : Algebra (v.adicCompletion F) (P.adicCompletion E) := φ.toAlgebra
+  have : ContinuousSMul (v.adicCompletion F) (P.adicCompletion E) :=
     continuousSMul_of_algebraMap _ _ hc
-  letI : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
+  let : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
   let f : v.adicCompletion F ⊗[F] E →ₐ[v.adicCompletion F] P.adicCompletion E :=
     ⟨ψ, fun a => (hψ a 1).trans (by rw [map_one, mul_one]; rfl)⟩
   have hcl : IsClosed (LinearMap.range f.toLinearMap : Set (P.adicCompletion E)) :=
-    Submodule.closed_of_finiteDimensional _
+    Submodule.isClosed_of_finiteDimensional _
   intro y
   refine (HeightOneSpectrum.denseRange_algebraMap E P).induction_on
     (p := fun y => y ∈ (LinearMap.range f.toLinearMap : Set (P.adicCompletion E))) y hcl fun x => ?_
@@ -126,7 +126,7 @@ theorem exists_ringEquiv_completion : ∀ (E : Type) [Field E] [NumberField E] [
   obtain ⟨φ, hc, hφ, hv⟩ := exists_completion_map v P h
   obtain ⟨ψ, hψ⟩ : ∃ ψ : LocAlg v →+* P.adicCompletion E,
       ∀ a x, ψ (a ⊗ₜ x) = φ a * algebraMap E _ x := by
-    letI : Algebra (maximalRealSubfield E) (P.adicCompletion E) :=
+    let : Algebra (maximalRealSubfield E) (P.adicCompletion E) :=
       ((algebraMap E (P.adicCompletion E)).comp (algebraMap (maximalRealSubfield E) E)).toAlgebra
     let f : E →ₐ[maximalRealSubfield E] P.adicCompletion E := ⟨algebraMap E _, fun _ => rfl⟩
     let g : v.adicCompletion (maximalRealSubfield E) →ₐ[maximalRealSubfield E] P.adicCompletion E :=
@@ -136,7 +136,7 @@ theorem exists_ringEquiv_completion : ∀ (E : Type) [Field E] [NumberField E] [
     (Algebra.IsQuadraticExtension.finrank_eq_two _ E) v (by
       rw [show Ideal.map _ v.asIdeal = P.asIdeal from h]; exact P.isPrime)
   have hinj : Function.Injective ψ := by
-    letI := hF.toField
+    let := hF.toField
     exact ψ.injective
   have hE : ∀ x : E, ψ (locEmb v x) = algebraMap E _ x := fun x =>
     (hψ 1 x).trans (by rw [map_one, one_mul])

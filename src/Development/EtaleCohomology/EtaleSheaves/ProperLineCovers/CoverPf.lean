@@ -87,7 +87,7 @@ theorem leafNormal : LeafNormal := by
   have : Nonempty W := hWn.to_subtype
   have hSm : Smooth c := SmoothOfRelativeDimension.smooth 1 c
   let φ : Ω →+* Γ(C, W) := (c.appLE ⊤ W le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
-  letI : Algebra Ω Γ(C, W) := φ.toAlgebra
+  let : Algebra Ω Γ(C, W) := φ.toAlgebra
   have hφ : φ.Smooth := by
     have h1 : (c.appLE ⊤ W le_top).hom.Smooth :=
       HasRingHomProperty.appLE @Smooth c hSm ⟨⊤, isAffineOpen_top _⟩ ⟨W, hW⟩ (by simp)
@@ -108,7 +108,7 @@ theorem krullDim_eq_one {Ω : Type} [Field Ω] {C : Scheme.{0}} (c : C ⟶ Sp Ω
   let e : Ω ≃+* Γ(Sp Ω, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of Ω)).commRingCatIsoToRingEquiv.symm
   let ψ := (c.appLE ⊤ W le_top).hom
   let φ : Ω →+* Γ(C, W) := ψ.comp (e : Ω →+* Γ(Sp Ω, ⊤))
-  letI : Algebra Ω Γ(C, W) := φ.toAlgebra
+  let : Algebra Ω Γ(C, W) := φ.toAlgebra
   have hφ : φ.FiniteType := by
     have h1 : ψ.FiniteType :=
       HasRingHomProperty.appLE @LocallyOfFiniteType c hL ⟨⊤, isAffineOpen_top _⟩ ⟨W, hW⟩ (by simp)
@@ -157,7 +157,7 @@ theorem LeafDedRing_of (hd : LeafDim1) (hn : LeafNormal) : LeafDedRing := by
   have : Nonempty W := hWn.to_subtype
   have hL : LocallyOfFiniteType c := inferInstance
   let φ : Ω →+* Γ(C, W) := (c.appLE ⊤ W le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom
-  letI : Algebra Ω Γ(C, W) := φ.toAlgebra
+  let : Algebra Ω Γ(C, W) := φ.toAlgebra
   have hφ : φ.FiniteType := by
     have h1 : (c.appLE ⊤ W le_top).hom.FiniteType :=
       HasRingHomProperty.appLE @LocallyOfFiniteType c hL ⟨⊤, isAffineOpen_top _⟩ ⟨W, hW⟩ (by simp)

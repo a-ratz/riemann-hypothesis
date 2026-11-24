@@ -100,19 +100,19 @@ theorem integrableOn_absDet_rpow (ha : 0 < a) (μ : Measure (GA E a)) [μ.IsHaar
     · rintro ⟨g, hg⟩
       obtain ⟨γ, n, rfl⟩ := mem_latticeGL_iff.1 hg
       exact ⟨⟨⟨_, γ, rfl⟩, n⟩, rfl⟩
-  haveI : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hd := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom (latticeGL E a) μ
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have h1 : μ (GlobalTheory.AutomorphicL2Unitary.stdDom (latticeGL E a)) ≠ ⊤ := by
     rw [← GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ hd]; exact measure_ne_top _ _
   rw [← GlobalTheory.ThetaUnfold.lintegral_unfold μ (latticeGL E a) (ratGL E a).range (fun n : ℤ => splitCentre E a 1 ^ n)
     (Equiv.ofBijective φ hφ) (fun _ => rfl) hd h𝓕 _
-    (by rintro _ ⟨γ, rfl⟩ g; simp only [Set.indicator_apply, Set.mem_setOf_eq]; rw [show δ (ratGL E a γ * g) = δ g from hδr γ g])
+    (by rintro _ ⟨γ, rfl⟩ g; simp only [Set.indicator_apply, Set.mem_ofPred_eq]; rw [show δ (ratGL E a γ * g) = δ g from hδr γ g])
     ((hc.measurable.ennreal_ofReal.indicator hm).aemeasurable)]
   obtain ⟨B, hB, h⟩ := exists_tsum_zpow_le_low hT1 hs
   refine (lintegral_mono (g := fun _ => B) fun g => ?_).trans_lt ?_
   · refine le_of_eq_of_le (tsum_congr fun n => ?_) (h _ (hδ0 g))
-    simp only [Set.indicator_apply, Set.mem_setOf_eq]
+    simp only [Set.indicator_apply, Set.mem_ofPred_eq]
     rw [hδz]
   · rw [setLIntegral_const]
     exact ENNReal.mul_lt_top hB.lt_top h1.lt_top

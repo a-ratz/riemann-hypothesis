@@ -75,8 +75,8 @@ theorem stdEx_of (h1 : FrameConj) (h2 : HgtEx) : StdEx := by
   have h0 : (0 : ℝ) < absE F E (Matrix.GeneralLinearGroup.det t) := by
     rw [← ha.val p t hpt 1 K.one_mem]
     exact hp _
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : IsTopologicalGroup (G2 σ Y) := Subgroup.instIsTopologicalGroupSubtypeMem _
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalGroup (G2 σ Y) := Subgroup.instIsTopologicalGroupSubtypeMem _
   refine ⟨b, K₀, fun x => absE F E (Matrix.GeneralLinearGroup.det t) * a (x * p⁻¹), hb, hK₀, ⟨fun x => ?_, fun q u hq k hk => ?_⟩,
     continuous_const.mul (hc.comp (continuous_mul_const _)), fun x => mul_pos h0 (hp _)⟩
   · obtain ⟨q, u, hq, k, hk, ex⟩ := ha.iwa (x * p⁻¹)

@@ -48,7 +48,7 @@ open GroundTheory.Automorphic GroundTheory.Automorphic.FourierWhittaker GroundTh
 
 theorem UpperTheory.ConvolutionTheory.R2.Pp.whittaker_eq {F : Type} [Field F] [NumberField F] {f : GL (Fin 2) (A F) → ℂ} (hf : Lf f)
     (g : GL (Fin 2) (A F)) : whittaker f g = Wf f (aE (IdeleGroup.diagonal F (-1)) * g) := by
-  letI : Unique (Pos 2) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
+  let : Unique (Pos 2) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
   rw [← wfT F f hf (-1) g, ← int_one (ι := Pos 2)]
   refine integral_congr_ae (Eventually.of_forall fun x => ?_)
   have h1 : gl (nU (x default)) = uGL x := by

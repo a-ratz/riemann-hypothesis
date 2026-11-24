@@ -247,7 +247,7 @@ theorem h2_inj : LocalTateDuality → ∀ (F Ω : Type) [Field F] [NumberField F
       map_smul' := fun a x => f.map_smul (algebraMap ℤ_[l] O a) x }
   let χ : Dec (F := F) A →* ℤ_[l]ˣ := (cycZ F Ω l).comp (Dec (F := F) A).subtype
   have hχ : Continuous fun g => (χ g : ℤ_[l]) :=
-    Units.continuous_val.comp ((continuous_cycZ F Ω l).comp continuous_subtype_val)
+    Units.continuous_val.comp ((continuous_cycZ F Ω l).comp continuous_subtypeVal)
   have htorZ : ∀ b : B, ∃ n : ℕ, (l : ℤ_[l]) ^ n • b = 0 := by
     intro b
     obtain ⟨n, hn⟩ := htor b
@@ -586,8 +586,8 @@ theorem res_addH1 {H : Type} [Group H] [TopologicalSpace H] (phi : H →* Γ) (h
 
 theorem addH1_ur (J : Subgroup Γ) (x : H1 rho) (hx : x ∈ H1ur rho J) :
     h1MapOfAdditive rho rho' u hu he x ∈ H1ur rho' J := by
-  have h0 : resH1 rho J.subtype continuous_subtype_val x = 0 := hx
-  exact (res_addH1 rho rho' u hu he J.subtype continuous_subtype_val x).trans
+  have h0 : resH1 rho J.subtype continuous_subtypeVal x = 0 := hx
+  exact (res_addH1 rho rho' u hu he J.subtype continuous_subtypeVal x).trans
     ((congrArg _ h0).trans (map_zero _))
 
 end General
@@ -647,7 +647,7 @@ theorem coefH1_mem_selOn (Q : Finset (PlE D.host)) (x : H1 (repOn ρ (1 : GE N �
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
   have hv := (mem_Sel _ _ _ _ _).1 hx v
   refine (res_addH1 (repOn ρ (1 : GE N →* Kˣ) K) (repOn ρ (1 : GE N →* K'ˣ) K') (vecAdd f r) continuous_of_discreteTopology
-    (vecAdd_repOn f ρ) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtype_val x) ▸ ?_
+    (vecAdd_repOn f ρ) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtypeVal x) ▸ ?_
   unfold Formalism.GaloisCohomology.bkCond at hv ⊢
   split_ifs at hv ⊢ with h1 h2
   · exact addH1_mem_bkOn bkP i ρ f v _ hv
@@ -667,10 +667,10 @@ theorem selOn_baseChange (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D
   have hker : RingHom.ker (algebraMap (X.O0 i) k) ≤ RingHom.ker (algebraMap (X.O0 i) K) := fun x hx =>
     hK x (IsLocalRing.le_maximalIdeal (RingHom.ker_ne_top _) hx)
   let ι : k →+* K := (algebraMap (X.O0 i) k).liftOfSurjective hs ⟨algebraMap (X.O0 i) K, hker⟩
-  letI : Algebra k K := ι.toAlgebra
-  haveI : IsScalarTower (X.O0 i) k K := IsScalarTower.of_algebraMap_eq fun x =>
+  let : Algebra k K := ι.toAlgebra
+  have : IsScalarTower (X.O0 i) k K := IsScalarTower.of_algebraMap_eq fun x =>
     ((algebraMap (X.O0 i) k).liftOfRightInverse_comp_apply _ _ ⟨algebraMap (X.O0 i) K, hker⟩ x).symm
-  haveI : CompactSpace (GE N) := inferInstance
+  have : CompactSpace (GE N) := inferInstance
   refine finrank_eq_of_coord _ _ (coefH1 i ρ ((Algebra.linearMap k K).restrictScalars (X.O0 i)))
     (fun lam => coefH1 i ρ (lam.restrictScalars (X.O0 i))) ?_ ?_ ?_
     (fun v hv => coefH1_mem_selOn bkP i ρ _ Q v hv) (fun lam v hv => coefH1_mem_selOn bkP i ρ _ Q v hv)
@@ -911,14 +911,14 @@ theorem card_eq (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (hLD : 
     (fun g => ⟨0, by simp⟩) (IsLocalRing.ResidueField (X.O0 i)) htors (Tgl i s) (Or.inl rfl)
   have cl : ∀ (τ : GE N →* GL (Fin D.R.r) (X.O0 i)) v, v ∈ placesOver D.host.E (X.l i) →
       Formalism.GaloisCohomology.bkCond (red i (IsLocalRing.ResidueField (X.O0 i)) τ) N.plOm (X.l i) (Spl i ∪ ↑(∅ : Finset (PlE D.host))) (bkOn bkP i τ 1 (IsLocalRing.ResidueField (X.O0 i))) v =
-        bkOn bkP i τ 1 (IsLocalRing.ResidueField (X.O0 i)) v := fun τ v hv => if_pos hv
+        bkOn bkP i τ 1 (IsLocalRing.ResidueField (X.O0 i)) v := fun τ v hv => ite_eq_left hv
   have cp : ∀ (τ : GE N →* GL (Fin D.R.r) (X.O0 i)) v, v ∈ Spl (X := X) i →
       Formalism.GaloisCohomology.bkCond (red i (IsLocalRing.ResidueField (X.O0 i)) τ) N.plOm (X.l i) (Spl i ∪ ↑(∅ : Finset (PlE D.host))) (bkOn bkP i τ 1 (IsLocalRing.ResidueField (X.O0 i))) v = ⊤ :=
-    fun τ v hv => (if_neg hv.2).trans (if_pos (Or.inl hv))
+    fun τ v hv => (ite_eq_right hv.2).trans (ite_eq_left (Or.inl hv))
   have cu : ∀ (τ : GE N →* GL (Fin D.R.r) (X.O0 i)) v, v ∉ Sl ∪ Sp →
       Formalism.GaloisCohomology.bkCond (red i (IsLocalRing.ResidueField (X.O0 i)) τ) N.plOm (X.l i) (Spl i ∪ ↑(∅ : Finset (PlE D.host))) (bkOn bkP i τ 1 (IsLocalRing.ResidueField (X.O0 i))) v =
         Formalism.GaloisCohomology.unrAt (red i (IsLocalRing.ResidueField (X.O0 i)) τ) (N.plOm.1 v) :=
-    fun τ v hv => (if_neg (hnot v hv).1).trans (if_neg (by simpa using (hnot v hv).2))
+    fun τ v hv => (ite_eq_right (hnot v hv).1).trans (ite_eq_right (by simpa using (hnot v hv).2))
   obtain ⟨f1, f2, e⟩ := _root_.GlobalTheory.DualPairFormula.greenbergWiles_dualPair hPT hLF hGF hGE D.host.E N.Om (X.l i) (IsLocalRing.ResidueField (X.O0 i)) (Fin D.R.r → (IsLocalRing.ResidueField (X.O0 i))) (Fin D.R.r → (IsLocalRing.ResidueField (X.O0 i)))
     (red i (IsLocalRing.ResidueField (X.O0 i)) (Tgl i s)) (red i (IsLocalRing.ResidueField (X.O0 i)) ρ) (fun g => algebraMap (X.O0 i) (IsLocalRing.ResidueField (X.O0 i)) ((eps0 X i g : (X.O0 i)ˣ) : X.O0 i))
     (dotProductBilin (IsLocalRing.ResidueField (X.O0 i)) (IsLocalRing.ResidueField (X.O0 i))) hc hc' (residue_globalCyclotomicCharacter i)
@@ -968,8 +968,8 @@ theorem finrank_eq_of_card_eq {k V V' : Type} [Field k] [Finite k] [AddCommGroup
 
 theorem eqDim : Cheb → PoitouTateTotallyComplex → CohDimTwo → TameLocal → LocalFiniteness → LocalTateDuality → LocalEulerChar → GlobalFiniteness → GlobalEulerChar → UnramifiedOrthogonality → Gen.ArchimedeanSignatureMatching → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i), GalHyp bkP i s → EqDim bkP i s := by
   intro _ hPT _ _ hLF hLD hLE hGF hGE _ h4 D N X bkP i s h K _ _ _ _ hK ρ hρ
-  letI : TopologicalSpace (IsLocalRing.ResidueField (X.O0 i)) := ⊥
-  haveI : DiscreteTopology (IsLocalRing.ResidueField (X.O0 i)) := ⟨rfl⟩
+  let : TopologicalSpace (IsLocalRing.ResidueField (X.O0 i)) := ⊥
+  have : DiscreteTopology (IsLocalRing.ResidueField (X.O0 i)) := ⟨rfl⟩
   obtain ⟨f1, f2, e⟩ := card_eq hPT hLF hLD hLE hGF hGE h4 bkP i s h ρ hρ
   have := X.twistBaseCoefficientRing_residueField_finite i
   have hres : IsRes i (IsLocalRing.ResidueField (X.O0 i)) := fun x hx => (IsLocalRing.residue_eq_zero_iff _).2 hx

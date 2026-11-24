@@ -89,7 +89,7 @@ theorem residueDegree_eq_one_of_surjectiveOnStalks {X Y : Scheme} (f : X ⟶ Y) 
     obtain ⟨s, rfl⟩ := Scheme.residue_surjective X x y
     obtain ⟨t, rfl⟩ := SurjectiveOnStalks.stalkMap_surjective (f := f) x s
     exact ⟨Y.residue (f x) t, rfl⟩
-  letI : Algebra (Y.residueField (f x)) (X.residueField x) := (f.residueFieldMap x).hom.toAlgebra
+  let : Algebra (Y.residueField (f x)) (X.residueField x) := (f.residueFieldMap x).hom.toAlgebra
   have hb : Function.Bijective (algebraMap (Y.residueField (f x)) (X.residueField x)) :=
     ⟨RingHom.injective (algebraMap (Y.residueField (f x)) (X.residueField x)), hs⟩
   have e := (AlgEquiv.ofBijective (Algebra.ofId (Y.residueField (f x)) (X.residueField x)) hb).toLinearEquiv
@@ -102,8 +102,8 @@ namespace GlobalTheory.CoverDeg
 
 theorem j_genericPoint {F : Type} [Field F] [NumberField F] {Y : Var F} (V : Cover Y) :
     V.j (genericPoint V.G) = genericPoint V.X := by
-  haveI := V.int
-  haveI := V.intG
+  have := V.int
+  have := V.intG
 
   let η : Sp F := ⟨⊥, Ideal.isPrime_bot⟩
   have hη : ∀ w : Sp F, (spMap (algebraMap (𝓞 F) F) w).asIdeal = ⊥ := by
@@ -144,7 +144,7 @@ namespace GlobalTheory.CoverDeg
 
 theorem j_residueDegree {F : Type} [Field F] [NumberField F] {Y : Var F} (V : Cover Y) (x : V.G) :
     V.j.residueDegree x = 1 := by
-  haveI := CoverHt.isPreimmersion_j V
+  have := CoverHt.isPreimmersion_j V
   exact residueDegree_eq_one_of_surjectiveOnStalks V.j x
 
 theorem map_genericPoint_and_deg : ∀ (F : Type) [Field F] [NumberField F] (Y : Var F) (V : Cover Y)

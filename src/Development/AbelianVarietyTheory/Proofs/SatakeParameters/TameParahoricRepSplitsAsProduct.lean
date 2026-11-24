@@ -169,7 +169,7 @@ theorem perm_normal (r t : ℕ) (w₀ : Equiv.Perm (Fin (r + t))) :
   · intro i j hij
     have h1 := congrArg Fin.val hij
     have h2 := j.2
-    simp only [Equiv.Perm.one_apply, Fin.coe_natAdd, Fin.coe_castAdd] at h1
+    simp only [Equiv.Perm.one_apply, Fin.val_natAdd, Fin.val_castAdd] at h1
     omega
   · have hww' : w * w = 1 := Equiv.ext fun x => hww x
     rw [mul_one, mul_assoc, hww', mul_one]
@@ -199,7 +199,7 @@ theorem permGL_mem_parab (F : Type) [Field F] {r t : ℕ} {v : Equiv.Perm (Fin (
     Parabolic.permGL F v ∈ parab F (part r t) := by
   rw [mem_parab_iff_lower_left_eq_zero]
   intro i j
-  rw [GlobalTheory.Parabolic.permGL_apply, if_neg (hv i j)]
+  rw [GlobalTheory.Parabolic.permGL_apply, ite_eq_right (hv i j)]
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
@@ -281,7 +281,7 @@ theorem hasBlocks_split {r t : ℕ} {y : GL (Fin (r + t)) 𝒪[k]} {a : GL (Fin 
     rw [← Matrix.mul_apply, Units.val_one, Matrix.one_mul]
   · rw [Units.val_mul, Matrix.mul_apply, Fin.sum_univ_add]
     simp only [diagO_ll, diagO_lr, zero_mul, Finset.sum_const_zero, zero_add, Units.val_one,
-      Matrix.one_apply, ite_mul, one_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Matrix.one_apply, ite_mul, one_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact h3 i j
 
 theorem blockTri_mem_parab {F : Type} [Field F] {r t : ℕ} {g : GL (Fin (r + t)) F}
@@ -729,7 +729,7 @@ theorem val_det_sub_one_lt {m : Type} [Fintype m] [LinearOrder m] (A : Matrix m 
     (hd : ∀ i, valuation k (algebraMap 𝒪[k] k (A i i) - 1) < 1) :
     valuation k ((A.map (algebraMap 𝒪[k] k)).det - 1) < 1 := by
   have h1 : (A.map (IsLocalRing.residue 𝒪[k])).det = 1 := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [Matrix.det_of_isUpperTriangular]
     · refine Finset.prod_eq_one fun i _ => ?_
       have := (residue_eq_zero_iff_val_lt (A i i - 1)).2 (by simpa using hd i)
       rw [map_sub, map_one, sub_eq_zero] at this
@@ -748,8 +748,8 @@ theorem isIwVec_of_isParahoricVec (k : Type) [Field k] [ValuativeRel k] [Topolog
     IsIwVec (Fin.append (fun _ : Fin r => (1 : kˣ →* ℂˣ)) (fun _ : Fin t => χ)) π v := by
   have hlt : ∀ (i : Fin t) (j : Fin r), Fin.castAdd t j < Fin.natAdd r i := by
     intro i j
-    rw [Fin.lt_iff_val_lt_val]
-    simp only [Fin.coe_castAdd, Fin.coe_natAdd]
+    rw [Fin.lt_def]
+    simp only [Fin.val_castAdd, Fin.val_natAdd]
     omega
   refine ⟨fun h hK hl hd => ?_, fun s hs => ?_⟩
   · obtain ⟨h₀, hh⟩ := hK
@@ -1003,7 +1003,7 @@ theorem exists_isIwVec_fst : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
         rw [fromBlocks_apply₁₁, hSapp, val_diagT, diagonal_apply]
         by_cases hij : i = j
         · subst hij; simp
-        · rw [if_neg hij, if_neg]
+        · rw [ite_eq_right hij, ite_eq_right]
           intro h
           exact hij (s.injective (Sum.inl_injective ((stdSum (rfl : r + t = r + t)).injective
             (w.symm.injective h))))
@@ -1013,7 +1013,7 @@ theorem exists_isIwVec_fst : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
         change (if a = b then (1 : k) else 0) = _
         by_cases hab : a = b
         · subst hab; simp
-        · rw [if_neg hab, if_neg]
+        · rw [ite_eq_right hab, ite_eq_right]
           intro h
           exact hab (Sum.inr_injective ((stdSum (rfl : r + t = r + t)).injective (w.symm.injective h)))
     have hc : torusChar θ τ' = torusChar (fun i => θ (w.symm (Fin.castAdd t (s i)))) τ := by
@@ -1220,7 +1220,7 @@ theorem tameSplit : GlobalTheory.Published.BernsteinZelevinskyFiniteness → Glo
       have h1 := hμ i u hu
       rw [ha, hij, Equiv.symm_apply_apply] at h1
       simpa [θ] using h1.symm.trans (hψ₁ a u hu)
-    refine (mem_parab_two k).2 fun j i => (GlobalTheory.Parabolic.permGL_apply w _ _).trans (if_neg fun hji => ?_)
+    refine (mem_parab_two k).2 fun j i => (GlobalTheory.Parabolic.permGL_apply w _ _).trans (ite_eq_right fun hji => ?_)
     have hF : ∀ b, ∃ c, w (Fin.natAdd r b) = Fin.natAdd r c := fun b => by
       generalize hx : w (Fin.natAdd r b) = x
       induction x using Fin.addCases with

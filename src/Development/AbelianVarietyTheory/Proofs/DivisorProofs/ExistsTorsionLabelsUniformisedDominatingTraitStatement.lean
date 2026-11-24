@@ -159,14 +159,14 @@ theorem exists_oneTrait : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [IsL
       ∃ lab : Labels D₁.toPre A, OneTrait D₁.toPre A lab := by
   intro R _ _ _ hR D A hU
   obtain ⟨W, _, _, _, φ, G', _, _, D', A', U', hD, a, hW, hφ, hloc, hG', ga, hga, hpb, hLa⟩ := hU
-  haveI : CharZero R := hR.2
-  haveI : CharZero W := charZero_of_injective_ringHom hφ
+  have : CharZero R := hR.2
+  have : CharZero W := charZero_of_injective_ringHom hφ
   have := hW.1
   have hW' : AdmBase W (maximalIdeal W) := ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
-  letI iW : Algebra (FractionRing R) (Kb W) := ((algebraMap (FractionRing W) (Kb W)).comp ga).toAlgebra
+  let iW : Algebra (FractionRing R) (Kb W) := ((algebraMap (FractionRing W) (Kb W)).comp ga).toAlgebra
   have tf : ∀ (K M : Type) [Field K] [Field M] [Algebra K M], Module.IsTorsionFree K M := fun _ _ _ _ _ => inferInstance
-  haveI := tf (FractionRing R) (Kb W)
-  haveI := tf (FractionRing R) (Kb R)
+  have := tf (FractionRing R) (Kb W)
+  have := tf (FractionRing R) (Kb R)
   let em : Kb R →ₐ[FractionRing R] Kb W := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -176,10 +176,10 @@ theorem exists_oneTrait : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [IsL
       algebraMap (FractionRing W) (Kb W) (algebraMap W _ (φ r)) := fun r =>
     congrArg (algebraMap (FractionRing W) (Kb W)) (hga r)
   obtain ⟨hL, -⟩ := GlobalTheory.firstFiveLaws
-  haveI : CharZero (FractionRing R) := charZero_of_injective_ringHom (IsFractionRing.injective R (FractionRing R))
-  haveI : CharZero (Kb R) := charZero_of_injective_ringHom (algebraMap (FractionRing R) (Kb R)).injective
-  haveI : CharZero (Kb W) := charZero_of_injective_ringHom em.toRingHom.injective
-  haveI := GlobalTheory.ArcExt.epi_spMap em.toRingHom
+  have : CharZero (FractionRing R) := charZero_of_injective_ringHom (IsFractionRing.injective R (FractionRing R))
+  have : CharZero (Kb R) := charZero_of_injective_ringHom (algebraMap (FractionRing R) (Kb R)).injective
+  have : CharZero (Kb W) := charZero_of_injective_ringHom em.toRingHom.injective
+  have := GlobalTheory.ArcExt.epi_spMap em.toRingHom
   have hρ : spMap em.toRingHom ≫ jFK (R := R) (Kb R) = (TFK (R := W) (Kb W)).hom ≫ spMap ga := by
     show Spec.map _ ≫ Spec.map _ = Spec.map _ ≫ Spec.map _
     rw [← Spec.map_comp, ← Spec.map_comp]
@@ -202,7 +202,7 @@ theorem exists_oneTrait : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [IsL
     have c := GlobalTheory.ArcExt.card_torsion hL A (jFK (R := R) (Kb R)) (n := k) (Nat.cast_ne_zero.2 (by omega))
     have c' := GlobalTheory.ArcExt.card_torsion hL A ((TFK (R := W) (Kb W)).hom ≫ spMap ga) (n := k)
       (Nat.cast_ne_zero.2 (by omega))
-    haveI : Finite {z : Over.mk ((TFK (R := W) (Kb W)).hom ≫ spMap ga) ⟶ A.A // z ^ k = 1} :=
+    have : Finite {z : Over.mk ((TFK (R := W) (Kb W)).hom ≫ spMap ga) ⟶ A.A // z ^ k = 1} :=
       Nat.finite_of_card_ne_zero (by rw [c']; positivity)
     obtain ⟨y, e⟩ := (hu.bijective_of_nat_card_le (c'.trans c.symm).le).2 ⟨z, hz⟩
     exact ⟨y.1, congrArg Subtype.val e⟩

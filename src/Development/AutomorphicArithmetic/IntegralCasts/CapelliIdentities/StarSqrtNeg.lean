@@ -62,7 +62,7 @@ theorem UpperTheory.Reformulated.B.StarSqrtNeg.star_sqrt_neg :
         Star.star x =
           -x := by
   intro D x n hn h
-  haveI : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
+  have : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
   obtain ⟨φ⟩ : Nonempty (D.host.E →+* ℂ) := inferInstance
   apply φ.injective
   have key : φ (Star.star x) = (starRingEnd ℂ) (φ x) :=

@@ -129,7 +129,7 @@ theorem monomial_smul_mem (H : Set M) (u : (Σ k, ι k) →₀ ℕ) {y : M}
   | mem x hx =>
     obtain ⟨v, h, hh, rfl⟩ := hx
     refine Submodule.subset_span ⟨u + v, h, hh, ?_⟩
-    rw [smul_smul, monomial_mul, one_mul]
+    rw [smul_smul, monomial_mul_monomial, one_mul]
   | zero => rw [smul_zero]; exact Submodule.zero_mem _
   | add x z _ _ hx hz => rw [smul_add]; exact Submodule.add_mem _ hx hz
   | smul s x _ hx => rw [smul_comm]; exact Submodule.smul_mem _ s hx

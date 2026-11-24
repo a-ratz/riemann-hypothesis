@@ -89,20 +89,20 @@ theorem smooth_mp : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ), SmoothOfRelativeDim
     exact smoothOfRelativeDimension_comp (n := ∑ i, Fin.tail n i) (m := n 0) (hf := h1) (hg := h2) _ _
 
 theorem genSmooth_mp (m : ℕ) (n : Fin (m + 1) → ℕ) : GenSmooth (mpStr k m n) (∑ i, n i) := by
-  haveI := smooth_mp k m n
+  have := smooth_mp k m n
   exact genSmooth_of_smooth _ _
 
 theorem isArithVar_mp [IsDomain k] [CharZero k] (hf : Module.Finite ℤ k) (m : ℕ) (n : Fin (m + 1) → ℕ) :
     IsArithVar (mpStr k m n) (∑ i, n i) := by
-  haveI : Module.Finite ℤ k := hf
-  haveI : IsNoetherian ℤ k := isNoetherian_of_isNoetherianRing_of_finite ℤ k
-  haveI : IsNoetherianRing k := isNoetherian_of_tower ℤ inferInstance
+  have : Module.Finite ℤ k := hf
+  have : IsNoetherian ℤ k := isNoetherian_of_isNoetherianRing_of_finite ℤ k
+  have : IsNoetherianRing k := isNoetherian_of_tower ℤ inferInstance
   have hdim : ringKrullDim k = 1 := ringKrullDim_eq_one hf
   have hbase := (GlobalTheory.ArithBase.isArithVar_id (k := k) hdim).flat
   rw [Category.id_comp] at hbase
-  haveI := hbase
-  haveI : SmoothOfRelativeDimension (∑ i, n i) (mpStr k m n) := smooth_mp k m n
-  haveI : Smooth (mpStr k m n) := SmoothOfRelativeDimension.smooth (∑ i, n i) (mpStr k m n)
+  have := hbase
+  have : SmoothOfRelativeDimension (∑ i, n i) (mpStr k m n) := smooth_mp k m n
+  have : Smooth (mpStr k m n) := SmoothOfRelativeDimension.smooth (∑ i, n i) (mpStr k m n)
   refine ⟨inferInstance, hf, isIntegral_mp k m n, ?_, ?_, ?_⟩
   · rw [← multiProjEmb_toSpecBase]
     exact GlobalTheory.ProjSpace.isProjOver_comp_of_isClosedImmersion _ (GlobalTheory.ProjSpace.isProjOver_pspace_str k _)
@@ -112,10 +112,10 @@ theorem isArithVar_mp [IsDomain k] [CharZero k] (hf : Module.Finite ℤ k) (m : 
 theorem isClosedImmersion_lift {T : Scheme.{0}} (m : ℕ) (n' : ℕ) (n : Fin (m + 1) → ℕ) (a : T ⟶ PSpace k n')
     [IsClosedImmersion a] (b : T ⟶ MP k m n) (h : a ≫ toSpecBase k n' = b ≫ mpStr k m n) :
     IsClosedImmersion (pullback.lift a b h : T ⟶ pullback (toSpecBase k n') (mpStr k m n)) := by
-  haveI : IsProper (mpStr k m n) := isProper_mpStr k m n
-  haveI : IsSeparated (mpStr k m n) := inferInstance
-  haveI : IsSeparated (pullback.fst (toSpecBase k n') (mpStr k m n)) := inferInstance
-  haveI : IsClosedImmersion (pullback.lift a b h ≫ pullback.fst (toSpecBase k n') (mpStr k m n)) := by
+  have : IsProper (mpStr k m n) := isProper_mpStr k m n
+  have : IsSeparated (mpStr k m n) := inferInstance
+  have : IsSeparated (pullback.fst (toSpecBase k n') (mpStr k m n)) := inferInstance
+  have : IsClosedImmersion (pullback.lift a b h ≫ pullback.fst (toSpecBase k n') (mpStr k m n)) := by
     rw [pullback.lift_fst]
     infer_instance
   exact IsClosedImmersion.of_comp (pullback.lift a b h) (pullback.fst (toSpecBase k n') (mpStr k m n))

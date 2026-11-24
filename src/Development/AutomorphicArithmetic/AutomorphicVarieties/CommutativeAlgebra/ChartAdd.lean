@@ -79,19 +79,19 @@ private theorem exists_intertwiner_decomp_of_kernel_intertwines {σ O : Type} [F
     simp only [coeff_monomial_mul, one_mul]
     by_cases hn : n.support.Nonempty
     · have hi0 : hn.choose ∈ n.support := hn.choose_spec
-      have hsel : sel n = some hn.choose := dif_pos hn
+      have hsel : sel n = some hn.choose := dite_eq_left hn
       have hle0 : Finsupp.single hn.choose 1 ≤ n := by
         rw [Finsupp.single_le_iff]
         exact Nat.one_le_iff_ne_zero.2 (Finsupp.mem_support_iff.1 hi0)
       rw [Finset.sum_eq_single hn.choose]
-      · rw [if_pos hle0, hc, tsub_add_cancel_of_le hle0, if_pos hsel]
+      · rw [ite_eq_left hle0, hc, tsub_add_cancel_of_le hle0, ite_eq_left hsel]
       · intro i _ hi
         by_cases hle : Finsupp.single i 1 ≤ n
-        · rw [if_pos hle, hc, tsub_add_cancel_of_le hle, if_neg]
+        · rw [ite_eq_left hle, hc, tsub_add_cancel_of_le hle, ite_eq_right]
           rw [hsel]
           intro heq
           exact hi (Option.some_injective _ heq).symm
-        · rw [if_neg hle]
+        · rw [ite_eq_right hle]
       · intro hnot
         exact absurd (Finset.mem_univ _) hnot
     · have hn0 : n = 0 := by
@@ -102,17 +102,17 @@ private theorem exists_intertwiner_decomp_of_kernel_intertwines {σ O : Type} [F
       · rw [coeff_zero_eq_constantCoeff_apply]
         exact hg
       · intro i _
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hle
         have h1 := Finsupp.single_le_iff.1 hle
         simp at h1
   · intro i
-    rw [← coeff_zero_eq_constantCoeff_apply, hc, zero_add, if_pos]
+    rw [← coeff_zero_eq_constantCoeff_apply, hc, zero_add, ite_eq_left]
     have hn : (Finsupp.single i 1 : σ →₀ ℕ).support.Nonempty := ⟨i, by simp⟩
     show (if hn : (Finsupp.single i 1 : σ →₀ ℕ).support.Nonempty then some hn.choose else none) = some i
-    rw [dif_pos hn]
+    rw [dite_eq_left hn]
     have hs : hn.choose ∈ ({i} : Finset σ) := by
-      rw [← Finsupp.support_single_ne_zero i (one_ne_zero : (1 : ℕ) ≠ 0)]
+      rw [← Finsupp.support_single i (one_ne_zero : (1 : ℕ) ≠ 0)]
       exact hn.choose_spec
     rw [Finset.mem_singleton.1 hs]
 
@@ -127,7 +127,7 @@ private lemma π_mem_sq {O X R : Type} [CommRing O] [AddCommGroup X] [CommRing R
     intro i
     rw [RingHom.mem_ker]
     erw [WPres.origin_π]
-    rw [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, if_neg]
+    rw [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, ite_eq_right]
     exact (Finsupp.single_ne_zero.2 one_ne_zero).symm
 
   rw [hf, map_sum]
@@ -168,10 +168,10 @@ theorem UpperTheory.V.Alg.chart_free :
       ← coeff_zero_eq_constantCoeff_apply, MvPowerSeries.coeff_map]
   · intro i
     refine ⟨W.π (MvPowerSeries.X i), ?_, ?_⟩
-    · rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, if_pos rfl]
+    · rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, ite_eq_left rfl]
       exact one_ne_zero
     · intro i' hi'
-      rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, if_neg]
+      rw [hφ, MvPowerSeries.map_X, MvPowerSeries.coeff_X, ite_eq_right]
       intro heq
       exact hi' (Finsupp.single_left_injective one_ne_zero heq)
   · intro f hf0 hlin
@@ -272,14 +272,14 @@ theorem UpperTheory.V.Alg.chart_add :
     rw [this, map_zero]
   obtain ⟨φ0, hφ0, hz0⟩ := chart_free O X (MvPowerSeries τ' O) W0 h0 Function.injective_id
   let B : Bool → Type := chart_add_fam R (MvPowerSeries τ' O)
-  letI iB : ∀ v : Bool, CommRing (B v) := fun v =>
+  let iB : ∀ v : Bool, CommRing (B v) := fun v =>
     Bool.rec (motive := fun v : Bool => CommRing (B v)) (inferInstance : CommRing (MvPowerSeries τ' O)) iR v
-  letI aB : ∀ v : Bool, Algebra O (B v) := fun v =>
+  let aB : ∀ v : Bool, Algebra O (B v) := fun v =>
     Bool.rec (motive := fun v : Bool => @Algebra O (B v) _ (iB v).toCommSemiring.toSemiring) (inferInstance : Algebra O (MvPowerSeries τ' O)) aR v
   let WB : ∀ v : Bool, WPres O X (B v) := fun v => Bool.rec (motive := fun v : Bool => WPres O X (B v)) W0 W v
   have hB : ∀ v : Bool, (WB v).HasOrigin := fun v => Bool.rec (motive := fun v : Bool => (WB v).HasOrigin) h0 h v
   let F : Bool → Type := chart_add_fam τ τ'
-  letI fF : ∀ v : Bool, Fintype (F v) := fun v => Bool.rec (motive := fun v : Bool => Fintype (F v)) fτ' fτ v
+  let fF : ∀ v : Bool, Fintype (F v) := fun v => Bool.rec (motive := fun v : Bool => Fintype (F v)) fτ' fτ v
   let wF : ∀ v : Bool, F v → X := fun v => Bool.rec (motive := fun v : Bool => F v → X) W0.wt wt v
   let φF : ∀ v : Bool, B v →ₐ[O] MvPowerSeries (F v) (FractionRing O) := fun v =>
     Bool.rec (motive := fun v : Bool => B v →ₐ[O] MvPowerSeries (F v) (FractionRing O)) φ0 φ v

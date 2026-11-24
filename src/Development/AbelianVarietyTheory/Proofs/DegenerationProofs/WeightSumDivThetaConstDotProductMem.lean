@@ -58,13 +58,13 @@ theorem proj_mul_proj_eq_zero {o Ω : Type} [CommRing o] [Field Ω] [Algebra o �
     (S : ThetaSys o Ω) {T T' : AddSubgroup S.Gam} (h : T' ≤ T) (hT : S.IsoFree T) (hT' : S.IsoFree T')
     (c : T →+ ZMod S.N) (c' : T' →+ ZMod S.N) (hc : c.comp (AddSubgroup.inclusion h) ≠ c') :
     S.proj T c * S.proj T' c' = 0 := by
-  haveI : IsDomain o := hA.inj.isDomain
-  haveI := FreeNear.finite_char S T
-  haveI := Fintype.ofFinite (T →+ ZMod S.N)
+  have : IsDomain o := hA.inj.isDomain
+  have := FreeNear.finite_char S T
+  have := Fintype.ofFinite (T →+ ZMod S.N)
   rw [(thetaSys_FF_mem_finite_perp_proj o Ω S).2.2.2 T T' h hT hT' c',
     finsum_mem_eq_finite_toFinset_sum _ (Set.toFinite _), Finset.mul_sum]
   refine Finset.sum_eq_zero fun c'' hc'' => ?_
-  rw [(FreeNear.proj_orthogonal S T hT).1, if_neg]
+  rw [(FreeNear.proj_orthogonal S T hT).1, ite_eq_right]
   rintro rfl
   rw [Set.Finite.mem_toFinset] at hc''
   exact hc hc''

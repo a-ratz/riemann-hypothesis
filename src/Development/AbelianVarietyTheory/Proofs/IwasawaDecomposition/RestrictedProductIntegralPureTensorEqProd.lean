@@ -90,15 +90,15 @@ theorem map_eq_smul_prod {ι Z Zi : Type} {Zv : ι → Type} [MeasurableSpace Z]
     have hfv : ∀ v, Measurable (fv v) := by
       intro v
       by_cases hv : v ∈ S
-      · simp only [fv, dif_pos hv]
+      · simp only [fv, dite_eq_left hv]
         exact measurable_one.indicator (ht' _)
-      · simp only [fv, dif_neg hv]
+      · simp only [fv, dite_eq_right hv]
         exact measurable_zero
-    have hfv' : ∀ v : S, fv v = (t v).indicator 1 := fun v => by simp only [fv, dif_pos v.2]
+    have hfv' : ∀ v : S, fv v = (t v).indicator 1 := fun v => by simp only [fv, dite_eq_left v.2]
     have h1 := h (s.indicator 1) fv (measurable_one.indicator hs') hfv
     have hm : MeasurableSet (s ×ˢ Set.pi Set.univ t) :=
       hs'.prod (MeasurableSet.univ_pi ht')
-    rw [Measure.smul_apply, Measure.map_apply hT hm, ← lintegral_indicator_one (hT hm), Measure.pi_pi]
+    rw [smul_apply, Measure.map_apply hT hm, ← lintegral_indicator_one (hT hm), Measure.pi_pi]
     have h2 : ∀ X, ((fun X => (pi X, fun v : S => pv v X)) ⁻¹' (s ×ˢ Set.pi Set.univ t)).indicator
         (1 : Z → ℝ≥0∞) X = s.indicator 1 (pi X) * ∏ v ∈ S, fv v (pv v X) := by
       intro X
@@ -179,7 +179,7 @@ theorem integral_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   obtain ⟨hsb, hae, hfin⟩ := hpure
   obtain ⟨hco, -, hint, hbb⟩ := GlobalTheory.GaugeEx.IntBasis.main F E (AlgHom.id F E) d b
   obtain ⟨-, -, hci, hcv⟩ := _root_.GlobalTheory.GaugeGlue.adelicTuple_measurableEmbedding F E d b n M
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have hae' : ∀ᶠ v in Filter.cofinite, Φv v = (latV b v).indicator 1 := by
     filter_upwards [hae, hbb d' b'] with v h1 h2
     rw [h1]
@@ -219,7 +219,7 @@ theorem integral_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       simp only [hout v hvS']
       exact Set.indicator_of_mem (hX v hvS') _
     · rw [Set.indicator_of_notMem hX]
-      simp only [hB, Set.mem_setOf_eq, not_forall] at hX
+      simp only [hB, Set.mem_ofPred_eq, not_forall] at hX
       obtain ⟨v, hvS, hv⟩ := hX
       have hev : ∀ᶠ v in Filter.cofinite, Φv v (projV v (projFin X)) = 1 := by
         have h1 : ∀ᶠ v in Filter.cofinite, ∀ a i, prV v (X a i) ∈ intV b v :=
@@ -229,8 +229,8 @@ theorem integral_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
         exact Set.indicator_of_mem (show projV w (projFin X) ∈ latV b w from h3) _
       rw [finprod_eq_zero _ v (by rw [hout v hvS]; exact Set.indicator_of_notMem hv _)
         (Filter.eventually_cofinite.1 hev), mul_zero]
-  haveI : SigmaFinite mi := inferInstance
-  haveI : ∀ v, SigmaFinite (mv v) := fun v => inferInstance
+  have : SigmaFinite mi := inferInstance
+  have : ∀ v, SigmaFinite (mv v) := fun v => inferInstance
   obtain ⟨h1, h2⟩ := integral_tensor (ν.restrict B) mi mv projInf (fun v X => projV v (projFin X))
     hci.measurable (fun v => (hcv v).measurable) S (tailProd b mv S) ENNReal.ofReal_ne_top (hP S)
     Φinf Φv (hc.integrable_of_hasCompactSupport hcs)

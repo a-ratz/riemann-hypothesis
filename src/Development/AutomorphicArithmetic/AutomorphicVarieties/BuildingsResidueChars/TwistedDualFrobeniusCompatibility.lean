@@ -98,7 +98,7 @@ theorem UpperTheory.Reformulated.B.CyclotomicBarContinuous.cont_cycBar :
   have hι : Continuous
       (↑((Algebra.algebraMap ℚ_[l] (UpperTheory.Reformulated.B.CyclotomicBarContinuous.Qbar l)).comp PadicInt.Coe.ringHom) :
         ℤ_[l] →* UpperTheory.Reformulated.B.CyclotomicBarContinuous.Qbar l) :=
-    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtype_val
+    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtypeVal
   exact (Units.continuous_map hι).comp hZ
 end -- clump:auto
 end -- clump:auto

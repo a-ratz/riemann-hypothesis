@@ -92,8 +92,8 @@ theorem longElt_conj_apply {R : Type} [CommRing R] (n : ℕ) (g : GL (Fin n) R) 
     ((longElt n R * g * longElt n R : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) i j =
       (g : Matrix (Fin n) (Fin n) R) i.rev j.rev := by
   simp only [longElt, Units.val_mul, Matrix.mul_apply, Matrix.of_apply, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
-  rw [Finset.sum_eq_single j.rev (fun x _ hx => by rw [if_neg (fun hh => hx (by rw [hh, Fin.rev_rev])), mul_zero]) (by simp)]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
+  rw [Finset.sum_eq_single j.rev (fun x _ hx => by rw [ite_eq_right (fun hh => hx (by rw [hh, Fin.rev_rev])), mul_zero]) (by simp)]
   simp
 
 end GlobalTheory.ThetaRad

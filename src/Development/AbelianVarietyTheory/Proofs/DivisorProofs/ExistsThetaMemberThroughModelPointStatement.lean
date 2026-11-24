@@ -79,8 +79,8 @@ set_option backward.isDefEq.respectTransparency false in
 theorem exists_unif_trait : ∀ (X₁ : GlobalTheory.GSep.GSet) (Y : RatModel X₁.o₁ X₁.Ω₁) (U₀ : Y.Z.Opens) (EE : Y.Lat X₁.S.J) (O : ZHOut X₁.ρ Y U₀ EE) (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V], IsAdicComplete (maximalIdeal V) V → CharZero V → ∀ (ξ : Sp V ⟶ Y.Z) (e : X₁.Ω₁ →+* FractionRing V), jK V ≫ ξ = spMap e ≫ Y.pt → (ξ ⁻¹' abLocus O.G).Nonempty → ∃ (D : DegData V (maximalIdeal V)) (A : PolAV (Sp (FractionRing V))) (U : Unif (maximalIdeal V) D A ((Over.pullback ξ).obj O.G)) (β : A.A.left ⟶ ((Over.pullback Y.pt).obj O.G).left), IsGrpPullback A.A ((Over.pullback Y.pt).obj O.G) (spMap e) β ∧ LBIso A.L ((O.L.L.pull (pullback.fst O.G.hom Y.pt)).pull β) ∧ ∀ F : O.G ⟶ O.G, IsMonHom F → ∃ E : EndU U.toUnifPre, E.aA.left ≫ β = β ≫ ((Over.pullback Y.pt).map F).left := by
   intro X₁ Y U₀ EE O V _ _ _ hc hch ξ e he hab
   obtain ⟨D, A, U, hl, -⟩ := O.unif V inferInstance inferInstance hc ξ hab
-  haveI := U.gen_hom
-  haveI : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
+  have := U.gen_hom
+  have : IsMonHom U.gen.symm.hom := inferInstanceAs (IsMonHom U.gen.inv)
   let κ : A.A.left ⟶ ((Over.pullback ξ).obj O.G).left :=
     U.gen.inv.left ≫ pullback.fst ((Over.pullback ξ).obj O.G).hom (jK V)
   have hκ : IsGrpPullback A.A ((Over.pullback ξ).obj O.G) (jK V) κ :=
@@ -276,7 +276,7 @@ theorem spMap_stalkHom {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M :
 theorem isFractionRing_stalk {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (z : M.Z) :
     letI : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
     IsFractionRing (M.Z.presheaf.stalk z) Ω := by
-  letI : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
+  let : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
   have : FaithfulSMul (M.Z.presheaf.stalk z) Ω :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (M.stalkHom_injective z)
   refine IsFractionRing.of_field _ _ fun x => ?_
@@ -294,12 +294,12 @@ theorem exists_cdvr_thru {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [I
       (e : Ω →+* FractionRing V), IsAdicComplete (maximalIdeal V) V ∧ CharZero V ∧ IsLocalHom φ ∧
       (∀ r, e (M.stalkHom z r) = algebraMap V (FractionRing V) (φ r)) ∧
       jK V ≫ spMap φ ≫ M.Z.fromSpecStalk z = spMap e ≫ M.pt := by
-  letI : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
-  haveI := isFractionRing_stalk M z
-  haveI : CharZero (M.Z.presheaf.stalk z) := (M.stalkHom z).charZero
-  haveI := M.lft
-  haveI : IsLocallyNoetherian (Sp o) := inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of o)))
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  let : Algebra (M.Z.presheaf.stalk z) Ω := (M.stalkHom z).toAlgebra
+  have := isFractionRing_stalk M z
+  have : CharZero (M.Z.presheaf.stalk z) := (M.stalkHom z).charZero
+  have := M.lft
+  have : IsLocallyNoetherian (Sp o) := inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of o)))
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
   obtain ⟨V₀, _, _, _, φ₀, ⟨hdvr, hcpl, hchar⟩, hinj₀, hmax⟩ :=
     GlobalTheory.ClosedPol.exists_cdvr (M.Z.presheaf.stalk z) (maximalIdeal _)
   have hl : IsLocalHom φ₀ := ((IsLocalRing.local_hom_tfae φ₀).out 1 5).2 hmax
@@ -373,8 +373,8 @@ theorem exists_gMem_of_trait : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z
 theorem exists_gMem_thru : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)), GlobalTheory.GSep.IsAct X₁ act → ∀ (Y : RatModel X₁.o₁ X₁.Ω₁) (πY : Y.Z ⟶ X₁.M.Z), GlobalTheory.GSep.ZHAbove X₁ Y πY → ∀ y : Y.Z, πY y = z₁ → ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsLocalRing V) (_ : IsDiscreteValuationRing V) (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) (_ : AddCommGroup X) (t : X → V) (δ : I → X → X) (𝔫 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ) (ξ : Sp V ⟶ Y.Z), ξ ≫ πY = spMap ev ≫ X₁.M.Z.fromSpecStalk z₁ ∧ ξ (closedPoint V) = y ∧ Function.Injective ev := by
   intro I X₁ z₁ act hact Y πY hY y hy
   subst hy
-  haveI : CharZero X₁.Ω₁ := X₁.ar.char
-  haveI : IsDedekindDomain X₁.o₁ := X₁.ar.ded
+  have : CharZero X₁.Ω₁ := X₁.ar.char
+  have : IsDedekindDomain X₁.o₁ := X₁.ar.ded
   obtain ⟨V, _, _, hdvr, φ₀, emb, hcpl, hchar, hl₀, -, hptY⟩ := exists_cdvr_thru Y y
   have hπ : Y.pt ≫ πY = X₁.M.pt := by
     obtain ⟨-, -, -, -, -, hhom, -⟩ := hY
@@ -383,7 +383,7 @@ theorem exists_gMem_thru : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ 
   let s : X₁.M.Z.presheaf.stalk (πY y) →+* Y.Z.presheaf.stalk y := (πY.stalkMap y).hom
   have hs : spMap s ≫ X₁.M.Z.fromSpecStalk (πY y) = Y.Z.fromSpecStalk y ≫ πY :=
     Scheme.SpecMap_stalkMap_fromSpecStalk πY
-  haveI hsl : IsLocalHom s := inferInstanceAs (IsLocalHom (πY.stalkMap y).hom)
+  have hsl : IsLocalHom s := inferInstanceAs (IsLocalHom (πY.stalkMap y).hom)
   let ev : X₁.M.Z.presheaf.stalk (πY y) →+* V := φ₀.comp s
   have hξ : (spMap φ₀ ≫ Y.Z.fromSpecStalk y) ≫ πY = spMap ev ≫ X₁.M.Z.fromSpecStalk (πY y) := by
     rw [Category.assoc, ← hs, ← Category.assoc, spMap_spMap]

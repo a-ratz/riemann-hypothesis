@@ -65,8 +65,8 @@ private theorem isLocallyNoetherian_of_closedImmersion_pSpace (o : Type) [CommRi
     obtain ⟨j, hj⟩ := TopologicalSpace.Opens.mem_iSup.mp hx
     exact TopologicalSpace.Opens.mem_iSup.mpr ⟨j, hj⟩
   · intro j
-    letI := GlobalTheory.ProjSpace.algebraSections o N (GlobalTheory.ProjSpace.chart o N j)
-    haveI : IsNoetherianRing Γ(PSpace o N, GlobalTheory.ProjSpace.chart o N j) :=
+    let := GlobalTheory.ProjSpace.algebraSections o N (GlobalTheory.ProjSpace.chart o N j)
+    have : IsNoetherianRing Γ(PSpace o N, GlobalTheory.ProjSpace.chart o N j) :=
       isNoetherianRing_of_ringEquiv _ (GlobalTheory.ProjSpace.chartAlgEquiv o N j).toRingEquiv
     exact isNoetherianRing_of_surjective _ _ (i.app (GlobalTheory.ProjSpace.chart o N j)).hom
       (Scheme.Hom.app_surjective i _ (GlobalTheory.ProjSpace.isAffineOpen_chart o N j))
@@ -75,7 +75,7 @@ private theorem isLocallyNoetherian_of_closedImmersion_pSpace (o : Type) [CommRi
 theorem _root_.GlobalTheory.CompanionTheory.Relay.projective_over_coords_exist : ∀ (o : Type) [CommRing o] [IsNoetherianRing o] (X : Scheme.{0}) (s : X ⟶ Sp o), IsProjOver s → ∀ (Ω : Type) [Field Ω] [Algebra o Ω] (ξ : Sp Ω ⟶ X), IsCptGen ξ → ξ ≫ s = spMap (algebraMap o Ω) → ∃ (n : ℕ) (x : Fin n → Ω), CoordTie o ξ x := by
   intro o _ _ X s hs Ω _ _ ξ hξ hcomp
   obtain ⟨N, i, hi, rfl⟩ := hs
-  haveI := isLocallyNoetherian_of_closedImmersion_pSpace o X N i
+  have := isLocallyNoetherian_of_closedImmersion_pSpace o X N i
   have hZ := GlobalTheory.CompanionTheory.Ar.isClopen_setOf_genPt_specializes X Ω ξ hξ
   let U : X.Opens := ⟨{q | genPt ξ ⤳ q}, hZ.isOpen⟩
   have hr : Set.range ξ ⊆ Set.range U.ι := by
@@ -86,7 +86,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.projective_over_coords_exist :
     exact specializes_rfl
   let ξ' : Sp Ω ⟶ U := IsOpenImmersion.lift U.ι ξ hr
   have hfac : ξ' ≫ U.ι = ξ := IsOpenImmersion.lift_fac _ _ _
-  haveI : IsClosedImmersion U.ι := IsClosedImmersion.of_isPreimmersion _
+  have : IsClosedImmersion U.ι := IsClosedImmersion.of_isPreimmersion _
     (by rw [Scheme.Opens.range_ι]; exact hZ.isClosed)
   have hξ2 : IsCptGen (ξ' ≫ U.ι) := by rw [hfac]; exact hξ
   have hgen' : IsCptGen ξ' := PositivityTheory.HtPt.Mf.isCptGen_of_comp ξ' U.ι hξ2

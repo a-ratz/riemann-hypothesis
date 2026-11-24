@@ -152,7 +152,7 @@ private theorem hasTrace_hk (m : Measure G) [IsFiniteMeasureOnCompacts m] [m.IsM
   refine ⟨A, fun v l => ?_, Submodule.finiteDimensional_of_le hle, ?_⟩
   · rw [e, integral_indicator hDm, integrable_indicator_iff hDm]
     exact hA v l
-  haveI := Submodule.finiteDimensional_of_le hle
+  have := Submodule.finiteDimensional_of_le hle
   let j := Submodule.inclusion hle
   let s : UpperTheory.V.Hi.fixd ρ I →ₗ[ℂ] LinearMap.range A := A.rangeRestrict ∘ₗ (UpperTheory.V.Hi.fixd ρ I).subtype
   have h1 : UpperTheory.V.AlgebraTools.hk ρ I x = j ∘ₗ s := by
@@ -257,6 +257,6 @@ end Loc
 theorem UpperTheory.ConvolutionTheory.C.iwPow :
     UpperTheory.ConvolutionTheory.C.IwPow := by
   intro K _ _ n w _ _ m _ hm σ ν hν hfd
-  haveI : FiniteDimensional ℂ (UpperTheory.V.Hi.fixd σ.ρ (GlobalTheory.SmGL.iwahori (w.adicCompletion K) (Fin n))) := hfd
+  have : FiniteDimensional ℂ (UpperTheory.V.Hi.fixd σ.ρ (GlobalTheory.SmGL.iwahori (w.adicCompletion K) (Fin n))) := hfd
   exact iw_local m (UpperTheory.V.AlgebraTools.memIwC _ n ⊤).2.1 hm σ.ρ σ.smooth (GLnLocal.isOpen_iwahori _ _)
     (GLnLocal.isCompact_iwahori _ _) ν hν

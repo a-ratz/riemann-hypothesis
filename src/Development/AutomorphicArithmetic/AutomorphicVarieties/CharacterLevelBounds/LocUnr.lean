@@ -89,9 +89,9 @@ theorem UpperTheory.V.Chr.locUnr :
   intro Ω _ _ _ l _ O _ _ _ _ _ e n ψ he hn hopen hpow p A hp hpl hAp U' U h hU' hU
   subst hU' hU
   obtain ⟨hnorm, _, γ, hγ, hcl, hcyc⟩ := decCyc Ω p A hp hAp
-  haveI := hnorm
+  have := hnorm
   obtain ⟨_, hζ, heOtop, hchar⟩ := rootVal l O n hn
-  haveI := hchar
+  have := hchar
   have hlprime : l.Prime := Fact.out
   have hlA : ¬ A.valuation (l : Ω) < 1 := not_both A ((Nat.coprime_primes hp hlprime).2 hpl) hAp
   have hIneCyc : Ine (F := ℚ) A ≤ (cycZ ℚ Ω l).ker := (places ℚ Ω l A).2.2.2 hlA
@@ -154,7 +154,7 @@ theorem UpperTheory.V.Chr.locUnr :
   · have hbot : LinearMap.ker (resU (rho l e ψ) h) = ⊥ := LinearMap.ker_eq_bot.mpr (hinj hker)
     rw [hbot]
     simp
-  · obtain ⟨g, hg, hgk⟩ := SetLike.not_le_iff_exists.mp hker
+  · obtain ⟨g, hg, hgk⟩ := IsConcreteLE.not_le_iff_exists.mp hker
     set ζ : O := (((ψ g)⁻¹ : Oˣ) : O) with hζdef
     have hζn : ζ ^ n = 1 := by
       rw [hζdef, ← Units.val_pow_eq_pow_val, inv_pow, hψn g, inv_one, Units.val_one]
@@ -176,7 +176,7 @@ theorem UpperTheory.V.Chr.locUnr :
       rw [(qoFacts l O).2.2.2]
       exact hζ ζ hζn hζ1
     have hfin : Module.length O (H0U (rho l e ψ) (Ine (F := ℚ) A)) ≠ ⊤ :=
-      ne_top_of_le_ne_top (WithTop.mul_ne_top (ENat.coe_ne_top _) heOtop) hbound
+      ne_top_of_le_ne_top (WithTop.mul_ne_top (ENat.natCast_ne_top _) heOtop) hbound
     have hmono : H0U (rho l e ψ) (Dec (F := ℚ) A) ≤ H0U (rho l e ψ) (Ine (F := ℚ) A) := by
       intro m hm
       rw [H0U, mem_riemannRochSpace_iff_regularAt_everywhere] at hm ⊢

@@ -253,7 +253,7 @@ theorem mvPowerSeries_X_syzygy {k : Type} [CommRing k] {g : ℕ}
       have e2 : (∀ l < j, (m - single j 1 : Fin g →₀ ℕ) l = 0) ↔ ∀ l < j, m l = 0 := by
         refine forall_congr' fun l => forall_congr' fun hl => ?_
         simp [Finsupp.single_apply, hl.ne']
-      simp only [e, e2, hj, ne_eq, not_false_eq_true, if_true, true_and]
+      simp only [e, e2, hj, ne_eq, not_false_eq_true, ite_true, true_and]
   have h2 : ∀ j, coeff m (t j i * X j) =
       if (∀ l < i, m l = 0) ∧ j ≠ i then coeff (m + single i 1) (r j * X j) else 0 := by
     intro j
@@ -274,30 +274,30 @@ theorem mvPowerSeries_X_syzygy {k : Type} [CommRing k] {g : ℕ}
     · have e2 : (∀ l < i, (m - single j 1 : Fin g →₀ ℕ) l = 0) ↔ ∀ l < i, m l = 0 := by
         refine forall_congr' fun l => forall_congr' fun hl => ?_
         simp [Finsupp.single_apply, (hl.trans h).ne']
-      simp only [e2, hj, h, hji, ne_eq, not_false_eq_true, if_true, true_and, and_true]
+      simp only [e2, hj, h, hji, ne_eq, not_false_eq_true, ite_true, true_and, and_true]
 
   simp only [Matrix.mulVec, dotProduct, Matrix.sub_apply, Matrix.transpose_apply, sub_mul,
   map_sum, map_sub, h1, h2, Finset.sum_sub_distrib]
   by_cases hi : ∀ l < i, m l = 0
-  · rw [Finset.sum_eq_zero (fun j _ => if_neg (fun H => H.1 (hi j H.2.1)))]
+  · rw [Finset.sum_eq_zero (fun j _ => ite_eq_right (fun H => H.1 (hi j H.2.1)))]
     have h3 := congrArg (coeff (m + single i 1)) hr
 
     rw [map_sum, map_zero, ← Finset.add_sum_erase _ _ (Finset.mem_univ i), coeff_mul_X_ite] at h3
     simp only [iff_true_intro hi, true_and]
     rw [← Finset.sum_filter, Finset.filter_ne']
     simp only [Finsupp.add_apply, single_eq_same, add_tsub_cancel_right] at h3
-    rw [if_pos (by omega)] at h3
+    rw [ite_eq_left (by omega)] at h3
     linear_combination h3
-  · simp only [hi, false_and, if_false, Finset.sum_const_zero, sub_zero]
+  · simp only [hi, false_and, ite_false, Finset.sum_const_zero, sub_zero]
     push_neg at hi
     obtain ⟨l, hl, hml⟩ := hi
     obtain ⟨j, hj, hmin⟩ := WellFounded.has_min (wellFounded_lt (α := Fin g)) {j | m j ≠ 0} ⟨l, hml⟩
     have hj0 : ∀ a < j, m a = 0 := fun a ha => by
       by_contra h; exact hmin a h ha
     rw [Finset.sum_eq_single j]
-    · rw [if_pos ⟨hj, lt_of_le_of_lt (not_lt.1 (hmin l hml)) hl, hj0⟩]
+    · rw [ite_eq_left ⟨hj, lt_of_le_of_lt (not_lt.1 (hmin l hml)) hl, hj0⟩]
     · intro b _ hb
-      refine if_neg fun H => ?_
+      refine ite_eq_right fun H => ?_
       rcases lt_or_gt_of_ne hb with h | h
       · exact H.1 (hj0 b h)
       · exact hj (H.2.2 j h)
@@ -413,9 +413,9 @@ theorem exists_pow_mul_one_sub_mem_map_maximalIdeal (O H : Type) [CommRing O] [I
     ∃ (N : ℕ) (y : H), u ^ N * (1 - y * u) ∈ (IsLocalRing.maximalIdeal O).map (algebraMap O H) := by
   set m := IsLocalRing.maximalIdeal O
   set J := m.map (algebraMap O H)
-  letI : Field (O ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite (O ⧸ m) (H ⧸ J) := Module.Finite.of_restrictScalars_finite O _ _
-  haveI : IsArtinianRing (H ⧸ J) := IsArtinianRing.of_finite (O ⧸ m) _
+  let : Field (O ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite (O ⧸ m) (H ⧸ J) := Module.Finite.of_restrictScalars_finite O _ _
+  have : IsArtinianRing (H ⧸ J) := IsArtinianRing.of_finite (O ⧸ m) _
   obtain ⟨N, y, hy⟩ := IsArtinian.exists_pow_succ_smul_dvd (R := H ⧸ J) (M := H ⧸ J)
     (Ideal.Quotient.mk J u) 1
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -776,9 +776,9 @@ theorem exists_smul_ker_le (π : MvPolynomial (Fin g) O →ₐ[O] B) (hπ : π.t
     simp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, Algebra.ofId_apply, hb', map_zero] at this
     exact Ideal.Quotient.eq_zero_iff_mem.mp this
   have hfp : Algebra.FinitePresentation O B := by
-    letI : Algebra (MvPolynomial (Fin g) O) B := π.toRingHom.toAlgebra
-    haveI : Algebra.Etale (MvPolynomial (Fin g) O) B := hπ
-    haveI : IsScalarTower O (MvPolynomial (Fin g) O) B :=
+    let : Algebra (MvPolynomial (Fin g) O) B := π.toRingHom.toAlgebra
+    have : Algebra.Etale (MvPolynomial (Fin g) O) B := hπ
+    have : IsScalarTower O (MvPolynomial (Fin g) O) B :=
       IsScalarTower.of_algebraMap_eq fun r => (π.commutes r).symm
     exact Algebra.FinitePresentation.trans O (MvPolynomial (Fin g) O) B
   have hfg : I.FG := Algebra.FinitePresentation.ker_fG_of_surjective e
@@ -799,9 +799,9 @@ theorem exists_coords (π : MvPolynomial (Fin g) O →ₐ[O] B) (hπ : π.toRing
         ∀ i, ρ (x i) = MvPowerSeries.X i := by
   let x : Fin g → S := fun i =>
     algebraMap B S (π (MvPolynomial.X i) - algebraMap O B (e (π (MvPolynomial.X i))))
-  letI : Algebra (MvPolynomial (Fin g) O) B := π.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin g) O) B := hπ
-  haveI : IsScalarTower O (MvPolynomial (Fin g) O) B :=
+  let : Algebra (MvPolynomial (Fin g) O) B := π.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin g) O) B := hπ
+  have : IsScalarTower O (MvPolynomial (Fin g) O) B :=
     IsScalarTower.of_algebraMap_eq fun r => (π.commutes r).symm
   refine ⟨x, le_antisymm ?_ ?_, fun j => ?_, ?_⟩
   · obtain ⟨r, hr1, hr2⟩ := exists_smul_ker_le π hπ e
@@ -845,7 +845,7 @@ theorem exists_coords (π : MvPolynomial (Fin g) O →ₐ[O] B) (hπ : π.toRing
   · let A := MvPowerSeries (Fin g) (IsLocalRing.ResidueField O)
     let ρ : MvPolynomial (Fin g) O →ₐ[O] A :=
       MvPolynomial.aeval (fun j => algebraMap O A (e (π (MvPolynomial.X j))) + MvPowerSeries.X j)
-    letI : Algebra (MvPolynomial (Fin g) O) A := ρ.toRingHom.toAlgebra
+    let : Algebra (MvPolynomial (Fin g) O) A := ρ.toRingHom.toAlgebra
     let J : Ideal A := Ideal.span (Set.range MvPowerSeries.X)
     have hf₀ : ((Ideal.Quotient.mkₐ O J).comp ((Algebra.ofId O A).comp e)).comp π =
         (Ideal.Quotient.mkₐ O J).comp ρ := by
@@ -891,8 +891,8 @@ variable {O : Type} [CommRing O] [IsLocalRing O] {G : Over (Sp O)} [GrpObj G]
 theorem exists_pt_of_aug (C : Chart.Chart G) {A : Type} [CommRing A] [Algebra O A] (α : A →ₐ[O] O)
     (hα : ∀ a, IsUnit (α a) → IsUnit a) (z : specO O A ⟶ G) (hz : ptMap α ≫ z = 1) :
     ∃ h : Γ(G.left, C.U) →ₐ[O] A, z = Chart.pt C h ∧ α.comp h = Chart.eps C := by
-  haveI : IsLocalHom α.toRingHom := ⟨hα⟩
-  haveI : IsLocalRing A := RingHom.domain_isLocalRing α.toRingHom
+  have : IsLocalHom α.toRingHom := ⟨hα⟩
+  have : IsLocalRing A := RingHom.domain_isLocalRing α.toRingHom
   have hz' : Chart.spMap α ≫ z = Chart.pt C ((Algebra.ofId O O).comp (Chart.eps C)) :=
     hz.trans (Chart.pt_eps C O).symm
   have hU : ⊤ ≤ z.left ⁻¹ᵁ C.U := by
@@ -945,7 +945,7 @@ theorem exists_local_ring (G : Over (Sp O)) [GrpObj G] (g : ℕ)
     exact congrArg (algebraMap O A) (he b)
   · rw [hpt, hpt] at h
     have h1 := Chart.pt_injective C h
-    refine AlgHom.coe_ringHom_injective (IsLocalization.ringHom_ext
+    refine AlgHom.toRingHom_injective (IsLocalization.ringHom_ext
       ((IsLocalRing.maximalIdeal O).comap e).primeCompl ?_)
     ext b
     exact AlgHom.congr_fun h1 b
@@ -1019,7 +1019,7 @@ theorem local_presentation : ∀ (O : Type) [CommRing O] [IsLocalRing O] (G : Ov
   have hψκ : ψ.comp κ = φ := AlgHom.ext hψ
   have hψπ : ψ.comp π = q := hinj _ _ _ (by rw [hcomp, hπ, ← hcomp, hψκ, hφ])
   have hid : πq.comp ψ = AlgHom.id O T := by
-    refine AlgHom.coe_ringHom_injective (IsLocalization.ringHom_ext
+    refine AlgHom.toRingHom_injective (IsLocalization.ringHom_ext
       ((IsLocalRing.maximalIdeal O).comap ε).primeCompl ?_)
     ext h
     show πq (ψ (algebraMap H T h)) = algebraMap H T h
@@ -1217,14 +1217,14 @@ theorem isUnit_det_of_bicharacter_of_dvd_trace :
     ∀ (O H K Γ : Type) [CommRing O] [IsDomain O] [CommRing H] [Algebra O H] [Field K] [IsAlgClosed K] [Algebra O K] [CommGroup Γ] (r : ℕ) (b : Module.Basis (Fin r) O H) (D : Matrix (Fin r) (Fin r) O) (pt : Γ → (H →ₐ[O] K)) (X : Γ → Γ → K) (c : O), Function.Injective (algebraMap O K) → IsReduced (K ⊗[O] H) → Function.Bijective pt → (∀ a a', X a a' = ∑ i, ∑ j, algebraMap O K (D i j) * pt a (b i) * pt a' (b j)) → (∀ a b, X a b ≠ 0) → (∀ a a' b, X (a * a') b = X a b * X a' b) → (∀ a b b', X a (b * b') = X a b * X a b') → (∀ a, (∀ b, X a b = 1) → a = 1) → c ≠ 0 → (r : O) = c ^ 2 → (∀ h : H, c ∣ Algebra.trace O H h) → IsUnit D.det := by
   intro O H K Γ _ _ _ _ _ _ _ _ r b D pt X c hinj hred hpt hX hne hm₁ hm₂ hnd hc hr hdvd
   classical
-  haveI : Module.Free O H := Module.Free.of_basis b
-  haveI : Module.Finite O H := Module.Finite.of_basis b
+  have : Module.Free O H := Module.Free.of_basis b
+  have : Module.Finite O H := Module.Finite.of_basis b
   obtain ⟨hfin, hcard, htrace⟩ :=
     finite_card_trace_algHom_of_isReduced_baseChange O H K hred
   let E : Γ ≃ (H →ₐ[O] K) := Equiv.ofBijective pt hpt
-  haveI : Finite Γ := Finite.of_equiv _ E.symm
-  letI : Fintype Γ := Fintype.ofFinite Γ
-  letI : Fintype (H →ₐ[O] K) := Fintype.ofFinite _
+  have : Finite Γ := Finite.of_equiv _ E.symm
+  let : Fintype Γ := Fintype.ofFinite Γ
+  let : Fintype (H →ₐ[O] K) := Fintype.ofFinite _
   have hcardΓ : Fintype.card Γ = r := by
     rw [← Nat.card_eq_fintype_card, Nat.card_congr E, hcard, Module.finrank_eq_card_basis b,
       Fintype.card_fin]
@@ -1309,9 +1309,9 @@ theorem exists_rep [IsLocalRing O] (A : Over (Sp O)) [GrpObj A] [IsCommMonObj A]
         ∃! φ : H →ₐ[O] S, ptMap φ ≫ y = z := by
   obtain ⟨H, φ, y, hφf, hφl, hpb⟩ := finRep_exists_isPullback_spec ((𝟙 A) ^ n : A ⟶ A).left
     (CommRingCat.of O) (eSec A)
-  letI : Algebra O H := φ.hom.toAlgebra
-  haveI : Module.Finite O H := hφf
-  haveI : Module.Flat O H := hφl
+  let : Algebra O H := φ.hom.toAlgebra
+  have : Module.Finite O H := hφf
+  have : Module.Flat O H := hφl
   have hpow : ∀ {T : Over (Sp O)} (z : T ⟶ A),
       z.left ≫ ((𝟙 A) ^ n : A ⟶ A).left = (z ^ n).left := by
     intro T z
@@ -1382,7 +1382,7 @@ theorem eq_one_of_affine {A : Over (Sp O)} [GrpObj A] {T : Over (Sp O)} (x : T �
   apply Over.OverMorphism.ext
   refine T.left.affineOpenCover.openCover.hom_ext _ _ fun i => ?_
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (T.left.affineOpenCover.f i ≫ T.hom)
-  letI : Algebra O (T.left.affineOpenCover.X i) := ψ.hom.toAlgebra
+  let : Algebra O (T.left.affineOpenCover.X i) := ψ.hom.toAlgebra
   let ρ : specO O (T.left.affineOpenCover.X i) ⟶ T := Over.homMk (T.left.affineOpenCover.f i) hψ.symm
   have := (h _ ρ).trans (MonObj.comp_one ρ).symm
   exact congrArg (fun q => q.left) this

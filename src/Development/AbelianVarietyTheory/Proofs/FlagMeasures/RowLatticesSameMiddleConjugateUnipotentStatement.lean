@@ -212,7 +212,7 @@ theorem rowsLift : ∀ (D : D7) (u : D.what₂.Word), (Tu D u).Prime → 3 ≤ T
   obtain ⟨hi₁, -, hq₁⟩ := hf₁
   obtain ⟨hi₂, -, hq₂⟩ := hf₂
   have hmem : n₁.trans n₂.symm ∈ stabF D F0 := by
-    simp only [stabF, Set.mem_setOf_eq]
+    simp only [stabF, Set.mem_ofPred_eq]
     refine ⟨?_, ?_, ?_⟩
     · exact (Formalism.HermitianLatticesTheory.isom _).mul_mem ((Formalism.HermitianLatticesTheory.isom _).inv_mem hi₂) hi₁
     · intro j

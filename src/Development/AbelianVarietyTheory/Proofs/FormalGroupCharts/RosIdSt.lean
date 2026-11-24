@@ -88,7 +88,7 @@ theorem rep_unique (hR : RepSt) {R : Type} [CommRing R] {G : Over (Spec (CommRin
 theorem actSt_of (_ : JetAlgSt) (hR : RepSt) (hM : MapSt) : ActSt := by
   intro R _ G _ _ d x hx O _ act Gl hF
   have hex : ∀ a, ∃ φ, IsMapOf x x (act.act a) φ := fun a => by
-    haveI := act.hom a
+    have := act.hom a
     exact (hM R G G d x x hx hx (act.act a) (IsMonHom.one_hom _)).exists
   choose φ hφ using hex
   have hpt : ∀ (n : ℕ) (j : Fin n), ∃ y, Rep x (pt R (n := n) d j) y := fun n j =>
@@ -98,7 +98,7 @@ theorem actSt_of (_ : JetAlgSt) (hR : RepSt) (hM : MapSt) : ActSt := by
     have := (hφ a).2 1 _ _ (hy 1 0)
     rwa [gt_comp1_pt_right] at this
   refine ⟨⟨φ, fun a => (hφ a).1, fun a => ?_, fun a b => ?_, fun a b => ?_, ?_⟩, hφ⟩
-  · haveI := act.hom a
+  · have := act.hom a
     refine rep_unique hR hx ((hφ a).2 2 _ _ (hF.2 2 _ _ _ _ (hy 2 0) (hy 2 1)))
       (hF.2 2 _ _ _ _ ((hφ a).2 2 _ _ (hy 2 0)) ((hφ a).2 2 _ _ (hy 2 1))) ?_
     funext m

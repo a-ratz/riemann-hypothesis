@@ -140,7 +140,7 @@ theorem sec_comp (he : SplitAt D v e) (z : AE D) : GlobalTheory.FinPl.SplitPoint
 
 theorem le_exp_neg_one {x : WithZero (Multiplicative ℤ)} (hx : x < 1) : x ≤ WithZero.exp (-1) := by
   rcases eq_or_ne x 0 with rfl | h0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log h0] at hx ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at hx
     exact WithZero.exp_le_exp.2 (by omega)
@@ -181,10 +181,10 @@ theorem val_lt_one (PP : Pl D.host.E) (hI : Formalism.L2.NTheta.IsIdemAt e PP) (
     { carrier := {s | Valued.v (comp he (lift D (s : Formalism.IndefR.Datum.EAf D))) < 1}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, Subring.coe_add, comp_lift_add] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, Subring.coe_add, comp_lift_add] at ha hb ⊢
         exact Valuation.map_add_lt _ ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, ZeroMemClass.coe_zero]
+        simp only [Set.mem_ofPred_eq, ZeroMemClass.coe_zero]
         have : lift D (0 : Formalism.IndefR.Datum.EAf D) = 0 := by
           have h := lift_add (D := D) 0 0
           rw [add_zero] at h
@@ -193,7 +193,7 @@ theorem val_lt_one (PP : Pl D.host.E) (hI : Formalism.L2.NTheta.IsIdemAt e PP) (
         exact zero_lt_one
       smul_mem' := by
         intro c a ha
-        simp only [Set.mem_setOf_eq, smul_eq_mul, Subring.coe_mul, comp_lift_mul] at ha ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, Subring.coe_mul, comp_lift_mul] at ha ⊢
         rw [Valuation.map_mul]
         have hc := hint c
         rw [HeightOneSpectrum.mem_adicCompletionIntegers] at hc
@@ -452,7 +452,7 @@ theorem psi_trace_split (ψ : AddChar (AF D.host.F) ℂ) (a Z Z₁ : AE D) :
 theorem redM_apply_of_mem (PP : Pl D.host.E) {b a : ℕ} (N : Matrix (Fin b) (Fin a) (Datum.EAf D)) (i : Fin b) (j : Fin a)
     (h : N i j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E) : redM PP N i j = resS D.host.F PP ⟨N i j, h⟩ := by
   simp only [redM]
-  exact dif_pos h
+  exact dite_eq_left h
 
 
 set_option maxHeartbeats 800000 in
@@ -464,7 +464,7 @@ theorem local_dual_unit (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ (
       (∀ Z : AE D, infPart D Z = 0 → toEAf D Z = c * u →
         ψ (Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * Z)) ≠ 1) := by
   obtain ⟨c, h1, h2⟩ := local_dual ψ hψ e₁ PP he₁
-  haveI := PP.isMaximal
+  have := PP.isMaximal
   obtain ⟨b, hb⟩ := Ideal.Quotient.exists_inv (I := PP.asIdeal) hu
   obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective b
   have hra : resS D.host.F PP (oToS D.host.F D.host.E a) * resS D.host.F PP u = 1 := by

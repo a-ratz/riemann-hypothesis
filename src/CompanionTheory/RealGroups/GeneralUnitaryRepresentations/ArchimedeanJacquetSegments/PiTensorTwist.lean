@@ -127,7 +127,7 @@ theorem cuspUnit (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
     have hcc := UnitaryOrder.hasCentralChar_nu y hω ((-(s / y.1) : ℝ) : ℂ)
     have hi := (y.nu ((-(s / y.1) : ℝ) : ℂ)).2.rep.irr
     have hsm := (y.nu ((-(s / y.1) : ℝ) : ℂ)).2.rep.smooth
-    haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hi
+    have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hi
     obtain ⟨v₀, hv₀⟩ := exists_ne (0 : (y.nu ((-(s / y.1) : ℝ) : ℂ)).2.rep.V)
     obtain ⟨l, hl⟩ := GlobalTheory.ContraRefl.exists_smooth_form_ne hsm (GlobalTheory.SqIntUnit.compactOpen_basis k _) hv₀
     refine GlobalTheory.isUnitarisable_of_isSupercuspidal _ _ _ (l : Module.Dual ℂ _) l.2

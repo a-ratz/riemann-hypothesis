@@ -233,7 +233,7 @@ theorem abelianScheme_hom_extends_dedekind :
         rw [(cancel_mono _).1 e]
       · let T := Localization.AtPrime s.asIdeal
         have := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R hs T
-        letI : Algebra T K := IsLocalization.localizationAlgebraOfSubmonoidLe T K s.asIdeal.primeCompl
+        let : Algebra T K := IsLocalization.localizationAlgebraOfSubmonoidLe T K s.asIdeal.primeCompl
           (nonZeroDivisors R) s.asIdeal.primeCompl_le_nonZeroDivisors
         have : IsScalarTower R T K := IsLocalization.localization_isScalarTower_of_submonoid_le T K _ _ _
         have : IsFractionRing T K :=

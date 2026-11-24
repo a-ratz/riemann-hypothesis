@@ -331,8 +331,8 @@ theorem om_iop : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), Crv D cc 
   have nA2 := GlobalTheory.ThetaTriple.nice_of_klat hc kA2
   have nB1 := GlobalTheory.ThetaTriple.nice_of_klat hc kB1
   have nB2 := GlobalTheory.ThetaTriple.nice_of_klat hc kB2
-  haveI i1 := AddSubgroup.fintypeOfIndexNeZero (GlobalTheory.ThetaTriple.index_ne_zero hc kA1 kB1)
-  haveI i2 := AddSubgroup.fintypeOfIndexNeZero (GlobalTheory.ThetaTriple.index_ne_zero hc kA2 kB2)
+  have i1 := AddSubgroup.fintypeOfIndexNeZero (GlobalTheory.ThetaTriple.index_ne_zero hc kA1 kB1)
+  have i2 := AddSubgroup.fintypeOfIndexNeZero (GlobalTheory.ThetaTriple.index_ne_zero hc kA2 kB2)
   have hb := quot_bijective _ _ _ _ f f2 f3
   have hi : ((La D (tor0 D cc δ) L₁ L₁').addSubgroupOf (La D (tor0 D cc δ) M₁ M₁')).index =
       ((La D (tor0 D cc δ) L₂ L₂').addSubgroupOf (La D (tor0 D cc δ) M₂ M₂')).index :=

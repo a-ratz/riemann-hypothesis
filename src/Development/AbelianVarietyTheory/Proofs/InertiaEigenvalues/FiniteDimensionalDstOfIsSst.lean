@@ -54,7 +54,7 @@ theorem finiteDimensional_Dst_of_isSst : ∀ (l : ℕ) [Fact l.Prime] (P : LocPr
     [AddCommGroup V] [Module ℚ_[l] V] [FiniteDimensional ℚ_[l] V] (ρ : Representation ℚ_[l] ↥(GK K) V),
     IsSst P ρ → FiniteDimensional ℚ_[l] ↥(Dst P ρ) := by
   intro l _ P K V _ _ _ ρ h
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
   by_cases hV : 0 < finrank ℚ_[l] V
   · have hK : 0 < finrank ℚ_[l] ↥(K0 K) := Module.finrank_pos
     have hpos : 0 < finrank ℚ_[l] ↥(Dst P ρ) := by
@@ -63,8 +63,8 @@ theorem finiteDimensional_Dst_of_isSst : ∀ (l : ℕ) [Fact l.Prime] (P : LocPr
       exact Nat.mul_pos hK hV
     exact Module.finite_of_finrank_pos hpos
   · have h0 : finrank ℚ_[l] V = 0 := Nat.eq_zero_of_not_pos hV
-    haveI : Subsingleton V := Module.finrank_zero_iff.mp h0
-    haveI : Subsingleton (V ⊗[ℚ_[l]] Bst P) := by
+    have : Subsingleton V := Module.finrank_zero_iff.mp h0
+    have : Subsingleton (V ⊗[ℚ_[l]] Bst P) := by
       refine ⟨fun x y => ?_⟩
       have hx : ∀ z : V ⊗[ℚ_[l]] Bst P, z = 0 := by
         intro z

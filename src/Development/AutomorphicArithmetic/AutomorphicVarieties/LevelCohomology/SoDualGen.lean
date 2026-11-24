@@ -56,7 +56,7 @@ theorem UpperTheory.V.X.So.dualGen :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] (a : O), a ≠ 0 → ∀ (r : ℕ) (M : Type) [AddCommGroup M] [Module O M] [Module (ZMod (l ^ r)) M], Nonempty (M ≃ₗ[O] (O ⧸ Ideal.span {a})) → ∃ φ₀ : M →ₗ[ZMod (l ^ r)] ZMod (l ^ r), (∀ x : O, (∀ m, φ₀ (x • m) = 0) ↔ a ∣ x) ∧ ∀ φ : M →ₗ[ZMod (l ^ r)] ZMod (l ^ r), ∃ x : O, ∀ m, φ m = φ₀ (x • m) := by
   intro l _ O _ _ _ _ _ a ha r M _ _ _ hne
   obtain ⟨e⟩ := hne
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨hMfin, -, -⟩ := UpperTheory.V.X.So.levFacts l O a ha M ⟨e⟩
   have hsm : ∀ x y : O,
       x • e.symm (Ideal.Quotient.mk (Ideal.span {a}) y) = e.symm (Ideal.Quotient.mk _ (x * y)) := by
@@ -148,7 +148,7 @@ theorem UpperTheory.V.X.So.dualGen :
       Nat.card_congr (QuotientAddGroup.quotientAddEquivOfEq hker).toEquiv]
     exact Nat.card_congr e.symm.toEquiv
   have hcardD := _root_.GlobalTheory.ZModDual.card_dual_eq (l ^ r) M
-  haveI : Finite (Module.Dual (ZMod (l ^ r)) M) :=
+  have : Finite (Module.Dual (ZMod (l ^ r)) M) :=
     Nat.finite_of_card_ne_zero (by rw [hcardD]; exact Nat.card_pos.ne')
   have htop : Ψ.range = ⊤ := AddSubgroup.eq_top_of_card_eq _ (by rw [hcardR, hcardD])
   obtain ⟨x, hx⟩ : φ ∈ Ψ.range := htop ▸ AddSubgroup.mem_top φ

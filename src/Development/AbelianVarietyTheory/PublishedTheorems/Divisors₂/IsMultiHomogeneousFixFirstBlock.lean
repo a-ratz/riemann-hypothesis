@@ -75,7 +75,7 @@ theorem localLength_ne_top [IsNoetherianRing R] {J Q : Ideal R} [Q.IsPrime]
       (J.map (algebraMap R (Localization.AtPrime Q))).minimalPrimes := by
     rw [← Ideal.radical_minimalPrimes, hrad, Ideal.minimalPrimes_eq_subsingleton_self]
     rfl
-  haveI := IsLocalRing.quotient_artinian_of_mem_minimalPrimes_of_isLocalRing _ hmin
+  have := IsLocalRing.quotient_artinian_of_mem_minimalPrimes_of_isLocalRing _ hmin
   rw [localLength, Module.length_eq_of_surjective
     (R := Localization.AtPrime Q ⧸ J.map (algebraMap R (Localization.AtPrime Q)))
     Ideal.Quotient.mk_surjective]
@@ -98,13 +98,13 @@ def projCycle (J : Ideal (MvPolynomial (Fin N) k)) : Ideal (MvPolynomial (Fin N)
 theorem cast_projCycle_apply {J Q : Ideal (MvPolynomial (Fin N) k)} [Q.IsPrime]
     (h : Q ∈ projComponents J) : (projCycle J Q : ℕ∞) = localLength J Q := by
   rw [projCycle, Finsupp.ofSupportFinite_coe]
-  simp only [dif_pos h]
-  exact ENat.coe_toNat (localLength_ne_top h.1)
+  simp only [dite_eq_left h]
+  exact ENat.natCast_toNat (localLength_ne_top h.1)
 
 theorem projCycle_apply_of_notMem {J Q : Ideal (MvPolynomial (Fin N) k)}
     (h : Q ∉ projComponents J) : projCycle J Q = 0 := by
   rw [projCycle, Finsupp.ofSupportFinite_coe]
-  exact dif_neg h
+  exact dite_eq_right h
 
 def hyperplaneForm (u : Fin N → k) : MvPolynomial (Fin N) k := ∑ j, C (u j) * X j
 

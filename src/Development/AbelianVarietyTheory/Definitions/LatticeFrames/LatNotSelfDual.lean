@@ -78,7 +78,7 @@ theorem val_lt_one_iff {K : Type} [Field K] [ValuativeRel K] [TopologicalSpace K
   have h0 : (q.pr.comp (incA D)) (x : D.host.E) ≠ 0 := (map_ne_zero _).2 (RingOfIntegers.coe_ne_zero_iff.2 hx)
   rw [h.2 x hx, ← q.sec_pr, ← q.int_iff]
   change valuation K ((q.pr.comp (incA D)) x) < 1 ↔ ¬ valuation K ((q.pr.comp (incA D)) (x : D.host.E)⁻¹) ≤ 1
-  rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0))]
+  rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))]
 
 
 section Unif
@@ -135,7 +135,7 @@ theorem val_eq_unif (h : Formalism.L2.NTheta.IsIdemAt q.e PP) (ϖ : Unif K) {x :
       rw [← WithZero.exp_log hne, WithZero.exp_le_exp]
       omega
     have h6 := val_le_one_of q h (y := c / x) (by
-      rw [map_div₀]; exact div_le_one_of_le₀ (hc2.trans hx) zero_le')
+      rw [map_div₀]; exact div_le_one_of_le₀ (hc2.trans hx) zero_le)
     rw [← hc, show c = (x : D.host.E) * (c / x) by field_simp, map_mul, map_mul, map_mul]
     exact mul_le_of_le_one_right' h6
 
@@ -166,13 +166,13 @@ theorem exists_prime {K : Type} [Field K] [ValuativeRel K] [TopologicalSpace K] 
     refine (hφ x).trans ?_
     rw [← q.sec_pr, ← q.int_iff]
     change valuation K ((q.pr.comp (incA D)) x) < 1 ↔ ¬ valuation K ((q.pr.comp (incA D)) (x : D.host.E)⁻¹) ≤ 1
-    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0))]
+    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))]
 
 theorem notMem_sq {p : ℕ} (h : GlobalTheory.IndefiniteRowSideFullHecke.SplitColumnClasses.SplitsCompletely D.host.E p) (P : HeightOneSpectrum (𝓞 D.host.E))
     (hP : (p : 𝓞 D.host.E) ∈ P.asIdeal) : (p : 𝓞 D.host.E) ∉ P.asIdeal ^ 2 := by
   obtain ⟨hp, h⟩ := h
   rw [GlobalTheory.HostSplit.ncard_placesOver _ hp] at h
-  haveI := P.isPrime
+  have := P.isPrime
   exact (GlobalTheory.LocSplit.split_prime hp h P.asIdeal hP).1
 
 theorem unifT_of (p : GlobalTheory.FinPl.SplitPt D k) (ϖ : Unif k) (h : (((D.mem u).A.T : ℕ) : 𝓞 D.host.F) ∈ p.v.asIdeal) :

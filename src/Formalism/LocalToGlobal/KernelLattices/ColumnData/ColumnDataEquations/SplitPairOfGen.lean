@@ -380,10 +380,10 @@ theorem rowProjection_mem_lattice {M : Submodule (𝓞 D.host.E) (Fin N → D.ho
     refine mem_stdL.2 fun i => ?_
     by_cases hi : i.val < N' / 2
     · have e : (rowPM N N' A *ᵥ x) i = (A *ᵥ x) i := by
-        simp only [rowPM, LinearMap.coe_mk, AddHom.coe_mk, mulVec, dotProduct, of_apply, if_pos hi]
+        simp only [rowPM, LinearMap.coe_mk, AddHom.coe_mk, mulVec, dotProduct, of_apply, ite_eq_left hi]
       rw [e]; exact h i
     · have e : (rowPM N N' A *ᵥ x) i = 0 := by
-        simp only [rowPM, LinearMap.coe_mk, AddHom.coe_mk, mulVec, dotProduct, of_apply, if_neg hi, zero_mul,
+        simp only [rowPM, LinearMap.coe_mk, AddHom.coe_mk, mulVec, dotProduct, of_apply, ite_eq_right hi, zero_mul,
           Finset.sum_const_zero]
       rw [e]; exact Submodule.zero_mem _
 
@@ -874,7 +874,7 @@ theorem bet_add_right (x y y' : TaylorLogMetric.VC D N N') :
 
 theorem bet_phi (e : Matrix (Fin N') (Fin N') D.host.E) (x y : TaylorLogMetric.VC D N N') :
     bet D cc δ N N' (phi e x) (phi e y) = bet D cc δ N N' x (phi (letI := D.host.cmStar; eᴴ * e) y) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h1 : ∀ a b : TaylorLogMetric.VC D N N', HH D cc δ N N' (phi e a) (phi e b) = HH D cc δ N N' a (phi (eᴴ * e) b) := by
     intro a b
     simp only [HH]
@@ -888,7 +888,7 @@ theorem bet_phi (e : Matrix (Fin N') (Fin N') D.host.E) (x y : TaylorLogMetric.V
   simp only [cp, h1, h2]
 
 theorem negpow (b : ℤ) : ((-1 : ℂ) ^ b) = Complex.exp ((Real.pi : ℂ) * Complex.I * (b : ℂ)) := by
-  rw [← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+  rw [← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
   congr 1
   ring
 

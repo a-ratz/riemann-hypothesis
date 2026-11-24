@@ -64,11 +64,11 @@ theorem exists_finite_quotient_ne_zero {X : Type} [AddCommGroup X] [Module.Finit
     have : x ∈ M.toIntSubmodule := h ▸ Submodule.mem_top
     exact this)
   obtain ⟨N, hN, hMN⟩ := (IsCoatomic.eq_top_or_exists_le_coatom M.toIntSubmodule).resolve_left hM'
-  haveI : IsSimpleModule ℤ (X ⧸ N) := isSimpleModule_iff_isCoatom.2 hN
+  have : IsSimpleModule ℤ (X ⧸ N) := isSimpleModule_iff_isCoatom.2 hN
   obtain ⟨I, hI, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.1 this
-  haveI : Finite (ℤ ⧸ I) :=
+  have : Finite (ℤ ⧸ I) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (Ring.ne_bot_of_isMaximal_of_not_isField hI Int.not_isField)
-  haveI : Finite (X ⧸ N) := Finite.of_equiv _ e.toEquiv.symm
+  have : Finite (X ⧸ N) := Finite.of_equiv _ e.toEquiv.symm
   refine ⟨X ⧸ N, inferInstance, inferInstance, N.mkQ.toAddMonoidHom, fun h => hN.1 ?_, fun x hx => ?_⟩
   · refine eq_top_iff.2 fun x _ => (Submodule.Quotient.mk_eq_zero N).1 ?_
     exact DFunLike.congr_fun h x
@@ -106,15 +106,15 @@ theorem restrict_surjective : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   obtain ⟨F, _, _, l, hl0, hl⟩ := exists_finite_quotient_ne_zero ρ.range hM
   have hlρ : l.comp ρ = 0 := AddMonoidHom.ext fun x => hl _ ⟨x, rfl⟩
   have key : GlobalTheory.SplitTorus.torusMap (Sp V) l ≫ j = GlobalTheory.SplitTorus.torusMap (Sp V) 0 ≫ j := by
-    haveI : IsSeparated tV.G.hom := tV.semi.separated
+    have : IsSeparated tV.G.hom := tV.semi.separated
     have hjac : maximalIdeal V ≤ Ideal.jacobson ⊥ := (IsLocalRing.jacobson_eq_maximalIdeal ⊥ bot_ne_top).ge
     refine GlobalTheory.hom_eq_of_thickenings_of_isProper V (maximalIdeal V) hjac (splitTorus (Sp V) F) tV.G _ _ fun e => ?_
     have hψ : ∀ x ∈ maximalIdeal R, ψ x ∈ maximalIdeal V := fun x hx =>
       (mem_maximalIdeal _).2 fun hu => (mem_maximalIdeal _).1 hx (isUnit_of_map_unit ψ x hu)
     have hI : maximalIdeal V ^ (e + 1) ≠ ⊤ := fun h =>
       (maximalIdeal.isMaximal V).ne_top (top_le_iff.1 (h ▸ Ideal.pow_le_self (Nat.succ_ne_zero e)))
-    haveI : Nontrivial (V ⧸ maximalIdeal V ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2 hI
-    haveI : IsLocalRing (V ⧸ maximalIdeal V ^ (e + 1)) := .of_surjective' _ Ideal.Quotient.mk_surjective
+    have : Nontrivial (V ⧸ maximalIdeal V ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2 hI
+    have : IsLocalRing (V ⧸ maximalIdeal V ^ (e + 1)) := .of_surjective' _ Ideal.Quotient.mk_surjective
     let q : V →+* V ⧸ maximalIdeal V ^ (e + 1) := Ideal.Quotient.mk _
     have he := isGrpPullback_pullback tV.G (thick V (maximalIdeal V) e)
     have ha : ∀ x ∈ maximalIdeal R ^ (e + 1), (q.comp ψ) x = 0 := by
@@ -161,7 +161,7 @@ theorem restrict_surjective : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     show pullback.fst (splitTorus (Sp V) F).hom (thick V (maximalIdeal V) e) ≫ _ =
       pullback.fst (splitTorus (Sp V) F).hom (thick V (maximalIdeal V) e) ≫ _
     rw [← GlobalTheory.SplitTorus.bcIso_inv_bcMap, Category.assoc, Category.assoc, k3]
-  haveI : Mono (GlobalTheory.TorusPart.PELUnif.torus P' hβ n') :=
+  have : Mono (GlobalTheory.TorusPart.PELUnif.torus P' hβ n') :=
     (_root_.GlobalTheory.TorusPart.mono_gtTorus_unif_and_factor E H W (maximalIdeal W) t' P' Ω β 0 (GlobalTheory.TorusPart.map_pow_one_eq_zero hβ) tΩ.G n'.φ n'.cart).1
   have e2 := congrArg (GlobalTheory.TorusPart.pullTorus n.cart) key
   rw [GlobalTheory.TorusPart.pullTorus_torusMap_comp, GlobalTheory.TorusPart.pullTorus_torusMap_comp, hΩ] at e2

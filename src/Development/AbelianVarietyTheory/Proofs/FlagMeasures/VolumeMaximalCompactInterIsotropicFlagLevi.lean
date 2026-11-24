@@ -339,7 +339,7 @@ theorem uMat_mul' {n : ℕ} {ε : Fin n → Bool} (g h : Formalism.REAL.UJ ε) :
 theorem uMat_one' {n : ℕ} {ε : Fin n → Bool} : uMat (1 : Formalism.REAL.UJ ε) = 1 := rfl
 
 theorem continuous_uMat {n : ℕ} {ε : Fin n → Bool} : Continuous (fun g : Formalism.REAL.UJ ε => uMat g) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem exists_blockDiag_hom : ∀ (n : ℕ) (ε : Fin n → Bool) (σ ι : Type) [Fintype σ] [Fintype ι] (π : σ → ι) (m : ι → ℕ) (T : ∀ s, Matrix (Fin n) (Fin (m (π s))) ℂ), Function.Surjective π → (∀ s, (T s)ᴴ * T s = 1) → (∀ s t, s ≠ t → (T s)ᴴ * T t = 0) → ∑ s, T s * (T s)ᴴ = 1 → (∀ k : ∀ i, Matrix (Fin (m i)) (Fin (m i)) ℂ, Formalism.REAL.Jm ε * ∑ s, T s * k (π s) * (T s)ᴴ = (∑ s, T s * k (π s) * (T s)ᴴ) * Formalism.REAL.Jm ε) → ∃ Φ : (∀ i, Formalism.REAL.UJ (allPos (m i))) →* Formalism.REAL.UJ ε, Continuous Φ ∧ Function.Injective Φ ∧ (∀ g, uMat (Φ g) = ∑ s, T s * uMat (g (π s)) * (T s)ᴴ) ∧ ∀ g, Formalism.REAL.hs (uMat (Φ g) - 1) = ∑ s, Formalism.REAL.hs (uMat (g (π s)) - 1) := by
   intro n ε σ ι _ _ π m T hπ h1 h0 hs hJ
@@ -898,7 +898,7 @@ lemma cmp_zero {Y Y' : Type*} [MeasurableSpace Y] [MeasurableSpace Y'] (μ : Mea
     exact le_trans hy hle
   have hInter : (⋂ n, S n) = {y | Real.sqrt (ρ' y) ≤ 0} := by
     ext y
-    simp only [S, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [S, Set.mem_iInter, Set.mem_ofPred_eq]
     constructor
     · intro hy
       by_contra hne
@@ -930,7 +930,7 @@ lemma section_eq {Y : Type*} (ρ : Y → ℝ) (c r : ℝ) (hr : 0 ≤ r) (hc : c
     have := Real.sqrt_le_sqrt_iff (x := x) (y := r ^ 2) (by positivity)
     rwa [Real.sqrt_sq hr] at this
   ext y
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   rw [key, Real.sqrt_le_sqrt_iff (by linarith)]
   constructor <;> intro h <;> linarith
 
@@ -940,7 +940,7 @@ lemma section_empty {Y : Type*} (ρ : Y → ℝ) (h0 : ∀ y, 0 ≤ ρ y) (c r :
     have := Real.sqrt_le_sqrt_iff (x := x) (y := r ^ 2) (by positivity)
     rwa [Real.sqrt_sq hr] at this
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+  simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
   intro hy
   rw [key] at hy
   linarith [h0 y]
@@ -989,7 +989,7 @@ lemma prod_swap_level {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]
   rw [← Measure.prod_swap (μ := μ) (ν := ν), Measure.map_apply measurable_swap hS]
   congr 1
   ext p
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, Prod.fst_swap, Prod.snd_swap]
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, Prod.fst_swap, Prod.snd_swap]
   rw [add_comm]
 
 lemma cmp_both {X X' Y Y' : Type*} [MeasurableSpace X] [MeasurableSpace X'] [MeasurableSpace Y]
@@ -1063,7 +1063,7 @@ lemma vol_prod_level (d e : ℕ) (s : ℝ) (hs : 0 ≤ s) :
   have hpre : Φ ⁻¹' {z : EuclideanSpace ℝ (Fin (d + e)) | Real.sqrt (‖z‖ ^ 2) ≤ s}
       = {y | Real.sqrt (‖y.1‖ ^ 2 + ‖y.2‖ ^ 2) ≤ s} := by
     ext y
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, hnorm]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, hnorm]
   rw [← hpre, hΦ.measure_preimage hT.nullMeasurableSet, vol_level (d + e) s hs]
 
 lemma tendsto_of_two_sided {f : ℝ → ENNReal} {l : Filter ℝ} {L : ENNReal}
@@ -1373,7 +1373,7 @@ namespace GlobalTheory.FlagMeas.LeviCompact
 theorem continuous_hs_uMat {n : ℕ} (ε : Fin n → Bool) :
     Continuous fun g : Formalism.REAL.UJ ε => Formalism.REAL.hs (uMat g - 1) := by
   have hc : Continuous fun g : Formalism.REAL.UJ ε => uMat g :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   unfold Formalism.REAL.hs
   refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun k _ => ?_
   exact ((continuous_apply k).comp ((continuous_apply i).comp (hc.sub continuous_const))).norm.pow 2
@@ -1416,7 +1416,7 @@ theorem exists_eq_mul_preimage {G H : Type} [Group G] [TopologicalSpace G] [IsTo
   have heq := Measure.isMulLeftInvariant_eq_smul ν' ν
   refine ⟨Measure.haarScalarFactor ν' ν, fun A => ?_⟩
   have h3 := congrArg (fun m : Measure G => m (Φ ⁻¹' A)) heq
-  rw [hkey A, h3, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  rw [hkey A, h3, smul_apply, ENNReal.smul_def, smul_eq_mul]
 
 theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype ι] (m : ι → ℕ) (w : ι → ℝ) (Φ : (∀ i, Formalism.REAL.UJ (allPos (m i))) →* Formalism.REAL.UJ ε), (∀ i, 0 < w i) → Continuous Φ → Function.Injective Φ → (∀ g, Formalism.REAL.hs (uMat (Φ g) - 1) = ∑ i, w i * Formalism.REAL.hs (uMat (g i) - 1)) → ∀ μ, IsGaugeSub (Set.range Φ) (∑ i, m i ^ 2) μ → μ Set.univ = ENNReal.ofReal (∏ i, volU (m i) * w i ^ (((m i : ℝ)) ^ 2 / 2)) := by
   intro n ε ι _ m w Φ hw hc hi hhs μ hμ
@@ -1426,7 +1426,7 @@ theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype 
   set νi : ∀ i, Measure (Formalism.REAL.UJ (allPos (m i))) :=
     fun i => ENNReal.ofReal (c i) • Formalism.REAL.muG (allPos (m i)) with hνi
   have hfin : ∀ i, IsFiniteMeasure (νi i) := fun i => ⟨by
-    simp only [hνi, Measure.smul_apply, smul_eq_mul]
+    simp only [hνi, smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top (measure_lt_top _ _)⟩
   have hhaar : ∀ i, (νi i).IsHaarMeasure := fun i =>
     Measure.IsHaarMeasure.smul _ (by simpa using hcpos i) ENNReal.ofReal_ne_top
@@ -1446,7 +1446,7 @@ theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype 
   have hu1 : uMat (1 : Formalism.REAL.UJ ε) = 1 := rfl
   have hU1 : (1 : Formalism.REAL.UJ ε) ∈ U := by simp [hU, Formalism.REAL.hs, hu1, hr0]
   have hUfin : μ U ≠ ⊤ := ne_top_of_le_ne_top hrfin (measure_mono fun g (hg : g ∈ U) => by
-    simp only [hU, Set.mem_setOf_eq] at hg ⊢; exact hg.le)
+    simp only [hU, Set.mem_ofPred_eq] at hg ⊢; exact hg.le)
   obtain ⟨α, hα⟩ := exists_eq_mul_preimage ν Φ hc hi μ h0 hinv hUo hU1 hUfin
   have hfac : ∀ i, Filter.Tendsto (fun r : ℝ => νi i {x | Real.sqrt (Formalism.REAL.hs (uMat x - 1)) ≤ r} /
       ENNReal.ofReal (r ^ (m i ^ 2))) (nhdsWithin 0 (Set.Ioi 0))
@@ -1458,7 +1458,7 @@ theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype 
     rw [ENNReal.ofReal_toReal measure_ball_lt_top.ne] at h1
     refine h1.congr' ?_
     filter_upwards [self_mem_nhdsWithin] with r (hr : 0 < r)
-    simp only [hνi, Measure.smul_apply, smul_eq_mul]
+    simp only [hνi, smul_apply, smul_eq_mul]
     rw [ENNReal.ofReal_div_of_pos (pow_pos hr _), ENNReal.ofReal_mul (hcpos i).le,
       ENNReal.ofReal_toReal (measure_lt_top _ _).ne]
   have hprod := _root_.GlobalTheory.smallBall_pi_weight ι (fun i => Formalism.REAL.UJ (allPos (m i))) νi (fun i x => Formalism.REAL.hs (uMat x - 1))
@@ -1467,7 +1467,7 @@ theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype 
   set K : ℝ := ∏ i, w i ^ (-(((m i ^ 2 : ℕ) : ℝ) / 2)) with hK
   have hpre : ∀ r, Φ ⁻¹' {g | Real.sqrt (Formalism.REAL.hs (uMat g - 1)) ≤ r} =
       {x | Real.sqrt (∑ i, w i * Formalism.REAL.hs (uMat (x i) - 1)) ≤ r} := by
-    intro r; ext x; simp only [Set.mem_preimage, Set.mem_setOf_eq, hhs]
+    intro r; ext x; simp only [Set.mem_preimage, Set.mem_ofPred_eq, hhs]
   have hlim2 : Filter.Tendsto (fun r : ℝ => (α : ENNReal) * (ν {x | Real.sqrt (∑ i, w i * Formalism.REAL.hs (uMat (x i) - 1)) ≤ r} /
       ENNReal.ofReal (r ^ (∑ i, m i ^ 2)))) (nhdsWithin 0 (Set.Ioi 0)) (nhds V) := by
     refine hlim.congr' (Filter.Eventually.of_forall fun r => ?_)
@@ -1486,7 +1486,7 @@ theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype 
   have hνu : ν Set.univ = ∏ i, ENNReal.ofReal (volU (m i)) := by
     rw [hν, Measure.pi_univ]
     refine Finset.prod_congr rfl fun i _ => ?_
-    simp only [hνi, Measure.smul_apply, smul_eq_mul]
+    simp only [hνi, smul_apply, smul_eq_mul]
     rw [← _root_.GlobalTheory.UnitaryVolume.volume_unitary (m i) (c i) (hcg i), ENNReal.ofReal_mul (hcpos i).le,
       ENNReal.ofReal_toReal (measure_lt_top _ _).ne]
   rw [hα, Set.preimage_univ, hνu, ENNReal.eq_inv_of_mul_eq_one_left h1, ← ENNReal.ofReal_inv_of_pos hKpos,

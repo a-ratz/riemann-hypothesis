@@ -163,7 +163,7 @@ theorem jac_cocompact {W W₀ : HSp D} {ρ : ℕ} (d : HypDec W W₀ ρ) (hc : C
   let m : flagN d × GA D W₀ → jacGrp d := fun p =>
     ⟨p.1.1 * d.emb0 p.2, mul_mem (Subgroup.mem_sup_left p.1.2) (Subgroup.mem_sup_right ⟨p.2, rfl⟩)⟩
   have hm : Continuous m :=
-    ((continuous_subtype_val.comp continuous_fst).mul (d.continuous_embed.comp continuous_snd)).subtype_mk _
+    ((continuous_subtypeVal.comp continuous_fst).mul (d.continuous_embed.comp continuous_snd)).subtype_mk _
   refine ⟨m '' (K ×ˢ K₀), (hK.prod hK₀).image hm, fun g => ?_⟩
   obtain ⟨n, hn, h, hg⟩ := (dec.2.2.2.1 g.1).1 g.2
   obtain ⟨δ, hδ, hk⟩ := h₀ h
@@ -206,7 +206,7 @@ theorem jac_mean {ρ : ℕ} (J : JacLev D ρ) (K : GA D J.W → GA D J.W → ℂ
       K (γ * x : jacGrp J.d) p = K x p := fun γ hγ x p => hinv γ hγ.1 γ.2 x x.2 p
   obtain ⟨hI, hcont⟩ := mean_continuous hC hcov h𝓡' (fun (x : jacGrp J.d) p => K x p) hK hinv'
   have hme : MeasurableEmbedding (Subtype.val : jacGrp J.d → GA D J.W) :=
-    MeasurableEmbedding.subtype_coe hcl.measurableSet
+    MeasurableEmbedding.subtypeVal hcl.measurableSet
   have key : ∀ p, ∫ h in J.v0.𝓕, ∫ n in J.vN.𝓝, K (n.1 * J.d.emb0 h) p ∂J.vN.ν ∂J.v0.μ =
       ∫ x : jacGrp J.d in 𝓡, K x p ∂J.μR := fun p => by
     let f : GA D J.W → ℂ := Function.extend Subtype.val (fun x : jacGrp J.d => K x p) 0
@@ -335,7 +335,7 @@ theorem ker_cont : Continuous fun q : GA D B.A × jacGrp J.d × GA D J.W => ker 
   have hA : Continuous (embA B.d B.o) :=
     B.d.continuous_embed.comp (B.o.continuous_emb.comp (continuous_id.prodMk continuous_const))
   have hr : Continuous fun q : GA D B.A × jacGrp J.d × GA D J.W => (q.2.1 : GA D J.W) :=
-    continuous_subtype_val.comp continuous_snd.fst
+    continuous_subtypeVal.comp continuous_snd.fst
   have hx : Continuous fun q : GA D B.A × jacGrp J.d × GA D J.W => (mt J.W q.2.1 ⬝ J.d.jX : Mx D J.W.rank ρ) :=
     ((continuous_mt J.W).comp hr).matrix_mul continuous_const
   have hp : Continuous fun q : GA D B.A × jacGrp J.d × GA D J.W =>
@@ -384,7 +384,7 @@ theorem evalIntegrand_continuous_invariant : ∀ (D : D7) (ψ : AddChar (AF D.ho
     rw [show psiFlag ψ J.d = psiBes ψ J.d 1 0 from funext (psiFlag_eq J.d ψ)]
     exact GlobalTheory.CharLaws.continuous_psiBes ψ J.d s.weil.std.1.1 1 0
   have hK : Continuous fun q : jacGrp J.d × GA D J.W => K q.1 q.2 := by
-    have hr : Continuous fun q : jacGrp J.d × GA D J.W => (q.1 : GA D J.W) := continuous_subtype_val.comp continuous_fst
+    have hr : Continuous fun q : jacGrp J.d × GA D J.W => (q.1 : GA D J.W) := continuous_subtypeVal.comp continuous_fst
     exact ((hG.continuous.comp (hr.mul continuous_snd)).mul (hpsi.comp hr).star).mul
       (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D B.A B.cpt B.vA (jacGrp J.d × GA D J.W) (fun h₀ q => ker s φ Φ h₀ q.1 q.2) (ker_cont s hφ hΦ)
         fun γ hγ h₀ q => ker_left s hom hφ hΦ hγ q.1.2 h₀ q.2).2.1

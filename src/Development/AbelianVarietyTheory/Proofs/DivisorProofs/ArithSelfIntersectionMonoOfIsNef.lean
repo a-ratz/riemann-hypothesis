@@ -209,7 +209,7 @@ open MvPolynomial in
 theorem mixed_diff_nonneg : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (A B : HermLB p) (Φ : MvPolynomial (Fin 2) ℝ →ₗ[ℝ] ℝ), IsArFun ![A, B] D Φ → Le B A → ∀ x y : ℕ, HtNef ((A.pow x).tens (B.pow y)) D → 0 ≤ Φ ((MvPolynomial.X 0 - MvPolynomial.X 1) * (MvPolynomial.C (x : ℝ) * MvPolynomial.X 0 + MvPolynomial.C (y : ℝ) * MvPolynomial.X 1) ^ D) := by
   intro hC k _ X _ p D hX A B Φ hΦ hle x y hN
   classical
-  haveI := hX.isLocallyNoetherian
+  have := hX.isLocallyNoetherian
   obtain ⟨s, hs, hs0⟩ := (_root_.GlobalTheory.HSNef.le_iff_exists_smallSec k X p A B).1 hle
   have hg :=  (sec_ne_zero_iff s).1 hs0
   let L : Fin 2 → HermLB p := ![A, B]

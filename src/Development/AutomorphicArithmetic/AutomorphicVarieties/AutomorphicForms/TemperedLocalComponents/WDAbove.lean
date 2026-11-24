@@ -49,7 +49,7 @@ private theorem cont_diag {Γ : Type} [Group Γ] [TopologicalSpace Γ] {l : ℕ}
     (hf : IsFlagOn r H κ) (i : Fin n) : Continuous fun s => (κ i s : Qbar l) := by
   obtain ⟨g, hg⟩ := hf
   have h1 : Continuous fun s : ↥H => (g * r s * g⁻¹ : GL (Fin n) (Qbar l)) :=
-    (continuous_const.mul (hr.comp continuous_subtype_val)).mul continuous_const
+    (continuous_const.mul (hr.comp continuous_subtypeVal)).mul continuous_const
   exact ((Units.continuous_val.comp h1).matrix_elem i i).congr fun s => (hg s).2 i
 
 private theorem transport_rho {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]

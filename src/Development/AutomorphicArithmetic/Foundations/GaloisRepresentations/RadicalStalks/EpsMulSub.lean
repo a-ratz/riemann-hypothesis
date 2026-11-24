@@ -142,7 +142,7 @@ theorem UpperTheory.Gal.Ord.lie :
       ∀ h : HdR o.A, hom o D.ω (hom o π.ε h) = β b.ρ • hom o π.ε h := by
   intro p _ D R _ b N _ _ hm k _ _ hk β o i w f hw _ _ π
   have hpp : p.Prime := Fact.out
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero hpp).mpr hk
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero hpp).mpr hk
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim k o.A o.ab
   have HL : LieExact o.A := (GlobalTheory.abelianDeRham.2.1 k o.A g o.ab hg).1
   set τ : 𝓞 D.F →+* k := β.comp (b.t i) with hτ

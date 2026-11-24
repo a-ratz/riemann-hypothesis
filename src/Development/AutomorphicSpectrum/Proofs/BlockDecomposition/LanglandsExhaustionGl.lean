@@ -448,7 +448,7 @@ theorem jhMult_jac_multiProd_ne_zero {α β n : Type} [Fintype α] [LinearOrder 
       jhMult τ (piTensor fun j => multiProd (g j) fun i => (s₀ i j).rep.ρ) ≠ 0) :
     jhMult τ (jac E' (multiProd E ρ)) ≠ 0 := by
   classical
-  haveI : Fintype (SizeMatrix m m') := Fintype.ofFinite _
+  have : Fintype (SizeMatrix m m') := Fintype.ofFinite _
   have hG := GlobalTheory.CompanionTheory.GeoLink.geometricLemma k
   let f : ∀ (b : SizeMatrix m m') i, (Σ j, Fin (b.1 i j)) ≃ m i := fun b => b.nonempty_rows.some
   let g : ∀ (b : SizeMatrix m m') j, (Σ i, Fin (b.1 i j)) ≃ m' j := fun b => b.nonempty_cols.some

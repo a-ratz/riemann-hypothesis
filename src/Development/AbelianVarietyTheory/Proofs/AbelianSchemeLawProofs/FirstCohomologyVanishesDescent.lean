@@ -239,18 +239,18 @@ theorem exists_iso_tw {X : Scheme.{0}} (L : LB X) (hL : L.IsLB) (f : X ⟶ X) (k
 theorem first_cohomology_vanishes_powers : (∀ (S : Scheme.{0}) (P : PolAV S) (R : Type) [CommRing R] (t : Spec (CommRingCat.of R) ⟶ S) (X : Scheme.{0}) (π : X ⟶ P.A.left) (f : X ⟶ Spec (CommRingCat.of R)), IsPullback π f P.A.hom t → ∃ N : ℕ, 1 ≤ N ∧ ∃ (m : ℕ) (s : Fin (m + 1) → LB.Sec (pw (P.L.pull π) N)), (pw (P.L.pull π) N).IsLB ∧ VeryAmpleBy f (pw (P.L.pull π) N) s) → (∀ (R : Type) [CommRing R] (X : Scheme.{0}) (f : X ⟶ Spec (CommRingCat.of R)) [IsNoetherianRing R] (H : LB X) (m : ℕ) (s : Fin (m + 1) → LB.Sec H), H.IsLB → VeryAmpleBy f H s → ∀ M : LB X, M.IsLB → ∃ t₀ : ℤ, ∀ t, t₀ ≤ t → FirstCohomologyVanishes (tw M H t)) → (∀ (X X' : Scheme.{0}) (e : X' ⟶ X) (M : LB X) (M' : LB X'), IsIso e → M.IsLB → M'.IsLB → (∃ w : LB.Iso M' (M.pull e), w.IsGen) → FirstCohomologyVanishes M → FirstCohomologyVanishes M') → (∀ (S : Scheme.{0}) (P : PolAV S) (n : ℕ), ∃ α : LB.Gen (LB.LinComb P.L (K := Fin 2) ![𝟙 P.A.left, (mulA P.A n).left] ![(n : ℤ) ^ 2, -1]), α.IsGen) → (∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (P : PolAV S) (n : ℕ), 1 ≤ n → IsFinite (mulA P.A n).left ∧ Flat (mulA P.A n).left ∧ Surjective (mulA P.A n).left ∧ (IsUnit (n : Γ(S, ⊤)) → Etale (mulA P.A n).left)) → (∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (n : ℕ), (n : K) ≠ 0 → ∀ (U : P.A.left.Opens) (f : Γ(P.A.left, (mulA P.A n).left ⁻¹ᵁ U)), (∀ y : 𝟙_ (Over (Spec (CommRingCat.of K))) ⟶ P.A, y ^ n = 1 → ∀ (e : (mulA P.A n).left ⁻¹ᵁ U ≤ ((toUnit P.A ≫ y) * 𝟙 P.A).left ⁻¹ᵁ ((mulA P.A n).left ⁻¹ᵁ U)), (((toUnit P.A ≫ y) * 𝟙 P.A).left.appLE _ _ e).hom f = f) → ∃! g : Γ(P.A.left, U), ((mulA P.A n).left.app U).hom g = f) → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (n : ℕ), 1 ≤ n → FirstCohomologyVanishes (pw P.L n) := by
   intro hproj hsv hiso hmulp hfin hgal K _ _ P n hn
   classical
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨N, hN, m, s, hH, hva⟩ := hproj _ P K (𝟙 _) P.A.left (𝟙 _) P.A.hom (IsPullback.of_horiz_isIso ⟨by simp⟩)
   choose t₀ ht₀ using fun r : ℕ => hsv K P.A.left P.A.hom _ m s hH hva (pw P.L r) (isLB_pw P.isLB r)
   let T : ℕ := (Finset.range N).sup fun r => (t₀ r).toNat
   obtain ⟨q, hq, hqp⟩ := Nat.exists_infinite_primes (N * T + ringChar K + 1)
-  haveI : Fact q.Prime := ⟨hqp⟩
+  have : Fact q.Prime := ⟨hqp⟩
   have hqK : (q : K) ≠ 0 := fun h0 => by
     rcases (Nat.dvd_prime hqp).1 ((ringChar.spec K q).1 h0) with h1 | h1
     · exact CharP.ringChar_ne_one h1
     · omega
   obtain ⟨α, hα⟩ := hmulp _ P q
-  haveI := (hfin _ P q hqp.one_lt.le).1
+  have := (hfin _ P q hqp.one_lt.le).1
   have hdiv : q ^ 2 * n = q ^ 2 * n % N + N * (q ^ 2 * n / N) := (Nat.mod_add_div _ _).symm
   have hT : T ≤ q ^ 2 * n / N := by
     rw [Nat.le_div_iff_mul_le hN]
@@ -263,8 +263,8 @@ theorem first_cohomology_vanishes_powers : (∀ (S : Scheme.{0}) (P : PolAV S) (
       (DVR.linComb_isLB _ (isLB_pw P.isLB n) _ _)
       (exists_iso_tw P.L P.isLB _ _ n _ N _ α hα (by exact_mod_cast hdiv)) (ht₀ _ _ ht)
   let G : Subgroup (𝟙_ (Over (Spec (CommRingCat.of K))) ⟶ P.A) := (powMonoidHom q).ker
-  haveI : Finite G := finite_torsion_of_isFinite_mul K P q
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Finite G := finite_torsion_of_isFinite_mul K P q
+  have : Fintype G := Fintype.ofFinite G
   have hG : IsPGroup q G := fun g => ⟨1, Subtype.ext (by rw [pow_one]; exact g.2)⟩
   obtain ⟨j, hj⟩ := IsPGroup.iff_card.1 hG
   refine first_cohomology_vanishes_descent (mulA P.A q).left _ G (fun y => ((toUnit P.A ≫ y.1) * 𝟙 P.A).left)

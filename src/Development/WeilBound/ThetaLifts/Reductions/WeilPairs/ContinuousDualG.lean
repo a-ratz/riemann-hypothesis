@@ -152,7 +152,7 @@ theorem isUWeilSplit_cast₂ [TopologicalSpace R] [TopologicalSpace E] [IsModule
     GlobalTheory.WeilM.IsUWeilSplit c C ψ ξ K J (castD₂ c h d) χ Cy (om.comp (Subgroup.inclusion hle)) :=
   ⟨hL, ⟨⟨fun g => H.2.1.pres (Subgroup.inclusion hle g), fun g => H.2.1.impl (Subgroup.inclusion hle g),
     fun g => H.2.1.adm (Subgroup.inclusion hle g)⟩, H.2.1.unit.comp _,
-    H.2.1.cont.comp (continuous_subtype_val.subtype_mk _)⟩,
+    H.2.1.cont.comp (continuous_subtypeVal.subtype_mk _)⟩,
     fun l hl hinv p t hp => H.2.2 l hl hinv (Subgroup.inclusion hle p) t hp⟩
 
 end Gen
@@ -198,7 +198,7 @@ theorem mt_dualG_inv {n : ℕ} {J J' : Matrix (Fin n) (Fin n) E} (h : J'ᵀ * J 
     mtF σ J (dualG σ h g)⁻¹ = (mtF σ J' g)ᵀ := rfl
 
 theorem continuous_dualG {n : ℕ} {J J' : Matrix (Fin n) (Fin n) E} (h : J'ᵀ * J = 1) : Continuous (dualG σ h) :=
-  (continuous_invT.comp continuous_subtype_val).subtype_mk _
+  (continuous_invT.comp continuous_subtypeVal).subtype_mk _
 
 theorem dualG_mem_GQ {n : ℕ} {J J' : Matrix (Fin n) (Fin n) E} (h : J'ᵀ * J = 1) {γ : GAF σ J'} (hγ : γ ∈ GQF σ J') :
     dualG σ h γ ∈ GQF σ J := by
@@ -310,9 +310,9 @@ theorem swap_datum {Tau : Type} [Fintype Tau] {tauE : Tau → (E →+* ℂ)} {χ
       (theta_trW σ hS hT ξ₀ ψ hf), trW_heis' σ hS hT, actO_tr, Matrix.transpose_transpose]
   · exact h.om_aut _ (dualG_mem_GQ σ hS hk) _ (dualG_mem_GQ σ hT hg) _ (theta_trW σ hS hT ξ₀ ψ hf)
   · have : IsTopologicalRing (AEF F E) := IsModuleTopology.isTopologicalRing (AF F) (AEF F E)
-    have : IsTopologicalAddGroup (AEF F E) := IsTopologicalRing.to_topologicalAddGroup
-    have : IsTopologicalAddGroup (WOF F E nS nT) := Pi.topologicalAddGroup
-    have : IsTopologicalAddGroup (WOF F E nT nS) := Pi.topologicalAddGroup
+    have : IsTopologicalAddGroup (AEF F E) := IsTopologicalRing.isTopologicalAddGroup
+    have : IsTopologicalAddGroup (WOF F E nS nT) := Pi.isTopologicalAddGroup
+    have : IsTopologicalAddGroup (WOF F E nT nS) := Pi.isTopologicalAddGroup
     have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
     have : BorelSpace (WOF F E nT nS) := ⟨rfl⟩
     let e : WOF F E nT nS ≃ₜ+ WOF F E nS nT :=

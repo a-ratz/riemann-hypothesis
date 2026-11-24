@@ -67,7 +67,7 @@ private theorem secStr_side {K : Type} [Field K] [NumberField K] [_root_.NumberF
     ⟨fun h => ((hOU g).1 h).1, fun h => (hOU g).2 ⟨h, hg⟩⟩
   obtain ⟨t, ht⟩ := hK.elim_finite_subcover
     (fun k : KG K n => {y : G1 K n | (((k : G1 K n)⁻¹ * y : G1 K n) : AdelicGLn.AdelicGL K n) ∈ O})
-    (fun k => hO.preimage (continuous_subtype_val.comp (continuous_const.mul continuous_id)))
+    (fun k => hO.preimage (continuous_subtypeVal.comp (continuous_const.mul continuous_id)))
     (fun y hy => Set.mem_iUnion.2 ⟨⟨y, hy⟩, by
       have := (hmem 1 (one_mem _)).1 (one_mem _)
       simpa using this⟩)
@@ -81,7 +81,7 @@ private theorem secStr_side {K : Type} [Field K] [NumberField K] [_root_.NumberF
   have hU : ∀ x, x ∈ U ↔ x ∈ KG K 2 ∧ ∀ j : t, c j x ∈ D.U := fun x => by
     simp only [U, Subgroup.mem_inf, Subgroup.mem_iInf, Subgroup.mem_comap]
   let d : t → U → D.U := fun j x => ⟨c j x, ((hU x).1 x.2).2 j⟩
-  have hd : ∀ j, Continuous (d j) := fun j => ((hcc j).comp continuous_subtype_val).subtype_mk _
+  have hd : ∀ j, Continuous (d j) := fun j => ((hcc j).comp continuous_subtypeVal).subtype_mk _
   have hdm : ∀ j x y, d j (x * y) = d j x * d j y := fun j x y => Subtype.ext (map_mul (c j) _ _)
   let ℬ : Submodule ℂ (U → ℂ) := ⨆ j : t, 𝒜.map (LinearMap.funLeft ℂ ℂ (d j))
   have hin : ∀ j, ∀ a ∈ 𝒜, (fun x => a (d j x)) ∈ ℬ := fun j a ha =>
@@ -91,7 +91,7 @@ private theorem secStr_side {K : Type} [Field K] [NumberField K] [_root_.NumberF
     exact mul_mem (mul_mem (inv_mem j.2) (hιK x hx)) j.2
   obtain ⟨E, hE, hR, hP⟩ := adm μ₂ τ hτ U inf_le_left
     ⟨⋂ j : t, {x | ((c j x : G1 K n) : AdelicGLn.AdelicGL K n) ∈ O},
-      isOpen_iInter_of_finite fun j => hO.preimage (continuous_subtype_val.comp (hcc j)), fun x hx => by
+      isOpen_iInter_of_finite fun j => hO.preimage (continuous_subtypeVal.comp (hcc j)), fun x hx => by
         rw [hU, Set.mem_iInter]
         exact ⟨fun h j => (hmem _ (hcK j x hx)).1 (h.2 j), fun h => ⟨hx, fun j => (hmem _ (hcK j x hx)).2 (h j)⟩⟩⟩
     ℬ inferInstance (fun a ha => by

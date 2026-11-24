@@ -112,9 +112,9 @@ private theorem gEx_abs {O Γ Δ k : Type} [CommRing O] [Group Γ] [Group Δ] [F
 theorem UpperTheory.V.Ws.Lk.gEx :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c} (T : Tower D), T.Ok → ∃ g : G T.L Ω, (∀ i j, Raw.bar (chi D T.pr i) (resQ T.L g) = Raw.bar (chi D T.pr j) (resQ T.L g)) ∧ Raw.bar D.om (resQ T.L g) ≠ 1 := by
   intro Ω _ _ _ l _ c D T hT
-  haveI := c.dvr
-  haveI := c.fin
-  haveI : Finite (ResidueField c.O) :=
+  have := c.dvr
+  have := c.fin
+  have : Finite (ResidueField c.O) :=
     IsLocalRing.ResidueField.finite_of_finite (R := ℤ_[l]) inferInstance
   have hrel : ∀ x, (T.fr ∅).χ 0 x * (T.fr ∅).χ 3 x = (T.fr ∅).χ 1 x * (T.fr ∅).χ 2 x := by
     intro x

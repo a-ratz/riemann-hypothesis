@@ -297,7 +297,7 @@ theorem fin (T : Finset ι) :
   | empty =>
     have hu : ∀ l : {l : ι →₀ L // l.support ⊆ ∅}, l.1 = 0 := fun l =>
       Finsupp.support_eq_empty.1 (Finset.subset_empty.1 l.2)
-    haveI : Unique {l : ι →₀ L // l.support ⊆ ∅} := ⟨⟨⟨0, by simp⟩⟩, fun l => Subtype.ext (hu l)⟩
+    have : Unique {l : ι →₀ L // l.support ⊆ ∅} := ⟨⟨⟨0, by simp⟩⟩, fun l => Subtype.ext (hu l)⟩
     have hΦ : ∀ l : {l : ι →₀ L // l.support ⊆ ∅}, Φ F l.1 = 1 := fun l => by rw [hu l]; simp [Φ]
     have e1 := hasSum_unique (fun l : {l : ι →₀ L // l.support ⊆ ∅} => Φ F l.1)
     have e2 := hasSum_unique (fun l : {l : ι →₀ L // l.support ⊆ ∅} => ‖Φ F l.1‖)
@@ -769,12 +769,12 @@ theorem beta_generating_of_sum_bound : HGen → SumBd → SchurJT → BetaGen :=
   have hterm : ∀ l : {l : Fin k → ℕ // Antitone l},
       jt α l.1 * evalAt β (schur fun j => (l.1 j : ℤ)) * X ^ (∑ j, l.1 j) = gF α b X l.1 := by
     intro l
-    rw [gF, if_pos l.2, hJ k β l.1]
+    rw [gF, ite_eq_left l.2, hJ k β l.1]
   obtain ⟨hsum, hbdα⟩ := hS m k A B ‖X‖ hA hB (norm_nonneg _) hX
   have hbdβ := (hS k k B B 0 hB hB le_rfl (by simp)).2 b hβ
   have hsumF : Summable (fun l : {l : Fin k → ℕ // Antitone l} => gF α b X l.1) := by
     refine Summable.of_norm_bounded hsum fun l => ?_
-    rw [gF, if_pos l.2, norm_mul, norm_mul, norm_pow]
+    rw [gF, ite_eq_left l.2, norm_mul, norm_mul, norm_pow]
     have h1 := hbdα α hα l.1
     have h2 := hbdβ l.1
     have h0 : 0 ≤ cjt m A l.1 := (norm_nonneg _).trans h1
@@ -916,9 +916,9 @@ theorem continuous_hN (p : ℕ) : Continuous fun α : Fin m → ℂ => hN p α :
 
 theorem continuous_hZ (z : ℤ) : Continuous fun α : Fin m → ℂ => hZ z α := by
   by_cases h : z < 0
-  · simp only [hZ, if_pos h]
+  · simp only [hZ, ite_eq_left h]
     exact continuous_const
-  · simp only [hZ, if_neg h]
+  · simp only [hZ, ite_eq_right h]
     exact continuous_hN _
 
 theorem continuous_jt {m' : ℕ} (l : Fin m' → ℕ) : Continuous fun γ : Fin m → ℂ => jt γ l := by
@@ -1262,13 +1262,13 @@ theorem hN_zero {m : ℕ} (α : Fin m → ℂ) : hN 0 α = 1 := by
 
 theorem jt_zero {m m' : ℕ} (α : Fin m → ℂ) : jt α (0 : Fin m' → ℕ) = 1 := by
   unfold jt
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · simp [hZ, hN_zero]
   · intro i j hij
     have h' : i < j := hij
     have h'' : (i : ℕ) < j := h'
     simp only [Matrix.of_apply, Pi.zero_apply, Nat.cast_zero, zero_sub, hZ]
-    rw [if_pos (by omega)]
+    rw [ite_eq_left (by omega)]
 
 theorem schur_conj (hS : SchurJT) {n : ℕ} (z : Fin n → ℂˣ) (L : Fin n → ℕ) :
     evalAt (fun i => cU (z i)) (schur fun i => (L i : ℤ)) = conj (evalAt z (schur fun i => (L i : ℤ))) := by
@@ -1322,7 +1322,7 @@ theorem mem_range_emb {k : ℕ} {l : Fin k → ℤ} (h : Antitone l ∧ ∀ i, 0
 theorem loc_off {m k q : ℕ} (α : Fin m → ℂˣ) (β : Fin k → ℂˣ) (s : ℂ) {l : Fin k → ℤ}
     (hl : l ∉ Set.range (emb (k := k))) : loc q α β s l = 0 := by
   unfold loc
-  rw [if_neg fun h => hl (mem_range_emb h)]
+  rw [ite_eq_right fun h => hl (mem_range_emb h)]
 
 theorem pad_emb {m k : ℕ} (l : {l : Fin k → ℕ // Antitone l}) : pad m (emb l) = fun i => (padN m l.1 i : ℤ) := by
   funext i
@@ -1335,7 +1335,7 @@ theorem loc_emb (hS : SchurJT) {m k q : ℕ} (α : Fin m → ℂˣ) (β : Fin k 
   have hcond : Antitone (emb l) ∧ ∀ i, 0 ≤ emb l i :=
     ⟨fun i j hij => by simp only [emb]; exact_mod_cast l.2 hij, fun i => by simp [emb]⟩
   unfold loc
-  rw [if_pos hcond, pad_emb, schur_conj hS]
+  rw [ite_eq_left hcond, pad_emb, schur_conj hS]
   congr 1
   have hs : (∑ i, emb l i : ℤ) = ((∑ j, l.1 j : ℕ) : ℤ) := by simp [emb]
   rw [hs, Int.cast_natCast, mul_comm, Complex.cpow_nat_mul]

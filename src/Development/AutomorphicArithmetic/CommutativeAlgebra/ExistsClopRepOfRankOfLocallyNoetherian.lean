@@ -103,7 +103,7 @@ theorem exists_finFree_local : ∀ (S Z : Scheme.{0}) (z : Z ⟶ S), IsFinite z 
   intro S Z z h1 h2 h3 s
   obtain ⟨V, hV, hsV, -, hF⟩ := GlobalTheory.FiniteAmpleFP.exists_finFree_app_fp z (x := s) (U := ⊤) trivial
   have hZ : IsAffineOpen (z ⁻¹ᵁ V) := hV.preimage z
-  letI : Algebra Γ(S, V) Γ(Z, z ⁻¹ᵁ V) := (z.app V).hom.toAlgebra
+  let : Algebra Γ(S, V) Γ(Z, z ⁻¹ᵁ V) := (z.app V).hom.toAlgebra
   have hfin : Module.Finite Γ(S, V) Γ(Z, z ⁻¹ᵁ V) := hF.1
   have hfree : Module.Free Γ(S, V) Γ(Z, z ⁻¹ᵁ V) := hF.2
   refine ⟨V, Γ(S, V), Γ(Z, z ⁻¹ᵁ V), inferInstance, inferInstance, inferInstance, hfree, hfin,
@@ -535,7 +535,7 @@ theorem representing_qc_qs_loft : ∀ (A B : Type) [CommRing A] [CommRing B] [Al
     exact ⟨g, ⟨f', h1, h2⟩, (congrArg Sigma.fst hg).symm⟩
   choose g hg hgx using hiso
   have hWa : ∀ σ, IsAffineOpen (W σ) := fun σ => by
-    haveI := hg σ; haveI := hXa σ; exact IsAffine.of_isIso (g σ)
+    have := hg σ; have := hXa σ; exact IsAffine.of_isIso (g σ)
   have hint : ∀ (U : H.Opens), CompactSpace U.toScheme → ∀ τ, IsCompact ((U : Set H) ∩ W τ) := by
     intro U hU τ
     obtain ⟨V, hV, hVc⟩ := GlobalTheory.T.exists_open_affineHilbertChartBasic_locus A B N r e τ U.toScheme ((functor A B r).map U.ι.op ξ)
@@ -556,7 +556,7 @@ theorem representing_qc_qs_loft : ∀ (A B : Type) [CommRing A] [CommRing B] [Al
     rw [this]
     exact (hVc hU).image U.ι.continuous
   have hWc' : ∀ σ, CompactSpace (W σ).toScheme := fun σ => by
-    haveI : IsAffine (W σ).toScheme := hWa σ
+    have : IsAffine (W σ).toScheme := hWa σ
     infer_instance
   refine ⟨?_, ?_, ?_⟩
   · rw [quasiCompact_iff_compactSpace]
@@ -569,11 +569,11 @@ theorem representing_qc_qs_loft : ∀ (A B : Type) [CommRing A] [CommRing B] [Al
   · rw [quasiSeparated_iff_quasiSeparatedSpace]
     exact Scheme.quasiSeparatedSpace_of_isOpenCover W hcov hWa
       (fun σ τ => hint (W σ) (hWc' σ) τ)
-  · haveI : IsZariskiLocalAtSource @LocallyOfFiniteType := HasRingHomProperty.instIsZariskiLocalAtSource
+  · have : IsZariskiLocalAtSource @LocallyOfFiniteType := HasRingHomProperty.instIsZariskiLocalAtSource
     refine IsZariskiLocalAtSource.of_iSup_eq_top (P := @LocallyOfFiniteType) W hcov fun σ => ?_
     rw [hgx σ]
-    haveI := hg σ
-    haveI := hXl σ
+    have := hg σ
+    have := hXl σ
     infer_instance
 
 end GlobalTheory.HilbAff
@@ -679,7 +679,7 @@ attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 theorem exists_flat_ideal : ∀ (V K : Type) [CommRing V] [IsDomain V] [ValuationRing V] [Field K] [Algebra V K] [IsFractionRing V K] (X X' : Scheme.{0}) [IsAffine X] [IsAffine X'] (p : X ⟶ Spec (CommRingCat.of V)) (p' : X' ⟶ Spec (CommRingCat.of K)) (b : X' ⟶ X), IsPullback b p' p (Spec.map (CommRingCat.ofHom (algebraMap V K))) → ∀ I : Ideal Γ(X', ⊤), ∃ J : Ideal Γ(X, ⊤), ((Ideal.Quotient.mk J).comp (p.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom)).Flat ∧ Ideal.map b.appTop.hom J = I := by
   intro V K _ _ _ _ _ _ X X' _ _ p p' b h I
   set φ : V →+* Γ(X, ⊤) := p.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of V)).inv.hom with hφ
-  letI : Algebra V Γ(X, ⊤) := φ.toAlgebra
+  let : Algebra V Γ(X, ⊤) := φ.toAlgebra
   have H0 := isPushout_appTop_of_isPullback h
   have H : IsPushout (CommRingCat.ofHom (algebraMap V K)) (CommRingCat.ofHom (algebraMap V Γ(X, ⊤)))
       ((Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫ p'.appTop) b.appTop := by
@@ -900,9 +900,9 @@ namespace GlobalTheory.HilbAff
 theorem pushout_inl_injective {R S R' P : CommRingCat.{0}} {f : R ⟶ S} {g : R ⟶ R'}
     {inl : S ⟶ P} {inr : R' ⟶ P} (h : IsPushout f g inl inr) (hf : f.hom.Flat)
     (hg : Function.Injective g.hom) : Function.Injective inl.hom := by
-  letI := f.hom.toAlgebra
-  letI := g.hom.toAlgebra
-  haveI : Module.Flat R S := hf
+  let := f.hom.toAlgebra
+  let := g.hom.toAlgebra
+  have : Module.Flat R S := hf
   have ht := CommRingCat.isPushout_tensorProduct R R' S
   let e := IsPushout.isoIsPushout _ _ h.flip ht
   have he : inl ≫ e.hom = CommRingCat.ofHom Algebra.TensorProduct.includeRight.toRingHom :=
@@ -922,7 +922,7 @@ theorem pushout_inl_injective {R S R' P : CommRingCat.{0}} {f : R ⟶ S} {g : R 
 theorem ker_eq_bot_of_isPullback {Z ZK Y Y' : Scheme.{0}} [IsAffine Z] [IsAffine Y] [IsAffine Y']
     {p : ZK ⟶ Z} {q : ZK ⟶ Y'} {π : Z ⟶ Y} {j : Y' ⟶ Y} (H : IsPullback p q π j) [Flat π]
     (hj : Function.Injective j.appTop.hom) : p.ker = ⊥ := by
-  haveI : IsAffine ZK := .of_isPullback H
+  have : IsAffine ZK := .of_isPullback H
   have hP := isPushout_appTop_of_isPullback H
   have hf : π.appTop.hom.Flat := (HasRingHomProperty.iff_of_isAffine (P := @Flat)).mp inferInstance
   have hinj := pushout_inl_injective hP hf hj
@@ -949,7 +949,7 @@ theorem map_comap_bc_eq (r : ℕ) {V K : Type} [CommRing V] [IsDomain V] [Field 
       (bc A B g (Spec.map (CommRingCat.ofHom (algebraMap V K)))) = I := by
   set a := Spec.map (CommRingCat.ofHom (algebraMap V K))
   obtain ⟨-, h2, -⟩ := hI
-  haveI : IsAffine I.subscheme := isAffine_of_isAffineHom I.subschemeι
+  have : IsAffine I.subscheme := isAffine_of_isAffineHom I.subschemeι
   have H : IsPullback (pullback.snd (bc A B g a) I.subschemeι)
       (pullback.fst (bc A B g a) I.subschemeι ≫ pullback.snd _ (a ≫ g))
       (I.subschemeι ≫ pullback.snd _ g) a :=
@@ -1250,7 +1250,7 @@ theorem isHilbRep_restrict_local : ∀ {S Z : Scheme.{0}} (z : Z ⟶ S) (r : ℕ
         x.1 = b ≫ W.ι → ∃! c : Y ⟶ T, GlobalTheory.HilbGlue.HPt.map c y = x := by
   intro S Z z r W hR
   obtain ⟨H, h, U, u, hprop, hcl, hfin, hflat, hrk, huniv⟩ := hR
-  haveI := hcl
+  have := hcl
   have hv : IsFinFlatRk ((u ≫ (restrictIso z W h).hom) ≫ pullback.snd z (h ≫ W.ι)) r := by
     rw [Category.assoc, restrictIso_hom_snd]
     exact ⟨hfin, hflat, hrk⟩
@@ -1333,7 +1333,7 @@ theorem GlobalTheory.HilbGlue.HPt.ext_openCover : ∀ {S Z : Scheme.{0}} (z : Z 
   rw [HPt.mk_eq_mk_iff]
   have hP : ∀ i : 𝒰.I₀, IsPullback (pullback.snd z (𝒰.f i ≫ g)) (bc z (𝒰.f i) g (𝒰.f i ≫ g) rfl) (𝒰.f i)
       (pullback.snd z g) := fun i => (isPullback_bc z (𝒰.f i) g (𝒰.f i ≫ g) rfl).flip
-  haveI : ∀ i : 𝒰.I₀, IsOpenImmersion (bc z (𝒰.f i) g (𝒰.f i ≫ g) rfl) := fun i =>
+  have : ∀ i : 𝒰.I₀, IsOpenImmersion (bc z (𝒰.f i) g (𝒰.f i ≫ g) rfl) := fun i =>
     MorphismProperty.of_isPullback (P := @IsOpenImmersion) (hP i) inferInstance
   refine idealSheaf_ext_of_openImmersions (ι := 𝒰.I₀) (X := fun i => pullback z (𝒰.f i ≫ g)) (fun i => bc z (𝒰.f i) g (𝒰.f i ≫ g) rfl) ?_ I.1 I'.1 fun i => ?_
   · intro x
@@ -1534,7 +1534,7 @@ theorem isProper_of_represents_of_local_proper : ∀ {S Z : Scheme.{0}} (z : Z �
     rw [← cancel_mono (W s).ι, Category.assoc, ← hy s, ← hx1, ← hφ]
     rfl
   rw [← hcomp]
-  haveI := hπ s
+  have := hπ s
   infer_instance
 
 end GlobalTheory.HilbGlue
@@ -1758,18 +1758,18 @@ theorem UpperTheory.exists_clopRepOfRank_of_locallyNoetherian :
   intro S _ G hfin het r
   obtain ⟨H, h, U₀, u, hprop, hcl, hfin', hflat', hrk, huniv⟩ :=
     GlobalTheory.T.hilbertScheme_finite_locallyFree_representable_proper S G.left G.hom hfin inferInstance inferInstance r
-  haveI := hprop
-  haveI := hcl
-  haveI := hfin'
-  haveI := hflat'
-  haveI : IsLocallyNoetherian H := LocallyOfFiniteType.isLocallyNoetherian h
-  haveI : Etale (pullback.snd G.hom h) := inferInstance
-  haveI : IsOpenImmersion u :=
+  have := hprop
+  have := hcl
+  have := hfin'
+  have := hflat'
+  have : IsLocallyNoetherian H := LocallyOfFiniteType.isLocallyNoetherian h
+  have : Etale (pullback.snd G.hom h) := inferInstance
+  have : IsOpenImmersion u :=
     UpperTheory.isOpenImmersion_of_closedImmersion_flat_etale u (pullback.snd G.hom h) inferInstance hcl hflat' inferInstance
   let Y : Over S := Over.mk h
   let ι₀ : U₀ ⟶ (Y ⊗ G).left := u ≫ (pullbackSymmetry G.hom Y.hom).hom
-  haveI : IsOpenImmersion ι₀ := by dsimp [ι₀]; infer_instance
-  haveI : IsClosedImmersion ι₀ := by dsimp [ι₀]; infer_instance
+  have : IsOpenImmersion ι₀ := by dsimp [ι₀]; infer_instance
+  have : IsClosedImmersion ι₀ := by dsimp [ι₀]; infer_instance
   refine ⟨Y, ι₀.opensRange, ?_, ?_, ?_⟩
   · exact ι₀.isClosedEmbedding.isClosed_range
   · intro y
@@ -1782,16 +1782,16 @@ theorem UpperTheory.exists_clopRepOfRank_of_locallyNoetherian :
     exact hrk y
   · intro T V hV hVr
     obtain ⟨hVF, hVE⟩ := UpperTheory.clopProj_finite_etale_of_isClosed V hfin het hV
-    haveI := hVF
-    haveI := hVE
+    have := hVF
+    have := hVE
     let v : (V : Scheme.{0}) ⟶ pullback G.hom T.hom := V.ι ≫ (pullbackSymmetry G.hom T.hom).inv
-    haveI : IsClosedImmersion V.ι :=
+    have : IsClosedImmersion V.ι :=
       IsClosedImmersion.of_isPreimmersion V.ι (by rw [Scheme.Opens.range_ι]; exact hV)
-    haveI : IsClosedImmersion v := by dsimp [v]; infer_instance
+    have : IsClosedImmersion v := by dsimp [v]; infer_instance
     have hvp : v ≫ pullback.snd G.hom T.hom = UpperTheory.RepresentationRank.proj V := by
       simp [v, UpperTheory.RepresentationRank.proj]
-    haveI : IsFinite (v ≫ pullback.snd G.hom T.hom) := by rw [hvp]; exact hVF
-    haveI : Flat (v ≫ pullback.snd G.hom T.hom) := by rw [hvp]; infer_instance
+    have : IsFinite (v ≫ pullback.snd G.hom T.hom) := by rw [hvp]; exact hVF
+    have : Flat (v ≫ pullback.snd G.hom T.hom) := by rw [hvp]; infer_instance
     obtain ⟨f, ⟨hf, w, hw⟩, huniq⟩ := huniv T.left T.hom V v inferInstance inferInstance
       inferInstance (fun t => by rw [hvp]; exact hVr t)
     have key : ∀ y' : T ⟶ Y, ((y' ▷ G).left ⁻¹ᵁ ι₀.opensRange = V ↔

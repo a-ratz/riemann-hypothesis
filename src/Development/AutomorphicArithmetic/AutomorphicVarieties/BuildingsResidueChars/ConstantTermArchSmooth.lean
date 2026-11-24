@@ -81,7 +81,7 @@ theorem UpperTheory.constantTerm_convolution_arch :
     have h1 : IntegrableOn f (C ×ˢ tsupport D) ((unipMeasure K n r).prod μ) :=
       hfc.continuousOn.integrableOn_compact (hC.prod hDc)
     have h2 : IntegrableOn f (unipFundamentalDomain K n r ×ˢ Set.univ) ((unipMeasure K n r).prod μ) := by
-      refine h1.of_forall_diff_eq_zero (measurableSet_unipFundamentalDomain.prod MeasurableSet.univ) ?_
+      refine h1.of_forall_sdiff_eq_zero (measurableSet_unipFundamentalDomain.prod MeasurableSet.univ) ?_
       rintro ⟨X, y⟩ ⟨⟨hX, -⟩, hn⟩
       have hy : y ∉ tsupport D := fun hy => hn ⟨hFC hX, hy⟩
       show φ (unipGL X * g * infEmb K n y) * D y = 0

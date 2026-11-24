@@ -56,9 +56,9 @@ theorem exists_ringHom_lift_of_formallySmooth {R A C : Type} [CommRing R] [CommR
     (φ : R →+* A) (hφ : φ.FormallySmooth) (ψ : R →+* C) (I : Ideal C) (hI : IsNilpotent I)
     (g : A →+* C ⧸ I) (hg : g.comp φ = (Ideal.Quotient.mk I).comp ψ) :
     ∃ F : A →+* C, (∀ x, Ideal.Quotient.mk I (F x) = g x) ∧ ∀ r, F (φ r) = ψ r := by
-  letI := φ.toAlgebra
-  letI := ψ.toAlgebra
-  haveI : Algebra.FormallySmooth R A := hφ
+  let := φ.toAlgebra
+  let := ψ.toAlgebra
+  have : Algebra.FormallySmooth R A := hφ
   let g' : A →ₐ[R] C ⧸ I :=
     { g with
       commutes' := fun r => by
@@ -101,7 +101,7 @@ theorem frob_lift_etale_chart :
     refine ⟨2, ?_⟩
     rw [hIdef, Ideal.span_singleton_pow, hp2, Ideal.span_singleton_eq_bot.mpr rfl, Ideal.zero_eq_bot]
   have hsm : φ.FormallySmooth := by
-    letI := φ.toAlgebra
+    let := φ.toAlgebra
     haveI : Algebra.Etale _ B := hφ
     show Algebra.FormallySmooth _ B
     infer_instance

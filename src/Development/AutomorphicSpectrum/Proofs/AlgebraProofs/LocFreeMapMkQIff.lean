@@ -153,11 +153,11 @@ theorem span_bcMap_annSub (Ω C : Type) [Field Ω] [Field C] [Algebra Ω C] (n i
   apply le_antisymm
   · rw [Submodule.span_le]
     rintro _ ⟨v, hv, rfl⟩
-    simp only [annSub, SetLike.mem_coe, Submodule.mem_pi, Set.mem_setOf_eq, Submodule.mem_bot] at hv ⊢
+    simp only [annSub, SetLike.mem_coe, Submodule.mem_pi, Set.mem_ofPred_eq, Submodule.mem_bot] at hv ⊢
     intro j hj
     simp [bcMap, hv j hj]
   · intro v hv
-    simp only [annSub, Submodule.mem_pi, Set.mem_setOf_eq, Submodule.mem_bot] at hv
+    simp only [annSub, Submodule.mem_pi, Set.mem_ofPred_eq, Submodule.mem_bot] at hv
     have : v = ∑ j, v j • bcMap Ω C (Fin n) (if (j : ℕ) < i then 0 else Pi.single j 1) := by
       ext k
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
@@ -172,7 +172,7 @@ theorem span_bcMap_annSub (Ω C : Type) [Field Ω] [Field C] [Algebra Ω C] (n i
       · simp
     rw [this]
     refine Submodule.sum_mem _ fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨_, ?_, rfl⟩)
-    simp only [annSub, SetLike.mem_coe, Submodule.mem_pi, Set.mem_setOf_eq, Submodule.mem_bot]
+    simp only [annSub, SetLike.mem_coe, Submodule.mem_pi, Set.mem_ofPred_eq, Submodule.mem_bot]
     intro k hk
     by_cases hj : (j : ℕ) < i
     · simp [hj]

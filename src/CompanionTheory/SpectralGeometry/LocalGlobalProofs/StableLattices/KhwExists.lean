@@ -150,7 +150,7 @@ theorem D_upper {a b : Fin k} (hab : a < b) : R.D (Matrix.single a b 1) *ᵥ R.v
     funext t
     rw [R.hw _ (curve_tri hab.le _)]
     · simp only [hdiag]; simp
-    · rw [Matrix.det_of_upperTriangular (curve_tri hab.le _)]
+    · rw [det_of_isUpperTriangular (curve_tri hab.le _)]
       simp only [hdiag]; simp
   rw [e] at h
   exact h.unique (hasDerivAt_const _ _)
@@ -175,7 +175,7 @@ theorem D_diag (a : Fin k) : R.D (Matrix.single a a 1) *ᵥ R.v0 = (ν a : ℂ) 
     · congr 1
       simp only [hdiag]
       rw [Finset.prod_eq_single a] <;> simp +contextual
-    · rw [Matrix.det_of_upperTriangular (curve_tri le_rfl _)]
+    · rw [det_of_isUpperTriangular (curve_tri le_rfl _)]
       simp only [hdiag]
       exact Finset.prod_ne_zero_iff.2 fun c _ => by split_ifs <;> simp [ht]
   have hz : HasDerivAt (fun x : ℂ => x ^ ν a) (ν a : ℂ) ((1 : ℂ) + ((0 : ℝ) : ℂ)) := by
@@ -183,7 +183,7 @@ theorem D_diag (a : Fin k) : R.D (Matrix.single a a 1) *ᵥ R.v0 = (ν a : ℂ) 
   have h2 : HasDerivAt (fun t : ℝ => ((1 : ℂ) + t) ^ ν a) (ν a : ℂ) 0 := by
     have := (hz.hasFDerivAt.restrictScalars ℝ).comp_hasDerivAt (0 : ℝ) h1
     simp only [ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.toSpanSingleton_apply, one_smul,
-      ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.one_apply] at this
+      ContinuousLinearMap.smulRight_apply, one_apply_eq_self] at this
     exact this
   exact (h.congr_of_eventuallyEq e).unique (h2.smul_const R.v0)
 
@@ -444,7 +444,7 @@ theorem khwExists : CompanionTheory.D.DSIC.KHWExists := by
   · intro a
     have h := hw.1 (σ.symm a)
     simp only [Equiv.apply_symm_apply] at h
-    simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, h, if_true, s, ← sub_smul]
+    simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, h, ite_true, s, ← sub_smul]
     congr 1
     push_cast
     ring

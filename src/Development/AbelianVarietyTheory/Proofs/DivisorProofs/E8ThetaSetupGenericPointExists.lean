@@ -135,8 +135,8 @@ theorem exists_setup : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F
   intro g n hg hn ho F Z z i hproj hZn hopen hiz hden W hW hT η hη B
   obtain ⟨o₁, Ω₁, _, _, _, _, κ, S, ρ, u, hbig, hB, hsharp, hgen, hbase, hκ, hstalk⟩ :=
     exists_thetaSys_at g n hg hn ho F W hW η hη B
-  haveI : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
-  haveI : IsProper z := ((isProjOver_iff_isProper_and_exists_isAmpleLB z).1 hproj).1
+  have : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
+  have : IsProper z := ((isProjOver_iff_isProper_and_exists_isAmpleLB z).1 hproj).1
   have hp : (spMap S.R.val.toRingHom ≫ u ≫ i) ≫ z = spMap ((algebraMap o₁ Ω₁).comp κ) := by
     simp only [Category.assoc, hiz]
     simpa only [Category.assoc] using hbase

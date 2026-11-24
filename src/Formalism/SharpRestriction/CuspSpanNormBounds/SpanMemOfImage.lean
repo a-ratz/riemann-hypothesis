@@ -352,7 +352,7 @@ theorem continuous_expL (S : Set (Mx k r)) : Continuous (expL S) := by
   have h1 : Continuous (fun x : EuclideanSpace ℝ (IxE k r) => unrealify x) :=
     (unrealL' k r).continuous_of_finiteDimensional
   have h3 : Continuous (fun x : lieE S => (unrealify (x : EuclideanSpace ℝ (IxE k r)) : Mx k r)) :=
-    h1.comp continuous_subtype_val
+    h1.comp continuous_subtypeVal
   exact continuous_expM'.comp h3
 
 theorem cjT_expL (hκ : 0 < κ) (hτ : 0 < τ) (x : lieE (Nset k r)) :

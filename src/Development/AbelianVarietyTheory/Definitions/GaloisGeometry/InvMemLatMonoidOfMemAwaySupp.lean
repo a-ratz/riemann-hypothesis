@@ -325,12 +325,12 @@ theorem isGIsogWit_mul {S : Scheme.{0}} {s : S ⟶ Sp R} {N M : ℕ} (e : N = M)
     IsGIsogWit L h (relevelObj e o) o (𝟙 o.A ^ c) (𝟙 o.A ^ c) m (c * c) := by
   subst e
   show IsGIsogWit L h o o (𝟙 o.A ^ c) (𝟙 o.A ^ c) m (c * c)
-  haveI := GlobalTheory.DrinLev.HT.MulModel.isMonHom_id_pow o.A c
+  have := GlobalTheory.DrinLev.HT.MulModel.isMonHom_id_pow o.A c
   refine ⟨inferInstance, inferInstance, fun a => ?_, fun a => ?_, ?_, ?_, hm, Nat.Coprime.mul_left hc hc,
     fun k _ _ t β ht => ?_⟩
-  · haveI := o.act.hom a
+  · have := o.act.hom a
     rw [MonObj.comp_pow, GlobalTheory.DrinLev.HT.MulModel.pow_comp', Category.comp_id, Category.id_comp]
-  · haveI := o.act.hom a
+  · have := o.act.hom a
     rw [MonObj.comp_pow, GlobalTheory.DrinLev.HT.MulModel.pow_comp', Category.comp_id, Category.id_comp]
   · rw [MonObj.comp_pow, Category.comp_id, ← pow_mul]
   · rw [MonObj.comp_pow, Category.comp_id, ← pow_mul]
@@ -360,10 +360,10 @@ def hkIndex (N N' : ℕ) (h : G.GAf) : ℕ := (L.KN N').relIndex (heckeLevel (L.
 theorem relIndex_KN_ne_zero {N N' : ℕ} (hN : 0 < N) (hN' : 0 < N') : (L.KN N').relIndex (L.KN N) ≠ 0 := by
   obtain ⟨K, hK⟩ := GlobalTheory.LKGeo.KNLevel.exists_level_eq_KN p D G L N hN
   obtain ⟨K', hK'⟩ := GlobalTheory.LKGeo.KNLevel.exists_level_eq_KN p D G L N' hN'
-  haveI : CompactSpace (L.KN N) := isCompact_iff_compactSpace.1 (hK ▸ K.compact)
+  have : CompactSpace (L.KN N) := isCompact_iff_compactSpace.1 (hK ▸ K.compact)
   have ho : IsOpen ((L.KN N').subgroupOf (L.KN N) : Set (L.KN N)) :=
-    (show IsOpen (L.KN N' : Set G.GAf) from hK' ▸ K'.K.isOpen).preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ ho
+    (show IsOpen (L.KN N' : Set G.GAf) from hK' ▸ K'.K.isOpen).preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ ho
   exact Nat.card_pos.ne'
 
 def IsAdelicHecke (h : G.GAf) {k' : ℕ} {X : GenModel gb N} {X' : GenModel gb (N * k')} (C : Corr X X') : Prop :=

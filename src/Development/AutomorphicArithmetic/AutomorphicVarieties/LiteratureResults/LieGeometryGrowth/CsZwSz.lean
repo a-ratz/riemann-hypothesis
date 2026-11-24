@@ -102,8 +102,8 @@ theorem UpperTheory.V.Lit.Geo.Cs.zwSz :
   have z3 := (appSz (HV E a) (HV E a) (HV E a) k (hOne E a)).1 _ _ _ _ hs (ContDiffAt.sum fun n _ => s2 n) hb₂ z2
   refine z3.congr (he.mono fun p hp => ?_)
   have e2 := hW (g * τ p) x
-  have e3 : sand (g * τ p) (hOne E a) = sand g p := by rw [map_mul, ContinuousLinearMap.mul_apply, hp]
+  have e3 : sand (g * τ p) (hOne E a) = sand g p := by rw [map_mul, mul_apply_eq_comp, hp]
   rw [e3] at e2
   simp only [chart_val, hφ, Zw, e2, ← pt_mul]
-  rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel_left]
+  rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel_left]
   exact congrArg _ (hL (hv (Y (pt (g * τ p) x)))).symm

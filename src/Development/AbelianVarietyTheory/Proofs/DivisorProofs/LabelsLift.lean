@@ -324,9 +324,9 @@ theorem GlobalTheory.Poinc.special_transport : ∀ (g n : ℕ) (F : SFam g n (ze
   set x₂ := (gPt p ≫ y) (closedPoint (PadicAlgCl p)) with hx₂
   have hx₁ : (gPt p ≫ c.y) (closedPoint (PadicAlgCl p)) = D.q x₂ := by
     rw [← h, ← Category.assoc]; rfl
-  haveI : IsDedekindDomain D.X.o₁ := ArithBase.ded (Ω := D.X.Ω₁)
-  haveI : IsNoetherianRing (D.X.M.O x₂) := D.X.M.isNoetherianRing_O x₂
-  haveI : IsIntegrallyClosed (D.X.M.O x₂) := haveI := D.X.normal; RatModel.isIntegrallyClosed_O (GlobalTheory.IsNormalScheme.pred _) x₂
+  have : IsDedekindDomain D.X.o₁ := ArithBase.ded (Ω := D.X.Ω₁)
+  have : IsNoetherianRing (D.X.M.O x₂) := D.X.M.isNoetherianRing_O x₂
+  have : IsIntegrallyClosed (D.X.M.O x₂) := haveI := D.X.normal; RatModel.isIntegrallyClosed_O (GlobalTheory.IsNormalScheme.pred _) x₂
   have hmem : ∀ a : R', algebraMap X₁.Ω₁ D.X.Ω₁ a ∈ D.X.M.O x₂ := fun a =>
     map_mem_O_of D.gen (hx₁ ▸ hR' a.2)
   let g₁ : R' →+* D.X.M.O x₂ := ((algebraMap X₁.Ω₁ D.X.Ω₁).comp R'.val.toRingHom).codRestrict _ hmem

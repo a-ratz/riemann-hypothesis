@@ -70,7 +70,7 @@ theorem _root_.UpperTheory.KN.hasPres_of_injective_equivariant :
     · intro hy
       exact ⟨y, hy, rfl⟩
   have hfg' : Y'.FG := by
-    haveI : IsNoetherian O Y := isNoetherian_of_fg_of_noetherian Y hfg
+    have : IsNoetherian O Y := isNoetherian_of_fg_of_noetherian Y hfg
     exact Submodule.FG.map _ (IsNoetherian.noetherian _)
   have hst' : ∀ g, ∀ y ∈ Y', actN LL (fun j => N (x j)) g y ∈ Y' := by
     intro g y hy

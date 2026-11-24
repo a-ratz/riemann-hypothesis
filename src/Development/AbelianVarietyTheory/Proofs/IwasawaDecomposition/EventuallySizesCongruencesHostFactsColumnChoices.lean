@@ -113,7 +113,7 @@ namespace GlobalTheory.Mem.HypCMRec
 
 theorem hypCM_all (D : D7) : SphericalInertData.HypCM D := by
   refine ⟨?_, GlobalTheory.DesignBC.two_le_finrank D, fun w hw h2 => hw (GlobalTheory.DesignBC.isSplitPl_of_two_mem D w h2)⟩
-  letI := D.host.cmStar
+  let := D.host.cmStar
   exact D.sp.cm.cmUnram
 
 theorem hypCM_at_record : EvLgG fun K B f _ => KPx B f → ∀ (T : TwDat B) (w : ColW B f T) (Z : w.Lt), SphericalInertData.HypCM (w.D Z) :=

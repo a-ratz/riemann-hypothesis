@@ -118,7 +118,7 @@ theorem exists_lieElement_middleBlockPart (c : Coeff l) (la : HeightOneSpectrum 
     rw [h7, map_inv₀] at h5
     have hW0 : W.valuation (x : ℂ) ≠ 0 := by
       rw [Valuation.ne_zero_iff]; exact_mod_cast hx0
-    exact absurd ((inv_lt_one₀ (zero_lt_iff.2 hW0)).1 h5) (not_lt.2 h6)
+    exact absurd ((inv_lt_one₀ (pos_iff_ne_zero.2 hW0)).1 h5) (not_lt.2 h6)
 
 theorem modelAtSt_of {Xo : Moduli Dw l} {c : Coeff l} (hI : PartIAt Xo c) (hgood : ∀ p : ℕ, p.Prime → l.GoodAt p)
     (la : HeightOneSpectrum (𝓞 c.F)) : ModelAtSt Xo c la := by

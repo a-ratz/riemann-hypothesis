@@ -300,7 +300,7 @@ theorem curve_eq_kcurve (ε : Fin n → Bool) {X : Matrix (Fin n) (Fin n) ℂ} (
 theorem differentiableAt_oneParam {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] [FiniteDimensional ℂ V]
     (φ : ℝ → (V →L[ℂ] V)) (hc : Continuous φ) (h0 : φ 0 = 1) (hadd : ∀ s t, φ (s + t) = φ s * φ t) :
     DifferentiableAt ℝ φ 0 := by
-  have : CompleteSpace V := FiniteDimensional.complete ℂ V
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
   set Φ : ℝ → (V →L[ℂ] V) := fun x => ∫ s in (0:ℝ)..x, φ s with hΦ
   have hΦd : ∀ x, HasDerivAt Φ (φ x) x := fun x => (hc.integral_hasStrictDerivAt 0 x).hasDerivAt
   have hslope : Tendsto (slope Φ 0) (𝓝[≠] 0) (𝓝 (φ 0)) := hasDerivAt_iff_tendsto_slope.1 (hΦd 0)
@@ -348,7 +348,7 @@ theorem derOp_hasDeriv [FiniteDimensional ℂ V] (ε : Fin n → Bool) (τ : KG 
     rw [(kcurve_spec ε hX).2.1]
     show NormedSpace.exp (((0 : ℝ) : ℂ) • X) = (1 : Matrix (Fin n) (Fin n) ℂ)
     simp
-  have hφc : Continuous φ := continuous_subtype_val.comp (hcont.comp hc)
+  have hφc : Continuous φ := continuous_subtypeVal.comp (hcont.comp hc)
   have hφ0 : φ 0 = 1 := by
     simp only [hφ, h0k, map_one]
     rfl

@@ -167,7 +167,7 @@ theorem exists_semisimple_rep_tpow {ι : Type} [Fintype ι] [DecidableEq ι] {G 
     have hs₁ : r₁.IsSemisimpleRepresentation := by
       rw [← _root_.GlobalTheory.ClassFin.ss_range_toMatrix_iff_isSemisimpleRepresentation ι G _ _ (Pi.basisFun ℂ _)]
       simpa only [h₁] using h
-    haveI : FiniteDimensional ℂ V := Module.Finite.of_basis b
+    have : FiniteDimensional ℂ V := Module.Finite.of_basis b
     let e : ι × (Fin n → ι) ≃ (Fin (n + 1) → ι) := Fin.consEquiv fun _ => ι
     refine ⟨(ι → ℂ) ⊗[ℂ] V, inferInstance, inferInstance, r₁.tprod r,
       ((Pi.basisFun ℂ ι).tensorProduct b).reindex e,

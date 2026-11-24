@@ -145,7 +145,7 @@ theorem isConeTangent_of_sheet {P0 P : Ideal (MRing ι)} (hP0 : P0 ≤ P) {e : �
   have h0 : HasFDerivAt ((fun w => eval w F) ∘ γ) (0 : (Fin e → ℂ) →L[ℂ] ℂ) y :=
     (hasFDerivAt_const (0 : ℂ) y).congr_of_eventuallyEq hzero
   have := congrArg (fun L => L ξ) (hd.unique h0)
-  simpa [ContinuousLinearMap.sum_apply, smul_eq_mul] using this
+  simpa [sum_apply, smul_eq_mul] using this
 
 theorem maDensity_nonneg_of_sheet {P0 P : Ideal (MRing ι)} (hP0 : P0 ≤ P) {A : HermLine ι}
     (hsp : IsSemipositiveRel P0 P A) {e : ℕ} {Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e + 1) → ℂ)}

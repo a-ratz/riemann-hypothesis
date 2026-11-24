@@ -180,7 +180,7 @@ theorem primitiveOfDualFunctionals : Assemble := by
         rw [SetLike.mem_coe, Submodule.mem_comap, LinearMap.restrictScalars_apply, map_smul, p1,
           smul_eq_mul]
         by_cases hab : a = b
-        · subst hab; rw [if_pos rfl, mul_one]; exact hx
+        · subst hab; rw [ite_eq_left rfl, mul_one]; exact hx
         · simp [hab]
       · intro l hl
         rw [Submodule.mem_comap, LinearMap.restrictScalars_apply, p3 a l hl]
@@ -263,7 +263,7 @@ theorem primitiveOfDualFunctionals : Assemble := by
       have h := Assemble_bc_span v (φ a) (Λ : Set (Fin n → E)) _ (hφΛ a) _ hc
       rw [hsum] at h
       simp only [p1, p3 a z hz, map_zero, mul_zero, add_zero, apply_ite (inclR (F := F) (Fv F v)),
-        map_one, mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, if_true] at h
+        map_one, mul_ite, mul_one, Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h
       rw [Assemble_exp] at h
       obtain ⟨p, hp, hcp⟩ := (hD (r - (a : ℕ)) _).1 h
       rw [mul_comm] at hcp
@@ -350,7 +350,7 @@ theorem DiffLoc_psi_mul (I J : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) :
   · have h : ((I * J : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Set E) =
         (Submodule.span (𝓞 E) ((I : Set E) * (J : Set E)) : Set E) := by
       show (((I * J : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) : Set E) = _
-      rw [FractionalIdeal.coe_mul, Submodule.mul_eq_span_mul_set]
+      rw [FractionalIdeal.coeToSubmodule_mul, Submodule.mul_eq_span_mul_set]
       rfl
     rw [h]
     apply DiffLoc_span_le
@@ -449,7 +449,7 @@ theorem DiffLoc_ddE_eq : ((ddE (E := E) F : FractionalIdeal (nonZeroDivisors (�
       (differentIdeal ℤ (𝓞 F) : Set (𝓞 F))) : Set E) := by
   show (((ddE (E := E) F : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) : Set E) = _
   unfold ddE
-  rw [FractionalIdeal.coe_coeIdeal, IsLocalization.coeSubmodule, Ideal.map, Ideal.span, Submodule.map_span,
+  rw [FractionalIdeal.coeToSubmodule_coeIdeal, IsLocalization.coeSubmodule, Ideal.map, Ideal.span, Submodule.map_span,
     Set.image_image]
   rfl
 

@@ -125,12 +125,12 @@ private theorem exists_sqrt : ∃ σ : HV E a → HV E a, ContDiffAt ℝ ∞ σ 
     rwa [square_map_one] at this
   · have := hc.localInverse_apply_image square_map_hasFDerivAt hn
     rwa [square_map_one] at this
-  · have := (hc.hasStrictFDerivAt' square_map_hasFDerivAt hn).eventually_right_inverse
+  · have := (hc.hasStrictFDerivAt square_map_hasFDerivAt hn).eventually_right_inverse
     rwa [square_map_one] at this
 
 private theorem ev_unit : ∀ᶠ X in 𝓝 (hOne E a), IsUnit (Matrix.of X.1) := by
   have hc : Continuous fun X : HV E a => (Matrix.of X.1).det :=
-    Continuous.matrix_det (A := fun X : HV E a => Matrix.of X.1) continuous_subtype_val
+    Continuous.matrix_det (A := fun X : HV E a => Matrix.of X.1) continuous_subtypeVal
   have h1 : (Matrix.of (hOne E a).1).det ∈ {x : Cinf E | IsUnit x} := by
     rw [hOne_val, det_one]; exact isUnit_one
   filter_upwards [hc.continuousAt.preimage_mem_nhds (Units.isOpen.mem_nhds h1)] with X hX
@@ -151,7 +151,7 @@ theorem locSec : LocSec := by
   rintro E _ _ a p₀ ⟨g, rfl⟩
   obtain ⟨σ, hσ, hσ1, hσ2⟩ := exists_sqrt (E := E) (a := a)
   have h0 : sand g⁻¹ (sand g (hOne E a)) = hOne E a := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one]; rfl
+    rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one]; rfl
   have hq : Tendsto (sand g⁻¹) (𝓝 (sand g (hOne E a))) (𝓝 (hOne E a)) := by
     have := (sand g⁻¹).continuous.tendsto (sand g (hOne E a))
     rwa [h0] at this
@@ -161,7 +161,7 @@ theorem locSec : LocSec := by
   have hu := (hs.comp hq).eventually ev_unit
   let u : HV E a → GL (Fin a) (Cinf E) := fun X => if h : IsUnit (Matrix.of X.1) then h.unit else 1
   have hval : ∀ X : HV E a, IsUnit (Matrix.of X.1) → (u X).val = Matrix.of X.1 := fun X h => by
-    simp only [u, dif_pos h, IsUnit.unit_spec]
+    simp only [u, dite_eq_left h, IsUnit.unit_spec]
   refine ⟨fun p => g * u (σ (sand g⁻¹ p)), ?_, ?_⟩
   · have h1 : ContDiffAt ℝ ∞ (fun p => σ (sand g⁻¹ p)) (sand g (hOne E a)) :=
       ContDiffAt.comp (g := σ) _ (h0.symm ▸ hσ) (sand g⁻¹).contDiff.contDiffAt
@@ -175,7 +175,7 @@ theorem locSec : LocSec := by
       change Matrix.of (sand _ _).1 = Matrix.of (sq2 _).1
       have hX : star (Matrix.of (σ (sand g⁻¹ p)).1) = Matrix.of (σ (sand g⁻¹ p)).1 := (σ (sand g⁻¹ p)).2
       rw [sand_val, square_map_val, hOne_val, mul_one, hp2, hval (σ (sand g⁻¹ p)) hp, hX]
-    rw [map_mul, ContinuousLinearMap.mul_apply, h2, ← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]
+    rw [map_mul, mul_apply_eq_comp, h2, ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]
     rfl
 
 end UpperTheory.V.Lit.Dr

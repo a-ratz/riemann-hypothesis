@@ -138,7 +138,7 @@ theorem coneBall_hausdorff_lt_top (hMF : MassFinite.Statement) {n e : ℕ} (h : 
         measure_mono hsub
     _ ≤ (‖Q‖₊ : ENNReal) ^ ((2 * (e + 1) : ℕ) : ℝ) *
           Measure.hausdorffMeasure ((2 * (e + 1) : ℕ) : ℝ) (zeroSetEuc J ∩ ball 0 (‖P‖ + 1)) :=
-        Q.lipschitz.hausdorffMeasure_image_le hd _
+        Q.lipschitzWith.hausdorffMeasure_image_le hd _
     _ < ⊤ := ENNReal.mul_lt_top (ENNReal.rpow_lt_top_of_nonneg hd ENNReal.coe_ne_top)
         (hMF n (e + 1) J hJ (by exact_mod_cast hdim) _)
 

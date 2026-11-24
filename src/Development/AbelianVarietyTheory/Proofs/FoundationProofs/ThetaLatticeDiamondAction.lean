@@ -105,7 +105,7 @@ private theorem exists_isDiam_of_coprime {N l d : ℕ} (hNl : Nat.Coprime N l) (
 
 private theorem conj_mem_Gamma1_of_mem_Gamma0 {N : ℕ} {σ γ : SL(2, ℤ)} (hσ : σ ∈ CongruenceSubgroup.Gamma0 N)
     (hγ : γ ∈ CongruenceSubgroup.Gamma1 N) : σ * γ * σ⁻¹ ∈ CongruenceSubgroup.Gamma1 N := by
-  have hγ0 : γ ∈ CongruenceSubgroup.Gamma0 N := CongruenceSubgroup.Gamma1_in_Gamma0 N hγ
+  have hγ0 : γ ∈ CongruenceSubgroup.Gamma0 N := CongruenceSubgroup.Gamma1_le_Gamma0 N hγ
   have hg0 : σ * γ * σ⁻¹ ∈ CongruenceSubgroup.Gamma0 N :=
     Subgroup.mul_mem _ (Subgroup.mul_mem _ hσ hγ0) (Subgroup.inv_mem _ hσ)
   have h1 : (⟨γ, hγ0⟩ : CongruenceSubgroup.Gamma0 N) ∈ CongruenceSubgroup.Gamma1' N := by
@@ -174,7 +174,7 @@ theorem thN_isThB : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     IsThB X A N l n (X.act l (sgD N l d : Matrix (Fin 2) (Fin 2) ℤ) b) (thN X A N l n d b) ∧
       IsLat 1 (thN X A N l n d b) := by
   intro Ω _ _ _ ε X A N l _ hj hl2 hlN hN hlA n w d hw hd b hb
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hl : l.Prime := Fact.out
   have hNl : Nat.Coprime N l := ((Nat.Prime.coprime_iff_not_dvd hl).mpr hlN).symm
   have hb' := ThnEx.diam_B X N l w d (by omega) hNl hd b hb

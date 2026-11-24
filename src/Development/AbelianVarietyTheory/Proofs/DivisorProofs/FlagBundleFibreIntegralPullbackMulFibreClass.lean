@@ -163,8 +163,8 @@ namespace GlobalTheory.FlagCell2
 
 theorem det_upU {K : Type} [Field K] {s : ℕ} (y : Low s → K) : (upU y).det = 1 := by
   have hb : (upU y).BlockTriangular id := fun a b (hab : b < a) => by
-    simp only [upU, Matrix.of_apply, dif_neg (not_lt.2 hab.le), if_neg (ne_of_gt hab)]
-  rw [Matrix.det_of_upperTriangular hb]
+    simp only [upU, Matrix.of_apply, dite_eq_right (not_lt.2 hab.le), ite_eq_right (ne_of_gt hab)]
+  rw [Matrix.det_of_isUpperTriangular hb]
   exact Finset.prod_eq_one fun a _ => by simp [upU]
 
 theorem pts_of {F : Type} [Field F] {X Y : Var F} {ι : Type} [Fintype ι] {m : ι → ℕ} {E : Fr (ratOf X) m 0}
@@ -247,7 +247,7 @@ theorem cellMap_image_eq : ∀ (F : Type) [Field F] (σ : F →+* ℂ) (X Y : Va
   · let W : Y.X.Opens := ⟨{y | InCell E E' φ f A u y}, hO.1⟩
     have e : cellSet E E' φ f hf c A u = ptsIn Y.str σ W ∩ ptMap σ f hf ⁻¹' c.e.source := by
       ext y
-      simp only [cellSet, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, mem_ptsIn]
+      simp only [cellSet, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, mem_ptsIn]
       rfl
     rw [e]
     exact (isOpen_ptsIn W).inter (c.e.open_source.preimage (Points.PtsOver.continuous_map f hf _))
@@ -699,7 +699,7 @@ theorem grF_eq_pull : ∀ (F : Type) [Field F] (σ : F →+* ℂ) (X Y : Var F) 
       ((B₀ * B⁻¹) r.1).map (ratVal · w) r.2 r.2 ≠ 0 := fun w h1 h2 => by
     obtain ⟨hol, tri⟩ := hT w h1 h2
     have := hol.1.ne_zero
-    rw [Matrix.det_of_lowerTriangular _ (fun i j hij => tri i j hij)] at this
+    rw [Matrix.det_of_isLowerTriangular _ (fun i j hij => tri i j hij)] at this
     exact Finset.prod_ne_zero_iff.1 this r.2 (Finset.mem_univ _)
   have hπ : Continuous (ptMap σ f hf) := by
     unfold ptMap
@@ -1085,8 +1085,8 @@ theorem part_preimage : ∀ (F : Type) [Field F] (σ : F →+* ℂ) (X Y : Var F
   intro F _ σ X Y ι _ m E E' φ f hf hR H hH α hα hβ s c A O hO hOc hOA T hT hTO
   rcases T.eq_empty_or_nonempty with rfl | ⟨x₀, hx₀⟩
   · simp
-  haveI : T2Space (CxPts X.str σ) := CxPts.t2Space _ _
-  haveI : T2Space (CxPts Y.str σ) := CxPts.t2Space _ _
+  have : T2Space (CxPts X.str σ) := CxPts.t2Space _ _
+  have : T2Space (CxPts Y.str σ) := CxPts.t2Space _ _
   obtain ⟨u, hu⟩ := _root_.GlobalTheory.FlagCell2.GenericCell.exists_inCell_genericPoint F X Y ι m E E' φ f hR _ A (hOA x₀ (hTO hx₀))
   have hdim := _root_.GlobalTheory.FlagCell2.Dim.main F σ X Y ι m E E' φ f hf hR
   let ε : Fin Y.dim ≃ Fin X.dim ⊕ Cell m := Fintype.equivOfCardEq (by simp [hdim])
@@ -1100,7 +1100,7 @@ theorem part_preimage : ∀ (F : Type) [Field F] (σ : F →+* ℂ) (X Y : Var F
     evalF (atlas Y σ) (grF E' (pullGram E H φ f hf)) (fibrePoint m)) s := ⟨_, rfl⟩
   rw [← hμ] at hnull ⊢
   have h1 : μ (ptMap σ f hf ⁻¹' T) = μ (ptMap σ f hf ⁻¹' T ∩ cellSet E E' φ f hf c A u) := by
-    refine (measure_inter_add_diff (ptMap σ f hf ⁻¹' T) hopen.measurableSet).symm.trans ?_
+    refine (measure_inter_add_sdiff (ptMap σ f hf ⁻¹' T) hopen.measurableSet).symm.trans ?_
     have h0 : μ (ptMap σ f hf ⁻¹' T \ cellSet E E' φ f hf c A u) = 0 :=
       by
       refine measure_mono_null (fun y hy => ?_) hnull
@@ -1125,8 +1125,8 @@ theorem part_preimage : ∀ (F : Type) [Field F] (σ : F →+* ℂ) (X Y : Var F
       · rintro ⟨v, hv, rfl⟩
         exact ⟨_, hv, c.e.right_inv v.2⟩
     rw [e]
-    exact (MeasurableEmbedding.subtype_coe c.e.open_target.measurableSet).measurableSet_image.2
-      ((continuousOn_iff_continuous_restrict.1 c.e.continuousOn_symm).measurable hT)
+    exact (MeasurableEmbedding.subtypeVal c.e.open_target.measurableSet).measurableSet_image.2
+      ((continuousOn_iff_continuous_domRestrict.1 c.e.continuousOn_symm).measurable hT)
   rw [h1, hμ, _root_.GlobalTheory.FlagCell2.ChangeOfVariables.part_eq_lintegral_image _ _ (atlas Y σ) _ hβ _ (cellMap ε f hf c u)
     (cellForm ε (fun v => H A (c.e.symm v)) ((atlas X σ).loc α c)) hopen hinj ?_ s _
     (hTm.inter hopen.measurableSet) Set.inter_subset_right, himg T (hTO.trans hOc) fun x hx => hOA x (hTO hx),
@@ -1170,7 +1170,7 @@ theorem GlobalTheory.FlagCell2.univ_eq_of_local_preimage_eq : ∀ (M N : Type) [
   intro M N _ _ _ _ _ π hπ μ ν h
   choose U hUo hxU hU using h
   obtain ⟨S, hSc, hS⟩ := TopologicalSpace.isOpen_iUnion_countable U hUo
-  haveI : Countable S := hSc.to_subtype
+  have : Countable S := hSc.to_subtype
   have hcov : ⋃ i : S, U i = Set.univ := by
     rw [← Set.biUnion_eq_iUnion S (fun i _ => U i), hS]
     exact Set.eq_univ_of_forall fun x => Set.mem_iUnion.2 ⟨x, hxU x⟩

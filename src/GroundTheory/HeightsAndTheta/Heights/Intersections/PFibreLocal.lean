@@ -937,7 +937,7 @@ theorem ZonalHeightReduction.proof (hA : SphereLongitudeCoordinates.Statement)
   set μ := heightLongitudeMeasure with hμ
   have hsp : Measurable (fun q : ℝ × ℝ => spherePoint q.1 q.2) :=
     continuous_spherePoint.measurable
-  have hι : Measurable (fun n : Sphere2 => (n : E3)) := measurable_subtype_coe
+  have hι : Measurable (fun n : Sphere2 => (n : E3)) := measurable_subtypeVal
   set k : ENNReal := (ENNReal.ofReal (4 * Real.pi))⁻¹ with hk
   have hA' : sphereMeasure.map (fun n : Sphere2 => (n : E3)) =
       k • μ.map (fun q : ℝ × ℝ => spherePoint q.1 q.2) := by
@@ -1545,8 +1545,8 @@ theorem continuous_evalPair (g : MvPolynomial (Fin 2) ℝ) (u v : S2 × S2 → �
 theorem kappa_eq (k : ℕ) : kappa k = -FlagBundles.fibreConstant k := by
   have hc : Continuous fun p : S2 × S2 => eval ![(p.1 : E3) 2, (p.2 : E3) 2] (dgPoly k) :=
     continuous_evalPair _ _ _ ((EuclideanSpace.proj (2 : Fin 3)).continuous.comp
-      (continuous_subtype_val.comp continuous_fst))
-      ((EuclideanSpace.proj (2 : Fin 3)).continuous.comp (continuous_subtype_val.comp continuous_snd))
+      (continuous_subtypeVal.comp continuous_fst))
+      ((EuclideanSpace.proj (2 : Fin 3)).continuous.comp (continuous_subtypeVal.comp continuous_snd))
   rw [kappa, FlagBundles.fibreConstant, neg_inj]
   refine (integral_prod _ (integrable_mul _ hc)).symm.trans ?_
   simp_rw [dgPoly_eq]
@@ -1652,8 +1652,8 @@ theorem fibreMomentPoly_eq (k : ℕ) : fibreMomentPoly k = FlagBundles.fibrePoly
 theorem proof : FibreLocal.Statement := by
   refine ⟨fun k a => ?_, fun k B _ _ a => ?_, fun k hk a => ?_, fun k hk B _ _ a => ?_, fun k => ?_⟩
   · have hc : Continuous fun p : S2 × S2 => eval ![inner ℝ a (p.1 : E3), inner ℝ a (p.2 : E3)] (dgPoly k) :=
-      continuous_evalPair _ _ _ (continuous_const.inner (continuous_subtype_val.comp continuous_fst))
-        (continuous_const.inner (continuous_subtype_val.comp continuous_snd))
+      continuous_evalPair _ _ _ (continuous_const.inner (continuous_subtypeVal.comp continuous_fst))
+        (continuous_const.inner (continuous_subtypeVal.comp continuous_snd))
     refine (integral_prod _ (integrable_mul _ hc)).symm.trans ?_
     simp_rw [dgPoly_eq]
     rw [kappa_eq, neg_neg]

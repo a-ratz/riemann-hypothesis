@@ -347,7 +347,7 @@ private theorem mem_Uc (w : Plc L) (n : ℕ) (y : (Kw w)ˣ)
     omega
   have hz : ((y : Kw w) - 1) / ϖ ^ n ∈ 𝒪[Kw w] := (mem_int w _).2 (by
     rw [map_div₀, map_pow, hpow]
-    exact div_le_one_of_le₀ h.le zero_le')
+    exact div_le_one_of_le₀ h.le zero_le)
   refine ⟨u, ?_, Units.ext rfl⟩
   rw [SetLike.mem_coe, MonoidHom.mem_ker, Units.ext_iff]
   change Ideal.Quotient.mk _ (u : 𝒪[Kw w]) = 1
@@ -396,7 +396,7 @@ theorem UpperTheory.V.Z.Sym.So.weakOne :
     apply mem_Uc w (c w)
     have hA := ha w (Finset.mem_union_left _ hw)
     have hB := ha (ub w) (Finset.mem_union_right _ (Finset.mem_image_of_mem ub hw))
-    simp only [hw, hnS, if_true, if_false, inv_one, Units.val_one, mul_one] at hA hB
+    simp only [hw, hnS, ite_true, ite_false, inv_one, Units.val_one, mul_one] at hA hB
     have hB' : Valued.v (algebraMap L (Kw w) (cj a) - 1) < WithZero.exp (-(E : ℤ)) := by
       have e1 : algebraMap L (Kw w) (cj a) - 1 = algebraMap L (Kw w) (cj ((a : L) - 1)) := by
         simp [map_sub]
@@ -423,7 +423,7 @@ theorem UpperTheory.V.Z.Sym.So.weakOne :
     have hexpr : ((Units.map (algebraMap L (Kw w) : L →* Kw w) (a * ca⁻¹) / x w : (Kw w)ˣ) : Kw w) =
         (algebraMap L (Kw w) a * (((x w)⁻¹ : (Kw w)ˣ) : Kw w)) * (algebraMap L (Kw w) (cj a))⁻¹ := by
       simp only [Units.val_div_eq_div_val, Units.coe_map, Units.val_mul, Units.val_inv_eq_inv_val, ca,
-        Units.val_mk0, MonoidHom.coe_coe, map_mul, map_inv₀, div_eq_mul_inv]
+        Units.val_mk0, MonoidHom.coe_ofClass, map_mul, map_inv₀, div_eq_mul_inv]
       ring
     rw [hexpr]
     have e2 : (algebraMap L (Kw w) a * (((x w)⁻¹ : (Kw w)ˣ) : Kw w)) * (algebraMap L (Kw w) (cj a))⁻¹ - 1
@@ -567,7 +567,7 @@ private theorem exProd {n : ℕ} (S : Finset (Plc L)) (hs : ∀ w ∈ S, IsSplit
 
 private theorem int_of_Uo (w : Plc L) (x : (Kw w)ˣ) (h : x ∈ Uo (Kw w)) : (x : Kw w) ∈ w.adicCompletionIntegers L := by
   have h1 : valuation (Kw w) (x : Kw w) = 1 := h
-  haveI : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (valuation (Kw w)) Valued.v).le_one_iff_le_one.1 h1.le
 
 private theorem dg_KGL (w : Plc L) (d : Fin 2 → (Kw w)ˣ) (hd : ∀ i, d i ∈ Uo (Kw w)) : dg d ∈ GlobalTheory.LFun.KGL w (n := 2) := by
@@ -807,7 +807,7 @@ private theorem dc_tr {H G V : Type} [Group H] [Group G] [AddCommGroup V] [Modul
     (hf : AlgebraTools.FinOrb U U (b g : G)) (hc : ∀ u ∈ U, ∃ c ∈ U, c * (b g : G) = b g * c ∧ u * c⁻¹ ∈ S ∧ c⁻¹ * u ∈ S)
     (φ : G → V) (hφ : ∀ u ∈ U, ∀ g, φ (g * u) = φ g) (c : ℂ) (he : dcF U (b g : G) φ = c • φ) :
     dcF CU g (fun h => φ ((b h : G) * x)) = c • (fun h => φ ((b h : G) * x)) := by
-  haveI := hS
+  have := hS
   let β : H ≃* S := b.trans (MulAut.conjNormal x⁻¹)
   have hβ : ∀ g, ((β g : S) : G) = x⁻¹ * b g * x := by
     intro g
@@ -929,7 +929,7 @@ private theorem op0 {L : Type} [Field L] [NumberField L] [IsCMField L] {B : Brid
   classical
   have hfull : Full (Kall (L := L) 2) S := ⟨le_rfl, fun _ _ => inf_le_right⟩
   have hd : ∃ d : ∀ w : Plc L, Fin 2 → (Kw w)ˣ, ∀ w h, d w = fun i => iu T w h (SD.dS t (un w) i) :=
-    ⟨fun w => if h : IsSplitAt w then fun i => iu T w h (SD.dS t (un w) i) else 1, fun w h => dif_pos h⟩
+    ⟨fun w => if h : IsSplitAt w then fun i => iu T w h (SD.dS t (un w) i) else 1, fun w h => dite_eq_left h⟩
   refine hd.elim fun d hd => ?_
   have h3 : ∀ w ∈ S, cLoc w x = Sig.dg (d w) := fun w hw => (h2 w hw (hF.pl.split w hw)).trans (congrArg _ (hd w _).symm)
   have hp := prodEig L 2 _ S VL hF.pl hfull d x h1 h3

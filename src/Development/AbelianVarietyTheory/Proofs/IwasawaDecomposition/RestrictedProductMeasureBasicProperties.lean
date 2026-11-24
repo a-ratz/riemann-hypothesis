@@ -81,7 +81,7 @@ theorem isOpen_box (S : Finset (HeightOneSpectrum (𝓞 F))) : IsOpen (box (n :=
         ((Algebra.TensorProduct.basis (AF F) b).coord k (X a i)).2) ⁻¹'
         {x : Af F | ∀ v, v ∉ S → x.1 v ∈ (v.adicCompletionIntegers F : Set (v.adicCompletion F))} := by
     ext X
-    simp only [box, latV, projV, projFin, repr_map, Set.mem_setOf_eq, Set.mem_iInter,
+    simp only [box, latV, projV, projFin, repr_map, Set.mem_ofPred_eq, Set.mem_iInter,
       Set.mem_preimage]
     exact ⟨fun h a i k v hv => h v hv a i k, fun h v hv a i k => h a i k v hv⟩
   rw [h]
@@ -103,7 +103,7 @@ theorem exists_mem_box (X : Fin n → Fin M → AF F ⊗[F] E) : ∃ S, X ∈ bo
   have hX : ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite, projV v (projFin X) ∈ latV b v := by
     have h1 := Set.mem_range_self (f := fun X : Fin n → Fin M → AF F ⊗[F] E =>
       (projInf X, fun v : HeightOneSpectrum (𝓞 F) => projV v (projFin X))) X
-    rw [h, Set.mem_setOf_eq] at h1
+    rw [h, Set.mem_ofPred_eq] at h1
     exact h1
   have hf := Filter.eventually_cofinite.1 hX
   refine ⟨hf.toFinset, fun v hv => ?_⟩
@@ -177,8 +177,8 @@ theorem finiteOnCompacts (h : IsProd b ν mi mv) : IsFiniteMeasureOnCompacts ν 
   have hi := hK.image hc.1
   have hv := fun v => hK.image (hc.2 v)
   have key := measure_rect h S hi.measurableSet (fun v => (hv v).measurableSet)
-  haveI := h.1.1
-  haveI := h.1.2.1
+  have := h.1.1
+  have := h.1.2.1
   refine lt_of_le_of_lt (measure_mono fun X hX => ?_) (key.trans_lt ?_)
   · exact ⟨⟨⟨X, hX, rfl⟩, fun v _ => ⟨X, hX, rfl⟩⟩, hS hX⟩
   · exact ENNReal.mul_lt_top (ENNReal.mul_lt_top hi.measure_lt_top
@@ -197,7 +197,7 @@ theorem null (h : IsProd b ν mi mv) (Ai : Set (Fin n → Fin M → Ainf F ⊗[F
     (zv : ∀ v, mv v (Av v)ᶜ = 0) :
     ν {X | ¬ (projInf X ∈ Ai ∧ ∀ v, projV v (projFin X) ∈ Av v)} = 0 := by
   classical
-  haveI := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
+  have := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
   have h1 : ∀ S, ν ({X | projInf X ∈ Aiᶜ ∧ ∀ v ∈ S, projV v (projFin X) ∈ Set.univ} ∩ box b S) = 0 :=
     fun S => by
       rw [measure_rect h S (Av := fun _ => Set.univ) hi.compl fun _ => MeasurableSet.univ, zi,

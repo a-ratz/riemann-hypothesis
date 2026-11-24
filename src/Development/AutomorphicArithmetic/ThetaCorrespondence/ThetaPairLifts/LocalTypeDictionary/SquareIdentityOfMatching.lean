@@ -229,10 +229,10 @@ theorem square_identity_of_matching : GlobalTheory.Published.HoweDualityReal →
     fun t τ => ⟨GlobalTheory.SquareRel.hasInfExp_alpha G i j hL t₀ t τ (ha τ), hb τ⟩
   have hqi : Function.Surjective (q ∘ₗ ι) := hq.comp hι
   have hqi' : Function.Surjective (q' ∘ₗ ι') := hq'.comp hι'
-  haveI hPr : Nontrivial Pr := by
+  have hPr : Nontrivial Pr := by
     obtain ⟨⟨ωA, ωB, Pi, rf, rl, p, p', hm⟩, H2⟩ := H _ _ hT₀ (hexp t₀)
     obtain ⟨Pf, -, -, e, -⟩ := H2 ωA ωB Pi rf rl p p' hm
-    haveI : Nontrivial Pi := hm.irred.1
+    have : Nontrivial Pi := hm.irred.1
     exact GlobalTheory.SquareRel.nontrivial_of_tensor e
   refine ⟨GlobalTheory.SquareRel.relOf (q ∘ₗ ι) (q' ∘ₗ ι'), GlobalTheory.SquareRel.relOf_fst hqi', GlobalTheory.SquareRel.relOf_snd hqi,
     GlobalTheory.SquareRel.relOf_ne_top hqi, fun ρ' _ _ hrel t => ?_⟩

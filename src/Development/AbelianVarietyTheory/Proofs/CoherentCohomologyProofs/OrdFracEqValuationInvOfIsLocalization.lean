@@ -511,7 +511,7 @@ private theorem exists_algebra_localization (P : HeightOneSpectrum S) :
       IsFractionRing (Localization.AtPrime P.asIdeal) L := by
   have hu : ∀ y : P.asIdeal.primeCompl, IsUnit (algebraMap S L y) := fun y =>
     IsLocalization.map_units L ⟨y.1, P.asIdeal.primeCompl_le_nonZeroDivisors y.2⟩
-  letI : Algebra (Localization.AtPrime P.asIdeal) L := (IsLocalization.lift hu).toAlgebra
+  let : Algebra (Localization.AtPrime P.asIdeal) L := (IsLocalization.lift hu).toAlgebra
   have h₁ : IsScalarTower S (Localization.AtPrime P.asIdeal) L :=
     IsScalarTower.of_algebraMap_eq' (IsLocalization.lift_comp hu).symm
   refine ⟨inferInstance, h₁, IsScalarTower.of_algebraMap_eq fun r => ?_,
@@ -553,7 +553,7 @@ private theorem log_ordFrac_norm_algebraMap {x : S} (hx : x ≠ 0) :
         (P.asIdeal.inertiaDeg R : ℤ) * -WithZero.log (P.valuation L (algebraMap S L x)) := by
   have := faithfulSMul_of_tower R K S L
   let e := HeightOneSpectrum.equivMaximalSpectrum (not_isField_of_finite R K S L)
-  letI : Fintype (MaximalSpectrum S) := Fintype.ofEquiv _ e
+  let : Fintype (MaximalSpectrum S) := Fintype.ofEquiv _ e
   have := isDiscreteValuationRing_localization_of_isDedekindDomain R (S := S)
   have h := addVal_norm_eq_sum R (fun n : MaximalSpectrum S => Localization.AtPrime n.asIdeal) x
   rw [← e.sum_comp] at h

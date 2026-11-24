@@ -131,7 +131,7 @@ theorem translate_sub_le : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace �
     K, ?_, fun a f => ?_⟩
   · have h : Continuous ⇑((Finset.Iic (K, N + 1)).sup fun m ↦ SchwartzMap.seminorm ℂ m.1 m.2) :=
       Seminorm.continuous_finsetSup fun i _ => (schwartz_withSeminorms ℂ V ℂ).continuous_seminorm i
-    rw [Seminorm.coe_smul]
+    rw [FunLike.coe_smul]
     exact h.const_smul _
   set S := ((Finset.Iic (K, N + 1)).sup fun m ↦ SchwartzMap.seminorm ℂ m.1 m.2) f
   have hS0 : 0 ≤ S := apply_nonneg _ _
@@ -141,8 +141,8 @@ theorem translate_sub_le : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace �
     exact seminorm_translate_sub_le K N i.1 i.2 (Finset.le_sup (f := Prod.fst) hi)
       (Finset.le_sup (f := Prod.snd) hi) a f
   have h2 := hC (SchwartzMap.compSubConstCLM ℂ (-a) f - f)
-  rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul] at h2
-  rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, NNReal.smul_def, smul_eq_mul] at h2
+  rw [smul_apply, NNReal.smul_def, smul_eq_mul]
   push_cast
   calc p (SchwartzMap.compSubConstCLM ℂ (-a) f - f)
       ≤ (C : ℝ) * (s.sup (schwartzSeminormFamily ℂ V ℂ)) (SchwartzMap.compSubConstCLM ℂ (-a) f - f) := h2

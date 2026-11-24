@@ -103,7 +103,7 @@ theorem pq_baseChange : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A](S :
       have hψs : ∀ s, ψ (i s) = i' (j s) := fun s => by
         have h := RingHom.congr_fun hψ s
         simpa using h
-      letI : Algebra A T' := ((i'.comp κ).comp (algebraMap A K)).toAlgebra
+      let : Algebra A T' := ((i'.comp κ).comp (algebraMap A K)).toAlgebra
       have hal : ∀ a, algebraMap A T' a = i' (κ (algebraMap A K a)) := fun a => rfl
       let ψA : B →ₐ[A] T' :=
         { ψ with

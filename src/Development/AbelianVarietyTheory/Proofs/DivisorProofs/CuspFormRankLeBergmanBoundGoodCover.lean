@@ -159,7 +159,7 @@ theorem rkC_le_of_bergLe : ∀ (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e
       refine ⟨inferInstance, ?_⟩
       rw [Module.finrank_zero_of_subsingleton]
       simpa using hβ
-    · haveI : IsProbabilityMeasure μ := isProbabilityMeasure_muPart _ _ hA
+    · have : IsProbabilityMeasure μ := isProbabilityMeasure_muPart _ _ hA
       have hpet : ∀ P ∈ S, (petE (D.sp.W j) (Y.dict σ) μ lw P).toReal ^ 2 =
           ∫ q, ‖P (Y.dict σ q.out).1 (Y.dict σ q.out).2‖ ^ 2 ∂μ := by
         intro P hP
@@ -206,9 +206,9 @@ theorem rkC_le_of_bergLe : ∀ (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e
     let v : Fin s.card → S := fun i => ⟨rdU (Y.U σ) (b i), Submodule.subset_span ⟨b i, (eq i : Cw).2, rfl⟩⟩
     have hv : LinearIndependent ℂ v := LinearIndependent.of_comp S.subtype hrd
     simpa using hv.fintype_card_le_finrank
-  haveI : Module.Free Y.d.c₂.F Cw := Module.Free.of_divisionRing Y.d.c₂.F Cw
+  have : Module.Free Y.d.c₂.F Cw := Module.Free.of_divisionRing Y.d.c₂.F Cw
   have hrank : Module.rank Y.d.c₂.F Cw ≤ ((Module.finrank ℂ S : ℕ) : Cardinal) := rank_le hcard
-  haveI hCf : FiniteDimensional Y.d.c₂.F Cw :=
+  have hCf : FiniteDimensional Y.d.c₂.F Cw :=
     Module.rank_lt_aleph0_iff.1 (lt_of_le_of_lt hrank Cardinal.natCast_lt_aleph0)
   have h2 : Module.finrank Y.d.c₂.F Cw ≤ Module.finrank ℂ S := Module.finrank_le_of_rank_le hrank
   have h3 : GlobalTheory.AllWt.rankOn Y.U Z G ≤ Module.finrank Y.d.c₂.F Cw := by

@@ -61,13 +61,13 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem res_res {X : Scheme.{0}} {U V W : X.Opens} (h₁ : V ≤ U) (h₂ : W ≤ V) (s : Γ(X, U)ˣ) :
     res h₂ (res h₁ s) = res (h₂.trans h₁) s := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
 theorem res_self {X : Scheme.{0}} {U : X.Opens} (h : U ≤ U) (s : Γ(X, U)ˣ) : res h s = s := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   have : (homOfLE h).op = 𝟙 _ := rfl
   rw [this, CategoryTheory.Functor.map_id]
   rfl

@@ -223,7 +223,7 @@ theorem integral_fundamentalDomain (f : 𝓢(E, ℂ)) {μ : E} (hμ : μ ∈ dua
   have hfin : ∑' ℓ : L, ∫⁻ y in D, ‖(𝐞 (-⟪y, μ⟫) : ℂ) * f (ℓ + y)‖ₑ ≠ ⊤ := by
     have h1 : ∀ (ℓ : L) (y : E), ‖(𝐞 (-⟪y, μ⟫) : ℂ) * f (ℓ + y)‖ₑ = ‖f (ℓ + y)‖ₑ := by
       intro ℓ y
-      rw [enorm_mul, ← ofReal_norm (𝐞 _ : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
+      rw [eNorm_mul, ← ofReal_norm (𝐞 _ : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
     simp_rw [h1]
     have h2 := hD.lintegral_eq_tsum' (fun y => ‖f y‖ₑ)
     rw [← (Equiv.neg L).tsum_eq] at h2
@@ -272,7 +272,7 @@ theorem setIntegral_cube (φ : E → ℂ) :
   have hν : ν = c • volume := Measure.isAddLeftInvariant_eq_smul ν volume
   have hc : (c : ℝ) = (ZLattice.covolume L)⁻¹ := by
     have h1 := hνD
-    rw [hν, Measure.smul_apply, hvolD, ENNReal.smul_def, smul_eq_mul] at h1
+    rw [hν, smul_apply, hvolD, ENNReal.smul_def, smul_eq_mul] at h1
     have h2 := congrArg ENNReal.toReal h1
     rw [ENNReal.toReal_mul, ENNReal.coe_toReal, ENNReal.toReal_ofReal hcv.le,
       ENNReal.toReal_one] at h2

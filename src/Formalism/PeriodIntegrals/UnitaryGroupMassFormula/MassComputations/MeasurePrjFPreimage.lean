@@ -96,9 +96,9 @@ theorem unfold_mass {Γ : Subgroup G} [Countable Γ] {μ : Measure G} [μ.IsMulL
     μ 𝓕 = c0 * ENNReal.ofReal (Formalism.L2.SG.TypedSets.massCl Γf U) := by
   classical
   obtain ⟨hC, hS⟩ := hfin
-  haveI := Fintype.ofFinite (DoubleCoset.Quotient (Γf : Set Gf) (U : Set Gf))
+  have := Fintype.ofFinite (DoubleCoset.Quotient (Γf : Set Gf) (U : Set Gf))
 
-  haveI : Countable Γf := by
+  have : Countable Γf := by
     have hsurj : Function.Surjective (fun γ : Γ => (⟨p γ, himg ▸ Subgroup.mem_map_of_mem p γ.2⟩ : Γf)) := by
       rintro ⟨y, hy⟩
       rw [← himg] at hy
@@ -194,8 +194,8 @@ theorem unfold_mass {Γ : Subgroup G} [Countable Γ] {μ : Measure G} [μ.IsMulL
         rw [← himg] at hy1
         obtain ⟨γ, hγ, rfl⟩ := Subgroup.mem_map.1 hy1
         exact ⟨⟨⟨γ, hγ⟩, hy2⟩, rfl⟩
-      haveI : Finite ↥(Γf ⊓ V) := hS (xo c)
-      haveI : Finite {γ : Γ | p (γ : G) ∈ V} := Finite.of_injective φ hφi
+      have : Finite ↥(Γf ⊓ V) := hS (xo c)
+      have : Finite {γ : Γ | p (γ : G) ∈ V} := Finite.of_injective φ hφi
       have hT : Nat.card {γ : Γ | p (γ : G) ∈ V} = Nc c :=
         Nat.card_congr (Equiv.ofBijective φ ⟨hφi, hφs⟩)
       rw [ENat.card_eq_coe_natCard, hT]
@@ -221,8 +221,8 @@ theorem unfold_mass {Γ : Subgroup G} [Countable Γ] {μ : Measure G} [μ.IsMulL
     rw [this, lintegral_indicator_const (hp (hDm c)), Measure.restrict_apply (hp (hDm c)), inter_comm]
   have hNpos : ∀ c, 0 < Nc c := by
     intro c
-    haveI := hS (xo c)
-    haveI : Nonempty ↥(Γf ⊓ U.map (MulAut.conj (xo c)).toMonoidHom) := ⟨1⟩
+    have := hS (xo c)
+    have : Nonempty ↥(Γf ⊓ U.map (MulAut.conj (xo c)).toMonoidHom) := ⟨1⟩
     exact Nat.card_pos
 
   have hsum : μ 𝓕 = ∑ c, μ (𝓕 ∩ p ⁻¹' (cl ⁻¹' {c})) := by
@@ -295,7 +295,7 @@ theorem nontrivial_Af (F : Type) [Field F] [NumberField F] : Nontrivial (Af F) :
      exact zero_ne_one (h0.symm.trans (h2.trans h1)))
 
 theorem inj_Af (F : Type) [Field F] [NumberField F] : Function.Injective (algebraMap F (Af F)) := by
-  haveI := nontrivial_Af F
+  have := nontrivial_Af F
   exact (algebraMap F (Af F)).injective
 
 theorem inclR_injective (R : Type) [CommRing R] [Algebra F R] (h : Function.Injective (algebraMap F R)) :
@@ -398,7 +398,7 @@ theorem continuous_prjF : Continuous (prjF σ J P) := by
     first
     | exact continuous_snd
   have hm := continuous_haMap (σ := σ) (J := J) (sndA F) hs
-  exact continuous_induced_rng.2 (hm.comp continuous_subtype_val)
+  exact continuous_induced_rng.2 (hm.comp continuous_subtypeVal)
 
 theorem continuous_splitA_u : Continuous (splitA σ J) := by
   have hs : Continuous (sndA F) := by
@@ -416,7 +416,7 @@ theorem isClosed_stabT' (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace 
     [LocallyCompactSpace R] [T2Space R] {a : ℕ} (X0 : Fin a → Fin n → E) :
     IsClosed ((stabT R σ J X0 : Subgroup (HA R σ J)) : Set (HA R σ J)) := by
   have hmat : Continuous (fun g : HA R σ J => (HA.mat R σ J g : Matrix (Fin n) (Fin n) (R ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hc : Continuous (fun g : HA R σ J => actTup R (HA.mat R σ J g) (ratTup (F := F) R X0)) := by
     unfold actTup
     refine continuous_pi fun b => ?_
@@ -438,13 +438,13 @@ theorem measure_prjF_preimage (M : MeasW σ J P) (hM : M.IsTextNorm) (S : Set (H
     isClosed_stabT' σ J (Af F) (tupH P)
   have hHf : MeasurableSet ((Hsub (Af F) σ J P : Subgroup (HA (Af F) σ J)) : Set (HA (Af F) σ J)) :=
     hcl.measurableSet
-  haveI : SecondCountableTopology (HA (Af F) σ J) := PI.VolStabSW.TopoAF.secondCountable_HA_of (Af F) σ J
-  haveI : LocallyCompactSpace (Hsub (Af F) σ J P) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI := hM.2.2.1
-  haveI : SecondCountableTopology (Hsub (Af F) σ J P) :=
+  have : SecondCountableTopology (HA (Af F) σ J) := PI.VolStabSW.TopoAF.secondCountable_HA_of (Af F) σ J
+  have : LocallyCompactSpace (Hsub (Af F) σ J P) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have := hM.2.2.1
+  have : SecondCountableTopology (Hsub (Af F) σ J P) :=
     TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaCompactSpace (Hsub (Af F) σ J P) := inferInstance
-  haveI : SigmaFinite M.μHf := inferInstance
+  have : SigmaCompactSpace (Hsub (Af F) σ J P) := inferInstance
+  have : SigmaFinite M.μHf := inferInstance
   have hmeas : Measurable (splitA σ J) := (continuous_splitA_u σ J).measurable
   let T : Set (HA (Ainf F) σ J × HA (Af F) σ J) := univ ×ˢ (Subtype.val '' S)
   have hT : MeasurableSet T := MeasurableSet.univ.prod (hHf.subtype_image hS)
@@ -457,13 +457,13 @@ theorem measure_prjF_preimage (M : MeasW σ J P) (hM : M.IsTextNorm) (S : Set (H
       have : s = prjF σ J P g := Subtype.ext hse
       show prjF σ J P g ∈ S
       rwa [← this]
-  rw [hpre, ← Measure.map_apply measurable_subtype_coe (hmeas hT), ← Measure.map_apply hmeas hT,
+  rw [hpre, ← Measure.map_apply measurable_subtypeVal (hmeas hT), ← Measure.map_apply hmeas hT,
     hM.2.2.2.2.2.2.2.2.1, Measure.prod_prod]
   have hIm : MeasurableSet (Subtype.val '' S : Set (HA (Af F) σ J)) := hHf.subtype_image hS
   have e1 : (amb M.μHinf) univ = M.μHinf univ := by
-    rw [Measure.map_apply measurable_subtype_coe MeasurableSet.univ, preimage_univ]
+    rw [Measure.map_apply measurable_subtypeVal MeasurableSet.univ, preimage_univ]
   have e2 : (amb M.μHf) (Subtype.val '' S) = M.μHf S := by
-    rw [Measure.map_apply measurable_subtype_coe hIm, Subtype.val_injective.preimage_image]
+    rw [Measure.map_apply measurable_subtypeVal hIm, Subtype.val_injective.preimage_image]
   rw [e1, e2]
 
 theorem massUnfold_gen [NumberField E] (hCM : IsCMExt F E σ) (hJ : IsHermND σ J) (M : MeasW σ J P)
@@ -472,9 +472,9 @@ theorem massUnfold_gen [NumberField E] (hCM : IsCMExt F E σ) (hJ : IsHermND σ 
     (𝓕 : Set (Hsub (AF F) σ J P)) (h𝓕 : IsFundamentalDomain (ratOf (K := Hsub (AF F) σ J P)) 𝓕 M.μH) :
     M.μH 𝓕 = M.μHinf univ * M.μHf U *
       ENNReal.ofReal (Formalism.L2.SG.TypedSets.massCl (G := ↥(Hsub (Af F) σ J P)) ((HFinIn (Af F) σ J : Subgroup (HA (Af F) σ J)).subgroupOf (Hsub (Af F) σ J P)) U) := by
-  haveI : Countable (HFinIn (AF F) σ J) :=
+  have : Countable (HFinIn (AF F) σ J) :=
     ((PI.VolSemiDirect.W.discHA_of PI.VolSemiDirect.W.Lc.tensor_adele_topology_holds) F E σ hCM n J hJ).1
-  haveI : Countable (ratOf (K := Hsub (AF F) σ J P)) := by
+  have : Countable (ratOf (K := Hsub (AF F) σ J P)) := by
     let f : ratOf (K := Hsub (AF F) σ J P) → HFinIn (AF F) σ J := fun x =>
       ⟨((x : Hsub (AF F) σ J P) : HA (AF F) σ J), Subgroup.mem_comap.1 x.2⟩
     have hinj : Function.Injective f := by
@@ -482,8 +482,8 @@ theorem massUnfold_gen [NumberField E] (hCM : IsCMExt F E σ) (hJ : IsHermND σ 
       have e := congrArg Subtype.val hxy
       exact Subtype.ext (Subtype.ext e)
     exact hinj.countable
-  haveI := hM.1
-  haveI := hM.2.2.1
+  have := hM.1
+  have := hM.2.2.1
   exact Abs.unfold_mass h𝓕 (prjF σ J P) (continuous_prjF σ J P).measurable _ U (prjF_map_ratOf σ J P)
     (prjF_inj σ J P) hU hfin _ (fun x => by
       rw [measure_prjF_preimage σ J P M hM _ (Abs.meas_smul_set hU x), measure_smul])

@@ -57,10 +57,10 @@ open GlobalTheory.SplitScalar
 variable {D : D7}
 
 theorem continuous_mt (V : HSp D) : Continuous (Formalism.L2.Theta.mt V) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_mt_inv (V : HSp D) : Continuous fun g : GA D V => Formalism.L2.Theta.mt V g⁻¹ :=
-  Units.continuous_coe_inv.comp continuous_subtype_val
+  Units.continuous_coe_inv.comp continuous_subtypeVal
 
 theorem continuous_actO (S T : HSp D) (x : WO S T) :
     Continuous fun p : GA D S × GA D T => actO S T p.1 p.2 x := by

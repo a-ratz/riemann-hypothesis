@@ -89,8 +89,8 @@ theorem exists_hasWeightAt (U : AutSub E n) (τ : E →+* ℂ) : ∃ lam, HasWei
     have : RU E n (1 : infU E n) φ ∈ S := Submodule.subset_span ⟨1, rfl⟩
     simpa using this
   have hS : S ≤ U.V := Submodule.span_le.2 (by rintro _ ⟨k, rfl⟩; exact U.isAut.stable _ _ hφU)
-  haveI : FiniteDimensional ℂ S := (U.isAut.aut φ hφU).kfin
-  haveI : Nontrivial S := ⟨⟨⟨φ, hφS⟩, 0, fun h => hφ0 (congrArg Subtype.val h)⟩⟩
+  have : FiniteDimensional ℂ S := (U.isAut.aut φ hφU).kfin
+  have : Nontrivial S := ⟨⟨⟨φ, hφS⟩, 0, fun h => hφ0 (congrArg Subtype.val h)⟩⟩
   let ρ : Representation ℂ (Matrix.unitaryGroup (Fin n) ℂ) S :=
     sub ((RU E n).comp j) S (fun u ψ hψ => RU_mem_infSpan φ (hj u) hψ)
   have hρ : ∀ u (v : S), (ρ u v : UA E n → ℂ) = RU E n (j u) v := fun _ _ => rfl
@@ -102,7 +102,7 @@ theorem exists_hasWeightAt (U : AutSub E n) (τ : E →+* ℂ) : ∃ lam, HasWei
         smul_mem' := fun c _ ha v => (ha v).const_smul c }
     have hev : ∀ g : UA E n, (LinearMap.proj g ∘ₗ S.subtype : Module.Dual ℂ S) ∈ P := fun g v => by
       have hv : Continuous (v : UA E n → ℂ) := (U.isAut.aut _ (hS v.2)).cont
-      have : Continuous fun u => (j u : UA E n) := continuous_subtype_val.comp e.symm.continuous
+      have : Continuous fun u => (j u : UA E n) := continuous_subtypeVal.comp e.symm.continuous
       exact hv.comp ((continuous_const_mul g).comp this)
     have h1 : P.dualCoannihilator = ⊥ := by
       rw [eq_bot_iff]

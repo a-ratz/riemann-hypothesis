@@ -133,8 +133,8 @@ theorem om_section {n : ℕ} (E : KMod n) : ∃ A : E.V →L[ℂ] E.V, ∀ f ∈
   congr 1
   have h : ∀ p, Rd (sk p) (Rd (sk p) f) g = B p (B p (f g)) := fun p =>
     Rd_Rd_of_act E (sk p) (B p) (hB p) f hf g hg
-  simp only [h, ContinuousLinearMap.smul_apply, ContinuousLinearMap.sum_apply,
-    ContinuousLinearMap.neg_apply, neg_smul]
+  simp only [h, smul_apply, sum_apply,
+    neg_apply, neg_smul]
   rfl
 
 end GlobalTheory.CompanionTheory.WaveSpd
@@ -1011,7 +1011,7 @@ theorem energy_vanish : ∀ {n : ℕ} {W : Type} [NormedAddCommGroup W] [InnerPr
   have hyu : yu.val = y := rfl
   have hat : χ (ℓ y + C * t - r) * dens u t y = 0 := by
     by_contra hne
-    have := hcont.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := μ) (x := yu) hsupp
+    have := hcont.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := μ) (x := yu) hsupp
       (fun z => hnn t z) (by simpa [hyu] using hne)
     exact this.ne' hzero
   rw [hχ2 _ (by linarith), one_mul] at hat
@@ -1298,14 +1298,14 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 variable {n : ℕ}
 
 theorem locCpt (n : ℕ) : LocallyCompactSpace (G n) := by
-  haveI : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : LocallyCompactSpace (Mat n)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
+  have : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
+  have : LocallyCompactSpace (Mat n)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
   exact Units.isClosedEmbedding_embedProduct.locallyCompactSpace
 
 theorem exists_haar (n : ℕ) : ∃ (_ : MeasurableSpace (G n)) (_ : BorelSpace (G n)) (μ : Measure (G n)), μ.IsHaarMeasure := by
-  haveI := locCpt n
-  letI : MeasurableSpace (G n) := borel _
-  haveI : BorelSpace (G n) := ⟨rfl⟩
+  have := locCpt n
+  let : MeasurableSpace (G n) := borel _
+  have : BorelSpace (G n) := ⟨rfl⟩
   exact ⟨inferInstance, inferInstance, Measure.haar, inferInstance⟩
 
 theorem waveEq {n : ℕ} (E : KMod n) (u : ℝ → Mat n → E.V) (hu : IsWave E u) (A : E.V →L[ℂ] E.V)
@@ -1328,7 +1328,7 @@ theorem speed_pos (hL : LgFacts) (hR : RCalc) {n : ℕ} (C₁ : ℝ) (hC₁ : 0 
     (C : ℝ) (hC : C₁ * (1 + Fintype.card (Ix n)) ≤ C)
     (h0 : ∀ y ∈ GLs n, lg y ≤ lg (1 : Mat n) + 1 + C * t → u 0 (x * y) = 0) : u t x = 0 := by
   obtain ⟨mG, bG, μ, hμ⟩ := exists_haar n
-  letI : InnerProductSpace ℝ E.V := InnerProductSpace.rclikeToReal ℂ E.V
+  let : InnerProductSpace ℝ E.V := InnerProductSpace.rclikeToReal ℂ E.V
   obtain ⟨A, hA⟩ := GlobalTheory.T.casimir_right_laplacian_formula E
   obtain ⟨l1, l2, l3⟩ := hlg x hx
   have hxu : IsUnit x.det := isUnit_iff_ne_zero.2 hx
@@ -1338,7 +1338,7 @@ theorem speed_pos (hL : LgFacts) (hR : RCalc) {n : ℕ} (C₁ : ℝ) (hC₁ : 0 
     have : x⁻¹.det * x.det = 1 := by rw [← Matrix.det_mul, hxx, Matrix.det_one]
     exact left_ne_zero_of_mul_eq_one this |> fun h => h
   have hmul : ∀ y ∈ GLs n, x⁻¹ * y ∈ GLs n := fun y hy => by
-    simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul]
+    simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul]
     exact mul_ne_zero hxi hy
   have hbp : ∀ Ψ : Mat n → ℝ, ContDiffOn ℝ ∞ Ψ (GLs n) → (∃ R : ℝ, ∀ y ∈ GLs n, R < lg (x⁻¹ * y) → Ψ y = 0) → ∀ X : Mat n, ∫ y : G n, Rr X Ψ y.val ∂μ = 0 := by
     intro Ψ hΨ ⟨R, hRΨ⟩ X

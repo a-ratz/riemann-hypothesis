@@ -111,7 +111,7 @@ theorem UpperTheory.integrable_translate_mul_conj_and_inner_self_ne_zero :
     have h3 := MeasureTheory.QuasiMeasurePreserving.ae_eq_comp
       (RightCosetSpace.quasiMeasurePreserving_mk (rationalGLOne (K := E) (n := r)) (mu1 E r)) h2
     have h4 := (Continuous.ae_eq_iff_eq (mu1 E r) (f := fun y : normOneGL (K := E) (n := r) => ‖b.f.1 (y : AdelicGLn.AdelicGL E r)‖ ^ 2)
-      ((hcont.comp continuous_subtype_val).norm.pow 2) continuous_const).1 h3
+      ((hcont.comp continuous_subtypeVal).norm.pow 2) continuous_const).1 h3
     apply b.ne
     refine Subtype.ext (funext fun g => ?_)
     obtain ⟨s, y, hy, rfl⟩ := CuspidalSpectrum.exists_centralSection_mul_mem_normOneGL g

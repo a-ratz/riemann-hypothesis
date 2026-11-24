@@ -139,11 +139,11 @@ theorem map_PhiL (U : Matrix ι ι ℂ) (hU1 : star U * U = 1) (hU2 : U * star U
     ext z
     constructor
     · rintro ⟨w, hw, rfl⟩
-      simp only [S, Set.mem_setOf_eq, L, PhiL_apply, norm_Phi U hU1] at hw ⊢
+      simp only [S, Set.mem_ofPred_eq, L, PhiL_apply, norm_Phi U hU1] at hw ⊢
       exact hw
     · intro hz
       refine ⟨Phi (star U) z, ?_, ?_⟩
-      · simp only [S, Set.mem_setOf_eq, norm_Phi (star U) hU3]
+      · simp only [S, Set.mem_ofPred_eq, norm_Phi (star U) hU3]
         exact hz
       · simp only [L, PhiL_apply, ← Phi_mul, hU2, Phi_one]
   have hpos : 0 < volume S := by

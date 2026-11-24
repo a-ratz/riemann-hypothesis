@@ -100,7 +100,7 @@ attribute [instance] LocBase0.ringOc LocBase0.domOc LocBase0.dvrOc LocBase0.topO
   LocBase0.modVO LocBase0.towV
 
 theorem placesOver_fin (p : ℕ) (hp : p.Prime) : (placesOver H.E p).Finite := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   exact Formalism.GaloisCohomology.above_finite (F := H.E) p
 
 theorem exceptional_places_finite (l : ℕ) : (exceptionalPlaces H l).Finite := by

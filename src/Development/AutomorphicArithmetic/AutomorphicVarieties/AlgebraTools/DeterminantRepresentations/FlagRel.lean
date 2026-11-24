@@ -106,7 +106,7 @@ theorem UpperTheory.V.AlgebraTools.Det.flagRel :
       rw [hm, Units.val_mul, Units.val_mul, Matrix.charpoly_mul_comm, ← mul_assoc, Units.inv_mul, one_mul]
     have h2 : ((P * r s * P⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular id :=
       fun i j hij => (hP s).1 i j hij
-    rw [← h1, Matrix.charpoly_of_upperTriangular _ h2]
+    rw [← h1, charpoly_of_isUpperTriangular _ h2]
     exact Finset.prod_congr rfl fun i _ => by rw [← (hP s).2 i]
   · intro g
     let W : ℕ → Submodule k (Fin n → k) := fun j =>

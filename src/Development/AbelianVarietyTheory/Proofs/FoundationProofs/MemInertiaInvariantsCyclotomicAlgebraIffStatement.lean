@@ -73,8 +73,8 @@ namespace GlobalTheory
 theorem fixed_cycMod_of_fixed_cycZ : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω), A.valuation (l : Ω) < 1 → ∀ (F : Finset Ω) (y : Ω), (∀ s ∈ Ine (F := ℚ) A, (∀ z ∈ F, s z = z) → cycZ ℚ Ω l s = 1 → s y = y) →
   ∃ m : ℕ, ∀ s : G ℚ Ω, s ∈ Ine (F := ℚ) A ∧ (∀ z ∈ F, s z = z) ∧ cycMod ℚ Ω l m s = 1 → s y = y := by
   intro l _ Ω _ _ _ A _ F y hy
-  haveI : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : CompactSpace (G ℚ Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[ℚ] Ω))
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
 
   set K : IntermediateField ℚ Ω := IntermediateField.adjoin ℚ ({y} : Set Ω) with hK
   have : FiniteDimensional ℚ K :=
@@ -105,7 +105,7 @@ theorem fixed_cycMod_of_fixed_cycZ : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [F
   have hmono : ∀ m k, m ≤ k → C k ⊆ C m := by
     intro m k hmk s ⟨⟨h0, h1⟩, h2⟩
     refine ⟨⟨h0, ?_⟩, h2⟩
-    simp only [Set.mem_setOf_eq] at h1 ⊢
+    simp only [Set.mem_ofPred_eq] at h1 ⊢
     rw [← PadicInt.zmod_cast_comp_toZModPow m k hmk, RingHom.comp_apply, h1, map_one]
   by_contra hne
   push_neg at hne
@@ -113,7 +113,7 @@ theorem fixed_cycMod_of_fixed_cycZ : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [F
     intro m
     obtain ⟨s, ⟨hs1, hs2, hs3⟩, hs4⟩ := hne m
     refine ⟨s, ⟨⟨hs1, ?_⟩, (hcm m s).mp hs3⟩, hs4⟩
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     exact hs2
   have hdir : Directed (· ⊇ ·) C := fun m k =>
     ⟨max m k, hmono m _ (le_max_left m k), hmono k _ (le_max_right m k)⟩
@@ -124,7 +124,7 @@ theorem fixed_cycMod_of_fixed_cycZ : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [F
   have hz : cycZ ℚ Ω l s = 1 := by
     refine Units.ext (PadicInt.ext_of_toZModPow.mp fun n => ?_)
     rw [(hs n).1.2, Units.val_one, map_one]
-  simp only [Set.mem_iInter, Set.mem_setOf_eq] at h0f
+  simp only [Set.mem_iInter, Set.mem_ofPred_eq] at h0f
   exact (hs 0).2 ((memS s).mpr (hy s h0i h0f hz))
 
 end GlobalTheory
@@ -144,11 +144,11 @@ namespace GlobalTheory.RecOne
 
 theorem mem_cycAlg_iff : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω), OverL l A → ∀ x : A, x ∈ cycAlg l A ↔ ∀ s ∈ ineCyc l A, s (x : Ω) = x := by
   intro l _ Ω _ _ _ A hA x
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
   have hl : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hl.ne_zero⟩
-  haveI hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : NeZero l := ⟨hl.ne_zero⟩
+  have hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   constructor
   · intro hx s hs
     obtain ⟨hsI, hsZ⟩ := mem_ineCyc.1 hs
@@ -172,9 +172,9 @@ theorem mem_cycAlg_iff : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Al
       simpa using h1
     obtain ⟨m, hm⟩ := GlobalTheory.fixed_cycMod_of_fixed_cycZ l Ω A hv ∅ (x : Ω)
       (fun s hs _ hz => hx s (mem_ineCyc.2 ⟨hs, hz⟩))
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
     have hpos : 0 < l ^ m := pow_pos hl.pos m
-    haveI : NeZero (l ^ m) := ⟨hpos.ne'⟩
+    have : NeZero (l ^ m) := ⟨hpos.ne'⟩
     have hfix : ∀ s ∈ Ine (F := ℚ) A, s ζ = ζ → s (x : Ω) = x := by
       intro s hs hsζ
       refine hm s ⟨hs, by simp, ?_⟩

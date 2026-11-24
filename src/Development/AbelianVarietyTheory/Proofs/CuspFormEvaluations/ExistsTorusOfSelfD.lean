@@ -82,9 +82,9 @@ theorem perf {bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ} (hs : IsSympl X 
   classical
   have hnd := nondeg hs
 
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.mpr hL.1
-  haveI : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
-  haveI : Module.IsTorsionFree ℤ L :=
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.mpr hL.1
+  have : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
+  have : Module.IsTorsionFree ℤ L :=
     Function.Injective.moduleIsTorsionFree (Subtype.val : L → Fin r → E) Subtype.val_injective
       (fun _ _ => rfl)
   let bZ := Module.Free.chooseBasis ℤ L
@@ -153,16 +153,16 @@ theorem exists_basis_of_full {x : Frame X.Ψ r} (ho : X.IsOrtho x) {L : Lt E r} 
     obtain ⟨v, hv, rfl⟩ := (hM y).1 hy
     exact (hb₀ _).2 ⟨(n : E) • v, hnL v hv, hsc n v⟩
 
-  haveI : DiscreteTopology M := by
+  have : DiscreteTopology M := by
     let f : M → I2.lat b₀ := fun y => ⟨n • (y : I2.Vsp (dimPer X)), hsub y y.2⟩
     refine DiscreteTopology.of_continuous_injective (f := f) ?_ ?_
-    · exact ((continuous_const_smul n).comp continuous_subtype_val).subtype_mk _
+    · exact ((continuous_const_smul n).comp continuous_subtypeVal).subtype_mk _
     · intro y y' h
       have h0 : n • (y : I2.Vsp (dimPer X)) = n • (y' : I2.Vsp (dimPer X)) := congrArg Subtype.val h
       rw [← Int.cast_smul_eq_zsmul ℝ, ← Int.cast_smul_eq_zsmul ℝ] at h0
       exact Subtype.ext (smul_right_injective _ (by exact_mod_cast hn : (n : ℝ) ≠ 0) h0)
 
-  haveI : IsZLattice ℝ M := by
+  have : IsZLattice ℝ M := by
     refine ⟨eq_top_iff.2 ?_⟩
     rw [← ZSpan.span_top b₀]
     refine Submodule.span_le.2 fun z hz => ?_

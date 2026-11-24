@@ -104,7 +104,7 @@ theorem term_unit [IsCMField E] {φ : I → E →+* ℂ} (h : IsCMType φ) (s : 
     have hv := NumberField.isUnit_iff_norm.mp (u.isUnit.map (algebraMap (OF E) (𝓞 E)))
     have hc : ((algebraMap (OF E) (𝓞 E) u : 𝓞 E) : E) = x :=
       (IsScalarTower.algebraMap_apply (OF E) (𝓞 E) E u).symm
-    rw [RingOfIntegers.coe_norm, hc] at hv
+    rw [NumberField.RingOfIntegers.coe_norm, hc] at hv
     exact_mod_cast hv
   have hprod : ∏ i, ‖φ i x‖ = 1 := by
     have hsq : (∏ i, ‖φ i x‖) ^ 2 = 1 := by rw [← Finset.prod_pow, prod_norm_sq h x, hN]

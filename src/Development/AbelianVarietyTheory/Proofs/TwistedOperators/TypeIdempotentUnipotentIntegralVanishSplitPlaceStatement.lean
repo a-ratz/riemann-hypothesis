@@ -139,14 +139,14 @@ theorem exists_gl_adapted_chain : ∀ {K : Type} [Field K] {n m : ℕ} (Y : Fin 
         ext v
         constructor
         · rintro ⟨⟨a, i⟩, hp, rfl⟩
-          simp only [Set.mem_setOf_eq] at hp
+          simp only [Set.mem_ofPred_eq] at hp
           by_cases ha : (a : ℕ) < k
           · exact Or.inr ⟨⟨a, i⟩, ha, rfl⟩
           · obtain rfl : a = ⟨k, hk⟩ := Fin.ext (by simp; omega)
             exact Or.inl ⟨i, rfl⟩
         · rintro (⟨i, rfl⟩ | ⟨p, hp, rfl⟩)
           · exact ⟨⟨⟨k, hk⟩, i⟩, by simp, rfl⟩
-          · exact ⟨p, by simp only [Set.mem_setOf_eq] at hp ⊢; omega, rfl⟩
+          · exact ⟨p, by simp only [Set.mem_ofPred_eq] at hp ⊢; omega, rfl⟩
       have e1 : (⟨k + 1, by omega⟩ : Fin (m + 1)) = (⟨k, hk⟩ : Fin m).succ := rfl
       have e2 : (⟨k, by omega⟩ : Fin (m + 1)) = (⟨k, hk⟩ : Fin m).castSucc := rfl
       rw [hset, Submodule.span_union, hspanC, ← ih (by omega), e1, e2, hCsup]
@@ -189,12 +189,12 @@ theorem exists_gl_adapted_chain : ∀ {K : Type} [Field K] {n m : ℕ} (Y : Fin 
   · intro hs i hi
     by_contra hne
     have := hs (Finsupp.mem_support_iff.2 hne)
-    simp only [Set.mem_setOf_eq] at this
+    simp only [Set.mem_ofPred_eq] at this
     omega
   · intro H i hi
     rw [Finset.mem_coe, Finsupp.mem_support_iff] at hi
     by_contra hlt
-    simp only [Set.mem_setOf_eq, not_lt] at hlt
+    simp only [Set.mem_ofPred_eq, not_lt] at hlt
     exact hi (H i hlt)
 
 end GlobalTheory.Flag
@@ -377,7 +377,7 @@ theorem stab_iff (b : Fin n → Fin m) (z : Matrix (Fin n) (Fin n) K) :
     refine Finset.sum_eq_zero fun c _ => ?_
     by_cases hc : (j : ℕ) ≤ (b c : ℕ)
     · rw [hw c hc, mul_zero]
-    · rw [H i c (by rw [Fin.lt_iff_val_lt_val]; omega), zero_mul]
+    · rw [H i c (by rw [Fin.lt_def]; omega), zero_mul]
 
 theorem rad_iff (b : Fin n → Fin m) (z : Matrix (Fin n) (Fin n) K) :
     (∀ j : Fin m, ∀ w, lowVec b (j.succ : ℕ) w → lowVec b (j.castSucc : ℕ) (z *ᵥ w - w)) ↔
@@ -395,8 +395,8 @@ theorem rad_iff (b : Fin n → Fin m) (z : Matrix (Fin n) (Fin n) K) :
     refine Finset.sum_eq_zero fun c _ => ?_
     by_cases hc : (j : ℕ) + 1 ≤ (b c : ℕ)
     · rw [hw c (by simpa using hc), mul_zero]
-    · simp only [Fin.coe_castSucc] at hi
-      rw [Matrix.sub_apply, H i c (by rw [Fin.lt_iff_val_lt_val]; omega), sub_self, zero_mul]
+    · simp only [Fin.val_castSucc] at hi
+      rw [Matrix.sub_apply, H i c (by rw [Fin.lt_def]; omega), sub_self, zero_mul]
 
 theorem transport (Gm Gi X : Matrix (Fin n) (Fin n) K) (h1 : Gi * Gm = 1) (h2 : Gm * Gi = 1)
     (P : (Fin n → K) → Prop) (Q : (Fin n → K) → (Fin n → K) → Prop) :
@@ -574,7 +574,7 @@ theorem isIrreducible_comp {G H W : Type} [Group G] [Group H] [AddCommGroup W] [
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_rel_iff' := Iff.rfl }
-  haveI : IsSimpleOrder (Subrepresentation ρ) := h
+  have : IsSimpleOrder (Subrepresentation ρ) := h
   exact e.isSimpleOrder
 
 theorem map_map_symm {R S : Type} [CommRing R] [CommRing S] {r : ℕ} (ι : R ≃+* S) (u : GL (Fin r) S) :
@@ -609,7 +609,7 @@ variable {F : Type} [Field F] [NumberField F]
 
 theorem mem_integers_iff (v : HeightOneSpectrum (𝓞 F)) (z : Fv F v) :
     z ∈ 𝒪[Fv F v] ↔ z ∈ v.adicCompletionIntegers F := by
-  haveI : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := isEquiv (valuation (Fv F v)) (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ)))
   rw [Valuation.mem_integer_iff, he.le_one_iff_le_one]
@@ -730,7 +730,7 @@ theorem unip_integral_of_map (e : G ≃ₜ* H) (N : Subgroup G) (ν : Measure N)
         ∫ u : N.map (e : G →* H), f' (e x * u * e y) ∂ν' = 0) :
     Integrable (fun n : N => f (x * n * y)) ν ∧ ∫ n : N, f (x * n * y) ∂ν = 0 := by
   let ψ := (mapSubgroupEquiv e N).toHomeomorph.toMeasurableEquiv
-  haveI : (Measure.map ψ ν).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map ν (mapSubgroupEquiv e N)
+  have : (Measure.map ψ ν).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map ν (mapSubgroupEquiv e N)
   obtain ⟨h1, h2⟩ := h (Measure.map ψ ν)
   have key : ∀ n : N, f' (e x * (ψ n : H) * e y) = f (x * n * y) := fun n => by
     change f' (e x * e n * e y) = _
@@ -762,8 +762,8 @@ theorem unip_integral_vanish_of (hTV : TypeConstTermVanish)
     ∀ (ν : Measure (NLoc 𝔉 v.1)) [ν.IsHaarMeasure] (x y : GLoc D.sp.cm.sig V.gram v.1),
       Integrable (fun n : NLoc 𝔉 v.1 => f (x * n * y)) ν ∧ ∫ n : NLoc 𝔉 v.1, f (x * n * y) ∂ν = 0 := by
   intro D V T v a ha har hNF 𝔉 hP μ _ φ hφ f hf ν _ x y
-  letI := GlobalTheory.LocalData.complRel v.1
-  haveI := GlobalTheory.LocalData.isLocalField v.1
+  let := GlobalTheory.LocalData.complRel v.1
+  have := GlobalTheory.LocalData.isLocalField v.1
   generalize T.frame v = s at hP hf
   let τ' : Representation ℂ (GL (Fin V.rank) 𝓀[Fv D.host.F v.1]) (T.W v) :=
     (T.τ v).comp (Matrix.GeneralLinearGroup.map (resEquiv v.1 : 𝓀[Fv D.host.F v.1] →+* ResF v.1))
@@ -771,7 +771,7 @@ theorem unip_integral_vanish_of (hTV : TypeConstTermVanish)
     (fun u => ⟨_, map_map_symm (resEquiv v.1) u⟩) (T.irred v)
   have hab : a + (V.rank - a) = V.rank := by omega
   have hNF' : NoFixed τ' (stdMaxRad 𝓀[Fv D.host.F v.1] hab) := noFixed_comp hab (resEquiv v.1) (T.τ v) hNF
-  haveI : (Measure.map s.equiv μ).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ s.equiv
+  have : (Measure.map s.equiv μ).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ s.equiv
   have hφ' : φ ∘ s.equiv.symm ∈ GlobalTheory.SplitWeil.SB (GL (Fin V.rank) (Fv D.host.F v.1)) :=
     comp_mem_SB hφ s.equiv.symm.toHomeomorph
   have hφB : ∀ g, (φ ∘ s.equiv.symm) (s.equiv g) = φ g := fun g => by simp

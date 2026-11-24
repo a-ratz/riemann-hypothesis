@@ -268,7 +268,7 @@ theorem UpperTheory.Gal.W2.placePer_of :
   · obtain ⟨hQa, hQs, Hm, hH, hpos, hIm⟩ := hQ
     have hc : Module.finrank ℤ D'.La = 2 * D.g := by
       rw [finrank_eq_of_place j hinj hden, hrk]
-      haveI : Module.Free ℤ D.La := D.freeLa
+      have : Module.Free ℤ D.La := D.freeLa
       exact Module.finrank_baseChange
     have hs' : Submodule.span ℝ (Set.range (Q.comp j)) = ⊤ := by
       rw [eq_top_iff, ← hQs]

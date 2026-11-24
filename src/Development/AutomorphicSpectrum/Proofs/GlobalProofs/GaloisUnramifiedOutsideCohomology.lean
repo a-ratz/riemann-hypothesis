@@ -124,14 +124,14 @@ theorem exists_residue_correction [IsAlgClosure K Ω] {A : ValuationSubring Ω}
     ∃ h : Ω ≃ₐ[K] Ω, h • A = A ∧ ∀ b : IntCl K Ω, A.valuation (h (b : Ω) - σ₁ b) < 1 := by
   have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ K).injective
   have : IsGalois K Ω := {}
-  letI : TopologicalSpace (IntCl K Ω) := ⊥
-  haveI : DiscreteTopology (IntCl K Ω) := ⟨rfl⟩
-  haveI := continuousSMul_intCl K Ω
-  haveI := isInvariant_intCl K Ω
+  let : TopologicalSpace (IntCl K Ω) := ⊥
+  have : DiscreteTopology (IntCl K Ω) := ⟨rfl⟩
+  have := continuousSMul_intCl K Ω
+  have := isInvariant_intCl K Ω
   set P := primeBelow (F := K) A with hPdef
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  haveI : P.LiesOver w.asIdeal := ⟨(under_primeBelow hA).symm⟩
-  haveI : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := 𝓞 K) P
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  have : P.LiesOver w.asIdeal := ⟨(under_primeBelow hA).symm⟩
+  have : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := 𝓞 K) P
     (by rw [show Ideal.under (𝓞 K) P = w.asIdeal from under_primeBelow hA]
         exact w.isMaximal)
   let e : IntCl K Ω ≃+* IntCl K Ω := actInt σ₁

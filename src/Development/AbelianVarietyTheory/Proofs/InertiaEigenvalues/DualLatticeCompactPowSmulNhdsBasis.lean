@@ -147,7 +147,7 @@ theorem isCompact_dualLattice_of_pairing [CompactSpace O] (hemb : Topology.IsOpe
     rw [← hs] at hx
     exact Submodule.span_subset_span O (FractionRing O) (s : Set VT) hx
   obtain ⟨b, hbs, hbspan, hbli⟩ := exists_linearIndependent (FractionRing O) (s : Set VT)
-  haveI : Fintype b := (s.finite_toSet.subset hbs).fintype
+  have : Fintype b := (s.finite_toSet.subset hbs).fintype
   obtain ⟨e, he⟩ : ∃ e : Module.Basis b (FractionRing O) VT, ∀ i, e i = (i : VT) :=
     ⟨Module.Basis.mk hbli (le_of_eq (by rw [Subtype.range_coe, hbspan, hsK])),
       fun i => Module.Basis.mk_apply _ _ i⟩
@@ -203,7 +203,7 @@ theorem isOpen_powSub (hemb : Topology.IsOpenEmbedding (algebraMap O (FractionRi
   let W : Set ↥D.T' := ⋂ x ∈ s, (fun z : ↥D.T' => D.bT (a⁻¹ • x) (z : VT')) ⁻¹'
     ((1 : Submodule O (FractionRing O)) : Set (FractionRing O))
   have hW : IsOpen W := isOpen_biInter_finset fun x _ =>
-    (isOpen_one hemb).preimage ((cont_bT D _).comp continuous_subtype_val)
+    (isOpen_one hemb).preimage ((cont_bT D _).comp continuous_subtypeVal)
   have h0 : (0 : ↥D.T') ∈ W := Set.mem_iInter₂.2 fun x _ => by
     simp only [Set.mem_preimage, ZeroMemClass.coe_zero, map_zero, SetLike.mem_coe]
     exact Submodule.zero_mem _
@@ -251,7 +251,7 @@ namespace GlobalTheory.LocDualTop
 theorem dualLat_compact_powSub_nhds : ∀ {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [TopologicalSpace O] [TopologicalSpace (FractionRing O)] [IsTopologicalAddGroup (FractionRing O)] [ContinuousSMul O (FractionRing O)] {VT VT' : Type} [AddCommGroup VT] [Module O VT] [TopologicalSpace VT] [IsTopologicalAddGroup VT] [ContinuousSMul O VT] [Module (FractionRing O) VT] [IsScalarTower O (FractionRing O) VT] [AddCommGroup VT'] [Module O VT'] [TopologicalSpace VT'] [IsTopologicalAddGroup VT'] [ContinuousSMul O VT'] [Module (FractionRing O) VT'] [IsScalarTower O (FractionRing O) VT'] {G : Type} [Group G] [TopologicalSpace G] (D : LatData O G VT VT'), CompactSpace O → Topology.IsOpenEmbedding (algebraMap O (FractionRing O)) → IsLatticeIn D.T → PerfectRight D.bT → T2Space VT' → ∀ ϖ : O, Irreducible ϖ → CompactSpace ↥D.T' ∧ (∀ n : ℕ, IsOpen ((powSub (M := ↥D.T') ϖ n : Submodule O ↥D.T') : Set ↥D.T')) ∧ ∀ U ∈ nhds (0 : ↥D.T'), ∃ n : ℕ, ((powSub (M := ↥D.T') ϖ n : Submodule O ↥D.T') : Set ↥D.T') ⊆ U := by
   intro O _ _ _ _ _ _ _ VT VT' _ _ _ _ _ _ _ _ _ _ _ _ _ _ G _ _ D hO hemb hL hP hT2 ϖ hϖ
   have hK : IsCompact (D.T' : Set VT') := isCompact_dualLattice_of_pairing D hemb hL hP
-  haveI : CompactSpace ↥D.T' := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace ↥D.T' := isCompact_iff_compactSpace.1 hK
   have hopen := isOpen_powSub D hemb hL hϖ
   refine ⟨inferInstance, hopen, fun U hU => ?_⟩
   obtain ⟨V, hVU, hV, h0V⟩ := mem_nhds_iff.1 hU

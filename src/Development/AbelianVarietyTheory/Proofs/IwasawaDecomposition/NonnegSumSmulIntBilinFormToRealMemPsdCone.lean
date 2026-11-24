@@ -113,7 +113,7 @@ theorem sum_smul_toReal_mem_psdCone : ∀ (O : Type) [CommRing O] [IsDedekindDom
   have hO : ∀ a : O, a ≠ 0 → ∀ y, a • y ∈ R → y ∈ R := by
     intro a ha y hy
     have hne : (Ideal.span {a}).comap (algebraMap ℤ O) ≠ ⊥ :=
-      Ideal.comap_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
+      Ideal.under_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
     obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
     obtain ⟨a', ha'⟩ := Ideal.mem_span_singleton'.1 (Ideal.mem_comap.1 hn)
     refine hZ n hn0 y fun i hi z => ?_

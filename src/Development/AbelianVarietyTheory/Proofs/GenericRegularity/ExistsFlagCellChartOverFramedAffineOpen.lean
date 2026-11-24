@@ -632,7 +632,7 @@ theorem algHom_eq_of_point {A S : Type} [CommRing A] [Algebra c.F A] [CommRing S
     (j : Sp A ⟶ Xo.XF c) [IsOpenImmersion j] (hj : j ≫ pullback.snd _ _ = spMap (algebraMap c.F A))
     (f f' : A →ₐ[c.F] S)
     (h : spMap f.toRingHom ≫ j ≫ pullback.fst _ _ = spMap f'.toRingHom ≫ j ≫ pullback.fst _ _) : f = f' := by
-  apply AlgHom.coe_ringHom_injective
+  apply AlgHom.toRingHom_injective
   apply spMap_inj
   rw [← cancel_mono j]
   apply pullback.hom_ext
@@ -786,7 +786,7 @@ theorem exists_fChart_cell : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     ((Z.2.1 : IsIrreducible (Z : Set (Xo.XF c))).isGenericPoint_genericPoint isClosed_closure)
   obtain ⟨f, hf, hfi, hfr⟩ := exists_generic (K := c.F) (κ := kap Z) (pullback.snd _ _) j hj (genSp Z)
     (Spec.map_preimage (genSp Z ≫ strK)).symm hr β.hom hβ
-  haveI : Infinite (kap Z) := Infinite.of_injective _ (algebraMap c.F (kap Z)).injective
+  have : Infinite (kap Z) := Infinite.of_injective _ (algebraMap c.F (kap Z)).injective
   obtain ⟨hgx, y₀, hy₀, hgu⟩ := isGenFr_genFr h Z
   obtain ⟨zκ, hzκ⟩ := bc _ _ f yA
   obtain ⟨G, ⟨hGu, hG⟩, _⟩ := (_root_.GlobalTheory.Reg.ReframeEx.reframe_exists_unique E H Dw l Xo c _ zκ).2 y₀ (by

@@ -73,8 +73,8 @@ theorem finite_levQc {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Rec
 theorem hatC_phiHat {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E} {Dw : Datum H} {l : Level H} (c : Coeff l) {n : ℕ}
     (φ : (Fin n → LevQc Dw l) → c.F) (q : Fin n → LevQ Dw l) :
     inC c (phiHat c φ q) = hatC l (fun x => inC c (φ x)) q := by
-  haveI := finite_levQc Dw l
-  haveI := Fintype.ofFinite (Fin n → LevQc Dw l)
+  have := finite_levQc Dw l
+  have := Fintype.ofFinite (Fin n → LevQc Dw l)
   have hz : inC c (zetaM c) = Complex.exp (2 * Real.pi * Complex.I / (l.M : ℂ)) := by
     rw [zetaM, map_pow]
     show zeta l.M' ^ (l.M' / l.M) = _
@@ -83,7 +83,7 @@ theorem hatC_phiHat {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.hos
     have h1 : l.M' ≠ 0 := Nat.lcm_ne_zero h0.ne' l.A_pos.ne'
     have h2 : (m : ℂ) ≠ 0 := by rintro h; apply h1; rw [hm, Nat.cast_eq_zero.1 h, mul_zero]
     have h3 : (l.M : ℂ) ≠ 0 := Nat.cast_ne_zero.2 h0.ne'
-    rw [zeta, ← Complex.exp_nat_mul, hm, Nat.mul_div_cancel_left _ h0]
+    rw [zeta, ← Complex.exp_natCast_mul, hm, Nat.mul_div_cancel_left _ h0]
     congr 1
     push_cast
     field_simp

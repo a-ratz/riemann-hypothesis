@@ -156,7 +156,7 @@ theorem blochKatoFiniteCocycles_le_continuousCocycles (A : GRep G Qp LL O) : fin
 
 theorem finite_continuous_cocycles_localGaloisRep (A : GRep G Qp LL O) (h : Module.Finite LL (H1V A.ρ)) :
     FiniteDimensional LL (continuousCocycles A.ρ) := by
-  haveI : FiniteDimensional LL (B1 A.ρ) := LinearMap.finiteDimensional_range (cob A.ρ)
+  have : FiniteDimensional LL (B1 A.ρ) := LinearMap.finiteDimensional_range (cob A.ρ)
   have hK : FiniteDimensional LL ((B1 A.ρ).comap (continuousCocycles A.ρ).subtype) :=
     Module.Finite.equiv (Submodule.comapSubtypeEquivOfLe (galoisCoboundaries_le_continuousCocycles A)).symm
   show Module.Finite LL (continuousCocycles A.ρ)
@@ -177,7 +177,7 @@ theorem finrank_H1fV (A : GRep G Qp LL O) [FiniteDimensional LL (continuousCocyc
     finrank LL (FiniteCohomology PD A.ρ) + finrank LL (B1 A.ρ) =
       finrank LL ((finiteCocycles PD A.ρ).comap (continuousCocycles A.ρ).subtype) := by
   have eW := (Submodule.comapSubtypeEquivOfLe (blochKatoFiniteCocycles_le_continuousCocycles PD A))
-  haveI : FiniteDimensional LL (finiteCocycles PD A.ρ) := Module.Finite.equiv eW
+  have : FiniteDimensional LL (finiteCocycles PD A.ρ) := Module.Finite.equiv eW
   have e := Submodule.finrank_quotient_add_finrank ((B1 A.ρ).comap (finiteCocycles PD A.ρ).subtype)
   rw [(Submodule.comapSubtypeEquivOfLe (B1_le_Z1f PD A)).finrank_eq] at e
   rw [eW.finrank_eq]
@@ -208,8 +208,8 @@ theorem bkA_exact_annihilators : Formalism.GaloisCohomology.LocalTateDualityK �
   obtain ⟨-, hf'⟩ := _root_.GlobalTheory.SeqDim.h1f_finrank l P AI hT K LL O hO A' hdr'
   have hort := _root_.GlobalTheory.BKOrth.bk_orth l P AI hT K LL O hO A A' m hdr hdual
   obtain ⟨β, hβ, hl, hr⟩ := _root_.GlobalTheory.tateDuality_degreeOne_cocycles hTD l P K LL O hO A A' m hdual
-  haveI := finite_continuous_cocycles_localGaloisRep A hH1fin
-  haveI := finite_continuous_cocycles_localGaloisRep A' hH1fin'
+  have := finite_continuous_cocycles_localGaloisRep A hH1fin
+  have := finite_continuous_cocycles_localGaloisRep A' hH1fin'
   have hkl : LinearMap.ker β = (B1 A.ρ).comap (continuousCocycles A.ρ).subtype := by
     ext a
     rw [LinearMap.mem_ker, Submodule.mem_comap, Submodule.subtype_apply, ← hl a]

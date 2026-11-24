@@ -161,7 +161,7 @@ lemma fhTau_cont [FiniteDimensional ℂ H] (π : Matrix (Fin k) (Fin k) ℂ → 
   rw [continuous_clm_apply]
   intro v
   have hc : Continuous fun g : KG (fun _ : Fin k => true) => toMK g :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   exact (hU.2.2 v).comp_continuous hc (fun g => g.1.2)
 
 end Tau
@@ -285,7 +285,7 @@ lemma fh_dτ_of_wt {μ : Fin k → ℝ} {v : H}
   rw [hfun] at hd2
   have hu := hd2.unique hd3
   simp only [mul_zero, Complex.ofReal_zero, zero_mul, Complex.exp_zero, one_mul, mul_one] at hu
-  rw [map_smul, ContinuousLinearMap.smul_apply, mul_comm, mul_smul] at hu
+  rw [map_smul, smul_apply, mul_comm, mul_smul] at hu
   exact smul_right_injective H Complex.I_ne_zero hu
 
 include hder hσ in
@@ -318,9 +318,9 @@ lemma fh_hw {Λ : Fin k → ℝ}
     rw [← hσ, hg]
     exact hw θ hθ
   have h2 := congrArg (fun T : H →L[ℂ] H => T w) hcomm
-  simp only [ContinuousLinearMap.mul_apply] at h2
+  simp only [mul_apply_eq_comp] at h2
   rw [hg, fh_diag_conj, h3] at h2
-  rw [← hg, hσ, h2, map_smul, LinearMap.map_smul, ContinuousLinearMap.smul_apply, smul_smul]
+  rw [← hg, hσ, h2, map_smul, LinearMap.map_smul, smul_apply, smul_smul]
   congr 1
   have hs : ∑ c, (Λ + Pi.single a 1 - Pi.single b 1 : Fin k → ℝ) c * θ c = (∑ c, Λ c * θ c) + θ a - θ b := by
     simp [add_mul, sub_mul, Finset.sum_add_distrib, Finset.sum_sub_distrib, Pi.single_apply]

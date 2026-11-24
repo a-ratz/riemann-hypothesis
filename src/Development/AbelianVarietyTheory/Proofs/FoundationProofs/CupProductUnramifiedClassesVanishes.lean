@@ -63,16 +63,16 @@ namespace GlobalTheory.Ord2
 theorem exists_frob_pow_inv_mul_mem : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (q : Pl) (B : ValuationSubring Ω) (K : Subgroup (G ℚ Ω)), IsPlaceOver B q → Ine (F := ℚ) B ≤ K → IsOpen ((K.subgroupOf (Dec (F := ℚ) B) : Subgroup ↥(Dec (F := ℚ) B)) : Set ↥(Dec (F := ℚ) B)) → ∃ (φ : ↥(Dec (F := ℚ) B)) (m : ℕ), 0 < m ∧ ((φ ^ m : ↥(Dec (F := ℚ) B)) : G ℚ Ω) ∈ K ∧ ∀ N : ℕ, 0 < N → ∃ d : ↥(Dec (F := ℚ) B) →* Multiplicative (ZMod (m * N)), IsOpen (d.ker : Set ↥(Dec (F := ℚ) B)) ∧ ∀ s : ↥(Dec (F := ℚ) B), (((φ ^ (Multiplicative.toAdd (d s)).val)⁻¹ * s : ↥(Dec (F := ℚ) B)) : G ℚ Ω) ∈ K := by
   intro Ω _ _ _ q B K hq hIK hKo
   obtain ⟨φ, -, hcl, hd⟩ := UpperTheory.V.GC.decZhat ℚ Ω q B hq
-  haveI : CompactSpace (Dec (F := ℚ) B) :=
+  have : CompactSpace (Dec (F := ℚ) B) :=
     isCompact_iff_compactSpace.1 (ReciprocityTheory.Gal.isClosed_Dec (F := ℚ) B).isCompact
   set K' : Subgroup (Dec (F := ℚ) B) := K.subgroupOf (Dec (F := ℚ) B) with hK'
-  haveI : Finite (Dec (F := ℚ) B ⧸ K') := Subgroup.quotient_finite_of_isOpen K' hKo
-  haveI : K'.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (Dec (F := ℚ) B ⧸ K') := Subgroup.quotient_finite_of_isOpen K' hKo
+  have : K'.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨m, hm0, -, hmK'⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
     (Subgroup.FiniteIndex.index_ne_zero (H := K')) φ
   refine ⟨φ, m, hm0, Subgroup.mem_subgroupOf.1 hmK', fun N hN => ?_⟩
   obtain ⟨d, hdlc, hdI, hdφ⟩ := hd (m * N) (Nat.mul_pos hm0 hN)
-  haveI : NeZero (m * N) := ⟨(Nat.mul_pos hm0 hN).ne'⟩
+  have : NeZero (m * N) := ⟨(Nat.mul_pos hm0 hN).ne'⟩
   refine ⟨d, hdlc.isOpen_fiber 1, ?_⟩
 
   have hK'cl : IsClosed (K' : Set (Dec (F := ℚ) B)) := Subgroup.isClosed_of_isOpen K' hKo
@@ -183,7 +183,7 @@ private theorem continuous_eps' : Continuous (fun s : G ℚ Ω => eps l s) := by
   rw [h]
   have h1 : Continuous fun s : G ℚ Ω => ((ReciprocityTheory.Gal.cycZ ℚ Ω l s : ℤ_[l]ˣ) : ℤ_[l]) :=
     Units.continuous_val.comp (ReciprocityTheory.Gal.continuous_cycZ ℚ Ω l)
-  have h2 : Continuous fun z : ℤ_[l] => (z : ℚ_[l]) := continuous_subtype_val
+  have h2 : Continuous fun z : ℤ_[l] => (z : ℚ_[l]) := continuous_subtypeVal
   exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp (h2.comp h1)
 
 theorem ev_cg {X : Type} [TopologicalSpace X] {n : ℕ} {f g : X → Qbar l} (hf : Continuous f) (hg : Continuous g)
@@ -229,7 +229,7 @@ theorem open_inv : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra 
   have : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
   have hξc : Continuous fun p : H × H => ξ p.1 p.2 := by
     have hp : Continuous fun p : H × H => ((p.1 : G ℚ Ω), (p.2 : G ℚ Ω)) :=
-      (continuous_subtype_val.comp continuous_fst).prodMk (continuous_subtype_val.comp continuous_snd)
+      (continuous_subtypeVal.comp continuous_fst).prodMk (continuous_subtypeVal.comp continuous_snd)
     exact hξ.comp_continuous hp (fun p => ⟨p.1.2, p.2.2⟩)
   have hL : ∀ᶠ k in 𝓝 (1 : H), ∀ y ∈ (Set.univ : Set (H × H)),
       Cg n (ξ ((y.1 * k : H) : G ℚ Ω) y.2) (ξ y.1 y.2) := by
@@ -249,7 +249,7 @@ theorem open_inv : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra 
       (x := ((1 : H), y)) (by simp)
   have hE : ∀ᶠ k : H in 𝓝 (1 : H), Cg n (eps l (k : G ℚ Ω)) 1 := by
     refine ev_cg (X := H) (n := n) (f := fun k => eps l (k : G ℚ Ω)) (g := fun _ => 1)
-      (continuous_eps'.comp continuous_subtype_val) continuous_const ?_
+      (continuous_eps'.comp continuous_subtypeVal) continuous_const ?_
     show eps l ((1 : H) : G ℚ Ω) = 1
     rw [OneMemClass.coe_one, eps_one]
   refine ⟨invSub n H ξ, ?_, fun k hk => hk.1, ?_, fun k hk => hk.2.1, fun s hs t ht k hk => hk.2.2 s hs t ht⟩
@@ -418,14 +418,14 @@ theorem twoCocycleModPow_coboundary_of_frobenius_split (l : ℕ) [Fact l.Prime] 
     (hinv : ∀ s ∈ D, ∀ t ∈ D, ∀ k ∈ K, Cg n (ξ (s * k) t) (ξ s t) ∧ Cg n (ξ s (t * k)) (ξ s t)) :
     Cob2 c n D ξ := by
   classical
-  haveI : NeZero (m * l ^ n) := ⟨Nat.mul_ne_zero hm.ne' (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
+  have : NeZero (m * l ^ n) := ⟨Nat.mul_ne_zero hm.ne' (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)⟩
   set g : G ℚ Ω := (φ : G ℚ Ω) with hgdef
   have hg : g ∈ D := φ.2
   have hgm : g ^ m ∈ K := by simpa [hgdef] using hφm
   set k : ↥D → ℕ := fun s => (Multiplicative.toAdd (d s)).val with hkdef
   set T := Tr ξ g with hT
   refine ⟨fun s => if h : s ∈ D then T (k ⟨s, h⟩) else 0, ?_, ?_, ?_⟩
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     have hc : Continuous (fun s : ↥D => T (k s)) :=
       ((isLocallyConstant_hom d hker).comp fun z => T (Multiplicative.toAdd z).val).continuous
     exact hc.congr fun s => by simp [Set.restrict, s.2]
@@ -439,7 +439,7 @@ theorem twoCocycleModPow_coboundary_of_frobenius_split (l : ℕ) [Fact l.Prime] 
     set a := k s' with ha
     set b := k t' with hb
     have hst : s * t ∈ D := D.mul_mem hs ht
-    simp only [dif_pos hs, dif_pos ht, dif_pos hst]
+    simp only [dite_eq_left hs, dite_eq_left ht, dite_eq_left hst]
     have hk : k ⟨s * t, hst⟩ = (a + b) % (m * l ^ n) := by
       show (Multiplicative.toAdd (d (s' * t'))).val = _
       rw [map_mul, toAdd_mul, ZMod.val_add]

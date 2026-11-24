@@ -76,7 +76,7 @@ theorem transport : ∀ (k K k₁ K' : Type) [Field k] [Field K] [Field k₁] [F
   obtain ⟨N, a₀, r, e, β, hN, ha₀, hβ, hI⟩ := hD
   have hβ' : ∀ i, ∃ f : (Over.pullback (spMap c)).obj A ⟶ (Over.pullback (spMap c)).obj A,
       IsMonHom f ∧ f.left ≫ π' = π' ≫ (β i).left := fun i => by
-    haveI := hβ i
+    have := hβ i
     exact GlobalTheory.HomDescent.exists_isMonHom_pull hP hP (β i)
   choose β' hβ'm hβ'c using hβ'
   have iL : LBIso (L.pull (pullback.fst A.hom (spMap c))) ((L₀.pull (pullback.fst A₀.hom (spMap b))).pull π') :=

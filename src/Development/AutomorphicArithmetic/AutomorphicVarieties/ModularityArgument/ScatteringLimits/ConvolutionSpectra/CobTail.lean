@@ -96,7 +96,7 @@ private theorem wInt (p : L V) (hp : Tail p) : Integrable fun y => Real.exp (|y|
         ← (cutLaws (V := V) _ univ measurableSet_Icc.compl .univ).2.2.2.2.2.2.2.2]
       refine ENNReal.ofReal_le_ofReal ((mul_le_mul_of_nonneg_left
         (pow_le_pow_left₀ (norm_nonneg _) (hC n (Nat.cast_nonneg n)) 2) (Real.exp_pos _).le).trans_eq ?_)
-      rw [mul_pow, ← Real.exp_nat_mul, ← Real.exp_nat_mul, mul_left_comm, ← Real.exp_add, mul_right_comm, ← Real.exp_add, mul_comm]
+      rw [mul_pow, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, mul_left_comm, ← Real.exp_add, mul_right_comm, ← Real.exp_add, mul_comm]
       congr 2; push_cast; ring
     refine (ENNReal.tsum_le_tsum b2).trans_lt ?_
     rw [← ENNReal.ofReal_tsum_of_nonneg (fun _ => by positivity)
@@ -106,8 +106,8 @@ private theorem wInt (p : L V) (hp : Tail p) : Integrable fun y => Real.exp (|y|
     (((by fun_prop : Continuous fun y : ℝ => Real.exp (|y| / 2)).aestronglyMeasurable).mul (Lp.aestronglyMeasurable _).norm)
     (Eventually.of_forall fun y => ?_)
   rw [Real.norm_of_nonneg (by positivity), Pi.add_apply]
-  have e1 : Real.exp (3 * |y| / 2) = Real.exp (3 * |y| / 4) ^ 2 := by rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
-  have e2 : Real.exp (-(1 / 2) * |y|) = Real.exp (-|y| / 4) ^ 2 := by rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+  have e1 : Real.exp (3 * |y| / 2) = Real.exp (3 * |y| / 4) ^ 2 := by rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
+  have e2 : Real.exp (-(1 / 2) * |y|) = Real.exp (-|y| / 4) ^ 2 := by rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
   have e3 : Real.exp (|y| / 2) = Real.exp (3 * |y| / 4) * Real.exp (-|y| / 4) := by rw [← Real.exp_add]; congr 1; ring
   rw [e1, e2, e3]
   nlinarith [sq_nonneg (Real.exp (3 * |y| / 4) * ‖p y‖ - Real.exp (-|y| / 4)),
@@ -164,7 +164,7 @@ private theorem cobOf (q : L V) (wq : Integrable fun y => Real.exp (|y| / 2) * �
     refine ((expAbs one_pos).const_mul (D ^ 2)).mono' (kc.norm.pow 2).aestronglyMeasurable (Eventually.of_forall fun x => ?_)
     rw [Real.norm_of_nonneg (by positivity)]
     refine (pow_le_pow_left₀ (norm_nonneg _) (kb x) 2).trans_eq ?_
-    rw [mul_pow, ← Real.exp_nat_mul]; congr 2; push_cast; ring
+    rw [mul_pow, ← Real.exp_natCast_mul]; congr 2; push_cast; ring
   refine ⟨km.toLp k, fun t => ?_⟩
   show ∫ s in (0 : ℝ)..t, sh V s q = sh V t (km.toLp k) - km.toLp k
   have e1 : ∫ s in (0 : ℝ)..t, sh V s q = ∫ s in (-t)..0, sh V (-s) q := by
@@ -190,7 +190,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.cobTail :
     · have h2 := DFunLike.congr_fun (cl (Icc (-ρ) ρ)ᶜ (Icc (-ρ₀) ρ₀) measurableSet_Icc.compl measurableSet_Icc).1 p
       rw [ContinuousLinearMap.comp_apply, h, (disjoint_compl_left_iff_subset.2 (Icc_subset_Icc (by linarith) a)).inter_eq,
         (cl univ univ .univ .univ).2.2.2.2.1] at h2
-      rw [h2]; simp only [ContinuousLinearMap.zero_apply, norm_zero]; positivity
+      rw [h2]; simp only [zero_apply, norm_zero]; positivity
     · refine ((cl _ univ measurableSet_Icc.compl .univ).2.2.2.2.2.1 _).trans ?_
       rw [mul_right_comm, ← Real.exp_add]
       exact le_mul_of_one_le_left (norm_nonneg _) (Real.one_le_exp (by linarith [not_le.1 a]))

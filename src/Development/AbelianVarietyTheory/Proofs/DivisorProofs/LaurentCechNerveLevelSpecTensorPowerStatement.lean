@@ -93,7 +93,7 @@ theorem tensorPow_univ (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (k :
     ∃! φ : PiTensorProduct A (fun _ : Fin (k + 1) => B) →+* R,
       ∀ j, φ.comp (PiTensorProduct.singleAlgHom (R := A) (A := fun _ : Fin (k + 1) => B) j).toRingHom = g j := by
   classical
-  letI : Algebra A R := ((g 0).comp (algebraMap A B)).toAlgebra
+  let : Algebra A R := ((g 0).comp (algebraMap A B)).toAlgebra
   let g' : Fin (k + 1) → (B →ₐ[A] R) := fun j => ⟨g j, fun r => RingHom.congr_fun (hg j) r⟩
   refine ⟨(GlobalTheory.piTensorLift g').toRingHom, fun j => ?_, fun ψ hψ => ?_⟩
   · ext x

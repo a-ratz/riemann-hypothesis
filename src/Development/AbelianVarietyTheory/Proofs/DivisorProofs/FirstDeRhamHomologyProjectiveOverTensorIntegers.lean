@@ -151,17 +151,17 @@ theorem baseChange_equiv :
       Nonempty ((L ⊗[ℤ] O) ⊗[K ⊗[ℤ] O] M ≃ₗ[L ⊗[ℤ] O] N) := by
   open TensorProduct in
   intro R R' O _ _ _ _ M _ _ _ _ N _ _ _ _ e he
-  letI : Module (R ⊗[ℤ] O) M := TensorProduct.Algebra.module
-  letI : Module (R' ⊗[ℤ] O) N := TensorProduct.Algebra.module
+  let : Module (R ⊗[ℤ] O) M := TensorProduct.Algebra.module
+  let : Module (R' ⊗[ℤ] O) N := TensorProduct.Algebra.module
   let f : R ⊗[ℤ] O →ₐ[ℤ] R' ⊗[ℤ] O :=
     Algebra.TensorProduct.map (IsScalarTower.toAlgHom ℤ R R') (AlgHom.id ℤ O)
-  letI : Algebra (R ⊗[ℤ] O) (R' ⊗[ℤ] O) := f.toRingHom.toAlgebra
-  letI : Module (R ⊗[ℤ] O) N := Module.compHom N f.toRingHom
-  haveI : IsScalarTower (R ⊗[ℤ] O) (R' ⊗[ℤ] O) N := ⟨fun a x n => mul_smul (f a) x n⟩
+  let : Algebra (R ⊗[ℤ] O) (R' ⊗[ℤ] O) := f.toRingHom.toAlgebra
+  let : Module (R ⊗[ℤ] O) N := Module.compHom N f.toRingHom
+  have : IsScalarTower (R ⊗[ℤ] O) (R' ⊗[ℤ] O) N := ⟨fun a x n => mul_smul (f a) x n⟩
   have hf : ∀ (r : R) (o : O), f (r ⊗ₜ o) = algebraMap R R' r ⊗ₜ o := fun r o => rfl
 
-  haveI : Module.FaithfullyFlat R R' := inferInstance
-  haveI : IsScalarTower R (R ⊗[ℤ] O) (R' ⊗[ℤ] O) := IsScalarTower.of_algebraMap_eq (fun r => rfl)
+  have : Module.FaithfullyFlat R R' := inferInstance
+  have : IsScalarTower R (R ⊗[ℤ] O) (R' ⊗[ℤ] O) := IsScalarTower.of_algebraMap_eq (fun r => rfl)
   let l : R' →ₗ[R] R' ⊗[ℤ] O :=
     { toFun := fun r' => r' ⊗ₜ 1
       map_add' := fun x y => add_tmul x y 1
@@ -286,9 +286,9 @@ theorem smulComm (a : OAct O A) : letI := oModule a; SMulCommClass R O (HdR A) :
 theorem tensorModule_eq (a : OAct O A) :
     tensorModule (dp0 R) (𝟙 _) a =
       (letI := oModule a; haveI := smulComm a; TensorProduct.Algebra.module) := by
-  letI := oModule a
-  haveI := smulComm a
-  letI : Module (R ⊗[ℤ] O) (HdR A) := TensorProduct.Algebra.module
+  let := oModule a
+  have := smulComm a
+  let : Module (R ⊗[ℤ] O) (HdR A) := TensorProduct.Algebra.module
   refine Module.ext' _ _ fun x h ↦ ?_
   induction x using TensorProduct.induction_on with
   | zero =>
@@ -354,13 +354,13 @@ theorem projective_of_baseChange (k K : Type) [Field k] [Field K] [Algebra k K] 
   obtain ⟨hFree, -, hBC, -, -⟩ := _root_.GlobalTheory.abelianDeRham
   have hh := isGrpPullback_pullback A₀ (spMap (algebraMap k K))
   have hbc := (hBC k A₀ g hA hg K _ _ hh).1
-  haveI : Module.Finite k (primDR A₀) := (hFree.prim hA hg).1
+  have : Module.Finite k (primDR A₀) := (hFree.prim hA hg).1
   have hφ := bijective_liftSemi_bcMap hbc
   have hact : ∀ (x : O) (h : HdR A₀), hbc.bcMap (act (dp0 k) (𝟙 _) a x h) =
       act (dp0 K) (𝟙 _) (OAct.pullback (spMap (algebraMap k K)) A₀ a) x (hbc.bcMap h) := by
     intro x h
-    haveI := a.hom x
-    haveI := (OAct.pullback (spMap (algebraMap k K)) A₀ a).hom x
+    have := a.hom x
+    have := (OAct.pullback (spMap (algebraMap k K)) A₀ a).hom x
     refine hbc.corr_iff.1 ?_
     exact GrpMor.Corr.push (m := Published.AbelianDeRham.bcMor hh) (Published.AbelianDeRham.bcMor hh)
       (a.act x) ((OAct.pullback (spMap (algebraMap k K)) A₀ a).act x)
@@ -368,13 +368,13 @@ theorem projective_of_baseChange (k K : Type) [Field k] [Field K] [Algebra k K] 
   set B := (Over.pullback (spMap (algebraMap k K))).obj A₀
   set b := OAct.pullback (spMap (algebraMap k K)) A₀ a
 
-  haveI : Module.Finite k (HdR A₀) := inferInstance
-  letI := oModule a
-  letI := oModule b
-  haveI := smulComm a
-  haveI := smulComm b
+  have : Module.Finite k (HdR A₀) := inferInstance
+  let := oModule a
+  let := oModule b
+  have := smulComm a
+  have := smulComm b
   let e : K ⊗[k] HdR A₀ ≃ₗ[K] HdR B := LinearEquiv.ofBijective _ hφ
-  haveI : Module.Finite K (HdR B) := Module.Finite.equiv e
+  have : Module.Finite K (HdR B) := Module.Finite.equiv e
   have he : ∀ (x : O) (h : HdR A₀), e (1 ⊗ₜ (x • h)) = x • e (1 ⊗ₜ h) := by
     intro x h
     change liftSemi hbc.bcMap (1 ⊗ₜ act (dp0 k) (𝟙 _) a x h) =
@@ -382,18 +382,18 @@ theorem projective_of_baseChange (k K : Type) [Field k] [Field K] [Algebra k K] 
     rw [liftSemi_tmul, liftSemi_tmul, one_smul, one_smul, hact]
   obtain ⟨alg, hFF, ⟨e'⟩⟩ := baseChange_equiv k K O (HdR A₀) (HdR B) e he
   have hfinB : letI := tensorModule (dp0 K) (𝟙 _) b; Module.Finite (K ⊗[ℤ] O) (HdR B) := by
-    letI := tensorModule (dp0 K) (𝟙 _) b
-    haveI := isScalarTower_tensorModule (dp0 K) (𝟙 _) b
+    let := tensorModule (dp0 K) (𝟙 _) b
+    have := isScalarTower_tensorModule (dp0 K) (𝟙 _) b
     exact Module.Finite.of_restrictScalars_finite K (K ⊗[ℤ] O) (HdR B)
   rw [tensorModule_eq b] at hB hfinB
   rw [tensorModule_eq a]
-  letI := alg
-  haveI := hFF
-  letI : Module (k ⊗[ℤ] O) (HdR A₀) := TensorProduct.Algebra.module
-  letI : Module (K ⊗[ℤ] O) (HdR B) := TensorProduct.Algebra.module
-  haveI : Module.Projective (K ⊗[ℤ] O) ((K ⊗[ℤ] O) ⊗[k ⊗[ℤ] O] HdR A₀) :=
+  let := alg
+  have := hFF
+  let : Module (k ⊗[ℤ] O) (HdR A₀) := TensorProduct.Algebra.module
+  let : Module (K ⊗[ℤ] O) (HdR B) := TensorProduct.Algebra.module
+  have : Module.Projective (K ⊗[ℤ] O) ((K ⊗[ℤ] O) ⊗[k ⊗[ℤ] O] HdR A₀) :=
     Module.Projective.of_equiv e'.symm
-  haveI : Module.Finite (K ⊗[ℤ] O) ((K ⊗[ℤ] O) ⊗[k ⊗[ℤ] O] HdR A₀) := Module.Finite.equiv e'.symm
+  have : Module.Finite (K ⊗[ℤ] O) ((K ⊗[ℤ] O) ⊗[k ⊗[ℤ] O] HdR A₀) := Module.Finite.equiv e'.symm
   exact GlobalTheory.Descent.projective (K ⊗[ℤ] O)
 
 end Main
@@ -468,7 +468,7 @@ theorem exists_flat_lift_mod_p_sq : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Fie
       RingHom.ker π = Ideal.span {(p : Λ)} ∧ (p : Λ) ^ 2 = 0 ∧
       ∀ x : Λ, (p : Λ) * x = 0 → x ∈ Ideal.span {(p : Λ)} := by
   intro p _ k _ _ _
-  haveI : PerfectRing k p := PerfectField.toPerfectRing p
+  have : PerfectRing k p := PerfectField.toPerfectRing p
   set I : Ideal (WittVector p k) := Ideal.span {(p : WittVector p k) ^ 2} with hI
   have hlift : ∀ a ∈ I, WittVector.constantCoeff a = 0 := by
     intro a ha
@@ -524,12 +524,12 @@ namespace GlobalTheory
 
 theorem isReduced_charZero_tensor_ringOfIntegers (F : Type) [Field F] [NumberField F] (k : Type) [Field k]
     [CharZero k] : IsReduced (k ⊗[ℤ] 𝓞 F) := by
-  haveI : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
-  haveI : Algebra.EssFiniteType ℤ ℚ := Algebra.EssFiniteType.of_isLocalization ℚ (nonZeroDivisors ℤ)
-  haveI : Algebra.FormallyUnramified ℚ F := Algebra.FormallyUnramified.of_isSeparable ℚ F
-  haveI : Algebra.FormallyUnramified ℤ F := Algebra.FormallyUnramified.comp ℤ ℚ F
-  haveI : Algebra.EssFiniteType ℤ F := Algebra.EssFiniteType.comp ℤ ℚ F
-  haveI : IsReduced (k ⊗[ℤ] F) := Algebra.FormallyUnramified.isReduced_of_field k (k ⊗[ℤ] F)
+  have : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
+  have : Algebra.EssFiniteType ℤ ℚ := Algebra.EssFiniteType.of_isLocalization ℚ (nonZeroDivisors ℤ)
+  have : Algebra.FormallyUnramified ℚ F := Algebra.FormallyUnramified.of_isSeparable ℚ F
+  have : Algebra.FormallyUnramified ℤ F := Algebra.FormallyUnramified.comp ℤ ℚ F
+  have : Algebra.EssFiniteType ℤ F := Algebra.EssFiniteType.comp ℤ ℚ F
+  have : IsReduced (k ⊗[ℤ] F) := Algebra.FormallyUnramified.isReduced_of_field k (k ⊗[ℤ] F)
   have hinj : Function.Injective (Algebra.TensorProduct.map (AlgHom.id ℤ k) (IsScalarTower.toAlgHom ℤ (𝓞 F) F)) :=
     Module.Flat.lTensor_preserves_injective_linearMap _ (IsFractionRing.injective _ _)
   exact isReduced_of_injective _ hinj
@@ -751,7 +751,7 @@ theorem free_of_principal_maximalIdeal_of_ker_smul_le :
         (∀ n : N, x • n = 0 → n ∈ Ideal.span {a : R | x * a = 0} • (⊤ : Submodule R N)) →
         Module.Free R N := by
   intro R _ _ _ x hx N _ _ hfin hann
-  haveI : Module.FinitePresentation R N := Module.finitePresentation_of_finite R N
+  have : Module.FinitePresentation R N := Module.finitePresentation_of_finite R N
   apply Module.free_of_maximalIdeal_rTensor_injective
   have hxm : x ∈ IsLocalRing.maximalIdeal R := hx ▸ Ideal.subset_span rfl
   let X : IsLocalRing.maximalIdeal R := ⟨x, hxm⟩
@@ -812,25 +812,25 @@ namespace GlobalTheory.FinRedTensor
 theorem formallyUnramified_int_of_finite_field (K : Type) [Field K] [Finite K] :
     Algebra.FormallyUnramified ℤ K := by
   obtain ⟨p, hp⟩ := CharP.exists K
-  haveI : NeZero p := ⟨CharP.char_ne_zero_of_finite K p⟩
-  haveI : Fact p.Prime := CharP.char_is_prime_of_pos K p
-  letI : Algebra (ZMod p) K := ZMod.algebra K p
-  haveI : Module.Finite (ZMod p) K := Module.Finite.of_finite
-  haveI : Algebra.IsSeparable (ZMod p) K := inferInstance
-  haveI : Algebra.FormallyUnramified (ZMod p) K := Algebra.FormallyUnramified.of_isSeparable _ _
-  haveI : Algebra.FormallyUnramified ℤ (ZMod p) :=
+  have : NeZero p := ⟨CharP.char_ne_zero_of_finite K p⟩
+  have : Fact p.Prime := CharP.char_is_prime_of_pos K p
+  let : Algebra (ZMod p) K := ZMod.algebra K p
+  have : Module.Finite (ZMod p) K := Module.Finite.of_finite
+  have : Algebra.IsSeparable (ZMod p) K := inferInstance
+  have : Algebra.FormallyUnramified (ZMod p) K := Algebra.FormallyUnramified.of_isSeparable _ _
+  have : Algebra.FormallyUnramified ℤ (ZMod p) :=
     Algebra.FormallyUnramified.of_surjective (Algebra.ofId ℤ (ZMod p)) (ZMod.intCast_surjective)
   exact Algebra.FormallyUnramified.comp ℤ (ZMod p) K
 
 theorem formallyUnramified_int_of_finite_isReduced (A : Type) [CommRing A] [Finite A]
     [IsReduced A] : Algebra.FormallyUnramified ℤ A := by
-  haveI : IsArtinianRing A := inferInstance
+  have : IsArtinianRing A := inferInstance
   have h : Algebra.FormallyUnramified ℤ (∀ I : MaximalSpectrum A, A ⧸ I.asIdeal) := by
     rw [Algebra.FormallyUnramified.pi_iff]
     intro I
     have := I.isMaximal
-    letI := Ideal.Quotient.field I.asIdeal
-    haveI : Finite (A ⧸ I.asIdeal) :=
+    let := Ideal.Quotient.field I.asIdeal
+    have : Finite (A ⧸ I.asIdeal) :=
       Finite.of_surjective (Ideal.Quotient.mk I.asIdeal) Ideal.Quotient.mk_surjective
     exact formallyUnramified_int_of_finite_field _
   exact Algebra.FormallyUnramified.of_equiv ((IsArtinianRing.equivPi A).restrictScalars ℤ).symm
@@ -839,10 +839,10 @@ theorem isReduced_field_tensor_finite :
     ∀ (A : Type) [CommRing A] [Finite A] [IsReduced A] (k : Type) [Field k],
       IsReduced (k ⊗[ℤ] A) := by
   intro A _ _ _ k _
-  haveI := formallyUnramified_int_of_finite_isReduced A
-  haveI : Algebra.FormallyUnramified k (k ⊗[ℤ] A) := Algebra.FormallyUnramified.base_change k
-  haveI : Module.Finite ℤ A := Module.Finite.of_finite
-  haveI : Algebra.EssFiniteType k (k ⊗[ℤ] A) := inferInstance
+  have := formallyUnramified_int_of_finite_isReduced A
+  have : Algebra.FormallyUnramified k (k ⊗[ℤ] A) := Algebra.FormallyUnramified.base_change k
+  have : Module.Finite ℤ A := Module.Finite.of_finite
+  have : Algebra.EssFiniteType k (k ⊗[ℤ] A) := inferInstance
   exact Algebra.FormallyUnramified.isReduced_of_field k _
 
 end GlobalTheory.FinRedTensor
@@ -1056,10 +1056,10 @@ theorem projective_of_nilpotent_of_reduced_quotient (D : Type) [CommRing D] [IsA
     intro P _
     have hloc := _root_.GlobalTheory.localization_maximalIdeal_eq_span_of_nilpotent D x hx hr P
     have hann := _root_.GlobalTheory.localizedModule_mem_annSpan_smul_top D P.primeCompl x N h
-    haveI := _root_.GlobalTheory.free_of_principal_maximalIdeal_of_ker_smul_le (Localization.AtPrime P) (algebraMap D _ x) hloc
+    have := _root_.GlobalTheory.free_of_principal_maximalIdeal_of_ker_smul_le (Localization.AtPrime P) (algebraMap D _ x) hloc
       (LocalizedModule P.primeCompl N) inferInstance hann
     exact Module.Flat.trans D (Localization.AtPrime P) _
-  haveI : Module.FinitePresentation D N := Module.finitePresentation_of_finite D N
+  have : Module.FinitePresentation D N := Module.finitePresentation_of_finite D N
   exact Module.Flat.projective_of_finitePresentation
 
 theorem projective_reduction_of_flat_lift : ∀ (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [NumberField F] (Λ : Type) [CommRing Λ] (k : Type) [Field k] (π : Λ →+* k), Function.Surjective π → RingHom.ker π = Ideal.span {(p : Λ)} → (p : Λ) ^ 2 = 0 → (∀ x : Λ, (p : Λ) * x = 0 → x ∈ Ideal.span {(p : Λ)}) → ∀ (M : Type 1) [AddCommGroup M] [Module Λ M] [Module (Λ ⊗[ℤ] 𝓞 F) M] [IsScalarTower Λ (Λ ⊗[ℤ] 𝓞 F) M], Module.Finite Λ M → Module.Free Λ M → ∀ (N : Type 1) [AddCommGroup N] [Module (k ⊗[ℤ] 𝓞 F) N] (f : M →ₛₗ[(Algebra.TensorProduct.map π.toIntAlgHom (AlgHom.id ℤ (𝓞 F))).toRingHom] N), Function.Surjective f → (∀ m, f m = 0 → m ∈ (RingHom.ker π) • (⊤ : Submodule Λ M)) → Module.Projective (k ⊗[ℤ] 𝓞 F) N := by
@@ -1071,8 +1071,8 @@ theorem projective_reduction_of_flat_lift : ∀ (p : ℕ) [Fact p.Prime] (F : Ty
   have hkerf' : ∀ m, f m = 0 → m ∈ Ideal.span {(p : Λ)} • (⊤ : Submodule Λ M) := by
     intro m hm; rw [← hker]; exact hkerf m hm
   obtain ⟨ϖ, z, hϖz, ⟨n0, hn0⟩, hred⟩ := _root_.GlobalTheory.exists_global_uniformiser_above_prime p F
-  haveI : IsArtinianRing (k ⊗[ℤ] 𝓞 F) := IsArtinianRing.of_finite k (k ⊗[ℤ] 𝓞 F)
-  haveI : Module.Finite (k ⊗[ℤ] 𝓞 F) N := _root_.GlobalTheory.finite_of_surjective_tensor_semilinear Λ k π (𝓞 F) M hfin N f hf
+  have : IsArtinianRing (k ⊗[ℤ] 𝓞 F) := IsArtinianRing.of_finite k (k ⊗[ℤ] 𝓞 F)
+  have : Module.Finite (k ⊗[ℤ] 𝓞 F) N := _root_.GlobalTheory.finite_of_surjective_tensor_semilinear Λ k π (𝓞 F) M hfin N f hf
   have hnil : IsNilpotent ((1 : k) ⊗ₜ[ℤ] ϖ) := by
     refine ⟨n0, ?_⟩
     obtain ⟨y, hy⟩ := Ideal.mem_span_singleton'.mp hn0
@@ -1082,7 +1082,7 @@ theorem projective_reduction_of_flat_lift : ∀ (p : ℕ) [Fact p.Prime] (F : Ty
   have hfinQ : Finite (𝓞 F ⧸ Ideal.span {(p : 𝓞 F), ϖ}) := by
     have hne : Ideal.span {(p : 𝓞 F)} ≠ ⊥ := by
       simp [Ideal.span_singleton_eq_bot, (Fact.out : p.Prime).ne_zero]
-    haveI : Finite (𝓞 F ⧸ Ideal.span {(p : 𝓞 F)}) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
+    have : Finite (𝓞 F ⧸ Ideal.span {(p : 𝓞 F)}) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
     exact Finite.of_surjective _ (Ideal.Quotient.factor_surjective
       (Ideal.span_mono (by simp : ({(p : 𝓞 F)} : Set (𝓞 F)) ⊆ {(p : 𝓞 F), ϖ})))
   have hredD := _root_.GlobalTheory.reduced_quot_tensor_of_reduced_modp (𝓞 F) k p ϖ hpk (_root_.GlobalTheory.FinRedTensor.isReduced_field_tensor_finite _ k)
@@ -1111,22 +1111,22 @@ namespace GlobalTheory.CrysProj
 theorem hdR_projective : ∀ (F : Type) [Field F] [NumberField F] (k : Type) [Field k] (A₀ : Over (Sp k)) [GrpObj A₀] [IsCommMonObj A₀], IsAbelianScheme A₀ → ∀ a : OAct (𝓞 F) A₀, letI := tensorModule (dp0 k) (𝟙 _) a; Module.Projective (k ⊗[ℤ] 𝓞 F) (HdR A₀) := by
   intro F _ _ k _ A₀ _ _ hA a
   rcases CharP.char_is_prime_or_zero k (ringChar k) with hp | hp
-  · haveI : Fact (ringChar k).Prime := ⟨hp⟩
+  · have : Fact (ringChar k).Prime := ⟨hp⟩
     refine GlobalTheory.T.de_rham_cohomology_projective_module F k ?_ A₀ hA a
     intro B₀ _ _ hB b
     set K := AlgebraicClosure k
-    haveI : CharP K (ringChar k) := charP_of_injective_algebraMap (algebraMap k K).injective _
+    have : CharP K (ringChar k) := charP_of_injective_algebraMap (algebraMap k K).injective _
     obtain ⟨Λ, _, π, hπ, hker, hp2, hann⟩ := _root_.GlobalTheory.exists_flat_lift_mod_p_sq (ringChar k) K
     have hI : RingHom.ker π ^ 2 = 0 := by
       rw [hker, Ideal.span_singleton_pow, hp2, Ideal.span_singleton_eq_bot.2 rfl]; rfl
     obtain ⟨hfin, hfree, f, hf, hk⟩ := GlobalTheory.T.crystal_finite_free_reduces_to_deRham F Λ K π hπ hI B₀ hB b
-    letI := tensorModule (divided₂ hI) (spMap π) b
-    haveI := isScalarTower_tensorModule (divided₂ hI) (spMap π) b
-    letI := tensorModule (dp0 K) (𝟙 _) b
+    let := tensorModule (divided₂ hI) (spMap π) b
+    have := isScalarTower_tensorModule (divided₂ hI) (spMap π) b
+    let := tensorModule (dp0 K) (𝟙 _) b
     exact _root_.GlobalTheory.FlatLift.projective_reduction_of_flat_lift (ringChar k) F Λ K π hπ hker hp2 hann _ hfin hfree _ f hf hk
-  · haveI : CharP k 0 := hp ▸ ringChar.charP k
-    haveI : CharZero k := CharP.charP_to_charZero k
-    letI := tensorModule (dp0 k) (𝟙 _) a
+  · have : CharP k 0 := hp ▸ ringChar.charP k
+    have : CharZero k := CharP.charP_to_charZero k
+    let := tensorModule (dp0 k) (𝟙 _) a
     exact _root_.GlobalTheory.projective_charZero_tensor_ringOfIntegers F k _
 
 end GlobalTheory.CrysProj

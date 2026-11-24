@@ -100,7 +100,7 @@ theorem semicharacter_add {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : �
     linear_combination this
   have he : Complex.exp (Real.pi / 2 * a) * Complex.exp (Real.pi * c + Real.pi / 2 * b) =
       (-1) ^ n * Complex.exp (Real.pi / 2 * (a + star c + (c + b))) := by
-    rw [← Complex.exp_pi_mul_I, ← Complex.exp_int_mul, ← Complex.exp_add, ← Complex.exp_add]
+    rw [← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul, ← Complex.exp_add, ← Complex.exp_add]
     congr 1
     linear_combination (Real.pi / 2 : ℂ) * hc
   refine mul_right_cancel₀ (mul_ne_zero (Complex.exp_ne_zero (Real.pi / 2 * (a + star c + (c + b)))) hne) ?_

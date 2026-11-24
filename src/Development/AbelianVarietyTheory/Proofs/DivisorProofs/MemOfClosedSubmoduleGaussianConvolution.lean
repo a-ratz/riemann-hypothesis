@@ -117,13 +117,13 @@ theorem gauss_mul_diag_mem : ∀ (E : Type) [NormedAddCommGroup E] [InnerProduct
     | exact real_inner_self_eq_norm_sq x
   obtain ⟨G, hG⟩ := GlobalTheory.GaussSchwartz.exists_schwartz_exp_diag (-c • innerSL ℝ : E →L[ℝ] E →L[ℝ] ℝ)
     (fun x hx => by
-      simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]; rw [hin]
+      simp only [smul_apply, smul_eq_mul]; rw [hin]
       have : 0 < ‖x‖ ^ 2 := by positivity
       nlinarith)
   have hG' : ∀ y, G y = Complex.exp (-((c * ‖y‖ ^ 2 : ℝ) : ℂ)) := fun y => by
     rw [hG, Complex.ofReal_exp]
     congr 1
-    simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]; rw [hin]
+    simp only [smul_apply, smul_eq_mul]; rw [hin]
     push_cast; ring
   have hGmem := hGM G hG'
   let b := stdOrthonormalBasis ℝ E
@@ -135,9 +135,9 @@ theorem gauss_mul_diag_mem : ∀ (E : Type) [NormedAddCommGroup E] [InnerProduct
   have hy : (fun _ : Fin k => y) = fun _ : Fin k => ∑ i, (inner ℝ (b i) y) • b i := by
     funext _; exact (b.sum_repr' y).symm
 
-  rw [hy, ContinuousMultilinearMap.map_sum, Finset.mul_sum, SchwartzMap.sum_apply]
+  rw [hy, ContinuousMultilinearMap.map_sum, Finset.mul_sum, sum_apply]
   refine Finset.sum_congr rfl fun r _ => ?_
-  rw [B.map_smul_univ (fun j => inner ℝ (b (r j)) y) (fun j => b (r j)), SchwartzMap.smul_apply, hty, hG',
+  rw [B.map_smul_univ (fun j => inner ℝ (b (r j)) y) (fun j => b (r j)), smul_apply, hty, hG',
     Complex.real_smul, smul_eq_mul]
   have hi : ∀ v : E, innerSL ℝ v y = inner ℝ v y := fun v => rfl
   simp only [hi]
@@ -502,8 +502,8 @@ theorem summable_of_summable_seminorm (E : Type) [NormedAddCommGroup E] [NormedS
     rw [iteratedFDeriv_sub', iteratedFDeriv_limMap hu]
     exact hN j hj x
   
-  haveI : CompleteSpace (SchwartzMap E ℂ) := by
-    haveI : (uniformity (SchwartzMap E ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  have : CompleteSpace (SchwartzMap E ℂ) := by
+    have : (uniformity (SchwartzMap E ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
     exact UniformSpace.complete_of_cauchySeq_tendsto fun u hu => ⟨limMap u hu, tendsto_limMap hu⟩
   rw [summable_iff_vanishing]
   intro U hU
@@ -876,7 +876,7 @@ theorem summable_seminorm_term : ∀ (E : Type) [NormedAddCommGroup E] [InnerPro
       ((s : ℝ) : ℂ) • GlobalTheory.ConvSeries.coef b c (⇑h) j with hf
     have hfun : (⇑(t j)) = fun y => Complex.exp (-((c * ‖y‖ ^ 2 : ℝ) : ℂ)) * f (fun _ => y) := by
       funext y
-      rw [ht, GlobalTheory.ConvSeries.term, hf, ContinuousMultilinearMap.smul_apply, smul_eq_mul, mul_assoc]
+      rw [ht, GlobalTheory.ConvSeries.term, hf, smul_apply, smul_eq_mul, mul_assoc]
     have hG : ContDiff ℝ (⊤ : ℕ∞) (fun y : E => Complex.exp (-((c * ‖y‖ ^ 2 : ℝ) : ℂ))) := by
       refine Complex.contDiff_exp.comp ?_
       refine ContDiff.neg ?_
@@ -969,7 +969,7 @@ theorem mem_of_conv_gaussian : ∀ (E : Type) [NormedAddCommGroup E] [InnerProdu
     intro j
     obtain ⟨t, htM, ht⟩ := _root_.GlobalTheory.ConvSeries.gauss_mul_diag_mem E M hℓ c hc hg j (coef b c h j)
     refine ⟨(((2 * c) ^ j / (j.factorial : ℝ) : ℝ) : ℂ) • t, M.smul_mem _ htM, fun y => ?_⟩
-    simp only [SchwartzMap.smul_apply, ht, term, smul_eq_mul]
+    simp only [smul_apply, ht, term, smul_eq_mul]
     ring
   choose t htM hty using ht
   have hs : Summable t := _root_.GlobalTheory.ConvSeries.summable_of_summable_seminorm E t (_root_.GlobalTheory.ConvSeries.summable_seminorm_term E b c hb hc h t hty)

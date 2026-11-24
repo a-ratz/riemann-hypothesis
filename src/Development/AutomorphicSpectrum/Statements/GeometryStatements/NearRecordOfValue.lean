@@ -95,7 +95,7 @@ theorem const_le : Real.eulerMascheroniConstant + Real.log (2 * Real.pi) + 2 * R
   have hπ0 := Real.pi_pos
   have he : Real.exp (2 / 3) ≤ 1.9496 := by
     have h3 : Real.exp (2 / 3) ^ 3 = Real.exp 1 ^ 2 := by
-      rw [← Real.exp_nat_mul, ← Real.exp_nat_mul]; norm_num
+      rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul]; norm_num
     have h1 := Real.exp_one_lt_d9
     have h0 := Real.exp_pos 1
     refine le_of_pow_le_pow_left₀ three_ne_zero (by norm_num) ?_

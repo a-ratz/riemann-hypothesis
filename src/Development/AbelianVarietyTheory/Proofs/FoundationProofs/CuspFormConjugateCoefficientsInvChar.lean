@@ -92,7 +92,7 @@ lemma refl_smul (γ : SL(2, ℤ)) (τ : ℍ) : refl (γ • τ) = twist γ • r
   have hd'' : ((twist γ 1 0 : ℤ) : ℂ) * (-conj (τ : ℂ)) + ((twist γ 1 1 : ℤ) : ℂ) =
       conj (((γ 1 0 : ℤ) : ℂ) * (τ : ℂ) + ((γ 1 1 : ℤ) : ℂ)) := by
     simp [twist, map_add (f := _), map_mul, map_intCast]
-  rw [hd'', neg_div', div_left_inj' hd']
+  rw [hd'', neg_div', div_left_inj₀ hd']
   simp [twist, map_add (f := _), map_mul, map_intCast]
   ring
 

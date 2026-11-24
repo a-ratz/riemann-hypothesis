@@ -87,7 +87,7 @@ theorem archMat_eq_archEquiv {σ : E →ₐ[F] E} (h : IsCMExt F E σ) {w : Infi
 
 theorem continuous_infEmb {w : InfinitePlace F} (τ : EmbOver E w) : Continuous (infEmb τ) := by
   have : IsModuleTopology w.Completion (w.Completion ⊗[F] E) := ⟨rfl⟩
-  letI : Algebra w.Completion ℂ := (InfinitePlace.Completion.extensionEmbedding w).toAlgebra
+  let : Algebra w.Completion ℂ := (InfinitePlace.Completion.extensionEmbedding w).toAlgebra
   have : ContinuousSMul w.Completion ℂ :=
     ⟨((InfinitePlace.Completion.isometry_extensionEmbedding w).continuous.comp continuous_fst).mul continuous_snd⟩
   let L : w.Completion ⊗[F] E →ₗ[w.Completion] ℂ :=
@@ -287,9 +287,9 @@ theorem IsUnif.valuation_eq {v : HeightOneSpectrum (𝓞 F)} {ϖ : (Fv F v)ˣ} (
     letI := GlobalTheory.LocalData.complRel v
     haveI := GlobalTheory.LocalData.isLocalField v
     valuation (Fv F v) (ϖ : Fv F v) = uniformizer (Fv F v) := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
-  haveI : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
+  have : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have he := isEquiv (valuation (Fv F v)) (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ)))
   apply le_antisymm
   · rw [le_uniformizer_iff, he.lt_one_iff_lt_one, h, ← WithZero.exp_zero, WithZero.exp_lt_exp]
@@ -341,9 +341,9 @@ theorem mem_stabLoc_iff {g : GLoc σ J v} :
 
 theorem mem_iwahori {g : GLoc σ J v} :
     g ∈ s.iwahori ↔ g ∈ stabLoc σ J L v ∧ ∀ i j, j < i → Valued.v ((s.equiv g).1 i j) < 1 := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
-  haveI : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
+  have : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (ValuativeRel.valuation (Fv F v))
     (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ)))
   refine GlobalTheory.SmGL.mem_iwahori.trans (and_congr s.mem_stabLoc_iff.symm ?_)
@@ -386,7 +386,7 @@ theorem idem_mem [Submodule.IsFullLattice E L] : s.idem μ τ ∈ CcLoc σ J v :
   refine typeIdem_mem_SB μ _ τ (isOpen_stabLoc σ J L v) (isCompact_stabLoc σ J L v) ?_
   rw [show (s.red.ker : Set (stabLoc σ J L v)) = (↑) ⁻¹' (stabLocOne σ J s.emb L : Set (GLoc σ J v)) from
     Set.ext s.red_eq_one_iff]
-  exact (isOpen_stabLocOne J s.emb L s.cm).preimage continuous_subtype_val
+  exact (isOpen_stabLocOne J s.emb L s.cm).preimage continuous_subtypeVal
 
 theorem starFn_idem [FiniteDimensional ℂ W] : starFn (s.idem μ τ) = s.idem μ τ := starFn_typeIdem μ _ τ
 
@@ -539,19 +539,19 @@ theorem restrGroup_cent (γ : GAd σ J) :
     GlobalTheory.RestrMeas.IsRestrGroup (fun w => centMap (projArch σ J w) γ) (fun v => centMap (proj σ J v) γ)
       fun v => (stabLoc σ J L v).subgroupOf (cent (proj σ J v γ)) := by
   have h := restrGroup_GAd σ J L
-  refine ⟨fun w => ((h.continuous_pa w).comp continuous_subtype_val).subtype_mk _,
-    fun v => ((h.continuous_pf v).comp continuous_subtype_val).subtype_mk _,
-    fun v => (h.isOpen_K v).preimage continuous_subtype_val,
+  refine ⟨fun w => ((h.continuous_pa w).comp continuous_subtypeVal).subtype_mk _,
+    fun v => ((h.continuous_pf v).comp continuous_subtypeVal).subtype_mk _,
+    fun v => (h.isOpen_K v).preimage continuous_subtypeVal,
     fun v => (isClosed_cent _).isClosedEmbedding_subtypeVal.isCompact_preimage (h.isCompact_K v),
     fun x y ha hf => Subtype.ext (h.ext _ _ (fun w => congrArg Subtype.val (ha w)) fun v => congrArg Subtype.val (hf v)),
-    fun x => h.eventually_mem x, fun a y hy => ?_, h.isOpen_level.preimage continuous_subtype_val, fun C hC => ?_⟩
+    fun x => h.eventually_mem x, fun a y hy => ?_, h.isOpen_level.preimage continuous_subtypeVal, fun C hC => ?_⟩
   · obtain ⟨x, h1, h2⟩ := h.exists_eq (fun w => a w) (fun v => y v) hy
     exact ⟨⟨x, mem_cent.2 (h.ext _ _ (fun w => by simpa only [map_mul, h1] using mem_cent.1 (a w).2)
       fun v => by simpa only [map_mul, h2] using mem_cent.1 (y v).2)⟩, fun w => Subtype.ext (h1 w),
       fun v => Subtype.ext (h2 v)⟩
   · refine (congrArg IsCompact (Set.ext fun x => ?_)).mpr
       ((isClosed_cent γ).isClosedEmbedding_subtypeVal.isCompact_preimage
-        (h.isCompact_level (fun w => Subtype.val '' C w) fun w => (hC w).image continuous_subtype_val))
+        (h.isCompact_level (fun w => Subtype.val '' C w) fun w => (hC w).image continuous_subtypeVal))
     exact and_congr_left fun _ => forall_congr' fun w => (Subtype.val_injective.mem_set_image).symm
 
 theorem existsUnique_isCentProd (γ : GAd σ J) (dta : ∀ w, Measure (cent (projArch σ J w γ)))

@@ -193,8 +193,8 @@ theorem iwasawa_of_triangular (h : IsCMExt F E σ) (hJ : IsHermND σ J) (τ : E 
   obtain ⟨β, hβ⟩ : ∃ β, IsSplitBasis τ L β := exists_isSplitBasis τ L h
   have iw : ∀ x : GL (Fin n) (Fv F v), ∃ q ∈ Q, ∃ k ∈ stabLoc σ J L v,
       x * β = splitHom σ J τ q * B * β⁻¹ * splitHom σ J τ k * β := fun x => by
-    letI := GlobalTheory.LocalData.complRel v
-    haveI := GlobalTheory.LocalData.isLocalField v
+    let := GlobalTheory.LocalData.complRel v
+    have := GlobalTheory.LocalData.isLocalField v
     obtain ⟨b, hb, w, hw, e⟩ := GlobalTheory.SplitWeil.iwasawa_blockTriangular (Fv F v) (Fin n) lv (B⁻¹ * x * β)
     rw [← (GLint_eq_KO_and_princ_eq_KOne v n).1] at hw
     refine ⟨(splitEquivIn h hJ τ B).symm b, hQ _ ?_, (splitEquivIn h hJ τ β).symm w,
@@ -231,7 +231,7 @@ theorem iwasawa_stab_split : ∀ (D : D7) (T T₀ : HSp D) (r : ℕ) (d : HypDec
   intro D T T₀ r d v ⟨P, P', hne, hP, hP'⟩ y
   obtain ⟨τ, -⟩ := existsUnique_splitPrime_eq (isCMExt_host D) (v := v) hne (HeightOneSpectrum.ext hP)
     (HeightOneSpectrum.ext hP')
-  haveI := SelfDual.isLattice_frameLat T
+  have := SelfDual.isLattice_frameLat T
   have hf : d.qY ⬝ d.e' = 1 := rat_injective (by rw [rat_mul, rat_one]; exact d.pY_jY)
   obtain ⟨B, lv, hB⟩ := exists_flag_basis τ (GlobalTheory.Doubling.isHermND_gram T) (e := d.e) (e' := d.e') (i := d.i₀)
     (p := d.qX) (q := d.q0) (Fintype.equivOfCardEq (by simp [← d.rank_add]; ring)) d.sum_eq_one_rat hf

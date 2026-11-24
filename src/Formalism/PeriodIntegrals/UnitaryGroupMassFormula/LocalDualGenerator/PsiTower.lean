@@ -124,11 +124,11 @@ abbrev qAlg (A : LocAt F E sig p) : Algebra ℚ_[resChar p] A.Ep :=
 theorem trQ_eq (A : LocAt F E sig p) (z : A.Ep) :
     (letI := qAlg A; Algebra.trace ℚ_[resChar p] A.Ep z) =
       Algebra.trace ℚ_[resChar p] A.Fp (Algebra.trace A.Fp A.Ep z) := by
-  letI := qAlg A
+  let := qAlg A
   have : IsScalarTower ℚ_[resChar p] A.Fp A.Ep := IsScalarTower.of_algebraMap_eq' (R := ℚ_[resChar p]) (S := A.Fp) (A := A.Ep) rfl
-  haveI := A.free
-  haveI : Module.Finite A.Fp A.Ep := Module.finite_of_finrank_pos (by rw [A.rank]; norm_num)
-  haveI := A.qlFin
+  have := A.free
+  have : Module.Finite A.Fp A.Ep := Module.finite_of_finrank_pos (by rw [A.rank]; norm_num)
+  have := A.qlFin
   exact (Algebra.trace_trace (R := ℚ_[resChar p]) (S := A.Fp) z).symm
 
 theorem psi_tower (hK : PsiKer) (A : LocAt F E sig p) (z : A.Ep) :
@@ -175,7 +175,7 @@ theorem assemble (hK : PsiKer) (A : LocAt F E sig p) (d : A.Fp)
 theorem stmt_of (hK : PsiKer) (h1 : FpDual) (h2 : FpDualUnram) (h3 : EpSelfDual) :
     PI.LocDualGen.Stmt := by
   intro F E _ _ _ _ _ sig p A
-  haveI := A.ellPrime
+  have := A.ellPrime
   have hE : IsReduced A.Ep → UnramL A → ∀ x : A.Ep,
       (∀ y ∈ A.O, Algebra.trace A.Fp A.Ep (x * y) ∈ 𝒪[A.Fp]) ↔ x ∈ A.O :=
     fun hr hu => h3 A.Fp A.Ep A.lf A.char0 A.free A.rank hr A.O A.O_def hu

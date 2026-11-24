@@ -83,7 +83,7 @@ theorem alV_eq {a b : ℕ} (x : VCx X.Tau a b) {m : ℤ}
   rw [hm, round_intCast]
   rw [h1] at hm
   unfold alV alphaQ Formalism.L2.Th1.H.qOf
-  rw [hm, ← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+  rw [hm, ← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring

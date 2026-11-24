@@ -65,7 +65,7 @@ theorem UpperTheory.Lit.Cusp.isCompact_ball :
     have hpre := hemb.isCompact_preimage hK
     convert hpre using 1
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_preimage]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage]
     constructor
     · intro h
       exact ⟨g.2, h⟩

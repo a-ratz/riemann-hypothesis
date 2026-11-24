@@ -423,7 +423,7 @@ theorem exists_flag_model : Out.WeilSt → ∀ (E : Type) [Field E] [NumberField
         exact ⟨fun h => ⟨_, h, rfl⟩, fun ⟨w, hw, h⟩ => hinj h ▸ hw⟩
       deg := d
       generic := by
-        letI := 𝔐.fn.toAlgebra
+        let := 𝔐.fn.toAlgebra
         exact generic_map j V₀ b d φ₀ hinj hgen }
   obtain ⟨K', _, J', _, y', κ, v, tie', xdeg, e₀, hκ, hv, hroot⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeCpt.Flag.exists_recoord_rootLines E H D l Xo c _ _ Y S Ω K₁ J₁ y₁ A₁ F₁
   let A₂ : HodgeCpt Y S y' := { A₁ with tie := tie' }

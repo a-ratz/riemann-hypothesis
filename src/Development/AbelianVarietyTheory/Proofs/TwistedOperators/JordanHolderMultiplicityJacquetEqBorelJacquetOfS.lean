@@ -131,7 +131,7 @@ theorem torusToLevi_surjective (hf : Function.Injective (blk f)) :
     have : f ⟨j, u⟩ = f ⟨j, v⟩ := hf (by simp)
     simpa using this
   obtain rfl := hs x y
-  haveI : Unique (c j) := ⟨⟨x⟩, fun u => hs _ _⟩
+  have : Unique (c j) := ⟨⟨x⟩, fun u => hs _ _⟩
   rw [val_torusToLevi, diagonal_apply_eq, blk_apply, GeneralLinearGroup.val_det_apply,
     det_unique, hs default x]
 

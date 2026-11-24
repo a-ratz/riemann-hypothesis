@@ -97,7 +97,7 @@ theorem isHolTo_of_comp_openImmersion {W : Type} [NormedAddCommGroup W] [NormedS
 theorem isHolTo_pt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H)
     (Xo : Moduli D l) (σ : KA l →+* ℂ) (n a : ℕ) (C : BdryChart Xo σ n a), IsHolTo (punct n a 1) C.pt := by
   intro E _ _ _ H D l Xo σ n a C
-  haveI := C.j_open
+  have := C.j_open
   apply isHolTo_of_comp_openImmersion C.j
   have hB : IsOpen (punct n a 1) := isOpen_punct n a 1
   have hsub : punct n a 1 ⊆ Metric.ball 0 1 := fun z hz => hz.1

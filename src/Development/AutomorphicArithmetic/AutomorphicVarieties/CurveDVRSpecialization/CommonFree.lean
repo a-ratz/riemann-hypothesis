@@ -65,7 +65,7 @@ theorem UpperTheory.V.Pr.commonFree :
   obtain ⟨i, -, hfin⟩ := Subgroup.exists_finiteIndex_of_leftCoset_cover hcov
   obtain ⟨h, hh⟩ := hex i
   apply hh
-  haveI : (K i).Normal := MonoidHom.normal_ker _
+  have : (K i).Normal := MonoidHom.normal_ker _
   have hmem := (K i).pow_index_mem h
   rw [hK, map_pow, ← pow_mul] at hmem
   exact htor i h _ (Nat.mul_pos (Nat.pos_of_ne_zero hfin.index_ne_zero) hN) hmem

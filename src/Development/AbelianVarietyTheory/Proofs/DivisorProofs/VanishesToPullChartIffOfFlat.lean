@@ -156,7 +156,7 @@ theorem exists_stalkHom (hψ : ψ ≫ u = u' ≫ φ) (z : S') :
     exact ⟨_, fun _ _ _ _ => rfl⟩
   obtain ⟨θ, hθ⟩ := key _ (pt_square hψ z)
   refine ⟨θ, hθ, fun x => ?_⟩
-  obtain ⟨U, hU, x, rfl⟩ := Y.presheaf.germ_exist x
+  obtain ⟨U, hU, x, rfl⟩ := Y.presheaf.exists_germ_eq x
   exact (congrArg _ (hθ U hU (pt_square hψ z ▸ hU) x)).trans (stalkMap_square hψ z hU _ x).symm
 
 variable {B : LB Y} {B' : LB Y'}

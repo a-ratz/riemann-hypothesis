@@ -61,8 +61,8 @@ variable {R : Type} [TopologicalSpace R] {κ : Type}
 theorem integrable_pair (μ : @Measure (κ → R) (borel _)) (hμ : @IsFiniteMeasureOnCompacts _ (borel _) _ μ)
     (φ φ' : SB (κ → R)) :
     @Integrable ℂ _ _ _ (borel _) (fun x => (starRingEnd ℂ) ((φ : (κ → R) → ℂ) x) * (φ' : (κ → R) → ℂ) x) μ := by
-  letI : MeasurableSpace (κ → R) := borel _
-  haveI : BorelSpace (κ → R) := ⟨rfl⟩
+  let : MeasurableSpace (κ → R) := borel _
+  have : BorelSpace (κ → R) := ⟨rfl⟩
   have h1 : Continuous (φ : (κ → R) → ℂ) := φ.2.1.continuous
   have h2 : Continuous (φ' : (κ → R) → ℂ) := φ'.2.1.continuous
   have h3 : HasCompactSupport (φ' : (κ → R) → ℂ) := φ'.2.2
@@ -91,7 +91,7 @@ def pairForm (μ : @Measure (κ → R) (borel _)) (hμ : @IsFiniteMeasureOnCompa
 
 theorem pair_conj (μ : @Measure (κ → R) (borel _)) (φ φ' : (κ → R) → ℂ) :
     (starRingEnd ℂ) (pair μ φ φ') = pair μ φ' φ := by
-  letI : MeasurableSpace (κ → R) := borel _
+  let : MeasurableSpace (κ → R) := borel _
   unfold pair
   rw [← integral_conj]
   congr 1
@@ -100,8 +100,8 @@ theorem pair_conj (μ : @Measure (κ → R) (borel _)) (φ φ' : (κ → R) → 
 
 theorem pair_pos (μ : @Measure (κ → R) (borel _)) (hμ : @IsFiniteMeasureOnCompacts _ (borel _) _ μ)
     (hμ' : @Measure.IsOpenPosMeasure _ _ (borel _) μ) (φ : SB (κ → R)) (hφ : φ ≠ 0) : 0 < (pair μ φ φ).re := by
-  letI : MeasurableSpace (κ → R) := borel _
-  haveI : BorelSpace (κ → R) := ⟨rfl⟩
+  let : MeasurableSpace (κ → R) := borel _
+  have : BorelSpace (κ → R) := ⟨rfl⟩
   have h1 : Continuous (φ : (κ → R) → ℂ) := φ.2.1.continuous
   have h3 : HasCompactSupport (φ : (κ → R) → ℂ) := φ.2.2
   have e : pair μ φ φ = ((∫ x, ‖(φ : (κ → R) → ℂ) x‖ * ‖(φ : (κ → R) → ℂ) x‖ ∂μ : ℝ) : ℂ) := by
@@ -116,7 +116,7 @@ theorem pair_pos (μ : @Measure (κ → R) (borel _)) (hμ : @IsFiniteMeasureOnC
     by_contra h
     push Not at h
     exact hφ (Subtype.ext (funext h))
-  refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := x) (h1.norm.mul h1.norm)
+  refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := x) (h1.norm.mul h1.norm)
     (HasCompactSupport.mul_left (f := fun x => ‖(φ : (κ → R) → ℂ) x‖) h3.norm)
     (fun y => mul_nonneg (norm_nonneg _) (norm_nonneg _)) ?_
   have := norm_pos_iff.2 hx

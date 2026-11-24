@@ -80,8 +80,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem resChar_prime : (resChar v).Prime := by
   show (ringChar (𝓞 F ⧸ v.asIdeal)).Prime
-  haveI : v.asIdeal.IsPrime := v.isPrime
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := by
+  have : v.asIdeal.IsPrime := v.isPrime
+  have : Finite (𝓞 F ⧸ v.asIdeal) := by
     first
     | exact Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
     | infer_instance
@@ -203,7 +203,7 @@ theorem splitAt_nonempty (φ : E →ₐ[F] v.adicCompletion F) (b : E) (hb0 : b 
     rw [hval, ← hle.lt_iff_ne]
     generalize Valued.v (x : K) = γ
     rcases eq_or_ne γ 0 with rfl | hγ
-    · exact iff_of_true zero_lt_one zero_le'
+    · exact iff_of_true zero_lt_one zero_le
     · rw [← WithZero.exp_log hγ, WithZero.exp_lt_one_iff, WithZero.exp_le_exp]
       omega
   refine ⟨⟨AlgEquiv.ofBijective e ⟨hinj, hsurj⟩, fun x => ?_, ((resChar v : ℕ) : 𝒪[K]), ?_, ?_⟩⟩
@@ -282,7 +282,7 @@ theorem exists_emb {K : Type} [Field K] [Algebra F K]
 
 theorem exists_sqrt (g d : ℕ) (hg : g.Prime) (hg2 : g ≠ 2) (hgv : (g : 𝓞 F) ∈ v.asIdeal)
     (hj : jacobiSym (-(d : ℤ)) g = 1) : ∃ r : v.adicCompletion F, r ^ 2 = -(d : v.adicCompletion F) := by
-  haveI : Fact g.Prime := ⟨hg⟩
+  have : Fact g.Prime := ⟨hg⟩
   have hne : (d : ZMod g) ≠ 0 := by
     intro h0
     have h1 : (((-(d : ℤ)) : ℤ) : ZMod g) = 0 := by push_cast; rw [h0, neg_zero]

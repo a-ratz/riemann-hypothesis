@@ -79,7 +79,7 @@ theorem chi_eq_cyc (P : LocPrime l) (j : Ω →+* Om l) (σ : Formalism.Conjugat
 
   have key : ∀ m : ℕ, ‖((P.χQ g : ℚ_[l]ˣ) : ℚ_[l]) - (c : ℚ_[l])‖ ≤ (l : ℝ) ^ (-(m : ℤ)) := by
     intro m
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
     have hζ' : IsPrimitiveRoot (j ζ) (l ^ m) := hζ.map_of_injective j.injective
     have hσζ : σ ζ = ζ ^ (PadicInt.toZModPow m c).val :=
       cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (Formalism.ConjugateSelfDual.G E Ω) Ω σ) ζ hζ.pow_eq_one
@@ -133,7 +133,7 @@ theorem locChi_eps (g : Br.G D.nbr i w hw) :
   rw [hχ, hc]
   unfold epsU Glob.epsO LocBridge.toLL decS Br.ι
   simp only [RingHom.comp_apply, MonoidHom.comp_apply,
-    Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe,
+    Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe,
     RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom]
   erw [(D.nbr i w hw).eO_alg]
   rfl

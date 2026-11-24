@@ -283,7 +283,7 @@ theorem vMinus_root (p : ℕ) : vMinus p 0 ^ 2 + (p : ℂ) * vMinus p 1 ^ 2 = 0 
 theorem xN_not_mem_twist (p : ℕ) {W : Ideal (MRing ι)} (hW : W ≠ ⊤) :
     (xN : MRing (Tb ι)) ∉ twist p W := by
   classical
-  haveI : Nontrivial (MRing ι ⧸ W) := Ideal.Quotient.nontrivial_iff.mpr hW
+  have : Nontrivial (MRing ι ⧸ W) := Ideal.Quotient.nontrivial_iff.mpr hW
   let θ : MRing (Tb ι) →+* Polynomial (MRing ι ⧸ W) :=
     (aeval (fun q : Σ o, Tb ι o => match q with
       | ⟨none, j⟩ => if j = (0 : Fin 2) then Polynomial.X else 0
@@ -298,10 +298,10 @@ theorem xN_not_mem_twist (p : ℕ) {W : Ideal (MRing ι)} (hW : W ≠ ⊤) :
     exact congrArg (fun g => g f) this
   have h1 : θ (xN) = Polynomial.X := by
     simp only [θ, xN, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, aeval_X]
-    exact if_pos rfl
+    exact ite_eq_left rfl
   have h2 : θ (yN) = 0 := by
     simp only [θ, yN, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, aeval_X]
-    exact if_neg (show ¬ ((1 : Fin 2) = 0) by decide)
+    exact ite_eq_right (show ¬ ((1 : Fin 2) = 0) by decide)
   have hle : twist p W ≤ (Ideal.span {(Polynomial.X : Polynomial (MRing ι ⧸ W)) ^ 2}).comap θ := by
     refine sup_le (Ideal.map_le_iff_le_comap.mpr fun f hf => ?_) ?_
     · rw [Ideal.mem_comap, Ideal.mem_comap, hinc, Ideal.Quotient.eq_zero_iff_mem.mpr hf]

@@ -78,7 +78,7 @@ theorem pw_pw' {X : Scheme.{0}} (H : LB X) (a b : ℤ) :
 theorem relAmple_of_generic : ∀ (W L : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [Field L] [Algebra W L] [IsFractionRing W L] (G : Over (Sp W)) [GrpObj G] (A : Over (Sp L)) [GrpObj A] (φ : A.left ⟶ G.left), IsAbelianScheme G → IsGrpPullback A G (spMap (algebraMap W L)) φ → ∀ M : LB G.left, M.IsLB → Out.RelAmple A (M.pull φ) → Out.RelAmple G M := by
   intro W L _ _ _ _ _ _ G _ A _ φ hG hφ M hM hA
   have hAab : IsAbelianScheme A := by
-    haveI := hG.comm
+    have := hG.comm
     have hcomm : IsCommMonObj A := by
       rw [isCommMonObj_iff_isMulCommutative]
       intro T
@@ -97,7 +97,7 @@ theorem relAmple_of_generic : ∀ (W L : Type) [CommRing W] [IsDomain W] [IsDisc
   set g := spMap (algebraMap L L) with hg
   have hg1 : g = 𝟙 _ := by
     simp [hg, spMap]
-  haveI : IsIso g := by rw [hg1]; infer_instance
+  have : IsIso g := by rw [hg1]; infer_instance
   have h1 : inv (pullback.fst A.hom g) ≫ pullback.snd A.hom g = A.hom := by
     rw [IsIso.inv_comp_eq, pullback.condition, hg1, Category.comp_id]
   let i : pullback G.hom f ≅ pullback A.hom g :=

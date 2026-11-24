@@ -161,7 +161,7 @@ end GlobalTheory.AffineDense
 open GlobalTheory.AffineDense in
 theorem GlobalTheory.affineOpen_injects_to_dense : ∀ (X : Scheme.{0}) [IsReduced X] [IsLocallyNoetherian X] (U : X.Opens), Dense (U : Set X) → ∀ (W : X.Opens) (hW : IsAffineOpen W), ∃ (K : Type) (_ : CommRing K) (ρ : Γ(X, W) →+* K), Function.Injective ρ ∧ ⊤ ≤ (spMap ρ ≫ (show Sp Γ(X, W) ⟶ X from hW.fromSpec)) ⁻¹ᵁ U := by
   intro X _ _ U hU W hW
-  haveI : IsNoetherianRing Γ(X, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
+  have : IsNoetherianRing Γ(X, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
   refine ⟨Localization (nonZeroDivisors Γ(X, W)), inferInstance, algebraMap _ _,
     IsLocalization.injective _ le_rfl, ?_⟩
   intro x _

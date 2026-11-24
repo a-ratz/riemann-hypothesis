@@ -68,7 +68,7 @@ theorem exists_exhaustion [LocallyCompactSpace V] [SecondCountableTopology V] [T
     {U : Set V} (hU : IsOpen U) :
     ∃ K W : ℕ → Set V, (∀ n, IsCompact (K n)) ∧ (∀ n, IsOpen (W n)) ∧ (∀ n, W n ⊆ K n) ∧
       (∀ n, K n ⊆ U) ∧ Monotone K ∧ Monotone W ∧ (⋃ n, K n) = U ∧ (⋃ n, W n) = U := by
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   let E := CompactExhaustion.choice U
   have hint : ⋃ n, interior (E n) = Set.univ := by
     apply Set.eq_univ_of_forall
@@ -79,8 +79,8 @@ theorem exists_exhaustion [LocallyCompactSpace V] [SecondCountableTopology V] [T
     obtain ⟨n, hn⟩ := Set.mem_iUnion.mp hx
     exact Set.mem_iUnion.mpr ⟨n + 1, E.subset_interior_succ n hn⟩
   refine ⟨fun n => (↑) '' E n, fun n => (↑) '' interior (E n),
-    fun n => (E.isCompact n).image continuous_subtype_val,
-    fun n => hU.isOpenMap_subtype_val _ isOpen_interior, fun n => Set.image_mono interior_subset,
+    fun n => (E.isCompact n).image continuous_subtypeVal,
+    fun n => hU.isOpenMap_subtypeVal _ isOpen_interior, fun n => Set.image_mono interior_subset,
     fun n => by
       rintro _ ⟨x, -, rfl⟩
       exact x.2,
@@ -177,7 +177,7 @@ theorem BumpFamily.measurable_apply [LocallyCompactSpace V] [SecondCountableTopo
   obtain ⟨K, W, hKc, hWo, hWK, hKU, -, hWmono, -, hWU⟩ := exists_exhaustion hU
   have hWn : ∀ n, Measurable fun b => fib b (A ∩ W n) := by
     intro n
-    haveI : ∀ b, IsFiniteMeasure ((fib b).restrict (W n)) := fun b =>
+    have : ∀ b, IsFiniteMeasure ((fib b).restrict (W n)) := fun b =>
       isFiniteMeasure_restrict.mpr
         (ne_of_lt (lt_of_le_of_lt (measure_mono (hWK n)) (h.lt_top hU (hKc n) (hKU n) b)))
     have hmeas : Measurable fun b => (fib b).restrict (W n) := by

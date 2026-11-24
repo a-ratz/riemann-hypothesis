@@ -90,7 +90,7 @@ theorem exists_comb {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum 
     intro Q hQ hxQ hyQ
     apply hyS
     refine Set.mem_biUnion (x := Q) ?_ hyQ
-    rw [Finset.coe_erase, Set.mem_diff, Set.Finite.coe_toFinset]
+    rw [Finset.coe_erase, Set.mem_sdiff, Set.Finite.coe_toFinset]
     exact ⟨Ideal.dvd_iff_le.mpr ((Ideal.span_singleton_le_iff_mem _).mpr hxQ), hQ⟩
 
   let bf : ∀ Q : HeightOneSpectrum (𝓞 E), Q.adicCompletion E := fun Q =>
@@ -125,9 +125,9 @@ theorem exists_comb {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum 
     · have hyQ := hy Q hQ hxQ
       have hy0 : (y : E) ≠ 0 := fun h =>
         hyQ (by rw [show y = 0 from by exact_mod_cast h]; exact Q.asIdeal.zero_mem)
-      simp only [bf, cf, if_neg hQ, if_pos hxQ, h0 Q hQ, sub_zero, zero_mul, zero_add]
+      simp only [bf, cf, ite_eq_right hQ, ite_eq_left hxQ, h0 Q hQ, sub_zero, zero_mul, zero_add]
       exact (adicCompletion_coe_inv_mul_coe Q hy0).symm
-    · simp only [bf, cf, if_neg hQ, if_neg hxQ, h0 Q hQ, sub_zero, zero_mul, add_zero]
+    · simp only [bf, cf, ite_eq_right hQ, ite_eq_right hxQ, h0 Q hQ, sub_zero, zero_mul, add_zero]
       exact (adicCompletion_coe_inv_mul_coe Q (hxQ' hxQ)).symm
 
 theorem mul_smul_mem_hat (D : D7) {n : ℕ} (I : Ideal (𝓞 D.host.E)) (L : Submodule (𝓞 D.host.E) (Fin n → D.host.E))

@@ -136,7 +136,7 @@ theorem Wild_le_Ine : Wild E A ≤ Ine (F := E) A := by
   intro σ h
   have h1 : ∀ x : Ω, x ≠ 0 → A.valuation (σ x - x) < A.valuation x := fun x hx => by
     have e : σ x - x = (σ x / x - 1) * x := by field_simp
-    have h0 : 0 < A.valuation x := zero_lt_iff.mpr (by simpa using hx)
+    have h0 : 0 < A.valuation x := pos_iff_ne_zero.mpr (by simpa using hx)
     rw [e, map_mul]
     exact mul_lt_of_lt_one_left h0 (h x hx)
   have h2 : ∀ x : Ω, A.valuation (σ x) = A.valuation x := fun x => by
@@ -322,7 +322,7 @@ theorem IsTeich.exists_eq {τ : Fbar g →* ℂ} (hτ : IsTeich τ) {n : ℕ} (h
   have : NeZero n := ⟨hn.ne'⟩
   have : NeZero (n : Fbar g) := ⟨fun h0 =>
     (Nat.Prime.coprime_iff_not_dvd Fact.out).mp hc.symm ((CharP.cast_eq_zero_iff (Fbar g) g n).mp h0)⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Fbar g) n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Fbar g) n
   obtain ⟨i, -, hi⟩ := (hζ.map_of_injective hτ.injective).eq_pow_of_pow_eq_one hz
   exact ⟨ζ ^ i, by rw [map_pow, hi]⟩
 
@@ -476,7 +476,7 @@ open Classical in
 def lab (τ : Fbar g →* ℂ) (γ : G E Ω) (x : WD h) : (ZMod g)[X] :=
   if H : TeichmullerInertiaLabelCondition A w τ γ then (existsUnique_lab H x).choose else 1
 
-theorem lab_of_not (H : ¬ TeichmullerInertiaLabelCondition A w τ γ) (x : WD h) : lab τ γ x = 1 := dif_neg H
+theorem lab_of_not (H : ¬ TeichmullerInertiaLabelCondition A w τ γ) (x : WD h) : lab τ γ x = 1 := dite_eq_right H
 
 theorem lab_monic (τ : Fbar g →* ℂ) (γ : G E Ω) (x : WD h) : (lab τ γ x).Monic := by
   unfold lab

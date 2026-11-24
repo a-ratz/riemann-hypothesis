@@ -155,7 +155,7 @@ theorem transcendental (hP : IsHomogIdeal P) (j : Fin n) (hj : X j ∉ P) :
       · exact homogeneousComponent_eq_self ((hhom e).mul (isHomogeneous_X_pow j e))
       · intro b _ hb
         rw [homogeneousComponent_of_mem ((mem_homogeneousSubmodule _ _).2
-          ((hhom b).mul (isHomogeneous_X_pow j b))), if_neg (by omega)]
+          ((hhom b).mul (isHomogeneous_X_pow j b))), ite_eq_right (by omega)]
       · intro hne
         exact absurd (Finset.mem_range.2 he) hne
     have hmem : h e * X j ^ e ∈ P := hcomp ▸ hP G hG (M + e)
@@ -208,8 +208,8 @@ theorem proof : AffineChartTrdeg.Statement := by
     | add f g hf hg => rw [map_add (f := _)]; exact S.add_mem hf hg
     | mul_X f i hf => rw [map_mul, aeval_X]; exact S.mul_mem hf (hξS i)
 
-  letI : CommRing A' := Subalgebra.toCommRing A'
-  letI : CommRing S := Subalgebra.toCommRing S
+  let : CommRing A' := Subalgebra.toCommRing A'
+  let : CommRing S := Subalgebra.toCommRing S
   have halg : Algebra.IsAlgebraic S K := by
     refine ⟨fun x => ?_⟩
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := R) x

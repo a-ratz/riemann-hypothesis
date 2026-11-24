@@ -96,7 +96,7 @@ theorem finite_stab (V : HSp D) (hV : ∀ τ, (gramAt D V τ).PosDef) (J : Subgr
   obtain ⟨K, hK, hKe⟩ := exists_compact_of_fin V hV hC
   obtain ⟨x, rfl⟩ := (finHom V).rangeRestrict_surjective g
   have hK' : IsCompact ((fun k => x * k * x⁻¹) '' K) := hK.image ((continuous_const.mul continuous_id).mul continuous_const)
-  have hcl : IsClosed (GQ V : Set (GA D V)) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed (GQ V : Set (GA D V)) := Subgroup.isClosed_of_discreteTopology
   have hfin : ((Subtype.val : GQ V → GA D V) ⁻¹' ((fun k => x * k * x⁻¹) '' K)).Finite :=
     (hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK').finite_of_discrete
   refine Set.Finite.subset hfin fun γ hγ => ⟨x⁻¹ * γ.1 * x, hKe _ ?_, by group⟩
@@ -132,7 +132,7 @@ variable {D : D7} {T : Type} (L : LevCh D T) (i : Fin D.R.m) (t : T)
 
 theorem isPosDef_of_vStd (hV : VStd D i) : (Vc D i).IsPosDef := fun τ => by
   have h := factVSig _ _ D.sp ((i : ℕ) + 1) (by omega) (by omega) τ
-  rw [GlobalTheory.StdFrame.neg_eq_false_of_vStd D i hV, if_neg Bool.false_ne_true] at h
+  rw [GlobalTheory.StdFrame.neg_eq_false_of_vStd D i hV, ite_eq_right Bool.false_ne_true] at h
   rw [D.sp.V_rank _ (by omega) i.2]
   exact h
 

@@ -215,7 +215,7 @@ theorem sm_mean (hom : IsWeilDatumO ψ S T χS χT om) (hc : Chart θ σ) {K : T
         funext k x
         have := (((hcd x).hasFDerivAt.mul (hs k x).hasFDerivAt).const_mul (a k)).fderiv
         erw [this]
-        simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply, smul_eq_mul, Pi.add_apply,
+        simp only [smul_apply, add_apply, smul_eq_mul, Pi.add_apply,
           Finset.sum_apply]
         rw [fderiv_om hom hc e (p k) hf w x u]
         simp only [mul_add, Finset.mul_sum]
@@ -281,7 +281,7 @@ theorem exists_haar {S : HSp D} {y : DefSp S} (hy : y.Is) : CompactSpace ↥(Gin
       ext z; simp [Subgroup.mem_center_iff]
     rw [this]
     exact isClosed_iInter fun g => isClosed_eq (continuous_const.mul continuous_id) (continuous_id.mul continuous_const)
-  haveI hc : CompactSpace ↥(GinfC S ⊓ Subgroup.center (GA D S)) :=
+  have hc : CompactSpace ↥(GinfC S ⊓ Subgroup.center (GA D S)) :=
     isCompact_iff_compactSpace.1 ((Formalism.IndefR.Eqv.isCompact_GinfC hy.sig hd).inter_right hcl)
   refine ⟨hc, Measure.haarMeasure ⊤, ⟨?_⟩, inferInstance⟩
   exact Measure.haarMeasure_self
@@ -302,7 +302,7 @@ theorem integral_mean_translate {S : HSp D} (hS : CoCpt S) (v : Vol S) {K : Type
     ∫ h in v.𝓕, (∫ k, Ψ (h * b k) ∂ν) ∂v.μ = ∫ h in v.𝓕, Ψ h ∂v.μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D S
   have h1 := (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D S hS v Unit (fun _ _ => 1) continuous_const (fun _ _ _ _ => rfl)).1 ()
-  haveI : IsFiniteMeasure (v.μ.restrict v.𝓕) := (integrable_const_iff.1 h1).resolve_left one_ne_zero
+  have : IsFiniteMeasure (v.μ.restrict v.𝓕) := (integrable_const_iff.1 h1).resolve_left one_ne_zero
   obtain ⟨C, hC⟩ := (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D S hS v Unit (fun g _ => Ψ g) (hΨ.2.comp continuous_fst)
     (fun γ hγ g _ => hΨ.1 γ hγ g)).2.2 ()
   have hC' := hC.self_of_nhds
@@ -363,7 +363,7 @@ theorem theta_mean (hom : IsWeilDatumO ψ S T χS χT om) {θ : InfFam D} (hθ :
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D S
   obtain ⟨σ, hc⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   have hp : Continuous fun b : ↥(GinfC S ⊓ Subgroup.center (GA D S)) => ((b.1, 1) : GA D S × GA D T) :=
-    continuous_subtype_val.prodMk continuous_const
+    continuous_subtypeVal.prodMk continuous_const
   refine ⟨fun γ w => ?_, ?_, ?_, ((GlobalTheory.FockCompare.smooth_iff_sm_and_real_lines D θ σ hc T S).1 _).2
     (sm_mean hom hc ν hp hχ hf)⟩
   · simp only [mean]
@@ -399,7 +399,7 @@ theorem comb_mean (hom : IsWeilDatumO ψ S T χS χT om)
   rw [integral_finsetSum]
   · simp only [integral_const_mul]
   · exact fun x _ => ((GlobalTheory.AvgFam.integrable_of_continuous ν (hχ.mul ((hom.om_cont f hf _).comp
-      (continuous_subtype_val.prodMk continuous_const)))).const_mul _).const_mul _
+      (continuous_subtypeVal.prodMk continuous_const)))).const_mul _).const_mul _
 
 theorem om_mean (hom : IsWeilDatumO ψ S T χS χT om) {θ : InfFam D} (hθ : IsInfFam θ)
     (hχ : Continuous fun b : ↥(GinfC S ⊓ Subgroup.center (GA D S)) => χ b.1) {f : WO S T → ℂ}
@@ -412,7 +412,7 @@ theorem om_mean (hom : IsWeilDatumO ψ S T χS χT om) {θ : InfFam D} (hθ : Is
   have hco : ∀ (g : GA D S) (h : GA D T), Continuous fun q : ↥(GinfC S ⊓ Subgroup.center (GA D S)) × WO S T =>
       (χ q.1.1 • om (g * q.1.1, h) f) q.2 := fun g h =>
     (hχ.comp continuous_fst).mul ((GlobalTheory.ThetaJointCont.continuous_om_oriented hom hf).comp
-      (((continuous_const.mul (continuous_subtype_val.comp continuous_fst)).prodMk continuous_const).prodMk continuous_snd))
+      (((continuous_const.mul (continuous_subtypeVal.comp continuous_fst)).prodMk continuous_const).prodMk continuous_snd))
   have e : ∀ b : ↥(GinfC S ⊓ Subgroup.center (GA D S)),
       om (g, h) (χ b.1 • om (1 * b.1, 1) f) = χ b.1 • om (g * b.1, h) f := fun b => by
     rw [map_smul, ← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, one_mul, mul_one]
@@ -451,7 +451,7 @@ theorem lift_mean (hom : IsWeilDatumO ψ S T χS χT om) {θ : InfFam D} (hθ : 
     have e : ((γ * g, h₂) : GA D S × GA D T) = (γ, 1) * (g, h₂) := by simp
     simp only []
     rw [e, map_mul, Module.End.mul_apply, hom.om_aut γ hγ 1 (one_mem _) _ (hom.om_pres _ _ hf), hΦ.1 γ hγ g]
-  rw [← integral_mean_translate hS v ν continuous_subtype_val hΨ]
+  rw [← integral_mean_translate hS v ν continuous_subtypeVal hΨ]
   congr 1
   funext h
   rw [om_mean hom hθ hχ hf, ← integral_const_mul]

@@ -127,8 +127,8 @@ private theorem pullback_kahler_iMulti {K L : Type} [Field K] [Field L] [Algebra
     (n : ℕ) (v : Fin n → K) :
     pr2L j2 (ExteriorAlgebra.ιMulti K n fun a => D ℂ K (v a)) =
       ExteriorAlgebra.ιMulti L n fun a => D ℂ L (j2 (v a)) := by
-  letI : Algebra K L := j2.toRingHom.toAlgebra
-  haveI : IsScalarTower ℂ K L := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
+  let : Algebra K L := j2.toRingHom.toAlgebra
+  have : IsScalarTower ℂ K L := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
   exact mapDR_iM K L n v
 
 private theorem iM_cast {L : Type} [Field L] [Algebra ℂ L] {d : ℕ} (S : Finset (Fin d)) (q : ℕ)
@@ -191,14 +191,14 @@ theorem UpperTheory.Gal.productCup_of_system.dtPull_of :
         Finset.sum_subtype (Finset.univ.powersetCard T.card) (p := fun S => S.card = T.card)
           (by simp [Finset.mem_powersetCard])]
       refine Finset.sum_congr rfl fun S _ => ?_
-      simp only [dif_pos S.2]
+      simp only [dite_eq_left S.2]
       rw [iM_cast S.1 T.card S.2 (fun l => D ℂ K' (tt K' x l))]
       unfold dtS
       congr 1
       exact ((loc (rB ℂ K' (xv x) {0}) e.1).val.map_det
         (ah.submatrix (T.orderEmbOfFin rfl) (S.1.orderEmbOfFin S.2))).symm
     · intro S hS
-      simp only [dif_pos hS]
+      simp only [dite_eq_left hS]
       refine (hev _ _).2 ⟨SetLike.coe_mem _, ?_⟩
       change ev (ah.submatrix (T.orderEmbOfFin rfl) (S.orderEmbOfFin hS)).det = _
       rw [AlgHom.map_det, ← hAh]

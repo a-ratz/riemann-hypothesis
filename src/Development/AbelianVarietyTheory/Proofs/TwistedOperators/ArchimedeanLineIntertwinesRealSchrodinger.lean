@@ -151,12 +151,12 @@ theorem schr_equiv : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
         ⇑(T t f₁) = schrF (trP F (Fin n × Fin d)) (A t v) ⇑(T t f) := by
   intro F E _ _ _ _ _ σ n d X W M ψ χX χW om hψ hW γ hγ T hT
   refine ⟨fun t => amap M (mat (γ (Multiplicative.ofAdd t)))ᵀ, fun v => ?_, fun t v f f₁ hf => ?_⟩
-  · haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-    haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-    haveI : IsModuleTopology (AF F) (Matrix (Fin n) (Fin d) (AE F E)) :=
+  · have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+    have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+    have : IsModuleTopology (AF F) (Matrix (Fin n) (Fin d) (AE F E)) :=
       inferInstanceAs (IsModuleTopology (AF F) (Fin n → Fin d → AE F E))
     have hm : Continuous fun t : ℝ => (mat (γ (Multiplicative.ofAdd t)))ᵀ :=
-      ((Units.continuous_val.comp continuous_subtype_val).comp (hγ.1.comp continuous_ofAdd)).matrix_transpose
+      ((Units.continuous_val.comp continuous_subtypeVal).comp (hγ.1.comp continuous_ofAdd)).matrix_transpose
     have he : Continuous M.co.e := IsModuleTopology.continuous_of_linearMap M.co.e.toLinearMap
     have hev : Continuous (evI F) := by
       change Continuous fun a : AF F => InfiniteAdeleRing.ringEquiv_mixedSpace F a.1

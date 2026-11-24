@@ -210,7 +210,7 @@ theorem exists_unitary_to_finite : ∀ (E : Type) [Field E] [NumberField E] [Num
     rw [Matrix.mul_assoc, Matrix.mul_assoc, h1, Matrix.nonsing_inv_mul _ (hD t).isUnit]
   have hfin : (Set.range δ).Finite := (Set.Finite.pi' fun _ : Fin n => hS).subset (by
     rintro _ ⟨t, rfl⟩; exact hδ t)
-  haveI := hfin.fintype
+  have := hfin.fintype
   choose s hs using fun u : Set.range δ => u.2
   choose C₁ hC₁ h₁ using fun u : Set.range δ => house_mul_mul_le (P (s u) * (Matrix.diagonal u.1)⁻¹) Gᵀ
   choose C₂ hC₂ h₂ using fun u : Set.range δ =>
@@ -246,7 +246,7 @@ theorem exists_unitary_to_finite : ∀ (E : Type) [Field E] [NumberField E] [Num
 theorem exists_nat_integral {E : Type} [Field E] [NumberField E] {κ : Type} [Finite κ] (A : κ → E) :
     ∃ m : ℕ, 0 < m ∧ ∀ i, IsIntegral ℤ ((m : E) * A i) := by
   classical
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   obtain ⟨y, hy, h⟩ := exists_integral_multiples ℤ ℚ (Finset.univ.image A)
   refine ⟨y.natAbs, Int.natAbs_pos.2 hy, fun i => ?_⟩
   have h1 := h (A i) (Finset.mem_image_of_mem _ (Finset.mem_univ i))
@@ -343,7 +343,7 @@ theorem den_cT {n d : ℕ} (X : Matrix (Fin n) (Fin n) (Af D.host.F ⊗[D.host.F
 
 theorem bddDen_of_frame : ∀ (D : D7) (V : HSp D) (T : Set (GL (Fin V.rank) D.host.E)), T.Finite → ∃ d : ℕ, 0 < d ∧ ∀ (g γ : GA D V) (γ' : GL (Fin V.rank) D.host.E), ∀ Q ∈ T, GlobalTheory.Member.IsRat V γ γ' → (∀ j, (fun i => ((γ'⁻¹ * Q : GL (Fin V.rank) D.host.E) : Matrix (Fin V.rank) (Fin V.rank) D.host.E) i j) ∈ Formalism.L2.Pj.latG V g) → BddDen V d (γ * g) := by
   intro D V T hT
-  haveI := hT.to_subtype
+  have := hT.to_subtype
   obtain ⟨m₀, h₀, H₀⟩ := den_hat _ (GlobalTheory.Member.latG_lattice_and_completion D V 1).1
   obtain ⟨m₁, h₁, H₁⟩ := den_mul_mul (D := D) (fun _ : T => 1)
     fun Q : T => ((Q.1⁻¹ : GL (Fin V.rank) D.host.E) : Matrix (Fin V.rank) (Fin V.rank) D.host.E)

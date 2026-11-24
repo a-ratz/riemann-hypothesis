@@ -57,12 +57,12 @@ theorem UpperTheory.V.AlgebraTools.TopFG.subgroup_quot :
   obtain ⟨s, hs, hden⟩ := hG
   refine ⟨?_, ?_⟩
   · intro H hH
-    haveI : Finite (G ⧸ H) := H.quotient_finite_of_isOpen hH
-    haveI : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : Finite (G ⧸ H) := H.quotient_finite_of_isOpen hH
+    have : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     set D := Subgroup.closure s with hD
-    haveI : Finite s := hs
-    haveI : Group.FG D := inferInstance
-    haveI : (H.subgroupOf D).FiniteIndex := inferInstance
+    have : Finite s := hs
+    have : Group.FG D := inferInstance
+    have : (H.subgroupOf D).FiniteIndex := inferInstance
     have hfg : Group.FG (H.subgroupOf D) := inferInstance
     obtain ⟨t, ht, htf⟩ := Group.fg_iff.mp hfg
     let φ : H.subgroupOf D →* H :=
@@ -72,7 +72,7 @@ theorem UpperTheory.V.AlgebraTools.TopFG.subgroup_quot :
     rw [← MonoidHom.map_closure, ht, ← MonoidHom.range_eq_map]
     rw [dense_iff_inter_open]
     intro U hU hUne
-    have hVo : IsOpen ((Subtype.val : H → G) '' U) := hH.isOpenMap_subtype_val U hU
+    have hVo : IsOpen ((Subtype.val : H → G) '' U) := hH.isOpenMap_subtypeVal U hU
     obtain ⟨x, ⟨y, hyU, rfl⟩, hxD⟩ := hden.inter_open_nonempty _ hVo (hUne.image _)
     refine ⟨y, hyU, ⟨⟨y.1, hxD⟩, y.2⟩, ?_⟩
     rfl

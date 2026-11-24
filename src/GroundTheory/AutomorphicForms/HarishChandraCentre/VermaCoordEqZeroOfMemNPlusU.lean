@@ -116,11 +116,11 @@ noncomputable def vermaCoord (lam : Fin n → ℂ) : U n →ₗ[ℂ] ((Fin n × 
 
 theorem vermaCoord_canon_of_hasUpper (lam : Fin n → ℂ) {m : Fin n × Fin n →₀ ℕ} (h : HasUpper m) :
     vermaCoord lam (canon m) = 0 := by
-  rw [vermaCoord, ← pbw_apply, Module.Basis.constr_basis, if_pos h]
+  rw [vermaCoord, ← pbw_apply, Module.Basis.constr_basis, ite_eq_left h]
 
 theorem vermaCoord_canon_of_not (lam : Fin n → ℂ) {m : Fin n × Fin n →₀ ℕ} (h : ¬ HasUpper m) :
     vermaCoord lam (canon m) = Finsupp.single (lowPart m) (eval lam (monomial (diagExp m) 1)) := by
-  rw [vermaCoord, ← pbw_apply, Module.Basis.constr_basis, if_neg h]
+  rw [vermaCoord, ← pbw_apply, Module.Basis.constr_basis, ite_eq_right h]
 
 theorem vermaCoord_eq_zero_of_mem_nPlusU (lam : Fin n → ℂ) {x : U n} (hx : x ∈ nPlusU n) :
     vermaCoord lam x = 0 := by
@@ -152,7 +152,7 @@ theorem canon_mul_e_diag_of_not_hasUpper {m : Fin n × Fin n →₀ ℕ} (h : ¬
     simp only [diagExp_apply, Finsupp.add_apply, Finsupp.single_apply, Prod.mk.injEq, and_self]
   rw [canon_eq_triangular, canon_eq_triangular, blockW_eq_nil hup, blockW_eq_nil hup', hlow, hdiag,
     show monomial (diagExp m + Finsupp.single k 1) (1 : ℂ) = monomial (diagExp m) 1 * X k by
-      rw [X, monomial_mul, mul_one], map_mul, hcEmb_X]
+      rw [X, monomial_mul_monomial, mul_one], map_mul, hcEmb_X]
   simp only [word_nil, mul_one, mul_assoc]
 
 theorem vermaCoord_canon_mul_e_sub (lam : Fin n → ℂ) (m : Fin n × Fin n →₀ ℕ) (k : Fin n) :
@@ -182,7 +182,7 @@ theorem vermaCoord_canon_mul_e_sub (lam : Fin n → ℂ) (m : Fin n × Fin n →
       canon_mul_e_diag_of_not_hasUpper h, vermaCoord_canon_of_not lam hnu,
       vermaCoord_canon_of_not lam h, hlow, hdiag, Finsupp.smul_single,
       show monomial (diagExp m + Finsupp.single k 1) (1 : ℂ) = monomial (diagExp m) 1 * X k by
-        rw [X, monomial_mul, mul_one],
+        rw [X, monomial_mul_monomial, mul_one],
       eval_mul, eval_X, smul_eq_mul, mul_comm (lam k), sub_self]
 
 theorem vermaCoord_mul_e_sub (lam : Fin n → ℂ) (u : U n) (k : Fin n) :
@@ -219,7 +219,7 @@ theorem canon_single (a : Fin n × Fin n) (m : ℕ) : canon (Finsupp.single a m)
       · subst hb
         simp [(List.nodup_cons.1 hl).1]
       · simp [Finsupp.single_apply, Ne.symm hb, hb]
-  rw [key _ nodup_letters, if_pos (mem_letters a)]
+  rw [key _ nodup_letters, ite_eq_left (mem_letters a)]
 
 theorem vermaCoord_e_pow (lam : Fin n → ℂ) {a : Fin n × Fin n} (ha : IsLower a) (m : ℕ) :
     vermaCoord lam (e a ^ m) = Finsupp.single (Finsupp.single a m) 1 := by
@@ -340,7 +340,7 @@ theorem e_upper_simple_mul_pow_sub_mem (hij : (j : ℕ) = i + 1) (m : ℕ) :
   have hne : i ≠ j := fun h => by rw [h] at hij; omega
   have hxy : e (i, j) * e (j, i) = e (j, i) * e (i, j) + (e (i, i) - e (j, j)) := by
     have := e_mul_sub_mul (i, j) (j, i)
-    simp only [if_true] at this
+    simp only [ite_true] at this
     rw [← this]; abel
   have hh : ∀ p : ℕ, (e (i, i) - e (j, j)) * e (j, i) ^ p =
       e (j, i) ^ p * (e (i, i) - e (j, j)) - (2 * (p : ℂ)) • e (j, i) ^ p := by
@@ -552,7 +552,7 @@ theorem harishChandraHom_isSymmetric (z : Subalgebra.center ℂ (U n)) :
       { carrier := {τ | rename τ (harishChandraHom z) = harishChandraHom z}
         one_mem' := by simp
         mul_mem' := fun {a b} ha hb => by
-          simp only [Set.mem_setOf_eq, Equiv.Perm.coe_mul] at *
+          simp only [Set.mem_ofPred_eq, Equiv.Perm.coe_mul] at *
           rw [← rename_rename, hb, ha] }
     have hle : Submonoid.closure (Set.range fun i : Fin n => Equiv.swap i.castSucc i.succ) ≤ S := by
       rw [Submonoid.closure_le]

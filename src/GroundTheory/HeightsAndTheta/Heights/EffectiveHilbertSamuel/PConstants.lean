@@ -58,7 +58,7 @@ theorem log_add_log_two_pi_le : log 280 + log (2 * π) ≤ 7.6 := by
   rw [← Real.log_mul (by norm_num) (by positivity)]
   rw [Real.log_le_iff_le_exp (by positivity)]
   have hsplit : exp 7.6 = exp 1 ^ 7 * exp 0.6 := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← exp_natCast_mul, ← Real.exp_add]
     congr 1
     norm_num
   rw [hsplit]

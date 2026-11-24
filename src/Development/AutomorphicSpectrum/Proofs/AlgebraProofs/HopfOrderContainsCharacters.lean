@@ -184,8 +184,8 @@ lemma isIntegral_pairWith [FaithfulSMul R K] {A : Subalgebra R (T → R)} (hA : 
     {l : T → K} (hl : l ∈ dualOrder K A) : IsIntegral R (pairWith (R := R) c l) := by
   classical
   obtain ⟨d, hd0, hd⟩ := hA.full
-  haveI := hA.finite
-  haveI := hA.projective
+  have := hA.finite
+  have := hA.projective
   have hfg : (dualOrder K A).FG := by
     rw [← range_psi hd0 hd]
     rw [← Submodule.map_top]
@@ -215,10 +215,10 @@ theorem GlobalTheory.CompanionTheory.Ar.BT.char_mem_hopfOrder : ∀ (R : Type) [
   cases nonempty_fintype T
   let K := FractionRing R
   have hinj := IsFractionRing.injective R K
-  haveI : FaithfulSMul R K := (faithfulSMul_iff_algebraMap_injective R K).2 hinj
+  have : FaithfulSMul R K := (faithfulSMul_iff_algebraMap_injective R K).2 hinj
   obtain ⟨d, hd0, hd⟩ := hA.full
-  haveI := hA.finite
-  haveI := hA.projective
+  have := hA.finite
+  have := hA.projective
   obtain ⟨n, p, g, hp, hg, hpg⟩ := Module.Finite.exists_comp_eq_id_of_projective R A
   set c : T → R := fun t => ((χ t : Rˣ) : R) with hcdef
   let cK : T → K := fun t => algebraMap R K (c t)

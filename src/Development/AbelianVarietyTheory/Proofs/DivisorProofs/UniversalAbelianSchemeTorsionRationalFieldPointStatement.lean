@@ -177,7 +177,7 @@ theorem exists_sympLevel_of_tate : ∀ {E : Type} [Field E] [NumberField E] [IsC
     ∃ ev : D.La → Q, IsSympLevel D act e l.M' z ev ∧ Induces l (I.ev l.A) (I.ev l.M) ev := by
   intro E _ _ _ H D l k _ Q _ act e I z hz hzA
   have hM' := M'_pos l
-  haveI : NeZero l.M' := ⟨hM'.ne'⟩
+  have : NeZero l.M' := ⟨hM'.ne'⟩
   have hζ := I.ζ_prim l.M' hM'
   obtain ⟨L, -, hcop, hL⟩ := (hζ.isPrimitiveRoot_iff').1 hz
   obtain ⟨d, hd⟩ := A_dvd_M' l
@@ -478,7 +478,7 @@ theorem zeta_pow (l : Geo.Tor.Level H) : zeta l.M' ^ (l.M' / l.A) = zeta l.A := 
     subst h
     omega
   have hA : (l.A : ℂ) ≠ 0 := Nat.cast_ne_zero.2 l.A_pos.ne'
-  rw [hm, Nat.mul_div_cancel_left _ l.A_pos, zeta, zeta, ← Complex.exp_nat_mul]
+  rw [hm, Nat.mul_div_cancel_left _ l.A_pos, zeta, zeta, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp
@@ -542,8 +542,8 @@ theorem torsion_rational : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E
   intro E _ _ _ H Dw l Xo c _ K K' _ _ _ κ y x hx
   obtain ⟨bF, hbF⟩ : ∃ bF : c.F →+* K, y ≫ pullback.snd _ _ = spMap bF :=
     ⟨(Spec.preimage (y ≫ pullback.snd _ _)).hom, (Spec.map_preimage _).symm⟩
-  haveI : CharZero K := RingHom.charZero_iff bF.injective |>.1 inferInstance
-  letI : Algebra K K' := κ.toAlgebra
+  have : CharZero K := RingHom.charZero_iff bF.injective |>.1 inferInstance
+  let : Algebra K K' := κ.toAlgebra
   let inc := (IntermediateField.inclusion c.le).toRingHom
   have hs : (spMap κ ≫ y ≫ pullback.fst _ _) ≫ Xo.s = spMap (κ.comp (bF.comp inc)) := by
     rw [Category.assoc, Category.assoc, pullback.condition, ← Category.assoc y, hbF, spMap_comp, spMap_comp]
@@ -564,7 +564,7 @@ theorem torsion_rational : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E
       congr 2
       ext a
       exact σ.commutes a) (σ.commutes (bF z₀)) x hx
-  haveI : Epi (spMap κ) := GlobalTheory.FixedPoint.epi_specAlg (K₀ := K) (K₁ := K')
+  have : Epi (spMap κ) := GlobalTheory.FixedPoint.epi_specAlg (K₀ := K) (K₁ := K')
   have hp' : spMap κ ≫ p = x.left := hp
   have hpo : p ≫ Xo.univ.t.G.hom = y ≫ pullback.fst _ _ := by
     rw [← cancel_epi (spMap κ), ← Category.assoc, hp']

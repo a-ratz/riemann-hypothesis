@@ -137,9 +137,9 @@ theorem exists_unit_eq_matLat : ∀ {O K : Type} [CommRing O] [IsDomain O] [IsDi
     obtain ⟨p, rfl⟩ := (memA a).1 ha
     obtain ⟨q, rfl⟩ := (memA b).1 hb
     rw [← map_mul, ← map_mul, mul_comm]
-  letI : CommRing A := { A.toRing with mul_comm := fun x y => Subtype.ext (commA _ x.2 _ y.2) }
-  haveI : Module.Finite K A := inferInstance
-  haveI : IsReduced A := by
+  let : CommRing A := { A.toRing with mul_comm := fun x y => Subtype.ext (commA _ x.2 _ y.2) }
+  have : Module.Finite K A := inferInstance
+  have : IsReduced A := by
     refine ⟨fun a ⟨m, hm⟩ => ?_⟩
     obtain ⟨f, hf⟩ := (memA a).1 a.2
     have h0 : aeval γ (f ^ m) = 0 := by
@@ -200,7 +200,7 @@ theorem exists_unit_eq_matLat : ∀ {O K : Type} [CommRing O] [IsDomain O] [IsDi
     change ((a : Matrix (Fin n) (Fin n) K) * (y : Matrix (Fin n) (Fin n) K)) *ᵥ v₀ ∈ M
     rw [← Matrix.mulVec_mulVec, ← hp, hr]
     exact polyStable γ M hM r _ hy
-  haveI : IsPrincipalIdealRing (integralClosure O A) :=
+  have : IsPrincipalIdealRing (integralClosure O A) :=
     GlobalTheory.UnitLemma.PrincipalLatDVR.isPrincipalIdealRing_integralClosure (E := K)
   set Λ : Submodule O A := Subalgebra.toSubmodule (integralClosure O A)
 
@@ -259,8 +259,8 @@ theorem isIntegral_or_isIntegral_inv {O K L : Type} [CommRing O] [IsDomain O]
     [Algebra O K] [IsFractionRing O K] [Field L] [Algebra K L] [Algebra O L]
     [IsScalarTower O K L] [FiniteDimensional K L] (y : L) :
     IsIntegral O y ∨ IsIntegral O y⁻¹ := by
-  haveI := GlobalTheory.FormalIsogeny.isDiscreteValuationRing_integralClosure O K L
-  haveI := integralClosure.isFractionRing_of_finite_extension (A := O) K L
+  have := GlobalTheory.FormalIsogeny.isDiscreteValuationRing_integralClosure O K L
+  have := integralClosure.isFractionRing_of_finite_extension (A := O) K L
   rcases ValuationRing.isInteger_or_isInteger (integralClosure O L) y with ⟨z, hz⟩ | ⟨z, hz⟩
   · left; rw [← hz]; exact z.2
   · right; rw [← hz]; exact z.2
@@ -318,7 +318,7 @@ theorem exists_unitary_mul_integral : ∀ {O K A : Type} [CommRing O] [IsDomain 
     ∃ t : Aˣ, τ (t : A) * t = 1 ∧ IsIntegral O ((t : A) * ((x⁻¹ : Aˣ) : A)) ∧
       IsIntegral O (((t⁻¹ : Aˣ) : A) * (x : A)) := by
   intro O K A _ _ _ _ _ _ _ _ _ _ _ _ _ σ hσ τ hτ hτσ x hc hci
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
+  have : IsArtinianRing A := IsArtinianRing.of_finite K A
 
   have hinj := IsFractionRing.injective O K
   choose s hs using hσ
@@ -338,7 +338,7 @@ theorem exists_unitary_mul_integral : ∀ {O K A : Type} [CommRing O] [IsDomain 
   obtain ⟨tI, hmem, htt⟩ : ∃ tI : MaximalSpectrum A → MaximalSpectrum A,
       (∀ I y, y ∈ (tI I).asIdeal ↔ τ y ∈ I.asIdeal) ∧ ∀ I, tI (tI I) = I := by
     have hmax : ∀ I : MaximalSpectrum A, (I.asIdeal.comap τ).IsMaximal := fun I => by
-      haveI := I.isMaximal
+      have := I.isMaximal
       exact Ideal.comap_isMaximal_of_surjective τ hsurj
     refine ⟨fun I => ⟨I.asIdeal.comap τ, hmax I⟩, fun I y => Iff.rfl, fun I => ?_⟩
     ext y
@@ -411,9 +411,9 @@ theorem exists_unitary_mul_integral : ∀ {O K A : Type} [CommRing O] [IsDomain 
       fun y hy => hy.map (Ideal.Quotient.mkₐ O I.asIdeal)
     have hxa : a = (τ a * a) * τ b := by linear_combination -a * hpq
     have hxb : b = (τ b * b) * τ a := by linear_combination -b * hpq
-    haveI := I.isMaximal
-    letI : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
-    haveI : FiniteDimensional K (A ⧸ I.asIdeal) :=
+    have := I.isMaximal
+    let : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
+    have : FiniteDimensional K (A ⧸ I.asIdeal) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ K I.asIdeal).toLinearMap
         Ideal.Quotient.mk_surjective
     have hX : Ideal.Quotient.mk I.asIdeal a * Ideal.Quotient.mk I.asIdeal b = 1 := by
@@ -485,7 +485,7 @@ theorem isIntegral_of_mapsTo_lattice : ∀ {O K : Type} [CommRing O] [Field K] [
     IsLatV O M → ∀ c : Matrix (Fin n) (Fin n) K, (∀ v ∈ M, c *ᵥ v ∈ M) → IsIntegral O c := by
   intro O K _ _ _ n M hM c hc
   classical
-  haveI : Module.Finite O M := Module.Finite.iff_fg.mpr hM.1
+  have : Module.Finite O M := Module.Finite.iff_fg.mpr hM.1
   let f : Module.End O M :=
     { toFun := fun v => ⟨c *ᵥ (v : Fin n → K), hc v v.2⟩
       map_add' := fun x y => by ext1; simp [Matrix.mulVec_add]
@@ -626,9 +626,9 @@ theorem exists_unitary_matLat_eq : ∀ {O K : Type} [CommRing O] [IsDomain O] [I
       matLat O t M = matLat O (aeval γ p) M := by
   intro O K _ _ _ _ _ _ _ n P₀ hcop γ hchar σ hσ hσO hγ M hML hMγ p hpu hpM
   set A := Algebra.adjoin K {γ} with hAdef
-  letI : IsMulCommutative A := Algebra.isMulCommutative_adjoin_singleton K γ
+  let : IsMulCommutative A := Algebra.isMulCommutative_adjoin_singleton K γ
   open scoped IsMulCommutative in
-  letI : CommRing A := inferInstance
+  let : CommRing A := inferInstance
   have hcomm : ∀ u ∈ A, ∀ v ∈ A, u * v = v * u := by
     intro u hu v hv
     exact congrArg (fun z : A => z.1) (mul_comm (⟨u, hu⟩ : A) ⟨v, hv⟩)
@@ -972,7 +972,7 @@ theorem orbit_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
     ∀ g₁ g₂ : UL n w, g₁⁻¹ * γ * g₁ ∈ KL n w → g₂⁻¹ * γ * g₂ ∈ KL n w →
     ∃ t ∈ twCent (MonoidHom.id (UL n w)) γ, ∃ k ∈ KL n w, g₂ = t * g₁ * k := by
   intro E _ _ _ n w hcc hcv P₀ hcop γ hγ g₁ g₂ h₁ h₂
-  haveI := GlobalTheory.HenselSquare.isAdicComplete_integers E w
+  have := GlobalTheory.HenselSquare.isAdicComplete_integers E w
   have hσO : ∀ a : w.adicCompletionIntegers E, ∃ b : w.adicCompletionIntegers E,
       cj w (algebraMap (w.adicCompletionIntegers E) (w.adicCompletion E) a) =
         algebraMap (w.adicCompletionIntegers E) (w.adicCompletion E) b := by
@@ -1008,7 +1008,7 @@ theorem orbit_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
     · have hUL : ∀ h : UL n w, ((h.1.val).map (cj w))ᵀ * h.1.val = 1 := by
         intro h
         have := h.2
-        simp only [UL, hs, if_false] at this
+        simp only [UL, hs, ite_false] at this
         simpa [UJ, cT] using this
       have sd : ∀ g : UL n w, SelfDual (w.adicCompletionIntegers E) (cj w)
           (matLat (w.adicCompletionIntegers E) g.1.val (stdLat (w.adicCompletionIntegers E) n)) :=
@@ -1019,7 +1019,7 @@ theorem orbit_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
       have htu : IsUnit t := (Matrix.isUnit_iff_isUnit_det _).2 (Matrix.isUnit_det_of_left_inverse ht1)
       refine ⟨htu.unit, ?_, ?_, by rw [hp]; exact htM⟩
       · show _ ∈ UL n w
-        simp only [UL, hs, if_false]
+        simp only [UL, hs, ite_false]
         show cT (cj w) _ * 1 * _ = 1
         simpa [cT] using ht1
       · ext : 1

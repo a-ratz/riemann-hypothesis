@@ -451,8 +451,8 @@ end Transport
 
 theorem transport : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r k : ℕ) (P : LocNG.FPair H r), ∀ (S : Frames M.L r k) (c : Coord P S), Function.Injective (c.inn P.B.f) ∧ (∀ L, P.B.IsInner L ↔ S.IsInner S.f' S.es' (c.inn P.B.f L)) ∧ (∀ A, S.IsInner S.f' S.es' A → ∃ L, A = c.inn P.B.f L) ∧ ∀ L, c.lat (P.B.LamStd L) = S.stdLat S.f' S.es' (c.inn P.B.f L) := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P S c
-  letI := hM.loc
-  letI := hM.char0
+  let := hM.loc
+  let := hM.char0
   have hO := GlobalTheory.UnramOrder.order_facts M.L S.ϖ S.ϖ_irr
   have hT : P.B.T ≠ 0 := by rw [← c.T'_eq]; exact S.T'.ne_zero
   exact ⟨inn_inj P.B c,

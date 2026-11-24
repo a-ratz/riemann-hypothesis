@@ -139,8 +139,8 @@ theorem loc_eq_of_isRes {D : D7} {H H' : Formalism.L2.Host.HChar D.host.E} {PP :
     exact (ne_of_lt h1) h2
   have hb0 : (b : D.host.E) ≠ 0 := fun h0 => hbP (by rw [RingOfIntegers.coe_eq_zero_iff.1 h0]; exact zero_mem _)
   let kb : D.host.Eˣ := Units.mk0 _ hb0
-  haveI : PP.asIdeal.IsMaximal := PP.isMaximal
-  letI : Field (kP PP) := Ideal.Quotient.field PP.asIdeal
+  have : PP.asIdeal.IsMaximal := PP.isMaximal
+  let : Field (kP PP) := Ideal.Quotient.field PP.asIdeal
   have hu0 : (Ideal.Quotient.mk PP.asIdeal b : kP PP) ≠ 0 := fun h0 => hbP (Ideal.Quotient.eq_zero_iff_mem.1 h0)
   let u : (kP PP)ˣ := Units.mk0 _ hu0
   have e1 := h b kb u rfl rfl
@@ -355,7 +355,7 @@ namespace GlobalTheory.LocUnifVal
 theorem valued_eq_of_unif {D : D7} {v : HeightOneSpectrum (𝓞 D.host.F)} (ϖ : (Fv D.host.F v)ˣ)
     (hϖ : ValuativeRel.valuation (Fv D.host.F v) (ϖ : Fv D.host.F v) = ValuativeRel.uniformizer (Fv D.host.F v)) :
     Valued.v (ϖ : Fv D.host.F v) = WithZero.exp (-1 : ℤ) := by
-  haveI : (Valued.v : Valuation (Fv D.host.F v) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (Fv D.host.F v) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have key : ∀ a b : Fv D.host.F v, ValuativeRel.valuation (Fv D.host.F v) a ≤ ValuativeRel.valuation (Fv D.host.F v) b ↔
       Valued.v a ≤ Valued.v b := fun a b =>
@@ -866,10 +866,10 @@ theorem local_factor : GlobalTheory.Published.UnramifiedDoublingGL → GlobalThe
   obtain ⟨hbd, hval⟩ := hα α hαe
   obtain ⟨e₀, he₁, he₂, he₃, hϖ⟩ := id hxϖ
   have hμϖ : μT ϖ = Circle.toUnits (c.chT (k + 1) x₀) := hμT x₀ ϖ ⟨e₀, he₁, he₂, he₃⟩
-  letI : MeasurableSpace (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))) := borel _
-  haveI : BorelSpace (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))) := ⟨rfl⟩
-  letI : MeasurableSpace (GL (Fin D.R.r ⊕ Blocks k D.R.t) (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))) := borel _
-  haveI : BorelSpace (GL (Fin D.R.r ⊕ Blocks k D.R.t) (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))) := ⟨rfl⟩
+  let : MeasurableSpace (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))) := borel _
+  have : BorelSpace (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP))) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin D.R.r ⊕ Blocks k D.R.t) (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))) := borel _
+  have : BorelSpace (GL (Fin D.R.r ⊕ Blocks k D.R.t) (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))) := ⟨rfl⟩
   obtain ⟨ν, hν⟩ := GlobalTheory.SplitWeil.exists_isUnitVol (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))
   obtain ⟨hPo, hPc⟩ := GlobalTheory.ParahoricOpenCompact.isOpen_isCompact_parahoric (Fv D.host.F ((_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)))
     (Fin D.R.r) (Blocks k D.R.t)
@@ -899,7 +899,7 @@ theorem local_factor : GlobalTheory.Published.UnramifiedDoublingGL → GlobalThe
   · obtain ⟨y, rfl⟩ := e.surjective y
     simp only [ContinuousMulEquiv.symm_apply_apply]
     have hθ := hw.com.inf
-    haveI : s.ν.IsHaarMeasure := hst.haar
+    have : s.ν.IsHaarMeasure := hst.haar
     have hL2 : ∀ (u : s.CC c), ∀ v ∈ s.KF, MemL2Quotient (GQ s.V) s.ν fun g => conj (PiLocalization₂.val u v g) := fun u v hv =>
       memL2_of_cusp_form hC hθ (mem_cuspForms.1
         (GlobalTheory.ChainOnto.RealData.conj_multiplicityValue_mem_cuspFormsArchimedeanKFinite c.θ hθ s.M hst.sigOK u.1 u.2 v hv)).1
@@ -1032,8 +1032,8 @@ theorem integral_split_place : ∀ (D : D7) (A : HSp D) (m : Measure (GA D A)), 
       (measurable_snd.mul (hcm.comp measurable_fst) : Measurable fun p : GA D A × GlobalTheory.FinZeta.Gv A v => p.2 * c p.1)
       (Filter.Eventually.of_forall fun x => ?_)
     by_cases hx : GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v x ∈ J
-    · simp only [c, if_pos hx]; exact hright _ hx
-    · simp only [c, if_neg hx, mul_one, Measure.map_id']
+    · simp only [c, ite_eq_left hx]; exact hright _ hx
+    · simp only [c, ite_eq_right hx, mul_one, Measure.map_id']
   let g0 : GA D A × GlobalTheory.FinZeta.Gv A v → ℂ := fun q => (E ∩ {g : GA D A | GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v g ∈ J}).indicator F q.1 * ζ q.2
   have hg0 : Integrable g0 (m.prod μ) := Integrable.mul_prod ((integrable_indicator_iff hUm).2 hFi) hζ
   let f : GA D A × GlobalTheory.FinZeta.Gv A v → ℂ := fun q => (E ∩ {g : GA D A | GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v g ∈ J}).indicator (fun x => F (GlobalTheory.AdelicU.emb D.sp.cm.sig A.gram v q.2 * x)) q.1
@@ -1041,7 +1041,7 @@ theorem integral_split_place : ∀ (D : D7) (A : HSp D) (m : Measure (GA D A)), 
     funext q
     by_cases hx : q.1 ∈ (E ∩ {g : GA D A | GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v g ∈ J})
     · have hx2 : GlobalTheory.AdelicU.proj D.sp.cm.sig A.gram v q.1 ∈ J := hx.2
-      simp only [f, g0, Function.comp_apply, c, if_pos hx2]
+      simp only [f, g0, Function.comp_apply, c, ite_eq_left hx2]
       rw [Set.indicator_of_mem hx, Set.indicator_of_mem hx, key q.1 hx]
     · simp only [f, g0, Function.comp_apply, Set.indicator_of_notMem hx, zero_mul]
   have hf : Integrable f (m.prod μ) := by
@@ -1436,7 +1436,7 @@ theorem qPeel_holds : GlobalTheory.Published.UnramifiedDoublingGL → GlobalTheo
         rw [hgAt v _ hne]
       have hset : ET (w.Q \ insert PP T) ∩ {g | GlobalTheory.AdelicU.proj D.sp.cm.sig s.V.gram v g ∈ J PP hPP} = ET (w.Q \ T) := by
         ext g
-        simp only [ET, Set.mem_inter_iff, Set.mem_setOf_eq]
+        simp only [ET, Set.mem_inter_iff, Set.mem_ofPred_eq]
         constructor
         · rintro ⟨⟨h1, h2⟩, h3⟩
           refine ⟨h1, fun PP' hPP' => ?_⟩
@@ -1476,13 +1476,13 @@ theorem qPeel_holds : GlobalTheory.Published.UnramifiedDoublingGL → GlobalTheo
       exact GlobalTheory.T.twistedChain_coefficient_supported_principal_level D hgap c w hw k hk s s' hs hs' p hp m X hX φ g hc _
         (by simp only [Twist.S₀, Finset.coe_image]; exact Set.mem_image_of_mem _ hP)
     · exact h2 PP hP
-  have hintR : IntegrableOn F (ET w.Q) s.ν := hlev.of_forall_diff_eq_zero (hET _ subset_rfl) hzero
+  have hintR : IntegrableOn F (ET w.Q) s.ν := hlev.of_forall_sdiff_eq_zero (hET _ subset_rfl) hzero
   have hR := key w.Q subset_rfl hintR
   have hE0 : ET (w.Q \ w.Q) = intOff c s := by
     ext g; simp [ET]
   rw [hE0] at hR
   refine ⟨hR.1, fun hz2 => ?_⟩
-  rw [hR.2 hz2, setIntegral_eq_of_subset_of_forall_diff_eq_zero (hET _ subset_rfl) hsub hzero]
+  rw [hR.2 hz2, setIntegral_eq_of_subset_of_forall_sdiff_eq_zero (hET _ subset_rfl) hsub hzero]
   rfl
 
 end GlobalTheory.ChainTw.Peel

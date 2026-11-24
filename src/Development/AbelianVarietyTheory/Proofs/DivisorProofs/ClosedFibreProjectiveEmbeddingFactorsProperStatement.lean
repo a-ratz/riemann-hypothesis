@@ -174,10 +174,10 @@ theorem pspace_noeth_and_pullback : ∀ (R : Type) [CommRing R] [IsNoetherianRin
     have : CompactSpace (PSpace R N) := QuasiCompact.compactSpace_of_compactSpace (PSpace.str R N)
     exact {}
   refine ⟨h1, ?_⟩
-  haveI := hπ
+  have := hπ
   have : IsProper (pullback.fst (PSpace.str R N) π) := inferInstance
-  haveI := LocallyOfFiniteType.isLocallyNoetherian (pullback.fst (PSpace.str R N) π)
-  haveI := QuasiCompact.compactSpace_of_compactSpace (pullback.fst (PSpace.str R N) π)
+  have := LocallyOfFiniteType.isLocallyNoetherian (pullback.fst (PSpace.str R N) π)
+  have := QuasiCompact.compactSpace_of_compactSpace (pullback.fst (PSpace.str R N) π)
   exact {}
 
 end GlobalTheory.Mum
@@ -223,8 +223,8 @@ theorem connectedSpace_pullback_of_finitelyGenerated_residue :
         L = Subfield.closure (Set.range κ ∪ Set.range c) →
         ConnectedSpace (pullback π (spMap ((κ.codRestrict L hL).comp (residue R))) : Scheme.{0}) := by
   intro R _ _ _ S π hprop hsurj hbij K _ κ L hL n c hLc
-  haveI := hprop
-  haveI := hsurj
+  have := hprop
+  have := hsurj
   have hc : ∀ j, c j ∈ L := fun j => hLc ▸ Subfield.subset_closure (Or.inr ⟨j, rfl⟩)
   set A := MvPolynomial (Fin n) R
   set ιC : R →+* A := MvPolynomial.C with hC
@@ -265,10 +265,10 @@ theorem connectedSpace_pullback_of_finitelyGenerated_residue :
     refine RingHom.surjectiveOnStalks_of_exists_div fun x => ?_
     obtain ⟨a, b, hb, e⟩ := hdiv x
     exact ⟨a, b, (isUnit_iff_ne_zero).2 hb, e⟩
-  haveI hpre : IsPreimmersion (spMap φ) := by
+  have hpre : IsPreimmersion (spMap φ) := by
     rw [IsPreimmersion.SpecMap_iff]
     refine ⟨?_, hstalk⟩
-    haveI : Subsingleton (PrimeSpectrum L) := inferInstance
+    have : Subsingleton (PrimeSpectrum L) := inferInstance
     exact Topology.IsEmbedding.of_subsingleton _
 
   set π' : pullback π (spMap ιC) ⟶ Sp A := pullback.snd π (spMap ιC) with hπ'
@@ -296,7 +296,7 @@ theorem connectedSpace_pullback_of_finitelyGenerated_residue :
   have e : pullback π (spMap β) ≅ pullback π' (spMap φ) :=
     pullback.congrHom rfl hx ≪≫ (pullbackLeftPullbackSndIso π (spMap ιC) (spMap φ)).symm
   obtain ⟨z, -⟩ := (pullback.snd π (spMap β)).surjective q
-  haveI : ConnectedSpace ↥(pullback π' (spMap φ)) := ConnectedSpace.mk ⟨e.hom z⟩
+  have : ConnectedSpace ↥(pullback π' (spMap φ)) := ConnectedSpace.mk ⟨e.hom z⟩
   exact (Scheme.homeoOfIso e).symm.surjective.connectedSpace (Scheme.homeoOfIso e).symm.continuous
 
 end GlobalTheory.Mum
@@ -341,8 +341,8 @@ noncomputable section
 namespace GlobalTheory.GeomConnDesc
 
 theorem flat_spec_field {K : Type} [Field K] {Z : Scheme.{0}} (f : Z ⟶ Sp K) : Flat f := by
-  haveI : IsIntegral (Sp K) := by unfold Sp; infer_instance
-  haveI : Subsingleton (Sp K) := by unfold Sp; infer_instance
+  have : IsIntegral (Sp K) := by unfold Sp; infer_instance
+  have : Subsingleton (Sp K) := by unfold Sp; infer_instance
   infer_instance
 
 theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (i : A →+* B) (j : B →+* C) :
@@ -492,7 +492,7 @@ theorem Lc_le_append_right {n m : ℕ} (c : Fin n → K) (d : Fin m → K) : Lc 
 theorem gen [QuasiCompact f] [QuasiSeparated f] (x : Γ(pullback f (spMap i₀), ⊤)) :
     ∃ (n : ℕ) (c : Fin n → K) (y : Γ(pullback f (spMap (i₀.codRestrict (Lc i₀ c) (mem_Lc i₀ c))), ⊤)),
       (hc f i₀ c).appTop.hom y = x := by
-  haveI : Flat (spMap i₀) := flat_spec_field _
+  have : Flat (spMap i₀) := flat_spec_field _
   let S : Subring Γ(pullback f (spMap i₀), ⊤) :=
     { carrier := {x | ∃ (n : ℕ) (c : Fin n → K)
         (y : Γ(pullback f (spMap (i₀.codRestrict (Lc i₀ c) (mem_Lc i₀ c))), ⊤)), (hc f i₀ c).appTop.hom y = x}
@@ -534,7 +534,7 @@ theorem preconnectedSpace_of_finGen : ∀ (F : Type) [Field F] (X : Scheme.{0}) 
           PreconnectedSpace (pullback f (spMap (i₀.codRestrict L hL)) : Scheme.{0})) →
         PreconnectedSpace (pullback f (spMap i₀) : Scheme.{0}) := by
   intro F _ X f _ _ K _ i₀ hyp
-  haveI : Flat f := flat_spec_field f
+  have : Flat f := flat_spec_field f
   refine preconnectedSpace_iff_clopen.2 fun U hU => ?_
   obtain ⟨e, he, hUe⟩ := GlobalTheory.exists_idempotent_basicOpen_eq_of_isClopen _ U hU
   obtain ⟨n, c, y, rfl⟩ := gen f i₀ e
@@ -544,7 +544,7 @@ theorem preconnectedSpace_of_finGen : ∀ (F : Type) [Field F] (X : Scheme.{0}) 
   have hy : IsIdempotentElem y := hinj (by rw [map_mul]; exact he)
   have hcl : IsClopen (SetLike.coe (Scheme.basicOpen _ y)) :=
     ⟨isClosed_basicOpen_idem hy, (Scheme.basicOpen _ y).isOpen⟩
-  haveI := hyp (Lc i₀ c) (mem_Lc i₀ c) n c rfl
+  have := hyp (Lc i₀ c) (mem_Lc i₀ c) n c rfl
   have hU' : U = (hc f i₀ c) ⁻¹' (SetLike.coe (Scheme.basicOpen _ y)) := by
     rw [← hUe, ← Scheme.preimage_basicOpen_top]; rfl
   rcases isClopen_iff.1 hcl with h0 | h1
@@ -594,11 +594,11 @@ open GlobalTheory.Mum
 theorem GlobalTheory.Mum.connectedSpace_pullback_closedFibre_field : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (M : Modif R) (K : Type) [Field K] (κ : ResidueField R →+* K), ConnectedSpace (pullback M.π (spMap (κ.comp (residue R))) : Scheme.{0}) := by
   intro R _ _ _ hA M K _ κ
   obtain ⟨hN, -, hIC, -⟩ := hA
-  haveI := hN
-  haveI := hIC
+  have := hN
+  have := hIC
   obtain ⟨hbij, hsurj⟩ := Modif.appTop_bijective_surjective R M
-  haveI := M.proper
-  haveI := hsurj
+  have := M.proper
+  have := hsurj
   have hcomp : ∀ {A : Type} [CommRing A] (ψ : ResidueField R →+* A),
       spMap ψ ≫ spMap (residue R) = spMap (ψ.comp (residue R)) := fun ψ => by
     rw [← Spec.map_comp]; rfl
@@ -612,7 +612,7 @@ theorem GlobalTheory.Mum.connectedSpace_pullback_closedFibre_field : ∀ (R : Ty
     refine GlobalTheory.T.preconnectedSpace_of_finGen_subfield_baseChanges (ResidueField R) _ f inferInstance inferInstance K κ fun L hL n c hc => ?_
     have hc' := GlobalTheory.T.connectedSpace_closedFibre_finitelyGenerated_ext R M.S M.π inferInstance hsurj hbij K κ L hL n c hc
     exact @pc _ _ _ _ (Scheme.homeoOfIso (e _)).symm hc'.toPreconnectedSpace
-  haveI : PreconnectedSpace (pullback M.π (spMap (κ.comp (residue R))) : Scheme.{0}) :=
+  have : PreconnectedSpace (pullback M.π (spMap (κ.comp (residue R))) : Scheme.{0}) :=
     pc (Scheme.homeoOfIso (e κ))
   obtain ⟨q⟩ : Nonempty (Sp K) := inferInstance
   obtain ⟨z, -⟩ := (pullback.snd M.π (spMap (κ.comp (residue R)))).surjective q
@@ -770,13 +770,13 @@ theorem section_eq_of_apply_eq {k : Type} [Field k] {X : Scheme.{0}} (p : X ⟶ 
 
 theorem eq_of_comp_eq_of_connectedSpace_pullback : ∀ (P Q : Scheme.{0}) (b : P ⟶ Q), LocallyQuasiFinite b → ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (ν : Sp Ω ⟶ Q) (ξ₁ ξ₂ : Sp Ω ⟶ P), ξ₁ ≫ b = ν → ξ₂ ≫ b = ν → ConnectedSpace (pullback b ν : Scheme.{0}) → ξ₁ = ξ₂ := by
   intro P Q b hb Ω _ _ ν ξ₁ ξ₂ h₁ h₂ hc
-  haveI := hb
+  have := hb
   have hsub : ∀ x y : (pullback b ν : Scheme.{0}), x = y := by
     intro x y
     have hopen : ∀ z : (pullback b ν : Scheme.{0}), IsOpen ({z} : Set (pullback b ν : Scheme.{0})) := by
       intro z
       have hd := (pullback.snd b ν).isDiscrete_preimage_singleton (pullback.snd b ν z)
-      obtain ⟨U, hU, hUz⟩ := isDiscrete_iff_forall_exists_isOpen.mp hd z rfl
+      obtain ⟨U, hU, hUz⟩ := isDiscrete_iff_forall_mem_exists_isOpen.mp hd z rfl
       have hU' : U ∩ (pullback.snd b ν) ⁻¹' {pullback.snd b ν z} = U :=
         Set.inter_eq_left.mpr fun w _ => Subsingleton.elim _ _
       rw [hU'] at hUz
@@ -1014,10 +1014,10 @@ theorem lfac {X P : Scheme.{0}} (j : X ⟶ P) [IsImmersion j] (Ω : Type) [Field
     obtain ⟨x, hx⟩ := h ⟨q, rfl⟩
     refine ⟨x, j.coborderRange.ι.isOpenEmbedding.injective ?_⟩
     rw [← Scheme.Hom.comp_apply, Scheme.Hom.liftCoborder_ι, hx, ← Scheme.Hom.comp_apply, hν']
-  haveI : Surjective (pullback.snd j.liftCoborder ν') := ⟨by
+  have : Surjective (pullback.snd j.liftCoborder ν') := ⟨by
     rw [← Set.range_eq_univ, Scheme.Pullback.range_snd]
     exact Set.eq_univ_of_forall fun y => h2 ⟨y, rfl⟩⟩
-  haveI := isIso_of_isClosedImmersion_of_surjective (pullback.snd j.liftCoborder ν')
+  have := isIso_of_isClosedImmersion_of_surjective (pullback.snd j.liftCoborder ν')
   have key : pullback.fst j.liftCoborder ν' ≫ j = pullback.snd j.liftCoborder ν' ≫ ν := by
     have := congrArg (· ≫ j.coborderRange.ι) (pullback.condition (f := j.liftCoborder) (g := ν'))
     simp only [Category.assoc, Scheme.Hom.liftCoborder_ι, hν'] at this
@@ -1028,7 +1028,7 @@ theorem lfac {X P : Scheme.{0}} (j : X ⟶ P) [IsImmersion j] (Ω : Type) [Field
 theorem lsurj {X Y W Z : Scheme.{0}} (l : W ⟶ X) (f : X ⟶ Y) (ν : Z ⟶ Y)
     (h : ∀ z : (pullback f ν : Scheme.{0}), pullback.fst f ν z ∈ Set.range l)
     (hc : ConnectedSpace (pullback (l ≫ f) ν : Scheme.{0})) : ConnectedSpace (pullback f ν : Scheme.{0}) := by
-  haveI : ConnectedSpace (pullback l (pullback.fst f ν) : Scheme.{0}) :=
+  have : ConnectedSpace (pullback l (pullback.fst f ν) : Scheme.{0}) :=
     (pullbackRightPullbackFstIso f ν l).hom.homeomorph.connectedSpace_iff.2 hc
   refine Function.Surjective.connectedSpace (f := pullback.snd l (pullback.fst f ν)) ?_
     (pullback.snd l (pullback.fst f ν)).continuous
@@ -1074,18 +1074,18 @@ theorem liso {W Y T P Z B : Scheme.{0}} (a : Y ⟶ B) (k : T ⟶ B) (e : W ⟶ p
           · simp only [m, n, m₀, Category.assoc, pullback.lift_fst_assoc, pullback.lift_snd, IsIso.inv_hom_id_assoc,
               Category.id_comp]
         · simp only [m, n, Category.assoc, pullback.lift_snd, pullback.lift_fst, Category.id_comp] }
-  haveI : IsIso φ.hom := Iso.isIso_hom φ
+  have : IsIso φ.hom := Iso.isIso_hom φ
   exact φ.hom.homeomorph.connectedSpace_iff.1 hc
 
 theorem lred {X Y Z W : Scheme.{0}} (i : X ⟶ Y) [IsClosedImmersion i] (hs : Function.Surjective i)
     (s : Y ⟶ W) (h : Z ⟶ W) (hc : ConnectedSpace (pullback h s : Scheme.{0})) :
     ConnectedSpace (pullback h (i ≫ s) : Scheme.{0}) := by
-  haveI : Surjective i := ⟨hs⟩
+  have : Surjective i := ⟨hs⟩
   let q := pullback.fst (pullback.snd h s) i
   have hq : Function.Surjective q := (inferInstance : Surjective q).surj
-  haveI : Nonempty (pullback (pullback.snd h s) i : Scheme.{0}) :=
+  have : Nonempty (pullback (pullback.snd h s) i : Scheme.{0}) :=
     ⟨(hq (Nonempty.some inferInstance)).choose⟩
-  haveI : ConnectedSpace (pullback (pullback.snd h s) i : Scheme.{0}) := by
+  have : ConnectedSpace (pullback (pullback.snd h s) i : Scheme.{0}) := by
     refine connectedSpace_iff_univ.2 ⟨Set.univ_nonempty, ?_⟩
     refine (q.isClosedEmbedding.isInducing.isPreconnected_image).1 ?_
     rw [Set.image_univ, hq.range_eq]
@@ -1096,7 +1096,7 @@ theorem fib_conn : ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing
   intro R _ _ _ S π hπ G' _ hG E hconn Ω _ _ ν hex
   obtain ⟨g, hg, p, hp⟩ := hex
   obtain ⟨y, hy⟩ := (GlobalTheory.Mum.Emb.range_closed R S π G' E).1 g hg
-  haveI := E.imm
+  have := E.imm
   have hrange : Set.range ν ⊆ Set.range E.j := by
     rintro _ ⟨q, rfl⟩
     rw [Subsingleton.elim q p, hp, hy]
@@ -1105,14 +1105,14 @@ theorem fib_conn : ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing
   let κ₀ : ResidueField R →+* Ω := (Spec.preimage (y₀ ≫ E.Y.hom)).hom
   have hκ₀ : y₀ ≫ E.Y.hom = spMap κ₀ := by
     simp [κ₀, spMap]
-  haveI := hπ
+  have := hπ
   let ρ := spMap (residue R)
   let S₀ := pullback π ρ
-  haveI : IsLocallyNoetherian S₀ := LocallyOfFiniteType.isLocallyNoetherian (pullback.snd π ρ)
+  have : IsLocallyNoetherian S₀ := LocallyOfFiniteType.isLocallyNoetherian (pullback.snd π ρ)
   let T := S₀.nilradical.subscheme
   let i : T ⟶ S₀ := S₀.nilradical.subschemeι
-  haveI : IsReduced T := GlobalTheory.RedFibreField.isReduced_nilradical_subscheme _
-  haveI : IsLocallyNoetherian T := LocallyOfFiniteType.isLocallyNoetherian i
+  have : IsReduced T := GlobalTheory.RedFibreField.isReduced_nilradical_subscheme _
+  have : IsLocallyNoetherian T := LocallyOfFiniteType.isLocallyNoetherian i
   have hi : Function.Surjective i := by
     rw [← Set.range_eq_univ, Scheme.IdealSheafData.range_subschemeι, Scheme.support_nilradical]
     rfl
@@ -1208,7 +1208,7 @@ theorem GlobalTheory.Mum.Emb.lift_closedPoint : ∀ (R : Type) [CommRing R] [IsD
   obtain ⟨Ω', _, io, q, hq1, hq2⟩ := GlobalTheory.T.exists_lift_after_field_extension R M.S M.π G' E Ω (ξ ≫ b) s hs' hg
   let φ : E.H.toScheme ⟶ pullback M.π (PSpace.str R E.N) :=
     pullback.lift (E.H.ι ≫ G'.hom) E.f (by rw [E.f_over, Category.assoc])
-  haveI : Smooth G'.hom := hG.smooth
+  have : Smooth G'.hom := hG.smooth
   have hφ : LocallyOfFiniteType φ := by
     have : LocallyOfFiniteType (φ ≫ pullback.fst _ _) := by
       rw [pullback.lift_fst]; infer_instance
@@ -1233,7 +1233,7 @@ theorem GlobalTheory.Mum.Emb.lift_closedPoint : ∀ (R : Type) [CommRing R] [IsD
     rw [← Scheme.Hom.comp_apply, hp1]
   let p : Sp Ω ⟶ X.toScheme := IsOpenImmersion.lift X.ι p₀ hpX
   have hpι : p ≫ X.ι = p₀ := IsOpenImmersion.lift_fac _ _ _
-  haveI : IsNoetherianRing R := hAdm.1
+  have : IsNoetherianRing R := hAdm.1
   have c4 := GlobalTheory.T.geometricFibre_projEmbedding_fixedGroup_connected R M.S M.π (by have := M.proper; infer_instance) G' hG.smooth E
     (GlobalTheory.T.connectedSpace_closedFibre_modification_fieldExtension R hAdm M) Ω (ξ ≫ b) hg
   have c3 := GlobalTheory.T.connectedSpace_pullback_restrict_open_containing_fibre _ _ _ X E.f (ξ ≫ b) hU c4
@@ -1293,7 +1293,7 @@ theorem Emb.chart_injective : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
       rw [Scheme.Hom.comp_apply, Scheme.fromSpecResidueField_apply]; exact hz
     rw [← hφ] at h1
     have h2 : (spMap φ) pt = PrimeSpectrum.comap φ pt := rfl
-    have h3 : pt.asIdeal = ⊥ := by haveI := pt.isPrime; exact Ideal.eq_bot_of_prime _
+    have h3 : pt.asIdeal = ⊥ := by have := pt.isPrime; exact Ideal.eq_bot_of_prime _
     have h4 : r ∈ ((spMap φ) pt).asIdeal := by rw [h1]; exact hr
     rw [h2] at h4
     change φ r ∈ pt.asIdeal at h4
@@ -1313,7 +1313,7 @@ theorem Emb.chart_injective : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
     pullback.lift (l ≫ Φ) (pullback.snd _ _) hψ
 
   have hψinj : Function.Injective ψ := by
-    haveI : IsImmersion E.j := E.imm
+    have : IsImmersion E.j := E.imm
     let h : pullback (pullback.snd p M.π) (spMap io ≫ x) ⟶ PSpace R E.N := pullback.fst _ _ ≫ pullback.fst _ _
     have hΦf : Φ ≫ pullback.fst p M.π = E.f := by rw [hΦ]; exact pullback.lift_fst _ _ _
     have hψ1 : ψ ≫ pullback.fst _ _ = l ≫ Φ := pullback.lift_fst _ _ _
@@ -1323,7 +1323,7 @@ theorem Emb.chart_injective : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
     have hθ : (e.hom.left ≫ pullback.fst E.Y.hom (spMap (io.comp κ))) ≫ E.j = ψ ≫ h := by
       rw [hψh, hlf, Category.assoc]
     let θ : pullback G'.hom (spMap io ≫ x) ⟶ pullback E.j h := pullback.lift _ _ hθ
-    haveI : Mono (spMap (residue R)) := by
+    have : Mono (spMap (residue R)) := by
       have : IsClosedImmersion (spMap (residue R)) := IsClosedImmersion.spec_of_surjective _ residue_surjective
       infer_instance
     have hΦs : Φ ≫ pullback.snd p M.π = E.H.ι ≫ G'.hom := by rw [hΦ]; exact pullback.lift_snd _ _ _
@@ -1423,10 +1423,10 @@ namespace GlobalTheory
 
 theorem restrict_proper_sections_bijective_to_fibre_open : ∀ (Y₀ H X'' P'' : Scheme.{0}) (H' : H.Opens) (i : H'.toScheme ⟶ X'') (a'' : X'' ⟶ P'') (b'' : P'' ⟶ Y₀), IsNoetherian Y₀ → IsOpenImmersion i → IsProper a'' → Surjective a'' → (∀ V : P''.Opens, Function.Bijective (a''.app V).hom) → IsFinite b'' → ∃ (P' : Scheme.{0}) (c : P' ⟶ P'') (X : H.Opens) (k : X.toScheme ⟶ H'.toScheme) (a : X.toScheme ⟶ P'), IsOpenImmersion c ∧ IsNoetherian P' ∧ IsProper a ∧ Surjective a ∧ (∀ V : P'.Opens, Function.Bijective (a.app V).hom) ∧ k ≫ H'.ι = X.ι ∧ a ≫ c = k ≫ i ≫ a'' ∧ (∀ z : H'.toScheme, (∀ w : X'', a'' w = a'' (i z) → w ∈ Set.range i) → H'.ι z ∈ X) ∧ ∀ w : X'', a'' w ∈ Set.range c → w ∈ Set.range (k ≫ i) := by
   intro Y₀ H X'' P'' H' i a'' b'' hY hi ha hs hV hb
-  haveI := hY; haveI := hi; haveI := ha; haveI := hs; haveI := hb
+  have := hY; have := hi; have := ha; have := hs; have := hb
   have hP : IsNoetherian P'' := by
-    haveI : IsLocallyNoetherian P'' := LocallyOfFiniteType.isLocallyNoetherian b''
-    haveI : CompactSpace P'' := QuasiCompact.compactSpace_of_compactSpace b''
+    have : IsLocallyNoetherian P'' := LocallyOfFiniteType.isLocallyNoetherian b''
+    have : CompactSpace P'' := QuasiCompact.compactSpace_of_compactSpace b''
     exact {}
   let U0 : P''.Opens := ⟨(a'' '' (Set.range i)ᶜ)ᶜ,
     (a''.isClosedMap _ i.isOpenEmbedding.isOpen_range.isClosed_compl).isOpen_compl⟩
@@ -1471,8 +1471,8 @@ theorem restrict_proper_sections_bijective_to_fibre_open : ∀ (Y₀ H X'' P'' :
   have hfac : a ≫ U0.ι = k ≫ i ≫ a'' := by
     simp only [a, e, Category.assoc, morphismRestrict_ι, IsOpenImmersion.isoOfRangeEq_hom_fac_assoc]
   refine ⟨U0.toScheme, U0.ι, X, k, a, inferInstance, ?_, inferInstance, ?_, ?_, hk, hfac, ?_, ?_⟩
-  · haveI := hP
-    haveI : CompactSpace U0.toScheme := QuasiCompact.compactSpace_of_compactSpace U0.ι
+  · have := hP
+    have : CompactSpace U0.toScheme := QuasiCompact.compactSpace_of_compactSpace U0.ι
     exact {}
   · refine ⟨fun x => ?_⟩
     obtain ⟨w, hw⟩ := a''.surjective x.1
@@ -1543,7 +1543,7 @@ namespace GlobalTheory.SteinFact
 theorem finite_appTop_of_isProper {R : Type} [CommRing R] [IsNoetherianRing R] {X : Scheme.{0}}
     (f : X ⟶ Sp R) [IsProper f] :
     ((Scheme.ΓSpecIso (.of R)).inv ≫ f.appTop).hom.Finite := by
-  letI := GlobalTheory.algebraΓOfHom f
+  let := GlobalTheory.algebraΓOfHom f
   have h0 := GlobalTheory.ProperFinite.finite_coh_of_isProper f (GlobalTheory.structureModule X) 0
   have h1 := Module.Finite.equiv (GlobalTheory.cohOn.zeroEquiv R (GlobalTheory.structureModule X) ⊤)
   let ρ : GlobalTheory.sectionsOn (GlobalTheory.structureModule X) ⊤ →ₗ[R] Γ(X, ⊤) :=
@@ -1579,7 +1579,7 @@ theorem stein_factorisation : ∀ (X Y : Scheme.{0}) (g : X ⟶ Y), IsLocallyNoe
   have hb : IsFinite g.fromNormalization := by
     refine { toIsAffineHom := inferInstance, finite_app := fun U hU => ?_ }
     have : IsNoetherianRing Γ(Y, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-    letI := (g.app U).hom.toAlgebra
+    let := (g.app U).hom.toAlgebra
     have : Module.Finite Γ(Y, U) Γ(X, g ⁻¹ᵁ U) := finite_app_of_isProper g hU
     have : Module.Finite Γ(Y, U) (integralClosure Γ(Y, U) Γ(X, g ⁻¹ᵁ U)) :=
       Module.IsNoetherian.finite Γ(Y, U) (integralClosure Γ(Y, U) Γ(X, g ⁻¹ᵁ U)).toSubmodule
@@ -1704,8 +1704,8 @@ theorem ap {A B : Scheme.{0}} {f f' : A ⟶ B} (h : f = f') (x : A) : f x = f' x
 
 theorem range_inter_fibre_closed : ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] (S : Scheme.{0}) (π : S ⟶ Sp R), IsProper π → ∀ (G' : Over S) [GrpObj G'], Smooth G'.hom → ∀ (E : Emb π G') (H' : E.H.toScheme.Opens) (X : Scheme.{0}) (o : H'.toScheme ⟶ X) (g : X ⟶ PSpace R E.N), IsSeparated g → o ≫ g = H'.ι ≫ E.f → (∀ z : E.H.toScheme, π (G'.hom (E.H.ι z)) = closedPoint R → z ∈ H') → ∀ w : PSpace R E.N, PSpace.str R E.N w = closedPoint R → ∃ C : Set X, IsClosed C ∧ C ∩ g ⁻¹' {w} = Set.range o ∩ g ⁻¹' {w} := by
   intro R _ _ _ S π hπ G' _ hG E H' X o g hg hog hH' w hw
-  haveI := hπ
-  haveI := hg
+  have := hπ
+  have := hg
   obtain ⟨T, t, k, hTn, hTr, hk, htk, hrt⟩ := exists_redFibre R S π
   obtain ⟨e, l, -, hl, hlf⟩ := GlobalTheory.T.pullback_iso_baseChange_over_reduced_closedFibre R S π G' hG E T t k hTn hTr htk
   have hover : ∀ p, π (G'.hom (E.H.ι (l p))) = closedPoint R := by
@@ -1743,7 +1743,7 @@ theorem range_inter_fibre_closed : ∀ (R : Type) [CommRing R] [IsLocalRing R] [
     exact h.symm
   by_cases hy : ∃ y, E.j y = w
   · obtain ⟨y, rfl⟩ := hy
-    haveI := E.imm
+    have := E.imm
     let F := pullback (pullback.fst E.Y.hom k) (E.Y.left.fromSpecResidueField y)
     let φ : F ⟶ X := pullback.fst _ _ ≫ e.inv ≫ l' ≫ o
     have hφ : φ ≫ g = pullback.snd _ _ ≫ (E.Y.left.fromSpecResidueField y ≫ E.j) := by
@@ -1834,7 +1834,7 @@ namespace GlobalTheory.Mum
 
 theorem steinFibre_subset_range : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (M : Modif R) (G' : Over M.S) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ E : Emb M.π G', ∀ (H' : E.H.toScheme.Opens) (X'' : Scheme.{0}) (ν : X'' ⟶ pullback (PSpace.str R E.N) M.π) (i : H'.toScheme ⟶ X'') (P'' : Scheme.{0}) (a'' : X'' ⟶ P'') (b'' : P'' ⟶ PSpace R E.N), IsFinite ν → IsOpenImmersion i → i ≫ ν = H'.ι ≫ pullback.lift E.f (E.H.ι ≫ G'.hom) E.f_over → a'' ≫ b'' = ν ≫ pullback.fst (PSpace.str R E.N) M.π → IsFinite b'' → IsProper a'' → (∀ y : P'', _root_.IsPreconnected {x : X'' | a'' x = y}) → (∀ h : E.H.toScheme, M.π (G'.hom (E.H.ι h)) = closedPoint R → h ∈ H') → ∀ z : H'.toScheme, M.π (G'.hom (E.H.ι (H'.ι z))) = closedPoint R → ∀ w : X'', a'' w = a'' (i z) → w ∈ Set.range i := by
   intro R _ _ _ hR M G' _ _ hG E H' X'' ν i P'' a'' b'' hν hi hcomm hab hb ha hconn hH0 z hz w hw
-  haveI := hν; haveI := hb; haveI := ha; haveI := hi
+  have := hν; have := hb; have := ha; have := hi
   have hsep : IsSeparated (a'' ≫ b'') := inferInstance
   have hR' : IsNoetherianRing R := hR.1
   have hog : i ≫ a'' ≫ b'' = H'.ι ≫ E.f := by
@@ -1901,21 +1901,21 @@ namespace GlobalTheory.Mum
 
 theorem closedFibre_chart : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (M : Modif R) (G' : Over M.S) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ E : Emb M.π G', ∃ (P' : Scheme.{0}) (b : P' ⟶ PSpace R E.N) (X : E.H.toScheme.Opens) (a : X.toScheme ⟶ P'), IsNoetherian P' ∧ IsSeparated b ∧ LocallyOfFiniteType b ∧ IsProper a ∧ Surjective a ∧ (∀ V : P'.Opens, Function.Bijective (a.app V).hom) ∧ a ≫ b = X.ι ≫ E.f ∧ (∀ z : E.H.toScheme, M.π (G'.hom (E.H.ι z)) = closedPoint R → z ∈ X) ∧ ∀ x : P', IsClosed ({x} : Set P') → (b ≫ PSpace.str R E.N) x = closedPoint R → ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (ξ : Sp Ω ⟶ P') (s : Sp Ω ⟶ M.S), Set.range ξ = {x} → ξ ≫ b ≫ PSpace.str R E.N = s ≫ M.π → ∃ p : Sp Ω ⟶ X.toScheme, p ≫ a = ξ ∧ p ≫ X.ι ≫ E.H.ι ≫ G'.hom = s := by
   intro R _ _ _ hR M G' _ _ hG E
-  haveI : IsNoetherianRing R := hR.1
-  haveI := M.proper
+  have : IsNoetherianRing R := hR.1
+  have := M.proper
   obtain ⟨hPn, hTn⟩ := GlobalTheory.T.isNoetherian_projectiveSpace_and_pullback_proper R M.S M.π M.proper E.N
   obtain ⟨hs, hl, hq⟩ := GlobalTheory.T.closedFibreEmbedding_lift_separated_finiteType_quasiCompact R hR M G' hG E
   obtain ⟨H', X'', ν, i, hZ, hν, hi, hiν, -, -⟩ := GlobalTheory.T.exists_finite_openImmersion_nbhd_isolatedFibrePoints E.H.toScheme _
     (pullback.lift E.f (E.H.ι ≫ G'.hom) E.f_over) hTn hs hl hq
     {z | M.π (G'.hom (E.H.ι z)) = closedPoint R} (fun z hz => ⟨⊤, trivial, fun w _ hw => GlobalTheory.T.lift_to_projective_base_injective_over_closedFibre R hR M G' hG E z w hz hw⟩)
-  haveI := hν; haveI := hi; haveI := hPn
+  have := hν; have := hi; have := hPn
   have hprop : IsProper (ν ≫ pullback.fst (PSpace.str R E.N) M.π) := inferInstance
   obtain ⟨P'', a'', b'', hab, hb'', ha'', hsurj, hbij, hconn⟩ :=
     GlobalTheory.T.stein_factorisation_connected_fibres X'' (PSpace R E.N) _ inferInstance hprop
-  haveI := hb''
+  have := hb''
   obtain ⟨P', c, X, k, a, hc, hP', hpa, hsa, hba, hk, hac, hsat, -⟩ :=
     GlobalTheory.T.exists_proper_surjective_sections_bijective_over_fibre_open (PSpace R E.N) E.H.toScheme X'' P'' H' i a'' b'' hPn hi ha'' hsurj hbij hb''
-  haveI := hc
+  have := hc
   have hf : a ≫ c ≫ b'' = X.ι ≫ E.f := by
     rw [← Category.assoc, hac, Category.assoc, Category.assoc, hab, ← Category.assoc i, hiν, ← hk]
     simp only [← Category.assoc]

@@ -133,17 +133,17 @@ theorem semiBC_of_cover : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (
     (v : N' →ₛₗ[h.f] N'') (w : N →ₛₗ[h.f.comp k] N''), (∀ x, w x = v (u x)) → SemiBC v → SemiBC w →
     SemiBC u := by
   intro l _ R _ B C h hc A _ k N _ _ _ _ N' _ _ _ _ N'' _ _ u v w hw hv hwb
-  letI : Algebra A B.A := k.toAlgebra
-  letI : Algebra B.A C.A := h.f.toAlgebra
-  letI : Algebra A C.A := (h.f.comp k).toAlgebra
-  haveI : IsScalarTower A B.A C.A := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  letI : Module A N' := Module.compHom N' k
-  haveI : IsScalarTower A B.A N' := ⟨fun a b x => mul_smul (k a) b x⟩
-  letI : Module B.A N'' := Module.compHom N'' h.f
-  letI : Module A N'' := Module.compHom N'' (h.f.comp k)
-  haveI : IsScalarTower B.A C.A N'' := ⟨fun a b x => mul_smul (h.f a) b x⟩
-  haveI : IsScalarTower A C.A N'' := ⟨fun a b x => mul_smul (h.f (k a)) b x⟩
-  haveI : IsScalarTower A B.A N'' := ⟨fun a b x => by
+  let : Algebra A B.A := k.toAlgebra
+  let : Algebra B.A C.A := h.f.toAlgebra
+  let : Algebra A C.A := (h.f.comp k).toAlgebra
+  have : IsScalarTower A B.A C.A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Module A N' := Module.compHom N' k
+  have : IsScalarTower A B.A N' := ⟨fun a b x => mul_smul (k a) b x⟩
+  let : Module B.A N'' := Module.compHom N'' h.f
+  let : Module A N'' := Module.compHom N'' (h.f.comp k)
+  have : IsScalarTower B.A C.A N'' := ⟨fun a b x => mul_smul (h.f a) b x⟩
+  have : IsScalarTower A C.A N'' := ⟨fun a b x => mul_smul (h.f (k a)) b x⟩
+  have : IsScalarTower A B.A N'' := ⟨fun a b x => by
     show h.f (k a * b) • x = h.f (k a) • (h.f b • x)
     rw [map_mul, mul_smul]⟩
   let u' : N →ₗ[A] N' := { toFun := u, map_add' := u.map_add, map_smul' := fun a x => u.map_smulₛₗ a x }
@@ -157,13 +157,13 @@ theorem semiBC_of_cover : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (
     exact (hw x).symm
   set L := u'.liftBaseChange B.A
   have hC : Function.Bijective (L.baseChange C.A) := BCCancel.bij_lin u' v' hv' hw'
-  letI : Algebra (B.A ⧸ adI B ^ 1) (C.A ⧸ adI C ^ 1) := (qmap h 1).toAlgebra
-  haveI : IsScalarTower B.A (B.A ⧸ adI B ^ 1) (C.A ⧸ adI C ^ 1) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.FaithfullyFlat (B.A ⧸ adI B ^ 1) (C.A ⧸ adI C ^ 1) := hc.ff 1
+  let : Algebra (B.A ⧸ adI B ^ 1) (C.A ⧸ adI C ^ 1) := (qmap h 1).toAlgebra
+  have : IsScalarTower B.A (B.A ⧸ adI B ^ 1) (C.A ⧸ adI C ^ 1) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.FaithfullyFlat (B.A ⧸ adI B ^ 1) (C.A ⧸ adI C ^ 1) := hc.ff 1
   have hQ : Function.Bijective (L.baseChange (C.A ⧸ adI C ^ 1)) := BCCancel.bij_up (S := C.A) L hC
   have hB : Function.Bijective (L.baseChange (B.A ⧸ adI B ^ 1)) :=
     BCCancel.bij_down (T := C.A ⧸ adI C ^ 1) L hQ
-  haveI : IsAdicComplete (adI B) B.A := B.complete
+  have : IsAdicComplete (adI B) B.A := B.complete
   have hJ : adI B ^ 1 ≤ Ideal.jacobson ⊥ := (pow_one (adI B)).le.trans (IsAdicComplete.le_jacobson_bot (adI B))
   have hL : Function.Bijective L := _root_.GlobalTheory.BSP.bijective_of_bijective_baseChange_quotient B.A (adI B ^ 1) hJ (B.A ⊗[A] N) N' L hB
   have hu' : IsBaseChange B.A u' :=

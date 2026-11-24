@@ -67,9 +67,9 @@ namespace GlobalTheory.EtaForm.ScalarWeight
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
 
 theorem finite_aut (Dw : Datum H) {k : ℕ} (hk : 0 < k) : Finite (LevGrp Dw k) := by
-  haveI : Finite (LatMod Dw k) := by
-    haveI := Dw.fin
-    haveI : Module.Finite ℤ (LatMod Dw k) := Module.Finite.trans (𝓞 E) _
+  have : Finite (LatMod Dw k) := by
+    have := Dw.fin
+    have : Module.Finite ℤ (LatMod Dw k) := Module.Finite.trans (𝓞 E) _
     refine Module.finite_of_fg_torsion (M := LatMod Dw k) fun x => ?_
     obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective _ x
     refine ⟨⟨(k : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hk.ne')⟩, ?_⟩
@@ -83,8 +83,8 @@ theorem finite_aut (Dw : Datum H) {k : ℕ} (hk : 0 < k) : Finite (LevGrp Dw k) 
 theorem etaExpr_scale {S : Type} [CommRing S] {k : ℕ} (hk : 0 < k) {J : Type} [Fintype J] {n : ℕ} (cf : J → ℤ)
     (x : J → Fin n → LatMod Dw k) (w : LatMod Dw k → S) (t : S) :
     etaExpr k cf x (fun q => t * w q) = t ^ (n * Nat.card (LevGrp Dw k)) * etaExpr k cf x w := by
-  haveI := finite_aut Dw hk
-  haveI := Fintype.ofFinite (LevGrp Dw k)
+  have := finite_aut Dw hk
+  have := Fintype.ofFinite (LevGrp Dw k)
   unfold etaExpr
   rw [finprod_eq_prod_of_fintype, finprod_eq_prod_of_fintype, Nat.card_eq_fintype_card, pow_mul,
     ← Finset.card_univ, ← Finset.prod_const, ← Finset.prod_mul_distrib]

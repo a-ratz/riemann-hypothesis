@@ -70,9 +70,9 @@ private theorem units_map_stalkMap_gm_eq_gm_comp {X Y Z : Scheme.{0}} (r : Z ⟶
   · have h' : (r ≫ s) z ∈ U := h
     rw [dite_eq_left h, dite_eq_left h']
     apply Units.ext
-    simp only [Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass]
     unfold pullU
-    simp only [Units.coe_map, MonoidHom.coe_coe, MonoidHom.comp_apply]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, MonoidHom.comp_apply]
     have key := congrArg (fun φ => φ.hom ((s.app U).hom a.val)) (Scheme.Hom.germ_stalkMap r (s ⁻¹ᵁ U) z h)
     simp only [CommRingCat.hom_comp, RingHom.comp_apply] at key
     exact key

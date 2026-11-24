@@ -65,7 +65,7 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V]
 theorem exists_continuous_cexp_eq {f : V → ℂ} (hf : Continuous f) (h0 : ∀ v, f v ≠ 0) :
     ∃ q : V → ℂ, Continuous q ∧ ∀ v, cexp (q v) = f v := by
   have hU : IsSimplyConnected (univ : Set V) := by
-    haveI : ContractibleSpace (univ : Set V) := (convex_univ (𝕜 := ℝ)).contractibleSpace ⟨0, trivial⟩
+    have : ContractibleSpace (univ : Set V) := (convex_univ (𝕜 := ℝ)).contractibleSpace ⟨0, trivial⟩
     exact (inferInstance : SimplyConnectedSpace (univ : Set V))
   obtain ⟨q, hq, hq'⟩ := Complex.exists_continuousOn_eqOn_exp_comp hU isOpen_univ
     hf.continuousOn (by rintro ⟨v, -, hv⟩; exact h0 v hv)
@@ -142,8 +142,8 @@ theorem free_finite_finrank_of_lattice_embedding {V : Type*} [NormedAddCommGroup
     (hd : DiscreteTopology (range P)) (hs : Submodule.span ℝ (range P) = ⊤) :
     Module.Free ℤ L ∧ Module.Finite ℤ L ∧ Module.finrank ℤ L = Module.finrank ℝ V := by
   let Λ : Submodule ℤ V := LinearMap.range P.toIntLinearMap
-  haveI : DiscreteTopology Λ := hd
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
+  have : DiscreteTopology Λ := hd
+  have : IsZLattice ℝ Λ := ⟨hs⟩
   let e : L ≃ₗ[ℤ] Λ := LinearEquiv.ofInjective P.toIntLinearMap hP
   exact ⟨Module.Free.of_equiv e.symm, Module.Finite.equiv e.symm,
     e.finrank_eq.trans (ZLattice.rank ℝ Λ)⟩

@@ -73,7 +73,7 @@ lemma rep_mul_apply {G K : Type*} [Monoid G] [NormedAddCommGroup K] [InnerProduc
 
 lemma inner_rep_one {G K : Type*} [Monoid G] [NormedAddCommGroup K] [InnerProductSpace ℂ K] (ρ : G →* (K →L[ℂ] K))
     (F : K) : ⟪F, ρ 1 F⟫_ℂ = ((‖F‖ ^ 2 : ℝ) : ℂ) := by
-  rw [map_one, ContinuousLinearMap.one_apply, inner_self_eq_norm_sq_to_K]
+  rw [map_one, one_apply_eq_self, inner_self_eq_norm_sq_to_K]
   simp
 
 section Local
@@ -187,7 +187,7 @@ theorem GlobalTheory.HolDict.inner_reg_eq_coef_extremal : ∀ (D : D7) (θ : Inf
       ring
     rw [e1, e2] at h2
     exact hR3 _ _ _ h1 h2
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 hfin.fin
+  have : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 hfin.fin
   have hA : HolFn (gramAt D V) (fun τ => nNeg (M.ε τ)) (x0Mat M) w fun u => ⟪F, ρ (L u) F⟫_ℂ := by
     have h := GlobalTheory.HolDict.holFn_integral _ _ _ _ _ w hO (GA D V) (μ.restrict 𝓕) (fun x u => star (φ x) * φ (x * L u)) (C * C)
       (fun x => holFn_const_mul (horb x) _)

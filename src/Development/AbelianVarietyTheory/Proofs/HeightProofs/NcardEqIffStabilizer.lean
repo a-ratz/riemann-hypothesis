@@ -73,7 +73,7 @@ theorem _root_.GlobalTheory.FieldSize.RaySplit.ncard_eq_primesOver (𝔭 : Heigh
   rw [← Set.ncard_image_of_injective _ hinj]
   congr 1
   ext P
-  simp only [Set.mem_image, Set.mem_setOf_eq, Ideal.primesOver]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Ideal.primesOver]
   constructor
   · rintro ⟨Q, hQ, rfl⟩
     exact ⟨Q.isPrime, ⟨hQ.symm⟩⟩
@@ -94,15 +94,15 @@ private theorem ncard_primesOver_eq_finrank_iff_frob_eq_one {F R : Type} [Field 
     (hσ : _root_.GlobalTheory.NT.IsFrob R 𝔭 σ) :
     (𝔭.asIdeal.primesOver (𝓞 R)).ncard = Module.finrank F R ↔ σ = 1 := by
   obtain ⟨P, hPp, hPo, hfrob⟩ := hσ
-  haveI := hPp
-  haveI := hPo
+  have := hPp
+  have := hPo
   have hPne : P ≠ ⊥ := by
     rintro rfl
     apply 𝔭.ne_bot
     rw [hPo.over, Ideal.under, Ideal.comap_bot_of_injective]
     exact FaithfulSMul.algebraMap_injective _ _
-  haveI : P.IsMaximal := hPp.isMaximal hPne
-  haveI : 𝔭.asIdeal.IsMaximal := 𝔭.isMaximal
+  have : P.IsMaximal := hPp.isMaximal hPne
+  have : 𝔭.asIdeal.IsMaximal := 𝔭.isMaximal
   have he : 𝔭.asIdeal.ramificationIdxIn (𝓞 R) = 1 := by
     rw [← Ideal.card_inertia_eq_ramificationIdxIn (G := Gal(R/F)) 𝔭.asIdeal P]
     have hbot : Ideal.inertia Gal(R/F) P = ⊥ := by
@@ -111,16 +111,16 @@ private theorem ncard_primesOver_eq_finrank_iff_frob_eq_one {F R : Type} [Field 
       exact hu τ ⟨P, hPp, hPo, fun x => (AddSubgroup.mem_inertia.mp hτ) x⟩
     rw [hbot, Subgroup.card_bot]
   have hf : 𝔭.asIdeal.inertiaDegIn (𝓞 R) = Module.finrank (𝓞 F ⧸ 𝔭.asIdeal) (𝓞 R ⧸ P) := by
-    rw [Ideal.inertiaDegIn_eq_inertiaDeg 𝔭.asIdeal P Gal(R/F), ← Ideal.inertiaDeg_eq_inertiaDeg' 𝔭.asIdeal P,
+    rw [Ideal.inertiaDegIn_eq_inertiaDeg 𝔭.asIdeal P Gal(R/F), ← Ideal.inertiaDeg'_eq_inertiaDeg 𝔭.asIdeal P,
       Ideal.inertiaDeg'_algebraMap]
   have hcount :=
     Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn 𝔭.asIdeal (𝓞 R) Gal(R/F)
   rw [he, one_mul, hf, IsGalois.card_aut_eq_finrank] at hcount
   have hdeg : 0 < Module.finrank F R := Module.finrank_pos
-  letI : Field (𝓞 F ⧸ 𝔭.asIdeal) := Ideal.Quotient.field _
-  letI : Field (𝓞 R ⧸ P) := Ideal.Quotient.field _
-  letI : Fintype (𝓞 F ⧸ 𝔭.asIdeal) := Fintype.ofFinite _
-  letI : Fintype (𝓞 R ⧸ P) := Fintype.ofFinite _
+  let : Field (𝓞 F ⧸ 𝔭.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 R ⧸ P) := Ideal.Quotient.field _
+  let : Fintype (𝓞 F ⧸ 𝔭.asIdeal) := Fintype.ofFinite _
+  let : Fintype (𝓞 R ⧸ P) := Fintype.ofFinite _
   have hq : Ideal.absNorm 𝔭.asIdeal = Fintype.card (𝓞 F ⧸ 𝔭.asIdeal) := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
   have hcard : Fintype.card (𝓞 R ⧸ P) =
@@ -177,9 +177,9 @@ variable {K L : Type} [Field K] [NumberField K] [Field L] [NumberField L] [Algeb
 private theorem eq_one_iff_forall_char_eq_one_of_finite_commutative {G : Type} [Group G] [Finite G]
     [IsMulCommutative G] (σ : G) : σ = 1 ↔ ∀ χ : G →* ℂˣ, χ σ = 1 := by
   refine ⟨fun h χ => by rw [h, map_one], fun h => ?_⟩
-  letI : CommGroup G := { (inferInstance : Group G) with mul_comm := mul_comm' }
+  let : CommGroup G := { (inferInstance : Group G) with mul_comm := mul_comm' }
   by_contra hσ
-  haveI : NeZero (Monoid.exponent G) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero (Monoid.exponent G) := ⟨Monoid.exponent_ne_zero_of_finite⟩
   obtain ⟨χ, hχ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity G ℂ hσ
   exact hχ (h χ)
 

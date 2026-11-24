@@ -68,7 +68,7 @@ theorem smooth_solve {P F V : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
     (h0 : ∀ y ∈ L, ∃ c, M 0 c = y) :
     ∃ U : Set P, IsOpen U ∧ (0 : P) ∈ U ∧ ∀ y : P → V, ContDiff ℝ ∞ y → (∀ t, y t ∈ L) →
       ∃ c : P → F, ContDiffOn ℝ ∞ c U ∧ ∀ t ∈ U, M t (c t) = y t := by
-  have : CompleteSpace V := FiniteDimensional.complete ℝ V
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℝ V
   obtain ⟨p, hp⟩ := LinearMap.exists_leftInverse_of_injective L.subtype (Submodule.ker_subtype L)
   have hp' : ∀ y (hy : y ∈ L), (p y : V) = y := fun y hy => by
     have := LinearMap.congr_fun hp ⟨y, hy⟩

@@ -57,7 +57,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtLin_of :
     obtain ⟨ψ2, hψ2, e2⟩ := h2 A φ hφ
     refine ⟨ψ1 + ψ2, hψ1.add hψ2, ?_⟩
     intro Ω _ _ x
-    haveI := A.finite
+    have := A.finite
     have hfin := hF A.r Ω x
     rw [Pi.add_apply, e1, e2, ← finsum_mem_add_distrib hfin]
     refine finsum_congr fun z => finsum_congr fun _ => ?_
@@ -76,7 +76,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtLin_of :
   · intro Z S p _ d
     unfold IsWt
     intro A φ hφ
-    haveI : IsIso A.r := by
+    have : IsIso A.r := by
       rw [← A.pb.isoPullback_hom_snd]
       infer_instance
     refine ⟨(fun t => d * t) ∘ φ ∘ ⇑(inv A.r), (hφ.comp_continuous (inv A.r).continuous).comp _, ?_⟩

@@ -189,11 +189,11 @@ private theorem iof_ine (σ : GQ v) : iota j σ ∈ Ine (F := ℚ) (placeJ j) �
 private theorem iof_cyc (l : ℕ) [Fact l.Prime] (σ : GQ v) :
     cycZ ℚ Ω l (iota j σ) = UpperTheory.V.Loc.cyc v l σ := by
   have hl : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
   refine Units.ext (PadicInt.ext_of_toZModPow.1 fun m => ?_)
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
   have hζ' := hζ.map_of_injective j.injective
   have ha : iota j σ ζ = ζ ^ (((cycZ ℚ Ω l (iota j σ) : ℤ_[l]ˣ) : ℤ_[l]).toZModPow m).val :=
     cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (Ω ≃ₐ[ℚ] Ω) Ω (iota j σ)) ζ hζ.pow_eq_one
@@ -226,7 +226,7 @@ end SlopeTestRemainingChoices
 theorem UpperTheory.V.Loc.iotaFacts :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {v : ℕ} [Fact v.Prime] (j : Ω →+* Om v), IsEmbedding (iota j) ∧ (iota j).range = Dec (F := ℚ) (placeJ j) ∧ (Ine (F := ℚ) (placeJ j)).comap (iota j) = Iq v ∧ (Iq v).map (iota j) = Ine (F := ℚ) (placeJ j) ∧ (∀ (l : ℕ) [Fact l.Prime], (cycZ ℚ Ω l).comp (iota j) = UpperTheory.V.Loc.cyc v l) ∧ (∀ w : HeightOneSpectrum (𝓞 ℚ), IsPlaceOver (placeJ j) w ↔ ((v : ℕ) : 𝓞 ℚ) ∈ w.asIdeal) ∧ ∀ σ : GQ v, UpperTheory.V.Loc.IsFrob σ ↔ Formalism.ConjugateSelfDual.IsFrob (F := ℚ) (placeJ j) v (iota j σ) := by
   intro Ω _ _ _ v _ j
-  haveI : IsGalois ℚ_[v] (Om v) := {}
+  have : IsGalois ℚ_[v] (Om v) := {}
   refine ⟨((iof_cont j).isClosedEmbedding (iof_inj j)).isEmbedding, iof_range j, Subgroup.ext (iof_ine j), ?_,
     fun l _ => MonoidHom.ext (iof_cyc j l), iof_place j, fun σ => ?_⟩
   · ext g

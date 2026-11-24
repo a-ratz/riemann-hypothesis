@@ -99,8 +99,8 @@ theorem exists_algEquiv_extending_padicAlgCl {p : ℕ} [Fact p.Prime]
 
 theorem HTGroup.sum_finrank_Fw_eq_finrank_Kq {p : ℕ} [Fact p.Prime] (G : HTGroup p) :
     ∑ w : Fin G.m, Module.finrank ℚ_[p] (G.Fw w) = Module.finrank G.Kq G.F := by
-  letI : Algebra G.Kq (PadicAlgCl p) := ((algebraMap ℚ_[p] (PadicAlgCl p)).comp G.u).toAlgebra
-  haveI : FiniteDimensional G.Kq G.F := Module.Finite.of_restrictScalars_finite ℚ G.Kq G.F
+  let : Algebra G.Kq (PadicAlgCl p) := ((algebraMap ℚ_[p] (PadicAlgCl p)).comp G.u).toAlgebra
+  have : FiniteDimensional G.Kq G.F := Module.Finite.of_restrictScalars_finite ℚ G.Kq G.F
   let f : (Σ w : Fin G.m, (G.Fw w →ₐ[ℚ_[p]] PadicAlgCl p)) → (G.F →ₐ[G.Kq] PadicAlgCl p) := fun a =>
     { (a.2 : G.Fw a.1 →+* PadicAlgCl p).comp (G.embW a.1) with
       commutes' := fun x => by
@@ -187,10 +187,10 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (M : Ideal (TensorPr
     ∃ i : Fin G.m, M = RingHom.ker (G.liftW i) ∨
       M = RingHom.ker ((G.liftW i).toRingHom.comp (conjT G.F ℚ_[p])) := by
   intro p _ G M hM
-  letI : Field ((ℚ_[p] ⊗[ℚ] G.F) ⧸ M) := Ideal.Quotient.field M
-  haveI : Module.Finite ℚ_[p] ((ℚ_[p] ⊗[ℚ] G.F) ⧸ M) :=
+  let : Field ((ℚ_[p] ⊗[ℚ] G.F) ⧸ M) := Ideal.Quotient.field M
+  have : Module.Finite ℚ_[p] ((ℚ_[p] ⊗[ℚ] G.F) ⧸ M) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ ℚ_[p] M).toLinearMap Ideal.Quotient.mk_surjective
-  haveI : Algebra.IsAlgebraic ℚ_[p] ((ℚ_[p] ⊗[ℚ] G.F) ⧸ M) := Algebra.IsAlgebraic.of_finite _ _
+  have : Algebra.IsAlgebraic ℚ_[p] ((ℚ_[p] ⊗[ℚ] G.F) ⧸ M) := Algebra.IsAlgebraic.of_finite _ _
   let ι : ((ℚ_[p] ⊗[ℚ] G.F) ⧸ M) →ₐ[ℚ_[p]] PadicAlgCl p := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -241,8 +241,8 @@ theorem padic_tensor_numberField_isReduced :
     ∀ (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [NumberField F],
       IsReduced (TensorProduct ℚ ℚ_[p] F) := by
   intro p _ F _ _
-  haveI : Algebra.FormallyUnramified ℚ F := Algebra.FormallyUnramified.of_isSeparable ℚ F
-  haveI : Algebra.FormallyUnramified ℚ_[p] (TensorProduct ℚ ℚ_[p] F) :=
+  have : Algebra.FormallyUnramified ℚ F := Algebra.FormallyUnramified.of_isSeparable ℚ F
+  have : Algebra.FormallyUnramified ℚ_[p] (TensorProduct ℚ ℚ_[p] F) :=
     Algebra.FormallyUnramified.base_change ℚ_[p]
   exact Algebra.FormallyUnramified.isReduced_of_field ℚ_[p] (TensorProduct ℚ ℚ_[p] F)
 
@@ -292,13 +292,13 @@ theorem inj_Z (z : ℚ_[p] ⊗[ℚ] G.F) (h1 : ∀ i, G.liftW i z = 0) (h2 : ∀
     obtain ⟨i, hi | hi⟩ := GlobalTheory.MaxIdealTensorPadic.main p G M hM <;> rw [hi, RingHom.mem_ker]
     · exact h1 i
     · exact h2 i
-  haveI : IsArtinianRing (ℚ_[p] ⊗[ℚ] G.F) := IsArtinianRing.of_finite ℚ_[p] _
+  have : IsArtinianRing (ℚ_[p] ⊗[ℚ] G.F) := IsArtinianRing.of_finite ℚ_[p] _
   obtain ⟨k, hk⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := ℚ_[p] ⊗[ℚ] G.F)
   have hk0 : z ^ k = 0 := by
     have := Ideal.pow_mem_pow hJ k
     rw [hk] at this
     simpa using this
-  haveI := GlobalTheory.padic_tensor_numberField_isReduced p G.F
+  have := GlobalTheory.padic_tensor_numberField_isReduced p G.F
   exact IsReduced.eq_zero _ ⟨k, hk0⟩
 
 theorem iotaZ_comm (d : ℚ_[p] ⊗[ℚ] G.C) (z : ℚ_[p] ⊗[ℚ] G.F) : Commute d (iotaZ G z) := by
@@ -318,12 +318,12 @@ theorem iotaZ_comm (d : ℚ_[p] ⊗[ℚ] G.C) (z : ℚ_[p] ⊗[ℚ] G.F) : Commu
 theorem locW_inj (x : ℚ_[p] ⊗[ℚ] G.C) (h1 : ∀ i, G.locW i x = 0)
     (h2 : ∀ i, G.locW i (starT G.star ℚ_[p] x).unop = 0) : x = 0 := by
   classical
-  letI algD : Algebra G.F (ℚ_[p] ⊗[ℚ] G.C) :=
+  let algD : Algebra G.F (ℚ_[p] ⊗[ℚ] G.C) :=
     RingHom.toAlgebra' ((iotaZ G).toRingHom.comp (Algebra.TensorProduct.includeRight.toRingHom)) (by
       intro c d
       show iotaZ G ((1 : ℚ_[p]) ⊗ₜ c) * d = d * iotaZ G ((1 : ℚ_[p]) ⊗ₜ c)
       exact (iotaZ_comm G d _).symm.eq)
-  letI algZ : Algebra G.F (ℚ_[p] ⊗[ℚ] G.F) := Algebra.TensorProduct.rightAlgebra
+  let algZ : Algebra G.F (ℚ_[p] ⊗[ℚ] G.F) := Algebra.TensorProduct.rightAlgebra
   let f : G.C →ₐ[G.F] ℚ_[p] ⊗[ℚ] G.C :=
     { (Algebra.TensorProduct.includeRight : G.C →ₐ[ℚ] ℚ_[p] ⊗[ℚ] G.C).toRingHom with
       commutes' := fun c => by
@@ -354,7 +354,7 @@ theorem locW_inj (x : ℚ_[p] ⊗[ℚ] G.C) (h1 : ∀ i, G.locW i x = 0)
       (RingHom.pi fun i => (RingHom.op (G.locW i).toRingHom).comp (starT G.star ℚ_[p]))
   have hψ : ∀ d, ψ d = 0 ↔ (∀ i, G.locW i d = 0) ∧ ∀ i, G.locW i (starT G.star ℚ_[p] d).unop = 0 := by
     intro d
-    simp only [ψ, Prod.ext_iff, funext_iff, RingHom.prod_apply, Pi.ringHom_apply, Prod.fst_zero, Prod.snd_zero,
+    simp only [ψ, Prod.ext_iff, funext_iff, RingHom.prod_apply, RingHom.pi_apply, Prod.fst_zero, Prod.snd_zero,
       Pi.zero_apply, RingHom.comp_apply]
     refine and_congr Iff.rfl (forall_congr' fun i => ?_)
     rw [← MulOpposite.unop_inj]
@@ -367,7 +367,7 @@ theorem locW_inj (x : ℚ_[p] ⊗[ℚ] G.C) (h1 : ∀ i, G.locW i x = 0)
     rw [TwoSidedIdeal.mem_ker, RingHom.comp_apply] at hz
     change ψ (Φ ((1 : G.C) ⊗ₜ z)) = 0 at hz
     rw [hΦ1, hψ] at hz
-    haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+    have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
     apply inj_Z G z
     · intro i
       have := hz.1 i
@@ -446,7 +446,7 @@ theorem finrank_eq : Module.finrank ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C) = Module.finr
   ring
 
 theorem psiL_bijective : Function.Bijective (psiL G) := by
-  haveI : ∀ i, FiniteDimensional ℚ_[p] (Matrix (Fin G.n) (Fin G.n) (G.Fw i)) := fun i => inferInstance
+  have : ∀ i, FiniteDimensional ℚ_[p] (Matrix (Fin G.n) (Fin G.n) (G.Fw i)) := fun i => inferInstance
   exact ⟨psiL_injective G,
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank (finrank_eq G)).1 (psiL_injective G)⟩
 

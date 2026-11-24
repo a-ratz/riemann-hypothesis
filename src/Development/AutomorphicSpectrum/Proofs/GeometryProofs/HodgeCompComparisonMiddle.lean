@@ -59,8 +59,8 @@ theorem fieldRange_finite {Ω₁ Ω : Type} [Field Ω₁] [Field Ω] (i : Ω₁ 
     (hfin : letI := i.toAlgebra; FiniteDimensional Ω₁ Ω) :
     FiniteDimensional i.fieldRange Ω ∧
       Module.finrank i.fieldRange Ω = (letI := i.toAlgebra; Module.finrank Ω₁ Ω) := by
-  letI := i.toAlgebra
-  haveI := hfin
+  let := i.toAlgebra
+  have := hfin
   let e : Ω₁ ≃+* i.fieldRange := RingEquiv.ofBijective i.rangeRestrictField
     ⟨fun x y h => i.injective (congrArg Subtype.val h), fun x => by
       obtain ⟨a, ha⟩ := x.2
@@ -76,7 +76,7 @@ theorem span_eq_of_indep {Ω V : Type} [Field Ω] [AddCommGroup V] [Module Ω V]
     {W : Submodule Ω V} (hb : LinearIndependent Ω b) (hle : ∀ k, b k ∈ W) (hb' : LinearIndependent Ω b')
     (hs : Submodule.span Ω (Set.range b') = W) : Submodule.span Ω (Set.range b) = W := by
   subst hs
-  haveI : FiniteDimensional Ω (Submodule.span Ω (Set.range b')) :=
+  have : FiniteDimensional Ω (Submodule.span Ω (Set.range b')) :=
     FiniteDimensional.span_of_finite Ω (Set.finite_range _)
   refine Submodule.eq_of_le_of_finrank_eq (Submodule.span_le.2 ?_) ?_
   · rintro _ ⟨k, rfl⟩
@@ -86,7 +86,7 @@ theorem span_eq_of_indep {Ω V : Type} [Field Ω] [AddCommGroup V] [Module Ω V]
 theorem generic_read : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S₀ S : Finset ℕ) (Ω₁ Ω : Type) [Field Ω₁] [Field Ω] (K₁ : Type) [Fintype K₁] (J₁ : K₁ → Type) [∀ k, Fintype (J₁ k)] (y₁ : (Σ k, J₁ k) → Ω₁) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (A : HodgeCpt Y S₀ y₁) (Fl : A.Flag) (B : HodgeCpt Y S y) (i : Ω₁ →+* Ω) (h : B.X ⟶ A.X) (jA : A.Li →+ B.Li), (letI := i.toAlgebra; FiniteDimensional Ω₁ Ω) → GlobalTheory.CompanionTheory.Ar.Dominates B.ξ A.ξ h i → B.f = h ≫ A.f → B.cst = i.comp A.cst → IsExtOver i jA → (∀ e, (B.M.pt (jA e)).left ≫ B.m.φ = spMap (dualMap i) ≫ (A.M.pt e).left ≫ A.m.φ) → (∀ a e, jA (A.ρ a e) = B.ρ a (jA e)) → ∃ (Li₀ : Type) (_ : AddCommGroup Li₀) (_ : Module B.Ω₀ Li₀) (M₀ : LieModel Y.t.G B.ξ₀ Li₀) (j : Li₀ →+ B.Li) (V₀ : CMType H ⊕ CMType H → Submodule B.Ω₀ Li₀), (∀ s, Submodule.span Ω (Set.range fun a => jA (Fl.b s a)) = B.Vgen s) ∧ (∀ e, (B.M.pt (j e)).left ≫ B.m.φ = spMap (dualMap B.fn) ≫ (M₀.pt e).left) ∧ (∀ s e, e ∈ V₀ s ↔ j e ∈ B.Vgen s) ∧ (letI := B.fn.toAlgebra; IsGenericFlag (Ω' := Ω) j V₀ (fun s a => jA (Fl.b s a)) ((letI := i.toAlgebra; Module.finrank Ω₁ Ω) * Fl.deg)) := by
   intro E _ _ _ H D l Xo c Y S₀ S Ω₁ Ω _ _ K₁ _ J₁ _ y₁ K _ J _ y A Fl B i h jA hfin hd hf hcst hj hpt hρ
   obtain ⟨hfd, hfr⟩ := fieldRange_finite i hfin
-  haveI := hfd
+  have := hfd
   have hgen : genPt A.ξ₀ = genPt B.ξ₀ := by
     have h1 := RegAtDom.map_genPt hd
     have h2 := RegAtDom.map_genPt A.fn_over
@@ -95,7 +95,7 @@ theorem generic_read : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     rfl
   obtain ⟨ψ, hψ⟩ := exists_iso A.gen₀ B.gen₀ hgen
   have hfn : B.fn.comp ψ.toRingHom = i.comp A.fn := by
-    haveI := mono_of_isCptGen A.gen₀
+    have := mono_of_isCptGen A.gen₀
     have e1 : spMap B.fn ≫ B.ξ₀ = B.ξ ≫ B.f := B.fn_over.symm
     have e2 : spMap A.fn ≫ A.ξ₀ = A.ξ ≫ A.f := A.fn_over.symm
     have e3 : B.ξ ≫ h = spMap i ≫ A.ξ := hd
@@ -104,7 +104,7 @@ theorem generic_read : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       rw [FlagPull.spMap_comp, FlagPull.spMap_comp, Category.assoc, Category.assoc, hψ, e1, e2, hf, ← Category.assoc, e3,
         Category.assoc]
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective e4)
-  letI mod' : Module B.Ω₀ Fl.Li₀ := Module.compHom _ ψ.symm.toRingHom
+  let mod' : Module B.Ω₀ Fl.Li₀ := Module.compHom _ ψ.symm.toRingHom
   have hs : ∀ (a : A.Ω₀) (e : Fl.Li₀), ψ a • e = a • e := fun a e => by
     show ψ.symm (ψ a) • e = a • e
     rw [ψ.symm_apply_apply]
@@ -125,7 +125,7 @@ theorem generic_read : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     rw [← FlagPull.spMap_comp, ← FlagPull.spMap_comp, ← dualMap_comp, ← dualMap_comp, hfn]
   have hspan : ∀ s, Submodule.span Ω (Set.range fun a => jA (Fl.b s a)) = B.Vgen s := by
     intro s
-    letI := A.fn.toAlgebra
+    let := A.fn.toAlgebra
     obtain ⟨cc, u, hcV, -, -, hb, -, -, hfl, -⟩ := Fl.generic
     have hmemc : ∀ k, Fl.j (cc s k) ∈ A.Vgen s := fun k => (Fl.V₀_mem s _).1 (by
       rw [← (hcV s).2]

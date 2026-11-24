@@ -118,7 +118,7 @@ private theorem dM_diag (e : Eˣ) : dM (IdeleGroup.diagonal E e) ∈ GroundTheor
 
 private theorem exists_V : ∃ V : Set (GL (Fin 2) (A E)), IsOpen V ∧ (1 : GL (Fin 2) (A E)) ∈ V ∧
     ∀ e : Eˣ, dM (IdeleGroup.diagonal E e) ∈ V → dM (IdeleGroup.diagonal E e) = 1 := by
-  haveI := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E 2
+  have := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E 2
   obtain ⟨V, hV, hVe⟩ := isOpen_induced_iff.1
     (isOpen_discrete ({1} : Set (GroundTheory.Automorphic.AdelicGLn.rationalGL E 2)))
   refine ⟨V, hV, ?_, fun e he => ?_⟩
@@ -172,8 +172,8 @@ private def prN (g : NG E) : G1 E := pr g.1
 
 private def dN (g : NG E) : (A E)ˣ := dt g.1
 
-private theorem continuous_prN : Continuous (prN : NG E → G1 E) := continuous_pr.comp continuous_subtype_val
-private theorem continuous_dN : Continuous (dN : NG E → (A E)ˣ) := continuous_dt.comp continuous_subtype_val
+private theorem continuous_prN : Continuous (prN : NG E → G1 E) := continuous_pr.comp continuous_subtypeVal
+private theorem continuous_dN : Continuous (dN : NG E → (A E)ˣ) := continuous_dt.comp continuous_subtypeVal
 
 private theorem prN_glN_mul (h : G1 E) (g : NG E) : prN (glN h * g) = h * prN g := pr_gl_mul h g.1
 private theorem dN_glN_mul (h : G1 E) (g : NG E) : dN (glN h * g) = dN g := by
@@ -273,9 +273,9 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.volE :
     VolE := by
   intro E _ _ N
   obtain ⟨W, K₀, hW, h1, hK, hWK, hsep⟩ := exists_sep (E := E)
-  haveI := N.haar
-  haveI := pm_left hW
-  haveI := pm_fin hK hWK
+  have := N.haar
+  have := pm_left hW
+  have := pm_fin hK hWK
   obtain ⟨c, hc⟩ : ∃ c : NNReal, pm W = c • N.μ := ⟨_, Measure.isMulLeftInvariant_eq_smul _ _⟩
   have hc0 : c ≠ 0 := by
     intro h
@@ -285,7 +285,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.volE :
   have hF := GroundTheory.Automorphic.RightCosetSpace.isFundamentalDomain_fundamentalDomain
     (GroundTheory.Automorphic.Reduction.rationalGLOne (K := E) (n := 2)) μG
   have hFin : μG (GroundTheory.Automorphic.RightCosetSpace.fundamentalDomain (GroundTheory.Automorphic.Reduction.rationalGLOne (K := E) (n := 2))) < ⊤ := by
-    haveI := GroundTheory.Automorphic.Reduction.isFiniteMeasure_quotientMeasure μG
+    have := GroundTheory.Automorphic.Reduction.isFiniteMeasure_quotientMeasure μG
     rw [← GroundTheory.Automorphic.RightCosetSpace.quotientMeasure_univ μG hF]
     exact measure_lt_top _ _
   have hSm : MeasurableSet (prN ⁻¹' N.D ∩ dN ⁻¹' W) :=
@@ -293,8 +293,8 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.volE :
   have hS : μG (prN ⁻¹' N.D ∩ dN ⁻¹' W) = c * N.μ N.D := by
     rw [← pm_apply N.meas, hc]
     rfl
-  haveI h₀ : SMulInvariantMeasure (NG E) (NG E) μG := ⟨fun a s _ => measure_preimage_mul μG a s⟩
-  haveI h₁ : SMulInvariantMeasure (GroundTheory.Automorphic.Reduction.rationalGLOne (K := E) (n := 2)) (NG E) μG :=
+  have h₀ : SMulInvariantMeasure (NG E) (NG E) μG := ⟨fun a s _ => measure_preimage_mul μG a s⟩
+  have h₁ : SMulInvariantMeasure (GroundTheory.Automorphic.Reduction.rationalGLOne (K := E) (n := 2)) (NG E) μG :=
     Subgroup.smulInvariantMeasure _
   have hpair : Pairwise (Function.onFun (AEDisjoint μG) fun g : GroundTheory.Automorphic.Reduction.rationalGLOne (K := E) (n := 2) =>
       g • (prN ⁻¹' N.D ∩ dN ⁻¹' W) ∩ GroundTheory.Automorphic.RightCosetSpace.fundamentalDomain (GroundTheory.Automorphic.Reduction.rationalGLOne (K := E) (n := 2))) := by

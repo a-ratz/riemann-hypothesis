@@ -255,7 +255,7 @@ theorem flL_inverse {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y] [Sec
   have hxM : x ∈ A.Mset w0 s De := (e.symm v).2
   have hOt : e.target ∈ 𝓝 v := e.open_target.mem_nhds hv
   have hcs : ContinuousAt (fun v' => ((e.symm v' : A.Mset w0 s De) : Y)) v :=
-    continuous_subtype_val.continuousAt.comp (e.continuousAt_symm hv)
+    continuous_subtypeVal.continuousAt.comp (e.continuousAt_symm hv)
   have hsrc : ∀ᶠ v' in 𝓝 v, ((e.symm v' : A.Mset w0 s De) : Y) ∈ (A.chart i).source :=
     hcs.preimage_mem_nhds ((A.chart i).open_source.mem_nhds hi)
   have hg : ContinuousAt (fun v' => A.chart i (e.symm v' : Y)) v :=
@@ -282,7 +282,7 @@ theorem flL_inverse {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y] [Sec
     have hL := hZ.to_localInverse hf (by simp)
     rw [hfa] at hL
     refine hL.congr_of_eventuallyEq ?_
-    have hli := (hZ.hasStrictFDerivAt' hf (by simp)).eventually_left_inverse
+    have hli := (hZ.hasStrictFDerivAt hf (by simp)).eventually_left_inverse
     have hli' := Filter.Tendsto.eventually hg hli
     filter_upwards [hli', hfg] with v' h1 h2
     rw [h2] at h1

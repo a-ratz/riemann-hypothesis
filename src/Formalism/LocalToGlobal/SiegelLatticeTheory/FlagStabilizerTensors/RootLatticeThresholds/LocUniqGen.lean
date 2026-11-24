@@ -149,7 +149,7 @@ theorem continuous_gam (hF : IsFrameJ ε e f wf z0) (hCP : CayPair ε P0 B0) :
         (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)ˣ) : Matrix _ _ ℂ)
           = Qm e f wf z0 * p.1 * B0 := fun p => uMat_toUJ _ _
     simp only [Function.comp_def, e]
-    exact (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+    exact (continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const
   · have hinv : ∀ p : UH (Hpk k r), (((((gam hF hCP p.1 p.2 : Formalism.REAL.UJ ε) :
         (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)ˣ))⁻¹ :
         (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)ˣ) : Matrix _ _ ℂ)
@@ -157,14 +157,14 @@ theorem continuous_gam (hF : IsFrameJ ε e f wf z0) (hCP : CayPair ε P0 B0) :
     refine Continuous.congr (f := fun p : UH (Hpk k r) =>
       Formalism.REAL.Jm ε * (Qm e f wf z0 * p.1 * B0)ᴴ * Formalism.REAL.Jm ε) ?_ ?_
     · exact (continuous_const.matrix_mul
-        ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const).matrix_conjTranspose).matrix_mul
+        ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const).matrix_conjTranspose).matrix_mul
         continuous_const
     · intro p
       exact (hinv p).symm
 
 theorem WB_continuousOn {V : Type} [TopologicalSpace V] [Zero V] (hF : IsFrameJ ε e f wf z0) (hCP : CayPair ε P0 B0)
     {W : Formalism.REAL.UJ ε → V} (hW : Continuous W) : ContinuousOn (WB hF hCP W) (UH (Hpk k r)) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   have hr : ∀ p : UH (Hpk k r), WB hF hCP W p.1 = W (gam hF hCP p.1 p.2) := by
     intro p
     unfold WB
@@ -276,9 +276,9 @@ theorem isHaarOn_smul {S : Set (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1
   · intro h0
     apply h2
     rw [← Measure.measure_univ_eq_zero] at h0 ⊢
-    rw [Measure.smul_apply, smul_eq_mul] at h0
+    rw [smul_apply, smul_eq_mul] at h0
     exact (mul_eq_zero.mp h0).resolve_left hc0
-  · rw [Measure.smul_apply, h3, smul_zero]
+  · rw [smul_apply, h3, smul_zero]
   · intro s hs
     rw [Measure.map_smul, h4 s hs]
     exact (Formalism.L2.SG.Pf.WFL.measurable_lmulM s).aemeasurable
@@ -412,7 +412,7 @@ theorem locUniq_gen (hBW : Formalism.L2.SG.LocWSOf.BesselOfW) (hM1 : Formalism.L
       have h0' : 0 ≤ nuH k r (zBv k r T) (Matrix.of (cM (Qi (eps48 k r) e f wf (z0v T z)) P0 x)) :=
         Real.iInf_nonneg fun _ => Formalism.L2.SG.WuDecayPf.opn_nonneg _
       have hle := nuLoc_le hF hCP (zBv k r T) x
-      rw [hWeq x, enorm_smul, hKdef]
+      rw [hWeq x, eNorm_smul, hKdef]
       have h2 : ENNReal.ofReal (nuLoc (e := e) (f := f) (wf := wf) (z0 := z0v T z) (zBv k r T) x ^ N1H k r) ≤
           ENNReal.ofReal ((opn (Qm e f wf (z0v T z)) * opn B0) ^ N1H k r) *
             ENNReal.ofReal (nuH k r (zBv k r T) (Matrix.of (cM (Qi (eps48 k r) e f wf (z0v T z)) P0 x)) ^ N1H k r) := by
@@ -426,8 +426,8 @@ theorem locUniq_gen (hBW : Formalism.L2.SG.LocWSOf.BesselOfW) (hM1 : Formalism.L
             gcongr
         _ = _ := by ring
     refine lt_of_le_of_lt (lintegral_mono hpt) ?_
-    rw [lintegral_const_mul' _ _ (ENNReal.mul_ne_top enorm_ne_top ENNReal.ofReal_ne_top)]
-    refine ENNReal.mul_lt_top (lt_top_iff_ne_top.2 (ENNReal.mul_ne_top enorm_ne_top ENNReal.ofReal_ne_top)) ?_
+    rw [lintegral_const_mul' _ _ (ENNReal.mul_ne_top eNorm_ne_top ENNReal.ofReal_ne_top)]
+    refine ENNReal.mul_lt_top (lt_top_iff_ne_top.2 (ENNReal.mul_ne_top eNorm_ne_top ENNReal.ofReal_ne_top)) ?_
     have h3 := hwt0
     rw [lintegral_smul_measure, smul_eq_mul, embX.lintegral_map] at h3
     have h4 : ∫⁻ x, ‖W0 (Matrix.of (cM (Qi (eps48 k r) e f wf (z0v T z)) P0 x))‖ₑ *

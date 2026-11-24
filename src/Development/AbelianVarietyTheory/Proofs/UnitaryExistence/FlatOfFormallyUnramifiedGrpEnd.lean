@@ -115,11 +115,11 @@ theorem flat_of_map_maximalIdeal {A B : Type*} [CommRing A] [CommRing B] [IsLoca
 theorem flat_iff_comp_germ {X : Scheme.{0}} {U : X.Opens} (hU : IsAffineOpen U) {x : X}
     (hx : x ∈ U) {C : CommRingCat.{0}} (g : X.presheaf.stalk x ⟶ C) :
     g.hom.Flat ↔ (X.presheaf.germ U x hx ≫ g).hom.Flat := by
-  letI := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
-  haveI := hU.isLocalization_stalk ⟨x, hx⟩
-  letI := g.hom.toAlgebra
-  letI := (X.presheaf.germ U x hx ≫ g).hom.toAlgebra
-  haveI : IsScalarTower Γ(X, U) (X.presheaf.stalk x) C := IsScalarTower.of_algebraMap_eq' rfl
+  let := X.presheaf.algebra_section_stalk (⟨x, hx⟩ : U)
+  have := hU.isLocalization_stalk ⟨x, hx⟩
+  let := g.hom.toAlgebra
+  let := (X.presheaf.germ U x hx ≫ g).hom.toAlgebra
+  have : IsScalarTower Γ(X, U) (X.presheaf.stalk x) C := IsScalarTower.of_algebraMap_eq' rfl
   exact Module.flat_iff_of_isLocalization (X.presheaf.stalk x)
     (hU.primeIdealOf ⟨x, hx⟩).asIdeal.primeCompl C
 

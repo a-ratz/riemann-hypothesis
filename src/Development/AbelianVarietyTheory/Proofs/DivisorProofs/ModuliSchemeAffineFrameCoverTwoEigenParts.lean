@@ -149,7 +149,7 @@ theorem exists_affine_bases {X : Scheme.{0}} (π : X ⟶ S) (s : X ⟶ Sp c.F) (
       ∃ (xc' : ∀ m : ℕ, sp (R₀ := R') (ReciprocityTheory.ChartRestriction.G.Chart.JetR R' (Fin n) m) ⟶ (Over.pullback x').obj t.G),
         IsUnivChart _ n xc' ∧ Compat t ψ xc xc' := by
     subst h
-    letI : Algebra R R' := ψ.toAlgebra
+    let : Algebra R R' := ψ.toAlgebra
     obtain ⟨x₁, hx₁, hcomp⟩ := LieChart.univChart_baseChange_of_chart (R := R) (R' := R') _ C n xc hx
     have h₁ := IsGrpPullback.comp
       (isGrpPullback_pullback ((Over.pullback x).obj t.G) (ReciprocityTheory.ChartRestriction.G.Chart.fB R R'))
@@ -176,9 +176,9 @@ theorem exists_affine_bases {X : Scheme.{0}} (π : X ⟶ S) (s : X ⟶ Sp c.F) (
     have : CharZero c.F := RingHom.charZero c.F.val.toRingHom
     obtain ⟨α, hinj, ⟨f, hf, hfs⟩, hN⟩ :=
       exists_sepElt (E := E) (F := c.F) c.F.val.toRingHom (embK c) (fun τ a => embK_coe c τ a)
-    letI : Algebra c.F L := φ.toAlgebra
+    let : Algebra c.F L := φ.toAlgebra
     refine ⟨fun τ => LinearMap.toMatrix' (proj (rho hx) (embK c) α τ), fun {k} _ ψ {x' xc'} hx' hv τ => ?_⟩
-    letI : Algebra c.F k := (ψ.comp φ).toAlgebra
+    let : Algebra c.F k := (ψ.comp φ).toAlgebra
     have e₁ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) (proj (rho hx') (embK c) α τ m) := fun m =>
       eig_of_alpha _ _ α hN τ (proj_eig_alpha _ _ α hinj f hf hfs τ m)
     have e₂ : ∀ m, ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (rho hx') (embK c τ) m → proj (rho hx') (embK c) α τ m = m := fun m hm => by
@@ -186,7 +186,7 @@ theorem exists_affine_bases {X : Scheme.{0}} (π : X ⟶ S) (s : X ⟶ Sp c.F) (
         by_cases h : τ' = τ
         · subst h; rwa [Pi.single_eq_same]
         · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-      rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+      rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
     have htm : ∀ (a : 𝓞 E) (cc : Fin n → L), rho hx' a (ψ ∘ cc) = ψ ∘ rho hx a cc :=
       fun a cc => vec_inj hx' (by
         show vec t _ xc' (tmap hx' _ _) = vec t _ xc' (_ ∘ tmap hx _ _)
@@ -219,7 +219,7 @@ theorem exists_affine_bases {X : Scheme.{0}} (π : X ⟶ S) (s : X ⟶ Sp c.F) (
     exact ⟨e₁ v, e₂ v⟩
   obtain ⟨P, hP⟩ := exists_projectors φ₀ hx
   let L : Type := X.presheaf.stalk z
-  letI : Algebra Γ(X, U₀) L := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨z, hz⟩
+  let : Algebra Γ(X, U₀) L := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨z, hz⟩
   have hloc := hU₀.isLocalization_stalk ⟨z, hz⟩
   obtain ⟨xL, hxL, hvL⟩ := vec_bc_of_chart C hx (algebraMap Γ(X, U₀) L)
     (x' := (spMap (algebraMap Γ(X, U₀) L) ≫ j) ≫ π) (by rw [hx₀, Category.assoc])
@@ -266,7 +266,7 @@ theorem lieMult_univ (Xo : Moduli D l) (k : Type) [Field k] [IsAlgClosed k] (φ 
   · exact hd.2 fun h' => h (congrArg Subtype.val (φ.injective h'))
 
 theorem mult_conj {τ : E →+* ℂ} (hτ : τ (H.rt : E) = H.rt0) : D.mult (conjEmb τ) = D.q := by
-  refine if_neg fun h => ?_
+  refine ite_eq_right fun h => ?_
   have h3 : starRingEnd ℂ (τ (H.rt : E)) = H.rt0 := h
   rw [hτ] at h3
   have h5 : H.rt0.im = 0 := Complex.conj_eq_iff_im.1 h3
@@ -286,7 +286,7 @@ theorem GlobalTheory.DetLine.frameCover_univ : ∀ (E : Type) [Field E] [NumberF
     exists_affine_bases (t := Xo.univ.t) c (toX Xo c) (toF Xo c) D.mult (lieMult_univ c Xo) U z hz
   have h₁ := hb τ
   have h₂ := hb (conjEmb τ)
-  rw [show D.mult τ = D.p from if_pos hτ] at h₁
+  rw [show D.mult τ = D.p from ite_eq_left hτ] at h₁
   rw [mult_conj hτ] at h₂
   obtain ⟨v, hv⟩ := h₁
   obtain ⟨w, hw⟩ := h₂

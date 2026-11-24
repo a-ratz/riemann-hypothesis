@@ -174,7 +174,7 @@ private theorem coeff_zero_derivative_eq_coeff_one {R : Type} [CommRing R] (f : 
     PowerSeries.coeff 0 (PowerSeries.derivative (R := R) f) = PowerSeries.coeff 1 f := by
   first
   | (rw [show PowerSeries.derivative (R := R) f = f.derivativeFun from rfl, PowerSeries.coeff_derivativeFun]; simp)
-  | simp [PowerSeries.coeff_derivativeFun]
+  | simp [PowerSeries.coeff_derivative]
 
 theorem X_dvd_levC_q (i : ZMod n) (ζ : LL) (hζ : IsPrimitiveRoot ζ PD.p) (hp : 2 ≤ PD.p) :
     PowerSeries.X ∣ levC W i ζ W.q₀ := by
@@ -204,13 +204,13 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 
 theorem residue_q₀ [IsLocalRing O] (hp : PD.p.Prime) (hpm : ((PD.p : ℕ) : O) ∈ IsLocalRing.maximalIdeal O) :
     PowerSeries.map (IsLocalRing.residue O) W.q₀ = PowerSeries.X ^ (PD.p - 1) := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hk : ((PD.p : ℕ) : IsLocalRing.ResidueField O) = 0 := by
     rw [← map_natCast (IsLocalRing.residue O)]
     exact (IsLocalRing.residue_eq_zero_iff _).mpr hpm
   have hK : ((PD.p : ℕ) : PowerSeries (IsLocalRing.ResidueField O)) = 0 := by
     rw [← map_natCast (PowerSeries.C (R := IsLocalRing.ResidueField O)), hk, map_zero]
-  haveI : CharP (PowerSeries (IsLocalRing.ResidueField O)) PD.p := by
+  have : CharP (PowerSeries (IsLocalRing.ResidueField O)) PD.p := by
     first
     | exact (CharP.charP_iff_prime_eq_zero hp).mpr hK
   have h := congrArg (PowerSeries.map (IsLocalRing.residue O)) W.q₀_def
@@ -278,7 +278,7 @@ private theorem q0_dvd_of_X_dvd_levC_primitive_roots [IsLocalRing O] [IsAdicComp
   rw [hres, PowerSeries.order_X_pow] at hdeg0
   have hdeg : r.degree < ((PD.p - 1 : ℕ) : WithBot ℕ) := by
     first
-    | (rw [ENat.toNat_coe] at hdeg0; exact hdeg0)
+    | (rw [ENat.toNat_natCast] at hdeg0; exact hdeg0)
   have hroots : ∀ ζ ∈ primitiveRoots PD.p LL, (r.map (algebraMap O LL)).eval (ζ - 1) = 0 := by
     intro ζ hζm
     have hζ : IsPrimitiveRoot ζ PD.p := (mem_primitiveRoots hp.pos).mp hζm
@@ -436,7 +436,7 @@ theorem jumps_le (hE : Formalism.MainNotions.RamifiedCoefficientChains.DcrisExac
   have := fd_DdRE W hQ hS i τ hτ
   intro a ha
   have hw := Formalism.MainNotions.N.Pv.LocalLengthBound.rk_jumps₂ W hE hC hQ hS i τ hτ a ha
-  simp only [JumpWinS, hi, if_true, Set.mem_union, Set.mem_Icc] at hw
+  simp only [JumpWinS, hi, ite_true, Set.mem_union, Set.mem_Icc] at hw
   rcases hw with ⟨-, h2⟩ | ⟨h1, h2⟩
   · exact h2
   · exfalso
@@ -574,7 +574,7 @@ theorem Q_eq_q (hs : W.s = 1) : W.Q = W.q := by
 theorem coeff_Xpow_mul_lt (k j : ℕ) (hj : j < k) (f : PowerSeries LL) :
     PowerSeries.coeff j (PowerSeries.X ^ k * f) = 0 := by
   first
-    | (rw [PowerSeries.coeff_X_pow_mul']; exact if_neg (by omega))
+    | (rw [PowerSeries.coeff_X_pow_mul']; exact ite_eq_right (by omega))
     | simp [PowerSeries.coeff_X_pow_mul', Nat.not_le.mpr hj]
 
 theorem lead_indep [IsDomain O] [IsFractionRing O LL] (Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop)
@@ -610,7 +610,7 @@ theorem lead_indep [IsDomain O] [IsFractionRing O LL] (Pt : ZMod n → LL → (K
         (fun j hj => by rw [hlevQ]; exact coeff_Xpow_mul_lt M j hj _)
       rw [add_comm] at this
       unfold Formalism.MainNotions.RamifiedCoefficientChains.S9.Conv.conv at this
-      rw [this, hlevQ, PowerSeries.coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self,
+      rw [this, hlevQ, PowerSeries.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self,
         PowerSeries.coeff_zero_eq_constantCoeff_apply, map_pow]
 
     have hsum : (letE i : LetA O n) • (W.Q ^ M • (W.Q ^ k • W.φD T x)) =
@@ -959,7 +959,7 @@ theorem ninQbP_of [IsLocalRing O] [IsAdicComplete (IsLocalRing.maximalIdeal O) O
   have h5 := hP5 T₂ Mf hf hT hJL
   have hxNl : x ∈ W.Nl T₂ i := ⟨x, hx.1, by simpa using hx.2.1⟩
   have h52 := h5.2.1 i x hxNl
-  simp only [hf, if_true, pow_zero, one_smul] at h52
+  simp only [hf, ite_true, pow_zero, one_smul] at h52
   obtain ⟨g, hg⟩ := (Submodule.mem_span_range_iff_exists_fun _).mp (phispan_le W T₂ i bb huniq h52)
   have hpa : ∀ a, W.Q ^ (Mf i) • W.φD T₂ ((letE (i - 1) : LetA O n) • bb a) ∈ W.N T₂ :=
     fun a => h5.1 i _ ⟨bb a, hbN a, rfl⟩

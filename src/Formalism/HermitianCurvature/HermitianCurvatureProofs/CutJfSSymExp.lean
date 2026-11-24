@@ -64,8 +64,8 @@ noncomputable section
 
 lemma expS_summable {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) :
     Summable (fun m : ℕ => ((m.factorial : ℂ))⁻¹ • X ^ m) := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   exact NormedSpace.expSeries_summable' X
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
@@ -115,7 +115,7 @@ lemma hpk_symm (i j : Fin (2 * r + k + 1)) : Hpk k r i j = Hpk k r j i := by
     rfl
   · have hji : ¬ j = i := fun h => hij h.symm
     unfold Hpk
-    simp only [hij, hji, and_false, if_false]
+    simp only [hij, hji, and_false, ite_false]
     split_ifs <;> first | rfl | (exfalso; omega)
 
 lemma herm_conj (y w : Fin (2 * r + k + 1) → ℂ) : herm (Hpk k r) y w = star (herm (Hpk k r) w y) := by

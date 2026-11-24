@@ -71,7 +71,7 @@ theorem UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.sphUnl :
     rfl
   · obtain ⟨σ, hσ, -⟩ := id hs
     obtain ⟨α, hα, hS⟩ := GlobalTheory.LFun.SphComp.hasSatake_of_isLocComp π ((CG.hasSat_mk π v B).1 hB) hσ
-    haveI : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
+    have : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
     have h := GlobalTheory.LocLanglands.hasSupport_of_isSubquotient_prinSeries (v.adicCompletion K) n (fun i => unrChar _ (α i))
       (fun i => isSmoothChar_of_isUnram (isUnram_unrChar _ (α i))) ⟨σ.V, σ.ρ, σ.smooth, σ.irred⟩ hS.2.2
     have key : ∀ ξ ∈ chars s, ξ (unif _) ∈ B := by

@@ -50,7 +50,7 @@ namespace UpperTheory.Gal.UnramifiedFromSplittingCriterion
 private theorem apply_eq_of_not_fixes {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω]
     {s t : G (maximalRealSubfield L) Ω} (hs : ¬ Fixes L s) (ht : ¬ Fixes L t) (y : L) :
     s (algebraMap L Ω y) = t (algebraMap L Ω y) := by
-  haveI : IsGalois (maximalRealSubfield L) L := Algebra.IsQuadraticExtension.isGalois _ _
+  have : IsGalois (maximalRealSubfield L) L := Algebra.IsQuadraticExtension.isGalois _ _
   have hcard : Nat.card (L ≃ₐ[maximalRealSubfield L] L) = 2 := by
     rw [IsGalois.card_aut_eq_finrank]
     exact Algebra.IsQuadraticExtension.finrank_eq_two _ _

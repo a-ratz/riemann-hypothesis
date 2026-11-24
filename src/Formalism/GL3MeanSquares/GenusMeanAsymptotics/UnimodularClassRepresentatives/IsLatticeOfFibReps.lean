@@ -86,7 +86,7 @@ theorem finite_vF_ne_zero {n : 𝓞 F} (hn : n ≠ 0) :
     Subtype.ext (congrArg IsDedekindDomain.HeightOneSpectrum.asIdeal h)
   refine ((Ideal.finite_factors hI).preimage hf.injOn).subset ?_
   intro 𝔭 h𝔭
-  simp only [Set.mem_setOf_eq, Set.mem_preimage] at h𝔭 ⊢
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage] at h𝔭 ⊢
   show 𝔭.1 ∣ Ideal.span {n}
   rw [Ideal.dvd_span_singleton]
   by_contra hmem
@@ -95,7 +95,7 @@ theorem finite_vF_ne_zero {n : 𝓞 F} (hn : n ≠ 0) :
 
   have hset : {e : ℕ | n ∈ 𝔭.1 ^ e} = {0} := by
     ext e
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · intro he
       by_contra h0
@@ -122,8 +122,8 @@ theorem card_fibG_eq_zero (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
     (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {Λ' : Submodule (𝓞 K) V'}
     (hΛ' : Submodule.IsFullLattice K Λ') (𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal})
     (H : fibLoc S L 𝔭.1 Λ' = 0) : (Nat.card (fibG S L Λ') : ℝ) = 0 := by
-  letI := hL
-  letI := hΛ'
+  let := hL
+  let := hΛ'
   rw [card_fibG_eq_prod (L := L) (Λ' := Λ') hK hF hs hd S inferInstance hLi inferInstance]
   exact tprod_of_exists_eq_zero ⟨𝔭, by rw [H]; simp⟩
 
@@ -172,7 +172,7 @@ theorem sum_genus (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsF
       c * ∏ 𝔭 ∈ Z, ((fibLoc S L 𝔭.1 (locF 𝔭.1 M) : ℝ) * lamP h' (locF 𝔭.1 M) 𝔭.1) := by
   have hs2 := S.isSymm hs
   have hd2 := S.isTotPosDef hd
-  letI := hL
+  let := hL
   have hMi := hM.integral hF hL.toIsLattice hLi
   have hMfull := hM.isFullLattice hL
   have hmass : Formalism.HermitianLatticesTheory.mass h' M = ∑ Λ' ∈ s'.filter (fun Λ' => Formalism.HermitianLatticesTheory.SameGenus h' M Λ'),
@@ -189,7 +189,7 @@ theorem sum_genus (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsF
           ((Nat.card (Formalism.ThetaLiftIndependence.autL h' Λ') : ℕ) : ℝ)⁻¹ := by
     intro Λ' hΛ'
     rw [Finset.mem_filter] at hΛ'
-    letI := isFullLattice_of_fibReps S hs' hΛ'.1
+    let := isFullLattice_of_fibReps S hs' hΛ'.1
     rw [card_fibG_eq_prod (F := F) (L := L) (Λ' := Λ') hK hF hs hd S inferInstance hLi inferInstance,
       div_eq_mul_inv]
     congr 1

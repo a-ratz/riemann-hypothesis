@@ -118,7 +118,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.unlFull :
       (fun a => (single_spec (hx a)).2.1)
   have h1 := GlobalTheory.LocGL.SupportPerm.isSubquotient_prodIrr_of_hasSupport
     UpperTheory.Zero.LLC.Pr.zel UpperTheory.Zero.LLC.Pr.bz k N s ⟨V, π, hs.isSmooth, hs.isIrreducible⟩ x hd hs
-  haveI := GlobalTheory.ReducedFactor.nontrivial_of_irr hs.isIrreducible
+  have := GlobalTheory.ReducedFactor.nontrivial_of_irr hs.isIrreducible
   have equiv_of_sub {G A B : Type} [Group G] [AddCommGroup A] [Module ℂ A]
       [AddCommGroup B] [Module ℂ B] {σ : Representation ℂ G B}
       {ρ : Representation ℂ G A} (h : IsSubquotient σ ρ) [Nontrivial B]
@@ -126,7 +126,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.unlFull :
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : B)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hirr
+    have : IsSimpleOrder (Subrepresentation ρ) := hirr
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : ρ.IntertwiningMap σ := f.comp (topEquiv ρ).symm.toIntertwiningMap

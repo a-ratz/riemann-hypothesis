@@ -113,7 +113,7 @@ theorem levelS_of (hinv : ∀ x, σ (σ x) = x) (hEx : ExistS F E σ M J) (hMe :
   rw [hS, hN, hH]
   have hL : ∫⁻ k, (Kf σ J (ΛX ∪ ΛW ∪ ΛY) : Set (HA (Af F) σ J)).indicator 1
       (k : HA (Af F) σ J) ∂μS = μS (Subtype.val ⁻¹' (Kf σ J (ΛX ∪ ΛW ∪ ΛY) : Set (HA (Af F) σ J))) := by
-    rw [← lintegral_indicator_one (measurable_subtype_coe hKm)]
+    rw [← lintegral_indicator_one (measurable_subtypeVal hKm)]
     congr 1
   have inner : ∀ m : Nsub (Af F) σ J P,
       ∫⁻ h, (Kf σ J (ΛX ∪ ΛW ∪ ΛY) : Set (HA (Af F) σ J)).indicator 1
@@ -124,7 +124,7 @@ theorem levelS_of (hinv : ∀ x, σ (σ x) = x) (hEx : ExistS F E σ M J) (hMe :
     by_cases hm : (m : HA (Af F) σ J) ∈ Kf σ J (ΛX ∪ ΛW ∪ ΛY)
     · rw [Set.indicator_of_mem (show m ∈ Subtype.val ⁻¹'
           (Kf σ J (ΛX ∪ ΛW ∪ ΛY) : Set (HA (Af F) σ J)) from hm),
-        ← lintegral_indicator_one (measurable_subtype_coe hKm)]
+        ← lintegral_indicator_one (measurable_subtypeVal hKm)]
       congr 1
       funext h
       by_cases hh : (h : HA (Af F) σ J) ∈ Kf σ J (ΛX ∪ ΛW ∪ ΛY)
@@ -147,7 +147,7 @@ theorem levelS_of (hinv : ∀ x, σ (σ x) = x) (hEx : ExistS F E σ M J) (hMe :
         have h2 := (Kf σ J (ΛX ∪ ΛW ∪ ΛY)).mul_mem hmh ((Kf σ J (ΛX ∪ ΛW ∪ ΛY)).inv_mem hh)
         rwa [mul_inv_cancel_right] at h2
       simp only [hz, lintegral_zero]
-  rw [hL, lintegral_congr inner, lintegral_indicator_const (measurable_subtype_coe hKm)] at key
+  rw [hL, lintegral_congr inner, lintegral_indicator_const (measurable_subtypeVal hKm)] at key
   rw [key, mul_comm]
 
 end ExtN

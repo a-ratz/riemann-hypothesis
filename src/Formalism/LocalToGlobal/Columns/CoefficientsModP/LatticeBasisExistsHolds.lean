@@ -160,7 +160,7 @@ theorem latticeBasisExists_holds :
       (M : Submodule (𝓞 K) (Fin n → K)), Submodule.IsFullLattice K M →
       ∀ w : HeightOneSpectrum (𝓞 K), ∃ B : GL (Fin n) K, IsBasisAt w M B := by
   intro K _ _ n M hM w
-  letI : Submodule.IsFullLattice K M := hM
+  let : Submodule.IsFullLattice K M := hM
   obtain ⟨κ, hκ, bK, hb⟩ := lc_exists_basis w hM.fg Submodule.IsFullLattice.span_eq_top
   have hcard : Fintype.card κ = n := by
     rw [← Module.finrank_eq_card_basis bK, Module.finrank_fin_fun]
@@ -202,13 +202,13 @@ theorem lc_primeTo (d : 𝓞 K) (hd : d ≠ 0) (w : HeightOneSpectrum (𝓞 K)) 
     · simpa using hd
   obtain ⟨I, hI, hnd⟩ := hfin.exists_eq_pow_mul_and_not_dvd
   have h1 : ¬ I ≤ w.asIdeal := fun h => hnd (Ideal.dvd_iff_le.2 h)
-  obtain ⟨t, htI, htw⟩ := SetLike.not_le_iff_exists.1 h1
+  obtain ⟨t, htI, htw⟩ := IsConcreteLE.not_le_iff_exists.1 h1
   refine ⟨t, htw, fun w' hw' => ?_⟩
   have h2 : ¬ w.asIdeal ^ multiplicity w.asIdeal (Ideal.span {d}) ≤ w'.asIdeal := by
     intro h
     have h3 : w.asIdeal ≤ w'.asIdeal := w'.isPrime.le_of_pow_le h
     exact hw' (HeightOneSpectrum.ext (w.isMaximal.eq_of_le w'.isPrime.ne_top h3).symm)
-  obtain ⟨r, hr, hrw⟩ := SetLike.not_le_iff_exists.1 h2
+  obtain ⟨r, hr, hrw⟩ := IsConcreteLE.not_le_iff_exists.1 h2
   refine ⟨r, hrw, ?_⟩
   have h4 : r * t ∈ Ideal.span {d} := by
     rw [hI]

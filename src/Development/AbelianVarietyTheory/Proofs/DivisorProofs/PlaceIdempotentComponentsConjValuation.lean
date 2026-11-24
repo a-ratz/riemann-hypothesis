@@ -83,7 +83,7 @@ theorem int_iff {E : Type} [Field E] [NumberField E] {P : HeightOneSpectrum (�
       Valued.v (y P) ≤ P.valuation E k := by
   have e1 : ∀ R, (e * (y * algebraMap E (FiniteAdeleRing (𝓞 E) E) k⁻¹)) R =
       e R * (y R * algebraMap E (R.adicCompletion E) k⁻¹) := fun R => rfl
-  have hv : 0 < P.valuation E k := zero_lt_iff.2 (by simpa using hk)
+  have hv : 0 < P.valuation E k := pos_iff_ne_zero.2 (by simpa using hk)
   have e2 : Valued.v ((e * (y * algebraMap E (FiniteAdeleRing (𝓞 E) E) k⁻¹)) P) ≤ 1 ↔
       Valued.v (y P) ≤ P.valuation E k := by
     rw [e1, h1, one_mul, map_mul, Formalism.UG.P.levelaf_valued_algebraMap, map_inv₀, mul_inv_le_iff₀ hv, one_mul]

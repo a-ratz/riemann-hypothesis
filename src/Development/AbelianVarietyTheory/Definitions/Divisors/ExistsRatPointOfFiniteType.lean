@@ -49,7 +49,7 @@ theorem isUnit_intCast_ratHull [CharZero Ω] (R : Subalgebra o Ω) {n : ℤ} (hn
 theorem isLocalization_ratHull [CharZero Ω] (R : Subalgebra o Ω) :
     letI := (toRat R).toAlgebra
     IsLocalization (Algebra.algebraMapSubmonoid R (nonZeroDivisors ℤ)) (ratHull R) := by
-  letI := (toRat R).toAlgebra
+  let := (toRat R).toAlgebra
   refine (isLocalization_iff _ _).2 ⟨?_, ?_, ?_⟩
   · rintro ⟨_, n, hn, rfl⟩
     simpa using isUnit_intCast_ratHull R (nonZeroDivisors.ne_zero hn)
@@ -63,8 +63,8 @@ theorem isLocalization_ratHull [CharZero Ω] (R : Subalgebra o Ω) :
 
 theorem existsUnique_ratLift [CharZero Ω] (R : Subalgebra o Ω) {K : Type} [CommRing K]
     (hK : ∀ n : ℤ, n ≠ 0 → IsUnit (n : K)) (f : R →+* K) : ∃! g : ratHull R →+* K, g.comp (toRat R) = f := by
-  letI := (toRat R).toAlgebra
-  haveI := isLocalization_ratHull R
+  let := (toRat R).toAlgebra
+  have := isLocalization_ratHull R
   have hf : ∀ y : Algebra.algebraMapSubmonoid R (nonZeroDivisors ℤ), IsUnit (f y) := by
     rintro ⟨_, n, hn, rfl⟩
     simpa using hK n (nonZeroDivisors.ne_zero hn)
@@ -156,7 +156,7 @@ theorem exists_pol_baseChange {S S' : Scheme.{0}} (P : PolAV S) (f : S' ⟶ S) :
 
 theorem exists_uOver_id (u : Sp R' ⟶ Xo.XF c) : ∃ P : PolAV (Sp R'), UOver Xo c P (RingHom.id R') u := by
   obtain ⟨P, g, hG, hL⟩ := exists_pol_baseChange (Obj.toPolAV Xo.univ) (u ≫ pullback.fst _ _)
-  haveI : IsMonHom (Iso.refl P.A).hom := inferInstanceAs (IsMonHom (𝟙 P.A))
+  have : IsMonHom (Iso.refl P.A).hom := inferInstanceAs (IsMonHom (𝟙 P.A))
   refine ⟨P, P.A, inferInstance, 𝟙 _, g, (isGrpPullback_of_iso (Iso.refl P.A)).congr (Spec.map_id _).symm rfl, hG, ?_⟩
   exact LBIso.trans (pull_isLB P.isLB _) P.isLB (pull_isLB Xo.univ.t.PP.isLB _)
     (LBIso.chartPull (chartPullId _) (chartPullUnpull P.L _ rfl) (PolBaseChange.lbIso_refl (pull_isLB P.isLB _))) hL
@@ -188,7 +188,7 @@ theorem exists_spread_grp {B Ω : Type} [CommRing B] [IsDomain B] [Field Ω] [Al
   refine ⟨b₁ * b₂, mul_ne_zero hb₁ hb₂, fun B' _ g j hu hj e => ?_⟩
   rw [map_mul, IsUnit.mul_iff] at hu
   have e' : spMap j ≫ spMap g = spMap (algebraMap B Ω) := by rw [← Spec.map_comp, ← e]; rfl
-  haveI : IsSchemeTheoreticallyDominant (spMap j) := ExtUnique.isSchemeTheoreticallyDominant_spec_of_injective _ hj
+  have : IsSchemeTheoreticallyDominant (spMap j) := ExtUnique.isSchemeTheoreticallyDominant_spec_of_injective _ hj
   obtain ⟨u, hu₁, hu₂⟩ := H₁ B' g hu.1 _ (pullback.fst _ _) (pullback.snd _ _) pullback.condition
   obtain ⟨v, hv₁, hv₂⟩ := H₂ B' g hu.2 _ (pullback.fst _ _) (pullback.snd _ _) pullback.condition
   have p₁ := isGrpPullback_pullback G₁ (spMap g)
@@ -215,13 +215,13 @@ theorem exists_spread_grp {B Ω : Type} [CommRing B] [IsDomain B] [Field Ω] [Al
         (hv₂ _ (pullback.lift_fst _ _ _))).symm
     · exact (pullback.lift_snd _ _ _).trans (((Category.assoc _ _ _).trans (congrArg _ (Over.w V))).trans
         (pullback.lift_snd _ _ _)).symm
-  haveI : Flat ((Over.pullback (spMap g)).obj G₁).hom := inferInstanceAs (Flat (pullback.snd _ _))
-  haveI : Flat ((Over.pullback (spMap g)).obj G₂).hom := inferInstanceAs (Flat (pullback.snd _ _))
-  haveI : IsSeparated ((Over.pullback (spMap g)).obj G₁).hom := inferInstanceAs (IsSeparated (pullback.snd _ _))
-  haveI : IsSeparated ((Over.pullback (spMap g)).obj G₂).hom := inferInstanceAs (IsSeparated (pullback.snd _ _))
-  haveI : IsIso U := ExtUnique.isIso_of_isPullback q₁.1 q₂.1 (Iso.refl G) U V eU eV
-  haveI : IsMonHom (Iso.refl G).hom := inferInstanceAs (IsMonHom (𝟙 G))
-  haveI : IsMonHom (asIso U).hom := ExtUnique.isMonHom_of_isGrpPullback q₁ q₂ (Iso.refl G).hom U eU
+  have : Flat ((Over.pullback (spMap g)).obj G₁).hom := inferInstanceAs (Flat (pullback.snd _ _))
+  have : Flat ((Over.pullback (spMap g)).obj G₂).hom := inferInstanceAs (Flat (pullback.snd _ _))
+  have : IsSeparated ((Over.pullback (spMap g)).obj G₁).hom := inferInstanceAs (IsSeparated (pullback.snd _ _))
+  have : IsSeparated ((Over.pullback (spMap g)).obj G₂).hom := inferInstanceAs (IsSeparated (pullback.snd _ _))
+  have : IsIso U := ExtUnique.isIso_of_isPullback q₁.1 q₂.1 (Iso.refl G) U V eU eV
+  have : IsMonHom (Iso.refl G).hom := inferInstanceAs (IsMonHom (𝟙 G))
+  have : IsMonHom (asIso U).hom := ExtUnique.isMonHom_of_isGrpPullback q₁ q₂ (Iso.refl G).hom U eU
   exact ⟨u, _, ((isGrpPullback_of_iso (asIso U)).comp p₂).congr (Category.id_comp _) hU, q₁, pullback.lift_fst _ _ _,
     hu₂ _ (pullback.lift_fst _ _ _)⟩
 
@@ -251,17 +251,17 @@ theorem UOver.exists_spread {Xo : Moduli D l} {c : Coeff l} {R : Subalgebra o Ω
     rw [hβ.1.w]; simp only [Category.assoc]
   have q₁ := p₁.cancel (hα.congr (spMap_val_toRat R).symm (pullback.lift_fst _ _ w₁).symm) (pullback.lift_snd _ _ w₁)
   have q₂ := p₂.cancel (hβ.congr (Category.assoc _ _ _) (pullback.lift_fst _ _ w₂).symm) (pullback.lift_snd _ _ w₂)
-  haveI := fr R le_rfl
+  have := fr R le_rfl
   have pullAb : ∀ {S S' : Scheme.{0}} {f : S' ⟶ S} {G : Over S} {G' : Over S'}
       [GrpObj G] [GrpObj G'] {φ : G'.left ⟶ G.left},
       IsAbelianScheme G → IsGrpPullback G' G f φ → IsAbelianScheme G' := by
     intro S S' f G G' instG instG' φ hG h
-    letI : GrpObj G := instG
-    letI : GrpObj G' := instG'
+    let : GrpObj G := instG
+    let : GrpObj G' := instG'
     refine ⟨?_, MorphismProperty.of_isPullback (P := @Smooth) h.1 hG.smooth,
       MorphismProperty.of_isPullback (P := @IsProper) h.1 hG.proper,
       MorphismProperty.of_isPullback (P := @GeometricallyConnected) h.1 hG.geomConnected⟩
-    letI := hG.comm
+    let := hG.comm
     rw [isCommMonObj_iff_isMulCommutative]
     intro T
     open scoped CategoryTheory.MonObj in
@@ -275,8 +275,8 @@ theorem UOver.exists_spread {Xo : Moduli D l} {c : Coeff l} {R : Subalgebra o Ω
   obtain ⟨β₁, φ, g₂, gφ, e₁, e₂⟩ := H₁ _ _ (ratHull R₁).val.toRingHom u₁ Subtype.val_injective rfl
   have g₁ := isGrpPullback_pullback ((Over.pullback (spMap (toRat R))).obj P.A)
     (spMap (Subalgebra.inclusion (ratHull_mono h₁)).toRingHom)
-  haveI := fr R₁ h₁
-  haveI := (PolPull.isAbelianScheme_of_isGrpPullback a₁ g₁).proper
+  have := fr R₁ h₁
+  have := (PolPull.isAbelianScheme_of_isGrpPullback a₁ g₁).proper
   have eα : φ ≫ pullback.fst _ _ ≫ pullback.fst P.A.hom (spMap (toRat R)) = α :=
     (Category.assoc _ _ _).symm.trans ((congrArg (· ≫ _) e₁).trans (pullback.lift_fst _ _ _))
   have eβ : φ ≫ β₁ ≫ pullback.fst Xo.univ.t.G.hom (u ≫ pullback.fst _ _) = β :=
@@ -351,16 +351,16 @@ abbrev UCompact.i {Xo : Moduli D l} {c : Coeff l} (C : UCompact Xo c) : Xo.XF c 
 theorem UCompact.isFractionRing {Xo : Moduli D l} {c : Coeff l} (C : UCompact Xo c) :
     letI := C.b.toAlgebra
     IsFractionRing C.o c.F := by
-  letI := C.b.toAlgebra
-  haveI := C.ded
-  haveI : FaithfulSMul C.o c.F := (faithfulSMul_iff_algebraMap_injective _ _).2 C.inj
+  let := C.b.toAlgebra
+  have := C.ded
+  have : FaithfulSMul C.o c.F := (faithfulSMul_iff_algebraMap_injective _ _).2 C.inj
   exact IsFractionRing.of_field _ _ C.frac
 
 theorem UCompact.isPreimmersion_i {Xo : Moduli D l} {c : Coeff l} (C : UCompact Xo c) : IsPreimmersion C.i := by
-  letI := C.b.toAlgebra
-  haveI := C.isFractionRing
-  haveI := C.iF_open
-  haveI : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
+  let := C.b.toAlgebra
+  have := C.isFractionRing
+  have := C.iF_open
+  have : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
   infer_instance
 
 structure USetup {Xo : Moduli D l} {c : Coeff l} (C : UCompact Xo c) where
@@ -407,7 +407,7 @@ def USetup.Lies {K : Type} [CommRing K] (x : Sp K ⟶ Sp X₁.S.R) (y : Sp K ⟶
   ∃ x' : Sp K ⟶ Sp (ratHull X₁.S.R), x' ≫ spMap (toRat X₁.S.R) = x ∧ x' ≫ X₁.u = y
 
 theorem USetup.existsUnique_lies {K : Type} [Field K] [CharZero K] (x : Sp K ⟶ Sp X₁.S.R) : ∃! y, X₁.Lies x y := by
-  haveI := X₁.ar.char
+  have := X₁.ar.char
   obtain ⟨x', hx, hu⟩ := existsUnique_ratPoint X₁.S.R x
   exact ⟨_, ⟨x', hx, rfl⟩, fun _ ⟨x'', h, e⟩ => e ▸ hu x'' h ▸ rfl⟩
 

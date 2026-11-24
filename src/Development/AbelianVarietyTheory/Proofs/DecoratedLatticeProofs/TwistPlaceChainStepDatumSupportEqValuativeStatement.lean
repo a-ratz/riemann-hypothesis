@@ -82,7 +82,7 @@ theorem suppQ_eq_valuative : ∀ (D : D7) (v : FinPl D) (a b r : ℕ), GlobalThe
     · exact Or.inl rfl
   refine ⟨?_, ?_⟩
   · ext x
-    simp only [suppQ, Set.mem_setOf_eq, GlobalTheory.ParahoricConjBlocks.mem_KO_val_iff,
+    simp only [suppQ, Set.mem_ofPred_eq, GlobalTheory.ParahoricConjBlocks.mem_KO_val_iff,
       HeightOneSpectrum.mem_adicCompletionIntegers]
     constructor
     · rintro ⟨-, hdet, hint, hlow⟩
@@ -98,7 +98,7 @@ theorem suppQ_eq_valuative : ∀ (D : D7) (v : FinPl D) (a b r : ℕ), GlobalThe
       rw [h0, map_zero] at hd
       exact zero_ne_one hd
   · ext y
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     exact forall_congr' fun i => forall_congr' fun j => (hle _).symm
 
 end GlobalTheory.NrmVol

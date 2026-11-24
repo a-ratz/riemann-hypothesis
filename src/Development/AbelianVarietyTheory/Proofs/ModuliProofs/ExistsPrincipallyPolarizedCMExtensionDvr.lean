@@ -306,11 +306,11 @@ theorem exists_generating (hA : IsAbelianScheme A) (c : CubicalStr A L) (O F : T
   obtain ⟨σ, hσ⟩ := hσ
   obtain ⟨-, ⟨t, -, a, x, hx, hxa⟩, -⟩ := DvrModel.existsUnique_zpow_mul_sec hK hk hϖ hH σ hσ
   have hflat : g.Flat := by
-    letI := g.toAlgebra
+    let := g.toAlgebra
     have : Module.IsTorsionFree V O := Module.isTorsionFree_iff_algebraMap_injective.2 hg
     exact (inferInstance : Module.Flat V O)
   have : Surjective (spMap g) := by
-    letI := g.toAlgebra
+    let := g.toAlgebra
     have : Module.Flat V O := hflat
     have : IsLocalHom (algebraMap V O) := ‹_›
     have := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := V) (B := O)

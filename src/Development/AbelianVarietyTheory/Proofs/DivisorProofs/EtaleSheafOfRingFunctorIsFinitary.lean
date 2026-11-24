@@ -107,7 +107,7 @@ lemma stage_of_pieces (F : Shv R) {J : Type} [SmallCategory J] [IsFiltered J]
     ∃ (k : J) (f : j ⟶ k), ((onRings F).map (D.map f)).hom y = 0 := by
   classical
   choose k hk using hk
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   obtain ⟨K, hK⟩ := IsFiltered.sup_objs_exists (Finset.univ.image k)
   have e : ∀ i, k i ⟶ K := fun i => (hK (Finset.mem_image_of_mem _ (Finset.mem_univ i))).some
   refine ⟨K.right, K.hom, ?_⟩
@@ -357,7 +357,7 @@ theorem surj (M : CommRingCat.{0} ⥤ ModuleCat.{1} (ULift.{1} R)) (F : Shv R) (
   have hlift : ∀ i, ∃ k : Under j, ∃ n : M.obj ((D' i).obj k), (M.map ((ιB i).app k)).hom n = m i :=
     fun i => (hMel (Under j) (D' i) _ (hcol i).some).1 (m i)
   choose k n hn using hlift
-  letI := Fintype.ofFinite ι
+  let := Fintype.ofFinite ι
   obtain ⟨K, hK⟩ := IsFiltered.sup_objs_exists (Finset.univ.image k)
   have e : ∀ i, k i ⟶ K := fun i => (hK (Finset.mem_image_of_mem _ (Finset.mem_univ i))).some
   let s : ∀ i, (onRings F).obj ((D' i).obj K) :=

@@ -161,7 +161,7 @@ theorem isHecke_pull : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Co
       pushPt m'.cart.1.w (x * y) = pushPt m'.cart.1.w x * pushPt m'.cart.1.w y := fun x y => map_mul (pushHom m'.cart _) x y
   have inj' : ∀ {T : Over S'} {x y : T ⟶ o₁'.A}, pushPt m'.cart.1.w x = pushPt m'.cart.1.w y → x = y := fun e =>
     ext' _ _ (congrArg (fun z => z.left) e)
-  haveI := hmon
+  have := hmon
   have hmon₁ : IsMonHom ψ₁ := by
     refine isMonHom_of_mul ψ₁ fun T x y => ?_
     apply inj'

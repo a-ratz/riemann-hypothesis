@@ -117,14 +117,14 @@ theorem conj_mul {G : Type} [TopologicalSpace G] {φ φ' : G → ℂ} (c : Conti
 
 theorem exists_embedding_skew : GlobalTheory.Published.CuspDecaySobolev → ∀ (D : D7) (θ : InfFam D) (V : HSp D) (μ : Measure (GA D V)) (𝓕 : Set (GA D V)), IsInfFam θ → μ.IsHaarMeasure → IsFundamentalDomain (GQ V) 𝓕 μ → ∃ E : (GA D V → ℂ) →ₗ[ℂ] Lp ℂ 2 (μ.restrict 𝓕), (∀ φ, IsCuspGrow θ V φ → MemLp φ 2 (μ.restrict 𝓕) ∧ (E φ = 0 → φ = 0)) ∧ ∀ τ, ∀ X ∈ lieAt V τ, ∀ φ φ', IsCuspGrow θ V φ → IsCuspGrow θ V φ' → IsCuspGrow θ V (Rder θ V τ X φ) → IsCuspGrow θ V (Rder θ V τ X φ') → ⟪E (Rder θ V τ X φ), E φ'⟫_ℂ + ⟪E φ, E (Rder θ V τ X φ')⟫_ℂ = 0 := by
   intro hP D θ V μ 𝓕 hθ hμ h𝓕
-  haveI := hμ
+  have := hμ
   obtain ⟨-, -, -, iB, iT, -, iC⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := iB
-  haveI := iT
-  haveI := iC
-  haveI := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V μ hμ).1
+  have := iB
+  have := iT
+  have := iC
+  have := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V μ hμ).1
   have hfin : μ 𝓕 ≠ ⊤ := (GlobalTheory.Mem.QuotVol.quot_volume_ne_zero_ne_top D V μ 𝓕 (And.intro hμ h𝓕)).2
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin.lt_top⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin.lt_top⟩
   have hmem : ∀ φ, IsCuspGrow θ V φ → MemLp φ 2 (μ.restrict 𝓕) := by
     intro φ hφ
     obtain ⟨B, hB⟩ := bounded hP hθ hφ
@@ -142,7 +142,7 @@ theorem exists_embedding_skew : GlobalTheory.Published.CuspDecaySobolev → ∀ 
       rw [← a, b]
       rfl
     have hopen : IsOpen {g | φ g ≠ 0} := isOpen_ne_fun hφ.1.cont continuous_const
-    haveI : SMulInvariantMeasure (GQ V) (GA D V) μ := by
+    have : SMulInvariantMeasure (GQ V) (GA D V) μ := by
       first
         | exact inferInstance
         | exact ⟨fun γ s _ => measure_preimage_mul μ (γ : GA D V) s⟩

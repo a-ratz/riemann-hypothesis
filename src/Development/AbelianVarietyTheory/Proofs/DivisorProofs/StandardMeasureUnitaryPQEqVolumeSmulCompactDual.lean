@@ -66,7 +66,7 @@ theorem omegaDensity_smul {P Q : ℕ} {μ : Measure (UpqT P Q)} {c : ENNReal} (a
   obtain ⟨lam, hlam, hl⟩ := h
   refine ⟨lam, hlam, ?_⟩
   refine (ENNReal.Tendsto.const_mul hl (Or.inr ha)).congr fun r => ?_
-  rw [Measure.smul_apply, smul_eq_mul, mul_div_assoc]
+  rw [smul_apply, smul_eq_mul, mul_div_assoc]
 
 theorem omegaDensity_unique {P Q : ℕ} {μ : Measure (UpqT P Q)} {c c' : ENNReal}
     (h : OmegaDensity μ c) (h' : OmegaDensity μ c') : c = c' := by
@@ -79,9 +79,9 @@ theorem isMinf_eq_volU_smul_cd : ∀ (cd : CDHaar) (p q : ℕ) (m : Measure (Upq
     m = ENNReal.ofReal (ReciprocityTheory.ChartRestriction.DS.volU (p + q)) • cd.cd p q := by
   intro cd p q m hm
   obtain ⟨c, hc0, hctop, hpq, hN⟩ := cd.trick p q
-  haveI := cd.haar (p + q) 0
-  haveI := cd.prob (p + q)
-  haveI := cd.haar p q
+  have := cd.haar (p + q) 0
+  have := cd.prob (p + q)
+  have := cd.haar p q
   have hmain := ReciprocityTheory.ChartRestriction.DS.PolarCoordinateComparison.omegaDensity_main (N := p + q) (cd.cd (p + q) 0)
   have hc := omegaDensity_unique hN hmain
   have hV : 0 < ReciprocityTheory.ChartRestriction.DS.volU (p + q) := ReciprocityTheory.ChartRestriction.DS.PolarCoordinateComparison.volU_pos (p + q)

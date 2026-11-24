@@ -111,16 +111,16 @@ theorem valuation_det_mul_unif (q : Unif k) (P : Pair k n') (g : GL n' k) (hg : 
       refine ⟨⟨_, h2⟩, Subtype.ext ?_⟩
       change F (g • (x : n' → k)) = x
       rw [hF, inv_smul_smul]
-  letI : P.lat.IsLattice k := P.isLat.toIsLattice
-  letI : Module.Free 𝒪[k] P.lat := Submodule.IsLattice.free k P.lat
-  letI : Module.Finite 𝒪[k] P.lat := Submodule.IsLattice.finite k P.lat
+  let : P.lat.IsLattice k := P.isLat.toIsLattice
+  let : Module.Free 𝒪[k] P.lat := Submodule.IsLattice.free k P.lat
+  let : Module.Finite 𝒪[k] P.lat := Submodule.IsLattice.finite k P.lat
   have hlen : IsDiscreteValuationRing.addVal 𝒪[k] (LinearMap.det f) = 1 := by
     rw [← GlobalTheory.length_quotient_range_eq_addVal_det, hr, (P.fn.quotKerEquivOfSurjective (fn_surjective P)).length_eq,
       length_residue]
   have hdetmap : algebraMap 𝒪[k] k (LinearMap.det f) = ((g⁻¹ : GL n' k) : Matrix n' n' k).det := by
     let b := Module.finBasis 𝒪[k] P.lat
     let bK := b.extendOfIsLattice k
-    have hbK : ∀ i, bK i = (b i : n' → k) := Module.Basis.extendOfIsLattice_apply k b
+    have hbK : ∀ i, bK i = (b i : n' → k) := Module.Basis.extendOfIsFullLattice_apply k b
     rw [← LinearMap.det_toMatrix b f, RingHom.map_det,
       ← LinearMap.det_toLin' ((g⁻¹ : GL n' k) : Matrix n' n' k), ← LinearMap.det_toMatrix bK]
     refine congrArg Matrix.det ?_

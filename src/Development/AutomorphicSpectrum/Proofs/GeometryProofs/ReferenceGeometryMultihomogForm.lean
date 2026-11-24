@@ -94,7 +94,7 @@ theorem bcomp_homog (g : MRing J) (d : K → ℕ) : IsMultiHomog (bcomp g d) d :
   rw [mem_support_iff, coeff_bcomp] at hm
   have h : bdeg m = d := by
     by_contra h
-    exact hm (if_neg h)
+    exact hm (ite_eq_right h)
   exact congrFun h k
 
 theorem sum_bcomp [DecidableEq (K → ℕ)] (g : MRing J) : ∑ d ∈ g.support.image bdeg, bcomp g d = g := by
@@ -109,9 +109,9 @@ theorem sum_bcomp [DecidableEq (K → ℕ)] (g : MRing J) : ∑ d ∈ g.support.
     · exact h
     · rfl
   · rw [Finset.sum_eq_single (bdeg m)]
-    · rw [coeff_bcomp, if_pos rfl]
+    · rw [coeff_bcomp, ite_eq_left rfl]
     · intro d _ hd
-      rw [coeff_bcomp, if_neg (Ne.symm hd)]
+      rw [coeff_bcomp, ite_eq_right (Ne.symm hd)]
     · intro hn
       exact absurd (Finset.mem_image_of_mem _ (mem_support_iff.2 h)) hn
 
@@ -153,7 +153,7 @@ theorem aeval_bcomp_eq_zero (w : (Σ k, J k) → ℂ) (g : MRing J)
   · have h2 := congrArg (AddMonoidAlgebra.coeff · (Finsupp.equivFunOnFinite.symm d)) (h1.symm.trans h0)
     rw [coeff_sum, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply] at h2
     simp only [hm, coeff_C_mul, coeff_monomial, mul_ite, _root_.mul_one, mul_zero, EmbeddingLike.apply_eq_iff_eq] at h2
-    rwa [Finset.sum_ite_eq', if_pos hd] at h2
+    rwa [Finset.sum_ite_eq', ite_eq_left hd] at h2
   · rw [bcomp_eq_zero g hd, map_zero]
 
 theorem mem_chartLat {Ω : Type} [Field Ω] {y : (Σ k, J k) → Ω} {g : MRing J} {d : K → ℕ} (hg : IsMultiHomog g d) :
@@ -302,9 +302,9 @@ theorem exists_point_at {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype 
       map_mul' := fun _ _ => rfl
       map_zero' := rfl
       map_add' := fun _ _ => rfl }
-  haveI : IsLocalRing (regAt ξ p) := GlobalTheory.CompanionTheory.Ar.Flat.CPoint.isLocalRing_regAt X Ω ξ T.gen p
+  have : IsLocalRing (regAt ξ p) := GlobalTheory.CompanionTheory.Ar.Flat.CPoint.isLocalRing_regAt X Ω ξ T.gen p
   let P : Ideal (Algebra.adjoin ℤ (Set.range fun j => x j / x cc)) := (IsLocalRing.maximalIdeal (regAt ξ p)).comap inc
-  haveI : P.IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := Ideal.comap_isPrime _ _
   have hPmem : ∀ a, a ∈ P ↔ ¬ unitAt ξ p (a : Ω) := by
     intro a
     rw [Ideal.mem_comap, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, not_iff_not]

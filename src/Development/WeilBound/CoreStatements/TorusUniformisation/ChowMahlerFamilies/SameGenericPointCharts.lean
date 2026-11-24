@@ -174,7 +174,7 @@ theorem PositivityTheory.Xgn.same_generic_point_charts : ∀ (X : Scheme.{0}) (�
     rintro w hw _ ⟨P, rfl⟩
     rw [Scheme.Opens.range_ι]
     exact (hmem _).2 (chart_pt ξ x T c hc _ hi hx w hw P)
-  haveI : IsAffine U := hU
+  have : IsAffine U := hU
   have := eq_of_affine _ hi (IsOpenImmersion.lift U.ι z (hr z hz)) (IsOpenImmersion.lift U.ι z' (hr z' hz')) (by
     rw [← cancel_mono U.ι, Category.assoc, Category.assoc, IsOpenImmersion.lift_fac, IsOpenImmersion.lift_fac,
       hz, hz'])

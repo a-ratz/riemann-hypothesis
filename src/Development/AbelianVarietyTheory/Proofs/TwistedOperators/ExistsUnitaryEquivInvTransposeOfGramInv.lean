@@ -185,9 +185,9 @@ def iso {V W : HSp D} (e : Fin V.rank ≃ Fin W.rank) (h : V.gram⁻¹ = -(W.gra
 theorem continuous_fwd {V W : HSp D} (e : Fin V.rank ≃ Fin W.rank) (h : V.gram⁻¹ = -(W.gramᵀ.submatrix e e)) :
     Continuous (fwd e h) := by
   have hv : Continuous fun g : GA D V => (matHom V g).1 :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hi : Continuous fun g : GA D V => ((matHom V g)⁻¹).1 :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
   · show Continuous fun g : GA D V => (((matHom V g)⁻¹).1ᵀ).submatrix e.symm e.symm
     exact hi.matrix_transpose.matrix_submatrix _ _

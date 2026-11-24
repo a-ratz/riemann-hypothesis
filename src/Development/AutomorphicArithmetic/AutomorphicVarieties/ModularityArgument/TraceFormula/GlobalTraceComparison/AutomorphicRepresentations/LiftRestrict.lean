@@ -162,9 +162,9 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.zTr_pf :
       rw [hbot, Submodule.mem_bot] at hv
       simp [hv]) x (y.le hx) (hfixY w hw false x hx)
     simpa using this
-  haveI : FiniteDimensional ℂ y.Y := y.fd
-  haveI : Nontrivial y.Y := Submodule.nontrivial_iff_ne_bot.2 y.ne
-  haveI : ∀ w : ↥Z, FiniteDimensional ℂ (fixed (τ w.1).ρ (N w.1)) := fun w =>
+  have : FiniteDimensional ℂ y.Y := y.fd
+  have : Nontrivial y.Y := Submodule.nontrivial_iff_ne_bot.2 y.ne
+  have : ∀ w : ↥Z, FiniteDimensional ℂ (fixed (τ w.1).ρ (N w.1)) := fun w =>
     hAdm E n w.1 (τ w.1) (N w.1) (hNo _)
   have hαinv : ∀ (w : ↥Z) (f : {f : GLw n w.1 → ℂ // IsHecke (N w.1) f}), ∀ x ∈ fixed (τ w.1).ρ (N w.1),
       Lv (τ w.1).ρ (N w.1) f.1 x ∈ fixed (τ w.1).ρ (N w.1) := fun w f x hx =>

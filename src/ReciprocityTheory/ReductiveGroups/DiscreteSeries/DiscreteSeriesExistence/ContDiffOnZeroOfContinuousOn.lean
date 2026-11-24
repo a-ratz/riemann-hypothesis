@@ -137,7 +137,7 @@ def slmG (C : ι → Y →L[ℝ] ℝ) (fd : X →L[ℝ] Y) (w : ι → E) : X �
 
 theorem slmG_apply (C : ι → Y →L[ℝ] ℝ) (fd : X →L[ℝ] Y) (w : ι → E) (W : X) :
     slmG C fd w W = ∑ i, (C i (fd W)) • w i := by
-  simp [slmG, ContinuousLinearMap.sum_apply]
+  simp [slmG, sum_apply]
 
 theorem slmG_cd {V : Set X} (hV : IsOpen V) {γ : X → Y} (hγ : ContDiffOn ℝ ∞ γ V)
     (C : ι → Y →L[ℝ] ℝ) {N : ℕ} {w : ι → X → E} (hw : ∀ i, ContDiffOn ℝ N (w i) V) :
@@ -191,7 +191,7 @@ theorem slm_gen_hD {V : Set X} (hV : IsOpen V) {γ : X → Y} (hγ : ContDiffOn 
   have h1 := hρL hd
   rw [dist_eq_norm] at h1
   calc ‖L (q + s • W) W - L q W‖ = ‖(L (q + s • W) - L q) W‖ := by
-        rw [ContinuousLinearMap.sub_apply]
+        rw [sub_apply]
     _ ≤ ‖L (q + s • W) - L q‖ * ‖W‖ := ContinuousLinearMap.le_opNorm _ _
     _ ≤ ε * ‖W‖ := mul_le_mul_of_nonneg_right h1.le (norm_nonneg _)
 
@@ -264,7 +264,7 @@ theorem slmG_mat_apply (γ : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin 
       ∑ a, ∑ b, ((m q * fderiv ℝ γ q W) a b) • v a b := by
   refine (slmG_apply (Y := Matrix (Fin n) (Fin n) ℂ) slmC (fderiv ℝ γ q) _ W).trans ?_
   simp only [Fintype.sum_prod_type, Fintype.sum_bool, slmC, slmc, ↓reduceIte, Bool.false_eq_true,
-    ContinuousLinearMap.coe_comp', Function.comp_apply, slmEnt_apply, Complex.reCLM_apply,
+    ContinuousLinearMap.coe_comp, Function.comp_apply, slmEnt_apply, Complex.reCLM_apply,
     Complex.imCLM_apply, Matrix.mul_apply, Finset.sum_smul]
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ =>
     Finset.sum_congr rfl fun k _ => ?_

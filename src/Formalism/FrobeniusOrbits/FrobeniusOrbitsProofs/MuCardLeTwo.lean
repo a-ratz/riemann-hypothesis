@@ -126,7 +126,7 @@ theorem mu_mem_pow (p : ℕ) [hp : Fact p.Prime] (Q : Ideal (𝓞 L)) [Q.IsPrime
     intro μ hμ
     have hμ0p : IsPrimitiveRoot μ0 p := (mem_primitiveRoots hp0).mp hμ0mem
     have hμp : IsPrimitiveRoot μ p := (mem_primitiveRoots hp0).mp hμ
-    haveI : NeZero p := ⟨hp.out.ne_zero⟩
+    have : NeZero p := ⟨hp.out.ne_zero⟩
     obtain ⟨i, -, hi⟩ := hμ0p.eq_pow_of_pow_eq_one hμp.pow_eq_one
     rw [← hi]
     have hd : 1 - μ0 ∣ 1 - μ0 ^ i := by simpa [one_pow] using sub_dvd_pow_sub_pow 1 μ0 i
@@ -153,7 +153,7 @@ theorem mu_ram_bound (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (p : �
     [Fact p.Prime] (hp2 : p ≠ 2) (Q : Ideal (𝓞 L)) [Q.IsPrime] [Q.LiesOver (span {(p : ℤ)})] :
     Q.ramificationIdx ℤ ≤ 2 ∧ (p ≠ q → p ≠ d → Q.ramificationIdx ℤ ≤ 1) := by
   obtain ⟨hGal, -, -, hbij⟩ := Formalism.FrobeniusOrbits.Galois.layer_galois hqd h
-  haveI := hGal
+  have := hGal
   rw [← Formalism.TwoAdicCyclotomicDecomposition.odd_card L p Q]
   have hinjF := hbij.1
   have key : p ≠ q → p ≠ d → Nat.card (Q.inertia Gal(L/ℚ)) ≤ 1 := by
@@ -208,12 +208,12 @@ theorem mu_ram_bound (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (p : �
 
 theorem mu_no_odd (hq : HostHyp q d) (hq3 : q ≠ 3) (h : IsLayer (e + 2) q d ζ a b) (p : ℕ)
     (hp : p.Prime) (hp2 : p ≠ 2) (η : L) (hη : IsPrimitiveRoot η p) : False := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : (span {(p : ℤ)} : Ideal ℤ).IsMaximal := Int.ideal_span_isMaximal_of_prime p
+  have : Fact p.Prime := ⟨hp⟩
+  have : (span {(p : ℤ)} : Ideal ℤ).IsMaximal := Int.ideal_span_isMaximal_of_prime p
   obtain ⟨Q, hQmax, hQover⟩ :=
     Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 L) (span {(p : ℤ)})
-  haveI := hQmax.isPrime
-  haveI := hQover
+  have := hQmax.isPrime
+  have := hQover
   have h1 := mu_mem_pow p Q η hη
   have h2 := mu_le_ram p Q (p - 1) h1
   have h3 := mu_ram_bound hq.toHypOdd h p hp2 Q
@@ -252,7 +252,7 @@ theorem mu_no_four (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (y : L)
     exact eq_inv_of_mul_eq_one_left h1
   have hyN : y ^ (2 ^ (e + 2)) = 1 := by
     rw [show 2 ^ (e + 2) = 4 * 2 ^ e by ring, pow_mul, hy.pow_eq_one, one_pow]
-  haveI : NeZero (2 ^ (e + 2)) := ⟨by positivity⟩
+  have : NeZero (2 ^ (e + 2)) := ⟨by positivity⟩
   obtain ⟨j, -, hj⟩ := hζ.eq_pow_of_pow_eq_one hyN
   have hτy : Galois.tau0 hqd h y = y⁻¹ := by
     rw [← hj, map_pow, hτζ, inv_pow]

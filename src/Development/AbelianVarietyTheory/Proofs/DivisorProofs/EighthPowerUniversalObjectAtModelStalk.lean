@@ -86,10 +86,10 @@ namespace GlobalTheory.SemiPow
 
 theorem nonempty_torusExtension {K : Type} [Field K] {G' G : Over (Spec (CommRingCat.of K))} [GrpObj G'] [GrpObj G]
     {j : ℕ} (p : IsPowGrp G' G j) (E : TorusExtension G) : Nonempty (TorusExtension G') := by
-  letI := E.addCommGroup
-  haveI := E.free
-  haveI := E.finite
-  letI := E.grpB
+  let := E.addCommGroup
+  have := E.free
+  have := E.finite
+  let := E.grpB
   obtain ⟨pT, -⟩ := GlobalTheory.exists_isPowGrp_splitTorus (Spec (CommRingCat.of K)) E.X (Fin j → E.X) j (AddEquiv.refl _)
   obtain ⟨q', hq, hq1, hq2, hq3, hq4, -⟩ :=
     GlobalTheory.PowMap.main _ G' G (powObj E.B j) E.B j p (powIsPowGrp E.B j) E.q
@@ -259,11 +259,11 @@ theorem exists_isSquare {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} {f : S' 
 
 theorem stalk_isDomain_isNoetherian_isIntegrallyClosed : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [ArithBase o' Ω] (M : RatModel o' Ω), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (V : M.Z.Opens) (z : V.toScheme), IsDomain (V.toScheme.presheaf.stalk z) ∧ IsNoetherianRing (V.toScheme.presheaf.stalk z) ∧ IsIntegrallyClosed (V.toScheme.presheaf.stalk z) := by
   intro o' Ω _ _ _ hA M hN V z
-  haveI : IsDedekindDomain o' := hA.ded
+  have : IsDedekindDomain o' := hA.ded
   let e : M.Z.presheaf.stalk (V.ι z) ≅ V.toScheme.presheaf.stalk z := asIso (V.ι.stalkMap z)
   let e' : (V.toScheme.presheaf.stalk z) ≃+* M.O (V.ι z) := e.commRingCatIsoToRingEquiv.symm.trans (M.stalkEquiv (V.ι z))
-  haveI := RatModel.isNoetherianRing_O M (V.ι z)
-  haveI := RatModel.isIntegrallyClosed_O hN (V.ι z)
+  have := RatModel.isNoetherianRing_O M (V.ι z)
+  have := RatModel.isIntegrallyClosed_O hN (V.ι z)
   exact ⟨MulEquiv.isDomain _ e'.toMulEquiv, isNoetherianRing_of_ringEquiv _ e'.symm, IsIntegrallyClosed.of_equiv e'.symm⟩
 
 theorem exists_generic_stalk : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] (M : RatModel o' Ω) (V : M.Z.Opens) (z : V.toScheme) [IsDomain (V.toScheme.presheaf.stalk z)], ∃ emb : Ω →+* FractionRing (V.toScheme.presheaf.stalk z), jK (V.toScheme.presheaf.stalk z) ≫ V.toScheme.fromSpecStalk z ≫ V.ι = spMap emb ≫ M.pt := by
@@ -338,7 +338,7 @@ theorem eighth_power_at_stalk : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o)
   intro g n o _ ζ F W o' Ω _ _ _ _ S ρ u c pr hS M U₀ EE FinalForm hO V v hv z
   obtain ⟨hpb, hmon, huniv, hLc⟩ := hS
   obtain ⟨hdom, hnoeth, hic⟩ := stalk_isDomain_isNoetherian_isIntegrallyClosed o' Ω M hO.normal V z
-  haveI := hdom; haveI := hnoeth; haveI := hic
+  have := hdom; have := hnoeth; have := hic
   obtain ⟨emb, hemb⟩ := exists_generic_stalk o' Ω M V z
 
   have hVne : (V : Set M.Z).Nonempty := ⟨z.1, z.2⟩
@@ -443,10 +443,10 @@ theorem eighth_power_at_stalk : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o)
         GlobalTheory.MatEndPull.unit_pull (isGrpPullback_pullback cO.A (jK (V.toScheme.presheaf.stalk z))), ← Category.assoc (pullback.fst _ _) ((Over.pullback (V.toScheme.fromSpecStalk z ≫ V.ι)).obj FinalForm.G).hom,
         pullback.condition]
       exact Category.assoc _ _ _
-    haveI : IsMonHom f := hfm
+    have : IsMonHom f := hfm
     refine ⟨inferInstance, fun w => ?_⟩
-    haveI := hmon' w
-    haveI := hmonO w
+    have := hmon' w
+    have := hmonO w
     have e0 := GlobalTheory.SemiAbExtDomain.existsUnique_hom_extension_generic (R := (V.toScheme.presheaf.stalk z)) (FractionRing (V.toScheme.presheaf.stalk z))
     have e1 := e0 ((Over.pullback (V.toScheme.fromSpecStalk z ≫ V.ι)).obj FinalForm.G)
     have e2 := e1 cO.A hGO hsemiC
@@ -455,9 +455,9 @@ theorem eighth_power_at_stalk : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o)
     have hw := hME.2 w
     apply ext.unique ⟨inferInstance, by rw [Functor.map_comp, hprOg]⟩
     by_cases hwa : w = a
-    · rw [if_pos hwa] at hw ⊢
+    · rw [ite_eq_left hwa] at hw ⊢
       exact ⟨hmonO b, by rw [hprOg, hw]⟩
-    · rw [if_neg hwa] at hw ⊢
+    · rw [ite_eq_right hwa] at hw ⊢
       exact ⟨inferInstanceAs (IsMonHom (toUnit _ ≫ η[cO.A])), by rw [hone, hw]⟩
 
 end GlobalTheory.Poinc.Eq8.StalkPow

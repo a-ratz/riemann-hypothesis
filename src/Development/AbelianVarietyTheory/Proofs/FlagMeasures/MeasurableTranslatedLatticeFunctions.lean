@@ -114,7 +114,7 @@ theorem dualAt_map (L : Submodule ℤ (VecInf E j)) {A B : InfinitePlace E → M
   rw [Submodule.map_span]
   congr 1
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · intro hy
     refine ⟨act (fun w => (A w)ᵀ) y, fun x hx => ?_, hT y⟩
@@ -182,7 +182,7 @@ theorem countable_dualAt (L : Submodule ℤ (VecInf E j)) (hL : Submodule.span �
       obtain ⟨a, ha⟩ := h1
       exact ⟨n * a, by rw [map_zsmul, ha, zsmul_eq_mul]; push_cast; ring⟩
   obtain ⟨b, hbL, hbspan, hbli⟩ := exists_linearIndependent ℝ (L : Set (VecInf E j))
-  haveI : Finite b := hbli.finite
+  have : Finite b := hbli.finite
   choose φ hφ using fun (y : dualAt E j L) (i : b) => hint y.1 y.2 i.1 (hbL i.2)
   refine Function.Injective.countable (f := φ) ?_
   intro y y' hyy
@@ -247,11 +247,11 @@ theorem measurable_latFun : ∀ (E : Type) [Field E] [NumberField E], IsTotallyC
   intro E _ _ hE j wt Φ hw hΦ Λ hΛ
   obtain ⟨κ, -, hK⟩ := (_root_.GlobalTheory.LatFacts.lattice_facts E hE j).1 Λ hΛ
   obtain ⟨⟨hd, hz⟩, -, -, -⟩ := hK (oneInf E j) (detNorm_oneInf E j)
-  haveI : Countable (latAt E j Λ (oneInf E j)) :=
+  have : Countable (latAt E j Λ (oneInf E j)) :=
     TopologicalSpace.separableSpace_iff_countable.mp inferInstance
-  haveI : Countable (dualAt E j (latAt E j Λ (oneInf E j))) := countable_dualAt _ hz.span_top
-  haveI := countable_nonzero_lattice_vectors (latAt E j Λ (oneInf E j))
-  haveI := countable_nonzero_lattice_vectors (dualAt E j (latAt E j Λ (oneInf E j)))
+  have : Countable (dualAt E j (latAt E j Λ (oneInf E j))) := countable_dualAt _ hz.span_top
+  have := countable_nonzero_lattice_vectors (latAt E j Λ (oneInf E j))
+  have := countable_nonzero_lattice_vectors (dualAt E j (latAt E j Λ (oneInf E j)))
   have hinv : ∀ g : MatInf E j, 0 < detNorm E j g → ∀ w, (Matrix.of (g w))⁻¹ * Matrix.of (g w) = 1 :=
     fun g hg w => Matrix.nonsing_inv_mul _ (isUnit_det_of_pos hg w)
   have htr : ∀ g : MatInf E j, 0 < detNorm E j g →

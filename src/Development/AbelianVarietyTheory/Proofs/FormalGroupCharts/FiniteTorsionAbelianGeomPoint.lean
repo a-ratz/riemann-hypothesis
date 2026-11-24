@@ -97,8 +97,8 @@ theorem finite_torsion_geomPoint : ∀ (S : Scheme.{0}) (G B : Over S) [GrpObj G
   · intro x hx
     have hx' : x ≫ q = 1 := hx
     exact ⟨hk.lift x (toUnit _) (by rw [hx', Hom.one_def]), hk.lift_fst _ _ _⟩
-  · haveI : IsDomain Γ((Over.mk t).left, ⊤) := inferInstanceAs (IsDomain Γ(Sp Ω, ⊤))
-    haveI := SemiAbTorsion.finite_chars_pow_eq_one X Γ((Over.mk t).left, ⊤) hn
+  · have : IsDomain Γ((Over.mk t).left, ⊤) := inferInstanceAs (IsDomain Γ(Sp Ω, ⊤))
+    have := SemiAbTorsion.finite_chars_pow_eq_one X Γ((Over.mk t).left, ⊤) hn
     let e := splitTorusPointsEquiv S X (Over.mk t)
     refine Finite.of_injective (fun s => (⟨e s.1, by rw [← map_pow, s.2, map_one]⟩ :
       {s : Multiplicative X →* Γ((Over.mk t).left, ⊤)ˣ // s ^ n = 1})) ?_

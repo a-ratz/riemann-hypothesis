@@ -68,7 +68,7 @@ theorem mem_dual_one_iff_span_dualInt (y : E) :
     rfl)
   have h2 : y ∈ FractionalIdeal.dual ℤ ℚ (1 : FractionalIdeal (𝓞 E)⁰ E) ↔
       y ∈ Submodule.traceDual ℤ ℚ (1 : Submodule (𝓞 E) E) := by
-    rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_dual_one]
+    rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_dual_one]
   rw [h2, ← Submodule.restrictScalars_mem ℤ, h]
   have : (⇑(integralBasis E).traceDual) = dualInt E := by
     funext k

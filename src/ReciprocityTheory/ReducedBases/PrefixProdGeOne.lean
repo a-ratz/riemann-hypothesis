@@ -72,7 +72,7 @@ lemma prefix_prod_ge_one (e : Module.Basis (Fin d) ℤ (Fin d → ℤ))
       refine Submodule.span_mono ?_ (b_sub_gs_mem v (Fin.castLE hk i))
       rintro _ ⟨j, hj, rfl⟩
       have hj' : j.val < i.val := Set.mem_Iio.mp hj
-      refine ⟨⟨j.val, by omega⟩, Fin.lt_iff_val_lt_val.mpr hj', ?_⟩
+      refine ⟨⟨j.val, by omega⟩, Fin.lt_def.mpr hj', ?_⟩
       rw [hwi]
       exact congrArg v (Fin.ext rfl)
     · intro j hj
@@ -84,7 +84,7 @@ lemma prefix_prod_ge_one (e : Module.Basis (Fin d) ℤ (Fin d → ℤ))
     refine Finset.prod_bij (fun i _ => Fin.castLE hk i) ?_ ?_ ?_ ?_
     · intro i _
       simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      rw [Fin.le_iff_val_le_val, Fin.coe_castLE]
+      rw [Fin.le_iff_val_le_val, Fin.val_castLE]
       have := i.isLt
       omega
     · intro a _ b _ h

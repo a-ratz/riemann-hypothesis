@@ -90,7 +90,7 @@ theorem Jm_comm_zM {a b : Fin n} (hab : ε a = ε b) (c : ℂ) : Jm ε * zM a b 
       unfold zM
       simp only [Matrix.sub_apply, Matrix.single_apply]
       push_neg at hij
-      rw [if_neg, if_neg, sub_zero]
+      rw [ite_eq_right, ite_eq_right, sub_zero]
       · exact fun h => hij.2 h.1.symm h.2.symm
       · exact fun h => hij.1 h.1.symm h.2.symm
     rw [hz, mul_zero, zero_mul]
@@ -171,8 +171,8 @@ private theorem exp_smul_mem_Kset_of_skew_of_commute_Jm {X : Matrix (Fin n) (Fin
   · rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, ← Matrix.exp_conjTranspose, hY,
       ← Matrix.exp_add_of_commute _ _ (Commute.neg_right (Commute.refl ((t : ℂ) • X))), add_neg_cancel,
       NormedSpace.exp_zero]
-  · letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  · let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
     have hc : Commute ((t : ℂ) • X) (Jm ε) := by
       show (t : ℂ) • X * Jm ε = Jm ε * ((t : ℂ) • X)
       rw [Matrix.smul_mul, Matrix.mul_smul, hC]

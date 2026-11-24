@@ -67,7 +67,7 @@ theorem continuous_of_mem (hθ : IsInfFam θ) {m : ℕ} (Φ : schwartzA θ m n) 
 theorem integrable_of_mem (hθ : IsInfFam θ) {m : ℕ} (μ : Measure (Mx D m n)) [μ.IsAddHaarMeasure] (Φ : schwartzA θ m n) :
     Integrable Φ.1 μ := by
   obtain ⟨i1, i2, i3, i4, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   obtain ⟨hc, K, hK, hC⟩ := GlobalTheory.SchwartzMaj.continuous_and_le_maj D θ hθ m n Φ.1
     (GlobalTheory.SchwartzPure.isSchwartzBruhat_of_mem_schwartzA D θ hθ m n Φ.1 Φ.2)
   obtain ⟨N, hN⟩ := GlobalTheory.Unf.MajInt.maj_integrable D θ hθ m n (fun _ _ => True) 0 μ inferInstance

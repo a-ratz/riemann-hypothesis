@@ -403,7 +403,7 @@ theorem form_orthLift (hu : IsUnit (subGram H).det) (q q' : l → ℂ) :
 
 theorem det_eq_det_subGram_mul (hu : IsUnit (subGram H).det) :
     H.det = (subGram H).det * (quotGram H).det := by
-  letI : Invertible H.toBlocks₁₁ := invertibleOfIsUnitDet _ hu
+  let : Invertible H.toBlocks₁₁ := invertibleOfIsUnitDet _ hu
   conv_lhs => rw [← fromBlocks_toBlocks H]
   rw [det_fromBlocks₁₁, invOf_eq_nonsing_inv]; rfl
 

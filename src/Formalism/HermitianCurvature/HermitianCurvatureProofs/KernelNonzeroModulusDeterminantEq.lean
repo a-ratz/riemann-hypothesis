@@ -121,10 +121,10 @@ structure Lat (A : AddSubgroup V) : Prop where
 
 theorem relIndex_ne_zero {U A : AddSubgroup V} (hU : IsOpen (U : Set V))
     (hA : IsCompact (A : Set V)) : U.relIndex A ≠ 0 := by
-  haveI : CompactSpace A := isCompact_iff_compactSpace.mp hA
+  have : CompactSpace A := isCompact_iff_compactSpace.mp hA
   have ho : IsOpen ((U.addSubgroupOf A : AddSubgroup A) : Set A) :=
-    hU.preimage continuous_subtype_val
-  haveI := AddSubgroup.quotient_finite_of_isOpen (U.addSubgroupOf A) ho
+    hU.preimage continuous_subtypeVal
+  have := AddSubgroup.quotient_finite_of_isOpen (U.addSubgroupOf A) ho
   exact AddSubgroup.index_ne_zero_of_finite
 
 theorem gi_pos {A B : AddSubgroup V} (hA : Lat A) (hB : Lat B) : 0 < gi A B := by
@@ -675,7 +675,7 @@ theorem good_corner (hd : LocalDatum K R ψ) (hG : Good R ι) (M : Matrix (ι �
   have hDd : D.det = D () () := Matrix.det_unique D
   have hc1 : IsUnit (D () ()) := hc
   have hDdet : IsUnit D.det := by rw [hDd]; exact hc1
-  letI := Matrix.invertibleOfIsUnitDet D hDdet
+  let := Matrix.invertibleOfIsUnitDet D hDdet
   have hMeq : M = fromBlocks A B C D := (Matrix.fromBlocks_toBlocks M).symm
   have hfac := Matrix.fromBlocks_eq_of_invertible₂₂ A B C D
   have hdet := Matrix.det_fromBlocks₂₂ A B C D
@@ -713,8 +713,8 @@ theorem good_corner (hd : LocalDatum K R ψ) (hG : Good R ι) (M : Matrix (ι �
 
 theorem good_step (hd : LocalDatum K R ψ) (hG : Good R ι) : Good R (ι ⊕ Unit) := by
   intro M hM
-  haveI := hd.artin
-  haveI := hd.red
+  have := hd.artin
+  have := hd.red
   have hL : Lat (LL R (ι ⊕ Unit)) := lat_LL hd.isOpen hd.isCompact
   have hinv : M * M⁻¹ = 1 := Matrix.mul_nonsing_inv M hM
   have hrow : (∑ i : ι, M (Sum.inr ()) (Sum.inl i) * M⁻¹ (Sum.inl i) (Sum.inr ())) +
@@ -952,9 +952,9 @@ theorem kernel_nonzero_modulus_determinant_eq (hd : LocalDatum K R ψ) (w w' : P
   unfold pairTerm at hq
   by_cases hc : IsInt R (orbZ w (rep R q.1)) ∧ IsInt R (orbZ w' (rep R q.2))
   swap
-  · rw [if_neg hc, zero_mul, zero_mul] at hq
+  · rw [ite_eq_right hc, zero_mul, zero_mul] at hq
     exact absurd rfl hq
-  rw [if_pos hc] at hq
+  rw [ite_eq_left hc] at hq
   have hcard : Nat.card (isoZZ R (orbZ w (rep R q.1)) (orbZ w' (rep R q.2))) ≠ 0 := by
     intro h0
     apply hq

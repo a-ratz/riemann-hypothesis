@@ -86,7 +86,7 @@ theorem fderiv_norm_apply {τ : ℂ} (hτ : τ ≠ 0) (v : ℂ) :
     fderiv ℝ (fun σ : ℂ => ‖σ‖) τ v = ‖τ‖⁻¹ * (τ.re * v.re + τ.im * v.im) := by
   rw [(hasFDerivAt_norm1 hτ).fderiv]
   have hs : Real.sqrt (‖τ‖ ^ 2) = ‖τ‖ := Real.sqrt_sq (norm_nonneg τ)
-  simp only [ContinuousLinearMap.smul_apply, innerSL_apply_apply, hs, smul_eq_mul, Complex.inner, nsmul_eq_mul]
+  simp only [smul_apply, innerSL_apply_apply, hs, smul_eq_mul, Complex.inner, nsmul_eq_mul]
   have hn : ‖τ‖ ≠ 0 := norm_ne_zero_iff.2 hτ
   simp only [Complex.conj_re, Complex.conj_im, Complex.mul_re]
   field_simp
@@ -97,7 +97,7 @@ theorem normPow_deriv_apply {τ : ℂ} (hτ : τ ≠ 0) (n : ℕ) (v : ℂ) :
       (n : ℝ) * ‖τ‖ ^ (n - 1) * (‖τ‖⁻¹ * (τ.re * v.re + τ.im * v.im)) := by
   rw [((hasFDerivAt_norm1 hτ).pow n).fderiv]
   rw [← (hasFDerivAt_norm1 hτ).fderiv]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul, nsmul_eq_mul, fderiv_norm_apply hτ]
+  simp only [smul_apply, smul_eq_mul, nsmul_eq_mul, fderiv_norm_apply hτ]
 
 theorem gauge_scalar {τ : ℂ} (hτ : τ ≠ 0) (n : ℕ) :
     τ * (1 / 2) * ((((n : ℝ) * ‖τ‖ ^ (n - 1) * (‖τ‖⁻¹ * τ.re) : ℝ) : ℂ) -
@@ -131,7 +131,7 @@ theorem dz_gauge {τ : ℂ} (hτ : τ ≠ 0) (n : ℕ) {f : ℂ → E} (hf : Dif
   have hfun : (fun σ => ((‖σ‖ ^ n : ℝ) : ℂ) • f σ) = (fun σ : ℂ => ((‖σ‖ ^ n : ℝ) : ℂ)) • f := rfl
   unfold dz
   rw [hfun, hP.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.smulRight_apply,
     ContinuousLinearMap.comp_apply, Complex.ofRealCLM_apply, normPow_deriv_apply hτ]
   have key := gauge_scalar hτ n
   simp only [Complex.one_re, Complex.one_im, Complex.I_re, Complex.I_im, mul_one, mul_zero, add_zero, zero_add] at *
@@ -169,7 +169,7 @@ theorem dzb_gauge {τ : ℂ} (hτ : τ ≠ 0) (n : ℕ) {f : ℂ → E} (hf : Di
   have hfun : (fun σ => ((‖σ‖ ^ n : ℝ) : ℂ) • f σ) = (fun σ : ℂ => ((‖σ‖ ^ n : ℝ) : ℂ)) • f := rfl
   unfold dzb
   rw [hfun, hP.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply,
+  simp only [add_apply, smul_apply, ContinuousLinearMap.smulRight_apply,
     ContinuousLinearMap.comp_apply, Complex.ofRealCLM_apply, normPow_deriv_apply hτ]
   have key := gauge_scalar_bar hτ n
   simp only [Complex.one_re, Complex.one_im, Complex.I_re, Complex.I_im, mul_one, mul_zero, add_zero, zero_add] at *
@@ -235,7 +235,7 @@ theorem operators_at_base_point {n ρ : ℕ} (hn : 1 + ρ = n) {c : Fin ρ → �
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · show pOp _ f _ = _
     unfold pOp
-    rw [if_pos hmem, h0]
+    rw [ite_eq_left hmem, h0]
     unfold wirt dz
     rw [hd, hd]
   · show cOp _ f _ = _
@@ -244,7 +244,7 @@ theorem operators_at_base_point {n ρ : ℕ} (hn : 1 + ρ = n) {c : Fin ρ → �
     simp only [ciOp, h0]
   · show pbOp _ f _ = _
     unfold pbOp
-    rw [if_pos hmem, h0]
+    rw [ite_eq_left hmem, h0]
     unfold wirtBar dzb
     rw [hd, hd]
     rfl
@@ -306,27 +306,27 @@ theorem dz_add {f g : ℂ → E} (hf : f ∈ V1 E) (hg : g ∈ V1 E) {τ : ℂ} 
     PBP.dz (f + g) τ = PBP.dz f τ + PBP.dz g τ := by
   unfold PBP.dz
   rw [fderiv_add (differentiableAt_of_punctured_smooth hf hτ) (differentiableAt_of_punctured_smooth hg hτ)]
-  simp only [ContinuousLinearMap.add_apply, smul_add, smul_sub]
+  simp only [add_apply, smul_add, smul_sub]
   abel
 
 theorem dzb_add {f g : ℂ → E} (hf : f ∈ V1 E) (hg : g ∈ V1 E) {τ : ℂ} (hτ : τ ≠ 0) :
     PBP.dzb (f + g) τ = PBP.dzb f τ + PBP.dzb g τ := by
   unfold PBP.dzb
   rw [fderiv_add (differentiableAt_of_punctured_smooth hf hτ) (differentiableAt_of_punctured_smooth hg hτ)]
-  simp only [ContinuousLinearMap.add_apply, smul_add]
+  simp only [add_apply, smul_add]
   abel
 
 theorem dz_smul {f : ℂ → E} (hf : f ∈ V1 E) (c : ℂ) {τ : ℂ} (hτ : τ ≠ 0) :
     PBP.dz (c • f) τ = c • PBP.dz f τ := by
   unfold PBP.dz
   rw [fderiv_const_smul (differentiableAt_of_punctured_smooth hf hτ)]
-  simp only [ContinuousLinearMap.smul_apply, smul_sub, smul_comm c Complex.I, smul_comm c (1 / 2 : ℂ)]
+  simp only [smul_apply, smul_sub, smul_comm c Complex.I, smul_comm c (1 / 2 : ℂ)]
 
 theorem dzb_smul {f : ℂ → E} (hf : f ∈ V1 E) (c : ℂ) {τ : ℂ} (hτ : τ ≠ 0) :
     PBP.dzb (c • f) τ = c • PBP.dzb f τ := by
   unfold PBP.dzb
   rw [fderiv_const_smul (differentiableAt_of_punctured_smooth hf hτ)]
-  simp only [ContinuousLinearMap.smul_apply, smul_add, smul_comm c Complex.I, smul_comm c (1 / 2 : ℂ)]
+  simp only [smul_apply, smul_add, smul_comm c Complex.I, smul_comm c (1 / 2 : ℂ)]
 
 def off0 (f : ℂ → E) : ℂ → E := fun τ => if τ = 0 then 0 else f τ
 

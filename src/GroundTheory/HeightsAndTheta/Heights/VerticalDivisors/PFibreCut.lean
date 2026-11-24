@@ -107,7 +107,7 @@ theorem FibreCut.proof (hAvoid : CodimOnePrimeAvoid.Statement) : FibreCut.Statem
       obtain ⟨hQW', hQ⟩ := Finset.mem_erase.mp hQs
       rw [Set.Finite.mem_toFinset] at hQ
       exact hQW' (le_antisymm hQW (hW.2 ⟨hQ.isPrime, hQ.le⟩ hQW))
-    obtain ⟨h, hh, hhW⟩ := SetLike.not_le_iff_exists.mp hnot
+    obtain ⟨h, hh, hhW⟩ := IsConcreteLE.not_le_iff_exists.mp hnot
     exact ⟨h, fun Q hQ hQW => Finset.inf_le (f := id)
       (Finset.mem_erase.mpr ⟨hQW, hfin.mem_toFinset.mpr hQ⟩) hh, hhW⟩
 

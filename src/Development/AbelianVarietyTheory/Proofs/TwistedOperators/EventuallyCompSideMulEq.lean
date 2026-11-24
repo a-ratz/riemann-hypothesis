@@ -107,9 +107,9 @@ theorem isOpen_valuation_eq_one : IsOpen {x : kˣ | valuation k (x : k) = 1} := 
   have : {x : kˣ | valuation k (x : k) = 1} =
       (fun x : kˣ => (x : k)) ⁻¹' (𝒪[k] : Set k) ∩ (fun x : kˣ => ((x⁻¹ : kˣ) : k)) ⁻¹' (𝒪[k] : Set k) := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, SetLike.mem_coe,
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, SetLike.mem_coe,
       Valuation.mem_integer_iff, Units.val_inv_eq_inv_val, map_inv₀]
-    rw [inv_le_one₀ (by simp [zero_lt_iff])]
+    rw [inv_le_one₀ (by simp [pos_iff_ne_zero])]
     exact le_antisymm_iff
   rw [this]
   exact ((isOpen_int k).preimage Units.continuous_val).inter

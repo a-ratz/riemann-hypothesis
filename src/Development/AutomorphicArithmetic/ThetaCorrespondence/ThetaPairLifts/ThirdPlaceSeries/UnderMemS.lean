@@ -86,7 +86,7 @@ theorem stage_y_is (W : _root_.GlobalTheory.MiS.RealPackAlt ex) (hP : _root_.Glo
     · have : j = D.R.m - 1 := by omega
       subst this
       exact ⟨(hM.νY' _).1.1, (hM.νY' _).2⟩
-  haveI := hν.1
+  have := hν.1
   refine ⟨?_, D.sp.Y_sig _, fun τ => ?_, ?_, GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ ⟨c, hc⟩, hc.1,
     ⟨_, hc, fun P hP hN => hP ?_⟩, ⟨r_le_Y j, (_root_.GlobalTheory.Fam.pk_z W).xiR W.P.A3.A.μ0, ?_⟩, ?_, ?_⟩
   · show (D.sp.Y (min j D.R.m)).rank = _

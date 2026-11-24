@@ -238,8 +238,8 @@ theorem det_secM_eq_one : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
     exact Finset.prod_ne_zero_iff.2 fun a _ => by exact_mod_cast PoinPf.sgn_ne _ _
   have hY : (yM X w τ).det = ((∏ k, gsS X w τ k : ℝ) : ℂ) := by
     rw [yM, Matrix.det_mul, gsB, Matrix.det_mul, Matrix.det_diagonal]
-    rw [Matrix.det_of_lowerTriangular _ (fun a b hab => ?_)]
-    · rw [gsU, Matrix.det_of_upperTriangular (FrameDegreeData.uMat_upper _)]
+    rw [det_of_isLowerTriangular _ (fun a b hab => ?_)]
+    · rw [gsU, det_of_isUpperTriangular (FrameDegreeData.uMat_upper _)]
       simp only [FrameDegreeData.uMat_diag, Finset.prod_const_one, one_mul]
       have : ∀ i, mat (nmat X w) τ i i = 1 := fun i => by
         simp [mat, nmat]
@@ -249,7 +249,7 @@ theorem det_secM_eq_one : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E]
       simp only [nmat]
       have hab' : a < b := hab
       have h1 : ¬ b < a := not_lt.2 (le_of_lt hab')
-      rw [dite_eq_right h1, if_neg (ne_of_lt hab')]
+      rw [dite_eq_right h1, ite_eq_right (ne_of_lt hab')]
   set t : ℝ := ∏ k, gsS X w τ k with ht
   have hpos : 0 ≤ t := Finset.prod_nonneg fun k _ => inv_nonneg.2 (Real.sqrt_nonneg _)
   rw [hY, Complex.conj_ofReal] at hd
@@ -349,9 +349,9 @@ theorem dY_lower (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (z : V (nd 
         gsB X 0 τ k b • fderiv ℝ (fun w => nmat X w τ a k) 0)) =
       fderiv ℝ (fun w => gsB X w τ a b) 0 + fderiv ℝ (fun w => nmat X w τ a b) 0 := by
     simp only [nmat_zero_apply, gsB_zero_apply, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-  rw [hsum, ContinuousLinearMap.add_apply]
-  rw [hB0, hN, fderiv_const_apply, ContinuousLinearMap.fderiv, ContinuousLinearMap.zero_apply, zero_add]
+      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
+  rw [hsum, add_apply]
+  rw [hB0, hN, fderiv_const_apply, ContinuousLinearMap.fderiv, zero_apply, zero_add]
   simp [nmat, hba, e] <;> rfl
 
 end GlobalTheory.SUChartSection
@@ -424,11 +424,11 @@ theorem diagreal {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} (X
   have hN0 : ∀ m : Fin r, m < a → nmat X 0 τ a m = 0 := by
     intro m hm
     have := congrFun (congrFun (PoinPf.nmat_zero X τ) a) m
-    simp only [mat, Matrix.of_apply, Matrix.one_apply, hm.ne', if_false] at this
+    simp only [mat, Matrix.of_apply, Matrix.one_apply, hm.ne', ite_false] at this
     exact this
   have hB0 : ∀ m : Fin r, m < a → gsB X 0 τ m a = 0 := by
     intro m hm
-    rw [gsB_zero, Matrix.one_apply, if_neg hm.ne]
+    rw [gsB_zero, Matrix.one_apply, ite_eq_right hm.ne]
   have hsum : HasFDerivAt (fun w => ∑ m ∈ Finset.univ.filter (· < a), nmat X w τ a m * gsB X w τ m a)
       (0 : V (nd X) →L[ℝ] ℂ) 0 := by
     have h : HasFDerivAt (fun w => ∑ m ∈ Finset.univ.filter (· < a), nmat X w τ a m * gsB X w τ m a)
@@ -522,10 +522,10 @@ theorem dY_skew (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (z : V (nd X
     intro k c
     show yM X 0 τ k c = _
     rw [yM_zero, Matrix.one_apply]
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
-    ContinuousLinearMap.comp_apply, ContinuousLinearMap.zero_apply, h0] at key
+  simp only [sum_apply, add_apply, smul_apply,
+    ContinuousLinearMap.comp_apply, zero_apply, h0] at key
   simp only [ite_mul, one_mul, zero_mul, apply_ite (starRingEnd ℂ), map_one, map_zero, ite_smul, zero_smul,
-    Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true, smul_eq_mul,
+    Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true, smul_eq_mul,
     ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply, P, ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply] at key
   linear_combination key
 
@@ -575,7 +575,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hσ : ∀ w (h : w ∈ Metric.ball (0 : V (nd X)) R) τ,
       ((((σ w : realSU X.Ψ X.Gm) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) =
         secM X x w τ := fun w h τ => by
-    simp only [σ, dif_pos h]; rfl
+    simp only [σ, dite_eq_left h]; rfl
   have hx0 : ∀ τ, IsUnit (mat x τ).det := fun τ => isUnit_iff_ne_zero.2 (det_ne_of_orth X hx τ)
   have h0 : (0 : V (nd X)) ∈ Metric.ball (0 : V (nd X)) R := Metric.mem_ball_self hR
   let Cx : (X.Ψ → Fin r → Fin r → ℂ) →ₗ[ℝ] (X.Ψ → Fin r → Fin r → ℂ) :=
@@ -593,19 +593,19 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   refine ⟨σ, R, C.comp (dY X), hR, ?_, ?_, ?_, ?_, ?_⟩
   · refine Subtype.ext (funext fun τ => Units.ext ?_)
     rw [hσ 0 h0 τ, secM_zero X hx τ]; rfl
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     have hg : ∀ τ, Continuous fun w : Metric.ball (0 : V (nd X)) R => gsB X w τ := fun τ => by
       refine continuous_pi fun a => continuous_pi fun b => ?_
-      exact ((_root_.GlobalTheory.SUChartSection.GSSmooth.gsB_contDiffOn X hx τ a b).continuousOn.mono (fun w hw => hball w hw)).restrict
+      exact ((_root_.GlobalTheory.SUChartSection.GSSmooth.gsB_contDiffOn X hx τ a b).continuousOn.mono (fun w hw => hball w hw)).domRestrict
     have hM : ∀ τ, Continuous fun w : Metric.ball (0 : V (nd X)) R => secM X x w τ := fun τ => by
       refine (continuous_const.matrix_mul ?_).matrix_mul continuous_const
-      exact ((PoinPf.cont_nmatm X τ).comp continuous_subtype_val).matrix_mul (hg τ)
+      exact ((PoinPf.cont_nmatm X τ).comp continuous_subtypeVal).matrix_mul (hg τ)
     refine continuous_induced_rng.2 (continuous_pi fun τ => Units.continuous_iff.2 ⟨?_, ?_⟩)
     · refine (hM τ).congr fun w => ?_
-      simp only [Function.comp_apply, Set.restrict_apply]
+      simp only [Function.comp_apply, Set.domRestrict_apply]
       exact (hσ w w.2 τ).symm
     · refine ((hM τ).matrix_adjugate).congr fun w => ?_
-      simp only [Function.comp_apply, Set.restrict_apply]
+      simp only [Function.comp_apply, Set.domRestrict_apply]
       rw [Matrix.coe_units_inv, hσ w w.2 τ, Matrix.inv_def, GlobalTheory.T.det_unitaryChartSectionConjugatedMatrix X hx (hball w w.2) τ, Ring.inverse_one, one_smul]
   · intro z hz
     refine ⟨FrameDegreeData.bOf X (cpt X x z), FrameDegreeData.bOf_mem X (hball z hz), ?_⟩

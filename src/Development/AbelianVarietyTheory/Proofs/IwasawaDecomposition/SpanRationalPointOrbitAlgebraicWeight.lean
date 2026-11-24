@@ -71,7 +71,7 @@ theorem span_ratPt_orbit : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L
   let S : Subrepresentation a.ρ := ⟨S0, hinv⟩
   have hxS : x ∈ S0 := Submodule.subset_span ⟨1, by simp⟩
   have hS0 : S0 = ⊤ := by
-    haveI := a.irr
+    have := a.irr
     rcases IsSimpleOrder.eq_bot_or_eq_top S with h | h
     · exfalso
       apply hx0

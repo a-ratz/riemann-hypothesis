@@ -76,7 +76,7 @@ theorem noeth_components {α : Type*} [TopologicalSpace α] [TopologicalSpace.No
     exact connectedComponent_eq (hsub t ht _ (IsIrreducible.nonempty (hSi t ht)).some_mem hxt)
   · have hc : (connectedComponent x)ᶜ = ⋃₀ {t ∈ S | Disjoint t (connectedComponent x)} := by
       ext z
-      simp only [Set.mem_compl_iff, Set.mem_sUnion, Set.mem_setOf_eq]
+      simp only [Set.mem_compl_iff, Set.mem_sUnion, Set.mem_ofPred_eq]
       constructor
       · intro hz
         obtain ⟨t, ht, hzt⟩ := hin z

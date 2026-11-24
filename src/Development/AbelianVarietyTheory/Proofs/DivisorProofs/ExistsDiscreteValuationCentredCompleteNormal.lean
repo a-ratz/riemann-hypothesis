@@ -54,7 +54,7 @@ theorem exists_valuation_centre (V : Type) [CommRing V] [IsDomain V] [IsLocalRin
       (∀ v : V, ν (algebraMap V (FractionRing V) v) ≤ 1) ∧
         ∀ v ∈ maximalIdeal V, ν (algebraMap V (FractionRing V) v) < 1 := by
   classical
-  haveI : IsNoetherianRing V := hV.1
+  have : IsNoetherianRing V := hV.1
   by_cases hm : maximalIdeal V = ⊥
   · refine ⟨1, fun v => ?_, fun v hv => ?_⟩
     · by_cases h : algebraMap V (FractionRing V) v = 0

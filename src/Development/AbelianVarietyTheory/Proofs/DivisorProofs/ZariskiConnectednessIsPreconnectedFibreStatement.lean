@@ -209,7 +209,7 @@ theorem thick_apply_eq (A : Type) [CommRing A] [IsLocalRing A] (e : ℕ)
 
 theorem isPreconnected_closedFibre : ∀ (A : Type) [CommRing A] [IsNoetherianRing A] [IsLocalRing A], IsAdicComplete (maximalIdeal A) A → ∀ (X : Scheme.{0}) (f : X ⟶ Sp A), IsProper f → PreconnectedSpace X → _root_.IsPreconnected {x : X | f x = closedPoint A} := by
   intro A _ _ _ hA X f hf hX
-  haveI := hf
+  have := hf
   rw [isPreconnected_iff_preconnectedSpace, preconnectedSpace_iff_clopen]
   intro C hC
   let Y : Over (Sp A) := Over.mk f
@@ -234,9 +234,9 @@ theorem isPreconnected_closedFibre : ∀ (A : Type) [CommRing A] [IsNoetherianRi
     ext y
     change thickMap A (maximalIdeal A) e Y y ∈ ((thickObj A (maximalIdeal A) (e + 1) Y).left.basicOpen (g (e + 1)) : Set _) ↔ y ∈ D e
     rw [hgD (e + 1)]
-    simp only [D, Set.mem_setOf_eq, ← Scheme.Hom.comp_apply, hcomp]
+    simp only [D, Set.mem_ofPred_eq, ← Scheme.Hom.comp_apply, hcomp]
   obtain ⟨s, hs⟩ := GlobalTheory.T.formalFunctions_exists_globalFunction_of_thickenings A (maximalIdeal A) hA Y hf g hcompat
-  haveI : IsProper Y.hom := hf
+  have : IsProper Y.hom := hf
   have : IsLocallyNoetherian Y.left := LocallyOfFiniteType.isLocallyNoetherian Y.hom
   have ht : s * s - s = 0 := by
     refine eq_zero_of_germ_closedFibre f f.isClosedMap _ fun x hx => ?_
@@ -250,7 +250,7 @@ theorem isPreconnected_closedFibre : ∀ (A : Type) [CommRing A] [IsNoetherianRi
     ⟨GlobalTheory.PairingLocus.isClosed_basicOpen (X := X) hs2, (X.basicOpen s).isOpen⟩
   have hne : (maximalIdeal A ^ (0 + 1)) ≠ ⊤ := by
     rw [zero_add, pow_one]; exact (maximalIdeal.isMaximal A).ne_top
-  haveI : Nontrivial (A ⧸ maximalIdeal A ^ (0 + 1)) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : Nontrivial (A ⧸ maximalIdeal A ^ (0 + 1)) := Ideal.Quotient.nontrivial_iff.2 hne
   obtain ⟨z₀⟩ : Nonempty (PrimeSpectrum (A ⧸ maximalIdeal A ^ (0 + 1))) := inferInstance
   have hC' : C = {c | c.1 ∈ (X.basicOpen s : Set X)} := by
     ext c
@@ -321,11 +321,11 @@ theorem exists_complete_flat (R : Type) [CommRing R] [IsNoetherianRing R] (P : P
       IsAdicComplete (maximalIdeal A) A ∧ φ.Flat ∧ (maximalIdeal A).comap φ = P.asIdeal := by
   let L := Localization.AtPrime P.asIdeal
   have fg : (maximalIdeal L).FG := IsNoetherian.noetherian _
-  haveI hloc : IsLocalRing (AdicCompletion (maximalIdeal L) L) := AdicCompletion.isLocalRing_of_fg fg
-  haveI : IsNoetherianRing (AdicCompletion (maximalIdeal L) L) := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ _
+  have hloc : IsLocalRing (AdicCompletion (maximalIdeal L) L) := AdicCompletion.isLocalRing_of_fg fg
+  have : IsNoetherianRing (AdicCompletion (maximalIdeal L) L) := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ _
   have hm := AdicCompletion.maximalIdeal_eq_map_of_fg fg
   let ψ := algebraMap L (AdicCompletion (maximalIdeal L) L)
-  haveI : IsLocalHom ψ := ((IsLocalRing.local_hom_tfae ψ).out 1 3).mpr hm.symm.le
+  have : IsLocalHom ψ := ((IsLocalRing.local_hom_tfae ψ).out 1 3).mpr hm.symm.le
   refine ⟨AdicCompletion (maximalIdeal L) L, inferInstance, inferInstance, hloc, ψ.comp (algebraMap R L), ?_, ?_, ?_⟩
   · rw [hm]; exact AdicCompletion.isAdicComplete_self _ fg
   · exact RingHom.Flat.comp (RingHom.flat_algebraMap_iff.2 inferInstance)
@@ -337,14 +337,14 @@ theorem isPreconnected_fibre : ∀ (X Y : Scheme.{0}) (a : X ⟶ Y), IsLocallyNo
     (∀ V : Y.Opens, Function.Bijective (a.app V).hom) → ∀ y : Y, _root_.IsPreconnected {x : X | a x = y} := by
   intro X Y a hY ha hbij y
   obtain ⟨_, ⟨U, hU, rfl⟩, hyU, -⟩ := Y.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ y) isOpen_univ
-  haveI : IsNoetherianRing Γ(Y, U) := hY.component_noetherian ⟨U, hU⟩
+  have : IsNoetherianRing Γ(Y, U) := hY.component_noetherian ⟨U, hU⟩
   let e := hU.isoSpec
   let P : PrimeSpectrum Γ(Y, U) := e.hom ⟨y, hyU⟩
   obtain ⟨A, _, _, _, φ, hAc, hφ, hφP⟩ := exists_complete_flat Γ(Y, U) P
   let π : (a ⁻¹ᵁ U).toScheme ⟶ Sp Γ(Y, U) := (a ∣_ U) ≫ e.hom
   let g : Sp A ⟶ Sp Γ(Y, U) := Spec.map (CommRingCat.ofHom φ)
-  haveI : Flat g := HasRingHomProperty.Spec_iff.2 hφ
-  haveI : IsProper π := inferInstance
+  have : Flat g := HasRingHomProperty.Spec_iff.2 hφ
+  have : IsProper π := inferInstance
   have hres : Function.Bijective ((a ∣_ U).app ⊤).hom := by
     rw [morphismRestrict_app]
     have h1 := hbij ((Scheme.Opens.ι U) ''ᵁ ⊤)
@@ -353,7 +353,7 @@ theorem isPreconnected_fibre : ∀ (X Y : Scheme.{0}) (a : X ⟶ Y), IsLocallyNo
   have hπ : Function.Bijective π.appTop.hom := by
     change Function.Bijective ((a ∣_ U) ≫ e.hom).appTop.hom
     rw [Scheme.Hom.comp_appTop, CommRingCat.hom_comp, RingHom.coe_comp]
-    haveI : IsIso e.hom.appTop := inferInstanceAs (IsIso (e.hom.app ⊤))
+    have : IsIso e.hom.appTop := inferInstanceAs (IsIso (e.hom.app ⊤))
     exact hres.comp (ConcreteCategory.bijective_of_isIso _)
   have hp := GlobalTheory.T.app_bijective_of_flat_baseChange_globalFunctions Γ(Y, U) _ _ _ π g (pullback.snd π g) (pullback.fst π g) inferInstance inferInstance hπ
     inferInstance (IsPullback.of_hasPullback π g).flip
@@ -361,10 +361,10 @@ theorem isPreconnected_fibre : ∀ (X Y : Scheme.{0}) (a : X ⟶ Y), IsLocallyNo
   let ψ : A →+* Γ(Z, ⊤) :=
     ((pullback.snd π g).app ⊤).hom.comp (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
   have hψ : Function.Bijective ψ := (hp ⊤).comp (ConcreteCategory.bijective_of_isIso _)
-  haveI : Nontrivial Γ(Z, ⊤) := hψ.1.nontrivial
-  haveI : IsLocalHom ψ := IsLocalHom.of_surjective ψ hψ.2
-  haveI : IsLocalRing Γ(Z, ⊤) := IsLocalRing.of_surjective ψ hψ.2
-  haveI : PreconnectedSpace Z := preconnectedSpace_of_isLocalRing Z
+  have : Nontrivial Γ(Z, ⊤) := hψ.1.nontrivial
+  have : IsLocalHom ψ := IsLocalHom.of_surjective ψ hψ.2
+  have : IsLocalRing Γ(Z, ⊤) := IsLocalRing.of_surjective ψ hψ.2
+  have : PreconnectedSpace Z := preconnectedSpace_of_isLocalRing Z
   have hfib := GlobalTheory.T.isPreconnected_closedFibre_proper_completeLocalNoetherian A hAc Z (pullback.snd π g) inferInstance inferInstance
   have hg : g (closedPoint A) = P := PrimeSpectrum.ext hφP
   have einj : Function.Injective e.hom := e.hom.isOpenEmbedding.injective

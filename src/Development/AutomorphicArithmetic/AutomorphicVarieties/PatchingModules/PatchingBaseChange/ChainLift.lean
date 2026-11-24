@@ -56,8 +56,8 @@ private theorem UpperTheory.V.Pa.BC.chain_lift_down (B B' : Type) [CommRing B] [
     [Module.Flat B B'] (P : Ideal B') (q : Ideal B) (hP : P.IsPrime) (hq : q.IsPrime)
     (hle : q ≤ P.comap (algebraMap B B')) :
     ∃ Q : Ideal B', Q.IsPrime ∧ Q.comap (algebraMap B B') = q ∧ Q ≤ P := by
-  haveI : (P.comap (algebraMap B B')).IsPrime := Ideal.comap_isPrime _ _
-  haveI : P.LiesOver (P.comap (algebraMap B B')) := ⟨rfl⟩
+  have : (P.comap (algebraMap B B')).IsPrime := Ideal.comap_isPrime _ _
+  have : P.LiesOver (P.comap (algebraMap B B')) := ⟨rfl⟩
   obtain ⟨Q, h1, h2, h3⟩ := Ideal.exists_ideal_le_liesOver_of_le (p := q)
     (q := P.comap (algebraMap B B')) P hle
   exact ⟨Q, h2, h3.over.symm, h1⟩
@@ -83,8 +83,8 @@ private theorem UpperTheory.V.Pa.BC.prime_chain_lift_extension (B B' : Type) [Co
     obtain ⟨he0, he0l, he0r⟩ := he 0
     obtain ⟨E0, hE0, hE0c, hE0le⟩ :=
       UpperTheory.V.Pa.BC.chain_lift_down B B' P0 (e 0) hP0 he0 (by rw [hP0c]; exact he0l)
-    haveI := hp (Fin.succ 0)
-    haveI := hE0
+    have := hp (Fin.succ 0)
+    have := hE0
     obtain ⟨P1, hP1ge, hP1, hP1c⟩ := Ideal.exists_ideal_over_prime_of_isIntegral_of_isPrime
       (p (Fin.succ 0)) E0 (by
         change E0.comap (algebraMap B B') ≤ p (Fin.succ 0)
@@ -117,7 +117,7 @@ theorem UpperTheory.V.Pa.BC.chain_lift :
     ∀ (B B' : Type) [CommRing B] [CommRing B'] [Algebra B B'] [Algebra.IsIntegral B B'] [Module.Flat B B'] [FaithfulSMul B B'] (h : ℕ) (p : Fin (h + 1) → Ideal B) (e : Fin h → Ideal B), (∀ i, (p i).IsPrime) → (∀ i, (e i).IsPrime ∧ e i ≤ p i.castSucc ∧ e i ≤ p i.succ) → (∃ (P : Fin (h + 1) → Ideal B') (E : Fin h → Ideal B'), (∀ i, (P i).IsPrime ∧ (P i).comap (algebraMap B B') = p i) ∧ ∀ i, (E i).IsPrime ∧ (E i).comap (algebraMap B B') = e i ∧ E i ≤ P i.castSucc ∧ E i ≤ P i.succ) ∧ ∀ (P : Ideal B') (q : Ideal B), P.IsPrime → q.IsPrime → q ≤ P.comap (algebraMap B B') → ∃ Q : Ideal B', Q.IsPrime ∧ Q.comap (algebraMap B B') = q ∧ Q ≤ P := by
   intro B B' _ _ _ _ _ _ h p e hp he
   refine ⟨?_, fun P q hP hq hle => UpperTheory.V.Pa.BC.chain_lift_down B B' P q hP hq hle⟩
-  haveI := hp 0
+  have := hp 0
   obtain ⟨P0, _, hP0, hP0c⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := B') (p 0) ⊥ (by
     intro x hx
     rw [Ideal.mem_comap, Ideal.mem_bot] at hx

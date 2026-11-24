@@ -374,7 +374,7 @@ theorem exists_isogeny_homConstSet_eq {E E' : CMCurve K} (v : HeightOneSpectrum 
   obtain ⟨c, hc, hset⟩ := homConstSet_of_smul σ₀ hK h
   rw [primeUnit_inv_val] at hset
   have h1 : (1 : ℂ) ∈ idealLattice σ₀ (v.asIdeal : FractionalIdeal (𝓞 K)⁰ K)⁻¹ := by
-    simpa using map_mem_idealLattice σ₀ (FractionalIdeal.one_mem_inv_coe_ideal v.ne_bot)
+    simpa using map_mem_idealLattice σ₀ (FractionalIdeal.one_mem_inv_coeIdeal v.ne_bot)
   have hcmem : c ∈ homConstSet E.curve E'.curve := by
     have h' : c ∈ (homConstSet E.curve E'.curve : Set ℂ) := by
       rw [hset]; exact ⟨1, h1, mul_one c⟩

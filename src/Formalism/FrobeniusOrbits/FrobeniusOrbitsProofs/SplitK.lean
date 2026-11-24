@@ -232,13 +232,13 @@ theorem card_gal (hd : 0 < d) (hb : b ^ 2 = -(d : L)) : Nat.card (Kd b ≃ₐ[�
   let f : (Kd b ≃ₐ[ℚ] Kd b) → ({bK b, -bK b} : Set (Kd b)) := fun σ =>
     ⟨σ (bK b), by rcases Kd_algEquiv_bK_eq_or_eq_neg hb σ with h | h <;> simp [h]⟩
   have hinj : Function.Injective f := fun σ σ' h => Kd_algEquiv_ext_of_apply_bK_eq σ σ' (congrArg Subtype.val h)
-  haveI : Finite (Kd b ≃ₐ[ℚ] Kd b) := Finite.of_injective f hinj
+  have : Finite (Kd b ≃ₐ[ℚ] Kd b) := Finite.of_injective f hinj
   have hτ1 : τ ≠ 1 := by
     intro h1
     apply hne
     rw [h1] at hτ
     first | exact hτ | simpa using hτ
-  haveI : Nontrivial (Kd b ≃ₐ[ℚ] Kd b) := ⟨⟨τ, 1, hτ1⟩⟩
+  have : Nontrivial (Kd b ≃ₐ[ℚ] Kd b) := ⟨⟨τ, 1, hτ1⟩⟩
   apply le_antisymm
   · calc Nat.card (Kd b ≃ₐ[ℚ] Kd b) ≤ Nat.card ({bK b, -bK b} : Set (Kd b)) :=
           Nat.card_le_card_of_injective f hinj
@@ -291,12 +291,12 @@ private theorem Kd_isGalois_of_sq_eq_neg (hd : 0 < d) (hb : b ^ 2 = -(d : L)) : 
 theorem fund (hd0 : 0 < d) (hb : b ^ 2 = -(d : L)) (p : ℕ) [Fact p.Prime]
     (P : Ideal (𝓞 (Kd b))) [P.IsPrime] [P.LiesOver (span {(p : ℤ)})] :
     (primesOver (span {(p : ℤ)}) (𝓞 (Kd b))).ncard * (P.ramificationIdx ℤ * P.inertiaDeg ℤ) = 2 := by
-  haveI : NumberField (Kd b) := by
+  have : NumberField (Kd b) := by
     first
     | exact inferInstance
-  haveI : IsGalois ℚ (Kd b) := Kd_isGalois_of_sq_eq_neg hd0 hb
-  haveI : Finite (Kd b ≃ₐ[ℚ] Kd b) := Nat.finite_of_card_ne_zero (by rw [card_gal hd0 hb]; norm_num)
-  haveI := span_prime p
+  have : IsGalois ℚ (Kd b) := Kd_isGalois_of_sq_eq_neg hd0 hb
+  have : Finite (Kd b ≃ₐ[ℚ] Kd b) := Nat.finite_of_card_ne_zero (by rw [card_gal hd0 hb]; norm_num)
+  have := span_prime p
   have h := Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn (span {(p : ℤ)})
     (𝓞 (Kd b)) (Kd b ≃ₐ[ℚ] Kd b)
   rw [Ideal.ramificationIdxIn_eq_ramificationIdx (span {(p : ℤ)}) P (Kd b ≃ₐ[ℚ] Kd b),
@@ -307,12 +307,12 @@ theorem ncard_one (hd0 : 0 < d) (hb : b ^ 2 = -(d : L)) (p : ℕ) [Fact p.Prime]
     (P : Ideal (𝓞 (Kd b))) [P.IsPrime] [P.LiesOver (span {(p : ℤ)})]
     (h : ∀ σ : Kd b ≃ₐ[ℚ] Kd b, σ • P = P) :
     (primesOver (span {(p : ℤ)}) (𝓞 (Kd b))).ncard = 1 := by
-  haveI : NumberField (Kd b) := by
+  have : NumberField (Kd b) := by
     first
     | exact inferInstance
-  haveI : IsGalois ℚ (Kd b) := Kd_isGalois_of_sq_eq_neg hd0 hb
-  haveI : Finite (Kd b ≃ₐ[ℚ] Kd b) := Nat.finite_of_card_ne_zero (by rw [card_gal hd0 hb]; norm_num)
-  haveI := span_prime p
+  have : IsGalois ℚ (Kd b) := Kd_isGalois_of_sq_eq_neg hd0 hb
+  have : Finite (Kd b ≃ₐ[ℚ] Kd b) := Nat.finite_of_card_ne_zero (by rw [card_gal hd0 hb]; norm_num)
+  have := span_prime p
   have hP : P ∈ primesOver (span {(p : ℤ)}) (𝓞 (Kd b)) := by
     first
     | exact ⟨inferInstance, inferInstance⟩
@@ -322,7 +322,7 @@ theorem ncard_one (hd0 : 0 < d) (hb : b ^ 2 = -(d : L)) (p : ℕ) [Fact p.Prime]
   have hex : ∃ σ : Kd b ≃ₐ[ℚ] Kd b, σ • P = Q := by
     first
     | (obtain ⟨σ, hσ⟩ := MulAction.exists_smul_eq (Kd b ≃ₐ[ℚ] Kd b) (⟨P, hP⟩ : primesOver (span {(p : ℤ)}) (𝓞 (Kd b))) ⟨Q, hQ⟩; exact ⟨σ, congrArg Subtype.val hσ⟩)
-    | (haveI := hQ.1; haveI := hQ.2; exact Ideal.exists_smul_eq_of_isGaloisGroup (span {(p : ℤ)}) P Q (Kd b ≃ₐ[ℚ] Kd b))
+    | (have := hQ.1; have := hQ.2; exact Ideal.exists_smul_eq_of_isGaloisGroup (span {(p : ℤ)}) P Q (Kd b ≃ₐ[ℚ] Kd b))
   obtain ⟨σ, h1⟩ := hex
   rw [← h1, h σ]
 
@@ -331,12 +331,12 @@ theorem ncard_two (hd0 : 0 < d) (hb : b ^ 2 = -(d : L)) (p : ℕ) [Fact p.Prime]
     (σ : Kd b ≃ₐ[ℚ] Kd b) (h : σ • P ≠ P) :
     (primesOver (span {(p : ℤ)}) (𝓞 (Kd b))).ncard = 2 := by
   have hf := fund hd0 hb p P
-  haveI : NumberField (Kd b) := by
+  have : NumberField (Kd b) := by
     first
     | exact inferInstance
-  haveI : IsGalois ℚ (Kd b) := Kd_isGalois_of_sq_eq_neg hd0 hb
-  haveI : Finite (Kd b ≃ₐ[ℚ] Kd b) := Nat.finite_of_card_ne_zero (by rw [card_gal hd0 hb]; norm_num)
-  haveI := span_prime p
+  have : IsGalois ℚ (Kd b) := Kd_isGalois_of_sq_eq_neg hd0 hb
+  have : Finite (Kd b ≃ₐ[ℚ] Kd b) := Nat.finite_of_card_ne_zero (by rw [card_gal hd0 hb]; norm_num)
+  have := span_prime p
   have hP : P ∈ primesOver (span {(p : ℤ)}) (𝓞 (Kd b)) := by
     first
     | exact ⟨inferInstance, inferInstance⟩
@@ -522,7 +522,7 @@ theorem odd_case (hd : d.Prime) (hb : b ^ 2 = -(d : L)) (p : ℕ) [hp : Fact p.P
 
 private theorem Kd_exists_isPrime_liesOver (p : ℕ) [hp : Fact p.Prime] :
     ∃ P : Ideal (𝓞 (Kd b)), P.IsPrime ∧ P.LiesOver (span {(p : ℤ)}) := by
-  haveI hmax : (span {(p : ℤ)}).IsMaximal := by
+  have hmax : (span {(p : ℤ)}).IsMaximal := by
     first
     | exact Int.ideal_span_isMaximal_of_prime p
   first
@@ -533,10 +533,10 @@ private theorem Kd_exists_isPrime_liesOver (p : ℕ) [hp : Fact p.Prime] :
 theorem clause (hd : d.Prime) (hd7 : d % 8 = 7) (hb : b ^ 2 = -(d : L)) (p : ℕ) (hp : p.Prime) :
     (primesOver (span {(p : ℤ)}) (𝓞 (Kd b))).ncard = 2 ↔
       (p = 2 ∨ (p ≠ 2 ∧ jacobiSym (-(d : ℤ)) p = 1)) := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨P, hP1, hP2⟩ := Kd_exists_isPrime_liesOver (b := b) p
-  haveI := hP1
-  haveI := hP2
+  have := hP1
+  have := hP2
   by_cases h2 : p = 2
   · have h3 := two_case hd.pos hd7 hb p h2 P
     exact ⟨fun _ => Or.inl h2, fun _ => h3⟩
@@ -559,10 +559,10 @@ theorem clause (hd : d.Prime) (hd7 : d % 8 = 7) (hb : b ^ 2 = -(d : L)) (p : ℕ
 
 theorem ram_ncard (hd : d.Prime) (hb : b ^ 2 = -(d : L)) :
     (primesOver (span {(d : ℤ)}) (𝓞 (Kd b))).ncard = 1 := by
-  haveI : Fact d.Prime := ⟨hd⟩
+  have : Fact d.Prime := ⟨hd⟩
   obtain ⟨P, hP1, hP2⟩ := Kd_exists_isPrime_liesOver (b := b) d
-  haveI := hP1
-  haveI := hP2
+  have := hP1
+  have := hP2
   exact ram_case hd hb d rfl P
 
 end Formalism.FrobeniusOrbits.SplitK

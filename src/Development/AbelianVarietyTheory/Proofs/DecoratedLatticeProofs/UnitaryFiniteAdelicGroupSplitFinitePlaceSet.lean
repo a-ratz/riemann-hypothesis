@@ -67,14 +67,14 @@ namespace GlobalTheory.FinPl.SetCut
 variable {D : D7}
 
 theorem continuous_mt_cutTop (V : HSp D) : Continuous (fun g : GA D V => Formalism.L2.Theta.mt V g) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_mt_cutG (V : HSp D) (ε : AF D.host.F) (hε : ε * ε = ε) :
     Continuous (fun g : GA D V => Formalism.L2.Theta.mt V (cutG V ε hε g)) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) (AE D)
-  haveI hs : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul (AF D.host.F) (AE D)
-  haveI : ContinuousConstSMul (AF D.host.F) (AE D) :=
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) (AE D)
+  have hs : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul (AF D.host.F) (AE D)
+  have : ContinuousConstSMul (AF D.host.F) (AE D) :=
     @ContinuousSMul.continuousConstSMul (AF D.host.F) (AE D) _ _ _ hs
   refine continuous_matrix fun i j => ?_
   have h : (fun g : GA D V => Formalism.L2.Theta.mt V (cutG V ε hε g) i j) = fun g : GA D V =>
@@ -86,7 +86,7 @@ theorem continuous_mt_cutG (V : HSp D) (ε : AF D.host.F) (hε : ε * ε = ε) :
   exact (((continuous_mt_cutTop V).matrix_elem i j).const_smul ε).add continuous_const
 
 theorem continuous_cutG (V : HSp D) (ε : AF D.host.F) (hε : ε * ε = ε) : Continuous (cutG V ε hε) := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   refine continuous_induced_rng.2 (Units.continuous_iff.2 ⟨continuous_mt_cutG V ε hε, ?_⟩)
   have h := (continuous_mt_cutG V ε hε).comp (continuous_inv (G := GA D V))
   refine h.congr fun g => ?_
@@ -95,19 +95,19 @@ theorem continuous_cutG (V : HSp D) (ε : AF D.host.F) (hε : ε * ε = ε) : Co
 
 theorem isClosed_smul_sub_one_eq_zero (V : HSp D) (c : AF D.host.F) :
     IsClosed {g : GA D V | ∀ i j, algebraMap (AF D.host.F) (AE D) c * (Formalism.L2.Theta.mt V g - 1) i j = 0} := by
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (AF D.host.F)
-  haveI : T2Space (AE D) := e.isEmbedding.t2Space
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI hs : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul (AF D.host.F) (AE D)
-  haveI : ContinuousConstSMul (AF D.host.F) (AE D) :=
+  have : T2Space (AE D) := e.isEmbedding.t2Space
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have hs : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul (AF D.host.F) (AE D)
+  have : ContinuousConstSMul (AF D.host.F) (AE D) :=
     @ContinuousSMul.continuousConstSMul (AF D.host.F) (AE D) _ _ _ hs
   have h : {g : GA D V | ∀ i j, algebraMap (AF D.host.F) (AE D) c * (Formalism.L2.Theta.mt V g - 1) i j = 0} =
       ⋂ i, ⋂ j, {g : GA D V | c • Formalism.L2.Theta.mt V g i j =
         c • (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     refine forall_congr' fun i => forall_congr' fun j => ?_
     rw [Matrix.sub_apply, mul_sub, sub_eq_zero, Algebra.smul_def, Algebra.smul_def]
   rw [h]
@@ -435,14 +435,14 @@ theorem cutG_mem_Qc (V : HSp D) (Q : Finset (Pl D)) {g : GA D V} (hg : g ∈ GfC
   rw [mt_cutG, cut_sub_one, Matrix.smul_apply, smul_eq_mul, algebraMap_one_sub]
   refine ⟨?_, fun w hw => ?_⟩
   · rw [RingHom.map_mul, (mem_GfC_iff_entries V g).1 hg i j, mul_zero]
-  · rw [RingHom.map_mul, RingHom.map_sub, RingHom.map_one, (parts_idemQ Q).2 w, if_pos (not_not.1 hw), sub_self, zero_mul]
+  · rw [RingHom.map_mul, RingHom.map_sub, RingHom.map_one, (parts_idemQ Q).2 w, ite_eq_left (not_not.1 hw), sub_self, zero_mul]
 
 theorem isClosed_of_idem (V : HSp D) (P : Pl D → Prop) (c : AF D.host.F)
     (hc : ∀ a, a ∈ idAt D P ↔ algebraMap (AF D.host.F) (AE D) c * a = a) : IsClosed (grpAt V P : Set (GA D V)) := by
   have h := (GlobalTheory.T.continuous_idempotentCut_and_isClosed_scaledKernel D V).2 (1 - c)
   convert h using 1
   ext g
-  rw [SetLike.mem_coe, grpAt, mem_congGrp_iff, Set.mem_setOf_eq]
+  rw [SetLike.mem_coe, grpAt, mem_congGrp_iff, Set.mem_ofPred_eq]
   refine forall_congr' fun i => forall_congr' fun j => ?_
   rw [hc, algebraMap_one_sub, sub_mul, one_mul, sub_eq_zero, eq_comm]
 

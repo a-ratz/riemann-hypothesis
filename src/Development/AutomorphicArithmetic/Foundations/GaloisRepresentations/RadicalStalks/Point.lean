@@ -141,7 +141,7 @@ namespace GlobalTheory.FiniteGroupSchemeLength
 
 theorem length_self_eq_of_ringEquiv {R S : Type*} [CommRing R] [CommRing S] (e : R ≃+* S) :
     Module.length R R = Module.length S S := by
-  letI : Algebra R S := e.toRingHom.toAlgebra
+  let : Algebra R S := e.toRingHom.toAlgebra
   have h1 : Module.length R S = Module.length S S :=
     Module.length_eq_of_surjective (R := S) (M := S) (S := R) e.surjective
   let l : R ≃ₗ[R] S :=
@@ -250,8 +250,8 @@ private lemma art_tangent (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k
   have hdeg : P.degree ≠ 0 := by
     rw [hP, degree_X_pow]
     exact_mod_cast Nat.succ_ne_zero q
-  haveI : Nontrivial (AdjoinRoot P) := AdjoinRoot.nontrivial P hdeg
-  haveI : CharP (AdjoinRoot P) p := charP_of_injective_algebraMap (algebraMap k (AdjoinRoot P)).injective p
+  have : Nontrivial (AdjoinRoot P) := AdjoinRoot.nontrivial P hdeg
+  have : CharP (AdjoinRoot P) p := charP_of_injective_algebraMap (algebraMap k (AdjoinRoot P)).injective p
   set r := AdjoinRoot.root P with hr
   have hr0 : r ^ (q + 1) = 0 := by
     rw [hr, AdjoinRoot.root, ← map_pow]
@@ -338,8 +338,8 @@ private lemma art_alg_mem {c : k} (h : algebraMap k B c ∈ maximalIdeal B) : c 
 private lemma art_res [IsAlgClosed k] [Module.Finite k B] :
     ∃ π : B →ₐ[k] k, ∀ b, b - algebraMap k B (π b) ∈ maximalIdeal B := by
   let K := B ⧸ maximalIdeal B
-  letI : Field K := Ideal.Quotient.field _
-  haveI : Algebra.IsIntegral k K := Algebra.IsIntegral.of_finite k K
+  let : Field K := Ideal.Quotient.field _
+  have : Algebra.IsIntegral k K := Algebra.IsIntegral.of_finite k K
   have hbij : Function.Bijective (algebraMap k K) := IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e : k ≃ₐ[k] K := AlgEquiv.ofBijective (Algebra.ofId k K) hbij
   refine ⟨(e.symm : K →ₐ[k] k).comp (Ideal.Quotient.mkₐ k _), fun b => ?_⟩
@@ -382,7 +382,7 @@ private lemma art_gen [Module.Finite k B] (π : B →ₐ[k] k)
     (H : ∀ u v : B →ₐ[k] DualNumber k, (∃ x, TrivSqZeroExt.snd (u x) ≠ 0) →
       ∃ l : k, ∀ x, TrivSqZeroExt.snd (v x) = l * TrivSqZeroExt.snd (u x)) :
     ∃ x ∈ maximalIdeal B, maximalIdeal B ≤ Ideal.span {x} := by
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite k B
+  have : IsArtinianRing B := IsArtinianRing.of_finite k B
   have hfg : (maximalIdeal B).FG := IsNoetherian.noetherian _
   have hjac : maximalIdeal B ≤ (⊥ : Ideal B).jacobson :=
     (jacobson_eq_maximalIdeal ⊥ bot_ne_top).ge
@@ -391,7 +391,7 @@ private lemma art_gen [Module.Finite k B] (π : B →ₐ[k] k)
     Submodule.le_of_le_smul_of_le_jacobson_bot hfg hjac h
   by_cases hm : maximalIdeal B ≤ maximalIdeal B * maximalIdeal B
   · exact ⟨0, Ideal.zero_mem _, nak 0 (hm.trans le_sup_right)⟩
-  obtain ⟨x, hxm, hx2⟩ := SetLike.not_le_iff_exists.1 hm
+  obtain ⟨x, hxm, hx2⟩ := IsConcreteLE.not_le_iff_exists.1 hm
   refine ⟨x, hxm, nak x fun y hy => ?_⟩
   by_contra hy2
   let M2 : Submodule k B := (maximalIdeal B * maximalIdeal B).restrictScalars k
@@ -500,7 +500,7 @@ private lemma art_map [Module.Finite k B] (π : B →ₐ[k] k)
     (hπ : ∀ b, b - algebraMap k B (π b) ∈ maximalIdeal B)
     {x : B} (hxm : x ∈ maximalIdeal B) (hx : maximalIdeal B ≤ Ideal.span {x}) {q : ℕ} (hq : x ^ q ≠ 0) :
     ∃ u : B →ₐ[k] AdjoinRoot (X ^ (q + 1) : k[X]), u x = AdjoinRoot.root (X ^ (q + 1) : k[X]) := by
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite k B
+  have : IsArtinianRing B := IsArtinianRing.of_finite k B
   obtain ⟨N, hN⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := B)
   rw [jacobson_eq_maximalIdeal ⊥ bot_ne_top] at hN
   have hxN : x ^ N = 0 := by
@@ -618,10 +618,10 @@ private theorem stalkAlg_finite (K : Over (Sp k)) [IsFinite K.hom] (x : K.left) 
   have h0 : (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom.Finite :=
     RingHom.Finite.of_surjective _ (Scheme.ΓSpecIso (CommRingCat.of k)).commRingCatIsoToRingEquiv.symm.surjective
   have h01 : (K.hom.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).Finite := h1.comp h0
-  letI : Algebra k Γ(K.left, ⊤) := (K.hom.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).toAlgebra
-  haveI : Module.Finite k Γ(K.left, ⊤) := h01
-  haveI : IsArtinianRing Γ(K.left, ⊤) := IsArtinianRing.of_finite k _
-  letI := TopCat.Presheaf.algebra_section_stalk K.left.presheaf (⟨x, trivial⟩ : (⊤ : K.left.Opens))
+  let : Algebra k Γ(K.left, ⊤) := (K.hom.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom).toAlgebra
+  have : Module.Finite k Γ(K.left, ⊤) := h01
+  have : IsArtinianRing Γ(K.left, ⊤) := IsArtinianRing.of_finite k _
+  let := TopCat.Presheaf.algebra_section_stalk K.left.presheaf (⟨x, trivial⟩ : (⊤ : K.left.Opens))
   have hloc := (isAffineOpen_top K.left).isLocalization_stalk ⟨x, trivial⟩
   have hs : Function.Surjective (algebraMap Γ(K.left, ⊤) (K.left.presheaf.stalk x)) :=
     IsArtinianRing.localization_surjective ((isAffineOpen_top K.left).primeIdealOf ⟨x, trivial⟩).asIdeal.primeCompl _
@@ -653,7 +653,7 @@ private theorem exists_alg (K : Over (Sp k)) (x : K.left) {T : Type} [CommRing T
 
 private theorem closed_eps : (spMap (TrivSqZeroExt.fstHom k k k).toRingHom) (IsLocalRing.closedPoint k) =
     IsLocalRing.closedPoint (DualNumber k) := by
-  haveI : IsLocalHom (TrivSqZeroExt.fstHom k k k).toRingHom :=
+  have : IsLocalHom (TrivSqZeroExt.fstHom k k k).toRingHom :=
     ⟨fun a ha => TrivSqZeroExt.isUnit_iff_isUnit_fst.mpr ha⟩
   exact Spec_closedPoint (R := CommRingCat.of (DualNumber k)) (S := CommRingCat.of k)
     (f := CommRingCat.ofHom (TrivSqZeroExt.fstHom k k k).toRingHom)
@@ -667,7 +667,7 @@ private theorem exists_stalkPt [IsAlgClosed k] (K : Over (Sp k)) [GrpObj K] [IsF
       ∀ v : epsR k ⟶ K, IsTangent v → ∃ u : B →ₐ[k] DualNumber k, spOver u ≫ y = v := by
   set g₁ : Over.mk (spMap (algebraMap k k)) ⟶ K := 1 with hg₁
   set x₀ : K.left := g₁.left (IsLocalRing.closedPoint k) with hx₀
-  haveI : Module.Finite k (K.left.presheaf.stalk x₀) := stalkAlg_finite K x₀
+  have : Module.Finite k (K.left.presheaf.stalk x₀) := stalkAlg_finite K x₀
   obtain ⟨c, hc⟩ := exists_alg K x₀ g₁ rfl
   refine ⟨K.left.presheaf.stalk x₀, inferInstance, inferInstance, inferInstance, inferInstance, stalkPt K x₀,
     ?_, fun x => GlobalTheory.T.finite_group_scheme_stalk_length_constant k K inferInstance x x₀, ⟨c, hc⟩, fun v hv => ?_⟩
@@ -847,7 +847,7 @@ theorem UpperTheory.Gal.Ord.cnt :
       RingHom.ker (β.comp (b.t i)) = w → Ideal.absNorm w = p ^ f → 0 < f → ∀ π : Par p w f,
       IsWOrd o w (𝟙 (Sp k)) ∨ ∃ v : epsR k ⟶ o.A, IsTangent v ∧ v ≠ 1 ∧ IsDeep o w (p ^ f) v := by
   intro p _ D R _ b N hN hNp hm k _ _ hk β o i₀ w f hw hq hf π
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).mpr hk
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).mpr hk
   have hPne : p ^ f ≠ 0 := pow_ne_zero f (Fact.out : p.Prime).ne_zero
   have hP2 : 2 ≤ p ^ f := le_trans (Fact.out : p.Prime).two_le (Nat.le_self_pow hf.ne' p)
   have hwP : w.IsPrime := hw ▸ RingHom.ker_isPrime _
@@ -862,7 +862,7 @@ theorem UpperTheory.Gal.Ord.cnt :
   have hKiff : ∀ (T : Over (Sp k)) (x : T ⟶ o.A), GlobalTheory.IwLevel.InSub i x ↔ KilledBy o w x := fun T x =>
     (hiff T x).trans ((GlobalTheory.HTTors.killedBy_map o w x).trans Iff.rfl)
   have hqK : (toUnit K).left = K.hom := by simpa using Over.w (toUnit K)
-  haveI : IsFinite K.hom := hqK ▸ hdeg.fin
+  have : IsFinite K.hom := hqK ▸ hdeg.fin
   obtain ⟨B, _, _, _, _, y, hyMono, hlen, ⟨c, hc⟩, hfac⟩ := UpperTheory.Gal.Ord.CntStalk.exists_stalkPt K
   let z : Over.mk (spMap (algebraMap k B)) ⟶ o.A := y ≫ i
   have hzMono : Mono z.left := by
@@ -905,7 +905,7 @@ theorem UpperTheory.Gal.Ord.cnt :
     have hne : Module.length B B ≠ ⊤ := by
       intro htop
       rw [htop, ENat.mul_top (by exact_mod_cast hM0)] at hI
-      exact ENat.coe_ne_top _ hI
+      exact ENat.natCast_ne_top _ hI
     obtain ⟨L, hL⟩ := ENat.ne_top_iff_exists.mp hne
     exact ⟨L, hL.symm⟩
   rw [hL] at hI
@@ -914,8 +914,8 @@ theorem UpperTheory.Gal.Ord.cnt :
   have eψ : {g : Over.mk (𝟙 (Sp k)) ⟶ o.A // g ≫ ψ = 1 ∧ KilledBy o w g} ≃
       {g : Over.mk (𝟙 (Sp k)) ⟶ o.A // KilledBy o w g} :=
     Equiv.subtypeEquivRight fun g => ⟨fun h => h.2, fun h => ⟨h _ hpw, h⟩⟩
-  haveI : Finite {g : Over.mk (𝟙 (Sp k)) ⟶ o.A // KilledBy o w g} := Nat.finite_of_card_ne_zero hM0
-  haveI : Finite {g : Over.mk (𝟙 (Sp k)) ⟶ o.A // g ≫ ψ = 1 ∧ KilledBy o w g} := Finite.of_equiv _ eψ.symm
+  have : Finite {g : Over.mk (𝟙 (Sp k)) ⟶ o.A // KilledBy o w g} := Nat.finite_of_card_ne_zero hM0
+  have : Finite {g : Over.mk (𝟙 (Sp k)) ⟶ o.A // g ≫ ψ = 1 ∧ KilledBy o w g} := Finite.of_equiv _ eψ.symm
   obtain ⟨j', hj'⟩ := GlobalTheory.UPel.HT.ES.card_kerW_eq_pow o o ψ (o.act.hom _)
     (fun a => by rw [← o.act.mul, ← o.act.mul, ← map_mul, ← map_mul, mul_comm]) w hwM (𝟙 (Sp k)) inferInstance
   have hMpow : M = (p ^ f) ^ j' := by
@@ -1021,7 +1021,7 @@ private theorem frobN_nat (p : ℕ) [Fact p.Prime] {X Y : Scheme.{0}} (hX : (p :
 private theorem rel_mor (p : ℕ) [Fact p.Prime] {X : Scheme.{0}} [IsReduced X] (h : (p : Γ(X, ⊤)) = 0) (f : ℕ) (hf : 0 < f)
     (ψ V g c a q : X ⟶ X) (h1 : frobN p X h f ≫ ψ = a) (h2 : GlobalTheory.VB.frob X p h ≫ V = q) (h3 : a ≫ g = q ≫ c) :
     ψ ≫ frobN p X h (f - 1) ≫ g = V ≫ c := by
-  haveI := (UpperTheory.Gal.Ord.epi p X h).2 f
+  have := (UpperTheory.Gal.Ord.epi p X h).2 f
   rw [← cancel_epi (frobN p X h f)]
   obtain ⟨j, rfl⟩ : ∃ j, f = j + 1 := ⟨f - 1, by omega⟩
   have e : frobN p X h (j + 1) = frobN p X h j ≫ GlobalTheory.VB.frob X p h :=
@@ -1072,10 +1072,10 @@ theorem UpperTheory.Gal.Ord.rel :
       GlobalTheory.VB.frob o.A.left p (cast_left p k hk o.A) ≫ V = ((𝟙 o.A) ^ p : o.A ⟶ o.A).left →
       ∀ y, m.pull ((frobDR p k hk o.A)^[f - 1] (coh o π.g y)) = n.pull (coh o π.c y) := by
   intro p _ D R _ b N _ _ _ k _ _ hk β o i w f _ _ hf π σ τ ψ V m n h1 h2 y
-  haveI hg := o.act.hom (algebraMap (𝓞 D.F) D.O π.g)
-  haveI hc := o.act.hom (algebraMap (𝓞 D.F) D.O π.c)
-  haveI : Smooth o.A.hom := o.ab.smooth
-  haveI : IsReduced o.A.left := GlobalTheory.isReduced_of_smooth_of_isReduced o.A.hom
+  have hg := o.act.hom (algebraMap (𝓞 D.F) D.O π.g)
+  have hc := o.act.hom (algebraMap (𝓞 D.F) D.O π.c)
+  have : Smooth o.A.hom := o.ab.smooth
+  have : IsReduced o.A.left := GlobalTheory.isReduced_of_smooth_of_isReduced o.A.hom
   obtain ⟨ρ, u, hu⟩ := frobN_mor p hk o.A (f - 1)
   have gm := homMor (dp0 k) (𝟙 _) (o.act.act (algebraMap (𝓞 D.F) D.O π.g))
   have cm := homMor (dp0 k) (𝟙 _) (o.act.act (algebraMap (𝓞 D.F) D.O π.c))
@@ -1240,10 +1240,10 @@ private theorem semi_surj [IsAlgClosed k] {p : ℕ} (hp : 0 < p) [FiniteDimensio
 private theorem pow_card_chi [CommRing C] (χ : C →+* k) {q : ℕ} (hq0 : q ≠ 0)
     (hq : Nat.card (C ⧸ RingHom.ker χ) = q) (c : C) : χ c ^ q = χ c := by
   classical
-  haveI : Finite (C ⧸ RingHom.ker χ) := Nat.finite_of_card_ne_zero (by rw [hq]; exact hq0)
-  letI := Fintype.ofFinite (C ⧸ RingHom.ker χ)
-  haveI : (RingHom.ker χ).IsPrime := RingHom.ker_isPrime χ
-  letI : Field (C ⧸ RingHom.ker χ) := Fintype.fieldOfDomain _
+  have : Finite (C ⧸ RingHom.ker χ) := Nat.finite_of_card_ne_zero (by rw [hq]; exact hq0)
+  let := Fintype.ofFinite (C ⧸ RingHom.ker χ)
+  have : (RingHom.ker χ).IsPrime := RingHom.ker_isPrime χ
+  let : Field (C ⧸ RingHom.ker χ) := Fintype.fieldOfDomain _
   have h := FiniteField.pow_card (Ideal.Quotient.mk (RingHom.ker χ) c)
   rw [← Nat.card_eq_fintype_card, hq] at h
   have h2 := congrArg χ.kerLift h
@@ -1257,9 +1257,9 @@ private theorem pow_ne_chi [CommRing C] {p : ℕ} [Fact p.Prime] (χ : C →+* k
   intro h
   have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
   have hpj : 1 < p ^ j := Nat.one_lt_pow hj.ne' hp1
-  haveI : Finite (C ⧸ RingHom.ker χ) :=
+  have : Finite (C ⧸ RingHom.ker χ) :=
     Nat.finite_of_card_ne_zero (by rw [hq]; exact pow_ne_zero _ (by omega))
-  letI := Fintype.ofFinite (C ⧸ RingHom.ker χ)
+  let := Fintype.ofFinite (C ⧸ RingHom.ker χ)
   let Q : Polynomial k := Polynomial.X ^ p ^ j - Polynomial.X
   have hQ : Q ≠ 0 := Polynomial.X_pow_sub_X_ne_zero hpj
   have hQd : Q.natDegree = p ^ j := Polynomial.natDegree_X_pow_sub_X (R := k) hpj
@@ -1290,7 +1290,7 @@ theorem UpperTheory.Gal.Ord.alg1 :
       ∀ V W : P →+ P, (∀ y, V y = 0 → ∃ z, Φ z = y) → (∀ y, W (Φ^[f - 1] (ρ π.g y)) = V (ρ π.c y)) → (∀ x ∈ F, W (ρ π.ε x) = 0) →
       ∀ x ∈ F, ∃ z, ρ π.ε x = ρ π.g (Φ^[f] z) := by
   intro p _ k _ _ _ C _ w f hf hcard π χ P _ _ ρ F Φ L V W hV hW hWF x hx
-  haveI := L.fin
+  have := L.fin
   have hp0 : 0 < p := (Fact.out : p.Prime).pos
   have hcard' : Nat.card (C ⧸ RingHom.ker χ) = p ^ f := by rw [L.ker]; exact hcard
   have hcg := fun {a b : C} => rho_congr p ρ L.add L.mul L.one (a := a) (b := b)
@@ -1425,8 +1425,8 @@ private theorem sub_dual (k : Type) [Field k] : Subsingleton (PrimeSpectrum (Dua
 
 private theorem cancel_sp {k T : Type} [Field k] [CommRing T] (j : DualNumber k →+* T) (hj : Function.Injective j)
     {Y : Scheme.{0}} {g₁ g₂ : Sp (DualNumber k) ⟶ Y} (e : spMap j ≫ g₁ = spMap j ≫ g₂) : g₁ = g₂ := by
-  haveI hs : Subsingleton (Sp (DualNumber k)) := sub_dual k
-  haveI : Nontrivial T := hj.nontrivial
+  have hs : Subsingleton (Sp (DualNumber k)) := sub_dual k
+  have : Nontrivial T := hj.nontrivial
   obtain ⟨t⟩ : Nonempty (Sp T) := inferInstanceAs (Nonempty (PrimeSpectrum T))
   let x : Sp (DualNumber k) := spMap j t
   have hxy : g₁ x = g₂ x := by
@@ -1441,7 +1441,7 @@ private theorem cancel_sp {k T : Type} [Field k] [CommRing T] (j : DualNumber k 
     rintro _ ⟨z, rfl⟩
     rw [Subsingleton.elim z x, ← hxy, Scheme.Opens.range_ι]
     exact hy
-  haveI : IsAffine U.toScheme := hU
+  have : IsAffine U.toScheme := hU
   have f₁ := IsOpenImmersion.lift_fac U.ι g₁ r1
   have f₂ := IsOpenImmersion.lift_fac U.ι g₂ r2
   set h₁ := IsOpenImmersion.lift U.ι g₁ r1
@@ -1569,11 +1569,11 @@ theorem UpperTheory.Gal.Ord.hasse :
   obtain ⟨g, hg⟩ := GlobalTheory.AbFieldDim.exists_smoothOfRelativeDimension k o.A hab
   have HL : LieExact o.A := GlobalTheory.T.hodgeLieSequence_exact_abelianScheme GlobalTheory.SmoothLift.crystallineSmoothLift_of_relations
     GlobalTheory.AbCoh.abelianHodgeDeRham k o.A g hab hg
-  haveI := hab.smooth
-  haveI : AlgebraicGeometry.IsReduced o.A.left := GlobalTheory.isReduced_of_smooth_of_isReduced o.A.hom
+  have := hab.smooth
+  have : AlgebraicGeometry.IsReduced o.A.left := GlobalTheory.isReduced_of_smooth_of_isReduced o.A.hom
   have hA := cast_left p k hk o.A
-  haveI hEm : IsMonHom (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)) := o.act.hom _
-  haveI hAm : IsMonHom (o.act.act (algebraMap (𝓞 D.F) D.O π.a)) := o.act.hom _
+  have hEm : IsMonHom (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)) := o.act.hom _
+  have hAm : IsMonHom (o.act.act (algebraMap (𝓞 D.F) D.O π.a)) := o.act.hom _
 
   have hconst : IsConst (v.left ≫ ψ) :=
     const_of hk o.A ψ (o.act.act (algebraMap (𝓞 D.F) D.O π.a)) f ha τ j u hj hq (hku _ π.mem) v hv hτ
@@ -1617,7 +1617,7 @@ theorem UpperTheory.Gal.Ord.hasse :
   have hne : l₀ ≠ 0 := fun e => hn₁ (by simpa [e] using hd₀)
 
   have hcomm : ψ ≫ (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)).left = (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)).left ≫ ψ := by
-    haveI := (UpperTheory.Gal.Ord.epi p o.A.left hA).2 f
+    have := (UpperTheory.Gal.Ord.epi p o.A.left hA).2 f
     rw [← cancel_epi (frobN p o.A.left hA f), ← Category.assoc, ha, ← Category.assoc,
       frobN_nat (p := p) hA hA (o.act.act (algebraMap (𝓞 D.F) D.O π.ε)).left f, Category.assoc, ha,
       ← Over.comp_left, ← Over.comp_left, ← o.act.mul, ← o.act.mul, ← map_mul, ← map_mul, mul_comm]
@@ -1894,7 +1894,7 @@ theorem UpperTheory.Gal.Ord.point :
   rcases cnt p D R b N hN hNp hm k hk β o i w f hw hnorm hf π with h | ⟨v, hv1, hv2, hv3⟩
   · exact Or.inl h
   right
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero (R := k) (Fact.out : p.Prime)).mpr hk
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero (R := k) (Fact.out : p.Prime)).mpr hk
   have hL := lin p D R b N hN hNp hm k hk β o i w f hw hnorm hf π
   obtain ⟨σ, ψ, hσ, m, hψ⟩ := va p D R b N hN hNp hm k hk β o i w f hw hnorm hf π
   have hH := hasse p D R b N hN hNp hm k hk β o i w f hw hnorm hf π σ hσ ψ m hψ v hv1 hv2 hv3
@@ -1907,7 +1907,7 @@ theorem UpperTheory.Gal.Ord.point :
       rw [add_zero] at h0
       simpa using h0
     | succ n ih => rw [Nat.cast_succ, o.act.add, ih, o.act.one, pow_succ]
-  haveI hmon : IsMonHom (o.act.act ((p : D.O))) := o.act.hom _
+  have hmon : IsMonHom (o.act.act ((p : D.O))) := o.act.hom _
   have hp0 : ∀ x : ↥(primDR o.A), primPull (dp0 k) (𝟙 (Sp k)) (o.act.act ((p : D.O))) x = 0 := by
     intro x
     have h1 : ((p : D.O)) = (algebraMap (𝓞 D.F) D.O) (p : 𝓞 D.F) := by simp

@@ -298,7 +298,7 @@ theorem eq_zero_of_vanish_skew (F E : Type) [Field F] [NumberField F] [Field E] 
     have hw : ∀ τ i j, ∑ G, z G * ψ τ (A G i j) = w τ i j := by
       intro τ i j
       have k2 := key ((ψ τ).comp c) j i
-      simp only [RingHom.comp_apply, hne, if_false, mul_zero, Finset.sum_const_zero] at k2
+      simp only [RingHom.comp_apply, hne, ite_false, mul_zero, Finset.sum_const_zero] at k2
       rw [sum_gen, key, k2]
       simp [hinj]
     refine ⟨z, ?_⟩
@@ -728,7 +728,7 @@ theorem coef_root : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type}
   have hea : ∀ x, e x = a • e₂ x := fun x => by
     have h1 := ha (e₂ x)
     simpa [g] using h1
-  haveI := e.toEquiv.nontrivial
+  have := e.toEquiv.nontrivial
   obtain ⟨i0⟩ := (A.MtCSD i A.μ0).bV.index_nonempty
   have hx0 := (A.MtCSD i A.μ0).bV.ne_zero i0
   have hy0 : e₂ ((A.MtCSD i A.μ0).bV i0) ≠ 0 := fun h0 => hx0 (e₂.injective (h0.trans (map_zero e₂).symm))

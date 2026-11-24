@@ -120,15 +120,15 @@ theorem FibreSectionsCovering.proof : FibreSectionsCovering.Statement := by
   have hGX : ∀ i, ∀ w ∈ W, G i w ∈ X := fun i w hw => (inX _ _ w (hWO i w hw)).1
   have hGV : ∀ i, ∀ w ∈ W, G i w ∈ VV i := fun i w hw => (inX _ _ w (hWO i w hw)).2
   have hAG : ∀ i, ∀ w ∈ W, A *ᵥ G i w = w := fun i w hw => hAg _ _ w (hWO i w hw)
-  have hfc : Continuous f := (hAc.comp continuous_subtype_val).subtype_mk fun x => hX x.2
+  have hfc : Continuous f := (hAc.comp continuous_subtypeVal).subtype_mk fun x => hX x.2
   have hres : ∀ i (q : Ω) (hq : (q : Fin (e + 1) → ℂ) ∈ W),
       f ⟨G i q, hGX i q hq⟩ = q := fun i q hq =>
     Subtype.ext (hAG i q hq)
   let V : Set Ω := {p | (p : Fin (e + 1) → ℂ) ∈ W}
   let U : Fin N → Set X := fun i => {x | (x : Fin n → ℂ) ∈ VV i ∧ A *ᵥ (x : Fin n → ℂ) ∈ W}
-  have hVo : IsOpen V := continuous_subtype_val.isOpen_preimage _ hWo
+  have hVo : IsOpen V := continuous_subtypeVal.isOpen_preimage _ hWo
   have hUo : ∀ i, IsOpen (U i) := fun i =>
-    continuous_subtype_val.isOpen_preimage _ ((hV' _ _).inter (hWo.preimage hAc))
+    continuous_subtypeVal.isOpen_preimage _ ((hV' _ _).inter (hWo.preimage hAc))
 
   have hUG : ∀ i (x : X), x ∈ U i → G i (A *ᵥ (x : Fin n → ℂ)) = x := fun i x hx =>
     key _ _ _ x.2 hx.1

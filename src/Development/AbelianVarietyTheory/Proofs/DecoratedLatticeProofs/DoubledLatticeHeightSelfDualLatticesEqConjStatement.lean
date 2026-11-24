@@ -468,8 +468,8 @@ theorem hgtL_eq_conj_of_selfDual : ∀ (D : D7) (A : HSp D) (L L' : Lat A), IsSe
   intro D A L L' hL hL'
   obtain ⟨k, hk, hK⟩ := GlobalTheory.T.exists_finiteAdelic_conj_selfDual_doublingCompact D A L L' hL hL'
   refine ⟨k, hk, fun a ha g => ?_⟩
-  letI := GlobalTheory.OntoModPf.selfDual_isFullLattice A L hL
-  letI := GlobalTheory.OntoModPf.selfDual_isFullLattice A L' hL'
+  let := GlobalTheory.OntoModPf.selfDual_isFullLattice A L hL
+  let := GlobalTheory.OntoModPf.selfDual_isFullLattice A L' hL'
   have hI := GlobalTheory.T.adelicIwasawa_doubledGroup_selfDualLattice D A L' a hL' ha
   have hj : io A (k, k) ∈ siegel A := (io_mem_siegel A).2 rfl
   obtain ⟨p, κ, hκ, hx⟩ := hI (io A (g, 1))

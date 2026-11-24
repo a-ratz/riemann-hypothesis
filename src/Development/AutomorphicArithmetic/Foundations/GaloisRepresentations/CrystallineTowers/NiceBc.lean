@@ -88,10 +88,10 @@ private theorem isPullback_sΩ {k : Type} [Field k] (H : HTower k) (K : Type) [F
 theorem niceBc : NiceBc := by
   intro k K _ _ τ H hN
   obtain ⟨hsm, hproj, hfet⟩ := hN
-  letI : Algebra k K := τ.toAlgebra
+  let : Algebra k K := τ.toAlgebra
   unfold bcAlong
   refine ⟨?_, ?_, ?_⟩
-  · haveI := hsm
+  · have := hsm
     show Smooth (pullback.snd H.q (Spec.map (CommRingCat.ofHom (algebraMap k K))))
     infer_instance
   · exact GlobalTheory.ProjSpace.isProjOver_pullback_snd (algebraMap k K) hproj

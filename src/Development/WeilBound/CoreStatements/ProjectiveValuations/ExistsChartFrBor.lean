@@ -104,7 +104,7 @@ theorem evR_frBor {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {f : Rul Xo c} (h
     toC (evR Xo c f y') = chr (fun i => (ex D a n i : ℤ)) t * toC (evR Xo c f y) := by
   classical
   have hL := (GlobalTheory.Reg.evLaws_genFr_atlas E H D l Xo c).1
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   have e : evR Xo c f y' = wchar (ex D a n) t * evR Xo c f y :=
     hL.wt a n f hf (CAt σ) t _ _ (hL.test _ _) (hL.test _ _) h
   have e' : (wchar (ex D a n) t : CAt σ) = (∏ ix, t ix ^ (ex D a n ix : ℤ)).val := by
@@ -113,7 +113,7 @@ theorem evR_frBor {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {f : Rul Xo c} (h
   rfl
 
 theorem rdU_eq (V : Unf Xo c σ r) (f : Rul Xo c) (k : V.Comp) (x : (V.X k).dom) :
-    rdU V f k x.1 = toC (evR Xo c f (V.un k x)) := dif_pos x.2
+    rdU V f k x.1 = toC (evR Xo c f (V.un k x)) := dite_eq_left x.2
 
 theorem sec_frBor {V : Unf Xo c σ r} (hU : IsUnf V) {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} (hD : Dom a n)
     (hN : NV Xo c σ a n) {k : V.Comp} {P : Frame (V.X k).Ψ r → ℂ} (hP : (V.X k).IsSec (laU V a n k) P)
@@ -133,7 +133,7 @@ theorem sec_frBor {V : Unf Xo c σ r} (hU : IsUnf V) {a : (E →+* ℂ) × ℕ �
   have a₂ := mul_right_cancel₀ (show toC (evR Xo c f (V.un k x)) ≠ 0 from hf0) e₂
   have hdiag : ∀ τ i, b τ i i ≠ 0 := fun τ i => by
     have hdet := (hb τ).1
-    rw [Matrix.det_of_upperTriangular (M := mat b τ) (fun a c hac => (hb τ).2 a c hac)] at hdet
+    rw [Matrix.det_of_isUpperTriangular (M := mat b τ) (fun a c hac => (hb τ).2 a c hac)] at hdet
     exact Finset.prod_ne_zero_iff.1 hdet i (Finset.mem_univ _)
   have hadd : bchar (laU V a n k + laU V a' n' k) b = bchar (laU V a n k) b * bchar (laU V a' n' k) b := by
     simp only [bchar, ← Finset.prod_mul_distrib]

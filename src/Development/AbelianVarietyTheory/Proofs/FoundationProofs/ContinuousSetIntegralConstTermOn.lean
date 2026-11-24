@@ -126,7 +126,7 @@ theorem exists_setIntegral_norm_le (hS : IsCompact S) :
       ← lintegral_indicator_one ((measurable_mk hA).inter hS.measurableSet),
       lintegral_eq_lintegral_tsum (Γ := Γ)
         (measurable_one.indicator ((measurable_mk hA).inter hS.measurableSet)).aemeasurable,
-      Measure.smul_apply, smul_eq_mul, ← lintegral_indicator_one hA, ← lintegral_const_mul' _ _ ha']
+      smul_apply, smul_eq_mul, ← lintegral_indicator_one hA, ← lintegral_const_mul' _ _ ha']
     refine lintegral_mono fun q => le_trans (le_of_eq (tsum_congr fun γ => ?_))
       (AutomorphicL2Local.tsum_indicator_le Γ S q.out _)
     by_cases h1 : (γ : G) * q.out ∈ S <;> by_cases h2 : q ∈ A <;> simp [h1, h2]
@@ -140,7 +140,7 @@ theorem exists_setIntegral_norm_le (hS : IsCompact S) :
       ((eLpNorm_mono_measure _ hle).trans (le_of_eq ?_))
     rw [eLpNorm_smul_measure_of_ne_top (by norm_num) _ _ (Lp.stronglyMeasurable F).aestronglyMeasurable]
     norm_num
-  rw [integral_norm_eq_lintegral_enorm hm, ← eLpNorm_one_eq_lintegral_enorm hm, Lp.norm_def, ← ENNReal.toReal_mul]
+  rw [integral_norm_eq_lintegral_eNorm hm, ← eLpNorm_one_eq_lintegral_eNorm hm, Lp.norm_def, ← ENNReal.toReal_mul]
   refine ENNReal.toReal_mono (by have := Lp.eLpNorm_ne_top F; finiteness) (h1.trans ?_)
   rw [mul_right_comm, Measure.restrict_apply_univ]
   norm_num
@@ -165,7 +165,7 @@ theorem exists_compact_bound (hc : Cocompact Γ N) (hS : IsCompact S) : ∃ C : 
     ∀ φ : G → ℂ, LeftInv Γ φ → LocallyIntegrable φ μ → ∀ n : N,
       IntegrableOn (fun y => φ (n * y)) S μ ∧ ∫ y in S, ‖φ (n * y)‖ ∂μ ≤ ∫ y in C, ‖φ y‖ ∂μ := by
   obtain ⟨K, hK, hs⟩ := hc
-  have hC := (hK.image continuous_subtype_val).mul hS
+  have hC := (hK.image continuous_subtypeVal).mul hS
   refine ⟨_, hC, fun φ hφ hi n => ?_⟩
   obtain ⟨γ, hγ, hk⟩ := hs n
   simp only [← fun y => leftInv_integrand hφ y γ hγ n]
@@ -196,7 +196,7 @@ theorem integrable_prod (hc : Cocompact Γ N) (hφ : LeftInv Γ φ) (hm : Strong
     exact .iUnion fun γ => measurable_const_mul _ (hs.inter (measurableSet_stdDom _))
   have hm' : StronglyMeasurable fun p : Quot (Γ.subgroupOf N) × G => φ ((p.1.out : N) * p.2) :=
     e ▸ hm.comp_measurable
-      ((measurable_subtype_coe.comp (hsec.comp measurable_fst)).mul measurable_snd)
+      ((measurable_subtypeVal.comp (hsec.comp measurable_fst)).mul measurable_snd)
   refine (integrable_prod_iff hm'.aestronglyMeasurable).2 ⟨.of_forall fun q => (hC φ hφ hi q.out).1, ?_⟩
   refine .of_bound hm'.norm.integral_prod_right'.aestronglyMeasurable (∫ y in C, ‖φ y‖ ∂μ) (.of_forall fun q => ?_)
   rw [Real.norm_of_nonneg (integral_nonneg fun _ => norm_nonneg _)]
@@ -273,7 +273,7 @@ theorem constTermOn_ae_eq_zero (hc : Cocompact Γ N) {F : L2 Γ μ} (hF : F ∈ 
   rintro F' ⟨φ, h1, h2, h3, h4⟩
   have h5 := setIntegral_constTermOn (μ := μ) hc h2 h1.stronglyMeasurable h1.locallyIntegrable hS
   rw [h3] at h5
-  rw [mem_setOf_eq, setIntegral_constTermOn hc (leftInv_lift _) (hm _) (locallyIntegrable_lift _) hS]
+  rw [mem_ofPred_eq, setIntegral_constTermOn hc (leftInv_lift _) (hm _) (locallyIntegrable_lift _) hS]
   refine Eq.trans (integral_congr_ae (.of_forall fun q => integral_congr_ae (ae_restrict_of_ae ?_)))
     (h5.symm.trans (by simp))
   exact (measurePreserving_mul_left μ ((q.out : N) : G)).quasiMeasurePreserving.ae h4
@@ -302,7 +302,7 @@ theorem mem_of_forall_Rop_mem {W : Submodule ℂ (L2 Γ μ)} (hW : IsClosed (W :
     rw [inner_smul_right, mul_assoc, Complex.conj_mul']
     simp
   by_contra h0
-  refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) (b.continuous.mul (hu.norm.pow 2)) hbc.mul_right
+  refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) (b.continuous.mul (hu.norm.pow 2)) hbc.mul_right
     (fun g => mul_nonneg (hb g).1 (sq_nonneg _)) ?_).ne' h2
   simpa [hb1 (mem_singleton _)] using h0
 

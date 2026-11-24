@@ -223,7 +223,7 @@ theorem orbit_base_idempotent_rank {p : (Fin D.a0 → Matrix (Fin N) (Fin N) k) 
 theorem Ys_eq (τ : Fin D.m → ℕ) (hP : ∀ g ∈ Gz Z, ∀ x ∈ piece D τ, g.val * x * g⁻¹.val ∈ piece D τ) :
     Ys D τ = F0 D ∩ ⋂ t, {p | p ∈ F0 D ∧ (et D p.1 p.2.1 t).rank = τ t} := by
   ext p
-  simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+  simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨g, hg, hx, hχ, hτ⟩
     have e1 : p.1 = fun i => cj g (D.z i) := funext hg
@@ -245,10 +245,10 @@ theorem Ys_eq (τ : Fin D.m → ℕ) (hP : ∀ g ∈ Gz Z, ∀ x ∈ piece D τ,
     exact this
 
 theorem isClosed_orbit_base (hO : OrbClosed k) (hZ : CR Z) : IsClosed (F0 D) := by
-  haveI : T2Space k := t2k
+  have : T2Space k := t2k
   have e : F0 D = (Prod.fst ⁻¹' Orb D.z) ∩ ((⋂ i, {p : (Fin D.a0 → Matrix (Fin N) (Fin N) k) × Sp k N |
       p.1 i * p.2.1 = p.2.1 * p.1 i}) ∩ {p | aeval p.2.1 χ = 0}) := by
-    ext p; simp only [F0, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_iInter]
+    ext p; simp only [F0, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_iInter]
   rw [e]
   refine ((isClosed_orb hO hZ D.hz).preimage continuous_fst).inter (IsClosed.inter ?_ ?_)
   · exact isClosed_iInter fun i => isClosed_eq (((continuous_apply i).comp continuous_fst).mul

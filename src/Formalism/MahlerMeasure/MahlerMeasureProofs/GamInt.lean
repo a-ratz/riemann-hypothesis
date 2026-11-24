@@ -533,7 +533,7 @@ theorem Dop_pow_monomial_lt (u v : σ) (huv : u ≠ v) (a : ℕ) (γ : σ →₀
     have := congrArg (fun f : σ →₀ ℕ => f u) h'
     simp [Finsupp.single_apply, huv] at this
     omega
-  rw [if_neg this]
+  rw [ite_eq_right this]
   simp [AddMonoidAlgebra.coeff_zero]
 
 theorem pderiv_X_pow_mul (i y : σ) (hiy : i ≠ y) (m : ℕ) (G : MvPolynomial σ ℚ_[p]) :
@@ -744,7 +744,7 @@ theorem AllMono.prod (hQ : ∀ d d' β β', Q d β → Q d' β' → Q (d + d') (
 theorem AllMono.X_mul_X (u u' : σ) (d : M) (hq : Q d (Finsupp.single u 1 + Finsupp.single u' 1)) :
     AllMono Q d (X u * X u' : MvPolynomial σ ℚ_[p]) := by
   intro β hβ
-  rw [X, X, monomial_mul, one_mul] at hβ
+  rw [X, X, monomial_mul_monomial, one_mul] at hβ
   have := support_monomial_subset hβ
   rw [Finset.mem_singleton] at this
   subst this; exact hq
@@ -780,7 +780,7 @@ theorem IsIntP.one : IsIntP (1 : MvPolynomial σ ℚ_[p]) := by
   rw [← C_1]; exact IsIntP.C (by simp)
 
 theorem IsIntP.X (u : σ) : IsIntP (X u : MvPolynomial σ ℚ_[p]) := by
-  intro β; rw [coeff_X']; split_ifs <;> simp
+  intro β; rw [coeff_X]; split_ifs <;> simp
 
 theorem IsIntP.sum {ι : Type} (s : Finset ι) (P : ι → MvPolynomial σ ℚ_[p]) (h : ∀ i ∈ s, IsIntP (P i)) :
     IsIntP (∑ i ∈ s, P i) := by
@@ -896,16 +896,16 @@ theorem sum_dv (LL : Letters (N + 1)) (μ : Fin (N + 1) × Fin r →₀ ℕ) (h�
   | last =>
     have hne : ∀ x : Fin (N + 1), (Fin.last (N + 1) : Fin (N + 1 + 1)) ≠ Fin.castSucc x :=
       fun x h => Fin.castSucc_ne_last x h.symm
-    simp only [Pi.single_apply, hne, if_false, mul_zero, sum_const_zero, zero_add,
-      if_true, mul_one]
+    simp only [Pi.single_apply, hne, ite_false, mul_zero, sum_const_zero, zero_add,
+      ite_true, mul_one]
     simp only [Letters.snoc, Fin.lastCases_last, Letters.total]
     exact sum_congr rfl (fun i _ => hμ i)
   | cast k =>
-    simp only [Pi.single_apply, Fin.castSucc_inj, Fin.castSucc_ne_last k, if_false, mul_zero,
+    simp only [Pi.single_apply, Fin.castSucc_inj, Fin.castSucc_ne_last k, ite_false, mul_zero,
       sum_const_zero, add_zero]
     simp only [Letters.snoc, Fin.lastCases_castSucc]
     rw [Finset.sum_eq_single k]
-    · simp only [if_true, mul_one]; exact hμ k
+    · simp only [ite_true, mul_one]; exact hμ k
     · intro b _ hb; simp [Ne.symm hb]
     · simp
 
@@ -981,14 +981,14 @@ theorem wf_add_single_eq (δ : σ →₀ ℕ) (y : σ) (t : ℕ) :
   rw [← Finset.mul_prod_erase univ _ (mem_univ y), ← Finset.mul_prod_erase univ (fun x => ((δ x).factorial : ℚ_[p])) (mem_univ y)]
   have : ∀ v ∈ univ.erase y, (((δ + Finsupp.single y t : σ →₀ ℕ) v).factorial : ℚ_[p]) = ((δ v).factorial : ℚ_[p]) := by
     intro v hv
-    rw [Finsupp.add_apply, Finsupp.single_apply, if_neg (Ne.symm (ne_of_mem_erase hv)), add_zero]
+    rw [Finsupp.add_apply, Finsupp.single_apply, ite_eq_right (Ne.symm (ne_of_mem_erase hv)), add_zero]
   rw [Finset.prod_congr rfl this]
   simp only [Finsupp.add_apply, Finsupp.single_eq_same]
   ring
 
 theorem X_pow_mul_monomial (y : σ) (m : ℕ) (γ : σ →₀ ℕ) (h : ℚ_[p]) :
     (X y ^ m * monomial γ h : MvPolynomial σ ℚ_[p]) = monomial (γ + Finsupp.single y m) h := by
-  rw [X_pow_eq_monomial, monomial_mul, one_mul, add_comm]
+  rw [X_pow_eq_monomial, monomial_mul_monomial, one_mul, add_comm]
 
 theorem fock_Dop_term (x y : σ) (hxy : x ≠ y) (a a' m : ℕ) (β₀ β₀' : σ →₀ ℕ) (h h' : ℚ_[p]) :
     Formalism.GM.M.fock p ((Dop x y ^ a) (X y ^ m * monomial (β₀ + a • (Finsupp.single x 1 + Finsupp.single y 1)) h))
@@ -1011,7 +1011,7 @@ theorem fock_Dop_term (x y : σ) (hxy : x ≠ y) (a a' m : ℕ) (β₀ β₀' : 
   rw [hx, hx, hy, hy]
   by_cases hb : β₀ = β₀'
   · subst hb
-    rw [if_pos rfl, if_pos rfl]
+    rw [ite_eq_left rfl, ite_eq_left rfl]
 
     have hk : ((β₀ y).factorial : ℚ_[p]) ≠ 0 := by exact_mod_cast (Nat.factorial_pos _).ne'
     have w1 := wf_add_single_eq (p := p) β₀ y m
@@ -1049,7 +1049,7 @@ theorem fock_Dop_term (x y : σ) (hxy : x ≠ y) (a a' m : ℕ) (β₀ β₀' : 
           (((β₀ y + m + a').descFactorial a' : ℕ) : ℚ_[p]) := by ring
       _ = _ := by rw [key]; ring
   · have : β₀ + Finsupp.single y m ≠ β₀' + Finsupp.single y m := fun h'' => hb (add_right_cancel h'')
-    rw [if_neg this, if_neg hb]
+    rw [ite_eq_right this, ite_eq_right hb]
 
 end alg
 
@@ -1162,14 +1162,14 @@ theorem comp_facts (LL : Letters (N + 1)) (b : ℕ) (δ : Fin (N + 1 + 1) × Fin
   refine ⟨fun k => ?_, ?_, ?_⟩
   · have := congrFun hd (Fin.castSucc (Fin.castSucc k))
     simp only [Pi.add_apply, Pi.smul_apply, eWY, Pi.single_apply, Fin.castSucc_inj, Fin.castSucc_ne_last,
-      if_false, add_zero, smul_eq_mul, mul_zero, Letters.snoc, Fin.lastCases_castSucc] at this
+      ite_false, add_zero, smul_eq_mul, mul_zero, Letters.snoc, Fin.lastCases_castSucc] at this
     exact this
   · have := congrFun hd (Fin.castSucc (Fin.last N))
-    simp only [Pi.add_apply, Pi.smul_apply, eWY, Pi.single_apply, Fin.castSucc_ne_last, if_true, if_false,
+    simp only [Pi.add_apply, Pi.smul_apply, eWY, Pi.single_apply, Fin.castSucc_ne_last, ite_true, ite_false,
       add_zero, smul_eq_mul, mul_one, Letters.snoc, Fin.lastCases_castSucc] at this
     omega
   · have := congrFun hd (Fin.last (N + 1))
-    simp only [Pi.add_apply, Pi.smul_apply, eWY, Pi.single_apply, hne, if_true, if_false,
+    simp only [Pi.add_apply, Pi.smul_apply, eWY, Pi.single_apply, hne, ite_true, ite_false,
       zero_add, smul_eq_mul, mul_one, Letters.snoc, Fin.lastCases_last] at this
     omega
 

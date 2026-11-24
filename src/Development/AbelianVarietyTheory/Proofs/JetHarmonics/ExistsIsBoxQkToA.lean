@@ -191,7 +191,7 @@ theorem exists_unboxGt (hG : GlobalFnsSt) (g' : GtPtF D' F) : ∃ g : Fin j → 
 
 theorem unbox_isZero {g' : GtPtF D' F} {g : Fin j → GtPtF D F} (h : IsBoxGtF pD F g' g) (hz : g'.IsZero)
     (i : Fin j) : (g i).IsZero := by
-  haveI := pD.pw.hom i
+  have := pD.pw.hom i
   obtain ⟨b, v⟩ := (isZero_iff_val _).1 hz
   refine (isZero_iff_val _).2 ⟨by rw [← h.1, b, MonObj.one_comp], fun χ y J hJ => ?_⟩
   obtain ⟨J', hJ'⟩ := exists_good_at D'.P.isLB y
@@ -200,7 +200,7 @@ theorem unbox_isZero {g' : GtPtF D' F} {g : Fin j → GtPtF D F} (h : IsBoxGtF p
 theorem unbox_isAdd (hG : GlobalFnsSt) {g₁' g₂' g₃' : GtPtF D' F} {g₁ g₂ g₃ : Fin j → GtPtF D F}
     (h₁ : IsBoxGtF pD F g₁' g₁) (h₂ : IsBoxGtF pD F g₂' g₂) (h₃ : IsBoxGtF pD F g₃' g₃)
     (ha : g₁'.IsAdd g₂' g₃') (i : Fin j) : (g₁ i).IsAdd (g₂ i) (g₃ i) := by
-  haveI := pD.pw.hom i
+  have := pD.pw.hom i
   obtain ⟨b, v⟩ := (isAdd_iff_val _ _ _).1 ha
   refine (isAdd_iff_val _ _ _).2 ⟨by rw [← h₃.1, ← h₁.1, ← h₂.1, b, MonObj.mul_comp], fun χ y J hJ => ?_⟩
   obtain ⟨J', hJ'⟩ := exists_good_at D'.P.isLB y

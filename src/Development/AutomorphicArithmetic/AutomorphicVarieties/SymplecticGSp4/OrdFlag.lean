@@ -88,7 +88,7 @@ theorem ordFlag_diag (c : Fin 4 → K) (hc : Function.Injective c) (X : M4 K)
   have hli : LinearIndependent K v :=
     Module.End.eigenvectors_linearIndependent' (Matrix.toLin' X) c hc v hv
   have hU : IsUnit (Matrix.of fun i j => v j i : Matrix (Fin 4) (Fin 4) K) :=
-    Matrix.linearIndependent_cols_iff_isUnit.mp hli
+    Matrix.linearIndependent_col_iff_isUnit.mp hli
   obtain ⟨P, hP⟩ := hU
   refine ⟨P, ?_⟩
   rw [hP]

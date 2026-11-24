@@ -72,7 +72,7 @@ variable {A B C : Type} [CommRing A] [Algebra k A] [CommRing B] [Algebra k B]
 theorem spMap_injective : Function.Injective (spMap : (A →ₐ[k] B) → (sp B ⟶ sp A)) := by
   intro φ ψ h
   have h1 : (spMap φ).left = (spMap ψ).left := by rw [h]
-  exact AlgHom.coe_ringHom_injective (congrArg CommRingCat.Hom.hom (Spec.map_injective h1))
+  exact AlgHom.toRingHom_injective (congrArg CommRingCat.Hom.hom (Spec.map_injective h1))
 
 theorem spMap_surjective : Function.Surjective (spMap : (A →ₐ[k] B) → (sp B ⟶ sp A)) := by
   intro m

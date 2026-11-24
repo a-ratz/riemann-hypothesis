@@ -206,15 +206,15 @@ theorem exists_eigen_family : ∀ {G V W ι : Type} [inst : Group G] [inst_1 : T
     have ho : IsOpen (U ∩ ⋂ i, {g : G | ρ g (y i) = y i}) :=
       hU.inter (isOpen_iInter_of_finite fun i => hρ (y i))
     have ho' : IsOpen ((Subtype.val : K → G) ⁻¹' (U ∩ ⋂ i, {g : G | ρ g (y i) = y i})) :=
-      ho.preimage continuous_subtype_val
+      ho.preimage continuous_subtypeVal
     refine Filter.mem_of_superset (ho'.mem_nhds ?_) ?_
     · refine ⟨hU1, Set.mem_iInter.2 fun i => ?_⟩
       simp
     · rintro k ⟨hk, hk'⟩
       exact ⟨hθ _ hk k.2, fun i => Set.mem_iInter.1 hk' i⟩
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
-  letI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
+  let : Fintype (K ⧸ H) := Fintype.ofFinite _
   let f : ι → K → V := fun j k => θ (k⁻¹ : K) • ρ k (y j)
   have hf : ∀ j (k : K) (s : K), s ∈ H → f j (k * s) = f j k := by
     intro j k s hs
@@ -517,7 +517,7 @@ theorem vector_at_split_place (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D :
   obtain ⟨F, hF, hne⟩ := hocc
   set z := idemOf D k ρ with hz
   have hzc : ∀ b, z * b = b * z := by
-    haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+    have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
     exact (GlobalTheory.SerOSys.zIdem_centralIdempotent ρ hρ).2
   have hcen := GlobalTheory.SeriesSupportTest.atPlace_central D k v z hzc
   obtain ⟨L, hLift, hCL⟩ := hC i
@@ -831,17 +831,17 @@ theorem exists_of_isLiftN {p : ℕ} {g : GL (Fin r) (ZMod p)} {h : GL (Fin (r + 
     ext (a | a) (b | b)
     · rw [bl_apply, ee_inl, ee_inl, fromBlocks_apply₁₁]
     · have := H (Fin.castAdd t a) (Fin.natAdd r b)
-      rw [dite_eq_right (by simp only [Fin.coe_castAdd, Fin.coe_natAdd]; omega)] at this
+      rw [dite_eq_right (by simp only [Fin.val_castAdd, Fin.val_natAdd]; omega)] at this
       have hne : Fin.castAdd t a ≠ Fin.natAdd r b := fun e => by
         have := congrArg Fin.val e; simp at this; omega
       simp [bl_apply, ee_inl, ee_inr, this, hne]
     · have := H (Fin.natAdd r a) (Fin.castAdd t b)
-      rw [dite_eq_right (by simp only [Fin.coe_castAdd, Fin.coe_natAdd]; omega)] at this
+      rw [dite_eq_right (by simp only [Fin.val_castAdd, Fin.val_natAdd]; omega)] at this
       have hne : Fin.natAdd r a ≠ Fin.castAdd t b := fun e => by
         have := congrArg Fin.val e; simp at this; omega
       simp [bl_apply, ee_inl, ee_inr, this, hne]
     · have := H (Fin.natAdd r a) (Fin.natAdd r b)
-      rw [dite_eq_right (by simp only [Fin.coe_castAdd, Fin.coe_natAdd]; omega)] at this
+      rw [dite_eq_right (by simp only [Fin.val_castAdd, Fin.val_natAdd]; omega)] at this
       simp [bl_apply, ee_inr, this, Matrix.one_apply]
   have hdet : IsUnit M.det := by
     have h1 : IsUnit (bl F r t h).val.det := (Matrix.isUnit_iff_isUnit_det _).1 (bl F r t h).isUnit
@@ -913,7 +913,7 @@ namespace GlobalTheory.LevelType
 
 theorem exists_parVec_of_map : ∀ (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (p : ℕ) [Fact p.Prime] (α n : Type) [Fintype α] [LinearOrder α] [Fintype n] [DecidableEq n] (m : α → Type) [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] (e : (Σ a, m a) ≃ n) (X : α → Type) [∀ a, AddCommGroup (X a)] [∀ a, Module ℂ (X a)] (s : ∀ a, Representation ℂ (GL (m a) F) (X a)) (a : α) (θ : (ZMod p)ˣ →* ℂˣ) (χ : Fˣ →* ℂˣ) (U : Type) [AddCommGroup U] [Module ℂ U] (ρ : Representation ℂ (GL n (ZMod p)) U) (φ : U →ₗ[ℂ] IndSp e (piTensor s)), resCard F = p → CharLift θ χ → (∀ g ∈ KO F (m a), ∀ v, s a g v = (χ (Matrix.GeneralLinearGroup.det g) : ℂ) • v) → φ ≠ 0 → (∀ (g : GL n (ZMod p)) (h : GL n F), IsLift g h → ∀ w, multiProd e s h (φ w) = φ (ρ g w)) → ∃ v : U, v ≠ 0 ∧ ParVec ρ e a θ v := by
   intro F _ _ _ _ p _ α n _ _ _ _ m _ _ e X _ _ s a θ χ U _ _ ρ φ hp hθ hs hφ hint
-  haveI : Fact (1 < p) := ⟨(Fact.out : p.Prime).one_lt⟩
+  have : Fact (1 < p) := ⟨(Fact.out : p.Prime).one_lt⟩
   let Λ : U →ₗ[ℂ] (⨂[ℂ] b, X b) :=
     { toFun := fun w => (φ w).1.1 1
       map_add' := fun x y => by rw [map_add (f := _)]; rfl
@@ -1227,7 +1227,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem deltaHalf_eq_one (hc : c true = 0) (g : Levi k (fun j => Fin (c j))) :
     deltaHalf k (fun j => Fin (c j)) g = 1 := by
-  haveI : IsEmpty (Fin (c true)) := by rw [hc]; infer_instance
+  have : IsEmpty (Fin (c true)) := by rw [hc]; infer_instance
   rw [deltaHalf_apply, Fintype.prod_bool]
   have h1 : modExp (fun j => Fin (c j)) false = 0 := by
     simp only [modExp, Finset.sum_filter, Fintype.sum_bool]
@@ -1270,7 +1270,7 @@ theorem isSubquotient_of_empty_second_block : ∀ (F : Type) [Field F] [Valuativ
     IsSubquotient.of_surjective q (Submodule.mkQ_surjective _)
   have h2 := isSubquotient_comp' hsub ι
 
-  haveI := nontrivial_of_irreducible (s true).irr
+  have := nontrivial_of_irreducible (s true).irr
   obtain ⟨w0, hw0⟩ := exists_ne (0 : (s true).V)
   obtain ⟨ψ0, hψ0⟩ : ∃ ψ0 : Module.Dual ℂ (s true).V, ψ0 w0 ≠ 0 := by
     by_contra h
@@ -1415,7 +1415,7 @@ theorem exists_smul_eq (hc : c true = 0) (σ : IrrRep (GL (Fin (c true)) F)) {z 
   let S : Subrepresentation σ.ρ := ⟨ℂ ∙ z, fun g v hv => by
     rw [eq_one_true hc g, map_one]
     exact hv⟩
-  haveI := σ.irr
+  have := σ.irr
   rcases eq_bot_or_eq_top S with h | h
   · exfalso
     have : z ∈ S.toSubmodule := Submodule.mem_span_singleton_self z
@@ -1465,7 +1465,7 @@ theorem isSubquotient_multiProd : ∀ (F : Type) [Field F] [ValuativeRel F] [Top
       IsSubquotient (multiProd f fun j => (s j).ρ)
         ((s false).ρ.comp (reix F φ) : Representation ℂ (GL (Fin r) F) (s false).V) := by
   intro F _ _ _ _ r c f s hc
-  haveI := nontrivial_of_irreducible (s true).irr
+  have := nontrivial_of_irreducible (s true).irr
   obtain ⟨z, hz⟩ := exists_ne (0 : (s true).V)
   let x₀ : ∀ j, (s j).V := fun j => Bool.rec (motive := fun j => (s j).V) 0 z j
   refine ⟨(falseEquiv f hc).symm, ?_⟩
@@ -1554,7 +1554,7 @@ theorem quot_irreducible (ρ : Representation ℂ G V) (x : V)
     (hcyc : ∀ N : Subrepresentation ρ, x ∈ N.toSubmodule → N.toSubmodule = ⊤) (M : Subrepresentation ρ)
     (hM : Maximal (fun N : Subrepresentation ρ => x ∉ N.toSubmodule) M) : (quot ρ M).IsIrreducible := by
   have hx0 : M.toSubmodule.mkQ x ≠ 0 := fun h => hM.1 ((Submodule.Quotient.mk_eq_zero _).1 h)
-  haveI : Nontrivial (Subrepresentation (quot ρ M)) := ⟨⟨⊥, ⊤, fun h => hx0 (by
+  have : Nontrivial (Subrepresentation (quot ρ M)) := ⟨⟨⊥, ⊤, fun h => hx0 (by
     have h1 : M.toSubmodule.mkQ x ∈ (⊤ : Subrepresentation (quot ρ M)).toSubmodule := Submodule.mem_top
     rw [← h] at h1
     exact h1)⟩⟩
@@ -1905,7 +1905,7 @@ theorem locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTheory.NRows.ThetaLocalI
     (_root_.GlobalTheory.T.splitLoc_of_greenLab_depth_zero hP hL D P.ty.grp hGreen) (_root_.UpperTheory.Lit.Dz.blockTypeSplitProp hP hL D P.ty.grp hGreen)
   have hConj : ConjDual D := _root_.GlobalTheory.T.conjDual_of_labAll hP hL D P hLab
   intro i k v PI
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   intro ρ f hρ hser hocc hsq hu
   have hw : IsSplitPl D.host (D.naut.plGw k v) := _root_.GlobalTheory.TypeSplit.main D k _ (D.naut.plGw_over k v)
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.T.exists_blockVec_notKilled_of_occurs hP hL D P hCen S hS i PI k v hw ρ f ⟨hρ, hser⟩ hocc

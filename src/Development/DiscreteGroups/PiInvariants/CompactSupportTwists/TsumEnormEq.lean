@@ -84,10 +84,10 @@ theorem lint_unfold (hb : KerBasic) {φ : X.G → ℂ} (hφ : Tst φ) {f : X.G �
       ∫⁻ y, ‖ker X.Γ (fun w => ((‖φ w‖ : ℝ) : ℂ)) x y * f y‖ₑ ∂X.ν := by
   rw [← lintegral_tsum]
   · refine lintegral_congr fun y => ?_
-    simp only [enorm_mul]
+    simp only [eNorm_mul]
     rw [ENNReal.tsum_mul_right, tsum_enorm_eq X hb hφ x y]
   · intro γ
-    exact ((hφ.1.comp (continuous_const.mul continuous_id)).aestronglyMeasurable.mul hf).enorm
+    exact ((hφ.1.comp (continuous_const.mul continuous_id)).aestronglyMeasurable.mul hf).eNorm
 
 theorem unfold (hb : KerBasic) (hl2 : KernelL2RowsColumns) {φ : X.G → ℂ} (hφ : Tst φ) {f : X.G → ℂ}
     (hinv : ∀ γ : X.Γ, ∀ y, f ((γ : X.G) * y) = f y) (hf : MemLp f 2 X.ν) (x : X.G) :

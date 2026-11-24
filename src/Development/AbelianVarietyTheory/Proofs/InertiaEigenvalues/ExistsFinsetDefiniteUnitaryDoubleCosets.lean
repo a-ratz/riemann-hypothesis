@@ -82,7 +82,7 @@ theorem finAdEquiv_smul (a : FiniteAdeleRing (𝓞 F) F) (y : FiniteAdeleRing (�
   | add y z hy hz => rw [smul_add, map_add (f := _), map_add (f := _), hy, hz, mul_add]
 
 theorem continuous_finAdEquiv : Continuous (GlobalTheory.LFun.finAdEquiv F E) := by
-  haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E) := ⟨rfl⟩
   let φ : (FiniteAdeleRing (𝓞 F) F ⊗[F] E) →ₛₗ[GlobalTheory.AdeleBaseChange.adMap F E] FiniteAdeleRing (𝓞 E) E :=
     { toFun := GlobalTheory.LFun.finAdEquiv F E
       map_add' := map_add _
@@ -109,7 +109,7 @@ local notation3 "F₀" => maximalRealSubfield E
 theorem conjFin_adMap (a : FiniteAdeleRing (𝓞 F₀) F₀) :
     conjFin (IsCMField.complexConj E).toRingEquiv (GlobalTheory.AdeleBaseChange.adMap F₀ E a) =
       GlobalTheory.AdeleBaseChange.adMap F₀ E a := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
   refine congrFun ((GlobalTheory.AdeleCharTwist.denseRange_fin (F := F₀)).equalizer
     ((continuous_conjFin _).comp (continuous_adMap F₀ E)) (continuous_adMap F₀ E) (funext fun k => ?_)) a
   simp only [Function.comp_apply]
@@ -223,7 +223,7 @@ theorem continuous_finGL (n : ℕ) : Continuous (finGL E n) := by
     (continuous_id.matrix_map hs : Continuous fun x : Matrix (Fin n) (Fin n) (FiniteAdeleRing (𝓞 E) E) => x.map (sFin E)))
 
 theorem continuous_psi (n : ℕ) : Continuous (psi E n) :=
-  (Continuous.units_map _ (continuous_id.matrix_map (continuous_finAdEquiv F₀ E))).comp continuous_subtype_val
+  (Continuous.units_map _ (continuous_id.matrix_map (continuous_finAdEquiv F₀ E))).comp continuous_subtypeVal
 
 theorem continuous_jF (n : ℕ) : Continuous (jF E n) :=
   (((continuous_finGL (E := E) n).comp (continuous_psi (E := E) n)).subtype_mk _).subtype_mk _

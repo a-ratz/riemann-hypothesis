@@ -46,10 +46,10 @@ theorem UpperTheory.Kd.C7.pKumTriv :
     UpperTheory.Kd.C7.SKumTriv := by
   intro l _ _ Ω _ _ _ A _ ζ hζ m n hnm u hu h
   have hp : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
-    haveI : NeZero (l ^ i) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
+    have : NeZero (l ^ i) := ⟨pow_ne_zero _ hp.ne_zero⟩
     exact ⟨⟨ζ i, (hζ i).1⟩, inferInstance⟩
   have hpos : 0 < l ^ n := pow_pos hp.pos n
   obtain ⟨v, hv⟩ := IsAlgClosed.exists_pow_nat_eq u hpos

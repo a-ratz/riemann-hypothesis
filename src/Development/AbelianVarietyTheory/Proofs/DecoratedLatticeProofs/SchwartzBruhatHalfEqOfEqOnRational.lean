@@ -71,7 +71,7 @@ variable {D : D7}
 theorem coe_stdLat (n : ℕ) :
     ((Formalism.L2.Pj.stdLat D.host.E n : Submodule _ _) : Set (Fin n → D.host.E)) = intVec D n := by
   ext x
-  simp only [SetLike.mem_coe, GlobalTheory.LocM.Unim.mem_stdLat, intVec, Set.mem_setOf_eq]
+  simp only [SetLike.mem_coe, GlobalTheory.LocM.Unim.mem_stdLat, intVec, Set.mem_ofPred_eq]
   constructor
   · intro h k
     obtain ⟨c, hc⟩ := h k

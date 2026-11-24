@@ -184,8 +184,8 @@ theorem gram_re_posdef_adj : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (
   set B := reHermBilin Hm with hBdef
   have hB : ∀ z w, B z w = (hermForm Hm z w).re := fun _ _ => rfl
   have hind : LinearIndependent ℝ (fun i => P (e i)) := by
-    haveI : DiscreteTopology (LinearMap.range P.toIntLinearMap) := hdisc
-    haveI : IsZLattice ℝ (LinearMap.range P.toIntLinearMap) := ⟨hspan⟩
+    have : DiscreteTopology (LinearMap.range P.toIntLinearMap) := hdisc
+    have : IsZLattice ℝ (LinearMap.range P.toIntLinearMap) := ⟨hspan⟩
     let bL := e.map (LinearEquiv.ofInjective P.toIntLinearMap hinj)
     have hfun : (fun i => P (e i)) = ⇑(bL.ofZLatticeBasis ℝ (LinearMap.range P.toIntLinearMap)) := by
       funext i
@@ -446,7 +446,7 @@ theorem isSemisimpleRing_of_posForm_adjoint_closed :
     apply hnd
     rw [key, show bᴴ * Q * b = Q * (b * b) by rw [← hb, Matrix.mul_assoc], ← Matrix.mulVec_mulVec, hw,
       Matrix.mulVec_zero, dotProduct_zero]
-  haveI : IsArtinianRing S := IsArtinianRing.of_finite ℂ _
+  have : IsArtinianRing S := IsArtinianRing.of_finite ℂ _
   rw [IsArtinianRing.isSemisimpleRing_iff_jacobson, eq_bot_iff]
   intro x hx
   rw [Ideal.mem_bot]
@@ -682,7 +682,7 @@ theorem retype : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
   let F : (Fin m → ℂ) → (S →ₐ[ℂ] Matrix (Fin g) (Fin g) ℂ) := fun b =>
     if hb : b ∈ B' then restr (V b) (R b) S (hVR b hb) (hSV b hb.1)
     else restr (V b₀) (R b₀) S (hVR b₀ hb₀') (hSV b₀ hb₀)
-  have hF : ∀ b (hb : b ∈ B'), F b = restr (V b) (R b) S (hVR b hb) (hSV b hb.1) := fun b hb => dif_pos hb
+  have hF : ∀ b (hb : b ∈ B'), F b = restr (V b) (R b) S (hVR b hb) (hSV b hb.1) := fun b hb => dite_eq_left hb
   have hFd : ∀ a i j, DifferentiableOn ℂ (fun b => F b a i j) B' := by
     intro a i j
     refine DifferentiableOn.congr (f := fun b => (V b * a.1 * R b) i j) ?_ ?_
@@ -715,7 +715,7 @@ theorem retype : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
       obtain ⟨v, hv, hv'⟩ := hy
       exact ⟨v * u, S.mul_mem hv hu, by
         rw [← Matrix.mul_assoc, hv', Matrix.mul_assoc, hu', Matrix.conjTranspose_mul, Matrix.mul_assoc]⟩
-  haveI : IsSemisimpleRing S := _root_.GlobalTheory.isSemisimpleRing_of_posForm_adjoint_closed _ Q S hQh hQp hcl
+  have : IsSemisimpleRing S := _root_.GlobalTheory.isSemisimpleRing_of_posForm_adjoint_closed _ Q S hQh hQp hcl
   obtain ⟨B'', h, hB''o, hb₀'', hB''sub, hh1, hhd, hhu⟩ := _root_.GlobalTheory.holFamily_conj_const S g m B' b₀ F hB'o hb₀' hFd
   refine ⟨B'', fun b => (h b)⁻¹, hB''o, hb₀'', hB''sub.trans Set.inter_subset_left, by simp [hh1], ?_, ?_⟩
   · exact dOn_inv h hhd (fun b hb => ((Matrix.isUnit_iff_isUnit_det _).1 (hhu b hb).1).ne_zero)
@@ -791,7 +791,7 @@ theorem holomorphic_map_lifts_to_periods : ∀ (O : Type) [Ring O] (bar : O → 
   intro O _ bar g ρ Λ F N D' t m B y b₀ P₀ e₀ hN heta hlft hB hb₀ hyσ hy hU
   obtain ⟨-, hper₀, hexp₀, hker₀, hact₀, hweil₀, heta₀⟩ := hU
   have hab : IsAbelianScheme F.A := F.ab
-  haveI := hab.proper
+  have := hab.proper
   obtain ⟨B₁, e, r, hB₁, hb₁, hB₁B, rfl, hr, hol, he, hl⟩ :=
     GlobalTheory.RelExp.exists_relative_exp ℂ (RingHom.id ℂ) F.X F.s F.A g m B y b₀ e₀ hlft hab F.dim hB hb₀ hyσ hy hexp₀
   change GlobalTheory.LocLift.HasLifts B₁ y e at hl
@@ -823,7 +823,7 @@ theorem holomorphic_map_lifts_to_periods : ∀ (O : Type) [Ring O] (bar : O → 
     exact differentiableOn_pi.1 (hL2 a (Pi.single j 1)) i
   have hk1 : ∀ b ∈ C, ∀ x, e b (P b x) = 1 := fun b hb x => ((hball b hb).1.2.1 _).2 ⟨x, rfl⟩
   have hlin : ∀ (a : O) x, ∀ b ∈ C, P b (a • x) - L a b (P b x) = 0 := fun a x => by
-    haveI := F.hom a
+    have := F.hom a
     have hd : ContinuousOn (fun b => P b (a • x) - L a b (P b x)) C := by
       refine ((hPd _).sub ((hmv (M := fun b => LinearMap.toMatrix' (L a b)) (β := id)
         (fun i j => (hLm a i j).mono hC₁) (hPd x)).congr fun b _ => ?_)).continuousOn
@@ -914,7 +914,7 @@ theorem holomorphic_map_lifts_to_periods : ∀ (O : Type) [Ring O] (bar : O → 
       hex, hker, fun a z => ?_, hweil', fun a => ?_⟩
     · simp only [hP']
       exact (hh b hb).2 a x
-    · haveI := F.hom a
+    · have := F.hom a
       have := hL1 a b hb1 ((h b)⁻¹ *ᵥ z)
       rw [← hclaim, hinv' b hb] at this
       exact this

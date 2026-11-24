@@ -89,7 +89,7 @@ private theorem isClosed_Nset' : IsClosed (_root_.Formalism.QuantumDeterminants.
       ⋂ (i : Fin (2 * r + k + 1)) (j : Fin (2 * r + k + 1)) (_ : r ≤ (j : ℕ)) (_ : (j : ℕ) ≤ r + k)
         (_ : r ≤ (i : ℕ)), {g | g i j = if i = j then 1 else 0}) := by
     ext g
-    simp only [_root_.Formalism.QuantumDeterminants.Nset, _root_.Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [_root_.Formalism.QuantumDeterminants.Nset, _root_.Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [e]
   refine IsClosed.inter (isClosed_eq ?_ continuous_const) (IsClosed.inter ?_ ?_)
   · exact (continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul continuous_id
@@ -197,7 +197,7 @@ theorem _root_.GlobalTheory.Amp.RootMove.rootMeas_move : ∀ (D : _root_.Formali
   · rw [Measure.map_apply hc'.measurable (_root_.GlobalTheory.Amp.RootMove.measurableSet_notR _)]
     refine measure_mono_null ?_ hnull
     intro x hx
-    simp only [Set.mem_preimage, Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hx ⊢
     intro hR
     apply hx
     obtain ⟨hR1, hR2⟩ := hR

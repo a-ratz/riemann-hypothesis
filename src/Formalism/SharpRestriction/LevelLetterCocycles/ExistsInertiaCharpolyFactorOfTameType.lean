@@ -583,7 +583,7 @@ theorem isHeckeGalois_of_conj (i : N.Loc) (x : N.X i) (ρ : G H.E N.Om →* GL (
     exact (continuous_apply b).comp ((continuous_apply a).comp hcm)
   ·
     have h1 : IsSSRep (mapRep (iotaOQ N A i) r) := isSSRep_conj ρ _ Pm h hss
-    letI : Algebra (Kf N i) (Qbar (N.l i)) := (A.iotaQ i).toAlgebra
+    let : Algebra (Kf N i) (Qbar (N.l i)) := (A.iotaQ i).toAlgebra
     exact isSSRep_descent (L := Qbar (N.l i)) (mapRep (algebraMap (N.O i) (Kf N i)) r) h1
   ·
     intro w hw B σ hB hσ
@@ -1826,9 +1826,9 @@ theorem galois_clause_iff_reduced (i : N.Loc) (hDel : Del N i) : ConclusionG5 N 
       exact Y_of_b N r hG w hl Pp hu hk c φ hφ γ hγ
     · refine Y_of_a N r hG w hl (hDel w hS hp) (ha ?_) c φ hφ γ hγ
       by_cases hlp : N.l i = H.pde
-      · rw [if_pos hlp] at hp
+      · rw [ite_eq_left hlp] at hp
         exact Or.inr (Or.inr ⟨hlp, hp⟩)
-      · rw [if_neg hlp] at hp
+      · rw [ite_eq_right hlp] at hp
         exact Or.inr (Or.inl hp)
 
 end At

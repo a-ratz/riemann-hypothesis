@@ -87,11 +87,11 @@ theorem lintegral_thetaSum_schr_sq : ∀ (F : Type) [Field F] [NumberField F] (�
         μ 𝓕₁ * ∑' ξ : κ → F, ‖Φ ((fun i => algebraMap F (AF F) (ξ i)) + x)‖ₑ ^ 2 := by
   intro F _ _ ψ hψ κ _ μ hμ 𝓕₁ hF hfin Φ hΦ x
   classical
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : Countable F := countable_numberField F
-  haveI : IsFiniteMeasure (μ.restrict 𝓕₁) := isFiniteMeasure_restrict.mpr hfin
-  haveI := hμ
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : Countable F := countable_numberField F
+  have : IsFiniteMeasure (μ.restrict 𝓕₁) := isFiniteMeasure_restrict.mpr hfin
+  have := hμ
   obtain ⟨hcont, hnorm, htriv, s0, hs0⟩ := hψ
   obtain ⟨emb, hemb⟩ : ∃ emb : (κ → F) → (κ → AF F), emb = fun ξ i => algebraMap F (AF F) (ξ i) := ⟨_, rfl⟩
   obtain ⟨a, ha⟩ : ∃ a : (κ → F) → ℂ, a = fun ξ => Φ (emb ξ + x) := ⟨_, rfl⟩
@@ -132,7 +132,7 @@ theorem lintegral_thetaSum_schr_sq : ∀ (F : Type) [Field F] [NumberField F] (�
       congr 1; funext ξ
       subst ha he hemb
       simp only [AddChar.map_add_eq_mul]; ring
-    rw [this, enorm_mul, ← ofReal_norm_eq_enorm (ψ _), hnorm, ENNReal.ofReal_one, one_mul]
+    rw [this, eNorm_mul, ← ofReal_norm (ψ _), hnorm, ENNReal.ofReal_one, one_mul]
   have hgsq_int : Integrable (fun y => ‖g y‖ ^ 2) (μ.restrict 𝓕₁) :=
     Integrable.of_bound (hg_cont.norm.pow 2).aestronglyMeasurable ((∑' ξ, ‖a ξ‖) ^ 2) (ae_of_all _ fun y => by
       rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
@@ -141,7 +141,7 @@ theorem lintegral_thetaSum_schr_sq : ∀ (F : Type) [Field F] [NumberField F] (�
       ENNReal.ofReal (∫ y in 𝓕₁, ‖g y‖ ^ 2 ∂μ) := by
     rw [ofReal_integral_eq_lintegral_ofReal hgsq_int (ae_of_all _ fun y => sq_nonneg _)]
     refine lintegral_congr fun y => ?_
-    rw [h1, ← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [h1, ← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
   have hcomp : ∀ y, ((‖g y‖ ^ 2 : ℝ) : ℂ) =
       ∑' p : (κ → F) × (κ → F), a p.1 * (starRingEnd ℂ) (a p.2) * e (p.1 - p.2) y := by
     intro y
@@ -170,7 +170,7 @@ theorem lintegral_thetaSum_schr_sq : ∀ (F : Type) [Field F] [NumberField F] (�
       simp_rw [this]; rw [setIntegral_const]; simp
     · obtain ⟨i, hi⟩ : ∃ i, ζ i ≠ 0 := by
         by_contra h; push_neg at h; exact hζ (funext h)
-      haveI : Countable (GlobalTheory.ThetaParseval.ratVec F κ) := by
+      have : Countable (GlobalTheory.ThetaParseval.ratVec F κ) := by
         refine Function.Surjective.countable (f := fun ρ : κ → F => (⟨emb ρ, ?_⟩ : GlobalTheory.ThetaParseval.ratVec F κ)) ?_
         · exact (GlobalTheory.ThetaParseval.mem_ratVec_iff _).2 ⟨ρ, by rw [hemb]⟩
         · rintro ⟨r, hr⟩
@@ -195,8 +195,8 @@ theorem lintegral_thetaSum_schr_sq : ∀ (F : Type) [Field F] [NumberField F] (�
     intro p
     rw [integral_const_mul, horth]
     by_cases h : p.1 = p.2
-    · rw [if_pos (sub_eq_zero.mpr h), if_pos h, h, Complex.mul_conj']; push_cast; ring
-    · rw [if_neg (sub_ne_zero.mpr h), if_neg h, mul_zero]
+    · rw [ite_eq_left (sub_eq_zero.mpr h), ite_eq_left h, h, Complex.mul_conj']; push_cast; ring
+    · rw [ite_eq_right (sub_ne_zero.mpr h), ite_eq_right h, mul_zero]
   have hI : ∫ y in 𝓕₁, ‖g y‖ ^ 2 ∂μ = (∑' ξ, ‖a ξ‖ ^ 2) * μ.real 𝓕₁ := by
     apply Complex.ofReal_injective
     rw [← integral_complex_ofReal]
@@ -205,12 +205,12 @@ theorem lintegral_thetaSum_schr_sq : ∀ (F : Type) [Field F] [NumberField F] (�
     simp_rw [hFval]
     have hinj : Function.Injective (fun ξ : κ → F => (ξ, ξ)) := fun _ _ h => (Prod.ext_iff.1 h).1
     rw [← hinj.tsum_eq]
-    · simp only [if_true]
+    · simp only [ite_true]
       rw [← tsum_mul_right, Complex.ofReal_tsum]
     · intro p hp
       by_cases h : p.1 = p.2
       · exact ⟨p.1, Prod.ext rfl h⟩
-      · exact absurd (if_neg h) hp
+      · exact absurd (ite_eq_right h) hp
   have hsq : Summable fun ξ => ‖a ξ‖ ^ 2 :=
     Summable.of_nonneg_of_le (fun _ => sq_nonneg _)
       (fun ξ => by
@@ -221,6 +221,6 @@ theorem lintegral_thetaSum_schr_sq : ∀ (F : Type) [Field F] [NumberField F] (�
     ENNReal.ofReal_tsum_of_nonneg (fun _ => sq_nonneg _) hsq]
   congr 1
   refine tsum_congr fun ξ => ?_
-  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm, ha, hemb]
+  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm, ha, hemb]
 
 end GlobalTheory.ThetaParsevalInner

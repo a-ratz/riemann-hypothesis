@@ -99,11 +99,11 @@ theorem crd_mul (M : Matrix (Fin d.m) (Fin d.m) (AE F E)) (Y : Mx F E d.m d.n) :
   rw [Matrix.mul_apply, Finset.sum_congr rfl fun i' _ => by rw [hY i']]
 
   simp only [Matrix.mulVec, dotProduct, Fintype.sum_prod_type, mh, ite_mul, zero_mul, Finset.sum_ite_eq,
-  Finset.mem_univ, if_true, Finset.mul_sum, mul_smul_comm, map_sum, map_smul, Finsupp.coe_finsetSum,
+  Finset.mem_univ, ite_true, Finset.mul_sum, mul_smul_comm, map_sum, map_smul, Finsupp.coe_finsetSum,
   Finset.sum_apply, Finsupp.smul_apply, smul_eq_mul]
   refine Finset.sum_congr rfl fun i' _ => ?_
   rw [Finset.sum_eq_single j (fun b _ hb => by simp [Ne.symm hb]) (fun h => absurd (Finset.mem_univ j) h)]
-  simp only [if_true]
+  simp only [ite_true]
   exact Finset.sum_congr rfl fun k' _ => mul_comm _ _
 
 theorem mulVec_ext {A B : Matrix (Ix d) (Ix d) (AF F)} (h : ∀ c, A *ᵥ c = B *ᵥ c) : A = B := by
@@ -123,7 +123,7 @@ theorem mh_one : mh d 1 = 1 :=
     rw [← crd_mul, Matrix.one_mul, crd_cmb, Matrix.one_mulVec]
 
 theorem continuous_mh : Continuous (mh d) := by
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   refine continuous_pi fun p => continuous_pi fun q => ?_
   simp only [mh]
   split_ifs
@@ -138,10 +138,10 @@ def mhU : GL (Fin d.m) (AE F E) →* GL (Ix d) (AF F) :=
 theorem continuous_mhU_inv : Continuous fun h : UA σ d.A.J => mhU d ((h : GL (Fin d.m) (AE F E))⁻¹) := by
   rw [Units.continuous_iff]
   have h1 : Continuous fun h : UA σ d.A.J => ((h : GL (Fin d.m) (AE F E)) : Matrix (Fin d.m) (Fin d.m) (AE F E)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have h2 : Continuous fun h : UA σ d.A.J =>
       (((h : GL (Fin d.m) (AE F E))⁻¹ : GL (Fin d.m) (AE F E)) : Matrix (Fin d.m) (Fin d.m) (AE F E)) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   refine ⟨(continuous_mh d).comp h2, ?_⟩
   simp only [← map_inv, inv_inv]
   exact (continuous_mh d).comp h1

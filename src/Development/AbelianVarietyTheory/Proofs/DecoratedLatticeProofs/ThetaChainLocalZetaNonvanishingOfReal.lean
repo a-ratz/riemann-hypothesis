@@ -173,13 +173,13 @@ theorem zetaNe_of_real : ∀ D : D7, MetEx D → LevFacts D → LevelLaw D → C
     by_contra hni
     exact hz (integral_undef hni)
   refine ⟨?_, ?_⟩
-  · rw [setIntegral_eq_of_subset_of_forall_diff_eq_zero hmOff hAsub hoff]
+  · rw [setIntegral_eq_of_subset_of_forall_sdiff_eq_zero hmOff hAsub hoff]
     rw [(hint _ _ (hzInt.const_mul (conj (ip u u))) hlawZ).2, integral_const_mul]
     exact mul_ne_zero hcipu hz
   · intro a hmaj hcomp
     obtain ⟨s₁, hs₁, hI⟩ := hzI a hmaj hcomp
     refine ⟨s₁, hs₁, ?_⟩
-    refine IntegrableOn.of_forall_diff_eq_zero (s := {g : GA D s.V | Lev.finE s.V g ∈ Formalism.L2.DIV.lev D.sp.cm s.V.gram s.β s.L}) ?_ hmOff ?_
+    refine IntegrableOn.of_forall_sdiff_eq_zero (s := {g : GA D s.V | Lev.finE s.V g ∈ Formalism.L2.DIV.lev D.sp.cm s.V.gram s.β s.L}) ?_ hmOff ?_
     · refine (hint _ _ (hI.const_mul (conj (ip u u))) ?_).1
       intro b κ hκ
       rw [hlawZ b κ hκ, hgtS_mul_lev hs.selfDual hLF3 a b κ hκ, mul_assoc]

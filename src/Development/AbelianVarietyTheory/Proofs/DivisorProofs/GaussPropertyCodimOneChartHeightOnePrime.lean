@@ -101,7 +101,7 @@ theorem height_le_one {R : Type} [CommRing R] (q : Sp R) (h : Order.coheight q �
     q.asIdeal.height ≤ 1 := by
   rw [coheight_le_one_iff] at h
   have : q.asIdeal.IsPrime := q.2
-  letI : Algebra R ((Sp R).presheaf.stalk q) := StructureSheaf.stalkAlgebra R q
+  let : Algebra R ((Sp R).presheaf.stalk q) := StructureSheaf.stalkAlgebra R q
   have : IsLocalization.AtPrime ((Sp R).presheaf.stalk q) q.asIdeal :=
     StructureSheaf.IsLocalization.to_stalk R q
   rw [IsLocalization.AtPrime.ringKrullDim_eq_height q.asIdeal] at h
@@ -191,7 +191,7 @@ theorem dvr_of_height {E : Type} [CommRing E] [IsRegularLocalRing E] [IsDomain E
 theorem height_le_of_map {A E : Type} [CommRing A] [IsNoetherianRing A] [CommRing E] [IsLocalRing E]
     [IsNoetherianRing E] (a : A →+* E) (q : Ideal A) [q.IsPrime] (hq : q.height ≤ 1)
     (h₁ : (maximalIdeal E).comap a = q) (h₂ : q.map a = maximalIdeal E) : (maximalIdeal E).height ≤ 1 := by
-  letI := a.toAlgebra
+  let := a.toAlgebra
   have : (maximalIdeal E).LiesOver q := ⟨h₁.symm⟩
   refine (Ideal.height_le_height_add_of_liesOver q (maximalIdeal E)).trans ?_
   have h₃ : q.map (algebraMap A E) = maximalIdeal E := h₂
@@ -204,7 +204,7 @@ theorem height_le_of_map {A E : Type} [CommRing A] [IsNoetherianRing A] [CommRin
 
 theorem injective_of_flat {A E : Type} [CommRing A] [IsDomain A] [CommRing E] [Nontrivial E]
     {a : A →+* E} (h : a.Flat) : Function.Injective a := by
-  letI := a.toAlgebra
+  let := a.toAlgebra
   have : Module.Flat A E := h
   exact FaithfulSMul.algebraMap_injective A E
 
@@ -228,7 +228,7 @@ variable {R₁ F₁ : Type} [CommRing R₁] [CommRing F₁] (c : R₁ →+* F₁
 
 theorem mem_spanBy_iff (T : Set F₁) (v : F₁) :
     v ∈ spanBy c T ↔ letI := c.toAlgebra; v ∈ Submodule.span R₁ T := by
-  letI := c.toAlgebra
+  let := c.toAlgebra
   rw [Submodule.mem_span_set']
   constructor
   · rintro ⟨n, r, t, ht, rfl⟩
@@ -252,7 +252,7 @@ theorem spanBy_smul {T : Set F₁} (r : R₁) {u : F₁} (hu : u ∈ spanBy c T)
 theorem spanBy_induction {T : Set F₁} {P : F₁ → Prop} (h₀ : P 0) (h₁ : ∀ t ∈ T, P t)
     (h₂ : ∀ u v, P u → P v → P (u + v)) (h₃ : ∀ r u, P u → P (c r * u)) {v : F₁}
     (hv : v ∈ spanBy c T) : P v := by
-  letI := c.toAlgebra
+  let := c.toAlgebra
   rw [mem_spanBy_iff] at hv
   induction hv using Submodule.span_induction with
   | mem x hx => exact h₁ x hx
@@ -285,8 +285,8 @@ theorem descent {R₁ E : Type} [CommRing R₁] [CommRing E] [IsLocalRing E] (a 
     (e : Fin J → E) (h : ∀ i, a (p i) = ∑ j, e j * a (g j i)) :
     ∃ s, s ∉ q ∧ ∃ r : Fin J → R₁, ∀ i, s * p i = ∑ j, r j * g j i := by
   classical
-  letI : Algebra R₁ E := a.toAlgebra
-  haveI : Module.Flat R₁ E := ha
+  let : Algebra R₁ E := a.toAlgebra
+  have : Module.Flat R₁ E := ha
   let A : Matrix (Fin (J + 1)) (Fin m) R₁ := Fin.cons p g
   let xv : Fin (J + 1) → E := Fin.cons 1 (fun j => -e j)
   let f : (Fin m → R₁) →ₗ[R₁] (Fin (J + 1) → R₁) := A.mulVecLin
@@ -353,7 +353,7 @@ theorem exists_indep_denom {R₁ F₁ : Type} [CommRing R₁] [IsDomain R₁] [F
       (∀ r : Fin m → R₁, ∑ i, c₁ (r i) * b i = 0 → r = 0) ∧ δ ≠ 0 ∧
         ∀ l, c₁ δ * y l = ∑ i, c₁ (G l i) * b i := by
   classical
-  letI : Algebra R₁ F₁ := c₁.toAlgebra
+  let : Algebra R₁ F₁ := c₁.toAlgebra
   obtain ⟨s, hs, hmax⟩ := exists_maximal_linearIndepOn R₁ y
   have hex : ∀ l, ∃ a : R₁, a ≠ 0 ∧ a • y l ∈ Submodule.span R₁ (y '' s) := by
     intro l
@@ -508,7 +508,7 @@ theorem fnOf_appLE_top (D : Type) [CommRing D] {X' : Scheme.{0}} [IsIntegral X']
 
 theorem fnOf_preimage_mem_spanBy : ∀ (T D : Type) [CommRing T] [CommRing D] (a : T →+* D) (X X' : Scheme.{0}) [IsIntegral X] [IsIntegral X'] (p : X ⟶ Sp T) (p' : X' ⟶ Sp D) (π : X' ⟶ X) (θ : X.functionField →+* X'.functionField), IsPullback π p' p (spMap a) → PFF (𝟙 _) π θ → ∀ (U : X.Opens) (hU : genericPoint X ∈ U) (hU' : genericPoint X' ∈ π ⁻¹ᵁ U), IsAffineOpen U → ∀ s : Γ(X', π ⁻¹ᵁ U), GlobalTheory.Cartier.fnOf (π ⁻¹ᵁ U) hU' s ∈ spanBy (GlobalTheory.Desc.cst p') (θ '' Set.range (GlobalTheory.Cartier.fnOf U hU)) := by
   intro T D _ _ a X X' _ _ p p' π θ H hθ U hU hU' hAff s
-  letI : Algebra D X'.functionField := (GlobalTheory.Desc.cst p').toAlgebra
+  let : Algebra D X'.functionField := (GlobalTheory.Desc.cst p').toAlgebra
   set M : Submonoid X'.functionField := ((θ.comp (fnOf U hU)).rangeS).toSubmonoid with hM
   have hMset : (M : Set X'.functionField) = θ '' Set.range (fnOf U hU) := by
     ext v; simp [hM, Set.range_comp]
@@ -849,9 +849,9 @@ theorem gaussAt_comp_alg {T E F F' FE : Type} [CommRing T] [IsDomain T] [IsPrinc
 
 theorem gaussAt_comp : ∀ (T E F F' FE : Type) [CommRing T] [IsDomain T] [IsPrincipalIdealRing T] [CommRing E] [IsDomain E] [Field F] [Field F'] [Field FE] (b : T →+* E) (c' : T →+* F') (cE : E →+* FE) (θ : F →+* F') (θb : F' →+* FE) (q : Ideal T) [q.IsPrime] (Q : Ideal E) [Q.IsPrime] (W : Set F) (W' : Set F') (WE : Set FE), Function.Injective b → Function.Injective c' → (∀ s, s ∉ q → b s ∉ Q) → θb.comp c' = cE.comp b → LinDisj c' cE θb → (0 : F') ∈ W' → (∀ u ∈ W', ∀ v ∈ W', u + v ∈ W') → (∀ (t : T), ∀ u ∈ W', c' t * u ∈ W') → GaussAt c' q θ W W' → GaussAt cE Q θb W' WE → GaussAt cE Q (θb.comp θ) W WE := by
   intro T E F F' FE _ _ _ _ _ _ _ _ b c' cE θ θb q _ Q _ W W' WE hb hc' hq hcomm hL h0 hadd hsmul G₁ G₂
-  letI : Algebra T E := b.toAlgebra
-  letI : Algebra T F' := c'.toAlgebra
-  letI : Algebra E FE := cE.toAlgebra
+  let : Algebra T E := b.toAlgebra
+  let : Algebra T F' := c'.toAlgebra
+  let : Algebra E FE := cE.toAlgebra
   have : Module.IsTorsionFree T F' := Module.isTorsionFree_iff_smul_eq_zero.mpr fun t x h => by
     rw [Algebra.smul_def] at h
     rcases mul_eq_zero.mp h with h | h
@@ -942,7 +942,7 @@ theorem exists_den {X : Scheme.{0}} [IsIntegral X] {U : X.Opens} (hU : IsAffineO
     {u : X.functionField} (hu : RegAt y u) :
     ∃ g s : Γ(X, U), UnitAt y (fnOf U (gen_mem hy) g) ∧ fnOf U (gen_mem hy) g * u = fnOf U (gen_mem hy) s := by
   obtain ⟨a, rfl⟩ := hu
-  letI : Algebra Γ(X, U) (X.presheaf.stalk y) :=
+  let : Algebra Γ(X, U) (X.presheaf.stalk y) :=
     TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨y, hy⟩ : U)
   have hl : IsLocalization.AtPrime (X.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
     hU.isLocalization_stalk ⟨y, hy⟩

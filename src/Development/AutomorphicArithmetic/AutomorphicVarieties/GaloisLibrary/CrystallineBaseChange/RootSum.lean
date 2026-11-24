@@ -70,9 +70,9 @@ private theorem roots_card (f : ℕ) (h1 : 1 ≤ f) (h2 : f ≤ 2) (B : Multiset
 private theorem pairs_card {n q : ℕ} {m : Fin n → ℤ} {wt : ℤ} (D : EigData n q m wt) (f : ℕ) (h1 : 1 ≤ f) (h2 : f ≤ 2) :
     Finite {x : D.S × Multiset ℂ // x.2.map (· ^ f) = D.β x.1} ∧
       Nat.card {x : D.S × Multiset ℂ // x.2.map (· ^ f) = D.β x.1} ≤ 2 ^ n * Nat.card D.S := by
-  haveI := D.fin
-  haveI := Fintype.ofFinite D.S
-  haveI : ∀ s, Finite {C : Multiset ℂ // C.map (· ^ f) = D.β s} := fun s => (roots_card f h1 h2 _).1
+  have := D.fin
+  have := Fintype.ofFinite D.S
+  have : ∀ s, Finite {C : Multiset ℂ // C.map (· ^ f) = D.β s} := fun s => (roots_card f h1 h2 _).1
   let e := Equiv.subtypeProdEquivSigmaSubtype fun (s : D.S) (C : Multiset ℂ) => C.map (· ^ f) = D.β s
   refine ⟨Finite.of_equiv _ e.symm, ?_⟩
   rw [Nat.card_congr e, Nat.card_sigma]
@@ -85,7 +85,7 @@ private theorem pairs_conj {n q : ℕ} {m : Fin n → ℤ} {wt : ℤ} (D : EigDa
     (σ : ℂ ≃+* ℂ) :
     ∃ e : {x : D.S × Multiset ℂ // x.2.map (· ^ f) = D.β x.1} ≃ {x : D.S × Multiset ℂ // x.2.map (· ^ f) = D.β x.1},
       ∀ x, (e x).1.2 = x.1.2.map σ := by
-  haveI := (pairs_card D f h1 h2).1
+  have := (pairs_card D f h1 h2).1
   obtain ⟨e, he⟩ := D.conj σ
   let g : {x : D.S × Multiset ℂ // x.2.map (· ^ f) = D.β x.1} → {x : D.S × Multiset ℂ // x.2.map (· ^ f) = D.β x.1} :=
     fun x => ⟨(e x.1.1, x.1.2.map σ), by
@@ -110,7 +110,7 @@ open UpperTheory.V.Br in
 theorem UpperTheory.V.Br.rootSum :
     UpperTheory.V.Br.RootSum := by
   intro n p hp m wt I _ q f hf D
-  haveI : ∀ i, Finite {x : (D i).S × Multiset ℂ // x.2.map (· ^ f i) = (D i).β x.1} :=
+  have : ∀ i, Finite {x : (D i).S × Multiset ℂ // x.2.map (· ^ f i) = (D i).β x.1} :=
     fun i => (pairs_card (D i) (f i) (hf i).1 (hf i).2.1).1
   have hmem : ∀ i (x : {x : (D i).S × Multiset ℂ // x.2.map (· ^ f i) = (D i).β x.1}), ∀ b ∈ x.1.2,
       b ^ f i ∈ (D i).β x.1.1 := fun i x b hb => by

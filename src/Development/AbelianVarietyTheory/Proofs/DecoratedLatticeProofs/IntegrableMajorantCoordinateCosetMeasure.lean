@@ -169,7 +169,7 @@ theorem maj_integrable : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m n 
   set d := Fintype.card D.what₂.Tau * (m * n) with hd
   refine ⟨2 * d + 2, fun K hK => ?_⟩
   obtain ⟨hcl, hcont, hmeas, hcpt⟩ := (GlobalTheory.T.adelicMatrixSchwartzMajorant_measurable_rationalShift D θ hθ).1 m n K hK
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   set M : ℝ := realSize θ a + 2 * d with hM
   set Q := {x : Mx D m n | InBox K x ∧ realSize θ x ≤ M} with hQdef
   have hQ : μ Q < (⊤ : ℝ≥0∞) := (hcpt M).measure_lt_top
@@ -223,7 +223,7 @@ theorem maj_integrable : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m n 
           simp only [compAt, Matrix.map_apply, Matrix.sub_apply, map_sub]
         rw [e, compAt_shift hθ]
         by_cases hP : P i j
-        · rw [if_pos hP]
+        · rw [ite_eq_left hP]
           refine le_trans ?_ (le_add_of_nonneg_left (norm_nonneg _))
           refine le_trans (Complex.norm_le_abs_re_add_abs_im _) ?_
           set c := compAt θ τ x i j
@@ -239,7 +239,7 @@ theorem maj_integrable : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m n 
           rw [abs_of_nonneg (by linarith : (0 : ℝ) ≤ c.re - ⌊c.re⌋),
             abs_of_nonneg (by linarith : (0 : ℝ) ≤ c.im - ⌊c.im⌋)]
           linarith
-        · rw [if_neg hP, sub_zero]
+        · rw [ite_eq_right hP, sub_zero]
           have : compAt θ τ x i j = compAt θ τ a i j := by
             simp only [compAt, Matrix.map_apply, hx i j hP]
           rw [this]; linarith
@@ -272,18 +272,18 @@ theorem maj_integrable : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m n 
       refine le_trans ?_ (ENNReal.le_tsum ⌊realSize θ x⌋₊)
       have hmem : InBox K x ∧ realSize θ x ≤ ((⌊realSize θ x⌋₊ + 1 : ℕ) : ℝ) :=
         ⟨hb, by push_cast; exact (Nat.lt_floor_add_one _).le⟩
-      simp only [Set.indicator, Set.mem_setOf_eq]
-      rw [if_pos hmem]
-      unfold maj; rw [if_pos hb]
+      simp only [Set.indicator, Set.mem_ofPred_eq]
+      rw [ite_eq_left hmem]
+      unfold maj; rw [ite_eq_left hb]
       apply ENNReal.ofReal_le_ofReal
       apply inv_anti₀ (by positivity)
       apply pow_le_pow_left₀ (by positivity)
       linarith [Nat.floor_le hx0]
-    · unfold maj; rw [if_neg hb, ENNReal.ofReal_zero]; exact bot_le
+    · unfold maj; rw [ite_eq_right hb, ENNReal.ofReal_zero]; exact bot_le
   refine ⟨(hmeas _).aestronglyMeasurable, ?_⟩
   unfold HasFiniteIntegral
   have henorm : ∀ x, ‖maj θ K (2 * d + 2) x‖ₑ = ENNReal.ofReal (maj θ K (2 * d + 2) x) := fun x => by
-    rw [← ofReal_norm_eq_enorm, Real.norm_of_nonneg (maj_nonneg _ _ _ _)]
+    rw [← ofReal_norm, Real.norm_of_nonneg (maj_nonneg _ _ _ _)]
   simp_rw [henorm]
   calc ∫⁻ x, ENNReal.ofReal (maj θ K (2 * d + 2) x) ∂μ
       ≤ ∫⁻ x, ∑' R : ℕ, {x : Mx D m n | InBox K x ∧ realSize θ x ≤ ((R + 1 : ℕ) : ℝ)}.indicator

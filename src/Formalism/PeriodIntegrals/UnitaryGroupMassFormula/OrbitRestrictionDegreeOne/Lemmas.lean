@@ -101,7 +101,7 @@ theorem constantCoeff_logPl (p : ℕ) [Fact p.Prime] {β : Type} (v : Pl D × β
     if (0 : Pl D × β →₀ ℕ) = Finsupp.single (backPl D p v.1 (2 * e), v.2) ((p ^ 2) ^ e)
     then ((p : ℂ_[p]) ^ e)⁻¹ else 0) = 0
   simp only [JetTdeg, Finsupp.sum_zero_index, zero_add, Finset.sum_range_one, pow_zero]
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   exact (Finsupp.single_ne_zero.2 one_ne_zero) h.symm
 
@@ -112,7 +112,7 @@ theorem constantCoeff_jetLogG (p : ℕ) [Fact p.Prime] (d : ℕ) {β : Type*} (v
     if (0 : ZMod d × β →₀ ℕ) = Finsupp.single (v.1 - 2 * (e : ZMod d), v.2) ((p ^ 2) ^ e)
     then ((p : ℂ_[p]) ^ e)⁻¹ else 0) = 0
   simp only [JetTdeg, Finsupp.sum_zero_index, zero_add, Finset.sum_range_one, pow_zero]
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   exact (Finsupp.single_ne_zero.2 one_ne_zero) h.symm
 
@@ -152,12 +152,12 @@ theorem killCompl_logPl (p : ℕ) [Fact p.Prime] (hn : nP D p = 1) {N0 N1 : ℕ}
   · rw [map_zero]
     apply Finset.sum_eq_zero
     intro e _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro heq
     rw [backPl₂ p hn] at heq
     have hk : (p ^ 2) ^ e ≠ 0 := pow_sq_pow_ne_zero p e
     have hmem : ((v.1, v.2) : Pl D × Fin N0 × Fin N1) ∈ (Finsupp.embDomain (embOne z N0 N1) m).support := by
-      rw [heq, Finsupp.support_single_ne_zero _ hk]
+      rw [heq, Finsupp.support_single _ hk]
       exact Finset.mem_singleton_self _
     rw [Finsupp.support_embDomain, Finset.mem_map] at hmem
     obtain ⟨w, _, hw⟩ := hmem

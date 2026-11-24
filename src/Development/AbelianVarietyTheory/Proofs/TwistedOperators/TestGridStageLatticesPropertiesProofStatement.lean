@@ -396,7 +396,7 @@ theorem stageOK : StageOK := by
     have hw : GlobalTheory.Cusp.wittIndex r.sp = GlobalTheory.Cusp.wittIndex (G.V (.core i)) :=
       ((hRL.2.1 (G.V (.core i)) r W.θ _ Mo Set.univ).2.2.2).1
     have hwle : GlobalTheory.Cusp.wittIndex (G.V (.core i)) ≤ Node.neg D.R.m (.core i) := by
-      haveI : IsCMField D.host.E := D.host.isCMField_hostE
+      have : IsCMField D.host.E := D.host.isCMField_hostE
       have hpar := GlobalTheory.IndefiniteRowSideFullHecke.WittIndexParallel.parallelSig_of_sigOK hV.sigOK (fun τ => hV.sig τ)
       obtain ⟨U, hU, e⟩ := (GlobalTheory.Cusp.isGreatest_wittIndex ((G.V (.core i)) : HSpace D.host.E)).1
       obtain ⟨τ⟩ : Nonempty (D.host.E →+* ℂ) := inferInstance

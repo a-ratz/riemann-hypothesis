@@ -66,7 +66,7 @@ theorem tof_shell_term (d k : ℕ) (hd : 2 ≤ d) :
   have hd' : (2 : ℝ) ≤ d := by exact_mod_cast hd
   have hE : Real.exp (-1) * Real.exp (1 - Real.pi / 2) ^ k =
       Real.exp (-1 + k * (1 - Real.pi / 2)) := by
-    rw [← Real.exp_nat_mul, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add]
   rw [hE]
   have key : (3 * ((k : ℝ) + 1)) ^ d ≤
       (3 * (d : ℝ)) ^ d * Real.exp (Real.pi / 2 * (k : ℝ) ^ 2 + (-1 + k * (1 - Real.pi / 2))) := by
@@ -101,7 +101,7 @@ theorem tof_shell_term (d k : ℕ) (hd : 2 ≤ d) :
         have h1 : ((k : ℝ) + 1) ^ d ≤ Real.exp ((k : ℝ) * k) := by
           calc ((k : ℝ) + 1) ^ d ≤ (Real.exp k) ^ d :=
                 pow_le_pow_left₀ (by positivity) (by linarith [Real.add_one_le_exp (k : ℝ)]) d
-            _ = Real.exp (d * k) := by rw [← Real.exp_nat_mul]
+            _ = Real.exp (d * k) := by rw [← Real.exp_natCast_mul]
             _ ≤ Real.exp (k * k) := Real.exp_le_exp.mpr (by nlinarith)
         have h2 : (k : ℝ) * k ≤ Real.pi / 2 * (k : ℝ) ^ 2 + (-1 + k * (1 - Real.pi / 2)) := by
           have hkk : 2 ≤ (k : ℝ) * ((k : ℝ) - 1) := by nlinarith

@@ -86,7 +86,7 @@ theorem cont_em : Continuous (em E) :=
   Continuous.units_map _ (Continuous.matrix_map continuous_id AdeleBaseChange.continuous_adeleMap)
 
 theorem contOn_iy : ContinuousOn iy ({0}ᶜ : Set ℝ) := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · have e : (fun y : ({0}ᶜ : Set ℝ) => ((iy y : (A ℚ)ˣ) : A ℚ)) = fun y : ({0}ᶜ : Set ℝ) => 1 - TR.sInf ℚ 1 + TR.sInf ℚ fun _ => (y : ℝ) := by
       funext y
@@ -94,7 +94,7 @@ theorem contOn_iy : ContinuousOn iy ({0}ᶜ : Set ℝ) := by
     change Continuous fun y : ({0}ᶜ : Set ℝ) => ((iy y : (A ℚ)ˣ) : A ℚ)
     rw [e]
     refine continuous_const.add (cont_sInf.comp ?_)
-    exact continuous_pi fun _ => continuous_subtype_val
+    exact continuous_pi fun _ => continuous_subtypeVal
   · have e : (fun y : ({0}ᶜ : Set ℝ) => (((iy y)⁻¹ : (A ℚ)ˣ) : A ℚ)) = fun y : ({0}ᶜ : Set ℝ) => 1 - TR.sInf ℚ 1 + TR.sInf ℚ fun _ => (y : ℝ)⁻¹ := by
       funext y
       exact iy_inv_coe y.2
@@ -102,7 +102,7 @@ theorem contOn_iy : ContinuousOn iy ({0}ᶜ : Set ℝ) := by
     rw [e]
     refine continuous_const.add (cont_sInf.comp ?_)
     refine continuous_pi fun _ => ?_
-    exact continuous_subtype_val.inv₀ fun y => y.2
+    exact continuous_subtypeVal.inv₀ fun y => y.2
 
 theorem contOn_curve : ContinuousOn (fun p : ℝ × ℝ => em E (aE (iy p.1) * rot p.2)) (({0}ᶜ : Set ℝ) ×ˢ Set.univ) := by
   refine cont_em.comp_continuousOn (ContinuousOn.mul (continuous_aE.comp_continuousOn ?_) (cont_rot.comp continuous_snd).continuousOn)
@@ -118,7 +118,7 @@ theorem cont_n : Continuous fun q : A E => gl (nU q) := by
     refine continuous_matrix fun i j => ?_
     fin_cases i <;> fin_cases j <;> simp [nU] <;> fun_prop
 
-theorem cont_psi : Continuous (ψ (F := ℚ)) := continuous_subtype_val.comp continuous_adelicChar
+theorem cont_psi : Continuous (ψ (F := ℚ)) := continuous_subtypeVal.comp continuous_adelicChar
 
 theorem cont_mkE (D : Dat ℚ E) : Continuous fun x : Fin 2 → A ℚ => nE D x :=
   cont_n.comp ((AdeleBaseChange.continuous_adeleMap.comp (continuous_apply 0)).add
@@ -136,7 +136,7 @@ theorem cont_Wo (D : Dat ℚ E) {φ : GL (Fin 2) (A E) → ℂ} (hφ : Continuou
     {T : Type} [TopologicalSpace T] [FirstCountableTopology T] {c : T → GL (Fin 2) (A E)} (hc : Continuous c) :
     Continuous fun x => Wo D φ (c x) := by
   obtain ⟨B, hB⟩ := hb
-  haveI : IsFiniteMeasure ((adeleMeasurePi ℚ).restrict (FS2 ℚ)) := ⟨by simpa using adelic_measure_fundamental_domain_pi_rat_lt_top⟩
+  have : IsFiniteMeasure ((adeleMeasurePi ℚ).restrict (FS2 ℚ)) := ⟨by simpa using adelic_measure_fundamental_domain_pi_rat_lt_top⟩
   have hnorm : ∀ x : A ℚ, ‖ψ x‖ = 1 := fun x => Circle.norm_coe _
   refine continuous_of_dominated (bound := fun _ => B) ?_ ?_ (integrable_const _) ?_
   · intro x
@@ -150,7 +150,7 @@ theorem cont_Wo (D : Dat ℚ E) {φ : GL (Fin 2) (A E) → ℂ} (hφ : Continuou
 
 theorem contOn_Wo (D : Dat ℚ E) {φ : GL (Fin 2) (A E) → ℂ} (hφ : Continuous φ) (hb : ∃ B : ℝ, ∀ g, ‖φ g‖ ≤ B) :
     ContinuousOn (fun p : ℝ × ℝ => Wo D φ (em E (aE (iy p.1) * rot p.2))) (({0}ᶜ : Set ℝ) ×ˢ Set.univ) := by
-  rw [continuousOn_iff_continuous_restrict]
-  exact cont_Wo D hφ hb (continuousOn_iff_continuous_restrict.1 contOn_curve)
+  rw [continuousOn_iff_continuous_domRestrict]
+  exact cont_Wo D hφ hb (continuousOn_iff_continuous_domRestrict.1 contOn_curve)
 
 end UpperTheory.ConvolutionTheory.RankTwoDescent.Nz

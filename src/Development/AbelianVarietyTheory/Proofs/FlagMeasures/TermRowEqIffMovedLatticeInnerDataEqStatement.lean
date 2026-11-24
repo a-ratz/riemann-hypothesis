@@ -273,7 +273,7 @@ theorem rat_span_eq (σ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (f f0 : Fin (D.R.r
   have hA : ∀ a b, b < a → U a b = 0 := fun a b h => (hU a b).1 h
   have hd : ∀ i, U i i = 1 := fun i => (hU i i).2 rfl
   have hdet : IsUnit U.det := by
-    rw [Matrix.det_of_upperTriangular (by intro i j h; exact (hU i j).1 h)]
+    rw [Matrix.det_of_isUpperTriangular (by intro i j h; exact (hU i j).1 h)]
     simp [hd]
   apply le_antisymm
   · exact span_tri_le f0 (fun b => σ (f b)) U hA hσ

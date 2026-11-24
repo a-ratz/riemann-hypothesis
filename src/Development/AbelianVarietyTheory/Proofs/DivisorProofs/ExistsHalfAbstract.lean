@@ -91,18 +91,18 @@ theorem exists_sqrt_adele (d : 𝓞 F) : ∃ s ι : Af F, ∀ v,
     ⟨fun v => if ∃ y : Fv F v, y * y = algebraMap F (Fv F v) (d : F) then 1 else 0,
       Filter.Eventually.of_forall fun v => ?_⟩, fun v => ?_⟩
   · by_cases h : ∃ y : Fv F v, y * y = algebraMap F (Fv F v) (d : F)
-    · simp only [h, dif_pos]; exact sqrt_mem_of_int F d v _ h.choose_spec
-    · simp only [h, dif_neg, not_false_iff]; exact zero_mem _
+    · simp only [h, dite_eq_left]; exact sqrt_mem_of_int F d v _ h.choose_spec
+    · simp only [h, dite_eq_right, not_false_iff]; exact zero_mem _
   · by_cases h : ∃ y : Fv F v, y * y = algebraMap F (Fv F v) (d : F)
-    · simp only [h, if_true]; exact one_mem _
-    · simp only [h, if_false]; exact zero_mem _
+    · simp only [h, ite_true]; exact one_mem _
+    · simp only [h, ite_false]; exact zero_mem _
   · by_cases h : ∃ y : Fv F v, y * y = algebraMap F (Fv F v) (d : F)
     · left
-      refine ⟨if_pos h, ?_⟩
+      refine ⟨ite_eq_left h, ?_⟩
       have e : ∀ x : Fv F v, x = h.choose → x * x = algebraMap F (Fv F v) (d : F) := fun x hx => hx ▸ h.choose_spec
-      exact e _ (dif_pos h)
+      exact e _ (dite_eq_left h)
     · right
-      exact ⟨if_neg h, dif_neg h, fun y hy => h ⟨y, hy⟩⟩
+      exact ⟨ite_eq_right h, dite_eq_right h, fun y hy => h ⟨y, hy⟩⟩
 
 theorem af_ext' {x y : Af F} (h : ∀ v, evalV F v x = evalV F v y) : x = y :=
   Subtype.ext (funext fun v => h v)
@@ -318,9 +318,9 @@ theorem cutDet_eq_one (ε : AEF F E) (h : ε * ε = ε) (g : GAF σ J)
   linear_combination mul_det_sub_one ε _ hg
 
 theorem continuous_cutDet (ε : AEF F E) (h : ε * ε = ε) : Continuous (cutDet σ J ε h) := by
-  haveI : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AEF F E) := IsModuleTopology.isTopologicalRing (AF F) (AEF F E)
-  have h0 : Continuous fun g : GAF σ J => matHomF σ J g := continuous_subtype_val
+  have : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AEF F E) := IsModuleTopology.isTopologicalRing (AF F) (AEF F E)
+  have h0 : Continuous fun g : GAF σ J => matHomF σ J g := continuous_subtypeVal
   have h1 : Continuous (mtF σ J) := Units.continuous_val.comp h0
   have h2 : Continuous fun g : GAF σ J => mtF σ J g⁻¹ := by
     have e : (fun g : GAF σ J => mtF σ J g⁻¹) = fun g => ((matHomF σ J g)⁻¹).1 := by

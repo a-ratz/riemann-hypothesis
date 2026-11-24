@@ -105,9 +105,9 @@ variable {F : Type} [Field F] [NumberField F]
 
 private theorem dvd_normV (w : Pl F) : l ∣ normV w ↔ ((l : ℕ) : 𝓞 F) ∈ w.asIdeal := by
   have := w.isMaximal
-  letI := Ideal.Quotient.field w.asIdeal
+  let := Ideal.Quotient.field w.asIdeal
   have : Finite (𝓞 F ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
   rw [normV, Nat.card_eq_fintype_card, ← prime_dvd_char_iff_dvd_card, ← Ideal.Quotient.eq_zero_iff_mem, map_natCast,
     ringChar.spec]
   have hq : (ringChar (𝓞 F ⧸ w.asIdeal)).Prime := CharP.prime_ringChar _

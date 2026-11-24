@@ -171,7 +171,7 @@ variable {D : D7}
 theorem isTypeAt_star (θ : InfFam D) (V : HSp D) (τ : D.what₂.Tau) (P : SPar) (φ : GA D V → ℂ)
     (h : IsTypeAt θ V τ P φ) : IsTypeAt θ V τ (dualPar P) fun g => star (φ g) := by
   obtain ⟨H, i1, i2, σ, lam, ε, Q, hE, hD, hQ, hG, hx⟩ := h
-  letI := i1; letI := i2
+  let := i1; let := i2
   have hJ := GlobalTheory.SmoothAutCheck.gramAt_unit V τ
   have e : ∀ g, rv (Q.submatrix Fin.revPerm (Equiv.refl _) * g * (Q.submatrix Fin.revPerm (Equiv.refl _))⁻¹) =
       Q * g * Q⁻¹ := by

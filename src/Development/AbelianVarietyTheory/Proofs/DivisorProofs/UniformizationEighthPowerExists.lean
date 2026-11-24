@@ -148,7 +148,7 @@ theorem exists_cp_evenOn : Laws → Laws2 → GlobalTheory.LN.Ega → ∀ (V₁ 
   let Q₀ := GlobalTheory.Mum.tqOfGtCoord (U'.gt 0) hB'
   have hm : (maximalIdeal V₁ ^ (0 + 1)).IsMaximal := by
     rw [zero_add, pow_one]; infer_instance
-  letI : Field (V₁ ⧸ maximalIdeal V₁ ^ (0 + 1)) := Ideal.Quotient.field _
+  let : Field (V₁ ⧸ maximalIdeal V₁ ^ (0 + 1)) := Ideal.Quotient.field _
   have : Smooth (thickObj V₁ (maximalIdeal V₁) 0 (powObj G₀ 8)).hom := by
     have := hS8.smooth
     change Smooth (pullback.snd (powObj G₀ 8).hom (thick V₁ (maximalIdeal V₁) 0))
@@ -158,12 +158,12 @@ theorem exists_cp_evenOn : Laws → Laws2 → GlobalTheory.LN.Ega → ∀ (V₁ 
     change GeometricallyConnected (pullback.snd (powObj G₀ 8).hom (thick V₁ (maximalIdeal V₁) 0))
     infer_instance
   have := Q₀.i_hom
-  letI := D'.toPre.addX
-  haveI := D'.toPre.freeX
-  haveI := D'.toPre.finX
+  let := D'.toPre.addX
+  have := D'.toPre.freeX
+  have := D'.toPre.finX
   obtain ⟨s⟩ := GlobalTheory.BiextTriv.main (V₁ ⧸ maximalIdeal V₁ ^ (0 + 1)) D'.toPre.X
     (thickObj V₁ (maximalIdeal V₁) 0 (powObj G₀ 8)) P₀.L P₀.c Q₀.i Q₀.i_hom
-  haveI := hw
+  have := hw
   obtain ⟨σ, hσ⟩ := GlobalTheory.EvenTriv.exists_even_of_surjective h3 Pc w hwL' P₀
     (IsPullback.of_hasPullback (powObj G₀ 8).hom (thick V₁ (maximalIdeal V₁) 0)) hv Q₀.i s
   exact ⟨D'.toPre.X, D'.toPre.addX, D'.toPre.freeX, D'.toPre.finX, Q₀, P₀, ⟨v, hv⟩, σ, hσ⟩
@@ -455,13 +455,13 @@ theorem exists_gen {S T : Scheme.{0}} (f : T ⟶ S) (G₀ : Over S) [GrpObj G₀
   · have hm : ∀ a, IsMonHom (hom ≫ pr a) := fun a => by rw [hhom]; infer_instance
     constructor
     · have h1 := hxu _ (fun a => η[C]) (η ≫ hom) (fun a => by
-        haveI := hm a; rw [Category.assoc]; exact IsMonHom.one_hom (hom ≫ pr a))
-      have h2 := hxu _ (fun a => η[C]) η (fun a => by haveI := hpr a; exact IsMonHom.one_hom (pr a))
+        have := hm a; rw [Category.assoc]; exact IsMonHom.one_hom (hom ≫ pr a))
+      have h2 := hxu _ (fun a => η[C]) η (fun a => by have := hpr a; exact IsMonHom.one_hom (pr a))
       exact h1.trans h2.symm
     · have h1 := hxu _ (fun a => ((hom ≫ pr a) ⊗ₘ (hom ≫ pr a)) ≫ μ[C]) (μ ≫ hom) (fun a => by
-        haveI := hm a; rw [Category.assoc]; exact IsMonHom.mul_hom (hom ≫ pr a))
+        have := hm a; rw [Category.assoc]; exact IsMonHom.mul_hom (hom ≫ pr a))
       have h2 := hxu _ (fun a => ((hom ≫ pr a) ⊗ₘ (hom ≫ pr a)) ≫ μ[C]) ((hom ⊗ₘ hom) ≫ μ) (fun a => by
-        haveI := hpr a; rw [Category.assoc, IsMonHom.mul_hom (pr a), ← Category.assoc, tensorHom_comp_tensorHom])
+        have := hpr a; rw [Category.assoc, IsMonHom.mul_hom (pr a), ← Category.assoc, tensorHom_comp_tensorHom])
       exact h1.trans h2.symm
 
 theorem lift_lamφ {S : Scheme.{0}} {B T : Over S} [GrpObj B] [IsCommMonObj B] (x y : T ⟶ B)
@@ -534,9 +534,9 @@ theorem gen_eighthPower : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : 
     intro g n o _ ζ F W V₁ _ _ _ D₀ G₀ _ _ A₀ U₀ y α α₂ hcart hsq hlb P hP
     obtain ⟨c, ⟨φ, φ₂, hφ, hφsq, hφlb, -⟩, pr, prh, prl, hPL⟩ := hP
     obtain ⟨e, he, heα⟩ := grpPullback_iso hcart hφ
-    haveI := he
-    haveI := U₀.gen_hom
-    haveI : IsMonHom (U₀.gen ≪≫ e).hom := by rw [Iso.trans_hom]; infer_instance
+    have := he
+    have := U₀.gen_hom
+    have : IsMonHom (U₀.gen ≪≫ e).hom := by rw [Iso.trans_hom]; infer_instance
     obtain ⟨gen, hgen, hcoord⟩ := exists_gen (jK V₁) G₀ pr prh prl (U₀.gen ≪≫ e)
     refine ⟨gen, hgen, ?_⟩
     have hA0 := A₀.isLB
@@ -676,9 +676,9 @@ namespace GlobalTheory.SplitPow
 theorem splitExtensionModuloIdeal_eighth_power : ∀ (R : Type) [CommRing R] (G₀ : Over (Sp R)) [GrpObj G₀] [IsCommMonObj G₀] (I : Ideal R),
     GlobalTheory.LN.SplitOver G₀ I → GlobalTheory.LN.SplitOver (powObj G₀ 8) I := by
   intro R _ G₀ _ _ I ⟨E, ⟨D⟩⟩
-  letI := E.grpB
-  haveI := E.free
-  haveI := E.finite
+  let := E.grpB
+  have := E.free
+  have := E.finite
   obtain ⟨p, -⟩ := GlobalTheory.isPowGrp_baseChange _ _ (spMap (Ideal.Quotient.mk I)) (powObj G₀ 8) G₀ 8 (powIsPowGrp G₀ 8)
   obtain ⟨pT, -⟩ := GlobalTheory.exists_isPowGrp_splitTorus (Sp (R ⧸ I)) E.X (Fin 8 → E.X) 8 (AddEquiv.refl _)
   obtain ⟨q', hq, hq1, hq2, hq3, hq4, -⟩ :=
@@ -686,8 +686,8 @@ theorem splitExtensionModuloIdeal_eighth_power : ∀ (R : Type) [CommRing R] (G�
   obtain ⟨i', hi, hi1, -⟩ := GlobalTheory.PowMap.main _ _ _ _ _ 8 pT p D.i
   have hB : IsAbelianScheme (powObj E.B 8) := (GlobalTheory.PowGrp.powers _ _ _ 8 (powIsPowGrp E.B 8)).2.2.2.1 E.isAbelian
   have hk := GlobalTheory.PowKernel.main _ _ _ _ _ _ _ 8 pT p (powIsPowGrp E.B 8) D.i D.q i' q' hi hq D.isKernel
-  haveI : IsCommMonObj ((Over.pullback (spMap (Ideal.Quotient.mk I))).obj G₀) := inferInstance
-  haveI : IsCommMonObj ((Over.pullback (spMap (Ideal.Quotient.mk I))).obj (powObj G₀ 8)) := inferInstance
+  have : IsCommMonObj ((Over.pullback (spMap (Ideal.Quotient.mk I))).obj G₀) := inferInstance
+  have : IsCommMonObj ((Over.pullback (spMap (Ideal.Quotient.mk I))).obj (powObj G₀ 8)) := inferInstance
   have hqc : QuasiCompact D.q.left := by
     have := D.q_affine
     infer_instance
@@ -810,7 +810,7 @@ namespace GlobalTheory.PowE8
 theorem isAdmissibleBase_of_completeNormalLocalCharZero (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁] (h : IsCN V₁) :
     GlobalTheory.LN.admitted V₁ (maximalIdeal V₁) := by
   obtain ⟨h1, h2, h3, h4⟩ := h
-  letI : Field (V₁ ⧸ maximalIdeal V₁) := Ideal.Quotient.field _
+  let : Field (V₁ ⧸ maximalIdeal V₁) := Ideal.Quotient.field _
   exact ⟨⟨h1, inferInstance, h2, h3⟩, h3, h4, inferInstance, inferInstance⟩
 
 theorem exists_unif_pow8 : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : SFam g n ζ) (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], IsCN V₁ → ∀ (D₀ : DegData V₁ (maximalIdeal V₁)) (G₀ : Over (Sp V₁)) [GrpObj G₀] [IsCommMonObj G₀] (A₀ : PolAV (Sp (FractionRing V₁))) (U₀ : Unif (maximalIdeal V₁) D₀ A₀ G₀) (y : Sp (FractionRing V₁) ⟶ F.X) (α : A₀.A.left ⟶ F.univ.A.left) (α₂ : (G2 A₀.A).left ⟶ (G2 F.univ.A).left), IsSemiAbelian G₀ → IsGrpPullback A₀.A F.univ.A y α → IsSquare α α₂ → LBIso (abelian₂ A₀.A A₀.L) (F.univ.P.pull α₂) → ∀ P : PolAV (Sp (FractionRing V₁)), SharpOver F W P y → ∃ D : DegData V₁ (maximalIdeal V₁), Nonempty (Unif (maximalIdeal V₁) D P (powObj G₀ 8)) := by
@@ -823,7 +823,7 @@ theorem exists_unif_pow8 : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F :
   have hT : GlobalTheory.LN.ThetaNZ (powObj G₀ 8) Pc.L.L :=
     hPc ▸ GlobalTheory.T.thetaNZ_e8LB_powObj hL.1 hL.2 GlobalTheory.LN.ega_holds V₁ hCN D₀ G₀ A₀ U₀ hS W hW
   have hA' : LBIso (P.L.pull gen.hom.left) (Pc.L.L.pull (pullback.fst (powObj G₀ 8).hom (jK V₁))) := hPc ▸ hA
-  letI : Field (V₁ ⧸ maximalIdeal V₁) := Ideal.Quotient.field _
+  let : Field (V₁ ⧸ maximalIdeal V₁) := Ideal.Quotient.field _
   obtain ⟨D, U, -, -⟩ := GlobalTheory.PrimeUnif.exists_unif hL.1 hL.2 GlobalTheory.laws3 GlobalTheory.LN.ega_holds GlobalTheory.uniformisation_total_closed V₁
     (maximalIdeal V₁) (isAdmissibleBase_of_completeNormalLocalCharZero V₁ hCN) inferInstance (powObj G₀ 8) Pc
     (GlobalTheory.PowGrp.isSemiAbelian_pow _ _ _ 8 (powIsPowGrp G₀ 8) hS) hW8

@@ -159,7 +159,7 @@ lemma char_step (hv : v.Integers R) {g N : ℕ} (M : Matrix (Fin g) (Fin N) R) (
     funext a
     have h1 := hl (ι j) a
     simp only [Matrix.mulVec, dotProduct, hA, Matrix.of_apply, Pi.single_apply, mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [h1]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
   set μ : Fin N → R := fun b => T b (Fin.last s) - ∑ i, l b i * T (ι i) (Fin.last s) with hμ
@@ -273,7 +273,7 @@ lemma char_ind (hv : v.Integers R) {g N : ℕ} (M : Matrix (Fin g) (Fin N) R) (c
 
 theorem charThm : CharStatement := by
   intro C _ v R _ _ hv g N M c hc hspan
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hv.hom_inj
   obtain ⟨ι, hinj, h⟩ := char_ind hv M c hc hspan g le_rfl
   exact ⟨ι, hinj, fun s hs => h s hs⟩
 

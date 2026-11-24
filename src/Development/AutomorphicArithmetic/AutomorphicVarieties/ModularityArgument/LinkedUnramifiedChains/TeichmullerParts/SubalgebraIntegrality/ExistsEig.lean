@@ -158,7 +158,7 @@ private theorem exists_form {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (h
       ∃ l : V →ₗ[ℂ] ℂ, l ≠ 0 ∧ ∀ g v, l (ρ g v) = (μ g : ℂ) * l v := by
   have hT : (⊥ : Subrepresentation ρ) ≠ ⊤ := fun h =>
     hx ((Submodule.mem_bot ℂ).1 (show x ∈ (⊥ : Subrepresentation ρ).toSubmodule by rw [h]; trivial))
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨M, hM, -⟩ := (eq_top_or_exists_le_coatom ⊥).resolve_left hT
   have hi := isIrreducible_subQuot hM.covBy_top
   let p : (⊤ : Subrepresentation ρ).toRepresentation.IntertwiningMap (subQuot ⊤ M) :=

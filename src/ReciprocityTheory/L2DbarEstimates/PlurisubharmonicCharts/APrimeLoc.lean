@@ -114,7 +114,7 @@ lemma apra_slice (d k : ℕ) (hMVd : MVStatement d) (ε τ : ℝ) (u : V d × V 
   refine lintegral_congr fun x => ?_
   by_cases hx : ‖x‖ < ε
   · have hx' : x ∈ ball (0 : V d) ε := mem_ball_zero_iff.mpr hx
-    simp only [apraW, if_pos hx, Set.indicator_of_mem hx']
+    simp only [apraW, ite_eq_left hx, Set.indicator_of_mem hx']
     rw [ENNReal.ofReal_mul (by positivity)]
   · have hx' : x ∉ ball (0 : V d) ε := fun h => hx (mem_ball_zero_iff.mp h)
     simp [apraW, hx]
@@ -164,7 +164,7 @@ lemma apra_blow (d : ℕ) (hd : 1 ≤ d) (hMVI : MVIntStatement d) (ε : ℝ) (h
       have hpos : 0 < ‖x‖ := norm_pos_iff.mpr hx0
       obtain ⟨n, hn⟩ := exists_nat_one_div_lt (pow_pos hpos 2)
       refine le_trans ?_ (le_iSup _ n)
-      simp only [hf, hg, apraW, if_pos hx]
+      simp only [hf, hg, apraW, ite_eq_left hx]
       rw [max_eq_left hn.le, ENNReal.ofReal_rpow_of_pos hpos, ← Real.rpow_natCast,
         ← Real.rpow_mul hpos.le]
       apply le_of_eq
@@ -240,8 +240,8 @@ theorem ap_prod_blowup (d k : ℕ) (hd : 1 ≤ d) (hMVd : MVStatement d) (hMVk :
       ((volume.restrict (ball (0 : V d) ε)).prod (volume.restrict (ball (0 : V k) ε))) := by
     rw [Measure.prod_restrict, ← Measure.volume_eq_prod]
     have hu' : AEMeasurable u (volume.restrict (ball (0 : V d) ε ×ˢ ball (0 : V k) ε)) := by
-      letI : IsBoundedSMul ℂ (V d × V k) := NormedSpace.toIsBoundedSMul
-      letI : ContinuousSMul ℂ (V d × V k) := IsBoundedSMul.continuousSMul
+      let : IsBoundedSMul ℂ (V d × V k) := NormedSpace.toIsBoundedSMul
+      let : ContinuousSMul ℂ (V d × V k) := IsBoundedSMul.continuousSMul
       exact hu.continuousOn.aemeasurable (measurableSet_ball.prod measurableSet_ball)
     exact ((hu'.norm.pow_const 2).mul (((measurable_fst.norm.pow_const 2).max
       measurable_const).pow_const _).aemeasurable).ennreal_ofReal
@@ -304,7 +304,7 @@ theorem aprb_complement {n d : ℕ} (Lm : V n →L[ℂ] V d) (hs : Function.Surj
     have h1 : Lm v = 0 := by simpa [T] using congrArg Prod.fst hv
     have h2 : P v = 0 := by simpa [T] using congrArg Prod.snd hv
     have hvK : v ∈ K := by simpa [K] using h1
-    have h3 := Submodule.linearProjOfIsCompl_apply_left hC ⟨v, hvK⟩
+    have h3 := Submodule.projectionOnto_apply_left hC ⟨v, hvK⟩
     have h4 : (⟨v, hvK⟩ : K) = 0 := h3.symm.trans h2
     simpa using congrArg Subtype.val h4
   have hdim : Module.finrank ℂ (V n) = Module.finrank ℂ (V d × V (n - d)) := by
@@ -343,12 +343,12 @@ noncomputable section
 private lemma exists_const_lintegral_comp_continuousLinearEquiv {n a b : ℕ} (A : V n ≃L[ℂ] V a × V b) :
     ∃ K : NNReal, 0 < K ∧ ∀ (B : Set (V a × V b)) (h : V n → ℝ≥0∞),
       ∫⁻ z in B, h (A.symm z) = (K : ℝ≥0∞) * ∫⁻ x in (A : V n → V a × V b) ⁻¹' B, h x := by
-  haveI hvolF : (volume : Measure (V a × V b)).IsAddHaarMeasure := by
+  have hvolF : (volume : Measure (V a × V b)).IsAddHaarMeasure := by
     rw [Measure.volume_eq_prod]
-    haveI : (volume : Measure (V a)).IsAddHaarMeasure := inferInstance
-    haveI : (volume : Measure (V b)).IsAddHaarMeasure := inferInstance
-    haveI : SigmaFinite (volume : Measure (V a)) := inferInstance
-    haveI : SigmaFinite (volume : Measure (V b)) := inferInstance
+    have : (volume : Measure (V a)).IsAddHaarMeasure := inferInstance
+    have : (volume : Measure (V b)).IsAddHaarMeasure := inferInstance
+    have : SigmaFinite (volume : Measure (V a)) := inferInstance
+    have : SigmaFinite (volume : Measure (V b)) := inferInstance
     first
       | infer_instance
       | exact
@@ -356,7 +356,7 @@ private lemma exists_const_lintegral_comp_continuousLinearEquiv {n a b : ℕ} (A
             toIsAddLeftInvariant := inferInstance
             toIsOpenPosMeasure := inferInstance }
   set ν : Measure (V n) := Measure.map (A.symm : V a × V b → V n) volume with hν
-  haveI : ν.IsAddHaarMeasure := by
+  have : ν.IsAddHaarMeasure := by
     rw [hν]
     first
       | infer_instance
@@ -424,7 +424,7 @@ theorem ap_local_blowup (n d : ℕ) (hd : 1 ≤ d) (hMVd : ∀ k, MVStatement k)
     ext1 h
     have hh : ((fderiv ℂ p v0) h, Lsnd h) = A h := Prod.ext (hA h).symm rfl
     simp [hh]
-  have hs := hΨc.hasStrictFDerivAt' hΨd (by simp)
+  have hs := hΨc.hasStrictFDerivAt hΨd (by simp)
   set G : V n → V n := hs.localInverse Ψ (ContinuousLinearEquiv.refl ℂ (V n)) v0 with hGdef
   have hGc : ContDiffAt ℂ 1 G (Ψ v0) := hΨc.to_localInverse hΨd (by simp)
   have hC : ContDiffAt ℝ 1 Ψ v0 := hΨc.restrict_scalars ℝ

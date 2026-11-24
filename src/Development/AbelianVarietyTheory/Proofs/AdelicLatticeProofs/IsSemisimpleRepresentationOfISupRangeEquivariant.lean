@@ -65,7 +65,7 @@ theorem _root_.GlobalTheory.ClassFin.isSemisimpleRepresentation_of_iSup_range :
   have hF : ∀ j (v : V j), F j v = p j v := fun j v => rfl
   have hs : ∀ j, IsSemisimpleModule (MonoidAlgebra ℂ G) (LinearMap.range (F j)) := by
     intro j
-    haveI := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule (r j)).mp
+    have := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule (r j)).mp
       (hr j)
     exact IsSemisimpleModule.range (F j)
   rw [Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule]

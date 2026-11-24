@@ -167,23 +167,23 @@ theorem muF_univ_ne_zero (X : Data E r) {x0 : Frame X.Ψ r} (h : IsOrth X x0) : 
 theorem exists_haarChart (X : Data E r) : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ HaarChart X c := by
   classical
   set H := UnitaryFrames.unitarySubgroup X with hHdef
-  letI : MeasurableSpace H := borel H
-  haveI : BorelSpace H := ⟨rfl⟩
+  let : MeasurableSpace H := borel H
+  have : BorelSpace H := ⟨rfl⟩
   have hHm : ∀ g, g ∈ H ↔ X.IsUnitaryC fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ) := fun _ => Iff.rfl
   obtain ⟨hLC, hSC, -⟩ := UnitaryFrames.unitary_group_frames.2 r X H hHm
-  haveI := hLC
-  haveI := hSC
+  have := hLC
+  have := hSC
   have hx0 : IsOrth X (baseFr X) := fun τ => baseFr_mem X τ
   obtain ⟨ν, hνl, hνf, hν⟩ := UnitaryInvMeasure.invMeas FrameMeasureClosed.measure_statements.2.1
     GramSchmidtCont.exists_continuous_gramSchmidt isOrth_rmul_iff_unitary_diagonal
     (SatFin.muF_sat_lt_top FrameMeasureClosed.measure_statements.2.1)
     UnitaryFrames.unitary_group_frames.2 r X H hHm (baseFr X) hx0
-  haveI := hνl
-  haveI := hνf
-  haveI : (haarR X).IsHaarMeasure := by unfold haarR; infer_instance
+  have := hνl
+  have := hνf
+  have : (haarR X).IsHaarMeasure := by unfold haarR; infer_instance
   set e := isoEquiv X
   set μ : Measure H := (haarR X).map e with hμdef
-  haveI : μ.IsHaarMeasure := e.isHaarMeasure_map (haarR X)
+  have : μ.IsHaarMeasure := e.isHaarMeasure_map (haarR X)
   have hs := Measure.isMulLeftInvariant_eq_smul ν μ
   set s := ν.haarScalarFactor μ
   set L : H → Frame X.Ψ r := fun h =>
@@ -197,7 +197,7 @@ theorem exists_haarChart (X : Data E r) : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ 
     intro h0
     have h1 := hν (fun _ => 1) measurable_const (fun _ _ _ _ => rfl)
     simp only [lintegral_const, one_mul] at h1
-    rw [hs, h0, zero_smul, Measure.coe_zero, Pi.zero_apply] at h1
+    rw [hs, h0, zero_smul, FunLike.coe_zero, Pi.zero_apply] at h1
     exact muF_univ_ne_zero X hx0 h1.symm
   refine ⟨((s : ℝ≥0∞))⁻¹, ENNReal.inv_ne_zero.2 ENNReal.coe_ne_top,
     ENNReal.inv_ne_top.2 (ENNReal.coe_ne_zero.2 hs0), fun φ hφ hφb => ?_⟩

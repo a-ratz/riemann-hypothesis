@@ -93,7 +93,7 @@ theorem isCompact_setOf_isUnitAt (w : HeightOneSpectrum (𝓞 L)) :
   have e : ((↑) : (w.adicCompletion L)ˣ → w.adicCompletion L) '' {x | IsUnitAt w x} =
       (w.adicCompletionIntegers L : Set (w.adicCompletion L)) \ {x | Valued.v x < 1} := by
     ext y
-    simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_diff, SetLike.mem_coe,
+    simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_sdiff, SetLike.mem_coe,
       HeightOneSpectrum.mem_adicCompletionIntegers, not_lt, IsUnitAt]
     constructor
     · rintro ⟨x, hx, rfl⟩
@@ -116,9 +116,9 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 theorem continuous_toAb' : Continuous (toAb E Ω) := continuous_quot_mk
 
 theorem hausdorff_absolute_galois_abelianization : T2Space (Gab E Ω) := by
-  haveI : Algebra.IsIntegral E Ω := (IsAlgClosure.isAlgebraic (R := E) (K := Ω)).isIntegral
-  haveI : T2Space (G E Ω) := krullTopology_t2
-  haveI : IsClosed (((commutator (G E Ω)).topologicalClosure : Subgroup (G E Ω)) : Set (G E Ω)) :=
+  have : Algebra.IsIntegral E Ω := (IsAlgClosure.isAlgebraic (R := E) (K := Ω)).isIntegral
+  have : T2Space (G E Ω) := krullTopology_t2
+  have : IsClosed (((commutator (G E Ω)).topologicalClosure : Subgroup (G E Ω)) : Set (G E Ω)) :=
     Subgroup.isClosed_topologicalClosure _
   infer_instance
 
@@ -134,7 +134,7 @@ theorem exists_openSubgroup_ine_art_units : ∀ {E Ω : Type} [Field E] [NumberF
     ∃ V : Subgroup (G E Ω), IsOpen (V : Set (G E Ω)) ∧
       ∀ σ ∈ V, σ ∈ Ine (F := E) A → ∃ x ∈ U, art (localIdele E w x) = toAb E Ω σ := by
   intro E Ω _ _ _ _ _ l _ art hart w A hA U hUo _
-  haveI := hausdorff_absolute_galois_abelianization (E := E) (Ω := Ω)
+  have := hausdorff_absolute_galois_abelianization (E := E) (Ω := Ω)
   let f : (w.adicCompletion E)ˣ →* Gab E Ω := art.comp (localIdele E w)
   have hf : Continuous f := hart.quot.continuous.comp (continuous_localIdele' w)
   let K : Set (w.adicCompletion E)ˣ := {y | ∃ u ∈ U, f u = f y}

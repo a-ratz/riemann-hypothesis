@@ -368,12 +368,12 @@ theorem exists_mul_invol_eq_of_fixed_unit {R : Type} [CommRing R] [Finite R] [Is
     (τ : R →+* R) (hτ : ∀ a, τ (τ a) = a) {b : R} (hb : IsUnit (τ b - b)) {x : R} (hx : IsUnit x)
     (hxτ : τ x = x) : ∃ z : R, IsUnit z ∧ z * τ z = x := by
   classical
-  haveI : IsArtinianRing R := inferInstance
+  have : IsArtinianRing R := inferInstance
   have hsurj : Function.Surjective τ := fun a => ⟨τ a, hτ a⟩
   obtain ⟨tI, hmem, htt⟩ : ∃ tI : MaximalSpectrum R → MaximalSpectrum R,
       (∀ I y, y ∈ (tI I).asIdeal ↔ τ y ∈ I.asIdeal) ∧ ∀ I, tI (tI I) = I := by
     have hmax : ∀ I : MaximalSpectrum R, (I.asIdeal.comap τ).IsMaximal := fun I => by
-      haveI := I.isMaximal
+      have := I.isMaximal
       exact Ideal.comap_isMaximal_of_surjective τ hsurj
     refine ⟨fun I => ⟨I.asIdeal.comap τ, hmax I⟩, fun I y => Iff.rfl, fun I => ?_⟩
     ext y
@@ -387,9 +387,9 @@ theorem exists_mul_invol_eq_of_fixed_unit {R : Type} [CommRing R] [Finite R] [Is
     by_cases hI : tI I = I
     · have hle : I.asIdeal ≤ I.asIdeal.comap τ := fun y hy => by
         rw [Ideal.mem_comap, ← hmem, hI]; exact hy
-      haveI := I.isMaximal
-      letI : Field (R ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
-      haveI : Finite (R ⧸ I.asIdeal) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
+      have := I.isMaximal
+      let : Field (R ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
+      have : Finite (R ⧸ I.asIdeal) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
       let ρ := Ideal.quotientMap I.asIdeal τ hle
       have hρ : ∀ y, ρ (Ideal.Quotient.mk I.asIdeal y) = Ideal.Quotient.mk I.asIdeal (τ y) :=
         fun y => Ideal.quotientMap_mk
@@ -426,10 +426,10 @@ theorem exists_mul_invol_eq_of_fixed_unit {R : Type} [CommRing R] [Finite R] [Is
     have hzI := hz I
     have hτzI := hτz I
     by_cases h1 : WellOrderingRel I (tI I)
-    · have e1 : r I = x := if_pos h1
+    · have e1 : r I = x := ite_eq_left h1
       have e2 : r (tI I) = 1 := by
         simp only [r, htt]
-        rw [if_neg (asymm_of WellOrderingRel h1), if_pos h1]
+        rw [ite_eq_right (asymm_of WellOrderingRel h1), ite_eq_left h1]
       rw [e1] at hzI
       rw [e2, map_one] at hτzI
       refine ⟨?_, fun hzm => hnot I hx (by simpa using I.asIdeal.sub_mem hzm hzI)⟩
@@ -437,10 +437,10 @@ theorem exists_mul_invol_eq_of_fixed_unit {R : Type} [CommRing R] [Finite R] [Is
       rw [this]
       exact I.asIdeal.add_mem (I.asIdeal.mul_mem_right _ hzI) (I.asIdeal.mul_mem_left _ hτzI)
     · by_cases h2 : WellOrderingRel (tI I) I
-      · have e1 : r I = 1 := by simp only [r]; rw [if_neg h1, if_pos h2]
+      · have e1 : r I = 1 := by simp only [r]; rw [ite_eq_right h1, ite_eq_left h2]
         have e2 : r (tI I) = x := by
           simp only [r, htt]
-          rw [if_pos h2]
+          rw [ite_eq_left h2]
         rw [e1] at hzI
         rw [e2, hxτ] at hτzI
         refine ⟨?_, fun hzm => hnot I isUnit_one (by simpa using I.asIdeal.sub_mem hzm hzI)⟩
@@ -448,7 +448,7 @@ theorem exists_mul_invol_eq_of_fixed_unit {R : Type} [CommRing R] [Finite R] [Is
         rw [this]
         exact I.asIdeal.add_mem (I.asIdeal.mul_mem_right _ hzI) hτzI
       · have hI := hfix_of I h1 h2
-        have e1 : r I = a I := by simp only [r]; rw [if_neg h1, if_neg h2]
+        have e1 : r I = a I := by simp only [r]; rw [ite_eq_right h1, ite_eq_right h2]
         rw [e1] at hzI
         rw [hI, e1] at hτzI
         have haI := ha I hI
@@ -531,7 +531,7 @@ theorem finite_quot_span_piO {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramInv
   have hc := h.2.2.2.2.2.2
   have hq := h.2.2.2.2.2.1
   have hfin0 := Nat.finite_of_card_ne_zero (hc.trans_ne (by positivity))
-  haveI : Finite (V ⧸ IsLocalRing.maximalIdeal V) := hfin0
+  have : Finite (V ⧸ IsLocalRing.maximalIdeal V) := hfin0
   let f : V →+* intL L :=
     { toFun := fun y => ⟨(y : L), (Valuation.mem_valuationSubring_iff _ _).1 y.2⟩
       map_one' := rfl
@@ -575,9 +575,9 @@ theorem exists_mul_conj_sub_mem_piPow_one : ∀ (L : Type) [Field L] [Valued L (
   intro L _ _ σ ϖ q h P hP x hx
   classical
   let I0 : Ideal (intL L) := Ideal.span {piO h}
-  haveI : I0.IsMaximal := span_piO_isMaximal h
-  letI : Field (intL L ⧸ I0) := Ideal.Quotient.field I0
-  haveI : Finite (intL L ⧸ I0) := finite_quot_span_piO h
+  have : I0.IsMaximal := span_piO_isMaximal h
+  let : Field (intL L ⧸ I0) := Ideal.Quotient.field I0
+  have : Finite (intL L ⧸ I0) := finite_quot_span_piO h
   let J : Ideal (GlobalTheory.UTr.Alg P) := piPow h P 1
   have hJ : J = (Ideal.map (AdjoinRoot.of P.1) I0 : Ideal (GlobalTheory.UTr.Alg P)) := by
     change Ideal.span {algebraMap (intL L) (GlobalTheory.UTr.Alg P) (piO h) ^ 1} =
@@ -591,13 +591,13 @@ theorem exists_mul_conj_sub_mem_piPow_one : ∀ (L : Type) [Field L] [Valued L (
       AdjoinRoot (P.1.map (Ideal.Quotient.mk I0)) :=
     AdjoinRoot.quotAdjoinRootEquivQuotPolynomialQuot I0 P.1
   let e := e1.trans e2
-  haveI : IsReduced (AdjoinRoot (P.1.map (Ideal.Quotient.mk I0))) :=
+  have : IsReduced (AdjoinRoot (P.1.map (Ideal.Quotient.mk I0))) :=
     isReduced_adjoinRoot_of_separable (hP.map)
-  haveI : IsReduced (GlobalTheory.UTr.Alg P ⧸ J) := isReduced_of_injective e.toRingHom e.injective
-  haveI : Module.Finite (intL L ⧸ I0) (AdjoinRoot (P.1.map (Ideal.Quotient.mk I0))) :=
+  have : IsReduced (GlobalTheory.UTr.Alg P ⧸ J) := isReduced_of_injective e.toRingHom e.injective
+  have : Module.Finite (intL L ⧸ I0) (AdjoinRoot (P.1.map (Ideal.Quotient.mk I0))) :=
     (AdjoinRoot.powerBasis' (P.2.1.map (Ideal.Quotient.mk I0))).finite
-  haveI : Finite (AdjoinRoot (P.1.map (Ideal.Quotient.mk I0))) := Module.finite_of_finite (intL L ⧸ I0)
-  haveI : Finite (GlobalTheory.UTr.Alg P ⧸ J) := Finite.of_equiv _ e.symm.toEquiv
+  have : Finite (AdjoinRoot (P.1.map (Ideal.Quotient.mk I0))) := Module.finite_of_finite (intL L ⧸ I0)
+  have : Finite (GlobalTheory.UTr.Alg P ⧸ J) := Finite.of_equiv _ e.symm.toEquiv
 
   have hsig : ∀ b, sigO σ h.2.1 (sigO σ h.2.1 b) = b := fun b => Subtype.ext (h.1 b)
   have hsp : sigO σ h.2.1 (piO h) = piO h := Subtype.ext h.2.2.1

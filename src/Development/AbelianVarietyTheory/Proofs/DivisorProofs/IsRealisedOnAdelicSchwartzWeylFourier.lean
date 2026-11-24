@@ -89,7 +89,7 @@ theorem isStd_eq {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (a : AF F) : ψ a = 
     refine (GroundTheory.Automorphic.AdelicGLn.denseRange_algebraMap_finiteAdeleRing F).induction_on
       (p := fun y => ψ (finiteAdeleInr y) = (adelicChar F (finiteAdeleInr y) : ℂ)) y
       (isClosed_eq (hψ.1.comp continuous_finiteAdeleInr)
-        (continuous_subtype_val.comp ((continuous_adelicChar (K := F)).comp continuous_finiteAdeleInr))) fun k => ?_
+        (continuous_subtypeVal.comp ((continuous_adelicChar (K := F)).comp continuous_finiteAdeleInr))) fun k => ?_
     have hs := infiniteAdeleInl_add_finiteAdeleInr (algebraMap F (AF F) k)
     rw [adeleRing_algebraMap_fst, adeleRing_algebraMap_snd] at hs
     have e : (finiteAdeleInr (algebraMap F (FiniteAdeleRing (𝓞 F) F) k) : AF F) =

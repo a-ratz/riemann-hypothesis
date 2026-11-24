@@ -95,9 +95,9 @@ private theorem exists_leftInv {O OE : Type} [CommRing O] [IsDomain O] [Valuatio
     obtain ⟨c₀, hc₀, -⟩ := h.2 y hy
     rw [Submodule.mem_bot, Submodule.Quotient.mk_eq_zero]
     exact ⟨c₀, (hφ c₀).trans hc₀⟩
-  haveI : Module.Flat O ((Fin d → O) ⧸ LinearMap.range φ) :=
+  have : Module.Flat O ((Fin d → O) ⧸ LinearMap.range φ) :=
     Module.Flat.flat_iff_torsion_eq_bot_of_isBezout.mpr htf
-  haveI : Module.Free O ((Fin d → O) ⧸ LinearMap.range φ) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O ((Fin d → O) ⧸ LinearMap.range φ) := Module.free_of_flat_of_isLocalRing
   obtain ⟨s, hs⟩ := Module.projective_lifting_property (LinearMap.range φ).mkQ LinearMap.id
     (Submodule.mkQ_surjective _)
   have hmem : ∀ y, (LinearMap.id - s ∘ₗ (LinearMap.range φ).mkQ : (Fin d → O) →ₗ[O] (Fin d → O)) y ∈ LinearMap.range φ := by
@@ -125,9 +125,9 @@ private theorem exists_leftInv {O OE : Type} [CommRing O] [IsDomain O] [Valuatio
 theorem eigB_res_surjective : ∀ (C : Type) [Field C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ (OE : Type) [CommRing OE] (d n : ℕ) (ρ : OE → Matrix (Fin d) (Fin d) O) (τ : OE →+* O) (W : Fin n → Fin d → O), EigB ρ τ W → Function.Surjective (Pdiv.ChartF.res W) ∧ (∀ a f, Pdiv.ChartF.res W ((ρ a)ᵀ *ᵥ f) = τ a • Pdiv.ChartF.res W f) ∧ eigDim C ρ ((algebraMap O C).comp τ) = n := by
   classical
   intro C _ v O _ _ hv OE _ d n ρ τ W h
-  haveI : IsDomain O := Function.Injective.isDomain (algebraMap O C) hv.hom_inj
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
-  haveI : IsFractionRing O C := hv.isFractionRing
+  have : IsDomain O := Function.Injective.isDomain (algebraMap O C) hv.hom_inj
+  have : ValuationRing O := ValuationRing.of_integers v hv
+  have : IsFractionRing O C := hv.isFractionRing
   obtain ⟨G, hG⟩ := exists_leftInv ρ τ W h
   refine ⟨fun c => ⟨Gᵀ *ᵥ c, ?_⟩, fun a f => ?_, ?_⟩
   · have h1 : Matrix.of W * Gᵀ = 1 := by

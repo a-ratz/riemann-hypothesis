@@ -361,7 +361,7 @@ theorem avg_eq (hG : ∀ τ, (G τ).PosDef) (lam : ι → DomWeight n) {K : Type
   have hcn : Continuous fun k => Complex.normSq (f0 (Frames.tr (m k) (hm k) y)) :=
     Complex.continuous_normSq.comp (continuous_val hm hc y hf0)
   have hpos : 0 < ∫ k, Complex.normSq (f0 (Frames.tr (m k) (hm k) y)) ∂ν := by
-    refine hcn.integral_pos_of_hasCompactSupport_nonneg_nonzero (HasCompactSupport.of_compactSpace _)
+    refine hcn.integral_pos_of_hasCompactSupport_nonneg_ne_zero (HasCompactSupport.of_compactSpace _)
       (fun k => Complex.normSq_nonneg _) (x := 1) ?_
     have e1 : Frames.tr (m 1) (hm 1) y = y := Subtype.ext (funext fun τ => by
       show m 1 τ * y.1 τ = y.1 τ
@@ -415,7 +415,7 @@ theorem redM_eq_one (v : HeightOneSpectrum (𝓞 F)) (X : Matrix (Fin n) (Fin n)
       HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one]
     exact (hX i j).ne
   have e : (⟨X i j, hx⟩ : v.adicCompletionIntegers F) = ⟨_, hd⟩ + ⟨_, h1⟩ := Subtype.ext (sub_add_cancel _ _).symm
-  simp only [redM, dif_pos hx]
+  simp only [redM, dite_eq_left hx]
   rw [e, map_add (f := _), h0, zero_add]
   by_cases hij : i = j
   · subst hij
@@ -427,9 +427,9 @@ theorem redM_eq_one (v : HeightOneSpectrum (𝓞 F)) (X : Matrix (Fin n) (Fin n)
 theorem continuous_phi_prV (G : GLoc F E σ gp) (a : Fin 2) (v : HeightOneSpectrum (𝓞 F)) (h : (gp a : 𝓞 F) ∈ v.asIdeal) :
     letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
     Continuous ((G.phi a v h).comp (prV (E := E) v)) := by
-  letI : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
-  letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-  haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  let : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := Algebra.TensorProduct.rightAlgebra
+  let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
   refine IsModuleTopology.continuous_of_ringHom (R := FiniteAdeleRing (𝓞 F) F) _ ?_
   have hv : Continuous (Formalism.UG.evalV F v) := RestrictedProduct.continuous_eval v
   refine hv.congr fun r => ?_
@@ -479,8 +479,8 @@ theorem eventually_chi {S : StepLevel F E σ J T f bad} {G : GLoc F E σ gp} {a 
     (L : GLev S G a t nb skip fc zl) (hgp : ∀ a, gp a ≠ 0) :
     letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
     ∀ᶠ x : UPts σ J (FiniteAdeleRing (𝓞 F) F) in nhds 1, ∃ hx : x.1 ∈ S.U, S.chi ⟨x.1, hx⟩ = 1 := by
-  letI := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-  haveI := Formalism.L2.Col.rlt_topRing (F := F) (E := E)
+  let := tensTopL (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  have := Formalism.L2.Col.rlt_topRing (F := F) (E := E)
   have hfin : ∀ a, {v : HeightOneSpectrum (𝓞 F) | (gp a : 𝓞 F) ∈ v.asIdeal}.Finite := fun a => by
     have h0 : Ideal.span {(gp a : 𝓞 F)} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
@@ -496,7 +496,7 @@ theorem eventually_chi {S : StepLevel F E σ J T f bad} {G : GLoc F E σ gp} {a 
     refine Filter.eventually_all.2 fun a => (Filter.eventually_all_finite (hfin a)).2 fun v h => ?_
     have hc : Continuous fun x : UPts σ J (FiniteAdeleRing (𝓞 F) F) => G.mat a v h (L.fr a v h) (bc (prV (E := E) v) x.1) := by
       have c0 : Continuous fun x : UPts σ J (FiniteAdeleRing (𝓞 F) F) => (x.1.val).map ((G.phi a v h).comp (prV (E := E) v)) :=
-        (Units.continuous_val.comp continuous_subtype_val).matrix_map (GlobalTheory.LevelCharOpen.continuous_phi_prV G a v h)
+        (Units.continuous_val.comp continuous_subtypeVal).matrix_map (GlobalTheory.LevelCharOpen.continuous_phi_prV G a v h)
       exact ((continuous_const (y := ((L.fr a v h)⁻¹).val)).matrix_mul c0).matrix_mul (continuous_const (y := (L.fr a v h).val))
     have h3 : ∀ᶠ x : UPts σ J (FiniteAdeleRing (𝓞 F) F) in nhds 1, ∀ i j,
         Valued.v (G.mat a v h (L.fr a v h) (bc (prV (E := E) v) x.1) i j - (1 : Matrix (Fin n) (Fin n) (v.adicCompletion F)) i j) < 1 := by
@@ -507,7 +507,7 @@ theorem eventually_chi {S : StepLevel F E σ J T f bad} {G : GLoc F E σ gp} {a 
       have ho : IsOpen {y : v.adicCompletion F | Valued.v y < 1} := by
         simpa using Valued.isOpen_ball (v.adicCompletion F) 1
       refine (ho.preimage c1).mem_nhds ?_
-      rw [Set.mem_preimage, Set.mem_setOf_eq, hone, sub_self, map_zero]
+      rw [Set.mem_preimage, Set.mem_ofPred_eq, hone, sub_self, map_zero]
       exact zero_lt_one
     exact h3.mono fun x hx _ => GlobalTheory.LevelCharOpen.redM_eq_one v _ hx
   filter_upwards [h1, h2] with x hx hr
@@ -538,8 +538,8 @@ theorem exists_open {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) {J : Matrix
     ∃ W : Subgroup (GA D V), IsOpen (W : Set (GA D V)) ∧ ∀ k ∈ W, k ∈ GfC V → ∀ κ : S.U, κ.1.1 = finM V hn k → S.chi κ = 1 := by
   subst hn
   subst hJ
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  let := tensTopL (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hev := eventually_chi L fun a => (D.host.g_prime a).ne_zero
   let φ : GA D V →* GL (Fin V.rank) (D.host.E ⊗[D.host.F] FiniteAdeleRing (𝓞 D.host.F) D.host.F) :=
     (bc (toEAf D)).comp (matHom V)
@@ -630,18 +630,18 @@ theorem integral_rdS {D : D7} (θ : InfFam D) (hθ : IsInfFam θ) (V : HSp D) {n
   choose h hh1 hh2 using fun a => GlobalTheory.Core.Mi.PinModel.exists_finM V rfl (yc a)
   obtain ⟨vol, ν, hvol, hν, -, hsum⟩ := GlobalTheory.T.integral_definiteQuotient_eq_classSum D θ hθ V _ rfl _ rfl T f bad S cl yc hb hS hPD μ 𝓕 hμ h𝓕 h
     fun a => ⟨hh1 a, hh2 a⟩
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : T2Space (GA D V) := by
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : T2Space (GA D V) := by
     have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
     first | exact hT.1 | exact hT.2.1 | exact hT.2.2.1 | exact hT.2.2.2.1 | exact hT.2.2.2.2.1 | exact hT.2.2.2.2.2.1 | exact hT.2.2.2.2.2.2
-  haveI : CompactSpace (GinfC V) := isCompact_iff_compactSpace.1 (Formalism.IndefR.Eqv.isCompact_GinfC hS fun τ => Or.inl (hP τ))
-  haveI : BorelSpace (GinfC V) := Subtype.borelSpace _
+  have : CompactSpace (GinfC V) := isCompact_iff_compactSpace.1 (Formalism.IndefR.Eqv.isCompact_GinfC hS fun τ => Or.inl (hP τ))
+  have : BorelSpace (GinfC V) := Subtype.borelSpace _
   have hone : ∀ τ, infM θ V rfl 1 τ = 1 := RdLaw.infM_fin θ V 1 (one_mem _)
   have hu : ∀ (k : GinfC V) τ, IsUnit (infM θ V rfl k.1 τ).det := fun k τ =>
     Matrix.isUnit_det_of_right_inverse (B := infM θ V rfl k.1⁻¹ τ) (by rw [← RdLaw.infM_mul, mul_inv_cancel, hone])
   obtain ⟨c, hc, havg⟩ := GlobalTheory.ValSchur.avg_eq (G := gramC (V.gram.reindex (finCongr rfl) (finCongr rfl)) (embT D)) hPD lam ν
-    (fun k : GinfC V => infM θ V rfl k.1) hu (fun τ => (RdLaw.continuous_infM θ hθ V τ).comp continuous_subtype_val)
+    (fun k : GinfC V => infM θ V rfl k.1) hu (fun τ => (RdLaw.continuous_infM θ hθ V τ).comp continuous_subtypeVal)
     (fun a b τ => RdLaw.infM_mul θ V a.1 b.1 τ) (fun g hg => by
       obtain ⟨k, hk, e⟩ := (GlobalTheory.SmoothForms.RealPts.glue θ hθ V).2 g hg
       exact ⟨⟨k, hk⟩, fun τ => (RdLaw.infM_rfl θ V k τ).trans (e τ)⟩) y

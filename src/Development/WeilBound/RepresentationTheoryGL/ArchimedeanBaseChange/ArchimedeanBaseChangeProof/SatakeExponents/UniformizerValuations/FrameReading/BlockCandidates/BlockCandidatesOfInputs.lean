@@ -440,8 +440,8 @@ attribute [local instance] borelG borelF borelA GlobalTheory.LocalData.complRel 
 
 theorem pw_fin {E : Type} [Field E] [NumberField E] [IsCMField E] {B : Block E} (t : PT B) (h : IsFinM t.ψ) :
     ∀ j, IsFinM (t.pw j).ψ := by
-  haveI : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
-  haveI := B.hν
+  have : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
+  have := B.hν
   intro j
   induction j with
   | zero => exact h
@@ -603,7 +603,7 @@ theorem fok_Tj_top {n k : ℕ} {w : Pl E} {ϖ : w.adicCompletion E} (hk : n ≤ 
     unfold diagJ
     congr 1
     funext i
-    rw [if_pos (lt_of_lt_of_le i.isLt hk), if_pos i.isLt]
+    rw [ite_eq_left (lt_of_lt_of_le i.isLt hk), ite_eq_left i.isLt]
   unfold Tj
   rw [hd]
 
@@ -888,7 +888,7 @@ private theorem hcs_of_finDoset {G : Type} [Group G] [TopologicalSpace G] [IsTop
 theorem uSatOf_holds : USatOf := by
   intro hSD E _ _ _ n π w σ hw hcomp hfix
   obtain ⟨P, T, hT, hP, hlev⟩ := hSD E n w hw σ
-  have hUL : UL n w = ⊤ := if_pos hw
+  have hUL : UL n w = ⊤ := ite_eq_left hw
   have hmemUL : ∀ g : GLw n w, g ∈ UL n w := fun g => hUL ▸ Subgroup.mem_top g
   have hKmap : (KL n w).map (UL n w).subtype = KGL w (n := n) := by
     ext g
@@ -903,7 +903,7 @@ theorem uSatOf_holds : USatOf := by
       ext x
       exact Subgroup.mem_subgroupOf
     rw [this]
-    exact hoc.1.preimage continuous_subtype_val
+    exact hoc.1.preimage continuous_subtypeVal
   have hLev : IsLevel (MonoidHom.id _) (KL n w) (KL n w) := ⟨hKLopen, le_rfl, fun k hk => hk⟩
   have hHk : ∀ ϖ : w.adicCompletion E, IsUnifV E w ϖ → ∀ k : ℕ,
       PositivityTheory.Rg.BcN.F2.IsHk ((KL n w).map (UL n w).subtype) (Tj ℂ n (Ov E w) ϖ k) := by
@@ -1008,7 +1008,7 @@ theorem mOf_infOf_embedding {E : Type} [Field E] [NumberField E] {n : ℕ} (l : 
     (v : InfinitePlace E) :
     mOf (fun v => PositivityTheory.RgBcC.infOf (l v).w) v.embedding = infOfWeight (l v) := by
   unfold mOf infOfWeight PositivityTheory.RgBcC.infOf
-  simp only [InfinitePlace.mk_embedding, decide_true, if_true, one_mul]
+  simp only [InfinitePlace.mk_embedding, decide_true, ite_true, one_mul]
   congr 1
   funext k
   rw [add_sub_assoc]

@@ -282,7 +282,7 @@ theorem sizesRec_at_point {eps : ℝ} (Fm : FamP eps) {x : ℝ} (hx : Fm.x1 < x)
   ·
     have hg := (hG j j).1
     have hb : Real.exp (8 * x ^ eps) = (Real.exp (x ^ eps)) ^ 8 := by
-      rw [← Real.exp_nat_mul]; norm_num
+      rw [← Real.exp_natCast_mul]; norm_num
     have hb0 : 0 ≤ Real.exp (x ^ eps) := (Real.exp_pos _).le
     have hkb : Real.exp (x ^ eps) ≤ ((Fm.D x i).R.k : ℝ) * Real.exp (x ^ eps) := by
       have : (1 : ℝ) ≤ (Fm.D x i).R.k := by linarith
@@ -320,8 +320,8 @@ open Formalism.L2.GlobalTheoryTheory.ConcNWeight (RangeW rangeW_of_sizes)
 theorem stdAddChar_ne_one (D : D7) (k : Fin 2) :
     haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
     (ZMod.stdAddChar : AddChar (ZMod (D.host.g k)) ℂ) ≠ 1 := by
-  haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have h := ZMod.isPrimitive_stdAddChar (D.host.g k) (one_ne_zero : (1 : ZMod (D.host.g k)) ≠ 0)
   rwa [AddChar.mulShift_one] at h
 

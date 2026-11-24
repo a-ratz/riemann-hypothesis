@@ -187,7 +187,7 @@ theorem exists_formallySmooth_stalk {O : CommRingCat.{0}} {X : Scheme.{0}} (p : 
   refine ⟨τ ≫ p.stalkMap y, ?_, ?_⟩
   · have hs : (p.stalkMap y).hom.FormallySmooth :=
       Scheme.Hom.mem_smoothLocus.mp (p.smoothLocus_eq_top.ge (Set.mem_univ y))
-    letI : Algebra O ((Spec O).presheaf.stalk (p y)) := StructureSheaf.stalkAlgebra O (p y)
+    let : Algebra O ((Spec O).presheaf.stalk (p y)) := StructureSheaf.stalkAlgebra O (p y)
     have := (p y).isPrime
     have : IsLocalization.AtPrime ((Spec O).presheaf.stalk (p y)) (p y).asIdeal :=
       StructureSheaf.IsLocalization.to_stalk O (p y)
@@ -279,7 +279,7 @@ theorem exists_section_of_transversal {O ι : Type} [CommRing O] [IsDomain O] [I
       hy₀, ← hw₁ k]
     rfl)
   choose χ hχ using hχ
-  letI := α.hom.toAlgebra
+  let := α.hom.toAlgebra
   have : Algebra.FormallySmooth O (X.presheaf.stalk y₀) := hs
   have e₁ : α ≫ u = CommRingCat.ofHom (residue O) := by
     apply Spec.map_injective

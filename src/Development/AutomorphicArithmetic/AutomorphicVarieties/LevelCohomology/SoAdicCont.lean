@@ -103,14 +103,14 @@ private theorem dvd_of_norm_lt {l : ℕ} [Fact l.Prime] (c : HV.Coef l) (a x : c
     rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
   have htx : IsDiscreteValuationRing.addVal c.O x ≠ ⊤ := by
     rwa [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]
-  rw [← IsDiscreteValuationRing.addVal_le_iff_dvd, ← ENat.coe_toNat hta, ← ENat.coe_toNat htx]
+  rw [← IsDiscreteValuationRing.addVal_le_iff_dvd, ← ENat.natCast_toNat hta, ← ENat.natCast_toNat htx]
   exact_mod_cast hlt.le
 
 private theorem ev_dvd {l : ℕ} [Fact l.Prime] (c : HV.Coef l) (a : c.O) (ha : a ≠ 0) (x : c.O) :
     ∀ᶠ y in nhds x, a ∣ y - x := by
   have ha' : 0 < ‖(a : PadicAlgCl l)‖ := norm_pos_iff.mpr (by exact_mod_cast ha)
   have hc : Continuous (fun y : c.O => ‖(y : PadicAlgCl l) - x‖) :=
-    (continuous_subtype_val.sub continuous_const).norm
+    (continuous_subtypeVal.sub continuous_const).norm
   have h0 : ‖((x : c.O) : PadicAlgCl l) - x‖ < ‖(a : PadicAlgCl l)‖ := by
     rw [sub_self, norm_zero]
     exact ha'

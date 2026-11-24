@@ -118,8 +118,8 @@ theorem lowerIntegral_to_integral_coords : ∀ (X U Y : Type) [MeasurableSpace X
     rw [H g hg hgi, lintegral_prod (fun q : U × Y => g (p q.1 q.2)) (hg.comp hpm).aemeasurable]
   have hint : Integrable (fun q : U × Y => f (p q.1 q.2)) (νU.prod μ) := by
     refine ⟨(hf.comp hpm).aestronglyMeasurable, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm]
-    have := hprod (fun n => ‖f n‖ₑ) hf.enorm (fun t ht n hn => by simp only [hinv t ht n hn])
+    rw [hasFiniteIntegral_iff_eNorm]
+    have := hprod (fun n => ‖f n‖ₑ) hf.eNorm (fun t ht n hn => by simp only [hinv t ht n hn])
     rw [← this]
     exact hfi.2
   refine ⟨hint, ?_⟩
@@ -193,14 +193,14 @@ theorem integral_base_term_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
   obtain ⟨b1, b2, b3, b4, b5, b6, b7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   obtain ⟨c1, c2, c3, c4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag V (GlobalTheory.MixPer.isIsoSub_e d)
   obtain ⟨hN1, hN2, hN3⟩ := vN.unit
-  haveI := vW.haar
-  haveI : SFinite vN.ν := inferInstance
-  haveI : SFinite vW.μ := inferInstance
+  have := vW.haar
+  have : SFinite vN.ν := inferInstance
+  have : SFinite vW.μ := inferInstance
   obtain ⟨sb, sU⟩ := GlobalTheory.Unf.sFinite_vol D ρ V₀.rank vb vU
-  haveI : IsFiniteMeasure (vb.μ.restrict vb.𝓕) :=
+  have : IsFiniteMeasure (vb.μ.restrict vb.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, vb.covol.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
   have hTL := GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hω hω' vS
   have hsplit : ∀ (g : GA D V) (h : GA D W), om (g, h) Φ = om (g, 1) (om (1, h) Φ) := by
     intro g h
@@ -213,13 +213,13 @@ theorem integral_base_term_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
   have hFm : Measurable F := by
     refine Continuous.measurable ?_
     refine ((hTh.cont.comp continuous_fst).mul (hG.2.1.comp continuous_snd)).mul ?_
-    exact ((hTL Φ hΦ).2.2.2.1 x₀).comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+    exact ((hTL Φ hΦ).2.2.2.1 x₀).comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
   have hint : Integrable F ((vN.ν.restrict 𝓐).prod (vW.μ.restrict 𝓑)) := by
     rw [Measure.prod_restrict]
     exact ⟨hFm.aestronglyMeasurable, lt_top_iff_ne_top.2 hfin⟩
   have hpm : Measurable (Function.uncurry fun (u : UX D ρ) (b : Mx D ρ V₀.rank) => d.nB b * d.levi u.1) :=
     (d.continuous_nB.measurable.comp measurable_snd).mul
-      ((d.continuous_levi.comp continuous_subtype_val).measurable.comp measurable_fst)
+      ((d.continuous_levi.comp continuous_subtypeVal).measurable.comp measurable_fst)
   have hfib : ∀ h, Integrable (fun n => F (n, h)) (vN.ν.restrict 𝓐) →
       ∫ n, F (n, h) ∂(vN.ν.restrict 𝓐) = G h * fl ψ d W vS vb vU Th (rat x₀) (om (1, h) Φ) := by
     intro h hih
@@ -229,7 +229,7 @@ theorem integral_base_term_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
       (fun g => Th g * G h * term ψ d W vS (om (g, h) Φ) x₀) 0 with hfdef
     have hfm : Measurable f := by
       refine ContinuousOn.measurable_piecewise ?_ continuousOn_const (GlobalTheory.Mem.TrueRecord.isClosed_NFlag V (GlobalTheory.MixPer.isIsoSub_e d)).measurableSet
-      refine ((continuousOn_iff_continuous_restrict.2 hTh.cont).mul continuousOn_const).mul ?_
+      refine ((continuousOn_iff_continuous_domRestrict.2 hTh.cont).mul continuousOn_const).mul ?_
       exact (((hTL Φ hΦ).2.2.2.1 x₀).comp (continuous_id.prodMk continuous_const)).continuousOn
     have hfF : ∀ n : flagN d, f n.1 = F (n, h) := fun n => Set.piecewise_eq_of_mem _ _ _ n.2
     have hcen : ∀ (c : skewA D ρ) (n : GA D V), n ∈ flagN d →
@@ -267,7 +267,7 @@ theorem integral_base_term_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
       refine hih.congr (ae_of_all _ fun n => (hfF n).symm)
     obtain ⟨-, heq⟩ := GlobalTheory.T.lowerIntegral_to_integral_coordinates (flagN d) (UX D ρ) (Mx D ρ V₀.rank) (GA D V) (vN.ν.restrict 𝓐) vU.ν
       (vb.μ.restrict vb.𝓕) Subtype.val (fun u b => d.nB b * d.levi u.1) (fun t => ∃ c, t = (d.nC c * ·))
-      measurable_subtype_coe hpm (flagN d) hlay' f hfm hfinv hih'
+      measurable_subtypeVal hpm (flagN d) hlay' f hfm hfinv hih'
     calc ∫ n, F (n, h) ∂(vN.ν.restrict 𝓐) = ∫ x, f x.1 ∂(vN.ν.restrict 𝓐) :=
           integral_congr_ae (ae_of_all _ fun n => (hfF n).symm)
       _ = ∫ u, ∫ b, f (d.nB b * d.levi u.1) ∂(vb.μ.restrict vb.𝓕) ∂vU.ν := heq
@@ -332,7 +332,7 @@ theorem gramQ_unitri : ∀ (D : D7) (W : HSp D) (ρ : ℕ) (x₀ : Matrix (Fin W
     show incA D (u i i) = 1
     rw [hd i, map_one]
   have hu : IsUnit (rat u : Mx D ρ ρ) := (Matrix.isUnit_iff_isUnit_det _).2 (by
-    rw [Matrix.det_of_upperTriangular htri]; simp only [hdiag, Finset.prod_const_one]; exact isUnit_one)
+    rw [det_of_isUpperTriangular htri]; simp only [hdiag, Finset.prod_const_one]; exact isUnit_one)
   have hmem : hu.unit ∈ UX D ρ := fun i j => ⟨fun h => htri h, hdiag i⟩
   have h := hb.2 _ hmem
   rw [IsUnit.unit_spec] at h
@@ -417,7 +417,7 @@ theorem GlobalTheory.Unf.ratBlock_unitri : ∀ (D : D7) (V V₀ : HSp D) (ρ : �
   have hlow : ∀ i k, k < i → (d.qX * (M * d.e)) i k = 0 := fun i k hki =>
     incA_injective (by rw [map_zero, hent]; exact ((mem_UX.1 hv) i k).1 hki)
   have hdet : (d.qX * (M * d.e)).det = 1 := by
-    rw [Matrix.det_of_upperTriangular (fun i k (hki : k < i) => hlow i k hki)]
+    rw [det_of_isUpperTriangular (fun i k (hki : k < i) => hlow i k hki)]
     simp [hdiag]
   have hu : IsUnit (d.qX * (M * d.e)).det := by rw [hdet]; exact isUnit_one
   refine ⟨d.qX * (M * d.e), (d.qX * (M * d.e))⁻¹, hb, Matrix.mul_nonsing_inv _ hu, Matrix.nonsing_inv_mul _ hu,
@@ -858,13 +858,13 @@ theorem dep_frames_mean_zero : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF
     inferInstanceAs (Countable (Fin W.rank → Fin ρ → D.host.E))
   obtain ⟨hLC, hSC, -, -, -, hDisc, hCnt⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   have h56 := GlobalTheory.T.flag_subgroups_closed_normal_cocompact' D V V₀ ρ d
-  haveI : LocallyCompactSpace (flagN d) := h56.1.locallyCompactSpace
-  haveI : SecondCountableTopology (flagN d) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : vN.ν.IsHaarMeasure := vN.unit.1
+  have : LocallyCompactSpace (flagN d) := h56.1.locallyCompactSpace
+  have : SecondCountableTopology (flagN d) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : vN.ν.IsHaarMeasure := vN.unit.1
   obtain ⟨hle, hNcl, hNnorm, K, hK, hcov⟩ := h56.2 (Nfix d j) (Or.inr (Or.inr ⟨j, rfl⟩))
   have hT := GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hw hw' vS
   have hcont : ∀ x, Continuous fun n : flagN d => term ψ d W vS (om (n.1, 1) Ψ) x := fun x =>
-    ((hT Ψ hΨ).2.2.2.1 x).comp (continuous_subtype_val.prodMk continuous_const)
+    ((hT Ψ hΨ).2.2.2.1 x).comp (continuous_subtypeVal.prodMk continuous_const)
   obtain ⟨C, A, hC⟩ := GlobalTheory.T.thetaTermSeries_summable_moderateGrowth_uniform D ψ V V₀ W ρ d χV χW om om' hw hw' vS Ψ hΨ
   obtain ⟨K0, hK0, hcov0⟩ := (GlobalTheory.Mem.UnipCocompact.radicals_cocompact D V ρ d.e (isIsoSub_e d)).1
   obtain ⟨Mb, hMb⟩ := hK0.exists_bound_of_continuousOn (f := fun n : flagN d => Th n.1) hTh.cont.continuousOn
@@ -882,10 +882,10 @@ theorem dep_frames_mean_zero : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF
     have h1 : ∑' x, ‖term ψ d W vS (om (n.1, 1) Ψ) x‖ₑ ≤ ENNReal.ofReal (C * (height V 1 * quotHeight W 1) ^ A) := by
       have := hC 1 1 n.1 n.2
       rwa [mul_one] at this
-    simp_rw [enorm_mul]
+    simp_rw [eNorm_mul]
     rw [ENNReal.tsum_mul_left, ENNReal.coe_mul]
     refine mul_le_mul' ?_ ((ENNReal.tsum_comp_le_tsum_of_injective Subtype.val_injective _).trans h1)
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (hThb n)
   let Pj : Matrix (Fin W.rank) (Fin ρ) D.host.E → Prop := fun x => gramQ W x = gramQ W x₀ ∧
     (∀ a : Fin ρ → D.host.E, (∀ i, j ≤ i → a i = 0) → x *ᵥ a = 0 → a = 0) ∧
@@ -934,7 +934,7 @@ theorem dep_frames_mean_zero : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF
       · rw [hu i k h]; split_ifs <;> simp
       · rw [hc k h]; simp
   refine GlobalTheory.T.integral_tsum_normal_eigenfunctions_eq_zero (flagN d) vN.ν ((GQ V).subgroupOf (flagN d)) ((Nfix d j).subgroupOf (flagN d)) ?_ ?_ hNnorm
-    (hNcl.preimage continuous_subtype_val) ?_ vN.𝓝 vN.unit.2.1 (by rw [vN.unit.2.2]; exact ENNReal.one_ne_top)
+    (hNcl.preimage continuous_subtypeVal) ?_ vN.𝓝 vN.unit.2.1 (by rw [vN.unit.2.2]; exact ENNReal.one_ne_top)
     {x // Pj x} (Fin ρ → D.host.E) (fun x => Classical.choose x.2.2.2)
     (fun x n => Th n.1 * term ψ d W vS (om (n.1, 1) Ψ) x.1) (fun x => (hTh.cont.mul (hcont x.1)).measurable)
     ⟨_, fun n => hbdS {x | Pj x} n⟩ ?_ ?_ ?_
@@ -943,10 +943,10 @@ theorem dep_frames_mean_zero : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF
       (fun a b h => Subtype.ext (Subtype.ext (congrArg (fun y : GQ V => y.1) h)))
   · exact DiscreteTopology.of_continuous_injective (f := fun x : ((GQ V).subgroupOf (flagN d)) =>
       (⟨x.1.1, Subgroup.mem_subgroupOf.1 x.2⟩ : GQ V))
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)
       (fun a b h => Subtype.ext (Subtype.ext (congrArg (fun y : GQ V => y.1) h)))
   · refine ⟨(fun m : Nfix d j => (⟨⟨m.1, hle m.2⟩, m.2⟩ : (Nfix d j).subgroupOf (flagN d))) '' K,
-      hK.image ((continuous_subtype_val.subtype_mk _).subtype_mk _), fun m => ?_⟩
+      hK.image ((continuous_subtypeVal.subtype_mk _).subtype_mk _), fun m => ?_⟩
     obtain ⟨γ, hγ, k, hk, e⟩ := hcov ⟨m.1.1, Subgroup.mem_subgroupOf.1 m.2⟩
     refine ⟨⟨⟨γ.1, hle γ.2⟩, γ.2⟩, ?_, ⟨⟨k.1, hle k.2⟩, k.2⟩, ⟨k, hk, rfl⟩, ?_⟩
     · rw [Subgroup.mem_subgroupOf, Subgroup.mem_subgroupOf]; exact Subgroup.mem_subgroupOf.1 hγ
@@ -1135,7 +1135,7 @@ theorem det_eq_one {ρ : ℕ} (u : UX D ρ) (u₀ : Matrix (Fin ρ) (Fin ρ) D.h
     have := congrFun (congrFun h i) i
     change incA D (u₀ i i) = _ at this
     rw [this]; exact ((mem_UX.1 u.2) i i).2)
-  rw [Matrix.det_of_upperTriangular (fun i j (hij : j < i) => h0 i j hij)]
+  rw [det_of_isUpperTriangular (fun i j (hij : j < i) => h0 i j hij)]
   simp [h1]
 
 theorem gramQ_mul (W : HSp D) {ρ : ℕ} (x : Matrix (Fin W.rank) (Fin ρ) D.host.E) (u₀ : Matrix (Fin ρ) (Fin ρ) D.host.E) :
@@ -1249,23 +1249,23 @@ theorem GlobalTheory.Unf.cut_gram_base : ∀ (D : D7) (ψ : AddChar (AF D.host.F
     rw [hTh.cen c n.1 n.2, hsplit, hBc c _ (hW.om_pres _ _ hΨ)]
     ring
 
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin W.rank) (Fin ρ) D.host.E) :=
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin W.rank) (Fin ρ) D.host.E) :=
     inferInstanceAs (Countable (Fin W.rank → Fin ρ → D.host.E))
   have hT := GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hW hW' vS
   obtain ⟨-, hM⟩ := GlobalTheory.T.flag_subgroups_closed_normal_cocompact' D V V₀ ρ d
   obtain ⟨-, hcl, hnorm, K, hK, hKc⟩ := hM (GlobalTheory.MixPer.centre d) (Or.inl rfl)
   have hdisc : DiscreteTopology (NFlagQ V d.e) :=
     DiscreteTopology.of_continuous_injective (f := fun γ : NFlagQ V d.e => (⟨γ.1.1, γ.2⟩ : GQ V))
-      (Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _)
+      (Continuous.subtype_mk (continuous_subtypeVal.comp continuous_subtypeVal) _)
       (fun a b h => Subtype.ext (Subtype.ext (congrArg (fun x : GQ V => (x : GA D V)) h)))
   have hcl' : IsClosed (((GlobalTheory.MixPer.centre d).subgroupOf (flagN d) : Subgroup (flagN d)) : Set (flagN d)) := by
-    rw [Subgroup.coe_subgroupOf]; exact hcl.preimage continuous_subtype_val
+    rw [Subgroup.coe_subgroupOf]; exact hcl.preimage continuous_subtypeVal
   have hcpt : ∃ K' : Set ((GlobalTheory.MixPer.centre d).subgroupOf (flagN d)), IsCompact K' ∧
       ∀ m, ∃ γ ∈ (NFlagQ V d.e).subgroupOf ((GlobalTheory.MixPer.centre d).subgroupOf (flagN d)), ∃ k ∈ K', m = γ * k := by
     let φ : GlobalTheory.MixPer.centre d → (GlobalTheory.MixPer.centre d).subgroupOf (flagN d) := fun c =>
       ⟨⟨c.1, (hM (GlobalTheory.MixPer.centre d) (Or.inl rfl)).1 c.2⟩, Subgroup.mem_subgroupOf.2 c.2⟩
-    have hφ : Continuous φ := Continuous.subtype_mk (Continuous.subtype_mk continuous_subtype_val _) _
+    have hφ : Continuous φ := Continuous.subtype_mk (Continuous.subtype_mk continuous_subtypeVal _) _
     refine ⟨φ '' K, hK.image hφ, fun m => ?_⟩
     obtain ⟨γ, hγ, k, hk, e⟩ := hKc ⟨m.1.1, Subgroup.mem_subgroupOf.1 m.2⟩
     refine ⟨φ γ, ?_, φ k, ⟨k, hk, rfl⟩, ?_⟩
@@ -1274,7 +1274,7 @@ theorem GlobalTheory.Unf.cut_gram_base : ∀ (D : D7) (ψ : AddChar (AF D.host.F
       change m.1.1 = γ.1 * k.1
       exact congrArg Subtype.val e
   have hmeas : ∀ i, Measurable (F i) := fun i =>
-    (hTh.cont.mul ((hT Ψ hΨ).2.2.2.1 i.1 |>.comp (continuous_subtype_val.prodMk continuous_const))).measurable
+    (hTh.cont.mul ((hT Ψ hΨ).2.2.2.1 i.1 |>.comp (continuous_subtypeVal.prodMk continuous_const))).measurable
   have hbd : ∃ B : NNReal, ∀ n, ∑' i, ‖F i n‖ₑ ≤ B := by
     obtain ⟨K, hK, hKc⟩ := (GlobalTheory.T.isotropic_unipotentRadicals_rational_cocompact D V ρ d.e (isIsoSub_e d)).1
     obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn hTh.cont.continuousOn
@@ -1282,13 +1282,13 @@ theorem GlobalTheory.Unf.cut_gram_base : ∀ (D : D7) (ψ : AddChar (AF D.host.F
     refine ⟨M.toNNReal * (C * (height V 1 * quotHeight W 1) ^ A).toNNReal, fun n => ?_⟩
     have hTn : ‖Th n.1‖ₑ ≤ ENNReal.ofReal M := by
       obtain ⟨γ, hγ, k, hk, rfl⟩ := hKc n
-      rw [Subgroup.coe_mul, hTh.left γ.1 (Subgroup.mem_subgroupOf.1 hγ) γ.2 k.1 k.2, ← ofReal_norm_eq_enorm]
+      rw [Subgroup.coe_mul, hTh.left γ.1 (Subgroup.mem_subgroupOf.1 hγ) γ.2 k.1 k.2, ← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hM k hk)
     have hS := hCA 1 1 n.1 n.2
     rw [mul_one] at hS
     calc ∑' i, ‖F i n‖ₑ = ‖Th n.1‖ₑ * ∑' i : {x : Matrix (Fin W.rank) (Fin ρ) D.host.E // gramQ W x ≠ gramQ W x₀},
           ‖term ψ d W vS (om (n.1, 1) Ψ) i.1‖ₑ := by
-          rw [← ENNReal.tsum_mul_left]; exact tsum_congr fun i => enorm_mul _ _
+          rw [← ENNReal.tsum_mul_left]; exact tsum_congr fun i => eNorm_mul _ _
       _ ≤ ENNReal.ofReal M * ENNReal.ofReal (C * (height V 1 * quotHeight W 1) ^ A) :=
           mul_le_mul' hTn ((ENNReal.tsum_comp_le_tsum_of_injective Subtype.val_injective _).trans hS)
       _ = _ := by rw [ENNReal.ofReal, ENNReal.ofReal, ← ENNReal.coe_mul]
@@ -1368,7 +1368,7 @@ theorem mean_theta_orbit : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.h
   have hsum : ∀ n : flagN d, HasSum (term ψ d W vS (om (n.1, 1) Ψ)) (om (n.1, 1) Ψ 0) :=
     fun n => (hT _ (hw.om_pres _ _ hΨ)).2.2.2.2
   have hcont : ∀ x, Continuous fun n : flagN d => term ψ d W vS (om (n.1, 1) Ψ) x := fun x =>
-    ((hT Ψ hΨ).2.2.2.1 x).comp (continuous_subtype_val.prodMk continuous_const)
+    ((hT Ψ hΨ).2.2.2.1 x).comp (continuous_subtypeVal.prodMk continuous_const)
   obtain ⟨C, A, hC⟩ := GlobalTheory.T.thetaTermSeries_summable_moderateGrowth_uniform D ψ V V₀ W ρ d χV χW om om' hw hw' vS Ψ hΨ
   have hbd : ∀ n : flagN d, ∑' x, ‖term ψ d W vS (om (n.1, 1) Ψ) x‖ₑ ≤
       ENNReal.ofReal (C * (height V 1 * quotHeight W 1) ^ A) := fun n => by
@@ -1391,10 +1391,10 @@ theorem mean_theta_orbit : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.h
     refine mul_le_mul (hThb n) ?_ (norm_nonneg _) ((norm_nonneg _).trans (hThb n))
     have h1 : ‖∑' x : S, term ψ d W vS (om (n.1, 1) Ψ) x.1‖ₑ ≤
         ENNReal.ofReal (C * (height V 1 * quotHeight W 1) ^ A) :=
-      enorm_tsum_le_tsum_enorm.trans
+      eNorm_tsum_le_tsum_eNorm.trans
         ((ENNReal.tsum_comp_le_tsum_of_injective Subtype.val_injective _).trans (hbd n))
     have h2 := ENNReal.toReal_mono ENNReal.ofReal_ne_top h1
-    rwa [toReal_enorm, ENNReal.toReal_ofReal'] at h2
+    rwa [toReal_eNorm, ENNReal.toReal_ofReal'] at h2
   have hmeas : ∀ S : Set (Matrix (Fin W.rank) (Fin ρ) D.host.E),
       AEStronglyMeasurable (fun n : flagN d => ∑' x : S, Th n.1 * term ψ d W vS (om (n.1, 1) Ψ) x.1)
         (vN.ν.restrict vN.𝓝) := by
@@ -1500,11 +1500,11 @@ theorem mean_lift_eq_orbit_integral : ∀ (D : D7), Descent D → ∀ (ψ : AddC
   intro D hDesc ψ V V₀ W ρ d χV χW om om' hw hw' vS vN vW x₀ Th hB hTh G Φ hG hΦ
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   obtain ⟨j1, j2, j3, j4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag V (isIsoSub_e d)
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin W.rank) (Fin ρ) D.host.E) :=
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin W.rank) (Fin ρ) D.host.E) :=
     inferInstanceAs (Countable (Fin W.rank → Fin ρ → D.host.E))
-  haveI := vN.unit.1
-  haveI := vW.haar
+  have := vN.unit.1
+  have := vW.haar
   have hT := GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hw hw' vS
   have hsplit : ∀ (g : GA D V) (h : GA D W), om (g, h) Φ = om (g, 1) (om (1, h) Φ) := by
     intro g h
@@ -1536,29 +1536,29 @@ theorem mean_lift_eq_orbit_integral : ∀ (D : D7), Descent D → ∀ (ψ : AddC
   have hGt : ∀ (n : flagN d) (h : GA D W), ‖G h‖ₑ * ∑' x, ‖term ψ d W vS (om (n.1, h) Φ) x‖ₑ ≤
       ENNReal.ofReal (max C 0 * B) := fun n h => by
     refine (mul_le_mul' le_rfl (hbd n h)).trans ?_
-    rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (norm_nonneg _)]
+    rw [← ofReal_norm, ← ENNReal.ofReal_mul (norm_nonneg _)]
     refine ENNReal.ofReal_le_ofReal ?_
     calc ‖G h‖ * (max C 0 * quotHeight W h ^ A) = max C 0 * (‖G h‖ * quotHeight W h ^ A) := by ring
       _ ≤ max C 0 * B := mul_le_mul_of_nonneg_left (hBd h) (le_max_right _ _)
   have hall : ∀ (n : flagN d) (h : GA D W) (S : Set (Matrix (Fin W.rank) (Fin ρ) D.host.E)),
       ∑' y : S, ‖Th n.1 * G h * term ψ d W vS (om (n.1, h) Φ) y.1‖ₑ ≤ ENNReal.ofReal (M * (max C 0 * B)) := by
     intro n h S
-    simp_rw [enorm_mul]
+    simp_rw [eNorm_mul]
     rw [ENNReal.tsum_mul_left, mul_assoc, ENNReal.ofReal_mul hM0]
     refine mul_le_mul' ?_ ?_
-    · rw [← ofReal_norm_eq_enorm]; exact ENNReal.ofReal_le_ofReal (hThb n)
+    · rw [← ofReal_norm]; exact ENNReal.ofReal_le_ofReal (hThb n)
     · exact (mul_le_mul' le_rfl (ENNReal.tsum_comp_le_tsum_of_injective Subtype.val_injective _)).trans (hGt n h)
   have hK0 : 0 ≤ M * (max C 0 * B) := mul_nonneg hM0 (mul_nonneg (le_max_right _ _) hB0)
   have hnorm : ∀ (n : flagN d) (h : GA D W), ‖om (n.1, h) Φ 0‖ * ‖G h‖ ≤ max C 0 * B := fun n h => by
     have h1 : ‖om (n.1, h) Φ 0‖ₑ * ‖G h‖ₑ ≤ ENNReal.ofReal (max C 0 * B) := by
       rw [mul_comm, ← (hsum n h).tsum_eq]
-      exact (mul_le_mul' le_rfl enorm_tsum_le_tsum_enorm).trans (hGt n h)
+      exact (mul_le_mul' le_rfl eNorm_tsum_le_tsum_eNorm).trans (hGt n h)
     have h2 := ENNReal.toReal_mono ENNReal.ofReal_ne_top h1
-    rwa [ENNReal.toReal_mul, toReal_enorm, toReal_enorm,
+    rwa [ENNReal.toReal_mul, toReal_eNorm, toReal_eNorm,
       ENNReal.toReal_ofReal (mul_nonneg (le_max_right _ _) hB0)] at h2
-  haveI : IsFiniteMeasure (vN.ν.restrict vN.𝓝) :=
+  have : IsFiniteMeasure (vN.ν.restrict vN.𝓝) :=
     isFiniteMeasure_restrict.2 (by rw [vN.unit.2.2]; exact ENNReal.one_ne_top)
-  haveI : IsFiniteMeasure (vW.μ.restrict vW.𝓕) :=
+  have : IsFiniteMeasure (vW.μ.restrict vW.𝓕) :=
     isFiniteMeasure_restrict.2 (GlobalTheory.Chain.LiftReg.vol_ne_top vW.haar vW.fund)
   have hfin : (vN.ν.prod vW.μ) (vN.𝓝 ×ˢ vW.𝓕) ≠ ⊤ := by
     rw [Measure.prod_prod, vN.unit.2.2, one_mul]
@@ -1571,7 +1571,7 @@ theorem mean_lift_eq_orbit_integral : ∀ (D : D7), Descent D → ∀ (ψ : AddC
       ((vN.ν.restrict vN.𝓝).prod (vW.μ.restrict vW.𝓕)) := by
     refine Integrable.of_bound ?_ (M * (max C 0 * B)) (Filter.Eventually.of_forall fun p => ?_)
     · exact ((hTh.cont.comp continuous_fst).mul (((hw.om_cont Φ hΦ 0).comp
-        ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)).mul
+        ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)).mul
           (hG.2.1.comp continuous_snd))).aestronglyMeasurable
     · rw [norm_mul, norm_mul]
       exact mul_le_mul (hThb p.1) (hnorm p.1 p.2) (mul_nonneg (norm_nonneg _) (norm_nonneg _)) hM0
@@ -1583,11 +1583,11 @@ theorem mean_lift_eq_orbit_integral : ∀ (D : D7), Descent D → ∀ (ψ : AddC
         (f := fun s p => ∑ y ∈ s, Th p.1.1 * G p.2 * term ψ d W vS (om (p.1.1, p.2) Φ) y.1) (fun s => ?_)
         (Filter.Eventually.of_forall fun p => ?_)
       · exact (continuous_finsetSum _ fun y _ => ((hTh.cont.comp continuous_fst).mul (hG.2.1.comp continuous_snd)).mul
-          (((hT Φ hΦ).2.2.2.1 y.1).comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd))).aestronglyMeasurable
+          (((hT Φ hΦ).2.2.2.1 y.1).comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd))).aestronglyMeasurable
       · exact (((hsum p.1 p.2).summable.mul_left (Th p.1.1 * G p.2)).subtype _).hasSum
-    · have h1 := enorm_tsum_le_tsum_enorm.trans (hall p.1 p.2 (Orb W x₀))
+    · have h1 := eNorm_tsum_le_tsum_eNorm.trans (hall p.1 p.2 (Orb W x₀))
       have h2 := ENNReal.toReal_mono ENNReal.ofReal_ne_top h1
-      rwa [toReal_enorm, ENNReal.toReal_ofReal hK0] at h2
+      rwa [toReal_eNorm, ENNReal.toReal_ofReal hK0] at h2
   rw [← Measure.prod_restrict]
   simp only [liftS_apply]
   calc ∫ n in vN.𝓝, Th n.1 * ∫ h in vW.𝓕, om (n.1, h) Φ 0 * G h ∂vW.μ ∂vN.ν
@@ -1658,15 +1658,15 @@ theorem unfold_over_N_lift : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D
   obtain ⟨b1, b2, b3, b4, b5, b6, b7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   obtain ⟨c1, c2, c3, c4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag V (GlobalTheory.MixPer.isIsoSub_e d)
   obtain ⟨hN1, hN2, hN3⟩ := vN.unit
-  haveI := vW.haar
-  haveI : SFinite vN.ν := inferInstance
-  haveI : SFinite vW.μ := inferInstance
+  have := vW.haar
+  have : SFinite vN.ν := inferInstance
+  have : SFinite vW.μ := inferInstance
   obtain ⟨act, y₀, hy₀, hrel, htrans, hstab1, hstab2⟩ := GlobalTheory.T.flagUnitaryOrbitAction_transitive_with_stabilizer D V V₀ W ρ d x₀ hx
-  letI := act
+  let := act
   obtain ⟨𝓐, h𝓐, hlay⟩ := GlobalTheory.T.flagUnipotent_fundamentalDomain_layers_integral D V V₀ ρ d vN vb vU
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin W.rank) (Fin ρ) D.host.E) := inferInstanceAs (Countable (Fin _ → Fin _ → _))
-  haveI hΓc : Countable ((NFlagQ V d.e).prod (GQ W)) := Function.Injective.countable
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin W.rank) (Fin ρ) D.host.E) := inferInstanceAs (Countable (Fin _ → Fin _ → _))
+  have hΓc : Countable ((NFlagQ V d.e).prod (GQ W)) := Function.Injective.countable
     (f := fun γ : (NFlagQ V d.e).prod (GQ W) => ((⟨γ.1.1, (Subgroup.mem_prod.1 γ.2).1⟩ : NFlagQ V d.e),
       (⟨γ.1.2, (Subgroup.mem_prod.1 γ.2).2⟩ : GQ W)))
     fun a b h => by
@@ -1699,7 +1699,7 @@ theorem unfold_over_N_lift : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D
     have t4 := (GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hω hω' vS Φ hΦ).2.2.2.1 y.1
     refine Continuous.measurable ?_
     refine ((hTh.cont.comp continuous_fst).mul (hG.2.1.comp continuous_snd)).mul ?_
-    exact t4.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+    exact t4.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
   have hinv : ∀ (γ : (NFlagQ V d.e).prod (GQ W)) (y : Orb W x₀) (p : flagN d × GA D W),
       Th ((γ : flagN d × GA D W) * p).1.1 * G ((γ : flagN d × GA D W) * p).2 *
         term ψ d W vS (om (((γ : flagN d × GA D W) * p).1.1, ((γ : flagN d × GA D W) * p).2) Φ) (γ • y).1 =

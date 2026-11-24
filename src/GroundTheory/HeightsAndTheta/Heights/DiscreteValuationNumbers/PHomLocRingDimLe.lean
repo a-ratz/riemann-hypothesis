@@ -284,7 +284,7 @@ theorem primeAbove_strictMono [Fintype K] (hmem : HomLocRingMem.Statement.{u}) (
     intro b g hg hgW
     obtain ⟨a, ha, hav⟩ := hh b g hg hgW
     exact ⟨a, hlt.le ha, hav⟩
-  · obtain ⟨x, hx', hx⟩ := SetLike.exists_of_lt hlt
+  · obtain ⟨x, hx', hx⟩ := IsConcreteLE.exists_of_lt hlt
     obtain ⟨b, f, g, hf, hg, hgW, hxv⟩ := (hmem R K ι P W hW hPW x.1).1 x.2
     have h1 : f ∈ primeAbove hPW hW hrel q' := form_mem_primeSet hPW hf hg hgW ⟨x, hx', hxv⟩
     rw [← heq] at h1
@@ -299,7 +299,7 @@ open HomLocRingDimLe in
 theorem HomLocRingDimLe.proof (h₁ : HomLocRingMem.Statement.{u})
     (h₂ : HomLocRingIsLocal.Statement.{u}) : HomLocRingDimLe.Statement.{u} := by
   intro R _ K _ _ ι _ P W _ hP hW hrel hPW
-  haveI := hW
+  have := hW
   let Φ : PrimeSpectrum (homLocRing P W) → PrimeSpectrum (MRing ι R ⧸ P) := fun q =>
     haveI := primeAbove_isPrime hPW hW hrel q.asIdeal
     ⟨(primeAbove hPW hW hrel q.asIdeal).map (Ideal.Quotient.mk P),
@@ -318,7 +318,7 @@ theorem HomLocRingDimLe.proof (h₁ : HomLocRingMem.Statement.{u})
     rwa [Ideal.comap_map_of_surjective' _ Ideal.Quotient.mk_surjective,
       Ideal.comap_map_of_surjective' _ Ideal.Quotient.mk_surjective, Ideal.mk_ker,
       sup_eq_left.mpr hPq, sup_eq_left.mpr hPq'] at this
-  haveI hWq : (W.map (Ideal.Quotient.mk P)).IsPrime :=
+  have hWq : (W.map (Ideal.Quotient.mk P)).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hPW)
   let w : PrimeSpectrum (MRing ι R ⧸ P) := ⟨W.map (Ideal.Quotient.mk P), hWq⟩
   have hΦw : ∀ q, Φ q ≤ w := fun q => by

@@ -64,7 +64,7 @@ private theorem existsUnique_sec {U P : Scheme.{0}} (p' : P ⟶ U) {m : ℕ} (s'
     (hs : ∀ j, s' j ≫ p' = 𝟙 U) (hiso : IsIso (Sigma.desc s' : ∐ (fun _ : Fin m => U) ⟶ P))
     {Ω : Type} [Field Ω] (x0 : gp Ω ⟶ U) (y : gp Ω ⟶ P) (hy : y ≫ p' = x0) :
     ∃! j, x0 ≫ s' j = y := by
-  have hι : ∀ j, Sigma.ι (fun _ : Fin m => U) j ≫ Sigma.desc s' = s' j := fun j => Sigma.ι_desc _ _
+  have hι : ∀ j, Sigma.ι (fun _ : Fin m => U) j ≫ Sigma.desc s' = s' j := fun j => Sigma.ι_comp_desc _ _
   let t : gp Ω ⟶ ∐ (fun _ : Fin m => U) := y ≫ inv (Sigma.desc s')
   obtain ⟨⟨j, u⟩, hu⟩ := (sigmaMk (fun _ : Fin m => U)).surjective (pt t)
   rw [sigmaMk_mk] at hu
@@ -115,11 +115,11 @@ private theorem tr_split (hCorr : CorrEqQ) (hId : TrIdQ) (l : ℕ) [Fact l.Prime
     split_ifs with h
     · refine finsum_one_singleton _ y ?_
       ext z
-      simp only [c, Set.mem_setOf_eq, Set.mem_singleton_iff, Category.comp_id]
+      simp only [c, Set.mem_ofPred_eq, Set.mem_singleton_iff, Category.comp_id]
       exact ⟨fun hz => hz.2, fun hz => ⟨hz ▸ h, hz⟩⟩
     · refine finsum_one_empty _ ?_
       ext z
-      simp only [c, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, Category.comp_id]
+      simp only [c, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, Category.comp_id]
       rintro ⟨h1, rfl⟩
       exact h h1
   have hcs : ∀ (j : Fin m) (Ω : Type) [Field Ω] [IsAlgClosed Ω] (x0 : gp Ω ⟶ U) (y : gp Ω ⟶ P),
@@ -128,11 +128,11 @@ private theorem tr_split (hCorr : CorrEqQ) (hId : TrIdQ) (l : ℕ) [Fact l.Prime
     split_ifs with h
     · refine finsum_one_singleton _ x0 ?_
       ext z
-      simp only [c, Set.mem_setOf_eq, Set.mem_singleton_iff, Category.comp_id]
+      simp only [c, Set.mem_ofPred_eq, Set.mem_singleton_iff, Category.comp_id]
       exact ⟨fun hz => hz.1, fun hz => ⟨hz, hz ▸ h⟩⟩
     · refine finsum_one_empty _ ?_
       ext z
-      simp only [c, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, Category.comp_id]
+      simp only [c, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, Category.comp_id]
       rintro ⟨rfl, h1⟩
       exact h h1
   have key := hCorr l n i (𝟙 U) p' (Option (Fin m)) c mm
@@ -144,16 +144,16 @@ private theorem tr_split (hCorr : CorrEqQ) (hId : TrIdQ) (l : ℕ) [Fact l.Prime
       simp only [hcn, hcs, mm]
       by_cases hy : y ≫ p' = x0
       · obtain ⟨j, hj, hu⟩ := existsUnique_sec p' s' hs hiso x0 y hy
-        rw [if_pos hy, Finset.sum_eq_single j]
+        rw [ite_eq_left hy, Finset.sum_eq_single j]
         · simp [hj]
         · intro k _ hk
-          rw [if_neg (fun e => hk (hu k e))]
+          rw [ite_eq_right (fun e => hk (hu k e))]
           simp
         · simp
-      · rw [if_neg hy]
+      · rw [ite_eq_right hy]
         simp only [mul_zero, zero_add]
         refine Finset.sum_eq_zero fun j _ => ?_
-        rw [if_neg]
+        rw [ite_eq_right]
         · simp
         · intro e
           apply hy

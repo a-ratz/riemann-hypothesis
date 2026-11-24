@@ -138,7 +138,7 @@ theorem mem_of_sum_mul_pow_mem_of_valuation_zpow (Ω : Type) [Field Ω] (A : Val
   classical
   set v := A.valuation with hv
   set b := v ℓ with hb
-  have hb0 : 0 < b := lt_of_le_of_ne zero_le' (Ne.symm ((Valuation.ne_zero_iff v).2 hℓ))
+  have hb0 : 0 < b := lt_of_le_of_ne zero_le (Ne.symm ((Valuation.ne_zero_iff v).2 hℓ))
   set t : ℕ → A.ValueGroup := fun i => v (c i * π ^ i) with ht
 
   have hpow : ∀ i (k : ℤ), v (c i) = b ^ k → t i ^ N = b ^ ((N : ℤ) * k + i) := by
@@ -165,7 +165,7 @@ theorem mem_of_sum_mul_pow_mem_of_valuation_zpow (Ω : Type) [Field Ω] (A : Val
     obtain ⟨j, hj, hmax⟩ := Finset.exists_max_image (Finset.range N) t ⟨0, Finset.mem_range.2 hN⟩
     suffices t j ≤ 1 from fun i hi => (hmax i hi).trans this
     by_cases htj : t j = 0
-    · rw [htj]; exact zero_le'
+    · rw [htj]; exact zero_le
     have hcj : c j ≠ 0 := by
       intro h; apply htj; simp [ht, h]
     have hlt : ∀ i ∈ Finset.range N \ {j}, v (c i * π ^ i) < v (c j * π ^ j) := by
@@ -184,7 +184,7 @@ theorem mem_of_sum_mul_pow_mem_of_valuation_zpow (Ω : Type) [Field Ω] (A : Val
   by_cases hci : c i = 0
   · rw [hci]; exact A.zero_mem
   obtain ⟨k, hk⟩ := hc i hi hci
-  have h1 : t i ^ N ≤ 1 := pow_le_one₀ zero_le' (hle i (Finset.mem_range.2 hi))
+  have h1 : t i ^ N ≤ 1 := pow_le_one₀ zero_le (hle i (Finset.mem_range.2 hi))
   rw [hpow i k hk, zpow_le_one_iff_right_of_lt_one₀ hb0 hℓ1] at h1
   have hk0 : 0 ≤ k := by
     by_contra hneg
@@ -210,7 +210,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 theorem GlobalTheory.ZetaPoly.exists_poly : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω), OverL l A → ∀ (n : ℕ) (ζ : Ω), IsPrimitiveRoot ζ (l ^ n) → ∀ u ∈ A, (∀ s ∈ Ine (F := ℚ) A, s ζ = ζ → s u = u) → ∃ Q : Polynomial Ω, (∀ d, Q.coeff d ∈ A ∧ ∀ s ∈ Ine (F := ℚ) A, s (Q.coeff d) = Q.coeff d) ∧ Q.eval ζ = u := by
   intro l _ Ω _ _ _ A hA n ζ hζ u hu hfix
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · have hζ1 : ζ = 1 := by simpa using hζ
     subst hζ1

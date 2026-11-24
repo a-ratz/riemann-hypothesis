@@ -75,7 +75,7 @@ theorem teichmuller_dvd_of_dvd_natCast_mul (l : ℕ) [Fact l.Prime] (O : Type) [
   have hb0 : b.coeff 0 = 0 := (mul_eq_zero.mp h0).resolve_left hx
   rw [← WittVector.mem_span_p_iff_coeff_zero_eq_zero, Ideal.mem_span_singleton] at hb0
   obtain ⟨c, rfl⟩ := hb0
-  have hl : ((l : ℕ) : WittVector l O) ≠ 0 := WittVector.p_nonzero l O
+  have hl : ((l : ℕ) : WittVector l O) ≠ 0 := WittVector.p_ne_zero l O
   refine ⟨c, mul_left_cancel₀ hl ?_⟩
   rw [hb]; ring
 

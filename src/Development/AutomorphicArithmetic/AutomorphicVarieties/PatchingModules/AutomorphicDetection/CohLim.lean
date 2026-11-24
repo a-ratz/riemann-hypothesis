@@ -100,7 +100,7 @@ private theorem bd_mem_iff {A X : Type} [CommRing A] [CommRing X] [Algebra A X] 
       (Z i j).ep' = 0 ∧ (Z i j).eta = 0 ∧ ((((i : ℕ) < a) ↔ ((j : ℕ) < a)) → (Z i j).ep = 0) ∧
         (¬ (((i : ℕ) < a) ↔ ((j : ℕ) < a)) → (Z i j).a = 0) := by
   simp only [W1, blkMat, ddPart, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-    Set.mem_setOf_eq]
+    Set.mem_ofPred_eq]
   refine forall_congr' fun i => forall_congr' fun j => ?_
   by_cases hd : ((i : ℕ) < a ↔ (j : ℕ) < a) <;> simp [hd] <;> tauto
 
@@ -157,13 +157,13 @@ private theorem bd_rho_mem {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} {x 
     intro m i j hd
     have hm := (k.mem m).1 g
     simp only [Od, blkMat, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-      Set.mem_setOf_eq, Submodule.mem_bot] at hm
+      Set.mem_ofPred_eq, Submodule.mem_bot] at hm
     exact (hm i j).1 hd
   have hR : ∀ i j : Fin n, ¬((i : ℕ) < x.a ↔ (j : ℕ) < x.a) → (mat x.ρ) g i j = 0 := by
     intro i j hd
     have hm := x.blk g
     simp only [Ev, blkMat, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk,
-      Set.mem_setOf_eq, Submodule.mem_bot] at hm
+      Set.mem_ofPred_eq, Submodule.mem_bot] at hm
     exact (hm i j).2 hd
   apply bd_mul_mem
   · rw [bd_mem_iff]
@@ -446,7 +446,7 @@ private theorem exists_section (K : Type) [Field K] (I : Ideal (PowerSeries K)) 
 theorem UpperTheory.V.Pa.coefficients_bounded_of_selmer_boundary :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G G0 : Glob l L) (h : G.Hom G0) (n : ℕ) (x : NP G0.frame n) (k : Kap x) (e : ℕ) (z : Fin e → G.G₀ → Matrix (Fin n) (Fin n) (DD x.A k.g)), TopFG G.Γ → (∀ i, z i ∈ Sel1 h x.A k) → (∀ c : Fin e → x.A, ∑ i, c i • z i ∈ Bd1 h x.A k → c = 0) → ∃ C : ℕ, ∀ (m : ℕ) (c : Fin e → x.A), (fun g => ((∑ i, c i • z i) g).map (x.redD k.g m)) ∈ Bd1 h (x.Am m) k → ∀ i, c i ∈ Ideal.span {x.t ^ (m - C)} := by
   intro l _ L G G0 h n x k e z _ _ hind
-  haveI := dd_finite x.A k.g
+  have := dd_finite x.A k.g
   let V : Submodule x.A (Matrix (Fin n) (Fin n) (DD x.A k.g)) :=
     { carrier := {Y | Y ∈ W1 n x.A x.A k.g x.a ∧ Yᵀ = -Y}
       add_mem' := fun ha hb => ⟨add_mem ha.1 hb.1, by rw [transpose_add, ha.2, hb.2, neg_add]⟩
@@ -461,9 +461,9 @@ theorem UpperTheory.V.Pa.coefficients_bounded_of_selmer_boundary :
       map_smul' := fun c p => by
         simp only [dY, Prod.smul_fst, Prod.smul_snd, Pi.smul_apply, smul_eq_mul, mul_smul, ← Finset.smul_sum,
           Submodule.coe_smul, Matrix.mul_smul, Matrix.smul_mul, RingHom.id_apply, smul_sub] }
-  haveI : Module.Finite x.A (Matrix (Fin n) (Fin n) (DD x.A k.g)) :=
+  have : Module.Finite x.A (Matrix (Fin n) (Fin n) (DD x.A k.g)) :=
     inferInstanceAs (Module.Finite x.A (Fin n → Fin n → DD x.A k.g))
-  haveI : Module.Finite x.A V := Module.Finite.of_injective V.subtype V.subtype_injective
+  have : Module.Finite x.A V := Module.Finite.of_injective V.subtype V.subtype_injective
   obtain ⟨C, hC⟩ := ar_family (Ideal.span {x.t}) f
   refine ⟨C, fun m c hc i => ?_⟩
   rcases le_total m C with hm | hm
@@ -499,7 +499,7 @@ private theorem card_submodule_mul_quotient_le {A M : Type} [CommRing A] [AddCom
     (hBS : (B : Set M) ⊆ S) (hS : (S : Set M).Finite) (I : Ideal A) (e : ℕ) (φ : (Fin e → A) → M)
     (hφ : ∀ c, φ c ∈ S) (hsub : ∀ c c', φ (c - c') = φ c - φ c') (hI : ∀ c, φ c ∈ B → ∀ i, c i ∈ I) :
     (B : Set M).ncard * Nat.card (A ⧸ I) ^ e ≤ (S : Set M).ncard := by
-  haveI : Finite (S : Set M) := hS
+  have : Finite (S : Set M) := hS
   choose s hs using (Ideal.Quotient.mk_surjective (I := I))
   let f : ↥(B : Set M) × (Fin e → A ⧸ I) → ↥(S : Set M) := fun p =>
     ⟨φ (fun i => s (p.2 i)) + p.1, S.add_mem (hφ _) (hBS p.1.2)⟩
@@ -582,7 +582,7 @@ private theorem closed_zero {Γ K : Type} [TopologicalSpace Γ] [Field K] {f : �
   have hset : {g | f g = 0} = ⋂ N : ℕ,
       {g | Ideal.Quotient.mk ((Ideal.span {(PowerSeries.X : PowerSeries K)}) ^ N) (f g) = 0} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Ideal.Quotient.eq_zero_iff_mem,
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Ideal.Quotient.eq_zero_iff_mem,
       Ideal.span_singleton_pow, Ideal.mem_span_singleton]
     constructor
     · intro h N
@@ -660,7 +660,7 @@ theorem UpperTheory.V.Pa.coc_ker :
   have hHclosed : IsClosed (H : Set G.G₀) := by
     have e1 : (H : Set G.G₀) = {k | h.p₀ k = 1} ∩ ⋂ i, ⋂ j, {k | z k i j = 0} := by
       ext k
-      simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_iInter]
       constructor
       · rintro ⟨h1, h2⟩
         exact ⟨h1, fun i j => by rw [h2]; rfl⟩
@@ -715,11 +715,11 @@ theorem UpperTheory.V.Pa.ker_oo :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T), T.ProL → Λ.h.p.ker ≤ (Subgroup.normalClosure (Set.range fun j => (Λ.ta j : Λ.G.Γ))).topologicalClosure := by
   intro l _ L G0 T Λ hT x hx
   set K := (Subgroup.normalClosure (Set.range fun j => (Λ.ta j : Λ.G.Γ))).topologicalClosure with hK
-  haveI : K.Normal := Subgroup.is_normal_topologicalClosure _
+  have : K.Normal := Subgroup.is_normal_topologicalClosure _
   refine (totallyDisconnected_quot Λ.G.Γ K (Subgroup.isClosed_topologicalClosure _)).2 x fun O => ?_
-  haveI := O.isNormal'
+  have := O.isNormal'
   set W : Subgroup Λ.G.Γ := K ⊔ O.toSubgroup with hW
-  haveI hWn : W.Normal := Subgroup.sup_normal _ _
+  have hWn : W.Normal := Subgroup.sup_normal _ _
   have hWo : IsOpen (W : Set Λ.G.Γ) := Subgroup.isOpen_mono (le_sup_right : O.toSubgroup ≤ W) O.isOpen'
   have hta : ∀ j, (Λ.ta j : Λ.G.Γ) ∈ W := fun j =>
     Subgroup.mem_sup_left (Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure ⟨j, rfl⟩))
@@ -736,7 +736,7 @@ theorem UpperTheory.V.Pa.ker_oo :
   have hG0 : TopFG G0.Γ := (TopFG.subgroup_quot Λ.Ph hPh).2 G0.Γ (Λ.h.p.comp Λ.πo) (Λ.h.cont.comp Λ.πo_cont)
     (Λ.h.surj.comp Λ.πo_surj)
   have hidx : V.toSubgroup.index ≠ 0 := by
-    haveI : Finite (Λ.Ph ⧸ V.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ hVo
+    have : Finite (Λ.Ph ⧸ V.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ hVo
     exact Subgroup.index_ne_zero_of_finite
   have hfin := (finite_hom_of_topFG G0.Γ hG0).2.2 _ hidx
   have hall : ∀ᶠ N in (Λ.U : Filter ℕ), ∀ A ∈ {H : Subgroup G0.Γ | IsOpen (H : Set G0.Γ) ∧ H.index = V.toSubgroup.index},
@@ -748,7 +748,7 @@ theorem UpperTheory.V.Pa.ker_oo :
     · exact Eventually.of_forall fun N h => absurd h hn
   obtain ⟨N, h1, h2, h3⟩ := ((Λ.ker_lim V).and ((Λ.ta_lim V).and hall)).exists
   have hkN : (Λ.π N).ker ≤ V.toSubgroup := le_sup_left.trans (h1.le.trans (sup_le hko le_rfl))
-  haveI hVNn : (V.toSubgroup.map (Λ.π N)).Normal := hVn.map _ (Λ.π_surj N)
+  have hVNn : (V.toSubgroup.map (Λ.π N)).Normal := hVn.map _ (Λ.π_surj N)
   have hVNo := isOpen_map_of_ker_le (Λ.π N) (Λ.π_cont N) (Λ.π_surj N) _ hVo hkN
   have hkh : (T.h N).p.ker ≤ V.toSubgroup.map (Λ.π N) := by
     refine (T.ker_le N).trans (Subgroup.topologicalClosure_minimal _ ?_ (Subgroup.isClosed_of_isOpen _ hVNo))
@@ -948,7 +948,7 @@ theorem UpperTheory.V.AlgebraTools.ultra_fin :
   intro ι Z U a s hs h
   have hsub : {i | a i ∈ s} ⊆ ⋃ z ∈ s, {i | a i = z} := by
     intro i hi
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
     exact ⟨a i, hi, rfl⟩
   have hmem : (⋃ z ∈ s, {i | a i = z}) ∈ U := U.1.sets_of_superset h hsub
   obtain ⟨z, hz, hzU⟩ := (Ultrafilter.finite_biUnion_mem_iff hs).1 hmem
@@ -1420,7 +1420,7 @@ private theorem power_series_exists_ultrafilter_limit {K : Type} [Field K] [Fini
     have hinter : (⋂ v : K, {m | PowerSeries.coeff i (c m) = v}ᶜ) ∈ (U : Filter ℕ) :=
       Filter.iInter_mem.2 hall
     obtain ⟨m, hm⟩ := Filter.nonempty_of_mem hinter
-    simp only [Set.mem_iInter, Set.mem_compl_iff, Set.mem_setOf_eq] at hm
+    simp only [Set.mem_iInter, Set.mem_compl_iff, Set.mem_ofPred_eq] at hm
     exact hm _ rfl
   choose v hv using hv
   refine ⟨PowerSeries.mk v, fun j => ?_⟩

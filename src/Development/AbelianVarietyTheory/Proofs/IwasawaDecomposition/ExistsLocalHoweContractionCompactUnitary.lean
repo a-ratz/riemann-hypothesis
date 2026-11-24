@@ -110,7 +110,7 @@ theorem sum_castLE {M : Type*} [AddCommMonoid M] {k m : ℕ} (hk : k ≤ m) (f :
 theorem prod_pow_ite {k m : ℕ} (hk : k ≤ m) (c : Fin m → ℂ) :
     ∏ i, c i ^ (if (i : ℕ) < k then 1 else 0) = ∏ i : Fin k, c (Fin.castLE hk i) :=
   (Fintype.prod_of_injective (Fin.castLE hk) (Fin.castLE_injective hk) _ _
-    (fun i hi => by rw [if_neg (not_lt.2 (not_range_castLE hk i hi)), pow_zero])
+    (fun i hi => by rw [ite_eq_right (not_lt.2 (not_range_castLE hk i hi)), pow_zero])
     fun i => by simp).symm
 
 def block (hn : n ≤ N) {k : ℕ} (hk : k ≤ n) : Matrix (Fin k) (Fin k) (MvPolynomial (Fin N × Fin n) ℂ) :=
@@ -127,7 +127,7 @@ theorem det_block_ne_zero (hn : n ≤ N) {k : ℕ} (hk : k ≤ n) : (block hn hk
 
 theorem det_lead {k m : ℕ} (hk : k ≤ m) (g : Matrix (Fin m) (Fin m) ℂ) (hg : ∀ i j, j < i → g i j = 0) :
     (g.submatrix (Fin.castLE hk) (Fin.castLE hk)).det = ∏ i : Fin k, g (Fin.castLE hk i) (Fin.castLE hk i) := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · rfl
   · intro i j hij
     exact hg _ _ hij
@@ -537,16 +537,16 @@ theorem exists_intertwiner_of_embedding (k : ℕ) (κ : Type) (ν : Fin k → �
       push_cast
       rw [Finset.sum_mul, Complex.exp_sum]
       refine Finset.prod_congr rfl fun a _ => ?_
-      rw [← Complex.exp_nat_mul, mul_assoc])
+      rw [← Complex.exp_natCast_mul, mul_assoc])
   exact ⟨j ∘ₗ L, fun g hg u => by rw [LinearMap.comp_apply, hL g hg, hjπ]; rfl, v, by rw [LinearMap.comp_apply, hv]⟩
 
 theorem exists_intertwiner : ∀ (k : ℕ) (κ : Type) [Fintype κ] (ν : Fin k → ℕ) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [FiniteDimensional ℂ H] (τ : Matrix (Fin k) (Fin k) ℂ → (H →L[ℂ] H)) (Δ : MvPolynomial (Fin k × κ) ℂ), IsURepOn (UJset (allPos k)) τ → IsKTypeOf (allPos k) τ (fun a => (ν a : ℝ)) ⊤ → Δ ≠ 0 → (∀ g, ReciprocityTheory.PGsh.IsUpperUnitri g → ReciprocityTheory.PGsh.rowSubst g Δ = Δ) → (∀ d : Fin k → ℂ, ReciprocityTheory.PGsh.rowSubst (Matrix.diagonal d) Δ = (∏ a, d a ^ ν a) • Δ) → ∃ L : H →ₗ[ℂ] MvPolynomial (Fin k × κ) ℂ, (∀ g ∈ UJset (allPos k), ∀ u, L (τ g u) = ReciprocityTheory.PGsh.rowSubst g (L u)) ∧ ∃ v, L v = Δ := by
   intro k κ _ ν H _ _ _ τ Δ hτ hK hΔ hu hd
   let S : Submodule ℂ (MvPolynomial (Fin k × κ) ℂ) := restrictTotalDegree (Fin k × κ) ℂ Δ.totalDegree
   have hfin : FiniteDimensional ℂ S := inferInstanceAs (Module.Finite ℂ (restrictTotalDegree (Fin k × κ) ℂ Δ.totalDegree))
-  letI : InnerProductSpace.Core ℂ S := fischerCore S
-  letI : NormedAddCommGroup S := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ S := InnerProductSpace.ofCore _
+  let : InnerProductSpace.Core ℂ S := fischerCore S
+  let : NormedAddCommGroup S := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ S := InnerProductSpace.ofCore _
   exact exists_intertwiner_of_embedding k κ ν H τ S S.subtype S.injective_subtype (fun _ _ => rfl)
     (fun g x => ⟨⟨rowSubst g x.1, (mem_restrictTotalDegree _ _ _).mpr
       ((totalDegree_rowSubst_le g x.1).trans ((mem_restrictTotalDegree _ _ _).mp x.2))⟩, rfl⟩)
@@ -887,7 +887,7 @@ theorem exists_local_contraction : ∀ (N n : ℕ) (hn : n ≤ N) (ν : Fin N �
       (LinearIsometry.mk (σ g : H →ₗ[ℂ] H) (hσ.2.1 g hg)).inner_map_map u (I P v)
     rw [hiso, hI, hI, inv_transpose hg, fischer_smul_left,
       ← fischer_subst2_unitary hh (map_star_mem hg) P, ← hΨ h hh _ (map_star_mem hg), hπJ]
-    simp only [map_star_map_star, det_map_star, ContinuousLinearMap.smul_apply, LinearMap.map_smulₛₗ,
+    simp only [map_star_map_star, det_map_star, smul_apply, LinearMap.map_smulₛₗ,
       map_smul, LinearMap.smul_apply, fischer_smul_right, RingHom.id_apply, Complex.conj_conj,
       map_zpow₀, starRingEnd_apply, star_star]
     rw [star_det hh, _root_.inv_zpow', neg_neg]

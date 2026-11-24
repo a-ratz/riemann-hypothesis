@@ -105,7 +105,7 @@ theorem isAdmissible_cuspSubmodule (U : Submodule ℂ (cuspForms K n))
   set U₀ : Subgroup (AdelicGLn.integralFiniteGL K n) :=
     H.comap (AdelicGLn.integralFiniteGL K n).subtype with hU₀
   have hU₀o : IsOpen (U₀ : Set (AdelicGLn.integralFiniteGL K n)) :=
-    hHo.preimage continuous_subtype_val
+    hHo.preimage continuous_subtypeVal
 
   set S : Submodule ℂ (cuspForms K n) :=
     LinearMap.ker (Polynomial.aeval (uActionCusp K n (laplacianU K n b)) P) ⊓

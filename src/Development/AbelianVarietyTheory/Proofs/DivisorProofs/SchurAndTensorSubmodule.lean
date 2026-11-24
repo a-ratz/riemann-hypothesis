@@ -66,7 +66,7 @@ theorem density [Nontrivial V]
     ∃ r ∈ Algebra.adjoin ℂ (Set.range A), ∀ m ∈ s, f m = r m := by
   let R := Algebra.adjoin ℂ (Set.range A)
   have hA : ∀ Z, A Z ∈ R := fun Z => Algebra.subset_adjoin ⟨Z, rfl⟩
-  haveI : IsSimpleModule R V := by
+  have : IsSimpleModule R V := by
     refine (isSimpleModule_iff R V).2 ?_
     refine { toNontrivial := (Submodule.nontrivial_iff R).2 inferInstance, eq_bot_or_eq_top := fun N => ?_ }
     rcases hirr (N.restrictScalars ℂ) (fun Z y hy => N.smul_mem (⟨A Z, hA Z⟩ : R) hy) with h | h
@@ -139,7 +139,7 @@ theorem exists_highest (M : GKMod p q) [Nontrivial M.V] : ∃ μ v, IsHW M.act �
   have hKE : ∀ a b : Ix p q, sameBlock a b → IsKC (Eab a b) := by
     intro a b hab c d hcd
     unfold Eab
-    rw [Matrix.single_apply, if_neg]
+    rw [Matrix.single_apply, ite_eq_right]
     rintro ⟨rfl, rfl⟩
     exact hcd hab
   have hH : ∀ x ∈ U, M.act H x ∈ U := by
@@ -175,12 +175,12 @@ theorem exists_highest (M : GKMod p q) [Nontrivial M.V] : ∃ μ v, IsHW M.act �
       exact hab
   have := hmax _ ⟨_, ⟨_, hK _ (hKE a b hs) v hvU, root_shift M.lie hv a b, hne⟩, rfl⟩
   simp only [id, h, mul_add, mul_sub, Finset.sum_add_distrib, Finset.sum_sub_distrib, mul_ite,
-    mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+    mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
   linarith
 
 theorem schur (M : GKMod p q) (hI : IrrGK M) (hA : AdmGK M) (T : M.V →ₗ[ℂ] M.V)
     (hT : ∀ Z, T ∘ₗ M.act Z = M.act Z ∘ₗ T) : ∃ c : ℂ, T = c • LinearMap.id := by
-  haveI := hI.1
+  have := hI.1
   obtain ⟨μ, v, hv0, hv⟩ := exists_highest M
   have hf : ∀ Z x, T (M.act Z x) = M.act Z (T x) := fun Z x => LinearMap.congr_fun (hT Z) x
   have hst : ∀ x ∈ hwSub M.act μ, T x ∈ hwSub M.act μ := by
@@ -190,8 +190,8 @@ theorem schur (M : GKMod p q) (hI : IrrGK M) (hA : AdmGK M) (T : M.V →ₗ[ℂ]
     refine ⟨fun c => ?_, fun c d h => ?_⟩
     · rw [← hf, ← map_smul, ← map_sub, hx.1 c, map_zero]
     · rw [← hf, hx.2 c d h, map_zero]
-  haveI := hA μ
-  haveI : Nontrivial (hwSub M.act μ) := ⟨⟨⟨v, hv⟩, 0, fun e => hv0 (congrArg Subtype.val e)⟩⟩
+  have := hA μ
+  have : Nontrivial (hwSub M.act μ) := ⟨⟨⟨v, hv⟩, 0, fun e => hv0 (congrArg Subtype.val e)⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue (T.restrict hst)
   obtain ⟨x, hx⟩ := hc.exists_hasEigenvector
   have hx1 : T x = c • (x : M.V) := congrArg Subtype.val hx.apply_eq_smul

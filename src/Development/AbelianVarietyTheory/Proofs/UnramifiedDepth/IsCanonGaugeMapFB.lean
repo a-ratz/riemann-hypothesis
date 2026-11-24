@@ -93,7 +93,7 @@ theorem exists_log_exp :
         intro h
         have := Finsupp.single_left_injective (one_ne_zero (α := ℕ)) h
         exact hij (Prod.mk.inj this).2.symm
-      rw [if_neg hij, if_neg this]
+      rw [ite_eq_right hij, ite_eq_right this]
 
 end GlobalTheory.FormalLog
 end -- clump:auto
@@ -114,7 +114,7 @@ theorem isCanonGauge_mapFB {R k : Type} [CommRing R] [Algebra ℚ R] [CommRing k
     (f : R →+* k) {d : ℕ} {O : Type} [CommRing O] [StarRing O] (B : FB R d O) {h : PS R 2 d}
     (hg : B.IsCanonGauge R h) :
     (GlobalTheory.FBMap.mapFB f B).IsCanonGauge k (MvPowerSeries.map f h) := by
-  letI : Algebra R k := f.toAlgebra
+  let : Algebra R k := f.toAlgebra
   have h1 : B.IsCanonGauge k (MvPowerSeries.map f h) :=
     GlobalTheory.GaugeBaseChange.isCanonGauge_map B (Algebra.ofId R k) hg
   have hid : ∀ {σ : Type} (g : MvPowerSeries σ k), MvPowerSeries.map (algebraMap k k) g = g := by
@@ -141,7 +141,7 @@ theorem exists_baseChange :
   intro E _ _ _ H Dw l Xo c _ T io y C3 C _ _ V ι hι hac hcpl hl hw k hk
   obtain ⟨gF, gA, g1, g2, gs, ga, -⟩ := C3.gen.1
   have hg : (a3B C3).IsCanonGauge T.Fr (a3h C3) := by
-    letI := io.toAlgebra
+    let := io.toAlgebra
     exact C3.ch.gauge
   obtain ⟨lg, ex, hlin, hadd, hc, hle, hel⟩ :=
     GlobalTheory.FormalLog.exists_log_exp C (chD C3.ch) (GlobalTheory.FBMap.mapFB ι (a3B C3)).G

@@ -74,7 +74,7 @@ private theorem ll_mem_preimage_SLt_posU_iff (hV : Fr.Valid L₁ N₁) (hnL : �
     (j j' : ZMod J) (l : Fin (Dt.nL j')) (t : ℕ) (ht : t < Dt.nL j + r) :
     (ML.ll j' l : ML J Dt.nL r) ∈ mlPos Fr Dt.nL ⁻¹' SLt j (posU Fr (Dt.nL j) (segZ j) t) ↔
       j' = j ∧ l.val < t := by
-  simp only [Set.mem_preimage, mlPos, SLt, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, mlPos, SLt, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨rfl, h⟩
     refine ⟨rfl, ?_⟩
@@ -89,7 +89,7 @@ private theorem lab_mem_preimage_SLt_posU_iff (hV : Fr.Valid L₁ N₁) (hnL : �
     (j j' : ZMod J) (m : Fin r) (t : ℕ) (ht : t < Dt.nL j + r) :
     (ML.lab j' m : ML J Dt.nL r) ∈ mlPos Fr Dt.nL ⁻¹' SLt j (posU Fr (Dt.nL j) (segZ j) t) ↔
       j' = j ∧ Dt.nL j + (r - 1 - m.val) < t := by
-  simp only [Set.mem_preimage, mlPos, SLt, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, mlPos, SLt, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨rfl, h⟩
     refine ⟨rfl, ?_⟩
@@ -104,7 +104,7 @@ private theorem tp_mem_preimage_SLt_posU_iff (hV : Fr.Valid L₁ N₁) (hnL : �
     (j j' : ZMod J) (m : Fin r) (hm : 1 ≤ m.val) (t : ℕ) (ht : t < Dt.nL j + r) :
     (ML.tp j' m hm : ML J Dt.nL r) ∈ mlPos Fr Dt.nL ⁻¹' SLt j (posU Fr (Dt.nL j) (segZ j) t) ↔
       j' = j ∧ Dt.nL j + (r - 1 - m.val) < t := by
-  simp only [Set.mem_preimage, mlPos, SLt, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, mlPos, SLt, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨rfl, h⟩
     refine ⟨rfl, ?_⟩
@@ -120,7 +120,7 @@ private theorem wc_mem_preimage_SLt_posU_iff (hV : Fr.Valid L₁ N₁) (hr : 1 �
     (j j' : ZMod J) (m : Fin r) (t : ℕ) (ht : t < Dt.nL j + r) :
     (ML.wc j' m : ML J Dt.nL r) ∈ mlPos Fr Dt.nL ⁻¹' SLt j (posU Fr (Dt.nL j) (segZ j) t) ↔
       j' + 1 = j := by
-  simp only [Set.mem_preimage, mlPos, SLt, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, mlPos, SLt, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨h, -⟩
     exact h
@@ -140,7 +140,7 @@ theorem pre_chain (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, Dt.nL j
     rw [ll_mem_preimage_SLt_posU_iff Dt hV hnL j j' l i.val ht]
     by_cases hj : j' = j
     · subst hj
-      simp only [SignedChainData.chainML, Set.mem_image, hch, Set.mem_union, Set.mem_setOf_eq, true_and]
+      simp only [SignedChainData.chainML, Set.mem_image, hch, Set.mem_union, Set.mem_ofPred_eq, true_and]
       constructor
       · intro h
         exact ⟨Sum.inl l, Or.inr ⟨l, rfl, h⟩, rfl⟩
@@ -201,7 +201,7 @@ private theorem preimage_SLe_posU_eq_preimage_SLt_posU_succ (hV : Fr.Valid L₁ 
   ext x
   cases x with
   | ll j' l =>
-    simp only [Set.mem_preimage, mlPos, SLe, SLt, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, mlPos, SLe, SLt, Set.mem_ofPred_eq]
     apply and_congr_right
     rintro rfl
     rw [← posU_ll' (segZ j') (Dt.nL j') l.val l.isLt,
@@ -209,7 +209,7 @@ private theorem preimage_SLe_posU_eq_preimage_SLt_posU_succ (hV : Fr.Valid L₁ 
       posU_lt_iff' hV (segZ j') (Dt.nL j') (hnL j') _ _ (by omega) (by omega)]
     omega
   | lab j' m =>
-    simp only [Set.mem_preimage, mlPos, SLe, SLt, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, mlPos, SLe, SLt, Set.mem_ofPred_eq]
     apply and_congr_right
     rintro rfl
     rw [← posU_fr' (segZ j') (Dt.nL j') (r - 1 - m.val),
@@ -217,7 +217,7 @@ private theorem preimage_SLe_posU_eq_preimage_SLt_posU_succ (hV : Fr.Valid L₁ 
       posU_lt_iff' hV (segZ j') (Dt.nL j') (hnL j') _ _ (by omega) (by omega)]
     omega
   | tp j' m hm =>
-    simp only [Set.mem_preimage, mlPos, SLe, SLt, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, mlPos, SLe, SLt, Set.mem_ofPred_eq]
     apply and_congr_right
     rintro rfl
     rw [← posU_fr' (segZ j') (Dt.nL j') (r - 1 - m.val),
@@ -225,7 +225,7 @@ private theorem preimage_SLe_posU_eq_preimage_SLt_posU_succ (hV : Fr.Valid L₁ 
       posU_lt_iff' hV (segZ j') (Dt.nL j') (hnL j') _ _ (by omega) (by omega)]
     omega
   | wc j' m =>
-    simp only [Set.mem_preimage, mlPos, SLe, SLt, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, mlPos, SLe, SLt, Set.mem_ofPred_eq]
     apply and_congr_right
     rintro rfl
     exact iff_of_true
@@ -249,7 +249,7 @@ theorem pre_link (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, Dt.nL j 
   cases x with
   | ll j' l =>
     rw [ll_mem_preimage_SLt_posU_iff Dt hV hnL j j' l _ ht]
-    simp only [SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+    simp only [SignedChainData.linkML, Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨rfl, -⟩
       exact Or.inl (Or.inl (Or.inr ⟨l, rfl⟩))
@@ -264,7 +264,7 @@ theorem pre_link (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, Dt.nL j 
       · cases h
   | lab j' m =>
     rw [lab_mem_preimage_SLt_posU_iff Dt hV hnL j j' m _ ht]
-    simp only [SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+    simp only [SignedChainData.linkML, Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨rfl, h⟩
       refine Or.inr ⟨m, ?_, rfl⟩
@@ -280,7 +280,7 @@ theorem pre_link (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, Dt.nL j 
         exact ⟨rfl, by omega⟩
   | tp j' m hm =>
     rw [tp_mem_preimage_SLt_posU_iff Dt hV hnL j j' m hm _ ht]
-    simp only [SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+    simp only [SignedChainData.linkML, Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨rfl, h⟩
       refine Or.inl (Or.inr ⟨m, hm, ?_, rfl⟩)
@@ -296,7 +296,7 @@ theorem pre_link (hV : Fr.Valid L₁ N₁) (hr : 1 ≤ r) (hnL : ∀ j, Dt.nL j 
       · cases h
   | wc j' m =>
     rw [wc_mem_preimage_SLt_posU_iff Dt hV hr hnL j j' m _ ht]
-    simp only [SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+    simp only [SignedChainData.linkML, Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro rfl
       refine Or.inl (Or.inl (Or.inl ⟨m, ?_⟩))
@@ -585,7 +585,7 @@ theorem valBd_of (hM : MFH p Fr TT L₁ L₂ N₁ G' deg d Y (r + K) cP)
         have hmg := hM.margin _ _ hx.1 hx.2
         have hpos : (tlPos Fr Dt.nL (⟨j, Sum.inr ⟨r - 1 - (u - Dt.nL j), hm⟩⟩ : TL J Dt.nL r)) =
             (j, posU Fr (Dt.nL j) (segZ j) u) := by
-          simp only [tlPos, posTL, posU, if_neg (show ¬ u < Dt.nL j by omega)]
+          simp only [tlPos, posTL, posU, ite_eq_right (show ¬ u < Dt.nL j by omega)]
           congr 2
           omega
         rw [hpos] at hmg

@@ -94,7 +94,7 @@ theorem su_mem (hS : GlobalTheory.Published.StrongApproxSU) (hc : IsCMExt F E σ
     (e2 : e * sigR (AF F) σ e = 0) (e3 : e + sigR (AF F) σ e = algebraMap (AF F) (AE F E) ε) (g : UA σ X.J)
     (hg : (mat g).det = 1) : g ∈ L := by
   let ι : HA (AF F) σ X.Jᵀ → UA σ X.J := fun x => ⟨HA.mat _ _ _ x, mem_UG_of.2 (show HR (AF F) σ X.Jᵀ from x).2⟩
-  have hι : Continuous ι := continuous_subtype_val.subtype_mk _
+  have hι : Continuous ι := continuous_subtypeVal.subtype_mk _
   have z : ∀ t, evFin F v t = 0 → t * ε = 0 := fun t ht => by
     refine Prod.ext (funext fun w => (congrArg (t.1 w * ·) (hε.2.1 w (Finset.notMem_empty w))).trans (mul_zero _))
       (FiniteAdeleRing.ext _ fun u => ?_)
@@ -139,7 +139,7 @@ theorem exists_sec (hc : IsCMExt F E σ) {J : Matrix (Fin n) (Fin n) E} (hJ : Is
   have cS : Continuous (sec _ hR') := continuous_const.add ((continuous_id.sub continuous_const).smul continuous_const)
   refine ⟨((Units.map (sec _ hR')).comp (normOne (cA σ)).subtype).codRestrict _ fun z =>
     mem_UG_of.2 (h1 z.1 (by rw [← cA_eq, mul_comm]; exact mem_normOne.1 z.2)),
-    ((Continuous.units_map _ cS).comp continuous_subtype_val).subtype_mk _, fun z => h2 _,
+    ((Continuous.units_map _ cS).comp continuous_subtypeVal).subtype_mk _, fun z => h2 _,
     fun z ⟨k, k0, hk⟩ => ⟨Units.map (sec _ hR) (Units.mk0 k k0), Units.ext (Matrix.ext fun a b => ?_)⟩, fun z t ht => ?_⟩
   · change i ((1 : Matrix _ _ E) a b + (k - 1) * R a b) =
       (1 : Matrix _ _ (AE F E)) a b + (((z.1 : (AE F E)ˣ) : AE F E) - 1) * i (R a b)

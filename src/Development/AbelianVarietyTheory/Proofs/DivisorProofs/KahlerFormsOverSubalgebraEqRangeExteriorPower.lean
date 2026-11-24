@@ -83,7 +83,7 @@ theorem omB_eq_range_exteriorPower : ∀ (k K : Type) [Field k] [Field K] [Algeb
     ∀ v : Fin q → B, e (exteriorPower.ιMulti B q fun j => D k B (v j)) =
       ExteriorAlgebra.ιMulti K q fun j => D k K (v j : K) := by
   intro k K _ _ _ B _ _ q
-  haveI : Algebra.FormallyEtale B K := .of_isLocalization (nonZeroDivisors B)
+  have : Algebra.FormallyEtale B K := .of_isLocalization (nonZeroDivisors B)
   let φ : Ω[B⁄k] →ₗ[B] Ω[K⁄k] := KaehlerDifferential.map k k B K
   have hD : ∀ x : B, φ (D k B x) = D k K (x : K) := fun x => KaehlerDifferential.map_D k k B K x
   have hφ : IsBaseChange K φ := IsBaseChange.of_equiv (tensorKaehlerEquivOfFormallyEtale k B K) fun x => by
@@ -92,13 +92,13 @@ theorem omB_eq_range_exteriorPower : ∀ (k K : Type) [Field k] [Field K] [Algeb
   let E := GlobalTheory.exteriorPowerMapOver K q φ
   have hE : IsLocalizedModule (nonZeroDivisors B) E :=
     (isLocalizedModule_iff_isBaseChange _ K E).2 (GlobalTheory.TopForm.isBaseChange_exteriorPower hφ q)
-  haveI : Module.Projective B (⋀[B]^q Ω[B⁄k]) := by
+  have : Module.Projective B (⋀[B]^q Ω[B⁄k]) := by
     obtain ⟨s, hs⟩ := Module.projective_def'.1 (inferInstance : Module.Projective B Ω[B⁄k])
     exact Module.Projective.of_split (exteriorPower.map q s)
       (exteriorPower.map q (Finsupp.linearCombination B id))
       (by rw [← exteriorPower.map_comp, hs, exteriorPower.map_id])
-  haveI : Module.Flat B (⋀[B]^q Ω[B⁄k]) := inferInstance
-  haveI : Module.IsTorsionFree B (⋀[B]^q Ω[B⁄k]) := Module.Flat.isTorsionFree
+  have : Module.Flat B (⋀[B]^q Ω[B⁄k]) := inferInstance
+  have : Module.IsTorsionFree B (⋀[B]^q Ω[B⁄k]) := Module.Flat.isTorsionFree
   have hEinj : Function.Injective E := by
     intro x y hxy
     obtain ⟨c, hc⟩ := IsLocalizedModule.exists_of_eq (S := nonZeroDivisors B) hxy

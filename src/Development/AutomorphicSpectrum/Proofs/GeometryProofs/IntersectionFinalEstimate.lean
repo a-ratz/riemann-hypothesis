@@ -715,8 +715,8 @@ theorem stokesLimitTVb : StokesLimitTVb.Statement := by
       rw [hVb]
       exact ((hpush.2.2 hMIt).2).symm
     · intro j
-      letI : MeasurableSpace X.M.Xc := borel X.M.Xc
-      haveI : BorelSpace X.M.Xc := ⟨rfl⟩
+      let : MeasurableSpace X.M.Xc := borel X.M.Xc
+      have : BorelSpace X.M.Xc := ⟨rfl⟩
       have h1 : AEMeasurable (X.M.atlas.chart j).symm (volume.restrict (X.M.atlas.chart j).target) :=
         (X.M.atlas.chart j).continuousOn_symm.aemeasurable (X.M.atlas.chart j).open_target.measurableSet
       have h2 : Measurable G₀ := (by fun_prop : Measurable fun v : ℝ => v / 2).comp hGm
@@ -846,12 +846,12 @@ theorem logRatio_smul {a a₀ : HermLine ι} (hd : a.a = a₀.a) (c : K → ℂ)
   have hcone := cone_smul c z hc
   unfold logRatio
   by_cases h : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0
-  · rw [if_pos (hcone.mpr h), if_pos h, a.smul c z hc, a₀.smul c z hc, hd]
+  · rw [ite_eq_left (hcone.mpr h), ite_eq_left h, a.smul c z hc, a₀.smul c z hc, hd]
     have hprod : (∏ k, ‖c k‖ ^ a₀.a k) ≠ 0 :=
       Finset.prod_ne_zero_iff.mpr fun k _ => zpow_ne_zero _ (norm_ne_zero_iff.mpr (hc k))
     rw [Real.log_mul hprod (a₀.pos z h).ne', Real.log_mul hprod (a.pos z h).ne']
     ring
-  · rw [if_neg (fun h' => h (hcone.mp h')), if_neg h]
+  · rw [ite_eq_right (fun h' => h (hcone.mp h')), ite_eq_right h]
 
 theorem logRatio_smooth {a a₀ : HermLine ι} (ha : IsSmoothHerm a) (ha₀ : IsSmoothHerm a₀) :
     ReciprocityTheory.ChartRestriction.G.AI.I2.SmoothFn (logRatio a a₀) := by
@@ -861,7 +861,7 @@ theorem logRatio_smooth {a a₀ : HermLine ι} (ha : IsSmoothHerm a) (ha₀ : Is
   refine ((h0.log fun z hz => (a₀.pos z hz).ne').sub (h1.log fun z hz => (a.pos z hz).ne')).congr ?_
   intro z hz
   have hz' : ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0 := hz
-  simp only [logRatio, if_pos hz']
+  simp only [logRatio, ite_eq_left hz']
 
 theorem tensor_logRatio_h {a a₀ : HermLine ι}
     (hu : ∀ (c : K → ℂ) z, (∀ k, c k ≠ 0) → logRatio a a₀ (fun p => c p.1 * z p) = logRatio a a₀ z)
@@ -870,7 +870,7 @@ theorem tensor_logRatio_h {a a₀ : HermLine ι}
   have h0 := a₀.pos z hz
   have h1 := a.pos z hz
   show a₀.h z * Real.exp (-logRatio a a₀ z) = a.h z
-  rw [logRatio, if_pos hz, neg_sub, Real.exp_sub, Real.exp_log h1, Real.exp_log h0,
+  rw [logRatio, ite_eq_left hz, neg_sub, Real.exp_sub, Real.exp_log h1, Real.exp_log h0,
     ← mul_div_assoc, mul_div_right_comm, div_self h0.ne', one_mul]
 
 theorem word_step (I : Ideal (MRing ι) → (n : ℕ) → (Fin n → HermLine ι) → ℝ)
@@ -984,8 +984,8 @@ theorem tendsto_ptsIntegral_of_chart_conv : ∀ (K : Type) [Fintype K] (ι : K �
         ∀ x ∈ R.Yo, |GT t x| ≤ C + C * Real.log (R.r x) := by
       filter_upwards [hGT] with t ht
       refine ⟨?_, ht.2⟩
-      letI : MeasurableSpace M.Xc := borel M.Xc
-      haveI : BorelSpace M.Xc := ⟨rfl⟩
+      let : MeasurableSpace M.Xc := borel M.Xc
+      have : BorelSpace M.Xc := ⟨rfl⟩
       exact (continuous_of_atlasSmooth ht.1).measurable.indicator hYo.measurableSet
     obtain ⟨-, hint, hlim⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.mixed_integral_tendsto_of_C2_off_divisor n M.Xc M.atlas R Θ hΘ hΘp Pp f fT G GT C hP hf hfT hconv
       hmeas hGc
@@ -1383,7 +1383,7 @@ theorem term_tendsto (X : ComponentSetting D O Lt) (B : ℕ) (Θ : LocPot X.M.Xc
       rw [_root_.GlobalTheory.CompanionTheory.Ar.Giv.Mix.muReg_h_eq_of_mem_mcPts II Ψ K ι Ω E D O Lt X B u z hz, Real.log_mul (mul_pos (X.S.ref.pos z hz.1) (Real.exp_pos _)).ne'
         (hvp 0).ne', Real.log_mul (X.S.ref.pos z hz.1).ne' (Real.exp_pos _).ne', Real.log_exp]
     unfold logRatio
-    rw [if_pos hz.1, hlog, hlog]
+    rw [ite_eq_left hz.1, hlog, hlog]
     ring
 
 end

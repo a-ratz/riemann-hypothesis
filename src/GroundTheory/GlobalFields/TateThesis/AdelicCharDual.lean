@@ -150,7 +150,7 @@ theorem exists_mixedSpace_char_eq (χ : AddChar (mixedSpace K) Circle) (hχ : Co
       exact LinearMap.BilinForm.apply_dualBasis_left _ _ _ _
 
     simp only [ξ, neg_mul, map_neg, Finset.sum_mul, map_sum, smul_mul_assoc, map_smul, this,
-    smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   refine ⟨ξ, fun a => ?_, fun m => ?_⟩
   · have ha : algebraMap (𝓞 K) K a = ∑ i, ((RingOfIntegers.basis K).repr a i : ℤ) • ω i := by
       conv_lhs => rw [← (RingOfIntegers.basis K).sum_repr a]
@@ -241,7 +241,7 @@ theorem exists_forall_finiteChar_mul_eq_one (χ : AddChar (FiniteAdeleRing (𝓞
     ∃ d : 𝓞 K, d ≠ 0 ∧ ∀ y ∈ integralFiniteAdeles (𝓞 K) K,
       χ (algebraMap K (FiniteAdeleRing (𝓞 K) K) (algebraMap (𝓞 K) K d) * y) = 1 := by
   have hU : IsOpen {z : Circle | ‖(z : ℂ) - 1‖ < 1 / 2} :=
-    isOpen_lt (continuous_norm.comp (continuous_subtype_val.sub continuous_const))
+    isOpen_lt (continuous_norm.comp (continuous_subtypeVal.sub continuous_const))
       continuous_const
   have hW : χ ⁻¹' {z : Circle | ‖(z : ℂ) - 1‖ < 1 / 2} ∈ 𝓝 (0 : FiniteAdeleRing (𝓞 K) K) :=
     (hU.preimage hχ).mem_nhds (by simp)

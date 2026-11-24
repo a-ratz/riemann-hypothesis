@@ -133,7 +133,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : Deg
       exact this.trans (Finset.single_le_sum (fun j _ => Nat.zero_le (n j)) (Finset.mem_univ i))
   · intro k
     refine (GlobalTheory.ToricData.finite_form_le S hSs hSp (2 * k)).subset fun y hy => ?_
-    simp only [Set.mem_setOf_eq] at hy ⊢
+    simp only [Set.mem_ofPred_eq] at hy ⊢
     by_contra hlt
     obtain ⟨u, n, hn, hc⟩ := hM y
     refine hy ((GlobalTheory.PeriodFormEdge.psiIn_iff hc _).2 (hmem y u n k ?_))
@@ -209,7 +209,7 @@ theorem exists_baseChange : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] (R
       rigid := PolBaseChange.rigidified_pull (isGrpPullback_pullback D₁.P.A (spMap σ)) D₁.P.rigid
       sym := PolBaseChange.sym_pull (isGrpPullback_pullback D₁.P.A (spMap σ)) D₁.P.sym
       ample := by
-        haveI := D₁.P.isAb.proper
+        have := D₁.P.isAb.proper
         exact AmpleBaseChange.relAmple_of_isPullback D₁.P.isLB D₁.P.ample (IsPullback.of_hasPullback D₁.P.A.hom (spMap σ))
       ktriv := by
         obtain ⟨w, hw⟩ := PolBaseChange.lbIso_refl (pull_isLB D₁.P.isLB (pullback.fst D₁.P.A.hom (spMap σ)))
@@ -373,7 +373,7 @@ theorem exists_sqrt_fin : ∀ (n : ℕ) (R : Type) [CommRing R] [IsDomain R] [Is
       exists_sqrt_one R₁ (ρ₁ (a (Fin.last n))) hC₁
     refine ⟨R₂, inferInstance, inferInstance, inferInstance, ρ₂.comp ρ₁,
       Fin.lastCases s (fun i => ρ₂ (r₁ i)), hC₂, hi₂.comp hi₁, hf₂.comp hf₁, ?_, ?_⟩
-    · haveI := hl₁; haveI := hl₂; infer_instance
+    · have := hl₁; have := hl₂; infer_instance
     · intro i
       induction i using Fin.lastCases with
       | last => beta_reduce; rw [Fin.lastCases_last, hs, RingHom.comp_apply]
@@ -464,7 +464,7 @@ theorem exists_sqrt_hom : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
     rw [← ofMul_mul]
     congr 1
     ext
-    simp only [Units.val_mul, e, Units.val_mk0, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, toMul_ofMul]
+    simp only [Units.val_mul, e, Units.val_mk0, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, toMul_ofMul]
     rw [← hpq k, map_div₀, hgam, hgam, div_mul_div_comm, div_eq_div_iff (mul_ne_zero (hq0 k) (hq0 k)) (hq0 k)]
     have := congrArg (algebraMap R' (FractionRing R')) (hs k)
     rw [map_pow, map_mul, map_mul] at this
@@ -567,7 +567,7 @@ namespace GlobalTheory.HalfRatio
 
 theorem exists_unitOn (K : Type) [Field K] (z : Sp K) (r : ((Sp K).presheaf.stalk z)ˣ) :
     ∃ k : Kˣ, gm (𝟙 (Sp K)) z ⊤ (unitOn k) = r := by
-  obtain ⟨U, hz, f, hf⟩ := TopCat.Presheaf.germ_exist (Sp K).presheaf r.val
+  obtain ⟨U, hz, f, hf⟩ := TopCat.Presheaf.exists_germ_eq (Sp K).presheaf r.val
   have hs : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   obtain rfl : U = ⊤ := top_unique fun x _ => (Subsingleton.elim z x) ▸ hz
   have h0 : (Scheme.ΓSpecIso (CommRingCat.of K)).hom.hom f ≠ 0 := fun h => by
@@ -659,7 +659,7 @@ theorem ratio_indep (w : letI := D.P.isAb.comm; LB.Iso (abelian₂ D.P.A D.P.L) 
     ∀ z J₁ J₁' J₂ J₂', Good Q.M.L z J₁ → Good D.P.L z J₁' → Good Q.M.L z J₂ → Good D.P.L z J₂' →
       (val (D.tau a b) (𝟙 _) z J₁')⁻¹ * lamVal w (lift x y).left z J₁ J₁' * val (Q.tau (e a) (e b)) κ z J₁ =
       (val (D.tau a b) (𝟙 _) z J₂')⁻¹ * lamVal w (lift x y).left z J₂ J₂' * val (Q.tau (e a) (e b)) κ z J₂ := by
-  letI := D.P.isAb.comm
+  let := D.P.isAb.comm
   have hxy : toUnit (TK R') ≫ D.c (a + b) = x * y := by
     rw [hx, hy, ← MonObj.comp_mul]; exact congrArg (toUnit (TK R') ≫ ·) (D.c_add a b)
   intro z J₁ J₁' J₂ J₂' h₁ h₁' h₂ h₂'
@@ -683,7 +683,7 @@ theorem ratio_indep (w : letI := D.P.isAb.comm; LB.Iso (abelian₂ D.P.A D.P.L) 
 
 theorem ratio_exists : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [CommRing R'] [IsDomain R'] (Q : Data R) (ρ : R →+* R') (D : DegPre R') (e : D.X ≃+ Q.X) (β : D.P.A.left ⟶ Q.B.left) (β₂ : (G2 D.P.A).left ⟶ (G2 Q.B).left) (w : letI := D.P.isAb.comm; LB.Iso (abelian₂ D.P.A D.P.L) ((abelian₂ Q.B Q.M.L).pull β₂)), IsGrpPullback D.P.A Q.B (spMap ρ) β → IsSquare β β₂ → w.IsGen → (∀ a, (D.c a).left ≫ β = spMap ρ ≫ (Q.c (e a)).left) → ∀ κ : (TK R').left ⟶ (TK R).left, κ ≫ jK R = jK R' ≫ spMap ρ → ∀ a b, ∃ k : (FractionRing R')ˣ, ∀ z J J', Good Q.M.L z J → Good D.P.L z J' → val (D.tau a b) (𝟙 _) z J' * gm (𝟙 (TK R').left) z ⊤ (unitOn k) = (letI := D.P.isAb.comm; lamVal w (lift (toUnit (TK R') ≫ D.c a) (toUnit (TK R') ≫ D.c b)).left z J J') * val (Q.tau (e a) (e b)) κ z J := by
   intro R _ _ R' _ _ Q ρ D e β β₂ w hpb hsq hw hc κ hκ a b
-  letI := D.P.isAb.comm
+  let := D.P.isAb.comm
   have indep := ratio_indep w hpb hsq hw hc hκ (a := a) (b := b) rfl rfl
   have hs : Subsingleton (TK R').left := inferInstanceAs (Subsingleton (PrimeSpectrum (FractionRing R')))
   let z₀ : (TK R').left := (⊥ : PrimeSpectrum (FractionRing R'))
@@ -801,7 +801,7 @@ theorem half_exists : ∀ (R : Type) [CommRing R] [IsDomain R] (R' : Type) [Comm
   have h : ∃ κ : (TK R').left ⟶ (TK R).left, κ ≫ jK R = jK R' ≫ spMap ρ := ⟨κ, hκ⟩
   have e := kappa_unique R R' ρ _ _ h.choose_spec hκ
   have := (hR h.choose h.choose_spec a b).choose_spec z J J' hJ hJ'
-  simp only [f, dif_pos h]
+  simp only [f, dite_eq_left h]
   rw [← e]
   exact this
 
@@ -1171,7 +1171,7 @@ namespace GlobalTheory
 
 theorem symm_cocycle_isCoboundary : ∀ (X : Type) [AddCommGroup X] [Module.Free ℤ X] (A : Type) [CommGroup A] (f : X → X → A), (∀ a b, f a b = f b a) → (∀ a b c, f (a + b) c * f a b = f a (b + c) * f b c) → ∃ g : X → A, ∀ a b, f a b = g (a + b) * (g a)⁻¹ * (g b)⁻¹ := by
   intro X _ _ A _ f hs hc
-  letI : AddCommGroup (GlobalTheory.CoboundaryRoots.CocExt X A) := GlobalTheory.CoboundaryRoots.extGroup f hs hc
+  let : AddCommGroup (GlobalTheory.CoboundaryRoots.CocExt X A) := GlobalTheory.CoboundaryRoots.extGroup f hs hc
   let bs := Module.Free.chooseBasis ℤ X
   let s : X →ₗ[ℤ] GlobalTheory.CoboundaryRoots.CocExt X A := bs.constr ℤ (fun i => ⟨bs i, 1⟩)
   let π : GlobalTheory.CoboundaryRoots.CocExt X A →+ X :=
@@ -1362,7 +1362,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem GlobalTheory.PolDeg.refine_monomial_of_polarised : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (Q : Data R) (m : ℕ) (t : Fin m → R) (δ : Fin m → LinearMap.BilinForm ℤ Q.X), IsCN R → Q.IsMonomialTau t δ → (∀ i, t i ∈ maximalIdeal R) → (∀ i, t i ≠ 0) → (∀ i y z, δ i y z = δ i z y) → (∀ i y, 0 ≤ δ i y y) → (∀ y, y ≠ 0 → ∃ i, 0 < δ i y y) → ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (r : Fin m → R') (D : DegData R' (maximalIdeal R')) (e : D.toPre.X ≃+ Q.X), IsCN R' ∧ Function.Injective ρ ∧ ρ.Finite ∧ IsLocalHom ρ ∧ (∀ i, r i ^ 2 = ρ (t i)) ∧ Refines Q ρ D.toPre e ∧ IsMonomial D.toPre r fun i => (2 : ℤ) • pull e.toIntLinearEquiv.toLinearMap (δ i) := by
   intro R _ _ _ Q m t δ hCN hmono htm ht0 hsymm hnn hdef
   obtain ⟨R₁, _, _, _, ρ₁, P, β, β₂, hCN₁, hinj₁, hfin₁, hloc₁, hpb, hsq, hiso⟩ := GlobalTheory.T.exists_symmetricPolarisation_finiteExtension R Q hCN
-  haveI : IsNoetherianRing R₁ := hCN₁.1
+  have : IsNoetherianRing R₁ := hCN₁.1
   obtain ⟨D, e, f, hD⟩ := GlobalTheory.T.exists_symmetric_data_compare_polarised_up_to_function R R₁ Q ρ₁ P β β₂ hinj₁ hpb hsq hiso
   obtain ⟨hfs, hfc⟩ := GlobalTheory.T.polarisedPeriod_comparison_symm_cocycle R R₁ Q ρ₁ D e f hinj₁ hD
   obtain ⟨g, hg⟩ := GlobalTheory.T.symmetric_twoCocycle_free_abelian_isCoboundary D.X _ f hfs hfc
@@ -1372,7 +1372,7 @@ theorem GlobalTheory.PolDeg.refine_monomial_of_polarised : ∀ (R : Type) [CommR
   obtain ⟨h, hhom, hev⟩ := GlobalTheory.T.exists_hom_evenDefect_bimultiplicative_periods R₁ (rescale D g) hb₁
   obtain ⟨R₂, _, _, _, σ, gam, r, et, hCN₂, hinj₂, hfin₂, hloc₂, hgam, hr, hη, hη2⟩ :=
     GlobalTheory.T.exists_sqrt_latticeHom_finiteExtension_complete R₁ (rescale D g).X h m (fun i => ρ₁ (t i)) hCN₁ hhom
-  haveI : IsNoetherianRing R₂ := hCN₂.1
+  have : IsNoetherianRing R₂ := hCN₂.1
   obtain ⟨D₂, β', v, xe, hpb', hv, hc', hrig, hpsi⟩ := GlobalTheory.T.exists_baseChange_raw_degenerationData_injective R₁ R₂ σ (rescale D g) gam hgam
   have hD₂ := GlobalTheory.T.refinesPolarisedData_baseChange_symmetric R Q R₁ R₂ σ (rescale D g) D₂ β' v xe gam hgam hpb' hv hc' hrig hpsi ρ₁ e hinj₁ hD₁
   have hev₂ := GlobalTheory.T.evenDefect_degenerationData_baseChange R₁ R₂ σ (rescale D g) D₂ β' v xe gam hgam hpb' hv hc' hrig hpsi h hev

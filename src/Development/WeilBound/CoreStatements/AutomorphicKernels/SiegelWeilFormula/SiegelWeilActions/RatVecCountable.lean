@@ -99,7 +99,7 @@ theorem ratVec_discrete (k : ℕ) :
     exact (continuous_apply i).continuousAt.preimage_mem_nhds (by simpa using hV)
   obtain ⟨O, hOW, hO, h0⟩ := mem_nhds_iff.1 hW
   refine discreteTopology_of_isOpen_singleton_zero ?_
-  convert hO.preimage continuous_subtype_val using 1
+  convert hO.preimage continuous_subtypeVal using 1
   ext ⟨x, hx⟩
   constructor
   · intro h

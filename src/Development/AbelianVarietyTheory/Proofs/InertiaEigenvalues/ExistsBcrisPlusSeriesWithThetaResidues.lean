@@ -425,7 +425,7 @@ theorem series_acris : ∀ (l : ℕ) [Fact l.Prime] (h : ℕ) (x : Fl l), 2 ≤ 
   intro l _ h x h2 hx
   obtain ⟨-, -, -, hpw_comp, hpw_nat, -, -⟩ := _root_.GlobalTheory.PSer.PwLaws.pw_laws l
   obtain ⟨c, hdvd, hc⟩ := _root_.GlobalTheory.PSer.terms_mem l h x h2 hx
-  haveI := (GlobalTheory.MemLoc.acris_basic l).1
+  have := (GlobalTheory.MemLoc.acris_basic l).1
   have hφl : ∀ (j : ℕ) (k : ℕ) (a : Acris l), (⇑(GlobalTheory.MemLoc.phiA l))^[j] ((l : Acris l) ^ k * a) =
       (l : Acris l) ^ k * (⇑(GlobalTheory.MemLoc.phiA l))^[j] a := by
     intro j k a
@@ -494,7 +494,7 @@ namespace GlobalTheory.PSer
 theorem exists_acris_Lam : ∀ (l : ℕ) [Fact l.Prime] (h : ℕ) (y : ℕ → Fl l), 2 ≤ h → (∀ k, ‖sh (y k)‖ ≤ ‖(l : ℂ_[l])‖) → ∃ w : Acris l, (GlobalTheory.MemLoc.phiA l)^[h] w = (l : Acris l) * w ∧ ∀ (Θ : Acris l →+* ℂ_[l]), (∀ a, ‖Θ a‖ ≤ 1) → (∀ z : Fl l, Θ (algebraMap (Ainf l) (Acris l) (tm z)) = sh z) → ∀ j : ℕ, Θ ((GlobalTheory.MemLoc.phiA l)^[j] w) = abelian₂ h j y := by
   intro l _ h y hh hy
   choose w hw hθ using fun k => _root_.GlobalTheory.PSer.series_acris l h (y k) hh (hy k)
-  haveI : IsAdicComplete (Ideal.span {(l : Acris l)}) (Acris l) := (GlobalTheory.MemLoc.acris_basic l).1
+  have : IsAdicComplete (Ideal.span {(l : Acris l)}) (Acris l) := (GlobalTheory.MemLoc.acris_basic l).1
   obtain ⟨W, hW, hsum⟩ := _root_.GlobalTheory.abssum_eigen_lim l (Acris l) (GlobalTheory.MemLoc.phiA l) h w hw
   refine ⟨W, hW, fun Θ hΘ htm j => ?_⟩
   set φ := GlobalTheory.MemLoc.phiA l

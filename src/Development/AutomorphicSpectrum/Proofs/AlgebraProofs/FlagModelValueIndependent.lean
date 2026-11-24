@@ -197,7 +197,7 @@ private theorem genNum_mul {N : ℕ} (b : Fin N → K → ℤ) (G H : MvPolynomi
     simp [classList, Finsupp.toMultiset_add, add_comm]
   have e1 : L (monomial μ (G.coeff μ) * monomial ν (H.coeff ν)) =
       G.coeff μ * H.coeff ν * intNumL F V (classList b (μ + ν) ++ Q) := by
-    rw [← hL, monomial_mul, genNum_monomial]
+    rw [← hL, monomial_mul_monomial, genNum_monomial]
   rw [e1, intNumL_perm_of_perm F K ι V _ (classList b ν ++ (classList b μ ++ Q))
     ((hp.append_right Q).trans (List.Perm.of_eq (List.append_assoc _ _ _)))]
   ring
@@ -307,7 +307,7 @@ private theorem shift_agree_lemma_5 (F : Type) [Field F] (Ω : Type) [Field Ω] 
   rw [heq, h2] at h1
   have hle : N - 1 ≤ r + (N - 1) := by omega
   have hsub : r + (N - 1) - (N - 1) = r := by omega
-  rw [if_pos hle, if_pos hle, hsub] at h1
+  rw [ite_eq_left hle, ite_eq_left hle, hsub] at h1
   exact h1.symm
 
 private theorem negs_agree_lemma_6 (F : Type) [Field F] (K : Type) [Fintype K] [DecidableEq K]

@@ -155,8 +155,8 @@ theorem isNoetherianRing_completion (hfg : (maximalIdeal S).FG) :
     ((maximalIdeal S).map (algebraMap S (AdicCompletion (maximalIdeal S) S))) (hfg.map _)
     (AdicCompletion.isAdicComplete_self _ hfg) ?_
   rw [← AdicCompletion.ker_evalOneₐ_eq_map _ hfg]
-  letI := Ideal.Quotient.field (maximalIdeal S)
-  haveI : IsNoetherianRing (S ⧸ maximalIdeal S) := inferInstance
+  let := Ideal.Quotient.field (maximalIdeal S)
+  have : IsNoetherianRing (S ⧸ maximalIdeal S) := inferInstance
   exact isNoetherianRing_of_ringEquiv _
     (RingHom.quotientKerEquivOfSurjective (f := (AdicCompletion.evalOneₐ (maximalIdeal S)).toRingHom)
       (AdicCompletion.evalOneₐ_surjective _)).symm
@@ -175,10 +175,10 @@ theorem isNoetherianRing_of_directed_pure_union : ∀ (S : Type) [CommRing S] [I
   intro S _ _ ι _ _ _ R hmono hcov hnoeth hmax hpure
   obtain ⟨i₁⟩ := ‹Nonempty ι›
   have hfg : (maximalIdeal S).FG := by
-    haveI := hnoeth i₁
+    have := hnoeth i₁
     rw [← hmax i₁]
     exact (Ideal.fg_of_isNoetherianRing _).map _
-  haveI := isNoetherianRing_completion hfg
+  have := isNoetherianRing_completion hfg
   set f := algebraMap S (AdicCompletion (maximalIdeal S) S) with hf
   refine ⟨fun (I : Ideal S) => ?_⟩
   let E : ι → Ideal S := fun i => (I.comap (R i).subtype).map (R i).subtype
@@ -194,7 +194,7 @@ theorem isNoetherianRing_of_directed_pure_union : ∀ (S : Type) [CommRing S] [I
     (inferInstance : IsNoetherian (AdicCompletion (maximalIdeal S) S) (AdicCompletion (maximalIdeal S) S))
     (Set.range fun i => (E i).map f) (Set.range_nonempty _)
   have hfg0 : (E i₀).FG := by
-    haveI := hnoeth i₀
+    have := hnoeth i₀
     exact (Ideal.fg_of_isNoetherianRing _).map _
   suffices hle : I ≤ E i₀ by rw [le_antisymm hle (hEI i₀)]; exact hfg0
   intro x hx
@@ -214,7 +214,7 @@ theorem isNoetherianRing_of_directed_pure_union : ∀ (S : Type) [CommRing S] [I
     simp only [A, E, Ideal.map_map]
     rfl
   have hxA : (⟨x, hxj⟩ : R j) ∈ A := by
-    haveI := hnoeth j
+    have := hnoeth j
     apply mem_of_forall_mem_sup_pow (R j) (hmax j) (hpure j) A
     intro n
     rw [hA]
@@ -269,15 +269,15 @@ theorem stage_props {A W O : Type} [CommRing A] [CommRing W] [CommRing O] [IsLoc
     (∀ J : Ideal (Localization.AtPrime ((maximalIdeal O).comap (v : W →+* O))), (J.map (stageHom v)).comap (stageHom v) = J) ∧
       (maximalIdeal (Localization.AtPrime ((maximalIdeal O).comap (v : W →+* O)))).map (stageHom v) = maximalIdeal O := by
   set q := (maximalIdeal O).comap (v : W →+* O) with hq
-  letI : Algebra W O := (v : W →+* O).toAlgebra
-  haveI : IsScalarTower A W O := IsScalarTower.of_algebraMap_eq (fun a => (v.commutes a).symm)
+  let : Algebra W O := (v : W →+* O).toAlgebra
+  have : IsScalarTower A W O := IsScalarTower.of_algebraMap_eq (fun a => (v.commutes a).symm)
   have h1 : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap W O) := isIndEtale_of_etale_of_isIndEtale A W O hO
-  letI : Algebra (Localization.AtPrime q) O := (stageHom v).toAlgebra
-  haveI : IsScalarTower W (Localization.AtPrime q) O :=
+  let : Algebra (Localization.AtPrime q) O := (stageHom v).toAlgebra
+  have : IsScalarTower W (Localization.AtPrime q) O :=
     IsScalarTower.of_algebraMap_eq (fun w => (stageHom_algebraMap v w).symm)
   have h2 : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap (Localization.AtPrime q) O) :=
     GlobalTheory.StrictHensUnion.indEtale_over_localization W (Localization.AtPrime q) O q.primeCompl h1
-  haveI : IsLocalHom (algebraMap (Localization.AtPrime q) O) := by
+  have : IsLocalHom (algebraMap (Localization.AtPrime q) O) := by
     refine ⟨fun a ha => ?_⟩
     obtain ⟨⟨w, y⟩, rfl⟩ := IsLocalization.mk'_surjective q.primeCompl a
     rw [IsLocalization.AtPrime.isUnit_mk'_iff (Localization.AtPrime q) q]
@@ -292,7 +292,7 @@ theorem stage_props {A W O : Type} [CommRing A] [CommRing W] [CommRing O] [IsLoc
     intro hw
     exact hw h4
   obtain ⟨hfl, hmax, -⟩ := GlobalTheory.IndEtaleLocal.flat_map_maximalIdeal_isSeparable (Localization.AtPrime q) O h2
-  haveI : Module.FaithfullyFlat (Localization.AtPrime q) O := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have : Module.FaithfullyFlat (Localization.AtPrime q) O := Module.FaithfullyFlat.of_flat_of_isLocalHom
   exact ⟨fun J => Ideal.comap_map_eq_self_of_faithfullyFlat J, hmax⟩
 
 theorem stage_le {A W W' O : Type} [CommRing A] [CommRing W] [CommRing W'] [CommRing O] [IsLocalRing O] [Algebra A W]
@@ -330,12 +330,12 @@ theorem isNoetherianRing_of_indEt : ∀ (A O : Type) [CommRing A] [IsNoetherianR
     rw [stageHom_algebraMap]
     have := DFunLike.congr_fun huv Polynomial.X
     simpa using this
-  haveI : Nonempty ι := ⟨(mem 0).choose⟩
-  haveI : IsDirected ι (· ≤ ·) := by
+  have : Nonempty ι := ⟨(mem 0).choose⟩
+  have : IsDirected ι (· ≤ ·) := by
     refine ⟨fun T1 T2 => ?_⟩
     obtain ⟨T1, W1, _, _, _, v1, rfl⟩ := T1
     obtain ⟨T2, W2, _, _, _, v2, rfl⟩ := T2
-    haveI : Algebra.FinitePresentation A (TensorProduct A W1 W2) := Algebra.FinitePresentation.trans A W1 _
+    have : Algebra.FinitePresentation A (TensorProduct A W1 W2) := Algebra.FinitePresentation.trans A W1 _
     obtain ⟨W3, _, _, _, u, v3, huv⟩ := fac (TensorProduct A W1 W2) (Algebra.TensorProduct.productMap v1 v2)
     refine ⟨⟨_, W3, inferInstance, inferInstance, inferInstance, v3, rfl⟩, ?_, ?_⟩
     · exact stage_le v1 v3 (u.comp Algebra.TensorProduct.includeLeft) (by
@@ -344,8 +344,8 @@ theorem isNoetherianRing_of_indEt : ∀ (A O : Type) [CommRing A] [IsNoetherianR
         rw [← AlgHom.comp_assoc, huv]; exact Algebra.TensorProduct.productMap_right v1 v2)
   refine noeth_of_directed_subrings O ι (fun T => T.1) (fun _ _ h => h) mem ?_ ?_ ?_
   · rintro ⟨T, W, _, _, _, v, rfl⟩
-    haveI : IsNoetherianRing W := Algebra.FiniteType.isNoetherianRing A W
-    haveI : IsNoetherianRing (Localization.AtPrime ((maximalIdeal O).comap (v : W →+* O))) :=
+    have : IsNoetherianRing W := Algebra.FiniteType.isNoetherianRing A W
+    have : IsNoetherianRing (Localization.AtPrime ((maximalIdeal O).comap (v : W →+* O))) :=
       IsLocalization.isNoetherianRing ((maximalIdeal O).comap (v : W →+* O)).primeCompl _ inferInstance
     exact isNoetherianRing_range (stageHom v)
   · rintro ⟨T, W, _, _, _, v, rfl⟩
@@ -374,7 +374,7 @@ theorem isNoetherianRing_of_isStalk : ∀ (B : Type) [CommRing B] [Algebra.Finit
     [IsLocalRing O] (s : Spec (CommRingCat.of O) ⟶ Spec (CommRingCat.of B)), IsStalk O s → IsNoetherianRing O := by
   intro B _ _ O _ _ s hs
   obtain ⟨_, -, hind, -⟩ := isStalk_affine B O s hs
-  haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing ℤ B
+  have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing ℤ B
   exact isNoetherianRing_of_indEt B O hind
 
 end GlobalTheory.StalkNoeth

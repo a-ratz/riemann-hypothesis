@@ -86,16 +86,16 @@ namespace GlobalTheory.EtC
 
 theorem isField_aic_sh : ∀ (T : Type) [CommRing T], IsField T → AIC T → SH T := by
   intro T _ hF hA
-  letI : Field T := hF.toField
+  let : Field T := hF.toField
   refine ⟨Field.henselian T, ?_⟩
-  haveI hT : IsAlgClosed T := by
+  have hT : IsAlgClosed T := by
     refine IsAlgClosed.of_exists_root T ?_
     intro p hm hirr
     obtain ⟨a, ha⟩ := hA p hm (Polynomial.natDegree_pos_iff_degree_pos.mpr (Polynomial.degree_pos_of_irreducible hirr))
     exact ⟨a, by simpa [Polynomial.IsRoot] using ha⟩
   have hinj : Function.Injective (IsLocalRing.residue T) := (IsLocalRing.residue T).injective
   have hbij : Function.Bijective (IsLocalRing.residue T) := ⟨hinj, IsLocalRing.residue_surjective⟩
-  haveI : IsAlgClosed (IsLocalRing.ResidueField T) :=
+  have : IsAlgClosed (IsLocalRing.ResidueField T) :=
     IsAlgClosed.of_ringEquiv T _ (RingEquiv.ofBijective _ hbij)
   infer_instance
 
@@ -186,7 +186,7 @@ theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A 
   simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp, Functor.map_comp]
 
 theorem isIso_spMap {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B) : IsIso (spMap (e : A →+* B)) := by
-  haveI : IsIso (CommRingCat.ofHom (e : A →+* B)) := (RingEquiv.toCommRingCatIso e).isIso_hom
+  have : IsIso (CommRingCat.ofHom (e : A →+* B)) := (RingEquiv.toCommRingCatIso e).isIso_hom
   unfold spMap
   infer_instance
 
@@ -198,7 +198,7 @@ namespace GlobalTheory.EtC
 open GlobalTheory.EtC.AicAcyc in
 theorem b5 : B5 := by
   intro q A _ _ hA hq n i hn
-  haveI := GlobalTheory.T.isAlgClosed_fractionRing_of_monic_polynomials_have_roots A hA
+  have := GlobalTheory.T.isAlgClosed_fractionRing_of_monic_polynomials_have_roots A hA
   have hK : SH (FractionRing A) :=
     GlobalTheory.T.isStrictlyHenselian_of_isField_monicRoots (FractionRing A) (Field.toIsField _) (aic_of_isAlgClosed _)
   have hE := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
@@ -221,7 +221,7 @@ theorem b5 : B5 := by
     have h1 : Eqv (ZMod q) (spMap (j : O →+* O ⊗[A] FractionRing A)) (tw q i) :=
       GlobalTheory.T.eqv_spMap_tw_of_isUnit q i O _ (j : O →+* O ⊗[A] FractionRing A) hO hSH hqO
     have h2 : Eqv (ZMod q) (spMap ((e : O ⊗[A] A ≃+* O) : O ⊗[A] A →+* O)) (tw q i) := by
-      haveI := isIso_spMap (e : O ⊗[A] A ≃+* O)
+      have := isIso_spMap (e : O ⊗[A] A ≃+* O)
       exact hE.1 _ _ _ inferInstance
     have h3 := (hE.2.1 _ _ _ _ _).1 h1 h2
     rw [← spMap_comp] at h3

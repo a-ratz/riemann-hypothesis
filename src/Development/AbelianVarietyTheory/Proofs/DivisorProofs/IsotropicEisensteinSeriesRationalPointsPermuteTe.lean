@@ -124,7 +124,7 @@ theorem isCompact_and_continuous : ∀ (F E : Type) [Field F] [NumberField F] [F
       (isClosed_eq (hΛ.mul (hΛ.comp continuous_inv)) continuous_const)
   let u : P → (AF F ⊗[F] E)ˣ := fun p => ⟨Λ p, Λ p.1⁻¹, p.2.2, by rw [mul_comm]; exact p.2.2⟩
   have hu : Continuous u := Units.continuous_iff.2
-    ⟨hΛ.comp continuous_subtype_val, (hΛ.comp continuous_inv).comp continuous_subtype_val⟩
+    ⟨hΛ.comp continuous_subtypeVal, (hΛ.comp continuous_inv).comp continuous_subtypeVal⟩
   let f : P → ℝ := fun p => (absE F E (u p) : ℝ)
   have hf : Continuous f := NNReal.continuous_coe.comp (GlobalTheory.Doubling.continuous_absE.comp hu)
   have hval : ∀ p : P, ∀ k ∈ levelAll σ J L a, h (p.1 * k) = f p := fun p k hk =>

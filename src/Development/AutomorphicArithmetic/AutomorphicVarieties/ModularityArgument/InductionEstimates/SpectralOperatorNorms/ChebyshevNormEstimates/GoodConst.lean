@@ -259,7 +259,7 @@ private theorem star_test (β : TI K n) (hβ : SmoothT β) :
   have hs : (isExpLieAlgebra K n).IsSmoothFun fun g => β g⁻¹ :=
     (UpperTheory.ConvolutionTheory.Tf.invSmooth K n (fun g => β g) ((isExpLieAlgebra K n).mem_smoothFuns.2 hβ)).1
   have hs' : (isExpLieAlgebra K n).IsSmoothFun fun g => starRingEnd ℂ (β g⁻¹) := by
-    letI := (isExpLieAlgebra K n).chartedSpace
+    let := (isExpLieAlgebra K n).chartedSpace
     exact Complex.conjCLE.contDiff.comp_contMDiff hs
   have hc : HasCompactSupport fun g : archGroup K n => starRingEnd ℂ (β g⁻¹) :=
     (β.hasCompactSupport.comp_homeomorph (Homeomorph.inv _)).comp_left (g := starRingEnd ℂ) (map_zero _)
@@ -312,7 +312,7 @@ end Amp
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.genZk :
     ∀ {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {μ : Measure (normOneGL (K := E) (n := (2 + 2)))} [μ.IsHaarMeasure] {θ : Twist μ} {𝔢 : Side θ 2} (𝔵 : _root_.UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.Fam 𝔢) (y : Ix E (2 + 2)), ∃ f : CC E (2 + 2), 𝔵.D.Hecke f ∧ Rop μ f = 𝔢.toAmp.Z y := by
   intro E _ _ _ μ _ θ 𝔢 𝔵 y
-  haveI := 𝔵.D.prob
+  have := 𝔵.D.prob
   obtain ⟨P, hP, hf⟩ := two_sided (rightRegularRep (Gam E (2 + 2)) μ) μ (typeFin 𝔵.D).1 𝔵.D.supp 𝔵.D.inv 𝔵.D.cont 𝔵.D.idem
   obtain ⟨m, hm, hc⟩ := (UpperTheory.ConvolutionTheory.Tf.compatEx E (2 + 2) (by norm_num)).2.1 μ 𝔢.ν
   obtain ⟨e, -, he⟩ := UpperTheory.ConvolutionTheory.Tf.prjFix E (2 + 2) μ m 𝔢.U 𝔢.isOpen
@@ -347,7 +347,7 @@ private theorem conv_bump {V : Type} [NormedAddCommGroup V] [InnerProductSpace �
   refine ⟨fun x => ∫ t, κ t (w (x + t)), ?_, ?_, ?_, fun x hx => ?_⟩
   · have h1 : ∀ x, ∫ t, κ t (w (x + t)) = ∫ t in Set.Icc (-R) R, κ t (w (x + t)) := fun x => by
       refine (setIntegral_eq_integral_of_forall_compl_eq_zero fun t ht => ?_).symm
-      rw [hR t (lt_of_not_ge fun h => ht (abs_le.1 h)), ContinuousLinearMap.zero_apply]
+      rw [hR t (lt_of_not_ge fun h => ht (abs_le.1 h)), zero_apply]
     simp only [h1]
     exact continuous_parametric_integral_of_continuous (f := fun x t => κ t (w (x + t)))
       ((hκ.1.comp continuous_snd).clm_apply (hw.comp (continuous_fst.add continuous_snd))) isCompact_Icc
@@ -616,7 +616,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.genZ :
     have l₅ := (hcl k hk _ _ _ c₁ c₂ c₃ r₃ (0 : Fin 2 → ℝ)).symm.trans l₃
     rw [hu0 _ (by simp), hv0 _ (by simp)] at l₅
     exact (mul_eq_zero.1 l₅).resolve_left (mul_ne_zero hc0 (Complex.exp_ne_zero _))
-  rw [ContinuousLinearMap.smul_apply]
+  rw [smul_apply]
   rw [neg_smul, neg_add_eq_zero] at key
   exact key.symm
 end -- clump:auto
@@ -789,7 +789,7 @@ private theorem int_pair {E : Type} [Field E] [NumberField E] [_root_.NumberFiel
       starRingEnd ℂ (b.f.1 ((Quotient.out x : G1 E 2) : GlobalTheory.CuspRep.GA E 2))) (quotientMeasure (Gam E 2) (BW.mu1 E 2)) := by
   obtain ⟨w, -, hw⟩ := hb.mem
   have hf : Continuous b.f.1 := ((BW.umgOps E 2).2 b.f (BW.cuspUmg E 2 b.f b.cusp).1).1
-  exact (memLp_out hc hr).integrable_mul (memLp_out (hf.comp continuous_subtype_val) hw).star
+  exact (memLp_out hc hr).integrable_mul (memLp_out (hf.comp continuous_subtypeVal) hw).star
 
 private theorem zt_zero (K : Type) [Field K] [NumberField K] : UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.zt K 0 = 1 := by
   have : (⟨Real.exp 0, Real.exp_pos 0⟩ : {r : ℝ // 0 < r}) = 1 := Subtype.ext Real.exp_zero
@@ -928,8 +928,8 @@ private theorem act_cc {H V : Type} [NormedAddCommGroup H] [InnerProductSpace �
       filter_upwards [(measurePreserving_add_left volume x).quasiMeasurePreserving.ae hU] with t ht
       rw [ht]
   · rw [integral_add (sc.integrable_of_hasCompactSupport ss) (cvc.integrable_of_hasCompactSupport cvs), cvi, hs0,
-      integral_finsetSum _ fun t _ => (tc t).integrable_of_hasCompactSupport (ts t), ContinuousLinearMap.add_apply, Finsupp.sum,
-      ContinuousLinearMap.sum_apply]
+      integral_finsetSum _ fun t _ => (tc t).integrable_of_hasCompactSupport (ts t), add_apply, Finsupp.sum,
+      sum_apply]
     congr 1
     refine Finset.sum_congr rfl fun t _ => ?_
     rw [(a t).integral_comp_comm (hui.comp_add_right t), integral_add_right_eq_self]
@@ -1055,7 +1055,7 @@ private theorem good_add {Y Y' : H →L[ℂ] H} {c c' : ℝ → ℂ} (h : Good J
   obtain ⟨⟨s, hs, hz⟩, hc⟩ := h
   obtain ⟨⟨s', hs', hz'⟩, hc'⟩ := h'
   refine ⟨⟨_, ((actLaws J).2.2.2.1 _ _ _ _ hs hs').1, fun x hx v hv => ?_⟩, ?_⟩
-  · simp only [ContinuousLinearMap.add_apply, hz x hx v hv, hz' x hx v hv, add_smul]
+  · simp only [add_apply, hz x hx v hv, hz' x hx v hv, add_smul]
   · rw [ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add, hc, hc']
 
 private theorem good_mul {Y Y' : H →L[ℂ] H} {c c' : ℝ → ℂ} (h : Good J P a Y c) (h' : Good J P a Y' c') :
@@ -1112,7 +1112,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.evzEx :
   have hπX : ∀ y, π (X y) = if y.1 ∈ 𝔢.S then 0 else X y := fun y => eval₂Hom_X' _ _ _
   have hπ : ∀ R : PR E (2 + 2), (∀ y ∈ R.vars, y.1 ∉ 𝔢.S) → π R = R := fun R hR =>
     hom_congr_vars (f₁ := π) (f₂ := RingHom.id _) (RingHom.ext fun p => hπC p)
-      (fun y hy _ => by rw [hπX, if_neg (hR y hy)]; rfl) rfl
+      (fun y hy _ => by rw [hπX, ite_eq_right (hR y hy)]; rfl) rfl
   have hA : Act 𝔵.A'.J 𝔢.toAmp.A (symb 𝔵.βa) := by
     rw [← 𝔢.a_op]
     exact (actLaws 𝔵.A'.J).2.1 _ _ 𝔵.a_acts.1 𝔵.a_acts.2.1
@@ -1132,14 +1132,14 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.evzEx :
         obtain ⟨⟨β, hk, hc, hz⟩, hP⟩ := genZ 𝔵 y
         refine ⟨⟨_, (actLaws 𝔵.A'.J).2.1 _ _ hk hc, fun x _ v hv => ?_⟩, hP⟩
         have hv' : 𝔵.a₀ v = (x : ℂ) • v := Module.End.mem_eigenspace_iff.1 hv
-        rw [hz, ContinuousLinearMap.smul_apply, hv', smul_smul, mul_comm]
+        rw [hz, smul_apply, hv', smul_smul, mul_comm]
         rfl
     · simp only [RingHom.comp_apply, hπX]
       by_cases hy : y.1 ∈ 𝔢.S
-      · simp only [if_pos hy, map_zero]
+      · simp only [ite_eq_left hy, map_zero]
         simpa only [zero_smul] using good_const (J := 𝔵.A'.J) (P := 𝔵.P) (a := 𝔵.a₀) 0
       · obtain ⟨w, i⟩ := y
-        simp only [if_neg hy, val, eval₂Hom_X']
+        simp only [ite_eq_right hy, val, eval₂Hom_X']
         rw [hev.hecke w hy i]
         obtain ⟨⟨s, hs, hz⟩, hP⟩ := genT 𝔵 w hy i
         refine ⟨⟨s, hs, fun x hx v hv => ?_⟩, hP⟩

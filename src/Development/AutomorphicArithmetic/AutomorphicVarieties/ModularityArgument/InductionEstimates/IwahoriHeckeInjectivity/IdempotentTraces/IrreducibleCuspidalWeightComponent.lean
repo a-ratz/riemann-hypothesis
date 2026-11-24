@@ -96,7 +96,7 @@ private lemma map_zero_eq_one_of_additive_to_group {Γ : Type} [Group Γ] {V : T
       simp only [map_smul]
       rw [← Finset.smul_sum, k₁ N' hle hn, smul_zero]
   obtain ⟨N, hN, k⟩ := key
-  letI : Fintype (Γ ⧸ N.normalCore) := Fintype.ofFinite _
+  let : Fintype (Γ ⧸ N.normalCore) := Fintype.ofFinite _
   have h := k N.normalCore N.normalCore_le inferInstance
   simp only [hfix, Finset.sum_const, Finset.card_univ] at h
   rw [← Nat.cast_smul_eq_nsmul ℂ, smul_eq_zero] at h
@@ -104,7 +104,7 @@ private lemma map_zero_eq_one_of_additive_to_group {Γ : Type} [Group Γ] {V : T
 
 private lemma finite_translates_double_coset {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (U : Subgroup G) (hU : CO U) (g : G) :
     {c : G ⧸ U | ∃ u ∈ U, c = QuotientGroup.mk (u * g)}.Finite := by
-  haveI : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU.2
+  have : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU.2
   have hc : Continuous fun u : G => (QuotientGroup.mk (u * g) : G ⧸ U) :=
     QuotientGroup.continuous_mk.comp (continuous_id.mul continuous_const)
   have := (hU.1.image hc).finite_of_discrete
@@ -128,15 +128,15 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.heckeSim
       { carrier := {n | σ n z = z}
         one_mem' := by simp
         mul_mem' := fun {a b} ha hb => by
-          simp only [Set.mem_setOf_eq] at ha hb ⊢
+          simp only [Set.mem_ofPred_eq] at ha hb ⊢
           rw [map_mul, Module.End.mul_apply, hb, ha]
         inv_mem' := fun {a} ha => by
-          simp only [Set.mem_setOf_eq] at ha ⊢
+          simp only [Set.mem_ofPred_eq] at ha ⊢
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
-    haveI : CompactSpace U := isCompact_iff_compactSpace.mp hU.1
-    have ho : IsOpen (N : Set U) := (hsm z hz).preimage continuous_subtype_val
-    haveI := N.quotient_finite_of_isOpen ho
+    have : CompactSpace U := isCompact_iff_compactSpace.mp hU.1
+    have ho : IsOpen (N : Set U) := (hsm z hz).preimage continuous_subtypeVal
+    have := N.quotient_finite_of_isOpen ho
     exact ⟨N, Subgroup.finiteIndex_of_finite_quotient, fun n hn => hn⟩
   have htr : ∀ g, ∀ q ∈ Q, ρ g q ∈ Q ⊔ W := by
     intro g q hq
@@ -206,7 +206,7 @@ private def dbl {G : Type} [Group G] (U : Subgroup G) (g : G) : Set (G ⧸ U) :=
 
 private theorem dbl_finite {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {U : Subgroup G}
     (hU : CO U) (g : G) : (dbl U g).Finite := by
-  haveI : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU.2
+  have : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU.2
   have hc : Continuous fun u : G => (QuotientGroup.mk (u * g) : G ⧸ U) :=
     QuotientGroup.continuous_mk.comp (continuous_id.mul continuous_const)
   refine ((hU.1.image hc).finite_of_discrete).subset ?_

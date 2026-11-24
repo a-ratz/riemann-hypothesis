@@ -93,7 +93,7 @@ theorem exists_denominator {A C F F' ι : Type*} [CommRing A] [IsDomain A] [Comm
       rw [IsScalarTower.algebraMap_eq A C F'] at this
       exact Function.Injective.of_comp this
     have hal : IsAlgebraic A q := (Algebra.IsIntegral.isIntegral (R := A) q).isAlgebraic
-    obtain ⟨c, hc, z, hz⟩ := hal.exists_nonzero_dvd hq
+    obtain ⟨c, hc, z, hz⟩ := hal.exists_ne_zero_dvd hq
     refine ⟨c, hc, z * p, ?_⟩
     have hq' : algebraMap C F' q ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hq
     rw [← hpq, Algebra.smul_def, ← IsScalarTower.algebraMap_apply,

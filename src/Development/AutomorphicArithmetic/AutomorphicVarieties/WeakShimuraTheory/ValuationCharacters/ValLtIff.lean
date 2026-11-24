@@ -71,7 +71,7 @@ private theorem card_eq {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
       ∀ u : HeightOneSpectrum (𝓞 F), IsPlaceOver A u → IsPlaceOver B u := by
     intro A B g hg u hA x
     rw [← hA x, ← val_lt_iff g.toRingEquiv hg]
-    simp only [AlgEquiv.coe_ringEquiv, AlgEquiv.commutes]
+    simp only [AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes]
   have hinj : Function.Injective w := by
     intro v₁ v₂ he
     have h2 : IsPlaceOver (pl v₂) (w v₁) := by rw [he]; exact hw v₂
@@ -117,11 +117,11 @@ private theorem card_eq {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
 theorem UpperTheory.V.Ws.chDv :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (T : Tower D), ∃ dv : ℕ, dv * Nat.card T.ι = T.d := by
   intro Ω _ _ _ l hl c D T
-  haveI : IsAlgClosure T.F Ω :=
+  have : IsAlgClosure T.F Ω :=
     { isAlgClosed := IsAlgClosure.isAlgClosed ℚ
       isAlgebraic := haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
         Algebra.IsAlgebraic.tower_top (K := ℚ) T.F }
-  haveI hmax : (Ideal.span {(l : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime l
+  have hmax : (Ideal.span {(l : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime l
   have h := Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn (Ideal.span {(l : ℤ)}) (𝓞 T.F) (T.F ≃ₐ[ℚ] T.F)
   rw [IsGalois.card_aut_eq_finrank, ← card_eq l T.pl T.ovl T.cover] at h
   exact ⟨_, (mul_comm _ _).trans h⟩

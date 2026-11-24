@@ -233,7 +233,7 @@ namespace GlobalTheory.NormSum.AdLattice
 
 theorem star_eq_conj (D : D7) (x : D.host.E) : (letI := D.host.cmStar; star x) = D.host.conj x := by
   apply D.host.φ₀.injective
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   show D.host.φ₀ (IsCMField.complexConj D.host.E x) = _
   rw [NumberField.IsCMField.complexEmbedding_complexConj, D.host.toHostAx.conjE_apply]
 

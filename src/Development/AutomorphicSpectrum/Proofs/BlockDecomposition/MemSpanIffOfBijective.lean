@@ -250,14 +250,14 @@ theorem pf_rootExt (p : ℕ) (hp : p.Prime) {k : Type} [CommRing k] (hk : D.Pf p
       rw [map_one, map_zero] at h
       exact h.symm)
     exact ⟨Subsingleton.elim _ _, ⟨fun _ _ _ => Subsingleton.elim _ _, fun y => ⟨y, Subsingleton.elim _ _⟩⟩⟩
-  · haveI : CharP k p := (CharP.charP_iff_prime_eq_zero hp).2 hchar
-    haveI : ExpChar k p := ExpChar.prime hp
-    haveI : Nontrivial Y.E := nontrivial_of_ne 1 0 (by rw [← Y.b_a₀]; exact Y.b.ne_zero _)
+  · have : CharP k p := (CharP.charP_iff_prime_eq_zero hp).2 hchar
+    have : ExpChar k p := ExpChar.prime hp
+    have : Nontrivial Y.E := nontrivial_of_ne 1 0 (by rw [← Y.b_a₀]; exact Y.b.ne_zero _)
     have hcE : ((p : ℕ) : Y.E) = 0 := by
       rw [← map_natCast (algebraMap (MvPolynomial (Fin d) k) Y.E),
         ← map_natCast (MvPolynomial.C (σ := Fin d) (R := k)), hchar, map_zero, map_zero]
-    haveI : CharP Y.E p := (CharP.charP_iff_prime_eq_zero hp).2 hcE
-    haveI : ExpChar Y.E p := ExpChar.prime hp
+    have : CharP Y.E p := (CharP.charP_iff_prime_eq_zero hp).2 hcE
+    have : ExpChar Y.E p := ExpChar.prime hp
     have hfk : ⇑(frobenius k p) = fun x => x ^ p := funext (frobenius_def p)
     let σ : k ≃+* k := RingEquiv.ofBijective (frobenius k p) (by rw [hfk]; exact hbij)
     have hσ : ∀ a : k, σ.symm a ^ p = a := fun a =>
@@ -306,10 +306,10 @@ theorem exists_etale_rootExt (p : ℕ) {P E₀ : Type} [CommRing P] [CommRing E�
     (hψ : ψ.Etale) {d : ℕ} (s : Fin d → P) (t : Fin d → E₀) (hst : ∀ j, ψ (s j) = t j)
     (Y : RootExt p P s) (X : RootExt p E₀ t) : ∃ ψ' : Y.E →+* X.E, ψ'.Etale := by
   classical
-  letI : Algebra P E₀ := ψ.toAlgebra
-  haveI : Algebra.Etale P E₀ := hψ
-  letI : Algebra P X.E := ((algebraMap E₀ X.E).comp ψ).toAlgebra
-  haveI hbc : Algebra.Etale Y.E (Y.E ⊗[P] E₀) := Algebra.Etale.baseChange P E₀ Y.E
+  let : Algebra P E₀ := ψ.toAlgebra
+  have : Algebra.Etale P E₀ := hψ
+  let : Algebra P X.E := ((algebraMap E₀ X.E).comp ψ).toAlgebra
+  have hbc : Algebra.Etale Y.E (Y.E ⊗[P] E₀) := Algebra.Etale.baseChange P E₀ Y.E
   obtain ⟨gY, ⟨hgY1, hgY2⟩, -⟩ := Y.univ X.E ((algebraMap E₀ X.E).comp ψ) X.r
     (fun k => by rw [X.r_zero, RingHom.comp_apply, hst]) X.r_succ
   let gYa : Y.E →ₐ[P] X.E := AlgHom.mk gY (fun r => by
@@ -386,11 +386,11 @@ theorem root_perf : ∀ (p : ℕ), p.Prime → ∀ {k E₀ : Type} [CommRing k] 
   obtain ⟨ψ', hψ'⟩ := exists_etale_rootExt p (MvPolynomial.eval₂Hom i t) het MvPolynomial.X t
     (fun j => MvPolynomial.eval₂Hom_X' i t j) Y X
   refine ⟨GlobalTheory.CompanionTheory.EtalePerfect.pf_of_etale p hp ψ' hψ' hY, fun π hπ => ?_⟩
-  letI : Algebra k E₀ := i.toAlgebra
-  haveI : Module.Flat k E₀ := hflat
+  let : Algebra k E₀ := i.toAlgebra
+  have : Module.Flat k E₀ := hflat
   have hreg : IsSMulRegular E₀ π := Module.Flat.isSMulRegular_of_nonZeroDivisors hπ
-  haveI : Module.Free E₀ X.E := Module.Free.of_basis X.b
-  haveI : Module.Flat E₀ X.E := Module.Flat.of_free
+  have : Module.Free E₀ X.E := Module.Free.of_basis X.b
+  have : Module.Flat E₀ X.E := Module.Flat.of_free
   have hreg' : IsSMulRegular E₀ (i π) := by
     rw [isSMulRegular_iff_right_eq_zero_of_smul] at hreg ⊢
     intro m hm

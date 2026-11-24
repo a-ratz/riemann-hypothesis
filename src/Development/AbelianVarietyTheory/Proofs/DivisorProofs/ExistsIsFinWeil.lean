@@ -335,8 +335,8 @@ theorem eventually_fix (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) (f : th
 
 theorem cont (hS : IsSelfDualC S ΛS) (hT : IsSelfDualC T ΛT) (f : thetaSub ψ S T) (u : WO S T) :
     Continuous fun p => (Om p f : WO S T → ℂ) u := by
-  haveI : IsTopologicalGroup (GA D S) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig S.gram))
-  haveI : IsTopologicalGroup (GA D T) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig T.gram))
+  have : IsTopologicalGroup (GA D S) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig S.gram))
+  have : IsTopologicalGroup (GA D T) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig T.gram))
   refine continuous_iff_continuousAt.2 fun q => ?_
   have h1 : Filter.Tendsto (fun p => q⁻¹ * p) (𝓝 q) (𝓝 1) :=
     (continuous_const.mul continuous_id).tendsto' q 1 (inv_mul_cancel q)
@@ -482,10 +482,10 @@ theorem exists_isFinWeil (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdC
   · rw [ho p f hf]
     exact (thetaSub ψ S T).smul_mem _ (Om p ⟨f, hf⟩).2
   · simp only [ho _ f hf, Pi.smul_apply, smul_eq_mul]
-    exact (continuous_subtype_val.comp z3).mul (h.cont hS hT ⟨f, hf⟩ u)
+    exact (continuous_subtypeVal.comp z3).mul (h.cont hS hT ⟨f, hf⟩ u)
   · rw [← h.unit hlam μ 𝓕 hμ h𝓕 p ⟨f, hf⟩, ho p f hf]
     refine lintegral_congr fun u => ?_
-    rw [Pi.smul_apply, enorm_smul, ← ofReal_norm_eq_enorm (z p : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
+    rw [Pi.smul_apply, eNorm_smul, ← ofReal_norm (z p : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
   · rw [ho _ f hf, h.real_triv hg hk, show z (g, k) = 1 by simp [z, c2 g hg, d2 k hk], Circle.coe_one, one_smul]
   · obtain ⟨f', h1, h2⟩ := h.Heisenberg₂ hψ hg hk u ⟨f, hf⟩
     rw [ho _ f hf, heisO_smul, ← h2, ← h1]

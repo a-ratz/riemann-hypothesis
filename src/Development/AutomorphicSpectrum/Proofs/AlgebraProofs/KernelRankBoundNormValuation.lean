@@ -314,7 +314,7 @@ theorem core {k A W ι : Type} [Field k] [CommRing A] [Algebra k A] [FiniteDimen
     ∃ x : Fin r → W, (⊤ : Submodule A W) ≤
       Submodule.span A (Set.range x) ⊔ (RingHom.ker (χ j)) • (⊤ : Submodule A W) := by
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
   let G : ι → Submodule k W := fun i => Module.End.maxGenEigenspace (Algebra.lsmul k k W t) (χ i t)
   let f : ∀ i, Module.End k (G i) := fun i =>
     (Algebra.lsmul k k W π : Module.End k W).restrict (mapsTo_G t π (χ i t))
@@ -407,7 +407,7 @@ theorem glue {A W : Type} [CommRing A] [IsArtinianRing A] [AddCommGroup W] [Modu
       Submodule.span A (Set.range x) ⊔ m • (⊤ : Submodule A W)) :
     ∃ x : Fin r → W, Submodule.span A (Set.range x) = ⊤ := by
   classical
-  haveI := Fintype.ofFinite (MaximalSpectrum A)
+  have := Fintype.ofFinite (MaximalSpectrum A)
   choose y hy using fun m : MaximalSpectrum A => h m.asIdeal m.isMaximal
   have hcop : Pairwise (Function.onFun IsCoprime fun m : MaximalSpectrum A => m.asIdeal) := by
     intro m m' hmm
@@ -455,8 +455,8 @@ open scoped TensorProduct
 theorem exists_char {k A : Type} [Field k] [IsAlgClosed k] [CommRing A] [Algebra k A]
     [FiniteDimensional k A] (m : Ideal A) (hm : m.IsMaximal) :
     ∃ χ : A →ₐ[k] k, RingHom.ker χ = m := by
-  haveI : IsDomain (A ⧸ m) := Ideal.Quotient.isDomain m
-  haveI : Module.Finite k (A ⧸ m) :=
+  have : IsDomain (A ⧸ m) := Ideal.Quotient.isDomain m
+  have : Module.Finite k (A ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ k m).toLinearMap Ideal.Quotient.mk_surjective
   have hb : Function.Bijective (algebraMap k (A ⧸ m)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
@@ -470,11 +470,11 @@ theorem count_hom {F k : Type} [Field F] [Finite F] [Field k] [IsAlgClosed k] (p
     [Fact p.Prime] [CharP k p] (φ : F →+* k) :
     Finite (F →+* k) ∧ Nat.card F = p ^ Nat.card (F →+* k) := by
   classical
-  haveI : CharP F p := φ.charP φ.injective p
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
-  haveI := Fintype.ofFinite F
-  haveI : Module.Finite (ZMod p) F := Module.Finite.of_finite
+  have : CharP F p := φ.charP φ.injective p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) k := ZMod.algebra k p
+  have := Fintype.ofFinite F
+  have : Module.Finite (ZMod p) F := Module.Finite.of_finite
   let e : (F →ₐ[ZMod p] k) ≃ (F →+* k) :=
     { toFun := fun f => f.toRingHom
       invFun := fun f => { f with
@@ -518,7 +518,7 @@ theorem arith_pi {E : Type} [Field E] [NumberField E] (p : ℕ) [hp : Fact p.Pri
       rw [e, Algebra.norm_algebraMap, isUnit_pow_iff Module.finrank_pos.ne', Int.isUnit_iff_natAbs_eq,
         Int.natAbs_natCast] at hu
       exact hp.out.one_lt.ne' hu
-    haveI : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI0
+    have : Finite (𝓞 E ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI0
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hd
     obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 E ⧸ I) p hd
     have h2 : p • x = 0 := by rw [← hx]; exact addOrderOf_nsmul_eq_zero x
@@ -555,8 +555,8 @@ theorem arith_theta {E : Type} [Field E] [NumberField E] (p : ℕ) [hp : Fact p.
     classical
     obtain ⟨Q, h1, h2⟩ := Ideal.eq_prime_pow_mul_coprime hp0 w
     exact ⟨Q, h1, _, h2⟩
-  letI : Field (𝓞 E ⧸ w) := Ideal.Quotient.field w
-  haveI : Finite (𝓞 E ⧸ w) := Ideal.finiteQuotientOfFreeOfNeBot w hw0
+  let : Field (𝓞 E ⧸ w) := Ideal.Quotient.field w
+  have : Finite (𝓞 E ⧸ w) := Ideal.finiteQuotientOfFreeOfNeBot w hw0
   obtain ⟨g, hg⟩ := IsCyclic.exists_monoid_generator (α := (𝓞 E ⧸ w)ˣ)
   obtain ⟨g0, hg0⟩ := Ideal.Quotient.mk_surjective (g : 𝓞 E ⧸ w)
   have h1 : (1 : 𝓞 E) ∈ w ⊔ Q := by rw [hQ]; trivial
@@ -604,13 +604,13 @@ theorem locmax {E : Type} [Field E] [NumberField E] {k W : Type} [Field k] [IsAl
       rw [RingHom.mem_ker, map_natCast, CharP.cast_eq_zero]
     rw [h, Ideal.mem_bot] at this
     exact hpne this
-  haveI hw : (RingHom.ker ψ).IsMaximal := (RingHom.ker_isPrime ψ).isMaximal hw0
+  have hw : (RingHom.ker ψ).IsMaximal := (RingHom.ker_isPrime ψ).isMaximal hw0
   obtain ⟨π, hπ0, hπw, hπ⟩ := arith_pi p _ hw0
   obtain ⟨θ, hθ1, hθ2, hθ3⟩ := arith_theta p _ hw0
-  letI : Field (𝓞 E ⧸ RingHom.ker ψ) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 E ⧸ RingHom.ker ψ) := Ideal.finiteQuotientOfFreeOfNeBot _ hw0
+  let : Field (𝓞 E ⧸ RingHom.ker ψ) := Ideal.Quotient.field _
+  have : Finite (𝓞 E ⧸ RingHom.ker ψ) := Ideal.finiteQuotientOfFreeOfNeBot _ hw0
   obtain ⟨hfin, hcard⟩ := count_hom (F := 𝓞 E ⧸ RingHom.ker ψ) p (RingHom.kerLift ψ)
-  haveI := Fintype.ofFinite ((𝓞 E ⧸ RingHom.ker ψ) →+* k)
+  have := Fintype.ofFinite ((𝓞 E ⧸ RingHom.ker ψ) →+* k)
   let χ : ((𝓞 E ⧸ RingHom.ker ψ) →+* k) → (k ⊗[ℤ] 𝓞 E →ₐ[k] k) := fun j =>
     Algebra.TensorProduct.lift (AlgHom.id k k)
       (j.comp (Ideal.Quotient.mk (RingHom.ker ψ))).toIntAlgHom (fun _ _ => Commute.all _ _)
@@ -653,12 +653,12 @@ theorem PositivityTheory.Xgn.kernel_rank_algebraic_bound : ∀ (E : Type) [Field
       (fun c _ => Algebra.commutes c _)
   have hφ : ∀ (c : k) (a : 𝓞 E), φ (c ⊗ₜ[ℤ] a) = c • ρ a := fun c a => by
     rw [Algebra.smul_def]; rfl
-  letI : Module (k ⊗[ℤ] 𝓞 E) W := Module.compHom W φ.toRingHom
+  let : Module (k ⊗[ℤ] 𝓞 E) W := Module.compHom W φ.toRingHom
   have hs : ∀ (a : k ⊗[ℤ] 𝓞 E) (w : W), a • w = φ a w := fun _ _ => rfl
-  haveI : IsScalarTower k (k ⊗[ℤ] 𝓞 E) W := ⟨fun c a w => by
+  have : IsScalarTower k (k ⊗[ℤ] 𝓞 E) W := ⟨fun c a w => by
     rw [hs, hs, map_smul]; rfl⟩
-  haveI : Module.Finite (k ⊗[ℤ] 𝓞 E) W := Module.Finite.of_restrictScalars_finite k _ _
-  haveI : IsArtinianRing (k ⊗[ℤ] 𝓞 E) := IsArtinianRing.of_finite k _
+  have : Module.Finite (k ⊗[ℤ] 𝓞 E) W := Module.Finite.of_restrictScalars_finite k _ _
+  have : IsArtinianRing (k ⊗[ℤ] 𝓞 E) := IsArtinianRing.of_finite k _
   have h1 : ∀ a : 𝓞 E,
       (Algebra.lsmul k k W ((1 : k) ⊗ₜ[ℤ] a : k ⊗[ℤ] 𝓞 E) : Module.End k W) = ρ a := by
     intro a

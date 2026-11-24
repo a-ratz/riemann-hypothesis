@@ -180,7 +180,7 @@ theorem repSmooth_of (hLL : LocLog) : NFRadRedS.RepSmooth := by
   let T : Q.Mx k r →ₗ[ℝ] (Wp →L[ℂ] Wp) := (dOpL z π hrep).comp (Submodule.linearProjOfIsCompl _ q hq)
   have hT1 : ∀ Y, InLieW k r z Y → T Y = dOp π Y := by
     intro Y hY
-    have hp := Submodule.linearProjOfIsCompl_apply_left hq ⟨Y, hY⟩
+    have hp := Submodule.projectionOnto_apply_left hq ⟨Y, hY⟩
     show dOpL z π hrep (Submodule.linearProjOfIsCompl _ q hq Y) = dOp π Y
     rw [show Submodule.linearProjOfIsCompl _ q hq Y = ⟨Y, hY⟩ from hp]
     rfl

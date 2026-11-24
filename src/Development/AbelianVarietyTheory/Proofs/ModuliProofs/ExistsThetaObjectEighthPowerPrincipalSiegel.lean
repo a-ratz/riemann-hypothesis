@@ -385,7 +385,7 @@ theorem existsUnique_coord {Λ I : Type} [AddCommGroup Λ] {m k : ℕ} (hk : k �
     (add : ∀ a b, l (a + b) = l a * l b) (ker : ∀ a, l a = 1 ↔ ∃ b, a = k • b)
     (onto : ∀ y : Γ, y ^ k = 1 → ∃ a, l a = y) (bas : (Fin m → ℤ) ≃ₗ[ℤ] (I → Λ)) (y : I → Γ) (hy : ∀ u, y u ^ k = 1) :
     ∃! c : Fin m → ZMod k, ∀ u, ∏ i, l (bas (Pi.single i 1) u) ^ (c i).val = y u := by
-  haveI : NeZero k := ⟨hk⟩
+  have : NeZero k := ⟨hk⟩
   let F : Λ →+ Additive Γ := AddMonoidHom.mk' (fun a => Additive.ofMul (l a)) fun a b => by rw [add, ofMul_mul]
   have hF : ∀ a b, l a = l b ↔ ∃ e, a - b = k • e := fun a b => by
     rw [← ker]
@@ -594,7 +594,7 @@ theorem exists_tObj_isSharp : Out.Laws → Out.Laws2 → ∀ (h g : ℕ) (W : Ma
   intro hL _ h g W J a bas hW hbas k o _ b S s c hk h3 hζ hc
   have hG := hL.globalFns
   have hk0 : k ≠ 0 := by omega
-  haveI : NeZero k := ⟨hk0⟩
+  have : NeZero k := ⟨hk0⟩
   obtain ⟨G, _, pr, hab, hpr, hu⟩ : ∃ (G : Over S) (_ : GrpObj G) (pr : Fin 8 → (G ⟶ c.A)), IsAbelianScheme G ∧
       (∀ u, IsMonHom (pr u)) ∧ ∀ (T : Over S) (y : Fin 8 → (T ⟶ c.A)), ∃! x : T ⟶ G, ∀ u, x ≫ pr u = y u :=
     ⟨Out.powObj c.A 8, inferInstance, Out.powPr c.A, AbelianSchemeGerms.isAbelianScheme_powObj c.A c.ab 7, fun u => inferInstance,

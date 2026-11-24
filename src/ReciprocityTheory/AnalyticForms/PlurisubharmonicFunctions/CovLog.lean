@@ -76,7 +76,7 @@ theorem hessC_eq_zero_of_re_bilin (φ : (Fin D → ℂ) → ℝ) (z : Fin D → 
     (B : (Fin D → ℂ) →L[ℂ] (Fin D → ℂ) →L[ℂ] ℂ)
     (hB : ∀ v u, fderiv ℝ (fderiv ℝ φ) z v u = (B v u).re) : hessC φ z = 0 := by
   ext i j
-  simp only [hessC, hB, map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul, Matrix.zero_apply]
+  simp only [hessC, hB, map_smul, smul_apply, smul_eq_mul, Matrix.zero_apply]
   simp only [Complex.mul_re, Complex.mul_im, Complex.I_re, Complex.I_im]
   ring_nf
   simp
@@ -99,7 +99,7 @@ theorem hessC_add' (φ ψ : (Fin D → ℂ) → ℝ) (z : Fin D → ℂ) (hφ : 
     rw [hE.fderiv_eq]
     exact fderiv_add hdφ hdψ
   ext i j
-  simp only [hessC, h2, ContinuousLinearMap.add_apply, Matrix.add_apply]
+  simp only [hessC, h2, add_apply, Matrix.add_apply]
   push_cast
   ring
 

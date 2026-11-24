@@ -229,9 +229,9 @@ theorem b3c : ConjugationSecondOrderBound := by
         (n * max R 0) ^ 4 * Real.exp (n * max R 0) ^ 2), by positivity, ?_⟩
   intro Y M hY hM τ h0 h1
   have hY' : ∀ i j, ‖Y i j‖ ≤ max R 0 := fun i j =>
-    (Matrix.norm_entry_le_entrywise_sup_norm Y).trans (hY.trans (le_max_left _ _))
+    (Matrix.norm_apply_le_norm Y).trans (hY.trans (le_max_left _ _))
   have hM' : ∀ i j, ‖M i j‖ ≤ max R 0 := fun i j =>
-    (Matrix.norm_entry_le_entrywise_sup_norm M).trans (hM.trans (le_max_left _ _))
+    (Matrix.norm_apply_le_norm M).trans (hM.trans (le_max_left _ _))
   exact (Matrix.norm_le_iff (by positivity)).2
     (fun i j => conj_taylor_entry (max R 0) hR Y M hY' hM' τ h0 h1 i j)
 

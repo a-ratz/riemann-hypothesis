@@ -566,7 +566,7 @@ theorem beta_coord (A : DatAt Y P) {a b : A.Ylat} {r₁ r₂ r₃ : A.R} (h₁ :
   ring
 
 theorem nonempty_reading (hp : 1 < p) (A : DatAt Y P) : Nonempty (Reading A) := by
-  letI := H.starRing
+  let := H.starRing
   have nz : ∀ {χ r}, PsiCoord A.U.D.toPre χ r → (A.f r : ↥C.S) ≠ 0 := fun h => DatAtCheck.coord_ne_zero A _ _ h
   obtain ⟨t, h₁, h₂, h₃⟩ := exists_lift (C := ↥C.S) (A.beLin (DatAtCheck.betaAdd Y p)) p fun a b => by
     obtain ⟨r₁, h₁⟩ := exists_coord A (a + b)

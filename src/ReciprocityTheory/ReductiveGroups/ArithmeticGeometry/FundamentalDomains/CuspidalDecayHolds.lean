@@ -95,7 +95,7 @@ private lemma le_max_mul_exp_mul_exp_of_le_exp {N Cη c L S s T : ℝ} (hc : 0 �
 
 theorem cuspidalDecay_holds : CuspidalExponentialDecay (E := E) := by
   intro r X la P c hc hP
-  simp only [Data.SSgt, Data.SS, Data.IsBddSec, Set.mem_setOf_eq] at hP
+  simp only [Data.SSgt, Data.SS, Data.IsBddSec, Set.mem_ofPred_eq] at hP
   obtain ⟨⟨⟨hsec, B, hB⟩, -⟩, hgt⟩ := hP
   have h3d := (moderateCoefficientPositivity_holds (E := E)) r X la P B 0 hsec (by
     intro x hx
@@ -210,7 +210,7 @@ theorem cuspidalDecay_holds : CuspidalExponentialDecay (E := E) := by
             refine ⟨hnn v hiso ν x hx hν.2, ?_⟩
             by_contra hcnd
             apply hν.2
-            rw [Data.fj, if_neg hcnd]
+            rw [Data.fj, ite_eq_right hcnd]
     have hPx : ‖P x‖ * X.nfac la x ≤ max Cη 0 * Real.exp (-(Real.pi * c / X.firstMinimumSq x)) * Kf := by
       rcases hnf.eq_or_lt with h0 | hpos
       · rw [← h0, mul_zero]
@@ -232,7 +232,7 @@ theorem cuspidalDecay_holds : CuspidalExponentialDecay (E := E) := by
       linarith [hPx]
     have he2 : Real.exp (-(Real.pi * c / X.firstMinimumSq x)) ^ 2 =
         Real.exp (-2 * Real.pi * c / X.firstMinimumSq x) := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       push_cast
       ring

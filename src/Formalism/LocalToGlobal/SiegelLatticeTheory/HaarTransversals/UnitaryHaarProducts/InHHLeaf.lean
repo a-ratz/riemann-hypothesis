@@ -61,9 +61,9 @@ namespace Formalism.L2.SG.Pf
 variable {D : D7} (X : HidaSetting D)
 
 theorem fundBridge_holds : FundBridge X := by
-  haveI := X.B.sf
-  haveI := X.B.haar
-  haveI := Formalism.L2.SG.Count.muA_isHaar X.B.I X.B.μf
+  have := X.B.sf
+  have := X.B.haar
+  have := Formalism.L2.SG.Count.muA_isHaar X.B.I X.B.μf
   show IsFundamentalDomain (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I) X.B.fund (X.B.I.muA X.B.μf)
   obtain ⟨hmeas, hcov, hdisj⟩ := X.B.fund_spec
   refine IsFundamentalDomain.mk'' hmeas.nullMeasurableSet
@@ -80,7 +80,7 @@ theorem pserMeas_holds (u : D.what₂.Word) (hK : X.LevelSubgroupCharacter) : Ps
   have hG : (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I : Set X.B.I.GA).Countable :=
     Set.countable_coe_iff.mp (by exact (inferInstance : Countable (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I)))
   have hc : Dt.Countable := Set.Countable.mono hDt.1 hG
-  haveI : Countable Dt := hc.to_subtype
+  have : Countable Dt := hc.to_subtype
   refine measurable_of_tendsto_metrizable' (Filter.atTop : Filter (Finset Dt))
     (f := fun (s : Finset Dt) x => ∑ δ ∈ s, Ph X u hK T ((δ : X.B.I.GA) * x)) (fun s => ?_) ?_
   · exact Finset.measurable_sum s fun δ _ => (hPM T).comp (measurable_const_mul _)
@@ -115,14 +115,14 @@ theorem step_sub (h : rr_FD μ Γ D) (ι : H → G) (hι : Measurable ι) {φ : 
       Integrable Φ (ν.prod ((μ.restrict D).restrict s)) := by
     intro s hs hfin
     refine ⟨hΦm.aestronglyMeasurable, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm, lintegral_prod _ hΦm.enorm.aemeasurable]
+    rw [hasFiniteIntegral_iff_eNorm, lintegral_prod _ hΦm.eNorm.aemeasurable]
     set C : ℝ≥0∞ := (μ.restrict D) s + ∫⁻ y in D, ‖f0 y‖ₑ ^ 2 ∂μ with hC
     have hCfin : C ≠ ∞ := ENNReal.add_ne_top.2 ⟨hfin.ne, hsq⟩
     have hb : ∀ g, ∫⁻ x, ‖Φ (g, x)‖ₑ ∂((μ.restrict D).restrict s) ≤ ‖φ g‖ₑ * C := by
       intro g
       have hm1 : Measurable fun x => ‖f0 (r (x * ι g))‖ₑ :=
-        (hf0m.comp (hrm.comp (measurable_mul_const (ι g)))).enorm
-      simp only [hΦ, enorm_mul]
+        (hf0m.comp (hrm.comp (measurable_mul_const (ι g)))).eNorm
+      simp only [hΦ, eNorm_mul]
       rw [lintegral_const_mul _ hm1]
       refine mul_le_mul' le_rfl ?_
       calc ∫⁻ x, ‖f0 (r (x * ι g))‖ₑ ∂((μ.restrict D).restrict s)
@@ -132,9 +132,9 @@ theorem step_sub (h : rr_FD μ Γ D) (ι : H → G) (hι : Measurable ι) {φ : 
             rw [lintegral_add_left measurable_const, lintegral_one, Measure.restrict_apply_univ]
         _ ≤ (μ.restrict D) s + ∫⁻ x in D, ‖f0 (r (x * ι g))‖ₑ ^ 2 ∂μ :=
             add_le_add le_rfl (lintegral_mono' Measure.restrict_le_self le_rfl)
-        _ = C := by rw [rrkb_lint h hr (ι g) (F := fun y => ‖f0 y‖ₑ ^ 2) (hf0m.enorm.pow_const 2)]
+        _ = C := by rw [rrkb_lint h hr (ι g) (F := fun y => ‖f0 y‖ₑ ^ 2) (hf0m.eNorm.pow_const 2)]
     calc ∫⁻ g, ∫⁻ x, ‖Φ (g, x)‖ₑ ∂((μ.restrict D).restrict s) ∂ν ≤ ∫⁻ g, ‖φ g‖ₑ * C ∂ν := lintegral_mono hb
-      _ = (∫⁻ g, ‖φ g‖ₑ ∂ν) * C := lintegral_mul_const _ hφm.enorm
+      _ = (∫⁻ g, ‖φ g‖ₑ ∂ν) * C := lintegral_mul_const _ hφm.eNorm
       _ < ∞ := ENNReal.mul_lt_top hφ.2 (lt_top_iff_ne_top.2 hCfin)
   refine ae_eq_of_forall_setIntegral_eq_of_sigmaFinite ?_ ?_ ?_
   · intro s hs hfin
@@ -211,8 +211,8 @@ open MeasureTheory Formalism.MainNotions.LeviCoordinates
 variable {D : D7} (X : HidaSetting D)
 
 theorem muf_right : X.B.μf.IsMulRightInvariant := by
-  haveI := X.B.sf
-  haveI := X.B.haar
+  have := X.B.sf
+  have := X.B.haar
   exact Formalism.L2.SG.Closed.GfUnimod_holds X.B.I X.B.μf
 
 theorem idempotent_fixes_invariant_L2 : IdempotentFixesInvariantL2 X := by
@@ -370,8 +370,8 @@ theorem unfold_lint (h : rr_FD μ Γ D) (S : Subgroup G) (hS : S ≤ Γ) (Dt : S
   classical
   have hΓc : (Γ : Set G).Countable := Set.countable_coe_iff.mp (by exact (inferInstance : Countable Γ))
   have hDc : Dt.Countable := Set.Countable.mono hD.1 hΓc
-  haveI : Countable Dt := hDc.to_subtype
-  haveI : Countable S := Function.Injective.countable (Subgroup.inclusion_injective hS)
+  have : Countable Dt := hDc.to_subtype
+  have : Countable S := Function.Injective.countable (Subgroup.inclusion_injective hS)
   have hU := isFundamentalDomain_of_rr_FD (rr_FD_union h S hS Dt hD hDc)
   have hUeq : (⋃ δ ∈ Dt, (fun y => δ * y) '' D) = ⋃ δ : Dt, (fun y => (δ : G) * y) '' D := by
     ext x
@@ -445,7 +445,7 @@ theorem pserRph_holds (u : D.what₂.Word) (hK : X.LevelSubgroupCharacter) : Pse
   have hS : Srat X u ≤ rr_GF X.B.I := inf_le_left
   obtain ⟨r, hrm, hr⟩ := rr_exists_meas_rep hFD
   set f : X.B.I.GA → ℝ≥0∞ := fun w => ‖Ph X u hK T w‖ₑ with hfdef
-  have hfm : Measurable f := (hPP T).1.enorm
+  have hfm : Measurable f := (hPP T).1.eNorm
   have hfinv : ∀ s ∈ Srat X u, ∀ y, f (s * y) = f y := fun s hs y => by
     simp only [hfdef, (hPP T).2.1 s hs y]
   set F : X.B.I.GA → ℝ≥0∞ := fun w => ∑' δ : Dt, f ((δ : X.B.I.GA) * w) with hFdef
@@ -470,7 +470,7 @@ theorem pserRph_holds (u : D.what₂.Word) (hK : X.LevelSubgroupCharacter) : Pse
   set ι : X.B.I.Ginf → X.B.I.GA := fun z => (z, (1 : X.B.I.Gf)) with hι
   have hιm : Measurable ι := measurable_id.prodMk measurable_const
   set K : X.B.I.GA × X.B.I.Ginf → ℝ≥0∞ := fun p => ‖φ' p.2‖ₑ * F (p.1 * ι p.2) with hKdef
-  have hKm : Measurable K := (hφ'm.comp measurable_snd).enorm.mul (hFm.comp (measurable_fst.mul (hιm.comp measurable_snd)))
+  have hKm : Measurable K := (hφ'm.comp measurable_snd).eNorm.mul (hFm.comp (measurable_fst.mul (hιm.comp measurable_snd)))
   set J : X.B.I.GA → ℝ≥0∞ := fun y => ∫⁻ z, K (y, z) ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) with hJdef
   have hJm : Measurable J := hKm.lintegral_prod_right'
   have hJint : ∫⁻ y in X.B.fund, J y ∂(X.B.I.muA X.B.μf) < ⊤ := by
@@ -486,7 +486,7 @@ theorem pserRph_holds (u : D.what₂.Word) (hK : X.LevelSubgroupCharacter) : Pse
       obtain ⟨γ, hγ, e, -⟩ := hr (x * ι z)
       rw [e, hFinv γ hγ]
     simp only [e1]
-    rw [lintegral_mul_const _ hφ'm.enorm]
+    rw [lintegral_mul_const _ hφ'm.eNorm]
     refine ENNReal.mul_lt_top ?_ hC
     exact (hPI.congr hφφ').2
   have hJae : ∀ᵐ y ∂((X.B.I.muA X.B.μf).restrict X.B.fund), J y < ⊤ :=
@@ -517,14 +517,14 @@ theorem pserRph_holds (u : D.what₂.Word) (hK : X.LevelSubgroupCharacter) : Pse
     simpa [mul_assoc] using this.1
   have hsum : ∑' δ : Dt, ∫⁻ z, ‖X.ph z * Ph X u hK T ((δ : X.B.I.GA) * (y * (z, 1)))‖ₑ
       ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) ≠ ⊤ := by
-    rw [← lintegral_tsum fun δ => (hmeas δ).enorm]
+    rw [← lintegral_tsum fun δ => (hmeas δ).eNorm]
     refine ne_of_lt (lt_of_le_of_lt (le_of_eq ?_) hy)
     simp only [hJdef, hKdef, hFdef, hfdef]
     refine lintegral_congr_ae (hφφ'.mono fun z hz => ?_)
     beta_reduce
     rw [← ENNReal.tsum_mul_left]
     refine tsum_congr fun δ => ?_
-    rw [enorm_mul, hz]
+    rw [eNorm_mul, hz]
   simp only [← tsum_mul_left]
   rw [integral_tsum hmeas hsum]
   refine tsum_congr fun δ => ?_

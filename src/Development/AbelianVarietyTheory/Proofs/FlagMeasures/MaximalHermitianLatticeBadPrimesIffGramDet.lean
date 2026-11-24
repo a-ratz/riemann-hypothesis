@@ -173,7 +173,7 @@ theorem exists_orth_gens [FiniteDimensional K V] (h : V →ₗ⋆[K] V →ₗ[K]
     have := hmax y hy z hz
     rw [h0, map_zero] at this
     exact v.zero_iff.1 (le_antisymm this zero_le)
-  have hv0 : 0 < v (h x x) := zero_lt_iff.2 (v.ne_zero_iff.2 h0)
+  have hv0 : 0 < v (h x x) := pos_iff_ne_zero.2 (v.ne_zero_iff.2 h0)
   have hxx : star (h x x) = h x x := hs.eq x x
   have hc : ∀ y ∈ Λ, h x y / h x x ∈ biInt v := by
     intro y hy
@@ -432,7 +432,7 @@ theorem det_gram [DecidableEq ι] (h : V →ₗ⋆[K] V →ₗ[K] K) (e b : Modu
     (he : ∀ i l, i ≠ l → h (e i) (e l) = 0) :
     ∃ δ : K, δ ≠ 0 ∧ (Matrix.of fun i l => h (b i) (b l)).det = star δ * δ * ∏ i, h (e i) (e i) := by
   have hT : IsUnit (e.toMatrix b).det := by
-    letI := e.invertibleToMatrix b
+    let := e.invertibleToMatrix b
     exact Matrix.isUnit_det_of_invertible _
   refine ⟨(e.toMatrix b).det, hT.ne_zero, ?_⟩
   have : (Matrix.of fun i l => h (b i) (b l)) =
@@ -466,8 +466,8 @@ theorem val_star (w : HeightOneSpectrum (𝓞 K)) (hw : conjIdeal (K := K) w.asI
   have h2 : ∀ k : K, k ≠ 0 → w.valuation K (star k) ≤ w.valuation K k →
       w.valuation K k ≤ w.valuation K (star k) := by
     intro k hk hle
-    have p1 : 0 < w.valuation K k := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hk)
-    have p2 : 0 < w.valuation K (star k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (star_ne_zero.2 hk))
+    have p1 : 0 < w.valuation K k := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hk)
+    have p2 : 0 < w.valuation K (star k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (star_ne_zero.2 hk))
     have := h1 (star k / k) (by rw [map_div₀, div_le_one₀ p1]; exact hle)
     rwa [star_div₀, star_star, map_div₀, div_le_one₀ p2] at this
   by_cases hk : k = 0
@@ -565,7 +565,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
       rw [hu, heM] at h1
       have h2 := h1 i
       rw [map_smul, e.repr_self, Finsupp.smul_apply, Finsupp.single_eq_same, smul_eq_mul, mul_one,
-        map_inv₀, inv_le_one₀ (zero_lt_iff.2 (hv0 i))] at h2
+        map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 (hv0 i))] at h2
       exact le_antisymm (hd1 i) h2
     · intro hu
       ext y
@@ -589,9 +589,9 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
         rwa [map_sub, map_smul, map_smul, Finsupp.sub_apply, Finsupp.smul_apply, Finsupp.smul_apply,
           e.repr_self, Finsupp.single_apply, smul_eq_mul, smul_eq_mul] at this
       have h1 := hco i
-      rw [if_pos rfl, mul_one] at h1
+      rw [ite_eq_left rfl, mul_one] at h1
       have h2 : 1 < v (h (e i) (e i))⁻¹ := by
-        rw [map_inv₀, one_lt_inv₀ (zero_lt_iff.2 (hv0 i))]
+        rw [map_inv₀, one_lt_inv₀ (pos_iff_ne_zero.2 (hv0 i))]
         exact lt_of_le_of_ne (hd1 i) hi
       have h3 : v (c * (h x x)⁻¹ * e.repr x i) = v (h (e i) (e i))⁻¹ :=
         v.map_eq_of_sub_lt (by rw [v.map_sub_swap]; exact h1.trans_lt h2)
@@ -613,7 +613,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
       refine ⟨by rw [hn3, WithZero.exp_inj]; omega, by rw [hn2, ← WithZero.exp_zero, WithZero.exp_inj]; omega,
         fun l hl hl1 => ?_⟩
       have h5 := hco l
-      rw [if_neg hl.symm, mul_zero, zero_sub, Valuation.map_neg, map_mul, map_mul, map_inv₀, hxx, hl1, mul_one,
+      rw [ite_eq_right hl.symm, mul_zero, zero_sub, Valuation.map_neg, map_mul, map_mul, map_inv₀, hxx, hl1, mul_one,
         hn1, ← WithZero.exp_neg, ← WithZero.exp_add, ← WithZero.exp_zero, WithZero.exp_le_exp] at h5
       omega
     obtain ⟨i, hi⟩ := not_forall.1 (mt hU.2 hb.2)

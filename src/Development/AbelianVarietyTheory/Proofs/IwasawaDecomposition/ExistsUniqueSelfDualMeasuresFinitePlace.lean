@@ -239,9 +239,9 @@ theorem existsUnique_of_bilin (ψ : AddChar (Fv F v) ℂ) (hψ : Continuous ψ) 
     [LocallyCompactSpace V] [SecondCountableTopology V] [MeasurableSpace V] [BorelSpace V]
     (β : LinearMap.BilinForm (Fv F v) V) (hs : ∀ x y, β x y = β y x) (hn : ∀ x, (∀ y, β x y = 0) → x = 0) :
     ∃! μ : Measure V, SelfDual μ (fun x y => ψ (β x y)) := by
-  letI : NontriviallyNormedField (Fv F v) :=
+  let : NontriviallyNormedField (Fv F v) :=
     Valued.toNontriviallyNormedField (Fv F v) (WithZero (Multiplicative ℤ))
-  haveI : IsUltrametricDist (Fv F v) := inferInstance
+  have : IsUltrametricDist (Fv F v) := inferInstance
   obtain ⟨n, hc⟩ := GlobalTheory.CharConductor.exists_exponent_of_valued ψ hψ hne
   obtain ⟨c, hcv⟩ := HeightOneSpectrum.valuedAdicCompletion_surjective F v (WithZero.exp n)
   have hc0 : c ≠ 0 := by
@@ -369,7 +369,7 @@ end Form
 
 theorem existsUnique_selfDual_finite : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ ψ : AddChar (AF F) ℂ, IsCharAF F ψ → ∀ v : HeightOneSpectrum (𝓞 F), (∃! ν, SdR (Fv F v) (psiV F ψ v) ν) ∧ ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∃! μ, SdW F E σ M J (Fv F v) (psiV F ψ v) 1 μ := by
   intro F E _ _ _ _ _ σ h ψ hψ v
-  haveI := h.1
+  have := h.1
   let χ : AddChar (Fv F v) ℂ := ψ.compAddMonoidHom
     ((AddMonoidHom.inr (Ainf F) (Af F)).comp (GlobalTheory.AdelicU.singleFin v).toAddMonoidHom)
   have hc : Continuous χ :=

@@ -70,17 +70,17 @@ lemma kd_span {R A A' : Type} [CommRing R] [CommRing A] [CommRing A'] [Algebra R
 
 theorem LeafCoord_of (hR : LeafRank) (hP : LeafPick) (hS : LeafSpan) (hE : LeafEt) : LeafCoord := by
   intro e d R A _ _ φ I p hp hIp hstd
-  letI : Algebra R A := φ.toAlgebra
-  haveI h1 : Algebra.IsStandardSmoothOfRelativeDimension (e + d) R A := hstd.1
-  haveI h2 : Algebra.IsStandardSmoothOfRelativeDimension e R (A ⧸ I) := hstd.2
-  haveI : Algebra.IsStandardSmooth R A := h1.isStandardSmooth
-  haveI : Algebra.IsStandardSmooth R (A ⧸ I) := h2.isStandardSmooth
+  let : Algebra R A := φ.toAlgebra
+  have h1 : Algebra.IsStandardSmoothOfRelativeDimension (e + d) R A := hstd.1
+  have h2 : Algebra.IsStandardSmoothOfRelativeDimension e R (A ⧸ I) := hstd.2
+  have : Algebra.IsStandardSmooth R A := h1.isStandardSmooth
+  have : Algebra.IsStandardSmooth R (A ⧸ I) := h2.isStandardSmooth
   have hfg : I.FG := by
     have := Algebra.FinitePresentation.ker_fG_of_surjective (Ideal.Quotient.mkₐ R I)
       (Ideal.Quotient.mkₐ_surjective R I)
     simpa [Ideal.Quotient.mkₐ_ker] using this
-  haveI : Module.Finite A I := Module.Finite.iff_fg.mpr hfg
-  haveI := hp
+  have : Module.Finite A I := Module.Finite.iff_fg.mpr hfg
+  have := hp
   have hrank := hR e d R A I p hIp h1 h2
   obtain ⟨x, f, hf, hx⟩ := hP d A I p hrank
   set x' : Fin d → A := fun j => (x j : A) with hx'
@@ -93,14 +93,14 @@ theorem LeafCoord_of (hR : LeafRank) (hP : LeafPick) (hS : LeafSpan) (hE : LeafE
   obtain ⟨y, g, hg, hy⟩ := hS e d R A I p hp hIp h2 x' f hxI hf hfx
   refine ⟨f * g, fun h => (hp.mem_or_mem h).elim hf hg, ?_⟩
   intro A' _ _ _
-  letI : Algebra R A' := ((algebraMap A A').comp φ).toAlgebra
-  haveI : IsScalarTower R A A' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra R A' := ((algebraMap A A').comp φ).toAlgebra
+  have : IsScalarTower R A A' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hfgu : IsUnit (algebraMap A A' (f * g)) := IsLocalization.Away.algebraMap_isUnit (f * g)
   rw [map_mul] at hfgu
   have hfu : IsUnit (algebraMap A A' f) := isUnit_of_mul_isUnit_left hfgu
   have hgu : IsUnit (algebraMap A A' g) := isUnit_of_mul_isUnit_right hfgu
   refine ⟨fun j => algebraMap A A' (x' j), fun k => algebraMap A A' (y k), ?_, ?_⟩
-  · haveI : Algebra.IsStandardSmoothOfRelativeDimension 0 A A' :=
+  · have : Algebra.IsStandardSmoothOfRelativeDimension 0 A A' :=
       Algebra.IsStandardSmoothOfRelativeDimension.localization_away (f * g)
     have h3 : Algebra.IsStandardSmoothOfRelativeDimension (0 + (e + d)) R A' :=
       Algebra.IsStandardSmoothOfRelativeDimension.trans (R := R) (S := A) (T := A') (n := e + d) (m := 0)

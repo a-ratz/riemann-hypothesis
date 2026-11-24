@@ -125,7 +125,7 @@ theorem approx_algebraic_integer : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ) (S : S
     have hY : ‖(y : ℂ_[l]) - x‖ ≤ ((l : ℝ)⁻¹) ^ r := by
       rw [← dist_eq_norm, dist_comm]; exact hy.le
     have hAB : ‖algebraMap ℚ_[l] ℂ_[l] ((a σ - (((a σ).appr r : ℕ) : ℤ_[l]) : ℤ_[l]) : ℚ_[l])‖ ≤ ((l : ℝ)⁻¹) ^ r := by
-      rw [norm_algebraMap', PadicInt.padic_norm_e_of_padicInt]
+      rw [norm_algebraMap', PadicInt.norm_coe]
       obtain ⟨c, hc⟩ := hdiff σ
       rw [hc, norm_mul, norm_pow, PadicInt.norm_p]
       have := PadicInt.norm_le_one c
@@ -288,7 +288,7 @@ theorem detects_restrictNormal_inf : ∀ (l : ℕ) [Fact l.Prime] (L : Type) [Fi
       lift s ∈ N ∧ AlgEquiv.restrictNormalHom L (lift s) = s := by
     intro s hs
     have h : ∃ σ ∈ N, AlgEquiv.restrictNormalHom L σ = s := Subgroup.mem_map.mp hs
-    simp only [lift, dif_pos h]
+    simp only [lift, dite_eq_left h]
     exact h.choose_spec
   obtain ⟨hτN, hτ⟩ := hlift σ₀ hσ₀.1
   have hτN' : lift σ₀ ∉ N' := by
@@ -347,14 +347,14 @@ theorem exists_galois_ker_le_range (l : ℕ) [Fact l.Prime] (U : Subgroup (GQ l)
         S ⊆ Set.range (algebraMap L (Om l)) := by
   obtain ⟨E, hE, hEU⟩ := (krullTopology_mem_nhds_one_iff ℚ_[l] (Om l) (U : Set (GQ l))).mp
     (hU.mem_nhds U.one_mem)
-  haveI := hS.to_subtype
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] S) :=
+  have := hS.to_subtype
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] S) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   let F : IntermediateField ℚ_[l] (Om l) := E ⊔ IntermediateField.adjoin ℚ_[l] S
   let M : IntermediateField ℚ_[l] (Om l) := IntermediateField.normalClosure ℚ_[l] F (Om l)
-  haveI : FiniteDimensional ℚ_[l] M := inferInstance
-  haveI : Normal ℚ_[l] M := inferInstance
-  haveI : IsGalois ℚ_[l] M := isGalois_iff.mpr ⟨inferInstance, inferInstance⟩
+  have : FiniteDimensional ℚ_[l] M := inferInstance
+  have : Normal ℚ_[l] M := inferInstance
+  have : IsGalois ℚ_[l] M := isGalois_iff.mpr ⟨inferInstance, inferInstance⟩
   have hFM : F ≤ M := IntermediateField.le_normalClosure F
   obtain ⟨vr, top, hloc, hext⟩ := exists_isNonarchimedeanLocalField_valuativeExtension ℚ_[l] M
   refine ⟨M, inferInstance, vr, top, hloc, inferInstance, hext, inferInstance, inferInstance,
@@ -739,7 +739,7 @@ theorem exists_mem_upperRamificationGroup_jumpSum_not_mem :
     exact Subgroup.mem_top σ
   | succ k =>
     have hk : ¬ wild F L k ≤ B := (hn k).mp (Nat.lt_succ_self k)
-    obtain ⟨σ, hσ, hσB⟩ := SetLike.not_le_iff_exists.mp hk
+    obtain ⟨σ, hσ, hσB⟩ := IsConcreteLE.not_le_iff_exists.mp hk
     refine ⟨σ, ?_, hσB⟩
     have : ((k + 1 : ℕ) : ℤ) = (k : ℤ) + 1 := by push_cast; rfl
     rw [this]
@@ -882,10 +882,10 @@ theorem pow_mem_upperRamificationGroup_of_comm : ∀ (F M : Type) [Field F] [Val
 
   let f : M →ₐ[F] SeparableClosure F := IsSepClosed.lift
   let φ : M ≃ₐ[F] f.fieldRange := f.equivFieldRange
-  haveI : FiniteDimensional F f.fieldRange := LinearEquiv.finiteDimensional φ.toLinearEquiv
-  haveI : IsMulCommutative (M ≃ₐ[F] M) := ⟨⟨hcomm⟩⟩
-  haveI : IsAbelianGalois F M := IsAbelianGalois.mk
-  haveI : IsAbelianGalois F f.fieldRange := IsAbelianGalois.of_algHom φ.symm.toAlgHom
+  have : FiniteDimensional F f.fieldRange := LinearEquiv.finiteDimensional φ.toLinearEquiv
+  have : IsMulCommutative (M ≃ₐ[F] M) := ⟨⟨hcomm⟩⟩
+  have : IsAbelianGalois F M := IsAbelianGalois.mk
+  have : IsAbelianGalois F f.fieldRange := IsAbelianGalois.of_algHom φ.symm.toAlgHom
 
   have h1 : φ.autCongr σ ∈ upperRamificationGroup F f.fieldRange v := by
     rw [← map_upperRamificationGroup_autCongr φ v]
@@ -921,7 +921,7 @@ theorem pow_mem_upper_mod_commutator : ∀ (F L : Type) [Field F] [ValuativeRel 
 
   let H : Subgroup (L ≃ₐ[F] L) := ⁅(⊤ : Subgroup (L ≃ₐ[F] L)), ⊤⁆
   let Q : IntermediateField F L := IntermediateField.fixedField H
-  haveI : IsGalois F Q := IsGalois.of_fixedField_normal_subgroup H
+  have : IsGalois F Q := IsGalois.of_fixedField_normal_subgroup H
   have hker : (AlgEquiv.restrictNormalHom Q).ker = H := by
     rw [IntermediateField.restrictNormalHom_ker]
     exact IntermediateField.fixingSubgroup_fixedField H
@@ -1057,7 +1057,7 @@ theorem character_kernel_generator (G : Type) [Group G] (p r : ℕ) (a : G → �
     ∃ (J : Subgroup G) (_ : J.Normal) (σ₁ : G) (c : ℤ), (∀ σ, σ ∈ J ↔ (p : ℤ) ^ r ∣ a σ) ∧
       c * (p : ℤ) ^ r = (J.index : ℤ) * a σ₁ ∧ ¬ (p : ℤ) ∣ c := by
   classical
-  haveI : NeZero (p ^ r) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (p ^ r) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hcast : ∀ x : ℤ, ((x : ZMod (p ^ r)) = 0 ↔ (p : ℤ) ^ r ∣ x) := by
     intro x
     exact_mod_cast ZMod.intCast_zmod_eq_zero_iff_dvd x (p ^ r)
@@ -1243,7 +1243,7 @@ theorem exists_mem_maximalIdeal_pow_eq_trace_of_le_differentExponent :
     rw [hI, FractionalIdeal.coeIdeal_span_singleton]
     congr 1
   have hmem : x⁻¹ * (z : M) ∈ (((I⁻¹ : FractionalIdeal (nonZeroDivisors 𝒪[M]) M) : Submodule 𝒪[M] M)) := by
-    rw [hIfrac, FractionalIdeal.spanSingleton_inv, FractionalIdeal.mem_coe,
+    rw [hIfrac, FractionalIdeal.spanSingleton_inv, FractionalIdeal.mem_coeToSubmodule,
       FractionalIdeal.mem_spanSingleton]
     exact ⟨z, by rw [Algebra.smul_def, mul_comm]; rfl⟩
   have htr : Algebra.trace F M (x⁻¹ * (z : M)) ∈ (1 : Submodule 𝒪[F] F) :=
@@ -1401,7 +1401,7 @@ theorem sq_mul_not_mem_maxIdeal_pow :
   have hle := (addVal_le_iff_dvd).mpr hw
   rw [addVal_pow, addVal_uniformizer hϖ, hval] at hle
   have : ((3 * e : ℕ) : ℕ∞) ≤ ((2 * e : ℕ) : ℕ∞) := by simpa using hle
-  have := ENat.coe_le_coe.mp this
+  have := ENat.natCast_le_natCast.mp this
   omega
 
 end GlobalTheory.PMon.Ram
@@ -1432,9 +1432,9 @@ theorem jumpSum_kernel_le_six_mul :
     have h2 : (p : 𝒪[L]) = 0 := Subtype.ext (by simpa using h1)
     unfold OrdIs at hord
     rw [h2, AddValuation.map_zero] at hord
-    exact ENat.top_ne_coe E hord
+    exact ENat.top_ne_natCast E hord
   set M := IntermediateField.fixedField J with hM
-  haveI : IsGalois F M := IsGalois.of_fixedField_normal_subgroup J
+  have : IsGalois F M := IsGalois.of_fixedField_normal_subgroup J
   obtain ⟨z, hz⟩ := _root_.GlobalTheory.PMon.Ram.exists_integer_fixedField_trace_eq F L p r x a J σ₁ c hp0 hax hx (fun σ hσ => (hJ σ).1 hσ) hc
   obtain ⟨e, hordF, hEe, -⟩ := _root_.GlobalTheory.PMon.Ram.ordIs_of_ordIs_ext F L p E hord
   have he : 0 < e := by
@@ -1496,7 +1496,7 @@ theorem jumpSum_mono_of_le :
   intro t _
   by_cases hC : A ⊓ R t ≤ C
   · simp [hBC t hC]
-  · rw [if_neg hC]
+  · rw [ite_eq_right hC]
     split_ifs <;> simp
 
 end GlobalTheory.PMon.Ram
@@ -1521,7 +1521,7 @@ theorem jumpSum_wild_top_le_of_detects : ∀ (F L : Type) [Field F] [ValuativeRe
   · rw [_root_.GlobalTheory.PMon.Ram.jumpSum_eq_sum_range _ (wild F L) ⊤ B 0 hanti hn]
     simp
   · have hk : ¬ (⊤ : Subgroup (L ≃ₐ[F] L)) ⊓ wild F L k ≤ B := (hn k).1 (Nat.lt_succ_self k)
-    obtain ⟨σ₀, hσ₀, hσ₀B⟩ := SetLike.not_le_iff_exists.1 hk
+    obtain ⟨σ₀, hσ₀, hσ₀B⟩ := IsConcreteLE.not_le_iff_exists.1 hk
     have hσ₀k : σ₀ ∈ wild F L k := (Subgroup.mem_inf.1 hσ₀).2
     obtain ⟨x, a, hxa, hnd⟩ := hdet σ₀ (Subgroup.mem_top σ₀) hσ₀B
     obtain ⟨J, hJ, hJsum⟩ := _root_.GlobalTheory.PMon.Ram.jumpSum_kernel_le_six_mul F L p E r x a hp hE hord hax
@@ -1818,7 +1818,7 @@ theorem noTower : NoTower := by
     Subgroup.mem_map_iff_mem (GK K).subtype_injective
   obtain ⟨k, hk⟩ := _root_.GlobalTheory.PMon.Ram.noTowerQ_holds l (fun k => (N k).map (GK K).subtype)
     (fun i j hij => Subgroup.map_mono (hanti hij))
-    (fun k => hGK.isOpenMap_subtype_val _ (hopen k))
+    (fun k => hGK.isOpenMap_subtypeVal _ (hopen k))
     (by
       rintro k _ ⟨σ, hσ, rfl⟩
       exact ⟨σ ^ l, hpow k σ hσ, rfl⟩)

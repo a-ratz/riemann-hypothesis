@@ -180,7 +180,7 @@ theorem domain : IsDomain L := by
     rcases Ideal.IsPrime.mem_or_mem inferInstance h2 with h3 | h3
     · exact Or.inl (zero_of_E r a (hne a h3))
     · exact Or.inr (zero_of_E r b (hne b h3))
-  haveI : NoZeroDivisors L := ⟨fun {x y} hxy => by
+  have : NoZeroDivisors L := ⟨fun {x y} hxy => by
     obtain ⟨a, b, hb, hx⟩ := frac r x
     obtain ⟨a', b', hb', hy⟩ := frac r y
     have : algebraMap (D C) L (algebraMap C (D C) (a * a')) = 0 := by
@@ -198,7 +198,7 @@ end Loc
 theorem spS (q : Ideal C) (hq : q.IsPrime) : ∃ Q : Ideal (D C), Q.IsPrime ∧ Q.comap (algebraMap C (D C)) = q := by
   let φ : D C →+* C ⧸ q := (Pi.evalRingHom (fun p : PrimeSpectrum C => C ⧸ p.asIdeal) ⟨q, hq⟩).comp
     (D C).val.toRingHom
-  haveI := hq
+  have := hq
   refine ⟨RingHom.ker φ, RingHom.ker_isPrime φ, ?_⟩
   rw [RingHom.comap_ker]
   have : φ.comp (algebraMap C (D C)) = Ideal.Quotient.mk q := by ext c; rfl
@@ -206,7 +206,7 @@ theorem spS (q : Ideal C) (hq : q.IsPrime) : ∃ Q : Ideal (D C), Q.IsPrime ∧ 
 
 theorem IdemCover_of : LateralTheory.E.DomCoverPf.IdemCover := by
   intro C0
-  haveI : Algebra.IsIntegral C0 (D C0) := integral
+  have : Algebra.IsIntegral C0 (D C0) := integral
   refine ⟨CommRingCat.of (D C0), CommRingCat.ofHom (algebraMap C0 (D C0)), ?_, ?_, ?_⟩
   · intro x; exact Algebra.IsIntegral.isIntegral (R := C0) (x : D C0)
   · intro q hq; exact spS q hq

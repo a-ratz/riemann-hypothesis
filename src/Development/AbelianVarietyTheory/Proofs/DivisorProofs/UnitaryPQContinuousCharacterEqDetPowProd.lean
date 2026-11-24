@@ -170,7 +170,7 @@ theorem coe_diagHom (t : Fin n → Circle) :
 theorem continuous_diagHom : Continuous (diagHom n) := by
   refine Continuous.subtype_mk ?_ _
   exact Continuous.matrix_diagonal (continuous_pi fun i =>
-    continuous_subtype_val.comp (continuous_apply i))
+    continuous_subtypeVal.comp (continuous_apply i))
 
 theorem exists_conj_diagHom (u : Matrix.unitaryGroup (Fin n) ℂ) :
     ∃ (V : Matrix.unitaryGroup (Fin n) ℂ) (t : Fin n → Circle), V⁻¹ * u * V = diagHom n t := by

@@ -106,7 +106,7 @@ theorem exists_pow_eq (hc : ∀ n : ℕ, Nat.card {x : M // x ^ (l ^ n) = 1} = l
     refine Nat.eq_of_mul_eq_mul_right (pow_pos hp.pos (r * 1)) ?_
     rw [← h, ← pow_add]
     ring_nf
-  haveI := hfin n
+  have := hfin n
   have heq : φ.range = K n := Subgroup.eq_of_le_of_card_ge hrange (by rw [hcard, hK])
   obtain ⟨y, hy⟩ : x ∈ φ.range := heq ▸ (hmem n x).2 hx
   exact ⟨y.1, (hmem _ _).1 y.2, hy⟩
@@ -136,16 +136,16 @@ theorem exists_independent (hr : Nat.card {x : M // x ^ l = 1} = l ^ r) :
     simp [K, MonoidHom.mem_ker, powMonoidHom_apply]
   have hK : Nat.card K = l ^ r :=
     (Nat.card_congr (Equiv.subtypeEquivRight fun y => hmem y)).trans hr
-  haveI : Finite K := Nat.finite_of_card_ne_zero (by rw [hK]; exact pow_ne_zero _ hp.ne_zero)
-  letI : Module (ZMod l) (Additive K) := AddCommGroup.zmodModule fun z => by
+  have : Finite K := Nat.finite_of_card_ne_zero (by rw [hK]; exact pow_ne_zero _ hp.ne_zero)
+  let : Module (ZMod l) (Additive K) := AddCommGroup.zmodModule fun z => by
     apply Additive.toMul.injective
     apply Subtype.ext
     simp only [toMul_nsmul, toMul_zero, SubmonoidClass.coe_pow, OneMemClass.coe_one]
     exact (hmem _).1 (Additive.toMul z).2
-  haveI : Finite (Additive K) := inferInstanceAs (Finite K)
-  haveI : Fintype (Additive K) := Fintype.ofFinite _
-  haveI hMF : Module.Finite (ZMod l) (Additive K) := Module.Finite.of_finite
-  haveI hMFr : Module.Free (ZMod l) (Additive K) := Module.Free.of_divisionRing _ _
+  have : Finite (Additive K) := inferInstanceAs (Finite K)
+  have : Fintype (Additive K) := Fintype.ofFinite _
+  have hMF : Module.Finite (ZMod l) (Additive K) := Module.Finite.of_finite
+  have hMFr : Module.Free (ZMod l) (Additive K) := Module.Free.of_divisionRing _ _
   have hfr : Module.finrank (ZMod l) (Additive K) = r := by
     have h1 := Module.card_eq_pow_finrank (K := ZMod l) (V := Additive K)
     rw [ZMod.card, ← Nat.card_eq_fintype_card] at h1
@@ -199,8 +199,8 @@ theorem free_finite_finrank (M : Type) [CommGroup M] (l : ℕ) [Fact l.Prime] (r
 
   have hgen : ∀ n (x : M), x ^ l ^ n = 1 → ∃ c : Fin r → ℕ, ∏ i, (t i).lev n ^ c i = x := by
     intro n
-    haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
-    haveI : Finite {x : M // x ^ l ^ n = 1} :=
+    have : NeZero (l ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
+    have : Finite {x : M // x ^ l ^ n = 1} :=
       Nat.finite_of_card_ne_zero (by rw [hc n]; exact pow_ne_zero _ hp.ne_zero)
     let ψ : (Fin r → ZMod (l ^ n)) → {x : M // x ^ l ^ n = 1} := fun c =>
       ⟨∏ i, (t i).lev n ^ (c i).val, by

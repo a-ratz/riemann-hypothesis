@@ -113,7 +113,7 @@ theorem X_mul_pderiv_monomial {σ : Type*} (i : σ) (α : σ →₀ ℕ) (c : �
   rw [pderiv_monomial]
   by_cases h : α i = 0
   · simp [h]
-  · rw [X, monomial_mul, one_mul,
+  · rw [X, monomial_mul_monomial, one_mul,
       add_tsub_cancel_of_le (Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr h)),
       smul_monomial, smul_eq_mul, mul_comm c]
 
@@ -148,25 +148,25 @@ private theorem sgnL_eq_neg_one_of_not_linePos {p q r s : ℕ} {l : FockH1Action
 
 private theorem raiB_eq_mulLeft_X_of_linePos {p q r s : ℕ} {l : FockH1Action.Ln p q r s}
     (h : FockH1Action.linePos l = true) : FockH1Action.raiB l = LinearMap.mulLeft ℂ (X l) := by
-  rw [FockH1Action.raiB, if_pos h]
+  rw [FockH1Action.raiB, ite_eq_left h]
 
 private theorem raiB_eq_neg_pderiv_of_not_linePos {p q r s : ℕ} {l : FockH1Action.Ln p q r s}
     (h : FockH1Action.linePos l = false) : FockH1Action.raiB l = -(pderiv l).toLinearMap := by
-  rw [FockH1Action.raiB, if_neg (show ¬ (FockH1Action.linePos l = true) by simp [h])]
+  rw [FockH1Action.raiB, ite_eq_right (show ¬ (FockH1Action.linePos l = true) by simp [h])]
 
 private theorem lowB_eq_pderiv_of_linePos {p q r s : ℕ} {l : FockH1Action.Ln p q r s}
     (h : FockH1Action.linePos l = true) : FockH1Action.lowB l = (pderiv l).toLinearMap := by
-  rw [FockH1Action.lowB, if_pos h]
+  rw [FockH1Action.lowB, ite_eq_left h]
 
 private theorem lowB_eq_mulLeft_X_of_not_linePos {p q r s : ℕ} {l : FockH1Action.Ln p q r s}
     (h : FockH1Action.linePos l = false) : FockH1Action.lowB l = LinearMap.mulLeft ℂ (X l) := by
-  rw [FockH1Action.lowB, if_neg (show ¬ (FockH1Action.linePos l = true) by simp [h])]
+  rw [FockH1Action.lowB, ite_eq_right (show ¬ (FockH1Action.linePos l = true) by simp [h])]
 
 theorem omE_self_monomial {p q r s : ℕ} (l : Ln p q r s) (α : Ln p q r s →₀ ℕ) (c : ℂ) :
     omE l l (monomial α c) = (sgnL l * (((α l : ℕ) : ℂ) + 1 / 2)) • monomial α c := by
   have h1 := X_mul_pderiv_monomial l α c
   have h2 := pderiv_X_mul_monomial l α c
-  rw [FockH1Action.omE, if_pos rfl, LinearMap.add_apply, moduleEnd_mul_apply, LinearMap.smul_apply,
+  rw [FockH1Action.omE, ite_eq_left rfl, LinearMap.add_apply, moduleEnd_mul_apply, LinearMap.smul_apply,
     moduleEnd_one_apply]
   cases hl : FockH1Action.linePos l
   · rw [raiB_eq_neg_pderiv_of_not_linePos hl, lowB_eq_mulLeft_X_of_not_linePos hl, sgnL_eq_neg_one_of_not_linePos hl, LinearMap.neg_apply,
@@ -181,7 +181,7 @@ theorem omE_self_monomial {p q r s : ℕ} (l : Ln p q r s) (α : Ln p q r s →�
     | (rw [← add_smul]; congr 1; ring)
 
 theorem omE_ne {p q r s : ℕ} {l l' : Ln p q r s} (h : l ≠ l') : omE l l' = raiB l * lowB l' := by
-  rw [FockH1Action.omE, if_neg h, add_zero]
+  rw [FockH1Action.omE, ite_eq_right h, add_zero]
 
 open PI.FJM
 
@@ -348,7 +348,7 @@ private theorem homogeneousComponent_pderiv_monomial_eq_pderiv_succ (l : σ) (e 
   · have hle : Finsupp.single l 1 ≤ u :=
       Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr hu)
     have hsplit : monomial u c = X l * monomial (u - Finsupp.single l 1) c := by
-      rw [X, monomial_mul, one_mul, add_tsub_cancel_of_le hle]
+      rw [X, monomial_mul_monomial, one_mul, add_tsub_cancel_of_le hle]
     have hv := isHomogeneous_monomial (R := ℂ) (d := u - Finsupp.single l 1) c rfl
     have hU : (monomial u c).IsHomogeneous (1 + Finsupp.degree (u - Finsupp.single l 1)) := by
       rw [hsplit]
@@ -421,7 +421,7 @@ theorem minusPart_raise (A : Module.End ℂ (MvPolynomial σ ℂ))
   rw [minusPart_eq_sum]
   refine Finset.sum_eq_zero fun d _ => ?_
   rw [homogeneousComponent_of_mem (hA (d + 2) _ (homogeneousComponent_mem (d + 2) P)),
-    if_neg (by omega)]
+    ite_eq_right (by omega)]
 
 private theorem homogeneousComponent_minusPart (A : Module.End ℂ (MvPolynomial σ ℂ))
     (P : MvPolynomial σ ℂ) (e : ℕ) :
@@ -434,8 +434,8 @@ private theorem homogeneousComponent_minusPart (A : Module.End ℂ (MvPolynomial
   | rw [Finset.sum_ite_eq]
   | rw [Finset.sum_ite_eq']
   by_cases h : e ∈ Finset.range (P.totalDegree + 1)
-  · rw [if_pos h]
-  · rw [if_neg h]
+  · rw [ite_eq_left h]
+  · rw [ite_eq_right h]
     rw [Finset.mem_range, not_lt] at h
     rw [homogeneousComponent_eq_zero (e + 2) P (by omega), map_zero, map_zero]
 
@@ -447,7 +447,7 @@ theorem minusPart_lower (L : Module.End ℂ (MvPolynomial σ ℂ))
   apply eq_zero_of_hc
   intro e
   rw [map_sub, homogeneousComponent_minusPart, hL, hL,
-    hc_hc, if_pos rfl, sub_self]
+    hc_hc, ite_eq_left rfl, sub_self]
 
 theorem mulXX_homog (l l' : σ) (d : ℕ) (Q : MvPolynomial σ ℂ) (hQ : Q ∈ homog σ d) :
     ((LinearMap.mulLeft ℂ (X l) * LinearMap.mulLeft ℂ (X l') : Module.End ℂ (MvPolynomial σ ℂ)) Q) ∈
@@ -579,7 +579,7 @@ theorem minusPart2_expand (Y : Mat r s) (P : Pol p q r s) :
 
 theorem isPC_Eab {n m : ℕ} (a b : Ix n m) (h : ¬ sameBlock a b) : IsPC (Eab a b) := by
   intro a' b' h'
-  rw [FockH1Action.Eab, Matrix.single_apply, if_neg]
+  rw [FockH1Action.Eab, Matrix.single_apply, ite_eq_right]
   rintro ⟨rfl, rfl⟩
   exact h h'
 
@@ -587,7 +587,7 @@ end Lap
 
 theorem jointHarmonicsIffLaplacians : FormJ := by
   intro p q r s P
-  simp only [FockH1Action.Jset, Set.mem_setOf_eq]
+  simp only [FockH1Action.Jset, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hL, hR⟩
     refine ⟨fun i j => ?_, fun i j => ?_, fun k l => ?_, fun k l => ?_⟩

@@ -162,8 +162,8 @@ theorem continuous_of_valued_eq {A B Γ : Type*} [Ring A] [Ring B] [LinearOrdere
   have ha0 : (Valued.v : Valuation A Γ).restrict a ≠ 0 := by
     simp [ha]
   refine ⟨Units.mk0 _ ha0, trivial, fun x hx => ?_⟩
-  simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
-  simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
+  simp only [Set.mem_ofPred_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
+  simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
   rw [hf, ← ha]
   exact hx
 
@@ -332,7 +332,7 @@ theorem exists_isSplitChart (hc : IsCMExt F E σ) (hJ : IsHermND σ J) (hL : L.F
     (hd : IsSelfDualAt σ J L v) : ∃ e, IsSplitChart σ J L h e ∧ Continuous e ∧ Continuous e.symm := by
   obtain ⟨τ, rfl⟩ := exists_splitPrime_eq hc hv h
   obtain ⟨ψ, h1, h2, h3, h4, h5⟩ := exists_equiv_complMap τ h
-  letI : Submodule.IsFullLattice E L :=
+  let : Submodule.IsFullLattice E L :=
     { toIsLattice := Submodule.IsLattice.of_fg E hL, span_eq_top := hL' }
   obtain ⟨β, hβ⟩ := exists_isSplitBasis τ L hc
   refine ⟨(splitEquivIn hc hJ τ β).toMulEquiv.trans (Units.mapEquiv ψ.mapMatrix.toMulEquiv),

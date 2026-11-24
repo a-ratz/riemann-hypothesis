@@ -335,7 +335,7 @@ theorem loc_dual (Z : LocDat D) (p : PlF D) {N : ℕ} (F0 : FlagG (VS D) D.R.rS 
   | last =>
     have h0 : brS (VS D) (F0.fvec (Fin.last _)) (y j) = 0 := by
       simp only [FlagG.fvec, Fin.snoc_last, brS]; exact hy.yz j
-    rw [h0, map_zero, mul_zero, mul_zero, if_neg (Fin.castSucc_lt_last j).ne']
+    rw [h0, map_zero, mul_zero, mul_zero, ite_eq_right (Fin.castSucc_lt_last j).ne']
   | cast i =>
     have h0 : brS (VS D) (F0.fvec i.castSucc) (y j) = if i = j then 1 else 0 := by
       simp only [FlagG.fvec, Fin.snoc_castSucc, brS]; exact hy.ye j i
@@ -345,7 +345,7 @@ theorem loc_dual (Z : LocDat D) (p : PlF D) {N : ℕ} (F0 : FlagG (VS D) D.R.rS 
     · subst hij
       rw [map_one, mul_one, mul_comm]
       have := frFac_mul Z p i.castSucc
-      rwa [Fin.coe_castSucc] at this
+      rwa [Fin.val_castSucc] at this
     · rw [map_zero, mul_zero, mul_zero]
 
 theorem loc_iso (Z : LocDat D) (p : PlF D) (s t : (D.s.atP p).Ep) {N : ℕ} (F0 : FlagG (VS D) D.R.rS (N : D.host.E))
@@ -404,7 +404,7 @@ theorem split_fin (D : D7) : {p : PlF D | (D.s.atP p).split.isSome = true}.Finit
   · rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact gg_ne_zero D
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   rw [Ideal.dvd_span_singleton]
   by_contra hn
   rw [D.s_split] at hp
@@ -420,13 +420,13 @@ theorem isUnit_unitAt (D : D7) :
   · rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact gg_ne_zero D
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   rw [Ideal.dvd_span_singleton]
   by_contra hn
   apply hp
   have hu : uP p = ((D.host.g 0 * D.host.g 1 : ℕ) : ℚ)⁻¹ := by
     unfold uP gpart
-    rw [if_neg (not_mem_of p hn 0), if_neg (not_mem_of p hn 1)]
+    rw [ite_eq_right (not_mem_of p hn 0), ite_eq_right (not_mem_of p hn 1)]
     unfold Formalism.MainNotions.S.Lat.gS
     push_cast
     ring
@@ -455,7 +455,7 @@ theorem delta_unit (D : D7) (Z : LocDat D) :
   refine (Ideal.finite_factors (I := differentIdeal ℤ (𝓞 D.host.F)) ?_).subset ?_
   · exact differentIdeal_ne_bot
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   rw [Ideal.dvd_iff_le]
   intro x hx
   by_contra hxp
@@ -524,7 +524,7 @@ theorem cval_unit_fin (Z : LocDat D) :
     {p : PlF D | ¬ ∃ u : (𝒪[(D.s.atP p).Fp])ˣ, ((u : 𝒪[(D.s.atP p).Fp]) : (D.s.atP p).Fp) = cval Z p}.Finite := by
   refine ((delta_unit D Z).union (isUnit_unitAt D)).subset ?_
   intro p hp
-  simp only [Set.mem_setOf_eq, Set.mem_union] at hp ⊢
+  simp only [Set.mem_ofPred_eq, Set.mem_union] at hp ⊢
   by_contra h
   push_neg at h
   obtain ⟨⟨u, hu⟩, ⟨v, hv⟩⟩ := h
@@ -602,7 +602,7 @@ theorem exists_gen (D : D7) (Z : LocDat D) (N N' : ℕ) (hN : 0 < N) (hN' : 0 < 
   · exact cval_unit_fin Z
   · refine (split_fin D).subset ?_
     intro p hp
-    simp only [Set.mem_setOf_eq] at hp ⊢
+    simp only [Set.mem_ofPred_eq] at hp ⊢
     rw [← split_isSome Z p, ← (hS p).2.2.2.1]
     exact hp
   · intro p x
@@ -717,7 +717,7 @@ theorem amp_eq_finsum (d : G.Dat) (hT : {o : Quot G.LRel | G.IsTerm d o.out}.Fin
     simp only [this, true_and]
   · intro o ho
     have : ¬ G.IsTerm d o.out := fun h => ho (hT.mem_toFinset.2 h)
-    simp only [this, false_and, if_false]
+    simp only [this, false_and, ite_false]
 
 theorem finprod_split' {ι : Type} (S1 : Finset ι) (f g : ι → ℂ) (hf : (Function.mulSupport f).Finite)
     (hfg : ∀ p ∉ S1, f p = g p) :
@@ -748,12 +748,12 @@ theorem amp_cond (d : G.Dat) (B : Finset (HeightOneSpectrum (𝓞 F))) (p : Heig
 theorem cond_pos (d : G.Dat) {B : Finset (HeightOneSpectrum (𝓞 F))} {p : HeightOneSpectrum (𝓞 F)} (h : p ∈ B)
     (Λ : Submodule (A.L p).O (G.S p).V) : cond G d B p Λ ↔ ¬ (G.S p).BBzero (d p) Λ := by
   unfold cond
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 theorem cond_neg (d : G.Dat) {B : Finset (HeightOneSpectrum (𝓞 F))} {p : HeightOneSpectrum (𝓞 F)} (h : p ∉ B)
     (Λ : Submodule (A.L p).O (G.S p).V) : cond G d B p Λ ↔ (G.S p).BBzero (d p) Λ := by
   unfold cond
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 end GlobalTheory.HL.DefectPhase
 
@@ -807,18 +807,18 @@ theorem amp_sum_defect_sets : ∀ {F E : Type} [Field F] [NumberField F] [Field 
     · rw [Finset.prod_congr rfl fun p _ => amp_cond G d B p]
     · intro p hp
       have hpB : p ∉ B := fun h => hp (hB h)
-      rw [amp_cond, if_neg hpB]
+      rw [amp_cond, ite_eq_right hpB]
   have hc1 : ‖c‖ = 1 := by
     refine norm_finprod_eq_one _ ?_ fun p => ?_
     · refine (hsupp ∅ (Finset.empty_subset _)).subset fun p hp => ?_
       by_cases h : p ∈ S1
-      · exact absurd (if_pos h) hp
+      · exact absurd (ite_eq_left h) hp
       · change (G.S p).amp (d p) (cond G d ∅ p) ≠ 1
-        rw [amp_cond, if_neg (Finset.notMem_empty p)]
+        rw [amp_cond, ite_eq_right (Finset.notMem_empty p)]
         simpa [h] using hp
     · by_cases h : p ∈ S1
       · simp [h]
-      · simp only [h, if_false, hg]
+      · simp only [h, ite_false, hg]
         exact ((hgood p fun hp => h (hS1 hp)).2 (d p) ⟨A.lat p Λ₀, hΛ₀.2 p⟩).1
   refine ⟨c, hc1, fun Q => ?_⟩
   have hsum : G.amp d (fun Λ => Q (¬ G.Gen d Λ)) = ∑ B ∈ S1.powerset.filter (fun B => Q B.Nonempty),
@@ -867,8 +867,8 @@ theorem amp_sum_defect_sets : ∀ {F E : Type} [Field F] [NumberField F] [Field 
       rw [Finset.mem_filter, Finset.mem_powerset]
       exact ⟨fun h => h.2, fun h => ⟨Finset.filter_subset _ _, h⟩⟩
     by_cases hq : Q B₀.Nonempty
-    · rw [if_pos hq, if_pos (hmem.2 hq)]
-    · rw [if_neg hq, if_neg (fun h => hq (hmem.1 h))]
+    · rw [ite_eq_left hq, ite_eq_left (hmem.2 hq)]
+    · rw [ite_eq_right hq, ite_eq_right (fun h => hq (hmem.1 h))]
   rw [hsum, Finset.sum_congr rfl fun B hB => hsplit B (Finset.mem_powerset.1 (Finset.mem_filter.1 hB).1),
     ← Finset.mul_sum]
 
@@ -984,7 +984,7 @@ theorem ut_of_Nof (g : Fin (r + 1) → S.V) (t : E)
     refine h2.2 _ ?_
     refine GlobalTheory.FramePsi.hf_span_right L S.Hm _ _ ?_
     rintro _ ⟨l, hl, rfl⟩
-    rw [hg, if_neg]
+    rw [hg, ite_eq_right]
     rintro ⟨-, rfl⟩
     simp at hl
 
@@ -1010,7 +1010,7 @@ theorem ut_nlam {Λ : Submodule (𝓞 E) S.V} {T : E} {F : LFlag S r T} {n : S.V
     refine Submodule.span_le.2 ?_ h1
     rintro _ ⟨a, ha, rfl⟩
     refine Submodule.subset_span ⟨a.castSucc, ?_, frame_castSucc_td F a⟩
-    simp only [Set.mem_setOf_eq, Fin.coe_castSucc] at ha ⊢
+    simp only [Set.mem_ofPred_eq, Fin.val_castSucc] at ha ⊢
     exact ha
   · have hr : b = Fin.last r := Fin.ext (by have := b.2; simp only [Fin.val_last]; omega)
     subst hr
@@ -1136,8 +1136,8 @@ theorem local_orbit (hM : M.OK) (c : WCoord P S) {d d' : LocNG.Datum P} (hdd : L
     {t : Term V M r} (ht : LocNG.IsTermOver P d' t) (ψ0 : V ≃ₗ[E] V) (hu : LocNG.IsUnitary H ψ0)
     (hA : UT E ψ0 t.f P.A.f) (hB : UT E ψ0 t.f' P.B.f) (X : Submodule M.L.O S.V)
     (hX : conjH c.e ψ0 • c.lat t.abelian₂ = X) : ∃ h ∈ S.H0, h • c.dat d = S.datOf X := by
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   have ht' := ht
   obtain ⟨-, -, ⟨nA, hnA, hfA, -⟩, ⟨nB, hnB, hfB, -⟩, -⟩ := ht'
   have hφ : ∀ v, conjH c.e ψ0 (c.e v) = c.e (ψ0 v) := conjH_apply _ _
@@ -1239,8 +1239,8 @@ theorem datum_in_orbit : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D
   intro D X Y u u' hSt hk w F00 F'0 FP hZ hG hAB G c t₀ ρ U U' hMv p d hOv δ hδ
   obtain ⟨gl, hgl, d', hdd', hTO⟩ := hOv
   have hOK : (Y.M p).OK := (Y.agree p).1
-  haveI := hOK.loc
-  haveI := hOK.char0
+  have := hOK.loc
+  have := hOK.char0
   have hTOc := hTO
   obtain ⟨-, -, ⟨nA, hnA, hfA, -⟩, ⟨nB, hnB, hfB, -⟩, -⟩ := hTO
 
@@ -1363,8 +1363,8 @@ theorem global_amp_local : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
       (G.S p.1).amp (G.datOf (c.lat ρ t₀.lam) p.1) ((G.S p.1).BBzero (G.datOf (c.lat ρ t₀.lam) p.1)) =
         LocNG.amp (R p.1) (d p) (fun t => ¬ LocNG.BBne (H := locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p.1) t) := by
     intro p
-    haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p.1).lf
-    haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p.1).char0
+    have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p.1).lf
+    have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p.1).char0
     have hu : (Function.update (G.datOf (c.lat ρ t₀.lam)) p.1 ((c.c p.1).dat (d p))) p.1 = (c.c p.1).dat (d p) :=
       Function.update_self _ _ _
     obtain ⟨h, hh, hδ⟩ := GlobalTheory.T.localDatum_of_term_in_movedLattice_orbit D X Y u u' hst hk w F00 F'0 FP hw hG hbase G c t₀ ρ U U' hmv p.1 (d p)
@@ -1394,7 +1394,7 @@ theorem global_amp_local : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
       _ = ∑' _ : MulAction.orbitRel.Quotient (G.S p).St (Submodule _ (G.S p).V), (0 : ℂ) := by
         apply tsum_congr
         intro o
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro ⟨ht, hb⟩
         exact hb (hBB _ _ ht)
       _ = 0 := tsum_zero
@@ -1411,8 +1411,8 @@ theorem global_amp_local : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
         refine Finset.prod_congr rfl fun p _ => ?_
         have hm : (p.1 ∈ A.map emb) ↔ p ∈ A := Finset.mem_map' emb
         by_cases hp : p ∈ A
-        · rw [if_pos hp, if_pos (hm.2 hp), (hloc p).1]
-        · rw [if_neg hp, if_neg (fun h => hp (hm.1 h)), (hloc p).2]
+        · rw [ite_eq_left hp, ite_eq_left (hm.2 hp), (hloc p).1]
+        · rw [ite_eq_right hp, ite_eq_right (fun h => hp (hm.1 h)), (hloc p).2]
     _ = ∑ B ∈ (Om.powerset.filter (fun A => Q A.Nonempty)).map embF, ∏ p ∈ S1,
           (if p ∈ B then (G.S p).amp (G.datOf (c.lat ρ t₀.lam) p)
               (fun Λ => ¬ (G.S p).BBzero (G.datOf (c.lat ρ t₀.lam) p) Λ)
@@ -1442,7 +1442,7 @@ theorem global_amp_local : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' :
             exact hB.2
           · push_neg at hall
             obtain ⟨p, hpB, hp⟩ := hall
-            exact Finset.prod_eq_zero (hB.1 hpB) (by rw [if_pos hpB]; exact hzero p (hB.1 hpB) hp)
+            exact Finset.prod_eq_zero (hB.1 hpB) (by rw [ite_eq_left hpB]; exact hzero p (hB.1 hpB) hp)
 
 end GlobalTheory.HL.AmpLoc
 end -- clump:auto
@@ -1543,7 +1543,7 @@ theorem toPts_inj' {K : Type} [Zero K] {i : ℕ} (p q : Point K (i + 1)) (h : to
       if hk : k < x.1.length then x.2 ⟨k, hk⟩ else 0) h
     have e1 : k < (toPts p).1.length := by simpa [toPts, Composition.length] using hk
     have e2 : k < (toPts q).1.length := by simpa [toPts, Composition.length] using hk'
-    simp only [dif_pos e1, dif_pos e2] at key
+    simp only [dite_eq_left e1, dite_eq_left e2] at key
     simpa [toPts] using key
   apply Subtype.ext
   apply List.ext_getElem hl
@@ -1590,7 +1590,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
       apply ht.1
       show Formalism.L2.SG.TermOp.Gt t = 0
       unfold Formalism.L2.SG.TermOp.Gt
-      rw [if_pos h0]
+      rw [ite_eq_left h0]
     have hG1 := hGTS t1 ht1
     have hG0 := hGTS t0 ht0
     have hrel1 : t1.relevant := (GlobalTheory.T.nonGeneric_family_classes_determine_rows D X Y u u' hCT).2.2 t1 hv1
@@ -1644,7 +1644,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
           refine ⟨?_, hS⟩
           show Formalism.L2.SG.TermOp.Gt t ≠ 0
           unfold Formalism.L2.SG.TermOp.Gt
-          rw [if_neg (hGeq ▸ hG0)]
+          rw [ite_eq_right (hGeq ▸ hG0)]
           exact one_ne_zero
         refine ⟨htS, ((hCR t htS t0 ht0 hnm).2 hr).trans hc0, ?_, hnm.trans hn0⟩
         show toPts (Formalism.L2.SG.PairVal.ptOf t.toTerm) = γ
@@ -1657,7 +1657,7 @@ theorem squaredGroupSum_classDoubleCoset_eq_rowWeight : ∀ (D : D7) (X : HidaSe
       unfold J2of
       have hex : ∃ w' : Point D.host.E (D.R.rS + 1), toPts w' = γ ∧ ∃ g, Formalism.L2.SG.RealObj.IsPtRep X u u' w' g :=
         ⟨w1, hw, hrep⟩
-      rw [dif_pos hex]
+      rw [dite_eq_left hex]
       have hcw : hex.choose = w1 := toPts_inj' _ _ (hex.choose_spec.1.trans hw.symm)
       rw [hcw, Jw_sc, map_smul, norm_smul, mul_pow, Complex.norm_real, Real.norm_eq_abs, sq_abs]
     have hJne : ‖Formalism.L2.SG.PackageTie.hsEmb (Jw Y u u' ν w1)‖ ≠ 0 := by

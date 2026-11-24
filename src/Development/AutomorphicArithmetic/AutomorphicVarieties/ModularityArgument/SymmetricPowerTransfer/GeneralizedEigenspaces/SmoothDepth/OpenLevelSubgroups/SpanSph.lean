@@ -84,13 +84,13 @@ variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ}
 private theorem finite_quot (w : Plc L) (U : Subgroup (UA L n))
     (hU : IsOpen {x : finU (E := L) (n := n) | (x : UA L n) ∈ U}) :
     Finite ((locU n w ⊓ Kall L n : Subgroup (UA L n)) ⧸ U.subgroupOf (locU n w ⊓ Kall L n)) := by
-  haveI : CompactSpace (intPts L n) := isCompact_iff_compactSpace.1 isCompact_intPts
+  have : CompactSpace (intPts L n) := isCompact_iff_compactSpace.1 isCompact_intPts
   let U' : Subgroup (finU (E := L) (n := n)) := U.subgroupOf (finU (E := L) (n := n))
   have hU' : IsOpen (U' : Set (finU (E := L) (n := n))) := hU
   let H : Subgroup (intPts L n) := U'.subgroupOf (intPts L n)
-  have hH : IsOpen (H : Set (intPts L n)) := hU'.preimage continuous_subtype_val
-  haveI : Finite (intPts L n ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
-  haveI : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have hH : IsOpen (H : Set (intPts L n)) := hU'.preimage continuous_subtypeVal
+  have : Finite (intPts L n ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+  have : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hfin : ∀ k : (locU n w ⊓ Kall L n : Subgroup (UA L n)), (k : UA L n) ∈ finU (E := L) (n := n) := fun k =>
     (Subgroup.mem_inf.1 (Subgroup.mem_inf.1 k.2).2).1
   have hint : ∀ (k : (locU n w ⊓ Kall L n : Subgroup (UA L n))) (u : Plc L),
@@ -178,13 +178,13 @@ theorem UpperTheory.V.Z.Sym.Al.spanSph :
   have hU0 : IsOpen {k : finU (E := L) (n := n) | (k : UA L n) ∈ U0} := by
     have e : {k : finU (E := L) (n := n) | (k : UA L n) ∈ U0} = ⋂ g ∈ c.support, {k : finU (E := L) (n := n) | (k : UA L n) ∈ U g} := by
       ext k
-      simp only [U0, Subgroup.mem_iInf, Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [U0, Subgroup.mem_iInf, Set.mem_ofPred_eq, Set.mem_iInter]
     rw [e]
     exact isOpen_biInter_finset fun g _ => hUo g
   let K : Subgroup (UA L n) := locU n w ⊓ Kall L n
   let K' : Subgroup K := U0.subgroupOf K
-  haveI : Finite (K ⧸ K') := finite_quot w U0 hU0
-  letI : Fintype (K ⧸ K') := Fintype.ofFinite _
+  have : Finite (K ⧸ K') := finite_quot w U0 hU0
+  let : Fintype (K ⧸ K') := Fintype.ofFinite _
   let rep : K ⧸ K' → UA L n := fun q => ((Quotient.out q : K) : UA L n)
   have hrepK : ∀ q, rep q ∈ K := fun q => (Quotient.out q).2
   have hrepl : ∀ q, rep q ∈ locU n w := fun q => (Subgroup.mem_inf.1 (hrepK q)).1

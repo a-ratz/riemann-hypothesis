@@ -61,9 +61,9 @@ variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 theorem exists_pow_mul_mem_O [IsNonarchimedeanLocalField F] (L : LocE F E)
     (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) (c : E) :
     ∃ k : ℕ, algebraMap F E ((ϖ : F) ^ k) * c ∈ L.O := by
-  haveI : IsFractionRing 𝒪[F] F := (Valuation.integer.integers (valuation F)).isFractionRing
-  haveI : Module.Free F E := L.free
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
+  have : IsFractionRing 𝒪[F] F := (Valuation.integer.integers (valuation F)).isFractionRing
+  have : Module.Free F E := L.free
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
   have hc : IsIntegral F c := Algebra.IsIntegral.isIntegral c
   obtain ⟨⟨m, hm⟩, hmc⟩ := IsIntegral.exists_multiple_integral_of_isLocalization
     (nonZeroDivisors 𝒪[F]) c hc

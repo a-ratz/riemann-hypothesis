@@ -127,8 +127,8 @@ theorem trace_mul_single {m r : ℕ} (M : Matrix (Fin r) (Fin m) ℂ) (i : Fin m
     (M * Matrix.single i j c).trace = M j i * c := by
   simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.single_apply]
   rw [Finset.sum_eq_single j (fun b _ hb => Finset.sum_eq_zero fun c' _ => by
-    rw [if_neg fun h => hb h.2.symm, mul_zero]) (by simp)]
-  rw [Finset.sum_eq_single i (fun b _ hb => by rw [if_neg fun h => hb h.1.symm, mul_zero]) (by simp)]
+    rw [ite_eq_right fun h => hb h.2.symm, mul_zero]) (by simp)]
+  rw [Finset.sum_eq_single i (fun b _ hb => by rw [ite_eq_right fun h => hb h.1.symm, mul_zero]) (by simp)]
   simp
 
 theorem norm_le_forms {m r : ℕ} (B : Matrix (Fin r) (Fin m) ℂ) (ξ : ℂ) (hξ : ξ ≠ 0) (i : Fin m) (j : Fin r) :
@@ -193,11 +193,11 @@ theorem enorm_mixS_le' {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-
     (d : HypDec V V₀ ρ) (v : GlobalTheory.Unf.VolM D W.rank ρ) (φ : WO V W → ℂ) (x : Mx D W.rank ρ) (w : WO V₀ W) :
     ‖d.mixS W ψ v.μ v.𝓕 φ x w‖ₑ ≤ GlobalTheory.HeisTaylor.supN φ := by
   simp only [HypDec.mixS, HypDec.integrandS_eq]
-  refine (enorm_integral_le_lintegral_enorm _).trans ?_
+  refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
   calc ∫⁻ a in v.𝓕, ‖ψ (symplOH V W (d.extY W a) (d.extX W x)) * φ (d.extY W a + d.extX W x + d.ext0 W w)‖ₑ ∂v.μ
       ≤ ∫⁻ _ in v.𝓕, GlobalTheory.HeisTaylor.supN φ ∂v.μ := by
         refine lintegral_mono fun a => ?_
-        rw [enorm_mul, ← ofReal_norm (ψ _), hψ.1.2.1, ENNReal.ofReal_one, one_mul]
+        rw [eNorm_mul, ← ofReal_norm (ψ _), hψ.1.2.1, ENNReal.ofReal_one, one_mul]
         exact GlobalTheory.HeisTaylor.enorm_le_supN φ _
     _ = _ := by rw [setLIntegral_const, v.covol.2.2, mul_one]
 

@@ -121,7 +121,7 @@ theorem finrank_eigenSub_diagRep {g : ℕ} (ty : Fin g → (E →+* ℂ)) (φ : 
       · exact congrFun h ⟨i, hi⟩
       · exact hz _ z.2 i hi
     · refine ⟨⟨fun i => if h : ty i = φ then w ⟨i, h⟩ else 0, mem_eigenSub.2 fun a => funext fun i => ?_⟩,
-        funext fun i => dif_pos i.2⟩
+        funext fun i => dite_eq_left i.2⟩
       rw [diagRep_apply]
       by_cases hi : ty i = φ
       · simp [hi]
@@ -368,7 +368,7 @@ theorem similar_with_multiplier {D D' : Datum H} {k : Type} [Field k] {Q : Type}
     intro n
     rcases Nat.eq_zero_or_pos n with h | hn
     · exact ⟨1, fun h' => absurd h h'.ne'⟩
-    · haveI : NeZero n := ⟨hn.ne'⟩
+    · have : NeZero n := ⟨hn.ne'⟩
       obtain ⟨i, -, hi⟩ := (I'.ζ_prim n hn).eq_pow_of_mem_rootsOfUnity
         ((mem_rootsOfUnity _ _).2 (I.ζ_prim n hn).pow_eq_one)
       exact ⟨i, fun _ => by rw [zpow_natCast, hi]⟩

@@ -108,11 +108,11 @@ theorem cast_apply_eq {i j : ι} (e : p i = p j) (h : i = j) :
 
 theorem comb_inl (hp : Function.Injective p) (i : ι) : comb p A y0 z (.inl (p i)) = A i (z i) := by
   have h : ∃ j, p j = p i := ⟨i, rfl⟩
-  simp only [comb, dif_pos h]
+  simp only [comb, dite_eq_left h]
   exact cast_apply_eq h.choose_spec (hp h.choose_spec)
 
 theorem comb_inl_of_not (a : α) (h : ¬ ∃ i, p i = a) : comb p A y0 z (.inl a) = y0 (.inl a) := by
-  simp only [comb, dif_neg h]
+  simp only [comb, dite_eq_right h]
 
 theorem comb_update [DecidableEq ι] [DecidableEq (α ⊕ β)] (hp : Function.Injective p) (i : ι) (x : E i) :
     comb p A y0 (Function.update z i x) = Function.update (comb p A y0 z) (.inl (p i)) (A i x) := by
@@ -253,8 +253,8 @@ variable {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} {M : DSModel V S} {H 
 theorem uEquiv_dsRep (hπ : IsIrrUnitary π) (hds : HasDSComp M π)
     (hB : IsFactorisation D.sp.cm.sig V.gram (fun v => (R v).π) ξ π B) (τ : D.what₂.Tau) :
     UEquiv (dsRep M τ) (R (.inl (placeOf D τ))).π := by
-  haveI := hπ.complete
-  haveI := hπ.irred.1
+  have := hπ.complete
+  have := hπ.irred.1
   exact IsIsotypic.uEquiv (isIrrUnitary_dsRep M τ) (R _).isIrr
     (isUnitaryRep_comp hπ.unitary (continuous_embPl D.sp.cm.sig V.gram (.inl (placeOf D τ)))) (hds τ)
     (hB.hasCompPl _)
@@ -302,7 +302,7 @@ theorem exists_homDS_comb (hB : IsFactorisation D.sp.cm.sig V.gram (fun v => (R 
         simpa [h0'] using h }
   have hf : ∀ z, f z = B (c z) := fun z => rfl
   have hex : ∀ τ, ∃ x : M.H τ, ‖x‖ = 1 := fun τ => by
-    haveI := (isIrrUnitary_dsRep M τ).irred.1
+    have := (isIrrUnitary_dsRep M τ).irred.1
     obtain ⟨x, hx⟩ := exists_ne (0 : M.H τ)
     refine ⟨‖x‖⁻¹ • x, ?_⟩
     simp [norm_smul, hx]
@@ -337,11 +337,11 @@ theorem finiteDimensional_homDS_span (hπ : IsIrrUnitary π) (hds : HasDSComp M 
     FiniteDimensional ℂ (homDS M π
       (Submodule.span ℂ {z | ∃ y, Restr ξ y ∧ (∀ v, y (.inr v) ∈ Q v) ∧ z = B y}).topologicalClosure) := by
   classical
-  haveI := hπ.complete
+  have := hπ.complete
   choose A hA using fun τ => uEquiv_dsRep hπ hds hB τ
   set Sb : Set (HeightOneSpectrum (𝓞 D.host.F)) := {v | ¬ Q v ≤ ℂ ∙ ξ (.inr v)} with hSb
   have hSbf : Sb.Finite := hQξ
-  haveI : Finite Sb := hSbf.to_subtype
+  have : Finite Sb := hSbf.to_subtype
   let bas : ∀ v, Fin (Module.finrank ℂ (Q v)) → (R (.inr v)).H := fun v k => (Module.finBasis ℂ (Q v) k : _)
   let y0 : (∀ v : Sb, Fin (Module.finrank ℂ (Q v))) → ∀ v, (R v).H := fun k v => match v with
     | .inl w => ξ (.inl w)
@@ -364,30 +364,30 @@ theorem finiteDimensional_homDS_span (hπ : IsIrrUnitary π) (hds : HasDSComp M 
   have hyT : ∀ v ∈ T, y v ∈ Submodule.span ℂ (b v) := by
     rintro _ ⟨v, -, rfl⟩
     by_cases h : v ∈ Sb
-    · simp only [b, if_pos h]
+    · simp only [b, ite_eq_left h]
       have e : Set.range (bas v) = (Q v).subtype '' Set.range (Module.finBasis ℂ (Q v)) := by
         rw [← Set.range_comp]; rfl
       rw [e, Submodule.span_image, (Module.finBasis ℂ (Q v)).span_eq, Submodule.map_top, Submodule.range_subtype]
       exact hyQ v
-    · simp only [b, if_neg h]
+    · simp only [b, ite_eq_right h]
       have : Q v ≤ ℂ ∙ ξ (.inr v) := not_not.1 h
       exact this (hyQ v)
   refine Submodule.span_le.2 ?_ (mem_span_of_mem_span (fun y hy => hB.pure_update hy) b hT hy hyT)
   rintro _ ⟨y', hy'off, hy'T, rfl⟩
   have hk : ∀ v : Sb, ∃ j, y' (.inr v) = bas v j := fun v => by
     have := hy'T (.inr v) ⟨v, Or.inl v.2, rfl⟩
-    simp only [b, if_pos v.2] at this
+    simp only [b, ite_eq_left v.2] at this
     obtain ⟨j, hj⟩ := this
     exact ⟨j, hj.symm⟩
   choose k hk using hk
   have hagree : ∀ v, y0 k (.inr v) = y' (.inr v) := fun v => by
     by_cases h : v ∈ Sb
-    · simp only [y0, dif_pos h]
+    · simp only [y0, dite_eq_left h]
       exact (hk ⟨v, h⟩).symm
-    · simp only [y0, dif_neg h]
+    · simp only [y0, dite_eq_right h]
       by_cases hv : y (.inr v) ≠ ξ (.inr v)
       · have := hy'T (.inr v) ⟨v, Or.inr hv, rfl⟩
-        simp only [b, if_neg h] at this
+        simp only [b, ite_eq_right h] at this
         exact this.symm
       · rw [hy'off (.inr v) (by rintro ⟨u, hu, e⟩; obtain rfl := Sum.inr_injective e; exact hu.elim h hv)]
         exact (not_not.1 hv).symm
@@ -478,7 +478,7 @@ theorem exists_finset_sum_translate_fixed {G X : Type} [Group G] [TopologicalSpa
   have hf : ∀ y ∈ F, f y ∈ K ∧ ρ (f y) x = y := by
     intro y hy
     have h := (hFmem y).1 hy
-    simp only [f, dif_pos h]
+    simp only [f, dite_eq_left h]
     exact h.choose_spec
   refine ⟨F.image f, ?_, ?_, ?_⟩
   · intro g hg
@@ -562,7 +562,7 @@ theorem mem_closure_span_of_orthogonal [DecidableEq ι] [CompleteSpace H] (h : I
     (hx : ∀ z, Restr ξ z → ∀ i, ∀ w ∈ (U i)ᗮ, ⟪x, B (Function.update z i w)⟫_ℂ = 0) :
     x ∈ (Submodule.span ℂ {z | ∃ y, Restr ξ y ∧ (∀ i, y i ∈ U i) ∧ z = B y}).topologicalClosure := by
   set Y := (Submodule.span ℂ {z | ∃ y, Restr ξ y ∧ (∀ i, y i ∈ U i) ∧ z = B y}).topologicalClosure with hY
-  haveI : CompleteSpace Y := (Submodule.isClosed_topologicalClosure _).completeSpace_coe
+  have : CompleteSpace Y := (Submodule.isClosed_topologicalClosure _).completeSpace_coe
   obtain ⟨a, ha, u, hu, rfl⟩ := Y.exists_add_mem_mem_orthogonal x
   have h1 : ∀ z, Restr ξ z → ∀ i, ∀ w ∈ (U i)ᗮ, ⟪a, B (Function.update z i w)⟫_ℂ = 0 := fun z hz i w hw => by
     have : Y ≤ (ℂ ∙ B (Function.update z i w))ᗮ :=
@@ -597,7 +597,7 @@ theorem mem_closure_span_of_orthogonal [DecidableEq ι] [CompleteSpace H] (h : I
     have hf : ({i | y i ≠ ξ i} ∪ {i | ξ i ∈ U i}ᶜ).Finite := Set.Finite.union hy hξ
     rw [inner_zero_right, inner_eq_zero_symm]
     refine h3 hf.toFinset y hy fun i hi => ?_
-    simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_setOf_eq, Set.mem_compl_iff, not_or, not_not] at hi
+    simp only [Set.Finite.mem_toFinset, Set.mem_union, mem_ofPred_eq, Set.mem_compl_iff, not_or, not_not] at hi
     exact hi.1 ▸ hi.2
   rwa [h4, add_zero]
 
@@ -644,22 +644,22 @@ theorem inner_eq_zero_of_fixed {Γ X H : Type} [Group Γ] [TopologicalSpace Γ] 
   rw [← ContinuousLinearMap.adjoint_inner_left]
   refine Submodule.inner_right_of_mem_orthogonal (mem_fixedSub.2 fun k hk => ext_inner_right ℂ fun z => ?_) hw
   obtain ⟨z, rfl⟩ : ∃ z', z = ρ k z' := ⟨ρ k⁻¹ z, by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one, ContinuousLinearMap.one_apply]⟩
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]⟩
   rw [inner_map_map hρ, ContinuousLinearMap.adjoint_inner_left, ContinuousLinearMap.adjoint_inner_left, hT]
   conv_rhs => rw [← hx k hk, hτ]
 
 theorem mem_closure_span_fixed : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] (π : GAd σ J →* (H →L[ℂ] H)), IsIrrUnitary π → ∀ (R : ∀ v, IrrU (GPl σ J v)) (ξ : ∀ v, (R v).H) (B : (∀ v, (R v).H) → H), IsFactorisation σ J (fun v => (R v).π) ξ π B → ∀ (Kp : ∀ v : HeightOneSpectrum (𝓞 F), Subgroup (GLoc σ J v)), (∀ᶠ v in cofinite, ∀ k ∈ Kp v, (R (.inr v)).π k (ξ (.inr v)) = ξ (.inr v)) → ∀ x : H, (∀ v, ∀ k ∈ Kp v, π (emb σ J v k) x = x) → x ∈ (Submodule.span ℂ {z | ∃ y, Restr ξ y ∧ (∀ v, ∀ k ∈ Kp v, (R (.inr v)).π k (y (.inr v)) = y (.inr v)) ∧ z = B y}).topologicalClosure := by
   intro F E _ _ _ _ _ σ n J H _ _ π hπ R ξ B h Kp hξ x hx
   classical
-  haveI := hπ.complete
-  haveI := fun v => (R v).isIrr.complete
+  have := hπ.complete
+  have := fun v => (R v).isIrr.complete
   let K : ∀ v, Subgroup (GPl σ J v) := fun v => match v with
     | .inl _ => ⊥
     | .inr v => Kp v
-  haveI : ∀ v, CompleteSpace (fixedSub (R v).π (K v)) := fun v => (isClosed_fixedSub _ _).completeSpace_coe
+  have : ∀ v, CompleteSpace (fixedSub (R v).π (K v)) := fun v => (isClosed_fixedSub _ _).completeSpace_coe
   have hK : ∀ y : ∀ v, (R v).H, ∀ w, y (.inl w) ∈ fixedSub (R (.inl w)).π (K (.inl w)) := fun y w =>
     mem_fixedSub.2 fun k hk => by
-      rw [Subgroup.mem_bot.1 hk, map_one, ContinuousLinearMap.one_apply]
+      rw [Subgroup.mem_bot.1 hk, map_one, one_apply_eq_self]
   have key := mem_closure_span_of_orthogonal h (fun v => fixedSub (R v).π (K v)) ?_ x ?_
   · refine Submodule.topologicalClosure_mono (Submodule.span_mono ?_) key
     rintro _ ⟨y, hy, hyU, rfl⟩
@@ -676,7 +676,7 @@ theorem mem_closure_span_fixed : ∀ {F E : Type} [Field F] [NumberField F] [Fie
     · rw [hT, hT, h.apply_embPl (SmallThetaModules.restr_update hz v a), Function.update_self, Function.update_idem]
     · rcases v with v | v
       · intro k hk
-        rw [Subgroup.mem_bot.1 hk, map_one, map_one, ContinuousLinearMap.one_apply]
+        rw [Subgroup.mem_bot.1 hk, map_one, map_one, one_apply_eq_self]
       · exact hx v
 
 end GlobalTheory.FixedSpan
@@ -753,7 +753,7 @@ theorem span_values_dense : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar
     rintro _ ⟨Φ, hΦ, y, rfl⟩
     refine Submodule.subset_span ⟨Φ, hΦ, Function.update y τ (dsRep M τ x (y τ)), ?_⟩
     exact (((Φ : homDS M π ⊤).2).2 τ x y).symm
-  haveI : Submodule.IsFullLattice D.host.E (stdLattice D.host.E V.rank) := isLattice_stdLattice
+  have : Submodule.IsFullLattice D.host.E (stdLattice D.host.E V.rank) := isLattice_stdLattice
   have htop : Mon = ⊤ := GlobalTheory.PlaceGen.eq_top_of_local D.sp.cm.sig V.gram (stdLattice D.host.E V.rank) Mon ∅
     (fun v x => hfin (locFin V v x)) hinf (fun k hk => hfin ⟨k, (mem_levelOff.1 hk).1⟩)
   have hinvW : ∀ g, ∀ v ∈ W, π g v ∈ W := fun g v hv =>
@@ -869,7 +869,7 @@ theorem admissible (hF : GlobalTheory.Published.FlathFactorisation) (hπ : IsIrr
   classical
   refine ⟨isSmooth_smoothRep _, fun K hKo hKc => ?_⟩
   obtain ⟨R, ξ, B, hR, hKξ⟩ := hF.exists_factorisation hπ
-  haveI : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
+  have : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
   obtain ⟨S0, hS0⟩ := GlobalTheory.PlaceGen.exists_levelOff_le D.sp.cm.sig V.gram (frameLat V) (K.comap (toFin V))
     (hKo.preimage (continuous_toFin V))
   let Kp : ∀ v, Subgroup (Gv V v) := fun v => K.comap (locFin V v) ⊓ Kv V v
@@ -886,7 +886,7 @@ theorem admissible (hF : GlobalTheory.Published.FlathFactorisation) (hπ : IsIrr
   let Q : ∀ v, Submodule ℂ (R (.inr v)).H := fun v =>
     (fixed (smRep (Flath.finFactor R v)) (Kp v)).map (smoothPart (toRep (Flath.finFactor R v))).subtype
   have hQfin : ∀ v, FiniteDimensional ℂ (Q v) := fun v => by
-    haveI := (hR.2.1 v).2.2 (Kp v) (hKpo v) (hKpc v)
+    have := (hR.2.1 v).2.2 (Kp v) (hKpo v) (hKpc v)
     infer_instance
   have hQmem : ∀ v (z : (R (.inr v)).H), (∀ k ∈ Kp v, (R (.inr v)).π k z = z) → z ∈ Q v := fun v z hz =>
     ⟨⟨z, isOpen_stab_of_fixed _ (hKpo v) hz⟩, mem_fixed_iff.2 fun k hk => Subtype.ext (hz k hk), rfl⟩
@@ -900,7 +900,7 @@ theorem admissible (hF : GlobalTheory.Published.FlathFactorisation) (hπ : IsIrr
     exact congrArg Subtype.val (mem_fixed_iff.1 hw k (by rw [hKpeq v hv.2]; exact hk))
   obtain ⟨X, hX⟩ : ∃ X : Submodule ℂ H,
       X = (Submodule.span ℂ {z | ∃ y, Restr ξ y ∧ (∀ v, y (.inr v) ∈ Q v) ∧ z = B y}).topologicalClosure := ⟨_, rfl⟩
-  haveI : FiniteDimensional ℂ (homDS M π X) := hX ▸ GlobalTheory.T.finiteDimensional_homDS_closure_span_restricted D V S M H π hπ hD R ξ B hR.1 Q hQfin hQev
+  have : FiniteDimensional ℂ (homDS M π X) := hX ▸ GlobalTheory.T.finiteDimensional_homDS_closure_span_restricted D V S M H π hπ hD R ξ B hR.1 Q hQfin hQev
   have hval0 : ∀ Φ0 : ContinuousMultilinearMap ℂ M.H H, Φ0 ∈ homDS M π ⊤ →
       (∀ v, ∀ k ∈ Kp v, ∀ y, π (emb D.sp.cm.sig V.gram v k) (Φ0 y) = Φ0 y) → Φ0 ∈ homDS M π X := by
     intro Φ0 hΦ0m hfx
@@ -946,7 +946,7 @@ theorem irreducible [CompleteSpace H] (hπ : IsIrrUnitary π) (hD : HasDSComp M 
     (hadm : IsAdmissible (finPartDSSm M hU)) : (finPartDSSm M hU).IsIrreducible := by
   classical
   have hunit : IsUnitaryRep π := hπ.unitary
-  haveI : Nontrivial H := hπ.irred.1
+  have : Nontrivial H := hπ.irred.1
   let u : ∀ τ, M.H τ := fun τ => unitVec (H := M.H τ)
   obtain ⟨ev, hevd⟩ : ∃ ev : smoothPart (finPartDS M hU) →ₗ[ℂ] H,
       ev = (ContinuousMultilinearMap.apply ℂ M.H H u).toLinearMap ∘ₗ valMap hU := ⟨_, rfl⟩
@@ -970,8 +970,8 @@ theorem irreducible [CompleteSpace H] (hπ : IsIrrUnitary π) (hD : HasDSComp M 
     rw [h0, hb] at hTd
     exact bot_ne_top hTd
   obtain ⟨w0, hw0⟩ := hne
-  haveI : Nontrivial (smoothPart (finPartDS M hU)) := ⟨⟨w0, 0, hw0⟩⟩
-  haveI : Nontrivial (Subrepresentation (finPartDSSm M hU)) :=
+  have : Nontrivial (smoothPart (finPartDS M hU)) := ⟨⟨w0, 0, hw0⟩⟩
+  have : Nontrivial (Subrepresentation (finPartDSSm M hU)) :=
     ⟨⊥, ⊤, fun e => bot_ne_top (congrArg Subrepresentation.toSubmodule e :)⟩
   refine ⟨fun N => ?_⟩
   by_cases hN : N = ⊥
@@ -991,17 +991,17 @@ theorem irreducible [CompleteSpace H] (hπ : IsIrrUnitary π) (hD : HasDSComp M 
   have hKΦ : ∀ k ∈ K, finPartDSSm M hU k Φ = Φ := fun k hk => by
     rw [hKd] at hk
     exact hk.2
-  haveI : FiniteDimensional ℂ (fixed (finPartDSSm M hU) K) := hadm.2 K hKo hKc
+  have : FiniteDimensional ℂ (fixed (finPartDSSm M hU) K) := hadm.2 K hKo hKc
   obtain ⟨E, hEd⟩ : ∃ E : Submodule ℂ (smoothPart (finPartDS M hU)), E = N.toSubmodule ⊓ fixed (finPartDSSm M hU) K :=
     ⟨_, rfl⟩
-  haveI : FiniteDimensional ℂ E := hEd ▸ Submodule.finiteDimensional_of_le inf_le_right
+  have : FiniteDimensional ℂ E := hEd ▸ Submodule.finiteDimensional_of_le inf_le_right
   have hEN : ∀ x ∈ E, x ∈ N.toSubmodule := fun x hx => by rw [hEd] at hx; exact hx.1
   have hEK : ∀ x ∈ E, x ∈ fixed (finPartDSSm M hU) K := fun x hx => by rw [hEd] at hx; exact hx.2
   have hEmem : ∀ x ∈ N.toSubmodule, x ∈ fixed (finPartDSSm M hU) K → x ∈ E := fun x h1 h2 => by
     rw [hEd]; exact ⟨h1, h2⟩
   obtain ⟨Eh, hEhd⟩ : ∃ Eh : Submodule ℂ H, Eh = E.map ev := ⟨_, rfl⟩
-  haveI : FiniteDimensional ℂ Eh := hEhd ▸ inferInstance
-  haveI : CompleteSpace Eh := FiniteDimensional.complete ℂ Eh
+  have : FiniteDimensional ℂ Eh := hEhd ▸ inferInstance
+  have : CompleteSpace Eh := FiniteDimensional.completeSpace ℂ Eh
   have hpm := Eh.starProjection_apply_mem (ev Φ)
   have hpo := Eh.sub_starProjection_mem_orthogonal (ev Φ)
   generalize Eh.starProjection (ev Φ) = p at hpm hpo

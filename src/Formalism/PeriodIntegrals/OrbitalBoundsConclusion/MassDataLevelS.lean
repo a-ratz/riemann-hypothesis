@@ -190,7 +190,7 @@ theorem kSpOpen_holds : KSpOpen := by
   intro D X w p
   have := finiteDimensional_of_numberField X.B.I.F X.B.I.E
   exact (LatTop.isOpen_Kv p.1 X.B.I.L X.B.I.L_span X.B.I.L_fg X.B.I.cm.sig X.B.I.J).preimage
-    continuous_subtype_val
+    continuous_subtypeVal
 
 end MassDataLevelSSteps
 end -- clump:auto
@@ -223,7 +223,7 @@ theorem isClosed_stabT (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R
     unfold actTup HA.mat
     refine continuous_pi fun b => Continuous.matrix_mulVec ?_ continuous_const
     exact Units.continuous_val.comp
-      (continuous_subtype_val : Continuous fun g : HR R σ J => (g : GL (Fin n) (R ⊗[F] E)))
+      (continuous_subtypeVal : Continuous fun g : HR R σ J => (g : GL (Fin n) (R ⊗[F] E)))
   have : ((stabT R σ J X0 : Subgroup (HA R σ J)) : Set (HA R σ J)) =
       {g | g • ratTup (F := F) R X0 = ratTup (F := F) R X0} := by
     ext g
@@ -251,14 +251,14 @@ theorem prodNH_of {r : ℕ} (P : Frame E n r) (M : MeasW σ J P) (hM : M.IsTextN
   have hmul : Measurable fun p : HA (Af F) σ J × HA (Af F) σ J => p.1 * p.2 := measurable_mul
   intro f hf
   have e1 : ∫⁻ k, f (k : HA (Af F) σ J) ∂M.μSf = ∫⁻ x, f x ∂(amb M.μSf) :=
-    (lintegral_map hf measurable_subtype_coe).symm
+    (lintegral_map hf measurable_subtypeVal).symm
   rw [e1, hS, lintegral_map hf hmul, lintegral_prod (fun p : HA (Af F) σ J × HA (Af F) σ J => f (p.1 * p.2)) (hf.comp hmul).aemeasurable]
   have hin : Measurable fun x : HA (Af F) σ J => ∫⁻ y, f (x * y) ∂(amb M.μHf) :=
     Measurable.lintegral_prod_right' (f := fun p : HA (Af F) σ J × HA (Af F) σ J => f (p.1 * p.2))
       (hf.comp hmul)
-  rw [lintegral_map hin measurable_subtype_coe]
+  rw [lintegral_map hin measurable_subtypeVal]
   refine lintegral_congr fun m => ?_
-  exact lintegral_map (hf.comp (measurable_const_mul _)) measurable_subtype_coe
+  exact lintegral_map (hf.comp (measurable_const_mul _)) measurable_subtypeVal
 
 end MassDataLevelSSteps.ProdW
 
@@ -492,12 +492,12 @@ theorem level_congruence_typed_places : LevelCongruenceTypedPlaces := by
     rw [Finset.sum_congr rfl (fun p _ => hs p)]
     by_cases hv : v ∈ typSet X.B.I.F (D.host.g 0) (D.host.g 1)
     · rw [Finset.sum_eq_single (⟨v, hv⟩ : TypX X)]
-      · rw [if_pos rfl, one_mul, ← heq ⟨v, hv⟩, sub_self]
+      · rw [ite_eq_left rfl, one_mul, ← heq ⟨v, hv⟩, sub_self]
       · intro p _ hp
-        rw [if_neg (fun h => hp (Subtype.ext h.symm)), zero_mul]
+        rw [ite_eq_right (fun h => hp (Subtype.ext h.symm)), zero_mul]
       · intro h
         exact absurd (Finset.mem_univ _) h
-    · rw [Finset.sum_eq_zero (fun p _ => by rw [if_neg (fun h => hv (by rw [h]; exact p.2)), zero_mul])]
+    · rw [Finset.sum_eq_zero (fun p _ => by rw [ite_eq_right (fun h => hv (by rw [h]; exact p.2)), zero_mul])]
       rw [hO v hv]
       have : ((HA.mat (Fv X.B.I.F v) X.B.I.cm.sig X.B.I.J (1 : HA (Fv X.B.I.F v) X.B.I.cm.sig X.B.I.J) :
           GL (Fin X.B.I.n) _) : Matrix (Fin X.B.I.n) (Fin X.B.I.n) (Fv X.B.I.F v ⊗[X.B.I.F] X.B.I.E)) = 1 := rfl

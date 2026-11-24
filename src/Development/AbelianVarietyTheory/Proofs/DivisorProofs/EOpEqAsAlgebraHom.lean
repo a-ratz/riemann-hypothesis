@@ -305,8 +305,8 @@ theorem mem_wat_iff (R : RealDat D A Ks) (F : Face D A) (hU : R.LUnif) (hW : R.m
   · have h3 : ∀ v, R.eWf i σ ((R.HW i σ).e x v) = (∑ g, σ ((idemOf A.X).coeff g) •
         postOn _ (actL (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG g)) ((R.HW i σ).e x)) v := by
       intro v
-      simp only [RealDat.eWf, gaL, RealDat.eC, LinearMap.sum_apply, LinearMap.smul_apply, MultilinearMap.sum_apply,
-        MultilinearMap.smul_apply, postOn_apply]
+      simp only [RealDat.eWf, gaL, RealDat.eC, LinearMap.sum_apply, LinearMap.smul_apply, sum_apply,
+        smul_apply, postOn_apply]
       rfl
     simp only [h3]
     exact ⟨fun h => MultilinearMap.ext h, fun h v => by rw [h]⟩

@@ -142,7 +142,7 @@ theorem ent_mul (M : KMod n) (A B : M.V →L[ℂ] M.V) (i j : Ix M) :
   have hx : B (stdOrthonormalBasis ℂ M.V j) = ∑ m, inner ℂ (stdOrthonormalBasis ℂ M.V m)
       (B (stdOrthonormalBasis ℂ M.V j)) • stdOrthonormalBasis ℂ M.V m :=
     ((stdOrthonormalBasis ℂ M.V).sum_repr' _).symm
-  rw [ContinuousLinearMap.mul_apply]
+  rw [mul_apply_eq_comp]
   conv_lhs => rw [hx]
 
   rw [map_sum, inner_sum]

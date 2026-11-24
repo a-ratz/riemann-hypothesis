@@ -157,7 +157,7 @@ theorem pow_eq_one_iff_of_isGrpPullback {S S' X : Scheme.{0}} {G : Over S} {G' :
 
 theorem epi_spMap_of_field {K L : Type} [Field K] [Field L] (i : K →+* L) : Epi (spMap i) := by
   have : Flat (spMap i) := by
-    letI := i.toAlgebra
+    let := i.toAlgebra
     exact HasRingHomProperty.Spec_iff.2 (inferInstance : Module.Flat K L)
   have : Surjective (spMap i) := ⟨fun x => ⟨(⊥ : PrimeSpectrum L), Subsingleton.elim (α := PrimeSpectrum K) _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
@@ -481,7 +481,7 @@ theorem exists_torsion_lift_of_generic_rational : (∀ (V : Type) [CommRing V] [
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hβ : Function.Injective β.toRingHom := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := V) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := V) ?_
     change Ideal.comap (algebraMap V W) (RingHom.ker β.toRingHom) = ⊥
     rw [RingHom.comap_ker]
     refine (RingHom.injective_iff_ker_eq_bot _).1 ?_

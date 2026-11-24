@@ -202,7 +202,7 @@ theorem flagStep_of_le {E : Type} [AddCommGroup E] [Module K E] {r : ℕ} (b : F
     flagStep K b i = flagStep K b r := by
   have hs : {a : Fin r | (a : ℕ) < i} = {a : Fin r | (a : ℕ) < r} := by
     ext a
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     exact ⟨fun _ => a.2, fun _ => lt_of_lt_of_le a.2 h⟩
   show Submodule.span K (b '' {a : Fin r | (a : ℕ) < i}) = Submodule.span K (b '' {a : Fin r | (a : ℕ) < r})
   rw [hs]
@@ -259,7 +259,7 @@ theorem exists_cols {r : ℕ} (g : Fin r → Fin r → K)
       simp only [hold a ha]
     have hset : {a : Fin r | (a : ℕ) < k + 1} = insert kk {a : Fin r | (a : ℕ) < k} := by
       ext a
-      simp only [Set.mem_setOf_eq, Set.mem_insert_iff, kk, Fin.ext_iff]
+      simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, kk, Fin.ext_iff]
       omega
     have hon : LinearIndepOn (ResidueField R) (fun a i => residue R (p' a i)) {a : Fin r | (a : ℕ) < k + 1} := by
       rw [hset]
@@ -586,7 +586,7 @@ theorem pull_isFlagVB_genB : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : S
   have hBA' : B * A = 1 := by
     have := congrArg (fun M : Matrix (Fin (r s)) (Fin (r s)) Ω => M.map ι) hBA
     simpa [B, A, A₀, Matrix.map_mul] using this
-  haveI : IsLocalRing (regAt ξ' p') := EigSplit.isLocalRing_regAt p'
+  have : IsLocalRing (regAt ξ' p') := EigSplit.isLocalRing_regAt p'
   obtain ⟨P, hPreg, hP0, hPinv, hPflag⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Adapted.exists_adapted (GenField Ω r) (regAt ξ' p') (r s) (fun c i => G i c) (fun k =>
     _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.split_of_regular_ratios (GenField Ω r) (regAt ξ' p') (n s) (r s) A B G a k (J ⟨s, k⟩)
       (fun j l => hreg _ (hAreg j l)) (fun l j => hreg _ (hBreg l j)) hBA' ha

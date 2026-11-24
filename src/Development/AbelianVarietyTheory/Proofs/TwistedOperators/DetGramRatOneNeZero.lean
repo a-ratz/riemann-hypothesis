@@ -384,7 +384,7 @@ theorem congr_complex (h : ∀ w : InfinitePlace (maximalRealSubfield E), CongrO
   let ρ := τ.comp (algebraMap (maximalRealSubfield E) E)
   let w := InfinitePlace.mk ρ
   have hw : w.IsReal := IsTotallyReal.isReal w
-  letI : Algebra (maximalRealSubfield E) ℂ := ρ.toAlgebra
+  let : Algebra (maximalRealSubfield E) ℂ := ρ.toAlgebra
   let g : w.Completion →ₐ[(maximalRealSubfield E)] ℂ :=
     ⟨InfinitePlace.Completion.extensionEmbedding w, fun a => by
       rw [AbsoluteValue.Completion.algebraMap_def, WithAbs.algebraMap_right_apply,

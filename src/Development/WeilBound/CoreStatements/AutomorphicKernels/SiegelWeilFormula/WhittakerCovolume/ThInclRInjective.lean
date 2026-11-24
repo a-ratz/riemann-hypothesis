@@ -103,10 +103,10 @@ def thE (d : SD σ) {η : E} (hη : η ≠ 0) : UA σ d.A.J ≃* HeckeCharacterZ
   MulEquiv.subgroupCongr (Subgroup.ext (th_mem_iff d hη))
 
 theorem thE_cont (d : SD σ) {η : E} (hη : η ≠ 0) : Continuous (thE d hη) :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 
 theorem thE_symm_cont (d : SD σ) {η : E} (hη : η ≠ 0) : Continuous (thE d hη).symm :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 
 theorem th_haar_map {G H : Type} [Group G] [TopologicalSpace G] [MeasurableSpace G] [BorelSpace G] [MeasurableMul G] [Group H]
     [TopologicalSpace H] [MeasurableSpace H] [BorelSpace H] (μ : Measure G) [hμ : μ.IsHaarMeasure] (e : G ≃* H)

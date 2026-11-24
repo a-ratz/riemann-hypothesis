@@ -226,7 +226,7 @@ theorem mk0_eq_of_spanSingleton (F : Type) [Field F] [NumberField F] (𝔞 : Fra
     simp only [Units.val_mul, coe_toPrincipalIdeal, FractionalIdeal.coe_mk0, Units.val_mk0]
     exact hJ
   have hp : ClassGroup.mk F (toPrincipalIdeal (𝓞 F) F (Units.mk0 a ha)) = 1 :=
-    ClassGroup.mk_eq_one_iff.2 ⟨⟨a, by rw [coe_toPrincipalIdeal, Units.val_mk0, FractionalIdeal.coe_spanSingleton]⟩⟩
+    ClassGroup.mk_eq_one_iff.2 ⟨⟨a, by rw [coe_toPrincipalIdeal, Units.val_mk0, FractionalIdeal.coeToSubmodule_spanSingleton]⟩⟩
   rw [← ClassGroup.mk_mk0 F, hu, map_mul, map_mul, hp, one_mul, ClassGroup.mk_mk0]
 
 theorem exists_spanSingleton_of_mk0_eq (F : Type) [Field F] [NumberField F] (𝔞 : Frac F) (D : (Ideal (𝓞 F))⁰)
@@ -240,7 +240,7 @@ theorem exists_spanSingleton_of_mk0_eq (F : Type) [Field F] [NumberField F] (�
   have hu : (u : FractionalIdeal (𝓞 F)⁰ F) = FractionalIdeal.spanSingleton (𝓞 F)⁰ x := by
     apply FractionalIdeal.coeToSubmodule_injective
     show ((u : FractionalIdeal (𝓞 F)⁰ F) : Submodule (𝓞 F) F) = ((FractionalIdeal.spanSingleton (𝓞 F)⁰ x : FractionalIdeal (𝓞 F)⁰ F) : Submodule (𝓞 F) F)
-    rw [FractionalIdeal.coe_spanSingleton]
+    rw [FractionalIdeal.coeToSubmodule_spanSingleton]
     exact hx
   have hx0 : x ≠ 0 := by
     intro h; apply Units.ne_zero u; rw [hu, h, FractionalIdeal.spanSingleton_zero]
@@ -633,7 +633,7 @@ theorem cone_iff : ∀ (F : Type) [Field F] [NumberField F] (𝔞 : GlobalTheory
     rw [GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.latM_eq_dual]
     exact FractionalIdeal.dual_ne_zero ℤ ℚ ha
   unfold GlobalTheory.IndefiniteRowSideFullHecke.TraceDualDifferent.dualCone
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   rw [GlobalTheory.IndefiniteRowSideFullHecke.TraceDualDifferent.mem_traceDual_iff hM, GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.latM_eq_dual, FractionalIdeal.dual_dual]
   refine and_congr Iff.rfl (forall_congr' fun τ => ?_)
   rw [Complex.im_ofReal_mul, map_mul τ ν b]

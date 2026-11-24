@@ -50,7 +50,7 @@ theorem _root_.GlobalTheory.finiteGalois_fractionRing_of_isFractionRing :
     ∀ (A K L : Type) [CommRing A] [IsDomain A] [Field K] [Algebra A K] [IsFractionRing A K] [Field L] [Algebra K L] [FiniteDimensional K L] [IsGalois K L] [Algebra A L], (∀ a : A, algebraMap A L a = algebraMap K L (algebraMap A K a)) → ∃ (_ : Algebra (FractionRing A) L) (_ : IsScalarTower A (FractionRing A) L), FiniteDimensional (FractionRing A) L ∧ IsGalois (FractionRing A) L ∧ ∀ (σ : L ≃ₐ[FractionRing A] L) (x : K), σ (algebraMap K L x) = algebraMap K L x := by
   intro A K L _ _ _ _ _ _ _ _ _ _ h
   let e : FractionRing A ≃ₐ[A] K := FractionRing.algEquiv A K
-  letI alg : Algebra (FractionRing A) L := ((algebraMap K L).comp e.toRingHom).toAlgebra
+  let alg : Algebra (FractionRing A) L := ((algebraMap K L).comp e.toRingHom).toAlgebra
   have hmap : ∀ y : FractionRing A, algebraMap (FractionRing A) L y = algebraMap K L (e y) :=
     fun _ => rfl
   have hcomp : (algebraMap (FractionRing A) L).comp (e.symm.toRingEquiv : K →+* FractionRing A) =

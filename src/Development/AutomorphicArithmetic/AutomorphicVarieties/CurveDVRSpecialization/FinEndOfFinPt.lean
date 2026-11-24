@@ -49,16 +49,16 @@ theorem UpperTheory.V.Pr.finEnd_of_finPt :
       {L : Type} [Field L] [NumberField L] [Algebra L Ω] {Φ : Fr.Frame l (ResidueField O)} (k : GalLink η Ψ σ g₁ B M L Φ) [CharP (ResidueField O) l] {C₀ : ℕ}, Φ.Ok C₀ → l ∣ M → σ * σ = 1 →
     FinPt O Φ 3 → FinEnd l η Ψ σ g₁ B := by
   intro Ω _ _ _ l _ O _ _ η Ψ σ g₁ B M L _ _ _ Φ k _ C₀ hok hl hσ hF
-  haveI : Module.IsTorsionFree L Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
+  have : Module.IsTorsionFree L Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
   have hidx : (Base.galOf ℚ L Ω).index = Module.finrank ℚ L := (Base.galEmbTop ℚ L Ω).2.2
   refine ⟨Base.galOf ℚ L Ω, ⟨by rw [hidx]; exact Module.finrank_pos.ne'⟩, ?_⟩
   intro A _ _ _ h0 r hr g hg _
-  haveI : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
+  have : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
   let f : ResidueField O →+* A := Ideal.Quotient.lift (maximalIdeal O) (algebraMap O A) h0
   have hf : ∀ a : O, f (residue O a) = algebraMap O A a := fun a => rfl
-  letI : Algebra (ResidueField O) A := f.toAlgebra
-  haveI : IsScalarTower O (ResidueField O) A := IsScalarTower.of_algebraMap_eq fun a => (hf a).symm
+  let : Algebra (ResidueField O) A := f.toAlgebra
+  have : IsScalarTower O (ResidueField O) A := IsScalarTower.of_algebraMap_eq fun a => (hf a).symm
   obtain ⟨ρ, h1, h2, h3⟩ := exists_nrep3 k hok hl hσ r hr
   have hpow : ∀ (s : G ℚ Ω) (n : ℤ), algebraMap O A ((Ψ s ^ n : Oˣ) : O) =
       f ((barChar O Ψ s ^ n : (ResidueField O)ˣ) : ResidueField O) := by

@@ -85,7 +85,7 @@ theorem split_unit (hF : ∀ x : F, star (algebraMap F E x) = algebraMap F E x) 
   have hn' : P.valuation E ((e : E) ^ n * y) < 1 := by
     rw [map_mul, map_pow]
     rw [Units.val_inv_eq_inv_val, Units.val_mk0] at hn
-    rwa [← lt_div_iff₀ (zero_lt_iff.2 hy0), one_div]
+    rwa [← lt_div_iff₀ (pos_iff_ne_zero.2 hy0), one_div]
   have hm : e ^ n - 1 ∈ (conjPrime₂ P).asIdeal := by
     refine Ideal.mem_of_dvd _ (sub_one_dvd_pow_sub_one e n) ?_
     have : e - 1 = -e' := by rw [← hee]; ring
@@ -162,8 +162,8 @@ theorem inf_mul_prod : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hfp : (∏ᶠ (P : HeightOneSpectrum (𝓞 E)) (_ : P ∉ V.biUnion (aboveF (L := E) F)), χ.val P ^ ordF P x) = 1 := by
     refine finprod_eq_one_of_forall_eq_one fun P => ?_
     by_cases hP : P ∈ V.biUnion (aboveF (L := E) F)
-    · rw [finprod_eq_if, if_neg (not_not.2 hP)]
-    rw [finprod_eq_if, if_pos hP, ordF, (hV P fun e => hP ((hm P).2 e)).2, WithZero.log_one, neg_zero, zpow_zero]
+    · rw [finprod_eq_if, ite_eq_right (not_not.2 hP)]
+    rw [finprod_eq_if, ite_eq_left hP, ordF, (hV P fun e => hP ((hm P).2 e)).2, WithZero.log_one, neg_zero, zpow_zero]
   have hpl : ∀ v ∈ V, ∏ Q ∈ aboveF (L := E) F v, χ.locK Q x = χ.locK (rep v) z := fun v _ => by
     have := place_prod hF hr hc hu hχ ht hun hxz (rep v)
     rwa [hrep] at this

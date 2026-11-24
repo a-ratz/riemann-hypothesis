@@ -76,9 +76,9 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
   obtain ⟨hne, hpow, hsplit⟩ := hη
   rw [h2] at hpow
   let Ω := AlgebraicClosure E
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
   obtain ⟨ι⟩ : Nonempty (Qbar 2 ≃+* ℂ) := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex 2
   obtain ⟨artF, haF⟩ := hGAR F Ω
   obtain ⟨artE, haE⟩ := hGAR E Ω
@@ -126,9 +126,9 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
           (h : ∀ x : 𝓞 M, A.valuation (algebraMap M Ω (τ (x : M)) - algebraMap M Ω (x : M)) < 1) :
           ∃ σ ∈ Ine (F := F) A, ∀ x : M, σ (algebraMap M Ω x) = algebraMap M Ω (τ x) := by
         open Pointwise in
-          haveI : NumberField M := NumberField.of_module_finite F M
-          haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-          haveI : IsAlgClosure M Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) M⟩
+          have : NumberField M := NumberField.of_module_finite F M
+          have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+          have : IsAlgClosure M Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) M⟩
           let σ₁ : Ω ≃ₐ[F] Ω := τ.liftNormal Ω
           have h₁ : ∀ x : M, σ₁ (algebraMap M Ω x) = algebraMap M Ω (τ x) := fun x => τ.liftNormal_commutes Ω x
           obtain ⟨g, hg⟩ := GlobalTheory.InertiaLift.exists_smul_eq (F := M) (A := A) (A' := σ₁⁻¹ • A) (by
@@ -178,12 +178,12 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
         rfl
       let N : IntermediateField F Ω := IntermediateField.normalClosure F E Ω
       let M : Type := N
-      haveI : FiniteDimensional F M := inferInstance
-      haveI : NumberField M := NumberField.of_module_finite F M
-      haveI : IsGalois F M := IsGalois.normalClosure F E Ω
-      haveI : IsGalois E M := IsGalois.tower_top_of_isGalois F E M
+      have : FiniteDimensional F M := inferInstance
+      have : NumberField M := NumberField.of_module_finite F M
+      have : IsGalois F M := IsGalois.normalClosure F E Ω
+      have : IsGalois E M := IsGalois.tower_top_of_isGalois F E M
       let P : Ideal (𝓞 M) := primeUnder A M
-      haveI : P.IsPrime := Ideal.comap_isPrime _ _
+      have : P.IsPrime := Ideal.comap_isPrime _ _
       have hPv : P.under (𝓞 F) = v.asIdeal := by
         ext x
         rw [Ideal.mem_comap, mem_primeUnder, ← hv x]
@@ -192,9 +192,9 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
         ext x
         rw [Ideal.mem_comap, mem_primeUnder, ← hw x]
         congr! 2
-      haveI hPv' : P.LiesOver v.asIdeal := ⟨hPv.symm⟩
-      haveI hPw' : P.LiesOver w.asIdeal := ⟨hPw.symm⟩
-      haveI hwv : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hPw, Ideal.under_under, hPv]⟩
+      have hPv' : P.LiesOver v.asIdeal := ⟨hPv.symm⟩
+      have hPw' : P.LiesOver w.asIdeal := ⟨hPw.symm⟩
+      have hwv : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hPw, Ideal.under_under, hPv]⟩
       have hv0 := v.ne_bot
       have hw0 := w.ne_bot
       have hP0 : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot hv0 P
@@ -249,7 +249,7 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
   have hδs : δ s = 1 := (hL.unr_iff haF (Or.inr rfl) hAv).2 hu s hs
   have fixes_or (σ : G F Ω) (hσ : ∃ e : E, σ (algebraMap E Ω e) ≠ algebraMap E Ω e) (τ : G F Ω) :
       τ ∈ (UpperTheory.V.Af.Bc.res F Ω E).range ∨ σ⁻¹ * τ ∈ (UpperTheory.V.Af.Bc.res F Ω E).range := by
-    haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+    have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
     have hfix : ∀ ρ : G F Ω, (∀ e : E, ρ (algebraMap E Ω e) = algebraMap E Ω e) → ρ ∈ (UpperTheory.V.Af.Bc.res F Ω E).range :=
       fun ρ hρ => ⟨AlgEquiv.ofRingEquiv (f := ρ.toRingEquiv) hρ, AlgEquiv.ext fun _ => rfl⟩
     let f : G F Ω → (E →ₐ[F] Ω) := fun ρ => (ρ : Ω →ₐ[F] Ω).comp (IsScalarTower.toAlgHom F E Ω)
@@ -304,8 +304,8 @@ namespace GlobalTheory.QuadLiftBridge
 
 theorem quadLift : ArthurClozelStrongTC → JacquetShalikaRigidity → GlobalTheory.GalCut.QuadLift := by
   intro hAC hJS K M _ _ _ _ _ _ _ h2 a ha π ⟨w, hw, B, hB⟩
-  haveI : Algebra.IsQuadraticExtension K M := ⟨h2⟩
-  haveI : IsGalois K M := inferInstance
+  have : Algebra.IsQuadraticExtension K M := ⟨h2⟩
+  have : IsGalois K M := inferInstance
   refine hAC K M (h2 ▸ Nat.prime_two) a ha π fun η hη hST => ?_
   have hsm : CG.mk π = (CG.mk π).twist η := by
     refine JacquetShalikaRigidity.strong_multiplicity_one hJS ha _ _ (hST.mono fun v ⟨hu, B', h1, h3⟩ => ⟨B', h1, ?_⟩)

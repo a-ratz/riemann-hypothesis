@@ -112,7 +112,7 @@ theorem UpperTheory.V.Ws.H5.pairTw :
     exact pt_mul (pt_pow hγ.cont _) (p.cont i)
   · rw [← p.red]
     refine GDet.ext fun B _ _ x => ?_
-    letI : Algebra R B := ((algebraMap (ResidueField O) B).comp (res O R : R →+* ResidueField O)).toAlgebra
+    let : Algebra R B := ((algebraMap (ResidueField O) B).comp (res O R : R →+* ResidueField O)).toAlgebra
     change p.D.D B (twA γ B x) = p.D.D B x
     rw [pt_id γ B fun g => ?_]
     change algebraMap (ResidueField O) B (res O R (γ g)) = 1

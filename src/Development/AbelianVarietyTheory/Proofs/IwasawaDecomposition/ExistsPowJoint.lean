@@ -73,7 +73,7 @@ theorem exists_pow_joint : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω
   have hvζ : A.valuation ζ = 1 := by
     have hp : A.valuation ζ ^ L = 1 := by rw [← map_pow, hζn, map_one]
     rcases lt_trichotomy (A.valuation ζ) 1 with hl | he' | hg
-    · exact absurd hp (pow_lt_one₀ zero_le' hl hL0).ne
+    · exact absurd hp (pow_lt_one₀ zero_le hl hL0).ne
     · exact he'
     · exact absurd hp (one_lt_pow₀ hg hL0).ne'
 
@@ -98,7 +98,7 @@ theorem exists_pow_joint : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω
     rw [← map_mul_left_nhds_one τ]
     exact Filter.mem_map.2 (Filter.mem_of_superset (hH.mem_nhds (one_mem _)) fun g hg => hU τ hτ g hg)
   have hint : IsIntegral E π := Algebra.IsIntegral.isIntegral π
-  haveI : FiniteDimensional E (IntermediateField.adjoin E {π}) :=
+  have : FiniteDimensional E (IntermediateField.adjoin E {π}) :=
     IntermediateField.adjoin.finiteDimensional hint
   have hHo : IsOpen ((IntermediateField.adjoin E {π}).fixingSubgroup : Set (Formalism.ConjugateSelfDual.G E Ω)) :=
     IntermediateField.fixingSubgroup_isOpen _
@@ -106,14 +106,14 @@ theorem exists_pow_joint : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω
     intro c
     rw [← isOpen_compl_iff]
     refine hopenH _ hHo _ fun τ hτ g hg => ?_
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq] at hτ ⊢
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hτ ⊢
     rwa [AlgEquiv.mul_apply, (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg π
       (IntermediateField.mem_adjoin_simple_self E π)]
   have hfib : ∀ c : M, IsClosed {τ : Formalism.ConjugateSelfDual.G E Ω | φ τ = c} := by
     intro c
     rw [← isOpen_compl_iff]
     refine hopenH _ hker _ fun τ hτ g hg => ?_
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq] at hτ ⊢
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq] at hτ ⊢
     rwa [map_mul, (MonoidHom.mem_ker).1 hg, mul_one]
   let T : Set (Formalism.ConjugateSelfDual.G E Ω) := ⋃ a ∈ Finset.range L, {τ | φ τ = φ γ ^ a ∧ τ π = ζ ^ a * π}
   have hTc : IsClosed T := by

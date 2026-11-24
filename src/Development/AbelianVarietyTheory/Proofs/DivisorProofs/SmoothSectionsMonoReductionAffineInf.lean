@@ -52,7 +52,7 @@ open CategoryTheory AlgebraicGeometry KaehlerDifferential DividedPowers Reciproc
 namespace GlobalTheory.SmoothLift
 
 theorem Data.sec_smooth (D : Data) (U : D.X.affineOpens) : Algebra.Smooth D.R (Sec D.s U.1) := by
-  haveI := D.smooth
+  have := D.smooth
   have h := HasRingHomProperty.appLE @Smooth D.s ‹_› ⟨⊤, isAffineOpen_top _⟩ U le_top
   have h' : RingHom.Smooth ((D.s.appLE ⊤ U.1 le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of D.R)).inv.hom) :=
     RingHom.Smooth.comp (RingHom.Smooth.of_bijective
@@ -61,15 +61,15 @@ theorem Data.sec_smooth (D : Data) (U : D.X.affineOpens) : Algebra.Smooth D.R (S
 
 theorem Data.mono_i (D : Data) : Mono D.i := by
   obtain ⟨s₀, hpb, -⟩ := D.red
-  haveI : IsClosedImmersion (spMap (Ideal.Quotient.mk D.I)) :=
+  have : IsClosedImmersion (spMap (Ideal.Quotient.mk D.I)) :=
     IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective
-  haveI : IsClosedImmersion D.i := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hpb.flip ‹_›
+  have : IsClosedImmersion D.i := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hpb.flip ‹_›
   infer_instance
 
 theorem Data.affine_inf (D : Data) {U V : D.X.Opens} (hU : IsAffineOpen U) (hV : IsAffineOpen V) :
     IsAffineOpen (U ⊓ V) := by
-  haveI := D.sep
-  haveI : IsSeparated (Limits.terminal.from D.X) := by
+  have := D.sep
+  have : IsSeparated (Limits.terminal.from D.X) := by
     rw [← Limits.terminal.comp_from D.s]; infer_instance
   exact hU.inf hV
 

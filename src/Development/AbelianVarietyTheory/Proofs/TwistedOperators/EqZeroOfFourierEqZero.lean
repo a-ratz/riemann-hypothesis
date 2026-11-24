@@ -61,11 +61,11 @@ variable {G A : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGro
   [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] [AddCommGroup A]
 
 theorem polish : PolishSpace G := by
-  letI : UniformSpace G := IsTopologicalAddGroup.rightUniformSpace G
-  haveI : IsUniformAddGroup G := isUniformAddGroup_of_addCommGroup
-  haveI : CompleteSpace G := IsRightUniformAddGroup.completeSpace_of_weaklyLocallyCompactSpace G
-  haveI : (uniformity G).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
-  haveI : TopologicalSpace.IsCompletelyMetrizableSpace G := inferInstance
+  let : UniformSpace G := IsTopologicalAddGroup.rightUniformSpace G
+  have : IsUniformAddGroup G := isUniformAddGroup_of_addCommGroup
+  have : CompleteSpace G := IsRightUniformAddGroup.completeSpace_of_weaklyLocallyCompactSpace G
+  have : (uniformity G).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  have : TopologicalSpace.IsCompletelyMetrizableSpace G := inferInstance
   infer_instance
 
 def bchar (χ : A → G → ℂ) (hc : ∀ a, Continuous (χ a)) (hn : ∀ a x, ‖χ a x‖ = 1) (a : A) : G →ᵇ ℂ :=
@@ -91,13 +91,13 @@ theorem real_eq_zero (χ : A → G → ℂ) (hc : ∀ a, Continuous (χ a)) (hx 
     (ha : ∀ a b x, χ (a + b) x = χ a x * χ b x) (h0 : ∀ x, χ 0 x = 1) (hn : ∀ a x, ‖χ a x‖ = 1)
     (hsep : ∀ x, (∀ a, χ a x = 1) → x = 0) (μ : Measure G) [μ.IsAddHaarMeasure] (f : G → ℝ) (hf : Continuous f)
     (hi : Integrable f μ) (h : ∀ a, ∫ x, χ a x * (f x : ℂ) ∂μ = 0) : f = 0 := by
-  haveI : PolishSpace G := polish
+  have : PolishSpace G := polish
   set B : A → (G →ᵇ ℂ) := bchar χ hc hn with hB
   have hBx : ∀ a x, B a x = χ a x := fun a x => bchar_apply χ hc hn a x
   have hBmul : ∀ a b, B a * B b = B (a + b) := by
-    intro a b; ext x; rw [BoundedContinuousFunction.coe_mul, Pi.mul_apply, hBx, hBx, hBx, ha]
+    intro a b; ext x; rw [FunLike.coe_mul, Pi.mul_apply, hBx, hBx, hBx, ha]
   have hBone : B 0 = 1 := by
-    ext x; rw [hBx, h0, BoundedContinuousFunction.coe_one, Pi.one_apply]
+    ext x; rw [hBx, h0, FunLike.coe_one, Pi.one_apply]
   have hBstar : ∀ a, star (B a) = B (-a) := by
     intro a; ext x; rw [BoundedContinuousFunction.star_apply, hBx, hBx]; exact exists_integer_complexConj χ ha h0 hn a x
   have hmem : ∀ a, B a ∈ Submodule.span ℂ (Set.range B) := fun a => Submodule.subset_span ⟨a, rfl⟩
@@ -182,9 +182,9 @@ theorem real_eq_zero (χ : A → G → ℂ) (hc : ∀ a, Continuous (χ a)) (hx 
       show ∫ x, (f x : ℂ) * (c * g x) ∂μ = 0
       rw [show (fun x => (f x : ℂ) * (c * g x)) = fun x => c * ((f x : ℂ) * g x) from
         funext fun x => by ring, integral_const_mul, h1, mul_zero]
-  haveI : IsFiniteMeasure (μ.withDensity fun x => ((f x).toNNReal : ℝ≥0∞)) :=
+  have : IsFiniteMeasure (μ.withDensity fun x => ((f x).toNNReal : ℝ≥0∞)) :=
     isFiniteMeasure_withDensity_ofReal hi.2
-  haveI : IsFiniteMeasure (μ.withDensity fun x => ((-f x).toNNReal : ℝ≥0∞)) :=
+  have : IsFiniteMeasure (μ.withDensity fun x => ((-f x).toNNReal : ℝ≥0∞)) :=
     isFiniteMeasure_withDensity_ofReal hi.neg.2
   have hPP := MeasureTheory.ext_of_forall_mem_subalgebra_integral_eq_of_polish hsepA
     (fun g hg => sub_eq_zero.mp ((hI g).trans (hZ g hg)))
@@ -279,7 +279,7 @@ theorem eq_zero_of_psi_trace (hψ : IsStdChar D ψ (-1)) (z : AE D)
   have he : γ ⟨0, hS⟩ ⟨0, hS⟩ ≠ 0 := by
     intro he; apply hz0; rw [← hz, he, map_zero]
   obtain ⟨x0, hx0⟩ := hψ.1.2.2.2
-  haveI : Nontrivial (AF D.host.F) := nontrivial_of_ne x0 0 (fun h0 => hx0 (by rw [h0, AddChar.map_zero_eq_one]))
+  have : Nontrivial (AF D.host.F) := nontrivial_of_ne x0 0 (fun h0 => hx0 (by rw [h0, AddChar.map_zero_eq_one]))
   have hn0 : Module.finrank (AF D.host.F) (AE D) ≠ 0 := by
     rw [Module.finrank_baseChange]; exact Module.finrank_pos.ne'
   have hn : (Module.finrank (AF D.host.F) (AE D) : D.host.F) ≠ 0 := Nat.cast_ne_zero.mpr hn0
@@ -306,9 +306,9 @@ namespace GlobalTheory.AdelicMatFourier
 theorem eq_zero_of_fourier_eq_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (m n : ℕ) (μ : Measure (Mx D m n)), μ.IsAddHaarMeasure → ∀ N : Mx D m n → ℂ, Continuous N → Integrable N μ → (∀ y : Mx D n m, ∫ u : Mx D m n, ψ (Algebra.trace (AF D.host.F) (AE D) (Matrix.trace (HMul.hMul (y : Matrix (Fin n) (Fin m) (AE D)) (u : Matrix (Fin m) (Fin n) (AE D))))) * N u ∂μ = 0) → N = 0 := by
   intro D ψ hψ m n μ hμ N hN hi h
   obtain ⟨h1, h2, h3, h4, -, -⟩ := GlobalTheory.TowerRestrict.lattice_Mx D m n
-  haveI := h1; haveI := h2; haveI := h3; haveI := h4
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have := h1; have := h2; have := h3; have := h4
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   have htr : Continuous (Algebra.trace (AF D.host.F) (AE D)) := IsModuleTopology.continuous_of_linearMap _
   refine GlobalTheory.CharFourierInj.eq_zero (A := Mx D n m)
     (fun y u => ψ (Algebra.trace (AF D.host.F) (AE D) (Matrix.trace (y * u)))) ?_ ?_ ?_ ?_ ?_ ?_ μ N hN hi h

@@ -135,9 +135,9 @@ theorem pow_q_sub (hK : Module.finrank ℚ K = 2) (hP : (Ideal.span {(p : 𝓞 K
     (a : 𝓞 K) (n : ℕ) : (p : 𝓞 K) ∣ a ^ ((p ^ 2) ^ n) - a := by
   rw [← Ideal.mem_span_singleton, ← Ideal.Quotient.eq]
   have hM : (Ideal.span {(p : 𝓞 K)}).IsMaximal := isMaximal_span_p hP
-  letI := Ideal.Quotient.field (Ideal.span {(p : 𝓞 K)})
-  haveI := finite_quot (K := K) (p := p) hK
-  letI := Fintype.ofFinite (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)})
+  let := Ideal.Quotient.field (Ideal.span {(p : 𝓞 K)})
+  have := finite_quot (K := K) (p := p) hK
+  let := Fintype.ofFinite (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)})
   have hc : Fintype.card (𝓞 K ⧸ Ideal.span {(p : 𝓞 K)}) = p ^ 2 := by
     rw [Fintype.card_eq_nat_card, natCard_quot hK]
   rw [map_pow, ← hc, FiniteField.pow_card_pow]
@@ -145,7 +145,7 @@ theorem pow_q_sub (hK : Module.finrank ℚ K = 2) (hP : (Ideal.span {(p : 𝓞 K
 theorem exists_inv_mod (hP : (Ideal.span {(p : 𝓞 K)}).IsPrime) {a : 𝓞 K} (ha : ¬ (p : 𝓞 K) ∣ a) :
     ∃ b : 𝓞 K, (p : 𝓞 K) ∣ a * b - 1 := by
   have hM : (Ideal.span {(p : 𝓞 K)}).IsMaximal := isMaximal_span_p hP
-  letI := Ideal.Quotient.field (Ideal.span {(p : 𝓞 K)})
+  let := Ideal.Quotient.field (Ideal.span {(p : 𝓞 K)})
   have h0 : Ideal.Quotient.mk (Ideal.span {(p : 𝓞 K)}) a ≠ 0 := by
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
   obtain ⟨b, hb⟩ := Ideal.Quotient.mk_surjective (Ideal.Quotient.mk (Ideal.span {(p : 𝓞 K)}) a)⁻¹

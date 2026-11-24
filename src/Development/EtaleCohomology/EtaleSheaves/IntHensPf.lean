@@ -89,10 +89,10 @@ theorem hens (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRing A] [Alge
   set s : Finset B := insert a0 (insert u (f.coeffs ∪ (Finset.univ.image c1 ∪ Finset.univ.image c2)))
   let S := Algebra.adjoin A (s : Set B)
   have hsS : ∀ x ∈ s, x ∈ S := fun x hx => Algebra.subset_adjoin hx
-  haveI : Module.Finite A S :=
+  have : Module.Finite A S :=
     Algebra.finite_adjoin_of_finite_of_isIntegral s.finite_toSet (fun x _ => Algebra.IsIntegral.isIntegral (R := A) x)
   let JS := (maximalIdeal A).map (algebraMap A S)
-  haveI : HenselianRing S JS := GlobalTheory.henselianRing_of_finite A JS (GlobalTheory.map_maximalIdeal_le_jacobson_of_finite A S)
+  have : HenselianRing S JS := GlobalTheory.henselianRing_of_finite A JS (GlobalTheory.map_maximalIdeal_le_jacobson_of_finite A S)
   have hc : (↑f.coeffs : Set B) ⊆ S.toSubring := fun c hc => hsS c (by simp [s, Finset.mem_coe.1 hc])
   let g : S[X] := f.toSubring S.toSubring hc
   have hgf : g.map S.val.toRingHom = f := f.map_toSubring S.toSubring hc
@@ -124,8 +124,8 @@ theorem hens (A B : Type) [CommRing A] [CommRing B] [HenselianLocalRing A] [Alge
 
 theorem IntHens_of : LateralTheory.E.IntPBPf.IntHens := by
   intro A B _ _ _ φ hφ
-  letI : Algebra A B := φ.toAlgebra
-  haveI : Algebra.IsIntegral A B := ⟨hφ⟩
+  let : Algebra A B := φ.toAlgebra
+  have : Algebra.IsIntegral A B := ⟨hφ⟩
   exact hens A B
 
 end LateralTheory.E.IntHensPf

@@ -57,11 +57,11 @@ namespace GlobalTheory.Mix
 
 theorem logSec_intg_proj : GlobalTheory.Published.Principalisation → ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp F) (σ : F →+* ℂ) (D : ℕ), IsProjOver p → topologicalKrullDim X = (D : ℕ) → ∀ (L : Fin D → MLine p σ) (M : MLine p σ) (s : M.B.Sec), genericPoint X ∈ nonzeroLocus s → Intg L (M.logSec s) := by
   intro hP F _ X _ _ p σ D hproj hdim L M s hs
-  haveI : CharZero F := RingHom.charZero σ
+  have : CharZero F := RingHom.charZero σ
   obtain ⟨Y, hY, π, hsm, hprojY, hdimY, hgen, hdeg, -⟩ :=
     _root_.GlobalTheory.LogResProj.exists_logResolution hP F X p D hproj hdim ⊥ (fun h => h)
-  haveI : Smooth (π ≫ p) := SmoothOfRelativeDimension.smooth D (π ≫ p)
-  haveI : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian (π ≫ p)
+  have : Smooth (π ≫ p) := SmoothOfRelativeDimension.smooth D (π ≫ p)
+  have : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian (π ≫ p)
   obtain ⟨s', hz, hn, -⟩ := _root_.GlobalTheory.Mix.exists_secPull_props F X Y p (π ≫ p) σ π rfl M s
   have hs' : genericPoint Y ∈ nonzeroLocus s' := by
     rw [hz]; show π (genericPoint Y) ∈ nonzeroLocus s; rw [hgen]; exact hs

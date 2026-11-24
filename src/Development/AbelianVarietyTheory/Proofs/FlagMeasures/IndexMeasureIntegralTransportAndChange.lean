@@ -112,7 +112,7 @@ private lemma Fine_of_le_and_finsum_eq_relIndex_mul {A B C : AddSubgroup W} {φ 
       (∑ᶠ c : W ⧸ C, φ (Quotient.out c)) =
         (C.relIndex B : ℂ) * ∑ᶠ c : W ⧸ B, φ (Quotient.out c) := by
   obtain ⟨hBA, hBi, hφ, hsupp⟩ := hB
-  haveI : Finite (B ⧸ C.addSubgroupOf B) := Nat.finite_of_card_ne_zero hC
+  have : Finite (B ⧸ C.addSubgroupOf B) := Nat.finite_of_card_ne_zero hC
   let e := AddSubgroup.quotientEquivProdOfLE hCB
   have he : ∀ y : W, (e (QuotientAddGroup.mk y)).1 = QuotientAddGroup.mk y := fun _ => rfl
   have hφC : ∀ w b, b ∈ C → φ (w + b) = φ w := fun w b hb => hφ w b (hCB hb)
@@ -137,7 +137,7 @@ private lemma Fine_of_le_and_finsum_eq_relIndex_mul {A B C : AddSubgroup W} {φ 
   · rw [finsum_congr hcomp,
       finsum_comp_equiv e (f := fun p : (W ⧸ B) × (B ⧸ C.addSubgroupOf B) => φ (Quotient.out p.1))]
     rw [finsum_curry _ ?_]
-    · haveI := Fintype.ofFinite (B ⧸ C.addSubgroupOf B)
+    · have := Fintype.ofFinite (B ⧸ C.addSubgroupOf B)
       simp only [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
       rw [mul_finsum]
       congr 1

@@ -72,9 +72,9 @@ theorem lc (C : Out.PolAV (Sp R)) (v : epsR R ⟶ C.A) (hv : IsLieBasis ![v]) (V
   obtain ⟨b0, hb0⟩ := basis_of_lieBasis v hv M0
   obtain ⟨E1, i1, m1, ⟨M1⟩⟩ := lieModel_exists (Sp R) C.A V (spMap f ≫ 𝟙 (Sp R))
   obtain ⟨j, hj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts (Sp R) C.A R V f (𝟙 _) E0 E1 M0 M1
-  letI : Algebra R V := f.toAlgebra
-  letI : Module R E1 := Module.compHom E1 f
-  haveI : IsScalarTower R V E1 := ⟨fun r x e => by
+  let : Algebra R V := f.toAlgebra
+  let : Module R E1 := Module.compHom E1 f
+  have : IsScalarTower R V E1 := ⟨fun r x e => by
     show (f r * x) • e = f r • (x • e)
     rw [mul_smul]⟩
   let jR : E0 →ₗ[R] E1 :=
@@ -83,8 +83,8 @@ theorem lc (C : Out.PolAV (Sp R)) (v : epsR R ⟶ C.A) (hv : IsLieBasis ![v]) (V
       map_smul' := fun r e => by
         show j (r • e) = f r • j e
         exact j.map_smulₛₗ r e }
-  haveI : SmoothOfRelativeDimension C.g C.A.hom := C.smoothDim
-  haveI : Smooth C.A.hom := by
+  have : SmoothOfRelativeDimension C.g C.A.hom := C.smoothDim
+  have : Smooth C.A.hom := by
     first
     | exact SmoothOfRelativeDimension.smooth C.g C.A.hom
     | exact SmoothOfRelativeDimension.smooth C.g

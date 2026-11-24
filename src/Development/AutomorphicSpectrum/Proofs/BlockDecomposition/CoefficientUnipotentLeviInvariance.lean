@@ -176,9 +176,9 @@ theorem wz_heis : ∀ (D : D7) (n ρ p : ℕ) (hn : ρ + p = n) (M : Maps D hn) 
     Wz M m ψ b₀ f (M.nzx z₀ x₀ * M.emb g₁ * x) = chz ψ b₀ z₀ * Wz M m ψ b₀ f x := by
   intro D n ρ p hn M m ψ hψ b₀ χ z f hf g₁ b hg z₀ x₀ x
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D ρ ρ
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨hlam, -, -⟩ := m.hz
   have step : ∀ ζ : hermA D ρ, f (M.w * M.nzx ζ 0 * (M.nzx z₀ x₀ * M.emb g₁ * x)) =
       f (M.w * M.nzx (ζ + z₀) 0 * x) := by

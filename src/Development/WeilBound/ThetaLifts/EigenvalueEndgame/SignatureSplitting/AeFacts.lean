@@ -110,9 +110,9 @@ theorem nonarch_pi {ι : Type} {G : ι → Type} [∀ i, AddGroup (G i)] [∀ i,
       fun x hx => hs fun i hi => hK i (hx i hi)⟩
 
 theorem nonarch_finiteAdeleRing (F : Type) [Field F] [NumberField F] : NonarchimedeanAddGroup (FiniteAdeleRing (𝓞 F) F) := by
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
+  have : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
     nonarch_of_isInducing (v.adicCompletionIntegers F).subtype.toAddMonoidHom Topology.IsInducing.subtypeVal
-  haveI := nonarch_pi (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
+  have := nonarch_pi (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
   let f : (∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletionIntegers F) →+ FiniteAdeleRing (𝓞 F) F :=
     { toFun := RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
         (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite
@@ -170,7 +170,7 @@ theorem small_ad (U : Set (FiniteAdeleRing (𝓞 K) K)) (hU : U ∈ 𝓝 0) : �
   have : CompactSpace O := isCompact_iff_compactSpace.1 hO
   have ho : IsOpen ((V.toAddSubgroup ⊓ O : AddSubgroup _) : Set (FiniteAdeleRing (𝓞 K) K)) :=
     V.isOpen.inter isOpen_integralFiniteAdeles
-  have := (V.toAddSubgroup.addSubgroupOf O).quotient_finite_of_isOpen (V.isOpen.preimage continuous_subtype_val)
+  have := (V.toAddSubgroup.addSubgroupOf O).quotient_finite_of_isOpen (V.isOpen.preimage continuous_subtypeVal)
   have hi : (V.toAddSubgroup.addSubgroupOf O).index ≠ 0 := AddSubgroup.index_ne_zero_of_finite
   obtain ⟨C, hC, hx⟩ := exists_isCompact_forall_exists_sub_mem K
   obtain ⟨D, hD⟩ := IsCompact.exists_bound_of_continuousOn (f := fun z : (w : InfinitePlace K) → w.Completion => z) hC continuousOn_id
@@ -197,7 +197,7 @@ theorem siegel_ad {u : (AdeleRing (𝓞 K) K)ˣ} (hu : 2 * pI K (u⁻¹).1 = 1) 
       ∃ k : ℕ, ∃ κ ∈ Ω, γ * g = dia u ^ k * κ := by
   obtain ⟨Ω, K₀, t₀, h1, h2, h3, h4, h5⟩ := GlobalTheory.CompanionTheory.Classical.siegelSetsSL2Adelic_tie K
   have hC : IsCompact (⋃ i, ⋃ j, (fun z : SL(2, AdeleRing (𝓞 K) K) => z.1 i j) '' Ω) :=
-    isCompact_iUnion fun i => isCompact_iUnion fun j => h1.image (continuous_subtype_val.matrix_elem i j)
+    isCompact_iUnion fun i => isCompact_iUnion fun j => h1.image (continuous_subtypeVal.matrix_elem i j)
   obtain ⟨r, hr⟩ := hC.exists_bound_of_continuousOn (pI_cont K).continuousOn
   refine ⟨_, ((box fun _ _ => ball_cpt r _ (hC.image (pF_cont K))).mul
     (box fun _ _ => ball_cpt (2 * t₀ + t₀⁻¹) {0, 1} (Set.toFinite _).isCompact)).mul h3, fun g => ?_⟩
@@ -272,7 +272,7 @@ theorem cusp_of {u : Rˣ} (hu : 2 * pI K (Φ (u⁻¹).1) = 1) (hu' : pF K (Φ (u
     (fun O hO => ?_) (fun U hU => ?_) ((pi_norm_le_iff_of_nonneg one_half_pos.le).2 fun w => (norm_half (u := v) hu w).le) hu'⟩
   · obtain ⟨Ω, h1, h2⟩ := siegel_ad (u := v) hu hu'
     let s := Matrix.SpecialLinearGroup.map (n := Fin 2) Φ.symm.toRingHom
-    refine ⟨s '' Ω, h1.image (Continuous.subtype_mk (continuous_subtype_val.matrix_map hΦ') _), fun g => ?_⟩
+    refine ⟨s '' Ω, h1.image (Continuous.subtype_mk (continuous_subtypeVal.matrix_map hΦ') _), fun g => ?_⟩
     obtain ⟨_, ⟨γ, rfl⟩, k, κ, a1, a2⟩ := h2 (Matrix.SpecialLinearGroup.map Φ.toRingHom g)
     refine ⟨_, ⟨γ, rfl⟩, k, _, ⟨κ, a1, rfl⟩, ?_⟩
     have := congrArg s a2
@@ -297,7 +297,7 @@ theorem cusp_of {u : Rˣ} (hu : 2 * pI K (Φ (u⁻¹).1) = 1) (hu' : pF K (Φ (u
 
 theorem lat_of : Lat (inc.toAddMonoidHom.toMultiplicative).range := by
   refine ⟨?_, ?_, ?_⟩
-  · have : Countable K := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  · have : Countable K := Countable.of_moduleFinite (R := ℚ)
     have : Countable (Multiplicative K) := this
     exact (Set.countable_range _).to_subtype
   · have := discreteTopology_principalSubgroup K
@@ -305,7 +305,7 @@ theorem lat_of : Lat (inc.toAddMonoidHom.toMultiplicative).range := by
       rintro ⟨_, y, rfl⟩
       exact ⟨y.toAdd, (hi _).symm⟩
     exact DiscreteTopology.of_continuous_injective (f := fun x => (⟨_, k x⟩ : AdeleRing.principalSubgroup (𝓞 K) K))
-      (Continuous.subtype_mk (hΦ.comp (continuous_toAdd.comp continuous_subtype_val)) k) fun x y h =>
+      (Continuous.subtype_mk (hΦ.comp (continuous_toAdd.comp continuous_subtypeVal)) k) fun x y h =>
         Subtype.ext (Φ.injective (congrArg Subtype.val h))
   · obtain ⟨L, -, b, -, D, hD⟩ := small_ad (K := K) _ univ_mem
     refine ⟨_, ((ball_cpt D L b).image hΦ').image continuous_ofAdd, fun x => ?_⟩
@@ -364,7 +364,7 @@ variable {J : Matrix (Fin d) (Fin d) E}
 theorem ht_mul (g h : UA σ J) : (ht (g * h) : ℝ) ≤ ht g * ht h := by exact_mod_cast heightGL_mul_le F g.1 h.1
 
 theorem ht_cont : Continuous fun g : UA σ J => (ht g : ℝ) :=
-  NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtype_val)
+  NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtypeVal)
 
 def Mod (f : UA σ J → ℂ) : Prop := ∃ (C : ℝ) (k : ℕ), ∀ x, ‖f x‖ ≤ C * (ht x : ℝ) ^ k
 
@@ -390,7 +390,7 @@ theorem Mod.av {N : Subgroup (UA σ J)} (hN : UnipGood N) {f c : UA σ J → ℂ
   obtain ⟨C, k, hf⟩ := hf
   obtain ⟨K, hK, hc⟩ := hN.cov
   obtain ⟨μ, 𝓕, h1, h2, h3⟩ := hN.ex
-  obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn (f := fun u => (ht u.1 : ℝ)) (ht_cont.comp continuous_subtype_val).continuousOn
+  obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn (f := fun u => (ht u.1 : ℝ)) (ht_cont.comp continuous_subtypeVal).continuousOn
   refine ⟨max C 0 * M ^ k, k, fun x => ?_⟩
   rw [h μ 𝓕 h1 h2 h3]
   refine (norm_setIntegral_le_of_norm_le_const (by simp [h3]) fun u _ => ?_).trans_eq (by rw [Measure.real, h3, ENNReal.toReal_one, mul_one])

@@ -67,7 +67,7 @@ namespace GlobalTheory.MumFam
 open GlobalTheory.HalfBC in
 theorem refAt_pull : ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] (ρ : R →+* R'), Function.Injective ρ → ∀ (I : Ideal R) (D : DegData R I) (D' : DegPre R') (hD : IsPullDeg ρ D.toPre D'), RefAt (pol D) ρ D' hD.xe (hD.e.hom.left ≫ pullback.fst D.toPre.P.A.hom (specOf ρ)) := by
   intro R R' _ _ _ _ ρ hρ I D D' hD
-  letI := D'.P.isAb.comm
+  let := D'.P.isAb.comm
   have gp := pull_grp hD
   refine ⟨sqOf gp, lamIso gp hD.w, gp, isSquare_sqOf gp, isGen_lamIso gp hD.w hD.w_gen, fun a => hD.c_pr a,
     fun κ hκ a b z J J' hJ hJ' => ?_⟩

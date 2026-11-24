@@ -93,7 +93,7 @@ theorem free_of_unip : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   have hM0 : 0 < l.M := by have := l.three_le; omega
   obtain ⟨Λ, _, _, F, ψ, hfin, htf, hFN, hψadd, hψlin, hψker, hψonto, hψF⟩ :=
     GlobalTheory.T.periodLattice_action_of_finiteOrder_automorphism E P act θ N l.M hθ hN hθN hcomm hM0
-  letI := P.isAb.comm
+  let := P.isAb.comm
   letI : Module (𝓞 E) (Additive (𝟙_ (Over (Sp ℂ)) ⟶ P.A)) := ptModule P act
   let evL : Dw.La →ₗ[𝓞 E] Additive (𝟙_ (Over (Sp ℂ)) ⟶ P.A) :=
     { toFun := fun a => Additive.ofMul (ev a)

@@ -117,14 +117,14 @@ theorem exists_span_torsionBySet_maximal (F : Type) [Field F] [NumberField F] (M
     ∃ e : Fin h → M, (∀ i, ∀ c ∈ w0, c • e i = 0) ∧
       ∀ g : M, (∀ c ∈ w0, c • g = 0) → ∃ u : Fin h → 𝓞 F, g = ∑ i, u i • e i := by
   set T := Submodule.torsionBySet (𝓞 F) M (w0 : Set (𝓞 F)) with hT
-  haveI : Finite (𝓞 F ⧸ w0) := Ideal.finiteQuotientOfFreeOfNeBot w0 hne
-  haveI : Nontrivial (𝓞 F ⧸ w0) := Ideal.Quotient.nontrivial_iff.mpr hmax.ne_top
+  have : Finite (𝓞 F ⧸ w0) := Ideal.finiteQuotientOfFreeOfNeBot w0 hne
+  have : Nontrivial (𝓞 F ⧸ w0) := Ideal.Quotient.nontrivial_iff.mpr hmax.ne_top
   have hq : 2 ≤ Nat.card (𝓞 F ⧸ w0) := Finite.one_lt_card
-  haveI : Finite T := Nat.finite_of_card_ne_zero (by rw [hc]; positivity)
-  letI : Field (𝓞 F ⧸ w0) := Ideal.Quotient.field w0
-  haveI : Module.Finite (𝓞 F ⧸ w0) T := Module.Finite.of_finite
-  letI := Fintype.ofFinite (𝓞 F ⧸ w0)
-  letI := Fintype.ofFinite T
+  have : Finite T := Nat.finite_of_card_ne_zero (by rw [hc]; positivity)
+  let : Field (𝓞 F ⧸ w0) := Ideal.Quotient.field w0
+  have : Module.Finite (𝓞 F ⧸ w0) T := Module.Finite.of_finite
+  let := Fintype.ofFinite (𝓞 F ⧸ w0)
+  let := Fintype.ofFinite T
   have hrank : Module.finrank (𝓞 F ⧸ w0) T = h := by
     have := Module.card_eq_pow_finrank (K := 𝓞 F ⧸ w0) (V := T)
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card, hc] at this
@@ -153,14 +153,14 @@ theorem torsionBySet_pow_free_of_natCard : ∀ (F : Type) [Field F] [NumberField
   have memT : ∀ j (g : M), g ∈ T j ↔ ∀ c ∈ w0 ^ j, c • g = 0 := by
     intro j g
     simp only [hT, Submodule.mem_torsionBySet_iff, Subtype.forall, SetLike.mem_coe]
-  haveI : Finite (𝓞 F ⧸ w0) := Ideal.finiteQuotientOfFreeOfNeBot w0 hne
-  haveI : Nontrivial (𝓞 F ⧸ w0) := Ideal.Quotient.nontrivial_iff.mpr hmax.ne_top
+  have : Finite (𝓞 F ⧸ w0) := Ideal.finiteQuotientOfFreeOfNeBot w0 hne
+  have : Nontrivial (𝓞 F ⧸ w0) := Ideal.Quotient.nontrivial_iff.mpr hmax.ne_top
   have hq : 2 ≤ Nat.card (𝓞 F ⧸ w0) := Finite.one_lt_card
   have hqpos : 0 < Nat.card (𝓞 F ⧸ w0) := by omega
   have hfin : ∀ j, Finite (T j) := fun j =>
     Nat.finite_of_card_ne_zero (by rw [hcard j]; positivity)
   rcases r with _ | n
-  · haveI : Subsingleton (𝓞 F ⧸ w0 ^ 0) :=
+  · have : Subsingleton (𝓞 F ⧸ w0 ^ 0) :=
       Ideal.Quotient.subsingleton_iff.mpr (by rw [pow_zero, Ideal.one_eq_top])
     refine ⟨0, fun c a => by simp, fun a b _ => Subsingleton.elim a b, fun g hg => ⟨0, ?_⟩⟩
     have h1 := hg 1 (by rw [pow_zero, Ideal.one_eq_top]; exact Submodule.mem_top)
@@ -287,7 +287,7 @@ theorem torsionBySet_pow_free_of_natCard : ∀ (F : Type) [Field F] [NumberField
         simp [Algebra.smul_def, Ideal.Quotient.algebraMap_eq]
       simp only [LinearMap.toAddMonoidHom_coe]
       rw [this, map_smul]
-    · haveI : Finite (𝓞 F ⧸ w0 ^ (n + 1)) :=
+    · have : Finite (𝓞 F ⧸ w0 ^ (n + 1)) :=
         Nat.finite_of_card_ne_zero (by rw [natCard_quotient_pow_eq]; positivity)
       let f' : (Fin h → 𝓞 F ⧸ w0 ^ (n + 1)) → T (n + 1) := fun a => ⟨fL a, hrange a⟩
       have hs : Function.Surjective f' := by

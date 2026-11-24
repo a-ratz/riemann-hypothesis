@@ -76,12 +76,12 @@ theorem repY_yb_coset_bdd {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Fo
         (frsF t.sel (t.tup μ) (A.pt (t.m2 + 1) (cpl_lt t μ).le c) P).symm (repY (A.yb c)) l) := by
   obtain ⟨w, hw1, hw⟩ := H.chain.2.1 c
   have hwm : w ∈ A.yb c := by
-    rw [hw, Set.mem_setOf_eq, sub_self]
+    rw [hw, Set.mem_ofPred_eq, sub_self]
     exact zero_mem _
   have hmem : repY (A.yb c) ∈ A.yb c := Classical.epsilon_spec (p := fun y => y ∈ A.yb c) ⟨w, hwm⟩
   refine ⟨H.coset c _ hmem P, ?_⟩
   have hd := (Set.ext_iff.1 hw (repY (A.yb c))).1 hmem
-  rw [Set.mem_setOf_eq] at hd
+  rw [Set.mem_ofPred_eq] at hd
   have h0 := (Submodule.mem_iInf _).1 hd P
   have h1 := (Submodule.mem_iInf _).1 hw1 P
   rw [Submodule.mem_comap] at h0 h1
@@ -101,7 +101,7 @@ theorem repY_yb_coset_bdd {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Fo
   have a0 := k0 l
   have a1 := k1 l
   by_cases hP : P.1 ∈ t.Pr.vGs
-  · simp only [hP, if_true] at a0 a1 ⊢
+  · simp only [hP, ite_true] at a0 a1 ⊢
     have e : (qOf P.1 : t.X.E) ^ 1 * (fr P).symm (repY (A.yb c)) l =
         (qOf P.1 : t.X.E) ^ 1 * (((qOf P.1 : t.X.E) ^ (0 : ℤ))⁻¹ * (fr P).symm (repY (A.yb c)) l - ((qOf P.1 : t.X.E) ^ (0 : ℤ))⁻¹ * (fr P).symm w l) +
           ((qOf P.1 : t.X.E) ^ (-1 : ℤ))⁻¹ * (fr P).symm w l := by
@@ -109,7 +109,7 @@ theorem repY_yb_coset_bdd {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Fo
       ring
     rw [e]
     exact IntAt.add (IntAt.mul (ipow 1) a0) a1
-  · simp only [hP, if_false] at a0 a1 ⊢
+  · simp only [hP, ite_false] at a0 a1 ⊢
     have e : (qOf P.1 : t.X.E) ^ (t.cst μ).M * (fr P).symm (repY (A.yb c)) l =
         (qOf P.1 : t.X.E) ^ (2 * (t.cst μ).M) * (((qOf P.1 : t.X.E) ^ ((t.cst μ).M : ℤ))⁻¹ * (fr P).symm (repY (A.yb c)) l -
           ((qOf P.1 : t.X.E) ^ ((t.cst μ).M : ℤ))⁻¹ * (fr P).symm w l) +
@@ -133,7 +133,7 @@ theorem baseCosetRepresentative_bounded_at_bad_primes : ∀ {D : D7} {L : SizeDa
   have ineg : ∀ n : ℕ, IntAt Q.1 (-((qOf Q.1 : t.X.E) ^ n)) := fun n => by
     simpa using IntAt.coe Q.1 (-((qOf Q.1 : 𝓞 t.X.E) ^ n))
   by_cases hP : Q.1 ∈ t.Pr.vGs
-  · simp only [hP, if_true] at hsl hbl ⊢
+  · simp only [hP, ite_true] at hsl hbl ⊢
     have e : (qOf Q.1 : t.X.E) ^ 1 * A.y0 ((St (t.m2 + 1) (cpl_lt t μ).le).chOf c) Q l =
         (qOf Q.1 : t.X.E) ^ 1 * w l + (-((qOf Q.1 : t.X.E) ^ 1)) *
           (((qOf Q.1 : t.X.E) ^ 0)⁻¹ * (w l - A.y0 ((St (t.m2 + 1) (cpl_lt t μ).le).chOf c) Q l)) := by
@@ -141,7 +141,7 @@ theorem baseCosetRepresentative_bounded_at_bad_primes : ∀ {D : D7} {L : SizeDa
       ring
     rw [e]
     exact IntAt.add hbl (IntAt.mul (ineg 1) hsl)
-  · simp only [hP, if_false] at hsl hbl ⊢
+  · simp only [hP, ite_false] at hsl hbl ⊢
     have e : (qOf Q.1 : t.X.E) ^ (t.cst μ).M * A.y0 ((St (t.m2 + 1) (cpl_lt t μ).le).chOf c) Q l =
         (qOf Q.1 : t.X.E) ^ (t.cst μ).M * w l + (-((qOf Q.1 : t.X.E) ^ (2 * (t.cst μ).M))) *
           (((qOf Q.1 : t.X.E) ^ (t.cst μ).M)⁻¹ * (w l - A.y0 ((St (t.m2 + 1) (cpl_lt t μ).le).chOf c) Q l)) := by
@@ -196,7 +196,7 @@ theorem exists_depth (P : HeightOneSpectrum (𝓞 E)) {w : 𝓞 E} (hw : w ≠ 0
   have h0 : P.intValuation w ≠ 0 := P.intValuation_ne_zero w hw
   refine ⟨(P.intValuation w).log.natAbs, fun z hz => intAt_of_val_le ?_⟩
   rw [map_div₀, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap,
-    div_le_one₀ (zero_lt_iff.2 h0)]
+    div_le_one₀ (pos_iff_ne_zero.2 h0)]
   refine ((P.intValuation_le_pow_iff_mem z _).2 hz).trans ?_
   conv_rhs => rw [← WithZero.exp_log h0]
   rw [WithZero.exp_le_exp]
@@ -216,7 +216,7 @@ theorem exists_approx (T : Finset (HeightOneSpectrum (𝓞 E))) (t : T → E) (u
     (fun P _ Q _ h h' => h (HeightOneSpectrum.ext h')) (fun P => a P * ∏ Q ∈ Finset.univ.erase P, b Q)
   refine ⟨algebraMap (𝓞 E) E x / algebraMap (𝓞 E) E D, fun P => ?_⟩
   have hxP := hx P.1 P.2
-  simp only [dif_pos P.2] at hxP
+  simp only [dite_eq_left P.2] at hxP
   have h1 := hk P _ hxP
   convert h1 using 1
   have hsplit : D = b P * ∏ Q ∈ Finset.univ.erase P, b Q := (Finset.mul_prod_erase _ _ (Finset.mem_univ P)).symm
@@ -745,7 +745,7 @@ theorem sizeLaw_of_tie' : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dt
       (hPt (i + 1) hi β' x').choose (seamHom t.seam (inFr
       (toStdCo (D.sp.cm.sig : D.host.E →+* D.host.E) (Formalism.L2.Forms.gramN D i (Nat.le_of_succ_le hi)) (A.crd i (Nat.le_of_succ_le hi)))
       (toStdCo (D.sp.cm.sig : D.host.E →+* D.host.E) (Formalism.L2.Forms.gramN D (i + 1) hi) (A.crd (i + 1) hi)) z))) :=
-    funext fun z => dif_pos ⟨⟨_, hp⟩, ⟨_, hp'⟩⟩
+    funext fun z => dite_eq_left ⟨⟨_, hp⟩, ⟨_, hp'⟩⟩
   generalize (hPt i (Nat.le_of_succ_le hi) β x).choose = p at hp hxi
   generalize (hPt (i + 1) hi β' x').choose = p' at hp' hxi
   have hS : ssRec t u μ = (Sall t.sel (t.tup μ) (t.word u)).map

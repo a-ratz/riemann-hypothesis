@@ -88,7 +88,7 @@ theorem eqv_embDomain (v : Pl) (m : ι v →₀ ℕ) :
   · subst h
     rw [Pi.single_eq_same]
     exact Finsupp.embDomain_apply_self (Function.Embedding.sigmaMk w) m i
-  · rw [Pi.single_eq_of_ne h, Finsupp.coe_zero, Pi.zero_apply, Finsupp.embDomain_notin_range]
+  · rw [Pi.single_eq_of_ne h, Finsupp.coe_zero, Pi.zero_apply, Finsupp.embDomain_of_notMem_range]
     rintro ⟨j, hj⟩
     exact h (congrArg Sigma.fst hj).symm
 

@@ -295,7 +295,7 @@ theorem card_GL_subtype_eq_card_matrix {F : Type} [Field F] {n : ℕ} (P : Matri
   exact Nat.card_congr e
 
 theorem det_eq_one_of_unitriangular {F : Type} [Field F] {n : ℕ} (A : Matrix (Fin n) (Fin n) F) (h : IsUnitri A) : A.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => h.1 i j hij)]
+  rw [Matrix.det_of_isUpperTriangular (fun i j hij => h.1 i j hij)]
   simp [h.2]
 
 def RowLevCard : Prop :=
@@ -384,7 +384,7 @@ theorem isLevel_iff_free_support (k rS n : ℕ) {F : Type} [Zero F] [One F] (A :
   · rintro ⟨h1, h2, h3, h4⟩ i j hS
     by_cases hij : i = j
     · subst hij; simp [h2]
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       have hne : i.val ≠ j.val := fun h => hij (Fin.ext h)
       unfold IsFreePosition Formalism.HermitianLattices.CumulantEstimateDefs.CumulantEstimates.bb at hS
       simp only at hS
@@ -404,21 +404,21 @@ theorem isLevel_iff_free_support (k rS n : ℕ) {F : Type} [Zero F] [One F] (A :
   · intro h
     refine ⟨fun i j c => ?_, fun i => ?_, fun i j c c2 => ?_, fun i j c hij c2 => ?_⟩
     · have hne : i ≠ j := by rintro rfl; exact lt_irrefl _ c
-      rw [h i j ?_, if_neg hne]
+      rw [h i j ?_, ite_eq_right hne]
       unfold IsFreePosition Formalism.HermitianLattices.CumulantEstimateDefs.CumulantEstimates.bb
       unfold blk at c
       simp only
       split_ifs at c ⊢ <;> omega
-    · rw [h i i ?_, if_pos rfl]
+    · rw [h i i ?_, ite_eq_left rfl]
       unfold IsFreePosition
       simp
     · have c2' : j.val < i.val := c2
-      rw [h i j ?_, if_neg (ne_of_gt c2)]
+      rw [h i j ?_, ite_eq_right (ne_of_gt c2)]
       unfold IsFreePosition Formalism.HermitianLattices.CumulantEstimateDefs.CumulantEstimates.bb
       unfold blk at c
       simp only
       split_ifs at c ⊢ <;> omega
-    · rw [h i j ?_, if_neg hij]
+    · rw [h i j ?_, ite_eq_right hij]
       unfold IsFreePosition Formalism.HermitianLattices.CumulantEstimateDefs.CumulantEstimates.bb
       unfold blk at c2
       simp only
@@ -507,7 +507,7 @@ theorem strictAnti_fin_append {a m : ℕ} (v : Fin a → ℝ) (w : Fin m → ℝ
     | left j =>
       rw [Fin.append_left, Fin.append_left]
       apply hv
-      rw [Fin.lt_iff_val_lt_val] at hij ⊢
+      rw [Fin.lt_def] at hij ⊢
       simpa using hij
     | right j =>
       rw [Fin.append_left, Fin.append_right]
@@ -516,15 +516,15 @@ theorem strictAnti_fin_append {a m : ℕ} (v : Fin a → ℝ) (w : Fin m → ℝ
     induction j using Fin.addCases with
     | left j =>
       exfalso
-      rw [Fin.lt_iff_val_lt_val] at hij
-      simp only [Fin.coe_natAdd, Fin.coe_castAdd] at hij
+      rw [Fin.lt_def] at hij
+      simp only [Fin.val_natAdd, Fin.val_castAdd] at hij
       have := j.isLt
       omega
     | right j =>
       rw [Fin.append_right, Fin.append_right]
       apply hw
-      rw [Fin.lt_iff_val_lt_val] at hij ⊢
-      simp only [Fin.coe_natAdd] at hij
+      rw [Fin.lt_def] at hij ⊢
+      simp only [Fin.val_natAdd] at hij
       omega
 
 theorem strictAnti_param_v (D : D7) (ρ : D.what₂.Tau) : StrictAnti (fun i => (((D.hc ρ).v i : ℚ) : ℝ)) := by
@@ -596,11 +596,11 @@ theorem line_param_apply (D : D7) (ρ : D.what₂.Tau) (a : Fin (D.R.k - 1 + D.R
   | left i =>
     have hi : (Fin.castAdd D.R.m i).val = i.val := rfl
     unfold rowLam Formalism.LogVandermondeBounds.StandardLattice.rowPar vN
-    rw [Fin.append_left, hi, if_pos i.2, dite_eq_left i.2]
+    rw [Fin.append_left, hi, ite_eq_left i.2, dite_eq_left i.2]
   | right j =>
     have hj : (Fin.natAdd (D.R.k - 1) j).val = D.R.k - 1 + j.val := rfl
     unfold rowLam Formalism.LogVandermondeBounds.StandardLattice.rowPar bN
-    rw [Fin.append_right, hj, if_neg (by omega), Nat.add_sub_cancel_left, dite_eq_left j.2]
+    rw [Fin.append_right, hj, ite_eq_right (by omega), Nat.add_sub_cancel_left, dite_eq_left j.2]
 
 theorem line_sign_apply (D : D7) (a : Fin (D.R.k - 1 + D.R.m)) :
     rowSgn D a = Formalism.LogVandermondeBounds.StandardLattice.plusSign D.R.k a.val := by
@@ -748,9 +748,9 @@ theorem param_vector_eq_line_param (D : D7) (ρ : D.what₂.Tau) :
   unfold lamSH lamS Formalism.LogVandermondeBounds.StandardLattice.rowPar vN bN
   simp only [Fin.val_cast]
   by_cases h : i.val < D.R.k - 1
-  · rw [dite_eq_left h, if_pos h, dite_eq_left h]
+  · rw [dite_eq_left h, ite_eq_left h, dite_eq_left h]
   · have h' : i.val - (D.R.k - 1) < D.R.m := by omega
-    rw [dite_eq_right h, if_neg h, dite_eq_left h', dite_eq_left h']
+    rw [dite_eq_right h, ite_eq_right h, dite_eq_left h', dite_eq_left h']
 
 theorem sign_vector_eq_line_sign (D : D7) : epsSH D.R = fun i => rowSgn D (Fin.cast (rank_dimension_identity D.R) i) := by
   funext i
@@ -773,7 +773,7 @@ theorem sum_indicator_even_range (c : ℕ) : ∑ j ∈ range (2 * c), (if j % 2 
 theorem count_plus_line_sign (D : D7) : nPlus (rowSgn D) = pY D := by
   unfold nPlus rowSgn
   rw [Finset.card_filter, Fin.sum_univ_add]
-  simp only [Fin.append_left, Fin.append_right, if_true, decide_eq_true_eq]
+  simp only [Fin.append_left, Fin.append_right, ite_true, decide_eq_true_eq]
   rw [Fin.sum_univ_eq_sum_range (fun j => if j % 2 = 0 then 1 else 0) D.R.m]
   obtain ⟨c, hc⟩ := D.R.m_even
   have hc' : D.R.m = 2 * c := by omega
@@ -1084,7 +1084,7 @@ theorem tMap_lattice (e : V ≃ₗ[K] V') (M : Submodule (𝓞 K) V) (hM : Submo
 
 theorem tMap_fullLattice (e : V ≃ₗ[K] V') (M : Submodule (𝓞 K) V)
     (hM : Submodule.IsFullLattice K M) : Submodule.IsFullLattice K (tMap e M) := by
-  letI : Submodule.IsLattice K (tMap e M) := tMap_lattice e M hM.toIsLattice
+  let : Submodule.IsLattice K (tMap e M) := tMap_lattice e M hM.toIsLattice
   refine ⟨?_⟩
   change Submodule.span K ((e : V →ₗ[K] V') '' (M : Set V)) = ⊤
   rw [← Submodule.map_span, hM.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
@@ -1255,9 +1255,9 @@ theorem vandermonde_fin_eq_nat (x : ℕ → ℝ) (N : ℕ) : vand (fun i : Fin N
     simp only [Finset.mem_Ico, Finset.mem_map, Finset.mem_filter, Finset.mem_univ, true_and]
     constructor
     · rintro ⟨h1, h2⟩
-      exact ⟨⟨j, h2⟩, Fin.lt_iff_val_lt_val.mpr (show (a : ℕ) < j by omega), rfl⟩
+      exact ⟨⟨j, h2⟩, Fin.lt_def.mpr (show (a : ℕ) < j by omega), rfl⟩
     · rintro ⟨b, hb, rfl⟩
-      exact ⟨Fin.lt_iff_val_lt_val.mp hb, b.isLt⟩
+      exact ⟨Fin.lt_def.mp hb, b.isLt⟩
   rw [hI, Finset.prod_map]
   try rfl
 
@@ -1342,11 +1342,11 @@ theorem card_opposite_sign_between (D : D7) (a b : Fin (D.R.k - 1 + D.R.m)) :
     simp only [Finset.mem_filter, Finset.mem_Ioo, Finset.mem_map, Finset.mem_univ, true_and]
     constructor
     · rintro ⟨⟨h1, h2⟩, h3⟩
-      refine ⟨⟨j, lt_trans h2 b.isLt⟩, ⟨Fin.lt_iff_val_lt_val.mpr h1, Fin.lt_iff_val_lt_val.mpr h2, ?_⟩, rfl⟩
+      refine ⟨⟨j, lt_trans h2 b.isLt⟩, ⟨Fin.lt_def.mpr h1, Fin.lt_def.mpr h2, ?_⟩, rfl⟩
       rw [line_sign_apply, line_sign_apply]
       exact h3
     · rintro ⟨c, ⟨h1, h2, h3⟩, rfl⟩
-      refine ⟨⟨Fin.lt_iff_val_lt_val.mp h1, Fin.lt_iff_val_lt_val.mp h2⟩, ?_⟩
+      refine ⟨⟨Fin.lt_def.mp h1, Fin.lt_def.mp h2⟩, ?_⟩
       rw [line_sign_apply, line_sign_apply] at h3
       exact h3
   rw [hI, Finset.card_map]
@@ -1391,7 +1391,7 @@ theorem formal_degree_line_eq (D : D7) (ρ : D.what₂.Tau) :
     · have hc' : a.val < b.val ∧
           Formalism.LogVandermondeBounds.StandardLattice.plusSign D.R.k b.val = Formalism.LogVandermondeBounds.StandardLattice.plusSign D.R.k a.val :=
         ⟨hc.1, by rw [← line_sign_apply, ← line_sign_apply]; exact hc.2.symm⟩
-      simp only [if_pos hc, if_pos hc']
+      simp only [ite_eq_left hc, ite_eq_left hc']
       have h1 := rho_sub_eq_card_opposite (rowSgn D) a b hc.1 hc.2
       rw [card_opposite_sign_between] at h1
       rw [line_param_apply, line_param_apply]
@@ -1400,7 +1400,7 @@ theorem formal_degree_line_eq (D : D7) (ρ : D.what₂.Tau) :
           Formalism.LogVandermondeBounds.StandardLattice.plusSign D.R.k b.val = Formalism.LogVandermondeBounds.StandardLattice.plusSign D.R.k a.val) := by
         rintro ⟨h1, h2⟩
         exact hc ⟨h1, by rw [line_sign_apply, line_sign_apply]; exact h2.symm⟩
-      simp only [if_neg hc, if_neg hc']
+      simp only [ite_eq_right hc, ite_eq_right hc']
   rw [e, h, ← Finset.prod_filter, ← Finset.prod_filter]
   refine Finset.prod_congr ?_ fun _ _ => rfl
   ext j
@@ -1417,10 +1417,10 @@ theorem abs_param_sup_le (D : D7) (ρ : D.what₂.Tau) :
   have : Nonempty (Fin (D.R.k - 1 + D.R.m)) := ⟨⟨0, hN⟩⟩
   have hanti := (line_param_strictAnti D ρ).antitone
   have h0 : rowLam D ρ ⟨0, hN⟩ = vN D ρ 0 := by
-    rw [line_param_apply]; unfold Formalism.LogVandermondeBounds.StandardLattice.rowPar; rw [if_pos (by show 0 < D.R.k - 1; omega)]
+    rw [line_param_apply]; unfold Formalism.LogVandermondeBounds.StandardLattice.rowPar; rw [ite_eq_left (by show 0 < D.R.k - 1; omega)]
   have h1 : rowLam D ρ ⟨D.R.k - 1 + D.R.m - 1, by omega⟩ = - bN D ρ (D.R.m - 1) := by
     rw [line_param_apply]; unfold Formalism.LogVandermondeBounds.StandardLattice.rowPar
-    rw [if_neg (by show ¬ (D.R.k - 1 + D.R.m - 1 < D.R.k - 1); omega)]
+    rw [ite_eq_right (by show ¬ (D.R.k - 1 + D.R.m - 1 < D.R.k - 1); omega)]
     congr 2
     show D.R.k - 1 + D.R.m - 1 - (D.R.k - 1) = D.R.m - 1
     omega
@@ -1483,7 +1483,7 @@ theorem mass_telescope (D : D7) (h2b : MassRatio₂ D) (hv : 0 < D.host.v) (k : 
 
 theorem one_le_column_sub_of_lt (D : D7) (u : D.what₂.Word) (ρ : D.what₂.Tau) (i j : ℕ) (hij : i < j) (hj : j < D.R.k) :
     1 ≤ uN D u ρ i - uN D u ρ j := by
-  have h := one_le_column_param_sub D u ρ ⟨i, by omega⟩ ⟨j, hj⟩ (Fin.lt_iff_val_lt_val.mpr hij)
+  have h := one_le_column_param_sub D u ρ ⟨i, by omega⟩ ⟨j, hj⟩ (Fin.lt_def.mpr hij)
   rw [column_param_apply, column_param_apply] at h
   exact h
 

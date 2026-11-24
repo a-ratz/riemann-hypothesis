@@ -107,7 +107,7 @@ theorem seqN_single {N : ℕ} (hN : N ≠ 0) (j : Ω →+* Qbar l) (s : ℕ) (a 
   have hN' : (N : ℚ) ≠ 0 := by exact_mod_cast hN
   by_cases h : t = s
   · subst h; simp [seqN]
-  · have : (t : ℚ) / N ≠ (s : ℚ) / N := fun e => h (by exact_mod_cast (div_left_inj' hN').1 e)
+  · have : (t : ℚ) / N ≠ (s : ℚ) / N := fun e => h (by exact_mod_cast (div_left_inj₀ hN').1 e)
     simp [seqN, HahnSeries.coeff_single_of_ne this, h]
 
 theorem finSupp_proj (s : ℕ) : FinSupp (LinearMap.proj (R := Qbar l) (φ := fun _ : ℕ => Qbar l) s) :=

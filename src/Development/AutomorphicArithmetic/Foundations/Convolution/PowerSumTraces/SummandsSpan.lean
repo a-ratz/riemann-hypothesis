@@ -64,7 +64,7 @@ private theorem isSummandOf_map (hWc : IsClosed (W : Set H))
     simpa [Submodule.map_coe] using h
   · rintro g _ ⟨w, hw, rfl⟩
     exact ⟨π.restrict W hWi g w, hinv g w hw, rfl⟩
-  · haveI := hirr.1
+  · have := hirr.1
     obtain ⟨w, hw0⟩ := exists_ne (0 : V)
     intro hb
     have hm : ((w : W) : H) ∈ V.map W.subtype := ⟨w.1, w.2, rfl⟩
@@ -72,7 +72,7 @@ private theorem isSummandOf_map (hWc : IsClosed (W : Set H))
     exact hw0 (Subtype.ext (Subtype.ext hm))
   · intro V' hle hcl hinv'
     have hYc : IsClosed (((V'.comap W.subtype).comap V.subtype : Submodule ℂ V) : Set V) :=
-      hcl.preimage (continuous_subtype_val.comp continuous_subtype_val)
+      hcl.preimage (continuous_subtypeVal.comp continuous_subtypeVal)
     have hYi : ((π.restrict W hWi).restrict V hinv).IsInvariant
         ((V'.comap W.subtype).comap V.subtype) := fun g v hv => hinv' g _ hv
     rcases hirr.2 _ hYc hYi with h | h
@@ -102,7 +102,7 @@ private theorem closure_iSup_summands (hWc : IsClosed (W : Set H))
   · exact Submodule.topologicalClosure_minimal _ (iSup_le fun V => V.2.le) hWc
   · set S : Submodule ℂ H := ⨆ V : {V // IsSummandOf π W V}, V.1
     have hcl : IsClosed ((S.topologicalClosure.comap W.subtype : Submodule ℂ W) : Set W) :=
-      S.isClosed_topologicalClosure.preimage continuous_subtype_val
+      S.isClosed_topologicalClosure.preimage continuous_subtypeVal
     have hle : (⨆ V : s, (V : Submodule ℂ W)) ≤
         S.topologicalClosure.comap W.subtype := by
       refine iSup_le fun V w hw => ?_
@@ -124,6 +124,6 @@ theorem UpperTheory.ConvolutionTheory.C.summandsSpan :
     UpperTheory.ConvolutionTheory.C.SummandsSpan := by
   intro K _ _ n μ _
   obtain ⟨s, hc, hinv, hH, hirr⟩ := exists_isHilbertSum_isIrreducible_cuspidal μ
-  haveI := hc
+  have := hc
   exact closure_iSup_summands (rightRegularRep (rationalGLOne (K := K) (n := n)) μ) (cuspidalL2 μ)
     (isInvariant_cuspidalL2 μ) (isClosed_cuspidalL2 μ) s hinv hH hirr

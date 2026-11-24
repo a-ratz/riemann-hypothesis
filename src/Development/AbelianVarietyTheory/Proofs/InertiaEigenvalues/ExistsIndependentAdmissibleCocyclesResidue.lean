@@ -1067,7 +1067,7 @@ theorem exists_greatest_of_sup_closed {S V ι : Type} [CommRing S] [IsNoetherian
   classical
   have one : ∀ i, ∃ N, C N ∧ ∀ N', C N' → N' i ≤ N i := by
     intro i
-    haveI : IsNoetherian S (P i) := isNoetherian_of_fg_of_noetherian _ (hP i)
+    have : IsNoetherian S (P i) := isNoetherian_of_fg_of_noetherian _ (hP i)
     obtain ⟨_, ⟨N, hN, rfl⟩, hmax⟩ := set_has_maximal_iff_noetherian.2 this
       {Q : Submodule S (P i) | ∃ N, C N ∧ (N i).comap (P i).subtype = Q} ⟨_, N₀, h₀, rfl⟩
     refine ⟨N, hN, fun N' hN' x hx => ?_⟩
@@ -1089,7 +1089,7 @@ theorem exists_greatest_of_sup_closed {S V ι : Type} [CommRing S] [IsNoetherian
       rcases Finset.mem_insert.1 hi with rfl | hi
       · exact le_sup_of_le_right (h₁ N' hN')
       · exact le_sup_of_le_left (h N' hN' i hi)
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   obtain ⟨N, hN, h⟩ := all Finset.univ
   exact ⟨N, hN, fun N' hN' i => h N' hN' i (Finset.mem_univ i)⟩
 
@@ -1338,7 +1338,7 @@ theorem finite_of_le_sup {P Q F : Submodule k U} [FiniteDimensional k F] (h : P 
     refine ⟨f, hf, ?_⟩
     change Q.mkQ f = Q.mkQ (f + q)
     rw [map_add (f := _), show Q.mkQ q = 0 from (Submodule.Quotient.mk_eq_zero _).mpr hq, add_zero]
-  haveI : FiniteDimensional k (LinearMap.range (Q.mkQ ∘ₗ P.subtype)) :=
+  have : FiniteDimensional k (LinearMap.range (Q.mkQ ∘ₗ P.subtype)) :=
     Submodule.finiteDimensional_of_le hle
   rw [← hker]
   exact LinearEquiv.finiteDimensional (LinearMap.quotKerEquivRange _).symm
@@ -1381,7 +1381,7 @@ theorem exists_le_sup_sh {N : Submodule k⟦X⟧ V} (hN : IsLat N) (m : ℕ) :
   | zero => exact ⟨⊥, inferInstance, by simp [sh_zero_eq]⟩
   | succ m ih =>
     obtain ⟨F, hF, h⟩ := ih
-    haveI := Window.finite_quot (hN.shift m).1
+    have := Window.finite_quot (hN.shift m).1
     obtain ⟨F', hF', h'⟩ := exists_le_sup ((sh m N).restrictScalars k) ((sh 1 (sh m N)).restrictScalars k)
     rw [sh_sh_eq, add_comm] at h'
     refine ⟨F ⊔ F', inferInstance, h.trans ?_⟩
@@ -1494,25 +1494,25 @@ theorem sum_resCount {k : Type} [Field k] (U : Multiset ℤ) (w a : ℤ) (L : �
       push_cast
       exact sub_left_inj
     by_cases hp : p u
-    · rw [if_pos hp, Multiset.card_singleton]
+    · rw [ite_eq_left hp, Multiset.card_singleton]
       obtain ⟨ha, hb⟩ := hu.1 hp
       rw [Finset.sum_eq_single (u - a).toNat]
-      · rw [if_pos]
+      · rw [ite_eq_left]
         rw [tr]
         congr 1
         omega
       · intro j _ hj
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hc
         have := (hu.2 (a + j) (by omega) (by have := Finset.mem_range.mp ‹j ∈ Finset.range L›; omega) ((tr j).mp hc)).1
         omega
       · intro hn
         exfalso
         exact hn (Finset.mem_range.mpr (by omega))
-    · rw [if_neg hp, Multiset.card_zero]
+    · rw [ite_eq_right hp, Multiset.card_zero]
       apply Finset.sum_eq_zero
       intro j hj
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hc
       have hj' := Finset.mem_range.mp hj
       exact hp (hu.2 (a + j) (by omega) (by omega) ((tr j).mp hc)).2

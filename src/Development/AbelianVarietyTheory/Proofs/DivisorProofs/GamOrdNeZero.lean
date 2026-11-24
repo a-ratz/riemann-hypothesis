@@ -121,7 +121,7 @@ theorem finite_finCl (V : HSp D) (K : Subgroup (GL (Fin V.rank) (Lev.EAf D)))
 theorem continuous_finHom (V : HSp D) : Continuous (finHom V) := by
   have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   obtain ⟨π, hπ, -⟩ := GlobalTheory.Mass.existsUnique_isFinProj D.sp.cm.sig V.gram
-  exact (continuous_subtype_val.comp hπ.continuous).congr fun κ => hπ κ
+  exact (continuous_subtypeVal.comp hπ.continuous).congr fun κ => hπ κ
 
 theorem gamOrd_ne_zero (V : HSp D) (K : Subgroup (GL (Fin V.rank) (Lev.EAf D)))
     (hV : ∀ τ, (gramAt D V τ).PosDef) (hK : IsCO V K) (x : GfC V) : gamOrd V K x ≠ 0 := by

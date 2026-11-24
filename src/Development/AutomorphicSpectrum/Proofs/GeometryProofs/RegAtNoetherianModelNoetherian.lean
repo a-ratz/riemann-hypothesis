@@ -88,7 +88,7 @@ lemma exists_secVal_eq {ξ : Spec (CommRingCat.of Ω) ⟶ X} (hg : IsCptGen ξ) 
       secVal ξ W hW s = a := by
     intro q
     obtain ⟨t, ht⟩ := ha ⟨q.1, hU _ q.2⟩ q.2
-    obtain ⟨V, hqV, s, rfl⟩ := X.presheaf.germ_exist t
+    obtain ⟨V, hqV, s, rfl⟩ := X.presheaf.exists_germ_eq t
     have hqW : q.1 ∈ V ⊓ U := ⟨hqV, q.2⟩
     have hW : genPt ξ ∈ V ⊓ U := (hU _ q.2).mem_open (V ⊓ U).isOpen hqW
     refine ⟨V ⊓ U, hqW, homOfLE inf_le_right, hW, X.presheaf.map (homOfLE inf_le_left).op s, ?_⟩
@@ -153,10 +153,10 @@ theorem noetherian_of_coordTie (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spe
     obtain ⟨U, hUa, hU⟩ := tie.affine c hcp.1
     have hp : p.1 ∈ U := (hU p.1).2 ⟨p.2, hcp⟩
     have h : genPt ξ ∈ U := p.2.mem_open U.isOpen hp
-    haveI := isNoetherianRing_chart tie c hcp.1 U hU h
-    letI := X.presheaf.algebra_section_stalk (⟨p.1, hp⟩ : U)
-    haveI := hUa.isLocalization_stalk ⟨p.1, hp⟩
-    haveI : IsNoetherianRing (X.presheaf.stalk p.1) :=
+    have := isNoetherianRing_chart tie c hcp.1 U hU h
+    let := X.presheaf.algebra_section_stalk (⟨p.1, hp⟩ : U)
+    have := hUa.isLocalization_stalk ⟨p.1, hp⟩
+    have : IsNoetherianRing (X.presheaf.stalk p.1) :=
       IsLocalization.isNoetherianRing (hUa.primeIdealOf ⟨p.1, hp⟩).asIdeal.primeCompl _ ‹_›
     exact isNoetherianRing_of_surjective _ _ (genMap ξ p).rangeRestrict
       (genMap ξ p).rangeRestrict_surjective
@@ -171,9 +171,9 @@ theorem noetherian_of_coordTie (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spe
       exact TopologicalSpace.Opens.mem_iSup.2 ⟨⟨c, hc.1⟩, (hS _ q).2 ⟨hall q, hc⟩⟩
     have hgen : ∀ c, genPt ξ ∈ (S c : X.Opens) := fun c =>
       (hS c _).2 ⟨specializes_rfl, c.2, fun _ => mem_regAt_self tie.gen _⟩
-    haveI : IsLocallyNoetherian X := isLocallyNoetherian_of_affine_cover hcov fun c =>
+    have : IsLocallyNoetherian X := isLocallyNoetherian_of_affine_cover hcov fun c =>
       isNoetherianRing_chart tie c.1 c.2 _ (hS c) (hgen c)
-    haveI : CompactSpace X := by
+    have : CompactSpace X := by
       refine ⟨?_⟩
       have e : (Set.univ : Set X) = ⋃ c, ((S c : X.Opens) : Set X) := by
         have := congrArg (fun V : X.Opens => (V : Set X)) hcov
@@ -183,10 +183,10 @@ theorem noetherian_of_coordTie (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spe
     have hcl : closure {genPt ξ} = (Set.univ : Set X) :=
       Set.eq_univ_of_forall fun q => specializes_iff_mem_closure.1 (hall q)
     have hirr : IsIrreducible (Set.univ : Set X) := hcl ▸ isIrreducible_singleton.closure
-    haveI : IrreducibleSpace X := (irreducibleSpace_def X).2 hirr
-    haveI : ∀ q : X, _root_.IsReduced (X.presheaf.stalk q) := fun q =>
+    have : IrreducibleSpace X := (irreducibleSpace_def X).2 hirr
+    have : ∀ q : X, _root_.IsReduced (X.presheaf.stalk q) := fun q =>
       isReduced_of_injective (genMap ξ ⟨q, hall q⟩) (tie.gen.inj _)
-    haveI : AlgebraicGeometry.IsReduced X := isReduced_of_isReduced_stalk X
+    have : AlgebraicGeometry.IsReduced X := isReduced_of_isReduced_stalk X
     exact ⟨{}, isIntegral_of_irreducibleSpace_of_isReduced X⟩
 
 end GlobalTheory.CompanionTheory.Ar.CoordNoeth

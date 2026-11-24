@@ -202,8 +202,8 @@ theorem exists_coords {v : Pl F} {y : Fv F v ⊗[F] E} (hy : y ∈ intLoc F E v)
 theorem tendsto_zero_of_intLoc (x : Pl F → AE F E)
     (h : ∀ᶠ v in cofinite, At (evFin F v) (x v) ∧ compFin F E v (x v) ∈ intLoc F E v) :
     Tendsto x cofinite (𝓝 0) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
   have key : ∀ v : Pl F, ∃ a : Module.Free.ChooseBasisIndex ℤ (𝓞 E) → Fv F v,
       (∀ i, a i ∈ v.adicCompletionIntegers F) ∧ (At (evFin F v) (x v) ∧ compFin F E v (x v) ∈ intLoc F E v →
       x v = ∑ i, GlobalTheory.LatVac.liftV v (a i) • ((1 : AF F) ⊗ₜ[F] ((RingOfIntegers.basis E i : 𝓞 E) : E))) := fun v => by
@@ -241,8 +241,8 @@ theorem tendsto_zero_of_intLoc (x : Pl F → AE F E)
 
 theorem tendsto_one_of_unitsAt (m : Pl F → (AE F E)ˣ) (h : ∀ᶠ v in cofinite, m v ∈ unitsAt E v) :
     Tendsto m cofinite (𝓝 1) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
   have key : ∀ m : Pl F → (AE F E)ˣ, (∀ᶠ v in cofinite, m v ∈ unitsAt E v) →
       Tendsto (fun v => (m v : AE F E)) cofinite (𝓝 1) := fun m h => by
     have := (tendsto_zero_of_intLoc (fun v => (m v : AE F E) - 1) (h.mono fun v hv => ⟨hv.1, by
@@ -261,7 +261,7 @@ theorem eventually_chr_eq_one {ν : Chr F E} (hν : Continuous ν) (m : Pl F →
   choose n hn using key
   have ht := tendsto_one_of_unitsAt (fun v => m v ^ n v) (h.mono fun v hv => pow_mem hv _)
   have hc : Continuous fun x : (AE F E)ˣ => ‖(ν x : ℂ) - 1‖ :=
-    ((continuous_subtype_val.comp hν).sub continuous_const).norm
+    ((continuous_subtypeVal.comp hν).sub continuous_const).norm
   have h1 := ((hc.tendsto 1).comp ht).eventually (gt_mem_nhds (show ‖(ν 1 : ℂ) - 1‖ < 1 by simp))
   filter_upwards [h1] with v hv
   exact hn v (by simpa using hv)
@@ -304,7 +304,7 @@ theorem chr_abs_eq_finprod : ∀ {F E : Type} [Field F] [NumberField F] [Field E
     { toFun := fun x => (ν x : ℂ) * ((absE F E x : ℝ) : ℂ) ^ z
       map_one' := by simp
       map_mul' := fun x y => by simp only [map_mul, Circle.coe_mul, NNReal.coe_mul, Complex.ofReal_mul]; ring }
-  have hχ : Continuous χ := (continuous_subtype_val.comp hν).mul
+  have hχ : Continuous χ := (continuous_subtypeVal.comp hν).mul
     ((Complex.continuous_ofReal.comp (NNReal.continuous_coe.comp GlobalTheory.Doubling.continuous_absE)).pow z)
   refine tendsto_nhds_unique ((hχ.tendsto l).comp (GlobalTheory.Doubling.tendsto_cutIdele l)) (tendsto_const_nhds.congr' ?_)
   filter_upwards [eventually_ge_atTop hfin.toFinset] with S hS

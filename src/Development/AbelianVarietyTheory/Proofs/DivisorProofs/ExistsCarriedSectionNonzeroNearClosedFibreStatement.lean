@@ -704,9 +704,9 @@ namespace GlobalTheory.Mum
 
 theorem spMap_eq_closedPoint_iff {R R' : Type} [CommRing R] [IsLocalRing R] [CommRing R'] [IsLocalRing R']
     (ρ : R →+* R') (hρ : ρ.Finite) (y : Sp R') : spMap ρ y = closedPoint R ↔ y = closedPoint R' := by
-  letI : Algebra R R' := ρ.toAlgebra
-  haveI : Module.Finite R R' := hρ
-  haveI : Algebra.IsIntegral R R' := inferInstance
+  let : Algebra R R' := ρ.toAlgebra
+  have : Module.Finite R R' := hρ
+  have : Algebra.IsIntegral R R' := inferInstance
   constructor
   · intro h
     have hc : (y.asIdeal.comap (algebraMap R R')).IsMaximal := by
@@ -714,7 +714,7 @@ theorem spMap_eq_closedPoint_iff {R R' : Type} [CommRing R] [IsLocalRing R] [Com
       rw [h] at this
       change (y.asIdeal.comap ρ).IsMaximal
       rw [← this]; exact IsLocalRing.maximalIdeal.isMaximal R
-    haveI : y.asIdeal.IsPrime := PrimeSpectrum.isPrime (y : PrimeSpectrum R')
+    have : y.asIdeal.IsPrime := PrimeSpectrum.isPrime (y : PrimeSpectrum R')
     have hm : y.asIdeal.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under y.asIdeal hc
     exact PrimeSpectrum.ext (IsLocalRing.eq_maximalIdeal hm)
   · rintro rfl
@@ -725,7 +725,7 @@ theorem spMap_eq_closedPoint_iff {R R' : Type} [CommRing R] [IsLocalRing R] [Com
 theorem exists_open_secNz_closedFibre : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (hB : Base R) (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R') (hF : FinExt ρ) (hG : IsGal ρ) (D : DegData R (maximalIdeal R)) (D' : DegData R' (maximalIdeal R')) (hD : IsPullDeg ρ D.toPre D'.toPre) (A' : PolAV (Sp (FractionRing R'))) (G' : Over (Sp R')) [GrpObj G'] [IsCommMonObj G'] (hS' : IsSemiAbelian G') (U' : Unif (maximalIdeal R') D' A' G') (a : GalAct ρ hD U') (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (β : G'.left ⟶ G.left) (hS : IsSemiAbelian G) (hβ : IsGrpPullback G' G (spMap ρ) β) (hact : ∀ σ, a.act σ ≫ β = β), ∀ θ : U'.LG.L.Sec, (∃ g' : G'.left, G'.hom g' = closedPoint R' ∧ g' ∈ secNz θ) → ∃ O : G.left.Opens, (∃ g ∈ O, G.hom g = closedPoint R) ∧ ∀ g' : G'.left, β g' ∈ O → G.hom (β g') = closedPoint R → g' ∈ secNz θ := by
   intro R _ _ _ hB R' _ _ _ ρ hF hG D D' hD A' G' _ _ hS' U' a G _ _ β hS hβ hact θ ⟨g0, hg0c, hg0⟩
   have hfin : IsFinite (spMap ρ) := by rw [IsFinite.SpecMap_iff]; exact hF.2.2
-  haveI hβfin : IsFinite β := MorphismProperty.of_isPullback hβ.1.flip hfin
+  have hβfin : IsFinite β := MorphismProperty.of_isPullback hβ.1.flip hfin
   have hcl : IsClosedMap β := β.isClosedMap
   have hsq : ∀ g' : G'.left, G.hom (β g') = spMap ρ (G'.hom g') := fun g' => by
     change (β ≫ G.hom) g' = (G'.hom ≫ spMap ρ) g'
@@ -733,7 +733,7 @@ theorem exists_open_secNz_closedFibre : ∀ (R : Type) [CommRing R] [IsDomain R]
 
   obtain ⟨s, hs⟩ : ∃ s : (Sp R' : Scheme.{0}), s = closedPoint R' := ⟨_, rfl⟩
   rw [← hs] at hg0c
-  haveI hirr : IrreducibleSpace (G'.hom.fiber s) :=
+  have hirr : IrreducibleSpace (G'.hom.fiber s) :=
     GlobalTheory.SemiAbFibre.irreducibleSpace_fibre _ G' hS' _ ((Sp R').fromSpecResidueField s)
   obtain ⟨η', hη'⟩ : ∃ η' : G'.left, η' = G'.hom.fiberι s (genericPoint (G'.hom.fiber s)) := ⟨_, rfl⟩
   have hspec : ∀ g' : G'.left, G'.hom g' = s → η' ⤳ g' := by

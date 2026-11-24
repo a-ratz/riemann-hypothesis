@@ -92,14 +92,14 @@ theorem eq_one_of_smul_haar_eq {H : Type} [Group H] [TopologicalSpace H] [IsTopo
   have h1 : ν K ≠ ⊤ := K.isCompact.measure_lt_top.ne
   have h2 : (c : ENNReal) * ν K = 1 * ν K := by
     conv_rhs => rw [← h]
-    rw [one_mul, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [one_mul, smul_apply, ENNReal.smul_def, smul_eq_mul]
   rw [ENNReal.mul_left_inj h0 h1] at h2
   exact_mod_cast h2
 
 theorem haar_unimodular : ∀ (p q : ℕ) (T : GrpData p q), T.haar.IsMulRightInvariant ∧ T.haar.IsInvInvariant := by
   intro p q T
   have h := blockOrd_finSumFinEquiv p q
-  haveI := GlobalTheory.RealPar.SqInt.isHaarMeasure_map_covU h T
+  have := GlobalTheory.RealPar.SqInt.isHaarMeasure_map_covU h T
   set ε : Fin (p + q) → Bool := fun i => (finSumFinEquiv.symm i).isLeft
   set f := GlobalTheory.RealPar.SqInt.covU h T
   have hf : Measurable f := (GlobalTheory.RealPar.SqInt.continuous_covU h T).measurable
@@ -120,7 +120,7 @@ theorem haar_unimodular : ∀ (p q : ℕ) (T : GrpData p q), T.haar.IsMulRightIn
     · rw [hg, eq_one_of_smul_haar_eq _ h1, one_smul]
     · exact hf.aemeasurable
   refine ⟨hR, ⟨?_⟩⟩
-  haveI : T.haar.inv.IsHaarMeasure :=
+  have : T.haar.inv.IsHaarMeasure :=
     { toIsFiniteMeasureOnCompacts := inferInstance
       toIsMulLeftInvariant := inferInstance
       toIsOpenPosMeasure := inferInstance }

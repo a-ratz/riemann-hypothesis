@@ -99,7 +99,7 @@ theorem cConst_eq : cConst = fun σ => ∫ t, G σ t := by
 
 theorem norm_G (σ : ℂ) (t : ℝ) : ‖G σ t‖ = Real.exp (-(2 + 2 * σ.re) * lg t) := by
   unfold G
-  rw [norm_mul, norm_pow, norm_inv, norm_tI_eq, Complex.norm_exp, ← Real.exp_neg, ← Real.exp_nat_mul, ← Real.exp_add]
+  rw [norm_mul, norm_pow, norm_inv, norm_tI_eq, Complex.norm_exp, ← Real.exp_neg, ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 1
   simp
   ring
@@ -142,7 +142,7 @@ theorem integrable_expL {ε : ℝ} (hε : 0 < ε) : Integrable (fun t : ℝ => R
   have h := integrable_rpow_neg_one_add_norm_sq (E := ℝ) (μ := volume) (r := 1 + ε) (by simp; linarith)
   refine h.congr (Filter.Eventually.of_forall fun t => ?_)
   simp only
-  rw [← sq_norm_tI, norm_tI_eq, ← Real.exp_nat_mul, ← Real.exp_mul]
+  rw [← sq_norm_tI, norm_tI_eq, ← Real.exp_natCast_mul, ← Real.exp_mul]
   congr 1; push_cast; ring
 
 theorem hasDerivAt_G (σ : ℂ) (t : ℝ) : HasDerivAt (fun s => G s t) (G' σ t) σ := by

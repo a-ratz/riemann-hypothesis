@@ -148,7 +148,7 @@ theorem sectionComponents_preimage_of_isPullback :
         {x : X' | x ∈ connectedComponentIn (f' ⁻¹' {f' x}) (e' (f' x))} := by
   intro X S X' S' f f' p q e e' hf hq he he' hee
   ext x'
-  simp only [Set.mem_preimage, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq]
   have hfq : f (q x') = p (f' x') := by
     rw [← Scheme.Hom.comp_apply, hq.w, Scheme.Hom.comp_apply]
   rw [hfq]

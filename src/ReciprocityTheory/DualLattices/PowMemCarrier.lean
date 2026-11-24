@@ -22,7 +22,7 @@ lemma sq_eq_mul {X : Type} (I : Submodule R (X → C)) : sqIdeal I = I * I := by
   rw [sqIdeal, Submodule.mul_eq_span_mul_set]
   congr 1
   ext h
-  simp only [Set.mem_setOf_eq, Set.mem_mul]
+  simp only [Set.mem_ofPred_eq, Set.mem_mul]
   constructor
   · rintro ⟨f, hf, f', hf', rfl⟩
     exact ⟨f, hf, f', hf', rfl⟩
@@ -136,7 +136,7 @@ def ClaimBody (C : Type) [Field C] (v : Valuation C NNReal) (R : Type) [CommRing
 lemma claim_base {C : Type} [Field C] (v : Valuation C NNReal) {R : Type} [CommRing R]
     [Algebra R C] (hv : v.Integers R) (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N]
     (htriv : ∀ x : N, x = 0) (AA : HopfOrder (C := C) R N) : ClaimBody C v R N AA := by
-  haveI : Unique N := ⟨⟨0⟩, htriv⟩
+  have : Unique N := ⟨⟨0⟩, htriv⟩
   refine ⟨0, Fin.elim0, Fin.elim0, fun i => i.elim0, ?_, fun i => i.elim0, ?_⟩
   · intro f hf
     refine ⟨Fin.elim0, ?_⟩
@@ -190,9 +190,9 @@ theorem claim_all (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] [IsAlgClose
   obtain ⟨x, hx0⟩ := htriv
   set K : AddSubgroup N := AddSubgroup.zmultiples x with hKdef
   let e : ZMod p ≃+ K := zmodEquiv p x (hN x) hx0
-  letI : DecidablePred (· ∈ K) := Classical.decPred _
-  letI : DecidableEq (N ⧸ K) := Classical.decEq _
-  letI : Fintype (N ⧸ K) :=
+  let : DecidablePred (· ∈ K) := Classical.decPred _
+  let : DecidableEq (N ⧸ K) := Classical.decEq _
+  let : Fintype (N ⧸ K) :=
     Fintype.ofSurjective (QuotientAddGroup.mk : N → N ⧸ K) QuotientAddGroup.mk_surjective
   obtain ⟨⟨AK, hAK⟩, ⟨AQ, hAQ⟩, -, -⟩ := h2 C R v hv N K AA
   have hcardK : Fintype.card K = p := by
@@ -292,8 +292,8 @@ theorem claim_all (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] [IsAlgClose
         simp [h0, show p - 1 ≠ 0 by omega]
       refine ⟨Fin.snoc (fun j => -a j) 0, ?_⟩
       rw [Fin.sum_univ_castSucc]
-      simp only [Fin.snoc_last, Fin.snoc_castSucc, Fin.castSucc_lt_last, if_true,
-        lt_self_iff_false, if_false, zero_smul, add_zero]
+      simp only [Fin.snoc_last, Fin.snoc_castSucc, Fin.castSucc_lt_last, ite_true,
+        lt_self_iff_false, ite_false, zero_smul, add_zero]
       have h1 := Submodule.sub_mem _ hpow ha
       convert h1 using 1
       simp only [neg_smul, Finset.sum_neg_distrib, sub_neg_eq_add]
@@ -303,7 +303,7 @@ theorem claim_all (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] [IsAlgClose
       refine ⟨Fin.snoc a 0, ?_⟩
       have hnl : ¬ (Fin.last n < Fin.castSucc i0) := not_lt.2 (Fin.castSucc_lt_last i0).le
       rw [Fin.sum_univ_castSucc]
-      simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.castSucc_lt_castSucc_iff, hnl, if_false,
+      simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.castSucc_lt_castSucc_iff, hnl, ite_false,
         zero_smul, add_zero]
       have h1 := pullQ_sq K AA AQ hAQ ha
 

@@ -183,18 +183,18 @@ theorem sum_ite_out {G : Type} [AddCommGroup G] (H H' : AddSubgroup G) [Fintype 
     ∑ q : H' ⧸ H.addSubgroupOf H', (if x + ((q.out : H') : G) ∈ H then c else 0) = if x ∈ H' then c else 0 := by
   split_ifs with hx
   · rw [Finset.sum_eq_single (QuotientAddGroup.mk (⟨-x, H'.neg_mem hx⟩ : H'))]
-    · rw [if_pos]
+    · rw [ite_eq_left]
       have := out_mk_sub_mem H' H (⟨-x, H'.neg_mem hx⟩ : H')
       rwa [sub_neg_eq_add, add_comm] at this
     · intro q _ hq
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hmem
       apply hq
       rw [← QuotientAddGroup.out_eq' q, mk_eq_mk_iff]
       rwa [sub_neg_eq_add, add_comm]
     · simp
   · refine Finset.sum_eq_zero fun q _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hmem
     have := H'.sub_mem (hHH' hmem) (q.out : H').2
     rw [add_sub_cancel_right] at this

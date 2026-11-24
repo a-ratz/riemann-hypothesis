@@ -211,8 +211,8 @@ theorem XX_pow_mem_of_QQ_pow_mul_mem_map_phi : ∀ (l : ℕ) [Fact l.Prime] (O :
         (phi_mem_span l O ϖ (hdvd _ hlu) (m + 1) (Nat.le_add_left 1 m) (ih _ (hz j)))
   obtain ⟨a, b, hab⟩ := Ideal.mem_span_pair.1 (main c _ (Ideal.mul_mem_left _ _ (hc _)))
   have h := congrArg (PowerSeries.coeff c) hab
-  rw [map_add (f := _), PowerSeries.coeff_mul_C, PowerSeries.coeff_mul_X_pow', if_neg (by omega),
-    PowerSeries.coeff_X_pow, if_pos rfl, add_zero] at h
+  rw [map_add (f := _), PowerSeries.coeff_mul_C, PowerSeries.coeff_mul_X_pow', ite_eq_right (by omega),
+    PowerSeries.coeff_X_pow, ite_eq_left rfl, add_zero] at h
   exact hϖ.not_isUnit (IsUnit.of_mul_eq_one_right _ h)
 
 end GlobalTheory.Cyc
@@ -263,7 +263,7 @@ theorem indep_of_commensurable {κ : Type} [Fintype κ] (q : A) (hq : ∀ a, a *
     ext k i
     have e : ∑ i, ((M' * M) k i - ((q ^ (m + m')) • (1 : Matrix κ κ A)) k i) • b i = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul,
-        mul_ite, mul_one, mul_zero, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        mul_ite, mul_one, mul_zero, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rw [sub_eq_zero, pow_add, mul_smul, hM', Finset.smul_sum]
       simp only [Matrix.mul_apply, Finset.sum_smul]
       rw [Finset.sum_comm]
@@ -340,8 +340,8 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp LL O : Type} [Field Qp] [
 theorem exists_kernel [IsDomain O] [IsPrincipalIdealRing O] [IsFractionRing O LL]
     {T₁ T₂ : LocLat G Qp LL O} (π : LatHom T₁.L T₂.L) (hπ : π.Onto) :
     ∃ (T₀ : LocLat G Qp LL O) (ι : LatHom T₀.L T₁.L), IsSESLat (Qp := Qp) ι π := by
-  haveI := T₁.L.free
-  haveI : Module.Finite O ↥T₁.L.T := Module.Finite.iff_fg.2 T₁.L.fg
+  have := T₁.L.free
+  have : Module.Finite O ↥T₁.L.T := Module.Finite.iff_fg.2 T₁.L.fg
   let V' : Submodule LL T₁.V := LinearMap.ker π.f
   have hV' : ∀ g, V' ≤ V'.comap (T₁.ρ g) := fun g x hx => by
     change π.f (T₁.ρ g x) = 0
@@ -354,19 +354,19 @@ theorem exists_kernel [IsDomain O] [IsPrincipalIdealRing O] [IsFractionRing O LL
       map_smul' := fun _ _ => rfl }
   have he : Function.Injective e := fun x y h =>
     Subtype.ext (Subtype.ext (congrArg (fun z : T₁.L.T => (z : T₁.V)) h))
-  haveI : Module.Finite O S₂ := Module.Finite.of_injective e he
-  haveI : Module.IsTorsionFree O S₂ := he.moduleIsTorsionFree e e.map_smul
+  have : Module.Finite O S₂ := Module.Finite.of_injective e he
+  have : Module.IsTorsionFree O S₂ := he.moduleIsTorsionFree e e.map_smul
   have hden : ∀ x : T₁.V, ∃ c : O, c ≠ 0 ∧ c • x ∈ T₁.L.T := by
     intro x
     have hx : x ∈ Submodule.span LL (T₁.L.T : Set T₁.V) := by rw [T₁.L.span]; trivial
     obtain ⟨c, hc⟩ := multiple_mem_span_of_mem_localization_span (nonZeroDivisors O) LL _ x hx
     rw [Submodule.span_eq] at hc
     exact ⟨c, nonZeroDivisors.ne_zero c.2, hc⟩
-  letI : TopologicalSpace V' := moduleTopology LL V'
-  haveI : IsModuleTopology LL V' := ⟨rfl⟩
-  haveI : ContinuousAdd V' := IsModuleTopology.toContinuousAdd LL V'
-  haveI : ContinuousSMul LL V' := IsModuleTopology.toContinuousSMul LL V'
-  haveI : ContinuousSMul LL T₁.V := IsModuleTopology.toContinuousSMul LL T₁.V
+  let : TopologicalSpace V' := moduleTopology LL V'
+  have : IsModuleTopology LL V' := ⟨rfl⟩
+  have : ContinuousAdd V' := IsModuleTopology.toContinuousAdd LL V'
+  have : ContinuousSMul LL V' := IsModuleTopology.toContinuousSMul LL V'
+  have : ContinuousSMul LL T₁.V := IsModuleTopology.toContinuousSMul LL T₁.V
   obtain ⟨r, hr⟩ := V'.subtype.exists_leftInverse_of_injective V'.ker_subtype
   have hrc : Continuous r := IsModuleTopology.continuous_of_linearMap r
   let T' : LocLat G Qp LL O :=
@@ -614,7 +614,7 @@ theorem exists_kernel_padic {l : ℕ} [Fact l.Prime] (K LL : FinExt l) (T₁ T�
     (π : LatHom T₁.L T₂.L) (hπ : π.Onto) :
     ∃ (T₀ : Lt K LL) (ι : LatHom T₀.L T₁.L), IsSESLat (Qp := ℚ_[l]) ι π := by
   obtain ⟨_, -, -⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
-  haveI : IsFractionRing ↥(OL LL) ↥LL.1 :=
+  have : IsFractionRing ↥(OL LL) ↥LL.1 :=
     haveI := LL.2
     integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
   exact exists_kernel π hπ
@@ -627,9 +627,9 @@ theorem GlobalTheory.NL.CokerKill.X_pow_kills_coker : ∀ (D : Formalism.BasicNo
   intro D HW F Cm l _ K s LL hG T₁ T₂ π M h c1 c2
   obtain ⟨_, hcomp, hu⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
   obtain ⟨χ, -, hφ, -, hX, hQ, -⟩ := GlobalTheory.NL.CycRing.rings_cyclotomic D HW l K s LL hG
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := by
-    haveI := K.2
-    haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := Module.Finite.of_injective
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := by
+    have := K.2
+    have : FiniteDimensional ℚ_[l] ↥(K0 K) := Module.Finite.of_injective
       (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective (inf_le_left : K0 K ≤ K.1))
     exact ⟨Module.finrank_pos.ne'⟩
@@ -793,8 +793,8 @@ theorem letters_loc {l : ℕ} [Fact l.Prime] {P : LocPrime l} (H : LocHW l P) (K
     GlobalTheory.IndefiniteRowSideFullHecke.LetterBasisDecomposition.LettersDecompose (H.W K s LL h) T ∧ GlobalTheory.IndefiniteRowSideFullHecke.LetterBasisDecomposition.LettersFree (H.W K s LL h) T ∧
       ∀ i, ∃ b : Fin (Module.finrank ↥(OL LL) ↥T.L.T) → (H.W K s LL h).DD T,
         GlobalTheory.IndefiniteRowSideFullHecke.WachLettersFreeness.IsLetterBasis (H.W K s LL h) T i b := by
-  haveI := (P.PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have := (P.PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   obtain ⟨b⟩ := N_basis_loc H K s LL h T hT
   exact ⟨lettersDecompose _ T, fun i => ⟨(exists_letter_basis _ T b i).choose⟩,
     fun i => ⟨_, isLetterBasis _ T b i⟩⟩
@@ -1337,10 +1337,10 @@ theorem finiteLength_of_killed {O : Type} [CommRing O] [IsDomain O] [IsDiscreteV
   refine ⟨inferInstance, ?_⟩
   have ht : Module.IsTorsionBySet O M (Ideal.span {c}) :=
     (Module.isTorsionBySet_span_singleton_iff c).mpr (fun x => h x)
-  letI := ht.module
-  haveI : IsScalarTower O (O ⧸ Ideal.span {c}) M := ht.isScalarTower
-  haveI : IsArtinianRing (O ⧸ Ideal.span {c}) := isArtinian_of_tower O hfl.2
-  haveI : Module.Finite (O ⧸ Ideal.span {c}) M := Module.Finite.of_restrictScalars_finite O _ _
+  let := ht.module
+  have : IsScalarTower O (O ⧸ Ideal.span {c}) M := ht.isScalarTower
+  have : IsArtinianRing (O ⧸ Ideal.span {c}) := isArtinian_of_tower O hfl.2
+  have : Module.Finite (O ⧸ Ideal.span {c}) M := Module.Finite.of_restrictScalars_finite O _ _
   exact isArtinian_of_surjective_algebraMap (R := O ⧸ Ideal.span {c}) Ideal.Quotient.mk_surjective
 
 section Generic
@@ -1359,14 +1359,14 @@ theorem length_cokN_lt_top [NeZero n] [IsDomain O] [IsDiscreteValuationRing O]
     (hl : ∀ z ∈ W.N T₂, ∃ y ∈ W.N T₁, W.map π y = ((p : ℕ) : LetA O n) ^ c • z)
     (hπ : ∀ z ∈ W.N T₂, ∃ y ∈ W.N T₁, W.map π y = (letπ : LetA O n) ^ c • z) :
     Module.length O (cokN W π) < ⊤ := by
-  haveI : Module.Finite (LetA O n) ↥(W.N T₂) := Module.Finite.iff_fg.mpr (W.N_fg T₂)
+  have : Module.Finite (LetA O n) ↥(W.N T₂) := Module.Finite.iff_fg.mpr (W.N_fg T₂)
   have hπ' : ∀ m : cokN W π, ((letπ : LetA O n) ^ c) • m = 0 := by
     intro m
     obtain ⟨⟨z, hz⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ m
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
     obtain ⟨y, hy, e⟩ := hπ z hz
     exact ⟨y, hy, e⟩
-  haveI := finite_of_pi_pow (O := O) c hπ'
+  have := finite_of_pi_pow (O := O) c hπ'
   have hl' : ∀ m : cokN W π, ((p : ℕ) : O) ^ c • m = 0 := by
     intro m
     obtain ⟨⟨z, hz⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ m
@@ -1399,8 +1399,8 @@ theorem exactness_of_N : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (
     exact ⟨0, x, h4 x (hx ▸ hy), by rw [hx, pow_zero, one_smul]⟩
   · obtain ⟨⟨y, hy, e⟩, -⟩ := hc z hz
     exact ⟨c, y, hy, by rw [e, hp]⟩
-  · haveI := ((D.loc l).PD K).finK₀
-    haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  · have := ((D.loc l).PD K).finK₀
+    have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
     obtain ⟨_, -, -⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
     have hl0 : ((l : ℕ) : ↥(OL LL)) ≠ 0 := by
       intro h0

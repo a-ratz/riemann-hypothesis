@@ -91,7 +91,7 @@ private lemma reduces_of_corner_lemma {k : Type} [Field k] [ValuativeRel k] [Top
   have hdet : IsUnit A.det := by
     apply IsLocalRing.notMem_maximalIdeal.1
     intro hm
-    rw [← IsLocalRing.residue_eq_zero_iff, RingHom.map_det, Matrix.det_of_upperTriangular] at hm
+    rw [← IsLocalRing.residue_eq_zero_iff, RingHom.map_det, det_of_isUpperTriangular] at hm
     · have hp : ∏ i, (IsLocalRing.residue 𝒪[k]).mapMatrix A i i = 1 :=
         Finset.prod_eq_one fun i _ => by simp [RingHom.mapMatrix_apply, hB i i le_rfl]
       rw [hp] at hm
@@ -199,7 +199,7 @@ private lemma superSum_framePos_eq_simpleSum_of_mem_N {k : Type} [Field k] {κ l
   have h₃ : ∑ i : Fin l, ∑ j : Fin κ, (if (j : ℕ) = κ + i + 1 then
       (u : Matrix (Fin κ ⊕ Fin l) (Fin κ ⊕ Fin l) k) (Sum.inr i) (Sum.inl j) else 0) = 0 := by
     refine Finset.sum_eq_zero fun i _ => Finset.sum_eq_zero fun j _ => ?_
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   have h₄ : ∀ i j : Fin l, (κ + (j : ℕ) = κ + i + 1) ↔ ((j : ℕ) = i + 1) := fun i j => by omega
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
   simp only [h₄]

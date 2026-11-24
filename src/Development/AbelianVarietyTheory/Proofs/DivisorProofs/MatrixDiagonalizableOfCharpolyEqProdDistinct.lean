@@ -72,7 +72,7 @@ theorem matrix_diagonalizable_of_charpoly_eq_prod_distinct (K : Type) [Field K] 
   have hcols : Y.col = v := by
     funext k i; rfl
   have hu : IsUnit Y := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     rw [hcols]; exact hli
   refine ⟨hu.unit, ?_⟩
   simp only [IsUnit.unit_spec]

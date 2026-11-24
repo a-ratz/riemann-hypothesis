@@ -331,7 +331,7 @@ theorem moved_transSum : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (Dw : Datum H)
   intro D H Dw ψ θ V W χV χW om ΛV ΛW s f₀ hvp ι hι l e hhalf r hr bad N h k Λ mk hbad hh hΛ hT hL hmk Y γ u hY hu w
   obtain ⟨hp, -, a1, a2, a3, a4, a5, -, hψ, hvac⟩ := hvp
   obtain ⟨P, he, hPiff⟩ := hhalf
-  haveI : Finite (LevQ Dw l) := finite_levQ Dw l
+  have : Finite (LevQ Dw l) := finite_levQ Dw l
   have hMb : ∀ PP ∈ P, ((l.M : ℕ) : 𝓞 D.host.E) ∈ PP.asIdeal := fun PP hPP =>
     (hPiff PP).1 hPP (natCast_mem_Mb l)
   have hPP : ∀ PP ∈ P, l.Mb ≤ PP.asIdeal ∧ (2 : 𝓞 D.host.E) ∉ PP.asIdeal := by
@@ -366,7 +366,7 @@ theorem moved_transSum : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (Dw : Datum H)
     rw [hp.weil.om_heis h k _ _ hvac.theta]
     refine Eq.trans ?_ h4
     exact congrArg _ h3.symm
-  letI : Fintype (Fin V.rank → LevQ Dw l) := Fintype.ofFinite _
+  let : Fintype (Fin V.rank → LevQ Dw l) := Fintype.ofFinite _
   refine ⟨?_, ?_⟩
   · unfold transSum
     apply GlobalTheory.OrientedHeis.theta_smul

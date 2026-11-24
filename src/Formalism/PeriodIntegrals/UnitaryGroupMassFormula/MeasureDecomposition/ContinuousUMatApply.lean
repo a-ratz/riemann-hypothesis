@@ -145,7 +145,7 @@ theorem isClosed_sub_mem (x : Fin n → ℂ) (W : Submodule ℂ (Fin n → ℂ))
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ | (g - 1) *ᵥ x ∈ W} := by
   have hc : Continuous fun g : Matrix (Fin n) (Fin n) ℂ => (g - 1) *ᵥ x :=
     (continuous_id.sub continuous_const).matrix_mulVec continuous_const
-  exact W.closed_of_finiteDimensional.preimage hc
+  exact W.isClosed_of_finiteDimensional.preimage hc
 
 theorem isClosed_inN (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) :
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ | InN ε e z g} := by
@@ -153,7 +153,7 @@ theorem isClosed_inN (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fi
       ((⋂ a : Fin r, {g | (g - 1) *ᵥ e a ∈ spanLt e a.1}) ∩ {g | (g - 1) *ᵥ z ∈ spanLt e r}) ∩
         ⋂ y ∈ {y : Fin n → ℂ | ∀ a, hJ ε (e a) y = 0}, {g | (g - 1) *ᵥ y ∈ spanLt e r} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, InN, InS]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, InN, InS]
   rw [h1]
   exact ((isClosed_iInter fun a => isClosed_sub_mem _ _).inter (isClosed_sub_mem _ _)).inter
     (isClosed_biInter fun y _ => isClosed_sub_mem _ _)
@@ -223,7 +223,7 @@ theorem uMat_mul_inv {n : ℕ} {ε : Fin n → Bool} (g : Formalism.REAL.UJ ε) 
 theorem uMat_inUJ {n : ℕ} {ε : Fin n → Bool} (g : Formalism.REAL.UJ ε) : Formalism.REAL.inUJ ε (Formalism.MainNotions.S.uMat g) := g.2
 
 theorem continuous_uMat_apply (v : NumberField.InfinitePlace I.F) :
-    Continuous fun s : I.Ginf => Formalism.MainNotions.S.uMat (s v) := (Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply v)
+    Continuous fun s : I.Ginf => Formalism.MainNotions.S.uMat (s v) := (Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply v)
 
 variable {r : ℕ}
 
@@ -256,14 +256,14 @@ theorem isClosed_Ninf (e : Fin r → Fin I.n → I.E) (z : Fin I.n → I.E) : Is
   have h1 : Ninf I e z = ⋂ v, (fun s : I.Ginf => Formalism.MainNotions.S.uMat (s v)) ⁻¹'
       {g | InN (I.ε v) (fun a => rv I v (e a)) (rv I v z) g} := by
     ext s
-    simp only [Ninf, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+    simp only [Ninf, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
   rw [h1]
   exact isClosed_iInter fun v => (isClosed_inN _ _ _).preimage (continuous_uMat_apply I v)
 
 theorem isClosed_Hset (S : Set (Fin I.n → I.E)) : IsClosed (Hset I S) := by
   have h1 : Hset I S = ⋂ v, ⋂ x ∈ S, {s : I.Ginf | Formalism.MainNotions.S.uMat (s v) *ᵥ rv I v x = rv I v x} := by
     ext s
-    simp only [Hset, Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Hset, Set.mem_ofPred_eq, Set.mem_iInter]
   rw [h1]
   refine isClosed_iInter fun v => isClosed_biInter fun x _ => ?_
   exact isClosed_eq ((continuous_uMat_apply I v).matrix_mulVec continuous_const) continuous_const

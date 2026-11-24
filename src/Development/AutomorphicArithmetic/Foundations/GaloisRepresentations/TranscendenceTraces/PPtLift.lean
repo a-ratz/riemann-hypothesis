@@ -59,8 +59,8 @@ private theorem pt_map_ideal {Ω : Type} [Field Ω] {B : CommRingCat.{0}} (s : B
 private theorem exists_retract {Ω : Type} [Field Ω] [IsAlgClosed Ω] {B : CommRingCat.{0}} (φ : CommRingCat.of Ω ⟶ B)
     (hφ : φ.hom.IsIntegral) (q : Ideal B) [q.IsPrime] :
     ∃ s : B ⟶ CommRingCat.of Ω, φ ≫ s = 𝟙 _ ∧ RingHom.ker s.hom = q := by
-  letI : Algebra Ω B := φ.hom.toAlgebra
-  haveI : Algebra.IsIntegral Ω B := ⟨hφ⟩
+  let : Algebra Ω B := φ.hom.toAlgebra
+  have : Algebra.IsIntegral Ω B := ⟨hφ⟩
   have hb : Function.Bijective (algebraMap Ω (B ⧸ q)) := IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e : Ω ≃+* B ⧸ q := RingEquiv.ofBijective (algebraMap Ω (B ⧸ q)) hb
   refine ⟨CommRingCat.ofHom (e.symm.toRingHom.comp (Ideal.Quotient.mk q)), ?_, ?_⟩
@@ -78,15 +78,15 @@ theorem UpperTheory.Gal.TranscendenceTraces.ptLift_of :
   obtain ⟨t, ht1, ht2⟩ := Scheme.Pullback.exists_preimage_pullback (f := r) (g := x) v
     (IsLocalRing.closedPoint Ω) hv
   let P := pullback r x
-  haveI : IsIntegralHom (pullback.snd r x) := inferInstance
-  haveI : IsAffine P := isAffine_of_isAffineHom (pullback.snd r x)
+  have : IsIntegralHom (pullback.snd r x) := inferInstance
+  have : IsAffine P := isAffine_of_isAffineHom (pullback.snd r x)
   let φ : CommRingCat.of Ω ⟶ Γ(P, ⊤) := Spec.preimage (P.isoSpec.inv ≫ pullback.snd r x)
   have hφ' : Spec.map φ = P.isoSpec.inv ≫ pullback.snd r x := Spec.map_preimage _
   have hφ : φ.hom.IsIntegral := by
     rw [← IsIntegralHom.SpecMap_iff, hφ']
     infer_instance
   let y : Spec Γ(P, ⊤) := P.isoSpec.hom t
-  haveI : y.asIdeal.IsPrime := PrimeSpectrum.isPrime y
+  have : y.asIdeal.IsPrime := PrimeSpectrum.isPrime y
   obtain ⟨s, hs, hk⟩ := exists_retract φ hφ y.asIdeal
   refine ⟨Spec.map s ≫ P.isoSpec.inv ≫ pullback.fst r x, ?_, ?_⟩
   · have h1 : Spec.map s ≫ Spec.map φ = 𝟙 _ := by

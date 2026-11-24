@@ -103,15 +103,15 @@ private theorem exists_jacobiSym_neg_one_in_residue_class (m₀ s : ℕ) (h1 : 1
     (hcop : m₀.Coprime s) :
     ∃ u : ℕ, u % m₀ = 1 % m₀ ∧ u.Coprime s ∧ jacobiSym (u : ℤ) s = -1 := by
   have hp : s.minFac.Prime := Nat.minFac_prime (by omega)
-  haveI := Fact.mk hp
-  haveI : NeZero s := ⟨by omega⟩
+  have := Fact.mk hp
+  have : NeZero s := ⟨by omega⟩
   obtain ⟨t, ht⟩ := Nat.minFac_dvd s
   have ht0 : t ≠ 0 := by
     rintro rfl
     rw [mul_zero] at ht
     omega
-  haveI : NeZero t := ⟨ht0⟩
-  haveI : NeZero s.minFac := ⟨hp.ne_zero⟩
+  have : NeZero t := ⟨ht0⟩
+  have : NeZero s.minFac := ⟨hp.ne_zero⟩
   have hp2 : s.minFac ≠ 2 := by
     intro h2
     rw [h2] at ht

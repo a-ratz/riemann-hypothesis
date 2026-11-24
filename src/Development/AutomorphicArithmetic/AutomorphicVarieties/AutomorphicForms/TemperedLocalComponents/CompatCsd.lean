@@ -139,7 +139,7 @@ private theorem rank_one (P : Hypotheses₂) {K Ω : Type} [Field K] [NumberFiel
       rw [Subsingleton.elim i 0]
       simp [toEndC_apply, Matrix.mulVec, dotProduct, hval, hL.loc_away (Or.inl hw) _ _ (ha.glob art hart g)]] at h1
   · obtain ⟨T⟩ := Loc.tiedP l
-    exact P.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (hc.comp continuous_subtype_val))
+    exact P.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (hc.comp continuous_subtypeVal))
       (GlobalTheory.Published.heckeLAdicCharacterAbove_iff.1 P.litN.aut.chA K Ω l _ _ ⟨T⟩ ι art hart χ m μ hχ hμ hL w A h O Bw hj).1
   · exact Lev.SsCmp.of_eq (P.litN.aut.chW K Ω l _ _ (Loc.tiedP l) ι art hart χ m μ hχ hμ hL w A h O Bw hj _ hcp a ha)
 

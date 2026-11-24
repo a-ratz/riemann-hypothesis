@@ -89,7 +89,7 @@ theorem exists_measurableSet_orbitSection_of_discreteOrbits [Countable G] [Topol
       ((measurable_const_smul g) (hBo n).measurableSet).compl.union (hfix g)
   have hSmem : ∀ n x, x ∈ S n ↔ x ∈ B n ∧ ∀ g : G, g • x ∈ B n → g • x = x := fun n x => by
     simp only [S, mem_inter_iff, mem_iInter, mem_union, mem_compl_iff, mem_preimage,
-      mem_setOf_eq, imp_iff_not_or]
+      mem_ofPred_eq, imp_iff_not_or]
   have hS : ∀ x, ∃ n, x ∈ S n := fun x => by
     obtain ⟨U, hU, h⟩ := hdisc x
     obtain ⟨t, ht, hxt, htU⟩ := hb.mem_nhds_iff.1 hU

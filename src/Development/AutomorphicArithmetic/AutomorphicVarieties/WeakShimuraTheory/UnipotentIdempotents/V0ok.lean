@@ -45,7 +45,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 theorem UpperTheory.V.Ws.Lk.v0ok :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c} {T : Tower D} {c' : Coef l} {h : c.O ≤ c'.O} (X : OCh T c' h) (Y : SetD T) (V : Y.s.Lev), D.Good → ∀ r : W.Resid V.frame c'.O 4, (∀ i (g : G T.L Ω), r.chib i (V.pr g) = X.cb i g) → r.V0ok := by
   intro Ω _ _ _ l _ c D T c' h X Y V hD r hr
-  haveI : IsLocalHom (inc h) := (UpperTheory.V.Ws.P1.coefRes c).2.2.1 c' h
+  have : IsLocalHom (inc h) := (UpperTheory.V.Ws.P1.coefRes c).2.2.1 c' h
   have hres : ∀ x : c.O, residue c'.O (inc h x) = ResidueField.map (inc h) (residue c.O x) := fun x =>
     (ResidueField.map_residue _ x).symm
   refine ⟨?_, ?_, ?_⟩

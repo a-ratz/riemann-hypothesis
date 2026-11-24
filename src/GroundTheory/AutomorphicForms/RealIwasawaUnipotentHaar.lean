@@ -169,7 +169,7 @@ instance : SecondCountableTopology (upperUnipotentSubgroup n 𝕜) :=
   (unipotentCoordsHomeomorph (𝕜 := 𝕜) (n := n)).symm.isEmbedding.secondCountableTopology
 
 theorem isOpen_posDiag : IsOpen {a : n → ℝ | ∀ i, 0 < a i} := by
-  rw [setOf_forall]
+  rw [ofPred_forall]
   exact isOpen_iInter_of_finite fun i => isOpen_lt continuous_const (continuous_apply i)
 
 instance : LocallyCompactSpace (PosDiag (n := n)) :=
@@ -260,7 +260,7 @@ def diagConj (a : diagPosSubgroup n 𝕜) (u : upperUnipotentSubgroup n 𝕜) :
 
 theorem continuous_diagConj (a : diagPosSubgroup n 𝕜) :
     Continuous (diagConj a) :=
-  Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+  Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
 
 theorem unipotentLebesgue_map_diagConj (a : diagPosSubgroup n 𝕜) :
     Measure.map (diagConj a) (unipotentLebesgue (𝕜 := 𝕜) (n := n)) =

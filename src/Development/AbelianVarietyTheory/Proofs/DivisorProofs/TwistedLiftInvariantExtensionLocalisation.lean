@@ -67,8 +67,8 @@ theorem twisted_lift_to_localisation (A B A₂ : Type) [CommRing A] [IsLocalRing
   intro hfl hsurj hker V' _ _ e₁ β he₁ hβ
   set q : Ideal B := (maximalIdeal A₂).comap f with hq
   set c : Ideal B := (maximalIdeal V').comap β with hc
-  haveI : q.IsPrime := Ideal.comap_isPrime f (maximalIdeal A₂)
-  haveI : c.IsPrime := Ideal.comap_isPrime β (maximalIdeal V')
+  have : q.IsPrime := Ideal.comap_isPrime f (maximalIdeal A₂)
+  have : c.IsPrime := Ideal.comap_isPrime β (maximalIdeal V')
   have hqA : Ideal.under A q = maximalIdeal A := by
     ext a
     simp only [Ideal.under, Ideal.mem_comap, hq, mem_maximalIdeal, mem_nonunits_iff]
@@ -91,8 +91,8 @@ theorem twisted_lift_to_localisation (A B A₂ : Type) [CommRing A] [IsLocalRing
     rw [← hβ]
     ext a
     simp only [hβ', RingHom.comp_apply, MulSemiringAction.toRingHom_apply, smul_algebraMap]
-  letI : Algebra B A₂ := f.toAlgebra
-  haveI hloc : IsLocalization q.primeCompl A₂ := by
+  let : Algebra B A₂ := f.toAlgebra
+  have hloc : IsLocalization q.primeCompl A₂ := by
     rw [isLocalization_iff]
     refine ⟨?_, ?_, ?_⟩
     · rintro ⟨s, hs⟩

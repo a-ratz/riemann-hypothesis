@@ -133,7 +133,7 @@ theorem natCard_cohomology_quotientToInvariants :
       (E.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup)) 2) =
       Nat.card (groupCohomology (ideleClassRep K.1 E.1) 2) := by
   have hopen : IsOpen ((E.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup : Subgroup K.1.fixingSubgroup) :
-      Set K.1.fixingSubgroup) := E.1.fixingSubgroup_isOpen.preimage continuous_subtype_val
+      Set K.1.fixingSubgroup) := E.1.fixingSubgroup_isOpen.preimage continuous_subtypeVal
   have : DiscreteTopology (K.1.fixingSubgroup ⧸ E.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup) :=
     QuotientGroup.discreteTopology hopen
   have hiso := isIso_cohomologyMapAlong_of_mulEquiv (quotGalEquiv K E) continuous_of_discreteTopology
@@ -149,7 +149,7 @@ theorem natCard_ker_classResField :
   have hle : E.1.fixingSubgroup ≤ K.1.fixingSubgroup :=
     IntermediateField.fixingSubgroup_le (Fact.out : K ≤ E)
   have hopen : IsOpen (N : Set K.1.fixingSubgroup) :=
-    E.1.fixingSubgroup_isOpen.preimage continuous_subtype_val
+    E.1.fixingSubgroup_isOpen.preimage continuous_subtypeVal
   have hNc : IsClosed (N : Set K.1.fixingSubgroup) := Subgroup.isClosed_of_isOpen N hopen
   have h1 : Limits.IsZero (cohomology (Rep.res N.subtype (classLimitRep K)) 1) :=
     (isZero_cohomology_one_classLimitRep E).of_iso (asIso (cohomologyMapAlong

@@ -66,7 +66,7 @@ theorem conv {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {ρ : 
       IntegrableOn (fun h => ∫ n in B.vN.𝓝, besFun ψ 1 B.d B.o B.ζ φ f h n ∂B.vN.ν) B.vA.𝓕 B.vA.μ := by
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.A
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.V
-  haveI := B.vA.haar
+  have := B.vA.haar
   obtain ⟨K, hK, hcov⟩ := B.cpt
   obtain ⟨K', hK', hcov'⟩ := (GlobalTheory.Mem.UnipCocompact.radicals_cocompact D B.V ρ B.d.e (isIsoSub_e B.d)).1
   obtain ⟨hemb, -, hnorm, -, hrat⟩ := GlobalTheory.Unf.besSemi D ρ B
@@ -76,8 +76,8 @@ theorem conv {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {ρ : 
     obtain ⟨γ, hγ, hk⟩ := hcov g
     exact ⟨γ⁻¹, inv_mem hγ, γ * g, hk, by group⟩
   have hc : Continuous fun q : GA D B.A × flagN B.d => besFun ψ 1 B.d B.o B.ζ φ f q.1 q.2 :=
-    ((hφ.2.comp continuous_fst).mul (hf.2.comp ((continuous_subtype_val.comp continuous_snd).mul
-      (hemb.comp continuous_fst)))).mul ((hch.1 _).comp (continuous_subtype_val.comp continuous_snd)).star
+    ((hφ.2.comp continuous_fst).mul (hf.2.comp ((continuous_subtypeVal.comp continuous_snd).mul
+      (hemb.comp continuous_fst)))).mul ((hch.1 _).comp (continuous_subtypeVal.comp continuous_snd)).star
   obtain ⟨M, hM⟩ := (hK.prod hK').exists_bound_of_continuousOn hc.continuousOn
   refine GlobalTheory.Per.FJConv.iterated_integrableOn hfin.ne (by rw [B.vN.unit.2.2]; exact ENNReal.one_ne_top) hc (M := M)
     fun g n => ?_

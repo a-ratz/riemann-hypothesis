@@ -198,7 +198,7 @@ theorem sq_sum_bicharacter (hodd : Odd (Fintype.card A)) (B : A → AddChar A �
     ext x z
     rw [Matrix.mul_apply, Matrix.one_apply]
     simp only [P, of_apply, add_eq_zero_iff_neg_eq, ite_mul, one_mul, zero_mul,
-      sum_ite_eq, mem_univ, if_true, neg_neg]
+      sum_ite_eq, mem_univ, ite_true, neg_neg]
   have hP : P.trace = 1 := by
     have : ∀ x : A, x + x = 0 ↔ x = 0 := fun x =>
       ⟨eq_zero_of_add_self_eq_zero_of_odd_card hodd, fun h => by simp [h]⟩
@@ -508,7 +508,7 @@ theorem sq_sum_exp_pair (hodd : Odd d.det) (hs : (dᵀ * b).IsSymm)
         ((fun i => (r k i : ℂ)) ⬝ᵥ (b.map ((↑) : ℤ → ℂ) * (d.map ((↑) : ℤ → ℂ))⁻¹) *ᵥ
           fun i => (r k i : ℂ)))) ^ 2 =
       (ZMod.χ₄ (d.det : ZMod 4) : ℤ) * (d.det : ℂ) := by
-  letI := Fintype.ofBijective _ hr
+  let := Fintype.ofBijective _ hr
   rw [← sq_sum_pairQuadraticForm hodd hs he hc]
   congr 1
   exact Fintype.sum_bijective _ hr _ _ fun k => (ratCircleChar_pairQuadraticForm_mk _ hs he _).symm
@@ -529,7 +529,7 @@ theorem symm_coprime_of_mem_symplecticGroup {a c : Matrix n n ℤ}
 theorem exists_representatives_quotient_range_mulVecLin (hd : d.det ≠ 0) :
     ∃ r : Fin d.det.natAbs → n → ℤ, Function.Bijective fun k =>
       (Submodule.Quotient.mk (r k) : (n → ℤ) ⧸ LinearMap.range d.mulVecLin) := by
-  haveI := finite_quotient_range_mulVecLin hd
+  have := finite_quotient_range_mulVecLin hd
   let e := (Finite.equivFinOfCardEq (natCard_quotient_range_mulVecLin hd)).symm
   refine ⟨fun k => (e k).out, ?_⟩
   convert e.bijective using 2
@@ -572,7 +572,7 @@ def riemannThetaJointForm (a : ι → ℝ) (n : ι → ℤ) : ((ι → ℂ) × (
     simp only [dotProduct, mulVec, Finset.mul_sum, of_apply]
     exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
   simp only [riemannThetaJointForm, ContinuousLinearMap.coprod_apply, riemannThetaForm_apply,
-    ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+    sum_apply, smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.proj_apply, smul_eq_mul, this]
   ring
 

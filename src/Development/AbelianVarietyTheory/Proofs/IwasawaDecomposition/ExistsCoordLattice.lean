@@ -93,8 +93,8 @@ theorem _root_.GlobalTheory.LatticeMinuscule.lattice_elementary_divisors (R K : 
   classical
   have hinj : Function.Injective (algebraMap R K) := IsFractionRing.injective R K
   have hϖ0 : algebraMap R K ϖ ≠ 0 := (map_ne_zero_iff _ hinj).mpr hϖ.ne_zero
-  haveI : Module.Finite R Λ := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Free R Λ := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite R Λ := Module.Finite.iff_fg.mpr hfg
+  have : Module.Free R Λ := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis R Λ
   have hli : LinearIndependent K (fun i => (b i : Fin n → K)) :=
     (LinearIndependent.iff_fractionRing R K).mp

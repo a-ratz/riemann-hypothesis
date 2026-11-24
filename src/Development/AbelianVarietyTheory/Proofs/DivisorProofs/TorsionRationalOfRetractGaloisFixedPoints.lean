@@ -107,11 +107,11 @@ theorem torsRat_of_retract_galoisFixed : ∀ {R : Type} [CommRing R] [IsDomain R
       simpa using this
     rw [h4]
   intro R _ _ _ G _ _ G' _ _ A gen inc pr n hgen hinc hpr hret hn hfix
-  haveI := hgen
-  haveI := hinc
-  haveI := hpr
+  have := hgen
+  have := hinc
+  have := hpr
   intro Ω _ _ κ x hx
-  letI : Algebra (FractionRing R) Ω := κ.toAlgebra
+  let : Algebra (FractionRing R) Ω := κ.toAlgebra
   let jb := algebraMap (FractionRing R) (AlgebraicClosure (FractionRing R))
   let i₁ : AlgebraicClosure (FractionRing R) →ₐ[FractionRing R] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -149,8 +149,8 @@ theorem torsRat_of_retract_galoisFixed : ∀ {R : Type} [CommRing R] [IsDomain R
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra K' (AlgebraicClosure (FractionRing R)) := i'.toRingHom.toAlgebra
-  haveI : IsScalarTower (FractionRing R) K' (AlgebraicClosure (FractionRing R)) :=
+  let : Algebra K' (AlgebraicClosure (FractionRing R)) := i'.toRingHom.toAlgebra
+  have : IsScalarTower (FractionRing R) K' (AlgebraicClosure (FractionRing R)) :=
     IsScalarTower.of_algebraMap_eq fun a => (i'.commutes a).symm
   obtain ⟨w, hw⟩ := H (AlgebraicClosure (FractionRing R)) Ω i₁.toRingHom t.left (by
     rw [Over.w t]
@@ -197,7 +197,7 @@ theorem torsRat_of_retract_galoisFixed : ∀ {R : Type} [CommRing R] [IsDomain R
           rw [← Category.assoc]
           exact congrArg (· ≫ inc.left) (hfix σ y₀ hy₀)
       _ = y₁.left := by rw [Category.assoc, hy₁inc]
-  haveI : Mono (torsion.ι A.A n) := inferInstanceAs (Mono (pullback.fst _ _))
+  have : Mono (torsion.ι A.A n) := inferInstanceAs (Mono (pullback.fst _ _))
   have hwfix : ∀ σ : AlgebraicClosure (FractionRing R) ≃ₐ[FractionRing R] AlgebraicClosure (FractionRing R),
       spMap σ.toAlgHom.toRingHom ≫ w = w := by
     intro σ
@@ -218,8 +218,8 @@ theorem torsRat_of_retract_galoisFixed : ∀ {R : Type} [CommRing R] [IsDomain R
       simpa only [Category.assoc] using h1
     exact congrArg (fun f => f.left) h2
 
-  haveI := hfin
-  haveI : IsAffine (torsion A.A n).left := isAffine_of_isAffineHom (torsion A.A n).hom
+  have := hfin
+  have : IsAffine (torsion A.A n).left := isAffine_of_isAffineHom (torsion A.A n).hom
   obtain ⟨w₁, hw₁⟩ := descend_point (torsion A.A n).left w hwfix
   have hw₁s : w₁ ≫ (torsion A.A n).hom = 𝟙 _ := by
     refine spec_map_field_cancel jb _ _ ?_

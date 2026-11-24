@@ -365,7 +365,7 @@ theorem finite_annihilators : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ)
       IsCompact (L : Set (Af F)) ∧ ∀ u : Fin N → Af F, (∀ l, u l ∈ L) → u ∈ U := by
   intro F _ _ N ψ lam ν a hC
   obtain ⟨hTR, hψ, -, -, ha⟩ := hC
-  haveI : IsTotallyReal F := hTR
+  have : IsTotallyReal F := hTR
   exact ⟨fun L hL => FinAnnih.isCompact_annihilator ψ hψ a ha L hL,
     fun K hK => FinAnnih.annihilator_mem_nhds ψ hψ.1 a K hK,
     fun U hU => FinAnnih.basis_nhds U hU⟩

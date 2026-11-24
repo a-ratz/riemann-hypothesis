@@ -134,7 +134,7 @@ theorem kg_of_inv [IsFractionRing O K] {g : GL (Fin 2) K} (h : Ent O g) (h' : En
 theorem zk_iff {g : GL (Fin 2) K} : g ∈ ZK O K ↔ ∃ s : Kˣ, ∃ k ∈ KG O K, g = sc s * k := by
   constructor
   · intro h
-    haveI : (GeneralLinearGroup.scalar (Fin 2) : Kˣ →* GL (Fin 2) K).range.Normal := ⟨by
+    have : (GeneralLinearGroup.scalar (Fin 2) : Kˣ →* GL (Fin 2) K).range.Normal := ⟨by
       rintro _ ⟨s, rfl⟩ g
       exact ⟨s, by rw [← sc_comm s g, mul_inv_cancel_right]⟩⟩
     have h' : g ∈ ((ZK O K : Subgroup _) : Set (GL (Fin 2) K)) := h
@@ -208,7 +208,7 @@ theorem lat_mul (t : (Etau K τ)ˣ) (g : GL (Fin 2) K) :
     LL O τ (jU (j0 τ) t * g) = ((t : Etau K τ) * ·) '' LL O τ g := by
   have h : ∀ x, x ∈ LL O τ (jU (j0 τ) t * g) ↔ ((t⁻¹ : (Etau K τ)ˣ) : Etau K τ) * x ∈ LL O τ g := by
     intro x
-    simp only [LL, Set.mem_setOf_eq]
+    simp only [LL, Set.mem_ofPred_eq]
     rw [_root_.mul_inv_rev, ← map_inv, Units.val_mul, ← mulVec_mulVec, ← Algebra.leftMulMatrix_mulVec_repr]
     rfl
   ext x
@@ -266,8 +266,8 @@ theorem isLat_lat [IsDomain O] [IsDiscreteValuationRing O] [IsFractionRing O K] 
     (hS : IsLat O τ S) : ∃ g, S = LL O τ g := by
   obtain ⟨⟨s, rfl⟩, hsp⟩ := hS
   set M : Submodule O (Etau K τ) := Submodule.span O (s : Set (Etau K τ)) with hM
-  haveI : Submodule.IsLattice K M := Submodule.IsLattice.of_fg K ⟨s, rfl⟩
-  haveI : Submodule.IsFullLattice K M := ⟨hsp⟩
+  have : Submodule.IsLattice K M := Submodule.IsLattice.of_fg K ⟨s, rfl⟩
+  have : Submodule.IsFullLattice K M := ⟨hsp⟩
   have hr : Module.finrank O M = 2 := by
     apply Module.finrank_eq_of_rank_eq
     rw [Submodule.IsFullLattice.rank_eq K M, ← Module.finrank_eq_rank, QuadraticAlgebra.finrank_eq_two]
@@ -331,18 +331,18 @@ open QuadraticAlgebra Matrix UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 private theorem fin_between {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] {Δ τ : K}
     (L : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) (x : Etau K τ) (hx : x.im ≠ 0) :
     {S : Set (Etau K τ) | IsLat O τ S ∧ 1 ∈ S ∧ x ∈ S ∧ ∀ w ∈ S, IsIntegral O w}.Finite := by
-  haveI := L.frac
+  have := L.frac
   classical
   obtain ⟨N, hN, hden⟩ := int_denom L hτ
   obtain ⟨r, hr⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors O) ({-x.re / x.im, 1 / x.im} : Finset K)
   obtain ⟨p, hp⟩ := hr _ (Finset.mem_insert_self _ _)
   obtain ⟨q, hq⟩ := hr _ (Finset.mem_insert_of_mem (Finset.mem_singleton_self _))
   rw [Algebra.smul_def] at hp hq
-  haveI := finite_quot_span L (mul_ne_zero hN (nonZeroDivisors.coe_ne_zero r))
+  have := finite_quot_span L (mul_ne_zero hN (nonZeroDivisors.coe_ne_zero r))
   let M := integralClosure O (Etau K τ)
-  haveI : Module.Finite O M := Module.Finite.iff_fg (N := Subalgebra.toSubmodule M).2 (intE_fg L hτ)
+  have : Module.Finite O M := Module.Finite.iff_fg (N := Subalgebra.toSubmodule M).2 (intE_fg L hτ)
   let I : Submodule O M := Ideal.span {N * r} • ⊤
-  haveI : Finite (M ⧸ I) := Submodule.finite_quotient_smul _ Module.Finite.fg_top
+  have : Finite (M ⧸ I) := Submodule.finite_quotient_smul _ Module.Finite.fg_top
   let f : Set (M ⧸ I) → Set (Etau K τ) := fun A => Subtype.val '' (I.mkQ ⁻¹' A)
   refine (Set.finite_range f).subset ?_
   rintro _ ⟨⟨⟨g, rfl⟩, -⟩, h1, h2, h3⟩
@@ -368,7 +368,7 @@ private theorem fin_between {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVa
 open UpperTheory.V.Z.Sym.Loc.GL in
 theorem UpperTheory.V.Z.Sym.Loc.finG : UpperTheory.V.Z.Sym.Loc.FinG := by
   intro O K _ _ _ _ _ Δ τ L hτ j hj z hz
-  haveI := L.frac
+  have := L.frac
   classical
   obtain ⟨g, hg⟩ := (gConj O K Δ τ L hτ (j0 τ) j leftMulMatrixEmbedding_omega_trace hj).1
   have det : ∀ (y : GL (Fin 2) K) (s : Kˣ) (k : GL (Fin 2) K), k ∈ KG O K → y⁻¹ * jU j z * y = sc s * k →
@@ -439,7 +439,7 @@ private theorem map_two_add_smul_eq (O K : Type) [CommRing O] [Field K] [Algebra
 theorem UpperTheory.V.Z.Sym.Loc.stabG : UpperTheory.V.Z.Sym.Loc.StabG := by
   classical
   intro O K _ _ _ _ _ Δ τ L hτ j hj y
-  haveI := L.frac
+  have := L.frac
   set H := Subgroup.comap (jU j) (Subgroup.comap (MulEquiv.toMonoidHom (MulAut.conj y⁻¹)) (ZK O K)) with hH
   have memH : ∀ z, z ∈ H ↔ y⁻¹ * jU j z * y ∈ ZK O K := by
     intro z

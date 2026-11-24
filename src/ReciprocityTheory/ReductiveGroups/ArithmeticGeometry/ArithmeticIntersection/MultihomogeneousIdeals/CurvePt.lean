@@ -150,7 +150,7 @@ theorem exists_homog_chart (V : Ideal (MRingOver F ι)) (j : ∀ k, ι k) (b : M
       funext k
       have := hd m hm k
       simp only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, mw, smul_eq_mul, Pi.single_apply,
-        mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       omega
     rwa [hsum] at h3
   ·
@@ -269,7 +269,7 @@ theorem isUnit_mk_chartIdeal_form {V : Ideal (MRingOver F ι)} (hV : IsProjVarF 
   by_contra hu
   obtain ⟨M, hM, hpM⟩ := exists_max_ideal_of_mem_nonunits hu
   have hVp : V.IsPrime := hV.1.1
-  letI : Field (((MRingOver F ι ⧸ chartIdeal V j) ⧸ M)) := Ideal.Quotient.field M
+  let : Field (((MRingOver F ι ⧸ chartIdeal V j) ⧸ M)) := Ideal.Quotient.field M
   let θ : MRingOver F ι →ₐ[F] MvPolynomial K (((MRingOver F ι ⧸ chartIdeal V j) ⧸ M)) :=
     (IsScalarTower.toAlgHom F (((MRingOver F ι ⧸ chartIdeal V j) ⧸ M)) (MvPolynomial K (((MRingOver F ι ⧸ chartIdeal V j) ⧸ M)))).comp
       ((Ideal.Quotient.mkₐ F M).comp (Ideal.Quotient.mkₐ F (chartIdeal V j)))
@@ -314,7 +314,7 @@ theorem isUnit_mk_chartIdeal_form {V : Ideal (MRingOver F ι)} (hV : IsProjVarF 
     intro S k hk h
     have h' : φ S (X ⟨k, j k⟩) = 0 := RingHom.mem_ker.mp h
     rw [hφX, hθ, mk_chartIdeal_X_self, map_one, map_one, mul_one] at h'
-    simp only [c, if_neg hk] at h'
+    simp only [c, ite_eq_right hk] at h'
     exact MvPolynomial.X_ne_zero k h'
   have hbase : a ∈ Q ∅ := by
     show φ ∅ a = 0
@@ -358,7 +358,7 @@ theorem isUnit_mk_chartIdeal_form {V : Ideal (MRingOver F ι)} (hV : IsProjVarF 
 theorem chart_isField (hW : IsProjVarF W 0) {j : ∀ k, ι k} (hj : IsChart W j) :
     IsField (MRingOver F ι ⧸ chartIdeal W j) := by
   classical
-  haveI := hW.1.1
+  have := hW.1.1
   have hnt : Nontrivial (MRingOver F ι ⧸ chartIdeal W j) :=
     Ideal.Quotient.nontrivial_iff.mpr (chartIdeal_ne_top hW.1.2.1 hj)
   refine ⟨exists_pair_ne _, mul_comm, fun {y} hy => ?_⟩
@@ -373,8 +373,8 @@ theorem chart_isField (hW : IsProjVarF W 0) {j : ∀ k, ι k} (hj : IsChart W j)
 
 theorem chart_finite (hW : IsProjVarF W 0) {j : ∀ k, ι k} (hj : IsChart W j) :
     Module.Finite F (MRingOver F ι ⧸ chartIdeal W j) := by
-  letI := (chart_isField hW hj).toField
-  haveI : Algebra.FiniteType F (MRingOver F ι ⧸ chartIdeal W j) :=
+  let := (chart_isField hW hj).toField
+  have : Algebra.FiniteType F (MRingOver F ι ⧸ chartIdeal W j) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ F (chartIdeal W j))
       (Ideal.Quotient.mkₐ_surjective F _)
   exact finite_of_finite_type_of_isJacobsonRing F _

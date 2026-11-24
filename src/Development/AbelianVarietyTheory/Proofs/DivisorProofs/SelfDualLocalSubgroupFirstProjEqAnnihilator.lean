@@ -78,13 +78,13 @@ theorem isOpen_integers : IsOpen ((v.adicCompletionIntegers F : Set (Fv F v))) :
 
 theorem exists_nat_mem (c : Fv F v) (hc : c ≠ 0) :
     ∃ n : ℕ, 0 < n ∧ c⁻¹ * (n : Fv F v) ∈ v.adicCompletionIntegers F := by
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   let O := v.adicCompletionIntegers F
   let S : AddSubgroup (Fv F v) := (O.toSubring.toAddSubgroup).comap (AddMonoidHom.mulLeft c⁻¹)
   let H : AddSubgroup O := S.comap (O.toSubring.subtype.toAddMonoidHom)
   have hS : IsOpen (S : Set (Fv F v)) :=
     (isOpen_integers v).preimage (continuous_const.mul continuous_id)
-  have hH : IsOpen (H : Set O) := hS.preimage continuous_subtype_val
+  have hH : IsOpen (H : Set O) := hS.preimage continuous_subtypeVal
   let H' : OpenAddSubgroup O := ⟨H, hH⟩
   have : Finite (O ⧸ H) := AddSubgroup.instFiniteQuotientOfSeparatelyContinuousAddOfCompactSpace H'
   have hne : H.index ≠ 0 := AddSubgroup.index_ne_zero_of_finite
@@ -95,7 +95,7 @@ theorem exists_nat_mem (c : Fv F v) (hc : c ≠ 0) :
 theorem exists_finite_residues (n : ℕ) (hn : 0 < n) :
     ∃ R : Set (Fv F v), R.Finite ∧ ∀ y ∈ v.adicCompletionIntegers F,
       ∃ r ∈ R, ∃ u ∈ v.adicCompletionIntegers F, y = r + (n : Fv F v) * u := by
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   let U : Set (Fv F v) := (v.adicCompletionIntegers F : Set (Fv F v))
   have hUo : IsOpen U := isOpen_integers v
   have hUc : IsCompact U := isCompact_iff_compactSpace.mpr inferInstance
@@ -123,7 +123,7 @@ theorem exists_finite_residues_pi {κ : Type} [Fintype κ] (n : ℕ) (hn : 0 < n
     ∃ R : Set (κ → Fv F v), R.Finite ∧ ∀ t : κ → Fv F v, (∀ i, t i ∈ v.adicCompletionIntegers F) →
       ∃ r ∈ R, ∃ u : κ → Fv F v, (∀ i, u i ∈ v.adicCompletionIntegers F) ∧ t = r + n • u := by
   obtain ⟨R, hR, h⟩ := exists_finite_residues v n hn
-  haveI := hR.to_subtype
+  have := hR.to_subtype
   refine ⟨Set.range (fun f : κ → R => fun i => (f i : Fv F v)), Set.finite_range _, ?_⟩
   intro t ht
   choose r hr u hu hru using fun i => h (t i) (ht i)

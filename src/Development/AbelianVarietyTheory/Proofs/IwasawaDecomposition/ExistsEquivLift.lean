@@ -89,7 +89,7 @@ theorem lieFac_eq_pow {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Re
     rw [Real.sqrt_eq_rpow, Real.rpow_def_of_pos h, ← Real.exp_neg]
     congr 1
     ring
-  rw [e, ← Real.exp_nat_mul, lieFac, GlobalTheory.PtId.degW]
+  rw [e, ← Real.exp_natCast_mul, lieFac, GlobalTheory.PtId.degW]
   congr 1
   push_cast
   ring

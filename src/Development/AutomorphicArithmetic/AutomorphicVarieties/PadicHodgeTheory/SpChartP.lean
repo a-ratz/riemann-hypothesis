@@ -79,14 +79,14 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem comm_of_integral {k : Type} [Field k] {p : ℕ} (hp : p.Prime) (hk : (p : k) = 0) (f g : k →+* k)
     {x : k} (hx : IsIntegral ℤ x) : f (g x) = g (f x) := by
-  haveI hchar : CharP k p := (CharP.charP_iff_prime_eq_zero hp).mpr hk
-  haveI : Fact p.Prime := ⟨hp⟩
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
+  have hchar : CharP k p := (CharP.charP_iff_prime_eq_zero hp).mpr hk
+  have : Fact p.Prime := ⟨hp⟩
+  let : Algebra (ZMod p) k := ZMod.algebra k p
   by_cases hx0 : x = 0
   · simp [hx0]
   have hxi : IsIntegral (ZMod p) x := hx.tower_top
-  haveI := Algebra.finite_adjoin_simple_of_isIntegral hxi
-  haveI hF : Finite (Algebra.adjoin (ZMod p) {x}) := Module.finite_of_finite (ZMod p)
+  have := Algebra.finite_adjoin_simple_of_isIntegral hxi
+  have hF : Finite (Algebra.adjoin (ZMod p) {x}) := Module.finite_of_finite (ZMod p)
   have hxmem : x ∈ Algebra.adjoin (ZMod p) {x} := Algebra.subset_adjoin (Set.mem_singleton x)
   have hfin : (Set.range (fun n : ℕ => x ^ n)).Finite := by
     refine Set.Finite.subset (s := ((Algebra.adjoin (ZMod p) {x} : Subalgebra (ZMod p) k) : Set k))
@@ -107,7 +107,7 @@ private theorem comm_of_integral {k : Type} [Field k] {p : ℕ} (hp : p.Prime) (
       have h2 : x ^ j * x ^ (i - j) = x ^ j * 1 := by
         rw [← pow_add, Nat.add_sub_cancel' h.le, mul_one, heq']
       exact mul_left_cancel₀ (pow_ne_zero _ hx0) h2
-  haveI : NeZero N := ⟨hN0.ne'⟩
+  have : NeZero N := ⟨hN0.ne'⟩
   obtain ⟨ζ, hζ⟩ := IsCyclic.exists_generator (α := rootsOfUnity N k)
   have mem : ∀ y : k, y ^ N = 1 → ∃ a : ℤ, y = ((ζ : kˣ) : k) ^ a := by
     intro y hy
@@ -157,8 +157,8 @@ private theorem resA_local {σ : G ℚ Ω} (hσ : σ ∈ Dec (F := ℚ) A) : IsL
 
 private theorem comm_mem_Ine {p : ℕ} (hp : p.Prime) (hA : A.valuation (p : Ω) < 1) {g h : G ℚ Ω}
     (hg : g ∈ Dec (F := ℚ) A) (hh : h ∈ Dec (F := ℚ) A) : g * h * g⁻¹ * h⁻¹ ∈ Ine (F := ℚ) A := by
-  haveI := resA_local hg
-  haveI := resA_local hh
+  have := resA_local hg
+  have := resA_local hh
   have hkp : ((p : ℕ) : IsLocalRing.ResidueField A) = 0 := by
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff,
       ValuationSubring.valuation_lt_one_iff]
@@ -206,7 +206,7 @@ private theorem comm_mem_Ine {p : ℕ} (hp : p.Prime) (hA : A.valuation (p : Ω)
     Subgroup.mul_mem _ (Subgroup.mul_mem _ (Subgroup.mul_mem _ hg hh) (Subgroup.inv_mem _ hg))
       (Subgroup.inv_mem _ hh)
   show _ ∈ Inertia (F := ℚ) A
-  simp only [Inertia, Set.mem_setOf_eq]
+  simp only [Inertia, Set.mem_ofPred_eq]
   refine ⟨hDec, fun x hx => ?_⟩
   have hxA : x ∈ A := (A.valuation_le_one_iff x).1 hx
   have hyA : g⁻¹ (h⁻¹ x) ∈ A :=
@@ -230,13 +230,13 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.abP :
   have hpp : p.Prime := hD.S_prime p hpS
   have hv := hD.pl_over p hpp
   refine ⟨?_, ?_⟩
-  · haveI : Finite (G ℚ Ω ⧸ D.ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hD.psi_open
-    haveI : Finite D.ψ.range :=
+  · have : Finite (G ℚ Ω ⧸ D.ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hD.psi_open
+    have : Finite D.ψ.range :=
       Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange D.ψ).toEquiv
-    haveI hfin : Finite (Subgroup.map D.ψ (D.Ip p)) :=
+    have hfin : Finite (Subgroup.map D.ψ (D.Ip p)) :=
       Finite.of_injective (Subgroup.inclusion (Subgroup.map_le_range D.ψ _))
         (Subgroup.inclusion_injective _)
-    haveI : IsCyclic (Subgroup.map D.ψ (D.Ip p)) := isCyclic_subgroup_units _
+    have : IsCyclic (Subgroup.map D.ψ (D.Ip p)) := isCyclic_subgroup_units _
     obtain ⟨γ, hγ⟩ := IsCyclic.exists_generator (α := Subgroup.map D.ψ (D.Ip p))
     obtain ⟨τ, hτI, hτγ⟩ := Subgroup.mem_map.mp γ.2
     refine ⟨τ, hτI, ?_, ?_⟩
@@ -628,17 +628,17 @@ private theorem core {l : ℕ} [Fact l.Prime] {H E B B' : Type} [Group H] [Topol
     (hG : ∀ g, IsGSp (algebraMap E B' (θ g)) (r' g)) (hcont : ∀ a b, QCont l fun g => r' g a b) :
     ∃ r : H →* M4 B, (∀ a b, QCont l fun g => r g a b) ∧ (∀ g, IsGSp (algebraMap E B (θ g)) (r g)) ∧
       (∀ g, r' g = 1 → r g = 1) ∧ ∀ g, (r g).map (p : B →+* B') = r' g := by
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
-  letI : Algebra ℚ B := ((algebraMap ℚ_[l] B).comp (algebraMap ℚ ℚ_[l])).toAlgebra
-  letI : Algebra ℚ B' := ((algebraMap ℚ_[l] B').comp (algebraMap ℚ ℚ_[l])).toAlgebra
-  letI := moduleTopology ℚ_[l] B
-  letI := moduleTopology ℚ_[l] B'
-  haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
-  haveI : IsModuleTopology ℚ_[l] B' := ⟨rfl⟩
-  haveI : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
-  haveI : IsTopologicalRing B' := IsModuleTopology.isTopologicalRing ℚ_[l] B'
-  haveI : IsNoetherianRing B := isNoetherian_of_tower ℚ_[l] inferInstance
-  haveI : IsNoetherianRing B' := isNoetherian_of_tower ℚ_[l] inferInstance
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
+  let : Algebra ℚ B := ((algebraMap ℚ_[l] B).comp (algebraMap ℚ ℚ_[l])).toAlgebra
+  let : Algebra ℚ B' := ((algebraMap ℚ_[l] B').comp (algebraMap ℚ ℚ_[l])).toAlgebra
+  let := moduleTopology ℚ_[l] B
+  let := moduleTopology ℚ_[l] B'
+  have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+  have : IsModuleTopology ℚ_[l] B' := ⟨rfl⟩
+  have : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
+  have : IsTopologicalRing B' := IsModuleTopology.isTopologicalRing ℚ_[l] B'
+  have : IsNoetherianRing B := isNoetherian_of_tower ℚ_[l] inferInstance
+  have : IsNoetherianRing B' := isNoetherian_of_tower ℚ_[l] inferInstance
   obtain ⟨n, hn⟩ : IsNilpotent (RingHom.ker π) :=
     (Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian _)).2 hπ
   obtain ⟨n', hn'⟩ : IsNilpotent (RingHom.ker π') :=
@@ -837,7 +837,7 @@ private theorem hom_iff (χ : Fin 4 → H →* Eˣ) (γ : H → M4 E) :
   · rintro ⟨r, hr⟩ g h a b
     have key := congrArg (fun M => (M a b).snd) (r.map_mul g h)
     simp only [dualNumber_matrix_mul_snd_apply, hr, TrivSqZeroExt.fst_mk, TrivSqZeroExt.snd_mk, ite_mul, mul_ite, zero_mul, mul_zero,
-      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul,
+      Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_mul,
       Units.val_mul] at key
     have h1 := Units.ne_zero (χ b g)
     have h2 := Units.ne_zero (χ b h)
@@ -869,7 +869,7 @@ private theorem hom_iff (χ : Fin 4 → H →* Eˣ) (γ : H → M4 E) :
         show (if a = b then ((χ a (g * h) : Eˣ) : E) else 0) =
           ∑ c, (if a = c then ((χ a g : Eˣ) : E) else 0) * (if c = b then ((χ c h : Eˣ) : E) else 0)
         simp only [ite_mul, mul_ite, zero_mul, mul_zero,
-          Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul, Units.val_mul]
+          Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_mul, Units.val_mul]
         split_ifs with hab
         · subst hab
           rfl
@@ -879,7 +879,7 @@ private theorem hom_iff (χ : Fin 4 → H →* Eˣ) (γ : H → M4 E) :
           ∑ c, ((if a = c then ((χ a g : Eˣ) : E) else 0) * (γ h c b * ((χ b h : Eˣ) : E)) +
             (γ g a c * ((χ c g : Eˣ) : E)) * (if c = b then ((χ c h : Eˣ) : E) else 0))
         simp only [ite_mul, mul_ite, zero_mul, mul_zero,
-          Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_mul,
+          Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_mul,
           Units.val_mul, hc g h a b]
         have h2 := Units.ne_zero (χ b g)
         field_simp
@@ -926,12 +926,12 @@ private theorem dim_root [CharZero E] (χ : Fin 4 → H →* Eˣ) (I : H → Pro
       fun _ _ _ => rfl⟩
   have hQ : Q χ I (wt a b) v0 := by
     unfold Q
-    refine ⟨?_, ?_, ⟨X0, hX0, fun g a' b' h => by rw [hv0, if_neg h]⟩, fun s _ a' => by rw [hv0, if_pos rfl], ?_, ?_⟩
+    refine ⟨?_, ?_, ⟨X0, hX0, fun g a' b' h => by rw [hv0, ite_eq_right h]⟩, fun s _ a' => by rw [hv0, ite_eq_left rfl], ?_, ?_⟩
     · intro g h a' b'
       rw [hv0, hv0, hv0]
       by_cases h' : a' = b'
       · simp [h']
-      · simp only [if_neg h', map_mul, Units.val_mul]
+      · simp only [ite_eq_right h', map_mul, Units.val_mul]
         have h1 := Units.ne_zero (χ b' g)
         have h2 := Units.ne_zero (χ b' h)
         field_simp
@@ -944,7 +944,7 @@ private theorem dim_root [CharZero E] (χ : Fin 4 → H →* Eˣ) (I : H → Pro
       · subst h'
         simp
       · have h'' : b'.rev ≠ a'.rev := fun e => h' (Fin.rev_injective e).symm
-        rw [if_neg h', if_neg h'']
+        rw [ite_eq_right h', ite_eq_right h'']
         have hr : (χ b'.rev g : E) / χ a'.rev g = (χ a' g : E) / χ b' g := by
           have e1 := hθ g a'
           have e2 := hθ g b'
@@ -958,9 +958,9 @@ private theorem dim_root [CharZero E] (χ : Fin 4 → H →* Eˣ) (I : H → Pro
         linear_combination (1 - (χ a' g : E) / χ b' g) * hs
     · intro a' b'
       by_cases h' : a' = b'
-      · simp only [hv0, if_pos h']
+      · simp only [hv0, ite_eq_left h']
         exact continuous_const
-      · simp only [hv0, if_neg h']
+      · simp only [hv0, ite_eq_right h']
         exact (continuous_const.sub (hc a' b')).mul continuous_const
     · intro g a' b' hw
       rw [hv0]
@@ -973,7 +973,7 @@ private theorem dim_root [CharZero E] (χ : Fin 4 → H →* Eˣ) (I : H → Pro
     have h1 : v0 g0 a b = 0 := by
       have := congrArg (fun w : S => (w : H → M4 E) g0 a b) h
       simpa using this
-    rw [hv0, if_neg hab] at h1
+    rw [hv0, ite_eq_right hab] at h1
     rcases mul_eq_zero.1 h1 with h2 | h2
     · apply h0
       apply Units.ext
@@ -981,7 +981,7 @@ private theorem dim_root [CharZero E] (χ : Fin 4 → H →* Eˣ) (I : H → Pro
       have : (χ a g0 : E) / χ b g0 = 1 := by linear_combination -h2
       exact (div_eq_one_iff_eq hb).1 this
     · exact hX0ab h2
-  refine (finrank_eq_one_iff_of_nonzero' _ hne0).2 fun w => ?_
+  refine (finrank_eq_one_iff_of_ne_zero' _ hne0).2 fun w => ?_
   obtain ⟨w, hw⟩ := w
   have hwQ := (hS w).1 hw
   unfold Q at hwQ
@@ -991,9 +991,9 @@ private theorem dim_root [CharZero E] (χ : Fin 4 → H →* Eˣ) (I : H → Pro
   rw [hv0]
   by_cases h' : a' = b'
   · subst h'
-    rw [if_pos rfl, mul_zero]
+    rw [ite_eq_left rfl, mul_zero]
     exact (hwsupp g a' a' (by rw [(wt_eq_zero a' a').2 rfl]; exact hwab.symm)).symm
-  · rw [if_neg h', hXwe g a' b' h']
+  · rw [ite_eq_right h', hXwe g a' b' h']
     by_cases hw' : wt a' b' = wt a b
     · rcases wt_fib a b a' b' hab hw' with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
       · field_simp
@@ -1091,35 +1091,35 @@ private theorem dim_zero (χ : Fin 4 → H →* Eˣ) (I : H → Prop) (σ : H)
       · rw [hγ, hγ, hγ]
         by_cases hab : a = b
         · subst hab
-          rw [if_pos rfl, if_pos rfl, if_pos rfl, div_self (Units.ne_zero _), one_mul, hdadd]
-        · rw [if_neg hab, if_neg hab, if_neg hab, mul_zero, add_zero]
+          rw [ite_eq_left rfl, ite_eq_left rfl, ite_eq_left rfl, div_self (Units.ne_zero _), one_mul, hdadd]
+        · rw [ite_eq_right hab, ite_eq_right hab, ite_eq_right hab, mul_zero, add_zero]
       · rw [mem_sp4_iff]
         intro a b
         rw [hγ, hγ]
         by_cases hab : a = b
         · subst hab
-          rw [if_pos rfl, if_pos rfl, hdrev]
+          rw [ite_eq_left rfl, ite_eq_left rfl, hdrev]
           have h2 : sgn a * sgn a = 1 := by
             fin_cases a <;> decide
           rw [h2, one_smul]
         · have hne : b.rev ≠ a.rev := fun h => hab (Fin.rev_injective h).symm
-          rw [if_neg hne, if_neg hab, smul_zero, neg_zero]
-      · rw [hγ, if_neg hab]
+          rw [ite_eq_right hne, ite_eq_right hab, smul_zero, neg_zero]
+      · rw [hγ, ite_eq_right hab]
         show (0 : E) = _ * (0 : E)
         rw [mul_zero]
-      · rw [hγ, if_pos rfl]
+      · rw [hγ, ite_eq_left rfl]
         exact hdI s hs a
       · show Continuous fun g => if a = b then d g a else 0
         by_cases hab : a = b
-        · simp only [if_pos hab]
+        · simp only [ite_eq_left hab]
           exact hdc a
-        · simp only [if_neg hab]
+        · simp only [ite_eq_right hab]
           exact continuous_const
       · have hne : a ≠ b := fun h => hab (by rw [h]; exact (wt_eq_zero b b).2 rfl)
-        rw [hγ, if_neg hne]
+        rw [hγ, ite_eq_right hne]
     refine ⟨⟨γ, (hS γ).2 hQ⟩, ?_⟩
     show (γ σ 0 0, γ σ 1 1) = (e0, e1)
-    rw [hγ, hγ, if_pos rfl, if_pos rfl]
+    rw [hγ, hγ, ite_eq_left rfl, ite_eq_left rfl]
     simp [d, huσ, huσ']
   have e := LinearEquiv.ofBijective L ⟨hinj, hsurj⟩
   rw [e.finrank_eq]
@@ -1236,10 +1236,10 @@ private theorem cont_of_open {H O E : Type} [Group H] [TopologicalSpace H] [IsTo
 theorem UpperTheory.tangent_space_deformation_dual_numbers :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (hD : D.Good) (q : ℕ), q ∈ D.Sb → ∀ (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra ↥c.O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ↥c.O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing ↥c.O E] (j : ℤ × ℤ) (S : Submodule E (D.Gp q → M4 E)), (∀ s, s ∈ S ↔ (∃ r' : D.Gp q →* M4 (DualNumber E), (∀ g a b, r' g a b = ⟨algebraMap c.O E (D.r0At q g a b), s g a b⟩) ∧ EqP D q r') ∧ (∀ a b, QCont l fun g => s g a b) ∧ ∀ g a b, wt a b ≠ j → s g a b = 0) → finrank E ↥S = dimsP j := by
   intro Ω _ _ _ l _ c D hD q hq E _ _ _ _ _ _ _ _ j S hS
-  letI tE : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
+  let tE : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
   have hF := facts D hD
   have hqT : q ∈ D.T := Finset.mem_insert_of_mem hq
   let σ : D.Gp q := ⟨D.sg q, (hF.2.1 q hqT).1⟩
@@ -1248,7 +1248,7 @@ theorem UpperTheory.tangent_space_deformation_dual_numbers :
   have hQC : ∀ (f : D.Gp q → E), QCont l f ↔ Continuous f := fun f => Iff.rfl
   have cZ : Continuous (algebraMap ℤ_[l] E) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] E, RingHom.coe_comp]
-    exact (continuous_algebraMap ℚ_[l] E).comp (continuous_subtype_val : Continuous fun x : ℤ_[l] => (x : ℚ_[l]))
+    exact (continuous_algebraMap ℚ_[l] E).comp (continuous_subtypeVal : Continuous fun x : ℤ_[l] => (x : ℚ_[l]))
   have cC : Continuous fun g : D.Gp q => algebraMap c.O E (chiO ℚ Ω l c.O g : c.O) := by
     have : (fun g : D.Gp q => algebraMap c.O E (chiO ℚ Ω l c.O g : c.O)) =
         fun g : D.Gp q => algebraMap ℤ_[l] E (cycZ ℚ Ω l g : ℤ_[l]) := by
@@ -1256,13 +1256,13 @@ theorem UpperTheory.tangent_space_deformation_dual_numbers :
       rw [IsScalarTower.algebraMap_apply ℤ_[l] c.O E]
       rfl
     rw [this]
-    exact cZ.comp (Units.continuous_val.comp ((continuous_cycZ ℚ Ω l).comp continuous_subtype_val))
+    exact cZ.comp (Units.continuous_val.comp ((continuous_cycZ ℚ Ω l).comp continuous_subtypeVal))
   have cO : ∀ φ : G ℚ Ω →* c.Oˣ, IsOpen (φ.ker : Set (G ℚ Ω)) →
       Continuous fun g : D.Gp q => algebraMap c.O E (φ g : c.O) := by
     intro φ hφ
     refine cont_of_open (φ.comp (D.Gp q).subtype) ?_ (fun u => algebraMap c.O E (u : c.O))
     rw [← MonoidHom.comap_ker, Subgroup.coe_comap]
-    exact continuous_subtype_val.isOpen_preimage _ hφ
+    exact continuous_subtypeVal.isOpen_preimage _ hφ
   have cMul : ∀ φ ψ' : G ℚ Ω →* c.Oˣ, (Continuous fun g : D.Gp q => algebraMap c.O E (φ g : c.O)) →
       (Continuous fun g : D.Gp q => algebraMap c.O E (ψ' g : c.O)) →
       Continuous fun g : D.Gp q => algebraMap c.O E ((φ * ψ') g : c.O) := by
@@ -1415,8 +1415,8 @@ private theorem card_ten {n : ℕ} (u : Fin n → ℤ × ℤ) (hu : ∀ j, Nat.c
     by_contra h
     have h0 : u i ≠ 0 := fun e => h (e ▸ by decide)
     have h3 := hu (u i)
-    rw [dimsP, if_neg h0, if_neg h] at h3
-    haveI : Nonempty {k // u k = u i} := ⟨⟨i, rfl⟩⟩
+    rw [dimsP, ite_eq_right h0, ite_eq_right h] at h3
+    have : Nonempty {k // u k = u i} := ⟨⟨i, rfl⟩⟩
     exact Nat.card_pos.ne' h3
   have h2 := Finset.card_eq_sum_card_fiberwise (s := Finset.univ) (t := wts) (f := u) fun i _ => h1 i
   rw [Finset.card_univ, Fintype.card_fin] at h2
@@ -1427,8 +1427,8 @@ private theorem card_ten {n : ℕ} (u : Fin n → ℤ × ℤ) (hu : ∀ j, Nat.c
 theorem UpperTheory.V.Loc.spChartP :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (hD : D.Good) (q : ℕ), q ∈ D.Sb → ∀ (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra ↥c.O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ↥c.O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing ↥c.O E] (R : Type) [CommRing R] [Algebra ↥c.O R] [IsCO ↥c.O R] (ρ : Lift c.O (D.rbarAt q) R), Represents (D.condP q) ρ → ∃ (x : R →ₐ[c.O] c.O) (P : Ideal R) (w : Fin 10 → ℤ × ℤ) (φ : R →ₐ[c.O] MvPowerSeries (Fin 10) E), (ρ.map x).hom = D.r0At q ∧ UpperTheory.V.Loc.IsCompl P x φ ∧ (∃ y, x y ≠ 0 ∧ ∀ a ∈ P, y * a = 0) ∧ (∀ j, Nat.card {i // w i = j} = dimsP j) ∧ ∀ g a b, φ (ρ.hom g a b) ∈ wtPart E w (wt a b) := by
   intro Ω _ _ _ l _ c D hD q hq E _ _ _ _ _ _ _ _ R _ _ _ ρ hrep
-  haveI : IsGalois ℚ Ω := {}
-  haveI : CompactSpace (D.Gp q) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
+  have : IsGalois ℚ Ω := {}
+  have : CompactSpace (D.Gp q) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
   obtain ⟨ρ₀, h0, hpt⟩ := r0pt D hD
   have hQ0 : EqP D q (D.loc ρ₀ q).hom := ((ptMap D hD c.O ρ₀).1 hpt).atP q hq
   have h0' : (D.loc ρ₀ q).hom = D.r0At q := congrArg (fun r => MonoidHom.comp r (D.Gp q).subtype) h0

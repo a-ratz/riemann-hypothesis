@@ -83,9 +83,9 @@ theorem algChart_of_etale {R : Type} [CommRing R] {B : Type} [CommRing B] [Algeb
       ∀ (A : Type) [CommRing A] [Algebra R A] (aug : A →ₐ[R] R) (m : ℕ), (RingHom.ker aug) ^ (m + 1) = ⊥ →
         ∀ φ : B →ₐ[R] A, aug.comp φ = ε' →
           ∃! ψ : JetR R (Fin n) m →ₐ[R] A, aug.comp ψ = jetAug R (Fin n) m ∧ ψ.comp (π m) = φ := by
-  letI : Algebra (MvPolynomial (Fin n) R) B := g.toRingHom.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin n) R) B := IsScalarTower.of_algebraMap_eq fun r => (g.commutes r).symm
-  haveI : Algebra.Etale (MvPolynomial (Fin n) R) B := hg
+  let : Algebra (MvPolynomial (Fin n) R) B := g.toRingHom.toAlgebra
+  have : IsScalarTower R (MvPolynomial (Fin n) R) B := IsScalarTower.of_algebraMap_eq fun r => (g.commutes r).symm
+  have : Algebra.Etale (MvPolynomial (Fin n) R) B := hg
   have hπ : ∀ m : ℕ, ∃ π : B →ₐ[R] JetR R (Fin n) m, (jetAug R (Fin n) m).comp π = ε' ∧
       ∀ j, π (sX R j) = algebraMap R _ (ε' (sX R j)) + zR m j := fun m =>
     etale_exists (n := n) ε' (jetAug R (Fin n) m) (ker_jetAug_nil (Fin n) m) _ (fun j => by

@@ -83,7 +83,7 @@ theorem exists_etale_local (V : Type) [CommRing V] [IsLocalRing V] [IsNoetherian
     (Polynomial.mem_lifts_of_surjective residue_surjective g) hgm
   have hfin : Module.Finite V (AdjoinRoot f) := .of_basis (AdjoinRoot.powerBasis' hf).basis
   have hfree : Module.Free V (AdjoinRoot f) := .of_basis (AdjoinRoot.powerBasis' hf).basis
-  haveI : Fact (Irreducible (f.map (residue V))) := ⟨hg⟩
+  have : Fact (Irreducible (f.map (residue V))) := ⟨hg⟩
   have hmax : ((maximalIdeal V).map (algebraMap V (AdjoinRoot f))).IsMaximal := by
     rw [AdjoinRoot.algebraMap_eq]
     exact Ideal.Quotient.maximal_of_isField _ (MulEquiv.isField (Field.toIsField (AdjoinRoot (f.map (residue V))))
@@ -113,7 +113,7 @@ theorem exists_etale_local (V : Type) [CommRing V] [IsLocalRing V] [IsNoetherian
     exact IntermediateField.algebra_adjoin_le_adjoin _ _ (Polynomial.aeval_mem_adjoin_singleton _ _)
   have hun : Algebra.FormallyUnramified V (AdjoinRoot f) := Algebra.FormallyUnramified.of_map_maximalIdeal hme
   have hfp : Algebra.FinitePresentation V (AdjoinRoot f) := Algebra.FinitePresentation.of_finiteType.1 inferInstance
-  letI : Algebra k₀ (ResidueField (AdjoinRoot f)) := ((ResidueField.map (algebraMap V (AdjoinRoot f))).comp φ).toAlgebra
+  let : Algebra k₀ (ResidueField (AdjoinRoot f)) := ((ResidueField.map (algebraMap V (AdjoinRoot f))).comp φ).toAlgebra
   have hr : aeval (residue _ (AdjoinRoot.root f)) (minpoly k₀ pb.gen) = 0 := by
     obtain ⟨c, hc⟩ := hdvd
     have : aeval (residue _ (AdjoinRoot.root f)) ((minpoly k₀ pb.gen).map φ) = 0 := by rw [hc, map_mul, hroot, zero_mul]
@@ -186,12 +186,12 @@ variable {Dw : Datum H} {Xo : ∀ l : Level H, Moduli Dw l} {p : ℕ} {W : Valua
 
 theorem isNoetherianRing_stalk (hp : p ≠ 0) (hW : (p : ℂ) ∈ W.nonunits) (Z : Mdl Y i₀) (x : Z.X) :
     IsNoetherianRing (Z.X.presheaf.stalk x) := by
-  haveI := Z.i.c.fin
-  haveI : NumberField Z.i.c.F := {}
-  haveI := (isDiscreteValuationRing_and_finite_residueField_of_numberField (Z.i.c.V W) hp
+  have := Z.i.c.fin
+  have : NumberField Z.i.c.F := {}
+  have := (isDiscreteValuationRing_and_finite_residueField_of_numberField (Z.i.c.V W) hp
     (SharedLaws.mem_nonunits_V Z.i.c hp hW)).1
-  haveI := SharedLaws.isProper_toroidalModel_structureMap Z
-  haveI : IsLocallyNoetherian Z.X := LocallyOfFiniteType.isLocallyNoetherian Z.s
+  have := SharedLaws.isProper_toroidalModel_structureMap Z
+  have : IsLocallyNoetherian Z.X := LocallyOfFiniteType.isLocallyNoetherian Z.s
   infer_instance
 
 theorem charZero_stalk (Z : Mdl Y i₀) (x : Z.X) : CharZero (Z.X.presheaf.stalk x) := by

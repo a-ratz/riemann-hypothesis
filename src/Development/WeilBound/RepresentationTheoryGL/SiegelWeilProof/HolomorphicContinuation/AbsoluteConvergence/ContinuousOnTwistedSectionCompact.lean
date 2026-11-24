@@ -48,10 +48,10 @@ namespace PositivityTheory.Rg.Sw.AbsSt
 open PositivityTheory.Rg.Sw
 
 theorem cont_KR_mul (n : ℕ) (y k1 : GR n) : Continuous (fun k : KR n => y * (k : GR n) * k1) :=
-  (continuous_const.mul continuous_subtype_val).mul continuous_const
+  (continuous_const.mul continuous_subtypeVal).mul continuous_const
 
 theorem cont_KR_mul' (n : ℕ) (k1 : GR n) : Continuous (fun k : KR n => (k : GR n) * k1) :=
-  continuous_subtype_val.mul continuous_const
+  continuous_subtypeVal.mul continuous_const
 
 theorem mR_mul {n : ℕ} (a b : GR n) : mR (a * b) = mR a * mR b := rfl
 

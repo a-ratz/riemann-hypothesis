@@ -66,8 +66,8 @@ theorem UpperTheory.V.Alg.M.fg_holds :
       · rw [SetLike.mem_coe, Subalgebra.mem_restrictScalars]
         exact Algebra.subset_adjoin hz
     exact (Subalgebra.mem_restrictScalars O).1 (hle hy)
-  haveI : Algebra.FiniteType (𝒜 0) A := ⟨⟨s, hadj'⟩⟩
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing (𝒜 0) A
+  have : Algebra.FiniteType (𝒜 0) A := ⟨⟨s, hadj'⟩⟩
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing (𝒜 0) A
   have hI : (Ideal.span (𝒜 j : Set A)).FG := IsNoetherian.noetherian _
   obtain ⟨t, ht, hspan⟩ := (Submodule.fg_span_iff_fg_span_finset_subset _).1 hI
   refine ⟨t, le_antisymm ?_ ?_⟩

@@ -84,7 +84,7 @@ theorem field_case (F : Type) [Field F] [Finite F] (t m f : F) (hD : t ^ 2 - 4 *
   by_cases h2 : ringChar F = 2
   · obtain ⟨a, ha⟩ := FiniteField.isSquare_of_char_two h2 f
     exact ⟨a, 0, by rw [ha]; ring⟩
-  · haveI := Fintype.ofFinite F
+  · have := Fintype.ofFinite F
     have hodd : Fintype.card F % 2 = 1 := FiniteField.odd_card_of_char_ne_two h2
     have htwo : (2 : F) ≠ 0 := Ring.two_ne_zero h2
     have hp : (X ^ 2 : F[X]).degree = 2 := by simp
@@ -100,14 +100,14 @@ theorem main (S : Type) [inst : CommRing S] [Finite S] [IsReduced S] (t m f : S)
     (hD : IsUnit (t ^ (2 : ℕ) - (4 : S) * m)) (_hf : IsUnit f) :
     ∃ (a : S) (b : S), a ^ (2 : ℕ) + t * a * b + m * b ^ (2 : ℕ) = f := by
   classical
-  haveI : IsArtinianRing S := isArtinian_of_finite
+  have : IsArtinianRing S := isArtinian_of_finite
   let e := (IsArtinianRing.equivPi S).toRingEquiv
   have key : ∀ I : MaximalSpectrum S, ∃ a b : S ⧸ I.asIdeal,
       a ^ 2 + e t I * a * b + e m I * b ^ 2 = e f I := by
     intro I
-    haveI := I.isMaximal
-    letI : Field (S ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
-    haveI : Finite (S ⧸ I.asIdeal) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
+    have := I.isMaximal
+    let : Field (S ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
+    have : Finite (S ⧸ I.asIdeal) := Finite.of_surjective _ Ideal.Quotient.mk_surjective
     apply field_case
     have h := (hD.map ((Pi.evalRingHom (fun J : MaximalSpectrum S => S ⧸ J.asIdeal) I).comp
       e.toRingHom)).ne_zero
@@ -185,7 +185,7 @@ theorem norm_surj_of_finite_reduced_involution : ∀ (R : Type) [CommRing R] [Fi
     refine Subtype.ext ?_
     push_cast [fA, vA]
     rw [← hv, v.mul_inv]
-  haveI : IsReduced A := ⟨fun x hx => Subtype.ext (IsNilpotent.eq_zero (hx.map A.subtype))⟩
+  have : IsReduced A := ⟨fun x hx => Subtype.ext (IsNilpotent.eq_zero (hx.map A.subtype))⟩
   obtain ⟨a, b, hab⟩ := binQuad_represents_unit_of_finite_reduced A tA mA fA hdisc hfA
   have hab' := congrArg Subtype.val hab
   push_cast [tA, mA, fA] at hab'
@@ -473,7 +473,7 @@ theorem normStep_exists (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (
       add_mem' := fun {a b} ha hb => ⟨Commute.add_left ha.1 hb.1, normStep_isIntV_add ha.2 hb.2⟩
       zero_mem' := ⟨Commute.zero_left _, normStep_isIntV_zero⟩
       neg_mem' := fun {a} ha => ⟨Commute.neg_left ha.1, normStep_isIntV_neg ha.2⟩ }
-  letI : CommRing A :=
+  let : CommRing A :=
     { (inferInstance : Ring A) with mul_comm := fun a b => Subtype.ext (hcomm _ _ a.2.1 b.2.1) }
   have hτmem : ∀ y ∈ A, (starT G.star (Qv v) y).unop ∈ A := fun y hy =>
     ⟨normStep_star_comm G v g c hg y hy.1, hstar y hy.2⟩
@@ -496,7 +496,7 @@ theorem normStep_exists (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (
       show IsIntV G v (algebraMap (Qv v) (Qv v ⊗[ℚ] G.C) (algebraMap O (Qv v) r))
       rw [Algebra.algebraMap_eq_smul_one]
       exact normStep_isIntV_smul r.2 h1⟩)
-  letI : Algebra O A := φ.toAlgebra
+  let : Algebra O A := φ.toAlgebra
   let cf : A →ₗ[O] (Fin (Module.finrank ℚ G.C) → O) :=
     { toFun := fun y i => ⟨(basV G v).repr (y : Qv v ⊗[ℚ] G.C) i, y.2.2 i⟩
       map_add' := fun a b => by
@@ -514,10 +514,10 @@ theorem normStep_exists (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (
     apply Subtype.ext
     apply (basV G v).repr.injective
     exact Finsupp.ext fun i => congrArg (fun f => ((f i : O) : Qv v)) hab
-  haveI : Module.Finite O A := Module.Finite.of_injective cf hinj
+  have : Module.Finite O A := Module.Finite.of_injective cf hinj
   obtain ⟨hhen, hfin⟩ := GlobalTheory.T.padicIntegers_henselian_finiteResidue v.1
-  haveI := hhen
-  haveI := hfin
+  have := hhen
+  have := hfin
   let θA : A := ⟨θ, hθg, hθi⟩
   have hθu : IsUnit (θA - τ θA) := IsUnit.of_mul_eq_one (a := θA - τ θA) (⟨θ', hθ'g, hθ'i⟩ : A) (Subtype.ext hθθ')
   have hsg' : s⁻¹ * g = g * s⁻¹ := Commute.inv_left hsg
@@ -526,7 +526,7 @@ theorem normStep_exists (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (
   have hsu : IsUnit sA := IsUnit.of_mul_eq_one (a := sA) siA (Subtype.ext s.mul_inv)
   have hτs : τ sA = sA := Subtype.ext hsfix
   obtain ⟨t₀, ht₀, ht₀J⟩ := GlobalTheory.T.exists_isUnit_mul_involution_sub_mem_jacobson O A τ hτinv θA hθu sA hsu hτs
-  haveI : HenselianRing A (⊥ : Ideal A).jacobson := GlobalTheory.henselianRing_of_finite O _ le_rfl
+  have : HenselianRing A (⊥ : Ideal A).jacobson := GlobalTheory.henselianRing_of_finite O _ le_rfl
   have hτJ : ∀ a ∈ (⊥ : Ideal A).jacobson, τ a ∈ (⊥ : Ideal A).jacobson := by
     intro a ha
     rw [Ideal.mem_jacobson_bot] at ha ⊢

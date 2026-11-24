@@ -77,7 +77,7 @@ theorem exists_level : ∀ (F Ω : Type) [Field F] [IsAlgClosed F] [CharZero F] 
   generalize n ^ J = m at *
   have : NeZero (m ^ 2) := ⟨hM⟩
   have : NeZero ((m ^ 2 : ℕ) : F) := ⟨Nat.cast_ne_zero.2 hM⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F (m ^ 2)
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F (m ^ 2)
   have hζ := hz.isUnit_unit (NeZero.ne _)
   generalize (hz.isUnit (NeZero.ne _)).unit = ζ at hζ
   have inj : Function.Injective (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom :=

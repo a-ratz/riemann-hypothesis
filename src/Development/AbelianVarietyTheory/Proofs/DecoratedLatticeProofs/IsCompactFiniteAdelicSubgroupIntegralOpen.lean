@@ -59,7 +59,7 @@ theorem isCompact_of_integral_open (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.
     (hKi : ∀ k ∈ K, ∀ v, GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v k ∈ GlobalTheory.AdelicU.stabLoc D.sp.cm.sig V.gram Λ v)
     (hU : ∃ U : Subgroup (GA D V), IsOpen (U : Set (GA D V)) ∧ ∀ k ∈ U, k ∈ GfC V → k ∈ K) :
     IsCompact (K : Set (GA D V)) := by
-  haveI : Submodule.IsFullLattice D.host.E Λ :=
+  have : Submodule.IsFullLattice D.host.E Λ :=
     Formalism.IndefR.Fin.PDA.selfDual_isFullLattice V Λ hΛ
   obtain ⟨U, hUo, hUK⟩ := hU
   have hGf : IsClosed ((GfC V : Subgroup (GA D V)) : Set (GA D V)) := by
@@ -69,7 +69,7 @@ theorem isCompact_of_integral_open (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.
     refine Subgroup.isOpen_mono (H₁ := U.subgroupOf (GfC V)) ?_ ?_
     · intro x hx
       exact Subgroup.mem_subgroupOf.2 (hUK _ (Subgroup.mem_subgroupOf.1 hx) x.2)
-    · exact hUo.preimage continuous_subtype_val
+    · exact hUo.preimage continuous_subtypeVal
   have hcl : IsClosed ((K.subgroupOf (GfC V)) : Set (GfC V)) := Subgroup.isClosed_of_isOpen _ hopen
   have hKcl : IsClosed (K : Set (GA D V)) := by
     have h := hcl.trans hGf

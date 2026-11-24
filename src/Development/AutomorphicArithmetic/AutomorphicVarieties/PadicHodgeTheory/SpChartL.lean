@@ -280,7 +280,7 @@ private theorem ul_exp_onto {A : Type} [CommRing A] [Algebra ℚ A] {n : A} (hn 
 
 private theorem t2Space_finite_padic_module {l : ℕ} [Fact l.Prime] {V : Type} [AddCommGroup V] [Module ℚ_[l] V]
     [Module.Finite ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] : T2Space V := by
-  haveI : IsTopologicalAddGroup V := IsModuleTopology.topologicalAddGroup ℚ_[l] V
+  have : IsTopologicalAddGroup V := IsModuleTopology.isTopologicalAddGroup ℚ_[l] V
   let e0 := (Module.finBasis ℚ_[l] V).equivFun
   exact T2Space.of_injective_continuous e0.injective
     (IsModuleTopology.continuous_of_linearMap e0.toLinearMap)
@@ -288,17 +288,17 @@ private theorem t2Space_finite_padic_module {l : ℕ} [Fact l.Prime] {V : Type} 
 theorem UpperTheory.lift_unramified_unipotent_character :
     ∀ {v l : ℕ} [Fact v.Prime] [Fact l.Prime] {B B' : Type} [CommRing B] [CommRing B'] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra ℚ_[l] B'] [Module.Finite ℚ_[l] B'] (p : B →ₐ[ℚ_[l]] B'), Function.Surjective p → (∀ a, p a = 0 → IsNilpotent a) → ∀ u' : GQ v →* B'ˣ, QCont l (fun g => (u' g : B')) → (∀ g ∈ Iq v, u' g = 1) → (∀ g, IsNilpotent ((u' g : B') - 1)) → ∃ u : GQ v →* Bˣ, QCont l (fun g => (u g : B)) ∧ (∀ g ∈ Iq v, u g = 1) ∧ ∀ g, p (u g : B) = (u' g : B') := by
   intro v l _ _ B B' _ _ _ _ _ _ p hp hker u' hc' hI' hn'
-  letI : Algebra ℚ B := ((algebraMap ℚ_[l] B).comp (algebraMap ℚ ℚ_[l])).toAlgebra
-  letI : Algebra ℚ B' := ((algebraMap ℚ_[l] B').comp (algebraMap ℚ ℚ_[l])).toAlgebra
-  letI : TopologicalSpace B := moduleTopology ℚ_[l] B
-  letI : TopologicalSpace B' := moduleTopology ℚ_[l] B'
-  haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
-  haveI : IsModuleTopology ℚ_[l] B' := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup B := IsModuleTopology.topologicalAddGroup ℚ_[l] B
-  haveI : IsTopologicalAddGroup B' := IsModuleTopology.topologicalAddGroup ℚ_[l] B'
-  haveI : ContinuousSMul ℚ_[l] B := IsModuleTopology.toContinuousSMul ℚ_[l] B
-  haveI : ContinuousSMul ℚ_[l] B' := IsModuleTopology.toContinuousSMul ℚ_[l] B'
-  haveI : T2Space B' := t2Space_finite_padic_module (l := l)
+  let : Algebra ℚ B := ((algebraMap ℚ_[l] B).comp (algebraMap ℚ ℚ_[l])).toAlgebra
+  let : Algebra ℚ B' := ((algebraMap ℚ_[l] B').comp (algebraMap ℚ ℚ_[l])).toAlgebra
+  let : TopologicalSpace B := moduleTopology ℚ_[l] B
+  let : TopologicalSpace B' := moduleTopology ℚ_[l] B'
+  have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+  have : IsModuleTopology ℚ_[l] B' := ⟨rfl⟩
+  have : IsTopologicalAddGroup B := IsModuleTopology.isTopologicalAddGroup ℚ_[l] B
+  have : IsTopologicalAddGroup B' := IsModuleTopology.isTopologicalAddGroup ℚ_[l] B'
+  have : ContinuousSMul ℚ_[l] B := IsModuleTopology.toContinuousSMul ℚ_[l] B
+  have : ContinuousSMul ℚ_[l] B' := IsModuleTopology.toContinuousSMul ℚ_[l] B'
+  have : T2Space B' := t2Space_finite_padic_module (l := l)
   obtain ⟨σ, hσ⟩ := (iqBasic v).2.2.2.1
   obtain ⟨x', hx', he'⟩ := ul_exp_onto (hn' σ)
   obtain ⟨x, rfl⟩ := hp x'
@@ -368,11 +368,11 @@ theorem UpperTheory.V.Loc.cocLift (hP : LocalPublishedTheorems) {v l : ℕ} [Fac
     ∃ x : G → B, Continuous x ∧ (∀ g h, x (g * h) = x g + χ g * x h + f g h) ∧ ∀ g, p (x g) = x' g := by
   let J : Submodule ℚ_[l] B := LinearMap.ker p.toLinearMap
   have hJ : ∀ a, a ∈ J ↔ p a = 0 := fun _ => Iff.rfl
-  letI : TopologicalSpace J := moduleTopology ℚ_[l] J
-  haveI : IsModuleTopology ℚ_[l] J := ⟨rfl⟩
-  haveI : ContinuousAdd J := IsModuleTopology.toContinuousAdd ℚ_[l] J
-  haveI : IsTopologicalAddGroup J := IsModuleTopology.topologicalAddGroup ℚ_[l] J
-  haveI : ContinuousSMul ℚ_[l] J := IsModuleTopology.toContinuousSMul ℚ_[l] J
+  let : TopologicalSpace J := moduleTopology ℚ_[l] J
+  have : IsModuleTopology ℚ_[l] J := ⟨rfl⟩
+  have : ContinuousAdd J := IsModuleTopology.toContinuousAdd ℚ_[l] J
+  have : IsTopologicalAddGroup J := IsModuleTopology.isTopologicalAddGroup ℚ_[l] J
+  have : ContinuousSMul ℚ_[l] J := IsModuleTopology.toContinuousSMul ℚ_[l] J
   have hι : Continuous (fun a : J => (a : B)) := IsModuleTopology.continuous_of_linearMap J.subtype
   obtain ⟨π, hπ⟩ := J.subtype.exists_leftInverse_of_injective J.ker_subtype
   have hπc : Continuous π := IsModuleTopology.continuous_of_linearMap π
@@ -405,7 +405,7 @@ theorem UpperTheory.V.Loc.cocLift (hP : LocalPublishedTheorems) {v l : ℕ} [Fac
     rw [e, map_sub, hF g b, map_smul]
     exact sub_self _
   rw [hbot, finrank_bot] at hd
-  haveI : Subsingleton (H2 ρ) := finrank_zero_iff.1 hd
+  have : Subsingleton (H2 ρ) := finrank_zero_iff.1 hd
   let z : G × G → B := fun q => s (x' (q.1 * q.2)) - s (x' q.1) - χ q.1 * s (x' q.2) - f q.1 q.2
   have hzJ : ∀ q, z q ∈ J := fun q => by
     rw [hJ]
@@ -710,13 +710,13 @@ theorem UpperTheory.V.Loc.spLiftL :
     LocalPublishedTheorems → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (hD : D.Good) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra ↥c.O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ↥c.O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing ↥c.O E] (B : Type) [CommRing B] [Algebra ℚ_[l] B] [Module.Finite ℚ_[l] B] [Algebra ↥c.O B] [Algebra ℤ_[l] B] [IsScalarTower ℤ_[l] ↥c.O B] [IsScalarTower ℤ_[l] ℚ_[l] B] [Algebra E B] [IsScalarTower ↥c.O E B] [IsScalarTower ℚ_[l] E B] (π : B →ₐ[E] E) (hπ : ∀ a, π a = 0 → IsNilpotent a) (B' : Type) [CommRing B'] [Algebra ℚ_[l] B'] [Module.Finite ℚ_[l] B'] [Algebra ↥c.O B'] [Algebra ℤ_[l] B'] [IsScalarTower ℤ_[l] ↥c.O B'] [IsScalarTower ℤ_[l] ℚ_[l] B'] [Algebra E B'] [IsScalarTower ↥c.O E B'] [IsScalarTower ℚ_[l] E B'] (π' : B' →ₐ[E] E) (hπ' : ∀ a, π' a = 0 → IsNilpotent a) (p : B →ₐ[E] B'), Function.Surjective p → π'.comp p = π → ∀ r' : D.Gp l →* M4 B', IsContinuousLiftOfRZero D (π' : B' →+* E) l r' → EqL D r' → ∃ r : D.Gp l →* M4 B, IsContinuousLiftOfRZero D (π : B →+* E) l r ∧ EqL D r ∧ mapRep (p : B →+* B') r = r' := by
   intro hP Ω _ _ _ l _ c D hD E _ _ _ _ _ _ _ _ B _ _ _ _ _ _ _ _ _ _ π hπ B' _ _ _ _ _ _ _ _ _ _ π' hπ' p hp hpπ
     r' hr' hE'
-  letI : TopologicalSpace B := moduleTopology ℚ_[l] B
-  haveI : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
-  haveI : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
-  letI : TopologicalSpace B' := moduleTopology ℚ_[l] B'
-  haveI : IsModuleTopology ℚ_[l] B' := ⟨rfl⟩
-  haveI : IsTopologicalRing B' := IsModuleTopology.isTopologicalRing ℚ_[l] B'
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
+  let : TopologicalSpace B := moduleTopology ℚ_[l] B
+  have : IsModuleTopology ℚ_[l] B := ⟨rfl⟩
+  have : IsTopologicalRing B := IsModuleTopology.isTopologicalRing ℚ_[l] B
+  let : TopologicalSpace B' := moduleTopology ℚ_[l] B'
+  have : IsModuleTopology ℚ_[l] B' := ⟨rfl⟩
+  have : IsTopologicalRing B' := IsModuleTopology.isTopologicalRing ℚ_[l] B'
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
   have hpp : ∀ a, π' (p a) = π a := fun a => DFunLike.congr_fun hpπ a
   have hOB : ∀ x : c.O, algebraMap c.O B x = algebraMap E B (algebraMap c.O E x) := IsScalarTower.algebraMap_apply _ _ _
   have hOB' : ∀ x : c.O, algebraMap c.O B' x = algebraMap E B' (algebraMap c.O E x) :=
@@ -1001,9 +1001,9 @@ private theorem cl_count {n : ℕ} (u : Fin n → ℤ × ℤ) (h : ∀ j, Nat.ca
     by_contra hn
     have h2 : dimsL (u i) = 0 := by
       unfold dimsL
-      rw [if_neg, if_neg hn]
+      rw [ite_eq_right, ite_eq_right hn]
       rintro (e | e | e | e | e) <;> exact hn (by rw [e]; decide)
-    haveI : Nonempty {k // u k = u i} := ⟨⟨i, rfl⟩⟩
+    have : Nonempty {k // u k = u i} := ⟨⟨i, rfl⟩⟩
     exact Nat.card_pos.ne' ((h _).trans h2)
   have h3 := Finset.card_eq_sum_card_fiberwise (s := Finset.univ) (t := wts) (f := u) fun i _ => h1 i
   have h4 : ∀ j, (Finset.univ.filter fun i => u i = j).card = dimsL j := fun j => by
@@ -1015,7 +1015,7 @@ private theorem cl_count {n : ℕ} (u : Fin n → ℤ × ℤ) (h : ∀ j, Nat.ca
 theorem UpperTheory.V.Loc.spChartL :
     LocalPublishedTheorems → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (hD : D.Good) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra ↥c.O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ↥c.O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing ↥c.O E] (R : Type) [CommRing R] [Algebra ↥c.O R] [IsCO ↥c.O R] (ρ : Lift c.O (D.rbarAt l) R), Represents D.condL ρ → ∃ (x : R →ₐ[c.O] c.O) (P : Ideal R) (w : Fin 14 → ℤ × ℤ) (φ : R →ₐ[c.O] MvPowerSeries (Fin 14) E), (ρ.map x).hom = D.r0At l ∧ UpperTheory.V.Loc.IsCompl P x φ ∧ (∃ y, x y ≠ 0 ∧ ∀ a ∈ P, y * a = 0) ∧ (∀ j, Nat.card {i // w i = j} = dimsL j) ∧ ∀ g a b, φ (ρ.hom g a b) ∈ wtPart E w (wt a b) := by
   intro hP Ω _ _ _ l _ c D hD E _ _ _ _ _ _ _ _ R _ _ _ ρ hρ
-  haveI : CompactSpace (D.Gp l) := isCompact_iff_compactSpace.1 (isClosed_Dec (F := ℚ) (D.pl l)).isCompact
+  have : CompactSpace (D.Gp l) := isCompact_iff_compactSpace.1 (isClosed_Dec (F := ℚ) (D.pl l)).isCompact
   have hmap : ∀ (B B' : Type) [CommRing B] [Algebra c.O B] [CommRing B'] [Algebra c.O B'] (f : B →ₐ[c.O] B')
       (r : D.Gp l →* M4 B), (EqL D r → EqL D (mapRep (f : B →+* B') r)) ∧
         (Function.Injective f → EqL D (mapRep (f : B →+* B') r) → EqL D r) := by

@@ -182,8 +182,8 @@ private theorem gen {G Q : Type} [CommGroup G] [TopologicalSpace G] [IsTopologic
       · exact (measure_mono (t := Set.univ ×ˢ Sᶜ) fun p hp => ⟨trivial, fun hu => h (hF _ _ hu α hp).2⟩).trans hn.le
     rw [hm, Measure.sum_apply _ hK.measurableSet]
     refine (ENNReal.tsum_le_tsum hb).trans_lt ?_
-    rw [tsum_eq_sum (s := F) fun α h => if_neg h]
-    exact ENNReal.sum_lt_top.2 fun α h => by rw [if_pos h]; exact measure_Icc_lt_top⟩
+    rw [tsum_eq_sum (s := F) fun α h => ite_eq_right h]
+    exact ENNReal.sum_lt_top.2 fun α h => by rw [ite_eq_left h]; exact measure_Icc_lt_top⟩
   have e := Measure.isMulLeftInvariant_eq_smul m μ
   refine ⟨m.haarScalarFactor μ, fun h0 => ?_, fun h hh => ?_⟩
   · rw [h0, zero_smul] at e
@@ -202,7 +202,7 @@ private theorem cov_cont (α : ℚˣ) : Continuous fun p : ℝ × IdeleGroup ℚ
 
 private theorem fin_rat {C : Set (IdeleGroup ℚ)} (hC : IsCompact C) : {α : ℚˣ | IdeleGroup.diagonal ℚ α ∈ C}.Finite := by
   have h1 : (C ∩ (IdeleGroup.diagonal ℚ).range).Finite :=
-    (hC.inter_right (Subgroup.isClosed_of_discrete (U := (IdeleGroup.diagonal ℚ).range))).finite
+    (hC.inter_right (Subgroup.isClosed_of_discreteTopology (U := (IdeleGroup.diagonal ℚ).range))).finite
       (isDiscrete_iff_discreteTopology.2 (DiscreteTopology.of_subset (s := ((IdeleGroup.diagonal ℚ).range : Set _)) (inferInstanceAs (DiscreteTopology (IdeleGroup.diagonal ℚ).range))
         Set.inter_subset_right))
   exact (h1.preimage (IdeleGroup.diagonal_injective ℚ).injOn).subset fun α hα => ⟨hα, α, rfl⟩
@@ -231,8 +231,8 @@ theorem UpperTheory.ideleCovering_lintegral_eq_const_mul_haar :
     ∀ U : UMeas, ∃ c : ℝ≥0, c ≠ 0 ∧ ∀ h : IdeleGroup ℚ → ℝ≥0∞, Measurable h →
         ∫⁻ t : ℝ, ∫⁻ u, ∑' α : ℚˣ, h (Un.cov t u α) ∂U.υ = c * ∫⁻ y, h y ∂(ideleMeasure ℚ) := by
   intro U
-  haveI := U.prob
-  haveI : Countable ℚˣ := Units.val_injective.countable
+  have := U.prob
+  have : Countable ℚˣ := Units.val_injective.countable
   refine gen (ideleMeasure ℚ) U.υ Un.cov UU cov_cont U.supp U.inv UpperTheory.exists_rat_idele_eq_exp_unit_principal (fun τ w β t u α => ?_) cov_fin
   simp only [Un.cov, Real.exp_add, UpperTheory.realIdele_mul_abs_continuous_and_unit_abs_eq_one.1 _ _ (Real.exp_ne_zero _) (Real.exp_ne_zero _), map_mul]
   ac_rfl

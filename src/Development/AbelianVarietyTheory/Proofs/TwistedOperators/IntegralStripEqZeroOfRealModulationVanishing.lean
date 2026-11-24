@@ -193,7 +193,7 @@ theorem GlobalTheory.FourierRealPart.integral_preimage_eq_zero : ∀ (D : D7) (�
   intro D ψ hψ V V₀ W ρ d Y _ m F hF x hx hc S hS hsat
   obtain ⟨θ, hθ⟩ := hψ.2.1
   obtain ⟨s, hsc, hsf, hsθ, hsinf, hcθ⟩ := exists_section θ hθ
-  haveI : BorelSpace (Mx D W.rank ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank ρ) := ⟨rfl⟩
   classical
   let P : Mx D W.rank ρ → (Fin W.rank × Fin ρ × D.what₂.Tau → ℂ) := fun z k => θ k.2.2 (infPart D (z k.1 k.2.1))
   let sec : (Fin W.rank × Fin ρ × D.what₂.Tau → ℂ) → Mx D W.rank ρ := fun w i j => s fun τ => w (i, j, τ)
@@ -324,12 +324,12 @@ def pointHU (x₀ : Matrix (Fin W.rank) (Fin ρ) D.host.E) (q : GA D W × UX D �
   Formalism.L2.Theta.mt W q.1⁻¹ ⬝ ((rat x₀ : Mx D W.rank ρ) ⬝ q.2.1.1)
 
 theorem measurable_pointHU (x₀ : Matrix (Fin W.rank) (Fin ρ) D.host.E) : Measurable (pointHU (W := W) x₀) := by
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D W.rank ρ) := ⟨rfl⟩
-  haveI : SecondCountableTopologyEither (GA D W) (UX D ρ) := secondCountableTopologyEither_of_left _ _
-  haveI : OpensMeasurableSpace (GA D W × UX D ρ) := Prod.opensMeasurableSpace
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank ρ) := ⟨rfl⟩
+  have : SecondCountableTopologyEither (GA D W) (UX D ρ) := secondCountableTopologyEither_of_left _ _
+  have : OpensMeasurableSpace (GA D W × UX D ρ) := Prod.opensMeasurableSpace
   exact (((continuous_mt W).comp continuous_fst.inv).matrix_mul
-      (continuous_const.matrix_mul (Units.continuous_val.comp (continuous_subtype_val.comp continuous_snd)))).measurable
+      (continuous_const.matrix_mul (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_snd)))).measurable
 
 theorem measurable_point (x₀ : Matrix (Fin W.rank) (Fin ρ) D.host.E) :
     Measurable fun p : (GA D W × Y) × UX D ρ × Mx D ρ V₀.rank =>

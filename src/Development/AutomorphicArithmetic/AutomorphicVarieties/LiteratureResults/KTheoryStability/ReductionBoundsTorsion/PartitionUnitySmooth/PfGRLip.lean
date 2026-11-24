@@ -438,7 +438,7 @@ theorem pf_GRLip : GRLip := by
   have hlamk : 3 / 4 * lam h ≤ lam k := by
     obtain ⟨v0, hv0, -⟩ := (hB1.1 h hh).2.2.1
     unfold lam
-    haveI : Nonempty {v : UpperTheory.V.KT.Lat L₁ N₁ // v ≠ 0} := ⟨⟨v0, hv0⟩⟩
+    have : Nonempty {v : UpperTheory.V.KT.Lat L₁ N₁ // v ≠ 0} := ⟨⟨v0, hv0⟩⟩
     apply le_ciInf
     intro y
     have e1 : lam h ≤ q h y := (hB1.1 h hh).2.1 y y.2

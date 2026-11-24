@@ -57,8 +57,8 @@ private theorem isCrys_qRep {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K : FinEx
       (Q : Matrix (Fin d) (Fin d) P.R.B).map (P.actQ (g : GQ l)) = Q) :
     Formalism.WeaklyAdmissibleFiltrations.IsCrys (P.PD K) (((Matrix.toLinAlgEquiv' : Matrix (Fin d) (Fin d) ℚ_[l] ≃ₐ[ℚ_[l]] _) : _ →* _).comp
       ((Units.coeHom _).comp r) : Representation ℚ_[l] ↥(GK K) (Fin d → ℚ_[l])) := by
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
-  haveI : Nontrivial P.R.B := by
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
+  have : Nontrivial P.R.B := by
     refine ⟨⟨(P.PD K).t, 0, fun h => (P.PD K).not_mem_filtration_two ?_⟩⟩
     rw [h, map_zero]
     exact Submodule.zero_mem _
@@ -143,7 +143,7 @@ private theorem isCrys_of_mats {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K L : 
       exact GlobalTheory.PMon.iota_act P _ _
     rw [e1, e2]
     exact hσ g))
-  haveI := L.2
+  have := L.2
   refine (GlobalTheory.Pst.isCrys_ext_iff (P.PD K) (fun g => ⟨(r g : Matrix (Fin d) (Fin d) ℚ_[l]), fun x => rfl, fun x => ?_⟩)).2 hQ
   have : (r' g).val = (r g).val.map (algebraMap ℚ_[l] ↥L.1) := Matrix.ext fun i j => hr g i j
   show (r' g).val.mulVec x = _

@@ -210,12 +210,12 @@ theorem ioE_inj_inter : Function.Injective E.ioE ∧
     classical
     obtain ⟨_, hc, hl0, hlu, hfree, -, -⟩ := GlobalTheory.Per.integers_completeDVR l LL
     obtain ⟨hWc, hWtf, -, hsat, hμ⟩ := GlobalTheory.HWL.TensorWitt.main l LL
-    haveI : FiniteDimensional ℚ_[l] K.1 := K.2
-    haveI : FiniteDimensional ℚ_[l] (K0 K) :=
+    have : FiniteDimensional ℚ_[l] K.1 := K.2
+    have : FiniteDimensional ℚ_[l] (K0 K) :=
       Module.Finite.of_injective (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
         (IntermediateField.inclusion_injective (inf_le_left : K0 K ≤ K.1))
-    haveI : NeZero (Module.finrank ℚ_[l] (K0 K)) := ⟨Module.finrank_pos.ne'⟩
-    haveI : Nontrivial (RW LL) := Module.FaithfullyFlat.lTensor_nontrivial ℤ_[l] ↥(OL LL) (WCb l)
+    have : NeZero (Module.finrank ℚ_[l] (K0 K)) := ⟨Module.finrank_pos.ne'⟩
+    have : Nontrivial (RW LL) := Module.FaithfullyFlat.lTensor_nontrivial ℤ_[l] ↥(OL LL) (WCb l)
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible ↥(OL LL)
     obtain ⟨N, hN⟩ := IsDiscreteValuationRing.associated_pow_irreducible hl0 hϖ
     obtain ⟨n, rfl⟩ : ∃ n, N = n + 1 := by
@@ -270,7 +270,7 @@ theorem ioE_inj_inter : Function.Injective E.ioE ∧
     · intro i
       rw [← Pi.single_mul, mul_one]
     · exact Finset.univ_sum_single (1 : LetA ↥(OL LL) _)
-    · haveI := hμ _ (not_isUnit_εroot_sub_one AI s)
+    · have := hμ _ (not_isUnit_εroot_sub_one AI s)
       change E.io letπ ∈ _
       rw [E.io_π]
       exact IsAdicComplete.le_jacobson_bot _ (Ideal.mem_span_singleton_self _)

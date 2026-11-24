@@ -58,7 +58,7 @@ theorem slash_sub_partialSum_isBigO : ∀ (M : ℕ) (Γ : Subgroup SL(2, ℤ)) (
     (fun τ : ℍ => (f ∣[k] x) τ - ∑ n ∈ Finset.range M, co M k f x n * Function.Periodic.qParam (M : ℝ) (τ : ℂ) ^ n)
       =O[atImInfty] fun τ : ℍ => Real.exp (-2 * Real.pi * τ.im) := by
   intro M Γ k f hM hΓ hf x
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hg : IsMF (CongruenceSubgroup.Gamma M) k (f ∣[k] x) := by
     refine ⟨fun γ hγ => ?_, mdiff_slash hf.2.1 k x, fun y => ?_⟩
     · have h1 : x * γ * x⁻¹ ∈ Γ := hΓ ((CongruenceSubgroup.Gamma_normal M).conj_mem γ hγ x)
@@ -79,6 +79,6 @@ theorem slash_sub_partialSum_isBigO : ∀ (M : ℕ) (Γ : Subgroup SL(2, ℤ)) (
       FormalMultilinearSeries.ofScalars_apply_eq, smul_eq_mul, co]
     rw [eq_cuspFunction τ (by positivity) hperiodic]
   · simp only [Function.comp_apply, Function.Periodic.norm_qParam, coe_im]
-    rw [← Real.exp_nat_mul]; congr 1; field_simp
+    rw [← Real.exp_natCast_mul]; congr 1; field_simp
 
 end GlobalTheory.OddFrame

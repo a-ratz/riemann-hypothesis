@@ -62,13 +62,13 @@ private theorem meanInf_avg_le (K M : Type) [Field K] [NumberField K] [Field M] 
     Formalism.PairingDivisionLocalBalance.meanInf K (fun p => (∑ᶠ ρ ∈ {ρ : M →ₐ[ℚ] ℂ | ∀ x, ρ (i x) = p.embedding x}, h ρ) /
       Nat.card {ρ : M →ₐ[ℚ] ℂ | ∀ x, ρ (i x) = p.embedding x}) ≤
       2 * ((∑ ρ, h ρ) / (Module.finrank ℚ M : ℝ)) := by
-  letI : Algebra K M := i.toAlgebra
-  haveI : IsScalarTower ℚ K M := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : FiniteDimensional K M := FiniteDimensional.right ℚ K M
+  let : Algebra K M := i.toAlgebra
+  have : IsScalarTower ℚ K M := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : FiniteDimensional K M := FiniteDimensional.right ℚ K M
   have hcard : ∀ σ : K →+* ℂ, (Nat.card {ρ : M →ₐ[ℚ] ℂ | ∀ x, ρ (i x) = σ x} : ℝ) = Module.finrank K M := by
     intro σ
     have h1 := GlobalTheory.ArchMean.sum_comp_algHom K M (fun φ => if φ = σ.toRatAlgHom then 1 else 0)
-    rw [Finset.sum_ite_eq' Finset.univ σ.toRatAlgHom, if_pos (Finset.mem_univ _), mul_one, Finset.sum_boole] at h1
+    rw [Finset.sum_ite_eq' Finset.univ σ.toRatAlgHom, ite_eq_left (Finset.mem_univ _), mul_one, Finset.sum_boole] at h1
     rw [← h1, Nat.card_eq_fintype_card, Fintype.card_subtype]
     congr 2
     refine Finset.filter_congr fun ρ _ => ?_
@@ -118,7 +118,7 @@ theorem _root_.GlobalTheory.T.exists_const_mean_logArea_logThetaNorm_le : ∃ C1
   have h2 : g2 (lat D δ) ∈ fld D δ t0 := IntermediateField.subset_adjoin ℚ _ (Or.inr (by simp))
   have h3 : g3 (lat D δ) ∈ fld D δ t0 := IntermediateField.subset_adjoin ℚ _ (Or.inr (by simp))
   have h4 : wpF (lat D δ) t0 ∈ fld D δ t0 := IntermediateField.subset_adjoin ℚ _ (Or.inr (by simp))
-  haveI : FiniteDimensional ℚ (fld D δ t0) := by
+  have : FiniteDimensional ℚ (fld D δ t0) := by
     let b := Module.finBasis ℚ D.what₂.LL
     obtain ⟨M, hM1, -, hM⟩ := GlobalTheory.ArchNorm.exists_galois
       (Set.range (fun i => D.what₂.embLL (b i)) ∪ {g2 (lat D δ), g3 (lat D δ), wpF (lat D δ) t0})

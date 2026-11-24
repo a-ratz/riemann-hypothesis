@@ -135,7 +135,7 @@ theorem UpperTheory.ConvolutionTheory.Tf.tensMeas :
       refine (infFinEquiv K n).toHomeomorph.isCompact_preimage.2 ?_
       rw [← image_mul_centralSection_eq hn]
       exact (hΞc.isCompact.prod isCompact_posRealUnitInterval).image
-        ((continuous_subtype_val.comp continuous_fst).mul (continuous_centralSection.comp continuous_snd))
+        ((continuous_subtypeVal.comp continuous_fst).mul (continuous_centralSection.comp continuous_snd))
     refine integrable_of_bound_of_compact (hFm.comp hecont.measurable).aestronglyMeasurable
       hC M (fun p _ => (norm_indicator_le_norm_self _ _).trans (hM _)) fun p hp => ?_
     by_contra hne

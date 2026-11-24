@@ -80,9 +80,9 @@ theorem ind_drop :
       Ind χ (fun n => ξ n * J q n) M → Ind χ (fun n => ξ n * J q n) (N₀ * q) := by
   intro N₀ q M ξ N _ χ hN₀ hq hq2 hqN₀ hM hχ
   obtain ⟨hχp, hind⟩ := hχ
-  haveI : NeZero N₀ := ⟨hN₀.ne'⟩
-  haveI : NeZero ξ.conductor := ⟨ξ.conductor_ne_zero⟩
-  haveI : NeZero q := ⟨hq.ne_zero⟩
+  have : NeZero N₀ := ⟨hN₀.ne'⟩
+  have : NeZero ξ.conductor := ⟨ξ.conductor_ne_zero⟩
+  have : NeZero q := ⟨hq.ne_zero⟩
   have hqf : ¬ q ∣ ξ.conductor := fun h => hqN₀ (h.trans ξ.conductor_dvd_level)
   obtain ⟨ψ, hψ, -, hψeq⟩ :=
     twist_prim ξ.conductor q ξ.primitiveCharacter ξ.primitiveCharacter_isPrimitive hq hq2 hqf
@@ -486,7 +486,7 @@ theorem log_oddM :
   have hPle : (∏ p ∈ Icc 3 ⌊z⌋₊ with Nat.Prime p, p) ≤ 4 ^ ⌊z⌋₊ := by
     refine le_trans ?_ (primorial_le_four_pow ⌊z⌋₊)
     unfold primorial
-    apply Finset.prod_le_prod_of_subset_of_one_le'
+    apply prod_le_prod_of_subset_of_one_le
     · intro p hp
       simp only [Finset.mem_filter, Finset.mem_Icc, Finset.mem_range] at hp ⊢
       exact ⟨by omega, hp.2⟩
@@ -537,10 +537,10 @@ private theorem char_of (N₀ q : ℕ) (hN : 0 < N₀) (hq : q.Prime) (h2 : q �
   have hqN : ¬ q ∣ N₀ := fun h => absurd (Nat.le_of_dvd hN h) (by omega)
   have hNq : 0 < N₀ * q := Nat.mul_pos hN hq.pos
   by_cases ha : a ≤ 1
-  · haveI : NeZero N₀ := ⟨by omega⟩
+  · have : NeZero N₀ := ⟨by omega⟩
     have hfpos : 0 < ξ.conductor := Nat.pos_of_ne_zero ξ.conductor_ne_zero
     have hfN : ξ.conductor ≤ N₀ := Nat.le_of_dvd hN ξ.conductor_dvd_level
-    haveI : NeZero ξ.conductor := ⟨by omega⟩
+    have : NeZero ξ.conductor := ⟨by omega⟩
     have key : ∀ n : ℕ, n.Coprime N₀ →
         ξ.primitiveCharacter (n : ZMod ξ.conductor) = ξ (n : ZMod N₀) := by
       intro n hn
@@ -581,9 +581,9 @@ theorem stage2 :
         (∀ d ∈ B, ¬ GoodD N₀ C τ Y (Y ^ K) (Y ^ (ε / 5)) z' q d) → (B.card : ℝ) ≤ η * (primeSetTwoBounds (Y ^ (ε / 5)) z' q).card := by
   obtain ⟨C, hC, hst⟩ := stage
   refine ⟨C, hC, fun ε τ K η N₀ hε hε52 hτ hK hη hN₀ => ?_⟩
-  haveI : NeZero N₀ := ⟨by omega⟩
+  have : NeZero N₀ := ⟨by omega⟩
   classical
-  letI : Fintype (DirichletCharacter ℂ N₀) := Fintype.ofFinite _
+  let : Fintype (DirichletCharacter ℂ N₀) := Fintype.ofFinite _
   obtain ⟨Y₀, hY₀⟩ := hst (6 * ε / 5) τ K η (Fintype.card (DirichletCharacter ℂ N₀) * 2)
     (by positivity) (by linarith) hτ hK hη
   have e1 := ev_log hε hK
@@ -627,7 +627,7 @@ theorem stage2 :
     exact_mod_cast h
   have hqK : (Y ^ K) ^ 400 < (q:ℝ) := by
     have h : (Y ^ K) ^ 400 = Real.exp (400 * (K * Real.log Y)) := by
-      rw [Real.rpow_def_of_pos hYpos, ← Real.exp_nat_mul]
+      rw [Real.rpow_def_of_pos hYpos, ← Real.exp_natCast_mul]
       push_cast
       ring_nf
     rw [h]
@@ -755,7 +755,7 @@ private theorem stage1_succ (c : ℕ) (hc : c ≠ 0) (χ : DirichletCharacter �
 private theorem stage1_prim (N₀ : ℕ) (hN : 0 < N₀) (ξ : DirichletCharacter ℂ N₀) :
     ∃ ξ' : (Σ N : ℕ, DirichletCharacter ℂ (N + 1)), ξ'.2.IsPrimitive ∧ ξ'.1 + 1 ≤ N₀ ∧
       ∀ n : ℕ, n.Coprime N₀ → ξ'.2 (n : ZMod (ξ'.1 + 1)) = ξ (n : ZMod N₀) := by
-  haveI : NeZero N₀ := ⟨hN.ne'⟩
+  have : NeZero N₀ := ⟨hN.ne'⟩
   obtain ⟨ξ', h1, h2, h3⟩ := stage1_succ ξ.conductor (DirichletCharacter.conductor_ne_zero ξ)
     ξ.primitiveCharacter ξ.primitiveCharacter_isPrimitive
   refine ⟨ξ', h1, h2 ▸ Nat.le_of_dvd hN ξ.conductor_dvd_level, fun n hn => ?_⟩
@@ -781,8 +781,8 @@ theorem stage1 :
   classical
   obtain ⟨C, hC, hst⟩ := stage
   refine ⟨C, hC, fun ε τ K η N₀ hε hε' hτ hK hη hN => ?_⟩
-  haveI : NeZero N₀ := ⟨hN.ne'⟩
-  haveI : Fintype (DirichletCharacter ℂ N₀) := Fintype.ofFinite _
+  have : NeZero N₀ := ⟨hN.ne'⟩
+  have : Fintype (DirichletCharacter ℂ N₀) := Fintype.ofFinite _
   choose g hg1 hg2 hg3 using stage1_prim N₀ hN
   obtain ⟨Y₁, hY₁⟩ := hst ε τ K η (Fintype.card (DirichletCharacter ℂ N₀)) hε (by linarith) hτ hK hη
   obtain ⟨Y₂, hY₂⟩ := Filter.eventually_atTop.1 ((stage1_log hε).and
@@ -1064,7 +1064,7 @@ private theorem pairEx_box (M : ℕ) (hM : 0 < M) (C τ Y X z z' : ℝ) (q d : �
 private theorem pairEx_g {N : ℕ} [NeZero N] (χ : DirichletCharacter ℂ N) (h : χ ≠ 1) (y : ℝ) :
     Formalism.HC.An.gChi χ y = Gchi χ y := by
   unfold Formalism.HC.An.gChi
-  rw [if_neg h]
+  rw [ite_eq_right h]
   unfold Formalism.HC.An.sumLamChi Gchi
   congr 1
   apply Finset.sum_congr rfl
@@ -1099,7 +1099,7 @@ private theorem log_exp_product_bounds (M : ℕ) (hM : 0 < M) (ε Y : ℝ) (hε 
   have hwL : L ^ 2 ≤ w * L ^ 2 := by nlinarith
   have hlogQ : Real.log (8 * M * Real.exp w * Real.exp (w * L ^ 2) ^ j)
       = Real.log (8 * M) + w + j * (w * L ^ 2) := by
-    rw [← Real.exp_nat_mul, mul_assoc, ← Real.exp_add,
+    rw [← Real.exp_natCast_mul, mul_assoc, ← Real.exp_add,
       Real.log_mul (ne_of_gt (by linarith)) (Real.exp_pos _).ne', Real.log_exp]
     ring
   have hj' : (j : ℝ) ≤ 1 := by exact_mod_cast hj
@@ -1136,7 +1136,7 @@ theorem pairEx :
     have hm := hR.q_mod
     rw [h2] at hm
     norm_num at hm
-  haveI : NeZero (8 * M) := ⟨by omega⟩
+  have : NeZero (8 * M) := ⟨by omega⟩
   have hM8 : M ∣ 8 * M := Dvd.intro_left 8 rfl
   refine ⟨q, d, ?_, ?_, ?_, ?_⟩
   · refine ⟨hR.q_prime, hR.q_mod, hR.q_gt, hR.q_le, hR.d_prime, hR.d_mod, hR.d_gt, hR.d_le, ?_, ?_⟩

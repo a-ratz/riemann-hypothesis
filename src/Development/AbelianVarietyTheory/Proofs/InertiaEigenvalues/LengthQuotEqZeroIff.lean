@@ -189,13 +189,13 @@ theorem length_cocChi_le (hA : GlobalTheory.Published.GlobalArtinReciprocity) (e
   refine hlen.trans (add_le_add le_rfl (add_le_add ?_ le_rfl))
   have hZ := hC.trans ((_root_.GlobalTheory.Cut.Coc.main D i r ρ π Xs S hr hS hπ).2 c)
   by_cases hc : (c : ℕ) = 0
-  · rw [if_pos hc]
+  · rw [ite_eq_left hc]
     rw [hc, zero_add] at hZ hfin
     refine (GlobalTheory.UnramHom.length_le_classNumber hA D i C hZ fun v => ?_).trans le_add_self
     by_cases hv : v ∈ placesOver D.host.E (D.nd.l i)
     · exact GlobalTheory.CutTrivIne.main D i C v hv fun f hf => (hH v hv).2 (hfin f hf v hv)
     · exact hunr v hv
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     have h2 : 2 ≤ (c : ℕ) + 1 := by omega
     have ht : (c : ℕ) + 1 ≤ D.R.t := c.2
     have h := _root_.GlobalTheory.Cut.ShaBound.main D i ((c : ℕ) + 1) C hZ h2 ht
@@ -211,9 +211,9 @@ theorem sum_fin_ite {t : ℕ} (ht : 0 < t) (h : ℕ) (g : ℕ → ℕ) :
     ext x
     simp only [Finset.mem_range, Finset.mem_insert, Finset.mem_Ioo]
     omega
-  rw [this, Finset.sum_insert (by simp), if_pos rfl]
+  rw [this, Finset.sum_insert (by simp), ite_eq_left rfl]
   congr 1
-  exact Finset.sum_congr rfl fun e he => if_neg (Finset.mem_Ioo.mp he).1.ne'
+  exact Finset.sum_congr rfl fun e he => ite_eq_right (Finset.mem_Ioo.mp he).1.ne'
 
 
 
@@ -230,11 +230,11 @@ theorem main : GlobalTheory.Published.GlobalArtinReciprocity → GlobalCore := b
   have hz : ∀ q ∈ D.nd.Q i, lenQ i (D.nd.zeta i q - 1) = ((lenQ i (D.nd.zeta i q - 1)).toNat : ℕ∞) := by
     intro q hq
     obtain ⟨n, hn⟩ := exists_length_quot (sub_ne_zero.mpr (hQ q hq).2)
-    rw [lenQ, hn, ENat.toNat_coe]
+    rw [lenQ, hn, ENat.toNat_natCast]
   set z : HeightOneSpectrum (𝓞 D.host.E) → ℕ := fun q => (lenQ i (D.nd.zeta i q - 1)).toNat with hzdef
   set g : ℕ → ℕ := fun e => (Formalism.GaloisCohomology.shaLen (D.nd.ldat (D.nd.l i)) (e : ℤ)).toNat with hg
   have hg' : ∀ e ∈ Finset.Ioo 0 D.R.t, Formalism.GaloisCohomology.shaLen (D.nd.ldat (D.nd.l i)) (e : ℤ) = (g e : ℕ∞) :=
-    fun e he => (ENat.coe_toNat (hsha e he).ne).symm
+    fun e he => (ENat.natCast_toNat (hsha e he).ne).symm
   have ht : 0 < D.R.t := D.R.t_odd.pos
   set n := (placesOver D.host.E (D.nd.l i)).ncard with hn
   set h := padicValNat (D.nd.l i) (hE D.host) with hh
@@ -247,23 +247,23 @@ theorem main : GlobalTheory.Published.GlobalArtinReciprocity → GlobalCore := b
         (Finset.mem_Icc.mpr ⟨Nat.le_add_left _ _, c.2⟩)).trans (le_of_eq ?_)
     rw [Finset.sum_congr rfl hz, lenQ, lenQ, hL, hd]
     by_cases hc : (c : ℕ) = 0
-    · rw [if_pos hc, if_pos hc]
+    · rw [ite_eq_left hc, ite_eq_left hc]
       push_cast
       rfl
-    · rw [if_neg hc, if_neg hc, hg' c (Finset.mem_Ioo.mpr ⟨Nat.pos_of_ne_zero hc, c.2⟩)]
+    · rw [ite_eq_right hc, ite_eq_right hc, hg' c (Finset.mem_Ioo.mpr ⟨Nat.pos_of_ne_zero hc, c.2⟩)]
       push_cast
       rfl
   rw [lenQ, lenQ, hL, hd, ← hs] at hρ
   have htot := (_root_.GlobalTheory.CutDet.main D i r ρ π Xs S hr hS hπ hZ hN).trans
     (add_le_add hρ (Finset.sum_le_sum fun c _ => hχ c))
   rw [← Nat.cast_sum, ← Nat.cast_mul, ← Nat.cast_mul, ← Nat.cast_add, ← Nat.cast_add, ← Nat.cast_add] at htot
-  have hnat := ENat.toNat_le_of_le_coe htot
+  have hnat := ENat.toNat_le_of_le_natCast htot
   simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul,
     ← Finset.mul_sum, sum_fin_ite ht] at hnat
   have hvd : D.nd.vdel i = (d : ℚ) / L := by
-    rw [← hS.2.2.2.2.2.2.2.2.2.2.1.2.2.2, lenUnit, hL, hd, ENat.toNat_coe, ENat.toNat_coe]
+    rw [← hS.2.2.2.2.2.2.2.2.2.2.1.2.2.2, lenUnit, hL, hd, ENat.toNat_natCast, ENat.toNat_natCast]
   have hsp : Br.sPi D.loc D.nbr i ρ π = (s : ℚ) / L := by
-    rw [Br.sPi, lenUnit, hL, ← hs, ENat.toNat_coe, ENat.toNat_coe]
+    rw [Br.sPi, lenUnit, hL, ← hs, ENat.toNat_natCast, ENat.toNat_natCast]
   have hsh : ∑ e ∈ Finset.Ioo 0 D.R.t, (D.what₂.shaLen (D.nd.l i) e : ℚ) =
       ((∑ e ∈ Finset.Ioo 0 D.R.t, g e : ℕ) : ℚ) := by
     rw [Nat.cast_sum]
@@ -274,9 +274,9 @@ theorem main : GlobalTheory.Published.GlobalArtinReciprocity → GlobalCore := b
         ((∑ q ∈ D.nd.Q i, z q : ℕ) : ℚ) / L := by
     rw [Nat.cast_sum, Finset.sum_div]
     refine Finset.sum_congr rfl fun q _ => ?_
-    rw [lenUnit, hL, ENat.toNat_coe]
+    rw [lenUnit, hL, ENat.toNat_natCast]
     rfl
-  rw [hvd, hsp, hsh, hzq, vccOff, lenUnit, hL, ENat.toNat_coe]
+  rw [hvd, hsp, hsh, hzq, vccOff, lenUnit, hL, ENat.toNat_natCast]
   have hLq : (0 : ℚ) < L := by exact_mod_cast Nat.pos_of_ne_zero hL0
   generalize (Module.length (D.nd.O i) (D.nd.O i ⧸ ccOff i Xs π)).toNat = a at hnat
   generalize ∑ e ∈ Finset.Ioo 0 D.R.t, g e = G at hnat

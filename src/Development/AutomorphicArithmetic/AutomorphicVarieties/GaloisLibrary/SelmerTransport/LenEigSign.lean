@@ -162,7 +162,7 @@ theorem UpperTheory.V.Base.lenEigEq :
       Module.length O N = ∑ ψ : Q →* Oˣ, Module.length O (eig π ψ) ∧ ∀ ψ : Q →* Oˣ, IsCompl (eig π ψ) (coeig π ψ) := by
   intro O Q N _ _ _ _ _ _ _ _ π hu
   classical
-  letI := Fintype.ofFinite Q
+  let := Fintype.ofFinite Q
   rw [Nat.card_eq_fintype_card] at hu
   obtain ⟨c, hc⟩ := hu.exists_left_inv
   refine ⟨?_, fun ψ => ⟨?_, ?_⟩⟩
@@ -334,7 +334,7 @@ private theorem lenEigLe_gen (Q : Type) [CommGroup Q] [Finite Q] :
   classical
   obtain ⟨ι, _, n, hn, ⟨e⟩⟩ := CommGroup.equiv_prod_multiplicative_zmod_of_finite Q
   let σ := (Fintype.equivFin ι).symm
-  haveI : ∀ i, NeZero (n i) := fun i => ⟨by have := hn i; omega⟩
+  have : ∀ i, NeZero (n i) := fun i => ⟨by have := hn i; omega⟩
   refine ⟨_, fun i => n (σ i), fun i => e.symm (Pi.mulSingle (σ i) (Multiplicative.ofAdd 1)),
     fun i => zero_lt_one.trans (hn (σ i)), fun i => ?_, ?_, ?_⟩
   · rw [MulEquiv.orderOf_eq]
@@ -365,7 +365,7 @@ private theorem lenEigLe_gen (Q : Type) [CommGroup Q] [Finite Q] :
     change (∏ j : ι, (AddChar.zmodChar (n j) (hu' j)).toMonoidHom
       (Pi.mulSingle (M := fun j => Multiplicative (ZMod (n j))) (σ i) (Multiplicative.ofAdd 1) j)) = u i
     rw [Finset.prod_eq_single (σ i)]
-    · haveI : Fact (1 < n (σ i)) := ⟨hn _⟩
+    · have : Fact (1 < n (σ i)) := ⟨hn _⟩
       simp [AddChar.zmodChar_apply, ZMod.val_one]
     · intro j _ hj
       rw [Pi.mulSingle_eq_of_ne hj, map_one]
@@ -379,7 +379,7 @@ theorem UpperTheory.V.Base.lenEigLe :
   classical
   obtain ⟨k, n, g, hn, hg, hcl, hψ⟩ := lenEigLe_gen Q
   have hζ : ∀ i, ∃ ζ : Oˣ, IsPrimitiveRoot ζ (n i) := fun i => by
-    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot O (Monoid.exponent Q)
+    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot O (Monoid.exponent Q)
     have he : 0 < Monoid.exponent Q := Nat.pos_of_ne_zero Monoid.exponent_ne_zero_of_finite
     obtain ⟨m, hm⟩ : n i ∣ Monoid.exponent Q := hg i ▸ Monoid.order_dvd_exponent (g i)
     have h := hz.pow he (hm.trans (mul_comm _ _))

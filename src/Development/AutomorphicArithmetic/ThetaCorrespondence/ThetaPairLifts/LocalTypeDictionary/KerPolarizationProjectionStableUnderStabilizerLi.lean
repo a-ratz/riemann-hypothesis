@@ -408,7 +408,7 @@ theorem exists_sum_pure {F E : Type} [Field F] [NumberField F] [Field E] [Number
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [hg i]
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.smul_apply, smul_eq_mul, Pi.smul_apply, mul_assoc]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, smul_apply, smul_eq_mul, Pi.smul_apply, mul_assoc]
 
 theorem conjU_one {D : D7} (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (c : D.host.E)
     (h : J = c • V.gram) : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU V c h 1 = 1 := by

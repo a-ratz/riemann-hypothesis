@@ -104,7 +104,7 @@ theorem pLoc_sIdem_of_eq {v : HeightOneSpectrum (𝓞 E)}
   change ((pLoc E v).comp (pFin E)) (idem w) * _ = _
   have : ((pLoc E v).comp (pFin E)) (idem w) = 1 := by
     change (idemF w).1 v = 1
-    simp only [idemF, if_pos hv]
+    simp only [idemF, ite_eq_left hv]
   rw [this, one_mul]
   rfl
 
@@ -114,7 +114,7 @@ theorem pLoc_sIdem_of_ne {v : HeightOneSpectrum (𝓞 E)}
   change ((pLoc E v).comp (pFin E)) (idem w) * _ = _
   have : ((pLoc E v).comp (pFin E)) (idem w) = 0 := by
     change (idemF w).1 v = 0
-    simp only [idemF, if_neg hv]
+    simp only [idemF, ite_eq_right hv]
   rw [this, zero_mul]
 
 theorem conjAd_idem : conjAd E (idem w) = idem w := by
@@ -194,7 +194,7 @@ theorem continuous_ret : Continuous (ret w n) := by
     change Continuous fun M : Matrix (Fin n) (Fin n) (Ad E) => 1 - (1 : Matrix (Fin n) (Fin n) (Ad E)).map (idem w * ·) +
       M.map (idem w * ·)
     exact continuous_const.add (continuous_id.matrix_map (continuous_const.mul continuous_id))
-  exact Continuous.subtype_mk (Continuous.subtype_mk ((Continuous.units_map _ hc).comp continuous_subtype_val) _) _
+  exact Continuous.subtype_mk (Continuous.subtype_mk ((Continuous.units_map _ hc).comp continuous_subtypeVal) _) _
 
 theorem ret_of_mem (x : locU n w) : ret w n x = x := by
   refine Subtype.ext (Subtype.ext (ga_ext' ?_ fun v => ?_))

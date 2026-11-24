@@ -258,13 +258,13 @@ attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 theorem eventually_congOne (x₀ : GL (Fin n) (AfE D.host.F D.host.E)) (a : 𝓞 D.host.E) :
     ∀ᶠ κ in 𝓝 (1 : GA D V), CongOne a (x₀⁻¹ * finN V hn κ * x₀) := by
   subst hn
-  letI := rlt_top D.host.F D.host.E
-  haveI := rlt_isModTop D.host.F D.host.E
-  haveI := rlt_topRing (F := D.host.F) (E := D.host.E)
-  haveI : IsModuleTopology (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E) :=
+  let := rlt_top D.host.F D.host.E
+  have := rlt_isModTop D.host.F D.host.E
+  have := rlt_topRing (F := D.host.F) (E := D.host.E)
+  have : IsModuleTopology (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E) :=
     ⟨rfl⟩
   have hs : Continuous (swapAE D) := by
-    haveI := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 D.host.F) D.host.F) (EAf D)
+    have := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 D.host.F) D.host.F) (EAf D)
     refine (IsModuleTopology.continuous_of_linearMap
       (LinearEquiv.ofBijective (rlt_comm (F := D.host.F) (E := D.host.E)) (TensorProduct.comm _ _ _).bijective).symm.toLinearMap).congr
       fun z => ?_
@@ -285,7 +285,7 @@ theorem isAutFunDef_of [Fintype ι] (hθ : IsInfFam θ) (G : ι → Matrix (Fin 
     (h2 : ∀ γ ∈ GQ V, ∀ g, lT G (infN θ V hn t γ) (Φ (γ * g)) = Φ g) (h3 : ∀ᶠ κ in 𝓝 (1 : GA D V), ∀ g, Φ (g * κ) = Φ g)
     (h4 : ∀ k ∈ GinfC V, ∀ g, Φ (g * k) = Φ g) (l : (Frames G → ℂ) →ₗ[ℂ] ℂ) :
     IsAutFunDef V fun g => l (lT G (infN θ V hn t g) (Φ g)) := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   refine ⟨⟨fun γ hγ g => by rw [map_mul, lT_mul, h2 γ hγ], ?_, continuous_iff_continuousAt.2 fun g₀ => ?_⟩, ?_⟩
   · let U : Subgroup (GA D V) :=
       { carrier := {κ | ∀ g, Φ (g * κ) = Φ g}

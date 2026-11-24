@@ -101,7 +101,7 @@ theorem preimage_regSet {π : Y ⟶ X} [Flat π] {θ : X.functionField →+* Y.f
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := X.presheaf.stalk (π y)) u
   have hb0 : algebraMap _ X.functionField b ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hb
-  letI := (π.stalkMap y).hom.toAlgebra
+  let := (π.stalkMap y).hom.toAlgebra
   have : Module.Flat (X.presheaf.stalk (π y)) (Y.presheaf.stalk y) := Flat.stalkMap π y
   have : IsLocalHom (algebraMap (X.presheaf.stalk (π y)) (Y.presheaf.stalk y)) :=
     inferInstanceAs (IsLocalHom (π.stalkMap y).hom)

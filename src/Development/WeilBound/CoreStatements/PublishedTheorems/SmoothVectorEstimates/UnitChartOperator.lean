@@ -173,9 +173,9 @@ section Op
 attribute [local instance] Matrix.linftyOpNormedAddCommGroup Matrix.linftyOpNormedRing
 
 theorem a_hsgs : HasSummableGeomSeries (Matrix (Fin a) (Fin a) (ι → ℂ)) := by
-  letI : NormedSpace ℝ (Matrix (Fin a) (Fin a) (ι → ℂ)) := Matrix.linftyOpNormedSpace
+  let : NormedSpace ℝ (Matrix (Fin a) (Fin a) (ι → ℂ)) := Matrix.linftyOpNormedSpace
   have : FiniteDimensional ℝ (Matrix (Fin a) (Fin a) (ι → ℂ)) := by infer_instance
-  have := FiniteDimensional.complete ℝ (Matrix (Fin a) (Fin a) (ι → ℂ))
+  have := FiniteDimensional.completeSpace ℝ (Matrix (Fin a) (Fin a) (ι → ℂ))
   infer_instance
 
 theorem a_sup_le_op (A : Matrix (Fin a) (Fin a) (ι → ℂ)) :
@@ -197,7 +197,7 @@ theorem a_op_le_sup (A : Matrix (Fin a) (Fin a) (ι → ℂ)) :
     refine Finset.sup_le fun i _ => ?_
     calc ∑ j, ‖A i j‖₊ ≤ ∑ _j : Fin a, ‖(Matrix.of.symm A : LieI ι a)‖₊ :=
           Finset.sum_le_sum fun j _ =>
-            (nnnorm_le_pi_nnnorm (A i) j).trans (nnnorm_le_pi_nnnorm (Matrix.of.symm A : LieI ι a) i)
+            (nnNorm_le_pi_nnNorm (A i) j).trans (nnNorm_le_pi_nnNorm (Matrix.of.symm A : LieI ι a) i)
       _ = a * ‖(Matrix.of.symm A : LieI ι a)‖₊ := by simp
   exact_mod_cast this
 
@@ -248,7 +248,7 @@ theorem orb_gI (g : GL (Fin a) (ι → ℂ)) (v : X) : orb ρ v (gI g) = ρ g v 
     exact g.isUnit
   have hu : h.unit = g := Units.ext rfl
   simp only [orb]
-  rw [dif_pos h, hu]
+  rw [dite_eq_left h, hu]
 
 theorem orb_mulI (g : GL (Fin a) (ι → ℂ)) (v : X) (M : LieI ι a) :
     orb ρ v (mulI (gI g) M) = ρ g (orb ρ v M) := by
@@ -258,7 +258,7 @@ theorem orb_mulI (g : GL (Fin a) (ι → ℂ)) (v : X) (M : LieI ι a) :
   · have h' : IsUnit (Matrix.of (mulI (gI g) M)) := by rw [e]; exact g.isUnit.mul h
     have hu : h'.unit = g * h.unit := Units.ext (by simp [e])
     simp only [orb]
-    rw [dif_pos h', dif_pos h, hu, map_mul, ContinuousLinearMap.mul_apply]
+    rw [dite_eq_left h', dite_eq_left h, hu, map_mul, mul_apply_eq_comp]
   · have h' : ¬ IsUnit (Matrix.of (mulI (gI g) M)) := by rw [e, Units.isUnit_units_mul]; exact h
     simp only [orb]
     rw [dite_eq_right h', dite_eq_right h, map_zero]
@@ -271,7 +271,7 @@ theorem orb_mulI_right (g : GL (Fin a) (ι → ℂ)) (v : X) (M : LieI ι a) :
   · have h' : IsUnit (Matrix.of (mulI M (gI g))) := by rw [e]; exact h.mul g.isUnit
     have hu : h'.unit = h.unit * g := Units.ext (by simp [e])
     simp only [orb]
-    rw [dif_pos h', dif_pos h, hu, map_mul, ContinuousLinearMap.mul_apply]
+    rw [dite_eq_left h', dite_eq_left h, hu, map_mul, mul_apply_eq_comp]
   · have h' : ¬ IsUnit (Matrix.of (mulI M (gI g))) := by rw [e, Units.isUnit_mul_units]; exact h
     simp only [orb]
     rw [dite_eq_right h', dite_eq_right h]
@@ -657,7 +657,7 @@ theorem key [CompleteSpace X] [FiniteDimensional ℝ V] [MeasurableSpace V] [Bor
   have hF'g : ∀ g y, F' (gI g) y = (((ρ (g * u y)).restrictScalars ℝ).comp
       ((e_Dy D y).comp (lmul (gI (g * u y)⁻¹)))).comp (rmul (gI (u y))) := by
     intro g y
-    simp only [F', dif_pos (e_isUnit_gI g), e_unit_gI g]
+    simp only [F', dite_eq_left (e_isUnit_gI g), e_unit_gI g]
   have hdiff : ∀ g y, HasFDerivAt (F · y) (F' (gI g) y) (gI g) := by
     intro g y
     rw [hF'g]

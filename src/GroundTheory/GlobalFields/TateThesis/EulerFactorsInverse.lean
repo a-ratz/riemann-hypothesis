@@ -134,7 +134,7 @@ theorem infiniteParams_unique (w : InfinitePlace K) {p : ℤ × ℝ}
           abs_of_pos (Real.exp_pos t)]
       have h := heq (Units.mk0 a ha0)
       simp only [Units.val_mk0, ha, hn, div_self (by exact_mod_cast (Real.exp_pos t).ne' :
-        ((Real.exp t : ℝ) : ℂ) ≠ 0), one_zpow, one_mul, ← Real.exp_nat_mul,
+        ((Real.exp t : ℝ) : ℂ) ≠ 0), one_zpow, one_mul, ← Real.exp_natCast_mul,
         ofReal_exp_cpow] at h
       convert h using 2 <;> push_cast <;> ring
     have := eq_of_forall_exp_mul_I key
@@ -174,7 +174,7 @@ theorem infiniteParams_unique (w : InfinitePlace K) {p : ℤ × ℝ}
       have hn : ‖a‖ = 1 := by
         rw [← norm_extensionEmbedding', ha, Complex.norm_exp_ofReal_mul_I]
       have h := hm (Units.mk0 a ha0)
-      simp only [Units.val_mk0, ha, hn, ofReal_one, div_one, ← Complex.exp_int_mul] at h
+      simp only [Units.val_mk0, ha, hn, ofReal_one, div_one, ← exp_intCast_mul] at h
       convert h using 2 <;> push_cast <;> ring
     exact_mod_cast eq_of_forall_exp_mul_I key
 
@@ -206,7 +206,7 @@ theorem infiniteParams_inv (w : InfinitePlace K) :
   symm
   refine (χ⁻¹).infiniteParams_unique w ?_ fun a ↦ ?_
   · intro hw
-    rw [if_pos hw]
+    rw [ite_eq_left hw]
     exact χ.infiniteWeight_of_isReal hw
   · rw [infiniteComponent_inv, Circle.coe_inv, χ.infiniteComponent_eq]
     simp only
@@ -231,11 +231,11 @@ theorem infiniteParams_inv (w : InfinitePlace K) :
 
 theorem infiniteWeight_inv_of_isReal {w : InfinitePlace K} (hw : w.IsReal) :
     (χ⁻¹).infiniteWeight w = χ.infiniteWeight w := by
-  rw [infiniteWeight, infiniteParams_inv, if_pos hw]
+  rw [infiniteWeight, infiniteParams_inv, ite_eq_left hw]
 
 theorem infiniteWeight_inv_of_isComplex {w : InfinitePlace K} (hw : w.IsComplex) :
     (χ⁻¹).infiniteWeight w = -χ.infiniteWeight w := by
-  rw [infiniteWeight, infiniteParams_inv, if_neg (not_isReal_iff_isComplex.2 hw)]
+  rw [infiniteWeight, infiniteParams_inv, ite_eq_right (not_isReal_iff_isComplex.2 hw)]
 
 end HeckeCharacter
 

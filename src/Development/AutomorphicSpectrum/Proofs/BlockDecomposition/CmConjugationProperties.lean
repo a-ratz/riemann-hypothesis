@@ -88,7 +88,7 @@ theorem isCMExt_conj_fixed_integers : ∀ (F E : Type) [Field F] [NumberField F]
   refine ⟨hinv, ?_, hval, ?_⟩
   · intro x hx
     by_contra hne
-    haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; norm_num)
+    have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; norm_num)
     have hli : LinearIndependent F ![(1 : E), x] := by
       rw [LinearIndependent.pair_iff]
       intro s t hst

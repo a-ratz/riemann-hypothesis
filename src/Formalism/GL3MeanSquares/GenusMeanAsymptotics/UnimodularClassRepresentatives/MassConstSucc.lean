@@ -147,10 +147,10 @@ theorem sum_regroup (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : I
     obtain ⟨M, hM, h1, h2⟩ := exists_patch hK hF S hLfull hAfull Z
       (fun 𝔭 => if H : 𝔭 ∈ Z then τ ⟨𝔭, H⟩ else ⊥)
       (fun 𝔭 h𝔭 => by
-        simp only [dif_pos h𝔭]
+        simp only [dite_eq_left h𝔭]
         exact ⟨((hsr 𝔭).1 _ (hτ ⟨𝔭, h𝔭⟩)).1, ((hsr 𝔭).1 _ (hτ ⟨𝔭, h𝔭⟩)).2.2⟩)
       (fun 𝔭 h𝔭 => by rw [hZ1 𝔭 h𝔭]; exact one_ne_zero)
-    exact ⟨M, hM, fun 𝔭 => by rw [h1 𝔭.1 𝔭.2, dif_pos 𝔭.2], h2⟩
+    exact ⟨M, hM, fun 𝔭 => by rw [h1 𝔭.1 𝔭.2, dite_eq_left 𝔭.2], h2⟩
   choose! M hMg hMZ hMA using hex
   rw [← Finset.prod_coe_sort Z (fun 𝔭 => ∑ T ∈ s 𝔭, (fibLoc S L 𝔭.1 T : ℝ) * lamP h' T 𝔭.1),
     Finset.prod_univ_sum, Finset.mul_sum]
@@ -177,7 +177,7 @@ theorem sum_regroup (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : I
     choose τ₀ hτ₀ hu using hloc
     have hmem : τ₀ ∈ Fintype.piFinset (fun 𝔭 : ↥Z => s 𝔭.1) :=
       Fintype.mem_piFinset.mpr fun 𝔭 => (hτ₀ 𝔭).1
-    rw [Finset.sum_eq_single τ₀, if_pos]
+    rw [Finset.sum_eq_single τ₀, ite_eq_left]
     · rw [sameGenus_iff hK hF]
       intro 𝔭
       by_cases h𝔭 : 𝔭 ∈ Z
@@ -187,7 +187,7 @@ theorem sum_regroup (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : I
       · exact good_orbit hK hF hs hd S hLfull hLi 𝔭.2 hn (hZL 𝔭 h𝔭) (hZn 𝔭 h𝔭)
           ((hMg τ₀ hmem).2 𝔭) (hg.2 𝔭)
     · intro τ hτ hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hsg
       apply hne
       funext 𝔭
@@ -446,12 +446,12 @@ theorem volume_normSq_le_one (M : ℕ) :
       ext x; simp
     rw [e, MeasureTheory.volume_pi, MeasureTheory.Measure.pi_univ]
     simp
-  · haveI : Nonempty (Fin M) := ⟨⟨0, hM⟩⟩
+  · have : Nonempty (Fin M) := ⟨⟨0, hM⟩⟩
     have h := Complex.volume_sum_rpow_le (Fin M) (p := 2) one_le_two 1
     have hset : {x : Fin M → ℂ | ∑ i, Complex.normSq (x i) ≤ 1} =
         {x : Fin M → ℂ | (∑ i, ‖x i‖ ^ (2 : ℝ)) ^ (1 / (2 : ℝ)) ≤ 1} := by
       ext x
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [← Real.sqrt_eq_rpow, Real.sqrt_le_one]
       simp only [Real.rpow_two, Complex.normSq_eq_norm_sq]
     rw [hset, h, Fintype.card_fin, ENNReal.ofReal_one, one_pow, one_mul]
@@ -491,7 +491,7 @@ theorem volume_ell (ha : ∀ i, 0 < a i) :
     rw [hf, Complex.normSq_mul, Complex.normSq_ofReal, Real.mul_self_sqrt (ha i).le]
   have hpre : ell a = f ⁻¹' {x | ∑ i, Complex.normSq (x i) ≤ 1} := by
     ext z
-    simp only [ell, Set.mem_setOf_eq, Set.mem_preimage, hs]
+    simp only [ell, Set.mem_ofPred_eq, Set.mem_preimage, hs]
   have hprod : 0 < ∏ i, a i := Finset.prod_pos fun i _ => ha i
   rw [hpre, MeasureTheory.Measure.addHaar_preimage_linearMap _ (by rw [hdet]; exact hprod.ne'),
     volume_normSq_le_one, hdet, ← ENNReal.ofReal_mul (abs_nonneg _)]
@@ -501,7 +501,7 @@ theorem volume_ell (ha : ∀ i, 0 < a i) :
 
 theorem convex_ell (ha : ∀ i, 0 < a i) : Convex ℝ (ell a) := by
   intro x hx y hy s t hs ht hst
-  simp only [ell, Set.mem_setOf_eq] at hx hy ⊢
+  simp only [ell, Set.mem_ofPred_eq] at hx hy ⊢
   have key : ∀ i, a i * Complex.normSq ((s • x + t • y) i) ≤
       s * (a i * Complex.normSq (x i)) + t * (a i * Complex.normSq (y i)) := by
     intro i
@@ -529,7 +529,7 @@ theorem isBounded_ell (ha : ∀ i, 0 < a i) : Bornology.IsBounded (ell a) := by
   rw [Metric.isBounded_iff_subset_closedBall 0]
   refine ⟨∑ i, (1 + (a i)⁻¹), fun z hz => ?_⟩
   rw [mem_closedBall_zero_iff]
-  simp only [ell, Set.mem_setOf_eq] at hz
+  simp only [ell, Set.mem_ofPred_eq] at hz
   have hnn : ∀ j, 0 ≤ 1 + (a j)⁻¹ := fun j => add_nonneg zero_le_one (inv_nonneg.mpr (ha j).le)
   refine (pi_norm_le_iff_of_nonneg (Finset.sum_nonneg fun i _ => hnn i)).mpr fun i => ?_
   have hi : a i * Complex.normSq (z i) ≤ 1 :=
@@ -927,7 +927,7 @@ theorem discreteTopology_of_zsmul {Λ₁ Λ : Submodule ℤ E} [DiscreteTopology
     (hN : N ≠ 0) (h : ∀ y ∈ Λ, N • y ∈ Λ₁) : DiscreteTopology Λ := by
   refine DiscreteTopology.of_continuous_injective (β := Λ₁)
     (f := fun y : Λ ↦ (⟨N • (y : E), h y y.2⟩ : Λ₁)) ?_ ?_
-  · exact ((continuous_zsmul N).comp continuous_subtype_val).subtype_mk _
+  · exact ((continuous_zsmul N).comp continuous_subtypeVal).subtype_mk _
   · intro y z hyz
     have h' : N • (y : E) = N • (z : E) := congrArg Subtype.val hyz
     rw [← Int.cast_smul_eq_zsmul ℝ N (y : E), ← Int.cast_smul_eq_zsmul ℝ N (z : E)] at h'
@@ -987,7 +987,7 @@ theorem tendsto_ballCount (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
       atTop (𝓝 ((Real.pi ^ finrank K V / ((finrank K V).factorial : ℝ)) ^ Formalism.HermitianLatticesTheory.fDeg K /
         (Formalism.HermitianLatticesTheory.vInv K ^ (Formalism.HermitianLatticesTheory.fDeg K * finrank K V) * normD h L))) := by
   classical
-  haveI : IsEmpty {w : InfinitePlace K // w.IsReal} :=
+  have : IsEmpty {w : InfinitePlace K // w.IsReal} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.mpr (hK.1.isComplex w.1) w.2⟩
   obtain ⟨b, hbL, ho⟩ := BallB.exists_orth_basis_mem hK hs hd hL
   have hBL : Submodule.span (𝓞 K) (Set.range b) ≤ L :=

@@ -80,21 +80,21 @@ theorem pres (K : Type) [Field K] (N : Over (Sp K)) [GrpObj N] [IsCommMonObj N] 
   have haff : IsAffine N.left := isAffine_of_isAffineHom N.hom
   obtain ⟨A, ⟨e⟩⟩ := (essImage_hopfSpec (G := Grp.mk N)).2 haff
   let B : Type := A.unop
-  letI : HopfAlgebra K B := A.unop.hopfAlgebra
+  let : HopfAlgebra K B := A.unop.hopfAlgebra
   let G : Over (Spec (CommRingCat.of K)) :=
     (Spec (CommRingCat.of B)).asOver (Spec (CommRingCat.of K))
-  letI : GrpObj G := instGrpObjSpecAsOverSpec (R := CommRingCat.of K) (A := CommRingCat.of B)
+  let : GrpObj G := instGrpObjSpecAsOverSpec (R := CommRingCat.of K) (A := CommRingCat.of B)
   let i : G ≅ N := (Grp.forget _).mapIso e
-  haveI : IsMonHom i.hom := e.hom.hom.isMonHom_hom
+  have : IsMonHom i.hom := e.hom.hom.isMonHom_hom
   obtain ⟨j, hj, hw⟩ : ∃ j : Spec (CommRingCat.of B) ⟶ N.left, IsIso j ∧
       Spec.map (CommRingCat.ofHom (algebraMap K B)) = j ≫ N.hom :=
     ⟨i.hom.left, inferInstanceAs (IsIso ((Over.forget _).map i.hom)), (Over.w i.hom).symm⟩
-  haveI : Module.Finite K B := by
+  have : Module.Finite K B := by
     have h1 : IsFinite (Spec.map (CommRingCat.ofHom (algebraMap K B))) := by
       rw [hw]; infer_instance
     rw [IsFinite.SpecMap_iff] at h1
     exact RingHom.finite_algebraMap.1 h1
-  haveI : Coalgebra.IsCocomm K B := GlobalTheory.FiniteFlatKilled.isCocomm_of_mul_comm fun f g => by
+  have : Coalgebra.IsCocomm K B := GlobalTheory.FiniteFlatKilled.isCocomm_of_mul_comm fun f g => by
     let φ := (Spec.mapMulEquiv (R := K) (S := B) (T := B ⊗[K] B)).trans
       (Hom.mulEquivCongrRight i _)
     apply φ.injective
@@ -248,7 +248,7 @@ theorem bridge (K : Type) [Field K] (B D : Type) [CommRing B] [HopfAlgebra K B] 
   let G : Over (Sp K) := (Spec (CommRingCat.of B)).asOver (Sp K)
   let T : Over (Sp K) := (Spec (CommRingCat.of D)).asOver (Sp K)
   let Y : Over (Sp K) := G ⊗ (G ⊗ T)
-  letI : Algebra K Γ(Y.left, ⊤) :=
+  let : Algebra K Γ(Y.left, ⊤) :=
     (Y.hom.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom).toAlgebra
   let sh : ∀ (A : Type) [CommRing A] [Algebra K A] (_ : Y ⟶ (Spec (CommRingCat.of A)).asOver (Sp K)),
       A →ₐ[K] Γ(Y.left, ⊤) := fun A _ _ f =>

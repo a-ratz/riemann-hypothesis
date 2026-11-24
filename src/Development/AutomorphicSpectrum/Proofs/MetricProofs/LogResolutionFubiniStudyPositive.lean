@@ -114,8 +114,8 @@ theorem fderiv_affCoord_torus {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ
   have h1 : fderiv ℂ γ y w q = c q.1 * γ y q := congrFun hc q
   have h2 : fderiv ℂ γ y w ⟨q.1, p q.1⟩ = c q.1 * γ y ⟨q.1, p q.1⟩ := congrFun hc _
   have hr := hp q.1
-  simp only [ContinuousLinearMap.coe_pi', ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply,
+  simp only [ContinuousLinearMap.coe_pi', add_apply,
+    smul_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.proj_apply,
     h1, h2, smul_eq_mul, Pi.zero_apply]
   field_simp
   ring

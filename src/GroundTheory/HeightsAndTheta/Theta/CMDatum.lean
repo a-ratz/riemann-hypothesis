@@ -106,7 +106,7 @@ theorem conj_ne_one : conj F E ≠ 1 := by
 theorem conj_eq_complexConj (x : E) :
     (haveI := isCMField F E;
       conj F E x = IsCMField.complexConj E x) := by
-  haveI := isCMField F E
+  have := isCMField F E
   have hcard : Nat.card (E ≃ₐ[F] E) = 2 := by
     rw [IsGalois.card_aut_eq_finrank, Algebra.IsQuadraticExtension.finrank_eq_two]
   have hσ : complexConjOver F E ≠ 1 := by
@@ -120,7 +120,7 @@ theorem conj_eq_complexConj (x : E) :
   rw [this, complexConjOver_apply]
 
 theorem embedding_conj (φ : E →+* ℂ) (x : E) : φ (conj F E x) = starRingEnd ℂ (φ x) := by
-  haveI := isCMField F E
+  have := isCMField F E
   rw [conj_eq_complexConj, IsCMField.complexEmbedding_complexConj]
 
 variable {F E}

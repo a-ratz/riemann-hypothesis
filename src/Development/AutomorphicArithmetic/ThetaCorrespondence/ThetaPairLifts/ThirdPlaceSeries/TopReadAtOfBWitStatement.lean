@@ -184,7 +184,7 @@ theorem isPtOf_noFr {p : DecoF E n ST SG Q} (h : IsPtOf hc g p) : IsPtOf hc g (n
       show p.fr (rightOf w hw) ((p.fr (rightOf w hw)).symm x) ∈ _
       rw [LinearEquiv.apply_symm_apply]
       exact le_locP _ _ hx
-    have e : frBe w.1 (p.fr (rightOf w hw)) x = redV w.1 ((p.fr (rightOf w hw)).symm x) := if_pos hs
+    have e : frBe w.1 (p.fr (rightOf w hw)) x = redV w.1 ((p.fr (rightOf w hw)).symm x) := ite_eq_left hs
     rw [forgetDeco_be_of_not p w hw, e, adAt_pull h (rightOf w hw) x i]
     exact hasRes_red (mem_stdAt.1 hs i)
 
@@ -200,7 +200,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem latOf_eq_toRow : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : GlobalTheory.Mem.Col2.TC B X), I.Ok → ∀ (a : I.ι) (y : GlobalTheory.Mem.Col2.TC.GA B (B.R.N B.R.m - 1)) (p : GlobalTheory.Mem.Col2.XPt (B.primes X) B.R I.sel (I.tup a)), GlobalTheory.Mem.Col2.TC.PtOf y p → GlobalTheory.TopVal.latOf I a y = GlobalTheory.Mem.Col2.toRow I.sel (I.tup a) p := by
   intro B X I _ a y p h
-  letI := GlobalTheory.Mem.Col2.starE B
+  let := GlobalTheory.Mem.Col2.starE B
   exact decoOf_eq_forgetFr (F := B.fields.F) (E := B.fields.E) h
 
 end GlobalTheory.TopVal.DecoPt
@@ -334,13 +334,13 @@ theorem neg_lam_rev_eq : ∀ (D : D7) (u : D.what₂.Word) (M : DSModel D.sp.X' 
     have h1 := hsg (Fin.cast (rankP D) i) τ
     simp only [sgT, shW, F]
     rw [Int.cast_sub, h1, Int.cast_natCast, hdiv]
-    simp only [rhoVec, Fin.coe_cast]
+    simp only [rhoVec, Fin.val_cast]
     rw [hn]; ring
   have hFa : StrictAnti F := by
     intro i j hij
     rw [← hRHS i, ← hRHS j]
     have h1 : (sgT u τ).w (Fin.cast (rankP D) j) ≤ (sgT u τ).w (Fin.cast (rankP D) i) :=
-      (sgT u τ).anti (by rw [Fin.le_iff_val_le_val]; simp only [Fin.coe_cast]; exact hij.le)
+      (sgT u τ).anti (by rw [Fin.le_iff_val_le_val]; simp only [Fin.val_cast]; exact hij.le)
     have h2 : rhoVec D.sp.X'.rank j < rhoVec D.sp.X'.rank i := by
       simp only [rhoVec]; have : (i : ℚ) < j := by exact_mod_cast hij
       linarith
@@ -361,7 +361,7 @@ theorem neg_lam_rev_eq : ∀ (D : D7) (u : D.what₂.Word) (M : DSModel D.sp.X' 
     have hmem : (q (Fin.rev x), M.ε τ (Fin.rev x)) ∈ parB (Ptw D) D.R.m τ := by
       rw [hS]; exact Finset.mem_image_of_mem _ (Finset.mem_univ _)
     have hodd : ¬ Odd D.R.m := Nat.not_odd_iff_even.mpr D.R.m_even
-    simp only [parB, dualPar, TPar.Dpar, Finset.mem_image, hodd, if_false, add_zero] at hmem
+    simp only [parB, dualPar, TPar.Dpar, Finset.mem_image, hodd, ite_false, add_zero] at hmem
     obtain ⟨⟨y1, y2⟩, ⟨⟨z1, z2⟩, hz, hzy⟩, hy⟩ := hmem
     simp only [Prod.mk.injEq] at hzy hy
     obtain ⟨rfl, rfl⟩ := hzy
@@ -650,7 +650,7 @@ theorem mem_levS_of_reads {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I.Ok
     have := congrArg (Matrix.reindex (finCongr (rankP (I.rec7 l Z))) (finCongr (rankP (I.rec7 l Z)))).symm gP
     rw [gramP, Equiv.symm_apply_apply] at this
     rw [this, Matrix.reindex_symm, Matrix.reindex_apply, Matrix.submatrix_one_equiv]
-  haveI : NeZero (B.R.N B.R.m - 1) := ⟨by
+  have : NeZero (B.R.N B.R.m - 1) := ⟨by
     have := Formalism.L2.Col.rank_X'_eq B.R; have := B.R.m_add_three_le_k; unfold Ranks.r at *; omega⟩
   have hLb : S.Lb = Formalism.L2.Col.stdLat B.fields.E (B.R.N B.R.m - 1) := by
     ext x
@@ -765,9 +765,9 @@ theorem data_of_bWit_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p : _roo
     intro k hk
     subst hk
     intro hu
-    letI := a.x.grp
-    letI := a.x.fin
-    letI := a.x.alg
+    let := a.x.grp
+    let := a.x.fin
+    let := a.x.alg
     refine ⟨a.x.pins.keep.beta.2, fun t => ?_, fun g => ?_⟩
     · have h1 := eq_of_heq (hl _ (hu t)).1
       exact (congrArg a.x.R.Q (a.x.Y.tupT_tup t)).symm.trans h1
@@ -1112,7 +1112,7 @@ theorem exists_scalar (hθ : IsInfFam θ) (hp : AllPlus M) (hc : c.Is) (hpr : Is
     rw [ho] at h
     rw [hφ]
     exact h
-  haveI : FiniteDimensional ℂ (VV ℂ lam) := Module.Finite.of_basis (bVV ℂ lam)
+  have : FiniteDimensional ℂ (VV ℂ lam) := Module.Finite.of_basis (bVV ℂ lam)
   have hB : (pairBK (K := ℂ) lam).flip.Nondegenerate := LinearMap.flip_nondegenerate.mpr (pairingBNondegenerate_holds ℂ _ _ lam)
   let e := LinearEquiv.ofBijective pr (pair_bijective hθ hp hc hpr)
   let f : VV ℂ lam ≃ₗ[ℂ] c.W := (LinearMap.BilinForm.toDual _ hB).trans (φ.dualMap.trans e.symm)
@@ -1155,7 +1155,7 @@ theorem exists_scalar (hθ : IsInfFam θ) (hp : AllPlus M) (hc : c.Is) (hpr : Is
       rw [GlobalTheory.CoefSpace.map_actP, ← infGL_rat hθ σ emb hemb ⟨γ, hγ⟩ γE hE']
     rw [LinearMap.comp_apply, LinearMap.comp_apply, e2, hc', hc']
     exact hcv ⟨γ, hγ⟩ γE γE hE' ⟨rfl, fun i j i' j' hi hj => by rw [Fin.ext hi, Fin.ext hj]⟩ w
-  haveI := hc.2.2.2.1
+  have := hc.2.2.2.1
   obtain ⟨a, ha⟩ := schur (fun h => c.ρ h) hc.2.2.2.2 (c' ∘ₗ f.symm.toLinearMap) fun h w => by
     obtain ⟨u, hu, k, hk, rfl⟩ := (GlobalTheory.UnitarySplit.real_finite_split D V).1 h
     obtain ⟨x, rfl⟩ := f.surjective w
@@ -1274,7 +1274,7 @@ theorem isRes_unique {D : D7} {χ : Formalism.L2.Host.HChar D.host.E} {P : Pl D.
     (h : IsRes χ P c) (h' : IsRes χ P c') : c = c' := by
   refine MonoidHom.ext fun u => ?_
   obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective (u : kP P)
-  haveI : Nontrivial (kP P) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
+  have : Nontrivial (kP P) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
   have ha0 : (a : D.host.E) ≠ 0 := by
     intro h0
     have h1 : a = 0 := RingOfIntegers.coe_eq_zero_iff.1 h0
@@ -1292,7 +1292,7 @@ theorem isRes_chiC (h : I.Ok) (j : Fin B.R.m) (PP : Pl (I.rec7 l Z).host.E) (hw 
       Formalism.L2.Col.chiP I.Ch P j = I.Ch.chi j ⟨P, hw⟩ := by
     intro j P hw
     unfold Formalism.L2.Col.chiP
-    rw [dif_pos hw]
+    rw [dite_eq_left hw]
     simp [Formalism.L2.Col.chiAt, Formalism.L2.Col.extChi]
   refine Units.ext (Eq.trans ?_ ht.symm)
   have e2 := (chiC_apply I j PP u).trans (congrArg (fun f : _ →* B.LLˣ => B.embLL ((f u : B.LLˣ) : B.LL)) (e j PP hw))
@@ -1318,7 +1318,7 @@ theorem topLev_datY (ok : I.Ok) (pins : TC.Pins B X) (v : B.Word) {Ch : ℕ → 
     rw [gramP, Equiv.symm_apply_apply] at this
     rw [this, Matrix.reindex_symm, Matrix.reindex_apply, Matrix.submatrix_one_equiv]
   obtain ⟨c', -⟩ := F.clsP.y_bij.2 (Quotient.mk'' 1)
-  haveI : NeZero (B.R.N B.R.m - 1) := ⟨by
+  have : NeZero (B.R.N B.R.m - 1) := ⟨by
     have := Formalism.L2.Col.rank_X'_eq B.R; have := B.R.m_add_three_le_k; unfold Ranks.r at *; omega⟩
   have hR := rd_all I hK c'
   have hLb : F.clsP.lev.Lb = Formalism.L2.Col.stdLat B.fields.E (B.R.N B.R.m - 1) := by
@@ -1330,7 +1330,7 @@ theorem topLev_datY (ok : I.Ok) (pins : TC.Pins B X) (v : B.Word) {Ch : ℕ → 
     (Formalism.L2.Col.t_pos B.R) (Formalism.L2.Col.rank_X'_eq B.R) (B.primes X).vGs I.Ps (Formalism.L2.Col.chiAt I.Ch) B.embLL hR
     P' (fun i => chiC I (i - 1)) (fun PP => (ξ PP)⁻¹) hH hchi
     (fun i PP a => by
-      have e : Formalism.L2.Col.chiP I.Ch PP.1 = Formalism.L2.Col.chiAt I.Ch PP := dif_pos PP.2
+      have e : Formalism.L2.Col.chiP I.Ch PP.1 = Formalism.L2.Col.chiAt I.Ch PP := dite_eq_left PP.2
       show B.embLL ((Formalism.L2.Col.chiP I.Ch PP.1 i a : B.LLˣ) : B.LL) = _
       rw [e])
   have hc : ∀ c, c < B.R.m → ∀ PP ∈ (B.primes X).vGs, cg (c + 1) PP = chiC I (c + 1 - 1) PP := fun c hc PP hPP =>

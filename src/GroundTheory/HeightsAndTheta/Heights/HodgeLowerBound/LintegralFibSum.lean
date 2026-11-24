@@ -106,7 +106,7 @@ theorem lintegral_fibSum_piece {D : Set (Fin e → ℂ)} (hD : MeasurableSet D) 
   refine ⟨?_, ?_⟩
   · rw [hext]
     exact hE.measurable_extend (ENNReal.measurable_ofReal.comp
-      (hm.div ((measurable_jacN Q).comp measurable_subtype_coe))) measurable_const
+      (hm.div ((measurable_jacN Q).comp measurable_subtypeVal))) measurable_const
   · rw [← setLIntegral_eq_of_support_subset (s := Q '' D) (fun y hy => by
         by_contra h'
         exact hy (show ENNReal.ofReal (fibSum D Q h y) = 0 by rw [hzero y h', ENNReal.ofReal_zero])),
@@ -135,7 +135,7 @@ theorem lintegral_fibSum_open {O : Set (Fin e → ℂ)} (hO : IsOpen O) {Q : (Fi
       ∫⁻ y, ENNReal.ofReal (fibSum (D n) Q h y) = ∫⁻ u in D n, ENNReal.ofReal (h u) := fun n =>
     lintegral_fibSum_piece (hDm n) (fun u hu => (hQ u (hDO n hu)).1.differentiableAt)
       (fun u hu => (hQ u (hDO n hu)).2) ((hWinj n).mono (hDsub n))
-      (hm.comp (f := fun u : D n => (⟨u.1, hDO n u.2⟩ : O)) measurable_subtype_coe.subtype_mk)
+      (hm.comp (f := fun u : D n => (⟨u.1, hDO n u.2⟩ : O)) measurable_subtypeVal.subtype_mk)
   have hae : (fun y => ENNReal.ofReal (fibSum O Q h y)) =ᵐ[volume]
       fun y => ∑' n, ENNReal.ofReal (fibSum (D n) Q h y) := by
     filter_upwards [hfin] with y hy

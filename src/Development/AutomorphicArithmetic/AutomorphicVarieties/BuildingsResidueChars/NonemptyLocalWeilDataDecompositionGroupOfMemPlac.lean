@@ -150,7 +150,7 @@ theorem UpperTheory.nonempty_localWeilData_decompositionGroup_of_mem_place :
   · refine hφ.toIsEmbedding.continuous_iff.2 ?_
     have h : (⇑φ ∘ ⇑e.symm) = Subtype.val := funext fun τ => congrArg Subtype.val (e.apply_symm_apply τ)
     rw [h]
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
   · intro g
     rw [Subgroup.mem_comap, Subgroup.mem_subgroupOf]
     exact hin g

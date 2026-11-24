@@ -66,7 +66,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 theorem natCast_mem_Mb (l : Level H) : (l.M : 𝓞 E) ∈ l.Mb := by
   have hM := Ideal.mem_span_singleton_self (l.M : 𝓞 E)
   rw [← l.prod] at hM
-  exact (Submodule.mem_inf.1 (SetLike.le_def.mp Ideal.mul_le_inf hM)).1
+  exact (Submodule.mem_inf.1 (IsConcreteLE.le_iff.mp Ideal.mul_le_inf hM)).1
 
 theorem mem_of_modN (l : Level H) {x : D.La} (h : D.ModN l.M x) :
     x ∈ l.Mb • (⊤ : Submodule (𝓞 E) D.La) := by

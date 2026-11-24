@@ -80,7 +80,7 @@ theorem isCuspGrow_smul (z : ℂ) (h : IsCuspGrow θ V φ) : IsCuspGrow θ V (z 
   · obtain ⟨N, hN⟩ := GlobalTheory.Size.unifModGrowth_iff.1 g
     refine GlobalTheory.Size.unifModGrowth_iff.2 ⟨N, fun l hl => ?_⟩
     rw [(GlobalTheory.Size.linOnSm_rWord hl).smul, GlobalTheory.Size.growthSize_smul]
-    exact ENNReal.mul_ne_top enorm_ne_top (hN l hl)
+    exact ENNReal.mul_ne_top eNorm_ne_top (hN l hl)
 
 theorem isCuspGrow_zero : IsCuspGrow θ V 0 := by
   refine ⟨(isAutFunSm_const θ V 0).toIsAutFun, zero_mem _, fun _ _ _ _ _ _ _ _ => by simp,
@@ -88,7 +88,7 @@ theorem isCuspGrow_zero : IsCuspGrow θ V 0 := by
   have := (GlobalTheory.Size.linOnSm_rWord (θ := θ) hl).smul 0 0
   rw [zero_smul, zero_smul] at this
   rw [this]
-  exact (GlobalTheory.Size.growthSize_const (0 : ℂ)).trans_ne enorm_ne_top
+  exact (GlobalTheory.Size.growthSize_const (0 : ℂ)).trans_ne eNorm_ne_top
 
 theorem isCuspGrow_of_mem_span : ∀ (D : D7) (θ : InfFam D) (V : HSp D),
     ∀ φ ∈ Submodule.span ℂ {φ | IsCuspGrow θ V φ}, IsCuspGrow θ V φ := by

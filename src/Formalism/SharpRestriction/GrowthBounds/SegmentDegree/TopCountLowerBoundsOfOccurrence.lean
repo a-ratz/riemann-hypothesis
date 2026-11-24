@@ -168,7 +168,7 @@ theorem Et_le (hOcc : LeadingLetterInAtMostTwoSegments) (hX : X.Hyp p K) (t : Fi
     intro j x hx
     apply Finset.card_le_card_of_injOn (fun i => X.row j x i)
     · intro i hi
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq,
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq,
         Finset.mem_coe, Finset.mem_filter] at hi ⊢
       exact ⟨late_index_map_mem_letters hX j x hx i, hi⟩
     · intro i _ i' _ h
@@ -301,7 +301,7 @@ theorem top_count_lower_bounds_of_occurrence (C₀ : ℝ) (hC : 32 ≤ C₀) (hO
       have : (X.E' t : ℝ) ≤ X.deg t := by linarith
       exact_mod_cast this
     unfold Dat.d
-    rw [if_pos ht, Nat.cast_sub hle]
+    rw [ite_eq_left ht, Nat.cast_sub hle]
   have hEtd : ∀ t ∈ X.F.TT, X.Et p K t ≤ X.d t := by
     intro t ht
     have hdeg := (hX.degs t ht).1
@@ -329,7 +329,7 @@ theorem top_count_lower_bounds_of_occurrence (C₀ : ℝ) (hC : 32 ≤ C₀) (hO
         apply mul_eq_zero_of_right
         apply Finset.sum_eq_zero
         intro i _
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hpos
         apply ht
         rw [← hpos]

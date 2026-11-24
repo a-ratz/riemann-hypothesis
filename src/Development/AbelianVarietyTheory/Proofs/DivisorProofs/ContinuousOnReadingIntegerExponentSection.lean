@@ -85,7 +85,7 @@ theorem differentiableOn_rdU_of_antitone {σ : c.F →+* ℂ} {r : ℕ} {U : Unf
     simp only [a]
     by_cases hj : j < Dw.mult τ
     · have hi : i < Dw.mult τ := lt_of_le_of_lt hij hj
-      rw [dif_pos hj, dif_pos hi]
+      rw [dite_eq_left hj, dite_eq_left hi]
       exact Int.toNat_le_toNat (by linarith [hanti τ ⟨i, hi⟩ ⟨j, hj⟩ hij])
     · rw [dite_eq_right hj]; exact Nat.zero_le _
   have hgp := pow_succ_mem_secZ (Xo := Xo) (c := c) (by rw [secZ_nat]; exact hg) M
@@ -97,14 +97,14 @@ theorem differentiableOn_rdU_of_antitone {σ : c.F →+* ℂ} {r : ℕ} {U : Unf
     · simp [ex, he0]
     · have hi := i.2
       rw [Pi.add_apply, Pi.smul_apply]
-      simp only [ex, a, dif_pos hi, nsmul_eq_mul]
+      simp only [ex, a, dite_eq_left hi, nsmul_eq_mul]
       rw [Int.toNat_of_nonneg (by linarith [hM (some ⟨τ, i⟩)])]
       push_cast
       ring
   have d1 := (hU.2.2.2.2.1 _ n ⟨fun _ _ _ _ => le_rfl, hn⟩ g hg k).1
   have d2 := (hU.2.2.2.2.1 _ _ hdom _ hgf k).1
   have hx0 : rdU U g k x ≠ 0 := by
-    have : rdU U g k x = toC (evR Xo c g (U.un k ⟨x, hx⟩)) := dif_pos hx
+    have : rdU U g k x = toC (evR Xo c g (U.un k ⟨x, hx⟩)) := dite_eq_left hx
     rwa [this]
   have a1 := d1.differentiableAt (ho.mem_nhds hx)
   have a2 := d2.differentiableAt (ho.mem_nhds hx)

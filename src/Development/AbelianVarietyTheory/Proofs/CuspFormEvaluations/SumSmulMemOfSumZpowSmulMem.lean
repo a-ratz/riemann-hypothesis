@@ -244,7 +244,7 @@ theorem colLie_diag_comm [DecidableEq T] [DecidableEq κ] (t t' : T) (i k l : κ
           by_cases h3 : i = k <;> by_cases h4 : i = j <;> simp [h3, h4, eq_comm, sub_smul] <;>
             (try split_ifs) <;> simp_all
         · simp [h2, Ne.symm h2]
-      · simp only [if_neg h1, smul_zero, zero_sub, neg_eq_zero]
+      · simp only [ite_eq_right h1, smul_zero, zero_sub, neg_eq_zero]
         split_ifs with h2 h3
         · exact absurd ⟨h2.1.trans h3.1, h2.2.trans h3.2⟩ h1
         · rfl
@@ -258,7 +258,7 @@ theorem colLie_diag_comm [DecidableEq T] [DecidableEq κ] (t t' : T) (i k l : κ
           by_cases h3 : i = l <;> by_cases h4 : i = j <;> simp [h3, h4, eq_comm, sub_smul] <;>
             (try split_ifs) <;> simp_all
         · simp [h2, Ne.symm h2]
-      · simp only [if_neg h1, smul_zero, zero_sub, neg_eq_zero]
+      · simp only [ite_eq_right h1, smul_zero, zero_sub, neg_eq_zero]
         split_ifs with h2 h3
         · exact absurd ⟨h2.1.trans h3.1, h2.2.trans h3.2⟩ h1
         · simp
@@ -353,7 +353,7 @@ theorem exists_colAct_monomial (t : T) (k : κ) (u : Rˣ) :
     | zero => simp [colWeight]
     | add m m' h h' =>
       have e : (monomial (m + m') 1 : Poly R T p q κ) = monomial m 1 * monomial m' 1 := by
-        rw [monomial_mul, mul_one]
+        rw [monomial_mul_monomial, mul_one]
       rw [e, map_mul, h, h', colWeight_add, _root_.zpow_add, Units.val_mul, smul_mul_smul_comm]
     | single v e => exact hpow v e
   intro m c

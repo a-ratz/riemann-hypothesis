@@ -84,7 +84,7 @@ theorem eq_zero_of_mul_eq_zero_of_reading_ne_zero : ∀ (E : Type) [Field E] [Nu
     (GlobalTheory.frames_isConnected E r (U.X k)).isPreconnected (hU.2.2.2.2.1 a n ha f hf k).1
     (hU.2.2.2.2.1 a' n' ha' g hg k).1 (fun y hy => ?_) hx0 hx0ne
   have hmul : rdU U (f * g) k y = rdU U f k y * rdU U g k y := by
-    simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dif_pos hy]
+    simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left hy]
     exact evalAt_mul (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) f g (U.un k ⟨y, hy⟩)
   have h0 : rdU U (f * g) k y = 0 := by
     rw [hfg, map_zero]
@@ -133,12 +133,12 @@ theorem exists_small_coeff_rule_ne_zero : ∀ (E : Type) [Field E] [NumberField 
   subst hr
   obtain ⟨hfG, hfL, hcL, hcG, hdiv, ⟨x₀, hx₀⟩, hspan⟩ := GlobalTheory.EtaCard.card_levGrp_and_span E H Dw R h1
   obtain ⟨i, hi⟩ := hdiv hR h2
-  letI hFin : Fintype (LatMod Dw R) := Fintype.ofFinite _
+  let hFin : Fintype (LatMod Dw R) := Fintype.ofFinite _
   have hf : FD.fdeg E = I2.PT.f E := rfl
   rw [hf] at hcL hcG
   choose xk hxk using fun k => nonzeroRule_dom_nonempty (U.X k)
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   let e := Fintype.equivFin U.Comp
   obtain ⟨cf, hcf, hne⟩ := GlobalTheory.EtaForm.exists_small_coeff_etaValAt_ne_zero GlobalTheory.firstFiveLaws.1 E H Dw l Xo c R hR h1
     (Dw.p + Dw.q) x₀ (CAt σ) (Fintype.card U.Comp) (fun a => U.un (e.symm a) ⟨xk _, hxk _⟩)
@@ -161,7 +161,7 @@ theorem exists_small_coeff_rule_ne_zero : ∀ (E : Type) [Field E] [NumberField 
     have hv := (GlobalTheory.EtaForm.etaValAt_evR_of_fromTest E H Dw l Xo c R hR _ _ _ _ f hrule (CAt σ) (U.un (e.symm a) ⟨xk _, hxk _⟩)
       (hT _ _)).1
     have h0 := hne a _ hv
-    have e1 : rdU U f (e.symm a) (xk _) = toC (evR Xo c f (U.un (e.symm a) ⟨xk _, hxk _⟩)) := dif_pos (hxk _)
+    have e1 : rdU U f (e.symm a) (xk _) = toC (evR Xo c f (U.un (e.symm a) ⟨xk _, hxk _⟩)) := dite_eq_left (hxk _)
     rw [e1]
     exact h0
 

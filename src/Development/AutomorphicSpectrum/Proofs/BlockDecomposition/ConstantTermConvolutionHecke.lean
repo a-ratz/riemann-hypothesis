@@ -88,10 +88,10 @@ namespace GlobalTheory.CompanionTheory.SplitConvHecke
 theorem relIndex_ne_zero_of_isOpen {H : Type} [Group H] [TopologicalSpace H] [IsTopologicalGroup H]
     (K L : Subgroup H) (hL : IsOpen (L : Set H)) (hK : IsCompact (K : Set H)) :
     L.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have hop : IsOpen ((L.subgroupOf K : Subgroup K) : Set K) :=
-    hL.preimage continuous_subtype_val
-  haveI : Finite (K ⧸ L.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hop
+    hL.preimage continuous_subtypeVal
+  have : Finite (K ⧸ L.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hop
   exact Subgroup.index_ne_zero_of_finite
 
 end GlobalTheory.CompanionTheory.SplitConvHecke
@@ -206,7 +206,7 @@ theorem finite_out {G H : Type} [Group G] [Group H] [TopologicalSpace G] [IsTopo
     (L : Subgroup H) (K' : Subgroup G) (ho : IsOpen (K' : Set G)) (θ : H → G)
     (hθ : ∀ z z', (θ z)⁻¹ * θ z' ∈ K' → z⁻¹ * z' ∈ L) (C : Set G) (hC : IsCompact C) :
     ∃ T : Finset (H ⧸ L), ∀ z, θ z ∈ C → (z : H ⧸ L) ∈ T := by
-  haveI : DiscreteTopology (G ⧸ K') := QuotientGroup.discreteTopology ho
+  have : DiscreteTopology (G ⧸ K') := QuotientGroup.discreteTopology ho
   have hfin : ((fun g : G => (g : G ⧸ K')) '' C).Finite :=
     (hC.image continuous_quotient_mk').finite_of_discrete
   let pick : G ⧸ K' → H ⧸ L := fun t =>
@@ -214,7 +214,7 @@ theorem finite_out {G H : Type} [Group G] [Group H] [TopologicalSpace G] [IsTopo
   refine ⟨hfin.toFinset.image pick, fun z hz => ?_⟩
   refine Finset.mem_image.2 ⟨((θ z : G) : G ⧸ K'), hfin.mem_toFinset.2 ⟨_, hz, rfl⟩, ?_⟩
   have hx : ∃ z', θ z' ∈ C ∧ ((θ z' : G) : G ⧸ K') = ((θ z : G) : G ⧸ K') := ⟨z, hz, rfl⟩
-  simp only [pick, dif_pos hx]
+  simp only [pick, dite_eq_left hx]
   exact QuotientGroup.eq.2 (hθ _ _ (QuotientGroup.eq.1 hx.choose_spec.2))
 
 end Generic

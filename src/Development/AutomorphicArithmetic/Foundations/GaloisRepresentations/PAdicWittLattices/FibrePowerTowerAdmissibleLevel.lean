@@ -258,9 +258,9 @@ universe u
 theorem UpperTheory.Gal.G3.pEtDesc :
     ExtPts → EtDesc := by
   intro hE W Z Y B _ c _ _ _ pZ pY _ f hf hpts
-  haveI : Flat c := inferInstance
-  haveI : EffectiveEpi c := inferInstance
-  haveI : IsReduced (pullback c c) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.fst c c)
+  have : Flat c := inferInstance
+  have : EffectiveEpi c := inferInstance
+  have : IsReduced (pullback c c) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.fst c c)
   have key : pullback.fst c c ≫ f = pullback.snd c c ≫ f := by
     refine hE pY _ _ ?_ ?_
     · rw [Category.assoc, Category.assoc, hf, ← Category.assoc, ← Category.assoc, pullback.condition]
@@ -301,7 +301,7 @@ theorem UpperTheory.Gal.G3.pFullOf :
     (fun r b x => I'.lin _ b x) (fun r x => I'.ker _ (hpos r) x) (fun r q => I'.onto _ (hpos r) q) ?_
     (fun r x y => I'.isom _ (hpos r) x y)
   · intro c a b
-    haveI := o.act.hom c
+    have := o.act.hom c
     exact MonObj.mul_comp _ _ _
   · intro n hn g g' hg hg'
     obtain ⟨e, he⟩ := GlobalTheory.WeilGeomPt.exists_weilIs_geomPt S o.A _ o.ab hLB k t n hn
@@ -317,7 +317,7 @@ theorem UpperTheory.Gal.G3.pFullOf :
     rw [hu, Nat.cast_mul]
     exact GlobalTheory.WeilIsogeny.weilIs_pow GlobalTheory.globalFns_holds o.ab hLB j h
   · intro n j g g' z h
-    haveI := isMonHom_mulA (A := o.A) j
+    have := isMonHom_mulA (A := o.A) j
     have hiso := GlobalTheory.HeckeWeilValue.lbIso_mulA_diag o.ab o.isLB o.ample o.rig₁ o.rig₂ j
     have e1 : ∀ x : Over.mk t ⟶ o.A, x ≫ Out.mulA o.A j = x ^ j := fun x => by
       rw [Out.mulA, MonObj.comp_pow, Category.comp_id]
@@ -349,17 +349,17 @@ universe u
 
 theorem UpperTheory.Gal.G3.pGenSm : GenSm := by
   intro p _ D R _ _ gb N X
-  haveI : CharZero R := charZero_of_injective_algebraMap (algebraMap ℚ R).injective
+  have : CharZero R := charZero_of_injective_algebraMap (algebraMap ℚ R).injective
   obtain ⟨M⟩ := GlobalTheory.T.harrisTaylorIntegralModel_nonempty p D R (GenCmp.baseOf gb) N.1 N.2.1 N.2.2
   obtain ⟨j, hoi, hci, hj, -⟩ := GenCmp.genModel_eq_genericFibre p D R (GenCmp.baseOf gb) R (RingHom.id R) gb
     rfl (fun _ => rfl) N.1 N.2.1 N.2.2 M X
-  haveI := hoi
-  haveI := hci
-  haveI : IsQProjOver M.s := M.qproj
-  haveI : SmoothOfRelativeDimension (D.a * (D.n - 1)) M.s := M.smooth
-  haveI : IsSeparated M.s := GlobalTheory.ZM.isSeparated_of_isQProjOver M.qproj
-  haveI : QuasiCompact M.s := quasiCompact_of_qProj M.qproj
-  haveI : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
+  have := hoi
+  have := hci
+  have : IsQProjOver M.s := M.qproj
+  have : SmoothOfRelativeDimension (D.a * (D.n - 1)) M.s := M.smooth
+  have : IsSeparated M.s := GlobalTheory.ZM.isSeparated_of_isQProjOver M.qproj
+  have : QuasiCompact M.s := quasiCompact_of_qProj M.qproj
+  have : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
   rw [← hj]
   refine ⟨inferInstance, inferInstance, inferInstance, fun hB => ?_⟩
   exact GlobalTheory.ProjSpace.isProjOver_comp_of_isClosedImmersion j
@@ -584,7 +584,7 @@ theorem UpperTheory.Gal.G3.pKSNice :
       have h0 := (hKN p D G L 1).2.2 N (by norm_num) (by have := N.2.1; omega)
       rw [← Subgroup.relIndex_mul_relIndex _ _ _ (g j).le (g j).le_one] at h0
       exact left_ne_zero_of_mul h0
-    haveI : ((L.KN ↑N).subgroupOf (g j).K).FiniteIndex := ⟨hne⟩
+    have : ((L.KN ↑N).subgroupOf (g j).K).FiniteIndex := ⟨hne⟩
     refine ⟨_, hS _ _ _ (hT T.X _ _ ⟨?_, ?_⟩)⟩
     · exact one_mem _
     · intro u hu
@@ -608,7 +608,7 @@ universe u
 theorem UpperTheory.Gal.G3.pMapOfIso :
     MapOfIso := by
   intro G₀ R _ _ gb S s N o o' θ hiso hmon hact hpol heta
-  haveI : IsIso θ.left := (Over.forget S).map_isIso θ
+  have : IsIso θ.left := (Over.forget S).map_isIso θ
   refine ⟨⟨θ.left, Hecke.sq2 θ, ⟨IsPullback.of_horiz_isIso ⟨by rw [Over.w, Category.comp_id]⟩, ?_⟩, ⟨?_, ?_⟩,
     fun c => ?_, hpol, fun y => ?_⟩, rfl⟩
   · intro T x y x₀ y₀ hx hy
@@ -761,11 +761,11 @@ theorem UpperTheory.Gal.G3.pPowSm :
     GenSm → PowSm := by
   intro hG p _ D R _ _ gb N X k
   obtain ⟨hs, hsep, -, hproj⟩ := hG p D R gb N X
-  haveI := hs
-  haveI := hsep
-  haveI : Smooth X.univ.A.hom := X.univ.ab.smooth
-  haveI : Smooth (GlobalTheory.KS.pow X.univ.A k).hom := smooth_pow_hom _ inferInstance k
-  haveI : IsProper (GlobalTheory.KS.pow X.univ.A k).hom :=
+  have := hs
+  have := hsep
+  have : Smooth X.univ.A.hom := X.univ.ab.smooth
+  have : Smooth (GlobalTheory.KS.pow X.univ.A k).hom := smooth_pow_hom _ inferInstance k
+  have : IsProper (GlobalTheory.KS.pow X.univ.A k).hom :=
     GlobalTheory.KS.Leray.isProper_pow_hom _ X.univ.ab.proper k
   refine ⟨inferInstance, inferInstance, fun hD => ?_⟩
   exact GlobalTheory.KS.isProjOver_pow R X.X X.s (hproj hD) X.univ.A X.univ.ab _
@@ -860,9 +860,9 @@ private lemma twisted_kernel_forms_nonvanishing (hE : EtDesc) (k : Type) [Field 
     (ψ₁ : A ⟶ A₁) (ψ₂ : A ⟶ A₂) [IsMonHom ψ₁] [IsMonHom ψ₂] [IsFinite ψ₁.left] [Etale ψ₁.left] [Surjective ψ₁.left]
     (hker : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (t : Sp Ω ⟶ Sp k) (a : Over.mk t ⟶ A), a ≫ ψ₁ = 1 → a ≫ ψ₂ = 1) :
     ∃ θ : A₁ ⟶ A₂, ψ₁ ≫ θ = ψ₂ := by
-  haveI := hA.smooth
-  haveI := hA₂.proper
-  haveI : AlgebraicGeometry.IsReduced A.left := GlobalTheory.isReduced_of_smooth_of_isReduced A.hom
+  have := hA.smooth
+  have := hA₂.proper
+  have : AlgebraicGeometry.IsReduced A.left := GlobalTheory.isReduced_of_smooth_of_isReduced A.hom
   have hw : ψ₂.left ≫ A₂.hom = ψ₁.left ≫ A₁.hom := by rw [Over.w, Over.w]
   obtain ⟨hepi, g, hg⟩ := hE ψ₁.left A₁.hom A₂.hom ψ₂.left hw (by
     intro Ω _ _ x y hxy
@@ -882,7 +882,7 @@ private lemma twisted_kernel_forms_nonvanishing (hE : EtDesc) (k : Type) [Field 
     simp only [IsMonHom.monoidHom_apply] at e e'
     rw [e, e', mul_inv_eq_one] at h3
     exact congrArg CommaMorphism.left h3)
-  haveI := hepi
+  have := hepi
   refine ⟨Over.homMk g ?_, ?_⟩
   · rw [← cancel_epi ψ₁.left, ← Category.assoc, hg, hw]
   · exact Over.OverMorphism.ext hg
@@ -892,11 +892,11 @@ theorem UpperTheory.Gal.G3.pQuotUniq :
   intro hE k _ _ A A₁ A₂ _ _ _ _ _ _ hA hA₁ hA₂ ψ₁ ψ₂ h₁ h₂ f₁ e₁ s₁ f₂ e₂ s₂ hker
   obtain ⟨θ, hθ⟩ := twisted_kernel_forms_nonvanishing hE k A A₁ A₂ hA hA₂ ψ₁ ψ₂ (fun Ω _ _ t a => (hker Ω t a).1)
   obtain ⟨θ', hθ'⟩ := twisted_kernel_forms_nonvanishing hE k A A₂ A₁ hA hA₁ ψ₂ ψ₁ (fun Ω _ _ t a => (hker Ω t a).2)
-  haveI : Flat ψ₁.left := inferInstance
-  haveI : Flat ψ₂.left := inferInstance
-  haveI : Epi ψ₁ := GlobalTheory.FlatQuotient.epi_of_flat_surjective ψ₁
-  haveI : Epi ψ₂ := GlobalTheory.FlatQuotient.epi_of_flat_surjective ψ₂
-  haveI : Epi (ψ₁ ⊗ₘ ψ₁) := GlobalTheory.FlatQuotient.epi_tensorHom ψ₁ ψ₁
+  have : Flat ψ₁.left := inferInstance
+  have : Flat ψ₂.left := inferInstance
+  have : Epi ψ₁ := GlobalTheory.FlatQuotient.epi_of_flat_surjective ψ₁
+  have : Epi ψ₂ := GlobalTheory.FlatQuotient.epi_of_flat_surjective ψ₂
+  have : Epi (ψ₁ ⊗ₘ ψ₁) := GlobalTheory.FlatQuotient.epi_tensorHom ψ₁ ψ₁
   have i1 : θ ≫ θ' = 𝟙 _ := by
     rw [← cancel_epi ψ₁, ← Category.assoc, hθ, hθ', Category.comp_id]
   have i2 : θ' ≫ θ = 𝟙 _ := by
@@ -935,7 +935,7 @@ theorem UpperTheory.Gal.G3.pRelComp :
     simp
   · intro r₁ r₂ n hn hcop x z
     have htor : (I₁.ev n x ≫ ψ₁) ^ n = 1 := by
-      haveI := hψ₁
+      have := hψ₁
       have e := map_pow (IsMonHom.monoidHom ψ₁ (Over.mk t)) (I₁.ev n x) n
       simp only [IsMonHom.monoidHom_apply] at e
       rw [← e, (I₁.onto n hn (I₁.ev n x)).2 ⟨x, rfl⟩]
@@ -1074,10 +1074,10 @@ theorem UpperTheory.Gal.G3.pTransComp :
   intro hMB hRC hTD hTT p _ D G L R _ _ gb S s N₁ N₂ N₃ o₁ o₂ o₃ ψ₁ ψ₂ h₁ h₂ hI hA t1 t2
   obtain ⟨m1, a1, ⟨ψ₁', d₁, m1', a1', e1, e1', cp1⟩, ⟨c₁, cc1, ⟨iso1⟩, hm1⟩, g1⟩ := t1
   obtain ⟨m2, a2, ⟨ψ₂', d₂, m2', a2', e2, e2', cp2⟩, ⟨c₂, cc2, ⟨iso2⟩, hm2⟩, g2⟩ := t2
-  haveI := m1
-  haveI := m2
-  haveI := m1'
-  haveI := m2'
+  have := m1
+  have := m2
+  have := m1'
+  have := m2'
   refine ⟨inferInstance, ?_, ⟨ψ₂' ≫ ψ₁', d₁ * d₂, inferInstance, ?_, ?_, ?_, Nat.Coprime.mul_left cp1 cp2⟩,
     ⟨c₂ * c₁, Nat.Coprime.mul_left cc2 cc1, ⟨?_⟩, ?_⟩, ?_⟩
   · intro c
@@ -1161,16 +1161,16 @@ theorem UpperTheory.Gal.G3.pTransIso :
     IsoPts → IsogFEt → TransIso := by
   intro IP IF p _ D G L R _ _ gb S s N' N o' o ψ u hu T
   obtain ⟨hmon, -, ⟨ψ', d, hψ', -, hd, hd', hdp⟩, -, tate⟩ := T
-  haveI := hmon
-  haveI := hψ'
+  have := hmon
+  have := hψ'
   have hd0 : 0 < d := by
     rcases Nat.eq_zero_or_pos d with rfl | h0
     · rw [Nat.coprime_zero_left] at hdp
       exact absurd hdp (Fact.out : p.Prime).one_lt.ne'
     · exact h0
   obtain ⟨hfin, het, hsurj⟩ := IF R S s o'.A o.A o'.ab o.ab ψ ψ' d hd0 hmon hψ' hd hd'
-  haveI := het
-  haveI := hfin
+  have := het
+  have := hfin
   have hiso : IsIso ψ.left := by
     apply IP ψ.left
     intro Ω _ _ z
@@ -1484,8 +1484,8 @@ theorem UpperTheory.Gal.G3.pWitDeep :
   refine ⟨M, Dvd.intro _ rfl, ?_, ?_⟩
   · intro u hu
     exact hAk N u (UpperTheory.Gal.Int.Geo.KN_anti hNkM hu)
-  · haveI : Smooth (X Nk).s := (hSm p D R gb Nk (X Nk)).1
-    haveI : IsLocallyNoetherian (X Nk).X := LocallyOfFiniteType.isLocallyNoetherian (X Nk).s
+  · have : Smooth (X Nk).s := (hSm p D R gb Nk (X Nk)).1
+    have : IsLocallyNoetherian (X Nk).X := LocallyOfFiniteType.isLocallyNoetherian (X Nk).s
     obtain ⟨o, ψ, ht⟩ := hex N (X Nk).X (X Nk).s (X Nk).univ
     obtain ⟨π, ⟨hπ, ⟨φ⟩⟩, -⟩ := (X N).rep (X Nk).X (X Nk).s o
     have w₂ : Wit L h (X Nk) (X N) π (ψ.left ≫ φ.φ) := ⟨hπ, o, ψ, φ, ht, rfl⟩
@@ -1550,12 +1550,12 @@ theorem UpperTheory.Gal.G3.pWitEx :
   let ψ : (X N').univ.A ⟶ o.A := Over.homMk ψl hψ₂
   refine ⟨π, Φ, hπs, o, ψ, φ, ?_, hψ₁.symm⟩
   obtain ⟨m₂⟩ := BaseChange.gObjMap_cancel φ₁ φ
-  haveI := hTI p D G L R gb (X M).X (X M).s M N' (X M).univ oc ψc 1 (one_mem _) htc
+  have := hTI p D G L R gb (X M).X (X M).s M N' (X M).univ oc ψc 1 (one_mem _) htc
   have htr : IsTrans L h oc o₁ (inv ψc ≫ ψ₁) :=
     hTC p D G L R gb (X M).X (X M).s M N' N (X M).univ oc o₁ ψc (inv ψc ≫ ψ₁) h hI hAM htc
       (by simpa using ht₁)
-  haveI : Smooth (X M).s := (hSm p D R gb M (X M)).1
-  haveI : AlgebraicGeometry.IsReduced (X M).X := GlobalTheory.isReduced_of_smooth_of_isReduced (X M).s
+  have : Smooth (X M).s := (hSm p D R gb M (X M)).1
+  have : AlgebraicGeometry.IsReduced (X M).X := GlobalTheory.isReduced_of_smooth_of_isReduced (X M).s
   have hcomp : m₂.φ ≫ φ.φ = φ₁.φ := by
     obtain ⟨m, hm⟩ := gObjMap_comp_keep m₂ φ
     rw [← hm]
@@ -1786,8 +1786,8 @@ theorem UpperTheory.Gal.G3.pWitUniq :
     GenSm → ExtPts → TransSelf → PtEq → WitUniq := by
   intro hG hE hS hP p _ D G L R _ _ gb N' N X' X h ih ah π Φ π' Φ' w w'
   have hsm : Smooth X'.s := (hG p D R gb N' X').1
-  haveI : IsSeparated X.s := (hG p D R gb N X).2.1
-  haveI : AlgebraicGeometry.IsReduced X'.X := GlobalTheory.isReduced_of_smooth_of_isReduced X'.s
+  have : IsSeparated X.s := (hG p D R gb N X).2.1
+  have : AlgebraicGeometry.IsReduced X'.X := GlobalTheory.isReduced_of_smooth_of_isReduced X'.s
   have pt : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (x : Sp Ω ⟶ X'.X),
       ∃ ox : GObj gb N' (x ≫ X'.s), ∃ mx : GObjMap ox X'.univ x,
         x ≫ π = x ≫ π' ∧ mx.φ ≫ Φ = mx.φ ≫ Φ' := by
@@ -1801,12 +1801,12 @@ theorem UpperTheory.Gal.G3.pWitUniq :
     obtain ⟨_, _, e, _⟩ := pt Ω x
     exact e
   refine ⟨hπ, ?_⟩
-  haveI := X'.univ.ab
-  haveI := X.univ.ab
-  haveI : Smooth X'.univ.A.hom := IsAbelianScheme.smooth
-  haveI : AlgebraicGeometry.IsReduced X'.univ.A.left :=
+  have := X'.univ.ab
+  have := X.univ.ab
+  have : Smooth X'.univ.A.hom := IsAbelianScheme.smooth
+  have : AlgebraicGeometry.IsReduced X'.univ.A.left :=
     GlobalTheory.isReduced_of_smooth_of_isReduced X'.univ.A.hom
-  haveI : IsProper X.univ.A.hom := IsAbelianScheme.proper
+  have : IsProper X.univ.A.hom := IsAbelianScheme.proper
   refine hE X.univ.A.hom Φ Φ' (by rw [w.w, w'.w, hπ]) fun Ω _ _ z => ?_
   obtain ⟨ox, mx, -, e⟩ := pt Ω (z ≫ X'.univ.A.hom)
   obtain ⟨l, hl, -⟩ := mx.cart.1.exists_lift z (𝟙 _) (by simp)

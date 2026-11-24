@@ -223,7 +223,7 @@ theorem nonneg_of_tendsto {X : Type} [AddCommGroup X] [Module.Free ℤ X] (q : Q
     have := smul_left_injective ℤ hx0 hab
     omega
   refine Set.infinite_of_injective_forall_mem hinj (fun n => ?_) hfin
-  simp only [Set.mem_setOf_eq, not_le, QuadraticMap.map_smul, zsmul_eq_mul]
+  simp only [Set.mem_ofPred_eq, not_le, QuadraticMap.map_smul, zsmul_eq_mul]
   refine mul_neg_of_pos_of_neg ?_ hx
   positivity
 
@@ -279,7 +279,7 @@ theorem ratio_le_one {I : Type} [Fintype I] {δ a a' f' : ℝ} {t v : I → ℝ}
   have h3 : 0 ≤ ∏ x, t x / δ := Finset.prod_nonneg fun x _ => div_nonneg (ht0 x) hδ.le
   calc _ ≤ Real.exp (-a') ^ (j + 1) * Real.exp (-∑ x, v x) ^ C := by gcongr
     _ ≤ _ := by
-      rw [← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, Real.exp_le_exp]
+      rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, Real.exp_le_exp]
       push_cast
       linarith
 
@@ -291,8 +291,8 @@ theorem comparison_function_regular : ∀ (o Ω : Type) [CommRing o] [Field Ω] 
   intro o Ω _ _ _ _ S M U₀ hO hLL hT h0 hI h01 h11 h12 z ξ c c' k k' hz hξ hcc hk hk' x₀ hx₀ j hj
   have hN : 1 ≤ S.N := le_trans one_le_two S.N_ge
   have hr := S.r_pos
-  haveI : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by omega) (by omega)⟩
-  haveI : Fintype (S.supI M ξ) := Fintype.ofFinite _
+  have : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by omega) (by omega)⟩
+  have : Fintype (S.supI M ξ) := Fintype.ofFinite _
   refine ⟨j * (j + 1) * Fintype.card (S.supI M ξ) * S.N * (S.r * S.N) ^ 2, ?_⟩
   rw [← finprod_set_coe_eq_finprod_mem, finprod_eq_prod_of_fintype]
   have hth : ∀ x, S.th x ∈ M.ringOn U₀ := fun x => hO.le (S.th_mem x)
@@ -396,8 +396,8 @@ theorem ThetaSys.FF_div_FF_mem_O_of_valuationRing :
     rcases ValuationRing.isInteger_or_isInteger (M.O ξ) x with ⟨y, hy⟩ | ⟨y, hy⟩
     · exact Or.inl (hy ▸ y.2)
     · exact Or.inr (hy ▸ y.2)
-  haveI : ValuationRing (M.O ξ).toSubring := hv
-  haveI : IsNoetherianRing (M.O ξ).toSubring := hn
+  have : ValuationRing (M.O ξ).toSubring := hv
+  have : IsNoetherianRing (M.O ξ).toSubring := hn
   have key := div_mem_of_forall_pow_succ_div_pow_mem Ω (M.O ξ).toSubring hval
     (S.FF _ c k / S.th x₀) (S.FF _ c' k' / S.th x₀) (div_ne_zero hk.1 h0) (div_ne_zero hk'.1 h0) (by
       intro j hj
@@ -571,15 +571,15 @@ namespace GlobalTheory.ZH
 theorem span_lattice_eq_of_valuationRing :
     ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (M : RatModel o Ω) (U₀ : M.Z.Opens), S.admitted M U₀ → ((∀ ξ : M.Z, S.IsoFree (S.TT M ξ) ∧ S.perp (S.TT M ξ) = S.HH M ξ) ∧ (∀ ξ z : M.Z, ξ ⤳ z → S.supI M z ⊆ S.supI M ξ) ∧ (∀ ξ ∈ U₀, S.TT M ξ = ⊥) ∧ (∀ (ξ : M.Z) (W : M.Z.Opens), ξ ∈ W → ∃ x ∈ W, IsClosed ({x} : Set M.Z) ∧ ξ ⤳ x ∧ S.supI M x = S.supI M ξ)) → (∀ (ξ : M.Z) (c : S.TT M ξ →+ ZMod S.N), S.FF (S.TT M ξ) c ≠ 0) → (∀ (z ξ : M.Z) (c : S.TT M z →+ ZMod S.N) (c' : S.TT M ξ →+ ZMod S.N) (k : _) (k' : _), IsClosed ({z} : Set M.Z) → ξ ⤳ z → (∀ (t : S.Gam) (h₁ : t ∈ S.TT M z) (h₂ : t ∈ S.TT M ξ), c ⟨t, h₁⟩ = c' ⟨t, h₂⟩) → M.Div (S.FF (S.TT M z) c) k z → M.Div (S.FF (S.TT M ξ) c') k' ξ → S.FF _ c k / S.FF _ c' k' ∈ M.O ξ) → (∀ (z ξ : M.Z) (c : S.TT M z →+ ZMod S.N) (c' : S.TT M ξ →+ ZMod S.N) (k : _) (k' : _), IsClosed ({z} : Set M.Z) → ξ ⤳ z → (∀ (t : S.Gam) (h₁ : t ∈ S.TT M z) (h₂ : t ∈ S.TT M ξ), c ⟨t, h₁⟩ = c' ⟨t, h₂⟩) → M.Div (S.FF (S.TT M z) c) k z → M.Div (S.FF (S.TT M ξ) c') k' ξ → IsDomain (M.O ξ) → ValuationRing (M.O ξ) → IsNoetherianRing (M.O ξ) → S.FF _ c' k' / S.FF _ c k ∈ M.O ξ) → (∀ z ξ : M.Z, IsClosed ({z} : Set M.Z) → ξ ⤳ z → ValuationRing (M.O ξ) → Submodule.span (M.O ξ) {v | ∃ (c : S.TT M z →+ ZMod S.N) (k : _) (x₀ : S.Gam) (i : S.J), M.Div (S.FF (S.TT M z) c) k z ∧ x₀ ∈ S.supI M z ∧ v = fun j => S.th x₀ / S.FF _ c k * algebraMap o Ω (S.proj _ c j i)} = Submodule.span (M.O ξ) {v | ∃ (c : S.TT M ξ →+ ZMod S.N) (k : _) (x₀ : S.Gam) (i : S.J), M.Div (S.FF (S.TT M ξ) c) k ξ ∧ x₀ ∈ S.supI M ξ ∧ v = fun j => S.th x₀ / S.FF _ c k * algebraMap o Ω (S.proj _ c j i)}) := by
   intro o Ω _ _ _ hA S M U₀ hAdm h0 hne hge hle z ξ hz hs hval
-  haveI : IsDomain o := hA.inj.isDomain
-  haveI := hA.ded
+  have : IsDomain o := hA.inj.isDomain
+  have := hA.ded
   have hnoeth : IsNoetherianRing (M.O ξ) := (normalModel_height_le_one o Ω M hAdm.1.normal ξ).2.1
   have hT := (h0.1 z).1
   have hT' := (h0.1 ξ).1
   have hsup := h0.2.1 ξ z hs
   have h : S.TT M ξ ≤ S.TT M z := fun a ha x hx => ha x (AddSubgroup.closure_mono hsup hx)
-  haveI := FreeNear.finite_char S (S.TT M z)
-  haveI := Fintype.ofFinite (S.TT M z →+ ZMod S.N)
+  have := FreeNear.finite_char S (S.TT M z)
+  have := Fintype.ofFinite (S.TT M z →+ ZMod S.N)
   have hmul := (FreeNear.proj_orthogonal S _ hT).1
   have hsum : ∀ c' : S.TT M ξ →+ ZMod S.N, S.proj _ c' =
       ∑ c ∈ Finset.univ.filter fun c : S.TT M z →+ ZMod S.N => c.comp (AddSubgroup.inclusion h) = c',
@@ -594,9 +594,9 @@ theorem span_lattice_eq_of_valuationRing :
     have hu := hle z ξ c _ k k' hz hs (hcomp c) hk hk' inferInstance hval hnoeth
     have hp : S.proj _ (c.comp (AddSubgroup.inclusion h)) * S.proj _ c = S.proj _ c := by
       rw [hsum, Finset.sum_mul, Finset.sum_eq_single c]
-      · rw [hmul, if_pos rfl]
+      · rw [hmul, ite_eq_left rfl]
       · intro b _ hb
-        rw [hmul, if_neg hb]
+        rw [hmul, ite_eq_right hb]
       · simp
     have e : (fun j => S.th x₀ / S.FF _ c k * algebraMap o Ω (S.proj _ c j i)) =
         ∑ l, ((⟨_, hu⟩ : M.O ξ) * algebraMap o (M.O ξ) (S.proj _ c l i)) •
@@ -659,8 +659,8 @@ namespace GlobalTheory.ZH
 theorem exists_isEE_of_adm : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (M : RatModel o Ω) (U₀ : M.Z.Opens), S.HasTests → S.admitted M U₀ → ∃ EE : M.Lat S.J, S.IsEE M U₀ EE ∧ (∀ z : M.Z, IsClosed ({z} : Set M.Z) → EE.E z = Submodule.span (M.O z) {v | ∃ (c : S.TT M z →+ ZMod S.N) (k : _) (x₀ : S.Gam) (i : S.J), M.Div (S.FF (S.TT M z) c) k z ∧ x₀ ∈ S.supI M z ∧ v = fun j => S.th x₀ / S.FF _ c k * algebraMap o Ω (S.proj _ c j i)}) := by
   intro o Ω _ _ _ hb S M U₀ hT hA
   have hO : S.Over₀ M U₀ := hA.1
-  haveI := hb.ft
-  haveI := hb.char
+  have := hb.ft
+  have := hb.char
   have hll := @GlobalTheory.ZH.classical_points_and_local_regularity o Ω _ _ _ _ _ M U₀ hO.normal
   have hte := @GlobalTheory.ZH.exists_at_test_of_cen o Ω _ _ _ _ S M U₀ hT hO
   have hwt := @GlobalTheory.ZH.test_weights o Ω _ _ _ _ S

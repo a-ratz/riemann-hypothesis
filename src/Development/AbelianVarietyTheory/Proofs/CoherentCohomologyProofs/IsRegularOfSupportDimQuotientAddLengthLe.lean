@@ -205,8 +205,8 @@ theorem flat_of_basis_mod_pow [IsNoetherianRing A] (B : Type*) [CommRing B] [IsN
     Module.Flat A M := by
   rw [Module.Flat.iff_lTensor_injective']
   intro J
-  haveI : SMulCommClass A B M := IsScalarTower.to_smulCommClass
-  haveI : Module.Finite B (M ⊗[A] J) := by
+  have : SMulCommClass A B M := IsScalarTower.to_smulCommClass
+  have : Module.Finite B (M ⊗[A] J) := by
     exact Module.Finite.equiv (AlgebraTensorModule.cancelBaseChange A B B M J)
   let φ : (S →₀ J) →ₗ[A] M ⊗[A] J := Finsupp.lsum A fun s => TensorProduct.mk A M J (m s)
   have hφ : LinearMap.range φ ⊔ I • ⊤ = ⊤ := by
@@ -218,7 +218,7 @@ theorem flat_of_basis_mod_pow [IsNoetherianRing A] (B : Type*) [CommRing B] [IsN
       have hy : y ∈ Submodule.span A (Set.range m) ⊔ I • ⊤ := by rw [hsurj]; trivial
       have := Submodule.mem_map_of_mem (f := (TensorProduct.mk A M J).flip j) hy
       rw [Submodule.map_sup, Submodule.map_smul''] at this
-      refine SetLike.le_def.mp (sup_le_sup ?_ (Submodule.smul_mono le_rfl le_top)) this
+      refine IsConcreteLE.le_iff.mp (sup_le_sup ?_ (Submodule.smul_mono le_rfl le_top)) this
       rw [Submodule.map_span, Submodule.span_le]
       rintro _ ⟨_, ⟨s, rfl⟩, rfl⟩
       exact ⟨Finsupp.single s j, by simp [φ]⟩
@@ -273,7 +273,7 @@ theorem IsQuasiRegularSeq.flat_of_isMaximal [IsNoetherianRing A] (B : Type*) [Co
     (hI : (Ideal.span (Set.range f)).map (algebraMap A B) ≤ (⊥ : Ideal B).jacobson) :
     Module.Flat A M := by
   set I := Ideal.span (Set.range f) with hIdef
-  letI := Ideal.Quotient.field I
+  let := Ideal.Quotient.field I
   let b := Module.Free.chooseBasis (A ⧸ I) (M ⧸ (I • ⊤ : Submodule A M))
   choose m hm using fun s => Submodule.Quotient.mk_surjective _ (b s)
   have hb : ∀ z, (Submodule.Quotient.mk (Finsupp.linearCombination A m z) :
@@ -703,7 +703,7 @@ theorem flat_localization_atPrime_of_isCM (p : Ideal A) [p.IsPrime] (q : Ideal B
     [q.LiesOver p] [IsRegularLocalRing (Localization.AtPrime p)] [Algebra.QuasiFiniteAt A q]
     (hB : IsCM (Localization.AtPrime q)) (hd : p.height ≤ q.height) :
     Module.Flat A (Localization.AtPrime q) := by
-  letI := Localization.AtPrime.algebraOfLiesOver p q
+  let := Localization.AtPrime.algebraOfLiesOver p q
   have : Algebra.QuasiFinite (Localization.AtPrime p) (Localization.AtPrime q) :=
     .of_restrictScalars A _ _
   have : Module.Flat (Localization.AtPrime p) (Localization.AtPrime q) := by

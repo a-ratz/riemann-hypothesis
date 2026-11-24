@@ -154,21 +154,21 @@ theorem exists_projector (τ : Representation ℂ H V)
     rw [Submodule.disjoint_def]
     intro w hw hw'
     obtain ⟨N, h1, h2, h3⟩ := key w hw'
-    letI : Fintype (H ⧸ N) := Fintype.ofFinite _
+    let : Fintype (H ⧸ N) := Fintype.ofFinite _
     rw [← mean_of_fixed τ N hw, h3 N le_rfl h1]
   have hc : Codisjoint τ.invariants (aug τ) := by
     rw [codisjoint_iff, eq_top_iff]
     intro v _
     obtain ⟨N, h1, h2, h3⟩ := hτ v
-    letI : Fintype (H ⧸ N) := Fintype.ofFinite _
+    let : Fintype (H ⧸ N) := Fintype.ofFinite _
     have : v = mean τ N v - (mean τ N v - v) := by abel
     rw [this]
     exact Submodule.sub_mem _ (Submodule.mem_sup_left (apply_mean τ N h3))
       (Submodule.mem_sup_right (mean_sub_mem τ N v))
   have hcomp : IsCompl τ.invariants (aug τ) := ⟨hd, hc⟩
   obtain ⟨e, he1, he2⟩ : ∃ e : V →ₗ[ℂ] τ.invariants, (∀ v : τ.invariants, e v = v) ∧ ∀ w ∈ aug τ, e w = 0 :=
-    ⟨τ.invariants.linearProjOfIsCompl _ hcomp, fun v => Submodule.linearProjOfIsCompl_apply_left hcomp v,
-      fun w hw => Submodule.linearProjOfIsCompl_apply_right hcomp ⟨w, hw⟩⟩
+    ⟨τ.invariants.linearProjOfIsCompl _ hcomp, fun v => Submodule.projectionOnto_apply_left hcomp v,
+      fun w hw => Submodule.projectionOnto_apply_right hcomp ⟨w, hw⟩⟩
   refine ⟨e, he1, fun k v => ?_, fun N _ v hv => ?_⟩
   · rw [← sub_eq_zero, ← map_sub]
     exact he2 _ (Submodule.subset_span ⟨_, _, rfl⟩)
@@ -222,12 +222,12 @@ theorem hecke_comm (K : Subgroup G) (θ : G → G) (hmul : ∀ x y, θ (x * y) =
   obtain ⟨N₁, n1, f1, p1⟩ := hτ (ρ g v)
   obtain ⟨N₂, n2, f2, p2⟩ := hτ (ρ h v)
   let M : Subgroup K := N₁ ⊓ N₂
-  haveI : (M.comap ψ).FiniteIndex := ⟨by
+  have : (M.comap ψ).FiniteIndex := ⟨by
     rw [Subgroup.index_comap_of_surjective _ hψ.surjective]; exact Subgroup.FiniteIndex.index_ne_zero⟩
   let N : Subgroup K := M ⊓ M.comap ψ
-  haveI : N.Normal := inferInstance
-  haveI : N.FiniteIndex := inferInstance
-  letI : Fintype (K ⧸ N) := Fintype.ofFinite _
+  have : N.Normal := inferInstance
+  have : N.FiniteIndex := inferInstance
+  let : Fintype (K ⧸ N) := Fintype.ofFinite _
   have hN : N ≤ N.comap ψ := by
     intro n hn
     refine ⟨hn.2, ?_⟩
@@ -296,25 +296,25 @@ theorem main : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup
     ext v
     show (∀ k : K, ρ k v = ((1 : K →* ℂˣ) k : ℂ) • v) ↔ ∀ k : K, ρ k v = v
     simp
-  haveI : FiniteDimensional ℂ τ.invariants := hU ▸ hadm.2 K hKo hKc
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  have : FiniteDimensional ℂ τ.invariants := hU ▸ hadm.2 K hKo hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
   have hτ : ∀ v, ∃ N : Subgroup K, N.Normal ∧ N.FiniteIndex ∧ ∀ n ∈ N, ρ (n : K) v = v := by
     intro v
     let T : Subgroup K :=
       { carrier := {k | τ k v = v}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hb, ha]
         one_mem' := by simp
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul]; simp }
-    have hT : IsOpen (T : Set K) := (hadm.1 v).preimage continuous_subtype_val
-    haveI := T.quotient_finite_of_isOpen hT
-    haveI : T.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have hT : IsOpen (T : Set K) := (hadm.1 v).preimage continuous_subtypeVal
+    have := T.quotient_finite_of_isOpen hT
+    have : T.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     exact ⟨T.normalCore, inferInstance, inferInstance, fun n hn => T.normalCore_le hn⟩
   obtain ⟨e, he1, he2, he3⟩ := exists_projector τ hτ
   have hcomm := hecke_comm K θ hmul hinv hdc ρ hτ (τ.invariants.subtype ∘ₗ e)
@@ -322,7 +322,7 @@ theorem main : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup
   rw [hU] at hx ⊢
   let x' : τ.invariants := ⟨x, hx⟩
   have hx' : x' ≠ 0 := fun h => hx0 (congrArg Subtype.val h)
-  haveI : Nontrivial τ.invariants := ⟨x', 0, hx'⟩
+  have : Nontrivial τ.invariants := ⟨x', 0, hx'⟩
   have hscal : ∀ g : G, ∃ c : ℂ, ∀ u : τ.invariants, e (ρ g u) = c • u := by
     intro g
     let T : Module.End ℂ τ.invariants := e ∘ₗ ρ g ∘ₗ τ.invariants.subtype
@@ -529,13 +529,13 @@ theorem finsum_quot_le {K W : Type} [Group K] [AddCommGroup W] {H H' : Subgroup 
     [H.FiniteIndex] (F : K → W) (hF : ∀ y, ∀ h ∈ H', F (y * h) = F y) :
     ∑ᶠ q : K ⧸ H, F q.out = Nat.card (H' ⧸ H.subgroupOf H') • ∑ᶠ p : K ⧸ H', F p.out := by
   classical
-  haveI : H'.FiniteIndex := Subgroup.finiteIndex_of_le hle
+  have : H'.FiniteIndex := Subgroup.finiteIndex_of_le hle
   let e := Subgroup.quotientEquivProdOfLE hle
-  haveI : Finite ((K ⧸ H') × (H' ⧸ H.subgroupOf H')) := Finite.of_equiv _ e
-  haveI : Finite (H' ⧸ H.subgroupOf H') := Finite.prod_right (K ⧸ H')
-  haveI := Fintype.ofFinite (K ⧸ H)
-  haveI := Fintype.ofFinite (K ⧸ H')
-  haveI := Fintype.ofFinite (H' ⧸ H.subgroupOf H')
+  have : Finite ((K ⧸ H') × (H' ⧸ H.subgroupOf H')) := Finite.of_equiv _ e
+  have : Finite (H' ⧸ H.subgroupOf H') := Finite.prod_right (K ⧸ H')
+  have := Fintype.ofFinite (K ⧸ H)
+  have := Fintype.ofFinite (K ⧸ H')
+  have := Fintype.ofFinite (H' ⧸ H.subgroupOf H')
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]
   have h1 : ∀ q : K ⧸ H, F q.out = F (e q).1.out := by
     intro q

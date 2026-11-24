@@ -651,7 +651,7 @@ theorem eigen_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     have h : ∃ γ ∈ latDbl G.V G.W v, GlobalTheory.LatVac.locCo dd v γ = l := AddSubgroup.mem_map.mp hl
     have key := _root_.GlobalTheory.DblVacEigen.local_identity_of_tens_eigen v dd B.ψ h.choose f R _ (at_of_mem_latDbl _ _ _ h.choose_spec.1) hRinv
       (Sum.elim x₀ x₀) hRx (hf _ h.choose_spec.1) ξ
-    simp only [χ, dif_pos h]
+    simp only [χ, dite_eq_left h]
     rw [h.choose_spec.2] at key
     exact key
   have hloc1 := loc vd (fun γ hγ => hSt ▸ hSeig γ hγ)
@@ -701,10 +701,10 @@ theorem eigen_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     { carrier := {g | omd g S = S}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hD : ∀ p ∈ GlobalTheory.DblVac.KD σ G.W v, p ∈ GlobalTheory.DblVac.PDiag σ G.W → p ∈ H := fun p hp hpd => by

@@ -69,7 +69,7 @@ variable {D : D7} {v : HeightOneSpectrum (𝓞 D.host.F)}
 
 theorem val_le_iff (x y : Fv D.host.F v) :
     valuation (Fv D.host.F v) x ≤ valuation (Fv D.host.F v) y ↔ Valued.v x ≤ Valued.v y := by
-  haveI : (Valued.v : Valuation (Fv D.host.F v) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (Fv D.host.F v) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   rw [← Valuation.Compatible.vle_iff_le (v := valuation (Fv D.host.F v)),
     Valuation.Compatible.vle_iff_le (v := (Valued.v : Valuation (Fv D.host.F v) (WithZero (Multiplicative ℤ))))]

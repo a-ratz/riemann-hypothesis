@@ -97,7 +97,7 @@ theorem eisBL_of_k (hH : _root_.SiegelEisensteinSeries.EisHalf_k) (hM : _root_.S
   let Ehat : ℂ → G2 σ Y → ℂ := fun s' x => if max t₀ t₁ < s'.re then (v s').1 x else (H s').1 x / A s'
   refine ⟨Ehat, ⟨max t₀ t₁, ?_, ?_⟩, ?_⟩
   · intro s' hs' x
-    simp only [Ehat, if_pos hs']
+    simp only [Ehat, ite_eq_left hs']
     exact hv s' (lt_of_le_of_lt (le_max_left _ _) hs') x
   · intro x
     have hd : DifferentiableOn ℂ (fun s' => evAt x (v s')) {s' : ℂ | t₀ < s'.re} :=
@@ -105,7 +105,7 @@ theorem eisBL_of_k (hH : _root_.SiegelEisensteinSeries.EisHalf_k) (hM : _root_.S
     have hd' : DifferentiableOn ℂ (fun s' => (v s').1 x) {s' : ℂ | max t₀ t₁ < s'.re} :=
       (hd.mono fun s' (hs' : max t₀ t₁ < s'.re) => (show t₀ < s'.re from lt_of_le_of_lt (le_max_left _ _) hs'))
     refine hd'.congr fun s' hs' => ?_
-    simp only [Ehat, if_pos (show max t₀ t₁ < s'.re from hs')]
+    simp only [Ehat, ite_eq_left (show max t₀ t₁ < s'.re from hs')]
   · intro s₀
     obtain ⟨k, U, u, hUo, hs₀U, hud, hUA⟩ := hF A hA hAne s₀
     refine ⟨k, U, fun s' => (u s')⁻¹ • H s', hUo.mem_nhds hs₀U, ?_, ?_⟩
@@ -114,10 +114,10 @@ theorem eisBL_of_k (hH : _root_.SiegelEisensteinSeries.EisHalf_k) (hM : _root_.S
       have hpow : (s' - s₀) ^ k ≠ 0 := pow_ne_zero _ (sub_ne_zero.mpr hne)
       show (u s')⁻¹ * (H s').1 x = (s' - s₀) ^ k * Ehat s' x
       by_cases hre : max t₀ t₁ < s'.re
-      · simp only [Ehat, if_pos hre]
+      · simp only [Ehat, ite_eq_left hre]
         rw [hHv s' hre x, hAs]
         field_simp
-      · simp only [Ehat, if_neg hre]
+      · simp only [Ehat, ite_eq_right hre]
         rw [hAs]
         field_simp
     · intro μ hμ
@@ -237,7 +237,7 @@ open GlobalTheory.Doubling (absE)
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n : ℕ} {Y : Spc F E n}
 theorem eis_half_plane_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (B : Base F E) (n : ℕ) (Y : Spc F E n) (r s : ℕ), _root_.UpperTheory.TP.W.GoodK σ B → 1 ≤ n → (Y.IsHerm σ B r s ∨ Y.IsSkew σ B r s) → ∀ (b : GL (Fin n ⊕ Fin n) E) (K : Subgroup (G2 σ Y)) (a : G2 σ Y → ℝ), IsFrame2 σ Y b → IsStdK (σ := σ) (Y := Y) B b K → IsHgt K a → ∀ (χ : Chr F E) (s₁ : ℂ) (f : G2 σ Y → ℂ), IsSec K χ s₁ f → ∃ t₀ : ℝ, ∀ (t : ℝ) (Ê : ℂ → G2 σ Y → ℂ), t₀ ≤ t → (∀ s : ℂ, t < s.re → ∀ x, HasSum (eisTerm (flat a f s₁ s) x) (Ê s x)) → (∀ s : ℂ, t < s.re → (fun x => Ê s x) ∈ modFun σ Y) ∧ ContinuousOn (fun y : ℂ × G2 σ Y => Ê y.1 y.2) ({s : ℂ | t < s.re} ×ˢ Set.univ) ∧ ∀ c c' : ℝ, t < c → ∃ (C : ℝ) (N : ℕ), ∀ s : ℂ, c ≤ s.re → s.re ≤ c' → ∀ x, ‖Ê s x‖ ≤ C * (ht2 x : ℝ) ^ N := by
   intro F E _ _ _ _ _ σ B n Y r s hB hn hY b K a hb hK ha χ s₁ f hf
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   obtain ⟨ac, a0⟩ := _root_.GlobalTheory.T.height_function_continuous_pos F E σ B n Y r s hB hn hY b K a hb hK ha
   have kc := _root_.GlobalTheory.T.isCompact_standard_maximal_compact F E σ B n Y r s hB hn hY b K a hb hK ha
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.EisTerm.flat_norm_le_height_rpow K a kc ha a0 χ s₁ f hf
@@ -370,7 +370,7 @@ theorem eisHalf_k : _root_.SiegelEisensteinSeries.EisHalf_k := by
   let v : ℂ → modFun σ Y := fun s => if h : t' < s.re then ⟨fun x => Ê s x, hmem s h⟩ else 0
   have hv : ∀ s : ℂ, t' < s.re → ∀ x, (v s).1 x = Ê s x := by
     intro s h x
-    simp only [v, dif_pos h]
+    simp only [v, dite_eq_left h]
   refine ⟨t', v, fun s h x => by rw [hv s h x]; exact hsum' s h x, ?_⟩
   have hS : IsOpen {s : ℂ | t' < s.re} := isOpen_lt continuous_const Complex.continuous_re
   refine GlobalTheory.CompanionTheory.WeakHolo.wholo_growForms v hS ?_ ?_ ?_
@@ -461,8 +461,8 @@ theorem siegelMult_of_k : SecLaw → WallLaw → Dict → DictInf → CMGood →
   obtain ⟨-, hparU⟩ := hPar E (AE F E) (adCM σ χ) hgood (Fin n) ε (Set.univ : Set (Fin n))
   obtain ⟨hIP', hIH, -⟩ := hparU (by rwa [inf_idem])
   rw [inf_idem] at hIP'
-  haveI := ht2'
-  haveI := hlc'
+  have := ht2'
+  have := hlc'
   have hW := hSg F E σ χ c hcm hunr hχ hres ε (Fin n) (by simpa using hn) hiwa
   obtain ⟨σ₀, hσ₀⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.godement_sum_k F E σ B n Y r s hB hn hY b K a hb' hK ha
   refine eis_from_U hSec hWL Φ (continuous_frameEquiv χ ε b hε) _ _ _ ((adCM σ χ).uC ε (Fin n))

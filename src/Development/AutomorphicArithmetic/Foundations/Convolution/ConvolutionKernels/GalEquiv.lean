@@ -86,8 +86,8 @@ private theorem mult_comap_equiv {K : Type} [Field K] [NumberField K] (j : K ≃
   have h : (u.comap j.toRingHom).IsReal ↔ u.IsReal := InfinitePlace.isReal_comap_iff (f := j)
   unfold InfinitePlace.mult
   by_cases hu : u.IsReal
-  · rw [if_pos (h.2 hu), if_pos hu]
-  · rw [if_neg (mt h.1 hu), if_neg hu]
+  · rw [ite_eq_left (h.2 hu), ite_eq_left hu]
+  · rw [ite_eq_right (mt h.1 hu), ite_eq_right hu]
 
 private def infPerm {K : Type} [Field K] [NumberField K] (j : K ≃+* K) : InfinitePlace K ≃ InfinitePlace K where
   toFun u := u.comap j.toRingHom
@@ -227,7 +227,7 @@ private theorem resMap_cont (K : Type) [Field K] [NumberField K] (n : ℕ) (σ :
   exact (show Continuous (Matrix.GeneralLinearGroup.map (Formalism.L2.Host.CT.adMap σ) :
       AdelicGLn.AdelicGL K n → AdelicGLn.AdelicGL K n) from
     (continuous_id.matrix_map (Formalism.L2.Host.CT.continuous_adMap σ)).units_map _).comp
-      continuous_subtype_val
+      continuous_subtypeVal
 
 private theorem resMap_iter (K : Type) [Field K] [NumberField K] (n : ℕ) (σ : K ≃+* K) (m : ℕ) (g : G1 K n) :
     (resMap K n σ)^[m] g = resMap K n (σ ^ m) g := by

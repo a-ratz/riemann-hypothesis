@@ -58,7 +58,7 @@ theorem algHom_ext_localization {R A P : Type} [CommRing R] [CommRing A] [CommRi
     (φ₁ φ₂ : Localization.AtPrime q →ₐ[R] P)
     (h : φ₁.comp (IsScalarTower.toAlgHom R A (Localization.AtPrime q)) =
       φ₂.comp (IsScalarTower.toAlgHom R A (Localization.AtPrime q))) : φ₁ = φ₂ := by
-  apply AlgHom.coe_ringHom_injective
+  apply AlgHom.toRingHom_injective
   apply IsLocalization.ringHom_ext q.primeCompl
   exact RingHom.ext fun a => DFunLike.congr_fun h a
 

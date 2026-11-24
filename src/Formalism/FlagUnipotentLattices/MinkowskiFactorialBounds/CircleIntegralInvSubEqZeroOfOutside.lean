@@ -267,10 +267,10 @@ theorem degree_set_cardinality_bound : Formalism.HermitianLatticeCounting.Expans
     intro J a b
     obtain ⟨m, hm⟩ := hint a b
     by_cases ha : a ∈ J <;> by_cases hb : b ∈ J
-    · exact ⟨m, by simp only [ha, hb, if_true]; linarith⟩
-    · exact ⟨m + 1, by simp only [ha, hb, if_true, if_false]; push_cast; linarith⟩
-    · exact ⟨m - 1, by simp only [ha, hb, if_true, if_false]; push_cast; linarith⟩
-    · exact ⟨m, by simp only [ha, hb, if_false]; linarith⟩
+    · exact ⟨m, by simp only [ha, hb, ite_true]; linarith⟩
+    · exact ⟨m + 1, by simp only [ha, hb, ite_true, ite_false]; push_cast; linarith⟩
+    · exact ⟨m - 1, by simp only [ha, hb, ite_true, ite_false]; push_cast; linarith⟩
+    · exact ⟨m, by simp only [ha, hb, ite_false]; linarith⟩
   have fμ := Formalism.QuantumDeterminants.fdegPos n μ hμ.injective
   induction I using Finset.induction_on with
   | empty =>
@@ -457,7 +457,7 @@ theorem first_operator_norm_bound : Formalism.HermitianLatticeCounting.Expansion
       _ ≤ 2 * q0 / c := by gcongr
   rw [div_le_iff₀ hDpos]
   by_cases hs : (s : ℕ) + 1 < k
-  · rw [if_pos hs]
+  · rw [ite_eq_left hs]
     have above : ∀ (i : Fin k) (a : Fin (k + M)), (a : ℕ) + 1 = (i : ℕ) → (i : ℕ) < (s : ℕ) →
         |mu s - 1 / 2 - u i| ≤ Real.exp (2 * |mu a - lam a| / (ga / 2)) * |mu s - 1 - mu a| := by
       intro i a hai his
@@ -521,9 +521,9 @@ theorem first_operator_norm_bound : Formalism.HermitianLatticeCounting.Expansion
         have h := (Finset.mem_filter.mp hi).2
         by_cases c : (i : ℕ) < (s : ℕ)
         · apply above i _ _ c
-          simp only [c, if_true]; omega
+          simp only [c, ite_true]; omega
         · apply below i _ _ (by omega)
-          simp only [c, if_false])
+          simp only [c, ite_false])
       (fun i _ => hN i) (by linarith)
       (by
         have hsub : (univ : Finset (Fin k)) \
@@ -554,7 +554,7 @@ theorem first_operator_norm_bound : Formalism.HermitianLatticeCounting.Expansion
             mul_le_mul_of_nonneg_left hsq (by positivity)
           calc _ ≤ (4 * b) ^ 3 * Real.exp 1 * Real.sqrt k := by linarith
             _ = 64 * Real.exp 1 * Real.sqrt k * b ^ 3 := by ring
-  · rw [if_neg hs]
+  · rw [ite_eq_right hs]
     have above : ∀ (i : Fin k) (a : Fin (k + M)), (a : ℕ) + 1 = (i : ℕ) → (i : ℕ) + 1 < k →
         |mu s - 1 / 2 - u i| ≤ Real.exp (2 * |mu a - lam a| / (bv / 2)) * |mu s - 1 - mu a| := by
       intro i a hai hik

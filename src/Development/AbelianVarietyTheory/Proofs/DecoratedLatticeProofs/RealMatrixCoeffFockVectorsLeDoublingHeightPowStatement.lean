@@ -95,7 +95,7 @@ namespace GlobalTheory.TwBound
 
 theorem hgt_io_eq_prod (D : D7) (V : HSp D) (a : GL (Fin V.rank) (AE D)) (ha : IsMaj V a) (g : GA D V) (hg : g ∈ GinfC V) :
     (hgt V a (io V (g, 1)) : ℝ) = ∏ w, GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtW V a w (GlobalTheory.AdelicU.projArch D.sp.cm.sig V.gram w g) := by
-  haveI := GlobalTheory.Doubling.t2Space_adeleRing' (F := D.host.F)
+  have := GlobalTheory.Doubling.t2Space_adeleRing' (F := D.host.F)
   have hI := GlobalTheory.T.adelicIwasawa_doubledGroup_selfDualLattice D V (frameLat V) a (GlobalTheory.WeilAtPlace.isSelfDualC_frameLat V) ha
   rw [hgt, hI.hgtAd_eq (isCMExt_host D)]
   have hf : ∀ v, hgtFin D.sp.cm.sig (dblSp V).gram (frameLat V) v (proj D.sp.cm.sig (dblSp V).gram v (io V (g, 1))) = 1 := by
@@ -125,7 +125,7 @@ theorem tw_bound : ∀ (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPar) (M
   have hk := GlobalTheory.T.fock_vector_finite_under_compact_commuting_cartan D ψ θ (dblSp V) W 1 χT omh _ (cart M') homh hθ hc.1 hT (Khat V a) (isCompact_Khat V a) hc.2 _ hb
   have hmem := GlobalTheory.T.doublingSiegelWeilSection_mem_degeneratePrincipalSeries hpr D ψ V W χT omh homh m X hm _ (hth _ _ h1.1 h2.1).1 a hk
   have hI := GlobalTheory.T.adelicIwasawa_doubledGroup_selfDualLattice D V (frameLat V) a (GlobalTheory.WeilAtPlace.isSelfDualC_frameLat V) ha
-  haveI := GlobalTheory.Doubling.t2Space_adeleRing' (F := D.host.F)
+  have := GlobalTheory.Doubling.t2Space_adeleRing' (F := D.host.F)
   obtain ⟨C, hC⟩ := GlobalTheory.Doubling.HasIwasawa.exists_norm_le continuous_absE (isCompact_Khat V a) hI hmem
   refine ⟨C, fun g hg => ?_⟩
   have e1 := (hco _ _ h1.1 h2.1).2 g

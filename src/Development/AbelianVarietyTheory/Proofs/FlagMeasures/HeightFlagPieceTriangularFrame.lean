@@ -220,11 +220,11 @@ theorem covStd_index [_root_.NumberField.IsTotallyComplex E] {ι : Type} [Fintyp
     simp only [detNorm, h1]; simp
   have hlat : ∀ g : Fin j → Fin j → E, Submodule.span E (Set.range g) = ⊤ →
       Submodule.IsFullLattice E (Submodule.span (𝓞 E) (Set.range g)) := fun g hsp => by
-    letI : Submodule.IsLattice E (Submodule.span (𝓞 E) (Set.range g)) :=
+    let : Submodule.IsLattice E (Submodule.span (𝓞 E) (Set.range g)) :=
       Submodule.IsLattice.of_fg E (Submodule.fg_span (Set.finite_range g))
     exact ⟨by rw [Submodule.span_span_of_tower (𝓞 E), hsp]⟩
   have hfull : Submodule.IsFullLattice E Λ := by
-    letI := hΛ
+    let := hΛ
     exact ⟨eq_top_iff.mpr (by rw [← hsp]; exact Submodule.span_mono (Set.range_subset_iff.mpr hle))⟩
   obtain ⟨κ, -, hκ⟩ := hall Λ hfull
   obtain ⟨⟨i1, i2⟩, -⟩ := hκ _ (hd1 ▸ one_pos)
@@ -244,7 +244,7 @@ theorem covStd_index [_root_.NumberField.IsTotallyComplex E] {ι : Type} [Fintyp
   set M : Matrix (Fin j) (Fin j) E := (Matrix.of g)ᵀ with hM
   have hMu : M.det ≠ 0 := by
     rw [hM, Matrix.det_transpose]
-    exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1 hg)).ne_zero
+    exact ((Matrix.isUnit_iff_isUnit_det _).1 (linearIndependent_row_iff_isUnit.1 hg)).ne_zero
   have hMw : ∀ ψ : E →+* ℂ, (M.map ψ).det ≠ 0 := fun ψ => by
     rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]
     exact (map_ne_zero ψ).2 hMu
@@ -371,7 +371,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [StarRing E], IsTotallyC
   obtain ⟨g, hg, hgsp, hgli⟩ : ∃ g : Fin (r b) → Fin (r b) → E, (∀ a, g a ∈ Λ b) ∧
       Submodule.span E (Set.range g) = ⊤ ∧ LinearIndependent E g := by
     have h := Submodule.exists_fun_fin_finrank_span_eq E (Λ b : Set (Fin (r b) → E))
-    letI := hΛ b
+    let := hΛ b
     rw [Submodule.IsFullLattice.span_eq_top (A := E) (M := Λ b), finrank_top,
       Module.finrank_fin_fun] at h
     exact h

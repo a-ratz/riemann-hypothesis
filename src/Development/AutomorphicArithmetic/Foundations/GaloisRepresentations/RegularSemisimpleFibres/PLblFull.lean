@@ -129,10 +129,10 @@ theorem UpperTheory.Gal.InertialTypesAlt.lblFull :
     rw [← hJ]
     exact hP
   have h2 := frob_step hF (d := fun a => (x a).fst) hd (fun i => cusp θ (x i).fst (c i)) η h1
-  haveI hfd : ∀ a, FiniteDimensional ℂ (fixed (x a).rep (KOne k (Fin (x a).fst))) :=
+  have hfd : ∀ a, FiniteDimensional ℂ (fixed (x a).rep (KOne k (Fin (x a).fst))) :=
     fun a => fd_fixed _ (x a).snd.rep.smooth (x a).snd.rep.irr
   have h3 := meets_parab hTT hd (fun a => levelZero (x a).rep) (fun i => cusp θ (x i).fst (c i)) hx η h2
-  haveI := (hTT s _ _ (fun a => levelZero (x a).rep)).1
+  have := (hTT s _ _ (fun a => levelZero (x a).rep)).1
   obtain ⟨ψ, hψ0, hψ⟩ := ((hMI _ _ _ _ _).1).1 h3
   obtain ⟨j, hj, hjx⟩ := hTI k s (fun a => (x a).fst) _ (fun a => (x a).rep)
   obtain ⟨Φ, ev, hΦ1, hΦ2, hΦ3⟩ := hInd k N s (fun a => (x a).fst) hd _ _ _ _ j hj hjx
@@ -144,5 +144,5 @@ theorem UpperTheory.Gal.InertialTypesAlt.lblFull :
     have := congrArg e hab
     simpa using this
   obtain ⟨F', hF0, hF'⟩ := compose_map Ψ (levelZeroMap e.symm.toIntertwiningMap) hinj hΨ0 hΨ
-  haveI := fd_fixed π hs hi
+  have := fd_fixed π hs hi
   exact ((hMI _ _ _ (levelZero π) η).2).2 ⟨F', hF0, hF'⟩

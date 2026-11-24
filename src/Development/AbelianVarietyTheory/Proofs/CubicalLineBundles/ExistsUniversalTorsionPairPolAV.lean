@@ -221,7 +221,7 @@ theorem exists_universal_torsion_pair :
     rw [Out.mulA, ← GrpTangent.mulN_eq_pow] at h1 h2
     exact ⟨MorphismProperty.of_isPullback (P := @IsFinite) (GrpTangent.isPullback_torsion P.A k) h1,
       MorphismProperty.of_isPullback (P := @Flat) (GrpTangent.isPullback_torsion P.A k) h2⟩
-  haveI : CharZero (FractionRing R) := algebraRat.charZero _
+  have : CharZero (FractionRing R) := algebraRat.charZero _
   have hu : IsUnit (k : Γ(Sp (FractionRing R), ⊤)) := by
     have : IsUnit (k : FractionRing R) := (Nat.cast_ne_zero.mpr hk.ne').isUnit
     simpa using this.map (Scheme.ΓSpecIso (CommRingCat.of (FractionRing R))).inv.hom

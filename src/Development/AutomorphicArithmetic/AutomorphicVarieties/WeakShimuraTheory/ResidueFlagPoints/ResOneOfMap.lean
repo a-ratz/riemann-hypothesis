@@ -73,13 +73,13 @@ private theorem not_valuation_natCast_prime_lt_one_link {Ω : Type} [Field Ω] [
     rw [← K.s.hA K.s.v0 (l : 𝓞 (W.Lp T.L))]
     simpa using hv
   have hmax := K.s.v0.isMaximal
-  letI : Field (𝓞 (W.Lp T.L) ⧸ K.s.v0.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 (W.Lp T.L) ⧸ K.s.v0.asIdeal) := Ideal.Quotient.field _
   have hcard : Nat.card (𝓞 (W.Lp T.L) ⧸ K.s.v0.asIdeal) = K.s.p := K.s.norm_v0_eq_one
   have hfin : Finite (𝓞 (W.Lp T.L) ⧸ K.s.v0.asIdeal) := by
     apply Nat.finite_of_card_ne_zero
     rw [hcard]
     exact K.s.p_prime.ne_zero
-  letI := Fintype.ofFinite (𝓞 (W.Lp T.L) ⧸ K.s.v0.asIdeal)
+  let := Fintype.ofFinite (𝓞 (W.Lp T.L) ⧸ K.s.v0.asIdeal)
   have hp0 : ((K.s.p : ℕ) : 𝓞 (W.Lp T.L) ⧸ K.s.v0.asIdeal) = 0 := by
     rw [← hcard, Nat.card_eq_fintype_card]
     exact FiniteField.cast_card_eq_zero _

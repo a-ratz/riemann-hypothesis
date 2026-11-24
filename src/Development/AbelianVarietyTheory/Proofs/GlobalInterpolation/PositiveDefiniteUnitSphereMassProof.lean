@@ -65,15 +65,15 @@ theorem qf_pos_eq (M : ℕ) (x : Sp M 0) : qf x = ∑ i, ‖x i‖ ^ 2 := by
 
 theorem dx_ball (M : ℕ) (hM : 1 ≤ M) (b : ℝ) (hb : 0 ≤ b) :
     dx M 0 {x | qf x ≤ b} = ENNReal.ofReal ((2 * Real.pi) ^ M / (M.factorial : ℝ) * b ^ M) := by
-  haveI : Nonempty (Fin M ⊕ Fin 0) := ⟨Sum.inl ⟨0, hM⟩⟩
+  have : Nonempty (Fin M ⊕ Fin 0) := ⟨Sum.inl ⟨0, hM⟩⟩
   have h := Complex.volume_sum_rpow_le (Fin M ⊕ Fin 0) (p := 2) (by norm_num) (Real.sqrt b)
   have e : {x : Sp M 0 | qf x ≤ b} =
       {x : Fin M ⊕ Fin 0 → ℂ | (∑ i, ‖x i‖ ^ (2 : ℝ)) ^ (1 / (2 : ℝ)) ≤ Real.sqrt b} := by
     ext x
-    simp only [Set.mem_setOf_eq, ← Real.sqrt_eq_rpow, Real.rpow_two, qf_pos_eq]
+    simp only [Set.mem_ofPred_eq, ← Real.sqrt_eq_rpow, Real.rpow_two, qf_pos_eq]
     exact (Real.sqrt_le_sqrt_iff hb).symm
   have hc : Fintype.card (Fin M ⊕ Fin 0) = M := by simp
-  rw [dx, Measure.smul_apply, e, h, hc, smul_eq_mul]
+  rw [dx, smul_apply, e, h, hc, smul_eq_mul]
   have g1 : Real.Gamma (2 / 2 + 1) = 1 := by
     rw [show (2 / 2 + 1 : ℝ) = 2 by norm_num, Real.Gamma_two]
   have g2 : Real.Gamma (2 * (M : ℝ) / 2 + 1) = M.factorial := by
@@ -135,7 +135,7 @@ theorem dx_shell {M : ℕ} {fib : ℝ → Measure (Sp M 0)} (h : IsDxDq fib) (a 
   rw [key]
   refine lintegral_congr fun t => ?_
   rw [lintegral_indicator_one hO]
-  refine measure_congr (Filter.eventuallyEq_univ.2 ?_)
+  refine measure_congr (eventuallyEqSet_univ.2 ?_)
   have h1 : ∀ᵐ y ∂(fib t), y ∈ qf ⁻¹' {id t} ∩ {x : Sp M 0 | x ≠ 0} := h.1 t
   filter_upwards [h1] with y hy using hy.2
 
@@ -156,7 +156,7 @@ theorem sphereMass : SphereMass := by
     have e2 := dx_shell h (1 / 2) b (by norm_num)
     have hfin : dx M 0 {x : Sp M 0 | qf x ≤ 1 / 2} ≠ ⊤ := by
       rw [dx_ball M hM _ (by norm_num)]; exact ENNReal.ofReal_ne_top
-    rw [e1, measure_diff (s₁ := {x : Sp M 0 | qf x ≤ b}) (s₂ := {x : Sp M 0 | qf x ≤ 1 / 2})
+    rw [e1, measure_sdiff (s₁ := {x : Sp M 0 | qf x ≤ b}) (s₂ := {x : Sp M 0 | qf x ≤ 1 / 2})
       (fun x (hx : qf x ≤ 1 / 2) => (hx.trans hb.1.le : qf x ≤ b))
       (measurableSet_le hq measurable_const).nullMeasurableSet hfin,
       dx_ball M hM _ hb0, dx_ball M hM _ (by norm_num), ← hC,

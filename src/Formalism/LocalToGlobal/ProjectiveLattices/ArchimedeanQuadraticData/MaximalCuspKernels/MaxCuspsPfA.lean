@@ -147,7 +147,7 @@ theorem maxCuspsA_zAct_int (X : Data E r) (cu : CuspFD X ρ) (hb : IsZBasis X cu
     rw [hb2]
     exact Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨k, rfl⟩)
   have hβ' := hβ
-  simp only [zGam, Set.mem_setOf_eq] at hβ'
+  simp only [zGam, Set.mem_ofPred_eq] at hβ'
   obtain ⟨-, γ, hγ, hγe⟩ := hβ'
   refine ⟨_, hβ, γ, hγ, hγe, fun y => ?_⟩
   funext τ

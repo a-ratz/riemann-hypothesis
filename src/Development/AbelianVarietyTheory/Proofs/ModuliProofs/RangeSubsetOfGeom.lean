@@ -95,7 +95,7 @@ theorem ClopenCond.forall_of_finite {T : Over S} {J κ : Type} [Finite κ] (q : 
 
 theorem exists_finite_mod (M : Type) [AddCommGroup M] [Module.Free ℤ M] [Module.Finite ℤ M] {n : ℕ} (hn : 0 < n) :
     ∃ (κ : Type) (_ : Finite κ) (q : M → κ), ∀ a a', q a = q a' → ∃ c, a' = a + n • c := by
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   let b := Module.Free.chooseBasis ℤ M
   refine ⟨Module.Free.ChooseBasisIndex ℤ M → ZMod n, inferInstance, fun a i => (b.repr a i : ZMod n),
     fun a a' h => ?_⟩

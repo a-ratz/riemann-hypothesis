@@ -70,7 +70,7 @@ theorem coeff_mul_sum {Δ : Type} [Group Δ] [Fintype Δ] (x y : MonoidAlgebra �
 
 theorem ten_mul (x y : ∀ i, MonoidAlgebra ℂ (Γ i)) : ten x * ten y = ten fun i => x i * y i := by
   classical
-  haveI := fun i => Fintype.ofFinite (Γ i)
+  have := fun i => Fintype.ofFinite (Γ i)
   ext g
   simp only [coeff_mul_sum, coeff_ten]
   rw [Fintype.prod_sum]
@@ -127,10 +127,10 @@ theorem exists_char {A : Type} [Ring A] [Algebra ℂ A] [Module.Finite ℂ A] (z
     apply ht
     rw [← one_mul t, ← h1, mul_assoc, h, mul_zero]
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hz
-  letI := Ideal.Quotient.field M
-  haveI : Module.Finite ℂ (Subalgebra.center ℂ A) :=
+  let := Ideal.Quotient.field M
+  have : Module.Finite ℂ (Subalgebra.center ℂ A) :=
     Module.Finite.of_injective (Subalgebra.center ℂ A).val.toLinearMap Subtype.val_injective
-  haveI : Module.Finite ℂ (Subalgebra.center ℂ A ⧸ M) :=
+  have : Module.Finite ℂ (Subalgebra.center ℂ A ⧸ M) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ ℂ M).toLinearMap (Ideal.Quotient.mkₐ_surjective ℂ M)
   let l : (Subalgebra.center ℂ A ⧸ M) →ₐ[ℂ] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -150,7 +150,7 @@ theorem good_sum {I : Type} [Fintype I] {Γ : I → Type} [∀ i, Group (Γ i)] 
     (h3 : ∀ i p q, p ≠ q → E i p * E i q = 0) :
     e ∈ Subalgebra.center ℂ (MonoidAlgebra ℂ (∀ i, Γ i)) ∧
       ∀ a : ∀ i, P i, e * ten (fun i => E i (a i)) = if good a then ten (fun i => E i (a i)) else 0 := by
-  haveI := Fintype.ofFinite (∀ i, P i)
+  have := Fintype.ofFinite (∀ i, P i)
   have h : e = ∑ a : ∀ i, P i, if good a then ten (fun i => E i (a i)) else 0 := by
     ext g
     rw [he, finsum_eq_sum_of_fintype, MonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
@@ -184,8 +184,8 @@ theorem goodTupleIdempotent_central_and_action (T : NTypes A) (hs : ∀ k f, f.M
     T.e0 ∈ Subalgebra.center ℂ (MonoidAlgebra ℂ (G0g N)) ∧
       ∀ f : ∀ k, N.PlG k → (ZMod (H.g k))[X], (∀ k v, (f k v).Monic ∧ (f k v).natDegree = R.r ∧ (f k v).coeff 0 ≠ 0) →
         ∃ t : MonoidAlgebra ℂ (G0g N), t ≠ 0 ∧ (T.goodTuple f → T.e0 * t = t) ∧ (¬ T.goodTuple f → T.e0 * t = 0) := by
-  haveI : ∀ k, NeZero (H.g k) := fun k => ⟨(H.g_prime k).ne_zero⟩
-  haveI : ∀ k, Fact (H.g k).Prime := fun k => ⟨H.g_prime k⟩
+  have : ∀ k, NeZero (H.g k) := fun k => ⟨(H.g_prime k).ne_zero⟩
+  have : ∀ k, Fact (H.g k).Prime := fun k => ⟨H.g_prime k⟩
   obtain ⟨hc, hm⟩ := good_sum (I := Σ k : Fin 2, N.PlG k) (P := fun kv => Fin R.r → ZMod (H.g kv.1))
     (fun kv p => T.eSer kv.1 (Formalism.CyclotomicNorms.monicOf p))
     (fun a => T.goodTuple (fun k v => Formalism.CyclotomicNorms.monicOf (a ⟨k, v⟩))) T.e0 (fun g => rfl)
@@ -201,13 +201,13 @@ theorem goodTupleIdempotent_central_and_action (T : NTypes A) (hs : ∀ k f, f.M
     exact ha ⟨k, v⟩
   have := hm a
   rw [ha'] at this
-  refine ⟨_, ten_ne_zero fun kv => ?_, fun h => this.trans (if_pos h), fun h => this.trans (if_neg h)⟩
+  refine ⟨_, ten_ne_zero fun kv => ?_, fun h => this.trans (ite_eq_left h), fun h => this.trans (ite_eq_right h)⟩
   rw [ha]
   exact hs _ _ (hf _ _)
 
 theorem not_good_unip (T : NTypes A) : ¬ T.goodTuple (fun _ _ => (X - 1) ^ R.r) := by
   intro h
-  haveI : Fact (H.g 0).Prime := ⟨H.g_prime 0⟩
+  have : Fact (H.g 0).Prime := ⟨H.g_prime 0⟩
   have hne : Nonempty (N.PlG 0) := by
     rw [← Fintype.card_pos_iff, N.card_PlG]
     exact GaloisStage.f_pos R
@@ -222,7 +222,7 @@ theorem not_good_unip (T : NTypes A) : ¬ T.goodTuple (fun _ _ => (X - 1) ^ R.r)
 
 theorem goodTupleIdempotent_coeff_mem_subring (T : NTypes A) (S : Subring ℂ) (hS : ∀ k f x, (T.eSer k f).coeff x ∈ S) (x : G0g N) :
     T.e0.coeff x ∈ S := by
-  haveI : ∀ k, NeZero (H.g k) := fun k => ⟨(H.g_prime k).ne_zero⟩
+  have : ∀ k, NeZero (H.g k) := fun k => ⟨(H.g_prime k).ne_zero⟩
   simp only [NTypes.e0, MonoidAlgebra.coeff_ofCoeff, Finsupp.coe_equivFunOnFinite_symm]
   refine finsum_induction (· ∈ S) (zero_mem S) (fun _ _ => add_mem) fun a => ?_
   split_ifs

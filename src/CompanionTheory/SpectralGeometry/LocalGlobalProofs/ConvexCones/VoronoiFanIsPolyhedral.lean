@@ -353,7 +353,7 @@ theorem finite_isMin2 : ∀ (X : Type) [AddCommGroup X] [Module.Finite ℤ X] [M
           Finset.single_le_sum (f := fun g => ∑ j, P j g g)
             (fun g _ => Finset.sum_nonneg fun j _ => hnn j g) (hG.mem_toFinset.mpr hy'G)
     refine Set.mem_iUnion.mpr ⟨S, ?_⟩
-    rw [if_pos hpos]
+    rw [ite_eq_left hpos]
     show Q S y y ≤ S.card * C
     rw [hQ]
     calc ∑ i ∈ S, P i y y ≤ ∑ i ∈ S, C := Finset.sum_le_sum fun i hi => (heq i hi).trans (hbound i)
@@ -653,7 +653,7 @@ theorem exists_indep_rep (v : ι → V) (n : ℕ) : ∀ (t : ι → ℝ), (∀ i
         rw [Finset.smul_sum]
         exact Finset.sum_congr rfl fun i _ => by rw [smul_smul, mul_comm]
       rw [h2, hf0, smul_zero]
-    · simp only [hi₀, if_true]
+    · simp only [hi₀, ite_true]
       exact mul_self_pos.mpr hfi₀
   have hP : (S.filter (fun i => 0 < g i)).Nonempty := ⟨i₀, by simp [hi₀, hgpos]⟩
   obtain ⟨j, hjP, hjmin⟩ := Finset.exists_min_image _ (fun i => t i / g i) hP
@@ -1132,7 +1132,7 @@ theorem exists_least_radical : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] 
     K.Nonempty → K ⊆ psdCone (bar := bar) (X := X) → (∀ B ∈ K, ∀ B' ∈ K, B + B' ∈ K) →
       ∃ B₁ ∈ K, ∀ B ∈ K, ∀ y, B₁ y y = 0 → B y y = 0 := by
   intro O _ _ _ _ bar X _ _ _ K hne hK hadd
-  haveI : Module.Finite ℤ X := Module.Finite.trans O X
+  have : Module.Finite ℤ X := Module.Finite.trans O X
   choose! N hN using fun B (hB : B ∈ K) => exists_radical_of_mem_psdCone (hK hB)
   have hnn : ∀ B ∈ K, ∀ y, 0 ≤ B y y := fun B hB y => nonneg_of_mem_psdCone (hK hB) y
   obtain ⟨B₁, hB₁, hmin⟩ : ∃ B₁ ∈ K, ∀ B ∈ K, Module.finrank ℤ (N B₁) ≤ Module.finrank ℤ (N B) :=
@@ -1413,7 +1413,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Fan
 
 theorem exists_vorFun_cells : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZero O] [Module.Finite ℤ O] (bar : O → O) (g : ℕ), (∀ (Y : Type) [AddCommGroup Y] [Module O Y] [Module.Finite O Y] [Module.Projective O Y], HasRedCover bar Y) → ∀ (X : Type) [AddCommGroup X] [Module O X] [Module.Finite O X] [Module.Projective O X], ∃ S : Set (LinearMap.BilinForm ℤ X), S.Finite ∧ ∀ B ∈ psdCone (bar := bar) (X := X), ∃ (e : X ≃ₗ[O] X) (m : ℕ) (γ : Fin m → LinearMap.BilinForm ℤ X) (c : Fin m → ℝ), IsCell bar (vorFun O g) γ ∧ (∀ i, γ i ∈ S) ∧ (∀ i, 0 ≤ c i) ∧ pullR e.toLinearMap B = ∑ i, c i • toReal (γ i) := by
   intro O _ _ _ _ bar g hcov X _ _ _ _
-  haveI : Module.Finite ℤ X := Module.Finite.trans O X
+  have : Module.Finite ℤ X := Module.Finite.trans O X
   obtain ⟨n, r, hr⟩ := Module.Finite.exists_fin' ℤ X
   obtain ⟨k, nP, P, hPs, hPp, hPc⟩ := hcov X
   have hcls : ∀ (j : Fin k) (y : Fin n → ZMod (1 + 1)), ∃ F : Finset (Fin n → ℤ), (∀ a ∈ F, redV 1 a = y) ∧

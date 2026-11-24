@@ -470,11 +470,11 @@ theorem bc_inclE_injective (D : D7) :
       (bc (inclE (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) :
         GL (Fin D.R.k) D.host.E →*
           GL (Fin D.R.k) (D.host.E ⊗[D.host.F] FiniteAdeleRing (𝓞 D.host.F) D.host.F)) := by
-  haveI : Nontrivial (FiniteAdeleRing (𝓞 D.host.F) D.host.F) := by
+  have : Nontrivial (FiniteAdeleRing (𝓞 D.host.F) D.host.F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 D.host.F)
     have hne : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField _)
     exact (evalV D.host.F ⟨P, hP.isPrime, hne⟩).toRingHom.domain_nontrivial
-  haveI : Nontrivial (D.host.E ⊗[D.host.F] FiniteAdeleRing (𝓞 D.host.F) D.host.F) := inferInstance
+  have : Nontrivial (D.host.E ⊗[D.host.F] FiniteAdeleRing (𝓞 D.host.F) D.host.F) := inferInstance
   intro a b hab
   refine Units.ext (Matrix.ext fun i j => ?_)
   apply (inclE (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)).injective
@@ -529,7 +529,7 @@ theorem card_eq_index_mul_mass {G : Type} [Group G] (Γ U K : Subgroup G) (m : �
     (hfree : ∀ x γ : G, γ ∈ Γ → x⁻¹ * γ * x ∈ U → γ = 1) :
     (Nat.card (ClassSet Γ U) : ℝ) = (U.relIndex K : ℝ) * m := by
   obtain ⟨hfin, hst, hsum⟩ := hm
-  letI : Fintype (ClassSet Γ K) := Fintype.ofFinite _
+  let : Fintype (ClassSet Γ K) := Fintype.ofFinite _
   have e : ∀ y : G, StabiliserCardinality.stab Γ K y ≃ stabAt Γ K y := fun y =>
     { toFun := fun γ => ⟨⟨γ.1, ((StabiliserCardinality.mem_stab Γ K y _).1 γ.2).1⟩, ((StabiliserCardinality.mem_stab Γ K y _).1 γ.2).2⟩
       invFun := fun γ => ⟨γ.1.1, (StabiliserCardinality.mem_stab Γ K y _).2 ⟨γ.1.2, γ.2⟩⟩
@@ -566,7 +566,7 @@ theorem exists_lattice (N : Submodule (𝓞 E) (Fin R.k → E)) (hfin : Module.F
   · ext x
     rw [hmem, ← SetLike.mem_coe (p := N), ← hdual]
     simp only [Formalism.HermitianLatticesTheory.dual, Formalism.E.hdual, Submodule.mem_iInf, Submodule.mem_comap,
-      LinearMap.restrictScalars_apply, Submodule.mem_one, hmem, sp.hermitianForm_base_coordinates, dualSet, Set.mem_setOf_eq,
+      LinearMap.restrictScalars_apply, Submodule.mem_one, hmem, sp.hermitianForm_base_coordinates, dualSet, Set.mem_ofPred_eq,
       RingHom.mem_range]
     constructor
     · intro h y hy
@@ -586,8 +586,8 @@ end Lattice
 theorem idx_pos (D : D7) : 0 < idxPi D (D.host.g 0) (D.host.g 1) := by
   have h : ∀ g k : ℕ, g.Prime → 0 < idxColLoc g k := by
     intro g k hg
-    haveI : NeZero g := ⟨hg.ne_zero⟩
-    haveI : Nonempty {A : GL (Fin k) (ZMod g) // IsUnitri (A : Matrix (Fin k) (Fin k) (ZMod g))} :=
+    have : NeZero g := ⟨hg.ne_zero⟩
+    have : Nonempty {A : GL (Fin k) (ZMod g) // IsUnitri (A : Matrix (Fin k) (Fin k) (ZMod g))} :=
       ⟨⟨1, fun i j h => by simp [h.ne'], fun i => by simp⟩⟩
     exact div_pos (Nat.cast_pos.2 Nat.card_pos) (Nat.cast_pos.2 Nat.card_pos)
   exact mul_pos (pow_pos (h _ _ (D.host.g_prime 0)) _) (pow_pos (h _ _ (D.host.g_prime 1)) _)
@@ -595,7 +595,7 @@ theorem idx_pos (D : D7) : 0 < idxPi D (D.host.g 0) (D.host.g 1) := by
 theorem mass_selfDualLattice_firstSpace_eq (D : D7) : letI := D.host.cmStar
     ∀ M : Submodule (𝓞 D.host.E) (D.sp.X 0).V, Submodule.IsLattice D.host.E M →
       Formalism.HermitianLatticesTheory.IsUnimodular (D.sp.X 0).hT M → Formalism.HermitianLatticesTheory.mass (D.sp.X 0).hT M = massI D D.R.k := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro M hM hu
   rw [← D.sp.rank0]
   exact GlobalTheory.genusMassStd D { D.sp.X 0 with L0 := M, standardTuple_isLattice := hM, baseLattice_isUnimodular := hu } (D.sp.X_sig 0)
@@ -604,7 +604,7 @@ theorem mass_selfDualLattice_firstSpace_eq (D : D7) : letI := D.host.cmStar
 theorem classNumber (hover : SplittingProjection.SelfDualOverBase) (hindex : SelfDualLatticeIndex.StabiliserLevelIndexFormula)
     (hcos : ClassesDoubleCosets.ClassesAsDoubleCosets) (hstab : ColumnStabiliser.ColStabTrivial)
     (D : D7) (Lv : LevelData D) : ClassNumberFormula₂ D Lv := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro hg hs u hT
   obtain ⟨-, N, ⟨hfin, hspan, hdual, -⟩, -, -, hUK⟩ := hover D Lv u hT
   obtain ⟨M, hM, hu, rfl⟩ := exists_lattice D.sp N hfin hspan hdual
@@ -838,8 +838,8 @@ theorem exists_frame : ∀ (D : D7) (N : Submodule (𝓞 D.host.E) (Fin D.R.k �
       ∀ x, x ∈ latS (F := D.host.F) (v.adicCompletion D.host.F) (intV D.host.E v) N ↔
         ∀ i, ((b⁻¹).1 *ᵥ x) i ∈ intV D.host.E v := by
   intro D N v hN
-  letI := D.host.cmStar
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  let := D.host.cmStar
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   exact exists_frame_cm v D.sp.cm D.sp.gram0 D.sp.baseGram_isHermitian
     (GlobalTheory.OverCompare.gram_matrix_det_unit D.sp) N hN
 
@@ -1086,7 +1086,7 @@ variable {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F))
 theorem exists_natCast_valued_lt_one :
     ∃ p : ℕ, (p : v.adicCompletion F) ≠ 0 ∧ Valued.v (p : v.adicCompletion F) < 1 := by
   refine ⟨Ideal.absNorm v.asIdeal, ?_, ?_⟩
-  · haveI : CharZero (v.adicCompletion F) := algebraRat.charZero _
+  · have : CharZero (v.adicCompletion F) := algebraRat.charZero _
     exact Nat.cast_ne_zero.2 (by rw [Ne, Ideal.absNorm_eq_zero_iff]; exact v.ne_bot)
   · have h := Ideal.absNorm_mem v.asIdeal
     have h2 : ((Ideal.absNorm v.asIdeal : ℕ) : v.adicCompletion F) =
@@ -1099,7 +1099,7 @@ theorem exists_natCast_valued_lt_one :
 theorem exists_pow_eq_of_mem {p : ℕ} (hp : Valued.v (p : v.adicCompletion F) < 1) (e : ℕ)
     {x : v.adicCompletion F} (hx : x ∈ v.adicCompletionIntegers F) :
     ∃ y : v.adicCompletion F, y ^ (p * e + 1) = 1 + p * x ^ (p * e + 1) := by
-  haveI := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
   set R := v.adicCompletionIntegers F
   have hpm : (p : R) ∈ maximalIdeal R := by
     rw [mem_maximalIdeal, mem_nonunits_iff, adicCompletionIntegers.isUnit_iff_valued_eq_one]
@@ -1289,7 +1289,7 @@ namespace GlobalTheory.Proof.StabilizerIndex
 lemma index_field (F : Type) [Field F] [Finite F] (k : ℕ) (φ : Fin k → F) (hφ : φ ≠ 0) :
     (GlobalTheory.IndefiniteRowSideFullHecke.OverPlaceIntegralForm.stabRow φ).index = Nat.card F ^ k - 1 := by
   classical
-  letI : Fintype F := Fintype.ofFinite F
+  let : Fintype F := Fintype.ofFinite F
   have h := Formalism.LogVandermondeBounds.StandardLattice.cardStabilizerVector F k φ hφ
   have hcm := (GlobalTheory.IndefiniteRowSideFullHecke.OverPlaceIntegralForm.stabRow φ).card_mul_index
   have hc : Nat.card (GlobalTheory.IndefiniteRowSideFullHecke.OverPlaceIntegralForm.stabRow φ) =
@@ -1303,9 +1303,9 @@ theorem index_stabRow : ∀ (κ : Type) [CommRing κ] (T k : ℕ), T.Prime → N
     ∀ φ : Fin k → κ, φ ≠ 0 →
       (((GlobalTheory.IndefiniteRowSideFullHecke.OverPlaceIntegralForm.stabRow φ).index : ℕ) : ℝ) = (T : ℝ) ^ k - 1 := by
   intro κ _ T k hT hcard φ hφ
-  haveI : Fact T.Prime := ⟨hT⟩
-  haveI : Finite κ := Nat.finite_of_card_ne_zero (hcard ▸ hT.ne_zero)
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Fact T.Prime := ⟨hT⟩
+  have : Finite κ := Nat.finite_of_card_ne_zero (hcard ▸ hT.ne_zero)
+  let : Fintype κ := Fintype.ofFinite κ
   have e : ZMod T ≃+* κ := ZMod.ringEquivOfPrime κ hT (by rw [← Nat.card_eq_fintype_card, hcard])
   have hF : IsField κ := MulEquiv.isField (Field.toIsField (ZMod T)) e.symm.toMulEquiv
   have h := @index_field κ hF.toField _ k φ hφ
@@ -1613,7 +1613,7 @@ theorem relIndex_level (hp : ∀ i, (gp i).Prime) (hne : gp 0 ≠ gp 1) {f : ℕ
     (levelAfL sp.cm.sig sp.gram0 N) L.U (fun v => levelVL sp.cm.sig sp.gram0 v N) L.Uloc
     (((finite_over (hp 0)).toFinset ∪ (finite_over (hp 1)).toFinset) ∪ (finite_over hT').toFinset)
     (fun v x hx => exists_glue v x hx.1) hK L.U_eq (fun v hv => by
-      simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or] at hv
+      simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or] at hv
       have e : L.Uloc v = levelVL sp.cm.sig sp.gram0 v N₀ := by
         rw [L.Uloc_hyp v hv.1.1 hv.1.2 hv.2]
         exact congrArg (level _ _) (hN₀.2.2.2.2.2 v hv.2).symm
@@ -1641,7 +1641,7 @@ end Record
 open GlobalTheory.IndefiniteRowSideFullHecke.SelfDualStabiliserIndex GlobalTheory.IndefiniteRowSideFullHecke.SplittingProjection in
 theorem indexKU_of_selfDualOverBase (H : SelfDualOverBase) : IndexKU := by
   intro D Lv u
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro hg hT N hN hUK
   exact relIndex_level (Lv u) D.host.g_prime D.host.g_ne hg hT
     (fun N hN => ⟨hN.1, hN.2.1, fun v => GlobalTheory.SelfDualFrame.exists_frame D N v hN⟩) (H D Lv u hT) hN hUK

@@ -241,7 +241,7 @@ theorem UpperTheory.Kd.K4.ml3 :
     rw [Finset.sum_eq_single (τ x)]
     · simp [hτ]
     · intro y hy hne
-      rw [(Finset.mem_filter.1 hy).2, if_neg (Ne.symm hne)]
+      rw [(Finset.mem_filter.1 hy).2, ite_eq_right (Ne.symm hne)]
     · intro h
       exact absurd (by simp [hτ]) h
   have hd : ∀ r b, P r (d (r + 1) b) = d r (p r b) := by
@@ -428,7 +428,7 @@ private theorem bset_of_mem (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (N w : �
 private theorem sfun (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (N w : ℕ) (d : ℕ → X.Fn l)
     (hd : ∀ k, d k ∈ X.BSet N l w) :
     ∃ t ∈ X.BSet N l w, ∀ u, IsS (l : ℤ_[l]) (fun k => d k u) (t u) := by
-  haveI := khat_complete X l
+  have := khat_complete X l
   choose c hcA hc using fun k => (hd k).1
   choose s hs using fun i => IsS.ex (l : ℤ_[l]) (fun k => c k i)
   have hsum : ∀ u : Fin 2 → ℤ_[l], IsS (l : ℤ_[l]) (fun k => d k u)
@@ -457,7 +457,7 @@ open UpperTheory.Kd.K4.BoundedComplement in
 theorem UpperTheory.Kd.K4.bcompl :
     ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (N w : ℕ), IsAdicComplete (idl l) (X.B N l w) := by
   intro Ω _ _ _ ε X l _ N w
-  haveI := khat_complete X l
+  have := khat_complete X l
   have hH : IsHausdorff (idl l) (X.B N l w) := ⟨fun x hx => by
     refine Subtype.ext (funext fun u => ?_)
     show (x : X.Fn l) u = 0
@@ -614,9 +614,9 @@ end Shapiro
 
 private theorem ev_agree {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (E : Finset Ω) (s : Ω ≃ₐ[ℚ] Ω) :
     ∀ᶠ t in 𝓝 s, ∀ a ∈ E, t a = s a := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   let L := IntermediateField.adjoin ℚ (E : Set Ω)
-  haveI : FiniteDimensional ℚ L :=
+  have : FiniteDimensional ℚ L :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   have hU := L.fixingSubgroup_isOpen
   have h1 : (1 : Ω ≃ₐ[ℚ] Ω) ∈ (L.fixingSubgroup : Set (Ω ≃ₐ[ℚ] Ω)) := one_mem L.fixingSubgroup
@@ -904,7 +904,7 @@ theorem UpperTheory.Kd.K4.mlB :
       (bB n r) T H (red n r) s (x * t n r)
     rw [shE] at h
     exact h
-  haveI hcompl : IsAdicComplete (idl l) (X.B N l w) := bcompl ε X l N w
+  have hcompl : IsAdicComplete (idl l) (X.B N l w) := bcompl ε X l N w
   let σB : (Ω ≃ₐ[ℚ] Ω) →* Module.End ℤ_[l] (X.B N l w) :=
     { toFun := fun s => (X.galB l s).restrict (hstab s)
       map_one' := by

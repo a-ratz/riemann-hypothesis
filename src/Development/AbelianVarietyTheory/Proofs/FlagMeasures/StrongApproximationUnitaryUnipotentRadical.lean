@@ -525,7 +525,7 @@ theorem sf_sf (a : Bf I) : sf I (sf I a) = a := by
   | tmul e a => exact congrArg (· ⊗ₜ[I.F] a) (star_star e)
 
 theorem inc_injective : Function.Injective (inc I) := by
-  haveI : Nontrivial (Af I.F) := by
+  have : Nontrivial (Af I.F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 I.F)
     have hne : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField _)
     let v : IsDedekindDomain.HeightOneSpectrum (𝓞 I.F) := ⟨P, hP.isPrime, hne⟩
@@ -737,7 +737,7 @@ theorem exists_sub_mem_nhds (hc : IsCompact (IntAf I.F I.E : Set (Bf I)))
 omit [IsTopologicalRing (Bf I)] in
 theorem exists_compact_MA (hc : IsCompact (IntAf I.F I.E : Set (Bf I))) :
     ∃ K : Set (MA I), IsCompact K ∧ ∀ x, ∃ y, x - diag I y ∈ K := by
-  haveI : IsTotallyComplex I.E := I.cm.cmUnram.1
+  have : IsTotallyComplex I.E := I.cm.cmUnram.1
   obtain ⟨C, hC, hC'⟩ := exists_compact_arch I.F I.E I.φ I.φ_over
   let T : (Fin I.n → Fin I.n → InfinitePlace I.F → ℂ) → InfinitePlace I.F → Matrix (Fin I.n) (Fin I.n) ℂ :=
     fun m v => Matrix.of fun i j => m i j v
@@ -763,7 +763,7 @@ theorem continuous_adjA (hσ : Continuous (sf I)) : Continuous (adjA I) :=
 omit [IsTopologicalRing (Bf I)] in
 theorem continuous_toMA (hind : IsInducing (fun x : I.Gf => (x : GL (Fin I.n) (Bf I)))) : Continuous (toMA I) :=
   (continuous_pi fun v => (continuous_const.matrix_mul (Units.continuous_val.comp
-    (continuous_subtype_val.comp ((continuous_apply v).comp continuous_fst)))).matrix_mul continuous_const).prodMk
+    (continuous_subtypeVal.comp ((continuous_apply v).comp continuous_fst)))).matrix_mul continuous_const).prodMk
     (Units.continuous_val.comp (hind.continuous.comp continuous_snd))
 
 omit [IsTopologicalRing (Bf I)] in

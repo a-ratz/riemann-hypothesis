@@ -55,7 +55,7 @@ open IsLocalRing Polynomial UpperTheory.V.Alg UpperTheory.V.GradeZeroInterpolati
 theorem UpperTheory.V.Ws.sxExtA :
     ∀ {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] {X : Type} [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] [DecidableEq X] {R : Type} [CommRing R] [Algebra Λ R] [IsCO Λ R] (W : WPres Λ X R), (∀ s, W.z s ∈ maximalIdeal R) → ∀ (R' : Type) [CommRing R'] [Algebra Λ R'] [IsCO Λ R'] (f f' : W.A →ₐ[Λ] R'), (∀ s, f (W.zA s) = f' (W.zA s)) → f = f' := by
   intro Λ _ _ _ _ X _ _ _ _ R _ _ _ W hz R' _ _ _ f f' hf
-  haveI := wPres_gr_zero_isCO_of_mem_maximalIdeal Λ X R W hz
+  have := wPres_gr_zero_isCO_of_mem_maximalIdeal Λ X R W hz
   let ι : ↥(W.gr 0) →ₐ[Λ] W.A :=
     { toFun := Subtype.val, map_one' := rfl, map_mul' := fun _ _ => rfl, map_zero' := rfl,
       map_add' := fun _ _ => rfl, commutes' := fun _ => rfl }

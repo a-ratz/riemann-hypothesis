@@ -78,8 +78,8 @@ theorem UpperTheory.V.Win.klen :
   obtain ⟨hfin, hlog⟩ := hK l L Ω D htc hmu e he
   obtain ⟨k, hlen, hcard⟩ := Kum.lenOfCard l (ReciprocityTheory.Gal.H2 (zlTw D ((e : ℤ) + 1)))
   have hV : VLen D e = (k : ℕ∞) := hlen
-  refine ⟨by rw [hV]; exact ENat.coe_ne_top k, ?_⟩
-  rw [hV, ENat.toNat_coe]
+  refine ⟨by rw [hV]; exact ENat.natCast_ne_top k, ?_⟩
+  rw [hV, ENat.toNat_natCast]
   rw [hcard] at hlog
   push_cast at hlog
   rw [Real.log_pow] at hlog

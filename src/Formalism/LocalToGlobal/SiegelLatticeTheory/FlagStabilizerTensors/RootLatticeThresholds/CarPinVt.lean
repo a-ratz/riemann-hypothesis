@@ -107,7 +107,7 @@ theorem tB_orthonormal (t' : (∀ i, V' i) → H') (ht : ∀ x y, ⟪t' x, t' y�
   by_cases h : k = l
   · subst h
     simp
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_right h, ite_eq_right]
     intro hall
     exact h (funext fun i => hall i (Finset.mem_univ i))
 
@@ -235,7 +235,7 @@ theorem hsSum_conj {V V' : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ 
     ∑ j, ⟪M (stdOrthonormalBasis ℂ Wq j), M' (stdOrthonormalBasis ℂ Wq j)⟫_ℂ := by
   have key := sum_inner_basis_eq_trace_adjoint_comp ((stdOrthonormalBasis ℂ V').map e'.symm) M M'
   simp only [OrthonormalBasis.map_apply] at key
-  simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearEquiv.coe_coe,
+  simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearEquiv.coe_coe,
     LinearIsometryEquiv.coe_toContinuousLinearEquiv, LinearIsometryEquiv.inner_map_map]
   rw [key, sum_inner_basis_eq_trace_adjoint_comp]
 

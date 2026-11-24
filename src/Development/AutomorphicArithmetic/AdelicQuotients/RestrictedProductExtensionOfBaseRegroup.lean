@@ -70,7 +70,7 @@ private theorem ev_up [∀ v, Finite (I v)] (ι : ∀ v, I v → W) (b : W → V
     {P : W → Prop} (h : ∀ᶠ w in cofinite, P w) : ∀ᶠ v in cofinite, ∀ i, P (ι v i) := by
   rw [eventually_cofinite] at h ⊢
   refine (h.image b).subset fun v hv => ?_
-  simp only [Set.mem_setOf_eq, not_forall] at hv
+  simp only [Set.mem_ofPred_eq, not_forall] at hv
   obtain ⟨i, hi⟩ := hv
   exact ⟨ι v i, hi, hb v i⟩
 
@@ -80,7 +80,7 @@ private theorem ev_down [∀ v, Finite (I v)] (ι : ∀ v, I v → W) (b : W →
   rw [eventually_cofinite] at h ⊢
   refine (h.biUnion fun v _ => Set.finite_range (ι v)).subset fun w hw => ?_
   obtain ⟨v, i, rfl⟩ := hs w
-  simp only [Set.mem_setOf_eq, hb] at hw
+  simp only [Set.mem_ofPred_eq, hb] at hw
   exact Set.mem_biUnion hw ⟨i, rfl⟩
 
 variable {G Gi : Type} {H : W → Type} {Gv : V → Type} [Group G] [Group Gi] [∀ w, Group (H w)]

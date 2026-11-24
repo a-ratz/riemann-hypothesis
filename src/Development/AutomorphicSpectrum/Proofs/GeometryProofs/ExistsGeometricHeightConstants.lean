@@ -328,7 +328,7 @@ theorem pull_inj {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [Grp
 theorem isGrpPullback_iso {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] (e : A ≅ B) [IsMonHom e.hom] :
     IsGrpPullback A B (𝟙 S) e.hom.left := by
   refine ⟨?_, fun T x y x₀ y₀ hx hy => ?_⟩
-  · haveI : IsIso e.hom.left := ((Over.forget S).mapIso e).isIso_hom
+  · have : IsIso e.hom.left := ((Over.forget S).mapIso e).isIso_hom
     exact IsPullback.of_horiz_isIso ⟨by simp⟩
   · have e₁ : (x * y) ≫ e.hom = (x ≫ e.hom) * (y ≫ e.hom) := by
       first | exact Hom.mul_comp _ _ _ | exact MonObj.mul_comp _ _ _ | exact CategoryTheory.Hom.mul_comp _ _ _
@@ -346,8 +346,8 @@ theorem exists_generic {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMonObj G]
       (∀ e, (Mz.pt (j e)).left = spMap (dualMap (algebraMap (𝓞 L) L)) ≫ (M₀.pt e).left) ∧ Function.Injective j ∧
         Submodule.span L (Set.range j) = ⊤ ∧ Module.Finite (𝓞 L) V₀ ∧ Module.Finite L V := by
   obtain ⟨V, _, _, ⟨Mz⟩⟩ := lieModel_exists X G L (spMap (algebraMap (𝓞 L) L) ≫ z)
-  letI : Module (𝓞 L) V := Module.compHom V (algebraMap (𝓞 L) L)
-  haveI : IsScalarTower (𝓞 L) L V := ⟨fun a b x => by
+  let : Module (𝓞 L) V := Module.compHom V (algebraMap (𝓞 L) L)
+  have : IsScalarTower (𝓞 L) L V := ⟨fun a b x => by
     show (a • b) • x = algebraMap (𝓞 L) L a • b • x
     rw [Algebra.smul_def, mul_smul]⟩
   obtain ⟨j₀, hj₀, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts X G (𝓞 L) L (algebraMap (𝓞 L) L) z V₀ V M₀ Mz
@@ -359,7 +359,7 @@ theorem exists_generic {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCommMonObj G]
     (Category.comp_id _).symm.trans (hj₀ e)
   obtain ⟨hf, hp, hb⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G (𝓞 L) z V₀ M₀
   have hbc : IsBaseChange L j := hb L V Mz j hj
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 L)) j := (isLocalizedModule_iff_isBaseChange _ L j).2 hbc
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 L)) j := (isLocalizedModule_iff_isBaseChange _ L j).2 hbc
   refine ⟨V, inferInstance, inferInstance, inferInstance, inferInstance, Mz, j, hj, ?_, ?_, hf,
     (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G L _ V Mz).1⟩
   · refine (injective_iff_map_eq_zero j).2 fun x hx => ?_
@@ -465,16 +465,16 @@ theorem exists_lin {Ψ : Type} {X : Scheme.{0}} (t : SAB H X) (z : Sp (𝓞 L) �
       (∃ (MB : LieModel t'.G (𝟙 _) A.Bq.carrier), IsFibre (HodgeIP t'.G t'.PP.L) (𝟙 _) A.Bq MB ∧
         ∀ x : A.Λ, ((MV.pt x ≫ P.τ.q ≫ P.e.hom).left ≫ m'.φ = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap (𝓞 L) L)) ≫ (MB.pt (A.f x)).left)) ∧
       Module.finrank (𝓞 L) A.Bq.carrier ≤ Module.finrank L V := by
-  letI := P.τ.addCommGroup
-  letI := P.τ.grpB
-  haveI := P.τ.free
-  haveI := P.τ.finite
-  haveI := P.τ.q_hom
-  haveI := P.τ.i_hom
-  haveI := P.e_hom
-  haveI heinv : IsMonHom P.e.inv := inferInstance
-  haveI : Smooth t.G.hom := t.semi.smooth
-  haveI : Smooth t'.G.hom := t'.semi.smooth
+  let := P.τ.addCommGroup
+  let := P.τ.grpB
+  have := P.τ.free
+  have := P.τ.finite
+  have := P.τ.q_hom
+  have := P.τ.i_hom
+  have := P.e_hom
+  have heinv : IsMonHom P.e.inv := inferInstance
+  have : Smooth t.G.hom := t.semi.smooth
+  have : Smooth t'.G.hom := t'.semi.smooth
   obtain ⟨V₀, _, _, ⟨M₀⟩⟩ := lieModel_exists X t.G (𝓞 L) z
   obtain ⟨V, _, _, _, _, Mz, j, hj, hinj, hspan, hfin₀, hfin⟩ := exists_generic t.G z M₀
   obtain ⟨MV, hMV⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.LieMove.main L X _ t.G P.tK.G P.m.φ V P.m.cart).1 Mz
@@ -490,11 +490,11 @@ theorem exists_lin {Ψ : Type} {X : Scheme.{0}} (t : SAB H X) (z : Sp (𝓞 L) �
     rw [hj', hρ₀ a x, hρ a (j x), Over.comp_left, Over.comp_left, Category.assoc, P.m.act a, ← Category.assoc,
       ← Category.assoc, hj']))
   obtain ⟨md, hmd⟩ := _root_.GlobalTheory.CompanionTheory.TorusAct.exists_module_diagAct L P.tK.G P.τ (𝓞 E) P.tK.act (fun a => by
-    haveI := P.tB.act.hom a
+    have := P.tB.act.hom a
     refine ⟨P.e.hom ≫ P.tB.act.act a ≫ P.e.inv, inferInstance, ?_⟩
     refine (cancel_mono P.e.hom).1 ?_
     simpa only [Category.assoc, Iso.inv_hom_id, Category.comp_id] using P.act a)
-  letI := md
+  let := md
   let MT := Fl.Test.torusModel (𝟙 (Sp L)) P.τ.X
   have hMT : IsCocharLie MT := torusModel_cochar _
   obtain ⟨iL, hiL, -⟩ := lieModel_exists_unique_diff _ _ _ L (𝟙 _) _ _ MT MV P.τ.i
@@ -573,8 +573,8 @@ namespace LevelTowerAlt
 theorem integral_point_extends_compact : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (L₀ : Type) [Field L₀] [NumberField L₀], 1 ≤ D.p + D.q → ∀ w ∈ Small.ptsOver L₀ (mCoordIdeal y), ∃ (L : Type) (_ : Field L) (_ : NumberField L) (e : L₀ →+* L) (z : Sp (𝓞 L) ⟶ 𝔐.X) (P : AbPart 𝔐.t (spMap (algebraMap (𝓞 L) L) ≫ z)) (V : Type) (_ : AddCommGroup V) (_ : Module L V) (_ : Module (𝓞 L) V) (_ : IsScalarTower (𝓞 L) L V) (MV : LieModel P.tK.G (𝟙 (Sp L)) V) (A : LinPt E L (CMType H) V), CoordsAt 𝔐.ξ y (spMap (algebraMap (𝓞 L) L) ≫ z) (fun p => e (w p)) ∧ 𝔐.IsLinPtOf z P MV A ∧ (∀ s, Module.finrank L (eigSp A.ρ (A.σ s)) = labelRk D s) ∧ Module.finrank (𝓞 L) A.Bq.carrier ≤ Fintype.card (CMType H) * (D.p + D.q) := by
   intro hG E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 L₀ _ _ hpq w hw
   classical
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
-  haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   obtain ⟨h⟩ := _root_.GlobalTheory.CompanionTheory.Ar.MetricAny.exists_lieMetric 𝔐.X Ω K J y 𝔐.ξ inferInstance 𝔐.all 𝔐.tie 𝔐.t.G 𝔐.Li 𝔐.M
   obtain ⟨K₀, -, hQ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.main hG.2.2.2.2.1 E H D l Xo c Y S Ω K J y 𝔐 h hpq
   obtain ⟨z₀, hz₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.algebraicPoint_extends_to_integers 𝔐.X Ω K J y 𝔐.ξ inferInstance 𝔐.all 𝔐.tie L₀ w hw
@@ -680,7 +680,7 @@ lemma log_iSup_support {Jx : Type} [Fintype Jx] (x : Jx → L) (hx : ∃ i, x i 
     (Function.support fun v : FinitePlace L => Real.log (⨆ i, v (x i))).Finite := by
   classical
   obtain ⟨i₀, hi₀⟩ := hx
-  haveI : Nonempty Jx := ⟨i₀⟩
+  have : Nonempty Jx := ⟨i₀⟩
   have hS : (⋃ i ∈ Finset.univ.filter (fun i => x i ≠ 0),
       Function.mulSupport fun v : FinitePlace L => v (x i)).Finite := by
     refine Set.Finite.biUnion (Finset.finite_toSet _) fun i hi => ?_

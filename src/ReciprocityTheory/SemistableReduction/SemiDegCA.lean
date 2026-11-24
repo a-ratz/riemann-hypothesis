@@ -102,11 +102,11 @@ theorem exists_section_of_image {K : Type} [Field K] [NumberField K] {V : Type*}
   have hI0 : I ≠ 0 := by
     intro h
     have h1I : (1 : K) ∈ (I : Submodule (𝓞 K) K) := h1 hone
-    rw [h, FractionalIdeal.coe_zero, Submodule.mem_bot] at h1I
+    rw [h, FractionalIdeal.coeToSubmodule_zero, Submodule.mem_bot] at h1I
     exact one_ne_zero h1I
   have hII : (I : Submodule (𝓞 K) K) * ((I⁻¹ : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) =
       1 := by
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hI0, FractionalIdeal.coe_one]
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hI0, FractionalIdeal.coeToSubmodule_one]
   have key : ∀ w ∈ (I : Submodule (𝓞 K) K) * ((I⁻¹ : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K),
       ∃ u : V, f u = w ∧ ∀ t ∈ X.map (f.restrictScalars (𝓞 K)), t • u ∈ X := by
     intro w hw

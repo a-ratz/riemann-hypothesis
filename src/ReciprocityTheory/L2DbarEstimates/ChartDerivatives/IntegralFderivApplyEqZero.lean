@@ -105,7 +105,7 @@ theorem integral_wdb_eq_zero (n : ℕ) (j : Fin n) (H : V n → ℂ) (hH : ContD
 
 theorem integrable_of_continuous {M : Type*} [TopologicalSpace M] [T2Space M] [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (f : M → ℂ) (hf : Continuous f) (hc : HasCompactSupport f) :
     Integrable f (vol n z) := by
-  haveI := vol_isFiniteMeasureOnCompacts n z hz
+  have := vol_isFiniteMeasureOnCompacts n z hz
   exact hf.integrable_of_hasCompactSupport hc
 
 theorem integrable_of_continuous_real {M : Type*} [TopologicalSpace M] [T2Space M] [SecondCountableTopology M] [MeasurableSpace M] [BorelSpace M] (n : ℕ) (z : M → V n) (hz : IsLocalHomeomorph z) (f : M → ℝ) (hf : Continuous f) (hc : HasCompactSupport f) :
@@ -191,9 +191,9 @@ private theorem wd_wdb_finset_sum {ι : Type*} {n : ℕ} (s : Finset ι) (G : ι
     try simp only [Finset.sum_fn] at H
     exact H.fderiv
   constructor
-  · simp only [wd, hF, ContinuousLinearMap.sum_apply, Finset.mul_sum, ← Finset.sum_sub_distrib,
+  · simp only [wd, hF, sum_apply, Finset.mul_sum, ← Finset.sum_sub_distrib,
       Finset.sum_div]
-  · simp only [wdb, hF, ContinuousLinearMap.sum_apply, Finset.mul_sum, ← Finset.sum_add_distrib,
+  · simp only [wdb, hF, sum_apply, Finset.mul_sum, ← Finset.sum_add_distrib,
       Finset.sum_div]
 
 theorem d_finset_sum {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) {ι : Type*}
@@ -261,7 +261,7 @@ private theorem wd_wdb_mul {n : ℕ} {u v : V n → ℂ} {y : V n} (hu : Differe
   have hF : fderiv ℝ (fun w => u w * v w) y = u y • fderiv ℝ v y + v y • fderiv ℝ u y :=
     (hu.hasFDerivAt.mul hv.hasFDerivAt).fderiv
   constructor <;>
-    simp only [wd, wdb, hF, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+    simp only [wd, wdb, hF, add_apply, smul_apply,
       smul_eq_mul] <;> ring
 
 private theorem d_db_mul_of_ck_one {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n)

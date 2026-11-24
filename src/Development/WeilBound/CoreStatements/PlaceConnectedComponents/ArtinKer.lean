@@ -58,15 +58,15 @@ namespace PositivityTheory.FamInh
 theorem isOpen_connInf (E : Type) [Field E] [NumberField E] :
     IsOpen ((Subgroup.connectedComponentOfOne (InfiniteAdeleRing E)ˣ : Subgroup (InfiniteAdeleRing E)ˣ) :
       Set (InfiniteAdeleRing E)ˣ) := by
-  haveI : ∀ w : InfinitePlace E, LocallyConnectedSpace w.Completion := fun w => by
+  have : ∀ w : InfinitePlace E, LocallyConnectedSpace w.Completion := fun w => by
     rcases w.isReal_or_isComplex with hw | hw
     · exact (InfinitePlace.Completion.isometryEquivRealOfIsReal hw).toHomeomorph.locallyConnectedSpace
     · exact (InfinitePlace.Completion.isometryEquivComplexOfIsComplex hw).toHomeomorph.locallyConnectedSpace
-  haveI : LocallyConnectedSpace (InfiniteAdeleRing E) :=
+  have : LocallyConnectedSpace (InfiniteAdeleRing E) :=
     inferInstanceAs (LocallyConnectedSpace (∀ w : InfinitePlace E, w.Completion))
   have he : IsOpenEmbedding (Units.val : (InfiniteAdeleRing E)ˣ → InfiniteAdeleRing E) :=
     Units.isOpenEmbedding_val (R := ∀ w : InfinitePlace E, w.Completion)
-  haveI : LocallyConnectedSpace (InfiniteAdeleRing E)ˣ := he.locallyConnectedSpace
+  have : LocallyConnectedSpace (InfiniteAdeleRing E)ˣ := he.locallyConnectedSpace
   exact isOpen_connectedComponent
 
 theorem ofInfinite_eq_map (E : Type) [Field E] [NumberField E] (y : (InfiniteAdeleRing E)ˣ) :

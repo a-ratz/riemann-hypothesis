@@ -376,8 +376,8 @@ theorem Glob_measure_eq_relIndex_mul (μ : Measure G) [μ.IsMulLeftInvariant] (K
     μ K = (H.relIndex K : ℝ≥0∞) * μ H := by
   have hK : IsOpen (K : Set G) := Subgroup.isOpen_mono hle ho
   classical
-  haveI : (H.subgroupOf K).FiniteIndex := ⟨hi⟩
-  haveI : Fintype (K ⧸ H.subgroupOf K) := Fintype.ofFinite _
+  have : (H.subgroupOf K).FiniteIndex := ⟨hi⟩
+  have : Fintype (K ⧸ H.subgroupOf K) := Fintype.ofFinite _
   have hc : H.relIndex K = Fintype.card (K ⧸ H.subgroupOf K) := by
     rw [Subgroup.relIndex, Subgroup.index_eq_card, Nat.card_eq_fintype_card]
   have hU : (K : Set G) =
@@ -426,7 +426,7 @@ theorem Glob_topRing : IsTopologicalRing (Af F ⊗[F] E) := by
 
 theorem Glob_topGroup (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) :
     IsTopologicalGroup (HA (Af F) σ J) := by
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := Glob_topRing
+  have : IsTopologicalRing (Af F ⊗[F] E) := Glob_topRing
   first
     | exact inferInstanceAs (IsTopologicalGroup (HR (Af F) σ J))
     | (unfold HA; infer_instance)
@@ -564,7 +564,7 @@ theorem Glob_KppH_le (hK : X.LevelSubgroupCharacter) (hL : X.LevelSubgroupNormal
 
 theorem Glob_isOpen_KppH (hK : X.LevelSubgroupCharacter) (hL : X.LevelSubgroupNormalized) :
     IsOpen (Glob_KppH X hb hK : Set (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J)) := by
-  haveI := Glob_topGroup X.B.I.cm.sig X.B.I.J
+  have := Glob_topGroup X.B.I.cm.sig X.B.I.J
   have hg : 1 ≤ X.B.g := by
     rw [X.g_eq]
     exact Nat.mul_pos (D.host.g_prime 0).pos (D.host.g_prime 1).pos

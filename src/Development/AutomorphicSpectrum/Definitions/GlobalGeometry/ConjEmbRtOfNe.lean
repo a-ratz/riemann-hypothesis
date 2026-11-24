@@ -121,8 +121,8 @@ def labelEquiv (H : Host E) : CMType H ⊕ CMType H ≃ (E →+* ℂ) := Equiv.o
 
 theorem mult_labelC (D : Datum H) (s : CMType H ⊕ CMType H) : D.mult (labelC s) = labelRk D s := by
   rcases s with τ | τ
-  · exact if_pos τ.2
-  · exact if_neg (conjEmb_rt_ne τ)
+  · exact ite_eq_left τ.2
+  · exact ite_eq_right (conjEmb_rt_ne τ)
 
 theorem embK_labelC (c : Coeff l) (s : CMType H ⊕ CMType H) : embK c (labelC s) = labelEmb c s := by
   rcases s with τ | τ
@@ -199,7 +199,7 @@ theorem tanY_hom (y : FrPt Xo c S) (τ : E →+* ℂ) (i : Fin (D.mult τ)) :
   rfl
 
 theorem ptF_eq_of_ptY_eq {y y' : FrPt Xo c S} (h : ptY Y y = ptY Y y') : ptF y = ptF y' := by
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   rw [← cancel_mono Y.jQ]
   apply pullback.hom_ext
   · simpa only [ptY, Model.j, Category.assoc] using h
@@ -264,15 +264,15 @@ theorem rd_smul (a : c.F) (f : Rul Xo c) : Fr.rd (a • f) = Or.𝔐.cst a * Fr.
 
 theorem exists_spread : letI := cstAlg Or
     ∃ (p : TRing c.F) (φ : p.R →ₐ[c.F] RM.Ω) (y : FrPt Xo c p.R), FrMap φ y Fr.y₀ ∧ ∀ f, Fr.rd f = φ (f p y) := by
-  letI := cstAlg Or
+  let := cstAlg Or
   refine ⟨_, _, _, Fr.test.choose_spec.choose_spec.choose_spec, fun f => ?_⟩
-  exact dif_pos Fr.test
+  exact dite_eq_left Fr.test
 
 theorem rd_eq_of_frMap (hWD : EvalWD (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z))
     {f : Rul Xo c} (hf : IsNatural (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) f)
     (p : TRing c.F) : letI := cstAlg Or
     ∀ (φ : p.R →ₐ[c.F] RM.Ω) (y : FrPt Xo c p.R), FrMap φ y Fr.y₀ → Fr.rd f = φ (f p y) := by
-  letI := cstAlg Or
+  let := cstAlg Or
   intro φ y h
   obtain ⟨q, ψ, z, hz, hr⟩ := Fr.exists_spread
   rw [hr]

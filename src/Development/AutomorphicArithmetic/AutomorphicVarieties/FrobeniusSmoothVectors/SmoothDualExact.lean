@@ -66,7 +66,7 @@ theorem UpperTheory.smoothDual_exact :
   let φ : ResidueField O →+* p.asIdeal.ResidueField :=
     Ideal.Quotient.lift (maximalIdeal O) (ξ.comp (algebraMap O S.A)) hz
   refine ⟨p.asIdeal.ResidueField, inferInstance, φ.toAlgebra, ξ, hk, ?_, ?_⟩
-  · letI := φ.toAlgebra
+  · let := φ.toAlgebra
     refine ⟨?_, fun c => rfl⟩
     rw [hk]
     exact Ideal.map_le_iff_le_comap.2 h1

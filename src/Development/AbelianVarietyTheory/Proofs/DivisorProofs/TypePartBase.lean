@@ -104,8 +104,8 @@ theorem e_projH (h : R.models_gW) (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ) 
 
   rw [LinearMap.sum_apply, map_sum]
   ext v g
-  simp only [LinearMap.smul_apply, map_smul, h i σ, postOn_apply, LinearMap.sum_apply, MultilinearMap.sum_apply,
-    MultilinearMap.smul_apply]
+  simp only [LinearMap.smul_apply, map_smul, h i σ, postOn_apply, LinearMap.sum_apply, sum_apply,
+    smul_apply]
   rfl
 
 end GlobalTheory.LiftLower

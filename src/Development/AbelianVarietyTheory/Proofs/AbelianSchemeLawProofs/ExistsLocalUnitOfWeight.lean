@@ -170,8 +170,8 @@ theorem coaction_coeff {α : A →+* C} {ρ : C →+* AddMonoidAlgebra C X}
 theorem exists_homogeneous {α : A →+* C} (hα : α.FaithfullyFlat) {ρ : C →+* AddMonoidAlgebra C X}
     (h : ∀ (R : Type) [CommRing R], IsTorsorOn R α ρ) (χ : X) (p : Ideal A) (hp : p ≠ ⊤) :
     ∃ a ∉ p, ∃ c c' : C, c * c' = α a ∧ ρ c = AddMonoidAlgebra.single χ c := by
-  letI : Algebra A C := α.toAlgebra
-  haveI : Module.FaithfullyFlat A C := hα
+  let : Algebra A C := α.toAlgebra
+  have : Module.FaithfullyFlat A C := hα
   have hco := coaction_coeff (h _)
   obtain ⟨φ, hφ⟩ := (h (C ⊗[A] C)).2.2.2
     (Algebra.TensorProduct.includeRight : C →ₐ[A] C ⊗[A] C).toRingHom

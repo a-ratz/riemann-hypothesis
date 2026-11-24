@@ -70,7 +70,7 @@ theorem const_affine {K A : Type} [Field K] [CommRing A] [Algebra K A] [Algebra 
     filter_upwards [ball_mem_nhds b₀ hε] with b hb
     exact hF d (ball b₀ ε) (fun b => (y b).1 ≫ q) isOpen_ball (convex_ball b₀ ε).isPreconnected
       (isHolTo_mono (GagaRat.isHolTo_comp q hy) isOpen_ball hsub) b hb b₀ (mem_ball_self hε))
-  haveI := GlobalTheory.FiniteClasses.preconnectedSpace_pts (ℂ ⊗[K] A)
+  have := GlobalTheory.FiniteClasses.preconnectedSpace_pts (ℂ ⊗[K] A)
   have := hl.apply_eq_of_preconnectedSpace
     ⟨hpb'.lift (𝟙 _) x (by rw [Category.id_comp, hx]), hpb'.lift_fst _ _ _⟩
     ⟨hpb'.lift (𝟙 _) x' (by rw [Category.id_comp, hx']), hpb'.lift_fst _ _ _⟩
@@ -83,8 +83,8 @@ theorem const_chart {K : Type} [Field K] (σ : K →+* ℂ) {X : Scheme.{0}} (s 
       (∀ b ∈ T, ⊤ ≤ y b ⁻¹ᵁ V) → ∀ b ∈ T, ∀ b' ∈ T, F (y b) = F (y b'))
     (x x' : Sp ℂ ⟶ X) (hx : x ≫ s = spMap σ) (hx' : x' ≫ s = spMap σ) (hxV : ⊤ ≤ x ⁻¹ᵁ V) (hxV' : ⊤ ≤ x' ⁻¹ᵁ V) :
     F x = F x' := by
-  haveI : CharZero K := σ.charZero
-  letI : Algebra K ℂ := σ.toAlgebra
+  have : CharZero K := σ.charZero
+  let : Algebra K ℂ := σ.toAlgebra
   obtain ⟨A, _, _, a, -, ha, hr, has, -⟩ := GagaRat.exists_chart (C := ℂ) s V hV
   have hm : ∀ P, a P ∈ V := fun P => by
     have : a P ∈ Set.range a := ⟨P, rfl⟩
@@ -110,11 +110,11 @@ theorem const_chart {K : Type} [Field K] (σ : K →+* ℂ) {X : Scheme.{0}} (s 
   have hsA : SmoothOfRelativeDimension d (spMap (algebraMap K A)) := by
     rw [← has]
     simpa using (inferInstance : SmoothOfRelativeDimension (0 + d) (a ≫ s))
-  haveI : Algebra.FiniteType K A := by
-    haveI : Smooth (spMap (algebraMap K A)) := SmoothOfRelativeDimension.smooth d _
+  have : Algebra.FiniteType K A := by
+    have : Smooth (spMap (algebraMap K A)) := SmoothOfRelativeDimension.smooth d _
     exact RingHom.finiteType_algebraMap.1 ((HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1
       (inferInstance : LocallyOfFiniteType (spMap (algebraMap K A))))
-  haveI : IsDomain (ℂ ⊗[K] A) := GlobalTheory.GeomConn.isDomain_tensor
+  have : IsDomain (ℂ ⊗[K] A) := GlobalTheory.GeomConn.isDomain_tensor
     ({ φ with commutes' := fun k => RingHom.congr_fun hφK k } : A →ₐ[K] Ω) hinj (fun w hw => by
       obtain ⟨u, v, hv, h⟩ := hcl w hw
       exact ⟨u / v, by rw [map_div₀, ← h, mul_div_cancel_right₀ _ ((map_ne_zero _).2 hv)]⟩) ℂ
@@ -130,8 +130,8 @@ theorem const_of_hol {K : Type} [Field K] (σ : K →+* ℂ) {X : Scheme.{0}} (s
       (∀ b ∈ T, ⊤ ≤ y b ⁻¹ᵁ W) → ∀ b ∈ T, ∀ b' ∈ T, F (y b) = F (y b'))
     (x x' : Sp ℂ ⟶ X) (hx : x ≫ s = spMap σ) (hx' : x' ≫ s = spMap σ) (hxW : ⊤ ≤ x ⁻¹ᵁ W) (hxW' : ⊤ ≤ x' ⁻¹ᵁ W)
     (hc : genPt ξ ⤳ centre x) (hc' : genPt ξ ⤳ centre x') : F x = F x' := by
-  haveI : Smooth s := SmoothOfRelativeDimension.smooth d s
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : Smooth s := SmoothOfRelativeDimension.smooth d s
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
   obtain ⟨Z, hZ, -, -⟩ := cpt_open_integral X Ω ξ hξ
   obtain ⟨V, hV, m, le⟩ := exists_isAffineOpen_mem_and_subset (X := X) (x := centre x) (U := W ⊓ Z)
     ⟨GagaRat.centre_mem hxW, (hZ _).2 hc⟩

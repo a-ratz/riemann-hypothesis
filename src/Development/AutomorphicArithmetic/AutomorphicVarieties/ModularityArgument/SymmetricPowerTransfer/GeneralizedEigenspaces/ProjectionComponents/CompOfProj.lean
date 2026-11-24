@@ -147,6 +147,6 @@ private theorem pigeon {X I : Type} (A : Set X) (hA : A.Finite) (P : X → I →
   by_contra hn
   push Not at hn
   choose f hf using fun x : A => hn x.1 x.2
-  haveI := hA.fintype
+  have := hA.fintype
   obtain ⟨x, hx, h1⟩ := h (Finset.univ.image f)
   exact hf ⟨x, hx⟩ (h1 _ (Finset.mem_image_of_mem f (Finset.mem_univ _)))

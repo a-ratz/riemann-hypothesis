@@ -101,7 +101,7 @@ theorem dense_delta (hx0 : IsOrth X x0) (x : Frame X.Ψ r) (ε : ℝ) (hε : 0 <
   have hδ : 0 < δ := div_pos hε (by positivity)
   have hinf : ((fun s : ℝ => (s : ℂ)) '' Set.Ioo 0 δ).Infinite :=
     (Set.Ioo_infinite hδ).image (fun a _ b _ h => Complex.ofReal_injective h)
-  obtain ⟨c, hc, hcP⟩ := (hinf.diff (Polynomial.finite_setOf_isRoot hP0)).nonempty
+  obtain ⟨c, hc, hcP⟩ := (hinf.sdiff (finite_setOfPred_isRoot hP0)).nonempty
   obtain ⟨s, hs, rfl⟩ := hc
   refine ⟨x + (s : ℂ) • w, ?_, ?_⟩
   · rw [Metric.mem_ball, dist_eq_norm, add_sub_cancel_left, norm_smul, Complex.norm_real,

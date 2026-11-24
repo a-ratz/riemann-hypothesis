@@ -84,10 +84,10 @@ def ResLineAt : Prop :=
 
 theorem loc4Res_of (hP : ResPowAt) (hT : ResTelAt) (hL : ResLineAt) : LocalResidueBound := by
   intro X _ O _ _ _ _ S hS hD hseg j0 g hg hrat
-  haveI : (Ideal.span {S.w}).IsMaximal := by
+  have : (Ideal.span {S.w}).IsMaximal := by
     rw [← (IsDiscreteValuationRing.irreducible_iff_uniformizer S.w).mp S.w_irr]
     exact IsLocalRing.maximalIdeal.isMaximal O
-  letI : Field (O ⧸ Ideal.span {S.w}) := Ideal.Quotient.field _
+  let : Field (O ⧸ Ideal.span {S.w}) := Ideal.Quotient.field _
   by_cases h0 : psiRes0 X O S.w g 0 = 0
   · left
     rw [(hP X O S hS hD g 0).1 j0, h0, zero_pow (pow_ne_zero _ (Fact.out : X.p.Prime).ne_zero)]
@@ -232,7 +232,7 @@ theorem resLineAt : ResLineAt := by
     unfold ratPlane
     congr 1
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · rintro ⟨i, hi, rfl⟩
       have hi0 : i = 0 := Fin.ext (by rw [Fin.val_zero]; omega)

@@ -291,11 +291,11 @@ theorem exists_isMaximal_tensorProduct_of_isLocalHom (O O' B : Type*) [CommRing 
   obtain ⟨N, hN, hIN⟩ := Ideal.exists_le_maximal I hI
   have hle : IsLocalRing.maximalIdeal O ≤ N.comap (algebraMap O B) :=
     Ideal.map_le_iff_le_comap.mp (hm.trans hIN)
-  letI : Algebra (IsLocalRing.ResidueField O) (B ⧸ N) :=
+  let : Algebra (IsLocalRing.ResidueField O) (B ⧸ N) :=
     Ideal.Quotient.algebraQuotientOfLEComap hle
-  haveI : IsScalarTower O (IsLocalRing.ResidueField O) (B ⧸ N) :=
+  have : IsScalarTower O (IsLocalRing.ResidueField O) (B ⧸ N) :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Nontrivial (IsLocalRing.ResidueField O' ⊗[IsLocalRing.ResidueField O] (B ⧸ N)) :=
+  have : Nontrivial (IsLocalRing.ResidueField O' ⊗[IsLocalRing.ResidueField O] (B ⧸ N)) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain _ _ _
       (RingHom.injective (algebraMap (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField O'))) (RingHom.injective (algebraMap (IsLocalRing.ResidueField O) (B ⧸ N)))
   let f : O' →ₐ[O] IsLocalRing.ResidueField O' ⊗[IsLocalRing.ResidueField O] (B ⧸ N) :=
@@ -316,12 +316,12 @@ theorem exists_isMaximal_tensorProduct_of_isLocalHom (O O' B : Type*) [CommRing 
 theorem exists_integral_point_of_complete_case :
     (∀ (O B : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (IsLocalRing.maximalIdeal O) O] [CharZero O] [CommRing B] [IsDomain B] [Algebra O B] [Algebra.FiniteType O B] [Module.Flat O B] (M : Ideal B), M.IsMaximal → Ideal.map (algebraMap O B) (IsLocalRing.maximalIdeal O) ≤ M → ∀ e : B, e ≠ 0 → ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsDiscreteValuationRing V) (_ : Algebra O V) (_ : Module.Finite O V) (φ : B →ₐ[O] V), φ e ≠ 0 ∧ ∀ x ∈ M, φ x ∈ IsLocalRing.maximalIdeal V) → ∀ (O O' : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CommRing O'] [IsDomain O'] [IsDiscreteValuationRing O'] [IsAdicComplete (IsLocalRing.maximalIdeal O') O'] [CharZero O'] [Algebra O O'] [IsLocalHom (algebraMap O O')], Function.Injective (algebraMap O O') → ∀ (B : Type) [CommRing B] [IsDomain B] [Algebra O B] [Algebra.FiniteType O B], Function.Injective (algebraMap O B) → ∀ I : Ideal B, I ≠ ⊤ → Ideal.map (algebraMap O B) (IsLocalRing.maximalIdeal O) ≤ I → ∀ e : B, e ≠ 0 → ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsDiscreteValuationRing V) (_ : Algebra O' V) (_ : Module.Finite O' V) (φ : B →+* V), φ.comp (algebraMap O B) = (algebraMap O' V).comp (algebraMap O O') ∧ φ e ≠ 0 ∧ ∀ x ∈ I, φ x ∈ IsLocalRing.maximalIdeal V := by
   intro H O O' _ _ _ _ _ _ _ _ _ _ hOO' B _ _ _ _ hOB I hI hmI e he
-  haveI : Module.Flat O O' := flat_of_injective_algebraMap_of_isDomain O O' hOO'
-  haveI : Module.Flat O B := flat_of_injective_algebraMap_of_isDomain O B hOB
+  have : Module.Flat O O' := flat_of_injective_algebraMap_of_isDomain O O' hOO'
+  have : Module.Flat O B := flat_of_injective_algebraMap_of_isDomain O B hOB
   obtain ⟨M, hM, hM1, hM2⟩ := exists_isMaximal_tensorProduct_of_isLocalHom O O' B I hI hmI
   obtain ⟨P, hPmin, hPM⟩ := Ideal.exists_minimalPrimes_le (bot_le : (⊥ : Ideal (O' ⊗[O] B)) ≤ M)
-  haveI : P.IsPrime := hPmin.isPrime
-  haveI : IsDomain (O' ⊗[O] B ⧸ P) := Ideal.Quotient.isDomain P
+  have : P.IsPrime := hPmin.isPrime
+  have : IsDomain (O' ⊗[O] B ⧸ P) := Ideal.Quotient.isDomain P
   have hinj : Function.Injective (algebraMap O' (O' ⊗[O] B ⧸ P)) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro a ha
@@ -329,8 +329,8 @@ theorem exists_integral_point_of_complete_case :
     have ha' : Ideal.Quotient.mk P (a ⊗ₜ[O] (1 : B)) = 0 := ha
     exact notMem_nonZeroDivisors_of_mem_mem_minimalPrimes (Ideal.Quotient.eq_zero_iff_mem.mp ha')
       hPmin (tmul_one_mem_nonZeroDivisors_of_flat O O' B ha0)
-  haveI : Module.Flat O' (O' ⊗[O] B ⧸ P) := flat_of_injective_algebraMap_of_isDomain _ _ hinj
-  haveI : Algebra.FiniteType O' (O' ⊗[O] B ⧸ P) :=
+  have : Module.Flat O' (O' ⊗[O] B ⧸ P) := flat_of_injective_algebraMap_of_isDomain _ _ hinj
+  have : Algebra.FiniteType O' (O' ⊗[O] B ⧸ P) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ O' P)
       (Ideal.Quotient.mkₐ_surjective O' P)
   have hM' : (M.map (Ideal.Quotient.mk P)).IsMaximal := by
@@ -394,11 +394,11 @@ theorem _root_.GlobalTheory.isIntegral_mul_of_bounded_at_points :
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hπm : π ∈ IsLocalRing.maximalIdeal O := (IsLocalRing.mem_maximalIdeal _).2 hπ.not_isUnit
   let B := Algebra.adjoin A ({g} : Set Ω)
-  letI : Algebra O B := ((algebraMap A B).comp (algebraMap O A)).toAlgebra
-  haveI : IsScalarTower O A B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.FiniteType A B :=
+  let : Algebra O B := ((algebraMap A B).comp (algebraMap O A)).toAlgebra
+  have : IsScalarTower O A B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.FiniteType A B :=
     ⟨(Subalgebra.fg_top B).2 (by simpa using Subalgebra.fg_adjoin_finset (R := A) {g})⟩
-  haveI : Algebra.FiniteType O B := Algebra.FiniteType.trans (S := A) inferInstance inferInstance
+  have : Algebra.FiniteType O B := Algebra.FiniteType.trans (S := A) inferInstance inferInstance
   have hOB : Function.Injective (algebraMap O B) := by
     intro x y hxy
     exact hOA (hinj (congrArg Subtype.val hxy))
@@ -445,7 +445,7 @@ theorem _root_.GlobalTheory.isIntegral_mul_of_bounded_at_points :
   have hH : aeval g H = 0 := by
     simp only [H, map_sub, map_one, map_mul, aeval_X, aeval_C, hp, hr]
     linear_combination -hΩ
-  letI : Invertible g := invertibleOfNonzero (inv_ne_zero hf0)
+  let : Invertible g := invertibleOfNonzero (inv_ne_zero hf0)
   have hrev : aeval f (reverse H) = 0 := by
     have key := eval₂_reverse_mul_pow (algebraMap A Ω) g H
     have hinv : ⅟g = f := by rw [invOf_eq_inv, hg, inv_inv]

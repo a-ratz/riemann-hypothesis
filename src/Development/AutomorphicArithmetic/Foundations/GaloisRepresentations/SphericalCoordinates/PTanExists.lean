@@ -52,11 +52,11 @@ namespace UpperTheory.Gal.W2
 private theorem exists_basis {B : Type} [CommRing B] [Algebra ℂ B] (d : ℕ) (a : Fin d → B)
     (he : (MvPolynomial.aeval a : MvPolynomial (Fin d) ℂ →ₐ[ℂ] B).toRingHom.Etale) :
     ∃ b : Module.Basis (Fin d) B Ω[B⁄ℂ], ∀ l, b l = KaehlerDifferential.D ℂ B (a l) := by
-  letI : Algebra (MvPolynomial (Fin d) ℂ) B := (MvPolynomial.aeval a).toRingHom.toAlgebra
-  haveI : IsScalarTower ℂ (MvPolynomial (Fin d) ℂ) B := IsScalarTower.of_algebraMap_eq (fun r => by
+  let : Algebra (MvPolynomial (Fin d) ℂ) B := (MvPolynomial.aeval a).toRingHom.toAlgebra
+  have : IsScalarTower ℂ (MvPolynomial (Fin d) ℂ) B := IsScalarTower.of_algebraMap_eq (fun r => by
     change algebraMap ℂ B r = MvPolynomial.aeval a (MvPolynomial.C r)
     rw [MvPolynomial.aeval_C])
-  haveI : Algebra.Etale (MvPolynomial (Fin d) ℂ) B := he
+  have : Algebra.Etale (MvPolynomial (Fin d) ℂ) B := he
   let b0 := Algebra.TensorProduct.basis B (KaehlerDifferential.mvPolynomialBasis ℂ (Fin d))
   refine ⟨b0.map (KaehlerDifferential.tensorKaehlerEquivOfFormallyEtale ℂ (MvPolynomial (Fin d) ℂ) B),
     fun l => ?_⟩
@@ -102,7 +102,7 @@ end UpperTheory.Gal.W2
 theorem UpperTheory.Gal.W2.tanExists_of :
     UpperTheory.Gal.W2.TanExists := by
   intro Z Y sZ s' d hsmooth c₁ c₂ h₁ h₂ hc₁ y hy
-  haveI := hsmooth
+  have := hsmooth
   obtain ⟨U, x, hUaff, hzU, het⟩ := GlobalTheory.AlgChart.exists_etale_coords (p := sZ) (D := d)
     ((↑y ≫ c₁ : Sp ℂ ⟶ Z) (IsLocalRing.closedPoint ℂ))
   have hyU : ⊤ ≤ (↑y : Sp ℂ ⟶ Y) ⁻¹ᵁ (c₁ ⁻¹ᵁ U ⊓ c₂ ⁻¹ᵁ U) := by

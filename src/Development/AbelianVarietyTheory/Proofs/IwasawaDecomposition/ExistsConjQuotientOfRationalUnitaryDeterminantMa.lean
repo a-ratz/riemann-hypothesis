@@ -76,7 +76,7 @@ theorem rat_points : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R), IsRati
   intro R H
   have hcm : IsCMField H.E := H.isCMField_hostE
   have hc : ∀ x, IsCMField.complexConj H.E x = H.conj x := fun x => bridge_star_holds R H x
-  letI := H.cmStar
+  let := H.cmStar
   have h90 : ∀ z : unitary H.E, ∃ k : (H.E)ˣ, (z : H.E) * H.conj (k : H.E) = k := by
     intro z
     refine exists_mul_apply_eq_of_mul_apply_eq_one_of_involution (H.conj : H.E →+* H.E) (fun x => ?_) ?_ (z : H.E) ?_

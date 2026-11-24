@@ -77,7 +77,7 @@ theorem modul_mem_shiftId {T : Type} {L : LevCh D T} {sc : Consts} (G : GridData
     unfold Places.modulBar at h
     have := congrArg (fun J => D.host.conj⁻¹ • J) h
     simpa using this
-  have h1 := FractionalIdeal.one_mem_inv_coe_ideal (K := D.host.E) h0
+  have h1 := FractionalIdeal.one_mem_inv_coeIdeal (K := D.host.E) h0
   have h2 : (r : D.host.E) ∈ ((G.modul : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) :=
     FractionalIdeal.mem_coeIdeal_of_mem _ hr
   simpa [shiftId] using FractionalIdeal.mul_mem_mul h2 h1

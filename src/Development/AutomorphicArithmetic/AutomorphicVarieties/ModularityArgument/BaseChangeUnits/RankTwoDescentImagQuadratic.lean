@@ -52,9 +52,9 @@ open scoped Matrix
 
 private theorem kills_pow {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {C : Type} [CommGroup C] {M : ℕ} (hM : 1 ≤ M)
     {χ : G ℚ Ω →* C} (hχ : KillsMu M χ) : ∃ k : ℕ, 0 < k ∧ ∀ s, χ s ^ k = 1 := by
-  haveI : NeZero M := ⟨by omega⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : NeZero M := ⟨by omega⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  obtain ⟨μ, hμ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   refine ⟨Fintype.card (ZMod M)ˣ, Fintype.card_pos, fun s => ?_⟩
   rw [← map_pow]
   refine hχ _ fun ζ h => ?_

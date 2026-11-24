@@ -221,7 +221,7 @@ theorem dc_ee_fin_stable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace �
     induction j with
     | zero => intro f hf; simpa using hf
     | succ j ih => intro f hf; rw [pow_succ', Module.End.mul_apply]; exact dc_eeF_mem dual _ (ih f hf)
-  haveI hLfd' : FiniteDimensional ℂ (tensSub (n := n) L) := dc_tensSub_fd hLfd
+  have hLfd' : FiniteDimensional ℂ (tensSub (n := n) L) := dc_tensSub_fd hLfd
   have hVg : V ≤ genSub E V := by unfold genSub; exact le_sInf fun T hT => hT.1
   have key : ∀ j, S0.map (EE ^ j) ≤ tensSub L := by
     intro j x hx
@@ -352,8 +352,8 @@ theorem tens_unitarize (dual : Bool) {lam : Fin n → ℝ} {H : Type*} [NormedAd
           (fun c => ((f' c : D) : H)) = kDiag dual σ k (fun c => ((f c : D) : H)) →
           (fun c => ((g' c : D) : H)) = kDiag dual σ k (fun c => ((g c : D) : H)) → Q f' g' = Q f g := by
   classical
-  haveI : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
-  haveI : FiniteDimensional ℂ V := hV.1
+  have : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
+  have : FiniteDimensional ℂ V := hV.1
   let bV := Module.finBasis ℂ V
   let ys : Fin (Module.finrank ℂ V) → H := fun j => (((bV j : V) : D) : H)
   have hVM : V ≤ genSub E V := le_sInf fun T hT => hT.1
@@ -366,7 +366,7 @@ theorem tens_unitarize (dual : Bool) {lam : Fin n → ℝ} {H : Type*} [NormedAd
     (tensSub (n := n) (genSub E V)).subtype ∘ₗ Submodule.linearProjOfIsCompl _ _ hC
   have hPm : ∀ f : Fin n → D, P f ∈ tensSub (genSub E V) := fun f => (Submodule.linearProjOfIsCompl _ _ hC f).2
   have hPid : ∀ f ∈ tensSub (n := n) (genSub E V), P f = f := fun f hf => by
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hC ⟨f, hf⟩)
+    exact congrArg Subtype.val (Submodule.projectionOnto_apply_left hC ⟨f, hf⟩)
   let u : Fin (Module.finrank ℂ V) → Fin n → (Fin n → D) → Formalism.REAL.UJ ε → ℂ :=
     fun j ξ f => cf dual ε σ (ys j) ξ (hvec f)
   have hL : ∀ f ∈ tensSub (n := n) (genSub E V), ∀ j ξ, MemLp (u j ξ f) 2 (Formalism.REAL.muG ε) := fun f hf j ξ =>

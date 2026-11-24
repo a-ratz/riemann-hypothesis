@@ -147,7 +147,7 @@ private theorem pow_red' (h : IsRes rk rK s sb) (j : ℕ) (x y : 𝒪[K]) (hy : 
 private theorem finrank_dvd' [Fintype F₁] (h : IsRes rk rK s sb) :
     Module.finrank k K ∣ orderOf s := by
   classical
-  haveI : Algebra.IsAlgebraic F₀ F₁ := Algebra.IsAlgebraic.of_finite F₀ F₁
+  have : Algebra.IsAlgebraic F₀ F₁ := Algebra.IsAlgebraic.of_finite F₀ F₁
   have hsb : sb = FiniteField.frobeniusAlgEquivOfAlgebraic F₀ F₁ := by
     ext z
     rw [h.frob z]
@@ -179,11 +179,11 @@ open UpperTheory.Gal.InertialTypesAlt.L in
 theorem UpperTheory.Gal.InertialTypesAlt.L.derive :
     UpperTheory.Gal.InertialTypesAlt.L.Derive := by
   intro k K _ _ _ _ _ _ _ _ _ hc F₀ F₁ _ _ _ _ _ rk rK s sb h
-  haveI hv : ValuativeExtension k K := GlobalTheory.LBC.Inh.valuativeExtension hc
+  have hv : ValuativeExtension k K := GlobalTheory.LBC.Inh.valuativeExtension hc
   have hpos : 0 < Module.finrank k K := by
     rw [← h.deg]
     exact Module.finrank_pos
-  haveI hf : FiniteDimensional k K := Module.finite_of_finrank_pos hpos
+  have hf : FiniteDimensional k K := Module.finite_of_finrank_pos hpos
   exact ⟨hv, hf, isGalois_of_isRes h⟩
 end -- clump:auto
 end -- clump:auto
@@ -410,7 +410,7 @@ private theorem fin_desc (σ : F₁ ≃ₐ[F₀] F₁) (d : ℕ) (hG : UpperTheo
       exact Subtype.coe_prop _
     exact hBt hm
   refine ⟨(Pi.basisFun F₁ (Fin n)).toMatrix e', ?_, ?_⟩
-  · haveI := (Pi.basisFun F₁ (Fin n)).invertibleToMatrix e'
+  · have := (Pi.basisFun F₁ (Fin n)).invertibleToMatrix e'
     exact (Matrix.isUnit_iff_isUnit_det _).1 (isUnit_of_invertible _)
   · ext i j
     have := congrFun (he' j) i
@@ -450,10 +450,10 @@ private def rs (s : K ≃ₐ[k] K) : 𝒪[K] →+* 𝒪[K] :=
 
 private theorem unit_of_red {F : Type} [Field F] (rd : 𝒪[K] →+* F) (hrd : Function.Surjective rd)
     {x : 𝒪[K]} (hx : rd x ≠ 0) : IsUnit x := by
-  haveI : IsLocalRing 𝒪[K] := (inferInstance : IsDiscreteValuationRing 𝒪[K]).toIsLocalRing
+  have : IsLocalRing 𝒪[K] := (inferInstance : IsDiscreteValuationRing 𝒪[K]).toIsLocalRing
   by_contra hu
   have hm : x ∈ IsLocalRing.maximalIdeal 𝒪[K] := hu
-  haveI : (RingHom.ker rd).IsMaximal := RingHom.ker_isMaximal_of_surjective rd hrd
+  have : (RingHom.ker rd).IsMaximal := RingHom.ker_isMaximal_of_surjective rd hrd
   rw [← IsLocalRing.eq_maximalIdeal (inferInstance : (RingHom.ker rd).IsMaximal)] at hm
   exact hx hm
 
@@ -596,7 +596,7 @@ private theorem avg_const_frobenius_local_pairs {A : Type} [Group A] (c : ℂ) :
     simp [rStab]
   unfold avg
   rw [hS, Subgroup.index_top, Nat.cast_one, inv_one, one_mul]
-  haveI : Subsingleton (A ⧸ (⊤ : Subgroup A)) := QuotientGroup.subsingleton_quotient_top
+  have : Subsingleton (A ⧸ (⊤ : Subgroup A)) := QuotientGroup.subsingleton_quotient_top
   exact finsum_eq_single (fun _ : A ⧸ (⊤ : Subgroup A) => c) 1
     (fun q hq => absurd (Subsingleton.elim q 1) hq)
 
@@ -624,7 +624,7 @@ private theorem cpt_map {G H : Type} [Group G] [TopologicalSpace G] [Group H] [T
   rw [MonoidHom.map_closure]
   congr 1
   ext g
-  simp only [Set.mem_setOf_eq, Set.mem_image, Subgroup.mem_map]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, Subgroup.mem_map]
   constructor
   · rintro ⟨⟨t, ht, rfl⟩, hc⟩
     exact ⟨t, ⟨ht, (zpowers_closed j hj t).1 hc⟩, rfl⟩
@@ -830,7 +830,7 @@ private theorem partial_twConj {k K : Type} [Field k] [Field K] [Algebra k K] (s
   | zero => simp [GlobalTheory.LBC.galAct_one]
   | succ m ih =>
     rw [List.ofFn_succ', List.ofFn_succ', List.prod_concat, List.prod_concat]
-    simp only [Fin.coe_castSucc, Fin.val_last]
+    simp only [Fin.val_castSucc, Fin.val_last]
     rw [ih]
     have e : GlobalTheory.LBC.galAct (s ^ m) n (GlobalTheory.LBC.galAct s n g) = GlobalTheory.LBC.galAct (s ^ (m + 1)) n g := by
       rw [pow_succ, GlobalTheory.LBC.galAct_mul, MonoidHom.comp_apply]
@@ -858,7 +858,7 @@ end UpperTheory.Gal.InertialTypesAlt.L
 theorem UpperTheory.Gal.InertialTypesAlt.L.liftVal :
     UpperTheory.Gal.InertialTypesAlt.L.LiftVal := by
   intro F₀ F₁ _ _ _ _ _ sb _ n fb hfb
-  haveI : FiniteDimensional F₀ F₁ := Module.Finite.of_finite
+  have : FiniteDimensional F₀ F₁ := Module.Finite.of_finite
   refine ⟨fun δ γ h => ?_, fun δ x => ?_⟩
   · have hex : ∃ γ, GlobalTheory.DZA.IsFinNorm sb δ γ := ⟨γ, h⟩
     rw [GlobalTheory.DZA.normLift, dite_eq_left hex]
@@ -983,7 +983,7 @@ private theorem ofFn_twConj (s : K ≃ₐ[k] K) (n : ℕ) (δ g : GL (Fin n) K) 
   induction m with
   | zero => simp [galAct_one]
   | succ m ih =>
-    simp only [List.ofFn_succ', List.prod_concat, Fin.coe_castSucc, Fin.val_last]
+    simp only [List.ofFn_succ', List.prod_concat, Fin.val_castSucc, Fin.val_last]
     rw [ih]
     simp only [map_mul, map_inv]
     rw [pow_succ, galAct_mul, MonoidHom.comp_apply]
@@ -1034,8 +1034,8 @@ private theorem lift_prod
     obtain ⟨z, h1, h2⟩ := ih
     obtain ⟨y', h3, h4⟩ := lift_pow hf m y
     refine ⟨z * y', ?_, ?_⟩
-    · simp only [List.ofFn_succ', List.prod_concat, Fin.coe_castSucc, Fin.val_last, map_mul, h1, h3]
-    · simp only [List.ofFn_succ', List.prod_concat, Fin.coe_castSucc, Fin.val_last, map_mul, h2, h4]
+    · simp only [List.ofFn_succ', List.prod_concat, Fin.val_castSucc, Fin.val_last, map_mul, h1, h3]
+    · simp only [List.ofFn_succ', List.prod_concat, Fin.val_castSucc, Fin.val_last, map_mul, h2, h4]
 
 end Lift
 

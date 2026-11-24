@@ -123,10 +123,10 @@ theorem exists_mul_le {A : Submodule (𝓞 K) V} (hA : Submodule.span K (A : Set
 
 theorem finite_between {Λ : Submodule (𝓞 K) V} (hΛ : Λ.FG) {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
     {M : Submodule (𝓞 K) V | (∀ x ∈ Λ, a • x ∈ M) ∧ ∀ x ∈ M, b • x ∈ Λ}.Finite := by
-  haveI : Module.Finite (𝓞 K) Λ := Module.Finite.iff_fg.2 hΛ
-  haveI : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 K) Λ
+  have : Module.Finite (𝓞 K) Λ := Module.Finite.iff_fg.2 hΛ
+  have : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 K) Λ
   let P : Submodule ℤ Λ := LinearMap.range (LinearMap.lsmul ℤ Λ (b * a))
-  haveI : Finite (Λ ⧸ P) := by
+  have : Finite (Λ ⧸ P) := by
     refine Module.finite_of_fg_torsion _ ?_
     intro q
     obtain ⟨x, rfl⟩ := P.mkQ_surjective q
@@ -166,7 +166,7 @@ theorem mem_smul_iff (g : V ≃ₗ[K] V) (Λ : Submodule (𝓞 K) V) (x : V) :
 
 theorem isLattice_smul (g : V ≃ₗ[K] V) {Λ : Submodule (𝓞 K) V} (hΛ : Submodule.IsFullLattice K Λ) :
     Submodule.IsFullLattice K (g • Λ) := by
-  letI := hΛ
+  let := hΛ
   refine { toIsLattice := ⟨hΛ.fg.map _, ?_⟩, span_eq_top := ?_ }
   · intro s hs hli
     exact (LinearIndependent.iff_fractionRing _ _).mp hli
@@ -178,8 +178,8 @@ theorem relIndex_ne_zero (G : Subgroup (V ≃ₗ[K] V)) {Λ Λ' : Submodule (�
     (hΛ : Submodule.IsFullLattice K Λ) (hΛ' : Submodule.IsFullLattice K Λ') :
     (G ⊓ MulAction.stabilizer (V ≃ₗ[K] V) Λ).relIndex
       (G ⊓ MulAction.stabilizer (V ≃ₗ[K] V) Λ') ≠ 0 := by
-  letI := hΛ
-  letI := hΛ'
+  let := hΛ
+  let := hΛ'
   obtain ⟨a, ha, h₁⟩ := exists_mul_le (Submodule.IsFullLattice.span_eq_top (A := K) (M := Λ)) hΛ'.fg
   obtain ⟨b, hb, h₂⟩ := exists_mul_le (Submodule.IsFullLattice.span_eq_top (A := K) (M := Λ')) hΛ.fg
   set H := G ⊓ MulAction.stabilizer (V ≃ₗ[K] V) Λ' with hH
@@ -233,7 +233,7 @@ theorem exists_den {s : V ≃ₗ[K] V} {n : ℕ} (hs : ((s : V →ₗ[K] V) - 1)
     induction m with
     | zero => simpa using hm 0 x hx
     | succ m ih => rw [pow_succ']; exact hsB _ ih
-  letI := hΛ
+  let := hΛ
   obtain ⟨N, hN, h⟩ := exists_mul_le (Submodule.IsFullLattice.span_eq_top (A := K) (M := Λ)) hB
   exact ⟨N, hN, fun m x hx => h _ (hp m x hx)⟩
 

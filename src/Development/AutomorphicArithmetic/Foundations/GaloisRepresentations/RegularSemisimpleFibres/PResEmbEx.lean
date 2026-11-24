@@ -206,8 +206,8 @@ private theorem res_algClosed {Ω : Type} [Field Ω] [IsAlgClosed Ω] (A : Valua
 private theorem res_surj {Ω : Type} [Field Ω] [CharZero Ω] (hΩ : ∀ x : Ω, IsAlgebraic ℤ x) (A : ValuationSubring Ω) {κ : Type} [Field κ]
     [IsAlgClosed κ] (p : ℕ) [Fact p.Prime] [CharP (IsLocalRing.ResidueField A) p]
     (e : κ →+* IsLocalRing.ResidueField A) : Function.Surjective e := by
-  letI := e.toAlgebra
-  haveI : Algebra.IsIntegral κ (IsLocalRing.ResidueField A) := ⟨fun z => by
+  let := e.toAlgebra
+  have : Algebra.IsIntegral κ (IsLocalRing.ResidueField A) := ⟨fun z => by
     obtain ⟨z', rfl⟩ := IsLocalRing.residue_surjective z
     obtain ⟨P₀, h0, hP₀⟩ := hΩ (z' : Ω)
     have hP : aeval (z' : Ω) P₀.primPart = 0 := by
@@ -233,7 +233,7 @@ private theorem res_surj {Ω : Type} [Field Ω] [CharZero Ω] (hΩ : ∀ x : Ω,
         have h2 := congrArg e h1
         simp only [eq_intCast, map_intCast, map_zero] at h2
         exact (CharP.intCast_eq_zero_iff _ p _).1 h2
-      exact (Nat.prime_iff_prime_int.1 Fact.out).not_unit (P₀.isPrimitive_primPart _ hdvd)
+      exact (Nat.prime_iff_prime_int.1 Fact.out).not_isUnit (P₀.isPrimitive_primPart _ hdvd)
     refine IsAlgebraic.isIntegral ⟨_, hQ, ?_⟩
     rw [aeval_def, eval₂_map, Subsingleton.elim ((algebraMap κ (IsLocalRing.ResidueField A)).comp (algebraMap ℤ κ))
       (algebraMap ℤ (IsLocalRing.ResidueField A))]
@@ -243,8 +243,8 @@ private theorem res_surj {Ω : Type} [Field Ω] [CharZero Ω] (hΩ : ∀ x : Ω,
 theorem UpperTheory.Gal.InertialTypesAlt.resEmbEx :
     ResEmbEx := by
   intro E Ω _ _ _ _ _ A v hv
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI := res_algClosed A
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have := res_algClosed A
   obtain ⟨e₀, he₀⟩ : ∃ e₀ : 𝓀[v.adicCompletion E] →+* IsLocalRing.ResidueField A,
       ∀ x, e₀ (DiscreteGroups.sglob.DzType.kappaP v x) = DiscreteGroups.sglob.DzType.kappaQ A x := by
     refine ⟨RingHom.liftOfSurjective _ (DiscreteGroups.sglob.DzType.kappa_surj_O v) ⟨DiscreteGroups.sglob.DzType.kappaQ A, fun x hx => ?_⟩,
@@ -253,9 +253,9 @@ theorem UpperTheory.Gal.InertialTypesAlt.resEmbEx :
       exact hx
     · exact RingHom.liftOfRightInverse_comp_apply _ _ _ _ _
   obtain ⟨p, hp⟩ := CharP.exists 𝓀[v.adicCompletion E]
-  haveI : Fact p.Prime := ⟨CharP.char_is_prime 𝓀[v.adicCompletion E] p⟩
-  haveI : CharP (IsLocalRing.ResidueField A) p := charP_of_injective_ringHom e₀.injective p
-  letI := e₀.toAlgebra
+  have : Fact p.Prime := ⟨CharP.char_is_prime 𝓀[v.adicCompletion E] p⟩
+  have : CharP (IsLocalRing.ResidueField A) p := charP_of_injective_ringHom e₀.injective p
+  let := e₀.toAlgebra
   let e : AlgebraicClosure 𝓀[v.adicCompletion E] →ₐ[𝓀[v.adicCompletion E]] IsLocalRing.ResidueField A := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -271,10 +271,10 @@ theorem UpperTheory.Gal.InertialTypesAlt.resEmbEx :
       exact congrArg _ (Subtype.ext hz)
     rw [h1, h2, ← he₀]
     exact e.commutes _
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have hΩ : ∀ x : Ω, IsAlgebraic ℤ x := by
-    haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
-    haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
+    have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+    have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ E Ω
     exact fun x => (IsFractionRing.isAlgebraic_iff ℤ ℚ Ω).2 (Algebra.IsAlgebraic.isAlgebraic x)
   have hs := res_surj hΩ A p (e : AlgebraicClosure 𝓀[v.adicCompletion E] →+* IsLocalRing.ResidueField A)
   let e' := RingEquiv.ofBijective (e : AlgebraicClosure 𝓀[v.adicCompletion E] →+* IsLocalRing.ResidueField A)

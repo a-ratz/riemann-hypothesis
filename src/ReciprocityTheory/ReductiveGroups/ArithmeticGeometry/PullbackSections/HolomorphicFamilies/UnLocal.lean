@@ -185,7 +185,7 @@ theorem isHolTo_spMap {A : Type} [CommRing A] {m : ℕ} {B : Set (Fin m → ℂ)
     intro b0 hb0
     obtain ⟨g, hg, hD⟩ := nbhd b0 hb0
     refine ⟨_, hopen g, ⟨hb0.1, hg⟩, ?_⟩
-    haveI := (isAffineOpen_top (Sp A)).isLocalization_basicOpen ((Scheme.ΓSpecIso (CommRingCat.of A)).inv g)
+    have := (isAffineOpen_top (Sp A)).isLocalization_basicOpen ((Scheme.ΓSpecIso (CommRingCat.of A)).inv g)
     obtain ⟨⟨h', m⟩, hm⟩ := IsLocalization.surj (Submonoid.powers ((Scheme.ΓSpecIso (CommRingCat.of A)).inv g))
       ((Sp A).presheaf.map (homOfLE hD).op f)
     dsimp only at hm

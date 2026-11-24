@@ -78,7 +78,7 @@ theorem _root_.GlobalTheory.isIntegral_matrix_of_pow_bounded {O K : Type} [CommR
   have hφ : Function.Injective φ := fun A B hAB => smul_right_injective _ ha hAB
   have hP : (LinearMap.range ψ).FG := by
     rw [LinearMap.range_eq_map]; exact Submodule.FG.map _ Module.Finite.fg_top
-  haveI := isNoetherian_of_fg_of_noetherian _ hP
+  have := isNoetherian_of_fg_of_noetherian _ hP
   have hle : Submodule.map φ (Subalgebra.toSubmodule (Algebra.adjoin O {g})) ≤
       LinearMap.range ψ := by
     rw [Algebra.adjoin_eq_span, ← Submonoid.powers_eq_closure, Submodule.map_span_le]
@@ -123,7 +123,7 @@ private theorem exists_smul_pow_entry_mem_adicCompletionIntegers (E : Type) [Fie
     · intro x hx
       have := mul_mem ha (show b * x ∈ O from hx)
       simpa [U, mul_assoc] using this
-  haveI : Nonempty {a : w.adicCompletion E // a ∈ O ∧ a ≠ 0} := ⟨⟨1, O.one_mem, one_ne_zero⟩⟩
+  have : Nonempty {a : w.adicCompletion E // a ∈ O ∧ a ≠ 0} := ⟨⟨1, O.one_mem, one_ne_zero⟩⟩
   obtain ⟨a, hSa⟩ := hS.elim_directed_cover U hUo hcov hdir
   refine ⟨a.1, a.2.2, fun k i j => hSa ?_⟩
   refine Set.mem_iUnion.2 ⟨i, Set.mem_iUnion.2 ⟨j, ⟨g ^ k, subset_closure ?_, by simp⟩⟩⟩

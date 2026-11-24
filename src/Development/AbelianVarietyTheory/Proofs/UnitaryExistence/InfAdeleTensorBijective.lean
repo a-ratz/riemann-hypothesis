@@ -96,7 +96,7 @@ variable {E : Type} [Field E] [NumberField E] [Algebra F E]
 theorem exists_hom [IsTotallyReal F] (τ : E →+* ℂ) :
     ∃ θ : InfiniteAdeleRing F ⊗[F] E →+* ℂ, (∀ x, θ (1 ⊗ₜ x) = τ x) ∧
       Continuous fun a : InfiniteAdeleRing F => θ (a ⊗ₜ (1 : E)) := by
-  letI : Algebra F ℂ := (τ.comp (algebraMap F E)).toAlgebra
+  let : Algebra F ℂ := (τ.comp (algebraMap F E)).toAlgebra
   let f : InfiniteAdeleRing F →ₐ[F] ℂ :=
     { ext (τ.comp (algebraMap F E)) with commutes' := fun x => ext_algebraMap _ x }
   let g : E →ₐ[F] ℂ := { τ with commutes' := fun x => rfl }
@@ -270,9 +270,9 @@ theorem bijective [IsTotallyReal F] (c : E ≃ₐ[F] E) (h2 : Module.finrank F E
 
 theorem infAdele_tensor_bijective : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (c : E ≃ₐ[F] E), Module.finrank F E = 2 → c ≠ 1 → IsTotallyReal F → (∀ (τ : E →+* ℂ) x, τ (c x) = starRingEnd ℂ (τ x)) → letI : TopologicalSpace (InfiniteAdeleRing F ⊗[F] E) := moduleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E); (∀ τ : E →+* ℂ, ∃ θ : InfiniteAdeleRing F ⊗[F] E →+* ℂ, (∀ x, θ (1 ⊗ₜ x) = τ x) ∧ Continuous fun a : InfiniteAdeleRing F => θ (a ⊗ₜ (1 : E))) ∧ ∀ θ : (E →+* ℂ) → (InfiniteAdeleRing F ⊗[F] E →+* ℂ), (∀ τ, (∀ x, θ τ (1 ⊗ₜ x) = τ x) ∧ Continuous fun a : InfiniteAdeleRing F => θ τ (a ⊗ₜ (1 : E))) → (∀ τ, Continuous (θ τ)) ∧ (∀ τ z, θ τ (sg (InfiniteAdeleRing F) c z) = starRingEnd ℂ (θ τ z)) ∧ ∀ Ψ : Set (E →+* ℂ), (∀ τ, τ ∈ Ψ ↔ ComplexEmbedding.conjugate τ ∉ Ψ) → Function.Bijective (fun (z : InfiniteAdeleRing F ⊗[F] E) (τ : Ψ) => θ τ.1 z) := by
   intro F E _ _ _ _ _ c h2 hc hF hτ
-  letI : TopologicalSpace (InfiniteAdeleRing F ⊗[F] E) :=
+  let : TopologicalSpace (InfiniteAdeleRing F ⊗[F] E) :=
     moduleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E)
-  haveI : IsModuleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E) := ⟨rfl⟩
   refine ⟨exists_hom, fun θ hθ => ?_⟩
   have hθ' := fun τ => hom_tmul τ (θ τ) (hθ τ).1 (hθ τ).2
   refine ⟨fun τ => ?_, fun τ z => ?_, bijective c h2 hc hτ θ hθ'⟩

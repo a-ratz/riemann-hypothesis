@@ -156,7 +156,7 @@ theorem odd_l (h5 : 5 ≤ l) : (2 : ZMod l) ≠ 0 := by
 
 theorem exists_sqrt (h5 : 5 ≤ l) (t : ℤ_[l]) (s : ZMod l) (hs : s ≠ 0) (ht : PadicInt.toZMod t = s ^ 2) :
     ∃ z : ℤ_[l], z * z = t := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   obtain ⟨a, ha⟩ : ∃ a : ℤ_[l], PadicInt.toZMod a = s :=
     ⟨(s.val : ℤ_[l]), by rw [toZMod_natCast, ZMod.natCast_zmod_val]⟩
   set F : Polynomial ℤ_[l] := Polynomial.X ^ 2 - Polynomial.C t with hF
@@ -177,7 +177,7 @@ theorem exists_sqrt (h5 : 5 ≤ l) (t : ℤ_[l]) (s : ZMod l) (hs : s ≠ 0) (ht
 
 theorem exists_norm (h5 : 5 ≤ l) (dK : ℕ) (hld : ¬ l ∣ dK) (a : ℤ_[l]) (ha : ‖a‖ = 1) :
     ∃ x y : ℤ_[l], x * x + dK * (y * y) = a := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have hd : ((dK : ℕ) : ZMod l) ≠ 0 := by
     rwa [Ne, CharP.cast_eq_zero_iff (ZMod l) l]
   have hA : PadicInt.toZMod a ≠ 0 := (norm_eq_one_iff l a).1 ha

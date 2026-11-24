@@ -145,7 +145,7 @@ theorem alternatingForm_adjointSuperdiagRep (g : G) (v w : B × B) : omg (T.M1 g
     rw [← Units.val_mul, div_mul_div_cancel]
   have hn : ((-1 : ℤˣ) = 1) = False := by decide
   rcases Int.units_eq_one_or (η g) with hg | hg <;>
-    simp only [adjointSuperdiagRep_apply, χ2_apply, hg, hn, if_true, if_false, omg, e, Units.val_one, Units.val_neg, Int.cast_one,
+    simp only [adjointSuperdiagRep_apply, χ2_apply, hg, hn, ite_true, ite_false, omg, e, Units.val_one, Units.val_neg, Int.cast_one,
       Int.cast_neg] <;> ring
 
 def ch (H : Subgroup G) (hH : ∀ g ∈ H, η g = 1) (i : Fin 3) : H →* Bˣ where
@@ -297,7 +297,7 @@ theorem Tor.Good.chars [Algebra ℚ_[l] B] [Algebra ℤ_[l] B] [IsScalarTower �
     {H : Subgroup (GQ l)} {e : ℕ} (hD : TriDat η Ψ H e) :
     Chars H.subtype π e (Ψ.comp H.subtype) (T.ch H hD.ηH) :=
   { e_pos := hD.e_pos
-    cont i := (hT.cont i).comp continuous_subtype_val
+    cont i := (hT.cont i).comp continuous_subtypeVal
     ine g hg i := by
       apply Units.ext
       rw [Tor.ch_apply, hT.ine g hg, hD.ΨH g g.2 hg, ← algebraMap_cycA (E := E) (B := B), zpow_mul, zpow_natCast, ← map_pow (Units.map _),

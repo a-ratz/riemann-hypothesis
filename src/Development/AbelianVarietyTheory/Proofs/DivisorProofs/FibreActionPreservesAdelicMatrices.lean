@@ -57,9 +57,9 @@ theorem kron_identity {T : Type} [Fintype T] [DecidableEq T] {J : T → Type}
   by_cases h : I = I'
   · subst h
     simp
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     obtain ⟨t, ht⟩ : ∃ t, I t ≠ I' t := not_forall.mp fun hc => h (funext hc)
-    exact Finset.prod_eq_zero (Finset.mem_univ t) (if_neg ht)
+    exact Finset.prod_eq_zero (Finset.mem_univ t) (ite_eq_right ht)
 
 end GlobalTheory.KroneckerIdentity
 end -- clump:auto
@@ -163,7 +163,7 @@ theorem intAt_kron (w : HeightOneSpectrum (𝓞 K)) {T : Type} [Fintype T] [Deci
     [∀ t, Fintype (J t)] [∀ t, DecidableEq (J t)] {M : ∀ t, Matrix (J t) (J t) K} (hM : ∀ t, IntAt w (M t)) :
     IntAt w (kron M) := fun I I' => by
   rw [kron, Matrix.of_apply, map_prod]
-  exact Finset.prod_le_one' fun t _ => hM t (I t) (I' t)
+  exact Finset.prod_le_one fun t _ => hM t (I t) (I' t)
 
 end General
 
@@ -188,7 +188,7 @@ theorem fibA_isAdelic : ∀ (K : Type) [Field K] [NumberField K] (T : Type) [Fin
     exact zero_ne_one h1
   · refine (hfin.union (Set.finite_iUnion fun t => (hB t).2)).subset fun w hw => ?_
     by_contra hw'
-    simp only [Set.mem_union, Set.mem_iUnion, Set.mem_setOf_eq, Function.mem_support, not_or, not_exists,
+    simp only [Set.mem_union, Set.mem_iUnion, Set.mem_ofPred_eq, Function.mem_support, not_or, not_exists,
       not_not] at hw'
     obtain ⟨h0, h1⟩ := hw'
     have hv : w.valuation K (a w) = 1 := valuation_eq_one_of_vAdd w (ha w) h0

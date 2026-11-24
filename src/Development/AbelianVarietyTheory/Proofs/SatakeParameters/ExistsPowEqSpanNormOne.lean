@@ -170,13 +170,13 @@ theorem exists_pow_eq_span {𝔞 𝔟 : Submodule (𝓞 K) K} (h : 𝔞 * 𝔟 =
   let J : FractionalIdeal (𝓞 K)⁰ K := ⟨𝔟, FractionalIdeal.isFractional_of_fg (Submodule.fg_of_isUnit hv)⟩
   have hIJ : I * J = 1 := by
     apply FractionalIdeal.coeToSubmodule_injective
-    simp only [FractionalIdeal.coe_mul, FractionalIdeal.coe_one]
+    simp only [FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_one]
     exact h
   let U : (FractionalIdeal (𝓞 K)⁰ K)ˣ := Units.mkOfMulEqOne I J hIJ
   have h1 : ClassGroup.mk K (U ^ Fintype.card (ClassGroup (𝓞 K))) = 1 := by rw [map_pow, pow_card_eq_one]
   obtain ⟨a, ha⟩ := ClassGroup.mk_eq_one_iff.1 h1
   refine ⟨_, a, Fintype.card_pos (α := ClassGroup (𝓞 K)), ?_⟩
-  rw [← ha, Units.val_pow_eq_pow_val, FractionalIdeal.coe_pow]
+  rw [← ha, Units.val_pow_eq_pow_val, FractionalIdeal.coeToSubmodule_pow]
   rfl
 
 omit [NumberField K] in

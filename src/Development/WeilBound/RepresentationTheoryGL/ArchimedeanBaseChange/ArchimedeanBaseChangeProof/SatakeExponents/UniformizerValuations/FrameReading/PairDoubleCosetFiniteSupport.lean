@@ -122,7 +122,7 @@ theorem exists_common_eigenvector_in_submodule {W : Type} [AddCommGroup W] [Modu
       exact ⟨v, hv, hv0, χ, fun i => hχ i v hv⟩
     · push_neg at hs
       obtain ⟨i, hi⟩ := hs
-      haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hne
+      have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hne
       let R : End ℂ U := (H i).restrict (hinv i)
       obtain ⟨a, ha⟩ := Module.End.exists_eigenvalue R
       obtain ⟨⟨w, hwU⟩, hw⟩ := ha.exists_hasEigenvector
@@ -657,7 +657,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 theorem val_unif {w : Pl E} {ϖ : (w.adicCompletion E)ˣ} (hϖ : ordL (ϖ : w.adicCompletion E) = 1) :
     ValuativeRel.valuation (w.adicCompletion E) (ϖ : w.adicCompletion E) =
       ValuativeRel.uniformizer (w.adicCompletion E) := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have e := ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E))
     (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))
@@ -701,7 +701,7 @@ theorem v_zpow_le_one {w : Pl E} {ϖ : (w.adicCompletion E)ˣ} (hϖ : ordL (ϖ :
   have h1 : Valued.v (ϖ : w.adicCompletion E) < 1 :=
     GlobalTheory.CompanionTheory.IwahoriContraction.v_lt_one_of_ordL_eq_one w ϖ.ne_zero hϖ
   have h0 : 0 < Valued.v (ϖ : w.adicCompletion E) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
   rw [Units.val_zpow_eq_zpow_val, map_zpow₀]
   exact zpow_le_one₀ h0 h1.le hk
 
@@ -745,7 +745,7 @@ theorem iw_chain {w : Pl E} {ϖ : (w.adicCompletion E)ˣ} (hϖ : ordL (ϖ : w.ad
 
 theorem dcos_mem (n : ℕ) (w : Pl E) (t y : GLw n w) :
     (y ∈ dc (iwGL n w) t → dcos n w t y = 1) ∧ (y ∉ dc (iwGL n w) t → dcos n w t y = 0) :=
-  ⟨fun h => if_pos h, fun h => if_neg h⟩
+  ⟨fun h => ite_eq_left h, fun h => ite_eq_right h⟩
 
 theorem isHk_dcos (n : ℕ) (w : Pl E) (t : GLw n w) : IsHk (iwGL n w) (dcos n w t) := by
   refine ⟨GlobalTheory.SmGL.IwahoriOnto.isOpen_iwahori (w.adicCompletion E) (Fin n),
@@ -1099,11 +1099,11 @@ theorem dcos_inv {E : Type} [Field E] [NumberField E] [IsCMField E] (N : ℕ) (w
   unfold dcos
   constructor
   · by_cases h : ∃ x ∈ iwGL N w, ∃ z ∈ iwGL N w, g = x * t * z
-    · rw [if_pos (e1.2 h), if_pos h]
-    · rw [if_neg (fun h' => h (e1.1 h')), if_neg h]
+    · rw [ite_eq_left (e1.2 h), ite_eq_left h]
+    · rw [ite_eq_right (fun h' => h (e1.1 h')), ite_eq_right h]
   · by_cases h : ∃ x ∈ iwGL N w, ∃ z ∈ iwGL N w, g = x * t * z
-    · rw [if_pos (e2.2 h), if_pos h]
-    · rw [if_neg (fun h' => h (e2.1 h')), if_neg h]
+    · rw [ite_eq_left (e2.2 h), ite_eq_left h]
+    · rw [ite_eq_right (fun h' => h (e2.1 h')), ite_eq_right h]
 
 theorem gap_anti {N : ℕ} {x : Fin N → ℤ} (h : Gap x) : Antitone x := by
   intro i j hij
@@ -1305,7 +1305,7 @@ theorem rReadT : RReadT := by
   have hsmG : SmVec (pairRt a b w) G := ⟨I2 a b w, hIopen, hGI⟩
   have hv0 : L j' G ∈ GlobalTheory.PRep.fixed (pairAt Pa Pb w) (I2 a b w) :=
     (mem_fixed_iff' _ _ _).2 fun k hk => (hLeq j' k G hGS hsmG).symm.trans (congrArg (L j') (hGI' k hk))
-  haveI hfd : FiniteDimensional ℂ (GlobalTheory.PRep.fixed (pairAt Pa Pb w) (I2 a b w)) :=
+  have hfd : FiniteDimensional ℂ (GlobalTheory.PRep.fixed (pairAt Pa Pb w) (I2 a b w)) :=
     _root_.GlobalTheory.CompanionTheory.ExtTensorFixed.finiteDimensional_fixed_extTensor _ _ _ _ (lp Pa w) (lp Pb w) (iwGL a w) (iwGL b w)
       ((_root_.GlobalTheory.CompanionTheory.ProdAdm.isAdmissible_multiProd_smIrr (w.adicCompletion E) _ Pa.h (fun i => Pa.σ i w)).2 _ (hIa 1).2.1 (hIa 1).2.2.1)
       ((_root_.GlobalTheory.CompanionTheory.ProdAdm.isAdmissible_multiProd_smIrr (w.adicCompletion E) _ Pb.h (fun i => Pb.σ i w)).2 _ (hIb 1).2.1 (hIb 1).2.2.1)

@@ -348,7 +348,7 @@ theorem irrSm_pullback (g : ℕ) [Fact g.Prime] (F : Type) [Field F] [ValuativeR
   · have hW' : ∀ y, ∀ v ∈ W, σ.ρ y v ∈ W := fun y v hv => by
       obtain ⟨x, rfl⟩ := hsurj y
       exact hW x v hv
-    haveI : IsSimpleOrder (Subrepresentation σ.ρ) := σ.irr
+    have : IsSimpleOrder (Subrepresentation σ.ρ) := σ.irr
     let S : Subrepresentation σ.ρ := ⟨W, fun y v hv => hW' y v hv⟩
     rcases eq_bot_or_eq_top S with h | h
     · left; exact congrArg Subrepresentation.toSubmodule h
@@ -437,7 +437,7 @@ theorem act_inc {e : ℚ_[g] ≃+* F} (he : Continuous e) {ξ : Fˣ →* ℂˣ} 
     ext i j
     have hi : r + (i : ℕ) < r + t := by omega
     have hj : r + (j : ℕ) < r + t := by omega
-    simp only [br, Formalism.MainNotions.ArithmeticCylinders.entN, dif_pos (And.intro hi hj), hred]
+    simp only [br, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj), hred]
     rfl
   have hdc : PadicInt.toZMod d = c := by rw [hc, hbr, hd, RingHom.map_det]
   have hdu : IsUnit d := by
@@ -458,7 +458,7 @@ theorem act_inc {e : ℚ_[g] ≃+* F} (he : Continuous e) {ξ : Fˣ →* ℂˣ} 
       rw [← h1]
       have hi : (i : ℕ) < r + t := by omega
       have hj : (j : ℕ) < r + t := by omega
-      simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dif_pos (And.intro hi hj)]
+      simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj)]
       rfl
     have h2 : PadicInt.toZMod ((k : Matrix (Fin (r + t)) (Fin (r + t)) ℤ_[g]) (Fin.castAdd t i) (Fin.castAdd t j) -
         if i = j then 1 else 0) = 0 := by
@@ -482,16 +482,16 @@ theorem tl_one {r t : ℕ} : tl r (1 : Mt g (r + t)) = 1 := by
   ext i j
   have hi : (i : ℕ) < r + t := by omega
   have hj : (j : ℕ) < r + t := by omega
-  simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dif_pos (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
+  simp only [tl, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
 
 theorem br_one {r t : ℕ} : br r t (1 : Mt g (r + t)) = 1 := by
   ext i j
   have hi : r + (i : ℕ) < r + t := by omega
   have hj : r + (j : ℕ) < r + t := by omega
-  simp only [br, Formalism.MainNotions.ArithmeticCylinders.entN, dif_pos (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
+  simp only [br, Formalism.MainNotions.ArithmeticCylinders.entN, dite_eq_left (And.intro hi hj), Matrix.one_apply, Fin.ext_iff]
   by_cases h : (i : ℕ) = j
   · simp [h]
-  · rw [if_neg (by omega), if_neg h]
+  · rw [ite_eq_right (by omega), ite_eq_right h]
 
 theorem blk_parts {r t : ℕ} (y : Gn g t) :
     InPar r (blk r t (r + t) 1 y : Mt g (r + t)) ∧ tl r (blk r t (r + t) 1 y : Mt g (r + t)) = 1 ∧
@@ -499,7 +499,7 @@ theorem blk_parts {r t : ℕ} (y : Gn g t) :
   set M : Mt g (r + t) := fun i j : Fin (r + t) =>
     if (i : ℕ) < r ∧ (j : ℕ) < r then Formalism.MainNotions.ArithmeticCylinders.entN ((1 : Gn g r) : Mt g r) i j
     else if r ≤ (i : ℕ) ∧ r ≤ (j : ℕ) then Formalism.MainNotions.ArithmeticCylinders.entN (y : Mt g t) (i - r) (j - r) else 0 with hM
-  have h0 : InPar r M := fun i j hj hi => by rw [hM]; dsimp only; rw [if_neg (by omega), if_neg (by omega)]
+  have h0 : InPar r M := fun i j hj hi => by rw [hM]; dsimp only; rw [ite_eq_right (by omega), ite_eq_right (by omega)]
   have h1 : tl r M = 1 := by
     ext i j
     have hi : (i : ℕ) < r + t := by omega
@@ -513,7 +513,7 @@ theorem blk_parts {r t : ℕ} (y : Gn g t) :
     exact (Matrix.isUnit_iff_isUnit_det _).1 y.isUnit
   have hb : (blk r t (r + t) 1 y : Mt g (r + t)) = M := by
     show ((toG M : Gn g (r + t)) : Mt g (r + t)) = M
-    rw [toG, dif_pos hu]; rfl
+    rw [toG, dite_eq_left hu]; rfl
   rw [hb]; exact ⟨h0, h1, h2⟩
 
 theorem isParVec_of_isBlockVec : ∀ (g : ℕ) [Fact g.Prime] (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F]
@@ -633,7 +633,7 @@ theorem exists_intertwining_functional {K : Type u_1} {F : Type u_2} {V : Type u
   let s : Set (V →ₗ[ℂ] F) := {T | P T}
   let SA : Submodule A F := ⨆ T ∈ s, p T
   have hpT : ∀ T (hT : T ∈ s), p T = LinearMap.range (mkA T (hP T hT)) :=
-    fun T hT => dif_pos (hP T hT)
+    fun T hT => dite_eq_left (hP T hT)
   have hpSA : ∀ T (hT : T ∈ s), p T ≤ SA := fun T hT =>
     le_iSup₂ (f := fun T (_ : T ∈ s) => p T) T hT
   have memSA : ∀ x : F, x ∈ S ↔ x ∈ SA := by
@@ -782,7 +782,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
         rw [hxe]; ext i j; simp
       have := hW ⟨x, hx⟩ v hv
       rwa [hg] at this⟩
-    haveI := σ.irr
+    have := σ.irr
     rcases eq_bot_or_eq_top R with h | h
     · left; exact congrArg Subrepresentation.toSubmodule h
     · right; exact congrArg Subrepresentation.toSubmodule h
@@ -982,7 +982,7 @@ namespace GlobalTheory.SerChar
 open GlobalTheory.CuspRep GlobalTheory.LocLanglands GlobalTheory.SmGL GlobalTheory.SplitRead
 theorem locG_muC_eq_rcw_alt_alt : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D) (i : D.nd.Loc) (j : Fin D.R.m), j.1 + 1 = D.nd.j i → ∀ (k : Fin 2) (w : PlE D.host) (e : ℚ_[D.host.g k] ≃+* w.adicCompletion D.host.E) (rcw : ∀ n, QRep (D.host.g k) n → D.naut.LP w), (∀ n (σ : GlobalTheory.SmGL.IrrRep (GL (Fin n) (w.adicCompletion D.host.E))) (π : QRep (D.host.g k) n), Nonempty (π ≅ Rep.of (σ.ρ.comp (Matrix.GeneralLinearGroup.map e.toRingHom))) → P.T.e w (rcw n π) = _root_.GlobalTheory.CuspRep.ParLawsT.locRecT hL (D.nd.plOm.2 w) (GlobalTheory.LocLanglands.cls σ)) → D.naut.locG (D.naut.muC i) w = rcw 1 (Rep.of (Model.detRep 1 (((P.tp.tup (D.nd.mu i) j).loc w).comp (Units.map e.toMonoidHom)))) := by
   intro hPr hL D P i j hj k w e rcw hrcw
-  haveI := GlobalTheory.CuspRep.host_isCMField D.host
+  have := GlobalTheory.CuspRep.host_isCMField D.host
   have hc : GlobalTheory.NPin.IsComp (P.chr.e1 (D.naut.muC i)).1 w ((P.tp.tup (D.nd.mu i) j).loc w) := by
     rw [P.chr.muC i j hj]
     exact ⟨ParLaws.isSmoothChar_loc _ w, fun _ => rfl⟩
@@ -1431,7 +1431,7 @@ theorem serLoc : ∀ (D : D7) (S : ∀ k, @Sys (D.host.g k) ⟨D.host.g_prime k�
     (∀ k f, D.ntypes.eSer k f = @Sys.e _ ⟨D.host.g_prime k⟩ (S k) D.R.r f) → IneUnr D → LocType D S →
     SerLoc D := by
   intro D S hS hU hL i σ' k v f F hF hne
-  letI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  let : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hex : ∃ P Sig, (∀ w, isoLoc D.nd D.naut Sig w = D.ntypes.locPar σ' w) ∧
       IsBCV D.nd D.naut i P (twistIso D.nd D.naut (Sig ++ [muPart D.nd D.naut i]) D.naut.etaTinv) ∧
       ∃ F' ∈ D.naut.typeV i P,

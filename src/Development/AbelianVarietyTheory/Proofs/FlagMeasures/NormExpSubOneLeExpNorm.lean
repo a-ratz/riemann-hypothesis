@@ -173,7 +173,7 @@ theorem near_arch : ∀ (n : ℕ) (k X : Matrix (Fin n) (Fin n) ℂ) (ep : ℝ),
       have : (j : ℝ) ≤ n := by exact_mod_cast hj
       nlinarith
     have hcj : Real.exp ep ^ j ≤ 3 / 2 := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       exact (Real.exp_le_exp.mpr hje).trans hq
     have htr := norm_trace_le ((k * E) ^ j)
     have hb := hpow j

@@ -153,7 +153,7 @@ theorem cont_K [NumberField E] [IsCMField E] (φ : Sm E n) (g : GA E n) :
     Continuous fun k : Kinf E n => φ.1 (g * infGL E n (Unitary.toUnits k)) := by
   have h1 : Continuous fun k : Kinf E n => chart φ.1 g (toL (Unitary.toUnits k).val) :=
     (φ.2 g).continuousOn.comp_continuous (f := fun k : Kinf E n => toL (Unitary.toUnits k).val)
-      continuous_subtype_val fun k => val_mem_invSet _
+      continuous_subtypeVal fun k => val_mem_invSet _
   simp only [chart_val] at h1
   exact h1
 

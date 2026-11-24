@@ -342,8 +342,8 @@ theorem tr_add {k : ℕ} (p q r : QkPt D.toPre F k) :
 theorem tr_weil {k : ℕ} (hk : 1 ≤ k) (p q : QkPt D.toPre F k) (z : F) :
     WeilQkIs D' F' k (tr hD c em hB' p) (tr hD c em hB' q) (em z) ↔ WeilQkIs D.toPre F k p q z := by
   have hB := D.tau_bimult
-  letI : Algebra F F' := em.toRingHom.toAlgebra
-  haveI : IsScalarTower (FractionRing R) F F' := IsScalarTower.of_algebraMap_eq fun x => (em.commutes x).symm
+  let : Algebra F F' := em.toRingHom.toAlgebra
+  have : IsScalarTower (FractionRing R) F F' := IsScalarTower.of_algebraMap_eq fun x => (em.commutes x).symm
   unfold tr
   rw [← GlobalTheory.QkPullEquiv.weilQkIs_pullQk_iff hD _ c hB hB']
   exact (GlobalTheory.PairingCompare.weilQkIs_iff_of_algebra GlobalTheory.firstFiveLaws.1.globalFns hk

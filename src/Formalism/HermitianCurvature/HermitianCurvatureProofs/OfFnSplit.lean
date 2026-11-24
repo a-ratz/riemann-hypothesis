@@ -70,7 +70,7 @@ theorem mix_pushT (S : C.HidaSetting E Wp Wq) (v : Fin S.f) (ε : ℝ) (i : ℕ)
   have hmem : mk (List.ofFn fun b => grid b (n b)) ∈ PBD.pushU grid mk :=
     Finset.mem_image_of_mem _ (Finset.mem_univ n)
   simp only [apply_ite, Complex.ofReal_zero, zero_mul, ite_mul]
-  rw [Finset.sum_ite_eq, if_pos hmem]
+  rw [Finset.sum_ite_eq, ite_eq_left hmem]
 
 end helpers
 

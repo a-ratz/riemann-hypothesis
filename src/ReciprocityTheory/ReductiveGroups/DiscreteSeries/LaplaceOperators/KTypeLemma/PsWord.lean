@@ -112,14 +112,14 @@ lemma contDiff_lead (i : ℕ) : ContDiff ℂ ω (fun z : 𝕄 => lead i z) := by
   · have e : (fun z : 𝕄 => lead i z) = fun z : 𝕄 =>
         Matrix.det (fun a b => z (Fin.castLE h a) (Fin.castLE h b) : Fin i → Fin i → ℂ) := by
       funext z
-      simp only [lead, dif_pos h]
+      simp only [lead, dite_eq_left h]
       rfl
     rw [e]
     exact contDiff_det_k_type.comp (contDiff_pi.2 fun a => contDiff_pi.2 fun b =>
       contDiff_pi.1 (contDiff_pi.1 contDiff_id (Fin.castLE h a)) (Fin.castLE h b))
   · have e : (fun z : 𝕄 => lead i z) = fun _ => 0 := by
       funext z
-      simp only [lead, dif_neg h]
+      simp only [lead, dite_eq_right h]
     rw [e]
     exact contDiff_const
 
@@ -144,7 +144,7 @@ def Om : Set WW := {q | q.2 ∈ OmegaSet n}
 lemma isOpen_Om : IsOpen (Om : Set WW) := by
   have ho : IsOpen (OmegaSet n : Set 𝕄) := by
     show IsOpen {z : 𝕄 | ∀ i : Fin n, lead ((i : ℕ) + 1) z ≠ 0}
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i =>
       isOpen_ne_fun (contDiff_lead (n := n) _).continuous continuous_const
   exact ho.preimage continuous_snd
@@ -213,7 +213,7 @@ lemma continuousOn_G' (T : KType ε Λ) (μ : Fin n → ℤ) (D : List MM) :
     first
     | fun_prop
   have h2 : Continuous fun k : KG ε => toMK k⁻¹ := h1.comp continuous_inv
-  have hop : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have hop : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   have hC : Continuous fun k : KG ε => T.op k * projW T * T.op k⁻¹ :=
     (hop.mul continuous_const).mul (hop.comp continuous_inv)
   have hFd : ContinuousOn (fun p : 𝕄 × KG ε => fderiv ℂ (Fw μ D) (psi p.2 p.1))
@@ -236,7 +236,7 @@ lemma continuous_Fwk (μ : Fin n → ℤ) (D : List MM) {z : 𝕄} (hz : z ∈ P
 
 lemma continuous_Gk (T : KType ε Λ) (μ : Fin n → ℤ) (D : List MM) {z : 𝕄} (hz : z ∈ Ps1.Uset ε) :
     Continuous (G T μ D z) := by
-  have hop : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have hop : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   have hC : Continuous fun k : KG ε => T.op k * projW T * T.op k⁻¹ :=
     (hop.mul continuous_const).mul (hop.comp continuous_inv)
   exact (continuous_Fwk μ D hz).smul hC
@@ -247,7 +247,7 @@ lemma continuous_G'k (T : KType ε Λ) (μ : Fin n → ℤ) (D : List MM) {z : �
     first
     | fun_prop
   have h2 : Continuous fun k : KG ε => toMK k⁻¹ := h1.comp continuous_inv
-  have hop : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have hop : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   have hC : Continuous fun k : KG ε => T.op k * projW T * T.op k⁻¹ :=
     (hop.mul continuous_const).mul (hop.comp continuous_inv)
   have hps : Continuous fun k : KG ε => psi k z := by
@@ -343,7 +343,7 @@ end PsW
 
 theorem psM_word (n : ℕ) : PsMWordInterface n := by
   intro ε Λ T μ
-  haveI : CompactSpace (KG ε) := compactSpace_KG ε
+  have : CompactSpace (KG ε) := compactSpace_KG ε
   refine ⟨Ps1.Uset ε, Ps1.isOpen_Uset, Ps1.posSet_subset_Uset, fun z hz k => hz k, fun D =>
     ⟨?_, fun z hz => PsW.continuous_Fwk μ D hz, fun z hz => ?_⟩⟩
   · intro z hz

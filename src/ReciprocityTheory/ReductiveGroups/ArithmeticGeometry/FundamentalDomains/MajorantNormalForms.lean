@@ -138,7 +138,7 @@ theorem ppos_colP {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (d : Fin X.p
     intro a
     rw [← Matrix.mul_apply, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hdet),
       Matrix.one_apply]
-  simp only [hmul, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hmul, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 private lemma hermC_smul_sub_left_lemma_3 (σ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (a : ℂ)
     (p q y : Fin r → ℂ) : hermC σ G (a • p - q) y = a * hermC σ G p y - hermC σ G q y := by
@@ -284,7 +284,7 @@ theorem exists_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) :
       _ = if a = c then 1 else 0 := by
           by_cases hac : a = c
           · subst hac
-            rw [if_pos rfl]
+            rw [ite_eq_left rfl]
             have hr := (hdpos a).1
             have hre : D a a = ((D a a).re : ℂ) := Complex.ext rfl (by simp [(hdpos a).2])
             have hsq : Real.sqrt (D a a).re * Real.sqrt (D a a).re = (D a a).re :=
@@ -295,7 +295,7 @@ theorem exists_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) :
               field_simp
             rw [hre]
             exact_mod_cast h1
-          · rw [if_neg hac, hDoff a c hac, mul_zero]
+          · rw [ite_eq_right hac, hDoff a c hac, mul_zero]
 
 theorem Hf_eq_of_pos (x : Frame X.Ψ r) (τ : X.Ψ) {u : Fin r → ℂ} (hu : X.ppos x τ u = u)
     (w : Fin r → ℂ) : X.Hf x τ u w = hermC τ.1 X.Gm u w := by
@@ -322,7 +322,7 @@ theorem gram_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {B : Matri
       simp only [Data.colP] at h
       rw [show Fin.castLE X.p0_le ⟨(k : ℕ), hk⟩ = k from Fin.ext rfl] at h
       rw [h]
-    · rw [hBt k a (Fin.lt_iff_val_lt_val.mpr (by omega))]
+    · rw [hBt k a (Fin.lt_def.mpr (by omega))]
       simp
   have hzero : ∀ a : Fin r, X.p0 ≤ (a : ℕ) → X.ppos x τ (col (mat x τ * B) a) = 0 := by
     intro a ha
@@ -333,12 +333,12 @@ theorem gram_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {B : Matri
         subst h
         omega
       have h := hB a j
-      rw [if_neg hne] at h
+      rw [ite_eq_right hne] at h
       unfold Data.Hf at h
       rw [hermC_smul_sub_left_lemma_3, hermC_ppos_lemma_5 X x τ, hpos j hj] at h
       linear_combination h
     have hBinv : ∀ i j : Fin r, j < i → B⁻¹ i j = 0 := by
-      haveI : Invertible B := Matrix.invertibleOfIsUnitDet B (isUnit_iff_ne_zero.mpr hBd)
+      have : Invertible B := Matrix.invertibleOfIsUnitDet B (isUnit_iff_ne_zero.mpr hBd)
       intro i j hij
       exact Matrix.blockTriangular_inv_of_blockTriangular (b := id)
         (fun i' j' h' => hBt i' j' h' : B.BlockTriangular id) hij
@@ -356,7 +356,7 @@ theorem gram_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {B : Matri
       by_cases hj : (j : ℕ) < X.p0
       · rw [h1 j hj, mul_zero]
       · rw [hBinv j (Fin.castLE X.p0_le b)
-          (Fin.lt_iff_val_lt_val.mpr (by simp only [Fin.coe_castLE]; omega)), map_zero, zero_mul]
+          (Fin.lt_def.mpr (by simp only [Fin.val_castLE]; omega)), map_zero, zero_mul]
     unfold Data.ppos
     simp only [h2, zero_mul, Finset.sum_const_zero, zero_smul]
   ext a c
@@ -366,10 +366,10 @@ theorem gram_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {B : Matri
   by_cases ha : (a : ℕ) < X.p0
   · rw [Hf_eq_of_pos X x τ (hpos a ha)] at hBac
     rw [hBac]
-    simp only [sgn, if_pos ha, Complex.ofReal_one]
+    simp only [sgn, ite_eq_left ha, Complex.ofReal_one]
   · rw [Hf_eq_of_zero X x τ (hzero a (not_lt.mp ha))] at hBac
     rw [neg_eq_iff_eq_neg.mp hBac]
-    simp only [sgn, if_neg ha, Complex.ofReal_neg, Complex.ofReal_one]
+    simp only [sgn, ite_eq_right ha, Complex.ofReal_neg, Complex.ofReal_one]
     split_ifs <;> simp
 
 theorem maj_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {B : Matrix (Fin r) (Fin r) ℂ}
@@ -392,7 +392,7 @@ theorem maj_normal {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) {B : Matrix
   rw [maj_eq_lemma_4 X x τ v]
   conv_lhs => rw [hv]
   rw [Hf_sum_sum]
-  simp only [hB, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hB, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [Complex.re_sum]
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [Complex.mul_conj, Complex.ofReal_re, Complex.normSq_eq_norm_sq]

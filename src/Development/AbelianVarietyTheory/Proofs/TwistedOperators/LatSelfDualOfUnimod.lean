@@ -231,7 +231,7 @@ theorem isFrame_lat (β : GL (Fin n) 𝒜) : IsFrame β (lat β) := lat_span β
 
 theorem eq_lat {β : GL (Fin n) 𝒜} {Λ : Submodule (𝓞 E) (Fin n → E)} (h : IsFrame β Λ)
     (hΛ : Submodule.IsFullLattice E Λ) : Λ = lat β := by
-  letI := hΛ
+  let := hΛ
   ext x
   rw [mem_lat, ← h]
   conv_lhs => rw [← global_lattice_one_holds F E (Fin n) Λ (Module.Finite.iff_fg.2 hΛ.fg) (Submodule.IsFullLattice.span_eq_top (A := E) (M := Λ))]
@@ -371,8 +371,8 @@ theorem exists_idem (S : Set (Pl D.host.E)) :
     change toAd D e Q = _
     rw [he]
     rfl
-  refine ⟨e, cpt_ext fun Q => ?_, (mem_OA_iff e).2 fun Q => ?_, fun Q hQ => by rw [h, if_pos hQ],
-    fun Q hQ => by rw [h, if_neg hQ]⟩
+  refine ⟨e, cpt_ext fun Q => ?_, (mem_OA_iff e).2 fun Q => ?_, fun Q hQ => by rw [h, ite_eq_left hQ],
+    fun Q hQ => by rw [h, ite_eq_right hQ]⟩
   · rw [map_mul, h]
     split_ifs <;> simp
   · rw [h]
@@ -458,7 +458,7 @@ theorem exists_pow_mul_mem {N : ℕ} (z : Ef D)
     obtain ⟨k, hk⟩ := exists_pow_lt₀ hv (Units.mk0 _ h0)⁻¹
     refine ⟨k, fun _ => ?_⟩
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_pow]
-    rw [Units.val_inv_eq_inv_val, Units.val_mk0, ← one_mul (_⁻¹), lt_mul_inv_iff₀ (zero_lt_iff.2 h0)] at hk
+    rw [Units.val_inv_eq_inv_val, Units.val_mk0, ← one_mul (_⁻¹), lt_mul_inv_iff₀ (pos_iff_ne_zero.2 h0)] at hk
     exact hk.le
   choose k hk using h1
   obtain ⟨K, hK⟩ := (hfin.image k).bddAbove
@@ -523,7 +523,7 @@ theorem isLattice_crdLat (V : HSp D) {L : Submodule (𝓞 D.host.E) V.V} (h : Su
 
 theorem isFullLattice_crdLat (V : HSp D) :
     Submodule.IsFullLattice D.host.E (crdLat V V.L0) := by
-  letI := isLattice_crdLat V V.standardTuple_isLattice
+  let := isLattice_crdLat V V.standardTuple_isLattice
   constructor
   have hspan : Submodule.span D.host.E (V.L0 : Set V.V) = ⊤ := by
     let W := Submodule.span D.host.E (V.L0 : Set V.V)
@@ -572,7 +572,7 @@ theorem isSD_one {V : HSp D} {β : GL (Fin V.rank) (Ef D)} (h : crdLat V V.L0 = 
 
 theorem exists_base (V : HSp D) : ∃ β : GL (Fin V.rank) (Ef D), crdLat V V.L0 = lat β := by
   have hL := isFullLattice_crdLat V
-  letI := hL
+  let := hL
   obtain ⟨β, hβ⟩ := GlobalTheory.AdelicFrame.exists_isFrame D.host.F _ hL.fg (Submodule.IsFullLattice.span_eq_top (A := D.host.E) (M := crdLat V V.L0))
   exact ⟨β, eq_lat hβ hL⟩
 

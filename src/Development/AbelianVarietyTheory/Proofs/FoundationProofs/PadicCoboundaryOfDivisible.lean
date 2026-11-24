@@ -128,8 +128,8 @@ theorem mem_coboundaries_of_forall_pow : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type
     {β | Continuous β ∧ d1 (ρr s) β = fun p => PadicInt.toZModPow s (z p)}
   have hα : ∀ s, (α (s + 1)).Finite := by
     intro s
-    haveI : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-    haveI := hfin (s + 1) (Nat.succ_pos s)
+    have : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have := hfin (s + 1) (Nat.succ_pos s)
     exact finite_primitives (ρr (s + 1)) _
   let T : ℕ → Set (Γ → ℤ_[l]) := fun r =>
     ⋂ s, ⋂ (_ : s ≤ r), (fun (b : Γ → ℤ_[l]) g => PadicInt.toZModPow (s + 1) (b g)) ⁻¹' α (s + 1)
@@ -158,7 +158,7 @@ theorem mem_coboundaries_of_forall_pow : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type
   intro n
   cases n with
   | zero =>
-    haveI : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
+    have : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
     exact Subsingleton.elim _ _
   | succ n =>
     have := (hb' n).2

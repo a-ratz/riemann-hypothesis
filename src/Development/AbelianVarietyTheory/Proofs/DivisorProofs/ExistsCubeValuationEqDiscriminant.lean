@@ -95,9 +95,9 @@ theorem eq_of_sq_mul_eq_cube {α : Type*} [LinearOrderedCommGroupWithZero α] {a
     (ha : a ≤ c) (hb : b ≤ c) (h : a ^ 2 * b = c ^ 3) : a = c := by
   by_contra hne
   have hlt : a < c := lt_of_le_of_ne ha hne
-  have hc0 : 0 < c := zero_lt_iff.mpr hc
+  have hc0 : 0 < c := pos_iff_ne_zero.mpr hc
   have h1 : a ^ 2 * b ≤ a ^ 2 * c := by gcongr
-  have h2 : a ^ 2 < c ^ 2 := pow_lt_pow_left₀ hlt zero_le' two_ne_zero
+  have h2 : a ^ 2 < c ^ 2 := pow_lt_pow_left₀ hlt zero_le two_ne_zero
   have h3 : a ^ 2 * c < c ^ 2 * c := mul_lt_mul_of_pos_right h2 hc0
   have h4 : c ^ 2 * c = c ^ 3 := by rw [pow_succ c 2]
   rw [h4] at h3
@@ -145,7 +145,7 @@ theorem weierstrassP_sub_two_mul_unit : ∀ (L : PeriodPair) (β u : ℂ) (V : V
     intro h
     rw [h, zero_pow (by norm_num)] at hu
     exact latticeCurve_Δ_ne_zero L ((Valuation.zero_iff _).mp hu.symm)
-  have hv2 : 0 < V.valuation u ^ 2 := zero_lt_iff.mpr (pow_ne_zero 2 hv)
+  have hv2 : 0 < V.valuation u ^ 2 := pos_iff_ne_zero.mpr (pow_ne_zero 2 hv)
   rw [← ValuationSubring.valuation_le_one_iff, map_div₀, map_pow, div_le_one₀ hv2] at m1 m2
   have hval := congrArg V.valuation hd
   rw [map_mul, map_pow, Valuation.map_neg, map_mul, d1, d2,

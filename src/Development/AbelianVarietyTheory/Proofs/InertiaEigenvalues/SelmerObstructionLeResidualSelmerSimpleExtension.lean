@@ -574,7 +574,7 @@ theorem selAllLeInf : Formalism.GaloisCohomology.SelAllLeInf := by
     intro v hv
     have h1 := hL v hv (hloc v)
     have h2 : (Submodule.Quotient.mk (restrictCocycles1 _ ((Ine (F := F) (A.1 v)).subgroupOf (Dec (F := F) (A.1 v))).subtype
-        continuous_subtype_val (restrictCocycles1 _ (Dec (F := F) (A.1 v)).subtype continuous_subtype_val z)) :
+        continuous_subtypeVal (restrictCocycles1 _ (Dec (F := F) (A.1 v)).subtype continuous_subtypeVal z)) :
         H1 _) = 0 := h1
     have h3 := (Submodule.Quotient.mk_eq_zero _).1 h2
     rw [Submodule.mem_comap] at h3
@@ -818,7 +818,7 @@ theorem card_sel_of_euler [Fintype I] [∀ i, Finite (H1 (ρ.comp (φ i)))] (L :
       (∏ i, Nat.card (H0 (ρ.comp (φ i)))) * (∏ i, Nat.card (H2 (ρ.comp (φ i)))) * m ^ 2)
     (hL : ∏ i, Nat.card (L i) = (∏ i, Nat.card (H0 (ρ.comp (φ i)))) * m) :
     Finite (Cok ρ φ hφ L) ∧ Nat.card (Sel ρ φ hφ L) = Nat.card (Sha2 ρ φ hφ) * Nat.card (Cok ρ φ hφ L) := by
-  haveI : Finite ((∀ v, H1 (ρ.comp (φ v))) ⧸ Submodule.pi Set.univ L) :=
+  have : Finite ((∀ v, H1 (ρ.comp (φ v))) ⧸ Submodule.pi Set.univ L) :=
     Finite.of_surjective _ (Submodule.Quotient.mk_surjective _)
   refine ⟨Finite.of_surjective _ (Submodule.Quotient.mk_surjective _), ?_⟩
   let r2 : H2 ρ →ₗ[R] ∀ v, H2 (ρ.comp (φ v)) := LinearMap.pi fun v => resH2 ρ (φ v) (hφ v)
@@ -875,11 +875,11 @@ theorem card_sel (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (hLE :
   obtain ⟨f1, f2, eG⟩ := GlobalTheory.EulerScalars.global_euler_char hGF hGE F Ω l Λ M S ρ hl hS hc
   have hloc := fun v : Ab F l => GlobalTheory.LocEulerScalars.localEulerChar_above hLF hLE F Ω l Λ M (A.1 v.1) v.1 (ρ.comp (locAb l S A v)) hl (A.2 v.1) v.2
     (hc.comp (((continuous_locAb l S A v).comp continuous_fst).prodMk continuous_snd))
-  haveI := fun v => (hloc v).1
+  have := fun v => (hloc v).1
   refine ⟨f1, inferInstance, card_sel_of_euler _ _ L _ (fun x => ?_) ?_ ?_ hL⟩
   · obtain ⟨y, hy⟩ := GlobalTheory.LocTwoOnto.loc2_surjective hPT F Ω l Λ M S (fun v => A.1 v.1) ρ hl hS (fun v => A.2 v.1) hc hd
       fun v => if h : ((l : ℕ) : 𝓞 F) ∈ v.1.asIdeal then x ⟨v.1, h⟩ else 0
-    exact ⟨y, fun v => (hy ⟨v.1, hS _ v.2⟩).trans (dif_pos v.2)⟩
+    exact ⟨y, fun v => (hy ⟨v.1, hS _ v.2⟩).trans (dite_eq_left v.2)⟩
   · rw [eG, h0, Nat.card_unique (α := (⊥ : Submodule Λ M)), one_mul]
   · rw [Finset.prod_congr rfl fun v _ => (hloc v).2.2, Finset.prod_mul_distrib, Finset.prod_mul_distrib,
       Finset.prod_pow_eq_pow_sum, GlobalTheory.Proof.LocalDegreeSum.sum_locDeg F l, IsTotallyComplex.finrank, ← pow_mul, mul_comm 2]
@@ -942,7 +942,7 @@ theorem inf_mem_iff (x : H1 ρ) :
   obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
   refine (mem_selAll_bkCond _ _ _ _ _ _).trans (Iff.trans ?_ (mem_Sel ρ (locAb l S A) (continuous_locAb l S A) _ _).symm)
   refine ⟨fun h v => h.1 v.1 v.2, fun h => ⟨fun v hv => h ⟨v, hv⟩, fun v hv hv' => ?_⟩⟩
-  refine (mk_eq_zero_iff _ (restrictCocycles1 _ _ continuous_subtype_val (restrictCocycles1 _ _ continuous_subtype_val
+  refine (mk_eq_zero_iff _ (restrictCocycles1 _ _ continuous_subtypeVal (restrictCocycles1 _ _ continuous_subtypeVal
     (restrictCocycles1 ρ (toGS Ω _) (continuous_toGS Ω _) z)))).2 ⟨0, fun g => ?_⟩
   have h1 : toGS Ω (S : Set (HeightOneSpectrum (𝓞 F))) (g.1.1 : G F Ω) = 1 :=
     (QuotientGroup.eq_one_iff _).2 (ine_le_NS (fun h => ((hS v).1 h).elim hv hv') (A.2 v) g.2)
@@ -960,7 +960,7 @@ theorem exists_inf (hc : ContAction ρ) (x : H1 (ρ.comp (toGS Ω _)))
       resH1 ρ (toGS Ω _) (continuous_toGS Ω _) y.1 = x := by
   obtain ⟨y, rfl⟩ := GlobalTheory.SelInfl.selAllLeInf F Ω S Λ M ρ hc A _ (fun v hv => by
     unfold Formalism.GaloisCohomology.bkCond
-    rw [if_neg fun h => hv ((hS v).2 (.inl h)), if_neg fun h => hv ((hS v).2 (.inr h))]) hx
+    rw [ite_eq_right fun h => hv ((hS v).2 (.inl h)), ite_eq_right fun h => hv ((hS v).2 (.inr h))]) hx
   exact ⟨⟨y, (inf_mem_iff l A hS ρ L y).1 hx⟩, rfl⟩
 
 end Transfer
@@ -1015,7 +1015,7 @@ theorem obstruction_le (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) 
       Nat.card (↥(SelAll ρ'' A (bkCond ρ'' A l Sig L'')) ⧸ ((SelAll ρ A (bkCond ρ A l Sig L)).map
         (mapH1 ρ ρ'' w continuous_of_discreteTopology hw)).comap (SelAll ρ'' A (bkCond ρ'' A l Sig L'')).subtype) ≤
         Nat.card (SelAll ρ' A (bkCond ρ' A l Sig L')) := by
-  haveI : Fintype (Ab F l) := (finite_above (F := F) l).fintype
+  have : Fintype (Ab F l) := (finite_above (F := F) l).fintype
   obtain ⟨S, hS⟩ : ∃ S : Finset (HeightOneSpectrum (𝓞 F)), ∀ v, v ∈ S ↔ ((l : ℕ) : 𝓞 F) ∈ v.asIdeal ∨ v ∈ Sig :=
     ⟨((finite_above (F := F) l).union hSig).toFinset, fun v => Set.Finite.mem_toFinset _⟩
   have hur' : ∀ v ∉ (S : Set (HeightOneSpectrum (𝓞 F))), ∀ B : ValuationSubring Ω, IsPlaceOver B v →
@@ -1095,9 +1095,9 @@ theorem smul_eq_zero_of_simple {K : Type} [AddCommGroup K] [Module Λ K] (hK : I
 
 theorem finite_of_simple [Module.Finite (X.O0 i) Λ] {K : Type} [AddCommGroup K] [Module Λ K]
     (hK : IsSimpleModule Λ K) : Finite K := by
-  haveI := X.twistBaseCoefficientRing_residueField_finite i
-  haveI : Module.Finite (ResidueField (X.O0 i)) (ResidueField Λ) := inferInstance
-  haveI : Finite (ResidueField Λ) := Module.finite_of_finite (ResidueField (X.O0 i))
+  have := X.twistBaseCoefficientRing_residueField_finite i
+  have : Module.Finite (ResidueField (X.O0 i)) (ResidueField Λ) := inferInstance
+  have : Finite (ResidueField Λ) := Module.finite_of_finite (ResidueField (X.O0 i))
   obtain ⟨I, hI, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.1 hK
   rw [eq_maximalIdeal hI] at e
   exact Finite.of_equiv (ResidueField Λ) e.symm.toEquiv
@@ -1113,8 +1113,8 @@ theorem l_mem : ((X.l i : ℕ) : Λ) ∈ maximalIdeal Λ := by
   rwa [map_natCast] at this
 
 theorem finite_Spl : (Spl i).Finite := by
-  refine Set.Finite.subset ((Set.finite_iUnion fun k => ?_).union (X.pD i).finite_toSet) Set.diff_subset
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  refine Set.Finite.subset ((Set.finite_iUnion fun k => ?_).union (X.pD i).finite_toSet) Set.sdiff_subset
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   exact finite_above _
 
 end Main
@@ -1122,8 +1122,8 @@ end Main
 theorem selObs : PoitouTateTotallyComplex → CohDimTwo → LocalFiniteness → LocalTateDuality → LocalEulerChar → GlobalFiniteness → GlobalEulerChar → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i) (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [Algebra (X.O0 i) Λ] (κ : GE N →* Λˣ) (Q : Finset (PlE D.host)), Setup bkP i s κ Q → NoInv i s κ → LocSat bkP i s κ → LocCount bkP i s κ → SelObs bkP i s κ Q := by
   intro hPT _ hLF _ hLE hGF hGE D N X bkP i s Λ _ _ _ κ Q h h0 _ hcount K B B'' _ _ _ _ _ _ _ _ _ _ _ _ hK hB f g hf hex hg
   obtain ⟨hG, hloc, hfin, hκ, -, htriv, -, hur⟩ := h
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  haveI := finite_of_simple i hK
+  have : IsCMField D.host.E := D.host.isCMField_hostE
+  have := finite_of_simple i hK
   have hkill := smul_eq_zero_of_simple hK
   have hKt : Tors Λ K := fun k => ⟨1, fun x hx => hkill x (by simpa using hx) k⟩
   have hB'' : Tors Λ B'' := fun b => by

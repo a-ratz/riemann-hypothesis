@@ -164,8 +164,8 @@ theorem jhMult_eq_zero_of_isCusp : ∀ {k : Type} [Field k] [ValuativeRel k] [To
   have hs2 := isSubquotient_carry (d := fun a => (x a).1) (piTensor fun a => (x a).rep) _
     (Equiv.ext fun y => by simp [stdBlocks, GlobalTheory.CompanionTheory.BZInd.stdE]) hsub
   obtain ⟨A, p, hp⟩ := hs2
-  haveI : ρ₀.rep.IsIrreducible := ρ₀.2.rep.irr
-  haveI := isIrreducible_carry (d := fun a => (x a).1) _ (GlobalTheory.CompanionTheory.FrobJm.piTensor_rep_isIrreducible hA x)
+  have : ρ₀.rep.IsIrreducible := ρ₀.2.rep.irr
+  have := isIrreducible_carry (d := fun a => (x a).1) _ (GlobalTheory.CompanionTheory.FrobJm.piTensor_rep_isIrreducible hA x)
   exact GroundTheory.Automorphic.Parabolic.not_surjective_of_isIrreducible (π := ρ₀.rep) ρ₀.2.rep.smooth
     (isSupercuspidal_of_isCuspidal hc.2) (exists_pos_ne h2 hpos)
     (isSmooth_carry _ (isSmooth_piTensor fun a => (x a).2.rep.smooth)) A p hp

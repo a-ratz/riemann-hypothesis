@@ -114,9 +114,9 @@ theorem exists_im_pos (E : Type) [Field E] [NumberField E] [IsCMField E] (I : Ty
   have hfc : ∀ i, Continuous (f i) := by
     intro i
     by_cases h : (InfinitePlace.mk (φ i)).embedding = φ i
-    · simp only [f, h, if_true]
+    · simp only [f, h, ite_true]
       exact Complex.continuous_im.comp (continuous_apply _)
-    · simp only [f, h, if_false]
+    · simp only [f, h, ite_false]
       exact (Complex.continuous_im.comp (continuous_apply _)).neg
   let U : Set (InfinitePlace E → ℂ) := {z | ∀ i, 0 < f i z}
   have hU : IsOpen U := by
@@ -149,7 +149,7 @@ theorem exists_im_pos (E : Type) [Field E] [NumberField E] [IsCMField E] (I : Ty
   · simpa [f, h] using this
   · by_cases h' : (InfinitePlace.mk (φ i)).embedding = φ i
     · simpa [f, h'] using this
-    · simp only [f, h', if_false] at this
+    · simp only [f, h', ite_false] at this
       rw [h, ComplexEmbedding.conjugate_coe_eq, Complex.conj_im] at this
       linarith
 

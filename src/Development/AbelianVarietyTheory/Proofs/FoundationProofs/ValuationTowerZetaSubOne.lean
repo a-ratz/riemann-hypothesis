@@ -82,7 +82,7 @@ theorem valuation_zeta_sub_one : ∀ (p : ℕ) [hpf : Fact p.Prime] (Ω : Type) 
     intro n
     have h1 : v (T.ζ n) ^ (p ^ n) = 1 := by
       rw [← v.map_pow, (T.prim n).pow_eq_one, v.map_one]
-    exact (pow_eq_one_iff_of_nonneg (zero_le') (pow_ne_zero _ hp.ne_zero)).1 h1
+    exact (pow_eq_one_iff_of_nonneg (zero_le) (pow_ne_zero _ hp.ne_zero)).1 h1
 
   have hlt : ∀ n, v (T.ζ n - 1) < 1 := by
     intro n
@@ -127,7 +127,7 @@ theorem valuation_zeta_sub_one : ∀ (p : ℕ) [hpf : Fact p.Prime] (Ω : Type) 
   have ha1 : v (T.ζ 1 - 1) ≤ 1 := (hlt 1).le
   have hp3 : 2 ≤ p - 1 := by have := hp.two_le; omega
   rw [← h1]
-  calc v (T.ζ 1 - 1) ^ (p - 1) ≤ v (T.ζ 1 - 1) ^ 2 := pow_le_pow_of_le_one (zero_le') ha1 hp3
+  calc v (T.ζ 1 - 1) ^ (p - 1) ≤ v (T.ζ 1 - 1) ^ 2 := pow_le_pow_of_le_one (zero_le) ha1 hp3
     _ = v (T.ζ 1 - 1) * v (T.ζ 1 - 1) := sq _
     _ ≤ v (T.ζ 1 - 1) * v (T.ζ n - 1) := by gcongr
 

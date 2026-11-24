@@ -206,7 +206,7 @@ theorem _root_.GlobalTheory.AdLat.scale_latOf : ∀ (F E : Type) [Field F] [Numb
         exact Submodule.subset_span ⟨a, ha, b • v, smul_mem_latOf_of_smul_mem (hinv b hb) G hv, rfl⟩
       have h1 : (1 : E) ∈ (I : Submodule (𝓞 E) E) *
           ((I⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) := by
-        rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hI]
+        rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hI]
         exact (FractionalIdeal.mem_one_iff _).2 ⟨1, map_one _⟩
       have h2 : (1 : E) • v ∈ N := hle h1
       rwa [one_smul] at h2

@@ -168,7 +168,7 @@ theorem exists_primitive_data {R B : Type*} [CommRing R] [IsDomain R] [IsIntegra
       apply AlgHom.ext_of_adjoin_eq_top hx
       rintro _ ⟨j, rfl⟩
       exact h j
-    apply AlgHom.coe_ringHom_injective
+    apply AlgHom.toRingHom_injective
     apply IsLocalization.ringHom_ext (Algebra.algebraMapSubmonoid B (nonZeroDivisors R))
     exact RingHom.ext fun b => AlgHom.congr_fun h1 b
   obtain ⟨c, hc⟩ := exists_linear_primitive ιK (fun j => algebraMap B L (x j)) hxgen

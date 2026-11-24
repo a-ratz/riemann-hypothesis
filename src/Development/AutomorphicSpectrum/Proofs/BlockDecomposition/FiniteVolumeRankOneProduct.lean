@@ -113,20 +113,20 @@ theorem density_close {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
         x * (lv V).toReal| ≤ ε * (lv V).toReal) :
     |x - 1| ≤ δ := by
   obtain ⟨r1, r2, r3, r4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := r1
+  have := r2
+  have := r3
+  have := r4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨a1, a2, a3, a4, -, -, -, a8, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI := a1
-  haveI := a2
-  haveI := a3
-  haveI := a4
-  haveI := a8 1 M
-  haveI := hlv.1
+  have := a1
+  have := a2
+  have := a3
+  have := a4
+  have := a8 1 M
+  have := hlv.1
   obtain ⟨-, hW, -⟩ := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Fv F v) d b lv hlv.1
-  haveI := hW 1 M
+  have := hW 1 M
   obtain ⟨n1, n2⟩ := GlobalTheory.CompanionTheory.SW.NullV.null_nonunits F E σ hσ M J hJ (by omega) v
     (coordW (Fv F v) b lv 1 M) lv (hW 1 M) hlv.1
   have hmv' : IsGramFib (Fv F v) σ J 1 (coordW (Fv F v) b lv 1 M)

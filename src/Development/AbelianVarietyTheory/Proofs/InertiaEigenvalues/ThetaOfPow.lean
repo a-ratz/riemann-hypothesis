@@ -52,8 +52,8 @@ theorem lift {F : Type} [Field F] {m M : ℕ} (hM : 0 < M) (hm : m ∣ M) {ξ ζ
     (hζ : IsPrimitiveRoot ζ m) : ∃ ξ' : F, IsPrimitiveRoot ξ' M ∧ ξ' ^ (M / m) = ζ := by
   obtain ⟨c, rfl⟩ := hm
   have hm0 : 0 < m := Nat.pos_of_mul_pos_right hM
-  haveI : NeZero m := ⟨hm0.ne'⟩
-  haveI : NeZero (m * c) := ⟨hM.ne'⟩
+  have : NeZero m := ⟨hm0.ne'⟩
+  have : NeZero (m * c) := ⟨hM.ne'⟩
   have hη : IsPrimitiveRoot (ξ ^ c) m := hξ.pow hM (mul_comm _ _)
   obtain ⟨a, -, hac, ha⟩ := (hη.isPrimitiveRoot_iff).1 hζ
   obtain ⟨U, hU⟩ := ZMod.unitsMap_surjective (n := m) (m := m * c) (Dvd.intro _ rfl) (ZMod.unitOfCoprime a hac)
@@ -73,11 +73,11 @@ theorem pos {d : ℕ} (hd : 0 < d) : 0 < g ^ d - 1 :=
 theorem dv {d e : ℕ} (h : d ∣ e) : g ^ d - 1 ∣ g ^ e - 1 := Nat.pow_sub_one_dvd_pow_sub_one g h
 
 theorem exprim {d : ℕ} (hd : 0 < d) : ∃ ξ : Formalism.CyclotomicNorms.Fbar g, IsPrimitiveRoot ξ (g ^ d - 1) := by
-  haveI : NeZero (((g ^ d - 1 : ℕ)) : Formalism.CyclotomicNorms.Fbar g) := ⟨by
+  have : NeZero (((g ^ d - 1 : ℕ)) : Formalism.CyclotomicNorms.Fbar g) := ⟨by
     rw [Nat.cast_sub (Nat.one_le_pow _ _ hg.out.pos), Nat.cast_pow, CharP.cast_eq_zero (Formalism.CyclotomicNorms.Fbar g) g, zero_pow hd.ne']
     simp⟩
-  haveI : NeZero (g ^ d - 1) := ⟨(pos g hd).ne'⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot _ _
+  have : NeZero (g ^ d - 1) := ⟨(pos g hd).ne'⟩
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot _ _
 
 theorem chain : ∃ z : ℕ → Formalism.CyclotomicNorms.Fbar g, ∀ n, IsPrimitiveRoot (z n) (g ^ n.factorial - 1) ∧
     z (n+1) ^ ((g ^ (n+1).factorial - 1) / (g ^ n.factorial - 1)) = z n := by
@@ -122,9 +122,9 @@ theorem gensys : ∃ ζ : ℕ → Formalism.CyclotomicNorms.Fbar g, ∀ d, 0 < d
 theorem level (x : Formalism.CyclotomicNorms.Fbar g) (hx : x ≠ 0) : ∃ d, 0 < d ∧ x ^ (g ^ d - 1) = 1 := by
   have hint : IsIntegral (ZMod g) x := Algebra.IsIntegral.isIntegral x
   let K := IntermediateField.adjoin (ZMod g) {x}
-  haveI : FiniteDimensional (ZMod g) K := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  letI : Fintype K := Fintype.ofFinite K
+  have : FiniteDimensional (ZMod g) K := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  let : Fintype K := Fintype.ofFinite K
   have hcard : Fintype.card K = g ^ Module.finrank (ZMod g) K := by
     rw [Module.card_eq_pow_finrank (K := ZMod g), ZMod.card]
   let y : K := ⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩
@@ -144,7 +144,7 @@ theorem E_pow {d d' : ℕ} (h : d ∣ d') (hd : 0 < d) (hd' : 0 < d') : E g d' ^
   have h2 := pos g hd'
   have hc0 : c ≠ 0 := by rintro rfl; omega
   unfold E
-  rw [← Complex.exp_nat_mul, hc, Nat.mul_div_cancel_left _ h1]
+  rw [← Complex.exp_natCast_mul, hc, Nat.mul_div_cancel_left _ h1]
   congr 1
   have : ((g ^ d - 1 : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 h1.ne'
   have : (c : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hc0
@@ -179,7 +179,7 @@ theorem inhab : Nonempty (LabelDatum g) := by
   have ex : ∀ x, x ≠ 0 → ∃ c, R x c := by
     intro x hx
     obtain ⟨d, hd, h⟩ := level g x hx
-    haveI : NeZero (g ^ d - 1) := ⟨(pos g hd).ne'⟩
+    have : NeZero (g ^ d - 1) := ⟨(pos g hd).ne'⟩
     obtain ⟨j, -, hj⟩ := (hζ d hd).1.eq_pow_of_pow_eq_one h
     exact ⟨_, d, hd, j, hj.symm, rfl⟩
   choose! t ht using ex

@@ -70,7 +70,7 @@ theorem twLamQB_red_one (ξ : (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ) {kj n' N : ℕ}
       funext l
       simp [Loc.eN, Pi.single_apply, Fin.ext_iff]
     rw [he]
-    simp only [Loc.atN, dif_pos (hlt s)]
+    simp only [Loc.atN, dite_eq_left (hlt s)]
     rfl
   have hent' := fun s t : Fin (n' - kj) =>
     hent ⟨kj + s.1, hlt s⟩ ⟨kj + t.1, hlt t⟩ (by simp) (hlt' s) (by simp) (hlt' t)
@@ -109,7 +109,7 @@ theorem twRed0_of_val {w : E} (hw : P.valuation E w < 1) : IntAt P w ∧ redP P 
     rw [hm, WithZero.exp_le_exp] at h3
     push_cast at h3
     omega
-  obtain ⟨t, htJ, htP⟩ := SetLike.not_le_iff_exists.mp hJP
+  obtain ⟨t, htJ, htP⟩ := IsConcreteLE.not_le_iff_exists.mp hJP
   have htE : algebraMap (𝓞 E) E t ≠ 0 := by
     have ht0 : t ≠ 0 := fun h => htP (h ▸ P.asIdeal.zero_mem)
     rwa [Ne, map_eq_zero_iff _ (IsFractionRing.injective (𝓞 E) E)]

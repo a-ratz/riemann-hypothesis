@@ -113,7 +113,7 @@ theorem exists_hasDerivAt (M : ℝ → 𝔸) (hc : Continuous M) (h0 : M 0 = 1)
 theorem exists_exp_eq (M : ℝ → 𝔸) (hc : Continuous M) (h0 : M (0 : ℝ) = (1 : 𝔸))
     (hadd : ∀ s t : ℝ, M (s + t) = M s * M t) :
     ∃ X : 𝔸, ∀ t : ℝ, NormedSpace.exp (t • X) = M t := by
-  letI : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
+  let : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   obtain ⟨X, hX⟩ := exists_hasDerivAt M hc h0 hadd
   refine ⟨X, fun t => ?_⟩
   have hN : ∀ u : ℝ, HasDerivAt (fun v => M v * NormedSpace.exp (v • (-X))) 0 u := fun u => by

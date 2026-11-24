@@ -140,14 +140,14 @@ theorem key (hU : IsURepOn (UJset ε) σ) (hD : Dens ε σ) {E : Fin n → Fin n
   obtain ⟨Sv, fv, hv, stv⟩ : IsKFin ε σ (v : H) := v.2
   obtain ⟨Sy, fy, hy, sty⟩ : IsKFin ε σ (y : H) := y.2
   let W : Submodule ℂ H := Sv ⊔ Sy
-  haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_sup Sv Sy
+  have : FiniteDimensional ℂ W := Submodule.finiteDimensional_sup Sv Sy
   have stW : ∀ g ∈ Kset ε, ∀ x ∈ W, σ g x ∈ W := by
     intro g hg x hx
     obtain ⟨a, ha, b, hb, rfl⟩ := Submodule.mem_sup.mp hx
     rw [map_add (f := _)]
     exact Submodule.add_mem_sup (stv g hg a ha) (sty g hg b hb)
   have hWk : W ≤ kfin ε σ := fun x hx => ⟨W, inferInstance, hx, stW⟩
-  have hclosed : IsClosed (W : Set H) := Submodule.closed_of_finiteDimensional W
+  have hclosed : IsClosed (W : Set H) := Submodule.isClosed_of_finiteDimensional W
   have hvW : (v : H) ∈ W := Submodule.mem_sup_left hv
   have hyW : (y : H) ∈ W := Submodule.mem_sup_right hy
   have hder : ∀ x : kfin ε σ,

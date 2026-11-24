@@ -64,8 +64,8 @@ theorem residue_pow_and_roots : ∀ (S : Type) [CommRing S] [IsLocalRing S] [Fin
   let s := ResidueField.mapEquiv e
   have hs : ∀ x, s (residue S x) = residue S (τ x) := fun x => rfl
   obtain ⟨p, hp⟩ := CharP.exists (ResidueField S)
-  haveI := hp
-  haveI : Fact p.Prime := ⟨CharP.char_is_prime (ResidueField S) p⟩
+  have := hp
+  have : Fact p.Prime := ⟨CharP.char_is_prime (ResidueField S) p⟩
   obtain ⟨-, hsq⟩ := GlobalTheory.UnitLemma.UnrExt.invol_eq_pow p hM s (fun x => by
     obtain ⟨x, rfl⟩ := residue_surjective x
     rw [hs, hs, hττ]) (by
@@ -78,7 +78,7 @@ theorem residue_pow_and_roots : ∀ (S : Type) [CommRing S] [IsLocalRing S] [Fin
     omega
   set N := M ^ 2 - 1 with hN
   have hNk : (N : ResidueField S) ≠ 0 := by
-    haveI := Fintype.ofFinite (ResidueField S)
+    have := Fintype.ofFinite (ResidueField S)
     have h0 : ((N + 1 : ℕ) : ResidueField S) = 0 := by
       rw [show N + 1 = M ^ 2 by omega, ← hM, Nat.card_eq_fintype_card, FiniteField.cast_card_eq_zero]
     intro h

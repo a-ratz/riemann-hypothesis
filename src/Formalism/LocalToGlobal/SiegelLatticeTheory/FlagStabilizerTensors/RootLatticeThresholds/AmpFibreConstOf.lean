@@ -249,7 +249,7 @@ private theorem norm_hsEmb_OOt_eq_of_toTerm_eq (hR : RatPt) (hC : ChiTrivialC) {
       ((X.psiInfU u xn.1 * X.psiInfU u' xν.1) • OOt s).comp
         ((Formalism.L2.SG.RealObj.InfCut.piIso X u' xc.1⁻¹ hsinv).symm.toContinuousLinearEquiv :
           X.Vpi u' →L[ℂ] X.Vpi u') := by
-    have := FiniteDimensional.complete ℂ (X.Vpi u)
+    have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
     show OO (Formalism.L2.SG.ProjRows.muInf X.B.I) (FundOf s') (X.Wu u) (X.Wu u') s'.pt.1 = _
     rw [hpt, Prod.fst_mul, OO_right _ _ _ _ _ xc.1 _ _ (fun x => by
       rw [Formalism.L2.SG.RealObj.InfCut.piIso_apply]
@@ -268,7 +268,7 @@ theorem oot_norm (hR : RatPt) (hC : ChiTrivialC) {s s' : TT Y u u'} (h : s.toTer
   · by_cases hs' : ∃ Ω, IsSFund X.B.I (ROinf s') Ω
     · exact absurd (exists_isSFund_ROinf_of_toTerm_eq hR h.symm hs') hs
     · have e : ∀ t : TT Y u u', ¬ (∃ Ω, IsSFund X.B.I (ROinf t) Ω) → OOt t = 0 := fun t ht => by
-        have := FiniteDimensional.complete ℂ (X.Vpi u)
+        have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
         show OO (Formalism.L2.SG.ProjRows.muInf X.B.I) (FundOf t) (X.Wu u) (X.Wu u') t.pt.1 = 0
         unfold Formalism.L2.SG.TermOp.FundOf
         rw [dite_eq_right ht]

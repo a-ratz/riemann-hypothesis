@@ -233,7 +233,7 @@ theorem discrete_Lat (hep : 0 < ep0) : DiscreteTopology (Lat z ξ hξ) := by
       have := min_norm z hξ ep0 hns x.1 x.2 (fun h => hne (Subtype.ext h))
       linarith
   rw [hset]
-  exact Metric.isOpen_ball.preimage continuous_subtype_val
+  exact Metric.isOpen_ball.preimage continuous_subtypeVal
 
 include hns in
 theorem short_basis (hD3 : IntegerApproximationCount (E := E)) (hep : 0 < ep0) :
@@ -461,7 +461,7 @@ theorem exists_herm_ne (hr : 0 < r) : ∃ x ∈ X.L', ∃ y ∈ X.L', herm X.Gm 
       simp [herm, Pi.single_apply, apply_ite cc, hcc1, hcc0]
     rw [Matrix.zero_apply, ← hval]
     exact hall _ _
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   exact X.Gm_det (by rw [hG]; exact Matrix.det_zero)
 
 private theorem herm_smul_left_eq_mul (G : Matrix (Fin r) (Fin r) E) (c : E) (x y : Fin r → E) :
@@ -651,7 +651,7 @@ theorem noShortVectorLowerBound_holds : NoShortVectorLowerBound (E := E) := by
   intro r X ξ ep0 hξ hep z hz hgap δ
   have hz' : z ∈ X.dom ∧ ∀ τ : X.Ψ, X.c τ * X.maj z τ (Data.emb τ.1 ξ) = 1 := hz
   have hz1 : z ∈ X.dom := hz'.1
-  haveI hzf : Fact (z ∈ X.dom) := ⟨hz1⟩
+  have hzf : Fact (z ∈ X.dom) := ⟨hz1⟩
   have hk0 : 0 < X.k0 := X.minWeight_pos
   have hk0ne : X.k0 ≠ 0 := hk0.ne'
   have hdE : 0 < dE E := by

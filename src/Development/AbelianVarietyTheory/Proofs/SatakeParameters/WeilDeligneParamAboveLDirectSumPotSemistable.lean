@@ -271,9 +271,9 @@ end Iso
 
 theorem wdPst_sumRep : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (ι : Om l ≃+* ℂ) {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l E Ω (Dec (F := E) A) O) (h : IsPlaceOver A w) (hj : Induces Bw) {L : FinExt l} {a b : ℕ} (s : ↥(Dec (F := E) A) →* GL (Fin a) ↥L.1) (s' : ↥(Dec (F := E) A) →* GL (Fin b) ↥L.1), IsPst P (Bw.repE L s) → IsPst P (Bw.repE L s') → IsPst P (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.sumRep s s')) → wdPst P ι Bw h hj (Bw.repE L (Formalism.MainNotions.SumRepresentations.At.sumRep s s')) = (wdPst P ι Bw h hj (Bw.repE L s)).lpSum (wdPst P ι Bw h hj (Bw.repE L s')) := by
   intro l _ P ι E Ω _ _ _ _ _ A w O _ _ _ Bw h hj L a b s s' hV₁ hV₂ hV
-  haveI := hV₁.finite
-  haveI := hV₂.finite
-  haveI := hV.finite
+  have := hV₁.finite
+  have := hV₂.finite
+  have := hV.finite
   rw [wdPst_of_isPst ι Bw h hj hV, wdPst_of_isPst ι Bw h hj hV₁, wdPst_of_isPst ι Bw h hj hV₂, WD.lpSum_mk]
   exact WD.sound (wdRep_iso_sum P ι Bw h hj _ _ _ fun g v => GlobalTheory.DirectSumLocal.splitEquiv_sumRep s s' _ v)
 
@@ -324,7 +324,7 @@ theorem mapRep_sumRep {Γ : Type} [Group Γ] {A B : Type} [CommRing A] [CommRing
     mapRep f (Formalism.MainNotions.SumRepresentations.At.sumRep ρ ρ') = Formalism.MainNotions.SumRepresentations.At.sumRep (mapRep f ρ) (mapRep f ρ') := by
   ext x i j
   simp only [mapRep, Formalism.MainNotions.SumRepresentations.At.sumRep, Formalism.MainNotions.SumRepresentations.At.blkHom, MonoidHom.coe_comp, Function.comp_apply,
-    Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, RingHom.mapMatrix_apply,
+    Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, RingHom.mapMatrix_apply,
     MulEquiv.coe_toMonoidHom, MonoidHom.prod_apply, MonoidHom.coe_mk, OneHom.coe_mk]
   obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
   obtain ⟨j, rfl⟩ := finSumFinEquiv.surjective j
@@ -363,13 +363,13 @@ theorem wdPst_eq_of_map (s : ↥L₁.1 →+* ↥L₂.1) (hs : ∀ a, (s a : Om l
     (hsum : ∀ v, ∑ j, b j • f (π j v) = v) (hV₁ : IsPst P ρ₁) (hV₂ : IsPst P ρ₂)
     (hdim : finrank ℂ (WDSpace P ι ρ₁) = finrank ℂ (WDSpace P ι ρ₂)) :
     wdPst P ι Bw h hj ρ₂ = wdPst P ι Bw h hj ρ₁ := by
-  haveI := hV₁.finite
-  haveI := hV₂.finite
+  have := hV₁.finite
+  have := hV₂.finite
   set_option synthInstance.maxHeartbeats 400000 in
   have hT : ∀ (a : ↥L₁.1) (x : ↥(Dpst P ρ₁)), EnlargeCoeff.dQ P hf (a • x) = s a • EnlargeCoeff.dQ P hf x :=
     fun a x => Subtype.ext (EnlargeCoeff.tensQ_smul P s hfs a x.1)
-  letI := algC ι L₁
-  letI := algC ι L₂
+  let := algC ι L₁
+  let := algC ι L₂
   let Φ := EnlargeCoeff.chg (mulD P ρ₁) (mulD P ρ₂) ℂ (urC ι) s (fun a => congrArg ι (hs a))
     (EnlargeCoeff.dQ P hf) hT (EnlargeCoeff.dQ_mulD P hf)
   have hρ : ∀ σ y, Φ (wdRho P ι Bw h hj ρ₁ σ y) = wdRho P ι Bw h hj ρ₂ σ (Φ y) := fun σ =>
@@ -443,7 +443,7 @@ theorem wdAt_sumRep : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAin
   obtain ⟨L₁, r₁, hm₁, hp₁, e₁⟩ := wdAt_of_isPstAt ι Bw h hj hr
   obtain ⟨L₂, r₂, hm₂, hp₂, e₂⟩ := wdAt_of_isPstAt ι Bw h hj hr'
   obtain ⟨L₃, r₃, hm₃, hp₃, e₃⟩ := wdAt_of_isPstAt ι Bw h hj hs
-  haveI := L₁.2; haveI := L₂.2; haveI := L₃.2
+  have := L₁.2; have := L₂.2; have := L₃.2
   let L : FinExt l := ⟨L₁.1 ⊔ L₂.1 ⊔ L₃.1, inferInstance⟩
   have h₁ : L₁.1 ≤ L.1 := le_sup_left.trans le_sup_left
   have h₂ : L₂.1 ≤ L.1 := le_sup_right.trans le_sup_left

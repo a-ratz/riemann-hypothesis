@@ -68,15 +68,15 @@ theorem memLpSchA {κ : Type} [Fintype κ] (m : MeasurableSpace (κ → AF F)) (
 theorem memLp_schM (d : SD σ) (ν : Measure (Mx F E d.m d.n)) (hν : ν.IsAddHaarMeasure) {f : Mx F E d.m d.n → ℂ}
     (hf : f ∈ d.schM) : MemLp f 2 ν := by
   obtain ⟨i1, i2, i3, i4⟩ := (PositivityTheory.ThKCT.ideleTop F E).1
-  haveI : BorelSpace (AE F E) := ⟨rfl⟩
-  haveI : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
-  haveI : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : BorelSpace (Fin d.m × Fin d.n × Fin 2 → AF F) := Pi.borelSpace
+  have : BorelSpace (AE F E) := ⟨rfl⟩
+  have : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
+  have : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (Fin d.m × Fin d.n × Fin 2 → AF F) := Pi.borelSpace
   let e : (Fin d.m × Fin d.n × Fin 2 → AF F) ≃ᵐ Mx F E d.m d.n := (KFock.cmbE d).toHomeomorph.toMeasurableEquiv
-  haveI : (Measure.map e.symm ν).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν (KFock.cmbE d).symm
+  have : (Measure.map e.symm ν).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν (KFock.cmbE d).symm
   have h1 : MemLp (f ∘ e) 2 (Measure.map e.symm ν) := by
     have hf' : f ∘ d.cmb ∈ schA F (Fin d.m × Fin d.n × Fin 2) := Submodule.mem_comap.mp hf
     exact memLpSchA _ BorelSpace.measurable_eq _ inferInstance hf'

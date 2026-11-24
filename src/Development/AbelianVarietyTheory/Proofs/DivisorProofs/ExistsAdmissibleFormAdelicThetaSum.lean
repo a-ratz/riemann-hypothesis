@@ -69,7 +69,7 @@ theorem thetaSum_pureA_bound {κ : Type} [Fintype κ] {g : (κ → FiniteAdeleRi
       ‖thetaSum F (pureA F f g)‖ ≤ C * (s.sup (schwartzSeminormFamily ℂ (κ → mixedEmbedding.mixedSpace F) ℂ)) f := by
   obtain ⟨B, hB⟩ := hg.1.continuous.bounded_above_of_compact_support hg.2
   obtain ⟨N, hN, hK⟩ := exists_nat_mul_integral_of_isCompact F hg.2.isCompact
-  haveI := discreteTopology_denomLattice F κ hN
+  have := discreteTopology_denomLattice F κ hN
   have hw := ZLattice.summable_norm_pow_inv (denomLattice F κ N) (Module.finrank ℤ (denomLattice F κ N) + 1)
     (Nat.lt_succ_self _)
   set k := Module.finrank ℤ (denomLattice F κ N) + 1 with hkdef
@@ -89,11 +89,11 @@ theorem thetaSum_pureA_bound {κ : Type} [Fintype κ] {g : (κ → FiniteAdeleRi
   have hM0 : 0 ≤ M := (norm_nonneg _).trans (h00 0)
   have hpt : ∀ z : denomLattice F κ N, ‖f z‖ ≤ (if z = 0 then M else 0) + ‖z‖⁻¹ ^ k * M := fun z => by
     by_cases hz : z = 0
-    · subst hz; simp only [if_true]
+    · subst hz; simp only [ite_true]
       have := h00 0
       have h2 : 0 ≤ ‖(0 : denomLattice F κ N)‖⁻¹ ^ k * M := by positivity
       simpa using (show ‖f 0‖ ≤ M + ‖(0 : denomLattice F κ N)‖⁻¹ ^ k * M by linarith)
-    · rw [if_neg hz, zero_add]
+    · rw [ite_eq_right hz, zero_add]
       have hz0 : 0 < ‖z‖ := norm_pos_iff.2 hz
       rw [inv_pow, ← div_eq_inv_mul, le_div_iff₀ (pow_pos hz0 _), mul_comm]
       exact hk0 z

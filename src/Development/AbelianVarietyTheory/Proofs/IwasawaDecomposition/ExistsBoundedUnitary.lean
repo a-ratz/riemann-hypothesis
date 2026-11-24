@@ -72,7 +72,7 @@ theorem exists_short_notMem {X ι : Type} [NormedAddCommGroup X] [NormedSpace �
       (∀ x ∈ Submodule.span ℤ (Set.range b), x ≠ 0 → c ≤ ‖T x‖) →
       ∀ W : Submodule ℝ X, W ≠ ⊤ → ∃ x ∈ Submodule.span ℤ (Set.range b), x ∉ W ∧ ‖T x‖ ≤ R := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   borelize X
   let μ : Measure X := Measure.addHaar
   have hF := ZSpan.isAddFundamentalDomain' b μ
@@ -99,7 +99,7 @@ theorem exists_short_notMem {X ι : Type} [NormedAddCommGroup X] [NormedSpace �
   have hA : ∀ y, A y = y + f y • ((s : ℝ) / f u) • u := fun y => LinearMap.transvection.apply _ _ _
   have hfv : f (((s : ℝ) / f u) • u) = s := by rw [map_smul, smul_eq_mul, div_mul_cancel₀ _ hu0]
   have hdA : LinearMap.det A = 1 + s := by rw [LinearMap.transvection.det, hfv]
-  haveI : Countable (Submodule.span ℤ (Set.range b)).toAddSubgroup :=
+  have : Countable (Submodule.span ℤ (Set.range b)).toAddSubgroup :=
     inferInstanceAs (Countable (Submodule.span ℤ (Set.range b)))
   obtain ⟨x, hx0, y, hy, hxy⟩ := exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
     (s := T ⁻¹' (A '' Metric.ball 0 c)) hF
@@ -292,7 +292,7 @@ theorem exists_bounded_basis [_root_.NumberField.IsTotallyComplex E] (hτ : Func
       congr 3
       funext j
       simp [Pi.single_apply, eq_comm]
-    haveI : Nonempty I := hτ.2.nonempty
+    have : Nonempty I := hτ.2.nonempty
     obtain ⟨v, hv, hvW, hvR⟩ := hR' (LinearMap.ker (g.restrictScalars ℝ)) (fun h' => hf0 (LinearMap.ext fun x => by
       have : g.restrictScalars ℝ (fun a => Pi.ringHom τ (x a)) = 0 := LinearMap.mem_ker.1 (h' ▸ Submodule.mem_top)
       exact (Pi.ringHom τ).injective (by rw [← hg, LinearMap.zero_apply, map_zero]; exact this)))
@@ -305,7 +305,7 @@ theorem exists_bounded_basis [_root_.NumberField.IsTotallyComplex E] (hτ : Func
   have hr : n = Module.finrank E (Submodule.span E Sx) := by rw [hsp, finrank_top]; simp
   refine ⟨(Matrix.of fun k => v (Fin.cast hr k))ᵀ, ?_, fun a k => (hv _).1 a, fun a k => ?_⟩
   · rw [det_transpose]
-    exact ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1
+    exact ((Matrix.isUnit_iff_isUnit_det _).1 (linearIndependent_row_iff_isUnit.1
       (hli.comp _ (Fin.cast_injective hr)))).ne_zero
   · exact (norm_le_pi_norm (G *ᵥ fun a => Pi.ringHom τ (v (Fin.cast hr k) a)) a).trans (hv _).2
 
@@ -396,9 +396,9 @@ theorem mt_mul_rat {D : D7} (V : HSp D) (x u : GA D V) {B M : Matrix (Fin V.rank
 theorem exists_finite_part (D : D7) (V : HSp D) : ∃ C : Set (Af D.host.F ⊗[D.host.F] D.host.E), IsCompact C ∧
     ∀ g : GA D V, ∃ γ ∈ GQ V, ∀ B : Matrix (Fin V.rank) (Fin V.rank) D.host.E, (∀ a b, IsIntegral ℤ (B a b)) →
       ∀ a b, finPart D ((mt V (g * γ) * B.map (incA D)) a b) ∈ C := by
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
   obtain ⟨π, hπ, -⟩ := GlobalTheory.Mass.existsUnique_isFinProj D.sp.cm.sig V.gram
   obtain ⟨S, hS⟩ := GlobalTheory.Mem.ClassFinite.exists_finset_classes _ _ _ (GlobalTheory.DefiniteQuotient.cmExt D) _ _
     (GlobalTheory.DefiniteQuotient.gram_hermND V) _ (GlobalTheory.Mass.isOpen_stdLevel D.sp.cm.sig V.gram)
@@ -433,7 +433,7 @@ theorem exists_real_part (D : D7) (V : HSp D) (hV : IsAniso V) {θ : InfF D} (h�
       ∃ u ∈ GQ V, ∃ B : Matrix (Fin V.rank) (Fin V.rank) D.host.E, ∃ M ∈ 𝓒, mt V u = (B * M).map (incA D) ∧
         (∀ a b, IsIntegral ℤ (B a b)) ∧ ∀ a b τ, ‖θ τ (infPart D ((mt V x * B.map (incA D)) a b))‖ ≤ R := by
   have hcm := GlobalTheory.DefiniteQuotient.cmExt D
-  haveI := hcm.2.1
+  have := hcm.2.1
   obtain ⟨R, 𝓒, h𝓒, H⟩ := exists_bounded_unitary (σ := (D.sp.cm.sig : D.host.E →+* D.host.E))
     (GlobalTheory.CMTypePlaces.mk_tauE_bijective D) (fun τ x => hcm.2.2.2 _ x) (GlobalTheory.DefiniteQuotient.gram_hermND V).2
     (hform_ne_zero hV)
@@ -457,11 +457,11 @@ theorem exists_real_part (D : D7) (V : HSp D) (hV : IsAniso V) {θ : InfF D} (h�
 theorem exists_compact : ∀ (D : D7) (V : HSp D), IsAniso V → ∃ K : Set (GA D V), IsCompact K ∧ ∀ g, ∃ γ ∈ GQ V, ∃ k ∈ K, g = γ * k := by
   intro D V hV
   obtain ⟨θ, hθ⟩ := GlobalTheory.Member.exists_isInfFam_family D
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  haveI : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
   obtain ⟨C₁, hC₁, H₁⟩ := exists_finite_part D V
   obtain ⟨R, 𝓒, h𝓒, H₂⟩ := exists_real_part D V hV hθ
   obtain ⟨C₂, hC₂, hCe₂⟩ := GlobalTheory.StabCompact.exists_compact_adele D θ hθ R C₁ hC₁

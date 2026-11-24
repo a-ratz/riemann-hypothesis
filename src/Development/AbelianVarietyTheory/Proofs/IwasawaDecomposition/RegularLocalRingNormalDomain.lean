@@ -126,7 +126,7 @@ theorem main : (let d1 : (A : Type u_1) → [CommRing A] → Prop := @(fun (A : 
   have hd' : ∀ (a b : A ⧸ Ideal.span {x}) (I : Ideal (A ⧸ Ideal.span {x})), b ≠ 0 → I ≠ ⊥ →
       (∀ r ∈ I, ∃ s ∈ I, a * r = b * s) → b ∣ a := hd
   obtain ⟨K, hK, hsat, hKa⟩ := exists_saturated hx hb hI h
-  obtain ⟨u₀, hu₀, hxu⟩ := exists_not_dvd hx.not_unit hK hsat
+  obtain ⟨u₀, hu₀, hxu⟩ := exists_not_dvd hx.not_isUnit hK hsat
   have hz : ∀ y : A, Ideal.Quotient.mk (Ideal.span {x}) y = 0 ↔ x ∣ y := fun y => by
     rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
   have step : ∀ a : A, (∀ r ∈ K, ∃ s ∈ K, a * r = b * s) →
@@ -167,7 +167,7 @@ theorem main : (let d1 : (A : Type u_1) → [CommRing A] → Prop := @(fun (A : 
       obtain ⟨c, d, rfl, hd2⟩ := step a ha
       obtain ⟨c', y, rfl⟩ := ih d hd2
       exact ⟨c + x * c', y, by ring⟩
-  have hne : Ideal.span {x} ≠ ⊤ := fun h => hx.not_unit (Ideal.span_singleton_eq_top.1 h)
+  have hne : Ideal.span {x} ≠ ⊤ := fun h => hx.not_isUnit (Ideal.span_singleton_eq_top.1 h)
   have hk := Ideal.iInf_pow_smul_eq_bot_of_isLocalRing (M := A ⧸ Ideal.span {b})
     (Ideal.span {x}) hne
   have hmem : Ideal.Quotient.mk (Ideal.span {b}) a ∈
@@ -274,7 +274,7 @@ theorem prime_dvd_of_stable (hx : Prime x) {a b : A} {I : Ideal A} (hI : I ≠ �
       obtain ⟨v, rfl⟩ := ih s hs
       exact hx.pow_dvd_of_dvd_mul_left (k + 1) ha ⟨b * v, by linear_combination e⟩
   obtain ⟨r, hr, hr0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
-  obtain ⟨n, c, hc, e⟩ := WfDvdMonoid.max_power_factor' hr0 hx.not_unit
+  obtain ⟨n, c, hc, e⟩ := WfDvdMonoid.max_power_factor' hr0 hx.not_isUnit
   obtain ⟨v, hv⟩ := key (n + 1) r hr
   refine hc ⟨v, mul_left_cancel₀ (pow_ne_zero n hx.ne_zero) ?_⟩
   linear_combination hv - e
@@ -282,7 +282,7 @@ theorem prime_dvd_of_stable (hx : Prime x) {a b : A} {I : Ideal A} (hI : I ≠ �
 theorem StableDvd.of_quotient (hx : Prime x) (h : StableDvd (A ⧸ Ideal.span {x})) :
     StableDvd A := by
   intro a b I hb hI hst
-  obtain ⟨n, c, hc, rfl⟩ := WfDvdMonoid.max_power_factor' hb hx.not_unit
+  obtain ⟨n, c, hc, rfl⟩ := WfDvdMonoid.max_power_factor' hb hx.not_isUnit
   clear hb
   induction n generalizing a with
   | zero =>
@@ -315,7 +315,7 @@ theorem stableDvd_of_spanFinrank_eq (n : ℕ) :
     have : b ∈ maximalIdeal R := hu
     rw [h0] at this
     exact hb this
-  obtain ⟨x, hx, hx2⟩ := SetLike.not_le_iff_exists.mp hsq
+  obtain ⟨x, hx, hx2⟩ := IsConcreteLE.not_le_iff_exists.mp hsq
   have hx0 : x ≠ 0 := by
     rintro rfl
     exact hx2 (zero_mem _)

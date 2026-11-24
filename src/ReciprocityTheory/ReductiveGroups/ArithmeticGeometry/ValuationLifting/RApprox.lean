@@ -157,8 +157,8 @@ theorem pair_separation : PairSep := by
   have hx0 : x ≠ 0 := by
     rintro rfl
     simp at hx
-  have hi0 : 0 < v i x := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hx0)
-  have hj0 : 0 < v j x := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hx0)
+  have hi0 : 0 < v i x := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hx0)
+  have hj0 : 0 < v j x := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hx0)
   by_cases hix : v i x ≤ 1
   · have hjx : 1 < v j x := lt_of_not_ge (fun h => hx (iff_of_true hix h))
     refine upgrade (v i) (v j) (π i) (hπ i) x⁻¹ ?_ ?_
@@ -177,8 +177,8 @@ theorem pair_separation : PairSep := by
       rintro rfl
       rw [map_zero] at hy1
       exact absurd hy1 (not_lt.mpr zero_le)
-    have hiy : 0 < v i y := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hy0)
-    have hjy : 0 < v j y := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hy0)
+    have hiy : 0 < v i y := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hy0)
+    have hjy : 0 < v j y := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hy0)
     refine ⟨y⁻¹, ?_, ?_⟩
     · rw [map_inv₀]
       exact (one_lt_inv₀ hiy).mpr hy2
@@ -251,7 +251,7 @@ theorem rho_projection_assembly : Assembly := by
     exact exp_ne_zero this.symm
   set t : ι → Ω := fun i => π i ^ n i with ht
   have ht0 : ∀ i k, 0 < v k (t i) := fun i k =>
-    zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr (zpow_ne_zero _ (hπ0 i)))
+    pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr (zpow_ne_zero _ (hπ0 i)))
   have hε : ∀ i k, exp (n k) * (v k (t i))⁻¹ ≠ 0 := fun i k =>
     mul_ne_zero exp_ne_zero (inv_ne_zero (ht0 i k).ne')
   choose z hz1 hz2 using fun i => hN i (fun k => exp (n k) * (v k (t i))⁻¹) (hε i)

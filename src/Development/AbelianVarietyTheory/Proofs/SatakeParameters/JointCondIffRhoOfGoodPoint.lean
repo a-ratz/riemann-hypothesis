@@ -70,7 +70,7 @@ private lemma valuation_lt_one_iff_eq_zero_or_inv_notMem' (B : ValuationSubring 
   · simp
   · rw [← B.valuation_le_one_iff, map_inv₀]
     have h0 : 0 < B.valuation y := by
-      rw [zero_lt_iff]; exact (Valuation.ne_zero_iff _).2 hy
+      rw [pos_iff_ne_zero]; exact (Valuation.ne_zero_iff _).2 hy
     simp [hy, inv_le_one₀ h0]
 
 open Polynomial NumberField IsDedekindDomain in

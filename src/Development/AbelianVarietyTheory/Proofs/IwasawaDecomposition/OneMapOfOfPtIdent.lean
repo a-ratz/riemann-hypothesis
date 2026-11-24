@@ -116,7 +116,7 @@ theorem exists_coef_ext {K K' : Type} [Field K] [Field K'] {σ : K →+* ℂ} {�
       (v' : Pol K' I n) = MvPolynomial.map ι (v : Pol K I n) ∧ c' v' = c₀ v := by
   classical
   obtain ⟨π, hπ⟩ := LinearMap.exists_leftInverse_of_injective (VV K lam).subtype (Submodule.ker_subtype _)
-  letI : Module K' W := Module.compHom W σ'
+  let : Module K' W := Module.compHom W σ'
   let g : Pol K' I n →ₗ[K'] W := (MvPolynomial.basisMonomials _ K').constr K' fun m => c₀ (π (MvPolynomial.monomial m 1))
   have hg : ∀ P : Pol K I n, g (MvPolynomial.map ι P) = c₀ (π P) := fun P => by
     induction P using MvPolynomial.induction_on' with
@@ -177,7 +177,7 @@ theorem InForms.ratio (hT : LawsJ T) (hj : InR D j) {a : (D.host.E →+* ℂ) ×
     (h' : InForms T j hV a n K' Φ') {ρ : ℂ} (e : Φ = ρ • Φ') (hne : Φ ≠ 0) : ρ ∈ K' := by
   obtain ⟨m, as, fs, ha, rfl⟩ := h
   obtain ⟨m', as', fs', ha', rfl⟩ := h'
-  haveI : FiniteDimensional T.Q.c.F (T.cuspA j a n) := hT.cuspFD j hj a n hD
+  have : FiniteDimensional T.Q.c.F (T.cuspA j a n) := hT.cuspFD j hj a n hD
   exact ratio_mem ((psi T j hV).comp (T.cuspA j a n).subtype) (psi_indep T j hV hT hj hD) K' (fun x => hc x.2) as fs as' fs'
     (fun l => h0 (ha l)) ha' ρ e hne
 

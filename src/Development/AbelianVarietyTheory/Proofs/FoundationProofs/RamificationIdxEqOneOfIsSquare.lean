@@ -164,8 +164,8 @@ theorem continuous_extZero : Continuous (extZero F E) := by
   exact Prod.ext ((he _).1.trans (infTens_extZero y)).symm ((he _).2.trans (finTens_extZero y)).symm
 
 theorem continuous_locIdele (w : HeightOneSpectrum (𝓞 E)) : Continuous (locIdele F w) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
   have h : Continuous fun y : w.adicCompletion E =>
       1 - extZero F E 1 + extZero F E ((finAdEquiv F E).symm (Neutral.B1.finiteSingle E w y)) :=
     continuous_const.add (continuous_extZero.comp (continuous_finAdEquiv_symm.comp
@@ -173,7 +173,7 @@ theorem continuous_locIdele (w : HeightOneSpectrum (𝓞 E)) : Continuous (locId
   exact Units.continuous_iff.2 ⟨h.comp Units.continuous_val, h.comp Units.continuous_coe_inv⟩
 
 theorem continuous_locChar {χ : (AF F ⊗[F] E)ˣ →* Circle} (h : Continuous χ) (w : HeightOneSpectrum (𝓞 E)) :
-    Continuous fun x => (locChar χ w x : ℂ) := continuous_subtype_val.comp (h.comp (continuous_locIdele w))
+    Continuous fun x => (locChar χ w x : ℂ) := continuous_subtypeVal.comp (h.comp (continuous_locIdele w))
 
 theorem finAdEquiv_tmul (a : Af F) (x : E) (w : HeightOneSpectrum (𝓞 E)) :
     finAdEquiv F E (a ⊗ₜ[F] x) w = complMap rfl (a (w.under (𝓞 F))) * algebraMap E _ x := rfl
@@ -267,7 +267,7 @@ theorem charFam_eq_of_chrEq (h : ChrEq c χ) : charFam c = heckeFam χ := funext
   by_cases hu : χ.UnrAt w
   · rw [charFam_of_unrAt ((unrAt_iff_of_chrEq h w).2 hu), heckeFam_of_unrAt hu, val_eq_of_chrEq h]
   · rw [heckeFam_of_not_unrAt hu]
-    exact if_neg (mt (unrAt_iff_of_chrEq h w).1 hu)
+    exact ite_eq_right (mt (unrAt_iff_of_chrEq h w).1 hu)
 
 theorem charL_eq_of_chrEq (h : ChrEq c χ) (S : Set (HeightOneSpectrum (𝓞 D.host.F))) :
     charL c S = heckeL (above D.host.E S) χ := funext fun s => by
@@ -303,8 +303,8 @@ theorem valued_complMap (h : w.under (𝓞 F) = v) {a : Fv F v} (ha : a ≠ 0) :
   have h2 : Valued.v (complMap h (algebraMap F _ k / a)) ≤ 1 :=
     complMap_mem h ((HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 (by rw [map_div₀, hk', div_self h0]))
   rw [map_div₀, map_div₀, complMap_algebraMap, valued_alg, valuation_up h, hk] at h1 h2
-  exact le_antisymm ((div_le_one₀ (zero_lt_iff.2 (pow_ne_zero _ h0))).1 h1)
-    ((div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ((map_ne_zero _).2 ha)))).1 h2)
+  exact le_antisymm ((div_le_one₀ (pos_iff_ne_zero.2 (pow_ne_zero _ h0))).1 h1)
+    ((div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ((map_ne_zero _).2 ha)))).1 h2)
 
 theorem comap_eq_iff : w.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E)) = v.asIdeal ↔ w.under (𝓞 F) = v :=
   ⟨fun h => HeightOneSpectrum.ext h, fun h => h ▸ rfl⟩
@@ -433,7 +433,7 @@ theorem mem_normGroup_of_isSplit (h2 : Module.finrank F E = 2) (hv : IsSplit (E 
     x ∈ normGroup F E (Fv F v) := by
   obtain ⟨σ, δ, b, -, hδ, h0, -, h1⟩ := exists_conj_basis h2
   obtain ⟨s, hs⟩ := isSquare_of_isSplit h0 h1 hv
-  haveI : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
+  have : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
   have hs0 : s ≠ 0 := by
     rintro rfl
     exact hδ ((map_eq_zero _).1 (hs.trans (mul_zero _)))
@@ -565,7 +565,7 @@ theorem IsEta.loc_of_not_mem (h2 : Module.finrank F E = 2) (h : IsEta F E η) {x
   have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
   change Circle.toUnits (η (localIdele F v x)) = -1
   rw [h.eq_normSign, MonoidHom.comp_apply, normSign_localIdele, GlobalTheory.QuadSymbol.eta_eq_neg_one_iff.2 hx]
-  exact Units.ext (congrArg (fun z : Circle => (z : ℂ)) (if_neg (by decide) :
+  exact Units.ext (congrArg (fun z : Circle => (z : ℂ)) (ite_eq_right (by decide) :
     (if (-1 : ℤˣ) = 1 then (1 : Circle) else -1) = -1))
 
 theorem IsEta.unrAt_iff (h2 : Module.finrank F E = 2) (h : IsEta F E η) :
@@ -615,7 +615,7 @@ theorem ResEta.val_mul_val (h2 : Module.finrank F E = 2) (h : ResEta F E μ k) (
     exact ⟨key u, by rintro (rfl | rfl) <;> assumption⟩
   have := h.prod_val h2 (isUnram_of_isSplit h2 hv) fun u hu => by
     rcases key u hu with rfl | rfl <;> assumption
-  rwa [e, Finset.prod_pair hne, etaU, if_pos hv, one_pow] at this
+  rwa [e, Finset.prod_pair hne, etaU, ite_eq_left hv, one_pow] at this
 
 theorem ResEta.val_of_isInertAt (h2 : Module.finrank F E = 2) (h : ResEta F E μ k) (hw : IsInertAt F E v w)
     (hu : UnrAt μ w) : val μ w = (-1) ^ k := by
@@ -627,7 +627,7 @@ theorem ResEta.val_of_isInertAt (h2 : Module.finrank F E = 2) (h : ResEta F E μ
     rw [mem_aboveF, Finset.mem_singleton]
     exact ⟨key u, fun h => h ▸ under_eq_of_isInertAt hw⟩
   have := h.prod_val h2 (isUnram_of_isInertAt hw) fun u h1 => key u h1 ▸ hu
-  rwa [e, Finset.prod_singleton, etaU, if_neg hv] at this
+  rwa [e, Finset.prod_singleton, etaU, ite_eq_right hv] at this
 
 end Eta
 

@@ -108,7 +108,7 @@ theorem continuous_col (hK : X.LevelSubgroupCharacter) (T : Cu X u hK) (ξ : X.V
   rw [continuous_iff_continuousAt]
   intro p0
   have hπ : Continuous fun η : Hinf X u => X.piU u η ξ :=
-    ((X.piU_rep u).2.2.2.2 ξ).comp_continuous continuous_subtype_val (fun η => hinf_le_sinf X u _ η.2)
+    ((X.piU_rep u).2.2.2.2 ξ).comp_continuous continuous_subtypeVal (fun η => hinf_le_sinf X u _ η.2)
   let L : X.Vpi u →ₗ[ℂ] ℂ :=
     (LinearMap.proj (R := ℂ) (φ := fun _ : Hinf X u × Hfin X u => ℂ) ((1 : Hinf X u), p0.2)).comp
       (T : X.Vpi u →ₗ[ℂ] (Hinf X u × Hfin X u → ℂ))
@@ -117,7 +117,7 @@ theorem continuous_col (hK : X.LevelSubgroupCharacter) (T : Cu X u hK) (ξ : X.V
   have hUo : IsOpen {p : Hinf X u × Hfin X u |
       (X.xu u)⁻¹ * ((p0.2⁻¹ * p.2 : Hfin X u) : X.B.I.Gf) * X.xu u ∈ X.B.I.Kg X.B.g} := by
     refine (X.B.I.topf_open X.B.g (one_le_level X)).preimage ?_
-    exact (continuous_const.mul (continuous_subtype_val.comp (continuous_const.mul continuous_snd))).mul
+    exact (continuous_const.mul (continuous_subtypeVal.comp (continuous_const.mul continuous_snd))).mul
       continuous_const
   have hp0 : p0 ∈ {p : Hinf X u × Hfin X u |
       (X.xu u)⁻¹ * ((p0.2⁻¹ * p.2 : Hfin X u) : X.B.I.Gf) * X.xu u ∈ X.B.I.Kg X.B.g} := by
@@ -187,7 +187,7 @@ theorem ph_colForm : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D
     have hm1S : m.1 ∈ X.SinfU u := fun v => (hn1 v).1
     have hb1S : b.1 ∈ X.SinfU u := hinf_le_sinf X u _ ha1
     have hW : X.Wu u (m.1 * b.1 * y) = X.psiInfU u m.1 • X.piU u b.1 (X.Wu u y) := by
-      rw [mul_assoc, (X.Wu_spec u).1 m.1 hm1S, (X.piU_rep u).2.2.2.1 m.1 hn1, ContinuousLinearMap.one_apply,
+      rw [mul_assoc, (X.Wu_spec u).1 m.1 hm1S, (X.piU_rep u).2.2.2.1 m.1 hn1, one_apply_eq_self,
         (X.Wu_spec u).1 b.1 hb1S]
       have hpsi : X.psiInfU u b.1 = 1 := psiInfU_of_mem_Hinf X u b.1 ha1
       change X.psiInfU u m.1 • (X.psiInfU u b.1 • X.piU u b.1 (X.Wu u y)) = _

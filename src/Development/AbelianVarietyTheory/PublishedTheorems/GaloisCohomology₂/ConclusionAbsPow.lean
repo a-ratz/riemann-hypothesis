@@ -102,7 +102,7 @@ theorem eq_cyc_pow [IsAlgClosure E Ω] {art : Ideles E →* Gab E Ω} (ha : IsGl
   have hc : Continuous (cyc E Ω l) :=
     (Continuous.units_map ((algebraMap ℚ_[l] (PadicAlgCl l)).comp PadicInt.Coe.ringHom).toMonoidHom
       ((continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp
-        (continuous_subtype_val : Continuous fun z : ℤ_[l] => (z : ℚ_[l])))).comp (continuous_cycZ E Ω l)
+        (continuous_subtypeVal : Continuous fun z : ℤ_[l] => (z : ℚ_[l])))).comp (continuous_cycZ E Ω l)
   refine mul_inv_eq_one.1 (GlobalTheory.FrobDense.eq_one_of_frob E Ω art ha _ (μ * (cyc E Ω l ^ m)⁻¹)
     (hμ.mul (hc.pow m).inv) (Ideal.finite_factors h0).toFinset fun v hv A hA σ hσ => ?_)
   have hv' : ((l : ℕ) : 𝓞 E) ∉ v.asIdeal := fun hm => hv (by

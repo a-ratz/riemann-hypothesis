@@ -102,7 +102,7 @@ theorem hasQ_iff (N : ℕ) (f : ℍ → ℂ) (a : ℕ → ℂ) :
   have key : ∀ (τ : ℍ) (n : ℕ), Complex.exp (2 * Real.pi * Complex.I * n * τ / N)
       = Complex.exp (2 * Real.pi * Complex.I * τ / N) ^ n := by
     intro τ n
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     congr 1
     ring
   simp only [HasQ, key]

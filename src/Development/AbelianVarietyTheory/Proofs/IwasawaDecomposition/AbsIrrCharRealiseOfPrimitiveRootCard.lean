@@ -95,7 +95,7 @@ namespace GlobalTheory.BI
 
 theorem isChar_linear : ∀ (K L : Type) [Field K] [Field L] [Algebra K L] (G : Type) [Group G] (m : ℕ) (ζ : K) (lam : G →* Lˣ), m ≠ 0 → IsPrimitiveRoot ζ m → (∀ g : G, g ^ m = 1) → IsChar K L (fun g => (lam g : L)) := by
   intro K L _ _ _ G _ m ζ lam hm hζ hG
-  haveI : NeZero m := ⟨hm⟩
+  have : NeZero m := ⟨hm⟩
   have hinj : Function.Injective (algebraMap K L) := (algebraMap K L).injective
   have hζ' : IsPrimitiveRoot (algebraMap K L ζ) m := hζ.map_of_injective hinj
   have h : ∀ g : G, ∃ x : K, algebraMap K L x = (lam g : L) := by
@@ -354,7 +354,7 @@ theorem exists_sylow_over_subgroup (G : Type) [Group G] [Finite G] (C : Subgroup
       (∀ h ∈ H, ∃ k : ℕ, h ^ p ^ k ∈ C) ∧
       ∀ N : Subgroup G, (∀ g : G, g ∈ N ↔ ∀ c ∈ C, g * c * g⁻¹ ∈ C) → ¬ p ∣ H.relIndex N := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   let N : Subgroup G :=
     { carrier := {g | ∀ c ∈ C, g * c * g⁻¹ ∈ C}
       one_mem' := by intro c hc; simpa using hc
@@ -380,7 +380,7 @@ theorem exists_sylow_over_subgroup (G : Type) [Group G] [Finite G] (C : Subgroup
         rwa [h1] at this }
   have hN : ∀ g : G, g ∈ N ↔ ∀ c ∈ C, g * c * g⁻¹ ∈ C := fun g => Iff.rfl
   let C' : Subgroup N := C.subgroupOf N
-  haveI hC' : C'.Normal := ⟨fun n hn g => by
+  have hC' : C'.Normal := ⟨fun n hn g => by
     simp only [C', Subgroup.mem_subgroupOf] at hn ⊢
     exact (hN g).1 g.2 _ hn⟩
   let P : Sylow p (N ⧸ C') := Classical.arbitrary _
@@ -398,7 +398,7 @@ theorem exists_sylow_over_subgroup (G : Type) [Group G] [Finite G] (C : Subgroup
   · rintro _ ⟨h, -, rfl⟩
     exact (hN h).1 h.2
   · rintro _ ⟨h, hh, rfl⟩
-    obtain ⟨k, hk⟩ := P.isPGroup' ⟨QuotientGroup.mk' C' h, hh⟩
+    obtain ⟨k, hk⟩ := P.isPGroup ⟨QuotientGroup.mk' C' h, hh⟩
     refine ⟨k, ?_⟩
     have h2 : QuotientGroup.mk' C' (h ^ p ^ k) = 1 := by
       rw [map_pow]
@@ -460,7 +460,7 @@ theorem exists_abelianByPrimePower_not_dvd_card_fixedBy₂ :
     obtain ⟨j, hj⟩ := hpow g g.2
     exact ⟨j, by rw [Subgroup.mem_subgroupOf]; simpa using hj⟩
   · intro hd
-    haveI : Finite (G ⧸ H) := inferInstance
+    have : Finite (G ⧸ H) := inferInstance
     have h1 := _root_.GlobalTheory.card_fixedBy_quotient_eq_relIndex_of_pRegular G (x ^ p ^ k) p H _ hk hCH hpow hN
     have h2 := _root_.GlobalTheory.card_fixedBy_pow_prime_pow_modEq G (G ⧸ H) x p k hp
     apply hidx _ hN
@@ -500,10 +500,10 @@ theorem ind_restrict_eq_card_fixedBy_mul : ∀ (L : Type) [Field L] [CharZero L]
     unfold ext0
     by_cases hq : g • q = q
     · have hm := (out_conj_mem_iff_smul_eq H g q).2 hq
-      rw [dite_eq_left hm, if_pos hq, one_mul]
+      rw [dite_eq_left hm, ite_eq_left hq, one_mul]
       exact hχ g q.out
     · have hm : q.out⁻¹ * g * q.out ∉ H := fun h => hq ((out_conj_mem_iff_smul_eq H g q).1 h)
-      rw [dite_eq_right hm, if_neg hq, zero_mul]
+      rw [dite_eq_right hm, ite_eq_right hq, zero_mul]
   rw [ind_eq_finsum_cosets L G H _ hψ g, finsum_eq_sum_of_fintype]
   simp_rw [hterm]
   rw [← Finset.sum_mul, Finset.sum_boole, Nat.card_eq_fintype_card, Fintype.card_subtype]
@@ -625,7 +625,7 @@ theorem isIrreducible_of_sum_char_mul_char_inv [Fintype G] {k : Type} [Field k] 
     (h : ∑ x, ρ.character x * ρ.character x⁻¹ = (Nat.card G : k)) : ρ.IsIrreducible := by
   classical
   have hcard : (Nat.card G : k) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
-  letI : Invertible (Nat.card G : k) := invertibleOfNonzero hcard
+  let : Invertible (Nat.card G : k) := invertibleOfNonzero hcard
   have h1 := Representation.card_inv_mul_sum_char_mul_char_eq_finrank ρ ρ
   rw [h, inv_mul_cancel₀ hcard] at h1
   have hfr : Module.finrank k (ρ.IntertwiningMap ρ) = 1 := by exact_mod_cast h1.symm
@@ -670,7 +670,7 @@ theorem isIrreducible_of_sum_char_mul_char_inv [Fintype G] {k : Type} [Field k] 
         refine Fintype.sum_equiv (Equiv.mulLeft h⁻¹) _ _ (fun g => ?_)
         simp only [Equiv.coe_mulLeft, mul_inv_rev, inv_inv, map_mul, Module.End.mul_apply]
         rw [hρρ]
-      obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' idI hid0).mp hfr ⟨P, hPI⟩
+      obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' idI hid0).mp hfr ⟨P, hPI⟩
       have hcv : ∀ v, c • v = P v := fun v => congrArg (fun φ : ρ.IntertwiningMap ρ => φ.toLinearMap v) hc
       have hPU : ∀ u ∈ U.toSubmodule, P u = u := fun u hu => by
         rw [hPv]
@@ -713,8 +713,8 @@ theorem absIrr_realise_of_isPrimitiveRoot {K : Type} [Field K] (σ : K →+* ℂ
     (hz : IsPrimitiveRoot z (Fintype.card G)) (ψ : G → ℂ) (hψ : ψ ∈ Formalism.L2.Col.gxIrrSet (G := G) ℂ) :
     ∃ χ : G → K, IsAbsIrrChar χ ∧ ∀ g, σ (χ g) = ψ g := by
   classical
-  haveI : CharZero K := σ.charZero
-  letI : Algebra K ℂ := σ.toAlgebra
+  have : CharZero K := σ.charZero
+  let : Algebra K ℂ := σ.toAlgebra
   have hψC : GlobalTheory.BI.IsChar ℂ ℂ ψ := by
     obtain ⟨n, ρ, -, hρ⟩ := hψ
     exact ⟨n, ρ, fun g => by rw [← hρ]; rfl⟩
@@ -727,7 +727,7 @@ theorem absIrr_realise_of_isPrimitiveRoot {K : Type} [Field K] (σ : K →+* ℂ
   have hch : ∀ g, ρ'.character g = algebraMap K A (τ.character g) := character_mapScalars _ τ
   refine ⟨m, ρ', isIrreducible_of_sum_char_mul_char_inv ρ' ?_, hch⟩
   have horth := Formalism.L2.Col.gx_orth (G := G) (k := ℂ) hψ hψ
-  rw [if_pos rfl] at horth
+  rw [ite_eq_left rfl] at horth
   have hcardC : (Nat.card G : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
   have hsumC : ∑ g, ψ g * ψ g⁻¹ = (Nat.card G : ℂ) := by
     rw [← mul_one (Nat.card G : ℂ), ← horth, ← mul_assoc, mul_inv_cancel₀ hcardC, one_mul]

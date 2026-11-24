@@ -246,9 +246,9 @@ theorem word_Pw (comm : ∀ a b c d, T a b * T c d - T c d * T a b =
     intro a b p hp
     by_cases hab : a = b
     · subst hab
-      simp only [Pw, if_true, Module.End.one_apply]
+      simp only [Pw, ite_true, Module.End.one_apply]
       exact word_mem T blk F Z comm stab pos lev hf hz p (by omega)
-    · simp only [Pw, if_neg hab, LinearMap.zero_apply, map_zero]
+    · simp only [Pw, ite_eq_right hab, LinearMap.zero_apply, map_zero]
       exact Z.zero_mem
   | succ m ih =>
     intro a b p hp
@@ -446,7 +446,7 @@ theorem Tc_pos (blk : Fin n → ℕ) (s : Bool) (a b : Fin n) (hab : blk a < blk
   rw [RCalc.Tc_apply s a b x hg]
   have hs : ∀ z : ℂ, ∀ c d, ¬ blk c < blk d → (Matrix.single a b z : Mat n) c d = 0 := by
     intro z c d hcd
-    rw [Matrix.single_apply, if_neg]
+    rw [Matrix.single_apply, ite_eq_right]
     rintro ⟨rfl, rfl⟩
     exact hcd hab
   exact Eu_eq_zero s a b (Rd_nil blk x.2.1 hx hg hb (hs _)) (Rd_nil blk x.2.1 hx hg hb (hs _))
@@ -457,7 +457,7 @@ theorem Tc_lev (blk : Fin n → ℕ) (s : Bool) (a b : Fin n) (hab : blk a = blk
   rw [RCalc.Tc_apply s a b x hg]
   have hs : ∀ z : ℂ, ∀ c d, blk c ≠ blk d → (Matrix.single a b z : Mat n) c d = 0 := by
     intro z c d hcd
-    rw [Matrix.single_apply, if_neg]
+    rw [Matrix.single_apply, ite_eq_right]
     rintro ⟨rfl, rfl⟩
     exact hcd hab
   exact Eu_eq_zero s a b (Rd_levi blk x.2.1 hx hg hb (hs _)) (Rd_levi blk x.2.1 hx hg hb (hs _))
@@ -535,7 +535,7 @@ theorem exists_adapted (W₁ W₂ : Submodule ℂ (Fin n → ℂ)) (hle : W₁ �
   let b₀ : Module.Basis S₃ ℂ (Fin n → ℂ) := Module.Basis.mk hi₃ hsp
   have hcard : Nat.card S₃ = n := by
     rw [← Module.finrank_eq_nat_card_basis b₀]; simp
-  haveI : Finite S₃ := Module.Finite.finite_basis b₀
+  have : Finite S₃ := Module.Finite.finite_basis b₀
   let e : S₃ ≃ Fin n := Finite.equivFinOfCardEq hcard
   let b : Module.Basis (Fin n) ℂ (Fin n → ℂ) := b₀.reindex e
   have hb : ∀ a, b a = (e.symm a : Fin n → ℂ) := by

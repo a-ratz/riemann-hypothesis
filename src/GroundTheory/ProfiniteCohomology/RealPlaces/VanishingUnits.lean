@@ -1192,11 +1192,11 @@ theorem primaryVanishes_divFunRepOne (hZ : IsClosed (ψ.range : Set G)) {ℓ p :
   have hZc : IsClosed ((ψ.range.subgroupOf (a.1 : Subgroup G) : Subgroup (a.1 : Subgroup G)) :
       Set (a.1 : Subgroup G)) := by
     rw [Subgroup.coe_subgroupOf]
-    exact hZ.preimage continuous_subtype_val
+    exact hZ.preimage continuous_subtypeVal
   obtain ⟨U₀, hU₀o, hZU₀, hU₀⟩ := exists_cohomologyRes_eq_zero (M := trivQZRes a.1) hZc q z hw
   have hopen : IsOpen ((U₀.map (a.1 : Subgroup G).subtype : Subgroup G) : Set G) := by
     rw [Subgroup.coe_map]
-    exact (a.1.isOpen).isOpenMap_subtype_val _ hU₀o
+    exact (a.1.isOpen).isOpenMap_subtypeVal _ hU₀o
   let U' : OpenSubgroup G := ⟨U₀.map (a.1 : Subgroup G).subtype, hopen⟩
   have hU'a : (U' : Subgroup G) ≤ a.1 := Subgroup.map_subtype_le U₀
   have hZU' : ψ.range ≤ (U' : Subgroup G) := fun z hz =>
@@ -1259,9 +1259,9 @@ theorem mem_divFun_ite (T : Finset I) (f : divFun φ QZ) :
     apply hi
     simp only [hc, ite_self]
   · by_cases hi : i ∈ T
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact ⟨IsLocallyConstant.const 0, fun _ _ => rfl⟩
-    · simp only [hi, if_false]
+    · simp only [hi, ite_false]
       exact f.2.2 i
 
 def divFunOutside (T : Finset I) : divFunRep φ QZ ⟶ divFunRep φ QZ :=

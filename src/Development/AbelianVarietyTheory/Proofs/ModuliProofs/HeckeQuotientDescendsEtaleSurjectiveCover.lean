@@ -90,7 +90,7 @@ theorem desc_cocycle (Xo : Moduli D l) (𝔓 : Ideal (𝓞 E)) (p i : ℕ) {S S'
     ∀ {Z : Scheme.{0}} (x y : Z ⟶ o'.t.G.left), x ≫ m.toSABMap.φ = y ≫ m.toSABMap.φ →
       x ≫ ψ'.left ≫ n'.toSABMap.φ = y ≫ ψ'.left ≫ n'.toSABMap.φ := by
   have hab : pullback.fst π π ≫ π = pullback.snd π π ≫ π := pullback.condition
-  haveI : IsReduced (pullback π π) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.fst π π)
+  have : IsReduced (pullback π π) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.fst π π)
   obtain ⟨oT, ⟨mT⟩⟩ := desc_pull (pullback.fst π π ≫ π ≫ s) (pullback.fst π π ≫ π) (by simp) o
   obtain ⟨ma, hma⟩ := desc_cancel (f' := pullback.fst π π) m mT rfl
   obtain ⟨mb, hmb⟩ := desc_cancel (f' := pullback.snd π π) m mT hab.symm
@@ -132,16 +132,16 @@ theorem desc_cocycle (Xo : Moduli D l) (𝔓 : Ideal (𝓞 E)) (p i : ℕ) {S S'
 
 theorem hasQuot_descend : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (𝔓 : Ideal (𝓞 E)) (p i : ℕ) (S S' : Scheme.{0}) [IsReduced S] (s : S ⟶ Sp (KA l)) (π : S' ⟶ S) (o : Ob D l s) (o' : Ob D l (π ≫ s)) (m : ObjMap o' o π) (K : Set o.t.G.left), admitted l 𝔓 p → HeckeSet D o.t 𝔓 p i K → Etale π → Surjective π → QuasiCompact π → HasQuot o' p (m.toSABMap.φ ⁻¹' K) → HasQuot o p K := by
   intro E _ _ _ H D l Xo 𝔓 p i S S' _ s π o o' m K hA hK hE hS hQ ⟨o₂', ψ', hψ, hker⟩
-  haveI : IsReduced S' := GlobalTheory.isReduced_of_smooth_of_isReduced π
+  have : IsReduced S' := GlobalTheory.isReduced_of_smooth_of_isReduced π
   obtain ⟨f', ⟨hf', ⟨n'⟩⟩, -⟩ := Xo.rep S' (π ≫ s) inferInstance o₂'
   obtain ⟨c₁, c₂⟩ := desc_cocycle Xo 𝔓 p i π o o' o₂' m K hA hK ψ' hψ hker f' hf' n'
   have pm : IsPullback m.toSABMap.φ o'.t.G.hom o.t.G.hom π := m.cart.1
   have pn' : IsPullback n'.toSABMap.φ o₂'.t.G.hom Xo.univ.t.G.hom f' := n'.cart.1
-  haveI : Flat m.toSABMap.φ := MorphismProperty.of_isPullback pm.flip (inferInstance : Flat π)
-  haveI : Surjective m.toSABMap.φ := MorphismProperty.of_isPullback pm.flip hS
-  haveI : QuasiCompact m.toSABMap.φ := MorphismProperty.of_isPullback pm.flip hQ
-  haveI : EffectiveEpi π := inferInstance
-  haveI : EffectiveEpi m.toSABMap.φ := inferInstance
+  have : Flat m.toSABMap.φ := MorphismProperty.of_isPullback pm.flip (inferInstance : Flat π)
+  have : Surjective m.toSABMap.φ := MorphismProperty.of_isPullback pm.flip hS
+  have : QuasiCompact m.toSABMap.φ := MorphismProperty.of_isPullback pm.flip hQ
+  have : EffectiveEpi π := inferInstance
+  have : EffectiveEpi m.toSABMap.φ := inferInstance
   obtain ⟨f, hf⟩ : ∃ f : S ⟶ Xo.X, π ≫ f = f' := ⟨_, EffectiveEpi.fac π f' c₁⟩
   obtain ⟨h, hh⟩ : ∃ h, m.toSABMap.φ ≫ h = ψ'.left ≫ n'.toSABMap.φ := ⟨_, EffectiveEpi.fac _ _ c₂⟩
   have hfs : f ≫ Xo.s = s := by rw [← cancel_epi π, reassoc_of% hf, hf']
@@ -165,14 +165,14 @@ theorem hasQuot_descend : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       MorphismProperty.of_isPullback pn₂.flip hQ⟩
   have hEt : Etale ψ.left :=
     MorphismProperty.of_isPullback_of_descendsAlong (P := @Etale) P.flip q hψ.1.2.2.1
-  haveI : IsFinite ψ'.left := hψ.1.2.1
-  haveI : IsAffineHom ψ.left := by
+  have : IsFinite ψ'.left := hψ.1.2.1
+  have : IsAffineHom ψ.left := by
     refine GlobalTheory.isAffineHom_of_isAffineHom_pullback_snd_of_fpqc _ _ _ ψ.left n₂.toSABMap.φ q.1.1 q.1.2 q.2 ?_
     rw [← P.isoPullback_inv_snd]
     infer_instance
-  haveI := o₂.proper
-  haveI : IsProper (ψ.left ≫ o₂.t.G.hom) := by rw [Over.w]; exact o.proper
-  haveI : IsProper ψ.left := IsProper.of_comp ψ.left o₂.t.G.hom
+  have := o₂.proper
+  have : IsProper (ψ.left ≫ o₂.t.G.hom) := by rw [Over.w]; exact o.proper
+  have : IsProper ψ.left := IsProper.of_comp ψ.left o₂.t.G.hom
   have hFin : IsFinite ψ.left := IsFinite.iff_isProper_and_isAffineHom.2 ⟨inferInstance, inferInstance⟩
   obtain ⟨r₁, r₂⟩ := GlobalTheory.isIsog_of_surjective_baseChange E H D l p S S' s _ π o o₂ o' o₂' m n₂ ψ ψ' hS sq hψ hFin hEt
   exact ⟨o₂, ψ, r₁, r₂ K hker⟩

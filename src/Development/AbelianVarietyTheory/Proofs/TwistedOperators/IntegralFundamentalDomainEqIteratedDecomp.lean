@@ -99,21 +99,21 @@ theorem integral_fundamentalDomain_eq_iterated : ∀ (D : D7) (V W : HSp D) (a b
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D a b
   obtain ⟨j1, j2, j3, j4, j5, KZ, hKZ, hKZc⟩ := GlobalTheory.MixModel.lattice_Mx D 1 k
   obtain ⟨l1, l2, l3, l4, l5, K, hK, hKc⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank V.rank
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D 1 k) := ⟨rfl⟩
-  haveI : BorelSpace (WO V W) := ⟨rfl⟩
-  haveI : Countable (GlobalTheory.MixModel.ratMx D a b) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : Countable (GlobalTheory.MixModel.ratMx D 1 k) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : IsTopologicalAddGroup (WO V W) := l1
-  haveI : LocallyCompactSpace (WO V W) := l2
-  haveI : SecondCountableTopology (WO V W) := l3
-  haveI : T2Space (WO V W) := l4
-  haveI : BaireSpace (WO V W) := BaireSpace.of_t2Space_locallyCompactSpace
-  haveI : Countable (ratL W V) := by
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have : BorelSpace (Mx D 1 k) := ⟨rfl⟩
+  have : BorelSpace (WO V W) := ⟨rfl⟩
+  have : Countable (GlobalTheory.MixModel.ratMx D a b) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (GlobalTheory.MixModel.ratMx D 1 k) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : IsTopologicalAddGroup (WO V W) := l1
+  have : LocallyCompactSpace (WO V W) := l2
+  have : SecondCountableTopology (WO V W) := l3
+  have : T2Space (WO V W) := l4
+  have : BaireSpace (WO V W) := BaireSpace.of_t2Space_locallyCompactSpace
+  have : Countable (ratL W V) := by
     have : Countable (GlobalTheory.MixModel.ratMx D W.rank V.rank) :=
       TopologicalSpace.separableSpace_iff_countable.1 inferInstance
     exact this
-  haveI := hμ.1
+  have := hμ.1
 
   have hZfin : η 𝓩 < ⊤ := by
     have hcov : 𝓩 ⊆ ⋃ γ : GlobalTheory.MixModel.ratMx D 1 k, ((γ +ᵥ KZ) ∩ 𝓩) := by
@@ -126,8 +126,8 @@ theorem integral_fundamentalDomain_eq_iterated : ∀ (D : D7) (V W : HSp D) (a b
           (measure_mono hcov).trans (measure_iUnion_le _)
       _ = η KZ := (h𝓩.measure_eq_tsum KZ).symm
       _ < ⊤ := hKZ.measure_lt_top
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure (η.restrict 𝓩) := ⟨by rw [Measure.restrict_apply_univ]; exact hZfin⟩
+  have : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (η.restrict 𝓩) := ⟨by rw [Measure.restrict_apply_univ]; exact hZfin⟩
 
   let Ehom : (Mx D a b × (Mx D 1 k × Mx D a b)) →+ WO V W :=
     AddMonoidHom.mk' (fun p => f₁ p.1 + f₂ p.2.1 + f₃ p.2.2) (fun p q => by
@@ -153,9 +153,9 @@ theorem integral_fundamentalDomain_eq_iterated : ∀ (D : D7) (V W : HSp D) (a b
   have hMe : ∀ p, Me p = Ec p := fun _ => rfl
 
   set lam : Measure (Mx D a b × (Mx D 1 k × Mx D a b)) := μ.prod (η.prod μ) with hlam
-  haveI : lam.IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : lam.IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   set m : Measure (WO V W) := lam.map Me with hm
-  haveI : m.IsAddHaarMeasure := Ec.isAddHaarMeasure_map lam
+  have : m.IsAddHaarMeasure := Ec.isAddHaarMeasure_map lam
   have hνm := Measure.isAddLeftInvariant_eq_smul ν m
   set c := Measure.addHaarScalarFactor ν m with hcdef
   have hc : 0 < c := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure ν m
@@ -171,7 +171,7 @@ theorem integral_fundamentalDomain_eq_iterated : ∀ (D : D7) (V W : HSp D) (a b
     isAddFundamentalDomain_prod hμ.2.1 (isAddFundamentalDomain_prod h𝓩 hμ.2.1)
   have hac : lam.map Me ≪ ν := by
     intro s hs
-    rw [hνm, Measure.smul_apply] at hs
+    rw [hνm, smul_apply] at hs
     exact (smul_eq_zero.1 hs).resolve_left hc.ne'
   have hqmp : QuasiMeasurePreserving Me lam ν := ⟨Me.measurable.aemeasurable, hac⟩
   let eΓ : ratL W V → Γ := fun g => ⟨Ec.symm g, (hmemΓ _).2 (by simpa using g.2)⟩
@@ -180,7 +180,7 @@ theorem integral_fundamentalDomain_eq_iterated : ∀ (D : D7) (V W : HSp D) (a b
     · have := congrArg (fun q : Γ => Ec q.1) h
       simpa [eΓ] using this
     · simp [eΓ]
-  haveI : Countable Γ := heΓ.2.countable
+  have : Countable Γ := heΓ.2.countable
   have hFDE : IsAddFundamentalDomain Γ (Me ⁻¹' 𝓕) lam :=
     h𝓕.preimage_of_equiv hqmp heΓ (fun g p => by
       show Me ((Ec.symm g : _) + p) = (g : WO V W) + Me p

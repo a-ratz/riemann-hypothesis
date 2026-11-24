@@ -107,8 +107,8 @@ theorem bet_le [CompactSpace K] {ξ : K → ι → n → ℂ} (h : Continuous ξ
 
 theorem exists_lb {α : Type} [TopologicalSpace α] [CompactSpace α] {g : α → ι → ℝ} (h : ∀ w, Continuous fun a => g a w)
     (hp : ∀ a w, 0 < g a w) : ∃ m : ℝ, 0 < m ∧ ∀ a w, m ≤ g a w := by
-  letI : TopologicalSpace ι := ⊥
-  haveI : DiscreteTopology ι := ⟨rfl⟩
+  let : TopologicalSpace ι := ⊥
+  have : DiscreteTopology ι := ⟨rfl⟩
   have hc : Continuous fun q : α × ι => g q.1 q.2 := continuous_prod_of_discrete_right.2 h
   obtain ⟨m, hm, hb⟩ := isCompact_univ.exists_forall_le' hc.continuousOn (a := 0) fun q _ => hp q.1 q.2
   exact ⟨m, hm, fun a w => hb (a, w) trivial⟩
@@ -119,7 +119,7 @@ theorem prp_pim [CompactSpace K] {ξ : K → ι → n → ℂ} (h : Continuous �
   obtain ⟨m, hm, hb⟩ := exists_lb (g := fun k w => ‖ξ k w‖) (fun w => by fun_prop) fun k w => norm_pos_iff.2 (hne k w)
   refine ⟨m, {p | ∀ w, m / 2 ≤ ‖p.2 w‖ * ‖ξ p.1 w‖} ∩ univ ×ˢ Metric.closedBall 0 ((‖ξ k₁‖ + m) / m), hm, ?_, ?_, fun p hp => ?_⟩
   · refine IsCompact.inter_left (isCompact_univ.prod (isCompact_closedBall _ _)) ?_
-    simp only [setOf_forall]
+    simp only [ofPred_forall]
     exact isClosed_iInter fun w => isClosed_le continuous_const (by fun_prop)
   · intro p hp w h0
     have := hp.1 w
@@ -254,7 +254,7 @@ theorem cont_xi (h : IsLift σ B lift) (x : Fin n → E) (S : Subgroup (UA σ X.
   simp only [xi, Matrix.mulVec, dotProduct, map_sum, map_mul]
   refine continuous_finsetSum _ fun j _ => ((h.cont w).comp ?_).mul continuous_const
   have : Continuous fun k : S => (((k.1.1)⁻¹ : GL (Fin n) (AE F E)) : Matrix (Fin n) (Fin n) (AE F E)) :=
-    Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   exact (continuous_apply j).comp ((continuous_apply i).comp this)
 
 theorem xi_ne (h : IsLift σ B lift) {x y : Fin n → E} (hxy : form σ X.J x y = 1) {S : Subgroup (UA σ X.J)} (k : S) (w) : xi B x k w ≠ 0 := by
@@ -395,9 +395,9 @@ theorem genA (hA : ArchOp) (hE : EiDense) (hS : ArchSlice) {M : Model σ X W} {M
   obtain ⟨hcp, hin, hsl⟩ := hS F E σ B n d n₁ d₁ X W X₁ W₁ M M₁ H H' e _ ei ev cfg hv lift hlf K m hK hm' _ _ om _ _ _ _ hP
   obtain ⟨f₀, hf₀⟩ := hE F E σ B n d n₁ d₁ X W X₁ W₁ M M₁ H H' e _ ei ev cfg hv l hl0
   obtain ⟨-, i1, i2⟩ := PositivityTheory.ThKEst.lcsc_UA σ X.J
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
-  haveI : CompactSpace (kAt K (evI F)) := isCompact_iff_compactSpace.1 hcp
-  haveI := hm'.ki
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  have : CompactSpace (kAt K (evI F)) := isCompact_iff_compactSpace.1 hcp
+  have := hm'.ki
   obtain ⟨c₀, hc₀, hcv⟩ := conv hlf hν m.xi hm'.xi
   have hU : ∀ k ∈ kAt K (evI F), k ∈ UAt σ X (evI F) := fun k hk => (hin k hk).1
   have hG := hP.good
@@ -486,9 +486,9 @@ theorem genB (hA : ArchOp) (hE : EiDense) (hS : ArchSlice) {M : Model σ X W} {M
   obtain ⟨hcp, hin, hsl⟩ := hS F E σ B n d n₁ d₁ X W X₁ W₁ M M₁ H H' e _ ei ev cfg hv lift hlf K m hK hm' _ _ om _ _ _ _ hP
   obtain ⟨f₀, hf₀⟩ := hE F E σ B n d n₁ d₁ X W X₁ W₁ M M₁ H H' e _ ei ev cfg hv l hl0
   obtain ⟨-, i1, i2⟩ := PositivityTheory.ThKEst.lcsc_UA σ X.J
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
-  haveI : CompactSpace (kAt K (evI F)) := isCompact_iff_compactSpace.1 hcp
-  haveI := hm'.ki
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  have : CompactSpace (kAt K (evI F)) := isCompact_iff_compactSpace.1 hcp
+  have := hm'.ki
   obtain ⟨c₀, hc₀, hcv⟩ := conv hlf hν m.xi hm'.xi
   have hU : ∀ k ∈ kAt K (evI F), k ∈ UAt σ X (evI F) := fun k hk => (hin k hk).1
   have hG := hP.good
@@ -558,8 +558,8 @@ theorem genB (hA : ArchOp) (hE : EiDense) (hS : ArchSlice) {M : Model σ X W} {M
     congr 1
     simp only [pr, ← Finset.sum_neg_distrib, ← Finset.sum_add_distrib]
     exact Finset.sum_congr rfl fun w _ => by simp; ring
-  haveI : SecondCountableTopology (kAt K (evI F)) := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : FirstCountableTopology (kAt K (evI F)) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
+  have : SecondCountableTopology (kAt K (evI F)) := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : FirstCountableTopology (kAt K (evI F)) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
   obtain ⟨D, hD⟩ := bet_le (cont_xi hlf H.x (kAt K (evI F)))
   refine coreB m.ki hprp κ z hκ (hac f) (had f) (FT (fun c => a f (1, c)) 1)⁻¹ _ (cont_bet (cont_xi hlf H.x _)) D hD (pr_bet _)
     (fun p hp => ?_) fun η => ?_

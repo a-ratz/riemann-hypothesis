@@ -56,17 +56,17 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.chainRing_of :
   obtain ⟨t, ht, htm⟩ := hex
   set m : Ideal B := RingHom.ker (ε'.comp π).toRingHom with hm
   set m' : Ideal B' := RingHom.ker ε'.toRingHom with hm'
-  haveI : m.IsPrime := RingHom.ker_isPrime _
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite κ B
-  haveI : Module.Finite κ B' := Module.Finite.of_surjective π.toLinearMap hπ
-  haveI : IsArtinianRing B' := IsArtinianRing.of_finite κ B'
+  have : m.IsPrime := RingHom.ker_isPrime _
+  have : IsArtinianRing B := IsArtinianRing.of_finite κ B
+  have : Module.Finite κ B' := Module.Finite.of_surjective π.toLinearMap hπ
+  have : IsArtinianRing B' := IsArtinianRing.of_finite κ B'
   have hsurj : Function.Surjective (algebraMap B (Localization.AtPrime m)) :=
     IsArtinianRing.localization_surjective m.primeCompl _
   have hsurj' : Function.Surjective (algebraMap B' (Localization.AtPrime m')) :=
     IsArtinianRing.localization_surjective m'.primeCompl _
-  haveI : Module.Finite κ (Localization.AtPrime m) :=
+  have : Module.Finite κ (Localization.AtPrime m) :=
     Module.Finite.of_surjective (IsScalarTower.toAlgHom κ B (Localization.AtPrime m)).toLinearMap hsurj
-  haveI : IsArtinianRing (Localization.AtPrime m) := IsArtinianRing.of_finite κ _
+  have : IsArtinianRing (Localization.AtPrime m) := IsArtinianRing.of_finite κ _
   have hmem : ∀ x, x ∈ m ↔ ε' (π x) = 0 := fun x => by simp [m, RingHom.mem_ker]
   have hmem' : ∀ y, y ∈ m' ↔ ε' y = 0 := fun y => by simp [m', RingHom.mem_ker]
   have hunit : ∀ s, ε' (π s) ≠ 0 → IsUnit (g s) := by

@@ -270,10 +270,10 @@ theorem isProper_of_isProjOver' {R : Type} [CommRing R] {X : Scheme.{0}} {f : X 
 
 theorem exists_isMultIdeal : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (n : ℕ), IsProjOver p → ∀ (η : RatForms p n) (m : ℕ) (G : CartierDiv X) (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (s : Y ⟶ X) [IsDominant s] (K : CartierDiv Y) (B : Closeds Y), η ≠ 0 → 0 < m → IsLogRes p n η m G s K B → ∃ J : X.IdealSheafData, IsMultIdeal p n η m G J := by
   intro k _ _ X _ p n hp η m G Y _ _ s _ K B hη hm hres
-  haveI : SmoothOfRelativeDimension n (s ≫ p) := hres.smooth
-  haveI : IsProper (s ≫ p) := isProper_of_isProjOver' hres.proj
-  haveI : IsProper p := isProper_of_isProjOver' hp
-  haveI : QuasiCompact s := QuasiCompact.of_comp s p
+  have : SmoothOfRelativeDimension n (s ≫ p) := hres.smooth
+  have : IsProper (s ≫ p) := isProper_of_isProjOver' hres.proj
+  have : IsProper p := isProper_of_isProjOver' hp
+  have : QuasiCompact s := QuasiCompact.of_comp s p
   obtain ⟨F, hF, -⟩ := _root_.GlobalTheory.exists_cartierDiv_mult_ediv k Y (s ≫ p) n hres.proj (pullCart s G - m • K) m
   obtain ⟨J, hJ⟩ := _root_.GlobalTheory.Cartier.PullIdeal.exists_idealSheaf X Y s (-F)
   exact ⟨J, (_root_.GlobalTheory.Discrepancy.isMultIdeal_iff_regularAt k X p n hp η m G Y s K B F hη hm hres hF J).2 hJ⟩
@@ -299,7 +299,7 @@ theorem inMultAt_one_iff_kltAt {k : Type} [Field k] [CharZero k] {X : Scheme.{0}
     [IsLocallyNoetherian X] [GlobalTheory.IsNormalScheme X] {p : X ⟶ Sp k} {n : ℕ} (hp : IsProjOver p)
     (hn : topologicalKrullDim X = n) {Δ : X → ℚ} {η : RatForms p n} {m : ℕ} {G : CartierDiv X}
     (hM : IsLogMult p n Δ η m G) (y : X) : InMultAt p n η m G y 1 ↔ KltAt p n Δ y := by
-  haveI : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hp
+  have : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hp
   have hkey : ∀ g, G.IsEqn y g → (KltAt p n Δ y ↔ ∀ (E : DivOver p), E.Through y → -1 < discrep E η m g) :=
     fun g hg => IsLogEqn.kltAt_iff hn hM.ne_zero hM.pos (hM.eqn y g hg)
   constructor
@@ -349,7 +349,7 @@ theorem mem_support_multIdeal_iff : ∀ (k : Type) [Field k] [CharZero k] (X : S
     push_neg at h2
     obtain ⟨f, hf, hfx⟩ := h2
     rw [Scheme.mem_basicOpen X f x hxV] at hfx
-    haveI : Nonempty V := ⟨⟨x, hxV⟩⟩
+    have : Nonempty V := ⟨⟨x, hxV⟩⟩
     have hgen : algebraMap (X.presheaf.stalk x) X.functionField (X.presheaf.germ V x hxV f) =
         X.germToFunctionField V f := by simp
     have hunit : IsUnit (X.germToFunctionField V f) := by
@@ -390,12 +390,12 @@ theorem exists_isMultIdeal_support_iff_not_kltAt : GlobalTheory.Published.Princi
     exact hx
   obtain ⟨Y, hYi, s, hsd, K, B, hR, -⟩ :=
     LogResExist.exists_logRes hP k X p n hp hdim η m G hL.ne_zero ⊥ hne
-  haveI := hYi
-  haveI := hsd
-  haveI := hR.smooth
+  have := hYi
+  have := hsd
+  have := hR.smooth
   have hsm : Smooth (s ≫ p) := SmoothOfRelativeDimension.smooth (n := n) (f := s ≫ p)
   obtain ⟨-, -, hYn⟩ := isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field k Y (s ≫ p) hsm
-  haveI := hYn
+  have := hYn
   obtain ⟨J, hJ⟩ := MultIdealExists.exists_isMultIdeal k X p n hp η m G Y s K B hL.ne_zero hL.pos hR
   exact ⟨J, hJ, mem_support_multIdeal_iff k X p n hp hdim Δ η m G Y s K B hL hR J hJ⟩
 
@@ -420,10 +420,10 @@ namespace GlobalTheory.Discrepancy
 
 theorem regAt_of_regularAt_neg_roundDown : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] [GlobalTheory.IsNormalScheme X] (p : X ⟶ Sp k) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ (Δ : X → ℚ) (η : RatForms p n) (m : ℕ) (G : CartierDiv X) (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (s : Y ⟶ X) [IsDominant s] (K : CartierDiv Y) (B : Closeds Y) (F : CartierDiv Y), (∀ z, 0 ≤ Δ z) → IsLogMult p n Δ η m G → IsLogRes p n η m G s K B → (∀ z, F.mult z = (pullCart s G - m • K).mult z / (m : ℤ)) → ∀ (x : X) (f : X.functionField), (∀ y : Y, s y ⤳ x → (-F).RegularAt y (functionFieldMap s f)) → RegAt x f := by
   intro k _ _ X _ _ _ p n hproj _ Δ η m G Y _ _ s _ K B F hΔ hmult hres hF x f hf
-  haveI : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hproj
-  haveI : IsProper (s ≫ p) := GlobalTheory.CommonModel.isProper_of_isProjOver hres.proj
-  haveI : IsProper s := IsProper.of_comp s p
-  haveI := hres.smooth
+  have : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hproj
+  have : IsProper (s ≫ p) := GlobalTheory.CommonModel.isProper_of_isProjOver hres.proj
+  have : IsProper s := IsProper.of_comp s p
+  have := hres.smooth
   by_cases hf0 : f = 0
   · subst hf0; exact regAt_zero x
   refine regAt_of_forall_coheight_eq_one fun z hzx hz1 => ?_
@@ -552,7 +552,7 @@ theorem ratOf_add {W : Y.Opens} (σ τ : Γ(twist (GlobalTheory.structureModule 
     apply mul_right_cancel₀ (Units.ne_zero (genChart D).1.2)
     rw [add_mul, ratOf_mul _ _ h, ratOf_mul _ _ h, ratOf_mul _ _ h, ← map_add (f := _)]
     congr 1
-  · simp [ratOf, dif_neg hW]
+  · simp [ratOf, dite_eq_right hW]
 
 theorem ratOf_smul {W : Y.Opens} (hW : genericPoint Y ∈ W) (a : Γ(Y, W))
     (σ : Γ(twist (GlobalTheory.structureModule Y) (toLB D), W)) :
@@ -787,7 +787,7 @@ theorem pushforward_twist_iso_idealModule : ∀ (X Y : Scheme.{0}) [IsIntegral X
         exact (fnOf_funOf hbij hReg hV _).trans ((congrArg _ hσ).trans (finv_fnMap hbij _))
       · refine ⟨0, hι V ?_⟩
         exact GlobalTheory.Cartier.fn_ext fun h => (hV h).elim
-  haveI := isIso_of_bijective φ hbj
+  have := isIso_of_bijective φ hbj
   exact ⟨asIso φ⟩
 
 end GlobalTheory
@@ -811,7 +811,7 @@ namespace GlobalTheory
 theorem nadel_of_logRes : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] [GlobalTheory.IsNormalScheme X] (p : X ⟶ Sp k) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ (Δ : X → ℚ) (η : RatForms p n) (m : ℕ) (G : CartierDiv X) (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (s : Y ⟶ X) [IsDominant s] (K : CartierDiv Y) (B : Closeds Y), (∀ z, 0 ≤ Δ z) → IsLogMult p n Δ η m G → IsLogRes p n η m G s K B → ∀ (N M T : LB X) (hN : N.IsLB) (hM : M.IsLB) (r : ℕ) (hT : letI := algebraΓOfHom p; IsNef k T), 0 < r → cls T (letI := algebraΓOfHom p; hT.isLB) = (m * r) • cls N hN - r • toPic G - m • cls M hM → (letI := algebraΓOfHom p; IsNef k M) → ∀ (a : ℕ) (Fd : CartierDiv Y) (A : LB Y) (hA : IsAmpleLB A), (0 < a ∧ Fd.Eff ∧ Fd.supp ≤ B ∧ a • CechPic.pull s (cls M hM) = cls A hA.isLB + toPic Fd) → ∀ J : X.IdealSheafData, IsMultIdeal p n η m G J → ∀ i, 0 < i → Subsingleton (coh (twist (idealModule J) N) i) := by
   intro k _ _ X _ _ _ p n hp hdim Δ η m G Y _ _ s _ K B hΔ hLM hR N M T hN hMlb r hT hr hcls hMnef
     a Fd A hA hFd J hJ i hi
-  haveI := hR.smooth
+  have := hR.smooth
   obtain ⟨F, hF, -⟩ := _root_.GlobalTheory.exists_cartierDiv_mult_ediv k Y (s ≫ p) n hR.proj (pullCart s G - m • K) m
   have hJ' := (_root_.GlobalTheory.Discrepancy.isMultIdeal_iff_regularAt k X p n hp η m G Y s K B F hLM.ne_zero hLM.pos hR hF J).1 hJ
   obtain ⟨e⟩ := _root_.GlobalTheory.pushforward_twist_iso_idealModule X Y s hR.bir (-F) J hJ'
@@ -845,7 +845,7 @@ theorem GlobalTheory.nadelVanishing : GlobalTheory.Published.Principalisation �
     exact hx
   obtain ⟨Y, _, s, _, K, B, hres, -, a, Fd, A, hA, hkod⟩ :=
     GlobalTheory.LogResBig.exists_logRes_smul_eq_ample_add_eff hP k X p n hproj hdim η m G hlm.ne_zero ⊥ hZ M hM hMbig
-  haveI : IsLocallyNoetherian Y :=
+  have : IsLocallyNoetherian Y :=
     (GlobalTheory.isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field k Y (s ≫ p) hres.smooth.smooth).2.2
   exact GlobalTheory.nadel_of_logRes k X p n hproj hdim Δ η m G Y s K B hΔ hlm hres N M T hN hM r hT hr hcls hMnef a Fd A hA hkod J hJ i hi
 end -- clump:auto
@@ -867,7 +867,7 @@ namespace GlobalTheory.Discrepancy
 theorem nadelVanishingPair_of_principalisation (hP : GlobalTheory.Published.Principalisation) :
     GlobalTheory.Published.NadelVanishingPair := by
   intro X _ _ _ p n hproj hdim N Δ m G r M₀ hN hΔ hm hlc hr hnef hbig hcurve
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   obtain ⟨η, hlm⟩ := hlc.exists_isLogMult hm
   obtain ⟨J, hJ, hsupp⟩ :=
     exists_isMultIdeal_support_iff_not_kltAt hP ℂ X p n hproj hdim Δ η m G hlm

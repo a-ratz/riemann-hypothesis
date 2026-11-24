@@ -87,7 +87,7 @@ def W (P : S.Presents s i) (U : AffOp X₀) : X.affineOpens :=
   ⟨(P.y U).opensRange, isAffineOpen_opensRange _⟩
 
 theorem range_y (P : S.Presents s i) (U : AffOp X₀) : Set.range (P.y U) = (W P U).1 := by
-  haveI := P.isOpen U
+  have := P.isOpen U
   exact (Scheme.Hom.coe_opensRange _).symm
 
 theorem y_apply_red (P : S.Presents s i) (U : AffOp X₀) (z : Sp (Sec s₀ U.unop.1)) :
@@ -146,13 +146,13 @@ theorem spMap_fwd (P : S.Presents s i) (U : AffOp X₀) : spMap (fwd P U) ≫ af
   exact IsOpenImmersion.lift_fac _ _ _
 
 theorem spMap_bwd (P : S.Presents s i) (U : AffOp X₀) : spMap (bwd P U) ≫ P.y U = affPt s (W P U) := by
-  haveI := P.isOpen U
+  have := P.isOpen U
   change Spec.map (Spec.preimage (ofW P U)) ≫ _ = _
   rw [Spec.map_preimage]
   exact IsOpenImmersion.lift_fac _ _ _
 
 theorem fwd_bwd (P : S.Presents s i) (U : AffOp X₀) : (fwd P U).comp (bwd P U) = RingHom.id _ := by
-  haveI := P.isOpen U
+  have := P.isOpen U
   refine ringHom_eq_of_spMap (P.y U) ?_
   rw [Cris.spMap_comp, Category.assoc, spMap_bwd, spMap_fwd, Cris.spMap_id, Category.id_comp]
 
@@ -282,7 +282,7 @@ end GlobalTheory.LiftSys.Coh
 open Opposite in
 theorem GlobalTheory.LiftSys.cohomology_presents : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ideal R) (hI : I ^ 2 = 0) (π : R →+* R₀) (hπ : Function.Surjective π) (hk : RingHom.ker π = I) (X₀ : Scheme.{0}) (s₀ : X₀ ⟶ Sp R₀), ∀ (S : Sys I π s₀) (X : Scheme.{0}) (s : X ⟶ Sp R) (i : X₀ ⟶ X) (h : IsPullback i s₀ s (spMap π)), S.Presents s i → ∃ e : HO1 s ≃ₗ[R] GlobalTheory.CatCoh.H1 S.F, (∀ (m : IsMor (dp0 R) s (divided₂ hI) (s₀ ≫ spMap π) (RingHom.id R) i) (c : FirstDeRham s), e (toHO1 s (cmp1 s c)) = S.r hI (m.pull1 c)) ∧ ∀ c : HO1 s, IsPullO h.w c (S.redO.pull1 (e c)) := by
   intro R R₀ _ _ I hI π hπ hk X₀ s₀ S X s i h P
-  haveI : IsClosedImmersion i :=
+  have : IsClosedImmersion i :=
     MorphismProperty.of_isPullback (P := @IsClosedImmersion) h.flip (IsClosedImmersion.spec_of_surjective _ hπ)
   have hsurj : Surjective i := MorphismProperty.of_isPullback (P := @Surjective) h.flip
     (Coh.surjective_spMap_of_sq π hπ fun a ha ↦ by

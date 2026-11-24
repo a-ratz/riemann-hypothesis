@@ -101,9 +101,9 @@ theorem isOpenMap_doubleCoset (hP : IsClosed (P : Set G)) (hQ : IsClosed (Q : Se
   have : LocallyCompactSpace (doubleCoset x (P : Set G) Q) := hC.locallyCompactSpace
   have : ContinuousSMul (P × Q) (doubleCoset x (P : Set G) Q) := by
     refine ⟨Continuous.subtype_mk ?_ _⟩
-    exact ((continuous_subtype_val.comp (continuous_fst.comp continuous_fst)).mul
-      (continuous_subtype_val.comp continuous_snd)).mul
-      ((continuous_subtype_val.comp (continuous_snd.comp continuous_fst)).inv)
+    exact ((continuous_subtypeVal.comp (continuous_fst.comp continuous_fst)).mul
+      (continuous_subtypeVal.comp continuous_snd)).mul
+      ((continuous_subtypeVal.comp (continuous_snd.comp continuous_fst)).inv)
   have : MulAction.IsPretransitive (P × Q) (doubleCoset x (P : Set G) Q) := by
     refine ⟨fun a b => ?_⟩
     obtain ⟨p₁, hp₁, q₁, hq₁, h₁⟩ := mem_doubleCoset.1 a.2
@@ -137,8 +137,8 @@ theorem exists_nhds_inter_doubleCoset_subset (hP : IsClosed (P : Set G))
   have hopen := isOpenMap_doubleCoset hP hQ y hC
   set W : Set (P × Q) := {pq | (pq.1 : G) ∈ interior UP ∧ (pq.2 : G) ∈ interior UQ}
   have hW : IsOpen W :=
-    (isOpen_interior.preimage (continuous_subtype_val.comp continuous_fst)).inter
-      (isOpen_interior.preimage (continuous_subtype_val.comp continuous_snd))
+    (isOpen_interior.preimage (continuous_subtypeVal.comp continuous_fst)).inter
+      (isOpen_interior.preimage (continuous_subtypeVal.comp continuous_snd))
   obtain ⟨V, hVo, hV⟩ := isOpen_induced_iff.1 (hopen W hW)
   have h1 : (1 : P × Q) ∈ W := ⟨mem_interior_iff_mem_nhds.2 hUP, mem_interior_iff_mem_nhds.2 hUQ⟩
   have hyV : y ∈ V := by

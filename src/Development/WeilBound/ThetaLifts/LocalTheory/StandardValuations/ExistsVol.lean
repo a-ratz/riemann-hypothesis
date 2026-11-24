@@ -192,10 +192,10 @@ theorem gdet_low (y : Matrix (Fin a') (Fin a) k) : gdet (low y) = 1 := Units.ext
   rw [det_submatrix_equiv_self, det_fromBlocks_zero₁₂]; simp)
 
 theorem rad_AB (j : Fin a') : rad ϖ c (eA a a') (finSumFinEquiv (Sum.inr j)) = (ϖ : k) ^ c :=
-  if_neg fun ⟨_, h⟩ => by simpa using finSumFinEquiv.injective h
+  ite_eq_right fun ⟨_, h⟩ => by simpa using finSumFinEquiv.injective h
 
 theorem rad_BA (j : Fin a) : rad ϖ c (eB a a') (finSumFinEquiv (Sum.inl j)) = (ϖ : k) ^ c :=
-  if_neg fun ⟨_, h⟩ => by simpa using finSumFinEquiv.injective h
+  ite_eq_right fun ⟨_, h⟩ => by simpa using finSumFinEquiv.injective h
 
 theorem low_X (y : Matrix (Fin a') (Fin a) k) : ∀ i (j : Fin a ⊕ Fin a'), (X0 k finSumFinEquiv * (invT (low y)).1 : Matrix (Fin a) (Fin (a + a')) k) i (finSumFinEquiv j) =
     fromBlocks (1 : Matrix (Fin a) (Fin a) k) 0 (-y) (1 : Matrix (Fin a') (Fin a') k) j (Sum.inl i) := fun i j => by
@@ -415,20 +415,20 @@ theorem abs_id (hσ : IsCMExt F E σ) (l : idAt E (evFin F v)) :
     rw [Algebra.algebraMap_eq_smul_one, (h.smul _ _).1, map_one, mul_one, map_mul] at this
     rw [this]
     exact congrArg _ (h.conj _).1
-  rw [e1, GlobalTheory.Doubling.absE_ideleAt, GlobalTheory.Doubling.absEv_unitFin, e2, coe_nnnorm, norm_mul,
+  rw [e1, GlobalTheory.Doubling.absE_ideleAt, GlobalTheory.Doubling.absEv_unitFin, e2, coe_nnNorm, norm_mul,
     norm_nabs, norm_nabs]
 
 theorem units_eq (h : IsSec σ t sec) : {l | IsCompact (closure (Subgroup.zpowers l : Set (idAt E (evFin F v))))} =
     {l | valuation _ (cmp t l : Fv F v) = 1 ∧ valuation _ (cmp (t.comp σ) l : Fv F v) = 1} := by
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
-  haveI : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul _ _
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul _ _
   ext l
   constructor
   · intro hl
     have key : ∀ s : E →ₐ[F] Fv F v, valuation _ (cmp s l : Fv F v) = 1 := fun s => by
       have hc : Continuous fun a : idAt E (evFin F v) => ‖(cmp s a : Fv F v)‖ :=
-        ((cont_piW s).comp (Units.continuous_val.comp continuous_subtype_val)).norm
+        ((cont_piW s).comp (Units.continuous_val.comp continuous_subtypeVal)).norm
       obtain ⟨C, hC⟩ := (IsCompact.image hl hc).bddAbove
       have hb : ∀ n : ℤ, ‖(cmp s l : Fv F v)‖ ^ n ≤ C := fun n => by
         have := hC ⟨l ^ n, subset_closure ⟨n, rfl⟩, rfl⟩
@@ -461,7 +461,7 @@ theorem units_eq (h : IsSec σ t sec) : {l | IsCompact (closure (Subgroup.zpower
       have : Units.val '' {x : (Fv F v)ˣ | valuation _ (x : Fv F v) = 1} =
           {x | valuation _ x ≤ valuation (Fv F v) 1} ∩ Metric.sphere 0 1 := by
         ext x
-        simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_inter_iff, mem_sphere_zero_iff_norm, ← val_iff_norm, map_one]
+        simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_inter_iff, mem_sphere_zero_iff_norm, ← val_iff_norm, map_one]
         exact ⟨by rintro ⟨u, hu, rfl⟩; exact ⟨hu.le, hu⟩, fun hx => let ⟨u, hu⟩ := exists_unit hx.2; ⟨u, hu ▸ hx.2, hu⟩⟩
       rw [this]
       exact (IsNonarchimedeanLocalField.isCompact_closedBall _ _).inter_right Metric.isClosed_sphere
@@ -478,13 +478,13 @@ theorem idele_int (hσ : IsCMExt F E σ) [SecondCountableTopology (Fv F v)] [Mea
       (χ l.1 : ℂ) * ((absE F E l.1 : ℝ) : ℂ) ^ z) = gI m ψ (chrW χ t) (((ϖ : Fv F v) ^ (c + 1))⁻¹) * (chrW χ t ϖ : ℂ) ^ (c + 1) *
         ((GlobalTheory.SplitWeil.resCard (Fv F v) : ℂ) ^ (c + 1)) ^ z * C := by
   obtain ⟨⟨sec, h⟩, -⟩ := section_statement F E σ hσ v t
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  letI : MeasurableSpace (idAt E (evFin F v)) := borel _
-  haveI : BorelSpace (idAt E (evFin F v)) := ⟨rfl⟩
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  let : MeasurableSpace (idAt E (evFin F v)) := borel _
+  have : BorelSpace (idAt E (evFin F v)) := ⟨rfl⟩
   rw [units_eq h] at h1
   set U := {l : idAt E (evFin F v) | valuation _ (cmp t l : Fv F v) = 1 ∧ valuation _ (cmp (t.comp σ) l : Fv F v) = 1} with hU
   have hc : ∀ s : E →ₐ[F] Fv F v, Continuous fun a : idAt E (evFin F v) => ‖(cmp s a : Fv F v)‖ := fun s =>
-    ((cont_piW s).comp (Units.continuous_val.comp continuous_subtype_val)).norm
+    ((cont_piW s).comp (Units.continuous_val.comp continuous_subtypeVal)).norm
   have mU : MeasurableSet U := by
     simp only [hU, val_iff_norm]
     exact ((isClosed_eq (hc _) continuous_const).inter (isClosed_eq (hc _) continuous_const)).measurableSet
@@ -545,7 +545,7 @@ theorem ext_neg {k : Type} [Field k] (jr : Fin n₁ → Fin n) (jc : Fin d₁ �
 
 theorem lin_uniq {M : Model σ X W} (hm : IsVol m) (hB : B.IsGood σ) (hu : PsiUnr B.ψ v) (g : M.IsGood B.ψ) {c₁ c₂ ι ι'}
     (L : Lin M B.ψ v c₁ c₂ ι) (L' : Lin M B.ψ v c₁ c₂ ι') {φ : Fl F v n d} (hφ : φ ∈ SB _) : ι' φ = ι φ := by
-  haveI := hm.haar
+  have := hm.haar
   obtain ⟨f, hf⟩ := exists_sinf F (Fin n × Fin d)
   have hl : IsEvLoc M M LinearMap.id (ContinuousLinearMap.id _ _) fun _ => LinearMap.id :=
     ⟨fun e => by
@@ -559,7 +559,7 @@ theorem lin_uniq {M : Model σ X W} (hm : IsVol m) (hB : B.IsGood σ) (hu : PsiU
   refine (ev_model hm hB.std hu g g he hl L L' id id ∅ (fun z => by simp [o, x]) (fun _ h => by simp at h)
     (fun p _ => Or.inl ⟨p.1, p.2, rfl⟩) hφ y).trans ?_
   have : ∀ Z : Fin n × Fin d → Fv F v, tm (cut ∅ Z) = 0 := fun Z => by ext i j; simp [tm, cut]
-  simp only [this, zero_add, x, wt, Finset.notMem_empty, if_false]
+  simp only [this, zero_add, x, wt, Finset.notMem_empty, ite_false]
   rw [integral_const_mul, integral_fintype_prod_eq_prod (fun _ : Fin n × Fin d => ind (1 : Fv F v))]
   simp [int_ind_one hm]
 
@@ -818,7 +818,7 @@ theorem eps_eq {m : Measure (Fv F v)} (hm : IsVol m) {ψ : AddChar (AF F) ℂ} (
   have q0 : (Ideal.absNorm v.asIdeal : ℂ) ≠ 0 := by exact_mod_cast Ideal.absNorm_eq_zero_iff.not.2 v.ne_bot
   have g : gI m (psiV ψ v) ν (((unifAt v : Fv F v) ^ condExp ν)⁻¹) =
       ((GlobalTheory.SplitWeil.resCard (Fv F v) : ℂ) ^ condExp ν)⁻¹ * gauss ψ ν := by
-    letI : Fintype (Res (Fv F v) (condExp ν))ˣ := Fintype.ofFinite _
+    let : Fintype (Res (Fv F v) (condExp ν))ˣ := Fintype.ofFinite _
     rw [gI_gauss (ϖ := unifAt v) hm hψ exists_isUnif.choose_spec (by omega) (h ▸ hν), gauss]
     congr
     exact Subsingleton.elim _ _

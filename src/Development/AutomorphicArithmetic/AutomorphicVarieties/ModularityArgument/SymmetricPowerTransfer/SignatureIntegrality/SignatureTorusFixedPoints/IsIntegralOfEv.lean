@@ -136,7 +136,7 @@ theorem roots : Roots := by
       rw [← map_mul]
       nth_rewrite 2 [h]
       rw [Units.mul_inv, map_one]
-    have h3 := pow_lt_one₀ zero_le' ha1 (n := 2) two_ne_zero
+    have h3 := pow_lt_one₀ zero_le ha1 (n := 2) two_ne_zero
     rw [sq, h2] at h3
     exact lt_irrefl _ h3
   have hint : (valuation k).Integers O :=

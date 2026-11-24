@@ -68,7 +68,7 @@ theorem cusp_decay : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) (a : ℕ 
   intro k L N ε a γ hk hL hN hcf
   obtain ⟨f, hf⟩ := _root_.GlobalTheory.EisM.cuspForm_of_CF k L N ε a hk hL hN hcf
   obtain ⟨C₀, hC₀⟩ := hcf.2
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   have : ((ConjAct.toConjAct (γ : GL (Fin 2) ℝ)⁻¹) • (Gamma1 L : Subgroup (GL (Fin 2) ℝ))).IsArithmetic := by
     simpa [(show Rat.castHom ℝ = algebraMap ℚ ℝ by rfl), map_inv, map_mapGL]
       using! Subgroup.IsArithmetic.conj (Gamma1 L : Subgroup (GL (Fin 2) ℝ)) (mapGL ℚ γ)⁻¹

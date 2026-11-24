@@ -104,7 +104,7 @@ theorem relIndex_ne_zero_of_compact_open [TopologicalSpace G] [IsTopologicalGrou
     (hC : IsCompact (C : Set G)) (hU : IsOpen (U : Set G)) : U.relIndex C ≠ 0 := by
   have : CompactSpace C := isCompact_iff_compactSpace.mp hC
   have : Finite (C ⧸ U.subgroupOf C) :=
-    Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtype_val)
+    Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 theorem twOrb_indicator_eq_inv_index [TopologicalSpace G] [IsTopologicalGroup G] (θ : G →* G)
@@ -223,7 +223,7 @@ theorem clSum_eq_single (θ : G →* G) [TopologicalSpace G] (K : Subgroup G) (S
       exact (Quot.sound ⟨g, rfl⟩).symm
     · exact hne rfl
   · obtain ⟨g, hg⟩ := rep_mk_eq θ δ0
-    rw [hg, if_pos (hS0 g), hinv g]
+    rw [hg, ite_eq_left (hS0 g), hinv g]
 
 end Gen
 

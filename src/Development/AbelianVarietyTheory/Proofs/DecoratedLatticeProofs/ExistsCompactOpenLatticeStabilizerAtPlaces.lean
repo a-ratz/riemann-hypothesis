@@ -105,7 +105,7 @@ theorem e_mul_of_supp (P : Pl D → Prop) (X : Af D.host.F ⊗[D.host.F] D.host.
   change GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.compFin D w _ = GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.compFin D w _
   rw [map_mul, compFin_e]
   by_cases hw : P w
-  · rw [if_pos hw, one_mul]
+  · rw [ite_eq_left hw, one_mul]
   · rw [h w hw, mul_zero]
 
 theorem e_mul_fin {P : Pl D → Prop} {a : AE D} (ha : a ∈ idAt D P) :
@@ -124,7 +124,7 @@ theorem exists_latticeCompletion_cut_to_places_finiteReal (S : HSp D) (L : Lat S
       refine ⟨fun i => pairA D.host.F 0 (indP D P * a) ⊗ₜ[D.host.F] (1 * x i),
         AddSubgroup.subset_closure ⟨_, GlobalTheory.KStabBridge.intAf_mul (indicatorAdele_integral P) ha, fun w hw => ?_, 1, rfl, x, hx, rfl⟩,
         fun i => GlobalTheory.KStabBridge.infPart_pair _ _, fun i => ?_⟩
-      · rw [map_mul, evalV_indP, if_neg hw, zero_mul]
+      · rw [map_mul, evalV_indP, ite_eq_right hw, zero_mul]
       · rw [GlobalTheory.KStabBridge.finPart_pair, one_mul, Algebra.TensorProduct.tmul_mul_tmul, one_mul]
     | zero =>
       refine ⟨0, zero_mem (latV S L P), fun i => (infPart D).map_zero, fun i => ?_⟩
@@ -147,7 +147,7 @@ theorem mem_idAt_of_fin (P : Pl D → Prop) {a : AE D} (h1 : infPart D a = 0) {z
     (h2 : finPart D a = (indP D P ⊗ₜ[D.host.F] (1 : D.host.E)) * z) : a ∈ idAt D P := by
   refine (mem_supportedOnPlacesIdeal_iff_components_zero_elsewhere D P _).2 ⟨h1, fun w hw => ?_⟩
   change GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.compFin D w (finPart D a) = 0
-  rw [h2, (GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.compFin D w).map_mul, compFin_e, if_neg hw, zero_mul]
+  rw [h2, (GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.compFin D w).map_mul, compFin_e, ite_eq_right hw, zero_mul]
 
 theorem exists_lift_latV (S : HSp D) (L : Lat S) (P : Pl D → Prop) {z : Fin S.rank → Af D.host.F ⊗[D.host.F] D.host.E}
     (hz : z ∈ latHat D.host.F D.host.E (L : Set (Fin S.rank → D.host.E))) :
@@ -212,7 +212,7 @@ theorem levelOpen_of_inK (S : HSp D) (L : Lat S) (hL : L.FG) (P : Pl D → Prop)
   have hI := (SetCut.mem_congGrp_iff S _ g).1 hg.1
   refine keeps_of_core (latHat D.host.F D.host.E (L : Set (Fin S.rank → D.host.E)))
     (indP D P ⊗ₜ[D.host.F] (1 : D.host.E))
-    (e_mul_of_supp P _ fun w hw => by rw [compFin_e, if_neg hw])
+    (e_mul_of_supp P _ fun w hw => by rw [compFin_e, ite_eq_right hw])
     (fun z hz => GlobalTheory.KStabBridge.latHat_smul _ (indicatorAdele_integral P) hz) (fun z hz => ?_) _ (fun i j => ?_) (fun z => ?_)
   · have := GlobalTheory.KStabBridge.latHat_smul _ (one_sub_indP_int P) hz
     rwa [TensorProduct.sub_tmul, ← Algebra.TensorProduct.one_def] at this
@@ -268,7 +268,7 @@ theorem isClosed_grpAt (S : HSp D) (P : Pl D → Prop) : IsClosed (grpAt S P : S
 private theorem selfDual_isFullLattice {D : D7} : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
     IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
   intro V Λ hΛ
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr
@@ -328,7 +328,7 @@ private theorem selfDual_isFullLattice {D : D7} : ∀ (V : HSp D) (Λ : Submodul
 
 theorem exists_compact_open : ∀ (D : D7) (V : HSp D) (L : Lat V), IsSelfDualC V L → ∀ P : Pl D → Prop, ∃ K : Subgroup (GA D V), (∀ g, g ∈ K ↔ InK V L P g) ∧ IsCompact (K : Set (GA D V)) ∧ IsOpen ((K.subgroupOf (grpAt V P) : Subgroup _) : Set (grpAt V P)) := by
   intro D V L hL P
-  haveI : Submodule.IsFullLattice D.host.E L := selfDual_isFullLattice V L hL
+  have : Submodule.IsFullLattice D.host.E L := selfDual_isFullLattice V L hL
   have hfg : L.FG := Submodule.IsLattice.fg (A := D.host.E) L
   let U : Subgroup (GA D V) := GlobalTheory.AdelicU.levelOpen D.sp.cm.sig V.gram L
   have hU : IsOpen (U : Set (GA D V)) := GlobalTheory.AdelicU.isOpen_levelOpen D.sp.cm.sig V.gram L
@@ -342,7 +342,7 @@ theorem exists_compact_open : ∀ (D : D7) (V : HSp D) (L : Lat V), IsSelfDualC 
       ext x
       exact ⟨fun h => h.2, fun h => ⟨x.2, h⟩⟩
     rw [e]
-    exact hU.preimage continuous_subtype_val
+    exact hU.preimage continuous_subtypeVal
 
 end GlobalTheory.FinPl.KOpen
 

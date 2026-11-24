@@ -595,8 +595,8 @@ theorem wittVector_lift : ∀ (p : ℕ) [Fact p.Prime] {A B : Type} [CommRing A]
       fun f f' _ => RingHom.ext fun x => Subsingleton.elim _ _⟩
   · rw [not_subsingleton_iff_nontrivial] at hB
     have hu : ¬IsUnit (p : B) := IsNilpotent.not_isUnit ⟨n, hn⟩
-    haveI : Fact ¬IsUnit (p : B) := ⟨hu⟩
-    haveI := isAdicComplete_of_pow_eq_zero p hn
+    have : Fact ¬IsUnit (p : B) := ⟨hu⟩
+    have := isAdicComplete_of_pow_eq_zero p hn
     have hAn : Nontrivial A := by
       by_contra hA'
       rw [not_nontrivial_iff_subsingleton] at hA'
@@ -605,8 +605,8 @@ theorem wittVector_lift : ∀ (p : ℕ) [Fact p.Prime] {A B : Type} [CommRing A]
       have h2 := hJ 1 h1
       rw [one_pow, Ideal.mem_span_singleton] at h2
       exact hu (isUnit_of_dvd_one h2)
-    haveI : CharP A p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hA.char
-    haveI : PerfectRing A p := ⟨hA.bij⟩
+    have : CharP A p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hA.char
+    have : PerfectRing A p := ⟨hA.bij⟩
     exact ⟨exists_lift p J hpJ hJ g, fun f f' h => lift_unique p J n hA.bij hn hJ f f' h⟩
 
 end GlobalTheory.CompanionTheory.PerfectWittMaps
@@ -674,7 +674,7 @@ theorem tens_desc (m n : ℕ)
     (u : S →+* B) (v : T →+* B) (huv : ∀ r, u (algebraMap R S r) = v (algebraMap R T r))
     (hm : (m : B) ^ n = 0) :
     ∃ f : C →+* B, (∀ s, f (algebraMap S C s) = u s) ∧ ∀ t, f (algebraMap T C t) = v t := by
-  letI : Algebra R B := (u.comp (algebraMap R S)).toAlgebra
+  let : Algebra R B := (u.comp (algebraMap R S)).toAlgebra
   let u' : S →ₐ[R] B := { u with commutes' := fun _ => rfl }
   let v' : T →ₐ[R] B := { v with commutes' := fun r => (huv r).symm }
   let L : S ⊗[R] T →ₐ[R] B := Algebra.TensorProduct.lift u' v' (fun _ _ => Commute.all _ _)
@@ -872,9 +872,9 @@ theorem finish {O R Λ : Type} [CommRing O] [CommRing R] [CommRing Λ] {a : O �
     intro z
     exact RingHom.congr_fun (e1.trans e2.symm) z
   have hφ : e'.comp φ = algebraMap 𝓛.D X.E := by
-    letI : Algebra (MvPolynomial (Fin d) Λ) 𝓛.D := (MvPolynomial.eval₂Hom 𝓛.i 𝓛.t).toAlgebra
-    haveI : Algebra.Etale (MvPolynomial (Fin d) Λ) 𝓛.D := 𝓛.et
-    letI : Algebra (MvPolynomial (Fin d) Λ) X.E :=
+    let : Algebra (MvPolynomial (Fin d) Λ) 𝓛.D := (MvPolynomial.eval₂Hom 𝓛.i 𝓛.t).toAlgebra
+    have : Algebra.Etale (MvPolynomial (Fin d) Λ) 𝓛.D := 𝓛.et
+    let : Algebra (MvPolynomial (Fin d) Λ) X.E :=
       ((algebraMap 𝓛.D X.E).comp (MvPolynomial.eval₂Hom 𝓛.i 𝓛.t)).toAlgebra
     have hcomp : (e'.comp φ).comp (MvPolynomial.eval₂Hom 𝓛.i 𝓛.t)
         = (algebraMap 𝓛.D X.E).comp (MvPolynomial.eval₂Hom 𝓛.i 𝓛.t) := by
@@ -914,7 +914,7 @@ theorem toAcr_sub_mem {l : ℕ} [Fact l.Prime] (A : PAlg l) (n : ℕ) (w : Ainf 
     exact Ideal.zero_mem _
   · have hl0 : ((l : ℕ) : A.A) = 0 := by
       rw [← map_natCast A.s l, CharP.cast_eq_zero, map_zero]
-    haveI : CharP A.A l := (CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)).mpr hl0
+    have : CharP A.A l := (CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)).mpr hl0
     obtain ⟨π, hπ, -, -, -⟩ := (_root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp A n).1
     have hlP : ((l : ℕ) : A.Acr n) ∈ A.PFil n := by
       rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast, ← map_natCast π l, hl0, map_zero]
@@ -1269,8 +1269,8 @@ theorem twist {Λ D : Type} [CommRing Λ] [CommRing D] (i : Λ →+* D) (hf : i.
     (hg : ∀ z, g z - z ∈ Ideal.span {i μ}) :
     (∀ x, i χ * g x = x → i μ * x = 0) ∧ ∀ 𝔞 : Ideal Λ, ∀ x ∈ 𝔞.map i,
       ∃ y ∈ (Ideal.span {ξ} * 𝔞).map i, i χ * g y - y = i μ * x := by
-  letI : Algebra Λ D := i.toAlgebra
-  haveI : Module.Flat Λ D := hf
+  let : Algebra Λ D := i.toAlgebra
+  have : Module.Flat Λ D := hf
   have hs : ∀ (a : Λ) (x : D), a • x = i a * x := fun a x => rfl
   have hgi' : ∀ a, g (i a) = i a := fun a => RingHom.congr_fun hgi a
   let γ : D →ₗ[Λ] D :=
@@ -1499,16 +1499,16 @@ theorem main : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] {F : Fn O} {
   let χ : Gam d → X.ι → Acris l := fun g a =>
     if h : a = X.a₀ then 1 else ∏ j, ε.qk (mm a h) ^ (Multiplicative.toAdd g j * cc a h j)
   have hχ : ∀ g a (h : a ≠ X.a₀), χ g a = ∏ j, ε.qk (mm a h) ^ (Multiplicative.toAdd g j * cc a h j) :=
-    fun g a h => dif_neg h
+    fun g a h => dite_eq_right h
   have hflat := (GlobalTheory.CompanionTheory.LiftFlat.lift_flat 𝓛.i 𝓛.t 𝓛.et).1
   letI alg : Algebra ((SingleObj.functor γ).obj (SingleObj.star _)).B X.E := X.alg
-  have hA := @ni_of_basis (bs l k n) (Lc F κ k n) (Acris l) _ ((base l).cris n) ρ hρ ε.μ (ε.μ_mem k (base l) n) d _ _ θ X.ι X.E _ alg X.b X.a₀ X.b_a₀ e₀ hbij hal χ (fun g => dif_pos rfl)
+  have hA := @ni_of_basis (bs l k n) (Lc F κ k n) (Acris l) _ ((base l).cris n) ρ hρ ε.μ (ε.μ_mem k (base l) n) d _ _ θ X.ι X.E _ alg X.b X.a₀ X.b_a₀ e₀ hbij hal χ (fun g => dite_eq_left rfl)
   refine hA ?_ (fun r => fil (DD k (base l) n) r) ?_ ?_ hflat ?_ ?_
   · intro g a
     show (mapAcr (γ' g).asHom.1 n) (e₀ (X.b a)) =
       (mapAcr 𝒯.A.fromBase n) ((base l).cris n (χ g a)) * e₀ (X.b a)
     by_cases ha : a = X.a₀
-    · have h0 : χ g a = 1 := dif_pos ha
+    · have h0 : χ g a = 1 := dite_eq_left ha
       have hb1 : e₀ (X.b a) = 1 := by rw [ha, X.b_a₀, map_one]
       rw [hb1, h0, map_one, map_one, map_one, mul_one]
     · have hbe : e₀ (X.b a) = ∏ j, 𝒯.A.toAcr n (WittVector.teichmuller l (𝒯.c j (mm a ha) : 𝒯.A.A)) ^ cc a ha j := by

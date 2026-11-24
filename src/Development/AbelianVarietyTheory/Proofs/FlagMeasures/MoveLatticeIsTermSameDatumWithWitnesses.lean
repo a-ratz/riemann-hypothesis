@@ -83,7 +83,7 @@ theorem algebraMap_mem_O (L : Formalism.MainNotions.S.Loc.LocE F E) (t : 𝒪[F]
 
 theorem exists_den (L : Formalism.MainNotions.S.Loc.LocE F E) (c : E) :
     ∃ t : 𝒪[F], t ≠ 0 ∧ algebraMap F E (t : F) * c ∈ L.O := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_eq_succ L.rank
+  have : Module.Finite F E := Module.finite_of_finrank_eq_succ L.rank
   have hc : IsIntegral F c := Algebra.IsIntegral.isIntegral c
   obtain ⟨m, hm⟩ := IsIntegral.exists_multiple_integral_of_isLocalization
     (nonZeroDivisors 𝒪[F]) (Rₘ := F) c hc
@@ -485,7 +485,7 @@ theorem f'_perp (b : Fin (r + 1)) : S.f' b ∈ perp L S.Hm S.X' := by
   induction hy using Submodule.span_induction with
   | mem y hy =>
     obtain ⟨j, rfl⟩ := hy
-    rw [S.gram', if_neg]
+    rw [S.gram', ite_eq_right]
     exact fun h => (Fin.castSucc_lt_last j).ne h.2
   | zero => exact h_zero_r S _
   | add y z _ _ h1 h2 => exact (h_add_r S _ _ _).trans (by unfold Frames.h; rw [h1, h2, add_zero])

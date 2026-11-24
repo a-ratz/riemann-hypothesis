@@ -83,7 +83,7 @@ theorem exists_C_mul_eq_C_pow_mul {a : A} (ha : v.intValuation a = exp (-1 : ℤ
     rw [ha, exp_le_exp] at h3
     norm_num at h3
   have hJj : ¬ J ^ j ≤ v.asIdeal := fun h => hJv (Ideal.IsPrime.le_of_pow_le h)
-  obtain ⟨t, htJ, htv⟩ := SetLike.not_le_iff_exists.mp hJj
+  obtain ⟨t, htJ, htv⟩ := IsConcreteLE.not_le_iff_exists.mp hJj
   have hid : J ^ j * v.asIdeal ^ j = Ideal.span {a ^ j} := by
     rw [← mul_pow, mul_comm, ← hJ, Ideal.span_singleton_pow]
   have hmem : C t * p ∈ Ideal.span {(C a ^ j : MvPolynomial σ A)} := by

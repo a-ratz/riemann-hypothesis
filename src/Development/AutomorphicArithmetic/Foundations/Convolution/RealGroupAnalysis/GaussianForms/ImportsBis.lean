@@ -74,7 +74,7 @@ private theorem dv_iff {F : Type} [Field F] [NumberField F] (m : F) (hm : m ≠ 
     have e : (algebraMap F (FiniteAdeleRing (𝓞 F) F) m⁻¹ * x.2) v =
         (algebraMap F (FiniteAdeleRing (𝓞 F) F) m⁻¹) v * x.2 v := rfl
     rw [e, Valuation.map_mul, val_coe, map_inv₀, mul_comm, ← div_eq_mul_inv]
-    exact div_le_one₀ (zero_lt_iff.2 h0)
+    exact div_le_one₀ (pos_iff_ne_zero.2 h0)
   constructor
   · intro h v
     exact (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 ((key v).2 (h v))
@@ -147,7 +147,7 @@ private theorem place {K Γ : Type*} [Field K] [LinearOrderedCommGroupWithZero �
     rw [this]
     refine (val.map_add _ _).trans (max_le (hd.trans hm2) (by simp))
   by_cases h : val d = 1
-  · simp only [h, if_true] at he
+  · simp only [h, ite_true] at he
     subst he
     have hd0 : d ≠ 0 := by
       rintro rfl
@@ -157,7 +157,7 @@ private theorem place {K Γ : Type*} [Field K] [LinearOrderedCommGroupWithZero �
       rw [mul_zero, add_zero, neg_sub, sub_mul, mul_inv_cancel₀ hd0, one_mul]
     rw [this, map_mul, map_inv₀, Valuation.map_neg, h]
     simpa using hd
-  · simp only [h, if_false] at he
+  · simp only [h, ite_false] at he
     subst he
     have hlt : val d < 1 := lt_of_le_of_ne hd1 h
     have hc1 : val c = 1 := hcd.resolve_right h
@@ -170,7 +170,7 @@ private theorem place {K Γ : Type*} [Field K] [LinearOrderedCommGroupWithZero �
       refine le_antisymm hm ?_
       by_contra hlt'
       have : val mm < 1 := not_le.mp hlt'
-      have := pow_lt_one₀ zero_le' this (two_ne_zero)
+      have := pow_lt_one₀ zero_le this (two_ne_zero)
       exact absurd hm1 this.ne
     have hu : val (d + c * 1) = 1 := by
       rw [mul_one, Valuation.map_add_eq_of_lt_right val (by rwa [hc1]), hc1]
@@ -196,9 +196,9 @@ theorem UpperTheory.ConvolutionTheory.R2.C.lvEps :
   have he_int : ∀ v : HeightOneSpectrum (𝓞 F), e v ∈ v.adicCompletionIntegers F := by
     intro v
     by_cases h : Valued.v (d.2 v) = 1
-    · simp only [e, h, if_true]
+    · simp only [e, h, ite_true]
       exact zero_mem _
-    · simp only [e, h, if_false]
+    · simp only [e, h, ite_false]
       exact one_mem _
   let ef : FiniteAdeleRing (𝓞 F) F := ⟨e, Filter.Eventually.of_forall he_int⟩
   let ε : A F := ((0 : InfiniteAdeleRing F), ef)
@@ -412,7 +412,7 @@ private theorem dv_neg {F : Type} [Field F] [NumberField F] {m : F} {x : A F}
 private theorem dv_zero {F : Type} [Field F] [NumberField F] (m : F) : Dv m (0 : A F) := fun v => by
   change Valued.v (0 : v.adicCompletion F) ≤ _
   rw [map_zero]
-  exact zero_le'
+  exact zero_le
 
 private theorem dv_one {F : Type} [Field F] [NumberField F] : Dv 1 (1 : A F) := fun v => by
   change Valued.v (1 : v.adicCompletion F) ≤ _
@@ -497,7 +497,7 @@ theorem UpperTheory.ConvolutionTheory.R2.C.grpLevel :
   have hev : ∀ i j, ∀ᶠ g in 𝓝 (1 : G1 F), Dv (m ^ 2) (g i j - (1 : Matrix (Fin 2) (Fin 2) (A F)) i j) := by
     intro i j
     have hc : Continuous fun g : G1 F => g i j - (1 : Matrix (Fin 2) (Fin 2) (A F)) i j :=
-      (continuous_subtype_val.matrix_elem i j).sub continuous_const
+      (continuous_subtypeVal.matrix_elem i j).sub continuous_const
     have ht : Tendsto (fun g : G1 F => g i j - (1 : Matrix (Fin 2) (Fin 2) (A F)) i j) (𝓝 1) (𝓝 0) := by
       have h := hc.tendsto 1
       simpa using h
@@ -629,12 +629,12 @@ theorem UpperTheory.ConvolutionTheory.R2.C.level :
     { carrier := {g | Om g φ = φ}
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_mul, Module.End.mul_apply, hb, ha]
       one_mem' := by simp
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         have h : Om a⁻¹ (Om a φ) = φ := by
           rw [← Module.End.mul_apply, ← map_mul]; simp
         rwa [ha] at h }

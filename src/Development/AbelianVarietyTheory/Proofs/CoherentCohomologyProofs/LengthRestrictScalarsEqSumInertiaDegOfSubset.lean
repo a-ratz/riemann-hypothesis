@@ -74,10 +74,10 @@ theorem length_eq_length_localizedModule (T : Submonoid S) (A : Type*) [CommRing
     [Module S X'] [Module A X'] [IsScalarTower S A X'] (f : X →ₗ[S] X') [IsLocalizedModule T f] :
     Module.length A X' = Module.length (Localization T) (LocalizedModule T X) := by
   let e : Localization T ≃ₐ[S] A := IsLocalization.algEquiv T _ _
-  letI : Algebra (Localization T) A := e.toRingHom.toAlgebra
-  letI : Module (Localization T) X' := Module.compHom X' e.toRingHom
-  haveI : IsScalarTower (Localization T) A X' := ⟨fun a b x => mul_smul (e a) b x⟩
-  haveI : IsScalarTower S (Localization T) X' := ⟨fun a b x => by
+  let : Algebra (Localization T) A := e.toRingHom.toAlgebra
+  let : Module (Localization T) X' := Module.compHom X' e.toRingHom
+  have : IsScalarTower (Localization T) A X' := ⟨fun a b x => mul_smul (e a) b x⟩
+  have : IsScalarTower S (Localization T) X' := ⟨fun a b x => by
     change e (a • b) • x = a • (e b • x)
     rw [map_smul, smul_assoc]⟩
   rw [← Module.length_eq_of_surjective (S := Localization T) (R := A) (M := X') e.surjective]
@@ -104,9 +104,9 @@ theorem length_localizedModule_congr (T : Submonoid S) {M N : Type*}
 
 theorem length_localizedModule_quotient_self (m : Ideal S) [hm : m.IsMaximal] :
     Module.length (Localization.AtPrime m) (LocalizedModule m.primeCompl (S ⧸ m)) = 1 := by
-  haveI : IsSimpleModule S (S ⧸ m) :=
+  have : IsSimpleModule S (S ⧸ m) :=
     isSimpleModule_iff_quot_maximal.mpr ⟨m, hm, ⟨LinearEquiv.refl _ _⟩⟩
-  haveI : IsLocalizedModule m.primeCompl (LinearMap.id : S ⧸ m →ₗ[S] S ⧸ m) :=
+  have : IsLocalizedModule m.primeCompl (LinearMap.id : S ⧸ m →ₗ[S] S ⧸ m) :=
     { map_units := fun s => by
         rw [Module.End.isUnit_iff]
         refine LinearMap.bijective_of_ne_zero fun h => s.2 ?_
@@ -118,7 +118,7 @@ theorem length_localizedModule_quotient_self (m : Ideal S) [hm : m.IsMaximal] :
       surj := fun y => ⟨(y, 1), by simp⟩
       exists_of_eq := fun h => ⟨1, by simpa using h⟩ }
   let e := IsLocalizedModule.iso m.primeCompl (LinearMap.id : S ⧸ m →ₗ[S] S ⧸ m)
-  haveI : Nontrivial (LocalizedModule m.primeCompl (S ⧸ m)) := e.toEquiv.nontrivial
+  have : Nontrivial (LocalizedModule m.primeCompl (S ⧸ m)) := e.toEquiv.nontrivial
   apply le_antisymm
   · rw [← Module.length_top]
     refine (Submodule.length_le_length_restrictScalars S _).trans ?_
@@ -130,7 +130,7 @@ theorem length_localizedModule_quotient_of_ne (m n : Ideal S) [hm : m.IsMaximal]
     Module.length (Localization.AtPrime n) (LocalizedModule n.primeCompl (S ⧸ m)) = 0 := by
   rw [Module.length_eq_zero_iff, LocalizedModule.subsingleton_iff]
   have : ¬ m ≤ n := fun hle => h (hm.eq_of_le hn.ne_top hle).symm
-  obtain ⟨s, hs, hs'⟩ := SetLike.not_le_iff_exists.mp this
+  obtain ⟨s, hs, hs'⟩ := IsConcreteLE.not_le_iff_exists.mp this
   intro x
   obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective m x
   refine ⟨s, hs', ?_⟩
@@ -203,7 +203,7 @@ theorem length_restrictScalars_eq_sum_of_subset {X : Type*} [AddCommGroup X] [Mo
 theorem length_quotient_eq_finrank (p : Ideal R) (n : Ideal S) [p.IsMaximal] [n.LiesOver p]
     [Module.Finite (R ⧸ p) (S ⧸ n)] :
     Module.length R (S ⧸ n) = (Module.finrank (R ⧸ p) (S ⧸ n) : ℕ∞) := by
-  letI := Ideal.Quotient.field p
+  let := Ideal.Quotient.field p
   rw [Module.length_eq_of_surjective (S := R) (R := R ⧸ p) Ideal.Quotient.mk_surjective,
     Module.length_eq_finrank]
 
@@ -223,9 +223,9 @@ theorem length_restrictScalars_eq_sum_inertiaDeg_of_subset [IsLocalRing R] {X : 
       (LocalizedModule n.asIdeal.primeCompl X) * (n.asIdeal.inertiaDeg R : ℕ∞) := by
   rw [length_restrictScalars_eq_sum_of_subset R h T hT]
   refine Finset.sum_congr rfl fun n hn => ?_
-  haveI := hover n hn
-  haveI := hfin n hn
-  haveI : Module.Finite (R ⧸ maximalIdeal R) (S ⧸ n.asIdeal) :=
+  have := hover n hn
+  have := hfin n hn
+  have : Module.Finite (R ⧸ maximalIdeal R) (S ⧸ n.asIdeal) :=
     Module.Finite.of_restrictScalars_finite R _ _
   rw [length_quotient_eq_inertiaDeg R (maximalIdeal R) n.asIdeal]
 
@@ -240,7 +240,7 @@ theorem liesOver_maximalIdeal_of_isIntegral [Algebra.IsIntegral R S] (n : Ideal 
   ⟨(eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := R) n)).symm⟩
 
 theorem finite_maximalSpectrum_of_finite [Module.Finite R S] : Finite (MaximalSpectrum S) := by
-  haveI := (Algebra.QuasiFinite.finite_primesOver (S := S) (maximalIdeal R)).to_subtype
+  have := (Algebra.QuasiFinite.finite_primesOver (S := S) (maximalIdeal R)).to_subtype
   refine Finite.of_injective (fun n : MaximalSpectrum S =>
     (⟨n.asIdeal, n.isMaximal.isPrime, liesOver_maximalIdeal_of_isIntegral R S n.asIdeal⟩ :
       (maximalIdeal R).primesOver S)) fun a b hab => ?_

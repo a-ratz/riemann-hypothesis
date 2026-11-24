@@ -51,8 +51,8 @@ theorem UpperTheory.acy_middle_of_shortExact :
   intro Q S hS h1 h3 P hP n hn
   obtain ⟨z, hz⟩ := GlobalTheory.T.etaleCohomology_coefficient_longExactSequence ℤ S hS
   have e := (hz (sgl ((free ℤ).obj P)) n).1
-  haveI := h1 P hP n hn
-  haveI := h3 P hP n hn
+  have := h1 P hP n hn
+  have := h3 P hP n hn
   refine ⟨fun y y' => ?_⟩
   have hy : ∀ u : HK ℤ (sgl ((free ℤ).obj P)) S.X₂ n, u = 0 := by
     intro u

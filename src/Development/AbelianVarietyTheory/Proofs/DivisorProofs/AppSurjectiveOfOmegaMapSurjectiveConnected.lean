@@ -135,7 +135,7 @@ theorem surjective_of_cotangentPullback_surjective_nilAug {k A B : Type} [Field 
       have : x - f (b + b') = x - f b - f b' := by rw [map_add (f := _)]; ring
       rw [this]; exact hb'
 
-  haveI : IsNoetherianRing A := IsNoetherianRing.of_finite k A
+  have : IsNoetherianRing A := IsNoetherianRing.of_finite k A
   have hnil : IsNilpotent I := by
     refine (Ideal.FG.isNilpotent_iff_le_nilradical (IsNoetherian.noetherian I)).2 ?_
     intro a ha

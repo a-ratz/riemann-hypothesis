@@ -58,7 +58,7 @@ theorem hom_ext_of_fibres {S : Scheme.{0}} [IsReduced S] {Sg : Set S} (hSg : Den
   let incl : (∐ fun q : Sg => pullback X.hom (j q.1 q.2)) ⟶ X.left :=
     Sigma.desc fun q : Sg => pullback.fst X.hom (j q.1 q.2)
   have hincl : ∀ q : Sg, Sigma.ι (fun q : Sg => pullback X.hom (j q.1 q.2)) q ≫ incl =
-      pullback.fst X.hom (j q.1 q.2) := fun q => Sigma.ι_desc _ q
+      pullback.fst X.hom (j q.1 q.2) := fun q => Sigma.ι_comp_desc _ q
   have hdense : Dense (X.hom ⁻¹' Sg) := hSg.preimage X.hom.isOpenMap
   have : IsDominant incl := by
     refine ⟨Dense.mono ?_ hdense⟩

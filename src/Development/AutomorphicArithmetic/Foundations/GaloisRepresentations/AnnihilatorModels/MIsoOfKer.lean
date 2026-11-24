@@ -88,7 +88,7 @@ private lemma factor (hDiv : DivC) {A₀ A₁ A₂ : Over S} [GrpObj A₀] [IsCo
       rw [Category.assoc, v, comp_pow', Category.comp_id, hg]
     rw [← Category.assoc]
     exact hk T _ this)
-  haveI := hν
+  have := hν
   refine ⟨ν, hν, hνc, ?_⟩
   refine (hDiv S A₀ A₂ h₀ c hc).2 (ψ₁ ≫ ν) ψ₂ inferInstance inferInstance ?_
   rw [← comp_pow', hνc, ← Category.assoc, u, ← self_pow]
@@ -126,14 +126,14 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.isoOfKer_of :
   have hc : 0 < c := h1.pos
   obtain ⟨-, hm1, hact1, heta1, hpol1, ψ₁', hψ₁', u1, v1⟩ := h1
   obtain ⟨-, hm2, hact2, heta2, hpol2, ψ₂', hψ₂', u2, v2⟩ := h2
-  haveI := hm1
-  haveI := hm2
-  haveI := hψ₁'
-  haveI := hψ₂'
+  have := hm1
+  have := hm2
+  have := hψ₁'
+  have := hψ₂'
   obtain ⟨ρ, hρ, -, hρ1⟩ := factor hDiv o.ab o₁.ab hc ψ₁ ψ₁' ψ₂ u1 v1 (fun T g h => (hker T g).1 h)
   obtain ⟨ρ', hρ', -, hρ2⟩ := factor hDiv o.ab o₂.ab hc ψ₂ ψ₂' ψ₁ u2 v2 (fun T g h => (hker T g).2 h)
-  haveI := hρ
-  haveI := hρ'
+  have := hρ
+  have := hρ'
   have hrr : ρ ≫ ρ' = 𝟙 o₁.A :=
     cancel hDiv o₁.ab hc ψ₁ ψ₁' v1 _ _ (by rw [← Category.assoc, hρ1, hρ2, Category.comp_id])
   have hr'r : ρ' ≫ ρ = 𝟙 o₂.A :=
@@ -188,7 +188,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.isoOfKer_of :
   have hcls := hTF k o₁.A o₁.A o₁.ab o₁.ab _ hL hLadd hLsadd (c * c) (Nat.mul_pos hc hc) key
   rw [GlobalTheory.CechPic.cls_div hLp o₁.isLB hL, sub_eq_zero] at hcls
   have hpol : LBIso o₁.P (o₂.P.pull (sq2 ρ)) := (GlobalTheory.CechPic.cls_eq_iff o₁.isLB hLp).1 hcls.symm
-  haveI : IsIso ρ.left := ⟨⟨ρ'.left, by rw [← Over.comp_left, hrr, Over.id_left],
+  have : IsIso ρ.left := ⟨⟨ρ'.left, by rw [← Over.comp_left, hrr, Over.id_left],
     by rw [← Over.comp_left, hr'r, Over.id_left]⟩⟩
   refine ⟨⟨ρ.left, sq2 ρ, ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, ?_⟩, ⟨?_, ?_⟩, ?_, hpol, ?_⟩, ?_⟩
   · intro T x y x₀ y₀ hx hy
@@ -210,8 +210,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.isoOfKer_of :
   · show (lift (fst o₁.A o₁.A ≫ ρ) (snd o₁.A o₁.A ≫ ρ)).left ≫ _ = _
     rw [← Over.comp_left, lift_snd, Over.comp_left]
   · intro a
-    haveI := o₁.act.hom a
-    haveI := o₂.act.hom a
+    have := o₁.act.hom a
+    have := o₂.act.hom a
     have h : o₁.act.act a ≫ ρ = ρ ≫ o₂.act.act a :=
       cancel hDiv o₁.ab hc ψ₁ ψ₁' v1 _ _ (by
         rw [← Category.assoc, ← hact1 a, Category.assoc, hρ1, hact2 a, ← hρ1, Category.assoc])

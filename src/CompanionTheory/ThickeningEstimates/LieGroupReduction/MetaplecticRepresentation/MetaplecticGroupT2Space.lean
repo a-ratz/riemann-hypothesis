@@ -65,7 +65,7 @@ theorem sec_one : sec (1 : Mat l) = 1 := by
 theorem eventually_det_pos : ∀ᶠ s in 𝓝 (1 : Sp l), 0 < s.1.toBlocks₁₁.det := by
   have hc : Continuous fun s : Sp l => s.1.toBlocks₁₁.det :=
     Continuous.matrix_det (continuous_pi fun i => continuous_pi fun j =>
-      continuous_subtype_val.matrix_elem (Sum.inl i) (Sum.inl j))
+      continuous_subtypeVal.matrix_elem (Sum.inl i) (Sum.inl j))
   have h1 : (1 : Sp l).1.toBlocks₁₁.det = 1 := by
     rw [show (1 : Sp l).1 = 1 from rfl, toBlocks₁₁_one', Matrix.det_one]
   have h2 : ∀ᶠ y in 𝓝 ((1 : Sp l).1.toBlocks₁₁.det), (0 : ℝ) < y := lt_mem_nhds (by rw [h1]; exact one_pos)
@@ -84,13 +84,13 @@ theorem tendsto_sec (hD : SecDer l) (f : Sch l) :
   have h := hD ((l ⊕ l) → (l ⊕ l) → ℝ) (fun x => Matrix.of x) m' (fun a b => (1 : Mat l) a b) rfl
     (fun a b => (m' a b).hasFDerivAt.congr_of_eventuallyEq (Eventually.of_forall fun x => rfl)) f
   have h2 : schwartzToL2 l (sec (Matrix.of fun a b => (1 : Mat l) a b) f) = schwartzToL2 l f := by
-    rw [show (Matrix.of fun a b => (1 : Mat l) a b) = 1 from rfl, sec_one, ContinuousLinearMap.one_apply]
+    rw [show (Matrix.of fun a b => (1 : Mat l) a b) = 1 from rfl, sec_one, one_apply_eq_self]
   have h3 : Tendsto (fun x : (l ⊕ l) → (l ⊕ l) → ℝ => schwartzToL2 l (sec (Matrix.of x) f))
       (𝓝 (fun a b => (1 : Mat l) a b)) (𝓝 (schwartzToL2 l f)) := by
     convert h.continuousAt.tendsto using 2
     exact h2.symm
   have hc : Continuous fun s : Sp l => (fun a b => (s.1 : Mat l) a b : (l ⊕ l) → (l ⊕ l) → ℝ) :=
-    continuous_pi fun a => continuous_pi fun b => continuous_subtype_val.matrix_elem a b
+    continuous_pi fun a => continuous_pi fun b => continuous_subtypeVal.matrix_elem a b
   have h4 : Tendsto (fun s : Sp l => (fun a b => (s.1 : Mat l) a b : (l ⊕ l) → (l ⊕ l) → ℝ)) (𝓝 1)
       (𝓝 (fun a b => (1 : Mat l) a b)) := hc.tendsto 1
   exact h3.comp h4
@@ -207,7 +207,7 @@ theorem cover_of (hT : TopG l) (hO : Surj l) (hK : Ker l) (hS : SecEx l) (hD : S
     rintro _ ⟨g, hg, rfl⟩
     have hc : Tendsto (fun t : Sp l => (pr g)⁻¹ * t) (𝓝 (pr g)) (𝓝 1) := by
       have : Continuous fun t : Sp l => (pr g)⁻¹ * t :=
-        Continuous.subtype_mk (continuous_const.mul continuous_subtype_val) fun t => ((pr g)⁻¹ * t).2
+        Continuous.subtype_mk (continuous_const.mul continuous_subtypeVal) fun t => ((pr g)⁻¹ * t).2
       simpa using this.tendsto (pr g)
     have h1 : Tendsto (fun t => g * σ ((pr g)⁻¹ * t)) (𝓝 (pr g)) (𝓝 g) := by
       have := ((continuous_const_mul g).tendsto 1).comp (key.comp hc)

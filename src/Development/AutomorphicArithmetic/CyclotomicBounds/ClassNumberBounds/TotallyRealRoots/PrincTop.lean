@@ -103,7 +103,7 @@ theorem isOpen_iff_isClosed_finiteIndex (U : Subgroup ℤ_[l]ˣ) :
   · intro h
     refine ⟨U.isClosed_of_isOpen h, ?_⟩
     obtain ⟨a, ha⟩ := (isOpen_iff_princ_le U).mp h
-    haveI : (princ l a).FiniteIndex := Subgroup.finiteIndex_ker (redPow l a)
+    have : (princ l a).FiniteIndex := Subgroup.finiteIndex_ker (redPow l a)
     exact Subgroup.finiteIndex_of_le ha
   · rintro ⟨hc, hf⟩
     exact U.isOpen_of_isClosed_of_finiteIndex hc

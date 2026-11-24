@@ -76,7 +76,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.iwaInt :
   obtain ⟨c, hc0, hc⟩ := HaarSK.exists_lintegral_eq μ hS hK hSK ν κ
   refine ⟨c, by exact_mod_cast pos_iff_ne_zero.mpr hc0, fun Φ hm => ?_⟩
   have hφ : Measurable fun g : G1 K (2 + 2) => ∫⁻ k : KG K (2 + 2), Φ (g * k) ∂κ :=
-    (hm.comp (measurable_fst.mul (measurable_subtype_coe.comp measurable_snd))).lintegral_prod_right'
+    (hm.comp (measurable_fst.mul (measurable_subtypeVal.comp measurable_snd))).lintegral_prod_right'
   rw [hc Φ hm, hΦ _ hφ, ENNReal.ofReal_coe_nnreal]
   congr 1
   refine lintegral_congr fun m₁ => lintegral_congr fun m₂ => lintegral_congr fun t => ?_
@@ -87,4 +87,4 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.iwaInt :
   · refine lintegral_congr fun X => ?_
     rw [lintegral_mul_const' _ _ ENNReal.ofReal_ne_top]
   · exact ((hm.comp ((hn.comp measurable_fst).mul
-      (measurable_subtype_coe.comp measurable_snd))).mul_const _).aemeasurable
+      (measurable_subtypeVal.comp measurable_snd))).mul_const _).aemeasurable

@@ -118,7 +118,7 @@ theorem continuous_pr (a : Matrix (Fin n) (Fin n) D.host.E) : Continuous (pr a :
   continuous_halfTr.comp (Continuous.matrix_trace (continuous_const.matrix_mul continuous_id))
 
 theorem trA_cA (z : AE D) : trA (cA D z) = trA z := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   have hb : Function.Bijective (D.sp.cm.sig : D.host.E →ₐ[D.host.F] D.host.E) :=
     Algebra.IsAlgebraic.algHom_bijective _
   have ht : ∀ e : D.host.E, Algebra.trace D.host.F D.host.E (D.sp.cm.sig e) = Algebra.trace D.host.F D.host.E e :=
@@ -162,7 +162,7 @@ theorem mem_hermSub_sym (γ : Matrix (Fin n) (Fin n) D.host.E) : γ + γᴴ ∈ 
 
 theorem rat_ker {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (x : hermA D n)
     (h : ∀ a ∈ hermSub D n, ψ (-pr a x.1) = 1) : x ∈ ratHerm D n := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   have hx : adj x.1 = x.1 := x.2
   have key : ∀ i j (e : D.host.E), ψ (Algebra.trace (AF D.host.F) (AE D) (incA D e * x.1 i j)) = 1 := by
     intro i j e
@@ -184,7 +184,7 @@ theorem rat_ker {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (x
 
 theorem ker_of_rat {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (x : hermA D n)
     (hx : x ∈ ratHerm D n) (a : Matrix (Fin n) (Fin n) D.host.E) : ψ (-pr a x.1) = 1 := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   obtain ⟨η, hη⟩ := hx
   have hη' : x.1 = rat η := hη.symm
   have e : Matrix.trace (rat (D := D) (a * η)) = (1 : AF D.host.F) ⊗ₜ[D.host.F] Matrix.trace (a * η) :=
@@ -254,7 +254,7 @@ theorem exists_compact_cover : ∃ K : Set (hermA D n), IsCompact K ∧ ∀ x, �
 theorem discrete_ratHerm : DiscreteTopology (ratHerm D n) := by
   obtain ⟨-, -, -, -, i5, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D n n
   let φ : ratHerm D n → GlobalTheory.IndefiniteRowSideFullHecke.AdjointIsotropicDecomposition.ratMx D n n := fun a => ⟨a.1.1, a.2⟩
-  have hc : Continuous φ := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+  have hc : Continuous φ := (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
   have hi : Function.Injective φ := fun a b h => by
     have e : a.1.1 = b.1.1 := Subtype.mk.inj h
     exact Subtype.ext (Subtype.ext e)
@@ -276,7 +276,7 @@ theorem nb_zero {nb : hermA D n → G D n} (h : IsNMap nb) : nb 0 = 1 := by
   exact block_matrix_one
 
 theorem continuous_block_matrix : Continuous fun b : hermA D n => (blk4 1 b.1 0 1 : Mx D (n + n) (n + n)) :=
-  (Continuous.matrix_fromBlocks continuous_const continuous_subtype_val continuous_const continuous_const).matrix_submatrix _ _
+  (Continuous.matrix_fromBlocks continuous_const continuous_subtypeVal continuous_const continuous_const).matrix_submatrix _ _
 
 theorem continuous_nb {nb : hermA D n → G D n} (h : IsNMap nb) : Continuous nb := by
   rw [(isEmbedding_matHom (AF D.host.F) D.sp.cm.sig (Jst D n)).continuous_iff, Units.continuous_iff]
@@ -292,7 +292,7 @@ theorem continuous_nb {nb : hermA D n → G D n} (h : IsNMap nb) : Continuous nb
       rw [Function.comp_apply, ← map_inv, hinv]
       exact h (-b)
     rw [e]
-    exact (Continuous.matrix_fromBlocks continuous_const continuous_subtype_val.neg continuous_const
+    exact (Continuous.matrix_fromBlocks continuous_const continuous_subtypeVal.neg continuous_const
       continuous_const).matrix_submatrix _ _
 
 theorem blk4_map_alt {R S : Type} (f : R → S) (a b c d : Matrix (Fin n) (Fin n) R) :
@@ -324,16 +324,16 @@ theorem fourierZero : PositivityTheory.PfSWUS.FourierZero := by
   intro D n ψ hψ nb lam 𝓖 hC f hf hinv hco
   obtain ⟨hnb, hlam, hFD, -⟩ := hC
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D n n
-  haveI : BorelSpace (Mx D n n) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D n) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : LocallyCompactSpace (hermA D n) := isClosed_hermA.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : DiscreteTopology (ratHerm D n) := discrete_ratHerm
+  have : BorelSpace (Mx D n n) := ⟨rfl⟩
+  have : BorelSpace (hermA D n) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (hermA D n) := isClosed_hermA.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : DiscreteTopology (ratHerm D n) := discrete_ratHerm
   obtain ⟨K, hK, hcov⟩ := exists_compact_cover (D := D) (n := n)
   funext g
   have key := GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero (hermA D n) (ratHerm D n) K hK hcov
     (hermSub D n) (fun a x => ψ (-pr a.1 x.1))
-    (fun a => hψ.1.comp ((continuous_pr a.1).neg.comp continuous_subtype_val))
+    (fun a => hψ.1.comp ((continuous_pr a.1).neg.comp continuous_subtypeVal))
     (fun a x y => by
       show ψ (-pr a.1 (x.1 + y.1)) = _
       rw [pr_add_right, neg_add, AddChar.map_add_eq_mul])

@@ -378,7 +378,7 @@ theorem isClosed_of_ne_generic {Z : Scheme.{0}} [IsIntegral Z] (hd : topological
 theorem log_card_residueField {W Z : Scheme.{0}} (g : W ⟶ Z) (w : W) [Finite (W.residueField w)] :
     Real.log (Nat.card (W.residueField w)) =
       (g.residueDegree w : ℝ) * Real.log (Nat.card (Z.residueField (g w))) := by
-  letI := (g.residueFieldMap w).hom.toAlgebra
+  let := (g.residueFieldMap w).hom.toAlgebra
   have : Finite (Z.residueField (g w)) := Finite.of_injective _ (g.residueFieldMap w).hom.injective
   have : Module.Finite (Z.residueField (g w)) (W.residueField w) := Module.Finite.of_finite
   rw [Module.natCard_eq_pow_finrank (K := Z.residueField (g w)) (V := W.residueField w), Nat.cast_pow,
@@ -501,7 +501,7 @@ namespace GlobalTheory.FibreProj
 
 theorem isProjOver_closed_fibre : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (q : X ⟶ Sp k) (D : ℕ), IsArithVar q D → ∀ (Z : Scheme.{0}) (i : Z ⟶ X) [IsClosedImmersion i] (l : ℕ) [Fact l.Prime] [Algebra (ZMod l) Γ(Z, ⊤)], IsProjOver (strHom (ZMod l) (X := Z)) := by
   intro k _ X q D hX Z i _ l _ _
-  haveI : Module.Finite ℤ k := hX.finite
+  have : Module.Finite ℤ k := hX.finite
   exact GlobalTheory.FibreNef.isProjOver_fibre hX.isProjOver l i
 
 end GlobalTheory.FibreProj
@@ -551,15 +551,15 @@ theorem exists_affine_finite_free (k : Type) [Field k] (X Y : Scheme.{0}) [IsInt
     show π (genericPoint Y) ∈ U₀
     rw [hg]; exact hxU₀
   obtain ⟨V₀, hV₀, hyV₀, hVle⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.1 Y.isBasis_affineOpens hyU₀
-  haveI : Nonempty U₀ := ⟨⟨_, hxU₀⟩⟩
-  haveI : Nonempty V₀ := ⟨⟨_, hyV₀⟩⟩
-  letI : Algebra Γ(X, U₀) Γ(Y, V₀) := (π.appLE U₀ V₀ hVle).hom.toAlgebra
-  haveI : IsNoetherianRing Γ(X, U₀) := IsLocallyNoetherian.component_noetherian ⟨U₀, hU₀⟩
-  haveI : FaithfulSMul Γ(X, U₀) Γ(Y, V₀) :=
+  have : Nonempty U₀ := ⟨⟨_, hxU₀⟩⟩
+  have : Nonempty V₀ := ⟨⟨_, hyV₀⟩⟩
+  let : Algebra Γ(X, U₀) Γ(Y, V₀) := (π.appLE U₀ V₀ hVle).hom.toAlgebra
+  have : IsNoetherianRing Γ(X, U₀) := IsLocallyNoetherian.component_noetherian ⟨U₀, hU₀⟩
+  have : FaithfulSMul Γ(X, U₀) Γ(Y, V₀) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (GlobalTheory.appLE_injective_of_genericPoint_map π hg ⟨_, hyV₀⟩ hVle)
-  haveI : Algebra.FiniteType Γ(X, U₀) Γ(Y, V₀) :=
+  have : Algebra.FiniteType Γ(X, U₀) Γ(Y, V₀) :=
     HasRingHomProperty.appLE @LocallyOfFiniteType π hlft ⟨U₀, hU₀⟩ ⟨V₀, hV₀⟩ hVle
-  haveI : Algebra.IsAlgebraic Γ(X, U₀) Γ(Y, V₀) := GlobalTheory.GenDegAlg.isAlgebraic_appLE π hg hδ hU₀ ⟨_, hyV₀⟩ hVle
+  have : Algebra.IsAlgebraic Γ(X, U₀) Γ(Y, V₀) := GlobalTheory.GenDegAlg.isAlgebraic_appLE π hg hδ hU₀ ⟨_, hyV₀⟩ hVle
   obtain ⟨a₁, ha₁, H₁⟩ := GlobalTheory.finite_away_of_isAlgebraic_of_finiteType (A := Γ(X, U₀)) (B := Γ(Y, V₀))
   obtain ⟨a₂, ha₂, H₂⟩ := GlobalTheory.free_away_mul_of_finiteType (A := Γ(X, U₀)) (B := Γ(Y, V₀))
   have ha : a₁ * a₂ ≠ 0 := mul_ne_zero ha₁ ha₂
@@ -578,17 +578,17 @@ theorem exists_affine_finite_free (k : Type) [Field k] (X Y : Scheme.{0}) [IsInt
   have hVa : IsAffineOpen V := hV₀.basicOpen _
   have hyV : genericPoint Y ∈ V := by
     rw [hVe]; exact ⟨hyV₀, show π (genericPoint Y) ∈ U from hg ▸ hxU⟩
-  letI iA : Algebra Γ(X, U₀) Γ(X, U) := (X.presheaf.map (homOfLE hUU₀).op).hom.toAlgebra
-  letI iB : Algebra Γ(Y, V₀) Γ(Y, V) := (Y.presheaf.map (homOfLE hVV₀).op).hom.toAlgebra
-  letI iAB : Algebra Γ(X, U) Γ(Y, V) := (π.appLE U V hVU).hom.toAlgebra
-  letI iAB' : Algebra Γ(X, U₀) Γ(Y, V) := (π.appLE U₀ V (hVV₀.trans hVle)).hom.toAlgebra
-  haveI : IsScalarTower Γ(X, U₀) Γ(X, U) Γ(Y, V) := IsScalarTower.of_algebraMap_eq'
+  let iA : Algebra Γ(X, U₀) Γ(X, U) := (X.presheaf.map (homOfLE hUU₀).op).hom.toAlgebra
+  let iB : Algebra Γ(Y, V₀) Γ(Y, V) := (Y.presheaf.map (homOfLE hVV₀).op).hom.toAlgebra
+  let iAB : Algebra Γ(X, U) Γ(Y, V) := (π.appLE U V hVU).hom.toAlgebra
+  let iAB' : Algebra Γ(X, U₀) Γ(Y, V) := (π.appLE U₀ V (hVV₀.trans hVle)).hom.toAlgebra
+  have : IsScalarTower Γ(X, U₀) Γ(X, U) Γ(Y, V) := IsScalarTower.of_algebraMap_eq'
     (congrArg CommRingCat.Hom.hom (π.map_appLE hVU (homOfLE hUU₀).op).symm)
-  haveI : IsScalarTower Γ(X, U₀) Γ(Y, V₀) Γ(Y, V) := IsScalarTower.of_algebraMap_eq'
+  have : IsScalarTower Γ(X, U₀) Γ(Y, V₀) Γ(Y, V) := IsScalarTower.of_algebraMap_eq'
     (congrArg CommRingCat.Hom.hom (π.appLE_map hVle (homOfLE hVV₀).op).symm)
-  haveI hlA : IsLocalization.Away (a₁ * a₂) Γ(X, U) :=
+  have hlA : IsLocalization.Away (a₁ * a₂) Γ(X, U) :=
     hU₀.isLocalization_of_eq_basicOpen _ (homOfLE hUU₀) rfl
-  haveI hlB : IsLocalization.Away (algebraMap Γ(X, U₀) Γ(Y, V₀) (a₁ * a₂)) Γ(Y, V) :=
+  have hlB : IsLocalization.Away (algebraMap Γ(X, U₀) Γ(Y, V₀) (a₁ * a₂)) Γ(Y, V) :=
     hV₀.isLocalization_of_eq_basicOpen _ (homOfLE hVV₀) rfl
   have e2 : a₂ * a₁ = a₁ * a₂ := mul_comm _ _
   have hfin : Module.Finite Γ(X, U) Γ(Y, V) := H₁ a₂ Γ(X, U) Γ(Y, V) hlA hlB
@@ -626,13 +626,13 @@ theorem height_pull_vertical : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) (p
     have := GlobalTheory.appLE_injective_of_genericPoint_map g hgen (U := ⊤) (V := g ⁻¹ᵁ ⊤)
       ⟨genericPoint (clo y), trivial⟩ le_rfl
     rwa [← Scheme.Hom.app_eq_appLE] at this
-  haveI : Nonempty (⊤ : (clo y).Opens) := ⟨⟨genericPoint (clo y), trivial⟩⟩
-  haveI : CharP Γ(clo y, ⊤) l :=
+  have : Nonempty (⊤ : (clo y).Opens) := ⟨⟨genericPoint (clo y), trivial⟩⟩
+  have : CharP Γ(clo y, ⊤) l :=
     charP_of_injective_algebraMap (algebraMap (ZMod l) Γ(clo y, ⊤)).injective l
-  haveI : CharP Γ(clo (π y), ⊤) l := ⟨fun n => by
+  have : CharP Γ(clo (π y), ⊤) l := ⟨fun n => by
     rw [← CharP.cast_eq_zero_iff Γ(clo y, ⊤) l n, ← map_natCast g.appTop.hom n,
       map_eq_zero_iff _ hinj]⟩
-  letI instZ : Algebra (ZMod l) Γ(clo (π y), ⊤) := ZMod.algebra _ l
+  let instZ : Algebra (ZMod l) Γ(clo (π y), ⊤) := ZMod.algebra _ l
   have hWp : IsProjOver (strHom (ZMod l) (X := (clo y))) :=
     GlobalTheory.FibreProj.isProjOver_closed_fibre k Y q E hY (clo y) (cloι y) l
   have hZp : IsProjOver (strHom (ZMod l) (X := (clo (π y)))) :=

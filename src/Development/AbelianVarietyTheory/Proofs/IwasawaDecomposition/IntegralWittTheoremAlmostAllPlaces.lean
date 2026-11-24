@@ -199,7 +199,7 @@ theorem exists_three {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
     by_contra hne
     push Not at hne
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
-    haveI := h.2.1
+    have := h.2.1
     refine IsTotallyComplex.complexEmbedding_not_isReal τ ?_
     rw [ComplexEmbedding.isReal_iff]
     ext x

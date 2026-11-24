@@ -131,7 +131,7 @@ theorem restrict_target_eq (A : FinHolAtlas e X) {U : Set X}
   · refine measure_mono_null (fun y hy => ?_) (hnull j)
     exact ⟨hy.1, fun h => hy.2 ⟨hy.1, h⟩⟩
   · have : ov A U j \ (A.chart j).target = ∅ := by
-      ext y; simp only [Set.mem_diff, Set.mem_empty_iff_false, iff_false]
+      ext y; simp only [Set.mem_sdiff, Set.mem_empty_iff_false, iff_false]
       exact fun h => h.2 h.1.1
     rw [this, measure_empty]
 
@@ -274,11 +274,11 @@ theorem integrableOn_ov (A : FinHolAtlas e X) (P : ChartPartition A) {U : Set X}
       ∫⁻ y in ov A U j, ∑ k, H k ((A.chart j).symm y) * ENNReal.ofReal (locDens A Φ j y) := by
     refine setLIntegral_congr_fun hVm fun y hy => ?_
     simp only [hHd]
-    rw [← Finset.sum_mul, ← Finset.mul_sum, hsum, mul_one, enorm_mul,
-      Real.enorm_of_nonneg (hnn j y hy)]
+    rw [← Finset.sum_mul, ← Finset.mul_sum, hsum, mul_one, eNorm_mul,
+      Real.eNorm_of_nonneg (hnn j y hy)]
   have hHm : ∀ k, AEMeasurable (fun y => H k ((A.chart j).symm y) *
       ENNReal.ofReal (locDens A Φ j y)) (volume.restrict (ov A U j)) := fun k =>
-    ((hGm.enorm).mul ((((chi_continuousOn P k j).mono Set.inter_subset_left).aemeasurable
+    ((hGm.eNorm).mul ((((chi_continuousOn P k j).mono Set.inter_subset_left).aemeasurable
       hVm).ennreal_ofReal)).mul hdm.ennreal_ofReal
   show ∫⁻ y in ov A U j, ‖G ((A.chart j).symm y) * locDens A Φ j y‖ₑ < ⊤
   rw [hpt, lintegral_finsetSum' _ fun k _ => hHm k]
@@ -292,8 +292,8 @@ theorem integrableOn_ov (A : FinHolAtlas e X) (P : ChartPartition A) {U : Set X}
           (P.χ k ((A.chart k).symm z) * locDens A Φ k z)‖ₑ := by
       refine setLIntegral_congr_fun (isOpen_ov A hU k).measurableSet fun z hz => ?_
       simp only [hHd]
-      rw [enorm_mul, enorm_mul, Real.enorm_of_nonneg (hnn k z hz),
-        Real.enorm_of_nonneg (P.nonneg k _), mul_assoc]
+      rw [eNorm_mul, eNorm_mul, Real.eNorm_of_nonneg (hnn k z hz),
+        Real.eNorm_of_nonneg (P.nonneg k _), mul_assoc]
     rw [hcg]
     exact hk
 

@@ -98,7 +98,7 @@ theorem exists_isBlockOrderedSumEquiv (p q : ℕ) : ∃ e : Fin (p + q) ≃ Fin 
 @[simp] theorem vecOf_toMat (v : Fin p × Fin q → ℂ) : vecOf (toMat v) = v := rfl
 
 theorem det_uni (y : Low m → ℂ) : (uni y).det = 1 := by
-  rw [det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · simp [uni]
   · intro a b h
     have h' : a < b := h
@@ -110,9 +110,9 @@ theorem uni_eq_of_entries {e : Fin r ≃ Fin p ⊕ Fin q} (he : IsBlockSL2Embedd
   ext a b
   rw [reindex_apply, submatrix_apply]
   by_cases hab : e.symm b < e.symm a
-  · simp only [uni, of_apply, dif_pos hab]
+  · simp only [uni, of_apply, dite_eq_left hab]
     rw [h]; simp [uni]
-  · simp only [uni, of_apply, dif_neg hab, EmbeddingLike.apply_eq_iff_eq]
+  · simp only [uni, of_apply, dite_eq_right hab, EmbeddingLike.apply_eq_iff_eq]
     rw [Fin.lt_def] at hab
     rcases a with a | a <;> rcases b with b | b <;> simp only [he.1, he.2] at hab
     · have : ¬ b < a := by rw [Fin.lt_def]; omega
@@ -142,7 +142,7 @@ theorem glue_surjective {e : Fin r ≃ Fin p ⊕ Fin q} (he : IsBlockSL2Embeddin
   obtain ⟨b, rfl⟩ := e.symm.surjective b
   have hy : y ⟨(e.symm a, e.symm b), hab⟩ = M a b := by
     have hab' : e.symm b < e.symm a := hab
-    simp only [hM, reindex_apply, submatrix_apply, uni, of_apply, dif_pos hab']
+    simp only [hM, reindex_apply, submatrix_apply, uni, of_apply, dite_eq_left hab']
   rw [hy]
   simp only [glue, toMat_vecOf, Equiv.apply_symm_apply]
   rw [nonsing_inv_mul_cancel_right _ _ (by rw [det_uni]; exact isUnit_one)]
@@ -201,7 +201,7 @@ theorem posDef_shear {A : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ} (hA : 
 
 theorem det_eq_mul_schur {H : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ} (h : IsUnit H.toBlocks₂₂.det) :
     H.det = H.toBlocks₂₂.det * (schur H).det := by
-  letI := invertibleOfIsUnitDet _ h
+  let := invertibleOfIsUnitDet _ h
   conv_lhs => rw [← fromBlocks_toBlocks H, det_fromBlocks₂₂]
   rw [schur, invOf_eq_nonsing_inv]
 
@@ -210,7 +210,7 @@ theorem posDef_blocks {H : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ} (h : 
   have h1 : H.toBlocks₁₁.PosDef := h.submatrix Sum.inl_injective
   have h2 : H.toBlocks₂₂.PosDef := h.submatrix Sum.inr_injective
   refine ⟨h1, h2, ?_⟩
-  letI := invertibleOfIsUnitDet _ h2.det_pos.ne'.isUnit
+  let := invertibleOfIsUnitDet _ h2.det_pos.ne'.isUnit
   have e : H.toBlocks₂₁ = H.toBlocks₁₂ᴴ := by
     ext a b
     exact (h.1.apply _ _).symm

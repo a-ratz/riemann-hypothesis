@@ -602,7 +602,7 @@ theorem density_at_sign : ∀ (I : AutInst) (θ : InfinitePlace I.F → (Ainf I.
 
   have : IsModuleTopology (Ainf I.F) (Ainf I.F ⊗[I.F] I.E) := ⟨rfl⟩
   have : IsTopologicalAddGroup (Ainf I.F ⊗[I.F] I.E) :=
-    IsModuleTopology.topologicalAddGroup (Ainf I.F) (Ainf I.F ⊗[I.F] I.E)
+    IsModuleTopology.isTopologicalAddGroup (Ainf I.F) (Ainf I.F ⊗[I.F] I.E)
   have : SecondCountableTopology (Ainf I.F ⊗[I.F] I.E) := Ψ.toHomeomorph.secondCountableTopology
   have : BorelSpace (Ainf I.F ⊗[I.F] I.E) := ⟨rfl⟩
   have : BorelSpace (Ainf I.F) := ⟨rfl⟩

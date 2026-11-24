@@ -94,20 +94,20 @@ theorem _root_.GlobalTheory.strictHenselisation_etale_over_polynomial : ∀ (T E
   intro T E _ _ _ _ _ _ _ _ y _
   obtain ⟨S, _, _, _, _, hsep, hflat, -, -, hpieces⟩ := _root_.GlobalTheory.exists_strictHenselisation
     (Localization.AtPrime y) (SeparableClosure (ResidueField (Localization.AtPrime y)))
-  haveI := hsep
+  have := hsep
   have hP : _root_.GlobalTheory.LocAcyc.LocPiecesEtale (Localization.AtPrime y) S := hpieces
-  letI : Algebra E S :=
+  let : Algebra E S :=
     ((algebraMap (Localization.AtPrime y) S).comp (algebraMap E (Localization.AtPrime y))).toAlgebra
-  letI : Algebra T S := ((algebraMap E S).comp (algebraMap T E)).toAlgebra
-  letI : Algebra (Polynomial T) S := ((algebraMap E S).comp (algebraMap (Polynomial T) E)).toAlgebra
-  haveI : IsScalarTower E (Localization.AtPrime y) S := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower T E S := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower (Polynomial T) E S := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower T (Polynomial T) S := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra T S := ((algebraMap E S).comp (algebraMap T E)).toAlgebra
+  let : Algebra (Polynomial T) S := ((algebraMap E S).comp (algebraMap (Polynomial T) E)).toAlgebra
+  have : IsScalarTower E (Localization.AtPrime y) S := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower T E S := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (Polynomial T) E S := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower T (Polynomial T) S := IsScalarTower.of_algebraMap_eq fun x => by
     show algebraMap E S (algebraMap T E x) =
       algebraMap E S (algebraMap (Polynomial T) E (algebraMap T (Polynomial T) x))
     exact congrArg _ (IsScalarTower.algebraMap_apply T (Polynomial T) E x)
-  haveI : IsScalarTower (Polynomial T) (Localization.AtPrime y) S :=
+  have : IsScalarTower (Polynomial T) (Localization.AtPrime y) S :=
     IsScalarTower.of_algebraMap_eq fun x => by
       show algebraMap (Localization.AtPrime y) S (algebraMap E (Localization.AtPrime y)
           (algebraMap (Polynomial T) E x)) =
@@ -117,8 +117,8 @@ theorem _root_.GlobalTheory.strictHenselisation_etale_over_polynomial : ∀ (T E
     rw [IsScalarTower.algebraMap_eq E (Localization.AtPrime y) S, ← Ideal.comap_comap,
       _root_.GlobalTheory.comap_maximalIdeal_of_localHom_strictHens]
     exact Localization.AtPrime.under_maximalIdeal ..
-  haveI : Module.Flat E (Localization.AtPrime y) := IsLocalization.flat _ y.primeCompl
-  haveI := hflat
+  have : Module.Flat E (Localization.AtPrime y) := IsLocalization.flat _ y.primeCompl
+  have := hflat
   have hflatE : Module.Flat E S := Module.Flat.trans E (Localization.AtPrime y) S
   have hpiecesE : _root_.GlobalTheory.LocAcyc.LocPiecesEtale E S :=
     _root_.GlobalTheory.indEtale_localPieces_trans E (Localization.AtPrime y) S
@@ -128,7 +128,7 @@ theorem _root_.GlobalTheory.strictHenselisation_etale_over_polynomial : ∀ (T E
       (locPiecesEtale_localization_atPrime (R := Polynomial T) (A := E) y) hP
   obtain ⟨P, _, φ, hφc, hφs⟩ := _root_.GlobalTheory.StrictHensUnion.isStrictHenselisation_of_directed_union T S hpiecesT
   have hPy : P = y.comap (algebraMap (Polynomial T) E) := by
-    haveI : IsLocalHom φ := hφs.2.2.1
+    have : IsLocalHom φ := hφs.2.2.1
     calc P = ((maximalIdeal S).comap φ).comap (algebraMap (Polynomial T) (Localization.AtPrime P)) := by
           rw [_root_.GlobalTheory.comap_maximalIdeal_of_localHom_strictHens]
           exact (Localization.AtPrime.under_maximalIdeal ..).symm

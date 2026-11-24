@@ -214,7 +214,7 @@ theorem gam_binomialSeries (c c' : ℤ_[l]) :
 
 variable {R} in
 theorem algHom_ext_X {f g : R⟦X⟧ →ₐ[R] R⟦X⟧} (h : f X = g X) (h0 : constantCoeff (f X) = 0) : f = g :=
-  AlgHom.coe_ringHom_injective (ps_hom_ext
+  AlgHom.toRingHom_injective (ps_hom_ext
     (fun r => (f.commutes r).trans (g.commutes r).symm) h (eq_zero_of_pow_dvd h0))
 
 def gamHom : ℤ_[l] →* (R⟦X⟧ →ₐ[R] R⟦X⟧) where
@@ -342,7 +342,7 @@ theorem prime_pow_dvd_of_dvd_completedLocalization (a : R⟦X⟧) (k : ℕ) (h :
   obtain ⟨⟨b, _, m, rfl⟩, h2⟩ := IsLocalization.surj (Submonoid.powers (X : R⟦X⟧)) y
   have h3 : a * X ^ m = (l : R⟦X⟧) ^ k * b := by
     apply IsLocalization.injective (M := Submonoid.powers (X : R⟦X⟧)) (Localization.Away (X : R⟦X⟧))
-      (Submonoid.powers_le.2 (MvPowerSeries.X_mem_nonzeroDivisors (i := ())))
+      (Submonoid.powers_le.2 (MvPowerSeries.X_mem_nonZeroDivisors (i := ())))
     rw [map_mul, map_mul, hy, mul_assoc, map_pow _ (l : R⟦X⟧), map_natCast]
     exact congrArg _ h2
   have hc : (l : R⟦X⟧) ^ k = C ((l : R) ^ k) := by simp

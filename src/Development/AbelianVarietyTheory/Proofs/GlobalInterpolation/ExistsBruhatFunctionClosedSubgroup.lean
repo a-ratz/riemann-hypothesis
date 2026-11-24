@@ -67,9 +67,9 @@ private theorem exists_normalized_weight_of_closedEmbedding
       ∀ K : Set T, IsCompact K → ∃ (K' : Set T) (C : ℝ≥0∞), IsCompact K' ∧ C < ⊤ ∧
         ∀ k ∈ K, ∀ s : T', φ (k * j s) ≤ C ∧ (φ (k * j s) ≠ 0 → k * j s ∈ K') := by
   classical
-  haveI : LocallyCompactSpace T' := hj.locallyCompactSpace
-  haveI : SecondCountableTopology T' := hj.isEmbedding.secondCountableTopology
-  haveI : T2Space T' := hj.isEmbedding.t2Space
+  have : LocallyCompactSpace T' := hj.locallyCompactSpace
+  have : SecondCountableTopology T' := hj.isEmbedding.secondCountableTopology
+  have : T2Space T' := hj.isEmbedding.t2Space
   have hjm : Measurable j := hj.continuous.measurable
   let E := CompactExhaustion.choice T
   obtain ⟨A, hA⟩ : ∃ A : ℕ → Set T, ∀ n x, x ∈ A n ↔ ∃ s : T', x * j s ∈ E n :=

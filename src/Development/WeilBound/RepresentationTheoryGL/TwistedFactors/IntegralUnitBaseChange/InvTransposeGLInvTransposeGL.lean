@@ -169,15 +169,15 @@ theorem lintegral_normaliser_eq [MeasurableMul₂ G] [MeasurableInv G]
     {F : G → ℝ≥0∞} (hF : Measurable F) (hFH : ∀ h ∈ H, ∀ g, F (h * g) = F g)
     {ρ ρ' : G → ℝ≥0∞} (hρ : IsQuotNormaliser H μH ρ) (hρ' : IsQuotNormaliser H μH ρ') :
     ∫⁻ g, F g * ρ g ∂μG = ∫⁻ g, F g * ρ' g ∂μG := by
-  have : MeasurableInv H := ⟨(measurable_subtype_coe.inv).subtype_mk⟩
+  have : MeasurableInv H := ⟨(measurable_subtypeVal.inv).subtype_mk⟩
   have hmulH : Measurable fun p : H × G => (p.1 : G) * p.2 :=
-    (measurable_subtype_coe.comp measurable_fst).mul measurable_snd
+    (measurable_subtypeVal.comp measurable_fst).mul measurable_snd
 
   have e1 : ∫⁻ g, F g * ρ g ∂μG = ∫⁻ h, ∫⁻ g, F g * ρ g * ρ' ((h : G) * g) ∂μG ∂μH := by
     rw [lintegral_lintegral_swap]
     · refine lintegral_congr fun g => ?_
       rw [lintegral_const_mul, hρ'.2 g, mul_one]
-      exact hρ'.1.comp (measurable_subtype_coe.mul_const g)
+      exact hρ'.1.comp (measurable_subtypeVal.mul_const g)
     · exact ((hF.comp measurable_snd).mul (hρ.1.comp measurable_snd)).mul
         (hρ'.1.comp hmulH) |>.aemeasurable
 
@@ -192,9 +192,9 @@ theorem lintegral_normaliser_eq [MeasurableMul₂ G] [MeasurableInv G]
   rw [e1, lintegral_congr e2, ← lintegral_lintegral_swap]
   · refine lintegral_congr fun g => ?_
     rw [lintegral_const_mul, lintegral_inv_eq_self (fun h : H => ρ ((h : G) * g)), hρ.2 g, mul_one]
-    exact hρ.1.comp ((measurable_subtype_coe.comp measurable_inv).mul_const g)
+    exact hρ.1.comp ((measurable_subtypeVal.comp measurable_inv).mul_const g)
   · have : Measurable fun p : G × H => ((p.2⁻¹ : H) : G) * p.1 :=
-      (measurable_subtype_coe.comp (measurable_snd.inv)).mul measurable_fst
+      (measurable_subtypeVal.comp (measurable_snd.inv)).mul measurable_fst
     exact ((hF.comp measurable_fst).mul (hρ'.1.comp measurable_fst)).mul
       (hρ.1.comp this) |>.aemeasurable
 

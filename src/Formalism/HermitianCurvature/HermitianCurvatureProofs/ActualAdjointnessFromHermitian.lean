@@ -186,9 +186,9 @@ theorem dirD_mem (v : Fin r → ℂ) {Φ : Fn k r (Wq →L[ℂ] Wp)} (hΦ : Φ �
       ⟨hxU, hx₀.1⟩, ?_, fun x hx hg => ?_⟩
     · exact (contDiffOn_partial_fderiv_fst hU hF v).mono Set.inter_subset_left
     · unfold dirD
-      rw [if_pos (show x.1 ∈ OmX r from hx.2), (slice_hasFDerivAt hU hF hΦF hx.1 hg).fderiv]
+      rw [ite_eq_left (show x.1 ∈ OmX r from hx.2), (slice_hasFDerivAt hU hF hΦF hx.1 hg).fderiv]
   · unfold dirD
-    rw [if_pos hx.1, if_pos hx.1]
+    rw [ite_eq_left hx.1, ite_eq_left hx.1]
     have he : (fun c' => Φ c' (h * x.2 * h')) =ᶠ[nhds x.1] fun c' => sandCLM (π h) (π' h') (Φ c' x.2) := by
       filter_upwards [(isOpen_OmX r).mem_nhds hx.1] with c' hc'
       exact hΦ.2.2 (c', x.2) ⟨hc', hx.2⟩ h hh h' hh'
@@ -432,7 +432,7 @@ theorem psi_one {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) 
     apply Finset.sum_eq_zero
     intro a _
     split_ifs with h
-    · rw [Matrix.one_apply, if_neg]
+    · rw [Matrix.one_apply, ite_eq_right]
       intro e
       have := congrArg Fin.val e
       simp [eI] at this
@@ -884,7 +884,7 @@ theorem CovRel.Tη (h : CovRel E η x ζ) (w : ℂ) (a b c : Fin n) :
   unfold Tm
   rw [add_mul, mul_add, h2]
   by_cases hab : a = b
-  · simp only [hab, if_true]
+  · simp only [hab, ite_true]
     rw [Algebra.commutes, map_sub, map_one, mul_sub, mul_one]
     abel
   · simp [hab]
@@ -1630,9 +1630,9 @@ theorem rep_Tm (hD : IsOpen D) (u : ℂ) (a b : Fin (mdim k r i)) :
   rw [LinearMap.add_apply, Submodule.coe_add, Pi.add_apply, ev_E hD a b v hg]
   congr 1
   by_cases h : a = b
-  · rw [if_pos h, if_pos (congrArg _ h), Module.algebraMap_end_apply]
+  · rw [ite_eq_left h, ite_eq_left (congrArg _ h), Module.algebraMap_end_apply]
     rfl
-  · rw [if_neg h, if_neg ((posL_inj i).ne h)]
+  · rw [ite_eq_right h, ite_eq_right ((posL_inj i).ne h)]
     rfl
 
 theorem rep_prod (hD : IsOpen D) (L : List (ℂ × Fin (mdim k r i) × Fin (mdim k r i))) :
@@ -1730,8 +1730,8 @@ theorem eh_y (a b c : Fin (mdim k r i)) (g : Mx k r) :
   refine Eq.trans h ?_
   rw [single_mulVec', LinearMap.proj_apply, Pi.smul_apply, bvec_posL, smul_eq_mul]
   by_cases hac : a = c
-  · rw [if_pos hac, if_pos hac.symm, mul_one]; rfl
-  · rw [if_neg hac, if_neg (Ne.symm hac), mul_zero, neg_zero]
+  · rw [ite_eq_left hac, ite_eq_left hac.symm, mul_one]; rfl
+  · rw [ite_eq_right hac, ite_eq_right (Ne.symm hac), mul_zero, neg_zero]
 
 theorem eh_zb (a b : Fin (mdim k r i)) (g : Mx k r) :
     EH k r (posL k r i a) (posL k r i b) (zbF k r z z' i) g = -(xbv k r z' i a * yv k r z i g b) := by
@@ -1865,8 +1865,8 @@ theorem oneSide_succ (M : ℕ) (α β : Fin (M + 2) → ℂ) (H : (Fin M → Fin
   refine Finset.sum_congr rfl fun i' _ => ?_
   by_cases h : i < i'
   · have h' : (i : ℕ) < (i' : ℕ) := h
-    simp only [h, if_true, hT, sg2, min_eq_right h.le, max_eq_left h.le, min_eq_left h.le, max_eq_right h.le,
-      if_neg (not_lt.2 h'.le), if_pos h', ← add_smul]
+    simp only [h, ite_true, hT, sg2, min_eq_right h.le, max_eq_left h.le, min_eq_left h.le, max_eq_right h.le,
+      ite_eq_right (not_lt.2 h'.le), ite_eq_left h', ← add_smul]
     congr 1
     push_cast
     ring
@@ -1918,7 +1918,7 @@ theorem pairSum (n : ℕ) (A ρ B κ : Fin n → ℂ) (G : (Fin (n - 2) → Fin 
   rw [L, h2]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun i' _ => ?_
   by_cases hi : i < i'
-  · simp only [hi, if_true, true_and, h1, Finset.smul_sum]
+  · simp only [hi, ite_true, true_and, h1, Finset.smul_sum]
     refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun j' _ => ?_
     split_ifs
     · rw [smul_smul]

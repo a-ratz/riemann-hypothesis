@@ -63,9 +63,9 @@ theorem genericFibre_closed {O K : Type} [CommRing O] [Field K] (β : O →+* K)
     IsReduced (pullback s (spMap β)) ∧ IsLocallyNoetherian (pullback s (spMap β)) ∧
       ∃ (M : ℕ) (i : pullback s (spMap β) ⟶ PSpace K M), IsClosedImmersion i ∧
         i ≫ PSpace.str K M = pullback.snd s (spMap β) := by
-  letI : Algebra O K := β.toAlgebra
-  haveI : IsDomain O := hinj.isDomain β
-  haveI : IsFractionRing O K :=
+  let : Algebra O K := β.toAlgebra
+  have : IsDomain O := hinj.isDomain β
+  have : IsFractionRing O K :=
     { map_units := fun y => by
         have hy : β y.1 ≠ 0 := fun h => nonZeroDivisors.ne_zero y.2 (hinj (by rw [h, map_zero]))
         exact (IsUnit.mk0 _ hy)
@@ -133,7 +133,7 @@ theorem exists_resolution_genericFibre : Geo.ResK.ResKStatement → ∀ (E : Typ
       (IsPullback.of_horiz_isIso ⟨by simp⟩ :
         IsPullback Y.jQ.isoOpensRange.inv (Y.jQ.isoOpensRange.inv ≫ pullback.snd _ _) (pullback.snd _ _) (𝟙 _)) hXF
   have hin : Geo.ResK.IsResInput M i U D.dim := ⟨hi, hred, hd, by rw [his]; exact hU⟩
-  haveI : CharZero c.F := inferInstance
+  have : CharZero c.F := inferInstance
   obtain ⟨r, X', j, f, hj, hfj, hsm, hiso, hdense, hsnc⟩ := hRes c.F M D.dim _ i U hin
   obtain ⟨hp1, hp2⟩ := GenRes.isProper_of_closed i j f hfj
   rw [his] at hp2 hsm hsnc

@@ -119,7 +119,7 @@ theorem eK_alg_cont {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOv
       fun c => algebraMap (Br.Ow (D.nbr i w hw)) (Br.LLw (D.nbr i w hw)) ((D.nbr i w hw).eO c) :=
     funext fun c => by rw [eK_apply, Br.toLLK_alg]
   rw [h]
-  exact continuous_subtype_val.comp (D.nbr i w hw).eO_cont
+  exact continuous_subtypeVal.comp (D.nbr i w hw).eO_cont
 
 variable (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))) (π : D.nd.X i) (g0 : GE D.nd)
   (eB e₁ s : D.nd.X i → MatN D.nd i)
@@ -131,7 +131,7 @@ theorem uElt_cont_n
     letI := K.Topo.rTopology (D.nd.O i) Dd.R'
     Continuous fun g : ↥(Γn i dc n) => uElt Dd.r Dd.χ (g : GE D.nd) := by
   letI := K.Topo.rTopology (D.nd.O i) Dd.R'
-  exact (K.Topo.uElt_cont (hD := hD) (hc := hc)).comp continuous_subtype_val
+  exact (K.Topo.uElt_cont (hD := hD) (hc := hc)).comp continuous_subtypeVal
 
 theorem orbC_uRep
     (hD : Formalism.RepresentationBoundsCohomology.ringDataObjects.RingDef (D.nd.O i) (D.nd.T i) (RepresentationBoundsCohomology.repX D.nd r) π (chiU D.nd i 1) (epsU D.nd i) g0 eB e₁ s Dd)
@@ -281,11 +281,11 @@ theorem locC_cont (hc : TruncatedSeriesCountingIdentities.FamilyContinuous i r) 
     (hw : w ∈ placesOver D.host.E (D.nd.l i)) (C : TruncatedSeriesCountingIdentities.CoefExt D i w hw) (x : D.nd.X i) :
     Continuous ⇑(TruncatedSeriesCountingIdentities.locC C (rTwO D.nd i r x)) := by
   have hinc : Continuous (TruncatedSeriesCountingIdentities.CoefExt.inc C) :=
-    continuous_induced_rng.2 (by exact continuous_subtype_val)
+    continuous_induced_rng.2 (by exact continuous_subtypeVal)
   have h1 : Continuous fun g : Br.G D.nbr i w hw =>
       rTwO D.nd i r x ((Br.iota D.nbr i w hw g : _) : GE D.nd) :=
-    (rTwO_cont i r hc x).comp (continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw))
-  exact ((h1.matrix_map (D.nbr i w hw).eO_cont).matrix_map continuous_subtype_val).matrix_map hinc
+    (rTwO_cont i r hc x).comp (continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw))
+  exact ((h1.matrix_map (D.nbr i w hw).eO_cont).matrix_map continuous_subtypeVal).matrix_map hinc
 
 end Ms
 

@@ -82,7 +82,7 @@ theorem UpperTheory.V.FW.gcNeg :
     calc s = ((c : ZMod M) * (c : ZMod M)⁻¹) * s := by rw [ZMod.mul_inv_of_unit _ hcu, one_mul]
       _ = (c : ZMod M) * ((c : ZMod M)⁻¹ * s) := by ring
       _ = 0 := by rw [h0, mul_zero]
-  haveI : NeZero ((c : ZMod M)⁻¹ * s) := ⟨ht0⟩
+  have : NeZero ((c : ZMod M)⁻¹ * s) := ⟨ht0⟩
   rw [ht, ZMod.val_neg_of_ne_zero]
   have hv0 : 0 < ((c : ZMod M)⁻¹ * s).val := ZMod.val_pos.mpr ht0
   have hvM : ((c : ZMod M)⁻¹ * s).val < M := ZMod.val_lt _

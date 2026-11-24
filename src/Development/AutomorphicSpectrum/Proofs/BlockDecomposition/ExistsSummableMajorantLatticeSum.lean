@@ -205,7 +205,7 @@ section -- clump:auto
 private lemma sum_prod_le {ι : Type*} [Fintype ι] [DecidableEq ι] {α : Type*} {g : α → ℝ}
     (hg : ∀ x, 0 ≤ g x) (hs : Summable g) (s : Finset (ι → α)) :
     ∑ ξ ∈ s, ∏ i, g (ξ i) ≤ ∏ _i : ι, ∑' x, g x := by
-  haveI : DecidableEq α := Classical.decEq α
+  have : DecidableEq α := Classical.decEq α
   let t : ι → Finset α := fun i => s.image fun η : ι → α => η i
   have hsub : s ⊆ Fintype.piFinset t := by
     intro ξ hξ
@@ -388,11 +388,11 @@ theorem exists_summable_bound_tensor_cosetIndicator (φ : 𝓢(ι → mixedSpace
   simp only [schwartzBruhatTensorPi, finiteTensor]
   by_cases hm : ∀ i, finPartPi Y i - b i ∈ idealFiniteAdeles I
   · have h1 : ∏ i, cosetIndicator I (b i) (finPartPi Y i) = 1 :=
-      Finset.prod_eq_one fun i _ ↦ by rw [cosetIndicator_apply, if_pos (hm i)]
+      Finset.prod_eq_one fun i _ ↦ by rw [cosetIndicator_apply, ite_eq_left (hm i)]
     rw [h1, mul_one]
     have hξJ := hJ h hh ξ hm
     have hw : ∀ i, latticeWeight J k (ξ i) = ((1 + ‖mixedEmbedding K (ξ i)‖) ^ k)⁻¹ :=
-      fun i ↦ if_pos (hξJ i)
+      fun i ↦ ite_eq_left (hξJ i)
     simp only [hw]
     set y := infPartPi Y
     have hy : embPi K ξ =
@@ -426,7 +426,7 @@ theorem exists_summable_bound_tensor_cosetIndicator (φ : 𝓢(ι → mixedSpace
   · push_neg at hm
     obtain ⟨i, hi⟩ := hm
     have hz : ∏ i, cosetIndicator I (b i) (finPartPi Y i) = 0 :=
-      Finset.prod_eq_zero (Finset.mem_univ i) (by rw [cosetIndicator_apply, if_neg hi])
+      Finset.prod_eq_zero (Finset.mem_univ i) (by rw [cosetIndicator_apply, ite_eq_right hi])
     rw [hz, mul_zero, norm_zero]
     exact hu0
 

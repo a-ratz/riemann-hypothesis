@@ -99,7 +99,7 @@ theorem exists_frac [Algebra.IsAlgebraic L Ω] {x : Ω} (hx : x ∈ V) :
   have hwm : w m ≠ 0 := by
     intro h
     have := hmax p.natDegree (by simp [hn])
-    rw [h, le_zero_iff] at this
+    rw [h, nonpos_iff_eq_zero] at this
     simp [w, hp0] at this
   have hcm : p.coeff m ≠ 0 := by intro h; simp [w, h] at hwm
   let a : ℕ → L := fun i => p.coeff i / p.coeff m
@@ -107,7 +107,7 @@ theorem exists_frac [Algebra.IsAlgebraic L Ω] {x : Ω} (hx : x ∈ V) :
     simp [a, w]
   have hle : ∀ i < n, V.valuation (algebraMap L Ω (a i)) ≤ 1 := fun i hi => by
     rw [hva]
-    exact div_le_one_of_le₀ (hmax i (Finset.mem_range.2 hi)) zero_le'
+    exact div_le_one_of_le₀ (hmax i (Finset.mem_range.2 hi)) zero_le
   have haW : ∀ i < n, a i ∈ below L V := fun i hi => (V.valuation_le_one_iff _).1 (hle i hi)
   obtain ⟨j, hj, hjmax⟩ := ((Finset.range n).filter
     fun i => V.valuation (algebraMap L Ω (a i)) = 1).exists_max_image id
@@ -219,9 +219,9 @@ theorem exists_correction [IsGalois L Ω] (s : Ω ≃+* Ω) (t : L ≃+* L)
   let W := below L V
   let B := integralClosure W Ω
   let G := Ω ≃ₐ[L] Ω
-  letI : TopologicalSpace B := ⊥
-  haveI : DiscreteTopology B := ⟨rfl⟩
-  haveI : ContinuousSMul G B := by
+  let : TopologicalSpace B := ⊥
+  have : DiscreteTopology B := ⟨rfl⟩
+  have : ContinuousSMul G B := by
     rw [continuousSMul_iff_stabilizer_isOpen]
     intro b
     have h := stabilizer_isOpen_of_isIntegral (K := L) (L := Ω) (b : Ω)
@@ -229,7 +229,7 @@ theorem exists_correction [IsGalois L Ω] (s : Ω ≃+* Ω) (t : L ≃+* L)
     ext g
     simp only [SetLike.mem_coe, MulAction.mem_stabilizer_iff, Subtype.ext_iff]
     rfl
-  haveI : Algebra.IsInvariant W B G := ⟨fun b hb => by
+  have : Algebra.IsInvariant W B G := ⟨fun b hb => by
     have h1 : (b : Ω) ∈ (⊥ : IntermediateField L Ω) := by
       rw [InfiniteGalois.mem_bot_iff_fixed]
       exact fun g => congrArg Subtype.val (hb g)
@@ -249,7 +249,7 @@ theorem exists_correction [IsGalois L Ω] (s : Ω ≃+* Ω) (t : L ≃+* L)
       map_mul' := fun a b => Subtype.ext (map_mul s _ _)
       map_add' := fun a b => Subtype.ext (map_add s _ _) }
   let P : Ideal B := centre L V
-  haveI : P.IsPrime := centre_isPrime V
+  have : P.IsPrime := centre_isPrime V
   have hφ : ∀ a : W, φ (algebraMap W B a) - algebraMap W B a ∈ P := fun a => by
     rw [mem_centre]
     have := ht1 a a.2
@@ -260,7 +260,7 @@ theorem exists_correction [IsGalois L Ω] (s : Ω ≃+* Ω) (t : L ≃+* L)
       change s (algebraMap L Ω (t.symm a)) = algebraMap L Ω a
       rw [hst, RingEquiv.apply_symm_apply])⟩
   let Q : Ideal B := P.map φ
-  haveI : Q.IsPrime := Ideal.map_isPrime_of_equiv φ
+  have : Q.IsPrime := Ideal.map_isPrime_of_equiv φ
   have hQ : ∀ b, φ b ∈ Q ↔ b ∈ P := fun b => Ideal.apply_mem_of_equiv_iff
   have hQP : Q.under W = P.under W := by
     ext a
@@ -413,11 +413,11 @@ theorem exists_den_integral (R K Ω : Type) [CommRing R] [IsDomain R] [IsDiscret
     (hx : x ∈ V) :
     ∃ s t : Ω, IsIntegral R s ∧ IsIntegral R t ∧ V.valuation s = 1 ∧ s * x = t := by
   let M : IntermediateField K Ω := K⟮x⟯
-  haveI : FiniteDimensional K M := adjoin.finiteDimensional (Algebra.IsSeparable.isIntegral K x)
-  haveI : Algebra.IsSeparable K M := Algebra.isSeparable_tower_bot_of_isSeparable K M Ω
-  haveI : IsDedekindDomain (integralClosure R M) := integralClosure.isDedekindDomain R K M
-  haveI : IsFractionRing (integralClosure R M) M := integralClosure.isFractionRing_of_finite_extension K M
-  haveI : IsScalarTower R M Ω := IsScalarTower.of_algebraMap_eq fun r => by
+  have : FiniteDimensional K M := adjoin.finiteDimensional (Algebra.IsSeparable.isIntegral K x)
+  have : Algebra.IsSeparable K M := Algebra.isSeparable_tower_bot_of_isSeparable K M Ω
+  have : IsDedekindDomain (integralClosure R M) := integralClosure.isDedekindDomain R K M
+  have : IsFractionRing (integralClosure R M) M := integralClosure.isFractionRing_of_finite_extension K M
+  have : IsScalarTower R M Ω := IsScalarTower.of_algebraMap_eq fun r => by
     rw [IsScalarTower.algebraMap_apply R K Ω, IsScalarTower.algebraMap_apply R K M]
     rfl
   let A := V.comap (algebraMap M Ω)

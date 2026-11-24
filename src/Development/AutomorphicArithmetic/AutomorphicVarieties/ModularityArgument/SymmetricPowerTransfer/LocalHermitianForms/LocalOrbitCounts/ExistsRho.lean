@@ -79,7 +79,7 @@ variable {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Fie
 private theorem su_fg (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) :
     (Subalgebra.toSubmodule (integralClosure O (Etau K τ))).FG := by
   classical
-  haveI := h.frac
+  have := h.frac
   have hD : τ ^ 2 - 4 ≠ 0 := hτ
   have toK : ∀ k : K, IsIntegral O (algebraMap K (Etau K τ) k) → ∃ o : O, algebraMap O K o = k := by
     intro k hk
@@ -146,7 +146,7 @@ private theorem su_fg (h : IsLoc O Δ) (hτ : τ ^ 2 - 4 ≠ 0) :
     rw [hx', algebraMap_smul, algebraMap_smul]
     exact Submodule.add_mem _ (Submodule.smul_mem _ _ (Submodule.subset_span (by simp)))
       (Submodule.smul_mem _ _ (Submodule.subset_span (by simp)))
-  haveI : IsNoetherian O (Submodule.span O ({e1, e2} : Set (Etau K τ))) :=
+  have : IsNoetherian O (Submodule.span O ({e1, e2} : Set (Etau K τ))) :=
     isNoetherian_of_fg_of_noetherian _ (Submodule.fg_span (Set.toFinite _))
   exact Submodule.FG.of_le_of_isNoetherian hle
 
@@ -158,11 +158,11 @@ private theorem mat_int {O L : Type} [CommRing O] [CommRing L] [Algebra O L] (g 
   let s : Set L := Set.range (fun p : Fin 3 × Fin 3 => g p.1 p.2)
   have hs : s.Finite := Set.finite_range _
   let S := Algebra.adjoin O s
-  haveI : Module.Finite O S :=
+  have : Module.Finite O S :=
     Algebra.finite_adjoin_of_finite_of_isIntegral hs (by
       rintro x ⟨p, rfl⟩
       exact hg p.1 p.2)
-  haveI : Module.Finite O (Matrix (Fin 3) (Fin 3) S) :=
+  have : Module.Finite O (Matrix (Fin 3) (Fin 3) S) :=
     inferInstanceAs (Module.Finite O (Fin 3 → Fin 3 → S))
   let g' : Matrix (Fin 3) (Fin 3) S := fun i j => ⟨g i j, Algebra.subset_adjoin ⟨(i, j), rfl⟩⟩
   have hg' : (S.val.mapMatrix : Matrix (Fin 3) (Fin 3) S →ₐ[O] Matrix (Fin 3) (Fin 3) L) g' = g := by
@@ -262,7 +262,7 @@ theorem UpperTheory.V.Z.Sym.Loc.stabU :
     UpperTheory.V.Z.Sym.Loc.StabU := by
   classical
   intro O K _ _ _ _ _ Δ τ h c d m hd δ ι P hM y
-  haveI := h.frac
+  have := h.frac
   obtain ⟨ρ, hρi, hρ⟩ := exists_rho ι P hM.tor y
   have hτ := hd.reg
   set H := Subgroup.comap ι (Subgroup.comap (MulEquiv.toMonoidHom (MulAut.conj y⁻¹)) (KU O Δ)) with hH
@@ -287,8 +287,8 @@ theorem UpperTheory.V.Z.Sym.Loc.stabU :
   obtain ⟨s, hs⟩ := su_fg h hτ
   let F : Etau K τ →ₗ[O] Matrix (Fin 3) (Fin 3) (Lsq K Δ) :=
     ρO.toLinearMap ∘ₗ LinearMap.inr O (Lsq K Δ) (EL Δ τ) ∘ₗ (ofEA O Δ τ).toLinearMap
-  haveI : Algebra.IsAlgebraic K (Lsq K Δ) := Algebra.IsAlgebraic.of_finite K _
-  haveI : Algebra.IsAlgebraic O (Lsq K Δ) :=
+  have : Algebra.IsAlgebraic K (Lsq K Δ) := Algebra.IsAlgebraic.of_finite K _
+  have : Algebra.IsAlgebraic O (Lsq K Δ) :=
     ⟨fun x => (IsFractionRing.isAlgebraic_iff O K (Lsq K Δ)).mpr (Algebra.IsAlgebraic.isAlgebraic x)⟩
   obtain ⟨e, he0, he⟩ := Algebra.IsAlgebraic.exists_integral_multiples O
     (s.biUnion fun g => Finset.univ.image fun p : Fin 3 × Fin 3 => F g p.1 p.2)

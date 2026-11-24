@@ -97,7 +97,7 @@ theorem ringHom_sep_charZero (k : Type) [Field k] [CharZero k] (C : Type) [CommR
     have key : ∀ χ ∈ insert χ' S, χ ≠ χ₀ →
         ({n : ℕ | χ (c + n * d) = χ₀ (c + n * d)} : Set ℕ).Subsingleton := by
       intro χ hχ hne n hn m hm
-      simp only [Set.mem_setOf_eq, map_add (f := _), map_mul, map_natCast] at hn hm
+      simp only [Set.mem_ofPred_eq, map_add (f := _), map_mul, map_natCast] at hn hm
       have hsub : ((n : k) - m) * (χ d - χ₀ d) = 0 := by linear_combination hn - hm
       rcases mul_eq_zero.1 hsub with h | h
       · exact_mod_cast sub_eq_zero.1 h
@@ -119,7 +119,7 @@ theorem ringHom_pow_eq_one_of_finite_range {k : Type} [Field k] {C : Type} [Comm
     (ψ : C →+* k) [Finite ψ.range] (a : C) (ha : ψ a ≠ 0) (m : ℕ)
     (hm : (Nat.card ψ.range).factorial ∣ m) : ψ a ^ m = 1 := by
   classical
-  haveI := Fintype.ofFinite ψ.range
+  have := Fintype.ofFinite ψ.range
   let f : Fin (Nat.card ψ.range + 1) → ψ.range := fun i => ⟨ψ a ^ (i : ℕ), ⟨a ^ (i : ℕ), by simp⟩⟩
   obtain ⟨i, j, hij, hf⟩ := Fintype.exists_ne_map_eq_of_card_lt f (by
     rw [Fintype.card_fin, ← Nat.card_eq_fintype_card]; omega)
@@ -177,7 +177,7 @@ theorem ringHom_sep_of_finite_range (k : Type) [Field k] (C : Type) [CommRing C]
   let M : ℕ := ∏ ψ ∈ insert χ₀ S, (Nat.card ψ.range).factorial
   have hM0 : M ≠ 0 := Finset.prod_ne_zero_iff.2 fun _ _ => Nat.factorial_ne_zero _
   have hpow : ∀ ψ ∈ insert χ₀ S, ∀ a, ψ a ≠ 0 → ψ a ^ M = 1 := fun ψ hψ a ha => by
-    haveI := hfin ψ
+    have := hfin ψ
     exact ringHom_pow_eq_one_of_finite_range ψ a ha M (Finset.dvd_prod_of_mem _ hψ)
   have hpow' : ∀ ψ ∈ insert χ₀ S, ∀ a, ψ (a ^ M) = if ψ a = 0 then 0 else 1 := by
     intro ψ hψ a
@@ -185,7 +185,7 @@ theorem ringHom_sep_of_finite_range (k : Type) [Field k] (C : Type) [CommRing C]
     split_ifs with h
     · rw [h, zero_pow hM0]
     · exact hpow ψ hψ a h
-  haveI := hfin χ₀
+  have := hfin χ₀
   obtain ⟨g, hg0, hgen⟩ := ringHom_exists_generator_of_finite_range χ₀
   have hsep : ∀ χ ∈ S, χ ≠ χ₀ → χ g = χ₀ g → ∃ a, χ a = 0 ∧ χ₀ a ≠ 0 := by
     intro χ hχ hne hgeq
@@ -220,10 +220,10 @@ theorem ringHom_sep_of_finite_range (k : Type) [Field k] (C : Type) [CommRing C]
     exact Finset.prod_eq_zero hχ (ha χ hχ).1
   refine ⟨g * A ^ M, fun χ hχ hne => ?_⟩
   have hχ' : χ ∈ insert χ₀ S := Finset.mem_insert_of_mem hχ
-  rw [map_mul, map_mul, hpow' χ₀ (Finset.mem_insert_self _ _), if_neg hA0, mul_one,
+  rw [map_mul, map_mul, hpow' χ₀ (Finset.mem_insert_self _ _), ite_eq_right hA0, mul_one,
     hpow' χ hχ']
   by_cases hgeq : χ g = χ₀ g
-  · rw [if_pos (hAV χ (Finset.mem_filter.2 ⟨hχ, hne, hgeq⟩)), mul_zero]
+  · rw [ite_eq_left (hAV χ (Finset.mem_filter.2 ⟨hχ, hne, hgeq⟩)), mul_zero]
     exact fun h => hg0 h.symm
   · split_ifs
     · rw [mul_zero]; exact fun h => hg0 h.symm
@@ -232,11 +232,11 @@ theorem ringHom_sep_of_finite_range (k : Type) [Field k] (C : Type) [CommRing C]
 theorem ringHom_finite_range_of_charP {k : Type} [Field k] {C : Type} [CommRing C]
     [Module.Finite ℤ C] (p : ℕ) [hp : CharP k p] (hp0 : p ≠ 0) (ψ : C →+* k) :
     Finite ψ.range := by
-  haveI : Module.Finite ℤ ψ.range :=
+  have : Module.Finite ℤ ψ.range :=
     Module.Finite.of_surjective (ψ.rangeRestrict.toAddMonoidHom.toIntLinearMap)
       ψ.rangeRestrict_surjective
-  haveI : AddGroup.FG ψ.range := Module.Finite.iff_addGroup_fg.1 inferInstance
-  refine AddCommGroup.finite_of_fg_torsion _ fun x => ?_
+  have : AddGroup.FG ψ.range := Module.Finite.iff_addGroup_fg.1 inferInstance
+  refine AddCommGroup.finite_of_fg_isAddTorsion _ fun x => ?_
   refine (isOfFinAddOrder_iff_nsmul_eq_zero).2 ⟨p, Nat.pos_of_ne_zero hp0, ?_⟩
   apply Subtype.ext
   simp [nsmul_eq_mul, CharP.cast_eq_zero]
@@ -249,7 +249,7 @@ theorem ringHom_exists_sep_of_moduleFinite_int : ∀ (k : Type) [Field k] (C : T
   rcases CharP.char_is_prime_or_zero k p with hpp | rfl
   · exact ringHom_sep_of_finite_range k C
       (fun ψ => ringHom_finite_range_of_charP p hpp.ne_zero ψ) S χ₀
-  · haveI := CharP.charP_to_charZero k
+  · have := CharP.charP_to_charZero k
     exact ringHom_sep_charZero k C S χ₀
 
 end GlobalTheory
@@ -303,7 +303,7 @@ theorem weight_isRingHom {k V C : Type*} [Field k] [AddCommGroup V] [Module k V]
   have hUm : ∀ m, Set.MapsTo (ρ m) U U := fun m v hv => by
     simp only [U, SetLike.mem_coe, Submodule.mem_iInf] at hv ⊢
     exact fun i => hmaps m i (ψ i) (hv i)
-  haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hψ
+  have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hψ
   let R : C → Module.End k U := fun m => (ρ m).restrict (hUm m)
   have hRadd : ∀ x y, R (x + y) = R x + R y := fun x y => by
     ext v

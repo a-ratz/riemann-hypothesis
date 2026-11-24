@@ -157,7 +157,7 @@ theorem induces_ofModel {A : Adl C Y} {M : TrueGeo.Model Y} (h : ReciprocityTheo
   · obtain rfl : y = z := Subtype.ext (e₁.trans (Category.comp_id _))
     have := h₁ σ y y' i _ e₂ hi (hg _).regularAt
     rw [C.pn_mPow Y σ A.D k _ _ y (generatesAt_genAt _ _)] at this
-    rw [mul_pow, ← Real.exp_nat_mul]
+    rw [mul_pow, ← Real.exp_natCast_mul]
     refine Eq.trans ?_ this
     congr 2
     ring

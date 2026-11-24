@@ -160,11 +160,11 @@ lemma mul_exp_zero_smul {n : ℕ} (g X : Matrix (Fin n) (Fin n) ℂ) :
 private lemma hasDerivAt_mul_matrix_exp_smul {n : ℕ} (g X : Matrix (Fin n) (Fin n) ℂ) (t : ℝ) :
     HasDerivAt (fun s : ℝ => g * NormedSpace.exp ((s : ℂ) • X))
       (g * (NormedSpace.exp ((t : ℂ) • X) * X)) t := by
-  letI i1 : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI i2 : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI i3 : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAddCommGroup
-  letI i4 : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedSpace
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  let i1 : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let i2 : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let i3 : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAddCommGroup
+  let i4 : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedSpace
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have h3 : ∀ s : ℝ, ((s : ℂ) • X) = s • X := fun s => by
     ext i j
     simp [Complex.real_smul]
@@ -354,7 +354,7 @@ lemma continuous_smooth_on_group {n : ℕ} {ε : Fin n → Bool} {f : Matrix (Fi
     Continuous (fun g : UJ ε => f (toM g)) := by
   have hc : Continuous (toM : UJ ε → Matrix (Fin n) (Fin n) ℂ) := by
     unfold toM
-    exact Units.continuous_val.comp continuous_subtype_val
+    exact Units.continuous_val.comp continuous_subtypeVal
   rw [continuous_iff_continuousAt]
   intro g
   obtain ⟨U, F, hU, hgU, hF, hfF⟩ := hf (toM g) g.2

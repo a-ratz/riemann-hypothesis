@@ -82,11 +82,11 @@ theorem eq_zero_of_eig_of_mem_twKer {G V : Type} [Group G] [TopologicalSpace G] 
     (hx : x ∈ twKer ρ L θ) (he : ∀ l : L, ρ (l : G) x = (θ l : ℂ) • x) : x = 0 := by
   classical
   obtain ⟨M, hM, hs⟩ := exists_sum_eq_zero hρ hL θ hθ hx
-  haveI : M.FiniteIndex := hM
-  haveI : M.normalCore.FiniteIndex := inferInstance
-  haveI : M.normalCore.Normal := Subgroup.normalCore_normal _
-  haveI : Finite (L ⧸ M.normalCore) := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (L ⧸ M.normalCore) := Fintype.ofFinite _
+  have : M.FiniteIndex := hM
+  have : M.normalCore.FiniteIndex := inferInstance
+  have : M.normalCore.Normal := Subgroup.normalCore_normal _
+  have : Finite (L ⧸ M.normalCore) := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (L ⧸ M.normalCore) := Fintype.ofFinite _
   have h0 := hs M.normalCore (Subgroup.normalCore_le M)
   have h1 : ∀ t : L, twOrbit ρ L θ x t = x := fun t => by
     rw [twOrbit, he t, smul_smul, ← Units.val_mul, inv_mul_cancel, Units.val_one, one_smul]
@@ -380,7 +380,7 @@ theorem det_unip (n : ℕ) (v : Multiplicative (Fin n → k)) :
       exact absurd hab' (not_lt.2 (Fin.le_last _))
     show (1 + colMat k n v.toAdd) a b = 0
     simp [colMat, one_apply, hb, hab'.ne']
-  rw [det_of_upperTriangular h]
+  rw [det_of_isUpperTriangular h]
   refine Finset.prod_eq_one fun a _ => ?_
   show (1 + colMat k n v.toAdd) a a = 1
   induction a using Fin.lastCases with
@@ -543,12 +543,12 @@ theorem isSmooth_rho1 {i : ℕ} (τ : MRep k (i + 1)) (hτ : IsSmooth τ.ρ) (W 
       { carrier := {g | rho1 τ W g (a ⊗ₜ b) = a ⊗ₜ b}
         mul_mem' := by
           intro x y hx hy
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hy, hx]
         one_mem' := by simp
         inv_mem' := by
           intro x hx
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           conv_lhs => rw [← hx]
           rw [← Module.End.mul_apply, ← map_mul]
           simp }
@@ -635,7 +635,7 @@ theorem isOpen_resChr_ker (ψ : AddChar k Circle) (hψ : Continuous ψ) (i : ℕ
   have h : ((resChr ψ (Pi.single (Fin.last i) 1 : Fin (i + 1) → k) C).ker : Set C) =
       (fun x : C => (x : Multiplicative (Fin (i + 1) → k)).toAdd (Fin.last i)) ⁻¹' {z | ψ z = 1} := by
     ext x
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker, resChr_last, Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, MonoidHom.mem_ker, resChr_last, Set.mem_preimage, Set.mem_ofPred_eq]
     constructor
     · intro h
       apply Circle.ext
@@ -644,7 +644,7 @@ theorem isOpen_resChr_ker (ψ : AddChar k Circle) (hψ : Continuous ψ) (i : ℕ
       rw [h, map_one]
   rw [h]
   refine (GlobalTheory.CompanionTheory.BZFun.isOpen_addChar_eq_one k ψ hψ).preimage ?_
-  exact (continuous_apply _).comp (continuous_toAdd.comp continuous_subtype_val)
+  exact (continuous_apply _).comp (continuous_toAdd.comp continuous_subtypeVal)
 
 theorem exists_polyBall_of_isCompact (n : ℕ) {K : Set (Fin n → k)} (hK : IsCompact K) :
     ∃ s : kˣ, ∀ a ∈ K, Multiplicative.ofAdd a ∈ polyBall (k := k) n s := by
@@ -699,9 +699,9 @@ theorem avgVanish_at {i t : ℕ} (ψ : AddChar k Circle) (hψ : Continuous ψ) (
     (hτ : IsSmooth τ.ρ) (f : XS τ σ) (m : Mir k ((i + 1) + t)) (y : Mir k ((i + 1) + t + 1))
     (hy : y = wEl k i t * sEmb k ((i + 1) + t) m) (hq : qO τ σ ψ (intO f y) = 0) :
     AvgVanish (HPG k (i + 1) (t + 1)) (sigX τ σ) (MirUin k ((i + 1) + t + 1)) (mirChar k ψ ((i + 1) + t)) f y := by
-  letI : MeasurableSpace (Fin (t + 1) → k) := borel _
-  haveI : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
-  haveI : (muD k (t + 1)).IsAddHaarMeasure := by
+  let : MeasurableSpace (Fin (t + 1) → k) := borel _
+  have : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
+  have : (muD k (t + 1)).IsAddHaarMeasure := by
     unfold muD
     infer_instance
   have hnorm := Grp.mirUin_normal (k := k) ((i + 1) + t + 1)
@@ -718,7 +718,7 @@ theorem avgVanish_at {i t : ℕ} (ψ : AddChar k Circle) (hψ : Continuous ψ) (
     exact ((isCompact_polyBall _ _).prod (isCompact_polyBall _ _)).image (continuous_psiHom i t y)
   have hθ : IsOpen (((mirChar k ψ ((i + 1) + t)).comp (Subgroup.inclusion hLU)).ker : Set L) := by
     have h1 := Grp.mirChar_ker_open (k := k) ψ hψ ((i + 1) + t)
-    exact h1.preimage (Continuous.subtype_mk continuous_subtype_val _)
+    exact h1.preimage (Continuous.subtype_mk continuous_subtypeVal _)
   have hmem : ∀ l ∈ L, ∃ p ∈ (polyBall (k := k) (i + 1) s₁).prod (polyBall (k := k) (t + 1) s₂), psiHom i t y p = l := by
     rw [hL]
     exact fun l hl => hl

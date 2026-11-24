@@ -79,7 +79,7 @@ theorem mem_colGroup {κ τ n : ℕ} (e : XIx (Fin κ) (Fin τ) 0 ≃ Fin n) (he
     simp only [M, Matrix.one_apply, Matrix.of_apply]
     split_ifs <;> simp
   have hdet : ((residue 𝒪[k]).mapMatrix M).det = 1 := by
-    rw [← Matrix.det_submatrix_equiv_self e.symm, Matrix.det_of_upperTriangular]
+    rw [← Matrix.det_submatrix_equiv_self e.symm, det_of_isUpperTriangular]
     · refine Finset.prod_eq_one fun i _ => ?_
       rw [Matrix.submatrix_apply, hM _ _ le_rfl, Matrix.one_apply_eq]
     · intro i j hij

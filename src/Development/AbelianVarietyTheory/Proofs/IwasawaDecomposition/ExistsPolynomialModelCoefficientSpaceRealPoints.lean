@@ -93,7 +93,7 @@ theorem exists_real_model (V : HSp D) (θ : InfFam D) (c : CoefA V) (lam : D.wha
   obtain ⟨e, he⟩ : ∃ e : VV ℂ lam ≃ₗ[ℂ] c.W, ∀ v, e (mapVV D.what₂.embLL lam v) = c0 v :=
     exists_scalarExt D.what₂.embLL lam c0 ht.2.1 ht.2.2
   refine ⟨e, he, fun u hu v => ?_⟩
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hlab : ∀ τ x, D.what₂.embLL (labLL D τ x) = tauE D τ x := fun τ x =>
     DFunLike.congr_fun (GlobalTheory.ThetaFiresProbe.labE_fixed τ) x
   have hrat : ∀ (γ : GQ V) (v : VV ℂ lam), c.ρ γ.1 (e v) = e (rhoK lam (invTrK (realGL θ V γ.1)) v) := by

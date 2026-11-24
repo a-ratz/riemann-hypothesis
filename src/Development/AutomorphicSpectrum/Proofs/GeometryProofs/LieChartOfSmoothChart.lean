@@ -78,10 +78,10 @@ theorem exists_diffModule {A B : Type} [CommRing A] [CommRing B] (g : B →+* A)
         (∀ δ : A → C, (∀ a b, δ (a + b) = δ a + δ b) →
           (∀ a b, δ (a * b) = κ (u a) * δ b + κ (u b) * δ a) → (∀ b, δ (g b) = 0) →
           ∃ w : P →ₗ[R] C, ∀ a, w (d a) = δ a) := by
-  letI iB : Algebra B A := g.toAlgebra
-  haveI : Algebra.Smooth B A := hg
-  letI iA : Algebra A (Localization.Away f) := u.toAlgebra
-  haveI tw : IsScalarTower R (Localization.Away f) (Localization.Away f ⊗[A] Ω[A⁄B]) := inferInstance
+  let iB : Algebra B A := g.toAlgebra
+  have : Algebra.Smooth B A := hg
+  let iA : Algebra A (Localization.Away f) := u.toAlgebra
+  have tw : IsScalarTower R (Localization.Away f) (Localization.Away f ⊗[A] Ω[A⁄B]) := inferInstance
   have hsmul : ∀ (a : A) (x : Ω[A⁄B]), (1 : Localization.Away f) ⊗ₜ[A] (a • x) =
       u a • ((1 : Localization.Away f) ⊗ₜ[A] x) := fun a x => by
     have e : a • (1 : Localization.Away f) = u a := by
@@ -94,8 +94,8 @@ theorem exists_diffModule {A B : Type} [CommRing A] [CommRing B] (g : B →+* A)
   · have : g b = algebraMap B A b := rfl
     simp [this]
   intro C _ _ κ hκ
-  letI aC : Algebra (Localization.Away f) C := κ.toAlgebra
-  haveI : IsScalarTower R (Localization.Away f) C := IsScalarTower.of_algebraMap_eq' hκ.symm
+  let aC : Algebra (Localization.Away f) C := κ.toAlgebra
+  have : IsScalarTower R (Localization.Away f) C := IsScalarTower.of_algebraMap_eq' hκ.symm
   have lin : ∀ (w : (Localization.Away f ⊗[A] Ω[A⁄B]) →ₗ[R] C) (r : Localization.Away f) p,
       w (r • p) = κ r * w p := fun w r p => by
     have h : w (r • p) = r • w p :=
@@ -119,10 +119,10 @@ theorem exists_diffModule {A B : Type} [CommRing A] [CommRing B] (g : B →+* A)
       have e : r ⊗ₜ[A] x = r • ((1 : Localization.Away f) ⊗ₜ[A] x) := by
         rw [TensorProduct.smul_tmul', smul_eq_mul, _root_.mul_one]
       rw [e, lin, lin, hD]
-  · letI aA : Algebra A C := (κ.comp u).toAlgebra
-    haveI : IsScalarTower A (Localization.Away f) C := IsScalarTower.of_algebraMap_eq' rfl
-    letI aB : Algebra B C := ((κ.comp u).comp g).toAlgebra
-    haveI : IsScalarTower B A C := IsScalarTower.of_algebraMap_eq' rfl
+  · let aA : Algebra A C := (κ.comp u).toAlgebra
+    have : IsScalarTower A (Localization.Away f) C := IsScalarTower.of_algebraMap_eq' rfl
+    let aB : Algebra B C := ((κ.comp u).comp g).toAlgebra
+    have : IsScalarTower B A C := IsScalarTower.of_algebraMap_eq' rfl
     let L : A →ₗ[B] C :=
       { toFun := δ
         map_add' := h1

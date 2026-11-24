@@ -113,7 +113,7 @@ theorem flagStep_eq {W : Type} [AddCommGroup W] [Module ℂ W] {m : ℕ} (x : Fi
     (hU : U.BlockTriangular id) (hd : IsUnit U.det) (k : ℕ) :
     flagStep ℂ (fun j => ∑ i, U i j • x i) k = flagStep ℂ x k := by
   refine le_antisymm (flagStep_le x U hU k) ?_
-  letI := U.invertibleOfIsUnitDet hd
+  let := U.invertibleOfIsUnitDet hd
   have h := flagStep_le (fun j => ∑ i, U i j • x i) U⁻¹ (blockTriangular_inv_of_blockTriangular hU) k
   have e : (fun j => ∑ i, U⁻¹ i j • ∑ l, U l i • x l) = x := by
     funext j
@@ -129,12 +129,12 @@ theorem flagStep_eq {W : Type} [AddCommGroup W] [Module ℂ W] {m : ℕ} (x : Fi
 theorem diag_ne {N : ℕ} {T : Matrix (Fin N) (Fin N) ℂ} (hT : T.BlockTriangular id) (hd : IsUnit T.det) (a : Fin N) :
     T a a ≠ 0 := by
   have h := hd.ne_zero
-  rw [det_of_upperTriangular hT] at h
+  rw [det_of_isUpperTriangular hT] at h
   exact Finset.prod_ne_zero_iff.1 h a (Finset.mem_univ a)
 
 theorem unit_of_diag {N : ℕ} {T : Matrix (Fin N) (Fin N) ℂ} (hT : T.BlockTriangular id) (hd : ∀ a, T a a ≠ 0) :
     IsUnit T.det := by
-  rw [det_of_upperTriangular hT]
+  rw [det_of_isUpperTriangular hT]
   exact (Finset.prod_ne_zero_iff.2 fun a _ => hd a).isUnit
 
 theorem tri_M {p q : ℕ} {M M' : Matrix (Fin p) (Fin (p + q)) ℂ} {g g' T : Matrix (Fin (p + q)) (Fin (p + q)) ℂ}
@@ -159,11 +159,11 @@ theorem tri_M {p q : ℕ} {M M' : Matrix (Fin p) (Fin (p + q)) ℂ} {g g' T : Ma
     simp only [hM', mul_ite, mul_one, mul_zero]
     by_cases hc : (c : ℕ) < q
     · rw [hT (show c < ι a from by show (c : ℕ) < q + a; omega)]
-      exact (Finset.sum_eq_zero fun b _ => if_neg (by omega)).symm
+      exact (Finset.sum_eq_zero fun b _ => ite_eq_right (by omega)).symm
     · let b : Fin p := ⟨c - q, by have := c.2; omega⟩
       have hb : c = ι b := Fin.ext (by show (c : ℕ) = q + (c - q); omega)
-      rw [Finset.sum_eq_single b (fun b' _ hb' => if_neg fun h => hb' (Fin.ext (by show (b' : ℕ) = c - q; omega)))
-        (fun h => absurd (Finset.mem_univ _) h), if_pos (by show (c : ℕ) = q + (c - q); omega)]
+      rw [Finset.sum_eq_single b (fun b' _ hb' => ite_eq_right fun h => hb' (Fin.ext (by show (b' : ℕ) = c - q; omega)))
+        (fun h => absurd (Finset.mem_univ _) h), ite_eq_left (by show (c : ℕ) = q + (c - q); omega)]
       show T (ι a) c = T (ι a) (ι b)
       rw [← hb]
   have := congrArg (· * g'⁻¹) key
@@ -185,7 +185,7 @@ theorem tri_Q {p q : ℕ} {Q Q' : Matrix (Fin q) (Fin (p + q)) ℂ} {L L' : Matr
       perMat Q L a (ι i) = (sigForm (p + q) p a : ℂ) * Q i a := fun Q L a i => by
     have hi := i.2
     have h1 : ((ι i : Fin (p + q)) : ℕ) < q := by show q - 1 - (i : ℕ) < q; omega
-    simp only [perMat, Matrix.of_apply, dif_pos h1]
+    simp only [perMat, Matrix.of_apply, dite_eq_left h1]
     congr 2
     exact Fin.ext (by show q - 1 - (q - 1 - (i : ℕ)) = i; omega)
   have hinj : Function.Injective ι := fun a b h => by
@@ -265,7 +265,7 @@ theorem perMat_of : PerCoord → MatStep → PerMat := by
       tri_M (hst τ t ht).2.2 (hst τ t' ht').2.2 (hst τ t' ht').1.1 (hT τ) (hTd τ) (hTe τ)
     choose U' hU' hUd' hUe' using fun τ =>
       tri_Q (Q := Q τ t) (Q' := Q τ t') (L := L τ t) (L' := L τ t') (T := (T τ)⁻¹)
-        (by letI := (T τ).invertibleOfIsUnitDet (hTd τ); exact blockTriangular_inv_of_blockTriangular (hT τ))
+        (by let := (T τ).invertibleOfIsUnitDet (hTd τ); exact blockTriangular_inv_of_blockTriangular (hT τ))
         (Matrix.isUnit_nonsing_inv_det _ (hTd τ))
         (by rw [show perMat (Q τ t') (L τ t') = _ from hTe τ, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (hTd τ),
           Matrix.mul_one])

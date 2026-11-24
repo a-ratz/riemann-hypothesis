@@ -127,12 +127,12 @@ theorem invariants_of_subgroup {act : GQ l →* (PadicComplex l ≃+* PadicCompl
     (K : FinExt l) (i : ℤ) (y : PadicComplex l) (hy : ∀ g ∈ GK K, chiC χ i g * act g y = y) :
     (i ≠ 0 → y = 0) ∧ (i = 0 → y ∈ inC K.1) := by
   classical
-  haveI := K.2
-  haveI : IsGalois ℚ_[l] (Om l) := {}
-  haveI : (GK K).FiniteIndex := ⟨by
+  have := K.2
+  have : IsGalois ℚ_[l] (Om l) := {}
+  have : (GK K).FiniteIndex := ⟨by
     rw [GK, ← IntermediateField.finrank_eq_fixingSubgroup_index]
     exact Module.finrank_pos.ne'⟩
-  haveI : Fintype (GQ l ⧸ GK K) := Fintype.ofFinite _
+  have : Fintype (GQ l ⧸ GK K) := Fintype.ofFinite _
   obtain ⟨F, hF1, hF0, hF⟩ := descent_conj hact χ i (GK K) y hy
   constructor
   · intro hi

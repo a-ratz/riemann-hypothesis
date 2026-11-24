@@ -62,7 +62,7 @@ theorem sp_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →
 
 theorem sp_epi {K L : Type} [Field K] [Field L] (i : K →+* L) : Epi (spMap i) := by
   have : Flat (spMap i) := by
-    letI := i.toAlgebra
+    let := i.toAlgebra
     exact HasRingHomProperty.Spec_iff.2 (inferInstance : Module.Flat K L)
   have : Surjective (spMap i) := ⟨fun x => ⟨(⊥ : PrimeSpectrum L), Subsingleton.elim (α := PrimeSpectrum K) _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
@@ -118,7 +118,7 @@ theorem exists_finset_over {K F : Type} [Field K] [Field F] [Algebra K F] {X : S
   have h1 : spMap (algebraMap L F) ≫ q ≫ pullback.fst G.hom x = p.left := by
     rw [← Category.assoc, hq]; exact pullback.lift_fst _ _ _
   refine ⟨Over.homMk (q ≫ pullback.fst G.hom x) ?_, h1⟩
-  haveI := sp_epi (algebraMap L F)
+  have := sp_epi (algebraMap L F)
   rw [← cancel_epi (spMap (algebraMap L F))]
   change spMap (algebraMap L F) ≫ (q ≫ pullback.fst G.hom x) ≫ G.hom =
     spMap (algebraMap L F) ≫ spMap (algebraMap K L) ≫ x
@@ -128,7 +128,7 @@ theorem exists_finset_over {K F : Type} [Field K] [Field F] [Algebra K F] {X : S
 theorem comp_injective {X : Scheme.{0}} {G : Over X} {K L : Type} [Field K] [Field L] {x : Sp K ⟶ X} {y : Sp L ⟶ X}
     (ψ : K →+* L) (g : Over.mk y ⟶ Over.mk x) (hg : g.left = spMap ψ) {a b : Over.mk x ⟶ G}
     (h : g ≫ a = g ≫ b) : a = b := by
-  haveI := sp_epi ψ
+  have := sp_epi ψ
   have h' : spMap ψ ≫ a.left = spMap ψ ≫ b.left := hg ▸ congrArg CommaMorphism.left h
   exact Over.OverMorphism.ext ((cancel_epi _).1 h')
 
@@ -183,7 +183,7 @@ theorem allRat_of_isAlgClosure (Xo : Moduli Dw l) {M : ℕ} (hM : 0 < M) {L F : 
   intro Ω _ ψ w hw
   let Ω' := AlgebraicClosure Ω
   let i : Ω →+* Ω' := algebraMap Ω Ω'
-  letI : Algebra L Ω' := (i.comp ψ).toAlgebra
+  let : Algebra L Ω' := (i.comp ψ).toAlgebra
   let σ : F →ₐ[L] Ω' := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -198,7 +198,7 @@ theorem allRat_of_isAlgClosure (Xo : Moduli Dw l) {M : ℕ} (hM : 0 < M) {L F : 
     (by rw [← MonObj.comp_pow, hw, MonObj.comp_one])
   obtain ⟨a, ha⟩ := h b hb
   refine ⟨a, ?_⟩
-  haveI := sp_epi i
+  have := sp_epi i
   have h1 : spMap (σ : F →+* Ω') ≫ b.left = spMap i ≫ w.left := congrArg CommaMorphism.left hb'
   refine (cancel_epi (spMap i)).1 (h1.symm.trans ?_)
   rw [← ha, ← Category.assoc, ← Category.assoc, sp_comp, sp_comp, hσ]
@@ -207,12 +207,12 @@ theorem exists_finite_allRat (Xo : Moduli Dw l) {K : Type} [Field K] (x : Sp K �
     ∃ (L : Type) (_ : Field L) (_ : Algebra K L), FiniteDimensional K L ∧
       AllRat Xo (spMap (algebraMap K L) ≫ x) M := by
   let F := AlgebraicClosure K
-  haveI := Xo.univ.proper
+  have := Xo.univ.proper
   obtain ⟨J, _, hJ⟩ := exists_enum Xo hM
   obtain ⟨u, -, hu⟩ := hJ F (spMap (algebraMap K F) ≫ x)
   choose S hS using fun j => exists_finset_over Xo.univ.t.G x (u j)
   let s : Set F := ⋃ j, (S j : Set F)
-  haveI : Finite s := (Set.finite_iUnion fun j => (S j).finite_toSet).to_subtype
+  have : Finite s := (Set.finite_iUnion fun j => (S j).finite_toSet).to_subtype
   let L := IntermediateField.adjoin K s
   refine ⟨L, inferInstance, inferInstance,
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral, ?_⟩

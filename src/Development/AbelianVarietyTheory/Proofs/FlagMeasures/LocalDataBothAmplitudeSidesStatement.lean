@@ -109,7 +109,7 @@ theorem isHaarOn_smul {k r : ℕ} {S : Set (Mat k r)} {μ : Measure (Mt k r)} (h
     rcases Measure.ennreal_smul_eq_zero.1 h0 with h | h
     · exact (ENNReal.ofReal_pos.2 hc).ne' h
     · exact h2 h
-  · rw [Measure.smul_apply, h3, smul_zero]
+  · rw [smul_apply, h3, smul_zero]
   · intro s hs
     rw [Measure.map_smul, h4 s hs]
     exact (continuous_const.matrix_mul (continuous_id (X := Mat k r))).measurable.aemeasurable
@@ -124,7 +124,7 @@ theorem oneSide_of_bessel {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerPr
     (hB : IsBesselMapSm z (psi k r z s) σ π B) (hv : IsSmoothVec σ v) (hc : 0 < c)
     (hl : l2SG νS (fun g => B (σ g v)) = ENNReal.ofReal (c * Module.finrank ℂ Wp)) :
     OneSide z π (psi k r z s) μG μW μN νS (fun g => B (σ g v)) c := by
-  have := FiniteDimensional.complete ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wp
   obtain ⟨hnt, hu, hi⟩ := (GlobalTheory.Amp.Schur.type_irred_and_avg k r z π hz hT).1 u hπ
   refine ⟨hz, hT, hnt, hu, hi, hG, hW, hW1, hN, hq, fun n hn => (psiChar k r z s hz n hn).2, ?_, ?_, hc, hl⟩
   · intro h hh m hm g hg

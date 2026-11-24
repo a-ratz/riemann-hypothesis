@@ -106,7 +106,7 @@ theorem topLevelBesselHypothesis : TopLevelBesselHypothesis := by
   have hconc : Formalism.FourierDecayAlt.D.muR Ds g (hp.2 ▸ Formalism.FourierDecayAlt.D.ptPerm (γ.1.map Prod.swap))
       {x | Matrix.of x ∉ RStab (k0 + 1) r g} = 0 := by
     have h1 := hroot.1
-    rw [Measure.smul_apply, smul_eq_mul] at h1
+    rw [smul_apply, smul_eq_mul] at h1
     rcases mul_eq_zero.1 h1 with h | h
     · exact absurd h hl0
     · exact h

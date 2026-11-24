@@ -256,7 +256,7 @@ theorem val_norm (wP : PrimTy H Xo) (hwP : IsPrim wP) (β : 𝓞 E) (N k : ℕ) 
   obtain ⟨a, -, va⟩ := FrameGeo.exists_ratio Xo.univ.t.PP.isLB Xo.univ.t.G.hom η[Xo.univ.t.G].left
     (Over.w η[Xo.univ.t.G]) (GlobalTheory.SemiRigid.globalFns _ _ (isAbelianScheme_univ Xo)).2 hα hnu
   have o : ∀ b, (1 : T ⟶ Xo.univ.t.G) ≫ Xo.univ.t.act.act b = 1 := fun b => by
-    haveI := Xo.univ.t.act.hom b
+    have := Xo.univ.t.act.hom b
     exact MonObj.one_comp _
   have face (x y : T ⟶ Xo.univ.t.G) : cubV Xo.univ.t.cub z J 1 x y = 1 := by
     have e := val_corr hJ (Xo.univ.t.cub.face 0) (lift x y).left
@@ -574,8 +574,8 @@ end Weight
 theorem harmonic_value_normPull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (F : Type) [Field F] [Algebra c.F F] (yF : FrPt Xo c F) (β : 𝓞 E) (N k : ℕ) (z : ℤ), β * star β = (N : 𝓞 E) → z = ((k * N : ℕ) : ℤ) → ∀ (n : ℕ) (hh : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L (k : ℤ) (ptO Xo yF.x))) (hh' : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L z (ptO Xo yF.x))), (∀ i, IsNormPull Xo.univ.t.G Xo.univ.t.PP (Xo.univ.t.act.act β) z (k : ℤ) (hh i) (hh' i)) → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (Pp : MvPolynomial (LtN Dw n) c.F), Pp ∈ harmA c a n → ∑ m ∈ Pp.support, algebraMap c.F F (Pp.coeff m) * ∏ i, nab yF z (hh' i) (colOf m i) = algebraMap c.F F (nrm Dw c a β) * ∑ m ∈ Pp.support, algebraMap c.F F (Pp.coeff m) * ∏ i, nab yF (k : ℤ) (hh i) (colOf m i) := by
   intro E _ _ _ H Dw l Xo c nab hnab F _ _ yF β N k z hN hz n hh hh' hp a Pp hP
   subst hz
-  letI := H.starRing
-  letI : Algebra ℚ F := ((algebraMap c.F F).comp (algebraMap ℚ c.F)).toAlgebra
+  let := H.starRing
+  let : Algebra ℚ F := ((algebraMap c.F F).comp (algebraMap ℚ c.F)).toAlgebra
   obtain ⟨C, hex, hpin⟩ := hnab.2 F yF
   obtain ⟨w, hw, hw'⟩ := exists_series C.gauge H.w0 β N hN
   have key : ∀ i mo, nab yF ((k * N : ℕ) : ℤ) (hh' i) mo =

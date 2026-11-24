@@ -50,7 +50,7 @@ private theorem dc_common {G : Type} [Group G] (K K' : Subgroup G) (x : G) :
     ∃ s : Finset (MulAction.orbit K (x : G ⧸ K')), ∀ (M : Type) [AddCommGroup M] [Module ℂ M]
       (ρ : Representation ℂ G M) (v : M), Hi.dc ρ K K' x v = ∑ q ∈ s, ρ (q : G ⧸ K').out v := by
   by_cases h : Finite (MulAction.orbit K (x : G ⧸ K'))
-  · letI := Fintype.ofFinite (MulAction.orbit K (x : G ⧸ K'))
+  · let := Fintype.ofFinite (MulAction.orbit K (x : G ⧸ K'))
     refine ⟨Finset.univ, fun M _ _ ρ v => ?_⟩
     rw [Hi.dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply]
   · refine ⟨∅, fun M _ _ ρ v => ?_⟩

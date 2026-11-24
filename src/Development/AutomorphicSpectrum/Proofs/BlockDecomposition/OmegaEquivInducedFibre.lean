@@ -148,21 +148,21 @@ theorem isQuotientMap_sweep (r : X → G → X) (h1 : ∀ x, r x 1 = x)
     {j : Y → X} (hj : IsClosedEmbedding j) {K : Set G} (hK : IsCompact K)
     (hs : ∀ x, ∃ y, ∃ c ∈ K, x = r (j y) c) :
     IsQuotientMap fun p : Y × K => r (j p.1) p.2 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   let e : X × K ≃ₜ X × K :=
     { toFun := fun p => (r p.1 p.2, p.2)
       invFun := fun p => (r p.1 (p.2 : G)⁻¹, p.2)
       left_inv := fun x => by simp only [← hm, mul_inv_cancel, h1]
       right_inv := fun x => by simp only [← hm, inv_mul_cancel, h1]
-      continuous_toFun := (hc.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))).prodMk
+      continuous_toFun := (hc.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))).prodMk
         continuous_snd
       continuous_invFun := (hc.comp (continuous_fst.prodMk
-        (continuous_subtype_val.comp continuous_snd).inv)).prodMk continuous_snd }
+        (continuous_subtypeVal.comp continuous_snd).inv)).prodMk continuous_snd }
   have hcl : IsClosedMap fun p : Y × K => r (j p.1) p.2 :=
     (isClosedMap_fst_of_compactSpace (X := X) (Y := K)).comp
       (e.isClosedMap.comp (hj.prodMap (IsClosedEmbedding.id (X := K))).isClosedMap)
   refine hcl.isQuotientMap (hc.comp ((hj.continuous.comp continuous_fst).prodMk
-    (continuous_subtype_val.comp continuous_snd))) fun x => ?_
+    (continuous_subtypeVal.comp continuous_snd))) fun x => ?_
   obtain ⟨y, c, hc, rfl⟩ := hs x
   exact ⟨(y, ⟨c, hc⟩), rfl⟩
 
@@ -190,7 +190,7 @@ theorem descend [T2Space X] (r : X → G → X) (h1 : ∀ x, r x 1 = x)
   refine ⟨⟨φ, fun s => ?_, ?_⟩, hφ⟩
   · rw [← hq.isOpen_preimage]
     have := (hlc.comp_continuous (f := fun p : Y × K => (p.1, (p.2 : G)))
-      (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))) s
+      (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))) s
     convert this using 1
     ext p
     simp only [Set.mem_preimage, hφ, Function.comp_apply]
@@ -353,10 +353,10 @@ theorem isClosedEmbedding_topEmbR (e : c ⊕ d ≃ b) {κ : ℕ} :
   refine ⟨IsEmbedding.of_comp (g := fun x : RankIn (k := k) (a := a) (b := b) {κ} =>
     x.1.submatrix (fun i => e (.inl i)) id)
     (Continuous.subtype_mk (continuous_matrix fun i l => ?_) _)
-    (continuous_subtype_val.matrix_submatrix _ _) ?_, ?_⟩
+    (continuous_subtypeVal.matrix_submatrix _ _) ?_, ?_⟩
   · obtain ⟨i | i, rfl⟩ := e.surjective i
     · simp only [topR_inl]
-      exact continuous_subtype_val.matrix_elem _ _
+      exact continuous_subtypeVal.matrix_elem _ _
     · simp only [topR_inr]
       exact continuous_const
   · convert IsEmbedding.subtypeVal (p := fun y : Matrix c a k => y.rank ∈ ({κ} : Set ℕ)) using 1
@@ -364,9 +364,9 @@ theorem isClosedEmbedding_topEmbR (e : c ⊕ d ≃ b) {κ : ℕ} :
     ext i l
     exact topR_inl e _ i l
   · rw [range_topEmbR]
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun i => isClosed_iInter fun j =>
-      isClosed_eq (continuous_subtype_val.matrix_elem _ _) continuous_const
+      isClosed_eq (continuous_subtypeVal.matrix_elem _ _) continuous_const
 
 theorem lAct_topEmbR (e : c ⊕ d ≃ b) {κ : ℕ}
     (y : RankIn (k := k) (a := a) (b := c) {κ}) (p : parab k (two e)) :

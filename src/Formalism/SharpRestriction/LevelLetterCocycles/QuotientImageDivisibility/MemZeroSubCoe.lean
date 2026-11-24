@@ -177,12 +177,12 @@ theorem pstep_rank [IsDomain O] [IsPrincipalIdealRing O] {LL : Type} [Field LL] 
   · rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, mem_zeroSub_coe]
     rfl
 
-  haveI : IsNoetherian O FF := isNoetherian_of_isNoetherianRing_of_finite O FF
-  haveI : Module.Finite O ↥A := Module.IsNoetherian.finite O ↥A
-  haveI : Module.Finite O (↥A ⧸ K) := Module.Finite.quotient O K
+  have : IsNoetherian O FF := isNoetherian_of_isNoetherianRing_of_finite O FF
+  have : Module.Finite O ↥A := Module.IsNoetherian.finite O ↥A
+  have : Module.Finite O (↥A ⧸ K) := Module.Finite.quotient O K
 
   have hinj : Function.Injective (algebraMap O LL) := IsFractionRing.injective O LL
-  haveI : NoZeroSMulDivisors O (↥A ⧸ K) := by
+  have : NoZeroSMulDivisors O (↥A ⧸ K) := by
     refine ⟨fun {a q} h => ?_⟩
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective K q
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h
@@ -195,7 +195,7 @@ theorem pstep_rank [IsDomain O] [IsPrincipalIdealRing O] {LL : Type} [Field LL] 
       rw [hφ] at h
       have ha' : algebraMap O LL a ≠ 0 := fun h0 => ha (hinj (by rw [h0, map_zero]))
       exact (smul_eq_zero.1 h).resolve_left ha'
-  haveI : Module.Free O (↥A ⧸ K) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free O (↥A ⧸ K) := Module.free_of_finite_type_torsion_free'
   let ι := Module.Free.ChooseBasisIndex O (↥A ⧸ K)
   let bQ : Basis ι O (↥A ⧸ K) := Module.Free.chooseBasis O (↥A ⧸ K)
 
@@ -246,9 +246,9 @@ theorem pstep_rank [IsDomain O] [IsPrincipalIdealRing O] {LL : Type} [Field LL] 
     | zero => simp
     | add y z _ _ hy hz => rw [map_add (f := _)]; exact Submodule.add_mem _ hy hz
     | smul r y _ hy => rw [hφ]; exact Submodule.smul_mem _ _ hy
-  haveI : FiniteDimensional LL ↥(Submodule.span LL (φ '' (gA : Set ↥A))) :=
+  have : FiniteDimensional LL ↥(Submodule.span LL (φ '' (gA : Set ↥A))) :=
     FiniteDimensional.span_of_finite LL (gA.finite_toSet.image φ)
-  haveI : FiniteDimensional LL ↥(Submodule.span LL (Set.range φ)) :=
+  have : FiniteDimensional LL ↥(Submodule.span LL (Set.range φ)) :=
     Submodule.finiteDimensional_of_le hspan
   let u' : ι → ↥(Submodule.span LL (Set.range φ)) := fun i =>
     ⟨u i, Submodule.subset_span ⟨xr i, rfl⟩⟩

@@ -219,7 +219,7 @@ namespace LateralTheory.E.BaseIntPf
 
 theorem bij_of_flat_surj {A B : CommRingCat.{0}} [IsLocalRing A] [IsLocalRing B] (φ : A ⟶ B)
     [IsLocalHom φ.hom] (hf : φ.hom.Flat) (hs : Function.Surjective φ.hom) : Function.Bijective φ.hom := by
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   have : Module.Flat A B := hf
   have : IsLocalHom (algebraMap A B) := ‹IsLocalHom φ.hom›
   have := Module.FaithfullyFlat.of_flat_of_isLocalHom (A := A) (B := B)
@@ -1558,10 +1558,10 @@ theorem germs (S : Scheme.{0}) (x : S) (c : ℕ → S.presheaf.stalk x) (s : Fin
        else (S.presheaf.map (homOfLE (hWUV.trans inf_le_left)).op).hom (f i), ?_⟩
     intro i hi
     rcases Finset.mem_insert.mp hi with rfl | hi
-    · simp only [if_true]
+    · simp only [ite_true]
       rw [← hg, ← CommRingCat.comp_apply, TopCat.Presheaf.germ_res]
     · have : i ≠ a := fun h => ha (h ▸ hi)
-      simp only [this, if_false]
+      simp only [this, ite_false]
       rw [← hf i hi, ← CommRingCat.comp_apply, TopCat.Presheaf.germ_res]
 
 theorem stalkAIC : StalkAIC := by

@@ -121,7 +121,7 @@ theorem dopL_mem {ι : Type} [Fintype ι] (b : Module.Basis ι ℝ (V × V)) (w 
     have h := congrArg (evD lam f x) (b.sum_repr w).symm
 
     rw [map_sum] at h
-    rw [SchwartzMap.sum_apply]
+    rw [sum_apply]
     refine h.trans (Finset.sum_congr rfl fun i _ => ?_)
     rw [map_smul]
     rfl

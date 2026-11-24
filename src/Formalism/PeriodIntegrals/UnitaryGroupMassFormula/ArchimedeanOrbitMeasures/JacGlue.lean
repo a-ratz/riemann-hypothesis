@@ -309,11 +309,11 @@ theorem splitAsym_good : SplitAsymFor GoodP := by
   intro D X u' ψ hT μinf νinf fibInf hP Ω a hC hPr Ω₂ hΩ₂ hΩ₂n
   obtain ⟨ι, hι, κ, ⟨⟨ρ0, hρ0, hG0⟩, hGl⟩, η, hη, eT, eH, cμ, cν, Ψ', U, hcμ, hcν, hμ, hν, hU, hΨ', hinj,
     hdet, hev, harith⟩ := hPr
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : BorelSpace (TupI X) :=
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : BorelSpace (TupI X) :=
     PI.AprimeInfT.borelSpace_tup (F := X.B.I.F) (E := X.B.I.E) (Ainf X.B.I.F) (D.R.rS + 1 + D.R.rS)
-  haveI : BorelSpace (HmI X) := ⟨rfl⟩
-  haveI hHaar : (volume : Measure (EuclideanSpace ℝ ι × EuclideanSpace ℝ η)).IsAddHaarMeasure := by
+  have : BorelSpace (HmI X) := ⟨rfl⟩
+  have hHaar : (volume : Measure (EuclideanSpace ℝ ι × EuclideanSpace ℝ η)).IsAddHaarMeasure := by
     rw [Measure.volume_eq_prod]; infer_instance
   set T0 := TI X u' hT with hT0
   set z0 : EuclideanSpace ℝ ι × EuclideanSpace ℝ η := (0, eH T0) with hz0
@@ -393,9 +393,9 @@ theorem splitAsym_good : SplitAsymFor GoodP := by
       _ = ENNReal.ofReal (d + 1) * volume (A n) := setLIntegral_const _ _
       _ < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top (hAt n)
   have hμB : ∀ n, μinf (BoxT X u' a (V n) (W n)) = ENNReal.ofReal cμ * volume (Ψ '' A n) := fun n => by
-    rw [hBox n, ← Measure.map_apply eT.continuous.measurable (hΨm n), hμ, Measure.smul_apply, smul_eq_mul]
+    rw [hBox n, ← Measure.map_apply eT.continuous.measurable (hΨm n), hμ, smul_apply, smul_eq_mul]
   have hνW : ∀ n, νinf (W n) = ENNReal.ofReal cν * volume (ball (eH T0) (ρ n)) := fun n => by
-    rw [hW, ← Measure.map_apply eH.continuous.measurable measurableSet_ball, hν, Measure.smul_apply, smul_eq_mul]
+    rw [hW, ← Measure.map_apply eH.continuous.measurable measurableSet_ball, hν, smul_apply, smul_eq_mul]
   have hBy0 : ∀ n, 0 < volume (ball (eH T0) (ρ n)) := fun n => measure_ball_pos _ _ (hρp n)
   have hBx0 : ∀ n, 0 < volume (ball (0 : EuclideanSpace ℝ ι) (ρ n)) := fun n => measure_ball_pos _ _ (hρp n)
   refine ⟨V, W, fun n => (volume (ball (0 : EuclideanSpace ℝ ι) (ρ n))).toReal, fun n => ?_, ?_, ?_, ?_⟩

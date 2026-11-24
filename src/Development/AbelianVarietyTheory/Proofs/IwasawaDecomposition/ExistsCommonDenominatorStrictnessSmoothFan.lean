@@ -87,9 +87,9 @@ theorem GlobalTheory.PolCell.exists_common_den : ∀ (X : Type) [AddCommGroup X]
       StrictWith (id : ℤ → ℤ) φ N (linW w) u ∧ B ∈ rcone u := by
   intro X _ _ φ hφ
   obtain ⟨S, hS, hSc⟩ := hφ.finite
-  haveI : Finite S := hS.to_subtype
+  have : Finite S := hS.to_subtype
   let K := Σ m : Fin (Nat.card S + 1), (Fin m → S)
-  haveI : Fintype K := Fintype.ofFinite K
+  have : Fintype K := Fintype.ofFinite K
   let D : K → ℕ := fun k =>
     if h : IsCone (id : ℤ → ℤ) φ (fun i => ((k.2 i : S) : LinearMap.BilinForm ℤ X)) then Classical.choose h.strict else 1
   have hD : ∀ k, 0 < D k := fun k => by
@@ -108,7 +108,7 @@ theorem GlobalTheory.PolCell.exists_common_den : ∀ (X : Type) [AddCommGroup X]
     exact Nat.lt_succ_of_le this
   let k : K := ⟨⟨m, hm⟩, fun i => ⟨_, he i⟩⟩
   have hk : IsCone (id : ℤ → ℤ) φ (fun i => ((k.2 i : S) : LinearMap.BilinForm ℤ X)) := hγ'
-  have hDk : D k = Classical.choose hk.strict := dif_pos hk
+  have hDk : D k = Classical.choose hk.strict := dite_eq_left hk
   obtain ⟨ℓ, -, hℓ⟩ := Classical.choose_spec hk.strict
   obtain ⟨t, ht⟩ : D k ∣ ∏ k, D k := Finset.dvd_prod_of_mem D (Finset.mem_univ k)
   have ht0 : 0 < t := by

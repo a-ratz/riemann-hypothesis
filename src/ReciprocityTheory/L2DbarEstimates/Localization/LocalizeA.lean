@@ -77,7 +77,7 @@ theorem loc_d_congr {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n)
     (hz : IsLocalHomeomorph z) (j : Fin n) (f g : M → ℂ) (x : M) (h : f =ᶠ[𝓝 x] g) :
     d n z j f x = d n z j g x := by
   by_cases hc : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source
-  · simp only [d, dif_pos hc]
+  · simp only [d, dite_eq_left hc]
     set e := Classical.choose hc with he_def
     have he : IsChart n z e ∧ x ∈ e.source := Classical.choose_spec hc
     have hzx : z x = e x := he.1 he.2
@@ -91,13 +91,13 @@ theorem loc_d_congr {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n)
       exact ht.eventually h
     unfold wd
     rw [hfg.fderiv_eq]
-  · simp only [d, dif_neg hc]
+  · simp only [d, dite_eq_right hc]
 
 theorem loc_db_congr {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n)
     (hz : IsLocalHomeomorph z) (j : Fin n) (f g : M → ℂ) (x : M) (h : f =ᶠ[𝓝 x] g) :
     db n z j f x = db n z j g x := by
   by_cases hc : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source
-  · simp only [db, dif_pos hc]
+  · simp only [db, dite_eq_left hc]
     set e := Classical.choose hc with he_def
     have he : IsChart n z e ∧ x ∈ e.source := Classical.choose_spec hc
     have hzx : z x = e x := he.1 he.2
@@ -111,7 +111,7 @@ theorem loc_db_congr {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n)
       exact ht.eventually h
     unfold wdb
     rw [hfg.fderiv_eq]
-  · simp only [db, dif_neg hc]
+  · simp only [db, dite_eq_right hc]
 
 theorem loc_ck_sum {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) (k : ℕ) {ι : Type*}
     (s : Finset ι) (f : ι → M → ℂ) (hf : ∀ i, Ck n z k (f i)) :
@@ -125,7 +125,7 @@ theorem loc_d_sum {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) {ι
     (s : Finset ι) (f : ι → M → ℂ) (hf : ∀ i, Ck n z 1 (f i)) (j : Fin n) (x : M) :
     d n z j (fun y => ∑ i ∈ s, f i y) x = ∑ i ∈ s, d n z j (f i) x := by
   by_cases hc : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source
-  · simp only [d, dif_pos hc]
+  · simp only [d, dite_eq_left hc]
     set e := Classical.choose hc with he_def
     have he : IsChart n z e ∧ x ∈ e.source := Classical.choose_spec hc
     have hdiff : ∀ i ∈ s, DifferentiableAt ℝ (f i ∘ e.symm) (z x) := by
@@ -139,15 +139,15 @@ theorem loc_d_sum {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) {ι
     have key : ∀ L : ι → (V n →L[ℝ] ℂ), ((∑ i ∈ s, L i) (bas n j) - Complex.I * (∑ i ∈ s, L i) (Complex.I • bas n j)) / 2 =
         ∑ i ∈ s, (L i (bas n j) - Complex.I * L i (Complex.I • bas n j)) / 2 := by
       intro L
-      simp only [ContinuousLinearMap.sum_apply, Finset.mul_sum, ← Finset.sum_sub_distrib, Finset.sum_div]
+      simp only [sum_apply, Finset.mul_sum, ← Finset.sum_sub_distrib, Finset.sum_div]
     exact key _
-  · simp only [d, dif_neg hc, Finset.sum_const_zero]
+  · simp only [d, dite_eq_right hc, Finset.sum_const_zero]
 
 theorem loc_db_sum {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) {ι : Type*}
     (s : Finset ι) (f : ι → M → ℂ) (hf : ∀ i, Ck n z 1 (f i)) (j : Fin n) (x : M) :
     db n z j (fun y => ∑ i ∈ s, f i y) x = ∑ i ∈ s, db n z j (f i) x := by
   by_cases hc : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ x ∈ e.source
-  · simp only [db, dif_pos hc]
+  · simp only [db, dite_eq_left hc]
     set e := Classical.choose hc with he_def
     have he : IsChart n z e ∧ x ∈ e.source := Classical.choose_spec hc
     have hdiff : ∀ i ∈ s, DifferentiableAt ℝ (f i ∘ e.symm) (z x) := by
@@ -161,9 +161,9 @@ theorem loc_db_sum {M : Type*} [TopologicalSpace M] (n : ℕ) (z : M → V n) {�
     have key : ∀ L : ι → (V n →L[ℝ] ℂ), ((∑ i ∈ s, L i) (bas n j) + Complex.I * (∑ i ∈ s, L i) (Complex.I • bas n j)) / 2 =
         ∑ i ∈ s, (L i (bas n j) + Complex.I * L i (Complex.I • bas n j)) / 2 := by
       intro L
-      simp only [ContinuousLinearMap.sum_apply, Finset.mul_sum, ← Finset.sum_add_distrib, Finset.sum_div]
+      simp only [sum_apply, Finset.mul_sum, ← Finset.sum_add_distrib, Finset.sum_div]
     exact key _
-  · simp only [db, dif_neg hc, Finset.sum_const_zero]
+  · simp only [db, dite_eq_right hc, Finset.sum_const_zero]
 
 theorem loc_norm_sum_sq {E : Type*} [SeminormedAddCommGroup E] {N : ℕ} (a : Fin N → E) :
     ‖∑ i, a i‖ ^ 2 ≤ N * ∑ i, ‖a i‖ ^ 2 := by
@@ -284,7 +284,7 @@ private theorem d_eq_wd_at_chart_image {M : Type*} [TopologicalSpace M] (n : ℕ
     (e : OpenPartialHomeomorph M (V n)) (he : IsChart n z e) (y : M) (hy : y ∈ e.source) (j : Fin n) :
     d n z j g y = wd n j (g ∘ e.symm) (e y) := by
   have hc : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ y ∈ e.source := ⟨e, he, hy⟩
-  simp only [d, dif_pos hc]
+  simp only [d, dite_eq_left hc]
   have hs := Classical.choose_spec hc
   have hfg : g ∘ (Classical.choose hc).symm =ᶠ[𝓝 (z y)] g ∘ e.symm :=
     (chart_symm_eventuallyEq_at_chart_point n z e (Classical.choose hc) he hs.1 y hy hs.2).fun_comp g
@@ -296,7 +296,7 @@ private theorem db_eq_wdb_at_chart_image {M : Type*} [TopologicalSpace M] (n : �
     (e : OpenPartialHomeomorph M (V n)) (he : IsChart n z e) (y : M) (hy : y ∈ e.source) (j : Fin n) :
     db n z j g y = wdb n j (g ∘ e.symm) (e y) := by
   have hc : ∃ e : OpenPartialHomeomorph M (V n), IsChart n z e ∧ y ∈ e.source := ⟨e, he, hy⟩
-  simp only [db, dif_pos hc]
+  simp only [db, dite_eq_left hc]
   have hs := Classical.choose_spec hc
   have hfg : g ∘ (Classical.choose hc).symm =ᶠ[𝓝 (z y)] g ∘ e.symm :=
     (chart_symm_eventuallyEq_at_chart_point n z e (Classical.choose hc) he hs.1 y hy hs.2).fun_comp g

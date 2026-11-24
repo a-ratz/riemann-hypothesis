@@ -193,11 +193,11 @@ theorem _root_.GroundTheory.Global.FirstInequality.exists_place_mem_unitsPowIn_n
   let κ : Kˣ →* (v.adicCompletion K)ˣ := Units.map (algebraMap K (v.adicCompletion K) : K →* _)
   have hικ (z : Kˣ) : ιv (κ z) = ιK z := by
     apply Units.ext
-    simp only [ιv, ιK, κ, Units.coe_map, MonoidHom.coe_coe]
+    simp only [ιv, ιK, κ, Units.coe_map, MonoidHom.coe_ofClass]
     exact (IsScalarTower.algebraMap_apply K (v.adicCompletion K) (w.adicCompletion L) _).symm
   have hxLw : ((ιK x : (w.adicCompletion L)ˣ) : w.adicCompletion L) =
       algebraMap L (w.adicCompletion L) (xL : L) := by
-    simp only [ιK, xL, Units.coe_map, MonoidHom.coe_coe]
+    simp only [ιK, xL, Units.coe_map, MonoidHom.coe_ofClass]
     exact IsScalarTower.algebraMap_apply K L (w.adicCompletion L) _
   suffices h : ιK x ∈ unitsPow (w.adicCompletion L) p by
     obtain ⟨b, hb⟩ := mem_unitsPow.1 h
@@ -221,7 +221,7 @@ theorem _root_.GroundTheory.Global.FirstInequality.exists_place_mem_unitsPowIn_n
     let αw : (w.adicCompletion L)ˣ := Units.mk0 _ hα0
     have hαw : αw ^ p = ιK a := by
       apply Units.ext
-      simp only [αw, ιK, Units.val_pow_eq_pow_val, Units.val_mk0, Units.coe_map, MonoidHom.coe_coe]
+      simp only [αw, ιK, Units.val_pow_eq_pow_val, Units.val_mk0, Units.coe_map, MonoidHom.coe_ofClass]
       rw [← map_pow]
       change algebraMap L (w.adicCompletion L) ((α ^ p : kummerExtension K p Ω _) : L) = _
       rw [hα, IsScalarTower.algebraMap_apply K L (w.adicCompletion L)]

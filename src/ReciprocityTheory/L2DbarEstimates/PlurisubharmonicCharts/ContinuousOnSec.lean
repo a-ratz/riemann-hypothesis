@@ -326,7 +326,7 @@ theorem flatE_isCompact {n : ℕ} {Y : Type u} [TopologicalSpace Y] [T2Space Y] 
   have hK := hF.proper _ (isCompact_flatK De a) hne
   convert hK using 1
   ext x
-  simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage]
   constructor
   · rintro ⟨y, hy, rfl⟩
     have h2 : _ ∧ _ := y.2

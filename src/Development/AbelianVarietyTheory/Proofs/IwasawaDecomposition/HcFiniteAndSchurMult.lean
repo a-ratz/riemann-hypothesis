@@ -419,13 +419,13 @@ namespace GlobalTheory.SmVec
 theorem inner_l2_gard : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (P G : Matrix (Fin n) (Fin n) ℂ), IsUnit P → Pᴴ * Formalism.REAL.Jm ε * P = G → IsURepOn (UJset ε) σ → ∀ (X : Type) [TopologicalSpace X] [SecondCountableTopology X] [MeasurableSpace X] [BorelSpace X] (ν : Measure X) [IsFiniteMeasure ν] (act : Formalism.REAL.UJ ε → X → X), Continuous (Function.uncurry act) → ∀ (a : H →ₗ[ℂ] (X → ℂ)) (A : H →ₗ[ℂ] Lp ℂ 2 ν), (∀ w ∈ smSub G (trRep σ P), Continuous (a w) ∧ (∃ C : ℝ, ∀ x, ‖a w x‖ ≤ C) ∧ ∀ (g : Formalism.REAL.UJ ε) x, a (σ (umat g) w) x = a w (act g x)) → (∀ x, Sobolev₂ (lieG G) (trRep σ P) ((LinearMap.proj x).comp a)) → (∀ w ∈ smSub G (trRep σ P), (A w : X → ℂ) =ᵐ[ν] a w) → ∀ φ, IsTest φ → ∀ w ∈ smSub G (trRep σ P), ∀ f : Lp ℂ 2 ν, ⟪f, A (gard ε σ φ w)⟫_ℂ = ∫ g : Formalism.REAL.UJ ε, φ (umat g) • ⟪f, A (σ (umat g) w)⟫_ℂ ∂(Formalism.REAL.muG ε) := by
   intro n ε H _ _ _ σ P G hP hG hσ X _ _ _ _ ν _ act hact a A ha hsob hA φ hφ w hw f
   have hemb := (Formalism.REAL.isClosedEmbeddingMatrix n ε).1
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Formalism.REAL.UJ ε) := hemb.isEmbedding.secondCountableTopology
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Formalism.REAL.UJ ε) := hemb.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : LocallyCompactSpace (Formalism.REAL.UJ ε) := hemb.locallyCompactSpace
-  haveI : SigmaFinite (Formalism.REAL.muG ε) := inferInstance
+  have : LocallyCompactSpace (Formalism.REAL.UJ ε) := hemb.locallyCompactSpace
+  have : SigmaFinite (Formalism.REAL.muG ε) := inferInstance
   obtain ⟨hc, ⟨C, hC⟩, hact'⟩ := ha w hw
   have key : ∀ v ∈ smSub G (trRep σ P), ⟪f, A v⟫_ℂ = ∫ x, ⟪f x, a v x⟫_ℂ ∂ν := fun v hv => by
     rw [L2.inner_def]
@@ -603,10 +603,10 @@ theorem schurLemma_equivariant_pair_boundedFunctions : ∀ (n : ℕ) (ε : Fin n
       refine ⟨⟨_, hj⟩, fun v => ?_, fun v => ?_⟩
       · show σ _ (σ i.1 v) = v
         rw [← ContinuousLinearMap.comp_apply, ← hrep.2 _ hj _ i.2, hl, hrep.1,
-          ContinuousLinearMap.one_apply]
+          one_apply_eq_self]
       · show σ i.1 (σ _ v) = v
         rw [← ContinuousLinearMap.comp_apply, ← hrep.2 _ i.2 _ hj, hr, hrep.1,
-          ContinuousLinearMap.one_apply])
+          one_apply_eq_self])
     (fun S hS hS' => hirr S hS (fun g hg v hv => hS' ⟨g, hg⟩ v hv))
     (fun i v hv => hmem i.1 i.2 v hv)
     A A' (hnorm A hAinv) (hnorm A' hA'inv) (fun i w hw => hxinv i.1 i.2 w hw w hw) hcl hcl'
@@ -812,7 +812,7 @@ theorem isContRep_kRep {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAddComm
     [FiniteDimensional ℂ W] (hW : ∀ k ∈ Formalism.REAL.Kset ε, ∀ w ∈ W, σ k w ∈ W) :
     GlobalTheory.Published.AutFin.IsContRep (kRep hσ W hW) := fun ℓ w =>
   (LinearMap.continuous_of_finiteDimensional ℓ).comp
-    (Continuous.subtype_mk ((continuous_orbit hσ w).comp continuous_subtype_val) _)
+    (Continuous.subtype_mk ((continuous_orbit hσ w).comp continuous_subtypeVal) _)
 
 theorem hcFinite (hP : GlobalTheory.Published.HarishChandraFinite) : HCFinite θ M J χ := by
   rintro hθ ⟨U, hU, hUJ⟩

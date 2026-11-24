@@ -433,9 +433,9 @@ theorem besChar_continuous (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsCharAF D.ho
   obtain ⟨L, hL⟩ := exists_leftInv d.e d.e_iso.1
   have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   have ht : Continuous (Algebra.trace (AF D.host.F) (AE D)) := IsModuleTopology.continuous_of_linearMap _
-  have hm0 : Continuous (fun k : GA D B => Formalism.L2.Theta.mt B k) := Units.continuous_val.comp continuous_subtype_val
+  have hm0 : Continuous (fun k : GA D B => Formalism.L2.Theta.mt B k) := Units.continuous_val.comp continuous_subtypeVal
   have := hψ.1.comp (ht.comp ((continuous_coordSum (fun i => incA D (d.c i))
-    (L.map (incA D)) (d.e.map (incA D)) (ratV d.z)).comp (hm0.comp (continuous_subtype_val (p := (· ∈ NFlag B d.e))))))
+    (L.map (incA D)) (d.e.map (incA D)) (ratV d.z)).comp (hm0.comp (continuous_subtypeVal (p := (· ∈ NFlag B d.e))))))
   exact this.congr fun n => (besChar_formula ψ d L hL n n.2).symm
 
 theorem perp_fixed {ρ : ℕ} (e : Matrix (Fin B.rank) (Fin ρ) D.host.E) (g : GA D B)

@@ -110,7 +110,7 @@ theorem UJ_flip (ε : Fin n → Bool) : Formalism.REAL.UJ (flip ε) = Formalism.
 theorem Kset_flip (ε : Fin n → Bool) : Formalism.REAL.Kset (flip ε) = Formalism.REAL.Kset ε := by
   ext g
   unfold Formalism.REAL.Kset
-  simp only [Set.mem_setOf_eq, Jm_flip, Matrix.mul_neg, Matrix.neg_mul, neg_inj]
+  simp only [Set.mem_ofPred_eq, Jm_flip, Matrix.mul_neg, Matrix.neg_mul, neg_inj]
 
 theorem rhoC_flip (ε : Fin n → Bool) : Formalism.REAL.rhoC (flip ε) = Formalism.REAL.rhoC ε := by
   funext a
@@ -185,7 +185,7 @@ theorem gramAt_neg (V : HSp D) (τ : D.what₂.Tau) : gramAt D (GlobalTheory.Gri
 
 theorem UH_neg {ι : Type*} [Fintype ι] [DecidableEq ι] (H : Matrix ι ι ℂ) : Formalism.QuantumDeterminants.UH (-H) = Formalism.QuantumDeterminants.UH H := by
   ext g
-  simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq, Matrix.mul_neg, Matrix.neg_mul, neg_inj]
+  simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq, Matrix.mul_neg, Matrix.neg_mul, neg_inj]
 
 theorem UH_sgn (V : HSp D) (τ : D.what₂.Tau) :
     Formalism.QuantumDeterminants.UH (gramAt D (GlobalTheory.Grid.sgn true V) τ) = Formalism.QuantumDeterminants.UH (gramAt D V τ) := by
@@ -193,7 +193,7 @@ theorem UH_sgn (V : HSp D) (τ : D.what₂.Tau) :
 
 theorem lieAt_sgn (V : HSp D) (τ : D.what₂.Tau) : lieAt (GlobalTheory.Grid.sgn true V) τ = lieAt V τ := by
   ext X
-  simp only [lieAt, Set.mem_setOf_eq]
+  simp only [lieAt, Set.mem_ofPred_eq]
   rw [gramAt_neg, Matrix.mul_neg, Matrix.neg_mul, ← neg_add, neg_eq_zero]
 
 @[reducible] def negModel {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel V S) :

@@ -75,7 +75,7 @@ theorem chi_pin (gen : Γ → Prod' H d) (a₀ : Γ) (v : EuclideanSpace ℂ (Fi
     have hg : g.1.2 v = (1 : ℂ) • v := by rw [one_smul]; exact ha₀
     have hab : (a + g).1.2 v = (1 : ℂ) • v := by
       change (a.1.2 + g.1.2) v = _
-      rw [ContinuousLinearMap.add_apply, hc, hg, zero_smul, zero_add]
+      rw [add_apply, hc, hg, zero_smul, zero_add]
     have e1 := key (a + g) 1 one_ne_zero hab
     have e2 := key g 1 one_ne_zero hg
     have hsum : (⟨(a + g).1.1 s, StarAlgebra.subset_adjoin ℂ _ (Or.inl ⟨a + g, rfl⟩)⟩ :

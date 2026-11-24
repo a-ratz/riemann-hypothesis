@@ -200,7 +200,7 @@ theorem GlobalTheory.WhitRed.exists_mirabolic : ∀ (E : Type) [Field E] [Number
       rw [e1, e2, row_mul_inv _ _ _ hkr]
       by_cases hj : j = Fin.last m
       · subst hj; simp
-      · rw [if_neg hj, map_zero, Matrix.one_apply_ne (Ne.symm hj)]
+      · rw [ite_eq_right hj, map_zero, Matrix.one_apply_ne (Ne.symm hj)]
     · refine IsDedekindDomain.FiniteAdeleRing.ext _ fun w => ?_
       change (GlobalTheory.CellDec.compV E (m + 1) w p).val (Fin.last m) j =
         pLoc E w (pFin E (if j = Fin.last m then (1 : Ad E) else 0))
@@ -208,7 +208,7 @@ theorem GlobalTheory.WhitRed.exists_mirabolic : ∀ (E : Type) [Field E] [Number
           (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) (w.adicCompletion E)) (Fin.last m) j := by
         by_cases hj : j = Fin.last m
         · subst hj; simp
-        · rw [if_neg hj, map_zero, map_zero, Matrix.one_apply_ne (Ne.symm hj)]
+        · rw [ite_eq_right hj, map_zero, map_zero, Matrix.one_apply_ne (Ne.symm hj)]
       rw [eR]
       by_cases hw : w ∈ T
       · have e2 : GlobalTheory.CellDec.compV E (m + 1) w p =
@@ -353,14 +353,14 @@ theorem sub_single_apply {m : ℕ} (y : Fin (m + 1) → Af E) (i : Fin (m + 1)) 
   congr 1
   by_cases h : i = Fin.last m
   · subst h; simp
-  · rw [Pi.single_eq_of_ne h, if_neg h, map_zero]
+  · rw [Pi.single_eq_of_ne h, ite_eq_right h, map_zero]
 
 theorem val_sub_ite_le_one {v : HeightOneSpectrum (𝓞 E)} {x : v.adicCompletion E} (hx : Valued.v x ≤ 1) (p : Prop)
     [Decidable p] : Valued.v (x - if p then 1 else 0) ≤ 1 := by
   refine (Valuation.map_sub _ _ _).trans (max_le hx ?_)
   split_ifs
   · rw [map_one]
-  · rw [map_zero]; exact zero_le'
+  · rw [map_zero]; exact zero_le
 
 end GlobalTheory.CellDec.RowPos
 
@@ -466,7 +466,7 @@ theorem GlobalTheory.CellDec.lastRow_sub_notMem_latt : ∀ (E : Type) [Field E] 
     have hle : Valued.v (((ϖ w ^ a : (w.adicCompletion E)ˣ) : w.adicCompletion E) * K.val (Fin.last m) i) ≤ 1 := by
       by_cases hi : i = Fin.last m
       · have := hb i
-        rw [if_pos hi] at this
+        rw [ite_eq_left hi] at this
         calc _ = Valued.v ((((ϖ w ^ a : (w.adicCompletion E)ˣ) : w.adicCompletion E) * K.val (Fin.last m) i - 1) + 1) := by
               rw [sub_add_cancel]
           _ ≤ max _ _ := Valuation.map_add _ _ _
@@ -523,7 +523,7 @@ theorem locFac_eq_wtS_sphZ : ∀ (q : ℕ), 0 < q → ∀ (n : ℕ) (α : Fin (n
   by_cases hA : Antitone ν
   · have hnn : ∀ i, 0 ≤ ν i := fun i => le_trans hlast (hA (Fin.le_last i))
     have hAn : Antitone (fun i => (ν i).toNat) := fun i j h => Int.toNat_le_toNat (hA h)
-    rw [GlobalTheory.RSCell.locFac, if_pos ⟨hA, hnn⟩, GlobalTheory.RSCell.sphZ, if_pos hA, GlobalTheory.JSW.sphW, if_pos hAn]
+    rw [GlobalTheory.RSCell.locFac, ite_eq_left ⟨hA, hnn⟩, GlobalTheory.RSCell.sphZ, ite_eq_left hA, GlobalTheory.JSW.sphW, ite_eq_left hAn]
     set s := GlobalTheory.JSW.schurAt (fun i => (ν i).toNat) α
     set w : ℤ := GlobalTheory.CellDec.wtS (n + 1) ν with hw
     have hc : (∑ i : Fin (n + 1), ((((n + 1 : ℕ)) : ℂ) - 1 - 2 * ((i : ℕ) : ℂ)) * (((ν i).toNat : ℕ) : ℂ)) = ((w : ℤ) : ℂ) := by
@@ -537,7 +537,7 @@ theorem locFac_eq_wtS_sphZ : ∀ (q : ℕ), 0 < q → ∀ (n : ℕ) (α : Fin (n
       refine Finset.sum_congr rfl fun i _ => ?_
       exact_mod_cast Int.toNat_of_nonneg (hnn i)
     rw [hc, hsum]
-    rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _),
+    rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _),
       ← ENNReal.ofReal_mul (zpow_nonneg hq'.le _), ← ENNReal.ofReal_mul (by positivity)]
     congr 1
     rw [norm_mul, Complex.norm_natCast_cpow_of_pos hq]
@@ -551,7 +551,7 @@ theorem locFac_eq_wtS_sphZ : ∀ (q : ℕ), 0 < q → ∀ (n : ℕ) (α : Fin (n
           ((q : ℝ) ^ (-(w : ℝ) / 2 * ((2 : ℕ) : ℝ)) * ‖s‖ ^ 2)
         = ((q : ℝ) ^ (w : ℝ) * (q : ℝ) ^ (-(w : ℝ) / 2 * ((2 : ℕ) : ℝ))) * (‖s‖ ^ 2 * (q : ℝ) ^ (-((∑ i, (ν i : ℝ)) * x))) := by ring
       _ = _ := by rw [h1, one_mul]
-  · rw [GlobalTheory.RSCell.locFac, if_neg (fun h => hA h.1), GlobalTheory.RSCell.sphZ, if_neg hA]
+  · rw [GlobalTheory.RSCell.locFac, ite_eq_right (fun h => hA h.1), GlobalTheory.RSCell.sphZ, ite_eq_right hA]
     simp
 
 end GlobalTheory.RSCell
@@ -594,7 +594,7 @@ theorem bInt_of_mem [_root_.NumberField.IsTotallyComplex E] {a : ℕ} (ℓ : Fin
       ENNReal.ofReal (‖GlobalTheory.JSW.whit F (h * (infGL E a (GlobalTheory.RSTheta.rowGL ℓ (fun i => pInf E (h.val ℓ i))))⁻¹)‖ ^ 2 *
         ‖Φ (fun i => pInf E (h.val ℓ i))‖ * (ideleModule E (GeneralLinearGroup.det h) : ℝ) ^ x) := by
   rw [GlobalTheory.RSCell.bInt, GlobalTheory.RSTheta.rsPsi, GlobalTheory.ThetaPoisson.thetaFn, GlobalTheory.RSTheta.rsInf, Set.indicator_of_mem hm,
-    ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (norm_nonneg _)]
+    ← ofReal_norm, ← ENNReal.ofReal_mul (norm_nonneg _)]
   congr 1
   simp only [Pi.one_apply, mul_one, norm_mul, Complex.norm_conj]
   ring
@@ -697,7 +697,7 @@ theorem cell_identity : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
     rw [dite_eq_right hwT, dite_eq_right hwT, ← _root_.GlobalTheory.RSCell.locFac_eq_wtS_sphZ (Ideal.absNorm w.asIdeal) (Nat.pos_of_ne_zero (by
       rw [Ne, Ideal.absNorm_eq_zero_iff]; exact w.ne_bot)) m (α ⟨w, hwT⟩) x (ν.1 w) (by rw [hνw]; exact hneg w),
       ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
-      ofReal_norm_eq_enorm]
+      ofReal_norm]
     rfl
   have hd0 : ∀ k : HeightOneSpectrum (𝓞 E) →₀ (Fin (m + 1) → ℤ), 0 ≤ GlobalTheory.CellDec.dinv (m + 1) k := fun k =>
     Finset.prod_nonneg fun v _ => (zpow_pos (hqpos v) _).le

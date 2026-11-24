@@ -209,7 +209,7 @@ theorem iteratedDeriv_const_mul' (f : ℂ → ℂ) (c : ℂ) :
 theorem strip_ball (X : Fin n → ℝ) : ∃ ρ : ℝ, 0 < ρ ∧ Metric.ball (0 : ℂ) ρ ⊆ strip X := by
   refine ⟨Real.pi / 4 / (∑ j, |X j| + 1), by positivity, ?_⟩
   intro z hz
-  simp only [strip, Set.mem_setOf_eq]
+  simp only [strip, Set.mem_ofPred_eq]
   intro j
   rw [Metric.mem_ball, dist_zero_right] at hz
   have hS : |X j| ≤ ∑ k, |X k| :=

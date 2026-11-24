@@ -98,7 +98,7 @@ theorem UpperTheory.Reformulated.B.CyclotomicCharacterContinuity.cyc_cont :
   have h1 : Continuous (UpperTheory.Reformulated.B.CyclotomicCharacterContinuity.cycZ E Ω l) := cyclotomicCharacter.continuous l E Ω
   have h2 : Continuous ((Algebra.algebraMap ℚ_[l] (UpperTheory.Reformulated.B.CyclotomicCharacterContinuity.Qbar l)).comp
       (PadicInt.Coe.ringHom : ℤ_[l] →+* ℚ_[l])) :=
-    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtype_val
+    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtypeVal
   exact (Continuous.units_map _ h2).comp h1
 end -- clump:auto
 end -- clump:auto

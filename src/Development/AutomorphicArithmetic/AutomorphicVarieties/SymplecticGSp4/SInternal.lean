@@ -130,7 +130,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.sInternal :
   have hA : WS.A = M.SS := by
     unfold WPres.A Model.SS
     congr
-  haveI := WS.fin
+  have := WS.fin
   refine ⟨by rw [← hp]; exact part_indep WS, ⟨Finset.univ.image WS.z, ?_, ?_⟩, WS, hpart, hzm⟩
   · intro x hx
     obtain ⟨i, -, rfl⟩ := Finset.mem_image.mp hx

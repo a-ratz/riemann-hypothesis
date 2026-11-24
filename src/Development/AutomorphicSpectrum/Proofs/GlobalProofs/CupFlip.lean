@@ -145,7 +145,7 @@ theorem mk_isLocallyConstant (L : Lattice (O := O) ρ) {ϖ : O} {r : ℕ}
   rw [IsLocallyConstant.iff_eventually_eq]
   intro x
   have hc : Continuous fun y : ↥L.T => (y : V) + -(x : V) :=
-    continuous_subtype_val.add continuous_const
+    continuous_subtypeVal.add continuous_const
   have hev := hc.continuousAt.eventually_mem (x := x)
     (s := (fun x => ϖ ^ r • x) '' (L.T : Set V)) (by simpa using hW)
   filter_upwards [hev] with y hy
@@ -583,10 +583,10 @@ theorem exists_dual (T : Submodule O V) (hfg : T.FG) (hfree : Module.Free O T)
       (∀ y, y ∈ T' ↔ ∀ x ∈ T, ∃ a : O, P x y = algebraMap O LL a) ∧
       (∀ x, x ∈ T ↔ ∀ y ∈ T', ∃ a : O, P x y = algebraMap O LL a) := by
   classical
-  haveI : Module.Finite O T := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite O T := Module.Finite.iff_fg.2 hfg
   let bT := Module.Free.chooseBasis O T
   let ι := Module.Free.ChooseBasisIndex O T
-  haveI : Fintype ι := Module.Free.ChooseBasisIndex.fintype O T
+  have : Fintype ι := Module.Free.ChooseBasisIndex.fintype O T
   let e : ι → V := fun i => (bT i : V)
   have hli : LinearIndependent O e :=
     bT.linearIndependent.map' T.subtype (Submodule.ker_subtype T)
@@ -695,7 +695,7 @@ theorem exists_stable (hO : IsOpen (Set.range (algebraMap O LL)))
     have h : Wa a = ⋂ i, ⋂ j, (fun g => algebraMap O LL a * b.repr (ρ g (b i)) j) ⁻¹'
         Set.range (algebraMap O LL) := by
       ext g
-      simp only [Wa, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+      simp only [Wa, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
     rw [h]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
       hO.preimage (continuous_const.mul (hc i j))
@@ -746,10 +746,10 @@ theorem exists_stable (hO : IsOpen (Set.range (algebraMap O LL)))
     · exact Subtype.ext h1
   have hl0 : LinearIndependent O b :=
     (LinearIndependent.iff_fractionRing O LL).2 b.linearIndependent
-  haveI : Module.Free O T0 := Module.Free.of_basis (Basis.span hl0)
-  haveI : Module.Finite O T0 := Module.Finite.span_of_finite O (Set.finite_range _)
-  haveI : Module.Finite O T := Module.Finite.of_injective φ hφ
-  haveI : Module.Free O (LinearMap.range φ) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free O T0 := Module.Free.of_basis (Basis.span hl0)
+  have : Module.Finite O T0 := Module.Finite.span_of_finite O (Set.finite_range _)
+  have : Module.Finite O T := Module.Finite.of_injective φ hφ
+  have : Module.Free O (LinearMap.range φ) := Module.free_of_finite_type_torsion_free'
   refine ⟨{ T := T, stable := ?_, fg := Module.Finite.iff_fg.1 inferInstance,
             free := Module.Free.of_equiv (LinearEquiv.ofInjective φ hφ).symm, span := ?_ }⟩
   · intro h x hx
@@ -994,7 +994,7 @@ theorem mk_mul_int {LL O : Type} [Field LL] [Algebra ℚ_[l] LL] [CommRing O] [A
     (x : LL) (hx : (l ^ n) • (Submodule.Quotient.mk x : LL ⧸ T) = 0) :
     (Submodule.Quotient.mk (algebraMap ℚ_[l] LL (u : ℚ_[l]) * x) : LL ⧸ T) =
       (PadicInt.toZModPow n u).val • (Submodule.Quotient.mk x : LL ⧸ T) := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have h : u - (((PadicInt.toZModPow n u).val : ℕ) : ℤ_[l]) ∈ Ideal.span {(l : ℤ_[l]) ^ n} := by
     rw [← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_self]
   obtain ⟨w, hw⟩ := Ideal.mem_span_singleton.1 h
@@ -1043,7 +1043,7 @@ theorem exists_basis (M : Submodule O V) (hfg : M.FG) (hfree : Module.Free O M)
     (hspan : Submodule.span LL (M : Set V) = ⊤) :
     ∃ (ι : Type) (_ : Fintype ι) (b : Module.Basis ι LL V),
       ∀ x, x ∈ M ↔ ∀ i, ∃ a : O, b.repr x i = algebraMap O LL a := by
-  haveI : Module.Finite O M := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite O M := Module.Finite.iff_fg.2 hfg
   have hfull : ∀ v : V, ∃ c : O, c ≠ 0 ∧ ∃ m : M, algebraMap O LL c • v = (m : V) := by
     intro v
     have hv : v ∈ Submodule.span LL (M : Set V) := by rw [hspan]; trivial
@@ -1112,8 +1112,8 @@ theorem isCompact_lattice (hC : IsCompact (Set.range (algebraMap O LL))) (M : Su
     (hfg : M.FG) (hfree : Module.Free O M) (hspan : Submodule.span LL (M : Set V) = ⊤) :
     IsCompact (M : Set V) := by
   obtain ⟨ι, _, b, hb⟩ := exists_basis M hfg hfree hspan
-  haveI := IsModuleTopology.toContinuousSMul LL V
-  haveI := IsModuleTopology.toContinuousAdd LL V
+  have := IsModuleTopology.toContinuousSMul LL V
+  have := IsModuleTopology.toContinuousAdd LL V
   have hc : Continuous fun c : ι → LL => ∑ i, c i • b i :=
     continuous_finsetSum _ fun i _ => (continuous_apply i).smul continuous_const
   have he : (M : Set V) = (fun c : ι → LL => ∑ i, c i • b i) ''
@@ -1137,7 +1137,7 @@ theorem hasBasis_lattice (M : Submodule O V) (hopen : IsOpen (M : Set V))
     (hB : (nhds (0 : LL)).HasBasis (fun _ : ℕ => True)
       (fun n => (fun o : O => algebraMap O LL (ϖ ^ n * o)) '' Set.univ)) :
     (nhds (0 : V)).HasBasis (fun _ : ℕ => True) (fun n => (fun x => ϖ ^ n • x) '' (M : Set V)) := by
-  haveI := IsModuleTopology.toContinuousSMul LL V
+  have := IsModuleTopology.toContinuousSMul LL V
   have hne : ∀ n : ℕ, algebraMap O LL (ϖ ^ n) ≠ 0 := fun n => by
     rw [Ne, map_eq_zero_iff _ (IsFractionRing.injective O LL)]
     exact pow_ne_zero n hϖ
@@ -1168,7 +1168,7 @@ theorem exists_pow_smul_mem {G : Type} [TopologicalSpace G] [CompactSpace G] (M 
     (hB : (nhds (0 : LL)).HasBasis (fun _ : ℕ => True)
       (fun n => (fun o : O => algebraMap O LL (ϖ ^ n * o)) '' Set.univ))
     (c : G → V) (hc : Continuous c) : ∃ n : ℕ, ∀ g, ϖ ^ n • c g ∈ M := by
-  haveI := IsModuleTopology.toContinuousSMul LL V
+  have := IsModuleTopology.toContinuousSMul LL V
   have hcov : Set.range c ⊆ ⋃ n : ℕ, {x : V | ϖ ^ n • x ∈ M} := by
     rintro _ ⟨g, rfl⟩
     have hU : IsOpen ((fun a : LL => a • c g) ⁻¹' (M : Set V)) :=
@@ -1180,7 +1180,7 @@ theorem exists_pow_smul_mem {G : Type} [TopologicalSpace G] [CompactSpace G] (M 
   have hop : ∀ n : ℕ, IsOpen {x : V | ϖ ^ n • x ∈ M} := fun n => by
     have : {x : V | ϖ ^ n • x ∈ M} = (fun x : V => algebraMap O LL (ϖ ^ n) • x) ⁻¹' (M : Set V) := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, algebraMap_smul]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, algebraMap_smul]
     rw [this]
     exact hopen.preimage (continuous_const_smul _)
   have hdir : Directed (· ⊆ ·) fun n : ℕ => {x : V | ϖ ^ n • x ∈ M} :=
@@ -1220,8 +1220,8 @@ theorem cycMem (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l) (LL : T
     ((cycLL (Lp.PD K) LL g : LLˣ) : LL) ∈ Set.range (algebraMap O LL) := by
   obtain ⟨χ, hχ, -, -⟩ := GlobalTheory.Cyc.exists_integral_cyclotomicChar l Lp
   obtain ⟨⟨hdom, hdvr, -⟩, -⟩ := id hG
-  haveI := hdom
-  haveI := hdvr
+  have := hdom
+  have := hdvr
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have h := (_root_.GlobalTheory.CompanionTheory.GoodCoeff.goodO_structure l LL O hG ϖ hϖ).2.2.2.2.2 ((χ (g : GQ l) : ℤ_[l]ˣ) : ℤ_[l])
   rw [hχ, ← Lp.PD_χ K g] at h
@@ -1231,16 +1231,16 @@ theorem cycMem (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l) (LL : T
 open GlobalTheory.CompanionTheory.LocDual.Lat in
 theorem dualLat : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l), cycIntCore (Lp.PD K) ∧ ∀ (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (P : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDual1 (Lp.PD K) A.ρ A'.ρ P → ∃ (LA : Lattice (O := O) A.ρ) (LA' : Lattice (O := O) A'.ρ), IsDualLat1 (Lp.PD K) LA LA' P ∧ IsDualLat1 (Lp.PD K) LA' LA P.flip := by
   intro l _ Lp K
-  haveI : CompactSpace ↥(GK K) := by
-    haveI := K.2
+  have : CompactSpace ↥(GK K) := by
+    have := K.2
     exact isCompact_iff_compactSpace.1 (InfiniteGalois.fixingSubgroup_isClosed K.1).isCompact
   refine ⟨?_, ?_⟩
   · intro LL _ _ _ O _ _ hG
     have hχ := cycMem l Lp K LL O hG
     obtain ⟨⟨hdom, hdvr, hfr⟩, -⟩ := hG
-    haveI := hdom
-    haveI := hdvr
-    haveI := hfr
+    have := hdom
+    have := hdvr
+    have := hfr
     have hinj : Function.Injective (algebraMap O LL) := IsFractionRing.injective O LL
     refine ⟨{ T := LinearMap.range (Algebra.linearMap O LL), stable := ?_, fg := ?_,
               free := Module.Free.of_equiv (LinearEquiv.ofInjective (Algebra.linearMap O LL) hinj),
@@ -1260,10 +1260,10 @@ theorem dualLat : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l),
   · intro LL _ _ _ O _ _ hG A A' P hP
     have hχ := cycMem l Lp K LL O hG
     obtain ⟨⟨hdom, hdvr, hfr⟩, -, -, htr, hop⟩ := hG
-    haveI := hdom
-    haveI := hdvr
-    haveI := hfr
-    haveI := htr
+    have := hdom
+    have := hdvr
+    have := hfr
+    have := htr
     obtain ⟨LA⟩ := exists_stable (O := O) hop A.ρ A.cont
     obtain ⟨T', hfg, hfree, hspan, h1, h2⟩ :=
       exists_dual LA.T LA.fg LA.free LA.span P hP.2.2.1 hP.2.2.2
@@ -1291,10 +1291,10 @@ theorem latTop : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l), 
   have I := _root_.GlobalTheory.CompanionTheory.GoodCoeff.goodO_structure l LL O hO ϖ hϖ
   obtain ⟨⟨hd, hdvr, hfr⟩, hfd, hmt, htr, hop⟩ := hO
   obtain ⟨-, -, hC, -, hB, -⟩ := I
-  haveI := hd
-  haveI := hfr
-  haveI := htr
-  haveI : CompactSpace ↥(GK K) := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK K
+  have := hd
+  have := hfr
+  have := htr
+  have : CompactSpace ↥(GK K) := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK K
   have hopen : IsOpen (LA.T : Set A.V) :=
     GlobalTheory.Cyc.isOpen_of_fg_of_span_eq_top hop LA.T LA.fg LA.span
   have hcomp : IsCompact (LA.T : Set A.V) := isCompact_lattice hC LA.T LA.fg LA.free LA.span
@@ -1360,15 +1360,15 @@ theorem cobChar : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ)
   have hχc : Continuous fun g => (χZ g : ℤ_[l]) := by
     rw [continuous_iff_coe]
     simp only [hχZ]
-    exact hcyc.continuous.comp (continuous_subtype_val.comp hΨ)
+    exact hcyc.continuous.comp (continuous_subtypeVal.comp hΨ)
   have hval : ∀ g : Formalism.GaloisCohomology.GK l K.1,
       (χ (Ψ g) : ZMod (l ^ n)) = (Formalism.GaloisCohomology.cycK l K.1 n g : ZMod (l ^ n)) := fun g => by
     obtain ⟨u, hu, hu'⟩ := hχ (Ψ g)
     rw [Lp.PD_χ K (Ψ g), ← hχZ] at hu
     rw [← hu', show u = (χZ g : ℤ_[l]) from Subtype.ext hu]
     rfl
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
   obtain ⟨c, hc, hd⟩ := coboundary_of_characters hT l K.1 K.2 n hn
     ((continuous_toZModPow n).comp hχc) M (fun p => z (Ψ p.1, Ψ p.2))
     (hz.continuous.comp (hΨ.prodMap hΨ))
@@ -1396,9 +1396,9 @@ theorem dblAnn : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) 
     rw [map_nsmul, AddMonoidHom.nsmul_apply, nsmul_eq_mul, ZMod.natCast_self, zero_mul]
   have mW' : Module (ZMod (l ^ n)) W' := AddCommGroup.zmodModule fun y => hP2 _ fun x => by
     rw [map_nsmul, nsmul_eq_mul, ZMod.natCast_self, zero_mul]
-  letI tW' : TopologicalSpace W' := ⊥
-  haveI dW' : DiscreteTopology W' := ⟨rfl⟩
-  haveI hK : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  let tW' : TopologicalSpace W' := ⊥
+  have dW' : DiscreteTopology W' := ⟨rfl⟩
+  have hK : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   let φ : ↥(GK K) ≃* Formalism.GaloisCohomology.GK l K.1 := IntermediateField.fixingSubgroupEquiv K.1
   have hφ : Continuous φ ∧ Continuous φ.symm :=
     GlobalTheory.fixingSubgroupEquiv_bicontinuous ℚ_[l] (Om l) K.1
@@ -1536,17 +1536,17 @@ theorem topInj : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) 
   intro hT l _ Lp K LL _ _ _ O _ _ hO L1 hL1 ϖ hϖ r z hz hcob
   obtain ⟨-, hFin, -, ⟨e, hl, -⟩, -, hZ⟩ := _root_.GlobalTheory.CompanionTheory.GoodCoeff.goodO_structure l LL O hO ϖ hϖ
   obtain ⟨⟨hD, hDVR, hFr⟩, -⟩ := hO
-  haveI := hD
-  haveI := hDVR
-  haveI := hFr
-  haveI := K.2
-  haveI : CompactSpace ↥(GK K) :=
+  have := hD
+  have := hDVR
+  have := hFr
+  have := K.2
+  have : CompactSpace ↥(GK K) :=
     isCompact_iff_compactSpace.1 (IntermediateField.fixingSubgroup_isClosed K.1).isCompact
   obtain ⟨F, ⟨hF, -⟩, hFz⟩ := hcob
   obtain ⟨s, hrs, hFs⟩ := exists_tor_range L1.T hF.range_finite hϖ hL1 r
   obtain ⟨χZ, hχZ, hχc, -⟩ := GlobalTheory.Cyc.exists_integral_cyclotomicChar l Lp
   have hlpos : l ≠ 0 := (Fact.out : l.Prime).ne_zero
-  haveI : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ hlpos⟩
+  have : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ hlpos⟩
   let χ : ↥(GK K) →* (ZMod (l ^ (s + 1)))ˣ :=
     (Units.map (PadicInt.toZModPow (s + 1) : ℤ_[l] →+* ZMod (l ^ (s + 1))).toMonoidHom).comp
       (χZ.comp (GK K).subtype)
@@ -1554,7 +1554,7 @@ theorem topInj : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) 
     fun _ => rfl
   have hχlc : IsLocallyConstant fun g => (χ g : ZMod (l ^ (s + 1))) :=
     (lc_toZModPow (s + 1)).comp_continuous
-      (Units.continuous_val.comp (hχc.comp continuous_subtype_val))
+      (Units.continuous_val.comp (hχc.comp continuous_subtypeVal))
   have hcyc : ∀ g : ↥(GK K), ((cycLL (Lp.PD K) LL g : LLˣ) : LL) =
       algebraMap ℚ_[l] LL (((χZ (g : GQ l) : ℤ_[l]ˣ) : ℤ_[l]) : ℚ_[l]) := fun g => by
     rw [hχZ, ← Lp.PD_χ K g]
@@ -1568,9 +1568,9 @@ theorem topInj : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) 
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective L1.T q
     rw [hχv, ← mk_mul_int L1.T hZ (s + 1) _ x (hS _ hq), ← hcyc]
     rfl
-  letI : Module (ZMod (l ^ (s + 1))) ↥(tor L1.T ϖ r) :=
+  let : Module (ZMod (l ^ (s + 1))) ↥(tor L1.T ϖ r) :=
     AddCommGroup.zmodModule fun m => Subtype.ext (hS _ (tor_mono L1.T hrs m.2))
-  haveI := finite_tor L1.T hL1 hϖ hFin r
+  have := finite_tor L1.T hL1 hϖ hFin r
   obtain ⟨f, hf, hfM, hfe⟩ := descent (fun g => (repD L1 g).toAddMonoidHom)
     (fun g h q => by
       change repD L1 (g * h) q = repD L1 g (repD L1 h q)

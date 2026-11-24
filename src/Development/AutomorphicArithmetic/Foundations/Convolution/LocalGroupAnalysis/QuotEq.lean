@@ -120,7 +120,7 @@ private theorem integrable_iff (hp : Pair μ j ν) {F : G → ℂ} (hF : Measura
   have e : ∫⁻ x, ‖F x * ((ρ x).toReal : ℂ)‖ₑ ∂μ = ∫⁻ x, ‖F x‖ₑ * ρ x ∂μ := by
     refine lintegral_congr_ae ?_
     filter_upwards [ae_lt_top_nrm hp h] with x hx
-    rw [enorm_mul, ← ofReal_norm_eq_enorm ((ρ x).toReal : ℂ), Complex.norm_real,
+    rw [eNorm_mul, ← ofReal_norm ((ρ x).toReal : ℂ), Complex.norm_real,
       Real.norm_of_nonneg ENNReal.toReal_nonneg, ENNReal.ofReal_toReal hx.ne]
   rw [← e, ← lt_top_iff_ne_top]
   exact ⟨fun h => h.2, fun h => ⟨Measurable.aestronglyMeasurable (by fun_prop), h⟩⟩
@@ -134,7 +134,7 @@ theorem UpperTheory.ConvolutionTheory.G.quotEq :
   intro G _ _ _ _ _ _ _ _ T _ _ _ _ _ _ _ _ μ j ν hp F hF hi ρ h
   have h2 : QInt μ j ν F ↔ ∫⁻ x, ‖F x‖ₑ * ρ x ∂μ ≠ ⊤ := by
     refine ⟨fun hq => (integrable_iff hp hF h).1 (hq.2.2 ρ h), fun hq => ⟨hF, hi, fun ρ' h' => ?_⟩⟩
-    rw [integrable_iff hp hF h', lint_eq hp (Φ := fun x => ‖F x‖ₑ) hF.enorm (fun t g => by rw [hi]) h' h]
+    rw [integrable_iff hp hF h', lint_eq hp (Φ := fun x => ‖F x‖ₑ) hF.eNorm (fun t g => by rw [hi]) h' h]
     exact hq
   refine ⟨h2.trans (integrable_iff hp hF h).symm, h2, ?_⟩
   have hex : ∃ ρ, IsNrm j ν ρ := ⟨ρ, h⟩

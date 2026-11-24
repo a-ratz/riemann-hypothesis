@@ -126,7 +126,7 @@ theorem gaussQb_sq (hq : q % 4 = 3) {w : Qb} (hw : IsPrimitiveRoot w q) :
   push_cast; ring
 
 theorem sqQ_le_cycQ (hq : q % 4 = 3) : sqQ (-(q : ℤ)) ≤ cycQ q := by
-  obtain ⟨w, hw⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Qb q
+  obtain ⟨w, hw⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Qb q
   rw [sqQ_eq (gaussQb_sq hq hw), adjoin_simple_le_iff]
   exact gaussQb_mem hw
 
@@ -235,7 +235,7 @@ theorem PsQ.exists_q (hP : H.PsQ) :
   have hqd : Nat.Coprime H.d H.q := (Nat.coprime_primes hd hq).mpr (by omega)
   have hc : Nat.Coprime (H.QS * H.d) H.q :=
     Nat.Coprime.mul_left (Nat.Coprime.coprime_dvd_right (Nat.dvd_mul_right H.q H.d) H.QS_coprime) hqd
-  haveI : NeZero H.condN := ⟨(Nat.mul_pos (Nat.mul_pos H.QS_pos hq.pos) hd.pos).ne'⟩
+  have : NeZero H.condN := ⟨(Nat.mul_pos (Nat.mul_pos H.QS_pos hq.pos) hd.pos).ne'⟩
   obtain ⟨u, hu1, hu2⟩ := exists_unit_crt (N := H.condN) (condN_eq_q H) hc (Nat.coprime_one_left _) hcop
   refine ⟨u, hu1, ?_⟩
   have hu2' : (u : ZMod H.condN).val % H.q = (H.q - 1) % H.q := hu2
@@ -258,7 +258,7 @@ theorem exists_d : ∃ u : (ZMod H.condN)ˣ, (u : ZMod H.condN).val ≡ 1 [MOD H
   have hqd : Nat.Coprime H.q H.d := (Nat.coprime_primes hq hd).mpr (by omega)
   have hc : Nat.Coprime (H.QS * H.q) H.d :=
     Nat.Coprime.mul_left (Nat.Coprime.coprime_dvd_right (Nat.dvd_mul_left H.d H.q) H.QS_coprime) hqd
-  haveI : NeZero H.condN := ⟨(Nat.mul_pos (Nat.mul_pos H.QS_pos hq.pos) hd.pos).ne'⟩
+  have : NeZero H.condN := ⟨(Nat.mul_pos (Nat.mul_pos H.QS_pos hq.pos) hd.pos).ne'⟩
   obtain ⟨u, hu1, hu2⟩ := exists_unit_crt (N := H.condN) (a := H.QS * H.q) (b := H.d) rfl hc
     (Nat.coprime_one_left _) hcop
   refine ⟨u, hu1, ?_⟩

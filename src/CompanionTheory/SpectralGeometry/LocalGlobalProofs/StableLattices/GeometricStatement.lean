@@ -947,9 +947,9 @@ theorem hs_lines (hA : IsGrad ε A) (x : S7.UJ ε) (t : ℝ) (h0 : 0 ≤ tauG A 
   have hab : a * b ≤ 1 := by nlinarith
   have hc1 : 1 ≤ c := by nlinarith
   have hbc : b ≤ c := by nlinarith [mul_le_mul_of_nonneg_right hab hc, mul_le_mul_of_nonneg_left hac hb]
-  have hE : Real.exp t ^ 2 = Real.exp (2 * t) := by rw [← Real.exp_nat_mul]; norm_num
+  have hE : Real.exp t ^ 2 = Real.exp (2 * t) := by rw [← Real.exp_natCast_mul]; norm_num
   have hE' : Real.exp (-t) ^ 2 ≤ Real.exp (2 * t) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     exact Real.exp_le_exp.2 (by push_cast; linarith)
   have hE1 : 1 ≤ Real.exp (2 * t) := Real.one_le_exp (by linarith)
   have hE0 : 0 ≤ Real.exp (-t) ^ 2 := by positivity
@@ -1064,7 +1064,7 @@ theorem gap (g : S7.UJ ε) (hn : (n : ℝ) < hs (S7.toM g)) :
       simp [Formalism.REAL.hs] at hn
     · exact h
   have hnR : (0 : ℝ) < n := by exact_mod_cast hn0
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn0⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn0⟩⟩
   set h := hs (S7.toM g) with hh
   have hq : 1 < h / n := (one_lt_div hnR).2 hn
   obtain ⟨i₁, hi₁⟩ : ∃ i, h / n ≤ lam i := by
@@ -1139,9 +1139,9 @@ theorem gap (g : S7.UJ ε) (hn : (n : ℝ) < hs (S7.toM g)) :
     intro s hi
     by_contra hc
     by_cases h2 : s ≤ α⁻¹
-    · simp only [f, if_neg hc, if_pos h2] at hi
+    · simp only [f, ite_eq_right hc, ite_eq_left h2] at hi
       norm_num at hi
-    · simp only [f, if_neg hc, if_neg h2] at hi
+    · simp only [f, ite_eq_right hc, ite_eq_right h2] at hi
       norm_num at hi
   obtain ⟨A', hA', hy⟩ := _root_.GlobalTheory.CompanionTheory.UGeo.SpecGrad.grading_of_spectral n ε g hT f α β hf
     (fun i hi => hneg _ hi)

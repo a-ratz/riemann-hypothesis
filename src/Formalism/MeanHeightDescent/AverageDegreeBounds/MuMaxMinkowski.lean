@@ -183,7 +183,7 @@ theorem max_slope_minkowski : MuMaxMinkowski := by
     have h4 : r ^ 2 ≤ ‖ρ x‖ ^ 2 := by
       rw [h3, hr, mul_pow, Real.sq_sqrt hf.le]
       refine le_trans (mul_le_mul_of_nonneg_left ?_ hf.le) h2
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       apply Real.exp_le_exp.2
       have : (1 / (nPl K : ℝ)) * ∑ v, Real.log (Formalism.HermitianLatticesTheory.normAt b X v x) =
           (1 / (Fintype.card (InfinitePlace K) : ℝ)) * ∑ v, Real.log (Formalism.HermitianLatticesTheory.normAt b X v x) := rfl

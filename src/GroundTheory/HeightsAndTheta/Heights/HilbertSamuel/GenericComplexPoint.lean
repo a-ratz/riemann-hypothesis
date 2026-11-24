@@ -84,7 +84,7 @@ theorem exists_mcPts_not_mem_mcPts {K : Type} [Fintype K] {ι : K → Type} [∀
     {P J : Ideal (MRing ι)} {d : ℕ} (hP : IsArithVar P d) (hJ : ¬ J ≤ P) :
     ∃ z, z ∈ mcPts P ∧ z ∉ mcPts J := by
   obtain ⟨_, ⟨hprime, -, hrel⟩, hhor, -⟩ := hP
-  obtain ⟨g, hgJ, hgP⟩ := SetLike.not_le_iff_exists.mp hJ
+  obtain ⟨g, hgJ, hgP⟩ := IsConcreteLE.not_le_iff_exists.mp hJ
   have := hprime
   let Q := MRing ι ⧸ P
   let F := FractionRing Q

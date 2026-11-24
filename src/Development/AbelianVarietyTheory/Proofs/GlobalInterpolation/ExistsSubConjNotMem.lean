@@ -93,7 +93,7 @@ theorem _root_.GlobalTheory.UnramConjUnit.exists_sub_conj_notMem (h : _root_.For
     refine le_antisymm (hrank ▸ AlgEquiv.card_le) ?_
     have h2 : ({1, τ} : Finset (E ≃ₐ[F] E)).card = 2 := Finset.card_pair (Ne.symm hτ1)
     exact h2 ▸ Finset.card_le_univ _
-  haveI : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E
+  have : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E
     (by rw [Nat.card_eq_fintype_card, hcard, hrank])
   have hG : ∀ g : E ≃ₐ[F] E, g = 1 ∨ g = τ := by
     intro g

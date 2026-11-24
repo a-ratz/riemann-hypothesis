@@ -103,13 +103,13 @@ theorem isCusp_psi (θ : Fbar p →* ℂ) (hθ : ∀ x y : Fbar p, x ≠ 0 → y
     refine mul_eq_zero_of_right _ (Eq.trans ?_ h2)
     refine Finset.sum_congr rfl fun u _ => ?_
     by_cases hu : u ∈ (Formalism.D.Classical.grUnipBlock d a : Set (GL (Fin d) (ZMod p)))
-    · rw [if_pos ((GlobalTheory.GreenExists.mem_grUnipBlock_iff had u).1 hu), Set.indicator_of_mem (by exact hu)]
-    · rw [if_neg (mt (GlobalTheory.GreenExists.mem_grUnipBlock_iff had u).2 hu), Set.indicator_of_notMem (by exact hu), mul_zero]
+    · rw [ite_eq_left ((GlobalTheory.GreenExists.mem_grUnipBlock_iff had u).1 hu), Set.indicator_of_mem (by exact hu)]
+    · rw [ite_eq_right (mt (GlobalTheory.GreenExists.mem_grUnipBlock_iff had u).2 hu), Set.indicator_of_notMem (by exact hu), mul_zero]
 
 theorem thetaOf_gen (L : LabelDatum p) {d : ℕ} (hd : 0 < d) (k : ℕ) {z : Fbar p} (hz : z ^ (p ^ d - 1) = 1) :
     thetaOf L d (L.gen d ^ k) z = L.teich z ^ k := by
   have hp : IsPrimitiveRoot (L.gen d) (p ^ d - 1) := L.gen_order d hd ▸ IsPrimitiveRoot.orderOf _
-  haveI : NeZero (p ^ d - 1) := ⟨(g_pow_sub_pos hd).ne'⟩
+  have : NeZero (p ^ d - 1) := ⟨(g_pow_sub_pos hd).ne'⟩
   obtain ⟨n, -, rfl⟩ := hp.eq_pow_of_pow_eq_one hz
   rw [Model.thetaOf_gen_pow L hd (by rw [← pow_mul, mul_comm, pow_mul, hp.pow_eq_one, one_pow]),
     ← map_pow, ← map_pow, ← pow_mul, ← pow_mul, mul_comm]
@@ -165,13 +165,13 @@ theorem isCuspOf_cuspOn (L : LabelDatum p) {ι : Type} [Fintype ι] [DecidableEq
   obtain ⟨hx1, hθ⟩ := hL
   have hp : IsPrimitiveRoot (L.gen (Fintype.card ι)) (p ^ Fintype.card ι - 1) :=
     L.gen_order _ hd ▸ IsPrimitiveRoot.orderOf _
-  haveI : NeZero (p ^ Fintype.card ι - 1) := ⟨(g_pow_sub_pos hd).ne'⟩
+  have : NeZero (p ^ Fintype.card ι - 1) := ⟨(g_pow_sub_pos hd).ne'⟩
   obtain ⟨k, -, rfl⟩ := hp.eq_pow_of_pow_eq_one hx1
   have hι : Function.Injective (Units.map L.teich) := fun a b e =>
     Units.ext (L.teich_inj _ _ a.ne_zero b.ne_zero (congrArg Units.val e))
   let f : Fbar p → ℂ := fun x => if h : x = 0 then 0 else ((Units.map L.teich (Units.mk0 x h) : ℂˣ) : ℂ)
-  have hf0 : ∀ x (hx : x ≠ 0), f x = ((Units.map L.teich (Units.mk0 x hx) : ℂˣ) : ℂ) := fun x hx => dif_neg hx
-  have hfz : f 0 = 0 := dif_pos rfl
+  have hf0 : ∀ x (hx : x ≠ 0), f x = ((Units.map L.teich (Units.mk0 x hx) : ℂˣ) : ℂ) := fun x hx => dite_eq_right hx
+  have hfz : f 0 = 0 := dite_eq_left rfl
   let ω : Fbar p →*₀ ℂ :=
     { toFun := f
       map_zero' := hfz
@@ -239,7 +239,7 @@ theorem isCuspOf_cuspOn (L : LabelDatum p) {ι : Type} [Fintype ι] [DecidableEq
     have hs := sum_shift (g := p) (z := ω z) (m := k) (e := Fintype.card ι)
       (by rw [mul_comm, pow_mul, ← map_pow, pow_g_of hz1]) j
     refine Eq.trans (Finset.sum_congr rfl fun i _ => ?_) (hs.symm.trans (Finset.sum_congr rfl fun i _ => ?_))
-    · simp only [Function.comp, MonoidHom.coe_coe, map_pow, ← pow_mul, mul_comm]
+    · simp only [Function.comp, MonoidHom.coe_ofClass, map_pow, ← pow_mul, mul_comm]
     · have hzi : (z ^ p ^ i) ^ (p ^ Fintype.card ι - 1) = 1 := by
         rw [← pow_mul, mul_comm, pow_mul, hz1, one_pow]
       rw [← pow_mul (L.gen _), thetaOf_gen L hd _ hzi, he' _ hzi, map_pow, ← pow_mul, ← pow_mul]

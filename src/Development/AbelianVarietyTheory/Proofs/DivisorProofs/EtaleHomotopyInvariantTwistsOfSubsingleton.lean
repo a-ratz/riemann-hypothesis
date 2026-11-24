@@ -62,9 +62,9 @@ theorem hInv_of_subsingleton : ∀ (q : ℕ) [NeZero q] (A : Type) [CommRing A],
   have hb : Function.Bijective (Polynomial.C : A →+* Polynomial A) :=
     ⟨fun x y _ => Subsingleton.elim x y, fun y => ⟨0, Subsingleton.elim _ _⟩⟩
   let e : A ≃+* Polynomial A := RingEquiv.ofBijective _ hb
-  haveI : IsIso (CommRingCat.ofHom (Polynomial.C : A →+* Polynomial A)) :=
+  have : IsIso (CommRingCat.ofHom (Polynomial.C : A →+* Polynomial A)) :=
     (RingEquiv.toCommRingCatIso e).isIso_hom
-  haveI : IsIso (spMap (Polynomial.C : A →+* Polynomial A)) := by
+  have : IsIso (spMap (Polynomial.C : A →+* Polynomial A)) := by
     unfold spMap; infer_instance
   exact eqv_of_isIso _ _
 

@@ -91,12 +91,12 @@ theorem isOpen_map [FiniteDimensional F E] (V : Subgroup (Dec (F := E) A)) (hV :
     have : (1 : Dec (F := E) A) ∈ Subtype.val ⁻¹' U := by rw [hUV]; exact h1
     exact this
   obtain ⟨K, hK, hKU⟩ := (krullTopology_mem_nhds_one_iff E Ω U).mp (hU.mem_nhds hU1)
-  haveI := hK
-  haveI : FiniteDimensional F (K.restrictScalars F) :=
+  have := hK
+  have : FiniteDimensional F (K.restrictScalars F) :=
     (Module.Finite.trans E K : Module.Finite F K)
   apply Subgroup.isOpen_of_mem_nhds _ (g := 1)
   have hO : IsOpen (Subtype.val ⁻¹' ((K.restrictScalars F).fixingSubgroup : Set (G F Ω)) : Set (Dec (F := F) A)) :=
-    (IntermediateField.fixingSubgroup_isOpen (K.restrictScalars F)).preimage continuous_subtype_val
+    (IntermediateField.fixingSubgroup_isOpen (K.restrictScalars F)).preimage continuous_subtypeVal
   refine Filter.mem_of_superset (hO.mem_nhds ((K.restrictScalars F).fixingSubgroup.one_mem)) ?_
   intro k hk
   obtain ⟨g, rfl⟩ := resHom_surjective (E := E) A hfix k
@@ -123,7 +123,7 @@ namespace GlobalTheory.AboveL
 open GlobalTheory.AboveL.DecRes in
 theorem exists_cm_solvDisj_dec_eq : ∀ (Ω : Type) [Field Ω] (E : Type) [Field E] [NumberField E] [IsCMField E] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w), (∀ g ∈ Dec (F := maximalRealSubfield E) A, ∀ x : E, g (algebraMap E Ω x) = algebraMap E Ω x) → ∀ V : Subgroup (Dec (F := E) A), IsOpen (V : Set (Dec (F := E) A)) → commutator (Dec (F := E) A) ≤ V → ∀ N : Subgroup (G E Ω), IsOpen (N : Set (G E Ω)) → ∃ (M : Type) (_ : Field M) (_ : NumberField M) (_ : IsCMField M) (_ : Algebra M Ω) (_ : IsAlgClosure M Ω) (_ : Algebra E M) (_ : IsScalarTower E M Ω), SolvDisj M N ∧ ∀ g : Dec (F := E) A, (∀ x : M, (g : G E Ω) (algebraMap M Ω x) = algebraMap M Ω x) ↔ g ∈ V := by
   intro Ω _ E _ _ _ _ _ A w h hfix V hVo hVc N hNo
-  haveI : IsAlgClosure (maximalRealSubfield E) Ω :=
+  have : IsAlgClosure (maximalRealSubfield E) Ω :=
     ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans _ E Ω⟩
   obtain ⟨n, hn, hnv⟩ := (Formalism.MainNotions.V.Pf.ShaCmp.exists_over_iff (K := E) A).mp ⟨w, h⟩
   obtain ⟨v, hv⟩ := (Formalism.MainNotions.V.Pf.ShaCmp.exists_over_iff (K := maximalRealSubfield E) A).mpr ⟨n, hn, hnv⟩
@@ -132,7 +132,7 @@ theorem exists_cm_solvDisj_dec_eq : ∀ (Ω : Type) [Field Ω] (E : Type) [Field
     (V.map (resHom (F := maximalRealSubfield E) (E := E) A)) (isOpen_map A hfix V hVo)
     (commutator_le_map A hfix V hVc) T hvT
   have hsolv : IsSolvable (F₁ ≃ₐ[maximalRealSubfield E] F₁) :=
-    isSolvable_of_comm fun a b => hab.toIsMulCommutative.is_comm.comm a b
+    Group.isSolvable_of_comm fun a b => hab.toIsMulCommutative.is_comm.comm a b
   obtain ⟨M, i1, i2, i3, i4, i5, i6, i7, hSD, hM, -⟩ :=
     hT F₁ hfin hab.toIsGalois hsolv hreal hsplit
   refine ⟨M, i1, i2, i3, i4, i5, i6, i7, hSD, fun g => ?_⟩

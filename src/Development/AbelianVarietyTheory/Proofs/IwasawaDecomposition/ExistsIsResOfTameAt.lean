@@ -86,7 +86,7 @@ theorem locK_eq_of_congr (χ : HChar E) (P : HeightOneSpectrum (𝓞 E)) (h : χ
 theorem exists_lift (P : HeightOneSpectrum (𝓞 E)) (u : (𝓞 E ⧸ P.asIdeal)ˣ) :
     ∃ p : 𝓞 E × Eˣ, (p.2 : E) = p.1 ∧ (u : 𝓞 E ⧸ P.asIdeal) = Ideal.Quotient.mk _ p.1 ∧ p.1 ∉ P.asIdeal := by
   obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective (u : 𝓞 E ⧸ P.asIdeal)
-  haveI : Nontrivial (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
+  have : Nontrivial (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
   have hn : a ∉ P.asIdeal := fun h => u.ne_zero (by rw [← ha]; exact Ideal.Quotient.eq_zero_iff_mem.2 h)
   have h0 : (a : E) ≠ 0 := by
     intro h

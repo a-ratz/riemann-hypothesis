@@ -160,16 +160,16 @@ namespace GlobalTheory.FinPl.VertexExactCount
 open Classical in
 theorem vertexExact (D : D7) : VertexExact D := by
   intro k _ _ _ _ p q ψ χ hχ hIs
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
-  haveI := secondCountable k
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
+  have := secondCountable k
   obtain ⟨e, he, HC⟩ := _root_.GlobalTheory.FinPl.contraction_all D k p ψ χ hIs
   obtain ⟨ν, hν, -⟩ := exists_isUnitVol k
   let ε : 𝓀[k]ˣ := if e = 1 then 1 else -1
   have hεe : (e = 1 ∧ ε = 1) ∨ (e = -1 ∧ ε = -1) := by
     by_cases h1 : e = 1
-    · exact Or.inl ⟨h1, if_pos h1⟩
-    · exact Or.inr ⟨he.resolve_left h1, if_neg h1⟩
+    · exact Or.inl ⟨h1, ite_eq_left h1⟩
+    · exact Or.inr ⟨he.resolve_left h1, ite_eq_right h1⟩
   refine ⟨ε, ?_, ?_⟩
   · rcases hεe with ⟨-, h⟩ | ⟨-, h⟩
     · exact Or.inl h
@@ -548,8 +548,8 @@ theorem sp1 (hstd : IsStdChar D ψ (-1)) (hu : p.UnitAA) {NS N'S : Lat S} {NT N'
     (hAS : α.IsLat NS AS) (hAT : β.IsLat NT AT) (hA'S : α.IsLat N'S A'S) (hA'T : β.IsLat N'T A'T)
     {f₀ g : WO S T → ℂ} (hf₀ : Vac ψ S T NS NT (· = p.v) f₀) (hg : Over ψ α β NS NT f₀ (latInd A'S A'T) g) :
     Vac ψ S T N'S N'T (· = p.v) g ∧ ∀ Ψ h, Over ψ α β NS NT f₀ Ψ h ↔ Over ψ α β N'S N'T g Ψ h := by
-  haveI := full_of_isLat α NS h1 AS inferInstance hAS
-  haveI := full_of_isLat β NT h2 AT inferInstance hAT
+  have := full_of_isLat α NS h1 AS inferInstance hAS
+  have := full_of_isLat β NT h2 AT inferInstance hAT
   have R := (_root_.GlobalTheory.FinPl.Rebase.rebase D k p n n' ψ hstd hu S T α β NS N'S NT N'T h1 h2 h3 h4).1 A'S A'T hA'S hA'T f₀ g hg
   refine ⟨R.1, fun Ψ h => ⟨R.2 Ψ h, fun hh => ?_⟩⟩
   obtain ⟨g', hg', huniq⟩ := (GlobalTheory.T.splitPlace_baseVacuum_datum_exists_unique D k p n n' ψ hstd S T α β N'S N'T h3 h4 g R.1).1 (latInd AS AT)
@@ -719,34 +719,34 @@ theorem gen (hstd : IsStdChar D ψ (-1)) {I : List ι} {P : Pl D → Prop} (hPl 
     let BT : ι → Submodule 𝒪[k] (n → k) := fun j => if j ∈ l then A'T j else AT j
     have hBS : ∀ j, (BS j).IsLattice k := fun j => by
       by_cases hj : j ∈ l
-      · simp only [BS, if_pos hj]; exact (hL j).2.1
-      · simp only [BS, if_neg hj]; exact (hL j).1
+      · simp only [BS, ite_eq_left hj]; exact (hL j).2.1
+      · simp only [BS, ite_eq_right hj]; exact (hL j).1
     have hBT : ∀ j, (BT j).IsLattice k := fun j => by
       by_cases hj : j ∈ l
-      · simp only [BT, if_pos hj]; exact (hL j).2.2.2
-      · simp only [BT, if_neg hj]; exact (hL j).2.2.1
+      · simp only [BT, ite_eq_left hj]; exact (hL j).2.2.2
+      · simp only [BT, ite_eq_right hj]; exact (hL j).2.2.1
     have hBSfull : ∀ j, (BS j).IsFullLattice k := fun j => by
       by_cases hj : j ∈ l
       · apply full_of_isLat (α j) N'S h3 _ (hBS j)
-        simpa only [BS, if_pos hj] using (hA j).2.1
+        simpa only [BS, ite_eq_left hj] using (hA j).2.1
       · apply full_of_isLat (α j) NS h1 _ (hBS j)
-        simpa only [BS, if_neg hj] using (hA j).1
+        simpa only [BS, ite_eq_right hj] using (hA j).1
     have hBTfull : ∀ j, (BT j).IsFullLattice k := fun j => by
       by_cases hj : j ∈ l
       · apply full_of_isLat (β j) N'T h4 _ (hBT j)
-        simpa only [BT, if_pos hj] using (hA j).2.2.2
+        simpa only [BT, ite_eq_left hj] using (hA j).2.2.2
       · apply full_of_isLat (β j) NT h2 _ (hBT j)
-        simpa only [BT, if_neg hj] using (hA j).2.2.1
+        simpa only [BT, ite_eq_right hj] using (hA j).2.2.1
     obtain ⟨N₁S, hN₁S, hlatS, -⟩ := _root_.GlobalTheory.LatPresc.latAll D k ι p I P hPl n' S α NS h1 BS hBSfull
     obtain ⟨N₁T, hN₁T, hlatT, -⟩ := _root_.GlobalTheory.LatPresc.latAll D k ι p I P hPl n T β NT h2 BT hBTfull
     obtain ⟨g₁, hg₁, hO⟩ := ValDbl.overAll_cons.1 hg
     have hg₁' : OverAll ψ α β NS NT (fun j => latInd (BS j) (BT j)) l f g₁ :=
-      overAll_congrΨ l (fun j hj => by simp only [BS, BT, if_pos hj]) f g₁ hg₁
+      overAll_congrΨ l (fun j hj => by simp only [BS, BT, ite_eq_left hj]) f g₁ hg₁
     have IH := ih hnd NS N₁S NT N₁T AS BS AT BT h1 h2 hN₁S hN₁T
       (fun j => ⟨(hL j).1, hBS j, (hL j).2.2.1, hBT j⟩) (fun j => ⟨(hA j).1, hlatS j, (hA j).2.2.1, hlatT j⟩)
-      (fun j hj => ⟨by simp only [BS, if_neg hj], by simp only [BT, if_neg hj]⟩)
+      (fun j hj => ⟨by simp only [BS, ite_eq_right hj], by simp only [BT, ite_eq_right hj]⟩)
       f g₁ (fun j hj => hf j (List.mem_cons_of_mem _ hj)) hg₁'
-    have hBi : BS i = AS i ∧ BT i = AT i := ⟨by simp only [BS, if_neg hil], by simp only [BT, if_neg hil]⟩
+    have hBi : BS i = AS i ∧ BT i = AT i := ⟨by simp only [BS, ite_eq_right hil], by simp only [BT, ite_eq_right hil]⟩
     have hN₁Si : (α i).IsLat N₁S (AS i) := hBi.1 ▸ hlatS i
     have hN₁Ti : (β i).IsLat N₁T (AT i) := hBi.2 ▸ hlatT i
     have hg₁v : Vac ψ S T NS NT (· = (p i).v) g₁ :=
@@ -755,15 +755,15 @@ theorem gen (hstd : IsStdChar D ψ (-1)) {I : List ι} {P : Pl D → Prop} (hPl 
     have hO₁ := C.2 _ _ hO
     have hsame : ∀ j ∈ l, ∃ (ΛS : Submodule 𝒪[k] (n' → k)) (ΛT : Submodule 𝒪[k] (n → k)),
         (α j).IsLat N₁S ΛS ∧ (α j).IsLat N'S ΛS ∧ (β j).IsLat N₁T ΛT ∧ (β j).IsLat N'T ΛT := fun j hj =>
-      ⟨A'S j, A'T j, by simpa only [BS, if_pos hj] using hlatS j, (hA j).2.1,
-        by simpa only [BT, if_pos hj] using hlatT j, (hA j).2.2.2⟩
+      ⟨A'S j, A'T j, by simpa only [BS, ite_eq_left hj] using hlatS j, (hA j).2.1,
+        by simpa only [BT, ite_eq_left hj] using hlatT j, (hA j).2.2.2⟩
     have hgv : ∀ j ∈ l, Vac ψ S T N'S N'T (· = (p j).v) g := fun j hj => by
       obtain ⟨ΛS, ΛT, a, b, c, d⟩ := hsame j hj
       have hji : (p j).v ≠ (p i).v := fun e => hil (by rw [← hinj e]; exact hj)
       have hk := (ValDbl.over_keep hstd hO₁).2 (p j).v hji (IH.1 j hj)
       exact (cc hstd (hunit j) hN₁S hN₁T h3 h4 a b c d hk).1
-    haveI := (hL i).1
-    haveI := (hL i).2.2.1
+    have := (hL i).1
+    have := (hL i).2.2.1
     have hsp := sp1 hstd (hunit i) hN₁S hN₁T h3 h4 hN₁Si hN₁Ti (hA i).2.1 (hA i).2.2.2 C.1 hO₁
     refine ⟨fun j hj => ?_, fun Ψ f' => ?_⟩
     · rcases List.mem_cons.1 hj with rfl | hj'
@@ -796,9 +796,9 @@ theorem rebaseAll : ∀ D : D7, RebaseAll D := by
   have hA : ∀ j, (α j).IsLat LS (ALS j) ∧ (α j).IsLat MS (AMS j) ∧ (β j).IsLat LT (ALT j) ∧ (β j).IsLat MT (AMT j) :=
     fun j => ⟨hALS2 j, hAMS2 j, hALT2 j, hAMT2 j⟩
   obtain ⟨e, he1, he2⟩ := (_root_.GlobalTheory.FinPl.allComb D k ι p I P hPl n n' ψ hstd S T α β LS LT hLS hLT
-    (fun i => latInd (AMS i) (AMT i))).1 (fun i => by haveI := full_of_isLat (α i) MS hMS _ (hAMS1 i) (hAMS2 i); haveI := full_of_isLat (β i) MT hMT _ (hAMT1 i) (hAMT2 i); exact latInd_mem_SB _ _)
+    (fun i => latInd (AMS i) (AMT i))).1 (fun i => by have := full_of_isLat (α i) MS hMS _ (hAMS1 i) (hAMS2 i); have := full_of_isLat (β i) MT hMT _ (hAMT1 i) (hAMT2 i); exact latInd_mem_SB _ _)
   have AC' := _root_.GlobalTheory.FinPl.allComb D k ι p I P hPl n n' ψ hstd S T α β MS MT hMS hMT (fun i => latInd (ALS i) (ALT i))
-  obtain ⟨e', he'1, he'2⟩ := AC'.1 (fun i => by haveI := full_of_isLat (α i) LS hLS _ (hALS1 i) (hALS2 i); haveI := full_of_isLat (β i) LT hLT _ (hALT1 i) (hALT2 i); exact latInd_mem_SB _ _)
+  obtain ⟨e', he'1, he'2⟩ := AC'.1 (fun i => by have := full_of_isLat (α i) LS hLS _ (hALS1 i) (hALS2 i); have := full_of_isLat (β i) LT hLT _ (hALT1 i) (hALT2 i); exact latInd_mem_SB _ _)
   refine ⟨e, e', he1, he'1, fun f hf => ?_⟩
   have hfv : ∀ j, Vac ψ S T LS LT (· = (p j).v) f := fun j => ValDbl.vac_at ((hPl.mem _).2 ⟨j, rfl⟩) hf
   obtain ⟨hgv, hiff⟩ := gen hstd hPl I hPl.nodup LS MS LT MT ALS AMS ALT AMT hLS hLT hMS hMT hL hA

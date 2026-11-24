@@ -75,7 +75,7 @@ private theorem qoc_inj : Function.Injective (algebraMap ℤ_[l] O) := by
         rw [hr, ← TensorProduct.smul_tmul, Algebra.smul_def, map_natCast, h0, zero_mul,
           TensorProduct.zero_tmul]
       | add x y hx hy => rw [hx, hy, add_zero]
-    haveI : Subsingleton (QO l O) := ⟨fun x y => (hz x).trans (hz y).symm⟩
+    have : Subsingleton (QO l O) := ⟨fun x y => (hz x).trans (hz y).symm⟩
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
     have h4 := (UpperTheory.V.Base.qoFacts l O).2.2.2 ϖ
     rw [IsDiscreteValuationRing.addVal_uniformizer hϖ, Module.length_eq_zero] at h4
@@ -167,8 +167,8 @@ private theorem qoc_gen (a : O) (w : QO l O) (ha : a ≠ 0) (h : ∀ y : O, y �
     rw [← (LinearMap.quotKerEquivRange g).length_eq, hker, length_quotient_span_eq_addVal' a ha, hTlen]
   have htop : LinearMap.range g = ⊤ := by
     have hfl : IsFiniteLength O T := Module.length_ne_top_iff.mp hfin
-    haveI := (isFiniteLength_iff_isNoetherian_isArtinian.mp hfl).1
-    haveI := (isFiniteLength_iff_isNoetherian_isArtinian.mp hfl).2
+    have := (isFiniteLength_iff_isNoetherian_isArtinian.mp hfl).1
+    have := (isFiniteLength_iff_isNoetherian_isArtinian.mp hfl).2
     by_contra hne
     have hlt := Submodule.length_lt hne
     rw [hrange] at hlt

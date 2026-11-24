@@ -430,12 +430,12 @@ theorem pEquiv0_k {δ : E} (hδ0 : δ ≠ 0)
           rfl
       continuous_toFun := by
         refine Continuous.prodMk (Continuous.prodMk ?_ ?_) ?_
-        · exact continuous_pi fun j => (continuous_apply _).comp ((continuous_apply _).comp continuous_subtype_val)
-        · exact (continuous_ellA δ).comp ((continuous_apply _).comp ((continuous_apply _).comp continuous_subtype_val))
-        · exact continuous_induced_rng.2 (continuous_subtype_val.matrix_submatrix _ _)
+        · exact continuous_pi fun j => (continuous_apply _).comp ((continuous_apply _).comp continuous_subtypeVal)
+        · exact (continuous_ellA δ).comp ((continuous_apply _).comp ((continuous_apply _).comp continuous_subtypeVal))
+        · exact continuous_induced_rng.2 (continuous_subtypeVal.matrix_submatrix _ _)
       continuous_invFun := by
         refine Continuous.subtype_mk ((_root_.PositivityTheory.SiegelWeilFormula.Act.C5.Meas.continuous_ins_k L _ δ).comp ?_) _
-        exact continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd) }
+        exact continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd) }
   refine ⟨P, fun β => rfl, fun β => ?_⟩
   constructor
   · intro hβ
@@ -509,23 +509,23 @@ theorem pEquiv_k (h : _root_.PositivityTheory.SiegelWeilFormula.Act.C5.Hyp_k L n
 theorem lam_map_k {lam : Measure (nA σ d.Y d.b)} [lam.IsAddHaarMeasure] {ν : Measure (Fin L.n → AE F E)} [ν.IsAddHaarMeasure]
     {lam' : Measure (nA σ L.Y L.b)} [lam'.IsAddHaarMeasure] (P : (nA σ d.Y d.b) ≃ₜ+ (((Fin L.n → AE F E) × AF F) × nA σ L.Y L.b)) :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ lam.map P = c • ((ν.prod (lamA F)).prod lam') := by
-  haveI : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
-  haveI : (lam.map P).IsAddHaarMeasure := P.isAddHaarMeasure_map lam
-  haveI : SFinite ν := inferInstance
-  haveI : SFinite lam' := inferInstance
-  haveI : SFinite (lamA F) := inferInstance
-  haveI : (ν.prod (lamA F)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
-  haveI : SFinite (ν.prod (lamA F)) := inferInstance
-  haveI : ((ν.prod (lamA F)).prod lam').IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : Fact (IsFrame2 σ L.Y L.b) := ⟨L.ok.frame⟩
+  have : (lam.map P).IsAddHaarMeasure := P.isAddHaarMeasure_map lam
+  have : SFinite ν := inferInstance
+  have : SFinite lam' := inferInstance
+  have : SFinite (lamA F) := inferInstance
+  have : (ν.prod (lamA F)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : SFinite (ν.prod (lamA F)) := inferInstance
+  have : ((ν.prod (lamA F)).prod lam').IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   refine ⟨(Measure.addHaarScalarFactor (lam.map P) ((ν.prod (lamA F)).prod lam') : ℝ≥0∞),
     ENNReal.coe_ne_zero.2 (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne', ENNReal.coe_ne_top, ?_⟩
   rw [← ENNReal.smul_def]
   exact Measure.isAddLeftInvariant_eq_smul _ _
 theorem kap_eq_k {ν : Measure (Fin L.n → AE F E)} [ν.IsAddHaarMeasure] {κ : Measure ((Fin L.n → AE F E) × AF F)}
     [κ.IsAddHaarMeasure] : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ κ = c • (ν.prod (lamA F)) := by
-  haveI : SFinite ν := inferInstance
-  haveI : SFinite (lamA F) := inferInstance
-  haveI : (ν.prod (lamA F)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : SFinite ν := inferInstance
+  have : SFinite (lamA F) := inferInstance
+  have : (ν.prod (lamA F)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   refine ⟨(Measure.addHaarScalarFactor κ (ν.prod (lamA F)) : ℝ≥0∞),
     ENNReal.coe_ne_zero.2 (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne', ENNReal.coe_ne_top, ?_⟩
   rw [← ENNReal.smul_def]

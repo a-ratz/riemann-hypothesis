@@ -63,10 +63,10 @@ private theorem deg_part (D : D7) : Module.finrank ℚ D.host.E = 2 * D.R.f := b
 private theorem unram_part (D : D7) (𝔭 : Ideal (𝓞 D.host.F)) (h𝔭 : 𝔭.IsPrime) (h0 : 𝔭 ≠ ⊥) :
     𝔭.ramificationIdxIn (𝓞 D.host.E) = 1 := by
 
-  haveI := D.host.der.cm
-  haveI := D.host.galois
-  haveI := h𝔭.isMaximal h0
-  haveI : IsGalois D.host.F D.host.E := by
+  have := D.host.der.cm
+  have := D.host.galois
+  have := h𝔭.isMaximal h0
+  have : IsGalois D.host.F D.host.E := by
     first
     | infer_instance
     | exact IsGalois.tower_top_of_isGalois ℚ D.host.F D.host.E
@@ -107,10 +107,10 @@ private theorem split_part (D : D7) (p : ℕ) (hpp : p.Prime) (hp : p ∣ D.host
     have hPm : P ∈ primesOver 𝔭 (𝓞 D.host.E) := by
       rw [hP]
       exact Set.mem_singleton P
-    haveI : P.IsPrime := hPm.1
-    haveI : P.LiesOver 𝔭 := hPm.2
-    haveI : Fact p.Prime := ⟨hpp⟩
-    haveI : P.LiesOver (span {(p : ℤ)}) := by
+    have : P.IsPrime := hPm.1
+    have : P.LiesOver 𝔭 := hPm.2
+    have : Fact p.Prime := ⟨hpp⟩
+    have : P.LiesOver (span {(p : ℤ)}) := by
       first
       | exact Ideal.LiesOver.trans P 𝔭 (span {(p : ℤ)})
       | infer_instance

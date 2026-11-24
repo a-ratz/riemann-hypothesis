@@ -75,7 +75,7 @@ theorem lastRow_uGL_mul (X : GroundTheory.Automorphic.FourierWhittaker.Pos (m + 
   rw [Finset.sum_eq_single (Fin.last m)]
   · simp
   · intro c _ hc
-    rw [if_neg (Ne.symm hc), dite_eq_right (not_lt.2 (Fin.le_last c)), zero_mul]
+    rw [ite_eq_right (Ne.symm hc), dite_eq_right (not_lt.2 (Fin.le_last c)), zero_mul]
   · simp
 
 theorem jswWhit_fT (φ : GA E (m + 1) → ℂ) (Φ : (Fin (m + 1) → Cinf E) → ℂ) (g : GA E (m + 1)) :
@@ -165,10 +165,10 @@ theorem enorm_uInt_self {E : Type} [Field E] [NumberField E] [_root_.NumberField
     {Φ : (Fin (m + 1) → Cinf E) → ℂ} (hΦ : ∀ u, 0 ≤ (Φ u).re ∧ (Φ u).im = 0)
     (φ : GA E (m + 1) → ℂ) (N : ℕ) (x : ℝ) (g : GA E (m + 1)) :
     ‖GlobalTheory.ZEul.uInt φ φ Φ N x g‖ₑ = ‖GlobalTheory.JSW.whit (fT φ Φ) g‖ₑ ^ 2 * (wt N x g : ℝ≥0∞) := by
-  rw [uInt_eq hΦ, enorm_mul, enorm_mul, RCLike.enorm_conj, pow_two]
+  rw [uInt_eq hΦ, eNorm_mul, eNorm_mul, RCLike.eNorm_conj, pow_two]
   congr 1
   have h0 : (((wt N x g : ℝ≥0) : ℝ) : ℂ) = ((wt N x g : ℝ≥0) : ℂ) := rfl
-  rw [h0, enorm_eq_nnnorm]
+  rw [h0, eNorm_eq_nnNorm]
   congr 1
   ext
   simp
@@ -187,11 +187,11 @@ theorem zint_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFie
   intro E _ _ _ m μ _
   refine ⟨1, one_pos, ?_⟩
   intro π π' ω ω' hω hω' hπ hπ' φ φ' hφ hφ' N Φ _hN hΦs _hΦc hΦr hΦp 𝓕 𝓕₀ h𝓕 h𝓕₀ x _hx h1 h2
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E (m + 1)
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E (m + 1)
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E (m + 1)
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E (m + 1)
+  have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E (m + 1)
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E (m + 1)
   obtain ⟨𝓕P, h𝓕P⟩ : ∃ 𝓕P, IsFundamentalDomain (ratMirU E (m + 1) m) 𝓕P μ := by
-    haveI : DiscreteTopology (ratMirU E (m + 1) m) := discrete_of_le_range (Subgroup.map_le_range _ _)
+    have : DiscreteTopology (ratMirU E (m + 1) m) := discrete_of_le_range (Subgroup.map_le_range _ _)
     exact GlobalTheory.FundDomDiscrete.exists_isFundamentalDomain _ μ
   have h𝓕₀' : IsFundamentalDomain (ratMirU E (m + 1) 0) 𝓕₀ μ := NE_eq_ratMirU_zero (E := E) (m := m) ▸ h𝓕₀
   obtain ⟨hc, hl, hv⟩ := _root_.GlobalTheory.JSW.mspanR_cont_left_avg E m π ω hω hπ φ hφ

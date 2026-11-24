@@ -118,7 +118,7 @@ theorem exists_finiteAdele_of_denom {F : Type} [Field F] [NumberField F] (r : He
   have hfin := Ideal.finite_factors hD0
   refine ⟨⟨fun v => algebraMap F (v.adicCompletion F) (r v), Filter.eventually_cofinite.2
     (hfin.subset fun v hv => ?_)⟩, fun v => rfl⟩
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_span_singleton]
   by_contra hDv
   apply hv
@@ -133,7 +133,7 @@ theorem exists_finiteAdele_of_denom {F : Type} [Field F] [NumberField F] (r : He
 
 theorem le_exp_neg_one_of_lt_one {x : WithZero (Multiplicative ℤ)} (hx : x < 1) : x ≤ WithZero.exp (-1) := by
   by_cases h0 : x = 0
-  · rw [h0]; exact zero_le'
+  · rw [h0]; exact zero_le
   · rw [← WithZero.exp_log h0] at hx ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at hx
     rw [WithZero.exp_le_exp]
@@ -154,7 +154,7 @@ theorem locMap_val_eq_one_iff {F E : Type} [Field F] [NumberField F] [Field E] [
     by_contra hne
     rcases lt_or_gt_of_ne hne with hl | hg
     · exact absurd h (ne_of_lt (hlt a hl))
-    · have ha0 : a ≠ 0 := fun e => by rw [e, map_zero] at hg; exact not_lt_of_ge zero_le' hg
+    · have ha0 : a ≠ 0 := fun e => by rw [e, map_zero] at hg; exact not_lt_of_ge zero_le hg
       have hinv : Valued.v a⁻¹ < 1 := by
         rw [map_inv₀]
         exact inv_lt_one_of_one_lt₀ hg
@@ -361,13 +361,13 @@ theorem exists_integral_h90_preimage_of_mem_intU_unramified (σ : E →ₐ[F] E)
     rw [hιT, haι, haσ]
   have hxS : ∀ P : HeightOneSpectrum (𝓞 E), S (P.under (𝓞 F)) → ι x0 P = 1 := by
     intro P h
-    rw [ιx, if_pos h, hf0 _ h]
+    rw [ιx, ite_eq_left h, hf0 _ h]
     simp
   have hxN : ∀ P : HeightOneSpectrum (𝓞 E), ¬ S (P.under (𝓞 F)) → ι x0 P =
       algebraMap E _ (algebraMap (𝓞 E) E (f (P.under (𝓞 F)))) +
         ι d P * algebraMap E _ (σ (algebraMap (𝓞 E) E (f (P.under (𝓞 F))))) := by
     intro P h
-    rw [ιx, if_neg h, zero_add]
+    rw [ιx, ite_eq_right h, zero_add]
   have hde : (d : AfE F E) * T = T := by
     apply map_injective hι
     refine FiniteAdeleRing.ext _ fun P => ?_

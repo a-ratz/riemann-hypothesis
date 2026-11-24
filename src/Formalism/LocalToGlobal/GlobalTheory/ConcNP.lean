@@ -161,7 +161,7 @@ theorem weight_numbers_bound : WeightNumbersBound := by
     push_cast; linarith
   have hsE : Real.exp (2 * E) ≤ s := by
     have h4 : Real.exp (2 * E) ^ 4 ≤ s ^ 4 := by
-      rw [← hs4, ← Real.exp_nat_mul]; push_cast
+      rw [← hs4, ← Real.exp_natCast_mul]; push_cast
       calc Real.exp (4 * (2 * E)) = Real.exp (8 * E) := by ring_nf
         _ ≤ (g : ℝ) := hg
     exact (pow_le_pow_iff_left₀ (Real.exp_pos _).le hs0.le (by norm_num)).1 h4
@@ -218,7 +218,7 @@ theorem weight_numbers_bound : WeightNumbersBound := by
     have := Real.add_one_le_exp (-(1 / 8 : ℝ)); linarith
   have hT5 : (N : ℝ) / 2 * (7 / 8 : ℝ) ^ f ≤ P * eu := by
     have hpow : (7 / 8 : ℝ) ^ f ≤ Real.exp (-(1 / 8)) ^ f := pow_le_pow_left₀ (by norm_num) h78 f
-    rw [← Real.exp_nat_mul] at hpow
+    rw [← Real.exp_natCast_mul] at hpow
     have h8x : 8 * x ≤ x ^ 2 := by rw [sq]; exact mul_le_mul_of_nonneg_right (by linarith) hx0.le
     have hfu : u ≤ (f : ℝ) / 8 := by linarith
     have hexp : Real.exp ((f : ℝ) * (-(1 / 8))) ≤ eu := Real.exp_le_exp.2 (by linarith)

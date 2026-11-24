@@ -130,7 +130,7 @@ theorem shrink {X : Scheme.{0}} (I : X.IdealSheafData) (V : X.affineOpens) (x : 
 theorem off_case (d : ℕ) {X : Scheme.{0}} (I : X.IdealSheafData) (V : X.affineOpens) (x : X) (hx : x ∈ V.1)
     (h : ¬ I.ideal V ≤ (V.2.primeIdealOf ⟨x, hx⟩).asIdeal) :
     ∃ V' : X.affineOpens, x ∈ V'.1 ∧ V'.1 ≤ V.1 ∧ (I.ideal V').FG ∧ Chart d Γ(X, V'.1) (I.ideal V') := by
-  obtain ⟨f, hfI, hf⟩ := SetLike.not_le_iff_exists.mp h
+  obtain ⟨f, hfI, hf⟩ := IsConcreteLE.not_le_iff_exists.mp h
   obtain ⟨V', _, hx', hle, _, hI⟩ := shrink I V x hx f hf
   have ht : I.ideal V' = ⊤ := by
     rw [hI]

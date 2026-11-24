@@ -114,7 +114,7 @@ theorem exists_congr_one : ∀ (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ
     by_cases h : i = j
     · subst h
       simp
-    · rw [if_neg (Ne.symm h), if_neg h]
+    · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
   exact ⟨_, Matrix.isUnit_det_of_left_inverse hg, hg⟩
 
 end GlobalTheory.CompanionTheory.UnrDens
@@ -282,14 +282,14 @@ theorem red_image_one {R : Type} [CommRing R] (σ : R →+* R) (ϖ : R) (h : σ 
   ext y
   constructor
   · rintro ⟨x, hx, rfl⟩
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     rw [red_mul_one, red_mul_one, red_cT_one σ ϖ h] at hx
     exact hx
   · intro hy
     obtain ⟨x, rfl⟩ := red_surj_one ϖ y
-    simp only [Set.mem_setOf_eq] at hy
+    simp only [Set.mem_ofPred_eq] at hy
     refine ⟨x, ?_, rfl⟩
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [red_mul_one, red_mul_one, red_cT_one σ ϖ h]
     exact hy
 

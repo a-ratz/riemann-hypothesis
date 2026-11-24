@@ -169,7 +169,7 @@ def TorSec : Prop := ∀ (q : ℕ) [NeZero q] (S : Type) [CommRing S] (f g : S),
 
 theorem torsor_of (hE : TorEt) (hS : TorSec) : Torsor := by
   intro q _ S _ f g hfg φ ε hε hφ
-  letI := (torMap f g hε).toAlgebra
+  let := (torMap f g hε).toAlgebra
   obtain ⟨h1, h2, h3⟩ := hE q S f g hfg ε hε
   exact ⟨Tor f g hε, inferInstance, (torMap f g hε).toAlgebra, h1, h2, h3, hS q S f g hfg φ ε hε hφ⟩
 

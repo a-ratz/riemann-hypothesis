@@ -91,7 +91,7 @@ theorem UpperTheory.V.Af.Rs.unfold :
     UpperTheory.V.Af.Rs.FdFin → UpperTheory.V.Af.Rs.UnfM → UpperTheory.V.Af.Rs.RowBij → UpperTheory.V.Af.Rs.Unfold := by
   classical
   intro _ hU hR H Φ hH hHi hHΦ hΦ
-  haveI := unf_countable
+  have := unf_countable
   have hstrip := unf_meas_strip
   set f : ℍ → ℂ := strip.indicator H with hf
   have hfm : StronglyMeasurable f := hH.stronglyMeasurable.indicator hstrip
@@ -129,9 +129,9 @@ theorem UpperTheory.V.Af.Rs.unfold :
     obtain ⟨γ0, ⟨h0row, h0s⟩, huniq⟩ := hR.2 z x
     have hg0 : g γ0 = x := Subtype.ext h0row
     rw [tsum_eq_single ⟨γ0, hg0⟩]
-    · rw [hfγ, if_pos h0s, h0row]
+    · rw [hfγ, ite_eq_left h0s, h0row]
     · intro c hc
-      rw [hfγ, if_neg]
+      rw [hfγ, ite_eq_right]
       intro hs
       apply hc
       exact Subtype.ext (huniq c.1 ⟨congrArg Subtype.val c.2, hs⟩)

@@ -70,7 +70,7 @@ theorem _root_.GlobalTheory.RootEx.exists_isOpen_addSubgroup_add_eq {X : Type*}
     · have hsub : {x | Φ x = c} ⊆ tsupport Φ := fun x hx =>
         subset_tsupport Φ (by
           rw [Function.mem_support]
-          rw [Set.mem_setOf_eq] at hx
+          rw [Set.mem_ofPred_eq] at hx
           rw [hx]
           exact hc)
       obtain ⟨V, hV0, hVs⟩ := compact_open_separated_add_right

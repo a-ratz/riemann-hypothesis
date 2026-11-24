@@ -976,7 +976,7 @@ theorem keyTwo_of_locTwo_vacBar (hB : ThetaBasic) (hK : KDecay) (hA : IAut) (hL 
     yy_tendsto (by exact_mod_cast q1) rn c₀, fun g hg => ?_⟩
   · have o : ∀ g₀ : UA σ G.W.J, IntM (cp t g₀).1 → ∀ᶠ g in 𝓝 g₀, IntM (cp t g).1 := fun g₀ hg =>
       eventually_all.2 fun i => eventually_all.2 fun j => (isOpen_int.preimage ((p1 v t).comp
-        ((Units.continuous_val.comp continuous_subtype_val).matrix_elem i j))).mem_nhds (hg i j)
+        ((Units.continuous_val.comp continuous_subtypeVal).matrix_elem i j))).mem_nhds (hg i j)
     exact (o h₀ (i1 t)).and ((continuous_inv.tendsto h₀).eventually (o h₀⁻¹ (i2 t)))
   · have ci := i3 t
     have ci' := i4 t

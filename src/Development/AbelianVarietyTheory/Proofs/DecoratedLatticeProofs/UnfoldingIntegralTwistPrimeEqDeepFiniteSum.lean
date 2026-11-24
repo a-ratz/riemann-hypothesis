@@ -186,12 +186,12 @@ theorem val_inv_pow_le {k : Type} [Field k] [ValuativeRel k] (ϖ : kˣ) (hv : va
     simp only [Nat.add_sub_cancel]
     field_simp
   rw [e, map_mul, map_pow]
-  exact mul_le_of_le_one_left zero_le' (pow_le_one' hv.le _)
+  exact mul_le_of_le_one_left zero_le (pow_le_one' hv.le _)
 
 theorem val_pow_le {k : Type} [Field k] [ValuativeRel k] (ϖ : kˣ) (hv : valuation k (ϖ : k) < 1)
     {N B : ℕ} (h : N ≤ B) : valuation k ((ϖ : k) ^ B) ≤ valuation k ((ϖ : k) ^ N) := by
   rw [show B = N + (B - N) by omega, pow_add, map_mul]
-  exact mul_le_of_le_one_right zero_le' (by rw [map_pow]; exact pow_le_one' hv.le _)
+  exact mul_le_of_le_one_right zero_le (by rw [map_pow]; exact pow_le_one' hv.le _)
 
 theorem sumAgreeBd : ∀ (E K k : Type) [Field E] [NumberField E] [StarRing E] [Field K]
     [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k]
@@ -238,7 +238,7 @@ theorem sumAgreeBd : ∀ (E K k : Type) [Field E] [NumberField E] [StarRing E] [
     intro t ht
     obtain ⟨i, -, rfl⟩ := (hmemT t).1 ht
     rw [hinv, map_mul]
-    exact mul_le_of_le_one_left zero_le' (hnat i)
+    exact mul_le_of_le_one_left zero_le (hnat i)
   have hT2 : ∀ x : k, valuation k x ≤ valuation k (((ϖ ^ A)⁻¹ : kˣ) : k) →
       ∃! t, t ∈ T ∧ valuation k (x - t) ≤ valuation k ((ϖ : k) ^ B) := by
     intro x hx
@@ -255,7 +255,7 @@ theorem sumAgreeBd : ∀ (E K k : Type) [Field E] [NumberField E] [StarRing E] [
         field_simp
       rw [e1, pow_add, mul_comm ((ϖ : k) ^ A) ((ϖ : k) ^ B), map_mul, map_mul (valuation k) ((ϖ : k) ^ B)]
       have : valuation k ((ϖ : k) ^ A) ≠ 0 := by simpa using hA0
-      exact (mul_le_mul_iff_of_pos_right (zero_lt_iff.2 this)).symm
+      exact (mul_le_mul_iff_of_pos_right (pos_iff_ne_zero.2 this)).symm
     refine ⟨(i : k) * ((ϖ : k) ^ A)⁻¹, ⟨(hmemT _).2 ⟨i, hi, rfl⟩, (key i).2 hzi⟩, ?_⟩
     rintro t ⟨ht, htx⟩
     obtain ⟨j, hj, rfl⟩ := (hmemT t).1 ht
@@ -277,7 +277,7 @@ theorem sumAgreeBd : ∀ (E K k : Type) [Field E] [NumberField E] [StarRing E] [
       simp only [freeMat, Matrix.of_apply]
       split_ifs with h
       · exact (hy _).trans (val_pow_le ϖ hv hB)
-      · rw [map_zero]; exact zero_le'
+      · rw [map_zero]; exact zero_le
     rw [hper _ _ hy']
     congr 1
     rw [neg_add, AddChar.map_add_eq_mul, hψ1 (-ch (freeMat y)) (by rw [Valuation.map_neg]; exact ch_freeMat_int ϖ hv y hy), mul_one]

@@ -350,7 +350,7 @@ namespace GlobalTheory.HeckeSatakeEigen
 
 theorem exists_satU_eigenvector : ∀ {K : Type} [Field K] [Valued K (WithZero (Multiplicative ℤ))] [CompleteSpace K] (ϖ : K) (σ : K →+* K) (q n : ℕ), Formalism.UG.IsUnramInv ϖ σ q → ∀ (V : Type) [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V] (T : (Formalism.UG.GU σ n → ℂ) → Module.End ℂ V), (∀ h₁ ∈ Formalism.UG.Hecke ℂ (Formalism.UG.KU σ n), ∀ h₂ ∈ Formalism.UG.Hecke ℂ (Formalism.UG.KU σ n), T (h₁ + h₂) = T h₁ + T h₂) → (∀ (c : ℂ), ∀ h ∈ Formalism.UG.Hecke ℂ (Formalism.UG.KU σ n), T (c • h) = c • T h) → T (Formalism.UG.dosetInd ℂ (Formalism.UG.KU σ n) 1) = 1 → (∀ h₁ ∈ Formalism.UG.Hecke ℂ (Formalism.UG.KU σ n), ∀ h₂ ∈ Formalism.UG.Hecke ℂ (Formalism.UG.KU σ n), T (Formalism.UG.conv (Formalism.UG.KU σ n) h₁ h₂) = T h₁ * T h₂) → ∀ x₀ : V, x₀ ≠ 0 → ∃ α : Fin (n / 2) → ℂ, ∃ x : V, x ≠ 0 ∧ ∀ h ∈ Formalism.UG.Hecke ℂ (Formalism.UG.KU σ n), T h x = Formalism.UG.SatU ϖ q h α • x := by
   intro K _ _ _ ϖ σ q n hU V _ _ _ T hadd hsmul h1 hmul x₀ hx₀
-  haveI : Nontrivial V := ⟨⟨x₀, 0, hx₀⟩⟩
+  have : Nontrivial V := ⟨⟨x₀, 0, hx₀⟩⟩
   have hcomm : ∀ a b : Formalism.UG.Hecke ℂ (Formalism.UG.KU σ n), T a.1 * T b.1 = T b.1 * T a.1 := by
     intro a b
     rw [← hmul _ a.2 _ b.2, ← hmul _ b.2 _ a.2, GlobalTheory.UnitarySwap.heckeCommU K ϖ σ q n ℂ hU _ a.2 _ b.2]
@@ -728,14 +728,14 @@ theorem heckeFunI_one : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
     unfold InertDatum.hval
     rw [dite_eq_left hg]
     by_cases hxU : x ∈ U
-    · rw [if_pos hxU]
+    · rw [ite_eq_left hxU]
       have hK := GlobalTheory.T.inertLocal_mem_integralPoints_of_latticeStabilizer L n v w Dv x ((hU x hx).1 hxU) hg
       unfold Formalism.UG.dosetInd
       rw [Set.indicator_of_mem]
       · rfl
       · rw [DoubleCoset.mem_doubleCoset]
         exact ⟨_, hK, 1, one_mem _, by simp⟩
-    · rw [if_neg hxU]
+    · rw [ite_eq_right hxU]
       unfold Formalism.UG.dosetInd
       apply Set.indicator_of_notMem
       intro hmem
@@ -760,10 +760,10 @@ theorem heckeFunI_one : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
     have hmem : hc.choose ∈ U := by
       have := QuotientGroup.eq.1 hc.choose_spec.1.symm
       simpa using this
-    rw [key _ hc.choose_spec.2, if_pos hmem, one_smul, hfU _ hmem]
+    rw [key _ hc.choose_spec.2, ite_eq_left hmem, one_smul, hfU _ hmem]
   · intro c hc1
     split_ifs with hc
-    · rw [key _ hc.choose_spec.2, if_neg, zero_smul]
+    · rw [key _ hc.choose_spec.2, ite_eq_right, zero_smul]
       intro hmem
       apply hc1
       rw [← hc.choose_spec.1]
@@ -855,9 +855,9 @@ theorem exists_satAt : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
         rw [map_add (f := _), hf.2 κ hκ, hf'.2 κ hκ]⟩
       zero_mem' := ⟨π.S.zero_mem, fun κ _ => map_zero _⟩
       smul_mem' := fun c f hf => ⟨π.S.smul_mem c hf.1, fun κ hκ => by rw [map_smul, hf.2 κ hκ]⟩ }
-  haveI : FiniteDimensional ℂ π.W := π.alg.1
-  haveI := GlobalTheory.AlgFormsFin.fixedForms_finite L n π.ρ (_root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n) hN
-  haveI hVfin : FiniteDimensional ℂ V :=
+  have : FiniteDimensional ℂ π.W := π.alg.1
+  have := GlobalTheory.AlgFormsFin.fixedForms_finite L n π.ρ (_root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n) hN
+  have hVfin : FiniteDimensional ℂ V :=
     Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.AlgFormsFin.fixedForms L n π.ρ N) fun f hf =>
       ⟨(π.irrS.1.le hf.1).1, fun κ hκ g => congrFun (hf.2 κ (hCU κ hκ)) g⟩
   have hfin := fun h hh => GlobalTheory.SatInd.CosetFin.finite_inert_support L n v w Dv
@@ -880,18 +880,18 @@ theorem exists_satAt : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
     · rw [Finset.sum_apply]
       refine Finset.sum_congr rfl fun c _ => ?_
       by_cases hc : ∃ x : GAf L n, (x : GAf L n ⧸ U) = c ∧ TrivOutside {v} x
-      · simp only [dif_pos hc]
+      · simp only [dite_eq_left hc]
         rfl
-      · simp only [dif_neg hc, zero_smul]
+      · simp only [dite_eq_right hc, zero_smul]
         rfl
     · intro c hc0
       rw [Function.mem_support] at hc0
       by_cases hc : ∃ x : GAf L n, (x : GAf L n ⧸ U) = c ∧ TrivOutside {v} x
-      · rw [dif_pos hc] at hc0
+      · rw [dite_eq_left hc] at hc0
         rw [Set.Finite.coe_toFinset]
         refine ⟨hc.choose, hc.choose_spec.1, hc.choose_spec.2, fun h0 => hc0 ?_⟩
         rw [h0, zero_smul]
-      · exact absurd (dif_neg hc) hc0
+      · exact absurd (dite_eq_right hc) hc0
   have hmemV : ∀ h ∈ Formalism.UG.Hecke ℂ (Formalism.UG.KU Dv.σw n), ∀ f ∈ V, heckeFunI L n U Dv h f ∈ V := by
     intro h hh f hf
     refine ⟨?_, GlobalTheory.T.inertHeckeOperator_preserves_productLevel_invariance L n v w Dv U hU hdec' π.W h hh f hf.2⟩
@@ -911,7 +911,7 @@ theorem exists_satAt : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
     else 0
   have hT : ∀ h (hh : h ∈ Formalism.UG.Hecke ℂ (Formalism.UG.KU Dv.σw n)) (f : V),
       ((T h f : V) : GAf L n → π.W) = heckeFunI L n U Dv h f := fun h hh f => by
-    simp only [T, dif_pos hh]
+    simp only [T, dite_eq_left hh]
     rfl
   have hK := Formalism.UG.P.isCommensurated_integral_unitary_of_unramified Dv.unram n
   obtain ⟨α, x, hx0, hx⟩ := GlobalTheory.T.exists_satU_eigenvector_alt Dv.ϖ Dv.σw _ n Dv.unram V T

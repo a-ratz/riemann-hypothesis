@@ -212,7 +212,7 @@ private lemma split_alg (H : ∀ (A : Type) [CommRing A] [Algebra R A], Algebra.
       by_contra hn
       have : Nontrivial A := not_subsingleton_iff_nontrivial.1 hn
       obtain ⟨m, hm⟩ := Ideal.exists_maximal A
-      letI := Ideal.Quotient.field m
+      let := Ideal.Quotient.field m
       have h0 := hd (AlgebraicClosure (A ⧸ m))
       have hfin := finite_algHom (R := R) (A := A) (AlgebraicClosure (A ⧸ m))
       have hne : Nonempty (A →ₐ[R] AlgebraicClosure (A ⧸ m)) := ⟨IsScalarTower.toAlgHom R A _⟩
@@ -303,7 +303,7 @@ private lemma split_sch {R : Type} [CommRing R]
   have : IsAffine W := isAffine_of_isAffineHom q
   let ψ : CommRingCat.of R ⟶ Γ(W, ⊤) := Spec.preimage (W.isoSpec.inv ≫ q)
   have hψ : Spec.map ψ = W.isoSpec.inv ≫ q := Spec.map_preimage _
-  letI : Algebra R Γ(W, ⊤) := ψ.hom.toAlgebra
+  let : Algebra R Γ(W, ⊤) := ψ.hom.toAlgebra
   have hfin : Module.Finite R Γ(W, ⊤) := (IsFinite.SpecMap_iff ψ).1 (by rw [hψ]; infer_instance)
   have het : Algebra.Etale R Γ(W, ⊤) := by
     have h1 : Etale (Spec.map ψ) := by rw [hψ]; infer_instance
@@ -357,7 +357,7 @@ private lemma split_sch {R : Type} [CommRing R]
     have he : Sigma.desc (fun i => Spec.map (CommRingCat.ofHom (z i).toRingHom) ≫ W.isoSpec.inv) =
         sigmaSpec (fun _ : Fin d => CommRingCat.of R) ≫ Spec.map (CommRingCat.ofHom Φ) ≫ W.isoSpec.inv := by
       refine Sigma.hom_ext _ _ fun i => ?_
-      rw [Sigma.ι_desc, ι_sigmaSpec_assoc, ← Category.assoc, ← Spec.map_comp]
+      rw [Sigma.ι_comp_desc, ι_sigmaSpec_assoc, ← Category.assoc, ← Spec.map_comp]
       rfl
     rw [he]
     infer_instance
@@ -608,11 +608,11 @@ private theorem splitOn_spec {Y Z : Scheme.{0}} (p : Z ⟶ Y) {B : Type} [CommRi
       Ψ ≫ pullback.snd p x = Spec.map (CommRingCat.ofHom (Pi.ringHom fun _ : Fin m => RingHom.id B)) := by
   obtain ⟨hz, hiso⟩ := h
   let R : Fin m → CommRingCat := fun _ => CommRingCat.of B
-  haveI : IsIso (sigmaSpec R) := inferInstance
+  have : IsIso (sigmaSpec R) := inferInstance
   let D : ∐ (fun _ : Fin m => Spec (CommRingCat.of B)) ⟶ pullback p x :=
     Sigma.desc fun i => pullback.lift (z i) (𝟙 _) (by rw [hz i, Category.id_comp])
   let s : (∐ fun _ : Fin m => Spec (CommRingCat.of B)) ⟶ Spec (CommRingCat.of (Fin m → B)) := sigmaSpec R
-  haveI : IsIso s := inferInstanceAs (IsIso (sigmaSpec R))
+  have : IsIso s := inferInstanceAs (IsIso (sigmaSpec R))
   have hs : ∀ i, Sigma.ι (fun _ : Fin m => Spec (CommRingCat.of B)) i ≫ s =
       Spec.map (CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin m => B) i)) := fun i => ι_sigmaSpec R i
   refine ⟨hz, inv s ≫ D, inferInstance, fun i => ?_, ?_⟩
@@ -625,7 +625,7 @@ private theorem splitOn_spec {Y Z : Scheme.{0}} (p : Z ⟶ Y) {B : Type} [CommRi
         CommRingCat.ofHom (Pi.evalRingHom (fun _ : Fin m => B) i) = 𝟙 _ := by
       ext; rfl
     rw [← Category.assoc (Sigma.ι _ i) s, hs i, ← Spec.map_comp, h1, Spec.map_id]
-    simp only [D, Sigma.ι_desc_assoc]
+    simp only [D, Sigma.ι_comp_desc_assoc]
     exact pullback.lift_snd _ _ _
 
 end UpperTheory.Ru.crystallineComparison
@@ -634,13 +634,13 @@ open CategoryTheory Limits AlgebraicGeometry UpperTheory.Gal.crystallineComparis
 theorem UpperTheory.Ru.crystallineComparison.splitPerm :
     UpperTheory.Ru.crystallineComparison.SplitPerm := by
   intro l Y T U _ hl hint y z z' hz hz' hs hs'
-  haveI := T.fin
+  have := T.fin
   let B := Localization.Away (l : U)
   let j := awayPt l U
   let alg : U →+* B := algebraMap U B
   have halg : Function.Injective alg :=
     IsLocalization.injective B (Submonoid.powers_le.2 hl)
-  haveI : IsAffine (pullback T.p y) := isAffine_of_isAffineHom (pullback.snd T.p y)
+  have : IsAffine (pullback T.p y) := isAffine_of_isAffineHom (pullback.snd T.p y)
   let sec : ∀ w : Spec (CommRingCat.of U) ⟶ T.Z, w ≫ T.p = y → (Spec (CommRingCat.of U) ⟶ pullback T.p y) :=
     fun w hw => pullback.lift w (𝟙 _) (by rw [hw, Category.id_comp])
   let q : pullback T.p (j ≫ y) ⟶ pullback T.p y :=

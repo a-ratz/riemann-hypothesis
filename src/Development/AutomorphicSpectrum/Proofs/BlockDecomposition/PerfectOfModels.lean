@@ -76,8 +76,8 @@ theorem perfAll_of_models
       ∀ M : LB Y, M.IsLB → HasModel f M) : PerfAll := by
   intro R _ Y f hs hp M hM
   obtain ⟨R₀, _, _, φ, Y₀, f₀, π, hp₀, hf₀, hsq, M₀, hM₀, w, hw⟩ := hModel R Y f hs hp M hM
-  haveI := hp₀
-  haveI := hf₀
+  have := hp₀
+  have := hf₀
   obtain ⟨P₀⟩ := GlobalTheory.ProperFinite.nonempty_perf_of_isProper f₀ hM₀
   obtain ⟨P⟩ := hBase φ f₀ f π hsq M₀ hM₀ P₀
   exact hIso f hM (Geo.Tor.pull_isLB hM₀ π) w hw P

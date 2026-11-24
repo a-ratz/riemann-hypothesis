@@ -322,7 +322,7 @@ theorem isDomain_of_forall_spanFinrank_lt (R : Type u) [CommRing R]
   classical
   by_cases hsq : maximalIdeal R ≤ maximalIdeal R ^ 2
   · exact isDomain_of_maximalIdeal_eq_bot R (maximalIdeal_eq_bot_of_le_sq R hsq)
-  obtain ⟨y, hy, hy2⟩ := SetLike.not_le_iff_exists.mp hsq
+  obtain ⟨y, hy, hy2⟩ := IsConcreteLE.not_le_iff_exists.mp hsq
   have hdimR : ∃ d : ℕ, ((d + 1 : ℕ) : WithBot ℕ∞) = ringKrullDim R := by
     have := isLocalRing_quotient_span_singleton hy
     have h7 := spanFinrank_quotient_eq_and_ringKrullDim_add_one R hy hy2

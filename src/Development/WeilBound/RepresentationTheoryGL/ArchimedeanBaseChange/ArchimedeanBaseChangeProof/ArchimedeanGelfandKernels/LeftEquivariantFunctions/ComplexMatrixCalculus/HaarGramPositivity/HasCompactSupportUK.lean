@@ -88,7 +88,7 @@ theorem clm_continuous (lam : Fin n → ℤ) : Continuous (clm (n := n) lam) := 
 theorem Ak_cont (hF : MatrixFrechetDerivativeAtZeroLaws) (lam : Fin n → ℤ) : Continuous (Ak (n := n) lam) := by
   have hc : ContinuousOn (fr0 (n := n) lam) (GLs n) := (hF n lam).2.2.continuousOn
   exact (clm_continuous lam).comp
-    (hc.comp_continuous continuous_subtype_val (fun k => mem_GLs k))
+    (hc.comp_continuous continuous_subtypeVal (fun k => mem_GLs k))
 
 theorem Fk_cont (hF : MatrixFrechetDerivativeAtZeroLaws) (lam : Fin n → ℤ) : Continuous (Fk (n := n) lam) := by
   have h := Ak_cont hF lam
@@ -121,7 +121,7 @@ theorem inner_gram (hF : MatrixFrechetDerivativeAtZeroLaws) (lam : Fin n → ℤ
     ← integral_inner ((Fk_int hF lam).apply_continuousLinearMap v), ← integral_complex_ofReal]
   congr 1
   funext k
-  rw [Fk, ContinuousLinearMap.mul_apply, ContinuousLinearMap.adjoint_inner_right,
+  rw [Fk, mul_apply_eq_comp, ContinuousLinearMap.adjoint_inner_right,
     inner_self_eq_norm_sq_to_K]
   push_cast
   rfl
@@ -130,7 +130,7 @@ theorem gram_pos (hF : MatrixFrechetDerivativeAtZeroLaws) (lam : Fin n → ℤ) 
     0 < ∫ k, ‖Ak lam k v‖ ^ 2 ∂(Measure.haar : Measure (UK n)) := by
   have hc : Continuous fun k : UK n => ‖Ak lam k v‖ ^ 2 :=
     (((Ak_cont hF lam).clm_apply continuous_const).norm).pow 2
-  refine hc.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) (hasCompactSupport_UK _)
+  refine hc.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) (hasCompactSupport_UK _)
     (fun _ => sq_nonneg _) ?_
   simp [Ak_one hF, hv]
 

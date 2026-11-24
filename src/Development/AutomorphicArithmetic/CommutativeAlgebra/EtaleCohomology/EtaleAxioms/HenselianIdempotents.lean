@@ -88,7 +88,7 @@ private lemma exists_roots {A : Type} [CommRing A] [Nontrivial A] {g : A[X]} (hg
       by_contra h
       exact AdjoinRoot.mk_ne_zero_of_natDegree_lt hg (C_ne_zero.mpr h)
         (by rw [natDegree_C]; omega) (by rwa [AdjoinRoot.mk_C])
-    haveI : Nontrivial (AdjoinRoot g) := hinj.nontrivial
+    have : Nontrivial (AdjoinRoot g) := hinj.nontrivial
     have hroot : (g.map (AdjoinRoot.of g)).IsRoot (AdjoinRoot.root g) := AdjoinRoot.isRoot_root g
     have hfac : (X - C (AdjoinRoot.root g)) * ((g.map (AdjoinRoot.of g)) /ₘ (X - C (AdjoinRoot.root g)))
         = g.map (AdjoinRoot.of g) := mul_divByMonic_eq_iff_isRoot.mpr hroot
@@ -100,7 +100,7 @@ private lemma exists_roots {A : Type} [CommRing A] [Nontrivial A] {g : A[X]} (hg
         natDegree_map_eq_of_injective hinj, hN] at e1
       omega
     obtain ⟨S, iS, aS, hSinj, x, hx⟩ := ih hqm hqd
-    letI : Algebra A S := ((algebraMap (AdjoinRoot g) S).comp (AdjoinRoot.of g)).toAlgebra
+    let : Algebra A S := ((algebraMap (AdjoinRoot g) S).comp (AdjoinRoot.of g)).toAlgebra
     refine ⟨S, iS, this, hSinj.comp hinj, Fin.cons (algebraMap (AdjoinRoot g) S (AdjoinRoot.root g)) x, ?_⟩
     have e2 : g.map (algebraMap A S) = (g.map (AdjoinRoot.of g)).map (algebraMap (AdjoinRoot g) S) := by
       rw [Polynomial.map_map]
@@ -275,7 +275,7 @@ theorem UpperTheory.exists_monic_factor_of_root_subset_product_equation :
   obtain ⟨p, -, hp⟩ := UpperTheory.exists_polynomial_eq_map_eval_roots_of_perm_invariant A N g (Ph N m α (↑c⁻¹ : A) (fun J => Jᶜ))
     (Ph_sym N m α _ _ (fun σ J => by ext i; simp [Finset.mem_map_equiv]))
   obtain ⟨S, iS, aS, hinj, x, hx⟩ := exists_roots hg hN
-  haveI : Nontrivial S := hinj.nontrivial
+  have : Nontrivial S := hinj.nontrivial
   have hinjX : Function.Injective (Polynomial.map (algebraMap A S)) := Polynomial.map_injective _ hinj
   obtain ⟨h0, h1⟩ := hyp S x hx
   have hc : algebraMap A S (↑c⁻¹ : A) * algebraMap A S (↑c : A) = 1 := by
@@ -382,7 +382,7 @@ private lemma exists_chi {A : Type} [CommRing A] [Nontrivial A] (g : A[X]) (N m 
     · rw [Polynomial.natDegree_lt_iff_degree_lt h0]
       have hdeg : Φ.degree = (X ^ d : (MvPolynomial (Fin N) A)[X]).degree := by
         rw [Polynomial.degree_X_pow, Polynomial.degree_eq_natDegree hΦm.ne_zero, hΦdeg]
-      have := Polynomial.degree_sub_lt hdeg hΦm.ne_zero
+      have := degree_sub_lt_left hdeg hΦm.ne_zero
         (by rw [hΦm.leadingCoeff, Polynomial.leadingCoeff_X_pow])
       rwa [Polynomial.degree_eq_natDegree hΦm.ne_zero, hΦdeg] at this
   refine ⟨X ^ d + p, ?_, ?_⟩
@@ -411,7 +411,7 @@ theorem UpperTheory.exists_root_subset_product_equation_of_henselian_reduction :
     intro S _ _ x _
     have h10 : (1 : S) = 0 := by
       rw [← map_one (algebraMap A S), Subsingleton.elim (1 : A) 0, map_zero]
-    haveI : Subsingleton S := subsingleton_of_zero_eq_one h10.symm
+    have : Subsingleton S := subsingleton_of_zero_eq_one h10.symm
     exact ⟨Subsingleton.elim _ _, Subsingleton.elim _ _⟩
   · obtain ⟨χ, hχm, hχ⟩ := exists_chi g (n + m) m (Nat.le_add_left m n)
     let x0 : Fin (n + m) → A ⧸ I := fun i => if (i : ℕ) < m then 1 else 0
@@ -421,11 +421,11 @@ theorem UpperTheory.exists_root_subset_product_equation_of_henselian_reduction :
       rw [h, show n + m = m + n from add_comm n m, Finset.prod_range_add]
       have h1 : ∏ k ∈ Finset.range m, ((X : (A ⧸ I)[X]) - C (if k < m then 1 else 0)) =
           (X - 1) ^ m := by
-        rw [Finset.prod_congr rfl (fun k hk => by rw [if_pos (Finset.mem_range.mp hk), map_one])]
+        rw [Finset.prod_congr rfl (fun k hk => by rw [ite_eq_left (Finset.mem_range.mp hk), map_one])]
         simp
       have h2 : ∏ k ∈ Finset.range n, ((X : (A ⧸ I)[X]) - C (if m + k < m then 1 else 0)) =
           X ^ n := by
-        rw [Finset.prod_congr rfl (fun k _ => by rw [if_neg (by omega), map_zero, sub_zero])]
+        rw [Finset.prod_congr rfl (fun k _ => by rw [ite_eq_right (by omega), map_zero, sub_zero])]
         simp
       rw [h1, h2, mul_comm]
     have hsplit : g.map (algebraMap A (A ⧸ I)) = ∏ i, (X - C (x0 i)) := by
@@ -486,7 +486,7 @@ theorem UpperTheory.exists_root_subset_product_equation_of_henselian_reduction :
       rw [hk]
       exact I.mul_mem_right k hα1
     have hunit : IsUnit ((derivative χ).eval α) := by
-      haveI := isLocalHom_of_le_jacobson_bot I (by
+      have := isLocalHom_of_le_jacobson_bot I (by
         simpa only [Ideal.jacobson_bot] using (HenselianRing.jac (I := I)))
       exact isUnit_of_map_unit (Ideal.Quotient.mk I) _ (by rw [hcong, hE1]; exact isUnit_one)
     refine ⟨α, hunit.unit, hα1, ?_⟩
@@ -526,8 +526,8 @@ theorem UpperTheory.exists_monic_factor_lift_of_pow_mul_sub_one_pow :
   swap
   · rw [not_nontrivial_iff_subsingleton] at hR
     exact ⟨g, 1, hg, monic_one, (mul_one g).symm, Subsingleton.elim _ _, Subsingleton.elim _ _⟩
-  haveI := hR
-  haveI hA : Nontrivial A := (Ideal.Quotient.mk I).domain_nontrivial
+  have := hR
+  have hA : Nontrivial A := (Ideal.Quotient.mk I).domain_nontrivial
   have h1 : ((X : (A ⧸ I)[X]) - 1) = X - C 1 := by simp
   have hdeg : g.natDegree = n + m := by
     have h := congrArg natDegree hgm
@@ -962,7 +962,7 @@ namespace LateralTheory.E.LJacPf
 
 theorem LJac_of : LateralTheory.E.HensIdemCut.LJac := by
   intro A _ I hH B _ φ hφ
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have : Algebra.IsIntegral A B := ⟨hφ⟩
   have hI : I ≤ Ideal.jacobson ⊥ := by simpa only [Ideal.jacobson_bot] using hH.jac
   rw [Ideal.jacobson]

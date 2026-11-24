@@ -91,7 +91,7 @@ namespace PositivityTheory.SiegelWeilFormula.AStep
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
 theorem a_dil_k {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (i₀ : Fin d.n) (τ : ℝ) (y : GR d.n)
     (hy : IsDil (Pi.single i₀ 1) τ y) (h : d.G) : d.a (R.ι w y * h) = Real.exp (2 * τ) * d.a h ∧ 0 ≤ d.a h := by
-  haveI := d.cm.1
+  have := d.cm.1
   have hf := _root_.PositivityTheory.SiegelWeilFormula.AStep.inFrame_dil'_k R w i₀ τ y hy
   have h21 : (inFrame d.b (R.ι w y)).toBlocks₂₁ = 0 := by rw [hf, Matrix.toBlocks_fromBlocks₂₁]
   obtain ⟨t, ht, hdet⟩ := _root_.PositivityTheory.SiegelWeilFormula.Avac.isPar_of_frame_k d (R.ι w y) h21
@@ -658,7 +658,7 @@ theorem holA_pf_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {
     · left; rw [h1, h2, cnt_true, cnt_false]; exact ⟨rfl, rfl⟩
     · right; rw [h1, h2, cnt_true, cnt_false]; exact ⟨rfl, rfl⟩
   refine ⟨pp, qq, e, hpq, ?_⟩
-  haveI := hTG; haveI := hLC; haveI := hT2; haveI := hSC
+  have := hTG; have := hLC; have := hT2; have := hSC
   refine H.holLead d.m d.n pp qq e d.ok.hm hmn hpq d.G (par2 σ d.Y) (rat2 σ d.Y) (R.ι w) (s0 d.m d.n) d.Ht (d.sec0 Φ)
     (R.cont w) ?_ U p Ê t hUo hR hs hd hcont (fun z hz => ⟨(hfar z hz).1, fun g => (hfar z hz).2 g⟩) j hlow ?_
   · intro g
@@ -832,7 +832,7 @@ theorem holPhi_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d
   obtain ⟨iLC, iSC, iT2, iBo⟩ := kfour.nA_top hσ d.ok.frame
   obtain ⟨K, hK, hKc⟩ := kfour.nF_cocompact hσ d.ok.frame
   obtain ⟨-, -, hTG, -, -, -⟩ := H.auxEx F E σ d
-  haveI := hTG
+  have := hTG
   have hψ := GlobalTheory.StdCharWeilDatum.isCharAF d.ok.good.std
   have hnbc := kfour.nb_continuous hσ d.ok.frame hN
   let u : nA σ d.Y d.b → ℂ := fun β => d.B.ψ (-(Algebra.trace (AF F) (AE F E) (Matrix.trace (T.1.1 * β.1))))
@@ -844,7 +844,7 @@ theorem holPhi_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d
     intro β g
     show A (nb (γf β + β) * x' * g) = _
     rw [_root_.PositivityTheory.SiegelWeilFormula.KSing.nb_add_k d hN, mul_assoc, mul_assoc, hAi _ (_root_.PositivityTheory.SiegelWeilFormula.KSing.nb_rat_k d hN (hγ β).1)]
-  haveI : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (lam.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
   have hC : IsCompact ((fun k => nb k * x') '' K) := hK.image (hnbc.mul continuous_const)
   have hmeas : ∀ y, AEStronglyMeasurable (fun β => A (c β * R.ι w y) * u β) (lam.restrict 𝓖) := by
     intro y
@@ -1039,7 +1039,7 @@ theorem deg_k (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : 
       _root_.PositivityTheory.SiegelWeilFormula.AStep.cOne_k d L (d.sec0 Φ) s z nb' lam' 𝓖' T' x + c2 z x) ∧
       ∀ x, c2 z (R.ι w y * x) = Complex.exp (((1 : ℝ) : ℂ) * (d.n - 2 * z)) * c2 z x := by
     intro z hz
-    simp only [c2, dif_pos hz]
+    simp only [c2, dite_eq_left hz]
     exact Classical.choose_spec (hspl z hz)
   have havg_smul : ∀ (c : ℂ) (φ : d.G → ℂ) x', _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 (fun g => c * φ g) T x' =
       c * _root_.PositivityTheory.SiegelWeilFormula.AStep.avg_k d L uM ν 𝓤 nb lam 𝓖 φ T x' := by

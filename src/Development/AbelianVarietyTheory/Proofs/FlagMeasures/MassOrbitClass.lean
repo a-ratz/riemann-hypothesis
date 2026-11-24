@@ -89,7 +89,7 @@ theorem mass_orbit_class {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
     change (if S.IsIntCls (Quotient.mk (MulAction.orbitRel S.St (Set S.FrP)) C₁).out then
       ENNReal.ofReal (S.wC (Quotient.mk (MulAction.orbitRel S.St (Set S.FrP)) C₁).out) *
         S.nT d (Quotient.mk (MulAction.orbitRel S.St (Set S.FrP)) C₁).out _ else 0) = _
-    rw [e', if_pos hint, (vol C₁ (hI _ _ h₁).1).2.2.2 h hh]
+    rw [e', ite_eq_left hint, (vol C₁ (hI _ _ h₁).1).2.2.2 h hh]
     congr 1
     unfold Frames.nT
     congr 1
@@ -113,7 +113,7 @@ theorem mass_orbit_class {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
       have : {Λ : Submodule L.O S.V | S.IsTerm d Λ ∧
         (S.BBzero d Λ ∧ ∃ s ∈ S.St, S.Fr d Λ = s • C₁) ∧ S.Fr d Λ = o.out} = ∅ := by
         ext Λ
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         rintro ⟨-, ⟨-, s, hs, e⟩, e2⟩
         apply ho
         rw [← Quotient.out_eq o]

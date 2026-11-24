@@ -216,7 +216,7 @@ theorem nat_sq {Y X : Scheme.{0}} (g : Y ⟶ X) (O : X.Opens) {ι : Type} (V : �
         Limits.Sigma.desc (cmp O V hV _ hW) := by
   apply Sigma.hom_ext
   intro j
-  simp only [Sigma.ι_desc_assoc, Sigma.ι_map_assoc, Sigma.ι_desc]
+  simp only [Sigma.ι_comp_desc_assoc, Sigma.ι_map_assoc, Sigma.ι_comp_desc]
   apply WidePullback.hom_ext
   · intro k
     simp only [wpMap, sqS, Category.assoc, WidePullback.lift_π, Arrow.homMk_left]

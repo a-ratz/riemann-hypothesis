@@ -94,8 +94,8 @@ end GlobalTheory.HeckeExtend
 theorem GlobalTheory.HeckeExtend.CE_isOpen : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (N : ℕ), 0 < N → IsOpen (CE F E N : Set (AF F ⊗[F] E)) := by
   intro F E _ _ _ _ _ N hN
-  haveI : IsTopologicalAddGroup (AF F ⊗[F] E) := IsModuleTopology.topologicalAddGroup (AF F) _
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalAddGroup (AF F ⊗[F] E) := IsModuleTopology.isTopologicalAddGroup (AF F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
   let b₀ := Module.finBasis F E
   have hint : ∀ i, ∃ d : ℕ, 0 < d ∧ IsIntegral ℤ ((d : E) * b₀ i) := by
     intro i

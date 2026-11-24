@@ -194,7 +194,7 @@ theorem exists_sum_pure {F E : Type} [Field F] [NumberField F] [Field E] [Number
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [hpure i]
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_apply, smul_eq_mul, mul_assoc]
 
 end GlobalTheory.SquareAgree.StabLieAdelic
 

@@ -101,7 +101,7 @@ theorem apply_genericPoint {K : Type} [Field K] (A B : Over (Sp K)) [GrpObj A] [
   have hlt : f.left (genericPoint A.left) < genericPoint B.left :=
     lt_of_le_not_ge hle fun h => hne (Specializes.antisymm (show f.left (genericPoint A.left) ⤳ genericPoint B.left from h) hle).eq
   have hfin : Order.height (f.left (genericPoint A.left)) < ⊤ := by
-    exact lt_of_le_of_lt (Order.height_mono hlt.le) (lt_of_le_of_lt (WithBot.coe_le_coe.mp h3) (ENat.coe_lt_top g))
+    exact lt_of_le_of_lt (Order.height_mono hlt.le) (lt_of_le_of_lt (WithBot.coe_le_coe.mp h3) (ENat.natCast_lt_top g))
   have h4 := Order.height_strictMono hlt hfin
   have : (g : WithBot ℕ∞) < g := calc
     (g : WithBot ℕ∞) ≤ Order.height (genericPoint A.left) := h1

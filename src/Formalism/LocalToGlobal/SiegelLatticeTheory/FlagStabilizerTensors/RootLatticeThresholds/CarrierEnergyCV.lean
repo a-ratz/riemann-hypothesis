@@ -83,16 +83,16 @@ def xN (c : Fin (r + 1) → ℂ) (i : ℕ) : ℝ := if h : i < r + 1 then ‖c �
 theorem norm_dl_diag (c : Fin (r + 1) → ℂ) (l : ℕ) (hl : l ≤ r + 1) :
     ‖Formalism.L2.SG.RealObj.Dl (Matrix.diagonal c) l‖ = ∏ i ∈ Finset.range l, xN c i := by
   unfold Formalism.L2.SG.RealObj.Dl
-  rw [dif_pos hl, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective hl), Matrix.det_diagonal, norm_prod,
+  rw [dite_eq_left hl, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective hl), Matrix.det_diagonal, norm_prod,
     ← Fin.prod_univ_eq_prod_range]
   refine Finset.prod_congr rfl fun i _ => ?_
   have hi : (i : ℕ) < r + 1 := lt_of_lt_of_le i.2 hl
-  simp only [xN, dif_pos hi, Function.comp_apply]
+  simp only [xN, dite_eq_left hi, Function.comp_apply]
   rfl
 
 theorem xN_last (c : Fin (r + 1) → ℂ) : xN c r = ‖c (Fin.last r)‖ := by
   unfold xN
-  rw [dif_pos (by omega)]
+  rw [dite_eq_left (by omega)]
   rfl
 
 theorem gv_diag (T T' : ℝ) (c : Fin (r + 1) → ℂ) :
@@ -119,7 +119,7 @@ theorem bc_prod (k : ℕ) (hk : 1 ≤ k) (lam : Fin r → ℝ) (hlam : ∀ a, 0 
         (((∏ i ∈ Finset.range r, xN c i) ^ 2) ^ (k - 1) * ∏ i ∈ Finset.range r, (xN c i ^ 4) ^ (r - i)) := by
   have h1 : ∀ a : Fin r, ‖(phiC lam c).1 a‖ = lam a * xN c a := fun a => by
     have ha : (a : ℕ) < r + 1 := by have := a.2; omega
-    simp only [phiC, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (hlam a), xN, dif_pos ha]
+    simp only [phiC, norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (hlam a), xN, dite_eq_left ha]
   simp only [h1, mul_pow, Finset.prod_mul_distrib]
   congr 1
   show ∏ a : Fin r, (fun i : ℕ => xN c i ^ (2 * (2 * (r - i) + k + 1 - 2))) a = _
@@ -157,18 +157,18 @@ theorem null_set (T T' : ℝ) :
       (⋃ i, Function.eval i ⁻¹' ({0} : Set ℂ)) ∪
         Function.eval (Fin.last r) ⁻¹' {z : ℂ | ‖z‖ ^ 2 = T * T'} := by
     intro c hc
-    simp only [Set.mem_setOf_eq, not_and_or, not_forall, not_not] at hc
+    simp only [Set.mem_ofPred_eq, not_and_or, not_forall, not_not] at hc
     rcases hc with ⟨i, hi⟩ | h
     · exact Or.inl (Set.mem_iUnion.2 ⟨i, hi⟩)
     · exact Or.inr h
   refine measure_mono_null hsub (measure_union_null (measure_iUnion_null fun i => ?_) ?_)
   · refine Measure.pi_eval_preimage_null _ ?_
-    rw [Measure.smul_apply, measure_singleton, smul_zero]
+    rw [smul_apply, measure_singleton, smul_zero]
   · refine Measure.pi_eval_preimage_null _ ?_
-    rw [Measure.smul_apply]
+    rw [smul_apply]
     have hs : {z : ℂ | ‖z‖ ^ 2 = T * T'} ⊆ Metric.sphere 0 (Real.sqrt (T * T')) := by
       intro z hz
-      simp only [Set.mem_setOf_eq] at hz
+      simp only [Set.mem_ofPred_eq] at hz
       simp only [mem_sphere_iff_norm, sub_zero]
       rw [← hz, Real.sqrt_sq (norm_nonneg z)]
     rw [measure_mono_null hs (Measure.addHaar_sphere volume 0 _), smul_zero]
@@ -181,14 +181,14 @@ theorem ae_weight (k : ℕ) (hk : 1 ≤ k) (T T' : ℝ) (lam : Fin r → ℝ) (h
   have hmem : {c : Fin (r + 1) → ℂ | (∀ i, c i ≠ 0) ∧ ‖c (Fin.last r)‖ ^ 2 ≠ T * T'} ∈ ae (dcC (r := r)) := by
     rw [mem_ae_iff]
     have := null_set (r := r) T T'
-    simpa [Set.compl_setOf] using this
+    simpa [Set.compl_ofPred] using this
   filter_upwards [hmem] with c hc
   obtain ⟨hc0, hcT⟩ := hc
   have hP : 0 < ∏ i ∈ Finset.range r, xN c i := by
     refine Finset.prod_pos fun i hi => ?_
     rw [Finset.mem_range] at hi
     unfold xN
-    rw [dif_pos (by omega)]
+    rw [dite_eq_left (by omega)]
     exact norm_pos_iff.2 (hc0 _)
   have hP2 : 0 < (∏ i ∈ Finset.range r, xN c i) ^ 2 := by positivity
   have hns : Complex.normSq (phiC lam c).2 = ‖c (Fin.last r)‖ ^ 2 := by
@@ -205,7 +205,7 @@ theorem ae_weight (k : ℕ) (hk : 1 ≤ k) (T T' : ℝ) (lam : Fin r → ℝ) (h
     rw [gv_diag] at hG
     have hpos : 0 < ‖c (Fin.last r)‖ ^ 2 - T * T' := pos_of_mul_pos_right hG hP2.le
     unfold Formalism.QuantumDeterminants.bcWeight
-    rw [if_pos (by rw [hns]; linarith), bc_prod k hk lam hlam c, hns, gv_diag, jac_diag]
+    rw [ite_eq_left (by rw [hns]; linarith), bc_prod k hk lam hlam c, hns, gv_diag, jac_diag]
     congr 1
     rw [mul_pow]
     calc ((∏ i ∈ Finset.range r, xN c i) ^ 2) ^ (k - 1) * (‖c (Fin.last r)‖ ^ 2 - T * T') ^ (k - 1) *
@@ -222,7 +222,7 @@ theorem ae_weight (k : ℕ) (hk : 1 ≤ k) (T T' : ℝ) (lam : Fin r → ℝ) (h
       exact hng (mul_pos hP2 (lt_of_not_ge h))
     have hlt : ‖c (Fin.last r)‖ ^ 2 < T * T' := lt_of_le_of_ne (by linarith) hcT
     unfold Formalism.QuantumDeterminants.bcWeight
-    rw [if_neg (by rw [hns]; linarith)]
+    rw [ite_eq_right (by rw [hns]; linarith)]
     simp
 
 end AE
@@ -278,8 +278,8 @@ theorem map_scaled_coordinates_pi (lam : Fin r → ℝ) (hlam : ∀ a, 0 < lam a
   rw [hpre, dcC, Measure.pi_pi]
   refine Finset.prod_congr rfl fun i _ => ?_
   have hμ := muS_pos lam hlam i
-  rw [Measure.smul_apply, Measure.smul_apply, ← Measure.map_apply (measurable_const_smul (muS lam i)) (hs i),
-    Measure.map_addHaar_smul volume hμ.ne', Measure.smul_apply, Complex.finrank_real_complex]
+  rw [smul_apply, smul_apply, ← Measure.map_apply (measurable_const_smul (muS lam i)) (hs i),
+    Measure.map_addHaar_smul volume hμ.ne', smul_apply, Complex.finrank_real_complex]
   rw [abs_of_nonneg (by positivity)]
   simp only [smul_eq_mul, cN]
   rw [ENNReal.smul_def, smul_eq_mul, ← mul_assoc]
@@ -292,9 +292,9 @@ theorem pi_smul_const (c : Fin (r + 1) → ℝ≥0) :
     Measure.pi (fun i => c i • (volume : Measure ℂ)) =
       (∏ i, (c i : ℝ≥0∞)) • Measure.pi (fun _ : Fin (r + 1) => (volume : Measure ℂ)) := by
   refine Measure.pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
+  rw [smul_apply, Measure.pi_pi, smul_eq_mul, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
-  rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
 
 theorem map_coordinate_change_volume : (Measure.pi fun _ : Fin (r + 1) => (volume : Measure ℂ)).map (e2 (r := r)) = volume := by
   have h1 := measurePreserving_piFinSuccAbove (fun _ : Fin (r + 1) => (volume : Measure ℂ)) (Fin.last r)

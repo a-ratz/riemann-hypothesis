@@ -433,7 +433,7 @@ theorem integrableOn_constTerm (W : Submodule E V.V) (hW : IsIsotropic V W) (f :
   have := countable_unipRat hc V W
   obtain ⟨K, hK, h⟩ := unipRad_cocompact hc V W hW
   refine _root_.GlobalTheory.integrableOn_fundamentalDomain_of_cocompact _ (unipRat hc V W) K hK h μ hμ 𝓕 h𝓕 _
-    (hf.comp (continuous_subtype_val.mul continuous_const)) fun γ hγ n => ?_
+    (hf.comp (continuous_subtypeVal.mul continuous_const)) fun γ hγ n => ?_
   rw [Subgroup.coe_mul, mul_assoc]
   exact hl _ hγ _
 

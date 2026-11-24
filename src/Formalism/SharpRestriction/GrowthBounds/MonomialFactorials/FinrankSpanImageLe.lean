@@ -109,7 +109,7 @@ theorem finrank_span_image_le (ι : ℚ_[p] →+* KK O) {V₁ V₂ : Type} [AddC
       simpa only [Submodule.subtype_apply, map_smul] using h3
     rw [hw'', hsum]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  haveI : FiniteDimensional (KK O) (Submodule.span (KK O) (Set.range fun i => f (bW i))) :=
+  have : FiniteDimensional (KK O) (Submodule.span (KK O) (Set.range fun i => f (bW i))) :=
     FiniteDimensional.span_of_finite (KK O) (Set.finite_range _)
   calc Module.finrank (KK O) (Submodule.span (KK O) (f '' (W : Set V₁)))
       ≤ Module.finrank (KK O) (Submodule.span (KK O) (Set.range fun i => f (bW i))) := Submodule.finrank_mono hle

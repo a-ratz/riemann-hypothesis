@@ -68,13 +68,13 @@ theorem UpperTheory.maximalCompact_integral_unipotent_norm_finite :
   obtain ⟨hmp, hme⟩ := UpperTheory.measurePreserving_idele_scale_and_conj_on_maximalCompact M₀ t u hu
   obtain ⟨C, hC⟩ := UpperTheory.schwartzBruhat_row_lintegral_abs_pow_bounded Φ hΦ 2 (by norm_num)
   obtain ⟨-, hiy, -, hU⟩ := UpperTheory.realIdele_mul_abs_continuous_and_unit_abs_eq_one
-  haveI := M₀.prob
+  have := M₀.prob
   have hw : ∀ g : G1 ℚ, ∫⁻ b in fundamentalSet ℚ, ‖Un.Uu φ Φ t u (nU b * g)‖ₑ ∂(adeleMeasure ℚ) ≤
       ENNReal.ofReal B * ‖Φ fun j => (iy (Real.exp t) : A ℚ) * (gl g * dM u).val 1 j‖ₑ := by
     intro g
     refine (lintegral_mono (g := fun _ => ENNReal.ofReal B * ‖Φ fun j => (iy (Real.exp t) : A ℚ) * (gl g * dM u).val 1 j‖ₑ)
       fun b => ?_).trans ?_
-    · simp only [Un.Uu, row_nU, enorm_mul]
+    · simp only [Un.Uu, row_nU, eNorm_mul]
       refine mul_le_mul_left ?_ _
       rw [← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hB _)
@@ -87,7 +87,7 @@ theorem UpperTheory.maximalCompact_integral_unipotent_norm_finite :
         (Units.continuous_val.comp continuous_fst).mul ((M.continuous_entry 1 j).comp continuous_snd))
     have h2 : Continuous fun p : IdeleGroup ℚ × G1 ℚ => ab p.1 ^ (2 : ℝ) :=
       (M.continuous_ab.comp continuous_fst).rpow_const fun _ => Or.inr (by norm_num)
-    exact h1.measurable.enorm.mul h2.measurable.ennreal_ofReal
+    exact h1.measurable.eNorm.mul h2.measurable.ennreal_ofReal
   have hI : ∫⁻ p, F p ∂M₀.ν ≤ C := by
     rw [Meas.ν, lintegral_prod_symm _ hF.aemeasurable]
     have hae : ∀ᵐ k ∂M₀.κ, k ∈ KK ℚ := by

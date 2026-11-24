@@ -658,7 +658,7 @@ theorem algHom_mem_fieldRange_of_pow_eq {L F E : Type*} [Field L] [Field F] [Fie
       rw [ha, map_zero, pow_eq_zero_iff (NeZero.ne n)] at hα
       rw [hα, map_zero]
       exact zero_mem _
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K n
     have hζ' : IsPrimitiveRoot (algebraMap K E ζ) n :=
       hζ.map_of_injective (algebraMap K E).injective
     have hx0' : algebraMap F E x ≠ 0 := (map_ne_zero _).2 hx0
@@ -742,7 +742,7 @@ theorem FirstInequality.secondInequalityRoots (hFI : FirstInequality.{u}) :
   have : Fact p.Prime := ⟨hp⟩
   have : NeZero p := ⟨hp.ne_zero⟩
 
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K p
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K p
   have hK : (primitiveRoots (finrank K L) K).Nonempty :=
     ⟨ζ, (mem_primitiveRoots finrank_pos).2 (hdeg ▸ hζ)⟩
   obtain ⟨α, ⟨a₀, ha₀⟩, hgen⟩ := exists_root_adjoin_eq_top_of_isCyclic K L hK

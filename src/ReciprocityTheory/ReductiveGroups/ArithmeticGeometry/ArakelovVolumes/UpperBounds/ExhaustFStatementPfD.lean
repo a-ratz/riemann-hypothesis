@@ -67,17 +67,17 @@ theorem cd_nM (τ : X.Ψ) (a b : Fin r) : ContDiff ℂ ∞ fun z : V (nd X) => n
   show ContDiff ℂ ∞ fun z : V (nd X) => nmat X z τ a b
   unfold nmat
   by_cases h : b < a
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     first
       | exact (EuclideanSpace.proj (𝕜 := ℂ) _).contDiff
       | fun_prop
       | exact ((EuclideanSpace.proj (𝕜 := ℂ) _).contDiff).congr fun z => rfl
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     exact contDiff_const
 
 theorem unipotentFrame_inv_eq_adjugate (z : V (nd X)) (τ : X.Ψ) : (n1 X z τ)⁻¹ = (n1 X z τ).adjugate := by
   have hdet : (n1 X z τ).det = 1 := by
-    rw [Matrix.det_of_lowerTriangular]
+    rw [det_of_isLowerTriangular]
     · simp [n1, nM_diag]
     · intro i j hij
       have hij' : i < j := OrderDual.toDual_lt_toDual.1 hij
@@ -98,9 +98,9 @@ private lemma cd_adj_lemma_2 {𝕜 : Type*} [NontriviallyNormedField 𝕜] [Norm
   simp only [Matrix.adjugate_apply]
   refine cd_det_lemma fun a b => ?_
   by_cases hab : a = j
-  · simp only [Matrix.updateRow_apply, hab, if_true]
+  · simp only [Matrix.updateRow_apply, hab, ite_true]
     exact contDiff_const
-  · simp only [Matrix.updateRow_apply, hab, if_false]
+  · simp only [Matrix.updateRow_apply, hab, ite_false]
     exact h a b
 
 theorem cd_Zt (τ : X.Ψ) (a : Fin X.p0) (m : Fin (r - X.p0)) :
@@ -175,7 +175,7 @@ theorem isOpen_OmF (x0 : Frame X.Ψ r) : IsOpen (OmF X x0) := by
   have hset : OmF X x0 = ⋂ τ : X.Ψ, ({z | (mat (cpt X x0 z) τ).det ≠ 0} ∩
       ⋂ i : Fin (r + 1), {z | 0 < psgn X.p0 i * (dmin X.Gm (cpt X x0 z) τ i).re}) := by
     ext z
-    simp only [OmF, Set.mem_setOf_eq, X.mem_dom_iff, Set.mem_iInter, Set.mem_inter_iff]
+    simp only [OmF, Set.mem_ofPred_eq, X.mem_dom_iff, Set.mem_iInter, Set.mem_inter_iff]
   rw [hset]
   refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
   · exact isOpen_ne_fun ((hdet τ).comp hc) continuous_const

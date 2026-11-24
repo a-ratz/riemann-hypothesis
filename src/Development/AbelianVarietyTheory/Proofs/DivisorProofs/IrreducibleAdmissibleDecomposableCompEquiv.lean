@@ -64,7 +64,7 @@ def subrepCompIso (ρ : Representation ℂ H' X) (φ : H ≃* H') :
 
 theorem isIrreducible_comp_mulEquiv (ρ : Representation ℂ H' X) (φ : H ≃* H') (h : ρ.IsIrreducible) :
     Representation.IsIrreducible (ρ.comp φ.toMonoidHom : Representation ℂ H X) := by
-  haveI : IsSimpleOrder (Subrepresentation ρ) := h
+  have : IsSimpleOrder (Subrepresentation ρ) := h
   exact (subrepCompIso ρ φ).isSimpleOrder
 
 theorem isAdmissible_comp_equiv [TopologicalSpace H] [TopologicalSpace H'] (ρ : Representation ℂ H' X) (Φ : H ≃ₜ* H')

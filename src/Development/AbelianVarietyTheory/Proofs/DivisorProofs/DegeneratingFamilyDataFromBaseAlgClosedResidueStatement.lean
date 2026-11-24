@@ -201,8 +201,8 @@ abbrev ptsModule {S : Scheme.{0}} (T : Over S) (B : Over S) [GrpObj B] [IsCommMo
 
 theorem exists_divided_linear : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] [IsNoetherianRing V], IsAdicComplete (maximalIdeal V) V → IsAlgClosed (ResidueField V) → ∀ (B : Over (Sp V)) [GrpObj B], IsAbelianScheme B → ∀ (O : Type) [CommRing O] [IsDomain O] [Module.Finite ℤ O] (a : OAct O B) (X : Type) [AddCommGroup X] [Module O X] [Module.Finite O X] [Module.Projective O X] (x : X → (𝟙_ (Over (Sp V)) ⟶ B)), (∀ y z, x (y + z) = x y * x z) → (∀ (o : O) y, x (o • y) = x y ≫ a.act o) → ∀ n : ℕ, IsUnit (n : V) → ∃ x' : X → (𝟙_ (Over (Sp V)) ⟶ B), (∀ y z, x' (y + z) = x' y * x' z) ∧ (∀ (o : O) y, x' (o • y) = x' y ≫ a.act o) ∧ ∀ y, x' (n • y) = x y := by
   intro V _ _ _ _ hc hk B _ hB O _ _ _ a X _ _ _ _ x hadd hsmul n hn
-  haveI := hB.comm
-  letI := ptsModule (𝟙_ (Over (Sp V))) B O a
+  have := hB.comm
+  let := ptsModule (𝟙_ (Over (Sp V))) B O a
   let g : X →ₗ[O] Additive (𝟙_ (Over (Sp V)) ⟶ B) :=
     { toFun := fun y => Additive.ofMul (x y)
       map_add' := fun y z => by rw [hadd]; rfl
@@ -488,7 +488,7 @@ theorem scalar_of_laws {R : Type} [CommRing R] [IsDomain R] {O : Type} [CommRing
     (hW' : @TraceFormTwistIso R _ _ O _ _ (GlobalTheory.PolDeg.rescale D g) inst oa' w0) :
     IsScalarForm O (fun a b => g (a + b) * (g a)⁻¹ * (g b)⁻¹) ∧
       ∀ y, g y = g (y + w0 • y) * (g y)⁻¹ * (g (w0 • y))⁻¹ := by
-  letI : Module O (GlobalTheory.PolDeg.rescale D g).X := inst
+  let : Module O (GlobalTheory.PolDeg.rescale D g).X := inst
   have hG := GlobalTheory.globalFns_holds
   let y : (TK R).left := IsLocalRing.closedPoint (FractionRing R)
   obtain ⟨I, hJ⟩ := GlobalTheory.DegPull.exists_good' D.P.isLB y
@@ -607,9 +607,9 @@ namespace GlobalTheory.YRatio
 
 theorem main : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {W V : Type} [CommRing W] [IsDomain W] [IsLocalRing W] [CommRing V] [IsDomain V] [IsLocalRing V] (θ₀ : W →+* V) (D₀ : DegPre W) [Module (𝓞 E) D₀.X] (o₀ : letI := H.starRing; D₀.OAct (𝓞 E)) (Q : DegPre V) [Module (𝓞 E) Q.X] (oQ : letI := H.starRing; Q.OAct (𝓞 E)) (e : Q.X ≃ₗ[𝓞 E] D₀.X) (β : Q.P.A.left ⟶ D₀.P.A.left), D₀.TauBimult → (∀ y, PsiUnitOn D₀ y Set.univ) → (letI := H.starRing; TraceFormTwistIso D₀ o₀ H.w0) → Q.TauBimult → (letI := H.starRing; TraceFormTwistIso Q oQ H.w0) → IsGrpPullback Q.P.A D₀.P.A (spMap θ₀) β → (letI := H.starRing; ∀ a : 𝓞 E, (oQ.onB.act a).left ≫ β = β ≫ (o₀.onB.act a).left) → LBIso Q.P.L (D₀.P.L.pull β) → (∀ y, (Q.c y).left ≫ β = spMap θ₀ ≫ (D₀.c (e y)).left) → ∃ (g : Q.X → (FractionRing V)ˣ) (hD : IsPullDeg θ₀ D₀ (GlobalTheory.PolDeg.rescale Q g)) (q : Q.X → Q.X → (FractionRing V)ˣ), (∀ y : Q.X, hD.xe y = e y) ∧ hD.e.hom.left ≫ pullback.fst D₀.P.A.hom (specOf θ₀) = β ∧ (∀ y, PsiUnitOn (GlobalTheory.PolDeg.rescale Q g) y Set.univ) ∧ (∀ a b, q a b = q b a) ∧ (∀ a a' b, q (a + a') b = q a b * q a' b) ∧ (∀ (x : 𝓞 E) a b, q (x • a) b = q a (H.bar x • b)) ∧ ∀ y, (g y)⁻¹ = q y (H.w0 • y) := by
   intro E _ _ _ H W V _ _ _ _ _ _ θ₀ D₀ _ o₀ Q _ oQ e β hB₀ hU hW₀ hBQ hWQ gp hact hL hc
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨g, hD, hxe, hβ, hWt⟩ := GlobalTheory.T.exists_rescale_isPullDeg_generating_everywhere θ₀ D₀ Q e.toAddEquiv β hU gp hL hc
-  letI : Module (𝓞 E) (GlobalTheory.PolDeg.rescale Q g).X := ‹Module (𝓞 E) Q.X›
+  let : Module (𝓞 E) (GlobalTheory.PolDeg.rescale Q g).X := ‹Module (𝓞 E) Q.X›
   obtain ⟨hB', o', ho', hW'⟩ := GlobalTheory.T.pullDeg_keeps_bimult_action_polarisationElement o₀ hD oQ.onB
     (fun a y => by rw [hxe, hxe]; exact e.map_smul a y) oQ.c_lin
     (fun a => by rw [hβ]; exact hact a) hB₀ H.w0 hW₀
@@ -724,7 +724,7 @@ theorem mem_of_diag {O : Type} [CommRing O] (bar : O → O) {w : O} (hw : w + ba
 
 theorem exists_unit_coords : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Type) [AddCommGroup X] [Module (𝓞 E) X] [Module.Free ℤ X] [Module.Finite ℤ X] (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], IsAdicComplete (maximalIdeal V) V → IsAlgClosed (ResidueField V) → ∀ n : ℕ, IsUnit (n : V) → ∀ (m N : ℕ) (ε : Module.Basis (Fin m ⊕ Fin N) ℤ (balForms H.bar X)) (t : Fin m → V), (∀ i, t i ≠ 0) → ∀ q : X → X → (FractionRing V)ˣ, (∀ a b, q a b = q b a) → (∀ a a' b, q (a + a') b = q a b * q a' b) → (∀ (x : 𝓞 E) a b, q (x • a) b = q a (H.bar x • b)) → (∀ y, ∃ u : Vˣ, (q y (H.w0 • y) : FractionRing V) = algebraMap V _ u * ∏ i, algebraMap V (FractionRing V) (t i) ^ ((n : ℤ) * (ε (.inl i) : LinearMap.BilinForm ℤ X) y (H.w0 • y))) → ∃ s : Fin m ⊕ Fin N → V, (∀ i, Associated (s (.inl i)) (t i)) ∧ (∀ j, IsUnit (s (.inr j))) ∧ ∀ a b, (q a b : FractionRing V) = ∏ k, algebraMap V (FractionRing V) (s k) ^ ((n : ℤ) * (ε k : LinearMap.BilinForm ℤ X) a b) := by
   intro E _ _ _ H X _ _ _ _ V _ _ _ hV hk n hn m N ε t ht q hs ha hb hd
-  letI : StarRing (𝓞 E) :=
+  let : StarRing (𝓞 E) :=
     { star := H.bar
       star_involutive := fun a => by
         apply Subtype.ext
@@ -848,9 +848,9 @@ theorem inv_eq_unit_mul {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] (D 
 
 theorem exists_divFrom : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → IsAlgClosed (ResidueField V) → ∀ (C : MonoFam Xo c φ V) (D' : Datum H) (L : LowBase D' c) (θ₀ : L.W →+* V) (e : C.P.D.toPre.X ≃ₗ[𝓞 E] L.D.X) (β : C.P.D.toPre.P.A.left ⟶ L.D.P.A.left), IsGrpPullback C.P.D.toPre.P.A L.D.P.A (spMap θ₀) β → (letI := H.starRing; ∀ a : 𝓞 E, (C.P.oD.onB.act a).left ≫ β = β ≫ (L.oa.onB.act a).left) → LBIso C.P.D.toPre.P.L (L.D.P.L.pull β) → (∀ y, (C.P.D.toPre.c y).left ≫ β = spMap θ₀ ≫ (L.D.c (l.M' • e y)).left) → ∀ (N : ℕ) (ε : Module.Basis (Fin C.m ⊕ Fin N) ℤ (balForms H.bar L.D.X)), (∀ i, C.δ i = pull e.toLinearMap (ε (.inl i) : LinearMap.BilinForm ℤ L.D.X)) → ∃ s : Fin C.m ⊕ Fin N → V, (∀ i, Associated (s (.inl i)) (C.s i)) ∧ (∀ j, IsUnit (s (.inr j))) ∧ DivFrom L C.P.D.toPre C.P.oD θ₀ s (fun k => (ε k : LinearMap.BilinForm ℤ L.D.X)) e := by
   intro E _ _ _ H Dw l Xo c φ V _ _ _ hV hk C D' L θ₀ e β hβ hact hL hc N ε hε
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨-, hbm, hgen, o₀, ho₀, hw₀⟩ := GlobalTheory.T.degenerationDataNsmulRescale_keeps_laws L.W L.D (𝓞 E) L.oa H.w0 l.M' L.even L.bimult L.w0 L.gen
-  letI : Module (𝓞 E) (mulDeg L.D l.M').X := L.mod
+  let : Module (𝓞 E) (mulDeg L.D l.M').X := L.mod
   obtain ⟨g, hD, q, hxe, hpr, hU, qs, qa, qb, hg⟩ := GlobalTheory.T.degData_differ_by_symmBalancedForm_of_psi_tau (H := H) θ₀ (mulDeg L.D l.M') o₀ C.P.D.toPre C.P.oD e β
     hbm hgen hw₀ C.P.D.tau_bimult C.P.w0 hβ (fun a => by rw [ho₀]; exact hact a) hL hc
   have hM : IsUnit ((l.M' : ℕ) : V) := by
@@ -1000,9 +1000,9 @@ theorem essFiniteType_preimage_fromSpecStalk (F : Type) [CommRing F] (X : Scheme
 
 theorem stalk_regular_essFiniteType_dim : ∀ (F : Type) [Field F] (Cs : Scheme.{0}) (g : Cs ⟶ Sp F) (n : ℕ), SmoothOfRelativeDimension n g → ∀ z : Cs, IsRegularLocalRing (Cs.presheaf.stalk z) ∧ ∃ b : F →+* Cs.presheaf.stalk z, Cs.fromSpecStalk z ≫ g = spMap b ∧ b.EssFiniteType ∧ (letI := ((residue (Cs.presheaf.stalk z)).comp b).toAlgebra; ∃ a t : ℕ, ringKrullDim (Cs.presheaf.stalk z) = a ∧ Algebra.trdeg F (ResidueField (Cs.presheaf.stalk z)) = t ∧ a + t = n) := by
   intro F _ Cs g n hsm z
-  haveI := hsm
-  haveI : Smooth g := SmoothOfRelativeDimension.smooth n g
-  haveI : IsRegularRing (CommRingCat.of F) := inferInstanceAs (IsRegularRing F)
+  have := hsm
+  have : Smooth g := SmoothOfRelativeDimension.smooth n g
+  have : IsRegularRing (CommRingCat.of F) := inferInstanceAs (IsRegularRing F)
   have hreg : ∀ x : Cs, IsRegularLocalRing (Cs.presheaf.stalk x) := fun x =>
     GroundTheory.Arith.SchemeCoh.isRegularLocalRing_stalk_of_smooth g x
   refine ⟨hreg z, (Spec.preimage (Cs.fromSpecStalk z ≫ g)).hom, ?_, essFiniteType_preimage_fromSpecStalk F Cs g z, ?_⟩
@@ -1136,7 +1136,7 @@ theorem of_homScheme (D' : Datum H) {l : Geo.Tor.Level H} (c : Coeff l) (X : Typ
   obtain ⟨v, m0, hvg, hvx⟩ := hex V bV o' x hx hxl
   obtain ⟨hreg, b, hqb, hft, hdim⟩ :=
     GlobalTheory.SmoothStalk.stalk_regular_essFiniteType_dim c.F Cs g N hsm (v (closedPoint V))
-  haveI : IsDomain (Cs.presheaf.stalk (v (closedPoint V))) := ReciprocityTheory.AnForm.R.isDomain_of_isRegularLocalRing
+  have : IsDomain (Cs.presheaf.stalk (v (closedPoint V))) := ReciprocityTheory.AnForm.R.isDomain_of_isRegularLocalRing
   obtain ⟨q, hq⟩ : ∃ q, q = Cs.fromSpecStalk (v (closedPoint V)) := ⟨_, rfl⟩
   rw [← hq] at hqb
   have hs : lowMap c b = q ≫ g ≫ lowMap c (RingHom.id c.F) := by
@@ -1317,7 +1317,7 @@ namespace GlobalTheory.TensorDualDim
 theorem finrank_dual_eq (O X : Type) [CommRing O] [IsDomain O] [AddCommGroup X] [Module O X]
     [Module.Finite O X] [Module.Projective O X] :
     Module.finrank O (Module.Dual O X) = Module.finrank O X := by
-  haveI : Module.FinitePresentation O X := Module.finitePresentation_of_projective O X
+  have : Module.FinitePresentation O X := Module.finitePresentation_of_projective O X
   let F := FractionRing O
   let f : X →ₗ[O] F ⊗[O] X := TensorProduct.mk O F X 1
   have h1 := IsLocalizedModule.finrank_eq (nonZeroDivisors O) f le_rfl
@@ -1448,7 +1448,7 @@ theorem exists_homObj_relDim (S : Scheme.{0}) (B : Over S) [GrpObj B] (hB : IsAb
       (∀ (o : O) x, u (o • x) = u x ≫ a.act o) ∧
       ∀ (T : Over S) (f : X → (T ⟶ B)), (∀ x y, f (x + y) = f x * f y) →
         (∀ (o : O) x, f (o • x) = f x ≫ a.act o) → ∃! c : T ⟶ C, ∀ x, c ≫ u x = f x := by
-  haveI := hB.comm
+  have := hB.comm
   obtain ⟨u, h1, h2, h3, h4⟩ := tensorObj_dual_represents B a X
   exact ⟨_, inferInstance, u, (isTensor (Module.Dual O X) a).isAbelianScheme hB,
     GlobalTheory.T.smoothOfRelativeDimension_tensorObj_dual_finrank_mul S B O a X g hg, h1, h2, h3, h4⟩
@@ -1531,8 +1531,8 @@ theorem homScheme_low : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
   obtain ⟨oY, ⟨mY⟩⟩ := P.1 Xo.s Xo.univ (pullback.fst Xo.s sF) (pullback.snd Xo.s sF ≫ sF) pullback.condition.symm
   have hB : IsAbelianScheme oY.t.G := ⟨inferInstance, oY.t.semi.smooth, oY.proper, oY.t.semi.geomConnected⟩
   have hg := GlobalTheory.T.smoothOfRelativeDimension_shimuraObject_abelianScheme D' (LowDat.lowLevel l) (pullback.snd Xo.s sF ≫ sF) oY
-  haveI : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ _ _
-  haveI : Module.Projective (𝓞 E) X := GlobalTheory.Forms.projective_of_int _ _
+  have : Module.Finite (𝓞 E) X := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : Module.Projective (𝓞 E) X := GlobalTheory.Forms.projective_of_int _ _
   obtain ⟨C, _, u, -, hCsm, -, hadd, hlin, huniv⟩ :=
     GlobalTheory.HomScheme.exists_homObj_relDim _ oY.t.G hB _ hg oY.t.act X
   obtain ⟨oC, ⟨mC⟩⟩ := P.1 (pullback.snd Xo.s sF ≫ sF) oY C.hom ((C.hom ≫ pullback.snd Xo.s sF) ≫ sF)
@@ -1563,11 +1563,11 @@ theorem homScheme_low : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
       _ = z y ≫ k₂'.toSABMap.φ := by rw [hφ]
       _ = v₂ ≫ (u y).left := by rw [hk₂', hk₂, ← Category.assoc, hz₂, Category.assoc, hu'l]
   refine ⟨C.left, C.hom ≫ pullback.snd Xo.s sF, oC, u', ?_, hu'add, hu'lin, ?_, ?_, ?_⟩
-  · haveI := smoothOfRelativeDimension_isStableUnderBaseChange (n := D'.dim)
-    haveI h1 : SmoothOfRelativeDimension D'.dim (pullback.snd Xo.s sF) :=
+  · have := smoothOfRelativeDimension_isStableUnderBaseChange (n := D'.dim)
+    have h1 : SmoothOfRelativeDimension D'.dim (pullback.snd Xo.s sF) :=
       MorphismProperty.IsStableUnderBaseChange.of_isPullback (P := @SmoothOfRelativeDimension D'.dim)
         (IsPullback.of_hasPullback Xo.s sF) Xo.smooth
-    haveI := hCsm
+    have := hCsm
     rw [add_comm]
     infer_instance
   · intro V _ _ bV o' x hxadd hxlin
@@ -1607,8 +1607,8 @@ theorem homScheme_low : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
     · simpa only [Category.assoc] using hv
   · intro k _ v s' o'' m₁ m₂ z hs' hz₁ hz₂
     refine key2 (DualNumber k) (IsNoetherianRing.isNilpotent_nilradical _) v (constPt v) s' o'' m₁ m₂ z ?_ hz₁ hz₂
-    haveI : FiniteDimensional ℚ c.F := c.fin
-    haveI : Algebra.IsAlgebraic ℚ c.F := Algebra.IsAlgebraic.of_finite ℚ c.F
+    have : FiniteDimensional ℚ c.F := c.fin
+    have : Algebra.IsAlgebraic ℚ c.F := Algebra.IsAlgebraic.of_finite ℚ c.F
     have hcp : ∀ {W : Scheme.{0}} (w : C.left ⟶ W), constPt v ≫ w = constPt (v ≫ w) := fun w => by simp [constPt]
     obtain ⟨k₁, -⟩ := (P.2 _ _ s' oY oC o'' C.hom v mC).1 m₁
     obtain ⟨K₁, -⟩ := (P.2 _ _ s' Xo.univ oY o'' (pullback.fst _ _) (v ≫ C.hom) mY).1 k₁
@@ -1689,13 +1689,13 @@ theorem lowBase_of_linearPoints : ∀ {E : Type} [Field E] [NumberField E] [IsCM
   intro E _ _ _ H D' l c V _ _ _ bV o' X _ _ _ _ x hadd hlin
   obtain ⟨W, _, _, _, b, o, x₀, θ₀, m, hft, hadd₀, hlin₀, hloc, hcomp, hx, ⟨fR, fE⟩, hdim⟩ :=
     GlobalTheory.T.exists_localRing_linearHomScheme_lowerObject D' c V bV o' X x hadd hlin
-  haveI : IsProper o.t.G.hom := o.proper
+  have : IsProper o.t.G.hom := o.proper
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim W o.t.G
     (ReciprocityTheory.ChartRestriction.G.Geo.Tor.AbelianSchemeGerms.isAbelianScheme_of_proper _ o.t.semi)
   obtain ⟨D, hmod, oa, φB, e, hev, hbi, hgen, hw0, hab, hc⟩ :=
     GlobalTheory.T.exists_generating_degenerationData_principalTriple W o.t o.proper o.ample o.ktriv ⟨g, hg⟩ X x₀ hadd₀ hlin₀
-  letI := hmod
-  haveI hiso : IsIso φB := hab.1.1.isIso_fst_of_isIso
+  let := hmod
+  have hiso : IsIso φB := hab.1.1.isIso_fst_of_isIso
   refine ⟨⟨W, b, hft, o, D, oa, hev, hbi, hgen, hw0, φB, hab, ?_, ?_, ?_⟩, θ₀, e, m, hloc, hcomp, ?_⟩
   · intro A _ _ f₁ f₂ hf o'' m₁ m₂ z h₁ h₂ hz
     refine fR A f₁ f₂ hf o'' m₁ m₂ (fun y => z (e y)) (fun y => ?_) (fun y => ?_) (fun y => hz (e y))
@@ -1748,14 +1748,14 @@ namespace GlobalTheory.VData
 
 theorem exists_divFrom : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base V → IsAlgClosed (ResidueField V) → ∀ (C : MonoFam Xo c φ V), Nontrivial C.P.D.toPre.X → ∃ (D' : Datum H) (L : LowBase D' c) (θ₀ : L.W →+* V) (N : ℕ) (ε : Module.Basis (Fin C.m ⊕ Fin N) ℤ (balForms H.bar L.D.X)) (e : C.P.D.toPre.X ≃ₗ[𝓞 E] L.D.X) (s : Fin C.m ⊕ Fin N → V), D'.p + Module.finrank (𝓞 E) C.P.D.toPre.X = Dw.p ∧ D'.q + Module.finrank (𝓞 E) C.P.D.toPre.X = Dw.q ∧ IsLocalHom θ₀ ∧ θ₀.comp L.b = C.b ∧ (∀ i, C.δ i = pull e.toLinearMap (ε (.inl i) : LinearMap.BilinForm ℤ L.D.X)) ∧ (∀ i, Associated (s (.inl i)) (C.s i)) ∧ (∀ j, IsUnit (s (.inr j))) ∧ DivFrom L C.P.D.toPre C.P.oD θ₀ s (fun k => (ε k : LinearMap.BilinForm ℤ L.D.X)) e := by
   intro E _ _ _ H Dw l Xo c φ V _ _ _ hV hk C hX
-  haveI : IsNoetherianRing V := hV.1.1
-  haveI : CharZero V := hV.2
-  haveI : Module.Projective (𝓞 E) C.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) _
-  haveI : Module.Finite (𝓞 E) C.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : IsNoetherianRing V := hV.1.1
+  have : CharZero V := hV.2
+  have : Module.Projective (𝓞 E) C.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) _
+  have : Module.Finite (𝓞 E) C.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
   have hr : 1 ≤ Module.finrank (𝓞 E) C.P.D.toPre.X := Module.finrank_pos
   obtain ⟨Z, D', f, o', φB, -, -, -, hp, hq, hpb, hact, hw, -⟩ := GlobalTheory.LowDat.exists_lower Xo c V hV C.toFam hr
   have hrk := C.rank
-  haveI : IsMonHom (Iso.refl C.P.D.toPre.P.A).hom := inferInstanceAs (IsMonHom (𝟙 _))
+  have : IsMonHom (Iso.refl C.P.D.toPre.P.A).hom := inferInstanceAs (IsMonHom (𝟙 _))
   obtain ⟨i, hi, hiφ⟩ := grpPullback_iso (isGrpPullback_of_iso (Iso.refl C.P.D.toPre.P.A)) hpb
   have hiφ' : i.hom.left ≫ φB = 𝟙 _ := hiφ
   have hia : ∀ a : 𝓞 E, (letI := H.starRing; C.P.oD.onB.act a) ≫ i.hom = i.hom ≫ o'.t.act.act a := by
@@ -1774,7 +1774,7 @@ theorem exists_divFrom : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     (fun y z => by
       rw [C.P.D.toPre.c_add, ← MonObj.mul_comp]; rfl)
     (fun a y => by
-      letI := H.starRing
+      let := H.starRing
       rw [C.P.oD.c_lin, Category.assoc, hia, Category.assoc]) l.M' hM
   obtain ⟨L, θ₀, e, m, hθ, hb, hc⟩ := GlobalTheory.T.lowerDatumObject_comes_from_base_of_linearPoints D' c V C.b o' C.P.D.toPre.X x' hx₁ hx₂
   obtain ⟨N, b, hbas⟩ := C.cone.basis

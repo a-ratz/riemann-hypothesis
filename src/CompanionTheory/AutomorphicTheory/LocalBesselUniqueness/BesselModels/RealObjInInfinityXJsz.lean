@@ -158,7 +158,7 @@ theorem locQuad1_G_holds (hI : CompanionTheory.Lime.BM.Inputs2) : LocQuad1_G := 
     (fun s hs => hlil s (sloc_sub_NH X w _ hs))
 
   have hsub : MeasurableEmbedding (Subtype.val : S → Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) :=
-    MeasurableEmbedding.subtype_coe hSc.measurableSet
+    MeasurableEmbedding.subtypeVal hSc.measurableSet
   obtain ⟨hli', hmap⟩ := Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.JL.HC.comap_inv S hSc (μS w) (by rw [hSset]; exact h0)
     (fun s hs => hli s hs)
   set μS' : Measure S := (μS w).comap Subtype.val with hμS'
@@ -167,7 +167,7 @@ theorem locQuad1_G_holds (hI : CompanionTheory.Lime.BM.Inputs2) : LocQuad1_G := 
   have : SigmaCompactSpace S := sigmaCompactSpace_of_locallyCompact_secondCountable
   have : IsFiniteMeasureOnCompacts μS' := ⟨fun K hK => by
     rw [hμS', hsub.comap_apply]
-    exact (hK.image continuous_subtype_val).measure_lt_top⟩
+    exact (hK.image continuous_subtypeVal).measure_lt_top⟩
   have hne' : μS' ≠ 0 := by
     intro h00
     apply hne

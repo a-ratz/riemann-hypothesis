@@ -147,18 +147,18 @@ theorem exists_sum_box (X : Type) [TopologicalSpace X] [LocallyCompactSpace X] [
     refine ⟨hσ.comp fun s => if s = x.1 ∧ x.1.Nonempty then c x.1 x.2 else 0, ?_⟩
     by_cases hx : x.1.Nonempty
     · obtain ⟨i, hi⟩ := hx
-      refine HasCompactSupport.intro (hUc i) fun a ha => if_neg fun hs => ha ?_
+      refine HasCompactSupport.intro (hUc i) fun a ha => ite_eq_right fun hs => ha ?_
       rw [← hs.1] at hi
       simpa [σ] using hi
-    · exact HasCompactSupport.intro isCompact_empty fun a _ => if_neg fun hs => hx hs.2
+    · exact HasCompactSupport.intro isCompact_empty fun a _ => ite_eq_right fun hs => hx hs.2
   · intro x
     refine ⟨hτ.comp fun s => if s = x.2 ∧ x.2.Nonempty then (1 : ℂ) else 0, ?_⟩
     by_cases hx : x.2.Nonempty
     · obtain ⟨i, hi⟩ := hx
-      refine HasCompactSupport.intro (hVc i) fun b hb => if_neg fun hs => hb ?_
+      refine HasCompactSupport.intro (hVc i) fun b hb => ite_eq_right fun hs => hb ?_
       rw [← hs.1] at hi
       simpa [τ] using hi
-    · exact HasCompactSupport.intro isCompact_empty fun b _ => if_neg fun hs => hx hs.2
+    · exact HasCompactSupport.intro isCompact_empty fun b _ => ite_eq_right fun hs => hx hs.2
   · funext z
     rw [Finset.sum_apply, hgh z]
     generalize z ∘ Sum.inl = a
@@ -169,10 +169,10 @@ theorem exists_sum_box (X : Type) [TopologicalSpace X] [LocallyCompactSpace X] [
         have ht : (τ b).Nonempty := hst.mono Finset.inter_subset_right
         have hmem := Finset.mem_inter.1 hst.choose_spec
         simp only [σ, τ, Finset.mem_filter, Finset.mem_univ, true_and] at hmem
-        have hc : c (σ a) (τ b) = h (hst.choose : (κ → X) × (κ' → X)) := dif_pos hst
-        simp only [true_and, hs, ht, and_self, if_true, hc, mul_one]
+        have hc : c (σ a) (τ b) = h (hst.choose : (κ → X) × (κ' → X)) := dite_eq_left hst
+        simp only [true_and, hs, ht, and_self, ite_true, hc, mul_one]
         exact hconst _ a hmem.1 b hmem.2
-      · have hc : c (σ a) (τ b) = 0 := dif_neg hst
+      · have hc : c (σ a) (τ b) = 0 := dite_eq_right hst
         simp only [hc, ite_self, zero_mul]
         by_contra hne
         obtain ⟨i, hi, hab⟩ := mem_iUnion₂.1 (hF (subset_tsupport h hne))
@@ -216,7 +216,7 @@ theorem GlobalTheory.norm_iteratedFDeriv_succ_le_sum_partial :
     apply ContinuousLinearMap.ext
     intro v
     have hv := b.sum_repr v
-    simp [L, ContinuousLinearMap.sum_apply]
+    simp [L, sum_apply]
 
     conv_lhs => rw [← hv, map_sum]
     refine Finset.sum_congr rfl (fun i _ => ?_)
@@ -326,7 +326,7 @@ theorem seminorm_slice_taylor_le (V : Type) [NormedAddCommGroup V] [NormedSpace 
     funext y'
     have hy : (Sum.elim x y' : κ ⊕ κ' → V) = inrL κ κ' y' + c := by
       rw [add_comm]; exact congrFun (elim_eq_add x) y'
-    simp only [SchwartzMap.sub_apply, sliceR_apply, Function.comp_apply, hG, ← hy,
+    simp only [sub_apply, sliceR_apply, Function.comp_apply, hG, ← hy,
       elim_add_padL, ha]
   have cGc : ContDiff ℝ ∞ (fun u => G (u + c)) := cG.comp (contDiff_id.add contDiff_const)
   have eit : iteratedFDeriv ℝ n ⇑(sliceR f (x + h) - sliceR f x - sliceR f1 x) y
@@ -494,14 +494,14 @@ theorem pd_padL_add (f : SchwartzMap (κ ⊕ κ' → V) ℂ) (h h' : κ → V) :
   have e : (padL (κ' := κ') (h + h') : κ ⊕ κ' → V) = padL h + padL h' := by
     funext i; cases i <;> simp [padL]
   ext z
-  rw [SchwartzMap.add_apply, pd_apply, pd_apply, pd_apply, e, map_add (f := _)]
+  rw [add_apply, pd_apply, pd_apply, pd_apply, e, map_add (f := _)]
 
 theorem pd_padL_smul (f : SchwartzMap (κ ⊕ κ' → V) ℂ) (c : ℝ) (h : κ → V) :
     pd (padL (κ' := κ') (c • h)) f = (c : ℂ) • pd (padL h) f := by
   have e : (padL (κ' := κ') (c • h) : κ ⊕ κ' → V) = c • padL h := by
     funext i; cases i <;> simp [padL]
   ext z
-  rw [SchwartzMap.smul_apply, pd_apply, pd_apply, e, map_smul, Complex.real_smul, smul_eq_mul]
+  rw [smul_apply, pd_apply, pd_apply, e, map_smul, Complex.real_smul, smul_eq_mul]
 
 def xPartL (P : SchwartzMap (κ' → V) ℂ →L[ℂ] SchwartzMap (κ₁' → V) ℂ) (f : SchwartzMap (κ ⊕ κ' → V) ℂ)
     (x : κ → V) (y : κ₁' → V) : (κ → V) →ₗ[ℝ] ℂ where
@@ -540,7 +540,7 @@ theorem hasFDerivAt_sliceR_apply (P : SchwartzMap (κ' → V) ℂ →L[ℂ] Schw
     intro h
     set D := sliceR f (x + h) - sliceR f x - sliceR (pd (padL (κ' := κ') h) f) x
     have e : P (sliceR f (x + h)) y - P (sliceR f x) y - xPart P f x y h = P D y := by
-      simp only [D, xPart_apply, map_sub, SchwartzMap.sub_apply]
+      simp only [D, xPart_apply, map_sub, sub_apply]
     rw [e]
     have h1 : ‖P D y‖ ≤ ({((0 : ℕ), (0 : ℕ))} : Finset (ℕ × ℕ)).sup (schwartzSeminormFamily ℂ (κ₁' → V) ℂ) (P D) := by
       simpa [schwartzSeminormFamily] using SchwartzMap.norm_le_seminorm ℂ (P D) y
@@ -824,9 +824,9 @@ theorem GlobalTheory.SliceOp.exists_tensor_clm : ∀ (V : Type) [NormedAddCommGr
   intro V _ _ _ κ κ' κ₁' _ _ _ P
   refine ⟨SchwartzMap.mkCLM (σ := RingHom.id ℂ) (fun f => qOp P f) ?_ ?_ ?_ ?_, fun f s => rfl⟩
   · intro f g s
-    simp only [qOp, ← sliceRL_apply, map_add (f := _), SchwartzMap.add_apply]
+    simp only [qOp, ← sliceRL_apply, map_add (f := _), add_apply]
   · intro a f s
-    simp only [qOp, ← sliceRL_apply, map_smul, SchwartzMap.smul_apply, RingHom.id_apply]
+    simp only [qOp, ← sliceRL_apply, map_smul, smul_apply, RingHom.id_apply]
   · intro f; exact contDiff_qOp P f
   · rintro ⟨k, n⟩; exact decay_qOp n P k
 end -- clump:auto
@@ -876,8 +876,8 @@ theorem td_adic {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (�
 
 theorem totallyDisconnected_finiteAdele : ∀ (F : Type) [Field F] [NumberField F], TotallyDisconnectedSpace (FiniteAdeleRing (𝓞 F) F) := by
   intro F _ _
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), TotallyDisconnectedSpace (v.adicCompletion F) := fun v => td_adic v
-  haveI : TotallyDisconnectedSpace (Πʳ v : HeightOneSpectrum (𝓞 F), [v.adicCompletion F, v.adicCompletionIntegers F]) :=
+  have : ∀ v : HeightOneSpectrum (𝓞 F), TotallyDisconnectedSpace (v.adicCompletion F) := fun v => td_adic v
+  have : TotallyDisconnectedSpace (Πʳ v : HeightOneSpectrum (𝓞 F), [v.adicCompletion F, v.adicCompletionIntegers F]) :=
     td_of_inj (fun x v => x v) (continuous_pi fun v => RestrictedProduct.continuous_eval v)
       fun x y h => Subtype.ext (funext fun v => congrFun h v)
   exact inferInstanceAs (TotallyDisconnectedSpace (Πʳ v : HeightOneSpectrum (𝓞 F), [v.adicCompletion F, v.adicCompletionIntegers F]))
@@ -890,9 +890,9 @@ theorem pureA_sum (F : Type) [Field F] [NumberField F] {κ ι : Type} [Fintype �
 theorem isTame_partR : ∀ (F : Type) [Field F] [NumberField F] (κ κ' κ₁' : Type) [Fintype κ] [Fintype κ'] [Fintype κ₁']
     (T : ((κ' → AF F) → ℂ) →ₗ[ℂ] ((κ₁' → AF F) → ℂ)), IsTame F T → IsTame F (partR (κ := κ) T) := by
   intro F _ _ κ κ' κ₁' _ _ _ T hT g hg
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele (F := F)
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField (F := F)
-  haveI := totallyDisconnected_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele (F := F)
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField (F := F)
+  have := totallyDisconnected_finiteAdele F
   obtain ⟨ι₀, _, g₁, g₂, hg₁, hg₂, rfl⟩ := _root_.GlobalTheory.SBProd.exists_sum_box _ κ κ' g hg
   choose ι inst P g' hg' hP using fun i => hT (g₂ i) (hg₂ i)
   choose Q hQ using fun (p : Σ i, ι i) => _root_.GlobalTheory.SliceOp.exists_tensor_clm (mixedEmbedding.mixedSpace F) κ κ' κ₁' (P p.1 p.2)

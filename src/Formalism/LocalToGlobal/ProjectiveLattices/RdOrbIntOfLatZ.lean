@@ -189,7 +189,7 @@ theorem zAct_mem_dom (X : Data E r) (cu : CuspFD X ρ) (hb : ∀ k, IsSkew (zBas
     (t : Fin (nZ X ρ) → ℝ) (x : Frame X.Ψ r) (hx : x ∈ X.dom) : zAct X cu t x ∈ X.dom := by
   unfold zAct ReciprocityTheory.ChartRestriction.G.FD.Data.dom at *
   unfold GG at *
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   intro τ
   obtain ⟨hdet, hpos⟩ := hx τ
   unfold dmin mat at *

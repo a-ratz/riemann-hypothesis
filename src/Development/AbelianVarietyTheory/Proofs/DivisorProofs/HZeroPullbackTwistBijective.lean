@@ -108,7 +108,7 @@ theorem sec_eq_nsmul (X : Scheme.{0}) [Nonempty X] (hX : ∀ s : Set X, IsClopen
     intro c
     rw [isOpen_iff_forall_mem_open]
     rintro x ⟨V, g, hV, hg, hx, hP⟩
-    haveI := hg
+    have := hg
     refine ⟨Set.range g, ?_, g.isOpenMap.isOpen_range, hx⟩
     rintro _ ⟨v, rfl⟩
     exact ⟨V, g, hV, hg, ⟨v, rfl⟩, hP⟩
@@ -121,7 +121,7 @@ theorem sec_eq_nsmul (X : Scheme.{0}) [Nonempty X] (hX : ∀ s : Set X, IsClopen
   have hdisj : ∀ c d x, x ∈ S c → x ∈ S d → c = d := by
     rintro c d x ⟨V, g, -, -, ⟨v, rfl⟩, hP⟩ ⟨V', g', -, -, ⟨v', hv'⟩, hP'⟩
     obtain ⟨z, -, -⟩ := Scheme.Pullback.exists_preimage_pullback (f := g) (g := g') v v' hv'.symm
-    haveI : Nonempty ↥(Limits.pullback g g') := ⟨z⟩
+    have : Nonempty ↥(Limits.pullback g g') := ⟨z⟩
     have h1 := hstab _ _ _ g (pullback.fst g g') hP
     have h2 := hstab _ _ _ g' (pullback.snd g g') hP'
     simp only [P] at h1 h2
@@ -178,11 +178,11 @@ theorem GlobalTheory.EtC.h_zero_pull_bijective : ∀ (q : ℕ) [NeZero q] (A A' 
     (∀ e : A, IsIdempotentElem e → e = 0 ∨ e = 1) → (∀ e : A', IsIdempotentElem e → e = 0 ∨ e = 1) →
     ∀ i : ℤ, Function.Bijective (pull _ (spMap f) (tw q i) 0) := by
   intro q _ A A' _ _ f hq ⟨ζ0, hζ0⟩ hA' hidA hidA' i
-  haveI : Nontrivial A := f.domain_nontrivial
+  have : Nontrivial A := f.domain_nontrivial
   obtain ⟨-, e, he, -⟩ := _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero (ZMod q) (tw q i)
   let g : Spec (CommRingCat.of A') ⟶ Spec (CommRingCat.of A) := Spec.map (CommRingCat.ofHom f)
-  haveI : Nonempty (Spec (CommRingCat.of A)) := inferInstance
-  haveI : Nonempty (Spec (CommRingCat.of A')) := inferInstance
+  have : Nonempty (Spec (CommRingCat.of A)) := inferInstance
+  have : Nonempty (Spec (CommRingCat.of A')) := inferInstance
   let ζ : Prim q Γ(Spec (CommRingCat.of A), ⊤) :=
     Prim.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom ⟨ζ0, hq, hζ0⟩
   have hres : Function.Bijective (Sec.res (F := tw q i) g) := by

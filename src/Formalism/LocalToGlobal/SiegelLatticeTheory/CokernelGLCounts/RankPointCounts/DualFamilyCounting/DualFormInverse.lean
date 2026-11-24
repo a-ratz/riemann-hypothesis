@@ -170,9 +170,9 @@ theorem family_dual_holds : FamDual := by
   have hGr : ∀ j, glueFam K 𝔭 b a π w τ (Sum.inr j) = w j := fun j => rfl
   have hGl : ∀ i, vF 𝔭 (a i) ≠ 0 → glueFam K 𝔭 b a π w τ (Sum.inl i) =
       (algebraMap F K (π : F))⁻¹ ^ vF 𝔭 (a i) • (b i + w (τ i)) := fun i hi => by
-    simp only [glueFam, Sum.elim_inl, if_neg hi]
+    simp only [glueFam, Sum.elim_inl, ite_eq_right hi]
   have hGl0 : ∀ i, vF 𝔭 (a i) = 0 → glueFam K 𝔭 b a π w τ (Sum.inl i) = b i := fun i hi => by
-    simp only [glueFam, Sum.elim_inl, if_pos hi]
+    simp only [glueFam, Sum.elim_inl, ite_eq_left hi]
   have key_ii : ∀ i, h (b i + w (τ i)) (b i + w (τ i)) =
       algebraMap F K ((a i : 𝓞 F) : F) + algebraMap F K (c (τ i)) := by
     intro i
@@ -246,13 +246,13 @@ theorem family_dual_holds : FamDual := by
     rw [hκ s]
     by_cases h1 : s = Sum.inl i
     · subst h1
-      rw [if_pos rfl, hgg i hi, hgw i hi]
+      rw [ite_eq_left rfl, hgg i hi, hgw i hi]
       linear_combination e1
     · by_cases h2 : s = Sum.inr (τ i)
       · subst h2
-        rw [if_neg h1, if_pos rfl, hwg i hi, hww]
+        rw [ite_eq_right h1, ite_eq_left rfl, hwg i hi, hww]
         linear_combination e2
-      · rw [if_neg h1, if_neg h2, (hoff i hi s h1 h2).1, (hoff i hi s h1 h2).2]
+      · rw [ite_eq_right h1, ite_eq_right h2, (hoff i hi s h1 h2).1, (hoff i hi s h1 h2).2]
         ring
   refine dualF_le_of_inv hs hnd _ hTop ?_
   intro u
@@ -267,8 +267,8 @@ theorem family_dual_holds : FamDual := by
       rw [hκ s]
       by_cases h1 : s = Sum.inl i
       · subst h1
-        rw [if_pos rfl, hdiag0 i hi, inv_mul_cancel₀ (hA0 i)]
-      · rw [if_neg h1, hoff0 i hi s h1, mul_zero]
+        rw [ite_eq_left rfl, hdiag0 i hi, inv_mul_cancel₀ (hA0 i)]
+      · rw [ite_eq_right h1, hoff0 i hi s h1, mul_zero]
     · obtain ⟨κ, hκS, hκ⟩ := hpair i hi 1 0 (SP K 𝔭).one_mem (SP K 𝔭).zero_mem
       refine ⟨κ, hκS, fun s => ?_⟩
       rw [hκ s]
@@ -289,8 +289,8 @@ theorem family_dual_holds : FamDual := by
       rw [hκ s]
       by_cases h1 : s = Sum.inr j
       · subst h1
-        rw [if_pos rfl, hww, inv_mul_cancel₀ (hC0 j)]
-      · rw [if_neg h1, hoffw j hj s h1, mul_zero]
+        rw [ite_eq_left rfl, hww, inv_mul_cancel₀ (hC0 j)]
+      · rw [ite_eq_right h1, hoffw j hj s h1, mul_zero]
 
 end Formalism.L2.SG.Pf.Cnt
 end -- clump:auto

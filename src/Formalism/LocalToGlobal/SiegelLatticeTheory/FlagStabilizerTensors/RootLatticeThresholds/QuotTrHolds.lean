@@ -112,7 +112,7 @@ theorem quotTr_holds (u u' : D.what₂.Word) (τ : D.what₂.Tau) : QuotTr C u u
   intro f hf
   show ∫⁻ x, f x ∂((Formalism.REAL.muG (X.B.I.ε (vOf X τ))).map F) = _
   rw [lintegral_map hf hFm]
-  haveI : SigmaFinite μRv := hσ
+  have : SigmaFinite μRv := hσ
   have hfm2 : Measurable fun p : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS × Formalism.QuantumDeterminants.Mt D.R.k D.R.rS =>
       f (fun i j => (Matrix.of p.2 * Matrix.of p.1) i j) := by
     refine hf.comp ?_

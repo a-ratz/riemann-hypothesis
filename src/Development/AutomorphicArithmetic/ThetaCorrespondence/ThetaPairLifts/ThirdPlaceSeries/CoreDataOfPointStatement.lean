@@ -484,7 +484,7 @@ theorem exists_places (D : D7) (T : ℕ) (hT : T ≠ 0) : ∃ s : Finset (Global
   have h0 : Ideal.span {((T : ℕ) : 𝓞 D.host.F)} ≠ 0 := by
     simpa [Ideal.span_singleton_eq_bot] using hT
   refine ⟨(Ideal.finite_factors h0).toFinset, fun p => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
 
 end Transport
 
@@ -549,7 +549,7 @@ theorem core (hD : GlobalTheory.Published.DiscreteSeriesCover) (hH : GlobalTheor
       (∀ PP h, PP ∉ (pk W).Pg → bas PP h = fun _ _ _ => 1) ∧
       ∀ PP : (pk W).Pg, bas PP.1 (Or.inl PP.2) = fun j c hc => ((S PP).T (Fin D.R.t)).bas j c hc :=
     ⟨fun PP h => if hp : PP ∈ (pk W).Pg then fun j c hc => ((S ⟨PP, hp⟩).T (Fin D.R.t)).bas j c hc else fun _ _ _ => 1,
-      fun PP h hp => dif_neg hp, fun PP => dif_pos PP.2⟩
+      fun PP h hp => dite_eq_right hp, fun PP => dite_eq_left PP.2⟩
   obtain ⟨N, b, dT, M, β₀, hsh, hb, hN, hY⟩ := GlobalTheory.T.local_component_vector_relation W u hPk a y m _ k ι v₀ o l bas hc₀ hτ hn rfl rfl hζ hsd hgP htP hP
     (fun n h x hx => horth n h x fun h' => hx ((htP x).2 h')) fun PP h hp j c hc => by rw [hb1 PP h hp]
   have hm := meas_upd hm₀ b
@@ -1148,7 +1148,7 @@ theorem exists_symData_symRead : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies 
     · split_ifs with h
       · exact tame_step (_root_.GlobalTheory.Fam.pk_z W).toLevCh hlev (l PP).q PP.2 (l PP).idem h.1 h.2 (hμ j)
       · exact fun _ _ => rfl
-    · simp only [if_pos (And.intro h1 h2)]
+    · simp only [ite_eq_left (And.intro h1 h2)]
       exact hμ j
   choose S h1 h2 h3 using loc
   refine ⟨S, h1, h2, fun x => (hH x).trans ?_, fun x hx y hxy => ?_⟩
@@ -1419,7 +1419,7 @@ theorem measures_common_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} 
   intro D L hT Gi Gl Kc Yd cX ex W u hP a y b _
   have hM : (_root_.GlobalTheory.Fam.pk_z W).IsModels := hP.bot.hyp.2.2.2.1.models
   have hm2 := D.R.two_le_m
-  haveI : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V =>
+  have : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V =>
     (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
   have hf : ∀ j, ∃ μ : Measure (GfC (Yc D j)), μ.IsHaarMeasure := fun j =>
     (GlobalTheory.T.exists_haar_finitePoints_fourierJacobi_bessel D (Yc D j)).1
@@ -1455,28 +1455,28 @@ theorem measures_common_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} 
   let vS : ∀ j, Vol (Yc D (j + 1)) := fun j => if h : j + 2 * 0 + 2 = D.R.m then volOf _ (hLH j h)
     else volOf (ν₀ (j + 1)) (hν₀H (j + 1))
   have hvS1 : ∀ j (h : j + 2 * 0 + 2 = D.R.m), (vS j).μ = Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ := by
-    intro j h; simp only [vS, dif_pos h, volOf_μ]
+    intro j h; simp only [vS, dite_eq_left h, volOf_μ]
   have hvS2 : ∀ j, ¬ (j + 2 * 0 + 2 = D.R.m) → (vS j).μ = ν₀ (j + 1) := by
-    intro j h; simp only [vS, dif_neg h, volOf_μ]
+    intro j h; simp only [vS, dite_eq_right h, volOf_μ]
   let vol : ∀ k, Vol (Yc D k) := fun k => Nat.casesOn (motive := fun k => Vol (Yc D k)) k (volOf (ν₀ 0) (hν₀H 0)) vS
   let κ : ℕ → ℝ := fun k => Nat.casesOn (motive := fun _ => ℝ) k 1 fun j => if h : j + 2 * 0 + 2 = D.R.m then
     ((Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ).haarScalarFactor (ν₀ (j + 1)) : ℝ) else 1
   have hκ1 : ∀ j (h : j + 2 * 0 + 2 = D.R.m), κ (j + 1) =
       ((Measure.map (y.jac j 0 h).d.emb0 (a.x (j + 1)).vol.μ).haarScalarFactor (ν₀ (j + 1)) : ℝ) := by
-    intro j h; simp only [κ, dif_pos h]
+    intro j h; simp only [κ, dite_eq_left h]
   have hκ2 : ∀ k, k + 1 ≠ D.R.m → κ k = 1 := by
     intro k hk
     cases k with
     | zero => rfl
-    | succ j => simp only [κ, dif_neg (show ¬ (j + 2 * 0 + 2 = D.R.m) by omega)]
+    | succ j => simp only [κ, dite_eq_right (show ¬ (j + 2 * 0 + 2 = D.R.m) by omega)]
   have hκpos : ∀ k, 0 < κ k := by
     intro k
     by_cases hk : k + 1 = D.R.m
     · obtain ⟨j, rfl⟩ : ∃ j, k = j + 1 := ⟨k - 1, by omega⟩
       have h : j + 2 * 0 + 2 = D.R.m := by omega
       rw [hκ1 j h]
-      haveI := hLH j h
-      haveI := hν₀H (j + 1)
+      have := hLH j h
+      have := hν₀H (j + 1)
       exact_mod_cast Measure.haarScalarFactor_pos_of_isHaarMeasure _ _
     · rw [hκ2 k hk]; exact one_pos
   have hset : ∀ k (β : GL (Fin (Yc D k).rank) (Lev.EAf D)) (Ld : Formalism.L2.DIV.LevDat D.host.E ℂ (Yc D k).rank),
@@ -1487,7 +1487,7 @@ theorem measures_common_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} 
   · intro t j hj
     have hX := hν₀ (j + 1) hj t
     show (vS j).μ = _
-    rw [GlobalTheory.Fam.volLev, if_pos hj]
+    rw [GlobalTheory.Fam.volLev, ite_eq_left hj]
     change (vS j).μ = ENNReal.ofReal (κ (j + 1) * (μf (j + 1) {g | g.1 ∈ levS _ ((_root_.GlobalTheory.Fam.pk_z W).βY (j + 1))
       ((_root_.GlobalTheory.Fam.pk_z W).datYt t (j + 1) (_root_.GlobalTheory.Fam.pk_z W).triv)}).toReal) • (_root_.GlobalTheory.Fam.pk_z W).νY t (j + 1)
     rw [hset]
@@ -1496,18 +1496,18 @@ theorem measures_common_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} 
       ((_root_.GlobalTheory.Fam.pk_z W).datYt t (j + 1) (_root_.GlobalTheory.Fam.pk_z W).triv)} = X at hX0 hXT hXe ⊢
     by_cases hL : j + 2 * 0 + 2 = D.R.m
     · rw [hvS1 j hL, hκ1 j hL]
-      haveI := hLH j hL
-      haveI := hν₀H (j + 1)
+      have := hLH j hL
+      have := hν₀H (j + 1)
       have e := Measure.isMulLeftInvariant_eq_smul (Measure.map (y.jac j 0 hL).d.emb0 (a.x (j + 1)).vol.μ) (ν₀ (j + 1))
       generalize (Measure.map (y.jac j 0 hL).d.emb0 (a.x (j + 1)).vol.μ).haarScalarFactor (ν₀ (j + 1)) = c at e ⊢
       rw [e, ← hXe, ENNReal.ofReal_mul c.coe_nonneg, ENNReal.ofReal_coe_nnreal, ENNReal.ofReal_toReal hXT, mul_smul]
       ext s _
-      simp only [Measure.smul_apply, smul_eq_mul, ENNReal.smul_def]
+      simp only [smul_apply, smul_eq_mul, ENNReal.smul_def]
     · rw [hvS2 j hL, hκ2 (j + 1) (by omega), one_mul, ENNReal.ofReal_toReal hXT, hXe]
   · intro t
     obtain ⟨hX0, hXT, hXe⟩ := hν₀T t
     show ν₀T = _
-    rw [GlobalTheory.Fam.volLev, if_neg (by omega)]
+    rw [GlobalTheory.Fam.volLev, ite_eq_right (by omega)]
     change ν₀T = ENNReal.ofReal (κ D.R.m * (μT {k | k.1 ∈ levS _ (_root_.GlobalTheory.Fam.pk_z W).βX ((_root_.GlobalTheory.Fam.pk_z W).datXt t)}).toReal) • (_root_.GlobalTheory.Fam.pk_z W).νX t
     rw [hκ2 D.R.m (by omega), one_mul]
     have hs : {g : GfC D.sp.X' | g.1 ∈ levS _ (_root_.GlobalTheory.Fam.pk_z W).βX ((_root_.GlobalTheory.Fam.pk_z W).datXt t)} =

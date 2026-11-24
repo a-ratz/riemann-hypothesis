@@ -109,7 +109,7 @@ theorem _root_.GlobalTheory.AdicColimit.isAdicColimit_spec_of_isLocalRing (R : T
           Category.assoc, hthick, ← Category.assoc, hs_snd, hq]
     show _root_.GlobalTheory.adicLevelMap (I.map φ) _ ≫ s (n + 1) ≫ f (n + 1) = s n ≫ f n
     rw [← Category.assoc, hmap, Category.assoc, hf]
-  haveI := hA
+  have := hA
   obtain ⟨g, hg, hgu⟩ := _root_.GlobalTheory.existsUnique_of_isAdicFamily hfam
   have key : ∀ y : Spec (CommRingCat.of A) ⟶ X,
       (∀ e, _root_.GlobalTheory.AdicColimit.thickι I e (Over.mk (Spec.map (CommRingCat.ofHom φ))) ≫ y = f e) ↔

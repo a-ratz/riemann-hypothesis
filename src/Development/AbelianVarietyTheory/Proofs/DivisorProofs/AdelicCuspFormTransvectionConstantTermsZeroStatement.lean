@@ -124,7 +124,7 @@ theorem exists_mean_zero (X : Data E r) (la : Wt X.Ψ r) {P : Frame X.Ψ r → �
   obtain ⟨-, -, h1, h2⟩ := hex.choose_spec
   refine ⟨hex.choose, h1, h2, fun x hx => ?_⟩
   have h := hP.2 ξ hξ x hx
-  rw [Data.fj, if_pos (fun p _ => ⟨0, by simp⟩), dite_eq_left hex] at h
+  rw [Data.fj, ite_eq_left (fun p _ => ⟨0, by simp⟩), dite_eq_left hex] at h
   simp only [Pi.zero_apply, Complex.ofReal_zero, zero_mul, Finset.sum_const_zero, mul_zero, Complex.exp_zero, mul_one] at h
   refine (mul_eq_zero.1 h).resolve_left (inv_ne_zero ?_)
   exact_mod_cast (ENNReal.toReal_pos h1.ne' h2.ne).ne'
@@ -270,7 +270,7 @@ theorem zCusp_adel : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau
     Function.Injective.countable (f := fun a => (⟨a.1.1, a.2⟩ : GQ V)) fun a b h =>
       Subtype.ext (Subtype.ext (congrArg (fun y : GQ V => (y : GA D V)) h))
   refine setIntegral_eq_zero_of_means hcomm _ μ 𝓕 h𝓕 (hfin μ 𝓕 hμ h𝓕).2 (fun z => φ ((z : GA D V) * g))
-    (hcont.comp (continuous_subtype_val.mul continuous_const)) C (fun z => hC _) (fun a ha z => ?_) u hu B hB0 hBt fun z => ?_
+    (hcont.comp (continuous_subtypeVal.mul continuous_const)) C (fun z => hC _) (fun a ha z => ?_) u hu B hB0 hBt fun z => ?_
   · change φ ((a : GA D V) * z * g) = _
     rw [mul_assoc]
     exact hleft _ ha _

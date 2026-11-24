@@ -83,7 +83,7 @@ theorem exists_char_sep {G : Type} [AddCommGroup G] (L : AddSubgroup G) [Finite 
 theorem eq_top_of_sep {G : Type} [AddCommGroup G] [Finite G] (K : AddSubgroup (AddChar G ℂ))
     (h : ∀ g, (∀ χ ∈ K, χ g = 1) → g = 0) : K = ⊤ := by
   by_contra hK
-  obtain ⟨φ, -, hφ⟩ := SetLike.exists_of_lt (lt_top_iff_ne_top.2 hK)
+  obtain ⟨φ, -, hφ⟩ := IsConcreteLE.exists_of_lt (lt_top_iff_ne_top.2 hK)
   obtain ⟨Φ, hΦK, hΦ⟩ := exists_char_sep K hφ
   obtain ⟨g, rfl⟩ := (AddChar.doubleDualEmb_bijective (α := G)).2 Φ
   have hg : g = 0 := h g (fun χ hχ => by simpa using hΦK χ hχ)
@@ -116,8 +116,8 @@ theorem exists_dual_sep {G : Type} [AddCommGroup G] {χ : G → G → ℂ} (h : 
     show M • M • (v' - v) = M • (-(u : G) + (u' : G))
     rw [smul_add, smul_neg, e, e', ← mul_smul, smul_sub]
     abel
-  haveI : Finite (W ⧸ N) := by
-    haveI : Finite R := hRf.to_subtype
+  have : Finite (W ⧸ N) := by
+    have : Finite R := hRf.to_subtype
     let g : R → W ⧸ N := fun r =>
       if h : ∃ u : W, ∃ v ∈ L₀, M • (u : G) = (r : G) + (M * M) • v then QuotientAddGroup.mk h.choose else 0
     refine Finite.of_surjective g fun q => ?_
@@ -207,7 +207,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem isLattice_of_isFrame {β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)} {Λ : Submodule (𝓞 E) (Fin n → E)}
     (hβ : IsFrame β Λ) : Submodule.IsLattice E Λ := by
   classical
-  letI : StarRing E := starRingOfComm
+  let : StarRing E := starRingOfComm
   set ι : E →+* E ⊗[F] Formalism.L2.Herm.Af F := Formalism.UG.inclE (F := F) (Formalism.L2.Herm.Af F) with hι
 
   have hspan : ∀ M : Submodule (𝓞 E) (Fin n → E), Formalism.L2.Herm.hatL (F := F) M =
@@ -345,9 +345,9 @@ theorem halfInd_dualLat (hc : a * cA D a = 0) : halfInd a (dualLat ψ a Λ) = ha
   by_cases ht : IsHalf a t
   · have e := mem_dualLat_half (ψ := ψ) (Λ := Λ) hc ht
     by_cases h : t ∈ Λ
-    · rw [if_pos ⟨e.2 h, ht⟩, if_pos ⟨h, ht⟩]
-    · rw [if_neg (fun h' => h (e.1 h'.1)), if_neg (fun h' => h h'.1)]
-  · rw [if_neg (fun h' => ht h'.2), if_neg (fun h' => ht h'.2)]
+    · rw [ite_eq_left ⟨e.2 h, ht⟩, ite_eq_left ⟨h, ht⟩]
+    · rw [ite_eq_right (fun h' => h (e.1 h'.1)), ite_eq_right (fun h' => h h'.1)]
+  · rw [ite_eq_right (fun h' => ht h'.2), ite_eq_right (fun h' => ht h'.2)]
 
 theorem isPlaceModel_dualLat (hc : a * cA D a = 0) {f₀ : WO S T → ℂ} {Tm : (WO S T → ℂ) →ₗ[ℂ] (WO S T → ℂ)}
     (h : IsPlaceModel ψ (symplO S T) (heisO ψ S T) a Λ 1 f₀ Tm) :

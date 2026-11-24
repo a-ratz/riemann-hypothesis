@@ -134,7 +134,7 @@ theorem spMap_subtype_comp_inclusion {R : Type} [CommRing R] {R₁ R₂ : Subrin
 
 theorem pullbackTriple_of_le : ∀ (R : Type) [CommRing R] (R₁ R₂ : Subring R) (h : R₁ ≤ R₂) (g M : ℕ) (A : Over (Sp R)) [GrpObj A] (P : LB (A ⊗ A).left) (lv : Std g M → (𝟙_ (Over (Sp R)) ⟶ A)) (A₁ : Over (Sp R₁)) [GrpObj A₁] (P₁ : LB (A₁ ⊗ A₁).left) (lv₁ : Std g M → (𝟙_ (Over (Sp R₁)) ⟶ A₁)), IsAbelianScheme A₁ → SmoothOfRelativeDimension g A₁.hom → P.IsLB → P₁.IsLB → IsPullbackTriple A P lv A₁ P₁ lv₁ (spMap R₁.subtype) → ∃ (A₂ : Over (Sp R₂)) (_ : GrpObj A₂) (lv₂ : Std g M → (𝟙_ (Over (Sp R₂)) ⟶ A₂)) (π : A₂.left ⟶ A₁.left) (π₂ : (A₂ ⊗ A₂).left ⟶ (A₁ ⊗ A₁).left), IsAbelianScheme A₂ ∧ SmoothOfRelativeDimension g A₂.hom ∧ IsGrpPullback A₂ A₁ (spMap (Subring.inclusion h)) π ∧ Geo.Tor.IsSquare π π₂ ∧ IsPullbackTriple A P lv A₂ (P₁.pull π₂) lv₂ (spMap R₂.subtype) := by
   intro R _ R₁ R₂ h g M A _ P lv A₁ _ P₁ lv₁ hab hsm hP hP₁ H
-  haveI := hab.comm
+  have := hab.comm
   obtain ⟨φ, φ₂, hφ, s₁, s₂, iso, hl⟩ := H
   have e := spMap_subtype_comp_inclusion h
   have pb₂ := Pdiv.PullbackComparison.isGrpPullback (spMap (Subring.inclusion h)) A₁
@@ -290,8 +290,8 @@ theorem rigSym_descends_to_subring_containing_finset : ∀ (R : Type) [CommRing 
   intro R _ R₁ A _ P A₁ _ P₁ φ φ₂ hab hP hP₁ hA sq hiso h1 h2 hs
   classical
   have := hab.proper
-  haveI : QuasiCompact (A₁ ⊗ A₁).hom := inferInstanceAs (QuasiCompact (pullback.fst A₁.hom A₁.hom ≫ A₁.hom))
-  haveI : QuasiSeparated (A₁ ⊗ A₁).hom :=
+  have : QuasiCompact (A₁ ⊗ A₁).hom := inferInstanceAs (QuasiCompact (pullback.fst A₁.hom A₁.hom ≫ A₁.hom))
+  have : QuasiSeparated (A₁ ⊗ A₁).hom :=
     inferInstanceAs (QuasiSeparated (pullback.fst A₁.hom A₁.hom ≫ A₁.hom))
   obtain ⟨e₁, e₂, e₃⟩ := GlobalTheory.RigSymDescent.axes_sq hA sq
   have hc : cls P hP = pull φ₂ (cls P₁ hP₁) := (cls_eq_iff hP (pull_isLB hP₁ _)).2 hiso
@@ -365,7 +365,7 @@ theorem sections_eq_of_spMap_subtype_comp_eq : ∀ (R : Type) [CommRing R] (R₀
   intro R _ R₀ X p _ x y hp hR
   let l : Sp R₀ ⟶ pullback p p := pullback.lift x y hp
   let c : pullback (pullback.diagonal p) l ⟶ Sp R₀ := pullback.snd _ _
-  haveI : IsClosedImmersion c := inferInstance
+  have : IsClosedImmersion c := inferInstance
   have e1 : l ≫ pullback.fst p p = x := pullback.lift_fst _ _ _
   have e2 : l ≫ pullback.snd p p = y := pullback.lift_snd _ _ _
   have hc : c ≫ x = c ≫ y := by
@@ -396,8 +396,8 @@ theorem sections_eq_of_spMap_subtype_comp_eq : ∀ (R : Type) [CommRing R] (R₀
     rw [← hk, Scheme.Hom.comp_appTop] at hinj0
     simp only [CommRingCat.hom_comp, RingHom.coe_comp] at hinj0
     exact hinj0.of_comp
-  haveI : IsIso c.appTop := (ConcreteCategory.isIso_iff_bijective _).mpr ⟨hinj, hsurj⟩
-  haveI : IsIso c :=
+  have : IsIso c.appTop := (ConcreteCategory.isIso_iff_bijective _).mpr ⟨hinj, hsurj⟩
+  have : IsIso c :=
     (MorphismProperty.arrow_mk_iso_iff (MorphismProperty.isomorphisms _) (arrowIsoSpecΓOfIsAffine c)).mpr
       (inferInstanceAs (IsIso (Spec.map c.appTop)))
   rw [← cancel_epi c]
@@ -461,7 +461,7 @@ theorem siegPre_data_descends_fg : ∀ (g n : ℕ), 3 ≤ n → ∀ (R : Type) [
   intro g n hn R _ β c
   classical
   have h0 : n ≠ 0 := by omega
-  haveI : NeZero n := ⟨h0⟩
+  have : NeZero n := ⟨h0⟩
   have hdim : SmoothOfRelativeDimension g c.A.hom :=
     relDim (ζ := (cycBase h0).ζ) (by omega) (isUnit_natCast h0) c
   have hm : ((n : ℂ))⁻¹ ∈ cycAway n := Subring.subset_closure (by simp)
@@ -621,7 +621,7 @@ open GlobalTheory.SiegelPull GlobalTheory.CharZeroPts
 
 theorem exists_geomPt_specializes (R : Type) [CommRing R] (R₁ : Subring R) (p : Sp R₁) :
     ∃ (K : Type) (_ : Field K) (_ : IsAlgClosed K) (z : Sp K ⟶ Sp R), ∀ u, (z ≫ spMap R₁.subtype) u ⤳ p := by
-  haveI := p.isPrime
+  have := p.isPrime
   obtain ⟨q, hq, hqp⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal R₁)) (J := p.asIdeal) bot_le
   obtain ⟨P, hP, hPq⟩ :=
     Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective (f := R₁.subtype) Subtype.val_injective q hq
@@ -779,7 +779,7 @@ open GlobalTheory.SiegelPull GlobalTheory.CharZeroPts
 
 theorem isLevel_of_subring : ∀ (h M : ℕ) (R : Type) [CommRing R] (R₁ : Subring R) (A : Over (Sp R)) [GrpObj A] (A₁ : Over (Sp R₁)) [GrpObj A₁] (φ : A.left ⟶ A₁.left) (lv : Std h M → (𝟙_ (Over (Sp R)) ⟶ A)) (lv₁ : Std h M → (𝟙_ (Over (Sp R₁)) ⟶ A₁)), 0 < M → IsUnit (M : R₁) → IsAbelianScheme A₁ → IsGrpPullback A A₁ (spMap R₁.subtype) φ → (∀ a, (lv a).left ≫ φ = spMap R₁.subtype ≫ (lv₁ a).left) → (∀ a b, lv₁ (a + b) = lv₁ a * lv₁ b) → IsLevel A lv → IsLevel A₁ lv₁ := by
   intro h M R _ R₁ A _ A₁ _ φ lv lv₁ hM hu hA hp hl hadd hlev
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hu' : IsUnit ((M : ℕ) : Γ(Sp R₁, ⊤)) := by
     simpa using hu.map (Scheme.ΓSpecIso (CommRingCat.of R₁)).inv.hom
   refine ⟨hadd, fun k _ _ x => (cond_iff hadd x).2 fun y hy => ?_⟩
@@ -1200,7 +1200,7 @@ theorem kernelAlong_of_trivAlong {S' : Scheme.{0}} (g : S' ⟶ S) (u₀ : Fin n)
     exact (congrArg _ h).trans (map_zero _)⟩
   have := hmon u₀
   have h := hy u₀
-  rw [if_pos rfl, h1, MonObj.one_comp] at h
+  rw [ite_eq_left rfl, h1, MonObj.one_comp] at h
   exact h.symm
 
 end Calc
@@ -1270,12 +1270,12 @@ theorem prime_contraction_or_dvr : ∀ (R : Type) [CommRing R] (R₁ : Subring R
   by_cases hp : p ∈ Set.range (PrimeSpectrum.comap R₁.subtype)
   · exact Or.inl hp
   right
-  haveI := p.isPrime
+  have := p.isPrime
   obtain ⟨q, hq, hqp⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal R₁)) (J := p.asIdeal) bot_le
   obtain ⟨P, hP, hPq⟩ :=
     Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective (f := R₁.subtype) Subtype.val_injective q hq
   let Q : PrimeSpectrum R := ⟨P, hP⟩
-  haveI hqpr : q.IsPrime := hq.1.1
+  have hqpr : q.IsPrime := hq.1.1
   let f₀ : R₁ →+* Q.asIdeal.ResidueField := (algebraMap R Q.asIdeal.ResidueField).comp R₁.subtype
   have hker : RingHom.ker f₀ = q := by
     rw [← hPq]
@@ -1298,19 +1298,19 @@ theorem prime_contraction_or_dvr : ∀ (R : Type) [CommRing R] (R₁ : Subring R
     simp only [i, j, RingHom.comp_apply, IsFractionRing.lift_algebraMap]
     rfl
   let p' : Ideal A := p.asIdeal.map (Ideal.Quotient.mk q)
-  haveI hp' : p'.IsPrime := Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hqp)
+  have hp' : p'.IsPrime := Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hqp)
   have hcp' : p'.comap (Ideal.Quotient.mk q) = p.asIdeal := by
     rw [Ideal.comap_map_of_surjective _ Ideal.Quotient.mk_surjective, ← RingHom.ker_eq_comap_bot, Ideal.mk_ker]
     exact sup_eq_left.2 hqp
   let O := Localization.AtPrime p'
-  haveI : IsDomain O := IsLocalization.isDomain_localization p'.primeCompl_le_nonZeroDivisors
+  have : IsDomain O := IsLocalization.isDomain_localization p'.primeCompl_le_nonZeroDivisors
   have hOinj : Function.Injective (algebraMap A O) := IsLocalization.injective O p'.primeCompl_le_nonZeroDivisors
   have hcm : (IsLocalRing.maximalIdeal O).comap (algebraMap A O) = p' := Localization.AtPrime.under_maximalIdeal
   have hnf : ¬ IsField O := by
     intro hF
     apply hp
     have hm : IsLocalRing.maximalIdeal O = ⊥ := by
-      letI := hF.toField
+      let := hF.toField
       exact IsLocalRing.maximalIdeal_eq_bot
     have h1 : p' = ⊥ := by
       rw [← hcm, hm, ← RingHom.ker_eq_comap_bot,
@@ -1361,8 +1361,8 @@ namespace GlobalTheory.PrincSubring
 
 theorem isPrincipal_of_subring : ∀ (h : ℕ) (R : Type) [CommRing R] (R₁ : Subring R) [IsNoetherianRing R₁] (A : Over (Sp R)) [GrpObj A] (P : LB (A ⊗ A).left) (A₁ : Over (Sp R₁)) [GrpObj A₁] (P₁ : LB (A₁ ⊗ A₁).left) (φ : A.left ⟶ A₁.left) (φ₂ : (A ⊗ A).left ⟶ (A₁ ⊗ A₁).left), IsSymmetricPair h A₁ P₁ → Out.RelAmple A₁ (diagPull A₁ P₁) → IsGrpPullback A A₁ (spMap R₁.subtype) φ → IsSquare φ φ₂ → LBIso P (P₁.pull φ₂) → IsPrincipal A P → IsPrincipal A₁ P₁ := by
   intro h R _ R₁ _ A _ P A₁ _ P₁ φ φ₂ hS hamp hpb hsq hiso hpr
-  haveI : IsAbelianScheme A₁ := hS.1
-  haveI : IsCommMonObj A₁ := IsAbelianScheme.comm
+  have : IsAbelianScheme A₁ := hS.1
+  have : IsCommMonObj A₁ := IsAbelianScheme.comm
   obtain ⟨hG, hL, hLa, hrig, hsym⟩ := _root_.GlobalTheory.EighthPowerBundle.powLB_props h A₁ P₁ hS hamp
   have hf : KerAlong A₁ P₁ (spMap R₁.subtype) := _root_.GlobalTheory.PrincSubring.kerAlong_of_pull _ A P A₁ P₁ φ φ₂ hS.2.2.1 hpb hsq hiso hpr.2
   have hfT := (_root_.GlobalTheory.PrincSubring.kerAlong_iff_trivAlong h A₁ P₁ hS hamp _).1 hf
@@ -1413,7 +1413,7 @@ theorem translFixed_of_pair {S : Scheme.{0}} {h M : ℕ} (A : Over S) [GrpObj A]
     (H : IsSymmetricPair h A P) (ha : Out.RelAmple A (diagPull A P)) (x : 𝟙_ (Over S) ⟶ A) (hx : x ^ M = 1) :
     (M : ℤ) • cls (diagPull A P) (pull_isLB H.2.2.1 _) =
       (M : ℤ) • pull ((toUnit A ≫ x) * 𝟙 A).left (cls (diagPull A P) (pull_isLB H.2.2.1 _)) := by
-  haveI := H.1.comm
+  have := H.1.comm
   have hP := H.2.2.1
   have hb : IsSymBilin (cls P hP) := isSymBilin_of_gen hP (fun T x x' y =>
     (Biadditive.biadditive_of_triv_axes globalFns_holds S A (diagPull A P) H.1 (pull_isLB hP _) ha P hP
@@ -1437,7 +1437,7 @@ theorem units_map_comp_appTop {X Y Z : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ Z) (
 
 theorem isSymplectic_of_subring : ∀ (h M : ℕ) (B R : Type) [CommRing B] [CommRing R] (ζ : Bˣ) (R₁ : Subring R) (s₁ : Sp R₁ ⟶ Sp B) (A : Over (Sp R)) [GrpObj A] (P : LB (A ⊗ A).left) (lv : Std h M → (𝟙_ (Over (Sp R)) ⟶ A)) (A₁ : Over (Sp R₁)) [GrpObj A₁] (P₁ : LB (A₁ ⊗ A₁).left) (lv₁ : Std h M → (𝟙_ (Over (Sp R₁)) ⟶ A₁)), 0 < M → ζ ^ M = 1 → IsUnit (M : R₁) → IsSymmetricPair h A₁ P₁ → IsPrincipal A₁ P₁ → IsLevel A₁ lv₁ → P.IsLB → IsPullbackTriple A P lv A₁ P₁ lv₁ (spMap R₁.subtype) → IsSymplectic ζ (spMap R₁.subtype ≫ s₁) A P lv → IsSymplectic ζ s₁ A₁ P₁ lv₁ := by
   intro h M B R _ _ ζ R₁ s₁ A _ P lv A₁ _ P₁ lv₁ hM hζ hu H₁ H₂ H₃ hPR Hpb Hs
-  haveI := H₁.1.comm
+  have := H₁.1.comm
   have hP := H₁.2.2.1
   have hD : (diagPull A₁ P₁).IsLB := pull_isLB hP _
   have z₀ : lv₁ 0 = 1 := by
@@ -1496,7 +1496,7 @@ theorem isSymplectic_of_subring : ∀ (h M : ℕ) (B R : Type) [CommRing B] [Com
   have hinj : Function.Injective (Units.map (toUnit X').left.appTop.hom.toMonoidHom) := fun u v huv =>
     Units.ext (inj (by
       have := congrArg Units.val huv
-      simp only [Units.coe_map, MonoidHom.coe_coe, Over.toUnit_left] at this
+      simp only [Units.coe_map, MonoidHom.coe_ofClass, Over.toUnit_left] at this
       exact this))
   have q₂ : Units.map (toUnit X').left.appTop.hom.toMonoidHom
       (Units.map ((𝟙_ (Over (Sp R₁))).hom ≫ s₁).appTop.hom.toMonoidHom (unitOn (ζ ^ (2 * stdForm a b).val))) =

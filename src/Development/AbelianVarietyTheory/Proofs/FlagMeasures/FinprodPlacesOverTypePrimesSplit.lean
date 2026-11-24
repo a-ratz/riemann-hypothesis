@@ -52,7 +52,7 @@ theorem finite_over {K : Type*} [Field K] [NumberField K] {n : ℕ} (hn : n ≠ 
     exact Nat.cast_ne_zero.mpr hn
   refine (Ideal.finite_factors hI).subset ?_
   intro v hv
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hv
 
@@ -88,7 +88,7 @@ theorem finprod_typed_places : ∀ (D : D7) (φ : ℝ → ℝ), (∀ i, Standard
   have hp := D.host.g_prime
   have hne : D.host.g 0 ≠ D.host.g 1 := D.host.g_ne
   have hcop : Nat.Coprime (D.host.g 0) (D.host.g 1) := (Nat.coprime_primes (hp 0) (hp 1)).mpr hne
-  rw [Set.setOf_or, finprod_mem_union (disjoint_primes_dvd_of_coprime hcop) (finite_over (hp 0).ne_zero)
+  rw [Set.ofPred_or, finprod_mem_union (disjoint_primes_dvd_of_coprime hcop) (finite_over (hp 0).ne_zero)
     (finite_over (hp 1).ne_zero), finprod_over (hp 0).ne_zero φ (hs 0).1 (hs 0).2,
     finprod_over (hp 1).ne_zero φ (hs 1).1 (hs 1).2]
 

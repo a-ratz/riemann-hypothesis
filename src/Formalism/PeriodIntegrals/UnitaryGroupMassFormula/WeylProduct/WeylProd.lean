@@ -97,7 +97,7 @@ theorem weylProd : PI.WeylProd := by
     unfold wg
     by_cases h : i < j
     · have h' : (i : ℕ) < (j : ℕ) := h
-      rw [if_pos h, if_pos h']
+      rw [ite_eq_left h, ite_eq_left h']
       have hi : shiftSeq w (i : ℕ) = ((w i : ℤ) : ℝ) - ((i : ℕ) : ℝ) := by
         simp [shiftSeq]
       have hj : shiftSeq w (j : ℕ) = ((w j : ℤ) : ℝ) - ((j : ℕ) : ℝ) := by
@@ -106,7 +106,7 @@ theorem weylProd : PI.WeylProd := by
       push_cast
       ring
     · have h' : ¬ (i : ℕ) < (j : ℕ) := h
-      rw [if_neg h, if_neg h', Rat.cast_one]
+      rw [ite_eq_right h, ite_eq_right h', Rat.cast_one]
   rw [Rat.cast_prod]
   simp only [Rat.cast_prod]
   rw [Finset.prod_congr rfl (fun i _ => Finset.prod_congr rfl (fun j _ => hterm i j))]

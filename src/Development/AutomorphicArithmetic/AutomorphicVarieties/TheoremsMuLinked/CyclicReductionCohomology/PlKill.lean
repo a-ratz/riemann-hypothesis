@@ -110,7 +110,7 @@ private theorem tw_lc {Γ R : Type} [TopologicalSpace Γ] {n : ℕ} (f : Γ → 
 private theorem pow_mem_of_PL (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     (H : Subgroup Γ) (V : Set Γ) (hV : IsOpen V) (hle : (PL l H : Set Γ) ⊆ V) : ∀ h ∈ H, ∃ e : ℕ, h ^ l ^ e ∈ V := by
   let ι := {U : OpenNormalSubgroup Γ // ∀ h ∈ H, ∃ e : ℕ, h ^ l ^ e ∈ U}
-  haveI : Nonempty ι := ⟨⟨⟨⊤, Subgroup.normal_top⟩, fun h _ => ⟨0, trivial⟩⟩⟩
+  have : Nonempty ι := ⟨⟨⟨⊤, Subgroup.normal_top⟩, fun h _ => ⟨0, trivial⟩⟩⟩
   have hd : Directed (· ⊇ ·) fun U : ι => (U.1 : Set Γ) := by
     intro U U'
     refine ⟨⟨U.1 ⊓ U'.1, fun h hh => ?_⟩, fun a ha => ha.1, fun a ha => ha.2⟩
@@ -160,7 +160,7 @@ private theorem rho_pow (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : 
     (hc : IsLocallyConstant fun g : G0.G₀ => red m (mat y.ρ g)) (g : G0.G₀)
     (hg : (g : G0.Γ) ∈ T.H) : ∃ e : ℕ, red m (mat y.ρ (g ^ l ^ e)) = 1 := by
   obtain ⟨e, g', h1, h2⟩ := pow_mem_of_PL l T.H.toSubgroup _
-    (G0.η_open.isOpenMap_subtype_val _ (hc.isOpen_fiber 1)) (fun a ha => by
+    (G0.η_open.isOpenMap_subtypeVal _ (hc.isOpen_fiber 1)) (fun a ha => by
     have hη : a ∈ G0.η.ker := by
       have ha' := ha
       simp only [PL, SetLike.mem_coe, Subgroup.mem_iInf] at ha'
@@ -181,12 +181,12 @@ theorem UpperTheory.V.Th.plKill :
     have := hk 1
     rwa [nsmul_eq_mul, mul_one, Nat.cast_pow] at this
   have hp : Continuous fun g : G.G₀ => h.p₀ g :=
-    Continuous.subtype_mk (h.cont.comp continuous_subtype_val) _
+    Continuous.subtype_mk (h.cont.comp continuous_subtypeVal) _
   have h0 : IsLocallyConstant fun g : G0.G₀ => red m (mat y.ρ g) := tw_lc _ fun i j => y.cont i j m
   have c1 : IsLocallyConstant fun g : G.G₀ => y.ρm h m g := h0.comp_continuous hp
   let f : ℤ_[l] →+* Om O m := (algebraMap O (Om O m)).comp (algebraMap ℤ_[l] O)
   have c2 : IsLocallyConstant fun g : G.G₀ => epsm O G m g :=
-    (lc_padic f m hl).comp_continuous (Units.continuous_val.comp (G.ε_cont.comp continuous_subtype_val))
+    (lc_padic f m hl).comp_continuous (Units.continuous_val.comp (G.ε_cont.comp continuous_subtypeVal))
   have r1 : y.ρm h m 1 = 1 := by simp [Pt.ρm, red, mat]
   have r2 : ∀ a b, y.ρm h m (a * b) = y.ρm h m a * y.ρm h m b := fun a b => by
     simp [Pt.ρm, red, mat, Matrix.map_mul]
@@ -195,7 +195,7 @@ theorem UpperTheory.V.Th.plKill :
     intro a b
     simp [epsm]
   obtain ⟨U, hU⟩ := tw_U (K := G.G₀) (fun g => y.ρm h m g) z (fun g => epsm O G m g) r1 r2 e1 em hz c1 c2 cz
-  haveI := T.H.isNormal'
+  have := T.H.isNormal'
   have hsub := pl_sub l G.Γ (T.H.toSubgroup.comap h.p) G.η.ker G.η_open
     (fun a ha => by rw [MonoidHom.mem_ker, ← h.η]; exact T.H_η _ ha) U fun a ha => by
     obtain ⟨e, he⟩ := rho_pow l L G0 T O n y m hPL h0 (h.p₀ a) ha

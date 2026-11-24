@@ -63,7 +63,7 @@ private theorem plOver_of_mem {K : Type} [Field K] [NumberField K] {g : ℕ} (hg
       Associates.mk_le_mk_iff_dvd, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     exact h
   unfold Formalism.DivisionValues.PlOver Formalism.DivisionValues.vw
-  rw [← hc, ← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K _ hJ]
+  rw [← hc, ← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K _ hJ]
   exact_mod_cast h1
 
 theorem goal1 :

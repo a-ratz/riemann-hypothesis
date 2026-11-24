@@ -124,20 +124,20 @@ theorem gram_frm (v : InfinitePlace X.B.I.F) (w : D.what₂.Word) (sc : ℝ) (a 
       induction j using Fin.lastCases with
       | last =>
         simp only [fam, Fin.snoc_last, lastDiag, Matrix.of_apply]
-        try simp only [and_self, ite_true, if_true]
+        try simp only [and_self, ite_true, ite_true]
         exact Formalism.L2.SG.RealObj.InfCut.UnitaryIsometries.hermitian_z_z_eq_neg (X := X) v w
       | cast j =>
         simp only [fam, Fin.snoc_last, Fin.snoc_castSucc, lastDiag, Matrix.of_apply]
-        rw [if_neg (fun h => (Fin.castSucc_lt_last j).ne h.2), Formalism.L2.SG.PoincareInHH.Cut.hJ_conj,
+        rw [ite_eq_right (fun h => (Fin.castSucc_lt_last j).ne h.2), Formalism.L2.SG.PoincareInHH.Cut.hJ_conj,
           hez_v X v w j, map_zero]
     | cast i =>
       induction j using Fin.lastCases with
       | last =>
         simp only [fam, Fin.snoc_last, Fin.snoc_castSucc, lastDiag, Matrix.of_apply]
-        rw [if_neg (fun h => (Fin.castSucc_lt_last i).ne h.1), hez_v X v w i]
+        rw [ite_eq_right (fun h => (Fin.castSucc_lt_last i).ne h.1), hez_v X v w i]
       | cast j =>
         simp only [fam, Fin.snoc_castSucc, lastDiag, Matrix.of_apply]
-        rw [if_neg (fun h => (Fin.castSucc_lt_last i).ne h.1), hee_v X v i j]
+        rw [ite_eq_right (fun h => (Fin.castSucc_lt_last i).ne h.1), hee_v X v i j]
   simp only [frm, famSc, hJs_l, hJs_r, h0]
   by_cases ha : a = Fin.last _
   · by_cases hb : b = Fin.last _

@@ -68,7 +68,7 @@ theorem pF_id (A : Over (Sp R)) (a : GlobForm A.hom) : pF (𝟙 A) a = a :=
 theorem pF_unit {A B : Over (Sp R)} (f : 𝟙_ (Over (Sp R)) ⟶ A) (a : GlobForm A.hom) :
     pF (toUnit B ≫ f) a = 0 := by
   rw [← pF_comp]
-  haveI := (GlobalTheory.AbCoh.Vanish.main.2 R).1
+  have := (GlobalTheory.AbCoh.Vanish.main.2 R).1
   rw [Subsingleton.elim (pF f a) 0, map_zero]
 
 theorem prim_of_axes (A : Over (Sp R)) [GrpObj A]

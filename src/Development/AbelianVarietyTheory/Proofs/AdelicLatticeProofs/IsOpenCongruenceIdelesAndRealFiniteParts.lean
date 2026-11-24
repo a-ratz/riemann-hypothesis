@@ -61,7 +61,7 @@ theorem isOpen_nsmul_adelicCompletion_integers (F E : Type) [Field F] [NumberFie
     letI : TopologicalSpace (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
       moduleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E)
     IsOpen {z : GlobalTheory.AdLat.RA F E | ∃ y ∈ GlobalTheory.AdLat.hat1 F (Set.range (algebraMap (𝓞 E) E)), z = N • y} := by
-  letI : TopologicalSpace (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
+  let : TopologicalSpace (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
       moduleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E)
   let L : Submodule (𝓞 E) (Fin 1 → E) :=
     (1 : Submodule (𝓞 E) E).comap (LinearMap.proj (R := 𝓞 E) (φ := fun _ : Fin 1 => E) 0)
@@ -148,9 +148,9 @@ theorem exists_units_parts {R A B : Type} [Ring R] [Ring A] [Ring B] [Topologica
 
 theorem congr_open_and_parts : ∀ (D : D7), (∀ N : ℕ, 0 < N → IsOpen {x : (AE D)ˣ | finPart D (x : AE D) ∈ intAE D ∧ finPart D ((x⁻¹ : (AE D)ˣ) : AE D) ∈ intAE D ∧ ∃ y ∈ intAE D, finPart D (x : AE D) - 1 = N • y}) ∧ ∃ a b : (AE D)ˣ →* (AE D)ˣ, Continuous a ∧ Continuous b ∧ (∀ x, x = a x * b x) ∧ (∀ x, infPart D (a x : AE D) = infPart D (x : AE D) ∧ finPart D (a x : AE D) = 1) ∧ ∀ x, infPart D (b x : AE D) = 1 ∧ finPart D (b x : AE D) = finPart D (x : AE D) := by
   intro D
-  letI tf : TopologicalSpace (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  let tf : TopologicalSpace (Af D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E)
-  letI ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
+  let ti : TopologicalSpace (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
     moduleTopology (Ainf D.host.F) (Ainf D.host.F ⊗[D.host.F] D.host.E)
   obtain ⟨e, he, hec, hes⟩ : ∃ e : AE D ≃+* (Ainf D.host.F ⊗[D.host.F] D.host.E) × (Af D.host.F ⊗[D.host.F] D.host.E),
       (∀ z, (e z).1 = infPart D z ∧ (e z).2 = finPart D z) ∧ Continuous e ∧ Continuous e.symm :=
@@ -160,8 +160,8 @@ theorem congr_open_and_parts : ∀ (D : D7), (∀ N : ℕ, 0 < N → IsOpen {x :
     rw [this]
     exact continuous_snd.comp hec
   refine ⟨fun N hN => ?_, ?_⟩
-  · haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-    haveI : ContinuousAdd (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  · have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+    have : ContinuousAdd (Af D.host.F ⊗[D.host.F] D.host.E) :=
       IsModuleTopology.toContinuousAdd (Af D.host.F) _
     have hN' : IsOpen {z : Af D.host.F ⊗[D.host.F] D.host.E | ∃ y ∈ intAE D, z = N • y} := by
       rw [integralFiniteAdeles_eq_adelicCompletion_integers]

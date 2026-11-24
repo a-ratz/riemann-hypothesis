@@ -120,7 +120,7 @@ theorem UpperTheory.V.Ws.Eb.trPlus :
         congr 1
         ext i j
         by_cases h : i = j <;> simp [Matrix.charmatrix_apply, Matrix.one_apply, h]
-      haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+      have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
       unfold W.GDet.tr W.GDet.lam
       rw [hchi, Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin]
       ring

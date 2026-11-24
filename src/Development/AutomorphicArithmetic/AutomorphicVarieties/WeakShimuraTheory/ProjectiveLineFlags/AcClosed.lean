@@ -66,7 +66,7 @@ private theorem ac_closed {Γ R : Type} [TopologicalSpace Γ] [CommRing R] {I : 
   have hset : {x | f x = y} =
       ⋂ N : ℕ, {x | Ideal.Quotient.mk (I ^ N) (f x) = Ideal.Quotient.mk (I ^ N) y} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     constructor
     · rintro hx N
       rw [hx]
@@ -101,7 +101,7 @@ theorem UpperTheory.V.Ws.P1.rhoEx :
     · have hset : (ρ'.ker : Set (G T.L Ω)) =
           ⋂ a, ⋂ b, {g | σ g a b = (1 : Matrix (Fin 4) (Fin 4) R) a b} := by
         ext g
-        simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+        simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
         rw [← Units.val_eq_one, hρ']
         exact ⟨fun hg a b => by rw [hg], fun hg => Matrix.ext hg⟩
       rw [hset]

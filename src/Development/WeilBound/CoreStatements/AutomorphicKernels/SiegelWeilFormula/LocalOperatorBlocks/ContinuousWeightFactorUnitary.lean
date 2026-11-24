@@ -228,7 +228,7 @@ theorem weight_factor_levi_unipotent (p q : ℕ) (e : ℤ) (a b : Matrix (Fin n)
   rw [mul_zpow, inv_zpow', inv_zpow', inv_zpow', neg_neg, neg_neg, mul_assoc, ← zpow_add₀ hs, ← zpow_add₀ hs]
   ring_nf
 
-theorem mR_cont : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtype_val
+theorem mR_cont : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtypeVal
 
 theorem cont_blk (f g : Fin n → Fin n ⊕ Fin n) : Continuous fun M : M2 n => (Matrix.of fun i j => M (f i) (g j)) :=
   continuous_pi fun i => continuous_pi fun j => (continuous_apply (g j)).comp (continuous_apply (f i))

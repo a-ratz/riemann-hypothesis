@@ -287,7 +287,7 @@ theorem _root_.GlobalTheory.RealWeil.proj_eq_self_of_annihilated (V : Type) [Nor
       fun_prop
     exact (_root_.GlobalTheory.RealWeil.continuous_gau.comp continuous_snd).smul
       (h.continuous ha' continuous_const)
-  haveI : IsFiniteMeasure (volume.restrict (Set.uIoc (0 : ℝ) (2 * Real.pi))) := by
+  have : IsFiniteMeasure (volume.restrict (Set.uIoc (0 : ℝ) (2 * Real.pi))) := by
     rw [isFiniteMeasure_restrict]
     exact ((measure_mono Set.uIoc_subset_uIcc).trans_lt isCompact_uIcc.measure_lt_top).ne
   have hint : Integrable (Function.uncurry G)
@@ -425,7 +425,7 @@ theorem kL_one : kL (1 : Matrix ι ι ℂ) = 1 :=
 omit [DecidableEq ι] in
 theorem kL_mul (g g' : Matrix ι ι ℂ) : kL (g * g') = kL g * kL g' :=
   ContinuousLinearMap.ext fun v => (crd ι).injective (by
-    rw [ContinuousLinearMap.mul_apply, crd_kL, crd_kL, crd_kL, mulVec_mulVec])
+    rw [mul_apply_eq_comp, crd_kL, crd_kL, crd_kL, mulVec_mulVec])
 
 omit [DecidableEq ι] in
 theorem continuous_kL : Continuous (kL : Matrix ι ι ℂ → _) := by

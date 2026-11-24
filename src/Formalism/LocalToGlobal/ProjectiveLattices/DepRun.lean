@@ -70,7 +70,7 @@ theorem satDir_of (hS : ChartSaturated Xo c) {T : CDVR} {io : c.F →+* T.Fr} {y
       | exact mul_eq_one_comm.mp hAw
       | exact (Matrix.mul_eq_one_comm_of_equiv (Equiv.refl _)).mp hAw
   refine ⟨fun i j => A j (emb i), fun i i' => ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have e1 : ∀ j, C.ch.uvec ⟨τ, i'⟩ j * algebraMap T.V T.Fr (A j (emb i)) =
       algebraMap T.V T.Fr (w (emb i') j * A j (emb i)) := by
     intro j
@@ -83,7 +83,7 @@ theorem satDir_of (hS : ChartSaturated Xo c) {T : CDVR} {io : c.F →+* T.Fr} {y
   rw [h3]
   by_cases hii : i' = i
   · subst hii; simp
-  · rw [if_neg (fun h' => hii (emb.injective h')), if_neg hii, map_zero]
+  · rw [ite_eq_right (fun h' => hii (emb.injective h')), ite_eq_right hii, map_zero]
 
 theorem nuW_le_crude (hE : IntChartEx Xo c) (hS : ChartSaturated Xo c) (la : HeightOneSpectrum (𝓞 c.F)) (k : ℕ)
     (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) (ha : DomW Dw a) (hn : Fintype.card (Lt1 Dw) ≤ n) :
@@ -96,7 +96,7 @@ theorem nuW_le_crude (hE : IntChartEx Xo c) (hS : ChartSaturated Xo c) (la : Hei
   obtain ⟨C⟩ := hE T io y hy
   unfold nuLoc
   refine (iInf_le _ C).trans ?_
-  letI := io.toAlgebra
+  let := io.toAlgebra
   exact (crude_inf C.ch.B C.ch.h C.ch.gauge H.w0 k C.ch.uvec (satDir_of hS C) a n ha hn ho).1
 
 omit [StarRing (𝓞 E)] in

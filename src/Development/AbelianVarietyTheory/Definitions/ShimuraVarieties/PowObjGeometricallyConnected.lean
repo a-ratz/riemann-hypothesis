@@ -875,14 +875,14 @@ theorem fixIncl_proj {K : Over S} {p : K ⟶ K} (hp : p ≫ p = p) :
 
 theorem isMonHom_fixIncl {p : K ⟶ K} [IsMonHom p] (hp : p ≫ p = p) :
     letI := fixGrp hp; IsMonHom (fixIncl p) := by
-  letI := fixGrp hp
+  let := fixGrp hp
   refine isMonHom_of_mul_comp _ fun T x y ↦ ?_
   change (lift x y ≫ (fst _ _ ≫ fixIncl p * snd _ _ ≫ fixIncl p) ≫ fixProj hp) ≫ fixIncl p = _
   simp [fixProj_incl, MonObj.mul_comp, MonObj.comp_mul, fixIncl_comp]
 
 theorem isMonHom_fixProj {p : K ⟶ K} [IsMonHom p] (hp : p ≫ p = p) :
     letI := fixGrp hp; IsMonHom (fixProj hp) := by
-  letI := fixGrp hp
+  let := fixGrp hp
   have := isMonHom_fixIncl hp
   refine isMonHom_of_mul_comp _ fun T x y ↦ ?_
   rw [← cancel_mono (fixIncl p)]
@@ -890,7 +890,7 @@ theorem isMonHom_fixProj {p : K ⟶ K} [IsMonHom p] (hp : p ≫ p = p) :
 
 theorem isCommMonObj_fix [IsCommMonObj K] {p : K ⟶ K} [IsMonHom p] (hp : p ≫ p = p) :
     letI := fixGrp hp; IsCommMonObj (fixObj p) := by
-  letI := fixGrp hp
+  let := fixGrp hp
   have := isMonHom_fixIncl hp
   rw [isCommMonObj_iff_isMulCommutative]
   refine fun T ↦ ⟨⟨fun x y ↦ ?_⟩⟩

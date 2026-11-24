@@ -109,7 +109,7 @@ instance instGroupRT : Group (RT k r g) where
   mul_one x := toM_inj (by rw [toM_mul, toM_one, Matrix.mul_one])
   inv_mul_cancel x := toM_inj (by rw [toM_mul, toM_inv, toM_one, uh_inv_mul (toM_mem x).1.1])
 
-theorem continuous_toM : Continuous (toM : RT k r g → Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := continuous_subtype_val
+theorem continuous_toM : Continuous (toM : RT k r g → Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := continuous_subtypeVal
 
 instance : IsTopologicalGroup (RT k r g) where
   continuous_mul := by
@@ -129,7 +129,7 @@ section Meas
 variable {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} {μR : Measure (Mt k r)}
 
 theorem rs_emb (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :
-    MeasurableEmbedding (Subtype.val : RT k r g → Mt k r) := MeasurableEmbedding.subtype_coe (isClosed_RS g).measurableSet
+    MeasurableEmbedding (Subtype.val : RT k r g → Mt k r) := MeasurableEmbedding.subtypeVal (isClosed_RS g).measurableSet
 
 theorem rs_back (hc : μR {x | Matrix.of x ∉ RStab k r g} = 0) :
     (μR.comap (Subtype.val : RT k r g → Mt k r)).map Subtype.val = μR := by
@@ -138,9 +138,9 @@ theorem rs_back (hc : μR {x | Matrix.of x ∉ RStab k r g} = 0) :
 
 theorem measurable_lmulM (a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :
     Measurable (lmulM (k := k) (r := r) a) := by
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro i
-  apply measurable_pi_lambda
+  apply Measurable.of_eval
   intro j
   have : Continuous (fun x : Mt k r => (a * Matrix.of x) i j) := by
     simp only [Matrix.mul_apply, Matrix.of_apply]
@@ -160,7 +160,7 @@ theorem rs_inv [Fact (g ∈ UH (Hpk k r))] (hc : μR {x | Matrix.of x ∉ RStab 
   intro a
   have hf : Measurable (fun x : RT k r g => a * x) := by
     rw [← (rs_emb g).measurable_comp_iff, rs_val_mul a]
-    exact (measurable_lmulM _).comp measurable_subtype_coe
+    exact (measurable_lmulM _).comp measurable_subtypeVal
   rw [← (rs_emb g).comap_map (Measure.map (fun x => a * x) (μR.comap Subtype.val)),
     Measure.map_map (rs_emb g).measurable hf, rs_val_mul a,
     ← Measure.map_map (measurable_lmulM _) (rs_emb g).measurable, rs_back hc, hinv _ (toM_mem a)]
@@ -170,9 +170,9 @@ theorem rs_smul [Fact (g ∈ UH (Hpk k r))] (hμ : IsHaarOn (RStab k r g) μR) :
       μR.comap (Subtype.val : RT k r g → Mt k r) = c • (haar : Measure (RT k r g)) := by
   obtain ⟨hσ, h0, hc, hinv⟩ := hμ
   have hback := rs_back hc
-  haveI : SigmaFinite (μR.comap (Subtype.val : RT k r g → Mt k r)) :=
+  have : SigmaFinite (μR.comap (Subtype.val : RT k r g → Mt k r)) :=
     SigmaFinite.of_map _ (rs_emb g).measurable.aemeasurable (by rw [hback]; exact hσ)
-  haveI : IsMulLeftInvariant (μR.comap (Subtype.val : RT k r g → Mt k r)) := rs_inv hc hinv
+  have : IsMulLeftInvariant (μR.comap (Subtype.val : RT k r g → Mt k r)) := rs_inv hc hinv
   obtain ⟨K, hK, hK1⟩ := exists_compact_mem_nhds (1 : RT k r g)
   have hK0 : (haar : Measure (RT k r g)) K ≠ 0 := (measure_pos_of_mem_nhds haar hK1).ne'
   have hKt : (haar : Measure (RT k r g)) K ≠ ⊤ := hK.measure_lt_top.ne
@@ -194,13 +194,13 @@ theorem rs_smul [Fact (g ∈ UH (Hpk k r))] (hμ : IsHaarOn (RStab k r g) μR) :
       exact isOpen_univ.measure_ne_zero haar Set.univ_nonempty hU
     have h2 : ν (spanningSets ν n) = ((⊤ : ℝ≥0∞) • (haar : Measure (RT k r g))) (spanningSets ν n) := by
       rw [← heq]
-    rw [Measure.smul_apply, smul_eq_mul, ENNReal.top_mul hn] at h2
+    rw [smul_apply, smul_eq_mul, ENNReal.top_mul hn] at h2
     exact (measure_spanningSets_lt_top ν n).ne h2
 
 theorem rhaar_props (hg : g ∈ UH (Hpk k r)) (hμ : IsHaarOn (RStab k r g) μR) :
     (∀ C : Set (Mt k r), IsCompact C → μR C < ⊤) ∧
       (∀ U : Set (Mt k r), IsOpen U → (U ∩ RS k r g).Nonempty → μR U ≠ 0) := by
-  haveI : Fact (g ∈ UH (Hpk k r)) := ⟨hg⟩
+  have : Fact (g ∈ UH (Hpk k r)) := ⟨hg⟩
   obtain ⟨c, hc1, hc2, hν⟩ := rs_smul hμ
   have hback := rs_back hμ.2.2.1
   refine ⟨?_, ?_⟩
@@ -208,13 +208,13 @@ theorem rhaar_props (hg : g ∈ UH (Hpk k r)) (hμ : IsHaarOn (RStab k r g) μR)
     have hpc : IsCompact ((Subtype.val : RT k r g → Mt k r) ⁻¹' C) := by
       rw [Subtype.isCompact_iff, Set.image_preimage_eq_inter_range, Subtype.range_coe]
       exact hC.inter_right (isClosed_RS g)
-    rw [← hback, Measure.map_apply (rs_emb g).measurable hC.measurableSet, hν, Measure.smul_apply,
+    rw [← hback, Measure.map_apply (rs_emb g).measurable hC.measurableSet, hν, smul_apply,
       smul_eq_mul]
     exact ENNReal.mul_lt_top hc2.lt_top hpc.measure_lt_top
   · rintro U hU ⟨x, hxU, hxR⟩
-    rw [← hback, Measure.map_apply (rs_emb g).measurable hU.measurableSet, hν, Measure.smul_apply,
+    rw [← hback, Measure.map_apply (rs_emb g).measurable hU.measurableSet, hν, smul_apply,
       smul_eq_mul]
-    exact mul_ne_zero hc1 ((hU.preimage continuous_subtype_val).measure_ne_zero haar ⟨⟨x, hxR⟩, hxU⟩)
+    exact mul_ne_zero hc1 ((hU.preimage continuous_subtypeVal).measure_ne_zero haar ⟨⟨x, hxR⟩, hxU⟩)
 
 end Meas
 
@@ -302,10 +302,10 @@ private theorem hpk_sq_lemma (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
   rw [Finset.sum_eq_single (⟨_, hs⟩ : Fin (2 * r + k + 1))]
   · by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       simp only [Hpk, Fin.ext_iff, Fin.val_mk, eq_self_iff_true, and_true]
       split_ifs <;> first | (exfalso; (try simp only [Fin.val_mk] at *); omega) | (simp_all; done) | norm_num
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       rw [Fin.ext_iff] at hij
       simp only [Hpk, Fin.ext_iff, Fin.val_mk]
       split_ifs <;> first | (exfalso; (try simp only [Fin.val_mk] at *); omega) | (simp_all; done) | norm_num
@@ -356,7 +356,7 @@ theorem Phi_inv (hg : g ∈ UH (Hpk k r)) (hμ : IsHaarOn (RStab k r g) μR) (hK
   have hcomp : (lmulM (k := k) (r := r) b) ⁻¹' ((lmulM b⁻¹) ⁻¹' {a : Mt k r | nInv g a y ∈ K m}) =
       {a | nInv g a y ∈ K m} := by
     ext a
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, mem_ofPred_eq]
     have e : lmulM (k := k) (r := r) b⁻¹ (lmulM b a) = a := by
       show b⁻¹ * (b * Matrix.of a) = Matrix.of a
       rw [← Matrix.mul_assoc, Matrix.nonsing_inv_mul b hd, Matrix.one_mul]
@@ -496,7 +496,7 @@ theorem cutoff_exists {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) �
     (hg : g ∈ UH (Hpk k r)) (hμ : IsHaarOn (RStab k r g) μR) :
     ∃ θ : PairSp k r → ℝ≥0∞, Measurable θ ∧
       ∀ y : PairSp k r, y.1.2 ∈ NS k r → ∫⁻ a, θ (stabAct g (Matrix.of a)⁻¹ y) ∂μR = 1 := by
-  haveI : SigmaFinite μR := hμ.1
+  have : SigmaFinite μR := hμ.1
   obtain ⟨K, hKc, hKi⟩ := exists_cover' (k := k) (r := r)
   exact ⟨theta g μR K, measurable_theta g μR K (fun m => (hKc m).isClosed),
     fun y hy => theta_norm hg hμ hKc hKi hy⟩
@@ -583,15 +583,15 @@ theorem orbQuotEx_of_haarLieN (h : PI.AmpOrbQ.HaarLieN) : PI.AmpOrbQ.OrbQuotEx :
   intro k r L p g₀ μR hpt _ hμ
   obtain ⟨hsf, _, hnull, hinv⟩ := h k r 1 one_ne_zero ENNReal.one_ne_top
   have e := muN_smul L
-  haveI := hsf
-  haveI : SFinite L.μN := by rw [e]; infer_instance
+  have := hsf
+  have : SFinite L.μN := by rw [e]; infer_instance
   refine exists_isOrbQuot_of_isHaarOn L g₀ μR hpt.1 hμ ?_ ?_
   · intro s hs
     rw [e, Measure.map_smul, hinv s hs]
     exact (show Continuous (lmulM (k := k) (r := r) s) from by
       unfold lmulM
       exact continuous_const.matrix_mul continuous_id).measurable.aemeasurable
-  · rw [e, Measure.smul_apply]
+  · rw [e, smul_apply]
     have h0 : haarLie (Nset k r) 1 (NS k r)ᶜ = 0 := hnull
     rw [h0, smul_eq_mul, mul_zero]
 end -- clump:auto

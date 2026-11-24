@@ -53,7 +53,7 @@ theorem freeModule_adicComplete_separated : ∀ {R : Type} [CommRing R] (ϖ : R)
   intro R _ ϖ hc hs M _ _ _ _
   classical
   let b := Module.Free.chooseBasis R M
-  haveI : Fintype (Module.Free.ChooseBasisIndex R M) := Module.Free.ChooseBasisIndex.fintype R M
+  have : Fintype (Module.Free.ChooseBasisIndex R M) := Module.Free.ChooseBasisIndex.fintype R M
   constructor
   · intro x
     choose a ha using fun i => hc (fun j => b.equivFun (x j) i)

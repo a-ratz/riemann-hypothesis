@@ -73,7 +73,7 @@ variable {K : Type} [Field K] [Valued K (WithZero (Multiplicative ℤ))]
 theorem le_ofAdd_neg_one_of_lt_one {y : WithZero (Multiplicative ℤ)} (h : y < 1) :
     y ≤ ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
   induction y using WithZero.recZeroCoe with
-  | zero => exact zero_le'
+  | zero => exact zero_le
   | coe a =>
     rw [← WithZero.coe_one, WithZero.coe_lt_coe] at h
     rw [WithZero.coe_le_coe]
@@ -89,7 +89,7 @@ theorem exists_residue_reps {q : ℕ} (hq : 2 ≤ q)
   set v := (Valued.v : Valuation K (WithZero (Multiplicative ℤ)))
   have hfin : Finite (v.integer ⧸ IsLocalRing.maximalIdeal v.valuationSubring) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
-  haveI : Finite (v.valuationSubring ⧸ IsLocalRing.maximalIdeal v.valuationSubring) := hfin
+  have : Finite (v.valuationSubring ⧸ IsLocalRing.maximalIdeal v.valuationSubring) := hfin
   let f : v.valuationSubring ⧸ IsLocalRing.maximalIdeal v.valuationSubring → K :=
     fun c => ((Ideal.Quotient.mk_surjective c).choose : K)
   refine ⟨Set.range f, Set.finite_range f, ?_, ?_⟩
@@ -170,7 +170,7 @@ theorem exists_le_inv_pow (ϖ : K)
   rw [hϖ]
   generalize (Valued.v : Valuation K (WithZero (Multiplicative ℤ))) x = y
   induction y using WithZero.recZeroCoe with
-  | zero => exact ⟨0, zero_le'⟩
+  | zero => exact ⟨0, zero_le⟩
   | coe c =>
     refine ⟨(Multiplicative.toAdd c).toNat, ?_⟩
     rw [← WithZero.coe_inv, ← WithZero.coe_pow, WithZero.coe_le_coe]
@@ -317,7 +317,7 @@ theorem finite_dcoset : ∀ {K : Type} [Field K] [Valued K (WithZero (Multiplica
         group
       rw [hg]
       exact half a' a haa'.symm
-  haveI : Finite T := hTf.to_subtype
+  have : Finite T := hTf.to_subtype
   classical
   let G : (Fin n → Fin n → T) → GU σ n ⧸ KU σ n := fun τ =>
     if h : ∃ a, F a = τ then (((h.choose : GU σ n) * s : GU σ n) : GU σ n ⧸ KU σ n) else ((1 : GU σ n) : GU σ n ⧸ KU σ n)
@@ -325,7 +325,7 @@ theorem finite_dcoset : ∀ {K : Type} [Field K] [Valued K (WithZero (Multiplica
   rintro c ⟨a, ha, rfl⟩
   refine ⟨F ⟨a, ha⟩, ?_⟩
   have h : ∃ a', F a' = F ⟨a, ha⟩ := ⟨_, rfl⟩
-  simp only [G, dif_pos h]
+  simp only [G, dite_eq_left h]
   exact key ⟨a, ha⟩ h.choose h.choose_spec.symm
 
 end GlobalTheory.SatInd.DCoset

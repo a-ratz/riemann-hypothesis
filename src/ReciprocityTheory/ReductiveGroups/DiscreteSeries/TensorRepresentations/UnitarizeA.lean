@@ -228,7 +228,7 @@ theorem incr {φ : ℝ → G} (hφc : Continuous φ) (hφ0 : φ 0 = 1) {a a' b :
     IntervalIntegrable (fun s => pr μ (fun x => a' (x * φ s)) b) MeasureTheory.volume 0 t ∧
     pr μ (fun x => a (x * φ t)) b - pr μ a b =
       ∫ s in (0:ℝ)..t, pr μ (fun x => a' (x * φ s)) b := by
-  haveI : IsFiniteMeasure (volume.restrict (Set.Ioc (0:ℝ) t)) :=
+  have : IsFiniteMeasure (volume.restrict (Set.Ioc (0:ℝ) t)) :=
     ⟨by rw [Measure.restrict_apply_univ, Real.volume_Ioc]; exact ENNReal.ofReal_lt_top⟩
   have hFc : Continuous (fun p : ℝ × G => star (a' (p.2 * φ p.1)) * b p.2) :=
     (continuous_star.comp (ha'.comp (continuous_snd.mul (hφc.comp continuous_fst)))).mul

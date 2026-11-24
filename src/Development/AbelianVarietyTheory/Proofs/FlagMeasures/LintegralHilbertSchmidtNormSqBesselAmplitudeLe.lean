@@ -219,7 +219,7 @@ theorem pt {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     intro η
     rw [← adj_inv hπ' hh', ContinuousLinearMap.adjoint_inner_left]
   ext η
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, rankOneInnerOperator_apply, map_smul,
+  simp only [smul_apply, ContinuousLinearMap.comp_apply, rankOneInnerOperator_apply, map_smul,
     inner_smul_left, smul_smul, hadj, Matrix.mul_assoc]
   congr 1
   simp only [Complex.star_def]
@@ -380,7 +380,7 @@ noncomputable section
 namespace GlobalTheory.SgInf.ProjLine
 
 theorem mul_mem_GG_iff {k r : ℕ} {s x : Mat k r} (hs : s ∈ GG k r) : s * x ∈ GG k r ↔ x ∈ GG k r := by
-  simp only [GG, UH, Set.mem_setOf_eq] at hs ⊢
+  simp only [GG, UH, Set.mem_ofPred_eq] at hs ⊢
   have e : (s * x)ᴴ * Hpk k r * (s * x) = xᴴ * (sᴴ * Hpk k r * s) * x := by
     simp only [conjTranspose_mul, Matrix.mul_assoc]
   rw [e, hs]
@@ -490,7 +490,7 @@ theorem projector_line : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [Inne
     unfold l2SG
     rw [← hintL, ofReal_integral_eq_lintegral_ofReal hIL (Filter.Eventually.of_forall fun x => by positivity)]
     refine lintegral_congr fun x => ?_
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     rfl
   · intro v hv ξ x hx
     simp only [Afun]
@@ -530,7 +530,7 @@ theorem integrable_and_integral_norm_le_of_lintegral_sq_le {X E : Type*} [Measur
       (ENNReal.rpow_ne_top_of_nonneg (by norm_num) (measure_ne_top _ _))
   refine ⟨(C ^ (1 / 2 : ℝ) * (μ Set.univ) ^ (1 / 2 : ℝ)).toReal, ENNReal.toReal_nonneg, fun f t hf h => ?_⟩
   have h1 := ENNReal.lintegral_mul_le_Lp_mul_Lq μ Real.HolderConjugate.two_two
-    (f := fun x => ‖f x‖ₑ) (g := fun _ => 1) hf.enorm aemeasurable_const
+    (f := fun x => ‖f x‖ₑ) (g := fun _ => 1) hf.eNorm aemeasurable_const
   have h2 : (∫⁻ x, ‖f x‖ₑ ^ (2 : ℝ) ∂μ) ^ (1 / 2 : ℝ) ≤ C ^ (1 / 2 : ℝ) * t := by
     have : (∫⁻ x, ‖f x‖ₑ ^ (2 : ℝ) ∂μ) ≤ C * (t : ℝ≥0∞) ^ 2 := by
       refine le_trans (le_of_eq ?_) h
@@ -546,7 +546,7 @@ theorem integrable_and_integral_norm_le_of_lintegral_sq_le {X E : Type*} [Measur
       _ = _ := by ring
   have h4 : C ^ (1 / 2 : ℝ) * (μ Set.univ) ^ (1 / 2 : ℝ) * t ≠ ⊤ := ENNReal.mul_ne_top hK ENNReal.coe_ne_top
   refine ⟨⟨hf, lt_of_le_of_lt h3 h4.lt_top⟩, ?_⟩
-  rw [integral_norm_eq_lintegral_enorm hf]
+  rw [integral_norm_eq_lintegral_eNorm hf]
   refine (ENNReal.toReal_mono h4 h3).trans (le_of_eq ?_)
   rw [ENNReal.toReal_mul]; simp
 
@@ -565,7 +565,7 @@ theorem ae_fixed {X Y H E : Type*} [MeasurableSpace X] [MeasurableSpace Y] [Norm
       IntegrableOn (fun x => ∫ g, e g • P (τ g) x ∂μ) s ν ∧ IntegrableOn (P w) s ν ∧
       ∫ x in s, (∫ g, e g • P (τ g) x ∂μ) ∂ν = ∫ x in s, P w x ∂ν := by
     intro s _ hs
-    haveI : IsFiniteMeasure (ν.restrict s) := ⟨by simpa using hs⟩
+    have : IsFiniteMeasure (ν.restrict s) := ⟨by simpa using hs⟩
     obtain ⟨K, hK0, hK⟩ := integrable_and_integral_norm_le_of_lintegral_sq_le (E := E) (ν.restrict s) C hC
     have hP : ∀ v ∈ D, Integrable (P v) (ν.restrict s) ∧ ∫ x, ‖P v x‖ ∂(ν.restrict s) ≤ K * ‖v‖ := fun v hv =>
       hK (P v) ‖v‖₊ (hm v hv).restrict ((lintegral_mono' Measure.restrict_le_self le_rfl).trans (hb v hv))
@@ -669,7 +669,7 @@ theorem integrable_eFun {σ : Mat k r → (H →L[ℂ] H)} {w : H} {a d : ℝ} {
   have hle : ∫⁻ g, ‖eFun μG σ w (Matrix.of g)‖ₑ ∂μG ≤
       ∫⁻ g, ENNReal.ofReal (|fdegH μG σ w| * |C|) * ENNReal.ofReal (opn (Matrix.of g) ^ (-a)) ∂μG := by
     refine lintegral_mono_ae (hae.mono fun g hg => ?_)
-    rw [← ENNReal.ofReal_mul (by positivity), ← ofReal_norm_eq_enorm]
+    rw [← ENNReal.ofReal_mul (by positivity), ← ofReal_norm]
     refine ENNReal.ofReal_le_ofReal ?_
     unfold eFun
     rw [norm_mul, norm_star, Complex.norm_real, Real.norm_eq_abs, mul_assoc]
@@ -727,7 +727,7 @@ theorem ae_of_quot {z : Fin (2 * r + k + 1) → ℂ} {ψ : Mat k r → ℂ} {π 
     have hmem : Matrix.of s * Matrix.of x ∈ GG k r := by
       rw [hs]; exact hG.2.2.2.1 _ (hG.2.2.2.1 _ ha.1 _ hm.1) _ hx
     refine Set.indicator_of_notMem ?_ _
-    simp only [Set.mem_compl_iff, not_not, Set.mem_setOf_eq]
+    simp only [Set.mem_compl_iff, not_not, Set.mem_ofPred_eq]
     rw [eΦ (fun i j => (Matrix.of s * Matrix.of x) i j) hmem, eΨ (fun i j => (Matrix.of s * Matrix.of x) i j) hmem]
     change Φ (Matrix.of s * Matrix.of x) = Ψ (Matrix.of s * Matrix.of x)
     rw [hs, hΦ a ha m hm _ hx, hΨ a ha m hm _ hx, hx']
@@ -743,9 +743,9 @@ theorem nonVan_of_bessel : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [In
   have he := integrable_eFun hstd hG
   obtain ⟨-, hσ, -, hw, hμ, hsch, -, -, -⟩ := hstd
   obtain ⟨hσf, hν, -⟩ := _root_.GlobalTheory.SgInf.weil_integrable k r _ μG μS ν hS hμ hμS ((_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hz hT μS).1 hμS) hq
-  haveI := hμ.1
-  haveI : SecondCountableTopology Wp := by
-    haveI : ProperSpace Wp := FiniteDimensional.proper_rclike ℂ Wp
+  have := hμ.1
+  have : SecondCountableTopology Wp := by
+    have : ProperSpace Wp := FiniteDimensional.proper_rclike ℂ Wp
     infer_instance
   have hνG : ∀ᵐ x ∂ν, Matrix.of x ∈ GG k r := hν
   have hμG : ∀ᵐ x ∂μG, Matrix.of x ∈ GG k r := hμ.2.2.1
@@ -833,7 +833,7 @@ theorem hsNormSq_smul {Wp Wq : Type*} [NormedAddCommGroup Wp] [InnerProductSpace
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (t : ℂ) (A : Wq →L[ℂ] Wp) :
     hsNormSq (t • A) = ‖t‖ ^ 2 * hsNormSq A := by
   have h : hsInner (t • A) (t • A) = ((‖t‖ ^ 2 : ℝ) : ℂ) * hsInner A A := by
-    simp only [hsInner, Finset.mul_sum, ContinuousLinearMap.smul_apply, inner_smul_left, inner_smul_right]
+    simp only [hsInner, Finset.mul_sum, smul_apply, inner_smul_left, inner_smul_right]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [← mul_assoc, Complex.mul_conj, Complex.normSq_eq_norm_sq]
   rw [hsNormSq, h, Complex.re_ofReal_mul, hsNormSq]
@@ -850,7 +850,7 @@ theorem ampJ_of_smul {k r : ℕ} {Wp Wq : Type*} [NormedAddCommGroup Wp] [InnerP
   filter_upwards [show ∀ᵐ x ∂μ, Matrix.of x ∈ GG k r from hμ.2.2.1] with x hx
   rw [h _ (Formalism.FourierDecayAlt.P.DDSmoothness.uh_mul hγ hx), h' _ hx]
   ext η
-  simp only [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, ContinuousLinearMap.smul_apply,
+  simp only [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, smul_apply,
     inner_smul_left, smul_smul, Complex.star_def]
   congr 1
   ring
@@ -878,7 +878,7 @@ theorem exists_isEll_smul (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerPr
   have hd : 0 < d := hStd.2.2.2.2.2.1.1
   obtain ⟨-, -, hle, hact, hinf⟩ := _root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ w hU
   have hgw : ∀ g ∈ GG k r, σ g w ∈ smoothVecs (k := k) (r := r) σ := (hact w hsm).1
-  haveI : Nontrivial Wp := hz.2.2
+  have : Nontrivial Wp := hz.2.2
   have hdim : (0 : ℝ) < Module.finrank ℂ Wp := by exact_mod_cast Module.finrank_pos
   have hn0 : ((‖v₀‖₊ : ℝ≥0∞)) ^ 2 ≠ 0 := pow_ne_zero _ (by simpa using hv)
   have hnt : ((‖v₀‖₊ : ℝ≥0∞)) ^ 2 ≠ ⊤ := ENNReal.pow_ne_top ENNReal.coe_ne_top
@@ -926,7 +926,7 @@ theorem exists_isEll_smul (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerPr
     rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
     refine lintegral_congr_ae ?_
     filter_upwards [hae] with x hx
-    rw [key _ hx, nnnorm_smul, ENNReal.coe_mul, mul_pow, ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [key _ hx, nnNorm_smul, ENNReal.coe_mul, mul_pow, ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     rfl
   rw [h0, hlw, hw1, ← ENNReal.ofReal_mul (sq_nonneg _),
     ENNReal.ofReal_eq_ofReal_iff (by positivity) (by positivity)] at e

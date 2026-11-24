@@ -76,8 +76,8 @@ theorem res_slH1 {H : Type} [Group H] [TopologicalSpace H] (phi : H →* Γ) (hp
 
 theorem slH1_ur (J : Subgroup Γ) (x : H1 rho) (hx : x ∈ H1ur rho J) :
     slH1 rho rho' u hu he x ∈ H1ur rho' J := by
-  have h0 : resH1 rho J.subtype continuous_subtype_val x = 0 := hx
-  exact (res_slH1 rho rho' u hu he J.subtype continuous_subtype_val x).trans
+  have h0 : resH1 rho J.subtype continuous_subtypeVal x = 0 := hx
+  exact (res_slH1 rho rho' u hu he J.subtype continuous_subtypeVal x).trans
     ((congrArg _ h0).trans (map_zero _))
 
 end General
@@ -131,7 +131,7 @@ theorem slH1_mem_selOn (Q : Finset (PlE D.host)) (x : H1 (repOn ρ (1 : GE N →
   refine (mem_Sel _ _ _ _ _).2 fun v => ?_
   have hv := (mem_Sel _ _ _ _ _).1 hx v
   refine (res_slH1 (repOn ρ (1 : GE N →* Kˣ) K) (repOn ρ (1 : GE N →* K'ˣ) K') (vecMap f r) continuous_of_discreteTopology
-    (vecMap_repOn f ρ) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtype_val x) ▸ ?_
+    (vecMap_repOn f ρ) (Dec (F := D.host.E) (N.plOm.1 v)).subtype continuous_subtypeVal x) ▸ ?_
   unfold Formalism.GaloisCohomology.bkCond at hv ⊢
   split_ifs at hv ⊢ with h1 h2
   · exact slH1_mem_bkOn bkP i ρ f v _ hv

@@ -153,8 +153,8 @@ lemma exists_comb {X : Type} [AddCommGroup X] [Module.Finite ℤ X] (S : X →+ 
   let S' : X →ₗ[ℤ] X →ₗ[ℤ] ℂ := LinearMap.mk₂ ℤ (fun x y => S x y) (by simp) (by simp) (by simp) (by simp)
   let L := TensorProduct.lift S'
   let M := LinearMap.range L
-  haveI : Module.Finite ℤ M := inferInstance
-  haveI : Module.Free ℤ M := inferInstance
+  have : Module.Finite ℤ M := inferInstance
+  have : Module.Free ℤ M := inferInstance
   let b := Module.finBasis ℤ M
   let f : X → X → M := fun x y => ⟨S x y, x ⊗ₜ y, by simp [L, S']⟩
   refine ⟨_, fun i => (b i : ℂ), fun i => LinearMap.mk₂ ℤ (fun x y => b.repr (f x y) i) ?_ ?_ ?_ ?_, ?_, ?_⟩
@@ -324,7 +324,7 @@ lemma shift_periods [Algebra (FractionRing ℂ) ℂ] (hσ : GoodEmb c σ) (hU : 
       ∀ S : A.X →+ A.X →+ ℂ, (∀ y y', S y y' = S y' y) → (∀ (a : 𝓞 E) y y', S (a • y) y' = S y (star a • y')) →
       ∃ T₀ : ℝ, ∀ w : ℂ, T₀ < w.im → ∃ (s : (U.X k).Ψ → ℂ) (hs : (U.X k).flow ξ' s x ∈ (U.X k).dom)
         (h : (Fin Uw.g → ℂ) ≃ₗ[ℂ] A.V), ∀ v, h (Uw.Pm k ⟨_, hs⟩ v) = A.Pw w (gam v) + ((S (gam v).y, 0) : A.V) := by
-  letI := H.starRing
+  let := H.starRing
   intro A gam ξ ⟨hEF, ⟨t, htξ, ht⟩, T₀, hT₀⟩ hξ hrk S hSs hSa
   obtain ⟨s₁, hs₁, h, hh⟩ := hT₀ (((T₀ + 1 : ℝ) : ℂ) * Complex.I) (by simp)
   set w₁ : ℂ := ((T₀ + 1 : ℝ) : ℂ) * Complex.I
@@ -403,7 +403,7 @@ lemma shift_periods [Algebra (FractionRing ℂ) ℂ] (hσ : GoodEmb c σ) (hU : 
 
 theorem exists_normAn_onOrbit : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r) (Uw : UnfWit U) (k : U.Comp) (ξ' : Fin r → E) (x : Frame (U.X k).Ψ r) (n' : ℕ), GoodEmb c σ → IsUnf U → (U.X k).IsIso ξ' → x ∈ (U.X k).dom → 0 < n' → letI := H.starRing; ∀ (A : AnArc (𝓞 E)) (gam : (Uw.F.Di (Uw.ik k)).La ≃ₗ[𝓞 E] A.La) (ξ : Module.Dual ℤ A.X), OnOrbit Uw k ξ' x A gam ξ → ξ ≠ 0 → Module.finrank (𝓞 E) A.X = 1 → PrimAn H A → (∀ y, n' • A.ct y ∈ A.abelian₂) → ∃ (A' : AnArc (𝓞 E)) (gam' : (Uw.F.Di (Uw.ik k)).La ≃ₗ[𝓞 E] A'.La) (ξ₁ : Module.Dual ℤ A'.X) (eX : A'.X ≃ₗ[𝓞 E] A.X), OnOrbit Uw k ξ' x A' gam' ξ₁ ∧ PrimAn H A' ∧ NormAn A' n' ∧ (∀ y, ξ₁ y = ξ (eX y)) ∧ (∀ y y', A'.be y y' = A.be (eX y) (eX y')) ∧ ∀ DB : Datum H, (∃ tyB eB, AbDat H A DB tyB eB) → ∃ tyB eB, AbDat H A' DB tyB eB := by
   intro E _ _ _ H Dw l Xo c _ _ σ r U Uw k ξ' x n' hσ hU hiso _ _
-  letI := H.starRing
+  let := H.starRing
   intro A gam ξ hO hξ hrk hP hn
   have hw : H.w0 + star H.w0 = 1 := GlobalTheory.Ex.Arch.AbVal.cmField_host_element_add_conj_eq_one H
   obtain ⟨T₀, hT⟩ := shift_periods Uw hσ hU k ξ' hiso x A gam ξ hO hξ hrk (normT A H.w0 - A.T)

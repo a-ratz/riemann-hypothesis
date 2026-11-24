@@ -104,9 +104,9 @@ theorem fderiv_vacF (hc : IsCharAF F ψ) (ι : (InfinitePlace F → ℂ) →+ AE
   have h2 := ev_fderivF hc ι G hG (Complex.I • s *ᵥ z) w
   have h3 := hv w z
   rw [PositivityTheory.ThKW.jV_apply] at h3
-  simp only [Submodule.coe_add, Submodule.coe_smul, BoundedContinuousFunction.coe_add,
-    BoundedContinuousFunction.coe_smul, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Submodule.coe_zero,
-    BoundedContinuousFunction.coe_zero, Pi.zero_apply]
+  simp only [Submodule.coe_add, Submodule.coe_smul, FunLike.coe_add,
+    FunLike.coe_smul, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Submodule.coe_zero,
+    FunLike.coe_zero, Pi.zero_apply]
   rw [h1, h2]
   exact h3
 
@@ -182,7 +182,7 @@ theorem exists_inf_A (C : Ctx σ B JS JT ξ₀ θ ι) : ∃ oi, IsInfWeilF σ JS
       funext fun p => by rw [hom p x hf]
     rw [e]
     exact (BoundedContinuousFunction.evalCLM ℂ w).continuous.comp
-      (continuous_subtype_val.comp (hcont (_root_.GlobalTheory.RealWeilF.MCont.continuous_mMF F E σ B good nS nT JS JT θ hinf) x (hSmθ x hf)))
+      (continuous_subtypeVal.comp (hcont (_root_.GlobalTheory.RealWeilF.MCont.continuous_mMF F E σ B good nS nT JS JT θ hinf) x (hSmθ x hf)))
   · obtain ⟨x, rfl⟩ := hx f hf
     rw [show om p ⇑(x : BoundedContinuousFunction (WOF F E nS nT) ℂ) = ⇑((Ω p x) : BoundedContinuousFunction (WOF F E nS nT) ℂ) from hom p x hf]
     exact _root_.GlobalTheory.RealWeilF.lintegral_eq_of_normsF F E σ nS nT JS JT ξ₀ B.ψ hc μ 𝓕 hμ h𝓕 x (Ω p x)

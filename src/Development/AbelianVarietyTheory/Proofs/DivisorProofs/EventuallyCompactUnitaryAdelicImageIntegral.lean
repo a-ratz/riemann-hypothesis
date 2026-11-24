@@ -87,20 +87,20 @@ theorem repr_map_eval {p : ℕ} [Fact p.Prime] (G : HTGroup p) (v : AwayP p) (y 
 theorem cptInt : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (Ω : Set G.GAf), IsCompact Ω →
     ∀ᶠ v in (Filter.cofinite : Filter (AwayP p)), piV G v '' Ω ⊆ IntV G v := by
   intro p _ G Ω hΩ
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  have : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
   set bA := Algebra.TensorProduct.basis (AfP p) (Module.finBasis ℚ G.C) with hbA
   have hrep : ∀ i, Continuous (fun y : AfP p ⊗[ℚ] G.C => bA.repr y i) := fun i => by
     have := IsModuleTopology.continuous_of_linearMap (R := AfP p) (bA.coord i)
     exact this
   have hg1 : Continuous (fun g : G.GAf => (((g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1 : (AfP p ⊗[ℚ] G.C)ˣ) : AfP p ⊗[ℚ] G.C)) :=
-    Units.continuous_val.comp (continuous_fst.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_fst.comp continuous_subtypeVal)
   have hg2 : Continuous (fun g : G.GAf => ((((g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1)⁻¹ : (AfP p ⊗[ℚ] G.C)ˣ) : AfP p ⊗[ℚ] G.C)) :=
-    Units.continuous_coe_inv.comp (continuous_fst.comp continuous_subtype_val)
+    Units.continuous_coe_inv.comp (continuous_fst.comp continuous_subtypeVal)
   have hg3 : Continuous (fun g : G.GAf => (((g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).2 : (AfP p)ˣ) : AfP p)) :=
-    Units.continuous_val.comp (continuous_snd.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_snd.comp continuous_subtypeVal)
   have hg4 : Continuous (fun g : G.GAf => ((((g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).2)⁻¹ : (AfP p)ˣ) : AfP p)) :=
-    Units.continuous_coe_inv.comp (continuous_snd.comp continuous_subtype_val)
+    Units.continuous_coe_inv.comp (continuous_snd.comp continuous_subtypeVal)
   have h1 := Filter.eventually_all.2 fun i => eventually_int_of_isCompact _ (hΩ.image ((hrep i).comp hg1))
   have h2 := Filter.eventually_all.2 fun i => eventually_int_of_isCompact _ (hΩ.image ((hrep i).comp hg2))
   have h3 := eventually_int_of_isCompact _ (hΩ.image hg3)

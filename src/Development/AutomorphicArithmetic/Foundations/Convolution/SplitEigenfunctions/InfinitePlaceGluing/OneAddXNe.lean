@@ -214,7 +214,7 @@ private theorem deg_le (h2 : Module.finrank ℚ E = 2) (v : H.P ℚ)
     (T : Finset (v.asIdeal.primesOver (𝓞 E))) : ∑ q ∈ T, q.1.inertiaDeg (𝓞 ℚ) ≤ 2 := by
   have := v.isMaximal
   have : Fintype (v.asIdeal.primesOver (𝓞 E)) := (IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 E)).fintype
-  rw [← h2, Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 ℚ) ℚ (𝓞 E) E,
+  rw [← h2, IsFractionRing.finrank_eq (𝓞 ℚ) ℚ (𝓞 E) E,
     ← Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 E)]
   refine (Finset.sum_le_sum_of_subset T.subset_univ).trans (Finset.sum_le_sum fun q _ => ?_)
   have := q.2.1
@@ -237,7 +237,7 @@ private theorem res_surj (w : H.P E) (hn : normV w = normV (w.under (𝓞 ℚ)))
     ∃ t : 𝓞 ℚ, x - algebraMap (𝓞 ℚ) (𝓞 E) t ∈ w.asIdeal := by
   have := (w.under (𝓞 ℚ)).isMaximal
   have := w.isPrime
-  letI := Ideal.Quotient.field (w.under (𝓞 ℚ)).asIdeal
+  let := Ideal.Quotient.field (w.under (𝓞 ℚ)).asIdeal
   have : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
   let φ : (𝓞 ℚ ⧸ (w.under (𝓞 ℚ)).asIdeal) →+* (𝓞 E ⧸ w.asIdeal) :=
     Ideal.quotientMap w.asIdeal (algebraMap (𝓞 ℚ) (𝓞 E)) le_rfl
@@ -452,7 +452,7 @@ private theorem unr_of_ok {ω : HChar ℚ} {L : ℕ} (hc : ChOk ω⁻¹ L) {v : 
         rw [map_sub, map_one, sub_eq_zero]
         exact hs w h
       rw [e, map_zero]
-      exact zero_le'
+      exact zero_le
   have h : (ω.1 (localIdele ℚ v x))⁻¹ = 1 := hc _ hU hD
   exact inv_eq_one.1 h
 
@@ -704,7 +704,7 @@ private theorem serInert {α β c : ℂ} {S S' : PowerSeries ℂ} (h1 : starRing
     split_ifs
     · simpa [Gs] using Complex.zero_le_real.2 (gg_nonneg τ (k / 2))
     · exact le_rfl
-  · rw [coeff_expand, if_pos (by norm_num)]
+  · rw [coeff_expand, ite_eq_left (by norm_num)]
     have := one_le_gg τ
     simp only [Gs, coeff_mk, show 4 / 2 = 2 from rfl]
     rw [← Complex.ofReal_one, Complex.real_le_real]
@@ -740,7 +740,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.lan_of :
     rw [hw, pow_one] at hab
     have hetav : η.val v = 1 := by
       have := hη w hnw
-      rw [hw, if_pos hn] at this
+      rw [hw, ite_eq_left hn] at this
       exact this
     have hval' : ((ω * η)⁻¹).val v = (ω.val v)⁻¹ := by
       rw [HChar.val_inv, HChar.val_mul, hetav, mul_one]
@@ -762,7 +762,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.lan_of :
       nlinarith
     have hetav : η.val v = -1 := by
       have := hη w hnw
-      rw [hw, if_neg hne1] at this
+      rw [hw, ite_eq_right hne1] at this
       exact this
     have hval' : ((ω * η)⁻¹).val v = -(ω.val v)⁻¹ := by
       rw [HChar.val_inv, HChar.val_mul, hetav]; simp

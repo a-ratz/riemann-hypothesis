@@ -181,7 +181,7 @@ theorem xFactorial_add_diagExponent (m : XY k →₀ ℕ) (i : Fin k) (n : ℕ) 
     have : i ≠ j := (Finset.ne_of_mem_erase hj).symm
     simp [diagExponent_inl, this]
   rw [h1]
-  simp only [Finsupp.add_apply, diagExponent_inl, if_true]
+  simp only [Finsupp.add_apply, diagExponent_inl, ite_true]
   rw [factorial_add_eq_descFactorial_mul, mul_assoc]
 
 def h3e (K : Type) [Field K] {k : ℕ} (i : Fin k) : Module.End K (PolXY K k) :=
@@ -196,7 +196,7 @@ theorem diagLaplacian_apply (i : Fin k) (f : PolXY K k) :
 theorem diagMul_pow_apply (i : Fin k) (n : ℕ) (f : PolXY K k) :
     (h3e K i ^ n) f = monomial (h3s i n) (1 : K) * f := by
   have : (monomial (h3s i n) (1 : K) : PolXY K k) = (X (Sum.inl i) * X (Sum.inr i)) ^ n := by
-    rw [mul_pow, X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul, one_mul, h3s]
+    rw [mul_pow, X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul_monomial, one_mul, h3s]
   rw [this, h3e, LinearMap.pow_mulLeft, LinearMap.mulLeft_apply]
 
 theorem coeff_diagMul_pow (i : Fin k) (n : ℕ) (f : PolXY K k) (m : XY k →₀ ℕ) :
@@ -610,7 +610,7 @@ theorem glAct_hXY {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) : glAct g (h
         exact Finset.sum_congr rfl fun i _ => by rw [map_mul]; ring
     _ = ∑ i : Fin k, X (Sum.inl i) * X (Sum.inr i) := by
         simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.sum_ite_eq,
-          Finset.mem_univ, if_true]
+          Finset.mem_univ, ite_true]
 
 theorem glAct_inv_glAct {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (f : PolXY K k) :
     glAct g⁻¹ (glAct g f) = f := by
@@ -633,7 +633,7 @@ theorem glAct_inv_glAct {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (f : P
             simp only [map_sum, Finset.sum_mul, map_mul, mul_assoc, Finset.mul_sum]
             rw [Finset.sum_comm]
         _ = X (Sum.inl i) := by
-          simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+          simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     · set_option synthInstance.maxHeartbeats 100000 in
         simp only [AlgHom.comp_apply, AlgHom.id_apply, glAct_X_inr, map_sum, map_mul,
         MvPolynomial.algHom_C, MvPolynomial.algebraMap_eq, inv_inv]
@@ -657,7 +657,7 @@ theorem glAct_inv_glAct {K : Type} [Field K] {k : ℕ} (g : GL (Fin k) K) (f : P
             simp only [map_sum, Finset.sum_mul, map_mul, mul_assoc, Finset.mul_sum]
             rw [Finset.sum_comm]
         _ = X (Sum.inr i) := by
-          simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+          simp only [hm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   have h2 := congrArg (fun φ => φ f) key
   simpa using h2
 
@@ -753,7 +753,7 @@ theorem multinomial_factorization_le (p : ℕ) {ι : Type} [DecidableEq ι] (s :
     rcases s.eq_empty_or_nonempty with hs | hs
     · subst hs
       simp [Nat.multinomial_singleton]
-    · rw [Nat.multinomial_insert ha, Finset.sum_insert ha, Finset.card_insert_eq_ite, if_neg ha]
+    · rw [Nat.multinomial_insert ha, Finset.sum_insert ha, Finset.card_insert_eq_ite, ite_eq_right ha]
       have hc : (f a + ∑ i ∈ s, f i).choose (f a) ≠ 0 := (Nat.choose_pos (Nat.le_add_right _ _)).ne'
       have hm : Nat.multinomial s f ≠ 0 := (Nat.multinomial_pos _ _).ne'
       rw [Nat.factorization_mul hc hm, Finsupp.add_apply]
@@ -920,7 +920,7 @@ theorem h_mul_mem_gauss {K : Type} [Field K] {k : ℕ} (R : Subring K) (G : PolX
   unfold hXY
   rw [MvPolynomial.coeff_sum]
   refine R.sum_mem fun i _ => ?_
-  rw [MvPolynomial.coeff_X_mul', MvPolynomial.coeff_X']
+  rw [MvPolynomial.coeff_X_mul', coeff_X]
   split_ifs <;> first | exact R.one_mem | exact R.zero_mem
 
 theorem h_pow_mul_mem_gauss {K : Type} [Field K] {k : ℕ} (R : Subring K) (j : ℕ) (G : PolXY K k)
@@ -934,7 +934,7 @@ theorem h_pow_mul_mem_gauss {K : Type} [Field K] {k : ℕ} (R : Subring K) (j : 
 theorem isotypicLattice_holds : LevelLattice := by
   intro K _ _ k a b j O g hk
   ext f
-  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_image, SetLike.mem_coe]
+  simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_image, SetLike.mem_coe]
   constructor
   · rintro ⟨hf, w, hw, rfl⟩
     exact ⟨w, ⟨gaussLemmaPairing_holds K k O g j w hk hf, hw⟩, rfl⟩
@@ -968,7 +968,7 @@ private theorem coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth (v : XY k
     by_cases hs : s = m + Finsupp.single v 1
     · subst hs
       simp
-    · rw [if_neg hs, zero_mul]
+    · rw [ite_eq_right hs, zero_mul]
       split_ifs with h
       · have hsv : s v = 0 := by
           by_contra hne
@@ -994,7 +994,7 @@ theorem coeff_ctrF (f : PolXY K k) (m : XY k →₀ ℕ) :
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [LinearMap.comp_apply]
   show AddMonoidAlgebra.coeff (pderiv (R := K) (Sum.inl i : XY k) (pderiv (R := K) (Sum.inr i : XY k) f)) m = _
-  rw [coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth, coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth, Finsupp.add_apply, Finsupp.single_apply, if_neg Sum.inl_ne_inr,
+  rw [coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth, coeff_pderiv_eq_coeff_add_single_mul_multinomial_depth, Finsupp.add_apply, Finsupp.single_apply, ite_eq_right Sum.inl_ne_inr,
     add_zero]
 
 theorem ctrF_mem_PolAB {a b : ℕ} {f : PolXY K k} (hf : f ∈ PolAB K k a b) :
@@ -1207,12 +1207,12 @@ theorem h_mul_eq_zero_of_deg {K : Type} [Field K] {k A B : ℕ} (hAB : A = 0 ∨
     · have hle : m (Sum.inl i) ≤ xDeg m :=
         Finset.single_le_sum (f := fun j => m (Sum.inl j)) (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)
       have hmi : m (Sum.inl i) = 0 := by omega
-      rw [mul_assoc, MvPolynomial.coeff_X_mul', if_neg (by simpa [Finsupp.mem_support_iff] using hmi)]
+      rw [mul_assoc, MvPolynomial.coeff_X_mul', ite_eq_right (by simpa [Finsupp.mem_support_iff] using hmi)]
     · have hle : m (Sum.inr i) ≤ yDeg m :=
         Finset.single_le_sum (f := fun j => m (Sum.inr j)) (fun _ _ => Nat.zero_le _) (Finset.mem_univ i)
       have hmi : m (Sum.inr i) = 0 := by omega
       rw [mul_comm (X (Sum.inl i)) (X (Sum.inr i)), mul_assoc, MvPolynomial.coeff_X_mul',
-        if_neg (by simpa [Finsupp.mem_support_iff] using hmi)]
+        ite_eq_right (by simpa [Finsupp.mem_support_iff] using hmi)]
 
 theorem harQuot_of (H1 : HarProj) (H2 : GaussProj) : HarQuot := by
   intro K _ _ k A B p O g hk hp hR

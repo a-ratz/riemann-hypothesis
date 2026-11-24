@@ -169,7 +169,7 @@ theorem exists_prime_div_uniformiser (F' : Type) [Field F'] [NumberField F']
     simpa using this
   have hle : v.valuation F' (ℓ : F') ≤ WithZero.exp (-1 : ℤ) := by
     rcases eq_or_ne (v.valuation F' (ℓ : F')) 0 with h0 | h0
-    · rw [h0]; exact zero_le'
+    · rw [h0]; exact zero_le
     · obtain ⟨a, ha⟩ : ∃ a : ℤ, v.valuation F' (ℓ : F') = WithZero.exp a :=
         ⟨WithZero.log _, (WithZero.exp_log h0).symm⟩
       rw [ha] at hlt ⊢
@@ -178,7 +178,7 @@ theorem exists_prime_div_uniformiser (F' : Type) [Field F'] [NumberField F']
         exact WithZero.exp_lt_exp.1 hlt
       exact WithZero.exp_le_exp.2 (by omega)
   rw [map_div₀, hπ]
-  exact div_le_one_of_le₀ hle zero_le'
+  exact div_le_one_of_le₀ hle zero_le
 
 end GlobalTheory.CompanionTheory.Ar.Rescar
 end -- clump:auto
@@ -253,9 +253,9 @@ end PositivityTheory.Xgn.LineLatticeSpread
 open PositivityTheory.Xgn.LineLatticeSpread in
 theorem PositivityTheory.Xgn.line_lattice_spread : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (O : Type) [CommRing O] [IsDomain O] [Algebra O Ω] (s : X ⟶ Spec (CommRingCat.of O)) [IsNoetherianRing O] [LocallyOfFiniteType s] [QuasiCompact s], ξ ≫ s = Spec.map (CommRingCat.ofHom (algebraMap O Ω)) → Function.Injective (algebraMap O Ω) → IsCptGen ξ → ∀ (L : Lat ξ Ω) (T : Set (Cpt ξ)) (n₀ : O) (t : Ω), n₀ ≠ 0 → (∀ p, unitAt ξ p (algebraMap O Ω n₀) → p ∈ T) → L.IsVBOn T 1 ⊤ → (∀ p ∈ genFibre O ξ, L.IsGenAt p t) → ∃ n : O, n ≠ 0 ∧ ∀ p, unitAt ξ p (algebraMap O Ω n) → L.IsGenAt p t := by
   intro X Ω _ ξ O _ _ _ s _ _ _ hs _ hc L T n₀ t hn₀ hT hL hgen
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
-  haveI : IsNoetherian X := {}
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
+  have : IsNoetherian X := {}
   have hu : ∀ (p : Cpt ξ) (o : O), unitAt ξ p (algebraMap O Ω o) ↔ o ∉ (s p.1).asIdeal := fun p o =>
     (ConstReg.regular_const X Ω ξ O s hs p o).2 hc
   let W : Set X := ⋃ (U : X.Opens) (_ : ∀ q : Cpt ξ, q.1 ∈ U → L.IsGenAt q t), (U : Set X)
@@ -596,13 +596,13 @@ theorem exists_orders (hZ : PropZ) {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ :
   let r₀ : HeightOneSpectrum (𝓞 F') → ℚ := fun v => if v ∈ T then (a v : ℚ) / M v else 0
   have hr₀ : (Function.support r₀).Finite := hfin.subset fun v hv => by
     by_contra h
-    exact hv (if_neg h)
+    exact hv (ite_eq_right h)
   refine ⟨Finsupp.ofSupportFinite r₀ hr₀, fun v π' hπ' => ?_⟩
   have hrv : (Finsupp.ofSupportFinite r₀ hr₀) v = r₀ v := rfl
   rw [hrv]
   by_cases hv : v ∈ T
   · have hMv : (M v : ℚ) ≠ 0 := by exact_mod_cast (hM v).ne'
-    refine ⟨M v, a v, hM v, by simp only [r₀, if_pos hv]; field_simp, fun p hp => ?_⟩
+    refine ⟨M v, a v, hM v, by simp only [r₀, ite_eq_left hv]; field_simp, fun p hp => ?_⟩
     refine orderAt_of_unit (hord v p hp) ?_
     have h0 : π' ≠ 0 := by
       rintro rfl
@@ -619,7 +619,7 @@ theorem exists_orders (hZ : PropZ) {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ :
     have e2 : v.valuation F' (π v / π')⁻¹ = 1 := by rw [map_inv₀, e1, inv_one]
     rw [← map_div₀]
     exact ⟨(map_ne_zero ψ).2 (div_ne_zero h1 h0), hp _ e1.le, by rw [← map_inv₀]; exact hp _ e2.le⟩
-  · refine ⟨1, 0, one_pos, by simp only [r₀, if_neg hv]; simp, fun p hp => ?_⟩
+  · refine ⟨1, 0, one_pos, by simp only [r₀, ite_eq_right hv]; simp, fun p hp => ?_⟩
     have h1 : v.valuation F' (n : F') ≤ 1 := by
       have := v.valuation_le_one (K := F') (n : 𝓞 F')
       simpa using this
@@ -745,8 +745,8 @@ namespace PositivityTheory.Xgn.PointOverExistence
 theorem exists_algHom (F R : Type) [Field F] [CommRing R] [Nontrivial R] [Algebra F R]
     [Algebra.FiniteType F R] [Algebra F ℂ] : Nonempty (R →ₐ[F] ℂ) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal R
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite F (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing F (R ⧸ m)
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite F (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing F (R ⧸ m)
   exact ⟨(IsAlgClosed.lift : (R ⧸ m) →ₐ[F] ℂ).comp (Ideal.Quotient.mkₐ F m)⟩
 
 variable {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)]
@@ -811,8 +811,8 @@ open PositivityTheory.Xgn.PointOverExistence in
 theorem PositivityTheory.Xgn.exists_point_over_nonvanishing : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Ω : Type) [Field Ω] (F : Type) [Field F] [NumberField F] (y : (Σ k, ι k) → Ω) (φ : F →+* Ω) (σ : F →+* ℂ) (g : MRing ι) (d : K → ℕ), OverInt y φ → IsMultiHomog g d → g ∉ mCoordIdeal y → ∃ z, PtOver y φ σ z ∧ evC z g ≠ 0 := by
   intro K _ ι _ Ω _ F _ _ y φ σ g d hO hg hn
   choose c hc using hO.1
-  letI : Algebra F Ω := φ.toAlgebra
-  letI : Algebra F ℂ := σ.toAlgebra
+  let : Algebra F Ω := φ.toAlgebra
+  let : Algebra F ℂ := σ.toAlgebra
   let t : K → Ω := fun k => (y ⟨k, c k⟩)⁻¹
   let w : (Σ k, ι k) → Ω := fun p => t p.1 * y p
   have hγ : aeval w g ≠ 0 := by
@@ -820,7 +820,7 @@ theorem PositivityTheory.Xgn.exists_point_over_nonvanishing : ∀ (K : Type) [Fi
     exact mul_ne_zero (Finset.prod_ne_zero_iff.mpr fun k _ => pow_ne_zero _ (inv_ne_zero (hc k)))
       (aeval_ne_zero hg hn)
   let A : Subalgebra F Ω := Algebra.adjoin F (insert (aeval w g)⁻¹ (Set.range w))
-  haveI : Algebra.FiniteType F A :=
+  have : Algebra.FiniteType F A :=
     Algebra.FiniteType.adjoin_of_finite ((Set.finite_range w).insert _)
   obtain ⟨ψ⟩ := exists_algHom F A
   let wA : (Σ k, ι k) → A := fun p => ⟨w p, Algebra.subset_adjoin (Or.inr ⟨p, rfl⟩)⟩
@@ -1547,12 +1547,12 @@ end PositivityTheory.Xgn.FibreFunctionConstant
 open PositivityTheory.Xgn.FibreFunctionConstant in
 theorem PositivityTheory.Xgn.function_on_connected_fibre_unit : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra O Ω] (s : X ⟶ Spec (CommRingCat.of O)) [IsProper s] (ϖ : O), Irreducible ϖ → Function.Injective (algebraMap O Ω) → ξ ≫ s = Spec.map (CommRingCat.ofHom (algebraMap O Ω)) → IsCptGen ξ → _root_.IsConnected (zeroSet ξ (algebraMap O Ω ϖ)) → ∀ h : Cpt ξ → Ω, (∀ p : Cpt ξ, ¬ unitAt ξ p (algebraMap O Ω ϖ) → ∃ U : X.Opens, p.1 ∈ U ∧ ∀ q : Cpt ξ, q.1 ∈ U → ¬ unitAt ξ q (algebraMap O Ω ϖ) → h p ∈ regAt ξ q ∧ (h p - h q) / algebraMap O Ω ϖ ∈ regAt ξ q) → (∃ p, ¬ unitAt ξ p (algebraMap O Ω ϖ) ∧ unitAt ξ p (h p)) → ∀ p, ¬ unitAt ξ p (algebraMap O Ω ϖ) → unitAt ξ p (h p) := by
   intro X Ω _ ξ O _ _ _ _ s _ ϖ hϖ hinj hs hc hconn h H hex
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
   obtain ⟨U, hU, hUc, -⟩ := cpt_open_integral X Ω ξ hc
-  haveI : IsClosedImmersion U.ι := IsClosedImmersion.of_isPreimmersion _ (by simpa using hUc)
+  have : IsClosedImmersion U.ι := IsClosedImmersion.of_isPreimmersion _ (by simpa using hUc)
   let r : Spec (CommRingCat.of (IsLocalRing.ResidueField O)) ⟶ Spec (CommRingCat.of O) :=
     Spec.map (CommRingCat.ofHom (IsLocalRing.residue O))
-  haveI : IsClosedImmersion r :=
+  have : IsClosedImmersion r :=
     IsClosedImmersion.spec_of_surjective _ (IsLocalRing.residue_surjective (R := O))
   have hmax : IsLocalRing.maximalIdeal O = Ideal.span {ϖ} := hϖ.maximalIdeal_eq
   have hrr : ∀ x : Spec (CommRingCat.of O), x ∈ Set.range r ↔ ϖ ∈ x.asIdeal := fun x => by
@@ -1579,7 +1579,7 @@ theorem PositivityTheory.Xgn.function_on_connected_fibre_unit : ∀ (X : Scheme.
       obtain ⟨y, hy⟩ := h3
       refine ⟨y, ?_⟩
       simp [ι, hy]
-  haveI : ConnectedSpace (pullback (U.ι ≫ s) r : Scheme.{0}) := by
+  have : ConnectedSpace (pullback (U.ι ≫ s) r : Scheme.{0}) := by
     rw [← hr, ← Set.image_univ] at hconn
     rw [connectedSpace_iff_univ]
     exact ⟨hconn.1.of_image, ι.isEmbedding.isInducing.isPreconnected_image.1 hconn.2⟩
@@ -1771,14 +1771,14 @@ theorem exists_constants {Ω : Type} [Field Ω] {K : Type} [Fintype K] {J : K �
     ∃ (F' : Type) (_ : Field F') (_ : NumberField F') (ι : F →+* F') (ψ : F' →+* Ω), ψ.comp ι = cst ∧
       ∀ x : Ω, (∃ f : Polynomial F', f ≠ 0 ∧ f.eval₂ ψ x = 0) → x ∈ Set.range ψ := by
   classical
-  letI : Algebra F Ω := cst.toAlgebra
+  let : Algebra F Ω := cst.toAlgebra
   have hle : ∀ g : MRing J, aeval y g ∈ IntermediateField.adjoin F (Set.range y) := fun g => by
     induction g using MvPolynomial.induction_on with
     | C a => simp
     | add p q hp hq => rw [map_add]; exact add_mem hp hq
     | mul_X p i hp =>
       rw [map_mul, aeval_X]; exact mul_mem hp (IntermediateField.subset_adjoin _ _ ⟨i, rfl⟩)
-  haveI : Algebra.EssFiniteType F Ω := by
+  have : Algebra.EssFiniteType F Ω := by
     rw [← IntermediateField.fg_top_iff]
     refine ⟨(Set.finite_range y).toFinset, ?_⟩
     rw [Set.Finite.coe_toFinset, eq_top_iff]
@@ -1787,8 +1787,8 @@ theorem exists_constants {Ω : Type} [Field Ω] {K : Type} [Fintype K] {J : K �
     rw [eq_div_of_mul_eq h0 e.symm]
     exact div_mem (hle g) (hle h)
   let L := algebraicClosure F Ω
-  haveI : FiniteDimensional F L := GlobalTheory.finiteDimensional_algebraicClosure_of_essFiniteType F Ω
-  haveI : NumberField L := NumberField.of_module_finite F L
+  have : FiniteDimensional F L := GlobalTheory.finiteDimensional_algebraicClosure_of_essFiniteType F Ω
+  have : NumberField L := NumberField.of_module_finite F L
   refine ⟨L, inferInstance, inferInstance, algebraMap F L, algebraMap L Ω, rfl, ?_⟩
   rintro x ⟨f, hf, hx⟩
   have h1 : IsAlgebraic L x := ⟨f, hf, hx⟩
@@ -1847,7 +1847,7 @@ theorem core (hSm : SmoothLine) (hLc : LocalCmp) (hNu : Numerics) (hF : HT.Fargu
         𝔐.Interior z → A.h w = ∏ i, (hx (τ, i)).h w) ∧
       NearRecord (D.p + D.q) S (hostRd E) (hostLval H) Sf.ht := by
   obtain ⟨F', _, _, ι, ψ, hψ, hcl⟩ := CptInputs.exists_constants hbir 𝔐.cst
-  haveI : Nonempty K := hvar.1
+  have : Nonempty K := hvar.1
   have hN : NormalCpt 𝔐.ξ := XR.normalCpt_of_isCptGen 𝔐.tie.gen 𝔐.normal
   obtain ⟨hφ, a, b, hgen, hrep⟩ := id hflat
   obtain ⟨i, j, hT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.CptIn.exists_isTie E H D l Xo c Y U Z S Ω K J y 𝔐 hgp
@@ -1892,7 +1892,7 @@ theorem core (hSm : SmoothLine) (hLc : LocalCmp) (hNu : Numerics) (hF : HT.Fargu
       (exteriorPower.ιMulti Ω _ (Fl.b (.inl τ))) (exteriorPower.ιMulti Ω _ (Fl.b (.inr τ)))) (ℓ : Ω) := by
     intro ℓ hℓ
     by_cases hS : ℓ ∈ S
-    · haveI : Fact ℓ.Prime := ⟨hℓ⟩
+    · have : Fact ℓ.Prime := ⟨hℓ⟩
       refine Or.inl (_root_.GlobalTheory.CompanionTheory.Ar.Flat.DddTriv.trivMod_lineLat 𝔐.X Ω 𝔐.ξ 𝔐.Li _ _ _ _ _ _ _ _ (ℓ : Ω) 𝔐.tie.gen (Nat.cast_ne_zero.2 hℓ.ne_zero)
         (fun q => ?_) hVA hVB haF hbF ⟨x₀, _, hco x₀ hx₀⟩
         (_root_.GlobalTheory.CompanionTheory.Ar.Flat.exactModLat_hodgeTate hF E H D l Xo c _ _ Y S Ω K J y 𝔐 ℓ hS hpq (hfree ℓ hS) τ))

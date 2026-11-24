@@ -58,7 +58,7 @@ namespace GlobalTheory
 theorem algebraMap_surjective_of_unramified_of_unique_point (K A : Type) [Field K] [IsAlgClosed K]
     [CommRing A] [Algebra K A] [Module.Finite K A] [Algebra.FormallyUnramified K A]
     (φ : A →ₐ[K] K) (hφ : ∀ ψ : A →ₐ[K] K, ψ = φ) : Function.Surjective (algebraMap K A) := by
-  haveI : IsReduced A := Algebra.FormallyUnramified.isReduced_of_field K A
+  have : IsReduced A := Algebra.FormallyUnramified.isReduced_of_field K A
   have hker : ∀ a : A, φ a = 0 → a = 0 := by
     intro a ha
     apply IsNilpotent.eq_zero
@@ -88,11 +88,11 @@ theorem nontrivial_tensor_of_mem_support (R C K : Type) [CommRing R] [AddCommGro
       intro r hr
       have : algebraMap R K r ≠ 0 := fun h0 => hr (hp.le h0)
       exact (isUnit_iff_ne_zero.mpr this))
-  letI : Algebra p.asIdeal.ResidueField K := g.toAlgebra
-  haveI : IsScalarTower R p.asIdeal.ResidueField K := IsScalarTower.of_algebraMap_eq (by
+  let : Algebra p.asIdeal.ResidueField K := g.toAlgebra
+  have : IsScalarTower R p.asIdeal.ResidueField K := IsScalarTower.of_algebraMap_eq (by
     intro r
     exact (Ideal.ResidueField.lift_algebraMap ..).symm)
-  haveI : Nontrivial (K ⊗[p.asIdeal.ResidueField] (p.asIdeal.ResidueField ⊗[R] C)) :=
+  have : Nontrivial (K ⊗[p.asIdeal.ResidueField] (p.asIdeal.ResidueField ⊗[R] C)) :=
     inferInstance
   exact (TensorProduct.AlgebraTensorModule.cancelBaseChange R p.asIdeal.ResidueField K K
     C).symm.toEquiv.nontrivial
@@ -114,12 +114,12 @@ open scoped TensorProduct in
 private lemma algebraMap_surjective_of_unique_algHom (K A : Type) [Field K] [IsAlgClosed K] [CommRing A]
     [Algebra K A] [Module.Finite K A] [Algebra.FormallyUnramified K A]
     (φ₀ : A →ₐ[K] K) (hφ₀ : ∀ φ : A →ₐ[K] K, φ = φ₀) : Function.Surjective (algebraMap K A) := by
-  haveI := Algebra.FormallyUnramified.isReduced_of_field K A
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
+  have := Algebra.FormallyUnramified.isReduced_of_field K A
+  have : IsArtinianRing A := IsArtinianRing.of_finite K A
   have hφ₀s : Function.Surjective φ₀ := fun c => ⟨algebraMap K A c, by simp⟩
   have hmax : ∀ m : Ideal A, m.IsMaximal → m = RingHom.ker φ₀ := by
     intro m hm
-    letI := Ideal.Quotient.field m
+    let := Ideal.Quotient.field m
     have hs : Function.Surjective (algebraMap K (A ⧸ m)) := IsSepClosed.algebraMap_surjective K (A ⧸ m)
     let e : K ≃ₐ[K] A ⧸ m := AlgEquiv.ofBijective (Algebra.ofId K (A ⧸ m))
       ⟨(algebraMap K (A ⧸ m)).injective, hs⟩
@@ -127,7 +127,7 @@ private lemma algebraMap_surjective_of_unique_algHom (K A : Type) [Field K] [IsA
     rw [← h]
     ext a
     simp [RingHom.mem_ker, Ideal.Quotient.eq_zero_iff_mem]
-  haveI : IsLocalRing A := IsLocalRing.of_unique_max_ideal
+  have : IsLocalRing A := IsLocalRing.of_unique_max_ideal
     ⟨RingHom.ker φ₀, RingHom.ker_isMaximal_of_surjective _ hφ₀s, fun m hm => hmax m hm⟩
   have hfield := IsArtinianRing.isField_of_isReduced_of_isLocalRing A
   have hinj : Function.Injective φ₀ := by
@@ -145,7 +145,7 @@ private lemma exists_smul_mem_range_algebraMap_of_unique_lift {R B : Type} [Comm
     [Module.Finite R B] [Algebra.FormallyUnramified R B] {K : Type} [Field K] [IsAlgClosed K]
     (x : R →+* K) (hy : ∃! y : B →+* K, y.comp (algebraMap R B) = x) :
     ∃ f : R, f ∉ RingHom.ker x ∧ ∀ b : B, ∃ a : R, f • b = algebraMap R B a := by
-  letI : Algebra R K := x.toAlgebra
+  let : Algebra R K := x.toAlgebra
   obtain ⟨y, hyx, hyu⟩ := hy
   let y' : B →ₐ[R] K := { y with commutes' := fun r => congrArg (fun g : R →+* K => g r) hyx }
   let φ₀ : K ⊗[R] B →ₐ[K] K := Algebra.TensorProduct.productLeftAlgHom (AlgHom.id K K) y'
@@ -160,7 +160,7 @@ private lemma exists_smul_mem_range_algebraMap_of_unique_lift {R B : Type} [Comm
       ext r
       exact ((φ₀.restrictScalars R).comp Algebra.TensorProduct.includeRight).commutes r
     apply Algebra.TensorProduct.ext (Subsingleton.elim _ _)
-    apply AlgHom.coe_ringHom_injective
+    apply AlgHom.toRingHom_injective
     exact h1.trans h2.symm
   have hsurj := algebraMap_surjective_of_unique_algHom K (K ⊗[R] B) φ₀ hΦ
   let N : Submodule R B := LinearMap.range (Algebra.linearMap R B)
@@ -180,19 +180,19 @@ private lemma exists_smul_mem_range_algebraMap_of_unique_lift {R B : Type} [Comm
     (fun a ha => by
       simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff, isUnit_iff_ne_zero]
       exact ha)
-  letI : Algebra (RingHom.ker x).ResidueField K := xb.toAlgebra
-  haveI : IsScalarTower R (RingHom.ker x).ResidueField K := IsScalarTower.of_algebraMap_eq (fun r => by
+  let : Algebra (RingHom.ker x).ResidueField K := xb.toAlgebra
+  have : IsScalarTower R (RingHom.ker x).ResidueField K := IsScalarTower.of_algebraMap_eq (fun r => by
     simp [xb, RingHom.algebraMap_toAlgebra])
   have hsub2 : Subsingleton ((RingHom.ker x).ResidueField ⊗[R] (B ⧸ N)) := by
     have e := TensorProduct.AlgebraTensorModule.cancelBaseChange R (RingHom.ker x).ResidueField K K (B ⧸ N)
-    haveI : Subsingleton (K ⊗[(RingHom.ker x).ResidueField] ((RingHom.ker x).ResidueField ⊗[R] (B ⧸ N))) :=
+    have : Subsingleton (K ⊗[(RingHom.ker x).ResidueField] ((RingHom.ker x).ResidueField ⊗[R] (B ⧸ N))) :=
       e.toEquiv.subsingleton
     exact (Module.FaithfullyFlat.subsingleton_tensorProduct_iff_right _ _).mp this
   have hns : (⟨RingHom.ker x, hq⟩ : PrimeSpectrum R) ∉ Module.support R (B ⧸ N) := by
     rw [Module.mem_support_iff_nontrivial_residueField_tensorProduct]
     exact not_nontrivial_iff_subsingleton.mpr hsub2
   rw [Module.mem_support_iff_of_finite] at hns
-  obtain ⟨f, hfann, hfq⟩ := SetLike.not_le_iff_exists.mp hns
+  obtain ⟨f, hfann, hfq⟩ := IsConcreteLE.not_le_iff_exists.mp hns
   refine ⟨f, hfq, fun b => ?_⟩
   have h0 := Module.mem_annihilator.mp hfann (N.mkQ b)
   rw [← LinearMap.map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h0

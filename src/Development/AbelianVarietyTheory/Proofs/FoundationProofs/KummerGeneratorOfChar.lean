@@ -71,7 +71,7 @@ theorem kummer_generator_of_char : ∀ (K Ω : Type) [Field K] [CharZero K] [Fie
   IsLocallyConstant χ → (∀ g ∈ E.fixingSubgroup, ∀ h ∈ E.fixingSubgroup, χ (g * h) = χ g + χ h) →
   ∃ θ : Ω, θ ≠ 0 ∧ θ ^ N ∈ E ∧ ∀ g ∈ E.fixingSubgroup, g θ = ζ ^ (χ g).val * θ := by
   intro K Ω _ _ _ _ _ N ζ hN hζ hfix E χ hχ hadd
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   classical
   set H := E.fixingSubgroup with hH
   have hζN : ζ ^ N = 1 := hζ.pow_eq_one
@@ -100,10 +100,10 @@ theorem kummer_generator_of_char : ∀ (K Ω : Type) [Field K] [CharZero K] [Fie
     have := hadd h hh (h⁻¹ * g) hm
     rw [mul_inv_cancel_left, h0, add_zero] at this
     exact this
-  haveI : FiniteDimensional K F := hFfin
+  have : FiniteDimensional K F := hFfin
   let ι := {φ : F →ₐ[K] Ω // ∃ g ∈ H, r g = φ}
-  haveI : Finite (F →ₐ[K] Ω) := inferInstance
-  haveI : Fintype ι := Fintype.ofFinite ι
+  have : Finite (F →ₐ[K] Ω) := inferInstance
+  have : Fintype ι := Fintype.ofFinite ι
   let s : ι → (Ω ≃ₐ[K] Ω) := fun i => i.2.choose
   have hsH : ∀ i, s i ∈ H := fun i => i.2.choose_spec.1
   have hsr : ∀ i, r (s i) = i.1 := fun i => i.2.choose_spec.2
@@ -166,7 +166,7 @@ theorem kummer_generator_of_char : ∀ (K Ω : Type) [Field K] [CharZero K] [Fie
     simp only [w] at h3
     rw [h3, ← hec i]; ring
   refine ⟨∑ i, w i * i.1 c, hc, ?_, ?_⟩
-  · haveI : IsGalois K Ω := IsAlgClosure.isGalois K Ω
+  · have : IsGalois K Ω := IsAlgClosure.isGalois K Ω
     rw [← InfiniteGalois.fixedField_fixingSubgroup E, IntermediateField.mem_fixedField_iff]
     intro g hg
     have key := hmain g hg

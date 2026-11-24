@@ -133,7 +133,7 @@ theorem sub_const_mem_span_X {κ : Type} (p : MvPolynomial κ R) :
     ext i
     exact hcon i (Set.mem_univ i)
   subst h0
-  rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, MvPolynomial.coeff_C, if_pos rfl] at hm
+  rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, MvPolynomial.coeff_C, ite_eq_left rfl] at hm
   apply hm
   rw [sub_eq_zero, MvPolynomial.aeval_zero', ← MvPolynomial.constantCoeff_eq]
   rfl
@@ -182,8 +182,8 @@ theorem etale_ext {A : Type} [CommRing A] [Algebra R A] (aug : A →ₐ[R] R)
     apply MvPolynomial.algHom_ext
     intro j
     exact (hs j).symm
-  letI : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin n) R) A := IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
+  let : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
+  have : IsScalarTower R (MvPolynomial (Fin n) R) A := IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
   let ψ₁ : S →ₐ[MvPolynomial (Fin n) R] A :=
     { φ₁.toRingHom with commutes' := fun p => rfl }
   let ψ₂ : S →ₐ[MvPolynomial (Fin n) R] A :=
@@ -201,8 +201,8 @@ theorem etale_exists {A : Type} [CommRing A] [Algebra R A] (aug : A →ₐ[R] R)
     (hJ : IsNilpotent (RingHom.ker aug)) (b : Fin n → A) (hb : ∀ j, aug (b j) = ε (sX (R := R) j)) :
     ∃ φ : S →ₐ[R] A, aug.comp φ = ε ∧ ∀ j, φ (sX (R := R) j) = b j := by
   let ρ : MvPolynomial (Fin n) R →ₐ[R] A := MvPolynomial.aeval b
-  letI : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin n) R) A := IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
+  let : Algebra (MvPolynomial (Fin n) R) A := ρ.toRingHom.toAlgebra
+  have : IsScalarTower R (MvPolynomial (Fin n) R) A := IsScalarTower.of_algebraMap_eq (fun r => (ρ.commutes r).symm)
   let J := RingHom.ker aug
   let mk : A →ₐ[MvPolynomial (Fin n) R] A ⧸ J := Ideal.Quotient.mkₐ _ J
   have hmkR : ∀ a : A, mk a = Ideal.Quotient.mk J (algebraMap R A (aug a)) := by

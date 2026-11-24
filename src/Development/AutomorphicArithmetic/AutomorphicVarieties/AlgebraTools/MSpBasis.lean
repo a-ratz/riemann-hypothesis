@@ -74,10 +74,10 @@ theorem UpperTheory.V.AlgebraTools.splitAlg_succ_equiv :
     exact Finset.prod_eq_zero (Finset.mem_univ 0) (by simp)
   let φ : AdjoinRoot P →+* SplitAlg P (n + 1) :=
     AdjoinRoot.lift (algebraMap R (SplitAlg P (n + 1))) (SplitAlg.root P (n + 1) 0) hroot0
-  letI alg : Algebra (AdjoinRoot P) (SplitAlg P (n + 1)) := φ.toAlgebra
+  let alg : Algebra (AdjoinRoot P) (SplitAlg P (n + 1)) := φ.toAlgebra
   have hφ : ∀ r : R, algebraMap (AdjoinRoot P) (SplitAlg P (n + 1)) (algebraMap R (AdjoinRoot P) r)
       = algebraMap R (SplitAlg P (n + 1)) r := fun r => AdjoinRoot.lift_of hroot0
-  haveI tower : IsScalarTower R (AdjoinRoot P) (SplitAlg P (n + 1)) :=
+  have tower : IsScalarTower R (AdjoinRoot P) (SplitAlg P (n + 1)) :=
     IsScalarTower.of_algebraMap_eq (fun r => (hφ r).symm)
   have hr0 : algebraMap (AdjoinRoot P) (SplitAlg P (n + 1)) (AdjoinRoot.root P) = SplitAlg.root P (n + 1) 0 :=
     AdjoinRoot.lift_root hroot0

@@ -209,7 +209,7 @@ private theorem pa_inst {J : Type u} (Y0 Y : Submodule A M) [Module.Finite A Y] 
   let act : heckeAlg Y op →+* Module.End K E := ρ.comp (heckeAlg Y op).val.toRingHom
   have c2 : ∀ i (F : E), (act (heckeGen Y op i) F : W) = opC i F := fun i F => b2 i _ (fun _ => rfl) F
   refine ⟨hsum, act, fun t f F hF => b1 t f F hF, c2, b3, fun z hz => ?_, fun Z' h0 hsc => ?_⟩
-  · haveI : FiniteDimensional K E := Module.Finite.equiv Ψ
+  · have : FiniteDimensional K E := Module.Finite.equiv Ψ
     obtain ⟨v, hv, hv'⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.pointEig (M := Y)
       ({ z with commutes' := fun b => RingHom.congr_fun hz b } : heckeAlg Y op →ₐ[A] K)
     have htop : ⨆ j, (Z j).comap E.subtype = ⊤ := by
@@ -266,9 +266,9 @@ private theorem pa_main {A K M W ι : Type} [CommRing A] [Field K] [AddCommGroup
       (∀ Z' : Submodule K W, Z' ⊓ E ≠ ⊥ → (∀ i, ∃ μ : K, ∀ F ∈ Z' ⊓ E, opC i F = μ • F) →
         ∃ z : heckeAlg Y op →+* K, z.comp (algebraMap A _) = χ ∧
           ∀ t (F : E), (F : W) ∈ Z' → act t F = z t • F) := by
-  letI : Algebra A K := χ.toAlgebra
-  letI : Module A W := Module.compHom W χ
-  haveI : IsScalarTower A K W := ⟨fun a k w => mul_smul (χ a) k w⟩
+  let : Algebra A K := χ.toAlgebra
+  let : Module A W := Module.compHom W χ
+  have : IsScalarTower A K W := ⟨fun a k w => mul_smul (χ a) k w⟩
   let s : Y0 →ₗ[A] W :=
     { toFun := fun f => sp f
       map_add' := fun f g => hadd _ f.2 _ g.2
@@ -370,13 +370,13 @@ theorem UpperTheory.V.Hi.partAct0 :
     ∀ (x : A →ₐ[c.O] Qbar l) (lam : Wt L l n) (d : ℕ) (ξ : GV n H.Sl →* GL (Fin d) ℂ) (c0 : ℕ) (sp : H.X.Fn A H.m → Fin H.m → H.X.Fn ℂ d), H.IsSpec θ ι x.toRingHom lam ξ c0 sp →
     lam ∈ H.admitted → ∀ (a : H.Op → c.O) (K : H.Lev) [Fact (CommOn (H.MK θ a K) (H.op A))], ∀ E : Submodule ℂ (Fin H.m → H.X.Fn ℂ d), E = Submodule.span ℂ (sp '' H.MK θ a K) → (E = ⨆ Y : {Y : H.Part ι lam ξ // P lam Y.r}, Y.1.Y ⊓ E ∨ ¬ H.Good θ x.toRingHom lam) ∧ ∃ act : H.TK θ a K →+* Module.End ℂ E, (∀ (t : H.TK θ a K) (f : H.MK θ a K) (F : E), (F : Fin H.m → H.X.Fn ℂ d) = sp f → (act t F : Fin H.m → H.X.Fn ℂ d) = sp ((t : Module.End A (H.MK θ a K)) f : H.MK θ a K)) ∧ (∀ i (F : E), (act (H.gen θ a K i) F : Fin H.m → H.X.Fn ℂ d) = H.opC ι lam d i F) ∧ (∀ (b : A) (F : E), act (algebraMap A _ b) F = ι (x b) • F) ∧ (∀ y : H.TK θ a K →ₐ[c.O] Qbar l, y.toRingHom.comp (algebraMap A _) = x.toRingHom → ∃ (Y : H.Part ι lam ξ) (F : Fin H.m → H.X.Fn ℂ d) (e : ℕ), P lam Y.r ∧ c0 ≤ e ∧ F ≠ 0 ∧ F ∈ Y.Y ⊓ H.OrdAt θ ι x.toRingHom lam ξ K e ∧ ∀ i, H.opC ι lam d i F = ι (y (H.gen θ a K i)) • F) ∧ (H.Good θ x.toRingHom lam → ∀ Y : H.Part ι lam ξ, Y.Y ⊓ E ≠ ⊥ → ∃ y : H.TK θ a K →ₐ[c.O] Qbar l, y.toRingHom.comp (algebraMap A _) = x.toRingHom ∧ ∀ t (F : E), (F : Fin H.m → H.X.Fn ℂ d) ∈ Y.Y → act t F = ι (y t) • F) := by
   intro hN L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ ι P hP x lam d ξ c0 sp hsp hlam a K _ E hE
-  haveI : Finite (ResidueField c.O) := by
-    haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
-    haveI : Finite (ResidueField ℤ_[l]) := IsCNL.finite
+  have : Finite (ResidueField c.O) := by
+    have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+    have : Finite (ResidueField ℤ_[l]) := IsCNL.finite
     exact Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨h0, hfin, hfree, hK⟩ := hiComm L Ω l n c H hH A θ hθ K
-  haveI := (hK a).2.1
+  have := (hK a).2.1
   obtain ⟨e, he, hi, hY, -⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.locIdem A _ _ _ (H.op A) (fun i => algebraMap c.O A (a i)) h0
   obtain ⟨hEO, hsum, act, h1, h2, h3, h4, h5⟩ := pa_fin (H.X.Ord (H.τA A) θ (H.lev K)) (H.MK θ a K) inf_le_left (H.op A)
     e he hi hY ι x sp (hsp.add K) (hsp.smul K) (hsp.indep K) (H.opC ι lam d) (hsp.op K)

@@ -154,7 +154,7 @@ theorem inv_eq_self_GL [MeasurableSpace (GL (Fin n) F)] [BorelSpace (GL (Fin n) 
   have e := isMulLeftInvariant_eq_smul μ.inv μ
   have hc : haarScalarFactor μ.inv μ = 1 := by
     have h := congrArg (fun ν : Measure (GL (Fin n) F) => ν K) e
-    simp only [Measure.inv_apply, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+    simp only [Measure.inv_apply, smul_apply, ENNReal.smul_def, smul_eq_mul] at h
     have hKinv : (K : Set (GL (Fin n) F))⁻¹ = K := by
       ext x
       simp

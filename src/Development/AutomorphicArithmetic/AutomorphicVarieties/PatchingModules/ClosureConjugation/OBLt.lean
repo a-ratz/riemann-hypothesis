@@ -480,9 +480,9 @@ theorem UpperTheory.V.AlgebraTools.st_coi_lift :
     by_cases h : a = b
     · subst h
       simp
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
       refine Finset.sum_eq_zero (fun x _ => ?_)
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨rfl, rfl⟩
       exact h rfl
   have hr0 : r (1 - ∑ i, ep i) = 0 := by
@@ -567,24 +567,24 @@ theorem UpperTheory.V.AlgebraTools.units_exist :
     ?_, ?_, ?_, ?_⟩, rfl, ?_⟩
   · intro i
     by_cases h : o i = i
-    · rw [if_pos h, h, idem, idem]
-    · rw [if_neg h, mul_smul_comm, smul_mul_assoc, hz_mem]
+    · rw [ite_eq_left h, h, idem, idem]
+    · rw [ite_eq_right h, mul_smul_comm, smul_mul_assoc, hz_mem]
   · intro i
-    rw [if_pos (ho i)]
+    rw [ite_eq_left (ho i)]
   · intro i
     by_cases h : o i = i
-    · rw [if_pos h, hst, idem, h]
-    · rw [if_neg h, map_smul, smul_mul_assoc, mul_smul_comm, smul_smul, hzst, hbb, smul_smul, hinv,
+    · rw [ite_eq_left h, hst, idem, h]
+    · rw [ite_eq_right h, map_smul, smul_mul_assoc, mul_smul_comm, smul_smul, hzst, hbb, smul_smul, hinv,
         one_smul]
   · intro i
     by_cases h : o i = i
-    · rw [if_pos h, hst, idem]
-    · rw [if_neg h, map_smul, smul_mul_assoc, mul_smul_comm, smul_smul, hb', smul_smul, hinv, one_smul]
+    · rw [ite_eq_left h, hst, idem]
+    · rw [ite_eq_right h, map_smul, smul_mul_assoc, mul_smul_comm, smul_smul, hb', smul_smul, hinv, one_smul]
   · intro i
     dsimp only
     by_cases h : o i = i
-    · rw [if_pos h, hre, h]
-    · rw [if_neg h, map_smul, hrz, ← algebraMap_smul (A := F), hαinvF, one_smul]
+    · rw [ite_eq_left h, hre, h]
+    · rw [ite_eq_right h, map_smul, hrz, ← algebraMap_smul (A := F), hαinvF, one_smul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.UnitsExist =====
@@ -664,12 +664,12 @@ private theorem oB_oB {n a : ℕ} (h1 : 1 ≤ a) (h2 : a ≤ n) (i : Fin n) : oB
   unfold oB at key ⊢
   by_cases hi : (i : ℕ) < a
   · have : ((if (i : ℕ) < a then (⟨0, by omega⟩ : Fin n) else ⟨n - 1, by omega⟩ : Fin n) : ℕ) < a := key.2 hi
-    simp only [hi, if_true] at this ⊢
-    simp only [this, if_true]
+    simp only [hi, ite_true] at this ⊢
+    simp only [this, ite_true]
   · have : ¬ ((if (i : ℕ) < a then (⟨0, by omega⟩ : Fin n) else ⟨n - 1, by omega⟩ : Fin n) : ℕ) < a :=
       fun h => hi (key.1 h)
-    simp only [hi, if_false] at this ⊢
-    simp only [this, if_false]
+    simp only [hi, ite_false] at this ⊢
+    simp only [this, ite_false]
 
 private theorem single_mem {F : Type} [Field F] {n a : ℕ} (p q : Fin n) (h : (p : ℕ) < a ↔ (q : ℕ) < a) :
     (single p q 1 : Matrix (Fin n) (Fin n) F) ∈ Ev F F n a := by
@@ -685,7 +685,7 @@ theorem UpperTheory.V.Pa.idem :
     ∀ {B E F : Type} [CommRing B] [IsLocalRing B] [Ring E] [Algebra B E] [Field F] [Algebra B F] {n : ℕ} [IsNoetherianRing B] [IsAdicComplete (maximalIdeal B) B] [Module.Finite B E] (a : ℕ) (D : Det n B E) (T : TrInv B E) (r : E →ₐ[B] Matrix (Fin n) (Fin n) F), 1 ≤ a → a ≤ n → IsUnit (2 : B) → D.IsCH → (∀ y, T.tr y = D.tr y) → RingHom.ker (algebraMap B F) = maximalIdeal B → (∀ y, (D.chi y).map (algebraMap B F) = (r y).charpoly) → (∀ y, r (T.st y) = (r y)ᵀ) → (∀ Z ∈ Ev F F n a, ∃ y, r y = Z) → ∃ U : T.Units (Fin n) (oB n a), (∀ i, r (U.x i) = single (oB n a i) i 1) ∧ ∀ i, D.D B[X] (1 + X ⊗ₜ U.ep i) = 1 + X := by
   intro B E F _ _ _ _ _ _ n _ _ _ a D T r h1 h2 h2u hCH htr hker hchi hst hsurj
   have hn : 1 ≤ n := le_trans h1 h2
-  haveI : IsAdicComplete (maximalIdeal B) E := GlobalTheory.isAdicComplete_of_finite (maximalIdeal B) E
+  have : IsAdicComplete (maximalIdeal B) E := GlobalTheory.isAdicComplete_of_finite (maximalIdeal B) E
   obtain ⟨hnil, hidem⟩ := idem_nil D r hCH hker hchi
   have hdiag : ∀ i : Fin n, ∃ y, r y = single i i 1 := fun i =>
     hsurj _ (single_mem i i Iff.rfl)
@@ -694,7 +694,7 @@ theorem UpperTheory.V.Pa.idem :
   have hD : ∀ i, D.D B[X] (1 + X ⊗ₜ ep i) = 1 + X := fun i =>
     hidem (ep i) i (hcoi.idem i) (hrep i)
   have hcorner := fun i => d_corner D (ep i) hCH (hcoi.idem i) (hD i) hn
-  haveI : HenselianRing B (RingHom.ker (algebraMap B F)) := by
+  have : HenselianRing B (RingHom.ker (algebraMap B F)) := by
     rw [hker]
     infer_instance
   obtain ⟨U, hUep, hUx⟩ := units_exist T (oB n a) r ep h2u (fun i => oB_oB h1 h2 i) hst

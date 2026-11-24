@@ -399,7 +399,7 @@ theorem exists_avg [DecidableEq ι] (hc : Continuous ψ) (h1 : ψ ≠ 1) (large�
     have h3 := congrArg Complex.re h2
     rw [← RCLike.re_to_complex, ← integral_re (hint _ hU)] at h3
     refine ne_of_gt ?_ h3
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 0)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 0)
       (RCLike.continuous_re.comp hU.1.continuous) (hU.2.comp_left (g := RCLike.re) (map_zero _)) (fun t => ?_) ?_
     · by_cases ht : t ∈ U <;> simp [ht]
     · simp [U.zero_mem]

@@ -273,14 +273,14 @@ theorem dbar_sum {ι : Type*} {t : Finset ι} {A : ι → E → F}
 
 theorem del_smul {c : E → ℂ} (hc : DifferentiableAt ℝ c z) (hf : DifferentiableAt ℝ f z) (v : E) :
     del (fun x => c x • f x) z v = c z • del f z v + del c z v • f z := by
-  simp only [del_apply, fderiv_fun_smul hc hf, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply, smul_eq_mul]
+  simp only [del_apply, fderiv_fun_smul hc hf, add_apply,
+    smul_apply, ContinuousLinearMap.smulRight_apply, smul_eq_mul]
   module
 
 theorem dbar_smul {c : E → ℂ} (hc : DifferentiableAt ℝ c z) (hf : DifferentiableAt ℝ f z) (v : E) :
     dbar (fun x => c x • f x) z v = c z • dbar f z v + dbar c z v • f z := by
-  simp only [dbar_apply, fderiv_fun_smul hc hf, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply, smul_eq_mul]
+  simp only [dbar_apply, fderiv_fun_smul hc hf, add_apply,
+    smul_apply, ContinuousLinearMap.smulRight_apply, smul_eq_mul]
   module
 
 theorem del_mul {a b : E → ℂ} (ha : DifferentiableAt ℝ a z) (hb : DifferentiableAt ℝ b z) (v : E) :
@@ -398,7 +398,7 @@ theorem ddbar_apply (hu : ContDiffAt ℝ 2 u z) (v w : E) :
   have h : HasFDerivAt (dbar u) _ z := (antilinPartCLM (E := E) (F := F)).hasFDerivAt.comp z
     (differentiableAt_fderiv_of_contDiffAt_two hu).hasFDerivAt
   rw [ddbar, del_apply, h.fderiv]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply,
+  simp only [smul_apply, sub_apply,
     ContinuousLinearMap.comp_apply, antilinPartCLM_apply, antilinPart_apply]
   match_scalars
   · ring
@@ -421,7 +421,7 @@ theorem ddbar_eq_del_dbar (hu : ContDiffAt ℝ 2 u z) (v w : E) :
   rw [del_const_smul _ ((h1 _).fun_add ((h1 _).fun_const_smul I)),
     del_add (h1 _) ((h1 _).fun_const_smul I),
     del_const_smul _ (h1 _)]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply, del_apply,
+  simp only [smul_apply, add_apply, del_apply,
     fderiv_fderiv_apply hu]
   match_scalars
   · ring
@@ -440,7 +440,7 @@ theorem ddbar_eq_dbar_del (hu : ContDiffAt ℝ 2 u z) (v w : E) :
   rw [dbar_const_smul _ ((h1 _).fun_sub ((h1 _).fun_const_smul I)),
     dbar_sub (h1 _) ((h1 _).fun_const_smul I),
     dbar_const_smul _ (h1 _)]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply, dbar_apply,
+  simp only [smul_apply, sub_apply, dbar_apply,
     fderiv_fderiv_apply hu]
   rw [hs.eq w, hs.eq w, hs.eq (I • w), hs.eq (I • w)]
   match_scalars
@@ -515,7 +515,7 @@ theorem ddbar_comp_holo {u : F → G} {φ : E → F} (hu : ContDiffAt ℝ 2 u (�
   rw [del_congr he, ddbar_apply hu]
   simp only [antilinPart_apply]
   erw [del_eq_of_hasFDerivAt h3]
-  simp only [linPart_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+  simp only [linPart_apply, smul_apply, add_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearMap.flip_apply,
     ContinuousLinearMap.coe_restrictScalars', map_smul, I_smul_I_smul, map_neg, Pi.smul_apply]
   match_scalars
@@ -688,7 +688,7 @@ theorem leviForm_log_normSq_eq_zero {f : E → ℂ} (hf : ContDiffAt ℂ 2 f z) 
   rw [leviForm_log_normSq_comp hf hz, ← conj_mul', show (‖f z‖ : ℂ) ^ 4 = (conj (f z) * f z) ^ 2 by
     rw [conj_mul']; ring]
   have : conj (f z) ≠ 0 := by simpa using hz
-  simp only [inner, ContinuousLinearMap.zero_apply, star_def]
+  simp only [inner, zero_apply, star_def]
   field_simp
   ring
 

@@ -92,8 +92,8 @@ theorem hasFDerivAt_kernel (u x : Fin n → Cinf E) :
 theorem fderiv_kernel (u x v : Fin n → Cinf E) :
     fderiv ℝ (fun y => (𝐞 (-pairL u y) : ℂ)) x v = -(2 * π * I * (pairL u v : ℂ)) * 𝐞 (-pairL u x) := by
   rw [(hasFDerivAt_kernel u x).fderiv]
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply, ContinuousLinearMap.smulRight_apply,
-    ContinuousLinearMap.one_apply, Complex.real_smul]
+  simp only [ContinuousLinearMap.comp_apply, neg_apply, ContinuousLinearMap.smulRight_apply,
+    one_apply_eq_self, Complex.real_smul]
   push_cast
   ring
 

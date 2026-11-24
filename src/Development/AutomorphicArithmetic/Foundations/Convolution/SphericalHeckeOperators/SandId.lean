@@ -343,16 +343,16 @@ private theorem sum_vanish {A : Type*} [Group A] (L R : Subgroup A) [Fintype (A 
     (φ : A → ℂ) (hL : ∀ b ∈ L, ∀ m, φ (b * m) = φ m) (hR : ∀ m, ∀ b ∈ R, φ (m * b) = φ m)
     (h : ∑ q : A ⧸ R, φ q.out = 0) : ∑ q : A ⧸ L, φ (q.out)⁻¹ = 0 := by
   classical
-  haveI : L.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
-  haveI : R.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : L.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : R.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   let P : Subgroup A := (L ⊓ R).normalCore
-  haveI : P.Normal := Subgroup.normalCore_normal _
-  haveI : P.FiniteIndex := inferInstance
+  have : P.Normal := Subgroup.normalCore_normal _
+  have : P.FiniteIndex := inferInstance
   have hPL : P ≤ L := (Subgroup.normalCore_le _).trans inf_le_left
   have hPR : P ≤ R := (Subgroup.normalCore_le _).trans inf_le_right
-  letI : Fintype (A ⧸ P) := Fintype.ofFinite _
-  letI : Fintype (L ⧸ P.subgroupOf L) := Fintype.ofFinite _
-  letI : Fintype (R ⧸ P.subgroupOf R) := Fintype.ofFinite _
+  let : Fintype (A ⧸ P) := Fintype.ofFinite _
+  let : Fintype (L ⧸ P.subgroupOf L) := Fintype.ofFinite _
+  let : Fintype (R ⧸ P.subgroupOf R) := Fintype.ofFinite _
   have h1 := sum_fiber P R hPR φ hR
   have h2 := sum_fiber P L hPL (fun m => φ m⁻¹) (fun m b hb => by
     rw [mul_inv_rev]; exact hL _ (L.inv_mem hb) _)
@@ -380,7 +380,7 @@ private theorem setIntegral_cosets {G : Type*} [Group G] [MeasurableSpace G] [Me
   let S : A ⧸ J.subgroupOf A → Set G := fun q => (fun g => ((q.out : G) * t)⁻¹ * g) ⁻¹' (I : Set G)
   have hU : {g | ∃ x ∈ A, ∃ y ∈ I, g = x * t * y} = ⋃ q, S q := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion, S, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, S, Set.mem_preimage, SetLike.mem_coe]
     constructor
     · rintro ⟨x, hx, y, hy, rfl⟩
       refine ⟨((⟨x, hx⟩ : A) : A ⧸ J.subgroupOf A), ?_⟩
@@ -417,7 +417,7 @@ private theorem isOpen_cosets {G : Type*} [Group G] [TopologicalSpace G] [IsTopo
     IsOpen {g | ∃ x ∈ A, ∃ y ∈ I, g = x * t * y} := by
   have : {g | ∃ x ∈ A, ∃ y ∈ I, g = x * t * y} = ⋃ x ∈ A, (fun g => (x * t)⁻¹ * g) ⁻¹' (I : Set G) := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe, exists_prop]
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe, exists_prop]
     constructor
     · rintro ⟨x, hx, y, hy, rfl⟩
       exact ⟨x, hx, by simpa [mul_assoc] using hy⟩
@@ -451,7 +451,7 @@ private theorem vanish_of_cover {G : Type*} [Group G] [TopologicalSpace G] [IsTo
       ⟨c, hc, y * y'⁻¹, I.mul_mem hy (I.inv_mem hy'), by
         rw [← mul_assoc, ← mul_inv_eq_iff_eq_mul.2 hsy]⟩
     rw [← cosets_eq C I hmem, ← h0 s]
-    refine (setIntegral_eq_of_subset_of_forall_diff_eq_zero
+    refine (setIntegral_eq_of_subset_of_forall_sdiff_eq_zero
       (isOpen_cosets N I hI s).measurableSet ?_ ?_).symm
     · rintro p ⟨u, hu, y, hy, rfl⟩
       exact ⟨u, hCN hu, y, hy, rfl⟩
@@ -556,7 +556,7 @@ theorem UpperTheory.ConvolutionTheory.H.jacq :
   have hvan := vanish_of_cover μ (unipotent F n) C (iwahori F n) hCN hIo T S hS hC h0
   have hAc : IsCompact (A : Set (GL (Fin n) F)) :=
     (isCompact_integralGL F n).inter_left (Whittaker.isClosed_unipotent F n)
-  haveI : CompactSpace A := isCompact_iff_compactSpace.1 hAc
+  have : CompactSpace A := isCompact_iff_compactSpace.1 hAc
   have hopen : ∀ t : GL (Fin n) F,
       IsOpen (((iwahori F n).comap (MulAut.conj t⁻¹).toMonoidHom : Subgroup (GL (Fin n) F)) : Set (GL (Fin n) F)) := by
     intro t
@@ -570,12 +570,12 @@ theorem UpperTheory.ConvolutionTheory.H.jacq :
   let Jx : Subgroup (GL (Fin n) F) := (iwahori F n).comap (MulAut.conj x⁻¹).toMonoidHom
   have hJw : ∀ b, b ∈ Jw ↔ w⁻¹ * b * w ∈ iwahori F n := fun b => by simp [Jw]
   have hJx : ∀ b, b ∈ Jx ↔ x⁻¹ * b * x ∈ iwahori F n := fun b => by simp [Jx]
-  haveI : Finite (A ⧸ Jw.subgroupOf A) :=
-    Subgroup.quotient_finite_of_isOpen _ ((hopen w).preimage continuous_subtype_val)
-  haveI : Finite (A ⧸ Jx.subgroupOf A) :=
-    Subgroup.quotient_finite_of_isOpen _ ((hopen x).preimage continuous_subtype_val)
-  letI : Fintype (A ⧸ Jw.subgroupOf A) := Fintype.ofFinite _
-  letI : Fintype (A ⧸ Jx.subgroupOf A) := Fintype.ofFinite _
+  have : Finite (A ⧸ Jw.subgroupOf A) :=
+    Subgroup.quotient_finite_of_isOpen _ ((hopen w).preimage continuous_subtypeVal)
+  have : Finite (A ⧸ Jx.subgroupOf A) :=
+    Subgroup.quotient_finite_of_isOpen _ ((hopen x).preimage continuous_subtypeVal)
+  let : Fintype (A ⧸ Jw.subgroupOf A) := Fintype.ofFinite _
+  let : Fintype (A ⧸ Jx.subgroupOf A) := Fintype.ofFinite _
   have e1 := setIntegral_cosets μ A (iwahori F n) Jw w hJw hIo.measurableSet hfin (fun z => T (z⁻¹ * x))
     (fun g i hi => by
       have := (hBi (g⁻¹ * x) i⁻¹ ((iwahori F n).inv_mem hi)).1
@@ -587,7 +587,7 @@ theorem UpperTheory.ConvolutionTheory.H.jacq :
   have hpre : (fun p => w⁻¹ * p) ⁻¹' {p | ∃ u ∈ C, ∃ y ∈ iwahori F n, p = u * (w⁻¹ * x) * y} =
       {g | ∃ v ∈ A, ∃ y ∈ iwahori F n, g = v * x * y} := by
     ext p
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨v, hv, z, hz, h⟩
       refine ⟨_, (hCmem v).1 hv, z, hz, ?_⟩

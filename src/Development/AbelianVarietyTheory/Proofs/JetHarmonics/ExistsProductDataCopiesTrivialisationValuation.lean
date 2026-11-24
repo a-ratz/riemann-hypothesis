@@ -125,8 +125,8 @@ namespace GlobalTheory
 
 theorem powOAct_of_globalFns : GlobalFnsSt → PowOActSt := by
   intro hG E _ _ _ H V _ _ _ t P n D' pD
-  letI := H.starRing
-  letI M : Module (𝓞 E) D'.toPre.X := pD.xe.module (𝓞 E)
+  let := H.starRing
+  let M : Module (𝓞 E) D'.toPre.X := pD.xe.module (𝓞 E)
   have h : ∀ (a : 𝓞 E) (x : D'.toPre.X), pD.xe (a • x) = a • pD.xe x := by
     intro a x
     exact pD.xe.apply_symm_apply _
@@ -1013,7 +1013,7 @@ theorem exists_powData : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
  letI := H.starRing
  ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y) (P : PELUnif (maximalIdeal T.V) C.I.G) (ϖ : T.V), Irreducible ϖ → (∃ Q : P.D.toPre.X → ℤ, IsQ P.D.toPre ϖ Q) ∧ ∀ n : ℕ, ∃ (D' : DegData T.V (maximalIdeal T.V)) (A' : PolAV (Spec (CommRingCat.of T.Fr))) (G' : Over (Sp T.V)) (_ : GrpObj G') (_ : IsCommMonObj G') (pD : IsPowDeg D'.toPre P.D.toPre n) (pA : IsPowPolAV A' P.A n) (pG : IsPowGrp G' C.I.G.G n) (U' : Unif (maximalIdeal T.V) D' A' G') (_ : UnifPowOf3 pD pA pG U' P.U) (_ : Module (𝓞 E) D'.toPre.X) (oD' : D'.toPre.OAct (𝓞 E)), (∀ (a : 𝓞 E) (x : D'.toPre.X) (i : Fin n), pD.xe (a • x) i = a • pD.xe x i) ∧ (∀ (a : 𝓞 E) (i : Fin n), oD'.onB.act a ≫ pD.pw.pr i = pD.pw.pr i ≫ P.oD.onB.act a) ∧ ∀ (F : Type) [Field F] [IsAlgClosed F] [CharZero F] [Algebra T.Fr F] [Algebra T.V F] [IsScalarTower T.V T.Fr F] (v : AddValuation F (WithTop ℚ)), ValOver ϖ F v → ∀ Q : P.D.toPre.X → ℤ, IsQ P.D.toPre ϖ Q → ∀ (α : 𝓞 E) (N : ℕ), 0 < N → α * star α = (N : 𝓞 E) → ∃ (θ : Fam D'.toPre F 1) (θα : Fam D'.toPre F (1 * N)), NuGe D' (sumQ pD.xe Q) F v 1 θ 0 ∧ ThFrame D' ϖ F θ ∧ PullAl D' F oD' α 1 N θ θα := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y C P ϖ hϖ
   obtain ⟨hL, hL2, -, hL4, -⟩ := firstFiveLaws
   have hT := GlobalTheory.twistBaseChange
@@ -1026,7 +1026,7 @@ theorem exists_powData : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   intro F _ _ _ _ _ _ v hv Q hQ α N hN hα
   obtain ⟨θ, hν, hθ⟩ := exists_thetaFrame hL hL2 hL4 hT T.V ϖ hϖ P'.D (sumQ pD.xe Q)
     (QBox.main T.V ϖ hϖ n P.D P'.D pD Q hQ) F v hv
-  letI := M
+  let := M
   have hw : TraceFormTwistIso P'.D.toPre oD H.w0 :=
     PsiWZeroProd.main T.V n P.D.toPre P'.D.toPre pD (𝓞 E) (fun a x => funext (hx a x)) P.oD oD hact H.w0 P.w0
   obtain ⟨f, -, hf⟩ := PullLin.exists_pull_linearMap hL T.V P'.D F (𝓞 E) oD H.w0 hw α N 1 hN le_rfl hα

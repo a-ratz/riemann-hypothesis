@@ -757,10 +757,10 @@ theorem trace_hOf_mul (hH : HbFacts) (u u' : Fin n × Fin n → ℝ) :
     (hOf u * hOf u').trace = ∑ p, ((u p * u' p : ℝ) : ℂ) := by
   obtain ⟨-, horth, -⟩ := hH n
   simp only [hOf, Finset.sum_mul, Finset.mul_sum, Matrix.smul_mul, Matrix.mul_smul, Matrix.trace_sum,
-    Matrix.trace_smul, horth, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Matrix.trace_smul, horth, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   refine Finset.sum_congr rfl fun p _ => ?_
   rw [Finset.sum_ite_eq']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   push_cast
   ring
 
@@ -843,17 +843,17 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 variable {n : ℕ}
 
 theorem mem_GLs_mul {a b : Mat n} (ha : a ∈ GLs n) (hb : b ∈ GLs n) : a * b ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero ha hb
 
 theorem mem_GLs_inv {a : Mat n} (ha : a ∈ GLs n) : a⁻¹ ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq] at *
+  simp only [GLs, Set.mem_ofPred_eq] at *
   rw [Matrix.det_nonsing_inv, Ring.inverse_eq_inv']
   exact inv_ne_zero ha
 
 theorem mem_GLs_conjT_inv {a : Mat n} (ha : a ∈ GLs n) : aᴴ⁻¹ ∈ GLs n := by
   apply mem_GLs_inv
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_conjTranspose] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_conjTranspose] at *
   exact (star_ne_zero).mpr ha
 
 theorem kChain_of (hS : KcSmooth) (hC : ConeGL) (h1 : HalfOne) (h2 : HalfTwo) : KChain := by

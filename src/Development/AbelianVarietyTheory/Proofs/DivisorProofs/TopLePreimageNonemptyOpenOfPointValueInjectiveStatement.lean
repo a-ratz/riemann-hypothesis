@@ -79,9 +79,9 @@ namespace GlobalTheory.GenPtOpen
 
 theorem top_le_preimage_of_valR_injective : ∀ (K : Type) [Field K] (P₀ : Out.PolAV (Sp K)), ∀ (F : Type) [Field F] (ψ : K →+* F) (ξ : Sp F ⟶ P₀.A.left), ξ ≫ P₀.A.hom = spMap ψ → (∀ O (f : Γ(P₀.A.left, O)), ⊤ ≤ ξ ⁻¹ᵁ O → valR ξ O f = 0 → f = 0) → ∀ O : P₀.A.left.Opens, (O : Set P₀.A.left).Nonempty → ⊤ ≤ ξ ⁻¹ᵁ O := by
   intro K _ P₀ F _ ψ ξ _ H O hO
-  haveI : IsIntegral P₀.A.left := GlobalTheory.isIntegral_left_of_isAbelianScheme_field P₀.A P₀.isAb
+  have : IsIntegral P₀.A.left := GlobalTheory.isIntegral_left_of_isAbelianScheme_field P₀.A P₀.isAb
   by_contra hno
-  haveI : Subsingleton (Sp F) := inferInstanceAs (Subsingleton (PrimeSpectrum F))
+  have : Subsingleton (Sp F) := inferInstanceAs (Subsingleton (PrimeSpectrum F))
   obtain ⟨p⟩ : Nonempty (Sp F) := inferInstanceAs (Nonempty (PrimeSpectrum F))
   have key : ∀ V : P₀.A.left.Opens, ξ p ∈ V → ⊤ ≤ ξ ⁻¹ᵁ V := fun V hV y _ => by
     rw [Subsingleton.elim y p]; exact hV

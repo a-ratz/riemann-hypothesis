@@ -84,7 +84,7 @@ theorem linearIndependent_toCotangent {k A P : Type*} [CommRing k] [CommRing A] 
   have h1 : IsFreeGen P (dForm (ρ.comp α) fun i => ρ (z i)) := by
     have := MorJac.isFreeGen_formMap (D := n) hρ rfl hω
     rwa [formMap_dForm] at this
-  letI := (ρ.comp α).toAlgebra
+  let := (ρ.comp α).toAlgebra
   set κ := ResidueField P
   let φ : Omega (ρ.comp α) →ₗ[P] κ ⊗[P] Omega (ρ.comp α) := TensorProduct.mk P κ _ 1
   have h2 := h1.of_isBaseChange

@@ -298,12 +298,12 @@ theorem aestronglyMeasurable_out {E : Type} [NormedAddCommGroup E] [SecondCounta
     {Φ : G → E} (hΦ : Continuous Φ) (hinv : ∀ γ ∈ Γ, ∀ x, Φ (γ * x) = Φ x) (g : G)
     (μ : Measure (Quot (Γ.subgroupOf N))) :
     AEStronglyMeasurable (fun q : Quot (Γ.subgroupOf N) => Φ ((q.out : N) * g)) μ := by
-  letI : MeasurableSpace E := borel E
-  haveI : BorelSpace E := ⟨rfl⟩
+  let : MeasurableSpace E := borel E
+  have : BorelSpace E := ⟨rfl⟩
   have hl : LeftInv (Γ.subgroupOf N) (fun n : N => Φ (n * g)) := fun γ hγ n => by
     simp only [Subgroup.coe_mul, mul_assoc]; exact hinv _ hγ _
   have hm : Measurable (fun n : N => Φ (n * g)) :=
-    (hΦ.comp ((continuous_subtype_val).mul continuous_const)).measurable
+    (hΦ.comp ((continuous_subtypeVal).mul continuous_const)).measurable
   have hq : Measurable (descend (Γ.subgroupOf N) (fun n : N => Φ (n * g))) := by
     refine measurable_from_quotient.2 ?_
     have e : (descend (Γ.subgroupOf N) (fun n : N => Φ (n * g))) ∘ Quotient.mk'' = fun n : N => Φ (n * g) :=
@@ -318,7 +318,7 @@ theorem exists_bound {T E : Type} [TopologicalSpace T] [NormedAddCommGroup E] (h
     (g : G) {S : Set T} (hS : IsCompact S) : ∃ C, ∀ (n : N) t, t ∈ S → ‖Ψ (n * g) t‖ ≤ C := by
   obtain ⟨K, hK, hs⟩ := hc
   obtain ⟨C, hC⟩ := (hK.prod hS).exists_bound_of_continuousOn (f := fun p : N × T => Ψ (p.1 * g) p.2)
-    (hΨ.comp (((continuous_subtype_val.comp continuous_fst).mul continuous_const).prodMk continuous_snd)).continuousOn
+    (hΨ.comp (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).prodMk continuous_snd)).continuousOn
   refine ⟨C, fun n t ht => ?_⟩
   obtain ⟨γ, hγ, hk⟩ := hs n
   have e : Ψ (((γ * n : N) : G) * g) t = Ψ (n * g) t := by
@@ -544,7 +544,7 @@ theorem chart_general {E : Type} [NormedRing E] [NormedAlgebra ℝ E] [FiniteDim
     ∃ s : E → (Fin d → ℝ), ContinuousAt s 1 ∧
       ∀ᶠ g in 𝓝 (1 : E), σ g * g = 1 →
         g = (List.ofFn fun a => NormedSpace.exp (s g a • Z a)).prod := by
-  have : CompleteSpace E := FiniteDimensional.complete ℝ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℝ E
   let : NormedAlgebra ℚ E := NormedAlgebra.restrictScalars ℚ ℝ E
   have hexp : ∀ a, σ (NormedSpace.exp a) = NormedSpace.exp (σ a) := fun a => by
     have hp : ∀ m : ℕ, σ (a ^ m) = σ a ^ m := fun m => by
@@ -620,7 +620,7 @@ theorem chart_general {E : Type} [NormedRing E] [NormedAlgebra ℝ E] [FiniteDim
     rwa [h0] at this
   refine ⟨fun g => cL (Ψ (P g)), cC.continuous.continuousAt.comp hcont, ?_⟩
   filter_upwards [hPt.eventually p3, hnear, ht.eventually hnear] with g q1 q2 q3 hg1
-  haveI : IsArtinianRing E := IsArtinianRing.of_finite ℝ E
+  have : IsArtinianRing E := IsArtinianRing.of_finite ℝ E
   exact (GlobalTheory.UnitaryChart.eq_of_skew_eq (hU _).1 (mul_eq_one_comm.1 hg1) (hP3 _ _ q1) q3 q2).symm
 
 section
@@ -747,8 +747,8 @@ theorem exists_realLines_chart : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     intro w a t
     by_cases hw : (q.symm a).1 = w
     · subst hw
-      simp only [δ, Zw, if_pos rfl, projArch_embArch_self, hy]
-    · simp only [δ, Zw, if_neg hw, smul_zero, NormedSpace.exp_zero, projArch_embArch_ne σ J (Ne.symm hw), map_one]
+      simp only [δ, Zw, ite_eq_left rfl, projArch_embArch_self, hy]
+    · simp only [δ, Zw, ite_eq_right hw, smul_zero, NormedSpace.exp_zero, projArch_embArch_ne σ J (Ne.symm hw), map_one]
   have hunit : ∀ w (g : GArch σ J w), (archMat σ J (τ w) g)ᴴ * H w * archMat σ J (τ w) g = H w := fun w g => by
     rw [GlobalTheory.Orb.archMat_eq_archEquiv J h]
     exact (archEquiv J h (τ w) g).2
@@ -762,13 +762,13 @@ theorem exists_realLines_chart : ∀ (F E : Type) [Field F] [NumberField F] [Fie
       simpa using q.injective hi
     have hZj : ∀ i, Zw w (q ⟨w, i⟩) = (b w i : Matrix (Fin n) (Fin n) ℂ) := fun i => by
       show (if (q.symm (q ⟨w, i⟩)).1 = w then Zg (q ⟨w, i⟩) else 0) = _
-      rw [if_pos (by simp)]
+      rw [ite_eq_left (by simp)]
       show ((b (q.symm (q ⟨w, i⟩)).1 (q.symm (q ⟨w, i⟩)).2 : Matrix (Fin n) (Fin n) ℂ)) = _
       rw [q.symm_apply_apply]
     refine _root_.GlobalTheory.UnitaryGroupChart.unitary_chart n (H w) (hHh w) (hHu w) _ (e w) (Zw w) (fun i => q ⟨w, i⟩) hj ?_ ?_ ?_ ?_
     · intro a ha
       simp only [Zw]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hw
       apply ha
       rcases hqa : q.symm a with ⟨w', i⟩
@@ -865,7 +865,7 @@ theorem isSmModOn_constTermOn (h : IsCMExt F E σ) (hJ : IsHermND σ J) {r : ℕ
     IsSmModOn σ J (leftGrp σ J C d : Set (GAd σ J)) c ∧ ∀ l : List (ℝ → GAd σ J), (∀ γ ∈ l, IsRealLine σ J γ) →
       IsConstTermOn σ J (unipFlag σ J C d) (l.foldr lineDer φ) (l.foldr lineDer c) := by
   classical
-  haveI := locallyCompact_unipFlag hJ (sigma_sigma h) hC d
+  have := locallyCompact_unipFlag hJ (sigma_sigma h) hC d
   have hs : IsSm σ J φ := hφ.smooth
   have hφΓ : LeftInv (ratPts σ J ⊓ parFlag σ J C d) φ := fun γ hγ => hφ.left γ (hΓ hγ)
   obtain ⟨hco, e⟩ := hc.eq_constTermOn_par h hJ hC hφΓ
@@ -911,8 +911,8 @@ theorem isSmModOn_constTermOn (h : IsCMExt F E σ) (hJ : IsHermND σ J) {r : ℕ
       ∃ B : ℝ, ∀ g, ‖l.foldr lineDer c g‖ ≤ B * (height σ J g : ℝ) ^ M := by
     obtain ⟨M, hM⟩ := hφ.growth
     obtain ⟨K0, hK0, hs'⟩ := id hco
-    haveI := hco.isProbabilityMeasure
-    obtain ⟨A, hA⟩ := (hK0.image continuous_subtype_val).exists_bound_of_continuousOn
+    have := hco.isProbabilityMeasure
+    obtain ⟨A, hA⟩ := (hK0.image continuous_subtypeVal).exists_bound_of_continuousOn
       (f := fun x => (height σ J x : ℝ)) (NNReal.continuous_coe.comp (continuous_height_GAd σ J)).continuousOn
     refine ⟨M, fun l hl => ?_⟩
     obtain ⟨B, hB⟩ := hM l hl
@@ -1128,8 +1128,8 @@ theorem exists_interp {K : Type} (A : Submodule ℂ (K → ℂ)) [FiniteDimensio
   have hbtop : ⊤ ≤ Submodule.span ℂ (Set.range ((↑) : b → Module.Dual ℂ A)) := by
     rw [Subtype.range_coe, hbspan, htop]
   let B : Module.Basis b ℂ (Module.Dual ℂ A) := Module.Basis.mk hbli hbtop
-  haveI : Finite b := hbli.finite
-  letI : Fintype b := Fintype.ofFinite b
+  have : Finite b := hbli.finite
+  let : Fintype b := Fintype.ofFinite b
   have hp : ∀ i : b, ∃ k, E k = (i : Module.Dual ℂ A) := fun i => hbsub i.2
   choose p hpE using hp
   let a : b → A := fun i => (Module.evalEquiv ℂ A).symm (B.coord i)
@@ -1156,9 +1156,9 @@ theorem hasTypeAt_of_isConstAlong : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D
   have hst := GlobalTheory.StdPar.constAlong_cocompact_unique_stages (GlobalTheory.DefiniteQuotient.cmExt D)
     (GlobalTheory.DefiniteQuotient.gram_hermND V) hW
   obtain ⟨hcoc, μ, 𝓕, hμ, h𝓕, h1⟩ := hst.1 T
-  haveI := hμ
+  have := hμ
   have hcI := hc μ 𝓕 hμ h𝓕 h1
-  haveI := finiteDimensional_coeffs ρ
+  have := finiteDimensional_coeffs ρ
   obtain ⟨ι, _, p, a, ha, hrep⟩ := exists_interp (coeffSpan ρ)
   have hcoc' : GlobalTheory.Cusp.Cocompact (GQ V ⊓ unip D.sp.cm.sig V.gram X T) (unip D.sp.cm.sig V.gram X T) := by
     obtain ⟨K, hK, hKc⟩ := hcoc
@@ -1171,8 +1171,8 @@ theorem hasTypeAt_of_isConstAlong : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D
       (unip D.sp.cm.sig V.gram X T)) 𝓕 μ := by
     rw [Subgroup.inf_subgroupOf_right]
     exact h𝓕
-  haveI hdQ : DiscreteTopology ↥(GlobalTheory.AdelicU.ratPts D.sp.cm.sig V.gram) := inferInstance
-  haveI hdisc : DiscreteTopology ↥(GQ V ⊓ unip D.sp.cm.sig V.gram X T) :=
+  have hdQ : DiscreteTopology ↥(GlobalTheory.AdelicU.ratPts D.sp.cm.sig V.gram) := inferInstance
+  have hdisc : DiscreteTopology ↥(GQ V ⊓ unip D.sp.cm.sig V.gram X T) :=
     DiscreteTopology.of_subset hdQ (fun y hy => hy.1)
   have hint : ∀ g : GA D V, IntegrableOn (fun u : unip D.sp.cm.sig V.gram X T => φ ((u : GA D V) * g)) 𝓕 μ := by
     intro g
@@ -1319,7 +1319,7 @@ theorem good_of_mem_pairSpan (hW : IsWittFrame D.sp.cm.sig V.gram X Y) (T : Fins
     have hleft := GlobalTheory.UAut.ConstAut.leftInv_foldr
       (Γ := (GQ V ⊓ unip D.sp.cm.sig V.gram X T : Subgroup (GA D V))) (φ := φ) (fun γ hγ x => hφ.left γ hγ x) l
     refine GlobalTheory.integrableOn_fundamentalDomain_of_cocompact _ _ C hC hcov μ hμ 𝓕 h𝓕 _
-      (hcont.comp (continuous_subtype_val.mul continuous_const)) fun γ hγ u => ?_
+      (hcont.comp (continuous_subtypeVal.mul continuous_const)) fun γ hγ u => ?_
     simp only [Subgroup.coe_mul, mul_assoc]
     exact hleft γ ⟨Subgroup.mem_subgroupOf.1 hγ, γ.2⟩ _
   | zero => exact ⟨integrableOn_zero, by simp⟩
@@ -1463,7 +1463,7 @@ theorem finite_formsOn [∀ τ, FiniteDimensional ℂ (W τ)] (hθ : IsInfFam θ
       ∀ f : A, IsConstAlong D.sp.cm.sig V.gram X (insert k.1 T) f.1 (L f).1 := by
     intro k
     have hsub : T ⊆ insert k.1 T := Finset.subset_insert _ _
-    haveI := locallyCompact_unip hcm hJ hW (insert k.1 T)
+    have := locallyCompact_unip hcm hJ hW (insert k.1 T)
     have cS := cocompact_unip_std hcm hJ hW (insert k.1 T)
     have cS' := cocompact_ratPts_inf le_rfl cS
     have hc : ∀ f : A, IsConstAlong D.sp.cm.sig V.gram X (insert k.1 T) f.1
@@ -1495,8 +1495,8 @@ theorem finite_formsOn [∀ τ, FiniteDimensional ℂ (W τ)] (hθ : IsInfFam θ
     rw [h0] at h1
     exact st.2.2.2.2 T' (insert k T) f.1 0 0 (Finset.insert_subset hk hT'.1) (hmem f).1.cont
       (fun γ hγ hγ' g => hl f T' hT'.1 γ ⟨hγ, hγ'⟩ g) h1 (isConstAlong_const _ _ _ _ 0)
-  haveI := GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.Rg.finite_cuspOn D θ hθ V U hU ε fr hfr W ρ hρ c m X Y hW T hT
-  haveI : FiniteDimensional ℂ (LinearMap.ker Ψ) := by
+  have := GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.Rg.finite_cuspOn D θ hθ V U hU ε fr hfr W ρ hρ c m X Y hW T hT
+  have : FiniteDimensional ℂ (LinearMap.ker Ψ) := by
     let ι : LinearMap.ker Ψ →ₗ[ℂ] Submodule.span ℂ {φ | φ ∈ formsOn θ V X Y T U ε fr ρ c ∧
         ∀ T' : Finset (Fin m), T ⊂ T' → IsConstAlong D.sp.cm.sig V.gram X T' φ 0} :=
       { toFun := fun f => ⟨f.1.1, Submodule.subset_span ⟨hmem f.1, hker f.1 f.2⟩⟩
@@ -1504,9 +1504,9 @@ theorem finite_formsOn [∀ τ, FiniteDimensional ℂ (W τ)] (hθ : IsInfFam θ
         map_smul' := fun _ _ => rfl }
     exact FiniteDimensional.of_injective ι fun a b h =>
       Subtype.ext (Subtype.ext (congrArg (fun z => z.1) h))
-  haveI := hfin
-  haveI : FiniteDimensional ℂ (LinearMap.range Ψ) := inferInstance
-  haveI : FiniteDimensional ℂ (A ⧸ LinearMap.ker Ψ) := Module.Finite.equiv Ψ.quotKerEquivRange.symm
+  have := hfin
+  have : FiniteDimensional ℂ (LinearMap.range Ψ) := inferInstance
+  have : FiniteDimensional ℂ (A ⧸ LinearMap.ker Ψ) := Module.Finite.equiv Ψ.quotKerEquivRange.symm
   exact Module.Finite.of_submodule_quotient (LinearMap.ker Ψ)
 
 end Main
@@ -1518,7 +1518,7 @@ theorem finite_constTerm : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F �
   obtain ⟨r, rfl⟩ : ∃ r', r = r' + 1 := ⟨r - 1, by omega⟩
   obtain ⟨m, hm, X, Y, hW, hX⟩ := _root_.GlobalTheory.AdjugateAppendColumn.exists_wittFrame_initCols D.host.F D.host.E D.sp.cm.sig hcm V.rank V.gram hJ r C hi hg
   have hfin := finite_formsOn (c := c) (U := U) hθ hU hfr hρ hW _ {(⟨r, hm⟩ : Fin m)} (Finset.singleton_nonempty _) rfl
-  haveI := hfin
+  have := hfin
   refine Submodule.finiteDimensional_of_le (S₂ := Submodule.span ℂ (formsOn θ V X Y {(⟨r, hm⟩ : Fin m)} U ε fr ρ c))
     (Submodule.span_le.2 ?_)
   rintro _ ⟨φ, hφ, rfl⟩
@@ -1620,14 +1620,14 @@ theorem finite_of_cusp_of_constTerm {D : D7} (θ : D.what₂.Tau → (Ainf D.hos
   have hRfin : ∀ i, FiniteDimensional ℂ (R i) := fun i => by
     by_cases h : hex i.val
     · have e : R i = Submodule.span ℂ (GlobalTheory.Cusp.constTerm (GlobalTheory.Cusp.frameFlag h.choose_spec) '' forms θ V U ε fr ρ c) :=
-        dif_pos h
+        dite_eq_left h
       rw [e]; exact hct _ _ h.choose_spec
-    · have e : R i = ⊥ := dif_neg h
+    · have e : R i = ⊥ := dite_eq_right h
       rw [e]; infer_instance
   let T : ∀ i : Fin (V.rank + 1), S →ₗ[ℂ] R i := fun i =>
     if h : hex i.val then
       (Tm i.val h).codRestrict (R i) (fun f => by
-        simp only [R, dif_pos h]
+        simp only [R, dite_eq_left h]
         exact Submodule.subset_span ⟨f.1, hmem f, rfl⟩)
     else 0
   let Ψ : S →ₗ[ℂ] (∀ i, R i) := LinearMap.pi T
@@ -1645,16 +1645,16 @@ theorem finite_of_cusp_of_constTerm {D : D7} (θ : D.what₂.Tau → (Ainf D.hos
       have h2 := congrArg Subtype.val this
       simpa [Ψ, T, hx, Tm] using h2
     exact GlobalTheory.CompanionTheory.ConstTermConj.constTerm_eq_zero_of_frame D V r _ C hx.choose_spec hC f.1 hl h0
-  haveI := hcusp
-  haveI : FiniteDimensional ℂ (LinearMap.ker Ψ) := by
+  have := hcusp
+  have : FiniteDimensional ℂ (LinearMap.ker Ψ) := by
     let ι : LinearMap.ker Ψ →ₗ[ℂ] Submodule.span ℂ {φ | φ ∈ forms θ V U ε fr ρ c ∧ IsCuspFun V φ} :=
       { toFun := fun f => ⟨f.1.1, Submodule.subset_span ⟨hmem f.1, hker f.1 f.2⟩⟩
         map_add' := fun _ _ => rfl
         map_smul' := fun _ _ => rfl }
     exact FiniteDimensional.of_injective ι fun a b h =>
       Subtype.ext (Subtype.ext (congrArg (fun z => z.1) h))
-  haveI : FiniteDimensional ℂ (LinearMap.range Ψ) := inferInstance
-  haveI : FiniteDimensional ℂ (S ⧸ LinearMap.ker Ψ) := Module.Finite.equiv Ψ.quotKerEquivRange.symm
+  have : FiniteDimensional ℂ (LinearMap.range Ψ) := inferInstance
+  have : FiniteDimensional ℂ (S ⧸ LinearMap.ker Ψ) := Module.Finite.equiv Ψ.quotKerEquivRange.symm
   exact Module.Finite.of_submodule_quotient (LinearMap.ker Ψ)
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.HCF.Rg

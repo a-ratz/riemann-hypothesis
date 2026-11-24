@@ -351,7 +351,7 @@ private theorem exists_trace {k U D : Type} [Field k] [Field U] [AddCommGroup D]
   have h1 : ∃ j : ℕ, (∑ i ∈ Finset.range n, φ ^ i * m (t 0 ^ j)) x ≠ 0 := by
     by_contra hc
     push Not at hc
-    letI : Module U D := Module.compHom D m
+    let : Module U D := Module.compHom D m
     refine hx ((Module.forall_dual_apply_eq_zero_iff U x).mp fun f => ?_)
     have h2 := Matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero (f := fun i : Fin n => t i)
       (v := fun i : Fin n => f ((φ ^ (i : ℕ)) x)) ht (fun j => by
@@ -389,8 +389,8 @@ private theorem exists_orbit (l : ℕ) [hl : Fact l.Prime] (n : ℕ) (hn : 2 ≤
   have h0 : 0 < l ^ n - 1 := lt_of_le_of_lt (Nat.zero_le _) (hlt 0 (by omega))
   have hd : ¬ l ∣ l ^ n - 1 := fun h => hl.out.one_lt.ne' (Nat.dvd_one.mp
     ((Nat.dvd_sub_iff_right (by omega) (dvd_pow_self l (by omega))).mp h))
-  haveI : NeZero (l ^ n - 1) := ⟨h0.ne'⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ n - 1)
+  have : NeZero (l ^ n - 1) := ⟨h0.ne'⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ n - 1)
   have hmem : z ∈ MaximalUnramifiedExtension l := IntermediateField.subset_adjoin _ _ ⟨_, h0, hd, hz.pow_eq_one⟩
   have h1 : (⟨z, hmem⟩ : ↥(MaximalUnramifiedExtension l)) ^ (l ^ n - 1) = 1 := Subtype.ext hz.pow_eq_one
   refine ⟨⟨z, hmem⟩, ?_, fun i j hij => ?_⟩
@@ -433,12 +433,12 @@ variable (ρ : Representation LL ↥(GK Bw.Kw) V)
 private theorem fix_of_weil (z : ↥(Dpst P ρ)) (hz : ∀ σ, actD P ρ (weilToGK Bw h σ) z = z)
     (g : ↥(GK Bw.Kw)) : actD P ρ g z = z := by
   obtain ⟨K', hK'⟩ := exists_stab P ρ z
-  haveI := K'.2
+  have := K'.2
   let S := (GlobalTheory.PstLaws.vecStab (actD P ρ) z).comap Bw.e.toMonoidHom
   have hS : IsOpen (S : Set ↥(Dec (F := F) A)) := by
     refine Subgroup.isOpen_mono (H₁ := ((GK K').subgroupOf (GK Bw.Kw)).comap Bw.e.toMonoidHom)
       (fun τ hτ => hK' _ hτ) ?_
-    exact (IntermediateField.fixingSubgroup_isOpen K'.1).preimage (continuous_subtype_val.comp Bw.e_cont)
+    exact (IntermediateField.fixingSubgroup_isOpen K'.1).preimage (continuous_subtypeVal.comp Bw.e_cont)
   have hd := UpperTheory.weil_group_dense_in_galois_group F Ω w A h
   obtain ⟨τ, rfl⟩ := Bw.e.surjective g
   exact hd.induction_on (p := fun τ => τ ∈ S) τ (S.isClosed_of_isOpen hS) hz
@@ -454,8 +454,8 @@ private theorem exists_period (x : ↥(Dpst P ρ)) (hx : ∀ σ, weilD Bw h P ρ
     rw [normV_eq_pow (hj.mem_placesOver h), h0, pow_zero] at hq1
     exact lt_irrefl _ hq1
   obtain ⟨K', hK'⟩ := exists_stab P ρ x
-  haveI := GlobalTheory.PstLaws.finite_quotient K' _ hK'
-  haveI : (GlobalTheory.PstLaws.vecStab (actD P ρ) x).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have := GlobalTheory.PstLaws.finite_quotient K' _ hK'
+  have : (GlobalTheory.PstLaws.vecStab (actD P ρ) x).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨r, hr0, -, hr⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
     (Subgroup.FiniteIndex.index_ne_zero (H := GlobalTheory.PstLaws.vecStab (actD P ρ) x)) (weilToGK Bw h (frob h)⁻¹)
   have hr2 : weilToGK Bw h ((frob h)⁻¹ ^ (r * 2)) ∈ GlobalTheory.PstLaws.vecStab (actD P ρ) x := by
@@ -520,7 +520,7 @@ private theorem core0 {O : Type} [CommRing O] [Algebra ℤ_[l] O] [TopologicalSp
     (hμ : ∀ j k, j ≠ k → μ j ≠ μ k ∧ μ j ≠ μ k * unrChar h (qPow w 1))
     (hP : ∀ σ, (wdPst P ι Bw h hj ρ).charPol σ = ∏ j, (X - C (μ j σ : ℂ))) :
     wdN P ι ρ = 0 ∧ ∀ j, μ j = 1 → ∃ z : ↥(Dpst P ρ), z ≠ 0 ∧ phiD P ρ z = z ∧ ∀ g, actD P ρ g z = z := by
-  haveI := hV.finite
+  have := hV.finite
   have hc : ∀ σ, (wdRho P ι Bw h hj ρ σ).charpoly = ∏ j, (X - C (μ j σ : ℂ)) :=
     fun σ => (DpstMap.charPol_wdPst P ι Bw h hj ρ hV σ).symm.trans (hP σ)
   have hL := UpperTheory.exists_common_eigenvector_of_charpoly_split_characters (ineIncl h) (frob h) (wdRho P ι Bw h hj ρ) μ (ine_normal h)
@@ -706,10 +706,10 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem norm_q {F : Type} [Field F] [NumberField F] {l : ℕ} [Fact l.Prime] (w : HeightOneSpectrum (𝓞 F))
     (hw : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal) : ((normV w : ℕ) : Qbar l) ≠ 0 ∧ ‖((normV w : ℕ) : Qbar l)‖ < 1 := by
   have := w.isMaximal
-  letI := Ideal.Quotient.field w.asIdeal
+  let := Ideal.Quotient.field w.asIdeal
   have : Finite (𝓞 F ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
   refine ⟨Nat.cast_ne_zero.2 Nat.card_pos.ne', ?_⟩
-  letI := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
   have hd : l ∣ normV w := by
     rw [normV, Nat.card_eq_fintype_card, ← prime_dvd_char_iff_dvd_card]
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast, ringChar.spec] at hw
@@ -741,7 +741,7 @@ theorem UpperTheory.deRham_weights_of_localArtin_characters :
   have q2 : 0 < ‖((normV w : ℕ) : Qbar l)‖ := norm_pos_iff.2 q0
   have hcyc : Continuous (cycBar F Ω l) :=
     (Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-      ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ F Ω l)
+      ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ F Ω l)
   have key : ∀ j, ∃ κ : Dec (F := F) A →* (Qbar l)ˣ, Continuous κ ∧ ∀ s : Weil h,
       (κ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) * ((normV w : ℕ) : Qbar l) ^ (m j * deg s) =
         ι.symm (ω j (a s) : ℂ) * (cycBar F Ω l (s : G F Ω) : Qbar l) ^ m j := by
@@ -762,7 +762,7 @@ theorem UpperTheory.deRham_weights_of_localArtin_characters :
       obtain ⟨s, rfl⟩ := ha.surj x
       rw [hξ, norm_mul, hn, norm_zpow, ← zpow_add₀ q2.ne', neg_mul, add_neg_cancel, zpow_zero]
     refine ⟨κ * ((cycBar F Ω l).comp (Dec (F := F) A).subtype) ^ m j,
-      c1.mul ((continuous_zpow (m j)).comp (hcyc.comp continuous_subtype_val)), fun s => ?_⟩
+      c1.mul ((continuous_zpow (m j)).comp (hcyc.comp continuous_subtypeVal)), fun s => ?_⟩
     show ((κ (Subgroup.inclusion (Weil_le_Dec h) s) * cycBar F Ω l (s : G F Ω) ^ m j : (Qbar l)ˣ) : Qbar l) * _ = _
     rw [c2, Units.val_mul, hξ, Units.val_zpow_eq_zpow_val, neg_mul, zpow_neg, mul_right_comm,
       inv_mul_cancel_right₀ (zpow_ne_zero _ q0)]
@@ -778,8 +778,8 @@ theorem UpperTheory.deRham_weights_of_localArtin_characters :
       ← mul_assoc] at h1
     refine (mul_right_cancel₀ (zpow_ne_zero _ q0) h1).trans ?_
     congr 1
-    haveI := finite_contEmb (l := l) w
-    letI := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
+    have := finite_contEmb (l := l) w
+    let := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
     unfold Hi.algPow
     rw [finprod_eq_prod_of_fintype, finprod_eq_prod_of_fintype, ← Finset.prod_zpow]
     simp
@@ -813,18 +813,18 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 theorem UpperTheory.heckeChar_localArtin_eq_cyclotomic_twist :
     GlobalTheory.Mem.LiteralAutomorphy.LitN → ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (χ : HChar F) (ξ : G F Ω →* (Qbar l)ˣ) (t : ℤ), IsOpen (ξ.ker : Set (G F Ω)) → IsCharOf ι χ (cycBar F Ω l ^ t * ξ) → ∀ (w : HeightOneSpectrum (𝓞 F)), ((l : ℕ) : 𝓞 F) ∈ w.asIdeal → ∀ (A : ValuationSubring Ω) (h : IsPlaceOver A w) (a : Weil h →* (w.adicCompletion F)ˣ), IsLocalArtin h a → ∀ s : Weil h, ((χ.loc w (a s) : ℂˣ) : ℂ) = ((normV w : ℕ) : ℂ) ^ (t * deg s) * ι (ξ (s : G F Ω) : Qbar l) := by
   intro N F Ω _ _ _ _ _ l _ ι χ ξ t hξ ⟨hc, art, n, hart, _, hL⟩ w hw A h a ha s
-  haveI : Finite (G F Ω ⧸ ξ.ker) := ξ.ker.quotient_finite_of_isOpen hξ
+  have : Finite (G F Ω ⧸ ξ.ker) := ξ.ker.quotient_finite_of_isOpen hξ
   have hN : ξ.ker.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have h1 := UpperTheory.V.Loc.laHecke h art hart ι χ n _ hL ⟨a, ha⟩
   have h2 := UpperTheory.V.Loc.laArith N.aut.art h hw ((cycBar F Ω l ^ t * ξ).comp (Dec (F := F) A).subtype)
-    (hc.comp continuous_subtype_val) t ξ.ker.index (Nat.pos_of_ne_zero hN) fun g _ => by
+    (hc.comp continuous_subtypeVal) t ξ.ker.index (Nat.pos_of_ne_zero hN) fun g _ => by
       have e : ((cycBar F Ω l ^ t * ξ).comp (Dec (F := F) A).subtype) g * cycBar F Ω l g ^ (-t) = ξ g := by
         show cycBar F Ω l g ^ t * ξ g * cycBar F Ω l g ^ (-t) = ξ g
         rw [mul_right_comm, ← zpow_add, add_neg_cancel, zpow_zero, one_mul]
       rw [e, ← map_pow]
       exact ξ.ker.pow_index_mem _
   have h3 := UpperTheory.V.Loc.laUnique h ⟨a, ha⟩ _ _ _ h1 h2
-  haveI : Fintype {j : w.adicCompletion F →+* Qbar l // Continuous j} := @Fintype.ofFinite _ (finite_contEmb w)
+  have : Fintype {j : w.adicCompletion F →+* Qbar l // Continuous j} := @Fintype.ofFinite _ (finite_contEmb w)
   have h4 : locPow ι n w (a s : w.adicCompletion F) = Hi.algPow w (fun _ => 1) (a s : w.adicCompletion F) ^ t := by
     unfold locPow Hi.algPow
     rw [finprod_eq_prod_of_fintype, finprod_eq_prod_of_fintype, ← Finset.prod_zpow]
@@ -961,7 +961,7 @@ theorem UpperTheory.V.Af.Cq.wdRelRes :
   have hV' : IsPst (Loc.PP l) (Bw'.repE L r'') := by rw [hrep]; exact hV
   rw [wdAt_of_model _ ι Bw h hj _ L r' hm hV, wdAt_of_model _ ι Bw' h' hj' _ L r'' hm' hV', hrep]
   generalize Bw.repE L r' = ρ at hV ⊢
-  haveI := hV.finite
+  have := hV.finite
   rw [wdPst_of_isPst ι Bw h hj hV, wdPst_of_isPst ι Bw' h' hj' hV]
   obtain ⟨c, hc, hdeg, hq, -⟩ := GlobalTheory.T.place_over_transport_ring_iso F Ω A v h K Ω A w h' _ _ i hP
   refine wdRel_of_frobSS _ (BridgeParam.isFrobSS_wdRep (Loc.PP l) ι Bw h hj ρ)
@@ -1020,10 +1020,10 @@ private theorem place_between {K L Ω : Type} [Field K] [NumberField K] [Field L
 theorem UpperTheory.exists_quadratic_of_inertia :
     UpperTheory.V.Af.Cr.QuadCM → UpperTheory.V.Af.Cr.ImagGen → UpperTheory.V.Af.Cr.IneRes → UpperTheory.V.Af.Cr.ExQuadR := by
   intro hQ hI hR F Ω _ _ _ _ _ _ l _ h2 S hS
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsScalarTower ℚ F Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans ℚ F Ω⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsScalarTower ℚ F Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans ℚ F Ω⟩
   have hT : {v | ¬ S v}.Finite := Filter.eventually_cofinite.1 hS
   have h1 : ∀ᶠ v : HeightOneSpectrum (𝓞 ℚ) in Filter.cofinite,
       v ∉ (fun w : HeightOneSpectrum (𝓞 F) => w.under (𝓞 ℚ)) '' {v | ¬ S v} :=
@@ -1067,7 +1067,7 @@ open UpperTheory.V UpperTheory.V.Af UpperTheory.V.Af.Bc
 theorem UpperTheory.imaginary_generator :
     UpperTheory.V.Af.Cr.ImagGen := by
   intro K _ _ _ h
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h⟩
   obtain ⟨d, e, -, h0, h1⟩ := GlobalTheory.QuadSymbol.AlmostNorm.exists_basis_sq ℚ K
   have hy : e 1 ^ 2 = (d : K) := by rw [sq, h1]; simp
   have hx : ∀ x : K, ∃ a b : ℚ, x = (a : K) + (b : K) * e 1 := fun x => by
@@ -1108,8 +1108,8 @@ theorem UpperTheory.quadratic_complex_multiplication :
   have halg : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   have hint : IsIntegral F δ := (halg.isAlgebraic δ).isIntegral
   let K : IntermediateField F Ω := IntermediateField.adjoin F {δ}
-  haveI : FiniteDimensional F K := IntermediateField.adjoin.finiteDimensional hint
-  haveI : NumberField K := NumberField.of_module_finite F K
+  have : FiniteDimensional F K := IntermediateField.adjoin.finiteDimensional hint
+  have : NumberField K := NumberField.of_module_finite F K
   let y : K := IntermediateField.AdjoinSimple.gen F δ
   have hy : algebraMap K Ω y = δ := rfl
   have hy2 : y ^ 2 = algebraMap F K d := by
@@ -1134,15 +1134,15 @@ theorem UpperTheory.quadratic_complex_multiplication :
   have hdeg : (minpoly F δ).natDegree = 2 := by omega
   have hrk : Module.finrank F K = 2 := by
     rw [← hdeg]; exact IntermediateField.adjoin.finrank hint
-  haveI : IsTotallyComplex K := by
+  have : IsTotallyComplex K := by
     refine ⟨fun v => ?_⟩
     rw [← InfinitePlace.not_isReal_iff_isComplex]
     intro hv
     have h3 := hd ((InfinitePlace.embedding_of_isReal hv).comp (algebraMap F K))
     rw [RingHom.comp_apply, ← hy2, map_pow] at h3
     exact absurd h3 (not_lt.2 (sq_nonneg _))
-  haveI : Algebra.IsQuadraticExtension F K := { finrank_eq_two' := hrk }
-  haveI : IsAlgClosure K Ω :=
+  have : Algebra.IsQuadraticExtension F K := { finrank_eq_two' := hrk }
+  have : IsAlgClosure K Ω :=
     { isAlgClosed := IsAlgClosure.isAlgClosed F
       isAlgebraic := Algebra.IsAlgebraic.tower_top (K := F) K }
   refine ⟨K, inferInstance, inferInstance, IsCMField.ofCMExtension F K, inferInstance, inferInstance,
@@ -1295,8 +1295,8 @@ private theorem regAlg_twist {K : Type} [Field K] [NumberField K] [_root_.Number
 private theorem noTwistRam (hP : Hypotheses₂) : Cr.NoTwistRam := by
   intro F E Ω _ _ _ _ _ _ _ _ _ _ _ l _ ι h2 n hn r π hc hatt ⟨s, hs, hs1⟩ η hη hT
   obtain ⟨δ, hδc, -, hδs, hδu⟩ := UpperTheory.exists_quadratic_sign_character F E Ω l h2
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, by
-    haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, by
+    have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
     exact Algebra.IsAlgebraic.trans F E Ω⟩
   obtain ⟨g, hg⟩ : RepIso r (tw r δ) := by
     refine isoOfFrob hP F Ω l ι n r _ hc (irrBasic.2 _ _ n r δ hc hδc) hatt.1 ((irrBasic.1 _ (G F Ω) _ n r).2.2 δ hatt.1) ?_
@@ -1377,7 +1377,7 @@ theorem UpperTheory.V.Af.compatReal :
       P.litN.loc.geo P.litN.loc.bz
   have hpst : IsPstAt (Loc.PP l) Bw (r.comp (Dec (F := F) A).subtype) := by
     obtain ⟨T⟩ := Loc.tiedP l
-    exact P.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (hr.comp continuous_subtype_val))
+    exact P.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (hr.comp continuous_subtypeVal))
       (hG.above _ _ ⟨T⟩ v A h O Bw hj).1
   refine ⟨hpst, ?_⟩
   obtain ⟨K, _, _, _, _, _, _, _, hK, hemb, v₀, A₀, ⟨B₀, -, hB₀⟩, hA₀, s, hs, hs'⟩ :=
@@ -1611,7 +1611,7 @@ theorem UpperTheory.V.Sd.ordAbove :
   have hdr := UpperTheory.local_global_compatibility_gl2 hP F Ω l hl ι 2 one_le_two r π χ₀ H.cont H.reg hpol H.att w (m w) hinf σ hσ A h rc hrc
     ((Lev.ssCalc F Ω A w h).1 2 _ (fun j => (ω j).comp ar) hcp)
   rw [funext hcp] at hdr
-  obtain ⟨κ, hκ, hv⟩ := UpperTheory.deRham_weights_of_localArtin_characters hP.litN F Ω l hl ι 2 w hw A h ar har _ (H.cont.comp continuous_subtype_val) (m w)
+  obtain ⟨κ, hκ, hv⟩ := UpperTheory.deRham_weights_of_localArtin_characters hP.litN F Ω l hl ι 2 w hw A h ar har _ (H.cont.comp continuous_subtypeVal) (m w)
     (fun i j hij => by fin_cases i <;> fin_cases j <;> first | exact hm | exact absurd hij (by decide)) ω hsm
     (Fin.forall_fin_two.2 ⟨hn0, hn1⟩) hdr
   have k0 : ∀ g : ↥(Dec (F := F) A), (g : G F Ω) ∈ Ine (F := F) A → κ 0 g = cycBar F Ω l g ^ m w 0 := fun g hg => by

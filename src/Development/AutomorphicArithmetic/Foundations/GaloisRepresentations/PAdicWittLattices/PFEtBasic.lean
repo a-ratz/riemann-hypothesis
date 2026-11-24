@@ -69,14 +69,14 @@ private theorem fEt_of_pullback {P Y Z' Z : Scheme.{0}} (v : P ⟶ Y) (s' : P �
 
 private theorem fEt_comp {W Y Z : Scheme.{0}} (r : W ⟶ Y) (s : Y ⟶ Z) (d e : ℕ) (hr : FEt r e) (hs : FEt s d) :
     FEt (r ≫ s) (d * e) := by
-  haveI := hr.1
-  haveI := hr.2.1
-  haveI := hs.1
-  haveI := hs.2.1
+  have := hr.1
+  have := hr.2.1
+  have := hs.1
+  have := hs.2.1
   refine ⟨inferInstance, inferInstance, fun K _ _ x => ?_⟩
-  haveI : Fintype {y : Spec (CommRingCat.of K) ⟶ Y // y ≫ s = x} :=
+  have : Fintype {y : Spec (CommRingCat.of K) ⟶ Y // y ≫ s = x} :=
     @Fintype.ofFinite _ (fib_finite s K x)
-  haveI hfin : ∀ y : {y : Spec (CommRingCat.of K) ⟶ Y // y ≫ s = x},
+  have hfin : ∀ y : {y : Spec (CommRingCat.of K) ⟶ Y // y ≫ s = x},
       Finite {w : Spec (CommRingCat.of K) ⟶ W // w ≫ r = y.1} := fun y => fib_finite r K y.1
   let eqv : {w : Spec (CommRingCat.of K) ⟶ W // w ≫ r ≫ s = x} ≃
       Σ y : {y : Spec (CommRingCat.of K) ⟶ Y // y ≫ s = x},
@@ -95,9 +95,9 @@ private theorem fEt_comp {W Y Z : Scheme.{0}} (r : W ⟶ Y) (s : Y ⟶ Z) (d e :
 
 private theorem fEt_galois (hp : PtsOfSplits) {W Z : Scheme.{0}} (c : W ⟶ Z) (G : Type) [Group G] [Finite G]
     (a : G → (W ⟶ W)) (h : IsGalois c G a) : FEt c (Nat.card G) := by
-  haveI := h.1
-  haveI := h.2.1
-  haveI := h.2.2.1
+  have := h.1
+  have := h.2.1
+  have := h.2.2.1
   refine ⟨inferInstance, inferInstance, fun Ω _ _ x => ?_⟩
   obtain ⟨w, hw⟩ := Surjective.surj (f := c) (UpperTheory.Gal.TranscendenceTraces.pt x)
   obtain ⟨z, hz, -⟩ := UpperTheory.Gal.TranscendenceTraces.ptLift_of c Ω x w hw

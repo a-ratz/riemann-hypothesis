@@ -65,12 +65,12 @@ theorem toLL_injective : Function.Injective Bw.toLL :=
   Subtype.val_injective.comp Bw.eO.injective
 
 theorem toLL_continuous : Continuous Bw.toLL :=
-  continuous_subtype_val.comp Bw.eO_cont
+  continuous_subtypeVal.comp Bw.eO_cont
 
 theorem rep_continuous {m : ℕ} (r : ↥Gw →* GL (Fin m) O)
     (hr : Continuous fun g => ((r g : GL (Fin m) O) : Matrix (Fin m) (Fin m) O))
     (x : Fin m → ↥Bw.LL.1) : Continuous fun g => Bw.rep r g x := by
-  haveI : IsTopologicalRing ↥Bw.LL.1 := (GlobalTheory.LocalIntegers.good_integers l Bw.LL).1.2.2.2.1
+  have : IsTopologicalRing ↥Bw.LL.1 := (GlobalTheory.LocalIntegers.good_integers l Bw.LL).1.2.2.2.1
   simp only [rep_apply]
   exact ((hr.comp Bw.e_symm_cont).matrix_map (toLL_continuous Bw)).matrix_mulVec continuous_const
 

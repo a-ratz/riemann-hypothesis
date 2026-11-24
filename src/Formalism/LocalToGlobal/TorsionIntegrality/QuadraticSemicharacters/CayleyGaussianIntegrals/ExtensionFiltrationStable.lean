@@ -61,8 +61,8 @@ private theorem exists_real_basis_span_int_eq_of_isLat {V : Type} [NormedAddComm
       (Submodule.span ℤ (Set.range b)).toAddSubgroup = Λ := by
   obtain ⟨hdisc, hspan⟩ := hΛ
   let L : Submodule ℤ V := AddSubgroup.toIntSubmodule Λ
-  haveI : DiscreteTopology L := hdisc
-  haveI : IsZLattice ℝ L := ⟨hspan⟩
+  have : DiscreteTopology L := hdisc
+  have : IsZLattice ℝ L := ⟨hspan⟩
   refine ⟨_, inferInstance, (Module.Free.chooseBasis ℤ L).ofZLatticeBasis ℝ L, ?_⟩
   rw [Module.Basis.ofZLatticeBasis_span]
   rfl
@@ -88,8 +88,8 @@ theorem fundamentalDomainExists : FundDomain := by
   have hfl : ∀ x : V, (ZSpan.floor b x : V) ∈ L := fun x => (ZSpan.floor b x).2
   set H := Λ'.addSubgroupOf L with hH
   have hcardQ : Nat.card (L ⧸ H) = relIdx Λ' L := rfl
-  haveI : Finite (L ⧸ H) := Nat.finite_of_card_ne_zero (by rw [hcardQ]; exact hidx)
-  letI : Fintype (L ⧸ H) := Fintype.ofFinite _
+  have : Finite (L ⧸ H) := Nat.finite_of_card_ne_zero (by rw [hcardQ]; exact hidx)
+  let : Fintype (L ⧸ H) := Fintype.ofFinite _
   let rep : L ⧸ H → V := fun q => ((Quotient.out q : L) : V)
   have hrepL : ∀ q, rep q ∈ L := fun q => (Quotient.out q).2
   have hrep : ∀ q : L ⧸ H, ((Quotient.out q : L) : L ⧸ H) = q := fun q => QuotientAddGroup.out_eq' q
@@ -176,12 +176,12 @@ theorem characterIntegral : CharIntegral := by
     rw [this, one_mul]
   by_cases hμ : μ D' = 0
   · exact setIntegral_measure_zero _ hμ
-  haveI : Countable Λ' := by
+  have : Countable Λ' := by
     have hc := Measure.countable_meas_pos_of_disjoint_iUnion₀ (μ := μ) (As := fun g : Λ' => g +ᵥ D')
       (fun g => hD.nullMeasurableSet_vadd g) hD.aedisjoint
     have huniv : {g : Λ' | 0 < μ (g +ᵥ D')} = Set.univ := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+      simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
       rw [measure_vadd]
       exact pos_iff_ne_zero.mpr hμ
     rw [huniv] at hc

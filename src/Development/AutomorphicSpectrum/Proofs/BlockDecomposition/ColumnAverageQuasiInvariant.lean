@@ -72,7 +72,7 @@ theorem exists_unif_pow_mul_mem (x : F) : ∃ m : ℕ, (uniformizer F : F) ^ m *
   obtain ⟨m, hm⟩ := exists_pow_lt₀ (valuation_uniformizer_lt_one F) (Units.mk0 _ hvx)⁻¹
   refine ⟨m, ?_⟩
   have h1 : ValuativeRel.valuation F (uniformizer F : F) ^ m * ValuativeRel.valuation F x < 1 := by
-    have := mul_lt_mul_of_pos_right hm (zero_lt_iff.mpr hvx)
+    have := mul_lt_mul_of_pos_right hm (pos_iff_ne_zero.mpr hvx)
     simpa [hvx] using this
   rw [Valuation.mem_integer_iff, map_mul, map_pow]
   exact h1.le

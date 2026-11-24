@@ -129,8 +129,8 @@ theorem pi_const_smul {ι : Type*} [Fintype ι] {X : Type*} [MeasurableSpace X] 
     [SigmaFinite μ] (c : ℝ≥0) :
     Measure.pi (fun _ : ι => c • μ) = (c ^ Fintype.card ι) • Measure.pi (fun _ : ι => μ) := by
   refine pi_eq fun s hs => ?_
-  rw [Measure.smul_apply, pi_pi, ENNReal.smul_def, smul_eq_mul]
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, pi_pi, ENNReal.smul_def, smul_eq_mul]
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
   rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, ENNReal.coe_pow]
 
 theorem map_mul_right (b : GL (Fin n) 𝔸[K]) :
@@ -817,8 +817,8 @@ theorem thetaPairing_eq (hn : 2 ≤ n) {φ₁ φ₂ : AdelicGLn.AdelicGL K n →
     refine Integrable.of_bound ?_ (C₂ * (max 1 ((t⁻¹ : {r : ℝ // 0 < r}) : ℝ)⁻¹) ^ M₂)
       (Eventually.of_forall fun p => hTb p.1 p.2)
     refine Continuous.aestronglyMeasurable ?_
-    exact ((h₂c'.comp (continuous_subtype_val.comp continuous_fst)).mul
-      (h₁c.comp (continuous_subtype_val.comp continuous_snd))).mul hT
+    exact ((h₂c'.comp (continuous_subtypeVal.comp continuous_fst)).mul
+      (h₁c.comp (continuous_subtypeVal.comp continuous_snd))).mul hT
 
   unfold thetaPairing
   dsimp only

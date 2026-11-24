@@ -59,7 +59,7 @@ theorem UpperTheory.V.Ws.Chain.exists_residual_datum_over_restriction_to_rationa
     rcases hT.2 with h | h
     · exact h.1.1
     · exact h.1.1
-  haveI : NumberField T.F := T.nF
+  have : NumberField T.F := T.nF
   have hl : l.Prime := Fact.out
   have hpl : ∀ v, ∃ g : G ℚ Ω, (∀ x : Ω, g x ∈ T.pl v ↔ x ∈ D.pl l) ∧
       (∀ s ∈ Dec (T.pl v), g⁻¹ * resQ T.F s * g ∈ Dec (D.pl l)) ∧
@@ -131,8 +131,8 @@ theorem UpperTheory.V.Ws.Chain.exists_residual_datum_over_restriction_to_rationa
     obtain ⟨hsD, m, hm⟩ := hs
     refine ((key v s hsD).2 i).trans ?_
     have hchar : CharP k l := by
-      haveI := c.dvr
-      haveI := c.fin
+      have := c.dvr
+      have := c.fin
       have hmax : ((l : ℕ) : c.O) ∈ IsLocalRing.maximalIdeal c.O := by
         obtain ⟨Q, hQ, hQc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (R := ℤ_[l]) (S := c.O)
           (IsLocalRing.maximalIdeal ℤ_[l]) (IsLocalRing.le_maximalIdeal (RingHom.ker_ne_top _))
@@ -166,7 +166,7 @@ theorem UpperTheory.V.Ws.Chain.exists_residual_datum_over_restriction_to_rationa
       rw [he]
       exact (hlc.isClopen_fiber 1).isClosed
     have hcomm : ⁅Dec (T.pl v), Dec (T.pl v)⁆ ≤ φ.ker :=
-      le_trans (Subgroup.commutator_mono le_top le_top) (Abelianization.commutator_subset_ker φ)
+      le_trans (Subgroup.commutator_mono le_top le_top) (Group.Abelianization.commutator_le_ker φ)
     have hker := Subgroup.topologicalClosure_minimal _ hcomm hcl hm
     rw [MonoidHom.mem_ker, map_pow] at hker
     have hx : (φ s : k) ^ (l ^ m) = 1 := by

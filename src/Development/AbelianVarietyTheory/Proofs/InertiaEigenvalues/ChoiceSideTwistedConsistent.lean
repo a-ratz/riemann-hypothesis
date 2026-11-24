@@ -595,7 +595,7 @@ theorem _root_.UpperTheory.KN.mem_range_semilinear_of_values_mem_range :
       (∀ m h, ev (jm m) h ∈ Set.range c0) → ∀ f : N, (∀ h, ev f h ∈ Set.range c0) → f ∈ Set.range jm := by
   intro K M N V U I J _ _ _ _ _ _ _ _ _ σ jm ev c0 b hspan hev hli hjm f hf
   classical
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   have hσ : ∀ k : K, algebraMap K ℂ k = σ k := fun k => rfl
   obtain ⟨lam, hlam⟩ := LinearMap.exists_leftInverse_of_injective (Algebra.linearMap K ℂ)
     (LinearMap.ker_eq_bot.mpr (algebraMap K ℂ).injective)

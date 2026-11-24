@@ -75,11 +75,11 @@ theorem SemidirectHaar.proof (G T : Type*) [Group G] [TopologicalSpace G] [IsTop
   set f : G → ℝ≥0∞ := (interior K).indicator 1 with hf_def
   have hfm : Measurable f := measurable_one.indicator hUo.measurableSet
   have hI : ∫⁻ x : H, f x ∂ν = ν (Subtype.val ⁻¹' interior K) := by
-    rw [← lintegral_indicator_one (hUo.preimage continuous_subtype_val).measurableSet]
+    rw [← lintegral_indicator_one (hUo.preimage continuous_subtypeVal).measurableSet]
     congr 1
   have hI0 : ∫⁻ x : H, f x ∂ν ≠ 0 := by
     rw [hI]
-    exact ((hUo.preimage continuous_subtype_val).measure_pos ν ⟨1, hU1⟩).ne'
+    exact ((hUo.preimage continuous_subtypeVal).measure_pos ν ⟨1, hU1⟩).ne'
   have hItop : ∫⁻ x : H, f x ∂ν ≠ ∞ := by
     rw [hI]
     exact ((measure_mono (Set.preimage_mono interior_subset)).trans_lt
@@ -114,7 +114,7 @@ theorem SemidirectHaar.proof (G T : Type*) [Group G] [TopologicalSpace G] [IsTop
 
   let Φ : T × H → P := fun q => ⟨(q.2 : G) * τ q.1, P.mul_mem (hHP q.2.2) (hτP q.1)⟩
   have hΦc : Continuous Φ :=
-    ((continuous_subtype_val.comp continuous_snd).mul (hτ.comp continuous_fst)).subtype_mk _
+    ((continuous_subtypeVal.comp continuous_snd).mul (hτ.comp continuous_fst)).subtype_mk _
   have hΦm : Measurable Φ := hΦc.measurable
   have hδm : Measurable fun t => (δ t : ℝ≥0∞) := (ENNReal.continuous_coe.comp hδc).measurable
   let m : Measure P := Measure.map Φ ((ρ.withDensity fun t => (δ t : ℝ≥0∞)).prod ν)
@@ -134,7 +134,7 @@ theorem SemidirectHaar.proof (G T : Type*) [Group G] [TopologicalSpace G] [IsTop
     let y : H := ⟨(p₀ : G) * (τ s)⁻¹, hβH p₀⟩
     let ψ' : G → ℝ≥0∞ := Function.extend Subtype.val ψ 0
     have hψ' : Measurable ψ' :=
-      (MeasurableEmbedding.subtype_coe hP.measurableSet).measurable_extend hψ measurable_const
+      (MeasurableEmbedding.subtypeVal hP.measurableSet).measurable_extend hψ measurable_const
     have hψ'e : ∀ p : P, ψ' p = ψ p := fun p => Subtype.val_injective.extend_apply ψ 0 p
     have inner : ∀ t, ∫⁻ x : H, ψ (p₀ * Φ (t, x)) ∂ν =
         δ s * ∫⁻ x : H, ψ (Φ (s * t, x)) ∂ν := by
@@ -178,7 +178,7 @@ theorem SemidirectHaar.proof (G T : Type*) [Group G] [TopologicalSpace G] [IsTop
     exact (mul_inv_eq_one.1 (hτH _ h')).symm
   let α : P → H := fun p => ⟨(p : G) * (τ (β p))⁻¹, hβH p⟩
   have hα : Continuous α :=
-    (continuous_subtype_val.mul (hτ.comp hβ).inv).subtype_mk _
+    (continuous_subtypeVal.mul (hτ.comp hβ).inv).subtype_mk _
   have hαΦ : ∀ t (x : H), α (Φ (t, x)) = x := by
     intro t x
     apply Subtype.ext
@@ -241,7 +241,7 @@ theorem SemidirectHaar.proof (G T : Type*) [Group G] [TopologicalSpace G] [IsTop
     rw [hsc, h, zero_smul]
   refine ⟨c₀⁻¹, inv_ne_zero hc0, fun φ hφ => ?_⟩
   have key : ∫⁻ p, φ p ∂m = ∫⁻ t, δ t * ∫⁻ x : H, φ (x * τ t) ∂ν ∂ρ :=
-    hm _ (hφ.comp continuous_subtype_val.measurable)
+    hm _ (hφ.comp continuous_subtypeVal.measurable)
   rw [hsc, lintegral_smul_measure, ENNReal.smul_def, smul_eq_mul] at key
   rw [← key, ENNReal.coe_inv hc0, ← mul_assoc,
     ENNReal.inv_mul_cancel (by exact_mod_cast hc0) ENNReal.coe_ne_top, one_mul]

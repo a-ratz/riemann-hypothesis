@@ -89,7 +89,7 @@ private theorem zd_dec (D : J → Submodule ℂ M) {F : M} (h : F ∈ ⨆ i, D i
   classical
   induction h using Submodule.iSup_induction' with
   | mem i y hy =>
-    refine ⟨Pi.single i y, fun j => ?_, by rw [Finset.sum_pi_single', if_pos (Finset.mem_univ i)]⟩
+    refine ⟨Pi.single i y, fun j => ?_, by rw [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ i)]⟩
     by_cases hj : j = i
     · subst hj
       rw [Pi.single_eq_same]; exact hy
@@ -133,8 +133,8 @@ private theorem zd_rank (E : J → Submodule ℂ M) (hE : iSupIndep E) (Z : Subm
       simp
     | insert a s ha ih =>
       have hs : (⨆ i ∈ s, E i) ≤ Z := iSup₂_le fun i _ => hZ i
-      haveI : FiniteDimensional ℂ ↥(E a) := Submodule.finiteDimensional_of_le (hZ a)
-      haveI : FiniteDimensional ℂ ↥(⨆ i ∈ s, E i) := Submodule.finiteDimensional_of_le hs
+      have : FiniteDimensional ℂ ↥(E a) := Submodule.finiteDimensional_of_le (hZ a)
+      have : FiniteDimensional ℂ ↥(⨆ i ∈ s, E i) := Submodule.finiteDimensional_of_le hs
       have hd : Disjoint (E a) (⨆ i ∈ s, E i) := by
         exact hE.disjoint_biSup (y := (s : Set J)) (Finset.mem_coe.not.2 ha)
       have h := Submodule.finrank_sup_add_finrank_inf_eq (E a) (⨆ i ∈ s, E i)
@@ -170,7 +170,7 @@ private theorem zd_main (Y D : J → Submodule ℂ M) (C : Submodule ℂ M) [Fin
     refine (Submodule.mem_iInf _).2 fun j => ?_
     exact zd_gen D hD (t j) (ev j) (fun i => ht i j) x (fun i => (hx i).1) ((Submodule.mem_iInf _).1 hF.2 j) i
   have hE : iSupIndep fun i => Y i ⊓ Z := hY.mono fun _ => inf_le_left
-  haveI : FiniteDimensional ℂ ↥Z := Submodule.finiteDimensional_of_le (inf_le_left.trans hOC)
+  have : FiniteDimensional ℂ ↥Z := Submodule.finiteDimensional_of_le (inf_le_left.trans hOC)
   have hs : (⨆ i, Y i ⊓ Z) = Z := le_antisymm (iSup_le fun _ => inf_le_right) hB
   have h := zd_rank (fun i => Y i ⊓ Z) hE Z fun _ => inf_le_right
   rw [hs] at h
@@ -469,8 +469,8 @@ private theorem ze_rank (E : J → Submodule ℂ M) (hE : iSupIndep E) (Z : Subm
       rw [h0, finrank_bot, Finset.sum_empty]
     | insert a s ha ih =>
       have hs : (⨆ i ∈ s, E i) ≤ Z := iSup₂_le fun i _ => hZ i
-      haveI : FiniteDimensional ℂ ↥(E a) := Submodule.finiteDimensional_of_le (hZ a)
-      haveI : FiniteDimensional ℂ ↥(⨆ i ∈ s, E i) := Submodule.finiteDimensional_of_le hs
+      have : FiniteDimensional ℂ ↥(E a) := Submodule.finiteDimensional_of_le (hZ a)
+      have : FiniteDimensional ℂ ↥(⨆ i ∈ s, E i) := Submodule.finiteDimensional_of_le hs
       have hd : Disjoint (E a) (⨆ i ∈ s, E i) :=
         hE.disjoint_biSup (y := (s : Set J)) fun h => ha (Finset.mem_coe.1 h)
       have h := Submodule.finrank_sup_add_finrank_inf_eq (E a) (⨆ i ∈ s, E i)
@@ -502,7 +502,7 @@ private theorem ze_main (Y : J → Submodule ℂ M) (hY : iSupIndep Y) (Z : Subm
       exact hF.2
     exact ze_zero Y hY (fun i => P (x i)) (fun i => hP i _ (hx i).1) h0 i
   have hE' : iSupIndep fun i => Y i ⊓ (Z ⊓ LinearMap.ker P) := hY.mono fun _ => inf_le_left
-  haveI : FiniteDimensional ℂ ↥(Z ⊓ LinearMap.ker P) := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ ↥(Z ⊓ LinearMap.ker P) := Submodule.finiteDimensional_of_le inf_le_left
   have hs' : (⨆ i, Y i ⊓ (Z ⊓ LinearMap.ker P)) = Z ⊓ LinearMap.ker P :=
     le_antisymm (iSup_le fun _ => inf_le_right) hB
   have h := ze_rank (fun i => Y i ⊓ (Z ⊓ LinearMap.ker P)) hE' (Z ⊓ LinearMap.ker P) fun _ => inf_le_right
@@ -617,8 +617,8 @@ theorem UpperTheory.V.Z.Desc.V0.zDecE :
     UpperTheory.V.Z.J.D.ZEq → NormS → ZDecE := by
   intro hE hN l _ L Ω _ _ _ _ _ _ s n hn V hV Q c ι m τ₀ lam d e ξ hξ A _ _ _ θ x c0 sp hw hs K ev hev J _ σ hσ hind hdec a N ha
   have hZ := UpperTheory.V.Z.J.D.zDec hE l L Ω s n hn V hV Q c ι m τ₀ lam d e ξ hξ A θ x c0 sp hw hs K ev hev J σ hσ hind hdec
-  haveI : FiniteDimensional ℂ ↥(zPart (hset Q τ₀) θ ι x.toRingHom lam ξ K c0 ev) := by
-    haveI := hs.fin K c0 le_rfl
+  have : FiniteDimensional ℂ ↥(zPart (hset Q τ₀) θ ι x.toRingHom lam ξ K c0 ev) := by
+    have := hs.fin K c0 le_rfl
     exact Submodule.finiteDimensional_of_le (inf_le_left.trans (iSup_le fun _ => inf_le_left))
   exact ze_H (hset Q τ₀) _ hind _ inferInstance hZ (sec0 n s) a N fun i g hg y hy =>
     ze_tr hn Q c τ₀ hξ (hσ i) _ ((hN l L Ω s n hn V hV Q c m τ₀).norm g (ha g hg)) y hy

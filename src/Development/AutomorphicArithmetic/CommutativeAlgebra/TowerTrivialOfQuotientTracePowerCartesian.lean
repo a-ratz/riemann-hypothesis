@@ -91,7 +91,7 @@ private lemma powMap_congr {S' S₁ : Scheme.{0}} {A' : Over S'} {A : Over S₁}
 theorem UpperTheory.tower_trivial_of_quotient_trace_powerCartesian :
     MIn → QObj → QComp → QIso → QUniq → TrEta → TrUnit → PowCart → PiZero := by
   intro hM hQO hQC hQI hQU hTE hTU hPC p _ D G L E _ _ gb w q _ r 𝔴 𝔫 S k T N c a hNum C
-  haveI : IsNoetherianRing (Ow w) := inferInstance
+  have : IsNoetherianRing (Ow w) := inferInstance
   let N₀' : Lv p := ⟨S.N₀, S.std.three, S.cop⟩
   let β : Ow w →+* E := algebraMap (Ow w) E
   obtain ⟨j₀, hop, hcl, hj, φA, φ₂, hcart, hsq, hact, ⟨hpol⟩, heta⟩ :=
@@ -114,8 +114,8 @@ theorem UpperTheory.tower_trivial_of_quotient_trace_powerCartesian :
     simp only [Category.assoc]
     rw [hs]
   refine ⟨(T.e N₀').hom ≫ pw, e, ?_⟩
-  haveI := hop
-  haveI := hcl
+  have := hop
+  have := hcl
   obtain ⟨h1, h2⟩ := pullback_lift_clopen_immersion j₀ (pullback.fst _ _) (pullback.snd _ _) S.M.s (spMap β)
     (IsPullback.of_hasPullback _ _) (GlobalTheory.KS.pow S.M.univ.A k).hom (GlobalTheory.KS.pow (T.M N₀').univ.A k).hom pw
     (pc.1 n₀.cart.1) (T.e N₀') _ rfl _ hq e

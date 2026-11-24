@@ -60,7 +60,7 @@ namespace GlobalTheory.Mum
 
 theorem spMap_field_cancel (Ω Ω' : Type) [Field Ω] [Field Ω'] (io : Ω →+* Ω') (X : Scheme.{0}) (a b : Sp Ω ⟶ X)
     (h : spMap io ≫ a = spMap io ≫ b) : a = b := by
-  haveI : Epi (spMap io) := Flat.epi_of_flat_of_surjective _
+  have : Epi (spMap io) := Flat.epi_of_flat_of_surjective _
   exact (cancel_epi (spMap io)).1 h
 
 end GlobalTheory.Mum

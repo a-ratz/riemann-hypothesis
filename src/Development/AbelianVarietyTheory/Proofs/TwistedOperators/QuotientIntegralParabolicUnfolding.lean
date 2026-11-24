@@ -106,7 +106,7 @@ theorem exists_open_stab {F : G → ℂ} (hF : F ∈ SB G) :
 theorem sb_of_quot (K : Subgroup G) (hKo : IsOpen (K : Set G)) (hKc : IsCompact (K : Set G))
     (S : Finset (G ⧸ K)) (a : G ⧸ K → ℂ) (ha : ∀ q, q ∉ S → a q = 0) :
     (fun g : G => a (g : G ⧸ K)) ∈ SB G := by
-  haveI := QuotientGroup.discreteTopology hKo
+  have := QuotientGroup.discreteTopology hKo
   refine ⟨(IsLocallyConstant.of_discrete a).comp_continuous QuotientGroup.continuous_mk, ?_⟩
   have hc : IsCompact (⋃ q ∈ S, (fun x => q.out * x) '' (K : Set G)) :=
     S.isCompact_biUnion fun q _ => hKc.image (by fun_prop)
@@ -117,7 +117,7 @@ theorem sb_of_quot (K : Subgroup G) (hKo : IsOpen (K : Set G)) (hKc : IsCompact 
 
 theorem finite_quot (K : Subgroup G) (hKo : IsOpen (K : Set G)) {C : Set G} (hC : IsCompact C) :
     ∃ S : Finset (G ⧸ K), ∀ g ∈ C, (g : G ⧸ K) ∈ S := by
-  haveI := QuotientGroup.discreteTopology hKo
+  have := QuotientGroup.discreteTopology hKo
   have := (hC.image (QuotientGroup.continuous_mk (N := K))).finite_of_discrete
   exact ⟨this.toFinset, fun g hg => by simpa using ⟨g, hg, rfl⟩⟩
 
@@ -288,9 +288,9 @@ theorem compact_preimage (hN : IsClosed (N k n c p : Set (GL (n ⊕ Fin c) k))) 
   have hb : Continuous (fun g : GL (n ⊕ Fin c) k => g.val.toBlocks₁₁) := by
     refine continuous_matrix fun i j => ?_
     exact (Units.continuous_val.matrix_elem (Sum.inl i) (Sum.inl j))
-  haveI : T2Space k := by
-    letI := IsTopologicalAddGroup.rightUniformSpace k
-    haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  have : T2Space k := by
+    let := IsTopologicalAddGroup.rightUniformSpace k
+    have := isUniformAddGroup_of_addCommGroup (G := k)
     infer_instance
   have h1 := hC.image hb
   have h2 := hC.image (MulOpposite.continuous_op.comp (hb.comp continuous_inv))
@@ -317,17 +317,17 @@ theorem quotInt_unique_exists : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
   obtain ⟨bG, lG, sG, hKc, hKo, -⟩ := GlobalTheory.SplitWeil.volGL_haar k (n ⊕ Fin c) ν
   obtain ⟨hN, -, hH, hRi, hconj⟩ := _root_.GlobalTheory.RootEx.VolN.volN_haar_and_modulus k n c p hp hpc ν
   obtain ⟨-, -, -, hnorm, hdec, -⟩ := GlobalTheory.RootEx.Radical.unipotent_radical_basic k n c p
-  haveI : LocallyCompactSpace (N k n c p) := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (N k n c p) :=
+  have : LocallyCompactSpace (N k n c p) := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (N k n c p) :=
     TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaFinite (volN ν n c p) := Measure.IsHaarMeasure.sigmaFinite _
-  haveI : μX.IsMulRightInvariant := by
+  have : SigmaFinite (volN ν n c p) := Measure.IsHaarMeasure.sigmaFinite _
+  have : μX.IsMulRightInvariant := by
     rw [Measure.isMulLeftInvariant_eq_smul μX (volGL ν n)]
     infer_instance
   let Λ : (GL (n ⊕ Fin c) k → ℂ) → ℂ := fun φ =>
     ∫ g, (∫ u : N k n c p, φ (embX c g * (u : GL (n ⊕ Fin c) k)) ∂(volN ν n c p)) ∂μX
   have hm : Continuous (fun z : GL n k × N k n c p => embX c z.1 * (z.2 : GL (n ⊕ Fin c) k)) :=
-    (continuous_embX.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+    (continuous_embX.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
   have hsupp : ∀ φ ∈ SB (GL (n ⊕ Fin c) k),
       HasCompactSupport (fun z : GL n k × N k n c p => φ (embX c z.1 * (z.2 : GL (n ⊕ Fin c) k))) := by
     intro φ hφ

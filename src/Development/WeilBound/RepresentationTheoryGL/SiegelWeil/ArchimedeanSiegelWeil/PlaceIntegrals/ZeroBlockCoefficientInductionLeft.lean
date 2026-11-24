@@ -177,21 +177,21 @@ end Main
 
 theorem stageInt_eq_of_e0 : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ (n d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure R), lam.IsAddHaarMeasure → ∀ m₀ : Measure (Fin n → Fin M → R ⊗[F] E), (∀ h : HA R σ J, m₀.map (actW R σ J h) = m₀) → ∀ φ : (Fin (n + 1) → Fin (M + 2) → R ⊗[F] E) → ℝ≥0∞, Measurable φ → ∀ g g' : HA R σ (hypOne J), actW R σ (hypOne J) g (e0 _ M) = actW R σ (hypOne J) g' (e0 _ M) → stageInt R σ J b lam m₀ φ g = stageInt R σ J b lam m₀ φ g' := by
   intro F E _ _ _ _ _ σ hcm M J hJ R _ _ _ _ _ hL n d b lam hlam m₀ hm₀ φ hφ g g' hgg
-  haveI : IsTopologicalRing R := hL.1
-  haveI : LocallyCompactSpace R := hL.2.1
-  haveI : SecondCountableTopology R := hL.2.2.1
-  haveI : T2Space R := hL.2.2.2.1
+  have : IsTopologicalRing R := hL.1
+  have : LocallyCompactSpace R := hL.2.1
+  have : SecondCountableTopology R := hL.2.2.1
+  have : T2Space R := hL.2.2.2.1
   obtain ⟨tK1, tK2, tK3, tK4, -, -, -, tK8, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
-  haveI := tK1
-  haveI := tK2
-  haveI := tK3
-  haveI := tK4
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) := tK8 n M
-  haveI : BorelSpace (Fin 1 → Fin n → R ⊗[F] E) := tK8 1 n
-  haveI : BorelSpace (Fin (n + 1) → Fin (M + 2) → R ⊗[F] E) := tK8 (n + 1) (M + 2)
+  have := tK1
+  have := tK2
+  have := tK3
+  have := tK4
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fin n → Fin M → R ⊗[F] E) := tK8 n M
+  have : BorelSpace (Fin 1 → Fin n → R ⊗[F] E) := tK8 1 n
+  have : BorelSpace (Fin (n + 1) → Fin (M + 2) → R ⊗[F] E) := tK8 (n + 1) (M + 2)
   obtain ⟨-, hW, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm R d b lam hlam
-  haveI := hW 1 n
+  have := hW 1 n
   obtain ⟨-, -, -, -, -, hA⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hcm (M + 2) (hypOne J) (isHermND_hypOne σ hJ) R
   obtain ⟨-, -, -, -, -, hA'⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hcm M J hJ R
   obtain ⟨-, e1, em, -⟩ := hA 1
@@ -380,7 +380,7 @@ theorem local_stages : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       hW1 hH1 hm₁ g 0
   have hinvU : ∀ h : HA R σ J, (m' 0).map (actW R σ J h) = m' 0 := fun h =>
     GlobalTheory.CompanionTheory.WeilSiegel.Free.FibreInv.map_actW_fibre_free F E σ hCM M J hJ R hLoc n _ _ m' (hW n M) (hH n) hm' h 0
-  haveI hσ' : SigmaFinite (m' 0) :=
+  have hσ' : SigmaFinite (m' 0) :=
     GlobalTheory.CompanionTheory.WeilSiegel.FreeLocal.sigmaFinite_fib hm' (_root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeOpen.isOpen_free F E σ hCM R hLoc n M) 0
   have hact1 : ∀ g : HA R σ (hypOne J), Continuous (actW R σ (hypOne J) g : (Fin 1 → Fin (M + 2) → R ⊗[F] E) → _) :=
     fun g => (gAct 1).1.comp (Continuous.prodMk_right g)

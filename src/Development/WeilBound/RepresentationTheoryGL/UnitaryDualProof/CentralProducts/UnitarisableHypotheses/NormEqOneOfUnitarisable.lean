@@ -338,7 +338,7 @@ theorem isIrreducible_iff_finrank (ρ : Representation ℂ G X) :
 theorem finrank_smoothPart_ind [TopologicalSpace G] [IsTopologicalGroup G] {Z : Type} [AddCommGroup Z]
     [Module ℂ Z] (H : Subgroup G) (σ : Representation ℂ H Z) :
     Module.finrank ℂ (smoothPart (ind H σ)) = Module.finrank ℂ Z := by
-  haveI : DiscreteTopology G := Subsingleton.discreteTopology
+  have : DiscreteTopology G := Subsingleton.discreteTopology
   have hmem : ∀ z : Z, (fun _ : G => z) ∈ GlobalTheory.PRep.indSpace H σ := by
     intro z
     simp [GlobalTheory.PRep.indSpace, Subsingleton.elim _ (1 : H)]
@@ -368,7 +368,7 @@ theorem prodGL0Irreducible_at (V W : Type) [AddCommGroup V] [Module ℂ V] [AddC
     (π₁ : Representation ℂ (GL (Fin 0) k) V) (π₂ : Representation ℂ (GL (Fin 0) k) W) :
     π₁.IsIrreducible → π₂.IsIrreducible → (prod₂ π₁ π₂).IsIrreducible := by
   intro h₁ h₂
-  haveI : Subsingleton (GL (Fin (0 + 0)) k) := PositivityTheory.PfBern.Props2.subsingleton_GL0
+  have : Subsingleton (GL (Fin (0 + 0)) k) := PositivityTheory.PfBern.Props2.subsingleton_GL0
   rw [PositivityTheory.PfBern.Props2.isIrreducible_iff_finrank] at h₁ h₂ ⊢
   erw [PositivityTheory.PfBern.Props2.finrank_smoothPart_ind]
   rw [Module.finrank_tensorProduct (R := ℂ) (S := ℂ), h₁, h₂]
@@ -399,7 +399,7 @@ theorem finite_orbit_of_isSmooth {ρ : Representation ℂ G X} (hρ : IsSmooth �
   have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   refine IsLocallyConstant.range_finite ?_
   refine (IsLocallyConstant.iff_eventually_eq _).2 fun x => ?_
-  have hc : Continuous fun y : K => (x : G)⁻¹ * (y : G) := continuous_const.mul continuous_subtype_val
+  have hc : Continuous fun y : K => (x : G)⁻¹ * (y : G) := continuous_const.mul continuous_subtypeVal
   have hU : IsOpen ((fun y : K => (x : G)⁻¹ * (y : G)) ⁻¹' {g : G | ρ g w = w}) := (hρ w).preimage hc
   filter_upwards [hU.mem_nhds (by simp)] with y hy
   have hy' : ρ ((x : G)⁻¹ * (y : G)) w = w := hy
@@ -764,7 +764,7 @@ theorem exists_nd_pos (ψ : AddChar k Circle) (hψc : Continuous ψ) (hψ1 : ψ 
     (hN : 0 < N) (hs : IsSmooth X.ρ) (hX : Nontrivial X.V) : ∃ j, 1 ≤ j ∧ ND ψ X j := by
   obtain ⟨m, rfl⟩ : ∃ m, N = m + 1 := ⟨N - 1, by omega⟩
   obtain ⟨n, hn, hnt⟩ := _root_.GlobalTheory.CompanionTheory.BZMirDer.NonZero.exists_derivative_nontrivial k ψ hψc hψ1 m (resM k X.ρ).V (resM k X.ρ).ρ
-    (fun v => (hs v).preimage continuous_subtype_val) hX
+    (fun v => (hs v).preimage continuous_subtypeVal) hX
   obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le hn
   obtain ⟨E⟩ := _root_.GlobalTheory.CompanionTheory.BZMir.iterPhi_twJacquet_equiv k ψ n j (resM k X.ρ)
   exact ⟨j + 1, by omega, n, rfl, E.symm.injective.nontrivial⟩

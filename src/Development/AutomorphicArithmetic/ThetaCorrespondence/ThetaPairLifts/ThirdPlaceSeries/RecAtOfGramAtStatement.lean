@@ -155,8 +155,8 @@ theorem rk_deg_transport (ρ : V →+ E) (σ : W →+ F) (T : V →+ W) {A : Sub
       obtain ⟨x, hx, rfl⟩ := (hAB m).1 hm
       exact ⟨⟨x, hx⟩, e⟩, fun ⟨m, e⟩ => ⟨T m.1, (hAB _).2 ⟨m.1, m.2, rfl⟩, e⟩⟩
   have hn' : ∀ m, ‖f m‖ = ‖g m‖ := fun m => (hn m.1 m.2).symm
-  haveI := hA.2
-  haveI := hB.2
+  have := hA.2
+  have := hB.2
   refine ⟨?_, ?_⟩
   · have hf : Function.Injective f := fun x y h => Subtype.ext (hA.1 x.2 y.2 h)
     have hg : Function.Injective g := fun x y h =>

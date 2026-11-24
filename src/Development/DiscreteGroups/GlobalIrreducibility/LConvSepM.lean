@@ -186,7 +186,7 @@ theorem circle_eq_one {z : Circle} (h : ∀ n : ℕ, 0 < ((z ^ n : Circle) : ℂ
 theorem exists_good (hψ : Continuous ψ) {U : Set (GL (Fin m) k)} (hU : U ∈ 𝓝 (1 : GL (Fin m) k)) :
     ∃ K : Subgroup (GL (Fin m) k), Good ψ K ∧ (K : Set (GL (Fin m) k)) ⊆ U := by
   have hc : Continuous fun g : GL (Fin m) k => ((ψ (superDiag g) : Circle) : ℂ).re :=
-    Complex.continuous_re.comp (continuous_subtype_val.comp (hψ.comp continuous_superDiag))
+    Complex.continuous_re.comp (continuous_subtypeVal.comp (hψ.comp continuous_superDiag))
   have hV : {g : GL (Fin m) k | 0 < ((ψ (superDiag g) : Circle) : ℂ).re} ∈ 𝓝 (1 : GL (Fin m) k) :=
     (isOpen_lt continuous_const hc).mem_nhds (by simp [superDiag_one])
   obtain ⟨r, hr⟩ := exists_congruence_subset (Filter.inter_mem hU hV)

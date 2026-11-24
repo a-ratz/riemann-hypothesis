@@ -204,9 +204,9 @@ private theorem rank_pos {K : Type} [Field K] {Z' : Scheme.{0}} (p' : Z' ⟶ Tra
 theorem injL_holds : InjL := by
   intro hT l _ X Y π hfin hsurj hint hloc hl n
   obtain ⟨hW, -, hD, hTr⟩ := hT
-  haveI := hfin
-  haveI := hsurj
-  haveI := hint
+  have := hfin
+  have := hsurj
+  have := hint
   have hw : TranscendenceTraces.IsNwt π (TranscendenceTraces.nwt π) := hW π hloc
   let g : TranscendenceTraces.gp (Y.residueField (genericPoint Y)) ⟶ Y :=
     Y.fromSpecResidueField (genericPoint Y)
@@ -289,13 +289,13 @@ theorem UpperTheory.Gal.KunnethLefschetz.kunL_holds :
     · intro u v
       obtain rfl : m = n - 2 * (d : ℤ) := by omega
       simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply, he,
-        DirectSum.toModule_lof, dif_pos rfl]
+        DirectSum.toModule_lof, dite_eq_left rfl]
       simp [TensorProduct.lift.tmul, LinearMap.compl₁₂_apply, LinearMap.lsmul_apply]
     · intro a b h' hbm u v
       obtain rfl : b = n - a := by omega
       have ha : a ≠ 2 * (d : ℤ) := by omega
       simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply, he,
-        DirectSum.toModule_lof, dif_neg ha, LinearMap.zero_apply]
+        DirectSum.toModule_lof, dite_eq_right ha, LinearMap.zero_apply]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -484,7 +484,7 @@ namespace UpperTheory.Gal.KunnethLefschetz
 theorem basisOne_holds : BasisOne := by
   intro F M _ _ _ _ lam hlam
   by_cases h0 : lam = 0
-  · haveI := hlam h0
+  · have := hlam h0
     exact ⟨0, Module.Basis.empty M, fun t => t.elim0⟩
   obtain ⟨x, hx⟩ : ∃ x, lam x ≠ 0 := by
     by_contra hc
@@ -742,15 +742,15 @@ theorem UpperTheory.Gal.KunnethLefschetz.dualL_holds :
   have van : ∀ n, 2 * (d : ℤ) < n → Subsingleton (V l X n) := by
     intro n hn
     have key : ∀ z : V l X n, z = 0 := fun z => hA n z (fun t h => by
-      haveI := L.neg X (c t) (by omega)
+      have := L.neg X (c t) (by omega)
       rw [Subsingleton.elim (a t) 0]
       simp)
     exact ⟨fun x y => by rw [key x, key y]⟩
   have le : ∀ n m (h : n + m = 2 * (d : ℤ)),
       Module.finrank ℚ_[l] (V l X m) ≤ Module.finrank ℚ_[l] (V l X n) := by
     intro n m h
-    haveI := fd n
-    haveI := fd m
+    have := fd n
+    have := fd m
     have inj : Function.Injective ((cupV l X h).compr₂ lam).flip := by
       rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
       intro y hy
@@ -772,12 +772,12 @@ theorem UpperTheory.Gal.KunnethLefschetz.dualL_holds :
         intro w
         obtain ⟨r, hr, -⟩ := L.line w
         exact ⟨r, hr.symm⟩
-      haveI : Module.Finite ℚ_[l] (V l (S k) 0) := Module.Finite.of_surjective _ hsurj
+      have : Module.Finite ℚ_[l] (V l (S k) 0) := Module.Finite.of_surjective _ hsurj
       calc Module.finrank ℚ_[l] (V l X 0) ≤ Module.finrank ℚ_[l] (V l (S k) 0) :=
             LinearMap.finrank_le_finrank_of_injective inj
         _ ≤ 1 := finrank_le_one (oneV l (S k)) (fun w => (L.line w).exists.imp fun r hr => hr.symm)
     · have hz : ∀ z : V l X 0, z = 0 := fun z => L.pts p hprop z (fun y => (hpt ⟨y⟩).elim)
-      haveI : Subsingleton (V l X 0) := ⟨fun x y => by rw [hz x, hz y]⟩
+      have : Subsingleton (V l X 0) := ⟨fun x y => by rw [hz x, hz y]⟩
       simp [Module.finrank_zero_of_subsingleton]
   obtain ⟨x0, hx0⟩ : ∃ x, lam x ≠ 0 := by
     by_contra hc
@@ -785,7 +785,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.dualL_holds :
     exact hlam (LinearMap.ext hc)
   have surj : Function.Surjective lam := fun r => ⟨(r / lam x0) • x0, by
     rw [map_smul, smul_eq_mul, div_mul_cancel₀ _ hx0]⟩
-  haveI := fd (2 * (d : ℤ))
+  have := fd (2 * (d : ℤ))
   have hnt : Nontrivial (V l X (2 * (d : ℤ))) := ⟨⟨x0, 0, fun h => hx0 (by rw [h, map_zero])⟩⟩
   have d2 : Module.finrank ℚ_[l] (V l X (2 * (d : ℤ))) = Module.finrank ℚ_[l] ℚ_[l] := by
     rw [Module.finrank_self]
@@ -797,8 +797,8 @@ theorem UpperTheory.Gal.KunnethLefschetz.dualL_holds :
   have htr : ((LinearEquiv.ofBijective lam ⟨inj, surj⟩ : V l X (2 * (d : ℤ)) ≃ₗ[ℚ_[l]] ℚ_[l]) :
       V l X (2 * (d : ℤ)) →ₗ[ℚ_[l]] ℚ_[l]) = lam := LinearMap.ext fun x => rfl
   rw [htr]
-  haveI := fd n
-  haveI := fd m
+  have := fd n
+  have := fd m
   have injf : Function.Injective ((cupV l X h).compr₂ lam).flip := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro y hy
@@ -835,7 +835,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.finFib_holds :
     rw [← Set.finite_univ_iff]
     refine h.subset fun z _ => ?_
     exact Subsingleton.elim _ _
-  haveI : Fintype ↥(pullback π t0) := Fintype.ofFinite _
+  have : Fintype ↥(pullback π t0) := Fintype.ofFinite _
   let c : ↥(S k) := IsLocalRing.closedPoint k
   let e : ↥(pullback π t0) → (S k ⟶ pullback π t0) := fun z =>
     pointOfClosedPoint (pullback.snd π t0) z (isClosed_discrete _)
@@ -1125,9 +1125,9 @@ namespace UpperTheory.Gal.KunnethLefschetz
 theorem kunBij_holds : KunBij := by
   intro hIn l _ k _ _ hl hR d X p hp n
   obtain ⟨hprop, hsm⟩ := hp
-  haveI := hprop
-  haveI := hsm
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth d p
+  have := hprop
+  have := hsm
+  have : Smooth p := SmoothOfRelativeDimension.smooth d p
   apply kun_bijective_of_kunIso l p p n (fun a m r h => hR.isCup _ a m r h)
   exact hIn.kun hIn.a2 hIn.a6nat hIn.a6ring hIn.a7 hIn.a8 hIn.a9 hIn.a10 hIn.a11 hIn.b1 hIn.b2
     hIn.b3 hIn.e2 hIn.e3 hIn.e4 l k (Ne.isUnit hl) p p n 0
@@ -1155,8 +1155,8 @@ theorem UpperTheory.Gal.KunnethLefschetz.limOnto_holds :
   let g : ∀ n, F (n + 1) → F n := fun n a =>
     ⟨ra n a.1, by rw [← hf, a.2, hz]⟩
   let G : ℕᵒᵖ ⥤ Type 1 := Functor.ofOpSequence (X := F) (fun n => TypeCat.ofHom (g n))
-  haveI : ∀ j : ℕᵒᵖ, Finite (G.obj j) := fun j => (inferInstance : Finite (F j.unop))
-  haveI : ∀ j : ℕᵒᵖ, Nonempty (G.obj j) := fun j => by
+  have : ∀ j : ℕᵒᵖ, Finite (G.obj j) := fun j => (inferInstance : Finite (F j.unop))
+  have : ∀ j : ℕᵒᵖ, Nonempty (G.obj j) := fun j => by
     obtain ⟨a, ha⟩ := hsurj j.unop
     exact ⟨(⟨a, ha⟩ : F j.unop)⟩
   obtain ⟨s, hs⟩ := nonempty_sections_of_finite_inverse_system G
@@ -1302,9 +1302,9 @@ theorem ptInt_holds : PtInt := by
       rw [mul_comm]
     · have hz : pb l y.1 b v = 0 := by
         rcases lt_or_gt_of_ne hb with hneg | hpos
-        · haveI := L.neg (S k) b hneg
+        · have := L.neg (S k) b hneg
           exact Subsingleton.elim _ _
-        · haveI := L.pos b hpos
+        · have := L.pos b hpos
           exact Subsingleton.elim _ _
       rw [hΛ.2 a b hab hb u v, map_zero, hz, map_zero, map_zero, map_zero, zero_smul]
   exact LinearMap.congr_fun key w
@@ -1370,7 +1370,7 @@ namespace UpperTheory.Gal.KunnethLefschetz
 theorem qEasy_holds : QEasy := by
   unfold QEasy
   intro l _ k _ G
-  haveI : Module.Flat ℤ_[l] ℚ_[l] := IsLocalization.flat ℚ_[l] (nonZeroDivisors ℤ_[l])
+  have : Module.Flat ℤ_[l] ℚ_[l] := IsLocalization.flat ℚ_[l] (nonZeroDivisors ℤ_[l])
   refine ⟨?_, ?_, ?_⟩
   · intro d e Z X p ι h n m hn U hU a
     have h0 : (pullHl l (sch.map U.ι) m 0).comp (G.hl h hn) = 0 :=
@@ -1384,7 +1384,7 @@ theorem qEasy_holds : QEasy := by
     have hinj : Function.Injective (G.hl h hn) := fun x y hxy =>
       Subtype.ext (funext fun j => G.inj j h hn U hU (hs j) (congrArg (fun z => z.1 j) hxy))
     unfold Gys0.q
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_preserves_injective_linearMap _ hinj
   · intro d e' e Z' X' Z X p' ι' p ι h' h f u hf hp n m hn a
     have h0 : (pullHl l (sch.map f) m 0).comp (G.hl h hn) =
@@ -1433,8 +1433,8 @@ theorem UpperTheory.Gal.KunnethLefschetz.qOnto_holds :
     exact (IsUnit.mk0 _ hl).pow j
   have hne : ∀ j : ℕ, NeZero (l ^ j) := fun j => ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hfin : ∀ j : ℕ, Finite (Ht (l ^ j) (sch.obj Z) n 0) := fun j => by
-    haveI := hne j
-    haveI := hprop
+    have := hne j
+    have := hprop
     exact hI.e4 (l ^ j) k (hunit j) (ι ≫ p) n 0
   set x' : Hl l (sch.obj X) m 0 := c • x with hx'
   have hpull : pullHl l (sch.map U.ι) m 0 x' = 0 := by
@@ -1510,7 +1510,7 @@ namespace UpperTheory.Gal.KunnethLefschetz
 theorem slice_holds : Slice := by
   intro hP l _ k _ _ hl d X p hSP hR G y
   obtain ⟨hprop, hsm⟩ := hSP
-  haveI := hprop
+  have := hprop
   obtain ⟨hdiag, hpt⟩ := hP k d p inferInstance hsm
   obtain ⟨hy, hpb⟩ := hpt y
   have hunitX : IsUnit ((l : Γ(X, ⊤))) := by
@@ -1519,7 +1519,7 @@ theorem slice_holds : Slice := by
     simpa [map_natCast] using h2
   have hunit : IsUnit ((l : Γ(S k, ⊤))) := by
     simpa [map_natCast] using hunitX.map (y.1.appTop).hom
-  simp only [GysQ.diag, GysQ.pt, GysQ.cls, dif_pos hdiag, dif_pos hy]
+  simp only [GysQ.diag, GysQ.pt, GysQ.cls, dite_eq_left hdiag, dite_eq_left hy]
   rw [G.nat hy hdiag (slice y) y.1
     (by rw [slice, ← Category.assoc, pullback.lift_fst, Category.id_comp]) hpb]
   congr 1
@@ -1555,7 +1555,7 @@ theorem topPart_holds : TopPart := by
   | mem x hx =>
     obtain ⟨a', b', h', u, v, rfl⟩ := hx
     rcases lt_trichotomy b' 0 with hb | hb | hb
-    · haveI := hLow.neg X b' hb
+    · have := hLow.neg X b' hb
       obtain rfl : v = 0 := Subsingleton.elim _ _
       refine ⟨0, ?_, ?_⟩
       · simp [ext2]
@@ -1595,7 +1595,7 @@ theorem topPart_holds : TopPart := by
         rw [h0, sub_zero]
         rcases le_or_gt 0 a' with ha | ha
         · exact Submodule.subset_span ⟨a', b', h', u, v, ha, hb, rfl⟩
-        · haveI := hLow.neg X a' ha
+        · have := hLow.neg X a' ha
           obtain rfl : u = 0 := Subsingleton.elim _ _
           simp [ext2]
   | zero =>
@@ -1772,7 +1772,7 @@ theorem trComp_holds : TrComp := by
   choose lamj hlamj using hex
   refine ⟨∑ j, (lamj j).comp (pb l (U j).ι (2 * d)), fun y => ?_⟩
   have hsep : IsSeparated p := by
-    haveI := hsp.1
+    have := hsp.1
     infer_instance
   obtain ⟨hy, -⟩ := (hP k d p hsep hsp.2).2 y
   obtain ⟨s⟩ : Nonempty (S k) := inferInstance
@@ -1794,7 +1794,7 @@ theorem trComp_holds : TrComp := by
       exact y.2⟩
   have hfac : y'.1 ≫ (U j).ι = y.1 := IsOpenImmersion.lift_fac _ _ _
   have hsep' : IsSeparated ((U j).ι ≫ p) := by
-    haveI := (hU j).1.1
+    have := (hU j).1.1
     infer_instance
   have hy' : IsPair d 0 ((U j).ι ≫ p) y'.1 := ((hP k d ((U j).ι ≫ p) hsep' (hU j).1.2).2 y').1
   rw [LinearMap.sum_apply, Finset.sum_eq_single j]
@@ -1909,7 +1909,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.swap_holds :
     UpperTheory.Gal.KunnethLefschetz.Swap := by
   intro hP l _ k _ _ hl d X p hSP hR G n w h h' x
   obtain ⟨hprop, hsm⟩ := hSP
-  haveI := hprop
+  have := hprop
   have hpair := (hP k d p inferInstance hsm).1
   have hunit : IsUnit ((l : Γ(X, ⊤))) := by
     have h1 : IsUnit ((l : k)) := isUnit_iff_ne_zero.mpr hl
@@ -1920,7 +1920,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.swap_holds :
       cupV l (pullback p p) h (pb l f n x) (G.diag d p) = G.g hpair h x := by
     intro f hf
     have hd : G.diag d p = G.g hpair (show (0 : ℤ) + 2 * d = 2 * d by simp) (oneV l X) := by
-      simp only [GysQ.diag, GysQ.cls, dif_pos hpair]
+      simp only [GysQ.diag, GysQ.cls, dite_eq_left hpair]
     rw [hd, ← G.proj hpair (show n + 0 = n by simp) h (show (0 : ℤ) + 2 * d = 2 * d by simp) h,
       ← pb_comp_apply, hf, pb_self, hu]
   rw [key _ (by simp), hR.comm (pullback p p) (2 * d) n w h' h,

@@ -205,7 +205,7 @@ lemma toMK_blkEmbed (ε : Fin n → Bool) (s : Bool) (h : KG (fun _ : Fin (blkP 
 
 lemma continuous_blkEmbed (ε : Fin n → Bool) (s : Bool) : Continuous (blkEmbed ε s) := by
   have hmk : Continuous (fun h : KG (fun _ : Fin (blkP ε s) => true) => toMK h) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hemb : Continuous fun h : KG (fun _ : Fin (blkP ε s) => true) => embM ε s (toMK h) :=
     (continuous_blkDiag ε).comp ((continuous_mulSingle s).comp hmk)
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
@@ -226,16 +226,16 @@ lemma inK_blkRes {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (hX : in
 
 lemma exp_blkDiag (ε : Fin n → Bool) (v : ∀ s : Bool, Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :
     NormedSpace.exp (blkDiag ε v) = blkDiag ε (fun s => NormedSpace.exp (v s)) := by
-  letI : ∀ s : Bool, NormedRing (Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :=
+  let : ∀ s : Bool, NormedRing (Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :=
     fun _ => Matrix.linftyOpNormedRing
-  letI : ∀ s : Bool, NormedAlgebra ℚ (Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :=
+  let : ∀ s : Bool, NormedAlgebra ℚ (Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :=
     fun _ => Matrix.linftyOpNormedAlgebra
-  letI : ∀ s : Bool, NormedAlgebra ℂ (Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :=
+  let : ∀ s : Bool, NormedAlgebra ℂ (Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :=
     fun _ => Matrix.linftyOpNormedAlgebra
-  haveI : ∀ s : Bool, CompleteSpace (Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :=
-    fun _ => FiniteDimensional.complete ℂ _
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  have : ∀ s : Bool, CompleteSpace (Matrix (Fin (blkP ε s)) (Fin (blkP ε s)) ℂ) :=
+    fun _ => FiniteDimensional.completeSpace ℂ _
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   have h := NormedSpace.map_exp (blkDiag ε) (continuous_blkDiag ε) v
   exact h.symm.trans (congrArg _ (Pi.exp_def v))
 

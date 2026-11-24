@@ -381,7 +381,7 @@ theorem unif_pow_ne_real : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type)
   obtain ⟨-, ⟨d', hd', hBw⟩, -⟩ := hT.weil'
   obtain ⟨-, dd, omd, hdd, ⟨-, hspl, hsieg⟩, hres⟩ := hBw
 
-  haveI : Nonempty (Fin a') := ⟨⟨0, by have := hT.geo.aBig; omega⟩⟩
+  have : Nonempty (Fin a') := ⟨⟨0, by have := hT.geo.aBig; omega⟩⟩
   obtain ⟨g₀, hg₀⟩ := Matrix.GeneralLinearGroup.det_surjective (n := Fin a') (R := Fv F v) (unifAt v)
 
   set k := K g₀ with hk
@@ -698,7 +698,7 @@ theorem bounded_coeff_of_SB (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   intro f hf hdet
   have hcl : IsClosed (Function.support f) := by
     have := (hf.1.isOpen_fiber 0).isClosed_compl
-    simpa [Function.support, Set.compl_setOf] using this
+    simpa [Function.support, Set.compl_ofPred] using this
   have hK : IsCompact (Function.support f) := by
     have h2 : HasCompactSupport f := hf.2
     rw [HasCompactSupport, tsupport, hcl.closure_eq] at h2
@@ -837,7 +837,7 @@ theorem exists_mem_nsp_eq_of_rank_le : ∀ (k : Type) [Field k] [ValuativeRel k]
   classical
   obtain ⟨a, ha⟩ := _root_.GlobalTheory.RankChart.bounded_coeff_of_SB k R T D τ f hf hsupp
   obtain ⟨b, hb⟩ := _root_.GlobalTheory.RankChart.sb_shear_invariant k R T D f hf
-  have hv0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 (by simp)
+  have hv0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 (by simp)
   have hv1 : valuation k (ϖ : k) ≤ 1 := hϖ ▸ uniformizer_lt_one.le
   have hva : ∀ x : k, (valuation k (x : k) ≤ valuation k (((ϖ⁻¹ * a : kˣ)) : k) ↔
       valuation k ((ϖ : k) * x) ≤ valuation k (a : k)) := by
@@ -852,10 +852,10 @@ theorem exists_mem_nsp_eq_of_rank_le : ∀ (k : Type) [Field k] [ValuativeRel k]
   generalize hH : box T R a = H at ha hHH' hdilmem
   generalize hH' : box T R (ϖ⁻¹ * a) = H' at hHH' hdilmem
   generalize hL : box T R b = L at hb
-  haveI : Finite (H ⧸ L.addSubgroupOf H) := hH ▸ hL ▸ finite_box (Y := T) (Y' := R) (k := k) a b
-  haveI : Finite (H' ⧸ H.addSubgroupOf H') := hH ▸ hH' ▸ finite_box (Y := T) (Y' := R) (k := k) (ϖ⁻¹ * a) a
-  letI : Fintype (H ⧸ L.addSubgroupOf H) := Fintype.ofFinite _
-  letI : Fintype (H' ⧸ H.addSubgroupOf H') := Fintype.ofFinite _
+  have : Finite (H ⧸ L.addSubgroupOf H) := hH ▸ hL ▸ finite_box (Y := T) (Y' := R) (k := k) a b
+  have : Finite (H' ⧸ H.addSubgroupOf H') := hH ▸ hH' ▸ finite_box (Y := T) (Y' := R) (k := k) (ϖ⁻¹ * a) a
+  let : Fintype (H ⧸ L.addSubgroupOf H) := Fintype.ofFinite _
+  let : Fintype (H' ⧸ H.addSubgroupOf H') := Fintype.ofFinite _
 
   have hinvL : ∀ (Y₁ : Matrix R D k) (C C' : Matrix T R k), C' - C ∈ L →
       f (stack Y₁ C') = f (stack Y₁ C) := by
@@ -1161,7 +1161,7 @@ theorem exists_fullRank_sub_mem_span : ∀ (k : Type) [Field k] [ValuativeRel k]
       (Equiv.sumCongr (Equiv.ofInjective S hinj) (Equiv.refl _)).trans (Equiv.Set.sumCompl _)
     have he' : ∀ i, e'.symm (S i) = Sum.inl i := fun i => by
       rw [Equiv.symm_apply_eq]; simp [e']
-    haveI : Nonempty ↥(Set.range S)ᶜ := by
+    have : Nonempty ↥(Set.range S)ᶜ := by
       by_contra hne
       rw [not_nonempty_iff] at hne
       have := Fintype.card_congr e'
@@ -1181,9 +1181,9 @@ theorem exists_fullRank_sub_mem_span : ∀ (k : Type) [Field k] [ValuativeRel k]
       (∀ Y : Matrix (Fin n) (Fin d) k, Y.rank < ρ → g Y = 0) →
       ∃ Φ ∈ Nsp k (Fin n) (Fin d) ν, ∀ Y : Matrix (Fin n) (Fin d) k, Y.rank ≤ ρ → Φ Y = g Y := by
     intro ρ hρ g hg hg0
-    haveI : T2Space k := by
-      letI := IsTopologicalAddGroup.rightUniformSpace k
-      haveI := isUniformAddGroup_of_addCommGroup (G := k)
+    have : T2Space k := by
+      let := IsTopologicalAddGroup.rightUniformSpace k
+      have := isUniformAddGroup_of_addCommGroup (G := k)
       infer_instance
     have hsp := _root_.GlobalTheory.CoverSB.mem_span_of_cover k (Fin n) (Fin d) ((Fin ρ → Fin n) × (Fin ρ → Fin d))
       (fun i => {Y : Matrix (Fin n) (Fin d) k | (Y.submatrix i.1 i.2).det ≠ 0})

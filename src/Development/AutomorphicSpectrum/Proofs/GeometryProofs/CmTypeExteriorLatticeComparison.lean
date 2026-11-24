@@ -329,7 +329,7 @@ theorem exists_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     show _ ∈ abLocus Y.t.G
     rw [e]
     exact hab
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   let y₀ : Sp ℂ ⟶ Xo.XF c := IsOpenImmersion.lift Y.jQ w hrange
   have hy : y₀ ≫ Y.jQ = w := IsOpenImmersion.lift_fac _ _ _
   have hj : y₀ ≫ Y.j = z ≫ 𝔐.f := by
@@ -346,9 +346,9 @@ theorem exists_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     have hp : p = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
     subst hp
     refine (Z.closure _).2 ?_
-    haveI : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
+    have : IsPreimmersion (spMap (algebraMap (𝓞 c.F) c.F)) :=
       IsPreimmersion.of_isLocalization (nonZeroDivisors (𝓞 c.F)) (S := c.F)
-    haveI : IsPreimmersion Y.j := by
+    have : IsPreimmersion Y.j := by
       show IsPreimmersion (Y.jQ ≫ pullback.fst _ _)
       infer_instance
     have hind : Topology.IsInducing Y.j := Y.j.isEmbedding.isInducing

@@ -87,13 +87,13 @@ theorem coef_mem_pow : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] 
   obtain ⟨s, hs⟩ := hE e
   refine ⟨s, fun χ hχ u b hb => ?_⟩
   have hI' : I ^ (e + 1) ≠ ⊤ := fun h => hI (top_unique (h ▸ Ideal.pow_le_self e.succ_ne_zero))
-  haveI : Nontrivial (R ⧸ I ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2 hI'
-  haveI : IsLocalRing (R ⧸ I ^ (e + 1)) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom (Ideal.Quotient.mk (I ^ (e + 1))) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
+  have : Nontrivial (R ⧸ I ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2 hI'
+  have : IsLocalRing (R ⧸ I ^ (e + 1)) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
+  have : IsLocalHom (Ideal.Quotient.mk (I ^ (e + 1))) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
   have hcl : thick R I e (IsLocalRing.closedPoint _) = IsLocalRing.closedPoint R :=
     IsLocalRing.comap_closedPoint (Ideal.Quotient.mk (I ^ (e + 1)))
-  haveI := U.semi.smooth
-  haveI : Flat (thickObj R I e G).hom := inferInstanceAs (Flat (pullback.snd G.hom (thick R I e)))
+  have := U.semi.smooth
+  have : Flat (thickObj R I e G).hom := inferInstanceAs (Flat (pullback.snd G.hom (thick R I e)))
   obtain ⟨z₀, hz₀, hnz⟩ := hth (IsLocalRing.closedPoint R)
   let T := (Over.map (thick R I e)).obj (thickObj R I e G)
   let y : T ⟶ D.P.A := (U.gt e).pG

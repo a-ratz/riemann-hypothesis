@@ -68,7 +68,7 @@ theorem exists_coeff_containing :
   let S : Set ℂ := (s : Set ℂ) ∪ Set.range (fun p : (E →+* ℂ) × Fin (Module.finrank ℚ E) => p.1 (b p.2)) ∪
     {zeta l.M', H.rt0, zeta l.A}
   have hfin : S.Finite := ((s.finite_toSet).union (Set.finite_range _)).union (Set.toFinite _)
-  haveI : Finite S := hfin.to_subtype
+  have : Finite S := hfin.to_subtype
   have hint : ∀ x ∈ S, IsIntegral ℚ x := by
     rintro x ((hx | ⟨p, rfl⟩) | hx)
     · exact (hs x hx).isIntegral

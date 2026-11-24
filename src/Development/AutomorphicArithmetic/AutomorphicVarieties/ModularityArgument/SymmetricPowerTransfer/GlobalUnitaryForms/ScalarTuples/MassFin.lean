@@ -143,14 +143,14 @@ private theorem map_quo {K' : Type} [Field K'] (f : K →+* K') {τ : K} (z : (E
 
 private theorem relIndex_of_fin {G M : Type} [Group G] [Monoid M] (f : G →* M) (A B : Subgroup G) (S : Set M) (hS : S.Finite)
     (hB : ∀ z ∈ B, f z ∈ S) (hA : ∀ z, f z = 1 → z ∈ A) : A.relIndex B ≠ 0 := by
-  haveI := hS.to_subtype
+  have := hS.to_subtype
   let c : B ⧸ A.subgroupOf B → S := fun q => ⟨f q.out, hB _ q.out.2⟩
   have hc : Function.Injective c := fun p q h => by
     have h' : f p.out = f q.out := congrArg Subtype.val h
     rw [← p.out_eq', ← q.out_eq', QuotientGroup.eq, Subgroup.mem_subgroupOf]
     apply hA
     rw [Subgroup.coe_mul, Subgroup.coe_inv, map_mul, ← h', ← map_mul, inv_mul_cancel, map_one]
-  haveI := Finite.of_injective c hc
+  have := Finite.of_injective c hc
   exact Subgroup.index_ne_zero_of_finite
 
 end Gen
@@ -175,7 +175,7 @@ private theorem index_of_classes (E : Type) [Field E] [NumberField E] {G : Type}
     have : a ∈ J x := hp
     rw [h] at this
     exact ha ((FractionalIdeal.mem_zero_iff _).1 this)
-  haveI : Finite ((FractionalIdeal (𝓞 E)⁰ E)ˣ ⧸ (toPrincipalIdeal (𝓞 E) E).range) :=
+  have : Finite ((FractionalIdeal (𝓞 E)⁰ E)ˣ ⧸ (toPrincipalIdeal (𝓞 E) E).range) :=
     Finite.of_equiv _ (ClassGroup.equiv (R := 𝓞 E) E).toEquiv
   let c : G ⧸ H → (FractionalIdeal (𝓞 E)⁰ E)ˣ ⧸ (toPrincipalIdeal (𝓞 E) E).range := fun q =>
     QuotientGroup.mk (Units.mk0 _ (hL0 q.out))
@@ -193,7 +193,7 @@ private theorem index_of_classes (E : Type) [Field E] [NumberField E] {G : Type}
       rw [mul_comm] at h
       rwa [mul_left_cancel₀ e.ne_zero h]
     · exact fun h => ⟨a, h, mul_comm _ _⟩
-  haveI : Finite (G ⧸ H) := Finite.of_injective c hc
+  have : Finite (G ⧸ H) := Finite.of_injective c hc
   exact Subgroup.index_ne_zero_of_finite
 
 section Glo
@@ -366,12 +366,12 @@ private theorem part2 [IsTotallyReal F] (hτ : IsCM τ) (φ : (Etau F τ)ˣ →*
 
 private theorem part1 [IsTotallyReal F] (hτ : IsCM τ) (φ : (Etau F τ)ˣ →* TA τ) (hφ : IsDiagT τ φ) :
     (φ.range ⊔ (rpg _ _).box fun v => Cint (Ov v) (cv v τ)).index ≠ 0 := by
-  haveI : Fact (∀ r : F, r ^ 2 ≠ -1 + τ * r) := ⟨fun r h => by
+  have : Fact (∀ r : F, r ^ 2 ≠ -1 + τ * r) := ⟨fun r h => by
     obtain ⟨σ⟩ : Nonempty (F →+* ℂ) := inferInstance
     have h1 := hτ (IsTotallyReal.complexEmbedding_isReal σ).embedding
     rw [show τ ^ 2 - 4 = (2 * r - τ) ^ 2 by linear_combination (-4) * h, map_pow] at h1
     exact absurd h1 (not_lt.2 (sq_nonneg _))⟩
-  haveI : NumberField (Etau F τ) := NumberField.of_module_finite F _
+  have : NumberField (Etau F τ) := NumberField.of_module_finite F _
   have hsm : ∀ (v : Pl F) (d : F) (y : Etau (Kv v) (cv v τ)), emap (cv v) τ (algebraMap F _ d) * y = cv v d • y := fun v d y => by
     rw [Algebra.smul_def]
     rfl

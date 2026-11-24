@@ -59,7 +59,7 @@ theorem exists_embeddings_agree_on_subfield_ne (L Ω : Type) [Field L] [Field Ω
     [CharZero L] (a : Ω) (ha : a ∉ Set.range (algebraMap L Ω)) :
     ∃ (F : Type) (_ : Field F) (i₁ i₂ : Ω →+* F),
       i₁.comp (algebraMap L Ω) = i₂.comp (algebraMap L Ω) ∧ i₁ a ≠ i₂ a := by
-  haveI hred : IsReduced (Ω ⊗[L] Ω) := GlobalTheory.ReducedAlg.isReduced_tensor (k := L) Ω Ω
+  have hred : IsReduced (Ω ⊗[L] Ω) := GlobalTheory.ReducedAlg.isReduced_tensor (k := L) Ω Ω
   have he : (a ⊗ₜ[L] (1 : Ω) - (1 : Ω) ⊗ₜ[L] a : Ω ⊗[L] Ω) ≠ 0 := by
     intro h
     have h1 : (a ⊗ₜ[L] (1 : Ω) : Ω ⊗[L] Ω) = (1 : Ω) ⊗ₜ[L] a := sub_eq_zero.mp h
@@ -77,7 +77,7 @@ theorem exists_embeddings_agree_on_subfield_ne (L Ω : Type) [Field L] [Field Ω
   rw [nilpotent_iff_mem_prime] at hn
   push_neg at hn
   obtain ⟨J, hJ, heJ⟩ := hn
-  haveI := hJ
+  have := hJ
   let g : (Ω ⊗[L] Ω) →+* FractionRing ((Ω ⊗[L] Ω) ⧸ J) :=
     (algebraMap ((Ω ⊗[L] Ω) ⧸ J) (FractionRing ((Ω ⊗[L] Ω) ⧸ J))).comp (Ideal.Quotient.mk J)
   refine ⟨FractionRing ((Ω ⊗[L] Ω) ⧸ J), inferInstance,

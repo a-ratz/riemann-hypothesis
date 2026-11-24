@@ -220,7 +220,7 @@ theorem int (h : Par μN nn ι mm χ) (hR : ∀ p, ∃ R : N → N, MeasurePrese
     {K : Subgroup G} (hK : IsCompact (K : Set G)) (μK : Measure K) [μK.IsHaarMeasure]
     (hG : ∀ g, ∃ p u t, ∃ k ∈ K, g = nn p * ι u * mm t * k) {f : G → ℂ} (hf : Continuous f)
     (hP : ∀ p u t x, f (nn p * ι u * mm t * x) * ((χ t : ℝ) : ℂ) = f x) (g : G) : ∫ k, f (k.1 * g) ∂μK = ∫ k, f k.1 ∂μK := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have re : ∀ f : G → ℝ, Continuous f → (∀ p u t x, f (nn p * ι u * mm t * x) * (χ t : ℝ) = f x) →
       ∫ k, f (k.1 * g) ∂μK = ∫ k, f k.1 ∂μK := fun f hf hP => by
     have a : ∀ f : G → ℝ, Continuous f → (∀ p u t x, f (nn p * ι u * mm t * x) * (χ t : ℝ) = f x) →
@@ -271,8 +271,8 @@ theorem push {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T
     [MeasurableSpace G] [BorelSpace G] {K K' : Subgroup G} (hK : IsCompact (K : Set G)) [CompactSpace K'] (π : K →* K')
     (hc : Continuous π) (hs : Function.Surjective π) (μ : Measure K') [μ.IsHaarMeasure] :
     ∃ (μK : Measure K) (_ : μK.IsHaarMeasure) (c : ℝ≥0), ∀ f : K' → ℂ, Continuous f → ∫ k, f k ∂μ = c • ∫ k, f (π k) ∂μK := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : ((Measure.haar : Measure K).map π).IsHaarMeasure := Measure.isHaarMeasure_map_of_isFiniteMeasure _ π hc hs
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : ((Measure.haar : Measure K).map π).IsHaarMeasure := Measure.isHaarMeasure_map_of_isFiniteMeasure _ π hc hs
   refine ⟨Measure.haar, inferInstance, Measure.haarScalarFactor μ ((Measure.haar : Measure K).map π), fun f hf => ?_⟩
   rw [← integral_map hc.measurable.aemeasurable hf.aestronglyMeasurable, ← integral_smul_nnreal_measure,
     ← Measure.isMulLeftInvariant_eq_smul]
@@ -282,8 +282,8 @@ namespace Tp
 theorem ae_ring : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
 theorem ae_smul : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul (AF F) _
 theorem ae_top : T2Space (AE F E) ∧ LocallyCompactSpace (AE F E) ∧ SecondCountableTopology (AE F E) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
   exact ⟨e.isEmbedding.t2Space, e.isClosedEmbedding.locallyCompactSpace, e.secondCountableTopology⟩
 theorem ae_t2 : T2Space (AE F E) := ae_top.1
@@ -294,13 +294,13 @@ attribute [local instance] ae_ring ae_smul ae_t2 ae_lc ae_sc
 
 theorem units_top {A : Type} [Ring A] [TopologicalSpace A] [IsTopologicalRing A] [T2Space A] [LocallyCompactSpace A]
     [SecondCountableTopology A] : LocallyCompactSpace Aˣ ∧ SecondCountableTopology Aˣ := by
-  haveI : SecondCountableTopology Aᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : LocallyCompactSpace Aᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology Aᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : LocallyCompactSpace Aᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
   exact ⟨Units.isClosedEmbedding_embedProduct.locallyCompactSpace, Units.isEmbedding_embedProduct.secondCountableTopology⟩
 
 theorem ua_top {n : ℕ} (J : Matrix (Fin n) (Fin n) E) : LocallyCompactSpace (UA σ J) ∧ SecondCountableTopology (UA σ J) := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → AE F E))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E)) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) (AE F E)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → AE F E))
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) (AE F E)) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → AE F E))
   obtain ⟨h1, h2⟩ := units_top (A := Matrix (Fin n) (Fin n) (AE F E))
   have hc : Continuous (cA σ) := IsModuleTopology.continuous_of_linearMap (cA σ).toLinearMap
@@ -520,20 +520,20 @@ theorem kInv (hB : B.IsGood σ) (hY : Y.IsHerm σ B r s) (hH : H.IsAdapted σ B 
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
   obtain ⟨-, ⟨ν, -, hν, -⟩, hνr⟩ := PositivityTheory.ThKF.unimodularity_holds F E σ hB.cm n Y.J 1 (fun i j => by simp [hY.herm]) hd
   obtain ⟨-, ⟨μH, -, hμH, -⟩, hμr⟩ := PositivityTheory.ThKF.unimodularity_holds F E σ hB.cm n₁ Y₁.J 1 h₁ hd₁.ne_zero
-  haveI := hνr ν hν
-  haveI := hμr μH hμH
-  haveI := (Tp.ua_top (F := F) (σ := σ) Y.J).1
-  haveI := (Tp.ua_top (F := F) (σ := σ) Y.J).2
-  haveI := (Tp.ua_top (F := F) (σ := σ) Y₁.J).1
-  haveI := (Tp.ua_top (F := F) (σ := σ) Y₁.J).2
-  haveI := Tp.ae_lc (F := F) (E := E)
-  haveI := Tp.ae_sc (F := F) (E := E)
-  haveI := (Tp.units_top (A := AE F E)).1
-  haveI := (Tp.units_top (A := AE F E)).2
-  haveI : BorelSpace (UA σ Y.J) := ⟨rfl⟩
-  haveI : BorelSpace (UA σ Y₁.J) := ⟨rfl⟩
-  haveI : BorelSpace (AE F E)ˣ := ⟨rfl⟩
-  haveI := US.kAt_compact hI.1 v
+  have := hνr ν hν
+  have := hμr μH hμH
+  have := (Tp.ua_top (F := F) (σ := σ) Y.J).1
+  have := (Tp.ua_top (F := F) (σ := σ) Y.J).2
+  have := (Tp.ua_top (F := F) (σ := σ) Y₁.J).1
+  have := (Tp.ua_top (F := F) (σ := σ) Y₁.J).2
+  have := Tp.ae_lc (F := F) (E := E)
+  have := Tp.ae_sc (F := F) (E := E)
+  have := (Tp.units_top (A := AE F E)).1
+  have := (Tp.units_top (A := AE F E)).2
+  have : BorelSpace (UA σ Y.J) := ⟨rfl⟩
+  have : BorelSpace (UA σ Y₁.J) := ⟨rfl⟩
+  have : BorelSpace (AE F E)ˣ := ⟨rfl⟩
+  have := US.kAt_compact hI.1 v
   obtain ⟨hG, act, ht, htc, ht1, htK, htP⟩ := htEx hB hY hH hI hpar.emb hu hL
   have ht0 : ∀ t : (AE F E)ˣ, absE F E t ≠ 0 := fun t => ((Group.isUnit t).map (absE F E)).ne_zero
   have ha := idem_mul_self v
@@ -544,7 +544,7 @@ theorem kInv (hB : B.IsGood σ) (hY : Y.IsHerm σ B r s) (hH : H.IsAdapted σ B 
     fun x => htne _
   let π : K →* kAt K (evFin F v) := MonoidHom.mk' (fun k => ⟨partU ha k.1, partU_mem_kAt hK k.2 v⟩)
     fun a b => Subtype.ext (part_mul ha _ _)
-  have πc : Continuous π := ((cont_part ha).comp continuous_subtype_val).subtype_mk _
+  have πc : Continuous π := ((cont_part ha).comp continuous_subtypeVal).subtype_mk _
   have πs : Function.Surjective π := fun k => ⟨⟨k.1, k.2.1⟩, Subtype.ext (part_at (US.kAt_mem k))⟩
   obtain ⟨μK, _, c, hc⟩ := push hI.1 π πc πs μ
   have main := KInv.int ν μH Measure.haar hpar hR hI.1 μK hG hf' (fun p u t x => by
@@ -573,7 +573,7 @@ theorem kInv (hB : B.IsGood σ) (hY : Y.IsHerm σ B r s) (hH : H.IsAdapted σ B 
     simp only [f', e1, e3]
     exact mul_div_cancel_right₀ _ (htne _)
   have tr : ∀ g ∈ UAt σ Y (evFin F v), ∫ k, f (k.1 * g) ∂μ = c • ∫ k : K, f' (k.1 * g) ∂μK := fun g hg => by
-    rw [hc (fun k => f (k.1 * g)) (hf.comp_continuous (continuous_subtype_val.mul continuous_const)
+    rw [hc (fun k => f (k.1 * g)) (hf.comp_continuous (continuous_subtypeVal.mul continuous_const)
       fun k => (US.uSub σ Y v).mul_mem (US.kAt_mem k) hg)]
     simp only [val g hg]
   have t1 := tr 1 (US.uSub σ Y v).one_mem
@@ -614,9 +614,9 @@ theorem tate' (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) {B : Base F E} {M : 
       IsLocallyConstant (fun l : idAt E (evFin F v) => ev v (rv B M v (idem F v • u l.1) φ)) ∧
       @IntegrableOn _ _ (borel _) _ _ (fun l : idAt E (evFin F v) => wt ν z l.1)
         {l | ev v (rv B M v (idem F v • u l.1) φ) ≠ 0} (m.xf v) := by
-  letI : MeasurableSpace (idAt E (evFin F v)) := borel _
-  haveI : BorelSpace (idAt E (evFin F v)) := ⟨rfl⟩
-  haveI := (hm.xf v).1
+  let : MeasurableSpace (idAt E (evFin F v)) := borel _
+  have : BorelSpace (idAt E (evFin F v)) := ⟨rfl⟩
+  have := (hm.xf v).1
   obtain ⟨V₀, V₁, c, hu, -, -, hinv, hcomp⟩ := dirs hc
   obtain ⟨r, s, hX⟩ := hc.herm
   obtain ⟨r', s', hW⟩ := hc.skew
@@ -636,17 +636,17 @@ theorem tate' (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) {B : Base F E} {M : 
     rw [locCo_smul, evFin_idem, one_smul, hu]
   have hG : IsLocallyConstant fun l : idAt E (evFin F v) => ev v (rv B M v (idem F v • u l.1) φ) := by
     simp only [rv, e1]
-    exact hg.comp_continuous ((cont_loc M v c V₀).comp (Units.continuous_val.comp continuous_subtype_val))
+    exact hg.comp_continuous ((cont_loc M v c V₀).comp (Units.continuous_val.comp continuous_subtypeVal))
   have hk : ∀ l : (AE F E)ˣ, ev v (rv B M v (idem F v • u l) φ) ≠ 0 → (N : AF F) • idem F v • u l ∈ latAtV X W v := fun l hl => by
     have e2 : idem F v • u l = (idem F v • c l.1) • V₀ := by rw [hu, smul_assoc]
     rw [e2] at hl ⊢
     exact key hc h hinv (hcomp v) hφ N (fun t ht => hfix _ ht) _ (e2 ▸ Cone.at_idem v _) hl
   have hN' : (N : Fv F v) ≠ 0 := by
-    haveI : CharZero (Fv F v) := algebraRat.charZero _
+    have : CharZero (Fv F v) := algebraRat.charZero _
     exact Nat.cast_ne_zero.2 hN
   refine ⟨?_, hG, ?_⟩
-  · haveI := isCompact_iff_compactSpace.1 hC
-    have hf := (hg.comp_continuous ((continuous_subtype_val (p := (· ∈ C))).const_smul (N : Fv F v)⁻¹)).range_finite
+  · have := isCompact_iff_compactSpace.1 hC
+    have hf := (hg.comp_continuous ((continuous_subtypeVal (p := (· ∈ C))).const_smul (N : Fv F v)⁻¹)).range_finite
     refine (hf.insert 0).subset ?_
     rintro _ ⟨l, rfl⟩
     by_cases h0 : ev v (rv B M v (idem F v • u l.1) φ) = 0
@@ -675,10 +675,10 @@ theorem tate' (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) {B : Base F E} {M : 
       rw [show absE F E l₀.1 = 0 from NNReal.coe_eq_zero.1 e.symm, zero_mul] at this
       exact zero_ne_one this
     refine Integrable.mono' (((hint.comp_mul_left l₀).norm.const_mul (((absE F E l₀.1 : ℝ) ^ z)⁻¹)).integrableOn)
-      ((cont_wt hν z).comp continuous_subtype_val).aestronglyMeasurable
+      ((cont_wt hν z).comp continuous_subtypeVal).aestronglyMeasurable
       (ae_restrict_of_forall_mem (hG.isClosed_fiber 0).measurableSet.compl fun l hl => ?_)
     have := (hin v (l₀ * l).1).1 (e3 l ▸ hk _ hl)
-    rw [if_pos this, one_mul, norm_wt, norm_wt, Subgroup.coe_mul, map_mul, NNReal.coe_mul, mul_pow,
+    rw [ite_eq_left this, one_mul, norm_wt, norm_wt, Subgroup.coe_mul, map_mul, NNReal.coe_mul, mul_pow,
       inv_mul_cancel_left₀ (pow_pos h0 z).ne']
 
 theorem int_lin {α Y : Type} [MeasurableSpace α] (μ : Measure α) (G : α → Y → ℂ) (w : α → ℂ) (hf : (Set.range G).Finite)
@@ -891,13 +891,13 @@ theorem fLocB_of (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) (hIw : IwaEx) (hM
   obtain ⟨ω₁, ρ₁, L₁⟩ := PositivityTheory.ThKH.Locrep.locRepEx F E σ _ _ B _ _ _ om₁'
     ⟨hP₁.base, ⟨_, _, hP₁.herm⟩, ⟨_, _, hP₁.skew⟩, hP₁.good, _, _, hP₁.weil⟩ v
   have hIK := hIw F E σ B _ _ _ _ _ H T.base T.geo.hV' (fun e => by simpa [e, form] using c.hH.xy) c.hH.xx K hK
-  haveI := kAt_compact hIK.1 v
-  haveI : BorelSpace (UA σ G.V'.J) := ⟨rfl⟩
-  haveI : IsProbabilityMeasure (m.kf v) := ⟨(hm.kf v).2⟩
-  haveI := (hm.kf v).1
-  letI : MeasurableSpace (idAt E (evFin F v)) := borel _
-  haveI : BorelSpace (idAt E (evFin F v)) := ⟨rfl⟩
-  haveI := (hm.xf v).1
+  have := kAt_compact hIK.1 v
+  have : BorelSpace (UA σ G.V'.J) := ⟨rfl⟩
+  have : IsProbabilityMeasure (m.kf v) := ⟨(hm.kf v).2⟩
+  have := (hm.kf v).1
+  let : MeasurableSpace (idAt E (evFin F v)) := borel _
+  have : BorelSpace (idAt E (evFin F v)) := ⟨rfl⟩
+  have := (hm.xf v).1
   have o1 : (1 : UA σ G.W.J) ∈ UAt σ G.W (evFin F v) := (uSub σ G.W v).one_mem
   have sb : ∀ k ∈ UAt σ G.V' (evFin F v), ∀ φ ∈ SB _, ω (k, 1) φ ∈ SB _ := fun k hk φ hφ => L.pres _ hk _ o1 φ hφ
   have op : ∀ (k : kAt K (evFin F v)) (l : (AE F E)ˣ), ∀ φ ∈ SB _,
@@ -913,7 +913,7 @@ theorem fLocB_of (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) (hIw : IwaEx) (hM
     obtain ⟨U, hU, hU'⟩ := (PositivityTheory.ThKF0.actsEx F E σ B _ _ _ _ _ _ _ om' _ _ _ _ hP v).2.2 _ (sb _ k₀.2 φ hφ)
     have t : Tendsto (fun k : uSub σ G.V' v => (((k * k₀⁻¹).1, 1) : UA σ G.V'.J × UA σ G.W.J)) (𝓝 k₀) (𝓝 1) := by
       have : Continuous fun k : uSub σ G.V' v => (((k * k₀⁻¹).1, 1) : UA σ G.V'.J × UA σ G.W.J) :=
-        (continuous_subtype_val.comp (continuous_mul_const k₀⁻¹)).prodMk continuous_const
+        (continuous_subtypeVal.comp (continuous_mul_const k₀⁻¹)).prodMk continuous_const
       have := this.tendsto k₀
       rwa [mul_inv_cancel] at this
     filter_upwards [t.eventually hU] with k hk
@@ -922,7 +922,7 @@ theorem fLocB_of (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) (hIw : IwaEx) (hM
     exact h1.symm
   have lcK : ∀ φ ∈ SB _, IsLocallyConstant fun k : kAt K (evFin F v) => A (ω (k.1, 1) φ) := fun φ hφ =>
     ((lc φ hφ).comp A).comp_continuous (f := fun k : kAt K (evFin F v) => (⟨k.1, kAt_mem k⟩ : uSub σ G.V' v))
-      (continuous_subtype_val.subtype_mk _)
+      (continuous_subtypeVal.subtype_mk _)
   have ce : ∀ φ ∈ SB _, coneF B G.M' om' m v (ev v) (shiftB σ H H') X.ν z φ =
       fun y => ∫ k : kAt K (evFin F v), A (ω (k.1, 1) φ) y * 1 ∂(m.kf v) :=
     fun φ hφ => funext fun y => by
@@ -940,7 +940,7 @@ theorem fLocB_of (hI : IdeleFub) (hJ : IdealId0) (hS : StabEx) (hIw : IwaEx) (hM
         (hA ψ hψ).2.2 l
     rw [cl _ hφ₁, cl _ hφ, (L.acts g hg 1 o1 φ hφ _).1 hact]
     have := KInv.kInv T.base T.geo.hV' c.hH hK hIK v (m.kf v) (f := fun x => l (A (ω (x, 1) φ)))
-      (continuousOn_iff_continuous_restrict.2 ((lc φ hφ).comp fun ψ => l (A ψ)).continuous)
+      (continuousOn_iff_continuous_domRestrict.2 ((lc φ hφ).comp fun ψ => l (A ψ)).continuous)
       (fun u hu hu' t g₁ mm hL hm' hg₁ ht x hxx => by
         have hp : u * mm ∈ uSub σ G.V' v := mul_mem (show u ∈ uSub σ G.V' v from hu') hm'
         have e := L.mul _ hp 1 o1 x hxx 1 o1 φ hφ

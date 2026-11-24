@@ -69,7 +69,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc UpperTheory.V.
 
 theorem UpperTheory.V.Z.Sym.Loc.dOrb : UpperTheory.V.Z.Sym.Loc.DOrb := by
   intro O K _ _ _ _ _ Δ τ L hτ γ j h1 h2
-  haveI := L.frac
+  have := L.frac
   obtain ⟨φ, p1, p2, p3, p4⟩ := dIso O K Δ L
   obtain ⟨j', q1, q2, q3⟩ := p4 τ γ j h1 h2
   have sc : ∀ z : Kˣ, IsScal z (φ.symm (Matrix.GeneralLinearGroup.scalar (Fin 2) z)) := fun z => (p2 _ _).2 (by simp)
@@ -134,9 +134,9 @@ theorem UpperTheory.V.Z.Sym.Loc.dOrb : UpperTheory.V.Z.Sym.Loc.DOrb := by
       ext s t
       by_cases hst : s = t <;> simp [hst, hz₀]
     rw [e, F.2 z _ ⟨k, rfl⟩]
-    exact (if_pos ((p1 _).1 hk)).trans (by simp)
+    exact (ite_eq_left ((p1 _).1 hk)).trans (by simp)
   · rw [F.1 _ h]
-    exact if_neg fun h' => h (Subgroup.mem_sup_right ((p1 _).2 h'))
+    exact ite_eq_right fun h' => h (Subgroup.mem_sup_right ((p1 _).2 h'))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.LocalHermitianForms.LocalOrbitCounts.DOrb =====

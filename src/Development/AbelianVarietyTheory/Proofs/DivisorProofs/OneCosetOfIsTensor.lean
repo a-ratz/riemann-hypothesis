@@ -115,7 +115,7 @@ theorem exists_symR_diag : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
   obtain ⟨b, hb, w, hw, hbw⟩ := iwasawa_blockTriangular k (n ⊕ Fin c) lv (u⁻¹ * H)
   have hbi : (b⁻¹).val.BlockTriangular lv := by
     rw [Matrix.coe_units_inv]
-    haveI := b.invertible
+    have := b.invertible
     exact Matrix.blockTriangular_inv_of_blockTriangular hb
   have hH : H = u * b * w := by rw [mul_assoc, ← hbw]; simp
   obtain ⟨w1, w2⟩ := (mem_KO_iff w).1 hw
@@ -188,7 +188,7 @@ theorem exists_symR_diag : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
     · exact h4 _ _
     · exact zero_mem _
     · exact h4 _ _) (by
-    rw [det_fromBlocks_zero₂₁, det_one, one_mul, det_of_upperTriangular hAtri, map_prod]
+    rw [det_fromBlocks_zero₂₁, det_one, one_mul, det_of_isUpperTriangular hAtri, map_prod]
     refine Finset.prod_eq_one fun i _ => le_antisymm (h4 (Sum.inr i) i) ?_
     simp only [A, of_apply, map_mul]
     calc (1 : ValueGroupWithZero k) = valuation k ((b⁻¹).val (Sum.inr i) (Sum.inr i)) *
@@ -591,7 +591,7 @@ theorem step_form [ν.IsAddHaarMeasure] (hs : 1 ≤ G.s) (hψ : HasConductor ψ 
             · simp [M, Matrix.mul_apply, hsi]
         · rw [Pi.single_eq_of_ne hjj]; simp
     rw [map_mul, map_inv₀, Units.val_one, map_one] at key
-    have hpos : 0 < valuation k (((ϖ ^ (e * (i.val + 1)) : kˣ) : k)) := zero_lt_iff.mpr ((map_ne_zero _).mpr hd)
+    have hpos : 0 < valuation k (((ϖ ^ (e * (i.val + 1)) : kˣ) : k)) := pos_iff_ne_zero.mpr ((map_ne_zero _).mpr hd)
     have hfin := (mul_inv_le_iff₀ hpos).mp key
     rw [one_mul] at hfin
     exact hfin

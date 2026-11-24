@@ -374,8 +374,8 @@ theorem expSt_of_alt : Formalism.CohomologicalDescent.E.ExCut → _root_.GlobalT
   have h3 : x3 ≤ x := (le_max_right _ _).trans ((le_max_right _ _).trans hle)
   choose Pj Wj hPW using N1 x hx h1 i p hp hMo
   obtain ⟨st, hRT⟩ := hR.1.depth
-  letI := st
-  letI := hostAlg (Fm.D x i)
+  let := st
+  let := hostAlg (Fm.D x i)
   intro C CH'
   exact hasExpBound_at p hcut O hRT.m_eq hRT.x_eq hRT.eps_eq hR.1.realisedChain_torus_eq Pj Wj (fun j => (hPW j).1) (fun j => (hPW j).2)
     (fun j t w => S1 x hx h2 i p hp hMo j (Pj j) (Wj j) (hPW j).1 (hPW j).2 t w)
@@ -791,7 +791,7 @@ theorem valsAt_of_isLamPrime : ∀ {D : Formalism.BasicNotions.D7} (L : Formalis
       Formalism.IndefR.IndefiniteWeightData.WeightData.r] at hq
     split_ifs at hq with c1 c2 <;> try omega
     have c3 : D.R.k + ↑j + s + 1 ≤ D.R.k + ((j : ℕ) + 1) - 1 + D.R.t := by omega
-    simp only [c3, if_true] at hq
+    simp only [c3, ite_true] at hq
     rw [hp, hmj] at hq
     have hQ : (((lamL j τ).w ⟨_, hal⟩ : ℤ) : ℚ) + ((Vc D j).rank : ℚ) / 2 - ((D.R.k + j + s : ℕ) : ℚ) =
         -(D.hc τ).e ⟨(j : ℕ) + 1 - 1, hj.2⟩ + ((D.R.t : ℚ) - 1) / 2 - s := by
@@ -813,7 +813,7 @@ theorem valsAt_of_isLamPrime : ∀ {D : Formalism.BasicNotions.D7} (L : Formalis
       Formalism.IndefR.IndefiniteWeightData.WeightData.r] at hq
     split_ifs at hq with c1 c2 <;> try omega
     have c3 : ¬ (D.R.k - 1 + (i : ℕ) + D.R.t + 1 ≤ D.R.k + ((j : ℕ) + 1) - 1 + D.R.t) := by omega
-    simp only [c3, if_false] at hq
+    simp only [c3, ite_false] at hq
     rw [show D.R.m - ((j : ℕ) + 1) + 1 - (D.R.m - ((j : ℕ) + 1) + 1 - (D.R.k - 1 + (i : ℕ) + D.R.t + 1 - (D.R.k + ((j : ℕ) + 1) - 1) - D.R.t))
         = (i : ℕ) - j by omega] at hq
     rw [show (j : ℕ) + 1 + ((i : ℕ) - j) = (i : ℕ) + 1 by omega, hp, hmj] at hq
@@ -1334,7 +1334,7 @@ theorem exZ_res_eq_natW (n : ℕ) (lam : Formalism.BasicNotions.DomWeight n) (f 
     exact a.elim0
   · let m : Fin n := ⟨n - 1, by omega⟩
     have hds : lam.detShift = lam.w m := by
-      simp only [Formalism.BasicNotions.DomWeight.detShift, dif_pos hn]
+      simp only [Formalism.BasicNotions.DomWeight.detShift, dite_eq_left hn]
       rfl
     have hres : res n f = fun a => lam.natW a + f m := by
       funext a

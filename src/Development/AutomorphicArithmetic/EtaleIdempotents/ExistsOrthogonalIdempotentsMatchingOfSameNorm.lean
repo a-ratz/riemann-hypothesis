@@ -78,8 +78,8 @@ theorem UpperTheory.Gal.crystallineComparison.gaussLin_of :
     rw [hmem, one_mul] at h1
     exact hc0 h1
   obtain ⟨M, hM, hIM⟩ := Ideal.exists_le_maximal _ hIt
-  haveI := hM
-  letI := Ideal.Quotient.field M
+  have := hM
+  let := Ideal.Quotient.field M
   have hprod : MvPolynomial.map (Ideal.Quotient.mk M) s.prod = 0 := by
     ext m
     change (MvPolynomial.map (Ideal.Quotient.mk M) s.prod).coeff m = 0
@@ -166,7 +166,7 @@ theorem UpperTheory.Gal.crystallineComparison.idemCover_of :
   intro B _ Λ _ J h
   classical
   obtain ⟨f, hfi, hfJ, hf0⟩ := cover_step Λ J h
-  letI : LinearOrder Λ := LinearOrder.lift' (Fintype.equivFin Λ) (Equiv.injective _)
+  let : LinearOrder Λ := LinearOrder.lift' (Fintype.equivFin Λ) (Equiv.injective _)
   let P : Λ → B := fun σ => ∏ τ ∈ Finset.univ.filter (· < σ), (1 - f τ)
   have hP : ∀ σ, IsIdempotentElem (P σ) := by
     intro σ
@@ -251,7 +251,7 @@ theorem linFactor_of : LinFactor := by
   by_cases hk : k = k₀
   · subst hk
     simp
-  · simp only [hk, if_false]
+  · simp only [hk, ite_false]
     exact (hall k).choose_spec
 
 end UpperTheory.Gal.crystallineComparison
@@ -372,7 +372,7 @@ private lemma coeff_lin_form {A ι : Type} [CommRing A] [Fintype ι] (a : ι →
   rw [Finset.sum_eq_single k₀]
   · simp
   · intro k _ hk
-    rw [MvPolynomial.coeff_X', if_neg, mul_zero]
+    rw [MvPolynomial.coeff_X, ite_eq_right, mul_zero]
     intro h
     exact hk (Finsupp.single_left_injective one_ne_zero h)
   · simp
@@ -521,7 +521,7 @@ private theorem main (hS : SameNormBasic) (hM : MatchStep) {B : Type} [CommRing 
     intro _ u u' hu _ _ _ hsn
     have hu0 : u = 0 := Multiset.card_eq_zero.mp hu
     subst hu0
-    haveI : Nontrivial (B ⧸ Ideal.span {ϖ ^ (N + 1) ^ 0}) := by
+    have : Nontrivial (B ⧸ Ideal.span {ϖ ^ (N + 1) ^ 0}) := by
       refine nontrivial_of_ne 1 0 ?_
       intro h
       rw [← map_one (Ideal.Quotient.mk (Ideal.span {ϖ ^ (N + 1) ^ 0})),

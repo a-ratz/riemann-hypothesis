@@ -129,11 +129,11 @@ theorem _root_.GlobalTheory.exists_basis_in_finite_domain_trace_mem (T C F K : T
     exact Submodule.span_le.2 fun x hx => by
       obtain ⟨c, rfl⟩ := MonoidHom.mem_mrange.1 hx
       exact hM0 c
-  haveI : FiniteDimensional F K := ⟨⟨s.image (algebraMap C K), htop⟩⟩
+  have : FiniteDimensional F K := ⟨⟨s.image (algebraMap C K), htop⟩⟩
   obtain ⟨B, hBsub, hBspan, hBli⟩ :=
     exists_linearIndependent F ((s.image (algebraMap C K) : Finset K) : Set K)
   have hBfin : B.Finite := (Finset.finite_toSet _).subset hBsub
-  haveI := hBfin.fintype
+  have := hBfin.fintype
   let b0 : Module.Basis B F K := Module.Basis.mk hBli (by rw [Subtype.range_coe, hBspan, htop])
   let b := b0.reindex (Fintype.equivFin B)
   have hbC : ∀ i, ∃ c : C, algebraMap C K c = b i := by
@@ -212,16 +212,16 @@ namespace GlobalTheory
 
 theorem integral_of_finite_base_change_image : ∀ (T U C F K L : Type) [CommRing T] [IsDomain T] [CommRing U] [IsDomain U] [CommRing C] [IsDomain C] [Field F] [Field K] [Field L] [Algebra T U] [Algebra T C] [Algebra T F] [IsFractionRing T F] [Algebra C K] [IsFractionRing C K] [Algebra U L] [IsFractionRing U L] [Algebra T K] [Algebra F K] [IsScalarTower T C K] [IsScalarTower T F K] [Algebra T L] [Algebra F L] [IsScalarTower T U L] [IsScalarTower T F L] [Module.Finite T C] (φ : U ⊗[T] C →+* L ⊗[F] K), (∀ u c, φ (u ⊗ₜ c) = algebraMap U L u ⊗ₜ algebraMap C K c) → ∀ (ω : L ⊗[F] K) (p : Polynomial (U ⊗[T] C)), p.Monic → p.eval₂ φ ω = 0 → IsIntegral U ω := by
   intro T U C F K L _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ φ hφ ω p hp h
-  letI : Algebra (U ⊗[T] C) (L ⊗[F] K) := φ.toAlgebra
+  let : Algebra (U ⊗[T] C) (L ⊗[F] K) := φ.toAlgebra
   have hmap : algebraMap (U ⊗[T] C) (L ⊗[F] K) = φ := rfl
-  haveI : IsScalarTower U (U ⊗[T] C) (L ⊗[F] K) := by
+  have : IsScalarTower U (U ⊗[T] C) (L ⊗[F] K) := by
     refine IsScalarTower.of_algebraMap_eq fun u => ?_
     rw [hmap]
     change algebraMap U (L ⊗[F] K) u = φ (u ⊗ₜ 1)
     rw [hφ, map_one]
     rfl
   have hint : IsIntegral (U ⊗[T] C) ω := ⟨p, hp, h⟩
-  haveI : Algebra.IsIntegral U (U ⊗[T] C) := inferInstance
+  have : Algebra.IsIntegral U (U ⊗[T] C) := inferInstance
   exact isIntegral_trans ω hint
 
 end GlobalTheory
@@ -245,7 +245,7 @@ theorem exists_base_denominator_of_finite {T C K : Type} [CommRing T] [IsDomain 
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := C) k
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have hint : IsIntegral T b := Algebra.IsIntegral.isIntegral b
-  have h := Ideal.comap_ne_bot_of_integral_mem (R := T) (I := Ideal.span {b}) hb0
+  have h := Ideal.under_ne_bot_of_integral_mem (R := T) (I := Ideal.span {b}) hb0
     (Ideal.mem_span_singleton_self b) hint
   obtain ⟨t, ht, ht0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h
   rw [Ideal.mem_comap, Ideal.mem_span_singleton] at ht
@@ -440,8 +440,8 @@ theorem exists_conductor_of_fractionFields
   have hG : (algebraMap T F).mapMatrix Gt = Algebra.traceMatrix F b := by
     ext i j
     simp [Gt, ht, Algebra.traceMatrix_apply, Algebra.traceForm_apply]
-  haveI : FiniteDimensional F K := Module.Finite.of_basis b
-  haveI : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective T F)
+  have : FiniteDimensional F K := Module.Finite.of_basis b
+  have : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective T F)
   have hd : algebraMap T F Gt.det = (Algebra.traceMatrix F b).det := by
     rw [RingHom.map_det, hG]
   refine ⟨Gt.det, ?_, ?_⟩
@@ -451,7 +451,7 @@ theorem exists_conductor_of_fractionFields
   intro c hc
   let B : Module.Basis (Fin n) L (L ⊗[F] K) := b.baseChange L
   have hB : ∀ i, B i = 1 ⊗ₜ b i := fun i => Module.Basis.baseChange_apply L b i
-  haveI : Module.Finite L (L ⊗[F] K) := Module.Finite.of_basis B
+  have : Module.Finite L (L ⊗[F] K) := Module.Finite.of_basis B
   have htr : ∀ x : K, Algebra.trace L (L ⊗[F] K) (1 ⊗ₜ x) = algebraMap F L (Algebra.trace F K x) := by
     intro x
     rw [Algebra.trace_apply, Algebra.trace_apply, ← Algebra.baseChange_lmul,
@@ -509,8 +509,8 @@ theorem exists_conductor_of_fractionFields
 attribute [local instance] FractionRing.liftAlgebra FractionRing.isScalarTower_liftAlgebra in
 theorem discr_mul_mem_of_isIntegral : ∀ (T U C : Type) [CommRing T] [IsDomain T] [IsIntegrallyClosed T] [CharZero T] [CommRing U] [IsDomain U] [IsIntegrallyClosed U] [Algebra T U] [Module.Flat T U] [CommRing C] [IsDomain C] [Algebra T C] [Module.Finite T C], Function.Injective (algebraMap T U) → Function.Injective (algebraMap T C) → ∃ d : T, d ≠ 0 ∧ ∀ c : FractionRing (U ⊗[T] C), IsIntegral (U ⊗[T] C) c → ∃ s : (U ⊗[T] C), algebraMap (U ⊗[T] C) (FractionRing (U ⊗[T] C)) s = algebraMap (U ⊗[T] C) (FractionRing (U ⊗[T] C)) (algebraMap T (U ⊗[T] C) d) * c := by
   intro T U C _ _ _ _ _ _ _ _ _ _ _ _ _ hU hC
-  haveI : FaithfulSMul T U := (faithfulSMul_iff_algebraMap_injective _ _).2 hU
-  haveI : FaithfulSMul T C := (faithfulSMul_iff_algebraMap_injective _ _).2 hC
+  have : FaithfulSMul T U := (faithfulSMul_iff_algebraMap_injective _ _).2 hU
+  have : FaithfulSMul T C := (faithfulSMul_iff_algebraMap_injective _ _).2 hC
   exact exists_conductor_of_fractionFields T U C (FractionRing T) (FractionRing C) (FractionRing U)
 
 end GlobalTheory.DiscConductor

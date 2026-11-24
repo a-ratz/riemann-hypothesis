@@ -89,11 +89,11 @@ theorem hasStrict_logA : HasStrictFDerivAt (logA (𝔸 := 𝔸)) (ContinuousLine
   exact h
 
 theorem exp_cont : Continuous (exp : 𝔸 → 𝔸) := by
-  letI : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
+  let : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   exact NormedSpace.exp_continuous
 
 theorem exp_neg_mul (X : 𝔸) : exp (-X) * exp X = 1 := by
-  letI : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
+  let : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   rw [← exp_add_of_commute (Commute.neg_left (Commute.refl X)), neg_add_cancel, exp_zero]
 
 def F1 (p : 𝔸 × 𝔸) : 𝔸 := logA (𝔸 := 𝔸) (exp (-p.1) * exp (p.1 + p.2))

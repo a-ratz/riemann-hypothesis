@@ -56,7 +56,7 @@ namespace DiscreteGroups.T1.G
 variable (X : Ctx)
 
 theorem enorm_conj' (a : ℂ) : ‖starRingEnd ℂ a‖ₑ = ‖a‖ₑ := by
-  rw [← ofReal_norm_eq_enorm, Complex.norm_conj, ofReal_norm_eq_enorm]
+  rw [← ofReal_norm, Complex.norm_conj, ofReal_norm]
 
 theorem tst_norm {φ : X.G → ℂ} (hφ : Tst φ) : Tst (fun w => ((‖φ w‖ : ℝ) : ℂ)) :=
   ⟨Complex.continuous_ofReal.comp hφ.1.norm,

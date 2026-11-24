@@ -210,18 +210,18 @@ theorem shapiro_holds : ShapiroStatement.{u} := by
       exact shpPush_hd ev hφ n _ _ (hC n F)⟩,
      fun n f => (eB n).apply_symm_apply _⟩
   obtain ⟨φ1, hφ1⟩ := (prism_holds R U M U G M.coch B eM eB hM hB).1 Subtype.val
-    continuous_subtype_val (fun g x => rfl)
+    continuous_subtypeVal (fun g x => rfl)
   obtain ⟨φ2, hφ2⟩ := (prism_holds R U M G U B M.coch eB eM hB hM).1 r hrc (fun g x => hrx g x)
   have h12 : ∀ n, (φ1.comp φ2).H n = (Hom.id M.coch).H n :=
     (prism_holds R U M U U M.coch M.coch eM eM hM hM).2 (fun u => r u) id (φ1.comp φ2) (Hom.id _)
-      (hrc.comp continuous_subtype_val) continuous_id (fun g x => hrx g x) (fun g x => rfl)
+      (hrc.comp continuous_subtypeVal) continuous_id (fun g x => hrx g x) (fun g x => rfl)
       (fun n F x => by
         show (eM n (φ1.f n (φ2.f n F))).1 x = _
         rw [hφ1, hφ2])
       (fun n F x => rfl)
   have h21 : ∀ n, (φ2.comp φ1).H n = (Hom.id B).H n :=
     (prism_holds R U M G G B B eB eB hB hB).2 (fun g => (r g : G)) id (φ2.comp φ1) (Hom.id _)
-      (continuous_subtype_val.comp hrc) continuous_id
+      (continuous_subtypeVal.comp hrc) continuous_id
       (fun g x => by
         show ((r (↑g * x) : U) : G) = ↑g * ↑(r x)
         rw [hrx, Subgroup.coe_mul])
@@ -302,7 +302,7 @@ theorem coindRho_cont : ContAction (coindRho U M) := by
   let m : C(G × G, G) := ⟨fun q => q.2 * q.1, continuous_snd.mul continuous_fst⟩
   have h1 : Continuous fun p : G × coindSub U M => (ContinuousMap.curry m p.1, (p.2 : C(G, M.V))) :=
     ((ContinuousMap.curry m).continuous.comp continuous_fst).prodMk
-      (continuous_subtype_val.comp continuous_snd)
+      (continuous_subtypeVal.comp continuous_snd)
   have h2 := ContinuousMap.continuous_comp'.comp h1
   show Continuous fun p : G × coindSub U M => coindRho U M p.1 p.2
   refine continuous_induced_rng.2 ?_

@@ -98,7 +98,7 @@ theorem isMulRightInvariant_of_isFiniteMeasure_quotientMeasure (μ : Measure G) 
   have heq : Measure.map (· * g) μ (fundamentalDomain Γ) = μ (fundamentalDomain Γ) := by
     rw [Measure.map_apply (measurable_mul_const g) (measurableSet_fundamentalDomain Γ)]
     exact hF'.measure_eq hF
-  rw [hmap, Measure.smul_apply] at heq
+  rw [hmap, smul_apply] at heq
   have hc : (Measure.modularCharacterFun g : ENNReal) = 1 := by
     have h1 : (Measure.modularCharacterFun g : ENNReal) * μ (fundamentalDomain Γ) =
         1 * μ (fundamentalDomain Γ) := by

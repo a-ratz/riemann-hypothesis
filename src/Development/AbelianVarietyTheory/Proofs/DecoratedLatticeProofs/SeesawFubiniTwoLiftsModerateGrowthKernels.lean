@@ -155,13 +155,13 @@ lemma memLp_lift {k : X₁ → Y → ℂ} {u : X₁ → ℂ} (hk : Measurable (F
   rw [memLp_iff, eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num)
     hsm.aestronglyMeasurable]
   refine ENNReal.rpow_lt_top_of_nonneg (by norm_num) ?_
-  have hA : Measurable (Function.uncurry fun x y => ‖k x y‖ₑ) := hk.enorm
-  have hb : Measurable fun x => ‖u x‖ₑ := hu.enorm
+  have hA : Measurable (Function.uncurry fun x y => ‖k x y‖ₑ) := hk.eNorm
+  have hb : Measurable fun x => ‖u x‖ₑ := hu.eNorm
   have hc := core (μ₁ := μ₁) (μ₂ := μ₁) (ν := ν) hA hA hb hb hN hN
   refine ne_top_of_le_ne_top (ENNReal.mul_ne_top hfin hfin) (le_trans ?_ hc)
   refine lintegral_mono fun y => ?_
   have h1 : ‖∫ x, k x y * u x ∂μ₁‖ₑ ≤ ∫⁻ x, ‖k x y‖ₑ * ‖u x‖ₑ ∂μ₁ := by
-    simpa only [enorm_mul] using enorm_integral_le_lintegral_enorm (μ := μ₁) (fun x => k x y * u x)
+    simpa only [eNorm_mul] using eNorm_integral_le_lintegral_eNorm (μ := μ₁) (fun x => k x y * u x)
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_two, pow_two]
   exact mul_le_mul' h1 h1
 
@@ -187,22 +187,22 @@ theorem abstract_fubini_two_lifts : ∀ {X₁ X₂ Y : Type*} [MeasurableSpace X
       (hk₂.comp ((measurable_snd.comp measurable_snd).prodMk measurable_fst)).mul
         (hu₂.comp (measurable_snd.comp measurable_snd))
     exact e₁.mul (Complex.continuous_conj.measurable.comp e₂)
-  have hA₁ : Measurable (Function.uncurry fun x y => ‖k₁ x y‖ₑ) := hk₁.enorm
-  have hA₂ : Measurable (Function.uncurry fun x y => ‖k₂ x y‖ₑ) := hk₂.enorm
-  have hc := core (μ₁ := μ₁) (μ₂ := μ₂) (ν := ν) hA₁ hA₂ hu₁.enorm hu₂.enorm hN₁ hN₂
+  have hA₁ : Measurable (Function.uncurry fun x y => ‖k₁ x y‖ₑ) := hk₁.eNorm
+  have hA₂ : Measurable (Function.uncurry fun x y => ‖k₂ x y‖ₑ) := hk₂.eNorm
+  have hc := core (μ₁ := μ₁) (μ₂ := μ₂) (ν := ν) hA₁ hA₂ hu₁.eNorm hu₂.eNorm hN₁ hN₂
   have hFi : Integrable (Function.uncurry F) (ν.prod (μ₁.prod μ₂)) := by
     refine ⟨hFm.aestronglyMeasurable, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm, lintegral_prod _ hFm.enorm.aemeasurable]
+    rw [hasFiniteIntegral_iff_eNorm, lintegral_prod _ hFm.eNorm.aemeasurable]
     refine lt_of_le_of_lt (le_of_eq ?_) (lt_of_le_of_lt hc
       (ENNReal.mul_lt_top hf₁.lt_top hf₂.lt_top))
     refine lintegral_congr fun y => ?_
     have hA₁' : Measurable (Function.uncurry fun x y => ‖k₁ x y‖ₑ * ‖u₁ x‖ₑ) :=
-      hA₁.mul (hu₁.enorm.comp measurable_fst)
+      hA₁.mul (hu₁.eNorm.comp measurable_fst)
     have hA₂' : Measurable (Function.uncurry fun x y => ‖k₂ x y‖ₑ * ‖u₂ x‖ₑ) :=
-      hA₂.mul (hu₂.enorm.comp measurable_fst)
+      hA₂.mul (hu₂.eNorm.comp measurable_fst)
     rw [lintegral_prod_split (μ₁ := μ₁) (μ₂ := μ₂) hA₁' hA₂' y]
     refine lintegral_congr fun p => ?_
-    simp only [Function.uncurry_apply_pair, hFdef, enorm_mul, RCLike.enorm_conj]
+    simp only [Function.uncurry_apply_pair, hFdef, eNorm_mul, RCLike.eNorm_conj]
   have hpt : ∀ y, (∫ x, k₁ x y * u₁ x ∂μ₁) * conj (∫ x, k₂ x y * u₂ x ∂μ₂) =
       ∫ p, F y p ∂μ₁.prod μ₂ := by
     intro y

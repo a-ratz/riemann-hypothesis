@@ -57,8 +57,8 @@ open UpperTheory.ConvolutionTheory UpperTheory.ConvolutionTheory.C UpperTheory.C
 private theorem occ_basic {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure]
     (V : Submodule ℂ (LL μ)) (hV : IsSummand μ V) (w : Pl K) :
     (∃ σ, Occurs μ V w σ) ∧ (∀ σ σ', Occurs μ V w σ → Occurs μ V w σ' → Nonempty (σ.ρ.Equiv σ'.ρ)) := by
-  letI : MeasurableSpace (Gw n w) := borel _
-  haveI : BorelSpace (Gw n w) := ⟨rfl⟩
+  let : MeasurableSpace (Gw n w) := borel _
+  have : BorelSpace (Gw n w) := ⟨rfl⟩
   have h := _root_.PositivityTheory.TfC.OccursBasics_holds K n μ V w Measure.haar hV
   exact ⟨h.1, h.2.1⟩
 

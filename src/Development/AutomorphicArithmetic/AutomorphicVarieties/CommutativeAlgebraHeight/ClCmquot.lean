@@ -56,10 +56,10 @@ open IsLocalRing UpperTheory.V.Alg UpperTheory.V.CA ReciprocityTheory.CA
 
 private theorem UpperTheory.V.CA.cmquot_of_finite {P R : Type} [CommRing P] [IsLocalRing P] [CommRing R]
     [IsLocalRing R] (hP : IsCM P) (φ : P →+* R) (hf : φ.Finite) [IsLocalHom φ] : IsCMQuot R := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨n, g, hg⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp hf.finiteType
   let N : Ideal (MvPolynomial (Fin n) P) := Ideal.comap g.toRingHom (maximalIdeal R)
-  haveI : N.IsMaximal := Ideal.comap_isMaximal_of_surjective g.toRingHom hg
+  have : N.IsMaximal := Ideal.comap_isMaximal_of_surjective g.toRingHom hg
   have hgC : g.toRingHom.comp MvPolynomial.C = φ := by
     refine RingHom.ext fun x => ?_
     show g (MvPolynomial.C x) = φ x
@@ -81,7 +81,7 @@ private theorem UpperTheory.V.CA.cmquot_of_finite {P R : Type} [CommRing P] [IsL
 theorem UpperTheory.V.CA.cl_cmquot :
     ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (maximalIdeal O) O] (R : Type) [CommRing R] [Algebra O R] [IsLocalRing R], IsCL O R → IsCMQuot R := by
   intro O _ _ _ _ R _ _ _ hR
-  haveI := hR.noeth
+  have := hR.noeth
   obtain ⟨n, a, ha⟩ :=
     Submodule.fg_iff_exists_fin_generating_family.mp (IsNoetherian.noetherian (maximalIdeal R))
   have hspan : Ideal.span (Set.range a) = maximalIdeal R := ha
@@ -94,5 +94,5 @@ theorem UpperTheory.V.CA.cl_cmquot :
     rw [hspan]
     exact le_sup_left.trans Ideal.le_radical
   obtain ⟨φ, -, hfin, hloc⟩ := cl_mvps O R hR (Fin n) a hmem hrad
-  haveI := hloc
+  have := hloc
   exact cmquot_of_finite (cl_cm.1 O n).1 φ hfin

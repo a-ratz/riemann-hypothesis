@@ -172,7 +172,7 @@ theorem exists_trans {E F : Idx R Ω} (h : E ≤ F) :
   refine ⟨φ, fun a => ?_⟩
   have := congrArg (fun g => liftEquiv R Ω F (g (1 ⊗ₜ a))) hφ
   simp only [Algebra.TensorProduct.map_tmul, AlgHom.coe_id, id_eq, AlgHom.coe_comp,
-    Function.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe, AlgEquiv.apply_symm_apply] at this
+    Function.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass, AlgEquiv.apply_symm_apply] at this
   rw [red_apply, red_apply, this]
   simp
 
@@ -223,7 +223,7 @@ theorem comap_ker_red (E : Idx R Ω) :
 
 theorem ker_red (E : Idx R Ω) : RingHom.ker (red R Ω E) = maximalIdeal (Lift R Ω E) := by
   have hp : (RingHom.ker (red R Ω E)).IsPrime := RingHom.ker_isPrime _
-  haveI : Algebra.IsIntegral R (Lift R Ω E) := Algebra.IsIntegral.of_finite R _
+  have : Algebra.IsIntegral R (Lift R Ω E) := Algebra.IsIntegral.of_finite R _
   have hIntegral : (algebraMap R (Lift R Ω E)).IsIntegral := algebraMap_isIntegral_iff.mpr this
   have : (RingHom.ker (red R Ω E)).IsMaximal :=
     Ideal.isMaximal_of_isIntegral_of_isMaximal_comap (algebraMap R (Lift R Ω E)) hIntegral _
@@ -254,15 +254,15 @@ theorem map_maximalIdeal_lift (E : Idx R Ω) :
   Algebra.FormallyUnramified.map_maximalIdeal
 
 theorem trans_injective (E F : Idx R Ω) (h : E ≤ F) : Function.Injective (trans R Ω E F h) := by
-  letI : Algebra (Lift R Ω E) (Lift R Ω F) := (trans R Ω E F h).toRingHom.toAlgebra
-  haveI : IsScalarTower R (Lift R Ω E) (Lift R Ω F) :=
+  let : Algebra (Lift R Ω E) (Lift R Ω F) := (trans R Ω E F h).toRingHom.toAlgebra
+  have : IsScalarTower R (Lift R Ω E) (Lift R Ω F) :=
     IsScalarTower.of_algebraMap_eq (fun r => ((trans R Ω E F h).commutes r).symm)
-  haveI : Algebra.Etale (Lift R Ω E) (Lift R Ω F) := Algebra.Etale.of_restrictScalars R _ _
-  haveI : Module.Flat (Lift R Ω E) (Lift R Ω F) := Algebra.Smooth.flat _ _
-  haveI : IsLocalHom (algebraMap (Lift R Ω E) (Lift R Ω F)) := isLocalHom_trans E F h
-  haveI : Module.FaithfullyFlat (Lift R Ω E) (Lift R Ω F) :=
+  have : Algebra.Etale (Lift R Ω E) (Lift R Ω F) := Algebra.Etale.of_restrictScalars R _ _
+  have : Module.Flat (Lift R Ω E) (Lift R Ω F) := Algebra.Smooth.flat _ _
+  have : IsLocalHom (algebraMap (Lift R Ω E) (Lift R Ω F)) := isLocalHom_trans E F h
+  have : Module.FaithfullyFlat (Lift R Ω E) (Lift R Ω F) :=
     Module.FaithfullyFlat.of_flat_of_isLocalHom
-  haveI := Module.FaithfullyFlat.faithfulSMul (A := Lift R Ω E) (B := Lift R Ω F)
+  have := Module.FaithfullyFlat.faithfulSMul (A := Lift R Ω E) (B := Lift R Ω F)
   exact FaithfulSMul.algebraMap_injective (Lift R Ω E) (Lift R Ω F)
 
 
@@ -499,7 +499,7 @@ theorem exists_strictHenselisation_of_henselian : ∀ (R : Type) [CommRing R] [H
     refine _root_.GlobalTheory.flat_of_forall_finset_subset_flat R (SH R Ω) fun s => ?_
     obtain ⟨E, hE⟩ := StrictHensOfHens.exists_ofA_finset (R := R) (Ω := Ω) s
     let e := AlgEquiv.ofInjective (ofA (R := R) (Ω := Ω) E) (ofA_injective E)
-    haveI : Module.Flat R (Lift R Ω E) := Algebra.Smooth.flat _ _
+    have : Module.Flat R (Lift R Ω E) := Algebra.Smooth.flat _ _
     refine ⟨Subalgebra.toSubmodule (ofA (R := R) (Ω := Ω) E).range, fun x hx => ?_,
       Module.Flat.of_linearEquiv e.symm.toLinearEquiv⟩
     obtain ⟨a, rfl⟩ := hE x hx
@@ -538,22 +538,22 @@ theorem exists_strictHenselisation : ∀ (R : Type) [CommRing R] [IsLocalRing R]
   intro R _ _ Ω _ _ hΩ
   obtain ⟨H, _, _, _, _, hflat, hmax, hbij, hind⟩ := _root_.GlobalTheory.Henselisation.exists_henselisation R
   let e : ResidueField R ≃+* ResidueField H := RingEquiv.ofBijective _ hbij
-  letI algH : Algebra (ResidueField H) Ω :=
+  let algH : Algebra (ResidueField H) Ω :=
     ((algebraMap (ResidueField R) Ω).comp e.symm.toRingHom).toAlgebra
   have he : (algebraMap (ResidueField H) Ω).comp e.toRingHom =
       (RingEquiv.refl Ω : Ω →+* Ω).comp (algebraMap (ResidueField R) Ω) := by
     ext x
     simp [RingHom.algebraMap_toAlgebra]
-  haveI : IsSepClosure (ResidueField H) Ω :=
+  have : IsSepClosure (ResidueField H) Ω :=
     ⟨hΩ.sep_closed, Algebra.IsSeparable.of_equiv_equiv e (RingEquiv.refl Ω) he⟩
   obtain ⟨T, _, _, _, _, hsc, hflat2, hmax2, ⟨e2⟩, hind2⟩ := _root_.GlobalTheory.exists_strictHenselisation_of_henselian H Ω
-  letI algRT : Algebra R T := ((algebraMap H T).comp (algebraMap R H)).toAlgebra
-  haveI : IsScalarTower R H T := IsScalarTower.of_algebraMap_eq' rfl
-  haveI hloc : IsLocalHom (algebraMap R T) := by
+  let algRT : Algebra R T := ((algebraMap H T).comp (algebraMap R H)).toAlgebra
+  have : IsScalarTower R H T := IsScalarTower.of_algebraMap_eq' rfl
+  have hloc : IsLocalHom (algebraMap R T) := by
     change IsLocalHom ((algebraMap H T).comp (algebraMap R H))
     infer_instance
   refine ⟨T, inferInstance, algRT, inferInstance, hloc, hsc, ?_, ?_, ?_, ?_⟩
-  · haveI := hflat; haveI := hflat2
+  · have := hflat; have := hflat2
     exact Module.Flat.trans R H T
   · rw [IsScalarTower.algebraMap_eq R H T, ← Ideal.map_map, hmax, hmax2]
   · refine ⟨{ e2 with commutes' := ?_ }⟩

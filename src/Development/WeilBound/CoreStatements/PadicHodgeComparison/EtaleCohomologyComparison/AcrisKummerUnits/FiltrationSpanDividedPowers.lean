@@ -369,7 +369,7 @@ theorem mem_span_pow_of_factorial_mul_eq {S : Type} [CommRing S] (hS : R.TF S) {
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · simp
   obtain ⟨x', rfl⟩ := Ideal.mem_span_singleton'.1 hx
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   obtain ⟨v, m, hlm, hm⟩ := Nat.exists_eq_pow_mul_and_not_dvd k.factorial_ne_zero l hl.ne_one
   have hv : v < k := by
     have h1 : v ≤ multiplicity l k.factorial :=
@@ -742,7 +742,7 @@ theorem exists_idempotents_of_root_of_unity {l : ℕ} [Fact l.Prime] (A : PAlg l
       (haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩;
         CompleteOrthogonalIdempotents e) ∧
       ∀ c, A.sharp (e c) * (z - A.oC ζ ^ c.val) = 0 := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hl : (l : A.U) ∈ nonZeroDivisors A.U := (GlobalTheory.CompanionTheory.UntiltRegular.untilt_regular A).1
   have hq0 : 0 < l ^ n := Nat.pos_of_ne_zero (NeZero.ne _)
   have hq1 : ζ ^ l ^ n = 1 := hζ.pow_eq_one
@@ -819,7 +819,7 @@ theorem isUnit_of_isUnit_sharp {l : ℕ} [Fact l.Prime] (A : PAlg l) (a : A.A)
   have hmem : a * b - 1 ∈ Ideal.span {A.pi} := by
     rw [← hker, RingHom.mem_ker, map_sub, map_mul, hv, map_one, sub_self]
   have hjac : Ideal.span {A.pi} ≤ (⊥ : Ideal A.A).jacobson := by
-    haveI : IsAdicComplete (Ideal.span {A.pi}) A.A := A.compl
+    have : IsAdicComplete (Ideal.span {A.pi}) A.A := A.compl
     exact IsAdicComplete.le_jacobson_bot _
   have hunit := Ideal.mem_jacobson_bot.mp (hjac hmem) 1
   rw [mul_one, sub_add_cancel] at hunit

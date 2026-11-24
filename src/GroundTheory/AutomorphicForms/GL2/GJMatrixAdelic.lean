@@ -192,7 +192,7 @@ def adelicFourierPi (F : (ι → 𝔸[K]) → ℂ) (y : ι → 𝔸[K]) : ℂ :=
 
 theorem continuous_adelicChar_sum_mul_pi (y : ι → 𝔸[K]) :
     Continuous fun x : ι → 𝔸[K] ↦ (adelicChar K (∑ i, x i * y i) : ℂ) :=
-  continuous_subtype_val.comp ((continuous_adelicChar (K := K)).comp
+  continuous_subtypeVal.comp ((continuous_adelicChar (K := K)).comp
     (continuous_finsetSum _ fun i _ ↦ (continuous_apply i).mul continuous_const))
 
 theorem integrable_mul_adelicChar_pi {F : (ι → 𝔸[K]) → ℂ} (hF : Integrable F (adeleMeasurePi K))
@@ -306,14 +306,14 @@ theorem adelicFourierPi_tensor_cosetIndicator_algebraMap (φ : 𝓢(ι → mixed
   by_cases hη : ∀ i, η i ∈ (traceDualIdeal K J : FractionalIdeal (𝓞 K)⁰ K)
   · have hmem : η ∈ cosetPi K (fun _ ↦ traceDualIdeal K J) 0 := fun i ↦ by simpa using hη i
     rw [Set.indicator_of_mem hmem]
-    simp only [if_pos (hη _)]
+    simp only [ite_eq_left (hη _)]
     simp only [mixedPairingPi, embPi]
     rw [addChar_sum Real.fourierChar Finset.univ]
     ring
   · have hmem : η ∉ cosetPi K (fun _ ↦ traceDualIdeal K J) 0 := fun h ↦ hη fun i ↦ by
       simpa using h i
     obtain ⟨i, hi⟩ := not_forall.mp hη
-    rw [Set.indicator_of_notMem hmem, Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)]
+    rw [Set.indicator_of_notMem hmem, Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)]
     ring
 
 theorem finiteAdeleMeasure_idealFiniteAdeles_pow (J : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
@@ -321,7 +321,7 @@ theorem finiteAdeleMeasure_idealFiniteAdeles_pow (J : (FractionalIdeal (𝓞 K)�
       (((∏ _i : ι, ((FractionalIdeal.absNorm (J : FractionalIdeal (𝓞 K)⁰ K) : ℝ) *
           √|(discr K : ℝ)|))⁻¹ : ℝ) : ℂ) := by
   rw [finiteAdeleMeasure_idealFiniteAdeles_toReal, Finset.prod_const, Finset.card_univ,
-    Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs]
+    Real.coe_sqrt, coe_nnNorm, Int.norm_eq_abs]
   push_cast
   rw [← mul_inv, inv_pow]
 

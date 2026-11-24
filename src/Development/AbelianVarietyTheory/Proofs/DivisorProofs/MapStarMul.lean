@@ -69,10 +69,10 @@ variable {m n : Type} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] in
 theorem _root_.GlobalTheory.IndLine.Iwasawa.exp_mul_eq {A : Matrix m m ℂ} {D : Matrix n n ℂ}
     {B : Matrix m n ℂ} (h : A * B = B * D) :
     NormedSpace.exp A * B = B * NormedSpace.exp D := by
-  letI : NormedRing (Matrix m m ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix m m ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedRing (Matrix n n ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix n n ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix m m ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix m m ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix n n ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix n n ℂ) := Matrix.linftyOpNormedAlgebra
   have hk : ∀ k : ℕ, A ^ k * B = B * D ^ k := by
     intro k
     induction k with

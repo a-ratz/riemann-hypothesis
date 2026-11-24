@@ -60,7 +60,7 @@ def Pins (l : ℕ) {G : Type} [Group G] [TopologicalSpace G] (I : Subgroup G) (S
 
 theorem eq_one_of_pow {l : ℕ} [hl : Fact l.Prime] {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] (h0 : (l : R) = 0)
     {x : R} (hx : x - 1 ∈ maximalIdeal R) {N : ℕ} (hN : N ≠ 0) (h : x ^ N = 1) : x = 1 := by
-  haveI : CharP R l := (CharP.charP_iff_prime_eq_zero hl.out).2 h0
+  have : CharP R l := (CharP.charP_iff_prime_eq_zero hl.out).2 h0
   obtain ⟨k, M, hlM, rfl⟩ := Nat.exists_eq_pow_mul_and_not_dvd hN l hl.out.ne_one
   have hz1 : x ^ l ^ k - 1 = (x - 1) ^ l ^ k := by rw [sub_pow_char_pow, one_pow]
   have hzM : (x ^ l ^ k) ^ M = 1 := by rw [← pow_mul]; exact h
@@ -143,7 +143,7 @@ theorem isClosed_ker_of_adicCont {G R : Type} [Group G] [TopologicalSpace G] [Co
   have e : (ψ.ker : Set G) = ⋂ N, {g | Ideal.Quotient.mk (maximalIdeal R ^ N) ((ψ g : Rˣ) : R) =
       Ideal.Quotient.mk (maximalIdeal R ^ N) 1} := by
     ext g
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq, Ideal.Quotient.eq]
+    simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq, Ideal.Quotient.eq]
     constructor
     · intro h N
       simp [h]

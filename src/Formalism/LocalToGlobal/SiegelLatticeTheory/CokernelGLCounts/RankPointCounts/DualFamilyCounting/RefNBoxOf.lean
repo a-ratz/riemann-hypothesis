@@ -115,12 +115,12 @@ theorem refN_map_kapL {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Boo
   have hΦN : ∀ t : (WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ), WlocSk.NB.phi0 t.1 t.2 ∈ Nset k r := fun t =>
     WlocSk.NB.test_vector_mem_schwartz_bruhat t.1 t.2
   set ν := (volume : Measure ((WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ))).map Φ with hν
-  haveI : SigmaFinite ν := hΦe.sigmaFinite_map
+  have : SigmaFinite ν := hΦe.sigmaFinite_map
   have hν0 : ν ≠ 0 := by
     intro h0
     rw [hν, Measure.map_eq_zero_iff hΦe.measurable.aemeasurable] at h0
     exact isOpen_univ.measure_ne_zero (volume : Measure ((WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ))) Set.univ_nonempty
-      (by rw [h0, Measure.coe_zero, Pi.zero_apply])
+      (by rw [h0, FunLike.coe_zero, Pi.zero_apply])
   have hrange : ∀ t, ∃ g : Formalism.REAL.UJ ε, Ψ g = Φ t := fun t => by
     refine ⟨toUJ _ (conjQ_UJ hFJ (hΦN t).1), ?_⟩
     show (Qi ε e f w (z0v T z) * uMat (toUJ _ (conjQ_UJ hFJ (hΦN t).1)) * Qm e f w (z0v T z) :
@@ -133,10 +133,10 @@ theorem refN_map_kapL {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Boo
     rw [ae_iff, hν, hΦe.map_apply]
     convert measure_empty (μ := (volume : Measure ((WlocSk.NB.CI k r → ℂ) × (Fin r → ℝ))))
     ext t
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
     obtain ⟨g, hg⟩ := hrange t
     exact ⟨g, hg⟩
-  haveI : SigmaFinite lam0 := SigmaFinite.of_map _ emb.measurable.aemeasurable (by rw [hmap]; infer_instance)
+  have : SigmaFinite lam0 := SigmaFinite.of_map _ emb.measurable.aemeasurable (by rw [hmap]; infer_instance)
   have hNz : NLoc ε e (Qm e f w (z0v T z) *ᵥ zBv k r T) = NLoc ε e z := by rw [hQz]
   have hz0 : ∃ t : ℂ, z0v T z = t • (Qm e f w (z0v T z) *ᵥ zBv k r T) :=
     ⟨(((Real.sqrt T)⁻¹ : ℝ) : ℂ), by rw [hQz]; rfl⟩
@@ -211,7 +211,7 @@ theorem refN_map_kapL {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Boo
     rw [refNg_rfl]
     ext s _
     show (Measure.comap Ψ (Formalism.MainNotions.S.haarLie (Nset k r) 1)) s = _
-    rw [emb.comap_apply, hH, Measure.smul_apply, Measure.smul_apply, hlam0, emb.comap_apply]
+    rw [emb.comap_apply, hH, smul_apply, smul_apply, hlam0, emb.comap_apply]
   have hlamK : lam0.map (kapL ε e f w z) = c • volume := by
     rw [Measure.map_congr hkc, ← Measure.map_map (Kc_cont T).measurable emb.measurable, hmap, hν,
       Measure.map_map (Kc_cont T).measurable hΦe.measurable, hcomp,
@@ -289,13 +289,13 @@ theorem refNBox_of (hF : FrameRow) : RefNBox := by
     have hpre : (fun g => L v (kapL (X.B.I.ε v) (eV X v) (ProductExactness.pV X v) (X.wfr u v) (ProductExactness.zV X u v) g)) ⁻¹' Set.univ.pi (fun _ => Set.Ico (0 : ℝ) 1) =
         kapL (X.B.I.ε v) (eV X v) (ProductExactness.pV X v) (X.wfr u v) (ProductExactness.zV X u v) ⁻¹' ((L v) ⁻¹' Set.univ.pi (fun _ => Set.Ico (0 : ℝ) 1)) := rfl
     rw [hpre, show refNX X u v = refNg (nX X) _ _ _ _ _ from rfl, ← Measure.map_apply_of_aemeasurable hae hmeas, hmap,
-      Measure.smul_apply, smul_eq_mul, Measure.addHaar_preimage_linearMap _ (hdet0 v), Real.volume_pi_Ico]
+      smul_apply, smul_eq_mul, Measure.addHaar_preimage_linearMap _ (hdet0 v), Real.volume_pi_Ico]
     simp only [sub_zero, ENNReal.ofReal_one, Finset.prod_const_one, mul_one]
     rw [abs_inv, hdet v, ← ENNReal.ofReal_mul (by positivity)]
     congr 1
     rw [div_pow]
     field_simp
-  haveI : ∀ v, SigmaFinite (refNX X u v) := fun v =>
+  have : ∀ v, SigmaFinite (refNX X u v) := fun v =>
     (refNg_isHaarLoc (nX X) (X.B.I.ε v) (eV X v) (ProductExactness.pV X v) (X.wfr u v) (ProductExactness.zV X u v)
       (ProductExactness.zV X u v) hTu (fX_ee (X := X) (v := v)) (fX_ff (X := X) (v := v))
       (fX_ef (X := X) (v := v)) (fX_ww (X := X) (u := u) (v := v)) (fX_ew (X := X) (u := u) (v := v))

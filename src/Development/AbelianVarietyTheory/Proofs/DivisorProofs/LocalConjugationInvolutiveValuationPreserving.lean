@@ -58,7 +58,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {w : Pl E}
 
 theorem valuation_equiv :
     (valuation (w.adicCompletion E)).IsEquiv (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))) := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact isEquiv _ _
 
@@ -96,7 +96,7 @@ theorem lt_one_of_map (s : w.adicCompletion E →+* w.adicCompletion E) (hs : Co
 
 theorem le_exp_neg_one {x : WithZero (Multiplicative ℤ)} (hx : x < 1) : x ≤ WithZero.exp (-1) := by
   by_cases h0 : x = 0
-  · rw [h0]; exact zero_le'
+  · rw [h0]; exact zero_le
   · rw [← WithZero.exp_log h0] at hx ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at hx
     rw [WithZero.exp_le_exp]
@@ -110,12 +110,12 @@ theorem valued_map_eq (s : w.adicCompletion E →+* w.adicCompletion E) (hs : Co
     by_contra hc
     push_neg at hc
     have hy0 : s y ≠ 0 := by
-      intro h0; rw [h0, map_zero] at hc; exact absurd hc (not_lt.2 zero_le')
+      intro h0; rw [h0, map_zero] at hc; exact absurd hc (not_lt.2 zero_le)
     have h1 : Valued.v (s y)⁻¹ < 1 := by rw [map_inv₀]; exact inv_lt_one_of_one_lt₀ hc
     have h2 := lt_one_of_map s hs h1
     rw [map_inv₀, hss, map_inv₀] at h2
     have h0 : (0 : WithZero (Multiplicative ℤ)) < Valued.v y := by
-      rw [zero_lt_iff, Valuation.ne_zero_iff]
+      rw [pos_iff_ne_zero, Valuation.ne_zero_iff]
       intro h; apply hy0; rw [h, map_zero]
     exact absurd hy (not_le.2 ((inv_lt_one₀ h0).1 h2))
 
@@ -123,11 +123,11 @@ theorem valued_map_eq (s : w.adicCompletion E →+* w.adicCompletion E) (hs : Co
     intro a b hb hab
     have hb' : s b ≠ 0 := (map_ne_zero s).2 hb
     have h1 : Valued.v (a / b) ≤ 1 := by
-      rw [map_div₀]; exact div_le_one_of_le₀ hab zero_le'
+      rw [map_div₀]; exact div_le_one_of_le₀ hab zero_le
     have h2 := hle _ h1
     rw [map_div₀, map_div₀] at h2
     have h0 : (0 : WithZero (Multiplicative ℤ)) < Valued.v (s b) := by
-      rw [zero_lt_iff, Valuation.ne_zero_iff]; exact hb'
+      rw [pos_iff_ne_zero, Valuation.ne_zero_iff]; exact hb'
     exact (div_le_one₀ h0).1 h2
 
   obtain ⟨π, hπ⟩ := w.valuation_exists_uniformizer E
@@ -164,7 +164,7 @@ theorem valued_map_eq (s : w.adicCompletion E →+* w.adicCompletion E) (hs : Co
     apply le_antisymm hsu1
     rw [map_inv₀, map_inv₀] at hsu2
     have h0 : (0 : WithZero (Multiplicative ℤ)) < Valued.v (s u) := by
-      rw [zero_lt_iff, Valuation.ne_zero_iff]; exact (map_ne_zero s).2 hu0
+      rw [pos_iff_ne_zero, Valuation.ne_zero_iff]; exact (map_ne_zero s).2 hu0
     exact (inv_le_one₀ h0).1 hsu2
   rw [hu, map_mul, map_zpow₀, map_mul, map_zpow₀, hvsp] at hsu
   rw [hu, map_mul, map_zpow₀] at hvu

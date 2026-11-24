@@ -131,7 +131,7 @@ theorem absBar_le_one_of_monic {x : FvBar F v} (p : Polynomial ℤ) (hp : p.Moni
     (hx : p.eval₂ (Int.castRingHom _) x = 0) : absBar F v x ≤ 1 := by
   have hint : ∀ m : ℤ, absBar F v (m : FvBar F v) ≤ 1 := fun m => by
     rw [← map_intCast (algebraMap (Fv F v) (FvBar F v)), absBar_algebraMap]
-    exact IsUltrametricDist.nnnorm_intCast_le_one _ m
+    exact IsUltrametricDist.nnNorm_intCast_le_one _ m
   have hv : ∀ y : FvBar F v, valBar F v y = absBar F v y := fun _ => rfl
   by_contra hlt
   push Not at hlt
@@ -193,7 +193,7 @@ theorem absFin_tmul_one (a : Fv F v) : absFin F v (a ⊗ₜ[F] (1 : E)) = ‖a�
   exact Finset.sup_const Finset.univ_nonempty _
 
 @[simp] theorem absFin_one : absFin F v (1 : Fv F v ⊗[F] E) = 1 := by
-  rw [Algebra.TensorProduct.one_def, absFin_tmul_one, nnnorm_one]
+  rw [Algebra.TensorProduct.one_def, absFin_tmul_one, nnNorm_one]
 
 theorem absFin_tmul_le (a : Fv F v) (x : 𝓞 E) : absFin F v (a ⊗ₜ[F] (x : E)) ≤ ‖a‖₊ := (absFin_le_iff F v).2 fun τ => by
   have hx2 : IsIntegral ℤ (x : E) := x.2
@@ -273,7 +273,7 @@ theorem opNorm_mul_le {n : Type} [Fintype n] [DecidableEq n] (x y : Matrix n n �
     opNorm (x * y) ≤ opNorm x * opNorm y := by
   unfold opNorm
   rw [map_mul]
-  exact nnnorm_mul_le _ _
+  exact nnNorm_mul_le _ _
 
 theorem opNorm_one_le {n : Type} [Fintype n] [DecidableEq n] : opNorm (1 : Matrix n n ℂ) ≤ 1 := by
   unfold opNorm
@@ -312,14 +312,14 @@ theorem opNorm_map_conj_le {n : Type} [Fintype n] [DecidableEq n] (y : Matrix n 
       simp [xs, Matrix.mulVec, dotProduct, map_sum]
   have h1 : ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℂ) (y.map (starRingEnd ℂ)) x‖₊ =
       ‖Matrix.toEuclideanCLM (n := n) (𝕜 := ℂ) y xs‖₊ := by
-    rw [EuclideanSpace.nnnorm_eq, EuclideanSpace.nnnorm_eq]
+    rw [EuclideanSpace.nnNorm_eq, EuclideanSpace.nnNorm_eq]
     congr 1
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [hcomp i]
     congr 1
     exact Subtype.ext (Complex.norm_conj _)
   have h2 : ‖xs‖₊ = ‖x‖₊ := by
-    rw [EuclideanSpace.nnnorm_eq, EuclideanSpace.nnnorm_eq]
+    rw [EuclideanSpace.nnNorm_eq, EuclideanSpace.nnNorm_eq]
     congr 1
     refine Finset.sum_congr rfl fun i _ => ?_
     congr 1
@@ -438,7 +438,7 @@ theorem eventually_absFin_le_one (z : AF F ⊗[F] E) :
     rw [e1]
     refine (absFin_tmul_le F v _ (⟨m • x, hint⟩ : 𝓞 E)).trans ?_
     have hv' : Valued.v (evFin F v ((m : F)⁻¹ • a)) ≤ 1 := hv
-    rw [← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
+    rw [← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]
     exact Valued.toNormedField.norm_le_one_iff.2 hv'
 
 variable {n : Type} [Fintype n] [DecidableEq n]
@@ -459,7 +459,7 @@ theorem finite_mulSupport_htFin (g : GL n (AF F ⊗[F] E)) :
 def heightGL (g : GL n (AF F ⊗[F] E)) : ℝ≥0 :=
   (∏ w, htInf F w (bc (compInf F E w) g)) * ∏ᶠ v, htFin F v (bc (compFin F E v) g)
 
-theorem one_le_heightGL (g : GL n (AF F ⊗[F] E)) : 1 ≤ heightGL F g := one_le_mul_of_one_le_of_one_le (Finset.one_le_prod' fun w _ => one_le_htOf _ _)
+theorem one_le_heightGL (g : GL n (AF F ⊗[F] E)) : 1 ≤ heightGL F g := one_le_mul_of_one_le_of_one_le (Finset.one_le_prod fun w _ => one_le_htOf _ _)
   (one_le_finprod' fun v => one_le_htOf _ _)
 
 theorem heightGL_inv (g : GL n (AF F ⊗[F] E)) : heightGL F g⁻¹ = heightGL F g := by
@@ -471,8 +471,8 @@ theorem heightGL_eq_one_iff {g : GL n (AF F ⊗[F] E)} : heightGL F g = 1 ↔
   have hA : ∀ w ∈ (Finset.univ : Finset (InfinitePlace F)), 1 ≤ htInf F w (bc (compInf F E w) g) :=
     fun w _ => one_le_htOf _ _
   have hB : ∀ v ∈ hfin.toFinset, 1 ≤ htFin F v (bc (compFin F E v) g) := fun v _ => one_le_htOf _ _
-  rw [heightGL, finprod_eq_prod _ hfin, mul_eq_one_iff_of_one_le (Finset.one_le_prod' hA) (Finset.one_le_prod' hB),
-    Finset.prod_eq_one_iff_of_one_le' hA, Finset.prod_eq_one_iff_of_one_le' hB]
+  rw [heightGL, finprod_eq_prod _ hfin, mul_eq_one_iff_of_one_le (Finset.one_le_prod hA) (Finset.one_le_prod hB),
+    Finset.prod_eq_one_iff_of_one_le hA, Finset.prod_eq_one_iff_of_one_le hB]
   constructor
   · rintro ⟨h1, h2⟩
     refine ⟨fun w => h1 w (Finset.mem_univ _), fun v => ?_⟩
@@ -507,7 +507,7 @@ theorem heightGL_mul_le (g h : GL n (AF F ⊗[F] E)) : heightGL F (g * h) ≤ he
   have e1 : (∏ w, htInf F w (bc (compInf F E w) (g * h))) ≤
       (∏ w, htInf F w (bc (compInf F E w) g)) * ∏ w, htInf F w (bc (compInf F E w) h) := by
     rw [← Finset.prod_mul_distrib]
-    exact Finset.prod_le_prod' fun w _ => hN w
+    exact Finset.prod_le_prod fun w _ => hN w
   have e2 : (∏ᶠ v, htFin F v (bc (compFin F E v) (g * h))) ≤
       (∏ᶠ v, htFin F v (bc (compFin F E v) g)) * ∏ᶠ v, htFin F v (bc (compFin F E v) h) := by
     rw [← finprod_mul_distrib fg1 fh1]

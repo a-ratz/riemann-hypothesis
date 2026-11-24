@@ -83,7 +83,7 @@ theorem _root_.GlobalTheory.QRDecomp.exists_qr (n m : ℕ) (A : Matrix (Fin n) (
   have hS : (Aᴴ * A).PosDef := PosDef.conjTranspose_mul_self A hinj
   set L := LDL.lowerInv hS
   set d := LDL.diagEntries hS
-  haveI : Invertible L := LDL.invertibleLowerInv hS
+  have : Invertible L := LDL.invertibleLowerInv hS
   have hLu : IsUnit L.det := isUnit_det_of_invertible L
   have hD : diagonal d = L * (Aᴴ * A) * Lᴴ := LDL.diag_eq_lowerInv_conj hS
   have hDpos : (diagonal d).PosDef := by
@@ -169,7 +169,7 @@ theorem stdBlocks_lt_of_lt {s r : ℕ} (d : Fin s → ℕ) (hd : ∑ i, d i = r)
     rw [← Fin.sum_univ_eq_sum_range]
     refine Finset.sum_congr rfl fun x _ => ?_
     have hx : (x : ℕ) < s := x.2.trans c.2
-    simp only [f, hx, dif_pos]
+    simp only [f, hx, dite_eq_left]
     rfl
   rw [Fin.lt_def, stdBlocks_val, stdBlocks_val, key, key]
   have h1 : ∑ x ∈ Finset.range (b + 1), f x ≤ ∑ x ∈ Finset.range a, f x :=
@@ -197,7 +197,7 @@ theorem exists_upper_mul_unitary (N : ℕ) (y : GL (Fin N) ℂ) :
   have hdet : IsUnit (Aᴴ * A).det := by
     rw [det_mul, det_conjTranspose]; exact hAdet.star.mul hAdet
   obtain ⟨Q, u, hQ, hu, hudet, hA⟩ := GlobalTheory.QRDecomp.exists_qr N N A hdet
-  letI := u.invertibleOfIsUnitDet hudet
+  let := u.invertibleOfIsUnitDet hudet
   refine ⟨(Matrix.nonsingInvUnit u hudet)⁻¹, ?_, Qᴴ, ?_, ?_⟩
   · show (u⁻¹).BlockTriangular id
     exact Matrix.blockTriangular_inv_of_blockTriangular hu

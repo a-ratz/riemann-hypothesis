@@ -180,11 +180,11 @@ theorem exists_signs_iff_even (K L : Type) [Field K] [NumberField K] [Field L] [
       · have key := mem_normGroup_iff_pos hL hw (infDiag K h w)
         rw [ringEquivReal_infDiag hw h] at key
         by_cases hS : (⟨w, hw⟩ : {w : InfinitePlace K // w.IsReal}) ∈ S
-        · rw [if_pos ⟨hw, hS⟩, eta_eq_neg_one_iff, key]
+        · rw [ite_eq_left ⟨hw, hS⟩, eta_eq_neg_one_iff, key]
           exact not_lt.2 ((hsgn ⟨w, hw⟩).1 hS).le
-        · rw [if_neg (by rintro ⟨hw', h'⟩; exact hS h'), eta_eq_one_iff, key]
+        · rw [ite_eq_right (by rintro ⟨hw', h'⟩; exact hS h'), eta_eq_one_iff, key]
           exact (hsgn ⟨w, hw⟩).2 hS
-      · rw [if_neg (by rintro ⟨hw', _⟩; exact hw hw'), eta_eq_one_iff]
+      · rw [ite_eq_right (by rintro ⟨hw', _⟩; exact hw hw'), eta_eq_one_iff]
         exact Converse.mem_normGroup_of_isComplex b h0 h1 (InfinitePlace.not_isReal_iff_isComplex.1 hw) _
   · intro hS
     let P : InfinitePlace K → Prop := fun w =>
@@ -193,9 +193,9 @@ theorem exists_signs_iff_even (K L : Type) [Field K] [NumberField K] [Field L] [
     have hy : ∀ w, eta K L w.Completion (y w) = if P w then -1 else 1 := by
       intro w
       by_cases hP : P w
-      · simp only [y, if_pos hP]
+      · simp only [y, ite_eq_left hP]
         exact eta_eq_neg_one_iff.2 (SignCount.neg_one_not_mem_normGroup hL hP.1)
-      · simp only [y, if_neg hP]
+      · simp only [y, ite_eq_right hP]
         exact eta_eq_one_iff.2 (one_mem _)
     have hx : AlmostNorm K L (1 : FinFam K) := by
       refine Set.Finite.subset Set.finite_empty fun v hv => hv ?_
@@ -214,14 +214,14 @@ theorem exists_signs_iff_even (K L : Type) [Field K] [NumberField K] [Field L] [
       have hP : P w.1 ↔ w ∈ S := ⟨by rintro ⟨_, h⟩; exact h, fun h => ⟨w.2, h⟩⟩
       constructor
       · intro hw
-        have hyw : y w.1 = -1 := if_pos (hP.2 hw)
+        have hyw : y w.1 = -1 := ite_eq_left (hP.2 hw)
         rw [hyw, Units.val_neg, Units.val_one, map_neg, map_one] at key
         have := (div_pos_iff.1 key)
         rcases this with ⟨h1, -⟩ | ⟨-, h2⟩
         · linarith
         · exact h2
       · intro hw
-        have hyw : y w.1 = 1 := if_neg (fun h => hw (hP.1 h))
+        have hyw : y w.1 = 1 := ite_eq_right (fun h => hw (hP.1 h))
         rw [hyw, Units.val_one, map_one] at key
         exact (one_div_pos).1 key
     · have := htf v
@@ -371,8 +371,8 @@ theorem exists_signs (K L : Type) [Field K] [NumberField K] [Field L] [NumberFie
       ∀ v : HeightOneSpectrum (𝓞 K), ∃ z : v.adicCompletion K ⊗[K] L,
         Algebra.norm (v.adicCompletion K) z = algebraMap K (v.adicCompletion K) h := by
   classical
-  haveI : Algebra.IsQuadraticExtension K L := ⟨hd⟩
-  haveI : FiniteDimensional K L := Module.finite_of_finrank_pos (by omega)
+  have : Algebra.IsQuadraticExtension K L := ⟨hd⟩
+  have : FiniteDimensional K L := Module.finite_of_finrank_pos (by omega)
   have hKr : IsTotallyReal K := isTotallyReal_of_conj σ hK hc
   have hLc : IsTotallyComplex L := isTotallyComplex_of_conj σ hσ hc
   have hover : ∀ φ ψ : L →+* ℂ, InfinitePlace.mk (φ.comp (algebraMap K L)) =
@@ -453,7 +453,7 @@ namespace GlobalTheory.AdelicQuadSol
 theorem exists_sq_eq_of_approx {K : Type} [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K))
     (r b : v.adicCompletionIntegers K) (hb : b ^ 2 - r ∈ maximalIdeal (v.adicCompletionIntegers K))
     (hu : IsUnit (2 * b)) : ∃ s : v.adicCompletionIntegers K, s ^ 2 = r := by
-  haveI := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
   have hm : (X ^ 2 - C r : (v.adicCompletionIntegers K)[X]).Monic := monic_X_pow_sub_C r two_ne_zero
   have hd : eval b (derivative (X ^ 2 - C r : (v.adicCompletionIntegers K)[X])) = 2 * b := by
     simp [one_add_one_eq_two]
@@ -475,7 +475,7 @@ theorem local_integral : ∀ (K : Type) [Field K] [NumberField K] (v : HeightOne
     have e2 : ((2 : O) : v.adicCompletion K) = algebraMap K (v.adicCompletion K) 2 := by
       rw [map_ofNat]; rfl
     rw [e2]; exact h2
-  letI := Fintype.ofFinite (ResidueField O)
+  let := Fintype.ofFinite (ResidueField O)
   have h2k : (2 : ResidueField O) ≠ 0 := by
     have := (h2u.map (residue O)).ne_zero
     rwa [map_ofNat] at this
@@ -540,7 +540,7 @@ theorem eventually_valued_eq_one {K : Type} [Field K] [NumberField K] {c : K} (h
   rw [map_inv₀, map_inv₀] at h2'
   have h0 : Valued.v (algebraMap K (v.adicCompletion K) c) ≠ 0 := by
     rw [Ne, map_eq_zero, map_eq_zero]; exact hc
-  exact le_antisymm h1' ((inv_le_one₀ (zero_lt_iff.2 h0)).1 h2')
+  exact le_antisymm h1' ((inv_le_one₀ (pos_iff_ne_zero.2 h0)).1 h2')
 
 theorem exists_finiteAdele_sq_sub_mul_sq : ∀ (K : Type) [Field K] [NumberField K] (δ a : K), δ ≠ 0 → a ≠ 0 → (∀ v : HeightOneSpectrum (𝓞 K), ∃ x y : v.adicCompletion K, x ^ 2 - algebraMap K (v.adicCompletion K) δ * y ^ 2 = algebraMap K (v.adicCompletion K) a) → ∃ x y : FiniteAdeleRing (𝓞 K) K, x ^ 2 - algebraMap K (FiniteAdeleRing (𝓞 K) K) δ * y ^ 2 = algebraMap K (FiniteAdeleRing (𝓞 K) K) a := by
   intro K _ _ δ a hδ ha hloc
@@ -567,7 +567,7 @@ theorem exists_finiteAdele_sq_sub_mul_sq : ∀ (K : Type) [Field K] [NumberField
   have hint : ∀ᶠ v : HeightOneSpectrum (𝓞 K) in Filter.cofinite,
       (sol v).1 ∈ v.adicCompletionIntegers K ∧ (sol v).2 ∈ v.adicCompletionIntegers K := by
     filter_upwards [hev] with v h
-    simp only [sol, dif_pos h]
+    simp only [sol, dite_eq_left h]
     exact ⟨(local_integral K v δ a h.1 h.2.1 h.2.2).choose_spec.choose_spec.1,
       (local_integral K v δ a h.1 h.2.1 h.2.2).choose_spec.choose_spec.2.1⟩
   refine ⟨⟨fun v => (sol v).1, hint.mono fun _ h => h.1⟩, ⟨fun v => (sol v).2, hint.mono fun _ h => h.2⟩, ?_⟩
@@ -639,7 +639,7 @@ theorem form_of_norm {K L : Type} [Field K] [NumberField K] [Field L] [Algebra K
   have e0 : e 0 = 1 := by simp [e]
   have e1 : e 1 * e 1 = algebraMap K L δ := by simp [e, htt]
   have hu : IsUnit (algebraMap K (v.adicCompletion K) h) := (map_ne_zero _).2 h0 |>.isUnit
-  haveI : FiniteDimensional K L := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional K L := Module.finite_of_finrank_pos (by omega)
   have hm : hu.unit ∈ GlobalTheory.QuadSymbol.normGroup K L (v.adicCompletion K) := by
     rw [GlobalTheory.QuadSymbol.mem_normGroup_iff]
     obtain ⟨z, hz⟩ := hz

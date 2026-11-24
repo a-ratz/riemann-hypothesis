@@ -140,7 +140,7 @@ theorem mul_idem_eq_zero {k M : ℕ} (hk : k.Coprime M) {v : HeightOneSpectrum (
   change α w * idem F k w = 0
   by_cases h : w = v
   · subst h
-    rw [idem_apply, if_neg, mul_zero]
+    rw [idem_apply, ite_eq_right, mul_zero]
     intro hk'
     obtain ⟨a, b, hab⟩ : IsCoprime (k : 𝓞 F) (M : 𝓞 F) := Nat.Coprime.cast hk
     exact w.isPrime.ne_top ((Ideal.eq_top_iff_one _).2
@@ -905,7 +905,7 @@ theorem exists_real_point {D : D7} {S T : HSp D} (C : Ctx S T)
       have hcc : ((u (C.m.e τ)).map conj).map conj = u (C.m.e τ) := by
         ext i j
         simp
-      simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq]
+      simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq]
       rw [GlobalTheory.StabProper.unitary_iff_form, hcc]
       intro v w
       have hform := hu (C.m.e τ) v w
@@ -1007,7 +1007,7 @@ theorem mem_of_loc (L : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (𝓞 E)
     Ideal.finite_factors (by rwa [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot])
   set P := hfin.toFinset with hP
   have hmemP : ∀ v, v ∈ P ↔ c₁ ∈ v.asIdeal := fun v => by
-    rw [hP, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+    rw [hP, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   choose ind hind1 hind0 using (exists_ind (F := F))
   set e₁ : FiniteAdeleRing (𝓞 F) F := ∑ v ∈ P, ind v with he₁
   have hev : ∀ w, evalV F w e₁ = if w ∈ P then 1 else 0 := fun w => by
@@ -1025,10 +1025,10 @@ theorem mem_of_loc (L : Submodule (𝓞 E) (Fin n → E)) (𝔪 : Ideal (𝓞 E)
     · rw [map_sub, map_one, hev]; split_ifs
       · rw [sub_self]; exact zero_mem _
       · rw [sub_zero]; exact one_mem _
-    · rw [map_sub, map_one, hev, if_pos ((hmemP w).2 hw), sub_self]
+    · rw [map_sub, map_one, hev, ite_eq_left ((hmemP w).2 hw), sub_self]
   · by_cases hI : 𝔪.comap (algebraMap (𝓞 F) (𝓞 E)) ≤ v.asIdeal
     · exact hloc v hI (ind v) (hind1 v) (hind0 v)
-    · obtain ⟨c, hc, hcv⟩ := SetLike.not_le_iff_exists.1 hI
+    · obtain ⟨c, hc, hcv⟩ := IsConcreteLE.not_le_iff_exists.1 hI
       have hc0 : c ≠ 0 := fun h => hcv (h ▸ zero_mem _)
       refine vanish_smul_mem L 𝔪 hc0 hc (ind_int (hind1 v) (hind0 v)) (fun w hw => hind0 v w ?_) hx
       rintro rfl; exact hcv hw
@@ -1259,7 +1259,7 @@ theorem th_phi_ne {D : D7} {S T : HSp D} (C : Ctx S T) (Lv : SW.Level C.X) (hn :
       (0 : ℂ) • (0 : TF S.rank C.g) := by
     funext x; simp
   rw [ez, (_root_.GlobalTheory.SW.isSB_algebra_haar_linear ℚ (Fin S.rank) (Fin C.g) _ _ SW.isSB_zero SW.isSB_zero).2.2.2.2.2.1, zero_mul] at hip
-  haveI : Finite (𝓞 D.host.E ⧸ Lv.𝔪) := Ideal.finiteQuotientOfFreeOfNeBot _ Lv.ne_bot
+  have : Finite (𝓞 D.host.E ⧸ Lv.𝔪) := Ideal.finiteQuotientOfFreeOfNeBot _ Lv.ne_bot
   have hpos : 0 < Nat.card Lv.J := Nat.card_pos
   exact (Nat.cast_ne_zero.2 hpos.ne') hip.symm
 

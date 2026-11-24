@@ -219,15 +219,15 @@ variable {o : Type} [CommRing o] {S S' : Scheme.{0}} {k : ℕ}
 
 theorem isIso_of_points [IsReduced S] (A : Over S) [GrpObj A] (h : IsAbelianScheme A)
     (hp : ∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ S) (y : Over.mk x ⟶ A), y = 1) : IsIso A.hom := by
-  haveI := h.proper
-  haveI := h.smooth
-  haveI : IsReduced A.left := GlobalTheory.isReduced_of_smooth_of_isReduced A.hom
+  have := h.proper
+  have := h.smooth
+  have : IsReduced A.left := GlobalTheory.isReduced_of_smooth_of_isReduced A.hom
   let e : S ⟶ A.left := eSec A
   have he : e ≫ A.hom = 𝟙 S := Over.w η[A]
-  haveI : IsClosedImmersion e := by
-    haveI : IsClosedImmersion (e ≫ A.hom) := by rw [he]; infer_instance
+  have : IsClosedImmersion e := by
+    have : IsClosedImmersion (e ≫ A.hom) := by rw [he]; infer_instance
     exact IsClosedImmersion.of_comp e A.hom
-  haveI : Surjective e := ⟨fun a => by
+  have : Surjective e := ⟨fun a => by
     let K := AlgebraicClosure (A.left.residueField a)
     let y : Sp K ⟶ A.left := spMap (algebraMap (A.left.residueField a) K) ≫ A.left.fromSpecResidueField a
     have h1 := hp K (y ≫ A.hom) (Over.homMk y rfl)
@@ -238,8 +238,8 @@ theorem isIso_of_points [IsReduced S] (A : Over S) [GrpObj A] (h : IsAbelianSche
       simp only [y, Scheme.Hom.comp_apply]
       exact Scheme.fromSpecResidueField_apply _ _
     exact ⟨(y ≫ A.hom) default, by rw [← Scheme.Hom.comp_apply, ← h2, h3]⟩⟩
-  haveI : IsIso e := isIso_of_isClosedImmersion_of_surjective e
-  haveI : IsIso (e ≫ A.hom) := by rw [he]; infer_instance
+  have : IsIso e := isIso_of_isClosedImmersion_of_surjective e
+  have : IsIso (e ≫ A.hom) := by rw [he]; infer_instance
   exact IsIso.of_isIso_comp_left e _
 
 theorem siegPB_zero {B : Type} [CommRing B] {ζ' : B} {s' : S' ⟶ Sp B} (c : SiegPre 0 k ζ' s') [IsIso c.A.hom]
@@ -330,7 +330,7 @@ theorem isIso_of_count
     rw [h1] at h
     obtain rfl : g = 0 := by
       rcases (Nat.pow_eq_one.1 h.symm) with h | h <;> omega
-    haveI : IsIso (pullback.snd c.A.hom t) := isIso_of_dim_zero _ hB' hg
+    have : IsIso (pullback.snd c.A.hom t) := isIso_of_dim_zero _ hB' hg
     have u : ∀ z z' : Over.mk t ⟶ c.A, z = z' := fun z z' => by
       have e : pullback.lift z.left (𝟙 _) ((Over.w z).trans (Category.id_comp t).symm) =
           pullback.lift z'.left (𝟙 _) ((Over.w z').trans (Category.id_comp t).symm) := by

@@ -113,9 +113,9 @@ theorem coprime_absNorm_of_not_le {p : ℕ} (hp : p.Prime) (hP : (Ideal.span {(p
   have hI0 : I ≠ ⊥ := fun h => hI (h ▸ bot_le)
   have hc : Nat.card (𝓞 K ⧸ I) = Ideal.absNorm I := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 K ⧸ I) :=
+  have : Finite (𝓞 K ⧸ I) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact Ideal.absNorm_eq_zero_iff.not.mpr hI0)
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   rw [Nat.coprime_comm, Nat.Prime.coprime_iff_not_dvd hp]
   intro hdvd
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 K ⧸ I) p (hc ▸ hdvd)
@@ -151,7 +151,7 @@ theorem lamOf_span_mul (D : D7) (cc : Ideal (𝓞 D.host.K)) (a : 𝓞 D.host.K)
   unfold TaylorLogMetric.lamOf
   congr 1
   ext w
-  simp only [Set.mem_setOf_eq, Ideal.mem_span_singleton_mul]
+  simp only [Set.mem_ofPred_eq, Ideal.mem_span_singleton_mul]
   constructor
   · rintro ⟨_, ⟨z, hz, rfl⟩, rfl⟩
     exact ⟨z, hz, by simp only [map_mul, MulMemClass.coe_mul]; ring⟩
@@ -165,7 +165,7 @@ theorem lamOf_smul (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) :
   rw [AddMonoidHom.map_closure]
   congr 1
   ext w
-  simp only [Set.mem_setOf_eq, Set.mem_image, one_mul]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, one_mul]
   constructor
   · rintro ⟨c, hc, rfl⟩; exact ⟨_, ⟨c, hc, rfl⟩, rfl⟩
   · rintro ⟨_, ⟨c, hc, rfl⟩, rfl⟩; exact ⟨c, hc, rfl⟩

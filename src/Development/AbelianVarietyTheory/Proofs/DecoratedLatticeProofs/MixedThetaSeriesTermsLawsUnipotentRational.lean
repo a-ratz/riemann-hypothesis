@@ -81,7 +81,7 @@ variable {D : D7}
 theorem det_uni {ρ : ℕ} {u : GL (Fin ρ) (AE D)} (hu : u ∈ UX D ρ) : Matrix.GeneralLinearGroup.det u = 1 := by
   have bt : Matrix.BlockTriangular u.1 id := fun a b h => (hu a b).1 h
   apply Units.ext
-  rw [Matrix.GeneralLinearGroup.val_det_apply, Matrix.det_of_upperTriangular bt, Units.val_one]
+  rw [Matrix.GeneralLinearGroup.val_det_apply, det_of_isUpperTriangular bt, Units.val_one]
   exact Finset.prod_eq_one fun i _ => (hu i i).2
 
 theorem halfMod_uni {ρ : ℕ} (n : ℕ) {u : GL (Fin ρ) (AE D)} (hu : u ∈ UX D ρ) :
@@ -204,7 +204,7 @@ theorem continuous_periodic_integral {X : Type} [TopologicalSpace X] {m n : ℕ}
     (hG : Continuous (Function.uncurry G)) (hper : ∀ p, ∀ γ ∈ ratMx D m n, ∀ a, G p (γ + a) = G p a) :
     Continuous fun p => ∫ a in 𝓕, G p a ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   have hint : ∀ p, IntegrableOn (G p) 𝓕 μ := fun p => covolOne_integrableOn h (G p) (hG.uncurry_left p) (hper p)
   refine continuous_iff_continuousAt.2 fun p₀ => Metric.tendsto_nhds.2 fun ε hε => ?_
   have hev : ∀ᶠ p in nhds p₀, ∀ k ∈ K, ‖G p k - G p₀ k‖ < ε / 2 :=

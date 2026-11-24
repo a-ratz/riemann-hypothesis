@@ -192,9 +192,9 @@ theorem integral_oddSchwartz : ∫ x, oddSchwartz F x ∂selfDualMeasure F = 0 :
     refine volume_preserving_pi (ι := {w : InfinitePlace F // w.IsReal})
       (f := fun i (r : ℝ) => if i = w₀ then -r else r) fun i => ?_
     by_cases h : i = w₀
-    · have e : (fun r : ℝ => if i = w₀ then -r else r) = Neg.neg := funext fun r => if_pos h
+    · have e : (fun r : ℝ => if i = w₀ then -r else r) = Neg.neg := funext fun r => ite_eq_left h
       rw [e]; exact Measure.measurePreserving_neg volume
-    · have e : (fun r : ℝ => if i = w₀ then -r else r) = id := funext fun r => if_neg h
+    · have e : (fun r : ℝ => if i = w₀ then -r else r) = id := funext fun r => ite_eq_right h
       rw [e]; exact MeasurePreserving.id volume
   set σ : mixedSpace F → mixedSpace F := Prod.map σ₁ id with hσdef
   have hσ : MeasurePreserving σ volume volume := by
@@ -263,7 +263,7 @@ theorem bound_large {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (hH 
     ∃ M : ℝ, ∀ t : {r : ℝ // 0 < r}, 1 ≤ (t : ℝ) → ∀ u ∈ normOneFundamentalDomain F,
       ‖zeroRow c (tau t u)‖ ≤ ((t : ℝ) ^ 2)⁻¹ * M := by
   have hC : IsCompact ((Subtype.val : normOneSubgroup F → IdeleGroup F) '' closure (normOneFundamentalDomain F)) :=
-    (isCompact_closure_normOneFundamentalDomain F).image continuous_subtype_val
+    (isCompact_closure_normOneFundamentalDomain F).image continuous_subtypeVal
   obtain ⟨M, hM⟩ := exists_norm_adelicTheta_sub_le (w0 F) (unitaryTransvection_zero_second_mem_closure hH) hC 2
   refine ⟨M, fun t ht u hu => ?_⟩
   have := hM (u : IdeleGroup F) ⟨u, subset_closure hu, rfl⟩ t ht
@@ -274,7 +274,7 @@ theorem bound_small {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (hH 
       ‖zeroRow c (tau t u)‖ ≤ (t : ℝ) * M := by
   have hC : IsCompact ((fun x : IdeleGroup F => x⁻¹) ''
       ((Subtype.val : normOneSubgroup F → IdeleGroup F) '' closure (normOneFundamentalDomain F))) :=
-    ((isCompact_closure_normOneFundamentalDomain F).image continuous_subtype_val).image continuous_inv
+    ((isCompact_closure_normOneFundamentalDomain F).image continuous_subtypeVal).image continuous_inv
   obtain ⟨M, hM⟩ := exists_norm_adelicTheta_sub_le (w0 F) (adelicFourier_mem_schwartzBruhat (unitaryTransvection_zero_second_mem_closure hH)) hC 2
   refine ⟨M, fun t ht u hu => ?_⟩
   have ht0 : 0 < (t : ℝ) := t.2
@@ -300,7 +300,7 @@ theorem lintegral_min_lt_top :
     ∫⁻ t, ENNReal.ofReal (min (t : ℝ) (t : ℝ)⁻¹) ∂posRealMeasure < ⊤ := by
   have hmeas : Measurable fun t : {r : ℝ // 0 < r} => ENNReal.ofReal (min (t : ℝ) (t : ℝ)⁻¹) :=
     ENNReal.measurable_ofReal.comp
-      ((continuous_subtype_val.min (continuous_subtype_val.inv₀ fun t => t.2.ne')).measurable)
+      ((continuous_subtypeVal.min (continuous_subtypeVal.inv₀ fun t => t.2.ne')).measurable)
   rw [posRealMeasure_eq_map_expPos, lintegral_map hmeas measurable_expPos]
   have key : ∀ y : ℝ, 0 ≤ y → (Real.exp y)⁻¹ ≤ 2 * (1 + y ^ 2)⁻¹ := fun y hy => by
     have h1 := Real.quadratic_le_exp_of_nonneg hy
@@ -321,7 +321,7 @@ theorem lintegral_min_lt_top :
 
 theorem integrable_min : Integrable (fun t : {r : ℝ // 0 < r} => min (t : ℝ) (t : ℝ)⁻¹) posRealMeasure := by
   have hc : Continuous fun t : {r : ℝ // 0 < r} => min (t : ℝ) (t : ℝ)⁻¹ :=
-    continuous_subtype_val.min (continuous_subtype_val.inv₀ fun t => t.2.ne')
+    continuous_subtypeVal.min (continuous_subtypeVal.inv₀ fun t => t.2.ne')
   refine ⟨hc.aestronglyMeasurable, ?_⟩
   rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun t =>
     le_min t.2.le (inv_nonneg.2 t.2.le))]
@@ -330,14 +330,14 @@ theorem integrable_min : Integrable (fun t : {r : ℝ // 0 < r} => min (t : ℝ)
 theorem continuous_integrand {ω : HChar F} {c : HeightOneSpectrum (𝓞 F) → ℕ} (hH : Hyp ω c) :
     Continuous (fun p : {r : ℝ // 0 < r} × normOneSubgroup F => zeroRow c (tau p.1 p.2) * wt ω p.1 p.2) := by
   have htau : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => tau p.1 p.2 :=
-    ((continuous_moduleSection (w0 F)).comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+    ((continuous_moduleSection (w0 F)).comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
   have h1 : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => zeroRow c (tau p.1 p.2) := by
     simp only [zeroRow_eq c hH]
     exact (continuous_adelicTheta (unitaryTransvection_zero_second_mem_closure hH)).comp htau
   have h2 : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => ((ω.1 (tau p.1 p.2) : ℂˣ) : ℂ) :=
     Units.continuous_val.comp (ω.2.1.comp htau)
   have h3 : Continuous fun p : {r : ℝ // 0 < r} × normOneSubgroup F => wt ω p.1 p.2 :=
-    (h2.inv₀ fun p => Units.ne_zero _).mul (Complex.continuous_ofReal.comp (continuous_subtype_val.comp continuous_fst))
+    (h2.inv₀ fun p => Units.ne_zero _).mul (Complex.continuous_ofReal.comp (continuous_subtypeVal.comp continuous_fst))
   exact h1.mul h3
 
 end UpperTheory.HilbertEisensteinWeightOne.FourierExpansionEisenstein.L2

@@ -207,14 +207,14 @@ theorem GlobalTheory.rational_eigen_image_span : ∀ (K L : Type) [Field K] [Fie
       { carrier := {y | ∀ p, ((A p).map f).mulVec y = f (lam p) • y}
         add_mem' := by
           intro a c ha hc p
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           rw [Matrix.mulVec_add, ha p, hc p, smul_add]
         zero_mem' := by
           intro p
           simp
         smul_mem' := by
           intro c a ha p
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           rw [Matrix.mulVec_smul, ha p, smul_comm] }
     have hle : Submodule.span L ((fun x i => f (x i)) '' {x : Fin n → K | ∀ p, (A p).mulVec x = lam p • x}) ≤ W := by
       rw [Submodule.span_le]

@@ -50,7 +50,7 @@ theorem Modif.factor_gp (R : Type) [CommRing R] [IsDomain R] (M : Modif R) (L : 
   have hI := M.integral
   have hdom := M.dominant
   have hsub : ∀ (K : Type) [Field K] (a b : Sp K), a = b := fun K _ a b =>
-    PrimeSpectrum.ext (by haveI := a.isPrime; haveI := b.isPrime; rw [Ideal.eq_bot_of_prime a.asIdeal, Ideal.eq_bot_of_prime b.asIdeal])
+    PrimeSpectrum.ext (by have := a.isPrime; have := b.isPrime; rw [Ideal.eq_bot_of_prime a.asIdeal, Ideal.eq_bot_of_prime b.asIdeal])
   let p : Sp L := IsLocalRing.closedPoint L
   obtain ⟨V, hV, hxV, -⟩ := exists_isAffineOpen_mem_and_subset (x := y p) (U := ⊤) trivial
   have hyV : Set.range y ⊆ Set.range hV.fromSpec := by
@@ -58,8 +58,8 @@ theorem Modif.factor_gp (R : Type) [CommRing R] [IsDomain R] (M : Modif R) (L : 
   obtain ⟨q, hq⟩ := M.gp.denseRange.exists_mem_open V.isOpen ⟨y p, hxV⟩
   have hgV : Set.range M.gp ⊆ Set.range hV.fromSpec := by
     rw [hV.range_fromSpec]; rintro _ ⟨z, rfl⟩; rw [hsub (FractionRing R) z q]; exact hq
-  haveI : Nonempty V := ⟨⟨y p, hxV⟩⟩
-  haveI : IsDomain Γ(M.S, V) := IsIntegral.component_integral V
+  have : Nonempty V := ⟨⟨y p, hxV⟩⟩
+  have : IsDomain Γ(M.S, V) := IsIntegral.component_integral V
   set yV := IsOpenImmersion.lift hV.fromSpec y hyV with hyVdef
   set gV := IsOpenImmersion.lift hV.fromSpec M.gp hgV with hgVdef
   have hyf : yV ≫ hV.fromSpec = y := IsOpenImmersion.lift_fac _ _ _
@@ -76,7 +76,7 @@ theorem Modif.factor_gp (R : Type) [CommRing R] [IsDomain R] (M : Modif R) (L : 
       rw [Spec.map_comp, hbg, hc, ← Category.assoc, hgf, M.gp_π]
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective e)
   have hdV : IsDominant gV := by
-    haveI : IsDominant (gV ≫ hV.fromSpec) := by rw [hgf]; exact hdom
+    have : IsDominant (gV ≫ hV.fromSpec) := by rw [hgf]; exact hdom
     exact IsDominant.of_comp_of_isOpenImmersion gV hV.fromSpec
   have hinj : Function.Injective bg.hom := by
     rw [← hbg] at hdV

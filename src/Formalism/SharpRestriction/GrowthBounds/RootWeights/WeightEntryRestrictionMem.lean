@@ -257,10 +257,10 @@ theorem binomial_stable_contains_components : BinomialStableContainsComponents :
     rw [coeff_weightComponent, coeff_monomialRestriction]
     by_cases h : wtS LL S m = nu
     · have h' : ∀ a ∈ (Finset.univ : Finset (Fin n)), wtS LL S m a = nu a := fun a _ => by rw [h]
-      rw [if_pos h, if_pos h']
+      rw [ite_eq_left h, ite_eq_left h']
     · have h' : ¬ ∀ a ∈ (Finset.univ : Finset (Fin n)), wtS LL S m a = nu a :=
         fun h'' => h (funext fun a => h'' a (Finset.mem_univ a))
-      rw [if_neg h, if_neg h']
+      rw [ite_eq_right h, ite_eq_right h']
   rw [e]
   exact key _
 

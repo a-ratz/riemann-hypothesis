@@ -84,8 +84,8 @@ theorem structureSheafCoh_abelianVariety_algClosed :
   obtain ⟨hax, -, hrk⟩ := GlobalTheory.T.abelian_variety_h1_axes_primitive_rank K A g hA hg
   obtain ⟨hw, hno⟩ := GlobalTheory.T.abelian_variety_wedge_no_primitive_h2 K A g hA hg
   refine ⟨?_, hrk, hw, hno, hax⟩
-  haveI : IsProper A.hom := hA.proper
-  haveI : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
+  have : IsProper A.hom := hA.proper
+  have : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
   obtain ⟨n, D, hD, hcov⟩ := exists_fin_affineOpen_cover_of_compactSpace A.left
   obtain ⟨⟨e⟩, -⟩ := GlobalTheory.T.cech_cohomology_structure_sheaf_iso K A.left A.hom (Fin n) D inferInstance hD hcov
   obtain ⟨hfin, -, -⟩ := GlobalTheory.T.cech_cohomology_trivial_bundle_abelian K A g hA hg (Fin n) D hD hcov

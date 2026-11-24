@@ -232,7 +232,7 @@ private theorem exists_dec (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
       have : NeZero (l ^ i) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
       have : NeZero ((l ^ i : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne _)⟩
       infer_instance
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ 1)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ 1)
     have ha : γ ζ = ζ ^ (PadicInt.toZModPow 1 (cycZ ℚ Ω l γ : ℤ_[l])).val :=
       cyclotomicCharacter.spec l γ.toRingEquiv ζ hζ.pow_eq_one
     rw [hγ' _ (((Nat.coprime_primes hl.out hp).2 h1.symm).pow_left 1) ζ hζ.pow_eq_one,

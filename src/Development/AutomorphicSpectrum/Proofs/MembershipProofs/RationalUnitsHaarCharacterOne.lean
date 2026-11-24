@@ -197,18 +197,18 @@ theorem exists_mean {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopologi
         ∀ f, IsPer Γ f → M (fun x => f (σ x)) = M f) ∧
       ∀ S : Set (G → ℂ), (∀ a ∈ S, IsPer Γ a) → 1 ∈ S → (∀ a ∈ S, ∀ b ∈ S, a * b ∈ S) → (∀ a ∈ S, star a ∈ S) →
         (∀ x y, (∀ a ∈ S, a x = a y) → -x + y ∈ Γ) → ∀ f, IsPer Γ f → (∀ a ∈ S, M (a * f) = 0) → f = 0 := by
-  haveI : CompactSpace (G ⧸ Γ) := ⟨by
+  have : CompactSpace (G ⧸ Γ) := ⟨by
     convert hD.image (QuotientAddGroup.continuous_mk (N := Γ))
     refine (Set.eq_univ_of_forall fun q => ?_).symm
     induction q using QuotientAddGroup.induction_on with
     | H x =>
       obtain ⟨γ, hγ, hx⟩ := hDΓ x
       exact ⟨x - γ, hx, QuotientAddGroup.eq.mpr (by simpa using hγ)⟩⟩
-  letI : MeasurableSpace (G ⧸ Γ) := borel _
-  haveI : BorelSpace (G ⧸ Γ) := ⟨rfl⟩
+  let : MeasurableSpace (G ⧸ Γ) := borel _
+  have : BorelSpace (G ⧸ Γ) := ⟨rfl⟩
   let μ : Measure (G ⧸ Γ) := Measure.addHaarMeasure ⊤
   have hμ : μ Set.univ = 1 := by simpa using Measure.addHaarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (G ⧸ Γ)))
-  haveI : IsProbabilityMeasure μ := ⟨hμ⟩
+  have : IsProbabilityMeasure μ := ⟨hμ⟩
   have hint : ∀ h : C(G ⧸ Γ, ℂ), Integrable h μ := fun h =>
     h.continuous.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   let I : C(G ⧸ Γ, ℂ) →ₗ[ℂ] ℂ :=
@@ -555,7 +555,7 @@ theorem exists_avg {F : Type} [Field F] {A : Type} [CommRing A] [Algebra F A] {�
       obtain ⟨c, hc'⟩ := hann ((-x + y) i) fun a => by
         have h1 := hxy _ ⟨Pi.single i a, rfl⟩
         simp only [Pi.single_apply, apply_ite (algebraMap F A), map_zero, mul_ite, mul_zero, Finset.sum_ite_eq',
-          Finset.mem_univ, if_true] at h1
+          Finset.mem_univ, ite_true] at h1
         rw [Pi.add_apply, Pi.neg_apply, add_mul, neg_mul, AddChar.map_add_eq_mul, AddChar.map_neg_eq_inv, h1]
         exact inv_mul_cancel₀ (norm_ne_zero_iff.mp (by rw [hψ]; exact one_ne_zero))
       exact ⟨c, hc'.symm⟩

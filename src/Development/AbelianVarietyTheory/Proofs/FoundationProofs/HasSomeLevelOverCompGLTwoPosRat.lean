@@ -344,7 +344,7 @@ theorem qAll_affine : ∀ (E : Subring ℂ) (N a d : ℕ) (b : ℤ) (f : ℍ →
     · show HasSum (fun k => _) (f _)
       convert hτ using 1
       funext k
-      simp only [Function.comp_apply, dvd_mul_right, if_true, Nat.mul_div_cancel_left _ ha, e]
+      simp only [Function.comp_apply, dvd_mul_right, ite_true, Nat.mul_div_cancel_left _ ha, e]
       rw [mul_assoc, ← Complex.exp_add]
       congr 2
       push_cast
@@ -357,9 +357,9 @@ theorem qAll_affine : ∀ (E : Subring ℂ) (N a d : ℕ) (b : ℤ) (f : ℍ →
       simp [this]
   · intro m
     by_cases h : a ∣ m
-    · simp only [h, if_true]
+    · simp only [h, ite_true]
       exact E.mul_mem (hcE _) (hE _)
-    · simp only [h, if_false]; exact E.zero_mem
+    · simp only [h, ite_false]; exact E.zero_mem
 
 end GlobalTheory.FNQ
 end -- clump:auto
@@ -431,7 +431,7 @@ theorem qAll_pole_affine : ∀ (E : Subring ℂ) (N w a d : ℕ) (b : ℤ) (φ :
       Complex.exp (2 * Real.pi * Complex.I * ((N * w * a * a * (d' * (d' + 2)) : ℕ) : ℂ) * τ /
         ((N * (a * (d' + 1)) : ℕ) : ℂ)) =
       Complex.exp (2 * Real.pi * Complex.I * (τ : ℂ)) ^ (w * (a * (d' + 1))) := by
-    rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add, ← Complex.exp_add, hU]
+    rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, ← Complex.exp_add, ← Complex.exp_add, hU]
     congr 1
     have hN' : (N : ℂ) ≠ 0 := by exact_mod_cast hN.ne'
     have ha' : (a : ℂ) ≠ 0 := by exact_mod_cast ha.ne'

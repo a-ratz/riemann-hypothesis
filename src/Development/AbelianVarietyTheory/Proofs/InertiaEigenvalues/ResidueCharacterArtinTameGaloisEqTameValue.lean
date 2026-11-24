@@ -101,7 +101,7 @@ theorem tameVal_eq_of_tameRep : ∀ {E Ω : Type} [Field E] [NumberField E] [Fie
   obtain ⟨ϖ0, hϖ0, hϖ0'⟩ : ∃ ϖ0 : 𝓞 E, ϖ0 ∈ P.asIdeal ∧ ϖ0 ∉ P.asIdeal ^ 2 := by
     have hlt := Ideal.pow_succ_lt_pow (P := P.asIdeal) P.ne_bot 1
     rw [pow_one] at hlt
-    obtain ⟨x, hx, hx'⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx, hx'⟩ := IsConcreteLE.exists_of_lt hlt
     exact ⟨x, hx, hx'⟩
   have hϖ0ne : algebraMap E Ω (ϖ0 : E) ≠ 0 := by
     intro h
@@ -272,14 +272,14 @@ theorem eq_res_locU {D : D7} {M : Type} [CommGroup M] {χ : (AE D)ˣ →* M} {PP
 
 theorem res_zpow_eq_tameVal : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (D : D7) (rc : Recip D D.nd.Om), rc.Good → ∀ (R : Type) [CommRing R] (f : R →+* ℂ) (φ : G D.host.E D.nd.Om →* Rˣ), IsOpen (φ.ker : Set (G D.host.E D.nd.Om)) → ∀ (PP : Pl D.host.E) (m : ℕ), ((m : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal → (∀ A : ValuationSubring D.nd.Om, IsPlaceOver A PP → ∀ σ ∈ Ine (F := D.host.E) A, ∃ N : ℕ, φ σ ^ (m ^ N) = 1) → Formalism.L2.NTheta.IsIdemAt (idemAt PP) PP → ∀ c : (kP PP)ˣ →* Circle, IsResAt (GlobalTheory.SeriesTie.charOf rc f φ) PP c → ∀ (e : ℤ) (u : 𝓞 D.host.E), u ∉ PP.asIdeal → ∀ z : (kP PP)ˣ, (z : kP PP) = Ideal.Quotient.mk PP.asIdeal u → ((c z : Circle) : ℂ) ^ e = f (NX.tameVal φ PP e u).1 := by
   intro hGAR D rc hrc R _ f φ hopen PP m hm hI hid c hc e u hu z hz
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
   obtain ⟨A, hA⟩ := ReciprocityTheory.Gal.exists_isPlaceOver D.nd.Om PP
   obtain ⟨hq2, hq1⟩ := GlobalTheory.TameValChar.two_le_normV_and_not_mem PP
   obtain ⟨ϖ, hϖ1, hϖ2⟩ : ∃ ϖ0 : 𝓞 D.host.E, ϖ0 ∈ PP.asIdeal ∧ ϖ0 ∉ PP.asIdeal ^ 2 := by
     have hlt := Ideal.pow_succ_lt_pow (P := PP.asIdeal) PP.ne_bot 1
     rw [pow_one] at hlt
-    obtain ⟨x, hx, hx'⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx, hx'⟩ := IsConcreteLE.exists_of_lt hlt
     exact ⟨x, hx, hx'⟩
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap D.host.E D.nd.Om (ϖ : D.host.E))
     (show 0 < normV PP - 1 by omega)

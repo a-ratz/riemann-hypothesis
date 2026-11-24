@@ -87,7 +87,7 @@ theorem gram_diag_pos {r : ℕ} (τ : E →+* ℂ) (d : Fin r → E)
       have hs : FD.sgn r (a : ℕ) = 1 := by simp [FD.sgn, a.isLt]
       simp [hs, ite_mul, mul_ite, Finset.sum_ite_eq, Finset.sum_ite_eq', Complex.conj_ofReal]
       rw [Finset.sum_eq_single a (fun x _ hx => by simp [Ne.symm hx]) (by simp)]
-      simp only [if_true, Complex.conj_ofReal]
+      simp only [ite_true, Complex.conj_ofReal]
       linear_combination hq2 a
     · simp [hab, ite_mul, mul_ite, Finset.sum_ite_eq, Finset.sum_ite_eq']
       refine Finset.sum_eq_zero fun x _ => ?_
@@ -105,7 +105,7 @@ theorem represents_totallyPositive : ∀ (K : Type) [Field K] [NumberField K] [S
     (∀ φ : K →+* ℂ, 0 < (φ a).re) → (∀ φ : K →+* ℂ, 0 < (φ b).re) → (∀ φ : K →+* ℂ, 0 < (φ n).re) →
     ∃ s t : K, a * (s * star s) + b * (t * star t) = n := by
   intro K _ _ _ hc a b n ha hb hn hpa hpb hpn
-  haveI : IsCMField K := GlobalTheory.OrthoLattice.isCMField_of_star K hc.1 hc.2.1
+  have : IsCMField K := GlobalTheory.OrthoLattice.isCMField_of_star K hc.1 hc.2.1
   let φ0 : K →+* ℂ := Classical.choice (inferInstance : Nonempty _)
   have hst : ∀ x : K, star x = FD.cc x := fun x =>
     φ0.injective (by rw [FD.cc, IsCMField.complexEmbedding_complexConj]; exact hc.2.1 φ0 x)

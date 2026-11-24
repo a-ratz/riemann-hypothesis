@@ -142,7 +142,7 @@ theorem measure_boxGL_le [MeasurableSpace (GL (Fin (m + 1)) 𝕜)] [BorelSpace (
         exact ⟨b, hb, y, fun i => abs_le.2 (hy i (Set.mem_univ i)), k, rfl⟩
     rw [this]
     refine (hω.prod ((isCompact_univ_pi fun _ => isCompact_Icc).prod isCompact_univ)).image ?_
-    exact (continuous_fst.mul (continuous_subtype_val.comp ((expDiag 𝕜 m).continuous.comp
+    exact (continuous_fst.mul (continuous_subtypeVal.comp ((expDiag 𝕜 m).continuous.comp
       (continuous_const.add (continuous_fst.comp continuous_snd))))).mul
       (continuous_unitary_toUnits.comp (continuous_snd.comp continuous_snd))
   have hSm : MeasurableSet (boxGL ω B x) := hSc.isClosed.measurableSet
@@ -233,7 +233,7 @@ theorem measure_boxGL_le [MeasurableSpace (GL (Fin (m + 1)) 𝕜)] [BorelSpace (
                 GL (Fin (m + 1)) 𝕜) : ℝ)) = Real.exp (e * pairSum m z) := by
               rw [iwasawaDelta_diagPosOf, pairSum, Finset.mul_sum, Real.exp_sum]
               refine Finset.prod_congr rfl fun p _ => ?_
-              rw [← Real.exp_sub, ← Real.exp_nat_mul]
+              rw [← Real.exp_sub, ← Real.exp_natCast_mul]
             rw [hδi]
             dsimp only
             rw [coe_expDiag, ← ENNReal.ofReal_coe_nnreal,

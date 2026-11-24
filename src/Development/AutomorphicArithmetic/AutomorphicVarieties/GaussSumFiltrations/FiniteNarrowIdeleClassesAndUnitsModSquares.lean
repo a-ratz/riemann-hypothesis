@@ -54,13 +54,13 @@ theorem exists_finset_mod_sq {G : Type} [CommGroup G] [Group.FG G] :
   classical
   let H : Subgroup G := (powMonoidHom 2 : G →* G).range
   have hfin : Finite (G ⧸ H) := by
-    apply CommGroup.finite_of_fg_torsion
+    apply CommGroup.finite_of_fg_isMulTorsion
     intro q
     obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective q
     refine (isOfFinOrder_iff_pow_eq_one).2 ⟨2, by norm_num, ?_⟩
     rw [← QuotientGroup.mk_pow, QuotientGroup.eq_one_iff]
     exact ⟨g, rfl⟩
-  haveI := Fintype.ofFinite (G ⧸ H)
+  have := Fintype.ofFinite (G ⧸ H)
   refine ⟨Finset.univ.image (fun q : G ⧸ H => q.out), fun g => ?_⟩
   refine ⟨(g : G ⧸ H).out, Finset.mem_image_of_mem _ (Finset.mem_univ _), ?_⟩
   have h1 : ((g : G ⧸ H).out : G ⧸ H) = (g : G ⧸ H) := Quotient.out_eq' _
@@ -156,7 +156,7 @@ theorem narrowClass_unitsSq_finite : ∀ (F : Type) [Field F] [NumberField F] [I
     show z = ι (k * σ⁻¹) * (ι σ * y0) * u
     rw [← mul_assoc, ← map_mul, inv_mul_cancel_right, mul_right_comm]
     exact hz
-  · haveI : Group.FG (𝓞 F)ˣ := Group.fg_iff_monoid_fg.2 inferInstance
+  · have : Group.FG (𝓞 F)ˣ := Group.fg_iff_monoid_fg.2 inferInstance
     exact exists_finset_mod_sq
 
 end GlobalTheory.HilbertThetaSeries.NarrowCls

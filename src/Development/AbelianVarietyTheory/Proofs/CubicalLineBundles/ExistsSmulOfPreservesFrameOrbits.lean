@@ -79,7 +79,7 @@ theorem _root_.GlobalTheory.OrbitScalar.exists_mem_dom (X : _root_.ReciprocityTh
   rw [hG τ]
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.lminor _root_.ReciprocityTheory.ChartRestriction.G.FD.psgn
   rw [Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal]
-  simp only [Function.comp_apply, Fin.coe_castLE]
+  simp only [Function.comp_apply, Fin.val_castLE]
   rw [← Complex.ofReal_prod, Complex.ofReal_re,
     Fin.prod_univ_eq_prod_range (fun a => _root_.ReciprocityTheory.ChartRestriction.G.FD.sgn X.p0 a) i]
   refine mul_self_pos.mpr (Finset.prod_ne_zero_iff.mpr fun a _ => ?_)
@@ -95,7 +95,7 @@ private lemma isOpen_dom_cubical_line_bundles (X : _root_.ReciprocityTheory.Char
       ⋂ τ : X.Ψ, ({x | (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat x τ).det ≠ 0} ∩
         ⋂ i : Fin (r + 1), {x | 0 < _root_.ReciprocityTheory.ChartRestriction.G.FD.psgn X.p0 i * (_root_.ReciprocityTheory.ChartRestriction.G.FD.dmin X.Gm x τ i).re}) := by
     ext x
-    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq]
     rfl
   rw [hset]
   refine isOpen_iInter_of_finite fun τ => IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
@@ -221,8 +221,8 @@ theorem _root_.GlobalTheory.OrbitScalar.exists_smul_of_orbits : ∀ (E : Type) [
   rcases Nat.eq_zero_or_pos r with rfl | hr
   · exact ⟨1, X.Γ.one_mem, 0, Matrix.ext fun i _ => i.elim0⟩
   set i0 : Fin r := ⟨0, hr⟩ with hi0
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (GL (Fin r) E) :=
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (GL (Fin r) E) :=
     Function.Injective.countable (f := fun g : GL (Fin r) E => fun i j => (g : Matrix (Fin r) (Fin r) E) i j)
       fun g h e => Units.ext (Matrix.ext fun i j => congrFun (congrFun e i) j)
   let col : (X.Ψ → Fin r → Fin r → ℂ) → X.Ψ → Fin r → ℂ := fun x τ a => x τ a i0
@@ -232,7 +232,7 @@ theorem _root_.GlobalTheory.OrbitScalar.exists_smul_of_orbits : ∀ (E : Type) [
     (((γ : Matrix (Fin r) (Fin r) E).map τ) *ᵥ col x τ) j *
       ((((g : GL (Fin r) E) : Matrix (Fin r) (Fin r) E).map τ) *ᵥ col x τ) i}
   have hCclosed : ∀ g, IsClosed (C g) := fun g => by
-    simp only [C, Set.setOf_forall]
+    simp only [C, Set.ofPred_forall]
     exact isClosed_iInter fun τ => isClosed_iInter fun i => isClosed_iInter fun j =>
       isClosed_eq (by fun_prop) (by fun_prop)
   let f : Option X.Γ → Set (X.Ψ → Fin r → Fin r → ℂ) := fun o =>
@@ -283,9 +283,9 @@ theorem _root_.GlobalTheory.OrbitScalar.exists_smul_of_orbits : ∀ (E : Type) [
   have hupd : Continuous upd := by
     refine continuous_pi fun τ => continuous_pi fun a => continuous_pi fun c => ?_
     by_cases h : τ = τ0 ∧ c = i0
-    · simp only [upd, h, and_self, if_true]
+    · simp only [upd, h, and_self, ite_true]
       exact continuous_apply a
-    · simp only [upd, h, if_false]
+    · simp only [upd, h, ite_false]
       exact continuous_const
   have hupdx : upd (col x τ0) = x := by
     funext τ a c
@@ -313,7 +313,7 @@ theorem _root_.GlobalTheory.OrbitScalar.exists_smul_of_orbits : ∀ (E : Type) [
       c * (τ0 : E →+* ℂ) (((g : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) a b) := fun a b => by
     have h := congrFun (congrFun hc a) b
     simpa [Matrix.map_apply] using h
-  haveI : Nonempty (Fin r) := ⟨i0⟩
+  have : Nonempty (Fin r) := ⟨i0⟩
   have hne0 : ∀ δ : GL (Fin r) E, (δ : Matrix (Fin r) (Fin r) E) ≠ 0 := fun δ h0 => by
     have h := (Matrix.isUnit_iff_isUnit_det _).mp δ.isUnit
     rw [h0, Matrix.det_zero] at h

@@ -109,7 +109,7 @@ theorem exists_dvd_all_away {R ι : Type*} [CommRing R] [IsDedekindDomain R] [Fi
   let A := Localization.AtPrime P.asIdeal
   have hinj : Function.Injective (algebraMap R A) :=
     IsLocalization.injective A (Ideal.primeCompl_le_nonZeroDivisors P.asIdeal)
-  haveI : IsDiscreteValuationRing A :=
+  have : IsDiscreteValuationRing A :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R P.ne_bot A
   obtain ⟨i0, hi0⟩ := h
   obtain ⟨j, -, hj0, hdvd⟩ := exists_dvd_all (fun i => algebraMap R A (a i)) Finset.univ

@@ -205,9 +205,9 @@ theorem branching_interlacing_pairs (D : D7) (sc : Scale) : Conclusion6 D sc := 
     linarith
   have hgood0 : good T0 := by
     by_contra hg
-    rw [if_neg hg] at hT0
+    rw [ite_eq_right hg] at hT0
     exact lt_irrefl _ hT0
-  rw [if_pos hgood0] at hT0
+  rw [ite_eq_left hgood0] at hT0
   have hlow : B * ∑ T : Finset (HH D), (if good T then bern δ T else 0) <
       ∑ T : Finset (HH D), bern δ T * Y T := by
     calc B * ∑ T : Finset (HH D), (if good T then bern δ T else 0)
@@ -221,7 +221,7 @@ theorem branching_interlacing_pairs (D : D7) (sc : Scale) : Conclusion6 D sc := 
             · exact mul_le_mul_of_nonneg_left (hcon T hg.1 hg.2).le (hbern0 T)
             · exact le_refl _
           · refine ⟨T0, Finset.mem_univ _, ?_⟩
-            rw [if_pos hgood0, if_pos hgood0]
+            rw [ite_eq_left hgood0, ite_eq_left hgood0]
             exact mul_lt_mul_of_pos_left (hcon T0 hgood0.1 hgood0.2) hT0
       _ ≤ ∑ T : Finset (HH D), bern δ T * Y T := by
           apply Finset.sum_le_sum
@@ -358,13 +358,13 @@ theorem dropping_proposition_holds : ∃ C : ℝ, ∀ D : D7, Conclusion5 D C :=
     · by_contra hc
       push_neg at hc
       obtain ⟨i1, hi1, i2, hi2, i3, hi3, h12, h13, h23⟩ := Finset.two_lt_card.mp hc
-      simp only [Finset.mem_filter, Finset.mem_Ico, transl, Set.mem_setOf_eq] at hi1 hi2 hi3
+      simp only [Finset.mem_filter, Finset.mem_Ico, transl, Set.mem_ofPred_eq] at hi1 hi2 hi3
       obtain ⟨⟨a1, b1⟩, s1, hs1, e1⟩ := hi1
       obtain ⟨⟨a2, b2⟩, s2, hs2, e2⟩ := hi2
       obtain ⟨⟨a3, b3⟩, s3, hs3, e3⟩ := hi3
       exact false_of_three_distinct_in_window _ t h u₀ T Lw hTs hTR hh i₀ i1 i2 i3 s1 s2 s3 a1 b1 a2 b2 a3 b3
         h12 h13 h23 hs1 hs2 hs3 e1 e2 e3
-    · haveI hfin : Finite (HH D) := by
+    · have hfin : Finite (HH D) := by
         show Finite (Fin _)
         infer_instance
       have hpos : 0 < addOrderOf h := addOrderOf_pos h

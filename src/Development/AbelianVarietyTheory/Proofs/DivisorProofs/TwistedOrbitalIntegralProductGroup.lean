@@ -81,12 +81,12 @@ theorem avg_prod : ∀ (H H' : Type) [Group H] [Group H'] (u : H → ℂ) (v : H
   have hSi : S.index = (rStab u).index * (rStab v).index := Subgroup.index_prod _ _
   have hS0 : S.index ≠ 0 := by rw [hSi]; exact mul_ne_zero hu hv
   rw [_root_.GlobalTheory.BCT.avg_eq_of_le_rStab _ _ S hle hS0]
-  haveI : (rStab u).FiniteIndex := ⟨hu⟩
-  haveI : (rStab v).FiniteIndex := ⟨hv⟩
-  haveI : S.FiniteIndex := ⟨hS0⟩
-  letI : Fintype (H ⧸ rStab u) := Fintype.ofFinite _
-  letI : Fintype (H' ⧸ rStab v) := Fintype.ofFinite _
-  letI : Fintype ((H × H') ⧸ S) := Fintype.ofFinite _
+  have : (rStab u).FiniteIndex := ⟨hu⟩
+  have : (rStab v).FiniteIndex := ⟨hv⟩
+  have : S.FiniteIndex := ⟨hS0⟩
+  let : Fintype (H ⧸ rStab u) := Fintype.ofFinite _
+  let : Fintype (H' ⧸ rStab v) := Fintype.ofFinite _
+  let : Fintype ((H × H') ⧸ S) := Fintype.ofFinite _
   let f : (H × H') ⧸ S → (H ⧸ rStab u) × (H' ⧸ rStab v) :=
     fun q => ((q.out.1 : H ⧸ rStab u), (q.out.2 : H' ⧸ rStab v))
   have hf : Function.Bijective f := by
@@ -447,7 +447,7 @@ theorem support_sub {G : Type} [Group G] [TopologicalSpace G] (θ : G →* G) (K
         ∃ k ∈ K, f ((Quotient.out q * k)⁻¹ * δ * θ (Quotient.out q * k)) ≠ 0} := by
   intro q hq
   by_contra h
-  simp only [Set.mem_setOf_eq, not_exists, not_and, not_not] at h
+  simp only [Set.mem_ofPred_eq, not_exists, not_and, not_not] at h
   apply hq
   have h0 : (fun k : K => f ((Quotient.out q * k)⁻¹ * δ * θ (Quotient.out q * k))) = fun _ => 0 :=
     funext fun k => h k k.2

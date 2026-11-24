@@ -212,7 +212,7 @@ theorem lIdx_mul (p : TypX X) (hR : MassDataIdxSteps.StRed X p) (hI : MassDataId
 
 theorem lIdx_eq (p : TypX X) (hR : MassDataIdxSteps.StRed X p) (hI : MassDataIdxSteps.StImA X hb p) :
     (lIdx X hb p : ℝ) = Formalism.MainNotions.StandardLattice.idxRowLoc (gOf p) D.R.k D.R.m := by
-  haveI : Fact (gOf p).Prime := by
+  have : Fact (gOf p).Prime := by
     unfold gOf
     split_ifs
     · exact ⟨D.host.g_prime 0⟩
@@ -304,13 +304,13 @@ theorem gOf_iff (i : Fin 2) (p : TypX X) : gOf p = D.host.g i ↔ ((D.host.g i :
     · simp [h0]
     · simp [h0, Ne.symm hne]
   · by_cases h0 : ((D.host.g 0 : ℕ) : 𝓞 X.B.I.F) ∈ p.1.asIdeal
-    · simp only [h0, if_true]
+    · simp only [h0, ite_true]
       constructor
       · intro h
         exact absurd h hne
       · intro h1
         exact (not_both X p.1 h0 h1).elim
-    · simp only [h0, if_false]
+    · simp only [h0, ite_false]
       exact ⟨fun _ => htyp.resolve_left h0, fun _ => trivial⟩
 
 def typEquiv (i : Fin 2) :

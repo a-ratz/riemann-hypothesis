@@ -92,16 +92,16 @@ variable {R K V : Type*} [CommRing R] [IsDedekindDomain R] [Field K] [Algebra R 
 
 theorem neighbourConstruct_one_mem (P : Ideal R) (hP0 : P ≠ ⊥) :
     (1 : K) ∈ Submodule.map (Algebra.linearMap R K) P * invIdeal (K := K) P := by
-  have e := FractionalIdeal.coe_ideal_mul_inv (K := K) P hP0
+  have e := FractionalIdeal.coeIdeal_mul_inv (K := K) P hP0
   have e2 : ((P : FractionalIdeal R⁰ K) : Submodule R K) *
       (((P : FractionalIdeal R⁰ K)⁻¹ : FractionalIdeal R⁰ K) : Submodule R K) = 1 := by
-    rw [← FractionalIdeal.coe_mul, e, FractionalIdeal.coe_one]
+    rw [← FractionalIdeal.coeToSubmodule_mul, e, FractionalIdeal.coeToSubmodule_one]
   have h1 : (1 : K) ∈ ((P : FractionalIdeal R⁰ K) : Submodule R K) *
       (((P : FractionalIdeal R⁰ K)⁻¹ : FractionalIdeal R⁰ K) : Submodule R K) := by
     rw [e2]; exact Submodule.mem_one.mpr ⟨1, map_one _⟩
   have hne : (P : FractionalIdeal R⁰ K) ≠ 0 := FractionalIdeal.coeIdeal_ne_zero.mpr hP0
   refine (mul_le_mul' ?_ ?_ : _ ≤ Submodule.map (Algebra.linearMap R K) P * invIdeal (K := K) P) h1
-  · rw [FractionalIdeal.coe_coeIdeal]; exact le_rfl
+  · rw [FractionalIdeal.coeToSubmodule_coeIdeal]; exact le_rfl
   · intro a ha
     rw [neighbourConstruct_mem_inv]
     intro p hp

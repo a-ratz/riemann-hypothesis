@@ -80,7 +80,7 @@ theorem exists_above {K F : Type} [Field K] [NumberField K] [Field F] [NumberFie
   have hker : RingHom.ker (algebraMap (𝓞 F) (𝓞 K)) ≤ v.asIdeal := by
     rw [(RingHom.injective_iff_ker_eq_bot _).mp (FaithfulSMul.algebraMap_injective (𝓞 F) (𝓞 K))]
     exact bot_le
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQ, hQc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral v.asIdeal hker
   have hQ0 : Q ≠ ⊥ := by
     rintro rfl
@@ -101,7 +101,7 @@ theorem norm_mass_assembly : NormAssembly := by
     hc _ P (Ideal.isMaximal_under_of_isIntegral_of_isMaximal P.asIdeal) rfl
   have he : ∀ P : HeightOneSpectrum (𝓞 K), P.asIdeal.ramificationIdx (𝓞 F) ≠ 0 := by
     intro P
-    haveI := P.isPrime
+    have := P.isPrime
     exact (Ideal.ramificationIdx_pos (R := 𝓞 F) P.asIdeal).ne'
 
   have hfinJ := FractionalIdeal.finite_factors (K := K) J
@@ -140,7 +140,7 @@ theorem norm_mass_assembly : NormAssembly := by
     have hm0 : IF.map (algebraMap (𝓞 F) (𝓞 K)) ≠ ⊥ := Ideal.map_ne_bot_of_ne_bot hIF0
     refine eq_of_count_eq hJ0 (by rwa [Ne, FractionalIdeal.coeIdeal_eq_zero]) fun P => ?_
     rw [hcJ P, count_coe_eq_multiplicity P hm0]
-    haveI : P.asIdeal.LiesOver (belowP (K := K) (F := F) P).asIdeal := ⟨rfl⟩
+    have : P.asIdeal.LiesOver (belowP (K := K) (F := F) P).asIdeal := ⟨rfl⟩
     have hem := Ideal.IsDedekindDomain.emultiplicity_map_eq_ramificationIdx'_mul hIF0
       (belowP (K := K) (F := F) P).irreducible P.irreducible P.ne_bot
     rw [(FiniteMultiplicity.of_prime_left P.prime hm0).emultiplicity_eq_multiplicity,

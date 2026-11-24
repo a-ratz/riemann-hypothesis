@@ -214,7 +214,7 @@ open Cardinal
 
 theorem exists_extend_of_countable {A K : Type} [Field A] [Field K] [Algebra A K] [Countable A]
     (hK : #K ≤ 𝔠) (φ : A →+* ℂ) : ∃ ψ : K →+* ℂ, ∀ a, ψ (algebraMap A K a) = φ a := by
-  letI : Algebra A ℂ := φ.toAlgebra
+  let : Algebra A ℂ := φ.toAlgebra
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis A K
   obtain ⟨t, ht⟩ := exists_isTranscendenceBasis A ℂ
   have hA : #A ≤ ℵ₀ := Cardinal.mk_le_aleph0
@@ -230,10 +230,10 @@ theorem exists_extend_of_countable {A K : Type} [Field A] [Field K] [Algebra A K
   let g : S →ₐ[A] ℂ := (MvPolynomial.aeval (fun x : s => ((f x : t) : ℂ))).comp hs.1.aevalEquiv.symm.toAlgHom
   have hg : Function.Injective g := (show Function.Injective (MvPolynomial.aeval (fun x : s => ((f x : t) : ℂ))) from hw).comp
     hs.1.aevalEquiv.symm.injective
-  letI : Algebra S ℂ := g.toRingHom.toAlgebra
-  haveI : Module.IsTorsionFree S ℂ := Module.isTorsionFree_iff_algebraMap_injective.2 hg
-  haveI : Module.IsTorsionFree S K := Module.isTorsionFree_iff_algebraMap_injective.2 Subtype.val_injective
-  haveI : Algebra.IsAlgebraic S K := hs.isAlgebraic
+  let : Algebra S ℂ := g.toRingHom.toAlgebra
+  have : Module.IsTorsionFree S ℂ := Module.isTorsionFree_iff_algebraMap_injective.2 hg
+  have : Module.IsTorsionFree S K := Module.isTorsionFree_iff_algebraMap_injective.2 Subtype.val_injective
+  have : Algebra.IsAlgebraic S K := hs.isAlgebraic
   let ψ : K →ₐ[S] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -267,15 +267,15 @@ theorem exists_side_embeddings : ∀ (D : D7) (N : NData D.R D.host D.what₂) (
       e (IsFractionRing.map (A := X.O0 i) (B := X.O i) (K := FractionRing (X.O0 i))
         (L := FractionRing (X.O i)) (X.O_inj i) z) = f0 i b z := by
     intro i b
-    letI := hcz i
+    let := hcz i
     let A := algebraicClosure ℚ (FractionRing (X.O0 i))
-    haveI : Algebra.IsAlgebraic ℚ A := ⟨fun a => IntermediateField.isAlgebraic_iff.2 (mem_algebraicClosure_iff.1 a.2)⟩
-    haveI : Countable A := by
+    have : Algebra.IsAlgebraic ℚ A := ⟨fun a => IntermediateField.isAlgebraic_iff.2 (mem_algebraicClosure_iff.1 a.2)⟩
+    have : Countable A := by
       rw [← Cardinal.mk_le_aleph0_iff]
       exact (Algebra.IsAlgebraic.cardinalMk_le_max ℚ A).trans (by simp)
     let m := IsFractionRing.map (A := X.O0 i) (B := X.O i) (K := FractionRing (X.O0 i))
         (L := FractionRing (X.O i)) (X.O_inj i)
-    letI : Algebra A (FractionRing (X.O i)) := (m.comp (algebraMap A (FractionRing (X.O0 i)))).toAlgebra
+    let : Algebra A (FractionRing (X.O i)) := (m.comp (algebraMap A (FractionRing (X.O0 i)))).toAlgebra
     have hK : Cardinal.mk (FractionRing (X.O i)) ≤ Cardinal.continuum :=
       (Cardinal.mk_le_of_injective (IsFractionRing.map (A := X.O i) (B := X.Ok i 0) (K := FractionRing (X.O i))
         (L := FractionRing (X.Ok i 0)) (X.Ok_inj i 0)).injective).trans (hcard i 0)
@@ -288,16 +288,16 @@ theorem exists_side_embeddings : ∀ (D : D7) (N : NData D.R D.host D.what₂) (
       ek (algebraMap (X.Ok i k) (FractionRing (X.Ok i k)) (algebraMap (X.O i) (X.Ok i k) x)) =
         e i b (algebraMap (X.O i) (FractionRing (X.O i)) x) := by
     intro i b k
-    letI : Algebra (X.O i) ℂ := ((e i b).comp (algebraMap (X.O i) (FractionRing (X.O i)))).toAlgebra
-    haveI : Module.IsTorsionFree (X.O i) ℂ := Module.isTorsionFree_iff_algebraMap_injective.2
+    let : Algebra (X.O i) ℂ := ((e i b).comp (algebraMap (X.O i) (FractionRing (X.O i)))).toAlgebra
+    have : Module.IsTorsionFree (X.O i) ℂ := Module.isTorsionFree_iff_algebraMap_injective.2
       ((e i b).injective.comp (IsFractionRing.injective (X.O i) (FractionRing (X.O i))))
-    haveI : Module.IsTorsionFree (X.O i) (FractionRing (X.Ok i k)) := by
+    have : Module.IsTorsionFree (X.O i) (FractionRing (X.Ok i k)) := by
       refine Module.isTorsionFree_iff_algebraMap_injective.2 ?_
       rw [IsScalarTower.algebraMap_eq (X.O i) (X.Ok i k) (FractionRing (X.Ok i k))]
       exact (IsFractionRing.injective (X.Ok i k) (FractionRing (X.Ok i k))).comp (X.Ok_inj i k)
-    haveI := X.Ok_fin i k
-    haveI : Algebra.IsAlgebraic (X.O i) (X.Ok i k) := Algebra.IsIntegral.isAlgebraic
-    haveI : Algebra.IsAlgebraic (X.O i) (FractionRing (X.Ok i k)) :=
+    have := X.Ok_fin i k
+    have : Algebra.IsAlgebraic (X.O i) (X.Ok i k) := Algebra.IsIntegral.isAlgebraic
+    have : Algebra.IsAlgebraic (X.O i) (FractionRing (X.Ok i k)) :=
       (IsFractionRing.isAlgebraic_iff' (X.O i) (X.Ok i k) (FractionRing (X.Ok i k))).1 inferInstance
     let ψ : FractionRing (X.Ok i k) →ₐ[X.O i] ℂ := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -309,13 +309,13 @@ theorem exists_side_embeddings : ∀ (D : D7) (N : NData D.R D.host D.what₂) (
     rfl
   choose ek hek using keyk
   refine ⟨e, ek, fun i b x => ?_, hek, fun i b y hy => ?_⟩
-  · letI := hcz i
+  · let := hcz i
     have hx : IsAlgebraic ℚ x := Algebra.IsAlgebraic.isAlgebraic x
     have h2 : IsAlgebraic ℚ ((if b then X.emb0 i else X.emb0b i) x) :=
       hx.algHom ((if b then X.emb0 i else X.emb0b i).toRatAlgHom)
     rw [← hf0 i b x, ← he i b _ h2]
     rfl
-  · letI := hcz i
+  · let := hcz i
     have h2 : IsAlgebraic ℚ (algebraMap (X.O0 i) (FractionRing (X.O0 i)) y) :=
       isAlgebraic_rat_of_isIntegral_int _ hy
     rw [← he i b _ h2]
@@ -635,7 +635,7 @@ theorem isResAt_one_of_unram : ∀ (D : D7) (M : Type) [CommGroup M] (χ : (AE D
       have hr0 : resS D.host.F PP' ⟨_, hei⟩ = 0 := by
         have hnle : ¬ PP'.asIdeal ≤ PP.asIdeal := fun hle =>
           hq (HeightOneSpectrum.ext (PP'.isMaximal.eq_of_le PP.isPrime.ne_top hle))
-        obtain ⟨a, ha', ha⟩ := SetLike.not_le_iff_exists.1 hnle
+        obtain ⟨a, ha', ha⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
         have ha0 : a ≠ 0 := fun h0 => ha (h0 ▸ zero_mem _)
         have ha0' : (a : D.host.E) ≠ 0 := fun h0 => ha0 (RingOfIntegers.coe_eq_zero_iff.1 h0)
         have hint : finPart D (idemAt PP * incA D ((a : D.host.E)⁻¹)) ∈ intAE D := by
@@ -1178,7 +1178,7 @@ def Onto (ρ : Setup D.ntw) (rdV : RdV D ρ) : Prop :=
 
 theorem latI_eq (rdV : RdV D ρ) {i} (j : Fin D.R.m) {b k Q ψ} (h : TwOK i k Q ψ) :
     latI rdV i ((j : ℕ) + 1) b k Q ψ = (Via.lat (ρ.mt i j b k Q ψ)).comap (rdVLin rdV i j b k Q ψ) :=
-  dif_pos ⟨j.2, h⟩
+  dite_eq_left ⟨j.2, h⟩
 
 theorem mem_latI (rdV : RdV D ρ) {i} (j : Fin D.R.m) {b k Q ψ} (h : TwOK i k Q ψ) (f) :
     f ∈ latI rdV i ((j : ℕ) + 1) b k Q ψ ↔ rdV i j b k Q ψ f ∈ ρ.mt i j b k Q ψ := by
@@ -1245,9 +1245,9 @@ theorem exists_tie_withSeries : ∀ (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) 
         thU_eq := fun Q M d hQ x hx => by
           have h : InRange D.ntw i Q ∧ ∀ a, ρ.xi i j b D.nexp Q M d.2.h d.2.P a ∈ Set.range (rd i j b) :=
             ⟨hQ, fun a => ⟨x a, hx a⟩⟩
-          refine (dif_pos h).trans (congrArg (grpSum D.nexp (ρ.ch i) Q M) (funext fun a => (hF i j b).injective ?_))
+          refine (dite_eq_left h).trans (congrArg (grpSum D.nexp (ρ.ch i) Q M) (funext fun a => (hF i j b).injective ?_))
           exact (h.2 a).choose_spec.trans (hx a).symm
-        thU_off := fun _ _ _ h => dif_neg h
+        thU_off := fun _ _ _ h => dite_eq_right h
         rdV_inj := fun k Q ψ h => (hV i j b k Q ψ h).1
         mtLat_iff := fun k Q ψ h F => by
           refine ⟨fun hF' => ?_, fun ⟨f, hf, e'⟩ => ?_⟩
@@ -1255,7 +1255,7 @@ theorem exists_tie_withSeries : ∀ (D : D7) (ρ : Setup D.ntw) (hρ : ρ.Good) 
             exact ⟨f, (mem_latI rdV j h f).2 hF', rfl⟩
           · exact e' ▸ (mem_latI rdV j h f).1 hf
         thP_eq := fun k Q ψ _ f hf => by
-          have e : thPI hρ rd hF rdV i ((j : ℕ) + 1) b k Q ψ = (exists_thPI hρ rd hF rdV i j b k Q ψ).choose := dif_pos j.2
+          have e : thPI hρ rd hF rdV i ((j : ℕ) + 1) b k Q ψ = (exists_thPI hρ rd hF rdV i j b k Q ψ).choose := dite_eq_left j.2
           exact (congrArg (fun φ => rdK (rd i j b) hρ k (φ f)) e).trans
             ((exists_thPI hρ rd hF rdV i j b k Q ψ).choose_spec f hf) }, fun _ _ _ => rfl⟩
 
@@ -1349,7 +1349,7 @@ theorem mk_fractionRing_le {R : Type} [CommRing R] [IsDomain R] (h : Cardinal.mk
 
 theorem mk_frac_Ok (F : TwFrameC D) : ∀ i k, Cardinal.mk (FractionRing (D.ntw.Ok i k)) ≤ Cardinal.continuum := by
   intro i k
-  haveI := D.ntw.lPrime i
+  have := D.ntw.lPrime i
   apply mk_fractionRing_le
   have hinj : Function.Injective (fun x : D.ntw.Ok i k => ((F.eOk i k x : _) : ℂ_[D.ntw.l i])) :=
     Subtype.val_injective.comp (F.eOk i k).injective
@@ -1394,7 +1394,7 @@ theorem exists_art_gal (hA : GlobalTheory.Published.GlobalArtinReciprocity) (cf 
         GlobalTheory.GalChar.IsGal art κ ι (cf.delAt (D.ntw.l i)) (fun _ => 0) (Formalism.MainNotions.BlochKatoReduction.Gen.psiAt b (D.ntw.delta i)) := by
   obtain ⟨art, hart⟩ := hA D.host.E D.nd.Om
   refine ⟨art, hart, fun i b => ?_⟩
-  haveI := D.ntw.lPrime i
+  have := D.ntw.lPrime i
   obtain ⟨ρ⟩ := GlobalTheory.Triple.Reading.nonempty (X := D.ntw) i b
   have hker : IsOpen ((Formalism.MainNotions.BlochKatoReduction.Gen.psiAt b (D.ntw.delta i)).ker : Set (G D.host.E D.nd.Om)) := by
     have e : ((Formalism.MainNotions.BlochKatoReduction.Gen.psiAt b (D.ntw.delta i)).ker : Set (G D.host.E D.nd.Om)) = (D.ntw.delta i).ker := by
@@ -1424,7 +1424,7 @@ theorem exists_art_gal (hA : GlobalTheory.Published.GlobalArtinReciprocity) (cf 
       have h1 : ρ.ι (ρ.κ (D.ntw.emb0 i x)) = (((cf.delAt (D.ntw.l i)).val v : ℂˣ) : ℂ) := by
         rw [← D.ntw.restX_coefficientEmbedding_conj i x⁻¹ x hstar]
         have := ρ.read x⁻¹
-        simp only [GlobalTheory.Triple.embSide, Bool.false_eq_true, if_false] at this
+        simp only [GlobalTheory.Triple.embSide, Bool.false_eq_true, ite_false] at this
         rw [this]
         show D.what₂.embLL ((x⁻¹ : D.LL0) : D.what₂.LL) = _
         rw [IntermediateField.coe_inv, map_inv₀, hx', inv_inv]
@@ -1435,7 +1435,7 @@ theorem exists_art_gal (hA : GlobalTheory.Published.GlobalArtinReciprocity) (cf 
       rw [hd, ← h1, ρ.ι.symm_apply_apply]
     · have h1 : ρ.ι (ρ.κ (D.ntw.emb0 i x)) = (((cf.delAt (D.ntw.l i)).val v : ℂˣ) : ℂ)⁻¹ := by
         have := ρ.read x
-        simp only [GlobalTheory.Triple.embSide, if_true] at this
+        simp only [GlobalTheory.Triple.embSide, ite_true] at this
         rw [this]
         exact hx'
       show ρ.κ (algebraMap _ _ ((D.ntw.delta i σ : (D.ntw.O0 i)ˣ) : D.ntw.O0 i)) = _
@@ -1468,7 +1468,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.fockHarmonicLattice_fg_and_spans_value_space : ∀ (D : D7) (m n : ℕ) (w : Weight D n) (B : GLR D n) (K : Type) [Field K] [NumberField K] (σ : K →+* ℂ) (emb : D.what₂.Tau → (D.host.E →+* K)) (O : Subring ℂ) (M : Submodule (𝓞 D.host.E) (Fin n → D.host.E)), w.Good → (∀ τ, w.p τ + w.q τ ≤ m) → IsCoefRing σ emb O → Submodule.IsFullLattice D.host.E M → (harmLat σ emb O m w B M).FG ∧ Submodule.span ℂ (harmLat σ emb O m w B M : Set (PolF D m n)) = harm m w B := by
   intro D m n w B K _ _ σ emb O M hw hm hc hM
-  letI := hM
+  let := hM
   exact GlobalTheory.ExportSeries.HarmLattice.harmLat_fg_span D m n w B K σ emb O M hw hm hc
     (by infer_instance)
 end -- clump:auto
@@ -1495,7 +1495,7 @@ namespace GlobalTheory.SeriesTie
 theorem fg_of_eval {R G W I : Type} [CommRing R] [IsNoetherianRing R] [AddCommGroup W] [Module R W] [Finite I]
     (L : Submodule R (G → W)) (y : I → G) (C : I → Submodule R W) (hC : ∀ c, (C c).FG)
     (hmem : ∀ f ∈ L, ∀ c, f (y c) ∈ C c) (hinj : ∀ f ∈ L, (∀ c, f (y c) = 0) → f = 0) : L.FG := by
-  haveI : ∀ c, IsNoetherian R (C c) := fun c => isNoetherian_of_fg_of_noetherian _ (hC c)
+  have : ∀ c, IsNoetherian R (C c) := fun c => isNoetherian_of_fg_of_noetherian _ (hC c)
   let ev : L →ₗ[R] ∀ c, C c :=
     { toFun := fun f c => ⟨f.1 (y c), hmem f.1 f.2 c⟩
       map_add' := fun _ _ => rfl
@@ -1503,7 +1503,7 @@ theorem fg_of_eval {R G W I : Type} [CommRing R] [IsNoetherianRing R] [AddCommGr
   have hev : Function.Injective ev := by
     refine (injective_iff_map_eq_zero ev).2 fun f hf => ?_
     exact Subtype.ext (hinj f.1 f.2 fun c => congrArg Subtype.val (congrFun hf c))
-  haveI : IsNoetherian R L := isNoetherian_of_injective ev hev
+  have : IsNoetherian R L := isNoetherian_of_injective ev hev
   exact Module.Finite.iff_fg.1 inferInstance
 
 section Eval
@@ -1533,7 +1533,7 @@ theorem latFG_of_good : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D
   intro D N X ρ hρ i j b k Q ψ hT
   obtain ⟨hg, ha, -⟩ := GlobalTheory.T.twistingCharacter_admissibleGaloisTwist_good D N X ρ hρ i j b k Q ψ hT
   have hc := hρ.classes i j b _ hg ha
-  haveI : IsNoetherianRing (ρ.eOk i b k).range :=
+  have : IsNoetherianRing (ρ.eOk i b k).range :=
     isNoetherianRing_of_surjective (X.Ok i k) _ (ρ.eOk i b k).rangeRestrict (ρ.eOk i b k).rangeRestrict_surjective
   have hB := hρ.base i j b
   refine mtLat_fg_of_reps _ _ hc.reps fun c => ?_
@@ -1546,7 +1546,7 @@ theorem latFG_of_good : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D
     have hfull : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
         IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
       intro V Λ hΛ
-      haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+      have : Submodule.IsLattice D.host.E Λ := hΛ.1
       refine ⟨?_⟩
       obtain ⟨s, hs⟩ := hΛ.1.fg
       apply eq_top_iff.mpr
@@ -1602,8 +1602,8 @@ theorem latFG_of_good : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X : NTw D
         ((algebraMap (𝓞 D.host.E) D.host.E a) • y) ∈ _ at this
       rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
       exact this
-    haveI : Submodule.IsFullLattice D.host.E (ρ.B i j b).F.ΛS := hfull _ _ hB.frame.sdS
-    haveI : Submodule.IsFullLattice D.host.E
+    have : Submodule.IsFullLattice D.host.E (ρ.B i j b).F.ΛS := hfull _ _ hB.frame.sdS
+    have : Submodule.IsFullLattice D.host.E
         ((ρ.B i j b).latAt (finPt (Vc D j) (ρ.rep i j b (ρ.tw i b k Q ψ) c))) :=
       Formalism.UG.P.csGlob_lattice (F := D.host.F) (ρ.B i j b).F.ΛS (Module.Finite.iff_fg.2 hB.frame.sdS.1.fg)
         (Submodule.IsFullLattice.span_eq_top (A := D.host.E) (M := (ρ.B i j b).F.ΛS)) _

@@ -240,7 +240,7 @@ private def eV : WithZero (Multiplicative ℤ) := ↑(Multiplicative.ofAdd (-1 :
 
 private lemma val_le_one_of (m : WithZero (Multiplicative ℤ)) (h : eV * m ^ 2 ≤ 1) : m ≤ 1 := by
   rcases eq_or_ne m 0 with rfl | hm
-  · exact zero_le'
+  · exact zero_le
   obtain ⟨k, rfl⟩ := WithZero.ne_zero_iff_exists.mp hm
   have h' : (Multiplicative.ofAdd (-1 : ℤ) * k ^ 2 : Multiplicative ℤ) ≤ 1 := by
     unfold eV at h
@@ -256,7 +256,7 @@ private lemma val_le_one_of (m : WithZero (Multiplicative ℤ)) (h : eV * m ^ 2 
 
 private lemma val_le_e_of (m : WithZero (Multiplicative ℤ)) (h : eV⁻¹ * m ^ 2 ≤ 1) : m ≤ eV := by
   rcases eq_or_ne m 0 with rfl | hm
-  · exact zero_le'
+  · exact zero_le
   obtain ⟨k, rfl⟩ := WithZero.ne_zero_iff_exists.mp hm
   have h' : ((Multiplicative.ofAdd (-1 : ℤ))⁻¹ * k ^ 2 : Multiplicative ℤ) ≤ 1 := by
     unfold eV at h
@@ -636,7 +636,7 @@ private theorem int_one {v : P F} : IsInt (1 : Kv v) := by
 private theorem int_zero {v : P F} : IsInt (0 : Kv v) := by
   unfold IsInt
   rw [map_zero]
-  exact zero_le'
+  exact zero_le
 
 private def KP (v : P F) (ϖ : (Kv v)ˣ) : Subgroup (Matrix.SpecialLinearGroup (Fin 2) (Kv v)) where
   carrier := {x | IsInt (x 0 0) ∧ IsInt (x 1 1) ∧ IsInt (((ϖ⁻¹ : (Kv v)ˣ) : Kv v) * x 0 1) ∧
@@ -689,7 +689,7 @@ private theorem ball_compact (v : P F) (c : (Kv v)ˣ) : IsCompact {x : Kv v | Is
       exact ⟨(c : Kv v) * x, hx, by simp⟩
     · rintro ⟨y, hy, rfl⟩
       have : IsInt y := hy
-      simpa [Set.mem_setOf_eq] using this
+      simpa [Set.mem_ofPred_eq] using this
   rw [e]
   exact hO.image (continuous_const.mul continuous_id)
 
@@ -762,11 +762,11 @@ theorem UpperTheory.ConvolutionTheory.R2.H.integral_thetaRowZero_eq_zero_of_iwah
   have hH : St.Hat W := hatSt F E D W
   obtain ⟨hjc, hAt, -, hent⟩ := (jEx F v).2 j hj
   let ρ : KP v ϖ →* Module.End ℂ (S4 F) := W.Om.comp (j.comp (KP v ϖ).subtype)
-  haveI : CompactSpace (KP v ϖ) := kp_compact v ϖ
+  have : CompactSpace (KP v ϖ) := kp_compact v ϖ
   have hρ : ∀ (k : KP v ϖ) (χ : S4 F), ρ k χ = W.Om (j k.1) χ := fun _ _ => rfl
   have hev : ∀ᶠ h in 𝓝 (1 : KP v ϖ), ρ h φ = φ := by
     have ht : Tendsto (fun h : KP v ϖ => j h.1) (𝓝 1) (𝓝 1) := by
-      have h1 := (hjc.comp continuous_subtype_val).tendsto (1 : KP v ϖ)
+      have h1 := (hjc.comp continuous_subtypeVal).tendsto (1 : KP v ϖ)
       simp only [OneMemClass.coe_one, map_one, Function.comp_apply] at h1
       exact h1
     filter_upwards [ht.eventually (W.level φ)] with h hh
@@ -1076,7 +1076,7 @@ theorem UpperTheory.ConvolutionTheory.R2.dih :
   obtain ⟨h1, h2⟩ := hq v hw
   refine ⟨h1, B, hB, ?_⟩
   rcases hp v hw with hs | hi
-  · rw [h2, if_pos hs.1]; simp
+  · rw [h2, ite_eq_left hs.1]; simp
   · have hn : normV w ≠ normV v := fun e => by
       have h3 := hi.norm
       have h4 : 1 < normV v := by
@@ -1089,7 +1089,7 @@ theorem UpperTheory.ConvolutionTheory.R2.dih :
     have h6 : β = -α := Units.ext (by
       have := (mul_eq_zero.1 h5).resolve_right hT
       simpa using eq_neg_of_add_eq_zero_right this)
-    rw [h2, if_neg hn, h6]
+    rw [h2, ite_eq_right hn, h6]
     simp [Multiset.cons_swap]
     exact Multiset.pair_comm _ _
 end -- clump:auto

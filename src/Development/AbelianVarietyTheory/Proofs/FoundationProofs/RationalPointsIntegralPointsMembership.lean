@@ -47,14 +47,14 @@ open scoped BigOperators
 namespace GlobalTheory.NormSum.PtsMem
 
 theorem inc_injective (D : D7) : Function.Injective (inc D) := by
-  haveI : Nontrivial (IsDedekindDomain.FiniteAdeleRing (𝓞 ℚ) ℚ) := by
+  have : Nontrivial (IsDedekindDomain.FiniteAdeleRing (𝓞 ℚ) ℚ) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 ℚ)
     let v : IsDedekindDomain.HeightOneSpectrum (𝓞 ℚ) :=
       ⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField ℚ)⟩
     refine ⟨0, 1, fun h => ?_⟩
     have h2 : (0 : v.adicCompletion ℚ) = 1 := congrArg (fun x : IsDedekindDomain.FiniteAdeleRing (𝓞 ℚ) ℚ => x v) h
     exact zero_ne_one h2
-  haveI : Nontrivial (AE D) := by
+  have : Nontrivial (AE D) := by
     have hinj : Function.Injective (Algebra.TensorProduct.includeRight :
         IsDedekindDomain.FiniteAdeleRing (𝓞 ℚ) ℚ →ₐ[ℚ] AE D) :=
       Algebra.TensorProduct.includeRight_injective (algebraMap ℚ D.host.E).injective

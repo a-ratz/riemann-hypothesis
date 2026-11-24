@@ -169,7 +169,7 @@ private theorem const_20736_le_exp_15 : (20736 : ℝ) ≤ Real.exp 15 := by
     have := Real.add_one_le_exp (1 : ℝ)
     linarith
   have h2 : Real.exp 15 = Real.exp 1 ^ 15 := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     norm_num
   rw [h2]
   calc (20736 : ℝ) ≤ 2 ^ 15 := by norm_num
@@ -215,7 +215,7 @@ theorem mass_pow_le_exp_rpow (f m : ℕ) (rd L B₁ C κ : ℝ) (hf : 1 ≤ f) (
         (pow_nonneg hrdpos.le 9) (by positivity)
     have h4 : Real.exp (15 + 6 * (m : ℝ) + 9 * (κ * L)) =
         Real.exp 15 * Real.exp m ^ 6 * Real.exp (κ * L) ^ 9 := by
-      rw [Real.exp_add, Real.exp_add, ← Real.exp_nat_mul, ← Real.exp_nat_mul]
+      rw [Real.exp_add, Real.exp_add, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul]
       norm_num
     rw [h4]
     calc _ ≤ _ := h1
@@ -242,7 +242,7 @@ theorem mass_pow_le_exp_rpow (f m : ℕ) (rd L B₁ C κ : ℝ) (hf : 1 ≤ f) (
   calc _ ≤ (Real.exp (15 + 6 * (m : ℝ) + 9 * (κ * L))) ^ (2 * (2 * f)) :=
         pow_le_pow_left₀ hQ0 hQ _
     _ = Real.exp (((2 * (2 * f) : ℕ) : ℝ) * (15 + 6 * (m : ℝ) + 9 * (κ * L))) :=
-        (Real.exp_nat_mul _ _).symm
+        (Real.exp_natCast_mul _ _).symm
     _ ≤ Real.exp (L * (C * (m : ℝ) ^ 2 * f) * C) := Real.exp_le_exp.2 hexp
 
 end Formalism.MainNotions.BridgeLemma₂
@@ -382,13 +382,13 @@ theorem exists_small_mem_fractional_ideal (K : Type) [Field K] [NumberField K] [
   have hr0 : 0 ≤ rootDiscriminant K := by unfold rootDiscriminant; positivity
   let f : InfinitePlace K → NNReal := fun _ => NNReal.sqrt (Real.toNNReal (rootDiscriminant K))
   have hmult : ∀ w : InfinitePlace K, w.mult = 2 := fun w => by
-    rw [InfinitePlace.mult, if_neg]
+    rw [InfinitePlace.mult, ite_eq_right]
     exact InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w)
   have hcard : Fintype.card (InfinitePlace K) = InfinitePlace.nrComplexPlaces K := by
     rw [InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces, IsTotallyComplex.nrRealPlaces_eq_zero K, zero_add]
   have hS : (∏ w, f w ^ w.mult) = NNReal.sqrt ‖discr K‖₊ := by
     apply NNReal.eq
-    rw [NNReal.coe_prod, Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs, ← rootDiscr_pow_eq_sqrt_discr K]
+    rw [NNReal.coe_prod, Real.coe_sqrt, coe_nnNorm, Int.norm_eq_abs, ← rootDiscr_pow_eq_sqrt_discr K]
     simp only [hmult, f, NNReal.coe_pow, NNReal.sq_sqrt, Real.coe_toNNReal _ hr0, Finset.prod_const,
       Finset.card_univ, hcard]
   have hbound : minkowskiBound K I < MeasureTheory.volume (convexBodyLT K f) := by
@@ -742,7 +742,7 @@ theorem eq_zero_of_inner_self_eq_zero (hK : IsCMUnram K) (L : Submodule (𝓞 K)
   have h01 : h (e 0) (e 1) = 0 := by rw [horth]; simp
   have h10 : h (e 1) (e 0) = 0 := by rw [horth]; simp
   rw [inner_comb_orthogonal_pair h _ _ h01 h10, horth, horth] at hv
-  simp only [if_true, mul_one] at hv
+  simp only [ite_true, mul_one] at hv
   obtain ⟨φ⟩ : Nonempty (K →+* ℂ) := inferInstance
   have h2 := congrArg φ hv
   rw [map_add (f := _), map_mul, map_mul, hK.2.1, hK.2.1, map_zero] at h2
@@ -1292,13 +1292,13 @@ theorem exists_short_vector_minkowski (N : ℕ) (hN : 1 ≤ N) (Λ : Submodule �
     (R : ℝ) (hR : 0 ≤ R)
     (hvol : ZLattice.covolume Λ * 2 ^ N < R ^ N * (√Real.pi ^ N / Real.Gamma ((N : ℝ) / 2 + 1))) :
     ∃ v ∈ Λ, v ≠ 0 ∧ ‖v‖ < R := by
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   let b := Module.Free.chooseBasis ℤ Λ
   have hF := ZLattice.isAddFundamentalDomain b (volume : Measure (EuclideanSpace ℝ (Fin N)))
   have hcov := ZLattice.covolume_eq_measure_fundamentalDomain Λ volume hF
   have hfin : volume (ZSpan.fundamentalDomain (b.ofZLatticeBasis ℝ Λ)) ≠ ⊤ :=
     (ZSpan.fundamentalDomain_isBounded _).measure_lt_top.ne
-  haveI : Countable Λ.toAddSubgroup := Countable.of_equiv _ b.equivFun.toEquiv.symm
+  have : Countable Λ.toAddSubgroup := Countable.of_equiv _ b.equivFun.toEquiv.symm
   have hc0 : 0 ≤ ZLattice.covolume Λ := by rw [hcov]; exact measureReal_nonneg
   have hvolF : volume (ZSpan.fundamentalDomain (b.ofZLatticeBasis ℝ Λ)) = ENNReal.ofReal (ZLattice.covolume Λ) := by
     rw [hcov, measureReal_def, ENNReal.ofReal_toReal hfin]
@@ -1320,7 +1320,7 @@ theorem short_vector_every_place (K : Type) [Field K] [NumberField K] [StarRing 
     ShortVectorEveryPlace K (2 * (finrank ℚ K : ℝ) * rootDiscriminant K) := by
   intro V _ _ _ _ h L hsymm hL M hM
   obtain ⟨e, hli, hsp, rfl, he⟩ := hL
-  haveI : FiniteDimensional K V := Module.Finite.of_basis (Module.Basis.mk hli hsp.ge)
+  have : FiniteDimensional K V := Module.Finite.of_basis (Module.Basis.mk hli hsp.ge)
   have hpos : ∀ x : V, x ≠ 0 → 0 < Algebra.trace ℚ K (h x x) := fun x hx => trace_inner_pos_of_orthonormal_pair hK h e hli hsp he x hx
   obtain ⟨N, ι, hι, -, hlat⟩ := Formalism.HermitianLatticesTheory.final_traceReal K V h hsymm hpos
   have hLlat : Submodule.IsLattice K (Submodule.span (𝓞 K) (Set.range e)) :=

@@ -80,7 +80,7 @@ theorem exact_of_subsingleton_Hs {R : Type} [CommRing R] {C : Type} [Category.{0
 
 theorem vanSt (hCx : CxSt) (hCmp : CmpSt) : VanSt := by
   intro R _ A _ g hA hg hR P _ _ S n hn
-  letI := hR.toField
+  let := hR.toField
   have hsep : IsSeparated A.hom := by
     have := hA.proper
     infer_instance

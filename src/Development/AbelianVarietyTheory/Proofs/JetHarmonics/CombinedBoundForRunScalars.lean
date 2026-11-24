@@ -187,7 +187,7 @@ theorem vLa_sWt {D : D7} {j : ℕ} (B : WeightFamilies.Prov D) (hinj : Function.
     rw [map_mul, map_natCast]
   rw [hc, Crude.crv_vLa_mul la hnn0 (Nat.cast_ne_zero.2 hN), hP, RPfVal.vLa_pPow la D.host.QS_pos.ne' hq hd, hl,
     Nat.padicValNat_def, multiplicity_eq_zero_of_not_dvd (fun h => hnd (h.trans D.host.QS_dvd_condN)),
-    if_neg (D.host.ne_q_of_not_dvd hnd), if_neg (D.host.ne_d_of_not_dvd hnd)]
+    ite_eq_right (D.host.ne_q_of_not_dvd hnd), ite_eq_right (D.host.ne_d_of_not_dvd hnd)]
   simp
 
 theorem nusOf_of_mem {D : D7} {j : ℕ} (B : WeightFamilies.Prov D) (w : WeightFamilies.Wt D j) (nu : HeightOneSpectrum (𝓞 B.KO) → ℝ)
@@ -213,7 +213,7 @@ theorem wtA_antitone {D : D7} {j : ℕ} (w : WeightFamilies.Wt D j) (τ : D.host
 
 theorem depth_le_over_level : (∀ (p : ℕ) [Fact p.Prime], Pdiv.ChartF.HTFSt p) → ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (hinj : Function.Injective D.what₂.OtoLL) (EX : ErrX D) (w : WeightFamilies.Wt D j) (c : ℝ), Oriented T EX → RunNum D w c → ∀ (la : HeightOneSpectrum (𝓞 T.Q.c.F)) (i : Fin 2), ((D.host.g i : ℕ) : 𝓞 T.Q.c.F) ∈ la.asIdeal → ∀ y : T.PtA j la, (recPJ h j hj).depth (sWt (recB h.toLawsCore) hinj EX w) w la y ≤ ((nusOf (recB h.toLawsCore) w (nuWt T w) la + c * (recPJ h j hj).phiC la y : ℝ) : EReal) := by
   intro hHT D T h j hj hinj EX w c hO hR la i hg y
-  letI := T.Q.H.starRing
+  let := T.Q.H.starRing
   obtain ⟨hlast, hn, hDg, hc0, hc⟩ := hR
   obtain ⟨S, io, e, ho, z, hz, hl, C, Pu, hC, hPu, hval⟩ := _root_.GlobalTheory.UnifPoint.exists_uniformised_chart D T h j hj la y
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible S.V
@@ -302,7 +302,7 @@ theorem depth_le_over_level : (∀ (p : ℕ) [Fact p.Prime], Pdiv.ChartF.HTFSt p
       positivity
     · have h0 : (recPJ h j hj).phiC la y = 0 := by
         unfold WeightAlgebra.PJ.phiC
-        rw [if_neg hlt]
+        rw [ite_eq_right hlt]
       rw [h0, (hjm (not_lt.1 hlt)).2]
       simp
 
@@ -332,9 +332,9 @@ theorem iInf_thGen_le_nuLocC : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
  letI := H.starRing
  ∀ (nab : NabV Xo c), IsNab Xo c nab → ThValTot Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (P : PELUnif (maximalIdeal T.V) C.I.G), P.TorsionIso → y.IsAlg → ∀ (ϖ : T.V), Irreducible ϖ → ∀ (Q : P.D.toPre.X → ℤ), IsQ P.D.toPre ϖ Q → ∀ (Φ M0 : ℝ) (r : ℕ) (b : Module.Basis (Fin r) ℤ P.D.toPre.X), 0 ≤ Φ → (∀ j, (Q (b j) : ℝ) ≤ Φ) → (∀ j z, |((Q (b j + z) - Q (b j) - Q z : ℤ) : ℝ)| ≤ M0 * Q z) → ∀ (α : 𝓞 E), α * star α = ((l.M : ℕ) : 𝓞 E) → l.Mb = Ideal.span {star α} → IsUnit ((l.M : ℕ) : T.V) → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n Dg e : ℕ), 1 ≤ n → 0 < e → DF Dw a ≤ Dg → 4 * Dg + 4 ≤ l.M → (Dg : ℝ) * M0 < l.M → (⨅ f ∈ thGen Xo c nab a n, nval T.V e (evI y f)) ≤ nuLocC C e l.M a n + (((Dg : ℝ) ^ 2 * Φ / l.M / e : ℝ) : EReal) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab hth T io y C hTr P hP hy ϖ hϖ Q hQ Φ M0 r b hΦ hb hb' α hα hMb hu a n Dg e hn he hD h4 hM0
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨F, _, _, _, _, _, _, v, hv, hvx⟩ : ∃ (F : Type) (_ : Field F) (_ : IsAlgClosed F) (_ : CharZero F)
       (_ : Algebra T.Fr F) (_ : Algebra T.V F) (_ : IsScalarTower T.V T.Fr F) (v : AddValuation F (WithTop ℚ)),
       ValOver ϖ F v ∧ ∀ x : T.Fr, x ≠ 0 → v (algebraMap T.Fr F x) = (((vV T.V x : ℤ) : ℚ) : WithTop ℚ) := by
@@ -477,7 +477,7 @@ theorem err_le (R N n Dg Φ φ c e g₀ g₁ : ℝ) (hR : 0 < R) (hN : 0 < N) (h
 
 theorem depth_le : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (hinj : Function.Injective D.what₂.OtoLL) (EX : ErrX D) (w : WeightFamilies.Wt D j) (c : ℝ), Oriented T EX → RunNum D w c → ∀ (la : HeightOneSpectrum (𝓞 T.Q.c.F)), (∀ i : Fin 2, ((D.host.g i : ℕ) : 𝓞 T.Q.c.F) ∉ la.asIdeal) → ∀ y : T.PtA j la, (recPJ h j hj).depth (sWt (recB h.toLawsCore) hinj EX w) w la y ≤ ((nusOf (recB h.toLawsCore) w (nuWt T w) la + c * (recPJ h j hj).phiC la y : ℝ) : EReal) := by
   intro D T h j hj hinj EX w c _ hrun la hg y
-  letI := T.Q.H.starRing
+  let := T.Q.H.starRing
   obtain ⟨hlp, hn, h4, hc0, hc⟩ := hrun
   obtain ⟨S, io, e, ho, z, hz, hl, C, Pu, hC, hPu, hval⟩ := _root_.GlobalTheory.UnifPoint.exists_uniformised_chart D T h j hj la y
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible S.V
@@ -527,7 +527,7 @@ theorem depth_le : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D 
       exact err_le (rr0 D) _ w.n _ Φ _ c e _ _ (rootDiscriminantDegreeRatio_pos D) (by positivity) (Nat.cast_nonneg _) he' (by linarith)
         (by linarith) hΦ0 hΦ' (hc hjm' 0).2
     · unfold WeightAlgebra.PJ.phiC
-      rw [(hjm hjm').2, if_neg (not_lt.2 hjm')]
+      rw [(hjm hjm').2, ite_eq_right (not_lt.2 hjm')]
       simp
   have hA := GlobalTheory.T.iInf_theta_generators_le_local_depth_prime_to_level _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c (T.nab j) hnab (h.thTot j hj) S io z C hC
     Pu hPu hz ϖ hϖ Q hQ Φ M0 r b hΦ0 hb1 hb2 α hα1 hα2 hMu (wtA w) w.n (WeightAlgebra.DF w) e hn1 ho.1
@@ -626,7 +626,7 @@ theorem combBound_of_depth_le {D : D7} {B : WeightFamilies.Prov D} {P : ModuliIn
     linarith
   · have h0 : X.phiC la y = 0 := by
       unfold WeightAlgebra.PJ.phiC
-      rw [if_neg (not_lt.2 hj)]
+      rw [ite_eq_right (not_lt.2 hj)]
     rw [h0, mul_zero, add_zero] at hd
     exact hd
 
@@ -678,7 +678,7 @@ theorem lastPos_L_of_setC {D : D7} {B : WeightFamilies.Prov D} {P : ModuliIntegr
   have h2 := two_T_sq_le_last h τ i hi1
   have h3 := hL.2.1 τ i
   have hn : ¬ i.1 + 1 < (D.R.sigW j).1 := by omega
-  rw [if_neg hn] at h3
+  rw [ite_eq_right hn] at h3
   unfold WeightAlgebra.gapZ at h3
   rw [dite_eq_right hn] at h3
   have hTp : (0 : ℤ) < (WeightAlgebra.Tp D j T : ℤ) := by unfold WeightAlgebra.Tp; positivity

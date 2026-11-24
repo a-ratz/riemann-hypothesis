@@ -90,8 +90,8 @@ theorem interNumRed_pull_curve {k : Type} [Field k] {M W : Scheme.{0}} (p : W �
     (∀ L : LB W, L.IsLB → interNumRed k C ![L.pull f] = 0) ∨
     ∃ C' : Closeds W, IsCompleteCurve k C' ∧ ∃ d : ℕ, ∀ L : LB W, L.IsLB →
       interNumRed k C ![L.pull f] = d * interNumRed k C' ![L] := by
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom (f ≫ p)
+  let := algebraΓOfHom p
+  let := algebraΓOfHom (f ≫ p)
   have hcomp {X Y Z : Scheme.{0}} {L : LB X} (hL : L.IsLB)
       (f : Y ⟶ X) (g : Z ⟶ Y) :
       cls ((L.pull f).pull g) (LB.isLB_pull (LB.isLB_pull hL f) g) =
@@ -102,7 +102,7 @@ theorem interNumRed_pull_curve {k : Type} [Field k] {M W : Scheme.{0}} (p : W �
   intro hC
   have : IsIntegral (Scheme.IdealSheafData.vanishingIdeal C).subscheme :=
     isIntegral_red hC.isIrreducible
-  letI : Algebra k Γ((Scheme.IdealSheafData.vanishingIdeal C).subscheme, ⊤) :=
+  let : Algebra k Γ((Scheme.IdealSheafData.vanishingIdeal C).subscheme, ⊤) :=
     algebraΓOfHom (redι C ≫ f ≫ p)
   let g := redι C ≫ f
   have hsM : strHom k M = f ≫ p := strHom_eq (fun _ => rfl)
@@ -159,7 +159,7 @@ theorem interNumRed_pull_curve {k : Type} [Field k] {M W : Scheme.{0}} (p : W �
   have hdZ : topologicalKrullDim g.image = 1 :=
     le_antisymm ((PosBaseChange.dim_le_of_isClosedMap φ.isClosedMap hsurj).trans hd.le)
       (ArInt.one_le_dim (genericPoint_specializes (φ x₀)) fun h => hne (h.symm.trans hgen.symm))
-  letI : Algebra k Γ(g.image, ⊤) := algebraΓOfHom (g.imageι ≫ p)
+  let : Algebra k Γ(g.image, ⊤) := algebraΓOfHom (g.imageι ≫ p)
   have hf : ∀ r : k, φ.appTop (algebraMap k Γ(g.image, ⊤) r) =
       algebraMap k Γ((Scheme.IdealSheafData.vanishingIdeal C).subscheme, ⊤) r :=
     appTop_algebraΓOfHom φ (g.imageι ≫ p) (by rw [reassoc_of% e]; exact Category.assoc _ _ _)
@@ -193,8 +193,8 @@ namespace GlobalTheory.NumPull
 
 theorem interNumRed_pull_proportional : ∀ (M W : Scheme.{0}) [IsIntegral M] [IsIntegral W] (p : W ⟶ Sp ℂ) (f : M ⟶ W), IsProjOver p → IsProjOver (f ≫ p) → letI := algebraΓOfHom p; letI := algebraΓOfHom (f ≫ p); ∀ (L L' : LB W), L.IsLB → L'.IsLB → ∀ (a b : ℕ), (∀ C : Closeds W, IsCompleteCurve ℂ C → (a : ℤ) * interNumRed ℂ C ![L] = b * interNumRed ℂ C ![L']) → ∀ C : Closeds M, IsCompleteCurve ℂ C → (a : ℤ) * interNumRed ℂ C ![L.pull f] = b * interNumRed ℂ C ![L'.pull f] := by
   intro M W _ _ p f hp _
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom (f ≫ p)
+  let := algebraΓOfHom p
+  let := algebraΓOfHom (f ≫ p)
   intro L L' hL hL' a b H C hC
   have : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hp).1
   rcases interNumRed_pull_curve p f C hC with h | ⟨C', hC', d, hd⟩

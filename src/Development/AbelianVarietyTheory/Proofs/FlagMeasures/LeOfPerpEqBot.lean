@@ -134,14 +134,14 @@ theorem nontrivial_alg : Nontrivial E :=
   Module.nontrivial_of_finrank_pos (R := F) (by rw [L.rank]; norm_num)
 
 theorem le_of_gram {m : ℕ} (x : Fin m → Fin n → E) (hx : IsUnit (gramT L Hm x).det) : m ≤ n := by
-  haveI := nontrivial_alg L
+  have := nontrivial_alg L
   have hli : LinearIndependent E x := Fintype.linearIndependent_iff.2 fun c hc a =>
     congrFun (coeff_eq_zero L Hm x hx c fun a => by rw [hc]; simp [hf]) a
   simpa using hli.fintype_card_le_finrank
 
 theorem le_of_perp_eq_bot {m : ℕ} (x : Fin m → Fin n → E) (hx : IsUnit (gramT L Hm x).det)
     (h : perp L Hm (Submodule.span E (Set.range x)) = ⊥) : n ≤ m := by
-  haveI := nontrivial_alg L
+  have := nontrivial_alg L
   have h1 := (isCompl_perp L Hm x hx).sup_eq_top
   rw [h, sup_bot_eq] at h1
   simpa using finrank_le_of_span_eq_top h1
@@ -151,7 +151,7 @@ theorem exists_unit_norm [CharZero F] (hH : IsHermND L Hm) {m : ℕ} (x : Fin m 
     ∃ w ∈ perp L Hm (Submodule.span E (Set.range x)), IsUnit (hf L Hm w w) := by
   by_contra hcon
   push Not at hcon
-  haveI := L.reduced
+  have := L.reduced
   set W := perp L Hm (Submodule.span E (Set.range x)) with hW
   have h0 : ∀ w ∈ W, hf L Hm w w = 0 := fun w hw => by
     obtain ⟨a, ha⟩ := (L.cj_fix _).1 (cj_hf L Hm hH.1 w w)

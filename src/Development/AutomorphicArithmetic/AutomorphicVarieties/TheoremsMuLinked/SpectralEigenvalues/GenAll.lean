@@ -78,8 +78,8 @@ theorem UpperTheory.V.Th.Sp.dlam :
     show th (MvPowerSeries.pderiv (R := O) k (MvPowerSeries.X k')) = if k = k' then 1 else 0
     by_cases h : k = k'
     · subst h
-      rw [MvPowerSeries.pderiv_X_self, map_one, if_pos rfl]
-    · rw [MvPowerSeries.pderiv_X_of_ne (Ne.symm h), map_zero, if_neg h]
+      rw [MvPowerSeries.pderiv_X_self, map_one, ite_eq_left rfl]
+    · rw [MvPowerSeries.pderiv_X_of_ne (Ne.symm h), map_zero, ite_eq_right h]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.TheoremsMuLinked.SpectralEigenvalues.Dlam =====
@@ -96,7 +96,7 @@ theorem UpperTheory.V.Th.Sp.chi :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] (q n m : ℕ) (a : Fin q → ℕ), (∀ j, m ≤ a j) → ∀ p : Fin q × Fin n, ∃ χ : Del l n a →* Multiplicative (Om O m), ∀ p', χ (Pi.mulSingle p' (Multiplicative.ofAdd 1)) = Multiplicative.ofAdd (if p = p' then 1 else 0) := by
   intro l _ O _ _ _ _ q n m a ha p
   have hl : (l : O) ∈ maximalIdeal O := by
-    haveI : CharP (ResidueField O) l := IsCoef.char
+    have : CharP (ResidueField O) l := IsCoef.char
     rw [← residue_eq_zero_iff, map_natCast]
     exact CharP.cast_eq_zero _ l
   have h0 : (zmultiplesHom (Om O m) 1) ((l ^ a p.1 : ℕ) : ℤ) = 0 := by
@@ -332,7 +332,7 @@ private theorem core {O Λ R T M Γ X ι : Type} [CommRing O] [CommRing Λ] [Com
   have hell1 : ell 1 = 0 := by
     have h11 := hell 1 1
     simpa using h11
-  letI : Module T ρ.asModule := Module.compHom M act.toRingHom
+  let : Module T ρ.asModule := Module.compHom M act.toRingHom
   have hsmulT : ∀ (τ : T) (x : ρ.asModule), τ • x = ρ.asModuleEquiv.symm (act τ (ρ.asModuleEquiv x)) :=
     fun _ _ => rfl
   have hS1 : ∀ (g : Γ) (a : Λ) (x : ρ.asModule),
@@ -340,13 +340,13 @@ private theorem core {O Λ R T M Γ X ι : Type} [CommRing O] [CommRing Λ] [Com
     intro g a x
     rw [← LinearMap.smul_apply, ← Representation.asAlgebraHom_single, ← Representation.asModuleEquiv_map_smul,
       LinearEquiv.symm_apply_apply]
-  haveI : SMulCommClass (MonoidAlgebra Λ Γ) T ρ.asModule := ⟨fun σ τ x => by
+  have : SMulCommClass (MonoidAlgebra Λ Γ) T ρ.asModule := ⟨fun σ τ x => by
     induction σ using MonoidAlgebra.induction_linear with
     | zero => rw [zero_smul, zero_smul, smul_zero]
     | add f g hf hg => rw [add_smul, add_smul, smul_add, hf, hg]
     | single g a =>
       simp only [hS1, hsmulT, LinearEquiv.apply_symm_apply, hcommΛ, hcommρ]⟩
-  haveI := hP
+  have := hP
   let lam' : ρ.asModule →+ O := lam.comp ρ.asModuleEquiv.toLinearMap.toAddMonoidHom
   have hlam'e : ∀ x, lam' x = lam (ρ.asModuleEquiv x) := fun _ => rfl
   have hlam' : ∀ (σ : MonoidAlgebra Λ Γ) (x : ρ.asModule), lam' (σ • x) = th σ * lam' x := by
@@ -373,14 +373,14 @@ private theorem core {O Λ R T M Γ X ι : Type} [CommRing O] [CommRing Λ] [Com
     { carrier := {w | ρ.asModuleEquiv.symm w ∈ (RingHom.ker th • ⊤ : Submodule (MonoidAlgebra Λ Γ) ρ.asModule)}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at *
         exact add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, map_zero]
+        simp only [Set.mem_ofPred_eq, map_zero]
         exact zero_mem _
       smul_mem' := by
         intro r w hw
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         have e : ρ.asModuleEquiv.symm (r • w) = (algebraMap R T r) • ρ.asModuleEquiv.symm w := by
           rw [hsmulT, LinearEquiv.apply_symm_apply, hact_alg]
         rw [e]
@@ -460,7 +460,7 @@ private theorem core {O Λ R T M Γ X ι : Type} [CommRing O] [CommRing Λ] [Com
 
 private theorem gen_all {l q n : ℕ} (hl : l.Prime) (a : Fin q → ℕ) (S : Submonoid (Del l n a))
     (h : ∀ p, (Pi.mulSingle p (Multiplicative.ofAdd 1) : Del l n a) ∈ S) (g : Del l n a) : g ∈ S := by
-  haveI : ∀ p : Fin q × Fin n, NeZero (l ^ a p.1) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : ∀ p : Fin q × Fin n, NeZero (l ^ a p.1) := fun s => ⟨pow_ne_zero _ hl.ne_zero⟩
   rw [← Finset.univ_prod_mulSingle g]
   refine Submonoid.prod_mem _ fun s _ => ?_
   have h1 : g s = Multiplicative.ofAdd (1 : ZMod (l ^ a s.1)) ^ (Multiplicative.toAdd (g s)).val := by

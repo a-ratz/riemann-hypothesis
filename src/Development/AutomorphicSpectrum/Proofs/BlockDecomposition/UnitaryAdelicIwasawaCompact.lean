@@ -257,7 +257,7 @@ theorem evenInt_span (H : IsHerm c h) (inv : ∀ a, c (c a) = a) (cm : ∀ a ∈
 
 theorem exists_maxEven (Hr : IsHermRing c 𝔬) (H : IsHerm c h) (Hp : IsPerfect h) (L₀ : Submodule 𝔬 V)
     (hL : IsLat 𝔬 L₀) (hE : IsEvenInt c 𝔬 h L₀) : ∃ L, L₀ ≤ L ∧ IsMaxEven c 𝔬 h L := by
-  haveI := Hr.noeth
+  have := Hr.noeth
   obtain ⟨m, g, hg⟩ := Submodule.fg_iff_exists_fin_generating_family.1 hL.1
   have hgL : ∀ i, g i ∈ L₀ := fun i => hg ▸ Submodule.subset_span ⟨i, rfl⟩
   let D : Submodule 𝔬 V :=
@@ -296,7 +296,7 @@ theorem exists_maxEven (Hr : IsHermRing c 𝔬) (H : IsHerm c h) (Hp : IsPerfect
     apply Subtype.ext
     refine Hp.nondeg _ fun w => ?_
     rw [H.symm w, h2 w (by rw [hL.2]; trivial), map_zero]
-  haveI : IsNoetherian 𝔬 D := isNoetherian_of_injective f finj
+  have : IsNoetherian 𝔬 D := isNoetherian_of_injective f finj
   have hD : ∀ L' : Submodule 𝔬 V, IsEvenInt c 𝔬 h L' → L₀ ≤ L' → L' ≤ D :=
     fun L' hE' hle z hz i => hE'.1 _ (hle (hgL i)) _ hz
   let S : Set (Submodule 𝔬 D) := {N | IsEvenInt c 𝔬 h (N.map D.subtype) ∧ L₀ ≤ N.map D.subtype}
@@ -304,7 +304,7 @@ theorem exists_maxEven (Hr : IsHermRing c 𝔬) (H : IsHerm c h) (Hp : IsPerfect
     rw [Submodule.map_comap_subtype]; exact inf_eq_right.2 hl
   have hS : (L₀.comap D.subtype) ∈ S := by
     have := hcm L₀ (hD L₀ hE le_rfl)
-    simp only [S, Set.mem_setOf_eq, this]
+    simp only [S, Set.mem_ofPred_eq, this]
     exact ⟨hE, le_rfl⟩
   obtain ⟨N, hN, hmin⟩ := (wellFounded_gt (α := Submodule 𝔬 D)).has_min S ⟨_, hS⟩
   refine ⟨N.map D.subtype, hN.2, ⟨?_, ?_⟩, hN.1, fun L' hE' hle => ?_⟩
@@ -314,7 +314,7 @@ theorem exists_maxEven (Hr : IsHermRing c 𝔬) (H : IsHerm c h) (Hp : IsPerfect
     exact Submodule.span_mono hN.2
   · have hDL : L' ≤ D := hD L' hE' (hN.2.trans hle)
     have hmem : L'.comap D.subtype ∈ S := by
-      simp only [S, Set.mem_setOf_eq, hcm L' hDL]
+      simp only [S, Set.mem_ofPred_eq, hcm L' hDL]
       exact ⟨hE', hN.2.trans hle⟩
     have hNle : N ≤ L'.comap D.subtype := by
       rw [← Submodule.map_le_iff_le_comap]; exact hle
@@ -855,11 +855,11 @@ end Place
 
 theorem isCompact_stabLat : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin n) (Fin n) E}, IsCMExt F E σ → IsHermND σ J → ∀ (v : HeightOneSpectrum (𝓞 F)) (Λ : Submodule (intLoc F E v) (Fin n → Fv F v ⊗[F] E)), IsLat (intLoc F E v) Λ → IsCompact (stabLat σ J Λ : Set (GLoc σ J v)) := by
   intro F E _ _ _ _ _ σ n J _ _ v Λ hΛ
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (Fv F v)
-  haveI : T2Space (Fv F v ⊗[F] E) := e.isEmbedding.t2Space
+  have : T2Space (Fv F v ⊗[F] E) := e.isEmbedding.t2Space
   have hcl : IsClosed (HR (Fv F v) σ J : Set (GL (Fin n) (Fv F v ⊗[F] E))) := by
     have hv : Continuous fun g : GL (Fin n) (Fv F v ⊗[F] E) => (g : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
       Units.continuous_val
@@ -1234,8 +1234,8 @@ theorem exists_dom (ρ : Fv F v ⊗[F] E →ₐ[Fv F v] Fv F v) (S : Finset (Fv 
   obtain ⟨j, hj, hmax⟩ := S.exists_max_image (fun s => ‖ρ s‖₊) ⟨j0, hj0⟩
   refine ⟨j, hj, fun e => hj0' ?_, hmax⟩
   have := hmax j0 hj0
-  rw [e, nnnorm_zero] at this
-  exact nnnorm_eq_zero.1 (le_antisymm this zero_le)
+  rw [e, nnNorm_zero] at this
+  exact nnNorm_eq_zero.1 (le_antisymm this zero_le)
 
 theorem principal_split (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) (I : Submodule (intLoc F E v) (Fv F v ⊗[F] E))
     (hI : I.FG) (hu : ∃ u ∈ I, IsUnit u) : ∃ u : Fv F v ⊗[F] E, IsUnit u ∧ I = Submodule.span (intLoc F E v) {u} := by
@@ -1260,9 +1260,9 @@ theorem principal_split (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) (I : Subm
   refine ⟨u, hunit, span_eq_of hmem fun s hs => ?_⟩
   refine ⟨(splitAlgEquiv h τ).symm (splitProj τ s / splitProj τ j1, splitProj (τ.comp σ) s / splitProj (τ.comp σ) j2),
     (mem_intLoc_iff_split h τ).2 ⟨?_, ?_⟩, split_ext h τ ?_ ?_⟩
-  · rw [splitProj_symm, ← nnnorm_le_one_iff_mem, nnnorm_div]
+  · rw [splitProj_symm, ← nnnorm_le_one_iff_mem, nnNorm_div]
     exact div_le_one_of_le₀ (hm1 s hs) zero_le
-  · rw [splitProj_comp_symm, ← nnnorm_le_one_iff_mem, nnnorm_div]
+  · rw [splitProj_comp_symm, ← nnnorm_le_one_iff_mem, nnNorm_div]
     exact div_le_one_of_le₀ (hm2 s hs) zero_le
   · simp [hup, h1]
   · simp [huq, h2]
@@ -1487,7 +1487,7 @@ theorem levi_mem_stabLat : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
   let L' : Submodule (intLoc F E v) (Fin n → Fv F v ⊗[F] E) :=
     { carrier := {z | (matHom _ σ J m).1 *ᵥ z ∈ Λ}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, mulVec_add] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, mulVec_add] at ha hb ⊢
         exact add_mem ha hb
       zero_mem' := by simp
       smul_mem' := fun a z hz => by
@@ -1818,7 +1818,7 @@ theorem flag_map_kfin {A A' : Type} [CommRing A] [Algebra F A] [TopologicalSpace
 theorem exists_compact_iwasawa_good : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin r) E), IsWittFrame σ J X Y → ∃ K : Subgroup (GAd σ J), K ≤ finPts σ J ∧ IsCompact (K : Set (GAd σ J)) ∧ (∀ g ∈ finPts σ J, ∃ p ∈ minPar σ J X, p ∈ finPts σ J ∧ ∃ k ∈ K, g = p * k) ∧ GoodPosition σ J X Y K := by
   intro F E _ _ _ _ _ σ hCM n J hJ r X Y hW
   let L₀ := stdLattice E n
-  haveI : Submodule.IsFullLattice E L₀ := isLattice_stdLattice
+  have : Submodule.IsFullLattice E L₀ := isLattice_stdLattice
   have hσ : ∀ e, σ (σ e) = e := fun e => by
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
     exact τ.injective (by rw [hCM.2.2.2, hCM.2.2.2, star_star])

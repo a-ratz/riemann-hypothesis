@@ -133,8 +133,8 @@ theorem exists_algHom_lift_of_smooth [Algebra.Smooth R A] [IsLocalRing B] (I : I
   choose b hb using fun i : Fin n => hπ (φ' (algebraMap _ _ (MvPolynomial.X (R := R) i)))
   let χ : MvPolynomial (Fin n) R →ₐ[R] C := φ'.comp (IsScalarTower.toAlgHom R _ _)
   have hχ : π.comp (MvPolynomial.aeval b) = χ := by ext i; simp [χ, hb]
-  letI := (MvPolynomial.aeval (R := R) b).toAlgebra
-  letI := χ.toAlgebra
+  let := (MvPolynomial.aeval (R := R) b).toAlgebra
+  let := χ.toAlgebra
   have : IsScalarTower R (MvPolynomial (Fin n) R) B :=
     .of_algebraMap_eq fun r => ((MvPolynomial.aeval (R := R) b).commutes r).symm
   let π' : B →ₐ[MvPolynomial (Fin n) R] C := ⟨π, fun r => congr($hχ r)⟩
@@ -192,10 +192,10 @@ theorem nonempty_algHom_of_etale_of_isSepClosed [IsSepClosed K] [Algebra.Etale R
   let p := RingHom.ker (algebraMap R K)
   have : p.IsPrime := RingHom.ker_isPrime _
   have : q.LiesOver p := ⟨hq.symm⟩
-  letI := Localization.AtPrime.algebraOfLiesOver p q
+  let := Localization.AtPrime.algebraOfLiesOver p q
   let ι : p.ResidueField →ₐ[R] K := Ideal.ResidueField.liftₐ p (Algebra.ofId R K) le_rfl (by
-    simp [SetLike.le_def, IsUnit.mem_submonoid_iff, p])
-  letI := ι.toAlgebra
+    simp [IsConcreteLE.le_iff, IsUnit.mem_submonoid_iff, p])
+  let := ι.toAlgebra
   have : IsScalarTower R p.ResidueField K := .of_algebraMap_eq fun r => (ι.commutes r).symm
   let j : q.ResidueField →ₐ[p.ResidueField] K := IsSepClosed.lift
   exact ⟨(j.restrictScalars R).comp (IsScalarTower.toAlgHom R A _)⟩
@@ -236,7 +236,7 @@ theorem nonempty_algHom_of_smooth_of_isSepClosed [IsSepClosed K] [Algebra.Smooth
     rw [← IsScalarTower.algebraMap_apply, ← Ideal.mem_comap, hp', RingHom.mem_ker,
       ← MvPolynomial.coeff_map, h₀]
     simp
-  letI := (MvPolynomial.aeval (R := R) b).toAlgebra
+  let := (MvPolynomial.aeval (R := R) b).toAlgebra
   have : IsScalarTower R P K :=
     .of_algebraMap_eq fun r => ((MvPolynomial.aeval (R := R) b).commutes r).symm
   obtain ⟨q, hq⟩ := hsub (a := ⟨RingHom.ker (algebraMap P K), RingHom.ker_isPrime _⟩) hb
@@ -301,15 +301,15 @@ theorem exists_etale_algHom_lift_of_smooth [Algebra.Smooth R A] (φ : A →ₐ[R
     fun i : Fin n => φ' (algebraMap P S (MvPolynomial.X i))
   choose c hc using hε
   let E := Q.Ring
-  letI : Algebra R E := ((algebraMap B E).comp (algebraMap R B)).toAlgebra
+  let : Algebra R E := ((algebraMap B E).comp (algebraMap R B)).toAlgebra
   have : IsScalarTower R B E := .of_algebraMap_eq' rfl
   let χ : P →ₐ[R] K := φ'.comp (IsScalarTower.toAlgHom R _ _)
   have hχ : (ε.restrictScalars R).comp (MvPolynomial.aeval c) = χ := by
     ext i
     exact (congrArg ε (MvPolynomial.aeval_X c i)).trans (hc i)
-  letI := (MvPolynomial.aeval (R := R) c).toAlgebra
-  letI := χ.toAlgebra
-  letI := ε.toAlgebra
+  let := (MvPolynomial.aeval (R := R) c).toAlgebra
+  let := χ.toAlgebra
+  let := ε.toAlgebra
   have : IsScalarTower B E K := .of_algebraMap_eq fun r => (ε.commutes r).symm
   have : IsScalarTower P E K := .of_algebraMap_eq fun r => congr($hχ r).symm
   let φ'' : S →ₐ[P] K := ⟨φ', fun r => rfl⟩

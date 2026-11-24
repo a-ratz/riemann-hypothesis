@@ -56,7 +56,7 @@ theorem index_smul_cocycle_eq_coboundary (R G X : Type) [CommRing R] [Group G] [
     ∃ x, ∀ g, H.index • f g = ρ g x - x := by
   classical
   obtain ⟨x₀, hx₀⟩ := hH
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   set f' : G → X := fun g => f g - (ρ g x₀ - x₀) with hf'
   have hc : ∀ g h, f' (g * h) = f' g + ρ g (f' h) := by
     intro g h

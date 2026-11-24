@@ -81,7 +81,7 @@ theorem finiteDimensional_of_finite_subring_fraction :
       (φ : B →+* B'), (∀ x : B, (φ x : L) = algebraMap K L x) → φ.Finite →
       (∀ y : L, ∃ a ∈ B', ∃ b ∈ B', b ≠ 0 ∧ y * b = a) → FiniteDimensional K L := by
   intro K L _ _ _ B B' φ hφ hfin hfrac
-  letI : Algebra B B' := φ.toAlgebra
+  let : Algebra B B' := φ.toAlgebra
   have hMF : Module.Finite B B' := hfin
   obtain ⟨s, hs⟩ := hMF.fg_top
 
@@ -161,13 +161,13 @@ namespace GlobalTheory.W1
 
 theorem dv_mem_span_of_formallyUnramified : ∀ (k K L : Type) [Field k] [Field K] [Field L] [Algebra k K] [Algebra k L] [Algebra K L] [IsScalarTower k K L] (B : Subalgebra k K) (B' : Subalgebra k L) (φ : B →+* B'), (∀ x : B, (φ x : L) = algebraMap K L x) → φ.FormallyUnramified → ∀ v ∈ B', ∃ (m : ℕ) (b : Fin m → L) (w : Fin m → K), (∀ j, b j ∈ B' ∧ w j ∈ B) ∧ ι1 (D k L v) = ∑ j, b j • mapDR k K L (ι1 (D k K (w j))) := by
   intro k K L _ _ _ _ _ _ _ B B' φ hφ hU v hv
-  letI := φ.toAlgebra
-  haveI : IsScalarTower k B B' := IsScalarTower.of_algebraMap_eq fun c => by
+  let := φ.toAlgebra
+  have : IsScalarTower k B B' := IsScalarTower.of_algebraMap_eq fun c => by
     apply Subtype.ext
     change algebraMap k L c = ((φ (algebraMap k B c) : B') : L)
     rw [hφ, IsScalarTower.algebraMap_apply k K L]
     rfl
-  haveI : Algebra.FormallyUnramified B B' := hU
+  have : Algebra.FormallyUnramified B B' := hU
   have hspan : Submodule.span B' (Set.range fun a : B => KaehlerDifferential.D k B' (φ a)) = ⊤ := by
     rw [eq_top_iff]
     rintro x -
@@ -241,8 +241,8 @@ namespace GlobalTheory.W1
 
 theorem integralClosure_of_finite_map : ∀ (k K L : Type) [Field k] [Field K] [Field L] [Algebra k K] [Algebra k L] [Algebra K L] [IsScalarTower k K L] (B : Subalgebra k K) (B' : Subalgebra k L) (φ : B →+* B'), (∀ x : B, (φ x : L) = algebraMap K L x) → φ.Finite → IsIntegrallyClosed B → IsIntegrallyClosed B' → (∀ x : K, ∃ a ∈ B, ∃ b ∈ B, b ≠ 0 ∧ x * b = a) → (∀ y : L, ∃ a ∈ B', ∃ b ∈ B', b ≠ 0 ∧ y * b = a) → (∀ y ∈ B', IsIntegral B (y : L)) ∧ (∀ x : K, IsIntegral B x → x ∈ B) ∧ (∀ y : L, IsIntegral B y → y ∈ B') := by
   intro k K L _ _ _ _ _ _ _ B B' φ hφ hfin hB hB' hK hL
-  letI : Algebra B B' := φ.toAlgebra
-  haveI : IsScalarTower B B' L := IsScalarTower.of_algebraMap_eq fun x => (hφ x).symm
+  let : Algebra B B' := φ.toAlgebra
+  have : IsScalarTower B B' L := IsScalarTower.of_algebraMap_eq fun x => (hφ x).symm
   have fracK : IsFractionRing B K := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨a, ha, b, hb, hb0, h⟩ := hK z
     refine ⟨⟨a, ha⟩, ⟨b, hb⟩, ?_⟩
@@ -296,10 +296,10 @@ theorem isIntegrallyClosed_sections_of_smooth_complex :
   intro Z _ s hsm U hU hg
   have hs : (s.appLE ⊤ U le_top).hom.Smooth :=
     HasRingHomProperty.appLE @Smooth s hsm ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ le_top
-  letI : Algebra Γ(Sp ℂ, ⊤) Γ(Z, U) := (s.appLE ⊤ U le_top).hom.toAlgebra
+  let : Algebra Γ(Sp ℂ, ⊤) Γ(Z, U) := (s.appLE ⊤ U le_top).hom.toAlgebra
   have : Algebra.Smooth Γ(Sp ℂ, ⊤) Γ(Z, U) := hs
   let e : Γ(Sp ℂ, ⊤) ≃+* ℂ := (Scheme.ΓSpecIso (CommRingCat.of ℂ)).commRingCatIsoToRingEquiv
-  letI : Field Γ(Sp ℂ, ⊤) := (e.toMulEquiv.isField (Field.toIsField ℂ)).toField
+  let : Field Γ(Sp ℂ, ⊤) := (e.toMulEquiv.isField (Field.toIsField ℂ)).toField
   have : Nonempty U := ⟨⟨_, hg⟩⟩
   have : IsDomain Γ(Z, U) := inferInstance
   exact GlobalTheory.isIntegrallyClosed_of_smooth Γ(Sp ℂ, ⊤) Γ(Z, U)
@@ -346,8 +346,8 @@ def eqv {A K σ : Type} [CommRing A] [CommRing K] [SetLike σ K] [SubringClass �
 
 theorem frac (X : Scheme.{0}) [IsIntegral X] (U : X.Opens) (hU : IsAffineOpen U) (h : genericPoint X ∈ U) (x : X.functionField) :
     ∃ a b : Γ(X, U), (X.presheaf.germ U _ h).hom b ≠ 0 ∧ x * (X.presheaf.germ U _ h).hom b = (X.presheaf.germ U _ h).hom a := by
-  haveI : Nonempty U := ⟨⟨_, h⟩⟩
-  haveI := functionField_isFractionRing_of_isAffineOpen X U hU
+  have : Nonempty U := ⟨⟨_, h⟩⟩
+  have := functionField_isFractionRing_of_isAffineOpen X U hU
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := Γ(X, U)) x
   have hb' : algebraMap Γ(X, U) X.functionField b ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hb
@@ -355,10 +355,10 @@ theorem frac (X : Scheme.{0}) [IsIntegral X] (U : X.Opens) (hU : IsAffineOpen U)
 
 theorem finiteEtale_functionField : ∀ (Z Y : Scheme.{0}) [IsIntegral Z] [IsIntegral Y] (s : Z ⟶ Sp ℂ) (s' : Y ⟶ Sp ℂ) (c : Y ⟶ Z), c ≫ s = s' → IsFinite c → Etale c → ∀ (d : ℕ) [SmoothOfRelativeDimension d s] [SmoothOfRelativeDimension d s'] [i1 : Algebra ℂ Z.functionField] [i2 : Algebra ℂ Y.functionField] [Algebra Z.functionField Y.functionField] [IsScalarTower ℂ Z.functionField Y.functionField], i1 = ffAlg s → i2 = ffAlg s' → (∀ (U : Z.Opens) (hU : genericPoint Z ∈ U) (hU' : genericPoint Y ∈ c ⁻¹ᵁ U) (f : Γ(Z, U)), (Y.presheaf.germ (c ⁻¹ᵁ U) (genericPoint Y) hU').hom ((c.app U).hom f) = algebraMap Z.functionField Y.functionField ((Z.presheaf.germ U (genericPoint Z) hU).hom f)) → FiniteDimensional Z.functionField Y.functionField ∧ ∀ (U : Z.Opens) (hU : genericPoint Z ∈ U) (hU' : genericPoint Y ∈ c ⁻¹ᵁ U) (B : Subalgebra ℂ Z.functionField) (B' : Subalgebra ℂ Y.functionField), IsAffineOpen U → (∀ y, y ∈ B ↔ ∃ f : Γ(Z, U), (Z.presheaf.germ U (genericPoint Z) hU).hom f = y) → (∀ y, y ∈ B' ↔ ∃ f : Γ(Y, c ⁻¹ᵁ U), (Y.presheaf.germ (c ⁻¹ᵁ U) (genericPoint Y) hU').hom f = y) → (∀ y ∈ B', IsIntegral B (y : Y.functionField)) ∧ (∀ x : Z.functionField, IsIntegral B x → x ∈ B) ∧ (∀ y : Y.functionField, IsIntegral B y → y ∈ B') ∧ (∀ v ∈ B', ∃ (m : ℕ) (b : Fin m → Y.functionField) (w : Fin m → Z.functionField), (∀ j, b j ∈ B' ∧ w j ∈ B) ∧ ι1 (D ℂ Y.functionField v) = ∑ j, b j • mapDR ℂ Z.functionField Y.functionField (ι1 (D ℂ Z.functionField (w j)))) := by
   intro Z Y _ _ s s' c hcs hfin het d _ _ i1 i2 _ _ h1 h2 hcomp
-  haveI : Smooth s := SmoothOfRelativeDimension.smooth d s
-  haveI : Smooth s' := SmoothOfRelativeDimension.smooth d s'
-  haveI := hfin
-  haveI := het
+  have : Smooth s := SmoothOfRelativeDimension.smooth d s
+  have : Smooth s' := SmoothOfRelativeDimension.smooth d s'
+  have := hfin
+  have := het
   have hφ : ∀ (U : Z.Opens) (hU : genericPoint Z ∈ U) (hU' : genericPoint Y ∈ c ⁻¹ᵁ U) {σ σ' : Type}
       [SetLike σ Z.functionField] [SubringClass σ Z.functionField] [SetLike σ' Y.functionField] [SubringClass σ' Y.functionField]
       (B : σ) (B' : σ') (hB : ∀ y, y ∈ B ↔ ∃ f : Γ(Z, U), (Z.presheaf.germ U (genericPoint Z) hU).hom f = y)
@@ -394,10 +394,10 @@ theorem finiteEtale_functionField : ∀ (Z Y : Scheme.{0}) [IsIntegral Z] [IsInt
     exact GlobalTheory.T.finiteDimensional_of_finite_subring_hom_of_fractions _ _ _ _ φ hφ1 hφ2 (hfr Y _ hU₀' _ (fun y => RingHom.mem_range) (hU₀.preimage c))
   · intro U hU hU' B B' hUa hB hB'
     obtain ⟨φ, hφ1, hφ2, hφ3, ⟨eB⟩, ⟨eB'⟩⟩ := hφ U hU hU' B B' hB hB' hUa
-    haveI := GlobalTheory.T.isIntegrallyClosed_sections_of_smooth_complex' Z s U hUa hU
-    haveI := GlobalTheory.T.isIntegrallyClosed_sections_of_smooth_complex' Y s' (c ⁻¹ᵁ U) (hUa.preimage c) hU'
-    haveI : IsIntegrallyClosed B := IsIntegrallyClosed.of_equiv eB
-    haveI : IsIntegrallyClosed B' := IsIntegrallyClosed.of_equiv eB'
+    have := GlobalTheory.T.isIntegrallyClosed_sections_of_smooth_complex' Z s U hUa hU
+    have := GlobalTheory.T.isIntegrallyClosed_sections_of_smooth_complex' Y s' (c ⁻¹ᵁ U) (hUa.preimage c) hU'
+    have : IsIntegrallyClosed B := IsIntegrallyClosed.of_equiv eB
+    have : IsIntegrallyClosed B' := IsIntegrallyClosed.of_equiv eB'
     obtain ⟨r1, r2, r3⟩ := GlobalTheory.T.integralClosure_of_finite_map_integrallyClosed_subrings ℂ _ _ B B' φ hφ1 hφ2 inferInstance inferInstance (hfr Z U hU B hB hUa)
       (hfr Y _ hU' B' hB' (hUa.preimage c))
     exact ⟨r1, r2, r3, GlobalTheory.T.formally_unramified_differentials_span ℂ _ _ B B' φ hφ1 hφ3⟩

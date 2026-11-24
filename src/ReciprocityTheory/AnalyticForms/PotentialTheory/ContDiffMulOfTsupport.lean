@@ -148,7 +148,7 @@ theorem sliceMap_analytic (B : FinHolAtlas e W) (hB : HoloMap B A Subtype.val)
     rw [(A.chart k).left_inv hk]
     exact hp
   have hcont : ContinuousAt (Subtype.val ∘ (B.chart j).symm) y :=
-    continuous_subtype_val.continuousAt.comp ((B.chart j).continuousAt_symm hy.1)
+    continuous_subtypeVal.continuousAt.comp ((B.chart j).continuousAt_symm hy.1)
   have hev : ∀ᶠ y' in 𝓝 y, (Subtype.val ∘ (B.chart j).symm) y' ∈ (A.chart k).source :=
     hcont.preimage_mem_nhds ((A.chart k).open_source.mem_nhds hk)
   have heq : (ψ ∘ (A.chart k).symm) ∘ (A.chart k ∘ Subtype.val ∘ (B.chart j).symm) =ᶠ[𝓝 y]
@@ -214,12 +214,12 @@ theorem slice_chart (B : FinHolAtlas e W) (hB : HoloMap B A Subtype.val) (Φ : F
     ∫ y in (B.chart j).target, P.χ j ((B.chart j).symm y) * (v ∘ Subtype.val) ((B.chart j).symm y) *
       locDens B (fun k => (Φ k).pullback Subtype.val continuous_subtype_val) j y =
     ∫ z, (hypInclAt i ⁻¹' ψ.target).indicator (sliceF W (P.χ j) v ψ i (sliceDens Φ x ψ i)) z := by
-  set Ψ : Fin e → LocPot W := fun k => (Φ k).pullback Subtype.val continuous_subtype_val
+  set Ψ : Fin e → LocPot W := fun k => (Φ k).pullback Subtype.val continuous_subtypeVal
   set F := sliceF W (P.χ j) v ψ i (sliceDens Φ x ψ i)
   set c := B.chart j
   set S := c.target ∩ c.symm ⁻¹' (Subtype.val ⁻¹' V)
   have hS : IsOpen S :=
-    c.continuousOn_symm.isOpen_inter_preimage c.open_target (hV.preimage continuous_subtype_val)
+    c.continuousOn_symm.isOpen_inter_preimage c.open_target (hV.preimage continuous_subtypeVal)
   set τ := sliceMap ψ i c
   have hτ : AnalyticOnNhd ℂ τ S := sliceMap_analytic B hB hψ j hVψ
   have hinj : Set.InjOn τ S := sliceMap_injOn B hWψ j hVψ
@@ -294,7 +294,7 @@ theorem slice_chart (B : FinHolAtlas e W) (hB : HoloMap B A Subtype.val) (Φ : F
       · rw [Set.indicator_of_notMem (show z ∉ hypInclAt i ⁻¹' ψ.target from ht)]
   have hIT : IntegrableOn I c.target := by
     have hcont : Continuous (fun q : W => P.χ j q * v q) :=
-      (smooth_continuous (P.smooth j)).mul ((smooth_continuous hv).comp continuous_subtype_val)
+      (smooth_continuous (P.smooth j)).mul ((smooth_continuous hv).comp continuous_subtypeVal)
     have hmi := mIntegrableCont B Ψ hΨ _ hcont
     have hKc : IsCompact (c '' tsupport (P.χ j)) :=
       (isClosed_tsupport _).isCompact.image_of_continuousOn (c.continuousOn.mono (P.tsupport_subset j))
@@ -354,7 +354,7 @@ theorem slice_mInt {A : FinHolAtlas (e + 1) X} {W : Set X} [CompactSpace W]
   by_cases hx : x ∈ W
   · have hne : Nonempty (ChartPartition B) := existsPartition B
     unfold mInt
-    rw [dif_pos hne]
+    rw [dite_eq_left hne]
     unfold integralWith
     have hj := fun j => slice_chart B hB Φ hΦ hψ hWψ x hx hV hVψ hVΦ hv hvV hne.some j
     rw [Finset.sum_congr rfl (fun j _ => (hj j).2)]
@@ -367,7 +367,7 @@ theorem slice_mInt {A : FinHolAtlas (e + 1) X} {W : Set X} [CompactSpace W]
       rw [chartExt, Set.indicator_of_mem ht]
       simp only [sliceF, ← Finset.sum_mul]
       have h1 : ∑ j, extW W (hne.some.χ j) (ψ.symm (hypInclAt i z)) = 1 := by
-        simp only [extW, hpW, dif_pos]
+        simp only [extW, hpW, dite_eq_left]
         exact hne.some.sum_eq_one _
       rw [h1, one_mul]
       rfl
@@ -447,7 +447,7 @@ theorem exists_cutoff {n : ℕ} {K U : Set (Fin n → ℂ)} (hK : IsCompact K) (
   intro x hx
   obtain ⟨i, hi, hix⟩ := Set.mem_iUnion₂.mp (hcov hx)
   have : f i x ≤ ∑ j ∈ t, f j x := Finset.single_le_sum (fun j _ => hf0 j x) hi
-  simp only [Set.mem_setOf_eq] at hix ⊢
+  simp only [Set.mem_ofPred_eq] at hix ⊢
   linarith
 
 theorem contDiff_mul_of_tsupport {n : ℕ} {ρ f : (Fin n → ℂ) → ℝ} {U : Set (Fin n → ℂ)}

@@ -132,7 +132,7 @@ lemma exists_nat_smul_mem {n : ℕ} {Λ : Submodule (𝓞 D.host.E) (Fin n → D
   have hnat : ∀ (m : ℕ) {y : Fin n → D.host.E}, y ∈ Λ → (m : D.host.E) • y ∈ Λ := fun m y hy => by
     rw [Nat.cast_smul_eq_nsmul]; exact Λ.nsmul_mem hy m
   have hx : x ∈ Submodule.span D.host.E (Λ : Set (Fin n → D.host.E)) := by
-    letI := hΛ
+    let := hΛ
     rw [Submodule.IsFullLattice.span_eq_top]; trivial
   induction hx using Submodule.span_induction with
   | mem y hy => exact ⟨1, one_pos, by simpa using hy⟩

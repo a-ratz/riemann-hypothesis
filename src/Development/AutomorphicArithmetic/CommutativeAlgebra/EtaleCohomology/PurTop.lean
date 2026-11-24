@@ -906,7 +906,7 @@ theorem hs_pull_id_RLocP (q : ℕ) (P : Arrow Spc) (n i : ℤ) (x : Hs q P n i) 
 theorem LeafLocPrd_of (hCl : LeafCl) (hPR : LeafPrdRing) (hZ : LeafZ) (hAbv : LeafAbv) (hAN : LeafActNat) : LeafLocPrd := by
   intro hyp H d P V q _ hq hG
   have a6 : DivisorNaturality := hyp.2.2.2.2.1
-  haveI := P.cl
+  have := P.cl
   have hcl : IsCl d (fcl d) := pick_spec (hCl hyp d)
 
   have hqA : IsUnit (q : Γ(P.X, V.1)) := by
@@ -920,14 +920,14 @@ theorem LeafLocPrd_of (hCl : LeafCl) (hPR : LeafPrdRing) (hZ : LeafZ) (hAbv : Le
     rw [Ideal.map_id] at e
     rw [e]; rfl
   have h0 : off Γ(P.X, V.1) (P.ι.ker.ideal V) ≤ V.2.fromSpec ⁻¹ᵁ P.U := le_of_eq e0
-  haveI : IsOpenImmersion V.2.fromSpec := V.2.isOpenImmersion_fromSpec
+  have : IsOpenImmersion V.2.fromSpec := V.2.isOpenImmersion_fromSpec
   obtain ⟨c, hcdef⟩ : ∃ c, c = Hs.pull q (opnMap V.2.fromSpec _ _ h0) _ _ (fcl d q P) := ⟨_, rfl⟩
   have hc : ∀ (B : Type) [CommRing B] (φ : Γ(P.X, V.1) →+* B) (x : Fin d → B) hx h, φ.Etale →
       Hs.pull q (opnMap (Spec.map (CommRingCat.ofHom φ)) (off B ((P.ι.ker.ideal V).map φ)) (off _ (P.ι.ker.ideal V)) h) _ _ c
         = thom d q B ((P.ι.ker.ideal V).map φ) x hx := by
     intro B _ φ x hx h hφ
     obtain ⟨z, hz⟩ := (hZ P.X P.Z P.ι V B φ).1
-    haveI : Etale (Spec.map (CommRingCat.ofHom φ)) := HasRingHomProperty.Spec_iff.mpr hφ
+    have : Etale (Spec.map (CommRingCat.ofHom φ)) := HasRingHomProperty.Spec_iff.mpr hφ
     have h' : off B ((P.ι.ker.ideal V).map φ) ≤ (Spec.map (CommRingCat.ofHom φ) ≫ V.2.fromSpec) ⁻¹ᵁ P.U :=
       le_of_eq (hoff B φ)
     rw [hcdef, ← hs_pull_comp, opnMap_comp_RLocP _ _ _ _ _ _ _ h']
@@ -1120,7 +1120,7 @@ theorem quotC_bij (d : ℕ) (R : Type) [CommRing R] :
     intro r hr
     rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem, hJ, MvPolynomial.mem_ideal_span_X_image] at hr
     by_contra h
-    obtain ⟨i, -, hi⟩ := hr 0 (by rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C, if_pos rfl]; exact h)
+    obtain ⟨i, -, hi⟩ := hr 0 (by rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_C, ite_eq_left rfl]; exact h)
     exact hi rfl
   · intro y
     obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -1131,7 +1131,7 @@ theorem quotC_bij (d : ℕ) (R : Type) [CommRing R] :
     push_neg at hcon
     have : m = 0 := Finsupp.ext fun i => hcon i (Set.mem_univ i)
     subst this
-    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, MvPolynomial.coeff_C, if_pos rfl,
+    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, MvPolynomial.coeff_C, ite_eq_left rfl,
       ← MvPolynomial.constantCoeff_eq, sub_self] at hm
     exact hm rfl
 
@@ -1822,7 +1822,7 @@ theorem zpf_pushout {R B : Type} [CommRing R] [CommRing B] (φ : R →+* B) (I :
     IsPushout (CommRingCat.ofHom φ) (CommRingCat.ofHom (Ideal.Quotient.mk I))
       (CommRingCat.ofHom (Ideal.Quotient.mk (I.map φ)))
       (CommRingCat.ofHom (Ideal.quotientMap (I.map φ) φ Ideal.le_comap_map)) := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   let e := Algebra.TensorProduct.quotIdealMapEquivTensorQuot B I
   refine (CommRingCat.isPushout_tensorProduct R B (R ⧸ I)).of_iso (Iso.refl _) (Iso.refl _)
     (Iso.refl _) e.toRingEquiv.toCommRingCatIso.symm ?_ ?_ ?_ ?_

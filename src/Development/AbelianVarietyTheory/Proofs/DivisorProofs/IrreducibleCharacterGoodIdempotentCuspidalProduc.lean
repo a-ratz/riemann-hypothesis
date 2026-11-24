@@ -98,10 +98,10 @@ theorem zIdem_pair_ne_zero {G : Type} [Group G] [Fintype G] (τ W : FDRep ℂ G)
     (h : ∑ x, (zIdem τ).coeff x * W.character x ≠ 0) : Nonempty (W ≅ τ) := by
   classical
   have hcard : (Fintype.card G : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
-  haveI := invertibleOfNonzero hcard
+  have := invertibleOfNonzero hcard
   have ho := FDRep.char_orthonormal W τ
   by_contra hn
-  rw [if_neg hn] at ho
+  rw [ite_eq_right hn] at ho
   apply h
   have hs : ∑ g, W.character g * τ.character g⁻¹ = 0 := by
     rcases mul_eq_zero.mp ho with h0 | h0
@@ -123,7 +123,7 @@ theorem GlobalTheory.SeriesIdem.exists_simple_of_eSerO_pair : ∀ (g : ℕ) [Fac
   intro g _ C O r f ψ hψ hsum
   classical
   obtain ⟨W, hWs, rfl⟩ := (PI.SerBridgeGLW.irrCharIff_of PI.SerBridgeGLW.conjugate_character_formula _ ψ).1 hψ
-  haveI := hWs
+  have := hWs
   by_contra hno
   push_neg at hno
   have hnt : Nontrivial W := by
@@ -144,7 +144,7 @@ theorem GlobalTheory.SeriesIdem.exists_simple_of_eSerO_pair : ∀ (g : ℕ) [Fac
       (∃ τ : FDRep ℂ (GL (Fin r) (ZMod g)), Simple τ ∧ zIdem τ = z ∧ HasLabelO O τ f) →
       ∑ x, z.coeff x * W.character x = 0 := by
     rintro z ⟨τ, hτs, rfl, hτl⟩
-    haveI := hτs
+    have := hτs
     by_contra hne
     obtain ⟨i⟩ := zIdem_pair_ne_zero τ W hne
     obtain ⟨x, hx⟩ := hno τ hτs hτl
@@ -161,9 +161,9 @@ theorem GlobalTheory.SeriesIdem.exists_simple_of_eSerO_pair : ∀ (g : ℕ) [Fac
     rw [hsplit]
     refine Finset.sum_eq_zero fun z _ => ?_
     by_cases hP : ∃ τ : FDRep ℂ (GL (Fin r) (ZMod g)), Simple τ ∧ zIdem τ = z ∧ HasLabelO O τ f
-    · simp only [hF, finsum_eq_if, if_pos hP]
+    · simp only [hF, finsum_eq_if, ite_eq_left hP]
       exact hz z hP
-    · simp only [hF, finsum_eq_if, if_neg hP]
+    · simp only [hF, finsum_eq_if, ite_eq_right hP]
       simp
   · rw [finsum_of_infinite_support hfin]
     simp
@@ -333,11 +333,11 @@ variable {K : Type} [Field K] [Fintype K] [DecidableEq K] {ι : Type} [Fintype �
 theorem unip_diag_mul (b : ι → Fin s) {g h : GL ι K} (hg : g ∈ unip K b) (hh : h ∈ unip K b)
     (i j : ι) (hij : b i = b j) : ((g * h : GL ι K) : Matrix ι ι K) i j = if i = j then 1 else 0 := by
   rw [Units.val_mul, Matrix.mul_apply, Finset.sum_eq_single i]
-  · rw [hg.2 i i rfl, if_pos rfl, one_mul, hh.2 i j hij]
+  · rw [hg.2 i i rfl, ite_eq_left rfl, one_mul, hh.2 i j hij]
   · intro k _ hki
     rcases lt_trichotomy (b k) (b i) with hlt | heq | hgt
     · rw [hg.1.1 i k hlt, zero_mul]
-    · rw [hg.2 i k heq.symm, if_neg (Ne.symm hki), zero_mul]
+    · rw [hg.2 i k heq.symm, ite_eq_right (Ne.symm hki), zero_mul]
     · rw [hh.1.1 k j (by rw [← hij]; exact hgt), mul_zero]
   · intro h; exact absurd (Finset.mem_univ i) h
 
@@ -346,11 +346,11 @@ theorem unip_diag_inv (b : ι → Fin s) {g : GL ι K} (hg : g ∈ unip K b)
   have h1 : ((g⁻¹ * g : GL ι K) : Matrix ι ι K) i j = if i = j then 1 else 0 := by
     rw [inv_mul_cancel, Units.val_one, Matrix.one_apply]
   rw [Units.val_mul, Matrix.mul_apply, Finset.sum_eq_single j] at h1
-  · rwa [hg.2 j j rfl, if_pos rfl, mul_one] at h1
+  · rwa [hg.2 j j rfl, ite_eq_left rfl, mul_one] at h1
   · intro k _ hkj
     rcases lt_trichotomy (b k) (b i) with hlt | heq | hgt
     · rw [hg.1.2 i k hlt, zero_mul]
-    · rw [hg.2 k j (heq.trans hij), if_neg hkj, mul_zero]
+    · rw [hg.2 k j (heq.trans hij), ite_eq_right hkj, mul_zero]
     · rw [hg.1.1 k j (by rw [← hij]; exact hgt), mul_zero]
   · intro h; exact absurd (Finset.mem_univ j) h
 
@@ -561,9 +561,9 @@ theorem factor_iso : ∀ (K : Type) [Field K] [Fintype K] [DecidableEq K] (r s :
   have hinj : Function.Injective (IntertwiningMap.equivLinearMapAsModule ρ' _ f) :=
     tprod_update_injective v hv c
   have hiso := hF.2.of_injective _ hinj
-  haveI : IsSimpleModule (MonoidAlgebra ℂ (GL (Fin d) K)) ρ'.asModule :=
+  have : IsSimpleModule (MonoidAlgebra ℂ (GL (Fin d) K)) ρ'.asModule :=
     (irreducible_iff_isSimpleModule_asModule ρ').1 hirr
-  haveI : IsSimpleModule (MonoidAlgebra ℂ (GL (Fin d) K)) (⊤ : Submodule (MonoidAlgebra ℂ (GL (Fin d) K)) ρ'.asModule) :=
+  have : IsSimpleModule (MonoidAlgebra ℂ (GL (Fin d) K)) (⊤ : Submodule (MonoidAlgebra ℂ (GL (Fin d) K)) ρ'.asModule) :=
     IsSimpleModule.congr (Submodule.topEquiv)
   let E : ρ.asModule ≃ₗ[MonoidAlgebra ℂ (GL (Fin d) K)] ρ'.asModule := ((hiso ⊤).some.symm.trans Submodule.topEquiv)
   let F : IntertwiningMap ρ ρ' := (IntertwiningMap.equivLinearMapAsModule ρ ρ').symm E.toLinearMap
@@ -692,9 +692,9 @@ theorem leviTensor_isIrreducible : ∀ (K : Type) [Field K] [Fintype K] [Decidab
   intro K _ _ _ r s b lam hs
   have hirr := fun c => GlobalTheory.SerOSys.ZSum.isIrreducible_of_simple (lam c) (hs c)
   have hspan := fun c => GlobalTheory.ClassFin.span_range_eq_top_of_isIrreducible _ _ (lam c).ρ (hirr c)
-  haveI : ∀ c, Nontrivial (lam c : Type) := fun c =>
+  have : ∀ c, Nontrivial (lam c : Type) := fun c =>
     GlobalTheory.OuterTensor.nontrivial_of_isIrreducible _ (hirr c)
-  haveI : Nontrivial (PiTensorProduct ℂ (fun c => (lam c : Type))) := nontrivial_piTensorProduct
+  have : Nontrivial (PiTensorProduct ℂ (fun c => (lam c : Type))) := nontrivial_piTensorProduct
   refine { exists_pair_ne := ⟨⊥, ⊤, fun h => ?_⟩, eq_bot_or_eq_top := fun S => ?_ }
   · exact bot_ne_top (congrArg Subrepresentation.toSubmodule h :
       (⊥ : Submodule ℂ (PiTensorProduct ℂ (fun c => (lam c : Type)))) = ⊤)
@@ -745,7 +745,7 @@ theorem isIrrRep_of_equiv {G V V' : Type} [Group G] [AddCommGroup V] [Module ℂ
 
 theorem isIrrRep_of_isIrreducible {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
     (ρ : Representation ℂ G V) (h : ρ.IsIrreducible) : IsIrrRep ρ := by
-  haveI := h
+  have := h
   refine ⟨?_, fun W hW => ?_⟩
   · by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
@@ -955,7 +955,7 @@ theorem character_eq_of_constituent {Γ : Type} [Group Γ] (τ : FDRep ℂ Γ) {
     · exact h
   let e : τ ≃ₗ[ℂ] V :=
     LinearEquiv.ofBijective φ ⟨LinearMap.ker_eq_bot.1 hker, LinearMap.range_eq_top.1 hran⟩
-  haveI : Module.Finite ℂ V := Module.Finite.equiv e
+  have : Module.Finite ℂ V := Module.Finite.equiv e
   have hconj : e.conj (τ.ρ x) = ρ x := by
     ext v
     obtain ⟨w, rfl⟩ := e.surjective v
@@ -972,7 +972,7 @@ theorem isCuspProdChar_of_squarefree : ∀ (K : Type) [Field K] [Fintype K] [Dec
   obtain ⟨s, b, lam, hb, hl, hc, rfl⟩ := hL
   have hirrF : ∀ c, Irreducible (labO O (lam c)) := fun c => by
     obtain ⟨i, hi⟩ := hb c
-    haveI : Nonempty {i // b i = c} := ⟨⟨i, hi⟩⟩
+    have : Nonempty {i // b i = c} := ⟨⟨i, hi⟩⟩
     exact labO_irreducible O (hl c).1 (hl c).2
   have hinj := injective_of_squarefree _ hirrF hsq
   have hirr := _root_.GlobalTheory.HcIrr.isIrrRep_hcRep K r s b lam hb hl C O hinj
@@ -1017,9 +1017,9 @@ theorem isChar_prod [DecidableEq ι] {ψ : ∀ i, G i → ℂ} (h : ∀ i, IsCha
     simp only [Mf, Matrix.of_apply, Pi.one_apply, map_one, Units.val_one, Matrix.one_apply]
     by_cases hpq : p = q
     · subst hpq; simp
-    · rw [if_neg hpq]
+    · rw [ite_eq_right hpq]
       obtain ⟨i, hi⟩ := Function.ne_iff.1 hpq
-      exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+      exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
   have hMm : ∀ g h, Mf (g * h) = Mf g * Mf h := by
     intro g h
     ext p q
@@ -1071,8 +1071,8 @@ theorem isIrrChar_character (V : FDRep ℂ H) (h : Simple V) : IsIrrChar V.chara
 
 theorem irr_one_ne_zero {ψ : H → ℂ} (h : IsIrrChar ψ) : ψ 1 ≠ 0 := by
   obtain ⟨V, hV, rfl⟩ := exists_simple h
-  haveI := hV
-  haveI := PI.CharIdemW.nontrivial_of_simple V
+  have := hV
+  have := PI.CharIdemW.nontrivial_of_simple V
   rw [FDRep.char_one]
   exact_mod_cast Module.finrank_pos.ne'
 
@@ -1081,15 +1081,15 @@ theorem eq_of_sum_ne_zero {χ ψ : H → ℂ} (hχ : IsIrrChar χ) (hψ : IsIrrC
   classical
   obtain ⟨V, hV, rfl⟩ := exists_simple hχ
   obtain ⟨W, hW, rfl⟩ := exists_simple hψ
-  haveI := hV
-  haveI := hW
+  have := hV
+  have := hW
   have hc : (Nat.card H : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
-  haveI := invertibleOfNonzero hc
+  have := invertibleOfNonzero hc
   have ho := FDRep.char_orthonormal V W
   by_cases hi : Nonempty (V ≅ W)
   · obtain ⟨i⟩ := hi
     exact FDRep.char_iso i
-  · rw [if_neg hi] at ho
+  · rw [ite_eq_right hi] at ho
     exact absurd ((mul_eq_zero.mp ho).resolve_left (inv_ne_zero hc)) h
 
 theorem sum_single (e : MonoidAlgebra ℂ H) : ∑ g : H, MonoidAlgebra.single g (e.coeff g) = e := by
@@ -1117,8 +1117,8 @@ theorem central_idem_term {e : MonoidAlgebra ℂ H} (hc : ∀ x, e * x = x * e) 
     (hψ : IsIrrChar ψ) : ∑ g, e.coeff g * ψ g = ψ 1 ∨ ∑ g, e.coeff g * ψ g = 0 := by
   classical
   obtain ⟨V, hVs, rfl⟩ := exists_simple hψ
-  haveI := hVs
-  haveI := PI.CharIdemW.nontrivial_of_simple V
+  have := hVs
+  have := PI.CharIdemW.nontrivial_of_simple V
   have hcomm : ∀ k : H, V.ρ k * (∑ g, e.coeff g • V.ρ g) = (∑ g, e.coeff g • V.ρ g) * V.ρ k :=
     PI.CharIdemW.comm_of_class V (fun g => e.coeff g) (fun g k => coeff_conj hc g k)
   obtain ⟨μ, hμ⟩ := PI.CharIdemW.schur_scalar V _ hcomm
@@ -1158,17 +1158,17 @@ theorem exists_factor [DecidableEq ι] {χ : (∀ i, G i) → ℂ} (hχ : IsIrrC
       MonoidAlgebra.coeff_single, Finsupp.single_apply] at h
     rw [h]
     by_cases ht : t = 1
-    · rw [if_pos ht.symm, if_pos ht]
-    · rw [if_neg (Ne.symm ht), if_neg ht]
+    · rw [ite_eq_left ht.symm, ite_eq_left ht]
+    · rw [ite_eq_right (Ne.symm ht), ite_eq_right ht]
   have hdelta : ∀ x : (∀ i, G i), ∑ p ∈ Fintype.piFinset Z, ∏ i, (p i).coeff (x i) = if x = 1 then 1 else 0 := by
     intro x
     rw [← Finset.prod_univ_sum Z (fun i z => z.coeff (x i))]
     simp only [hone]
     by_cases hx : x = 1
     · subst hx; simp
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       obtain ⟨i, hi⟩ := Function.ne_iff.1 hx
-      exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+      exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
   have hkey : χ 1 = ∑ p ∈ Fintype.piFinset Z, ∑ x, χ x * ∏ i, (p i).coeff (x i) := by
     rw [Finset.sum_comm]
     simp only [← Finset.mul_sum, hdelta]
@@ -1233,8 +1233,8 @@ theorem exists_good_factor {A : ι → Type} [∀ i, Fintype (A i)] [inst : Fint
 theorem irreducible_character_good_idempotent_cuspidal_product : ∀ (D : D7) [Fintype (G0g D.nd)], (∀ k : Fin 2, haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩; ∃ (C : Formalism.IrreducibleCountingLemmas.TYPES.LabelConv (ZMod (D.host.g k))) (O : Formalism.IrreducibleCountingLemmas.TYPES.LabelMap (ZMod (D.host.g k)) C), ∀ f, D.ntypes.eSer k f = Formalism.L2.NT.eSerO O D.R.r f) → ∀ χ : G0g D.nd → ℂ, Formalism.L2.NT.IsIrrChar χ → ∑ g, D.ntypes.e0.coeff g * χ g = χ 1 → ∃ θ : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), GL (Fin D.R.r) (ZMod (D.host.g kv.1)) → ℂ, (∀ kv : (Σ k : Fin 2, D.nd.PlG k), haveI : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩; GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.IsCuspProdChar (θ kv)) ∧ ∀ g, χ g = ∏ kv : (Σ k : Fin 2, D.nd.PlG k), θ kv (g kv) := by
   intro D _ hO χ hχ h
   classical
-  haveI hF : ∀ k, Fact (D.host.g k).Prime := fun k => ⟨D.host.g_prime k⟩
-  haveI hN : ∀ k, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
+  have hF : ∀ k, Fact (D.host.g k).Prime := fun k => ⟨D.host.g_prime k⟩
+  have hN : ∀ k, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
   choose C O hCO using hO
   obtain ⟨ψ, a, hP, hψ, hs, hχe⟩ := exists_good_factor
     (ι := Σ k : Fin 2, D.nd.PlG k) (G := fun kv => GL (Fin D.R.r) (ZMod (D.host.g kv.1)))

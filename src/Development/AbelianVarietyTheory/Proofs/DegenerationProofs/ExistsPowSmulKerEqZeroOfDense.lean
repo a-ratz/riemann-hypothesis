@@ -96,8 +96,8 @@ theorem IsBasisAway.one_tmul_ne_zero {a : R} {s : Set M}
     [Algebra R K] (ha : IsUnit (algebraMap R K a)) {x : M} (hx : x ∈ s) :
     (1 : K) ⊗ₜ[R] x ≠ 0 := by
   obtain ⟨b, hb⟩ := h.exists_basis_apply_eq
-  letI : Algebra (Localization.Away a) K := (IsLocalization.Away.lift a ha).toAlgebra
-  haveI : IsScalarTower R (Localization.Away a) K :=
+  let : Algebra (Localization.Away a) K := (IsLocalization.Away.lift a ha).toAlgebra
+  have : IsScalarTower R (Localization.Away a) K :=
     .of_algebraMap_eq fun r => (IsLocalization.Away.lift_eq a ha r).symm
   have := ((b.baseChange K).map (AlgebraTensorModule.cancelBaseChange R _ K K M)).ne_zero ⟨x, hx⟩
   simpa [hb] using this
@@ -116,7 +116,7 @@ theorem exists_pow_smul_ker_eq_zero_of_dense {D : Set (PrimeSpectrum R)} (hD : D
     (h : ∀ x ∈ D, Function.Injective (Algebra.TensorProduct.map
       (AlgHom.id R x.asIdeal.ResidueField) φ)) :
     ∃ a : R, a ≠ 0 ∧ ∀ y : A₀, φ y = 0 → ∃ n : ℕ, a ^ n • y = 0 := by
-  haveI : IsNoetherianRing A₀ := Algebra.FiniteType.isNoetherianRing R A₀
+  have : IsNoetherianRing A₀ := Algebra.FiniteType.isNoetherianRing R A₀
   let J : Ideal A₀ := RingHom.ker φ
   obtain ⟨a, ha0, ha⟩ := exists_hasBasisAway_of_finiteType (R := R) (A := A₀) J
   obtain ⟨b, hb0, hb⟩ := exists_hasBasisAway_quotient R A₀ A₀ J (IsNoetherian.noetherian J)

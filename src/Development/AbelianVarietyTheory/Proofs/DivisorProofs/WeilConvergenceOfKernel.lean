@@ -260,11 +260,11 @@ theorem lintegral_infScale_pi : ∀ (F : Type) [Field F] [NumberField F] (κ : T
     ∀ (f : (κ → AF F) → ℝ≥0∞), ∫⁻ x, f (fun j => GlobalTheory.TorusTheta.infScale F (u j) * x j) ∂μ =
       (ENNReal.ofReal (∏ j, u j ^ Module.finrank ℚ F))⁻¹ * ∫⁻ x, f x ∂μ := by
   intro F _ _ κ _ u hu μ hμ f
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := hμ
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := hμ
   let s : (κ → AF F)ˣ :=
     { val := fun j => infScale F (u j)
       inv := fun j => infScale F (u j)⁻¹
@@ -326,7 +326,7 @@ theorem proj_zero_mem_adm' (κ : Type) [Fintype κ] :
   intro g _
   refine ⟨g 0 • (BoundedContinuousFunction.evalCLM ℂ 0).comp
     (SchwartzMap.toBoundedContinuousFunctionCLM ℂ (κ → mixedEmbedding.mixedSpace F) ℂ), fun f => ?_⟩
-  simp only [LinearMap.proj_apply, pureA, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp',
+  simp only [LinearMap.proj_apply, pureA, FunLike.coe_smul, ContinuousLinearMap.coe_comp,
     Function.comp_apply, Pi.smul_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply,
     BoundedContinuousFunction.evalCLM_apply, smul_eq_mul]
   have h1 : (fun i : κ => InfiniteAdeleRing.ringEquiv_mixedSpace F ((0 : κ → AdeleRing (𝓞 F) F) i).1) = 0 := by
@@ -338,7 +338,7 @@ theorem proj_zero_mem_adm' (κ : Type) [Fintype κ] :
 theorem memLp_of_mem_schA {κ : Type} [Fintype κ] (μ : @Measure (κ → AF F) (borel _))
     (hμ : @Measure.IsAddHaarMeasure _ _ _ (borel _) μ) {Φ : (κ → AF F) → ℂ} (hΦ : Φ ∈ schA F κ) :
     (letI : MeasurableSpace (κ → AF F) := borel _; MemLp Φ 2 μ) := by
-  letI mA : MeasurableSpace (κ → AF F) := borel _
+  let mA : MeasurableSpace (κ → AF F) := borel _
   induction hΦ using Submodule.span_induction with
   | mem Φ h =>
     obtain ⟨f, g, hg, rfl⟩ := h
@@ -350,10 +350,10 @@ theorem memLp_of_mem_schA {κ : Type} [Fintype κ] (μ : @Measure (κ → AF F) 
 theorem lintegral_sq_ne_zero {κ : Type} [Fintype κ] (μ : @Measure (κ → AF F) (borel _))
     (hμ : @Measure.IsAddHaarMeasure _ _ _ (borel _) μ) {Φ : (κ → AF F) → ℂ} (hc : Continuous Φ) (h0 : Φ 0 ≠ 0) :
     ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ ≠ 0 := by
-  letI mA : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mA : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
   intro h
-  have hm : AEMeasurable (fun x => ‖Φ x‖ₑ ^ 2) μ := (hc.measurable.enorm.pow_const 2).aemeasurable
+  have hm : AEMeasurable (fun x => ‖Φ x‖ₑ ^ 2) μ := (hc.measurable.eNorm.pow_const 2).aemeasurable
   rw [lintegral_eq_zero_iff' hm] at h
   have h' : Φ =ᵐ[μ] 0 := h.mono fun x hx => by
     simpa using hx
@@ -408,8 +408,8 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
     simpa [schr, dotProduct] using h1
   refine ⟨c, ?_, hval⟩
 
-  letI mA : MeasurableSpace (Fin n × Fin d → AF F) := borel _
-  haveI : BorelSpace (Fin n × Fin d → AF F) := ⟨rfl⟩
+  let mA : MeasurableSpace (Fin n × Fin d → AF F) := borel _
+  have : BorelSpace (Fin n × Fin d → AF F) := ⟨rfl⟩
   let μ : Measure (Fin n × Fin d → AF F) := Measure.addHaar
   have hμ : μ.IsAddHaarMeasure := inferInstance
   obtain ⟨Φ, hΦ, h0⟩ := GlobalTheory.SchANonzero.exists_mem_schA_ne_zero F (Fin n × Fin d)
@@ -417,12 +417,12 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
     lintegral_sq_ne_zero μ hμ (GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA (F := F) hΦ) h0
   have hIt : ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ ≠ ⊤ := by
     have h2 := (memLp_of_mem_schA μ hμ hΦ).eLpNorm_lt_top
-    rw [eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top (by norm_num) (by norm_num)] at h2
+    rw [eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top (by norm_num) (by norm_num)] at h2
     · simpa using h2.ne
     · exact (memLp_of_mem_schA μ hμ hΦ).aestronglyMeasurable
   have hU := hS.unit μ hμ (g, 1) Φ hΦ
   have hsc := _root_.GlobalTheory.TorusTheta.lintegral_infScale_pi F (Fin n × Fin d) u hu μ hμ (fun y => ‖Φ y‖ₑ ^ 2)
-  simp only [hval Φ hΦ, enorm_mul, mul_pow] at hU
+  simp only [hval Φ hΦ, eNorm_mul, mul_pow] at hU
   rw [lintegral_const_mul' _ _ (by simp), hsc] at hU
   set P := ENNReal.ofReal (∏ j, u j ^ Module.finrank ℚ F) with hPdef
   have hPpos : 0 < ∏ j, u j ^ Module.finrank ℚ F := Finset.prod_pos fun j _ => pow_pos (hu j) _
@@ -569,7 +569,7 @@ theorem GlobalTheory.PairCoords.exists_pair_coords : ∀ {F E : Type} [Field F] 
     conv_rhs => rw [← B₂.sum_equivFun b, ← B₁.sum_equivFun a]
 
     simp only [map_sum, map_smul, LinearMap.sum_apply, LinearMap.smul_apply, hk, smul_eq_mul, mul_ite, mul_one,
-    mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, dotProduct]
+    mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, dotProduct]
     exact Finset.sum_congr rfl fun i _ => mul_comm _ _
   have hcc := GlobalTheory.PairCoords.cA_cA σ hσ
   have hK' : ∀ j l, cA σ (incM F K j l) = -incM F K l j := fun j l => by
@@ -967,7 +967,7 @@ theorem adapted_torus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     rw [Matrix.det_smul]
     exact mul_eq_zero_of_right _ this.symm
   have h2 : Module.finrank F E = 2 := hB.cm.2.2.1
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
   obtain ⟨n₀, Z₀, Q, hn, hQP, hPQ, hG, hJ₀, hJ₀h, hZx, hZy⟩ := _root_.GlobalTheory.SiegelSet.PerpBasis.exists_perp_basis F E σ hB.cm n X.J hP.herm.herm hX' r₀ Xf Yf hWF
   set P := Matrix.fromCols Z₀ (Matrix.fromCols Xf Yf) with hPdef
   obtain ⟨co₀, hco₀⟩ := GlobalTheory.RatDarboux.exists_darboux (AF F) h2 σ hσ hJ₀h hP.skew.skew hJ₀ hW'
@@ -1032,7 +1032,7 @@ theorem adapted_torus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   · intro i
     rw [Finset.card_filter, ← Equiv.sum_comp ε]
     simp only [Equiv.symm_apply_apply, Fintype.sum_sum_type, Fintype.sum_prod_type, Sum.elim_inl, Sum.elim_inr,
-      Option.some.injEq, reduceCtorEq, if_false, Finset.sum_const_zero, zero_add]
+      Option.some.injEq, reduceCtorEq, ite_false, Finset.sum_const_zero, zero_add]
     rw [Finset.sum_eq_single i (fun b _ hb => by simp [hb]) (by simp)]
     simp
   · intro t ht a hT a' ha' z
@@ -1335,13 +1335,13 @@ theorem schwartz_family_uniform_bound : ∀ (V : Type) [NormedAddCommGroup V] [N
     ∃ (N : ℕ) (C : ℝ) (T : Finset (ℕ × ℕ)), ∀ i f,
       ‖lam i f‖ ≤ C * (T.sup (schwartzSeminormFamily ℂ V ℂ)) f * w i ^ N := by
   intro V _ _ _ I lam w hw hb
-  haveI : (𝓤 𝓢(V, ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
-  haveI : CompleteSpace 𝓢(V, ℂ) := SchwartzComplete.completeSpace
-  haveI : BaireSpace 𝓢(V, ℂ) := inferInstance
+  have : (𝓤 𝓢(V, ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  have : CompleteSpace 𝓢(V, ℂ) := SchwartzComplete.completeSpace
+  have : BaireSpace 𝓢(V, ℂ) := inferInstance
   let S : ℕ × ℕ → Set 𝓢(V, ℂ) := fun p => {f | ∀ i, ‖lam i f‖ ≤ (p.2 : ℝ) * w i ^ p.1}
   have hS : ∀ p, IsClosed (S p) := by
     intro p
-    simp only [S, Set.setOf_forall]
+    simp only [S, Set.ofPred_forall]
     exact isClosed_iInter fun i =>
       isClosed_le (continuous_norm.comp (lam i).continuous) continuous_const
   have hU : ⋃ p, S p = Set.univ := by
@@ -1432,7 +1432,7 @@ theorem ht_bdd {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] 
     (J : Matrix (Fin n) (Fin n) E) {C₀ K : Set (GAd σ J)} (hC₀ : IsCompact C₀) (hK : IsCompact K) :
     ∃ B : ℝ, ∀ x ∈ C₀, ∀ k ∈ K, (heightGL F (HA.mat (AF F) σ J (x * k)) : ℝ) ≤ B := by
   have hc : Continuous fun q : GAd σ J × GAd σ J => (heightGL F (HA.mat (AF F) σ J (q.1 * q.2)) : ℝ) :=
-    NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp (continuous_subtype_val.comp (continuous_mul : Continuous fun p : GAd σ J × GAd σ J => p.1 * p.2)))
+    NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp (continuous_subtypeVal.comp (continuous_mul : Continuous fun p : GAd σ J × GAd σ J => p.1 * p.2)))
   obtain ⟨B, hB⟩ := ((hC₀.prod hK).image hc).bddAbove
   exact ⟨B, fun x hx k hk => hB ⟨(x, k), ⟨hx, hk⟩, rfl⟩⟩
 
@@ -1490,7 +1490,7 @@ theorem theta_le_seminorm_height_torus : ∀ (F E : Type) [Field F] [NumberField
     rw [mul_inv_cancel_left] at hb
     have hPq : 0 < ∏ i, t i ^ (Module.finrank ℚ F * d) := Finset.prod_pos fun i _ => pow_pos (htc.1 i) _
     show ‖((∏ i, t i ^ (Module.finrank ℚ F * d))⁻¹ • T _) f‖ ≤ _
-    rw [ContinuousLinearMap.smul_apply, ← hT, norm_smul, Real.norm_of_nonneg (inv_pos.2 hPq).le]
+    rw [smul_apply, ← hT, norm_smul, Real.norm_of_nonneg (inv_pos.2 hPq).le]
     have h0 : (0 : ℝ) ≤ (ht h : ℝ) := NNReal.coe_nonneg _
     have hy0 : (0 : ℝ) ≤ (ht (a'⁻¹ * g) : ℝ) := NNReal.coe_nonneg _
     calc (∏ i, t i ^ (Module.finrank ℚ F * d))⁻¹ * ‖theta om (pureA F f φ) g h‖
@@ -1509,7 +1509,7 @@ theorem theta_le_seminorm_height_torus : ∀ (F E : Type) [Field F] [NumberField
     rw [smul_smul, mul_inv_cancel₀ (hP0 q).ne', one_smul]
     exact hT q f
   have e2 := hN q f
-  simp only [ContinuousLinearMap.smul_apply] at e2
+  simp only [smul_apply] at e2
   rw [e1, norm_smul, Real.norm_of_nonneg (hP0 q).le]
   calc P q * ‖(P q)⁻¹ • T q f‖ ≤ P q * (C * (S.sup (schwartzSeminormFamily ℂ _ ℂ)) f * (ht h : ℝ) ^ N) :=
         mul_le_mul_of_nonneg_left e2 (hP0 q).le
@@ -1730,17 +1730,17 @@ theorem weilConv (hKP : KP) : WeilConv := by
     rw [one_smul]; exact GlobalTheory.UnitaryVol.isHermND_map hσ hP.herm
   let e : UA σ X.J ≃* GAd σ ((1 : E) • X.J.map σ) :=
     MulEquiv.subgroupCongr (GlobalTheory.SiegelSet.ug_eq_hr (F := F) (J := X.J) hσ (one_ne_zero : (1 : E) ≠ 0))
-  have he : Continuous e := continuous_subtype_val.subtype_mk _
-  have he' : Continuous e.symm := continuous_subtype_val.subtype_mk _
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
-  haveI : ContinuousMul (UA σ X.J) := ⟨by
+  have he : Continuous e := continuous_subtypeVal.subtype_mk _
+  have he' : Continuous e.symm := continuous_subtypeVal.subtype_mk _
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  have : ContinuousMul (UA σ X.J) := ⟨by
     have h3 : (fun p : UA σ X.J × UA σ X.J => p.1 * p.2) = fun p => e.symm (e p.1 * e p.2) :=
       funext fun p => by rw [← map_mul, MulEquiv.symm_apply_apply]
     rw [h3]
     exact he'.comp ((he.comp continuous_fst).mul (he.comp continuous_snd))⟩
-  haveI := hP.good.haar
-  haveI := GlobalTheory.UnitaryVol.countable_ratU σ X.J
-  haveI : MeasurableMul (UA σ X.J) :=
+  have := hP.good.haar
+  have := GlobalTheory.UnitaryVol.countable_ratU σ X.J
+  have : MeasurableMul (UA σ X.J) :=
     ⟨fun g => (continuous_const.mul continuous_id).measurable, fun g => (continuous_id.mul continuous_const).measurable⟩
   have hH : (M.μ.map e).IsHaarMeasure := MulEquiv.isHaarMeasure_map M.μ e he he'
   obtain ⟨r₀, Xf, Yf, hW⟩ := GlobalTheory.SiegelSet.exists_isWittFrame hcm hJ'
@@ -1778,9 +1778,9 @@ theorem weilConv (hKP : KP) : WeilConv := by
       calc ∫⁻ g in M.dom, ‖θ0 g‖ₑ ∂M.μ
           ≤ ∫⁻ g in e ⁻¹' GlobalTheory.SiegelSet.siegelSet σ ((1 : E) • X.J.map σ) Xf Yf Ω c K, ‖θ0 g‖ₑ ∂M.μ :=
             GlobalTheory.lintegral_fundamentalDomain_le_of_meets_orbits (ratU σ X.J) M.μ hP.good.dom hS' hScov
-              hθc.enorm.measurable (fun γ hγ g => by rw [hθi γ hγ g])
+              hθc.eNorm.measurable (fun γ hγ g => by rw [hθi γ hγ g])
         _ = ∫⁻ x in GlobalTheory.SiegelSet.siegelSet σ ((1 : E) • X.J.map σ) Xf Yf Ω c K, ‖θ0 (e.symm x)‖ₑ ∂(M.μ.map e) := by
-            rw [setLIntegral_map (f := fun x => ‖θ0 (e.symm x)‖ₑ) hSm (hθc.comp he').enorm.measurable he.measurable]
+            rw [setLIntegral_map (f := fun x => ‖θ0 (e.symm x)‖ₑ) hSm (hθc.comp he').eNorm.measurable he.measurable]
             simp only [MulEquiv.symm_apply_apply]
         _ ≤ C₁ * ∫⁻ t in GlobalTheory.SiegelSet.cone r₀ c, ENNReal.ofReal (max A 0 * ∏ i, t i ^ (Module.finrank ℚ F * d)) *
               ENNReal.ofReal ((GlobalTheory.SiegelSet.modulus F n t * ∏ i, t i)⁻¹) := by
@@ -1788,7 +1788,7 @@ theorem weilConv (hKP : KP) : WeilConv := by
             have ht0 : ∀ i, 0 < t i := ht.1
             have hP0 : 0 ≤ ∏ i, t i ^ (Module.finrank ℚ F * d) :=
               Finset.prod_nonneg fun i _ => pow_nonneg (ht0 i).le _
-            rw [← ofReal_norm_eq_enorm]
+            rw [← ofReal_norm]
             exact ENNReal.ofReal_le_ofReal
               ((hθb q hq t ht a ha k hk).trans (mul_le_mul_of_nonneg_right (le_max_left _ _) hP0))
         _ = C₁ * (ENNReal.ofReal (max A 0) * I) := by
@@ -1796,7 +1796,7 @@ theorem weilConv (hKP : KP) : WeilConv := by
             congr 1
             exact lintegral_congr fun t => by rw [ENNReal.ofReal_mul hA, mul_assoc]
     refine ⟨⟨hθc.aestronglyMeasurable, hle.trans_lt (by finiteness)⟩, ?_⟩
-    rw [integral_norm_eq_lintegral_enorm hθc.aestronglyMeasurable]
+    rw [integral_norm_eq_lintegral_eNorm hθc.aestronglyMeasurable]
     refine (ENNReal.toReal_mono (by finiteness) hle).trans (le_of_eq ?_)
     rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_ofReal hA, ENNReal.coe_toReal]
     ring

@@ -625,9 +625,9 @@ theorem pre_colT (hψ : StdPsi ψ) {m : ℕ} {f : GA E a → ℂ} (hma : m + 1 <
       have ht := t.2.1
       simp only [eLast, Matrix.one_apply]
       by_cases h : (t.1.1 : ℕ) = m
-      · rw [if_pos (Fin.ext h.symm), if_pos (by omega)]
-      · rw [if_neg (fun e => h (congrArg Fin.val e).symm), if_neg (by omega)]
-    · rw [eLast, if_neg, zero_mul]
+      · rw [ite_eq_left (Fin.ext h.symm), ite_eq_left (by omega)]
+      · rw [ite_eq_right (fun e => h (congrArg Fin.val e).symm), ite_eq_right (by omega)]
+    · rw [eLast, ite_eq_right, zero_mul]
       intro e
       have h2 := s.2.2
       exact hs (Subtype.ext (Prod.ext (Fin.ext (by simp [s0]; omega)) (Fin.ext (by simp [s0]; omega))))
@@ -679,7 +679,7 @@ instance : T2Space (Multiplicative X) := inferInstanceAs (T2Space X)
 
 theorem lat_mult (h : IsCoLat Γ) : Lat Γ.toSubgroup := by
   have := h.1
-  haveI : SecondCountableTopology Γ := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology Γ := TopologicalSpace.Subtype.secondCountableTopology _
   have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨K, a, b⟩ := h.2
   exact ⟨‹Countable Γ›, h.1, K, a, b⟩
@@ -687,8 +687,8 @@ theorem lat_mult (h : IsCoLat Γ) : Lat Γ.toSubgroup := by
 theorem avg_eq_of_isAv (h : IsCoLat Γ) [MeasurableSpace (Multiplicative X)] [hB : BorelSpace (Multiplicative X)] {H : Type} [Mul H]
     {ι : Multiplicative X → H} {f c : H → ℂ} (ha : IsAv Γ.toSubgroup ι f c) (x : H)
     (hp : Per Γ fun y => f (ι (Multiplicative.ofAdd y) * x)) : avg Γ (fun y => f (ι (Multiplicative.ofAdd y) * x)) = c x := by
-  letI : MeasurableSpace X := ‹MeasurableSpace (Multiplicative X)›
-  haveI : BorelSpace X := ⟨hB.1⟩
+  let : MeasurableSpace X := ‹MeasurableSpace (Multiplicative X)›
+  have : BorelSpace X := ⟨hB.1⟩
   obtain ⟨μ, 𝓕, h1, h2, h3⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one X Γ h
   have h4 := (_root_.GlobalTheory.CuspGeneric.setIntegral_eq_mass_mul_avg X Γ h μ 𝓕 h1 h2 _ hp).2.2.2
   rw [h3, ENNReal.toReal_one, Complex.ofReal_one, one_mul] at h4
@@ -749,7 +749,7 @@ theorem Ctx.lat (C : Ctx σ W) (U : Submodule E (Fin d → E)) : Lat ((ratU σ W
   let i : (ratU σ W.J).subgroupOf (unipU σ W U) → ratU σ W.J := fun x => ⟨x.1.1, x.2⟩
   have ii : Function.Injective i := fun a b h => Subtype.ext (Subtype.ext (congrArg Subtype.val h :))
   exact ⟨ii.countable, DiscreteTopology.of_continuous_injective
-    ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) ii, (C.good U).cov⟩
+    ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) ii, (C.good U).cov⟩
 
 
 variable (σ W) in
@@ -797,7 +797,7 @@ theorem Ctx.ct (C : Ctx σ W) (U : Submodule E (Fin d → E)) : ∃ ct, IsCt (σ
   have := (C.good U).sc
   obtain ⟨lam, h1, h2⟩ := (C.lat U).isAv_prob (H := UA σ W.J)
   have i : ∀ f, IsAut (W := W) f → ∀ x, Integrable (fun u : unipU σ W U => f (u.1 * x)) lam := fun f hf x => by
-    obtain ⟨M, hM⟩ := (C.lat U).bound (ι := Subgroup.subtype _) continuous_subtype_val hf.1 (fun γ h => hf.2 _ h)
+    obtain ⟨M, hM⟩ := (C.lat U).bound (ι := Subgroup.subtype _) continuous_subtypeVal hf.1 (fun γ h => hf.2 _ h)
       (isCompact_singleton (x := x))
     have := hf.1
     exact .of_bound (Continuous.aestronglyMeasurable (by fun_prop)) M (.of_forall fun u => hM u _ rfl)
@@ -831,7 +831,7 @@ omit h in
 theorem ct_cont : Continuous (ct f) := by
   have := (C.good (colSp u)).lc
   have := (C.good (colSp u)).sc
-  exact IsAv.cont (ι := Subgroup.subtype _) (C.lat _) (H.av f hf) continuous_subtype_val hf.1 fun γ h => hf.2 _ h
+  exact IsAv.cont (ι := Subgroup.subtype _) (C.lat _) (H.av f hf) continuous_subtypeVal hf.1 fun γ h => hf.2 _ h
 
 omit h in
 theorem ct_left {n : UA σ W.J} (hn : n ∈ unipU σ W (colSp u)) (x) : ct f (n * x) = ct f x := by
@@ -875,8 +875,8 @@ theorem ct_van {r : ℕ} (hr : r ≤ j - 1) (h0 : Av σ W (colSp (fst u (hr.tran
   have hr' := hr.trans (Nat.sub_le j 1)
   have h₁ := fr_fst h hr'
   have := C.disc
-  letI : MeasurableSpace (Multiplicative (UnipotentBlockColumnIndex j r (j - 1) → Ad E)) := borel _
-  haveI : BorelSpace (Multiplicative (UnipotentBlockColumnIndex j r (j - 1) → Ad E)) := ⟨rfl⟩
+  let : MeasurableSpace (Multiplicative (UnipotentBlockColumnIndex j r (j - 1) → Ad E)) := borel _
+  have : BorelSpace (Multiplicative (UnipotentBlockColumnIndex j r (j - 1) → Ad E)) := ⟨rfl⟩
   let β : Multiplicative (UnipotentBlockColumnIndex j r (j - 1) → Ad E) →* GA E j := MonoidHom.mk' (fun y => blkU y.toAdd) fun a b => posU_add _ _ _
   let ι := (lev h).comp ((th C j).comp β)
   have cι : Continuous ι := (isLev h).1.comp ((th_cont C).comp (continuous_posU (isNil_blk j r (j - 1))))
@@ -909,7 +909,7 @@ theorem ct_van {r : ℕ} (hr : r ≤ j - 1) (h0 : Av σ W (colSp (fst u (hr.tran
     ext a k
     refine (congrFun (congrFun e a) (Fin.castLE hr' k)).trans ?_
     rw [Matrix.mul_apply, Finset.sum_eq_single (Fin.castLE hr' k) (fun l _ hl => ?_) (by simp)]
-    all_goals rw [Matrix.map_apply, Matrix.add_apply, posM_blk_apply, dif_neg (fun q => by have := k.2; simp at q; omega), add_zero]
+    all_goals rw [Matrix.map_apply, Matrix.add_apply, posM_blk_apply, dite_eq_right (fun q => by have := k.2; simp at q; omega), add_zero]
     · simp [fst, incM]
     · rw [Matrix.one_apply_ne hl, map_zero, mul_zero]
   have le : unipU σ W (colSp (fst u hr')) ≤ S := fun n hn => by
@@ -956,7 +956,7 @@ theorem ct_van {r : ℕ} (hr : r ≤ j - 1) (h0 : Av σ W (colSp (fst u (hr.tran
   let ρ : S →* S := MonoidHom.mk' (fun s => ⟨ρ₀ s, mem s⟩) fun s t => Subtype.ext (mat_inj (mm s t))
   have cμ : Continuous μ := (continuous_const.add ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const)).add
     continuous_const
-  have c1 : Continuous fun s : S => μ (mat s.1) := cμ.comp (continuous_mat.comp continuous_subtype_val)
+  have c1 : Continuous fun s : S => μ (mat s.1) := cμ.comp (continuous_mat.comp continuous_subtypeVal)
   have z := zero_of_retract s1 (C.good _).closed le s2 (C.lat _) ρ
     (Continuous.subtype_mk (Continuous.subtype_mk (Units.continuous_iff.2 ⟨c1, c1.comp continuous_inv⟩) _) _)
     (fun s => Subtype.ext (mat_inj ((frA h₁).mid_mid _)))
@@ -969,8 +969,8 @@ theorem ct_van {r : ℕ} (hr : r ≤ j - 1) (h0 : Av σ W (colSp (fst u (hr.tran
     have := ct_rat C h H hf (blkU c) x
     rwa [ratGL_blkU] at this
   obtain ⟨c, hc⟩ := LB.isAv_ex inv
-  haveI : LocallyCompactSpace S := s1.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace S := s1.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology _
   obtain rfl := s2.isAv_uniq (s3 f _ c hf.1 hf.2 (H.av f hf) hc) z
   exact avg_eq_of_isAv (isCoLat_ratV E _) hc x ⟨(ct_cont C H hf).comp (cι.mul continuous_const), fun γ hγ y => by
     simp only [ofAdd_add, map_mul, mul_assoc]; exact inv _ hγ _⟩

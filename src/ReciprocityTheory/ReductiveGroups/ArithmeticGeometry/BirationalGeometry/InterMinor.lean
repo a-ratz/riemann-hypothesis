@@ -67,7 +67,7 @@ theorem isMultiHomogIdeal_mul {I I' : Ideal (MRing ι)} (hI : IsMultiHomogIdeal 
     (hI' : IsMultiHomogIdeal I') : IsMultiHomogIdeal (I * I') := by
   obtain ⟨S, hS, rfl⟩ := hI
   obtain ⟨S', hS', rfl⟩ := hI'
-  refine ⟨S * S', ?_, Ideal.span_mul_span' S S'⟩
+  refine ⟨S * S', ?_, Ideal.span_mul_span S S'⟩
   rintro f ⟨x, hx, y, hy, rfl⟩
   obtain ⟨a, ha⟩ := hS x hx
   obtain ⟨b, hb⟩ := hS' y hy
@@ -82,7 +82,7 @@ private theorem isMultiHomog_finset_prod' {β : Type} (s : Finset β) (f : β �
     rw [Finset.prod_empty] at hm
     have hm0 : m = 0 := by
       by_contra hne
-      rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, if_neg (Ne.symm hne)] at hm
+      rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, ite_eq_right (Ne.symm hne)] at hm
       exact hm rfl
     subst hm0
     simp
@@ -127,7 +127,7 @@ private theorem isMultiHomog_pderiv_and_one_le_of_pderiv_ne_zero [DecidableEq K]
     omega
   · obtain ⟨m, hm⟩ := MvPolynomial.ne_zero_iff.mp hne
     have := key m (MvPolynomial.mem_support_iff.mpr hm) v.1
-    rw [if_pos rfl] at this
+    rw [ite_eq_left rfl] at this
     omega
 
 theorem isMultiHomog_det_pderiv {s c : ℕ} (G : Fin s → MRing ι) (hG : ∀ i, ∃ a, IsMultiHomog (G i) a)

@@ -84,7 +84,7 @@ theorem UpperTheory.RealTr.wtDec :
     intro a b hab
     have h0 : F a a * F b b = F b b * F a a := by
       have := hF.gl a a b b
-      rw [if_neg hab, if_neg (Ne.symm hab), sub_zero, sub_eq_zero] at this
+      rw [ite_eq_right hab, ite_eq_right (Ne.symm hab), sub_zero, sub_eq_zero] at this
       exact this
     apply LinearMap.ext
     intro x
@@ -127,7 +127,7 @@ theorem UpperTheory.RealTr.wtDec :
       intro x hx y hy
       rw [Submodule.coe_inner]
       exact wsp_orth hF hne hx hy
-    haveI := hind'.fintypeNeBotOfFiniteDimensional
+    have := hind'.fintypeNeBotOfFiniteDimensional
     refine (Set.finite_range (fun i : {μ // W' μ ≠ ⊥} => (i : Wt n))).subset ?_
     intro μ hμ
     refine ⟨⟨μ, fun h => hμ ?_⟩, rfl⟩

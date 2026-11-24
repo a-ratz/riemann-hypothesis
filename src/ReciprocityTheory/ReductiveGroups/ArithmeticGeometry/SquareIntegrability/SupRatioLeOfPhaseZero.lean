@@ -101,7 +101,7 @@ theorem l2_one_eq_toGT_l2_col1 (s : (Fin 1 → Vsp X.dim) → ℂ) : X.l2 1 s = 
   have hfd : X.fd 1 = (MeasurableEquiv.funUnique (Fin 1) (Vsp X.dim)) ⁻¹'
       ZSpan.fundamentalDomain X.b := by
     ext v
-    simp only [PT.fd, Set.mem_setOf_eq, Set.mem_preimage]
+    simp only [PT.fd, Set.mem_ofPred_eq, Set.mem_preimage]
     exact ⟨fun h => h default, fun h k => by rwa [Subsingleton.elim k default]⟩
   have hf : ∀ v : Fin 1 → Vsp X.dim, X.ptN2 1 s v =
       X.toGT.ptN2 1 (X.col1 s) (MeasurableEquiv.funUnique (Fin 1) (Vsp X.dim) v) := by
@@ -130,7 +130,7 @@ theorem card_idx [IsCMField E] : Fintype.card (Idx X.dim) = X.gA := by
     nth_rewrite 2 [← hsum]
     rw [← Finset.sum_add_distrib, Finset.sum_congr rfl (fun τ _ => X.dim_conj τ), Finset.sum_const,
       Finset.card_univ, smul_eq_mul]
-  haveI : NumberField.IsTotallyComplex E := NumberField.IsCMField.to_isTotallyComplex
+  have : NumberField.IsTotallyComplex E := NumberField.IsCMField.to_isTotallyComplex
   rw [NumberField.Embeddings.card, NumberField.IsTotallyComplex.finrank] at h2
   rw [Fintype.card_sigma]
   simp only [Fintype.card_fin]
@@ -162,7 +162,7 @@ theorem threshold_le_firstMinimum [IsCMField E] {X : PT E} {DF : ℕ} (P : Par X
   by_contra hlt
   push_neg at hlt
   have hp : P.ph = 2 * PT.f E / (PT.rd E ^ 2 * X.la1 ^ 2) := by
-    simp only [Par.ph, PT.ph, if_pos hlt]
+    simp only [Par.ph, PT.ph, ite_eq_left hlt]
   rw [hp] at h0
   have hla := firstMinimum_pos_bis P
   have hf : (1 : ℝ) ≤ PT.f E := by exact_mod_cast f_pos P
@@ -236,7 +236,7 @@ theorem sup_ratio_le_of_phase_zero [IsCMField E] {X : PT E} {DF : ℕ} (P : Par 
       gcongr
     have hexp : Real.exp P.p1 = Real.exp 1 * C ^ X.gA := by
       unfold Par.p1
-      rw [Real.exp_add, Real.exp_nat_mul, Real.exp_log (by rw [← hC]; exact hCpos), hC]
+      rw [Real.exp_add, Real.exp_natCast_mul, Real.exp_log (by rw [← hC]; exact hCpos), hC]
     have he2 : Real.sqrt 2 ≤ Real.exp 1 := by
       have := Real.add_one_le_exp 1
       linarith

@@ -165,19 +165,19 @@ theorem lift_periods {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l P
       ∀ y ∈ DdR (P.PD K) ρ', ∃ x ∈ DdR (P.PD K) ρ,
         AlgebraTensorModule.map f (LinearMap.id : P.R.BdR →ₗ[ℚ_[l]] P.R.BdR) x = y := by
   let L : FinExt l := ⟨⊥, inferInstance⟩
-  letI : Algebra ↥L.1 LL :=
+  let : Algebra ↥L.1 LL :=
     ((algebraMap ℚ_[l] LL).comp (IntermediateField.botEquiv ℚ_[l] (Om l)).toRingEquiv.toRingHom).toAlgebra
-  haveI : IsScalarTower ℚ_[l] ↥L.1 LL := IsScalarTower.of_algebraMap_eq fun x =>
+  have : IsScalarTower ℚ_[l] ↥L.1 LL := IsScalarTower.of_algebraMap_eq fun x =>
     (congrArg (algebraMap ℚ_[l] LL) ((IntermediateField.botEquiv ℚ_[l] (Om l)).commutes x)).symm
-  haveI : FiniteDimensional ↥L.1 LL := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
-  letI : Module ↥L.1 V := Module.compHom V (algebraMap ↥L.1 LL)
-  letI : Module ↥L.1 V' := Module.compHom V' (algebraMap ↥L.1 LL)
-  haveI : IsScalarTower ↥L.1 LL V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : IsScalarTower ↥L.1 LL V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : IsScalarTower ℚ_[l] ↥L.1 V := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V
-  haveI : IsScalarTower ℚ_[l] ↥L.1 V' := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V'
-  haveI : FiniteDimensional ↥L.1 V := Module.Finite.trans LL V
-  haveI : FiniteDimensional ↥L.1 V' := Module.Finite.trans LL V'
+  have : FiniteDimensional ↥L.1 LL := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
+  let : Module ↥L.1 V := Module.compHom V (algebraMap ↥L.1 LL)
+  let : Module ↥L.1 V' := Module.compHom V' (algebraMap ↥L.1 LL)
+  have : IsScalarTower ↥L.1 LL V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : IsScalarTower ↥L.1 LL V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : IsScalarTower ℚ_[l] ↥L.1 V := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V
+  have : IsScalarTower ℚ_[l] ↥L.1 V' := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V'
+  have : FiniteDimensional ↥L.1 V := Module.Finite.trans LL V
+  have : FiniteDimensional ↥L.1 V' := Module.Finite.trans LL V'
   have hc := isCrys_res (P.PD K) ↥L.1 ρ h
   have hd := (GlobalTheory.Per.CrisDR.isDR_of_isCrys l P AI T K L V _ hc).1
   obtain ⟨-, h1⟩ := (GlobalTheory.Per.CrysSubQuot.crys_sub_quot l P AI T K L V (res ↥L.1 ρ) V' (res ↥L.1 ρ')
@@ -193,7 +193,7 @@ theorem lift_periods {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l P
 
 theorem bkARightExact_of_tied : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ K : FinExt l, Formalism.MainNotions.LocalSituation.bkARightExact (P.PD K) := by
   intro l _ P AI T K LL _ _ _ O _ _ hO A A' f hf hs hA _ c' hc'
-  haveI := hO.2.1
+  have := hO.2.1
   obtain ⟨hdr, hl1, hl2⟩ := lift_periods T K LL A.ρ A'.ρ f hf hs hA
   obtain ⟨-, x', hx'⟩ := hc'
   obtain ⟨hd1, d₂', hd2, hfil⟩ := _root_.GlobalTheory.CobCrisLift.coboundary_lift l P AI T K LL O hO A' hdr c' x' hx'

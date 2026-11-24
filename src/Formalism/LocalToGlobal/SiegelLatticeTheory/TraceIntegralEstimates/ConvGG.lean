@@ -82,7 +82,7 @@ theorem measurable_hv (w : D.what₂.Word) (v : InfinitePlace X.B.I.F) :
   have hU := (X.ds v).2.2.1
   have hcont : Continuous (fun a : Formalism.REAL.UJ (X.B.I.ε v) => X.B.σ v (uMat a) (X.B.w v)) := by
     refine (hU.2.2 (X.B.w v)).comp_continuous ?_ ?_
-    · exact Units.continuous_val.comp continuous_subtype_val
+    · exact Units.continuous_val.comp continuous_subtypeVal
     · intro a; exact a.2
   have hW : Continuous (X.Wloc w v) := X.Wloc_cont w v
   have heq : (fun p : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v) => hv X v p.1 p.2 w) =
@@ -91,8 +91,8 @@ theorem measurable_hv (w : D.what₂.Word) (v : InfinitePlace X.B.I.F) :
     unfold hv
     rfl
   rw [heq]
-  exact ((hcont.comp continuous_fst).inner (hcont.comp continuous_snd)).enorm.measurable.mul
-    (hW.comp continuous_snd).enorm.measurable
+  exact ((hcont.comp continuous_fst).inner (hcont.comp continuous_snd)).eNorm.measurable.mul
+    (hW.comp continuous_snd).eNorm.measurable
 
 theorem Kv_eq (w : D.what₂.Word) (v : InfinitePlace X.B.I.F) (a : Formalism.REAL.UJ (X.B.I.ε v)) :
     Kv X w v a = ‖X.Wloc w v a‖ₑ * ∫⁻ b, hv X v a b w ∂(Formalism.REAL.muG (X.B.I.ε v)) := by
@@ -101,7 +101,7 @@ theorem Kv_eq (w : D.what₂.Word) (v : InfinitePlace X.B.I.F) (a : Formalism.RE
 theorem measurable_Kv (w : D.what₂.Word) (v : InfinitePlace X.B.I.F) : Measurable (Kv X w v) := by
   have h1 : Measurable (fun a => ∫⁻ b, hv X v a b w ∂(Formalism.REAL.muG (X.B.I.ε v))) :=
     (measurable_hv X w v).lintegral_prod_right'
-  have h2 : Measurable (fun a => ‖X.Wloc w v a‖ₑ) := (X.Wloc_cont w v).enorm.measurable
+  have h2 : Measurable (fun a => ‖X.Wloc w v a‖ₑ) := (X.Wloc_cont w v).eNorm.measurable
   have heq : Kv X w v = fun a => ‖X.Wloc w v a‖ₑ * ∫⁻ b, hv X v a b w ∂(Formalism.REAL.muG (X.B.I.ε v)) :=
     funext (Kv_eq X w v)
   rw [heq]
@@ -113,7 +113,7 @@ theorem H_eq (w : D.what₂.Word) (z y : X.B.I.Ginf) :
   rw [hσ, hσ, hi, Formalism.L2.SG.Pf.WuDec.enorm_Wu]
   have hprod : ‖∏ v, ⟪X.B.σ v (uMat (z v)) (X.B.w v), X.B.σ v (uMat (y v)) (X.B.w v)⟫_ℂ‖ₑ =
       ∏ v, ‖⟪X.B.σ v (uMat (z v)) (X.B.w v), X.B.σ v (uMat (y v)) (X.B.w v)⟫_ℂ‖ₑ := by
-    simp only [enorm_eq_nnnorm, nnnorm_prod]
+    simp only [eNorm_eq_nnNorm, nnNorm_prod]
     push_cast
     rfl
   rw [hprod, ← Finset.prod_mul_distrib]
@@ -143,7 +143,7 @@ theorem Kv_inv (w : D.what₂.Word) (v : InfinitePlace X.B.I.F) (m : Formalism.R
       (Formalism.L2.SG.Pf.WuDec.Hloc_sub (X := X) (u := w) v hh)
   set g := m * h with hgdef
   have hn : ∀ y, ‖X.Wloc w v (g * y)‖ₑ = ‖X.Wloc w v y‖ₑ := fun y => by
-    rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm,
+    rw [← ofReal_norm, ← ofReal_norm,
       Formalism.L2.SG.Pf.WuDec.norm_Wloc_inv (X := X) (u := w) v hg y]
   have hinv : ∀ f : Formalism.REAL.UJ (X.B.I.ε v) → ℝ≥0∞,
       ∫⁻ b, f (g * b) ∂(Formalism.REAL.muG (X.B.I.ε v)) = ∫⁻ b, f b ∂(Formalism.REAL.muG (X.B.I.ε v)) := by
@@ -193,16 +193,16 @@ theorem inner_weil (w : D.what₂.Word) (z : X.B.I.Ginf) :
   have hinner : ∀ z', ∫⁻ s, ‖⟪X.B.σs z (X.B.tens X.B.w), X.B.σs s (X.B.σs z' (X.B.tens X.B.w))⟫_ℂ‖ₑ *
       ‖X.Wu w z‖ₑ * ‖X.Wu w z'‖ₑ ∂(muS X w) = ‖X.Wu w z‖ₑ * ∫⁻ s, G (s * z') ∂(muS X w) := by
     intro z'
-    rw [← lintegral_const_mul' _ _ enorm_ne_top]
+    rw [← lintegral_const_mul' _ _ eNorm_ne_top]
     refine lintegral_congr_ae ?_
     filter_upwards [hS] with s hs
     have hn : ‖X.Wu w (s * z')‖ₑ = ‖X.Wu w z'‖ₑ := by
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, norm_Wu_S X w s hs z']
+      rw [← ofReal_norm, ← ofReal_norm, norm_Wu_S X w s hs z']
     rw [hmul, hGdef]
     simp only [hn]
     ring
   simp_rw [hinner]
-  rw [lintegral_const_mul' _ _ enorm_ne_top]
+  rw [lintegral_const_mul' _ _ eNorm_ne_top]
   congr 1
   have hq := X.nuQ_weil w
   exact (hq G hGm).symm

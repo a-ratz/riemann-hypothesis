@@ -76,7 +76,7 @@ theorem eq_zero_of_commute_of_separable {n : ℕ} (γ X : Matrix (Fin n) (Fin n)
   have hcard : γ.charpoly.roots.toFinset.card = n := by
     rw [Multiset.toFinset_card_of_nodup hnd,
       ← (IsAlgClosed.splits γ.charpoly).natDegree_eq_card_roots, Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin]
-  haveI : Nonempty γ.charpoly.roots.toFinset := (Finset.card_pos.1 (by rw [hcard]; exact hn)).to_subtype
+  have : Nonempty γ.charpoly.roots.toFinset := (Finset.card_pos.1 (by rw [hcard]; exact hn)).to_subtype
   have hev : ∀ μ : γ.charpoly.roots.toFinset, ∃ v, T.HasEigenvector (μ : ℂ) v := fun μ => by
     have hroot : γ.charpoly.IsRoot (μ : ℂ) := by
       have := Multiset.mem_toFinset.1 μ.2
@@ -176,8 +176,8 @@ theorem map_shear (ν : Measure E) [ν.IsAddHaarMeasure] (F : Submodule ℝ E) (
   have hshc : Continuous sh := continuous_fst.prodMk (continuous_snd.add (hgc.comp continuous_fst))
   have hes : Measurable e.symm := e.symm.continuous.measurable
   have hem : Measurable e := e.continuous.measurable
-  haveI : (Measure.map e.symm ν).IsAddHaarMeasure := e.symm.isAddHaarMeasure_map ν
-  haveI : μ₀.IsAddHaarMeasure := by dsimp only [μ₀]; infer_instance
+  have : (Measure.map e.symm ν).IsAddHaarMeasure := e.symm.isAddHaarMeasure_map ν
+  have : μ₀.IsAddHaarMeasure := by dsimp only [μ₀]; infer_instance
   have hc1 : Measure.map e.symm ν = Measure.addHaarScalarFactor (Measure.map e.symm ν) μ₀ • μ₀ :=
     Measure.isAddLeftInvariant_eq_smul _ _
   have hmap : Measure.map sh (Measure.map e.symm ν) = Measure.map e.symm ν := by
@@ -194,10 +194,10 @@ theorem map_shear (ν : Measure E) [ν.IsAddHaarMeasure] (F : Submodule ℝ E) (
 theorem map_linear (ν : Measure E) [ν.IsAddHaarMeasure] (L : E ≃ₗ[ℝ] E) :
     ∃ c : NNReal, c ≠ 0 ∧ Measure.map L ν = c • ν := by
   let e : E ≃L[ℝ] (Fin (Module.finrank ℝ E) → ℝ) := (Module.finBasis ℝ E).equivFun.toContinuousLinearEquiv
-  haveI : LocallyCompactSpace E := e.toHomeomorph.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology E := e.toHomeomorph.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace E := e.toHomeomorph.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology E := e.toHomeomorph.isEmbedding.secondCountableTopology
   let L' : E ≃L[ℝ] E := L.toContinuousLinearEquiv
-  haveI : (Measure.map L' ν).IsAddHaarMeasure := L'.isAddHaarMeasure_map ν
+  have : (Measure.map L' ν).IsAddHaarMeasure := L'.isAddHaarMeasure_map ν
   refine ⟨Measure.addHaarScalarFactor (Measure.map L' ν) ν,
     (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne', ?_⟩
   exact Measure.isAddLeftInvariant_eq_smul (Measure.map L' ν) ν

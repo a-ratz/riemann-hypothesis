@@ -112,7 +112,7 @@ private theorem expo_le {I : Type} [Fintype I] (c : I → ℝ) (hc : Function.In
     (h0 : ∀ z ∈ Z, ∀ i, z + c i ≠ 0) (h1 : ∀ z ∈ Z, ∏ i, (z + c i) ^ m i = 1) (j : I) : m j ≤ 0 := by
   have hPQ : (∏ i, (X + C (c i)) ^ (m i).toNat : ℝ[X]) = ∏ i, (X + C (c i)) ^ (-m i).toNat := by
     refine Polynomial.eq_of_infinite_eval_eq _ _ (hZ.mono fun z hz => ?_)
-    simp only [Set.mem_setOf_eq, eval_prod, eval_pow, eval_add, eval_X, eval_C]
+    simp only [Set.mem_ofPred_eq, eval_prod, eval_pow, eval_add, eval_X, eval_C]
     rw [← one_mul (∏ i, _ ^ (-m i).toNat), ← h1 z hz, ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [← zpow_natCast, ← zpow_natCast, ← zpow_add₀ (h0 z hz i)]

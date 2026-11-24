@@ -63,7 +63,7 @@ theorem Op_isDVR {K : Type} [Field K] [NumberField K] (D N : ℕ)
     have hlt : la.asIdeal ^ 2 < la.asIdeal ^ 1 :=
       Ideal.pow_right_strictAnti la.asIdeal hp0 hp1 (by norm_num : 1 < 2)
     rw [pow_one] at hlt
-    obtain ⟨x, hx, hx2⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx, hx2⟩ := IsConcreteLE.exists_of_lt hlt
     exact ⟨x, hx, hx2⟩
   have hmemP : ∀ t : 𝓞 K, MvPolynomial.C t ∈ P ↔ t ∈ la.asIdeal := by
     intro t
@@ -88,13 +88,13 @@ theorem Op_isDVR {K : Type} [Field K] [NumberField K] (D N : ℕ)
         rw [hJ, pow_two]
         exact Ideal.mul_mono_right hJle
       exact hsq (Ideal.mem_span_singleton_self π)
-    obtain ⟨t, htJ, htp⟩ := SetLike.not_le_iff_exists.mp hJp
+    obtain ⟨t, htJ, htp⟩ := IsConcreteLE.not_le_iff_exists.mp hJp
     have hta : t * a ∈ Ideal.span {π} := by
       rw [hJ, mul_comm t a]
       exact Ideal.mul_mem_mul ha htJ
     obtain ⟨c, hc⟩ := Ideal.mem_span_singleton'.mp hta
     exact ⟨t, c, htp, by rw [← hc, mul_comm]⟩
-  haveI : IsNoetherianRing (Op D N la) :=
+  have : IsNoetherianRing (Op D N la) :=
     IsLocalization.isNoetherianRing P.primeCompl (Op D N la) inferInstance
   let f : 𝓞 K →+* Op D N la := (algebraMap (OT K D N) (Op D N la)).comp MvPolynomial.C
   have hmax : IsLocalRing.maximalIdeal (Op D N la) = Ideal.map f la.asIdeal := by

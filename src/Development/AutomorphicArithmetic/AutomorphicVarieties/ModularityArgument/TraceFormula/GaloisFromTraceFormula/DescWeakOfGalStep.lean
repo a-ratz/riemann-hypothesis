@@ -256,10 +256,10 @@ theorem UpperTheory.V.Z.Tf.GaloisFromTraceFormula.asmTh_of :
     have h1 := hid S hS' K' (famU Z T f e₁ e₂ k) (fun a' => if h : a' + (n - a') = n then Φ a' (n - a') h k else 0) hK
       (hUv T hT hTZ e₁ e₂ k).1 fun a' ha' => by
         have h := Nat.add_sub_cancel' ha'
-        simp only [dif_pos h]
+        simp only [dite_eq_left h]
         exact ⟨((ht _ _ h T hT hTZ e₁ e₂).2 k).1, fun w hw => (((ht _ _ h T hT hTZ e₁ e₂).2 k).2 w hw).1⟩
     rw [(hUv T hT hTZ e₁ e₂ k).2] at h1
-    simp only [dif_pos (hab _)] at h1
+    simp only [dite_eq_left (hab _)] at h1
     rw [← h1]
     refine Finset.sum_eq_zero fun i _ => ?_
     have := hv0 (.inl i)
@@ -996,12 +996,12 @@ private theorem logFin_eq (t : (Af E)ˣ) : logFin E t = -∑ᶠ w, Real.log ‖(
   have hfin := Filter.eventually_cofinite.1 (GlobalTheory.Idele.ord_vw_eventually_zero t)
   have h1 : GlobalTheory.Idele.idealOf t = ∏ v ∈ hfin.toFinset, (v.asIdeal : FractionalIdeal (𝓞 E)⁰ E) ^ GlobalTheory.Idele.ord_vw t v := by
     refine finprod_eq_prod_of_mulSupport_subset _ fun v hv => ?_
-    simp only [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     intro h0
     exact hv (by simp [h0])
   have h2 : ∑ᶠ w, Real.log ‖(t : Af E) w‖ = ∑ w ∈ hfin.toFinset, Real.log ‖(t : Af E) w‖ := by
     refine finsum_eq_sum_of_support_subset _ fun v hv => ?_
-    simp only [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     intro h0
     apply hv
     change Real.log ‖(t : Af E) v‖ = 0
@@ -1589,7 +1589,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Cusp.stabT :
   refine ⟨hull S ⊓ fixed (finRep E a) L, le_inf h1 fun φ hφ => ?_, ?_, fun φ hφ => ⟨?_, fun u hu g => ?_, ?_⟩,
     fun w hw => inf_le_right.trans (hK w hw), ?_⟩
   · exact GlobalTheory.LGrp.mem_fixed.2 fun u hu => Subtype.ext (funext fun g => (hty φ hφ).1 u hu g)
-  · haveI := UpperTheory.V.Af.Fin.formsFinite E a _ hb
+  · have := UpperTheory.V.Af.Fin.formsFinite E a _ hb
     exact Module.Finite.equiv (Submodule.equivMapOfInjective _ (UpperTheory.V.Cm.smEq E a).injective _).symm
   · exact (UpperTheory.V.Cm.isAutForm_iff φ).2 (UpperTheory.isAutomorphicForm_of_bdd_submodule E a _ hb _ ⟨φ, hφ, rfl⟩)
   · exact congrFun (congrArg Subtype.val (GlobalTheory.LGrp.mem_fixed.1 hφ.2 u hu)) g
@@ -1649,7 +1649,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Cusp.typeSat :
     intro f hf
     have h1 : (fun k => f (1 * k)) ∈ W := hf 1
     simpa using h1
-  haveI : FiniteDimensional ℂ W0 := Submodule.finiteDimensional_of_le hle
+  have : FiniteDimensional ℂ W0 := Submodule.finiteDimensional_of_le hle
   have hstab : ∀ (a : G) (f : G → ℂ), f ∈ W0 → (fun k => f (a * k)) ∈ W0 := by
     intro a f hf c
     have h1 : (fun k => f ((a * c) * k)) ∈ W := hf (a * c)
@@ -1804,7 +1804,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.levelFn :
       ⟨fun a b => by
         apply Subrepresentation.toSubmodule_injective
         exact Subsingleton.elim _ _⟩
-    haveI := τ.irred
+    have := τ.irred
     exact not_subsingleton (Subrepresentation τ.ρ) hs
   obtain ⟨v, hv⟩ := exists_ne (0 : τ.V)
   let U : Subgroup (GLw n w) :=
@@ -1812,11 +1812,11 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.levelFn :
       one_mem' := by simp
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hb, ha]
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul]
         simp }
@@ -1834,9 +1834,9 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.levelFn :
     rw [hb] at hm
     exact hv ((Submodule.mem_bot ℂ).1 hm)
   have hi : K'.relIndex (GlobalTheory.LFun.KGL w (n := n)) ≠ 0 := by
-    haveI : CompactSpace (GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hc
-    haveI : Finite ((GlobalTheory.LFun.KGL w (n := n)) ⧸ K'.subgroupOf (GlobalTheory.LFun.KGL w (n := n))) :=
-      Subgroup.quotient_finite_of_isOpen _ (hKo.preimage continuous_subtype_val)
+    have : CompactSpace (GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hc
+    have : Finite ((GlobalTheory.LFun.KGL w (n := n)) ⧸ K'.subgroupOf (GlobalTheory.LFun.KGL w (n := n))) :=
+      Subgroup.quotient_finite_of_isOpen _ (hKo.preimage continuous_subtypeVal)
     exact (Subgroup.finiteIndex_of_finite_quotient (H := K'.subgroupOf (GlobalTheory.LFun.KGL w (n := n)))).index_ne_zero
   refine ⟨(K' : Set (GLw n w)).indicator 1, ⟨K', hKo, hle, ?_, ?_⟩, UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.trc_ind_ne τ.ρ _ K' hle hi hfd hne⟩
   · exact HasCompactSupport.intro' hKc (K'.isClosed_of_isOpen hKo) fun x hx => Set.indicator_of_notMem hx _
@@ -1871,7 +1871,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.rChoice :
     Filter.eventually_cofinite.1 ((GlobalTheory.CuspRep.UnrSat.eventually_hasSatGL_locRep hF E n π).and
       (GlobalTheory.Mem.UnrAe.unr_ae_and_level E μ).1)
   obtain ⟨Bd, hBd⟩ : ∃ Bd : Finset (Pl E), ∀ w, w ∈ Bd ↔ ¬ ((∃ B, (CG.mk π).HasSat w B) ∧ μ.UnrAt w) :=
-    ⟨hbad.toFinset, fun w => by simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]⟩
+    ⟨hbad.toFinset, fun w => by simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]⟩
   have hgood : ∀ w, w ∉ Bd → (∃ B, (CG.mk π).HasSat w B) ∧ μ.UnrAt w := fun w hw => by
     by_contra h
     exact hw ((hBd w).2 h)
@@ -1891,7 +1891,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.rChoice :
     rcases (hm w).2 with e | e
     · rwa [e]
     · rw [e]; exact hcs w hw
-  obtain ⟨w₀, hw₀, hw₀'⟩ := (hInf.diff (Bd ∪ Bd.image cPl).finite_toSet).nonempty
+  obtain ⟨w₀, hw₀, hw₀'⟩ := (hInf.sdiff (Bd ∪ Bd.image cPl).finite_toSet).nonempty
   have hn₀ : w₀ ∉ Bd := fun h => hw₀' (by simp [h])
   have hn₁ : cPl w₀ ∉ Bd := fun h => hw₀' (by
     refine Finset.mem_coe.2 (Finset.mem_union_right _ (Finset.mem_image.2 ⟨_, h, (hc w₀).1⟩)))

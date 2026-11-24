@@ -621,7 +621,7 @@ theorem resV_linSub_zero {σ κ R : Type} [Fintype σ] [Field R] (f : κ → σ)
 
 variable {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p])
 
-theorem lamC_of_mem {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dif_pos h
+theorem lamC_of_mem {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dite_eq_left h
 
 theorem lamC_mul {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar) :
     TaylorLogMetric.lamC lam (x * y) = TaylorLogMetric.lamC lam x * TaylorLogMetric.lamC lam y := by
@@ -666,8 +666,8 @@ theorem subBG_congr {p : ℕ} [Fact p.Prime] {X : Sys p} {D : D7} (E : CEmb X.G)
 theorem xiEx_theta_general : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Base D cc δ) (χ : TaylorLogMetric.IdE D → ℂ), TaylorLogMetric.IsCurveIdeal D cc → TaylorLogMetric.IsDiscriminantTwelfthRootOfIdealLattice D cc δ → δ ≠ 0 → TaylorLogMetric.IsChi D χ → B.LatAll → B.VecP χ → B.EqP χ → GL3Theta.modelXi D → GL3Theta.movesCompose D → ∀ (SS : Finset (HeightOneSpectrum (𝓞 D.host.E))) (cl : ℕ), 0 < cl → (∀ Q ∈ SS, Formalism.L2.Col.conjPrime₂ Q ∉ SS) → ∀ (p : ℕ) [Fact p.Prime] (X : Sys p) (E : CEmb X.G) (pos : (Σ v : X.Pl, Fin (X.G.P.n' v)) ≃ D.what₂.Tau) (fd : FData X D) (lam : TaylorLogMetric.Qbar →+* ℂ_[p]) (Ξ₀ : ∀ j, X.Lt j → X.Lt (j + 1) → Formalism.L2.Col.HomE D.host.E ((X.Pj j).m + 1) ((X.Pj (j + 1)).m + 1) → ℂ) (muT : ℕ → (D.host.E ⊗[D.host.F] FiniteAdeleRing (𝓞 D.host.F) D.host.F)ˣ → ℂ) (ρ : ∀ v : X.Pl, D.host.E →+* X.G.P.Qq v) (c : ℂ_[p]), PairOK X fd B χ SS cl Ξ₀ muT ρ → ∀ (v : X.Pl) (j : ℕ), j < X.mm → AwayTie X E fd χ lam SS cl Ξ₀ muT ρ v j → letI := wittFractionAlgebraCp p; letI := algKfC E; XiEx X ℂ_[p] (thFOf X pos (FrecG E pos fd B χ lam SS cl Ξ₀ muT c)) v j := by
   intro D cc δ B χ hcurve hdelta hδ hchi hLat hVec hEq hmod hmoves SS cl hcl hSS p _ X E pos fd lam Ξ₀ muT ρ c hOK v j hj hA
   obtain ⟨P, hsplit, hAA, hPS, hPcS, hcP, hcPc, hρ1, hρ2, u, u', hu, hu', H⟩ := hA
-  letI := wittFractionAlgebraCp p
-  letI := algKfC E
+  let := wittFractionAlgebraCp p
+  let := algKfC E
   set K := thFOf X pos (FrecG E pos fd B χ lam SS cl Ξ₀ muT c) with hK
   have hp0 : (p : X.G.Kf) ≠ 0 := by
     intro h
@@ -918,8 +918,8 @@ theorem site_law_xiIn : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
       (Formalism.L2.PairingIndexBounds.F.ltC S.g S.hLT) hPair hPos hMove
   refine ⟨hLaw, ?_, ?_⟩
   · intro j hj c L0 La' ε hrep hL' hε
-    letI := wittFractionAlgebraCp (D.what₂.places.resChar w)
-    letI := algKfC S.E.toCEmb
+    let := wittFractionAlgebraCp (D.what₂.places.resChar w)
+    let := algKfC S.E.toCEmb
     exact GlobalTheory.TwU.KapLawLt.stab (h := hLaw) (hj := hj) c L0 La' ε (repOf_lat _ S.hfin j (c, L0) hrep) hL' hε
   · intro v j hj
     have hRB := GlobalTheory.TwU.pendT_ThF_lt_of_kapLawLt (D.what₂.places.resChar w) (sysS H X std) S.E S.hfin S.hst S.g S.hLT D.what₂.Tau

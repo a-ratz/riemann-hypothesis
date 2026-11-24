@@ -88,7 +88,7 @@ theorem exists_X_sub_C_mem (T : Type) [CommRing T] [IsLocalRing T] [IsAlgClosed 
     rw [hπ, ker_mapRingHom, ker_residue]
   have hle : RingHom.ker π ≤ P := by
     rw [hker, Ideal.map_le_iff_le_comap, hP]
-  haveI hQ : (P.map π).IsPrime := Ideal.map_isPrime_of_surjective hsurj hle
+  have hQ : (P.map π).IsPrime := Ideal.map_isPrime_of_surjective hsurj hle
   have hPQ : (P.map π).comap π = P := by
     rw [Ideal.comap_map_of_surjective _ hsurj, ← RingHom.ker_eq_comap_bot]
     exact sup_eq_left.2 hle
@@ -113,14 +113,14 @@ theorem keyClosedPts_of_keyOrigin : GlobalTheory.LocAcyc.KeyOrigin → GlobalThe
   unfold GlobalTheory.LocAcyc.KeyClosedPts GlobalTheory.LocAcyc.KeyLocalWith
   intro T O _ _ _ _ _ _ _ _ hT P _ φ hφ hsh hPm hne q hq hqu
   have hne' : P ≠ (maximalIdeal T).map (C : T →+* T[X]) := hne
-  haveI hac : IsAlgClosed (ResidueField T) :=
+  have hac : IsAlgClosed (ResidueField T) :=
     (GlobalTheory.AbsIntClosedLocal.henselian_isAlgClosed_pow_surj T ⟨inferInstance, hT⟩).2.1
   obtain ⟨c, hc⟩ := exists_X_sub_C_mem T P hPm hne'
   let τ : T[X] ≃ₐ[T] T[X] := algEquivAevalXAddC (-c)
   have hτX : τ X = X - C c := by simp [τ, sub_eq_add_neg]
   have hτC : ∀ a : T, τ (C a) = C a := fun a => τ.commutes a
   let P' : Ideal T[X] := P.comap (τ : T[X] →+* T[X])
-  haveI hP'p : P'.IsPrime := Ideal.comap_isPrime _ _
+  have hP'p : P'.IsPrime := Ideal.comap_isPrime _ _
   have hP'C : P'.comap (C : T →+* T[X]) = maximalIdeal T := by
     rw [← hPm]; ext a
     simp only [Ideal.mem_comap, P']
@@ -182,8 +182,8 @@ theorem keyClosedPts_of_keyOrigin : GlobalTheory.LocAcyc.KeyOrigin → GlobalThe
   have hsh' : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ' := by
     obtain ⟨h1, h2, h3, h4⟩ := hsh
     refine ⟨h1, h2, ?_, ?_⟩
-    · haveI := h3
-      haveI : IsLocalHom (Lq : Localization.AtPrime P' →+* Localization.AtPrime P) :=
+    · have := h3
+      have : IsLocalHom (Lq : Localization.AtPrime P' →+* Localization.AtPrime P) :=
         ⟨fun a ha => by simpa using ha.map (Lq.symm : Localization.AtPrime P →+* Localization.AtPrime P')⟩
       exact RingHom.isLocalHom_comp _ _
     · have : (RingHom.toMorphismProperty @RingHom.Etale).RespectsIso :=

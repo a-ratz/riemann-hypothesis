@@ -93,7 +93,7 @@ theorem free_as (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     (K : Type) [Field K] [Algebra O K] [IsFractionRing O K]
     (A : Type) [CommRing A] [Algebra O A] [Algebra K A] [IsScalarTower O K A]
     [Module.Finite O ↥(As O A)] : Module.Free O ↥(As O A) := by
-  haveI := isTorsionFree_as O K A
+  have := isTorsionFree_as O K A
   exact Module.free_of_finite_type_torsion_free'
 
 theorem isLocalizedModule_as (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
@@ -126,8 +126,8 @@ theorem finrank_as (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
     (K : Type) [Field K] [Algebra O K] [IsFractionRing O K]
     (A : Type) [CommRing A] [Algebra O A] [Algebra K A] [IsScalarTower O K A] [FiniteDimensional K A]
     [Module.Finite O ↥(As O A)] : Module.finrank O ↥(As O A) = Module.finrank K A := by
-  haveI : Module.Free O ↥(As O A) := free_as O K A
-  haveI := isLocalizedModule_as O K A
+  have : Module.Free O ↥(As O A) := free_as O K A
+  have := isLocalizedModule_as O K A
   let b := Module.Free.chooseBasis O ↥(As O A)
   let b' := b.ofIsLocalizedModule K (nonZeroDivisors O) ((As O A).val.toLinearMap)
   rw [Module.finrank_eq_card_basis b, Module.finrank_eq_card_basis b']
@@ -161,7 +161,7 @@ theorem sum_ef (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 
 theorem efRankSum_main : PI.EfRankSum := by
   intro O _ _ _ K _ _ _ A _ _ _ _ _ _ ϖ hϖ hfin _
-  haveI : Module.Free O ↥(As O A) := free_as O K A
+  have : Module.Free O ↥(As O A) := free_as O K A
   exact ⟨finite_pts O A, by rw [sum_ef O A hϖ, finrank_as O K A]⟩
 
 end PI.UnitaryGroupMassFormula.EfRankSum

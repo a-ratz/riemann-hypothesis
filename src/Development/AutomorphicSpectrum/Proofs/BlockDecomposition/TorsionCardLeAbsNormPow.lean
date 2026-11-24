@@ -80,7 +80,7 @@ theorem torsion_exact_bound {R A B C : Type*} [CommRing R] [AddCommGroup A] [Add
   have hs : ∀ b : TB, h (s (h b)) = h b := by
     intro b
     have hc : ∃ b', h b' = h b := ⟨b, rfl⟩
-    simp only [s, dif_pos hc]
+    simp only [s, dite_eq_left hc]
     exact hc.choose_spec
   have hk : ∀ b : TB, ∃ a, f a = b.1 - (s (h b)).1 := by
     intro b
@@ -282,7 +282,7 @@ theorem ins_injective (m : ℕ) : Function.Injective (ins K m) := by
 theorem isLat_comap_ins {m : ℕ} {L : Submodule (𝓞 K) (Fin (m + 1) → K)} (hL : IsLat L) :
     IsLat (L.comap (ins K m)) := by
   refine ⟨?_, ?_⟩
-  · haveI : IsNoetherian (𝓞 K) L := isNoetherian_of_fg_of_noetherian L hL.1
+  · have : IsNoetherian (𝓞 K) L := isNoetherian_of_fg_of_noetherian L hL.1
     have h1 : (L.comap (ins K m)).map (ins K m) ≤ L := Submodule.map_comap_le _ _
     exact Submodule.fg_of_fg_map_injective _ (ins_injective m) (isNoetherian_submodule.mp this _ h1)
   · rw [eq_top_iff]

@@ -78,7 +78,7 @@ theorem enorm_dblIntegrand {D : D7} {V : HSp D} (μ : (AE D)ˣ →* Circle) (E :
     (f₁ f₂ : GA D V → ℂ) (x : GA D V × GA D V) :
     ‖dblIntegrand V μ E f₁ f₂ x‖ₑ = ‖E (io V x)‖ₑ * (‖f₁ x.1‖ₑ * ‖f₂ x.2‖ₑ) := by
   simp only [dblIntegrand]
-  simp_rw [← ofReal_norm_eq_enorm]
+  simp_rw [← ofReal_norm]
   rw [norm_mul, norm_mul, norm_mul, norm_inv, Circle.norm_coe, inv_one, mul_one, Complex.norm_conj,
     ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity), mul_assoc]
 
@@ -160,7 +160,7 @@ theorem absConv_unfolded : ∀ (D : D7) (V : HSp D) (a : GL (Fin V.rank) (AE D))
       exact tsum_congr fun q => by rw [hn]; exact h2 _
     rw [e, Complex.norm_real, Real.norm_of_nonneg (tsum_nonneg fun _ => norm_nonneg _)]
   obtain ⟨C, hC⟩ : ∃ C : ℝ, ∀ g, ‖φ g‖ ≤ C * (hgt V a g : ℝ) ^ (s.re + (V.rank : ℝ) / 2) := by
-    haveI := t2Space_adeleRing' (F := D.host.F)
+    have := t2Space_adeleRing' (F := D.host.F)
     exact hI.exists_norm_le continuous_absE (isCompact_Khat V a) hφ
   have hφS : ∀ g, ‖φ g‖ ≤ max C 0 * ‖sph V a (s.re : ℂ) g‖ := fun g =>
     (hC g).trans (by rw [hn]; exact mul_le_mul_of_nonneg_right (le_max_left _ _) (hr0 g))
@@ -188,13 +188,13 @@ theorem absConv_unfolded : ∀ (D : D7) (V : HSp D) (a : GL (Fin V.rank) (AE D))
         ‖dblIntegrand V μ (fun x => φ (((q.out : GQ (dblSp V)) : GA D (dblSp V)) * x)) f₁ f₂ x‖ₑ)
         ((m.prod m).restrict (𝓕 ×ˢ 𝓕)) := fun q =>
       (continuous_dblIntegrand hμ (hφc.comp (continuous_const.mul continuous_id)) h₁.continuous
-        h₂.continuous).measurable.enorm.aemeasurable
+        h₂.continuous).measurable.eNorm.aemeasurable
     rw [← lintegral_tsum hmeas]
     refine ne_top_of_le_ne_top hint.2.ne (lintegral_mono fun x => ?_)
     simp only [enorm_dblIntegrand]
     rw [ENNReal.tsum_mul_right]
     gcongr ?_ * _
-    simp_rw [← ofReal_norm_eq_enorm]
+    simp_rw [← ofReal_norm]
     rw [Complex.norm_real, Real.norm_of_nonneg (mul_nonneg (le_max_right _ _) (norm_nonneg _)),
       ← ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) (hsφ _)]
     exact ENNReal.ofReal_le_ofReal (hle _)

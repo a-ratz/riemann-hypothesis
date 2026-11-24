@@ -211,7 +211,7 @@ theorem torus_stable_of_surjective {S S' : Scheme.{0}} (f : S' ⟶ S) [Surjectiv
 
 theorem torus_stable_of_red : ∀ (A : Type) [CommRing A] (J : Ideal A), IsNilpotent J → ∀ (X : Type) [AddCommGroup X] (G : Over (Spec (CommRingCat.of A))) [GrpObj G] (G₀ : Over (Spec (CommRingCat.of (A ⧸ J)))) [GrpObj G₀] (F : G₀.left ⟶ G.left), IsGrpPullback G₀ G (red J) F → ∀ (i₀ : splitTorus _ X ⟶ G₀) (i : splitTorus _ X ⟶ G), TorusCompat (red J) F i₀ i → ∀ W : G.left.Opens, (snd (splitTorus _ X) G₀).left ⁻¹ᵁ (F ⁻¹ᵁ W) ≤ ((fst (splitTorus _ X) G₀ ≫ i₀) * snd _ G₀).left ⁻¹ᵁ (F ⁻¹ᵁ W) → (snd (splitTorus _ X) G).left ⁻¹ᵁ W ≤ ((fst (splitTorus _ X) G ≫ i) * snd _ G).left ⁻¹ᵁ W := by
   intro A _ J hJ X _ G _ G₀ _ F hF i₀ i hi W hW
-  haveI := surjective_red hJ
+  have := surjective_red hJ
   exact torus_stable_of_surjective (red J) X G G₀ F hF i₀ i hi W hW
 
 end GlobalTheory.UU
@@ -514,7 +514,7 @@ theorem Graded.isLocalization (hV : IsAffineOpen V) (h : Graded i V) (a : wtZero
     (e : W = G.left.basicOpen a.1) (h' : Graded i W) :
     letI := ((rs hle).restrict (wtZero i V) (wtZero i W) fun _ hx => IsWt.res hx hle).toAlgebra
     IsLocalization.Away a (wtZero i W) := by
-  letI := ((rs hle).restrict (wtZero i V) (wtZero i W) fun _ hx => IsWt.res hx hle).toAlgebra
+  let := ((rs hle).restrict (wtZero i V) (wtZero i W) fun _ hx => IsWt.res hx hle).toAlgebra
   refine IsLocalization.Away.mk a ?_ (fun z => ?_) fun x y hxy => ?_
   · have hu : IsUnit (rs hle a.1) := by
       subst e

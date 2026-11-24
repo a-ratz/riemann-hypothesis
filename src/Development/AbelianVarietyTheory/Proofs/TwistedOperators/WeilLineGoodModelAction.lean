@@ -109,7 +109,7 @@ theorem Tame.growth {R : W → E →ₗ[ℂ] E} (h : Tame R) (p : Seminorm ℂ E
   have hp0 := apply_nonneg p f
   have hq0 := apply_nonneg q f
   have hw := norm_nonneg w
-  rw [Seminorm.add_apply, pow_succ]
+  rw [add_apply, pow_succ]
   nlinarith [mul_nonneg hw hp0, mul_nonneg (mul_nonneg hw hp0) (sub_nonneg.2 h3), mul_nonneg hp0 (sub_nonneg.2 h3),
     mul_nonneg hq0 (sub_nonneg.2 h3)]
 
@@ -145,7 +145,7 @@ theorem Tame.decay {R : W → E →ₗ[ℂ] E} (h : Tame R) (p : Seminorm ℂ E)
     nlinarith [le_abs_self A, abs_nonneg A, mul_le_mul_of_nonneg_right (le_abs_self A) hr]
   have hpow : (1 + ‖s‖) ^ M ≤ (1 + |A|) ^ M * (1 + r) ^ M := by
     rw [← mul_pow]; gcongr
-  rw [Real.rpow_neg (by linarith), Real.rpow_natCast, ← div_eq_mul_inv, le_div_iff₀ (by positivity), Seminorm.add_apply]
+  rw [Real.rpow_neg (by linarith), Real.rpow_natCast, ← div_eq_mul_inv, le_div_iff₀ (by positivity), add_apply]
   have h3 := apply_nonneg q₃ f
   have h4 := apply_nonneg q₄ f
   rcases le_or_gt r r₀ with hrr | hrr
@@ -216,7 +216,7 @@ theorem tame_heisOp
   have hw := norm_nonneg w
   have h1w : 1 ≤ 1 + ‖w‖ := by linarith
   have hc0 : 0 < c := by linarith
-  rw [Seminorm.add_apply, mul_add, add_comm]
+  rw [add_apply, mul_add, add_comm]
   refine add_le_add ((hb₂ _ f).trans ?_) ((hb₁ _ _ g).trans ?_)
   · have := ha w
     calc _ ≤ ‖w‖ * (1 + ‖w‖) ^ M₂ * q₂ f := by gcongr
@@ -255,7 +255,7 @@ namespace GlobalTheory.ArchJointCont
 
 theorem continuous_of_weak {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
     (A : 𝓢(V, ℂ) →ₗ[ℂ] 𝓢(V, ℂ)) (h : ∀ T : 𝓢(V, ℂ) →L[ℂ] ℂ, Continuous fun f => T (A f)) : Continuous A := by
-  haveI : BarrelledSpace ℂ 𝓢(V, ℂ) := GlobalTheory.schwartzMap_barrelledSpace V
+  have : BarrelledSpace ℂ 𝓢(V, ℂ) := GlobalTheory.schwartzMap_barrelledSpace V
   refine (schwartz_withSeminorms ℂ V ℂ).continuous_of_continuous_comp A fun i => ?_
   set p : Seminorm ℂ 𝓢(V, ℂ) := schwartzSeminormFamily ℂ V ℂ i
   have hp : Continuous p := (schwartz_withSeminorms ℂ V ℂ).continuous_seminorm i

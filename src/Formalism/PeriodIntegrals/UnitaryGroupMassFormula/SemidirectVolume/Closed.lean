@@ -64,7 +64,7 @@ theorem continuous_lin [IsTopologicalRing (R ⊗[F] E)] (x : Fin n → R ⊗[F] 
     Continuous fun g : HA R σ J => lin R σ J g x := by
   have hm : Continuous fun g : HA R σ J =>
       ((HA.mat R σ J g : GL (Fin n) (R ⊗[F] E)) : Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   simp only [lin, Matrix.mulVecLin_apply]
   exact hm.matrix_mulVec continuous_const
 
@@ -75,7 +75,7 @@ theorem exists_proj_mat (K : Submodule E (Fin n → E)) :
   · rw [LinearMap.toMatrix'_mulVec]
     exact (Submodule.linearProjOfIsCompl K K' hK x).2
   · rw [LinearMap.toMatrix'_mulVec, LinearMap.comp_apply]
-    have := Submodule.linearProjOfIsCompl_apply_left hK ⟨x, hx⟩
+    have := Submodule.projectionOnto_apply_left hK ⟨x, hx⟩
     exact congrArg Subtype.val this
 
 variable {R}

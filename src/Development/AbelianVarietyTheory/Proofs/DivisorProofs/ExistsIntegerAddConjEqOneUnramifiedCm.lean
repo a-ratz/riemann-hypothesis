@@ -58,7 +58,7 @@ namespace GlobalTheory.LatVac
 theorem exists_integer_add_conj_eq_one_of_isGood : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (B : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Base F E), B.IsGood σ → ∃ θ : 𝓞 E, (θ : E) + σ θ = 1 := by
   intro F E _ _ _ _ _ σ B hB
-  haveI : Algebra.Unramified (𝓞 F) (𝓞 E) := hB.unram
+  have : Algebra.Unramified (𝓞 F) (𝓞 E) := hB.unram
   exact GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified F E σ hB.cm inferInstance
 
 end GlobalTheory.LatVac

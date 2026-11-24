@@ -88,7 +88,7 @@ theorem isLocalization_locAt {A : Subalgebra ℂ K} (𝔭 : Ideal (tens (κ' := 
     (hinj : Function.Injective (algebraMap (K ⊗[ℂ] κ') L)) :
     letI := (toQ (L := L) 𝔭).toAlgebra
     IsLocalization 𝔭.primeCompl (locAt (L := L) 𝔭) := by
-  letI := (toQ (L := L) 𝔭).toAlgebra
+  let := (toQ (L := L) 𝔭).toAlgebra
   refine ⟨fun s => isUnit_toQ 𝔭 hinj s.2, fun x => ?_, fun {a b} h => ⟨1, ?_⟩⟩
   · obtain ⟨a, s, hs, e⟩ := exists_mul_toQ 𝔭 x
     exact ⟨(a, ⟨s, hs⟩), e⟩
@@ -97,8 +97,8 @@ theorem isLocalization_locAt {A : Subalgebra ℂ K} (𝔭 : Ideal (tens (κ' := 
 
 theorem formallyEtale_toQ {A : Subalgebra ℂ K} (𝔭 : Ideal (tens (κ' := κ') A)) [𝔭.IsPrime]
     (hinj : Function.Injective (algebraMap (K ⊗[ℂ] κ') L)) : (toQ (L := L) 𝔭).FormallyEtale := by
-  letI := (toQ (L := L) 𝔭).toAlgebra
-  haveI := isLocalization_locAt (L := L) 𝔭 hinj
+  let := (toQ (L := L) 𝔭).toAlgebra
+  have := isLocalization_locAt (L := L) 𝔭 hinj
   exact Algebra.FormallyEtale.of_isLocalization 𝔭.primeCompl
 
 end GlobalTheory.GraphLocal
@@ -117,7 +117,7 @@ theorem isFreeGen_locAt {n k' : ℕ} (τ' : Fin k' → κ') (E : Place (algebraM
     IsFreeGen (locAt (L := L) 𝔭) (dForm ((algebraMap ℂ L).codRestrict (locAt (L := L) 𝔭) hc)
       (Fin.append (fun i => toQ 𝔭 ⟨1 ⊗ₜ τ' i, tmul_mem (one_mem _) _⟩)
         (fun i => toQ 𝔭 ⟨(z i : K) ⊗ₜ 1, tmul_mem (z i).2 1⟩))) := by
-  letI : Algebra ℂ E.ring := E.const.toAlgebra
+  let : Algebra ℂ E.ring := E.const.toAlgebra
   let f : E.ring ≃ₐ[ℂ] placeAlg E :=
     { toFun := fun a => ⟨a.1, a.2⟩
       invFun := fun a => ⟨a.1, a.2⟩
@@ -130,7 +130,7 @@ theorem isFreeGen_locAt {n k' : ℕ} (τ' : Fin k' → κ') (E : Place (algebraM
     (Algebra.TensorProduct.congr f AlgEquiv.refl).trans (tensEquiv (placeAlg E))
   have hθ (a : E.ring) (c : κ') : (θ (a ⊗ₜ c) : K ⊗[ℂ] κ') = (a : K) ⊗ₜ c := rfl
   have hθe : (θ : E.ring ⊗[ℂ] κ' →+* tens (κ' := κ') (placeAlg E)).FormallyEtale := by
-    letI := (θ : E.ring ⊗[ℂ] κ' →+* tens (κ' := κ') (placeAlg E)).toAlgebra
+    let := (θ : E.ring ⊗[ℂ] κ' →+* tens (κ' := κ') (placeAlg E)).toAlgebra
     exact Algebra.FormallyEtale.of_equiv
       (AlgEquiv.ofBijective (Algebra.ofId (E.ring ⊗[ℂ] κ') (tens (κ' := κ') (placeAlg E)))
         θ.bijective)
@@ -188,9 +188,9 @@ theorem exists_matrix_dFun {K : Type} [Field K] (c₀ : ℂ →+* K) {n : ℕ} (
       c.det ≠ 0 ∧ (fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (dForm (c₀) x) = E.ord c.det := by
   obtain ⟨b', hb'⟩ : ∃ b' : Module.Basis (Fin n) K (Omega (c₀)),
       ∀ j, b' j = dFun (c₀) (z j : K) := by
-    letI := E.const.toAlgebra
-    letI := (c₀).toAlgebra
-    haveI : IsScalarTower ℂ E.ring K := IsScalarTower.of_algebraMap_eq' rfl
+    let := E.const.toAlgebra
+    let := (c₀).toAlgebra
+    have : IsScalarTower ℂ E.ring K := IsScalarTower.of_algebraMap_eq' rfl
     refine ⟨fracKaehlerBasis K b, fun j => ?_⟩
     simp only [fracKaehlerBasis_apply, hb, dFun, KaehlerDifferential.map_D]
     rfl
@@ -253,11 +253,11 @@ theorem exists_isFreeGen_locAt_formOrd : ∀ {K κ' L : Type} [Field K] [Field �
   have hinj : Function.Injective (algebraMap (K ⊗[ℂ] κ') L) := IsFractionRing.injective _ _
   obtain ⟨z, b, hb⟩ : ∃ (z : Fin n → E.ring) (b : Module.Basis (Fin n) E.ring (Omega E.const)),
       ∀ i, b i = dFun E.const (z i) := by
-    letI := E.const.toAlgebra
-    letI := (algebraMap ℂ K).toAlgebra
-    haveI : IsScalarTower ℂ E.ring K := IsScalarTower.of_algebraMap_eq' rfl
-    haveI : Algebra.EssFiniteType ℂ E.ring := E.essFiniteType
-    haveI := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ E.ring
+    let := E.const.toAlgebra
+    let := (algebraMap ℂ K).toAlgebra
+    have : IsScalarTower ℂ E.ring K := IsScalarTower.of_algebraMap_eq' rfl
+    have : Algebra.EssFiniteType ℂ E.ring := E.essFiniteType
+    have := formallySmooth_of_isRegularLocalRing_of_perfectField ℂ E.ring
     obtain ⟨m, z, b, -, hb⟩ := exists_basis_kaehler_uniformiser ℂ ht
     have h1 := trdeg_eq_of_basis_kaehler ℂ K b
     have h2 := IsTranscendenceBasis.cardinalMk_eq_trdeg (R := ℂ) hx
@@ -293,10 +293,10 @@ theorem exists_isFreeGen_locAt_formOrd : ∀ {K κ' L : Type} [Field K] [Field �
     refine (dForm_append_eq_det_smul (algebraMap ℂ L)
       (fun i => algebraMap (K ⊗[ℂ] κ') L (1 ⊗ₜ τ' i)) (fun i => j (x i)) (fun i => j (z i : K))
       (c.map j) fun i => ?_).trans ?_
-    letI := (algebraMap ℂ K).toAlgebra
-    letI := (algebraMap ℂ L).toAlgebra
-    letI := j.toAlgebra
-    haveI : IsScalarTower ℂ K L := IsScalarTower.of_algebraMap_eq' hj.symm
+    let := (algebraMap ℂ K).toAlgebra
+    let := (algebraMap ℂ L).toAlgebra
+    let := j.toAlgebra
+    have : IsScalarTower ℂ K L := IsScalarTower.of_algebraMap_eq' hj.symm
     have e := congrArg (KaehlerDifferential.map ℂ ℂ K L) (hcx i)
 
     rw [map_sum] at e
@@ -495,7 +495,7 @@ theorem jets_mem_pow_sup : ∀ {K κ κ' : Type} [Field K] [Field κ] [Field κ'
       (Function.rightInverse_surjInv _) ⟨φ, hker⟩
   have hψ : ∀ r, ψ (π.rangeRestrict r) = q (jL (ι r)) := fun r =>
     RingHom.liftOfRightInverse_comp_apply _ _ _ _ r
-  haveI : IsFractionRing π.range κ := by
+  have : IsFractionRing π.range κ := by
     refine ⟨fun y => ?_, fun z => ?_, fun {x y} h => ⟨1, by simpa using Subtype.ext h⟩⟩
     · refine isUnit_iff_ne_zero.2 fun h => nonZeroDivisors.coe_ne_zero y (Subtype.ext h)
     · obtain ⟨c, d, hd, e⟩ := hfrac z
@@ -603,7 +603,7 @@ theorem graphIdeal_ne_top_of_hom {K κ κ' F : Type} [Field K] [Field κ] [Field
     (α : E.ring →+* F) (β : κ' →+* F) (hα : ∀ r : R, α ⟨r, h4 _ r.2⟩ = β (ρ (π r)))
     (hpos : ∀ x : E.ring, 0 < E.ord (x : K) → α x = 0) :
     graphIdeal (κ' := κ') E R π ρ ≠ ⊤ := by
-  letI : Algebra ℂ F := (β.comp (algebraMap ℂ κ')).toAlgebra
+  let : Algebra ℂ F := (β.comp (algebraMap ℂ κ')).toAlgebra
   let j : placeAlg E →+* E.ring :=
     { toFun := fun x => ⟨x.1, x.2⟩, map_one' := rfl, map_mul' := fun _ _ => rfl,
       map_zero' := rfl, map_add' := fun _ _ => rfl }
@@ -693,7 +693,7 @@ theorem graphIdeal_ne_top : ∀ {K κ κ' : Type} [Field K] [Field κ] [Field κ
     obtain ⟨r, rfl⟩ := hsurj s
     rw [hφ₀] at hs
     exact Subtype.ext ((hker r).2 hs)
-  haveI : IsFractionRing π.range κ := IsFractionRing.of_field π.range κ fun z => by
+  have : IsFractionRing π.range κ := IsFractionRing.of_field π.range κ fun z => by
     obtain ⟨a, b, hb, e⟩ := h3 z
     refine ⟨π.rangeRestrict a, π.rangeRestrict b, ?_⟩
     show z = π a / π b
@@ -702,13 +702,13 @@ theorem graphIdeal_ne_top : ∀ {K κ κ' : Type} [Field K] [Field κ] [Field κ
   have hι : ∀ r, ι (π r) = g r := fun r => by
     rw [← hφ₀]
     exact IsFractionRing.lift_algebraMap hinj (π.rangeRestrict r)
-  letI : Algebra κ kE := ι.toAlgebra
-  letI : Algebra κ κ' := ρ.toRingHom.toAlgebra
-  haveI : Nontrivial (kE ⊗[κ] κ') :=
+  let : Algebra κ kE := ι.toAlgebra
+  let : Algebra κ κ' := ρ.toRingHom.toAlgebra
+  have : Nontrivial (kE ⊗[κ] κ') :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain κ kE κ'
       ι.injective ρ.toRingHom.injective
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (kE ⊗[κ] κ')
-  letI : Field (kE ⊗[κ] κ' ⧸ M) := Ideal.Quotient.field M
+  let : Field (kE ⊗[κ] κ' ⧸ M) := Ideal.Quotient.field M
   let q := Ideal.Quotient.mk M
   let α : E.ring →+* (kE ⊗[κ] κ' ⧸ M) :=
     q.comp (Algebra.TensorProduct.includeLeftRingHom.comp (IsLocalRing.residue E.ring))
@@ -901,7 +901,7 @@ theorem flat_aeval_placeAlg (k : ℕ) (R : Subring K)
         map_zero' := rfl, map_add' := fun _ _ => rfl }
     exact hyu.map toA
   set D := Localization.AtPrime q
-  haveI : IsDiscreteValuationRing D := isDVR_atPrime k
+  have : IsDiscreteValuationRing D := isDVR_atPrime k
   have hunits : ∀ s : q.primeCompl, IsUnit (φ.toRingHom s) := fun s => key s.1 s.2
   let ℓ : D →+* placeAlg E := IsLocalization.lift (M := q.primeCompl) hunits
   have hcomp : ℓ.comp (algebraMap _ D) = φ.toRingHom := IsLocalization.lift_comp hunits
@@ -915,7 +915,7 @@ theorem flat_aeval_placeAlg (k : ℕ) (R : Subring K)
     have e : ((φ (X 0) : placeAlg E) : K) = t := by simp [φ, x]
     exact Subtype.ext (by rw [← e, h]; rfl)
   have hℓ : ℓ.Flat := by
-    letI := ℓ.toAlgebra
+    let := ℓ.toAlgebra
     rw [RingHom.Flat, Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
     intro a ha
     obtain ⟨⟨d, hd⟩, hda⟩ := (Submodule.mem_torsion_iff _).1 ha
@@ -1051,15 +1051,15 @@ variable {K κ' L : Type} [Field K] [Field κ'] [Field L] [Algebra ℂ K] [Algeb
 theorem height_le_height_of_flat {A : Subalgebra ℂ K} {m : ℕ} (v : Fin m → A)
     (hf : (polyMap (κ' := κ') A v).Flat) (𝔭 : Ideal (tens (κ' := κ') A)) [𝔭.IsPrime] :
     (𝔭.comap (polyMap A v)).height ≤ 𝔭.height := by
-  letI := (polyMap (κ' := κ') A v).toAlgebra
-  haveI : Module.Flat (MvPolynomial (Fin m) κ') (tens (κ' := κ') A) := hf
-  haveI : Algebra.HasGoingDown (MvPolynomial (Fin m) κ') (tens (κ' := κ') A) :=
+  let := (polyMap (κ' := κ') A v).toAlgebra
+  have : Module.Flat (MvPolynomial (Fin m) κ') (tens (κ' := κ') A) := hf
+  have : Algebra.HasGoingDown (MvPolynomial (Fin m) κ') (tens (κ' := κ') A) :=
     Algebra.HasGoingDown.of_flat
   set q := 𝔭.comap (polyMap (κ' := κ') A v) with hq
-  haveI : q.IsPrime := Ideal.comap_isPrime _ _
-  haveI : 𝔭.LiesOver q := ⟨rfl⟩
+  have : q.IsPrime := Ideal.comap_isPrime _ _
+  have : 𝔭.LiesOver q := ⟨rfl⟩
   obtain ⟨l, hl, hlen⟩ := q.exists_ltSeries_length_eq_height
-  haveI : 𝔭.LiesOver l.last.asIdeal := by rw [hl]; infer_instance
+  have : 𝔭.LiesOver l.last.asIdeal := by rw [hl]; infer_instance
   obtain ⟨L', hlen', hlast, -⟩ := Ideal.exists_ltSeries_of_hasGoingDown l 𝔭
   rw [← hlen, ← hlen', (⟨𝔭, ‹_›⟩ : PrimeSpectrum (tens (κ' := κ') A)).height_eq_orderHeight]
   exact Order.length_le_height (le_of_eq hlast)
@@ -1067,8 +1067,8 @@ theorem height_le_height_of_flat {A : Subalgebra ℂ K} {m : ℕ} (v : Fin m →
 theorem ringKrullDim_locAt {A : Subalgebra ℂ K} (𝔭 : Ideal (tens (κ' := κ') A)) [𝔭.IsPrime]
     (hinj : Function.Injective (algebraMap (K ⊗[ℂ] κ') L)) :
     ringKrullDim (locAt (L := L) 𝔭) = 𝔭.height := by
-  letI := (toQ (L := L) 𝔭).toAlgebra
-  haveI : IsLocalization.AtPrime (locAt (L := L) 𝔭) 𝔭 :=
+  let := (toQ (L := L) 𝔭).toAlgebra
+  have : IsLocalization.AtPrime (locAt (L := L) 𝔭) 𝔭 :=
     { map_units := fun s => isUnit_toQ 𝔭 hinj s.2
       surj := fun x => by
         obtain ⟨a, s, hs, e⟩ := exists_mul_toQ 𝔭 x
@@ -1097,14 +1097,14 @@ theorem dim_locAt_graph : ∀ {K κ κ' L : Type} [Field K] [Field κ] [Field κ
   apply le_antisymm
   ·
     rw [← ringKrullDim_locAt 𝔭 hinj]
-    letI : Algebra ℂ L := ((algebraMap (K ⊗[ℂ] κ') L).comp (algebraMap ℂ (K ⊗[ℂ] κ'))).toAlgebra
-    haveI : IsScalarTower ℂ (K ⊗[ℂ] κ') L := IsScalarTower.of_algebraMap_eq' rfl
+    let : Algebra ℂ L := ((algebraMap (K ⊗[ℂ] κ') L).comp (algebraMap ℂ (K ⊗[ℂ] κ'))).toAlgebra
+    have : IsScalarTower ℂ (K ⊗[ℂ] κ') L := IsScalarTower.of_algebraMap_eq' rfl
     have hQ := _root_.GlobalTheory.GraphLocal.isLocModel_locAt (L := L) E 𝔭 hO'
-    letI : IsLocalRing (locAt (L := L) 𝔭) := isLocalRing_locAt 𝔭 hinj
-    letI : Algebra ℂ (locAt (L := L) 𝔭) :=
+    let : IsLocalRing (locAt (L := L) 𝔭) := isLocalRing_locAt 𝔭 hinj
+    let : Algebra ℂ (locAt (L := L) 𝔭) :=
       ((algebraMap ℂ L).codRestrict _ hQ.const_mem).toAlgebra
-    haveI : Algebra.EssFiniteType ℂ (locAt (L := L) 𝔭) := hQ.essFiniteType
-    haveI : IsNoetherianRing (locAt (L := L) 𝔭) := Algebra.EssFiniteType.isNoetherianRing ℂ _
+    have : Algebra.EssFiniteType ℂ (locAt (L := L) 𝔭) := hQ.essFiniteType
+    have : IsNoetherianRing (locAt (L := L) 𝔭) := Algebra.EssFiniteType.isNoetherianRing ℂ _
     have hmax := _root_.GlobalTheory.GraphLocal.MaxGen.maximalIdeal_locAt_eq_span (L := L) k R π ρ E hER t zR 𝔭 hO' hc1 hc2 hfrac hcent ht hzR h𝔭
     refine (ringKrullDim_le_spanFinrank_maximalIdeal _).trans ?_
     rw [hmax]
@@ -1238,10 +1238,10 @@ theorem GlobalTheory.GraphLocal.exists_locModel_graph : ∀ {K κ κ' L : Type} 
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible E.ring
   obtain ⟨zR, hzR⟩ := _root_.GlobalTheory.GraphLocal.exists_trBasis_lift k R π hfrac hz
   obtain ⟨𝔭, h𝔭⟩ := Ideal.nonempty_minimalPrimes (_root_.GlobalTheory.GraphLocal.graphIdeal_ne_top (κ' := κ') R π ρ E hcompat hC hfrac hER hcentre)
-  haveI : 𝔭.IsPrime := h𝔭.1.1
+  have : 𝔭.IsPrime := h𝔭.1.1
   have hle : graphIdeal E R π ρ ≤ 𝔭 := h𝔭.1.2
   have hQ : IsLocModel (algebraMap ℂ L) (locAt (L := L) 𝔭) := _root_.GlobalTheory.GraphLocal.isLocModel_locAt E 𝔭 hO'
-  letI := hQ.isLocalRing
+  let := hQ.isLocalRing
   have hmax := _root_.GlobalTheory.GraphLocal.MaxGen.maximalIdeal_locAt_eq_span (L := L) k R π ρ E hER t zR 𝔭 hO' hcompat hC hfrac hcentre ht hzR h𝔭
   have hdim := _root_.GlobalTheory.GraphLocal.dim_locAt_graph (L := L) k R π ρ E 𝔭 hO' hcompat hC hfrac hER hcentre hz h𝔭
   have hz0 : ((toQ (L := L) 𝔭 (gens E R π ρ hER t zR 0) : locAt (L := L) 𝔭) : L) =
@@ -1373,9 +1373,9 @@ theorem trBasis_append_tmul {k K F W : Type} [Field k] [Field K] [Field F] [Fiel
     unfold TrBasis
     rw [e]
   rw [key] at hx hy ⊢
-  letI : Algebra K W := ((algebraMap (K ⊗[k] F) W).comp (algebraMap K (K ⊗[k] F))).toAlgebra
-  haveI : IsScalarTower K (K ⊗[k] F) W := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower k K W := IsScalarTower.of_algebraMap_eq fun a => by
+  let : Algebra K W := ((algebraMap (K ⊗[k] F) W).comp (algebraMap K (K ⊗[k] F))).toAlgebra
+  have : IsScalarTower K (K ⊗[k] F) W := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower k K W := IsScalarTower.of_algebraMap_eq fun a => by
     rw [IsScalarTower.algebraMap_apply k (K ⊗[k] F) W,
       IsScalarTower.algebraMap_apply k K (K ⊗[k] F), ← IsScalarTower.algebraMap_apply]
   have h := hx.sumElim_comp (isTranscendenceBasis_one_tmul (K := K) (W := W) hy)
@@ -1461,7 +1461,7 @@ theorem exists_place_weighted_over_place : ∀ {K κ κ' L : Type} [Field K] [Fi
     have hs : ∑ i, (wt i : ℤ) = M + (k + 1) := by
       rw [Fin.sum_univ_succ, Fin.sum_univ_succ]
       have : ∀ i : Fin k, wt i.succ.succ = 1 := fun i =>
-        if_neg (fun h => Fin.succ_ne_zero i (Fin.succ_injective _ h))
+        ite_eq_right (fun h => Fin.succ_ne_zero i (Fin.succ_injective _ h))
       simp [this, wt]
       ring
     have h1 := hVf y hy

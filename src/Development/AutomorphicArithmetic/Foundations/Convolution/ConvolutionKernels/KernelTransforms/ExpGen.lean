@@ -56,7 +56,7 @@ open Matrix GlobalTheory.CuspRep in
 private theorem matEq_exp (K : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] (n : ℕ)
     (X : Matrix (Fin n) (Fin n) (Cinf K)) :
     UpperTheory.V.Cm.matEq K n (NormedSpace.exp X) = NormedSpace.exp (UpperTheory.V.Cm.matEq K n X) := by
-  letI : Algebra ℚ (ArchMatrix K n) := Algebra.compHom _ (algebraMap ℚ ℝ)
+  let : Algebra ℚ (ArchMatrix K n) := Algebra.compHom _ (algebraMap ℚ ℝ)
   open scoped Matrix.Norms.Operator in
   exact NormedSpace.map_exp (𝔸 := Matrix (Fin n) (Fin n) (Cinf K)) (UpperTheory.V.Cm.matEq K n)
     (show Continuous (UpperTheory.V.Cm.matEq K n) from (UpperTheory.V.Cm.archEq K n).continuous) X

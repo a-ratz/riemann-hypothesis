@@ -152,7 +152,7 @@ theorem translate_div_additive :
     ∀ (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Spec (CommRingCat.of K))) (x : 𝟙_ (Over (Spec (CommRingCat.of K))) ⟶ P.A), ∃ w : LB.Iso ((LB.LinComb P.L (K := Fin 2) ![(lift (toUnit P.A ≫ x) (𝟙 P.A) ≫ μ[P.A]).left, 𝟙 P.A.left] ![1, -1]).pull μ[P.A].left) (tw ((LB.LinComb P.L (K := Fin 2) ![(lift (toUnit P.A ≫ x) (𝟙 P.A) ≫ μ[P.A]).left, 𝟙 P.A.left] ![1, -1]).pull (fst P.A P.A).left) ((LB.LinComb P.L (K := Fin 2) ![(lift (toUnit P.A ≫ x) (𝟙 P.A) ≫ μ[P.A]).left, 𝟙 P.A.left] ![1, -1]).pull (snd P.A P.A).left) 1), w.IsGen := by
   intro K _ _ P x
   obtain ⟨t, ht⟩ := GlobalTheory.AbLaw.CubeAssembly.cube_gen _ P P.L P.isLB
-  letI : Unique (Spec (CommRingCat.of K)) := inferInstanceAs (Unique (PrimeSpectrum K))
+  let : Unique (Spec (CommRingCat.of K)) := inferInstanceAs (Unique (PrimeSpectrum K))
   exact exists_iso_of_cube P.isLB t ht x
 
 end GlobalTheory.TranslateAdditive

@@ -69,7 +69,7 @@ theorem exists_scale (h : IsCMExt F E σ) (ε : ℤˣ) : ∃ c : E, c ≠ 0 ∧ 
       by_contra hx
       refine hn (x - σ x) (sub_ne_zero.2 (Ne.symm hx)) ?_
       simp [GlobalTheory.SiegelSet.sigma_sigma h]
-    haveI := h.2.1
+    have := h.2.1
     obtain ⟨w⟩ : Nonempty (InfinitePlace E) := inferInstance
     have hc : w.IsComplex := IsTotallyComplex.isComplex w
     refine (InfinitePlace.not_isReal_iff_isComplex.2 hc) ?_
@@ -100,11 +100,11 @@ theorem unimodLC (h : IsCMExt F E σ) {n : ℕ} {J : Matrix (Fin n) (Fin n) E} {
   exact key _ e
 
 theorem countable_ratU (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) : Countable (ratU σ J) := by
-  haveI : Countable E := Function.Injective.countable (Module.finBasis ℚ E).equivFun.injective
-  haveI : Countable (GL (Fin n) E) :=
+  have : Countable E := Function.Injective.countable (Module.finBasis ℚ E).equivFun.injective
+  have : Countable (GL (Fin n) E) :=
     Function.Injective.countable (f := fun (g : GL (Fin n) E) (i j : Fin n) => (g : Matrix (Fin n) (Fin n) E) i j)
       fun _ _ h => Units.ext (Matrix.ext fun i j => congrFun (congrFun h i) j)
-  haveI := (Set.countable_range (Matrix.GeneralLinearGroup.map (n := Fin n) (inclR (F := F) (E := E) (AF F)))).to_subtype
+  have := (Set.countable_range (Matrix.GeneralLinearGroup.map (n := Fin n) (inclR (F := F) (E := E) (AF F)))).to_subtype
   exact Function.Injective.countable
     (f := fun γ : ratU σ J => (⟨γ.1.1, Subgroup.mem_subgroupOf.1 γ.2⟩ :
       Set.range (Matrix.GeneralLinearGroup.map (n := Fin n) (inclR (F := F) (E := E) (AF F)))))
@@ -112,14 +112,14 @@ theorem countable_ratU (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n
 
 theorem inclR_inj : Function.Injective (inclR (F := F) (E := E) (AF F)) :=
   haveI : Nontrivial (AF F ⊗[F] E) := by
-    haveI : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+    have : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
     infer_instance
   (inclR (F := F) (E := E) (AF F)).injective
 
 theorem discrete_ratU (h : IsCMExt F E σ) {n : ℕ} {J : Matrix (Fin n) (Fin n) E} {ε : ℤˣ}
     (hJ : ∀ i j, σ (J j i) = ((ε : ℤ) : E) * J i j) (hd : J.det ≠ 0) : DiscreteTopology (ratU σ J) := by
   obtain ⟨J', -, e⟩ := exists_hr h hJ hd
-  haveI : DiscreteTopology (HFinIn (AF F) σ J') := GlobalTheory.RationalDiscrete.discreteTopology_HFinIn σ J'
+  have : DiscreteTopology (HFinIn (AF F) σ J') := GlobalTheory.RationalDiscrete.discreteTopology_HFinIn σ J'
   have mem : ∀ γ : ratU σ J, γ.1.1 ∈ HFin (AF F) σ J' := fun γ => by
     obtain ⟨u, hu⟩ := Subgroup.mem_subgroupOf.1 γ.2
     have h1 : γ.1.1 ∈ HR (AF F) σ J' := e ▸ γ.1.2
@@ -132,7 +132,7 @@ theorem discrete_ratU (h : IsCMExt F E σ) {n : ℕ} {J : Matrix (Fin n) (Fin n)
     simp only [Matrix.map_mul]
     exact h1
   let f : ratU σ J → HFinIn (AF F) σ J' := fun γ => ⟨⟨γ.1.1, e ▸ γ.1.2⟩, Subgroup.mem_subgroupOf.2 (mem γ)⟩
-  have hc : Continuous f := ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _).subtype_mk _
+  have hc : Continuous f := ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _).subtype_mk _
   exact DiscreteTopology.of_continuous_injective hc fun a b hab =>
     Subtype.ext (Subtype.ext (congrArg (fun z : HFinIn (AF F) σ J' => z.1.1) hab))
 
@@ -149,8 +149,8 @@ theorem sFinite_haar (h : IsCMExt F E σ) {n : ℕ} {J : Matrix (Fin n) (Fin n) 
 theorem unimodularity_holds : Unimod := by
   intro F E _ _ _ _ _ σ h n J ε hJ hd
   obtain ⟨h1, h2, h3, h4, h5, ⟨μ, hμ⟩, h7⟩ := unimodLC h hJ hd
-  haveI := countable_ratU σ J
-  haveI := discrete_ratU h hJ hd
+  have := countable_ratU σ J
+  have := discrete_ratU h hJ hd
   obtain ⟨𝓕, -, h𝓕⟩ := (GlobalTheory.RationalUnitaryDomains.isDiscreteWithDomains_of_discrete (ratU σ J)).2.2 μ hμ
   exact ⟨inferInstance, ⟨μ, 𝓕, hμ, h𝓕⟩, h7⟩
 

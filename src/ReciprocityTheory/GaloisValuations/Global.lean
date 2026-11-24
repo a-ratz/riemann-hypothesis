@@ -211,7 +211,7 @@ def locHom (A : ValuationSubring (Ω)) : Dec (F := F) A →* GS Ω S :=
   (toGS Ω S).comp (Dec (F := F) A).subtype
 
 theorem continuous_locHom (A : ValuationSubring (Ω)) :
-    Continuous (locHom S A) := (continuous_toGS Ω S).comp continuous_subtype_val
+    Continuous (locHom S A) := (continuous_toGS Ω S).comp continuous_subtypeVal
 
 def UnramOutside {H : Type*} [Group H] (ρ : G F Ω →* H) : Prop := ∀ σ ∈ NS Ω S, ρ σ = 1
 
@@ -223,14 +223,14 @@ theorem unramOutside_iff {H : Type*} [Group H] [TopologicalSpace H] [T2Space H]
     apply h
     apply Subgroup.le_topologicalClosure
     apply Subgroup.subset_normalClosure
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff, exists_prop]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_compl_iff, exists_prop]
     exact ⟨v, hv, A, hA, hσ⟩
   · intro h σ hσ
     have hker : NS Ω S ≤ ρ.ker := by
       apply Subgroup.topologicalClosure_minimal
       · apply Subgroup.normalClosure_le_normal
         intro τ hτ
-        simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff, exists_prop] at hτ
+        simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_compl_iff, exists_prop] at hτ
         obtain ⟨v, hv, A, hA, hτ⟩ := hτ
         exact MonoidHom.mem_ker.mpr (h v hv A hA τ hτ)
       · rw [MonoidHom.coe_ker]
@@ -262,7 +262,7 @@ theorem cycZ_toZModPow_eq [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] {A : Valu
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   have hN0 : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
   have hspec := cyclotomicCharacter.spec (L := Ω) l
     (MulSemiringAction.toRingAut (G F Ω) (Ω) σ) ζ hζ.pow_eq_one
@@ -324,9 +324,9 @@ theorem exists_isPlaceOver (v : HeightOneSpectrum (𝓞 F)) :
     ∃ A : ValuationSubring (Ω), IsPlaceOver A v := by
   classical
   have hinj : Function.Injective (algebraMap F Ω) := (algebraMap F Ω).injective
-  haveI hV : IsLocalRing (v.valuation F).valuationSubring.toSubring :=
+  have hV : IsLocalRing (v.valuation F).valuationSubring.toSubring :=
     inferInstanceAs (IsLocalRing (v.valuation F).valuationSubring)
-  haveI hS : IsLocalRing ((v.valuation F).valuationSubring.toSubring.map (algebraMap F Ω)) :=
+  have hS : IsLocalRing ((v.valuation F).valuationSubring.toSubring.map (algebraMap F Ω)) :=
     IsLocalRing.of_surjective'
       ((v.valuation F).valuationSubring.toSubring.equivMapOfInjective (algebraMap F Ω) hinj).toRingHom
       ((v.valuation F).valuationSubring.toSubring.equivMapOfInjective (algebraMap F Ω) hinj).surjective
@@ -442,7 +442,7 @@ private theorem isClosed_setOf_apply_lemma [IsAlgClosure F Ω] (x : Ω) (P : Ω 
     have h2 : τ x = σ x := by
       have h3 := congrArg σ h1
       rwa [AlgEquiv.mul_apply, mul_inv_apply] at h3
-    exact hσ (by simpa only [Set.mem_setOf_eq, h2] using hPτ)
+    exact hσ (by simpa only [Set.mem_ofPred_eq, h2] using hPτ)
   · show σ⁻¹ * σ ∈ (IntermediateField.adjoin F {x}).fixingSubgroup
     rw [inv_mul_cancel]
     exact one_mem _
@@ -450,7 +450,7 @@ private theorem isClosed_setOf_apply_lemma [IsAlgClosure F Ω] (x : Ω) (P : Ω 
 theorem isClosed_Dec [IsAlgClosure F Ω] (A : ValuationSubring (Ω)) : IsClosed (Dec (F := F) A : Set (G F Ω)) := by
   have e : (Dec (F := F) A : Set (G F Ω)) = ⋂ x : Ω, {τ : G F Ω | τ x ∈ A ↔ x ∈ A} := by
     ext τ
-    simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_ofPred_eq]
     refine ⟨fun h x => apply_mem_iff_of_mem_Dec h x, fun h => mem_Dec.mpr ?_⟩
     ext y
     have k : τ • ((τ⁻¹ : G F Ω) y) ∈ τ • A ↔ (τ⁻¹ : G F Ω) y ∈ A :=
@@ -464,7 +464,7 @@ theorem isClosed_Ine [IsAlgClosure F Ω] (A : ValuationSubring (Ω)) : IsClosed 
   have e : (Ine (F := F) A : Set (G F Ω)) = (Dec (F := F) A : Set (G F Ω)) ∩
       ⋂ x : Ω, {τ : G F Ω | A.valuation x ≤ 1 → A.valuation (τ x - x) < 1} := by
     ext τ
-    simp only [SetLike.mem_coe, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     exact Iff.rfl
   rw [e]
   exact (isClosed_Dec A).inter (isClosed_iInter fun x =>

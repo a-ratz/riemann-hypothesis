@@ -122,7 +122,7 @@ theorem basis_value_at_origin : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algeb
   have hs : (t ≫ (ptSecT ρ.P.A (ρ.pt 0)).left) ≫ (snd (baseOver (Sp S.R)) ρ.P.A).left = spMap y₀ ≫ eSec ρ.P.A := by
     rw [Category.assoc, ← Over.comp_left, ptSecT, lift_snd, h0, ← ht, Category.assoc]; rfl
   have er : r = t ≫ (ptSecT ρ.P.A (ρ.pt 0)).left := by
-    haveI : Mono (snd (baseOver (Sp S.R)) ρ.P.A).left :=
+    have : Mono (snd (baseOver (Sp S.R)) ρ.P.A).left :=
       inferInstanceAs (Mono (pullback.snd (𝟙 (Sp S.R)) ρ.P.A.hom))
     rw [← cancel_mono (snd (baseOver (Sp S.R)) ρ.P.A).left, hr, hs]
   have hp := torsFrame_pow_origin ρ.P h0 (ρ.fr_tors 0) t hJ

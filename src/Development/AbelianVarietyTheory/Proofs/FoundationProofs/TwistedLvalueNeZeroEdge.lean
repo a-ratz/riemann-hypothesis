@@ -145,7 +145,7 @@ theorem lseries_cusp_entire : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) 
     CF k L (ch ε) g → ∃ Λ : ℂ → ℂ, Differentiable ℂ Λ ∧
       ∀ s : ℂ, ((k : ℝ) + 1) / 2 < s.re → LSeriesSummable g s ∧ LSeries g s = Λ s := by
   intro k L N ε g hk hL hNL hcf
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   obtain ⟨f, hf⟩ := _root_.GlobalTheory.EisM.cuspForm_of_CF k L N ε g hk hL hNL hcf
   have hcoef : ∀ n, (qExpansion 1 ⇑f).coeff n = g n := fun n => by
     have h := _root_.GlobalTheory.EisM.coef_qs g hcf.1.1 n
@@ -172,17 +172,17 @@ theorem lseries_cusp_entire : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) 
   refine ⟨ModularForm.L hk0 f, hdiff, fun s hs => ⟨hsum s hs, ?_⟩⟩
   set U : Set ℂ := {c : ℂ | ((k : ℝ) + 1) / 2 < c.re} with hU
   have hLU : AnalyticOnNhd ℂ (LSeries g) U := (LSeries_analyticOnNhd g).mono fun c hc => by
-    simp only [Set.mem_setOf_eq, hU] at hc ⊢
+    simp only [Set.mem_ofPred_eq, hU] at hc ⊢
     exact lt_of_le_of_lt habs (by exact_mod_cast hc)
   have hΛU : AnalyticOnNhd ℂ (ModularForm.L hk0 f) U := fun z _ => hdiff.analyticAt z
   have hconn : IsPreconnected U := (convex_halfSpace_re_gt _).isPreconnected
   set z₀ : ℂ := (((k : ℝ) + 2 : ℝ) : ℂ) with hz₀
   have hz₀re : z₀.re = (k : ℝ) + 2 := by rw [hz₀, Complex.ofReal_re]
   have hk' : (0 : ℝ) ≤ k := Nat.cast_nonneg k
-  have hz₀U : z₀ ∈ U := by simp only [hU, Set.mem_setOf_eq, hz₀re]; linarith
+  have hz₀U : z₀ ∈ U := by simp only [hU, Set.mem_ofPred_eq, hz₀re]; linarith
   have hev : LSeries g =ᶠ[𝓝 z₀] ModularForm.L hk0 f := by
     have hopen : IsOpen {c : ℂ | (k : ℝ) / 2 + 1 < c.re} := isOpen_lt continuous_const Complex.continuous_re
-    filter_upwards [hopen.mem_nhds (by simp only [Set.mem_setOf_eq, hz₀re]; linarith)] with c hc
+    filter_upwards [hopen.mem_nhds (by simp only [Set.mem_ofPred_eq, hz₀re]; linarith)] with c hc
     exact hagree c hc
   exact hLU.eqOn_of_preconnected_of_eventuallyEq hΛU hconn hz₀U hev hs
 
@@ -257,9 +257,9 @@ theorem norm_sq_mul_im_pow_smul {k L N : ℕ} (ε : DirichletCharacter ℂ N) (h
 theorem pet_self_ne_zero : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) (ρ : ℍ → ℝ) (h : ℕ → ℂ), 1 ≤ k → 0 < L → N ∣ L →
     Wt L ρ → CF k L (ch ε) h → h ≠ 0 → pet k ρ (qs h) (qs h) ≠ 0 := by
   intro k L N ε ρ h hk hL hN hW hCF hh
-  haveI : (volume : Measure ℍ).IsOpenPosMeasure := volume_isOpenPosMeasure
-  haveI : Countable (Matrix (Fin 2) (Fin 2) ℤ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℤ))
-  haveI : Countable SL(2, ℤ) :=
+  have : (volume : Measure ℍ).IsOpenPosMeasure := volume_isOpenPosMeasure
+  have : Countable (Matrix (Fin 2) (Fin 2) ℤ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℤ))
+  have : Countable SL(2, ℤ) :=
     inferInstanceAs (Countable {A : Matrix (Fin 2) (Fin 2) ℤ // A.det = 1})
   have hP : PolyB h := hCF.1.1
   have hInv : Inv k L (ch ε) (qs h) := hCF.1.2
@@ -725,7 +725,7 @@ theorem local_positivity_eulerFactor : ∀ (b ω : ℕ → ℂ) (s C : ℝ) (p :
     rw [hb1] at this
     simp at this
     linarith
-  obtain ⟨z, hz⟩ := IsAlgClosed.exists_eq_mul_self (b p ^ 2 - 4 * ω p)
+  obtain ⟨z, hz⟩ := IsAlgClosed.isSquare (b p ^ 2 - 4 * ω p)
   set x : ℂ := (b p + z) / 2 with hx
   set y : ℂ := (b p - z) / 2 with hy
   have hxy : x + y = b p := by rw [hx, hy]; ring
@@ -1073,10 +1073,10 @@ theorem global_positivity_ineq : ∀ (M : ℕ) (b ω : ℕ → ℂ) (s C : ℝ),
     intro p hp
     by_cases hpM : p ∣ M
     · obtain ⟨h1, h2⟩ := hdiv p hp hpM
-      simp only [hA, hpM, not_true_eq_false, if_false, Real.exp_zero, h1, h2, norm_one, one_pow, mul_one]
+      simp only [hA, hpM, not_true_eq_false, ite_false, Real.exp_zero, h1, h2, norm_one, one_pow, mul_one]
       nlinarith [hα1 p hp, hβ1 p hp]
     · have := _root_.GlobalTheory.LocIneq.local_positivity_eulerFactor b ω s C p hs hp hb1 (hrec p 1 hp hpM).1 (fun r => (hrec p r hp hpM).2) hC
-      simpa only [hA, hpM, not_false_eq_true, if_true] using this
+      simpa only [hA, hpM, not_false_eq_true, ite_true] using this
 
   have hfin : ∀ N : ℕ, X ≤ N → Real.exp (∑ p ∈ (Finset.range X).filter (fun p => p.Prime ∧ ¬ p ∣ M), ‖1 + b p‖ ^ 2 / (p : ℝ) ^ (1 + s)) ≤ 2 * (1 + 1 / s) * ‖∏ p ∈ N.primesBelow, Lp p‖ ^ 2 * Ssum := by
     intro N hN
@@ -1142,7 +1142,7 @@ theorem not_summable_one_div_primes_eq_neg_one :
     ∀ M : ℕ, 0 < M → ¬ Summable fun p : ℕ =>
       if p.Prime ∧ (p : ZMod M) = -1 then (1 : ℝ) / p else 0 := by
   intro M hM hs
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hD := Formalism.HF.apLogDensity M (-1 : ZMod M) isUnit_one.neg
   unfold Formalism.HF.LogDensity at hD
   set S := {p : ℕ | p.Prime ∧ p ∈ {p : ℕ | (p : ZMod M) = -1}} with hS
@@ -1165,13 +1165,13 @@ theorem not_summable_one_div_primes_eq_neg_one :
       have hx : (1 : ℝ) < x := hx
       by_cases hn : n ∈ S
       · have hc : n.Prime ∧ (n : ZMod M) = -1 := hn
-        simp only [Set.indicator_of_mem hn, if_pos hc]
+        simp only [Set.indicator_of_mem hn, ite_eq_left hc]
         have hlog : 0 ≤ Real.log n := Real.log_nonneg (by exact_mod_cast hc.1.one_lt.le)
         rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg (by linarith)
           (div_nonneg hlog (Real.rpow_nonneg n.cast_nonneg _)))]
         exact sub_one_mul_log_div_rpow_le n hc.1.one_lt hx
       · have hc : ¬ (n.Prime ∧ (n : ZMod M) = -1) := hn
-        simp only [Set.indicator_of_notMem hn, if_neg hc, mul_zero, norm_zero, le_refl]
+        simp only [Set.indicator_of_notMem hn, ite_eq_right hc, mul_zero, norm_zero, le_refl]
   simp only [tsum_zero, tsum_mul_left] at h0
   have hu := tendsto_nhds_unique hD h0
   have ht : (0 : ℝ) < M.totient := by exact_mod_cast Nat.totient_pos.2 hM

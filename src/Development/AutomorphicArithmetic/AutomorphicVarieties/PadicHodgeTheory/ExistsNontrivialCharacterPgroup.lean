@@ -69,7 +69,7 @@ private theorem exists_eigenvector_tame_inertia {p : ℕ} [Fact p.Prime] {G : Ty
     ∃ x : Om p, x ≠ 0 ∧ ∀ τ : ↥((Iq p).comap φ), φ τ x = c τ * x := by
   classical
   have hm0 : m ≠ 0 := by rintro rfl; exact hm (dvd_zero _)
-  haveI : NeZero m := ⟨hm0⟩
+  have : NeZero m := ⟨hm0⟩
   have hfix : ∀ τ σ : ↥((Iq p).comap φ), φ τ (c σ : Om p) = c σ := fun τ σ =>
     (IntermediateField.mem_fixingSubgroup_iff _ _).1 τ.2 _
       (IntermediateField.subset_adjoin _ _ ⟨m, Nat.pos_of_ne_zero hm0, hm, by
@@ -77,15 +77,15 @@ private theorem exists_eigenvector_tame_inertia {p : ℕ} [Fact p.Prime] {G : Ty
   have hle : c.range ≤ rootsOfUnity m (Om p) := by
     rintro _ ⟨τ, rfl⟩
     exact hc τ
-  haveI : Finite c.range := Finite.of_injective _ (Subgroup.inclusion_injective hle)
-  haveI : Fintype c.range := Fintype.ofFinite _
+  have : Finite c.range := Finite.of_injective _ (Subgroup.inclusion_injective hle)
+  have : Fintype c.range := Fintype.ofFinite _
   let J : Subgroup (GQ p) := (c.ker.map ((Iq p).comap φ).subtype).map φ
   have hJ : IsClosed (J : Set (GQ p)) := by
     have h1 : IsOpen (c.ker : Set ↥((Iq p).comap φ)) :=
-      Subgroup.isOpen_mono (H₁ := U.subgroupOf _) (fun τ hτ => hUc τ hτ) (hU.preimage continuous_subtype_val)
+      Subgroup.isOpen_mono (H₁ := U.subgroupOf _) (fun τ hτ => hUc τ hτ) (hU.preimage continuous_subtypeVal)
     have h2 := c.ker.isClosed_of_isOpen h1
     have h3 : IsClosed (((Iq p).comap φ : Subgroup G) : Set G) := (iqBasic p).2.1.preimage hφ.continuous
-    have h4 := h3.isClosedMap_subtype_val _ h2
+    have h4 := h3.isClosedMap_subtypeVal _ h2
     have h5 : IsClosedEmbedding φ := ⟨hφ.isEmbedding, by
       rw [← MonoidHom.coe_range]
       exact φ.range.isClosed_of_isOpen (by rw [MonoidHom.coe_range]; exact hφ.isOpen_range)⟩
@@ -182,7 +182,7 @@ private theorem cyclotomic_congruence_fixed_root {p l : ℕ} [Fact p.Prime] [Fac
   have ho : orderOf y = l ^ 1 := by
     rw [pow_one] at hy ⊢
     exact orderOf_eq_prime hy hy1
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have h4 : (PadicInt.toZModPow 1 (cyc p l σ : ℤ_[l])).val ≡ 1 [MOD l ^ 1] := by
     have := (isOfFinOrder_iff_pow_eq_one.2 ⟨_, NeZero.pos _, hy⟩).pow_eq_pow_iff_modEq.mp
       (hs'.symm.trans (h.trans (pow_one y).symm))
@@ -227,7 +227,7 @@ private theorem unipotent_residue_pow_mod_maximal {A : Type} [CommRing A] [IsLoc
     ∀ i j, (M ^ l ^ n - Matrix.scalar (Fin n) (c ^ l ^ n)) i j ∈ IsLocalRing.maximalIdeal A := by
   intro i j
   have hl : l.Prime := Fact.out
-  haveI : Nonempty (Fin n) := ⟨i⟩
+  have : Nonempty (Fin n) := ⟨i⟩
   have h1 := (M.map (IsLocalRing.residue A)).aeval_self_charpoly
   rw [h, map_pow, map_sub, Polynomial.aeval_X, Polynomial.aeval_C] at h1
   have h2 : (M.map (IsLocalRing.residue A) - algebraMap _ _ (IsLocalRing.residue A c)) ^ l ^ n = 0 :=
@@ -242,11 +242,11 @@ private theorem unipotent_residue_pow_mod_maximal {A : Type} [CommRing A] [IsLoc
 
 private theorem exists_nontrivial_character_pgroup {H : Type} [Group H] [Finite H] [Nontrivial H] {l : ℕ} [Fact l.Prime] (hH : IsPGroup l H)
     (F : Type) [Field F] [IsAlgClosed F] [CharZero F] : ∃ (ψ : H →* Fˣ) (a : H), ψ a ≠ 1 := by
-  haveI := hH.isNilpotent
-  have h1 := IsSolvable.commutator_lt_top_of_nontrivial H
-  obtain ⟨a, -, ha⟩ := SetLike.exists_of_lt h1
+  have := hH.isNilpotent
+  have h1 := Group.IsSolvable.commutator_lt_top_of_nontrivial H
+  obtain ⟨a, -, ha⟩ := IsConcreteLE.exists_of_lt h1
   have h2 : Group.Abelianization.of a ≠ 1 := fun h => ha ((QuotientGroup.eq_one_iff a).1 h)
-  haveI : NeZero (Monoid.exponent (Group.Abelianization H)) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero (Monoid.exponent (Group.Abelianization H)) := ⟨Monoid.exponent_ne_zero_of_finite⟩
   obtain ⟨ψ, hψ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity (Group.Abelianization H) F h2
   exact ⟨ψ.comp Group.Abelianization.of, a, hψ⟩
 
@@ -299,8 +299,8 @@ theorem UpperTheory.V.Loc.v0b :
   refine ⟨fun τ hτ => ?_, fun K _ _ _ X hX => ?_⟩
   · have main : ∀ N : ℕ, Matrix.GeneralLinearGroup.map (Ideal.Quotient.mk (IsLocalRing.maximalIdeal A ^ N)) (r τ) = 1 := by
       intro N
-      haveI : Finite (A ⧸ IsLocalRing.maximalIdeal A) := inferInstanceAs (Finite (IsLocalRing.ResidueField A))
-      haveI : Finite (A ⧸ IsLocalRing.maximalIdeal A ^ N) :=
+      have : Finite (A ⧸ IsLocalRing.maximalIdeal A) := inferInstanceAs (Finite (IsLocalRing.ResidueField A))
+      have : Finite (A ⧸ IsLocalRing.maximalIdeal A ^ N) :=
         Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
       let ρ : G →* GL (Fin n) (A ⧸ IsLocalRing.maximalIdeal A ^ N) :=
         (Matrix.GeneralLinearGroup.map (Ideal.Quotient.mk (IsLocalRing.maximalIdeal A ^ N))).comp r
@@ -332,7 +332,7 @@ theorem UpperTheory.V.Loc.v0b :
         rintro ⟨_, a, rfl⟩
         exact ⟨_, h1 a⟩
       by_contra hne
-      haveI : Nontrivial ρ'.range := ⟨⟨ρ'.rangeRestrict ⟨τ, hτ⟩, 1, fun h => hne (congrArg Subtype.val h)⟩⟩
+      have : Nontrivial ρ'.range := ⟨⟨ρ'.rangeRestrict ⟨τ, hτ⟩, 1, fun h => hne (congrArg Subtype.val h)⟩⟩
       obtain ⟨ψ, ⟨_, a, rfl⟩, ha⟩ := exists_nontrivial_character_pgroup hP (Om p)
       have hcm : ∀ b, (ψ.comp ρ'.rangeRestrict) b ^ l ^ (n + N) = 1 := fun b => by
         rw [MonoidHom.comp_apply, ← map_pow, h1, map_one]

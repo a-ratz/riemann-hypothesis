@@ -107,7 +107,7 @@ lemma finite_roots (F : Finset (MonP R)) : ∃ (T : Type u) (_ : CommRing T) (φ
     obtain ⟨T, _, φ, hφ, hF⟩ := ih
     by_cases hT : Subsingleton T
     · refine ⟨T, inferInstance, φ, hφ, fun p _ => ⟨0, Subsingleton.elim _ _⟩⟩
-    haveI : Nontrivial T := not_subsingleton_iff_nontrivial.1 hT
+    have : Nontrivial T := not_subsingleton_iff_nontrivial.1 hT
     set q' := q.1.map φ with hq'
     have hm : q'.Monic := q.2.1.map φ
     have hd : 0 < q'.natDegree := by rw [hq', q.2.1.natDegree_map]; exact q.2.2

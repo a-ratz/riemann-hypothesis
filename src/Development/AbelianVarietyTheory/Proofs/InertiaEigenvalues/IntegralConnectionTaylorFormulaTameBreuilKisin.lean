@@ -89,7 +89,7 @@ theorem semi_ext {A B C M N : Type} [CommRing A] [CommRing B] [CommRing C] [AddC
     [AddCommGroup N] [Module B N] {f : A →+* B} {u : M →ₛₗ[f] N} (h : SemiBC u) (k : B →+* C)
     (F G : N →+ C) (hF : ∀ (r : B) y, F (r • y) = k r * F y) (hG : ∀ (r : B) y, G (r • y) = k r * G y)
     (hx : ∀ x, F (u x) = G (u x)) (y : N) : F y = G y := by
-  letI : Module B C := Module.compHom C k
+  let : Module B C := Module.compHom C k
   let F' : N →ₗ[B] C := { toFun := F, map_add' := F.map_add, map_smul' := hF }
   let G' : N →ₗ[B] C := { toFun := G, map_add' := G.map_add, map_smul' := hG }
   exact LinearMap.congr_fun (h.hom_ext (w := F') (w' := G') hx) y
@@ -98,7 +98,7 @@ theorem semi_lift {A B C M N : Type} [CommRing A] [CommRing B] [CommRing C] [Add
     [AddCommGroup N] [Module B N] {f : A →+* B} {u : M →ₛₗ[f] N} (h : SemiBC u) (k : B →+* C)
     (F : M →+ C) (hF : ∀ (r : A) x, F (r • x) = k (f r) * F x) :
     ∃ G : N →+ C, (∀ (r : B) y, G (r • y) = k r * G y) ∧ ∀ x, G (u x) = F x := by
-  letI : Module B C := Module.compHom C k
+  let : Module B C := Module.compHom C k
   let F' : M →ₛₗ[f] C := { toFun := F, map_add' := F.map_add, map_smul' := hF }
   obtain ⟨w, hw, -⟩ := h C F'
   exact ⟨w.toAddMonoidHom, fun r y => w.map_smul r y, hw⟩
@@ -323,7 +323,7 @@ theorem exists_stratification : GlobalTheory.Published.BhattScholzeCrystallineLa
         · simp [Pi.single_eq_of_ne h]
       simp only [h1] at hE
       simp only [Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq,
-        Finset.mem_univ, if_true] at hE
+        Finset.mem_univ, ite_true] at hE
       simp only [Matrix.map_apply] at hE ⊢
       rw [hE, Finset.mul_sum]
       refine Finset.sum_congr rfl fun m _ => ?_
@@ -354,7 +354,7 @@ namespace GlobalTheory.BKBasis
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod O K l e a ι) (T : Lat a O K ϖ) (I : Ident t ϖ P T), letI := zlLat T; ∀ (E : FCrys l ↥(OL (ϖ.field a))) (jA : E.M (ainfObj (ϖ.field a)) →ₛₗ[(inclW l).comp (ainfId (ϖ.field a)).toRingHom] (WCb l ⊗[ℤ_[l]] ↥T.L.T)), Realises (ϖ.field a) E (ainfObj _) (ainfId _) ↥T.L.T (actZ T) jA → (∀ y : TW (OW l O) T, (∃ x : E.M (ϖ.prism a), y = kappa T (jA (E.tr (ϖ.toAinf a) x))) ↔ ∃ (m : Vec K a ι) (hm : m ∈ P.M), y = I.j (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩)) → ∀ (oE : O → FHom E E), (∀ (c : O) (x : E.M (ainfObj (ϖ.field a))), jA ((oE c).u (ainfObj (ϖ.field a)) x) = (OfCrystal.mulZ T c).lTensor (WCb l) (jA x)) → ∃ b : ι → E.M (ϖ.prism a), (∀ j, ∃ hm : (bas j : Vec K a ι) ∈ P.M, kappa T (jA (E.tr (ϖ.toAinf a) (b j))) = I.j (toW t ϖ P ⟨bas j, mem_ME_of_mem_M hm⟩)) ∧ ∀ x : E.M (ϖ.prism a), ∃ (N : ℕ) (c : ι → Fin N → O) (s : ι → Fin N → (ϖ.prism a).A), x = ∑ j, ∑ q, s j q • (oE (c j q)).u (ϖ.prism a) (b j) := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t ϖ ι _ _ P T I
-  letI := zlLat T
+  let := zlLat T
   intro E jA H him oE hoE
   obtain ⟨J, hJ⟩ : ∃ J : E.M (ϖ.prism a) →+ TW (OW l O) T,
       ∀ x, J x = kappa T (jA (E.tr (ϖ.toAinf a) x)) :=
@@ -458,8 +458,8 @@ namespace GlobalTheory.CrysEpsFrob
 theorem eps_frob_compat : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod O K l e a ι) (T : Lat a O K ϖ) (I : Ident t ϖ P T), letI := zlLat T; ∀ (E : FCrys l ↥(OL (ϖ.field a))) (jA : E.M (ainfObj (ϖ.field a)) →ₛₗ[(inclW l).comp (ainfId (ϖ.field a)).toRingHom] (WCb l ⊗[ℤ_[l]] ↥T.L.T)), Realises (ϖ.field a) E (ainfObj _) (ainfId _) ↥T.L.T (actZ T) jA → (∀ y : TW (OW l O) T, (∃ x : E.M (ϖ.prism a), y = kappa T (jA (E.tr (ϖ.toAinf a) x))) ↔ ∃ (m : Vec K a ι) (hm : m ∈ P.M), y = I.j (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩)) → ∀ (oE : O → FHom E E), (∀ (c : O) (x : E.M (ainfObj (ϖ.field a))), jA ((oE c).u (ainfObj (ϖ.field a)) x) = (OfCrystal.mulZ T c).lTensor (WCb l) (jA x)) → ∀ (b : ι → E.M (ϖ.prism a)), (∀ j, ∃ hm : (bas j : Vec K a ι) ∈ P.M, kappa T (jA (E.tr (ϖ.toAinf a) (b j))) = I.j (toW t ϖ P ⟨bas j, mem_ME_of_mem_M hm⟩)) → ∀ (sh : K⟦X⟧ →+* K⟦X⟧⟦X⟧) (φ₂ : K⟦X⟧⟦X⟧ →+* K⟦X⟧⟦X⟧), (∀ (f : K⟦X⟧) (i : ℕ), (i.factorial : K⟦X⟧) * coeff i (sh f) = (PowerSeries.derivative (R := K))^[i] f) → (∀ f : K⟦X⟧, φ₂ (PowerSeries.C f) = PowerSeries.C (frob K l f)) → ∀ (PP : Obj l ↥(OL (ϖ.field a))) (p₀ p₁ : GlobalTheory.Prism.Hom (ϖ.prism a) PP) (κ : ZMod a → PP.A →+* K⟦X⟧⟦X⟧), PP.I = Ideal.span {(l : PP.A)} → (∀ τ (x : (Wq l a)⟦X⟧), κ τ (p₀.f x) = PowerSeries.C (toAc t K (frobS l a x) τ : K⟦X⟧) ∧ κ τ (p₁.f x) = sh (toAc t K (frobS l a x) τ : K⟦X⟧)) → (∀ τ y, κ τ (PP.D.φ y) = φ₂ (κ (τ - 1) y)) → ∀ (Q : Type) [Fintype Q] (c : ι → ι → Q → O) (y : ι → ι → Q → PP.A), (∀ j, E.tr p₁ (b j) = ∑ i, ∑ q, y i j q • (oE (c i j q)).u PP (E.tr p₀ (b i))) → ∀ τ, (Matrix.of fun i j => ∑ q, c i j q • κ τ (y i j q)) * ((P.mx (τ - 1)).map (frob K l)).map sh = ((P.mx (τ - 1)).map (frob K l)).map PowerSeries.C * (Matrix.of fun i j => ∑ q, c i j q • κ (τ - 1) (y i j q)).map φ₂ := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t ϖ ι _ _ P T I
   intro EE jA hR him oE hoE b hb sh φ₂ hsh hφC PP p₀ p₁ κ hI hκ hκφ Q _ c y hy τ
-  letI := zlLat T
-  haveI hK : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  let := zlLat T
+  have hK : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
 
   obtain ⟨J, hJ⟩ : ∃ J : EE.M (ϖ.prism a) →+ TW (OW l O) T,
       ∀ x, J x = kappa T (jA (EE.tr (ϖ.toAinf a) x)) :=
@@ -556,13 +556,13 @@ theorem eps_frob_compat : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [N
 
     · rw [map_sum, Finset.sum_apply, Finset.sum_apply]
       refine Finset.sum_congr rfl fun q _ => ?_
-      rw [hl₀, hU0, if_pos rfl, Algebra.smul_def, PowerSeries.algebraMap_apply,
+      rw [hl₀, hU0, ite_eq_left rfl, Algebra.smul_def, PowerSeries.algebraMap_apply,
         PowerSeries.algebraMap_apply, mul_comm]
     · intro i' _ h
 
       rw [map_sum, Finset.sum_apply, Finset.sum_apply]
       refine Finset.sum_eq_zero fun q _ => ?_
-      rw [hl₀, hU0, if_neg (Ne.symm h), mul_zero]
+      rw [hl₀, hU0, ite_eq_right (Ne.symm h), mul_zero]
     · intro h; exact absurd (Finset.mem_univ i) h
   refine Matrix.ext fun i j => ?_
   obtain ⟨n, k, hn⟩ := exists_isFrac (l : PP.A) (EE.Φ PP ⟨l, hl⟩ (EE.tr p₁ (b j)))
@@ -656,7 +656,7 @@ theorem exists_ext (h : SemiBC u) (π : R →+* S) (i : A → R) (ψ : B →+* S
     ∃ w : N →+ (ι → S), (∀ (b : B) y, w (b • y) = ψ b • w y) ∧ (∀ x k, w (u x) k = π (κ x k)) ∧
       ∀ (U : M → M) (U' : N →ₗ[B] N) (r : R), (∀ x, U' (u x) = u (U x)) → (∀ x, κ (U x) = r • κ x) →
         ∀ y, w (U' y) = π r • w y := by
-  letI : Module B (ι → S) := Module.compHom _ ψ
+  let : Module B (ι → S) := Module.compHom _ ψ
   obtain ⟨w, hw, -⟩ := h (ι → S)
     { toFun := fun x k => π (κ x k)
       map_add' := fun x y => funext fun k => by rw [map_add (f := _), Pi.add_apply, map_add (f := _)]; rfl
@@ -713,7 +713,7 @@ theorem kappa_act (T : LocLat G ℚ_[l] K O) (s : GQ l) (g : G) :
     letI := zlLat T
     ∀ y : WCb l ⊗[ℤ_[l]] ↥T.L.T, kappa T (TensorProduct.map (galW l s).toLinearMap (actZ T g) y) =
       TWact (galOW O s) T g (kappa T y) := by
-  letI := zlLat T
+  let := zlLat T
   intro y
   induction y using TensorProduct.induction_on with
   | zero => simp only [map_zero]
@@ -746,7 +746,7 @@ theorem value_eq {l : ℕ} {R₀ O R S ι Q : Type} [CommRing R₀] [CommRing O]
   Finset.sum_apply, Pi.smul_apply, hwb]
   rw [Finset.sum_eq_single i (fun k _ hk => by simp [Ne.symm hk]) (by simp)]
   refine Finset.sum_congr rfl fun q _ => ?_
-  rw [if_pos rfl, smul_comm, smul_eq_mul, mul_one]
+  rw [ite_eq_left rfl, smul_comm, smul_eq_mul, mul_one]
 
 theorem exists_coord' {A B M N O R S ι : Type} [CommRing A] [CommRing B] [AddCommGroup M] [Module A M]
     [AddCommGroup N] [Module B N] {f : A →+* B} {u : M →ₛₗ[f] N} [CommRing O] [CommRing R] [CommRing S]
@@ -765,7 +765,7 @@ theorem exists_coord' {A B M N O R S ι : Type} [CommRing A] [CommRing B] [AddCo
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod O K l e a ι) (T : Lat a O K ϖ) (I : Ident t ϖ P T), letI := zlLat T; ∀ (E : FCrys l ↥(OL (ϖ.field a))) (jA : E.M (ainfObj (ϖ.field a)) →ₛₗ[(inclW l).comp (ainfId (ϖ.field a)).toRingHom] (WCb l ⊗[ℤ_[l]] ↥T.L.T)), Realises (ϖ.field a) E (ainfObj _) (ainfId _) ↥T.L.T (actZ T) jA → (∀ y : TW (OW l O) T, (∃ x : E.M (ϖ.prism a), y = kappa T (jA (E.tr (ϖ.toAinf a) x))) ↔ ∃ (m : Vec K a ι) (hm : m ∈ P.M), y = I.j (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩)) → ∀ (oE : O → FHom E E), (∀ (c : O) (x : E.M (ainfObj (ϖ.field a))), jA ((oE c).u (ainfObj (ϖ.field a)) x) = (OfCrystal.mulZ T c).lTensor (WCb l) (jA x)) → ∀ (b : ι → E.M (ϖ.prism a)), (∀ j, ∃ hm : (bas j : Vec K a ι) ∈ P.M, kappa T (jA (E.tr (ϖ.toAinf a) (b j))) = I.j (toW t ϖ P ⟨bas j, mem_ME_of_mem_M hm⟩)) → ∀ (PP : Obj l ↥(OL (ϖ.field a))) (p₀ p₁ : GlobalTheory.Prism.Hom (ϖ.prism a) PP), ∀ (Q : Type) [Fintype Q] (c : ι → ι → Q → O) (y : ι → ι → Q → PP.A), (∀ j, E.tr p₁ (b j) = ∑ i, ∑ q, y i j q • (oE (c i j q)).u PP (E.tr p₀ (b i))) → ∀ (Cr : Obj l ↥(OL (ϖ.field a))) (eC : Cr.A ≃+* Per.Acris l) (h : GlobalTheory.Prism.Hom (ainfObj (ϖ.field a)) Cr), (∀ x : Ainf l, eC (h.f x) = ainfToAcris l (WittVector.frobenius x)) → ∀ (g : ↥(GK (ϖ.field a))) (ev : GlobalTheory.Prism.Hom PP Cr), ev.comp p₀ = h.comp (ϖ.toAinf a) → ev.comp p₁ = (h.comp (ainfHom (ϖ.field a) g)).comp (ϖ.toAinf a) → ∃ Γ, I.IsLMat (g : GQ l) g Γ ∧ ∀ i j, toOCr l O (Γ i j) = ∑ q, c i j q ⊗ₜ[ℤ_[l]] eC (ev.f (y i j q)) := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t ϖ ι _ _ P T I
-  letI := zlLat T
+  let := zlLat T
   intro E jA H him oE hoE b hb PP p₀ p₁ Q _ c y hy Cr eC h hh g ev h₀ h₁
   have hJ0 : ∃ J : E.M (ainfObj (ϖ.field a)) →+ (ι → OW l O), ∀ x, I.j (J x) = kappa T (jA x) :=
     ⟨I.j.symm.toAddMonoidHom.comp ((kappa T).comp jA.toAddMonoidHom), fun x => I.j.apply_symm_apply _⟩
@@ -822,8 +822,8 @@ theorem exists_read {Z O S W R N ι : Type} [CommRing Z] [CommRing O] [CommRing 
     (hD : ∀ x i, ∃ z, Algebra.TensorProduct.map (AlgHom.id O O) ρ z = D x i) :
     ∃ V : N →+ (ι → R), (∀ s x x' i, D x' i = ((1 : O) ⊗ₜ[Z] ρ s) * D x i → V x' i = g s * V x i) ∧
       (∀ (c : O) x i, D x i = algebraMap O _ c → V x i = algebraMap O R c) := by
-  letI : Algebra Z R := ((algebraMap O R).comp (algebraMap Z O)).toAlgebra
-  haveI : IsScalarTower Z O R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra Z R := ((algebraMap O R).comp (algebraMap Z O)).toAlgebra
+  have : IsScalarTower Z O R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let g' : S →ₐ[Z] R := { toRingHom := g, commutes' := hg }
   let Ψ : O ⊗[Z] S →ₐ[O] R :=
     Algebra.TensorProduct.lift (Algebra.ofId O R) g' fun _ _ => Commute.all _ _
@@ -878,7 +878,7 @@ theorem indep_of_coord {Z O S W B R M N ι : Type} [CommRing Z] [CommRing O] [Co
 
   simp only [map_sum, Finset.sum_apply, h3]
   rw [Finset.sum_comm]
-  simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 variable {l : ℕ} [hl : Fact l.Prime] {a : ℕ} [NeZero a] {e : ℕ} [NeZero e]
 
@@ -920,7 +920,7 @@ theorem toW_bas (j : ι) (hm : (bas j : Vec K a ι) ∈ P.M) (i : ι) :
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod O K l e a ι) (T : Lat a O K ϖ) (I : Ident t ϖ P T), letI := zlLat T; ∀ (E : FCrys l ↥(OL (ϖ.field a))) (jA : E.M (ainfObj (ϖ.field a)) →ₛₗ[(inclW l).comp (ainfId (ϖ.field a)).toRingHom] (WCb l ⊗[ℤ_[l]] ↥T.L.T)), Realises (ϖ.field a) E (ainfObj _) (ainfId _) ↥T.L.T (actZ T) jA → (∀ y : TW (OW l O) T, (∃ x : E.M (ϖ.prism a), y = kappa T (jA (E.tr (ϖ.toAinf a) x))) ↔ ∃ (m : Vec K a ι) (hm : m ∈ P.M), y = I.j (toW t ϖ P ⟨m, mem_ME_of_mem_M hm⟩)) → ∀ (oE : O → FHom E E), (∀ (c : O) (x : E.M (ainfObj (ϖ.field a))), jA ((oE c).u (ainfObj (ϖ.field a)) x) = (OfCrystal.mulZ T c).lTensor (WCb l) (jA x)) → ∀ (b : ι → E.M (ϖ.prism a)), (∀ j, ∃ hm : (bas j : Vec K a ι) ∈ P.M, kappa T (jA (E.tr (ϖ.toAinf a) (b j))) = I.j (toW t ϖ P ⟨bas j, mem_ME_of_mem_M hm⟩)) → (∀ i, (oE 1).u (ϖ.prism a) (b i) = b i) ∧ ∀ (P' : Obj l ↥(OL (ϖ.field a))) (f : GlobalTheory.Prism.Hom (ϖ.prism a) P') (Q Q' : Type) [Fintype Q] [Fintype Q'] (c : ι → Q → O) (y : ι → Q → P'.A) (c' : ι → Q' → O) (y' : ι → Q' → P'.A), ∑ i, ∑ q, y i q • (oE (c i q)).u P' (E.tr f (b i)) = ∑ i, ∑ q, y' i q • (oE (c' i q)).u P' (E.tr f (b i)) → ∀ (R : Type) [CommRing R] [Algebra O R] (ψ : P'.A →+* R), (∀ z : ℤ_[l], ψ (f.f (algebraMap ℤ_[l] (Wq l a)⟦X⟧ z)) = algebraMap O R (algebraMap ℤ_[l] O z)) → ∀ i, ∑ q, c i q • ψ (y i q) = ∑ q, c' i q • ψ (y' i q) := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t ϖ ι _ _ P T I
-  letI := zlLat T
+  let := zlLat T
   intro E jA H him oE hoE b hb
   have h0 : ∃ J : E.M (ϖ.prism a) →+ TW (OW l O) T, ∀ x, J x = kappa T (jA (E.tr (ϖ.toAinf a) x)) :=
     ⟨(kappa T).comp (jA.toAddMonoidHom.comp (E.tr (ϖ.toAinf a)).toAddMonoidHom), fun _ => rfl⟩
@@ -963,7 +963,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O
     have h6 : I.j.symm (o • J (b j)) = o • I.j.symm (J (b j)) := LinearMapClass.map_smul_of_tower _ _ _
     have h7 := ((hD _).trans (congrArg I.j.symm (hJo o (b j)))).trans (h6.trans (congrArg (o • ·) h5))
     exact (congrFun h7 k).trans (congrArg (o • ·) (toW_bas t ϖ j hm k))
-  letI : Algebra ℤ_[l] (ϖ.prism a).A := (inferInstance : Algebra ℤ_[l] (Wq l a)⟦X⟧)
+  let : Algebra ℤ_[l] (ϖ.prism a).A := (inferInstance : Algebra ℤ_[l] (Wq l a)⟦X⟧)
   obtain ⟨lam, hlam⟩ := indep_of_coord (Z := ℤ_[l]) (S := (ϖ.prism a).A) (E.tr_bc f) (evW a ϖ)
     (OfCrystal.ev_injective ϖ t K) ψ hψ D h2 h3 (fun o j => (oE o).u (ϖ.prism a) (b j)) h4
   simp only [FHom.u_tr] at heq
@@ -992,7 +992,7 @@ theorem GlobalTheory.CrysDiag.eps_constantCoeff_eq_one : ∀ (l : ℕ) [Fact l.P
     have hfix : ∀ i, (oE 1).u S₀ (E.tr (δ.comp p₀) (b i)) = E.tr (δ.comp p₀) (b i) := fun i => by
       rw [(oE 1).u_tr, h1]
     simp only [hfix, ite_smul, one_smul, zero_smul, Finset.sum_const, Finset.card_univ, Fintype.card_unit]
-    rw [Finset.sum_ite_eq', if_pos (Finset.mem_univ _)]
+    rw [Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _)]
     conv_rhs => rw [hδ, E.tr_comp, hy j]
 
     simp only [E.tr_comp, map_sum]
@@ -1083,7 +1083,7 @@ theorem exists_rep {A M O ι : Type} [CommRing A] [AddCommGroup M] [Module A M] 
   rw [Finset.sum_eq_single j (fun j' _ hj' => by simp [hj']) (by simp)]
   rw [← hgg j]
   refine Finset.sum_congr rfl fun k _ => ?_
-  simp only [if_true, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ]
+  simp only [ite_true, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ]
   rw [← hpc j k]
 
 theorem conv_comb {l : ℕ} [Fact l.Prime] {a e : ℕ} [NeZero a] [NeZero e] {O K : Type} [CommRing O]
@@ -1126,7 +1126,7 @@ theorem comb_S {O K : Type} [CommRing O] [NormedField K] [IsUltrametricDist K] [
 
 theorem galois_taylor_basis : GlobalTheory.Published.BhattScholzeCrystallineLattices → ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (ϖ : PiSys l e) (LL : FinExt l) [HasUnr a LL] [TameDescentExponentData ↥LL.1 l e a], l ≠ 2 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod ↥(OL LL) ↥LL.1 l e a ι) (T : QLat LL) (I : Ident (thetaW a LL) ϖ P T), IsBK (T := resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) → ∀ (hS : ∀ (τ : ZMod a) (j : ι) (k : ℕ) (i : ι), (X : (↥LL.1)⟦X⟧) ^ k * (P.mxInv τ *ᵥ (P.nabla ^ k) (P.phi (bas j)) τ) i ∈ S (↥(OL LL)) (↥LL.1) e) (g : ↥(GK (ϖ.field a))), ∃ Γ, (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)).IsLMat (g : GQ l) g Γ ∧ ∀ (i j : ι) (r : ℕ), ∃ n₀ : ℕ, ∀ n ≥ n₀, (l : OCr l ↥(OL LL)) ^ r ∣ toOCr l ↥(OL LL) (Γ i j) - ∑ k ∈ Finset.range n, ϖ.muDiv a ↥(OL LL) g k * ϖ.iC (thetaW a LL) ↥LL.1 (fun τ => ⟨_, hS τ j k i⟩) := by
   intro BS l _ a e _ _ ϖ LL _ _ hl2 ι _ _ P T I hBK hS g
-  letI := zlLat (resF T (ϖ.field a))
+  let := zlLat (resF T (ϖ.field a))
   obtain ⟨E, jA, hR, hIm⟩ := hBK
   have hO : ∀ c : ↥(OL LL), ∃ u : FHom E E, ∀ x, jA (u.u (ainfObj (ϖ.field a)) x) =
       (OfCrystal.mulZ (resF T (ϖ.field a)) c).lTensor (WCb l) (jA x) := fun c => by
@@ -1134,20 +1134,20 @@ theorem galois_taylor_basis : GlobalTheory.Published.BhattScholzeCrystallineLatt
       (OfCrystal.mulZ (resF T (ϖ.field a)) c) fun g x => (((resF T (ϖ.field a)).actT g).map_smul c x).symm
     exact ⟨u, hu⟩
   choose oE hoE using hO
-  obtain ⟨b, hb, hgen⟩ := _root_.GlobalTheory.BKBasis.main l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P (resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) E jA hR hIm oE hoE
+  obtain ⟨b, hb, hgen⟩ := _root_.GlobalTheory.BKBasis.main l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P (resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _)) E jA hR hIm oE hoE
   obtain ⟨sh, φ₂, hsh, hφC, hφsh⟩ := GlobalTheory.TaylorShift.shift_frob_exists l ↥LL.1
   obtain ⟨PP, S₀, p₀, p₁, δ, κ, κ₀, hPPI, hδ, hκ₀, hκp, hκφ, hSS, -, hev⟩ :=
     _root_.GlobalTheory.CrysPrism.exists_crys_prisms l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ hl2 sh φ₂ hsh hφC hφsh
   obtain ⟨Q, _, c, y, hε⟩ := GlobalTheory.CrysGal.exists_rep (A := PP.A)
     (fun c i => (oE c).u PP (E.tr p₀ (b i))) (fun j => E.tr p₁ (b j))
     (fun j => GlobalTheory.CrysGal.mem_span_tr E p₀ oE b hgen _)
-  have hF := _root_.GlobalTheory.CrysEpsFrob.eps_frob_compat l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P (resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) E jA hR hIm oE hoE b hb sh φ₂ hsh hφC PP p₀ p₁ κ hPPI hκp hκφ Q c y hε
-  have hD := _root_.GlobalTheory.CrysDiag.eps_constantCoeff_eq_one l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P (resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) E jA hR hIm oE hoE b hb PP S₀ p₀ p₁ δ κ κ₀ hδ hκ₀ (fun τ x => (hκp τ x).1) Q c y hε
+  have hF := _root_.GlobalTheory.CrysEpsFrob.eps_frob_compat l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P (resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _)) E jA hR hIm oE hoE b hb sh φ₂ hsh hφC PP p₀ p₁ κ hPPI hκp hκφ Q c y hε
+  have hD := _root_.GlobalTheory.CrysDiag.eps_constantCoeff_eq_one l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P (resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _)) E jA hR hIm oE hoE b hb PP S₀ p₀ p₁ δ κ κ₀ hδ hκ₀ (fun τ x => (hκp τ x).1) Q c y hε
   have hK := _root_.GlobalTheory.TaylorStrat.stratification_coeff_eq_nabla_pow ↥(OL LL) ↥LL.1 l e a ι P sh φ₂ hsh hφC hφsh _ hD hF
   obtain ⟨Cr, eC, h, hCrI, heCφ, heCh⟩ := GlobalTheory.AcrisPrism.main l (ϖ.field a)
   have hev' := hev Cr eC h hCrI heCφ heCh g
   obtain ⟨ev, hevs⟩ := hev'
-  have hG := _root_.GlobalTheory.CrysGalValue.main l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P (resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) E jA hR hIm oE hoE b hb PP p₀ p₁ Q c y hε Cr eC h heCh g ev hevs.1 hevs.2.1
+  have hG := _root_.GlobalTheory.CrysGalValue.main l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P (resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _)) E jA hR hIm oE hoE b hb PP p₀ p₁ Q c y hε Cr eC h heCh g ev hevs.1 hevs.2.1
   obtain ⟨Γ, hΓ, hΓeq⟩ := hG
   have hconv := hevs.2.2
   refine ⟨Γ, hΓ, fun i j r => ?_⟩

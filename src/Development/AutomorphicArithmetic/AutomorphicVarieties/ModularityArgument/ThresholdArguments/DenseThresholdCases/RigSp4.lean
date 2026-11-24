@@ -477,11 +477,11 @@ theorem automorphic_of_gsp4_rigid_solvable_galois (H : _root_.UpperTheory.V.Af.H
     (r : G ℚ Ω →* M4 (Qbar l)) (θ : G ℚ Ω →* (Qbar l)ˣ) (hr : Continuous r.toHomUnits) (hθ : Af.IsAlgChar ι θ)
     (hm : ∀ g, IsGSp (θ g : Qbar l) (r g)) (cc : G ℚ Ω) (hc : Af.IsConjEl cc) (hirr : Af.IsIrr (r.toHomUnits.comp (resQ L)))
     (haut : Af.IsAut ι (r.toHomUnits.comp (resQ K))) : Af.IsAut ι (r.toHomUnits.comp (resQ L)) := by
-  letI : Algebra K L := (IntermediateField.inclusion hle).toRingHom.toAlgebra
-  haveI : IsScalarTower K L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI : IsGalois K L := IsGalois.tower_top_of_isGalois ℚ K L
-  haveI : Group.IsSolvable (L ≃ₐ[ℚ] L) := hsol
+  let : Algebra K L := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  have : IsScalarTower K L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : IsGalois K L := IsGalois.tower_top_of_isGalois ℚ K L
+  have : Group.IsSolvable (L ≃ₐ[ℚ] L) := hsol
   have s2 : IsSolvable (L ≃ₐ[K] L) :=
     Group.isSolvable_of_isSolvable_injective (f := (AlgEquiv.restrictScalarsHom ℚ : (L ≃ₐ[K] L) →* (L ≃ₐ[ℚ] L)))
       (AlgEquiv.restrictScalars_injective ℚ)
@@ -521,15 +521,15 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 private theorem exists_conj (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] :
     ∃ c : G (W.Lp L) Ω, ∃ j : Ω →+* ℂ, ∀ x, j (c x) = starRingEnd ℂ (j x) := by
   obtain ⟨φ⟩ : Nonempty (L →+* ℂ) := inferInstance
-  letI : Algebra L ℂ := φ.toAlgebra
-  haveI : Algebra.IsAlgebraic L Ω := IsAlgClosure.isAlgebraic
+  let : Algebra L ℂ := φ.toAlgebra
+  have : Algebra.IsAlgebraic L Ω := IsAlgClosure.isAlgebraic
   let j : Ω →ₐ[L] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω ℂ := (j : Ω →+* ℂ).toAlgebra
-  haveI : IsScalarTower (W.Lp L) Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes (x : L)).symm
+  let : Algebra Ω ℂ := (j : Ω →+* ℂ).toAlgebra
+  have : IsScalarTower (W.Lp L) Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes (x : L)).symm
   let s : ℂ →ₐ[W.Lp L] ℂ :=
     { starRingEnd ℂ with commutes' := fun x => (mem_maximalRealSubfield_iff (x : L)).1 x.2 φ }
   exact ⟨s.restrictNormal' Ω, j, fun x => s.restrictNormal_commutes Ω x⟩
@@ -925,7 +925,7 @@ private theorem comm_ab (E : Type) [Field E] [Algebra ℚ E] [Algebra E Ω] [IsS
   exact congrArg (algebraMap E Ω) (DFunLike.congr_fun h x)
 
 private theorem comm_L {D : Raw Ω c} (T : Tower D) (a b : G ℚ Ω) : a * b * a⁻¹ * b⁻¹ ∈ T.L.fixingSubgroup := by
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   rw [T.hL, IntermediateField.fixingSubgroup_sup]
   refine ⟨?_, ?_⟩
   · exact fun x => comm_ab T.F a b x
@@ -980,7 +980,7 @@ private theorem map_psi {ι Γ R R' : Type} [Group Γ] [CommRing R] [CommRing R'
 private theorem irr_L {D : Raw Ω c} (T : Tower D) (hT : T.Ok) (𝔞 : Amb l) (f : 𝔞.V →+* PadicAlgCl l) (hf : Function.Injective f)
     (r : G ℚ Ω →* M4 𝔞.V) (hr : ∀ g i j, r g i j - 𝔞.a c (D.r0 g i j) ∈ maximalIdeal 𝔞.V) (hi : Irr (mapRep f r)) :
     Irr ((mapRep f r).comp T.L.fixingSubgroup.subtype) := by
-  haveI : T.L.fixingSubgroup.Normal := ⟨fun n hn g => by
+  have : T.L.fixingSubgroup.Normal := ⟨fun n hn g => by
     have := mul_mem (comm_L T g n) hn
     rwa [inv_mul_cancel_right] at this⟩
   refine irr_sub f hf (residue 𝔞.V) r
@@ -1006,9 +1006,9 @@ private theorem point (hC : CohomologyHyp) {D : Raw Ω c} (T : Tower D) (hF : T.
   obtain ⟨d₁, a₁, a₂⟩ := (coefSup l).1 c₁ c
   obtain ⟨c', b₁, b₂⟩ := (coefSup l).1 d₁ c₃
   have h : c.O ≤ c'.O := a₂.trans b₁
-  haveI : Finite (ResidueField c'.O) := by
-    haveI : IsLocalHom (algebraMap ℤ_[l] c'.O) := (dvrFacts l c'.O).2.2.1
-    haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c'.O) := by
+    have : IsLocalHom (algebraMap ℤ_[l] c'.O) := (dvrFacts l c'.O).2.2.1
+    have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
     exact Module.finite_of_finite (ResidueField ℤ_[l])
   have hS := (std hC D T hF ∅ c' h).1 (Finset.notMem_empty 0)
   obtain ⟨X⟩ := spaceEx (T.fr ∅) l (inc h) hS
@@ -1175,11 +1175,11 @@ theorem UpperTheory.V.Z.Win.Dn.exists_cm_field_twist_h1 (hU : _root_.UpperTheory
   have hL := _root_.automorphic_of_gsp4_rigid_solvable_galois hU.pr T.K T.L hKL T.degK hgal hsol ι r _ hlev.cont (_root_.UpperTheory.V.Ws.isAlgChar_pushCh_th_of_good hU.pr D hG ι) hmul D.cc hG.isCC hiL
     ((_root_.UpperTheory.GalN.V.automorphy_bridge_of_printed_hida hU.pr T.K Ω l ι 4 _).2.1.2 ⟨π, hreg, hatt⟩)
   have hWit : _root_.UpperTheory.V.Z.Win.WitA ι (r.toHomUnits.comp (resQ T.L)) := by
-    letI : Algebra T.K T.L := (IntermediateField.inclusion hKL).toAlgebra
-    haveI : IsScalarTower T.K T.L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : IsGalois T.K T.L := IsGalois.tower_top_of_isGalois ℚ T.K T.L
+    let : Algebra T.K T.L := (IntermediateField.inclusion hKL).toAlgebra
+    have : IsScalarTower T.K T.L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : IsGalois T.K T.L := IsGalois.tower_top_of_isGalois ℚ T.K T.L
     have hsol' : IsSolvable (T.L ≃ₐ[T.K] T.L) :=
-      @solvable_of_solvable_injective _ _ _ _ (hf := (AlgEquiv.restrictScalarsHom_injective ℚ)) hsol
+      @Group.isSolvable_of_isSolvable_injective _ _ _ _ (hf := (AlgEquiv.restrictScalarsHom_injective ℚ)) hsol
         (f := (AlgEquiv.restrictScalarsHom ℚ : (T.L ≃ₐ[T.K] T.L) →* (T.L ≃ₐ[ℚ] T.L)))
     obtain ⟨Q, hQ⟩ := auPair r (W.pushCh (algebraMap c.O (PadicAlgCl l)) D.th) hmul D.cc
     have hpol : Af.Sol.Pol ι (r.toHomUnits.comp (Af.resG ℚ T.K Ω)) :=
@@ -1269,7 +1269,7 @@ private theorem rg_sign {K Ω : Type} [Field K] [NumberField K] [IsCMField K] (h
   set d : Ω := algebraMap K Ω δ with hd
   have hd0 : d ≠ 0 := by simpa [hd] using hδ0
   have hdd : d * d = algebraMap ℚ Ω q := by rw [IsScalarTower.algebraMap_apply ℚ K Ω, hq', map_mul]
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hne : -d ≠ d := fun e => hd0 (by linear_combination (-1 / 2 : Ω) * e)
   have hpm : ∀ g : G ℚ Ω, g d = d ∨ g d = -d := fun g => by
     have : g d * g d = d * d := by rw [← map_mul, hdd, AlgEquiv.commutes]

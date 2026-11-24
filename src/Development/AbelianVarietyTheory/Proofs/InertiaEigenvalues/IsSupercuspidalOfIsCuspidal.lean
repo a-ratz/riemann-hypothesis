@@ -93,7 +93,7 @@ theorem contraction {N r t : ℕ} (h : r + t = N) {ϖ : kˣ} (hϖ : valuation k 
     ∃ M : ℕ, ∀ ν : Fin N → ℤ, (∀ i j : Fin N, (i : ℕ) < r → r ≤ (j : ℕ) → (M : ℤ) ≤ ν i - ν j) →
       GlobalTheory.GLDoubling.torusElt k (Fin N) ϖ ν * u * (GlobalTheory.GLDoubling.torusElt k (Fin N) ϖ ν)⁻¹ ∈ U := by
   obtain ⟨γ, hγ, hsub⟩ := GlobalTheory.CentralExponent.exists_cong_subset (n := Fin N) hU
-  have hγ0 : (0 : ValueGroupWithZero k) < γ := zero_lt_iff.2 γ.ne_zero
+  have hγ0 : (0 : ValueGroupWithZero k) < γ := pos_iff_ne_zero.2 γ.ne_zero
   have key : ∀ x : k, ∀ᶠ m : ℕ in atTop, valuation k ((ϖ : k) ^ m * x) < γ := by
     intro x
     by_cases hx : x = 0
@@ -105,7 +105,7 @@ theorem contraction {N r t : ℕ} (h : r + t = N) {ϖ : kˣ} (hϖ : valuation k 
       have h1 : uniformizer k ^ m ≤ uniformizer k ^ n :=
         pow_le_pow_right_of_le_one' uniformizer_lt_one.le hm
       have h2 : uniformizer k ^ m < γ * (valuation k x)⁻¹ := by simpa using h1.trans_lt hn
-      exact (lt_mul_inv_iff₀ (zero_lt_iff.2 hvx)).1 h2
+      exact (lt_mul_inv_iff₀ (pos_iff_ne_zero.2 hvx)).1 h2
   have hall : ∀ᶠ m : ℕ in atTop, ∀ i j : Fin N,
       valuation k ((ϖ : k) ^ m * (u : Matrix (Fin N) (Fin N) k) i j) < γ :=
     Filter.eventually_all.2 fun i => Filter.eventually_all.2 fun j => key _
@@ -156,7 +156,7 @@ theorem fix_mem_nhds {N : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
   have ho : IsOpen ((fun g : GL (Fin N) k => g⁻¹) ⁻¹' {g | π.dual g l = l}) :=
     hl.preimage continuous_inv
   refine Filter.mem_of_superset (ho.mem_nhds (by
-    simp only [Set.mem_preimage, inv_one, Set.mem_setOf_eq, map_one, Module.End.one_apply])) fun g hg y => ?_
+    simp only [Set.mem_preimage, inv_one, Set.mem_ofPred_eq, map_one, Module.End.one_apply])) fun g hg y => ?_
   have := LinearMap.congr_fun (show π.dual g⁻¹ l = l from hg) y
   simpa [Representation.dual_apply, Module.Dual.transpose_apply] using this
 

@@ -289,8 +289,8 @@ theorem fam_hermZpow {I : Ideal (MRing ι) → (m : ℕ) → (Fin m → HermLine
         have hij : (i : ℕ) ≠ j := fun h => hi (Fin.ext h)
         simp only [Lj]
         by_cases h1 : (i : ℕ) < j
-        · rw [if_pos h1, if_pos (by omega)]
-        · rw [if_neg h1, if_neg (by omega)]
+        · rw [ite_eq_left h1, ite_eq_left (by omega)]
+        · rw [ite_eq_right h1, ite_eq_right (by omega)]
     have e0 : Lj j = Function.update (Lj j) ⟨j, hj⟩ M := by
       funext i
       by_cases hi : i = ⟨j, hj⟩
@@ -447,7 +447,7 @@ theorem G3.proof (hLR : LocalRep.Statement) (hCS : ConstantShift.Statement) (h6 
         rw [hLa] at hd
         have hbd' := bound_of_ptBoundOn hLR hsmL hs (hmaps hs) hsm hOd (hOb n hn hdvd s hs)
           (Real.exp_pos _).le dg dh g h z hg hh hd he hz
-        rw [hLh, mul_pow, ← Real.exp_nat_mul]
+        rw [hLh, mul_pow, ← Real.exp_natCast_mul]
         calc _ ≤ _ := hbd'
           _ = _ := by ring
 

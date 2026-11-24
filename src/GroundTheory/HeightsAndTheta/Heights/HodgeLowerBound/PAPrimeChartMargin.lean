@@ -65,7 +65,7 @@ theorem levi_real_smul {κ : Type*} [Fintype κ] (φ : (κ → ℂ) → ℝ) (z 
   unfold levi
   have h : Complex.I • (r • w) = r • (Complex.I • w) := smul_comm _ _ _
   rw [h]
-  simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [map_smul, smul_apply, smul_eq_mul]
   ring
 
 theorem IsChartVel.real_smul {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {P : Ideal (MRing ι)}

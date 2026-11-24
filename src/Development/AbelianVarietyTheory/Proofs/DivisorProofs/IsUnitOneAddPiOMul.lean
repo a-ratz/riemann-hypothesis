@@ -148,7 +148,7 @@ theorem isUnit_one_add_piO_mul {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramI
   by_contra hn
   obtain ⟨M, hM, hxM⟩ := Ideal.exists_le_maximal (Ideal.span {1 + algebraMap (intL L) (AdjoinRoot P.1) (piO h) * a})
     (by rwa [Ne, Ideal.span_singleton_eq_top])
-  letI : Module.Finite (intL L) (AdjoinRoot P.1) := .of_basis (AdjoinRoot.powerBasis' P.2.1).basis
+  let : Module.Finite (intL L) (AdjoinRoot P.1) := .of_basis (AdjoinRoot.powerBasis' P.2.1).basis
   have hmax := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap (intL L) (AdjoinRoot P.1))
     (RingHom.IsIntegral.of_finite (RingHom.finite_algebraMap.mpr inferInstance)) M
   have hϖ : algebraMap (intL L) (AdjoinRoot P.1) (piO h) ∈ M := piO_mem_of_isMaximal h hmax

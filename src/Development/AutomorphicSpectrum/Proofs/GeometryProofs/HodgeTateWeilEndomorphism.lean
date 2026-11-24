@@ -67,11 +67,11 @@ theorem homPow {X : Scheme.{0}} {G : Over X} [GrpObj G] {Z : Over X} (a : G ⟶ 
   | succ n ih => rw [pow_succ, pow_succ, CategoryTheory.MonObj.mul_comp, ih]
 
 theorem epiSp {Ω K : Type} [Field Ω] [Field K] (a : Ω →+* K) : Epi (spMap a) := by
-  letI := a.toAlgebra
-  haveI : AlgebraicGeometry.Flat (Spec.map (CommRingCat.ofHom a)) := by
+  let := a.toAlgebra
+  have : AlgebraicGeometry.Flat (Spec.map (CommRingCat.ofHom a)) := by
     rw [HasRingHomProperty.Spec_iff (P := @AlgebraicGeometry.Flat)]
     exact RingHom.flat_algebraMap_iff.mpr inferInstance
-  haveI : AlgebraicGeometry.Surjective (Spec.map (CommRingCat.ofHom a)) := by
+  have : AlgebraicGeometry.Surjective (Spec.map (CommRingCat.ofHom a)) := by
     rw [AlgebraicGeometry.surjective_iff]
     intro y
     exact ⟨(default : PrimeSpectrum K), Subsingleton.elim (α := PrimeSpectrum Ω) _ _⟩
@@ -82,7 +82,7 @@ theorem powDescend {X : Scheme.{0}} {G : Over X} [GrpObj G] {Ω K : Type} [Field
     {g₀ : Over.mk ξ ⟶ G} {g : Over.mk (spMap a ≫ ξ) ⟶ G} (e : g.left = spMap a ≫ g₀.left) (hg : g ^ N = 1) :
     g₀ ^ N = 1 := by
   let ψ : Over.mk (spMap a ≫ ξ) ⟶ Over.mk ξ := Over.homMk (spMap a)
-  haveI : Epi ψ := Over.epi_of_epi_left ψ (hk := epiSp a)
+  have : Epi ψ := Over.epi_of_epi_left ψ (hk := epiSp a)
   have hψ : ψ ≫ g₀ = g := Over.OverMorphism.ext (by simp [ψ, e])
   apply (cancel_epi ψ).mp
   rw [pullPow, hψ, hg, CategoryTheory.MonObj.comp_one]

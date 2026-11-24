@@ -186,7 +186,7 @@ private theorem normV_sq (h2 : Module.finrank F E = 2) (w : HeightOneSpectrum (�
     rw [hn]
     exact NumberField.HeightOneSpectrum.one_lt_absNorm w
   have h3 : w.asIdeal.inertiaDeg (𝓞 F) ≤ 2 := by
-    haveI : NoZeroSMulDivisors (𝓞 F) (𝓞 E) := ⟨fun {c x} h => by
+    have : NoZeroSMulDivisors (𝓞 F) (𝓞 E) := ⟨fun {c x} h => by
       rwa [Algebra.smul_def, mul_eq_zero, map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective _ _)] at h⟩
     rw [← h2, ← Ideal.inertiaDeg'_eq_inertiaDeg (w.under (𝓞 F)).asIdeal]
     exact Ideal.inertiaDeg_le_finrank (𝓞 E) F E w.asIdeal (w.under (𝓞 F)).ne_bot
@@ -207,7 +207,7 @@ private theorem res_surj (w : HeightOneSpectrum (𝓞 E)) (h : normV w = normV (
 
 private theorem exists_moved (h2 : Module.finrank F E = 2) {t : G F Ω} (ht : t ∉ galOf F E Ω) :
     ∃ x y : 𝓞 E, y - x ≠ 0 ∧ t (algebraMap E Ω x) = algebraMap E Ω y := by
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   by_contra h
   push Not at h
   have h1 : ∀ x : 𝓞 E, t (algebraMap E Ω x) = algebraMap E Ω x := fun x => by
@@ -295,9 +295,9 @@ private theorem loc {F E Ω : Type} [Field F] [NumberField F] [Field E] [NumberF
     have h4 := (h3 A hA).2 σ hσ
     refine ⟨fun h5 => ?_, fun h5 => ?_⟩
     · by_contra h6
-      rw [if_neg h6, h5] at h4
+      rw [ite_eq_right h6, h5] at h4
       norm_num at h4
-    · rw [if_pos h5] at h4
+    · rw [ite_eq_left h5] at h4
       exact Units.ext (ι.injective (by rw [h4]; simp))
   obtain ⟨B, hB, hE⟩ := hb w rfl
   by_cases hs : δ σ⁻¹ = 1
@@ -361,7 +361,7 @@ private theorem infOf_add {m m' : Fin 2 → ℤ} (h : Function.Injective ![m 0, 
 
 theorem UpperTheory.V.Z.Bc.attInd : AttInd := by
   intro F E Ω _ _ _ _ _ _ _ _ _ _ h2 l _ ι r R sat satP hu huP hatt hfin hR H'
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
   obtain ⟨δ, -, hδ1, hδ, hδu⟩ := UpperTheory.exists_quadratic_sign_character F E Ω l h2
   obtain ⟨t, ht⟩ : ∃ t, t ∉ (galEmb F E Ω).range := by
     by_contra h

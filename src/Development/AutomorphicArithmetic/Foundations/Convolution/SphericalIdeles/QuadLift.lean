@@ -131,8 +131,8 @@ open NumberField IsDedekindDomain
 theorem UpperTheory.ConvolutionTheory.Sph.quadLiftUnr :
     UpperTheory.ConvolutionTheory.Sph.QuadLiftUnr := by
   intro K M _ _ _ _ _ _ _ h2 a ha π ⟨w, hram, B, hB⟩
-  haveI : Algebra.IsQuadraticExtension K M := ⟨h2⟩
-  haveI : IsGalois K M := inferInstance
+  have : Algebra.IsQuadraticExtension K M := ⟨h2⟩
+  have : IsGalois K M := inferInstance
   have hp : (Module.finrank K M).Prime := h2 ▸ Nat.prime_two
   exact UpperTheory.ConvolutionTheory.Sph.liftUnr K M hp a ha π fun η hη =>
     _root_.GlobalTheory.TwistRamified.twist_ne K a ha _ η (w.under (𝓞 K)) B hB ((UpperTheory.ConvolutionTheory.Sph.normRam K M hp w hram).2.2 η hη)
@@ -161,8 +161,8 @@ theorem UpperTheory.ConvolutionTheory.Sph.quadLiftOf :
   intro hR K M _ _ _ _ _ _ _ h2 a ha π hw
   obtain ⟨P, hP⟩ := UpperTheory.ConvolutionTheory.Sph.quadLiftUnr K M h2 a ha π hw
   have hp : (Module.finrank K M).Prime := h2 ▸ Nat.prime_two
-  haveI : Algebra.IsQuadraticExtension K M := { finrank_eq_two' := h2 }
-  haveI : IsGalois K M := Algebra.IsQuadraticExtension.isGalois K M
+  have : Algebra.IsQuadraticExtension K M := { finrank_eq_two' := h2 }
+  have : IsGalois K M := Algebra.IsQuadraticExtension.isGalois K M
   refine ⟨P, ⟨fun w f B hf hB => ?_, hP.inf, hP.loc⟩⟩
   by_cases hu : Algebra.IsUnramifiedAt (𝓞 K) w.asIdeal
   · exact hP.sat w f B hu hf hB
@@ -281,7 +281,7 @@ namespace UpperTheory.ConvolutionTheory.Sph
 private theorem not_split_of_ramified {K M : Type} [Field K] [NumberField K] [Field M] [NumberField M] [Algebra K M]
     (v : Pl K) (u : PlacesOver M v) (hram : ¬ Algebra.IsUnramifiedAt (𝓞 K) u.1.asIdeal) : ¬ GM.Split M v := by
   intro hs
-  haveI := u.2
+  have := u.2
   have hb : Function.Bijective (Algebra.linearMap (v.adicCompletion K) (u.1.adicCompletion M)) :=
     ⟨(completionMap v u.1).injective, hs u⟩
   have h : u.1.asIdeal.ramificationIdx (𝓞 K) * u.1.asIdeal.inertiaDeg (𝓞 K) = 1 := by
@@ -318,8 +318,8 @@ theorem UpperTheory.ConvolutionTheory.Sph.ramSphOf :
   obtain ⟨hN, -, -⟩ := UpperTheory.ConvolutionTheory.Sph.normRam K M hp w hram
   have habs : Ideal.absNorm w.asIdeal = Ideal.absNorm v.asIdeal := by
     simpa [Formalism.ConjugateSelfDual.normV, Ideal.absNorm_apply, Submodule.cardQuot_apply, v] using hN
-  haveI : Fact (Module.finrank K M).Prime := ⟨hp⟩
-  haveI : IsCyclic (M ≃ₐ[K] M) := isCyclic_of_prime_card (p := Module.finrank K M) (IsGalois.card_aut_eq_finrank K M)
+  have : Fact (Module.finrank K M).Prime := ⟨hp⟩
+  have : IsCyclic (M ≃ₐ[K] M) := isCyclic_of_prime_card (p := Module.finrank K M) (IsGalois.card_aut_eq_finrank K M)
   obtain ⟨σ, hσ⟩ := IsCyclic.exists_generator (α := M ≃ₐ[K] M)
   obtain ⟨σw, N, hloc, hNorm, -⟩ := hLG K M σ hσ hp v u hns
   obtain ⟨ε, hε, hsd⟩ : SatDict := UpperTheory.ConvolutionTheory.Sph.satDict
@@ -487,7 +487,7 @@ private theorem conj_close {u : GL (Fin n) k} (hu : u ∈ unipB k (Fin n))
   · rw [hdiag i, Matrix.one_apply_eq]
     have : (t i : k) * 1 * (t i : k)⁻¹ = 1 := by simp
     rw [this, sub_self, map_zero, map_one]
-    exact ⟨zero_le', le_refl _⟩
+    exact ⟨zero_le, le_refl _⟩
   · have h1 : (1 : Matrix (Fin n) (Fin n) k) i j = 0 := Matrix.one_apply_ne (ne_of_gt hij)
     rw [hlow i j hij, h1]
     simp
@@ -513,7 +513,7 @@ private theorem conj_mem {K : Subgroup (GL (Fin n) k)} (hK : IsOpen (K : Set (GL
   obtain ⟨B, hB0, hB⟩ := exists_bound u
   set c : ValueGroupWithZero k :=
     valuation k ((GroundTheory.Automorphic.GLnLocal.uniformizer k : k)) ^ m with hcdef
-  have hc : c ≤ 1 := pow_le_one₀ zero_le'
+  have hc : c ≤ 1 := pow_le_one₀ zero_le
     (le_of_lt (GroundTheory.Automorphic.GLnLocal.valuation_uniformizer_lt_one k))
   have hc0 : c ≠ 0 := pow_ne_zero _ (GroundTheory.Automorphic.GLnLocal.valuation_uniformizer_ne_zero k)
   have hui : u⁻¹ ∈ unipB k (Fin n) := inv_mem hu
@@ -582,7 +582,7 @@ theorem UpperTheory.Gal.Join.traceQuot :
   have hRS : LinearMap.range B ≤ S := by
     rintro _ ⟨v, rfl⟩
     exact hB v
-  haveI : FiniteDimensional ℂ (LinearMap.range B) := Submodule.finiteDimensional_of_le hRS
+  have : FiniteDimensional ℂ (LinearMap.range B) := Submodule.finiteDimensional_of_le hRS
   refine ⟨inferInstance, ?_⟩
   unfold trIn
   rw [dite_eq_left hTP]
@@ -595,7 +595,7 @@ theorem UpperTheory.Gal.Join.traceQuot :
   rw [h1]
   set q : S →ₗ[ℂ] Submodule.map p S := p.submoduleMap S with hqdef
   have hq : Function.Surjective q := p.submoduleMap_surjective S
-  haveI : FiniteDimensional ℂ (Submodule.map p S) := Module.Finite.of_surjective q hq
+  have : FiniteDimensional ℂ (Submodule.map p S) := Module.Finite.of_surjective q hq
   obtain ⟨s, hs⟩ := q.exists_rightInverse_of_surjective (LinearMap.range_eq_top.mpr hq)
   set BS := B.restrict hBS with hBSdef
   set TP := T.restrict hTP with hTPdef
@@ -689,11 +689,11 @@ private theorem small {t : Fin n → kˣ} (ht : Strict t) {r : ValueGroupWithZer
   simp only [eventually_all]
   intro i j hij
   have h0 : valuation k (t j : k) ≠ 0 := by simp
-  have h1 : valuation k (t i : k) / valuation k (t j : k) < 1 := (div_lt_one₀ (zero_lt_iff.2 h0)).2 (ht i j hij)
+  have h1 : valuation k (t i : k) / valuation k (t j : k) < 1 := (div_lt_one₀ (pos_iff_ne_zero.2 h0)).2 (ht i j hij)
   obtain ⟨M, hM⟩ := exists_pow_lt₀ h1 (Units.mk0 r hr)
   filter_upwards [eventually_ge_atTop M] with m hm
   have h2 : (valuation k (t i : k) / valuation k (t j : k)) ^ m ≤ r := (pow_le_pow_right_of_le_one' h1.le hm).trans hM.le
-  rwa [div_pow, div_le_iff₀ (zero_lt_iff.2 (pow_ne_zero _ h0))] at h2
+  rwa [div_pow, div_le_iff₀ (pos_iff_ne_zero.2 (pow_ne_zero _ h0))] at h2
 
 private theorem unif {K : Subgroup (GL (Fin n) k)} (hK : IwLev K) {e : V →ₗ[ℂ] V} (he : IsAvg π K e) (Z : Submodule ℂ V)
     [FiniteDimensional ℂ Z] (hZ : Z ≤ twKer π (unipB k (Fin n)) 1) {t : Fin n → kˣ} (ht : Strict t) {σ : k ≃+* k} (h : Isom σ) :
@@ -727,8 +727,8 @@ theorem UpperTheory.Gal.Join.casTrace :
     have e1 : Loc.sg σ (Loc.sg σ.symm g) = g := Units.ext (Matrix.ext fun i j => σ.apply_symm_apply _)
     exact ⟨Loc.sg σ.symm g, (hst _).1 (by rwa [e1]), e1⟩
   have hfix : ∀ v ∈ fixed π K, A v ∈ fixed π K := fun v hv => by rw [← he.fix v hv, hAe]; exact he.mem _
-  haveI : μ.IsMulRightInvariant := GroundTheory.Automorphic.Measures.isMulRightInvariant_GL k n μ
-  haveI : FiniteDimensional ℂ (fixed π K) := ha.2 K hK.co.2 hK.co.1
+  have : μ.IsMulRightInvariant := GroundTheory.Automorphic.Measures.isMulRightInvariant_GL k n μ
+  have : FiniteDimensional ℂ (fixed π K) := ha.2 K hK.co.2 hK.co.1
   refine ⟨_, dcosOp _ V μ π ha.1 K hK.co e he (diagT k (Fin n) t), ?_⟩
   obtain ⟨-, s1, s2⟩ := imStab k n V π ha K hK
   change HasFinTrace (((μ.real (dcos K t) : ℂ) • (e ∘ₗ π (diagT k (Fin n) t) ∘ₗ e)) ∘ₗ A) _
@@ -764,7 +764,7 @@ theorem UpperTheory.Gal.Join.casTrace :
         have hdj : Dom fun i => Units.map (σ : k →* k) (pw σ t j i) := fun a b hab => by
           have h1 := hσ (pw σ t j a)
           have h2 := hσ (pw σ t j b)
-          simp only [Units.coe_map, MonoidHom.coe_coe, h1, h2, val_pw hσ]
+          simp only [Units.coe_map, MonoidHom.coe_ofClass, h1, h2, val_pw hσ]
           exact pow_le_pow_left' (hd a b hab) j
         rw [pow_succ', Module.End.mul_apply, ih, map_smul]
         simp only [LinearMap.comp_apply, LinearMap.smul_apply]
@@ -820,7 +820,7 @@ theorem UpperTheory.Gal.Join.normDom :
     calc valuation k' (t i : k') * valuation k' (s i : k')
         ≤ valuation k' (t i : k') * valuation k' (s j : k') := mul_le_mul' le_rfl (hs i j hij)
       _ < valuation k' (t j : k') * valuation k' (s j : k') :=
-        mul_lt_mul_of_pos_right (ht i j hij) (zero_lt_iff.2 hj)
+        mul_lt_mul_of_pos_right (ht i j hij) (pos_iff_ne_zero.2 hj)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.JacobianTraceQuotients.NormDom =====
@@ -939,7 +939,7 @@ private theorem nabs_norm [CharZero k] (x : k'ˣ) :
   have hT := _root_.GlobalTheory.KSp.map_linearEquiv_haar k k' μ T
   have hdet : LinearEquiv.det T = (Units.map (Algebra.norm k : k' →* k) x)⁻¹ := by
     ext
-    simp only [LinearEquiv.coe_det, T, Units.coe_map, MonoidHom.coe_coe, Algebra.norm_apply,
+    simp only [LinearEquiv.coe_det, T, Units.coe_map, MonoidHom.coe_ofClass, Algebra.norm_apply,
       Units.val_inv_eq_inv_val, map_inv₀]
     have hl : (↑(DistribMulAction.toLinearEquiv k k' x⁻¹) : k' →ₗ[k] k') =
         LinearMap.mul k k' ↑x⁻¹ := by
@@ -957,7 +957,7 @@ private theorem nabs_norm [CharZero k] (x : k'ˣ) :
   have e : Measure.map T μ K = (((distribHaarChar k) (LinearEquiv.det T))⁻¹ • μ) K := by
     rw [hT]
   rw [Measure.map_apply hTc.measurable hm, hdet, map_inv, inv_inv] at e
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e
   rw [← e]
   congr 1
   ext y
@@ -1048,8 +1048,8 @@ theorem UpperTheory.Gal.Join.locGal :
   have hvs : ∀ z, Valued.v (s z) = Valued.v z := fun z => by
     rw [hse]
     exact val_gal v σ w.1 w.1 hfix z
-  haveI : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
-  haveI : IsModuleTopology (v.adicCompletion F) (w.1.adicCompletion E) := isModuleTopologyOfFiniteDimensional
+  have : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F _).injective
+  have : IsModuleTopology (v.adicCompletion F) (w.1.adicCompletion E) := isModuleTopologyOfFiniteDimensional
   refine ⟨(s : _ ≃+* _), Units.map (Algebra.norm (v.adicCompletion F) : w.1.adicCompletion E →* _), fun n g => ?_,
     ⟨⟨fun x => ?_, ?_, fun x => ?_⟩, fun x => ?_, ?_, fun x => ?_⟩, fun x => rfl⟩
   · exact Units.ext (Matrix.ext fun a b => hgf _)
@@ -1226,7 +1226,7 @@ theorem UpperTheory.Reformulated.B.CommonEigenvectorInInvariantComplexSubspace.e
       {V : Submodule ℂ M | V ≤ W ∧ V ≠ ⊥ ∧ ∀ i, ∀ y ∈ V, f i y ∈ V} ⟨W, le_rfl, hW, hinv⟩
   obtain ⟨y, hyV, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hV0
   refine ⟨y, hVW hyV, hy0, fun i => ?_⟩
-  haveI : Nontrivial V := Submodule.nontrivial_iff_ne_bot.mpr hV0
+  have : Nontrivial V := Submodule.nontrivial_iff_ne_bot.mpr hV0
   obtain ⟨c, hcv⟩ := Module.End.exists_eigenvalue ((f i).restrict (hVinv i) : Module.End ℂ V)
   obtain ⟨v, hv⟩ := hcv.exists_hasEigenvector
   have hv1 : f i (v : M) = c • (v : M) := by
@@ -1423,12 +1423,12 @@ theorem UpperTheory.Gal.Join.expLev :
     { carrier := {g | π g v = v}
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       one_mem' := by simp
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul]
         simp }
@@ -1507,7 +1507,7 @@ theorem UpperTheory.Gal.Join.expSub :
   have hψs : ∀ i, IsSmoothChar (ψ i) := fun i =>
     GlobalTheory.TameIwahori.isSmoothChar_of_eq_on_units (hωs i) (hψω i)
   have hsubψ : IsSubquotient π (prinSeries ψ) := quotEmb k n V π hsm hirr ψ l hl0 hl
-  haveI : Nontrivial V := GroundTheory.Automorphic.RestrictedTensor.nontrivial_of_isIrreducible hirr
+  have : Nontrivial V := GroundTheory.Automorphic.RestrictedTensor.nontrivial_of_isIrreducible hirr
   have hcyc : Cyc (RingEquiv.refl k) 1 := ⟨fun _ => rfl, one_pos, fun _ => rfl⟩
   have hsemi : Semi (RingEquiv.refl k) π LinearMap.id := by
     intro g v
@@ -1520,7 +1520,7 @@ theorem UpperTheory.Gal.Join.expSub :
       intro h
       obtain ⟨v, hv⟩ := exists_ne (0 : V)
       exact hv (by simpa using LinearMap.congr_fun h v))
-  haveI := hfd
+  have := hfd
   obtain ⟨l', hl'0, hl'⟩ := (subQuot (Fin n → kˣ) _ (jacB π) μ).2 ⟨y, hy0, hy⟩
   refine ⟨ω, hωμ.symm, hωs, quotEmb k n V π hsm hirr ω l' hl'0 ?_⟩
   intro t z
@@ -1618,13 +1618,13 @@ private theorem exists_eigenchars {T : Type} [CommGroup T] (d : ℕ) : ∀ (V : 
   induction d with
   | zero =>
     intro V _ _ _ ρ h
-    haveI : Subsingleton V := Module.finrank_zero_iff.1 h
+    have : Subsingleton V := Module.finrank_zero_iff.1 h
     refine ⟨0, fun t => ?_, fun μ => ?_⟩
     · simp [Subsingleton.elim (ρ t) 0]
     · simp [Subsingleton.elim _ (0 : V)]
   | succ d ih =>
     intro V _ _ _ ρ h
-    haveI : Nontrivial V := Module.finrank_pos_iff.1 (by rw [h]; exact d.succ_pos)
+    have : Nontrivial V := Module.finrank_pos_iff.1 (by rw [h]; exact d.succ_pos)
     obtain ⟨ψ, v, hv, hψ⟩ := GlobalTheory.exists_character_eigenvector_of_commute ℂ T V ρ fun a b => by
       rw [← map_mul, mul_comm, map_mul]
     have hst : ∀ g, Submodule.span ℂ {v} ≤ (Submodule.span ℂ {v}).comap (ρ g) := fun g => by

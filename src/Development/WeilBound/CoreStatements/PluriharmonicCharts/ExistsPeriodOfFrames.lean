@@ -397,14 +397,14 @@ theorem exists_coord {X : Type} [NormedAddCommGroup X] [NormedSpace ℂ X] {ty :
     · rw [Finset.sum_eq_single (e.symm ⟨i, hit⟩)]
       · simp [hit, eq_comm]
       · intro b _ hb
-        rw [if_neg, zero_mul]
+        rw [ite_eq_right, zero_mul]
         intro h
         exact hb (by rw [Equiv.eq_symm_apply]; exact Subtype.ext h.symm)
       · simp
     · rw [Finset.sum_eq_zero]
       · simp [hit]
       · intro b _
-        rw [if_neg, zero_mul]
+        rw [ite_eq_right, zero_mul]
         intro h
         exact hit (h ▸ (e b).2)
   have hP : ∀ u ∈ B, Sᵀ * (S * W u) = W u := fun u hu => by
@@ -496,7 +496,7 @@ theorem exists_cols {Λ I : Type} [Fintype I] [DecidableEq I] (f : Λ → I → 
   classical
   obtain ⟨b, hbS, hspan, hli⟩ := exists_linearIndependent ℂ (Set.range f)
   let bb := Module.Basis.mk hli (by simp [hspan, hC])
-  haveI : Fintype b := Module.Basis.fintypeIndexOfRankLtAleph0 bb (Module.rank_lt_aleph0 ℂ _)
+  have : Fintype b := Module.Basis.fintypeIndexOfRankLtAleph0 bb (Module.rank_lt_aleph0 ℂ _)
   have hcard : Fintype.card I = Fintype.card b := by simpa using (Module.finrank_eq_card_basis bb)
   let e : I ≃ b := Fintype.equivOfCardEq hcard
   choose y hy using fun i : b => hbS i.2
@@ -505,7 +505,7 @@ theorem exists_cols {Λ I : Type} [Fintype I] [DecidableEq I] (f : Λ → I → 
     funext j
     simp [hy]
   have h3 : LinearIndependent ℂ fun j => f (y (e j)) := by rw [h2]; exact hli.comp _ e.injective
-  have h1 : IsUnit (Matrix.of fun j => f (y (e j))) := Matrix.linearIndependent_rows_iff_isUnit.1 h3
+  have h1 : IsUnit (Matrix.of fun j => f (y (e j))) := linearIndependent_row_iff_isUnit.1 h3
   rw [← det_transpose]
   exact ((Matrix.isUnit_iff_isUnit_det _).1 h1).ne_zero
 

@@ -418,14 +418,14 @@ theorem integral_squeeze {X : Type} [MeasurableSpace X] (ν : Measure X) (φ : X
     intro x
     by_cases hx : x ∈ A
     · rw [Set.indicator_of_mem hx, hA1 x hx]
-    · simp only [Set.indicator, hx, if_false]
+    · simp only [Set.indicator, hx, ite_false]
       exact h0 x
   have hi : ∀ x, φ x ≤ B.indicator (fun _ => (1:ℝ)) x := by
     intro x
     by_cases hx : x ∈ B
     · rw [Set.indicator_of_mem hx]
       exact h1 x
-    · simp only [Set.indicator, hx, if_false]
+    · simp only [Set.indicator, hx, ite_false]
       exact le_of_eq (hB0 x hx)
   have iB : Integrable (B.indicator fun _ => (1:ℝ)) ν :=
     (integrable_indicator_iff hB).2 (integrableOn_const hB')
@@ -487,7 +487,7 @@ omit [FiniteDimensional ℝ V] in
 theorem body_eq_smul (ρ : V → ℝ) (hs : ∀ s : ℝ, 0 ≤ s → ∀ v, ρ (s • v) = s * ρ v) {t : ℝ} (ht : 0 < t) :
     {v | ρ v ≤ t} = t • {v | ρ v ≤ 1} := by
   ext v
-  rw [Set.mem_smul_set_iff_inv_smul_mem₀ ht.ne', Set.mem_setOf_eq, Set.mem_setOf_eq,
+  rw [Set.mem_smul_set_iff_inv_smul_mem₀ ht.ne', Set.mem_ofPred_eq, Set.mem_ofPred_eq,
     hs _ (inv_nonneg.2 ht.le), inv_mul_le_iff₀ ht, mul_one]
 
 
@@ -1071,7 +1071,7 @@ theorem localised_iwasawa_asymptotics : ∀ (n : ℕ) (ε : Fin n → Bool) (a :
         crd EK (uMat x.2.2 - 1)) ≤ (1 + η) * r :=
       hγη.trans (mul_le_mul_of_nonneg_left hσ hη1.le)
     simp only [Set.indicator_apply, Set.mem_ofPred_eq]
-    rw [if_pos ⟨⟨hu, hm, hk⟩, hγ⟩, Pi.one_apply, mul_one]
+    rw [ite_eq_left ⟨⟨hu, hm, hk⟩, hγ⟩, Pi.one_apply, mul_one]
     exact (h₃ x.2.1 hxM (lt_of_lt_of_le hm htt₃)).1
 
 end GlobalTheory.IwConst

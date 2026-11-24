@@ -325,7 +325,7 @@ theorem exists_rot (γ : ℂ) : ∃ u : ℂ, ‖u‖ = 1 ∧ γ * u ^ 2 = (‖γ
     rw [this, Complex.norm_exp_ofReal_mul_I]
   · have h0 := Complex.norm_mul_exp_arg_mul_I γ
     generalize γ.arg = θ at h0 ⊢
-    rw [← h0, ← Complex.exp_nat_mul, mul_assoc, ← Complex.exp_add]
+    rw [← h0, ← Complex.exp_natCast_mul, mul_assoc, ← Complex.exp_add]
     have : (θ : ℂ) * Complex.I + ((2 : ℕ) : ℂ) * (-((θ / 2 : ℝ) : ℂ) * Complex.I) = 0 := by
       push_cast; ring
     rw [this, Complex.exp_zero, mul_one, h0]

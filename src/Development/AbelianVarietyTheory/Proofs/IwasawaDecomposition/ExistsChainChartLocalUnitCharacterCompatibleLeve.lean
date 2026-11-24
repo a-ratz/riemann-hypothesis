@@ -170,7 +170,7 @@ theorem GlobalTheory.Mem.Top.KerTwPsi.psi_tied : ∀ {K : Ctx} {B : Base} {f : F
             (tt.ch.lev u ((w.D Z).what₂.muAt v) (j + 1) (Formalism.MainNotions.G.CmpJ.AgreeLv.one_le j) hj β).Uloc ((w.D Z).what₂.places.resChar v) →* ((w.D Z).gat u v hg).Oˣ,
           Formalism.MainNotions.G.CmpJ.UnitCharacterChartCompatibility hj (tt.forms.ch u ((w.D Z).what₂.muAt v) hμ (j + 1) (Formalism.MainNotions.G.CmpJ.AgreeLv.one_le j) hj β).lev (t.cmp.embW u v hg) ψ := by
   intro K B f T w hO hF hP Z t Wt nch n Y hmu hQp O hO' hunf E hE Fl hfl hw u v hg hμ tt hstd j hj β
-  haveI : IsFractionRing ((w.D Z).gat u v hg).O ((w.D Z).gat u v hg).Kf :=
+  have : IsFractionRing ((w.D Z).gat u v hg).O ((w.D Z).gat u v hg).Kf :=
     (((w.D Z).gat u v hg).P.setting (plc t.Gt u v hg)).frac_O
   exact GlobalTheory.Mem.Top.KerTwPsi.exists_psiTiedJ hj _ (tt.forms.car u _ hμ (j + 1) _ hj β).Uloc_eq (t.cmp.embW u v hg)
     (GlobalTheory.T.twisted_chain_chart_level_characters_rational w ‹_› ‹_› ‹_› Z t Wt nch n hmu tt hstd u _ hμ j hj β) (tt.forms.chi_fin u _ hμ (j + 1) _ hj β)

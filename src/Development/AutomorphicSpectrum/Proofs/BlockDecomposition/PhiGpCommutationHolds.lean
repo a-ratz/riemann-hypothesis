@@ -416,12 +416,12 @@ theorem iotaM_descent (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
   let d : O → Mir k (m + j + 1) := fun κ => rowEl (m + j) (r κ.1) κ.2
   have hdc : Continuous d :=
     (continuous_rowEl (k := k) (m + j)).comp
-      (Continuous.subtype_mk (hcr.comp continuous_subtype_val) fun κ => κ.2)
+      (Continuous.subtype_mk (hcr.comp continuous_subtypeVal) fun κ => κ.2)
   have hQ : ∀ κ : O, d κ * κ.1 ∈ Q k (m + j) := fun κ => by
     have := mul_inv_mem_Q_of_rowQ_eq (m + j) (d κ) (κ.1)⁻¹ (rowQ_rowEl (m + j) (r κ.1) κ.2)
     rwa [inv_inv] at this
   let φ : O → Q k (m + j) := fun κ => ⟨d κ * κ.1, hQ κ⟩
-  have hφc : Continuous φ := Continuous.subtype_mk (hdc.mul continuous_subtype_val) _
+  have hφc : Continuous φ := Continuous.subtype_mk (hdc.mul continuous_subtypeVal) _
   let ψ : O → Mir k (m + j) := fun κ => qProj k (m + j) (φ κ)
   have hψc : Continuous ψ := (GlobalTheory.CompanionTheory.BZMirOnto.continuous_qProj k (m + j)).comp hφc
   have hd1 : d ⟨1, h1O⟩ = 1 := Subtype.ext (Units.ext hm1)
@@ -433,7 +433,7 @@ theorem iotaM_descent (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     rw [this, map_one]
   have hpre : ψ ⁻¹' K' ∈ 𝓝 (⟨1, h1O⟩ : O) :=
     hψc.continuousAt.preimage_mem_nhds (by rw [hψ1]; exact hK')
-  refine ⟨Subtype.val '' (ψ ⁻¹' K'), hO.isOpenMap_subtype_val.image_mem_nhds hpre, ?_⟩
+  refine ⟨Subtype.val '' (ψ ⁻¹' K'), hO.isOpenMap_subtypeVal.image_mem_nhds hpre, ?_⟩
   rintro x h hh _ ⟨κ, hκ, rfl⟩ e
   have hκinv : (κ.1)⁻¹ = embedding₂ k (m + j) x⁻¹ * h := by
     rw [map_inv, e]
@@ -1366,11 +1366,11 @@ private theorem isHK_diff {G : Type} [Group G] [TopologicalSpace G]
   obtain ⟨hA₁, KA, hKA, hA₂⟩ := hA
   obtain ⟨hB₁, KB, hKB, hB₂⟩ := hB
   refine ⟨fun h hh g => ?_, KA ⊓ KB, ?_, fun g x hx => ?_⟩
-  · simp only [Set.mem_diff, hA₁ h hh g, hB₁ h hh g]
+  · simp only [Set.mem_sdiff, hA₁ h hh g, hB₁ h hh g]
   · rw [Subgroup.coe_inf]
     exact hKA.inter hKB
   · rw [Subgroup.mem_inf] at hx
-    simp only [Set.mem_diff, hA₂ g x hx.1, hB₂ g x hx.2]
+    simp only [Set.mem_sdiff, hA₂ g x hx.1, hB₂ g x hx.2]
 
 theorem exists_cInd_restrict_eq {G G' W W' : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [Group G'] [TopologicalSpace G']
@@ -1807,7 +1807,7 @@ def extEquiv {G₁ G₂ M V V' W W' : Type} [Group G₁] [Group G₂] [Group M] 
 
 theorem isOpen_ker_dpowM (n : ℕ) (s : ℝ) :
     IsOpen (((dpowM (k := k) n s).ker : Subgroup (Mir k n)) : Set (Mir k n)) :=
-  (isOpen_ker_dpow k (n + 1) s).preimage continuous_subtype_val
+  (isOpen_ker_dpow k (n + 1) s).preimage continuous_subtypeVal
 
 theorem prodGP_congr {m j : ℕ} {V V' W W' : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup V'] [Module ℂ V']
     [AddCommGroup W] [Module ℂ W] [AddCommGroup W'] [Module ℂ W']

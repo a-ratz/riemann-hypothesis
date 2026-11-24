@@ -526,7 +526,7 @@ theorem exists_residue_germ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     (hp : (p : R) = 0) (hf : FibPF t (centre x)) :
     ∃ Bk : Germ.FB (IsLocalRing.ResidueField R) d (𝓞 E), IsMapOf (IsLocalRing.residue R) g.B Bk ∧ ConjInj Bk p := by
   obtain ⟨g₂, hm, -⟩ := GlobalTheory.T.formal_germ_base_change E H hbar X t R (IsLocalRing.ResidueField R) (IsLocalRing.residue R) x d g
-  haveI : CharP (IsLocalRing.ResidueField R) p :=
+  have : CharP (IsLocalRing.ResidueField R) p :=
     (CharP.charP_iff_prime_eq_zero Fact.out).2 (by rw [← map_natCast (IsLocalRing.residue R), hp, map_zero])
   refine ⟨g₂.B, hm, GlobalTheory.T.fibre_power_free_conj_injective E H hbar X t hpow _ p _ d g₂ ?_⟩
   have e := centre_spMap (IsLocalRing.residue R) x

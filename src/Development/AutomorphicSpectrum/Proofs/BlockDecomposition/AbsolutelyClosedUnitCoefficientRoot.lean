@@ -75,7 +75,7 @@ theorem exists_root : ∀ {S : Type} [CommRing S] , Aic (S := S) →
   intro S _ hA hL Q i h0 hi hu
   rcases subsingleton_or_nontrivial S with hs | hn
   · exact ⟨0, Subsingleton.elim _ _⟩
-  haveI : IsLocalRing S := IsLocalRing.of_isUnit_or_isUnit_of_isUnit_add hL
+  have : IsLocalRing S := IsLocalRing.of_isUnit_or_isUnit_of_isUnit_add hL
   have htd : Q.natTrailingDegree = 0 :=
     Nat.le_zero.mp (natTrailingDegree_le_of_ne_zero (by rw [h0]; exact one_ne_zero))
   have hmon : Q.reverse.Monic := by
@@ -99,7 +99,7 @@ theorem exists_root : ∀ {S : Type} [CommRing S] , Aic (S := S) →
       exact dvd_iff_isRoot.mp hdvd
     obtain ⟨u, rfl⟩ := hb
     refine ⟨((u⁻¹ : Sˣ) : S), ?_⟩
-    letI : Invertible ((u⁻¹ : Sˣ) : S) := (u⁻¹).invertible
+    let : Invertible ((u⁻¹ : Sˣ) : S) := (u⁻¹).invertible
     have key := eval₂_reverse_mul_pow (RingHom.id S) ((u⁻¹ : Sˣ) : S) Q
     have hinv : ⅟((u⁻¹ : Sˣ) : S) = (u : S) := by simp
     rw [hinv, eval₂_id, eval₂_id, hroot, zero_mul] at key

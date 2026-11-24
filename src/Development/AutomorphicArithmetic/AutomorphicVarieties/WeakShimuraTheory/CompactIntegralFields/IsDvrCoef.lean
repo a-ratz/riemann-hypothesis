@@ -46,7 +46,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem isDvr_coef {l : ℕ} [Fact l.Prime] (𝔞 : Amb l) (e : 𝔞.K ≃+* PadicAlgCl l) (h : 𝔞.IsZero e) (c : Coef l) :
     𝔞.IsDvr (𝔞.a c) := by
-  haveI : CharZero c.O := charZero_of_injective_algebraMap (dvrFacts l c.O).1
+  have : CharZero c.O := charZero_of_injective_algebraMap (dvrFacts l c.O).1
   refine ⟨fun x y hxy => Subtype.ext ?_, 𝔞.loc c, inferInstance, (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1, fun x => ?_⟩
   · rw [← h.1 c x, ← h.1 c y, hxy]
   · have h1 : IsAlgebraic ℚ_[l] (e x) := Algebra.IsAlgebraic.isAlgebraic _

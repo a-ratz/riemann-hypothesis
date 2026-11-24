@@ -176,8 +176,8 @@ theorem isIntFB_chart :
     letI := io.toAlgebra
     letI : Algebra T.Fr X.C := X.ιF.toAlgebra
     IsIntFB (vX_vp X) Ch.ch.B := by
-  letI := io.toAlgebra
-  letI : Algebra T.Fr X.C := X.ιF.toAlgebra
+  let := io.toAlgebra
+  let : Algebra T.Fr X.C := X.ιF.toAlgebra
   obtain ⟨-, h2, h3, h4, -, h6, -⟩ := Ch.gen.1
   refine ⟨(fgl Ch X).F_int, fun a i => ?_, ?_, ?_, fun a => ?_⟩
   · unfold FB.actK; rw [h2]; exact mvIsInt_map_map X _
@@ -189,8 +189,8 @@ theorem gauge_chart :
     letI := io.toAlgebra
     letI : Algebra T.Fr X.C := X.ιF.toAlgebra
     Ch.ch.B.IsCanonGauge X.C (MvPowerSeries.map X.ιF Ch.ch.h) := by
-  letI := io.toAlgebra
-  letI : Algebra T.Fr X.C := X.ιF.toAlgebra
+  let := io.toAlgebra
+  let : Algebra T.Fr X.C := X.ιF.toAlgebra
   exact (GlobalTheory.canonGauge_nabVal_baseChange T.Fr _ _ Ch.ch.B T.Fr X.C (Algebra.ofId T.Fr X.C) _ Ch.ch.gauge).1
 
 

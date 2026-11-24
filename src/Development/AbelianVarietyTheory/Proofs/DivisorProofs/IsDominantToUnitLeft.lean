@@ -326,7 +326,7 @@ variable {V : Type} [CommRing V] [IsDomain V] {D : DegPre V}
 theorem torsion_of_nsmul {N : ℕ} (g : GtPtF D (FractionRing V)) (b : 𝟙_ (Over (Spec (CommRingCat.of V))) ⟶ D.P.A)
     (hgb : g.b = toUnit _ ≫ b) (ho : ∃ o, GtPtF.IsNsmul N g o ∧ o.IsZero) :
     (letI := GlobalTheory.TorusExt.gtGroup D (FractionRing V); N • g = 0) ∧ b ^ N = 1 := by
-  letI := GlobalTheory.TorusExt.gtGroup D (FractionRing V)
+  let := GlobalTheory.TorusExt.gtGroup D (FractionRing V)
   obtain ⟨o, h₁, h₂⟩ := ho
   have e : N • g = 0 := ((isNsmul_iff_eq N g o).1 h₁).symm.trans ((isZero_iff_eq o).1 h₂)
   refine ⟨e, pow_eq_one_of_generic b N ?_⟩

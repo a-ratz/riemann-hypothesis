@@ -85,7 +85,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 private lemma isCMExt_mem_range_of_conj_fixed (h : _root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsCMExt F E σ) {x : E} (hx : σ x = x) :
     x ∈ Set.range (algebraMap F E) := by
   have hprime : (Module.finrank F E).Prime := by rw [h.2.2.1]; exact Nat.prime_two
-  haveI := Subalgebra.isSimpleOrder_of_finrank_prime F E hprime
+  have := Subalgebra.isSimpleOrder_of_finrank_prime F E hprime
   rcases eq_bot_or_eq_top (AlgHom.equalizer σ (AlgHom.id F E)) with h0 | h1
   · have hmem : x ∈ AlgHom.equalizer σ (AlgHom.id F E) := hx
     rw [h0] at hmem
@@ -137,10 +137,10 @@ theorem _root_.GlobalTheory.UnramifiedDiscriminant.exists_discr_notMem (F E : Ty
     rintro rfl
     apply v.ne_bot
     rw [← hPv, (show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ hinj)]
-  haveI : P.LiesOver v.asIdeal := ⟨hPv.symm⟩
-  haveI : Algebra.IsUnramifiedAt (𝓞 F) P := hv ⟨P, hPp, hPne⟩ ⟨hPv.symm⟩
+  have : P.LiesOver v.asIdeal := ⟨hPv.symm⟩
+  have : Algebra.IsUnramifiedAt (𝓞 F) P := hv ⟨P, hPp, hPne⟩ ⟨hPv.symm⟩
   let σ' : E ≃ₐ[F] E := AlgEquiv.ofBijective σ (Function.Involutive.bijective (isCMExt_conj_conj h))
-  haveI : IsGalois F E := by
+  have : IsGalois F E := by
     refine IsGalois.of_fixedField_eq_bot F E (eq_bot_iff.mpr fun x hx => ?_)
     exact IntermediateField.mem_bot.mpr (isCMExt_mem_range_of_conj_fixed h
       ((IntermediateField.mem_fixedField_iff _ _).mp hx σ' (Subgroup.mem_top _)))
@@ -152,7 +152,7 @@ theorem _root_.GlobalTheory.UnramifiedDiscriminant.exists_discr_notMem (F E : Ty
     by_contra hcon
     push_neg at hcon
     have hmem : σ' ∈ P.inertia (E ≃ₐ[F] E) := hcon
-    haveI := (Nat.card_eq_one_iff_unique.mp hcard).1
+    have := (Nat.card_eq_one_iff_unique.mp hcard).1
     have h1 : σ' = 1 := congrArg Subtype.val (Subsingleton.elim (⟨σ', hmem⟩ : P.inertia _) 1)
     apply isCMExt_conj_ne_id h
     ext z

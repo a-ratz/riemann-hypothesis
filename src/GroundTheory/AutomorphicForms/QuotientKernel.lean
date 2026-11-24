@@ -144,7 +144,7 @@ theorem tendsto_lintegral_rightMul_sub {ψ : RightCosetSpace Γ → ℂ} (hc : C
   set c : ℝ≥0∞ := ENNReal.ofReal (2 * M) ^ (2 : ℝ) with hc_def
   have hmeas : ∀ g, Measurable fun x ↦ ‖ψ (rightMul Γ g x) - ψ (rightMul Γ g₀ x)‖ₑ ^ (2 : ℝ) :=
     fun g ↦ (((hc.comp (continuous_rightMul Γ g)).sub
-      (hc.comp (continuous_rightMul Γ g₀))).measurable.enorm).pow_const _
+      (hc.comp (continuous_rightMul Γ g₀))).measurable.eNorm).pow_const _
   suffices key : Tendsto (fun g ↦ ∫⁻ x, ‖ψ (rightMul Γ g x) - ψ (rightMul Γ g₀ x)‖ₑ ^ (2 : ℝ)
       ∂quotientMeasure Γ μ) (𝓝 g₀) (𝓝 (∫⁻ _, (0 : ℝ≥0∞) ∂quotientMeasure Γ μ)) by
     rwa [lintegral_zero] at key
@@ -160,7 +160,7 @@ theorem tendsto_lintegral_rightMul_sub {ψ : RightCosetSpace Γ → ℂ} (hc : C
       calc ‖ψ (rightMul Γ g x) - ψ (rightMul Γ g₀ x)‖
           ≤ ‖ψ (rightMul Γ g x)‖ + ‖ψ (rightMul Γ g₀ x)‖ := norm_sub_le _ _
         _ ≤ 2 * M := by linarith [hM (rightMul Γ g x), hM (rightMul Γ g₀ x)]
-    · rw [hzero g hg x hx, hzero g₀ hg₀N x hx, sub_self, enorm_zero,
+    · rw [hzero g hg x hx, hzero g₀ hg₀N x hx, sub_self, eNorm_zero,
         ENNReal.zero_rpow_of_pos (by norm_num)]
       exact zero_le
   · rw [lintegral_indicator_const hK.measurableSet]
@@ -168,11 +168,11 @@ theorem tendsto_lintegral_rightMul_sub {ψ : RightCosetSpace Γ → ℂ} (hc : C
       hK.measure_lt_top.ne
   · refine Eventually.of_forall fun x ↦ ?_
     have hcont : Continuous fun g ↦ ‖ψ (rightMul Γ g x) - ψ (rightMul Γ g₀ x)‖ₑ ^ (2 : ℝ) :=
-      (ENNReal.continuous_rpow_const).comp (continuous_enorm.comp
+      (ENNReal.continuous_rpow_const).comp (continuous_eNorm.comp
         ((hc.comp ((continuous_rightMul_prod Γ).comp
           (continuous_const.prodMk continuous_id))).sub continuous_const))
     have := hcont.tendsto g₀
-    rwa [sub_self, enorm_zero, ENNReal.zero_rpow_of_pos (by norm_num)] at this
+    rwa [sub_self, eNorm_zero, ENNReal.zero_rpow_of_pos (by norm_num)] at this
 
 theorem tendsto_rightRegular_of_continuous {ψ : RightCosetSpace Γ → ℂ} (hc : Continuous ψ)
     (hs : HasCompactSupport ψ) (g₀ : G) :
@@ -188,7 +188,7 @@ theorem tendsto_rightRegular_of_continuous {ψ : RightCosetSpace Γ → ℂ} (hc
       2 (quotientMeasure Γ μ) = (∫⁻ x, ‖ψ (rightMul Γ g x) - ψ (rightMul Γ g₀ x)‖ₑ ^ (2 : ℝ)
         ∂quotientMeasure Γ μ) ^ (1 / (2 : ℝ)) := fun g ↦ by
     rw [eLpNorm_congr_ae ((hae g).sub (hae g₀))]
-    exact eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)
+    exact eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num)
       (((hc.comp (continuous_rightMul Γ g)).sub
         (hc.comp (continuous_rightMul Γ g₀))).measurable.aestronglyMeasurable)
   simp_rw [heq]

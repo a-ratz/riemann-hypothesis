@@ -213,7 +213,7 @@ private theorem discreteTopology_map_of_integral_bilinForm {V : Type} [AddCommGr
         have hsL : s ∈ L := hT ▸ Submodule.subset_span hs
         obtain ⟨k, hk⟩ := (hL x).1 hx s hsL
         have h1 := Set.mem_iInter₂.1 hl s hs
-        simp only [Set.mem_setOf_eq, ← hxl, hB, hk] at h1
+        simp only [Set.mem_ofPred_eq, ← hxl, hB, hk] at h1
         have h2 : |(k : ℝ)| < 1 := by exact_mod_cast h1
         have hk0 : k = 0 := by
           rwa [← Int.cast_abs, ← Int.cast_one, Int.cast_lt, Int.abs_lt_one_iff] at h2
@@ -230,7 +230,7 @@ private theorem discreteTopology_map_of_integral_bilinForm {V : Type} [AddCommGr
       apply Subtype.ext
       rw [← hxl, hx0, map_zero]; rfl
   rw [hset]
-  exact hU.preimage continuous_subtype_val
+  exact hU.preimage continuous_subtypeVal
 
 theorem proportional_of_selfDual {V : Type} [AddCommGroup V] [Module ℚ V] [FiniteDimensional ℚ V]
     {g : ℕ} (B : LinearMap.BilinForm ℚ V) (p : V →ₗ[ℤ] (Fin g → ℂ)) (hp : Function.Injective p)

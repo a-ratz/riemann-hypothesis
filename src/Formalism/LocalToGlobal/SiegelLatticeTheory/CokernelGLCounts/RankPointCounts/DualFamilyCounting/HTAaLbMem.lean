@@ -163,13 +163,13 @@ theorem shape_inv (X0 : Matrix (Fin D.R.rS) (Fin D.R.rS) D.host.E) (hup : ∀ b 
     (hd : ∀ a, X0 a a = 1) (hs : ∀ b a, b < a → X0 b a ∈ aaD D b * (aaD D a)⁻¹) :
     ∀ b a, b < a → X0⁻¹ b a ∈ aaD D b * (aaD D a)⁻¹ := by
   have hdet : X0.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (fun i j hij => hup i j hij)]
+    rw [det_of_isUpperTriangular (fun i j hij => hup i j hij)]
     simp [hd]
   have hU : IsUnit X0.det := by rw [hdet]; exact isUnit_one
   have hXY : X0 * X0⁻¹ = 1 := Matrix.mul_nonsing_inv _ hU
   have hYup : ∀ b a, a < b → X0⁻¹ b a = 0 := by
     have hbt : X0.BlockTriangular id := fun i j hij => hup i j hij
-    haveI : Invertible X0 := Matrix.invertibleOfIsUnitDet X0 hU
+    have : Invertible X0 := Matrix.invertibleOfIsUnitDet X0 hU
     exact fun b a h => Matrix.blockTriangular_inv_of_blockTriangular hbt h
   have hYd : ∀ a, X0⁻¹ a a = 1 := by
     intro a
@@ -198,7 +198,7 @@ theorem shape_inv (X0 : Matrix (Fin D.R.rS) (Fin D.R.rS) D.host.E) (hup : ∀ b 
       rcases lt_or_gt_of_ne heb with h1 | h1
       · rw [hup b e h1, zero_mul]; exact Submodule.zero_mem _
       · rcases lt_trichotomy e a with h2 | h2 | h2
-        · have hY := ih (a.val - e.val) (by have := Fin.lt_iff_val_lt_val.1 h1; omega) e a rfl h2
+        · have hY := ih (a.val - e.val) (by have := Fin.lt_def.1 h1; omega) e a rfl h2
           rw [← aa_cancel e b a]
           exact FractionalIdeal.mul_mem_mul (hs b e h1) hY
         · subst h2

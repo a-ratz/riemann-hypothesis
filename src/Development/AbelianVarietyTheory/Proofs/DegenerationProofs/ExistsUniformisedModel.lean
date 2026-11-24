@@ -106,9 +106,9 @@ namespace GlobalTheory
 open UniformisedModel in
 theorem exists_uniformised_model : GlobalTheory.Published.SemistableReductionSt → ThmUSt → PolBaseChangeSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (Fs : Finset (PadicAlgCl p)), ∃ u : ρ.UTest p y₀, ∀ x ∈ Fs, x ∈ Set.range (algebraMap (FractionRing u.V) (PadicAlgCl p)) := by
   intro hN hU hB o Ω _ _ _ _ S ρ p _ y₀ Fs
-  haveI := ArithBase.ft (o := o) (Ω := Ω)
-  haveI : Algebra.FiniteType o S.R := (Subalgebra.fg_iff_finiteType S.R).1 S.fg
-  haveI : Algebra.FiniteType ℤ S.R := Algebra.FiniteType.trans (S := o) inferInstance inferInstance
+  have := ArithBase.ft (o := o) (Ω := Ω)
+  have : Algebra.FiniteType o S.R := (Subalgebra.fg_iff_finiteType S.R).1 S.fg
+  have : Algebra.FiniteType ℤ S.R := Algebra.FiniteType.trans (S := o) inferInstance inferInstance
   obtain ⟨K, _, y, hy, hFs⟩ := exists_finite_factor y₀ Fs
   obtain ⟨P, φ₀, hφ₀, -⟩ := exists_polBaseChange hB (spMap y) ρ.P
   obtain ⟨K', h, _, _, G, _, hG, hE, φ, hφ⟩ := exists_semiAbelian_model_split_specialFibre hN p K P
@@ -121,8 +121,8 @@ theorem exists_uniformised_model : GlobalTheory.Published.SemistableReductionSt 
     ((hφ.comp hφ₀).congr (spMap_spMap _ _) rfl)
   obtain ⟨A, χ, hχ, hL⟩ := exists_polBaseChange hB (spMap (b.comp y')) ρ.P
   obtain ⟨gen, hgen, -⟩ := grpPullback_iso hψ hχ
-  haveI : CharZero V := charZero_integralClosure_padicInt
-  haveI := hG.comm
+  have : CharZero V := charZero_integralClosure_padicInt
+  have := hG.comm
   have hc : IsAdicComplete (IsLocalRing.maximalIdeal V) V :=
     CompleteFiniteExtension.isAdicComplete_of_finite_local ℤ_[p] V
   obtain ⟨D, U, -⟩ := hU V hc A G hG hE

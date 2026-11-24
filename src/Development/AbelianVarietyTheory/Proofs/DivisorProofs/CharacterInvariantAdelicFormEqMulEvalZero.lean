@@ -73,7 +73,7 @@ theorem arch (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimens
   obtain ⟨n, L, h, g, hg, hsum⟩ := GlobalTheory.SchwartzDiv.hadamard V _ h0
   have e : f - f 0 • f₀ = ∑ i, g i := by
     ext x
-    rw [hsum x, SchwartzMap.sum_apply]
+    rw [hsum x, sum_apply]
   have : T (f - f 0 • f₀) = 0 := by
 
     rw [e, map_sum]

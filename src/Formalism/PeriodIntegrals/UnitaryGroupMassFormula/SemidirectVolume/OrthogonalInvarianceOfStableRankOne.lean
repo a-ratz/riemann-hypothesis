@@ -93,7 +93,7 @@ theorem pt_ne {K : Type} [Field K] (B : ValuationSubring K) {a b x y : K} (h : a
   split_ifs with hv
   · rw [zero_mul, add_zero]
     rintro rfl
-    have hb0 : B.valuation b = 0 := le_antisymm (by simpa using hv) zero_le'
+    have hb0 : B.valuation b = 0 := le_antisymm (by simpa using hv) zero_le
     rw [Valuation.zero_iff] at hb0
     subst hb0
     simp at h

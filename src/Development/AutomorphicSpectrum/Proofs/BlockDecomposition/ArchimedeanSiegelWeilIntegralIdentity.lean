@@ -149,7 +149,7 @@ theorem continuous_phaseM_b {W : Type} [Fintype W] {n M : ℕ}
   refine continuous_finsetSum _ fun a _ => continuous_finsetSum _ fun c _ => ?_
   refine Continuous.mul ?_ continuous_const
   have h0 : Continuous fun b : W → hermC n => (b w : Matrix (Fin n) (Fin n) ℂ) :=
-    continuous_subtype_val.comp (continuous_apply w)
+    continuous_subtypeVal.comp (continuous_apply w)
   have h1 : Continuous fun m : Matrix (Fin n) (Fin n) ℂ => m a c :=
     (continuous_apply c).comp (continuous_apply a)
   exact h1.comp h0
@@ -159,7 +159,7 @@ theorem integrable_comp {E : Type} [AddCommGroup E] [TopologicalSpace E]
     (N : ℕ) (e : E ≃+ (Fin N → ℝ)) (he : Continuous e) (hes : Continuous e.symm)
     (f : SchwartzMap (Fin N → ℝ) ℂ) (μ : Measure E) [μ.IsAddHaarMeasure] :
     Integrable (fun X => f (e X)) μ := by
-  haveI : (Measure.map e μ).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
+  have : (Measure.map e μ).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
   have hs := Measure.isAddLeftInvariant_eq_smul (Measure.map e μ)
     (volume : Measure (Fin N → ℝ))
   have hi : Integrable f (Measure.map e μ) := by
@@ -502,9 +502,9 @@ theorem enorm_sq_le (f : SchwartzMap V ℂ) (q : V → ℝ) (T : V →ₗ[ℝ] V
   have e4 : ENNReal.ofReal (‖∫ x, v x‖ ^ 2) = ‖conj (∫ x, v x) * ∫ x, v x‖ₑ := by
     rw [← ofReal_norm, norm_mul, Complex.norm_conj, sq]
   rw [e4, e3]
-  refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
   refine lintegral_congr fun y => ?_
-  rw [enorm_mul, ← ofReal_norm (ee _), norm_ee]
+  rw [eNorm_mul, ← ofReal_norm (ee _), norm_ee]
   simp
 
 theorem weyl_differencing (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℝ V]
@@ -624,7 +624,7 @@ theorem pi_bound {n : ℕ} (l : Fin n → ℝ) :
   have hI0 : 0 ≤ I0.toReal := ENNReal.toReal_nonneg
   rw [volume_pi, GlobalTheory.RestrMeas.lintegral_fintype_prod_eq_prod
     (f := fun i => wt (l i)) fun i => (measurable_wt (l i)).aemeasurable]
-  refine (Finset.prod_le_prod' fun i _ => one_var (l i)).trans (le_of_eq ?_)
+  refine (Finset.prod_le_prod fun i _ => one_var (l i)).trans (le_of_eq ?_)
   rw [← ENNReal.ofReal_prod_of_nonneg fun i _ => by positivity, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ, Fintype.card_fin, Finset.prod_inv_distrib]
 
@@ -701,7 +701,7 @@ theorem exists_scale (n : ℕ) (m : Measure (EuclideanSpace ℂ (Fin n))) [m.IsA
     ∃ c : NNReal, ∀ P : (Fin n → ℂ) → ℝ≥0∞, Measurable P →
       ∫⁻ y, P (WithLp.ofLp y) ∂m = c * ∫⁻ x, P x := by
   let e := EuclideanSpace.equiv (Fin n) ℂ
-  haveI : (Measure.map e m).IsAddHaarMeasure := e.isAddHaarMeasure_map m
+  have : (Measure.map e m).IsAddHaarMeasure := e.isAddHaarMeasure_map m
   obtain ⟨c, hc⟩ : ∃ c : NNReal, Measure.map e m = c • (volume : Measure (Fin n → ℂ)) :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
   refine ⟨c, fun P hP => ?_⟩
@@ -832,7 +832,7 @@ theorem lintegral_prod_le : ∀ (W : Type) [Fintype W] (n M : ℕ), ∃ C : ℝ,
   have hπ : (Measure.pi fun _ : W × Fin M => (volume : Measure (EuclideanSpace ℂ (Fin n)))).IsAddHaarMeasure := by
     haveI : ∀ _ : W × Fin M, (volume : Measure (EuclideanSpace ℂ (Fin n))).IsAddHaarMeasure :=
       fun _ => inferInstance
-    haveI : MeasurableAdd (EuclideanSpace ℂ (Fin n)) := inferInstance
+    have : MeasurableAdd (EuclideanSpace ℂ (Fin n)) := inferInstance
     first
       | exact Measure.pi.isAddHaarMeasure _
       | exact Measure.pi.isAddHaarMeasure
@@ -1390,12 +1390,12 @@ def blkEquiv (n : ℕ) : (hermC n × (Fin n → ℂ) × ℝ) ≃+ hermC (n + 1) 
 theorem continuous_blkEquiv (n : ℕ) : Continuous (blkEquiv n) := by
   refine Continuous.subtype_mk (f := fun x : hermC n × (Fin n → ℂ) × ℝ =>
     blkM (x.1 : Matrix (Fin n) (Fin n) ℂ) x.2.1 x.2.2) ?_ _
-  exact continuous_blkM.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+  exact continuous_blkM.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
 
 theorem continuous_blkEquiv_symm (n : ℕ) : Continuous (blkEquiv n).symm := by
   have h : ∀ i j : Fin (n + 1), Continuous fun b : hermC (n + 1) =>
       (b : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) i j := fun i j =>
-    (continuous_apply_apply i j).comp continuous_subtype_val
+    (continuous_apply_apply i j).comp continuous_subtypeVal
   refine Continuous.prodMk ?_ (Continuous.prodMk ?_ ?_)
   · refine Continuous.subtype_mk (continuous_matrix fun i j => ?_) _
     exact h _ _
@@ -1406,9 +1406,9 @@ theorem haar_blocks (n : ℕ) (ν : Measure (hermC (n + 1))) (ν' : Measure (her
     (hν : ν.IsAddHaarMeasure) (hν' : ν'.IsAddHaarMeasure) :
     ∃ c : ENNReal, c ≠ ⊤ ∧ ∀ F : hermC (n + 1) → ENNReal, Measurable F →
       ∫⁻ b, F b ∂ν = c * ∫⁻ b', ∫⁻ u : Fin n → ℂ, ∫⁻ d : ℝ, F (blk b' u d) ∂volume ∂volume ∂ν' := by
-  haveI := hν
-  haveI := hν'
-  haveI : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have := hν
+  have := hν'
+  have : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hp : (ν'.prod ((volume : Measure (Fin n → ℂ)).prod (volume : Measure ℝ))).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure _ _
   have hm : (Measure.map (blkEquiv n)
@@ -1637,7 +1637,7 @@ theorem continuous_detW (n : ℕ) : Continuous (fun b : Matrix (Fin n) (Fin n) �
 theorem measurable_term (n : ℕ) (s : ℝ) :
     Measurable (fun b : hermC n => ENNReal.ofReal (detW (b : Matrix (Fin n) (Fin n) ℂ) ^ (-s))) := by
   have h : Continuous (fun b : hermC n => detW (b : Matrix (Fin n) (Fin n) ℂ)) :=
-    (continuous_detW n).comp continuous_subtype_val
+    (continuous_detW n).comp continuous_subtypeVal
   exact (h.measurable.pow_const _).ennreal_ofReal
 
 theorem inner_eq (n : ℕ) (s : ℝ) (hs : (n : ℝ) + 1 / 2 < s) : ∃ K : ENNReal, K ≠ ⊤ ∧
@@ -1704,10 +1704,10 @@ theorem hua_integrable : ∀ (n : ℕ) (s : ℝ), (n : ℝ) - 1 / 2 < s → ∀ 
   | zero =>
     intro s _ ν hν
     have : IsFiniteMeasure ν := by
-      haveI : Finite (hermC 0) := by
-        haveI : Subsingleton (Matrix (Fin 0) (Fin 0) ℂ) := inferInstance
+      have : Finite (hermC 0) := by
+        have : Subsingleton (Matrix (Fin 0) (Fin 0) ℂ) := inferInstance
         exact Finite.of_subsingleton
-      haveI : CompactSpace (hermC 0) := Finite.compactSpace
+      have : CompactSpace (hermC 0) := Finite.compactSpace
       exact ⟨isCompact_univ.measure_lt_top⟩
     have h1 : ∀ b : hermC 0, detW (b : Matrix (Fin 0) (Fin 0) ℂ) ^ (-s) = 1 := by
       intro b
@@ -1721,7 +1721,7 @@ theorem hua_integrable : ∀ (n : ℕ) (s : ℝ), (n : ℝ) - 1 / 2 < s → ∀ 
       Real.rpow_nonneg (by linarith [_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.one_le_detW _ _ (mem_hermC.1 b.2)]) _
     have hmeas := measurable_term (n + 1) s
     have hm2 : Measurable (fun b : hermC (n + 1) => detW (b : Matrix (Fin (n+1)) (Fin (n+1)) ℂ) ^ (-s)) :=
-      (((continuous_detW (n + 1)).comp continuous_subtype_val).measurable.pow_const _)
+      (((continuous_detW (n + 1)).comp continuous_subtypeVal).measurable.pow_const _)
     refine ⟨hm2.aestronglyMeasurable, ?_⟩
     rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall hpos)]
     obtain ⟨c, hc, hF⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.haar_blocks n ν (Measure.addHaar) hν inferInstance
@@ -1816,7 +1816,7 @@ theorem tup_coord_haar : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hc : Continuous Φ := hc'
   have hcs : Continuous Φ.symm := hcs'
   refine ⟨Φ, fun X => rfl, hc, hcs, fun μ hμ => ?_⟩
-  haveI := hμ
+  have := hμ
   refine ⟨AddEquiv.isAddHaarMeasure_map μ Φ hc hcs, fun g => ?_⟩
   let h : (Fin n → Fin M → Ainf F ⊗[F] E) ≃ₜ (InfinitePlace F → Fin n → Fin M → ℂ) :=
     ⟨Φ.toEquiv, hc, hcs⟩

@@ -182,7 +182,7 @@ theorem deg_of_local_formulas : ∀ (k E : Type) [Field k] [NumberField k] [Fiel
     refine (((S1.union S4).union S3).union hfin).subset ?_
     rintro ℓ ⟨j, hj⟩
     by_contra h
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_exists, not_not] at h
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_exists, not_not] at h
     obtain ⟨⟨⟨h1, h4⟩, h3⟩, h2⟩ := h
     apply hj
     have e1 : Real.log ‖j ρ‖ = 0 := h1 j
@@ -302,7 +302,7 @@ theorem deg_eq_of_local_two_curves : ∀ (k E : Type) [Field k] [NumberField k] 
   have hf : (Module.finrank ℚ k : ℝ) ≠ 0 := by exact_mod_cast Module.finrank_pos.ne'
   have hs : ∑ s, Real.log (n' s) = ∑ s, Real.log (n s) := by
     have e := hn'.trans hn.symm
-    rw [div_left_inj' hf] at e
+    rw [div_left_inj₀ hf] at e
     linarith
   have hsum : ∑ s, N'.inf s = ∑ s, N.inf s := by
     change ∑ s, (N.inf s + (q : ℝ) / 2 * (Real.log (n' s) - Real.log (n s))) = _
@@ -601,8 +601,8 @@ theorem flatGen_finNorm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have hF' : IsFramed U τ X.β X.y v' w' := ⟨hfr'.1, hF.2.1, hfr'.2.2⟩
     have hβ : j'.comp X.β = j.comp (IntermediateField.inclusion hc).toRingHom := by
       rw [← hj']; ext a; rfl
-    haveI := hV
-    haveI := hVf
+    have := hV
+    have := hVf
     have hfin := hN V X.K j' X.β X.y v' w' Tm X.t X.m m'' hval hβ hF' hiv hiw
     have hchg := hline.chg X.K X.β X.y v w v' w' (δ • (1 : Matrix (Fin D.p) (Fin D.p) X.K))
       (δ' • (1 : Matrix (Fin D.q) (Fin D.q) X.K)) hF hF' hA hB
@@ -807,7 +807,7 @@ theorem sigma_component : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   rw [hexp, Finset.sum_eq_single σ.toRatAlgHom]
   · have h1 : S σ.toRatAlgHom = 1 := by
       rw [hS]
-      exact if_pos (RingHom.ext fun _ => rfl)
+      exact ite_eq_left (RingHom.ext fun _ => rfl)
     have h2 : σ (H.rt : E) = 2 * σ (H.w0 : E) - 1 := by
       have h3 := congrArg (fun a : 𝓞 E => σ (algebraMap (𝓞 E) E a)) H.two_weight_eq_one_add_root
       simp only [map_mul, map_add (f := _), map_one, map_ofNat] at h3
@@ -820,7 +820,7 @@ theorem sigma_component : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   · intro τ _ hτ
     have h0 : S τ = 0 := by
       rw [hS]
-      refine if_neg fun hc => hτ (AlgHom.ext fun z => ?_)
+      refine ite_eq_right fun hc => hτ (AlgHom.ext fun z => ?_)
       exact congrArg (fun f : E →+* ℂ => f z) hc
     rw [h0]
     simp
@@ -1011,11 +1011,11 @@ theorem isComb_pad {G : Over S} [GrpObj G] [IsCommMonObj G] {x : Sp R ⟶ S} {m 
   let U : Fin M → (epsAt x ⟶ G) := fun q => if hq : ∃ j, jj j = q then u hq.choose else 1
   have hU : ∀ j, U (jj j) = u j := fun j => by
     have hq : ∃ j', jj j' = jj j := ⟨j, rfl⟩
-    simp only [U, dif_pos hq]
+    simp only [U, dite_eq_left hq]
     rw [hj hq.choose_spec]
   have hU1 : ∀ q, q ∉ Set.range jj → U q = 1 := fun q hq => by
     simp only [U]
-    exact dif_neg hq
+    exact dite_eq_right hq
   refine ⟨U, fun q => ?_, ?_⟩
   · by_cases hq : q ∈ Set.range jj
     · obtain ⟨j, rfl⟩ := hq
@@ -1711,14 +1711,14 @@ theorem flatDegree : FlatDegree := by
     cases b <;> simp [sgnRt, neg_sq, H.sqrt_neg_disc_sq]
   choose Z x hz hper hxv using fun b => _root_.GlobalTheory.CompanionTheory.Ar.Fl.exists_curve0_hasPeriod E H χ hχ (sgnRt H b) (hsq b)
   have hx : x false = x true := Complex.ofReal_injective ((hxv false).trans (hxv true).symm)
-  haveI := (Z true).nf
-  haveI := (Z false).nf
+  have := (Z true).nf
+  have := (Z false).nf
   obtain ⟨n₁, hn₁, hm₁⟩ := hper true
   obtain ⟨n₀, hn₀, hm₀⟩ := hper false
   obtain ⟨k, hkfd, r, hc, hM, hr0, hrz⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.Fl.ConstAlg.const_algebraic E H D l Xo c g ty FU i Z U τ φ e ρ hty hrt mem line hli hcm
-  haveI := hkfd
-  haveI : NumberField k := ⟨⟩
+  have := hkfd
+  have : NumberField k := ⟨⟩
   choose t ht1 ht2 ht3 using fun ℓ : Nat.Primes =>
     _root_.GlobalTheory.CompanionTheory.Ar.Fl.flatGen_finNorm E H D l Xo c g ty FU i Z U τ φ e ρ k hc hM r ℓ hty hrt mem line hli hcm hr0 hrz
   have hgram := _root_.GlobalTheory.CompanionTheory.Relay.gram_det_ne_zero_local_basis_cofinite E H (FU.Di i) (Fin D.p ⊕ Fin D.q) e

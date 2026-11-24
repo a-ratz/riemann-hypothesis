@@ -269,18 +269,18 @@ theorem exists_grpObj_isAbelianScheme : ∀ (R R₀ : Type) [CommRing R] [CommRi
     ∀ (m : X ⊗ X ⟶ X), l ≫ m.left = (μ[A₀]).left ≫ i →
     ∃ _ : GrpObj X, IsGrpPullback A₀ X (spMap π) i ∧ IsAbelianScheme X := by
   intro R R₀ _ _ π hπ hN A₀ _ hA X i hi hsm e he he1 l hl1 hl2 m hm
-  haveI : Smooth X.hom := hsm
-  haveI : IsCommMonObj A₀ := hA.comm
+  have : Smooth X.hom := hsm
+  have : IsCommMonObj A₀ := hA.comm
   obtain ⟨hpX, hgX⟩ := GlobalTheory.T.isProper_geometricallyConnected_smooth_nilpotent_lift R R₀ π hπ hN X A₀ i hi hsm hA.proper hA.geomConnected
-  haveI := hpX
-  haveI := hgX
+  have := hpX
+  have := hgX
   have s2 : Smooth (X ⊗ X).hom := by rw [Over.tensorObj_hom]; infer_instance
   have p2 : IsProper (X ⊗ X).hom := by rw [Over.tensorObj_hom]; infer_instance
   have g2 : GeometricallyConnected (X ⊗ X).hom := by
     rw [Over.tensorObj_hom]; exact GeometricallyConnected.comp _ _
-  haveI := s2
-  haveI := p2
-  haveI := g2
+  have := s2
+  have := p2
+  have := g2
   have s3 : Smooth ((X ⊗ X) ⊗ X).hom := by rw [Over.tensorObj_hom]; infer_instance
   have p3 : IsProper ((X ⊗ X) ⊗ X).hom := by rw [Over.tensorObj_hom]; infer_instance
   have g3 : GeometricallyConnected ((X ⊗ X) ⊗ X).hom := by
@@ -433,7 +433,7 @@ theorem exists_grpObj_isAbelianScheme : ∀ (R R₀ : Type) [CommRing R] [CommRi
     rw [h3, h2]
   have left_inv₁ : lift iX (𝟙 X) ≫ m₁ = toUnit X ≫ E := by
     rw [← comm₁, lift_braiding_hom_assoc, right_inv₁]
-  letI G : GrpObj X :=
+  let G : GrpObj X :=
     { one := E
       mul := m₁
       inv := iX

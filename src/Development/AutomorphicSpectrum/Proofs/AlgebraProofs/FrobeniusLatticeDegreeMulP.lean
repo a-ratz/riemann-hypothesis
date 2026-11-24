@@ -58,7 +58,7 @@ variable {K : Type} [Field K] (C : ACurve K) (p : ℕ) [Fact p.Prime] [CharP K p
 theorem det_frobVec {d : ℕ} (b : Fin d → Fin d → K) :
     (Pi.basisFun K (Fin d)).det (fun q => frobVec p (b q)) =
       ((Pi.basisFun K (Fin d)).det b) ^ p := by
-  haveI : ExpChar K p := ExpChar.prime Fact.out
+  have : ExpChar K p := ExpChar.prime Fact.out
   rw [Module.Basis.det_apply, Module.Basis.det_apply, ← frobenius_def, RingHom.map_det]
   congr 1
 
@@ -79,7 +79,7 @@ theorem exists_frob_basis {n d : ℕ} (b : Module.Basis (Fin n) K (Fin d → K))
 theorem repr_frobVec {n d : ℕ} (b b' : Module.Basis (Fin n) K (Fin d → K))
     (h : ∀ q, b' q = frobVec p (b q)) (y : Fin d → K) (q : Fin n) :
     b'.repr (frobVec p y) q = (b.repr y q) ^ p := by
-  haveI : ExpChar K p := ExpChar.prime Fact.out
+  have : ExpChar K p := ExpChar.prime Fact.out
   have key : frobVec p y = ∑ i, (b.repr y i) ^ p • b' i := by
     conv_lhs => rw [← b.sum_repr y]
     funext j

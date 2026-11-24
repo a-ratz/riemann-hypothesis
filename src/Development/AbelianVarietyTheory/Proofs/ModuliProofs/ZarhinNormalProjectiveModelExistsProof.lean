@@ -83,8 +83,8 @@ theorem exists_model_semiAbelian_of_geo :
   obtain ⟨M, U₀, hA, -, hD⟩ := @GlobalTheory.ZH.exists_admissible_affine_model_dividing_tuple o Ω _ _ _ _ S J₀ _ t₀ ht hfin
   obtain ⟨EE, hEE, hE⟩ := @GlobalTheory.ZH.exists_isEE_of_adm o Ω _ _ _ _ S M U₀ hT hA
   have hO : S.Over₀ M U₀ := hA.1
-  haveI := hb.ft
-  haveI := hb.char
+  have := hb.ft
+  have := hb.char
   have hll := @GlobalTheory.ZH.classical_points_and_local_regularity o Ω _ _ _ _ _ M U₀ hO.normal
   have hte := @GlobalTheory.ZH.exists_at_test_of_cen o Ω _ _ _ _ S M U₀ hT hO
   have hwt := @GlobalTheory.ZH.test_weights o Ω _ _ _ _ S

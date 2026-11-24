@@ -173,7 +173,7 @@ theorem chi_eq_sign : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have hχ := (mul_inv_eq_one₀ hX).1 key
   obtain ⟨k, hk⟩ := Φ.toAnFr.herm_im_int ha hw
   refine ⟨?_, hχ⟩
-  rw [hχ, hk, ← Complex.exp_nat_mul]
+  rw [hχ, hk, ← Complex.exp_natCast_mul]
   convert Complex.exp_int_mul_two_pi_mul_I k using 2
   push_cast
   ring

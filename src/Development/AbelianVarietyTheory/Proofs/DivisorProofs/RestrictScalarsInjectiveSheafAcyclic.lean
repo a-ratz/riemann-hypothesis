@@ -329,7 +329,7 @@ namespace GlobalTheory.EtC
 theorem homSh_injective (R : Type) [CommRing R] (J : Shv R) [Injective J] (M : ModuleCat.{1} (ULift.{1} R)) [Projective M] :
     Injective ((homSh J).obj (op M)) := by
   obtain ⟨e, -, hX⟩ := GlobalTheory.T.exists_sheafHom_linearMapsSheaf_curry_equiv R J
-  haveI : Module.Projective (ULift.{1} R) M := (IsProjective.iff_projective (P := M)).2 ‹_›
+  have : Module.Projective (ULift.{1} R) M := (IsProjective.iff_projective (P := M)).2 ‹_›
   constructor
   intro X Y g i _
   have surj : Function.Surjective (Linear.leftComp (ULift.{1} R) J i) :=
@@ -366,7 +366,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 
 theorem GlobalTheory.EtC.coindRes_exists : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R →+* S) (J : Shv R) [Injective J], (∀ P : PSh, Module.Injective (ULift.{1} R) ((free R).obj P ⟶ J)) → ∃ (C : Cx R) (ε : sgl ((restr φ).obj ((coind φ).obj J)) ⟶ C), C.IsStrictlyGE 0 ∧ (∀ t, Injective (C.X t)) ∧ QuasiIso ε ∧ ∀ (P : PSh) (n : ℤ), 0 < n → Subsingleton (CohomologyClass (sgl ((free R).obj P)) C n) := by
   intro R S _ _ φ J _ hJ
-  haveI := GlobalTheory.T.etaleCoinductionComplexAugmentation_quasiIso R S φ J hJ
+  have := GlobalTheory.T.etaleCoinductionComplexAugmentation_quasiIso R S φ J hJ
   let I : InjectiveResolution ((restr φ).obj ((coind φ).obj J)) :=
     { cocomplex := coindCx φ J
       injective := fun n => GlobalTheory.T.injective_etaleSheafOfLinearMapsFromModule R J ((scalarsRes φ).complex.X n)
@@ -446,7 +446,7 @@ theorem coind_retract (R S : Type) [CommRing R] [CommRing S] (φ : R →+* S) (I
     ∃ (J : Shv R) (_ : Injective J) (i : I ⟶ (coind φ).obj J) (r : (coind φ).obj J ⟶ I), i ≫ r = 𝟙 I := by
   let J := Injective.under ((restr φ).obj I)
   let i : I ⟶ (coind φ).obj J := (adj φ).unit.app I ≫ (coind φ).map (Injective.ι ((restr φ).obj I))
-  haveI : Mono i := mono_comp _ _
+  have : Mono i := mono_comp _ _
   exact ⟨J, inferInstance, i, Injective.factorThru (𝟙 I) i, Injective.comp_factorThru _ _⟩
 
 end GlobalTheory.EtC.CoindRetract

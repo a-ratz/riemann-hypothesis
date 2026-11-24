@@ -75,10 +75,10 @@ theorem submatrix_loUni_mul {N l : ℕ} (h : l ≤ N) (L A U : Matrix (Fin N) (F
   have hin : ∀ m : Fin N, ∑ k, L (Fin.castLE h i) k * A k m =
       ∑ k' : Fin l, L (Fin.castLE h i) (Fin.castLE h k') * A (Fin.castLE h k') m := fun m =>
     sum_castLE h _ fun k hk => by
-      rw [(hL _ _).1 (Fin.lt_iff_val_lt_val.2 (lt_of_lt_of_le (by simpa using i.isLt) hk)), zero_mul]
+      rw [(hL _ _).1 (Fin.lt_def.2 (lt_of_lt_of_le (by simpa using i.isLt) hk)), zero_mul]
   simp only [hin]
   exact sum_castLE h _ fun m hm => by
-    rw [(hU _ _).1 (Fin.lt_iff_val_lt_val.2 (lt_of_lt_of_le (by simpa using j.isLt) hm)), mul_zero]
+    rw [(hU _ _).1 (Fin.lt_def.2 (lt_of_lt_of_le (by simpa using j.isLt) hm)), mul_zero]
 
 theorem det_sub_loUni {N l : ℕ} (h : l ≤ N) (L A U : Matrix (Fin N) (Fin N) K) (hL : IsLoUni L) (hU : IsUpUni U) :
     ((L * A * U).submatrix (Fin.castLE h) (Fin.castLE h)).det = (A.submatrix (Fin.castLE h) (Fin.castLE h)).det := by
@@ -86,15 +86,15 @@ theorem det_sub_loUni {N l : ℕ} (h : l ≤ N) (L A U : Matrix (Fin N) (Fin N) 
   have h1 : (L.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
     have hb : (L.submatrix (Fin.castLE h) (Fin.castLE h)).BlockTriangular OrderDual.toDual := by
       intro i j hij
-      exact (hL _ _).1 (Fin.lt_iff_val_lt_val.2 (by
-        simpa using Fin.lt_iff_val_lt_val.1 (OrderDual.toDual_lt_toDual.1 hij)))
-    rw [Matrix.det_of_lowerTriangular _ hb]
+      exact (hL _ _).1 (Fin.lt_def.2 (by
+        simpa using Fin.lt_def.1 (OrderDual.toDual_lt_toDual.1 hij)))
+    rw [Matrix.det_of_isLowerTriangular _ hb]
     exact Finset.prod_eq_one fun i _ => (hL _ _).2 rfl
   have h2 : (U.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
     have hb : (U.submatrix (Fin.castLE h) (Fin.castLE h)).BlockTriangular id := by
       intro i j hij
-      exact (hU _ _).1 (Fin.lt_iff_val_lt_val.2 (by simpa using Fin.lt_iff_val_lt_val.1 hij))
-    rw [Matrix.det_of_upperTriangular hb]
+      exact (hU _ _).1 (Fin.lt_def.2 (by simpa using Fin.lt_def.1 hij))
+    rw [Matrix.det_of_isUpperTriangular hb]
     exact Finset.prod_eq_one fun i _ => (hU _ _).2 rfl
   rw [h1, h2, one_mul, mul_one]
 

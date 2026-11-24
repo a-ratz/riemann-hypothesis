@@ -62,7 +62,7 @@ def NormInvP : Prop :=
 
 theorem normInvP : NormInvP := fun k r => by
   refine ⟨fun x hx => Formalism.FourierDecayAlt.P.norm_of_inverse k r x hx, fun x y => ?_⟩
-  letI : SeminormedAddCommGroup (Formalism.FourierDecayAlt.B.Mat k r) := Matrix.frobeniusSeminormedAddCommGroup
+  let : SeminormedAddCommGroup (Formalism.FourierDecayAlt.B.Mat k r) := Matrix.frobeniusSeminormedAddCommGroup
   have h : ∀ z : Formalism.FourierDecayAlt.B.Mat k r, Formalism.FourierDecayAlt.B.gN z = ‖z‖ := by
     intro z
     rw [Formalism.FourierDecayAlt.B.gN, Matrix.frobenius_norm_def, Real.sqrt_eq_rpow]

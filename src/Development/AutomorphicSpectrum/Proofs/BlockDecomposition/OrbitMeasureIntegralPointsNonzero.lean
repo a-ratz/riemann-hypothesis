@@ -77,10 +77,10 @@ theorem isOpen_nearInt {D : D7} {a b : ℕ} (x : Mx D a b) :
   have h : {y : Mx D a b | ∀ i j, ∀ v : Pl D, cv D v (y i j - x i j) ∈ intLoc D.host.F D.host.E v} =
       ⋂ i, ⋂ j, (fun y : Mx D a b => y i j - x i j) ⁻¹' {z : AE D | ∀ v : Pl D, cv D v z ∈ intLoc D.host.F D.host.E v} := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
   rw [h]
   have hT := (top_mx (D := D) a b).1
-  haveI hS : ContinuousSub (Mx D a b) := @IsTopologicalAddGroup.to_continuousSub _ _ _ hT
+  have hS : ContinuousSub (Mx D a b) := @IsTopologicalAddGroup.to_continuousSub _ _ _ hT
   have hc : Continuous fun y : Mx D a b => y - x := continuous_id.sub continuous_const
   exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
     (isOpen_intAll D).preimage (hc.matrix_elem i j)
@@ -99,7 +99,7 @@ theorem nuT_intOff_ne_zero : ∀ (D : D7) (n t : ℕ) (B W : HSp D) (d : HypDec 
   refine ⟨hbad.toFinset, fun S hS => ?_⟩
   have hπ : Continuous π := by
     obtain ⟨-, k2, -, -, k5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B
-    exact (continuous_ac B).comp (((continuous_subtype_val.comp continuous_fst).inv).prodMk
+    exact (continuous_ac B).comp (((continuous_subtypeVal.comp continuous_fst).inv).prodMk
       ((continuous_zp d hn x₀).comp continuous_snd))
   let N : Set (Mx D B.rank W.rank × Mx D B.rank t) :=
     {z | (∀ i j, ∀ v : Pl D, cv D v (z.1 i j - (π p₀).1 i j) ∈ intLoc D.host.F D.host.E v) ∧

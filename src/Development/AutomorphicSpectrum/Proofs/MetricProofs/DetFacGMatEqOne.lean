@@ -53,7 +53,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.PB GlobalTheory.CompanionTheory.Ar.PB.FMX GlobalTheory.CompanionTheory.Ar.FlagBun
 
 theorem det_genU (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) (s : S) : (genU Ω r s).det = 1 := by
-  rw [det_of_lowerTriangular (genU Ω r s) fun a b h => ?_]
+  rw [det_of_isLowerTriangular (genU Ω r s) fun a b h => ?_]
   · refine Finset.prod_eq_one fun a _ => ?_
     simp [genU]
   · have h' : a < b := h

@@ -371,7 +371,7 @@ private theorem common_eigenvector_commuting_family {T D : Type}
       exact ⟨l, a, hl, fun t => ha t l hlW⟩
     · push Not at hs
       obtain ⟨t, ht⟩ := hs
-      haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW
+      have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hW
       obtain ⟨c, hcv⟩ := _root_.Module.End.exists_eigenvalue ((φ t).restrict (hinv t))
       obtain ⟨v, hv⟩ := hcv.exists_hasEigenvector
       have hv0 : (v : D) ≠ 0 := fun h => hv.2 (Subtype.ext h)
@@ -431,7 +431,7 @@ theorem eigZero : EigZero := by
   have hcomm : ∀ s t, Commute (ρ s) (ρ t) := fun s t => by
     change ρ s * ρ t = ρ t * ρ s
     rw [← map_mul, ← map_mul, mul_comm]
-  haveI : Nontrivial (Module.Dual ℂ J) := by
+  have : Nontrivial (Module.Dual ℂ J) := by
     obtain ⟨y, hy⟩ := exists_ne (0 : J)
     have hex : ∃ g : Module.Dual ℂ J, g y ≠ 0 := by
       by_contra h
@@ -627,7 +627,7 @@ private theorem ker_isOpen {B : Subgroup G} {χ : B →* ℂˣ} {π : Representa
     push_neg at h
     exact hl (LinearMap.ext h)
   refine Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_
-  have h1 : IsOpen ((↑) ⁻¹' {g : G | π g v₀ = v₀} : Set B) := (hπ v₀).preimage continuous_subtype_val
+  have h1 : IsOpen ((↑) ⁻¹' {g : G | π g v₀ = v₀} : Set B) := (hπ v₀).preimage continuous_subtypeVal
   refine Filter.mem_of_superset (h1.mem_nhds (by simp)) fun b hb' => ?_
   have h2 : π (b : G) v₀ = v₀ := hb'
   have h3 := hb b v₀
@@ -728,7 +728,7 @@ theorem core : FunInv → GLCells → GLFacts → Core := by
   obtain ⟨hBc, hNc, ⟨K, hKo, hKc, hKBK⟩, hθ, hs⟩ := hG E n
   obtain ⟨hsc, hsq, hsB, hsN⟩ := hs σ q hq
   obtain ⟨hlc, hsc2, ht2, -, -⟩ := UpperTheory.V.Z.Tf.Orb.gLTop E n
-  haveI : TotallyDisconnectedSpace (GL (Fin n) E) := inferInstance
+  have : TotallyDisconnectedSpace (GL (Fin n) E) := inferInstance
   have hχo : IsOpen (χ.ker : Set (borel E (Fin n))) := ker_isOpen hπ hl hlb
   set ι := iota hπ l hlb with hι
   have hinj : Function.Injective ι := iota_inj hπ hirr hl hlb
@@ -821,9 +821,9 @@ end Stable
 theorem funInv (hBi : BiInv) (hMem : PrMem) (hLeft : PrLeft) (hAuto : PrAuto) (hSurj : PrSurj) (hEta : EtaEx) :
     FunInv := by
   intro G _ _ _ _ _ _ _ B N hB hN K hKo hKc hBK s p hp hs hsp hsB hsN hC χ θ hχ hθ hχs hθs l hl φ hφ
-  letI : MeasurableSpace B := borel B
-  haveI : BorelSpace B := ⟨rfl⟩
-  haveI : LocallyCompactSpace B := hB.locallyCompactSpace
+  let : MeasurableSpace B := borel B
+  have : BorelSpace B := ⟨rfl⟩
+  have : LocallyCompactSpace B := hB.locallyCompactSpace
   set μ : Measure B := Measure.haar with hμ
   obtain ⟨hmem, hadd⟩ := hMem G B hB μ χ hχ
   obtain ⟨f, hf, rfl⟩ := hSurj G B hB μ χ K hKo hKc hBK φ hφ
@@ -852,7 +852,7 @@ theorem funInv (hBi : BiInv) (hMem : PrMem) (hLeft : PrLeft) (hAuto : PrAuto) (h
     intro f' hf'
     show l (prL ((Cc G).projectionOnto q hq f')) = _
     rw [show (Cc G).projectionOnto q hq f' = ⟨f', hf'⟩ from
-      Submodule.linearProjOfIsCompl_apply_left hq ⟨f', hf'⟩]
+      Submodule.projectionOnto_apply_left hq ⟨f', hf'⟩]
     rfl
   have hCs : f ∘ s ∈ Cc G := Cc_comp_homeo hf (homeoOf s p hp hs hsp)
   have hDleft : ∀ (b : B), ∀ f' ∈ Cc G, (D fun x => f' ((b : G)⁻¹ * x)) = η b * D f' := by
@@ -955,7 +955,7 @@ end SlopeTestRemainingChoices
 
 theorem gLCells : GLCells := by
   intro E _ _ _ _ n σ
-  haveI : T2Space E := GroundTheory.Automorphic.GLnLocal.t2Space E
+  have : T2Space E := GroundTheory.Automorphic.GLnLocal.t2Space E
   obtain ⟨k, w, hcov, hanti⟩ :=
     GroundTheory.Automorphic.Parabolic.exists_cellEnumeration (F := E) (Fin.val : Fin n → ℕ) Fin.val
   have hcl := GroundTheory.Automorphic.Parabolic.closure_doubleCoset_subset_of_antitone hcov hanti
@@ -1015,7 +1015,7 @@ private theorem isClosed_borel : IsClosed (borel E (Fin n) : Set (GL (Fin n) E))
   have : (borel E (Fin n) : Set (GL (Fin n) E)) =
       ⋂ i, ⋂ j, ⋂ _ : j < i, {g : GL (Fin n) E | g.val i j = 0} := by
     ext g
-    simp only [SetLike.mem_coe, mem_borel, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_borel, Set.mem_iInter, Set.mem_ofPred_eq]
   rw [this]
   exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
     isClosed_eq (Units.continuous_val.matrix_elem i j) continuous_const
@@ -1025,7 +1025,7 @@ private theorem isClosed_unipB : IsClosed (unipB E (Fin n) : Set (GL (Fin n) E))
       (⋂ i, ⋂ j, ⋂ _ : j < i, {g : GL (Fin n) E | g.val i j = 0}) ∩
         ⋂ i, {g : GL (Fin n) E | g.val i i = 1} := by
     ext g
-    simp only [SetLike.mem_coe, mem_unipB, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_unipB, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
   rw [this]
   exact (isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
     isClosed_eq (Units.continuous_val.matrix_elem i j) continuous_const).inter
@@ -1075,17 +1075,17 @@ theorem UpperTheory.Gal.LocD.eig :
     { carrier := {l | ∀ t y, l (ρ t y) = (μ t : ℂ) * l y}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         intro t y
         simp only [LinearMap.add_apply, ha t y, hb t y]
         ring
       zero_mem' := by
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         intro t y
         simp
       smul_mem' := by
         intro c l hl
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         intro t y
         simp only [LinearMap.smul_apply, smul_eq_mul, hl t y]
         ring }
@@ -1094,7 +1094,7 @@ theorem UpperTheory.Gal.LocD.eig :
     show l (A (ρ t y)) = (μ t : ℂ) * l (A y)
     rw [hA, hl, hμ]
   let A' : W →ₗ[ℂ] W := (LinearMap.dualMap A).restrict hAW
-  haveI : Nontrivial W := ⟨⟨⟨l0, hl0eq⟩, 0, fun h => hl0 (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial W := ⟨⟨⟨l0, hl0eq⟩, 0, fun h => hl0 (congrArg Subtype.val h)⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue A'
   obtain ⟨v, hv⟩ := hc.exists_hasEigenvector
   refine ⟨μ, (v : Module.Dual ℂ J), c, fun h => hv.2 (Subtype.ext h), hμ, v.2, fun y => ?_⟩
@@ -1130,7 +1130,7 @@ private theorem mem_Cc_mul_right {G : Type} [Group G] [TopologicalSpace G] [IsTo
 
 private theorem orbit_act {G : Type} [Group G] (B N : Subgroup G) (w : G) :
     letI := act B N; orbit (B × N) w = cell B N w := by
-  letI := act B N
+  let := act B N
   show orbit (B × N) w = cell B N w
   ext g
   constructor
@@ -1146,23 +1146,23 @@ theorem UpperTheory.Gal.LocD.biInv :
   intro hD G _ _ _ _ _ _ _ B N hB hN s p hp hs hsp hsB hsN hC η θ hη hθ hηs hθs D hDB hDN f hf
   obtain ⟨L, hLo, hL⟩ := hη
   obtain ⟨k, w, hw1, hw2, hw3⟩ := hC
-  letI := act B N
-  haveI : LocallyCompactSpace B := hB.locallyCompactSpace
-  haveI : LocallyCompactSpace N := hN.locallyCompactSpace
-  haveI : SecondCountableTopology B := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaCompactSpace (B × N) := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : ContinuousSMul (B × N) G := ⟨by
+  let := act B N
+  have : LocallyCompactSpace B := hB.locallyCompactSpace
+  have : LocallyCompactSpace N := hN.locallyCompactSpace
+  have : SecondCountableTopology B := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology N := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SigmaCompactSpace (B × N) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : ContinuousSMul (B × N) G := ⟨by
     show Continuous fun q : (B × N) × G => (q.1.1 : G) * q.2 * (q.1.2 : G)⁻¹
-    exact ((continuous_subtype_val.comp (continuous_fst.comp continuous_fst)).mul continuous_snd).mul
-      (continuous_subtype_val.comp (continuous_snd.comp continuous_fst)).inv⟩
+    exact ((continuous_subtypeVal.comp (continuous_fst.comp continuous_fst)).mul continuous_snd).mul
+      (continuous_subtypeVal.comp (continuous_snd.comp continuous_fst)).inv⟩
   let sB : B →* B := (s.comp B.subtype).codRestrict B (fun b => hsB b b.2)
   let sN : N →* N := (s.comp N.subtype).codRestrict N (fun u => hsN u u.2)
   let τ : B × N →* B × N := sB.prodMap sN
   have hτc : Continuous τ := by
     rw [MonoidHom.coe_prodMap]
-    exact (Continuous.subtype_mk (hs.comp continuous_subtype_val) _).prodMap
-      (Continuous.subtype_mk (hs.comp continuous_subtype_val) _)
+    exact (Continuous.subtype_mk (hs.comp continuous_subtypeVal) _).prodMap
+      (Continuous.subtype_mk (hs.comp continuous_subtypeVal) _)
   have hit : ∀ n (h : B × N), ((τ^[n] h).1 : G) = s^[n] h.1 ∧ ((τ^[n] h).2 : G) = s^[n] h.2 := by
     intro n
     induction n with
@@ -1182,7 +1182,7 @@ theorem UpperTheory.Gal.LocD.biInv :
     simp [map_mul, map_inv]
   · refine ⟨(L.comap B.subtype).prod θ.ker, ?_, ?_⟩
     · rw [Subgroup.coe_prod]
-      exact (hLo.preimage continuous_subtype_val).prod hθ
+      exact (hLo.preimage continuous_subtypeVal).prod hθ
     · intro l hl
       rw [Subgroup.mem_prod] at hl
       rw [hχ, hL l.1 hl.1, MonoidHom.mem_ker.1 hl.2]
@@ -1236,12 +1236,12 @@ theorem UpperTheory.Gal.LocD.prAuto :
       left_inv := fun b => Subtype.ext (hleft b)
       right_inv := fun b => Subtype.ext (hright b)
       map_mul' := fun a b => Subtype.ext (map_mul s (a : G) (b : G))
-      continuous_toFun := (hs.comp continuous_subtype_val).subtype_mk _
-      continuous_invFun := ((hs.iterate _).comp continuous_subtype_val).subtype_mk _ }
-  haveI : LocallyCompactSpace B := hB.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology B :=
+      continuous_toFun := (hs.comp continuous_subtypeVal).subtype_mk _
+      continuous_invFun := ((hs.iterate _).comp continuous_subtypeVal).subtype_mk _ }
+  have : LocallyCompactSpace B := hB.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology B :=
     inferInstanceAs (SecondCountableTopology {x // x ∈ (B : Set G)})
-  haveI hν : (Measure.map σ μ).IsHaarMeasure := σ.isHaarMeasure_map μ
+  have hν : (Measure.map σ μ).IsHaarMeasure := σ.isHaarMeasure_map μ
   have heq := Measure.isMulLeftInvariant_eq_smul (Measure.map σ μ) μ
   refine ⟨Measure.haarScalarFactor (Measure.map σ μ) μ,
     Measure.haarScalarFactor_pos_of_isHaarMeasure _ _, fun f g => ?_⟩
@@ -1275,8 +1275,8 @@ namespace UpperTheory.Gal.LocD
 
 theorem prLeft : PrLeft := by
   intro G _ _ _ _ _ _ B hB _ _ μ _ χ b
-  haveI : LocallyCompactSpace B := hB.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology B := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace B := hB.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology B := TopologicalSpace.Subtype.secondCountableTopology _
   obtain ⟨c', hc'⟩ : ∃ c' : NNReal, map (· * b) μ = c' • μ :=
     ⟨_, isMulLeftInvariant_eq_smul _ _⟩
   refine ⟨(((χ b)⁻¹ : ℂˣ) : ℂ) * ((c' : ℝ) : ℂ), fun f g => ?_⟩
@@ -1314,7 +1314,7 @@ open GlobalTheory.PRep GlobalTheory.SmGL GlobalTheory.LocGL ValuativeRel Matrix 
 theorem UpperTheory.Gal.LocD.prMem :
     PrMem := by
   intro G _ _ _ _ _ _ _ B hB _ _ μ _ χ hker
-  haveI : SecondCountableTopology B := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SecondCountableTopology B := TopologicalSpace.Subtype.secondCountableTopology _
   have hχc : Continuous (fun x : B => (χ x : ℂ)) := by
     have := continuous_of_continuousAt_one ((Units.coeHom ℂ).comp χ) ?_
     · exact this
@@ -1373,7 +1373,7 @@ theorem prSurj : PrSurj := by
   intro G _ _ _ _ _ _ B hB _ _ μ _ χ K hKo hKc hBK φ hφ
   obtain ⟨hφB, K0, hK0o, hφK0⟩ := mem_indF.1 hφ
   set S : Set B := {b | (b : G) ∈ K} with hS
-  have hSo : IsOpen S := hKo.preimage continuous_subtype_val
+  have hSo : IsOpen S := hKo.preimage continuous_subtypeVal
   have hSc : IsCompact S := (hB.isClosedEmbedding_subtypeVal).isCompact_preimage hKc
   have hSpos : 0 < μ S := hSo.measure_pos μ ⟨1, K.one_mem⟩
   have hSfin : μ S < ⊤ := hSc.measure_lt_top
@@ -1383,7 +1383,7 @@ theorem prSurj : PrSurj := by
   refine ⟨fun g => if g ∈ K then c * φ g else 0, ?_, ?_⟩
   · let K' : OpenSubgroup G := ⟨K ⊓ K0, hKo.inter hK0o⟩
     apply GroundTheory.Automorphic.mem_locallyConstantCompactSupport_of_forall_mul_right (R := ℂ) K'
-    · exact HasCompactSupport.intro hKc (fun g hg => if_neg hg)
+    · exact HasCompactSupport.intro hKc (fun g hg => ite_eq_right hg)
     · intro g k hk
       have hk' : k ∈ K ∧ k ∈ K0 := Subgroup.mem_inf.1 hk
       simp only [K.mul_mem_cancel_right hk'.1, hφK0 k hk'.2 g]
@@ -1392,7 +1392,7 @@ theorem prSurj : PrSurj := by
     set b0' : B := ⟨b0, hb0⟩
     have key : ∀ b : B, ((b : G)⁻¹ * (b0 * k0) ∈ K) ↔ b ∈ (fun x => b0'⁻¹ * x) ⁻¹' S := by
       intro b
-      simp only [Set.mem_preimage, hS, Set.mem_setOf_eq, Subgroup.coe_mul, Subgroup.coe_inv, b0']
+      simp only [Set.mem_preimage, hS, Set.mem_ofPred_eq, Subgroup.coe_mul, Subgroup.coe_inv, b0']
       rw [← mul_assoc, K.mul_mem_cancel_right hk0, ← K.inv_mem_iff]
       simp [mul_inv_rev]
     have hTm : MeasurableSet ((fun x : B => b0'⁻¹ * x) ⁻¹' S) :=
@@ -1401,14 +1401,14 @@ theorem prSurj : PrSurj := by
         = ((fun x : B => b0'⁻¹ * x) ⁻¹' S).indicator (fun _ => c * φ (b0 * k0)) := by
       funext b
       by_cases h : ((b:G)⁻¹ * (b0 * k0)) ∈ K
-      · rw [if_pos h, Set.indicator_of_mem ((key b).1 h)]
+      · rw [ite_eq_left h, Set.indicator_of_mem ((key b).1 h)]
         have h1 := hφB b⁻¹ (b0 * k0)
         rw [Subgroup.coe_inv] at h1
         rw [h1]
         have hu : (χ b : ℂ) * (χ b⁻¹ : ℂ) = 1 := by
           rw [← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one]
         linear_combination (c * φ (b0 * k0)) * hu
-      · rw [if_neg h, Set.indicator_of_notMem (fun h' => h ((key b).2 h')), mul_zero]
+      · rw [ite_eq_right h, Set.indicator_of_notMem (fun h' => h ((key b).2 h')), mul_zero]
     simp only [pr]
     rw [hint, integral_indicator_const _ hTm, measureReal_def, measure_preimage_mul]
     rw [hc, Complex.real_smul]
@@ -1500,7 +1500,7 @@ private theorem absPow_map (σ : E ≃+* E) (hσ : Isom σ) (s : ℂ) (x : Eˣ) 
     absPow E s (Units.map (σ : E →* E) x) = absPow E s x := by
   have hv : valuation E ((Units.map (σ : E →* E) x * x⁻¹ : Eˣ) : E) = 1 := by
     have hx : valuation E (x : E) ≠ 0 := by simp
-    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, Units.val_inv_eq_inv_val, map_mul, map_inv₀]
+    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, Units.val_inv_eq_inv_val, map_mul, map_inv₀]
     rw [hσ]
     exact mul_inv_cancel₀ hx
   have h1 := isUnram_absPow E s _ hv
@@ -1596,7 +1596,7 @@ theorem tracePow : TracePow := by
     rw [map_smul, smul_eq_mul]
     by_cases hi : k₀ ≤ i
     · rw [hne i hi, mul_zero]
-    · rw [hQ, mul_pow, Polynomial.coeff_X_pow_mul', if_neg hi, zero_mul]
+    · rw [hQ, mul_pow, Polynomial.coeff_X_pow_mul', ite_eq_right hi, zero_mul]
   rw [hQ1, LinearMap.trace_one] at htr
   exact (Nat.cast_ne_zero.2 (Module.finrank_pos (R := ℂ) (M := J)).ne') htr
 

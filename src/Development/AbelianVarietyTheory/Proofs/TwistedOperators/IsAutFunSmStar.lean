@@ -421,13 +421,13 @@ theorem isAutFunSm_star {F : GA D V → ℂ} (h : IsAutFunSm θ V F) (hh : F ∈
   zfin := by
     obtain ⟨W, hW, m, s⟩ := h.zfin
     let W₀ : Submodule ℂ (goodFun θ V) := W.comap (goodFun θ V).subtype
-    haveI : FiniteDimensional ℂ W₀ :=
+    have : FiniteDimensional ℂ W₀ :=
       FiniteDimensional.of_injective ((goodFun θ V).subtype.restrict (p := W₀) (q := W) fun _ hx => hx)
         fun x y hxy => by
           have h' := congrArg Subtype.val hxy
           exact Subtype.ext (Subtype.ext h')
     have hfg : (W₀.map (conjG θ V)).FG := Submodule.FG.map _ (Module.Finite.iff_fg.1 inferInstance)
-    haveI := Module.Finite.iff_fg.2 hfg
+    have := Module.Finite.iff_fg.2 hfg
     refine ⟨(W₀.map (conjG θ V)).map (goodFun θ V).subtype, inferInstance,
       ⟨_, ⟨⟨F, h.smooth, hh⟩, m, rfl⟩, rfl⟩, ?_⟩
     rintro τ k _ ⟨_, ⟨f, hf, rfl⟩, rfl⟩

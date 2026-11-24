@@ -90,7 +90,7 @@ theorem finite_range_latIdx {ϖ : L} {σ : L →+* L} {q : ℕ} (hU : Formalism.
   have hϖ' : Valued.v ϖ = WithZero.exp (-1 : ℤ) := hϖ
   have hϖ1 : V ϖ ≤ 1 := by rw [hV, hϖ', ← WithZero.exp_zero, WithZero.exp_le_exp]; omega
   have hc' : Nat.card (V.valuationSubring ⧸ IsLocalRing.maximalIdeal V.valuationSubring) = q ^ 2 := hc
-  haveI : Finite (V.valuationSubring ⧸ IsLocalRing.maximalIdeal V.valuationSubring) :=
+  have : Finite (V.valuationSubring ⧸ IsLocalRing.maximalIdeal V.valuationSubring) :=
     Nat.finite_of_card_ne_zero (by rw [hc']; exact pow_ne_zero _ (by omega))
   let ϖO : V.valuationSubring := ⟨ϖ, hϖ1⟩
   have hmax : IsLocalRing.maximalIdeal V.valuationSubring ≤ Ideal.span {ϖO} := by
@@ -113,10 +113,10 @@ theorem finite_range_latIdx {ϖ : L} {σ : L →+* L} {q : ℕ} (hU : Formalism.
     refine ⟨⟨(z : L) / ϖ, hq1⟩, ?_⟩
     ext
     simp [ϖO, div_mul_cancel₀ _ hϖ0]
-  haveI : Finite (V.valuationSubring ⧸ Ideal.span {ϖO}) :=
+  have : Finite (V.valuationSubring ⧸ Ideal.span {ϖO}) :=
     Finite.of_surjective _ (Ideal.Quotient.factor_surjective hmax)
   obtain ⟨K, hK⟩ := exists_pow_smul_int hϖ' x
-  haveI hfinK : Finite (V.valuationSubring ⧸ Ideal.span {ϖO} ^ K) :=
+  have hfinK : Finite (V.valuationSubring ⧸ Ideal.span {ϖO} ^ K) :=
     Ideal.finite_quotient_pow (Submodule.fg_span_singleton _) K
   let g : (Fin b → V.valuationSubring ⧸ Ideal.span {ϖO} ^ K) → (Fin a → L) ⧸ intVec L a :=
     fun c => QuotientAddGroup.mk (Matrix.mulVec x fun j => (((c j).out : V.valuationSubring) : L))
@@ -167,7 +167,7 @@ theorem latIdx_le_of_ker : ∀ (L : Type) [Field L] [Valued L (WithZero (Multipl
     refine ⟨_, ⟨u, rfl⟩, ?_⟩
     have hc : ∃ u' : intVec L b, (QuotientAddGroup.mk (Matrix.mulVec x (u' : Fin b → L)) : (Fin a → L) ⧸ intVec L a) =
         QuotientAddGroup.mk (Matrix.mulVec x (u : Fin b → L)) := ⟨u, rfl⟩
-    simp only [h, dif_pos hc]
+    simp only [h, dite_eq_left hc]
     have he := hc.choose_spec
     set u' := hc.choose
     rw [QuotientAddGroup.eq] at he ⊢

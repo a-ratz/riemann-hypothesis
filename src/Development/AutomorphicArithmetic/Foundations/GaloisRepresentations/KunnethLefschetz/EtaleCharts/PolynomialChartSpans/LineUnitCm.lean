@@ -714,8 +714,8 @@ theorem UpperTheory.quasiIso_chains_of_cech_condition_of_locallySurjective :
   have e : _root_.nerveMap p ≫ (Arrow.mk (vtx p)).augmentedCechNerve.hom = p := by
     ext n : 2
     simp [_root_.nerveMap, Arrow.augmentedCechNerve]
-  haveI := isIso_nerveMap_of_existsUnique_vertices p h
-  haveI := quasiIso_chains_cech_of_isLocallySurjective R (X _⦋0⦌) Q (vtx p) hs
+  have := isIso_nerveMap_of_existsUnique_vertices p h
+  have := quasiIso_chains_cech_of_isLocallySurjective R (X _⦋0⦌) Q (vtx p) hs
   rw [← e, Functor.map_comp]
   infer_instance
 end -- clump:auto
@@ -733,10 +733,10 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC Crystalli
 
 theorem UpperTheory.Gal.KunnethLefschetz.G.pBOf : UpperTheory.Gal.KunnethLefschetz.G.PBOf := by
   intro hIn q _ T W r d P hq L ε hL x hx
-  haveI := P.smc
-  haveI := P.suc
-  haveI := P.sme
-  haveI := P.sue
+  have := P.smc
+  have := P.suc
+  have := P.sme
+  have := P.sue
   have hS := UpperTheory.quasiIso_chains_of_cech_condition_of_locallySurjective (ZMod q) P.S P.Q P.pS (UpperTheory.projBundleData_existsUnique_simplex_of_vertices P) (UpperTheory.projBundleData_isLocallySurjective_etale P)
   have hE := UpperTheory.quasiIso_chains_of_cech_condition_of_locallySurjective (ZMod q) (cech P.e) P.Q (P.bunF ≫ P.pS) (UpperTheory.projBundleData_cech_existsUnique_simplex_of_vertices P) (UpperTheory.projBundleData_bundle_isLocallySurjective_etale P)
   rw [Functor.map_comp] at hE
@@ -886,8 +886,8 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.pBE :
     simp
   · intro U hU
     obtain ⟨Bl⟩ := hB
-    haveI := D.sm
-    haveI := D.surj
+    have := D.sm
+    have := D.surj
     have hun : ∀ {V : Scheme.{0}} (a : V ⟶ pullback D.f U.ι), IsUnit (Bl.f (a ≫ pullback.fst D.f U.ι)) := by
       intro V a
       refine Bl.unit _ ?_

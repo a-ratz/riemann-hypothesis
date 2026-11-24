@@ -89,7 +89,7 @@ theorem exists_sig_ne (hcm : IsCMExt F E σ) : ∃ x : E, σ x ≠ x := by
 
 theorem trace_sig (hcm : IsCMExt F E σ) (y : E) :
     Algebra.trace F E (σ y) = Algebra.trace F E y := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let e : E ≃ₐ[F] E := AlgEquiv.ofAlgHom σ σ (AlgHom.ext (sig_sig hcm)) (AlgHom.ext (sig_sig hcm))
   have h : (e.toLinearEquiv).conj (Algebra.lmul F E y) = Algebra.lmul F E (σ y) := by
     ext z
@@ -104,7 +104,7 @@ theorem trace_sig (hcm : IsCMExt F E σ) (y : E) :
 
 theorem add_sig_eq_trace (hcm : IsCMExt F E σ) (y : E) :
     y + σ y = algebraMap F E (Algebra.trace F E y) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have hfr : Module.finrank F E = 2 := hcm.2.2.1
   obtain ⟨x, hx⟩ := exists_sig_ne hcm
   set θ : E := x - σ x with hθ
@@ -155,7 +155,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem trace_tmul (r : R) (e : E) :
     Algebra.trace R (R ⊗[F] E) (r ⊗ₜ[F] e) = r * algebraMap F R (Algebra.trace F E e) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have h1 : r ⊗ₜ[F] e = r • ((1 : R) ⊗ₜ[F] e) := by simp [TensorProduct.smul_tmul']
   have h2 : Algebra.lmul R (R ⊗[F] E) ((1 : R) ⊗ₜ[F] e) = (Algebra.lmul F E e).baseChange R := by
     ext z
@@ -231,8 +231,8 @@ variable [MeasurableSpace R] [BorelSpace R]
 
 theorem map_coordHerm (hcm : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E) (lam : Measure R)
     [SigmaFinite lam] : (coordHerm R σ b lam 1).map (hermHomeo R hcm) = lam := by
-  haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
-  haveI hT : IsEmpty {p : Fin 1 × Fin 1 // p.1 < p.2} :=
+  have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+  have hT : IsEmpty {p : Fin 1 × Fin 1 // p.1 < p.2} :=
     ⟨fun p => by
       have h := p.2
       rw [Subsingleton.elim p.1.1 p.1.2] at h

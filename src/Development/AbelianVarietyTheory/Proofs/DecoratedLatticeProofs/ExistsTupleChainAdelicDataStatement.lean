@@ -125,7 +125,7 @@ theorem sel_under_of_mem_QE {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.O
 theorem topBase_ok : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word) (a : I.ι) {C : Type} (chOf : (I.stp u a B.R.m).Cl → C) (Lb : C → Submodule (𝓞 B.host.E) (Fin (B.R.N B.R.m) → B.host.E)) (U : C → Subgroup (TC.GA B (B.R.N B.R.m))) (chi : ∀ β, U β →* ℂˣ) (y : (I.stp u a B.R.m).Cl → TC.GA B (B.R.N B.R.m)) (st : ∀ c, (I.stp u a B.R.m).Stab c → GL (Fin (B.R.N B.R.m)) B.host.E) (k : C → TC.GA B (B.R.N B.R.m)), I.Reads u a B.R.m chOf Lb U chi y st k → (∀ β, I.TopPt l Z u a (k β)) → ∀ β, (∃ q : Formalism.L2.Col.ChPt (Pr := B.primes X) (R := B.R) I.sel (I.tup a) u B.R.m, TC.PtOf (k β) q) ∧ ∀ P ∈ I.SQ, P ∉ I.Q a → (k β).1.map (adAt B.host.F P) = 1 := by
   intro B X I hI hP l Z u a C chOf Lb U chi y st k hR hTop β
   have hPr := (base_fields_primes_ok B X).2.1
-  haveI : NeZero (B.R.N B.R.m - 1) := ⟨by
+  have : NeZero (B.R.N B.R.m - 1) := ⟨by
     rw [Formalism.L2.Col.rank_X'_eq]
     have h1 := B.R.two_le_m
     have h2 : 1 ≤ B.R.t := B.R.t_odd.pos
@@ -273,7 +273,7 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE
 theorem kStd_pt {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (u : B.Word) (a : I.ι) (i : ℕ) :
     ∃ q : ChPt (Pr := B.primes X) (R := B.R) I.sel (I.tup a) u i, TC.PtOf (kStd X u (B.R.N i)) q := by
   have hPr := (base_fields_primes_ok B X).2.1
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   obtain ⟨⟨p, hp, -⟩, -, -⟩ := kStd_spec hPr u (B.R.N i)
   refine GlobalTheory.Mem.Col2.RatFrPt.exists_isPtOf_of_rat B.sp.cm _ _ _ _ hp.uni fun P hP => ⟨1, fun r s => ?_⟩
   have h := congrFun (congrFun (kStd_at_SQ I hI u (B.R.N i) P (ColIn.Q_subset_SQ (I := I) a hP)) r) s
@@ -332,7 +332,7 @@ theorem stepCh_zero {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP :
     (fun c => stM (lvG I a) (lvQ I a) _ _ c.1) (fun c => stM_inj (lvG I a) (lvQ I a) _ _ ((l.ch u a).step 0) c.1)
     (fun c γ => stab_range0 I hI u a c.1 γ)
   obtain ⟨k1, k2, k3⟩ := kStd_spec hPr u (B.R.N 0)
-  letI := StepZero.idxUnique hL
+  let := StepZero.idxUnique hL
   obtain ⟨q₀, -⟩ := exists_ptAt (R := B.R) I.sel (I.tup a) (I.cst a) (u := u) (j := 0) (DecoF.base _ _ _ _ _)
   have hm := B.R.two_le_m
   refine ⟨Unit, inferInstance, badG (I.rec7 l Z), chOf, fun _ _ => ⟨lev, Y, h1, h2, SI, h3, h4⟩, fun _ => kStd X u (B.R.N 0),
@@ -393,7 +393,7 @@ theorem stepCh_mid {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : 
   have hk : GlobalTheory.Mem.Col2.TC.ChTw.AdmK I u a i (fun _ : GlobalTheory.Mem.Col2.TC.ChTw.Chart I u a i => kStd X u (B.R.N i)) :=
     ⟨fun _ => k1, fun _ v hv _ _ => k2 v hv, fun _ => k3⟩
   obtain ⟨K, hK, hfin⟩ := GlobalTheory.Mem.Col2.ChExM.exists_charts I hI hP l Z u a Q i h2.le h1 h2 hQ _ hk
-  haveI := GlobalTheory.Mem.Col2.TC.ChTw.finite_chart I l u a i
+  have := GlobalTheory.Mem.Col2.TC.ChTw.finite_chart I l u a i
   exact ⟨GlobalTheory.Mem.Col2.TC.ChTw.Chart I u a i, Fintype.ofFinite _, badQ (I.rec7 l Z) Q, GlobalTheory.Mem.Col2.TC.ChTw.chartOf I u a i,
     fun _ => K, fun _ => kStd X u (B.R.N i), fun _ => hK, fun _ => hfin,
     fun _ _ => ⟨kStd_pt I hI u a i, fun P hP _ => kStd_at_SQ I hI u _ P hP⟩,
@@ -423,7 +423,7 @@ theorem stepCh_above {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Laws) (Z 
     (u : B.Word) (a : I.ι) (i : ℕ) (hi : B.R.m < i) : StepCh I l Z u a i := by
   classical
   have h := (l.ch u a).step i
-  haveI : Finite (I.stp u a i).Cl := @Finite.instSigma _ _ inferInstance h.fin_orb
+  have : Finite (I.stp u a i).Cl := @Finite.instSigma _ _ inferInstance h.fin_orb
   exact ⟨(I.stp u a i).Cl, Fintype.ofFinite _, ∅, id, fun h' => absurd h' (by omega), fun _ => 1,
     fun h' => absurd h' (by omega), fun h' => absurd h' (by omega), fun h' => absurd h' (by omega),
     fun h' => absurd h' (by omega), fun h' => absurd h' (by omega), fun h' => absurd h' (by omega), fun h' => absurd h' (by omega)⟩
@@ -514,7 +514,7 @@ theorem fullStep {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (hP : TC
     obtain ⟨kA, xr, b0, p0, U, chi, h, c1, c2, c3, c4, c5, c6⟩ := comp I hI hP l Z u a i hi chOf (K hi) k (hR hi) (hBO hi)
     exact ⟨C, hC, bad, chOf, K, k, kA, xr, b0, p0, U, chi, h, fun hi' => ⟨hR hi', c1, c2, c3, c4, c5, c6, hF hi', hB hi'⟩, hU, hT, hS⟩
   · have h' := (l.ch u a).step i
-    haveI : Finite (I.stp u a i).Cl := @Finite.instSigma _ _ inferInstance h'.fin_orb
+    have : Finite (I.stp u a i).Cl := @Finite.instSigma _ _ inferInstance h'.fin_orb
     exact ⟨(I.stp u a i).Cl, Fintype.ofFinite _, ∅, id, fun h' => absurd h' hi, fun _ => 1, fun _ => 1, fun _ => 1, fun c => c.1,
       fun c => (I.stp u a i).rep c, fun _ => ⊥, fun _ => 1, fun _ _ => 1, fun h' => absurd h' hi, fun h' => absurd h' (by omega),
       fun h' => absurd h' (by omega), fun h' => absurd h' (by omega)⟩

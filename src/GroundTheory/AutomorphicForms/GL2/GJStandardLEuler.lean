@@ -378,7 +378,7 @@ theorem projMeasure_eq (hCo : ∀ i, IsOpen (C i : Set (G i))) (hCc : ∀ i, IsC
   have hc : ((projMeasure C μ T).haarScalarFactor (Measure.pi fun i : T ↦ ν i) : ℝ≥0∞) =
       μ {x : Πʳ i, [G i, (C i : Set (G i))] | ∀ i, x i ∈ C i} := by
     have := congrArg (fun m : Measure ((i : T) → G i) ↦ m B) h
-    simp only [Measure.smul_apply, hpi, ENNReal.smul_def, smul_eq_mul, mul_one] at this
+    simp only [smul_apply, hpi, ENNReal.smul_def, smul_eq_mul, mul_one] at this
     rw [← hproj, this]
   conv_lhs => rw [h]
   rw [← hc]
@@ -416,19 +416,19 @@ theorem setLIntegral_box (hCo : ∀ i, IsOpen (C i : Set (G i))) (hCc : ∀ i, I
       μ {x : Πʳ i, [G i, (C i : Set (G i))] | ∀ i, x i ∈ C i} * ∏ i ∈ T, ∫⁻ y, ‖F i y‖ₑ ∂ν i := by
   have hb := (isOpen_box C hCo T).measurableSet
   have hmeas : Measurable fun a : (i : T) → G i ↦ ∏ i : T, ‖F i (a i)‖ₑ :=
-    Finset.measurable_prod _ fun i _ ↦ ((hF i).comp (measurable_pi_apply i)).enorm
+    Finset.measurable_prod _ fun i _ ↦ ((hF i).comp (measurable_pi_apply i)).eNorm
   calc ∫⁻ x in (box C T : Set (Πʳ i, [G i, (C i : Set (G i))])), ‖Φ x‖ₑ ∂μ =
         ∫⁻ x in (box C T : Set (Πʳ i, [G i, (C i : Set (G i))])),
           (fun a : (i : T) → G i ↦ ∏ i : T, ‖F i (a i)‖ₑ) (proj C T x) ∂μ := by
         refine setLIntegral_congr_fun hb fun x hx ↦ ?_
         rw [hΦ x hx, ← Finset.prod_coe_sort T]
-        simp only [enorm_eq_nnnorm, nnnorm_prod, ENNReal.ofNNReal_finsetProd]
+        simp only [eNorm_eq_nnNorm, nnNorm_prod, ENNReal.ofNNReal_finsetProd]
         rfl
     _ = ∫⁻ a, ∏ i : T, ‖F i (a i)‖ₑ ∂projMeasure C μ T := by
         rw [projMeasure, lintegral_map hmeas (continuous_proj C T).measurable]
     _ = _ := by
         rw [projMeasure_eq C hCo hCc μ ν hν T, lintegral_smul_measure,
-          lintegral_fintype_prod_eq_prod (fun i : T ↦ fun y ↦ ‖F i y‖ₑ) (fun i ↦ (hF i).enorm),
+          lintegral_fintype_prod_eq_prod (fun i : T ↦ fun y ↦ ‖F i y‖ₑ) (fun i ↦ (hF i).eNorm),
           Finset.prod_coe_sort T (fun i ↦ ∫⁻ y, ‖F i y‖ₑ ∂ν i), smul_eq_mul]
 
 end Measure
@@ -496,7 +496,7 @@ theorem one_le_lintegral (ν : ∀ i, Measure (G i)) (hν : ∀ i, ν i (C i) = 
     (F : ∀ i, G i → ℂ) {i : ι} (h : ∀ c ∈ C i, F i c = 1) : 1 ≤ ∫⁻ y, ‖F i y‖ₑ ∂ν i := by
   calc (1 : ℝ≥0∞) = ∫⁻ y in (C i : Set (G i)), 1 ∂ν i := by rw [setLIntegral_const, one_mul, hν]
     _ = ∫⁻ y in (C i : Set (G i)), ‖F i y‖ₑ ∂ν i :=
-        setLIntegral_congr_fun (hCo i).measurableSet fun y hy ↦ by rw [h y hy, enorm_one]
+        setLIntegral_congr_fun (hCo i).measurableSet fun y hy ↦ by rw [h y hy, eNorm_one]
     _ ≤ _ := setLIntegral_le_lintegral _ _
 
 theorem integrable_factor (hCo : ∀ i, IsOpen (C i : Set (G i)))
@@ -706,11 +706,11 @@ theorem lintegral_eq_mul (ν : Measure (AdelicGLn.AdelicGL K n)) [ν.IsHaarMeasu
       ∫⁻ p, ‖A p.1‖ₑ * ‖B p.2‖ₑ ∂(ν.map me) := by
     rw [lintegral_map_equiv (fun p ↦ ‖A p.1‖ₑ * ‖B p.2‖ₑ) me]
     refine lintegral_congr fun g ↦ ?_
-    rw [enorm_mul]
+    rw [eNorm_mul]
     rfl
   have hme : ν.map me = ν.map (AdelicGLn.prodEquiv K n) := rfl
   rw [h1, hme, map_prodEquiv_eq ν μi, lintegral_smul_measure,
-    lintegral_prod_mul hA.enorm.aemeasurable hB.enorm.aemeasurable, ENNReal.smul_def, smul_eq_mul]
+    lintegral_prod_mul hA.eNorm.aemeasurable hB.eNorm.aemeasurable, ENNReal.smul_def, smul_eq_mul]
 
 end Product
 
@@ -1001,7 +1001,7 @@ theorem globalZeta_eq_euler (ν : Measure (AdelicGLn.AdelicGL K n)) [ν.IsHaarMe
       have hAne : ∫⁻ x, ‖A x‖ₑ ∂μi ≠ 0 := by
         intro h
         apply h0
-        rw [lintegral_eq_zero_iff hA.measurable.enorm] at h
+        rw [lintegral_eq_zero_iff hA.measurable.eNorm] at h
         filter_upwards [h] with x hx
         simpa using hx
       have hc0 : (prodConst ν μi : ℝ≥0∞) ≠ 0 := by exact_mod_cast (prodConst_pos ν μi).ne'

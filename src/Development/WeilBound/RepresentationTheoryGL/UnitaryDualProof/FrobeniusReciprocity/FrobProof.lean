@@ -237,11 +237,11 @@ theorem exists_decomp (K : OpenSubgroup G) (hK : IsCompact (K : Set G)) (f : SB 
     rw [e, ind_apply]
     by_cases h : π x = q
     · have hm : x * q.out ∈ K := (key x q).2 h
-      rw [if_pos h, Set.indicator_of_mem (show x * q.out ∈ (K : Set G) from hm), mul_one]
+      rw [ite_eq_left h, Set.indicator_of_mem (show x * q.out ∈ (K : Set G) from hm), mul_one]
       have := hf _ hm q.out⁻¹
       rw [mul_inv_cancel_right] at this
       exact this.symm
-    · rw [if_neg h, Set.indicator_of_notMem
+    · rw [ite_eq_right h, Set.indicator_of_notMem
         (show x * q.out ∉ (K : Set G) from fun hm => h ((key x q).1 hm)), mul_zero]
   rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq]
   split_ifs with h
@@ -431,7 +431,7 @@ theorem span_of_factor {A B S T : Type} [TopologicalSpace A] [T2Space A] [Topolo
     rw [Finset.sum_apply, Finset.sum_eq_single (ξ q.1, η q.2)]
     · simp
     · intro p _ hp
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨h1, h2⟩
       exact hp (Prod.ext h1.symm h2.symm)
     · intro h
@@ -466,10 +466,10 @@ theorem span_of_factor {A B S T : Type} [TopologicalSpace A] [T2Space A] [Topolo
   · have hz : (fun q : A × B => if ξ q.1 = p.1 ∧ η q.2 = p.2 then (f : A × B → ℂ) q else 0) = 0 := by
       funext q
       by_cases e : ξ q.1 = p.1 ∧ η q.2 = p.2
-      · rw [if_pos e]
+      · rw [ite_eq_left e]
         by_contra h
         exact hex ⟨q, e.1, e.2, h⟩
-      · rw [if_neg e]
+      · rw [ite_eq_right e]
         rfl
     rw [hz]
     exact Submodule.zero_mem _
@@ -920,7 +920,7 @@ theorem exists_refine [SecondCountableTopology G] (H K L : Subgroup G) [IsClosed
       (Homeomorph.mulLeft (t x * k)).isOpenMap _ hLo
     obtain ⟨n, l, hl, hn⟩ := he.exists_mem_open hopen ⟨t x * k * 1, 1, L.one_mem, rfl⟩
     refine ⟨n, ?_, l⁻¹, L.inv_mem hl, ?_⟩
-    · simp only [mem_preimage, mem_setOf_eq, ← hn]
+    · simp only [mem_preimage, mem_ofPred_eq, ← hn]
       have : (t x)⁻¹ * (t x * k * l) = k * l := by group
       rw [this]
       exact K.mul_mem hk (hLK hl)
@@ -964,7 +964,7 @@ theorem exists_continuous_section (G : Type) [Group G] [TopologicalSpace G] [IsT
     (H : Subgroup G) (hH : IsClosed (H : Set G)) :
     ∃ s : G ⧸ H → G, Continuous s ∧ ∀ c : G ⧸ H, ((s c : G) : G ⧸ H) = c := by
   classical
-  haveI : IsClosed (H : Set G) := hH
+  have : IsClosed (H : Set G) := hH
   obtain ⟨K, hK0, hKle, hKo, hKc, hKb⟩ := exists_subgroup_seq (G := G)
 
   let P : ℕ → (G ⧸ H → G) → Prop := fun n t =>
@@ -1045,7 +1045,7 @@ theorem exists_continuous_section (G : Type) [Group G] [TopologicalSpace G] [IsT
       rw [this]
       exact (K (m + 1)).mul_mem ((K (m + 1)).inv_mem h2) hk
     have := hm (hKle m hk')
-    simp only [mem_preimage, mem_setOf_eq, mul_inv_cancel_left] at this
+    simp only [mem_preimage, mem_ofPred_eq, mul_inv_cancel_left] at this
     exact this hkc
 
 end GlobalTheory.CompanionTheory.LGroupSection
@@ -1281,7 +1281,7 @@ theorem exists_openSubgroup_char_eq_one (χ : G →* ℂˣ) (hχ : Continuous (f
   refine ⟨K, fun k hk => PositivityTheory.RgUd.T2.eq_one_of_pow_near fun n => ?_⟩
   have h2 : k ^ n ∈ K := pow_mem hk n
   have h3 := hKU h2
-  simp only [Set.mem_setOf_eq, map_pow, Units.val_pow_eq_pow_val] at h3
+  simp only [Set.mem_ofPred_eq, map_pow, Units.val_pow_eq_pow_val] at h3
   exact h3.le
 
 theorem isLocallyConstant_char (χ : G →* ℂˣ) (hχ : Continuous (fun g => (χ g : ℂ))) :
@@ -1546,8 +1546,8 @@ theorem transl_fap (g0 : G) (α : SB G) (φ : SB (Fib p)) :
 theorem fap_translF (uH : IsUnimod H) (h0 : H) (α : SB G) (φ : SB (Fib p)) :
     fap hp σ hpc μH α (translF hp h0 φ) =
       fap hp σ hpc μH (pullHomeo (Homeomorph.mulRight ((h0 : G)⁻¹)) α) φ := by
-  haveI : SecondCountableTopology H := inferInstanceAs (SecondCountableTopology (H : Set G))
-  haveI := _root_.GlobalTheory.CompanionTheory.HaarUnimod.isMulRightInvariant_of_isUnimod H uH μH
+  have : SecondCountableTopology H := inferInstanceAs (SecondCountableTopology (H : Set G))
+  have := _root_.GlobalTheory.CompanionTheory.HaarUnimod.isMulRightInvariant_of_isUnimod H uH μH
   apply eq_fap
   intro g z
   rw [fap_smul]
@@ -1629,7 +1629,7 @@ theorem FrMap_surjective (uG : IsUnimod G) (uH : IsUnimod H)
     (hα0 : ∫ g, (α0 : G → ℂ) g * (χ g : ℂ) ∂μG = 1) :
     Function.Surjective (FrMap hp σ hpc μH μG χ uG uH hχ α0 hα0) := by
   intro η
-  haveI := _root_.GlobalTheory.CompanionTheory.HaarUnimod.isMulRightInvariant_of_isUnimod G uG μG
+  have := _root_.GlobalTheory.CompanionTheory.HaarUnimod.isMulRightInvariant_of_isUnimod G uG μG
   obtain ⟨b0, hb0⟩ := exists_schwartz_integral_one μH
   let Ψ := triv hp σ hpc
   let Lη : SB (G × Fib p) →ₗ[ℂ] ℂ := (η : Distr (Fib p)) ∘ₗ intG μG χ hχ
@@ -1749,8 +1749,8 @@ end Main
 
 theorem frobeniusReciprocity : FrobeniusReciprocity := by
   intro G _ _ _ _ _ _ _ _ _ H _ hH uG uH X _ _ _ _ _ _ p hpc hp χ hχ μG _ μH _
-  haveI : IsClosed (H : Set G) := hH
-  haveI : LocallyCompactSpace (Fib p) := by
+  have : IsClosed (H : Set G) := hH
+  have : LocallyCompactSpace (Fib p) := by
     have hc : IsClosed {x : X | p x = ((1 : G) : G ⧸ H)} :=
       (isClosed_singleton (x := ((1 : G) : G ⧸ H))).preimage hpc
     exact hc.locallyCompactSpace

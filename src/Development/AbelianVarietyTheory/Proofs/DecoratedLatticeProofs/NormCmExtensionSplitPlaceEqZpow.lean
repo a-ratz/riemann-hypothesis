@@ -86,7 +86,7 @@ theorem absEv_split : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     have := NumberField.HeightOneSpectrum.one_lt_absNorm v
     unfold qV
     exact_mod_cast (by omega)
-  rw [absEv_apply, coe_nnnorm, hN, norm_mul, hq, e1, e2, neg_add, zpow_add₀ hq0,
+  rw [absEv_apply, coe_nnNorm, hN, norm_mul, hq, e1, e2, neg_add, zpow_add₀ hq0,
     norm_eq_zpow v (x.isUnit.map (splitProj τ)).ne_zero, norm_eq_zpow v (x.isUnit.map (splitProj (τ.comp σ))).ne_zero]
 
 end GlobalTheory.Doubling.AbsSplit

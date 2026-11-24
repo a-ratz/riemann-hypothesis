@@ -91,7 +91,7 @@ theorem eq_zero_of_orbit (X : Data E r) (la : Wt X.Ψ r) (P : Frame X.Ψ r → �
     · rw [mat_frInv]
       exact (Matrix.isUnit_nonsing_inv_det_iff.2 hu).ne_zero
     · intro i j hij
-      haveI : Invertible (mat b τ) := Matrix.invertibleOfIsUnitDet _ hu
+      have : Invertible (mat b τ) := Matrix.invertibleOfIsUnitDet _ hu
       have hBT : (mat b τ).BlockTriangular id := fun i' j' h' => htri i' j' h'
       exact Matrix.blockTriangular_inv_of_blockTriangular hBT hij
   have hrm : rmul (rmul (lact γ x) b) (frInv b) = lact γ x := by
@@ -186,7 +186,7 @@ theorem adelMeas_of_aut {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {σ : c.F �
     (h : AdelAut V dict mu) : AdelMeas U σ V dict mu := by
   intro la P hP
   obtain ⟨hL, hc⟩ := h la P hP
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
   rw [onQ_eq_lift _ hL]
   refine Measurable.aestronglyMeasurable ?_
   exact measurable_from_quotient.2 hc.measurable

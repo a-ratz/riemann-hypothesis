@@ -212,7 +212,7 @@ theorem tb_top (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l : ℕ) 
     (hφ : ∀ g, ∀ y ∈ Yt.L.T, p y = 0 → φ (Yt.ρ g y) = actD Ve.L g (φ y)) :
     ∃ c : ℕ, c + g ≤ cBL l N h n t ∧
       ((l : ↥(OL LL)) ^ c) • (fun g => φ (Yt.ρ g e₀ - e₀)) ∈ HfD ((D.loc l).PD K) Ve.L := by
-  haveI : IsDiscreteValuationRing ↥(OL LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr LL
+  have : IsDiscreteValuationRing ↥(OL LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr LL
   let Y := kerY Yt p e₀ hpe hp hint he₀
   have hcjY := cj_sub (hF K LL) (S := fun _ => (U : Set ℤ)) (GRep.ofLat Yt) (LinearMap.ker p)
     (ker_stable Yt p hp) ⟨hcrys, hjmp⟩
@@ -291,14 +291,14 @@ theorem transfer_mem_blochKato_cocycles [IsTopologicalGroup G'] (PD : PeriodData
     intro g
     rw [trCochain_apply]
   refine ⟨⟨?_, ?_⟩, ?_⟩
-  · haveI : IsTopologicalAddGroup T.V :=
+  · have : IsTopologicalAddGroup T.V :=
       { continuous_neg := by
           have := continuous_const_smul (-1 : LL) (T := T.V)
           simpa using this }
     have hρc : ∀ g : G', Continuous (T.ρ g) := fun g =>
       IsModuleTopology.continuous_of_linearMap (R := LL) (T.ρ g)
     have hfc : ContinuousOn f (ι.range : Set G') := by
-      rw [continuousOn_iff_continuous_restrict]
+      rw [continuousOn_iff_continuous_domRestrict]
       refine (hzcont.comp (he.toHomeomorph).symm.continuous).congr ?_
       rintro ⟨h, a, rfl⟩
       simp only [Function.comp_apply, hf, hinv]
@@ -336,7 +336,7 @@ theorem index_smul_mem [IsTopologicalGroup G'] (PD : PeriodData G Qp K₀ K B Bd
     (c : G' → T.V ⧸ T.L.T) (hc : ∀ a b, c (a * b) = c a + actD T.L a (c b))
     (hres : (fun g => c (ι g)) ∈ HfD PD (LiftingTheory.resLoc ι hι T).L) :
     ((ι.range.index : ℕ) : O) • c ∈ HfD PD' T.L := by
-  haveI : Fintype (G' ⧸ ι.range) := Subgroup.fintypeQuotientOfFiniteIndex
+  have : Fintype (G' ⧸ ι.range) := Subgroup.fintypeQuotientOfFiniteIndex
   have hinj : Function.Injective ι := he.injective
   have hinv : ∀ a : G, Function.invFun ι (ι a) = a := fun a => Function.leftInverse_invFun hinj a
   obtain ⟨y, hy, bb, hbb, hsum⟩ := Submodule.mem_sup.mp hres
@@ -428,23 +428,23 @@ theorem tbK_of (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l : ℕ) 
     obtain ⟨c, hcle, key⟩ := tb_top D HW F l h4 hCo hW hF N h n t e _ K' LL hg hKs U hn hb he ht hidx
       (LocRes.res hle Yt) (LocRes.res hle VeL) r1 (fun τ a ha => hJ _ (hjmp _ a ((j1 τ a).1 ha))) p
       (fun g v => hp _ v) hint e₀ he₀ hpe hε.1 hχ φ (fun g y hy hy0 => hφ _ y hy hy0)
-    haveI := K.2
-    haveI := K'.2
+    have := K.2
+    have := K'.2
     have hix := GlobalTheory.InducedSectionsSpanStatement.inclusion_GK_index K' K hle
     have hpos : 0 < Module.finrank ℚ_[l] ↥K'.1 := Module.finrank_pos
     have hpos' : 0 < Module.finrank ℚ_[l] ↥K.1 := Module.finrank_pos
     have hgi : Module.finrank ℚ_[l] ↥K'.1 / Module.finrank ℚ_[l] ↥K.1 = (Subgroup.inclusion hle).range.index := by
       rw [← hix, Nat.mul_div_cancel _ hpos']
     have hi0 : (Subgroup.inclusion hle).range.index ≠ 0 := fun h => by rw [h, zero_mul] at hix; omega
-    haveI : (Subgroup.inclusion hle).range.FiniteIndex := ⟨hi0⟩
+    have : (Subgroup.inclusion hle).range.FiniteIndex := ⟨hi0⟩
     have hcoc : ∀ a b, φ (ρy (a * b) e₀ - e₀) = φ (ρy a e₀ - e₀) + actD Le a (φ (ρy b e₀ - e₀)) := fun a b => by
       rw [← hφ a _ (Ly.T.sub_mem (Ly.stable b e₀ he₀) he₀) (by rw [map_sub, hp, sub_self]), ← map_add (f := _), map_sub, map_mul]
       congr 1
       simp
     have hcor := CorD.index_smul_mem ((D.loc l).PD K') ((D.loc l).PD K) (Subgroup.inclusion hle)
-      (continuous_subtype_val.subtype_mk _) (Topology.IsEmbedding.inclusion hle)
+      (continuous_subtypeVal.subtype_mk _) (Topology.IsEmbedding.inclusion hle)
       (by rw [Subgroup.inclusion_range]
-          exact (IntermediateField.fixingSubgroup_isOpen K'.1).preimage continuous_subtype_val)
+          exact (IntermediateField.fixingSubgroup_isOpen K'.1).preimage continuous_subtypeVal)
       (fun g b => by rw [(D.loc l).PD_actB, (D.loc l).PD_actB]; rfl) VeL
       (((l : ↥(OL LL)) ^ c) • fun g => φ (ρy g e₀ - e₀))
       (fun a b => by
@@ -535,8 +535,8 @@ theorem tbe_of (PD : PeriodData G Qp K₀ K B BdR) (I : Subgroup G) [Topological
     rcases Nat.eq_zero_or_pos e with he | he
     · exact (hzero he).1
     · rw [(hpos he).1]; exact (hpos he).2
-  haveI := hfin n
-  haveI : IsDomain O := hO.1.1
+  have := hfin n
+  have : IsDomain O := hO.1.1
   have key := len_part PD hO Ve h1 PD.p n (Module.finrank Qp K) (pow_ne_zero n hp)
     (heul n) hne
   have hord : Module.length O (O ⧸ Ideal.span {((PD.p : ℕ) : O) ^ n}) =
@@ -552,14 +552,14 @@ theorem tbe_all (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.l
     (l : ℕ) [Fact l.Prime] (K LL : FinExt l) : TBe ((D.loc l).PD K) ↥LL.1 ↥(OL LL) (IK K) := by
   obtain ⟨-, hA2, -, hA4, hA5, -, hA7, -, -⟩ := hA
   obtain ⟨hO, hfin⟩ := GlobalTheory.LocalIntegers.good_integers l LL
-  haveI := K.2
-  haveI hc : CompactSpace ↥(GK K) :=
+  have := K.2
+  have hc : CompactSpace ↥(GK K) :=
     isCompact_iff_compactSpace.1 (IntermediateField.fixingSubgroup_isClosed K.1).isCompact
   obtain ⟨φ, hφ⟩ := GlobalTheory.exists_topologicalClosure_zpowers_sup_inertia l K
   obtain ⟨δ, hδ, hδI, hδ0⟩ := exists_unr D l K LL
   have hp : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
   have hl0 : ((l : ℕ) : ↥(OL LL)) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
-  haveI : IsTopologicalRing ↥LL.1 := hO.2.2.2.1
+  have : IsTopologicalRing ↥LL.1 := hO.2.2.2.1
   refine tbe_of _ _ hO ?_ ?_ (hA5 l K) (hA7 l K) (hB l K).2.1 ?_ ?_ φ hφ δ hδ hδI hδ0
   · rw [hp]; exact hfin
   · rw [hp]; exact hl0

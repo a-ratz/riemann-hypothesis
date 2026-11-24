@@ -139,7 +139,7 @@ theorem exists_root_of_level {D : D7} (V : HSp D) (N : ℕ) (hN : Odd N) (k : GA
 
 theorem exists_ext {K L : Type} [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L] (σ : K →+* ℂ) :
     ∃ τ : L →+* ℂ, τ.comp (algebraMap K L) = σ := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   have : Algebra.IsAlgebraic K L := Algebra.IsAlgebraic.tower_top (K := ℚ) K
   let f : L →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_

@@ -74,11 +74,11 @@ theorem evD_dMat (v : X.Pl) (s : Fin (X.G.P.n' v)) :
 
 theorem zT_even (v : X.Pl) (s : Fin (X.G.P.n' v)) (hs : ¬ IsOddPos s) {n : ℕ} (g : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ) :
     zT X D pos g (pos ⟨v, s⟩) = g (pos ⟨v, s⟩) := by
-  rw [zT, Equiv.symm_apply_apply, if_neg hs]
+  rw [zT, Equiv.symm_apply_apply, ite_eq_right hs]
 
 theorem zT_odd (v : X.Pl) (s : Fin (X.G.P.n' v)) (hs : IsOddPos s) {n : ℕ} (g : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ) :
     zT X D pos g (pos ⟨v, s⟩) = ((g (pos ⟨v, s⟩))⁻¹).transpose.submatrix id Fin.rev := by
-  rw [zT, Equiv.symm_apply_apply, if_pos hs]
+  rw [zT, Equiv.symm_apply_apply, ite_eq_left hs]
 
 theorem adj_zT_odd (v : X.Pl) (s : Fin (X.G.P.n' v)) (hs : IsOddPos s) {n : ℕ} (g : D.what₂.Tau → Matrix (Fin n) (Fin n) ℂ)
     (hg : (g (pos ⟨v, s⟩)).det ≠ 0) :
@@ -146,7 +146,7 @@ theorem evD_blockMats {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ v
       have h3 := rk_le X D hN
       have := t.isLt
       ext
-      simp only [Fin.val_rev, Fin.coe_cast, Fin.coe_castLE, shiftI]
+      simp only [Fin.val_rev, Fin.val_cast, Fin.val_castLE, shiftI]
       omega
     ext t a
 

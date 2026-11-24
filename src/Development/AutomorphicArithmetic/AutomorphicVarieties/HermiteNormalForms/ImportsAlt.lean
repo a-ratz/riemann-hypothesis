@@ -225,7 +225,7 @@ theorem UpperTheory.V.KT.stab :
     rw [MulAction.mem_stabilizer_iff] at hg ⊢
     rw [← Sx.smul_val, hg]
   have hfin : Finite (MulAction.stabilizer (Gm L N) t) := by
-    haveI := UpperTheory.V.KT.stabfin L N (t.1 0)
+    have := UpperTheory.V.KT.stabfin L N (t.1 0)
     exact Finite.of_injective _ (Subgroup.inclusion_injective hle)
   have hrk : Module.finrank ℤ (Matrix (Fin N) (Fin N) (𝓞 L)) = dd L N * N := by
     rw [Module.finrank_matrix, RingOfIntegers.rank]

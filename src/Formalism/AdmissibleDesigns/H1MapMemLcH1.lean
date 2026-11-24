@@ -113,7 +113,7 @@ theorem blkS_eq {c' : Fin D.R.t} (a : Fin D.R.nV) (h : RepresentationBoundsCohom
   · apply Fin.ext
     have h2 := congrArg Fin.val h'
     simp only [Fin.val_succ] at h2
-    simp only [Fin.coe_natAdd]
+    simp only [Fin.val_natAdd]
     omega
 
 theorem blkS_act (c' : Fin D.R.t) (a : Dd.R') (m : blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk c'.succ) (hE : EvS r π Dd) :

@@ -63,8 +63,8 @@ theorem fd_int_scale {D : D7} {V : HSp D} {μ μ' : Measure (GA D V)} (hμ : μ.
     {s : NNReal} (hs : μ = s • μ') {F F' : Set (GA D V)}
     (h : IsFundamentalDomain (GQ V) F μ) (h' : IsFundamentalDomain (GQ V) F' μ') (f : GA D V → ℂ)
     (hf : ∀ γ ∈ GQ V, ∀ x, f (γ * x) = f x) : ∫ x in F, f x ∂μ = ((s : ℝ) : ℂ) * ∫ x in F', f x ∂μ' := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableMulHA D.sp.cm.sig V.gram
-  haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableMulHA D.sp.cm.sig V.gram
+  have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
   have hs0 : s ≠ 0 := by
     rintro rfl
     rw [zero_smul] at hs

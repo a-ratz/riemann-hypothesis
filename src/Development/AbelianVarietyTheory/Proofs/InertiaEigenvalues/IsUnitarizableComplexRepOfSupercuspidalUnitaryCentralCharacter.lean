@@ -112,7 +112,7 @@ theorem isOpen_scal {ρ : Representation ℂ G V} {l : Module.Dual ℂ V} (hl : 
     IsOpen (scal ρ l : Set G) := by
   refine (scal ρ l).isOpen_of_mem_nhds (g := 1) (Filter.mem_of_superset ((show IsOpen
     {g : G | ρ.dual g l = l} from hl).mem_nhds (by
-      simp only [Set.mem_setOf_eq, map_one, Module.End.one_apply])) fun g hg => ⟨1, by simp, fun y => ?_⟩)
+      simp only [Set.mem_ofPred_eq, map_one, Module.End.one_apply])) fun g hg => ⟨1, by simp, fun y => ?_⟩)
   have h1 : (ρ.dual g l) (ρ g y) = l (ρ g y) := by rw [show ρ.dual g l = l from hg]
   rw [Representation.dual_apply] at h1
   simp only [Module.Dual.transpose_apply, LinearMap.comp_apply, ← Module.End.mul_apply, ← map_mul,
@@ -123,7 +123,7 @@ theorem exists_finset {ρ : Representation ℂ G V} {l : Module.Dual ℂ V} (hl 
     (hsc : IsSupercuspidal ρ) (hz : ∀ z ∈ Subgroup.center G, ∃ c : ℂ, ‖c‖ = 1 ∧ ∀ v, ρ z v = c • v)
     (v : V) : ∃ s : Finset (G ⧸ scal ρ l), ∀ g : G, l (ρ g⁻¹ v) ≠ 0 → (g : G ⧸ scal ρ l) ∈ s := by
   obtain ⟨C, hC, hCz⟩ := hsc.2 v l hl
-  haveI := QuotientGroup.discreteTopology (isOpen_scal hl)
+  have := QuotientGroup.discreteTopology (isOpen_scal hl)
   have hD : ((fun c : G => ((c⁻¹ : G) : G ⧸ scal ρ l)) '' C).Finite :=
     (hC.image (by fun_prop)).finite_of_discrete
   refine ⟨hD.toFinset, fun g hg => ?_⟩
@@ -200,7 +200,7 @@ theorem isUnitarisable_of_isSupercuspidal : ∀ (G V : Type) [Group G] [Topologi
             intro g'
             rw [← Module.End.mul_apply, ← map_mul]
             exact hy _ }
-      haveI := hirr
+      have := hirr
       rcases eq_bot_or_eq_top U with hU | hU
       · have hvU : v ∈ U.toSubmodule := by
           simp only [U, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.comp_apply]

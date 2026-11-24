@@ -101,7 +101,7 @@ theorem dvd_of_dvd_X_pow_mul {u a : R⟦X⟧} (hu : ¬ (X : R⟦X⟧) ∣ u) {c 
     apply ih
     obtain ⟨v, hv⟩ := h
     have hXv : (X : R⟦X⟧) ∣ u * v := ⟨X ^ c * a, by rw [← hv]; ring⟩
-    rcases X_prime.dvd_or_dvd hXv with hu' | ⟨w, hw⟩
+    rcases prime_X.dvd_or_dvd hXv with hu' | ⟨w, hw⟩
     · exact absurd hu' hu
     · refine ⟨w, mul_left_cancel₀ (X_ne_zero (R := R)) ?_⟩
       calc X * (X ^ c * a) = X ^ (c + 1) * a := by ring
@@ -147,7 +147,7 @@ private theorem constantCoeff_dvd_of_mem_almostMultiples [IsNoetherianRing R] [I
   obtain ⟨h, hh, H⟩ := mem_almostMultiples_iff.1 he
   obtain ⟨b, h₁, hh₁, rfl⟩ := exists_eq_X_pow_mul hh
   have H' : ∀ n : ℕ, g ^ n ∣ h₁ * e ^ n := fun n =>
-    dvd_of_dvd_X_pow_mul (fun hX => hg (X_prime.dvd_of_dvd_pow hX))
+    dvd_of_dvd_X_pow_mul (fun hX => hg (prime_X.dvd_of_dvd_pow hX))
       (c := b) (by simpa [mul_assoc] using H n)
   have hg0 : constantCoeff g ≠ 0 := fun h0 => hg (X_dvd_iff.2 h0)
   have hh0 : constantCoeff h₁ ≠ 0 := fun h0 => hh₁ (X_dvd_iff.2 h0)
@@ -159,7 +159,7 @@ private theorem mem_almostMultiples_of_X_pow_mul_mem {g e : R⟦X⟧} (hg : ¬ (
   obtain ⟨h, hh, H⟩ := mem_almostMultiples_iff.1 he
   refine mem_almostMultiples_iff.2 ⟨h, hh, fun n => ?_⟩
   have : h * (X ^ k * e) ^ n = X ^ (k * n) * (h * e ^ n) := by ring
-  exact dvd_of_dvd_X_pow_mul (fun hX => hg (X_prime.dvd_of_dvd_pow hX)) (this ▸ H n)
+  exact dvd_of_dvd_X_pow_mul (fun hX => hg (prime_X.dvd_of_dvd_pow hX)) (this ▸ H n)
 
 private theorem exists_X_pow_dvd_sub_mul_of_mem_almostMultiples [IsNoetherianRing R] [IsIntegrallyClosed R] {g f : R⟦X⟧}
     (hg : ¬ (X : R⟦X⟧) ∣ g) (hf : f ∈ almostMultiples g) :
@@ -194,7 +194,7 @@ theorem almostMultiples_le [IsNoetherianRing R] [IsIntegrallyClosed R] {g : R⟦
       have e1 : g * (r (j + 1) - r (m + 1)) = (f - g * r (m + 1)) - (f - g * r (j + 1)) := by ring
       rw [e1]
       exact dvd_sub ((pow_dvd_pow X (by omega)).trans (hr (m + 1))) (hr (j + 1))
-    have h2 := X_prime.pow_dvd_of_dvd_mul_left (j + 1) hg h1
+    have h2 := prime_X.pow_dvd_of_dvd_mul_left (j + 1) hg h1
     rw [X_pow_dvd_iff] at h2
     have := h2 j (Nat.lt_succ_self j)
     rw [map_sub, sub_eq_zero] at this
@@ -234,7 +234,7 @@ theorem dvd_of_pow_dvd_powerSeries [IsNoetherianRing R] [IsIntegrallyClosed R] {
     rw [← e1, ← e2]; exact H (b + 1)
   have h2 := (mul_dvd_mul_iff_left (pow_ne_zero (b + 1) hg₁0)).1 h1
   have hw : ¬ (X : R⟦X⟧) ∣ h₁ * f₁ ^ (b + 1) := fun hX =>
-    (X_prime.dvd_or_dvd hX).elim hh₁ fun h' => hf₁ (X_prime.dvd_of_dvd_pow h')
+    (prime_X.dvd_or_dvd hX).elim hh₁ fun h' => hf₁ (prime_X.dvd_of_dvd_pow h')
   have hae : a ≤ e := by
     by_contra hlt
     push Not at hlt

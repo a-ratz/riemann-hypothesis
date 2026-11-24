@@ -115,11 +115,11 @@ private theorem exists_open_avoid (w : Plc E) (x : GLw n w) (hx : x ≠ 1) :
     push_neg at h
     exact hx (Units.ext (Matrix.ext h))
   obtain ⟨i, j, hij⟩ := hne
-  haveI : CompactSpace ↥(GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hKc
+  have : CompactSpace ↥(GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hKc
   let f : ↥(GlobalTheory.LFun.KGL w (n := n)) → w.adicCompletion E :=
     fun g => g.1.val i j - (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j
   have hf : Continuous f :=
-    Continuous.sub (Continuous.matrix_elem (Units.continuous_val.comp continuous_subtype_val) i j) continuous_const
+    Continuous.sub (Continuous.matrix_elem (Units.continuous_val.comp continuous_subtypeVal) i j) continuous_const
   obtain ⟨A, hA⟩ := NonarchimedeanAddGroup.is_nonarchimedean
     ({x.val i j - (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j}ᶜ : Set (w.adicCompletion E))
     (isOpen_compl_singleton.mem_nhds (by simpa using (sub_ne_zero.2 hij).symm))
@@ -167,10 +167,10 @@ end UpperTheory.Gal.CertificateRingHomMap.PNbhd2
 theorem UpperTheory.Gal.CertificateRingHomMap.pNbhd2_of :
     UpperTheory.Gal.CertificateRingHomMap.Nbhd2 := by
   intro E _ _ _ n O hO
-  haveI := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
+  have := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
   let p : finU (E := E) (n := n) →* GL (Fin n) (Af E) :=
     (GeneralLinearGroup.map (pFin E)).comp ((UA E n).subtype.comp (finU (E := E) (n := n)).subtype)
-  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtype_val.comp continuous_subtype_val)
+  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hfin : ∀ x : UA E n, x ∈ finU (E := E) (n := n) ↔
       finGL E n (GeneralLinearGroup.map (pFin E) (x : GA E n)) = (x : GA E n) := by
     intro x
@@ -186,8 +186,8 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pNbhd2_of :
         {x : UA E n | finGL E n (GeneralLinearGroup.map (pFin E) (x : GA E n)) = (x : GA E n)} :=
       Set.ext hfin
     rw [e]
-    exact isClosed_eq (GlobalTheory.DefU.LocAdm.continuous_finGL.comp (continuous_map_pFin.comp continuous_subtype_val))
-      continuous_subtype_val
+    exact isClosed_eq (GlobalTheory.DefU.LocAdm.continuous_finGL.comp (continuous_map_pFin.comp continuous_subtypeVal))
+      continuous_subtypeVal
   have hι : Topology.IsClosedEmbedding (fun x : finU (E := E) (n := n) => ((x : UA E n) : GA E n)) :=
     GlobalTheory.DefU.LocAdm.isClosed_UA.isClosedEmbedding_subtypeVal.comp hc.isClosedEmbedding_subtypeVal
   have hKc := GlobalTheory.EulerTwRestr.isCompact_Kglob (E := E) (n := n)
@@ -250,7 +250,7 @@ private theorem exists_common_eigenvector_of_commute_of_invariant {E ι : Type} 
     exact ⟨x, hx, hx0, fun i => (hs i).imp fun c hc => hc x hx⟩
   · push_neg at hs
     obtain ⟨i, hi⟩ := hs
-    haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hne
+    have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hne
     obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue ((T i).restrict (fun x hx => hW i x hx))
     obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector
     set W' : Submodule ℂ E := W ⊓ LinearMap.ker (T i - μ • LinearMap.id) with hW'
@@ -263,7 +263,7 @@ private theorem exists_common_eigenvector_of_commute_of_invariant {E ι : Type} 
       intro heq
       obtain ⟨x, hx, hne'⟩ := hi μ
       exact hne' ((hmem x).1 (by rw [heq]; exact hx)).2
-    haveI : FiniteDimensional ℂ W' := Submodule.finiteDimensional_of_le hle
+    have : FiniteDimensional ℂ W' := Submodule.finiteDimensional_of_le hle
     have hlt' : finrank ℂ W' < n := hn ▸ Submodule.finrank_lt_finrank_of_lt hlt
     have hne' : W' ≠ ⊥ := by
       intro hbot
@@ -402,7 +402,7 @@ theorem pClassFin_of : ClassFin := by
   have hsel : ∀ y, ψ (sel (ψ y)) = ψ y := by
     intro y
     have h : ∃ z, ψ z = ψ y := ⟨y, rfl⟩
-    simp only [sel, dif_pos h]
+    simp only [sel, dite_eq_left h]
     exact h.choose_spec
   refine ⟨(Finset.univ.image sel ×ˢ F).image (fun p => p.1 * p.2), fun y => ?_⟩
   have hk : ψ ((sel (ψ y))⁻¹ * y) = 1 := by rw [map_mul, map_inv, hsel, inv_mul_cancel]
@@ -813,7 +813,7 @@ theorem pFormGU_of (hExt : ExtEig2) (hCl : ClassFin) (hXi : XiZeta) (hKer : KerF
     by_cases e : w = w₀
     · subst e
       simp only [Kw', Function.update_self]
-      exact (hS.opn w hw).isOpenMap_subtype_val _ hχ
+      exact (hS.opn w hw).isOpenMap_subtypeVal _ hχ
     · simp only [Kw', Function.update_of_ne e]; exact hS.opn w hw
   have hfix' : ∀ u : finU (E := E) (n := n), ofU u ∈ lev S Kw' → algRep W u f = f := fun u hu => by
     obtain ⟨a, h, e⟩ := (mem' _).1 hu
@@ -934,7 +934,7 @@ private theorem hecke_eq_sum {G : Type} [Group G] (K : Subgroup G) (h : G → �
   rw [Finset.sum_image (fun a _ b _ e => Quotient.out_injective e)]
   have hsupp : (Function.support fun q : G ⧸ K => h q.out • ρ q.out x) ⊆ hfin.toFinset := by
     intro q hq
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h0
     exact hq (by simp [h0])
   have hsum : heckeVec ρ K h x = ∑ q ∈ hfin.toFinset, h q.out • ρ q.out x :=
@@ -1144,7 +1144,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pKapOf_of :
       ext a
       simp [Subgroup.mem_map, MonoidHom.mem_ker]
     rw [e]
-    exact (hS.opn w₀ hS.mem).isOpenMap_subtype_val _ hχ
+    exact (hS.opn w₀ hS.mem).isOpenMap_subtypeVal _ hχ
   have hK' := hLO E n S (Function.update Kw w₀ (χ.ker.map (Kw w₀).subtype)) (by
     intro w hw
     by_cases h : w = w₀
@@ -1431,10 +1431,10 @@ private theorem isOpen_intA (F : Type) [Field F] [NumberField F] :
     (fun v => Valued.isOpen_valuationSubring _)
 
 private theorem continuous_sim {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} :
-    Continuous (sim : GUf E n → AfQˣ) := continuous_snd.comp continuous_subtype_val
+    Continuous (sim : GUf E n → AfQˣ) := continuous_snd.comp continuous_subtypeVal
 
 private theorem continuous_mat {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} :
-    Continuous (mat : GUf E n → GL (Fin n) (Af E)) := continuous_fst.comp continuous_subtype_val
+    Continuous (mat : GUf E n → GL (Fin n) (Af E)) := continuous_fst.comp continuous_subtypeVal
 
 private theorem continuous_comp {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ} (w : Plc E) :
     Continuous (comp w : GUf E n → GL (Fin n) (w.adicCompletion E)) :=
@@ -1470,7 +1470,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pLevOpen_of :
     · rw [Matrix.one_apply_ne h]
       change Valued.v (0 : v.adicCompletion E) ≤ 1
       rw [map_zero]
-      exact zero_le'
+      exact zero_le
   have hQ : ∀ v : Plc ℚ, Valued.v ((1 : AfQ) v) ≤ 1 := fun v => by
     change Valued.v (1 : v.adicCompletion ℚ) ≤ 1
     rw [map_one]
@@ -1524,7 +1524,7 @@ private noncomputable def th {w : Plc E} (hw : IsSplitAt w) : GLw n w →* GLw n
 
 private theorem continuous_th {w : Plc E} (hw : IsSplitAt w) : Continuous (th (n := n) hw) :=
   (GlobalTheory.BCT.GlobLev.continuous_cLoc (cj w)).comp
-    ((continuous_subtype_val (p := (· ∈ locU n w))).comp (locE hw).symm.continuous)
+    ((continuous_subtypeVal (p := (· ∈ locU n w))).comp (locE hw).symm.continuous)
 
 private theorem cLoc_cj_eq {w : Plc E} (hw : IsSplitAt w) (u : finU (E := E) (n := n)) :
     cLoc (cj w) u.1 = th hw (cLoc w u.1) :=
@@ -1587,14 +1587,14 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pNbhdU_of :
   have hKle : ∀ w, Kw w ≤ K₀ w := by
     intro w
     by_cases hw : IsSplitAt w
-    · simp only [Kw, dif_pos hw]; exact inf_le_left
-    · simp only [Kw, dif_neg hw]; exact le_rfl
+    · simp only [Kw, dite_eq_left hw]; exact inf_le_left
+    · simp only [Kw, dite_eq_right hw]; exact le_rfl
   have hKopen : ∀ w, IsOpen (Kw w : Set (GLw n w)) := by
     intro w
     by_cases hw : IsSplitAt w
-    · simp only [Kw, dif_pos hw, Subgroup.coe_inf, Subgroup.coe_comap]
+    · simp only [Kw, dite_eq_left hw, Subgroup.coe_inf, Subgroup.coe_comap]
       exact (hK₀ w).1.inter ((hK₀ (cj w)).1.preimage (continuous_th hw))
-    · simp only [Kw, dif_neg hw]; exact (hK₀ w).1
+    · simp only [Kw, dite_eq_right hw]; exact (hK₀ w).1
   have hKKGL : ∀ w, Kw w ≤ GlobalTheory.LFun.KGL w (n := n) := fun w => (hKle w).trans (hK₀ w).2
   have hmemS : ∀ w, w ∈ T → (IsSplitAt w → Top lt Up w₀ w) → w ∈ S := fun w h h' => Finset.mem_filter.2 ⟨h, h'⟩
   refine ⟨S, Kw, ⟨?_, fun w _ => hKopen w, fun w _ => ?_, fun w _ _ => hKKGL w, fun w hw hs => ?_⟩, ?_⟩
@@ -1623,7 +1623,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pNbhdU_of :
       · have ht' := (top_or hlt1 w₀ (hne w hs) (hUp w hs)).resolve_left ht
         have hT' : cj w ∈ T := Finset.mem_insert_of_mem (Finset.mem_union_right _ (Finset.mem_image_of_mem _ hw))
         have h3 := hS (cj w) (hmemS _ hT' fun _ => ht')
-        simp only [Kw, dif_pos (hsp w hs)] at h3
+        simp only [Kw, dite_eq_left (hsp w hs)] at h3
         have h4 : th (hsp w hs) (cLoc (cj w) u.1) ∈ K₀ (cj (cj w)) := (Subgroup.mem_inf.1 h3).2
         rw [← cLoc_cj_eq (hsp w hs) u] at h4
         have key : ∀ v : Plc E, v = w → cLoc v u.1 ∈ K₀ v → cLoc w u.1 ∈ K₀ w := by
@@ -1730,15 +1730,15 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pSphType_of :
     have hlev := (π.isAut.aut φ hφ).level
     have hc : Continuous fun k : J => (locF hw k.1 : finU (E := E) (n := n)) := by
       have h1 : Continuous fun k : GLw n w => (locF hw k : finU (E := E) (n := n)) :=
-        Continuous.subtype_mk (continuous_subtype_val.comp (locE hw).symm.continuous) _
-      exact h1.comp continuous_subtype_val
+        Continuous.subtype_mk (continuous_subtypeVal.comp (locE hw).symm.continuous) _
+      exact h1.comp continuous_subtypeVal
     have hset : {k : J | χ k = 1} = (fun k : J => (locF hw k.1 : finU (E := E) (n := n))) ⁻¹' {k : finU (E := E) (n := n) | RU E n k φ = φ} := by
       ext k
       have hk : cLoc w (locF hw k.1).1 ∈ J := by rw [cLoc_locF]; exact k.2
       have h1 := hact (locF hw k.1).1 (locF_mem hw k.1) hk
       have h2 : (⟨cLoc w (locF hw k.1).1, hk⟩ : J) = k := Subtype.ext (cLoc_locF hw k.1)
       rw [h2] at h1
-      simp only [Set.mem_setOf_eq, Set.mem_preimage]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage]
       rw [h1]
       constructor
       · intro h; rw [h]; simp
@@ -1819,9 +1819,9 @@ theorem UpperTheory.Gal.CertificateRingHomMap.pXiZeta_of :
   refine Finset.prod_congr rfl fun u _ => ?_
   by_cases h : φ x = -u.embedding x
   · have h' : u.embedding x = -φ x := by rw [h, neg_neg]
-    rw [if_pos h, if_pos h', _root_.zpow_neg]
+    rw [ite_eq_left h, ite_eq_left h', _root_.zpow_neg]
   · have h' : ¬ u.embedding x = -φ x := fun h'' => h (by rw [h'', neg_neg])
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
     simp
 end -- clump:auto
 end -- clump:auto

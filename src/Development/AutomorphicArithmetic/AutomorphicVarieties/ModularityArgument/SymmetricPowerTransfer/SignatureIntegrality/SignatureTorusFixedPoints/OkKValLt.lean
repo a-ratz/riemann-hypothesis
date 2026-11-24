@@ -120,7 +120,7 @@ private theorem okK_val_lt (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
   have hw : valuation k (unif k : k) < 1 := by
     rw [GlAx.unif_spec]
     exact uniformizer_lt_one
-  exact ht.trans (pow_lt_one₀ zero_le' hw two_ne_zero)
+  exact ht.trans (pow_lt_one₀ zero_le hw two_ne_zero)
 
 private theorem okK_conj {k : Type} [Field k] (g₀ : GL (Fin 2) k) (a b : kˣ) :
     ((g₀ * diagT k (Fin 2) ![a, b] * g₀⁻¹ : GL (Fin 2) k) : Matrix (Fin 2) (Fin 2) k).trace = (a : k) + b ∧
@@ -186,7 +186,7 @@ theorem UpperTheory.V.Z.Sym.Sig.okK :
       exact QuotientGroup.eq.mpr hm
     refine (Set.Finite.preimage (f := φ) (fun x _ x' _ he => hφ x x' he) hfin).subset ?_
     intro x hx
-    simp only [Set.mem_setOf_eq, Set.mem_preimage] at hx ⊢
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage] at hx ⊢
     rw [hfK] at hx
     have hx' := right_ne_zero_of_mul hx
     show V.fZ χ ![t, 1] (Quotient.out (QuotientGroup.mk (eD hs x.out) : GL (Fin 2) k ⧸ V.ZJ 2)) ≠ 0

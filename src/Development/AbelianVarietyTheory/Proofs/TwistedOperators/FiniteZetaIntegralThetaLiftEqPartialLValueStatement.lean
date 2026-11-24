@@ -319,7 +319,7 @@ theorem mem_offSet_mk {p : ∀ v, G →* L v} {K : ∀ v, Subgroup (L v)} {J H :
     (g : H ⧸ J.subgroupOf H) ∈ offSet p K J H T ↔ ∀ v ∉ T, p v g ∈ K v := by
   obtain ⟨k, hk, h⟩ := out_mul hJH g
   have hk' := (hJ k (hJH hk)).1 hk
-  simp only [offSet, Set.mem_setOf_eq, h, map_mul]
+  simp only [offSet, Set.mem_ofPred_eq, h, map_mul]
   exact forall₂_congr fun v _ => Subgroup.mul_mem_cancel_right _ (hk' v)
 
 theorem p_shift_self {e : ∀ v, L v →* G} {p : ∀ v, G →* L v} (hpe : ∀ v a, p v (e v a) = a)
@@ -649,11 +649,11 @@ theorem hasSum_cosets_smaller_level_relIndex_mul : ∀ {G : Type} [Group G] (K J
   have hJΓ : J ≤ Γ := hJH.trans hHΓ
   have hrel : (K.subgroupOf Γ).relIndex (J.subgroupOf Γ) = K.relIndex J :=
     Subgroup.relIndex_subgroupOf hJΓ
-  haveI : (((K.subgroupOf Γ).subgroupOf (J.subgroupOf Γ))).FiniteIndex := ⟨by
+  have : (((K.subgroupOf Γ).subgroupOf (J.subgroupOf Γ))).FiniteIndex := ⟨by
     rw [← Subgroup.relIndex, hrel]; exact hidx⟩
-  haveI : Finite (J.subgroupOf Γ ⧸ (K.subgroupOf Γ).subgroupOf (J.subgroupOf Γ)) :=
+  have : Finite (J.subgroupOf Γ ⧸ (K.subgroupOf Γ).subgroupOf (J.subgroupOf Γ)) :=
     Subgroup.finite_quotient_of_finiteIndex
-  letI := Fintype.ofFinite (J.subgroupOf Γ ⧸ (K.subgroupOf Γ).subgroupOf (J.subgroupOf Γ))
+  let := Fintype.ofFinite (J.subgroupOf Γ ⧸ (K.subgroupOf Γ).subgroupOf (J.subgroupOf Γ))
   have hcard : (Fintype.card (J.subgroupOf Γ ⧸ (K.subgroupOf Γ).subgroupOf (J.subgroupOf Γ)) : ℂ)
       = (K.relIndex J : ℂ) := by
     rw [Fintype.card_eq_nat_card, ← Subgroup.index, ← Subgroup.relIndex, hrel]

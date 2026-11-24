@@ -101,12 +101,12 @@ theorem UpperTheory.V.Pa.cCount :
     { carrier := {m | ρ c m = m}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_add (f := _), ha, hb]
       zero_mem' := by simp
       neg_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_neg, ha] }
   have cardMc : Nat.card {m : M // ρ c m = m} = Nat.card Mc :=
     Nat.card_congr (Equiv.subtypeEquivRight (fun m => Iff.rfl))
@@ -127,7 +127,7 @@ theorem UpperTheory.V.Pa.cCount :
         right_inv := fun _ => rfl }
   have hRange' : ∀ z, z ∈ f'.range ↔ z ∈ {z | z ∈ Bl ρ ∧ z c = 0} := by
     intro z
-    simp only [Set.mem_setOf_eq, AddMonoidHom.mem_range]
+    simp only [Set.mem_ofPred_eq, AddMonoidHom.mem_range]
     constructor
     · rintro ⟨x, rfl⟩
       refine ⟨(hBl _).2 ⟨x.1, (hf' x).symm⟩, ?_⟩

@@ -95,7 +95,7 @@ theorem _root_.GlobalTheory.card_le_pow_of_linearIndependent_theta_principal :
     have hmem : φ (Pi.single i 1) ∈ Λ := (hΛ _).mpr ⟨Pi.single i 1, 0, by
       rw [hs]; ext j; simp [Matrix.mulVec, dotProduct]⟩
     obtain ⟨l, hl⟩ : ∃ l : Λ, (l : Fin g → ℂ) = φ (Pi.single i 1) := ⟨⟨_, hmem⟩, rfl⟩
-    rw [map_add (f := _), ← hl, (hf k).2 l, hQ1 i l z hl, ← Complex.exp_nat_mul]
+    rw [map_add (f := _), ← hl, (hf k).2 l, hQ1 i l z hl, ← exp_natCast_mul]
     have key : cexp (↑n * (Q (z + Pi.single i 1) - Q z)) * cexp (-(↑n * Q (z + Pi.single i 1))) =
         cexp (-(↑n * Q z)) := by
       rw [← Complex.exp_add]; congr 1; ring
@@ -107,8 +107,8 @@ theorem _root_.GlobalTheory.card_le_pow_of_linearIndependent_theta_principal :
     have hmem : φ (τ *ᵥ Pi.single j 1) ∈ Λ := (hΛ _).mpr ⟨0, Pi.single j 1, by
       rw [hs]; ext i; simp⟩
     obtain ⟨l, hl⟩ : ∃ l : Λ, (l : Fin g → ℂ) = φ (τ *ᵥ Pi.single j 1) := ⟨⟨_, hmem⟩, rfl⟩
-    rw [map_add (f := _), ← hl, (hf k).2 l, hQ2 j l z hl, mul_pow, mul_pow, ← Complex.exp_nat_mul,
-      ← Complex.exp_nat_mul]
+    rw [map_add (f := _), ← hl, (hf k).2 l, hQ2 j l z hl, mul_pow, mul_pow, ← exp_natCast_mul,
+      ← exp_natCast_mul]
     have key : cexp (↑n * (-(2 * ↑Real.pi * I) * z j)) *
         cexp (↑n * (Q (z + τ *ᵥ Pi.single j 1) - Q z)) *
         cexp (-(↑n * Q (z + τ *ᵥ Pi.single j 1))) =

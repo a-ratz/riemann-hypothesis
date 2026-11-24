@@ -373,7 +373,7 @@ theorem _root_.GlobalTheory.RootEx.UnfoldShape.opE_translate (ψ : AddChar k Cir
     (hy : ∀ i, y i ∈ _root_.GlobalTheory.IndefiniteRowSideFullHecke.ExponentTerms.Yle k n c (i.val + 1)) (hΨ : ∀ x, Ψ (x + _root_.GlobalTheory.RootEx.UnfoldShape.colMat n' y) = Ψ x)
     (x₀ : Matrix n n' k) :
     _root_.GlobalTheory.RootEx.opE ψ ν 1 Ψ x₀ = (ψ (-∑ i, y i (Sum.inr i)) : ℂ) * _root_.GlobalTheory.RootEx.opE ψ ν 1 Ψ x₀ := by
-  haveI := _root_.GlobalTheory.SplitWeil.secondCountable k
+  have := _root_.GlobalTheory.SplitWeil.secondCountable k
   unfold _root_.GlobalTheory.RootEx.opE
   conv_lhs => rw [← integral_add_right_eq_self _ (_root_.GlobalTheory.RootEx.UnfoldShape.uncol n' y)]
   rw [← integral_const_mul]

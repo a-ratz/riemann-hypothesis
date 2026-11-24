@@ -63,7 +63,7 @@ theorem pow_self_le_factorial_sq (n : ℕ) : n ^ n ≤ n.factorial ^ 2 := by
       _ = n.factorial := h1
   calc n ^ n = ∏ _k ∈ Finset.range n, n := by rw [Finset.prod_const, Finset.card_range]
     _ ≤ ∏ k ∈ Finset.range n, ((k + 1) * (n - k)) := by
-        apply Finset.prod_le_prod'
+        apply Finset.prod_le_prod
         intro k hk
         have hk := Finset.mem_range.1 hk
         obtain ⟨m, hm⟩ : ∃ m, n - k = m + 1 := ⟨n - k - 1, by omega⟩
@@ -154,9 +154,9 @@ theorem lam_ballU_le (p q : ℕ) (lam : Measure (lieU p q)) (h : IsOmegaLeb lam)
       (ab.1 : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) +
         Complex.I • (ab.2 : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) :=
     have h1 : Continuous fun ab : lieU p q × lieU p q =>
-        (ab.1 : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) := continuous_subtype_val.comp continuous_fst
+        (ab.1 : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) := continuous_subtypeVal.comp continuous_fst
     have h2 : Continuous fun ab : lieU p q × lieU p q =>
-        (ab.2 : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) := continuous_subtype_val.comp continuous_snd
+        (ab.2 : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) := continuous_subtypeVal.comp continuous_snd
     h1.add (h2.const_smul Complex.I)
   have hΦ : Measurable fun ab : lieU p q × lieU p q =>
       entries ((ab.1 : Matrix (Fin p ⊕ Fin q) (Fin p ⊕ Fin q) ℂ) +

@@ -118,7 +118,7 @@ private theorem dense {O R : Type} [CommRing O] [CommRing R] [IsLocalRing R] [Al
     (hz : ∀ s, W.z s ∈ maximalIdeal R) (D : Subalgebra O R)
     (hD : ∀ m, Finsupp.weight W.wt m = 0 → W.π (MvPowerSeries.monomial m 1) ∈ D) {y : R} (hy : y ∈ W.part 0) :
     y ∈ adicClosure D := by
-  haveI := W.fin
+  have := W.fin
   classical
   simp only [WPres.part, Submodule.mem_map] at hy
   obtain ⟨f, hf, rfl⟩ := hy
@@ -141,7 +141,7 @@ private theorem dense {O R : Type} [CommRing O] [CommRing R] [IsLocalRing R] [Al
   let S : Set (W.σ →₀ ℕ) := {m | Finsupp.weight W.wt m = 0 ∧ ∃ s, N ≤ m s}
   have hg : ∀ m ∉ S, MvPowerSeries.coeff m (f - low) = 0 := by
     intro m hm
-    simp only [S, Set.mem_setOf_eq, not_and, not_exists, not_le] at hm
+    simp only [S, Set.mem_ofPred_eq, not_and, not_exists, not_le] at hm
     have hl : MvPowerSeries.coeff m low = if m ∈ Finset.Iic c then MvPowerSeries.coeff m f else 0 := by
 
       simp [low, map_sum, MvPowerSeries.coeff_monomial]
@@ -256,8 +256,8 @@ private theorem coord {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalR
   let wt : (F.G0 × Fin n × Fin n) ⊕ (Σ v : F.V, Fin n × F.Gv v) → ℤ := Sum.elim
     (fun p => w n p.2.1 - w n p.2.2) (fun _ => 0)
   have eon : ∀ g i, e (Sum.inl (g, i, i)) = S.ρ.r g i i - algebraMap O S.R (a (S.ρ.r g i i)) :=
-    fun g i => if_pos rfl
-  have eoff : ∀ g i j, i ≠ j → e (Sum.inl (g, i, j)) = S.ρ.r g i j := fun g i j h => if_neg h
+    fun g i => ite_eq_left rfl
+  have eoff : ∀ g i j, i ≠ j → e (Sum.inl (g, i, j)) = S.ρ.r g i j := fun g i j h => ite_eq_right h
   have eψ : ∀ v i g, e (Sum.inr ⟨v, i, g⟩) =
       (S.ρ.ψ v i g : S.R) - algebraMap O S.R (a (S.ρ.ψ v i g)) := fun v i g => rfl
   have hoff : ∀ g i j, i ≠ j → S.ρ.r g i j ∈ maximalIdeal S.R := fun g i j h =>

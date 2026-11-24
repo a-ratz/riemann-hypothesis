@@ -63,7 +63,7 @@ theorem isRoot_iff {K : Type} [CommRing K] (q : ℕ) (x : K) :
 
 theorem res_prim {C : Type} [CommRing C] [IsLocalRing C] {q : ℕ} [NeZero q] (hq : IsUnit (q : C)) {ζ : C}
     (h : aeval ζ (cyclotomic q ℤ) = 0) : IsPrimitiveRoot (residue C ζ) q := by
-  haveI : NeZero ((q : ℕ) : ResidueField C) := ⟨by
+  have : NeZero ((q : ℕ) : ResidueField C) := ⟨by
     have := hq.map (residue C); rw [map_natCast] at this; exact this.ne_zero⟩
   rw [← isRoot_cyclotomic_iff, isRoot_iff]
   exact (aeval_res q ζ).trans (by rw [h, map_zero])
@@ -118,7 +118,7 @@ theorem pow_inj {C : Type} [CommRing C] {q : ℕ} [NeZero q] {η : C} (hη : IsP
 theorem exists_root {A : Type} [CommRing A] {q : ℕ} [NeZero q] (hq : IsUnit (q : A)) (hA : SH A) :
     ∃ ζ : A, aeval ζ (cyclotomic q ℤ) = 0 := by
   obtain ⟨hH, hS⟩ := hA
-  haveI : NeZero ((q : ℕ) : ResidueField A) := ⟨by
+  have : NeZero ((q : ℕ) : ResidueField A) := ⟨by
     have := hq.map (residue A); rw [map_natCast] at this; exact this.ne_zero⟩
   obtain ⟨x, hx⟩ := IsSepClosed.exists_root (cyclotomic q (ResidueField A))
     (ne_of_gt (degree_cyclotomic_pos q _ (Nat.pos_of_ne_zero (NeZero.ne q)))) (separable_cyclotomic q _)
@@ -230,10 +230,10 @@ theorem TwFBij_of : LateralTheory.E.SHEqvPf.TwFBij := by
   have hloc : ∀ (R : CommRingCat.{0}), IsLocalRing R → IsLocalRing Γ(Spec R, ⊤) := by
     intro R _
     let e := (Scheme.ΓSpecIso R).commRingCatIsoToRingEquiv
-    haveI : Nontrivial Γ(Spec R, ⊤) := e.toEquiv.nontrivial
+    have : Nontrivial Γ(Spec R, ⊤) := e.toEquiv.nontrivial
     exact IsLocalRing.of_surjective' e.symm.toRingHom e.symm.surjective
-  haveI := hloc A inferInstance
-  haveI := hloc B inferInstance
+  have := hloc A inferInstance
+  have := hloc B inferInstance
   obtain ⟨ζ, hζ⟩ := exists_root hq ⟨hHA, hSA⟩
   exact bij_gen i _ (Prim.map (Scheme.ΓSpecIso A).inv.hom ⟨ζ, hq, hζ⟩)
 

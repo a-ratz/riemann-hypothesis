@@ -242,12 +242,12 @@ namespace GlobalTheory.CompanionTheory.Ar.Sl.KeyDeg.Gen
 
 theorem exists_generic_mem_nonzeroLocus : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] (G : Over (Sp R)) [GrpObj G] [Smooth G.hom] [GeometricallyConnected G.hom] (M : LB G.left), M.IsLB → ∀ t : SecMod G.hom M, t ≠ 0 → ∀ b : Sp R, b.asIdeal = ⊥ → ∃ y : G.left, G.hom y = b ∧ y ∈ Out.nonzeroLocus (M := M) t := by
   intro R _ _ _ G _ _ _ M hM t ht b hb
-  haveI hI : IsIntegral (Sp R) := by unfold Sp; infer_instance
-  haveI hN : IsLocallyNoetherian (Sp R) := by unfold Sp; infer_instance
-  haveI hGI : GeometricallyIntegral G.hom :=
+  have hI : IsIntegral (Sp R) := by unfold Sp; infer_instance
+  have hN : IsLocallyNoetherian (Sp R) := by unfold Sp; infer_instance
+  have hGI : GeometricallyIntegral G.hom :=
     GlobalTheory.geometricallyIntegral_of_smooth_of_geometricallyConnected_fibres G.hom
-  haveI hGR : GeometricallyReduced G.hom := inferInstance
-  haveI hRed : AlgebraicGeometry.IsReduced G.left :=
+  have hGR : GeometricallyReduced G.hom := inferInstance
+  have hRed : AlgebraicGeometry.IsReduced G.left :=
     GeometricallyReduced.isReduced_of_flat_of_isLocallyNoetherian G.hom
   have hgen : GeneralizingMap G.hom.base := Flat.generalizingMap G.hom
   have hne : ∃ y, y ∈ Out.nonzeroLocus (M := M) t := by
@@ -281,8 +281,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Basis
 
 theorem projective_of_torsionFree {R M : Type} [CommRing R] [IsDedekindDomain R] [AddCommGroup M]
     [Module R M] [Module.Finite R M] [Module.IsTorsionFree R M] : Module.Projective R M := by
-  haveI : Module.FinitePresentation R M := Module.finitePresentation_of_finite _ _
-  haveI : Module.Flat R M := IsDedekindDomain.flat_iff_torsion_eq_bot.2
+  have : Module.FinitePresentation R M := Module.finitePresentation_of_finite _ _
+  have : Module.Flat R M := IsDedekindDomain.flat_iff_torsion_eq_bot.2
     (Submodule.isTorsionFree_iff_torsion_eq_bot.1 inferInstance)
   exact Module.Flat.projective_of_finitePresentation
 
@@ -316,8 +316,8 @@ theorem exists_ideal_cover {R : Type} [CommRing R] [IsDedekindDomain R] (g : ℕ
     exact Subsingleton.elim _ _
   | succ g ih =>
     intro B _ _ _ _ hB
-    haveI : Module.Projective R B := projective_of_torsionFree
-    haveI : Nontrivial B := by
+    have : Module.Projective R B := projective_of_torsionFree
+    have : Nontrivial B := by
       by_contra hn
       rw [not_nontrivial_iff_subsingleton] at hn
       rw [Module.finrank_zero_of_subsingleton] at hB
@@ -329,7 +329,7 @@ theorem exists_ideal_cover {R : Type} [CommRing R] [IsDedekindDomain R] (g : ℕ
       have : f x ∈ J := ⟨x, rfl⟩
       rw [h] at this
       simpa using this)
-    haveI : Module.Projective R J := projective_of_torsionFree
+    have : Module.Projective R J := projective_of_torsionFree
     obtain ⟨s, hs⟩ := LinearMap.exists_rightInverse_of_surjective f.rangeRestrict
       (LinearMap.range_rangeRestrict f)
     have hrank : Module.finrank R (LinearMap.ker f) = g := by
@@ -406,8 +406,8 @@ theorem exists_extension_principal {ι : Type} [Fintype ι] (L : Type) [Field L]
   let p : Polynomial L := ∏ i, q i
   have hq0 : ∀ i, q i ≠ 0 := fun i => Polynomial.X_pow_sub_C_ne_zero (Nat.pos_of_ne_zero (hh i)) _
   have hp0 : p ≠ 0 := Finset.prod_ne_zero_iff.2 fun i _ => hq0 i
-  haveI : FiniteDimensional ℚ p.SplittingField := FiniteDimensional.trans ℚ L p.SplittingField
-  haveI : NumberField p.SplittingField := NumberField.mk
+  have : FiniteDimensional ℚ p.SplittingField := FiniteDimensional.trans ℚ L p.SplittingField
+  have : NumberField p.SplittingField := NumberField.mk
   have hroot : ∀ i, ∃ z : p.SplittingField, z ^ h i = algebraMap L p.SplittingField (c i : L) := by
     intro i
     have hdvd : (q i).map (algebraMap L p.SplittingField) ∣ p.map (algebraMap L p.SplittingField) :=
@@ -502,13 +502,13 @@ theorem linearIndependent_of_span_card {R M ι : Type} [CommRing R] [IsDomain R]
 
 theorem exists_basis_after_extension : ∀ (L : Type) [Field L] [NumberField L] (B : Type) [AddCommGroup B] [Module (𝓞 L) B] [Module.Finite (𝓞 L) B] [Module.Projective (𝓞 L) B] (I : Ideal (𝓞 L)), I ≠ ⊥ → ∃ (L' : Type) (_ : Field L') (_ : NumberField L') (_ : Algebra L L') (y : 𝓞 L'), I.map (algebraMap (𝓞 L) (𝓞 L')) = Ideal.span {y} ∧ ∀ (B' : Type) [AddCommGroup B'] [Module (𝓞 L') B'] [Module.Finite (𝓞 L') B'] [Module.Projective (𝓞 L') B'] (io : B →ₛₗ[algebraMap (𝓞 L) (𝓞 L')] B'), Submodule.span (𝓞 L') (Set.range io) = ⊤ → Module.finrank (𝓞 L') B' = Module.finrank (𝓞 L) B → ∃ e : Fin (Module.finrank (𝓞 L') B') → B', LinearIndependent (𝓞 L') e ∧ Submodule.span (𝓞 L') (Set.range e) = ⊤ := by
   intro L _ _ B _ _ _ _ I hI
-  haveI : Module.IsTorsionFree (𝓞 L) B := Module.Flat.isTorsionFree
+  have : Module.IsTorsionFree (𝓞 L) B := Module.Flat.isTorsionFree
   obtain ⟨ι, _, J, b, hc, hJ, hsup⟩ := exists_ideal_cover (Module.finrank (𝓞 L) B) B rfl
   obtain ⟨L', _, _, _, y, hy⟩ := exists_extension_principal L (fun o : Option ι => o.elim I J)
     (by rintro (_ | i); exacts [hI, hJ i])
   refine ⟨L', inferInstance, inferInstance, inferInstance, y none, (hy none).2, ?_⟩
   intro B' _ _ _ _ io hspan hrk
-  haveI : Module.IsTorsionFree (𝓞 L') B' := Module.Flat.isTorsionFree
+  have : Module.IsTorsionFree (𝓞 L') B' := Module.Flat.isTorsionFree
   obtain ⟨e, he⟩ := exists_spanning (algebraMap (𝓞 L) (𝓞 L')) J b hsup io hspan
     (fun i => y (some i)) (fun i => (hy (some i)).1) (fun i => (hy (some i)).2)
   have hli : LinearIndependent (𝓞 L') e :=
@@ -704,7 +704,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Sl.KeyDeg.FibDiv
 theorem mem_map_of_mem_primes {R A : Type} [CommRing R] [CommRing A] [Algebra R A] [Algebra.Smooth R A]
     (m : Ideal R) [hm : m.IsMaximal] (a : A)
     (h : ∀ P : Ideal A, P.IsPrime → m.map (algebraMap R A) ≤ P → a ∈ P) : a ∈ m.map (algebraMap R A) := by
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
   have hr : _root_.IsReduced ((R ⧸ m) ⊗[R] A) := isReduced_of_smooth_alg (R ⧸ m) _
   have hr' : _root_.IsReduced (A ⊗[R] (R ⧸ m)) :=
     isReduced_of_injective (Algebra.TensorProduct.comm R A (R ⧸ m)).toRingEquiv.toRingHom
@@ -771,7 +771,7 @@ theorem exists_smul_eq_smul : ∀ (R : Type) [CommRing R] [IsDomain R] (X : Sche
       have sm' : RingHom.Smooth ((p.appLE ⊤ V le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom) :=
         RingHom.Smooth.comp
           (RingHom.Smooth.of_bijective (Scheme.ΓSpecIso (CommRingCat.of R)).symm.commRingCatIsoToRingEquiv.bijective) sm
-      letI := ((p.appLE ⊤ V le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom).toAlgebra
+      let := ((p.appLE ⊤ V le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom).toAlgebra
       have : Algebra.Smooth R Γ(X, V) := sm'
       have hconst : ∀ r : R, algebraMap R Γ(X, V) r = constFn p V r := fun _ => rfl
       have hmem : (X.presheaf.map (homOfLE hle).op).hom (LB.Sec.f u j) ∈ b.asIdeal.map (algebraMap R Γ(X, V)) := by
@@ -974,7 +974,7 @@ theorem section_and_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       obtain ⟨x, u, hu, hV⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.KeydegPrimes.exists_multiple_not_mem (𝓞 L) _ (fun a m ha h => eq_zero_of_smul_eq_zero ha h) t ht d₀ hd₀ hb
         {u | ∀ yy : D.t.G.left, D.t.G.hom yy = b → yy ∉ Out.nonzeroLocus (M := LB.LinComb D.t.PP.L (K := Fin 1) (fun _ => 𝟙 _) (fun _ => ((1 : ℕ) : ℤ))) u}
         b.asIdeal hmax hb0 (fun u hu c e he h => _root_.GlobalTheory.CompanionTheory.Ar.Sl.KeyDeg.FibDiv.exists_smul_eq_smul (𝓞 L) _ D.t.G.hom _ b hmax u hu c e he h)
-      simp only [Set.mem_setOf_eq, not_forall, not_not] at hV
+      simp only [Set.mem_ofPred_eq, not_forall, not_not] at hV
       obtain ⟨yy, hyy, hmem⟩ := hV
       exact ⟨x, u, hu, yy, hyy, hmem⟩
   obtain ⟨y', hy', hm'⟩ := hP2 u b' yy hyy hmem

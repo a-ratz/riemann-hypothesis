@@ -82,7 +82,7 @@ private theorem UpperTheory.Reformulated.B.AbsolutelyIrreducibleSpan.adjoin_top 
   have hsm : ∀ (a : A) (v : n → k), a • v = (a : Module.End k (n → k)) v := fun _ _ => rfl
   have hk : ∀ (c : k) (v : n → k), (algebraMap k A c) • v = c • v := fun c v => by
     rw [hsm]; simp
-  haveI : IsSemisimpleModule A (n → k) := by
+  have : IsSemisimpleModule A (n → k) := by
     rw [isSemisimpleModule_iff]
     constructor
     intro W

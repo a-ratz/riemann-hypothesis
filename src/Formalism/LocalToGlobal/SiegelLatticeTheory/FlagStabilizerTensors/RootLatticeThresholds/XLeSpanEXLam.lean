@@ -335,7 +335,7 @@ theorem fibFin_holds : Formalism.L2.SG.TermTieOf.FibFinAll := by
     have hrow : IsRowLat D (X.Fu u') s₀.1.lam' := (Y.rowsOK u').1 _ s₀.1.mem'
     have hA : (autLz D (X.Fu u') s₀.1.lam').Finite :=
       _root_.automorphism_lattice_finite D (D.sp.Y_sig 0) _ (D.mem u').A.T_prime.pos (X.Fu u') _ hrow
-    haveI := hA.to_subtype
+    have := hA.to_subtype
     exact Finite.of_injective (phi Y t s₀) (phi_inj t s₀)
 
 section Move
@@ -740,7 +740,7 @@ theorem pair_step (hK : IotaKer) {s₁ s₂ t₁ t₂ : TT Y u u'} (h1 : s₁.to
   have hsF := X_le_spanE_XLam (X.Fu u) s₁.lam ((Y.rowsOK u).1 _ s₁.mem)
   constructor
   · unfold s0T
-    rw [if_pos ⟨hl, hl'⟩, if_pos ⟨hm, hm'⟩, ← hl1, hβt]
+    rw [ite_eq_left ⟨hl, hl'⟩, ite_eq_left ⟨hm, hm'⟩, ← hl1, hβt]
     have hT := Th_move hn₁ hn₂' hm₁ hm₂' hf₁ hzt₁ hf₂ hzt₂ (lift_F s₁) (lift_frame s₁) hL₂ hsF (hs_frame s₁) hβ hβX
       hτX hτ
     unfold Lat.s0

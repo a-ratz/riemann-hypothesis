@@ -61,7 +61,7 @@ theorem goal1 :
   have h0 : P.asIdeal ≠ ⊥ := P.ne_bot
   have h1 : P.asIdeal ≠ ⊤ := P.isPrime.ne_top
   have hlt : P.asIdeal ^ 2 < P.asIdeal := Ideal.pow_lt_self _ h0 h1 2 le_rfl
-  obtain ⟨a, haP, ha2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨a, haP, ha2⟩ := IsConcreteLE.exists_of_lt hlt
   have hdvd : P.asIdeal ∣ Ideal.span {a} :=
     Ideal.dvd_iff_le.mpr ((Ideal.span_singleton_le_iff_mem _).mpr haP)
   obtain ⟨J, hJ⟩ := hdvd
@@ -71,7 +71,7 @@ theorem goal1 :
     have h2 : Ideal.span {a} ≤ P.asIdeal ^ 2 := by
       rw [hJ, pow_two]; exact Ideal.mul_mono_right hle
     exact (Ideal.span_singleton_le_iff_mem _).mp h2
-  obtain ⟨c, hcJ, hcP⟩ := SetLike.not_le_iff_exists.mp hJP
+  obtain ⟨c, hcJ, hcP⟩ := IsConcreteLE.not_le_iff_exists.mp hJP
   refine ⟨a, haP, c, hcP, fun p hp => ?_⟩
   have hm : c * p ∈ Ideal.span {a} := by
     rw [hJ, mul_comm c p]; exact Ideal.mul_mem_mul hp hcJ

@@ -72,10 +72,10 @@ theorem _root_.GlobalTheory.exists_finsum_smul_eq_one_of_tame :
         ∃ b : B, ∑ᶠ g : Γ, g • b = 1 := by
   intro Γ _ _ B _ _ htame
   classical
-  haveI := Fintype.ofFinite Γ
+  have := Fintype.ofFinite Γ
   let A := FixedPoints.subring B Γ
-  haveI : Algebra.IsInvariant A B Γ := ⟨fun b hb => ⟨⟨b, hb⟩, rfl⟩⟩
-  haveI := Algebra.IsInvariant.isIntegral A B Γ
+  have : Algebra.IsInvariant A B Γ := ⟨fun b hb => ⟨⟨b, hb⟩, rfl⟩⟩
+  have := Algebra.IsInvariant.isIntegral A B Γ
   have tr_inv : ∀ b : B, ∑ g : Γ, g • b ∈ A := by
     intro b h
     rw [Finset.smul_sum]

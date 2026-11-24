@@ -114,9 +114,9 @@ theorem exists_trait_pt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
       ξ (closedPoint W) = x := by
   intro R _ _ _ hR M x hx
   obtain ⟨⟨hRn, -, -, -⟩, hR0⟩ := hR
-  haveI := M.integral
-  haveI := M.proper
-  haveI : IsLocallyNoetherian M.S := LocallyOfFiniteType.isLocallyNoetherian M.π
+  have := M.integral
+  have := M.proper
+  have : IsLocallyNoetherian M.S := LocallyOfFiniteType.isLocallyNoetherian M.π
   let A := M.S.presheaf.stalk x
   let ψc : CommRingCat.of R ⟶ A :=
     (Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ M.π.appTop ≫ M.S.presheaf.germ ⊤ x trivial
@@ -138,11 +138,11 @@ theorem exists_trait_pt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
       rw [← hcomp]
       exact h0
     exact congrArg PrimeSpectrum.asIdeal e1
-  haveI : CharZero A := charZero_of_injective_ringHom hψi
+  have : CharZero A := charZero_of_injective_ringHom hψi
   obtain ⟨V, _, _, _, φ₀, hV, hφ₀i, hφ₀l⟩ : ∃ (V : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsLocalRing V)
       (φ₀ : A →+* V), GlobalTheory.LN.CDvr V ∧ Function.Injective φ₀ ∧ IsLocalHom φ₀ := by
     by_cases h : IsField A
-    · letI := h.toField
+    · let := h.toField
       refine ⟨PowerSeries A, inferInstance, inferInstance, inferInstance, PowerSeries.C, ⟨inferInstance, ?_, ?_⟩,
         PowerSeries.C_injective, inferInstance⟩
       · rw [PowerSeries.maximalIdeal_eq_span_X]; infer_instance
@@ -159,8 +159,8 @@ theorem exists_trait_pt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
 
 theorem isLocalHom_of_finite {W W' : Type} [CommRing W] [IsLocalRing W] [CommRing W'] [IsLocalRing W']
     (io : W →+* W') (hf : io.Finite) : IsLocalHom io := by
-  letI := io.toAlgebra
-  haveI : Module.Finite W W' := hf
+  let := io.toAlgebra
+  have : Module.Finite W W' := hf
   have hmax : (maximalIdeal W').comap (algebraMap W W') = maximalIdeal W :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal W'))
   refine ⟨fun a ha => ?_⟩
@@ -202,12 +202,12 @@ theorem mem_basicOpen_theta : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   intro R _ _ _ hR M G _ hG B L hB hL N s θ Y _ hY j hj hji O hT g y hy hgc hgj
   obtain ⟨W, _, _, _, φ, ξ, hW, hφi, hφl, hξ, hξx⟩ := exists_trait_pt R hR M _ hgc
   obtain ⟨W', _, _, _, io, G', _, β, κ, e, hW', hio, hiof, hpb, hκ, he, H⟩ := hT W hW φ ξ hφi hφl hξ
-  haveI := isLocalHom_of_finite io hiof
+  have := isLocalHom_of_finite io hiof
   obtain ⟨q, hq⟩ := exists_closedFibre_pt io G G' ξ β hpb.1 _ hξx.symm
   let Ω : Type := (((Over.pullback (spMap (residue W'))).obj G').left).residueField q
   let p : Sp Ω ⟶ ((Over.pullback (spMap (residue W'))).obj G').left :=
     (((Over.pullback (spMap (residue W'))).obj G').left).fromSpecResidueField q
-  haveI : Subsingleton (Sp Ω) := inferInstanceAs (Subsingleton (PrimeSpectrum Ω))
+  have : Subsingleton (Sp Ω) := inferInstanceAs (Subsingleton (PrimeSpectrum Ω))
   obtain ⟨p', hp'⟩ : ∃ p', p' = p ≫ pullback.fst G'.hom (spMap (residue W')) := ⟨_, rfl⟩
   obtain ⟨y', hy'⟩ : ∃ y', y' = p ≫ e.hom.left ≫ pullback.fst Y.hom (spMap κ) := ⟨_, rfl⟩
   obtain ⟨⟨hs, hproj⟩, hnz⟩ := H Ω p p' y' hp' hy'
@@ -389,7 +389,7 @@ theorem exists_trait_point {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] 
   have key : ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsLocalRing W) (χ : M.S.presheaf.stalk x →+* W),
       GlobalTheory.LN.CDvr W ∧ Function.Injective χ ∧ IsLocalHom χ := by
     by_cases h : IsField (M.S.presheaf.stalk x)
-    · letI := h.toField
+    · let := h.toField
       refine ⟨PowerSeries (M.S.presheaf.stalk x), inferInstance, inferInstance, inferInstance, PowerSeries.C,
         ⟨inferInstance, ?_, ?_⟩, PowerSeries.C_injective, inferInstance⟩
       · rw [PowerSeries.maximalIdeal_eq_span_X]; infer_instance
@@ -418,7 +418,7 @@ theorem mem_embH_of_closed : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   obtain ⟨W, _, _, _, φ, ξ, hW, hφ, hl, hξ, hξx⟩ := exists_trait_point hR M (G.hom g) hg
   obtain ⟨W', _, _, _, io, G', _, β, κ, e, hW', hio, hfin, hcart, -, -, hpts⟩ := hT W hW φ ξ hφ hl hξ
   have hiol : IsLocalHom io := by
-    letI := io.toAlgebra
+    let := io.toAlgebra
     have : Module.Finite W W' := hfin
     have : FaithfulSMul W W' := (faithfulSMul_iff_algebraMap_injective W W').2 hio
     exact (inferInstance : IsLocalHom (algebraMap W W'))
@@ -482,11 +482,11 @@ theorem exists_common_field_of_point_eq : ∀ (X : Scheme.{0}) (K₁ K₂ : Type
     have h2 := congrArg Sigma.fst ((Scheme.SpecToEquivOfField K₂ X).apply_symm_apply ⟨y, g⟩)
     exact h1.symm.trans (h.trans h2)
   subst hxy
-  letI : Algebra (X.residueField x) K₁ := f.hom.toAlgebra
-  letI : Algebra (X.residueField x) K₂ := g.hom.toAlgebra
-  haveI : Nontrivial (TensorProduct (X.residueField x) K₁ K₂) := inferInstance
+  let : Algebra (X.residueField x) K₁ := f.hom.toAlgebra
+  let : Algebra (X.residueField x) K₂ := g.hom.toAlgebra
+  have : Nontrivial (TensorProduct (X.residueField x) K₁ K₂) := inferInstance
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (TensorProduct (X.residueField x) K₁ K₂)
-  letI : Field ((TensorProduct (X.residueField x) K₁ K₂) ⧸ m) := Ideal.Quotient.field m
+  let : Field ((TensorProduct (X.residueField x) K₁ K₂) ⧸ m) := Ideal.Quotient.field m
   refine ⟨(TensorProduct (X.residueField x) K₁ K₂) ⧸ m, inferInstance,
     (Ideal.Quotient.mk m).comp Algebra.TensorProduct.includeLeftRingHom,
     (Ideal.Quotient.mk m).comp (Algebra.TensorProduct.includeRight (R := X.residueField x) (A := K₁) (B := K₂)).toRingHom, ?_⟩
@@ -749,7 +749,7 @@ theorem fib : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R �
   obtain ⟨W, _, _, _, φ, ξ, hW, hφi, hφl, hξ, hξ0⟩ := trait R hR M _ (hcl (closedPoint Ω))
   obtain ⟨W', _, _, _, io', G', _, β, κ', e', hW', hio', hiof, hβ, hκ', he', hptw⟩ := hT W hW φ ξ hφi hφl hξ
   have hio0 : (spMap io') (closedPoint W') = closedPoint W := by
-    letI := io'.toAlgebra
+    let := io'.toAlgebra
     have : Algebra.IsIntegral W W' := ⟨fun a => hiof.to_isIntegral a⟩
     exact PrimeSpectrum.ext (IsLocalRing.eq_maximalIdeal
       (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) hiof.to_isIntegral (maximalIdeal W')))
@@ -1123,7 +1123,7 @@ theorem exists_term_nonzero_closed : ∀ (R : Type) [CommRing R] [IsDomain R] [I
     ∀ (D : DegData R (maximalIdeal R)) (Y : Ext D.toPre), ∃ (b : D.toPre.SecB 1 0) (τ : SecK D.toPre.P.L Y.q.left 1)
       (y : Y.H.left), IsTermOf Y b τ ∧ Y.H.hom y = closedPoint R ∧ y ∈ nonzeroLocus τ := by
   intro R _ _ _ hB D Y
-  haveI : IsNoetherianRing R := hB.1.1
+  have : IsNoetherianRing R := hB.1.1
   obtain ⟨-, -, hsurj, -, hterm⟩ := GlobalTheory.T.torusExtension_smooth_affine_surjective_fourierTerms R D.toPre Y
   obtain ⟨th, x, hx, hn⟩ :=
     GlobalTheory.ThetaSectionTest.exists_nonzero_closed GlobalTheory.abelianSchemeLaws_all.1.secBaseChange D.toPre
@@ -1200,7 +1200,7 @@ theorem sval_zero_of_van {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [
         (fun κ => J' ((r ≫ D'.famφB a κ) ≫ hD.e.hom.left ≫ pullback.fst D.P.A.hom (specOf φ)))
     · exact (gs_pull h' _ z _ hm _).symm.trans ((congrArg (gs h' z _) (hv _)).trans (gs_zero' _ _ _))
     · unfold gs
-      exact dif_neg hm
+      exact dite_eq_right hm
   rw [h0] at E
   exact (Units.mul_right_eq_zero _).1 E.symm
 
@@ -1296,7 +1296,7 @@ theorem closedFibre_val : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
     have h := hpull.1
     rw [hb'] at h
     exact h.trans ((Category.id_comp _).trans hq)
-  haveI := T.loc
+  have := T.loc
   have hmm : maximalIdeal R ^ (0 + 1) ≤ (maximalIdeal W ^ (0 + 1)).comap T.φ := by
     simp only [zero_add, pow_one]
     intro a ha
@@ -1596,7 +1596,7 @@ namespace GlobalTheory.Mum
 
 theorem closedFibre_iso : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (C : LabCover D) (Y : Ext D.toPre) (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (T : Trait C W), ∃ (κ : ResidueField R →+* ResidueField W) (e : (Over.pullback (spMap (residue W))).obj T.G ≅ (Over.pullback (spMap κ)).obj ((Over.pullback (spMap (residue R))).obj Y.H)), κ.comp (residue R) = (residue W).comp T.φ ∧ IsMonHom e.hom ∧ ∀ (Z : Scheme.{0}) (p : Z ⟶ ((Over.pullback (spMap (residue W))).obj T.G).left) (p' : Z ⟶ T.G.left) (y : Z ⟶ Y.H.left), p' = p ≫ pullback.fst T.G.hom (spMap (residue W)) → y = p ≫ e.hom.left ≫ pullback.fst ((Over.pullback (spMap (residue R))).obj Y.H).hom (spMap κ) ≫ pullback.fst Y.H.hom (spMap (residue R)) → ∃ (g : Z ⟶ (thickObj W (maximalIdeal W) 0 T.G).left) (ξ' : GtPt T.D'.toPre (Over.mk (g ≫ (thickObj W (maximalIdeal W) 0 T.G).hom ≫ thick W (maximalIdeal W) 0))), g ≫ (fstG (maximalIdeal W) 0 T.G).left = p' ∧ GlobalTheory.TorusCoord.IsPointOf (T.U.gt 0) g ξ' ∧ IsPullPt T.hD (𝟙 Z) (Y.Φ (Over.mk (y ≫ Y.H.hom)) (Over.homMk y rfl)) ξ' := by
   intro R _ _ _ hR D C Y W _ _ _ T
-  haveI := T.loc
+  have := T.loc
   let κ : ResidueField R →+* ResidueField W := ResidueField.map T.φ
   have hκ : κ.comp (residue R) = (residue W).comp T.φ := RingHom.ext fun r => ResidueField.map_residue T.φ r
   obtain ⟨φ₀, hφ₀⟩ := GlobalTheory.FormalModel.exists_carries T.hD Y.rep (T.U.gt 0)
@@ -1621,7 +1621,7 @@ theorem closedFibre_iso : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
     (isGrpPullback_pullback Y.H (spMap (residue R)))
   obtain ⟨e2, he2, he2'⟩ := grpPullback_iso g2 g3
   refine ⟨κ, e1.symm ≪≫ e2, hκ, ?_, ?_⟩
-  · haveI := he1; haveI := he2
+  · have := he1; have := he2
     show IsMonHom (e1.inv ≫ e2.hom)
     infer_instance
   · intro Z p p' y hp hy

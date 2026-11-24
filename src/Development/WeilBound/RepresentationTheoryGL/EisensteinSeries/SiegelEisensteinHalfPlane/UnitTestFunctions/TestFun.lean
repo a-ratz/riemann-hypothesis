@@ -336,7 +336,7 @@ theorem zInf_ne_zero : ZInf := by
     φ.continuous.comp (continuous_pi fun _ =>
       (homeomorphMixedSpace k).continuous.comp Units.continuous_val)
   have hm0 : Continuous fun a : (InfiniteAdeleRing k)ˣ => (ideleModule k (ofInfinite a) : ℝ) :=
-    continuous_subtype_val.comp (IdeleGroup.continuous_ideleModule.comp continuous_infinite_idele_inclusion)
+    continuous_subtypeVal.comp (IdeleGroup.continuous_ideleModule.comp continuous_infinite_idele_inclusion)
   set f : (InfiniteAdeleRing k)ˣ → ℝ := fun a =>
     ‖rd φ (fun _ => (a : InfiniteAdeleRing k))‖ * (ideleModule k (ofInfinite a) : ℝ) ^ x with hf
   have hcf : Continuous f :=
@@ -422,7 +422,7 @@ theorem isOpen_isClosed (M : ℕ) (hM : M ≠ 0) :
 
 theorem exists_pow_lt' {c a : WithZero (Multiplicative ℤ)} (ha : a ≠ 0) (hc : c < 1) : ∃ n : ℕ, c ^ n < a := by
   rcases eq_or_ne c 0 with rfl | hc0
-  · exact ⟨1, by simpa using (zero_lt_iff.mpr ha)⟩
+  · exact ⟨1, by simpa using (pos_iff_ne_zero.mpr ha)⟩
   obtain ⟨α, rfl⟩ := WithZero.ne_zero_iff_exists.mp hc0
   obtain ⟨β, rfl⟩ := WithZero.ne_zero_iff_exists.mp ha
   have hα : Multiplicative.toAdd α < 0 := by
@@ -716,7 +716,7 @@ theorem continuous_integrand {g : (Unit → FiniteAdeleRing (𝓞 k) k) → ℂ}
     ((GJMatrix.mem_finiteSchwartzBruhatPi k).1 hg).1.continuous.comp
       (continuous_pi fun _ ↦ Units.continuous_val)
   have h2 : Continuous fun b : (FiniteAdeleRing (𝓞 k) k)ˣ ↦ (ω.toIdele (ofFinite b) : ℂ) :=
-    continuous_subtype_val.comp (ω.continuous_toIdele.comp continuous_ofFinite)
+    continuous_subtypeVal.comp (ω.continuous_toIdele.comp continuous_ofFinite)
   have h3 : Continuous fun b : (FiniteAdeleRing (𝓞 k) k)ˣ ↦
       ((finiteModule (ofFinite b) ^ (n : ℝ) : ℝ) : ℂ) :=
     Complex.continuous_ofReal.comp
@@ -741,7 +741,7 @@ theorem norm_integrand_le {g : (Unit → FiniteAdeleRing (𝓞 k) k) → ℂ} (�
   have hL : (b : FiniteAdeleRing (𝓞 k) k) ∈ idealFiniteAdeles (1 : (FractionalIdeal (𝓞 k)⁰ k)ˣ) := by
     rw [← SetLike.mem_coe, idealFiniteAdeles_one]
     exact hO
-  rw [finiteZetaBound, if_pos hL]
+  rw [finiteZetaBound, ite_eq_left hL]
   have hpow : finiteModule (ofFinite b) ^ (n : ℝ) ≤ finiteModule (ofFinite b) ^ (2 : ℝ) :=
     Real.rpow_le_rpow_of_exponent_ge (finiteModule_pos _) (finiteModule_le_one hO)
       (by exact_mod_cast hn)
@@ -837,7 +837,7 @@ theorem line_lc_cs {g : (Unit → FiniteAdeleRing (𝓞 k) k) → ℂ}
 
 theorem zFinPos : ZFinPos := by
   intro K _ _ g hg hnn h1 x hx
-  haveI := isHaarMeasure_finiteIdeleMeasure K
+  have := isHaarMeasure_finiteIdeleMeasure K
   obtain ⟨hlc, hcs⟩ := line_lc_cs hg
   obtain ⟨L, hL⟩ := exists_subset_idealFiniteAdeles hcs.isCompact
   obtain ⟨B, hB⟩ := hlc.continuous.bounded_above_of_compact_support hcs
@@ -902,7 +902,7 @@ theorem zFinPos : ZFinPos := by
       rw [hgb] at h0
       exact hr0.ne' (by exact_mod_cast h0)
     rw [Function.mem_support]
-    simp only [F, G, finiteZetaBound, if_pos hmem, hgb, Complex.ofReal_re]
+    simp only [F, G, finiteZetaBound, ite_eq_left hmem, hgb, Complex.ofReal_re]
     exact (mul_pos hr0 (Real.rpow_pos_of_pos (finiteModule_pos _) _)).ne'
   have hpos : 0 < finiteIdeleMeasure K (Function.support F) :=
     (hUo.measure_pos _ ⟨1, h1U⟩).trans_le (measure_mono hUsub)
@@ -1149,7 +1149,7 @@ theorem supp : ColLaw → InMTop → Supp := by
     have e : O = ⋃ p : {p : (adStd k).kGL ι // p.1 ∈ stab 𝔸[k] ({i₀} : Set ι)},
         (fun x => (p.1)⁻¹ * x) ⁻¹' interior U := by
       ext κ
-      simp only [hOdef, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_preimage]
+      simp only [hOdef, Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_preimage]
       constructor
       · rintro ⟨p, hp, u, hu, rfl⟩
         exact ⟨⟨p, hp⟩, by simpa using hu⟩
@@ -1157,7 +1157,7 @@ theorem supp : ColLaw → InMTop → Supp := by
         exact ⟨p, hp, _, h, by simp⟩
     rw [e]
     exact isOpen_iUnion fun p => isOpen_interior.preimage (continuous_const.mul continuous_id)
-  have hfc : Continuous fun κ : (adStd k).kGL ι => TF.col i₀ κ.1 := hcont.comp continuous_subtype_val
+  have hfc : Continuous fun κ : (adStd k).kGL ι => TF.col i₀ κ.1 := hcont.comp continuous_subtypeVal
 
   set C : ℕ → Set ((adStd k).kGL ι) := fun n =>
     {κ | (∀ j, j ≠ i₀ → InM (n ! * M₀) (TF.col i₀ κ.1 j).2) ∧
@@ -1165,7 +1165,7 @@ theorem supp : ColLaw → InMTop → Supp := by
   have hne : ∀ n : ℕ, n ! * M₀ ≠ 0 := fun n => Nat.mul_ne_zero (Nat.factorial_ne_zero n) hM₀
   have hCcl : ∀ n, IsClosed (C n) := by
     intro n
-    simp only [hCdef, Set.setOf_and, Set.setOf_forall]
+    simp only [hCdef, Set.ofPred_and, Set.ofPred_forall]
     refine IsClosed.inter (isClosed_iInter fun j => isClosed_iInter fun _ => ?_) (isClosed_iInter fun w => ?_)
     · have c2 : Continuous fun κ : (adStd k).kGL ι => (TF.col i₀ κ.1 j).2 :=
         continuous_snd.comp ((continuous_apply j).comp hfc)
@@ -1186,7 +1186,7 @@ theorem supp : ColLaw → InMTop → Supp := by
     by_contra hno
     push_neg at hno
     obtain ⟨κ, hκ⟩ := IsCompact.nonempty_iInter_of_sequence_nonempty_isCompact_isClosed
-      (fun n => C n \ O) (fun n => Set.diff_subset_diff_left (hanti n))
+      (fun n => C n \ O) (fun n => Set.sdiff_subset_sdiff_left (hanti n))
       (fun n => Set.nonempty_of_not_subset (hno n)) ((hCcl 0).sdiff hO).isCompact
       (fun n => (hCcl n).sdiff hO)
     have hall : ∀ n, κ ∈ C n := fun n => (Set.mem_iInter.1 hκ n).1
@@ -1285,7 +1285,7 @@ theorem valued_absNorm_pow_le (v : HeightOneSpectrum (𝓞 k)) (n : ℕ) :
     Valued.v (((Ideal.absNorm v.asIdeal ^ n : ℕ)) : v.adicCompletion k) ≤ exp (-(n : ℤ)) := by
   have h1 := le_exp_neg_one_of_lt_one (valued_absNorm_lt_one v)
   rw [Nat.cast_pow, map_pow]
-  refine (pow_le_pow_left₀ zero_le' h1 n).trans (le_of_eq ?_)
+  refine (pow_le_pow_left₀ zero_le h1 n).trans (le_of_eq ?_)
   rw [← exp_nsmul]
   congr 1
   simp
@@ -1480,12 +1480,12 @@ theorem near_one_nhds (hCol : ColLaw) (hTop : InMTop) (i₀ : ι) (M₀ : ℕ) (
       ∀ w, ‖(col i₀ u.1 i₀).1 w - 1‖ < 1} ∈ 𝓝 (1 : (adStd k).kGL ι) := by
   obtain ⟨-, hc, h1, -⟩ := hCol k ι i₀
   have hcc : Continuous fun u : (adStd k).kGL ι => col i₀ u.1 i₀ :=
-    (continuous_apply i₀).comp (hc.comp continuous_subtype_val)
+    (continuous_apply i₀).comp (hc.comp continuous_subtypeVal)
   refine inter_mem hU (IsOpen.mem_nhds ?_ ?_)
   · have o1 : IsOpen {u : (adStd k).kGL ι | InM M₀ ((col i₀ u.1 i₀).2 - 1)} :=
       ((hTop k).1 M₀ hM).1.preimage ((continuous_snd.comp hcc).sub continuous_const)
     have o2 : IsOpen {u : (adStd k).kGL ι | ∀ w, ‖(col i₀ u.1 i₀).1 w - 1‖ < 1} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun w => isOpen_lt
         ((((continuous_apply w).comp (continuous_fst.comp hcc)).sub continuous_const).norm)
         continuous_const
@@ -1542,7 +1542,7 @@ theorem asm : ColLaw → InMTop → Supp → ArchFun → FinFun → ZSplit → Z
   have hunit : ∀ x : ℝ, 1 < x → zInf φ₁ ω x ≠ 0 := hZI k φ₁ ω hφ₁p hone
   refine ⟨GJMatrix.schwartzBruhatTensorPi φ g, GJMatrix.schwartzBruhatTensorPi φ₁ g₁,
     fun κ => GJMatrix.schwartzBruhatTensorPi φ g (col i₀ κ.1), hΨ, hΨ₁,
-    (GJMatrix.continuous_of_mem_schwartzBruhatPi hΨ).comp (hcc.comp continuous_subtype_val),
+    (GJMatrix.continuous_of_mem_schwartzBruhatPi hΨ).comp (hcc.comp continuous_subtypeVal),
     ?_, fun t κ => hfac t κ, ?_, fun p κ hp => hequiv p κ hp, ?_, ?_⟩
   · have e : col (k := k) i₀ ((1 : (adStd k).kGL ι) : GL ι 𝔸[k]) = Pi.single i₀ 1 := hcol1
     show GJMatrix.schwartzBruhatTensorPi φ g (col i₀ ((1 : (adStd k).kGL ι) : GL ι 𝔸[k])) = 1
@@ -1673,16 +1673,16 @@ theorem liftUnit : LiftUnit := by
   have hf : ∀ v : HeightOneSpectrum (𝓞 k), f v ∈ v.adicCompletionIntegers k := by
     intro v
     by_cases hv : Valued.v (M : v.adicCompletion k) < 1
-    · simp only [f, if_pos hv]
+    · simp only [f, ite_eq_left hv]
       exact ha v
-    · simp only [f, if_neg hv]
+    · simp only [f, ite_eq_right hv]
       exact one_mem _
   have hg : ∀ v : HeightOneSpectrum (𝓞 k), g v ∈ v.adicCompletionIntegers k := by
     intro v
     by_cases hv : Valued.v (M : v.adicCompletion k) < 1
-    · simp only [g, if_pos hv]
+    · simp only [g, ite_eq_left hv]
       rw [HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 k) k v, map_inv₀, hunit v hv, inv_one]
-    · simp only [g, if_neg hv]
+    · simp only [g, ite_eq_right hv]
       exact one_mem _
   let F : FiniteAdeleRing (𝓞 k) k := RestrictedProduct.mk f (Filter.Eventually.of_forall hf)
   let G : FiniteAdeleRing (𝓞 k) k := RestrictedProduct.mk g (Filter.Eventually.of_forall hg)
@@ -1690,12 +1690,12 @@ theorem liftUnit : LiftUnit := by
     refine RestrictedProduct.ext _ _ fun v => ?_
     show f v * g v = 1
     by_cases hv : Valued.v (M : v.adicCompletion k) < 1
-    · simp only [f, g, if_pos hv]
+    · simp only [f, g, ite_eq_left hv]
       refine mul_inv_cancel₀ fun h0 => ?_
       have h1 := hunit v hv
       rw [h0, map_zero] at h1
       exact zero_ne_one h1
-    · simp only [f, g, if_neg hv, mul_one]
+    · simp only [f, g, ite_eq_right hv, mul_one]
   have hGF : G * F = 1 := by
     rw [mul_comm]
     exact hFG
@@ -1709,9 +1709,9 @@ theorem liftUnit : LiftUnit := by
   have hY : ∀ v : HeightOneSpectrum (𝓞 k), Y v ∈ v.adicCompletionIntegers k := by
     intro v
     by_cases hv : Valued.v (M : v.adicCompletion k) < 1
-    · simp only [Y, if_pos hv]
+    · simp only [Y, ite_eq_left hv]
       exact zero_mem _
-    · simp only [Y, if_neg hv]
+    · simp only [Y, ite_eq_right hv]
       have hM1 : Valued.v (M : v.adicCompletion k) = 1 := le_antisymm (hMle v) (not_lt.mp hv)
       rw [HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 k) k v, map_mul, map_inv₀, hM1, inv_one,
         mul_one]
@@ -1721,8 +1721,8 @@ theorem liftUnit : LiftUnit := by
   refine RestrictedProduct.ext _ _ fun v => ?_
   show a v - f v = (M : v.adicCompletion k) * Y v
   by_cases hv : Valued.v (M : v.adicCompletion k) < 1
-  · simp only [f, Y, if_pos hv, sub_self, mul_zero]
-  · simp only [f, Y, if_neg hv]
+  · simp only [f, Y, ite_eq_left hv, sub_self, mul_zero]
+  · simp only [f, Y, ite_eq_right hv]
     rw [mul_comm, mul_assoc, inv_mul_cancel₀ (hM0 v), mul_one]
 
 end GlobalTheory.CompanionTheory.EisTF

@@ -182,14 +182,14 @@ theorem coordSum_flag {n r : ℕ} (c : Fin r → ℂ) {L : Matrix (Fin r) (Fin n
     intro i
     split_ifs with h
     · rw [Finset.sum_eq_single ⟨i.1 + 1, h⟩]
-      · rw [if_pos rfl, hT i ⟨i.1 + 1, h⟩ rfl]
+      · rw [ite_eq_left rfl, hT i ⟨i.1 + 1, h⟩ rfl]
       · intro j _ hj
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h'
         exact hj (Fin.ext h')
       · intro h'; exact absurd (Finset.mem_univ _) h'
     · refine Finset.sum_eq_zero fun j _ => ?_
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h'
       have := j.2
       omega
@@ -199,8 +199,8 @@ theorem coordSum_flag {n r : ℕ} (c : Fin r → ℂ) {L : Matrix (Fin r) (Fin n
   refine Finset.sum_congr rfl fun i _ => ?_
   have := i.2
   by_cases h : i.1 + 1 < r
-  · rw [if_pos h, if_neg (by omega), add_zero]
-  · rw [if_neg h, if_pos (by omega), zero_add, hb i (by omega)]
+  · rw [ite_eq_left h, ite_eq_right (by omega), add_zero]
+  · rw [ite_eq_right h, ite_eq_left (by omega), zero_add, hb i (by omega)]
 
 variable {D : D7}
 
@@ -1109,8 +1109,8 @@ theorem besselDatum_middleVector_norm_eq {A B : HSp D} {c : ℕ} {ε : D.host.E}
       (fun k => tauE D τ ((d.besDat hε ρ h).z k)) = tauE D τ ε := by
   have h1 := congrFun (congrFun d.gram ⟨ρ, by omega⟩) ⟨ρ, by omega⟩
   have h2 : antiDiagonalSignGramMatrix c ε ⟨ρ, by omega⟩ ⟨ρ, by omega⟩ = ε := by
-    simp only [antiDiagonalSignGramMatrix, if_true]
-    rw [if_pos (by omega)]
+    simp only [antiDiagonalSignGramMatrix, ite_true]
+    rw [ite_eq_left (by omega)]
   rw [h2] at h1
   refine Eq.trans ?_ (congrArg (tauE D τ) h1)
   show star _ ⬝ᵥ _ = _

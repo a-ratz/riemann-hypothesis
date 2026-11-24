@@ -114,9 +114,9 @@ private theorem descend {E : Type} [Field E] [NumberField E] {N L : ℕ} [NeZero
   have hL0 : L ≠ 0 := by
     rintro rfl
     exact hN0 (Nat.eq_zero_of_zero_dvd hL)
-  haveI : NeZero L := ⟨hL0⟩
-  haveI : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast hN0⟩
-  haveI : NeZero ((L : ℕ) : ℚ) := ⟨by exact_mod_cast hL0⟩
+  have : NeZero L := ⟨hL0⟩
+  have : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast hN0⟩
+  have : NeZero ((L : ℕ) : ℚ) := ⟨by exact_mod_cast hL0⟩
   obtain ⟨M, hNLM⟩ := hL
   have hM0 : M ≠ 0 := by
     rintro rfl
@@ -127,14 +127,14 @@ private theorem descend {E : Type} [Field E] [NumberField E] {N L : ℕ} [NeZero
   have hη : IsPrimitiveRoot (ζ ^ M) L := by
     have := hζ.pow_of_dvd hM0 hMdvd
     rwa [hk] at this
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
     CyclotomicField.isCyclotomicExtension N ℚ
-  haveI : IsCyclotomicExtension {L} ℚ (CyclotomicField L ℚ) :=
+  have : IsCyclotomicExtension {L} ℚ (CyclotomicField L ℚ) :=
     CyclotomicField.isCyclotomicExtension L ℚ
-  haveI : IsGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isGalois {N} ℚ _
-  haveI : FiniteDimensional ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.finiteDimensional {N} ℚ _
+  have : IsGalois ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.isGalois {N} ℚ _
+  have : FiniteDimensional ℚ (CyclotomicField N ℚ) := IsCyclotomicExtension.finiteDimensional {N} ℚ _
   let F : IntermediateField ℚ (CyclotomicField N ℚ) := IntermediateField.adjoin ℚ {ζ ^ M}
-  haveI : IsCyclotomicExtension {L} ℚ F := hη.intermediateField_adjoin_isCyclotomicExtension ℚ
+  have : IsCyclotomicExtension {L} ℚ F := hη.intermediateField_adjoin_isCyclotomicExtension ℚ
   have hmem : ∀ x : E, j x ∈ F := by
     intro x
     rw [← IsGalois.fixedField_fixingSubgroup F, IntermediateField.mem_fixedField_iff]
@@ -161,10 +161,10 @@ private theorem descend {E : Type} [Field E] [NumberField E] {N L : ℕ} [NeZero
 
 private theorem finrank_le {E : Type} [Field E] [NumberField E] {c : ℕ} (hc : 0 < c)
     (j : E →ₐ[ℚ] CyclotomicField c ℚ) : Module.finrank ℚ E ≤ c := by
-  haveI : NeZero c := ⟨hc.ne'⟩
-  haveI : NeZero ((c : ℕ) : ℚ) := ⟨by exact_mod_cast hc.ne'⟩
-  haveI : IsCyclotomicExtension {c} ℚ (CyclotomicField c ℚ) := CyclotomicField.isCyclotomicExtension c ℚ
-  haveI : FiniteDimensional ℚ (CyclotomicField c ℚ) := IsCyclotomicExtension.finiteDimensional {c} ℚ _
+  have : NeZero c := ⟨hc.ne'⟩
+  have : NeZero ((c : ℕ) : ℚ) := ⟨by exact_mod_cast hc.ne'⟩
+  have : IsCyclotomicExtension {c} ℚ (CyclotomicField c ℚ) := CyclotomicField.isCyclotomicExtension c ℚ
+  have : FiniteDimensional ℚ (CyclotomicField c ℚ) := IsCyclotomicExtension.finiteDimensional {c} ℚ _
   calc Module.finrank ℚ E ≤ Module.finrank ℚ (CyclotomicField c ℚ) :=
         LinearMap.finrank_le_finrank_of_injective (f := j.toLinearMap) j.toRingHom.injective
     _ = c.totient := IsCyclotomicExtension.finrank _ (Polynomial.cyclotomic.irreducible_rat hc)
@@ -175,8 +175,8 @@ theorem UpperTheory.V.conductor_bounds_of_isChiField :
       1 ≤ condF E ∧ condF E ≤ 2 ^ (e + 2) * ψ.N * q * d ∧ Module.finrank ℚ E ≤ condF E := by
   intro ψ e q d hq hd E _ _ hE
   obtain ⟨N, hNZ, j, ζ, h2, hψ, hqN, hdN, hζ, hτ⟩ := hE
-  haveI := hNZ
-  haveI := ψ.ne
+  have := hNZ
+  have := ψ.ne
   have hψpos : 0 < ψ.N := NeZero.pos ψ.N
   have hApos : 0 < 2 ^ (e + 2) := pow_pos two_pos _
   have hLN : Nat.lcm (Nat.lcm (Nat.lcm (2 ^ (e + 2)) ψ.N) q) d ∣ N :=
@@ -322,12 +322,12 @@ theorem UpperTheory.V.isCMField_of_isChiField :
     ∀ (ψ : PChar) (e q d : ℕ), q.Prime → q % 4 = 3 → ∀ (E : Type) [Field E] [NumberField E], IsChiField ψ e q d E → IsCMField E := by
   intro ψ e q d hq hq4 E _ _ hE
   obtain ⟨N, hN, j, ζ, -, -, hqN, -, hζ, hτ⟩ := hE
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : NeZero (N : ℚ) := ⟨by exact_mod_cast hN.out⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
-  haveI : IsAbelianGalois ℚ (CyclotomicField N ℚ) :=
+  have : Fact q.Prime := ⟨hq⟩
+  have : NeZero (N : ℚ) := ⟨by exact_mod_cast hN.out⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
+  have : IsAbelianGalois ℚ (CyclotomicField N ℚ) :=
     IsCyclotomicExtension.isAbelianGalois {N} ℚ (CyclotomicField N ℚ)
-  haveI : IsAbelianGalois ℚ E := IsAbelianGalois.of_algHom j
+  have : IsAbelianGalois ℚ E := IsAbelianGalois.of_algHom j
   have hζq : IsPrimitiveRoot (ζ ^ (N / q)) q :=
     hζ.pow (NeZero.pos N) (Nat.div_mul_cancel hqN).symm
   obtain ⟨G, hG2, hGσ⟩ := HostParam.SlopeTestRemainingChoices.GaussRoot.exists_gauss hq4 hζq
@@ -358,7 +358,7 @@ theorem UpperTheory.V.isCMField_of_isChiField :
     apply j.injective
     change j (x ^ 2) = j (-(q : E))
     rw [map_pow, hx, hG2, map_neg, map_natCast]
-  haveI : IsTotallyComplex E := ⟨fun w => by
+  have : IsTotallyComplex E := ⟨fun w => by
     rw [← InfinitePlace.not_isReal_iff_isComplex, InfinitePlace.isReal_iff,
       ComplexEmbedding.isReal_iff]
     intro hr
@@ -579,7 +579,7 @@ theorem UpperTheory.V.minusBound_le_exp_of_log_le :
     exact Real.exp_le_exp.mpr hW
   have hX4 : ((N : ℝ) * t) ^ 4 ≤ Real.exp (8 * W) := by
     have e : Real.exp (8 * W) = Real.exp (2 * W) ^ 4 := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       push_cast
       ring
@@ -739,7 +739,7 @@ theorem vwinAt_of_joint {Ct : ℝ} (hC : 1 ≤ Ct) (hJ : JointWin Ct) (hc : ThmB
   have hq4 : q % 4 = 3 := by
     have := hw.q_mod
     omega
-  haveI : IsCMField E := isCMField_of_isChiField ψ (e x) q d hw.q_prime hq4 E hE
+  have : IsCMField E := isCMField_of_isChiField ψ (e x) q d hw.q_prime hq4 E hE
   have hE' : IsCompField (AbF.ofChar ψ) (e x) q d E := (isCompField_ofChar ψ (e x) q d E).2 hE
   have h2 := hBa E hE'
   have hp := hHV E hE
@@ -833,7 +833,7 @@ theorem UpperTheory.V.Chr.nuSum :
   refine ⟨nu_sum, ?_⟩
   intro l _ O _ _ _ _ _ f a b t B B' h hB hB'
   obtain ⟨-, -, -, -, -, hne0, hle, -, -⟩ := dvrFacts l O
-  have hfin : eO l O ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) hle
+  have hfin : eO l O ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) hle
   obtain ⟨n, hn⟩ := ENat.ne_top_iff_exists.mp hfin
   have hn0 : (n : ℝ) ≠ 0 := by
     have : n ≠ 0 := by
@@ -845,7 +845,7 @@ theorem UpperTheory.V.Chr.nuSum :
     · obtain ⟨m, hm⟩ := ENat.ne_top_iff_exists.mp (h e h0 ht).1
       show a e * eO l O + (b e : ℕ∞) * eO l O ≠ ⊤
       rw [← hm, ← hn]
-      exact_mod_cast ENat.coe_ne_top (m * n + b e * n)
+      exact_mod_cast ENat.natCast_ne_top (m * n + b e * n)
     · calc ∑ e ∈ Finset.Ico 1 t, nrm l O (a e * eO l O + (b e : ℕ∞) * eO l O)
           = ∑ e ∈ Finset.Ico 1 t, (((a e).toNat : ℝ) + (b e : ℝ)) := by
             apply Finset.sum_congr rfl
@@ -856,7 +856,7 @@ theorem UpperTheory.V.Chr.nuSum :
             rw [← hm, ← hn]
             rw [show (m : ℕ∞) * (n : ℕ∞) + ((b e : ℕ) : ℕ∞) * (n : ℕ∞) = ((m * n + b e * n : ℕ) : ℕ∞) by
               push_cast; rfl]
-            rw [ENat.toNat_coe, ENat.toNat_coe, ENat.toNat_coe]
+            rw [ENat.toNat_natCast, ENat.toNat_natCast, ENat.toNat_natCast]
             push_cast
             field_simp
         _ = ∑ e ∈ Finset.Ico 1 t, ((a e).toNat : ℝ) + ∑ e ∈ Finset.Ico 1 t, (b e : ℝ) :=
@@ -878,7 +878,7 @@ open Polynomial
 
 private theorem layerex_up {K : Type} [Field K] {l m : ℕ} (hl : l.Prime) {b : K}
     (h : IsPrimitiveRoot (b ^ l) (l ^ (m + 1))) : IsPrimitiveRoot b (l ^ (m + 2)) := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have h1 : ¬ b ^ (l ^ (m + 1)) = 1 := by
     intro e
     have : (b ^ l) ^ (l ^ m) = 1 := by rw [← pow_mul, ← pow_succ']; exact e
@@ -916,11 +916,11 @@ private theorem layerex_step (K : Type) [Field K] [NumberField K] {l m : ℕ} (h
     ∃ (K' : Type) (_ : Field K') (_ : NumberField K') (_ : Algebra K K'),
       IsCyclotomicExtension {l ^ (m + 2)} K K' ∧ Module.finrank K K' = l := by
   have hirr : Irreducible (X ^ l - C z : K[X]) :=
-    X_pow_sub_C_irreducible_of_prime hl (fun b hb => hn ⟨b, layerex_up hl (hb ▸ hz)⟩)
-  haveI : Fact (Irreducible (X ^ l - C z : K[X])) := ⟨hirr⟩
+    irreducible_X_pow_sub_C_of_prime hl (fun b hb => hn ⟨b, layerex_up hl (hb ▸ hz)⟩)
+  have : Fact (Irreducible (X ^ l - C z : K[X])) := ⟨hirr⟩
   let pb := AdjoinRoot.powerBasis hirr.ne_zero
-  haveI : Module.Finite K (AdjoinRoot (X ^ l - C z : K[X])) := pb.finite
-  haveI : NeZero (l ^ (m + 2)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Module.Finite K (AdjoinRoot (X ^ l - C z : K[X])) := pb.finite
+  have : NeZero (l ^ (m + 2)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hr : IsPrimitiveRoot (AdjoinRoot.root (X ^ l - C z : K[X])) (l ^ (m + 2)) := by
     apply layerex_up hl
     rw [root_X_pow_sub_C_pow]
@@ -944,7 +944,7 @@ theorem UpperTheory.V.exists_cyclotomic_layer_of_primitiveRoot :
     induction j with
     | zero =>
       refine ⟨L, inferInstance, inferInstance, inferInstance, ⟨0, ?_⟩, by simp⟩
-      haveI : NeZero (l ^ (0 + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+      have : NeZero (l ^ (0 + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
       rw [IsCyclotomicExtension.iff_singleton]
       exact ⟨by simpa using hz, fun x => Subalgebra.algebraMap_mem _ x⟩
     | succ j ih =>
@@ -952,10 +952,10 @@ theorem UpperTheory.V.exists_cyclotomic_layer_of_primitiveRoot :
       obtain ⟨m, hkm, ⟨z, hz⟩, hn⟩ := layerex_max K (k := k) hl
         (hk.exists_isPrimitiveRoot (Set.mem_singleton _) (pow_ne_zero _ hl.ne_zero))
       obtain ⟨K', _, _, _, hc, hd'⟩ := layerex_step K hl hz hn
-      letI : Algebra L K' := ((algebraMap K K').comp (algebraMap L K)).toAlgebra
-      haveI : IsScalarTower L K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+      let : Algebra L K' := ((algebraMap K K').comp (algebraMap L K)).toAlgebra
+      have : IsScalarTower L K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
       refine ⟨K', inferInstance, inferInstance, inferInstance, ⟨m + 1, ?_⟩, ?_⟩
-      · haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+      · have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
         have h1 := IsCyclotomicExtension.trans {l ^ (k + 1)} {l ^ (m + 2)} L K K' (algebraMap K K').injective
         rw [Set.union_comm] at h1
         exact (IsCyclotomicExtension.iff_union_of_dvd L K'
@@ -976,7 +976,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem UpperTheory.V.Chr.layerLevel_emb (n : ℕ) [NeZero n] (K L C : Type) [Field K] [Field L] [Field C] [Algebra K L]
     [Algebra K C] [IsCyclotomicExtension {n} K L] (ζ : C) (hζ : IsPrimitiveRoot ζ n) : Nonempty (L →ₐ[K] C) := by
-  haveI : Polynomial.IsSplittingField K L (Polynomial.X ^ n - 1) :=
+  have : Polynomial.IsSplittingField K L (Polynomial.X ^ n - 1) :=
     IsCyclotomicExtension.isSplittingField_X_pow_sub_one (n := n) (K := K) (L := L)
   have hs : Polynomial.Splits ((Polynomial.X ^ n - 1 : Polynomial K).map (algebraMap K C)) := by
     rw [Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_X, Polynomial.map_one,
@@ -990,10 +990,10 @@ theorem UpperTheory.V.Chr.layerLevel :
   intro A l j hl L₀ _ _ L₁ _ _ _ hA hL
   obtain ⟨N, hN, jj, ζ, -, hζ, -⟩ := hA
   obtain ⟨⟨k, hk⟩, -⟩ := hL
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
-  haveI hN' : NeZero (N * l ^ k) := ⟨Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hl.ne_zero)⟩
-  haveI : NeZero (((N * l ^ k : ℕ)) : ℚ) := ⟨by exact_mod_cast NeZero.ne (N * l ^ k)⟩
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero ((N : ℕ) : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
+  have hN' : NeZero (N * l ^ k) := ⟨Nat.mul_ne_zero (NeZero.ne N) (pow_ne_zero _ hl.ne_zero)⟩
+  have : NeZero (((N * l ^ k : ℕ)) : ℚ) := ⟨by exact_mod_cast NeZero.ne (N * l ^ k)⟩
   obtain ⟨r, hr⟩ := @IsCyclotomicExtension.exists_isPrimitiveRoot {N * l ^ k} ℚ
     (CyclotomicField (N * l ^ k) ℚ) _ _ _ (CyclotomicField.isCyclotomicExtension (N * l ^ k) ℚ)
     (N * l ^ k) rfl (NeZero.ne _)
@@ -1005,7 +1005,7 @@ theorem UpperTheory.V.Chr.layerLevel :
     rwa [Nat.mul_div_cancel_left _ (Nat.pos_of_ne_zero (NeZero.ne N))] at h0
   obtain ⟨g⟩ := @layerLevel_emb N _ ℚ (CyclotomicField N ℚ) (CyclotomicField (N * l ^ k) ℚ)
     _ _ _ _ _ (CyclotomicField.isCyclotomicExtension N ℚ) _ hrN
-  letI : Algebra L₀ (CyclotomicField (N * l ^ k) ℚ) :=
+  let : Algebra L₀ (CyclotomicField (N * l ^ k) ℚ) :=
     ((g : CyclotomicField N ℚ →+* CyclotomicField (N * l ^ k) ℚ).comp
       (jj : L₀ →+* CyclotomicField N ℚ)).toAlgebra
   obtain ⟨h1⟩ := layerLevel_emb (l ^ k) L₀ L₁ (CyclotomicField (N * l ^ k) ℚ) (r ^ N) hrl
@@ -1029,7 +1029,7 @@ private theorem ker_le (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω
   intro σ hσ
   rw [MonoidHom.mem_ker] at hσ ⊢
   obtain ⟨hd, χ₀, hχ⟩ := ψ.factorsThrough_conductor
-  haveI : NeZero ψ.conductor := ⟨ψ.conductor_ne_zero⟩
+  have : NeZero ψ.conductor := ⟨ψ.conductor_ne_zero⟩
   have e1 := (Chr.clsFacts ℚ Ω N).2.1 ψ.conductor hd
   have e2 := (Chr.clsFacts ℚ Ω m).2.1 ψ.conductor h
   have hc : Chr.cls ℚ Ω ψ.conductor σ = 1 := by
@@ -1049,7 +1049,7 @@ theorem UpperTheory.V.HV.ivField :
         (_ : IsAlgClosure L₁ Ω) (_ : IsAbelianGalois ℚ L₁), IsAbField (Lchi χ l) L₀ ∧ IsLayer l j L₀ L₁ ∧ Module.finrank ℚ L₁ ≤ l * χ.N * l ^ j ∧
         ∀ (O : Type) [CommRing O] [IsDomain O] (N : ℕ) [NeZero N] (ψ : DirichletCharacter O N), ψ.conductor ∣ χ.N → galOf ℚ L₁ Ω ≤ (Chr.dirG ℚ Ω ψ).ker := by
   intro χ l _ j hl2 Ω _ _ _
-  haveI := χ.ne
+  have := χ.ne
   have hlp : l.Prime := Fact.out
   have hAm : (Lchi χ l).m = l * χ.N := by
     simp only [Lchi, AbF.cyc]
@@ -1066,13 +1066,13 @@ theorem UpperTheory.V.HV.ivField :
     exact Nat.ModEq.of_dvd hldvd ((ZMod.natCast_eq_natCast_iff _ _ _).mp h2)
   obtain ⟨z, hz⟩ := (abelianField_hasMu_iff_exists_primitiveRoot (Lchi χ l) l hlp hl2 L₀ hab).mp hmu
   obtain ⟨L₁, i2, i3, i4, hlay⟩ := exists_cyclotomic_layer_of_primitiveRoot l j hlp hl2 L₀ ⟨z, hz⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  letI : Algebra L₁ Ω := (IsAlgClosed.lift (R := ℚ) (S := L₁) (M := Ω)).toRingHom.toAlgebra
-  letI : Algebra L₀ Ω := ((algebraMap L₁ Ω).comp (algebraMap L₀ L₁)).toAlgebra
-  haveI : IsScalarTower L₀ L₁ Ω := IsScalarTower.of_algebraMap_eq (fun x => rfl)
-  haveI : IsScalarTower ℚ L₁ Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI : IsScalarTower ℚ L₀ L₁ := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI hcl : IsAlgClosure L₁ Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) L₁⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  let : Algebra L₁ Ω := (IsAlgClosed.lift (R := ℚ) (S := L₁) (M := Ω)).toRingHom.toAlgebra
+  let : Algebra L₀ Ω := ((algebraMap L₁ Ω).comp (algebraMap L₀ L₁)).toAlgebra
+  have : IsScalarTower L₀ L₁ Ω := IsScalarTower.of_algebraMap_eq (fun x => rfl)
+  have : IsScalarTower ℚ L₁ Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : IsScalarTower ℚ L₀ L₁ := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have hcl : IsAlgClosure L₁ Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) L₁⟩
   obtain ⟨N', hN', H, hlev⟩ := Chr.layerLevel (Lchi χ l) l j hlp L₀ L₁ hab hlay
   obtain ⟨habel, -, -⟩ := Chr.levGal L₁ N' H hlev
   have hlev0 := Chr.abLevel.1 (Lchi χ l) L₀ hab
@@ -1083,7 +1083,7 @@ theorem UpperTheory.V.HV.ivField :
     rw [AbF.deg]
     show (⊥ : Subgroup (ZMod (Lchi χ l).m)ˣ).index ≤ l * χ.N
     rw [Subgroup.index_bot, ← hAm]
-    haveI : NeZero (Lchi χ l).m := ⟨(AbF.pos _).ne'⟩
+    have : NeZero (Lchi χ l).m := ⟨(AbF.pos _).ne'⟩
     rw [Nat.card_eq_fintype_card, ZMod.card_units_eq_totient]
     exact Nat.totient_le _
   · intro O _ _ N _ ψ hψ
@@ -1136,8 +1136,8 @@ theorem UpperTheory.V.HV.countIV :
   obtain ⟨hlp, hl2⟩ := prime_of_mem_Bchi hlB
   refine ⟨l * χ.N * l ^ j + 3, ?_⟩
   intro h hχ t ht hbig B hLay Ω _ _ _ c ψ hψ hodd
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   have hNpos : 0 < h.N := Host.N_pos h
   have hN16 := (hostIndex h).2.2.1
   have hN2 : 2 ≤ h.N := le_trans (by norm_num) (Nat.le_of_dvd hNpos hN16)
@@ -1231,7 +1231,7 @@ theorem UpperTheory.V.HV.point :
   obtain ⟨Cl, hCl⟩ : ∃ Cl : ℕ → ℕ, ∀ (l : Nat.Primes) (hl : (l:ℕ) ∈ Bchi χ),
       Cl l = Classical.choose (hin χ l (j l) hl) :=
     ⟨fun n => if hn : n.Prime ∧ n ∈ Bchi χ then Classical.choose (hin χ ⟨n, hn.1⟩ (j n) hn.2) else 0,
-      fun l hl => dif_pos (show (l:ℕ).Prime ∧ (l:ℕ) ∈ Bchi χ from ⟨l.2, hl⟩)⟩
+      fun l hl => dite_eq_left (show (l:ℕ).Prime ∧ (l:ℕ) ∈ Bchi χ from ⟨l.2, hl⟩)⟩
   obtain ⟨D, hD⟩ : ∃ D : ℕ, ∀ l ∈ Bchi χ, Cl l ≤ D :=
     ⟨∑ l ∈ Bchi χ, Cl l, fun l hl => Finset.single_le_sum (fun _ _ => Nat.zero_le _) hl⟩
   refine ⟨C0 + D + (Bchi χ).card + (Bchi χ).card * D, r₁, r₂, hr₁, hr₂, ?_⟩
@@ -1297,10 +1297,10 @@ theorem UpperTheory.V.HV.redPrime :
         (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (e : ℕ), e ≠ 0 → ∀ T : Finset (DirichletCharacter c.O N), (T : Set _) = Chr.evenSet c.O H e →
         plusLen D e * eO l c.O ≤ ∑ ψ ∈ T, Vlen Ω c e ψ := by
   intro E _ _ _ N _ H hH l _ hl2 hlH c _ Ω' _ _ _ D Ω _ _ _ e he T hT
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   obtain ⟨σ, hσ, hplus, -⟩ := Chr.partModel E N H hH l c.O Ω' D Ω e
-  haveI hroots : HasEnoughRootsOfUnity c.O (Monoid.exponent ((ZMod N)ˣ ⧸ H)) := by
+  have hroots : HasEnoughRootsOfUnity c.O (Monoid.exponent ((ZMod N)ˣ ⧸ H)) := by
     have hdvd : Monoid.exponent ((ZMod N)ˣ ⧸ H) ∣ Nat.totient N := by
       refine Group.exponent_dvd_nat_card.trans ?_
       rw [← Subgroup.index_eq_card, ← ZMod.card_units_eq_totient, ← Nat.card_eq_fintype_card]
@@ -1405,7 +1405,7 @@ theorem UpperTheory.V.HV.sumOut :
   have hM2 : 2 ≤ M := by nlinarith
   have htM : (t:ℝ) ≤ M := by nlinarith
   have hNM : (h.N:ℝ) ≤ M := by nlinarith
-  haveI : NeZero h.N.totient := ⟨(Nat.totient_pos.2 h.N_pos).ne'⟩
+  have : NeZero h.N.totient := ⟨(Nat.totient_pos.2 h.N_pos).ne'⟩
   choose c hc using fun l : Nat.Primes => exists_coef (l : ℕ) h.N.totient
   have hfacts := fun (l : Nat.Primes) (hl : l ∈ S) =>
     (bchiFacts h t hbig).2.2.2.2 (l:ℕ) l.2 (hS l hl).1 (hS l hl).2
@@ -1470,9 +1470,9 @@ theorem UpperTheory.V.HV.sumOut :
       ∑ e ∈ Finset.Ico 1 t, ((plusLen (ld l) e).toNat : ℝ) ≤
         ∑ e ∈ Finset.Ico 1 t, ∑ ψ ∈ h.X (c l) e, Vn Ω0 (c l) e ψ := by
     intro l hl
-    haveI := (c l).dvr
-    haveI := (c l).fin
-    haveI := hc l
+    have := (c l).dvr
+    have := (c l).fin
+    have := hc l
     have hidx := (hfacts l hl).2.2.2.2.2.2.1
     have hlev := hostLevel h E hE
     have hT : ∀ e, (↑(h.X (c l) e) : Set (DirichletCharacter (↥(c l).O) h.N)) =
@@ -1494,14 +1494,14 @@ theorem UpperTheory.V.HV.sumOut :
         · exact Finset.empty_subset _)
       (by
         intro e he1 he2
-        simp only [he2, if_true, Nat.cast_zero, zero_mul, add_zero]
+        simp only [he2, ite_true, Nat.cast_zero, zero_mul, add_zero]
         exact ⟨hfin l hl e he1 he2, hred e he1.ne'⟩)
     refine ⟨r.1, ?_⟩
     have r2 := r.2
     simp only [Nat.cast_zero, Finset.sum_const_zero, mul_zero, add_zero] at r2
     refine r2.trans (le_of_eq (Finset.sum_congr rfl fun e he => ?_))
     simp only [Finset.mem_Ico] at he
-    simp only [if_pos he.2]
+    simp only [ite_eq_left he.2]
     rfl
   have hstep : ∀ e, 0 < e → e < t →
       ∑ l ∈ S, Real.log ((l:ℕ):ℝ) * ∑ ψ ∈ h.X (c l) e, Vn Ω0 (c l) e ψ ≤
@@ -1623,7 +1623,7 @@ private theorem exists_coprime_modEq_of_modEq_one_div {N p R w : ℕ} (hp : p.Pr
 private theorem subgroup_eq_of_chr_hasLevel (E : Type) [Field E] [NumberField E] (L : ℕ) [NeZero L]
     (H₁ H₂ : Subgroup (ZMod L)ˣ) (h₁ : Chr.HasLevel E L H₁) (h₂ : Chr.HasLevel E L H₂) :
     H₁ = H₂ := by
-  haveI : IsAlgClosure ℚ (AlgebraicClosure ℚ) := by
+  have : IsAlgClosure ℚ (AlgebraicClosure ℚ) := by
     convert AlgebraicClosure.instIsAlgClosure ℚ
     all_goals first | rfl | exact Subsingleton.elim _ _
   let f : E →ₐ[ℚ] AlgebraicClosure ℚ := (by
@@ -1631,7 +1631,7 @@ private theorem subgroup_eq_of_chr_hasLevel (E : Type) [Field E] [NumberField E]
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra E (AlgebraicClosure ℚ) := f.toRingHom.toAlgebra
+  let : Algebra E (AlgebraicClosure ℚ) := f.toRingHom.toAlgebra
   have e1 := ((Chr.levGal E L H₁ h₁).2.2 (AlgebraicClosure ℚ)).1
   have e2 := ((Chr.levGal E L H₂ h₂).2.2 (AlgebraicClosure ℚ)).1
   have e3 : Chr.levH ℚ (AlgebraicClosure ℚ) H₁ = Chr.levH ℚ (AlgebraicClosure ℚ) H₂ :=
@@ -1687,13 +1687,13 @@ private theorem unitOfCoprime_not_mem_host_H_of_cond (h : Host) (c : ℕ) (hc : 
   · obtain ⟨y, hy⟩ := hsq1
     have hv := congrArg Units.val hy
     rw [unitsMap_unitOfCoprime_coe_eq, hc1] at hv
-    haveI := Fact.mk hq1
+    have := Fact.mk hq1
     have hs : IsSquare (-1 : ZMod h.q1) := ⟨(y : ZMod h.q1), by rw [← hv]; simp [sq]⟩
     exact (ZMod.exists_sq_eq_neg_one_iff.1 hs) (by omega)
   · obtain ⟨y, hy⟩ := hsqd
     have hv := congrArg Units.val hy
     rw [unitsMap_unitOfCoprime_coe_eq, hcd] at hv
-    haveI := Fact.mk hdp
+    have := Fact.mk hdp
     have hs : IsSquare (-1 : ZMod h.d) := ⟨(y : ZMod h.d), by rw [← hv]; simp [sq]⟩
     exact (ZMod.exists_sq_eq_neg_one_iff.1 hs) (by omega)
 private theorem exists_modEq_one_unitOfCoprime_not_mem_host_H (h : Host) (p : ℕ) (hp : p.Prime) (hpN : p ∣ h.N) :
@@ -1701,7 +1701,7 @@ private theorem exists_modEq_one_unitOfCoprime_not_mem_host_H (h : Host) (p : �
   obtain ⟨hq1, hq18, hdp, hd16, hcop⟩ := h.pair
   have hNdef : h.N = (2 ^ (h.ex + 2)).lcm h.q * (h.q1 * h.d) := rfl
   have hN0 : h.N ≠ 0 := (Host.N_pos h).ne'
-  haveI := h.chi.ne
+  have := h.chi.ne
   have hq0 : h.q ≠ 0 := NeZero.ne h.chi.N
   have hq10 : h.q1 ≠ 0 := hq1.ne_zero
   have hd0 : h.d ≠ 0 := hdp.ne_zero
@@ -1840,7 +1840,7 @@ theorem UpperTheory.V.HV.hostCond :
     exact ⟨Host.N_pos h, ⟨j⟩⟩
   have key : ∀ M, 0 < M → Nonempty (E →ₐ[ℚ] CyclotomicField M ℚ) → h.N ∣ M := by
     intro M hM hf
-    haveI : NeZero M := ⟨hM.ne'⟩
+    have : NeZero M := ⟨hM.ne'⟩
     by_contra hnd
     rw [← Nat.factorization_le_iff_dvd hN0 hM.ne'] at hnd
     obtain ⟨p, hp⟩ : ∃ p, M.factorization p < h.N.factorization p := by
@@ -1854,7 +1854,7 @@ theorem UpperTheory.V.HV.hostCond :
     obtain ⟨c, hc, hc1, hcH⟩ := exists_modEq_one_unitOfCoprime_not_mem_host_H h p hpp hpN
     obtain ⟨H', hH'⟩ := (Chr.levChange E M).1 hf
     have hL0 : M.lcm h.N ≠ 0 := Nat.lcm_ne_zero hM.ne' hN0
-    haveI : NeZero (M.lcm h.N) := ⟨hL0⟩
+    have : NeZero (M.lcm h.N) := ⟨hL0⟩
     have hML : M ∣ M.lcm h.N := Nat.dvd_lcm_left _ _
     have hNL : h.N ∣ M.lcm h.N := Nat.dvd_lcm_right _ _
     have h1 := ((Chr.levChange E (M.lcm h.N)).2 M hML H').1 hH'

@@ -169,9 +169,9 @@ theorem integral_periodise {m n : ℕ} {ν : Measure (Mx D m n)} {𝓨 : Set (Mx
     (hF : ∀ x, HasSum (fun ξ : Matrix (Fin m) (Fin n) D.host.E => φ (x + rat ξ)) (F x)) :
     ∫ x in 𝓨, F x ∂ν = ∫ x, φ x ∂ν := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := hν.1
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := hν.1
   let e : Matrix (Fin m) (Fin n) D.host.E ≃ ratMx D m n :=
     Equiv.ofBijective (fun ξ => ⟨rat ξ, rat_mem ξ⟩)
       ⟨fun a b h => rat_injective (congrArg Subtype.val h), fun g => by

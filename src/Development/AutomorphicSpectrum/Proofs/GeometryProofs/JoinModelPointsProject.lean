@@ -437,16 +437,16 @@ end Local
 theorem exists_pivot {I Ω : Type} [Finite I] [Field Ω] (V : ValuationSubring Ω) (f : I → Ω) (h : ∃ i, f i ≠ 0) :
     ∃ e, f e ≠ 0 ∧ ∀ q, f q / f e ∈ V := by
   obtain ⟨i, hi⟩ := h
-  haveI : Nonempty I := ⟨i⟩
+  have : Nonempty I := ⟨i⟩
   obtain ⟨e, he⟩ := Finite.exists_max fun q => V.valuation (f q)
   have hne : f e ≠ 0 := by
     intro h0
     have h1 := he i
-    rw [h0, map_zero, le_zero_iff, map_eq_zero] at h1
+    rw [h0, map_zero, nonpos_iff_eq_zero, map_eq_zero] at h1
     exact hi h1
   refine ⟨e, hne, fun q => ?_⟩
   rw [← ValuationSubring.valuation_le_one_iff, map_div₀]
-  exact div_le_one_of_le₀ (he q) zero_le'
+  exact div_le_one_of_le₀ (he q) zero_le
 
 section Lift
 
@@ -594,7 +594,7 @@ theorem isMultiHomog_rename_inl {g : MRing ι} {d : K → ℕ} (hg : IsMultiHomo
     exact hg m₀ hm₀ k
   | inr k =>
     have h1 : ∀ i : joinIdx ι ι' (Sum.inr k), Finsupp.mapDomain (joinInl ι ι') m₀ ⟨Sum.inr k, i⟩ = 0 := fun i =>
-      Finsupp.mapDomain_notin_range _ _ (by
+      Finsupp.mapDomain_of_notMem_range _ _ (by
         rintro ⟨p, hp⟩
         have := congrArg Sigma.fst hp
         simp [joinInl] at this)
@@ -613,7 +613,7 @@ theorem main : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (M R : Ro
   obtain ⟨cR, hcR⟩ := GroundTheory.Heights₂.Heights.HilbertSamuel.CoordArithOfFnField.nonzero_of_relevant R.y R.arith.2.1.2.2
   have hb : ∀ k, ∃ q, (fun p => i (R.y p)) ⟨k, q⟩ ≠ 0 := fun k =>
     ⟨cR k, (map_ne_zero i).mpr (hcR k)⟩
-  haveI : CharZero M.Ω := charZero_of M.arith.2.2.1
+  have : CharZero M.Ω := charZero_of M.arith.2.2.1
   have eL : joinOf M R i ∘ joinInl M.ι R.ι = M.y := rfl
   refine ⟨?_, ?_, ?_, ?_⟩
   · have hblock : ReciprocityTheory.ChartRestriction.G.AI.I1.IsBlockMap (Sum.inl : M.K → M.K ⊕ R.K) (joinInl M.ι R.ι) := by

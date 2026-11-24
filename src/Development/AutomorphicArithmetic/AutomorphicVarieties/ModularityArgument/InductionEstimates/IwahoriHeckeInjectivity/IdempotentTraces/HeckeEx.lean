@@ -63,7 +63,7 @@ private def dbl (U : Subgroup G) (h : G) : Set (G ⧸ U) :=
 
 private theorem dbl_finite [TopologicalSpace G] [IsTopologicalGroup G] {U : Subgroup G} (hU : CO U) (h : G) :
     (dbl U h).Finite := by
-  haveI : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU.2
+  have : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU.2
   have hc : Continuous fun u : G => (QuotientGroup.mk (u * h) : G ⧸ U) :=
     QuotientGroup.continuous_mk.comp (continuous_id.mul continuous_const)
   refine ((hU.1.image hc).finite_of_discrete).subset ?_
@@ -209,7 +209,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.heckeEx :
   obtain ⟨hL, hLle⟩ := (levLaws (K := K) (2 + 2) S).1 U hU
   obtain ⟨⟨h0, hadd⟩, hfix, hinj, htr⟩ := secTr μ₂ τ₁ τ₂ κ e he
   obtain ⟨-, -, -, hac, -⟩ := levLaws (K := K) (2 + 2) S
-  haveI := he.haar.prob
+  have := he.haar.prob
   have hHH : Continuous (HP (K := K) 2 2) := (hpSpec (K := K)).2.2.2.1
   have hflc : ∀ f : G1 K (2 + 2) → ℂ, Continuous f → Continuous (flat 0 f) := fun f hf =>
     (Complex.continuous_exp.comp (continuous_const.mul (Complex.continuous_ofReal.comp hHH))).mul hf

@@ -115,11 +115,11 @@ theorem GlobalTheory.LiftTrans.isLift_trans : ∀ (K M N : Type) [Field K] [Numb
     have hv := eq_under_of_continuous i.toRingHom hi hie
     subst hv
     set u := w.under (𝓞 M) with hu
-    haveI : w.asIdeal.LiesOver u.asIdeal := by rw [hu, HeightOneSpectrum.under_asIdeal]; infer_instance
-    haveI : u.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := by
+    have : w.asIdeal.LiesOver u.asIdeal := by rw [hu, HeightOneSpectrum.under_asIdeal]; infer_instance
+    have : u.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := by
       constructor
       rw [hu, HeightOneSpectrum.under_asIdeal, HeightOneSpectrum.under_asIdeal, Ideal.under_under]
-    haveI : w.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := by rw [HeightOneSpectrum.under_asIdeal]; infer_instance
+    have : w.asIdeal.LiesOver (w.under (𝓞 K)).asIdeal := by rw [HeightOneSpectrum.under_asIdeal]; infer_instance
     let φ1 := GroundTheory.Global.adicCompletionMap (w.under (𝓞 K)) u
     let φ2 := GroundTheory.Global.adicCompletionMap u w
     have hcomp : ∀ y, φ2 (φ1 y) = GroundTheory.Global.adicCompletionMap (w.under (𝓞 K)) w y := fun y =>
@@ -192,8 +192,8 @@ theorem charLift_trans : ∀ (K M N : Type) [Field K] [NumberField K] [_root_.Nu
   refine ⟨GlobalTheory.T.cuspidal_baseChange_trans_tower K M N a π P Q h1.1 h2.1, ?_⟩
   intro v w _ τ T hτ hT ξ hξ hs
   let u : HeightOneSpectrum (𝓞 M) := w.under (𝓞 M)
-  haveI hwu : w.asIdeal.LiesOver u.asIdeal := ⟨rfl⟩
-  haveI huv : u.asIdeal.LiesOver v.asIdeal := Ideal.LiesOver.tower_bot w.asIdeal u.asIdeal v.asIdeal
+  have hwu : w.asIdeal.LiesOver u.asIdeal := ⟨rfl⟩
+  have huv : u.asIdeal.LiesOver v.asIdeal := Ideal.LiesOver.tower_bot w.asIdeal u.asIdeal v.asIdeal
   obtain ⟨σ, hσ, -⟩ := GlobalTheory.CuspRep.LocEx.exists_isLocComp GlobalTheory.automorphicFormsFiniteGL M a P u
   have h3 := h1.2 v u τ σ hτ hσ ξ hξ hs
   have h4 := h2.2 u w σ T hσ hT _ _ h3

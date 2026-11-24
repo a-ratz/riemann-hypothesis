@@ -150,7 +150,7 @@ theorem common_den {ι : Type} [Finite ι] (A : ι → Set ℝ)
     ∃ D : ℕ, 0 < D ∧ ∀ i, ∀ x ∈ A i, ∃ n : ℤ, (D : ℝ) * x = n := by
   classical
   choose D hD hA using h
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   refine ⟨∏ i, D i, Finset.prod_pos fun i _ => hD i, fun i x hx => ?_⟩
   obtain ⟨n, hn⟩ := hA i x hx
   refine ⟨(∏ j ∈ Finset.univ.erase i, D j : ℕ) * n, ?_⟩
@@ -225,7 +225,7 @@ theorem module_den (hX : IsPolyFanOn bar ψ X)
       ∃ n : ℤ, (D : ℝ) * (starDepth bar ψ w).evalZ β = n := by
   classical
   obtain ⟨S, hS, hcov⟩ := hX.finite
-  haveI : Finite {T : Set (LinearMap.BilinForm ℤ X) | T ⊆ S} := hS.finite_subsets.to_subtype
+  have : Finite {T : Set (LinearMap.BilinForm ℤ X) | T ⊆ S} := hS.finite_subsets.to_subtype
   let A : {T : Set (LinearMap.BilinForm ℤ X) | T ⊆ S} → Set ℝ := fun T =>
     {x | ∃ β : LinearMap.BilinForm ℤ X, x = (starDepth bar ψ w).evalZ β ∧ ∃ (m : ℕ) (γ : Fin m → LinearMap.BilinForm ℤ X),
       IsCell bar ψ γ ∧ Set.range γ = T.1 ∧ toReal β ∈ rcone γ}
@@ -264,8 +264,8 @@ theorem starDepth_den : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   obtain ⟨n, R, hR, hcls⟩ := GlobalTheory.exists_fin_reps_projective_finrank_le E q
   have key : ∀ k : Fin n, ∃ D : ℕ, 0 < D ∧ ∀ x ∈ {x : ℝ | ∃ β ∈ balForms H.bar (R k), (∀ y, 0 ≤ β y y) ∧
       haveI := (hR k).1; x = (starDepth H.bar ψ w).evalZ β}, ∃ z : ℤ, (D : ℝ) * x = z := fun k => by
-    haveI := (hR k).1
-    haveI := (hR k).2.1
+    have := (hR k).1
+    have := (hR k).2.1
     obtain ⟨-, h2, h3⟩ := hw (R k) (hR k).2.2
     obtain ⟨D, hD, hA⟩ := module_den (hψ (R k) (hR k).2.2) h2 h3
     refine ⟨D, hD, ?_⟩
@@ -274,7 +274,7 @@ theorem starDepth_den : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   obtain ⟨D₀, hD₀, hall⟩ := common_den _ key
   refine ⟨D₀, hD₀, fun X _ _ _ _ hX β hβ hp => ?_⟩
   obtain ⟨k, ⟨f⟩⟩ := hcls X hX
-  haveI := (hR k).1
+  have := (hR k).1
   have hval : (starDepth H.bar ψ w).evalZ (pull f.symm.toLinearMap β) = (starDepth H.bar ψ w).evalZ β :=
     evalZ_pull _ f.symm.surjective β
   rw [← hval]

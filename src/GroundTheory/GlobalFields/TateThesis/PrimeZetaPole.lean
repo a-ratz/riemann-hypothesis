@@ -95,7 +95,7 @@ theorem finite_absNorm_lt (N : ℕ) : {I : Ideal (𝓞 K) | absNorm I < N}.Finit
     ext I
     simp
   rw [this]
-  exact (Set.finite_Iio N).biUnion fun n _ => Ideal.finite_setOfPred_absNorm_eq n
+  exact (Set.finite_Iio N).biUnion fun n _ => Ring.HasFiniteQuotients.finite_absNorm_eq n
 
 theorem sum_range_dedekindZetaTerm (s : ℝ) (N : ℕ) :
     ∑ n ∈ Finset.range N, dedekindZetaTerm K s n =
@@ -107,7 +107,7 @@ theorem sum_range_dedekindZetaTerm (s : ℝ) (N : ℕ) :
   rw [Finset.sum_congr rfl (fun I hI => by rw [(Finset.mem_filter.mp hI).2]),
     Finset.sum_const, nsmul_eq_mul, dedekindZetaTerm]
   congr 2
-  have hfin := Ideal.finite_setOfPred_absNorm_eq (S := 𝓞 K) n
+  have hfin := Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 K) n
   have : ((finite_absNorm_lt K N).toFinset.filter fun I => absNorm I = n) = hfin.toFinset := by
     ext I
     simp only [Finset.mem_filter, Set.Finite.mem_toFinset, mem_ofPred_eq]

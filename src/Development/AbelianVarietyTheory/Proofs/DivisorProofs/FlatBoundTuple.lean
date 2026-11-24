@@ -152,7 +152,7 @@ variable {F E : Type} [Field F] [Field E] [Algebra F E] {σ : E →ₐ[F] E} {n 
 theorem form_col (v : Fin n → E) (k : Fin n₁) :
     form σ J v (ι *ᵥ Pi.single k 1) = ((ι.map σ)ᵀ *ᵥ (Jᵀ *ᵥ v)) k := by
   simp only [form, dotProduct, mulVec, Matrix.map_apply, transpose_apply, Pi.single_apply, mul_ite, mul_one,
-    mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.mul_sum, Finset.sum_mul]
+    mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.mul_sum, Finset.sum_mul]
   rw [Finset.sum_comm]
   exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by ring
 
@@ -183,10 +183,10 @@ theorem frameS_mul_frameT (hσ : ∀ a, σ (σ a) = a) (hJ : ∀ i j, σ (J j i)
     · simpa [Matrix.mul_apply, mulVec, dotProduct] using congrFun hQy i
   · ext r k; fin_cases r
     · have := (orth (Pi.single k 1)).2
-      simp only [form, dotProduct, mulVec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+      simp only [form, dotProduct, mulVec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
       simpa [Matrix.mul_apply, pairVec, mulVec, vecMul, dotProduct, mul_comm] using this
     · have := (orth (Pi.single k 1)).1
-      simp only [form, dotProduct, mulVec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+      simp only [form, dotProduct, mulVec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
       simpa [Matrix.mul_apply, pairVec, mulVec, vecMul, dotProduct, mul_comm] using this
   · ext r k; fin_cases r <;> fin_cases k
     · simpa [Matrix.mul_apply, pairVec, vecMul, Fin.sum_univ_two, ← dot_pairVec, dotProduct, mul_comm] using xy
@@ -532,7 +532,7 @@ theorem pairVec_vecMul {v : Fin n → E} (hv : ∀ u, form σ J (ι *ᵥ u) v = 
   funext k
   have := hv (Pi.single k 1)
   simp only [form, dotProduct, mulVec, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true] at this
+    ite_true] at this
   simpa [vecMul, pairVec, mulVec, vecMul, dotProduct, mul_comm] using this
 
 end More
@@ -649,7 +649,7 @@ theorem exists_dbl_emb : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
         ∀ z : Matrix (Fin d) (Fin n) (AE F E), ∃ z₁ : Matrix (Fin d) (Fin n₁) (AE F E), ∃ u ∈ isoD d H,
           z * (g₀.1.1 * (diagCols (Fin n) : Matrix (Fin n ⊕ Fin n) (Fin n) (AE F E)))ᵀ = z₁ * ((diagCols (Fin n₁) : Matrix (Fin n₁ ⊕ Fin n₁) (Fin n₁) (AE F E)))ᵀ * (dblEmb H.ι)ᵀ + u := by
   intro F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP n₁ X₁ H j₀ j₁ M₁ om₁ r₁ s₁ hH hP₁
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hσ : ∀ a, σ (σ a) = a := conj_conj_of_cm hP.base.cm
   have hJ := hP.herm.herm
   have hJ₁ := hP₁.herm.herm
@@ -723,9 +723,9 @@ theorem exists_dbl_emb : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     apply continuous_induced_rng.2
     apply Units.continuous_iff.2
     have hv : Continuous fun g : UG (cA σ) (dbl (incM F X₁.J)) => g.1.1 := by
-      exact Units.continuous_val.comp continuous_subtype_val
+      exact Units.continuous_val.comp continuous_subtypeVal
     have hi : Continuous fun g : UG (cA σ) (dbl (incM F X₁.J)) => (g.1⁻¹).1 := by
-      exact Units.continuous_coe_inv.comp continuous_subtype_val
+      exact Units.continuous_coe_inv.comp continuous_subtypeVal
     refine ⟨?_, ?_⟩
     · show Continuous fun g : UG (cA σ) (dbl (incM F X₁.J)) => extM (dblEmb (F := F) H.ι) Qd g.1.1
       unfold extM

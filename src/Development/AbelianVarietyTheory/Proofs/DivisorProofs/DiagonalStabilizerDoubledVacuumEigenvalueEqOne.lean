@@ -59,10 +59,10 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem norm_eq_one_of_eigen (hF : IsTotallyReal F) {κ G : Type} [Fintype κ] [Group G]
     {om : G →* Module.End ℂ ((κ → AF F) → ℂ)} (h : IsUnitaryOn (adeleClass F) om) {Φ : (κ → AF F) → ℂ}
     (hΦ : Φ ∈ schA F κ) (h0 : Φ ≠ 0) {g : G} {c : ℂ} (hg : om g Φ = c • Φ) : ‖c‖ = 1 := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
   obtain ⟨hc, ⟨C, hC⟩, hi⟩ := GlobalTheory.SplitSvN.schA_facts hF hΦ
   let ν : Measure (κ → AF F) := Measure.addHaar
   have e := h ν inferInstance g Φ hΦ
@@ -75,7 +75,7 @@ theorem norm_eq_one_of_eigen (hF : IsTotallyReal F) {κ G : Type} [Fintype κ] [
   · have h2 : Integrable (fun x => Φ x * Φ x) ν :=
       (hi ν inferInstance).mul_bdd hc.aestronglyMeasurable (Filter.Eventually.of_forall hC)
     have h3 := h2.2
-    simp only [HasFiniteIntegral, enorm_mul] at h3
+    simp only [HasFiniteIntegral, eNorm_mul] at h3
     simpa only [pow_two] using h3.ne
 
 variable (F) in
@@ -92,16 +92,16 @@ theorem continuous_ofMixed : Continuous (InfiniteAdeleRing.ringEquiv_mixedSpace 
 theorem lDiag_box_ne_zero (hF : IsTotallyReal F) {κ : Type} [Fintype κ] {Ψ : (κ → AF F) → ℂ}
     (hΨ : Ψ ∈ schA F κ) (h0 : Ψ ≠ 0) : DiagForm.lDiag F κ (boxFun Ψ fun x => star (Ψ x)) ≠ 0 := by
   classical
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  letI := DiagForm.measAf (F := F)
-  haveI := DiagForm.borelAf (F := F)
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  let := DiagForm.measAf (F := F)
+  have := DiagForm.borelAf (F := F)
   have hS := GlobalTheory.SchwartzBox.boxFun_mem_schA F κ κ Ψ hΨ _ (GlobalTheory.SchAConj.star_mem_schA F κ Ψ hΨ)
   have hi := DiagForm.integrable_resD hS
   have hc : Continuous Ψ := by
-    letI : MeasurableSpace (κ → AF F) := borel _
-    haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+    let : MeasurableSpace (κ → AF F) := borel _
+    have : BorelSpace (κ → AF F) := ⟨rfl⟩
     exact (GlobalTheory.SplitSvN.schA_facts hF hΨ).1
   have hg : Continuous (DiagForm.glue : DiagForm.Vi F κ × DiagForm.Vf F κ → κ → AF F) := by
     refine continuous_pi fun i => Continuous.prodMk ?_ ((continuous_apply i).comp continuous_snd)
@@ -115,7 +115,7 @@ theorem lDiag_box_ne_zero (hF : IsTotallyReal F) {κ : Type} [Fintype κ] {Ψ : 
   have hi' : Integrable (fun p => Complex.normSq (Ψ (DiagForm.glue p))) (DiagForm.mu F κ) := by
     simpa using hi.re
   have h2 := (integral_eq_zero_iff_of_nonneg (fun p => Complex.normSq_nonneg _) hi').1 h1
-  haveI : (DiagForm.mu F κ).IsOpenPosMeasure := by unfold DiagForm.mu; infer_instance
+  have : (DiagForm.mu F κ).IsOpenPosMeasure := by unfold DiagForm.mu; infer_instance
   have h3 := (Continuous.ae_eq_iff_eq _ (Complex.continuous_normSq.comp (hc.comp hg)) continuous_const).1 h2
   refine h0 (funext fun x => ?_)
   have h4 := Complex.normSq_eq_zero.1 (congrFun h3 (0 + DiagForm.shiftOf x))
@@ -223,8 +223,8 @@ theorem val_det_le_one {d : ℕ} (W : Spc F E d) (hL : W.L.IsFullLattice E) {v :
     exact h1
   by_contra h
   obtain ⟨n, hn⟩ := MulArchimedean.arch (D * b ^ Fintype.card (Fin d) / k) (lt_of_not_ge h)
-  rw [div_le_iff₀ (zero_lt_iff.2 hk)] at hn
-  have h0 : 0 < b ^ Fintype.card (Fin d) := (zero_lt_iff.2 hk).trans_le (by simpa using key 0)
+  rw [div_le_iff₀ (pos_iff_ne_zero.2 hk)] at hn
+  have h0 : 0 < b ^ Fintype.card (Fin d) := (pos_iff_ne_zero.2 hk).trans_le (by simpa using key 0)
   exact h ((mul_le_iff_le_one_left h0).1 (hn.trans (key n)))
 
 theorem chr_det_eq_one {d : ℕ} (W : Spc F E d) (hL : W.L.IsFullLattice E) {v : Pl (F := F)} {w : HeightOneSpectrum (𝓞 E)}
@@ -243,7 +243,7 @@ theorem chr_det_eq_one {d : ℕ} (W : Spc F E d) (hL : W.L.IsFullLattice E) {v :
       have := val_det_le_one W hL hu _ fun z hz => (ht z hz).2
       rw [← Matrix.GeneralLinearGroup.val_det_apply, map_inv] at this
       exact this
-    have h0 : 0 < Valued.v (y : w.adicCompletion E) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 y.ne_zero)
+    have h0 : 0 < Valued.v (y : w.adicCompletion E) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 y.ne_zero)
     rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ h0] at a2
     exact le_antisymm a1 a2
   have hN := h1 (1 - GlobalTheory.LatVac.liftV v 1) (by rw [map_sub, map_one, GlobalTheory.LatVac.evFin_liftV, sub_self])

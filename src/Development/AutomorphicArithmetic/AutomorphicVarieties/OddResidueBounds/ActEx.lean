@@ -51,17 +51,17 @@ theorem UpperTheory.V.Odd.actEx :
     ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (N : ℕ) [NeZero N], Nonempty (E →ₐ[ℚ] CyclotomicField N ℚ) → ∃ ρ : (ZMod N)ˣ →* (E ≃ₐ[ℚ] E), IsCycAct Ω N ρ := by
   intro E Ω _ _ _ _ _ N _ hf
   obtain ⟨f⟩ := hf
-  haveI : NeZero (N : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
-  letI : Algebra E (CyclotomicField N ℚ) := f.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ E (CyclotomicField N ℚ) :=
+  have : NeZero (N : ℚ) := ⟨by exact_mod_cast NeZero.ne N⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) := CyclotomicField.isCyclotomicExtension N ℚ
+  let : Algebra E (CyclotomicField N ℚ) := f.toRingHom.toAlgebra
+  have : IsScalarTower ℚ E (CyclotomicField N ℚ) :=
     IsScalarTower.of_algebraMap_eq' f.comp_algebraMap.symm
-  haveI : IsAbelianGalois ℚ (CyclotomicField N ℚ) :=
+  have : IsAbelianGalois ℚ (CyclotomicField N ℚ) :=
     IsCyclotomicExtension.isAbelianGalois {N} ℚ (CyclotomicField N ℚ)
-  haveI : IsAbelianGalois ℚ E := IsAbelianGalois.tower_bot ℚ E (CyclotomicField N ℚ)
-  haveI : Algebra.IsAlgebraic E (CyclotomicField N ℚ) := Algebra.IsAlgebraic.tower_top (K := ℚ) E
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAbelianGalois ℚ E := IsAbelianGalois.tower_bot ℚ E (CyclotomicField N ℚ)
+  have : Algebra.IsAlgebraic E (CyclotomicField N ℚ) := Algebra.IsAlgebraic.tower_top (K := ℚ) E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   let g : CyclotomicField N ℚ →ₐ[E] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

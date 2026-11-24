@@ -206,11 +206,11 @@ theorem ann_core {K : Type} [CommRing K] [TopologicalSpace K] [T2Space K] [Measu
 theorem localDual : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)) (c : ℝ≥0), GlobalTheory.CompanionTheory.SW.IsStdV v lam → SelfDual (c • lam) (fun s t => psiV F ψ v (s * t)) → ∀ U : AddSubgroup (Fv F v), IsCompact (U : Set (Fv F v)) → IsOpen (U : Set (Fv F v)) → annV ψ v (annV ψ v U) = U ∧ IsCompact (annV ψ v U) ∧ IsOpen (annV ψ v U) ∧ (c : ℝ) ^ 2 * (lam U).toReal * (lam (annV ψ v U)).toReal = 1 := by
   intro F _ _ ψ hψ v lam c _ hSD U hUc hUo
   obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨hc, y, hy⟩ := (GlobalTheory.CompanionTheory.AdeleCharLocal.char_nontrivial_at_every_place F ψ hψ).1 v
   have ha := psiV_add ψ v
   have h0 := psiV_zero ψ v
@@ -243,7 +243,7 @@ theorem localDual : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F
   · rw [← coe_annS, hcore.1]
   · have h5 := hcore.2
     rw [coe_annS] at h5
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.toReal_mul, ENNReal.coe_toReal] at h5
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.toReal_mul, ENNReal.coe_toReal] at h5
     rw [← h5]
     ring
 
@@ -293,12 +293,12 @@ variable {F}
 theorem eq_adeleMeasure (db : Measure (AdeleRing (𝓞 F) F)) (hH : db.IsAddHaarMeasure) (D : Set (AF F))
     (hD : IsAddFundamentalDomain (ratA F) D db) (hD1 : db D = 1) : db = adeleMeasure F := by
   obtain ⟨⟨hlc, hsc, ht2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := countable_numberField F
-  haveI : Countable (ratA F) := (AddMonoidHom.rangeRestrict_surjective _).countable
+  have := countable_numberField F
+  have : Countable (ratA F) := (AddMonoidHom.rangeRestrict_surjective _).countable
   have hl : db = Measure.addHaarScalarFactor db (adeleMeasure F) • adeleMeasure F :=
     Measure.isAddLeftInvariant_eq_smul db (adeleMeasure F)
   have h2 : db (fundamentalSet F) = 1 := ((isFD_fundamentalSet F db).measure_eq hD).trans hD1
-  rw [hl, Measure.smul_apply, adeleMeasure_fundamentalSet] at h2
+  rw [hl, smul_apply, adeleMeasure_fundamentalSet] at h2
   have hc : Measure.addHaarScalarFactor db (adeleMeasure F) = 1 := by
     simpa [ENNReal.smul_def] using h2
   rw [hl, hc, one_smul]
@@ -327,8 +327,8 @@ theorem prod_congr_inf {F : Type} [Field F] [NumberField F] {m₁ m₂ : Measura
 
 theorem prod_meas_eq (F : Type) [Field F] [NumberField F] :
     (inferInstance : MeasurableSpace (Ainf F × Af F)) = (measAF : MeasurableSpace (AF F)) := by
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Af F) := ⟨rfl⟩
   exact (Prod.borelSpace (α := Ainf F) (β := Af F)).measurable_eq
 
 def pairE (F : Type) [Field F] [NumberField F] : (Ainf F × Af F) ≃ᵐ AF F where
@@ -386,19 +386,19 @@ namespace GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test
 
 theorem integral_pure_indicator_char : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ (db : Measure (AF F)) (laminf : Measure (Ainf F)) (lf : Measure (Af F)), laminf.IsAddHaarMeasure → lf.IsAddHaarMeasure → ∀ e : (Ainf F × Af F) ≃ᵐ AF F, (∀ p, e p = pairA F p.1 p.2) → MeasurePreserving e (laminf.prod lf) db → ∀ (g : Ainf F → ℂ) (B : AddSubgroup (Af F)), MeasurableSet (B : Set (Af F)) → lf (B : Set (Af F)) ≠ ⊤ → ∀ b : AF F, ∫ y, (g (fstA F y) * (B : Set (Af F)).indicator (fun _ => (1 : ℂ)) (sndA F y)) * ψ (y * b) ∂db = (∫ x, g x * psiInf F ψ (x * fstA F b) ∂laminf) * ((lf (B : Set (Af F))).toReal : ℂ) * (annF ψ (B : Set (Af F))).indicator (fun _ => (1 : ℂ)) (sndA F b) := by
   intro F _ _ ψ _ db laminf lf hl hf e he hmp g B hB hfin b
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Af F) := (GlobalTheory.CompanionTheory.AdeleTop.adele_top F).2.1
-  haveI : SecondCountableTopology (Af F) := (GlobalTheory.CompanionTheory.AdeleTop.adele_top F).2.2.1
-  haveI : SecondCountableTopology (Ainf F) := by
-    haveI : SecondCountableTopology (Ainf F × Af F) := (GlobalTheory.CompanionTheory.AdeleTop.adele_top F).1.2.1
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have : LocallyCompactSpace (Af F) := (GlobalTheory.CompanionTheory.AdeleTop.adele_top F).2.1
+  have : SecondCountableTopology (Af F) := (GlobalTheory.CompanionTheory.AdeleTop.adele_top F).2.2.1
+  have : SecondCountableTopology (Ainf F) := by
+    have : SecondCountableTopology (Ainf F × Af F) := (GlobalTheory.CompanionTheory.AdeleTop.adele_top F).1.2.1
     exact (Topology.IsEmbedding.of_comp (f := fun x : Ainf F => (x, (0 : Af F))) (g := Prod.fst)
       (by fun_prop) continuous_fst Topology.IsEmbedding.id).secondCountableTopology
-  haveI : LocallyCompactSpace (Ainf F) := inferInstance
-  haveI : IsLocallyFiniteMeasure laminf := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
-  haveI : IsLocallyFiniteMeasure lf := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
-  haveI : SFinite laminf := inferInstance
-  haveI : SFinite lf := inferInstance
+  have : LocallyCompactSpace (Ainf F) := inferInstance
+  have : IsLocallyFiniteMeasure laminf := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
+  have : IsLocallyFiniteMeasure lf := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
+  have : SFinite laminf := inferInstance
+  have : SFinite lf := inferInstance
   set χ : Af F → ℂ := fun u => psiF ψ (u * sndA F b) with hχ
   have hχadd : ∀ x y, χ (x + y) = χ x * χ y := fun x y => by
     simp only [hχ, add_mul, psiF_add]
@@ -450,12 +450,12 @@ theorem boxMass : ∀ (F : Type) [Field F] [NumberField F] (lam : ∀ v : Height
   intro F _ _ lam hlam lf hlf h1 S A hA
   obtain ⟨-, hAfLC, hAfSC, hAfT2⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   have hloc := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
-  haveI : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
+  have : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
+  have : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have : BorelSpace (Af F) := ⟨rfl⟩
   let A' : ∀ v : HeightOneSpectrum (𝓞 F), Set (Unit → Fv F v) := fun v => {x | x () ∈ A v}
   have hA' : ∀ v, MeasurableSet (A' v) := fun v => measurable_pi_apply () (hA v)
   let T : Set (Unit → Af F) := {x | (∀ v ∈ S, (fun i => HeckeCharacterZeroLocus.SiegelWeilU.evalV F v (x i)) ∈ A' v) ∧
@@ -474,7 +474,7 @@ theorem boxMass : ∀ (F : Type) [Field F] [NumberField F] (lam : ∀ v : Height
       ((GlobalTheory.CompanionTheory.SW.AfBox.continuous_compS Unit S).measurable (MeasurableSet.univ_pi fun v => hA' v.1))
   have hbox : Coef.boxA S A = (MeasurableEquiv.funUnique Unit (Af F)).symm ⁻¹' T := by
     ext y
-    simp only [Coef.boxA, T, A', Set.mem_preimage, Set.mem_setOf_eq, MeasurableEquiv.funUnique_symm_apply]
+    simp only [Coef.boxA, T, A', Set.mem_preimage, Set.mem_ofPred_eq, MeasurableEquiv.funUnique_symm_apply]
     constructor
     · rintro ⟨h1, h2⟩
       exact ⟨fun v hv => h1 v hv, fun v hv _ => h2 v hv⟩
@@ -587,10 +587,10 @@ namespace GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.InfEx
 
 theorem exists_bumps_inf : (∀ (P : Type) [Fintype P] (a : P → ℝ), (∀ w, a w ≠ 0) → ∃ g : ℕ → (P → ℝ) → ℝ, (∀ k, Continuous (g k) ∧ HasCompactSupport (g k) ∧ (∀ x, 0 ≤ g k x) ∧ 0 < ∫ x, g k x) ∧ (∀ k, tsupport (g k) ⊆ Metric.closedBall 0 (1 / ((k : ℝ) + 1))) ∧ ∀ k, Integrable (fun t : P → ℝ => ∫ x, (g k x : ℂ) * Complex.exp (2 * Real.pi * Complex.I * ((∑ w, a w * (x w * t w) : ℝ) : ℂ)))) → ∀ (F : Type) [Field F] [NumberField F], NumberField.IsTotallyReal F → ∀ ψ : AddChar (AF F) ℂ, IsCharAF F ψ → ∀ laminf : Measure (Ainf F), laminf.IsAddHaarMeasure → ∃ ρ : ℕ → Ainf F → ℝ, (∀ k, Continuous (ρ k) ∧ HasCompactSupport (ρ k) ∧ (∀ y, 0 ≤ ρ k y) ∧ 0 < ∫ y, ρ k y ∂laminf) ∧ Filter.Tendsto (fun k => tsupport (ρ k)) Filter.atTop (nhds (0 : Ainf F)).smallSets ∧ ∀ k, Integrable (fouInf ψ laminf (ρ k)) laminf := by
   intro hreal F _ _ hF ψ hψ laminf hH
-  haveI := hF
+  have := hF
   classical
   obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have he : Continuous (GlobalTheory.CompanionTheory.SW.RealCoord.coord F) := (GlobalTheory.CompanionTheory.SW.RealCoord.isHomeomorph_coord F).continuous
   have he' : Continuous (GlobalTheory.CompanionTheory.SW.RealCoord.coord F).symm := (GlobalTheory.CompanionTheory.SW.RealCoord.coordHomeo F).symm.continuous
   have hpc : Continuous (psiInf F ψ) := hψ.1.comp (continuous_id.prodMk continuous_const)
@@ -604,7 +604,7 @@ theorem exists_bumps_inf : (∀ (P : Type) [Fintype P] (a : P → ℝ), (∀ w, 
   set e := GlobalTheory.CompanionTheory.SW.RealCoord.coord F with hedef
   set E := GlobalTheory.CompanionTheory.SW.RealCoord.coordHomeo F with hEdef
   have hEe : ∀ y, E y = e y := fun _ => rfl
-  haveI : (laminf.map e).IsAddHaarMeasure :=
+  have : (laminf.map e).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map laminf e.toAddEquiv he he'
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, laminf.map e = c • (volume : Measure (InfinitePlace F → ℝ)) :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
@@ -751,7 +751,7 @@ theorem annF_boxA : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F
         · rw [sub_self]; exact zero_mem _
         · rw [sub_zero]
           exact hcint w (fun hw => h (Finset.mem_union_right _ hw))
-      · rw [happ, if_pos (Finset.mem_union_left _ hw), sub_self]
+      · rw [happ, ite_eq_left (Finset.mem_union_left _ hw), sub_self]
     have hsum : psiF ψ e = 1 := by
       rw [he]
       refine Finset.sum_induction _ (fun x => psiF ψ x = 1) (fun a b ha hb => by rw [psiF_add, ha, hb, one_mul])
@@ -786,7 +786,7 @@ namespace GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.InfLim
 
 theorem tendsto_fouInf_div_integral : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ laminf : Measure (Ainf F), laminf.IsAddHaarMeasure → ∀ ρ : ℕ → Ainf F → ℝ, (∀ k, Continuous (ρ k) ∧ HasCompactSupport (ρ k) ∧ (∀ y, 0 ≤ ρ k y) ∧ 0 < ∫ y, ρ k y ∂laminf) → Filter.Tendsto (fun k => tsupport (ρ k)) Filter.atTop (nhds (0 : Ainf F)).smallSets → ∀ t : Ainf F, Filter.Tendsto (fun k => fouInf ψ laminf (ρ k) t / ((∫ y, ρ k y ∂laminf : ℝ) : ℂ)) Filter.atTop (nhds 1) := by
   intro F _ _ ψ hψ laminf _ ρ hρ hsupp t
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have hg_cont : Continuous fun x : Ainf F => psiInf F ψ (x * t) := by
     have h1 : Continuous fun x : Ainf F => pairA F (x * t) 0 :=
       (continuous_mul_const t).prodMk continuous_const
@@ -958,14 +958,14 @@ theorem sdConst : ∀ (F : Type) [Field F] [NumberField F], NumberField.IsTotall
     Unit 1 (Matrix.isSymm_one) (by simp)
   refine ⟨cinf, c, hU, ?_, fun v => ?_⟩
   · obtain ⟨a1, a2, a3, a4, -, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
-    haveI := a1; haveI := a2; haveI := a3; haveI := a4
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-    haveI := hinf.1
+    have := a1; have := a2; have := a3; have := a4
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
+    have := hinf.1
     exact (GlobalTheory.CompanionTheory.SW.SdAny.iff_of_unit (psiInf F ψ) laminf cinf _ (Matrix.map_one _ (map_zero _) (map_one _)) h1 _).2 rfl
   · obtain ⟨a1, a2, a3, a4, -, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI := a1; haveI := a2; haveI := a3; haveI := a4
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-    haveI := (hlam v).1
+    have := a1; have := a2; have := a3; have := a4
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := (hlam v).1
     exact (GlobalTheory.CompanionTheory.SW.SdAny.iff_of_unit (psiV F ψ v) (lam v) (c v) _ (Matrix.map_one _ (map_zero _) (map_one _)) (h2 v) _).2 rfl
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test
@@ -978,14 +978,14 @@ theorem condS_of : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F)
   obtain ⟨T, hT⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.psiF_eq_one_of_int_of_vanish F ψ hψ
   refine (T.finite_toSet.union hc1).subset fun v hv => ?_
   by_contra hcon
-  simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hcon
+  simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hcon
   obtain ⟨hvT, hcv⟩ := hcon
   apply hv
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have hloc := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : IsTopologicalRing (Fv F v) := hloc.1
-  haveI : SecondCountableTopology (Fv F v) := hloc.2.2.1
-  haveI := (hlam v).1
+  have : IsTopologicalRing (Fv F v) := hloc.1
+  have : SecondCountableTopology (Fv F v) := hloc.2.2.1
+  have := (hlam v).1
   have hO : ((GlobalTheory.CompanionTheory.SW.PiV.ball v 0 : AddSubgroup (Fv F v)) : Set (Fv F v)) =
       (v.adicCompletionIntegers F : Set (Fv F v)) := by
     ext x
@@ -1116,10 +1116,10 @@ theorem exists_test_approx : ∀ (F : Type) [Field F] [NumberField F], NumberFie
     by_contra h
     exact hv (hS (Finset.mem_union_right _ (hfin2.mem_toFinset.2 h)))
   obtain ⟨ρ, hρ, hρt, hρI⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.InfEx.exists_bumps_inf _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.InfReal.exists_bumps F hF ψ hψ laminf hinf.1
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v : HeightOneSpectrum (𝓞 F), (lam v).IsAddHaarMeasure := fun v => (hlam v).1
   have hloc := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
+  have : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
   let Ub : ℕ → ∀ v : HeightOneSpectrum (𝓞 F), AddSubgroup (Fv F v) :=
     fun k v => GlobalTheory.CompanionTheory.SW.PiV.ball v (-(k : ℤ))
   have hUc : ∀ k v, IsCompact (Ub k v : Set (Fv F v)) := fun k v => GlobalTheory.CompanionTheory.SW.PiV.ball_isCompact _

@@ -101,12 +101,12 @@ theorem exists_scale_integral_not_le_maximal :
   have hF0 : F ≠ 0 := by
     intro h
     apply hne
-    rw [← hFcoe, h, FractionalIdeal.coe_zero]
+    rw [← hFcoe, h, FractionalIdeal.coeToSubmodule_zero]
   have hinj : Function.Injective (algebraMap (𝓞 E) E) := FaithfulSMul.algebraMap_injective _ _
   have hint : ∀ s ∈ F⁻¹, ∀ a ∈ I, ∃ o : 𝓞 E, (o : E) = s * a := by
     intro s hs a ha
     have h1 := (FractionalIdeal.mem_inv_iff hF0).1 hs a ha
-    rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_one] at h1
+    rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_one] at h1
     obtain ⟨o, ho⟩ := Submodule.mem_one.1 h1
     exact ⟨o, ho⟩
   have key : ∀ P : Ideal (𝓞 E), P ≠ ⊤ →
@@ -117,12 +117,12 @@ theorem exists_scale_integral_not_le_maximal :
     apply hP
     have hle : ((F * F⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) ≤
         Submodule.map (Algebra.linearMap (𝓞 E) E) P := by
-      rw [FractionalIdeal.coe_mul, Submodule.mul_le]
+      rw [FractionalIdeal.coeToSubmodule_mul, Submodule.mul_le]
       intro m hm n hn
       obtain ⟨o, ho⟩ := hint n hn m hm
       refine Submodule.mem_map.2 ⟨o, h n hn m hm o ho, ?_⟩
       rw [mul_comm, ← ho]; rfl
-    rw [mul_inv_cancel₀ hF0, FractionalIdeal.coe_one] at hle
+    rw [mul_inv_cancel₀ hF0, FractionalIdeal.coeToSubmodule_one] at hle
     have h1 : (1 : E) ∈ (1 : Submodule (𝓞 E) E) := Submodule.mem_one.2 ⟨1, map_one _⟩
     obtain ⟨p, hp, hp1⟩ := Submodule.mem_map.1 (hle h1)
     have : p = 1 := hinj (by rw [map_one]; exact hp1)
@@ -145,7 +145,7 @@ theorem exists_scale_integral_not_le_maximal :
   let u : Ideal (𝓞 E) → 𝓞 E := fun P => ∏ P' ∈ T.erase P, c P' P
   have hu1 : ∀ P ∈ T, u P ∉ P := by
     intro P hP hmem
-    haveI := (hT P hP).isPrime
+    have := (hT P hP).isPrime
     obtain ⟨P', hP', hcP⟩ := Ideal.IsPrime.prod_mem_iff.1 hmem
     exact hc2 P' P (hT P' (Finset.mem_of_mem_erase hP')) (hT P hP) (Finset.ne_of_mem_erase hP') hcP
   have hu2 : ∀ P ∈ T, ∀ P' ∈ T, P' ≠ P → u P ∈ P' := by
@@ -172,7 +172,7 @@ theorem exists_scale_integral_not_le_maximal :
       refine Finset.sum_congr rfl (fun P hP => ?_)
       rw [mul_assoc, ← hw P hP]
     · intro hmem
-      haveI := (hT P0 hP0).isPrime
+      have := (hT P0 hP0).isPrime
       rw [← Finset.add_sum_erase _ _ hP0] at hmem
       have hrest : ∑ P ∈ T.erase P0, u P * w P ∈ P0 :=
         Ideal.sum_mem _ (fun P hP => Ideal.mul_mem_right _ _
@@ -308,7 +308,7 @@ theorem exists_pair : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
     apply τ.injective
     rw [hB.cm.2.2.2, hB.cm.2.2.2, star_star]
-  have hfu : Algebra.FormallyUnramified (𝓞 F) (𝓞 E) := by haveI := hB.unram; infer_instance
+  have hfu : Algebra.FormallyUnramified (𝓞 F) (𝓞 E) := by have := hB.unram; infer_instance
   obtain ⟨θ, hθ⟩ := GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified F E σ hB.cm hfu
   have hfg : Y.L.FG := hY.lat.fg
   obtain ⟨z0, hz0L, hz0⟩ := _root_.GlobalTheory.selfDual_pair_nondeg F E σ hσ n Y.J Y.L hfg hY.herm hY.dual x hx0
@@ -433,7 +433,7 @@ theorem exists_isotropic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
         rw [hid] at this
         exact this.symm)
     exact InfinitePlace.not_isReal_iff_isComplex.2 (hEC.isComplex w0) (InfinitePlace.isReal_iff.2 hre)
-  haveI : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
+  have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
   obtain ⟨hc, hF, θ, hθ0, hθ⟩ := GlobalTheory.HermGlobal.involutive_and_fixed hne
   obtain ⟨P, g, hP, hPg, hgf, hg0⟩ := GlobalTheory.HermDiag.exists_congr_diagonal (c := (σ : E →+* E))
     two_ne_zero (fun t => invol t) (G := Y.J) (fun a b => hY.herm b a)
@@ -828,11 +828,11 @@ theorem exists_hyperbolic_split : ∀ (F E : Type) [Field F] [NumberField F] [Fi
       θ *ᵥ (fun i => e w (x i)) = fun i => e w (y i) := fun w =>
     _root_.GlobalTheory.CartanPlane.extend_swap n n₁ _ _ _ _ _ _ hn (hMh w) (cxx w) (cyy w) (cxy w) (cox w) (coy w) (cP w) (by rw [cg w]; exact hθ₁ w)
   choose θ hθ using hθ
-  haveI := hlat₁
+  have := hlat₁
   have hb₁ : ∀ v : B.P, ∃ β, IsSplitBasis (B.τ v) L₁ β := fun v => exists_isSplitBasis (B.τ v) L₁ hcm
   choose β₁ hβ₁ using hb₁
   let bas₁ : ∀ v : Pl (F := F), GL (Fin n₁) (Fv F v) := fun v => if h : v ∈ B.P then β₁ ⟨v, h⟩ else 1
-  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dif_pos v.2]
+  have hbas₁ : ∀ v : B.P, bas₁ v = β₁ v := fun v => by simp only [bas₁, dite_eq_left v.2]
   have hb : ∀ v : B.P, ∃ β : GL (Fin n) (Fv F v), (∀ i : Fin n, (i.1 = i₀ → ∀ r, β.1 r i = B.τ v (x r)) ∧
       (i.1 = i₁ → ∀ r, β.1 r i = B.τ v (y r)) ∧
       ∀ j : Fin n₁, i.1 = skip i₀ i₁ j → ∀ r, β.1 r i = (ι.map (B.τ v) * (β₁ v).1) r j) ∧
@@ -843,7 +843,7 @@ theorem exists_hyperbolic_split : ∀ (F E : Type) [Field F] [NumberField F] [Fi
         exact ⟨_, _, u, (hL z hz).1, (hL z hz).2, hu, hz'⟩) (hP v).1 (hP v).2 (hβ₁ v)
   choose β hβ using hb
   let bas : ∀ v : Pl (F := F), GL (Fin n) (Fv F v) := fun v => if h : v ∈ B.P then β ⟨v, h⟩ else Y.bas v
-  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dif_pos v.2]
+  have hbas : ∀ v : B.P, bas v = β v := fun v => by simp only [bas, dite_eq_left v.2]
   let Y₁ : Spc F E n₁ := ⟨J₁, L₁, θ₁, bas₁⟩
   let Y' : Spc F E n := ⟨Y.J, Y.L, θ, bas⟩
   refine ⟨Y', Y₁, ⟨x, y, ι, 𝔟⟩, ?_, ?_, ?_⟩

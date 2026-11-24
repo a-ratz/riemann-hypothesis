@@ -170,7 +170,7 @@ def toCenter : 𝓞 G.F →+* Subring.center (ℚ ⊗[ℤ] G.O) where
 
 theorem toCenter_isUnit (c : nonZeroDivisors (𝓞 G.F)) : IsUnit (toCenter G c) := by
   have hc0 : (c : 𝓞 G.F) ≠ 0 := nonZeroDivisors.coe_ne_zero c
-  have hI := Ideal.comap_ne_bot_of_integral_mem hc0 (Ideal.mem_span_singleton_self (c : 𝓞 G.F))
+  have hI := Ideal.under_ne_bot_of_integral_mem hc0 (Ideal.mem_span_singleton_self (c : 𝓞 G.F))
     (Algebra.IsIntegral.isIntegral (R := ℤ) (c : 𝓞 G.F))
   obtain ⟨k, hk, hk0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
   rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at hk
@@ -227,13 +227,13 @@ namespace GlobalTheory
 
 theorem isReduced_tensor_int_numberField (F K : Type) [Field F] [NumberField F] [Field K] :
     IsReduced (K ⊗[ℤ] F) := by
-  haveI : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
-  haveI : Algebra.FormallyUnramified ℚ F := Algebra.FormallyUnramified.of_isSeparable ℚ F
-  haveI : Algebra.FormallyUnramified ℤ F := Algebra.FormallyUnramified.comp ℤ ℚ F
-  haveI : Algebra.EssFiniteType ℤ ℚ := Algebra.EssFiniteType.of_isLocalization ℚ (nonZeroDivisors ℤ)
-  haveI : Algebra.EssFiniteType ℤ F := Algebra.EssFiniteType.comp ℤ ℚ F
-  haveI : Algebra.FormallyUnramified K (K ⊗[ℤ] F) := inferInstance
-  haveI : Algebra.EssFiniteType K (K ⊗[ℤ] F) := inferInstance
+  have : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
+  have : Algebra.FormallyUnramified ℚ F := Algebra.FormallyUnramified.of_isSeparable ℚ F
+  have : Algebra.FormallyUnramified ℤ F := Algebra.FormallyUnramified.comp ℤ ℚ F
+  have : Algebra.EssFiniteType ℤ ℚ := Algebra.EssFiniteType.of_isLocalization ℚ (nonZeroDivisors ℤ)
+  have : Algebra.EssFiniteType ℤ F := Algebra.EssFiniteType.comp ℤ ℚ F
+  have : Algebra.FormallyUnramified K (K ⊗[ℤ] F) := inferInstance
+  have : Algebra.EssFiniteType K (K ⊗[ℤ] F) := inferInstance
   exact Algebra.FormallyUnramified.isReduced_of_field K (K ⊗[ℤ] F)
 
 end GlobalTheory
@@ -261,7 +261,7 @@ theorem GDatum.O_nontrivial (G : GDatum) : Nontrivial G.O := by
   omega
 
 theorem GDatum.tmul_one_injective (G : GDatum) : Function.Injective (fun o : G.O => (1 : ℚ) ⊗ₜ[ℤ] o) := by
-  haveI := G.freeO
+  have := G.freeO
   have := Algebra.TensorProduct.includeRight_injective (R := ℤ) (A := ℚ) (B := G.O)
     (algebraMap ℤ ℚ).injective_int
   exact fun a b h => this h
@@ -283,13 +283,13 @@ theorem GDatum.exists_smul_eq_tmul (G : GDatum) (z : ℚ ⊗[ℤ] G.O) :
       TensorProduct.tmul_smul, TensorProduct.tmul_smul]
 
 theorem GDatum.algebraMap_injective (G : GDatum) : Function.Injective (algebraMap (𝓞 G.F) G.O) := by
-  haveI := G.freeO
-  haveI := GDatum.O_nontrivial G
+  have := G.freeO
+  have := GDatum.O_nontrivial G
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro c hc
   by_contra h0
   have hI : (RingHom.ker (algebraMap (𝓞 G.F) G.O)).comap (algebraMap ℤ (𝓞 G.F)) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem h0 hc (Algebra.IsIntegral.isIntegral c)
+    Ideal.under_ne_bot_of_integral_mem h0 hc (Algebra.IsIntegral.isIntegral c)
   obtain ⟨k, hk, hk0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hI
   rw [Ideal.mem_comap, RingHom.mem_ker, ← IsScalarTower.algebraMap_apply] at hk
   have h2 : k • (1 : G.O) = 0 := by rw [zsmul_eq_mul, mul_one]; simpa using hk
@@ -344,13 +344,13 @@ theorem isSimpleRing_of_central_idem {R : Type} [Ring R] [IsSemisimpleRing R] [N
     (h : ∀ e : R, IsIdempotentElem e → (∀ y, e * y = y * e) → e = 0 ∨ e = 1) : IsSimpleRing R := by
   obtain ⟨n, D, d, _, hd, ⟨φ⟩⟩ := IsSemisimpleRing.exists_ringEquiv_pi_matrix_divisionRing R
   have hne : ∀ i, (1 : Matrix (Fin (d i)) (Fin (d i)) (D i)) ≠ 0 := fun i => by
-    haveI := hd i
+    have := hd i
     exact one_ne_zero
   obtain _ | _ | n := n
   · exfalso
     obtain ⟨a, b, hab⟩ := exists_pair_ne R
     exact hab (φ.injective (Subsingleton.elim _ _))
-  · haveI : Unique (Fin (0 + 1)) := inferInstanceAs (Unique (Fin 1))
+  · have : Unique (Fin (0 + 1)) := inferInstanceAs (Unique (Fin 1))
     exact IsSimpleRing.of_ringEquiv (φ.trans (RingEquiv.piUnique _)).symm inferInstance
   · exfalso
     let s : (Π i, Matrix (Fin (d i)) (Fin (d i)) (D i)) := Pi.single 0 1
@@ -373,9 +373,9 @@ theorem isSimpleRing_of_central_idem {R : Type} [Ring R] [IsSemisimpleRing R] [N
       simp [s, Pi.single_apply] at h1' <;> exact hne 1 h1'.symm
 
 theorem GDatum.isSemisimpleRing (G : GDatum) : IsSemisimpleRing (ℚ ⊗[ℤ] G.O) := by
-  haveI := G.finO
-  haveI := G.freeO
-  haveI : IsArtinianRing (ℚ ⊗[ℤ] G.O) := IsArtinianRing.of_finite ℚ _
+  have := G.finO
+  have := G.freeO
+  have : IsArtinianRing (ℚ ⊗[ℤ] G.O) := IsArtinianRing.of_finite ℚ _
   obtain ⟨q, hq, ⟨Φ⟩⟩ := G.splitSome
   rw [IsArtinianRing.isSemisimpleRing_iff_jacobson, eq_bot_iff]
   obtain ⟨k, hk⟩ := IsSemiprimaryRing.isNilpotent (R := ℚ ⊗[ℤ] G.O)
@@ -395,7 +395,7 @@ theorem GDatum.isSemisimpleRing (G : GDatum) : IsSemisimpleRing (ℚ ⊗[ℤ] G.
     rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, Algebra.TensorProduct.tmul_pow, one_pow] at this
     show (1:ℚ) ⊗ₜ[ℤ] ((o * x) ^ k) = (1:ℚ) ⊗ₜ[ℤ] 0
     rw [this, TensorProduct.tmul_zero]
-  haveI : IsReduced (𝓞 G.F ⊗[ℤ] ℤ_[q]) := by
+  have : IsReduced (𝓞 G.F ⊗[ℤ] ℤ_[q]) := by
     have h1 : Function.Injective
         ((algebraMap ℤ_[q] ℚ_[q]).toIntAlgHom.toLinearMap.lTensor (𝓞 G.F)) :=
       Module.Flat.lTensor_preserves_injective_linearMap _ (IsFractionRing.injective ℤ_[q] ℚ_[q])
@@ -418,7 +418,7 @@ theorem GDatum.isSemisimpleRing (G : GDatum) : IsSemisimpleRing (ℚ ⊗[ℤ] G.
         | add a b ha hb => simp only [map_add (f := _), Function.comp_apply] at ha hb ⊢; rw [ha, hb]
       rw [this]; exact h2.comp h1
     have hf : Function.Injective f := fun a b hab => hmap ((Algebra.TensorProduct.comm ℤ G.F ℚ_[q]).injective hab)
-    haveI := GlobalTheory.isReduced_tensor_int_numberField G.F ℚ_[q]
+    have := GlobalTheory.isReduced_tensor_int_numberField G.F ℚ_[q]
     exact isReduced_of_injective f.toRingHom hf
   set y := Φ (x ⊗ₜ[ℤ] (1 : ℤ_[q])) with hy
   have htr : ∀ w : G.O ⊗[ℤ] ℤ_[q], (Φ w * y).trace = 0 := by
@@ -446,9 +446,9 @@ theorem GDatum.isSemisimpleRing (G : GDatum) : IsSemisimpleRing (ℚ ⊗[ℤ] G.
   rw [hx, hx0, TensorProduct.tmul_zero]
 
 theorem GDatum.isSimpleRing (G : GDatum) : IsSimpleRing (ℚ ⊗[ℤ] G.O) := by
-  haveI := GDatum.isSemisimpleRing G
-  haveI := GDatum.O_nontrivial G
-  haveI : Nontrivial (ℚ ⊗[ℤ] G.O) := by
+  have := GDatum.isSemisimpleRing G
+  have := GDatum.O_nontrivial G
+  have : Nontrivial (ℚ ⊗[ℤ] G.O) := by
     refine ⟨⟨1, 0, fun h => ?_⟩⟩
     have : (1 : G.O) = 0 := GDatum.tmul_one_injective G (by
       show (1:ℚ) ⊗ₜ[ℤ] (1 : G.O) = (1:ℚ) ⊗ₜ[ℤ] 0
@@ -682,11 +682,11 @@ open NumberField GlobalTheory.LKInvGood
 open scoped TensorProduct
 
 theorem finrank_eq (G : GDatum) : Module.finrank G.F (ℚ ⊗[ℤ] G.O) = G.m ^ 2 := by
-  haveI := G.freeO
-  haveI := G.finO
+  have := G.freeO
+  have := G.finO
   have h1 : Module.finrank ℚ (ℚ ⊗[ℤ] G.O) = Module.finrank ℤ G.O := Module.finrank_baseChange
-  haveI : Module.Finite ℚ (ℚ ⊗[ℤ] G.O) := inferInstance
-  haveI : Module.Finite G.F (ℚ ⊗[ℤ] G.O) := Module.Finite.of_restrictScalars_finite ℚ G.F _
+  have : Module.Finite ℚ (ℚ ⊗[ℤ] G.O) := inferInstance
+  have : Module.Finite G.F (ℚ ⊗[ℤ] G.O) := Module.Finite.of_restrictScalars_finite ℚ G.F _
   have h2 := Module.finrank_mul_finrank ℚ G.F (ℚ ⊗[ℤ] G.O)
   rw [h1, G.rankO] at h2
   have hd : 0 < Module.finrank ℚ G.F := Module.finrank_pos
@@ -716,7 +716,7 @@ theorem isCentral (G : GDatum) : Algebra.IsCentral G.F (ℚ ⊗[ℤ] G.O) := by
   rw [Algebra.smul_def, map_mul, ← IsScalarTower.algebraMap_apply, ← Algebra.smul_def, ← hM, smul_smul, inv_mul_cancel₀ hq, one_smul]
 
 theorem ordB_finite (G : GDatum) : Module.Finite ℤ (ordB G) := by
-  haveI := G.finO
+  have := G.finO
   let f := (Algebra.TensorProduct.includeRight (R := ℤ) (A := ℚ) (B := G.O)).toRingHom
   exact Module.Finite.of_surjective f.rangeRestrict.toIntAlgHom.toLinearMap f.rangeRestrict_surjective
 
@@ -733,11 +733,11 @@ theorem ordB_denom (G : GDatum) (b : ℚ ⊗[ℤ] G.O) : ∃ n : ℕ, 0 < n ∧ 
 theorem splitAE : ∀ (G : GDatum), ∃ M : ℕ, 0 < M ∧ ∀ (p : ℕ) [Fact p.Prime], ¬ p ∣ M →
     Nonempty ((G.O ⊗[ℤ] ℤ_[p]) ≃ₐ[𝓞 G.F] Matrix (Fin G.m) (Fin G.m) (𝓞 G.F ⊗[ℤ] ℤ_[p])) := by
   intro G
-  haveI := G.freeO
-  haveI := G.finO
-  haveI := isCentral G
-  haveI := GDatum.isSimpleRing G
-  haveI : FiniteDimensional G.F (ℚ ⊗[ℤ] G.O) := Module.Finite.of_restrictScalars_finite ℚ G.F _
+  have := G.freeO
+  have := G.finO
+  have := isCentral G
+  have := GDatum.isSimpleRing G
+  have : FiniteDimensional G.F (ℚ ⊗[ℤ] G.O) := Module.Finite.of_restrictScalars_finite ℚ G.F _
   obtain ⟨N, hN, hloc⟩ := GlobalTheory.T.adjoinLocalOrderTensorPadic_matrix_almost_all G.F (ℚ ⊗[ℤ] G.O) G.m (finrank_eq G) (ordB G) (ordB_finite G) (ordB_denom G)
   refine ⟨N, hN, fun p _ hp => ?_⟩
   obtain ⟨ψ, hψ⟩ := hloc p hp
@@ -840,12 +840,12 @@ theorem schur (tr nm : ℤ) (M : ℕ) (hM : 0 < M) :
 
 theorem exists_datum (G : GDatum) (N : ℕ) (hN : 0 < N) :
     ∃ (p : ℕ) (_ : Fact p.Prime) (D : Datum p), N.Coprime p ∧ D.toG = G := by
-  haveI := G.freeLa; haveI := G.finLa
+  have := G.freeLa; have := G.finLa
   obtain ⟨e, he, hperf⟩ := GlobalTheory.T.bilinForm_injective_exists_nsmul_mem_range G.La G.EF G.nondeg
   obtain ⟨M, hM, hsplit⟩ := GlobalTheory.T.harrisTaylorOrder_split_almost_all_primes G
   have hd : 0 < (G.tr ^ 2 - 4 * G.nm).natAbs := Int.natAbs_pos.2 (ne_of_lt G.disc_neg)
   obtain ⟨p, hp, hpM, r, hr⟩ := schur G.tr G.nm (N * e * M * (G.tr ^ 2 - 4 * G.nm).natAbs) (by positivity)
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hN' : ¬ p ∣ N := fun h => hpM (Dvd.dvd.mul_right (Dvd.dvd.mul_right (Dvd.dvd.mul_right h _) _) _)
   have he' : ¬ p ∣ e := fun h => hpM (Dvd.dvd.mul_right (Dvd.dvd.mul_right (Dvd.dvd.mul_left h _) _) _)
   have hM' : ¬ p ∣ M := fun h => hpM (Dvd.dvd.mul_right (Dvd.dvd.mul_left h _) _)
@@ -955,9 +955,9 @@ theorem genericModel_complex_smooth {p : ℕ} [Fact p.Prime] (D : Datum p) (gb :
 theorem card_torsion_of_gTateIso (G : GDatum) {k : Type} [Field k] {Q : Type} [Group Q] {act : G.O → Q → Q}
     {e : ℕ → Q → Q → kˣ → Prop} (I : GTateIso G k Q act e) {ℓ : ℕ} (hℓ : 0 < ℓ) :
     Nat.card {q : Q // q ^ ℓ = 1} = ℓ ^ Module.finrank ℤ G.La := by
-  haveI := G.freeLa
-  haveI := G.finLa
-  haveI : NeZero ℓ := ⟨hℓ.ne'⟩
+  have := G.freeLa
+  have := G.finLa
+  have : NeZero ℓ := ⟨hℓ.ne'⟩
   set r := Module.finrank ℤ G.La
   let B := Module.finBasis ℤ G.La
   let v : (Fin r → ZMod ℓ) → G.La := fun c => ∑ i, ((c i).val : ℤ) • B i
@@ -994,7 +994,7 @@ theorem card_torsion_of_gTateIso (G : GDatum) {k : Type} [Field k] {Q : Type} [G
         rw [hrep, map_add (f := _), map_nsmul, Finsupp.add_apply, Finsupp.smul_apply, map_sum]
         simp only [map_zsmul, Module.Basis.repr_self, Finset.sum_apply', Finsupp.smul_apply,
           Finsupp.single_apply, smul_eq_mul, nsmul_eq_mul]
-        simp only [mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        simp only [mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         linear_combination hy i
       rw [e1, I.add, (I.ker ℓ hℓ _).2 ⟨_, rfl⟩, _root_.mul_one]
   rw [← Nat.card_congr (Equiv.ofBijective F hF), Nat.card_fun, Nat.card_zmod, Nat.card_fin]

@@ -259,7 +259,7 @@ theorem sg_algebraMap (hv : v.Integers R) {p : ℕ} [Fact p.Prime]
     (εT : ι → Matrix n n R) (sg : ι → O →+* R)
     (heig : ∀ a j, (ρ a).map (algebraMap ℤ_[p] R) * εT j = sg j a • εT j) (j : ι) (hj : εT j ≠ 0)
     (z : ℤ_[p]) : sg j (algebraMap ℤ_[p] O z) = algebraMap ℤ_[p] R z := by
-  haveI : IsDomain R := hv.hom_inj.isDomain (algebraMap R C)
+  have : IsDomain R := hv.hom_inj.isDomain (algebraMap R C)
   have hm : (ρ (algebraMap ℤ_[p] O z)).map (algebraMap ℤ_[p] R) = algebraMap ℤ_[p] (Matrix n n R) z := by
     ext i k
     rw [AlgHom.commutes, Matrix.map_apply, Matrix.algebraMap_matrix_apply, Matrix.algebraMap_matrix_apply]
@@ -564,7 +564,7 @@ theorem embeddingSeparatingGroup : EmbeddingSeparatingGroupStatement := by
   have hbm : ∀ t, H.ρ (b t) ^ m t = 1 := fun t => by
     show H.ρ (b t) ^ (2 * m0 t) = 1
     rw [mul_comm, pow_mul, hbm0 t, one_pow]
-  haveI : ∀ t, NeZero (m t) := fun t => ⟨(hm t).ne'⟩
+  have : ∀ t, NeZero (m t) := fun t => ⟨(hm t).ne'⟩
   have hone : ∀ t, (1 : ZMod (m t)).val = 1 := fun t => by
     rw [ZMod.val_one_eq_one_mod]
     exact Nat.mod_eq_of_lt (by have := hm0 t; show 1 < 2 * m0 t; omega)

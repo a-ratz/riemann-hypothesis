@@ -177,7 +177,7 @@ theorem UpperTheory.V.Z.Kato.Sym.PC.dgPt :
       hP' hQ'1 hR' _ hQ'2 hc2
     refine ((hE (X.gal s) s (hA.2.1 s) _ _ _ hQ'1).2.2.2 _ hR' _ _ hres).mpr ?_
     rcases Nat.lt_or_ge 1 m with h1 | h1
-    · haveI : Fact (1 < m) := ⟨h1⟩
+    · have : Fact (1 < m) := ⟨h1⟩
       refine ⟨1, ?_⟩
       rw [hcyc, ZMod.val_one, pow_one, mul_one, one_pow, mul_one]
       rfl
@@ -228,7 +228,7 @@ namespace GlobalTheory.K4
 
 theorem exists_map_const_eq_of_isAlgClosed {Ω L : Type} [Field Ω] [IsAlgClosed Ω] [Algebra ℚ Ω]
     [Algebra.IsAlgebraic ℚ Ω] [Field L] (i : Ω →+* L) (σ : L →+* L) (c : Ω) : ∃ c' : Ω, σ (i c) = i c' := by
-  letI : Algebra Ω L := i.toAlgebra
+  let : Algebra Ω L := i.toAlgebra
   obtain ⟨p, hp, h0⟩ : IsIntegral ℚ c := (Algebra.IsAlgebraic.isAlgebraic c).isIntegral
   have e : (σ.comp i).comp (algebraMap ℚ Ω) = i.comp (algebraMap ℚ Ω) := RingHom.ext_rat _ _
   have hint : IsIntegral Ω (σ (i c)) := by
@@ -262,8 +262,8 @@ theorem map_mem_ringOfIntegers_of_fix_mdl :
         x ∈ FunctionField.ringOfIntegers Ω (GlobalTheory.K4.lev X Γ') →
           σ x ∈ FunctionField.ringOfIntegers Ω (GlobalTheory.K4.lev X Γ') := by
   intro Ω _ _ _ _ ε X Γ' S
-  letI := GlobalTheory.K4.algPoly X Γ'
-  letI := GlobalTheory.K4.algMdl X Γ' S
+  let := GlobalTheory.K4.algPoly X Γ'
+  let := GlobalTheory.K4.algMdl X Γ' S
   intro σ x hx
   have hj : σ ⟨X.jK, jK_mem_lev X Γ'⟩ = ⟨X.jK, jK_mem_lev X Γ'⟩ :=
     σ.commutes (⟨X.jK, jK_mem_mdl X Γ' S⟩ : mdl X Γ' S)
@@ -317,7 +317,7 @@ theorem continuous_toK [Algebra.IsAlgebraic F Ω] : Continuous (toK : geo F K Ω
   let b := Module.finBasis K E
   have hop : IsOpen (⋂ i, (MulAction.stabilizer (Ω ≃ₐ[F] Ω) (b i : Ω) : Set (Ω ≃ₐ[F] Ω))) :=
     isOpen_iInter_of_finite fun i => stabilizer_isOpen_of_isIntegral (K := F) (b i : Ω)
-  refine Filter.mem_map.2 (Filter.mem_of_superset ((hop.preimage continuous_subtype_val).mem_nhds ?_) ?_)
+  refine Filter.mem_map.2 (Filter.mem_of_superset ((hop.preimage continuous_subtypeVal).mem_nhds ?_) ?_)
   · simp only [Set.mem_preimage, Set.mem_iInter, SetLike.mem_coe]
     exact fun i => Subgroup.one_mem _
   · intro g hg
@@ -339,16 +339,16 @@ theorem exists_extend [Algebra.IsAlgebraic F Ω] {N : ℕ} {ζ α β : Ω} {x y 
         (∀ z, B.valuation z ≤ 1 → B.valuation (g z - z) < 1) → g ∈ geo F K Ω → η' g = 0 := by
   classical
   refine ⟨fun g => if h : g ∈ geo F K Ω then η (toK ⟨g, h⟩) else 0, fun g hg h hh => ?_, ?_, fun B g hB hi hg => ?_⟩
-  · simp only [dif_pos hg, dif_pos hh, dif_pos (mul_mem hg hh)]
+  · simp only [dite_eq_left hg, dite_eq_left hh, dite_eq_left (mul_mem hg hh)]
     rw [hx, hy]
     have e : toK (⟨g * h, mul_mem hg hh⟩ : geo F K Ω) = toK ⟨g, hg⟩ * toK ⟨h, hh⟩ := map_mul toK ⟨g, hg⟩ ⟨h, hh⟩
     rw [e]
     exact h2 (toK ⟨g, hg⟩) (toK ⟨h, hh⟩)
   · have e : (fun g : geo F K Ω => if h : (g : Ω ≃ₐ[F] Ω) ∈ geo F K Ω then η (toK ⟨(g : Ω ≃ₐ[F] Ω), h⟩) else 0) = η ∘ toK :=
-      funext fun g => by rw [dif_pos g.2]; rfl
+      funext fun g => by rw [dite_eq_left g.2]; rfl
     rw [e]
     exact h1.comp_continuous continuous_toK
-  · simp only [dif_pos hg]
+  · simp only [dite_eq_left hg]
     exact h3 B hB _ hi
 
 end General
@@ -357,7 +357,7 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 
 theorem fixMu_eq {M : ℕ} (hM : M ≠ 0) {ζ : Ω} (hζ : IsPrimitiveRoot ζ M) :
     fixMu Ω M = (IntermediateField.adjoin ℚ {ζ}).fixingSubgroup := by
-  haveI : NeZero M := ⟨hM⟩
+  have : NeZero M := ⟨hM⟩
   unfold fixMu
   congr 1
   apply le_antisymm
@@ -370,8 +370,8 @@ theorem fixMu_eq {M : ℕ} (hM : M ≠ 0) {ζ : Ω} (hζ : IsPrimitiveRoot ζ M)
 attribute [local instance] algMdl
 
 theorem normal_top [IsAlgClosure ℚ Ω] (X : Tower Ω ε) {M : ℕ} (hM : M ≠ 0) : Normal (topF X M) (topL X M) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have h := LevNormal.normal Ω ε X (CongruenceSubgroup.Gamma M) M _ (Nat.pos_of_ne_zero hM) (isPrimitiveRoot_eOm ε hM) le_rfl
   rw [← fixMu_eq hM (isPrimitiveRoot_eOm ε hM)] at h
   exact h
@@ -381,7 +381,7 @@ theorem over_iff (X : Tower Ω ε) (M : ℕ) (B : ValuationSubring (topBar X M))
     Over (FunctionField.ringOfIntegers Ω (topL X M)).toSubring B ↔
       ∀ f : topL X M, ((f : X.K) = X.jK ∨ (f : X.K) ∈ Set.range (algebraMap Ω X.K)) →
         algebraMap (topL X M) (topBar X M) f ∈ B := by
-  letI := algPoly X (CongruenceSubgroup.Gamma M)
+  let := algPoly X (CongruenceSubgroup.Gamma M)
   constructor
   · intro h f hf
     apply h
@@ -420,15 +420,15 @@ theorem spec_of_units [IsAlgClosure ℚ Ω] (X : Tower Ω ε) {M l n : ℕ} (hM 
         (topEta X M (topChar X M l n u) (topChar X M l n v)) φ
         (topW (K := topL X M) (topZeta X M l n) (topChar X M l n u) (topChar X M l n v)
           (topEta X M (topChar X M l n u) (topChar X M l n v)) φ) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  letI := algPoly X (CongruenceSubgroup.Gamma M)
-  letI := algRat X (CongruenceSubgroup.Gamma M)
-  haveI := isScalarTower_poly_rat X (CongruenceSubgroup.Gamma M)
-  haveI : FiniteDimensional (RatFunc Ω) (topL X M) := _root_.GlobalTheory.K4.finiteDimensional_lev Ω ε X _ M (Nat.pos_of_ne_zero hM) le_rfl
-  haveI := normal_top X hM
-  haveI : Algebra.IsAlgebraic (topF X M) (topBar X M) := Algebra.IsAlgebraic.trans _ (topL X M) _
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : CharZero Ω := algebraRat.charZero Ω
+  let := algPoly X (CongruenceSubgroup.Gamma M)
+  let := algRat X (CongruenceSubgroup.Gamma M)
+  have := isScalarTower_poly_rat X (CongruenceSubgroup.Gamma M)
+  have : FiniteDimensional (RatFunc Ω) (topL X M) := _root_.GlobalTheory.K4.finiteDimensional_lev Ω ε X _ M (Nat.pos_of_ne_zero hM) le_rfl
+  have := normal_top X hM
+  have : Algebra.IsAlgebraic (topF X M) (topBar X M) := Algebra.IsAlgebraic.trans _ (topL X M) _
   obtain ⟨hu0, huF, huL, hu1, hu2⟩ := hu
   obtain ⟨hv0, hvF, hvL, hv1, hv2⟩ := hv
   have hN : 0 < l ^ n := Nat.pos_of_ne_zero (pow_ne_zero n hl)
@@ -485,12 +485,12 @@ theorem UpperTheory.V.Z.Kato.Sym.PT.isoEx :
   have hFL : F ≤ L' :=
     IntermediateField.adjoin_simple_le_iff.mpr (jK_mem_lev X _)
   have hle : F.toSubfield ≤ L := fun x hx => hFL hx
-  letI : Algebra F L := (Subfield.inclusion hle).toAlgebra
-  haveI : IsScalarTower F L X.K :=
+  let : Algebra F L := (Subfield.inclusion hle).toAlgebra
+  have : IsScalarTower F L X.K :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.IsAlgebraic L X.K :=
+  have : Algebra.IsAlgebraic L X.K :=
     ⟨fun f => (X.alg_j f).tower_top L⟩
-  haveI : IsAlgClosure L (Kb X) := IsAlgClosure.ofAlgebraic L X.K (Kb X)
+  have : IsAlgClosure L (Kb X) := IsAlgClosure.ofAlgebraic L X.K (Kb X)
   let e : topBar X M ≃ₐ[L] Kb X := IsAlgClosure.equiv L (topBar X M) (Kb X)
   refine ⟨e.toRingEquiv, fun f => ?_⟩
   change e (algebraMap L (topBar X M) f) = algebraMap X.K (Kb X) (f : X.K)
@@ -513,9 +513,9 @@ attribute [local instance] algMdl
 theorem UpperTheory.V.Z.Kato.Sym.PT.ptGal :
     UpperTheory.V.Z.Kato.Sym.PT.PtGal := by
   intro Ω _ _ _ ε X l n M hl hM hd u v hu hv huF hvF e he η hη s hs w hw f hf
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hm : 0 < l ^ n := pow_pos hl.pos n
-  haveI : NeZero (l ^ n) := ⟨hm.ne'⟩
+  have : NeZero (l ^ n) := ⟨hm.ne'⟩
   obtain ⟨-, -, -, -, -, -, hlift, -⟩ := admB Ω ε X
   obtain ⟨σ, hσ⟩ := hlift (X.gal s)
   obtain ⟨c1, c2, c3, c4, c5⟩ := cjB Ω ε X M e he
@@ -677,7 +677,7 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 theorem mem_int (X : Tower Ω ε) (M : ℕ) (f : topL X M) (h : IsIntegral (Algebra.adjoin Ω {X.jK}) (f : X.K)) :
     letI := algPoly X (CongruenceSubgroup.Gamma M)
     f ∈ FunctionField.ringOfIntegers Ω (topL X M) := by
-  letI := algPoly X (CongruenceSubgroup.Gamma M)
+  let := algPoly X (CongruenceSubgroup.Gamma M)
   obtain ⟨p, hpm, hp⟩ := h
   have hmem : ∀ P : Polynomial Ω, aeval X.jK P ∈ Algebra.adjoin Ω {X.jK} := fun P => by
     rw [Algebra.adjoin_singleton_eq_range_aeval]
@@ -779,7 +779,7 @@ private theorem val_lt_one_iff {K : Type} [Field K] (B : ValuationSubring K) (x 
   rcases eq_or_ne x 0 with rfl | hx
   · simp
   · have h0 : 0 < B.valuation x := by
-      rw [zero_lt_iff]
+      rw [pos_iff_ne_zero]
       exact (Valuation.ne_zero_iff _).2 hx
     rw [← one_lt_inv₀ h0, ← map_inv₀, ← not_le, B.valuation_le_one_iff]
     simp [hx]
@@ -808,9 +808,9 @@ theorem UpperTheory.V.Z.Kato.Sym.PT.ptIs :
     rw [hku g (hD g hg).1, hkv h (hD h hh).1, (c2 g h (hD g hg).1 (hD h hh).1).2.2.1]
     exact hcob _ (hD g hg).2 _ (hD h hh).2
   · classical
-    haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-    haveI : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
-    haveI : IsGalois (topL X M) (topBar X M) := inferInstance
+    have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+    have : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
+    have : IsGalois (topL X M) (topBar X M) := inferInstance
     obtain ⟨B, hB⟩ := lcGeo (topF X M) (topL X M) (topBar X M) _ η hlc
     refine ⟨B.image e, fun h h' hh hh' hb => ?_⟩
     refine hB _ (hD h hh).2 _ (hD h' hh').2 fun b hbB => e.injective ?_
@@ -872,11 +872,11 @@ private theorem cyc_one {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     obtain ⟨k, rfl⟩ := h
     exact (mem_fixMu_iff s).1 hs z (by rw [pow_mul, hz, one_pow])
   rcases Nat.lt_or_ge 1 m with hm1 | hm1
-  · haveI : Fact (1 < m) := ⟨hm1⟩
+  · have : Fact (1 < m) := ⟨hm1⟩
     have hspec : ∃ y : ZMod m, ∀ z : Ω, z ^ m = 1 → s z = z ^ y.val :=
       ⟨1, fun z hz => by rw [hfix z hz, ZMod.val_one, pow_one]⟩
     have hy : ∀ z : Ω, z ^ m = 1 → s z = z ^ (cyc m s).val := Classical.epsilon_spec hspec
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
     have hζ := isPrimitiveRoot_eOm ε hm.ne'
     have h1 := hy _ hζ.pow_eq_one
     rw [hfix _ hζ.pow_eq_one] at h1
@@ -890,7 +890,7 @@ private theorem cyc_one {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
 private theorem pow_val_one {K : Type} [Field K] {m : ℕ} (hm : 0 < m) (f : Kˣ) : ∃ h : Kˣ, f ^ (1 : ZMod m).val = f * h ^ m := by
   rcases Nat.lt_or_ge 1 m with h1 | h1
   · refine ⟨1, ?_⟩
-    haveI : Fact (1 < m) := ⟨h1⟩
+    have : Fact (1 < m) := ⟨h1⟩
     simp [ZMod.val_one]
   · have hm1 : m = 1 := by omega
     subst hm1

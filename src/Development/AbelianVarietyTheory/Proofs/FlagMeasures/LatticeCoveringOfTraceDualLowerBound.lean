@@ -122,9 +122,9 @@ theorem exists_basis {ι : Type} [Fintype ι] (L : Submodule (𝓞 K) (ι → K)
     ∃ (κ : Type) (_ : Fintype κ) (b : Module.Basis κ ℚ (ι → K)),
       ∀ y, y ∈ Submodule.span ℤ (Set.range b) ↔ y ∈ L := by
   classical
-  haveI : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.2 hfg
-  haveI : Module.Finite ℤ L := Module.Finite.trans (𝓞 K) L
-  haveI : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite (𝓞 K) L := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite ℤ L := Module.Finite.trans (𝓞 K) L
+  have : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
   let b0 := Module.Free.chooseBasis ℤ L
   let s : L →ₗ[ℤ] (ι → K) := L.subtype.restrictScalars ℤ
   have hs : Function.Injective s := Subtype.val_injective

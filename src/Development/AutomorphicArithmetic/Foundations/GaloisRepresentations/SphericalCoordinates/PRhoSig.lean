@@ -103,7 +103,7 @@ private theorem a_onto {F : Type} [Field F] [NumberField F] {O : Type} [Ring O] 
     Function.Surjective (algebraMap (𝓞 F) O) := by
   intro x
   obtain ⟨c, e, he, hx⟩ := hc x
-  letI : CommRing O := { (inferInstance : Ring O) with mul_comm := hcomm }
+  let : CommRing O := { (inferInstance : Ring O) with mul_comm := hcomm }
   obtain ⟨P, hP, hPx⟩ : IsIntegral ℤ x := IsIntegral.of_finite ℤ x
   have hQ : Polynomial.eval₂ (algebraMap ℤ O) (algebraMap ℤ O e * x) (P.scaleRoots e) = 0 := by
     rw [Polynomial.scaleRoots_eval₂_mul, hPx, mul_zero]
@@ -196,10 +196,10 @@ private theorem sum_mult {F : Type} [Field F] [NumberField F] (n : ℕ) (hn : 1 
 
 theorem rhoSig_of : RhoSig := by
   intro p _ D ha hm t₀ ht
-  haveI := D.freeO
-  haveI := D.finO
+  have := D.freeO
+  have := D.finO
   have hd : 0 < Module.finrank ℚ D.F := Module.finrank_pos
-  haveI : Nontrivial D.O := by
+  have : Nontrivial D.O := by
     apply Module.nontrivial_of_finrank_pos (R := ℤ)
     rw [D.rankO, hm]
     simpa using hd

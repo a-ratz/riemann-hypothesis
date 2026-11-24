@@ -62,7 +62,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.ew_of :
   have hsec := fun j : Fin (D.n + 1) =>
     hSec p D O f b N r w hS M j (Nat.lt_succ_iff.mp j.2) (T j) V hp x W
   choose e he using hsec
-  haveI : CharP (IsLocalRing.ResidueField V) p := hord.1
+  have : CharP (IsLocalRing.ResidueField V) p := hord.1
   obtain ⟨β, hβ⟩ : ∃ β : O →+* IsLocalRing.ResidueField V, (resPt V ≫ x) ≫ M.s = spMap β :=
     ⟨(Spec.preimage ((resPt V ≫ x) ≫ M.s)).hom, (Spec.map_preimage _).symm⟩
   have hker : ∀ a ∈ IsLocalRing.maximalIdeal O, β a = 0 := by
@@ -125,7 +125,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.ew_of :
       exact ⟨⟨a, (hU a).2 (ha ▸ ⟨h, hh, rfl⟩)⟩, Subtype.ext ha⟩
   have hk : Nat.card (𝓞 D.F ⧸ w) = p ^ f := by
     rw [← hS.norm, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 D.F ⧸ w) :=
+  have : Finite (𝓞 D.F ⧸ w) :=
     Nat.finite_of_card_ne_zero (by rw [hk]; exact pow_ne_zero _ (Fact.out : p.Prime).ne_zero)
   have hcnt : ∀ (j : ℕ) (Dd : Submodule (𝓞 D.F ⧸ w) W.H), Module.finrank (𝓞 D.F ⧸ w) Dd = j → ¬ C ≤ Dd →
       Nat.card (ρ '' (Dd : Set W.H)) = (p ^ f) ^ j := by

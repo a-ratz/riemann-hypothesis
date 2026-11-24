@@ -103,12 +103,12 @@ private lemma fockQ_monomial_monomial {σ : Type*} [DecidableEq σ] (s t : σ �
   by_cases ha : a = 0
   · subst ha
     simp [fockQ]
-  · rw [fockQ_eq_sum_coeff_mul_factorial_of_support_subset _ _ {s} (by rw [MvPolynomial.support_monomial, if_neg ha]),
-      Finset.sum_singleton, MvPolynomial.coeff_monomial, MvPolynomial.coeff_monomial, if_pos rfl]
+  · rw [fockQ_eq_sum_coeff_mul_factorial_of_support_subset _ _ {s} (by rw [MvPolynomial.support_monomial, ite_eq_right ha]),
+      Finset.sum_singleton, MvPolynomial.coeff_monomial, MvPolynomial.coeff_monomial, ite_eq_left rfl]
     by_cases hst : s = t
     · subst hst
       simp
-    · rw [if_neg (Ne.symm hst), if_neg hst]
+    · rw [ite_eq_right (Ne.symm hst), ite_eq_right hst]
       ring
 
 private lemma nonneg_of_le_add_self {σ : Type*} [DecidableEq σ] (s : σ →₀ ℕ) (v : σ) :
@@ -146,16 +146,16 @@ private lemma nonneg_of_le_add_self {σ : Type*} [DecidableEq σ] (s : σ →₀
 
 private lemma fockQ_X_mul_monomial_eq_pderiv_monomial {σ : Type*} [DecidableEq σ] (v : σ) (s t : σ →₀ ℕ) (a b : ℚ) :
     fockQ (X v * monomial s a) (monomial t b) = fockQ (monomial s a) (pderiv v (monomial t b)) := by
-  rw [X, monomial_mul, one_mul, pderiv_monomial, fockQ_monomial_monomial, fockQ_monomial_monomial]
+  rw [X, monomial_mul_monomial, one_mul, pderiv_monomial, fockQ_monomial_monomial, fockQ_monomial_monomial]
   by_cases h : Finsupp.single v 1 + s = t
   · subst h
     have hs : Finsupp.single v 1 + s - Finsupp.single v 1 = s := add_tsub_cancel_left _ _
-    rw [if_pos rfl, if_pos hs.symm, nonneg_of_le_add_self, Finsupp.add_apply, Finsupp.single_eq_same]
+    rw [ite_eq_left rfl, ite_eq_left hs.symm, nonneg_of_le_add_self, Finsupp.add_apply, Finsupp.single_eq_same]
     push_cast
     ring
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     by_cases h' : s = t - Finsupp.single v 1
-    · rw [if_pos h']
+    · rw [ite_eq_left h']
       have htv : t v = 0 := by
         by_contra hne
         apply h
@@ -163,7 +163,7 @@ private lemma fockQ_X_mul_monomial_eq_pderiv_monomial {σ : Type*} [DecidableEq 
         exact tsub_add_cancel_of_le (Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr hne))
       rw [htv]
       simp
-    · rw [if_neg h']
+    · rw [ite_eq_right h']
 
 private lemma fockQ_X_mul_left_eq_pderiv_right {σ : Type*} [DecidableEq σ] (v : σ) (P Q : MvPolynomial σ ℚ) :
     fockQ (X v * P) Q = fockQ P (pderiv v Q) := by
@@ -213,27 +213,27 @@ private lemma pderiv_rowAct_eq_sum_C_mul_rowAct_pderiv {r n : ℕ} (h : Matrix (
       rw [rowAct_X_eq_sum_C_mul_X, map_sum]
       simp only [pderiv_C_mul, pderiv_X, Pi.single_apply]
       by_cases hv : v.2 = w.2
-      · rw [if_pos hv, Finset.sum_eq_single w.1]
+      · rw [ite_eq_left hv, Finset.sum_eq_single w.1]
         · simp [Prod.ext_iff, hv]
         · intro c _ hc
-          rw [if_neg (fun hh : (c, v.2) = w => hc (by rw [← hh])), mul_zero]
+          rw [ite_eq_right (fun hh : (c, v.2) = w => hc (by rw [← hh])), mul_zero]
         · simp
-      · rw [if_neg hv]
+      · rw [ite_eq_right hv]
         apply Finset.sum_eq_zero
         intro c _
-        rw [if_neg (fun hh : (c, v.2) = w => hv (by rw [← hh])), mul_zero]
+        rw [ite_eq_right (fun hh : (c, v.2) = w => hv (by rw [← hh])), mul_zero]
     have e3 : ∑ c : Fin r, C (h c w.1) * (if v = (c, w.2) then (1 : MvPolynomial (Fin r × Fin n) ℚ) else 0) =
         if v.2 = w.2 then C (h v.1 w.1) else 0 := by
       by_cases hv : v.2 = w.2
-      · rw [if_pos hv, Finset.sum_eq_single v.1]
-        · rw [if_pos (show v = (v.1, w.2) from Prod.ext rfl hv), mul_one]
+      · rw [ite_eq_left hv, Finset.sum_eq_single v.1]
+        · rw [ite_eq_left (show v = (v.1, w.2) from Prod.ext rfl hv), mul_one]
         · intro c _ hc
-          rw [if_neg (fun hh : v = (c, w.2) => hc (by rw [hh])), mul_zero]
+          rw [ite_eq_right (fun hh : v = (c, w.2) => hc (by rw [hh])), mul_zero]
         · simp
-      · rw [if_neg hv]
+      · rw [ite_eq_right hv]
         apply Finset.sum_eq_zero
         intro c _
-        rw [if_neg (fun hh : v = (c, w.2) => hv (by rw [hh])), mul_zero]
+        rw [ite_eq_right (fun hh : v = (c, w.2) => hv (by rw [hh])), mul_zero]
     have e4 : ∀ c : Fin r, rowAct ℚ h (pderiv (c, w.2) (p * X v)) =
         rowAct ℚ h p * (if v = (c, w.2) then 1 else 0) + rowAct ℚ h (X v) * rowAct ℚ h (pderiv (c, w.2) p) := by
       intro c

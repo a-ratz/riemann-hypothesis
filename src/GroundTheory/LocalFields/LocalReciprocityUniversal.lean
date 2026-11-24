@@ -78,7 +78,7 @@ variable {K L : OpenSubgroup G}
 omit [IsTopologicalGroup G] in
 theorem isOpen_subgroupOf (K L : OpenSubgroup G) :
     IsOpen (((L : Subgroup G).subgroupOf K : Subgroup (K : Subgroup G)) : Set (K : Subgroup G)) :=
-  L.isOpen.preimage continuous_subtype_val
+  L.isOpen.preimage continuous_subtypeVal
 
 theorem IsAbelianExtension.topologicalClosure_commutator_le (hL : IsAbelianExtension K L) :
     (commutator (K : Subgroup G)).topologicalClosure ≤ (L : Subgroup G).subgroupOf K :=
@@ -112,7 +112,7 @@ theorem mem_topologicalClosure_commutator_iff (x : (K : Subgroup G)) :
     let M : OpenSubgroup G :=
       { toSubgroup := N.map (K : Subgroup G).subtype
         isOpen' := by
-          have h := K.isOpen.isOpenMap_subtype_val _ hNo
+          have h := K.isOpen.isOpenMap_subtypeVal _ hNo
           rw [← Subgroup.coe_subtype, ← Subgroup.coe_map] at h
           exact h }
     have hM : IsAbelianExtension K M :=
@@ -317,7 +317,7 @@ theorem denseRange_reciprocityLimit : DenseRange (D.reciprocityLimit hax K) := b
             Set (K : Subgroup G)) :=
           Subgroup.isOpen_mono (H₁ := (N : Subgroup (K : Subgroup G)))
             (H₂ := (N : Subgroup (K : Subgroup G)) ⊔ C) le_sup_left N.isOpen'
-        have h := K.isOpen.isOpenMap_subtype_val _ ho
+        have h := K.isOpen.isOpenMap_subtypeVal _ ho
         rw [← Subgroup.coe_subtype, ← Subgroup.coe_map] at h
         exact h }
   have hMmem : ∀ x : (K : Subgroup G), (x : G) ∈ (M : Subgroup G) ↔ x ∈ (N : Subgroup (K : Subgroup G)) ⊔ C :=
@@ -397,7 +397,7 @@ variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 omit [IsTopologicalGroup G] in
 theorem continuous_inclusion {K K' : Subgroup G} (hK : K' ≤ K) :
     Continuous (Subgroup.inclusion hK) :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 
 def limitRestrict {K K' : OpenSubgroup G} (hK : K' ≤ K) :
     TopologicalAbelianization (K' : Subgroup G) →* TopologicalAbelianization (K : Subgroup G) :=
@@ -482,7 +482,7 @@ def topSubtype : ((⊤ : OpenSubgroup (Ω ≃ₐ[K] Ω)) : Subgroup (Ω ≃ₐ[K
   Subgroup.subtype _
 
 theorem continuous_topSubtype : Continuous (topSubtype K Ω) :=
-  continuous_subtype_val
+  continuous_subtypeVal
 
 
 variable (K Ω) in
@@ -591,13 +591,13 @@ theorem localReciprocityLimit_baseUnitsEquiv
     localReciprocityLimit K Ω (baseUnitsEquiv a) = topAbelianizationEquiv K Ω
       ((localClassFieldData K Ω).reciprocityLimit (classFieldAxiom_units K Ω) ⊤ a) := by
   simp only [localReciprocityLimit, MonoidHom.comp_apply, MulEquiv.toMonoidHom_eq_coe,
-    MonoidHom.coe_coe, MulEquiv.symm_apply_apply]
+    MonoidHom.coe_ofClass, MulEquiv.symm_apply_apply]
 
 theorem of_abelianRestrict_localReciprocityLimit (L : IntermediateField K Ω) [FiniteDimensional K L]
     [IsGalois K L] [IsMulCommutative (L ≃ₐ[K] L)] (x : Kˣ) :
     Group.Abelianization.of (abelianRestrict L (localReciprocityLimit K Ω x)) =
       (localReciprocity L).symm (x : Kˣ ⧸ (normUnits K L).range) := by
-  haveI := isDiscreteModule_units (K := K) (Ω := Ω)
+  have := isDiscreteModule_units (K := K) (Ω := Ω)
   obtain ⟨a, rfl⟩ := (baseUnitsEquiv (K := K) (Ω := Ω)).surjective x
   have hM := isAbelianExtension_fixingOpenSubgroup L
   rw [localReciprocityLimit_baseUnitsEquiv, abelianRestrict_topAbelianizationEquiv,
@@ -619,7 +619,7 @@ theorem mem_range_norm_top_iff (L : IntermediateField K Ω) [IsGalois K Ω] [Fin
     a ∈ (norm Ωˣ ((⊤ : OpenSubgroup (Ω ≃ₐ[K] Ω)) : Subgroup (Ω ≃ₐ[K] Ω))
         (fixingOpenSubgroup L : Subgroup (Ω ≃ₐ[K] Ω))).range ↔
       baseUnitsEquiv a ∈ (normUnits K L).range := by
-  haveI : (L.fixingSubgroup.subgroupOf ⊤).FiniteIndex :=
+  have : (L.fixingSubgroup.subgroupOf ⊤).FiniteIndex :=
     inferInstanceAs (((fixingOpenSubgroup L : Subgroup (Ω ≃ₐ[K] Ω)).subgroupOf
       ((⊤ : OpenSubgroup (Ω ≃ₐ[K] Ω)) : Subgroup (Ω ≃ₐ[K] Ω))).FiniteIndex)
   constructor
@@ -635,7 +635,7 @@ theorem ker_localReciprocityLimit :
       ⨅ L : {L : IntermediateField K Ω // FiniteDimensional K L},
         haveI := L.2
         (normUnits K L.1).range := by
-  haveI := isDiscreteModule_units (K := K) (Ω := Ω)
+  have := isDiscreteModule_units (K := K) (Ω := Ω)
   ext x
   obtain ⟨a, rfl⟩ := (baseUnitsEquiv (K := K) (Ω := Ω)).surjective x
   rw [MonoidHom.mem_ker, localReciprocityLimit_baseUnitsEquiv, map_eq_one_iff _
@@ -643,7 +643,7 @@ theorem ker_localReciprocityLimit :
     ClassFieldData.ker_reciprocityLimit_eq_iInf, Subgroup.mem_iInf, Subgroup.mem_iInf]
   constructor
   · intro h L
-    haveI := L.2
+    have := L.2
     have := h ⟨fixingOpenSubgroup L.1, le_top⟩
     exact (mem_range_norm_top_iff L.1 a).1 this
   · intro h M
@@ -654,7 +654,7 @@ theorem ker_localReciprocityLimit :
     exact h'
 
 theorem denseRange_localReciprocityLimit : DenseRange (localReciprocityLimit K Ω) := by
-  haveI := isDiscreteModule_units (K := K) (Ω := Ω)
+  have := isDiscreteModule_units (K := K) (Ω := Ω)
   have hd := (localClassFieldData K Ω).denseRange_reciprocityLimit (classFieldAxiom_units K Ω)
     (K := (⊤ : OpenSubgroup (Ω ≃ₐ[K] Ω)))
   have hd' : DenseRange (((localClassFieldData K Ω).reciprocityLimit (classFieldAxiom_units K Ω) ⊤) ∘
@@ -686,7 +686,7 @@ theorem mem_unramifiedOpenSubgroup {n : ℕ+} {σ : Ω ≃ₐ[K] Ω} :
 theorem unramifiedDegree_of_mk_eq_localReciprocityLimit {x : Kˣ} {g : Ω ≃ₐ[K] Ω}
     (hg : (g : TopologicalAbelianization (Ω ≃ₐ[K] Ω)) = localReciprocityLimit K Ω x) :
     unramifiedDegree K Ω g = Multiplicative.ofAdd ((ord (x : K) : ℤ) : ℤ̂) := by
-  haveI := isDiscreteModule_units (K := K) (Ω := Ω)
+  have := isDiscreteModule_units (K := K) (Ω := Ω)
   obtain ⟨a, rfl⟩ := (baseUnitsEquiv (K := K) (Ω := Ω)).surjective x
   rw [localReciprocityLimit_baseUnitsEquiv] at hg
   have hg' : ((⟨g, Subgroup.mem_top g⟩ : ((⊤ : OpenSubgroup (Ω ≃ₐ[K] Ω)) : Subgroup (Ω ≃ₐ[K] Ω))) :
@@ -714,7 +714,7 @@ theorem unramifiedDegree_of_mk_eq_localReciprocityLimit {x : Kˣ} {g : Ω ≃ₐ
     rw [MonoidHom.mem_ker, MonoidHom.comp_apply, Subgroup.coe_subtype] at h
     rw [Subgroup.mem_subgroupOf, mem_unramifiedOpenSubgroup, h, toAdd_one]
     exact (multiples n).zero_mem
-  haveI := hL.normal
+  have := hL.normal
   have h1 := (localClassFieldData K Ω).reciprocity_abelianizationRestrict_reciprocityLimit
     (classFieldAxiom_units K Ω) hL a
   rw [← hg', abelianizationRestrict_mk] at h1

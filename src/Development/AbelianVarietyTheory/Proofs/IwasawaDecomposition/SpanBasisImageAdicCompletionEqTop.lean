@@ -70,21 +70,21 @@ theorem span_basis_image_adicCompletion_eq_top
     letI := f.toAlgebra; ∀ (n : ℕ) (b : Module.Basis (Fin n) K L),
       Submodule.span (v.adicCompletion K)
         (Set.range fun i => algebraMap L (v'.adicCompletion L) (b i)) = ⊤ := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   intro n b
-  letI : NontriviallyNormedField (v.adicCompletion K) := Valued.toNontriviallyNormedField _ _
+  let : NontriviallyNormedField (v.adicCompletion K) := Valued.toNontriviallyNormedField _ _
   set S := Submodule.span (v.adicCompletion K)
     (Set.range fun i => algebraMap L (v'.adicCompletion L) (b i)) with hS
-  haveI : ContinuousSMul (v.adicCompletion K) (v'.adicCompletion L) := by
+  have : ContinuousSMul (v.adicCompletion K) (v'.adicCompletion L) := by
     constructor
     have : (fun p : v.adicCompletion K × v'.adicCompletion L => p.1 • p.2)
         = fun p => f p.1 * p.2 := by
       funext p; exact Algebra.smul_def _ _
     rw [this]
     exact (hfc.comp continuous_fst).mul continuous_snd
-  haveI : FiniteDimensional (v.adicCompletion K) S :=
+  have : FiniteDimensional (v.adicCompletion K) S :=
     FiniteDimensional.span_of_finite _ (Set.finite_range _)
-  have hclosed : IsClosed (S : Set (v'.adicCompletion L)) := S.closed_of_finiteDimensional
+  have hclosed : IsClosed (S : Set (v'.adicCompletion L)) := S.isClosed_of_finiteDimensional
   have hmem : ∀ z : L, algebraMap L (v'.adicCompletion L) z ∈ S := by
     intro z
 

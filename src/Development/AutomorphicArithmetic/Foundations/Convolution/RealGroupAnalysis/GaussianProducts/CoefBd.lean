@@ -51,7 +51,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.coefBd :
     ∃ (n : ℕ) (b : Fin n → S4 F) (c : Fin n → G1 F → ℂ) (B : ℝ), (∀ i, b i ∈ U) ∧ (∀ i, ContinuousOn (c i) C) ∧
     ∀ k ∈ C, (∀ i, ‖c i k‖ ≤ B) ∧ W.Om k φ = ∑ i, c i k • b i := by
   intro F E _ _ _ _ _ _ _ D W φ C U hC hU hmem
-  haveI := hU
+  have := hU
   let b := Module.finBasis ℂ U
   let ev : V4 F → Module.Dual ℂ U := fun v =>
     { toFun := fun u => (u.1).1 v, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }

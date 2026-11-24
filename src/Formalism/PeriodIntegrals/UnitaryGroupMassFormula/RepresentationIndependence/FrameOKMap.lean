@@ -66,11 +66,11 @@ theorem cntCl_equiv {α : Type} (f g : α → α) (hgf : ∀ a, g (f a) = a) (hf
       refine ⟨g y, (hX (g y)).mp (by rw [hfg]; exact hy), ?_⟩
       ext c
       rw [← hfg y]
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, hX, hR, hgf]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, hX, hR, hgf]
     · rintro ⟨a, ha, rfl⟩
       refine ⟨{b | b ∈ Y ∧ R' (f a) b}, ⟨f a, (hX a).mpr ha, rfl⟩, ?_⟩
       ext c
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, hX, hR]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, hX, hR]
   unfold Cnt.cntCl
   rw [← himg, hinj.injOn.encard_image]
 
@@ -84,7 +84,7 @@ theorem XS_map {T : D.host.E} {γ : (VS D).V ≃ₗ[D.host.E] (VS D).V} (hγ : �
   rw [Submodule.map_span]
   congr 1
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · rintro ⟨a, x, hx, rfl⟩
     exact ⟨x • F.e a, ⟨a, x, hx, rfl⟩, by simp [mapF]⟩

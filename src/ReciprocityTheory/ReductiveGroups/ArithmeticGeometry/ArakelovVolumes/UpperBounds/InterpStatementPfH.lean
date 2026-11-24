@@ -64,7 +64,7 @@ def Lm (x : Frame X.Ψ r) (τ : X.Ψ) (i : Fin (r + 1)) : ℝ := Real.log ‖dmi
 theorem dmin_ne_zero {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ) (i : Fin (r + 1)) :
     dmin X.Gm x τ i ≠ 0 := by
   intro h
-  simp only [Data.dom, GG, Set.mem_setOf_eq] at hx
+  simp only [Data.dom, GG, Set.mem_ofPred_eq] at hx
   have h1 := (hx τ).2 i
   rw [h] at h1
   simp at h1
@@ -119,7 +119,7 @@ theorem sbp (L : ℕ → ℝ) : ∀ r : ℕ, ∑ i ∈ Finset.range r, ((2 * i :
 
 theorem Lm_zero (x : Frame X.Ψ r) (τ : X.Ψ) : Lm X x τ 0 = 0 := by
   unfold Lm dmin lminor
-  haveI : IsEmpty (Fin ((0 : Fin (r + 1)) : ℕ)) := ⟨fun i => by have := i.isLt; simp at this⟩
+  have : IsEmpty (Fin ((0 : Fin (r + 1)) : ℕ)) := ⟨fun i => by have := i.isLt; simp at this⟩
   rw [Matrix.det_isEmpty]
   simp
 
@@ -133,7 +133,7 @@ private theorem gram_eq_lemma (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) 
 theorem Lm_last_cpt (x0 : Frame X.Ψ r) (ho : IsOrth X x0) (z : V (nd X)) (τ : X.Ψ) :
     Lm X (cpt X x0 z) τ (Fin.last r) = 0 := by
   have hN : (mat (nmat X z) τ).det = 1 := by
-    rw [Matrix.det_of_lowerTriangular]
+    rw [Matrix.det_of_isLowerTriangular]
     · simp [mat, nmat]
     · intro a b hab
       have hab' : a < b := OrderDual.toDual_lt_toDual.mp hab
@@ -161,12 +161,12 @@ theorem phla_kapW_cpt (x0 : Frame X.Ψ r) (ho : IsOrth X x0) {z : V (nd X)} (hz 
   have h1 : ∀ i : Fin r, Lm X (cpt X x0 z) τ i.succ = L ((i : ℕ) + 1) := fun i => by
     rw [hL]
     dsimp only
-    rw [dif_pos (show (i : ℕ) + 1 < r + 1 by have := i.isLt; omega)]
+    rw [dite_eq_left (show (i : ℕ) + 1 < r + 1 by have := i.isLt; omega)]
     try rfl
   have h2 : ∀ i : Fin r, Lm X (cpt X x0 z) τ i.castSucc = L (i : ℕ) := fun i => by
     rw [hL]
     dsimp only
-    rw [dif_pos (show (i : ℕ) < r + 1 by have := i.isLt; omega)]
+    rw [dite_eq_left (show (i : ℕ) < r + 1 by have := i.isLt; omega)]
     try rfl
   have hk : ∀ i : Fin r, ((kapW X τ i : ℤ) : ℝ) = (2 * (i : ℕ) : ℝ) - ((r : ℝ) - 1) := fun i => by
     simp only [kapW]
@@ -175,13 +175,13 @@ theorem phla_kapW_cpt (x0 : Frame X.Ψ r) (ho : IsOrth X x0) {z : V (nd X)} (hz 
   have hr : L r = 0 := by
     rw [hL]
     dsimp only
-    rw [dif_pos (show r < r + 1 by omega)]
+    rw [dite_eq_left (show r < r + 1 by omega)]
     exact Lm_last_cpt X x0 ho z τ
   have e0 : (⟨0, Nat.succ_pos r⟩ : Fin (r + 1)) = 0 := Fin.ext (by simp)
   have h0 : L 0 = 0 := by
     rw [hL]
     dsimp only
-    rw [dif_pos (show 0 < r + 1 by omega), e0]
+    rw [dite_eq_left (show 0 < r + 1 by omega), e0]
     exact Lm_zero X _ τ
   simp only [h1, h2, hk]
   rw [Fin.sum_univ_eq_sum_range (fun i => ((2 * i : ℝ) - ((r : ℝ) - 1)) * (L (i + 1) - L i)) r,
@@ -193,9 +193,9 @@ theorem cpt_entry_cd (x0 : Frame X.Ψ r) (τ : X.Ψ) (a b : Fin r) :
   have hN : ∀ k : Fin r, ContDiff ℂ ∞ fun z : V (nd X) => nmat X z τ k b := by
     intro k
     by_cases h : b < k
-    · simp only [nmat, dif_pos h]
+    · simp only [nmat, dite_eq_left h]
       exact (show V (nd X) →L[ℂ] ℂ from EuclideanSpace.proj _).contDiff
-    · simp only [nmat, dif_neg h]
+    · simp only [nmat, dite_eq_right h]
       exact contDiff_const
   show ContDiff ℂ ∞ fun z : V (nd X) => (mat x0 τ * mat (nmat X z) τ) a b
   simp only [Matrix.mul_apply, mat, Matrix.of_apply]
@@ -251,7 +251,7 @@ private theorem eventually_mem_omF (x0 : Frame X.Ψ r) {z : V (nd X)} (hz : z �
     ∀ᶠ w in 𝓝 z, w ∈ OmF X x0 := by
   have hz' : cpt X x0 z ∈ X.dom := hz
   show ∀ᶠ w in 𝓝 z, cpt X x0 w ∈ X.dom
-  simp only [Data.dom, GG, Set.mem_setOf_eq] at hz' ⊢
+  simp only [Data.dom, GG, Set.mem_ofPred_eq] at hz' ⊢
   rw [Filter.eventually_all]
   intro τ
   refine Filter.Eventually.and ?_ ?_
@@ -310,7 +310,7 @@ private theorem mem_dom_of_isOrth' (x0 : Frame X.Ψ r) (ho : IsOrth X x0) : x0 �
     unfold psgn
     rw [Complex.ofReal_prod, ← Fin.prod_univ_eq_prod_range]
     rfl
-  simp only [Data.dom, GG, Set.mem_setOf_eq]
+  simp only [Data.dom, GG, Set.mem_ofPred_eq]
   intro τ
   refine ⟨?_, fun i => ?_⟩
   · intro h0
@@ -368,7 +368,7 @@ private theorem leviV_sub_sub_const_mul_of_eventuallyEq {n : ℕ} (f f1 f2 f3 : 
   have hW : ∀ l, wdb n l f =ᶠ[𝓝 z] fun w => wdb n l f1 w - wdb n l f2 w - c * wdb n l f3 w := by
     intro l
     filter_upwards [hD] with w hw
-    simp only [wdb, hw, ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [wdb, hw, sub_apply, smul_apply, smul_eq_mul]
     ring
   have hWd : ∀ g : V n → ℂ, (∀ᶠ w in 𝓝 z, ContDiffAt ℝ ∞ g w) → ∀ l,
       DifferentiableAt ℝ (wdb n l g) z := by
@@ -395,7 +395,7 @@ private theorem leviV_sub_sub_const_mul_of_eventuallyEq {n : ℕ} (f f1 f2 f3 : 
       ((d1.hasFDerivAt.sub d2.hasFDerivAt).sub (d3.hasFDerivAt.const_mul c)).fderiv
     unfold wd
     rw [(hW l).fderiv_eq, e2]
-    simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [sub_apply, smul_apply, smul_eq_mul]
     ring
   unfold leviV
   simp only [hwd]

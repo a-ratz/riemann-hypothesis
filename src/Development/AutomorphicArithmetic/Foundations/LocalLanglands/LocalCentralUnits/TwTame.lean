@@ -212,7 +212,7 @@ private theorem tame_of_dz {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     rw [smul_smul, inv_mul_cancel₀ (Units.ne_zero _), one_smul] at h4
     rw [map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply]
     exact GlobalTheory.DepthZeroJac.apply_mem_twKer_of_normalizer (GlobalTheory.DepthZeroJac.mem_normalizer_KOne hk1) h4
-  haveI : y.rep.IsIrreducible := y.snd.rep.irr
+  have : y.rep.IsIrreducible := y.snd.rep.irr
   have htop := GroundTheory.Automorphic.SchurOrthogonality.span_orbit_eq_top (π := y.rep) hw0
   have hvk : v ∈ twKer y.rep K 1 := by
     have h5 : v ∈ Submodule.span ℂ (Set.range fun g => y.rep g w) := by

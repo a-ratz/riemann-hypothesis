@@ -220,8 +220,8 @@ theorem exists_pol_baseChange {S S' : Scheme.{0}} (f : S' ⟶ S) (P : Out.PolAV 
   have gp : IsGrpPullback P'.A P.A f φ := ⟨hφ, fun T x y x₀ y₀ hx hy => by
     rw [(Over.OverMorphism.ext hx : x₀ = Out.toBase hφ.w x), (Over.OverMorphism.ext hy : y₀ = Out.toBase hφ.w y), ← hm]
     rfl⟩
-  letI := P.isAb.comm
-  letI := P'.isAb.comm
+  let := P.isAb.comm
+  let := P'.isAb.comm
   exact ⟨P', φ, gp, GlobalTheory.SymBaseChange.hypS_baseChange S S' P.A P'.A f φ P.L P'.L P.isLB P'.isLB gp
     (LBIso.symm ⟨t, ht⟩) h⟩
 
@@ -256,11 +256,11 @@ theorem exists_finite_data (K : Type) [Field K] [CharZero K] (A : Over (Sp K)) [
   have lev := GlobalTheory.nonempty_level_of_isAlgClosed Ω Q 1 (Units.map (algebraMap L₁ Ω).toMonoidHom 1) (by simp)
     (by rw [map_one]; exact IsPrimitiveRoot.one)
   obtain ⟨F, _, _, j, R₀, Q₀, χ, hfg, hfr, -, pC, hQ₀, -⟩ := GlobalTheory.SymLevelDescent.descends_to_fg_field L₁ Ω Q 1 1 hQ lev
-  letI : Algebra F Ω := j.toRingHom.toAlgebra
-  haveI : IsScalarTower L₁ F Ω := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
-  haveI : Algebra.IsAlgebraic L₁ Ω := Algebra.IsAlgebraic.tower_top (K := K) L₁
-  haveI : Algebra.IsAlgebraic L₁ F := Algebra.IsAlgebraic.of_injective j j.toRingHom.injective
-  haveI : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.tower_top (K := L₁) F
+  let : Algebra F Ω := j.toRingHom.toAlgebra
+  have : IsScalarTower L₁ F Ω := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  have : Algebra.IsAlgebraic L₁ Ω := Algebra.IsAlgebraic.tower_top (K := K) L₁
+  have : Algebra.IsAlgebraic L₁ F := Algebra.IsAlgebraic.of_injective j j.toRingHom.injective
+  have : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.tower_top (K := L₁) F
   have f₂ : FiniteDimensional L₁ F := finite_of_fg R₀ hfg hfr
   let c₀ : K →+* F := (algebraMap L₁ F).comp (algebraMap K L₁)
   have pB₁ : IsGrpPullback B B₁ (spMap (algebraMap L₁ Ω)) _ :=
@@ -289,11 +289,11 @@ theorem exists_isogenous_retract : ∀ (K : Type) [Field K] [CharZero K] (A : Ov
   intro K _ _ A _ hA
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim K A hA
   obtain ⟨L₀, _, _, f₀, hP⟩ := GlobalTheory.ProjFinite.exists_finite_isProjBy K A hA
-  haveI : CharZero L₀ := charZero_of_injective_algebraMap (algebraMap K L₀).injective
+  have : CharZero L₀ := charZero_of_injective_algebraMap (algebraMap K L₀).injective
   obtain ⟨L, _, c, B, _, Q, m, hc, hgB, hm, P₁, ⟨r', i', hr', hi', e'⟩, hQ⟩ := exists_finite_data L₀ _
     (isAbelianScheme_pullback_obj (spMap (algebraMap K L₀)) A hA) g
     (relDim_pullback _ _ hg)
-  letI : Algebra K L := (c.comp (algebraMap K L₀)).toAlgebra
+  let : Algebra K L := (c.comp (algebraMap K L₀)).toAlgebra
   have f : FiniteDimensional K L := hc.comp (RingHom.finite_algebraMap.2 f₀)
   obtain ⟨a, ha, -⟩ := grpPullback_iso (isGrpPullback_pullback A (spMap (algebraMap K L)))
     (((isGrpPullback_pullback _ (spMap c)).comp (isGrpPullback_pullback A (spMap (algebraMap K L₀)))).congr

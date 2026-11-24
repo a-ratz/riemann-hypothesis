@@ -139,7 +139,7 @@ theorem joint_pow_of_tameGen : ∀ {E Ω : Type} [Field E] [NumberField E] [Fiel
         ⋃ n ∈ Finset.range m, ({σ : G E Ω | ((χ σ : Oˣ) : O) = ((χ γ ^ n : Oˣ) : O)} ∩
           {σ : G E Ω | σ π = q ^ n * π}) := by
       ext σ
-      simp only [Set.mem_inter_iff, Set.mem_iUnion, Set.mem_setOf_eq, Finset.mem_range, exists_prop,
+      simp only [Set.mem_inter_iff, Set.mem_iUnion, Set.mem_ofPred_eq, Finset.mem_range, exists_prop,
         SetLike.mem_coe]
       constructor
       · rintro ⟨hσ, n, h₁, h₁'⟩
@@ -205,7 +205,7 @@ theorem char_eq_of_apply_root_eq : ∀ {E Ω : Type} [Field E] [NumberField E] [
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   obtain ⟨ζ, hζ⟩ : ∃ ζ : Ω, IsPrimitiveRoot ζ m := by
     have : NeZero (m : Ω) := ⟨Nat.cast_ne_zero.2 hm0⟩
-    exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω m
+    exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω m
   obtain ⟨σ₀, hσ₀, hσ₀π⟩ := _root_.GlobalTheory.TameSurj.main A P hP m hm hmP ϖ hϖP hϖ2 π hπ ζ hζ.pow_eq_one
   have J := fun τ hτ => _root_.GlobalTheory.TameTau.joint_pow_of_tameGen A γ hγ hO χ hχ m hm hvm hχm (ϖ : E) π hπ0 hπ τ hτ
   obtain ⟨k, -, hk⟩ := J σ₀ hσ₀
@@ -431,7 +431,7 @@ theorem char_eq_of_tameRep_congr : ∀ {E Ω : Type} [Field E] [NumberField E] [
     rw [e]
     exact Valuation.map_sub_lt _ (Valuation.map_add_lt _ hv hu) hv'
   exact _root_.GlobalTheory.TameTau.char_eq_of_apply_root_eq A P hA hO χ hχ m hm hmP (hk A hA) ϖ hϖ hϖ2 π hπ s hs s' hs'
-    ((div_left_inj' hπ0).1 heq)
+    ((div_left_inj₀ hπ0).1 heq)
 
 end GlobalTheory.TameTau
 end -- clump:auto

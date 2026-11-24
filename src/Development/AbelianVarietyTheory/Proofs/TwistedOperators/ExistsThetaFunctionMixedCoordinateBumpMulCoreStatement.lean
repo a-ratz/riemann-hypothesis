@@ -81,11 +81,11 @@ variable {D : D7}
 theorem finite_rat_mem (m n : ℕ) (K : Set (Mx D m n)) (hK : IsCompact K) :
     {γ : Matrix (Fin m) (Fin n) D.host.E | rat γ ∈ K}.Finite := by
   obtain ⟨hg, hlc, -, ht2, hdisc, -⟩ := lattice_Mx D m n
-  letI : IsTopologicalAddGroup (Mx D m n) := hg
-  letI : T2Space (Mx D m n) := ht2
-  letI : T1Space (Mx D m n) := T2Space.t1Space
-  letI : DiscreteTopology (ratMx D m n) := hdisc
-  have hcl : IsClosed (ratMx D m n : Set (Mx D m n)) := AddSubgroup.isClosed_of_discrete
+  let : IsTopologicalAddGroup (Mx D m n) := hg
+  let : T2Space (Mx D m n) := ht2
+  let : T1Space (Mx D m n) := T2Space.t1Space
+  let : DiscreteTopology (ratMx D m n) := hdisc
+  have hcl : IsClosed (ratMx D m n : Set (Mx D m n)) := AddSubgroup.isClosed_of_discreteTopology
   have hS : IsCompact ((Subtype.val : ratMx D m n → Mx D m n) ⁻¹' K) :=
     hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK
   have hfin := (hS.finite_of_discrete.image Subtype.val).preimage (rat_injective (D := D) (m := m) (n := n)).injOn
@@ -155,7 +155,7 @@ theorem poinX_smooth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar 
     (∀ t, (L t).map (finPart D) = 0) → ∀ w, ContDiff ℝ ∞ fun t => poinX ψ d T β (w + L t) := by
   intro D ψ hψ S S₀ T ρ d β hβ k L hL hL0 w
   obtain ⟨hg, hlc, -, -, -, -⟩ := lattice_Mx D T.rank ρ
-  haveI : ContinuousSub (Mx D T.rank ρ) := @IsTopologicalAddGroup.to_continuousSub _ _ _ hg
+  have : ContinuousSub (Mx D T.rank ρ) := @IsTopologicalAddGroup.to_continuousSub _ _ _ hg
   have hx : Continuous fun t => (w + L t) ⬝ d.jX := (continuous_const.add hL).matrix_mul continuous_const
   let lX := (rmul (m := T.rank) d.jX).comp L
   let lY := (rmul (m := T.rank) d.jY).comp L
@@ -257,11 +257,11 @@ namespace GlobalTheory.BumpMix
 theorem finite_rat_mem_of_isCompact {D : D7} {m n : ℕ} (K : Set (Mx D m n)) (hK : IsCompact K) :
     {γ : Matrix (Fin m) (Fin n) D.host.E | rat γ ∈ K}.Finite := by
   obtain ⟨hg, -, -, ht2, hdisc, -⟩ := lattice_Mx D m n
-  haveI : IsTopologicalAddGroup (Mx D m n) := hg
-  haveI : T2Space (Mx D m n) := ht2
-  haveI : T1Space (Mx D m n) := @T2Space.t1Space _ _ ht2
-  haveI : DiscreteTopology (ratMx D m n) := hdisc
-  have hcl : IsClosed (ratMx D m n : Set (Mx D m n)) := AddSubgroup.isClosed_of_discrete
+  have : IsTopologicalAddGroup (Mx D m n) := hg
+  have : T2Space (Mx D m n) := ht2
+  have : T1Space (Mx D m n) := @T2Space.t1Space _ _ ht2
+  have : DiscreteTopology (ratMx D m n) := hdisc
+  have hcl : IsClosed (ratMx D m n : Set (Mx D m n)) := AddSubgroup.isClosed_of_discreteTopology
   have hS : IsCompact ((Subtype.val : ratMx D m n → Mx D m n) ⁻¹' K) :=
     hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK
   have hfin := (hS.finite_of_discrete.image Subtype.val).preimage (rat_injective (D := D) (m := m) (n := n)).injOn
@@ -271,11 +271,11 @@ theorem finite_rat_mem_of_isCompact {D : D7} {m n : ℕ} (K : Set (Mx D m n)) (h
 theorem poinX_continuous : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (β : Mx D T.rank ρ → ℂ), IsBump β → Continuous (poinX ψ d T β) := by
   intro D ψ hψ S S₀ T ρ d β hβ
   obtain ⟨hg, hlc, -, -, -, -⟩ := lattice_Mx D T.rank S.rank
-  haveI : IsTopologicalAddGroup (WO S T) := hg
-  haveI : LocallyCompactSpace (WO S T) := hlc
+  have : IsTopologicalAddGroup (WO S T) := hg
+  have : LocallyCompactSpace (WO S T) := hlc
   obtain ⟨hg', -, -, -, -, -⟩ := lattice_Mx D T.rank ρ
-  haveI : IsTopologicalAddGroup (Mx D T.rank ρ) := hg'
-  haveI : ContinuousSub (Mx D T.rank ρ) := @IsTopologicalAddGroup.to_continuousSub _ _ _ hg'
+  have : IsTopologicalAddGroup (Mx D T.rank ρ) := hg'
+  have : ContinuousSub (Mx D T.rank ρ) := @IsTopologicalAddGroup.to_continuousSub _ _ _ hg'
   have hjX : Continuous fun u : WO S T => u ⬝ d.jX := Continuous.matrix_mul (A := fun u : WO S T => u) continuous_id continuous_const
   have hjY : Continuous fun u : WO S T => u ⬝ d.jY := Continuous.matrix_mul (A := fun u : WO S T => u) continuous_id continuous_const
   have hterm : ∀ γ : Matrix (Fin T.rank) (Fin ρ) D.host.E, Continuous fun u : WO S T =>
@@ -378,9 +378,9 @@ variable {D : D7}
 theorem finite_rat_mem {m n : ℕ} (K : Set (Mx D m n)) (hK : IsCompact K) :
     {γ : Matrix (Fin m) (Fin n) D.host.E | rat γ ∈ K}.Finite := by
   obtain ⟨hg, hlc, hsc, ht2, hdisc, -⟩ := lattice_Mx D m n
-  haveI : T2Space (Mx D m n) := ht2
-  haveI : T1Space (Mx D m n) := @T2Space.t1Space _ _ ht2
-  have hcl : IsClosed (ratMx D m n : Set (Mx D m n)) := AddSubgroup.isClosed_of_discrete
+  have : T2Space (Mx D m n) := ht2
+  have : T1Space (Mx D m n) := @T2Space.t1Space _ _ ht2
+  have hcl : IsClosed (ratMx D m n : Set (Mx D m n)) := AddSubgroup.isClosed_of_discreteTopology
   have hS : IsCompact ((Subtype.val : ratMx D m n → Mx D m n) ⁻¹' K) :=
     hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK
   have hfin := (hS.finite_of_discrete.image Subtype.val).preimage (rat_injective (D := D) (m := m) (n := n)).injOn
@@ -394,12 +394,12 @@ theorem mixS_poinX : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D 
   have hn : ∀ t, ‖ψ t‖ = 1 := hψ.1.2.1
   have hY : Continuous (d.extY T) := continuous_id.matrix_mul continuous_const
   obtain ⟨i1, i2, i3, -⟩ := lattice_Mx D T.rank ρ
-  haveI : BorelSpace (Mx D T.rank ρ) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
+  have : BorelSpace (Mx D T.rank ρ) := ⟨rfl⟩
+  have : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, h.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : Countable D.host.E := Finsupp.Countable.of_moduleFinite (R := ℚ)
-  haveI : Countable (Matrix (Fin T.rank) (Fin ρ) D.host.E) := inferInstanceAs (Countable (_ → _ → D.host.E))
-  haveI : ContinuousSub (Mx D T.rank ρ) := @IsTopologicalAddGroup.to_continuousSub _ _ _ i1
+  have : Countable D.host.E := Countable.of_moduleFinite (R := ℚ)
+  have : Countable (Matrix (Fin T.rank) (Fin ρ) D.host.E) := inferInstanceAs (Countable (_ → _ → D.host.E))
+  have : ContinuousSub (Mx D T.rank ρ) := @IsTopologicalAddGroup.to_continuousSub _ _ _ i1
   have hone : v.μ.real v.𝓕 = 1 := by rw [Measure.real, h.2.2, ENNReal.toReal_one]
 
   have hfin : {ξ : Matrix (Fin T.rank) (Fin ρ) D.host.E | β (x + rat ξ) ≠ 0}.Finite := by
@@ -542,7 +542,7 @@ theorem exists_level_pair (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ
 
 theorem poinX_heis_level : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S S₀ T : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ), S₀.rank = 0 → ∀ (β : Mx D T.rank ρ → ℂ), IsBump β → ∃ U : AddSubgroup (WO S T), IsOpen (U : Set (WO S T)) ∧ ∀ u ∈ U, u.map (infPart D) = 0 → heisO ψ S T u (poinX ψ d T β) = poinX ψ d T β := by
   intro D ψ hψ S S₀ T ρ d h0 β hβ
-  haveI : LocallyCompactSpace (Mx D T.rank ρ) := (GlobalTheory.MixModel.lattice_Mx D T.rank ρ).2.1
+  have : LocallyCompactSpace (Mx D T.rank ρ) := (GlobalTheory.MixModel.lattice_Mx D T.rank ρ).2.1
   obtain ⟨Uβ, hUβo, hUβ⟩ := hβ.level
   obtain ⟨C, hC, hC0⟩ := exists_compact_mem_nhds (0 : Mx D T.rank ρ)
   obtain ⟨UC, hUCo, hUC⟩ := GlobalTheory.MixSumBound.finite_points_in_nhds D T.rank ρ C hC0
@@ -793,7 +793,7 @@ theorem bump_mul_theta_mixS : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
     fun x => ?_⟩
   funext w₀
   have hz : ∀ z : WO (GlobalTheory.Core.Rk.SWLaw.zeroSp D) T, z = 0 := fun z => Matrix.ext fun _ j => by
-    haveI : IsEmpty (Fin (GlobalTheory.Core.Rk.SWLaw.zeroSp D).rank) := by rw [hZ]; infer_instance
+    have : IsEmpty (Fin (GlobalTheory.Core.Rk.SWLaw.zeroSp D).rank) := by rw [hZ]; infer_instance
     exact isEmptyElim j
   have e2 : ∀ a : Mx D T.rank ρ, sandwich (rat 1) (rat (GlobalTheory.TowerSurj.embMat d dH)) (d.extY T a + d.extX T x + d.ext0 T w₀) =
       dH.extY T a + dH.extX T x + dH.ext0 T 0 := by

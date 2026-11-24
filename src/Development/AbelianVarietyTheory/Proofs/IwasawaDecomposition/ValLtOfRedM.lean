@@ -66,7 +66,7 @@ variable {F : Type} [Field F] [NumberField F] {n : ℕ} (v : HeightOneSpectrum (
 theorem redM_map (X : Matrix (Fin n) (Fin n) (v.adicCompletionIntegers F)) :
     redM F v (X.map (v.adicCompletionIntegers F).subtype) = X.map (IsLocalRing.residue _) := by
   ext a b
-  exact dif_pos (X a b).2
+  exact dite_eq_left (X a b).2
 
 theorem exists_map {X : Matrix (Fin n) (Fin n) (v.adicCompletion F)} (h : ∀ a b, X a b ∈ v.adicCompletionIntegers F) :
     ∃ X' : Matrix (Fin n) (Fin n) (v.adicCompletionIntegers F), X'.map (v.adicCompletionIntegers F).subtype = X :=
@@ -272,7 +272,7 @@ theorem exists_gLevH (S : StepLevel F E σ J T f bad) (G : GLoc F E σ gp) (hg0 
       rcases ((hfin 0).union (hfin 1)).mem_toFinset.1 hv with h | h
       exacts [⟨0, h⟩, ⟨1, h⟩]
     obtain ⟨j, h⟩ := hj
-    haveI : Finite (kv F v) := glint_finite_residueField v
+    have : Finite (kv F v) := glint_finite_residueField v
     have h1 : IsOfFinOrder (lam j v h ((r j v h).rangeRestrict (cmp S v x))) := (lam j v h).isOfFinOrder (isOfFinOrder_of_finite _)
     rw [hlam, isOfFinOrder_inv_iff] at h1
     exact ((Units.coeHom ℂ).isOfFinOrder h1).norm_eq_one
@@ -348,7 +348,7 @@ theorem val_adAt_lt (G : GLoc F E σ gp) (j : Fin 2) (v : HeightOneSpectrum (�
           omega
     · have hn : ¬ (P.under (𝓞 F)).asIdeal ≤ v.asIdeal := fun hle =>
         hP (HeightOneSpectrum.ext ((P.under (𝓞 F)).isMaximal.eq_of_le v.isPrime.ne_top hle))
-      obtain ⟨a, haP, hav⟩ := SetLike.not_le_iff_exists.1 hn
+      obtain ⟨a, haP, hav⟩ := IsConcreteLE.not_le_iff_exists.1 hn
       refine ⟨a, haP, fun e => hav (e ▸ zero_mem _), fun t ht => ?_⟩
       rw [(HeightOneSpectrum.intValuation_eq_one_iff).2 hav]
       exact ht.le
@@ -358,7 +358,7 @@ theorem val_adAt_lt (G : GLoc F E σ gp) (j : Fin 2) (v : HeightOneSpectrum (�
   have hv0 : Valued.v α ≠ 0 := by rw [hvα]; exact v.intValuation_ne_zero a ha0
   have hα0 : α ≠ 0 := fun e => hv0 (by rw [e, map_zero])
   have key : ∀ t : v.adicCompletion F, Valued.v t < 1 → α⁻¹ * t ∈ v.adicCompletionIntegers F := fun t ht => by
-    rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.2 hv0), mul_one, hvα]
+    rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀, inv_mul_le_iff₀ (pos_iff_ne_zero.2 hv0), mul_one, hvα]
     exact ha t ht
   have hy : ((1 : E) ⊗ₜ[F] α⁻¹) * z ∈ intV E v := by
     rw [mem_intV_iff G j v h, map_mul, G.sp_alg]

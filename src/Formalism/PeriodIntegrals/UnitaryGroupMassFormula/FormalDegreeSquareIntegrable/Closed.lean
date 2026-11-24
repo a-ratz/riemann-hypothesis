@@ -79,7 +79,7 @@ lemma adjoint_rep (hπ : ∀ g v, ‖π g v‖ = ‖v‖) (g : G) : adjoint (π 
   have hinner : ∀ (h : G) (x y : H), ⟪π h x, π h y⟫_ℂ = ⟪x, y⟫_ℂ := fun h x y =>
     (⟨(π h).toLinearMap, hπ h⟩ : H →ₗᵢ[ℂ] H).inner_map_map x y
   have hinv : ∀ x, π g (π g⁻¹ x) = x := fun x => by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul]
+    rw [← mul_apply_eq_comp, ← map_mul]
     simp
   symm
   rw [ContinuousLinearMap.eq_adjoint_iff]
@@ -106,9 +106,9 @@ lemma sa_scalar (hirr : Irr π) (A : H →L[ℂ] H) (hA : IsSelfAdjoint A)
     ext v
     exact Subsingleton.elim _ _
   obtain ⟨v0, hv0⟩ := exists_ne (0 : H)
-  haveI : Nontrivial (H →L[ℂ] H) := ⟨⟨0, 1, fun h => hv0 (by
+  have : Nontrivial (H →L[ℂ] H) := ⟨⟨0, 1, fun h => hv0 (by
     have h1 := congrArg (fun T : H →L[ℂ] H => T v0) h
-    simp only [ContinuousLinearMap.zero_apply, ContinuousLinearMap.one_apply] at h1
+    simp only [zero_apply, one_apply_eq_self] at h1
     exact h1.symm)⟩⟩
   have hcom : ∀ (f : ℝ → ℝ) (g : G), Commute (cfc f A) (π g) := by
     intro f g
@@ -156,16 +156,16 @@ lemma sa_scalar (hirr : Irr π) (A : H →L[ℂ] H) (hA : IsSelfAdjoint A)
       have hv' : (cfc g A) v = 0 := hv
       show (cfc g A) (π g' v) = 0
       have h1 : (cfc g A * π g') v = (π g' * cfc g A) v := by rw [(hcom g g').eq]
-      simp only [ContinuousLinearMap.mul_apply] at h1
+      simp only [mul_apply_eq_comp] at h1
       rw [h1, hv', map_zero]
     rcases hirr S hSc hSi with hS | hS
     · apply hX
       ext v
       have h1 : (cfc f A) v ∈ S := by
         show (cfc g A) ((cfc f A) v) = 0
-        rw [← ContinuousLinearMap.mul_apply, hYX, ContinuousLinearMap.zero_apply]
+        rw [← mul_apply_eq_comp, hYX, zero_apply]
       rw [hS, Submodule.mem_bot] at h1
-      rw [h1, ContinuousLinearMap.zero_apply]
+      rw [h1, zero_apply]
     · apply hY
       ext v
       have h1 : v ∈ S := by rw [hS]; exact Submodule.mem_top
@@ -306,13 +306,13 @@ lemma inner_pi (π : G →* (H →L[ℂ] H)) (hiso : ∀ g v, ‖π g v‖ = ‖
   exact L.inner_map_map x y
 
 lemma pi_mul_inv (π : G →* (H →L[ℂ] H)) (g h : G) (x : H) : π (g * h) (π h⁻¹ x) = π g x := by
-  rw [map_mul, ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply (π h), ← map_mul, mul_inv_cancel, map_one,
-    ContinuousLinearMap.one_apply]
+  rw [map_mul, mul_apply_eq_comp, ← mul_apply_eq_comp (π h), ← map_mul, mul_inv_cancel, map_one,
+    one_apply_eq_self]
 
 lemma pi_inv (π : G →* (H →L[ℂ] H)) (hiso : ∀ g v, ‖π g v‖ = ‖v‖) (g : G) (v w : H) :
     ⟪w, π g⁻¹ v⟫_ℂ = star ⟪v, π g w⟫_ℂ := by
   have hv : π g (π g⁻¹ v) = v := by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one, ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]
   rw [← inner_pi π hiso g w (π g⁻¹ v), hv]
   exact (inner_conj_symm _ _).symm
 
@@ -340,8 +340,8 @@ theorem stOrthOf : StOrthOf := by
     simp [cfL_apply, RCLike.inner_apply, mul_comm]
   have hpiadj : ∀ (h : G) (x y : H), ⟪π h⁻¹ x, y⟫_ℂ = ⟪x, π h y⟫_ℂ := by
     intro h x y
-    rw [← inner_pi π hiso h (π h⁻¹ x) y, ← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← inner_pi π hiso h (π h⁻¹ x) y, ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   have hshift : ∀ (h : G) v w v' w', B (π h v) w v' w' = B v w (π h⁻¹ v') w' := by
     intro h v w v' w'
     show ∫ g, cf π (π h v) w g * star (cf π v' w' g) ∂μ = ∫ g, cf π v w g * star (cf π (π h⁻¹ v') w' g) ∂μ
@@ -349,7 +349,7 @@ theorem stOrthOf : StOrthOf := by
     congr 1
     funext g
     simp only [cf]
-    rw [pi_mul_inv, map_mul, ContinuousLinearMap.mul_apply]
+    rw [pi_mul_inv, map_mul, mul_apply_eq_comp]
   have hcomm : ∀ w w' (h : G), ((T w').adjoint ∘L T w) ∘L π h = π h ∘L ((T w').adjoint ∘L T w) := by
     intro w w' h
     refine ContinuousLinearMap.ext fun v => ?_
@@ -362,7 +362,7 @@ theorem stOrthOf : StOrthOf := by
     intro v w v' w'
     rw [hBT]
     have e := congrArg (fun A : H →L[ℂ] H => A v) (hc w w')
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply] at e
+    simp only [ContinuousLinearMap.comp_apply, smul_apply, ContinuousLinearMap.id_apply] at e
     rw [e, inner_smul_right]
   have hcfinv : ∀ v w g, cf π v w g = star (cf π w v g⁻¹) := by
     intro v w g
@@ -462,8 +462,8 @@ lemma irr_repOf {n : ℕ} (ε : Fin n → Bool) {H : Type} [NormedAddCommGroup H
 
 theorem formal_degree_orthogonality : FormalDegreeFromOrthogonality := by
   intro hOrth hUni n ε H _ _ _ _ σ hU hI hSq
-  haveI := (hUni n ε).1
-  haveI := (hUni n ε).2
+  have := (hUni n ε).1
+  have := (hUni n ε).2
   obtain ⟨d, hd, h⟩ := hOrth (UJ ε) (muG ε) H (repOf ε σ hU.1)
     (fun g v => hU.2.1 _ (umat_mem g) v)
     (fun v => (hU.2.2 v).comp_continuous (continuous_coeMatrix ε) umat_mem)

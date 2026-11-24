@@ -248,7 +248,7 @@ private theorem am_lift {A E B : Type} [CommRing A] [Ring E] [Algebra A E] [Comm
       simp only [amWt, FreeMonoid.toList_of_mul, ← Multiset.cons_coe, ← Multiset.singleton_add, map_add (f := _),
         Multiset.toFinsupp_singleton]
     rw [this, map_mul, map_mul, ih, FreeMonoid.lift_eval_of, FreeMonoid.lift_eval_of,
-      Algebra.TensorProduct.tmul_mul_tmul, ← map_mul, MvPolynomial.X, MvPolynomial.monomial_mul, one_mul]
+      Algebra.TensorProduct.tmul_mul_tmul, ← map_mul, MvPolynomial.X, MvPolynomial.monomial_mul_monomial, one_mul]
 
 private theorem am_one {n : ℕ} {A E B : Type} [CommRing A] [Ring E] [Algebra A E] [CommRing B] [Algebra A B]
     (D : Det n A E) (b : B) (y : E) :

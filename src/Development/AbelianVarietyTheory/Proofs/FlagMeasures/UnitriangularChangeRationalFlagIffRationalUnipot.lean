@@ -136,7 +136,7 @@ theorem chg_sub_mem (F : FlagG S r T) {A : Matrix (Fin (r + 1)) (Fin (r + 1)) E}
 theorem chg_indep {n : ℕ} {f g : Fin n → S.V} (hf : LinearIndependent E f)
     {A : Matrix (Fin n) (Fin n) E} (hA : Uni A) (hg : Chg f A g) : LinearIndependent E g := by
   have hdet : A.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (fun a b h => hA.1 a b h)]
+    rw [Matrix.det_of_isUpperTriangular (fun a b h => hA.1 a b h)]
     simp [hA.2]
   rw [Fintype.linearIndependent_iff] at hf ⊢
   intro c hc
@@ -298,7 +298,7 @@ theorem tri_of_unip (F F₁ : FlagG S r T) (n : S.V ≃ₗ[E] S.V)
     unfold FlagG.X FlagG.Xa
     congr 1
     ext x
-    simp only [Set.mem_range, Set.mem_image, Set.mem_setOf_eq]
+    simp only [Set.mem_range, Set.mem_image, Set.mem_ofPred_eq]
     exact ⟨fun ⟨i, hi⟩ => ⟨i, i.2, hi⟩, fun ⟨i, _, hi⟩ => ⟨i, hi⟩⟩
   have hb : ∀ b : Fin (r + 1), n (F.fvec b) - F.fvec b ∈ F.Xa b.1 := by
     intro b

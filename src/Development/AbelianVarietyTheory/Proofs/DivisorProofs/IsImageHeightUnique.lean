@@ -264,7 +264,7 @@ private theorem gaussAbs_X_le_one {ι : Type} (v : FinitePlace K) (i : ι) :
     _root_.ReciprocityTheory.MultiplicativeHeights.gaussAbs v (X i : MvPolynomial ι K) ≤ 1 := by
   classical
   refine gaussAbs_le_of_forall_coeff_le zero_le_one fun s => ?_
-  rw [coeff_X']
+  rw [coeff_X]
   split_ifs <;> simp
 
 set_option autoImplicit false in

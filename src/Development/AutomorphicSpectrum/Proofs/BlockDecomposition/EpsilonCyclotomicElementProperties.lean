@@ -67,9 +67,9 @@ open IsLocalRing in
 theorem _root_.GlobalTheory.preTilt_isLocalRing : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [Fact ¬IsUnit (p : O)], IsLocalRing (PreTilt O p) := by
   intro p _ O _ _ _
-  haveI : IsLocalRing (ModP O p) :=
+  have : IsLocalRing (ModP O p) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom (Perfection.coeff (ModP O p) p 0) := by
+  have : IsLocalHom (Perfection.coeff (ModP O p) p 0) := by
     refine ⟨fun x hx => ?_⟩
     have hunit : ∀ n, IsUnit (Perfection.coeff (ModP O p) p n x) := by
       intro n
@@ -171,7 +171,7 @@ theorem integral_prime_dvd_epsilon_zero_sub_one (ε : Eps l) : pFlat l ∣ ((ε.
   exact Ideal.mem_span_singleton.1 h
 
 theorem epsilon_one_sub_one_not_isUnit (ε : Eps l) : ¬ IsUnit ((ε.e 1 : Ob l) - 1) := fun h => by
-  haveI : CharP (Ob l) l := inferInstance
+  have : CharP (Ob l) l := inferInstance
   have h1 : IsUnit (((ε.e 1 : Ob l) - 1) ^ l) := h.pow l
   have e : (ε.e 1 : Ob l) ^ l = ε.e 0 := by
     have := congrArg Units.val (ε.succ 0)
@@ -214,7 +214,7 @@ theorem mu_eq (ε : Eps l) : ε.μ = (ε.qk 1 - 1) * ∑ i ∈ Finset.range l, �
 
 theorem eps_facts : ∀ {l : ℕ} [Fact l.Prime] (ε : Eps l), D.InWm l ((WittVector.teichmuller l (ε.e 1 : Ob l)) - 1) ∧ (∀ k, ε.qk (k + 1) ^ l = ε.qk k) ∧ (∀ (A : PAlg l) (n : ℕ), A.cris n (∑ i ∈ Finset.range l, ε.qk 1 ^ i) ∈ A.Fil n 1) ∧ ε.μ = (ε.qk 1 - 1) * ∑ i ∈ Finset.range l, ε.qk 1 ^ i ∧ ∀ m, IsPrimitiveRoot (theta0 l (WittVector.teichmuller l (ε.e m : Ob l))) (l ^ m) := by
   intro l _ ε
-  haveI := isLocalRing_ob l
+  have := isLocalRing_ob l
   exact ⟨fun i => coeff_not_isUnit _ (epsilon_one_sub_one_not_isUnit ε) i, qk_succ ε, cris_sum_mem ε, mu_eq ε,
     prim_chain (fun m => theta0 l (WittVector.teichmuller l (ε.e m : Ob l))) (theta_e_succ ε) ε.one ε.prim⟩
 

@@ -183,7 +183,7 @@ theorem ChartFiniteIrrel.weighted_le_pow (t : ℕ) :
     have hd1 := monomial_mem_weighted (F := F) d 1
     rw [show (fun k => ∑ i, d ⟨k, i⟩) = fun _ => 1 from funext h1] at hd1
     show AddMonoidAlgebra.single m (1 : F) ∈ _
-    rw [single_eq_monomial, ← tsub_add_cancel_of_le hdm, ← one_mul (1 : F), ← monomial_mul, pow_succ]
+    rw [single_eq_monomial, ← tsub_add_cancel_of_le hdm, ← one_mul (1 : F), ← monomial_mul_monomial, pow_succ]
     exact Ideal.mul_mem_mul (ih hmd) (Ideal.subset_span hd1)
 
 end

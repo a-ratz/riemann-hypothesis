@@ -67,7 +67,7 @@ lemma conductor_inv (χ : DirichletCharacter ℂ N) : (χ⁻¹).conductor = χ.c
   unfold DirichletCharacter.conductor
   congr 1
   ext d
-  simp only [DirichletCharacter.conductorSet, Set.mem_setOf_eq]
+  simp only [DirichletCharacter.conductorSet, mem_ofPred_eq]
   exact ⟨fun h => by simpa using factorsThrough_inv h, factorsThrough_inv⟩
 
 lemma isPrimitive_inv {χ : DirichletCharacter ℂ N} (h : χ.IsPrimitive) : (χ⁻¹).IsPrimitive := by

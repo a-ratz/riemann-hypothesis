@@ -125,7 +125,7 @@ theorem lattice : ∀ (D : D7) (V W : HSp D), IsTopologicalAddGroup (WA V W) ∧
     rw [isOpen_singleton_iff_nhds_eq_pure]
     refine le_antisymm (Filter.le_pure_iff.2 ?_) (pure_le_nhds _)
     have hc : ContinuousAt (fun x : ratL V W => (x : WA V W)) 0 :=
-      continuous_subtype_val.continuousAt
+      continuous_subtypeVal.continuousAt
     refine Filter.mem_of_superset (hc.preimage_mem_nhds hN) ?_
     rintro ⟨_, y, rfl⟩ hy
     have hy0 : y = 0 := by

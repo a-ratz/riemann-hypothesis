@@ -63,13 +63,13 @@ theorem natDegree_minpoly_le_mul {p : ℕ} [Fact p.Prime] {K : IntermediateField
     (hK : FiniteDimensional ℚ_[p] K) (x : PadicAlgCl p) (hx : IsIntegral K x) :
     (minpoly ℚ_[p] x).natDegree ≤ (minpoly K x).natDegree * Module.finrank ℚ_[p] K := by
   set E := K⟮x⟯
-  haveI : FiniteDimensional K E := adjoin.finiteDimensional hx
-  haveI : FiniteDimensional ℚ_[p] E := Module.Finite.trans K E
+  have : FiniteDimensional K E := adjoin.finiteDimensional hx
+  have : FiniteDimensional ℚ_[p] E := Module.Finite.trans K E
   have h1 : Module.finrank ℚ_[p] K * Module.finrank K E = Module.finrank ℚ_[p] E :=
     Module.finrank_mul_finrank ℚ_[p] K E
   rw [adjoin.finrank hx] at h1
   have hxE : x ∈ E := mem_adjoin_simple_self K x
-  haveI : IsScalarTower ℚ_[p] E (PadicAlgCl p) := IsScalarTower.of_algebraMap_eq (fun a => rfl)
+  have : IsScalarTower ℚ_[p] E (PadicAlgCl p) := IsScalarTower.of_algebraMap_eq (fun a => rfl)
   have h2 : minpoly ℚ_[p] (⟨x, hxE⟩ : E) = minpoly ℚ_[p] x :=
     (minpoly.algebraMap_eq (algebraMap E (PadicAlgCl p)).injective (⟨x, hxE⟩ : E)).symm
   have h3 := minpoly.natDegree_le (A := ℚ_[p]) (⟨x, hxE⟩ : E)
@@ -123,17 +123,17 @@ theorem exists_pow_ne_rootOfUnity : ∀ {p : ℕ} [Fact p.Prime] {K : Intermedia
   have hp : p.Prime := Fact.out
   set d := Module.finrank ℚ_[p] K with hd
   obtain ⟨n, hn⟩ : ∃ n, 2 * k * d < p ^ n := ⟨2 * k * d, Nat.lt_pow_self hp.one_lt⟩
-  haveI : NeZero (p ^ (n + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
-  haveI : NeZero ((p ^ (n + 1) : ℕ) : PadicAlgCl p) :=
+  have : NeZero (p ^ (n + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero ((p ^ (n + 1) : ℕ) : PadicAlgCl p) :=
     ⟨Nat.cast_ne_zero.2 (pow_ne_zero _ hp.ne_zero)⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicAlgCl p) (p ^ (n + 1))
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicAlgCl p) (p ^ (n + 1))
   have hfix : ∀ σ : Formalism.GaloisCohomology.GK p K, (σ ^ k) ζ = ζ := fun σ => hcon σ (n + 1) ζ hζ.pow_eq_one
   have hB := natDegree_minpoly_le_card_pow_eq_one hζ k hfix
   have hC : Nat.card {x : ZMod (p ^ (n + 1)) // x ^ k = 1} ≤ 2 * k := by
     by_cases h2 : p = 2
     · subst h2
       exact GlobalTheory.card_pow_eq_one_two_pow_le (n + 1) (by omega) hk
-    · haveI : IsCyclic (ZMod (p ^ (n + 1)))ˣ := ZMod.isCyclic_units_of_prime_pow p hp h2 (n + 1)
+    · have : IsCyclic (ZMod (p ^ (n + 1)))ˣ := ZMod.isCyclic_units_of_prime_pow p hp h2 (n + 1)
       have := GlobalTheory.card_pow_eq_one_le_of_isCyclic_units (p ^ (n + 1)) hk
       omega
   have hint : IsIntegral K ζ := (hζ.isIntegral (NeZero.pos _)).tower_top

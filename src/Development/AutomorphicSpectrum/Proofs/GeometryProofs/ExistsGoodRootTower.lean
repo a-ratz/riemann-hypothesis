@@ -229,13 +229,13 @@ theorem root_log (Γ : ∀ s, Matrix (Fin (labelRk D s)) (Fin (labelRk D s)) ℂ
   let F : (Σ s, Fin (labelRk D s)) → ℝ := fun a => Real.log (Real.sqrt (leadMinor (Γ a.1) (a.2 + 1) / leadMinor (Γ a.1) a.2))
   show _ * F (HodgeCpt.rootIdx D (τ, i)) = _
   by_cases h : (i : ℕ) < D.p
-  · have e : HodgeCpt.rootIdx D (τ, i) = ⟨.inl τ, ⟨i, h⟩⟩ := dif_pos h
+  · have e : HodgeCpt.rootIdx D (τ, i) = ⟨.inl τ, ⟨i, h⟩⟩ := dite_eq_left h
     rw [e]
-    simp only [HodgeCpt.rootSgn, grLog, if_pos h, F, Int.cast_one, one_mul]
+    simp only [HodgeCpt.rootSgn, grLog, ite_eq_left h, F, Int.cast_one, one_mul]
     rfl
-  · have e : HodgeCpt.rootIdx D (τ, i) = ⟨.inr τ, ⟨D.p + D.q - 1 - i, by have := i.2; show _ < D.q; omega⟩⟩ := dif_neg h
+  · have e : HodgeCpt.rootIdx D (τ, i) = ⟨.inr τ, ⟨D.p + D.q - 1 - i, by have := i.2; show _ < D.q; omega⟩⟩ := dite_eq_right h
     rw [e]
-    simp only [HodgeCpt.rootSgn, grLog, if_neg h, F, Int.cast_neg, Int.cast_one, neg_mul, one_mul]
+    simp only [HodgeCpt.rootSgn, grLog, ite_eq_right h, F, Int.cast_neg, Int.cast_one, neg_mul, one_mul]
     rfl
 
 theorem locChart (hLP : LocPer) (hT : Transport) (hFV : FrameVals) (hPM : PerMat) (hG : Top.Given)
@@ -554,9 +554,9 @@ theorem tele (F : ℕ → ℤ) (k M : ℕ) (hk : k ≤ M) :
     rw [Finset.sum_eq_zero]
     · simp
     · intro n hn
-      rw [if_neg (by simpa using hn)]
+      rw [ite_eq_right (by simpa using hn)]
   | succ M hM ih =>
-    rw [Finset.sum_range_succ, ih, if_pos hM]
+    rw [Finset.sum_range_succ, ih, ite_eq_left hM]
     ring
 
 theorem abel (N : ℕ) (f x : Fin N → ℤ) :
@@ -741,7 +741,7 @@ theorem exists_eff : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsC
   intro hG E _ _ _ H D Xo l c Y hgl hp hq G ⟨A⟩ ν hν
   classical
   have hIn : PB.Inputs := hG.2.2.2.2.2.2.2.2.2.1
-  haveI : Nonempty G.K := ⟨G.k₀⟩
+  have : Nonempty G.K := ⟨G.k₀⟩
   have hb : Birational G.y := (_root_.GlobalTheory.CompanionTheory.Ar.flagged_model_dim E H D l (Xo l) c (𝓞 c.F) (algebraMap _ _) Y ∅ G.Ω G.K G.J G.y G.𝔐 G.Fl
     (RingOfIntegers.coe_injective)).1
   obtain ⟨β, dβ, hβ, hβP, hb0, hβc, hbd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ExRefEff.BdForm.bd_form E H D l (Xo l) c _ _ Y G
@@ -760,7 +760,7 @@ theorem exists_eff : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsC
         by_contra h
         exact ha ⟨τ, i, by have := i.2; omega, rfl⟩
       have := hν τ i ⟨i + 1, hi⟩ (by simp [Fin.lt_def])
-      simp only [gapN, dif_pos hi]
+      simp only [gapN, dite_eq_left hi]
       omega
   obtain ⟨-, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.nefPol hIn _ _ A.Sys Fl hFl G.K G.J G.Ω G.y A.Re A.J_top hb
     (fun V _ L => GroundTheory.Heights₂.Heights.NumbersDVR.intNum ℚ V L) (GroundTheory.Heights₂.Heights.NumbersDVR.IntNumIsFieldIntersection.full ℚ G.K G.J) (gapN ν) hn
@@ -903,7 +903,7 @@ theorem embedsGeneric_of_coordTie : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] 
     obtain ⟨s, hs, hu, hsa⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.regAt_iff_exists_chart_fraction X Ω ξ ℤ κ x h i p hi a).mp ha
     exact ⟨s, mem_adjoin_rat_of_int hs, hu, mem_adjoin_rat_of_int hsa⟩
   · intro q _ hq hpq
-    haveI := isLocalRing_regAt h.gen p
+    have := isLocalRing_regAt h.gen p
     have hmem : ∀ a ∈ Algebra.adjoin ℤ (Set.range fun j => x j / x i), a ∈ regAt ξ p :=
       fun a ha => (h.ring i hi.1 a).mp ha p hi
     let φ : Algebra.adjoin ℤ (Set.range fun j => x j / x i) →+* regAt ξ p :=
@@ -1092,7 +1092,7 @@ namespace GlobalTheory.CompanionTheory.Ar
 
 theorem exists_refGeo : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (Ω₀ : Type) [Field Ω₀] (ξ₀ : Spec (CommRingCat.of Ω₀) ⟶ Y.X), IsCptGen ξ₀ → ∃ G : RefGeo Y, genPt G.𝔐.ξ₀ = genPt ξ₀ := by
   intro hRes E _ _ _ H D l Xo c Y Ω₀ _ ξ₀ hgen
-  haveI : CharZero Ω₀ := _root_.GlobalTheory.CompanionTheory.Ar.CharZeroModel.charZero_function_field E H D l Xo c Y Ω₀ ξ₀ hgen
+  have : CharZero Ω₀ := _root_.GlobalTheory.CompanionTheory.Ar.CharZeroModel.charZero_function_field E H D l Xo c Y Ω₀ ξ₀ hgen
   obtain ⟨K₀, _, J₀, _, y₀, X₀, ξ', f₀, cst₀, t₀, m₀, Li', _, _, M', ρ', L', bd₀, h₁, h₂, h₃, h₄, h₅, h₆, h₇, h₈, h₉⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.exists_eigBase hRes E H D l Xo c Y Ω₀ ξ₀ hgen
   obtain ⟨Ω, _, _, _, K, _, J, _, y, X, ξ, f, cst, t, m, Li, _, _, M, ρ, Li₀, _, _, M₀, j, V₀, b, bd,
@@ -1328,7 +1328,7 @@ theorem isFlagVBOn_genFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   intro E _ _ _ H D l Xo c Y S₀ S Ω₁ Ω _ _ K₁ _ J₁ _ y₁ K _ J _ y A Fl B i h jA hdom hf hcst hext hpt hρ hlat q hq s
   intro q' hq'
   obtain rfl : q' = q := hq'
-  haveI : CharZero Ω₁ := charZero_of_injective_ringHom A.cst.injective
+  have : CharZero Ω₁ := charZero_of_injective_ringHom A.cst.injective
   have hgenA := A.tie.gen
   have hgenB := B.tie.gen
   obtain ⟨hsp, hreg, hun⟩ := RegAtDom.regAt_dominates A.X Ω₁ A.ξ B.X Ω B.ξ h i hdom q'
@@ -1568,8 +1568,8 @@ theorem exists_good_tower : Top.Given → Out.WeilSt → Flat.FlatLineGenerator 
   intro hG hW hA0 hA1 E _ _ _ H D Xo l c Y _ hgl hsp hp hq
   obtain ⟨hfin, hne⟩ := GlobalTheory.T.generic_points_finite_nonempty hG E H D l (Xo l) c Y
   let Smax : Set Y.X := {x : Y.X | ∀ x' : Y.X, x' ⤳ x → x' = x}
-  haveI : Fintype Smax := Set.Finite.fintype hfin
-  haveI : Nonempty Smax := hne.to_subtype
+  have : Fintype Smax := Set.Finite.fintype hfin
+  have : Nonempty Smax := hne.to_subtype
   choose Sys Fx R o hgen hnu hdeg hJ hamp hemb hbij hflat hlam using
     fun a : Smax => comp_data hG hA0 hA1 Xo l c Y hgl hsp hp hq a.1 a.2
   have hM' : l.M' ≠ 0 := by

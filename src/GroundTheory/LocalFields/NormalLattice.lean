@@ -182,7 +182,7 @@ theorem exists_pow_mul_mem_integer_of_lt_one {F : Type*} [Field F] [ValuativeRel
     refine ⟨n, (Valuation.mem_integer_iff _ _).mpr (le_of_lt ?_)⟩
     calc valuation F (t ^ n * a) = valuation F t ^ n * valuation F a := by simp
       _ < (valuation F a)⁻¹ * valuation F a :=
-          mul_lt_mul_of_pos_right (by simpa using hn) (zero_lt_iff.mpr hva)
+          mul_lt_mul_of_pos_right (by simpa using hn) (pos_iff_ne_zero.mpr hva)
       _ = 1 := inv_mul_cancel₀ hva
   obtain ⟨n, hn⟩ := key
   refine ⟨n, fun m hm => ?_⟩
@@ -474,7 +474,7 @@ theorem isOpen_normalLattice (hπ : Irreducible π) (hθ : LinearIndependent K f
     refine continuous_finsetSum _ fun σ _ => ?_
     simp_rw [← Algebra.smul_def, smul_smul]
     refine Continuous.smul ?_ continuous_const
-    exact continuous_const.mul (continuous_subtype_val.comp (continuous_apply σ))
+    exact continuous_const.mul (continuous_subtypeVal.comp (continuous_apply σ))
   have hcpt : IsCompact (normalLattice π θ s : Set L) := by
     have : (normalLattice π θ s : Set L) = Set.range fun c : Gal(L/K) → 𝒪[K] =>
         π ^ s • ∑ σ, c σ • σ θ := by

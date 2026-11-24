@@ -67,7 +67,7 @@ namespace GlobalTheory.LocBounded
 theorem isIntegral_mul_of_commute {R A : Type} [CommRing R] [Ring A] [Algebra R A] {x y : A}
     (hc : Commute x y) (hx : IsIntegral R x) (hy : IsIntegral R y) : IsIntegral R (x * y) := by
   let S := Algebra.adjoin R ({x, y} : Set A)
-  letI : IsMulCommutative S :=
+  let : IsMulCommutative S :=
     Algebra.isMulCommutative_adjoin R (Set.pairwise_pair.2 fun _ => ⟨hc, hc.symm⟩)
   have hx' : x ∈ S := Algebra.subset_adjoin (by simp)
   have hy' : y ∈ S := Algebra.subset_adjoin (by simp)
@@ -183,7 +183,7 @@ theorem bounded_of_isIntegral_general {K Γ O : Type} [Field K] [LinearOrderedCo
         (fun p => v (N p.1 p.2)) ⟨(i0, j0), Finset.mem_univ _⟩
       have hpos : 1 < v (N p.1 p.2) := lt_of_lt_of_le h0 (hp (i0, j0) (Finset.mem_univ _))
       have hne : N p.1 p.2 ≠ 0 := fun h => by
-        rw [h, map_zero] at hpos; exact absurd hpos (not_lt.2 zero_le')
+        rw [h, map_zero] at hpos; exact absurd hpos (not_lt.2 zero_le)
       refine ⟨(N p.1 p.2)⁻¹, inv_ne_zero hne, fun i j => ?_⟩
       rw [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_one.trans hpos), mul_one]
       exact hp (i, j) (Finset.mem_univ _)

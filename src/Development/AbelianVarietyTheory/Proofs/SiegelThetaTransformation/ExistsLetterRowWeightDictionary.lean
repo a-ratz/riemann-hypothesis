@@ -224,15 +224,15 @@ theorem GlobalTheory.Dict.exists_dic : ∀ (E : Type) [Field E] [NumberField E] 
   · funext τ j
     obtain ⟨t, rfl⟩ := f.surjective τ
     obtain ⟨i | i, rfl⟩ := (rowIdx hr').surjective j
-    · rw [wtOf_inl, wtX, if_pos (by simp), hf, hinv, Function.comp_apply, f.symm_apply_apply, hx]
+    · rw [wtOf_inl, wtX, ite_eq_left (by simp), hf, hinv, Function.comp_apply, f.symm_apply_apply, hx]
       simp
     · have hi := i.isLt
-      rw [wtOf_inr, wtX, if_neg (by rw [rowIdx_inr]; omega), hf, ← hcj, hinv, Function.comp_apply,
+      rw [wtOf_inr, wtX, ite_eq_right (by rw [rowIdx_inr]; omega), hf, ← hcj, hinv, Function.comp_apply,
         f.symm_apply_apply, hy, rowIdx_inr, show X.p0 - 1 - (X.p0 - 1 - i) = i by omega]
       rfl
   · rw [← MvPolynomial.map_rename]
     exact map_mem_rowHighest _ ((hmem P).1 hP)
-  · letI := σ.toAlgebra
+  · let := σ.toAlgebra
     rw [← span_map_rowHighest c.F ℂ]
     refine Submodule.span_mono ?_
     rintro _ ⟨Q, hQ, rfl⟩

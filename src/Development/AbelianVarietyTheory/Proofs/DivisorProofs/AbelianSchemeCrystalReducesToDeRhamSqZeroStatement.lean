@@ -67,7 +67,7 @@ theorem oneTmul_surjective_ker {R R₀ : Type} [CommRing R] [CommRing R₀] (I :
     letI := π.toAlgebra
     Function.Surjective (TensorProduct.mk R R₀ M 1) ∧
       ∀ m : M, (1 : R₀) ⊗ₜ[R] m = 0 ↔ m ∈ I • (⊤ : Submodule R M) := by
-  letI := π.toAlgebra
+  let := π.toAlgebra
   subst hk
   let f : (R ⧸ RingHom.ker π) ≃ₐ[R] R₀ := Ideal.quotientKerAlgEquivOfSurjective (f := (Algebra.ofId R R₀)) hπ
   let E : R₀ ⊗[R] M ≃ₗ[R] M ⧸ (RingHom.ker π • (⊤ : Submodule R M)) :=
@@ -92,11 +92,11 @@ theorem rhoBC_of_abelianLift : CrystallineSmoothLift → AbelianHodgeDeRham → 
     (h' : IsGrpPullback A₀ A' (spMap π) i'), IsAbelianScheme A' → SmoothOfRelativeDimension g A'.hom →
     RhoBC hI hk A₀.hom := by
   intro H1 H2 R R₀ _ _ I hI π hπ hk g A₀ _ A' _ i' h' hA hg
-  letI := π.toAlgebra
+  let := π.toAlgebra
   have := hA.smooth
   have := hA.proper
-  haveI : Smooth A₀.hom := MorphismProperty.of_isPullback (P := @Smooth) h'.1 hA.smooth
-  haveI : IsProper A₀.hom := MorphismProperty.of_isPullback (P := @IsProper) h'.1 hA.proper
+  have : Smooth A₀.hom := MorphismProperty.of_isPullback (P := @Smooth) h'.1 hA.smooth
+  have : IsProper A₀.hom := MorphismProperty.of_isPullback (P := @IsProper) h'.1 hA.proper
   have w : i' ≫ A'.hom = A₀.hom ≫ spMap π := h'.1.w
   have hm : IsMor (dp0 R) A'.hom (divided₂ hI) (A₀.hom ≫ spMap π) (RingHom.id R) i' :=
     IsMor.of_dividedPowersZeroIdeal _ (by rw [Cris.spMap_id, Category.comp_id]; exact w)

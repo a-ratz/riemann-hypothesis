@@ -195,13 +195,13 @@ theorem eig_bc {L : Type} [CommRing L] [IsLocalRing L] (φ : c.F →+* L) {x : S
           by_cases h : τ' = τ
           · subst h; rwa [Pi.single_eq_same]
           · rw [Pi.single_eq_of_ne h]; intro a; simp) τ
-        rwa [Finset.sum_pi_single', if_pos (Finset.mem_univ _), Pi.single_eq_same] at this
+        rwa [Finset.sum_pi_single', ite_eq_left (Finset.mem_univ _), Pi.single_eq_same] at this
       refine ⟨LinearMap.ext fun m => e₂ _ (e₁ m), Submodule.ext fun m => ?_⟩
       rw [ReciprocityTheory.ChartRestriction.G.Chart.mem_eigLat_iff]
       exact ⟨fun ⟨m', h⟩ => h ▸ e₁ m', fun h => ⟨m, e₂ m h⟩⟩
-  letI : Algebra c.F L := φ.toAlgebra
-  letI : Algebra L k := ψ.toAlgebra
-  letI : Algebra c.F k := (ψ.comp φ).toAlgebra
+  let : Algebra c.F L := φ.toAlgebra
+  let : Algebra L k := ψ.toAlgebra
+  let : Algebra c.F k := (ψ.comp φ).toAlgebra
   have : CharZero k := charZero_of_injective_algebraMap (algebraMap c.F k).injective
   obtain ⟨xc', hx', hv⟩ := vec_bc (S' := k) hx
   have htm : ∀ (a : 𝓞 E) (cc : Fin n → L), rho hx' a (algebraMap L k ∘ cc) = algebraMap L k ∘ rho hx a cc :=

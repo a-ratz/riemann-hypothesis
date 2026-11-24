@@ -196,7 +196,7 @@ theorem exists_elem_col (c : HeightOneSpectrum (𝓞 F) → ℕ) (hc : {w | c w 
   have hcount : ∀ w : HeightOneSpectrum (𝓞 F), FractionalIdeal.count F w (Cfr * Dfr) = (c w : ℤ) + dd w := by
     intro w
     rw [FractionalIdeal.count_mul F w hCfr0 hDfr0, FractionalIdeal.count_finprod F w _ hexp,
-      FractionalIdeal.count_coe F w hD0]
+      FractionalIdeal.count_coeIdeal F w hD0]
     rfl
   obtain ⟨k, hkJ, hk0⟩ : ∃ k ∈ Cfr * Dfr, k ≠ 0 := by
     have hne : ((Cfr * Dfr : FractionalIdeal (𝓞 F)⁰ F) : Submodule (𝓞 F) F) ≠ ⊥ := by

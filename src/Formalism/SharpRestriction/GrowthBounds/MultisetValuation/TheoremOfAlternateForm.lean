@@ -80,7 +80,7 @@ theorem frac_of_place (v : X.Pl) : IsFractionRing X.G.O X.G.Kf := by
 abbrev piK : X.G.Kf := algebraMap X.G.O X.G.Kf X.vp
 
 theorem piK_ne (hfr : IsFractionRing X.G.O X.G.Kf) : piK X ≠ 0 := by
-  haveI := hfr
+  have := hfr
   intro h
   exact X.unif.ne_zero (IsFractionRing.injective X.G.O X.G.Kf (h.trans (map_zero _).symm))
 
@@ -215,7 +215,7 @@ theorem Rep.ofP : Rep X (p : X.G.Kf) X.eO := by
   rw [zpow_natCast, ← map_pow, ← map_mul, ← hu, mul_assoc, Units.mul_inv, mul_one, map_natCast]
 
 theorem exists_rep (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} (hx : x ≠ 0) : ∃ N, Rep X x N := by
-  haveI := hfr
+  have := hfr
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := X.G.O) x
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have ha0 : a ≠ 0 := by
@@ -235,7 +235,7 @@ theorem exists_rep (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} (hx : x ≠ 
 
 theorem vGeK_iff_of_rep (hfr : IsFractionRing X.G.O X.G.Kf) {x : X.G.Kf} {N : ℤ} (hx : Rep X x N) (g : ℝ) :
     X.vGeK x g ↔ g * (X.eO : ℝ) ≤ N := by
-  haveI := hfr
+  have := hfr
   obtain ⟨u, rfl⟩ := hx
   constructor
   · intro h
@@ -501,7 +501,7 @@ theorem clExp_ge_al (h : Std p n' k1 t m c r TT a b lam0 w) (j : ℕ) :
       exact ⟨mem_univ _, hs.2⟩
     · rw [mem_filter] at hs hs'
       unfold al
-      rw [if_neg fun hT => hs' ⟨hT, hs.2⟩]
+      rw [ite_eq_right fun hT => hs' ⟨hT, hs.2⟩]
   rw [e1]
   have e2 := tail_nonneg h j r
   have e3 : ∑ s ∈ univ.filter (fun s : Fin n' => ¬ IsOddPos s), al TT lam0 s ≤
@@ -642,7 +642,7 @@ theorem CiiiGen (v : X.Pl) (u mh : ℕ → X.G.Kf) (j : ℕ) (hu : ∀ l ∈ Icc
   rcases eq_or_lt_of_le hl' with rfl | hlt
   · have h0 : X.Tt v (X.G.P.r - X.G.P.r) (j + 1) (X.Kz j G) = X.Kz j G := by
       unfold Sys.Tt
-      rw [if_pos (Nat.sub_self _)]
+      rw [ite_eq_left (Nat.sub_self _)]
     rw [h0]
     have h := vGe_smul X hfr (vGeK_mul X hfr (vGeK_negOnePow X X.G.P.r) hcr)
       (vGe_smul X hfr (hU (X.G.P.r - X.G.P.r)) (hA G hG))

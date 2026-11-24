@@ -81,7 +81,7 @@ theorem indicator_cosetBoxV_mem_SB [Finite κ] {a : F} (ha : a ≠ 0) (r : κ �
     continuous_pi fun i => (continuous_const.mul (continuous_apply i)).add continuous_const
   have hS : cosetBoxV a r v = f ⁻¹' P := by
     ext x
-    simp only [cosetBoxV, P, f, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq,
+    simp only [cosetBoxV, P, f, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq,
       SetLike.mem_coe]
   have hPo : IsOpen P := isOpen_set_pi Set.finite_univ fun _ _ => Valued.isOpen_valuationSubring _
   have hPc : IsCompact P := isCompact_univ_pi fun _ => ReciprocityTheory.GeneralLinearIntegers.GeneralLinearIntegersOpenCompact.isCompact_integers v
@@ -125,7 +125,7 @@ theorem eventually_cosetBoxV_eq {a : F} (ha : a ≠ 0) (r : κ → FiniteAdeleRi
   rw [e1] at hv1
   rw [e2] at hv2
   ext x
-  simp only [cosetBoxV, Set.mem_setOf_eq]
+  simp only [cosetBoxV, Set.mem_ofPred_eq]
   refine forall_congr' fun i => ⟨fun h => ?_, fun h => ?_⟩
   · have hd : x i - (r i) v ∈ v.adicCompletionIntegers F := by
       rw [← mul_inv_cancel_left₀ ha0 (x i - (r i) v)]

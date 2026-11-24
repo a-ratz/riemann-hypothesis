@@ -305,7 +305,7 @@ theorem exists_isLevWith_geometric {k : ℕ} (hk : k ∣ l.M) {K : Type} [Field 
     {ζ : Kˣ} (hζ : IsPrimitiveRoot ζ k) : ∃ ev, IsLevWith Xo k ζ x0 ev := by
   have hM : 0 < l.M := by have := l.three_le; omega
   have hk0 : 0 < k := Nat.pos_of_dvd_of_pos hk hM
-  haveI : NeZero k := ⟨hk0.ne'⟩
+  have : NeZero k := ⟨hk0.ne'⟩
   obtain ⟨β, hβ⟩ := Spec.map_surjective (x0 ≫ Xo.s)
   obtain ⟨-, I, -, -, hI⟩ := Xo.univ.geom K x0 β.hom hβ.symm
   obtain ⟨m, -, hm⟩ := (I.ζ_prim k hk0).eq_pow_of_mem_rootsOfUnity (ξ := ζ) ((mem_rootsOfUnity _ _).2 hζ.pow_eq_one)
@@ -357,12 +357,12 @@ theorem exists_isLevWith_cover {k : ℕ} (hk : k ∣ l.M) {S : Type} [CommRing S
   classical
   have hL := GlobalTheory.firstFiveLaws.1
   have hk0 : 0 < k := Nat.pos_of_dvd_of_pos hk (by have := l.three_le; omega)
-  haveI := FullLevel.finite_latMod (Dw := Dw) k hk0
-  haveI := Fintype.ofFinite (LatMod Dw k)
-  haveI := UnivPol.isLocallyNoetherian Xo
+  have := FullLevel.finite_latMod (Dw := Dw) k hk0
+  have := Fintype.ofFinite (LatMod Dw k)
+  have := UnivPol.isLocallyNoetherian Xo
   choose r hr using Submodule.Quotient.mk_surjective (Ideal.span {(k : 𝓞 E)} • ⊤ : Submodule (𝓞 E) Dw.La)
   have hra : ∀ a, Dw.ModN k (r (Submodule.Quotient.mk a) - a) := fun a => (FullLevel.mk_eq_iff k _ _).1 (hr _)
-  haveI : IsAddFG (𝓞 E) := Module.Finite.iff_addGroup_fg.1 inferInstance
+  have : IsAddFG (𝓞 E) := Module.Finite.iff_addGroup_fg.1 inferInstance
   obtain ⟨s, hs⟩ : ∃ s : Finset (𝓞 E), AddSubgroup.closure (s : Set (𝓞 E)) = ⊤ :=
     AddGroup.exists_of_isAddFG (𝓞 E)
   obtain ⟨B, _, φ, w, hφ, hw, hU⟩ := exists_flat_universal_torsion_tuple hL E H Dw l Xo S x0 k hk0 (LatMod Dw k)
@@ -378,7 +378,7 @@ theorem exists_isLevWith_cover {k : ℕ} (hk : k ∣ l.M) {S : Type} [CommRing S
       · show (w p.1 * w p.2) ^ k = 1
         rw [mul_pow, hw, hw, _root_.mul_one]
       · show (w p.2 ≫ Xo.univ.t.act.act p.1) ^ k = 1
-        haveI := Xo.univ.t.act.hom p.1
+        have := Xo.univ.t.act.hom p.1
         rw [← MonObj.pow_comp, hw, MonObj.one_comp]
       · exact halfPt_pow Xo hk _ _)
     (fun _ => hw _) (fun _ => hw _)
@@ -486,7 +486,7 @@ theorem exists_isLevOf_cover {k : ℕ} (hk : k ∣ l.M) {S : Type} [CommRing S] 
     simpa using (IsUnit.mk0 (k : c.F) (Nat.cast_ne_zero.2 hk0.ne')).map (algebraMap c.F S)
   obtain ⟨B, _, ψ, ev, hψ, hev⟩ :=
     exists_isLevWith_cover Xo hk x0 hu (rootOn_pow c hk S) (isPrimitiveRoot_rootOn c hk)
-  letI : Algebra c.F B := (ψ.comp (algebraMap c.F S)).toAlgebra
+  let : Algebra c.F B := (ψ.comp (algebraMap c.F S)).toAlgebra
   exact ⟨B, inferInstance, inferInstance, { ψ with commutes' := fun _ => rfl }, ev, hψ, hk, hev⟩
 
 end GlobalTheory.ThetaConst

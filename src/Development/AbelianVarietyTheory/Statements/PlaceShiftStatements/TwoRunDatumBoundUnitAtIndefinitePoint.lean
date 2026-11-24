@@ -63,7 +63,7 @@ theorem finite_tuples_of_indefiniteSidePoint : Finite p.P.T := by
 theorem twoRunDatum_boundUnit_at_indefinitePoint {Pm : ParameterChoice' D L} (Tp : ParamsT D L Pm) (r : TwoRuns p.T p.P.Gp) {c : OnConst} (O : Obj p c)
     (h : RecAt p Tp r O) (C CH : ℝ) : ErrorConstantMatchesDefinition ((R2 p).num (F2 p) C CH) O C ∧ O.b = L.sc.b := by
   obtain ⟨st, hd⟩ := h.1.depth
-  letI := hostAlg D
+  let := hostAlg D
   have hb : O.b = L.sc.b := by
     unfold OnObj.b OnObj.xe
     rw [hd.x_eq, hd.eps_eq]; rfl

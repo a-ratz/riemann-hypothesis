@@ -133,7 +133,7 @@ theorem contrTensor : ContrTensor := by
     rw [Finset.sum_eq_single τ]
     · exact Finsupp.mapDomain_apply_of_injective (hinj τ) _ _
     · intro τ' _ hne
-      apply Finsupp.mapDomain_notin_range
+      apply Finsupp.mapDomain_of_notMem_range
       rintro ⟨s', hs'⟩
       exact hne (congrArg Sigma.fst (e.injective hs'))
     · simp

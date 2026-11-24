@@ -105,7 +105,7 @@ theorem pure_X_mul (hadd : ∀ f f', P f → P f' → P (f + f')) (hsm : ∀ (a 
     pureTensorL A f (MvPolynomial.X v * Q) = A v (pureTensorL A f Q) := by
   induction Q using MvPolynomial.induction_on' with
   | monomial k c =>
-    rw [MvPolynomial.X, MvPolynomial.monomial_mul, one_mul, pure_monomial, pure_monomial,
+    rw [MvPolynomial.X, MvPolynomial.monomial_mul_monomial, one_mul, pure_monomial, pure_monomial,
       Asm _ _ (opPow A k f) (foldr_mem hA hf _)]
     congr 1
     refine foldr_perm hA hc hf (l' := v :: (Finsupp.toMultiset k).toList) ?_
@@ -225,7 +225,7 @@ theorem dRho_add (τ : D.what₂.Tau) (z : Matrix (Fin T.rank) (Fin S.rank) ℂ)
     hD_eq_fderiv _ _ _ _ (theta_sm h hf), hD_eq_fderiv _ _ _ _ (theta_sm h hf')]
   have e : (fun x : RW T S => (f + f') (w + iotaW σ T S x)) =
       fun x : RW T S => f (w + iotaW σ T S x) + f' (w + iotaW σ T S x) := rfl
-  rw [e, fderiv_fun_add (hd hf w) (hd hf' w), ContinuousLinearMap.add_apply, Pi.add_apply]
+  rw [e, fderiv_fun_add (hd hf w) (hd hf' w), add_apply, Pi.add_apply]
   ring
 
 theorem dRho_smul (τ : D.what₂.Tau) (z : Matrix (Fin T.rank) (Fin S.rank) ℂ) (a : ℂ) {f : WO S T → ℂ}
@@ -243,7 +243,7 @@ theorem dRho_smul (τ : D.what₂.Tau) (z : Matrix (Fin T.rank) (Fin S.rank) ℂ
   rw [Pi.smul_apply, hE, hE, hD_eq_fderiv _ _ _ _ (theta_sm h (theta_smul a hf)), hD_eq_fderiv _ _ _ _ (theta_sm h hf)]
   have e : (fun x : RW T S => (a • f) (w + iotaW σ T S x)) =
       fun x : RW T S => a • f (w + iotaW σ T S x) := rfl
-  rw [e, fderiv_fun_const_smul (hd hf w), ContinuousLinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul,
+  rw [e, fderiv_fun_const_smul (hd hf w), smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul,
     smul_eq_mul]
   ring
 

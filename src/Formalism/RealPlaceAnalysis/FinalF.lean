@@ -69,7 +69,7 @@ theorem unimodular : Unimodular := indefinite_unitary_unimodular
 theorem invInvariant : InvInvariant := by
   intro n ε
   have hR := indefinite_unitary_unimodular n ε
-  haveI : (muG ε).IsMulRightInvariant := ⟨hR⟩
+  have : (muG ε).IsMulRightInvariant := ⟨hR⟩
   show (muG ε).inv = muG ε
   have key : (muG ε).inv =
       MeasureTheory.Measure.haarScalarFactor (muG ε).inv (muG ε) • muG ε := by

@@ -91,7 +91,7 @@ theorem lamTop_thr (hC : 28 * Real.exp 1 ≤ Cc) (hB : KB.IsLeadingFormSetting C
   have hlen := lenI_posT hB (Fin.pos v)
   have hsz : S.base.szL (S.G.r + 2 - s) s v = 2 * J.thrP S.G S.CA S.de S.de' S.T S.T' S.l (S.G.r + 2 - s) (S.pl v) := by
     show (if S.G.r + 2 - s + s ≤ S.G.r + 1 then _ else _) = _
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   rw [hsz]
   have hsA : ∀ one, 0 ≤ J.supA S.G S.de S.de' S.T S.T' S.l one (S.pl v) := fun one => supA_nonneg S hg hk v one
   have hFT := (Formalism.FourierDecayAlt.P.frame_threshold_bound_holds (InfinitePlace E) S.G S.CA S.de S.de' S.T S.T' S.l (S.pl v) hg hlen

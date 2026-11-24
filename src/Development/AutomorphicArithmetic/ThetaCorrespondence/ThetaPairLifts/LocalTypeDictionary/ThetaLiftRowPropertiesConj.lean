@@ -591,9 +591,9 @@ theorem colMap_coeff_mem : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0
     (fun j => if h : j < D.R.m then ch.S.Z.kkMap 1 (d.1 ⟨j, h⟩) (ch.S.ptTop c j) (ch.S.ptTop c (j + 1)) else 0)
     (fun j v => ∀ m, AddMonoidAlgebra.coeff (v : Pol ℂ D.what₂.Tau (ch.G.V (.top j)).rank) m ∈ K) (fun j v hv => by
       by_cases h : j < D.R.m
-      · simp only [dif_pos h]
+      · simp only [dite_eq_left h]
         exact coeff_map_mem K _ _ _ (fun a b => (memK _).2 (hrat ⟨j, h⟩ a b)) v hv
-      · simp only [dif_neg h, LinearMap.zero_apply, ZeroMemClass.coe_zero,
+      · simp only [dite_eq_right h, LinearMap.zero_apply, ZeroMemClass.coe_zero,
           AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
         exact fun _ => zero_mem K) D.R.m _ h0
   intro m
@@ -832,7 +832,7 @@ theorem vK_mem (ch : Choice R) (large₂ : SizeData₂ D) (F : Face D A) (CF b :
     if hβ : β ∈ ch.S.supp t (ch.Phi a) then (hex β hβ).choose else 0
   have hτf : ∀ β (hβ : β ∈ ch.S.supp t (ch.Phi a)), IsCosetExpansion ch.S.toGridChoice t (ch.Phi a) β
       (expDepth ch.S.toGridChoice t (ch.Phi a) β) (τf β) := fun β hβ => by
-    simp only [τf, dif_pos hβ]; exact (hex β hβ).choose_spec
+    simp only [τf, dite_eq_left hβ]; exact (hex β hβ).choose_spec
   show ch.S.sAA * ch.S.vCore t (ch.Phi a) (psiC (ch.Psi a)) (ch.S.formC t (R.jX t x)) ∈ D.what₂.embLL.fieldRange
   refine mul_mem (sAA_mem ch hK) ?_
   rw [h.vCore_eq τf fun β hβ => (hτf β hβ).2.1]
@@ -840,8 +840,8 @@ theorem vK_mem (ch : Choice R) (large₂ : SizeData₂ D) (F : Face D A) (CF b :
   have hβ : β ∈ ch.S.supp t (ch.Phi a) := (Set.Finite.mem_toFinset _).1 hβ'
   refine mul_mem (prod_mem fun w _ => SubfieldClass.ratCast_mem _ _) ?_
   unfold GridChoice.classSum
-  haveI := h.cls β
-  haveI := Fintype.ofFinite (ch.S.Classes t (ch.Phi a) β)
+  have := h.cls β
+  have := Fintype.ofFinite (ch.S.Classes t (ch.Phi a) β)
   rw [finsum_eq_sum_of_fintype]
   refine sum_mem fun c _ => mul_mem ?_ ?_
   · unfold GridChoice.invGam
@@ -1037,7 +1037,7 @@ theorem small_convolution_exists_integrable_translates : _root_.GlobalTheory.Fun
           rw [← mul_assoc]
           exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ h3 h4 k) (mul_nonneg (abs_nonneg C₀) (abs_nonneg C))
   have hWl := (hM.vtx (.grid i j) ⟨i.2.le, j.2.le⟩).haar_fund
-  haveI : IsFiniteMeasure ((M.ν (.grid i j)).restrict (M.fd (.grid i j))) :=
+  have : IsFiniteMeasure ((M.ν (.grid i j)).restrict (M.fd (.grid i j))) :=
     isFiniteMeasure_restrict.2 (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol _ _ _ hWl.1 hWl.2).ne
   have hcont := GlobalTheory.SmallRoute.continuous_translates_kerSmall hL ch.W ch.S.B ch.rm t i j Θ Θ' hΘ g₁ z
   exact ⟨z, hz, Integrable.of_bound ((hcont.comp (continuous_const.prodMk continuous_id)).aestronglyMeasurable) _

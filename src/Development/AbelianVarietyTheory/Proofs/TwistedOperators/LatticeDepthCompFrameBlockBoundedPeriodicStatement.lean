@@ -69,7 +69,7 @@ theorem exists_unit_bound {ι : Type} [Fintype ι] (f : ι → k) :
     ∃ R : kˣ, ∀ i, valuation k (f i) ≤ valuation k (R : k) := by
   classical
   let γ : ValueGroupWithZero k := ∏ i, max 1 (valuation k (f i))
-  have h1 : 1 ≤ γ := Finset.one_le_prod' (fun i _ => le_max_left _ _)
+  have h1 : 1 ≤ γ := Finset.one_le_prod (fun i _ => le_max_left _ _)
   obtain ⟨x, hx⟩ := ValuativeRel.valuation_surjective γ
   have hx0 : x ≠ 0 := by
     rintro rfl
@@ -78,7 +78,7 @@ theorem exists_unit_bound {ι : Type} [Fintype ι] (f : ι → k) :
   refine ⟨Units.mk0 x hx0, fun i => ?_⟩
   rw [Units.val_mk0, hx]
   exact (le_max_right _ _).trans
-    (Finset.single_le_prod' (f := fun j => max 1 (valuation k (f j))) (fun j _ => le_max_left _ _) (Finset.mem_univ i))
+    (Finset.single_le_prod (f := fun j => max 1 (valuation k (f j))) (fun j _ => le_max_left _ _) (Finset.mem_univ i))
 
 theorem frameMatrixSecondColumnBlock_mul_transpose {A A' D : Type} [Fintype A] [Fintype A'] [DecidableEq A'] [Fintype D] [DecidableEq D]
     (σ : A ⊕ A' ≃ D) : Y0 k σ * (Y0 k σ)ᵀ = 1 := by
@@ -126,7 +126,7 @@ theorem latticeDepth_comp_frameBlock_bounded_periodic : ∀ {k : Type} [Field k]
     rw [Matrix.mul_apply]
     refine Valuation.map_sum_le _ fun l _ => ?_
     rw [map_mul]
-    have hpos : 0 < valuation k ((((ϖ ^ e) * c m : kˣ)) : k) := zero_lt_iff.2 (by simp)
+    have hpos : 0 < valuation k ((((ϖ ^ e) * c m : kˣ)) : k) := pos_iff_ne_zero.2 (by simp)
     have h1 := hR' (l, m)
     simp only at h1
     rw [map_div₀, div_le_iff₀ hpos] at h1

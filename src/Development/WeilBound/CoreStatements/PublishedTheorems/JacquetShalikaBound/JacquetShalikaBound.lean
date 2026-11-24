@@ -119,10 +119,10 @@ theorem superdiagSum_cM {k : ℕ} (hk : k + 1 < n) (x : Fin (k + 1) → F) :
     Whittaker.superdiagSum (cM n k x) = x (Fin.last k) := by
   unfold Whittaker.superdiagSum
   rw [Finset.sum_eq_single (⟨k, by omega⟩ : Fin n), Finset.sum_eq_single (⟨k + 1, hk⟩ : Fin n)]
-  · rw [if_pos rfl, cM_eq_of x rfl (by simp)]
+  · rw [ite_eq_left rfl, cM_eq_of x rfl (by simp)]
     rfl
   · intro j _ hj
-    rw [if_neg]
+    rw [ite_eq_right]
     intro e
     exact hj (Fin.ext (by simpa using e))
   · simp
@@ -302,7 +302,7 @@ theorem coeff_prod_one_sub {n : ℕ} (β : Fin n → ℂ) (r : ℕ) :
   rw [e, coeff_C_mul, coeff_X_pow]
   by_cases h : r = t.card
   · subst h; simp
-  · rw [if_neg h, if_neg (fun h' => h h'.symm)]; simp
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h h'.symm)]; simp
 
 theorem mk_mul_prod_eq_one {n : ℕ} (β : Fin n → ℂ) (g : ℕ → ℂ) (h0 : g 0 = 1)
     (hrec : ∀ j : ℕ, 1 ≤ j → ∑ r ∈ Finset.range (j + 1),
@@ -313,7 +313,7 @@ theorem mk_mul_prod_eq_one {n : ℕ} (β : Fin n → ℂ) (g : ℕ → ℂ) (h0 
   simp only [coeff_prod_one_sub, coeff_mk]
   rcases Nat.eq_zero_or_pos j with rfl | hj
   · simp [h0, coeff_one]
-  · rw [hrec j hj, coeff_one, if_neg (by omega)]
+  · rw [hrec j hj, coeff_one, ite_eq_right (by omega)]
 
 end GlobalTheory.CompanionTheory.SatakeBound
 
@@ -391,7 +391,7 @@ theorem column_average_hermitian_positive : L0 → L3 → ColumnsMirabolic → F
 
   have hnegS : ∀ (M : ℕ), ∀ x ∈ PositivityTheory.JacquetShalikaLocal.lat F (k + 1) M, -x ∈ PositivityTheory.JacquetShalikaLocal.lat F (k + 1) M := by
     intro M x hx
-    simp only [PositivityTheory.JacquetShalikaLocal.lat, Set.mem_setOf_eq, Pi.neg_apply, mul_neg] at hx ⊢
+    simp only [PositivityTheory.JacquetShalikaLocal.lat, Set.mem_ofPred_eq, Pi.neg_apply, mul_neg] at hx ⊢
     exact fun i => neg_mem (hx i)
   have hvol : ∀ M : ℕ, 0 < (Measure.pi fun _ => μ).real (PositivityTheory.JacquetShalikaLocal.lat F (k + 1) M) :=
     fun M => (hlatM M).2.2.2
@@ -554,7 +554,7 @@ variable [MeasurableSpace F] [BorelSpace F] (μ : Measure F) [μ.IsAddHaarMeasur
 
 theorem lat_measure_pos (m M : ℕ) :
     0 < (Measure.pi fun _ : Fin m => μ).real (lat F m M) := by
-  haveI := Measures.sigmaCompactSpace F
+  have := Measures.sigmaCompactSpace F
   have h0 := (isOpen_lat (F := F) m M).measure_ne_zero (Measure.pi fun _ : Fin m => μ)
     ⟨0, zero_mem_lat m M⟩
   have h1 := (isCompact_lat (F := F) m M).measure_lt_top (μ := Measure.pi fun _ : Fin m => μ)
@@ -565,8 +565,8 @@ theorem setIntegral_image_mulVec {m : ℕ} (g : GL (Fin m) F) (A : Set (Fin m �
     ∫ x in (fun x => (g : Matrix (Fin m) (Fin m) F) *ᵥ x) '' A, f x ∂(Measure.pi fun _ => μ) =
       ((Measures.modulus (g : Matrix (Fin m) (Fin m) F).det : ℝ) : ℂ) *
         ∫ x in A, f ((g : Matrix (Fin m) (Fin m) F) *ᵥ x) ∂(Measure.pi fun _ => μ) := by
-  haveI := Measures.sigmaCompactSpace F
-  haveI := Measures.metrizableSpace F
+  have := Measures.sigmaCompactSpace F
+  have := Measures.metrizableSpace F
   set ν : Measure (Fin m → F) := Measure.pi fun _ => μ with hν
   set L := Measures.glEquiv g with hL
   let e : (Fin m → F) ≃ᵐ (Fin m → F) := (Homeomorph.smul L).toMeasurableEquiv
@@ -578,7 +578,7 @@ theorem setIntegral_image_mulVec {m : ℕ} (g : GL (Fin m) F) (A : Set (Fin m �
   have hmap : ν.map e.symm = (Measures.modulus (g : Matrix (Fin m) (Fin m) F).det) • ν := by
     refine Measure.ext fun s _ => ?_
     have hs : e.symm ⁻¹' s = L • s := (e.image_eq_preimage_symm s).symm
-    rw [e.symm.map_apply, hs, ← distribHaarChar_mul ν L s, hc, Measure.smul_apply,
+    rw [e.symm.map_apply, hs, ← distribHaarChar_mul ν L s, hc, smul_apply,
       ENNReal.smul_def, smul_eq_mul]
   have himg : (fun x => (g : Matrix (Fin m) (Fin m) F) *ᵥ x) '' A = e.symm ⁻¹' A := by
     rw [← e.image_eq_preimage_symm]
@@ -1032,8 +1032,8 @@ theorem jacquetShalikaBound_of_steps : ParameterUpperBound → liftZP_unit → P
   induction π using Quotient.inductionOn with | _ π => ?_
   set z := L.get with hz
   let F := w.adicCompletion E
-  letI : MeasurableSpace F := borel F
-  haveI : BorelSpace F := ⟨rfl⟩
+  let : MeasurableSpace F := borel F
+  have : BorelSpace F := ⟨rfl⟩
   have hB' : HasSatGL w (π.locRep w) (Finset.univ.val.map z) := by rw [← hBz]; exact hB
   obtain ⟨ψ, hψ, l, hl0, hW⟩ := g4 E L.length ha π w
   obtain ⟨v, g, hv, hlv⟩ := g2 E L.length π w _ hB' l hl0
@@ -1266,10 +1266,10 @@ theorem div_col {n k c : ℕ} {y : Fin (k + 1) → F}
   by_cases h : (j : ℕ) = k + 1 ∧ (i : ℕ) < k + 1
   · obtain ⟨t, ht, e'⟩ := hy ⟨i, h.2⟩
     refine ⟨t, ht, ?_⟩
-    simp only [cM, Matrix.of_apply, dif_pos h]
+    simp only [cM, Matrix.of_apply, dite_eq_left h]
     exact e'
   · refine ⟨0, Subring.zero_mem _, ?_⟩
-    simp only [cM, Matrix.of_apply, dif_neg h, mul_zero]
+    simp only [cM, Matrix.of_apply, dite_eq_right h, mul_zero]
 
 theorem stability_coefficients : L0 → L2 → ColumnsMirabolic → FormCoefficientStability := by
   intro h0 h2 h3 F _ _ _ _ _ _ μ _ ψ hψ n V _ _ ρ hρ l k B hk hI u u'
@@ -1379,7 +1379,7 @@ theorem orthogonality_of_lattice_character : L0 → L1 := by
   have hL := hL0 F μ ψ hψ
   dsimp only at hL ⊢
   by_cases hy : ∀ i, y i ∈ (valuation F).integer
-  · rw [if_pos hy]
+  · rw [ite_eq_left hy]
     have hmeas : MeasurableSet (lat F m 0) := ((hL.2 m).1 0).2.2.1
     have h1 : Set.EqOn (fun ξ : Fin m → F => ψ (ξ ⬝ᵥ y)) (fun _ => (1 : ℂ)) (lat F m 0) := by
       intro ξ hξ
@@ -1389,7 +1389,7 @@ theorem orthogonality_of_lattice_character : L0 → L1 := by
       exact sum_mem fun j _ => mul_mem (hξ j) (hy j)
     rw [setIntegral_congr_fun hmeas h1, setIntegral_const]
     simp
-  · rw [if_neg hy]
+  · rw [ite_eq_right hy]
     simp only [not_forall] at hy
     obtain ⟨i, hi⟩ := hy
     obtain ⟨t, ht, hne⟩ := exists_integer_psi_mul_ne_one hψ hi
@@ -1443,14 +1443,14 @@ namespace GlobalTheory.CompanionTheory.SatakeStable
 
 theorem secondCountable_field (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] : SecondCountableTopology k := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := ValuativeRel.IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := ValuativeRel.IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
   open scoped Valued in
-  haveI : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
+  have : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
   exact secondCountable_of_proper
 
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F]
@@ -1515,7 +1515,7 @@ theorem exists_char (hψ : Continuous ψ) (hlat : ∀ M, IsCompact (lat F (k + 1
     (hcont : ∀ u u', Continuous (fun x : Fin (k + 1) → F => B u' (ρ (col n k x) u)))
     (hst : ∀ u u', ∃ M₀ : ℕ, ∀ M, M₀ ≤ M → avg μ ψ ρ k B M u' u = avg μ ψ ρ k B M₀ u' u) :
     ∃ B', Char μ ρ ψ k B B' := by
-  haveI := secondCountable_field F
+  have := secondCountable_field F
   choose m hm using hst
   have hint : ∀ M u' u, IntegrableOn
       (fun x : Fin (k + 1) → F => ψ (-x (Fin.last k)) * B u' (ρ (col n k x) u)) (lat F (k + 1) M)
@@ -1759,8 +1759,8 @@ theorem exists_weak_integral {X V : Type} [TopologicalSpace X] [T2Space X] [Meas
     ∃ w : V, ∀ l : V →ₗ[ℂ] ℂ, l w = ∫ x in Λ, φ x * l (f x) ∂ν := by
   classical
   have hS : (f '' Λ).Finite := by
-    haveI : CompactSpace Λ := isCompact_iff_compactSpace.mp hc
-    have h := (hf.comp_continuous (continuous_subtype_val (p := (· ∈ Λ)))).range_finite
+    have : CompactSpace Λ := isCompact_iff_compactSpace.mp hc
+    have h := (hf.comp_continuous (continuous_subtypeVal (p := (· ∈ Λ)))).range_finite
     rwa [Set.range_comp, Subtype.range_coe] at h
   have hmeas : ∀ v, MeasurableSet (Λ ∩ f ⁻¹' {v}) := fun v =>
     hΛ.inter (hf.isOpen_fiber v).measurableSet

@@ -153,7 +153,7 @@ theorem psi_half_trace {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) (v : HeightOn
     ψ (algebraMap F (AF F) (1 / 2) * Algebra.trace (AF F) (AF F ⊗[F] E)
         (∑ i, ∑ j, x i j * inclR (AF F) (b j i))) =
       psiV F ψ v (∑ i, ∑ j, splitProj τ (compFin F E v (x i j)) * τ (b j i)) := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hcm.2.2.1
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hcm.2.2.1
   set z : AF F ⊗[F] E := ∑ i, ∑ j, x i j * inclR (AF F) (b j i) with hz
   set a : Fv F v := ∑ i, ∑ j, splitProj τ (compFin F E v (x i j)) * τ (b j i) with ha
   have hzi : ∀ w, compInf F E w z = 0 := fun w => by
@@ -744,8 +744,8 @@ theorem upperParabolic_height_of_split (h : IsCMExt F E σ) (hQ : Q = GlobalTheo
     have : splitProj (τ.comp σ) A.det = (A.map (splitProj (τ.comp σ))).det :=
       RingHom.map_det (splitProj (τ.comp σ) : Fv F v ⊗[F] E →+* Fv F v) A
     rw [this, ← Matrix.det_transpose, ← Matrix.det_mul, hd', Matrix.det_one]
-  rw [absEv_apply, GlobalTheory.LocIntw.coe_aUp, hA, GlobalTheory.SplitInterDet.norm_eq_split h τ, nnnorm_mul, d1,
-    eq_inv_of_mul_eq_one_left d2, nnnorm_inv, div_eq_mul_inv]
+  rw [absEv_apply, GlobalTheory.LocIntw.coe_aUp, hA, GlobalTheory.SplitInterDet.norm_eq_split h τ, nnNorm_mul, d1,
+    eq_inv_of_mul_eq_one_left d2, nnNorm_inv, div_eq_mul_inv]
 
 end General
 
@@ -827,7 +827,7 @@ theorem nvOK_nvL : ∀ (D : D7) (v : Pl D) (ϖ : Ov D v), Irreducible ϖ → ∀
       rw [map_mul, map_mul, GlobalTheory.SplitDetValue.valued_unit v u, GlobalTheory.SplitDetValue.valued_irreducible v hϖ,
         one_mul] <;> rfl
     have h2 := GlobalTheory.norm_uniformiser_eq_inv_absNorm D.host.F v _ hu2
-    rw [map_mul, nnnorm_mul, hn] at h2
+    rw [map_mul, nnNorm_mul, hn] at h2
     exact (mul_eq_right₀ hc).mp h2
   · show ‖(w : Lv D v)‖₊ = _
     rw [hw, hn, Fintype.card_eq_nat_card, GlobalTheory.SplitDetValue.card_residue_eq]
@@ -1079,7 +1079,7 @@ theorem continuous_entry (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.h
     Continuous fun k : KAt D n v => (thU D n v τ (proj D.sp.cm.sig (Jst D n) v k)).1 i j := by
   have h1 : Continuous fun k : KAt D n v =>
       splitHom D.sp.cm.sig (Jst D n) τ (proj D.sp.cm.sig (Jst D n) v k) :=
-    (continuous_splitHom τ).comp ((continuous_proj _ _ v).comp continuous_subtype_val)
+    (continuous_splitHom τ).comp ((continuous_proj _ _ v).comp continuous_subtypeVal)
   have h2 : Continuous fun k : KAt D n v =>
       (splitHom D.sp.cm.sig (Jst D n) τ (proj D.sp.cm.sig (Jst D n) v k)).1 :=
     Units.continuous_val.comp h1
@@ -1126,7 +1126,7 @@ theorem exists_rho (D : D7) (n : ℕ) (v : Pl D) (τ : D.host.E →ₐ[D.host.F]
           · rw [Matrix.one_apply_ne h, Matrix.one_apply_ne h, map_zero]
         rw [hρ', map_sub, h1]
         rfl
-      simp only [Set.mem_preimage, Set.mem_iInter, SetLike.mem_coe, mem_level_square_congruence_iff, he, hUdef, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_iInter, SetLike.mem_coe, mem_level_square_congruence_iff, he, hUdef, Set.mem_ofPred_eq]
       constructor
       · exact fun h i j => ⟨_, h i j, rfl⟩
       · intro h i j

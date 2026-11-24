@@ -70,7 +70,7 @@ theorem mem_unipRad_iff_radical {α : Type} {m : α → Type} [Fintype α] [Line
     (he : ∀ i j : Fin r, blk e i < blk e j ↔ (i : ℕ) < a ∧ a ≤ (j : ℕ)) {g : GL (Fin r) R} :
     g ∈ unipRad R e ↔ g ∈ radical R r a := by
   rw [GlobalTheory.RadRev.mem_unipRad_entries]
-  simp only [radical, Set.mem_setOf_eq, ← he]
+  simp only [radical, mem_ofPred_eq, ← he]
   constructor
   · intro h i j hne
     by_contra hc
@@ -140,7 +140,7 @@ theorem isClosed_radical (k : Type) [Field k] [TopologicalSpace k] [T2Space k] (
   have : radical k r a = ⋂ i : Fin r, ⋂ j : Fin r, {u : GL (Fin r) k |
       ((i : ℕ) < a ∧ a ≤ (j : ℕ)) ∨ (u : Matrix (Fin r) (Fin r) k) i j = (1 : Matrix (Fin r) (Fin r) k) i j} := by
     ext u
-    simp only [radical, Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [radical, mem_ofPred_eq, Set.mem_iInter]
     refine forall_congr' fun i => forall_congr' fun j => ?_
     tauto
   rw [this]
@@ -163,7 +163,7 @@ theorem isIrreducible_comp {G Q W : Type} [Group G] [Group Q] [AddCommGroup W] [
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_rel_iff' := Iff.rfl }
-  haveI : IsSimpleOrder (Subrepresentation ρ) := h
+  have : IsSimpleOrder (Subrepresentation ρ) := h
   exact e.isSimpleOrder
 
 theorem conv_map {G H : Type} [Group G] [Group H] [TopologicalSpace G] [TopologicalSpace H]
@@ -186,9 +186,9 @@ theorem integer_eq :
     letI := GlobalTheory.LocalData.complRel v
     haveI := GlobalTheory.LocalData.isLocalField v
     𝒪[Fv F v] = (v.adicCompletionIntegers F).toSubring := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
-  haveI : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible :=
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
+  have : (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := isEquiv (valuation (Fv F v)) (Valued.v : Valuation (Fv F v) (WithZero (Multiplicative ℤ)))
   ext y
@@ -219,8 +219,8 @@ theorem map_redK (x : GLoc σ J v) (hx : x ∈ stabLoc σ J L v) (hK) :
     haveI := GlobalTheory.LocalData.isLocalField v
     Matrix.GeneralLinearGroup.map (resEquiv v).toRingHom (GlobalTheory.LocGL.redK (Fv F v) (Fin n) ⟨s.equiv x, hK⟩) =
       s.red ⟨x, hx⟩ := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
   ext i j
   rw [Matrix.GeneralLinearGroup.map_apply, GlobalTheory.LocGL.redK_apply]
   change resEquiv v _ = ((splitRed s.cm s.herm s.selfDual s.isBasis ⟨x, hx⟩ : GL (Fin n) (ResF v)) :
@@ -242,10 +242,10 @@ theorem idemGL_eq {W : Type} [AddCommGroup W] [Module ℂ W] (μ : Measure (GLoc
     letI : MeasurableSpace (GL (Fin n) (Fv F v)) := borel _
     idemGL (Fv F v) (μ.map s.equiv) (τ.comp (Matrix.GeneralLinearGroup.map (resEquiv v).toRingHom)) =
       fun y => s.idem μ τ (s.equiv.symm y) := by
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
-  letI : MeasurableSpace (GL (Fin n) (Fv F v)) := borel _
-  haveI : BorelSpace (GL (Fin n) (Fv F v)) := ⟨rfl⟩
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
+  let : MeasurableSpace (GL (Fin n) (Fv F v)) := borel _
+  have : BorelSpace (GL (Fin n) (Fv F v)) := ⟨rfl⟩
   funext y
   obtain ⟨x, rfl⟩ := s.equiv.surjective y
   simp only [ContinuousMulEquiv.symm_apply_apply]
@@ -274,10 +274,10 @@ end Local
 
 theorem unipIntegral_vanish_splitAt : GlobalTheory.IndefiniteRowSideFullHecke.StandardMaximalParabolic.TypeConstTermVanish → ∀ (D : D7) (V : HSp D) (v : HeightOneSpectrum (𝓞 D.host.F)) (s : SplitAt D.sp.cm.sig V.gram (frameLat V) v) (a : ℕ), 0 < a → a < V.rank → ∀ (W : Type) [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] (τ : Representation ℂ (GL (Fin V.rank) (ResF v)) W), τ.IsIrreducible → GlobalTheory.IndefiniteRowSideFullHecke.RadicalNoFixedVectors.NoFixed τ (radical (ResF v) V.rank a) → ∀ (μ : Measure (GLoc D.sp.cm.sig V.gram v)) [μ.IsHaarMeasure], ∀ φ ∈ CcLoc D.sp.cm.sig V.gram v, ∀ f : GLoc D.sp.cm.sig V.gram v → ℂ, (f = conv μ (s.idem μ τ) φ ∨ f = conv μ φ (s.idem μ τ)) → ∀ g : GL (Fin V.rank) (Fv D.host.F v), ∃ H : Subgroup (GLoc D.sp.cm.sig V.gram v), IsClosed (H : Set (GLoc D.sp.cm.sig V.gram v)) ∧ (∀ x, x ∈ H ↔ g⁻¹ * s.equiv x * g ∈ radical (Fv D.host.F v) V.rank a) ∧ ∃ ν : Measure H, ν.IsHaarMeasure ∧ ∀ x y, ∫ u : H, f (x * u * y) ∂ν = 0 := by
   intro HT D V v s a ha har W _ _ _ τ hτ hNF μ _ φ hφ f hf g
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
-  letI : MeasurableSpace (GL (Fin V.rank) (Fv D.host.F v)) := borel _
-  haveI : BorelSpace (GL (Fin V.rank) (Fv D.host.F v)) := ⟨rfl⟩
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
+  let : MeasurableSpace (GL (Fin V.rank) (Fv D.host.F v)) := borel _
+  have : BorelSpace (GL (Fin V.rank) (Fv D.host.F v)) := ⟨rfl⟩
   obtain ⟨b, hb⟩ : ∃ b, a + b = V.rank := ⟨V.rank - a, by omega⟩
   have hb0 : 0 < b := by omega
   have h' : ∑ c, ![a, b] c = V.rank := by simpa using hb
@@ -297,7 +297,7 @@ theorem unipIntegral_vanish_splitAt : GlobalTheory.IndefiniteRowSideFullHecke.St
       at this
     rwa [e] at this
   let μ' : Measure (GL (Fin V.rank) (Fv D.host.F v)) := μ.map s.equiv
-  haveI : μ'.IsHaarMeasure := s.equiv.isHaarMeasure_map μ
+  have : μ'.IsHaarMeasure := s.equiv.isHaarMeasure_map μ
   let φ' := fun y => φ (s.equiv.symm y)
   have hφ' : φ' ∈ SB (GL (Fin V.rank) (Fv D.host.F v)) :=
     ⟨hφ.1.comp_continuous s.equiv.symm.continuous, hφ.2.comp_homeomorph s.equiv.symm.toHomeomorph⟩
@@ -324,7 +324,7 @@ theorem unipIntegral_vanish_splitAt : GlobalTheory.IndefiniteRowSideFullHecke.St
     rw [this]
     exact (isClosed_radical _ _ _).preimage ((continuous_const.mul s.equiv.continuous).mul continuous_const)
   refine ⟨H, hHc, hmem, ?_⟩
-  haveI : LocallyCompactSpace H := hHc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace H := hHc.isClosedEmbedding_subtypeVal.locallyCompactSpace
   refine ⟨Measure.haar, inferInstance, fun x y => ?_⟩
   let Φ : H ≃ₜ* N :=
     { toFun := fun u => ⟨s.equiv (u : GLoc D.sp.cm.sig V.gram v), u.2⟩
@@ -332,9 +332,9 @@ theorem unipIntegral_vanish_splitAt : GlobalTheory.IndefiniteRowSideFullHecke.St
       left_inv := fun u => Subtype.ext (s.equiv.symm_apply_apply (u : GLoc D.sp.cm.sig V.gram v))
       right_inv := fun n => Subtype.ext (s.equiv.apply_symm_apply n)
       map_mul' := fun u u' => Subtype.ext (by simp)
-      continuous_toFun := (s.equiv.continuous.comp continuous_subtype_val).subtype_mk _
-      continuous_invFun := (s.equiv.symm.continuous.comp continuous_subtype_val).subtype_mk _ }
-  haveI : ((Measure.haar : Measure H).map Φ).IsHaarMeasure := Φ.isHaarMeasure_map _
+      continuous_toFun := (s.equiv.continuous.comp continuous_subtypeVal).subtype_mk _
+      continuous_invFun := (s.equiv.symm.continuous.comp continuous_subtypeVal).subtype_mk _ }
+  have : ((Measure.haar : Measure H).map Φ).IsHaarMeasure := Φ.isHaarMeasure_map _
   have h0 := (key ((Measure.haar : Measure H).map Φ) (s.equiv x) (s.equiv y)).2
   have hme : MeasurableEmbedding (Φ : H → N) := Φ.toHomeomorph.isClosedEmbedding.measurableEmbedding
   rw [hme.integral_map] at h0

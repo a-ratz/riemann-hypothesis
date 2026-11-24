@@ -69,7 +69,7 @@ private theorem perMean_key {A : Type} [AddCommGroup A] [TopologicalSpace A] [Is
     simpa using this
   have h0 : μ D ≠ 0 := hD.measure_ne_zero (NeZero.ne μ)
   have hc : (c : ENNReal) = 1 := by
-    rw [← e.map_apply, he, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hm
+    rw [← e.map_apply, he, smul_apply, ENNReal.smul_def, smul_eq_mul] at hm
     exact (ENNReal.mul_left_inj h0 hfin).1 (by rw [hm, one_mul])
   have hc' : c = 1 := by exact_mod_cast hc
   rw [hc', one_smul] at he
@@ -98,7 +98,7 @@ theorem UpperTheory.periodic_integral_fundamentalDomain_invariant :
       exact map_add_right_eq_self μ y
     · intro g x
       exact add_assoc _ _ _
-  · haveI : (μ.map e).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map μ e
+  · have : (μ.map e).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map μ e
     refine perMean_key Γ μ D hD hfin e.toHomeomorph.toMeasurableEquiv _
       (Measure.isAddLeftInvariant_eq_smul (μ.map e) μ)
       (fun g => ⟨e.symm g, (he _).1 (by simpa using g.2)⟩) ⟨fun a b h => ?_, fun b => ⟨⟨e b, (he _).2 b.2⟩, ?_⟩⟩ ?_ f hf

@@ -230,9 +230,9 @@ theorem integrable_inner_of_memLp {α E : Type*} [MeasurableSpace α] {μ : Meas
 
 private theorem add_mem_sm {k r : ℕ} (R : BranchingSupport.Rep k r) {v w : R.H} (hv : v ∈ R.sm) (hw : w ∈ R.sm) :
     v + w ∈ R.sm := by
-  simp only [BranchingSupport.Rep.sm, PI.UpqRep.smoothVecs, Set.mem_setOf_eq, PI.UpqRep.IsSmoothVec] at hv hw ⊢
-  letI : NormedAddCommGroup (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedSpace
+  simp only [BranchingSupport.Rep.sm, PI.UpqRep.smoothVecs, Set.mem_ofPred_eq, PI.UpqRep.IsSmoothVec] at hv hw ⊢
+  let : NormedAddCommGroup (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedSpace
   intro g₀ h₀
   obtain ⟨U1, F1, hU1, h1, hF1, e1⟩ := hv g₀ h₀
   obtain ⟨U2, F2, hU2, h2, hF2, e2⟩ := hw g₀ h₀
@@ -244,9 +244,9 @@ private theorem add_mem_sm {k r : ℕ} (R : BranchingSupport.Rep k r) {v w : R.H
 
 private theorem smul_mem_sm' {k r : ℕ} (R : BranchingSupport.Rep k r) (c : ℂ) {v : R.H} (hv : v ∈ R.sm) :
     c • v ∈ R.sm := by
-  simp only [BranchingSupport.Rep.sm, PI.UpqRep.smoothVecs, Set.mem_setOf_eq, PI.UpqRep.IsSmoothVec] at hv ⊢
-  letI : NormedAddCommGroup (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedSpace
+  simp only [BranchingSupport.Rep.sm, PI.UpqRep.smoothVecs, Set.mem_ofPred_eq, PI.UpqRep.IsSmoothVec] at hv ⊢
+  let : NormedAddCommGroup (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedSpace
   intro g₀ h₀
   obtain ⟨U1, F1, hU1, h1, hF1, e1⟩ := hv g₀ h₀
   refine ⟨U1, fun x => c • F1 x, hU1, h1, hF1.const_smul c, fun g hg hgH => ?_⟩
@@ -255,9 +255,9 @@ private theorem smul_mem_sm' {k r : ℕ} (R : BranchingSupport.Rep k r) (c : ℂ
   exact congrArg (c • ·) (e1 g hg hgH)
 
 private theorem zero_mem_sm {k r : ℕ} (R : BranchingSupport.Rep k r) : (0 : R.H) ∈ R.sm := by
-  simp only [BranchingSupport.Rep.sm, PI.UpqRep.smoothVecs, Set.mem_setOf_eq, PI.UpqRep.IsSmoothVec]
-  letI : NormedAddCommGroup (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedSpace
+  simp only [BranchingSupport.Rep.sm, PI.UpqRep.smoothVecs, Set.mem_ofPred_eq, PI.UpqRep.IsSmoothVec]
+  let : NormedAddCommGroup (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.normedSpace
   intro g₀ _
   refine ⟨Set.univ, fun _ => 0, isOpen_univ, Set.mem_univ _, contDiffOn_const, fun g _ _ => ?_⟩
   show (R.σ g) 0 = 0

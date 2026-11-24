@@ -69,7 +69,7 @@ private theorem rmul_rmul' {Ψ : Finset (E →+* ℂ)} (x a b : Frame Ψ r) :
 
 private theorem rmul_mem_bor_upper_bounds {Ψ : Finset (E →+* ℂ)} {a b : Frame Ψ r} (ha : a ∈ Bor Ψ r)
     (hb : b ∈ Bor Ψ r) : rmul a b ∈ Bor Ψ r := by
-  simp only [Bor, Set.mem_setOf_eq] at ha hb ⊢
+  simp only [Bor, Set.mem_ofPred_eq] at ha hb ⊢
   intro τ
   obtain ⟨ha1, ha2⟩ := ha τ
   obtain ⟨hb1, hb2⟩ := hb τ
@@ -86,13 +86,13 @@ private theorem rmul_mem_bor_upper_bounds {Ψ : Finset (E →+* ℂ)} {a b : Fra
 
 private theorem mem_bor_of_mat_eq_inv {Ψ : Finset (E →+* ℂ)} {b c : Frame Ψ r} (hb : b ∈ Bor Ψ r)
     (hc : ∀ τ, mat c τ = (mat b τ)⁻¹) : c ∈ Bor Ψ r := by
-  simp only [Bor, Set.mem_setOf_eq] at hb ⊢
+  simp only [Bor, Set.mem_ofPred_eq] at hb ⊢
   intro τ
   obtain ⟨hb1, hb2⟩ := hb τ
   have hB : Matrix.BlockTriangular (mat b τ) id := by
     intro i j h
     exact hb2 i j h
-  haveI : Invertible (mat b τ) := Matrix.invertibleOfIsUnitDet _ (isUnit_iff_ne_zero.mpr hb1)
+  have : Invertible (mat b τ) := Matrix.invertibleOfIsUnitDet _ (isUnit_iff_ne_zero.mpr hb1)
   have hI : Matrix.BlockTriangular (mat b τ)⁻¹ id := Matrix.blockTriangular_inv_of_blockTriangular hB
   refine ⟨?_, fun i j h => ?_⟩
   · rw [hc τ]
@@ -103,7 +103,7 @@ private theorem mem_bor_of_mat_eq_inv {Ψ : Finset (E →+* ℂ)} {b c : Frame �
 
 private theorem rmul_rmul_of_mat_eq_inv {Ψ : Finset (E →+* ℂ)} (x : Frame Ψ r) {b c : Frame Ψ r} (hb : b ∈ Bor Ψ r)
     (hc : ∀ τ, mat c τ = (mat b τ)⁻¹) : rmul (rmul x b) c = x := by
-  simp only [Bor, Set.mem_setOf_eq] at hb
+  simp only [Bor, Set.mem_ofPred_eq] at hb
   funext τ
   have h := isUnit_iff_ne_zero.mpr (hb τ).1
   show mat x τ * mat b τ * mat c τ = x τ

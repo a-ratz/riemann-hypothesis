@@ -373,7 +373,7 @@ theorem range_sup_range (K A B R : Type) [CommRing K] [CommRing A] [CommRing B] 
 
 theorem kaehler_pushout_split : ∀ (K A B R : Type) [CommRing K] [CommRing A] [CommRing B] [CommRing R] [Algebra K A] [Algebra K B] [Algebra K R] [Algebra A R] [Algebra B R] [IsScalarTower K A R] [IsScalarTower K B R] [Algebra.IsPushout K A B R], ∃ (r : Ω[R⁄K] →ₗ[R] R ⊗[A] Ω[A⁄K]) (π : Ω[R⁄K] →ₗ[R] R ⊗[B] Ω[B⁄K]), (∀ x, r (KaehlerDifferential.mapBaseChange K A R x) = x) ∧ (∀ y, r (KaehlerDifferential.mapBaseChange K B R y) = 0) ∧ (∀ x, π (KaehlerDifferential.mapBaseChange K A R x) = 0) ∧ (∀ y, π (KaehlerDifferential.mapBaseChange K B R y) = y) ∧ LinearMap.range (KaehlerDifferential.mapBaseChange K A R) ⊔ LinearMap.range (KaehlerDifferential.mapBaseChange K B R) = ⊤ := by
   intro K A B R _ _ _ _ _ _ _ _ _ _ _ h
-  haveI hs : Algebra.IsPushout K B A R := h.symm
+  have hs : Algebra.IsPushout K B A R := h.symm
   obtain ⟨r, hr₁, hr₂⟩ := exists_retraction K A B R
   obtain ⟨π, hπ₁, hπ₂⟩ := exists_retraction K B A R
   exact ⟨r, π, hr₁, hr₂, hπ₂, hπ₁, range_sup_range K A B R⟩

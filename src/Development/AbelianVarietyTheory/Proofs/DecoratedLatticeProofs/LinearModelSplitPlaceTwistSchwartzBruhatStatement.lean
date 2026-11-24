@@ -299,7 +299,7 @@ theorem fockPure_any {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {
       unfold aPlusAll
       exact GlobalTheory.FockPureTensor.isPure_aPlus hb hμ z _ _ _ _ _ h) hP (x := x) (by rw [h1]; exact hx)
     (fun τ => by rw [h1]; exact hx0 τ) Finset.univ
-  simp only [Finset.mem_univ, if_true] at key
+  simp only [Finset.mem_univ, ite_true] at key
   exact key
 
 theorem pureTensorO_eq_sum {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (S T : HSp D)
@@ -736,8 +736,8 @@ theorem ip_reidx [MeasurableSpace (Fv D.host.F v)] [BorelSpace (Fv D.host.F v)] 
     (hν : ν.IsAddHaarMeasure) (u u' : Matrix (Fin r ⊕ B) (Fin r ⊕ A) (Fv D.host.F v) → ℂ) :
     GlobalTheory.SplitWeil.ip ν (fun z : Matrix (Fin b) (Fin a) (Fv D.host.F v) => u (z.submatrix ε' ε))
       (fun z => u' (z.submatrix ε' ε)) = GlobalTheory.SplitWeil.ip ν u u' := by
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion D.host.F v
-  haveI : SigmaFinite ν := inferInstance
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion D.host.F v
+  have : SigmaFinite ν := inferInstance
   have h1 := measurePreserving_arrowCongr' (fun _ : Fin a => ν) (fun _ : Fin r ⊕ A => ν) ε.symm
     (MeasurableEquiv.refl (Fv D.host.F v)) (fun _ => MeasurePreserving.id ν)
   have h2 := measurePreserving_arrowCongr' (fun _ : Fin b => Measure.pi fun _ : Fin a => ν)

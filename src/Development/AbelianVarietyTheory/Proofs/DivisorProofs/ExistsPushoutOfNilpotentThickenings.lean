@@ -328,10 +328,10 @@ theorem isLocalization_away_eqLocus {A B C A' B' C' : Type*} [CommRing A] [CommR
     letI := φ.toAlgebra
     IsLocalization.Away x
       (RingHom.eqLocus (f'.comp (RingHom.fst B' C')) (g'.comp (RingHom.snd B' C'))) := by
-  letI := ρB.toAlgebra
-  letI := ρC.toAlgebra
-  letI := ρA.toAlgebra
-  letI := φ.toAlgebra
+  let := ρB.toAlgebra
+  let := ρC.toAlgebra
+  let := ρA.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨⟨b, c⟩, hx⟩ := x
   have hx' : f b = g c := hx
   have eB : ∀ y, f' (ρB y) = ρA (f y) := fun y ↦ RingHom.congr_fun hB y
@@ -543,8 +543,8 @@ theorem isOpenImmersion_specMap_of_thickening : ∀ (B₀ : Scheme.{0}) (𝒰 : 
       (_ : W = B₀.basicOpen ((p.app (Opposite.op U)).hom a)) (h : W ≤ U),
       IsOpenImmersion (Spec.map (𝒜.map (homOfLE h).op)) := by
     rintro U hU a W rfl h
-    letI := (𝒜.map (homOfLE h).op).hom.toAlgebra
-    haveI := hloc U hU a
+    let := (𝒜.map (homOfLE h).op).hom.toAlgebra
+    have := hloc U hU a
     exact IsOpenImmersion.of_isLocalization
       (S := 𝒜.obj (Opposite.op (B₀.basicOpen ((p.app (Opposite.op U)).hom a)))) a
   have hci : ∀ U ∈ 𝒰, IsClosedImmersion (toSpec p U) := fun U hU ↦
@@ -696,7 +696,7 @@ theorem res_surjective_nilpotent_ker : ∀ {Y₀ Y₁ : Scheme.{0}} (i : Y₀ �
   intro Y₀ Y₁ i _ _ hnil U hU
   have e := res_eq_app_comp i U
   set g := Y₀.presheaf.map (eqToHom (preimage_upOpen i U).symm).op with hg
-  haveI : IsIso g := by rw [hg]; infer_instance
+  have : IsIso g := by rw [hg]; infer_instance
   have hgb : Function.Bijective g.hom :=
     ConcreteCategory.bijective_of_isIso g
   rw [e]
@@ -754,7 +754,7 @@ theorem mem_upOpen_iff {Y₀ Y₁ : Scheme.{0}} (i : Y₀ ⟶ Y₁) [IsClosedImm
 set_option backward.isDefEq.respectTransparency false in
 theorem exists_pushout_data : ∀ (Y₀ Y₁ Y₂ : Scheme.{0}) (i₁ : Y₀ ⟶ Y₁) (i₂ : Y₀ ⟶ Y₂), IsClosedImmersion i₁ → IsClosedImmersion i₂ → Surjective i₁ → Surjective i₂ → (∀ U : Y₁.Opens, IsAffineOpen U → IsNilpotent (RingHom.ker (i₁.app U).hom)) → (∀ U : Y₂.Opens, IsAffineOpen U → IsNilpotent (RingHom.ker (i₂.app U).hom)) → ∃ (Y : Scheme.{0}) (j₁ : Y₁ ⟶ Y) (j₂ : Y₂ ⟶ Y) (hw : i₁ ≫ j₁ = i₂ ≫ j₂), IsClosedImmersion j₁ ∧ IsClosedImmersion j₂ ∧ Surjective j₁ ∧ Surjective j₂ ∧ ∃ 𝒱 : Set Y.Opens, TopologicalSpace.Opens.IsBasis 𝒱 ∧ ∀ V ∈ 𝒱, IsPullback (j₁.app V) (j₂.app V) (i₁.appLE (j₁ ⁻¹ᵁ V) ((i₁ ≫ j₁) ⁻¹ᵁ V) le_rfl) (i₂.appLE (j₂ ⁻¹ᵁ V) ((i₁ ≫ j₁) ⁻¹ᵁ V) (by rw [hw]; exact le_rfl)) := by
   intro Y₀ Y₁ Y₂ i₁ i₂ hc₁ hc₂ hs₁ hs₂ hn₁ hn₂
-  haveI := hc₁; haveI := hc₂; haveI := hs₁; haveI := hs₂
+  have := hc₁; have := hc₂; have := hs₁; have := hs₂
   have hR : ∀ U ∈ good i₁ i₂, _ := fun U (hU : U ∈ good i₁ i₂) ↦
     _root_.GlobalTheory.pullbackCone_fst_snd_ring_nilpotent (res i₁ U) (res i₂ U) (_root_.GlobalTheory.FerrandPush.res_surjective_nilpotent_ker i₁ hn₁ U hU.2.1).1 (_root_.GlobalTheory.FerrandPush.res_surjective_nilpotent_ker i₁ hn₁ U hU.2.1).2
       (_root_.GlobalTheory.FerrandPush.res_surjective_nilpotent_ker i₂ hn₂ U hU.2.2).1 (_root_.GlobalTheory.FerrandPush.res_surjective_nilpotent_ker i₂ hn₂ U hU.2.2).2
@@ -768,16 +768,16 @@ theorem exists_pushout_data : ∀ (Y₀ Y₁ Y₂ : Scheme.{0}) (i₁ : Y₀ ⟶
     exact ⟨_, _root_.GlobalTheory.FerrandPush.basicOpen_fibπ_mem_good i₁ i₂ U hU a, hxf, Y₀.basicOpen_le _, hf⟩
   have hopen := _root_.GlobalTheory.ThickGlue.isOpenImmersion_specMap_of_thickening Y₀ (good i₁ i₂) (fun U hU ↦ hU.1) (fib i₁ i₂) (fibπ i₁ i₂) hπ (_root_.GlobalTheory.FerrandPush.isLocalization_away_fib i₁ i₂)
   let F := ThickGlue.specDiagram (good i₁ i₂) (fib i₁ i₂)
-  haveI hF : ∀ {U V : good i₁ i₂} (f : U ⟶ V), IsOpenImmersion (F.map f) :=
+  have hF : ∀ {U V : good i₁ i₂} (f : U ⟶ V), IsOpenImmersion (F.map f) :=
     fun {U V} f ↦ hopen _ U.2 _ V.2 f.le
-  haveI : (F ⋙ Scheme.forget).IsLocallyDirected :=
+  have : (F ⋙ Scheme.forget).IsLocallyDirected :=
     _root_.GlobalTheory.ThickGlue.isLocallyDirected_of_basis (good i₁ i₂) (fun U hU V _ x hx hy ↦ hbas₀ U hU V x hx hy) F hF
       (fun U ↦ ThickGlue.toSpec (fibπ i₁ i₂) U.1)
       (fun U ↦ by
-        haveI := ThickGlue.isClosedImmersion_toSpec (fibπ i₁ i₂) U.2.1 (hπ U.1 U.2).1
+        have := ThickGlue.isClosedImmersion_toSpec (fibπ i₁ i₂) U.2.1 (hπ U.1 U.2).1
         exact (ThickGlue.toSpec _ U.1).isClosedEmbedding.injective)
       (fun U ↦ by
-        haveI := ThickGlue.surjective_toSpec (fibπ i₁ i₂) U.2.1 (hπ U.1 U.2).1 (hπ U.1 U.2).2
+        have := ThickGlue.surjective_toSpec (fibπ i₁ i₂) U.2.1 (hπ U.1 U.2).1 (hπ U.1 U.2).2
         exact (ThickGlue.toSpec _ U.1).surjective)
       (fun h ↦ ThickGlue.toSpec_naturality _ h)
   let e₁ : ∀ U : good i₁ i₂, (upOpen i₁ U.1).toScheme ⟶ F.obj U := fun U ↦
@@ -859,7 +859,7 @@ theorem exists_pushout_data : ∀ (Y₀ Y₁ Y₂ : Scheme.{0}) (i₁ : Y₀ ⟶
       exact hUO hx'
   · rintro _ ⟨U, rfl⟩
     have hle : ⊤ ≤ (colimit.ι F U) ⁻¹ᵁ (colimit.ι F U).opensRange := fun x _ ↦ ⟨x, rfl⟩
-    haveI hiso : IsIso ((colimit.ι F U).appLE (colimit.ι F U).opensRange ⊤ hle) := by
+    have hiso : IsIso ((colimit.ι F U).appLE (colimit.ι F U).opensRange ⊤ hle) := by
       have := (colimit.ι F U).isIso_app (colimit.ι F U).opensRange le_rfl
       have : IsIso (homOfLE hle) := homOfLE_isIso_of_eq _ (top_le_iff.mp hle).symm
       rw [Scheme.Hom.appLE]

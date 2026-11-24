@@ -87,7 +87,7 @@ variable [SigmaFinite μ]
 
 theorem integrable_prod (hf : Integrable f μ) (F : L2 Γ μ) {s : Set (Quot Γ)} (hs : quotMeasure Γ μ s ≠ ⊤) :
     Integrable (fun p : Quot Γ × G => f p.2 * F (rmul Γ p.2 p.1)) (((quotMeasure Γ μ).restrict s).prod μ) := by
-  haveI : IsFiniteMeasure ((quotMeasure Γ μ).restrict s) := isFiniteMeasure_restrict.2 hs
+  have : IsFiniteMeasure ((quotMeasure Γ μ).restrict s) := isFiniteMeasure_restrict.2 hs
   have hm : AEStronglyMeasurable (fun p : Quot Γ × G => f p.2 * F (rmul Γ p.2 p.1))
       (((quotMeasure Γ μ).restrict s).prod μ) :=
     hf.1.comp_snd.mul ((Lp.stronglyMeasurable F).comp_measurable measurable_rmul_uncurry).aestronglyMeasurable
@@ -101,16 +101,16 @@ theorem integrable_prod (hf : Integrable f μ) (F : L2 Γ μ) {s : Set (Quot Γ)
 
 theorem ae_integrable (hf : Integrable f μ) (F : L2 Γ μ) :
     ∀ᵐ q ∂quotMeasure Γ μ, Integrable (fun y => f y * F (rmul Γ y q)) μ := by
-  haveI : SigmaFinite (quotMeasure Γ μ) :=
+  have : SigmaFinite (quotMeasure Γ μ) :=
     SigmaFinite.of_map _ (measurePreserving_sec (Γ := Γ) (μ := μ)).measurable.aemeasurable
       (by rw [measurePreserving_sec.map_eq]; infer_instance)
   refine ae_of_forall_measure_lt_top_ae_restrict _ fun s _ hs => ?_
-  haveI : IsFiniteMeasure ((quotMeasure Γ μ).restrict s) := isFiniteMeasure_restrict.2 hs.ne
+  have : IsFiniteMeasure ((quotMeasure Γ μ).restrict s) := isFiniteMeasure_restrict.2 hs.ne
   exact (integrable_prod hf F hs.ne).prod_right_ae
 
 theorem coeFn_Rop [LocallyCompactSpace G] [IsFiniteMeasureOnCompacts μ] (hf : Integrable f μ) (F : L2 Γ μ) :
     Rop Γ μ f F =ᵐ[quotMeasure Γ μ] fun q => ∫ y, f y * F (rmul Γ y q) ∂μ := by
-  haveI : SigmaFinite (quotMeasure Γ μ) :=
+  have : SigmaFinite (quotMeasure Γ μ) :=
     SigmaFinite.of_map _ (measurePreserving_sec (Γ := Γ) (μ := μ)).measurable.aemeasurable
       (by rw [measurePreserving_sec.map_eq]; infer_instance)
   refine ae_eq_of_forall_setIntegral_eq_of_sigmaFinite

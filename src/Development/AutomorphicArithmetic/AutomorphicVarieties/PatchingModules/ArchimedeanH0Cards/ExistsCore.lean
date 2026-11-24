@@ -151,7 +151,7 @@ private theorem odd_kill {A : Type} [CommRing A] [IsDomain A] {n : ℕ} (a : ℕ
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro Z hZ
     have od : ∀ i j : Fin n, (((i : ℕ) < a) ↔ ((j : ℕ) < a)) → (Z - evP A n a Z) i j = 0 := fun i j e => by
-      rw [Matrix.sub_apply, localComponent_apply₂, if_pos e, sub_self]
+      rw [Matrix.sub_apply, localComponent_apply₂, ite_eq_left e, sub_self]
     have h1 : evP A n a Z = 0 := by
       ext i j
       by_cases e : ((i : ℕ) < a) ↔ ((j : ℕ) < a)
@@ -166,7 +166,7 @@ private theorem odd_kill {A : Type} [CommRing A] [IsDomain A] {n : ℕ} (a : ℕ
           by_cases e' : ((i : ℕ) < a) ↔ ((k : ℕ) < a)
           · rw [od k j (by tauto), mul_zero]
           · rw [ev i k e', zero_mul]
-      · rw [localComponent_apply₂, if_neg e]; rfl
+      · rw [localComponent_apply₂, ite_eq_right e]; rfl
     rw [hΦ, h1, sub_zero, add_zero, sub_eq_zero] at hZ
     rw [h1, sub_zero] at od
     exact odd_comm a S Z al hal hS ev od hZ
@@ -202,10 +202,10 @@ private theorem fix_count {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} (x :
     ∃ C : ℕ, ∀ e, Nat.card {Z : Od x.A (x.Am e) n x.a // x.ρX (x.Am e) σ * Z = Z * x.ρX (x.Am e) σ} ≤
       Nat.card x.K ^ C := by
   obtain ⟨d, hd, h⟩ := odd_kill x.a (mat x.ρ σ) al hal hS fun i j e => (x.blk σ i j).2 e
-  obtain ⟨s, hs⟩ := IsDiscreteValuationRing.associated_pow_irreducible hd (PowerSeries.X_irreducible (R := x.K))
+  obtain ⟨s, hs⟩ := IsDiscreteValuationRing.associated_pow_irreducible hd (PowerSeries.irreducible_X (R := x.K))
   refine ⟨s * (n * n), fun e => ?_⟩
-  haveI := (finAm l F n x e 0).1
-  haveI := (finAm l F n x s 0).1
+  have := (finAm l F n x e 0).1
+  have := (finAm l F n x s 0).1
   have h1 := tors_card (Ideal.span {x.t ^ e}) (x.t ^ s)
   rw [(finAm l F n x s 0).2.1] at h1
   obtain ⟨v, hv⟩ := hs
@@ -338,8 +338,8 @@ end Coc
 private theorem exists_core {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     (K P : Subgroup Γ) [P.Normal] (hK : IsOpen (K : Set Γ)) (hP : P ≤ K) :
     ∃ U : OpenNormalSubgroup Γ, P ≤ U.toSubgroup ∧ U.toSubgroup ≤ K := by
-  haveI : Finite (Γ ⧸ K) := Subgroup.quotient_finite_of_isOpen K hK
-  haveI : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (Γ ⧸ K) := Subgroup.quotient_finite_of_isOpen K hK
+  have : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hc : IsClosed (K.normalCore : Set Γ) := Subgroup.normalCore_isClosed K (K.isClosed_of_isOpen hK)
   have ho : IsOpen (K.normalCore : Set Γ) := Subgroup.isOpen_of_isClosed_of_finiteIndex _ hc
   exact ⟨{ toSubgroup := K.normalCore, isOpen' := ho, isNormal' := inferInstance },
@@ -363,7 +363,7 @@ private theorem rhoH_one (x : NP G0.frame n) (X : Type) [CommRing X] [Algebra x.
 private theorem ph_eq (T : TWGrp G0) (x : NP G0.frame n)
     (hPL : ∀ g : G0.G₀, (g : G0.Γ) ∈ PL l T.H.toSubgroup → x.ρ g = 1) (m : ℕ) :
     ∀ᶠ N in atTop, ∀ e ≤ m, ∀ j, x.ρX (x.Am e) ((T.h N).p₀ (T.ph N j)) = x.ρX (x.Am e) (T.sg j) := by
-  haveI := T.H.isNormal'
+  have := T.H.isNormal'
   obtain ⟨hn, -, hle, -⟩ := pl_props l G0.Γ T.H.toSubgroup T.H.toOpenSubgroup.isOpen
   have hI : IsLocalRing.maximalIdeal x.A ^ m = Ideal.span {x.t ^ m} := by
     rw [PowerSeries.maximalIdeal_eq_span_X, Ideal.span_singleton_pow]
@@ -376,7 +376,7 @@ private theorem ph_eq (T : TWGrp G0) (x : NP G0.frame n)
     filter_upwards [this] with g hg
     exact Matrix.ext hg
   have ho : IsOpen (((rhoH x (x.Am m)).ker.map G0.η.ker.subtype : Subgroup G0.Γ) : Set G0.Γ) :=
-    G0.η_open.isOpenMap_subtype_val _ (h0.isOpen_fiber 1)
+    G0.η_open.isOpenMap_subtypeVal _ (h0.isOpen_fiber 1)
   obtain ⟨V, h1, h2⟩ := exists_core _ (PL l T.H.toSubgroup) ho fun g hg =>
     ⟨⟨g, T.H_η g (hle hg)⟩, rhoH_one x _ _ (hPL _ hg), rfl⟩
   filter_upwards [Filter.eventually_all.2 fun j => T.ph_lim V j h1] with N hN e he j
@@ -446,7 +446,7 @@ theorem UpperTheory.V.Pa.B2.selN :
   choose C hC using fun j => fix_count x (T.sg j) (al j) (hE j).1 (hE j).2
   refine ⟨∑ j, C j, fun m => ?_⟩
   filter_upwards [ph_eq T x hPL m, eventually_ge_atTop 1] with N hN hN1 e he D D0 o o0 hfin
-  haveI := T.H.isNormal'
+  have := T.H.isNormal'
   obtain ⟨-, -, hle, hiff, -⟩ := pl_props l G0.Γ T.H.toSubgroup T.H.toOpenSubgroup.isOpen
   let θ := o0.e.trans o.e.symm
   have hθ : ∀ g m, θ (D0.M.ρ ((T.h N).p g) m) = D.M.ρ g (θ m) := th_equiv o o0
@@ -497,7 +497,7 @@ theorem UpperTheory.V.Pa.B2.selN :
     rw [← rhoH_eq, hN e he j]
   · intro z hz h0
     obtain ⟨U, hU, hP⟩ := hU z.1 z.2
-    haveI := U.isNormal'
+    have := U.isNormal'
     have hk : (T.h N).p.ker ≤ U.toSubgroup := (T.ker_le N).trans (Subgroup.topologicalClosure_minimal _
       (sup_le (Subgroup.normalClosure_le_normal (by
         rintro _ ⟨j, rfl⟩
@@ -507,5 +507,5 @@ theorem UpperTheory.V.Pa.B2.selN :
     exact ⟨⟨_, th_sel o o0 ⟨z0, hz0⟩ z e0 hz⟩, congrArg Submodule.Quotient.mk (Subtype.ext (funext e0))⟩
   · refine Nat.mul_le_mul_left _ ?_
     rw [← Finset.prod_pow_eq_pow_sum]
-    refine Finset.prod_le_prod' fun j _ => le_trans (le_of_eq ?_) (hC j e)
+    refine Finset.prod_le_prod fun j _ => le_trans (le_of_eq ?_) (hC j e)
     exact Nat.card_congr (o.e.toEquiv.subtypeEquiv fun _ => Iff.rfl)

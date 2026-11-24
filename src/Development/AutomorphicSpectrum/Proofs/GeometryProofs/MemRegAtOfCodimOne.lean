@@ -105,7 +105,7 @@ theorem exists_point_of_prime {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec
   let e := RegAtRing.stalkEquiv h p
   let P' : Ideal (X.presheaf.stalk p.1) := P.comap (e : X.presheaf.stalk p.1 →+* regAt ξ p)
   have hP' : P'.IsPrime := Ideal.comap_isPrime _ _
-  letI algP := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨p.1, hp⟩ : U)
+  let algP := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨p.1, hp⟩ : U)
   have localization₂ := hU.isLocalization_stalk ⟨p.1, hp⟩
   let 𝔮 : Ideal Γ(X, U) := P'.comap (algebraMap Γ(X, U) (X.presheaf.stalk p.1))
   have h𝔮 : 𝔮.IsPrime := Ideal.comap_isPrime _ _
@@ -127,7 +127,7 @@ theorem exists_point_of_prime {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec
     have hle : hU.primeIdealOf ⟨genPt ξ, hg⟩ ≤ y := by
       change (hU.primeIdealOf ⟨genPt ξ, hg⟩).asIdeal ≤ 𝔮
       intro r hr
-      letI algG := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨genPt ξ, hg⟩ : U)
+      let algG := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨genPt ξ, hg⟩ : U)
       have locG := hU.isLocalization_stalk ⟨genPt ξ, hg⟩
       have hnu : ¬ IsUnit (algebraMap Γ(X, U) (X.presheaf.stalk (genPt ξ)) r) := by
         rw [← IsLocalization.AtPrime.under_maximalIdeal (X.presheaf.stalk (genPt ξ))
@@ -150,7 +150,7 @@ theorem exists_point_of_prime {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec
       exact P'.zero_mem
     have := ((PrimeSpectrum.le_iff_specializes _ _).1 hle).map hU.fromSpec.continuous
     rwa [hU.fromSpec_primeIdealOf] at this
-  letI algY : Algebra Γ(X, U) (X.presheaf.stalk (hU.fromSpec y)) :=
+  let algY : Algebra Γ(X, U) (X.presheaf.stalk (hU.fromSpec y)) :=
     TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨hU.fromSpec y, hyU⟩ : U)
   have locY : IsLocalization.AtPrime (X.presheaf.stalk (hU.fromSpec y)) y.asIdeal :=
     hU.isLocalization_stalk' y hyU

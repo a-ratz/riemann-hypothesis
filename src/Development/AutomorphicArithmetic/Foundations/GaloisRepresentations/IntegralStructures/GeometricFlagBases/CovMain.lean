@@ -179,15 +179,15 @@ theorem UpperTheory.Reformulated.B.Qi54.card_pow :
       (↑q : NumberField.RingOfIntegers E) ∈ w.asIdeal →
         ∃ (f : ℕ), Nat.card (NumberField.RingOfIntegers E ⧸ w.asIdeal) = q ^ f := by
   intro E _ _ w q hq hmem
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  haveI : Finite (NumberField.RingOfIntegers E ⧸ w.asIdeal) :=
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  have : Finite (NumberField.RingOfIntegers E ⧸ w.asIdeal) :=
     Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
-  letI : Field (NumberField.RingOfIntegers E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
-  letI : Fintype (NumberField.RingOfIntegers E ⧸ w.asIdeal) := Fintype.ofFinite _
+  let : Field (NumberField.RingOfIntegers E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
+  let : Fintype (NumberField.RingOfIntegers E ⧸ w.asIdeal) := Fintype.ofFinite _
   have h0 : (q : NumberField.RingOfIntegers E ⧸ w.asIdeal) = 0 := by
     have := Ideal.Quotient.eq_zero_iff_mem.mpr hmem
     rwa [map_natCast] at this
-  haveI : CharP (NumberField.RingOfIntegers E ⧸ w.asIdeal) q :=
+  have : CharP (NumberField.RingOfIntegers E ⧸ w.asIdeal) q :=
     (CharP.charP_iff_prime_eq_zero (p := q) (hp := hq)).mpr h0
   obtain ⟨n, -, hn⟩ := FiniteField.card (NumberField.RingOfIntegers E ⧸ w.asIdeal) q
   exact ⟨n, by rw [Nat.card_eq_fintype_card, hn]⟩
@@ -242,7 +242,7 @@ private theorem res_surj :
   have hx : (x : E) ∈ w.valuationSubringAtPrime E := by
     rw [HeightOneSpectrum.valuationSubringAtPrime_eq_valuationSubring]
     exact x.2
-  haveI : IsLocalization w.asIdeal.primeCompl (w.valuationSubringAtPrime E) :=
+  have : IsLocalization w.asIdeal.primeCompl (w.valuationSubringAtPrime E) :=
     Localization.subalgebra.isLocalization_ofField E w.asIdeal.primeCompl
       w.asIdeal.primeCompl_le_nonZeroDivisors
   obtain ⟨⟨a, s⟩, h⟩ := IsLocalization.surj w.asIdeal.primeCompl
@@ -273,7 +273,7 @@ end Local
 
 theorem baseExtension_holds : Gal.Int.Geo.BaseEx := by
   intro q _ D ha hm E _ _ e gb hstd w 𝔴 r hpl hu N₀ h3 hcop
-  haveI : Subsingleton (Fin D.a) := by
+  have : Subsingleton (Fin D.a) := by
     rw [ha]
     infer_instance
   have hq : q.Prime := Fact.out
@@ -1183,12 +1183,12 @@ private theorem relDim_pow {S : Scheme.{0}} (A : Over S) (g : ℕ) (hg : SmoothO
 theorem UpperTheory.power_projector_exists :
     PowProj := by
   intro q _ D R _ _ b N _ _ X s o k
-  letI := o.grp
-  haveI := o.comm
+  let := o.grp
+  have := o.comm
   have hT := _root_.GlobalTheory.HTDim.relDim_and_isLB q D R b N X s o
   refine ⟨fun hs => GlobalTheory.KS.isProjOver_pow R X s hs o.A o.ab _ hT.2 o.ample k, ?_⟩
   intro d hd
-  haveI := relDim_pow o.A D.g hT.1 k
+  have := relDim_pow o.A D.g hT.1 k
   exact ⟨k * D.g + d, inferInstance⟩
 end -- clump:auto
 end -- clump:auto
@@ -1361,7 +1361,7 @@ open scoped TensorProduct in
 theorem UpperTheory.rational_splitting_exists :
     SplitQ := by
   intro p _ D hm q _
-  haveI : Unique (Fin D.m) :=
+  have : Unique (Fin D.m) :=
     { default := ⟨0, by omega⟩
       uniq := fun i => Fin.ext (by have := i.2; simp; omega) }
   let e0 : D.O ≃ₐ[NumberField.RingOfIntegers D.F] NumberField.RingOfIntegers D.F :=
@@ -1404,10 +1404,10 @@ theorem UpperTheory.site_exists_of_splitting_and_power_projector :
     exact _root_.GlobalTheory.isProjOver_comp_of_finite (Ow w) M.X Y.X π M.s hfin hMproj
   have hYsm : SmoothOfRelativeDimension (0 + (datAt hat sp).a * ((datAt hat sp).n - 1)) Y.s := by
     rw [← hov]
-    haveI : SmoothOfRelativeDimension 0 π := by
+    have : SmoothOfRelativeDimension 0 π := by
       rw [← AlgebraicGeometry.Etale.eq_smoothOfRelativeDimension_zero]
       exact het
-    haveI := M.smooth
+    have := M.smooth
     infer_instance
   have hPw := fun k => hP q (datAt hat sp) (Ow w) b N₀ h3 hcq Y.X Y.s Y.univ k
   exact ⟨⟨hat, sp, f, b, hmat, N₀, 𝔞, hstdb, hqmem, hnorm, hcp, hsup, hupow, hlv, M, Y, π, hov, hmπ,
@@ -1457,8 +1457,8 @@ theorem UpperTheory.tower_covering_congruence_of_hecke_lies :
     MIn → SiteEx → NumEx → ClsEx → KSCover → TjLies → KSCong := by
   intro hM hS hN hC hV hL p _ D G L hsc E _ _ e gb hstd k T N J A _ g θ w 𝔴 hpl ϑ hG
   obtain ⟨q, r, 𝔫, K₀, hat, hok, hlev, hKN, hNn, hdeck, hall⟩ := hG
-  haveI : Fact q.Prime := ⟨hat.prime⟩
-  haveI : 𝔴.IsMaximal := hat.max
+  have : Fact q.Prime := ⟨hat.prime⟩
+  have : 𝔴.IsMaximal := hat.max
   obtain ⟨S⟩ := hS p D G hsc E e gb hstd w q r 𝔴 𝔫 hpl hat hok
   have hNpos : 0 < N.1 := lt_of_lt_of_le (by norm_num) N.2.1
   obtain ⟨c, a, hnum⟩ := (hN p D E gb w q r 𝔴 𝔫 S N.1 hNpos).1 hNn
@@ -1466,7 +1466,7 @@ theorem UpperTheory.tower_covering_congruence_of_hecke_lies :
     hnum.1 hNpos S.std.three S.std.cop hnum.2 S.Y (T.M N).X (T.M N).s (T.M N).univ
   obtain ⟨Cv⟩ := hV p D G L E gb w q r 𝔴 𝔫 S k T K₀ hlev N c a hnum C hKN J A g θ hdeck
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (Ow w)
-  haveI := S.et
+  have := S.et
   obtain ⟨Tc, Lc, d, h, hov, hpt⟩ := hM.cong q (datAt S.atq S.sp) (Ow w) S.f S.b S.N₀ r 𝔴 S.std S.M ϖ hϖ S.𝔞 1
     S.sup S.upow S.Y S.π S.ov inferInstance S.mπ k
   choose γ hγK hγT hγd hγr hγθ using hall
@@ -1540,7 +1540,7 @@ theorem UpperTheory.tower_finiteEtale_of_trivial_powerCartesian :
     (GlobalTheory.KS.powMap S.π S.mπ.φ hpb.w k) (𝟙 _) (𝟙 _) h1 h2
   have h3 : gen (Ow w) E = 𝟙 _ ≫ gen (Ow w) E := (Category.id_comp _).symm
   have hmF : IsFinite hm := MorphismProperty.pullbackMap (P := @IsFinite) hfinP inferInstance hcomm h3
-  haveI := hetP
+  have := hetP
   have hmU : FormallyUnramified hm :=
     MorphismProperty.pullbackMap (P := @FormallyUnramified) inferInstance inferInstance hcomm h3
   have hkey : pullback.lift (S.pi T C) (T.X.q (T.lev N)) eY ≫ hm =
@@ -1550,16 +1550,16 @@ theorem UpperTheory.tower_finiteEtale_of_trivial_powerCartesian :
       simp only [hm, pullback.lift_fst_assoc, pullback.map, pullback.lift_fst]
     · rw [Category.assoc, pullback.lift_snd, Category.assoc, pullback.lift_snd, T.X.10]
       simp only [hm, pullback.map, pullback.lift_snd, pullback.lift_snd_assoc, Category.comp_id]
-  haveI := hop
-  haveI := hcl
-  haveI := T.X.13 _ _ hx hy
-  haveI := T.X.14 _ _ hx hy
+  have := hop
+  have := hcl
+  have := T.X.13 _ _ hx hy
+  have := T.X.14 _ _ hx hy
   have hcomp : IsFinite (pullback.lift (S.pi T C) (T.X.q (T.lev N)) eY ≫ hm) ∧
       Etale (pullback.lift (S.pi T C) (T.X.q (T.lev N)) eY ≫ hm) := by
     rw [hkey]
     exact ⟨inferInstance, inferInstance⟩
-  haveI := hcomp.1
-  haveI := hcomp.2
+  have := hcomp.1
+  have := hcomp.2
   exact ⟨IsFinite.of_comp _ hm, Etale.of_comp _ hm⟩
 end -- clump:auto
 end -- clump:auto
@@ -1614,10 +1614,10 @@ theorem UpperTheory.tower_point_count_statement :
     Subgroup.relIndex_mul_relIndex K H K₀ hKH hHK₀
   have hKH0 : K.relIndex H ≠ 0 := fun h0 => hK (by rw [← hmul, h0, zero_mul])
   have hH0 : H.relIndex K₀ ≠ 0 := fun h0 => hK (by rw [← hmul, h0, mul_zero])
-  haveI : Finite F := Nat.finite_of_card_ne_zero (by rw [hF]; exact hH0)
-  haveI : Fintype F := Fintype.ofFinite F
-  haveI : Finite (↥K₀ ⧸ K.subgroupOf K₀) := Nat.finite_of_card_ne_zero hK
-  haveI : Finite (↥H ⧸ K.subgroupOf H) := Nat.finite_of_card_ne_zero hKH0
+  have : Finite F := Nat.finite_of_card_ne_zero (by rw [hF]; exact hH0)
+  have : Fintype F := Fintype.ofFinite F
+  have : Finite (↥K₀ ⧸ K.subgroupOf K₀) := Nat.finite_of_card_ne_zero hK
+  have : Finite (↥H ⧸ K.subgroupOf H) := Nat.finite_of_card_ne_zero hKH0
   have bound : ∀ ξ : F, Nat.card {x // κ x = ξ} ≤ K.relIndex H := by
     intro ξ
     by_cases hne : Nonempty {x // κ x = ξ}
@@ -1640,7 +1640,7 @@ theorem UpperTheory.tower_point_count_statement :
       calc Nat.card {x // κ x = ξ} ≤ Nat.card (↥H ⧸ K.subgroupOf H) :=
             Nat.card_le_card_of_injective f hinj
         _ = K.relIndex H := rfl
-    · haveI := not_nonempty_iff.mp hne
+    · have := not_nonempty_iff.mp hne
       rw [Nat.card_of_isEmpty]
       exact Nat.zero_le _
   have hsum : ∑ ξ : F, Nat.card {x // κ x = ξ} = ∑ ξ : F, K.relIndex H := by
@@ -1691,7 +1691,7 @@ private theorem kn_conj {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p} (
 
 private theorem gen_mono {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) :
     Mono (gen (Ow w) E) := by
-  haveI : Epi (CommRingCat.ofHom (algebraMap (Ow w) E)) := IsLocalization.epi (nonZeroDivisors (Ow w)) E
+  have : Epi (CommRingCat.ofHom (algebraMap (Ow w) E)) := IsLocalization.epi (nonZeroDivisors (Ow w)) E
   change Mono (Scheme.Spec.map (CommRingCat.ofHom (algebraMap (Ow w) E)).op)
   infer_instance
 
@@ -1714,14 +1714,14 @@ theorem UpperTheory.tower_separated_of_trivial_powerCartesian :
   have hzM : z ≫ T.X.tr (T.lev N) M 1 x y ≫ ρ = z' ≫ T.X.tr (T.lev N) M 1 x y ≫ ρ := by
     rw [htr', ← Category.assoc, hz, Category.assoc]
   have hzq : z ≫ T.X.tr (T.lev N) M 1 x y ≫ T.X.q M = z' ≫ T.X.tr (T.lev N) M 1 x y ≫ T.X.q M := by
-    haveI : Mono (gen (Ow w) E) := gen_mono w
+    have : Mono (gen (Ow w) E) := gen_mono w
     rw [← cancel_mono (gen (Ow w) E)]
     simp only [Category.assoc]
     rw [← e]
     simp only [← Category.assoc] at hzM ⊢
     rw [hzM]
   have hzt : z ≫ T.X.tr (T.lev N) M 1 x y = z' ≫ T.X.tr (T.lev N) M 1 x y := by
-    haveI := hopen
+    have := hopen
     rw [← cancel_mono (pullback.lift ρ (T.X.q M) e)]
     apply pullback.hom_ext
     · simp only [Category.assoc, pullback.lift_fst]

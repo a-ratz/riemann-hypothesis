@@ -158,14 +158,14 @@ theorem isFGTop_comap_lsmul_one : ∀ {p : ℕ} {O : Type} [CommRing O] [IsDomai
     PadicCoeff p O → FracTop O → ∀ n : ℕ,
     IsFGTop O ((1 : Submodule O (FractionRing O)).comap (LinearMap.lsmul O _ ((p : O) ^ n))) := by
   intro p O _ _ _ _ _ _ _ hO hF n
-  haveI := hO.t2
-  haveI := fractionRing_t2_of_openEmbedding hF.emb
+  have := hO.t2
+  have := fractionRing_t2_of_openEmbedding hF.emb
   set S := (1 : Submodule O (FractionRing O)).comap (LinearMap.lsmul O _ ((p : O) ^ n))
   refine ⟨?_, inferInstance, inferInstance⟩
-  haveI : Module.Finite O (1 : Submodule O (FractionRing O)) := by
+  have : Module.Finite O (1 : Submodule O (FractionRing O)) := by
     rw [Module.Finite.iff_fg, Submodule.one_eq_span]
     exact Submodule.fg_span (Set.finite_singleton _)
-  haveI : IsNoetherian O (1 : Submodule O (FractionRing O)) := inferInstance
+  have : IsNoetherian O (1 : Submodule O (FractionRing O)) := inferInstance
   let f : S →ₗ[O] (1 : Submodule O (FractionRing O)) :=
     (LinearMap.lsmul O (FractionRing O) ((p : O) ^ n)).restrict (fun x hx => hx)
   refine Module.Finite.of_injective f ?_
@@ -259,12 +259,12 @@ theorem colim_equiv {O : Type} [CommRing O] [TopologicalSpace O] {G : Type} [Gro
   have hinj := _root_.GlobalTheory.map_H2_subtype_injective_of_union Θ N hmono hopen hcov hfg
   have hsurj := _root_.GlobalTheory.h2_twist_exists_of_iUnion_open ε N hmono hopen hcov
   let ι : ∀ n, H2 (twist ε (N n)) →ₗ[O] H2 (twist ε M) := fun n =>
-    mapH2 (twist ε (N n)) (twist ε M) (N n).subtype continuous_subtype_val (twist_map ε (N n).subtype)
+    mapH2 (twist ε (N n)) (twist ε M) (N n).subtype continuous_subtypeVal (twist_map ε (N n).subtype)
   let ψ : ∀ n, N n →ₗ[O] H2 (twist ε M) := fun n => ι n ∘ₗ (Θ.θ (N n) (hfg n)).symm.toLinearMap
   have hup : ∀ n m (h : n ≤ m) (y : N n), ψ m (Submodule.inclusion (hmono h) y) = ψ n y := by
     intro n m h y
     let inc := Submodule.inclusion (hmono h)
-    have hinc : Continuous inc := continuous_subtype_val.subtype_mk _
+    have hinc : Continuous inc := continuous_subtypeVal.subtype_mk _
     have hι : ∀ w, ι m (mapH2 (twist ε (N n)) (twist ε (N m)) inc hinc (twist_map ε inc) w) = ι n w := by
       intro w
       induction w using Submodule.Quotient.induction_on with
@@ -348,8 +348,8 @@ end Lat
 theorem inv_iso (hT : Formalism.GaloisCohomology.LocalTateDualityK) : InvIso := by
   intro p _ K O _ _ _ _ _ _ _ G _ _ hK hO hF i ε hε
   obtain ⟨Θ⟩ := _root_.GlobalTheory.natInvIso_of_localTateDuality hT hK hO i hε
-  haveI : CompactSpace G := i.toHomeomorph.symm.compactSpace
-  haveI := ko_discrete hF
+  have : CompactSpace G := i.toHomeomorph.symm.compactSpace
+  have := ko_discrete hF
   let F : ℕ → Submodule O (FractionRing O) := fun n =>
     (1 : Submodule O (FractionRing O)).comap (LinearMap.lsmul O _ ((p : O) ^ n))
   let T : ℕ → Submodule O (KO O) := fun n => LinearMap.ker (LinearMap.lsmul O (KO O) ((p : O) ^ n))
@@ -396,13 +396,13 @@ theorem inv_iso (hT : Formalism.GaloisCohomology.LocalTateDualityK) : InvIso := 
   refine ⟨eT, eF, fun z => ?_⟩
   obtain ⟨n, hn⟩ := frac_cover hO (eF z)
   set z' := (Θ.θ (F n) (hFfg n)).symm ⟨eF z, hn⟩
-  have hz : mapH2 (twist ε (F n)) (twist ε (FractionRing O)) (F n).subtype continuous_subtype_val
+  have hz : mapH2 (twist ε (F n)) (twist ε (FractionRing O)) (F n).subtype continuous_subtypeVal
       (twist_map ε (F n).subtype) z' = z := eF.injective (by rw [heF, LinearEquiv.apply_symm_apply])
   let red : F n →ₗ[O] T n := ((toKO O).comp (F n).subtype).codRestrict (T n) fun y => hred n y y.2
-  have hredc : Continuous red := (toKO_cont.comp continuous_subtype_val).subtype_mk _
+  have hredc : Continuous red := (toKO_cont.comp continuous_subtypeVal).subtype_mk _
   have e3 : mapH2 (twist ε (FractionRing O)) (twist ε (KO O)) (toKO O) toKO_cont (toKO_equiv ε)
-      (mapH2 (twist ε (F n)) (twist ε (FractionRing O)) (F n).subtype continuous_subtype_val (twist_map ε _) z') =
-      mapH2 (twist ε (T n)) (twist ε (KO O)) (T n).subtype continuous_subtype_val (twist_map ε _)
+      (mapH2 (twist ε (F n)) (twist ε (FractionRing O)) (F n).subtype continuous_subtypeVal (twist_map ε _) z') =
+      mapH2 (twist ε (T n)) (twist ε (KO O)) (T n).subtype continuous_subtypeVal (twist_map ε _)
         (mapH2 (twist ε (F n)) (twist ε (T n)) red hredc (twist_map ε red) z') := by
     induction z' using Submodule.Quotient.induction_on with
     | H w => rfl

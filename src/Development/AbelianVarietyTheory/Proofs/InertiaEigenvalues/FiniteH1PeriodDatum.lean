@@ -178,7 +178,7 @@ theorem isOpen_smul (hT : IsOpen (T : Set V)) (hϖ : algebraMap O LL ϖ ≠ 0) :
   have : {v : V | ∃ u : ↥T, ϖ • (u : V) = v} =
       (fun v => (algebraMap O LL ϖ)⁻¹ • v) ⁻¹' (T : Set V) := by
     ext v
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe]
     constructor
     · rintro ⟨u, rfl⟩
       rw [← algebraMap_smul LL ϖ (u : V), smul_smul, inv_mul_cancel₀ hϖ, one_smul]
@@ -268,8 +268,8 @@ namespace GlobalTheory.LatRed
 theorem cocycles_fg_mod_l : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A : GRep ↥(GK K) ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ), ∃ s : Finset ↥(latticeCocycles LA), ∀ c : ↥(latticeCocycles LA), ∃ (a : ↥(latticeCocycles LA) → O) (c' : ↥(latticeCocycles LA)), ((c : ↥(GK K) → A.V) - ∑ i ∈ s, a i • (i : ↥(GK K) → A.V) - ((l : ℕ) : O) • (c' : ↥(GK K) → A.V)) ∈ latticeCoboundaries LA := by
   intro hT l _ K LL _ _ _ O _ _ hO A LA
   classical
-  haveI : IsTopologicalRing LL := hO.2.2.2.1
-  haveI hK : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : IsTopologicalRing LL := hO.2.2.2.1
+  have hK : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   set ϖ : O := ((l : ℕ) : O) with hϖdef
   have hϖ : algebraMap O LL ϖ ≠ 0 := by
     rw [hϖdef, map_natCast, ← map_natCast (algebraMap ℚ_[l] LL) l]
@@ -282,12 +282,12 @@ theorem cocycles_fg_mod_l : Formalism.GaloisCohomology.LocalTateDualityK → ∀
     obtain ⟨t, rfl⟩ := mk_surjective m
     rw [pow_one, ← map_nsmul, mk_eq_zero_iff]
     exact ⟨t, by rw [hϖdef, Nat.cast_smul_eq_nsmul]⟩
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  letI : Module (ZMod (l ^ 1)) (Red LA.T ϖ) := AddCommGroup.zmodModule hl1
-  haveI hfin : Finite (Red LA.T ϖ) := by
-    haveI : Module.Finite O ↥LA.T := Module.Finite.iff_fg.2 LA.fg
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  let : Module (ZMod (l ^ 1)) (Red LA.T ϖ) := AddCommGroup.zmodModule hl1
+  have hfin : Finite (Red LA.T ϖ) := by
+    have : Module.Finite O ↥LA.T := Module.Finite.iff_fg.2 LA.fg
     obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' O ↥LA.T
-    haveI : Finite (O ⧸ Ideal.span {ϖ}) := by
+    have : Finite (O ⧸ Ideal.span {ϖ}) := by
       have := (_root_.GlobalTheory.GoodCoeff.good_coeff_integers l LL O hO).2.2.1 1
       simpa [pow_one] using this
     have hqs : Function.Surjective (Ideal.Quotient.mk (Ideal.span {ϖ})) :=
@@ -360,7 +360,7 @@ theorem cocycles_fg_mod_l : Formalism.GaloisCohomology.LocalTateDualityK → ∀
     apply Subtype.ext
     simp [ev, ρT, map_mul, hcZ.2]
   let F : ↥(latticeCocycles LA) → ReciprocityTheory.Gal.H1 ρb := fun c => Submodule.Quotient.mk ⟨_, hred c⟩
-  haveI : Nonempty ↥(latticeCocycles LA) := ⟨0⟩
+  have : Nonempty ↥(latticeCocycles LA) := ⟨0⟩
   have hfr : (Set.range F).Finite := Set.toFinite _
   refine ⟨hfr.toFinset.image (Function.invFun F), fun c => ?_⟩
   set i := Function.invFun F (F c) with hi
@@ -388,7 +388,7 @@ theorem cocycles_fg_mod_l : Formalism.GaloisCohomology.LocalTateDualityK → ∀
   refine ⟨fun j => if j = i then 1 else 0, c', ?_⟩
   have hsum : ∑ j ∈ hfr.toFinset.image (Function.invFun F),
       (if j = i then (1 : O) else 0) • (j : ↥(GK K) → A.V) = (i : ↥(GK K) → A.V) := by
-    rw [Finset.sum_eq_single_of_mem i hmem (fun j _ hj => by rw [if_neg hj, zero_smul]), if_pos rfl,
+    rw [Finset.sum_eq_single_of_mem i hmem (fun j _ hj => by rw [ite_eq_right hj, zero_smul]), ite_eq_left rfl,
       one_smul]
   rw [hsum]
   simpa using hc'
@@ -412,8 +412,8 @@ theorem tate_finH1 (hT : Formalism.GaloisCohomology.LocalTateDualityK) :
     ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l), TateFiniteness (P.PD K) := by
   intro l _ P K LL _ _ _ O _ _ hO A LA
   obtain ⟨hR, hRs⟩ := _root_.GlobalTheory.goodO_coeff_explicit_sums l LL O hO
-  haveI : Module.Free O ↥LA.T := LA.free
-  haveI : Module.Finite O ↥LA.T := Module.Finite.iff_fg.2 LA.fg
+  have : Module.Free O ↥LA.T := LA.free
+  have : Module.Finite O ↥LA.T := Module.Finite.iff_fg.2 LA.fg
   obtain ⟨hTc, hTs⟩ := _root_.GlobalTheory.freeModule_adicComplete_separated ((l : ℕ) : O) hR hRs ↥LA.T
   have hmemT : ∀ c : ↥(latticeCocycles LA), ∀ g, (c : ↥(GK K) → A.V) g ∈ LA.T := fun c g =>
     (Submodule.mem_pi.1 (Submodule.mem_inf.1 c.2).2) g (Set.mem_univ g)

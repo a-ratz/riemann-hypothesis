@@ -88,7 +88,7 @@ theorem exists_factor {K : Type} [Field K] (X : Over (Sp K)) (hX : IsFinite X.ho
     [IsAlgClosed F] [Algebra K F] (x : Sp F ⟶ X.left) (hx : x ≫ X.hom = spMap (algebraMap K F)) :
     ∃ (σ : AlgebraicClosure K →ₐ[K] F) (x' : Over.mk (spMap (algebraMap K (AlgebraicClosure K))) ⟶ X),
       x = spMap σ.toRingHom ≫ x'.left := by
-  haveI : IsAffine X.left := isAffine_of_isAffineHom X.hom
+  have : IsAffine X.left := isAffine_of_isAffineHom X.hom
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (x ≫ X.left.isoSpec.hom)
   obtain ⟨c, hc⟩ := Spec.map_surjective (X.left.isoSpec.inv ≫ X.hom)
   have hfin : c.hom.Finite := by
@@ -133,21 +133,21 @@ theorem exists_factor {K : Type} [Field K] (X : Over (Sp K)) (hX : IsFinite X.ho
 theorem hom_ext_points {K : Type} [Field K] {X Y : Over (Sp K)} (hX : IsFinite X.hom) (hE : Etale X.hom)
     (hY : IsSeparated Y.hom) (u v : X ⟶ Y)
     (h : ∀ x : Over.mk (spMap (algebraMap K (AlgebraicClosure K))) ⟶ X, x ≫ u = x ≫ v) : u = v := by
-  haveI : IsAffine X.left := isAffine_of_isAffineHom X.hom
-  haveI : IsReduced X.left := by
+  have : IsAffine X.left := isAffine_of_isAffineHom X.hom
+  have : IsReduced X.left := by
     obtain ⟨c, hc⟩ := Spec.map_surjective (X.left.isoSpec.inv ≫ X.hom)
     have he : c.hom.Etale := by
       rw [← HasRingHomProperty.Spec_iff (P := @Etale), hc]; infer_instance
-    letI := c.hom.toAlgebra
-    haveI : Algebra.Etale K Γ(X.left, ⊤) := he
-    haveI : _root_.IsReduced Γ(X.left, ⊤) := Algebra.FormallyUnramified.isReduced_of_field K _
+    let := c.hom.toAlgebra
+    have : Algebra.Etale K Γ(X.left, ⊤) := he
+    have : _root_.IsReduced Γ(X.left, ⊤) := Algebra.FormallyUnramified.isReduced_of_field K _
     exact isReduced_of_isAffine_isReduced _
   apply Over.OverMorphism.ext
   refine ext_of_fromSpecResidueField_eq _ _ Y.hom Set.univ dense_univ (fun z _ => ?_) (by simp)
   let F := AlgebraicClosure (X.left.residueField z)
   let i := spMap (algebraMap (X.left.residueField z) F)
   obtain ⟨c, hc⟩ := Spec.map_surjective ((i ≫ X.left.fromSpecResidueField z) ≫ X.hom)
-  letI : Algebra K F := c.hom.toAlgebra
+  let : Algebra K F := c.hom.toAlgebra
   obtain ⟨σ, x', e⟩ := exists_factor X hX F _ hc.symm
   have : Epi i := by
     have : Flat i := inferInstance
@@ -202,17 +202,17 @@ theorem pow_eq_one_of_points : ∀ (K : Type) [Field K] (A C : AbVar K) (f : A �
   let H : Over (Sp K) := Over.mk (pullback.fst a (η[C.X]).left ≫ Z.hom)
   let j : H ⟶ Z := Over.homMk (pullback.fst a (η[C.X]).left) rfl
   have hHf : IsFinite H.hom := by
-    haveI := hZf; show IsFinite (pullback.fst a (η[C.X]).left ≫ Z.hom); infer_instance
+    have := hZf; show IsFinite (pullback.fst a (η[C.X]).left ≫ Z.hom); infer_instance
   have hHe : Etale H.hom := by
-    haveI := hZe
-    haveI : FormallyUnramified Z.hom := by infer_instance
-    haveI : LocallyOfFinitePresentation Z.hom := by infer_instance
-    haveI : IsClosedImmersion (pullback.fst a (η[C.X]).left) := inferInstance
-    haveI : FormallyUnramified (pullback.fst a (η[C.X]).left) := inferInstance
-    haveI : FormallyUnramified H.hom := by
+    have := hZe
+    have : FormallyUnramified Z.hom := by infer_instance
+    have : LocallyOfFinitePresentation Z.hom := by infer_instance
+    have : IsClosedImmersion (pullback.fst a (η[C.X]).left) := inferInstance
+    have : FormallyUnramified (pullback.fst a (η[C.X]).left) := inferInstance
+    have : FormallyUnramified H.hom := by
       show FormallyUnramified (pullback.fst a (η[C.X]).left ≫ Z.hom)
       exact MorphismProperty.comp_mem @FormallyUnramified _ _ ‹_› ‹FormallyUnramified Z.hom›
-    haveI : LocallyOfFinitePresentation H.hom := by
+    have : LocallyOfFinitePresentation H.hom := by
       show LocallyOfFinitePresentation (pullback.fst a (η[C.X]).left ≫ Z.hom); infer_instance
     exact Etale.of_formallyUnramified_of_flat _
   have hjf : j ≫ iZ ≫ f.hom = 1 := by
@@ -399,7 +399,7 @@ theorem card_kerLPart_eq (K : Type) [Field K] (l : ℕ) [Fact l.Prime] (hl : (l 
   set G := kerLPart l f with hG
   change Nat.card G = _
   have hker : Finite (ptMap f).ker := (GlobalTheory.T.isFinite_iff_finite_ker' K A B f).1 hf.1
-  haveI hGfin : Finite G := Finite.of_injective (Subgroup.inclusion (kerLPart_le l f))
+  have hGfin : Finite G := Finite.of_injective (Subgroup.inclusion (kerLPart_le l f))
     (Subgroup.inclusion_injective _)
   have hpG : IsPGroup l G := fun g => by
     obtain ⟨n, hn⟩ := g.2.2

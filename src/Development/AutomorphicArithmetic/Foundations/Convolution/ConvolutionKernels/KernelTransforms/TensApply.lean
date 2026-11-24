@@ -103,8 +103,8 @@ private theorem tens_apply' {K : Type} [Field K] [NumberField K] {n : ℕ} (hn :
   have h1 : Continuous (tensFun β e) := by
     unfold tensFun
     exact ((continuous_kbar hn β.continuous β.hasCompactSupport).comp
-      (continuous_infPart.comp continuous_subtype_val)).mul
-      (e.continuous.comp (continuous_finPart.comp continuous_subtype_val))
+      (continuous_infPart.comp continuous_subtypeVal)).mul
+      (e.continuous.comp (continuous_finPart.comp continuous_subtypeVal))
   obtain ⟨hC, hS⟩ := tensFun_support_bound hn β e
   have h2 : HasCompactSupport (tensFun β e) :=
     hC.of_isClosed_subset isClosed_closure (closure_minimal hS hC.isClosed)

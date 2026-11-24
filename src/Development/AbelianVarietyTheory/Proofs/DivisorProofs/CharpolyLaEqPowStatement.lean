@@ -75,7 +75,7 @@ theorem Datum.charpoly_La_eq_pow (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel
     haveI := D.freeLa; haveI := D.finLa
     LinearMap.charpoly (DistribSMul.toLinearMap ℤ D.La (algebraMap (𝓞 D.F) D.O c)) =
       (LinearMap.charpoly (LinearMap.mulLeft ℤ c)) ^ (D.m * D.n) := by
-  haveI := D.freeLa; haveI := D.finLa
+  have := D.freeLa; have := D.finLa
   have hint : IsIntegral ℤ c := RingOfIntegers.isIntegral c
   have hm : (minpoly ℤ c).Monic := minpoly.monic hint
   have hirr : Irreducible (minpoly ℤ c) := minpoly.irreducible hint

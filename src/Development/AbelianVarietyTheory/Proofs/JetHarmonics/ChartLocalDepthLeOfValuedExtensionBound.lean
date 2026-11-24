@@ -80,7 +80,7 @@ theorem exists_addValuation_mul_log {C : Type} [Field C] (v : Valuation C NNReal
     · simp [hx]
     by_cases hy : y = 0
     · simp [hy]
-    simp only [if_neg hx, if_neg hy, if_neg hxy]
+    simp only [ite_eq_right hx, ite_eq_right hy, ite_eq_right hxy]
     rcases le_max_iff.1 (v.map_add x y) with h | h
     · exact min_le_of_left_le (hmono _ _ hxy hx h)
     · exact min_le_of_right_le (hmono _ _ hxy hy h)
@@ -89,7 +89,7 @@ theorem exists_addValuation_mul_log {C : Type} [Field C] (v : Valuation C NNReal
     · simp [hx]
     by_cases hy : y = 0
     · simp [hy]
-    simp only [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy)]
+    simp only [ite_eq_right hx, ite_eq_right hy, ite_eq_right (mul_ne_zero hx hy)]
     rw [map_mul, NNReal.coe_mul, Real.log_mul (hpos x hx).ne' (hpos y hy).ne', mul_add, WithTop.coe_add]
 
 theorem ValExt.exists_addValuation {T : CDVR} {p : ℕ} [Fact p.Prime] (X : ValExt T p) (e : ℕ) (he : 0 < e) :
@@ -150,9 +150,9 @@ theorem ValExt.exists_addValuation {T : CDVR} {p : ℕ} [Fact p.Prime] (X : ValE
 
 theorem nuLocC_le_of_value_extension : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (p : ℕ) [Fact p.Prime] (X : ValExt T p) (B : FB X.O (chD Ch.ch) (𝓞 E)), B.G.F = (fun i => MvPowerSeries.map X.ι (Ch.FT i)) → (∀ a, B.A.act a = fun i => MvPowerSeries.map X.ι (Ch.actT a i)) → ∀ (e k n : ℕ) (a : (E →+* ℂ) × ℕ → ℕ), 0 < e → ∀ (P : MvPolynomial (LtN Dw n) X.O), MvPolynomial.map (algebraMap X.O X.C) P ∈ HHa Dw.mult n X.C ComplexEmbedding.conjugate (InPsi H) (fun τ i => a (τ, i)) → ∀ (f : PS X.O n (chD Ch.ch)) (A : ℝ), (X.v (p : X.C) : ℝ) ^ A ≤ (X.v (nabValN B X.C (letI := io.toAlgebra; MvPowerSeries.map X.ιF Ch.ch.h) H.w0 k (MvPowerSeries.map (algebraMap X.O X.C) f) (fun ℓ : LtN Dw n => ℓ.2.2) (fun (ℓ : LtN Dw n) i => algebraMap X.O X.C (X.ι (Ch.uvecT ⟨ℓ.1, ℓ.2.1⟩ i))) (MvPolynomial.map (algebraMap X.O X.C) P)) : ℝ) → nuLocC Ch e k a n ≤ (((vV T.V (p : T.Fr) : ℝ) / (e : ℝ) * A : ℝ) : EReal) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y Ch p _ X B hF hA e k n a he P hP f A hv
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨w, hO, hT, hw⟩ := X.exists_addValuation e he
   have hh : MvPowerSeries.constantCoeff Ch.ch.h = 0 :=
     ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.coeff_eq_zero_of_vanish_first_axis _ Ch.ch.gauge.ax0 0 fun _ => rfl
@@ -165,13 +165,13 @@ theorem nuLocC_le_of_value_extension : ∀ (E : Type) [Field E] [NumberField E] 
   let R : Subring X.C :=
     { carrier := {x | ((0 : ℝ) : WithTop ℝ) ≤ w x}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, WithTop.coe_zero] at *
+        simp only [Set.mem_ofPred_eq, WithTop.coe_zero] at *
         rw [w.map_mul]; exact add_nonneg ha hb
       one_mem' := by simp
       add_mem' := fun {a b} ha hb => w.map_le_add ha hb
       zero_mem' := by simp
       neg_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rwa [w.map_neg] }
   have key := GlobalTheory.nabValN_lower_bound_baseChange T X.C w X.ιF R (fun x => Iff.rfl)
     (fun x => by rw [X.comp]; exact hO _) _ (𝓞 E) Ch.ch.B (GlobalTheory.FBMap.mapFB (algebraMap X.O X.C) B)

@@ -281,7 +281,7 @@ theorem dUnit_ev_of_two (n : ℕ) (f : MvPowerSeries (Fin d) O)
       · exact hf v (by omega)
       · rfl
     exact c.dUnit_ev_monomial n h2 _
-  · rw [map_sub, MvPolynomial.coeff_coe, hP, coeff_trunc', if_pos, sub_self]
+  · rw [map_sub, MvPolynomial.coeff_coe, hP, coeff_trunc', ite_eq_left, sub_self]
     intro j
     exact ((Finsupp.le_degree j α).trans hα.le)
 
@@ -316,7 +316,7 @@ theorem dlog_eq_sum_lin [Fact p.Prime] (χ : G.dual.Tate) (u : MvPowerSeries (Fi
     rw [Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hj ((Finsupp.single_left_inj one_ne_zero).1 h).symm
     · simp
@@ -326,7 +326,7 @@ theorem dlog_eq_sum_lin [Fact p.Prime] (χ : G.dual.Tate) (u : MvPowerSeries (Fi
 
       rw [hg, map_sum]
       refine Finset.sum_eq_zero fun i _ => ?_
-      rw [map_smul, coeff_X, if_neg, smul_zero]
+      rw [map_smul, coeff_X, ite_eq_right, smul_zero]
       intro h
       have := congrArg (fun a : Fin d →₀ ℕ => a i) h
       simp at this
@@ -339,7 +339,7 @@ theorem dlog_eq_sum_lin [Fact p.Prime] (χ : G.dual.Tate) (u : MvPowerSeries (Fi
     obtain ⟨i, β, rfl, hdeg⟩ := exists_eq_add_single hne
     have hβ : β = 0 := (Finsupp.degree_eq_zero_iff β).1 (by omega)
     subst hβ
-    rw [zero_add, map_sub, map_sub, hcg, coeff_one, if_neg, sub_zero]
+    rw [zero_add, map_sub, map_sub, hcg, coeff_one, ite_eq_right, sub_zero]
     · exact sub_self _
     · intro h
       have := congrArg (fun a : Fin d →₀ ℕ => a i) h
@@ -500,7 +500,7 @@ variable {p : ℕ} {O : Type} [CommRing O] [IsHausdorff (Ideal.span {(p : O)}) O
 
 theorem res_ev (c : Chart G d) (n : ℕ) (f : MvPowerSeries (Fin d) O) :
     G.res n (c.ev (n + 1) f) = c.ev n f := by
-  haveI : IsHausdorff (Ideal.span {(p : G.A n)}) (G.A n) :=
+  have : IsHausdorff (Ideal.span {(p : G.A n)}) (G.A n) :=
     GlobalTheory.CEval.isHausdorff_of_projective (O := O) p
   have h := GlobalTheory.CEval.isEval_comp p (c.isEval (n + 1)) (G.res n : G.A (n + 1) →ₐ[O] G.A n)
   have h' : IsEval p (c.x n) ((G.res n : G.A (n + 1) →ₐ[O] G.A n).comp (c.ev (n + 1))) := by
@@ -538,7 +538,7 @@ namespace GlobalTheory.QLog
 
 theorem exists_charSeries : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (χ : G.dual.Tate), ∃ u : MvPowerSeries (Fin d) O, constantCoeff u = 1 ∧ ∀ n, c.ev n u = charElem χ n := by
   intro p _ O _ _ _ G d c χ
-  haveI : ∀ n, IsHausdorff (Ideal.span {(p : G.A n)}) (G.A n) := fun n =>
+  have : ∀ n, IsHausdorff (Ideal.span {(p : G.A n)}) (G.A n) := fun n =>
     GlobalTheory.CEval.isHausdorff_of_projective (O := O) p
   obtain ⟨u, hu⟩ := (GlobalTheory.Limits.exists_unique_of_compatible p O (Fin d) G.A
     (fun n => (G.res n : G.A (n + 1) →ₐ[O] G.A n)) c.x c.ev c.isEval
@@ -578,8 +578,8 @@ theorem frobenius_congr (p : ℕ) [hpf : Fact p.Prime] (B : Type) [CommRing B] (
   have hp0 : ((p : ℕ) : B ⧸ I) = 0 := by
     have h1 : π (p : B) = 0 := Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.subset_span rfl)
     rwa [map_natCast] at h1
-  haveI : CharP (B ⧸ I) p := (CharP.charP_iff_prime_eq_zero hpf.out).2 hp0
-  haveI : ExpChar (B ⧸ I) p := ExpChar.prime hpf.out
+  have : CharP (B ⧸ I) p := (CharP.charP_iff_prime_eq_zero hpf.out).2 hp0
+  have : ExpChar (B ⧸ I) p := ExpChar.prime hpf.out
   have hcomp : π.comp σB = (frobenius (B ⧸ I) p).comp π := by
     ext b
     simp only [RingHom.comp_apply, frobenius_def]
@@ -738,7 +738,7 @@ theorem dIn_log : ∀ (B Q : Type) [CommRing B] [CommRing Q] [Algebra B Q] [Alge
   · exact ⟨0, trivial, by simp [h]⟩
   · refine ⟨(-1) ^ (α i + 1), trivial, ?_⟩
     have h' : ((α i : ℕ) : ℚ) ≠ 0 := Nat.cast_ne_zero.2 h
-    rw [if_neg h, ← map_natCast (algebraMap ℚ Q), ← map_mul, mul_div_cancel₀ _ h']
+    rw [ite_eq_right h, ← map_natCast (algebraMap ℚ Q), ← map_mul, mul_div_cancel₀ _ h']
     simp
 
 end GlobalTheory.QLog.LogDiff
@@ -776,7 +776,7 @@ theorem dIn_top_powerSeriesLog (B Q : Type) [CommRing B] [CommRing Q] [Algebra B
 
 theorem hasVal_log_of_hasVal_formalLog : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRing B] [CommRing Q] [CommRing O] [Algebra B Q] [Algebra ℚ Q] (θ : B →+* O), IsFrame p Q θ → ∀ (σ : Type) [Fintype σ] [DecidableEq σ] (z : σ → B), (∀ i, ∃ N : ℕ, (p : B) ∣ z i ^ N) → ∀ E : MvPowerSeries σ B →ₐ[B] B, IsEval p z E → ∀ (g : MvPowerSeries σ B) (q : Q), constantCoeff g = 1 → HasVal p z (formalLog (map (algebraMap B Q) g)) q → HasVal p (fun _ : Unit => E g - 1) (PowerSeries.log Q : MvPowerSeries Unit Q) q := by
   intro p _ B O Q _ _ _ _ _ θ hF σ _ _ z hz E hE g q hg hq
-  haveI := hF.complete
+  have := hF.complete
   have hu : ∀ j : Unit, constantCoeff ((fun _ : Unit => g - 1) j) = 0 := fun _ => by simp [hg]
   have hEu : E (g - 1) = E g - 1 := by rw [map_sub, map_one]
   have hnil : ∃ N : ℕ, (p : B) ∣ (E g - 1) ^ N :=
@@ -821,7 +821,7 @@ theorem mvPolynomialEval_truncFinsupp_eq_sum_coeff_mul_prod {R σ : Type} [CommR
     · exact absurd rfl hm
   rw [MvPolynomial.eval_eq, Finset.sum_subset hsub]
   · refine Finset.sum_congr rfl fun m hm => ?_
-    rw [coeff_trunc', if_pos (Finset.mem_Iic.mp hm)]
+    rw [coeff_trunc', ite_eq_left (Finset.mem_Iic.mp hm)]
   · intro m _ hm
     rw [MvPolynomial.notMem_support_iff.mp hm, zero_mul]
 
@@ -912,7 +912,7 @@ namespace GlobalTheory.QLogPeriod
 
 theorem theta_eval_char : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O] (ε : PreTilt O p) (hε : IsPrimitiveSystem ε) (F : BFrame ε) (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (χ : G.dual.Tate) (g : MvPowerSeries (Fin d) F.B), (∀ n, c.ev n (map F.θ g) = charElem χ n) → ∀ (t : G.Tate) (n : ℕ) (z : Fin d → F.B), (∀ i, F.θ (z i) = t.pt n (c.x n i)) → (∀ i, ∃ N : ℕ, (p : F.B) ∣ z i ^ N) → ∀ E : MvPowerSeries (Fin d) F.B →ₐ[F.B] F.B, IsEval p z E → F.θ (E g) = zeta ε n ^ GlobalTheory.PDiv.digit n (epsPairing hε G t χ) := by
   intro p _ O _ _ _ _ ε hε F G d c χ g hg t n z hz hnil E hE
-  haveI := F.frame.complete
+  have := F.frame.complete
   let Ev : MvPowerSeries (Fin d) O →ₐ[O] O := (t.pt n).comp (c.ev n)
   have hEv : IsEval p (fun i => F.θ (z i)) Ev := by
     refine ⟨fun i => ?_, fun m => ?_⟩
@@ -986,7 +986,7 @@ theorem one_add_pow_of_sq_zero {R : Type} [CommRing R] {x : R} (hx : x * x = 0) 
 theorem pow_mul_logValue : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] (ε : PreTilt O p), IsPrimitiveSystem ε → ∀ (F : BFrame ε) [Algebra ℚ F.Q] (n k : ℕ) (w : F.B) (q : F.Q), F.θ w = zeta ε n ^ k → HasVal p (fun _ : Unit => w - 1) (PowerSeries.log F.Q : MvPowerSeries Unit F.Q) q → ∃ b : F.B, (p : F.Q) ^ n * q = algebraMap F.B F.Q (k * F.a (Sandwich.mu ε) + p ^ n * b) := by
   intro p _ O _ _ _ ε hε F _ n k w q hw hq
   have hF := F.frame
-  haveI := hF.complete
+  have := hF.complete
   set r : F.B := F.a (teichmuller p (root^[n] ε)) with hr
   have hθr : F.θ r = zeta ε n := by rw [hr, F.θ_a, fontaineTheta_teichmuller]; rfl
   have hrp : r ^ (p ^ n) = 1 + F.a (Sandwich.mu ε) := by
@@ -1049,7 +1049,7 @@ theorem pow_mul_logValue : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] 
 theorem hasPeriod_formalLog_char : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε) (F : BFrame ε) [Algebra ℚ F.Q] (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (χ : G.dual.Tate) (g : MvPowerSeries (Fin d) F.B), constantCoeff g = 1 → (∀ n, c.ev n (map F.θ g) = charElem χ n) → ∀ t, c.HasPeriod F.θ t (formalLog (map (algebraMap F.B F.Q) g)) (F.a (Sandwich.mu ε * ofPadic p O (epsPairing hε G t χ))) := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε F _ G d c χ g hg1 hgχ t
   have hF := F.frame
-  haveI := hF.complete
+  have := hF.complete
   have hD : DIn (⊤ : Ideal F.B) (formalLog (map (algebraMap F.B F.Q) g)) := _root_.GlobalTheory.QLog.dIn_top_formalLog_map F.B F.Q (Fin d) g hg1
   have hnil : ∀ n (z : Fin d → F.B), (∀ i, F.θ (z i) = t.pt n (c.x n i)) → ∀ i, ∃ N : ℕ, (p : F.B) ∣ z i ^ N := by
     intro n z hz i
@@ -1182,7 +1182,7 @@ open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory
 
 theorem GlobalTheory.CharLog.exists_log_char_period : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ F : BFrame ε, ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (μ' : Fin d → MvPowerSeries (Fin d ⊕ Fin d) F.B), IsLift F.θ μ' → (∀ i, map F.θ (μ' i) = c.μ i) → ∀ χ : G.dual.Tate, ∃ (f : MvPowerSeries (Fin d) F.Q) (w : Fin d → F.B), QL μ' ⊤ f ∧ In (RingHom.ker F.θ) (cob1 (up F.Q μ') f) ∧ In (⊤ : Ideal F.B) (frob p F.s f - (p : F.Q) • f) ∧ (∀ i, lin f i = algebraMap F.B F.Q (w i)) ∧ dlog G χ = ∑ i, F.θ (w i) • c.form i ∧ ∀ t, c.HasPeriod F.θ t f (F.a (Sandwich.mu ε * ofPadic p O (epsPairing hε G t χ))) := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε F G d c μ' hlift hμ χ
-  letI : Algebra ℚ F.Q := GlobalTheory.CharLog.ratAlgebra F.frame
+  let : Algebra ℚ F.Q := GlobalTheory.CharLog.ratAlgebra F.frame
   obtain ⟨u, hu0, hu⟩ := _root_.GlobalTheory.QLog.exists_charSeries p O G d c χ
   have hmul := _root_.GlobalTheory.QLog.Chart.subst_μ_eq_inL_mul_inR p O G d c χ u hu
   choose g0 hg0 using fun α => F.frame.surj (coeff α u)
@@ -1193,13 +1193,13 @@ theorem GlobalTheory.CharLog.exists_log_char_period : ∀ (p : ℕ) [Fact p.Prim
     by_cases h : α = 0
     · subst h
       change F.θ (if (0 : Fin d →₀ ℕ) = 0 then 1 else g0 0) = _
-      rw [if_pos rfl, map_one, coeff_zero_eq_constantCoeff_apply, hu0]
+      rw [ite_eq_left rfl, map_one, coeff_zero_eq_constantCoeff_apply, hu0]
     · change F.θ (if α = 0 then 1 else g0 α) = _
-      rw [if_neg h, hg0]
+      rw [ite_eq_right h, hg0]
   have hg1 : constantCoeff g = 1 := by
     rw [← coeff_zero_eq_constantCoeff_apply]
     change (if (0 : Fin d →₀ ℕ) = 0 then 1 else g0 0) = 1
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
   have hlin : ∀ i, lin (formalLog (map (algebraMap F.B F.Q) g)) i =
       algebraMap F.B F.Q (coeff (Finsupp.single i 1) g) := fun i => by
     rw [_root_.GlobalTheory.FormalCalc.lin_formalLog F.Q d _ (by rw [constantCoeff_map, hg1, map_one]) i, lin, coeff_map]

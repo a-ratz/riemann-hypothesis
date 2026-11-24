@@ -111,7 +111,7 @@ theorem isClosed_line {d : ℕ} (x : Fin d → E) : IsClosed {w : Fin d → _roo
   by_cases hx : x = 0
   · have : {w : Fin d → _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E) | ∃ a : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E), w = a • incV F x} = {0} := by
       ext w
-      simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+      simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
       have h0 : incV F x = 0 := by
         funext i
         simp [incV, hx]
@@ -127,7 +127,7 @@ theorem isClosed_line {d : ℕ} (x : Fin d → E) : IsClosed {w : Fin d → _roo
     have : {w : Fin d → _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E) | ∃ a : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E), w = a • incV F x} =
         {w | w = (w i * inclR (F := F) (AF F) (x i)⁻¹) • incV F x} := by
       ext w
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · rintro ⟨a, rfl⟩
         congr 1
@@ -143,7 +143,7 @@ end Top
 variable [T2Space (AE F E)] [IsTopologicalRing (AE F E)] in
 theorem isClosed_carrierSet (σ : E →ₐ[F] E) {d d₁ : ℕ} (W : Spc F E d) (H' : Plane E d d₁) :
     IsClosed (carrierSet σ W H') := by
-  have hm : Continuous fun u : UA σ W.J => mat u := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous fun u : UA σ W.J => mat u := Units.continuous_val.comp continuous_subtypeVal
   have h1 : IsClosed {u : UA σ W.J | mat u *ᵥ incV F H'.x = incV F H'.x} :=
     isClosed_eq (hm.matrix_mulVec continuous_const) continuous_const
   have h2 : ∀ z : Fin d₁ → AE F E, IsClosed {u : UA σ W.J | ∃ a : AE F E,
@@ -153,7 +153,7 @@ theorem isClosed_carrierSet (σ : E →ₐ[F] E) {d d₁ : ℕ} (W : Spc F E d) 
         (fun u : UA σ W.J => mat u *ᵥ (incM F H'.ι *ᵥ z) - incM F H'.ι *ᵥ z) ⁻¹'
           {w | ∃ a : AE F E, w = a • incV F H'.x} := by
       ext u
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, sub_eq_iff_eq_add']
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, sub_eq_iff_eq_add']
     rw [this]
     exact (isClosed_line H'.x).preimage ((hm.matrix_mulVec continuous_const).sub continuous_const)
   have : carrierSet σ W H' = {u : UA σ W.J | mat u *ᵥ incV F H'.x = incV F H'.x} ∩
@@ -167,11 +167,11 @@ theorem isClosed_carrierSet (σ : E →ₐ[F] E) {d d₁ : ℕ} (W : Spc F E d) 
 theorem isClosed_unip : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
     (d d₁ : ℕ) (W : Spc F E d) (H' : Plane E d d₁), IsClosed ((unip σ W H' : Subgroup (UA σ W.J)) : Set (UA σ W.J)) := by
   intro F E _ _ _ _ _ σ d d₁ W H'
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
   rw [unip_eq]
   exact isClosed_carrierSet σ W H'
 

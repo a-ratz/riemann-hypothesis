@@ -78,9 +78,9 @@ theorem nonarch_pi' {ι : Type} {G : ι → Type} [∀ i, AddGroup (G i)] [∀ i
 
 variable (F) in
 theorem nonarch_finAdeles : NonarchimedeanAddGroup (FiniteAdeleRing (𝓞 F) F) := by
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
+  have : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
     nonarch_of_inducing (v.adicCompletionIntegers F).subtype.toAddMonoidHom Topology.IsInducing.subtypeVal
-  haveI := nonarch_pi' (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
+  have := nonarch_pi' (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
   let f : (∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletionIntegers F) →+ FiniteAdeleRing (𝓞 F) F :=
     { toFun := RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
         (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite
@@ -154,7 +154,7 @@ theorem exists_fix_pure (ψ : AddChar (AdeleRing (𝓞 F) F) ℂ) (hψ : Continu
       IsOpen (L₁ : Set (κ → FiniteAdeleRing (𝓞 F) F)) ∧ IsOpen (L₂ : Set (κ → FiniteAdeleRing (𝓞 F) F)) ∧
       ∀ x ∈ L₁, ∀ y ∈ L₂, schr ψ (GlobalTheory.WeilCont.adeleJoin F 0 x, GlobalTheory.WeilCont.adeleJoin F 0 y) (pureA F f g) =
         pureA F f g := by
-  haveI := nonarch_finAdeles F
+  have := nonarch_finAdeles F
   let χ : AddChar (FiniteAdeleRing (𝓞 F) F) ℂ :=
     ψ.compAddMonoidHom (AddMonoidHom.inr (InfiniteAdeleRing F) (FiniteAdeleRing (𝓞 F) F))
   have hχ : Continuous χ := hψ.comp (continuous_const.prodMk continuous_id)

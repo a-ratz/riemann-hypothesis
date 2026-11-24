@@ -207,7 +207,7 @@ theorem dvd_of_smul_eq_zero {q : ℕ} [NeZero q] (i : ℤ) (U : Scheme.{0}) [Non
   rw [GlobalTheory.EtC.loc_iff_etale_affine_points] at hl
   · obtain ⟨x⟩ := ‹Nonempty U›
     obtain ⟨V, g, -, -, ⟨v, -⟩, hg⟩ := hl x
-    haveI : Nontrivial Γ(V, ⊤) := @Scheme.component_nontrivial V ⊤ ⟨⟨v, trivial⟩⟩
+    have : Nontrivial Γ(V, ⊤) := @Scheme.component_nontrivial V ⊤ ⟨⟨v, trivial⟩⟩
     obtain ⟨φ, hφ⟩ := (GlobalTheory.TwFree.twist_free q i Γ(V, ⊤)).2 (ζ.map g.appTop.hom)
     have hg' : c • (Submodule.Quotient.mk (Finsupp.single (ζ.map g.appTop.hom) 1) :
         (Prim q Γ(V, ⊤) →₀ ULift.{1} (ZMod q)) ⧸ twRel q i Γ(V, ⊤)) = 0 := by

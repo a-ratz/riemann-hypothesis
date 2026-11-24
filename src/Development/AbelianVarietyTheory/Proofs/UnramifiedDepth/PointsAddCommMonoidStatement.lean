@@ -184,9 +184,9 @@ private theorem general
       hS 3 (P 3 ![φ, φ', φ'']) φ (add φ' φ'') (pt O d 0) (fun l => ev (n := 3) ![pt O d 1, pt O d 2] (F.F l))
         (cpt 0) (fun l => const_ev _ (c2 (cpt 1) (cpt 2)) _ (F.const l))
         e0 (hS 3 _ φ' φ'' _ _ (cpt 1) (cpt 2) e1 e2), F.assoc]
-  letI : Add (PS O 1 d →ₐ[O] O) := ⟨add⟩
-  letI : Zero (PS O 1 d →ₐ[O] O) := ⟨origin O d⟩
-  letI inst : AddCommMonoid (PS O 1 d →ₐ[O] O) :=
+  let : Add (PS O 1 d →ₐ[O] O) := ⟨add⟩
+  let : Zero (PS O 1 d →ₐ[O] O) := ⟨origin O d⟩
+  let inst : AddCommMonoid (PS O 1 d →ₐ[O] O) :=
     { add_assoc := hassoc
       zero_add := hzero
       add_zero := fun φ => (hcomm φ _).trans (hzero φ)

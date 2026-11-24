@@ -196,7 +196,7 @@ theorem snd_app_eq_zero {X T S : Scheme.{0}} (p : X ⟶ S) (t : T ⟶ S) (W : X.
   refine TopCat.Presheaf.section_ext (CategoryTheory.Limits.pullback t p).sheaf _ _ _ fun y hy => ?_
   have hy' : CategoryTheory.Limits.pullback.snd t p y ∈ W := hy
   have := h y hy'
-  simp only [gs, dif_pos hy'] at this
+  simp only [gs, dite_eq_left hy'] at this
   erw [this]
   exact (map_zero _).symm
 
@@ -333,11 +333,11 @@ def SecBDvdSt : Prop :=
 theorem gs_fsum {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) (h : f y ∈ U) {κ : Type} (S : Finset κ)
     (a : κ → Γ(X, U)) : gs f y U (∑ i ∈ S, a i) = ∑ i ∈ S, gs f y U (a i) := by
   set_option synthInstance.maxHeartbeats 100000 in
-    simp only [gs, dif_pos h, map_sum]
+    simp only [gs, dite_eq_left h, map_sum]
 
 theorem isUnit_gs_pow {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) (h : f y ∈ U) (u : Γ(X, U)ˣ) (k : ℕ) :
     IsUnit (gs f y U (u.val ^ k)) := by
-  simp only [gs, dif_pos h]
+  simp only [gs, dite_eq_left h]
   exact ((u.isUnit.pow k).map _).map _
 
 theorem dvd_of_eq_sum {P : Scheme.{0}} {x : P} {W : P.Opens} (hmem : x ∈ W) {κ : Type} {S : Finset κ}
@@ -348,7 +348,7 @@ theorem dvd_of_eq_sum {P : Scheme.{0}} {x : P} {W : P.Opens} (hmem : x ∈ W) {�
   rw [gs_fsum (𝟙 P) x W hx]
   refine Finset.dvd_sum fun i hi => ?_
   have hm : gs (𝟙 P) x W (a i * b i) = gs (𝟙 P) x W (a i) * gs (𝟙 P) x W (b i) := by
-    simp only [gs, dif_pos hx, map_mul]
+    simp only [gs, dite_eq_left hx, map_mul]
   rw [hm]
   exact (h i hi).mul_right _
 
@@ -575,7 +575,7 @@ lemma valOver_vK (hϖ : Irreducible ϖ) : ValOver ϖ (FractionRing V) (vK hϖ) :
     refine mul_ne_zero (zpow_ne_zero _ hπ) ?_
     exact (map_ne_zero_iff _ (IsFractionRing.injective V (FractionRing V))).mpr u.ne_zero
   change vK hϖ c = _
-  simp only [vK, AddValuation.of_apply, if_neg hc0]
+  simp only [vK, AddValuation.of_apply, ite_eq_right hc0]
   rw [hasVal_unique hϖ (hasVal_valE hϖ hc0) hc]
 
 end ReciprocityTheory.ChartRestriction.G.DVR.TG
@@ -613,9 +613,9 @@ theorem secScal_cast {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] {
 theorem nuReg : NuRegSt := by
   intro E _ _ _ H V _ _ _ _ _ t P _ ϖ hϖ Q hQ vK hvK tK m w _ k hk F hF
   obtain ⟨s, Ex, htie, hexp, hnu⟩ := hF
-  haveI := t.semi.smooth
-  haveI := t.semi.separated
-  haveI := t.semi.quasiCompact
+  have := t.semi.smooth
+  have := t.semi.separated
+  have := t.semi.quasiCompact
   obtain ⟨σ', hσ'⟩ := nuExt V ϖ hϖ P.D Q hQ vK hvK P.A t.G P.U k hk s Ex hexp hnu
   have hsc := secScal_cast (pullback.fst t.G.hom (Out.jK V)) k P.bundle s σ' hσ'
   refine ⟨P.bundle ▸ σ', fun Z r zp hzp z J J' hJ hJ' => ?_⟩

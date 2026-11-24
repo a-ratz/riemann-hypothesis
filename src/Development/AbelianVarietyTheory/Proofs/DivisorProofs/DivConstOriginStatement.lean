@@ -304,9 +304,9 @@ theorem primeDescent : ∀ (A' B' : Type) [CommRing A'] [IsDomain A'] [IsNoether
     (Q.comap (algebraMap A' B')).height = 1 ∧
       (Q.comap (algebraMap A' B')).map (algebraMap A' B') = Q := by
   intro A' B' _ _ _ _ _ _ _ _ s hs hpr Q hQ hQ1 hsQ
-  haveI : Algebra.HasGoingDown A' B' := Algebra.HasGoingDown.of_flat
-  haveI hPp : (Q.comap (algebraMap A' B')).IsPrime := Ideal.comap_isPrime _ Q
-  haveI : Q.LiesOver (Q.comap (algebraMap A' B')) := ⟨rfl⟩
+  have : Algebra.HasGoingDown A' B' := Algebra.HasGoingDown.of_flat
+  have hPp : (Q.comap (algebraMap A' B')).IsPrime := Ideal.comap_isPrime _ Q
+  have : Q.LiesOver (Q.comap (algebraMap A' B')) := ⟨rfl⟩
   have h := Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown (Q.comap (algebraMap A' B')) Q
   have hle1 : (Q.comap (algebraMap A' B')).height ≤ 1 := by rw [← hQ1, h]; exact le_self_add
   have h1 : (Q.comap (algebraMap A' B')).height = 1 := by
@@ -317,7 +317,7 @@ theorem primeDescent : ∀ (A' B' : Type) [CommRing A'] [IsDomain A'] [IsNoether
     rw [hb, Ideal.mem_bot] at this
     exact hs this
   refine ⟨h1, ?_⟩
-  haveI hP : ((Q.comap (algebraMap A' B')).map (algebraMap A' B')).IsPrime := hpr _ hPp h1 hsQ
+  have hP : ((Q.comap (algebraMap A' B')).map (algebraMap A' B')).IsPrime := hpr _ hPp h1 hsQ
   have hle : (Q.comap (algebraMap A' B')).map (algebraMap A' B') ≤ Q := Ideal.map_comap_le
   by_contra hne
   have hlt := Ideal.height_strict_mono_of_isPrime (lt_of_le_of_ne hle hne)
@@ -460,9 +460,9 @@ theorem isDomain_of_directed {S : Type} [CommRing S] [Nontrivial S] {ι : Type} 
     [IsDirected ι (· ≤ ·)] [Nonempty ι] (R : ι → Subring S) (hmono : Monotone R)
     (hcov : ∀ x : S, ∃ i, x ∈ R i) (hdom : ∀ i, IsDomain (R i)) : IsDomain S := by
   classical
-  haveI : NoZeroDivisors S := ⟨fun {x y} hxy => by
+  have : NoZeroDivisors S := ⟨fun {x y} hxy => by
     obtain ⟨k, hk⟩ := exists_mem_finset R hmono hcov {x, y}
-    haveI := hdom k
+    have := hdom k
     have hx : x ∈ R k := hk x (by simp)
     have hy : y ∈ R k := hk y (by simp)
     have h : (⟨x, hx⟩ : R k) * ⟨y, hy⟩ = 0 := Subtype.ext hxy
@@ -481,8 +481,8 @@ theorem isIntegrallyClosed_of_directed {S : Type} [CommRing S] [IsDomain S] {ι 
   obtain ⟨f, hfm, hf⟩ := hx
   obtain ⟨⟨a, b⟩, rfl⟩ := IsLocalization.mk'_surjective (nonZeroDivisors S) x
   obtain ⟨k, hk⟩ := exists_mem_finset R hmono hcov (insert a (insert (b : S) f.coeffs))
-  haveI := hdom k
-  haveI := hic k
+  have := hdom k
+  have := hic k
   have ha : a ∈ R k := hk a (by simp)
   have hb : (b : S) ∈ R k := hk b (by simp)
   have hcf : (f.coeffs : Set S) ⊆ R k := fun c hc =>
@@ -529,14 +529,14 @@ theorem exists_strictlyHenselian_normal_between : ∀ (T : Type) [CommRing T] [I
       (_ : IsSepClosed (ResidueField A')) (_ : IsNoetherianRing A') (_ : IsIntegrallyClosed A')
       (ι : A →+* A') (α : A' →+* T), α.comp ι = i ∧ IsLocalHom α := by
   intro T _ _ _ hT A _ _ _ _ _ i hi
-  haveI := hi
+  have := hi
   obtain ⟨hThens, hTac, -⟩ :=
     GlobalTheory.AbsIntClosedLocal.henselian_isAlgClosed_pow_surj T ⟨inferInstance, hT⟩
-  haveI := hThens
-  haveI := hTac
+  have := hThens
+  have := hTac
   obtain ⟨S, _, _, _, hloc, hsc, -, hmax, -, ι, _, _, _, Si, hmono, hcov, hSi⟩ :=
     GlobalTheory.exists_strictHenselisation A (SeparableClosure (ResidueField A))
-  haveI := hsc
+  have := hsc
   have hind : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap A S) :=
     GlobalTheory.StrictHensUnion.indEtale_of_directed_union A S ι Si hmono hcov fun k => by
       obtain ⟨B, _, _, _, q, _, ⟨e⟩⟩ := hSi k
@@ -544,7 +544,7 @@ theorem exists_strictlyHenselian_normal_between : ∀ (T : Type) [CommRing T] [I
         (GlobalTheory.StrictHensUnion.indEtale_localization_of_etale A B q.primeCompl)
   have hsh : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation (algebraMap A S) :=
     ⟨inferInstance, hsc, hloc, hind⟩
-  haveI : IsNoetherianRing S := GlobalTheory.StalkNoeth.isNoetherianRing_of_indEt A S hind
+  have : IsNoetherianRing S := GlobalTheory.StalkNoeth.isNoetherianRing_of_indEt A S hind
   have hdi : ∀ k, IsDomain (Si k).toSubring ∧ IsIntegrallyClosed (Si k).toSubring := fun k => by
     obtain ⟨B, _, _, _, q, _, ⟨e⟩⟩ := hSi k
     obtain ⟨h1, h2⟩ := GlobalTheory.etale_localization_atPrime_isDomain_isIntegrallyClosed A B q
@@ -558,7 +558,7 @@ theorem exists_strictlyHenselian_normal_between : ∀ (T : Type) [CommRing T] [I
           map_add' := fun _ _ => rfl }
     exact ⟨e'.symm.toMulEquiv.isDomain _, IsIntegrallyClosed.of_equiv e'⟩
   have hmono' : Monotone fun k => (Si k).toSubring := fun _ _ h => hmono h
-  haveI : IsDomain S := isDomain_of_directed _ hmono' hcov fun k => (hdi k).1
+  have : IsDomain S := isDomain_of_directed _ hmono' hcov fun k => (hdi k).1
   have hic : IsIntegrallyClosed S :=
     isIntegrallyClosed_of_directed _ hmono' hcov (fun k => (hdi k).1) fun k => (hdi k).2
   obtain ⟨α, hα⟩ :=
@@ -645,11 +645,11 @@ theorem exists_normal_local (A : Type) [CommRing A] [HenselianLocalRing A] (𝔭
   let S := integralClosure B K
   have : IsFractionRing S K := inferInstance
   have hic : IsIntegrallyClosed S := (isIntegrallyClosed_iff_isIntegrallyClosedIn K).mpr inferInstance
-  letI : Algebra A S := ((algebraMap B S).comp (Ideal.Quotient.mk 𝔭)).toAlgebra
+  let : Algebra A S := ((algebraMap B S).comp (Ideal.Quotient.mk 𝔭)).toAlgebra
   have h1 : (Ideal.Quotient.mk 𝔭).IsIntegral := RingHom.isIntegral_of_surjective _ Ideal.Quotient.mk_surjective
   have h2 : (algebraMap B S).IsIntegral := fun x => Algebra.IsIntegral.isIntegral (R := B) x
   have hint : (algebraMap A S).IsIntegral := RingHom.IsIntegral.trans _ _ h1 h2
-  haveI : Algebra.IsIntegral A S := ⟨fun x => hint x⟩
+  have : Algebra.IsIntegral A S := ⟨fun x => hint x⟩
   have hloc : IsLocalRing S := GlobalTheory.IntClLocal.isLocalRing_of_isIntegral_of_henselian A S
   have hinjK : Function.Injective (algebraMap B K) := IsFractionRing.injective B K
   have hinj : Function.Injective (algebraMap B S) := by
@@ -748,10 +748,10 @@ theorem residue_origin : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsSepClose
     ∀ y : Localization.AtPrime Q, ∃ a : Polynomial A, y - algebraMap (Polynomial A) (Localization.AtPrime Q) a ∈ maximalIdeal (Localization.AtPrime Q) := by
   intro A _ _ _ E _ _ _ Q _ hQ y
   set p := GlobalTheory.KeyOriginCut.originIdeal A with hp
-  haveI : p.IsPrime := hQ ▸ Ideal.comap_isPrime _ Q
-  haveI : Q.LiesOver p := ⟨hQ.symm⟩
-  letI := Localization.AtPrime.algebraOfLiesOver p Q
-  haveI : IsSepClosed p.ResidueField := isSepClosed_of_ringEquiv
+  have : p.IsPrime := hQ ▸ Ideal.comap_isPrime _ Q
+  have : Q.LiesOver p := ⟨hQ.symm⟩
+  let := Localization.AtPrime.algebraOfLiesOver p Q
+  have : IsSepClosed p.ResidueField := isSepClosed_of_ringEquiv
     (RingEquiv.ofBijective _ ⟨(ResidueField.lift (constToResidue (A := A))).injective, lift_surjective⟩)
   obtain ⟨x, hx⟩ := IsSepClosed.algebraMap_surjective p.ResidueField Q.ResidueField
     (residue (Localization.AtPrime Q) y)
@@ -860,7 +860,7 @@ theorem originIdeal_isMaximal (T : Type) [CommRing T] [IsLocalRing T] :
 
 theorem mapRingHom_isIntegral {A S : Type} [CommRing A] [CommRing S] (f : A →+* S) (hf : f.IsIntegral) :
     (Polynomial.mapRingHom f).IsIntegral := by
-  letI : Algebra (Polynomial A) (Polynomial S) := (Polynomial.mapRingHom f).toAlgebra
+  let : Algebra (Polynomial A) (Polynomial S) := (Polynomial.mapRingHom f).toAlgebra
   have hC : ∀ s : S, IsIntegral (Polynomial A) (Polynomial.C s) := by
     intro s
     obtain ⟨P, hPm, hP⟩ := hf s
@@ -889,9 +889,9 @@ theorem polyOrigin : ∀ (A S : Type) [CommRing A] [IsLocalRing A] [CommRing S] 
   intro A S _ _ _ _ f hf
 
   have hmA : (maximalIdeal S).comap f = maximalIdeal A := by
-    haveI := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' f hf (maximalIdeal S)
+    have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal f hf (maximalIdeal S)
     exact IsLocalRing.eq_maximalIdeal this
-  haveI hloc : IsLocalHom f := by
+  have hloc : IsLocalHom f := by
     refine ⟨fun a ha => ?_⟩
     by_contra hna
     have : a ∈ (maximalIdeal S).comap f := by
@@ -905,14 +905,14 @@ theorem polyOrigin : ∀ (A S : Type) [CommRing A] [IsLocalRing A] [CommRing S] 
       rw [hc, GlobalTheory.LocalStage.mem_originIdeal_iff]; simp
     simpa using this
 
-  haveI : (𝔔.comap (Polynomial.C : S →+* Polynomial S)).IsPrime := Ideal.comap_isPrime _ _
+  have : (𝔔.comap (Polynomial.C : S →+* Polynomial S)).IsPrime := Ideal.comap_isPrime _ _
   have hcC : (𝔔.comap (Polynomial.C : S →+* Polynomial S)).comap f = maximalIdeal A := by
     ext a
     rw [Ideal.mem_comap, Ideal.mem_comap]
     have h1 : Polynomial.C (f a) = Polynomial.mapRingHom f (Polynomial.C a) := by simp
     rw [h1, ← Ideal.mem_comap, hc, GlobalTheory.LocalStage.mem_originIdeal_iff, Polynomial.coeff_C_zero]
   have hmax : (𝔔.comap (Polynomial.C : S →+* Polynomial S)).IsMaximal :=
-    Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' f hf _ (by rw [hcC]; infer_instance)
+    Ideal.isMaximal_of_isIntegral_of_isMaximal_comap f hf _ (by rw [hcC]; infer_instance)
   have hP : 𝔔.comap (Polynomial.C : S →+* Polynomial S) = maximalIdeal S :=
     IsLocalRing.eq_maximalIdeal hmax
   have hle : GlobalTheory.KeyOriginCut.originIdeal S ≤ 𝔔 := by
@@ -990,14 +990,14 @@ theorem tensor_isLocalRing_of_unique_prime_over : ∀ (P T L : Type) [CommRing P
     Algebra.TensorProduct.lift (Ideal.Quotient.mkₐ P 𝔐) g (fun _ _ => Commute.all _ _)
   have hψ : ∀ t y, ψ (t ⊗ₜ[P] y) = Ideal.Quotient.mk 𝔐 t * g y := by
     intro t y; simp [ψ, Algebra.TensorProduct.lift_tmul]
-  haveI : Nontrivial (T ⧸ 𝔐) := Ideal.Quotient.nontrivial_iff.mpr (Ideal.IsPrime.ne_top inferInstance)
+  have : Nontrivial (T ⧸ 𝔐) := Ideal.Quotient.nontrivial_iff.mpr (Ideal.IsPrime.ne_top inferInstance)
   have hψs : Function.Surjective ψ := by
     intro z
     obtain ⟨t, rfl⟩ := Ideal.Quotient.mk_surjective z
     exact ⟨t ⊗ₜ[P] 1, by rw [hψ, map_one, mul_one]⟩
-  haveI : Nontrivial (TensorProduct P T L) := hψs.nontrivial
+  have : Nontrivial (TensorProduct P T L) := hψs.nontrivial
 
-  letI : Algebra L (TensorProduct P T L) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra L (TensorProduct P T L) := Algebra.TensorProduct.rightAlgebra
   have hmap : ∀ x, algebraMap L (TensorProduct P T L) x = (1 : T) ⊗ₜ[P] x := fun _ => rfl
   have hint : Algebra.IsIntegral L (TensorProduct P T L) := by
     constructor
@@ -1102,17 +1102,17 @@ theorem tensor_localization_atPrime_isDomain_of_isLocalRing_etale :
       IsLocalRing (TensorProduct P R (Localization.AtPrime Q)) →
         IsDomain (TensorProduct P R (Localization.AtPrime Q)) := by
   intro P R E _ _ _ _ _ _ _ _ Q _ hloc
-  letI : Algebra (R ⊗[P] E) (R ⊗[P] Localization.AtPrime Q) :=
+  let : Algebra (R ⊗[P] E) (R ⊗[P] Localization.AtPrime Q) :=
     (Algebra.TensorProduct.map (AlgHom.id P R)
       (IsScalarTower.toAlgHom P E (Localization.AtPrime Q))).toAlgebra
-  haveI : IsScalarTower R (R ⊗[P] E) (R ⊗[P] Localization.AtPrime Q) :=
+  have : IsScalarTower R (R ⊗[P] E) (R ⊗[P] Localization.AtPrime Q) :=
     .of_algebraMap_eq <| by intro; simp [RingHom.algebraMap_toAlgebra]
-  haveI hl := IsLocalization.tensorProduct_tensorProduct_right P R Q.primeCompl
+  have hl := IsLocalization.tensorProduct_tensorProduct_right P R Q.primeCompl
     (Localization.AtPrime Q) (by ext; simp [RingHom.algebraMap_toAlgebra])
   let 𝔭 : Ideal (R ⊗[P] E) :=
     (maximalIdeal (R ⊗[P] Localization.AtPrime Q)).comap
       (algebraMap (R ⊗[P] E) (R ⊗[P] Localization.AtPrime Q))
-  haveI : 𝔭.IsPrime := Ideal.comap_isPrime _ _
+  have : 𝔭.IsPrime := Ideal.comap_isPrime _ _
   have hle : Q.primeCompl.map (Algebra.TensorProduct.includeRight (R := P) (A := R)) ≤
       𝔭.primeCompl := by
     intro x hx
@@ -1120,7 +1120,7 @@ theorem tensor_localization_atPrime_isDomain_of_isLocalRing_etale :
       (⟨x, hx⟩ : Q.primeCompl.map (Algebra.TensorProduct.includeRight (R := P) (A := R)))
     intro h
     exact ((mem_maximalIdeal _).mp (Ideal.mem_comap.mp h)) hu
-  haveI : IsLocalization 𝔭.primeCompl (R ⊗[P] Localization.AtPrime Q) :=
+  have : IsLocalization 𝔭.primeCompl (R ⊗[P] Localization.AtPrime Q) :=
     IsLocalization.of_le _ _ hle (fun r hr => by
       by_contra hu
       exact hr (Ideal.mem_comap.mpr ((mem_maximalIdeal _).mpr hu)))
@@ -1167,21 +1167,21 @@ theorem origin_primes : ∀ (A' : Type) [CommRing A'] [HenselianLocalRing A'] [I
   intro A' _ _ _ 𝔭 _ E _ _ _ Q _ hQ
   obtain ⟨S, _, _, _, _, f, hfi, hker⟩ := GlobalTheory.T.exists_normal_local_domain_over_henselian_prime A' 𝔭
   obtain ⟨hXi, hOp, hOc, hOu⟩ := GlobalTheory.T.origin_ideal_unique_prime_over A' S f hfi
-  letI : Algebra (Polynomial A') (Polynomial S) := (Polynomial.mapRingHom f).toAlgebra
-  haveI : Algebra.IsIntegral (Polynomial A') (Polynomial S) := ⟨hXi⟩
+  let : Algebra (Polynomial A') (Polynomial S) := (Polynomial.mapRingHom f).toAlgebra
+  have : Algebra.IsIntegral (Polynomial A') (Polynomial S) := ⟨hXi⟩
   have hmax : (maximalIdeal (Localization.AtPrime Q)).comap
       (algebraMap (Polynomial A') (Localization.AtPrime Q)) = GlobalTheory.KeyOriginCut.originIdeal A' := by
     have h0 : (maximalIdeal (Localization.AtPrime Q)).comap (algebraMap E (Localization.AtPrime Q)) = Q :=
       Localization.AtPrime.under_maximalIdeal (I := Q)
     rw [IsScalarTower.algebraMap_eq (Polynomial A') E (Localization.AtPrime Q), ← Ideal.comap_comap,
       h0, hQ]
-  haveI hloc : IsLocalRing (TensorProduct (Polynomial A') (Polynomial S) (Localization.AtPrime Q)) :=
+  have hloc : IsLocalRing (TensorProduct (Polynomial A') (Polynomial S) (Localization.AtPrime Q)) :=
     GlobalTheory.T.isLocalRing_tensor_of_unique_prime_over (Polynomial A') (Polynomial S) (Localization.AtPrime Q) (GlobalTheory.KeyOriginCut.originIdeal S)
       (by rw [hmax]; exact hOc) (by intro 𝔔 h1 h2; rw [hmax] at h2; exact hOu 𝔔 h1 h2)
       (GlobalTheory.T.exists_sub_mem_maximalIdeal_etale_over_origin A' E Q hQ)
-  haveI hdom : IsDomain (TensorProduct (Polynomial A') (Polynomial S) (Localization.AtPrime Q)) :=
+  have hdom : IsDomain (TensorProduct (Polynomial A') (Polynomial S) (Localization.AtPrime Q)) :=
     GlobalTheory.T.isDomain_tensor_atPrime_of_isLocalRing_of_etale (Polynomial A') (Polynomial S) E Q hloc
-  haveI : Module.Flat (Polynomial A') (Localization.AtPrime Q) :=
+  have : Module.Flat (Polynomial A') (Localization.AtPrime Q) :=
     Module.Flat.trans (Polynomial A') E (Localization.AtPrime Q)
   have hkerX : RingHom.ker (algebraMap (Polynomial A') (Polynomial S)) = 𝔭.map Polynomial.C := by
     change RingHom.ker (Polynomial.mapRingHom f) = _
@@ -1261,19 +1261,19 @@ theorem local_props (A' : Type) [CommRing A'] [IsDomain A'] [IsNoetherianRing A'
       (letI : Algebra A' (Localization.AtPrime Q) :=
         ((algebraMap (Polynomial A') (Localization.AtPrime Q)).comp Polynomial.C).toAlgebra
        Module.Flat A' (Localization.AtPrime Q)) := by
-  haveI : IsIntegrallyClosed (Polynomial A') := by
-    haveI := GlobalTheory.isIntegrallyClosed_mvPolynomial_fin A' 1
+  have : IsIntegrallyClosed (Polynomial A') := by
+    have := GlobalTheory.isIntegrallyClosed_mvPolynomial_fin A' 1
     exact IsIntegrallyClosed.of_equiv
       (MvPolynomial.uniqueAlgEquiv A' (Fin 1)).toRingEquiv
   obtain ⟨h1, h2⟩ := GlobalTheory.etale_localization_atPrime_isDomain_isIntegrallyClosed (Polynomial A') E Q
-  haveI : IsNoetherianRing E := Algebra.FiniteType.isNoetherianRing (Polynomial A') E
+  have : IsNoetherianRing E := Algebra.FiniteType.isNoetherianRing (Polynomial A') E
   refine ⟨h1, IsLocalization.isNoetherianRing Q.primeCompl _ inferInstance, h2, ?_⟩
-  letI : Algebra A' (Localization.AtPrime Q) :=
+  let : Algebra A' (Localization.AtPrime Q) :=
     ((algebraMap (Polynomial A') (Localization.AtPrime Q)).comp Polynomial.C).toAlgebra
-  haveI : IsScalarTower A' (Polynomial A') (Localization.AtPrime Q) := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Module.Flat (Polynomial A') E := inferInstance
-  haveI : Module.Flat E (Localization.AtPrime Q) := IsLocalization.flat _ Q.primeCompl
-  haveI : Module.Flat (Polynomial A') (Localization.AtPrime Q) := Module.Flat.trans (Polynomial A') E _
+  have : IsScalarTower A' (Polynomial A') (Localization.AtPrime Q) := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Module.Flat (Polynomial A') E := inferInstance
+  have : Module.Flat E (Localization.AtPrime Q) := IsLocalization.flat _ Q.primeCompl
+  have : Module.Flat (Polynomial A') (Localization.AtPrime Q) := Module.Flat.trans (Polynomial A') E _
   exact Module.Flat.trans A' (Polynomial A') _
 
 theorem good_stage : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [IsLocalRing O] [Algebra T O]
@@ -1301,7 +1301,7 @@ theorem good_stage : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] 
         (𝔭.map (algebraMap A' B')).IsPrime := by
   intro T O _ _ _ _ _ _ _ _ hT P _ φ hφ hsh hP A _ _ _ _ _ _ i hi hil EA _ _ _ _ _ QA _ hQA jA hjA sA hsA
   have hO : (maximalIdeal O).comap (algebraMap (Polynomial T) O) = GlobalTheory.KeyOriginCut.originIdeal T := by
-    haveI : IsLocalHom φ := hsh.2.2.1
+    have : IsLocalHom φ := hsh.2.2.1
     rw [← hφ, ← Ideal.comap_comap, GlobalTheory.comap_maximalIdeal_of_localHom_strictHens φ, ← hP]
     first
       | exact Localization.AtPrime.under_maximalIdeal (Localization.AtPrime P) P
@@ -1311,7 +1311,7 @@ theorem good_stage : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] 
   obtain ⟨E', _, _, _, Q', _, hQ', β, γ, h1, h2, h3⟩ :=
     GlobalTheory.T.exists_localStage_tensor_polynomial_origin T O hO A i hil EA QA hQA jA hjA A' ι α hια hα
   obtain ⟨hd, hn, hic, hfl⟩ := local_props A' E' Q'
-  letI alg : Algebra A' (Localization.AtPrime Q') :=
+  let alg : Algebra A' (Localization.AtPrime Q') :=
     ((algebraMap (Polynomial A') (Localization.AtPrime Q')).comp Polynomial.C).toAlgebra
   refine ⟨A', inferInstance, inferInstance, inferInstance, inferInstance, Localization.AtPrime Q',
     inferInstance, hd, inferInstance, hn, hic, alg, hfl, ι, α, β, γ, ?_, h2, h3, ?_, ?_⟩
@@ -1500,7 +1500,7 @@ theorem exists_stage_divisor : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLoc
   classical
   let I : Ideal (MvPolynomial (Fin 2) (Polynomial T)) :=
     Ideal.span {MvPolynomial.X 0 * MvPolynomial.X 1 - MvPolynomial.C (Polynomial.C s)}
-  haveI : Algebra.FinitePresentation (Polynomial T) (MvPolynomial (Fin 2) (Polynomial T) ⧸ I) :=
+  have : Algebra.FinitePresentation (Polynomial T) (MvPolynomial (Fin 2) (Polynomial T) ⧸ I) :=
     Algebra.FinitePresentation.quotient (Submodule.fg_span (Set.finite_singleton _))
   have hI : ∀ a ∈ I, MvPolynomial.aeval (R := Polynomial T) ![b, c] a = 0 := by
     intro a ha
@@ -1514,12 +1514,12 @@ theorem exists_stage_divisor : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLoc
     Ideal.Quotient.liftₐ I (MvPolynomial.aeval ![b, c]) hI
   obtain ⟨W, _, _, _, u, v, huv⟩ := GlobalTheory.IndEtFactorLoc.exists_etale_factor_of_indEt_atPrime
     (Polynomial T) O P φ hφ hSH.2.2.2 _ g
-  letI : Algebra T W := ((algebraMap (Polynomial T) W).comp (algebraMap T (Polynomial T))).toAlgebra
-  haveI : IsScalarTower T (Polynomial T) W := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra T W := ((algebraMap (Polynomial T) W).comp (algebraMap T (Polynomial T))).toAlgebra
+  have : IsScalarTower T (Polynomial T) W := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   set Q : Ideal W := (maximalIdeal O).comap v.toRingHom with hQdef
-  haveI : Q.IsPrime := Ideal.comap_isPrime _ _
+  have : Q.IsPrime := Ideal.comap_isPrime _ _
   have hloc : (maximalIdeal O).comap φ = maximalIdeal (Localization.AtPrime P) := by
-    haveI := hSH.2.2.1
+    have := hSH.2.2.1
     apply le_antisymm
     · exact IsLocalRing.le_maximalIdeal (Ideal.comap_ne_top _ (Ideal.IsMaximal.ne_top inferInstance))
     · intro x hx

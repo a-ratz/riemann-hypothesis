@@ -71,7 +71,7 @@ private theorem fib_abs {O I : Type} {P : I → Type} (F : ∀ i, P i → O) (S 
     let g : {i | (S i).Nonempty} → B := fun i => ⟨F i.1 i.2.some, (hF _ _ i.2.some_mem).1⟩
     have hg : Function.Injective g := fun i j h =>
       Subtype.ext (hij _ _ _ i.2.some_mem _ j.2.some_mem (congrArg Subtype.val h))
-    haveI := hB.to_subtype
+    have := hB.to_subtype
     exact Set.finite_coe_iff.1 (Finite.of_injective g hg)
   have hU : B = ⋃ i ∈ {i | (S i).Nonempty}, F i '' S i := by
     ext o

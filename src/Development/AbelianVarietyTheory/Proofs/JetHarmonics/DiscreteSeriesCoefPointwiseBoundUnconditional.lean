@@ -134,8 +134,8 @@ namespace GlobalTheory
 
 theorem discreteSeries_coefficient_expansion_bound_ball : ∀ (C : ℝ), 0 ≤ C → ∀ (P : M.Par) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (p : KB.Pl P Wp Wq) (lam : Fin (2 * P.r + P.k + 1) → ℝ) (b bv ga h : ℝ) (q0 : ℕ) (a₁ : ℕ) (ν₀ : Fin (2 * P.r + P.k + 1) → ℤ) (R0 : Rep P.k P.r) (f : B.Mat P.k P.r → (Wq →L[ℂ] Wp)), Num P.k P.r lam P.u b bv ga h q0 → Num P.k P.r lam P.u' b bv ga h q0 → P.T ≤ b ^ (C * ((2 * P.r + 2 : ℕ) : ℝ)) → P.T' ≤ b ^ (C * ((2 * P.r + 2 : ℕ) : ℝ)) → n1 ν₀ + (P.r + 1) * a₁ + (P.r + 1) * (P.r + 2) ≤ q0 → R0.IsDS (PI.BesselPeriodGGP.eps48 P.k P.r) (fun a => lam a + (ν₀ a : ℝ)) → PI.CapelliEig.IsKFinCoefT (k := P.k) (r := P.r) R0.σ f → Formalism.FourierDecayAlt.P.CutBP.BigCellDerivativeExpansion p f b (C / 2 + 6) a₁ := by
   intro C hC P Wp Wq _ _ _ _ _ _ p lam b bv ga h q0 a₁ ν₀ R0 f hN hN' hT hT' hq hR hf
-  haveI := FiniteDimensional.complete ℂ Wp
-  haveI := FiniteDimensional.complete ℂ Wq
+  have := FiniteDimensional.completeSpace ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wq
   have H : BranchingSupport.HypsG := CompanionTheory.PieriExpansion.hypsG_of_zuck CompanionTheory.Zuck.zuckerman_gap
   have hK : PI.KFinSmooth := H.1.2.2.1
   have hDG := CompanionTheory.WaveGrid.WEnd.isDG_of_num hN (by omega) hR
@@ -163,8 +163,8 @@ namespace GlobalTheory.CoefRegG
 theorem eigDec_of_isKFinCoefT : ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) → Bool) (mu : Fin (2 * r + k + 1) → ℝ) (h : ℝ) (R : Rep k r) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (f : B.Mat k r → (Wq →L[ℂ] Wp)), R.IsDS ε mu → Formalism.QuantumDeterminants.GapAtLeast ε mu h → GapOK k r h → (haveI := FiniteDimensional.complete ℂ Wp; PI.CapelliEig.IsKFinCoefT (k := k) (r := r) R.σ f) → EigDec f (aOf r h - 1) mu := by
   intro k r ε mu h R Wp Wq _ _ _ _ _ _ f hDS hgap hok hf
   have H : BranchingSupport.HypsG := CompanionTheory.PieriExpansion.hypsG_of_zuck CompanionTheory.Zuck.zuckerman_gap
-  have := FiniteDimensional.complete ℂ Wp
-  have := FiniteDimensional.complete ℂ Wq
+  have := FiniteDimensional.completeSpace ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wq
   have hsm : PI.KFinSmooth := H.1.2.2.1
   have hDG : R.IsDG ε mu := ⟨hDS.1, hDS.2, h, hgap, hok⟩
   obtain ⟨s, hs⟩ := (GlobalTheory.isCoef_of_translate_smul_exists hsm k r ε mu R Wp Wq (fun _ => 0) (fun _ => 0) hDS).1 f hf
@@ -831,11 +831,11 @@ theorem shiftExists_of (hA : GlobalTheory.WigSh.AmapsShExists) : GlobalTheory.Wi
     (fun i _ => by
       by_cases h : i = l + 1
       · subst h; simp
-      · rw [Function.update_of_ne h, if_neg h])
+      · rw [Function.update_of_ne h, ite_eq_right h])
     (fun i _ => by
       by_cases h : i = l
       · subst h; simp
-      · rw [Function.update_of_ne h, if_neg h])
+      · rw [Function.update_of_ne h, ite_eq_right h])
   exact ⟨Wqp, i1, i2, i3, Wqm, j1, j2, j3, pp, pm, Ap, Am, ApPt, AmPt, a1, b1, a2, a3, a4, b2, b3, b4, a8, b8,
     c1, c2, c3, c4⟩
 

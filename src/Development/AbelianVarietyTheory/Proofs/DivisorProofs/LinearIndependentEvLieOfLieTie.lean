@@ -70,7 +70,7 @@ theorem omega_free_finite_bijective_of_smooth {O : Type} [CommRing O] [IsLocalRi
       Function.Bijective (fun (x : LieG G) => ((LinearMap.proj x : (LieG G → O) →ₗ[O] O) ∘ₗ
         (omega G).subtype : Module.Dual O (omega G))) := by
   obtain ⟨h₁, h₂⟩ := finite_projective_of_smooth (G := G)
-  haveI : Module.Free O (GlobalTheory.IndefiniteRowSideFullHecke.HodgeTateCharacterSystems.Cotangent G) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O (GlobalTheory.IndefiniteRowSideFullHecke.HodgeTateCharacterSystems.Cotangent G) := Module.free_of_flat_of_isLocalRing
   refine ⟨.of_equiv (omegaEquiv G), .equiv (omegaEquiv G), ?_⟩
   refine (Function.Bijective.of_comp_iff _ (lieEquiv G).bijective).1 ?_
   refine (Function.Bijective.of_comp_iff' (omegaEquiv G).dualMap.bijective _).1 ?_
@@ -80,8 +80,8 @@ theorem omega_free_finite_bijective_of_smooth {O : Type} [CommRing O] [IsLocalRi
 
 theorem Point.omega_free_finite_bijective : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C ℝ≥0) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] [Algebra ℤ_[p] C] [IsScalarTower ℤ_[p] O C] (Λ : Type) [CommRing Λ] [StarRing Λ] (P : Point p v O Λ), Module.Free O (omega P.Gt) ∧ Module.Finite O (omega P.Gt) ∧ Function.Bijective (fun (x : LieG P.Gt) => ((LinearMap.proj x : (LieG P.Gt → O) →ₗ[O] O) ∘ₗ (omega P.Gt).subtype : Module.Dual O (omega P.Gt))) := by
   intro p _ C _ _ _ v O _ _ _ _ _ _ _ Λ _ _ P
-  haveI := P.isLocalRing
-  haveI := (GlobalTheory.UnitRigidity.smooth_geometricallyConnected_of_isGt _ _ ⟨P.D⟩).1
+  have := P.isLocalRing
+  have := (GlobalTheory.UnitRigidity.smooth_geometricallyConnected_of_isGt _ _ ⟨P.D⟩).1
   exact omega_free_finite_bijective_of_smooth P.Gt
 
 end GlobalTheory.HTLat
@@ -131,8 +131,8 @@ theorem lieTie_unique_right {Y : Scheme.{0}} {ψ : P.A.A.left ⟶ Y} {x : LieG P
     (h : LieTie P ψ x u) (h' : LieTie P ψ x u') : u = u' := by
   obtain ⟨xG, w, h1, h2, h3⟩ := h
   obtain ⟨xG', w', h1', h2', h3'⟩ := h'
-  haveI := P.isLocalRing
-  haveI := HodgeTateCompare.isLocalRing_dualNumber (O := O)
+  have := P.isLocalRing
+  have := HodgeTateCompare.isLocalRing_dualNumber (O := O)
   have hp : ¬ IsUnit (p : DualNumber O) := fun h => (Fact.out : ¬ IsUnit (p : O)) (by
     simpa using h.map (TrivSqZeroExt.fstHom O O O))
   have mem_pow {R : Type} [CommRing R] (a : R) (n : ℕ) (x : R) :
@@ -176,8 +176,8 @@ omit [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] in
 theorem linearIndependent_evLie {n : ℕ} (x : Fin n → LieG P.Gt)
     (h : ∀ a : Fin n → O, (∀ f : omega P.Gt, ∑ j, a j * f.1 (x j) = 0) → ∀ j, a j = 0) :
     LinearIndependent C (fun j => evLie P (x j)) := by
-  haveI : IsDomain O := P.integers.hom_inj.isDomain (algebraMap O C)
-  haveI : IsFractionRing O C := P.integers.isFractionRing
+  have : IsDomain O := P.integers.hom_inj.isDomain (algebraMap O C)
+  have : IsFractionRing O C := P.integers.isFractionRing
   rw [Fintype.linearIndependent_iff]
   intro g hg j
   obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors O) g
@@ -204,7 +204,7 @@ namespace GlobalTheory.CompHt
 open TieIndep in
 theorem linearIndependent_evLie_of_lieTie : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C ℝ≥0) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] [Algebra ℤ_[p] C] [IsScalarTower ℤ_[p] O C] [Algebra c.F C] [StarRing (𝓞 E)] (T : CDVR) (io : c.F →+* T.Fr) (y₀ : IntFr Xo c T io) (k : letI := io.toAlgebra; T.Fr →ₐ[c.F] C) (kO : T.V →+* O) (P : Point p v O (𝓞 E)) (ψ : P.A.A.left ⟶ Xo.univ.t.G.left) (z : FrPt Xo c C), (letI := io.toAlgebra; PointOver P y₀.1.x k.toRingHom kO ψ) → (letI := io.toAlgebra; FrMap k y₀.1 z) → ∀ (τ : E →+* ℂ) (x : Fin (Dw.mult τ) → LieG P.Gt), (∀ j, LieTie P ψ (x j) (z.u τ j)) → LinearIndependent C (fun j => evLie P (x j)) := by
   intro E _ _ _ H Dw l Xo c p _ C _ _ _ v O _ _ _ _ _ _ _ _ _ T io y₀ k kO P ψ z hP hz τ x hx
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hψ : IsGrpPullback P.A.A Xo.univ.t.G z.x ψ := hz.1 ▸ hP.isGrpPullback
   obtain ⟨N, _, _, w, ρ, -, htan, hcomb, hρ, hsm⟩ := GlobalTheory.TanMod.exists_tangent_module E H Dw l Xo C z.x
   choose b hb using fun j => (htan _).1 (z.tan τ j)

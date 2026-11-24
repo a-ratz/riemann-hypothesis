@@ -141,7 +141,7 @@ end TraceFormSpan
 theorem traceForm_span_rep_nondegenerate_mapRep_iff :
     ∀ (Γ K L : Type) [Group Γ] [Field K] [Field L] (f : K →+* L) (a : ℕ) (ρ : Γ →* GL (Fin a) K), (∀ x ∈ Submodule.span L (Set.range fun g => ((mapRep f ρ g : GL (Fin a) L) : Matrix (Fin a) (Fin a) L)), (∀ g, (x * ((mapRep f ρ g : GL (Fin a) L) : Matrix (Fin a) (Fin a) L)).trace = 0) → x = 0) ↔ (∀ x ∈ Submodule.span K (Set.range fun g => ((ρ g : GL (Fin a) K) : Matrix (Fin a) (Fin a) K)), (∀ g, (x * ((ρ g : GL (Fin a) K) : Matrix (Fin a) (Fin a) K)).trace = 0) → x = 0) := by
   intro Γ K L _ _ _ f a ρ
-  letI := f.toAlgebra
+  let := f.toAlgebra
   exact traceForm_span_nondegenerate_map_iff (L := L)
     (fun g => ((ρ g : GL (Fin a) K) : Matrix (Fin a) (Fin a) K))
 

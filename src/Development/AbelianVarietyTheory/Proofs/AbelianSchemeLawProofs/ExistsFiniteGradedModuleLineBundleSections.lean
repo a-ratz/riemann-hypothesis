@@ -95,7 +95,7 @@ theorem exists_finite_grCube_hom_bijective (ι : Type) [LinearOrder ι] [Fintype
       rintro _ ⟨l, rfl⟩
       exact ⟨d l, hg l⟩)
   refine ⟨_, hhom, Module.Finite.span_of_finite _ (Set.finite_range g), fun t I ⟨i, hi⟩ => ?_⟩
-  letI := grSubDecomposition 𝒢 hhom
+  let := grSubDecomposition 𝒢 hhom
   exact homLocMap_bijective_of_X _ hi
     (fun m hm => ⟨0, by
       rw [(map_eq_zero_iff _ (Submodule.injective_subtype _)).1 hm, smul_zero]⟩)
@@ -110,7 +110,7 @@ theorem exists_finite_graded_module_secCube : ∀ (R : Type) [CommRing R] (Y : S
     (GrSum.grading (hx ⊤)) fun i => by
       obtain ⟨haff, r, hr, hsurj⟩ := hs.2 i
       obtain ⟨h1, ε, hε, hk, -⟩ := GlobalTheory.T.exists_dehomogenisation_twisted_chart R Y f H m s M hH hM hs hx i r hr
-      letI := cstAlgebra f (nonzeroLocus (s i))
+      let := cstAlgebra f (nonzeroLocus (s i))
       have hfp := (secOn_finitePresentation_projective Y (tw M H 0) _ (isLB_tw hM hH 0) haff).1
       exact (finite_quotSMulTop_X_sub_one_of_chart (Fin (m + 1)) R (GrSum (hx ⊤))
         (GrSum.grading (hx ⊤)) i Γ(Y, nonzeroLocus (s i)) _ _ (MvPolynomial.aeval r)

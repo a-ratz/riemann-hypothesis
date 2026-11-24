@@ -97,7 +97,7 @@ theorem core_bump {Ω : Type} [TopologicalSpace Ω] [T2Space Ω] [MeasurableSpac
     have h' : ∫ p, ((b (π p) : ℝ) : ℂ) * G p ∂μ = 0 := by simpa using h
     rw [h']; rfl
   have h2 : 0 < ∫ p, (((b (π p) : ℝ) : ℂ) * G p).re ∂μ := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := p₀) (Complex.continuous_re.comp hcont)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := p₀) (Complex.continuous_re.comp hcont)
       (hk.comp_left (g := Complex.re) rfl) (fun p => ?_) ?_
     · by_cases hp : b (π p) = 0
       · simp [hp]

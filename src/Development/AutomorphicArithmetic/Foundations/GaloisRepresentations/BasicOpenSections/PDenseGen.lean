@@ -83,8 +83,8 @@ private theorem dense_generic_points {O A k : Type} [CommRing O] [Field A] [Fiel
   classical
   have hcomp : Mod.sp (β₀.comp q) = Mod.sp β₀ ≫ Mod.sp q := by
     simp only [Mod.sp, CommRingCat.ofHom_comp, Spec.map_comp]
-  haveI : IsClosedImmersion (Mod.sp q) := IsClosedImmersion.spec_of_surjective _ hq
-  haveI hτ : Flat (Mod.sp β₀) := Flat.SpecMap_iff.mpr (RingHom.Flat.of_isField (Field.toIsField A) _)
+  have : IsClosedImmersion (Mod.sp q) := IsClosedImmersion.spec_of_surjective _ hq
+  have hτ : Flat (Mod.sp β₀) := Flat.SpecMap_iff.mpr (RingHom.Flat.of_isField (Field.toIsField A) _)
   have hsq : s ≫ g = (bS ≫ Mod.sp β₀) ≫ Mod.sp q := by
     rw [Category.assoc, ← hcomp]
     exact hpb.w
@@ -97,7 +97,7 @@ private theorem dense_generic_points {O A k : Type} [CommRing O] [Field A] [Fiel
     refine IsPullback.of_right ?_ hφπ (IsPullback.of_hasPullback g (Mod.sp q))
     rw [hφi, ← hcomp]
     exact hpb
-  haveI : Flat φ := MorphismProperty.of_isPullback hφpb.flip hτ
+  have : Flat φ := MorphismProperty.of_isPullback hφpb.flip hτ
   have hgenφ : GeneralizingMap φ := Flat.generalizingMap φ
   have hind : Topology.IsInducing (pullback.fst g (Mod.sp q)) :=
     (pullback.fst g (Mod.sp q)).isClosedEmbedding.isInducing
@@ -147,7 +147,7 @@ theorem UpperTheory.Gal.Mod.denseGen :
   intro O _ _ _ ϖ hϖ k _ β hβ Y S g s bS hpb
   obtain ⟨A, _, q, hq, β₀, hker, hβeq⟩ : ∃ (A : Type) (_ : Field A) (q : O →+* A),
       Function.Surjective q ∧ ∃ β₀ : A →+* k, RingHom.ker q = Ideal.span {ϖ} ∧ β₀.comp q = β := by
-    haveI hmax : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+    have hmax : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
     refine ⟨O ⧸ Ideal.span {ϖ}, Ideal.Quotient.field _, Ideal.Quotient.mk _,
       Ideal.Quotient.mk_surjective, Ideal.Quotient.lift _ β (fun a ha => by
         obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.mp ha

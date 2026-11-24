@@ -52,7 +52,7 @@ namespace GlobalTheory
 
 theorem pgFrame_at_record : Formalism.HermitianLatticesTheory.SiegelMassRatio → Formalism.L2.SG.Pf.SzHypFD.DsigHC → ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb Cu cT CT C0 : ℝ), Ties D → Cnt.Hyp0 D large₂ C' Cl Cg cb Cu cT CT C0 → 40 ≤ Cl → Cu * large₂.sc.L ≤ (D.R.m : ℝ) - 1 → C0 * Real.exp 8 ≤ D.R.k → LocalBesselAndTopKernel.FamilyMidVolume D → Formalism.L2.SG.RowsConc.TFrameAt D ∧ UnitaryVolumeMass.cTvA D ∧ UnitaryVolumeMass.cTvD D 1 ∧ ∀ w τ, (D.R.k : ℝ) ^ (3 * D.R.rS) ≤ gg D ^ (-(D.R.m : ℝ)) * Tcrit D w τ := by
   intro hSM hDs D large₂ C' Cl Cg cb Cu cT CT C0 hT h h40 hCu hk hR
-  haveI : Fact Formalism.L2.SG.Pf.SzHypFD.DsigHC := ⟨hDs⟩
+  have : Fact Formalism.L2.SG.Pf.SzHypFD.DsigHC := ⟨hDs⟩
   have hyp : LocalBesselAndTopKernel.hyp D large₂ C0 C' Cl Cg cb Cu cT CT := ⟨h.2.1, h.1, h.2.2⟩
   have hL := Formalism.MainNotions.BridgeLemma.one_le_L large₂
   have hg : LocalBesselAndTopKernel.MidVolumeChain D large₂ (1 / 3) 0 :=

@@ -90,7 +90,7 @@ private theorem fin_prod {ι X : Type} [Fintype ι] {Y : ι → Type} (p : ∀ i
     refine Submodule.sum_mem _ fun r _ => ?_
     rw [MultilinearMap.map_smul_univ]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨r, rfl⟩)
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ R) := FiniteDimensional.span_of_finite ℂ hR
+  have : FiniteDimensional ℂ (Submodule.span ℂ R) := FiniteDimensional.span_of_finite ℂ hR
   exact Submodule.finiteDimensional_of_le hle
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E ≃ₐ[F] E} {m : ℕ}
@@ -115,8 +115,8 @@ private theorem compA_val (D : InfD σ m) (n : ℕ) (i : Fin (m + 1)) (g : archG
 
 private theorem thetaR_exp (D : InfD σ m) (n : ℕ) (i : Fin (m + 1)) (X : ArchMatrix E n) :
     thetaR D n i (NormedSpace.exp X) = NormedSpace.exp (thetaR D n i X) := by
-  letI : NormedAlgebra ℚ (ArchMatrix E n) := NormedAlgebra.restrictScalars ℚ ℝ _
-  letI : NormedAlgebra ℚ (ArchMatrix F n) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedAlgebra ℚ (ArchMatrix E n) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedAlgebra ℚ (ArchMatrix F n) := NormedAlgebra.restrictScalars ℚ ℝ _
   exact NormedSpace.map_exp (thetaR D n i) (continuous_thetaR D n i) X
 
 private def thetaL (D : InfD σ m) (n : ℕ) (i : Fin (m + 1)) : archLie E n →L[ℝ] archLie F n where
@@ -147,7 +147,7 @@ private theorem tens_smooth (D : InfD σ m) (n : ℕ) (φ : Fin (m + 1) → TI F
 
 private theorem tens_fin [_root_.NumberField.IsTotallyComplex F] (D : InfD σ m) (n : ℕ) (φ : Fin (m + 1) → TI F n) (β : TI E n)
     (hβ : IsTens D φ β) (hφ : ∀ i, LeftFin (φ i)) : LeftFin β := by
-  haveI := fin_prod (ι := Fin (m + 1)) (X := archGroup E n) (Y := fun _ => archGroup F n) (fun i => compA D n i)
+  have := fin_prod (ι := Fin (m + 1)) (X := archGroup E n) (Y := fun _ => archGroup F n) (fun i => compA D n i)
     (fun i => Set.range fun k : archCompact F n => fun g : archGroup F n => φ i ((k : archGroup F n) * g)) hφ
   have hsub : (Set.range fun k : archCompact E n => fun g : archGroup E n => β ((k : archGroup E n) * g)) ⊆
       {f | ∃ s : Fin (m + 1) → archGroup F n → ℂ, (∀ i, s i ∈ Set.range fun k : archCompact F n =>

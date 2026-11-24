@@ -150,7 +150,7 @@ theorem skew {p q : ℕ} {T : GrpData p q} (R : DSRep T) {Y : Mat p q} (hY : Y �
     ⟪R.ι (R.HK.act Y x), R.ι y⟫_ℂ = -⟪R.ι x, R.ι (R.HK.act Y y)⟫_ℂ := by
   have h1 := (R.der Y hY x).inner ℂ (R.der Y hY y)
   simp only [GlobalTheory.RealPar.DerivedAdjoint.inner_map, zero_smul, T.expt_zero, map_one,
-    ContinuousLinearMap.one_apply] at h1
+    one_apply_eq_self] at h1
   have h2 := h1.unique (hasDerivAt_const (0 : ℝ) (inner ℂ (R.ι x) (R.ι y)))
   linear_combination h2
 
@@ -480,7 +480,7 @@ theorem exists_riesz {H P : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ 
     intro φ
     obtain ⟨c, hc⟩ := hF φ
     have hden : DenseRange (E.subtype : E →ₗ[ℂ] H) := by
-      simpa using hE.denseRange_val
+      simpa using hE.denseRange_subtypeVal
     let g : H →L[ℂ] ℂ := (F φ).extendOfNorm E.subtype
     refine ⟨(InnerProductSpace.toDual ℂ H).symm g, fun y => ?_⟩
     rw [InnerProductSpace.toDual_symm_apply]
@@ -631,7 +631,7 @@ theorem exists_ins {a b : ℕ} (P : D.what₂.Tau → LPol b a) (τ : D.what₂.
   rw [mul_comm]
   congr 1
   refine Finset.prod_congr rfl fun σ hσ => ?_
-  rw [if_neg (Finset.ne_of_mem_erase hσ)]
+  rw [ite_eq_right (Finset.ne_of_mem_erase hσ)]
 
 
 open Classical in

@@ -54,13 +54,13 @@ variable {K : Type} [Field K] {n : ℕ}
 
 theorem cinv_det_up {U : Matrix (Fin n) (Fin n) K} (hU : IsUpUni U) : U.det = 1 := by
   have hT : U.BlockTriangular id := fun i j hij => (hU i j).1 hij
-  rw [Matrix.det_of_upperTriangular hT]
+  rw [det_of_isUpperTriangular hT]
   exact Finset.prod_eq_one (fun i _ => (hU i i).2 rfl)
 
 theorem cinv_inv_up {U : Matrix (Fin n) (Fin n) K} (hU : IsUpUni U) : IsUpUni U⁻¹ := by
   have hdet : IsUnit U.det := by rw [cinv_det_up hU]; exact isUnit_one
   have hT : U.BlockTriangular id := fun i j hij => (hU i j).1 hij
-  haveI : Invertible U := Matrix.invertibleOfIsUnitDet U hdet
+  have : Invertible U := Matrix.invertibleOfIsUnitDet U hdet
   have hI : (U⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hT
   intro i j
   refine ⟨fun h => hI (show id j < id i from h), ?_⟩

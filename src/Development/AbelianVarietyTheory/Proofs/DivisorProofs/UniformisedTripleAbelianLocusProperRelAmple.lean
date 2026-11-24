@@ -126,7 +126,7 @@ end GlobalTheory.KTrivGenericPt
 open GlobalTheory.KTrivGenericPt in
 theorem GlobalTheory.KTrivGenericPt.kTriv_of_polAt_generic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [CharZero R] (t : SAB H (Sp R)), IsProper t.G.hom → RelAmple t.G t.PP.L → GlobalTheory.LN.PolAt t (jK R) → KTriv t.G t.PP.L := by
   intro E _ _ _ H R _ _ _ _ t hP ha hpol
-  haveI : IsProper t.G.hom := hP
+  have : IsProper t.G.hom := hP
   have hA : IsAbelianScheme t.G := AbelianSchemeGerms.isAbelianScheme_of_proper t.G t.semi
   have hG : GlobalFnsSt := GlobalTheory.allSixLaws.1.globalFns
   have hgen : TrivAlong t.G t.PP.L (Out.jK R) :=
@@ -139,7 +139,7 @@ theorem GlobalTheory.KTrivGenericPt.kTriv_of_polAt_generic : ∀ (E : Type) [Fie
     PrimeSpectrum.ext Localization.AtPrime.under_maximalIdeal
   by_cases hf : IsField O
   · refine ⟨O, inferInstance, algebraMap R O, ⟨_, hp⟩, ?_⟩
-    letI := hf.toField
+    let := hf.toField
     have := trivAlong_field hgen' (algebraMap R O) hO
     rwa [Category.comp_id] at this
   · obtain ⟨V, _, _, _, ρ, h1, h2⟩ := exists_dvr O hf
@@ -584,7 +584,7 @@ theorem relAmple_near_of_polAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have : Flat t.G.hom := inferInstance
   have hL := t.PP.isLB
   let p : Ideal R := RingHom.ker g
-  haveI : p.IsPrime := RingHom.ker_isPrime g
+  have : p.IsPrime := RingHom.ker_isPrime g
   let g₀ := algebraMap R p.ResidueField
   have hf₂ : p.primeCompl ≤ (IsUnit.submonoid C).comap g := fun x hx =>
     show IsUnit (g x) from isUnit_iff_ne_zero.2 fun h0 => hx (RingHom.mem_ker.2 h0)
@@ -653,7 +653,7 @@ theorem relAmple_local {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [IsN
   by_cases hf : _root_.IsField O
   · obtain ⟨u, ⟨mu⟩⟩ := GlobalTheory.PolLocal.exists_pull (Out.jK O) t
     obtain ⟨hA, hK⟩ := GlobalTheory.LocM.PolFibre.ample_kTriv_of_polAt mu hpol
-    haveI : IsIso (Out.jK O) := GlobalTheory.PolLocal.isIso_spMap _ (GlobalTheory.PolLocal.algebraMap_fractionRing_bijective O hf)
+    have : IsIso (Out.jK O) := GlobalTheory.PolLocal.isIso_spMap _ (GlobalTheory.PolLocal.algebraMap_fractionRing_bijective O hf)
     exact (GlobalTheory.PolLocal.ample_kTriv_of_iso mu hA hK).1
   obtain ⟨V, _, _, _, ρ, hρ, hloc⟩ := GlobalTheory.KTrivSpread.exists_dvr O hf
   obtain ⟨tV, ⟨mV⟩⟩ := GlobalTheory.PolLocal.exists_pull (spMap ρ) t
@@ -668,7 +668,7 @@ theorem relAmple_local {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [IsN
   let β : O →+* IsLocalRing.ResidueField V := (IsLocalRing.residue V).comp ρ
   have hpβ : GlobalTheory.LN.PolAt t (spMap β) := by
     rw [GlobalTheory.PolLocal.spMap_comp]
-    exact GlobalTheory.LocM.PolFibre.polAt_of_map n (by haveI := hprop; infer_instance) hAk hKk
+    exact GlobalTheory.LocM.PolFibre.polAt_of_map n (by have := hprop; infer_instance) hAk hKk
   obtain ⟨r, hr, hA⟩ := GlobalTheory.PolNearAmple.relAmple_near_of_polAt E H O t hprop (IsLocalRing.ResidueField V) β hpβ
   have hu : IsUnit r := isUnit_of_map_unit ρ r ((IsLocalRing.residue_ne_zero_iff_isUnit _).1 hr)
   obtain ⟨m₀, -⟩ := GlobalTheory.ObjMaps.exists_sab_id t

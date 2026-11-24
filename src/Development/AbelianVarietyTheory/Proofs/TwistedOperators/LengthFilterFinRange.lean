@@ -97,9 +97,9 @@ theorem count_cons_map (a b : A) (x : List A) (s : Multiset (List A)) :
     (s.map (List.cons b)).count (a :: x) = if a = b then s.count x else 0 := by
   by_cases hab : a = b
   · subst hab
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact Multiset.count_map_eq_count' (List.cons a) s List.cons_injective x
-  · rw [if_neg hab, Multiset.count_eq_zero]
+  · rw [ite_eq_right hab, Multiset.count_eq_zero]
     intro hmem
     obtain ⟨y, -, hy⟩ := Multiset.mem_map.1 hmem
     exact hab (List.cons.inj hy).1.symm
@@ -150,7 +150,7 @@ theorem count_single (n : ℕ) : ∀ (w : Fin n → A) (u v : List A),
     intro w u v
     rw [sum_filter_sub_sum_filter_and_not_eq_sum, List.ofFn_succ]
     simp only [pos_cons, Fin.cons_zero, Fin.cons_succ, Bool.not_true, Bool.not_false,
-      Bool.false_eq_true, if_true, if_false, List.nil_append, List.singleton_append]
+      Bool.false_eq_true, ite_true, ite_false, List.nil_append, List.singleton_append]
     set w' : Fin n → A := fun j => w j.succ with hw'
     rcases u with _ | ⟨a, u⟩ <;> rcases v with _ | ⟨b, v⟩
     · simp
@@ -159,15 +159,15 @@ theorem count_single (n : ℕ) : ∀ (w : Fin n → A) (u v : List A),
       rw [Shuffle.shuffle_nil_left, count_cons_singleton_cons]
       simp only [count_cons_singleton_cons, count_cons_singleton_nil, zero_mul, add_zero]
       by_cases hc : w 0 = b
-      · simp only [if_pos hc, h]
-      · simp [if_neg hc]
+      · simp only [ite_eq_left hc, h]
+      · simp [ite_eq_right hc]
     · have h := ih w' u []
       rw [Shuffle.shuffle_nil_right] at h
       rw [Shuffle.shuffle_nil_right, count_cons_singleton_cons]
       simp only [count_cons_singleton_cons, count_cons_singleton_nil, mul_zero, zero_add]
       by_cases hc : w 0 = a
-      · simp only [if_pos hc, h]
-      · simp [if_neg hc]
+      · simp only [ite_eq_left hc, h]
+      · simp [ite_eq_right hc]
     · have h1 := ih w' u (b :: v)
       have h2 := ih w' (a :: u) v
       rw [Shuffle.shuffle_cons_cons, Multiset.count_add, count_cons_map, count_cons_map]
@@ -175,11 +175,11 @@ theorem count_single (n : ℕ) : ∀ (w : Fin n → A) (u v : List A),
       rw [add_comm]
       congr 1
       · by_cases hc : w 0 = b
-        · simp only [if_pos hc, h2]
-        · simp [if_neg hc]
+        · simp only [ite_eq_left hc, h2]
+        · simp [ite_eq_right hc]
       · by_cases hc : w 0 = a
-        · simp only [if_pos hc, h1]
-        · simp [if_neg hc]
+        · simp only [ite_eq_left hc, h1]
+        · simp [ite_eq_right hc]
 
 private theorem sum_map_count_singleton (X : List A) (s : Multiset (List A)) :
     (s.map fun v => ({v} : Multiset (List A)).count X).sum = s.count X := by
@@ -217,12 +217,12 @@ theorem exists_expMult_ne_zero_of_fixed_iwahori (k : Type) [Field k] [ValuativeR
     [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) (V : Type) [AddCommGroup V]
     [Module ℂ V] (π : Representation ℂ (GL (Fin n) k) V) (hπ : IsAdmissible π)
     (h : fixed π (iwahori k (Fin n)) ≠ ⊥) : ∃ χ : (Fin n → kˣ) →* ℂˣ, expMult π χ ≠ 0 := by
-  haveI := hπ.2 _ (IwahoriOnto.isOpen_iwahori k (Fin n)) (IwahoriOnto.isCompact_iwahori k (Fin n))
+  have := hπ.2 _ (IwahoriOnto.isOpen_iwahori k (Fin n)) (IwahoriOnto.isCompact_iwahori k (Fin n))
   have hb := GlobalTheory.Published.BorelCasselman_holds k (Fin n) V π hπ
-  haveI : FiniteDimensional ℂ (fixed (jacBU π) (torusO k (Fin n))) :=
+  have : FiniteDimensional ℂ (fixed (jacBU π) (torusO k (Fin n))) :=
     Module.Finite.of_surjective _ hb.2
-  haveI : Nontrivial (fixed π (iwahori k (Fin n))) := Submodule.nontrivial_iff_ne_bot.2 h
-  haveI : Nontrivial (fixed (jacBU π) (torusO k (Fin n))) := hb.1.nontrivial
+  have : Nontrivial (fixed π (iwahori k (Fin n))) := Submodule.nontrivial_iff_ne_bot.2 h
+  have : Nontrivial (fixed (jacBU π) (torusO k (Fin n))) := hb.1.nontrivial
   obtain ⟨ψ, v, hv, hψ⟩ := GlobalTheory.exists_character_eigenvector_of_commute ℂ (Fin n → kˣ) _
     (jacBUFixed π) fun a b => by rw [← map_mul, mul_comm, map_mul]
   let ι : (ofChar ψ).IntertwiningMap (jacBUFixed π) :=
@@ -860,7 +860,7 @@ theorem exists_strictMono_blk {n : ℕ} (c : Fin n → ℕ) (hc : ∀ j, c j ≤
       rw [Finset.range_orderEmbOfFin]
       have := hc j
       have := x.2
-      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+      simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
       omega
     obtain ⟨i, rfl⟩ := hj
     refine ⟨i, congrArg (Sigma.mk _) (Fin.ext ?_)⟩
@@ -898,7 +898,7 @@ theorem wordMult_prod₂ (hG : JacquetOfInducedFiltration k) (hC : CellSemisimpl
         wordMult π₂ (((List.finRange (r + t)).filter ε).map w) := by
   classical
   let B := SizeMatrix (Two (Fin r) (Fin t)) fun _ : Fin (r + t) => Unit
-  letI : Fintype B := Fintype.ofFinite _
+  let : Fintype B := Fintype.ofFinite _
   have hcol : ∀ (b : B) j, b.1 true j + b.1 false j = 1 := fun b j => by simpa using b.2.2 j
   have hf : ∀ b : B, ∃ f : (Σ j, Fin (b.1 false j)) ≃ Fin r, StrictMono (blk f) := fun b =>
     exists_strictMono_blk _ (fun j => by have := hcol b j; omega)
@@ -996,8 +996,8 @@ theorem wordMult_detRep (N : ℕ) (ψ : kˣ →* ℂˣ) (w : List ℂˣ) :
   obtain ⟨φ⟩ := nonempty_jacB_detRep N ψ
   by_cases hw : w.length = N
   swap
-  · rw [wordMult_of_ne _ hw, if_neg fun h => hw h.1]
-  rw [wordMult, if_pos hw, jhMult_congr_right _ φ]
+  · rw [wordMult_of_ne _ hw, ite_eq_right fun h => hw h.1]
+  rw [wordMult, ite_eq_left hw, jhMult_congr_right _ φ]
   split_ifs with h
   · rw [show (fun i : Fin N => unrChar k (w.getD i 1)) = _ from funext fun i => h.2 i i.2]
     exact jhMult_self (isIrreducible_ofChar _)
@@ -1049,7 +1049,7 @@ theorem wordMult_segment {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k)
     simp only [this]
   by_cases hu : IsUnram χ
   swap
-  · refine Or.inr fun w => (key w).trans (if_neg fun h => hu ?_)
+  · refine Or.inr fun w => (key w).trans (ite_eq_right fun h => hu ?_)
     have := h.2 0 hl
     rw [Nat.cast_zero, absPow_zero, mul_one] at this
     exact this ▸ isUnram_unrChar k _
@@ -1075,8 +1075,8 @@ theorem wordMult_segment {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k)
     · rintro rfl
       exact ⟨by simp [segWord], fun i hi => by simp [segWord, hi]⟩
   by_cases h : w = segWord (absPow k 1 ϖ) (χ ϖ) l
-  · rw [if_pos (this.2 h), if_pos h, Nat.cast_one]
-  · rw [if_neg fun h' => h (this.1 h'), if_neg h, Nat.cast_zero]
+  · rw [ite_eq_left (this.2 h), ite_eq_left h, Nat.cast_one]
+  · rw [ite_eq_right fun h' => h (this.1 h'), ite_eq_right h, Nat.cast_zero]
 
 def Realised [DecidableEq ℂˣ] (Ψ : GrothGL k ≃+ MvPolynomial (Segment k) ℤ)
     (P : MvPolynomial (Segment k) ℤ) (y : ShuffleAlgebra ℚ ℂˣ) : Prop :=
@@ -1160,7 +1160,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem isLyndon_segWord {q : ℂˣ} (hq : ‖(q : ℂ)‖ < 1) (z : ℂˣ) {l : ℕ} (hl : 0 < l) :
     @IsLyndon _ modArgOrder (segWord q z l) := by
-  letI := modArgOrder
+  let := modArgOrder
   refine isLyndon_of_pairwise_lt (by simp [segWord, hl.ne']) ?_
   rw [segWord, List.pairwise_map]
   refine List.pairwise_lt_range.imp fun {a b} hab => ?_
@@ -1235,7 +1235,7 @@ theorem exponentsSeparate (hG : Published.GeometricLemma) (hZ : Published.Zelevi
       exact ⟨{ℓ Δ}, h2, by simp [φ, h]⟩
     · exact ⟨0, by simpa using (wordMult_segment hϖ hZ Δ).resolve_left h, by simp [φ, h]⟩
   refine @_root_.GlobalTheory.ShuffleCount.separates_of_shuffle_count _ _ ℂˣ _ modArgOrder Ψ (fun x w => wordMult x.2.rep.ρ w) U ℓ φ ?_ ?_
-    (fun Δ h => if_neg h) (fun m => (Realised.monomial (hG k).1 (hG k).2 hΨ hR m).effective)
+    (fun Δ h => ite_eq_right h) (fun m => (Realised.monomial (hG k).1 (hG k).2 hΨ hR m).effective)
     n (fun i => ⟨r, (σ i).cl⟩) c ?_ ?_ ?_
   · intro Δ h Δ' h' e
     obtain ⟨z, l, hl, h1, h2, -⟩ := hℓ Δ h
@@ -1244,7 +1244,7 @@ theorem exponentsSeparate (hG : Published.GeometricLemma) (hZ : Published.Zelevi
     exact h1.trans h1'.symm
   · intro Δ h
     obtain ⟨z, l, hl, -, h2, -⟩ := hℓ Δ h
-    exact ⟨h2 ▸ isLyndon_segWord (norm_absPow_one_lt hϖ) z hl, if_pos h⟩
+    exact ⟨h2 ▸ isLyndon_segWord (norm_absPow_one_lt hϖ) z hl, ite_eq_left h⟩
   · intro i j h
     by_contra hij
     exact (hne i j hij).false (IrrRep.cl_eq_iff.1
@@ -1262,7 +1262,7 @@ theorem exponentsSeparate (hG : Published.GeometricLemma) (hZ : Published.Zelevi
     by_cases hw : w.length = r
     · obtain ⟨z, rfl⟩ : ∃ z : Fin r → ℂˣ, w = List.ofFn z :=
         ⟨fun i => w.get (i.cast hw.symm), List.ext_getElem (by simp [hw]) fun i h1 h2 => by simp⟩
-      simp only [hM, ENat.toNat_coe]
+      simp only [hM, ENat.toNat_natCast]
       exact _root_.GlobalTheory.ConeCount.sum_count_eq_zero k ϖ hϖ r n E c (fun i χ hχ t ht => (hE i).unramified hχ ht) hc _
     · simp [wordMult_of_ne _ hw]
 

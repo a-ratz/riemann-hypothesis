@@ -186,8 +186,8 @@ theorem liftsVia_of_list
       hyp B t (hkm ht) (le_bot_iff.1 ((Ideal.mul_mono_right hJ).trans hmk.le))
     have hne : Ideal.span {t} ≠ ⊤ := fun h =>
       (IsLocalRing.maximalIdeal.isMaximal B).ne_top (top_le_iff.1 (h ▸ hJ.trans hkm))
-    haveI : Nontrivial (B ⧸ Ideal.span {t}) := Ideal.Quotient.nontrivial_iff.2 hne
-    haveI : IsLocalRing (B ⧸ Ideal.span {t}) :=
+    have : Nontrivial (B ⧸ Ideal.span {t}) := Ideal.Quotient.nontrivial_iff.2 hne
+    have : IsLocalRing (B ⧸ Ideal.span {t}) :=
       IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
     have hψs : Function.Surjective ψ := Ideal.Quotient.lift_surjective_of_surjective _ _ hs
     have hC : Nontrivial C := by
@@ -208,7 +208,7 @@ theorem liftsVia_of_list
       have hset : (Ideal.Quotient.mk (Ideal.span {t})) '' {x | x ∈ t :: l'} =
           insert 0 {x | x ∈ l'.map (Ideal.Quotient.mk (Ideal.span {t}))} := by
         ext x
-        simp only [List.mem_cons, Set.mem_image, Set.mem_setOf_eq, Set.mem_insert_iff, List.mem_map]
+        simp only [List.mem_cons, Set.mem_image, Set.mem_ofPred_eq, Set.mem_insert_iff, List.mem_map]
         constructor
         · rintro ⟨a, rfl | ha, rfl⟩
           · exact Or.inl h0
@@ -789,13 +789,13 @@ theorem isPullback_whiskerLeft_left {S : Scheme.{0}} (A : Over S) {T T' : Over S
 theorem exists_pic_extend_of_milnor : ∀ (S : Scheme.{0}) (A T T₁ T₂ T₀ : Over S) [Flat A.hom] (j₁ : T₁ ⟶ T) (j₂ : T₂ ⟶ T) (k₁ : T₀ ⟶ T₁) (k₂ : T₀ ⟶ T₂), Milnor j₁.left j₂.left k₁.left k₂.left → IsClosedImmersion j₂.left → Surjective j₂.left → Surjective k₂.left → ∀ c₂ : Pic (A ⊗ T₂).left, GlobalTheory.CechPic.pull (A ◁ k₂).left c₂ = 0 → ∃ c : Pic (A ⊗ T).left, GlobalTheory.CechPic.pull (A ◁ j₁).left c = 0 ∧ GlobalTheory.CechPic.pull (A ◁ j₂).left c = c₂ := by
   intro S A T T₁ T₂ T₀ _ j₁ j₂ k₁ k₂ hM hj hj' hk' c₂ hc
   have hk := hM.closed
-  haveI : IsClosedImmersion (A ◁ j₂).left :=
+  have : IsClosedImmersion (A ◁ j₂).left :=
     MorphismProperty.of_isPullback (isPullback_whiskerLeft_left A j₂).flip hj
-  haveI : Surjective (A ◁ j₂).left :=
+  have : Surjective (A ◁ j₂).left :=
     MorphismProperty.of_isPullback (isPullback_whiskerLeft_left A j₂).flip hj'
-  haveI : IsClosedImmersion (A ◁ k₂).left :=
+  have : IsClosedImmersion (A ◁ k₂).left :=
     MorphismProperty.of_isPullback (isPullback_whiskerLeft_left A k₂).flip hk
-  haveI : Surjective (A ◁ k₂).left :=
+  have : Surjective (A ◁ k₂).left :=
     MorphismProperty.of_isPullback (isPullback_whiskerLeft_left A k₂).flip hk'
   have w₀ : k₁ ≫ j₁ = k₂ ≫ j₂ := Over.OverMorphism.ext hM.w
   have w : (A ◁ k₁).left ≫ (A ◁ j₁).left = (A ◁ k₂).left ≫ (A ◁ j₂).left := by
@@ -867,7 +867,7 @@ theorem glue_into_affineOpen (S : Scheme.{0}) [IsAffine S] (U T T₁ T₂ T₀ :
     (hV : IsAffineOpen V) (u₁ : T₁ ⟶ U) (u₂ : T₂ ⟶ U) (hk : k₁ ≫ u₁ = k₂ ≫ u₂)
     (h₁ : ∀ x, u₁.left x ∈ V) (h₂ : ∀ x, u₂.left x ∈ V) :
     ∃ u : T ⟶ U, j₁ ≫ u = u₁ ∧ j₂ ≫ u = u₂ := by
-  haveI : IsAffine V.toScheme := hV
+  have : IsAffine V.toScheme := hV
   have r₁ : Set.range u₁.left ⊆ Set.range V.ι := by
     rintro _ ⟨x, rfl⟩; rw [Scheme.Opens.range_ι]; exact h₁ x
   have r₂ : Set.range u₂.left ⊆ Set.range V.ι := by
@@ -884,7 +884,7 @@ theorem glue_into_affineOpen (S : Scheme.{0}) [IsAffine S] (U T T₁ T₂ T₀ :
   set b := hM.cart.lift a₁.appTop a₂.appTop w with hb
   have b₁ : b ≫ j₁.left.appTop = a₁.appTop := hM.cart.lift_fst _ _ _
   have b₂ : b ≫ j₂.left.appTop = a₂.appTop := hM.cart.lift_snd _ _ _
-  haveI := hM.aff
+  have := hM.aff
   let a : T.left ⟶ V.toScheme := T.left.toSpecΓ ≫ Spec.map b ≫ V.toScheme.isoSpec.inv
   have e₁ : j₁.left ≫ a = a₁ := by
     simp only [a]
@@ -1188,7 +1188,7 @@ end GlobalTheory.DualOpen.SmallExt
 open GlobalTheory.DualOpen.SmallExt in
 theorem GlobalTheory.DualOpen.exists_same_of_smallExt : ∀ (S : Scheme.{0}) [IsAffine S] (A : Over S) [GrpObj A], IsAbelianScheme A → ∀ (U : Over S) (M : LB (A ⊗ U).left), Fam A M → Inj A M → TanLift A M → ∀ (C : Type) [CommRing C] [IsLocalRing C] (e : C), e ∈ IsLocalRing.maximalIdeal C → (∀ a ∈ IsLocalRing.maximalIdeal C, a * e = 0) → e ≠ 0 → ∀ (s : Sp C ⟶ S) (N : LB (A ⊗ Over.mk s).left), Fam A N → ∀ u' : Over.mk s ⟶ U, Same A N M (ptMap s (Ideal.Quotient.mk (Ideal.span {e}))) (ptMap s (Ideal.Quotient.mk (Ideal.span {e})) ≫ u') → ∃ u : Over.mk s ⟶ U, Same A N M (𝟙 _) u := by
   intro S _ A _ hA U M hMf hMi hMt C _ _ e he hme hne s N hNf u' hsame
-  haveI : Smooth A.hom := hA.smooth
+  have : Smooth A.hom := hA.smooth
   obtain ⟨P, _, i, p, σ, q, hpi, hσi, hqi, hσc, hσs, hM1, hM2⟩ := GlobalTheory.T.smallExtension_dualNumber_fibreProduct_affineMilnorSquare C e he hme hne
   have calc3 := (GlobalTheory.T.additiveLineBundleFamily_calculus_rules S A).2.2.1
   set k := IsLocalRing.ResidueField C
@@ -1329,17 +1329,17 @@ theorem exists_lift (U S : Scheme.{0}) (p : U ⟶ S) [Smooth p] (C : Type) [Comm
     have h1 : (1 : C) ∈ (⊤ : Ideal C) ^ 2 := by rw [Ideal.top_pow]; exact Submodule.mem_top
     rw [hI, Ideal.mem_bot] at h1
     exact one_ne_zero h1
-  haveI : Nontrivial (C ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hItop
-  haveI : IsLocalRing (C ⧸ I) :=
+  have : Nontrivial (C ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hItop
+  have : IsLocalRing (C ⧸ I) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom (Ideal.Quotient.mk I) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
+  have : IsLocalHom (Ideal.Quotient.mk I) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
   let t₀ : Sp (C ⧸ I) := IsLocalRing.closedPoint (C ⧸ I)
   obtain ⟨_, ⟨W, hW, rfl⟩, hxW, -⟩ :=
     S.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ (p (u₀ t₀))) isOpen_univ
   obtain ⟨_, ⟨V, hV, rfl⟩, hxV, hVW⟩ :=
     U.isBasis_affineOpens.exists_subset_of_mem_open (a := u₀ t₀) hxW (W.2.preimage p.continuous)
-  haveI : IsOpenImmersion hW.fromSpec := hW.isOpenImmersion_fromSpec
-  haveI : IsOpenImmersion hV.fromSpec := hV.isOpenImmersion_fromSpec
+  have : IsOpenImmersion hW.fromSpec := hW.isOpenImmersion_fromSpec
+  have : IsOpenImmersion hV.fromSpec := hV.isOpenImmersion_fromSpec
   have hmap : (spMap (Ideal.Quotient.mk I)) t₀ = IsLocalRing.closedPoint C :=
     IsLocalRing.comap_closedPoint (Ideal.Quotient.mk I)
   have hsW : Set.range s ⊆ Set.range hW.fromSpec := by
@@ -1498,8 +1498,8 @@ theorem exists_lift_of_fpqc_cover : ∀ (G T T' Y : Scheme.{0}) (π : G ⟶ Y) [
   let σ : T' ⟶ pullback s t :=
     pullback.lift (pullback.lift z t hz) (𝟙 T') (by rw [Category.id_comp]; exact pullback.lift_snd _ _ _)
   have hσ : σ ≫ pullback.snd s t = 𝟙 T' := pullback.lift_snd _ _ _
-  haveI : IsSplitEpi (pullback.snd s t) := ⟨⟨⟨σ, hσ⟩⟩⟩
-  haveI : IsIso (pullback.snd s t) := isIso_of_mono_of_isSplitEpi _
+  have : IsSplitEpi (pullback.snd s t) := ⟨⟨⟨σ, hσ⟩⟩⟩
+  have : IsIso (pullback.snd s t) := isIso_of_mono_of_isSplitEpi _
   have hq : (@Surjective ⊓ @Flat ⊓ @QuasiCompact : MorphismProperty Scheme.{0}) t :=
     ⟨⟨‹_›, ‹_›⟩, ‹_›⟩
   have hs : IsIso s :=
@@ -1574,7 +1574,7 @@ theorem exists_mono_same : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbeli
   have hf : LocallyOfFiniteType (fst T U).left := by
     show LocallyOfFiniteType (pullback.fst T.hom U.hom)
     infer_instance
-  haveI : IsLocallyNoetherian (T ⊗ U).left := LocallyOfFiniteType.isLocallyNoetherian (fst T U).left
+  have : IsLocallyNoetherian (T ⊗ U).left := LocallyOfFiniteType.isLocallyNoetherian (fst T U).left
   obtain ⟨G, i, hi, hG⟩ := GlobalTheory.DualLocus.exists_closed_same S A (T ⊗ U) hA _ _ (fam_ev hN (fst T U))
     (fam_ev hM (snd T U))
   have key : ∀ (Y : Over S) (z : Y ⟶ G), Same A N M (z ≫ i ≫ fst T U) (z ≫ i ≫ snd T U) := fun Y z ↦ by
@@ -1682,10 +1682,10 @@ theorem tanLift_of_fieldChart : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], Is
     GlobalTheory.T.dualNumber_fieldHom_flat_surjective k (AlgebraicClosure k) (algebraMap k (AlgebraicClosure k))
 
   let T : Over S := Over.mk (spMap (dnInl k) ≫ s)
-  haveI : IsNoetherianRing (DualNumber k) := inferInstance
-  haveI : IsLocallyNoetherian T.left := (inferInstance : IsLocallyNoetherian (Sp (DualNumber k)))
+  have : IsNoetherianRing (DualNumber k) := inferInstance
+  have : IsLocallyNoetherian T.left := (inferInstance : IsLocallyNoetherian (Sp (DualNumber k)))
   obtain ⟨G, π, hmono, -, hG⟩ := GlobalTheory.T.exists_mono_finiteType_agreement_locus_injective_family S A hA T U N M hN hM hInj
-  haveI : Mono π.left := hmono
+  have : Mono π.left := hmono
 
   let Y : Over S := Over.mk (spMap ψ ≫ spMap (dnInl k) ≫ s)
   let y : Y ⟶ T := Over.homMk (spMap ψ)
@@ -1714,7 +1714,7 @@ theorem tanLift_of_fieldChart : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], Is
     (hev T U Y Z N M y z _ hN.isLB hM.isLB).2 h₁
   have hx : ∀ x, z.left x ∈ W := (hW Z z).1 ⟨_, h₂⟩
 
-  haveI : Subsingleton Y.left := subsingleton_spectrum_dualNumber (AlgebraicClosure k)
+  have : Subsingleton Y.left := subsingleton_spectrum_dualNumber (AlgebraicClosure k)
   have x₀ : Z.left := IsLocalRing.closedPoint (AlgebraicClosure k)
   have hall : ∀ x : Y.left, x ∈ W := fun x => by
     rw [Subsingleton.elim x (z.left x₀)]
@@ -1725,8 +1725,8 @@ theorem tanLift_of_fieldChart : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], Is
     rwa [Category.id_comp] at this
 
   obtain ⟨z', hz'⟩ := (hG Y y).1 ⟨u', h₃⟩
-  haveI : Flat (spMap ψ) := hflat
-  haveI : Surjective (spMap ψ) := hsurj
+  have : Flat (spMap ψ) := hflat
+  have : Surjective (spMap ψ) := hsurj
   obtain ⟨w, hw⟩ := GlobalTheory.T.exists_lift_mono_of_fpqc_cover_lift G.left T.left Y.left T.left π.left (𝟙 _) (spMap ψ) z'
     (by rw [Category.comp_id]; exact hz')
   exact (hG T (𝟙 T)).2 ⟨w, hw⟩

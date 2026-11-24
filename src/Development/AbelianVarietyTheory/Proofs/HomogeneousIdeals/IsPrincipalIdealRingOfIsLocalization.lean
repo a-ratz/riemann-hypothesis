@@ -446,7 +446,7 @@ theorem isPrime_span_X_away_C : (Ideal.span {algebraMap O⟦X⟧ T X}).IsPrime :
   refine IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers (C π)) T _ inferInstance
     (Set.disjoint_left.2 ?_)
   rintro _ ⟨n, rfl⟩ h
-  exact not_X_dvd_C hπ (X_prime.dvd_of_dvd_pow (Ideal.mem_span_singleton.1 h))
+  exact not_X_dvd_C hπ (prime_X.dvd_of_dvd_pow (Ideal.mem_span_singleton.1 h))
 
 theorem prime_algebraMap_X_away_C : Prime (algebraMap O⟦X⟧ T X) :=
   (Ideal.span_singleton_prime
@@ -459,7 +459,7 @@ theorem ringKrullDim_away_C : ringKrullDim T = 1 := by
   refine IsPrincipalIdealRing.ringKrullDim_eq_one T fun h => ?_
   have hp := prime_algebraMap_X_away_C hπ T
   obtain ⟨b, hb⟩ := h.mul_inv_cancel hp.ne_zero
-  exact hp.not_unit (IsUnit.of_mul_eq_one _ hb)
+  exact hp.not_isUnit (IsUnit.of_mul_eq_one _ hb)
 
 end AwayUniformiser
 
@@ -591,7 +591,7 @@ theorem powerSeries_completeDVR (O : Type*) [CommRing O] [IsDomain O] [IsDiscret
   ⟨⟨inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
       ringKrullDim_eq_two O, maximalIdeal_eq_span hπ, maximalIdeal_eq_span_X_sub_C hπ⟩,
     ⟨isAdicComplete_span_C_X hπ, inferInstance⟩,
-    ⟨X_prime, prime_C hπ, not_associated_X_C hπ⟩,
+    ⟨prime_X, prime_C hπ, not_associated_X_C hπ⟩,
     ⟨ev_X hπ, continuous_ev hπ, eq_ev hπ, ev_surjective hπ, ker_ev hπ, inferInstance,
       ⟨evFrac hπ K _, evFrac_algebraMap hπ K _, eq_evFrac hπ K _⟩,
       fun _ _ h => le_addVal_ev_vw hπ (Ideal.mem_span_singleton.1 h)⟩,

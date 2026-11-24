@@ -82,7 +82,7 @@ theorem UpperTheory.V.ZK.Ct.latDet :
   intro E V _ _ _ _ lam δ δV hcomm hker hdisc hspan hdet
   classical
   set L := LinearMap.range lam with hL
-  haveI : IsZLattice ℝ L := ⟨hspan⟩
+  have : IsZLattice ℝ L := ⟨hspan⟩
   have hmaps : ∀ x ∈ L, (δV.restrictScalars ℤ) x ∈ L := by
     rintro _ ⟨y, rfl⟩
     exact ⟨δ y, by simp [hcomm]⟩
@@ -134,7 +134,7 @@ theorem UpperTheory.V.ZK.Ct.latDet :
       simp [hcomm, ht]
   let e2 : (E ⧸ (LinearMap.range δ ⊔ Submodule.torsion ℤ E)) ≃ₗ[ℤ] L ⧸ LinearMap.range f :=
     (Submodule.quotEquivOfEq _ _ hkerg.symm).trans (g.quotKerEquivOfSurjective hgs)
-  haveI : Finite (L ⧸ LinearMap.range f) := Nat.finite_of_card_ne_zero (hcard ▸ hne)
+  have : Finite (L ⧸ LinearMap.range f) := Nat.finite_of_card_ne_zero (hcard ▸ hne)
   refine ⟨Finite.of_equiv _ e2.toEquiv.symm, ?_⟩
   rw [Nat.card_congr e2.toEquiv, hcard, Nat.cast_natAbs, Int.cast_abs, hdetf]
 end -- clump:auto
@@ -194,11 +194,11 @@ private theorem permDet_twist {X : Type} [Fintype X] [DecidableEq X] (π : Equiv
       · have e := hc i
         rw [← h1] at e
         have hz : ζ = 1 := mul_right_cancel₀ (hc0 i) (e.symm.trans (one_mul _).symm)
-        rw [if_pos h1, if_pos rfl, if_pos rfl, hz]
+        rw [ite_eq_left h1, ite_eq_left rfl, ite_eq_left rfl, hz]
         ring
-      · rw [if_neg h1, if_pos rfl, if_pos rfl]
+      · rw [ite_eq_right h1, ite_eq_left rfl, ite_eq_left rfl]
         ring
-    · rw [if_neg h2, if_neg h2]
+    · rw [ite_eq_right h2, ite_eq_right h2]
       split_ifs with h1
       · subst h1
         ring
@@ -316,9 +316,9 @@ open NumberField IsDedekindDomain UpperTheory.V UpperTheory.V.ZK UpperTheory.V.Z
 theorem UpperTheory.V.ZK.Ct.places :
     ∀ (L F : Type) [Field L] [NumberField L] [Field F] [NumberField F] [Algebra L F] (γ : F ≃ₐ[L] F), IsTotallyComplex L → IsGalois L F → (∀ σ : F ≃ₐ[L] F, σ ∈ Subgroup.zpowers γ) → IsTotallyComplex F ∧ Fintype.card (InfinitePlace F) = orderOf γ * InfinitePlace.nrComplexPlaces L ∧ ∀ (k : ℕ) (w : InfinitePlace F), γ ^ k • w = w ↔ orderOf γ ∣ k := by
   intro L F _ _ _ _ _ γ hL hG hγ
-  haveI := hL
-  haveI : IsTotallyComplex F := isTotallyComplex_of_algebra L F
-  haveI : IsUnramifiedAtInfinitePlaces L F :=
+  have := hL
+  have : IsTotallyComplex F := isTotallyComplex_of_algebra L F
+  have : IsUnramifiedAtInfinitePlaces L F :=
     ⟨fun w => InfinitePlace.isUnramified_iff.mpr (Or.inr (IsTotallyComplex.isComplex _))⟩
   have htop : Subgroup.zpowers γ = ⊤ := eq_top_iff.mpr fun σ _ => hγ σ
   have hcard : Module.finrank L F = orderOf γ := by
@@ -371,14 +371,14 @@ private theorem extS_log {F : Type} [Field F] [NumberField F] [_root_.NumberFiel
   classical
   by_cases h : w = w₀
   · subst h
-    simp only [extS, LinearMap.coe_mk, AddHom.coe_mk, dif_pos rfl, logEmbedding_component, mult_two, dite_true]
+    simp only [extS, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left rfl, logEmbedding_component, mult_two, dite_true]
     have hs := NumberField.Units.sum_mult_mul_log u
     have e : (algebraMap (𝓞 F) F) (u : 𝓞 F) = ((u : 𝓞 F) : F) := rfl
     simp only [mult_two, e] at hs
     rw [Fintype.sum_eq_add_sum_subtype_ne _ w₀] at hs
     rw [← Finset.mul_sum] at hs ⊢
     linarith
-  · simp only [extS, LinearMap.coe_mk, AddHom.coe_mk, dif_neg h, logEmbedding_component, mult_two]
+  · simp only [extS, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_right h, logEmbedding_component, mult_two]
     ring
 
 private theorem sum_log {F : Type} [Field F] [NumberField F] [_root_.NumberField.IsTotallyComplex F] (u : (𝓞 F)ˣ) :
@@ -433,7 +433,7 @@ theorem UpperTheory.V.ZK.Ct.unitLat :
   open NumberField.Units NumberField.Units.dirichletUnitTheorem NumberField.InfinitePlace in (
     classical
     intro F _ _ hF lam hlam
-    haveI := hF
+    have := hF
     have hlam' : ∀ (x : Additive (𝓞 F)ˣ) (m : ℤ),
         lam (x, m) = extS F (logEmbedding F x) + (m : ℝ) • (fun _ => (1 : ℝ)) := by
       intro x m
@@ -690,7 +690,7 @@ theorem UpperTheory.V.ZK.Ct.cardEQ :
         Nat.cast_smul_eq_nsmul]) u1 u2 u3
     (by rw [← abs_pos, hdet]; exact pow_pos (by linarith) _)
   obtain ⟨e3⟩ := card_prod _ δ (a - 1)
-  haveI : NeZero (a - 1) := ⟨by omega⟩
+  have : NeZero (a - 1) := ⟨by omega⟩
   have f3 := (e3.finite_iff).1 f1
   refine ⟨e2.toEquiv.finite_iff.1 (Finite.prod_left (ZMod (a - 1))), ?_⟩
   rw [Nat.card_congr e3, Nat.card_prod, Nat.card_zmod, Nat.card_congr e2.toEquiv, hdet] at f2

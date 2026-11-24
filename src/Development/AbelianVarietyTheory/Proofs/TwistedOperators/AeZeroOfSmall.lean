@@ -84,7 +84,7 @@ open MeasureTheory in
 theorem _root_.GlobalTheory.mean_periodic_indep_of_covolume_one :
     ∀ (G : Type) [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] [T2Space G] [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] (Γ : AddSubgroup G) [DiscreteTopology Γ] (K : Set G), IsCompact K → (∀ x, ∃ γ ∈ Γ, γ + x ∈ K) → ∀ (μ μ' : Measure G) (𝓕 𝓕' : Set G), μ.IsAddHaarMeasure → IsAddFundamentalDomain Γ 𝓕 μ → μ 𝓕 = 1 → μ'.IsAddHaarMeasure → IsAddFundamentalDomain Γ 𝓕' μ' → μ' 𝓕' = 1 → ∀ Φ : G → ℂ, Continuous Φ → (∀ γ ∈ Γ, ∀ x, Φ (γ + x) = Φ x) → IntegrableOn Φ 𝓕 μ ∧ ∫ x in 𝓕, Φ x ∂μ = ∫ x in 𝓕', Φ x ∂μ' := by
   intro G _ _ _ _ _ _ _ _ Γ _ K hK hcov μ μ' 𝓕 𝓕' hμ h𝓕 h𝓕1 hμ' h𝓕' h𝓕'1 Φ hΦ hper
-  haveI : Countable Γ := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
+  have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
   obtain ⟨M, hM⟩ : ∃ M, ∀ x, ‖Φ x‖ ≤ M := by
     obtain ⟨M, hM⟩ := (hK.image hΦ.norm).bddAbove
     refine ⟨M, fun x => ?_⟩
@@ -103,12 +103,12 @@ theorem _root_.GlobalTheory.mean_periodic_indep_of_covolume_one :
     simp at h𝓕'1
   have hac : μ ≪ μ' := by
     intro s hs
-    rw [hsm, Measure.smul_apply] at hs
+    rw [hsm, smul_apply] at hs
     simpa [hc0] using hs
   have h𝓕'μ : IsAddFundamentalDomain Γ 𝓕' μ := h𝓕'.mono hac
   have hc1 : μ'.addHaarScalarFactor μ = 1 := by
     have e := h𝓕'1
-    rw [hsm, Measure.smul_apply, h𝓕'μ.measure_eq h𝓕, h𝓕1] at e
+    rw [hsm, smul_apply, h𝓕'μ.measure_eq h𝓕, h𝓕1] at e
     simpa using e
   have hμμ' : μ' = μ := by rw [hsm, hc1, one_smul]
   rw [hμμ']
@@ -240,9 +240,9 @@ open scoped Pointwise in
 theorem _root_.GlobalTheory.exists_summation_kernel_periodic : ∀ (G : Type) [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] [T2Space G] [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] (Γ : AddSubgroup G) [DiscreteTopology Γ] (K : Set G), IsCompact K → (∀ x, ∃ γ ∈ Γ, γ + x ∈ K) → ∀ (A : Type) [AddCommGroup A] (χ : A → G → ℂ), (∀ a, Continuous (χ a)) → (∀ a x y, χ a (x + y) = χ a x * χ a y) → (∀ a b x, χ (a + b) x = χ a x * χ b x) → (∀ x, χ 0 x = 1) → (∀ a x, ‖χ a x‖ = 1) → (∀ x, (∀ a, χ a x = 1) ↔ x ∈ Γ) → ∀ (μ : Measure G) (𝓕 : Set G), μ.IsAddHaarMeasure → IsAddFundamentalDomain Γ 𝓕 μ → ∀ l : List (G → ℂ), (∀ Φ ∈ l, Continuous Φ ∧ ∀ γ ∈ Γ, ∀ x, Φ (γ + x) = Φ x) → ∀ ε : ℝ, 0 < ε → ∃ (s : Finset A) (c : A → ℂ), ∀ Φ ∈ l, ∀ x, ‖Φ x - ∑ a ∈ s, c a * ((∫ y in 𝓕, Φ y * starRingEnd ℂ (χ a y) ∂μ) * χ a x)‖ ≤ ε := by
   intro G _ _ _ _ _ _ _ _ Γ _ K hK hcov A _ χ hχc hχmul hχadd hχ0 hχnorm hχΓ μ 𝓕 hμ h𝓕 l hl ε hε
   classical
-  haveI : Countable Γ := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
-  haveI : IsClosed (Γ : Set G) := AddSubgroup.isClosed_of_discrete
-  haveI : CompactSpace (G ⧸ Γ) := compactSpace_quotient_of_cocompact Γ hK hcov
+  have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
+  have : IsClosed (Γ : Set G) := AddSubgroup.isClosed_of_discreteTopology
+  have : CompactSpace (G ⧸ Γ) := compactSpace_quotient_of_cocompact Γ hK hcov
   have hχz : ∀ a, χ a 0 = 1 := by
     intro a
     have h := hχmul a 0 0
@@ -309,7 +309,7 @@ theorem _root_.GlobalTheory.exists_summation_kernel_periodic : ∀ (G : Type) [A
     exact Filter.eventually_atTop.2 ⟨M, fun M' hM' x => (hM x).trans hM'⟩
   obtain ⟨M, hM⟩ := ((Filter.eventually_all_finset l.toFinset).2 hMev).exists
   have hfin : μ 𝓕 < ⊤ := _root_.GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact Γ hK hcov μ h𝓕
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.mpr hfin.ne
+  have : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.mpr hfin.ne
   set β : G → ℝ := fun y => b (y : G ⧸ Γ) with hβ
   have hβc : Continuous β := b.continuous.comp continuous_quotient_mk'
   have hβ0 : ∀ y, 0 ≤ β y := fun y => (hb01 _).1
@@ -552,7 +552,7 @@ theorem ae_zero_of_small {G : Type} [MeasurableSpace G] (ν : Measure G) {h : G 
           rw [huv]
           exact hpt (u w) (v w)
       _ = 2 * (∫⁻ w, ‖u w‖ₑ ^ 2 ∂ν + ∫⁻ w, ‖v w‖ₑ ^ 2 ∂ν) := by
-          rw [lintegral_const_mul' _ _ (by simp), lintegral_add_left (hu.enorm.pow_const 2)]
+          rw [lintegral_const_mul' _ _ (by simp), lintegral_add_left (hu.eNorm.pow_const 2)]
       _ ≤ 2 * (ENNReal.ofReal (ε ^ 2) * M + ENNReal.ofReal (ε ^ 2) * N) := by gcongr
       _ = ENNReal.ofReal (ε ^ 2) * (2 * (M + N)) := by ring
   have hlim : Filter.Tendsto (fun ε : ℝ => ENNReal.ofReal (ε ^ 2) * (2 * (M + N))) (𝓝[>] 0) (𝓝 0) := by
@@ -564,7 +564,7 @@ theorem ae_zero_of_small {G : Type} [MeasurableSpace G] (ν : Measure G) {h : G 
   have hI0 : I = 0 := by
     refine le_antisymm (ge_of_tendsto hlim ?_) bot_le
     filter_upwards [self_mem_nhdsWithin] with ε hε using hle ε hε
-  have hae := (lintegral_eq_zero_iff (hm.enorm.pow_const 2)).1 hI0
+  have hae := (lintegral_eq_zero_iff (hm.eNorm.pow_const 2)).1 hI0
   filter_upwards [hae] with w hw
   simpa using hw
 

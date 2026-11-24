@@ -488,7 +488,7 @@ namespace GlobalTheory.CokerL
 
 theorem isoProj_mem_L : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] (l e a : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] [Fact l.Prime] [NormedAlgebra ℚ_[l] K] [NeZero e] [NeZero a] [TameDescentExponentData K l e a] (P : PhiMod O K l e a ι) (Δ : Descent P) (c : ZMod e) (v : Vec K a ι), v ∈ P.L → GlobalTheory.CokerL.isoProj Δ c v ∈ P.L := by
   intro O K _ _ _ _ _ l e a ι _ _ _ _ _ _ _ P Δ c v hv
-  letI := Fintype.ofFinite (rootsOfUnity e K)
+  let := Fintype.ofFinite (rootsOfUnity e K)
   have key : ∀ s : ZMod a → K, (∀ τ, ‖s τ‖ ≤ 1) → ∀ w ∈ P.L, diagScale K a ι s w ∈ P.L := by
     intro s hs w hw
     have h : diagScale K a ι s w = (fun τ => C (s τ)) • w := by
@@ -557,7 +557,7 @@ theorem act_inertia_diagScale {P : PhiMod O K l e a ι} (Δ : Descent P) (ξ : r
 
 theorem isoProj_mem_isotypic {P : PhiMod O K l e a ι} (Δ : Descent P) (c : ZMod e)
     (v : Vec K a ι) : isoProj Δ c v ∈ Δ.isotypic c := by
-  letI := Fintype.ofFinite (rootsOfUnity e K)
+  let := Fintype.ofFinite (rootsOfUnity e K)
   unfold isoProj
   rw [LinearMap.smul_apply]
   refine Submodule.smul_mem _ _ ?_
@@ -824,8 +824,8 @@ theorem sum_isoProj : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrametr
     [NormedAlgebra ℚ_[l] K] [NeZero e] [NeZero a] [TameDescentExponentData K l e a] (P : PhiMod O K l e a ι)
     (Δ : Descent P) (v : Vec K a ι), ∑ c : ZMod e, GlobalTheory.CokerL.isoProj Δ c v = v := by
   intro O K _ _ _ _ _ l e a ι _ _ _ _ _ _ _ P Δ v
-  letI := Fintype.ofFinite (rootsOfUnity e K)
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  let := Fintype.ofFinite (rootsOfUnity e K)
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have he : (e : K) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne e)
   simp only [isoProj, LinearMap.smul_apply, LinearMap.sum_apply, LinearMap.comp_apply]
   rw [← Finset.smul_sum, Finset.sum_comm]
@@ -1154,15 +1154,15 @@ lemma phi_X : φ PowerSeries.X = PowerSeries.X ^ l := by
   rw [hφ, PowerSeries.coeff_X_pow]
   by_cases h1 : l ∣ m
   · obtain ⟨q, rfl⟩ := h1
-    rw [if_pos (dvd_mul_right l q), Nat.mul_div_cancel_left q (by omega), PowerSeries.coeff_X]
+    rw [ite_eq_left (dvd_mul_right l q), Nat.mul_div_cancel_left q (by omega), PowerSeries.coeff_X]
     by_cases hq : q = 1
     · subst hq; simp
-    · rw [if_neg hq, if_neg]
+    · rw [ite_eq_right hq, ite_eq_right]
       intro h2
       apply hq
       have : l * q = l * 1 := by simpa using h2
       exact Nat.eq_of_mul_eq_mul_left (by omega) this
-  · rw [if_neg h1, if_neg]
+  · rw [ite_eq_right h1, ite_eq_right]
     rintro rfl
     exact h1 dvd_rfl
 
@@ -1173,7 +1173,7 @@ lemma comps_X_pow (t : ℕ) :
       if j = (⟨t % l, Nat.mod_lt _ (Nat.lt_of_lt_of_le (by norm_num) hl)⟩ : Fin l) then PowerSeries.X ^ (t / l) else 0 := by
     apply comps_eq
     simp only [apply_ite φ, map_zero, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true]
+      ite_true]
     rw [map_pow, phi_X l hl φ hφ, ← pow_mul, ← pow_add, Nat.mod_add_div]
   rw [this]; simp
 
@@ -1704,7 +1704,7 @@ theorem psi_frob_mul (l : ℕ) [Fact l.Prime] (g h : K⟦X⟧) :
       ∑ p ∈ (Finset.HasAntidiagonal.antidiagonal n).map ⟨_, hinj⟩, coeff p.1 (frob K l g) * coeff p.2 h := by
     rw [Finset.sum_map]
     refine Finset.sum_congr rfl fun p _ => ?_
-    simp only [Function.Embedding.coeFn_mk, coeff_frob, coeff_psi, dvd_mul_right, if_true,
+    simp only [Function.Embedding.coeFn_mk, coeff_frob, coeff_psi, dvd_mul_right, ite_true,
       Nat.mul_div_cancel_left _ hl]
   rw [h1]
   refine (Finset.sum_subset ?_ ?_).symm
@@ -1715,7 +1715,7 @@ theorem psi_frob_mul (l : ℕ) [Fact l.Prime] (g h : K⟦X⟧) :
     simp only [Function.Embedding.coeFn_mk]
     rw [← mul_add, hq]
   · intro p hp hp'
-    rw [coeff_frob, if_neg, zero_mul]
+    rw [coeff_frob, ite_eq_right, zero_mul]
     rintro ⟨c, hc⟩
     apply hp'
     rw [Finset.HasAntidiagonal.mem_antidiagonal] at hp
@@ -1731,7 +1731,7 @@ theorem psi_frob_mul (l : ℕ) [Fact l.Prime] (g h : K⟦X⟧) :
 
 theorem psi_frob (l : ℕ) [Fact l.Prime] (g : K⟦X⟧) : psi l (frob K l g) = g := by
   ext n
-  rw [coeff_psi, coeff_frob, if_pos (dvd_mul_right _ _),
+  rw [coeff_psi, coeff_frob, ite_eq_left (dvd_mul_right _ _),
     Nat.mul_div_cancel_left _ (Fact.out : l.Prime).pos]
 
 theorem psi_mulVec {ι κ : Type} [Fintype ι] (l : ℕ) [Fact l.Prime] (Y : Matrix κ ι K⟦X⟧)
@@ -1850,8 +1850,8 @@ namespace GlobalTheory.Proof.cokernel_latticeMap_killed_by_prime_pow
 
 theorem main : GlobalTheory.IndefiniteRowSideFullHecke.RepresentationBounds.Stmt := by
   intro O K _ _ _ _ _ l e a _ _ _ _ hT ι κ _ _ _ _ Sig U N η H hB D₁ D₂ hD₁ hD₂ F hF
-  haveI : FiniteDimensional ℚ_[l] K := hT.finite
-  haveI : CompleteSpace K := FiniteDimensional.complete ℚ_[l] K
+  have : FiniteDimensional ℚ_[l] K := hT.finite
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[l] K
   exact _root_.GlobalTheory.CokerLift.killsAll_of_killsCoker_L O K l e a ι κ η H D₁ D₂ F _
     (_root_.GlobalTheory.CokerL.kills_cokerL O K l e a ι κ η H D₁ D₂ F Sig U N hB hD₁.chars_subset hD₂ hF)
 

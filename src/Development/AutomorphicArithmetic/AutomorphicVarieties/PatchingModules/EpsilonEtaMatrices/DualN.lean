@@ -86,7 +86,7 @@ open Matrix Filter NumberField IsDedekindDomain Formalism.ConjugateSelfDual Reci
 private theorem pow_mem_of_PL (l : ℕ) {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     (H : Subgroup Γ) (V : Set Γ) (hV : IsOpen V) (hle : (PL l H : Set Γ) ⊆ V) : ∀ h ∈ H, ∃ e : ℕ, h ^ l ^ e ∈ V := by
   let ι := {U : OpenNormalSubgroup Γ // ∀ h ∈ H, ∃ e : ℕ, h ^ l ^ e ∈ U}
-  haveI : Nonempty ι := ⟨⟨⟨⊤, Subgroup.normal_top⟩, fun h _ => ⟨0, trivial⟩⟩⟩
+  have : Nonempty ι := ⟨⟨⟨⊤, Subgroup.normal_top⟩, fun h _ => ⟨0, trivial⟩⟩⟩
   have hd : Directed (· ⊇ ·) fun U : ι => (U.1 : Set Γ) := by
     intro U U'
     refine ⟨⟨U.1 ⊓ U'.1, fun h hh => ?_⟩, fun a ha => ha.1, fun a ha => ha.2⟩
@@ -136,7 +136,7 @@ private theorem affine_ker {R Γ M : Type} [CommRing R] [Group Γ] [TopologicalS
   have ho : IsOpen (a.ker : Set Γ) := by
     have : (a.ker : Set Γ) = (⋂ m, {g | ρ g m = m}) ∩ {g | y g = 0} := by
       ext g
-      simp only [SetLike.mem_coe, key, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, key, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
       exact and_congr_left' ⟨fun h m => by rw [h]; rfl, fun h => LinearMap.ext h⟩
     rw [this]
     exact (isOpen_iInter_of_finite fun m => (hρ m).isOpen_fiber m).inter (h1.isOpen_fiber 0)
@@ -190,10 +190,10 @@ private theorem rho1_pow_eq_one_pro_l (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : G
     have : {g : G0.G₀ | x.ρX (DD (x.Am m) k.g) g = 1} = ⋂ i, ⋂ j,
         {g : G0.G₀ | x.ρX (DD (x.Am m) k.g) g i j = (1 : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) i j} := by
       ext g
-      simp only [Set.mem_iInter, Set.mem_setOf_eq, Matrix.ext_iff]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq, Matrix.ext_iff]
     rw [this]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => (h0 i j).isOpen_fiber _
-  obtain ⟨e, g', h1, h2⟩ := pow_mem_of_PL l T.H.toSubgroup _ (G0.η_open.isOpenMap_subtype_val _ ho) (fun a ha => by
+  obtain ⟨e, g', h1, h2⟩ := pow_mem_of_PL l T.H.toSubgroup _ (G0.η_open.isOpenMap_subtypeVal _ ho) (fun a ha => by
     have hη : a ∈ G0.η.ker := by
       have ha' := ha
       simp only [PL, SetLike.mem_coe, Subgroup.mem_iInf] at ha'
@@ -247,7 +247,7 @@ theorem UpperTheory.V.Pa.descend :
     rfl
   have hker : (T.h N).p.ker ≤ U.toSubgroup := by
     refine (T.ker_le N).trans (Subgroup.topologicalClosure_minimal _ (sup_le ?_ ?_) U.toOpenSubgroup.isClosed)
-    · haveI := U.isNormal'
+    · have := U.isNormal'
       refine Subgroup.normalClosure_le_normal ?_
       rintro _ ⟨j, rfl⟩
       refine (hU _).2 ⟨htriv _ (by rw [T.ta_ker]; exact T.H.toSubgroup.one_mem) ?_, hta j⟩
@@ -274,7 +274,7 @@ theorem UpperTheory.V.Pa.descend :
     exact g0.2
   have z3 : ∀ g : (T.GN N).G₀, Z ((T.h N).p₀ g : G0.G₀) = y g := fun g => (z2 g).symm
   refine ⟨fun g0 => Z g0, ⟨fun g => (Z g).2, fun i j => ?_, fun g0 h0 => ?_, fun g0 => ?_⟩, fun g => by rw [← z3]⟩
-  · exact (adicLC _ _ _ m _ f3).2 ((z1.comp_continuous continuous_subtype_val).comp fun W => W.1 i j)
+  · exact (adicLC _ _ _ m _ f3).2 ((z1.comp_continuous continuous_subtypeVal).comp fun W => W.1 i j)
   · obtain ⟨g, rfl⟩ := hs g0
     obtain ⟨h, rfl⟩ := hs h0
     have e := congrArg Subtype.val (hy.2 g h)
@@ -557,9 +557,9 @@ private theorem dgCut_iff {A X : Type} [CommRing A] [CommRing X] [Algebra A X] {
   rw [← Matrix.ext_iff]
   refine forall₂_congr fun i j => ?_
   by_cases h : ((i : ℕ) < a ↔ (j : ℕ) < a)
-  · simp only [dgCut, Matrix.of_apply, if_pos h]
+  · simp only [dgCut, Matrix.of_apply, ite_eq_left h]
     simp [h, ddPart, DD.ext_iff, funext_iff]
-  · simp only [dgCut, Matrix.of_apply, if_neg h]
+  · simp only [dgCut, Matrix.of_apply, ite_eq_right h]
     simp [h, ddPart, DD.ext_iff, funext_iff]
 
 variable (X : Type) [CommRing X] [Algebra x.A X] {q : ℕ} (sg : Fin q → F.G₀)
@@ -654,12 +654,12 @@ theorem UpperTheory.V.Pa.exists_ncard_annihilated_cocycles_le_coboundaries_mul :
     (ok1 l L G0 G0 (Glob.Hom.refl G0) n x k x.A χ).2.1
   obtain ⟨rep, r1, r2⟩ := adEx l G0.frame _ _ n _ _ _ hok
   have eK : IsLocalRing.ResidueField x.A ≃ x.K := (PowerSeries.residueFieldOfPowerSeries (k := x.K)).toEquiv
-  haveI : Finite (IsLocalRing.ResidueField x.A) := Finite.of_equiv _ eK.symm
+  have : Finite (IsLocalRing.ResidueField x.A) := Finite.of_equiv _ eK.symm
   rw [← Nat.card_congr eK]
   refine dg_abs x.A _ G0.G₀ _ x.t (fun m => Matrix (Fin n) (Fin n) (DD (x.Am m) k.g))
     (fun m => (x.redD k.g m).mapMatrix.toLinearMap) (dgL k sg) (dgB k)
     (fun m => {z | z ∈ TwZ k (x.Am m) ∧ ∀ j, ell k (x.Am m) (sg j) z = 0}) (fun m => TwB k (x.Am m))
-    PowerSeries.X_irreducible inferInstance (fun m Z => ?_) (fun m Z => ?_)
+    PowerSeries.irreducible_X inferInstance (fun m Z => ?_) (fun m Z => ?_)
     (fun Z h => Matrix.ext fun i j => dg_tf x _ _ (congrFun (congrFun h i) j))
     (fun Z h => Matrix.ext fun i j => dg_sep x fun m => congrFun (congrFun (h m) i) j) (fun u h => ?_)
     (fun m f => ?_) ((finTw l L G0 n x k 1 hΦ).subset fun z hz => hz.1) (fun m => ?_) ?_ (fun f hf h0 => ?_)
@@ -681,8 +681,8 @@ theorem UpperTheory.V.Pa.exists_ncard_annihilated_cocycles_le_coboundaries_mul :
       e.2 ⟨a1, a3, a4, a5⟩⟩, fun ⟨a1, a2⟩ => ?_⟩
     obtain ⟨b1, b2, b3, b4⟩ := e.1 a2
     exact ⟨⟨b1, fun i j => (adicLC _ _ _ m _ ht).2 ((dg_lc _).1 a1 i j), b2, b3⟩, b4⟩
-  · haveI := (finAm l G0.frame n x m k.g).2.2.1
-    haveI : Finite (Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) :=
+  · have := (finAm l G0.frame n x m k.g).2.2.1
+    have : Finite (Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) :=
       inferInstanceAs (Finite (Fin n → Fin n → DD (x.Am m) k.g))
     refine (Set.finite_range fun (Y : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) (g : G0.frame.G₀) =>
       epsD k (x.Am m) g • (k.ρ1 (x.Am m) g * Y * k.ρ1 (x.Am m) g⁻¹) - Y).subset ?_
@@ -748,13 +748,13 @@ theorem UpperTheory.V.Pa.dualN :
   intro rep' hAd hfin
   classical
   have hfinM := finAm l G0.frame n x m k.g
-  haveI : Finite (DD (x.Am m) k.g) := hfinM.2.2.1
-  haveI : Finite (Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) :=
+  have : Finite (DD (x.Am m) k.g) := hfinM.2.2.1
+  have : Finite (Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) :=
     inferInstanceAs (Finite (Fin n → Fin n → DD (x.Am m) k.g))
-  haveI : Finite ↥(k.EpsilonEtaTensorDual (x.Am m)) :=
+  have : Finite ↥(k.EpsilonEtaTensorDual (x.Am m)) :=
     Finite.of_injective (fun Y : ↥(k.EpsilonEtaTensorDual (x.Am m)) => (Y : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)))
       Subtype.val_injective
-  haveI := hfin
+  have := hfin
   have hrho1 := rho1 l G0.frame n x k (x.Am m)
   have hp0ta : ∀ j, (T.h N).p₀ (T.ta N j) = 1 := fun j =>
     Subtype.ext (by rw [Glob.Hom.coe_p₀, T.ta_ker]; rfl)
@@ -780,7 +780,7 @@ theorem UpperTheory.V.Pa.dualN :
         refine ⟨neg_mem ha, fun j => ?_⟩
         obtain ⟨Y, h1, h2⟩ := ha' j
         refine ⟨-Y, ?_, ?_⟩ <;> simp only [Pi.neg_apply, h1, h2, map_neg] <;> abel }
-  haveI hZfin : Finite Z := Finite.of_injective (fun z : Z => (⟨z.1, z.2.1⟩ : Zl rep'))
+  have hZfin : Finite Z := Finite.of_injective (fun z : Z => (⟨z.1, z.2.1⟩ : Zl rep'))
     (fun a b h => Subtype.ext (by simpa using congrArg Subtype.val h))
   have hZlf : (Zl rep' : Set ((T.GN N).Γ → ↥(k.EpsilonEtaTensorDual (x.Am m)))).Finite := Set.toFinite _
   have hLC := lc1 l L (T.GN N) G0 (T.h N) n x k m

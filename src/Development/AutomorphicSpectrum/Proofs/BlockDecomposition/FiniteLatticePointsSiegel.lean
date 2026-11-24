@@ -77,7 +77,7 @@ theorem exponent_mem (hn : 0 < n) {Q : Set (AdelicGLn.AdelicGL K n)} (hQ : IsCom
     ∃ M : Finset ℤ, ∀ (b : AdelicGLn.AdelicGL K n) (x : Fin n → ℝ), ∀ c ∈ Q, ∀ (γ₀ : GL (Fin n) K) (m : ℤ),
       AdelicGLn.diagonal K n γ₀ * count.cen K n ^ m = b * An.tor K x * c * (An.tor K x)⁻¹ * b⁻¹ → m ∈ M := by
   have hdc : Continuous fun g : AdelicGLn.AdelicGL K n => (detModule K n g : ℝ) :=
-    continuous_subtype_val.comp continuous_detModule
+    continuous_subtypeVal.comp continuous_detModule
   obtain ⟨a, b, ha, -, hab⟩ := Reduction.exists_pos_bounds hQ hdc (fun g _ => (detModule K n g).2)
   have hN : 0 < (n : ℝ) * (Module.finrank ℚ K : ℝ) :=
     mul_pos (Nat.cast_pos.2 hn) (Nat.cast_pos.2 Module.finrank_pos)
@@ -273,7 +273,7 @@ theorem count_core (hn : 0 < n) {Q' ω Q : Set (AdelicGLn.AdelicGL K n)} (t₀ :
     simp only [T, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
     rw [← pow_mul]
     have e3 : Real.exp (((n : ℝ) ^ 2 * (d : ℝ)) * S) = Real.exp S ^ (d * (n * n)) := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       push_cast
       ring

@@ -76,11 +76,11 @@ theorem finrank_tensor_cotangent {A K : Type*} [CommRing A] [Field K] [Algebra A
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro y hy
     have : y ∈ LinearMap.range (LinearMap.lTensor K (J • (⊤ : Submodule A J)).subtype) :=
-      (hex y).mp (by rw [LinearMap.baseChange_eq_ltensor] at hy; exact hy)
+      (hex y).mp (by rw [LinearMap.baseChange_eq_lTensor] at hy; exact hy)
     rw [h0, LinearMap.range_zero] at this
     simpa using this
   have hsurj : Function.Surjective (LinearMap.baseChange K (Ideal.toCotangent J)) := by
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact LinearMap.lTensor_surjective K (Submodule.mkQ_surjective _)
   exact LinearEquiv.finrank_eq (LinearEquiv.ofBijective _ ⟨hinj, hsurj⟩)
 
@@ -88,13 +88,13 @@ theorem _root_.LateralTheory.CohomologicalPurity.ChartCut.LeafRank_of : LateralT
   intro e d R A _ _ _ I p _ hIp hA hB
   have hk : ∀ a ∈ I, algebraMap A p.ResidueField a = 0 := fun a ha =>
     Ideal.algebraMap_residueField_eq_zero.mpr (hIp ha)
-  letI : Algebra (A ⧸ I) p.ResidueField := (Ideal.Quotient.lift I (algebraMap A p.ResidueField) hk).toAlgebra
-  haveI : IsScalarTower A (A ⧸ I) p.ResidueField := IsScalarTower.of_algebraMap_eq (fun a => rfl)
+  let : Algebra (A ⧸ I) p.ResidueField := (Ideal.Quotient.lift I (algebraMap A p.ResidueField) hk).toAlgebra
+  have : IsScalarTower A (A ⧸ I) p.ResidueField := IsScalarTower.of_algebraMap_eq (fun a => rfl)
   have hsurj : Function.Surjective (algebraMap A (A ⧸ I)) := Ideal.Quotient.mk_surjective
-  haveI : Nontrivial (A ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr (ne_top_of_le_ne_top (Ideal.IsPrime.ne_top ‹_›) hIp)
-  haveI : Nontrivial A := (Ideal.Quotient.mk I).domain_nontrivial
-  haveI : Algebra.IsStandardSmooth R A := hA.isStandardSmooth
-  haveI : Algebra.IsStandardSmooth R (A ⧸ I) := hB.isStandardSmooth
+  have : Nontrivial (A ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr (ne_top_of_le_ne_top (Ideal.IsPrime.ne_top ‹_›) hIp)
+  have : Nontrivial A := (Ideal.Quotient.mk I).domain_nontrivial
+  have : Algebra.IsStandardSmooth R A := hA.isStandardSmooth
+  have : Algebra.IsStandardSmooth R (A ⧸ I) := hB.isStandardSmooth
   have rA : Module.finrank A Ω[A⁄R] = e + d := Module.finrank_eq_of_rank_eq
     (Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (e + d))
   have rB : Module.finrank (A ⧸ I) Ω[(A ⧸ I)⁄R] = e := Module.finrank_eq_of_rank_eq
@@ -117,9 +117,9 @@ theorem _root_.LateralTheory.CohomologicalPurity.ChartCut.LeafRank_of : LateralT
   set f := (KaehlerDifferential.kerCotangentToTensor R A (A ⧸ I)).baseChange p.ResidueField
   set g := ((KaehlerDifferential.mapBaseChange R A (A ⧸ I)).restrictScalars A).baseChange p.ResidueField
   have hex : Function.Exact f g := by
-    simpa only [f, g, LinearMap.baseChange_eq_ltensor] using lTensor_exact p.ResidueField e0 s0
+    simpa only [f, g, LinearMap.baseChange_eq_lTensor] using lTensor_exact p.ResidueField e0 s0
   have hg : Function.Surjective g := by
-    simpa only [g, LinearMap.baseChange_eq_ltensor] using LinearMap.lTensor_surjective p.ResidueField s0
+    simpa only [g, LinearMap.baseChange_eq_lTensor] using LinearMap.lTensor_surjective p.ResidueField s0
   have hf : Function.Injective f := by
     have hc : (l.baseChange p.ResidueField).comp f = LinearMap.id := by
       rw [← LinearMap.baseChange_comp, hl, LinearMap.baseChange_id]
@@ -127,7 +127,7 @@ theorem _root_.LateralTheory.CohomologicalPurity.ChartCut.LeafRank_of : LateralT
       simpa using LinearMap.congr_fun hc x)
   have : CompatibleSMul A (A ⧸ I) p.ResidueField ((A ⧸ I) ⊗[A] Ω[A⁄R]) :=
     CompatibleSMul.of_algebraMap_surjective _ _ hsurj
-  haveI : Module.Finite p.ResidueField (p.ResidueField ⊗[A] ((A ⧸ I) ⊗[A] Ω[A⁄R])) :=
+  have : Module.Finite p.ResidueField (p.ResidueField ⊗[A] ((A ⧸ I) ⊗[A] Ω[A⁄R])) :=
     Module.Finite.equiv ((LinearEquiv.restrictScalars p.ResidueField
       (equivOfCompatibleSMul A (A ⧸ I) p.ResidueField p.ResidueField ((A ⧸ I) ⊗[A] Ω[A⁄R])).symm).trans
       eqv).symm

@@ -80,7 +80,7 @@ theorem exists_mem_not_mem {A : Type} [CommRing A] [IsDedekindDomain A] {Q P P' 
 theorem star_sqrt (D : D7) : star D.host.sqrtMinusD = -D.host.sqrtMinusD := by
   apply D.host.φ₀.injective
   have h1 : D.host.φ₀ D.host.sqrtMinusD = Complex.I * (Real.sqrt D.host.d : ℂ) := D.host.φ₀_mem
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   have h2 : D.host.φ₀ (star D.host.sqrtMinusD) = starRingEnd ℂ (D.host.φ₀ D.host.sqrtMinusD) :=
     NumberField.IsCMField.complexEmbedding_complexConj D.host.E D.host.φ₀ D.host.sqrtMinusD
   rw [h2, map_neg, h1]

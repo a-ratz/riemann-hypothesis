@@ -67,7 +67,7 @@ private theorem transpose_mul_mul_apply_eq_dot_product_mul_vec {m n R : Type*} [
 
 theorem exists_isCompl_ker {g : ℕ} (f : (Fin g → ℤ) →ₗ[ℤ] (Fin g → ℤ)) :
     ∃ M : Submodule ℤ (Fin g → ℤ), IsCompl M (LinearMap.ker f) := by
-  haveI : Module.Free ℤ (LinearMap.range f) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ (LinearMap.range f) := Module.free_of_finite_type_torsion_free'
   obtain ⟨t, ht⟩ :=
     LinearMap.exists_rightInverse_of_surjective f.rangeRestrict (LinearMap.range_rangeRestrict f)
   have hft : ∀ y : LinearMap.range f, f (t y) = y := fun y =>
@@ -91,8 +91,8 @@ theorem exists_adapted_basis {g : ℕ} (f : (Fin g → ℤ) →ₗ[ℤ] (Fin g �
       (∀ k, f (b (Sum.inr k)) = 0) ∧
       ∀ x : Fin r → ℤ, f (∑ a, x a • b (Sum.inl a)) = 0 → x = 0 := by
   obtain ⟨M, hM⟩ := GlobalTheory.CompanionTheory.ToricBasis.exists_isCompl_ker f
-  haveI : Module.Free ℤ M := Module.free_of_finite_type_torsion_free'
-  haveI : Module.Free ℤ (LinearMap.ker f) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ M := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ (LinearMap.ker f) := Module.free_of_finite_type_torsion_free'
   obtain ⟨bM⟩ : Nonempty (Module.Basis (Fin (Module.finrank ℤ M)) ℤ M) :=
     ⟨Module.finBasis ℤ M⟩
   obtain ⟨bK⟩ : Nonempty (Module.Basis (Fin (Module.finrank ℤ (LinearMap.ker f))) ℤ
@@ -178,7 +178,7 @@ theorem exists_adapted_unimodular :
     rw [hQdef, Module.Basis.toMatrix_apply, Pi.basisFun_repr, Module.Basis.reindex_apply]
   have hunit : IsUnit Q.det := by
     rw [hQdef]
-    letI := Module.Basis.invertibleToMatrix (Pi.basisFun ℤ (Fin g)) (b.reindex e)
+    let := Module.Basis.invertibleToMatrix (Pi.basisFun ℤ (Fin g)) (b.reindex e)
     exact Matrix.isUnit_det_of_invertible _
   have hcol : ∀ α, Qᵀ (e α) = b α := fun α => funext fun i => by
     rw [Matrix.transpose_apply, hQ, e.symm_apply_apply]

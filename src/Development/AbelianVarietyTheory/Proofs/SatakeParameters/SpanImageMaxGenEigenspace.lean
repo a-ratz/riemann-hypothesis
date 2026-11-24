@@ -111,14 +111,14 @@ theorem finiteDimensional_W (hli : LinearIndependent ℂ (fun k => j (b k)))
 theorem finrank_W (hli : LinearIndependent ℂ (fun k => j (b k)))
     (hsp : Submodule.span ℂ (Set.range fun k => j (b k)) = ⊤) :
     Module.finrank ℂ W = Module.finrank K V := by
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   rw [Module.finrank_eq_card_basis (Module.Basis.mk hli hsp.ge), Module.finrank_eq_card_basis b]
 
 theorem linearIndependent_comp (hli : LinearIndependent ℂ (fun k => j (b k)))
     (hsp : Submodule.span ℂ (Set.range fun k => j (b k)) = ⊤)
     {κ : Type} {u : κ → V} (hu : LinearIndependent K u) :
     LinearIndependent ℂ (fun k => j (u k)) := by
-  haveI := finiteDimensional_of_basis b
+  have := finiteDimensional_of_basis b
   have hs : LinearIndepOn K id (Set.range u) := hu.linearIndepOn_id
   let B := Module.Basis.extend hs
   haveI : Fintype (hs.extend (Set.subset_univ _)) := Fintype.ofFinite _
@@ -142,7 +142,7 @@ theorem linearIndependent_comp (hli : LinearIndependent ℂ (fun k => j (b k)))
 theorem finrank_span_image (hli : LinearIndependent ℂ (fun k => j (b k)))
     (hsp : Submodule.span ℂ (Set.range fun k => j (b k)) = ⊤) (U : Submodule K V) :
     Module.finrank ℂ (Submodule.span ℂ (j '' (U : Set V))) = Module.finrank K U := by
-  haveI := finiteDimensional_of_basis b
+  have := finiteDimensional_of_basis b
   let bU := Module.finBasis K U
   have hu : LinearIndependent K (fun i => (bU i : V)) :=
     bU.linearIndependent.map' U.subtype (Submodule.ker_subtype U)
@@ -160,8 +160,8 @@ theorem span_image_inf (hli : LinearIndependent ℂ (fun k => j (b k)))
     (hsp : Submodule.span ℂ (Set.range fun k => j (b k)) = ⊤) (U U' : Submodule K V) :
     Submodule.span ℂ (j '' ((U ⊓ U' : Submodule K V) : Set V))
       = Submodule.span ℂ (j '' (U : Set V)) ⊓ Submodule.span ℂ (j '' (U' : Set V)) := by
-  haveI := finiteDimensional_of_basis b
-  haveI := finiteDimensional_W j b hli hsp
+  have := finiteDimensional_of_basis b
+  have := finiteDimensional_W j b hli hsp
   refine Submodule.eq_of_le_of_finrank_eq
     (le_inf (span_image_mono j inf_le_left) (span_image_mono j inf_le_right)) ?_
   have h1 := Submodule.finrank_sup_add_finrank_inf_eq U U'
@@ -197,7 +197,7 @@ theorem span_image_iInf (hli : LinearIndependent ℂ (fun k => j (b k)))
     (hsp : Submodule.span ℂ (Set.range fun k => j (b k)) = ⊤) {I : Type} (U : I → Submodule K V) :
     Submodule.span ℂ (j '' ((⨅ i, U i : Submodule K V) : Set V))
       = ⨅ i, Submodule.span ℂ (j '' (U i : Set V)) := by
-  haveI := finiteDimensional_of_basis b
+  have := finiteDimensional_of_basis b
   obtain ⟨F, hF⟩ := exists_finset_inf_eq_iInf U
   refine le_antisymm (le_iInf fun i => span_image_mono j (iInf_le U i)) ?_
   rw [← hF, span_image_finset_inf j b hli hsp]
@@ -207,8 +207,8 @@ theorem span_image_ker (hli : LinearIndependent ℂ (fun k => j (b k)))
     (hsp : Submodule.span ℂ (Set.range fun k => j (b k)) = ⊤) (f : Module.End K V)
     (fC : Module.End ℂ W) (hf : ∀ v, j (f v) = fC (j v)) :
     Submodule.span ℂ (j '' (LinearMap.ker f : Set V)) = LinearMap.ker fC := by
-  haveI := finiteDimensional_of_basis b
-  haveI := finiteDimensional_W j b hli hsp
+  have := finiteDimensional_of_basis b
+  have := finiteDimensional_W j b hli hsp
   have hle : Submodule.span ℂ (j '' (LinearMap.ker f : Set V)) ≤ LinearMap.ker fC := by
     rw [Submodule.span_le]
     rintro _ ⟨v, hv, rfl⟩
@@ -229,8 +229,8 @@ theorem span_image_maxGenEigenspace (hli : LinearIndependent ℂ (fun k => j (b 
     (hsp : Submodule.span ℂ (Set.range fun k => j (b k)) = ⊤) (f : Module.End K V)
     (fC : Module.End ℂ W) (hf : ∀ v, j (f v) = fC (j v)) (a : K) :
     Submodule.span ℂ (j '' (f.maxGenEigenspace a : Set V)) = fC.maxGenEigenspace (σ a) := by
-  haveI := finiteDimensional_of_basis b
-  haveI := finiteDimensional_W j b hli hsp
+  have := finiteDimensional_of_basis b
+  have := finiteDimensional_W j b hli hsp
   have key : ∀ (k : ℕ) (v : V),
       ((fC - σ a • (1 : Module.End ℂ W)) ^ k) (j v) = j (((f - a • (1 : Module.End K V)) ^ k) v) := by
     intro k
@@ -283,7 +283,7 @@ theorem span_image_eigAt_of_basis : ∀ {K V W I ι : Type} [Field K] [AddCommGr
       refine LinearMap.ext_on_range hsp fun m => ?_
       have := congrArg (fun g => j (g (b m))) (hc i k).eq
       simpa [Module.End.mul_apply, hop] using this
-    haveI := finiteDimensional_of_basis b
+    have := finiteDimensional_of_basis b
     have htop : (⊤ : Submodule ℂ W) ≤ ⨆ (y : I → ℂ) (_ : y ≠ x), eigAt opC y := by
       rw [← span_image_top j b hsp, ← iSup_eigAt_eq_top hc hs, span_image_iSup]
       refine iSup_le fun s => ?_

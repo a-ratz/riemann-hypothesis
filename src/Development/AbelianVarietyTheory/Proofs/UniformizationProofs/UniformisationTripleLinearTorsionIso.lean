@@ -179,7 +179,7 @@ theorem w0_mul_bar_w0_eq_d_add_one_div_four {E : Type} [Field E] [NumberField E]
 
 theorem main : LL → TwistBCSpanStatement → TWM.VRatioGtStatement → TWStatement → UUStatement → ∀ (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsDomain R] [CharZero R] (I : Ideal R), AdmBase R I → ∀ (t : SAB H (Sp R)) (D : DegData R I) (A : PolAV (Sp (FractionRing R))) (U : Unif I D A t.G), U.LG = t.PP → ∃ P : PELUnif I t, P.D = D ∧ P.A = A ∧ HEq P.U U ∧ P.TorsionIso := by
   intro hL h₁ h₂ h₃ h₄ E _ _ _ H R _ _ _ I hR t D A U hU
-  letI := H.starRing
+  let := H.starRing
   have adj : ∀ a, LBIso (cubeLB t.G ![fst t.G t.G ≫ t.act.toRingAct.act a, snd t.G t.G] U.LG.L)
       (cubeLB t.G ![fst t.G t.G, snd t.G t.G ≫ t.act.toRingAct.act (star a)] U.LG.L) := by
     rw [hU]; exact t.adj

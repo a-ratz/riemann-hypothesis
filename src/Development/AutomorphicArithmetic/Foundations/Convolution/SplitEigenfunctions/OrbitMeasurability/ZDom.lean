@@ -46,7 +46,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.zDom :
   refine ⟨normOneMeasure_normOneFundamentalDomain_lt_top E,
     measurableSet_normOneFundamentalDomain E, ?_⟩
   have hc : Continuous (fun z : ↥(IdeleGroup.normOneSubgroup E) =>
-      ((z : IdeleGroup E) : (A E)ˣ)) := continuous_subtype_val
+      ((z : IdeleGroup E) : (A E)ˣ)) := continuous_subtypeVal
   refine ⟨_, (isCompact_closure_normOneFundamentalDomain E).image hc, ?_⟩
   intro z hz
   exact ⟨z, subset_closure hz, rfl⟩

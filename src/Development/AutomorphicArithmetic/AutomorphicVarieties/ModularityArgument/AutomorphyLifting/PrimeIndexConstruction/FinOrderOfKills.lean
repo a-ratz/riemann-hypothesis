@@ -241,9 +241,9 @@ variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω]
 
 private theorem finOrder_of_kills {C : Type} [CommGroup C] {N : ℕ} (hN : 0 < N) {φ : G ℚ Ω →* C} (h : KillsMu N φ) :
     IsOfFinOrder φ := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have : NeZero N := ⟨hN.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   refine isOfFinOrder_iff_pow_eq_one.2 ⟨Fintype.card (ZMod N)ˣ, Fintype.card_pos, MonoidHom.ext fun s => ?_⟩
   rw [MonoidHom.pow_apply, ← map_pow]
   refine h _ fun ζ hζ => ?_
@@ -274,7 +274,7 @@ private theorem algClosure (K : Type) [Field K] [NumberField K] [Algebra K Ω] :
 
 private theorem exists_alg (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K Ω] [Algebra L Ω]
     (h : galOf ℚ L Ω ≤ galOf ℚ K Ω) : ∃ _ : Algebra K L, IsScalarTower K L Ω := by
-  haveI := algClosure (Ω := Ω) L
+  have := algClosure (Ω := Ω) L
   have h1 : ∀ x : K, ∃ y : L, algebraMap L Ω y = algebraMap K Ω x := fun x =>
     (InfiniteGalois.mem_range_algebraMap_iff_fixed (k := L) _).2 fun f => h (galEmb_mem ℚ L Ω f) x
   choose f hf using h1
@@ -285,7 +285,7 @@ private theorem exists_alg (K L : Type) [Field K] [NumberField K] [Field L] [Num
       map_mul' := fun a b => hi (by simp [hf])
       map_zero' := hi (by simp [hf])
       map_add' := fun a b => hi (by simp [hf]) }
-  letI := g.toAlgebra
+  let := g.toAlgebra
   exact ⟨_, IsScalarTower.of_algebraMap_eq fun x => (hf x).symm⟩
 
 private theorem isOpen_ker_kills {C : Type} [Group C] {M : ℕ} (hM : 0 < M) {φ : G ℚ Ω →* C} (hφ : KillsMu M φ) :
@@ -336,7 +336,7 @@ private theorem cyc_ine [IsAlgClosure F Ω] {A : ValuationSubring Ω} (hA : ¬ A
         le_antisymm ((A.valuation_le_one_iff _).mpr (natCast_mem A l)) (not_lt.mp hA)
       rw [Nat.cast_pow, Valuation.map_pow, h2, one_pow]
       exact lt_irrefl 1
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
     have hN0 : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
     set c := PadicInt.toZModPow n ((cycZ F Ω l s : ℤ_[l]ˣ) : ℤ_[l]) with hc
     have hσζ : s ζ = ζ ^ c.val := cyclotomicCharacter.spec (L := Ω) l
@@ -416,11 +416,11 @@ private theorem up (hP : Z.Bc.HypothesesZ) (K L : Type) [Field K] [NumberField K
     (hL' : IsIrr (r.comp (galEmb ℚ L Ω))) (κ : G K Ω →* (Qbar l)ˣ) (hκ : IsAlgChar ι κ) (ka : G L Ω →* (Qbar l)ˣ)
     (hka : ∀ (s : G L Ω) (s' : G K Ω), galEmb ℚ L Ω s = galEmb ℚ K Ω s' → ka s = κ s') :
     IsAutC ι (tw (r.comp (galEmb ℚ L Ω)) ka) := by
-  haveI := algClosure (Ω := Ω) L
-  haveI := algClosure (Ω := Ω) K
+  have := algClosure (Ω := Ω) L
+  have := algClosure (Ω := Ω) K
   obtain ⟨_, _⟩ := exists_alg K L h
-  haveI : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
-  haveI : Group.IsSolvable (L ≃ₐ[K] L) := isSolvable_of_comm fun a b => mul_comm' a b
+  have : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
+  have : Group.IsSolvable (L ≃ₐ[K] L) := Group.isSolvable_of_comm fun a b => mul_comm' a b
   have e : (r.comp (galEmb ℚ K Ω)).comp (galEmb K L Ω) = r.comp (galEmb ℚ L Ω) := MonoidHom.ext fun s => rfl
   have h1 := upQuad hP.af ℚ K Ω l ι hK n hn r hc ha (irr_down K L _ (e ▸ hL'))
   have h1' := twC hP.af K Ω l ι n _ κ hκ h1
@@ -438,13 +438,13 @@ private theorem upW (hA : AwChain) (K L : Type) [Field K] [NumberField K] [_root
     (hL' : IsIrr (r.comp (galEmb ℚ L Ω))) (κ : G K Ω →* (Qbar l)ˣ) (hκ : IsAlgChar ι κ) (ka : G L Ω →* (Qbar l)ˣ)
     (hka : ∀ (s : G L Ω) (s' : G K Ω), galEmb ℚ L Ω s = galEmb ℚ K Ω s' → ka s = κ s') :
     AllW ι (tw (r.comp (galEmb ℚ L Ω)) ka) := by
-  haveI := algClosure (Ω := Ω) L
-  haveI := algClosure (Ω := Ω) K
+  have := algClosure (Ω := Ω) L
+  have := algClosure (Ω := Ω) K
   obtain ⟨_, _⟩ := exists_alg K L h
-  haveI : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
-  haveI : Group.IsSolvable (L ≃ₐ[K] L) := isSolvable_of_comm fun a b => mul_comm' a b
-  haveI : IsAbelianGalois ℚ K := IsAbelianGalois.tower_bot ℚ K L
-  haveI : IsCMField K := IsCMField.of_isAbelianGalois K
+  have : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
+  have : Group.IsSolvable (L ≃ₐ[K] L) := Group.isSolvable_of_comm fun a b => mul_comm' a b
+  have : IsAbelianGalois ℚ K := IsAbelianGalois.tower_bot ℚ K L
+  have : IsCMField K := IsCMField.of_isAbelianGalois K
   have e : (r.comp (galEmb ℚ K Ω)).comp (galEmb K L Ω) = r.comp (galEmb ℚ L Ω) := MonoidHom.ext fun s => rfl
   have e1 : ka = κ.comp (galEmb K L Ω) := MonoidHom.ext fun s => hka s _ rfl
   have e2 : (tw (r.comp (galEmb ℚ K Ω)) κ).comp (galEmb K L Ω) = tw (r.comp (galEmb ℚ L Ω)) ka := by

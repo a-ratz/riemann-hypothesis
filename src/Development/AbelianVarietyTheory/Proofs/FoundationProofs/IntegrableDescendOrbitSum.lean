@@ -55,9 +55,9 @@ theorem integrable_descend_orbitSum {G : Type*} [Group G] [TopologicalSpace G] [
     have hm : ∀ γ : Γ, AEMeasurable (fun x => h (γ * x)) μ := fun γ =>
       hh.1.aemeasurable.comp_quasiMeasurePreserving (measurePreserving_mul_left μ (γ : G)).quasiMeasurePreserving
     exact (AEMeasurable.tsum hm).aestronglyMeasurable
-  · have h1 := lintegral_eq_lintegral_tsum (Γ := Γ) hh.1.enorm
+  · have h1 := lintegral_eq_lintegral_tsum (Γ := Γ) hh.1.eNorm
     refine lt_of_le_of_lt ?_ (h1.symm.trans_lt hh.2)
-    exact lintegral_mono fun q => enorm_tsum_le_tsum_enorm
+    exact lintegral_mono fun q => eNorm_tsum_le_tsum_eNorm
 
 theorem convR_eq_integral_kernelQ : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [SecondCountableTopology G] [LocallyCompactSpace G] [T2Space G] [MeasurableSpace G] [BorelSpace G]

@@ -434,14 +434,14 @@ theorem abstract_change {ι X Z : Type} [Countable ι] {Y : ι → Type} [Measur
     rw [this]
     exact MeasurableSet.iInter fun v => MeasurableSet.iInter fun _ => hq v (hA v)
   let gv : ∀ v, Y v → ℝ≥0∞ := fun v => if v ∈ S then fv v else (A v).indicator 1
-  have hgS : ∀ v ∈ S, gv v = fv v := fun v hv => if_pos hv
+  have hgS : ∀ v ∈ S, gv v = fv v := fun v hv => ite_eq_left hv
   have hgT : ∀ v ∈ T, gv v = (A v).indicator 1 := fun v hv =>
-    if_neg (fun h => Finset.disjoint_left.mp hd h hv)
+    ite_eq_right (fun h => Finset.disjoint_left.mp hd h hv)
   have hgm : ∀ v, Measurable (gv v) := by
     intro v
     by_cases hv : v ∈ S
     · rw [hgS v hv]; exact hfv v
-    · have : gv v = (A v).indicator 1 := if_neg hv
+    · have : gv v = (A v).indicator 1 := ite_eq_right hv
       rw [this]; exact measurable_one.indicator (hA v)
   have h1 := H fi gv hfi hgm
   have hset : {x | ∀ v ∉ S ∪ T, q v x ∈ L v} = {x | ∀ v ∉ S ∪ T, q v x ∈ A v} := by
@@ -469,7 +469,7 @@ theorem abstract_change {ι X Z : Type} [Countable ι] {Y : ι → Type} [Measur
   · rw [Set.indicator_of_notMem hx]
     by_cases hx' : x ∈ {x | ∀ v ∉ S ∪ T, q v x ∈ A v}
     · rw [Set.indicator_of_mem hx', Finset.prod_union hd]
-      simp only [Set.mem_setOf_eq, not_forall] at hx
+      simp only [Set.mem_ofPred_eq, not_forall] at hx
       obtain ⟨v, hvS, hvA⟩ := hx
       have hvT : v ∈ T := by
         by_contra h
@@ -481,7 +481,7 @@ theorem abstract_change {ι X Z : Type} [Countable ι] {Y : ι → Type} [Measur
 
 theorem product_formula_change_sets : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (d : ℕ) (b : Module.Basis (Fin d) F E) (n M : ℕ) (ν : Measure (Fin n → Fin M → AF F ⊗[F] E)) (mi : Measure (Fin n → Fin M → Ainf F ⊗[F] E)) (mv : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fin n → Fin M → Fv F v ⊗[F] E)) (S T S' : Finset (HeightOneSpectrum (𝓞 F))) (A : ∀ v : HeightOneSpectrum (𝓞 F), Set (Fin n → Fin M → Fv F v ⊗[F] E)), (∀ v, v ∈ S' ↔ v ∈ S ∨ v ∈ T) → Disjoint S T → (∀ v, MeasurableSet (A v)) → (∀ v ∉ S', A v = latV b v) → (∀ (fi : (Fin n → Fin M → Ainf F ⊗[F] E) → ℝ≥0∞) (fv : ∀ v : HeightOneSpectrum (𝓞 F), (Fin n → Fin M → Fv F v ⊗[F] E) → ℝ≥0∞), Measurable fi → (∀ v, Measurable (fv v)) → ∫⁻ X in {X | ∀ v ∉ S', projV v (projFin X) ∈ latV b v}, fi (projInf X) * ∏ v ∈ S', fv v (projV v (projFin X)) ∂ν = (∫⁻ Y, fi Y ∂mi) * (∏ v ∈ S', ∫⁻ Y, fv v Y ∂(mv v)) * tailProd b mv S') → ∀ (fi : (Fin n → Fin M → Ainf F ⊗[F] E) → ℝ≥0∞) (fv : ∀ v : HeightOneSpectrum (𝓞 F), (Fin n → Fin M → Fv F v ⊗[F] E) → ℝ≥0∞), Measurable fi → (∀ v, Measurable (fv v)) → ∫⁻ X in {X | ∀ v ∉ S, projV v (projFin X) ∈ A v}, fi (projInf X) * ∏ v ∈ S, fv v (projV v (projFin X)) ∂ν = (∫⁻ Y, fi Y ∂mi) * (∏ v ∈ S, ∫⁻ Y, fv v Y ∂(mv v)) * ((∏ v ∈ T, mv v (A v)) * tailProd b mv S') := by
   intro F E _ _ _ _ _ d b n M ν mi mv S T S' A hS' hd hA hL H fi fv hfi hfv
-  haveI : Countable (HeightOneSpectrum (𝓞 F)) := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
+  have : Countable (HeightOneSpectrum (𝓞 F)) := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
   have hc := (GlobalTheory.GaugeGlue.adelicTuple_measurableEmbedding F E d b n M).2.2.2
   exact abstract_change ν mi mv projInf (fun v X => projV v (projFin X))
     (fun v => (hc v).measurable) S T S' A (fun v => latV b v) _ hS' hd hA hL H fi fv hfi hfv
@@ -861,11 +861,11 @@ theorem inner_eq (hCM : IsCMExt F E σ) (hS : StepData σ J x a B J')
         (fv v) (hfv v)).symm, ← key, ← lintegral_indicator (measurableSet_cyl b S _ hA)]
     refine lintegral_congr fun y' => ?_
     by_cases hq : ∀ v ∉ S, pairOf (Fv F v) σ J B (projV v (projFin y)) (gv v) (projV v (projFin y')) ∈ latV b v
-    · rw [Set.indicator_of_mem (by simpa only [Set.mem_setOf_eq, h4] using hq),
-        Set.indicator_of_mem (by simpa only [Set.mem_setOf_eq] using hq)]
+    · rw [Set.indicator_of_mem (by simpa only [Set.mem_ofPred_eq, h4] using hq),
+        Set.indicator_of_mem (by simpa only [Set.mem_ofPred_eq] using hq)]
       simp only [h3, h4]
-    · rw [Set.indicator_of_notMem (by simpa only [Set.mem_setOf_eq, h4] using hq),
-        Set.indicator_of_notMem (by simpa only [Set.mem_setOf_eq] using hq)]
+    · rw [Set.indicator_of_notMem (by simpa only [Set.mem_ofPred_eq, h4] using hq),
+        Set.indicator_of_notMem (by simpa only [Set.mem_ofPred_eq] using hq)]
   · rw [Set.indicator_of_notMem hyL, zero_mul]
     refine (lintegral_congr fun y' => ?_).trans lintegral_zero
     refine Set.indicator_of_notMem (fun hm => hyL fun v hv => ?_) _
@@ -883,7 +883,7 @@ theorem twoStep_isProd : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       g • ratTup (F := F) (Fv F v) x = y → y ∈ latV b v →
       mv' v {y' | pairOf (Fv F v) σ J B y g y' ∈ latV b v} = mv' v (latV b v) := by
     intro v hv
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
     exact hv _ (hiv v)
   obtain ⟨hsum, htail⟩ := _root_.GlobalTheory.GaugeEx.tailProd_mul_of_mass_mul F E d b _ _ _ _ _ _ mi mv mi' mv' Nv hfin.toFinset hν.1 hν'.1
     (fun v hv => mass_mul b (hov v) (hNv v) (hg v hv))
@@ -1362,7 +1362,7 @@ theorem exists_sec (R : Type) [CommRing R] [Algebra F R] {M : ℕ} (J : Matrix (
   classical
   refine ⟨fun y => if h : ∃ g : HA R σ J, g • ratTup (F := F) R x = y then h.choose else 1, ?_⟩
   intro y hy
-  simp only [dif_pos hy]
+  simp only [dite_eq_left hy]
   exact hy.choose_spec
 
 theorem meas_avg [FiniteDimensional F E] {M N : ℕ} {J : Matrix (Fin N) (Fin N) E}
@@ -1399,9 +1399,9 @@ theorem unfold_two [FiniteDimensional F E] {d : ℕ} {bb : Module.Basis (Fin d) 
   obtain ⟨u, hu⟩ := exists_sec (σ := σ) (AF F) J x
   obtain ⟨u', hu'⟩ := exists_sec (σ := σ) (AF F) J₁ y
   have c1 : Continuous fun g : HA (AF F) σ J₁ => (e.symm g : HA (AF F) σ J) :=
-    continuous_subtype_val.comp ce
+    continuous_subtypeVal.comp ce
   have c2 : Continuous fun g : HA (AF F) σ J₀ => (e'.symm g : HA (AF F) σ J₁) :=
-    continuous_subtype_val.comp ce'
+    continuous_subtypeVal.comp ce'
   have cι : Continuous (emb (AF F) e e') := c1.comp c2
   rw [hN _ (meas_avg μ₀ cι hf ht) u hu, r ν hν e he f hf u hu]
   refine lintegral_congr_ae ?_
@@ -1409,7 +1409,7 @@ theorem unfold_two [FiniteDimensional F E] {d : ℕ} {bb : Module.Basis (Fin d) 
   have a2 : ∀ᵐ z ∂ν', ∃ g : HA (AF F) σ J₁, g • ratTup (F := F) (AF F) y = z := ae_iff.2 oν'
   filter_upwards [a1] with z hz
   have m1 : Measurable fun h' : Hstab (AF F) σ J x => f (u z * (h' : HA (AF F) σ J)) :=
-    hf.comp (measurable_subtype_coe.const_mul _)
+    hf.comp (measurable_subtypeVal.const_mul _)
   have m2 : Measurable fun g : HA (AF F) σ J₁ => f (u z * (e.symm g : HA (AF F) σ J)) :=
     hf.comp (c1.measurable.const_mul _)
   rw [lintegral_map m1 ce.measurable, r' ν' hν' e' he' _ m2 u' hu']
@@ -1417,7 +1417,7 @@ theorem unfold_two [FiniteDimensional F E] {d : ℕ} {bb : Module.Basis (Fin d) 
   filter_upwards [a2] with z' hz'
   have m3 : Measurable fun h' : Hstab (AF F) σ J₁ y =>
       f (u z * (e.symm (u' z' * (h' : HA (AF F) σ J₁)) : HA (AF F) σ J)) :=
-    m2.comp (measurable_subtype_coe.const_mul _)
+    m2.comp (measurable_subtypeVal.const_mul _)
   rw [lintegral_map m3 ce'.measurable]
   have hp : pairOf (AF F) σ J B z (u z) z' =
       (u z * (e.symm (u' z') : HA (AF F) σ J)) • ratTup (F := F) (AF F) ![x 0, B *ᵥ y 0] := by
@@ -1494,7 +1494,7 @@ theorem square : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     rintro Y ⟨g, rfl⟩
     rw [hX, smul_lrAct, smul_lrAct, lrAct_lrAct, g1, lrAct_one, ht _ ⟨g, rfl⟩]
   have cι : Continuous (emb (AF F) e₂ e₂') :=
-    (continuous_subtype_val.comp (c₂ e₂ he₂).2).comp (continuous_subtype_val.comp (c₂' e₂' he₂').2)
+    (continuous_subtypeVal.comp (c₂ e₂ he₂).2).comp (continuous_subtypeVal.comp (c₂' e₂' he₂').2)
   refine Measure.ext_of_lintegral _ fun f hf => ?_
   rw [unfold_two h₁ he₁ he₁' (c₁ e₁ he₁).2 (c₁' e₁' he₁').2 r₁' r₁ n₁ n₁' o₁ o₁' t₁ hf mt₁ ht,
     unfold_two h₂ he₂ he₂' (c₂ e₂ he₂).2 (c₂' e₂' he₂').2 r₂' r₂ n₂ n₂' o₂ o₂' t₂ hf mt₂ ht₂,

@@ -71,7 +71,7 @@ def vball (x : K) (γ : ℤᵐ⁰) : Set K := {y | Valued.v (y - x) < γ}
 
 lemma vball_eq_of_mem {x y : K} {γ : ℤᵐ⁰} (h : y ∈ vball x γ) : vball y γ = vball x γ := by
   ext z
-  simp only [vball, Set.mem_setOf_eq] at h ⊢
+  simp only [vball, Set.mem_ofPred_eq] at h ⊢
   constructor
   · intro hz
     have : z - x = (z - y) + (y - x) := by ring
@@ -111,10 +111,10 @@ lemma isTopologicalBasis_vball :
     obtain ⟨γ, hγ⟩ := Valued.mem_nhds.1 (hu.mem_nhds ha)
     have hr : IsRadius K (MonoidWithZeroHom.ValueGroup₀.embedding γ.1) := ⟨γ, rfl⟩
     refine ⟨vball a _, ⟨a, _, rfl, hr⟩, ?_, ?_⟩
-    · simpa [vball] using zero_lt_iff.2 hr.ne_zero
+    · simpa [vball] using pos_iff_ne_zero.2 hr.ne_zero
     · intro y hy
       apply hγ
-      simpa only [vball, Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding] using hy
+      simpa only [vball, Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding] using hy
 
 lemma isPiSystem_vball :
     IsPiSystem {s : Set K | ∃ (x : K) (γ : ℤᵐ⁰), s = vball x γ ∧ IsRadius K γ} := by
@@ -129,7 +129,7 @@ lemma isPiSystem_vball :
 
 lemma le_exp_neg_one {x : ℤᵐ⁰} (h : x < 1) : x ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne x 0 with rfl | h0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log h0] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -216,32 +216,32 @@ lemma measure_ball (lam : Measure K) [lam.IsAddLeftInvariant] {a c : K}
         lt_of_lt_of_le (Valuation.map_sub_lt _ hs hyM) h1
       congr 1
       ext t
-      simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_ofPred_eq]
       exact ⟨fun h => ⟨hsub _ h.2, h.2⟩, fun h => ⟨hsub _ (v_quad_lt ha hc h.2), h.2⟩⟩
     · obtain ⟨t₀, ht₀, hnear⟩ := exists_near ha hc hyM hγ
       have hB : vball y γ = vball (a * t₀ + c * t₀ ^ 2) γ := (vball_eq_of_mem hnear).symm
       have hsubM : ∀ (z : K), Valued.v z < 1 → vball z γ ⊆ {s : K | Valued.v s < 1} := by
         intro z hz s hs
         have : s = (s - z) + z := by ring
-        rw [Set.mem_setOf_eq, this]
+        rw [Set.mem_ofPred_eq, this]
         exact Valuation.map_add_lt _ (lt_trans hs h1) hz
       have e1 : (fun t => a * t + c * t ^ 2) ⁻¹' vball y γ ∩ {s | Valued.v s < 1} = vball t₀ γ := by
         rw [hB]
         ext t
-        simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_setOf_eq]
+        simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_ofPred_eq]
         constructor
         · rintro ⟨h, hM⟩
-          simpa only [vball, Set.mem_setOf_eq, v_quad_sub ha hc hM ht₀] using h
+          simpa only [vball, Set.mem_ofPred_eq, v_quad_sub ha hc hM ht₀] using h
         · intro h
           have hM := hsubM t₀ ht₀ h
           refine ⟨?_, hM⟩
-          simpa only [vball, Set.mem_setOf_eq, v_quad_sub ha hc hM ht₀] using h
+          simpa only [vball, Set.mem_ofPred_eq, v_quad_sub ha hc hM ht₀] using h
       have e2 : vball y γ ∩ {s | Valued.v s < 1} = vball y γ :=
         Set.inter_eq_left.2 (hsubM y hyM)
       rw [e1, e2]
       have e3 : vball t₀ γ = (fun h => (y - t₀) + h) ⁻¹' vball y γ := by
         ext h
-        simp only [vball, Set.mem_preimage, Set.mem_setOf_eq]
+        simp only [vball, Set.mem_preimage, Set.mem_ofPred_eq]
         have : y - t₀ + h - y = h - t₀ := by ring
         rw [this]
       rw [e3, measure_preimage_add]
@@ -260,9 +260,9 @@ theorem measure_quad [SecondCountableTopology K] [IsTopologicalRing K] (lam : Me
   have hf : Measurable (fun t : K => a * t + c * t ^ 2) := by
     apply Continuous.measurable
     fun_prop
-  haveI : IsFiniteMeasure (lam.restrict {s | Valued.v s < 1}) :=
+  have : IsFiniteMeasure (lam.restrict {s | Valued.v s < 1}) :=
     ⟨by simpa using hfin.lt_top⟩
-  haveI : IsFiniteMeasure ((lam.restrict {s | Valued.v s < 1}).map fun t : K => a * t + c * t ^ 2) :=
+  have : IsFiniteMeasure ((lam.restrict {s | Valued.v s < 1}).map fun t : K => a * t + c * t ^ 2) :=
     Measure.isFiniteMeasure_map _ _
   have hmeas : (lam.restrict {s | Valued.v s < 1}).map (fun t : K => a * t + c * t ^ 2) =
       lam.restrict {s | Valued.v s < 1} := by
@@ -287,11 +287,11 @@ end GlobalTheory.CompanionTheory.SW.QuadIso
 
 theorem GlobalTheory.CompanionTheory.SW.QuadIso.measure_quad_Fv : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → Valued.v (2 : Fv F v) = 1 → ∀ a c : Fv F v, Valued.v a = 1 → c ∈ v.adicCompletionIntegers F → ∀ A : Set (Fv F v), MeasurableSet A → lam {t | Valued.v t < 1 ∧ a * t + c * t ^ 2 ∈ A} = lam (A ∩ {s | Valued.v s < 1}) := by
   intro F _ _ v lam hlam _ a c ha hc A hA
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨hH, h1⟩ := hlam
-  haveI := hH
+  have := hH
   obtain ⟨_, _, hsc, _⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := hsc
+  have := hsc
   have hfin : lam {s : Fv F v | Valued.v s < 1} ≠ ⊤ := by
     refine ne_top_of_le_ne_top (b := 1) ENNReal.one_ne_top ?_
     rw [← h1]
@@ -404,7 +404,7 @@ theorem isOpen_maxIdeal : IsOpen {t : Fv F v | Valued.v t < 1} := by
   simpa using Valued.isOpen_ball (Fv F v) 1
 
 theorem measurableSet_close (b : Fv F v) : MeasurableSet {t : Fv F v | Valued.v (t - b) < 1} := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   exact (isOpen_maxIdeal.preimage (continuous_sub_right b)).measurableSet
 
 theorem slice (hstd : IsStdV v lam) (h2 : Valued.v (2 : Fv F v) = 1) {a c : Fv F v}
@@ -412,15 +412,15 @@ theorem slice (hstd : IsStdV v lam) (h2 : Valued.v (2 : Fv F v) = 1) {a c : Fv F
     {A : Set (Fv F v)} (hA : MeasurableSet A) :
     lam {t | Valued.v (t - b) < 1 ∧ q + a * (t - b) + c * (t - b) ^ 2 ∈ A} =
       lam (A ∩ {s | Valued.v (s - q) < 1}) := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨htop, hlc, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := hstd.1
+  have := hstd.1
   have hA' : MeasurableSet ((fun h => q + h) ⁻¹' A) := (measurable_const_add q) hA
   have key := _root_.GlobalTheory.CompanionTheory.SW.QuadIso.measure_quad_Fv F v lam hstd h2 a c ha hc _ hA'
   have e1 : {t | Valued.v (t - b) < 1 ∧ q + a * (t - b) + c * (t - b) ^ 2 ∈ A} =
       (fun h => -b + h) ⁻¹' {t | Valued.v t < 1 ∧ a * t + c * t ^ 2 ∈ (fun h => q + h) ⁻¹' A} := by
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, neg_add_eq_sub, add_assoc]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, neg_add_eq_sub, add_assoc]
   have e2 : (fun h => q + h) ⁻¹' A ∩ {s | Valued.v s < 1} =
       (fun h => q + h) ⁻¹' (A ∩ {s | Valued.v (s - q) < 1}) := by
     ext t
@@ -435,7 +435,7 @@ variable {lam : Measure (Fv F v)}
 
 theorem measurable_form (B : Matrix ι ι (Fv F v)) :
     Measurable fun x : ι → Fv F v => (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨htop, hlc, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have : Continuous fun x : ι → Fv F v => (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) := by
     simp only [dotProduct, Matrix.mulVec]
@@ -486,7 +486,7 @@ theorem slice_form (hstd : IsStdV v lam) (h2 : Valued.v (2 : Fv F v) = 1)
           ((2 : Fv F v)⁻¹ * B i i) * (t - x₀ i) ^ 2 := by
       rw [hupd t, dot_add_single hs]
       field_simp
-    simp only [Set.mem_setOf_eq, hform]
+    simp only [Set.mem_ofPred_eq, hform]
     refine and_congr_left fun _ => ⟨fun h => by simpa using h i, fun h j => ?_⟩
     by_cases hj : j = i
     · subst hj; simpa using h
@@ -494,7 +494,7 @@ theorem slice_form (hstd : IsStdV v lam) (h2 : Valued.v (2 : Fv F v) = 1)
   have e2 : {s | Valued.v (s - (2 : Fv F v)⁻¹ * (x' ⬝ᵥ (B *ᵥ x'))) < 1} =
       {s | Valued.v (s - (2 : Fv F v)⁻¹ * (x₀ ⬝ᵥ (B *ᵥ x₀))) < 1} := by
     ext s
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro h
       have : s - (2 : Fv F v)⁻¹ * (x₀ ⬝ᵥ (B *ᵥ x₀)) =
@@ -554,9 +554,9 @@ end SlopeTestRemainingChoices
 
 theorem measure_residue_class : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → Valued.v (2 : Fv F v) = 1 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (B : Matrix ι ι (Fv F v)), B.IsSymm → (∀ i j, B i j ∈ v.adicCompletionIntegers F) → Valued.v B.det = 1 → ∀ x₀ : ι → Fv F v, (∀ i, x₀ i ∈ v.adicCompletionIntegers F) → (∃ i, Valued.v (x₀ i) = 1) → ∀ A : Set (Fv F v), MeasurableSet A → (Measure.pi fun _ : ι => lam) {x | (∀ i, Valued.v (x i - x₀ i) < 1) ∧ (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) ∈ A} = (Ideal.absNorm v.asIdeal : ℝ≥0∞)⁻¹ ^ (Fintype.card ι - 1) * lam (A ∩ {s | Valued.v (s - (2 : Fv F v)⁻¹ * (x₀ ⬝ᵥ (B *ᵥ x₀))) < 1}) := by
   intro F _ _ v lam hstd h2 ι _ _ B hs hB hdet x₀ hx₀ hp A hA
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨htop, hlc, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := hstd.1
+  have := hstd.1
   have hB' : ∀ i j, Valued.v (B i j) ≤ 1 := hB
   have hx₀' : ∀ i, Valued.v (x₀ i) ≤ 1 := hx₀
   obtain ⟨i, hi⟩ := exists_unit_coord hB' hdet hx₀' hp
@@ -566,7 +566,7 @@ theorem measure_residue_class : ∀ (F : Type) [Field F] [NumberField F] (v : He
     intro b
     have : {s | Valued.v (s - b) < 1} = (fun h => -b + h) ⁻¹' {t | Valued.v t < 1} := by
       ext s
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, neg_add_eq_sub]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, neg_add_eq_sub]
     rw [this, measure_preimage_add, hvol]
   have hN0 : Nn ≠ 0 := ENNReal.inv_ne_zero.mpr (ENNReal.natCast_ne_top _)
   have hNt : Nn ≠ ⊤ := by
@@ -578,10 +578,10 @@ theorem measure_residue_class : ∀ (F : Type) [Field F] [NumberField F] (v : He
   have hsec : ∀ j, MeasurableSet {y : ι → Fv F v | Valued.v (y j - x₀ j) < 1} := fun j =>
     (measurable_pi_apply (X := fun _ : ι => Fv F v) j) (measurableSet_close (x₀ j))
   have hE : MeasurableSet E := by
-    simp only [hEdef, Set.setOf_forall]
+    simp only [hEdef, Set.ofPred_forall]
     exact MeasurableSet.iInter fun j => MeasurableSet.iInter fun _ => hsec j
   have hD : MeasurableSet {y : ι → Fv F v | ∀ j, Valued.v (y j - x₀ j) < 1} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact MeasurableSet.iInter hsec
   have hform : ∀ A' : Set (Fv F v), MeasurableSet A' →
       (Measure.pi fun _ : ι => lam) {y : ι → Fv F v | (∀ j, Valued.v (y j - x₀ j) < 1) ∧
@@ -599,12 +599,12 @@ theorem measure_residue_class : ∀ (F : Type) [Field F] [NumberField F] (v : He
     · intro x hx
       exact slice_form hstd h2 hs hB' hx₀' hi hA' hx
     · intro x hx
-      simp only [hEdef, Set.mem_setOf_eq, not_forall] at hx
+      simp only [hEdef, Set.mem_ofPred_eq, not_forall] at hx
       obtain ⟨j, hj, hjx⟩ := hx
       have : {t | Function.update x i t ∈ {y : ι → Fv F v | (∀ j, Valued.v (y j - x₀ j) < 1) ∧
           (2 : Fv F v)⁻¹ * (y ⬝ᵥ (B *ᵥ y)) ∈ A'}} = ∅ := by
         ext t
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
         intro h
         exact absurd (by simpa [Function.update_of_ne hj] using h j) hjx
       rw [this, measure_empty]

@@ -148,7 +148,7 @@ theorem exists_isGenSec_of_retract (hL : L.IsLB) {a : ℤ} {T' : Over S} (i : T'
 
 theorem exists_generator_of_isField {R M : Type} [CommRing R] [AddCommGroup M] [Module R M] (hR : IsField R)
     (h : Module.finrank R M = 1) : ∃ t : M, t ≠ 0 ∧ ∀ s, ∃ r : R, r • t = s := by
-  letI := hR.toField
+  let := hR.toField
   exact finrank_eq_one_iff'.1 h
 
 theorem exists_isThetaPt (hLaw : Laws) (K : Type) [Field K] [IsAlgClosed K]
@@ -161,12 +161,12 @@ theorem exists_isThetaPt (hLaw : Laws) (K : Type) [Field K] [IsAlgClosed K]
   have hu : IsUnit (k : Γ(Spec (CommRingCat.of K), ⊤)) := by
     rw [← map_natCast e]
     exact (IsUnit.mk0 _ hK).map e
-  haveI : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   obtain ⟨p⟩ : Nonempty T.left := inferInstanceAs (Nonempty (PrimeSpectrum K))
   let T' : Over (Spec (CommRingCat.of K)) := overRes (T := T) ⊤
   obtain ⟨h, hh⟩ := GlobalLift.exists_section (T := T) (V := ⊤) (p := p) trivial
   have hi : overResι (T := T) ⊤ ≫ h = 𝟙 T' := by
-    haveI : Mono (overResι (T := T) ⊤) := Over.mono_of_mono_left _ (hk := inferInstanceAs (Mono (⊤ : T.left.Opens).ι))
+    have : Mono (overResι (T := T) ⊤) := Over.mono_of_mono_left _ (hk := inferInstanceAs (Mono (⊤ : T.left.Opens).ι))
     rw [← cancel_mono (overResι (T := T) ⊤), Category.assoc, hh, Category.comp_id, Category.id_comp]
   obtain ⟨t, -, ht⟩ : ∃ t : SecM P.A P.L 1 T, t ≠ 0 ∧ ∀ s, ∃ r : Γ(T.left, ⊤), r • t = s := by
     exact exists_generator_of_isField (MulEquiv.isField (Field.toIsField K) e.symm.toMulEquiv)

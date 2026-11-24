@@ -112,7 +112,7 @@ lemma mem_uniSeq_iff {n : ℕ} (l : List (Fin n → R)) :
   · rintro ⟨f, hf⟩
     refine ⟨fun i => if h : i < l.length then f ⟨i, h⟩ else 0, fun i j hi hj => ?_⟩
     have := hf ⟨i, hi⟩ ⟨j, hj⟩
-    simp only [dif_pos hi]
+    simp only [dite_eq_left hi]
     simpa [Fin.ext_iff] using this
   · rintro ⟨f, hf⟩
     refine ⟨fun i => f i, fun i j => ?_⟩
@@ -198,7 +198,7 @@ theorem GlobalTheory.SeqCx.exactAt_uniSeq_killed_by_split : ∀ (R : Type) [Comm
     rw [dotProduct_mulVec, vecMul_vecMul, hGGi, vecMul_one, dotProduct_padZero hmN, restrFirst_padZero]
   have hset : {w | w ∈ uniSeq R N ∧ ∀ y ∈ ρ, ∀ u ∈ w, y.2 ⬝ᵥ u = 0} = List.map e '' uniSeq R m := by
     ext w
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨hw, h⟩
       have hw' : w.map (fun u => e (restrFirst hmN (G *ᵥ u))) = w := by
@@ -350,7 +350,7 @@ theorem slicePr_mapDomain (V W : Type) (w w' : List W) (x : List V →₀ ℤ) :
   rw [Finsupp.linearCombination_mapDomain]
   split_ifs with h
   · simp [Function.comp_def, h, lc_single_one]
-  · simp only [Function.comp_def, h, if_false]
+  · simp only [Function.comp_def, h, ite_false]
     induction x using Finsupp.induction_linear with
     | zero => simp
     | add f g hf hg => rw [map_add (f := _), hf, hg, add_zero]
@@ -749,10 +749,10 @@ theorem incl_apply (w w' : List W) (z : List V →₀ ℤ) (l : List V) :
     incl w z (l, w') = if w = w' then z l else 0 := by
   by_cases h : w = w'
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact Finsupp.mapDomain_apply_of_injective (pair_injective w) z l
-  · rw [if_neg h]
-    apply Finsupp.mapDomain_notin_range
+  · rw [ite_eq_right h]
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨l', hl'⟩
     exact h (congrArg Prod.snd hl')
 
@@ -801,7 +801,7 @@ theorem dblRow_exact : ∀ (V W : Type) (D : Set (List V × List W)) (a b : ℕ)
     ext l
     have := congrArg (fun z => z (l, w)) h1
     simp only [h0, Finsupp.coe_zero, Pi.zero_apply, Finsupp.finsetSum_apply, incl_apply] at this
-    rw [Finset.sum_ite_eq', if_pos hw] at this
+    rw [Finset.sum_ite_eq', ite_eq_left hw] at this
     simpa using this.symm
   have hslice : ∀ w ∈ T, ∃ y ∈ chains {l | (l, w) ∈ D} (a + 1), bd V y = proj w x := by
     intro w hw
@@ -871,14 +871,14 @@ lemma sum_apply_pair {V W : Type} (T : Finset (List V)) (g : List V → List W �
   · rw [Finset.sum_eq_single l]
     · exact Finsupp.mapDomain_apply_of_injective (inj_pair l) _ _
     · intro l' _ hne
-      apply Finsupp.mapDomain_notin_range
+      apply Finsupp.mapDomain_of_notMem_range
       rintro ⟨w', hw'⟩
       exact hne (congrArg Prod.fst hw')
     · intro hl
       exact absurd h hl
   · apply Finset.sum_eq_zero
     intro l' hl'
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨w', hw'⟩
     obtain rfl : l' = l := congrArg Prod.fst hw'
     exact h hl'
@@ -921,7 +921,7 @@ theorem GlobalTheory.SeqCx.vertical_exact_of_columns : ∀ (V W : Type) (D : Set
     intro l hl
     ext w
     have := congrArg (fun f => f (l, w)) hvdec
-    simp only [hvx, sum_apply_pair, if_pos hl] at this
+    simp only [hvx, sum_apply_pair, ite_eq_left hl] at this
     simpa using this.symm
   have hchain : ∀ l ∈ T, g l ∈ chains {w | (l, w) ∈ D} b := by
     intro l hl

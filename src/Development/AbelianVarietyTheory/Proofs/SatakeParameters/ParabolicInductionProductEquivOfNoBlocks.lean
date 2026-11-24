@@ -76,8 +76,8 @@ theorem multiProd_equiv_of_isEmpty : ∀ {k : Type} [Field k] [ValuativeRel k] [
     (σ : ∀ a, Representation ℂ (GL (m a) k) (X a)) (σ' : ∀ a, Representation ℂ (GL (m' a) k) (X' a)),
     Nonempty ((multiProd e σ).Equiv (multiProd e' σ')) := by
   intro k _ _ _ _ α α' n _ _ _ _ _ _ _ _ m _ _ m' _ _ e e' X _ _ X' _ _ σ σ'
-  haveI : IsEmpty n := ⟨fun x => isEmptyElim (e.symm x).1⟩
-  haveI : Subsingleton (GL n k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
+  have : IsEmpty n := ⟨fun x => isEmptyElim (e.symm x).1⟩
+  have : Subsingleton (GL n k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
   refine ⟨Representation.Equiv.mk ((lineEquiv e σ).trans (lineEquiv e' σ').symm) fun g => ?_⟩
   rw [Subsingleton.elim g 1, map_one, map_one]
   rfl

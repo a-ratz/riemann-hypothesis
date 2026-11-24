@@ -127,7 +127,7 @@ theorem exists_covolOne (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (n : ℕ) {d
       dA.map e = GroundTheory.Automorphic.GJMatrix.adeleMeasurePi F ∧ IsCovolOne dA := by
   obtain ⟨e, he, hB⟩ := exists_coordHomeoN σ hCM 1 n b
   obtain ⟨t1, -, -, -, -, -, -, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI : IsTopologicalAddGroup (Fin 1 → Fin n → AF F ⊗[F] E) := inferInstance
+  have : IsTopologicalAddGroup (Fin 1 → Fin n → AF F ⊗[F] E) := inferInstance
   let eA := e.toMeasurableEquiv
   let μ := GroundTheory.Automorphic.GJMatrix.adeleMeasurePi (K := F) (ι := Fin 1 × (Fin n × Fin d))
   have hadd : ∀ x y, e (x + y) = e x + e y := by
@@ -191,15 +191,15 @@ theorem split_coord' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx
     MeasurePreserving (fun X : Fin n → Fin M → AF F ⊗[F] E => (projInf X, projFin X)) dx
       ((coordW (Ainf F) b l n M).prod (coordW (Af F) b lf n M)) := by
   obtain ⟨-, hAfLC, hAfSC, hAfT2⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
+  have : BorelSpace (Af F) := ⟨rfl⟩
   have hEq := adele_eq l hH D hD hD1 lf hlf h1
   obtain ⟨i1, i3⟩ := coordMapN σ hCM (Ainf F) b l hH n M
   obtain ⟨f1, f3⟩ := coordMapN σ hCM (Af F) b lf hlf n M
-  haveI hBi := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.2.1 n M
-  haveI hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
-  haveI : SigmaFinite l := by
+  have hBi := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.2.1 n M
+  have hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
+  have : SigmaFinite l := by
     exact Measure.IsAddHaarMeasure.sigmaFinite l
-  haveI : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
+  have : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
   let eI := (i1.homeomorph).toMeasurableEquiv
   let eF := (f1.homeomorph).toMeasurableEquiv
   let eA := e.toMeasurableEquiv
@@ -215,11 +215,11 @@ theorem split_coord' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx
       rw [GroundTheory.Automorphic.GJMatrix.adeleMeasurePi, hEq]
     exact ⟨eA.measurable, hdxc.trans e1⟩
   let eP := eI.prodCongr eF
-  haveI : SFinite (coordW (Af F) b lf n M) := sfinite_coordW σ hCM b lf hlf n M
-  haveI : SFinite (coordW (Ainf F) b l n M) := by
+  have : SFinite (coordW (Af F) b lf n M) := sfinite_coordW σ hCM b lf hlf n M
+  have : SFinite (coordW (Ainf F) b l n M) := by
     have hK : IsHomeomorph (GlobalTheory.CompanionTheory.SW.WBox.cK (F := F) (E := E) (Ainf F) b) :=
       (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.1 d b
-    haveI := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK (Ainf F) hK l
+    have := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK (Ainf F) hK l
     unfold coordW
     infer_instance
   have hP : MeasurePreserving eP ((coordW (Ainf F) b l n M).prod (coordW (Af F) b lf n M))
@@ -277,7 +277,7 @@ theorem euler_coord (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n : ℕ) (dx 
   · simp only [hmass]; simp [summable_zero]
   · have hT := split_coord σ hCM M n dx b e he hB hdxc laminf hinf lf hlf h1
     obtain ⟨hg, hI⟩ := lint_fin σ hCM b lam hlam lf hlf h1 n M S φ hφ
-    haveI := sfinite_coordW σ hCM b lf hlf n M
+    have := sfinite_coordW σ hCM b lf hlf n M
     set g := ({Y | ∀ v, v ∉ S → projV v Y ∈ latV b v} : Set (Fin n → Fin M → Af F ⊗[F] E)).indicator
       fun Y => ∏ v ∈ S, φ v (projV v Y) with hgdef
     have e' : ∀ X, pureL b S φinf φ X =
@@ -377,8 +377,8 @@ theorem measurable_actW (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (R : Type) [
     Measurable (actW R σ J g : (Fin n → Fin M → R ⊗[F] E) → _) := by
   obtain ⟨h1, h2, h3, h4, -⟩ := hR
   have hk := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
-  haveI : IsTopologicalRing (R ⊗[F] E) := hk.1
-  haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) := hk.2.2.2.2.2.2.2.1 n M
+  have : IsTopologicalRing (R ⊗[F] E) := hk.1
+  have : BorelSpace (Fin n → Fin M → R ⊗[F] E) := hk.2.2.2.2.2.2.2.1 n M
   have hc : Continuous (actW R σ J g : (Fin n → Fin M → R ⊗[F] E) → _) := by
     refine continuous_pi fun a => continuous_pi fun i => ?_
     simp only [actW, actTup, Matrix.mulVec, dotProduct]
@@ -394,9 +394,9 @@ theorem measurable_stage (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (R : Type) 
   obtain ⟨h1, h2, h3, h4, -⟩ := hR
   have hk := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
   have hKf : IsHomeomorph (GlobalTheory.CompanionTheory.SW.WBox.cK (F := F) (E := E) R b) := hk.2.2.2.2.2.2.1 d b
-  haveI : SigmaFinite lam := inferInstance
-  haveI := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK R hKf lam
-  haveI : SFinite (coordW R b lam 1 n) := by unfold coordW; infer_instance
+  have : SigmaFinite lam := inferInstance
+  have := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK R hKf lam
+  have : SFinite (coordW R b lam 1 n) := by unfold coordW; infer_instance
   exact Measurable.lintegral_prod_right (f := fun Y a => f (consA a Y))
     (hf.comp (measurable_consA M n))
 
@@ -521,8 +521,8 @@ theorem pureL_act {d M n : ℕ} (b : Module.Basis (Fin d) F E) (σ : E →ₐ[F]
       rw [← Finset.prod_subset hSS fun v hv hvS => ?_]
       · refine Finset.prod_congr rfl fun v hv => ?_
         rw [hfin]
-        simp only [if_pos hv]
-      · simp only [if_neg hvS]
+        simp only [ite_eq_left hv]
+      · simp only [ite_eq_right hvS]
         rw [Set.indicator_of_mem (hA v (Finset.mem_sdiff.2 ⟨hv, hvS⟩))]
         rfl
     · push Not at hA
@@ -533,7 +533,7 @@ theorem pureL_act {d M n : ℕ} (b : Module.Basis (Fin d) F E) (σ : E →ₐ[F]
         rw [hfin] at this
         exact hvl this
       rw [Set.indicator_of_notMem hY, Finset.prod_eq_zero (Finset.mem_sdiff.1 hv).1
-        (by simp only [if_neg (Finset.mem_sdiff.1 hv).2]; rw [Set.indicator_of_notMem hvl])]
+        (by simp only [ite_eq_right (Finset.mem_sdiff.1 hv).2]; rw [Set.indicator_of_notMem hvl])]
       simp
   · have hY : actW (AF F) σ Jp h X ∉ intOff b S := by
       intro hm
@@ -594,8 +594,8 @@ theorem inner_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   intro F E _ _ _ _ _ _ σ hCM M J hJ n d b laminf lam hinf hlam dA hdA I minf m hI
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   have hJ' := (hypOne_isHermND_and_e0_mem F E σ hCM M J hJ).1
   obtain ⟨pinf, p, hcomp, hlat, -⟩ := GlobalTheory.CompanionTheory.SW.HProj.components F E σ hCM (M + 2) _ hJ'
   have hcons := (GlobalTheory.CompanionTheory.SW.LatRat.latV_rational F E σ hCM d b 0 0).2.2
@@ -639,9 +639,9 @@ theorem inner_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   have mv : ∀ v, Measurable (fv v) := fun v => by
     rw [hfv]
     by_cases hv : v ∈ S
-    · simp only [hv, if_true]
+    · simp only [hv, ite_true]
       exact (hφ v).comp (measurable_actW σ hCM _ (hLv v) _ _)
-    · simp only [hv, if_false]
+    · simp only [hv, ite_false]
       exact (measurable_one.indicator
         (GlobalTheory.CompanionTheory.Hypotheses₂.OneV.DxEuler.measurableSet_latV σ hCM b _ _ v)).comp
         (measurable_actW σ hCM _ (hLv v) _ _)
@@ -663,11 +663,11 @@ theorem inner_pure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   have i2 : ∀ v, ∫⁻ Y, ∫⁻ a, fv v (consA a Y) ∂(coordW (Fv F v) b (lam v) 1 n) ∂(m v) =
       (if v ∈ S then Ψ v else G v) (actW (Fv F v) σ (hypOne J) (p v h) (e0 _ M)) := fun v => by
     by_cases hv : v ∈ S
-    · rw [if_pos hv, hΨ v (p v h), hfv]
-      simp only [hv, if_true]
+    · rw [ite_eq_left hv, hΨ v (p v h), hfv]
+      simp only [hv, ite_true]
       rfl
-    · rw [if_neg hv, hG v (p v h), hfv]
-      simp only [hv, if_false]
+    · rw [ite_eq_right hv, hG v (p v h), hfv]
+      simp only [hv, ite_false]
       rfl
   rw [i1, Finset.prod_congr rfl (fun v _ => i2 v)]
   have hmemP : actW (AF F) σ (hypOne J) h (e0 _ M) ∈
@@ -914,7 +914,7 @@ theorem latV_measurable {F E : Type} [Field F] [NumberField F] [Field E] [Number
     (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E) (n M : ℕ)
     (v : HeightOneSpectrum (𝓞 F)) : MeasurableSet (latV b v : Set (Fin n → Fin M → Fv F v ⊗[F] E)) := by
   obtain ⟨h1, h2, h3, h4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)).2.2.2.2.2.2.2.1 n M
+  have := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)).2.2.2.2.2.2.2.1 n M
   exact (((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d b n M).2.2.2.1 v).2).measurableSet
 
 theorem fam_inf {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
@@ -941,8 +941,8 @@ theorem hyp_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   classical
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   obtain ⟨hJ', he0⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStep.hypOne_isHermND_and_e0_mem F E σ hCM M J hJ
   have h₂ : ∀ a b : Fin 1, σ ((0 : Matrix (Fin 1) (Fin 1) E) b a) = (0 : Matrix (Fin 1) (Fin 1) E) a b :=
     fun a b => by simp
@@ -971,7 +971,7 @@ theorem hyp_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       latStab σ (hypOne J) b v g → stageInt (Fv F v) σ J b lam' m₀ ((latV b v).indicator 1) g = m₀ (latV b v) := by
     intro v hv
     by_contra hc
-    exact hv (hS (by simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq]; exact Or.inr hc))
+    exact hv (hS (by simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]; exact Or.inr hc))
   have hlatm : ∀ v, MeasurableSet (latV b v : Set (Fin (n + 1) → Fin (M + 2) → Fv F v ⊗[F] E)) :=
     fun v => latV_measurable σ hCM b (n + 1) (M + 2) v
   have stg := _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStage.local_stages F E σ hCM M J hJ n hn hnM h₀ h₁ h₂

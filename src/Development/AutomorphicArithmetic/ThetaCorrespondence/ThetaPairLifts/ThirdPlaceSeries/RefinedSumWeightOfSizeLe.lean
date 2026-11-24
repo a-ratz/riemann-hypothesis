@@ -187,12 +187,12 @@ namespace GlobalTheory.RefSum
 
 theorem iInf_thRule_le_nuLocOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (P : PELUnif (maximalIdeal T.V) C.I.G), P.TorsionIso → y.IsAlg → ∀ (ϖ : T.V), Irreducible ϖ → ∀ (Q : P.D.toPre.X → ℤ), IsQ P.D.toPre ϖ Q → ∀ (r : ℕ) (Φ M0 : ℝ), ShortBasis Q r Φ M0 → ∀ (α : 𝓞 E), α * star α = ((l.M : ℕ) : 𝓞 E) → l.Mb = Ideal.span {star α} → IsUnit ((l.M : ℕ) : T.V) → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n e : ℕ), 1 ≤ n → 0 < e → 4 * DF Dw a + 4 ≤ l.M → (DF Dw a : ℝ) * M0 < l.M → ∀ P₁ ∈ harmA (Dw := Dw) c a n, (⨅ (f : Rul Xo c) (_ : ∃ x : Fin n → Dw.La, IsThRule Xo c nab x P₁ f), nval T.V e (evI y f)) ≤ nuLocOf C e l.M (MvPolynomial.map io P₁) + (((DF Dw a : ℝ) ^ 2 * Φ / l.M / e : ℝ) : EReal) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab T io y C hTr P hP hy ϖ hϖ Q hQ r Φ M0 hSB α hα hMb hu a n e hn he h4 hM0 P₁ hP₁
   obtain ⟨hΦ, b, hb, hb'⟩ := hSB
   have hth : ThValTot Xo c nab :=
     GlobalTheory.thValTot_of_chartIndep GlobalTheory.firstFiveLaws.1 GlobalTheory.chartIndependence_unconditional E H Dw l Xo c nab hnab
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨F, _, _, _, _, _, _, v, hv, hvx⟩ : ∃ (F : Type) (_ : Field F) (_ : IsAlgClosed F) (_ : CharZero F)
       (_ : Algebra T.Fr F) (_ : Algebra T.V F) (_ : IsScalarTower T.V T.Fr F) (v : AddValuation F (WithTop ℚ)),
       ValOver ϖ F v ∧ ∀ x : T.Fr, x ≠ 0 → v (algebraMap T.Fr F x) = (((vV T.V x : ℤ) : ℚ) : WithTop ℚ) := by
@@ -279,9 +279,9 @@ namespace GlobalTheory.RefSum.TermLoc
 
 theorem harmonic_value_ge_local_depth : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ∀ P : MvPolynomial (LtN Dw n) c.F, P ∈ harmA (Dw := Dw) c w n → (∀ k, (ρ : EReal) ≤ nuLocOf C e k (MvPolynomial.map io P)) → ∀ (N : ℕ), Odd N → IsUnit (N : T.V) → ∀ (x₂ : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (F : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo (xOf y)))), (∀ b, x₂ b ^ (N ^ 2) = 1 ∧ IsUUOver Xo.univ.t.G Xo.univ.t.PP N (sOf1 y) 1 (x₂ b) (F b)) → letI := io.toAlgebra; (ρ : EReal) ≤ nval T.V e (hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F b)) P) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y C hC nab hnab e ρ w n he P hP hloc N hN hu x₂ F hF
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hst : ∀ a : 𝓞 E, star a = H.bar a := fun _ => rfl
   have hone : ∀ {Z : Over Xo.X} (t : Z ⟶ Xo.univ.t.G), t ≫ Xo.univ.t.act.act 1 = t := fun t => by
     rw [Xo.univ.t.act.one, Category.comp_id]
@@ -362,7 +362,7 @@ namespace GlobalTheory.RefSum.LowP
 
 theorem thRule_lower : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (p : ℕ), p.Prime → ¬ p ∣ l.M → ∀ (la : PointsOfFlagModel.abelian₂ p c) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), ∀ P₁ ∈ harmA (Dw := Dw) c a n, ∀ A B : ℝ, PolyBetween Xo la P₁ A B → ∀ (x : Fin n → Dw.La) (f : Rul Xo c), IsThRule Xo c nab x P₁ f → ∀ (T : CDVR) (io : c.F →+* T.Fr) (e : ℕ), OverLa la.1 T.V io e → ∀ y : IntFr Xo c T io, y.IsAlg → (A : EReal) ≤ nval T.V (vV T.V (p : T.Fr)).toNat (evI y f) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab p hp hpM la a n P₁ hP₁ A B hPB x f hf T io e ho y hy
   have hM0 : 0 < l.M := lt_of_lt_of_le (by norm_num) l.three_le
   obtain ⟨T', iT, r, y', C', ⟨hr, hiT, φ, hφ, hmap⟩, hfin, hgood, hrat⟩ :=
@@ -390,11 +390,11 @@ theorem thRule_lower : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     omega
   rw [← nval_bc iT hr hiT ((vV T.V (p : T.Fr)).toNat), ← he']
   obtain ⟨n', j, -, -, a3⟩ := (GlobalTheory.TorsFac.factorisation E H Dw l Xo l.M p l.odd dvd_rfl hp).1 hpM
-  letI := (iT.comp io).toAlgebra
+  let := (iT.comp io).toAlgebra
   choose F hF using fun b : Fin n =>
     (RatData.exists_thetaVal_data E H Dw l Xo c T'.Fr y'.1).1 hrat (x b)
   have hev : iT (evI y f) = thExpr Xo c nab y'.1 P₁ F := by
-    letI : Algebra T.Fr T'.Fr := iT.toAlgebra
+    let : Algebra T.Fr T'.Fr := iT.toAlgebra
     exact GlobalTheory.T.thetaRule_value_integral_framed_point_extension_field E H Dw l Xo c nab hnab T io y T'.Fr φ hφ y'.1 hmap a n x P₁ hP₁ F hF f hf
   have ht : ∀ b, ∃ t' : ptO Xo (xOf y') ⟶ Xo.univ.t.G, t' ^ (l.M ^ 2) = 1 ∧
       IsUUOver Xo.univ.t.G Xo.univ.t.PP l.M (sOf1 y') 1 t' (F b) := by
@@ -532,7 +532,7 @@ theorem err_le (R N ρ u Dg φ c r v g₀ g₁ : ℝ) (hR : 0 ≤ R) (hρ0 : 0 �
 
 theorem refExp_le_of_oscLe : ∀ (D : D7) (T : Core D), LawsM T → ∀ (_ : ErrX D) (j : ℕ), InR D j → ∀ (a : (D.host.E →+* ℂ) × ℕ → ℕ) (n : ℕ) (cst : ℝ), Dom a n → LastPos (T.Q.Dw j) a → ∑ f : Lt1 (T.Q.Dw j), 2 * rk f ≤ n → 2 * D.R.r ≤ n → JetNum D (DF (T.Q.Dw j) a) cst → ∀ (q : ℕ) [Fact q.Prime], (∀ k, q ≠ D.host.g k) → ∀ b : ℝ, OscLe (T.Q.Xo j) T.Q.c q (gap (T.Q.Dw j) a) b → refExp_vp (T.U j) cst (wtZ a n) q ≤ (b : EReal) := by
   intro D T hL EX j hj a n cst hD hLP hs hr hJ q hq' hq b hO
-  letI := T.Q.H.starRing
+  let := T.Q.H.starRing
   have hqp : q.Prime := hq'.out
   refine (refExp_vp_le_iff _).2 fun la S io e ho y hy φ hφ => ?_
   obtain ⟨st, nab, hnab⟩ := GlobalTheory.CanonConn.exists_isNab_uncond _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c
@@ -680,13 +680,13 @@ theorem GlobalTheory.RefSum.primeSum_add_pair {S : Finset ℕ} {e : ℕ → ℝ}
     · obtain ⟨k, -, rfl⟩ := Finset.mem_image.1 hq
       exact hg k
   · rw [Finset.mem_union, not_or] at hq
-    simp only [h3 q hq.1, if_neg hq.2, add_zero]
+    simp only [h3 q hq.1, ite_eq_right hq.2, add_zero]
   · have a : ∑ q ∈ S ∪ Finset.univ.image g, e q * Real.log q = ∑ q ∈ S, e q * Real.log q :=
       (Finset.sum_subset Finset.subset_union_left fun q _ hq => by rw [h3 q hq, zero_mul]).symm
     have b : ∑ q ∈ S ∪ Finset.univ.image g, (if q ∈ Finset.univ.image g then (1 : ℝ) else 0) * Real.log q =
         ∑ q ∈ Finset.univ.image g, Real.log q := by
-      rw [← Finset.sum_subset Finset.subset_union_right fun q _ hq => by rw [if_neg hq, zero_mul]]
-      exact Finset.sum_congr rfl fun q hq => by rw [if_pos hq, one_mul]
+      rw [← Finset.sum_subset Finset.subset_union_right fun q _ hq => by rw [ite_eq_right hq, zero_mul]]
+      exact Finset.sum_congr rfl fun q hq => by rw [ite_eq_left hq, one_mul]
     have c : ∑ q ∈ Finset.univ.image g, Real.log (q : ℕ) ≤ ∑ k : Fin 2, Real.log (g k) :=
       Finset.sum_image_le_of_nonneg (f := fun q : ℕ => Real.log q) fun q _ => Real.log_natCast_nonneg q
     rw [Fin.sum_univ_two] at c
@@ -768,7 +768,7 @@ theorem refExp_le_of_halfSplit (D : D7) (T : Core D) (hM : LawsM T) (j : ℕ) (h
     GlobalTheory.CanonConn.exists_isNab_uncond D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c
   have hst := GlobalTheory.PowGerm.starSt _ T.Q.H st hn.1
   subst hst
-  letI := T.Q.H.starRing
+  let := T.Q.H.starRing
   obtain ⟨-, -, -, -, -, hE, hnum⟩ := GlobalTheory.PinNum.numerics_of_pins D T.Q hM.pins
   obtain ⟨hpq, hr1, -⟩ := hnum j hj
   have hq : (T.Q.Dw j).q = D.R.m - j := (hM.pins.2.2.2 j hj).2.1
@@ -905,13 +905,13 @@ theorem GlobalTheory.RefSum.refCore_of_size_sumPt : _root_.GlobalTheory.CovTop.S
   · obtain ⟨k, -, rfl⟩ := Finset.mem_image.1 hq'
     refine (GlobalTheory.T.supLatticeReferenceExponent_thetaWeight_level_le_one _ p.T.toCore p.fw.laws.toLawsM (Fm.ex x hx ι).errX _ hI _ _ _ hD hL sum_le_nCol hr hJ k).trans
       (EReal.coe_le_coe_iff.2 ?_)
-    simp only [if_pos hq']
+    simp only [ite_eq_left hq']
     linarith [hP.2.1 ((Fm.D x ι).host.g k)]
-  · haveI := Fact.mk hq
+  · have := Fact.mk hq
     have hne : ∀ k, q ≠ (Fm.D x ι).host.g k := fun k h => hq' (Finset.mem_image.2 ⟨k, Finset.mem_univ _, h.symm⟩)
     refine (GlobalTheory.T.baseLocusExponent_le_oscillation_nonTypePrime _ p.T.toCore p.fw.laws.toLawsM (Fm.ex x hx ι).errX _ hI _ _ _ hD hL sum_le_nCol hr hJ q hne _
       (hO q hne)).trans (EReal.coe_le_coe_iff.2 ?_)
-    simp only [if_neg hq', add_zero, le_refl]
+    simp only [ite_eq_right hq', add_zero, le_refl]
 end
 end -- clump:auto
 end -- clump:auto
@@ -948,7 +948,7 @@ namespace GlobalTheory.PlaceBelow
 
 theorem exists_overLa_under : ∀ (K K' : Type) [Field K] [NumberField K] [Field K'] [NumberField K'] (i : K →+* K') (q : ℕ) (la' : HeightOneSpectrum (𝓞 K')), q.Prime → ((q : ℕ) : 𝓞 K') ∈ la'.asIdeal → ∀ (T : CDVR) (io' : K' →+* T.Fr) (e' : ℕ), OverLa la' T.V io' e' → ∃ (la : HeightOneSpectrum (𝓞 K)) (e : ℕ), ((q : ℕ) : 𝓞 K) ∈ la.asIdeal ∧ OverLa la T.V (io'.comp i) e := by
   intro K K' _ _ _ _ i q la' hq hmem T io' e' h
-  letI : Algebra K K' := i.toAlgebra
+  let : Algebra K K' := i.toAlgebra
 
   set la : HeightOneSpectrum (𝓞 K) := la'.under (𝓞 K) with hla
   set r : ℕ := la.asIdeal.ramificationIdx' la'.asIdeal with hr
@@ -995,8 +995,8 @@ open AlgebraicGeometry CategoryTheory
 theorem intFr_res_down : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (c' : Coeff l) (hle : c.F ≤ c'.F) (T : CDVR) (io' : c'.F →+* T.Fr) (y' : IntFr Xo c' T io'), y'.IsAlg → ∃ y : IntFr Xo c T (io'.comp (IntermediateField.inclusion hle).toRingHom), y.IsAlg ∧ (∀ φ : ℝ, HasPhi y' φ → HasPhi y φ) ∧ ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), ∀ f ∈ sec Xo c a n, evI y' (GlobalTheory.FieldBC.rulBC hle f) = evI y f := by
   intro E _ _ _ H Dw l Xo c c' hle T io' y' hy
   obtain ⟨pt, rest⟩ := y'
-  letI : Algebra c'.F T.Fr := io'.toAlgebra
-  letI : Algebra c.F T.Fr := (io'.comp (IntermediateField.inclusion hle).toRingHom).toAlgebra
+  let : Algebra c'.F T.Fr := io'.toAlgebra
+  let : Algebra c.F T.Fr := (io'.comp (IntermediateField.inclusion hle).toRingHom).toAlgebra
   have hover : AlgOver c c' hle T.Fr := fun _ => rfl
   refine ⟨⟨pt.res hle hover, GlobalTheory.FlagTan.fromTest_of_isLocalRing _, rest.2⟩, hy, fun φ hφ => hφ, ?_⟩
   intro a n f hf
@@ -1025,7 +1025,7 @@ theorem levPull_of_pull {T : Core D} {j : ℕ} (Y : Deep T j) {a : (D.host.E →
     (hf : f ∈ sec (T.Q.Xo j) T.Q.c a n) {g : Rul Y.d.Xo₂ Y.d.c₂} (hp : Y.Pull f g) :
     GlobalTheory.LevPull.Pull Y.d (GlobalTheory.FieldBC.rulBC Y.hle f) g := by
   intro k _ _ _ _ hk y₂ y hov
-  letI : Algebra T.Q.c.F k := GlobalTheory.FieldBC.resAlg Y.hle k
+  let : Algebra T.Q.c.F k := GlobalTheory.FieldBC.resAlg Y.hle k
   have ho : AlgOver T.Q.c Y.c' Y.hle k := fun _ => rfl
   rw [((GlobalTheory.FieldBC.rulBC_sec_val_linear _ _ _ _ _ _ _ Y.hle).1 a n f hf).2 k ho y]
   exact hp k ho hk y₂ y (y.res Y.hle ho) hov rfl rfl HEq.rfl
@@ -1229,9 +1229,9 @@ theorem primeSum_add (E : Type) [Field E] [NumberField E] {S B : Finset ℕ} {e 
     refine add_le_add ?_ ?_
     · rw [← Finset.sum_subset Finset.subset_union_left fun q _ hq => by rw [h3 q hq, zero_mul]]
       exact h4
-    · rw [← Finset.sum_subset Finset.subset_union_right fun q _ hq => by rw [if_neg hq, zero_mul]]
+    · rw [← Finset.sum_subset Finset.subset_union_right fun q _ hq => by rw [ite_eq_right hq, zero_mul]]
       rw [Finset.sum_congr rfl fun q hq => show (if q ∈ B then a * (different_vp E q : ℝ) + 1 else 0) * Real.log q =
-        a * ((different_vp E q : ℝ) * Real.log q) + Real.log q by rw [if_pos hq]; ring,
+        a * ((different_vp E q : ℝ) * Real.log q) + Real.log q by rw [ite_eq_left hq]; ring,
         Finset.sum_add_distrib, ← Finset.mul_sum]
       exact add_le_add (mul_le_mul_of_nonneg_left (sum_different_le E B hB) ha) le_rfl
 
@@ -1270,7 +1270,7 @@ open AlgebraicGeometry
 
 theorem exists_liesOn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), ∃ Z : Comp Xo c, (letI := io.toAlgebra; LiesOn Z y.1) := by
   intro E _ _ _ H Dw l Xo c T io y
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let s₀ : Sp T.Fr := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum T.Fr)
   refine ⟨⟨irreducibleComponent (GlobalTheory.AllWt.ptF y.1 s₀), irreducibleComponent_mem_irreducibleComponents _⟩,
     fun s => ?_⟩
@@ -1303,7 +1303,7 @@ theorem val_eq_of_agree {Z : Comp Xo c} {w : HeightOneSpectrum (𝓞 c.F)} {v : 
     (h : ∀ (S : Type) [CommRing S] [Algebra c.F S] (y : FrPt Xo c S), LiesOn Z y → evR Xo c g y = evR Xo c f y) :
     v g = v f := by
   obtain ⟨⟨q, T, io, e, ho, y, hy, η, hη, rfl⟩, rfl⟩ := hv
-  letI := io.toAlgebra
+  let := io.toAlgebra
   show nval T.V e (evR Xo c g y.1) = nval T.V e (evR Xo c f y.1)
   rw [h _ y.1 hy.2]
 
@@ -1500,12 +1500,12 @@ theorem two_mul_sum_mult {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
     unfold Datum.mult
     rw [h3]
     by_cases h : τ (H.rt : E) = H.rt0
-    · rw [if_pos h, if_neg fun e => h2 (by linear_combination (h - e) / 2)]
+    · rw [ite_eq_left h, ite_eq_right fun e => h2 (by linear_combination (h - e) / 2)]
     · have : -τ (H.rt : E) = H.rt0 := by
         rcases sq_eq_sq_iff_eq_or_eq_neg.1 (hs.trans H.sqrt_neg_disc_sq.symm) with e | e
         · exact absurd e h
         · rw [e, neg_neg]
-      rw [if_neg h, if_pos this, add_comm]
+      rw [ite_eq_right h, ite_eq_left this, add_comm]
   have hinv : Function.Involutive (ComplexEmbedding.conjugate : (E →+* ℂ) → (E →+* ℂ)) := fun τ => star_star τ
   have e := Equiv.sum_comp hinv.toPerm Dw.mult
   rw [two_mul]
@@ -1589,7 +1589,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.DifferentConjugateDefects NumberFie
 namespace GlobalTheory.RefSum.WFree
 theorem refExp_padicVal_le_shift_of_weightFree : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore j) (e : ℕ) (o : ℝ), LawsJ T → InR D j → Y.Good e o → 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → FlatExists Y.U (xiR D) → ∀ (u : GlobalTheory.AllWt.Weight (T.Q.Dw j)) (w₀ : Psi T.Q.H → ℤ) (m : ℕ) (cst : ℝ) (q : ℕ), q.Prime → refExp_vp Y.U cst (wtOf (T.Q.Dw j) u 0) q ≤ refExp_vp Y.U cst (wtOf (T.Q.Dw j) (u + parWt (T.Q.Dw j) w₀) m) q + (((if q ∈ badPrimes T.Q.H Y.d.l₂ then (m * (D.R.f * D.R.r) * (different_vp D.host.E q : ℝ) + 1) else 0 : ℝ)) : EReal) := by
   intro hP D T j Y e o hT hj hY _ _ hF u w₀ m cst q hq
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   have hL := _root_.GlobalTheory.LawsDeep.laws_deep D T j Y e o hT hj hY
   have hp := hT.pins
   have hr : (T.Q.Dw j).p + (T.Q.Dw j).q = D.R.r := by

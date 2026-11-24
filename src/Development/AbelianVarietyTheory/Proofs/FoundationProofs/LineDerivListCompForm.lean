@@ -65,8 +65,8 @@ namespace GlobalTheory.ProdThetaConj
 theorem exists_ringHom_extend (R K : Type) [Field R] [Countable R] [Field K]
     (hK : Cardinal.mk K ≤ Cardinal.mk ℂ) (i : R →+* K) (j : R →+* ℂ) :
     ∃ s : K →+* ℂ, ∀ x, s (i x) = j x := by
-  letI : Algebra R K := i.toAlgebra
-  letI : Algebra R ℂ := j.toAlgebra
+  let : Algebra R K := i.toAlgebra
+  let : Algebra R ℂ := j.toAlgebra
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis R K
   obtain ⟨t, ht⟩ := exists_isTranscendenceBasis R ℂ
   have hC : Cardinal.aleph0 < Cardinal.mk ℂ := by
@@ -200,7 +200,7 @@ theorem exists_endo_eq_cj (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] �
     (ρ.comp (IntermediateField.inclusion hle)).toRingHom
   refine ⟨s, fun x hx hM => ?_⟩
   have := hs ⟨x, IntermediateField.subset_adjoin ℚ _ ⟨hx, hM⟩⟩
-  simp only [cj, TaylorLogMetric.liftM, dif_pos hM]
+  simp only [cj, TaylorLogMetric.liftM, dite_eq_left hM]
   exact this.symm
 
 def ConjPair (D : D7) {N N' : ℕ} (s : ℂ →+* ℂ) (F F' : VC D N N' → ℂ) : Prop :=
@@ -278,7 +278,7 @@ theorem ConjPair.comp_form {g g' : ℂ → ℂ} (hg : Differentiable ℂ g) (hg'
   have hd : ∀ n, s (iteratedDeriv n g 0) = iteratedDeriv n g' 0 := fun n => by
     have := hc n
     rw [coef1, coef1, map_div₀, map_natCast] at this
-    exact (div_left_inj' (by exact_mod_cast n.factorial_ne_zero)).1 this
+    exact (div_left_inj₀ (by exact_mod_cast n.factorial_ne_zero)).1 this
   rw [MvPowerSeries.coeff_map,
     coeff_taylorDir_eq_lineDerivList _ (an0 h1) (Multiset.coe_toList _),
     coeff_taylorDir_eq_lineDerivList _ (an0 h2) (Multiset.coe_toList _),

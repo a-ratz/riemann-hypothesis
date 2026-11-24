@@ -119,8 +119,8 @@ theorem exists_lowerBound (D : D7) (T : Core D) (h : LawsM T) (j : ℕ) (hj : In
       ((D.R.f * D.R.r : ℕ) : ℝ) * w.n ≤ w.size := by
     refine le_trans (add_le_add ?_ le_rfl) hts
     exact_mod_cast Finset.sum_le_sum fun b _ => GlobalTheory.WtSizes.sum_wtA_le_tot w b _
-  haveI : Fact D.host.d.Prime := ⟨D.host.hyp.2.1⟩
-  haveI : NeZero D.host.d := ⟨D.host.hyp.2.1.ne_zero⟩
+  have : Fact D.host.d.Prime := ⟨D.host.hyp.2.1⟩
+  have : NeZero D.host.d := ⟨D.host.hyp.2.1.ne_zero⟩
   have hd4 : D.host.d % 4 = 3 := by
     have := T.Q.H.d_mod
     rw [h.pins.1.1] at this

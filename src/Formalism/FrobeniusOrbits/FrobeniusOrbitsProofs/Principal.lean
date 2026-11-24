@@ -174,8 +174,8 @@ theorem one_ne (ζ a b : L) : (1 : FractionalIdeal (𝓞 (hostE ζ a b))⁰ (hos
 theorem mem_dual_iff (hqd : HypOdd q d) (h : IsLayer (e + 2) q d ζ a b) (y : (hostE ζ a b)) :
     y ∈ FractionalIdeal.dual (𝓞 (KinE ζ a b)) (KinE ζ a b) (1 : FractionalIdeal (𝓞 (hostE ζ a b))⁰ (hostE ζ a b)) ↔
       ∀ x : 𝓞 (hostE ζ a b), IsIntegral ℤ (∑ τ : (hostE ζ a b) ≃ₐ[KinE ζ a b] (hostE ζ a b), τ (y * x)) := by
-  haveI := hostE_isGalois hqd h
-  haveI : IsGalois (KinE ζ a b) (hostE ζ a b) :=
+  have := hostE_isGalois hqd h
+  have : IsGalois (KinE ζ a b) (hostE ζ a b) :=
     IsGalois.tower_top_of_isGalois ℚ (KinE ζ a b) (hostE ζ a b)
   have htr : ∀ w : hostE ζ a b, algebraMap (KinE ζ a b) (hostE ζ a b)
       (Algebra.trace (KinE ζ a b) (hostE ζ a b) w) =
@@ -301,7 +301,7 @@ end Principal
 
 theorem liesOver_span_of_natCast_mem_frobenius_orbits {M : Type} [Field M] [NumberField M] (P : Ideal (𝓞 M)) [P.IsPrime]
     (p : ℕ) (hp : p.Prime) (hm : ((p : ℤ) : 𝓞 M) ∈ P) : P.LiesOver (span {(p : ℤ)}) := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hle : span {(p : ℤ)} ≤ P.under ℤ := by
     rw [Ideal.span_singleton_le_iff_mem]
     exact Ideal.mem_comap.mpr (by simpa using hm)

@@ -77,9 +77,9 @@ theorem UpperTheory.Gal.InertialTypesAlt.suppAny :
     (LblOn fun a => a.D = []) → LblOf → TypeOfLbl → UpperTheory.Gal.TypesAndIwahori.SuppOfType → UpperTheory.Gal.TypesAndIwahori.BlockCount → TameChars → LeTop → PolTop → PolBot → ResEmbEx → UnifTower → BaseQ → CardRes → ArtRead → CuspIne → SuppIne → SuppAny := by
   intro hOn hOf hTy hSO hBC hTC hLT hPT hPB hRE hUT hBQ hCR hAR hCI hSI
   intro E Ω _ _ _ _ _ _ n hn π Y hY A v w h h' g _ i hi hI τ τ' hτ hτ' hD f hf hs
-  haveI : CharZero (v.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
-  haveI : CharZero (w.adicCompletion Y.K) := charZero_of_injective_algebraMap (algebraMap Y.K _).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero (v.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion Y.K) := charZero_of_injective_algebraMap (algebraMap Y.K _).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   obtain ⟨⟨e, he⟩, Θ, hΘ⟩ := hRE E Ω A v h
   obtain ⟨⟨e', he'⟩, -⟩ := hRE Y.K Ω A w h'
   have eqv : τ.ρ.Equiv (IrrGL.of τ.ρ τ.smooth τ.irred).rep := IrrGL.equivOf _ _ _

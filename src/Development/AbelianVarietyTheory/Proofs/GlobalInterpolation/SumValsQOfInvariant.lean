@@ -120,7 +120,7 @@ theorem sum_valsQ_of_invariant (E : Type) [Field E] [NumberField E]
     unfold LocE.valsQ
     rw [Finset.sum_image]
     intro i _ j _ hij
-    have := (div_left_inj' (pow_ne_zero A hq)).1 hij
+    have := (div_left_inj₀ (pow_ne_zero A hq)).1 hij
     exact_mod_cast this
   rw [key, key]
   have e : qOf P ^ (A + B) = qOf P ^ (A + B₀) * qOf P ^ (B - B₀) := by

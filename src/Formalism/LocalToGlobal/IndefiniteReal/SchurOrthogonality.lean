@@ -237,14 +237,14 @@ theorem piR_inner (M : DSModel V S) (τ : D.what₂.Tau) (g : Gt V τ) (x y : M.
 theorem commutant_scalar (M : DSModel V S) (τ : D.what₂.Tau) :
     ∀ B : M.H τ →L[ℂ] M.H τ, (∀ g, B.comp (piR M τ g) = (piR M τ g).comp B) →
       ∃ c : ℂ, B = c • ContinuousLinearMap.id ℂ (M.H τ) := by
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   intro B hB
   have hstar : ∀ g, star (piR M τ g) = piR M τ g⁻¹ := by
     intro g
     rw [ContinuousLinearMap.star_eq_adjoint, eq_comm, ContinuousLinearMap.eq_adjoint_iff]
     intro x y
-    rw [← piR_inner M τ g, ← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← piR_inner M τ g, ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   obtain ⟨c, hc⟩ := Formalism.MainNotions.BridgeCSchur.schur_bounded (Set.range (piR M τ))
     (by rintro U ⟨g, rfl⟩; exact ⟨g⁻¹, (hstar g).symm⟩)
     (by
@@ -258,7 +258,7 @@ theorem commutant_scalar (M : DSModel V S) (τ : D.what₂.Tau) :
   exact ⟨c, by rw [hc]; rfl⟩
 
 theorem sm_dense (M : DSModel V S) (τ : D.what₂.Tau) : Dense (M.sm τ : Set (M.H τ)) := by
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   obtain ⟨-, -, hU, -⟩ := M.ds τ
   have hb := Formalism.IndefR.PeterssonHilbertSpace.sm_isURepOn_bridge (M.ε τ) (M.σ τ) hU
   rw [Submodule.dense_iff_topologicalClosure_eq_top, Submodule.topologicalClosure_eq_top_iff,

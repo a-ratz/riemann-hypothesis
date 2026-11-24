@@ -103,13 +103,13 @@ theorem exists_exponents {G : Type} [CommGroup G] (d : ℕ) : ∀ (V : Type) [Ad
   induction d with
   | zero =>
     intro V _ _ _ ρ h
-    haveI : Subsingleton V := Module.finrank_zero_iff.1 h
+    have : Subsingleton V := Module.finrank_zero_iff.1 h
     refine ⟨0, fun χ => ?_, fun t => ?_⟩
     · simp [jhMult_of_subsingleton (isIrreducible_ofChar χ)]
     · simp [Subsingleton.elim (ρ t) 0]
   | succ d ih =>
     intro V _ _ _ ρ h
-    haveI : Nontrivial V := Module.finrank_pos_iff.1 (by rw [h]; exact d.succ_pos)
+    have : Nontrivial V := Module.finrank_pos_iff.1 (by rw [h]; exact d.succ_pos)
     obtain ⟨ψ, v, hv, hψ⟩ := GlobalTheory.exists_character_eigenvector_of_commute ℂ G V ρ fun a b => by
       rw [← map_mul, mul_comm, map_mul]
     have hst : ∀ g, Submodule.span ℂ {v} ≤ (Submodule.span ℂ {v}).comap (ρ g) := fun g => by
@@ -153,9 +153,9 @@ theorem exists_setOp (μ : Measure G) [IsFiniteMeasureOnCompacts μ] {π : Repre
     ((IwahoriInj.isLocallyConstant_orbit hπ v).comp φ).continuous.continuousOn.integrableOn_compact' hD hm
   have hex : ∀ v : V, ∃ w : V, ∀ l : Module.Dual ℂ V, l w = ∫ g in D, l (π g v) ∂μ := by
     intro v
-    haveI : CompactSpace D := isCompact_iff_compactSpace.1 hD
+    have : CompactSpace D := isCompact_iff_compactSpace.1 hD
     have hf := ((IwahoriInj.isLocallyConstant_orbit hπ v).comp_continuous (f := fun h : D => (h : G))
-      continuous_subtype_val).range_finite
+      continuous_subtypeVal).range_finite
     refine ⟨∑ u ∈ hf.toFinset, (∫ g in D, (if π g v = u then 1 else 0 : ℂ) ∂μ) • u, fun l => ?_⟩
 
     simp only [map_sum, map_smul, smul_eq_mul, ← integral_mul_const]
@@ -218,7 +218,7 @@ theorem hasTrace_indicator (μ : Measure G) [IsFiniteMeasureOnCompacts μ] [μ.I
     refine (setIntegral_congr_fun (g := fun _ => l (B (φ y))) hm fun g hg => congrArg l (hB g hg y)).trans ?_
     simp
   rw [← smul_eq_mul, ← map_smul, ← h1, LinearMap.trace_conj']
-  haveI := Submodule.finiteDimensional_of_le hle
+  have := Submodule.finiteDimensional_of_le hle
   let j := Submodule.inclusion hle
   let q : fixed π I →ₗ[ℂ] LinearMap.range A := A.rangeRestrict ∘ₗ (fixed π I).subtype
   exact LinearMap.trace_comp_comm' j q
@@ -235,7 +235,7 @@ theorem measure_mul_eq [SecondCountableTopology G] (μ : Measure G) [SFinite μ]
   have hS : MeasurableSet S :=
     ((hI.preimage (f := fun x : N × G => (x.1 : G)) (by fun_prop)).inter
       (hI.preimage (f := fun x : N × G => (x.1 * t)⁻¹ * x.2) (by fun_prop))).measurableSet
-  have h0 : MeasurableSet {s : N | (s : G) ∈ I} := (hI.preimage continuous_subtype_val).measurableSet
+  have h0 : MeasurableSet {s : N | (s : G) ∈ I} := (hI.preimage continuous_subtypeVal).measurableSet
   rw [← lintegral_indicator_const hm, ← lintegral_indicator_const h0]
   refine Eq.trans ?_ (((Measure.prod_apply_symm (μ := ν) (ν := μ) hS).symm.trans (Measure.prod_apply hS)).trans ?_)
   · refine lintegral_congr fun g => ?_
@@ -336,7 +336,7 @@ theorem iwahori_factorisation {g : GL n k} (hg : g ∈ iwahori k n) :
   have hc : c ∈ KO k n := by
     let A : Matrix n n 𝒪[k] := fun i j => ⟨c.val i j, h1 i j⟩
     have hA : A.det = 1 := by
-      rw [det_of_lowerTriangular A fun i j hij => Subtype.ext (h2 i j hij)]
+      rw [det_of_isLowerTriangular A fun i j hij => Subtype.ext (h2 i j hij)]
       exact Finset.prod_eq_one fun i _ => Subtype.ext (h3 i)
     exact ⟨GeneralLinearGroup.mk'' A (by rw [hA]; exact isUnit_one), Units.ext rfl⟩
   have hu : diagT k n d * x * (diagT k n d)⁻¹ ∈ unipO k n := by
@@ -374,17 +374,17 @@ theorem isCompact_iwahoriCoset (t : n → kˣ) : IsCompact (iwahoriCoset t) := b
 theorem measure_iwahoriCoset [MeasurableSpace (GL n k)] [BorelSpace (GL n k)] (μ : Measure (GL n k))
     [μ.IsHaarMeasure] {t : n → kˣ} (ht : Contracts t) :
     μ.real (iwahoriCoset t) = μ.real (iwahori k n : Set (GL n k)) * (deltaB t)⁻¹ := by
-  haveI := secondCountable k
-  haveI := t2Space k
-  letI : MeasurableSpace (unipRad k (points n)) := _root_.borel _
-  haveI : BorelSpace (unipRad k (points n)) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (unipRad k (points n)) :=
+  have := secondCountable k
+  have := t2Space k
+  let : MeasurableSpace (unipRad k (points n)) := _root_.borel _
+  have : BorelSpace (unipRad k (points n)) := ⟨rfl⟩
+  have : LocallyCompactSpace (unipRad k (points n)) :=
     (UnipHaar.unipHomeo (points n)).isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (unipRad k (points n)) :=
+  have : SecondCountableTopology (unipRad k (points n)) :=
     (UnipHaar.unipHomeo (points n)).secondCountableTopology
   let ν : Measure (unipRad k (points n)) := Measure.haar
   have ho : IsOpen {s : unipRad k (points n) | (s : GL n k) ∈ iwahori k n} :=
-    (IwahoriOnto.isOpen_iwahori k n).preimage continuous_subtype_val
+    (IwahoriOnto.isOpen_iwahori k n).preimage continuous_subtypeVal
   have hcl : IsClosed (unipRad k (points n) : Set (GL n k)) := by
     have e : (unipRad k (points n) : Set (GL n k)) = (⋂ i, ⋂ j, ⋂ _ : j < i, {g : GL n k | g.val i j = 0}) ∩
         ⋂ i, {g : GL n k | g.val i i = 1} := by
@@ -412,9 +412,9 @@ theorem measure_iwahoriCoset [MeasurableSpace (GL n k)] [BorelSpace (GL n k)] (�
 
 theorem traceFormula (h : GlobalTheory.Published.BorelCasselman) : TraceFormula k n := by
   intro _ _ μ _ V _ _ π hπ
-  haveI := hπ.2 _ (IwahoriOnto.isOpen_iwahori k n) (IwahoriOnto.isCompact_iwahori k n)
+  have := hπ.2 _ (IwahoriOnto.isOpen_iwahori k n) (IwahoriOnto.isCompact_iwahori k n)
   have hb := h k n V π hπ
-  haveI hfd : FiniteDimensional ℂ (fixed (jacBU π) (torusO k n)) := Module.Finite.of_surjective _ hb.2
+  have hfd : FiniteDimensional ℂ (fixed (jacBU π) (torusO k n)) := Module.Finite.of_surjective _ hb.2
   have key : ∀ t : n → kˣ, Contracts t → HasTrace μ π (cosetInd t)
       ((μ.real (iwahori k n : Set (GL n k)) : ℂ) * ((deltaB t : ℂ))⁻¹ *
         LinearMap.trace ℂ (fixed (jacBU π) (torusO k n)) (jacBUFixed π t)) := by

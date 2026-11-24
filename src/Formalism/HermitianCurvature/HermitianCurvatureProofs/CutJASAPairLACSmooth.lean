@@ -128,7 +128,7 @@ theorem aCSmooth_of_proper (hP : ACProper) : ACSmooth := by
     have hgB := Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.gN_nonneg (Bm p)
     have hgg := Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.gN_nonneg g
     have hgn : B.gN g ≤ nn * ‖g‖ :=
-      Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.gN_le_of_ent g ‖g‖ (norm_nonneg _) (fun i j => Matrix.norm_entry_le_entrywise_sup_norm g)
+      Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.gN_le_of_ent g ‖g‖ (norm_nonneg _) (fun i j => norm_apply_le_norm g)
     have hAB : B.gN (Am p) * B.gN (Bm p) ≤ max M₁ 0 := by
       have := hM₁ p hp
       rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg hgA hgB)] at this

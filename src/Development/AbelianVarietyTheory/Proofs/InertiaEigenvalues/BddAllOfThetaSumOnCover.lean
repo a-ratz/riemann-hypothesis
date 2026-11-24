@@ -344,8 +344,8 @@ theorem exists_pull {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
       (GlobalTheory.FramedBaseChange.isPullSec ψ hm h rfl) (F q i b) (F' q i b) (hF' q i b)).2 _ _ (hF q i b)
 
   · rw [map_sum]
-    letI : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
-    letI : Algebra ℚ T := ((algebraMap c.F T).comp (algebraMap ℚ c.F)).toAlgebra
+    let : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
+    let : Algebra ℚ T := ((algebraMap c.F T).comp (algebraMap ℚ c.F)).toAlgebra
     exact Finset.sum_congr rfl fun i _ =>
       sum_map_of_harmonic nab hnab ψ y w hm h rfl n P hP _ (N ^ 2) (by push_cast; rfl) (F q i) (F' q i) (hF' q i)
 
@@ -370,10 +370,10 @@ theorem map_shortValAt {E : Type} [Field E] [NumberField E] [IsCMField E] {H : H
       ∑ᶠ q : Fin n → LevQ Dw l, algebraMap c.F k (cf q) *
         ∑ i, ∑ m ∈ P.support, algebraMap c.F k (P.coeff m) * ∏ b, nab yk ((N : ℤ) ^ 2) (F q i b) (colOf m b) := by
   have hL : Laws := GlobalTheory.firstFiveLaws.1
-  haveI := GlobalTheory.ShortAtField.finite_levQ Dw l
+  have := GlobalTheory.ShortAtField.finite_levQ Dw l
   obtain ⟨S1, _, _, φ1, y1, z1, tp1, F1, hf1, hm1, hz1, hg1, ht1, hu1, e1⟩ := hv
   obtain ⟨U, _, _, ψ2, ψ1, hc, -, hinj⟩ := GlobalTheory.exists_faithfullyFlat_pushout c.F K k S1 ψ φ1 hf1
-  haveI : Nontrivial U := hinj.nontrivial
+  have : Nontrivial U := hinj.nontrivial
   obtain ⟨Ω, _, _, ⟨κ⟩⟩ := GlobalTheory.ShortAtField.exists_algHom_field c.F U
   obtain ⟨u, hu⟩ := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw l Xo c S1 Ω (κ.comp ψ1) y1
   obtain ⟨u', hu'⟩ := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw l Xo c k Ω (κ.comp ψ2) yk
@@ -853,7 +853,7 @@ theorem dpolyOf_monomial_one {k : Type} [CommRing k] {d : ℕ} (F : Fin d → PS
     unfold DpolyOf
     refine Finset.sum_subset MvPolynomial.support_monomial_subset fun x _ hx => ?_
     rw [MvPolynomial.notMem_support_iff.1 hx, map_zero, zero_mul]
-  rw [e, Finset.sum_singleton, MvPolynomial.coeff_monomial, if_pos rfl, map_one, one_mul]
+  rw [e, Finset.sum_singleton, MvPolynomial.coeff_monomial, ite_eq_left rfl, map_one, one_mul]
 
 theorem pow_mul_nabVal_mem {R : Type} [CommRing R] {d : ℕ} {O : Type} [CommRing O] [StarRing O] (k : Type)
     [CommRing k] [Algebra ℚ k] [Algebra R k] (B : FB R d O) (g : PS k 2 d) (hg : B.IsCanonGauge k g) (δ : k)
@@ -1003,7 +1003,7 @@ theorem reach_of_isUUOver {S : Type} [CommRing S] {x : Sp S ⟶ Xo.X} {N : ℕ} 
 
 theorem splitModel_of_good {T : CDVR} {io : c.F →+* T.Fr} (y : IntFr Xo c T io) (hy : GoodPts.Good y)
     (I : IntData Xo c T io y.1) : PullbackSections.SplitModel I := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨G, t', m1, m2, hG⟩ := hy
   obtain ⟨-, n, -⟩ := GlobalTheory.ThetaBound.Prep.sab_extensions_iso E H Dw l Xo T.V T.Fr y.1.x I.G G I.t' t' I.m1 I.m2 m1 m2
   have hp : IsProper I.G.G.hom := MorphismProperty.of_isPullback (P := @IsProper) n.cart.1 hG
@@ -1044,7 +1044,7 @@ theorem hv_bound [StarRing (𝓞 E)] (nab : NabV Xo c) (hnab : IsNab Xo c nab) {
     (hc : ∀ m, InV T (io (P.coeff m))) :
     letI := io.toAlgebra
     InV T (((2 * NumberField.discr E : ℤ) : T.Fr) ^ d * hv Xo c nab y.1 k F P) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨B, hB, hB2⟩ := GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hnab.1 T io y C
   obtain ⟨h', hg', hbd⟩ := GlobalTheory.GaugeBoundedDenom.exists_canonGauge_nabVal_bounded_denom T.V T.Fr E _ B _ (hB2 B hB).1
   have tk : ∀ {r : ℕ} (g : PS T.Fr r (chD C.ch)), FB.toK T.Fr g = g := fun g => by
@@ -1134,8 +1134,8 @@ theorem theta_value_bounded : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   intro E _ _ _ H Dw l Xo c _ nab hnab T io y n d N La w P v hy hU hT hL hw hP hd hc hv
   obtain ⟨T', iT, e, y', C, ⟨he, hval, φ, hφ, hmap⟩, hC, hrat⟩ :=
     exists_ext hnab.1 y hy (N ^ 2) (pow_pos hL.1.pos 2)
-  letI := io.toAlgebra
-  letI := (iT.comp io).toAlgebra
+  let := io.toAlgebra
+  let := (iT.comp io).toAlgebra
   obtain ⟨z, tp, F, hz, hg, ht, hF⟩ :=
     (GlobalTheory.RatData.exists_thetaVal_data E H Dw l Xo c T'.Fr y'.1).2 n La N hU hL hrat
   have key := GlobalTheory.HarmonicAny.map_shortValAt nab hnab La N hU hT hL P hP w 1 φ y.1 y'.1 hmap z tp F hz hg ht hF v hv
@@ -1147,9 +1147,9 @@ theorem theta_value_bounded : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   have hb := fun q i => hv_bound nab hnab y' C (N ^ 2) n d _ (f q i) (hf q i) P hP hd
     (fun m => (inV_of_ext iT he hval).2 (hc m))
   have hcast := (GlobalTheory.PlaceInt.hv_linear E H Dw l Xo c hnab.1 nab hnab T'.Fr y'.1 n P).2.2 N
-  haveI := GlobalTheory.ShortAtField.finite_levQ Dw l
-  haveI := Fintype.ofFinite (Fin n → LevQ Dw l)
-  haveI : CharZero T'.Fr := algebraRat.charZero _
+  have := GlobalTheory.ShortAtField.finite_levQ Dw l
+  have := Fintype.ofFinite (Fin n → LevQ Dw l)
+  have : CharZero T'.Fr := algebraRat.charZero _
   rw [← inV_of_ext iT he hval, map_mul, map_mul, map_pow, map_natCast, map_intCast, ← hφv, key]
   simp only [map_mul, map_inv₀, map_one, map_natCast, map_pow]
   have hcases : P.totalDegree = d ∨ (∑ᶠ q : Fin n → LevQ Dw l, algebraMap c.F T'.Fr (w q) *
@@ -1271,8 +1271,8 @@ theorem shortValAt_of_map (nab : NabV Xo c) {n : ℕ} (w : (Fin n → LevQ Dw l)
   obtain ⟨S, _, _, φ, y', a, b, F, hf, hm, h1, h2, h3, h4, h5⟩ := hv
   refine ⟨S, inferInstance, inferInstance, φ.comp ψ, y', a, b, F, ?_, GlobalTheory.FramedBaseChange.trans ψ φ h hm,
     h1, h2, h3, h4, h5⟩
-  haveI : Nontrivial S := hf.injective.nontrivial
-  letI := (φ.comp ψ).toRingHom.toAlgebra
+  have : Nontrivial S := hf.injective.nontrivial
+  let := (φ.comp ψ).toRingHom.toAlgebra
   exact RingHom.faithfullyFlat_algebraMap_iff.2 inferInstance
 
 theorem evR_pow_succ (f : Rul Xo c) {S : Type} [CommRing S] [Algebra c.F S] (y : FrPt Xo c S) (e : ℕ) :
@@ -1291,14 +1291,14 @@ theorem bddAll_of_theta_sum_on_cover : ∀ (E : Type) [Field E] [NumberField E] 
   have laws := GlobalTheory.firstFiveLaws.1
   obtain ⟨T₁, i₁, e₁, y₁, io₁, z₁, ⟨he₁, hv₁, φ₁, hφ₁, hm₁⟩, -, hio₁, hover⟩ :=
     GlobalTheory.CoverPoint.exists_ext_lift_to_cover E H Dw l Xo c n dδ hlev T io y hfin
-  letI a0 : Algebra c.F T.Fr := io.toAlgebra
-  letI a1 : Algebra c.F T₁.Fr := (i₁.comp io).toAlgebra
-  letI b1 : Algebra dδ.c₂.F T₁.Fr := io₁.toAlgebra
+  let a0 : Algebra c.F T.Fr := io.toAlgebra
+  let a1 : Algebra c.F T₁.Fr := (i₁.comp io).toAlgebra
+  let b1 : Algebra dδ.c₂.F T₁.Fr := io₁.toAlgebra
   obtain ⟨k, _, _, _, _, -⟩ : ∃ (k : Type) (_ : Field k) (_ : IsAlgClosed k) (_ : Algebra T₁.Fr k)
       (_ : Algebra.IsAlgebraic T₁.Fr k), True :=
     ⟨AlgebraicClosure T₁.Fr, inferInstance, inferInstance, inferInstance, inferInstance, trivial⟩
-  letI ak : Algebra c.F k := ((algebraMap T₁.Fr k).comp (i₁.comp io)).toAlgebra
-  letI bk : Algebra dδ.c₂.F k := ((algebraMap T₁.Fr k).comp io₁).toAlgebra
+  let ak : Algebra c.F k := ((algebraMap T₁.Fr k).comp (i₁.comp io)).toAlgebra
+  let bk : Algebra dδ.c₂.F k := ((algebraMap T₁.Fr k).comp io₁).toAlgebra
   let ψ₁ : T₁.Fr →ₐ[c.F] k := { algebraMap T₁.Fr k with commutes' := fun _ => rfl }
   let ψ₂ : T₁.Fr →ₐ[dδ.c₂.F] k := { algebraMap T₁.Fr k with commutes' := fun _ => rfl }
   obtain ⟨yk, hyk⟩ := GlobalTheory.FramedBaseChange.exists_frMap laws E H Dw l Xo c _ _ ψ₁ y₁.1
@@ -1310,12 +1310,12 @@ theorem bddAll_of_theta_sum_on_cover : ∀ (E : Type) [Field E] [NumberField E] 
     (GlobalTheory.frames_lift_to_cover laws E H Dw l Xo c n dδ).2.1 T₁.Fr hc1 k hck ψ₁ ψ₂ rfl y₁.1 z₁.1 yk zk hover hyk hzk
   obtain ⟨v, hv, hev⟩ := hval k hck yk zk hoverk
   let K := IntermediateField.adjoin T₁.Fr (Set.range v)
-  haveI : FiniteDimensional T₁.Fr K := IntermediateField.finiteDimensional_adjoin fun x _ =>
+  have : FiniteDimensional T₁.Fr K := IntermediateField.finiteDimensional_adjoin fun x _ =>
     (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
   obtain ⟨T₂, i₂, e₂, ρ, -, he₂, hv₂, hρ, -, -⟩ := GlobalTheory.PlaceExtField.exists_cdvr_finite_extension T₁ K
   obtain ⟨z₂, -, -, φ₂, hφ₂, hm₂⟩ :=
     (GlobalTheory.PlaceInt.exists_isExt_and_trans E H Dw dδ.l₂ dδ.Xo₂ dδ.c₂ T₁ T₂ io₁ z₁ i₂ e₂ he₂ hv₂).1
-  letI b2 : Algebra dδ.c₂.F T₂.Fr := (i₂.comp io₁).toAlgebra
+  let b2 : Algebra dδ.c₂.F T₂.Fr := (i₂.comp io₁).toAlgebra
   obtain ⟨j, hj, hjv⟩ : ∃ j : T₂.Fr →+* k, (∀ x, j (i₂ x) = algebraMap T₁.Fr k x) ∧ ∀ t, ∃ u, j u = v t := by
     refine ⟨(algebraMap K k).comp ρ.symm.toRingHom, fun x => ?_, fun t =>
       ⟨ρ ⟨v t, IntermediateField.subset_adjoin _ _ ⟨t, rfl⟩⟩, ?_⟩⟩

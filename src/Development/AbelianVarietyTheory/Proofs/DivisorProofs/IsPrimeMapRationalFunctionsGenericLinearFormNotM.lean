@@ -82,7 +82,7 @@ theorem _root_.GlobalTheory.ExtPrime.isPrime_map_and_generic_form_notMem (K L : 
       P.map (MvPolynomial.map (algebraMap K L) :
         MvPolynomial (Fin N) K →+* MvPolynomial (Fin N) L)) := by
   classical
-  haveI := hP
+  have := hP
   let e := (commAlgEquiv K (Fin N) (Fin N)).toRingEquiv
   let ι : MvPolynomial (Fin N) K →+* MvPolynomial (Fin N) (MvPolynomial (Fin N) K) :=
     MvPolynomial.map (algebraMap K (MvPolynomial (Fin N) K))
@@ -125,12 +125,12 @@ theorem _root_.GlobalTheory.ExtPrime.isPrime_map_and_generic_form_notMem (K L : 
         exact h3
       exact h2 (Ideal.mem_map_of_mem _ hmem)
   have hQprime : (P.map ι).IsPrime := by rw [hQ]; exact RingHom.ker_isPrime π
-  letI : Algebra (MvPolynomial (Fin N) (MvPolynomial (Fin N) K)) (MvPolynomial (Fin N) L) :=
+  let : Algebra (MvPolynomial (Fin N) (MvPolynomial (Fin N) K)) (MvPolynomial (Fin N) L) :=
     (MvPolynomial.map (algebraMap (MvPolynomial (Fin N) K) L)).toAlgebra
   let Mₛ : Submonoid (MvPolynomial (Fin N) (MvPolynomial (Fin N) K)) :=
     Submonoid.map (C : MvPolynomial (Fin N) K →+* MvPolynomial (Fin N) (MvPolynomial (Fin N) K))
       (nonZeroDivisors (MvPolynomial (Fin N) K))
-  haveI hloc : IsLocalization Mₛ (MvPolynomial (Fin N) L) :=
+  have hloc : IsLocalization Mₛ (MvPolynomial (Fin N) L) :=
     MvPolynomial.isLocalization (nonZeroDivisors (MvPolynomial (Fin N) K)) L
   have hdisj : Disjoint (Mₛ : Set (MvPolynomial (Fin N) (MvPolynomial (Fin N) K))) ↑(P.map ι) := by
     rw [Set.disjoint_left]

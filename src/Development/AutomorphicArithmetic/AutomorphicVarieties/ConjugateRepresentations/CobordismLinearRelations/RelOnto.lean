@@ -195,10 +195,10 @@ theorem UpperTheory.V.Lit.Geo.Cs.corrForm :
       simpa only [Function.comp_def, extGL_val] using this
   · refine hs.mono fun p hp => ?_
     have e1 : sand (g * τ p) (hOne E a) = sand g p := by
-      rw [map_mul, ContinuousLinearMap.mul_apply, hp]
+      rw [map_mul, mul_apply_eq_comp, hp]
     have e2 : ∀ i, (2 : ℝ) • sand (g * τ p) (u p i) = sand g (v i) := fun i => by
       simp only [u, map_smul, smul_smul]
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel_right]
+      rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel_right]
       simp
     have h := hc (g * τ p) x fun i => hv.symm (u p i)
     simp only [LinearEquiv.apply_symm_apply, e1, e2] at h
@@ -391,7 +391,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.homSz :
   obtain ⟨C, hC, h⟩ := hkSz V F q k c
   refine ⟨C, hC, fun Y W w b hY hW hw p hp hc hb => ?_⟩
   obtain ⟨ho, hs, -, -⟩ := UpperTheory.V.Lit.Geo.hkSmooth V F Y hY W hW q w hw
-  haveI : CompleteSpace F := FiniteDimensional.complete ℝ F
+  have : CompleteSpace F := FiniteDimensional.completeSpace ℝ F
   refine intSz V (V [⋀^Fin q]→L[ℝ] F) k p _ (fun z : V × ℝ => UpperTheory.V.Lit.Geo.hk W z.2 w z.1) (C * b) ho
     (fun t ht => ⟨hp, hW.2 p hp t ht⟩) hs fun t ht => ?_
   exact h W t w p b (abs_le.2 ⟨by linarith [ht.1], ht.2⟩) (hW.1.contDiffAt (hY.mem_nhds hp)) hc
@@ -428,7 +428,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.decK :
     obtain ⟨h, hh, h1, h2⟩ := hS.root (pt g x) t ht'
     have hn := abs_le.1 (hS.near (pt g x) t h ht' hh)
     have e : flow (Zw U W g x) t (hOne E a) = sand h (hOne E a) := by
-      rw [hfz, hflow g h x t hh, ← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel_left]
+      rw [hfz, hflow g h x t hh, ← mul_apply_eq_comp, ← map_mul, inv_mul_cancel_left]
     rw [e]
     refine hmv w g x h _ ⟨h1, h2⟩ ((hw (g * h) x (by rw [pt_mul]; linarith [hn.1])).mono ?_)
     refine mul_le_mul_of_nonneg_left ?_ hM
@@ -504,7 +504,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.decP :
   obtain ⟨h, hh, hb⟩ := hS.root (Cs.pt g x) 1 (by simp)
   have hone : hOne E a ∈ cone E a := hOne_mem_cone
   have hpt : flow (Cs.Zw U W g x) 1 (hOne E a) = sand h (hOne E a) := by
-    rw [hfe, hflow g h x 1 hh, ← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel_left]
+    rw [hfe, hflow g h x 1 hh, ← mul_apply_eq_comp, ← map_mul, inv_mul_cancel_left]
   have hup : f (Cs.pt g x) + c ≤ f (Cs.pt (g * h) x) := by
     rw [Cs.pt_mul]
     exact hS.up _ h hg (by rw [hh, one_smul])
@@ -653,7 +653,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.descFun :
     have hl := hS.f_left 1 t (pt g x)
     rw [map_one, one_mul, ← hc, pt, ← mul_assoc, ← map_mul] at hl
     have hs : ∀ p : HV E a, r • sand g p = sand (c * g) p := fun p => by
-      rw [map_mul, ContinuousLinearMap.mul_apply, hp]
+      rw [map_mul, mul_apply_eq_comp, hp]
     rw [hs, hΦ, hΦ]
     exact hl
 end -- clump:auto
@@ -738,7 +738,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.geoCut :
           ((hη s).mono (fun x (hx : x ∈ G.Y ∩ (G.Y ∩ Φ s ⁻¹' Set.Ioi R)) => ⟨hx.2.1, hx.2.2⟩))
       refine hsm.congr (fun x hx => ?_)
       have hx' : x ∈ G.Y ∧ R < Φ s x := ⟨hx.2.1, hx.2.2⟩
-      simp only [f, if_pos hx']
+      simp only [f, ite_eq_left hx']
     · push_neg at hR
       refine ⟨G.Y ∩ Φ s ⁻¹' Set.Iio (R + 1 / 2),
         (hΦ.1 s).continuousOn.isOpen_inter_preimage G.isOpen isOpen_Iio,
@@ -756,7 +756,7 @@ theorem UpperTheory.V.Lit.Geo.Cs.geoCut :
     show G.tr q γ (f (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p)) = f s p
     have hρ : ∀ x, G.ρ γ (G.ρ γ⁻¹ x) = x := by
       intro x
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]
+      rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]
       rfl
     by_cases hp : p ∈ G.Y
     · have hp' : G.ρ γ⁻¹ p ∈ G.Y := G.maps _ _ hp
@@ -764,21 +764,21 @@ theorem UpperTheory.V.Lit.Geo.Cs.geoCut :
       by_cases hR : R < Φ s p
       · have h1 : G.ρ γ⁻¹ p ∈ G.Y ∧ R < Φ (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p) := ⟨hp', by rw [hΦ']; exact hR⟩
         have h2 : p ∈ G.Y ∧ R < Φ s p := ⟨hp, hR⟩
-        simp only [f, if_pos h1, if_pos h2]
+        simp only [f, ite_eq_left h1, ite_eq_left h2]
         rw [hΦ', map_smul, hinv γ s p hp hR]
       · have h1 : ¬ (G.ρ γ⁻¹ p ∈ G.Y ∧ R < Φ (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p)) := by
           rw [hΦ']
           exact fun h => hR h.2
         have h2 : ¬ (p ∈ G.Y ∧ R < Φ s p) := fun h => hR h.2
-        simp only [f, if_neg h1, if_neg h2, map_zero]
+        simp only [f, ite_eq_right h1, ite_eq_right h2, map_zero]
     · have hp' : G.ρ γ⁻¹ p ∉ G.Y := fun h => hp (by simpa [hρ] using G.maps γ _ h)
       have h1 : ¬ (G.ρ γ⁻¹ p ∈ G.Y ∧ R < Φ (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p)) := fun h => hp' h.1
       have h2 : ¬ (p ∈ G.Y ∧ R < Φ s p) := fun h => hp h.1
-      simp only [f, if_neg h1, if_neg h2, map_zero]
+      simp only [f, ite_eq_right h1, ite_eq_right h2, map_zero]
   · intro s p hp h1
     have h2 : p ∈ G.Y ∧ R < Φ s p := ⟨hp, by linarith⟩
     show f s p = η s p
-    simp only [f, if_pos h2, hχ1 _ h1, one_smul]
+    simp only [f, ite_eq_left h2, hχ1 _ h1, one_smul]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.LiteratureResults.LieGeometryGrowth.CsGeoCut =====
@@ -1061,7 +1061,7 @@ private theorem le_div_one_add_pow_succ_of_mul_le {x K Q A C F : ℝ} {N : ℕ} 
   have hQ0 : 0 < Q := lt_of_lt_of_le one_pos hQ
   have hl : 0 ≤ Real.log Q := Real.log_nonneg hQ
   have hp : Q ^ N = Real.exp (N * Real.log Q) := by
-    rw [Real.exp_nat_mul, Real.exp_log hQ0]
+    rw [Real.exp_natCast_mul, Real.exp_log hQ0]
   have h1 : A * F - A * C ≤ N * Real.log Q := by
     have := mul_le_mul_of_nonneg_left hF hA
     have := mul_le_mul_of_nonneg_right hN hl
@@ -1190,7 +1190,7 @@ private theorem pbOm_zero {Γ V S : Type} [Group Γ] [NormedAddCommGroup V] [Nor
 private theorem corr_sub {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ} (ho : IsOpen (cone E a))
     (U : Subgroup (GL (Fin a) (Af E))) (Ξ : AlgRep E a) {q : ℕ} {α β : Co Ξ q} {w w' : (geo ho U Ξ).Om q}
     (h : Corr U Ξ α w.1) (h' : Corr U Ξ β w'.1) : Corr U Ξ (α - β) (w - w').1 := fun g x X => by
-  rw [AlternatingMap.sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, ← h g x X, ← h' g x X]
+  rw [sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, ← h g x X, ← h' g x X]
   rfl
 
 private theorem corr_zero {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ} (ho : IsOpen (cone E a))

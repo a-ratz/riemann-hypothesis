@@ -82,13 +82,13 @@ theorem length_baseChange_eq_mul {O O₁ : Type} [CommRing O] [CommRing O₁] [A
       (LinearMap.exact_subtype_mkQ N)
     have e2 := Module.length_eq_add_of_exact ((N.subtype).baseChange O₁) ((N.mkQ).baseChange O₁)
       (by
-        rw [LinearMap.baseChange_eq_ltensor]
+        rw [LinearMap.baseChange_eq_lTensor]
         exact Module.Flat.lTensor_preserves_injective_linearMap (M := O₁) _ N.injective_subtype)
       (by
-        rw [LinearMap.baseChange_eq_ltensor]
+        rw [LinearMap.baseChange_eq_lTensor]
         exact LinearMap.lTensor_surjective O₁ N.mkQ_surjective)
       (by
-        rw [LinearMap.baseChange_eq_ltensor, LinearMap.baseChange_eq_ltensor]
+        rw [LinearMap.baseChange_eq_lTensor, LinearMap.baseChange_eq_lTensor]
         exact Module.Flat.lTensor_exact (M := O₁) (LinearMap.exact_subtype_mkQ N))
     rw [e1, e2, ih, hs _ hS, Module.length_eq_one_iff.mpr hS]
     ring

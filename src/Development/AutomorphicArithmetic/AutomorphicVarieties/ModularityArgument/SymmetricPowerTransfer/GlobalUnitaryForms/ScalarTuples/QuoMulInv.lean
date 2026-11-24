@@ -138,11 +138,11 @@ private theorem IB.of_tr (hτ : τ ∈ (algebraMap O K).range) (u : Oˣ) (hu : a
   refine ⟨int_unit u ?_, int_unit u ?_⟩
   · convert (((hi.mul hi).sub (isIntegral_one.add isIntegral_one)).mul h1).sub (hi.mul h2) using 1
     rw [hu]
-    simp only [trace_def, re_mul, im_mul, omega_re, omega_im, map_sub, map_pow, map_ofNat]
+    simp only [trace_def, re_mul, im_mul, re_omega, im_omega, map_sub, map_pow, map_ofNat]
     ring
   · convert (h2.add h2).sub (hi.mul h1) using 1
     rw [hu]
-    simp only [trace_def, re_mul, im_mul, omega_re, omega_im, map_sub, map_pow, map_ofNat]
+    simp only [trace_def, re_mul, im_mul, re_omega, im_omega, map_sub, map_pow, map_ofNat]
     ring
 
 
@@ -226,7 +226,7 @@ private theorem lcount_std (hl : IsLoc O Δ) (hu : ∃ u : Oˣ, algebraMap O K u
   obtain ⟨hτ, -, -, hint⟩ := One.intE O K Δ τ hl hu
   obtain ⟨u, hu'⟩ := hu
   have hfix := lat_fix hl hτ u hu' e hd hd' hdd hm hm' hmm
-  letI := torAct (K := K) Δ τ
+  let := torAct (K := K) Δ τ
   have hC : ∀ z ∈ Cint O τ, tor Δ z '' lat O Δ τ = lat O Δ τ := fun z hz => by
     have hq : ∀ z : (Etau K τ)ˣ, IsIntegral O (quo z) → IB O (ofE Δ (quo z)) := fun z h =>
       IB.ofE ((hint _).1 h).1 ((hint _).1 h).2
@@ -285,9 +285,9 @@ private theorem gen_loc (hl : IsLoc O Δ) (hu : ∃ u : Oˣ, algebraMap O K u = 
     simp [hne] at this
   rw [key t, Units.val_mul, hsMul O K Δ hl _ _ _ hD t.ne_zero s.ne_zero, h1, mul_one]
   by_cases ht : t ∈ NE τ
-  · rw [if_pos ((hsNE O K Δ τ hl hD t).1 ht)]
+  · rw [ite_eq_left ((hsNE O K Δ τ hl hD t).1 ht)]
     simp [one, ht]
-  · rw [if_neg (fun h => ht ((hsNE O K Δ τ hl hD t).2 h))]
+  · rw [ite_eq_right (fun h => ht ((hsNE O K Δ τ hl hD t).2 h))]
     simp [one, ht]
 
 end Lat
@@ -348,7 +348,7 @@ private theorem ae_int (x : F) :
     ∀ᶠ v : Pl F in Filter.cofinite, cv v x ∈ (algebraMap (Ov v) (Kv v)).range := by
   refine (HeightOneSpectrum.Support.finite (𝓞 F) x).subset fun v hv => ?_
   by_contra hn
-  simp only [HeightOneSpectrum.Support, Set.mem_setOf_eq, not_lt] at hn
+  simp only [HeightOneSpectrum.Support, Set.mem_ofPred_eq, not_lt] at hn
   exact hv ⟨⟨_, mem_int v x hn⟩, rfl⟩
 
 private theorem ae_unit {x : F} (hx : x ≠ 0) :

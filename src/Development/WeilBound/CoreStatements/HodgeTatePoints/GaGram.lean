@@ -190,7 +190,7 @@ theorem gram_unit : ∀ (A K : Type) [CommRing A] [Field K] [Algebra A K] [CharZ
     ∑ k, g k * (((D.e (Pi.single i (b k)) (Pi.single j 1)).val : ℕ) : A)
   let I : Ideal A := Ideal.span {(p : A) ^ R}
   let mkB := Ideal.Quotient.mk I
-  haveI : NeZero (p ^ R) := ⟨by have := (Fact.out : p.Prime).pos; positivity⟩
+  have : NeZero (p ^ R) := ⟨by have := (Fact.out : p.Prime).pos; positivity⟩
   have hzero : (Int.castRingHom (A ⧸ I)) ((p ^ R : ℕ) : ℤ) = 0 := by
     show ((((p ^ R : ℕ) : ℤ)) : A ⧸ I) = 0
     rw [Int.cast_natCast, Nat.cast_pow, ← map_natCast mkB, ← map_pow]

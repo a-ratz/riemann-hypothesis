@@ -197,11 +197,11 @@ theorem mem_omB_of_mul_mem_omB :
   let I : Ideal B :=
     { carrier := {c | (c : K) • y ∈ omB k K B q}
       add_mem' := fun {a c} ha hc => by
-        simp only [Set.mem_setOf_eq, Subalgebra.coe_add, add_smul] at *
+        simp only [Set.mem_ofPred_eq, Subalgebra.coe_add, add_smul] at *
         exact Submodule.add_mem _ ha hc
       zero_mem' := by simp
       smul_mem' := fun a c hc => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, Subalgebra.coe_mul, mul_smul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, Subalgebra.coe_mul, mul_smul] at *
         exact omB_smul_mem B q a.2 hc }
   have hI : I = ⊤ := by
     by_contra hne

@@ -189,7 +189,7 @@ theorem _root_.GlobalTheory.CharDualMat.mem_integer_of_dual (ψ : AddChar k Circ
   have hapos : valuation k a ^ (n + 1) ≠ 0 := pow_ne_zero _ (by simpa using ha0)
   have hlt' : valuation k t < γ * valuation k a ^ (n + 1) := by
     calc valuation k t = valuation k t * γ⁻¹ * γ := (inv_mul_cancel_right₀ hγ _).symm
-      _ < valuation k a ^ (n + 1) * γ := mul_lt_mul_of_pos_right hlt (zero_lt_iff.2 hγ)
+      _ < valuation k a ^ (n + 1) * γ := mul_lt_mul_of_pos_right hlt (pos_iff_ne_zero.2 hγ)
       _ = γ * valuation k a ^ (n + 1) := mul_comm _ _
   have hs : ∀ u : k, u ∈ 𝒪[k] → ψ (t * (a ^ (n + 1))⁻¹ * u) = 1 := by
     intro u hu

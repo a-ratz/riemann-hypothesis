@@ -200,8 +200,8 @@ theorem free_finite_quotient : ∀ (T : Type) [CommRing T] [IsLocalRing T] [IsNo
   have hfin : Module.Finite T (MvPowerSeries σ T ⧸ Ideal.span (Set.range f)) :=
     (GlobalTheory.FormalIsogeny.finiteReduction_iff.2 hM).finite_quotient
   refine ⟨?_, hfin⟩
-  haveI : Module.Flat T (MvPowerSeries σ T) := _root_.GlobalTheory.FiniteHeight.flat_mvPowerSeries_of_isNoetherianRing T σ
-  haveI : IsLocalHom (algebraMap T (MvPowerSeries σ T)) := ⟨fun r hr => by
+  have : Module.Flat T (MvPowerSeries σ T) := _root_.GlobalTheory.FiniteHeight.flat_mvPowerSeries_of_isNoetherianRing T σ
+  have : IsLocalHom (algebraMap T (MvPowerSeries σ T)) := ⟨fun r hr => by
     have := MvPowerSeries.isUnit_iff_constantCoeff.1 hr
     exact this⟩
   have hreg := _root_.GlobalTheory.isWeaklyRegular_mvPowerSeries_of_pow_le (ResidueField T) σ n e

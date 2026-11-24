@@ -266,10 +266,10 @@ theorem toric_torsion_eq_restrict : ∀ (E : Type) [Field E] [NumberField E] [Is
   let bW : ResidueField W →+* Ω := Ideal.Quotient.lift (maximalIdeal W) β hβ
   obtain ⟨Ω', _, _, σ, κ₀, hσκ⟩ : ∃ (Ω' : Type) (_ : Field Ω') (_ : IsAlgClosed Ω') (σ : Ω →+* Ω')
       (κ₀ : ResidueField O →+* Ω'), σ.comp bW = κ₀.comp (ResidueField.map φ) := by
-    letI := bW.toAlgebra
-    letI := (ResidueField.map φ).toAlgebra
+    let := bW.toAlgebra
+    let := (ResidueField.map φ).toAlgebra
     obtain ⟨M, hM⟩ := Ideal.exists_maximal (TensorProduct (ResidueField W) Ω (ResidueField O))
-    letI := Ideal.Quotient.field M
+    let := Ideal.Quotient.field M
     let q0 : TensorProduct (ResidueField W) Ω (ResidueField O) →+* AlgebraicClosure (TensorProduct (ResidueField W) Ω (ResidueField O) ⧸ M) :=
       (algebraMap (TensorProduct (ResidueField W) Ω (ResidueField O) ⧸ M) _).comp (Ideal.Quotient.mk M)
     refine ⟨AlgebraicClosure (TensorProduct (ResidueField W) Ω (ResidueField O) ⧸ M), inferInstance, inferInstance,

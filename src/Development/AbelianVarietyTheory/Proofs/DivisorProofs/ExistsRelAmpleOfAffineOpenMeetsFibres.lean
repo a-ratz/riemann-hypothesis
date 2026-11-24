@@ -121,9 +121,9 @@ theorem exists_affine_gen {X : Scheme.{0}} [IsLocallyNoetherian X] (G : X.IdealS
   let U' : X.affineOpens := ⟨U, hU⟩
   have hx : x ∈ U'.1 := hxU
   rw [ds_stalkId_eq_map G U' x hx] at ht
-  haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian U'
-  letI : Algebra Γ(X, U) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hx⟩
-  haveI := hU.isLocalization_stalk ⟨x, hx⟩
+  have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian U'
+  let : Algebra Γ(X, U) (X.presheaf.stalk x) := X.presheaf.algebra_section_stalk ⟨x, hx⟩
+  have := hU.isLocalization_stalk ⟨x, hx⟩
   have halg : algebraMap Γ(X, U) (X.presheaf.stalk x) = (X.presheaf.germ U x hx).hom := rfl
   rw [Ideal.map] at ht
   obtain ⟨y, ⟨a, haI, rfl⟩, c, hc⟩ := ds_gen_of_span _ t htnzd ht
@@ -134,7 +134,7 @@ theorem exists_affine_gen {X : Scheme.{0}} [IsLocallyNoetherian X] (G : X.IdealS
     rw [halg, hc]
     exact mul_mem (IsUnit.mem_nonZeroDivisors c.isUnit) htnzd
   obtain ⟨σ, hσP, hT⟩ := ds_spread (hU.primeIdealOf ⟨x, hx⟩).asIdeal (G.ideal U') a haI hmap hnzd
-  haveI := hU.isLocalization_basicOpen σ
+  have := hU.isLocalization_basicOpen σ
   obtain ⟨h1, h2⟩ := hT Γ(X, X.basicOpen σ)
   refine ⟨X.affineBasicOpen (U := U') σ, algebraMap Γ(X, U) Γ(X, X.basicOpen σ) a, ?_, h2, ?_⟩
   · show x ∈ X.basicOpen σ
@@ -149,8 +149,8 @@ theorem stalkId_eq_span_of_mem {X : Scheme.{0}} (G : X.IdealSheafData) (U : X.af
     (y : X) (hy : y ∈ U.1) :
     ∃ t ∈ nonZeroDivisors (X.presheaf.stalk y), FinalTheorems.stalkId G y = Ideal.span {t} := by
   refine ⟨X.presheaf.germ U.1 y hy f, ?_, ?_⟩
-  · letI : Algebra Γ(X, U.1) (X.presheaf.stalk y) := X.presheaf.algebra_section_stalk ⟨y, hy⟩
-    haveI := U.2.isLocalization_stalk ⟨y, hy⟩
+  · let : Algebra Γ(X, U.1) (X.presheaf.stalk y) := X.presheaf.algebra_section_stalk ⟨y, hy⟩
+    have := U.2.isLocalization_stalk ⟨y, hy⟩
     exact algebraMap_mem_nonZeroDivisors_of_isLocalization
       (U.2.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl hf
   · rw [ds_stalkId_eq_map G U y hy, hG, Ideal.map_span, Set.image_singleton]
@@ -304,13 +304,13 @@ theorem isRegularRing_localization_of_comap_eq_bot (R A : Type) [CommRing R] [Is
   let K := FractionRing R
   let M := Algebra.algebraMapSubmonoid A (nonZeroDivisors R)
   let B := Localization M
-  letI : Algebra K B := localizationAlgebra (nonZeroDivisors R) A
-  haveI : IsScalarTower R K B := inferInstance
-  haveI h1 : Algebra.IsPushout R A K B :=
+  let : Algebra K B := localizationAlgebra (nonZeroDivisors R) A
+  have : IsScalarTower R K B := inferInstance
+  have h1 : Algebra.IsPushout R A K B :=
     Algebra.isPushout_of_isLocalization (nonZeroDivisors R) K A B
-  haveI : Algebra.IsPushout R K A B := h1.symm
-  haveI : Algebra.Smooth K B := Algebra.Smooth.of_equiv (Algebra.IsPushout.equiv (R := R) (S := K) (R' := A) (S' := B))
-  haveI : IsRegularRing B := GlobalTheory.isRegularRing_of_smooth K B
+  have : Algebra.IsPushout R K A B := h1.symm
+  have : Algebra.Smooth K B := Algebra.Smooth.of_equiv (Algebra.IsPushout.equiv (R := R) (S := K) (R' := A) (S' := B))
+  have : IsRegularRing B := GlobalTheory.isRegularRing_of_smooth K B
   have disj : Disjoint (M : Set A) (p : Set A) := by
     rw [Set.disjoint_left]
     rintro _ ⟨r, hr, rfl⟩ hrp
@@ -318,12 +318,12 @@ theorem isRegularRing_localization_of_comap_eq_bot (R A : Type) [CommRing R] [Is
     rw [hp, Ideal.mem_bot] at this
     exact nonZeroDivisors.ne_zero hr this
   let q := p.map (algebraMap A B)
-  haveI : q.IsPrime := IsLocalization.isPrime_of_isPrime_disjoint M B p inferInstance disj
-  haveI : IsLocalization.AtPrime (Localization.AtPrime q) p := by
+  have : q.IsPrime := IsLocalization.isPrime_of_isPrime_disjoint M B p inferInstance disj
+  have : IsLocalization.AtPrime (Localization.AtPrime q) p := by
     convert IsLocalization.isLocalization_isLocalization_atPrime_isLocalization M
       (Localization.AtPrime q) q
     exact (IsLocalization.under_map_of_isPrime_disjoint M B inferInstance disj).symm
-  haveI : IsRegularRing (Localization.AtPrime q) :=
+  have : IsRegularRing (Localization.AtPrime q) :=
     GlobalTheory.ExtendRig.isRegularRing_of_isLocalization q.primeCompl _
   exact IsRegularRing.of_ringEquiv (IsLocalization.algEquiv p.primeCompl
     (Localization.AtPrime q) (Localization.AtPrime p)).toRingEquiv
@@ -336,8 +336,8 @@ theorem ufd_stalk_of_generic : ∀ (R : Type) [CommRing R] [IsDomain R] (X : Sch
     X.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ x) isOpen_univ
   have hs : (f.appLE ⊤ U le_top).hom.Smooth :=
     HasRingHomProperty.appLE @Smooth f inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ le_top
-  haveI : Nonempty (⊤ : (Sp R).Opens) := ⟨⟨f x, trivial⟩⟩
-  haveI : IsDomain Γ(Sp R, ⊤) := inferInstance
+  have : Nonempty (⊤ : (Sp R).Opens) := ⟨⟨f x, trivial⟩⟩
+  have : IsDomain Γ(Sp R, ⊤) := inferInstance
   have hgen : f x = genericPoint (Sp R) := by
     rw [genericPoint_eq_bot_of_affine]
     exact PrimeSpectrum.ext hx
@@ -355,7 +355,7 @@ theorem ufd_stalk_of_generic : ∀ (R : Type) [CommRing R] [IsDomain R] (X : Sch
     (hU.primeIdealOf ⟨x, hxU⟩).asIdeal hcomap
   let := X.presheaf.algebra_section_stalk ⟨x, hxU⟩
   have := hU.isLocalization_stalk ⟨x, hxU⟩
-  haveI : IsRegularRing (X.presheaf.stalk x) :=
+  have : IsRegularRing (X.presheaf.stalk x) :=
     IsRegularRing.of_ringEquiv (IsLocalization.algEquiv (hU.primeIdealOf ⟨x, hxU⟩).asIdeal.primeCompl
       (Localization.AtPrime (hU.primeIdealOf ⟨x, hxU⟩).asIdeal) (X.presheaf.stalk x)).toRingEquiv
   exact GlobalTheory.uniqueFactorizationMonoid_of_isRegularRing_of_isLocalRing
@@ -827,17 +827,17 @@ theorem isIso_shear {C : Type*} [Category C] [CartesianMonoidalCategory C] (A T 
 theorem isAffineOpen_preimage_translate (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A]
     (V : A.left.Opens) (hV : IsAffineOpen V) (T : Over (Sp R)) [IsAffine T.left] (b : T ⟶ A) :
     IsAffineOpen ((fst A T * (snd A T ≫ b)).left ⁻¹ᵁ V) := by
-  haveI : IsAffine (Sp R) := by unfold Sp; infer_instance
-  haveI : IsAffineHom T.hom := inferInstance
-  haveI : IsAffineHom (fst A T).left := by
+  have : IsAffine (Sp R) := by unfold Sp; infer_instance
+  have : IsAffineHom T.hom := inferInstance
+  have : IsAffineHom (fst A T).left := by
     change IsAffineHom (pullback.fst A.hom T.hom)
     exact isAffineHom_isStableUnderBaseChange.of_isPullback
       (IsPullback.of_hasPullback A.hom T.hom).flip inferInstance
-  haveI := isIso_shear A T b
+  have := isIso_shear A T b
   have h : fst A T * (snd A T ≫ b) = lift (fst A T * (snd A T ≫ b)) (snd A T) ≫ fst A T := by simp
-  haveI : IsAffineHom (fst A T * (snd A T ≫ b)).left := by
+  have : IsAffineHom (fst A T * (snd A T ≫ b)).left := by
     rw [h, Over.comp_left]
-    haveI : IsIso (lift (fst A T * (snd A T ≫ b)) (snd A T)).left :=
+    have : IsIso (lift (fst A T * (snd A T ≫ b)) (snd A T)).left :=
       inferInstanceAs (IsIso ((Over.forget (Sp R)).map (lift (fst A T * (snd A T ≫ b)) (snd A T))))
     infer_instance
   exact hV.preimage _
@@ -850,10 +850,10 @@ theorem isAffineOpen_preimage_add_inf_preimage_sub (R : Type) [CommRing R] (A : 
   have h1 := isAffineOpen_preimage_translate R A V hV T a
   have h2 := isAffineOpen_preimage_translate R A V hV T a⁻¹
   rw [GrpObj.comp_inv] at h2
-  haveI : IsSeparated (snd A T).left := by
+  have : IsSeparated (snd A T).left := by
     change IsSeparated (pullback.snd A.hom T.hom)
     infer_instance
-  haveI : (A ⊗ T).left.IsSeparated := by
+  have : (A ⊗ T).left.IsSeparated := by
     rw [Scheme.isSeparated_iff, ← terminal.comp_from (snd A T).left]
     infer_instance
   exact h1.inf h2
@@ -949,7 +949,7 @@ namespace GlobalTheory
 
 theorem isAmpleLB_pull_fst_of_translates : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (A : Over (Sp R)) [GrpObj A], IsAbelianScheme A → ∀ (L : LB A.left) (hL : L.IsLB) (c : Pic A.left) (V : A.left.Opens), cls L hL = c → IsAffineOpen V → IsLocus c V → ∀ (T : Over (Sp R)) [IsAffine T.left] (n : ℕ) (a : Fin n → (T ⟶ A)), ⨆ i, ((fst A T * (snd A T ≫ a i)).left ⁻¹ᵁ V ⊓ (fst A T * (snd A T ≫ a i)⁻¹).left ⁻¹ᵁ V) = ⊤ → (∀ i, GlobalTheory.CechPic.pull (a i).left c + GlobalTheory.CechPic.pull ((a i)⁻¹).left c - 2 • GlobalTheory.CechPic.pull (1 : T ⟶ A).left c = 0) → GlobalTheory.IsAmpleLB (L.pull (fst A T).left) := by
   intro R _ _ A _ hA L hL c V hc hV hloc T _ n a hcov hrel
-  haveI : IsProper A.hom := hA.proper
+  have : IsProper A.hom := hA.proper
   have hL' : (L.pull (fst A T).left).IsLB := LB.isLB_pull hL _
   have h2 : (lbPow (L.pull (fst A T).left) 2).IsLB := GlobalTheory.isLB_lbPow hL' 2
   have hcls : cls _ h2 = 2 • CechPic.pull (fst A T).left c := by

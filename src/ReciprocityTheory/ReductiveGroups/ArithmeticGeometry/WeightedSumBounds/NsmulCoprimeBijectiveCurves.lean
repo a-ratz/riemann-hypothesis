@@ -169,7 +169,7 @@ private theorem exists_eq_single_of_degree_eq_one {σ : Type} (α : σ →₀ �
   by_cases hi : i = s
   · subst hi
     simp [hs1]
-  · rw [Finsupp.single_apply, if_neg (Ne.symm hi)]
+  · rw [Finsupp.single_apply, ite_eq_right (Ne.symm hi)]
     by_contra hne'
     have hmem : i ∈ α.support.erase s :=
       Finset.mem_erase.mpr ⟨hi, Finsupp.mem_support_iff.mpr hne'⟩

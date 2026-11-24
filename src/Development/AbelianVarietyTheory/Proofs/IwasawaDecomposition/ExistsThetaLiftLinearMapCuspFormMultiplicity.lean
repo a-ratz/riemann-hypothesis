@@ -582,8 +582,8 @@ theorem exists_invariant_sum {L V : Type} [AddCommGroup L] [TopologicalSpace L] 
       add_mem' := fun {u w} hu hw a => by rw [← add_assoc, hw, hu]
       neg_mem' := fun {u} hu a => by rw [← hu (a + -u), neg_add_cancel_right] }
   have hH : IsOpen (H : Set L) := H.isOpen_of_mem_nhds (Filter.mem_of_superset hU hγ)
-  haveI : Finite (L ⧸ H) := H.quotient_finite_of_isOpen hH
-  letI : Fintype (L ⧸ H) := Fintype.ofFinite _
+  have : Finite (L ⧸ H) := H.quotient_finite_of_isOpen hH
+  let : Fintype (L ⧸ H) := Fintype.ofFinite _
   refine ⟨L ⧸ H, inferInstance, inferInstance, Quotient.out, fun b => ?_⟩
   refine Fintype.sum_equiv (Equiv.addLeft (b : L ⧸ H)) _ _ fun q => ?_
   have h : -(b + q.out) + ((b : L ⧸ H) + q).out ∈ H := by
@@ -766,7 +766,7 @@ theorem eq_zero_of_small (hψ : IsStdChar D ψ (-1)) {ξ : Fin T.rank → D.host
     rw [← heisO_add_of_orth ψ S T (half_orth he' (hαh s) (hαh s')), ← along_add]
     exact congrArg (fun x => heisO ψ S T (along S T ξ x) f) (funext fun b => (cA D).map_add (s.1 b) (s'.1 b))
   have hαc : Continuous α := continuous_matrix fun i k => continuous_const.mul
-    (GlobalTheory.FockCompare.ThetaCont.continuous_conj.comp ((continuous_apply k).comp continuous_subtype_val))
+    (GlobalTheory.FockCompare.ThetaCont.continuous_conj.comp ((continuous_apply k).comp continuous_subtypeVal))
   have hα0 : α 0 = 0 := by
     ext i k
     show _ * cA D 0 = 0
@@ -991,7 +991,7 @@ theorem norm_ne_zero (hS : ∀ τ, (gramAt D S τ).PosDef) {m : Fin S.rank → D
 theorem trace_three (s : AF D.host.F) (a b c : D.host.E) :
     Algebra.trace (AF D.host.F) (AE D) (incA D a * ((s ⊗ₜ[D.host.F] b : AE D) * incA D c)) =
       s * algebraMap _ _ (Algebra.trace D.host.F D.host.E (a * (b * c))) := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   have h2 : ∀ x, incA D x = (1 : AF D.host.F) ⊗ₜ[D.host.F] x := fun x => rfl
   rw [h2, h2, Algebra.TensorProduct.tmul_mul_tmul, Algebra.TensorProduct.tmul_mul_tmul, one_mul, mul_one, GlobalTheory.LatVac.trace_tmul]
 
@@ -1006,7 +1006,7 @@ theorem exists_transv (hψ : IsStdChar D ψ (-1)) (hS : ∀ τ, (gramAt D S τ).
     (x : Matrix (Fin T.rank) (Fin S.rank) D.host.E) (hx : row S T ξ (ratW T S x) ≠ 0) :
     ∃ e, IsSplitIdem D e ∧ ∃ z ∈ ZI T ξ, Formalism.L2.Theta.SuppAt e T z ∧ ∃ b, actO S T 1 z (ratW T S x) = along S T ξ b + ratW T S x ∧
       ψ (symplOH S T (along S T ξ b) (ratW T S x)) ≠ 1 := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   obtain ⟨m, hm⟩ : ∃ m : Fin S.rank → D.host.E, ∀ j, row S T ξ (ratW T S x) j = incA D (m j) :=
     ⟨fun j => ∑ c, ∑ d, star (ξ c) * T.gram c d * x d j, fun j => by
 
@@ -1111,7 +1111,7 @@ theorem exists_bound (hW : IsWeilDatumO ψ S T χS χT om) (h : IsoVec T ξ) {f 
   obtain ⟨K, hK, hKx⟩ := GlobalTheory.AdeleCocompact.exists_compact_adele D.host.F
   obtain ⟨C, hC⟩ := GlobalTheory.WeilSupBound.exists_sup_bound D ψ S T χS χT om hW f hf
     ((fun a => ((1 : GA D S), (e (Multiplicative.ofAdd a) : GA D T))) '' K)
-    (hK.image (continuous_const.prodMk (continuous_subtype_val.comp (e.continuous.comp continuous_ofAdd))))
+    (hK.image (continuous_const.prodMk (continuous_subtypeVal.comp (e.continuous.comp continuous_ofAdd))))
   refine ⟨C, fun z a => ?_⟩
   obtain ⟨s, rfl⟩ := e.surjective z
   obtain ⟨x, hx⟩ := hKx s.toAdd
@@ -1140,7 +1140,7 @@ theorem constantTerm_heisO_along : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
   intro D ψ S T χS χT om hW hS ξ h μ 𝓕 hμ h𝓕 f hf a
   have hψ := hW.std
   obtain ⟨θ, hθ⟩ := hψ.2.1
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   have : IsTopologicalGroup (GA D T) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have : BorelSpace (GA D T) := ⟨rfl⟩
   have : Countable (GQ T) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig T.gram
@@ -1163,12 +1163,12 @@ theorem constantTerm_heisO_along : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
   have : LocallyCompactSpace (AE D) := e.isClosedEmbedding.locallyCompactSpace
   have : SecondCountableTopology (AE D) := e.secondCountableTopology
   have : T2Space (AE D) := e.isEmbedding.t2Space
-  letI : MeasurableSpace (Fin S.rank → AE D) := borel _
+  let : MeasurableSpace (Fin S.rank → AE D) := borel _
   have : BorelSpace (Fin S.rank → AE D) := ⟨rfl⟩
   let Γ := (ratL T S).comap (alongHom S T ξ)
   have : DiscreteTopology (ratL T S) := (GlobalTheory.AdelicMatrixLattice.lattice D T S).2.2.2.2.1
   have : DiscreteTopology Γ := DiscreteTopology.of_continuous_injective (β := ratL T S) (f := fun γ => ⟨along S T ξ γ.1, γ.2⟩)
-    ((continuous_along.comp continuous_subtype_val).subtype_mk _)
+    ((continuous_along.comp continuous_subtypeVal).subtype_mk _)
     fun a b e => Subtype.ext (along_injective h.1 (congrArg Subtype.val e))
   obtain ⟨K, hK, hx⟩ := GlobalTheory.AdelicMatrixLattice.cocompact_tensor (F := D.host.F) (E := D.host.E) (AF D.host.F)
     (GlobalTheory.AdeleCocompact.exists_compact_adele D.host.F)
@@ -1220,7 +1220,7 @@ theorem constantTerm_heisO_along : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
     (fun y => (Iff.intro (fun H _ ⟨x, e⟩ => e ▸ H x) fun H x => H _ ⟨x, rfl⟩).trans
       (GlobalTheory.RatAnnih.ratL_annihilator D ψ hψ S T _))
     ν (hG ν) hc _ μ h𝓕 hfin (fun z y => om (1, (z : GA D T)) f (along S T ξ y))
-    (fun y => (hW.om_cont f hf _).comp (continuous_const.prodMk continuous_subtype_val))
+    (fun y => (hW.om_cont f hf _).comp (continuous_const.prodMk continuous_subtypeVal))
     (fun z => (hW.om_pres _ f hf).cont.comp continuous_along) hC
     (fun γ hγ z y => om_rat_along hW h γ.2 hγ _ hf y)
     (fun γ hγ z y => periodic h (hW.om_pres _ f hf) hγ y)
@@ -1297,8 +1297,8 @@ theorem swap_of_bound {Z H : Type} [TopologicalSpace Z] [MeasurableSpace Z] [Bor
     (μ : Measure Z) (ν : Measure H) (A : Set Z) (B : Set H) (hA : μ A ≠ ⊤) (hB : ν B ≠ ⊤)
     (K : Z × H → ℂ) (hK : Continuous K) (c : ℝ) (hc : ∀ p, ‖K p‖ ≤ c) :
     ∫ z in A, ∫ h in B, K (z, h) ∂ν ∂μ = ∫ h in B, ∫ z in A, K (z, h) ∂μ ∂ν := by
-  haveI : IsFiniteMeasure (μ.restrict A) := ⟨by rw [Measure.restrict_apply_univ]; exact hA.lt_top⟩
-  haveI : IsFiniteMeasure (ν.restrict B) := ⟨by rw [Measure.restrict_apply_univ]; exact hB.lt_top⟩
+  have : IsFiniteMeasure (μ.restrict A) := ⟨by rw [Measure.restrict_apply_univ]; exact hA.lt_top⟩
+  have : IsFiniteMeasure (ν.restrict B) := ⟨by rw [Measure.restrict_apply_univ]; exact hB.lt_top⟩
   exact integral_integral_swap (f := fun z h => K (z, h))
     (Integrable.of_bound hK.aestronglyMeasurable c (Filter.Eventually.of_forall hc))
 
@@ -1336,14 +1336,14 @@ theorem zcusp_lift : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D)
   have hN : ν 𝓕 ≠ ⊤ := GlobalTheory.TransvMeasure.measure_ne_top_of_cocompact (GQ S) hC (fun x => by
     obtain ⟨γ, hγ, c, hc, rfl⟩ := hcov x
     exact ⟨γ⁻¹, inv_mem hγ, by rwa [inv_mul_cancel_left]⟩) ν h𝓕
-  haveI : IsFiniteMeasure (μ.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ]; exact hG.lt_top⟩
+  have : IsFiniteMeasure (μ.restrict 𝓖) := ⟨by rw [Measure.restrict_apply_univ]; exact hG.lt_top⟩
 
   have hint : ∀ f, IsThetaFunO ψ S T f →
       Integrable (fun z : ZI T ξ => om (1, (z : GA D T)) f 0) (μ.restrict 𝓖) := by
     intro f hf
     obtain ⟨hc, hi⟩ := GlobalTheory.thetaKO_continuous_and_rat_invariant ψ S T χS χT om H f hf
     have hK : Continuous fun p : ZI T ξ × GA D S => thetaKO om p.2 (p.1 : GA D T) f :=
-      hc.comp (continuous_snd.prodMk (continuous_subtype_val.comp continuous_fst))
+      hc.comp (continuous_snd.prodMk (continuous_subtypeVal.comp continuous_fst))
     obtain ⟨B, hB⟩ := exists_bound _ (GQ S) μ₀ 𝓖₀ h𝓖₀ hc₀ C hC hcov _ hK
       fun γ hγ δ hδ z h => hi δ hδ γ hγ h z
     exact Integrable.of_bound (hK.comp (Continuous.prodMk_left 1)).aestronglyMeasurable B
@@ -1374,7 +1374,7 @@ theorem zcusp_lift : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D)
     exact (mul_eq_zero.1 h1.symm).resolve_left (Nat.cast_ne_zero.2 hn.ne')
   have hK : Continuous fun p : ZI T ξ × GA D S => thetaKO om p.2 ((p.1 : GA D T) * g) (L (F p.2)) :=
     (continuous_family H L hL).comp
-      ((continuous_snd.prodMk ((continuous_subtype_val.comp continuous_fst).mul continuous_const)).prodMk
+      ((continuous_snd.prodMk ((continuous_subtypeVal.comp continuous_fst).mul continuous_const)).prodMk
         (hF.comp continuous_snd))
   obtain ⟨B, hB⟩ := exists_bound _ (GQ S) μ₀ 𝓖₀ h𝓖₀ hc₀ C hC hcov _ hK fun γ hγ δ hδ z h => by
     have := (GlobalTheory.thetaKO_continuous_and_rat_invariant ψ S T χS χT om H _ (hL (F h))).2 δ hδ γ hγ h (z * g)

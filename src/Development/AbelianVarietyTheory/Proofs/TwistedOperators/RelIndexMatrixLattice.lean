@@ -70,8 +70,8 @@ theorem relIndex_comap_lattice {O K W : Type} [CommRing O] [IsDomain O] [IsDiscr
     {p : O} (hp : Irreducible p) : ∃ (m : ℕ) (u : Oˣ), LinearMap.det B * algebraMap O K u = algebraMap O K p ^ m ∧
       M.toAddSubgroup.relIndex (M.toAddSubgroup.comap B.toAddMonoidHom) = Nat.card (O ⧸ Ideal.span {p}) ^ m := by
   classical
-  letI : Module.Finite O M := Submodule.IsLattice.finite K M
-  letI : Module.Free O M := Submodule.IsLattice.free K M
+  let : Module.Finite O M := Submodule.IsLattice.finite K M
+  let : Module.Free O M := Submodule.IsLattice.free K M
 
   let f : M →ₗ[O] M := (B.restrictScalars O).restrict hM
   have hinj : Function.Injective f := fun x y hxy => Subtype.ext (hB.1 (congrArg Subtype.val hxy))

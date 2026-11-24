@@ -90,14 +90,14 @@ theorem UpperTheory.Reformulated.B.InterpolationPointsOfFinrankBound.pick :
     intro Y _ h
     by_cases hYW : Y ≤ W
     · exact ⟨fun _ => p0, fun _ => hp0, fun f hf _ => hYW hf⟩
-    · obtain ⟨g, hgY, hgW⟩ := SetLike.not_le_iff_exists.mp hYW
+    · obtain ⟨g, hgY, hgW⟩ := IsConcreteLE.not_le_iff_exists.mp hYW
       rw [hW] at hgW
       simp only [not_forall] at hgW
       obtain ⟨p, hp, hgp⟩ := hgW
       let K : Submodule k (D → k) := LinearMap.ker (LinearMap.proj p : (D → k) →ₗ[k] k)
       have hK : ∀ f : D → k, f ∈ K ↔ f p = 0 := fun f => LinearMap.mem_ker
       have hWK : W ≤ K := fun f hf => (hK f).2 ((hW f).1 hf p hp)
-      haveI : FiniteDimensional k ↥(Y ⊓ K) := Submodule.finiteDimensional_of_le inf_le_left
+      have : FiniteDimensional k ↥(Y ⊓ K) := Submodule.finiteDimensional_of_le inf_le_left
       have hlt : Y ⊓ K < Y := by
         refine lt_of_le_of_ne inf_le_left fun he => hgp ?_
         rw [← he] at hgY
@@ -156,8 +156,8 @@ private theorem cyc1 {D : Type} [Group D] [TopologicalSpace D] [IsTopologicalGro
     simp
   obtain ⟨n, hn⟩ := hex
   let en : D →* (ZMod (l ^ n))ˣ := (Units.map (PadicInt.toZModPow n : ℤ_[l] →+* ZMod (l ^ n)).toMonoidHom).comp e
-  haveI : IsCyclic (ZMod (l ^ n))ˣ := ZMod.isCyclic_units_of_prime_pow l Fact.out hl n
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : IsCyclic (ZMod (l ^ n))ˣ := ZMod.isCyclic_units_of_prime_pow l Fact.out hl n
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨⟨_, u, hu, rfl⟩, hgen⟩ := IsCyclic.exists_monoid_generator (α := J.map en)
   refine ⟨u, hu, fun g hg => ?_⟩
   obtain ⟨m, hm⟩ := hgen ⟨en g, g, hg, rfl⟩
@@ -175,8 +175,8 @@ private theorem exChar {B : Type} [CommGroup B] [Finite B] {l : ℕ} [Fact l.Pri
     (H : Subgroup B) (hH : H ≠ ⊤) :
     ∃ θ : B →* Multiplicative (ZMod l), (∀ x ∈ H, θ x = 1) ∧ ∃ x, θ x ≠ 1 := by
   obtain ⟨M, hM, hHM⟩ := (eq_top_or_exists_le_coatom H).resolve_left hH
-  haveI : Nontrivial (B ⧸ M) := QuotientGroup.nontrivial_iff.mpr hM.1
-  haveI : IsSimpleGroup (B ⧸ M) := by
+  have : Nontrivial (B ⧸ M) := QuotientGroup.nontrivial_iff.mpr hM.1
+  have : IsSimpleGroup (B ⧸ M) := by
     refine ⟨fun N _ => ?_⟩
     have h1 : M ≤ N.comap (QuotientGroup.mk' M) := fun x hx => by
       rw [Subgroup.mem_comap, show QuotientGroup.mk' M x = 1 from (QuotientGroup.eq_one_iff x).mpr hx]
@@ -238,7 +238,7 @@ private theorem lastStep {D B : Type} [Group D] [TopologicalSpace D] [IsTopologi
     (h0 : ∀ s ∈ S, χ s = 1) (g : D) (hg : g ∈ I) : χ g = 1 := by
   obtain ⟨n, hn⟩ := IsPGroup.iff_card.mp hB
   have hpos : 0 < l ^ n := pow_pos (Fact.out : l.Prime).pos n
-  haveI : NeZero (l ^ n) := ⟨hpos.ne'⟩
+  have : NeZero (l ^ n) := ⟨hpos.ne'⟩
   obtain ⟨d, hd1, hd2, hd3⟩ := hd (l ^ n) hpos
   have hB' : IsPGroup l (B × Multiplicative (ZMod (l ^ n))) :=
     IsPGroup.of_card (n := n + n) (by rw [Nat.card_prod, hn, pow_add]; simp)
@@ -277,8 +277,8 @@ private theorem core {D : Type} [Group D] [TopologicalSpace D] [IsTopologicalGro
   have hlt : Y < X := lt_of_le_of_ne inf_le_left fun h => hf0' (by
     have : f0 ∈ Y := h ▸ hf0
     exact this.2)
-  haveI : FiniteDimensional (ZMod l) Y := Submodule.finiteDimensional_of_le hlt.le
-  haveI : FiniteDimensional (ZMod l) (Y ⊓ W : Submodule (ZMod l) (D → ZMod l)) :=
+  have : FiniteDimensional (ZMod l) Y := Submodule.finiteDimensional_of_le hlt.le
+  have : FiniteDimensional (ZMod l) (Y ⊓ W : Submodule (ZMod l) (D → ZMod l)) :=
     Submodule.finiteDimensional_of_le inf_le_left
   have h1 := Submodule.finrank_lt_finrank_of_lt hlt
   by_cases hYW : Y ⊓ W = ⊥
@@ -290,7 +290,7 @@ private theorem core {D : Type} [Group D] [TopologicalSpace D] [IsTopologicalGro
   · have h2 : finrank (ZMod l) (Y ⊓ W : Submodule (ZMod l) (D → ZMod l)) ≠ 0 := fun h =>
       hYW (Submodule.finrank_eq_zero.mp h)
     obtain ⟨u, hu, hu'⟩ := pick P hP W hW n Y (by omega)
-    haveI : Finite (Y ⊓ W : Submodule (ZMod l) (D → ZMod l)) := Module.finite_of_finite (ZMod l)
+    have : Finite (Y ⊓ W : Submodule (ZMod l) (D → ZMod l)) := Module.finite_of_finite (ZMod l)
     let N : Set D := ⋂ f : (Y ⊓ W : Submodule (ZMod l) (D → ZMod l)), f.1 ⁻¹' {0}
     have hN : IsOpen N := isOpen_iInter_of_finite fun f =>
       (isOpen_discrete _).preimage ((hX f.1).mp f.2.1.1).1
@@ -372,7 +372,7 @@ theorem UpperTheory.V.GC.genDec :
     refine ⟨⟨g, hg⟩, fun h => hg' (Units.ext ?_)⟩
     have h1 : ZMod.castHom (dvd_pow_self l one_ne_zero) (ZMod l) (cycMod F Ω l 1 g : ZMod (l ^ 1)) = 1 :=
       congrArg Units.val h
-    haveI : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
+    have : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
     exact (ZMod.castHom (dvd_pow_self l one_ne_zero) (ZMod l)).injective (by rw [h1]; simp)
   obtain ⟨f1, f2⟩ := finrank_cocycles_trivial_mod_l (locDeg v) _ hω' e1 (by rw [e2 hv, e3])
   obtain ⟨n, hn⟩ : ∃ n, locDeg v = n + 1 := by
@@ -381,13 +381,13 @@ theorem UpperTheory.V.GC.genDec :
     have h2 := Ideal.inertiaDeg_pos v.asIdeal ℤ
     exact Nat.exists_eq_succ_of_ne_zero (Nat.mul_ne_zero h1.ne' h2.ne')
   rw [hn] at f2 ⊢
-  haveI : IsGalois F Ω := {}
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.mp (isClosed_Dec A).isCompact
+  have : IsGalois F Ω := {}
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.mp (isClosed_Dec A).isCompact
   obtain ⟨d, d1, -, d3⟩ := hd l (Fact.out : l.Prime).pos
   obtain ⟨u, u1, u2, u3⟩ := core hl ((Ine (F := F) A).subgroupOf (Dec (F := F) A))
     ((Ine (F := F) A ⊓ K).subgroupOf (Dec (F := F) A))
-    (((isClosed_Ine A).inter (K.isClosed_of_isOpen hKo)).preimage continuous_subtype_val)
-    ((cycZ F Ω l).comp (Dec (F := F) A).subtype) ((continuous_cycZ F Ω l).comp continuous_subtype_val)
+    (((isClosed_Ine A).inter (K.isClosed_of_isOpen hKo)).preimage continuous_subtypeVal)
+    ((cycZ F Ω l).comp (Dec (F := F) A).subtype) ((continuous_cycZ F Ω l).comp continuous_subtypeVal)
     K.index hKi (fun g hg => ⟨(Ine (F := F) A).pow_mem hg _, K.pow_index_mem g.1⟩) φ hφ
     (Z1 (Representation.trivial (ZMod l) (Dec (F := F) A) (ZMod l))) (fun f => Iff.rfl) n f2
     (fun g => (d g).toAdd) ⟨continuous_toAdd.comp d1.continuous, fun g h => by simp⟩ (by simp [d3])

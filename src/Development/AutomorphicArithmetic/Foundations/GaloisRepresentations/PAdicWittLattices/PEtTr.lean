@@ -60,10 +60,10 @@ theorem UpperTheory.Gal.G3.pEtTr :
         (Sigma.reindex e.symm (fun _ : J => W)).hom ≫
           Sigma.desc fun j => pullback.lift (σ j) (𝟙 W) (by rw [hsc, Category.id_comp]) := by
       refine Sigma.hom_ext _ _ (fun k => ?_)
-      rw [Sigma.ι_desc]
+      rw [Sigma.ι_comp_desc]
       have h4 := Sigma.ι_reindex_hom_assoc (ε := e.symm) (f := fun _ : J => W) (b := k)
         (h := Sigma.desc fun j => pullback.lift (σ j) (𝟙 W) (by rw [hsc, Category.id_comp]))
-      rw [Sigma.ι_desc] at h4
+      rw [Sigma.ι_comp_desc] at h4
       exact h4.symm
     rw [hEq]
     infer_instance

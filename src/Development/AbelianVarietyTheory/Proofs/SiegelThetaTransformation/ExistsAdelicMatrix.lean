@@ -80,7 +80,7 @@ namespace GlobalTheory.IsoTower
 theorem finite_quot_nsmul (M : Type) [AddCommGroup M] [Module.Finite ℤ M] {n : ℕ} (hn : 0 < n) :
     Finite (M ⧸ (nsmulAddMonoidHom n : M →+ M).range) := by
   have : AddGroup.FG M := Module.Finite.iff_addGroup_fg.1 inferInstance
-  refine AddCommGroup.finite_of_fg_torsion _ fun x => ?_
+  refine AddCommGroup.finite_of_fg_isAddTorsion _ fun x => ?_
   obtain ⟨y, rfl⟩ := QuotientAddGroup.mk_surjective x
   refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨n, hn, ?_⟩
   rw [← QuotientAddGroup.mk_nsmul, QuotientAddGroup.eq_zero_iff]
@@ -251,10 +251,10 @@ theorem exists_adelic_matrix [Algebra.Unramified (𝓞 (maximalRealSubfield E)) 
   have h2 : ReciprocityTheory.MultiplicativeHeights.IsLattice L' := ⟨hL'.1, SW.TensLat.span_of_selfD X hL'⟩
   have hγ := SelfDualGenus.exists_isLocalIsometry_of_modular hJ0 hJc X.Gm_herm X.Gm_herm X.Gm_det X.Gm_det h2 h1
     (hJ L' hL') (hJ L hL)
-  haveI : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL.1
-  haveI : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
-  haveI : Module.Finite (𝓞 E) L' := Module.Finite.iff_fg.2 hL'.1
-  haveI : Module.Finite ℤ L' := Module.Finite.trans (𝓞 E) L'
+  have : Module.Finite (𝓞 E) L := Module.Finite.iff_fg.2 hL.1
+  have : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
+  have : Module.Finite (𝓞 E) L' := Module.Finite.iff_fg.2 hL'.1
+  have : Module.Finite ℤ L' := Module.Finite.trans (𝓞 E) L'
   obtain ⟨f, f1, f2, f3⟩ := exists_tower (R := 𝓞 E) (L := L) (M := L')
     (fun n hn a b h => by
       have hn' : (n : E) ≠ 0 := Nat.cast_ne_zero.2 hn.ne'
@@ -282,7 +282,7 @@ theorem exists_adelic_matrix [Algebra.Unramified (𝓞 (maximalRealSubfield E)) 
 
 theorem exists_mov_of_selfD {D : D7} {S T : HSp D} (C : Ctx S T) {L : Lt D.host.E T.rank} (hL : SelfD C.X L) :
     ∃ g ∈ GfC T, IsMov (fmt T g) C.X.Λ L := by
-  haveI := (hostOfRecord D).unram
+  have := (hostOfRecord D).unram
   obtain ⟨g, g1, g2⟩ := exists_adelic_matrix D.host.F (Member.cF D)
     (Member.latHat_eq_hat_and_gram D T).2.2.2.2.2.1 C.X (SW.Lev.selfD_of_sympl C.sympl) hL
   rw [C.m.gT] at g2

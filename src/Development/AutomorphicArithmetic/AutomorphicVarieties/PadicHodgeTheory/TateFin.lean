@@ -70,7 +70,7 @@ private theorem exists_field {v : ℕ} [Fact v.Prime] {Ω : Type} [Field Ω] [Al
   have hall : ∀ τ : GQ v, τ ∈ GK K0 := fun τ =>
     (GlobalTheory.PlaceBridge.mem_GK_iff (j := j) K0 rfl τ).2 fun x => by simp
   let ψ : ↥(Dec (F := ℚ) A) →* GQ v := (GK K0).subtype.comp e.toMonoidHom
-  have hψ : Continuous ψ := continuous_subtype_val.comp he
+  have hψ : Continuous ψ := continuous_subtypeVal.comp he
   obtain ⟨W, hW, hWe⟩ := isOpen_induced_iff.1 (hU.preimage hψ)
   have hW1 : (1 : Ω ≃ₐ[ℚ] Ω) ∈ W := by
     have : (1 : ↥(Dec (F := ℚ) A)) ∈ ψ ⁻¹' (U : Set (GQ v)) := by
@@ -78,7 +78,7 @@ private theorem exists_field {v : ℕ} [Fact v.Prime] {Ω : Type} [Field Ω] [Al
       rw [map_one]; exact U.one_mem
     rw [← hWe] at this
     exact this
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hW hW1
   let H : Subgroup (Ω ≃ₐ[ℚ] Ω) := (U.comap ψ).map (Dec (F := ℚ) A).subtype ⊔ N.toSubgroup
   have hHo : IsOpen (H : Set (Ω ≃ₐ[ℚ] Ω)) := Subgroup.isOpen_mono le_sup_right N.isOpen
@@ -117,9 +117,9 @@ theorem UpperTheory.V.Loc.exists_dec {v : ℕ} [Fact v.Prime] {G : Type} [Group 
       Continuous e.symm ∧ locDeg w = φ.range.index ∧ ∀ (l : ℕ) [Fact l.Prime] (r : ℕ) (g : ↥(Dec (F := F) A)),
         PadicInt.toZModPow r ((cyc v l (φ (e g)) : ℤ_[l]ˣ) : ℤ_[l]) =
           (cycMod F Ω l r (g : Ω ≃ₐ[F] Ω) : ZMod (l ^ r)) := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   let j0 : Ω →ₐ[ℚ] PadicAlgCl v := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -132,8 +132,8 @@ theorem UpperTheory.V.Loc.exists_dec {v : ℕ} [Fact v.Prime] {G : Type} [Group 
     rw [PadicAlgCl.valuation_def]
     exact Iff.rfl
   obtain ⟨F, hF, hFU⟩ := exists_field hA φ.range (by simpa using hφ.isOpen_range)
-  haveI : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := by convert hF <;> exact Subsingleton.elim _ _ }
-  haveI : IsAlgClosure F Ω := ⟨inferInstance, inferInstance⟩
+  have : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := by convert hF <;> exact Subsingleton.elim _ _ }
+  have : IsAlgClosure F Ω := ⟨inferInstance, inferInstance⟩
   let K : FinExt v := ⟨IntermediateField.adjoin ℚ_[v] (Set.range fun x : F => j (algebraMap F Ω x)),
     GlobalTheory.PlaceBridge.finiteDimensional_adjoin_range (j.comp (algebraMap F Ω))⟩
   obtain ⟨e, he, he', hec⟩ := GlobalTheory.PlaceBridge.exists_mulEquiv (E := F) hA K rfl
@@ -148,7 +148,7 @@ theorem UpperTheory.V.Loc.exists_dec {v : ℕ} [Fact v.Prime] {G : Type} [Group 
   · rw [hφ.isInducing.continuous_iff]
     have : φ ∘ e' = fun g => (e g : GQ v) := funext he1
     rw [this]
-    exact continuous_subtype_val.comp he
+    exact continuous_subtypeVal.comp he
   · have : (e'.symm : G → _) = fun g => e.symm ⟨φ g, hK ▸ ⟨g, rfl⟩⟩ := rfl
     rw [this]
     exact he'.comp (hφ.continuous.subtype_mk _)
@@ -158,7 +158,7 @@ theorem UpperTheory.V.Loc.exists_dec {v : ℕ} [Fact v.Prime] {G : Type} [Group 
     have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
     have : NeZero ((l : ℕ) : Om v) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
     have : NeZero (l ^ r) := ⟨pow_ne_zero _ hl.ne_zero⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ r)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ r)
     have hζ' := hζ.map_of_injective j.injective
     have ha : (g : Ω ≃ₐ[F] Ω) ζ = ζ ^ ((cycMod F Ω l r (g : Ω ≃ₐ[F] Ω) : ZMod (l ^ r))).val :=
       cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (Ω ≃ₐ[F] Ω) Ω (g : Ω ≃ₐ[F] Ω)) ζ
@@ -244,7 +244,7 @@ private theorem card_H0dual {R k Γ Γ' M : Type} [Field R] [Field k] [Finite k]
     (ρ : Representation k Γ M) (ρ' : Representation R Γ' M) (e : Γ' ≃* Γ) (h : ∀ g m, ρ' g m = ρ (e g) m)
     (χ : Γ →* kˣ) (χ' : Γ' →* Rˣ) (hχ : ∀ g, (χ (e g) : k) = algebraMap R k (χ' g)) :
     Nat.card (H0dual χ ρ) = Nat.card (H0dual χ' ρ') := by
-  haveI : Finite R := Finite.of_injective _ (algebraMap R k).injective
+  have : Finite R := Finite.of_injective _ (algebraMap R k).injective
   let T : Module.Dual k M →+ Module.Dual R M :=
     { toFun := fun f => (Algebra.trace R k).comp (f.restrictScalars R)
       map_zero' := by ext; simp
@@ -258,7 +258,7 @@ private theorem card_H0dual {R k Γ Γ' M : Type} [Field R] [Field k] [Finite k]
     have := hT f (a • m)
     rw [hf, f.map_smul, smul_eq_mul, mul_comm] at this
     exact this.symm
-  haveI : Finite (Module.Dual R M) := DFunLike.finite _
+  have : Finite (Module.Dual R M) := DFunLike.finite _
   have hbij : Function.Bijective T := hinj.bijective_of_nat_card_le (by
     rw [Module.natCard_eq_pow_finrank (K := R) (V := Dual R M), Module.natCard_eq_pow_finrank (K := k) (V := Dual k M),
       Subspace.dual_finrank_eq, Subspace.dual_finrank_eq, ← Module.natCard_eq_pow_finrank,
@@ -314,18 +314,18 @@ theorem UpperTheory.V.Loc.tateFin :
     LocalPublishedTheorems → ∀ {v l : ℕ} [Fact v.Prime] [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ v) (hφ : IsOpenEmbedding φ) (k : Type) [Field k] [Finite k] [CharP k l] [Algebra ℤ_[l] k] (M : Type) [AddCommGroup M] [Module k M] [Module.Finite k M] [TopologicalSpace M] [DiscreteTopology M] (ρ : Representation k G M), ContAction ρ → Module.Finite k (H1 ρ) ∧ Module.Finite k (H2 ρ) ∧ finrank k (H1 ρ) = finrank k ↥(H0 ρ) + finrank k (H2 ρ) + (if v = l then φ.range.index * finrank k M else 0) ∧ finrank k (H2 ρ) = finrank k ↥(H0dual ((cycA v l k).comp φ) ρ) := by
   intro hP v l _ _ G _ _ _ φ hφ k _ _ _ _ M _ _ _ _ _ ρ hρ
   obtain ⟨Ω, _, _, _⟩ := exists_closure ℚ
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   obtain ⟨F, _, A, w, e, hAw, hw, he, he', hdeg, hcyc⟩ := exists_dec φ hφ Ω
   have hl : l.Prime := Fact.out
   have h0 : (l : k) = 0 := CharP.cast_eq_zero k l
-  haveI : IsAlgClosure F Ω := ⟨inferInstance, inferInstance⟩
-  haveI : Fact (l ^ 1).Prime := ⟨by rwa [pow_one]⟩
-  haveI : CharP k (l ^ 1) := by rwa [pow_one]
-  letI : Algebra (ZMod (l ^ 1)) k := ZMod.algebra k (l ^ 1)
-  letI : Module (ZMod (l ^ 1)) M := Module.compHom M (algebraMap (ZMod (l ^ 1)) k)
-  haveI : IsScalarTower (ZMod (l ^ 1)) k M := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : Finite M := Module.finite_of_finite k
+  have : IsAlgClosure F Ω := ⟨inferInstance, inferInstance⟩
+  have : Fact (l ^ 1).Prime := ⟨by rwa [pow_one]⟩
+  have : CharP k (l ^ 1) := by rwa [pow_one]
+  let : Algebra (ZMod (l ^ 1)) k := ZMod.algebra k (l ^ 1)
+  let : Module (ZMod (l ^ 1)) M := Module.compHom M (algebraMap (ZMod (l ^ 1)) k)
+  have : IsScalarTower (ZMod (l ^ 1)) k M := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : Finite M := Module.finite_of_finite k
   let ρ' : Representation (ZMod (l ^ 1)) ↥(Dec (F := F) A) M := resCoef (ZMod (l ^ 1)) (ρ.comp e.toMonoidHom)
   have h : ∀ g m, ρ' g m = ρ (e g) m := fun _ _ => rfl
   have hρ' : ContAction ρ' := hρ.comp (he.prodMap continuous_id)
@@ -335,8 +335,8 @@ theorem UpperTheory.V.Loc.tateFin :
   obtain ⟨-, f1, f2, -⟩ := hP.lf F Ω l 1 M A ρ' w one_pos hAw hρ'
   obtain ⟨⟨inv⟩, -, -, -, hb⟩ := hP.lt F Ω l 1 M A ρ' w one_pos hAw hρ'
   have hE := hP.le F Ω l 1 M A ρ' w one_pos hAw hρ'
-  haveI : Finite (H1 ρ) := Finite.of_equiv _ e1.symm
-  haveI : Finite (H2 ρ) := Finite.of_equiv _ e2.symm
+  have : Finite (H1 ρ) := Finite.of_equiv _ e1.symm
+  have : Finite (H2 ρ) := Finite.of_equiv _ e2.symm
   have hk : 1 < Nat.card k := Finite.one_lt_card
   refine ⟨Module.Finite.of_finite, Module.Finite.of_finite, ?_, ?_⟩
   · apply Nat.pow_right_injective hk
@@ -357,12 +357,12 @@ theorem UpperTheory.V.Loc.tateFin :
   · apply Nat.pow_right_injective hk
     beta_reduce
     let χ := (cycMod F Ω l 1).comp (Dec (F := F) A).subtype
-    haveI : Finite (Module.Dual k M) := DFunLike.finite _
-    haveI : Finite (TDual (ZMod (l ^ 1)) M) := (DFunLike.finite _ : Finite (M →ₗ[ZMod (l ^ 1)] ZMod (l ^ 1)))
+    have : Finite (Module.Dual k M) := DFunLike.finite _
+    have : Finite (TDual (ZMod (l ^ 1)) M) := (DFunLike.finite _ : Finite (M →ₗ[ZMod (l ^ 1)] ZMod (l ^ 1)))
     let B : Type := H0 ((twDual χ ρ').comp (MonoidHom.id _))
     let E : H2 ρ' ≃ Module.Dual (ZMod (l ^ 1)) B :=
       (Equiv.ofBijective _ hb).trans (LinearEquiv.congrRight inv).toEquiv
-    haveI : Finite B := Subtype.finite
+    have : Finite B := Subtype.finite
     rw [← Module.natCard_eq_pow_finrank, ← Module.natCard_eq_pow_finrank, Nat.card_congr e2,
       card_H0dual ρ ρ' e h _ χ fun g => (algebraMap_eq (l := l) (k := k) h0 _).trans (congrArg _ (hcyc l 1 g)),
       ← card_twDual, Nat.card_congr E, Module.natCard_eq_pow_finrank (K := ZMod (l ^ 1)),

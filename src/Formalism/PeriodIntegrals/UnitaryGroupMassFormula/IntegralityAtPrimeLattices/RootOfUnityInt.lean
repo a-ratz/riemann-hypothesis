@@ -92,7 +92,7 @@ theorem bases0 (T : Forms0 D u) (c : (D.mem u).C.cls 0) :
   have hL := bwB_clsCrd_lat D u 0 (Nat.zero_le _) c
   have hLfull : Submodule.IsFullLattice D.host.E (clsCrd D u 0 (Nat.zero_le _) c) := by
     refine { toIsLattice := hL, span_eq_top := ?_ }
-    letI := D.host.cmStar
+    let := D.host.cmStar
     unfold clsCrd
     rw [Submodule.map_coe, LinearMap.coe_restrictScalars, Submodule.span_image,
       (D.clsLat_lat u 0 c).span_eq_top, Submodule.map_top, LinearMap.range_eq_top]

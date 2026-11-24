@@ -102,18 +102,18 @@ theorem UpperTheory.ConvolutionTheory.K.cuspTrInt :
       cuspTr μ θ f = ∫ y : RightCosetSpace (Gam K n),
         ⟪Pc μ (kv μ a (Quotient.out y)), M (Pc μ (kv μ (ccStar g) (θ.e (Quotient.out y))))⟫_ℂ ∂quotientMeasure (Gam K n) μ := by
   intro K _ _ n μ _ θ f a g M ha hg hM hf
-  haveI := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := n) μ
-  haveI : SigmaFinite (quotientMeasure (Gam K n) μ) := IsFiniteMeasure.toSigmaFinite _
-  haveI : SFinite (quotientMeasure (Gam K n) μ) := by
+  have := Reduction.isFiniteMeasure_quotientMeasure (K := K) (n := n) μ
+  have : SigmaFinite (quotientMeasure (Gam K n) μ) := IsFiniteMeasure.toSigmaFinite _
+  have : SFinite (quotientMeasure (Gam K n) μ) := by
     set_option synthInstance.maxHeartbeats 400000 in
       exact inferInstance
-  haveI : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by simp⟩
-  haveI : SecondCountableTopology (RightCosetSpace (Gam K n)) :=
+  have : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by simp⟩
+  have : SecondCountableTopology (RightCosetSpace (Gam K n)) :=
     (isOpenQuotientMap_mk (Gam K n)).isQuotientMap.secondCountableTopology (isOpenQuotientMap_mk (Gam K n)).isOpenMap
-  haveI : MeasurableSpace.CountablyGenerated (RightCosetSpace (Gam K n)) := BorelSpace.countablyGenerated
-  haveI : IsSeparable (quotientMeasure (Gam K n) μ) := isSeparable_of_sigmaFinite _
-  haveI : SecondCountableTopology (Lp ℂ 2 (quotientMeasure (Gam K n) μ)) := Lp.SecondCountableTopology
-  haveI : TopologicalSpace.SeparableSpace (Lp ℂ 2 (quotientMeasure (Gam K n) μ)) :=
+  have : MeasurableSpace.CountablyGenerated (RightCosetSpace (Gam K n)) := BorelSpace.countablyGenerated
+  have : IsSeparable (quotientMeasure (Gam K n) μ) := isSeparable_of_sigmaFinite _
+  have : SecondCountableTopology (Lp ℂ 2 (quotientMeasure (Gam K n) μ)) := Lp.SecondCountableTopology
+  have : TopologicalSpace.SeparableSpace (Lp ℂ 2 (quotientMeasure (Gam K n) μ)) :=
     TopologicalSpace.SecondCountableTopology.to_separableSpace
   obtain ⟨h1, q1⟩ := qmapPres (Gam K n) μ θ.e θ.mem_gam θ.pres
   have hout : ∀ (b : CC K n) (x : G1 K n), kv μ b (Quotient.out (mk (Gam K n) x)) = kv μ b x := by

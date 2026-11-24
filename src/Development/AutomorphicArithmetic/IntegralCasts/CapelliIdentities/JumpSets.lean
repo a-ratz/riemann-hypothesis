@@ -270,7 +270,7 @@ theorem UpperTheory.Reformulated.B.JumpSetsAlt.hostReal_of :
       rw [hx] at h
       exact h.symm
   have hval : ((1 : (ZMod (2 ^ (e + 2)))ˣ) : ZMod (2 ^ (e + 2))).val = 1 := by
-    haveI : Fact (1 < 2 ^ (e + 2)) := ⟨Nat.one_lt_two_pow (by omega)⟩
+    have : Fact (1 < 2 ^ (e + 2)) := ⟨Nat.one_lt_two_pow (by omega)⟩
     rw [Units.val_one, ZMod.val_one]
   have hth : ∀ σ : Gal(↥(UpperTheory.Reformulated.B.JumpSetsAlt.hostE ζ a b)/ℚ), (UpperTheory.Reformulated.B.JumpSetsAlt.galE e ζ a b σ).2 = 1 ↔
       σ (UpperTheory.Reformulated.B.JumpSetsAlt.thE ζ a b) = UpperTheory.Reformulated.B.JumpSetsAlt.thE ζ a b := by

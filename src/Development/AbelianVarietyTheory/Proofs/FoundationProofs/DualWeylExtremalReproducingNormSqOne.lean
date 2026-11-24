@@ -61,7 +61,7 @@ variable {N : ℕ} {la : Fin N → ℕ}
 
 theorem exists_repr (la : Fin N → ℕ) :
     ∃ k : nabla la ℂ, ∀ f : nabla la ℂ, form la f.1 k.1 = evalAt 1 f.1 := by
-  have : CompleteSpace (Space la) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (Space la) := FiniteDimensional.completeSpace ℂ _
   refine ⟨(toSpace la).symm ((InnerProductSpace.toDual ℂ (Space la)).symm
     (LinearMap.toContinuousLinearMap (evSpace la 1))), fun f => ?_⟩
   rw [← inner_toSpace, LinearEquiv.apply_symm_apply, InnerProductSpace.toDual_symm_apply]

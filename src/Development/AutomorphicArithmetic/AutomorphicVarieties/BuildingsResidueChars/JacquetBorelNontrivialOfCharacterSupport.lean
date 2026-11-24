@@ -215,38 +215,38 @@ theorem UpperTheory.exists_refinement_block_order :
       constructor
       · rintro (h | ⟨-, h⟩)
         · exact absurd h (lt_irrefl _)
-        · exact Or.inr ⟨u, w, rfl, rfl, Fin.lt_iff_val_lt_val.mpr h⟩
+        · exact Or.inr ⟨u, w, rfl, rfl, Fin.lt_def.mpr h⟩
       · rintro (h | ⟨p', q', h1, h2, h3⟩)
         · exact absurd h (lt_irrefl _)
         · refine Or.inr ⟨rfl, ?_⟩
           rw [Sigma.mk.inj_iff] at h1 h2
           rw [eq_of_heq h1.2, eq_of_heq h2.2]
-          exact Fin.lt_iff_val_lt_val.mp h3
+          exact Fin.lt_def.mp h3
     · subst ha
       rw [dite_eq_left rfl, dite_eq_right hb]
       constructor
       · rintro (h | ⟨-, h⟩)
-        · exact Or.inl (Fin.lt_iff_val_lt_val.mpr h)
+        · exact Or.inl (Fin.lt_def.mpr h)
         · exact absurd h (Nat.not_lt_zero _)
       · rintro (h | ⟨p', q', -, h2, -⟩)
-        · exact Or.inl (Fin.lt_iff_val_lt_val.mp h)
+        · exact Or.inl (Fin.lt_def.mp h)
         · exact absurd (congrArg Sigma.fst h2) hb
     · subst hb
       rw [dite_eq_right ha, dite_eq_left rfl]
       constructor
       · rintro (h | ⟨h, -⟩)
-        · exact Or.inl (Fin.lt_iff_val_lt_val.mpr h)
+        · exact Or.inl (Fin.lt_def.mpr h)
         · exact absurd (Fin.ext h) ha
       · rintro (h | ⟨p', q', h1, -, -⟩)
-        · exact Or.inl (Fin.lt_iff_val_lt_val.mp h)
+        · exact Or.inl (Fin.lt_def.mp h)
         · exact absurd (congrArg Sigma.fst h1) ha
     · rw [dite_eq_right ha, dite_eq_right hb]
       constructor
       · rintro (h | ⟨-, h⟩)
-        · exact Or.inl (Fin.lt_iff_val_lt_val.mpr h)
+        · exact Or.inl (Fin.lt_def.mpr h)
         · exact absurd h (lt_irrefl 0)
       · rintro (h | ⟨p', q', h1, -, -⟩)
-        · exact Or.inl (Fin.lt_iff_val_lt_val.mp h)
+        · exact Or.inl (Fin.lt_def.mp h)
         · exact absurd (congrArg Sigma.fst h1) ha
   obtain ⟨t, c, f, hf⟩ := exists_equiv_sigma_blk_lt_iff_lt (fun p : Fin N => K (e.symm p))
   refine ⟨t, c, f, fun p q => ?_⟩
@@ -481,7 +481,7 @@ theorem UpperTheory.jacquet_finer_parabolic_of_character_support :
       (MonoidHom.mulSingle (fun j => GL (Fin (d j)) k) j))
     obtain ⟨S, g, hg⟩ := GlobalTheory.JacquetExact.isSubquotient_jac e' (isSmooth_comp hJs _
       (continuous_mulSingle (A := fun j => GL (Fin (d j)) k) j)) h2
-    haveI : Subsingleton S.toSubmodule := ⟨fun a b => Subtype.ext (h0.elim _ _)⟩
+    have : Subsingleton S.toSubmodule := ⟨fun a b => Subtype.ext (h0.elim _ _)⟩
     exact hJ' (Function.Surjective.subsingleton hg)
   · obtain ⟨p, q, hpq⟩ := GlobalTheory.SmGL.CuspMax.unipRad_ne_bot_iff.1 hU
     refine ⟨e ⟨j, p⟩, e ⟨j, q⟩, (hf _ _).2 (Or.inr ⟨p, q, rfl, rfl, hpq⟩), ?_⟩

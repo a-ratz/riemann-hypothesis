@@ -66,8 +66,8 @@ theorem isThetaFunO_placeModel (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : 
     (Φ : WO S T → ℂ)
     (hΦ : IsSBHalf e (latO S T (ΛS : Set (Fin S.rank → D.host.E)) (ΛT : Set (Fin T.rank → D.host.E))
       fun _ => True) Φ) : IsThetaFunO ψ S T (Tm Φ) := by
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hS
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hT
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hT
   exact GlobalTheory.DiagLiftFix.isTheta_placeModel hψ inferInstance inferInstance he.1 he.2.1 (infPart_of_isSplitIdem he) hf Tm hTm Φ hΦ
 
 end GlobalTheory.LocMod.LinTheta

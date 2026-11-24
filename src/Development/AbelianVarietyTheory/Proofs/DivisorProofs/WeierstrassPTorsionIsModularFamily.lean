@@ -111,7 +111,7 @@ private lemma exists_tors_vact_eq_denom_mul_tors_smul_add (N : ℕ) [NeZero N] (
       ((γ 0 0 : ℤ) : ℂ) * τ + ((γ 0 1 : ℤ) : ℂ) := by
     rw [coe_modularGroup_smul, mul_div_assoc', mul_div_cancel_left₀ _ hD]
   unfold _root_.GlobalTheory.WpFam.tors
-  rw [mul_div_assoc', div_add' _ _ _ hN, div_left_inj' hN]
+  rw [mul_div_assoc', div_add' _ _ _ hN, div_left_inj₀ hN]
   linear_combination (τ : ℂ) * e0 + e1 - ((x 0).val : ℂ) * hw
 
 open scoped UpperHalfPlane MatrixGroups Matrix ModularForm ComplexConjugate in

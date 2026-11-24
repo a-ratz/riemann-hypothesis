@@ -193,7 +193,7 @@ open Formalism.L2.Host GlobalTheory.Mem.Col2.SplitChar
 
 theorem le_exp_neg_one_of_lt_one {γ : WithZero (Multiplicative ℤ)} (h : γ < 1) : γ ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne γ 0 with rfl | h0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log h0] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -224,7 +224,7 @@ theorem eq_one_of_cong : ∀ (D : D7) (χ : HChar D.host.E) (S : Finset ℕ) (k 
       rw [map_mul, Nat.cast_pow, map_pow]
       calc vl D v ((∏ q ∈ S, q : ℕ) : AE D) ^ k * vl D v s ≤ vl D v ((∏ q ∈ S, q : ℕ) : AE D) ^ k :=
             mul_le_of_le_one_right' (vl_le hs v)
-        _ ≤ WithZero.exp (-1 : ℤ) ^ k := pow_le_pow_left₀ zero_le' h1 k
+        _ ≤ WithZero.exp (-1 : ℤ) ^ k := pow_le_pow_left₀ zero_le h1 k
         _ = WithZero.exp (-(k : ℤ)) := by rw [← WithZero.exp_nsmul]; congr 1; simp
 
 end GlobalTheory.HeckeCont
@@ -263,7 +263,7 @@ theorem exists_prime_notInert_place : ∀ {D : D7} {T : Type} {L : LevCh D T} (P
   obtain ⟨q, hq, hqv⟩ : ∃ q : ℕ, q.Prime ∧ ((q : ℕ) : 𝓞 D.host.F) ∈ v.asIdeal := by
     have := v.isMaximal
     have : Finite (𝓞 D.host.F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
-    letI := Ideal.Quotient.field v.asIdeal
+    let := Ideal.Quotient.field v.asIdeal
     refine ⟨ringChar (𝓞 D.host.F ⧸ v.asIdeal), CharP.char_is_prime (𝓞 D.host.F ⧸ v.asIdeal) _, ?_⟩
     exact Ideal.Quotient.eq_zero_iff_mem.1 (by simpa using CharP.cast_eq_zero (𝓞 D.host.F ⧸ v.asIdeal) (ringChar _))
   refine ⟨q, hq, fun hin => ?_, hqv⟩
@@ -373,7 +373,7 @@ theorem chi_norm_global (χ : HChar D.host.E) {n : D.what₂.Tau → ℤ} (hi : 
     χ.1 (finIdl D (incU D a * sgU D (incU D a))) = 1 := by
   obtain ⟨k', hk⟩ := exists_real_norm a
   have hu : ((upF D.host.F k' : D.host.Eˣ) : D.host.E) = (a : D.host.E) * D.host.conj a := by
-    haveI : Nontrivial (AE D) := by
+    have : Nontrivial (AE D) := by
       obtain ⟨v, -⟩ := GlobalTheory.exists_heightOneSpectrum_natCast_mem D.host.E Nat.prime_two
       refine ⟨⟨0, 1, fun h => ?_⟩⟩
       have := congrArg (vl D v) h
@@ -504,7 +504,7 @@ theorem vl_nat_coprime {D : D7} {q m : ℕ} (hm : Nat.Coprime m q) {v : HeightOn
 
 theorem le_exp_neg_one {x : WithZero (Multiplicative ℤ)} (h : x < 1) : x ≤ WithZero.exp (-1 : ℤ) := by
   rcases eq_or_ne x 0 with rfl | h0
-  · exact zero_le'
+  · exact zero_le
   · rw [← WithZero.exp_log h0] at h ⊢
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
     rw [WithZero.exp_le_exp]
@@ -518,7 +518,7 @@ theorem vl_le_of_zeroAt {D : D7} {q : ℕ} {x : AE D} (h : ZeroAt D q x) {v : He
     rw [← one_mul (vl D v x), ← h1, ← map_mul, e, map_mul, map_pow]
   rw [h2]
   refine (mul_le_of_le_one_right' (vl_le hs v)).trans ?_
-  calc vl D v (q : AE D) ^ k ≤ WithZero.exp (-1 : ℤ) ^ k := pow_le_pow_left₀ zero_le' (le_exp_neg_one (val_nat_lt hv)) k
+  calc vl D v (q : AE D) ^ k ≤ WithZero.exp (-1 : ℤ) ^ k := pow_le_pow_left₀ zero_le (le_exp_neg_one (val_nat_lt hv)) k
     _ = WithZero.exp (-(k : ℤ)) := by rw [← WithZero.exp_nsmul]; congr 1; simp
 
 end GlobalTheory.FunObj.SqNum.UnrKill
@@ -584,11 +584,11 @@ theorem eq_one (D : D7) (χ : HChar D.host.E) (hχ : IsEtaT D.host χ) (x : (AE 
     rw [dite_eq_left hex, ha w hex.choose hex.choose_spec]
   have hval : ∀ w, valAt w b = valAt w a := fun w => by
     have h1 : ∀ v, v ≠ w.under (𝓞 D.host.F) → valAt w (locF (L := D.host.E) D.host.F v (unif v) ^ m v) = 1 :=
-      fun v hv => by rw [map_zpow, valAt_locF, if_neg hv.symm, one_zpow]
+      fun v hv => by rw [map_zpow, valAt_locF, ite_eq_right hv.symm, one_zpow]
     simp only [b]
     rw [map_prod]
     by_cases hw : w.under (𝓞 D.host.F) ∈ T
-    · rw [Finset.prod_eq_single_of_mem _ hw (fun v _ hv => h1 v hv), map_zpow, valAt_locF, if_pos rfl, hu,
+    · rw [Finset.prod_eq_single_of_mem _ hw (fun v _ hv => h1 v hv), map_zpow, valAt_locF, ite_eq_left rfl, hu,
         ordF_unif_self, ← WithZero.exp_zsmul, hm]
       simp only [smul_eq_mul, mul_neg, neg_neg, mul_one]
       exact WithZero.exp_log (valAt_ne_zero w a)

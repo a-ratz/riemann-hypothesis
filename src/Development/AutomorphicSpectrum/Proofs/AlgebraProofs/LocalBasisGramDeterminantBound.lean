@@ -248,7 +248,7 @@ theorem comap_injective {ℓ : Nat.Primes} {m m' : Ideal (locRing E ℓ)} (hm' :
 
 theorem natCast_mem_comap {ℓ : Nat.Primes} {m : Ideal (locRing E ℓ)} (hm : m.IsPrime)
     (h0 : m.comap (ofInt ℓ) ≠ ⊥) : ((ℓ : ℕ) : 𝓞 E) ∈ m.comap (ofInt ℓ) := by
-  haveI : (m.comap (ofInt ℓ)).IsPrime := Ideal.comap_isPrime _ _
+  have : (m.comap (ofInt ℓ)).IsPrime := Ideal.comap_isPrime _ _
   set P := m.comap (ofInt ℓ) with hP
   have hN : Ideal.absNorm P ≠ 0 := fun h => h0 (Ideal.absNorm_eq_zero_iff.1 h)
   obtain ⟨k, n, hn, e⟩ := Nat.exists_eq_pow_mul_and_not_dvd hN (ℓ : ℕ) ℓ.2.one_lt.ne'
@@ -264,7 +264,7 @@ theorem finite_maxSpec (ℓ : Nat.Primes) : Finite (MaximalSpectrum (locRing E �
   classical
   have hℓ : Ideal.span {((ℓ : ℕ) : 𝓞 E)} ≠ 0 := by
     simpa using ℓ.2.ne_zero
-  haveI : Fintype {P : Ideal (𝓞 E) // P ∣ Ideal.span {((ℓ : ℕ) : 𝓞 E)}} :=
+  have : Fintype {P : Ideal (𝓞 E) // P ∣ Ideal.span {((ℓ : ℕ) : 𝓞 E)}} :=
     UniqueFactorizationMonoid.fintypeSubtypeDvd _ hℓ
   let f : MaximalSpectrum (locRing E ℓ) → Option {P : Ideal (𝓞 E) // P ∣ Ideal.span {((ℓ : ℕ) : 𝓞 E)}} :=
     fun m => if h : m.asIdeal.comap (ofInt ℓ) = ⊥ then none else
@@ -288,7 +288,7 @@ variable [IsCMField E]
 
 theorem exists_sub_star_notMem (H : Host E) (ℓ : Nat.Primes) (m : Ideal (locRing E ℓ)) (hm : m.IsMaximal) :
     ∃ a : locRing E ℓ, a - star a ∉ m := by
-  haveI : (m.comap (ofInt ℓ)).IsPrime := Ideal.comap_isPrime _ _
+  have : (m.comap (ofInt ℓ)).IsPrime := Ideal.comap_isPrime _ _
   have key : ∃ a : 𝓞 E, a - H.bar a ∉ m.comap (ofInt ℓ) := by
     by_cases h0 : m.comap (ofInt ℓ) = ⊥
     · obtain ⟨M, hM⟩ := Ideal.exists_maximal (𝓞 E)
@@ -491,9 +491,9 @@ theorem exists_diag_basis (H : Host E) (D : Datum H) (n : ℕ) (hn : n = D.p + D
         logIdeal (j.comp (algebraMap (𝓞 E) E)) (differentIdeal ℤ (𝓞 E))) ∧
       (∀ a b, a ≠ b → sesq D (x a) (x b) = 0) ∧
       ∀ a, ∃ u : locRing E ℓ, IsUnit u ∧ (δ : E) * sesq D (x a) (x a) = u := by
-  haveI := finite_maxSpec (E := E) ℓ
-  haveI := D.fin
-  haveI := D.proj
+  have := finite_maxSpec (E := E) ℓ
+  have := D.fin
+  have := D.proj
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.CompanionTheory.Relay.exists_local_basis' E D.La (Fin n) (ℓ : ℕ) ℓ.2 (by simp [D.rank, hn])
   obtain ⟨δ, hδ, hδ0, hδc, hδj⟩ := _root_.GlobalTheory.CompanionTheory.Relay.exists_real_different_generator E H.unram ℓ
   have hδE : (δ : E) ≠ 0 := by exact_mod_cast hδ0

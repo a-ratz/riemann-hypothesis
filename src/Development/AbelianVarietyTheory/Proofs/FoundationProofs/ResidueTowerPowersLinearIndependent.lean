@@ -65,7 +65,7 @@ theorem field_indep {k : Type} [Field k] (p : ℕ) [hp : Fact p.Prime] [CharP k 
     (c : ℕ → k) (hc : ∀ j < p ^ N, c j ∈ K)
     (hs : ∑ j ∈ Finset.range (p ^ N), c j * t ^ j = 0) : ∀ j < p ^ N, c j = 0 := by
   classical
-  haveI : ExpChar K p := ExpChar.prime hp.out
+  have : ExpChar K p := ExpChar.prime hp.out
   obtain ⟨n, y, hf⟩ := (minpoly.natSepDegree_eq_one_iff_eq_X_pow_sub_C (F := K) p (x := t)).1
     ((minpoly.natSepDegree_eq_one_iff_pow_mem (F := K) p (x := t)).2 ⟨N, ⟨⟨_, ha⟩, rfl⟩⟩)
   have hy : t ^ p ^ n = (y : k) := by
@@ -85,7 +85,7 @@ theorem field_indep {k : Type} [Field k] (p : ℕ) [hp : Fact p.Prime] [CharP k 
     rw [← hs, map_sum]
     refine Finset.sum_congr rfl fun j hj => ?_
     rw [aeval_monomial]
-    simp only [c', dif_pos (Finset.mem_range.1 hj)]
+    simp only [c', dite_eq_left (Finset.mem_range.1 hj)]
     rfl
   have hP0 : P = 0 := by
     by_contra h
@@ -104,7 +104,7 @@ theorem field_indep {k : Type} [Field k] (p : ℕ) [hp : Fact p.Prime] [CharP k 
     simp [P, coeff_monomial, Finsupp.single_apply] <;> omega
   rw [hP0, coeff_zero] at h1
   have h2 := congrArg Subtype.val h1
-  simp only [c', dif_pos hj] at h2
+  simp only [c', dite_eq_left hj] at h2
   exact h2.symm
 
 variable {p : ℕ} [hp : Fact p.Prime] {Ω : Type} [Field Ω] [Algebra (O0 p) Ω]
@@ -112,7 +112,7 @@ variable {p : ℕ} [hp : Fact p.Prime] {Ω : Type} [Field Ω] [Algebra (O0 p) Ω
 theorem mem_rad_iff (h : IsClo p Ω) (x : integralClosure (O0 p) Ω) :
     x ∈ (Ideal.span {(p : integralClosure (O0 p) Ω)}).radical ↔
       ∃ m : ℕ, 0 < m ∧ IsInt (p := p) ((x : Ω) ^ m / (p : Ω)) := by
-  haveI := Basic.charZero_of_isClo h
+  have := Basic.charZero_of_isClo h
   have hp0 : (p : Ω) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   constructor
   · rintro ⟨n, hn⟩
@@ -130,7 +130,7 @@ theorem mem_rad_iff (h : IsClo p Ω) (x : integralClosure (O0 p) Ω) :
 
 theorem isInt_inv (h : IsClo p Ω) (x : Ω)
     (hx : ¬ ∃ m : ℕ, 0 < m ∧ IsInt (p := p) (x ^ m / (p : Ω))) : x ≠ 0 ∧ IsInt (p := p) x⁻¹ := by
-  haveI := Basic.charZero_of_isClo h
+  have := Basic.charZero_of_isClo h
   have hp0 : (p : Ω) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   have hpi : IsIntegral (O0 p) (p : Ω) := by exact_mod_cast Basic.isInt_intCast (p := p) (Ω := Ω) (p : ℤ)
   have hx0 : x ≠ 0 := by
@@ -173,7 +173,7 @@ theorem isInt_inv (h : IsClo p Ω) (x : Ω)
 
 theorem rad_isMaximal (h : IsClo p Ω) :
     (Ideal.span {(p : integralClosure (O0 p) Ω)}).radical.IsMaximal := by
-  haveI := Basic.charZero_of_isClo h
+  have := Basic.charZero_of_isClo h
   have hp0 : (p : Ω) ≠ 0 := by exact_mod_cast hp.out.ne_zero
   rw [Ideal.isMaximal_iff]
   constructor
@@ -202,9 +202,9 @@ theorem residue_indep : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alg
   have hmem : ∀ x : integralClosure (O0 p) Ω, Ideal.Quotient.mk M x = 0 ↔
       ∃ m : ℕ, 0 < m ∧ IsInt (p := p) ((x : Ω) ^ m / (p : Ω)) := fun x => by
     rw [Ideal.Quotient.eq_zero_iff_mem, hM, mem_rad_iff h]
-  haveI : M.IsMaximal := rad_isMaximal h
-  letI : Field (integralClosure (O0 p) Ω ⧸ M) := Ideal.Quotient.field M
-  haveI : CharP (integralClosure (O0 p) Ω ⧸ M) p := by
+  have : M.IsMaximal := rad_isMaximal h
+  let : Field (integralClosure (O0 p) Ω ⧸ M) := Ideal.Quotient.field M
+  have : CharP (integralClosure (O0 p) Ω ⧸ M) p := by
     rw [CharP.charP_iff_prime_eq_zero hp.out, ← map_natCast (Ideal.Quotient.mk M),
       Ideal.Quotient.eq_zero_iff_mem]
     exact Ideal.le_radical (Ideal.mem_span_singleton_self _)
@@ -226,7 +226,7 @@ theorem residue_indep : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alg
   have ht : ((t ^ p ^ N : integralClosure (O0 p) Ω) : Ω) = algebraMap (O0 p) Ω (qO p) := by
     rw [← Basic.qq_pow T N]; rfl
   let d' : ℕ → integralClosure (O0 p) Ω := fun j => if hj : j < p ^ N then ⟨d j, (hd j hj).2⟩ else 0
-  have hd' : ∀ j < p ^ N, (d' j : Ω) = d j := fun j hj => by simp only [d', dif_pos hj]
+  have hd' : ∀ j < p ^ N, (d' j : Ω) = d j := fun j hj => by simp only [d', dite_eq_left hj]
   have key := field_indep p K N (Ideal.Quotient.mk M t)
     ⟨t ^ p ^ N, by
       show ((t ^ p ^ N : integralClosure (O0 p) Ω) : Ω) ∈ E

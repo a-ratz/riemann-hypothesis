@@ -103,7 +103,7 @@ theorem decays_smoothInf_invT {F : GA E a → ℂ} (hF : Decays fun g => F (invT
   have hK : IsCompact ((fun y : GL (Fin a) (Cinf E) => toL y.val) ⁻¹' tsupport f) :=
     GlobalTheory.CuspQuot.isOpenEmbedding_val.isInducing.isCompact_preimage' hc fun x hx => hs hx
   obtain ⟨C, h⟩ := hF L hL _ (hC₀.mul ((hK.image GlobalTheory.CuspQuot.continuous_infGL).image continuous_invT)) N
-  haveI : IsFiniteMeasureOnCompacts (volume : Measure (Lie E a)) :=
+  have : IsFiniteMeasureOnCompacts (volume : Measure (Lie E a)) :=
     MeasureTheory.Measure.pi.isFiniteMeasureOnCompacts _
   have hi : Integrable f := hf.integrable_of_hasCompactSupport hc
   refine ⟨(∫ x, ‖f x‖) * C, fun g c hcC ξ hξ hm => ?_⟩
@@ -244,7 +244,7 @@ theorem detAbs_mul (g h : GA E a) : detAbs (g * h) = detAbs g * detAbs h := by
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem continuous_detAbs : Continuous (detAbs (E := E) (a := a)) :=
-  continuous_subtype_val.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
+  continuous_subtypeVal.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det E a))
 
 theorem detAbs_invT (g : GA E a) : detAbs (invT a (Ad E) g) = (detAbs g)⁻¹ := by
   have h : GeneralLinearGroup.det (invT a (Ad E) g) = (GeneralLinearGroup.det g)⁻¹ := by

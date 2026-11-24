@@ -83,7 +83,7 @@ theorem adic_exists_approx (y : v.adicCompletion K) (hy : Valued.v y ≤ 1) :
   obtain ⟨c, hc⟩ : ∃ c : R, v.valuation K (k - algebraMap R K c) < 1 := by
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := R) k
     have hb0 : algebraMap R K b ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hb
-    haveI := v.isPrime
+    have := v.isPrime
     have hex : ∃ N, b ∉ v.asIdeal ^ N := by
       by_contra hall
       push_neg at hall
@@ -100,7 +100,7 @@ theorem adic_exists_approx (y : v.adicCompletion K) (hy : Valued.v y ≤ 1) :
       exact hspec (by simp))
     rw [hn] at hspec
     have hbn : b ∈ v.asIdeal ^ n := hmin n (by omega)
-    have hvb : 0 < v.valuation K (algebraMap R K b) := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hb0)
+    have hvb : 0 < v.valuation K (algebraMap R K b) := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hb0)
     have hk1' := hk1
     rw [map_div₀, div_le_one₀ hvb, valuation_of_algebraMap, valuation_of_algebraMap] at hk1'
     have ha : a ∈ v.asIdeal ^ n := by

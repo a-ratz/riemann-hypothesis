@@ -107,7 +107,7 @@ theorem integral_fundamentalDomain_eq_sum_doubleCoset_avg : ∀ (G : Type) [Grou
     exact integral_mul_left_eq_self (fun v => f (x * j v)) w
   obtain ⟨hfin𝓕, -, hFeq⟩ := GlobalTheory.Ker.integral_fundamentalDomain_eq_sum_doubleCoset G μ Γ K 𝓕 h𝓕 hK
     hKfin ι h huniq hfin (fun x => ∫ v, f (x * j v) ∂ν) hFl hFr
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 hfin𝓕
+  have : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 hfin𝓕
   have hint : IntegrableOn f 𝓕 μ :=
     Integrable.of_bound hf.aestronglyMeasurable C (Filter.Eventually.of_forall hC)
   refine ⟨hint, ?_⟩

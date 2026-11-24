@@ -171,7 +171,7 @@ theorem exists_sign [IsUltrametricDist E] (hstar : ∀ y : E, ‖star y‖ = ‖
     refine ⟨refl (Pi.single k 1) 2⁻¹ (inv_ne_zero h2) hN, bddPow_refl hstar _ _ _ _, ?_, ?_⟩
     · intro i hi
       rw [MulMemClass.coe_mul, col_mul, refl_mulVec, hg i hi, star_single_one, dotProduct_single,
-        Pi.single_apply, if_neg (ne_of_gt hi), zero_mul, mul_zero, zero_smul, sub_zero]
+        Pi.single_apply, ite_eq_right (ne_of_gt hi), zero_mul, mul_zero, zero_smul, sub_zero]
     · have h := congrFun (col_mul (refl (Pi.single k (1 : E)) 2⁻¹ (inv_ne_zero h2) hN : Matrix (Fin r) (Fin r) E)
         (g : Matrix (Fin r) (Fin r) E) k) k
       rw [refl_mulVec, star_single_one, single_dotProduct] at h
@@ -209,7 +209,7 @@ theorem exists_refl [IsUltrametricDist E] (hstar : ∀ y : E, ‖star y‖ = ‖
   · subst h
     rw [MulMemClass.coe_mul, col_mul, refl_mulVec, ← hw, hvw, inv_mul_cancel₀ ha, one_smul, hv, sub_sub_cancel]
   · rw [MulMemClass.coe_mul, col_mul, refl_mulVec, hg i h, dotProduct_single, mul_one]
-    have : v i = 0 := by rw [hv, Pi.sub_apply, hwi i h, Pi.single_apply, if_neg (ne_of_gt h), sub_zero]
+    have : v i = 0 := by rw [hv, Pi.sub_apply, hwi i h, Pi.single_apply, ite_eq_right (ne_of_gt h), sub_zero]
     rw [Pi.star_apply, this, star_zero, mul_zero, zero_smul, sub_zero]
 
 theorem hom_eq_one_of_bddPow [IsUltrametricDist E] (hstar : ∀ y : E, ‖star y‖ = ‖y‖) (h2 : (2 : E) ≠ 0)
@@ -260,7 +260,7 @@ variable {E : Type} [NontriviallyNormedField E] [StarRing E]
 
 theorem two_ne_zero_of_unram {F : Type} [NontriviallyNormedField F] [NormedAlgebra F E] [hU : Unram F E] :
     (2 : E) ≠ 0 := by
-  haveI : CharZero F := hU.charZero
+  have : CharZero F := hU.charZero
   intro h
   apply (two_ne_zero : (2 : F) ≠ 0)
   apply (algebraMap F E).injective
@@ -293,10 +293,10 @@ variable {F : Type} [NontriviallyNormedField F] [NormedAlgebra F E]
 
 theorem char_eq_one [hU : Unram F E] (r : ℕ) (ch : unitaryGroup (Fin r) E →* ℝ) (hc : Continuous ch)
     (hpos : ∀ g, 0 < ch g) (g : unitaryGroup (Fin r) E) : ch g = 1 := by
-  haveI := hU.ultraE
-  haveI := hU.lcE
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : NormedStarGroup E := ⟨fun y => (hU.norm_star y).le⟩
+  have := hU.ultraE
+  have := hU.lcE
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : NormedStarGroup E := ⟨fun y => (hU.norm_star y).le⟩
   refine hom_eq_one_of_bddPow hU.norm_star (two_ne_zero_of_unram (F := F)) ch (fun g hg => ?_) g
   obtain ⟨B, hB⟩ := hg
   obtain ⟨B', hB'⟩ := bddPow_inv hU.norm_star ⟨B, hB⟩
@@ -310,20 +310,20 @@ theorem char_eq_one [hU : Unram F E] (r : ℕ) (ch : unitaryGroup (Fin r) E →*
 
 theorem isMulRightInvariant [hU : Unram F E] (r : ℕ) (M : Meas r F E) :
     @Measure.IsMulRightInvariant (unitaryGroup (Fin r) E) M.mU _ M.μU := by
-  letI := M.mU
-  haveI := M.bU
-  haveI := M.haarU
-  haveI := hU.ultraE
-  haveI := hU.lcE
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : NormedStarGroup E := ⟨fun y => (hU.norm_star y).le⟩
-  haveI : SecondCountableTopology (Matrix (Fin r) (Fin r) E) :=
+  let := M.mU
+  have := M.bU
+  have := M.haarU
+  have := hU.ultraE
+  have := hU.lcE
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : NormedStarGroup E := ⟨fun y => (hU.norm_star y).le⟩
+  have : SecondCountableTopology (Matrix (Fin r) (Fin r) E) :=
     inferInstanceAs (SecondCountableTopology (Fin r → Fin r → E))
-  haveI : LocallyCompactSpace (Matrix (Fin r) (Fin r) E) :=
+  have : LocallyCompactSpace (Matrix (Fin r) (Fin r) E) :=
     inferInstanceAs (LocallyCompactSpace (Fin r → Fin r → E))
-  haveI : LocallyCompactSpace (unitaryGroup (Fin r) E) :=
+  have : LocallyCompactSpace (unitaryGroup (Fin r) E) :=
     (isClosed_unitary (R := Matrix (Fin r) (Fin r) E)).locallyCompactSpace
-  haveI : SecondCountableTopology (unitaryGroup (Fin r) E) :=
+  have : SecondCountableTopology (unitaryGroup (Fin r) E) :=
     (isClosed_unitary (R := Matrix (Fin r) (Fin r) E)).isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
   have hmap : ∀ g, Measure.map (· * g) M.μU = (Measure.modularCharacter g) • M.μU := fun g => by
     change _ = Measure.modularCharacterFun g • _
@@ -337,7 +337,7 @@ theorem isMulRightInvariant [hU : Unram F E] (r : ℕ) (M : Meas r F E) :
     intro C hC h hh
     have e1 : (Measure.map (· * h) M.μU) (uO r E) = (Measure.modularCharacter h • M.μU) (uO r E) := by
       rw [hmap h]
-    rw [Measure.map_apply (measurable_mul_const h) hK, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, M.volU, mul_one] at e1
+    rw [Measure.map_apply (measurable_mul_const h) hK, smul_apply, ENNReal.smul_def, smul_eq_mul, M.volU, mul_one] at e1
     rw [← e1]
     apply measure_mono
     intro x hx i j

@@ -260,7 +260,7 @@ theorem mem_range_intGL (x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) :
 
 theorem frame_mem_range {β : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)} (hβ : Formalism.L2.DIV.IsFrame β (Formalism.L2.Col.stdLat E n)) :
     β ∈ (Formalism.L2.DIV.intGL F E n).range := by
-  letI : StarRing E := starRingOfComm
+  let : StarRing E := starRingOfComm
   have hm : ∀ z : Fin n → E ⊗[F] Formalism.L2.Herm.Af F,
       z ∈ Formalism.L2.Herm.hatL (F := F) (Formalism.L2.Col.stdLat E n) ↔ ∀ i, z i ∈ Formalism.L2.Herm.intAf F E :=
     fun z => Formalism.L2.Col.mem_latS_std z

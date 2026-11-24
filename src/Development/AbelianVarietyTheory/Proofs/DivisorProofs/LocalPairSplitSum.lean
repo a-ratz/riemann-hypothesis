@@ -91,11 +91,11 @@ theorem etale_of_isZTorsor (B D : Type) [CommRing B] [CommRing D] [Algebra B D] 
       · simp [Pi.single_apply, hg]
     rw [hxe]
     exact Ideal.mul_mem_mul hx heI
-  haveI : Subsingleton Ω[D⁄B] := (Ideal.cotangent_subsingleton_iff _).2 hidem
-  haveI : Algebra.FormallyUnramified B D := ⟨inferInstance⟩
-  haveI : Module.Flat B D := inferInstance
-  haveI : Module.FinitePresentation B D := Module.finitePresentation_of_projective B D
-  haveI : Algebra.FinitePresentation B D :=
+  have : Subsingleton Ω[D⁄B] := (Ideal.cotangent_subsingleton_iff _).2 hidem
+  have : Algebra.FormallyUnramified B D := ⟨inferInstance⟩
+  have : Module.Flat B D := inferInstance
+  have : Module.FinitePresentation B D := Module.finitePresentation_of_projective B D
+  have : Algebra.FinitePresentation B D :=
     (Module.FinitePresentation.iff_finitePresentation_of_finite B D).mp inferInstance
   exact Algebra.Etale.of_formallyUnramified_of_flat
 

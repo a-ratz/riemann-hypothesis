@@ -179,11 +179,11 @@ theorem exists_repr {M : Type} [AddCommGroup M] [Finite M] {k : Type} [Field k] 
     MonoidHom.mk' (fun x => B x.toAdd y) (fun a b => hadd _ _ _)
   have hinj : Function.Injective φ := fun y y' h =>
     ext_right B hadd hsk hnd fun x => DFunLike.congr_fun h (Multiplicative.ofAdd x)
-  haveI : NeZero (Monoid.exponent (Multiplicative M)) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : NeZero (Monoid.exponent (Multiplicative M)) := ⟨Monoid.exponent_ne_zero_of_finite⟩
   have hcard : Nat.card (Multiplicative M →* kˣ) = Nat.card (Multiplicative M) :=
     CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity (Multiplicative M) k
   have hpos : 0 < Nat.card (Multiplicative M) := Nat.card_pos
-  haveI : Finite (Multiplicative M →* kˣ) := Nat.finite_of_card_ne_zero (by omega)
+  have : Finite (Multiplicative M →* kˣ) := Nat.finite_of_card_ne_zero (by omega)
   have hbij : Function.Bijective φ :=
     hinj.bijective_of_nat_card_le (by rw [hcard]; exact le_of_eq rfl)
   obtain ⟨z, hz⟩ := hbij.2 (MonoidHom.mk' (fun x => f x.toAdd) (fun a b => hf _ _))
@@ -279,7 +279,7 @@ theorem finite_quot (O L : Type) [Ring O] [AddCommGroup L] [Module O L] [Module.
   have h1 : AddGroup.FG L := Module.Finite.iff_addGroup_fg.1 inferInstance
   have h2 : AddGroup.FG (L ⧸ mulSub O L N) :=
     AddGroup.fg_of_surjective (f := (mulSub O L N).mkQ.toAddMonoidHom) (mulSub O L N).mkQ_surjective
-  refine AddCommGroup.finite_of_fg_torsion _ ?_
+  refine AddCommGroup.finite_of_fg_isAddTorsion _ ?_
   intro x
   obtain ⟨x, rfl⟩ := (mulSub O L N).mkQ_surjective x
   rw [isOfFinAddOrder_iff_nsmul_eq_zero]
@@ -318,9 +318,9 @@ theorem mem_of_dvd {p : ℕ} [Fact p.Prime] (D : Datum p) (r : ℕ) (x : D.La)
 theorem exists_level_pairing_eq : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (Q : Type) [CommGroup Q] (act : D.O → Q → Q) (r : ℕ) (W : Q → Q → kˣ) (ζ : kˣ), IsPrimitiveRoot ζ (p ^ r) → (∀ a a' b : Q, a ^ (p ^ r) = 1 → a' ^ (p ^ r) = 1 → b ^ (p ^ r) = 1 → W (a * a') b = W a b * W a' b) → (∀ a b : Q, a ^ (p ^ r) = 1 → b ^ (p ^ r) = 1 → W a b * W b a = 1) → (∀ (c : D.O) (a b : Q), a ^ (p ^ r) = 1 → b ^ (p ^ r) = 1 → W (act c a) b = W a (act (D.star c).unop b)) → (∀ a : Q, a ^ (p ^ r) = 1 → (∀ b : Q, b ^ (p ^ r) = 1 → W a b = 1) → a = 1) → ∀ f : D.La → Q, ((∀ x y, f (x + y) = f x * f y) ∧ (∀ (c : D.O) x, f (c • x) = act c (f x)) ∧ (∀ x, f x = 1 ↔ ∃ y, x = (p ^ r) • y) ∧ (∀ g : Q, g ^ (p ^ r) = 1 ↔ ∃ x, f x = g)) → ∃ f' : D.La → Q, ((∀ x y, f' (x + y) = f' x * f' y) ∧ (∀ (c : D.O) x, f' (c • x) = act c (f' x)) ∧ (∀ x, f' x = 1 ↔ ∃ y, x = (p ^ r) • y) ∧ (∀ g : Q, g ^ (p ^ r) = 1 ↔ ∃ x, f' x = g)) ∧ ∀ x y, W (f' x) (f' y) = ζ ^ D.EF x y := by
   intro p _ D k _ _ _ Q _ act r W ζ hζ Wadd Wskew Wadj Wnd f ⟨fadd, flin, fker, fonto⟩
   have hN : 0 < p ^ r := pow_pos (Fact.out : p.Prime).pos r
-  haveI := D.finLa
+  have := D.finLa
   set K := mulSub D.O D.La (p ^ r) with hK
-  haveI : Finite (D.La ⧸ K) := finite_quot D.O D.La hN
+  have : Finite (D.La ⧸ K) := finite_quot D.O D.La hN
   have surj : Function.Surjective K.mkQ := K.mkQ_surjective
   let s : D.La ⧸ K → D.La := Function.surjInv surj
   have hs : ∀ x, K.mkQ (s x) = x := Function.surjInv_eq surj

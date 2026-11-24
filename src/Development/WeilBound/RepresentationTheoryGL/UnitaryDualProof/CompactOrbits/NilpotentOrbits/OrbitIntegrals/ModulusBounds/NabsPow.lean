@@ -369,7 +369,7 @@ theorem modul_eq [CharZero k] (hratio : RatioP k n) (Z : Subalgebra k (Matrix (F
       simp only [Set.mem_preimage, SetLike.mem_coe, Subgroup.mem_inf]
       exact ⟨fun h => h.1, fun h => ⟨h, x.2⟩⟩
     rw [e]
-    exact (isOpen_congruenceSubgroup k n m).preimage continuous_subtype_val
+    exact (isOpen_congruenceSubgroup k n m).preimage continuous_subtypeVal
   · exact (isCompact_congruenceSubgroup k n m).inter_right (isClosed_Gz Z)
   · have e : ((↑) : GzS Z → GL (Fin n) k) ⁻¹' ((congruenceSubgroup k n (2 * m) ⊓ GzS Z : Subgroup _) : Set _) =
         ((↑) : GzS Z → GL (Fin n) k) ⁻¹' (congruenceSubgroup k n (2 * m) : Set _) := by
@@ -377,7 +377,7 @@ theorem modul_eq [CharZero k] (hratio : RatioP k n) (Z : Subalgebra k (Matrix (F
       simp only [Set.mem_preimage, SetLike.mem_coe, Subgroup.mem_inf]
       exact ⟨fun h => h.1, fun h => ⟨h, x.2⟩⟩
     rw [e]
-    exact (isOpen_congruenceSubgroup k n (2 * m)).preimage continuous_subtype_val
+    exact (isOpen_congruenceSubgroup k n (2 * m)).preimage continuous_subtypeVal
   · intro a ha b hb
     obtain ⟨ha1, ha2⟩ := Subgroup.mem_inf.mp ha
     obtain ⟨hb1, hb2⟩ := Subgroup.mem_inf.mp hb
@@ -504,7 +504,7 @@ theorem modBound [CharZero k] : ModBound (k := k) := by
       have hxA : x ∈ cA Z x := ⟨hxB, rfl⟩
       rw [← heq] at hxA
       have hxZ : x ∈ Z := hxA
-      haveI := hCR.2
+      have := hCR.2
       have hnZ : IsNilpotent (⟨x, hxZ⟩ : Z) := by
         obtain ⟨N, hN⟩ := hnil
         exact ⟨N, Subtype.ext (by simpa using hN)⟩

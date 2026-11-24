@@ -1460,11 +1460,11 @@ theorem algType_of_even {I : Type} [Fintype I] {φ : I → E →+* ℂ} {c : I �
   refine Finset.prod_congr rfl fun i _ => ?_
   rw [Finset.prod_mul_distrib, Finset.prod_inv_distrib]
   have e1 : ∏ ψ : E →+* ℂ, u ψ ^ (if φ i = ψ then c i else 0) = u (φ i) ^ c i := by
-    rw [Finset.prod_eq_single (φ i) (fun ψ _ hψ => by rw [if_neg (Ne.symm hψ), zpow_zero]) (by simp)]
+    rw [Finset.prod_eq_single (φ i) (fun ψ _ hψ => by rw [ite_eq_right (Ne.symm hψ), zpow_zero]) (by simp)]
     simp
   have e2 : ∏ ψ : E →+* ℂ, u ψ ^ (if (starRingEnd ℂ).comp (φ i) = ψ then c i else 0) =
       u ((starRingEnd ℂ).comp (φ i)) ^ c i := by
-    rw [Finset.prod_eq_single ((starRingEnd ℂ).comp (φ i)) (fun ψ _ hψ => by rw [if_neg (Ne.symm hψ), zpow_zero]) (by simp)]
+    rw [Finset.prod_eq_single ((starRingEnd ℂ).comp (φ i)) (fun ψ _ hψ => by rw [ite_eq_right (Ne.symm hψ), zpow_zero]) (by simp)]
     simp
   rw [e1, e2]
 
@@ -1661,7 +1661,7 @@ theorem split_vacuum_algebraic_combination : ∀ {D : D7} {T : Type} [Finite T] 
     rw [heq]
     exact (isAlgComb_sum Δ hΔ).smul (isAlg_mul (detAlg e' he' α) (isAlg_sqrt_inv _))
   obtain ⟨ϖ, hϖ, hϖ2⟩ : ∃ ϖ : 𝓞 D.host.E, ϖ ∈ P.asIdeal ∧ ϖ ∉ P.asIdeal ^ 2 :=
-    SetLike.exists_of_lt (by
+    IsConcreteLE.exists_of_lt (by
       simpa using Ideal.pow_right_strictAnti P.asIdeal P.ne_bot P.isPrime.ne_top (by norm_num : 1 < 2))
   have gen := GlobalTheory.T.splitPlace_unitaryPoint_mem_heckeClosure (stdLatSp WW hX.stdW.1) P e ϖ hP hϖ hϖ2 h hh hs
   refine Submonoid.closure_induction

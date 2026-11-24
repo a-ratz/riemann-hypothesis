@@ -225,7 +225,7 @@ namespace GlobalTheory.TestLat
 theorem mulVec_injective_map_of_linearIndependent {K L : Type} [Field K] [Field L] (σ : K →+* L) {d j : ℕ}
     (e : Fin j → Fin d → K) (he : LinearIndependent K e) :
     Function.Injective (((Matrix.of e)ᵀ).map σ).mulVec := by
-  letI : Algebra K L := σ.toAlgebra
+  let : Algebra K L := σ.toAlgebra
   rw [Matrix.mulVec_injective_iff]
   have h := (linearIndependent_algebraMap_comp_iff (S := L) (v := e)).2 he
   exact h
@@ -378,7 +378,7 @@ theorem neg_log_le_lcv_of_integral_form :
       funext i j
       simp [γ, Finset.sum_apply, Pi.single_apply]
     have hdet : γ.det ≠ 0 := by
-      have hu : IsUnit (Matrix.of f) := Matrix.linearIndependent_rows_iff_isUnit.mp hf.1
+      have hu : IsUnit (Matrix.of f) := Matrix.linearIndependent_row_iff_isUnit.mp hf.1
       have : γ = (Matrix.of f)ᵀ := by ext k i; rfl
       rw [this, Matrix.det_transpose]
       exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero

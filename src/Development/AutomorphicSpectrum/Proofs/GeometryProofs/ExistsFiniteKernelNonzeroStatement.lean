@@ -166,8 +166,8 @@ theorem pow_eq_norm {E : Type} [Field E] [NumberField E] (deg : 𝓞 E → ℕ) 
     let I : Ideal (𝓞 E) := Ideal.span {a ^ k}
     have hI : Nat.card (𝓞 E ⧸ I) = N := by
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ideal.absNorm_span_singleton, map_pow, Int.natAbs_pow]
-    haveI : Finite (𝓞 E ⧸ I) := Nat.finite_of_card_ne_zero (hI ▸ pow_ne_zero _ (hN a ha))
-    haveI := Fintype.ofFinite (𝓞 E ⧸ I)
+    have : Finite (𝓞 E ⧸ I) := Nat.finite_of_card_ne_zero (hI ▸ pow_ne_zero _ (hN a ha))
+    have := Fintype.ofFinite (𝓞 E ⧸ I)
     obtain ⟨u, v, huv, he⟩ := Fintype.exists_ne_map_eq_of_card_lt
       (fun u : Module.Free.ChooseBasisIndex ℤ (𝓞 E) → Fin (T + 1) =>
         Ideal.Quotient.mk I (∑ i, ((u i : ℕ) : ℤ) • RingOfIntegers.basis E i)) (by
@@ -219,10 +219,10 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem sandwich : ∀ (K : Type) [Field K] (X X' : Scheme.{0}) [IsIntegral X] [IsIntegral X'] (f : X ⟶ Spec (CommRingCat.of K)) (φ : X' ⟶ X) [IsFinite φ] [Flat φ] [Surjective φ] (H : LB X) (n : ℕ) (s : Fin (n + 1) → LB.Sec H), H.IsLB → VeryAmpleBy f H s → ∀ d : ℕ, (∀ x : X, φ.finrank x = d) → (∀ t : ℕ, Module.Finite K (SecOnR f (pw H t) ⊤)) → (∀ t : ℕ, Module.Finite K (SecOnR (φ ≫ f) ((pw H t).pull φ) ⊤)) → ∃ a : ℕ, ∀ t : ℕ, d * Module.finrank K (SecOnR (f) (pw H t) ⊤) ≤ Module.finrank K (SecOnR (φ ≫ f) ((pw H (t + a : ℕ)).pull φ) ⊤) ∧ Module.finrank K (SecOnR (φ ≫ f) ((pw H t).pull φ) ⊤) ≤ d * Module.finrank K (SecOnR (f) (pw H (t + a : ℕ)) ⊤) := by
   intro K _ X X' _ _ f φ _ _ _ H n s hH hs d hd hV hW
   have hd1 : 1 ≤ d := hd (genericPoint X) ▸ φ.one_le_finrank_iff_surjective.2 inferInstance _
-  letI : Algebra X.functionField X'.functionField := (functionFieldMap φ).toAlgebra
-  letI : Algebra K X.functionField := ((toField generic_top).comp (cst f ⊤)).toAlgebra
-  letI : Algebra K X'.functionField := ((toField generic_top).comp (cst (φ ≫ f) ⊤)).toAlgebra
-  haveI : IsScalarTower K X.functionField X'.functionField :=
+  let : Algebra X.functionField X'.functionField := (functionFieldMap φ).toAlgebra
+  let : Algebra K X.functionField := ((toField generic_top).comp (cst f ⊤)).toAlgebra
+  let : Algebra K X'.functionField := ((toField generic_top).comp (cst (φ ≫ f) ⊤)).toAlgebra
+  have : IsScalarTower K X.functionField X'.functionField :=
     IsScalarTower.of_algebraMap_eq fun r => by
       have w : φ ≫ f = (φ ≫ f) ≫ Spec.map (CommRingCat.ofHom (RingHom.id K)) := by simp
       have e := toField_appLE φ (U := ⊤) (V := ⊤) le_top generic_top generic_top (cst f ⊤ r)
@@ -231,7 +231,7 @@ theorem sandwich : ∀ (K : Type) [Field K] (X X' : Scheme.{0}) [IsIntegral X] [
   obtain ⟨hcov, hs⟩ := hs
   choose haff r hr _ using hs
   let I := {i // genericPoint X ∈ nonzeroLocus (s i)}
-  haveI : Fintype I := Fintype.ofFinite I
+  have : Fintype I := Fintype.ofFinite I
   let D : I → X.Opens := fun i => nonzeroLocus (s i.1)
   have hη : ∀ i, genericPoint X ∈ D i := fun i => i.2
   have hc : ⊤ ≤ ⨆ i, D i := fun x hx => by
@@ -244,7 +244,7 @@ theorem sandwich : ∀ (K : Type) [Field K] (X X' : Scheme.{0}) [IsIntegral X] [
   obtain ⟨k₀, h₀⟩ := TopologicalSpace.Opens.mem_iSup.1 (hH.cover.ge generic_top)
   obtain ⟨x, hx⟩ := (chart_data φ (fun _ => rfl) (haff i₀.1) (hη i₀)).1
   rw [hd] at hx
-  haveI : Module.Finite X.functionField X'.functionField :=
+  have : Module.Finite X.functionField X'.functionField :=
     Module.finite_of_finrank_pos (by omega)
   let e := Module.finBasisOfFinrankEq _ _ hx
   choose c hcm hc0 hc₁ hc₂ using fun i : I =>
@@ -391,9 +391,9 @@ theorem finrank_comp {X X' X'' : Scheme.{0}} [IsIntegral X] [IsIntegral X'] [IsI
     (ψ : X'' ⟶ X') (φ : X' ⟶ X) [IsFinite φ] [Flat φ] [Surjective φ] [IsFinite ψ] [Flat ψ] [Surjective ψ]
     {a b c : ℕ} (ha : ∀ x, φ.finrank x = a) (hb : ∀ x, ψ.finrank x = b) (hc : ∀ x, (ψ ≫ φ).finrank x = c) :
     c = b * a := by
-  letI : Algebra X.functionField X'.functionField := (functionFieldMap φ).toAlgebra
-  letI : Algebra X'.functionField X''.functionField := (functionFieldMap ψ).toAlgebra
-  letI : Algebra X.functionField X''.functionField := (functionFieldMap (ψ ≫ φ)).toAlgebra
+  let : Algebra X.functionField X'.functionField := (functionFieldMap φ).toAlgebra
+  let : Algebra X'.functionField X''.functionField := (functionFieldMap ψ).toAlgebra
+  let : Algebra X.functionField X''.functionField := (functionFieldMap (ψ ≫ φ)).toAlgebra
   have aff : ∀ (Z : Scheme.{0}) [IsIntegral Z], ∃ D : Z.Opens, IsAffineOpen D ∧ genericPoint Z ∈ D := by
     intro Z _
     obtain ⟨_, ⟨U, hU, rfl⟩, hxU, -⟩ :=
@@ -401,10 +401,10 @@ theorem finrank_comp {X X' X'' : Scheme.{0}} [IsIntegral X] [IsIntegral X'] [IsI
     exact ⟨U, hU, hxU⟩
   obtain ⟨D, hD, h⟩ := aff X
   obtain ⟨D', hD', h'⟩ := aff X'
-  haveI : IsScalarTower X.functionField X'.functionField X''.functionField :=
+  have : IsScalarTower X.functionField X'.functionField X''.functionField :=
     IsScalarTower.of_algebraMap_eq' (by
-      haveI : Nonempty D := ⟨⟨_, h⟩⟩
-      haveI := functionField_isFractionRing_of_isAffineOpen X D hD
+      have : Nonempty D := ⟨⟨_, h⟩⟩
+      have := functionField_isFractionRing_of_isAffineOpen X D hD
       refine IsLocalization.ringHom_ext (nonZeroDivisors Γ(X, D)) (RingHom.ext fun r => ?_)
       have h1 := generic_mem_preimage φ h
       have h2 := generic_mem_preimage ψ h1
@@ -436,10 +436,10 @@ theorem finrank_le {K : Type} [Field K] [IsIntegral X] (f : X ⟶ Spec (CommRing
     exact ⟨SecOnR.lin f F, hF⟩
   obtain ⟨a, ha⟩ := sandwich K X X f φ H m s hH hs d hd hfin fun t => by
     obtain ⟨F, hF⟩ := inj t
-    haveI := hfin (M * t)
+    have := hfin (M * t)
     exact Module.Finite.of_injective F hF
   obtain ⟨F, hF⟩ := inj (a + 1 + a)
-  haveI := hfin (M * (a + 1 + a))
+  have := hfin (M * (a + 1 + a))
   have h1 := (ha (a + 1)).1.trans (LinearMap.finrank_le_finrank_of_injective hF)
   have h2 := (hgrow (a + 1) (by omega)).1
   have h3 := (hgrow (M * (a + 1 + a)) (Nat.mul_pos hM (by omega))).2
@@ -527,11 +527,11 @@ theorem finrank_act {E : Type} [Field E] [NumberField E] (hB : IsAbelianScheme B
     ∃ (_ : IsFinite (ρ.act a).left) (_ : Flat (ρ.act a).left), ∀ x,
       (ρ.act a).left.finrank x ^ Module.finrank ℚ E = (Algebra.norm ℤ a).natAbs ^ (2 * g) := by
   have hG := GlobalTheory.globalFns_holds
-  haveI := hB.smooth
-  haveI := hB.proper
-  haveI : GeometricallyIntegral B.hom :=
+  have := hB.smooth
+  have := hB.proper
+  have : GeometricallyIntegral B.hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hB.smooth hB.geomConnected
-  haveI : IsIntegral B.left := GeometricallyIntegral.isIntegral_of_subsingleton B.hom
+  have : IsIntegral B.left := GeometricallyIntegral.isIntegral_of_subsingleton B.hom
   have hproj := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety k B hB
   obtain ⟨H, m, s, hH, hs, hsym⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmpleBy k B hB hproj
   have hΘ := GlobalTheory.AbLaw.CubeProj.exists_gen_theta_abelianVariety hG k B hB hproj H hH
@@ -561,8 +561,8 @@ theorem finrank_act {E : Type} [Field E] [NumberField E] (hB : IsAbelianScheme B
     have h := GlobalTheory.T.isFinite_of_pull_veryAmple_iso_pow k _ _ B.hom _ H H m s _ hH hH inferInstance (by rw [hw]; exact hs)
       (Nat.one_le_iff_ne_zero.2 (pow_ne_zero 2 hN)) (hiso _)
     rw [← hb, mul_comm, ρ.mul, Over.comp_left] at h
-    haveI : IsSeparated ((ρ.act b).left ≫ B.hom) := by rw [hw]; infer_instance
-    haveI : IsSeparated (ρ.act b).left := IsSeparated.of_comp _ B.hom
+    have : IsSeparated ((ρ.act b).left ≫ B.hom) := by rw [hw]; infer_instance
+    have : IsSeparated (ρ.act b).left := IsSeparated.of_comp _ B.hom
     exact IsFinite.of_comp _ (ρ.act b).left
   have hfs : ∀ a, a ≠ 0 → Flat (ρ.act a).left ∧ Surjective (ρ.act a).left := fun a ha =>
     haveI := hfin a ha
@@ -582,25 +582,25 @@ theorem finrank_act {E : Type} [Field E] [NumberField E] (hB : IsAbelianScheme B
   rw [hd a ha]
   refine pow_eq_norm deg (2 * g) (C₁ * C₂ ^ g) (fun a b ha hb => ?_) (fun a ha => ?_) (fun n hn => ?_)
     (fun T c hc hx => ?_) a ha
-  · haveI := hfin a ha
-    haveI := hfin b hb
+  · have := hfin a ha
+    have := hfin b hb
     obtain ⟨_, _⟩ := hfs a ha
     obtain ⟨_, _⟩ := hfs b hb
     refine finrank_comp (ρ.act a).left (ρ.act b).left (hd b hb) (hd a ha) fun x => ?_
     rw [← Over.comp_left, ← ρ.mul]
     exact hd _ (mul_ne_zero ha hb) x
-  · haveI := hfin a ha
+  · have := hfin a ha
     obtain ⟨_, _⟩ := hfs a ha
     exact (ρ.act a).left.one_le_finrank_iff_surjective.2 inferInstance _
   · have hn' : (n : 𝓞 E) ≠ 0 := Nat.cast_ne_zero.2 hn
-    haveI := hfin _ hn'
+    have := hfin _ hn'
     obtain ⟨_, _⟩ := hfs _ hn'
     obtain ⟨hfin, hmono, c, C, hc1, hgrow⟩ :=
       GlobalTheory.VeryAmpleGrowth.finite_monotone_growth k B.left B.hom g hg H m s hH hs
     have e := TorsionCount.nonempty_secEquiv B.hom _ (hw n) hH (n ^ 2) (hiso n)
     obtain ⟨a, ha⟩ := sandwich k B.left B.left B.hom (ρ.act n).left H m s hH hs _ (hd _ hn') hfin fun t => by
       obtain ⟨e⟩ := e t
-      haveI := hfin (n ^ 2 * t)
+      have := hfin (n ^ 2 * t)
       exact Module.Finite.equiv e
     rw [pow_mul]
     refine GlobalTheory.UU.degree_eq_pow_of_growth (fun t : ℕ => Module.finrank k (SecOnR B.hom (AbLaw.pw H t) ⊤)) g c C a _
@@ -608,7 +608,7 @@ theorem finrank_act {E : Type} [Field E] [NumberField E] (hB : IsAbelianScheme B
     obtain ⟨e₁⟩ := e (t + a)
     obtain ⟨e₂⟩ := e t
     exact ⟨(ha t).1.trans e₁.finrank_eq.ge, e₂.finrank_eq.le.trans (ha t).2⟩
-  · haveI := hfin _ hx
+  · have := hfin _ hx
     obtain ⟨_, _⟩ := hfs _ hx
     have hT : 1 ≤ T := by
       by_contra hT
@@ -665,7 +665,7 @@ theorem isCombAtG_id {n : ℕ} (v : Fin n → (epsR S ⟶ t.G)) (cf : Fin n → 
 
 theorem dim_eq [IsLocalRing S] [StarRing (𝓞 E)] {d g : ℕ} (gm₀ : GlobalTheory.CompanionTheory.Ar.Conj.GermAt t (𝟙 (Sp S)) d)
     (hg : SmoothOfRelativeDimension g t.G.hom) : g = d := by
-  haveI := t.semi.smooth
+  have := t.semi.smooth
   obtain ⟨u, hu⟩ := GlobalTheory.KeyPow.exists_isLieBasis t.G hg
   let v : Fin d → (epsR S ⟶ t.G) := fun l => Over.homMk (gm₀.tg l) ((gm₀.tan l).1.trans (Category.comp_id _))
   refine card_eq_of_isLieBasis hu (v := v) ⟨fun l => (isTanAtG_id t (v l)).1 (gm₀.tan l), fun w hw => ?_⟩
@@ -676,15 +676,15 @@ end Bridge
 theorem exists_fibre {X Y : Scheme.{0}} (f : X ⟶ Y) [IsFinite f] (k : Type) [Field k] (y : Sp k ⟶ Y) :
     ∃ (A : Type) (_ : CommRing A) (_ : Algebra k A) (_ : Module.Finite k A) (i : Sp A ⟶ X),
       IsPullback i (spMap (algebraMap k A)) f y := by
-  haveI : IsAffine (pullback f y) := isAffine_of_isAffineHom (pullback.snd f y)
+  have : IsAffine (pullback f y) := isAffine_of_isAffineHom (pullback.snd f y)
   let P := pullback f y
   let g' : Spec Γ(P, ⊤) ⟶ Sp k := P.isoSpec.inv ≫ pullback.snd f y
-  haveI : IsFinite g' := inferInstance
+  have : IsFinite g' := inferInstance
   obtain ⟨φ, hφ⟩ := Spec.map_surjective g'
   have hφf : φ.hom.Finite := by
     rw [← IsFinite.SpecMap_iff, hφ]
     infer_instance
-  letI : Algebra k Γ(P, ⊤) := φ.hom.toAlgebra
+  let : Algebra k Γ(P, ⊤) := φ.hom.toAlgebra
   refine ⟨Γ(P, ⊤), inferInstance, inferInstance, hφf, P.isoSpec.inv ≫ pullback.fst f y, ?_⟩
   exact (IsPullback.of_hasPullback f y).of_iso P.isoSpec (Iso.refl _) (Iso.refl _) (Iso.refl _)
     (by simp) (by

@@ -992,7 +992,7 @@ theorem mem_of_nonempty {W : Type} [CommRing W] [IsDomain W] [Algebra R W] [Modu
   have e : (TA R W).hom (φ.left z) = (TF (R := R) F).hom z := by
     rw [← Scheme.Hom.comp_apply, Over.w]
   have hp : p.asIdeal = ⊥ := by
-    refine Ideal.eq_bot_of_comap_eq_bot (R := R) (eq_bot_iff.2 fun r hr => ?_)
+    refine Ideal.eq_bot_of_under_eq_bot (R := R) (eq_bot_iff.2 fun r hr => ?_)
     have h0 : r ∈ PrimeSpectrum.asIdeal (R := R) ((TA R W).hom (φ.left z)) := hr
     rw [e] at h0
     have h1 : algebraMap (FractionRing R) F (algebraMap R (FractionRing R) r) ∈ PrimeSpectrum.asIdeal (R := F) z := h0

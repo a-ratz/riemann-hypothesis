@@ -205,7 +205,7 @@ theorem gTCCurv_of_cut : GTCCurvOfCut := by
   have h1 := hcurv ρ ζ hζ
   have h2 := hPc P.TT (u ρ) (hu ρ).1 (hu ρ).2 ζ hζ
   unfold NF.dZb at h1 h2 ⊢
-  rw [hder, ContinuousLinearMap.sub_apply, ContinuousLinearMap.sub_apply]
+  rw [hder, sub_apply, sub_apply]
   have key : ∀ a b c d : ℂ, (1 / 2 : ℂ) * ((a - b) + Complex.I * (c - d)) =
       (1 / 2 : ℂ) * (a + Complex.I * c) - (1 / 2 : ℂ) * (b + Complex.I * d) := by
     intros; ring

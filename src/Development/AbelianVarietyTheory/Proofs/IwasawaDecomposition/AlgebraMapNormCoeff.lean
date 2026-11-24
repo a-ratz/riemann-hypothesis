@@ -74,8 +74,8 @@ theorem algebraMap_normCoeff [IsDomain A] (φ : A →+* B) (hφ : φ.Finite) (b 
 
 theorem charK_monic (φ : A →+* B) (hφ : φ.Finite) (K : Type) [Field K] [Algebra A K] (b : B) :
     (charK φ hφ K b).Monic := by
-  letI := φ.toAlgebra
-  haveI : Module.Finite A B := hφ
+  let := φ.toAlgebra
+  have : Module.Finite A B := hφ
   exact LinearMap.charpoly_monic _
 
 end GlobalTheory.NormalDescent

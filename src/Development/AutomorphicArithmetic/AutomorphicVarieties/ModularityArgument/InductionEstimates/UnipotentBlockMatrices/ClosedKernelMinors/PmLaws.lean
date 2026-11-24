@@ -90,7 +90,7 @@ private theorem orth {K : Type} [Field K] [NumberField K] {n : ℕ} {μ : Measur
 private theorem posFd {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (G1 K n)) [μ.IsHaarMeasure]
     {φ : G1 K n → ℝ} (hc : Continuous φ) {C : ℝ} (hb : ∀ z, ‖φ z‖ ≤ C) (h0 : ∀ z, 0 ≤ φ z)
     (hΓ : ∀ (γ : Gam K n) z, φ (γ * z) = φ z) {z₀ : G1 K n} (hz : φ z₀ ≠ 0) : 0 < ∫ z, φ z ∂fd μ := by
-  haveI := finFd μ
+  have := finFd μ
   rw [integral_pos_iff_support_of_nonneg h0 (intg _ hc hb), pos_iff_ne_zero]
   intro h
   rw [Measure.restrict_apply hc.isOpen_support.measurableSet] at h
@@ -132,7 +132,7 @@ private theorem core {K : Type} [Field K] [NumberField K] (μ₂ : Measure (G1 K
     Continuous (fun p : G1 K (2 + 2) × G1 K (2 + 2) =>
       ∫ m₁, ∫ m₂, conj (f (a (m₁, m₂) * p.1)) * f' (b (m₁, m₂) * p.2) ∂fd μ₂ ∂fd μ₂) ∧
     ∃ C : ℝ, ∀ x y, ‖∫ m₁, ∫ m₂, conj (f (a (m₁, m₂) * x)) * f' (b (m₁, m₂) * y) ∂fd μ₂ ∂fd μ₂‖ ≤ C := by
-  haveI := finFd μ₂
+  have := finFd μ₂
   obtain ⟨C, hC⟩ := bdd2 hf hf'
   set_option synthInstance.maxHeartbeats 200000 in
   exact core0 (fd μ₂) hf.cont hf'.cont hC ha hb
@@ -160,7 +160,7 @@ private theorem pos2 {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measur
     {F : G1 K n × G1 K n → ℂ} (hc : Continuous F) {C : ℝ} (hC : ∀ z, ‖F z‖ ≤ C)
     (hΓ : ∀ (γ₁ γ₂ : Gam K n) (a b : G1 K n), F ((γ₁ : G1 K n) * a, (γ₂ : G1 K n) * b) = F (a, b))
     {m₁ m₂ : G1 K n} (hz : F (m₁, m₂) ≠ 0) : 0 < ∫ a, ∫ b, ‖F (a, b)‖ ^ 2 ∂fd μ ∂fd μ := by
-  haveI := finFd μ
+  have := finFd μ
   have hc2 : Continuous fun m => ‖F m‖ ^ 2 := hc.norm.pow 2
   have hb2 : ∀ m, ‖‖F m‖ ^ 2‖ ≤ C ^ 2 := fun m => by
     rw [norm_pow, norm_norm]
@@ -181,7 +181,7 @@ private theorem pos2 {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measur
 private theorem posPt {K : Type} [Field K] [NumberField K] (μ₂ : Measure (G1 K 2)) [μ₂.IsHaarMeasure]
     {f : G1 K (2 + 2) → ℂ} (hf : SFun f) (hne : f ≠ 0) :
     ∃ k ∈ KG K (2 + 2), 0 < ∫ m₁, ∫ m₂, ‖f (lv m₁ m₂ 0 * k)‖ ^ 2 ∂fd μ₂ ∂fd μ₂ := by
-  haveI := finFd μ₂
+  have := finFd μ₂
   have hmul := (blkLaws (K := K)).2.1
   obtain ⟨g, hg⟩ := Function.ne_iff.mp hne
   obtain ⟨X, m₁, m₂, t, k, hkK, rfl⟩ := iwa g
@@ -202,7 +202,7 @@ private theorem contK {K : Type} [Field K] [NumberField K] (μ₂ : Measure (G1 
     {f f' : G1 K (2 + 2) → ℂ} (hf : SFun f) (hf' : SFun f') : Continuous fun k : KG K (2 + 2) => pm μ₂ f f' k k :=
   (core μ₂ hf hf' contLv contLv).2.1.comp
     (f := fun k : KG K (2 + 2) => ((k : G1 K (2 + 2)), (k : G1 K (2 + 2))))
-    (continuous_subtype_val.prodMk continuous_subtype_val)
+    (continuous_subtypeVal.prodMk continuous_subtypeVal)
 
 private theorem cptK {K : Type} [Field K] [NumberField K] : CompactSpace (KG K (2 + 2)) :=
   isCompact_iff_compactSpace.mp ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 _).1
@@ -216,7 +216,7 @@ private theorem intK {K : Type} [Field K] [NumberField K] (μ₂ : Measure (G1 K
 private theorem posK {K : Type} [Field K] [NumberField K] (μ₂ : Measure (G1 K 2)) [μ₂.IsHaarMeasure]
     (κ : Measure (KG K (2 + 2))) [κ.IsHaarMeasure]
     {f : G1 K (2 + 2) → ℂ} (hf : SFun f) (hne : f ≠ 0) : 0 < (∫ k : KG K (2 + 2), pm μ₂ f f k k ∂κ).re := by
-  haveI := cptK (K := K)
+  have := cptK (K := K)
   obtain ⟨k, hkK, hpos⟩ := posPt μ₂ hf hne
   have hre : ∀ x, (pm μ₂ f f x x).re = ∫ m₁, ∫ m₂, ‖f (lv m₁ m₂ 0 * x)‖ ^ 2 ∂fd μ₂ ∂fd μ₂ := fun x => by
     rw [← Complex.ofReal_re (∫ m₁, ∫ m₂, ‖f (lv m₁ m₂ 0 * x)‖ ^ 2 ∂fd μ₂ ∂fd μ₂)]
@@ -237,7 +237,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.pmLaws :
       (∀ f : G1 K (2 + 2) → ℂ, SFun f → f ≠ 0 → 0 < (∫ k : KG K (2 + 2), pm μ₂ f f k k ∂κ).re) ∧
       ∀ f f' : G1 K (2 + 2) → ℂ, SFun f → SFun f' → Continuous (fun p : G1 K (2 + 2) × G1 K (2 + 2) => pw μ₂ f f' p.1 p.2) ∧ ∃ C : ℝ, ∀ x y, ‖pw μ₂ f f' x y‖ ≤ C := by
   intro K _ _ μ₂ _ κ _
-  haveI := finFd μ₂
+  have := finFd μ₂
   have ha := contLv (K := K)
   have hb : Continuous fun m : G1 K 2 × G1 K 2 => lv m.2 m.1 0 :=
     (blkLaws (K := K)).2.2.2.1.comp (f := fun m : G1 K 2 × G1 K 2 => (m.2, m.1, (0 : ℝ)))

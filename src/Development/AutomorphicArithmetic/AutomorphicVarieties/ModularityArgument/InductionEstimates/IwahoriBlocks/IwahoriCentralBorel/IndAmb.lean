@@ -182,8 +182,8 @@ private theorem finite_image {G Y : Type} [Group G] [TopologicalSpace G] [IsTopo
     filter_upwards [this] with y hy
     have h2 : f (x * (x⁻¹ * y)) = f x := congrFun hy x
     simpa using h2
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  have := (hlc.comp_continuous (continuous_subtype_val (p := (· ∈ K)))).range_finite
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have := (hlc.comp_continuous (continuous_subtypeVal (p := (· ∈ K)))).range_finite
   rwa [Set.range_comp, Subtype.range_coe_subtype] at this
 
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.indTens :
@@ -1205,7 +1205,7 @@ private theorem indF_stable {G H Y : Type} [Group G] [Group H] [AddCommGroup Y] 
     show IsOpen {a : G | rightReg ℂ G Y a (rightReg ℂ G Y g f) = rightReg ℂ G Y g f}
     convert h5 using 1
     ext a
-    simp only [Set.mem_setOf_eq, Set.mem_preimage]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage]
     constructor
     · intro h
       funext x
@@ -1232,7 +1232,7 @@ private theorem simple_of_sub {G H Y : Type} [Group G] [Group H] [AddCommGroup Y
     intro f
     have hs : {a : G | rightReg ℂ G X a f = f} = {a : G | rightReg ℂ G Y a (Φ f) = Φ f} := by
       ext a
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · intro h
         funext x

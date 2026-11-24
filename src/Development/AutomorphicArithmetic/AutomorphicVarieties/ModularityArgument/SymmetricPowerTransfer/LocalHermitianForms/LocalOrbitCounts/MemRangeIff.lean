@@ -273,7 +273,7 @@ private lemma exists_phi {K : Type} [Field K] {Δ : K} (h2 : (2 : K) ≠ 0) (P :
 theorem UpperTheory.V.Z.Sym.Loc.dIso :
     UpperTheory.V.Z.Sym.Loc.DIso := by
   intro O K _ _ _ _ _ Δ hl
-  haveI := hl.frac
+  have := hl.frac
   have h2 : (2 : K) ≠ 0 := by
     have := (hl.two.map (algebraMap O K)).ne_zero
     rwa [map_ofNat] at this

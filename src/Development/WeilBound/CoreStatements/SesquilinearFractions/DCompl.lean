@@ -83,8 +83,8 @@ def orthogonalFamilyAlt (D : Datum H) {p : ℕ} (x' : Fin p → D.La) : Submodul
     rw [(sesq_sesquilinear_properties D).2.2.2.2.1, hy a, mul_zero]
 
 theorem nsmul_injective_lattice (D : Datum H) {m : ℕ} (hm : m ≠ 0) {y y' : D.La} (h : m • y = m • y') : y = y' := by
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   have hm' : (m : 𝓞 E) ≠ 0 := by exact_mod_cast hm
   have h' : (m : 𝓞 E) • y = (m : 𝓞 E) • y' := by
     rw [Nat.cast_smul_eq_nsmul, Nat.cast_smul_eq_nsmul]
@@ -127,7 +127,7 @@ theorem padic_norm_projectionCoeffs_le (D : Datum H) {p : ℕ} (x' : Fin p → D
   have hR0 : 0 < R := Real.exp_pos _
   have hdetn : ‖j (gramE D x').det‖ = R ^ p := by
     have h0 : 0 < ‖j (gramE D x').det‖ := norm_pos_iff.mpr ((map_ne_zero j).mpr hdet)
-    rw [← Real.exp_log h0, hlog j, hR, ← Real.exp_nat_mul]
+    rw [← Real.exp_log h0, hlog j, hR, ← Real.exp_natCast_mul]
     congr 1
     ring
   have he : projectionCoeffs D x' y a =

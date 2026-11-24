@@ -78,7 +78,7 @@ theorem UpperTheory.Reformulated.B.LocalHeightDeterminant.norm_det_le_pow.{u_1} 
   have hent : ∀ i j, ‖(↑g : Matrix (Fin n) (Fin n) R) i j‖ ≤ UpperTheory.Reformulated.B.LocalHeightDeterminant.locHeight g := by
     intro i j
     refine le_trans ?_ (le_max_right _ _)
-    rw [← coe_nnnorm, NNReal.coe_le_coe]
+    rw [← coe_nnNorm, NNReal.coe_le_coe]
     exact (le_max_left _ _).trans (Finset.le_sup (f := fun (p : Fin n × Fin n) ↦
       Max.max ‖(↑g : Matrix (Fin n) (Fin n) R) p.1 p.2‖₊
         ‖(↑g⁻¹ : Matrix (Fin n) (Fin n) R) p.1 p.2‖₊) (Finset.mem_univ (i, j)))
@@ -192,9 +192,9 @@ private theorem module_le (q : Pl F) (x : AdelicGLn.FiniteAdelicGL E n)
   rw [hf]
   by_cases hb : AdeleBaseChange.below F v = q
   · have := hq ⟨v, liesOver_of_below hb⟩
-    simp only [ne_eq, hb, not_true_eq_false, if_false, one_pow]
+    simp only [ne_eq, hb, not_true_eq_false, ite_false, one_pow]
     exact this.le
-  · rw [if_pos hb]
+  · rw [ite_eq_left hb]
     exact norm_det_le_pow _
 
 end SlopeTestRemainingChoices

@@ -53,12 +53,12 @@ open UpperTheory.Gal.crystallineComparison UpperTheory.Gal.crystallineComparison
 theorem UpperTheory.Gal.crystallineComparison.Mod.kerRead_of :
     KerU → FFRead → LiftFF → PullKer → WVal → KerRead := by
   intro hKU hFF hLF hPK hWV p _ D O _ _ _ _ f b N r w _ hS M j T V _ _ _ _ hp x z hz σ o₁ m₁ P
-  haveI := M.smooth
-  haveI := T.fin
-  haveI : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
-  haveI : LocallyOfFiniteType M.s := inferInstance
-  haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
-  haveI : IsLocallyNoetherian T.Y := LocallyOfFiniteType.isLocallyNoetherian T.s
+  have := M.smooth
+  have := T.fin
+  have : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
+  have : LocallyOfFiniteType M.s := inferInstance
+  have : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : IsLocallyNoetherian T.Y := LocallyOfFiniteType.isLocallyNoetherian T.s
   have hcz : CharZero (FractionRing V) := by
     obtain ⟨φ, hφ⟩ := Spec.map_surjective (x ≫ M.s)
     have key : ∀ n : ℕ, n ≠ 0 → (n : V) ≠ 0 := by

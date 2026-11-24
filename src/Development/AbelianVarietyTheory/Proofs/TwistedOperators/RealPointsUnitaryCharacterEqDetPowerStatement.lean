@@ -98,7 +98,7 @@ theorem exists_dual (hG : IsHerm σ G) {x : Fin n → E} (hx : x ≠ 0) : ∃ y,
   have : hf σ G x (Pi.single b (σ (Matrix.vecMul x G b)⁻¹)) =
       Matrix.vecMul x G b * (Matrix.vecMul x G b)⁻¹ := by
     simp only [hf, Pi.single_apply, apply_ite σ, map_zero, mul_ite, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, hG.invol, ← Finset.sum_mul]
+      Finset.mem_univ, ite_true, hG.invol, ← Finset.sum_mul]
     rfl
   rw [this, mul_inv_cancel₀ hb]
 
@@ -751,7 +751,7 @@ theorem kill {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) (hH : H.IsHermitian) (hd
     exact zero_ne_one this
   let X : Matrix (Fin n) (Fin n) ℂ → ℂˣ := fun g => if h : c g = 0 then 1 else Units.mk0 (c g) h
   have hX : ∀ g ∈ Formalism.QuantumDeterminants.UH H, (X g : ℂ) = c g := fun g hg => by
-    simp only [X, dif_neg (hne g hg), Units.val_mk0]
+    simp only [X, dite_eq_right (hne g hg), Units.val_mk0]
   have key := GlobalTheory.UTrans.char_eq_one_of_det_eq_one ℂ n (starRingEnd ℂ) (H.map (starRingEnd ℂ)) (isHerm H hH hd)
     (iso_or_one_class H hH hd) ℂˣ X (fun a b ha hb => by
       rw [isU_iff] at ha hb

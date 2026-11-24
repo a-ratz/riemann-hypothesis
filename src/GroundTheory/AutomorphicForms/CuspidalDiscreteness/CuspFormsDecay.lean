@@ -74,7 +74,7 @@ def cuspQuot {φ : AdelicGLn.AdelicGL K n → ℂ} (hφ : IsLeftInvariant φ) :
 
 theorem continuous_cuspQuot {φ : AdelicGLn.AdelicGL K n → ℂ} (hφ : IsLeftInvariant φ)
     (hc : Continuous φ) : Continuous (cuspQuot hφ) :=
-  (isOpenQuotientMap_mk Γ₁).isQuotientMap.continuous_iff.2 (hc.comp continuous_subtype_val)
+  (isOpenQuotientMap_mk Γ₁).isQuotientMap.continuous_iff.2 (hc.comp continuous_subtypeVal)
 
 theorem cuspQuot_surj_eq {φ ψ : AdelicGLn.AdelicGL K n → ℂ} (hφ : IsLeftInvariant φ)
     (hψ : IsLeftInvariant ψ) (h : ∀ y : Reduction.normOneGL (K := K) (n := n), φ y = ψ y) :
@@ -135,7 +135,7 @@ theorem cuspToL2_eq_zero_iff (φ : cuspForms K n) :
       exact Lp.coeFn_zero _ _ _
     have h2 : (fun y : Reduction.normOneGL (K := K) (n := n) => (φ : AdelicGLn.AdelicGL K n → ℂ) y) =ᵐ[μ] 0 :=
       QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk Γ₁ μ) h1
-    have h3 := (Continuous.ae_eq_iff_eq μ (φ.2.1.continuous.comp continuous_subtype_val)
+    have h3 := (Continuous.ae_eq_iff_eq μ (φ.2.1.continuous.comp continuous_subtypeVal)
       continuous_const).1 h2
     exact congrFun h3 ⟨x, hx⟩
   · intro h

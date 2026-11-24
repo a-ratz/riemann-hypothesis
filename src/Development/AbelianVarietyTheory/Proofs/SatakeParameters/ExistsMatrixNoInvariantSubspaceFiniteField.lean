@@ -65,8 +65,8 @@ theorem exists_matrix_no_invariant_subspace :
       ∀ W : Submodule κ (Fin a → κ), (∀ v ∈ W, B.mulVec v ∈ W) → W = ⊥ ∨ W = ⊤ := by
   intro κ _ _ a ha
   obtain ⟨p, hp⟩ := CharP.exists κ
-  haveI : Fact p.Prime := ⟨CharP.char_is_prime κ p⟩
-  haveI : NeZero a := ⟨by omega⟩
+  have : Fact p.Prime := ⟨CharP.char_is_prime κ p⟩
+  have : NeZero a := ⟨by omega⟩
   let L := FiniteField.Extension κ p a
   let b : Module.Basis (Fin a) κ L :=
     Module.finBasisOfFinrankEq κ L (FiniteField.finrank_extension κ p a)

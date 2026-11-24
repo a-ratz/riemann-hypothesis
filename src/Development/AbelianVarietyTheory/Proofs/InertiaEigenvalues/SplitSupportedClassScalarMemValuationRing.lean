@@ -180,7 +180,7 @@ theorem lat_std_of_suppAt : ∀ (D : D7) (V : HSp D), V.gram = 1 → Bridge.hLat
 
   have hlog : ∀ x : WithZero (Multiplicative ℤ), ∃ n : ℕ, x ≤ WithZero.exp (n : ℤ) := fun x => by
     by_cases hx : x = 0
-    · exact ⟨0, hx ▸ zero_le'⟩
+    · exact ⟨0, hx ▸ zero_le⟩
     · exact ⟨(WithZero.log x).toNat, by
         rw [← WithZero.exp_log hx]; exact WithZero.exp_le_exp.2 (by rw [WithZero.log_exp]; exact Int.self_le_toNat _)⟩
   choose fn hfn using hlog
@@ -353,7 +353,7 @@ theorem unimod_hLat {D : D7} (V : HSp D) (hg : V.gram = 1) (g : Bridge.Gf V) :
   have h := (GlobalTheory.MovedLat.isSelfDualC_hLat V g).2 v
   rw [h]
   refine forall_congr' fun w => imp_congr_right fun _ => ?_
-  simp only [hg, Matrix.one_apply, mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hg, Matrix.one_apply, mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   have e : ∑ j, (IsCMField.complexConj D.host.E) (v j) * w j =
       IsCMField.complexConj D.host.E (∑ x, star (w x) * v x) := by
 
@@ -412,7 +412,7 @@ theorem exists_gen {K : Type} [Field K] [NumberField K] (P : HeightOneSpectrum (
   have h1 : ClassGroup.mk0 ⟨P.asIdeal ^ h, hPh⟩ = 1 := by
     have e : (⟨P.asIdeal ^ h, hPh⟩ : nonZeroDivisors (Ideal (𝓞 K))) = ⟨P.asIdeal, hP⟩ ^ h := Subtype.ext (by simp)
     rw [e, map_pow, pow_card_eq_one]
-  haveI := (ClassGroup.mk0_eq_one_iff hPh).1 h1
+  have := (ClassGroup.mk0_eq_one_iff hPh).1 h1
   exact ⟨h, Fintype.card_pos, _, Ideal.span_singleton_generator _⟩
 
 end GlobalTheory.UnitOverP
@@ -635,7 +635,7 @@ theorem val_le_one_of_mem {k : Type} [Field k] [NumberField k] (σ : k →+* ℂ
     · have : ((c' : 𝓞 k) : k) = q := hc'
       rw [this, hq, mul_div_cancel₀ _ (pow_ne_zero _ hαk0)]
   by_cases hz0 : z = 0
-  · rw [hz0, map_zero]; exact zero_le'
+  · rw [hz0, map_zero]; exact zero_le
   obtain ⟨⟨a, b, hb⟩, hab⟩ := IsLocalization.surj (nonZeroDivisors (𝓞 k)) z
   simp only at hab
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
@@ -665,7 +665,7 @@ theorem val_le_one_of_mem {k : Type} [Field k] [NumberField k] (σ : k →+* ℂ
       rw [← key]
       exact mul_le_of_le_one_left' (pow_le_one' hz e)
     have h2 : A.valuation (σ (α : k)) ^ mb < A.valuation (σ (α : k)) ^ ma :=
-      pow_lt_pow_right_of_lt_one₀ (zero_lt_iff.2 hc0) hc hlt
+      pow_lt_pow_right_of_lt_one₀ (pos_iff_ne_zero.2 hc0) hc hlt
     exact absurd h1 (not_le.2 h2)
   have hzv : la.valuation k z * la.valuation k (b : k) = la.valuation k (a : k) := by rw [← map_mul, hab']
   rw [hav, hbv] at hzv
@@ -676,7 +676,7 @@ theorem val_le_one_of_mem {k : Type} [Field k] [NumberField k] (σ : k →+* ℂ
   first
     | exact (mul_le_mul_right₀ hne).1 hexp'
     | exact le_of_mul_le_mul_right' hexp'
-    | exact (mul_le_mul_iff_of_pos_right (zero_lt_iff.2 hne)).1 hexp'
+    | exact (mul_le_mul_iff_of_pos_right (pos_iff_ne_zero.2 hne)).1 hexp'
 end GlobalTheory.LevelSeriesScal
 
 namespace GlobalTheory.LevelSeriesScal
@@ -822,7 +822,7 @@ theorem GlobalTheory.LevelSeries.clsScal_mem_valRing : ∀ (D : D7) (ψ : AddCha
   have hO : ∀ m : ℕ, Nat.Coprime m p → (m : ℂ)⁻¹ ∈ O := fun m hm => by
     have h1 := hVR ((m : k)⁻¹) (by rw [map_inv₀, GlobalTheory.ScalarUnit.val_natCast la hla hm, inv_one])
     simpa using h1
-  letI : Algebra k ℂ := σ.toAlgebra
+  let : Algebra k ℂ := σ.toAlgebra
   obtain ⟨A, hA⟩ := ReciprocityTheory.Gal.exists_valuationSubring_over (Ω := ℂ) la
   have hA' : ∀ x : 𝓞 k, A.valuation (σ (x : k)) < 1 ↔ x ∈ la.asIdeal := hA
   have hpA : (p : ℂ) ∈ A.nonunits := by
@@ -888,8 +888,8 @@ theorem GlobalTheory.LevelSeries.clsScal_mem_valRing : ∀ (D : D7) (ψ : AddCha
     have h0 : Ideal.absNorm cc * kk ^ 2 ≠ 0 :=
       mul_ne_zero (fun h0 => c0 (Ideal.absNorm_eq_zero_iff.1 h0)) (pow_ne_zero _ k0)
     rw [← hk] at h0 ⊢
-    haveI := Fact.mk hp
-    haveI : Finite (L.toAddSubgroup ⧸ (L ⊓ Formalism.L2.Pj.stdLat D.host.E V.rank).toAddSubgroup.addSubgroupOf L.toAddSubgroup) :=
+    have := Fact.mk hp
+    have : Finite (L.toAddSubgroup ⧸ (L ⊓ Formalism.L2.Pj.stdLat D.host.E V.rank).toAddSubgroup.addSubgroupOf L.toAddSubgroup) :=
       Nat.finite_of_card_ne_zero h0
     refine ((Nat.Prime.coprime_iff_not_dvd hp).2 fun hd => ?_).symm
     obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' p hd

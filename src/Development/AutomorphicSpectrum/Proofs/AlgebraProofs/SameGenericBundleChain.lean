@@ -101,7 +101,7 @@ theorem exists_minor_ne_zero {Ω : Type*} [Field Ω] {M i : ℕ} (A : Fin M → 
       exact hI a
     rw [this]
     exact hli.comp _ e.symm.injective
-  have hu := Matrix.linearIndependent_rows_iff_isUnit.1 hrow
+  have hu := Matrix.linearIndependent_row_iff_isUnit.1 hrow
   exact ((Matrix.isUnit_iff_isUnit_det _).1 hu).ne_zero
 
 theorem chartRing_le_fnField (O : Type*) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
@@ -273,10 +273,10 @@ theorem mem_span_iff {Ω : Type} [Field Ω] {E : Type} [AddCommGroup E] [Module 
       refine ⟨Fin.castLE i.2 b, ?_, rfl⟩
       show Fin.castLE i.2 b ≤ i
       rw [Fin.le_iff_val_le_val]
-      simp only [Fin.coe_castLE]
+      simp only [Fin.val_castLE]
       omega
     · rintro ⟨j, hj, rfl⟩
-      refine ⟨⟨j, by rw [Set.mem_setOf_eq, Fin.le_iff_val_le_val] at hj; omega⟩, ?_⟩
+      refine ⟨⟨j, by rw [Set.mem_ofPred_eq, Fin.le_iff_val_le_val] at hj; omega⟩, ?_⟩
       rfl
   rw [hrange, w.mem_span_image]
   constructor
@@ -284,7 +284,7 @@ theorem mem_span_iff {Ω : Type} [Field Ω] {E : Type} [AddCommGroup E] [Module 
     by_contra hne
     have hmem : j ∈ ((w.repr v).support : Set (Fin N)) := by simpa using hne
     have := h hmem
-    simp only [Set.mem_setOf_eq] at this
+    simp only [Set.mem_ofPred_eq] at this
     exact absurd this (not_le.mpr hj)
   · intro h j hj
     by_contra hne
@@ -433,23 +433,23 @@ private theorem combo_lemma_5 {Ω : Type} [Field Ω] {E : Type} [AddCommGroup E]
     rw [h]
     apply Finset.sum_eq_zero
     intro b _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro heq
-    rw [← heq, Fin.lt_iff_val_lt_val] at hj
-    simp only [Fin.coe_castLE] at hj
+    rw [← heq, Fin.lt_def] at hj
+    simp only [Fin.val_castLE] at hj
     have := b.2
     omega
   · rw [h, Finset.sum_eq_single (Fin.last _)]
-    · rw [if_pos]
+    · rw [ite_eq_left]
       ext
       simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro heq
       apply hb
       ext
       have := congrArg Fin.val heq
-      simp only [Fin.coe_castLE] at this
+      simp only [Fin.val_castLE] at this
       simp [this]
     · intro hh
       exact absurd (Finset.mem_univ _) hh
@@ -785,7 +785,7 @@ end PositivityTheory.Xgn.A_plucker_frame
 
 theorem PositivityTheory.Xgn.t_plucker_frame : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (Ω : Type) [Field Ω] [Algebra O Ω] (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type) [∀ k, Fintype (ι k)] (x : (Σ k, ι k) → Ω) (N : ℕ) (V : Type) [AddCommGroup V] [Module Ω V] (J : Type) [Fintype J] [DecidableEq J] (E : J → ChartBundle O (mseg x) N V) (M : J → ℕ) (a : J → K → ℤ) (φ : ∀ j, Fin (M j) → Module.Dual Ω V), (∀ j, IsTwistedDualGens x (E j) (a j) (φ j)) → ∀ (w : Module.Basis (Fin N) Ω V) (j : J) (EB : ChartBundle O (mseg (joinCoord x (pluckerCoord φ w))) N V), IsPull O x (pluckerCoord φ w) (E j) EB → IsFlagFrame (joinCoord x (pluckerCoord φ w)) EB w (pluckerDeg (a j) j) := by
   intro O _ _ _ Ω _ _ K _ _ ι _ x N V _ _ J _ _ E M a φ hE w j EB hpull
-  letI hfin : ∀ k, Fintype (Sum.elim ι (pluckerIdx N M) k) := fun k =>
+  let hfin : ∀ k, Fintype (Sum.elim ι (pluckerIdx N M) k) := fun k =>
     match k with
     | Sum.inl k => inferInstanceAs (Fintype (ι k))
     | Sum.inr k => inferInstanceAs (Fintype (Fin (k.2 : ℕ) → Fin (M k.1)))

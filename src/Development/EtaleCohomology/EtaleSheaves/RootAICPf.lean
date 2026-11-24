@@ -76,9 +76,9 @@ theorem localRoot {q : ℕ} {X : Scheme.{0}} [IsIntegral X] (hX : AICSch X) (hq 
 
 theorem RootAIC_of : LateralTheory.E.HZeroPf.RootAIC := by
   intro q X hX hq
-  haveI := hX.1
+  have := hX.1
   obtain ⟨x0⟩ : Nonempty X := inferInstance
-  haveI : Nonempty (⊤ : X.Opens) := ⟨⟨x0, trivial⟩⟩
+  have : Nonempty (⊤ : X.Opens) := ⟨⟨x0, trivial⟩⟩
   have hK : ((q : ℕ) : X.functionField) ≠ 0 := by
     intro h
     have := hq.map (X.germToFunctionField ⊤).hom
@@ -86,17 +86,17 @@ theorem RootAIC_of : LateralTheory.E.HZeroPf.RootAIC := by
     rw [h] at this
     exact not_isUnit_zero this
   have hq0 : q ≠ 0 := by rintro rfl; exact hK (by simp)
-  haveI : NeZero q := ⟨hq0⟩
+  have : NeZero q := ⟨hq0⟩
   have hnb : ∀ x : X, ∃ V : X.Opens, IsAffineOpen V ∧ x ∈ V := fun x => by
     obtain ⟨V, hV, hx, -⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.mp X.isBasis_affineOpens (show x ∈ (⊤ : X.Opens) from trivial)
     exact ⟨V, hV, hx⟩
   obtain ⟨V0, hV0, hx0⟩ := hnb x0
-  haveI : Nonempty V0 := ⟨⟨x0, hx0⟩⟩
+  have : Nonempty V0 := ⟨⟨x0, hx0⟩⟩
   obtain ⟨ζ0, hζ0⟩ := localRoot hX hq0 hK V0 hV0
   obtain ⟨s, hs⟩ := GlobalTheory.IsNormalScheme.exists_germToFunctionField_eq_of_locally (⊤ : X.Opens)
     (X.germToFunctionField V0 ζ0) (fun x _ => by
       obtain ⟨V, hV, hx⟩ := hnb x
-      haveI hne : Nonempty V := ⟨⟨x, hx⟩⟩
+      have hne : Nonempty V := ⟨⟨x, hx⟩⟩
       obtain ⟨ζ, hζ⟩ := localRoot hX hq0 hK V hV
       obtain ⟨k, -, hk⟩ := hζ.eq_pow_of_pow_eq_one hζ0.pow_eq_one
       exact ⟨V, hne, ζ ^ k, hx, le_top, by rw [map_pow]; exact hk⟩)

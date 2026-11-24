@@ -253,7 +253,7 @@ private theorem eq_of_mat_nmat_eq {r : ℕ} (X : Data E r) {z z' : V (nd X)}
   have hk : k = Fintype.equivFin (Ent X) ⟨τ, ⟨(a, c), hac⟩⟩ := by
     rw [← he]
     exact ((Fintype.equivFin (Ent X)).apply_symm_apply k).symm
-  simp only [mat, nmat, Matrix.of_apply, dif_pos hac] at h1
+  simp only [mat, nmat, Matrix.of_apply, dite_eq_left hac] at h1
   rw [hk]
   exact h1
 
@@ -449,7 +449,7 @@ theorem finMu_of_finite_covolume :
     refine continuous_pi fun τ => ?_
     show Continuous fun g : H =>
       (((g : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) * mat (x0F X) τ
-    exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtype_val)).matrix_mul
+    exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtypeVal)).matrix_mul
       continuous_const
   have hT : MeasurableSet ((fun g : H =>
       X.lmulC (fun τ => (((g : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ))
@@ -478,7 +478,7 @@ theorem finMu_of_finite_covolume :
     ⟨embGL X.Ψ s⁻¹, (hH _).2 (isUnitaryC_of_isUStab X hs)⟩ else 1
   have hνΩ : ν Ω < ⊤ := by
     rw [MeasureTheory.Measure.isMulLeftInvariant_eq_smul ν MeasureTheory.Measure.haar,
-      MeasureTheory.Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+      smul_apply, ENNReal.smul_def, smul_eq_mul]
     exact ENNReal.mul_lt_top ENNReal.coe_lt_top hΩfin
   have hΩ'm : MeasurableSet (⋃ s ∈ S, (fun w => σ s * w) '' Ω) := by
     refine Finset.measurableSet_biUnion S fun s _ => ?_
@@ -497,7 +497,7 @@ theorem finMu_of_finite_covolume :
       exact isUStab_mul' (X.Γ_stab _ (X.Γ.inv_mem hδ)) hγ
     refine ⟨⟨γ * s, hδ⟩, σ s * w, Set.mem_iUnion₂.2 ⟨s, hsS, w, hw, rfl⟩, ?_⟩
     have hσ : ((σ s : H) : X.Ψ → GL (Fin r) ℂ) = embGL X.Ψ s⁻¹ := by
-      simp only [σ, dif_pos hsu]
+      simp only [σ, dite_eq_left hsu]
     apply Subtype.ext
     funext τ
     apply Units.ext

@@ -171,7 +171,7 @@ theorem fr_fildR_hi (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ 
     intro a
     rw [ha0]
     exact Nat.find_min' hex ⟨a, rfl⟩
-  haveI := hfd a0
+  have := hfd a0
   have hstab : ∀ a, a0 ≤ a → FildR PD ρ τ a = FildR PD ρ τ a0 := fun a ha =>
     Submodule.eq_of_le_of_finrank_le (fr_fildR_anti PD ρ τ ha) (hmin a)
   have hbot : FildR PD ρ τ a0 = ⊥ := by

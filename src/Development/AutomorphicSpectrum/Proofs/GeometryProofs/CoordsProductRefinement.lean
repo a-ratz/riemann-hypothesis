@@ -102,7 +102,7 @@ theorem exists_val_eq (hgen : IsCptGen ξ) (V : X.Opens) (hV : genPt ξ ∈ V)
       val ξ O hξ f = a := by
     rintro ⟨q, hq⟩
     obtain ⟨g, hg⟩ := ha ⟨q, hcl q hq⟩ hq
-    obtain ⟨O, hqO, f, hf⟩ := TopCat.Presheaf.germ_exist X.presheaf g
+    obtain ⟨O, hqO, f, hf⟩ := TopCat.Presheaf.exists_germ_eq X.presheaf g
     have hξ : genPt ξ ∈ O ⊓ V := (hcl q hq).mem_open (O ⊓ V).2 ⟨hqO, hq⟩
     refine ⟨O ⊓ V, ⟨hqO, hq⟩, inf_le_right, hξ, X.presheaf.map (homOfLE inf_le_left).op f, ?_⟩
     rw [val_res, ← genMap_germ ξ O _ ⟨q, hcl q hq⟩ hqO, hf]

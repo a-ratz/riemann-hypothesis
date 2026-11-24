@@ -65,7 +65,7 @@ private theorem exists_span_singleton_eq_of_le_span_singleton {R M : Type} [Comm
     by_cases hJ : J = ⊥
     ·
       have hinj : Function.Injective f := LinearMap.ker_eq_bot.1 hJ
-      haveI : Finite R := Finite.of_injective f hinj
+      have : Finite R := Finite.of_injective f hinj
       have hF : IsField R := Finite.isField_of_domain R
       by_cases hI : I = ⊥
       · exact ⟨0, by rw [hJ, hI]; simp⟩
@@ -109,7 +109,7 @@ theorem exists_family_span_eq_of_le {R M : Type} [CommRing R] [IsDedekindDomain 
     have hv : Submodule.span R (Set.range v) = (R ∙ v 0) ⊔ S' := by
       conv_lhs => rw [← Fin.cons_self_tail v]
       rw [Fin.range_cons, Submodule.span_insert]
-    haveI : Finite (M ⧸ S') := Finite.of_surjective _ (Submodule.mkQ_surjective S')
+    have : Finite (M ⧸ S') := Finite.of_surjective _ (Submodule.mkQ_surjective S')
 
     have hπ : N.map S'.mkQ ≤ R ∙ S'.mkQ (v 0) := by
       rw [Submodule.map_le_iff_le_comap]

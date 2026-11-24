@@ -136,7 +136,7 @@ theorem sH_rel (hd : d.AxH 𝒜) (c : ι) (i : Fin d.D) :
   simp_rw [hr, d.sH_eq, ← map_mul, ← map_sum]
   rw [Fin.sum_univ_succAbove _ (d.jc c)]
   simp only [sHp, MvPolynomial.aeval_X, pImg, sac_self, sac_succAbove, ratio_self (hd.w_base c),
-    Fin.succ_ne_zero, if_false, hx, MvPolynomial.C_1, mul_one, neg_add_cancel, map_zero]
+    Fin.succ_ne_zero, ite_false, hx, MvPolynomial.C_1, mul_one, neg_add_cancel, map_zero]
 
 noncomputable def evP (c : ι) (P : Ω c →+* ℂ) (pt : TVar d.D d.N → ℂ) :
     MvPolynomial (SVar d.D d.N) (Ω c) →+* ℂ :=
@@ -168,7 +168,7 @@ theorem evP_sHp (c : ι) (sg : K →+* ℂ) (pt : TVar d.D d.N → ℂ) (hd : d.
         cases i using Fin.cases with
         | zero => simp [evP]
         | succ i' =>
-          rw [if_neg (Fin.succ_ne_zero i')]
+          rw [ite_eq_right (Fin.succ_ne_zero i')]
           have h1 := heq i'
           rw [Fin.sum_univ_succAbove _ (d.jc c), ratio_self (hd.w_base c), map_one, mul_one] at h1
           simp only [hx] at h1
@@ -302,13 +302,13 @@ theorem fibre_core :
        Set.range (fun σ : OmS (Ω c) d.D d.N →ₐ[KTf K d.D d.N] ℂ =>
          (σ : OmS (Ω c) d.D d.N →+* ℂ).comp (algebraMap (Ω c) (OmS (Ω c) d.D d.N))) =
          d.ST c sg (fun i j => pt (i.succ, j))) := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  letI : Algebra (KTf K d.D d.N) ℂ := (tauPev sg pt hpt).toAlgebra
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  let : Algebra (KTf K d.D d.N) ℂ := (tauPev sg pt hpt).toAlgebra
   have hcomm : ∀ σ : OmS (Ω c) d.D d.N →ₐ[KTf K d.D d.N] ℂ,
       (σ : OmS (Ω c) d.D d.N →+* ℂ).comp (d.KTtoS h c) = tauPev sg pt hpt :=
     fun σ => RingHom.ext fun z => σ.commutes z
   refine ⟨fun σ₁ σ₂ he => ?_, ?_⟩
-  · apply AlgHom.coe_ringHom_injective
+  · apply AlgHom.toRingHom_injective
     exact d.emb_ext h c sg pt hpt _ _ (hcomm σ₁) (hcomm σ₂) he
   · ext P
     constructor

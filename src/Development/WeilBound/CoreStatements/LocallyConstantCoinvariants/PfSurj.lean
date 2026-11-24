@@ -110,7 +110,7 @@ theorem bx_open {c : k} (hc : c ≠ 0) : IsOpen (bx S c : Set (S → k)) := by
 
 theorem bx_finite {c : k} (c' : k) (hc : c ≠ 0) : Finite (bx S c' ⧸ (bx S c).addSubgroupOf (bx S c')) :=
   have : CompactSpace (bx S c') := isCompact_iff_compactSpace.1 (bx_compact c')
-  AddSubgroup.quotient_finite_of_isOpen _ ((bx_open hc).preimage continuous_subtype_val)
+  AddSubgroup.quotient_finite_of_isOpen _ ((bx_open hc).preimage continuous_subtypeVal)
 
 theorem bx_small {W : Set (S → k)} (hW : W ∈ 𝓝 (0 : S → k)) : ∃ c : k, c ≠ 0 ∧ (bx S c : Set (S → k)) ⊆ W := by
   rw [nhds_pi, Filter.mem_pi] at hW
@@ -122,7 +122,7 @@ theorem bx_small {W : Set (S → k)} (hW : W ∈ 𝓝 (0 : S → k)) : ∃ c : k
   refine ⟨y * r, mul_ne_zero hy (by simpa using hr), fun b hb => hI fun s _ => Set.mem_iInter.1 (h ?_) s⟩
   refine lt_of_le_of_lt (hb s) ?_
   rw [map_mul]
-  exact mul_lt_of_lt_one_right (zero_lt_iff.2 hγ) hr1
+  exact mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hγ) hr1
 
 theorem bx_large {L : Set (S → k)} (hL : IsCompact L) : ∃ c : k, c ≠ 0 ∧ L ⊆ bx S c := by
   have hb : ∀ (T : Finset S) (b : S → k), ∃ c : k, c ≠ 0 ∧ ∀ s ∈ T, valuation k (b s) ≤ valuation k c := by
@@ -340,7 +340,7 @@ theorem step (hi : i ∉ S) {ν α : kˣ →* ℂˣ} (hν : USm ν) (h1 : ν ≠
       have i1 : ∀ a ∈ bx S c, ∀ b, f₁ (b + a) = f₁ b := fun a ha b => by rw [e1, e1, avg_inv _ _ i0 ha]
       have o1 : ∀ a ∉ bx S c, f₁ a = 0 := fun a ha => by rw [e1, avg_off _ _ o0 ha]
       have hm : ∀ a : S → k, a ∈ bx S ((x⁻¹ : kˣ) * c) ↔ (x : k) • a ∈ bx S c := fun a => forall_congr' fun s => by
-        have : 0 < valuation k (x : k) := zero_lt_iff.2 (by simp)
+        have : 0 < valuation k (x : k) := pos_iff_ne_zero.2 (by simp)
         simp [le_inv_mul_iff₀ this]
       rw [eY]
       simp only [mv_mv hi, one_smul, mul_zero, add_zero]

@@ -64,7 +64,7 @@ theorem discrete_cocompact : ∀ (F : Type) [Field F] [NumberField F],
       (GlobalTheory.AdeleDiscrete.exists_nhds_zero_principal_eq_zero F) hC
   refine ⟨GlobalTheory.AdeleCocompact.exists_compact_adele F, hfin, ⟨fun h => ?_⟩⟩
   have h1 := hfin Set.univ h
-  simp only [Set.mem_univ, Set.setOf_true] at h1
+  simp only [Set.mem_univ, Set.ofPred_true] at h1
   exact Set.infinite_univ h1
 
 end GlobalTheory.CompanionTheory.Adelic.FieldCocompact

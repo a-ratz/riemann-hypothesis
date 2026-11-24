@@ -106,7 +106,7 @@ theorem unit_of_integral {A O : Type} [CommRing A] [CommRing O] (φ : A →+* O)
     (hj : ∀ a, IsUnit (1 + j * a)) (z : O) : IsUnit (1 + φ j * z) := by
   by_contra h
   obtain ⟨M, hM, hx⟩ := exists_max_ideal_of_mem_nonunits h
-  have hm := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' φ hφ M
+  have hm := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal φ hφ M
   have hjm : j ∈ M.comap φ := by
     have : j ∈ Ideal.jacobson (⊥ : Ideal A) := by
       rw [Ideal.mem_jacobson_bot]
@@ -192,7 +192,7 @@ def ratHat : 𝓞 E →+* intHat F E :=
     (intHat F E) (fun x => tmul_mem F E 1 (fun v => one_mem _) x)
 
 theorem inclHat_integral : (inclHat F E).IsIntegral := by
-  letI := (inclHat F E).toAlgebra
+  let := (inclHat F E).toAlgebra
   rintro ⟨z, hz⟩
   change IsIntegral (∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletionIntegers F) (⟨z, hz⟩ : intHat F E)
   induction hz using AddSubgroup.closure_induction with
@@ -281,7 +281,7 @@ theorem finite_near (c : E ≃ₐ[F] E) (h2 : Module.finrank F E = 2) (hc : c �
     letI : TopologicalSpace (RA F E) := moduleTopology (FiniteAdeleRing (𝓞 F) F) (RA F E)
     ∀ V ∈ 𝓝 (1 : RA F E), ∀ᶠ u in 𝓝 (1 : RA F E), u * sg (FiniteAdeleRing (𝓞 F) F) c u = 1 →
       ∃ x ∈ V, ∃ y ∈ V, x * y = 1 ∧ x = u * sg (FiniteAdeleRing (𝓞 F) F) c x := by
-  letI : TopologicalSpace (RA F E) := moduleTopology (FiniteAdeleRing (𝓞 F) F) (RA F E)
+  let : TopologicalSpace (RA F E) := moduleTopology (FiniteAdeleRing (𝓞 F) F) (RA F E)
   have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (RA F E) := ⟨rfl⟩
   have : ContinuousAdd (RA F E) := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) _
   intro V hV
@@ -335,7 +335,7 @@ theorem infinite_near (c : E ≃ₐ[F] E) :
       u * sg (InfiniteAdeleRing F) c u = 1 →
       ∃ x ∈ V, ∃ y ∈ V, x * y = 1 ∧ x = u * sg (InfiniteAdeleRing F) c x := by
   classical
-  letI : TopologicalSpace (InfiniteAdeleRing F ⊗[F] E) :=
+  let : TopologicalSpace (InfiniteAdeleRing F ⊗[F] E) :=
     moduleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E)
   have : IsModuleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E) := ⟨rfl⟩
   have : ContinuousAdd (InfiniteAdeleRing F ⊗[F] E) :=
@@ -389,10 +389,10 @@ theorem map_sg {A B : Type} [CommRing A] [Algebra F A] [CommRing B] [Algebra F B
 
 theorem exists_root_near : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (c : E ≃ₐ[F] E), Module.finrank F E = 2 → c ≠ 1 → (∀ P : Ideal (𝓞 E), P.IsMaximal → ∃ t s : 𝓞 E, (s : E) = c (t : E) ∧ t - s ∉ P) → letI : TopologicalSpace (AdeleRing (𝓞 F) F ⊗[F] E) := moduleTopology (AdeleRing (𝓞 F) F) (AdeleRing (𝓞 F) F ⊗[F] E); ∀ W ∈ 𝓝 (1 : (AdeleRing (𝓞 F) F ⊗[F] E)ˣ), ∃ N ∈ 𝓝 (1 : (AdeleRing (𝓞 F) F ⊗[F] E)ˣ), ∀ u ∈ N, (u : AdeleRing (𝓞 F) F ⊗[F] E) * sg (AdeleRing (𝓞 F) F) c u = 1 → ∃ x ∈ W, (x : AdeleRing (𝓞 F) F ⊗[F] E) = u * sg (AdeleRing (𝓞 F) F) c x := by
   intro F E _ _ _ _ _ c h2 hc hP
-  letI : TopologicalSpace (AdeleRing (𝓞 F) F ⊗[F] E) :=
+  let : TopologicalSpace (AdeleRing (𝓞 F) F ⊗[F] E) :=
     moduleTopology (AdeleRing (𝓞 F) F) (AdeleRing (𝓞 F) F ⊗[F] E)
-  letI : TopologicalSpace (RA F E) := moduleTopology (FiniteAdeleRing (𝓞 F) F) (RA F E)
-  letI : TopologicalSpace (InfiniteAdeleRing F ⊗[F] E) :=
+  let : TopologicalSpace (RA F E) := moduleTopology (FiniteAdeleRing (𝓞 F) F) (RA F E)
+  let : TopologicalSpace (InfiniteAdeleRing F ⊗[F] E) :=
     moduleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E)
   intro W hW
   obtain ⟨V, hV, hVW⟩ := units_nhds W hW

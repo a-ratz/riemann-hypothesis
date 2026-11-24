@@ -283,7 +283,7 @@ theorem term_val {V₁ : Type} [CommRing V₁] [IsDomain V₁] (D : DegPre V₁)
     abel
 
 theorem toStk_surj {K : Type} [Field K] (z : Sp K) : Function.Surjective (toStk z) := fun s => by
-  obtain ⟨U, hU, a, rfl⟩ := (Sp K).presheaf.germ_exist s
+  obtain ⟨U, hU, a, rfl⟩ := (Sp K).presheaf.exists_germ_eq s
   exact ⟨_, (toStk_valF_gs (𝟙 _) U z hU a).trans (gs_eq _ _ _ hU _)⟩
 
 theorem root_mem {K : Type} [Field K] {k₀ : Subfield K} (hk₀ : IsAlgClosed k₀) {z : Sp K} {s : (Sp K).presheaf.stalk z}

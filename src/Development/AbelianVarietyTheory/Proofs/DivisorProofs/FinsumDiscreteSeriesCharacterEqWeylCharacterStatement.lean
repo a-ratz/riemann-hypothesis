@@ -215,7 +215,7 @@ theorem GlobalTheory.dsChar_finsum_eq_glChar : ∀ (n : ℕ) (ε : Fin n → Boo
     ∑ᶠ q, dsChar ε (fun a => (lam a : ℝ)) (θ q) = glChar (hiWt lam) α := by
   intro n ε lam α ι _ y θ hn hα hb hθ
   classical
-  haveI : Fintype ι := Fintype.ofFinite ι
+  have : Fintype ι := Fintype.ofFinite ι
   obtain ⟨k, hk⟩ := id hn
   set m : Fin n → ℤ := fun a => lam a + (((n - 1) / 2 : ℕ) : ℤ) with hmdef
   have hk2 : (n - 1) / 2 = k := by omega
@@ -229,7 +229,7 @@ theorem GlobalTheory.dsChar_finsum_eq_glChar : ∀ (n : ℕ) (ε : Fin n → Boo
     { carrier := {w | ε ∘ w = ε}
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at *
+        simp only [mem_ofPred_eq] at *
         funext x
         have ha' := congrFun ha (b x)
         have hb' := congrFun hb x
@@ -238,13 +238,13 @@ theorem GlobalTheory.dsChar_finsum_eq_glChar : ∀ (n : ℕ) (ε : Fin n → Boo
       one_mem' := by simp
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at *
+        simp only [mem_ofPred_eq] at *
         funext x
         have := congrFun ha (a⁻¹ x)
         simp only [Function.comp_apply] at this ⊢
         rw [show a (a⁻¹ x) = x from by simp] at this
         exact this.symm }
-  haveI : Fintype WK := Fintype.ofFinite _
+  have : Fintype WK := Fintype.ofFinite _
   have hmem : ∀ w, w ∈ WK ↔ w ∈ compactWeyl ε := by
     intro w
     show ε ∘ w = ε ↔ _

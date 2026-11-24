@@ -143,9 +143,9 @@ theorem exists_ordinary_form_trace_near_one_add_cyc (P : _root_.UpperTheory.V.Af
       simp [mul_comm]
     have h4 := hg _ (normV_prime w)
     rw [map_sub, map_add (f := _), map_one, ← h1, ← h2] at h4
-    exact ⟨h4, by rw [Set.mem_setOf_eq, h3, h1, (hval w hqN).2]⟩
-  have hlev : ∀ w : Pl ℚ, ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal → levL l c w = c w := fun w hw => if_neg hw
-  have hlev1 : ∀ w : Pl ℚ, ((l : ℕ) : 𝓞 ℚ) ∈ w.asIdeal → levL l c w = 1 := fun w hw => if_pos hw
+    exact ⟨h4, by rw [Set.mem_ofPred_eq, h3, h1, (hval w hqN).2]⟩
+  have hlev : ∀ w : Pl ℚ, ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal → levL l c w = c w := fun w hw => ite_eq_right hw
+  have hlev1 : ∀ w : Pl ℚ, ((l : ℕ) : 𝓞 ℚ) ∈ w.asIdeal → levL l c w = 1 := fun w hw => ite_eq_left hw
   have hker : ψ⁻¹.ker = ψ.ker := by ext s; simp
   refine ⟨levL l c, π, r, ⟨hreg, ⟨χ', hpol⟩, hG.cont, hatt, MonoidHom.ext fun s => ?_, ?_, ?_, fun w A hA => ?_, fun w hw => ?_,
     fun w hw hwl => ?_, fun w hw => ?_⟩, fun s => (hall s).1⟩
@@ -159,7 +159,7 @@ theorem exists_ordinary_form_trace_near_one_add_cyc (P : _root_.UpperTheory.V.Af
   · refine (fin_dvd hlN).subset fun w hw => ?_
     by_cases h : ((l : ℕ) : 𝓞 ℚ) ∈ w.asIdeal
     · exact ((mem_iff w l).1 h).mul_right _
-    · rw [Set.mem_setOf_eq, hlev w h, Ne, hc0, not_not] at hw
+    · rw [Set.mem_ofPred_eq, hlev w h, Ne, hc0, not_not] at hw
       exact hw.mul_left _
   · rw [hker, ← hm]
     by_cases h : normV w ∣ N

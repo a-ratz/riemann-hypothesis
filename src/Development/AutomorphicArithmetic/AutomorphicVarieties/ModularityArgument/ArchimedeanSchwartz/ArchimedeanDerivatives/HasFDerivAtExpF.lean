@@ -62,7 +62,7 @@ private def pairL (y : Lie K n) : Lie K n →L[ℝ] ℝ :=
         (ContinuousLinearMap.proj (R := ℝ) (φ := fun _ : Fin n => Fin n → Cinf K) a))))
 
 private theorem pairL_eq (y x : Lie K n) : pairL y x = ∑ w, ∑ a, ∑ b, (y b a w * x a b w).re := by
-  simp only [pairL, ContinuousLinearMap.sum_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply,
+  simp only [pairL, sum_apply, ContinuousLinearMap.comp_apply, smul_apply,
     ContinuousLinearMap.proj_apply, Complex.reCLM_apply, smul_eq_mul]
 
 private theorem pairL_apply (y x : Lie K n) : pairL y x = ∑ w, ((Matrix.of x * Matrix.of y).trace w).re := by
@@ -115,7 +115,7 @@ private theorem pd_expF (e : ℝ) (y : Lie K n) (a : ℂ) (τ : K →+* ℂ) (i 
     pd τ i j (fun x => a * expF e y x) = fun x => (a * (Complex.I * e / 2 * coord τ (y j i))) * expF e y x := by
   funext x
   rw [pd, (hasFDerivAt_expF e y a x).fderiv]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [smul_apply, ContinuousLinearMap.comp_apply,
     Complex.ofRealCLM_apply, pairL_single, smul_eq_mul, mul_one, Complex.mul_I_re, Complex.ofReal_neg]
   conv_rhs => rw [← Complex.re_add_im (coord τ (y j i))]
   ring
@@ -190,8 +190,8 @@ private theorem prod_coord (c : Cinf K) : ∏ τ : K →+* ℂ, coord τ c = ((�
       · rw [InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding]
   rw [hf, Finset.prod_pair hne.symm]
   unfold coord
-  rw [if_pos (by rw [InfinitePlace.mk_embedding]),
-    if_neg (by rw [InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding]; exact hne.symm)]
+  rw [ite_eq_left (by rw [InfinitePlace.mk_embedding]),
+    ite_eq_right (by rw [InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding]; exact hne.symm)]
   simp [InfinitePlace.mk_embedding, InfinitePlace.mk_conjugate_eq, Complex.mul_conj']
 
 end UpperTheory.V.Z.Inf.FourDH

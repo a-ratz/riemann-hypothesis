@@ -108,7 +108,7 @@ theorem ine_pow_normV_sub_one_apply_of_pow_mem : ∀ (E Ω : Type) [Field E] [Nu
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
     show ((Nat.card (𝓞 E ⧸ v.asIdeal) : ℕ) : 𝓞 E ⧸ v.asIdeal) = 0
     rcases finite_or_infinite (𝓞 E ⧸ v.asIdeal) with hf | hf
-    · haveI := Fintype.ofFinite (𝓞 E ⧸ v.asIdeal)
+    · have := Fintype.ofFinite (𝓞 E ⧸ v.asIdeal)
       rw [Nat.card_eq_fintype_card]; exact Nat.cast_card_eq_zero _
     · rw [Nat.card_eq_zero_of_infinite]; simp
   have hqA : A.valuation ((normV v : ℕ) : Ω) < 1 := by

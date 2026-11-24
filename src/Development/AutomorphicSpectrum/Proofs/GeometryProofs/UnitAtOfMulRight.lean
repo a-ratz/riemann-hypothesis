@@ -186,7 +186,7 @@ theorem unitAt_of_mul_right {p : Cpt ξ} {a b : Ω} (h : unitAt ξ p (a * b)) (h
 
 theorem not_unitAt_add (hξ : IsCptGen ξ) {p : Cpt ξ} {a b : Ω} (ha : a ∈ regAt ξ p) (hb : b ∈ regAt ξ p)
     (hna : ¬ unitAt ξ p a) (hnb : ¬ unitAt ξ p b) : ¬ unitAt ξ p (a + b) := by
-  haveI : IsLocalRing (regAt ξ p) := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hξ p).1
+  have : IsLocalRing (regAt ξ p) := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hξ p).1
   have key : ∀ {c : Ω} (hc : c ∈ regAt ξ p), IsUnit (⟨c, hc⟩ : regAt ξ p) ↔ unitAt ξ p c := by
     intro c hc
     constructor

@@ -89,7 +89,7 @@ theorem nrmL_twist (hU : Unr E) (n : ℕ) (w : Pl E) (g y : GLw n w) :
   unfold thL at h2 ⊢
   split_ifs with hs
   · simp [hs] at *
-  · simp only [hs, if_false] at h2 ⊢
+  · simp only [hs, ite_false] at h2 ⊢
     rw [map_mul, map_mul, map_inv, h2]
     group
 
@@ -138,7 +138,7 @@ theorem twist_basic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Un
   refine ⟨continuous_thL hU n w, thL_thL hU n w, thL_mem_KGL hU n w, nrmL_twist hU n w, hK.1, hK.2, ?_, ?_,
     charpoly_nrmL hU n w, fun x _ => cLoc_mem_UL hU n w x⟩
   · rw [KL, Subgroup.coe_subgroupOf]
-    exact hK.1.preimage continuous_subtype_val
+    exact hK.1.preimage continuous_subtypeVal
   · rw [KL, Subgroup.coe_subgroupOf]
     exact (isClosed_UL hU n w).isClosedEmbedding_subtypeVal.isCompact_preimage hK.2
 

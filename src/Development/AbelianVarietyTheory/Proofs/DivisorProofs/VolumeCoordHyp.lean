@@ -69,7 +69,7 @@ lemma _root_.GlobalTheory.GoodTop.offHyp_ae_eq {n : ℕ} (S : Finset (Fin n))
   · refine measure_mono_null (t := ⋃ a ∈ (S : Set (Fin n)), {v : _root_.ReciprocityTheory.L2DbarEstimates.V n | v.ofLp a = 0})
       ?_ ?_
     · intro v hv
-      simp only [Set.mem_iUnion, Set.mem_setOf_eq, Finset.mem_coe, exists_prop]
+      simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Finset.mem_coe, exists_prop]
       by_contra h
       push_neg at h
       exact hv.2 (mem_offHyp_iff.2 ⟨hv.1, h⟩)

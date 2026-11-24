@@ -143,7 +143,7 @@ theorem exists_isCompl_ker_of_projective {R : Type} {M N : Type*} [CommRing R] [
 theorem mem_smul_top_of_tmul_eq_zero {R R₀ M : Type} [CommRing R] [CommRing R₀] [AddCommGroup M] [Module R M]
     (π : R →+* R₀) (hπ : Function.Surjective π) {I : Ideal R} (hk : RingHom.ker π = I) (x : M)
     (h : letI := π.toAlgebra; (1 : R₀) ⊗ₜ[R] x = 0) : x ∈ I • (⊤ : Submodule R M) := by
-  letI := π.toAlgebra
+  let := π.toAlgebra
   subst hk
   let f : (R ⧸ RingHom.ker π) ≃ₐ[R] R₀ :=
     Ideal.quotientKerAlgEquivOfSurjective (f := Algebra.ofId R R₀) hπ
@@ -162,7 +162,7 @@ theorem full_and_isCompl : CrystallineSmoothLift → AbelianHodgeDeRham → ∀ 
   have hpb : IsPullback i' A₀.hom A'.hom (spMap π) := h'.1
   obtain ⟨e, he1, he2⟩ := GlobalTheory.T.hodge_cohomology_iso_presented_crystal R R₀ I hI π hπ hk A₀.left A₀.hom S A'.left A'.hom i' hpb hS
   have hsm : Smooth A'.hom := hA.smooth
-  haveI : IsProper A'.hom := hA.proper
+  have : IsProper A'.hom := hA.proper
   have hsep : IsSeparated A'.hom := inferInstance
   have hqc : QuasiCompact A'.hom := inferInstance
   have hw : i' ≫ A'.hom = (A₀.hom ≫ spMap π) ≫ spMap (RingHom.id R) := by
@@ -179,7 +179,7 @@ theorem full_and_isCompl : CrystallineSmoothLift → AbelianHodgeDeRham → ∀ 
     obtain ⟨w, rfl⟩ := hto x
     obtain ⟨c, rfl⟩ := hc.2 w
     exact ⟨m.pull1 c, key c⟩
-  haveI : Module.Projective R (GlobalTheory.CatCoh.H1 S.F) := Module.Projective.of_equiv e
+  have : Module.Projective R (GlobalTheory.CatCoh.H1 S.F) := Module.Projective.of_equiv e
   refine ⟨?_, exists_isCompl_ker_of_projective (S.r hI) hr⟩
   intro z hz
   have hz0 : S.redO.pullbackOneCocycle z = 0 := by
@@ -191,7 +191,7 @@ theorem full_and_isCompl : CrystallineSmoothLift → AbelianHodgeDeRham → ∀ 
   have hx0 : IsPullO hpb.w x 0 := by
     have := he2 x
     rwa [hxdef, LinearEquiv.apply_symm_apply, h0] at this
-  letI := π.toAlgebra
+  let := π.toAlgebra
   obtain ⟨-, -, e', he'⟩ := hbc R₀ A₀.left A₀.hom i' hpb
   have h1 : e' ((1 : R₀) ⊗ₜ[R] x) = 0 := by
     have a := he' x
@@ -1386,7 +1386,7 @@ theorem const_of_isAbelianScheme : ∀ (R : Type) [CommRing R] [IsNoetherianRing
   have := hA.smooth
   have := hA.proper
   have := hA.geomConnected
-  haveI : GeometricallyIntegral A.hom := GlobalTheory.geometricallyIntegral_of_smooth A.hom
+  have : GeometricallyIntegral A.hom := GlobalTheory.geometricallyIntegral_of_smooth A.hom
   have hbij := ((GlobalTheory.ProperFunctions.functions_of_isProper).2.2 R A.left A.hom).1
   intro g hg
   have hc : ∀ (U V : A.left.affineOpens) (h : V.1 ≤ U.1),
@@ -1645,7 +1645,7 @@ namespace GlobalTheory.LiftSys
 theorem abelianSchemeLifts_of_hodgeDeRham (hC : CrystallineSmoothLift) (hH : AbelianHodgeDeRham) :
     AbelianSchemeLifts := by
   intro R _ _ I hI R₀ _ π hπ hk g A₀ _ A' _ i' h' hA hg
-  haveI : IsNoetherianRing R₀ := isNoetherianRing_of_surjective R R₀ π hπ
+  have : IsNoetherianRing R₀ := isNoetherianRing_of_surjective R R₀ π hπ
   obtain ⟨-, -, -, -, -, -, hA₀, hg₀⟩ := GlobalTheory.T.abelianLift_reduction_standard_facts hC hH R R₀ I hI π hπ hk g A₀ A' i' h' hA hg
   have hG : Good A₀.hom := GlobalTheory.T.goodForSquareZeroLiftClassification_of_abelianScheme hC hH R₀ A₀ g hA₀ hg₀
   have hR : RhoBC hI hk A₀.hom := GlobalTheory.T.abelianScheme_crystal_reduces_to_deRham_sqZero hC hH R R₀ I hI π hπ hk g A₀ A' i' h' hA hg
@@ -1677,9 +1677,9 @@ theorem abelianSchemeLifts_of_hodgeDeRham (hC : CrystallineSmoothLift) (hH : Abe
     have hT : T.Full hI := (GlobalTheory.T.squareZeroLiftSystem_filtration_inf_eq_and_full R R₀ I hI π hπ hk A₀.left A₀.hom hG.const S' T).2 hF'
     obtain ⟨f, hf, hij⟩ := GlobalTheory.T.exists_morphism_liftSystemPresents_of_hom R R₀ I hI π hπ hk A₀.left A₀.hom T S X.left X.hom i Y.left Y.hom j h Q P
       (GlobalTheory.T.exists_squareZeroLiftSystem_hom_of_filtration_eq R R₀ I hI π hπ hk A₀.left A₀.hom hG hR T S hT hK)
-    haveI := hX
+    have := hX
     have hn : IsNilpotent (RingHom.ker π) := ⟨2, by rw [hk]; exact hI⟩
-    haveI : IsIso (Over.homMk f hf : X ⟶ Y) :=
+    have : IsIso (Over.homMk f hf : X ⟶ Y) :=
       GlobalTheory.NilThickIso.isIso_of_flat_of_isIso_reduction R R₀ π hπ hn X Y A₀ A₀ i j h k inferInstance
         (Over.homMk f hf) (𝟙 A₀) (by simpa using hij) inferInstance
     exact ⟨asIso (Over.homMk f hf : X ⟶ Y), hij⟩

@@ -91,8 +91,8 @@ theorem schA_riesz (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVf : FiniteDimens
       show V ≤ layer ε E V k ⊔ ⨆ (a : Fin n) (b : Fin n) (_ : ε a ≠ ε b), (layer ε E V k).map (E a b)
       exact ih.trans le_sup_left
   set F : Submodule ℂ M := T ⊓ layer ε E V m with hF
-  haveI : FiniteDimensional ℂ (layer ε E V m) := finiteDimensional_layer hVf m
-  haveI : FiniteDimensional ℂ F := Submodule.finiteDimensional_of_le inf_le_right
+  have : FiniteDimensional ℂ (layer ε E V m) := finiteDimensional_layer hVf m
+  have : FiniteDimensional ℂ F := Submodule.finiteDimensional_of_le inf_le_right
   have hFk : IsKStableSub ε E F := fun a b hab v hv =>
     ⟨hTk a b hab v hv.1, layer_kStable hE hVk m a b hab v hv.2⟩
   let ℓ : F →L[ℂ] ℂ := LinearMap.toContinuousLinearMap (f.comp F.subtype)
@@ -106,7 +106,7 @@ theorem schA_riesz (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVf : FiniteDimens
     inner_self_eq_zero.mp (h z hz)
   refine ⟨u', u'.2.1, ⟨?_, ?_⟩, hrep y₀ ⟨hy₀, hm⟩, fun v hv => hrep v ⟨hv.1, hVle m hv.2⟩⟩
   · intro a
-    have hsa : adjSign ε a a = 1 := if_pos rfl
+    have hsa : adjSign ε a a = 1 := ite_eq_left rfl
     have hmem : E a a u' - (μ a : ℂ) • (u' : M) ∈ F :=
       F.sub_mem (hFk a a rfl _ u'.2) (F.smul_mem _ u'.2)
     have h0 := hzero _ hmem (fun y hy => by

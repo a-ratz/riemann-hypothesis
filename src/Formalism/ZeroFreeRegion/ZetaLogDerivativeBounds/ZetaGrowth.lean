@@ -127,7 +127,7 @@ theorem growthBound : ZetaGrowth := by
   intro s hs hs1
   have h1 : riemannZeta₁ s = (s - 1) * riemannZeta s := by
     unfold riemannZeta₁ riemannZeta₀
-    rw [if_neg hs1, mul_sub, mul_inv_cancel₀ (sub_ne_zero.2 hs1)]
+    rw [ite_eq_right hs1, mul_sub, mul_inv_cancel₀ (sub_ne_zero.2 hs1)]
     ring
   have hD := norm_Dz_le hs
   have hne : s - 1 ≠ 0 := sub_ne_zero.2 hs1

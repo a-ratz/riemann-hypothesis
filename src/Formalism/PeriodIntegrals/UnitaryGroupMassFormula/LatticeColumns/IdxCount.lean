@@ -125,8 +125,8 @@ theorem lIdxH_eq_of_red (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (u : D.what
     (hc : Nat.card (((unitaryLevelLocalComponent X hb u p.1).subgroupOf (KvH X u p.1)).map ρ) = ukC D.R.k (gOf p)) :
     (lIdxH X hb u p : ℝ) = (glkC D.R.k (gOf p) : ℝ) / (ukC D.R.k (gOf p) : ℝ) := by
   classical
-  haveI : Fact (gOf p).Prime := ⟨gOf_prime' X p⟩
-  haveI : NeZero (gOf p) := ⟨(gOf_prime' X p).ne_zero⟩
+  have : Fact (gOf p).Prime := ⟨gOf_prime' X p⟩
+  have : NeZero (gOf p) := ⟨(gOf_prime' X p).ne_zero⟩
   have hidx : (((unitaryLevelLocalComponent X hb u p.1).subgroupOf (KvH X u p.1)).map ρ).index = lIdxH X hb u p :=
     Subgroup.index_map_eq _ hs hk
   have hmul := Subgroup.card_mul_index (((unitaryLevelLocalComponent X hb u p.1).subgroupOf (KvH X u p.1)).map ρ)

@@ -305,7 +305,7 @@ private lemma exists_differentiableOn_eventuallyEq_div_of_monic_root {U : Set �
       · subst h
         simp [hφ]
       · rw [Function.update_of_ne h, heq z ⟨hz, h⟩]
-    · filter_upwards [diff_mem_nhdsWithin_compl hs {z₀}] with z hz
+    · filter_upwards [sdiff_mem_nhdsWithin_compl hs {z₀}] with z hz
       exact (heq z hz).symm
   refine ⟨φ, fun z hz => (key z hz).1.differentiableWithinAt, ?_⟩
   refine mem_codiscreteWithin_iff_forall_mem_nhdsNE.2 fun z₀ hz₀ => ?_
@@ -362,7 +362,7 @@ private lemma sl_aeval_jK (X : _root_.GlobalTheory.KZ.Tower Ω ε) (γ : SL(2, �
     X.sl (_root_.GlobalTheory.KZ.ofSL γ) (Polynomial.aeval X.jK q) = Polynomial.aeval X.jK q := by
   have e := Polynomial.aeval_algHom_apply
     ((X.sl (_root_.GlobalTheory.KZ.ofSL γ) : X.K ≃ₐ[Ω] X.K) : X.K →ₐ[Ω] X.K) X.jK q
-  simp only [AlgEquiv.coe_algHom, X.j_inv] at e
+  simp only [AlgEquiv.coe_toAlgHom, X.j_inv] at e
   exact e.symm
 
 open scoped MatrixGroups TensorProduct in
@@ -440,7 +440,7 @@ theorem _root_.GlobalTheory.KZ.ES.LevFin.exists_finset_span : ∀ {Ω : Type} [F
         f ∈ Submodule.span (IntermediateField.adjoin Ω {X.jK}) (T : Set X.K) := by
   intro Ω _ _ _ ε X hj M hM
   classical
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   set L := _root_.GlobalTheory.KZ.ES.LevFin.levSub X M
   set ρ := _root_.GlobalTheory.KZ.ES.LevFin.act X M with hρ
   have hker : CongruenceSubgroup.Gamma M ≤ ρ.ker := by
@@ -450,8 +450,8 @@ theorem _root_.GlobalTheory.KZ.ES.LevFin.exists_finset_span : ∀ {Ω : Type} [F
     rw [show ρ γ = _root_.GlobalTheory.KZ.ES.LevFin.actE X M γ from rfl,
       _root_.GlobalTheory.KZ.ES.LevFin.actE_apply]
     exact f.2 _ (inv_mem hγ)
-  haveI : ρ.ker.FiniteIndex := Subgroup.finiteIndex_of_le hker
-  haveI : Finite ρ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ρ).toEquiv
+  have : ρ.ker.FiniteIndex := Subgroup.finiteIndex_of_le hker
+  have : Finite ρ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ρ).toEquiv
   let b := Module.finBasis (FixedPoints.subfield ρ.range L) L
   refine ⟨Finset.univ.image (fun i => ((b i : L) : X.K)), ?_, ?_⟩
   · intro x hx

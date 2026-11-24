@@ -92,7 +92,7 @@ theorem isClosed_NI (V : HSp D) {r : ℕ} {C : Matrix (Fin V.rank) (Fin r) D.hos
       (LinearEquiv.injective _) (IsModuleTopology.continuous_of_linearMap
         (Algebra.TensorProduct.basis (AF D.host.F) (Module.finBasis D.host.F D.host.E)).equivFun.toLinearMap)
   have hm : Continuous fun g : GA D V => (HA.mat _ D.sp.cm.sig V.gram g).1 :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   rw [GlobalTheory.AutFunCompare.NI_eq]
   have hcl : IsClosed {g : GA D V |
       ((HA.mat _ D.sp.cm.sig V.gram g).1 - 1) * (C * L).map (inclR (F := D.host.F) (AF D.host.F)) = 0 ∧
@@ -111,7 +111,7 @@ theorem not_isCuspFun_const (V : HSp D) {r : ℕ} {C : Matrix (Fin V.rank) (Fin 
   let i : NIQ V C → GQ V := fun x => ⟨x.1.1, x.2⟩
   have hi : Function.Injective i := fun x y h => Subtype.ext (Subtype.ext (congrArg (fun z : GQ V => z.1) h))
   have : DiscreteTopology (NIQ V C) := DiscreteTopology.of_continuous_injective (f := i)
-    ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) hi
+    ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) hi
   have : Countable (NIQ V C) := hi.countable
   have : SecondCountableTopology (NI V C) := TopologicalSpace.Subtype.secondCountableTopology _
   let μ : Measure (NI V C) := Measure.haar

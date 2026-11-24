@@ -251,16 +251,16 @@ theorem blockTeleFam_succAbove (A A' : ReciprocityTheory.ChartRestriction.G.Geo.
   · have h' : Fin.castSucc j < (⟨i, hi⟩ : Fin (D + 1)) := by
       rw [Fin.lt_def]
       exact h
-    rw [Fin.succAbove_of_castSucc_lt _ _ h', if_pos (show (Fin.castSucc j).val < k by
+    rw [Fin.succAbove_of_castSucc_lt _ _ h', ite_eq_left (show (Fin.castSucc j).val < k by
       show j.val < k
-      omega), if_pos h]
+      omega), ite_eq_left h]
   · have h' : (⟨i, hi⟩ : Fin (D + 1)) ≤ Fin.castSucc j := by
       rw [Fin.le_def]
       show i ≤ j.val
       omega
-    rw [Fin.succAbove_of_le_castSucc _ _ h', if_neg (show ¬ (Fin.succ j).val < k by
+    rw [Fin.succAbove_of_le_castSucc _ _ h', ite_eq_right (show ¬ (Fin.succ j).val < k by
       show ¬ j.val + 1 < k
-      omega), if_neg h]
+      omega), ite_eq_right h]
 
 theorem blockTeleFam_smooth {A A' : ReciprocityTheory.ChartRestriction.G.Geo.HermLine ι} (hA : IsSmoothHerm A) (hA' : IsSmoothHerm A') (N i : ℕ)
     (j : Fin N) : IsSmoothHerm (blockTeleFam A A' N i j) := by
@@ -541,7 +541,7 @@ theorem pair_smul (m : ConeMetric ℂ (Ix κ)) {z : Ix κ → ℂ} (hz : z ≠ 0
   have hcn : 0 < ‖c‖ := norm_pos_iff.2 hc
   have hexp : Real.exp (-(n : ℝ) * (2 * Real.log (m.ρ (c • z)))) = ((‖c‖ * m.ρ z) ^ (2 * n))⁻¹ := by
     rw [m.smul, show -(n : ℝ) * (2 * Real.log (‖c‖ * m.ρ z)) = -(((2 * n : ℕ) : ℝ) * Real.log (‖c‖ * m.ρ z)) by
-      push_cast; ring, Real.exp_neg, Real.exp_nat_mul, Real.exp_log (mul_pos hcn hρ)]
+      push_cast; ring, Real.exp_neg, Real.exp_natCast_mul, Real.exp_log (mul_pos hcn hρ)]
   have hcc : c ^ n * conj c ^ n = ((‖c‖ : ℝ) : ℂ) ^ (2 * n) := by
     rw [← mul_pow, Complex.mul_conj, Complex.normSq_eq_norm_sq, pow_mul]
     push_cast
@@ -842,7 +842,7 @@ theorem matAct_scaleMat {D : ℕ} (e : Fin (D + 1) → J) (m : ℕ) (y : J → �
   funext i
   simp only [matAct, scaleMat, Matrix.diagonal_apply]
   rw [Finset.sum_eq_single i (fun j _ hj => by simp [Ne.symm hj]) (by simp)]
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
   unfold scaleOff
   split_ifs <;> simp
 

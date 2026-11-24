@@ -98,25 +98,25 @@ theorem fib_of_tens {F E : Type} [Field F] [Field E] [Algebra F E] {σ : E →�
       IsFibreFamily μ (gramR R σ J) Subtype.val {X | LinearIndependent (R ⊗[F] E) X} ν
         Set.univ fib := by
   obtain ⟨hLC, hT2, hSC, hCl, hCont, hMem, hOpen⟩ := hT
-  haveI := hLC
-  haveI := hT2
-  haveI := hSC
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin a) (R ⊗[F] E)) :=
+  have := hLC
+  have := hT2
+  have := hSC
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : LocallyCompactSpace (Matrix (Fin a) (Fin a) (R ⊗[F] E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin a → Fin a → R ⊗[F] E))
-  haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (R ⊗[F] E)) :=
+  have : SecondCountableTopology (Matrix (Fin a) (Fin a) (R ⊗[F] E)) :=
     inferInstanceAs (SecondCountableTopology (Fin a → Fin a → R ⊗[F] E))
-  haveI : SecondCountableTopology (HermR R σ a) := by
+  have : SecondCountableTopology (HermR R σ a) := by
     first
       | infer_instance
       | exact hCl.isClosedEmbedding_subtypeVal.isInducing.secondCountableTopology
       | exact hCl.isClosedEmbedding_subtypeVal.isEmbedding.isInducing.secondCountableTopology
       | exact hCl.isClosedEmbedding_subtypeVal.toIsEmbedding.toIsInducing.secondCountableTopology
-  haveI : BorelSpace (HermR R σ a) := by
+  have : BorelSpace (HermR R σ a) := by
     first
       | infer_instance
       | exact ⟨rfl⟩
-  haveI : LocallyCompactSpace (HermR R σ a) := hCl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (HermR R σ a) := hCl.isClosedEmbedding_subtypeVal.locallyCompactSpace
   exact hG _ _ _ μ ν inferInstance inferInstance inferInstance (gramR R σ J) Subtype.val _ hCont
     hCl.isClosedEmbedding_subtypeVal (fun v => ⟨⟨_, hMem v⟩, rfl⟩) hOpen hD
 

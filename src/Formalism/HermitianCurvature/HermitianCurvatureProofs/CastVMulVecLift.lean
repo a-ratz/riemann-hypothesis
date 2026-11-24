@@ -174,7 +174,7 @@ theorem poly_types {P : M.Par} (p : KB.Pl P Wp Wq) (ν'r : Fin (2 * (P.r - P.r) 
   rw [aeval_intertwine V _ _ hint q v]
   conv_lhs => rw [← hex]
 
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.comp_apply, map_sum]
+  simp only [FunLike.coe_sum, Finset.sum_apply, ContinuousLinearMap.comp_apply, map_sum]
   refine Finset.sum_congr rfl fun ρ _ => ?_
   refine aeval_eigen _ _ _ ?_ q
   rw [← hglL.2, tp_eigen_lev p ν'r m₀r hLF hB ρ w0 (V v)]

@@ -186,7 +186,7 @@ theorem rkK_deg_iSup : ∀ (K V : Type) [Field K] [NumberField K] [_root_.Number
     Formalism.HN.rkK (⨆ i, M i) = ∑ i, Formalism.HN.rkK (M i) ∧ deg N (⨆ i, M i) = ∑ i, deg N (M i) := by
   intro K V _ _ _ _ _ _ _ ι _ N M hG hM hN
   classical
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨⟨n, ⟨⟨b, X⟩, hbX⟩⟩⟩ := hG
   obtain ⟨hfg, hrk, hdeg⟩ := sum_finset hbX M hM hN Finset.univ
   have hu : (⨆ i ∈ (Finset.univ : Finset ι), M i) = ⨆ i, M i := by simp

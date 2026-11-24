@@ -134,7 +134,7 @@ theorem _root_.GlobalTheory.Survey.UnimodularStandardLattice.unimod_std :
       · exact Subring.one_mem _
       · exact Subring.zero_mem _
     simp only [Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true] at hs
+      Finset.mem_univ, ite_true] at hs
     exact (complexConj_mem_integers_iff (v i)).1 hs
 
 
@@ -241,7 +241,7 @@ theorem exists_matrix_det_notMem (I : Ideal O) [I.IsMaximal] (a b : n → Q)
     (ha : Submodule.span O (Set.range a) = ⊤) (hb : Submodule.span O (Set.range b) = ⊤) :
     ∃ g : Matrix n n O, g.det ∉ I ∧ ∀ j, a j = ∑ i, g i j • b i := by
   classical
-  letI : Field (O ⧸ I) := Ideal.Quotient.field I
+  let : Field (O ⧸ I) := Ideal.Quotient.field I
   have hsp : ∀ c : n → Q, Submodule.span O (Set.range c) = ⊤ →
       Submodule.span (O ⧸ I) (Set.range ((I • ⊤ : Submodule O Q).mkQ ∘ c)) = ⊤ := by
     intro c hc
@@ -342,7 +342,7 @@ theorem exists_matrix_inv_mod (I : Ideal O) (hI : {P : Ideal O | P.IsMaximal ∧
     abel
   have hdet : ∀ P ∈ s, g.det ∉ P := by
     intro P hP hgP
-    haveI := ((hmem P).1 hP).1
+    have := ((hmem P).1 hP).1
     apply hGdet P ((hmem P).1 hP).1
     have hmap : g.map (Ideal.Quotient.mk P) = (G P).map (Ideal.Quotient.mk P) := by
       refine Matrix.ext fun i j => ?_
@@ -751,10 +751,10 @@ theorem exists_unitary_moving (c : Coeff l) {bad : ℕ} (hbad : 0 < bad) (x0 x1 
     have h4 : (l.M : ℕ) = 0 := by exact_mod_cast h2
     omega
   have hfin : {P : Ideal (𝓞 E) | P.IsMaximal ∧ Mfr l ≤ P}.Finite := by
-    haveI : Finite (𝓞 E ⧸ Mfr l) := by
+    have : Finite (𝓞 E ⧸ Mfr l) := by
       first
         | exact Ideal.finiteQuotientOfFreeOfNeBot _ hne
-    haveI : Finite (Ideal (𝓞 E ⧸ Mfr l)) := Finite.of_injective _ SetLike.coe_injective
+    have : Finite (Ideal (𝓞 E ⧸ Mfr l)) := Finite.of_injective _ SetLike.coe_injective
     refine Set.Finite.of_finite_image (f := fun P => P.map (Ideal.Quotient.mk (Mfr l))) (Set.toFinite _) ?_
     intro P hP Q hQ hPQ
     have := congrArg (Ideal.comap (Ideal.Quotient.mk (Mfr l))) hPQ

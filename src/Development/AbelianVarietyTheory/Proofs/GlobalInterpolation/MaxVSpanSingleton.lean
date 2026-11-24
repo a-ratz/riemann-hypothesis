@@ -81,7 +81,7 @@ theorem _root_.GlobalTheory.CharVal.val_le_of_span {S : Set E} (h : ∀ a ∈ S,
   intro a ha
   induction ha using Submodule.span_induction with
   | mem x hx => exact h x hx
-  | zero => rw [map_zero]; exact zero_le'
+  | zero => rw [map_zero]; exact zero_le
   | add x y _ _ hx hy => exact (Valuation.map_add _ x y).trans (max_le hx hy)
   | smul r x _ hx =>
     rw [Algebra.smul_def, map_mul]
@@ -159,7 +159,7 @@ theorem _root_.GlobalTheory.CharVal.MaxV.inv (h : _root_.GlobalTheory.CharVal.Ma
     have h1 : γ * P.valuation E b ≤ 1 := by
       rw [← hγ, ← map_mul, ← hr]
       exact P.valuation_le_one r
-    rwa [← mul_le_mul_iff_of_pos_left (zero_lt_iff.2 h0), mul_inv_cancel₀ h0]
+    rwa [← mul_le_mul_iff_of_pos_left (pos_iff_ne_zero.2 h0), mul_inv_cancel₀ h0]
   refine ⟨hle, ?_⟩
   by_contra hne
   push_neg at hne
@@ -170,7 +170,7 @@ theorem _root_.GlobalTheory.CharVal.MaxV.inv (h : _root_.GlobalTheory.CharVal.Ma
     rw [map_mul]
     calc P.valuation E u * P.valuation E w ≤ γ * P.valuation E w :=
           mul_le_mul' (h.1 u hu) le_rfl
-      _ < γ * γ⁻¹ := mul_lt_mul_of_pos_left (hlt w hw) (zero_lt_iff.2 h0)
+      _ < γ * γ⁻¹ := mul_lt_mul_of_pos_left (hlt w hw) (pos_iff_ne_zero.2 h0)
       _ = 1 := mul_inv_cancel₀ h0
   have h1 : (1 : E) ∈ I * J := by
     rw [hIJ]
@@ -216,7 +216,7 @@ theorem _root_.GlobalTheory.CharVal.intAt_iff (x : E) :
       rw [← P.intValuation_le_pow_iff_mem, ← hbv, ← P.valuation_of_algebraMap (K := E),
         ← P.valuation_of_algebraMap (K := E)]
       rw [map_div₀] at hx
-      exact (div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb'))).1 hx
+      exact (div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb'))).1 hx
     obtain ⟨Q, hQ⟩ := Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hbk)
     have hQP : ¬ Q ≤ P.asIdeal := by
       intro hle
@@ -258,7 +258,7 @@ theorem _root_.GlobalTheory.CharVal.MaxV.mem_locP (h : _root_.GlobalTheory.CharV
       exact h0 (by rw [← hγ, map_zero])
     have hint : _root_.Formalism.L2.Col.IntAt P (x / a) := by
       rw [_root_.GlobalTheory.CharVal.intAt_iff, map_div₀, hγ]
-      exact (div_le_one₀ (zero_lt_iff.2 h0)).2 hx
+      exact (div_le_one₀ (pos_iff_ne_zero.2 h0)).2 hx
     obtain ⟨r, s, hs, hsr⟩ := hint
     refine ⟨s, hs, ?_⟩
     have hsx : s • x = r • a := by

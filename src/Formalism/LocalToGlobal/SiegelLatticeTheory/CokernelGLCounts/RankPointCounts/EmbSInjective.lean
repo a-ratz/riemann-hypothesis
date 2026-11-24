@@ -68,8 +68,8 @@ theorem pi_const_smul {ι : Type} [Fintype ι] (x : ℝ) :
   have hsf : SigmaFinite (ENNReal.ofReal x • (volume : Measure ℂ)) :=
     (inferInstance : SigmaFinite (x.toNNReal • (volume : Measure ℂ)))
   refine Measure.pi_eq (fun t _ => ?_)
-  rw [Measure.smul_apply, volume_pi, Measure.pi_pi, smul_eq_mul]
-  simp only [Measure.smul_apply, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const,
+  rw [smul_apply, volume_pi, Measure.pi_pi, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const,
     Finset.card_univ]
 
 def embS {K : Type} [Field K] {ι : Type} (φ : ι → (K →+* ℂ)) (s : ℂ) : K →+ (ι → ℂ) where
@@ -130,7 +130,7 @@ theorem covol_oneT (K : Type) [Field K] [NumberField K] [IsEmpty {w : InfinitePl
   rw [triFundT P (fun _ => ι → ℂ) (fun _ => ENNReal.ofReal c ^ Fintype.card ι • volume) h B hBm hBd
     hB0 τ hτ (fun p => (Λ p).map (embS φ (s p))) hinv F hFm hFd' Kset hK hKd]
   refine Finset.prod_congr rfl fun p _ => ?_
-  rw [Measure.smul_apply, smul_eq_mul, idealCovolC K ι φ σ hφ (I p) (Λ p) (hΛ p) (k p) (hk p)
+  rw [smul_apply, smul_eq_mul, idealCovolC K ι φ σ hφ (I p) (Λ p) (hΛ p) (k p) (hk p)
     (hk0 p) (s p) (hs p) (F p) (hFm p) (hFd p), ← ENNReal.ofReal_pow hc,
     ← ENNReal.ofReal_mul (by positivity)]
   congr 1

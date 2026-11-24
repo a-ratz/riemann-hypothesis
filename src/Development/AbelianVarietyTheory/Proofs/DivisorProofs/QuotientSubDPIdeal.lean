@@ -69,7 +69,7 @@ theorem quotient_subDPIdeal : ∀ (B : Type) [CommRing B] (J : Ideal B) (δ : Di
       exact hg.2 a ha
   · have hset : {y | ∃ n : ℕ, n ≠ 0 ∧ ∃ x ∈ s, y = δ.dpow n x} =
         {y : B | ∃ (n : ℕ) (_ : n ≠ 0) (x : B) (_ : x ∈ s), y = δ.dpow n x} := by
-      ext y; simp only [Set.mem_setOf_eq, exists_prop]
+      ext y; simp only [Set.mem_ofPred_eq, exists_prop]
     rw [hset, ← SubDPIdeal.span_carrier_eq_dpow_span δ hs]
     exact (SubDPIdeal.span δ s).toIsSubDPIdeal
 

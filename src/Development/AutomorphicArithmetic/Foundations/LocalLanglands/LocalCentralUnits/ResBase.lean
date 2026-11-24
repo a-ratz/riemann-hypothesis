@@ -85,7 +85,7 @@ private theorem base_cong {E E' Ω : Type} [Field E] [NumberField E] [Field E'] 
     rw [hvN, ← pow_mul, he, Nat.div_mul_cancel hdvd, hπ]
   have h1 := hTR E Ω g A w h hgv hgv2 a ha (π ^ e) hπE s y hy
   have h2 := hTR E' Ω g A w' h' hgw hgw2 a' ha' π (by rw [hwN]; exact hπ) t' x hx
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have hπ0 : π ≠ 0 := by
     intro h0
     rw [h0, zero_pow (by have := Nat.one_lt_pow hn.ne' hg1; omega)] at hπ
@@ -152,7 +152,7 @@ theorem resBase : ResBase := by
     rw [show algebraMap E (w.adicCompletion E) (((a₀ : 𝓞 E)) : E) = (a₀ : w.adicCompletion E) by simp]
     exact h6
 
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hpos : 0 < g ^ n - 1 := by have := Nat.one_lt_pow hn.ne' hg1; omega
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq (g : Ω) hpos
   have hb := base_cong g n hn A w h D.w' D.h' hgw hgw2 hgw' D.unr hq D.card a ha D.a' D.ha' π hπ t t' htt

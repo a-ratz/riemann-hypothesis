@@ -654,7 +654,7 @@ theorem lintegral_ballSet_neg_log_sqNorm (m : ℕ) :
       refine le_antisymm (measure_mono hsub1) ?_
       refine (measure_mono hsub2).trans ((measure_union_le _ _).trans ?_)
       rw [volume_singleton_zero, add_zero]
-    rw [heq, volume_ballSet (exp_pos _), ← exp_nat_mul]
+    rw [heq, volume_ballSet (exp_pos _), ← exp_natCast_mul]
     have : ((m + 1 : ℕ) : ℝ) * -t = -((m + 1 : ℕ) : ℝ) * t := by ring
     rw [this]
   rw [setLIntegral_congr_fun measurableSet_Ioi hlev, lintegral_mul_const _
@@ -827,7 +827,7 @@ theorem sphereMeanLinear : SphereMeanLinear.Statement := by
   have hon : Orthonormal ℂ (({0} : Set (Fin (m + 1))).domRestrict fun _ => p') := by
     rw [orthonormal_iff_ite]
     intro i j
-    rw [Subsingleton.elim i j, if_pos rfl,
+    rw [Subsingleton.elim i j, ite_eq_left rfl,
       show (({0} : Set (Fin (m + 1))).domRestrict fun _ => p') j = p' from rfl,
       inner_self_eq_norm_sq_to_K, hp']
     simp

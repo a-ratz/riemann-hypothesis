@@ -120,7 +120,7 @@ theorem mem_openInv_of_mem {π : CuspSub E a} {φ : Sm E a} (hφ : φ ∈ π.V) 
   show IsOpen (invSub φ.1 : Set (GL (Fin a) (Af E)))
   have e : (invSub φ.1 : Set (GL (Fin a) (Af E))) = {k | π.finPart k ⟨φ, hφ⟩ = ⟨φ, hφ⟩} := by
     ext k
-    simp only [SetLike.mem_coe, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, Set.mem_ofPred_eq]
     exact ⟨fun hk => Subtype.ext (Subtype.ext (funext hk)), fun hk g => congrArg (fun ψ : π.V => ψ.1.1 g) hk⟩
   rw [e]; exact h
 

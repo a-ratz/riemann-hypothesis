@@ -173,13 +173,13 @@ theorem torsion_eq_and_weilIs_of_isHolTo_anyLB : ∀ (X : Scheme.{0}) (s : X ⟶
     have h₁ : IsUnit ((k : ℂ)) := isUnit_iff_ne_zero.2 (Nat.cast_ne_zero.2 hk.ne')
     have h₂ := (h₁.map (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv.hom).map s.appTop.hom
     simpa only [map_natCast] using h₂
-  haveI : FormallyUnramified (Out.mulA G k).left := GlobalTheory.formallyUnramified_mulA X G k hku
-  haveI : Smooth G.hom := hA.smooth
-  haveI : IsProper G.hom := hA.proper
-  haveI : LocallyOfFiniteType ((Out.mulA G k).left ≫ G.hom) := by rw [Over.w]; infer_instance
-  haveI : LocallyOfFiniteType (Out.mulA G k).left := locallyOfFiniteType_of_comp _ G.hom
-  haveI : IsSeparated ((Out.mulA G k).left ≫ G.hom) := by rw [Over.w]; infer_instance
-  haveI : IsSeparated (Out.mulA G k).left := IsSeparated.of_comp _ G.hom
+  have : FormallyUnramified (Out.mulA G k).left := GlobalTheory.formallyUnramified_mulA X G k hku
+  have : Smooth G.hom := hA.smooth
+  have : IsProper G.hom := hA.proper
+  have : LocallyOfFiniteType ((Out.mulA G k).left ≫ G.hom) := by rw [Over.w]; infer_instance
+  have : LocallyOfFiniteType (Out.mulA G k).left := locallyOfFiniteType_of_comp _ G.hom
+  have : IsSeparated ((Out.mulA G k).left ≫ G.hom) := by rw [Over.w]; infer_instance
+  have : IsSeparated (Out.mulA G k).left := IsSeparated.of_comp _ G.hom
   let o : X ⟶ G.left := (η[G] : 𝟙_ (Over X) ⟶ G).left
   have ho : o ≫ G.hom = 𝟙 X := Over.w (η[G] : 𝟙_ (Over X) ⟶ G)
   have hkill : ∀ (T : Over X) (u : T ⟶ G), u ^ k = 1 ↔ u.left ≫ (Out.mulA G k).left = T.hom ≫ o := by
@@ -193,9 +193,9 @@ theorem torsion_eq_and_weilIs_of_isHolTo_anyLB : ∀ (X : Scheme.{0}) (s : X ⟶
   let p := pullback.fst (Out.mulA G k).left o
   let q := pullback.snd (Out.mulA G k).left o
   have H : IsPullback p q (Out.mulA G k).left o := IsPullback.of_hasPullback _ _
-  haveI : FormallyUnramified q := MorphismProperty.of_isPullback (P := @FormallyUnramified) H ‹_›
-  haveI : LocallyOfFiniteType q := MorphismProperty.of_isPullback (P := @LocallyOfFiniteType) H ‹_›
-  haveI : IsSeparated q := MorphismProperty.of_isPullback (P := @IsSeparated) H ‹_›
+  have : FormallyUnramified q := MorphismProperty.of_isPullback (P := @FormallyUnramified) H ‹_›
+  have : LocallyOfFiniteType q := MorphismProperty.of_isPullback (P := @LocallyOfFiniteType) H ‹_›
+  have : IsSeparated q := MorphismProperty.of_isPullback (P := @IsSeparated) H ‹_›
   have hpq : p ≫ G.hom = q := by
     rw [← Over.w (Out.mulA G k), ← Category.assoc, H.w, Category.assoc, ho, Category.comp_id]
   have hy : IsHolTo B y := isHolTo_congr (isHolTo_comp hx G.hom) fun b _ => (Over.w (x b)).symm

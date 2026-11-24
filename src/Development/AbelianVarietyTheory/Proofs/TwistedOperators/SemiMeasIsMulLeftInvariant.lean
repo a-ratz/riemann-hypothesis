@@ -61,12 +61,12 @@ theorem GlobalTheory.MixPer.semiMeas_isMulLeftInvariant {G H : Type} [Group G] [
   have : SigmaFinite ν := inferInstance
   have : SigmaFinite μ := inferInstance
   have hemb : MeasurableEmbedding (Subtype.val : N → G) :=
-    MeasurableEmbedding.subtype_coe hN.measurableSet
+    MeasurableEmbedding.subtypeVal hN.measurableSet
 
   let φ : H × N → (N ⊔ s.range : Subgroup G) := fun p =>
     ⟨p.2.1 * s p.1, mul_mem (Subgroup.mem_sup_left p.2.2) (Subgroup.mem_sup_right ⟨p.1, rfl⟩)⟩
   have hφ : Measurable φ :=
-    (Continuous.subtype_mk ((continuous_subtype_val.comp continuous_snd).mul
+    (Continuous.subtype_mk ((continuous_subtypeVal.comp continuous_snd).mul
       (hs.comp continuous_fst)) _).measurable
   have hm : semiMeas N s μ ν = (μ.prod ν).map φ := rfl
 
@@ -118,7 +118,7 @@ theorem GlobalTheory.MixPer.semiMeas_isMulLeftInvariant {G H : Type} [Group G] [
     refine ⟨Subgroup.mem_sup_right ⟨h₀, rfl⟩, ?_⟩
     let c : N → N := fun m => ⟨s h₀ * m.1 * (s h₀)⁻¹, hnorm m.1 m.2 h₀⟩
     have hcm : Measurable c :=
-      (Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const)
+      (Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
         _).measurable
     have hcν : ν.map c = ν := by
       rw [← hemb.comap_map (ν.map c), Measure.map_map hemb.measurable hcm]

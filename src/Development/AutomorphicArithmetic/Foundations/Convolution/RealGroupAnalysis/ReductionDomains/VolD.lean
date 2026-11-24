@@ -262,7 +262,7 @@ private theorem isClosed_range_nU {F : Type} [Field F] [NumberField F] :
         simp
     · rintro ⟨h0, h1, h2⟩
       refine ⟨g 0 1, Subtype.ext ?_⟩
-      simp only [Set.mem_setOf_eq] at h0 h1 h2
+      simp only [Set.mem_ofPred_eq] at h0 h1 h2
       ext i j
       fin_cases i <;> fin_cases j <;> simp [nU, h0, h1, h2]
   rw [e]
@@ -294,7 +294,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.siegJ :
   · have e : {g : G1 F | ∃ (b : A F) (n : ℕ), ∃ x ∈ C, ∃ k ∈ KK F, g = nU b * mD (ρ ^ n * x) * k} =
         ⋃ n : ℕ, Set.range (nU : A F → G1 F) * ((mD '' ((ρ ^ n * ·) '' C)) * KK F) := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_mul, Set.mem_image, Set.mem_range]
+      simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_mul, Set.mem_image, Set.mem_range]
       constructor
       · rintro ⟨b, n, x, hx, k, hk, rfl⟩
         exact ⟨n, _, ⟨b, rfl⟩, _, ⟨_, ⟨_, ⟨x, hx, rfl⟩, rfl⟩, k, hk, rfl⟩, (mul_assoc _ _ _).symm⟩
@@ -310,7 +310,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.siegJ :
     have hCU : IsCompact (C * U) := hC.mul hU
     have hWm : MeasurableSet W := MeasurableSet.iUnion fun n =>
       (hCU.image (continuous_const_mul _)).measurableSet
-    haveI := M₀.prob
+    have := M₀.prob
     have hae : ∀ᵐ p ∂M₀.ν, p.2 ∈ KK F := by
       have h0 : ∀ᵐ k ∂M₀.κ, k ∈ KK F := M₀.supp
       exact Measure.quasiMeasurePreserving_snd.ae h0

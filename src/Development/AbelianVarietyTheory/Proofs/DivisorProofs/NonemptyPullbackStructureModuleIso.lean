@@ -140,9 +140,9 @@ theorem length_sectionsOn_pullback_of_free (O : Type) [CommRing O] {X Y : Scheme
     Module.length O (sectionsOn ((Scheme.Modules.pullback f).obj G) (f ⁻¹ᵁ V)) =
       n * Module.length O (sectionsOn G V) := by
   rw [Scheme.Hom.app_eq_appLE] at hfree
-  letI := appLEAlgebra f (le_refl (f ⁻¹ᵁ V))
-  letI := appLEModule f ((Scheme.Modules.pullback f).obj G) (le_refl (f ⁻¹ᵁ V))
-  haveI := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) (le_refl (f ⁻¹ᵁ V))
+  let := appLEAlgebra f (le_refl (f ⁻¹ᵁ V))
+  let := appLEModule f ((Scheme.Modules.pullback f).obj G) (le_refl (f ⁻¹ᵁ V))
+  have := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) (le_refl (f ⁻¹ᵁ V))
   obtain ⟨hF, hFin, hr⟩ := hfree
   have hbc := isBaseChange_pullbackSections f G hU hV (le_refl (f ⁻¹ᵁ V))
   let b := Module.Free.chooseBasis Γ(X, V) Γ(Y, f ⁻¹ᵁ V)
@@ -168,8 +168,8 @@ theorem length_sectionsOn_pullback_of_free (O : Type) [CommRing O] {X Y : Scheme
       rfl
   rw [Φ.length_eq, Module.length_pi_of_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   rcases subsingleton_or_nontrivial Γ(X, V) with hA | hA
-  · haveI : Subsingleton Γ(G, V) := Module.subsingleton Γ(X, V) Γ(G, V)
-    haveI : Subsingleton (sectionsOn G V) := (sectionsOn.toΓ G V).toEquiv.subsingleton_congr.2 this
+  · have : Subsingleton Γ(G, V) := Module.subsingleton Γ(X, V) Γ(G, V)
+    have : Subsingleton (sectionsOn G V) := (sectionsOn.toΓ G V).toEquiv.subsingleton_congr.2 this
     rw [Module.length_eq_zero_iff.2 this, mul_zero, mul_zero]
   · rw [← hr, Module.finrank_eq_card_chooseBasisIndex]
 
@@ -196,8 +196,8 @@ theorem fibre_finite_isClosed_of_affine_finite {X Y : Scheme.{0}} (f : Y ⟶ X) 
     (hfin : letI := (f.app V).hom.toAlgebra; Module.Finite Γ(X, V) Γ(Y, f ⁻¹ᵁ V))
     (x : X) (hxV : x ∈ V) (hx : IsClosed ({x} : Set X)) :
     (f.base ⁻¹' {x}).Finite ∧ ∀ y : Y, f.base y = x → IsClosed ({y} : Set Y) := by
-  haveI : IsAffine V.toScheme := hV
-  haveI : IsAffine (f ⁻¹ᵁ V).toScheme := hU
+  have : IsAffine V.toScheme := hV
+  have : IsAffine (f ⁻¹ᵁ V).toScheme := hU
   haveI hg : IsFinite (f ∣_ V) := by
     rw [HasAffineProperty.iff_of_isAffine (P := @IsFinite)]
     refine ⟨inferInstance, ?_⟩
@@ -448,9 +448,9 @@ theorem nontrivial_fibre_of_isBaseChange {R S : Type*} [CommRing R] [CommRing S]
     {l : M →ₗ[R] N} (hl : IsBaseChange S l) (p : Ideal R) [p.IsPrime] (q : Ideal S) [q.IsPrime]
     (hpq : p = q.comap (algebraMap R S)) :
     Nontrivial (q.ResidueField ⊗[S] N) ↔ Nontrivial (p.ResidueField ⊗[R] M) := by
-  letI : Algebra p.ResidueField q.ResidueField :=
+  let : Algebra p.ResidueField q.ResidueField :=
     (Ideal.ResidueField.map p q (algebraMap R S) hpq).toAlgebra
-  haveI : IsScalarTower R p.ResidueField q.ResidueField :=
+  have : IsScalarTower R p.ResidueField q.ResidueField :=
     .of_algebraMap_eq fun r =>
       (IsScalarTower.algebraMap_apply R S q.ResidueField r).trans
         (Ideal.ResidueField.map_algebraMap _ _ _ hpq r).symm
@@ -469,7 +469,7 @@ theorem mem_support_of_isBaseChange {R S : Type*} [CommRing R] [CommRing S] [Alg
     [AddCommGroup N] [Module R N] [Module S N] [IsScalarTower R S N]
     {l : M →ₗ[R] N} (hl : IsBaseChange S l) (q : PrimeSpectrum S) :
     q ∈ Module.support S N ↔ PrimeSpectrum.comap (algebraMap R S) q ∈ Module.support R M := by
-  haveI : Module.Finite S N := Module.Finite.equiv hl.equiv
+  have : Module.Finite S N := Module.Finite.equiv hl.equiv
   rw [Module.mem_support_iff_nontrivial_residueField_tensorProduct,
     Module.mem_support_iff_nontrivial_residueField_tensorProduct]
   exact nontrivial_fibre_of_isBaseChange hl _ _ rfl
@@ -481,9 +481,9 @@ theorem support_pullback {X Y : Scheme.{0}} (f : Y ⟶ X) (G : X.Modules) [IsFin
   have hfy : f y ∈ V := e hy
   rw [Set.mem_preimage, mem_support_iff_primeIdealOf hU ⟨y, hy⟩,
     mem_support_iff_primeIdealOf hV ⟨f y, hfy⟩]
-  letI := appLEAlgebra f e
-  letI := appLEModule f ((Scheme.Modules.pullback f).obj G) e
-  haveI := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
+  let := appLEAlgebra f e
+  let := appLEModule f ((Scheme.Modules.pullback f).obj G) e
+  have := appLE_isScalarTower f ((Scheme.Modules.pullback f).obj G) e
   have := finite_sections G hV
   rw [mem_support_of_isBaseChange (isBaseChange_pullbackSections f G hU hV e)]
   have h := IsAffineOpen.comap_primeIdealOf_appLE V hV U hU e hy
@@ -523,7 +523,7 @@ theorem dim_le_zero_of_finite_closed {T : Type} [TopologicalSpace T] {s : Set T}
   have : Finite s := hs.to_subtype
   have : T1Space s := ⟨fun x => by
     simpa [← Set.image_singleton, Set.preimage_image_eq _ Subtype.val_injective] using
-      (hc x.1 x.2).preimage (continuous_subtype_val (p := (· ∈ s)))⟩
+      (hc x.1 x.2).preimage (continuous_subtypeVal (p := (· ∈ s)))⟩
   exact topologicalKrullDim_zero_of_discreteTopology s
 
 theorem eq_empty_of_dim_add_one_le_zero {T : Type} [TopologicalSpace T] {S : Set T}
@@ -642,9 +642,9 @@ theorem diffVanish_chiPic_pullback_sub [AlgebraicGeometry.IsNoetherian X]
     refine diffVanish_of_generators (closure_nonzeroLocus_eq_top hA hS) fun g hg => ?_
     obtain ⟨N, hN, t, hSt, e⟩ := hg 0
     have hN' := Semi.LB.isLB_pull hN f
-    haveI hmono : Mono (cutHom G hN t) :=
+    have hmono : Mono (cutHom G hN t) :=
       (mono_cutHom_iff G hN t).2 fun x hx => hSt (Or.inl (Or.inl hx))
-    haveI hmono' : Mono (cutHom G' hN' (secPull t f)) :=
+    have hmono' : Mono (cutHom G' hN' (secPull t f)) :=
       (mono_cutHom_iff G' hN' _).2 fun x hx => by
         rw [nonzeroLocus_secPull]
         exact hSt (Or.inl (Or.inr ⟨x, hx, rfl⟩))
@@ -689,8 +689,8 @@ theorem interNum_pull_eq_mul (k : Type) [Field k] (X Y : Scheme.{0}) [IsIntegral
     letI := GlobalTheory.algebraΓOfHom (f ≫ sY); letI := GlobalTheory.algebraΓOfHom sY
     GlobalTheory.interNum k (GlobalTheory.QCoh.structureModule X) (fun i => (L i).pull f) =
       (n : ℤ) * GlobalTheory.interNum k (GlobalTheory.QCoh.structureModule Y) L := by
-  letI := GlobalTheory.algebraΓOfHom (f ≫ sY)
-  letI := GlobalTheory.algebraΓOfHom sY
+  let := GlobalTheory.algebraΓOfHom (f ≫ sY)
+  let := GlobalTheory.algebraΓOfHom sY
   have := isNoetherian_of_isProjOver hX
   have := isNoetherian_of_isProjOver hY
   obtain ⟨-, A, hA⟩ := isProper_and_exists_isAmpleLB_of_isProjOver hY

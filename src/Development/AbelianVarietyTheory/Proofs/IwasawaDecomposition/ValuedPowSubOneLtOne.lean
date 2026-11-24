@@ -177,10 +177,10 @@ theorem valued_pow_sub_one_lt_one {x : v.adicCompletion L} (hx : Valued.v x = 1)
   have hnot : y ∉ v.asIdeal := by
     rw [← valued_algebraMap_lt_one, hy1]; exact lt_irrefl _
   have hmem : y ^ (Ideal.absNorm v.asIdeal - 1) - 1 ∈ v.asIdeal := by
-    haveI := v.isMaximal
-    letI := Ideal.Quotient.field v.asIdeal
-    haveI : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-    letI := Fintype.ofFinite (𝓞 L ⧸ v.asIdeal)
+    have := v.isMaximal
+    let := Ideal.Quotient.field v.asIdeal
+    have : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+    let := Fintype.ofFinite (𝓞 L ⧸ v.asIdeal)
     rw [← Ideal.Quotient.eq, map_pow, map_one, Ideal.absNorm_apply, Submodule.cardQuot_apply,
       Nat.card_eq_fintype_card]
     exact FiniteField.pow_card_sub_one_eq_one _ (fun h => hnot (Ideal.Quotient.eq_zero_iff_mem.1 h))

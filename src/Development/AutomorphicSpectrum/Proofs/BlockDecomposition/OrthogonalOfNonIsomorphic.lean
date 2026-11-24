@@ -153,7 +153,7 @@ theorem GlobalTheory.CompanionTheory.FinDiscKfin.exists_kfin_subspace :
         (∀ a ∈ A, a ∈ V ∧ ∀ u ∈ L, finRep E N u a = a) ∧ (∀ k, ∀ a ∈ A, cptRep E N k a ∈ A) ∧
         ∀ ℓ : Sm E N →ₗ[ℂ] ℂ, ∀ a ∈ A, Continuous fun k => ℓ (cptRep E N k a) := by
   intro E _ _ _ N V hV L x hx hL
-  haveI hfin : FiniteDimensional ℂ (GlobalTheory.AutGrowth.spanK E N x) := (hV.aut x hx).kfin
+  have hfin : FiniteDimensional ℂ (GlobalTheory.AutGrowth.spanK E N x) := (hV.aut x hx).kfin
   refine ⟨GlobalTheory.AutGrowth.spanK E N x, hfin, GlobalTheory.AutGrowth.self_mem_spanK x, ?_,
     GlobalTheory.AutGrowth.spanK_stable x, fun ℓ a ha =>
       GlobalTheory.CompanionTheory.FinDiscKfin.continuous_coeff _ (GlobalTheory.AutGrowth.spanK_stable x) ℓ a ha⟩
@@ -201,10 +201,10 @@ theorem exists_sum_fixed {G W : Type} [Group G] [TopologicalSpace G] [IsTopologi
     { carrier := {k | ρ k x = x}
       one_mem' := by simp
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have h : ρ a⁻¹ (ρ a x) = x := by
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
         rwa [ha] at h }
@@ -260,11 +260,11 @@ theorem inner_R (g : GA E N) (u v : L2 (latticeGL E N) μ) :
 
 theorem exists_avg : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (N : ℕ) (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (V : Submodule ℂ (Sm E N)), IsDiscrete V → ∀ L : Subgroup (GL (Fin N) (Af E)), IsCompact (L : Set (GL (Fin N) (Af E))) → ∀ x ∈ V, ∃ x' ∈ V, (∀ u ∈ L, finRep E N u x' = x') ∧ ∀ y : Sm E N, y ∈ squareIntegrableSmoothSubmoduleGL μ → (∀ u ∈ L, finRep E N u y = y) → ⟪l2Map μ x, l2Map μ y⟫_ℂ = ⟪l2Map μ x', l2Map μ y⟫_ℂ := by
   intro E _ _ _ N μ _ _ V hV L hL x hx
-  haveI : CompactSpace L := isCompact_iff_compactSpace.1 hL
+  have : CompactSpace L := isCompact_iff_compactSpace.1 hL
   let ρ : L →* Module.End ℂ (Sm E N) := (finRep E N).comp L.subtype
   have hρ : ∀ l : L, ρ l = finRep E N (l : GL (Fin N) (Af E)) := fun _ => rfl
   have ho : IsOpen {k : L | ρ k x = x} :=
-    (hV.aut x hx).level.preimage continuous_subtype_val
+    (hV.aut x hx).level.preimage continuous_subtypeVal
   obtain ⟨S, hS, hfix⟩ := exists_sum_fixed ρ x ho
   have hn : ((S.card : ℂ)) ≠ 0 := Nat.cast_ne_zero.2 hS.card_pos.ne'
   have hmem : ∀ l : L, ρ l x ∈ V := fun l => hV.stable (.fin _) x hx
@@ -360,7 +360,7 @@ theorem map_mul_right_eq_of_mem_compact_subgroup :
         rw [← mul_assoc, h, mul_inv_cancel_right]
       · rintro ⟨c, hc, l, hl, rfl⟩
         exact ⟨c, hc, l * k, K.mul_mem hl hk, (mul_assoc _ _ _).symm⟩
-    haveI : IsFiniteMeasureOnCompacts (ν.map (fun x => x * k)) :=
+    have : IsFiniteMeasureOnCompacts (ν.map (fun x => x * k)) :=
       ⟨fun L hL => by
         rw [Measure.map_apply hmeas hL.measurableSet]
         exact ((Homeomorph.mulRight k).isCompact_preimage.2 hL).measure_lt_top⟩
@@ -368,7 +368,7 @@ theorem map_mul_right_eq_of_mem_compact_subgroup :
     set c := Measure.haarScalarFactor (ν.map (fun x => x * k)) ν with hc
     have h2 : (ν.map (fun x => x * k)) (C * (K : Set G)) = ν (C * (K : Set G)) := by
       rw [Measure.map_apply hmeas hS.measurableSet, hpre]
-    rw [h1, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+    rw [h1, smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
     have h3 : (c : ℝ≥0∞) = 1 := by
       have := (ENNReal.mul_left_inj hpos htop).1 (h2.trans (one_mul _).symm)
       exact this
@@ -791,7 +791,7 @@ theorem representing_vector : ∀ {K M H X : Type} [Group K] [TopologicalSpace K
   ∀ x ∈ U, ∃ y ∈ U', ∀ z ∈ U', ⟪ι z, ι x⟫_ℂ = ⟪ι z, ι y⟫_ℂ := by
   intro K M H X _ _ _ _ _ _ ν _ _ _ _ _ ρ ι U U' ev h1 h2 hU hU' hadm x hx
   obtain ⟨A, hAfd, hxA, hAU, hAst, hAc⟩ := hU x hx
-  haveI := hAfd
+  have := hAfd
   let ρA : K → A →ₗ[ℂ] A := fun k => (ρ k).restrict (hAst k)
   have hρA : ∀ k (a : A), ((ρA k a : A) : M) = ρ k a := fun k a => rfl
   have hρAmul : ∀ k k', ρA (k * k') = ρA k ∘ₗ ρA k' := by
@@ -835,16 +835,16 @@ theorem representing_vector : ∀ {K M H X : Type} [Group K] [TopologicalSpace K
       map_add' := fun η η' => rfl
       map_smul' := fun c η => rfl }
   let Wf : Submodule ℂ (K → ℂ) := LinearMap.range Φ
-  haveI hWf : FiniteDimensional ℂ Wf := inferInstance
+  have hWf : FiniteDimensional ℂ Wf := inferInstance
   let S : Set M := {x | x ∈ U' ∧ ∀ t, (fun k => ev t (ρ k x)) ∈ Wf}
   let D : Submodule ℂ M := Submodule.span ℂ S
-  haveI hDfd : FiniteDimensional ℂ D := hadm Wf hWf
+  have hDfd : FiniteDimensional ℂ D := hadm Wf hWf
   have hDU : D ≤ U' := Submodule.span_le.2 fun _ h => h.1
 
   have Z : ∀ z ∈ U', ∃ z₁ ∈ S, ∀ ℓ : M →ₗ[ℂ] ℂ, ℓ z₁ = ∫ k, g k * ℓ (ρ k z) ∂ν := by
     intro z hz
     obtain ⟨B, hBfd, hzB, hBU, hBst, hBc⟩ := hU' z hz
-    haveI := hBfd
+    have := hBfd
     obtain ⟨z₁, hz₁B, hz₁⟩ := exists_weak_integral_sub ν B (fun k => ρ k z)
       (fun k => hBst k z hzB) g hg (fun ℓ => hBc ℓ z hzB)
     refine ⟨z₁, ⟨hBU hz₁B, fun t => ?_⟩, hz₁⟩
@@ -892,8 +892,8 @@ theorem representing_vector : ∀ {K M H X : Type} [Group K] [TopologicalSpace K
     simp [inner_conj_symm]
 
   let P : Submodule ℂ H := D.map ι
-  haveI : FiniteDimensional ℂ P := inferInstance
-  haveI : CompleteSpace P := FiniteDimensional.complete ℂ P
+  have : FiniteDimensional ℂ P := inferInstance
+  have : CompleteSpace P := FiniteDimensional.completeSpace ℂ P
   obtain ⟨t₀, ht₀D, ht₀⟩ : ∃ t₀ ∈ D, ι t₀ = P.starProjection (ι x) := by
     have : P.starProjection (ι x) ∈ P := by
       rw [Submodule.starProjection_apply]
@@ -909,7 +909,7 @@ theorem representing_vector : ∀ {K M H X : Type} [Group K] [TopologicalSpace K
     exact this
   have ht₀U : t₀ ∈ U' := hDU ht₀D
   obtain ⟨B, hBfd, htB, hBU, hBst, hBc⟩ := hU' t₀ ht₀U
-  haveI := hBfd
+  have := hBfd
   obtain ⟨y, hyB, hy⟩ := exists_weak_integral_sub ν B (fun k => ρ k⁻¹ t₀)
     (fun k => hBst k⁻¹ t₀ htB) (fun k => (starRingEnd ℂ) (g k)) hcg
     (fun ℓ => (hBc ℓ t₀ htB).comp continuous_inv)
@@ -1038,9 +1038,9 @@ theorem exists_repr (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInv
   have hunit : ∀ (k : Kinf E N) {W W' : Submodule ℂ (Sm E N)}, IsDiscrete W → IsDiscrete W' → ∀ a ∈ W, ∀ b ∈ W',
       ⟪l2Map μ (cptRep E N k a), l2Map μ (cptRep E N k b)⟫_ℂ = ⟪l2Map μ a, l2Map μ b⟫_ℂ :=
     fun k _ _ h h' a ha b hb => (_root_.GlobalTheory.CompanionTheory.FinDiscOrth.rt_mem_l2Sub_and_inner_eq E N μ _ a b (mem_l2_of_discrete μ h ha) (mem_l2_of_discrete μ h' hb)).2
-  letI : MeasurableSpace (Kinf E N) := borel _
-  haveI : BorelSpace (Kinf E N) := ⟨rfl⟩
-  haveI : CompactSpace (Kinf E N) := GlobalTheory.KinfCompactness.compactSpace_Kinf E N
+  let : MeasurableSpace (Kinf E N) := borel _
+  have : BorelSpace (Kinf E N) := ⟨rfl⟩
+  have : CompactSpace (Kinf E N) := GlobalTheory.KinfCompactness.compactSpace_Kinf E N
   have key := _root_.GlobalTheory.CompanionTheory.FinDiscRepr.representing_vector (Measure.haar : Measure (Kinf E N)) (cptRep E N) (l2Map μ) (fixS V L) (fixS V' L)
     (fun g : GA E N => (LinearMap.proj g).comp (Sm E N).subtype)
     (fun k a ha b hb => hunit k hV' hV a ha.1 b hb.1)
@@ -1052,7 +1052,7 @@ theorem exists_repr (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInv
       obtain ⟨A, h1, h2, h3, h4, h5⟩ := _root_.GlobalTheory.CompanionTheory.FinDiscKfin.exists_kfin_subspace E N V' hV' L a ha.1 ha.2
       exact ⟨A, h1, h2, fun b hb => h3 b hb, h4, h5⟩)
     (fun W hW => by
-      haveI := GlobalTheory.CompanionTheory.AdmDiscFin.admissible_discrete_spaces E N L W hLo hW V' hV'
+      have := GlobalTheory.CompanionTheory.AdmDiscFin.admissible_discrete_spaces E N L W hLo hW V' hV'
       refine Submodule.finiteDimensional_of_le (Submodule.span_mono (t := {φ | φ ∈ V' ∧ TypeB L W φ}) ?_)
       rintro a ⟨ha, hW'⟩
       exact ⟨ha.1, fun u hu g => congrFun (congrArg Subtype.val (ha.2 u hu)) g, hW'⟩)
@@ -1170,7 +1170,7 @@ theorem GlobalTheory.CompanionTheory.FinDisc.integral_eq_zero_of_not_isoV :
     ∀ φ ∈ V, ∀ ψ ∈ V', ∫ x in F, φ.1 x * (starRingEnd ℂ) (ψ.1 x) ∂μ = 0 := by
   intro E _ _ _ N mG bG μ _ F hF V V' hV hV' hno φ hφ ψ hψ
   obtain rfl : mG = borel _ := bG.measurable_eq
-  haveI := _root_.GlobalTheory.CompanionTheory.AdelicUnimod.isMulRightInvariant_GA_CM E N μ
+  have := _root_.GlobalTheory.CompanionTheory.AdelicUnimod.isMulRightInvariant_GA_CM E N μ
   rw [_root_.GlobalTheory.CompanionTheory.FinDiscOrth.setIntegral_mul_conj_eq_inner E N μ F hF φ ψ (mem_l2_of_discrete μ hV hφ) (mem_l2_of_discrete μ hV' hψ)]
   by_contra hne
   exact hno (isoV_of_ne μ hV hV' hφ hψ hne)

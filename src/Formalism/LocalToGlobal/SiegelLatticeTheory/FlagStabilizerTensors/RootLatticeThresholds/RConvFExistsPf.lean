@@ -136,12 +136,12 @@ open Formalism.MainNotions.S Formalism.MainNotions.LeviCoordinates
 
 theorem convergent_reduction_exists : Formalism.L2.SG.Pf.RowDictPf.RConvFExists := by
   intro I μf _ _ hright hsc hborel fund hfund R hR f hf
-  haveI := hsc
-  haveI := hborel
-  haveI : μf.IsMulRightInvariant := hright
-  haveI : SigmaFinite (I.muA μf) := rr_muA_sigmaFinite I μf
-  haveI : (I.muA μf).IsMulLeftInvariant := rr_muA_left I μf
-  haveI : (I.muA μf).IsMulRightInvariant := rr_muA_right I μf
+  have := hsc
+  have := hborel
+  have : μf.IsMulRightInvariant := hright
+  have : SigmaFinite (I.muA μf) := rr_muA_sigmaFinite I μf
+  have : (I.muA μf).IsMulLeftInvariant := rr_muA_left I μf
+  have : (I.muA μf).IsMulRightInvariant := rr_muA_right I μf
   have hfd := rr_FD_of I μf fund hfund
   have hreg := rr_IsReg_of I μf fund R hR
 

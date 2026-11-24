@@ -184,9 +184,9 @@ theorem expCover_mem_ball {n a : ℕ} (h : a ≤ n) {w : Fin n → ℂ} (hw : w 
   · have hre := hw.1 ⟨k.val, hk⟩
     have hkk : Fin.castLE h ⟨k.val, hk⟩ = k := Fin.ext rfl
     rw [hkk] at hre
-    simp only [expCover, hk, if_true, Complex.norm_exp]
+    simp only [expCover, hk, ite_true, Complex.norm_exp]
     simpa using Real.exp_lt_exp.mpr hre
-  · simp only [expCover, hk, if_false]
+  · simp only [expCover, hk, ite_false]
     exact hw.2 k (not_lt.1 hk)
 
 theorem expCover_castLE {n a : ℕ} (h : a ≤ n) (w : Fin n → ℂ) (i : Fin a) :
@@ -270,7 +270,7 @@ theorem exp_quadratic_tau_shifted (v : Fin g → ℤ) (hnn : ∀ i, 0 ≤ intQua
       ∏ i : Fin a, expCover a w (Fin.castLE P.a_le i) ^ (intQuad (P.B i) v).toNat := by
     rw [Finset.mul_sum, Complex.exp_sum]
     refine Finset.prod_congr rfl fun i _ => ?_
-    rw [expCover_castLE, ← Complex.exp_nat_mul, hk i]
+    rw [expCover_castLE, ← Complex.exp_natCast_mul, hk i]
     congr 1
     field_simp [two_pi_I_ne_zero]
   rw [quadratic_tau_shifted, mul_sub, Complex.exp_sub, hw, hsum]

@@ -172,9 +172,9 @@ theorem log_norm_estimate_of_Q : Q1 → D0 → N3 → C0 → D1 := by
       rw [hD1, Complex.ofReal_one, Complex.one_cpow, mul_one]; exact hP1
     have hOinv : ∀ n g, UU 0 n → (n * g ∈ O ↔ g ∈ O) := by
       intro n g hn
-      simp only [hO, hf, Set.mem_inter_iff, Set.mem_setOf_eq, hG0inv n g hn, hPinv n hn g, hDmul, hDUU 0 n hn,
+      simp only [hO, hf, Set.mem_inter_iff, Set.mem_ofPred_eq, hG0inv n g hn, hPinv n hn g, hDmul, hDUU 0 n hn,
         one_mul]
-    haveI : MeasurableSingletonClass (GA E k) := LogNormEstimates.msc
+    have : MeasurableSingletonClass (GA E k) := LogNormEstimates.msc
     set_option synthInstance.maxHeartbeats 400000 in
     have hμO : μ O ≠ 0 := (hOo.measure_pos μ ⟨1, h1O⟩).ne'
     have hβO : μ.withDensity β O ≠ 0 := by

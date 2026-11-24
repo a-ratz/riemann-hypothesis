@@ -93,7 +93,7 @@ theorem intg_right {M X : HSp D} {ω : GlobalTheory.Grid.WRep M X} {ν : Measure
     (hν : IsHaarFD M ν 𝓕) {Φ : WO M X → ℂ} (hL : ∀ γ ∈ GQ M, ∀ g h, thetaKO ω (γ * g) h Φ = thetaKO ω g h Φ)
     (hΦ : Intg ω ν 𝓕 Φ) (k : GA D M) :
     Intg ω ν 𝓕 (ω (k, 1) Φ) ∧ thetaInt ω ν 𝓕 (ω (k, 1) Φ) = thetaInt ω ν 𝓕 Φ := by
-  haveI := hν.1
+  have := hν.1
   have key := fun h => setIntegral_mul_right' M ν 𝓕 hν.2 (fun g => thetaKO ω g h Φ)
     (fun γ hγ u => hL γ hγ u h) (hΦ h) k
   refine ⟨fun h => ?_, ?_⟩

@@ -75,7 +75,7 @@ theorem isContDensityOn_gram : ∀ (F E : Type) [Field F] [NumberField F] [Field
   obtain ⟨g, hg, hgram⟩ := hlift M J hJ
   have hB : IsOpen {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} := by
     have hdet : Continuous fun S : HermR R σ n => (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det :=
-      Continuous.matrix_det continuous_subtype_val
+      Continuous.matrix_det continuous_subtypeVal
     have hset : {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} =
         (fun S : HermR R σ n => (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det) ⁻¹'
           Set.range (Units.val : (R ⊗[F] E)ˣ → R ⊗[F] E) := by

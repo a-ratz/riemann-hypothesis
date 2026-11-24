@@ -155,7 +155,7 @@ theorem coefGlue_holds : CoefGlue := by
         refine LinearMap.ext fun f => ?_
         simp only [Matrix.toLin'_apply, Matrix.sum_mulVec, hBC1, Finset.sum_sub_distrib, tE_diag_sum,
           Matrix.smul_mulVec, Matrix.one_mulVec]
-        simp only [if_pos rfl, if_true, ite_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin]
+        simp only [ite_eq_left rfl, ite_true, ite_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin]
         rw [← Nat.cast_smul_eq_nsmul ℂ]
         module
       rw [Finset.sum_congr rfl fun i _ => hcx τ i i, ← Matrix.sum_mul, ← Matrix.mul_sum, hsumB, Matrix.mul_smul,

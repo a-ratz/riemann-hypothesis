@@ -75,10 +75,10 @@ theorem sum_Icc_cast_eq_choose (n : ℕ) :
 
 theorem isolatedNonKlt_smooth : GlobalTheory.Published.IsolatedNonKltDivisor → ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (q : X ⟶ Sp ℂ) (D : ℕ) [SmoothOfRelativeDimension D q], IsProjOver q → 1 ≤ D → letI := algebraΓOfHom q; ∀ (N₀ : LB X) (r : ℕ) (x : X), 0 < r → IsNef ℂ N₀ → IsBig ℂ N₀ → IsClosed ({x} : Set X) → (∀ (Z : Closeds X) (e : ℕ), IsIrreducible (Z : Set X) → x ∈ Z → 1 ≤ e → topologicalKrullDim (Z : Set X) = e → (((D + 1).choose 2 : ℕ) : ℝ) ^ e < (interNumRed ℂ Z (fun _ : Fin e => N₀) : ℝ) / (r : ℝ) ^ e) → ∃ (m' : ℕ) (D₀ : CartierDiv X) (U : X.Opens), 0 < m' ∧ D₀.Eff ∧ (∀ C : Closeds X, IsCompleteCurve ℂ C → (interNumRed ℂ C ![toLB D₀] : ℚ) / m' = interNumRed ℂ C ![N₀] / r) ∧ x ∈ U ∧ (∀ y ∈ U, y ≠ x → KltAt q D (qWeil D₀ m') y) ∧ ¬ KltAt q D (qWeil D₀ m') x := by
   intro hK X _ _ q D _ hproj hD
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   intro N₀ r x hr hnef hbig hx hint
-  haveI := SmoothOfRelativeDimension.smooth D q
-  haveI : GlobalTheory.IsNormalScheme X := isNormalScheme_of_smooth q
+  have := SmoothOfRelativeDimension.smooth D q
+  have : GlobalTheory.IsNormalScheme X := isNormalScheme_of_smooth q
   have hdim : topologicalKrullDim X = D := GlobalTheory.HSCore.VanishNumberField.topologicalKrullDim_eq_of_smooth q D inferInstance
   have hc : (0 : ℝ) < (((D + 1).choose 2 : ℕ) : ℝ) := by
     have : 0 < (D + 1).choose 2 := Nat.choose_pos (by omega)

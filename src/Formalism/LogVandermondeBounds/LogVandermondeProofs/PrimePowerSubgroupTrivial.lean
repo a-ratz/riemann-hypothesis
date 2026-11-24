@@ -58,7 +58,7 @@ open Polynomial
 
 theorem primeOrderFinrank : PrimeOrderFinrank := by
   intro K _ _ n g A hg hA hA1
-  haveI := Fact.mk hg
+  have := Fact.mk hg
   let f : (Fin n → K) →ₗ[ℚ] (Fin n → K) := (Matrix.toLin' A).restrictScalars ℚ
   have hpow : ∀ v : Fin n → K, (f ^ g) v = v := by
     intro v

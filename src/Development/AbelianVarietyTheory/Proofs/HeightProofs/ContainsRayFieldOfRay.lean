@@ -153,7 +153,7 @@ private theorem pow_residue_degree_eq_one_of_isFrobenius [IsGalois K L] (𝔭 : 
     exact pow_ne_zero f (fun h0 => 𝔭.ne_bot (Ideal.absNorm_eq_zero_iff.mp h0))
   have hQ0 : Q ≠ ⊥ := fun h0 => hN0 (Ideal.absNorm_eq_zero_iff.mpr h0)
   have hfin : Finite (𝓞 L ⧸ Q) := (Ideal.absNorm_ne_zero_iff _).mp hN0
-  haveI : Q.IsMaximal := hQ.isMaximal hQ0
+  have : Q.IsMaximal := hQ.isMaximal hQ0
   have hfix : ∀ x : 𝓞 L, τ ^ f • x - x ∈ Q := fun x => by
     have h1 := pow_smul_sub_mem Q hτ f x
     have h2 : x ^ Ideal.absNorm 𝔭.asIdeal ^ f - x ∈ Q := by
@@ -173,7 +173,7 @@ theorem containsRayField_of_ray [IsGalois K L] (n : ℕ)
         ∃ α β : 𝓞 K, RayPair (Ideal.span {(n : 𝓞 K)}) α β ∧ I * Ideal.span {β} = Ideal.span {α}) :
     GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField (algebraMap K L) n := by
   intro 𝔓 h𝔓
-  haveI := 𝔓.isPrime
+  have := 𝔓.isPrime
   have hN : ((Ideal.absNorm 𝔓.asIdeal : ℕ) : 𝓞 K) ∈
       𝔓.asIdeal.comap (RingOfIntegers.mapRingHom (algebraMap K L)) := by
     rw [Ideal.mem_comap, map_natCast]
@@ -185,7 +185,7 @@ theorem containsRayField_of_ray [IsGalois K L] (n : ℕ)
     rw [map_natCast, map_zero, Nat.cast_eq_zero, Ideal.absNorm_eq_zero_iff] at h2
     exact 𝔓.ne_bot h2
   let 𝔭 : HeightOneSpectrum (𝓞 K) := ⟨_, inferInstance, hne⟩
-  haveI : 𝔓.asIdeal.LiesOver 𝔭.asIdeal := ⟨rfl⟩
+  have : 𝔓.asIdeal.LiesOver 𝔭.asIdeal := ⟨rfl⟩
   obtain ⟨f, hfdef⟩ : ∃ f, f = 𝔓.asIdeal.inertiaDeg (𝓞 K) := ⟨_, rfl⟩
   have hf : Ideal.absNorm 𝔓.asIdeal = Ideal.absNorm 𝔭.asIdeal ^ f := by
     rw [hfdef, Ideal.absNorm_pow_inertiaDeg]

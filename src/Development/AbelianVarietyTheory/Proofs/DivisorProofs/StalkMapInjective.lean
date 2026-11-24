@@ -99,20 +99,20 @@ theorem exists_valuation (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing 
 variable {k : Type} [Field k] {Y : Scheme.{0}} {p : Y ⟶ Sp k} {U : Y.Opens} {D : ℕ}
 
 theorem isIntegral_X [IsIntegral Y] (M : Modif p U D) [Nonempty M.X] : IsIntegral M.X := by
-  haveI : Smooth M.str := SmoothOfRelativeDimension.smooth D M.str
-  haveI : IsReduced M.X := isReduced_of_smooth M.str
+  have : Smooth M.str := SmoothOfRelativeDimension.smooth D M.str
+  have : IsReduced M.X := isReduced_of_smooth M.str
   obtain ⟨x, hx⟩ := M.dense.nonempty
-  haveI : Nonempty (M.σ ⁻¹ᵁ U) := ⟨⟨x, hx⟩⟩
-  haveI : Nonempty U := ⟨⟨M.σ x, hx⟩⟩
-  haveI := M.iso
-  haveI : IsIntegral (M.σ ⁻¹ᵁ U : Scheme) := isIntegral_of_isOpenImmersion (M.σ ∣_ U)
+  have : Nonempty (M.σ ⁻¹ᵁ U) := ⟨⟨x, hx⟩⟩
+  have : Nonempty U := ⟨⟨M.σ x, hx⟩⟩
+  have := M.iso
+  have : IsIntegral (M.σ ⁻¹ᵁ U : Scheme) := isIntegral_of_isOpenImmersion (M.σ ∣_ U)
   have h1 : IsIrreducible ((M.σ ⁻¹ᵁ U : M.X.Opens) : Set M.X) := by
     have := (IrreducibleSpace.isIrreducible_univ (M.σ ⁻¹ᵁ U : Scheme)).image (⇑(M.σ ⁻¹ᵁ U).ι)
       (M.σ ⁻¹ᵁ U).ι.continuous.continuousOn
     rwa [Set.image_univ, Scheme.Opens.range_ι] at this
   have h2 := h1.closure
   rw [M.dense.closure_eq] at h2
-  haveI : IrreducibleSpace M.X := (irreducibleSpace_def _).2 h2
+  have : IrreducibleSpace M.X := (irreducibleSpace_def _).2 h2
   exact isIntegral_of_irreducibleSpace_of_isReduced M.X
 
 end GlobalTheory.HSApp.ValCrit

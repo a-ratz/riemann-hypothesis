@@ -127,7 +127,7 @@ theorem mk_mem_ker_piQ (𝔭 : Ideal (𝓞 F)) (k : ℕ) (a : 𝓞 K) :
 
 theorem card_ker_piQ (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) (k : ℕ) : Nat.card (RingHom.ker (piQ K 𝔭 k)) = Ideal.absNorm 𝔭 ^ 2 := by
-  haveI := finite_quot (K := K) h𝔭 (k + 1)
+  have := finite_quot (K := K) h𝔭 (k + 1)
   have hA := absNorm_extP_pow hK hF h𝔭 (k + 1)
   have hB := absNorm_extP_pow hK hF h𝔭 k
   have hC : Nat.card ((𝓞 K ⧸ extP K 𝔭 ^ (k + 1)) ⧸ RingHom.ker (piQ K 𝔭 k)) =

@@ -120,7 +120,7 @@ theorem rowDegree_le_of_rowAdd_eq {R : Type*} [CommRing R] [IsDomain R] [CharZer
   rw [not_le] at hlt
   let K := FractionRing R
   have hinj : Function.Injective (algebraMap R K) := IsFractionRing.injective R K
-  haveI : CharZero K := charZero_of_injective_algebraMap hinj
+  have : CharZero K := charZero_of_injective_algebraMap hinj
   have hinv (s : K) : rowAdd t r r' s (map (algebraMap R K) P) = map (algebraMap R K) P :=
     rowAdd_eq_self_of_forall_int (fun s => by
       rw [← map_intCast (algebraMap R K), ← map_rowAdd, h]) s
@@ -161,11 +161,11 @@ theorem rowDegree_le_of_rowAdd_eq {R : Type*} [CommRing R] [IsDomain R] [CharZer
       rw [rowInd_apply]
       by_cases e : t' = t ∧ r'' = r'
       · obtain ⟨rfl, rfl⟩ := e
-        simp only [f, g, hr.symm, and_self, and_false, if_true, if_false, Polynomial.eval_add,
+        simp only [f, g, hr.symm, and_self, and_false, ite_true, ite_false, Polynomial.eval_add,
           Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_X, add_zero, pow_one]
         linear_combination (-z (t', r'', k)) * mul_inv_cancel₀ hs
       · simp [g, e]
-    rw [Set.mem_setOf_eq, Polynomial.eval_mul, Polynomial.eval_mul, hev, hev, h1,
+    rw [Set.mem_ofPred_eq, Polynomial.eval_mul, Polynomial.eval_mul, hev, hev, h1,
       Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_C, ← mul_assoc, ← mul_pow,
       mul_neg, mul_inv_cancel₀ hs]
   have hg (v : Var T p q κ) : (g v).natDegree ≤ rowInd t r v := by
@@ -186,7 +186,7 @@ theorem rowDegree_le_of_rowAdd_eq {R : Type*} [CommRing R] [IsDomain R] [CharZer
   have := congrArg (fun F : Polynomial K => F.coeff d') hid
   simp only [Polynomial.coeff_C_mul, Polynomial.coeff_eq_zero_of_natDegree_lt (hdeg.trans_lt hlt),
     mul_zero] at this
-  rw [Polynomial.coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self,
+  rw [Polynomial.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self,
     Polynomial.coeff_zero_eq_eval_zero, hev] at this
   rw [map_zero, ← this]
   congr 2
@@ -272,10 +272,10 @@ theorem not_mem_hostType_iff (τ : E →+* ℂ) :
 
 variable {H} (D : Tor.Datum H)
 
-theorem mult_of_mem {τ : E →+* ℂ} (h : τ (H.rt : E) = H.rt0) : D.mult τ = D.p := if_pos h
+theorem mult_of_mem {τ : E →+* ℂ} (h : τ (H.rt : E) = H.rt0) : D.mult τ = D.p := ite_eq_left h
 
 theorem mult_conjEmb_of_mem {τ : E →+* ℂ} (h : τ (H.rt : E) = H.rt0) :
-    D.mult (Tor.conjEmb τ) = D.q := if_neg fun e => (not_mem_hostType_iff H τ).2 e h
+    D.mult (Tor.conjEmb τ) = D.q := ite_eq_right fun e => (not_mem_hostType_iff H τ).2 e h
 
 variable (n : ℕ)
 

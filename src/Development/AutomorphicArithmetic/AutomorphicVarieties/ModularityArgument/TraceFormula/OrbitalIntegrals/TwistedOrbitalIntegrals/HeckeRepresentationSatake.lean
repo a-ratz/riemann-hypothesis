@@ -50,9 +50,9 @@ open ValuativeRel Topology
 private theorem UpperTheory.V.Z.Tf.Orb.local_field_topology_facts (E : Type) [Field E] [ValuativeRel E] [TopologicalSpace E]
     [IsNonarchimedeanLocalField E] :
     T2Space E ∧ SecondCountableTopology E ∧ IsOpen {x : E | valuation E x ≤ 1} := by
-  letI := IsTopologicalAddGroup.rightUniformSpace E
-  haveI := isUniformAddGroup_of_addCommGroup (G := E)
-  letI : (Valued.v (R := E)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace E
+  have := isUniformAddGroup_of_addCommGroup (G := E)
+  let : (Valued.v (R := E)).RankOne :=
     { hom' := IsRankLeOne.nonempty.some.emb (R := E).comp MonoidWithZeroHom.ValueGroup₀.embedding
       strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
@@ -83,7 +83,7 @@ theorem UpperTheory.V.Z.Tf.Orb.gLTop :
         ((g⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) ∈ Ω'} =
         Units.embedProduct (Matrix (Fin n) (Fin n) E) ⁻¹' (Ω ×ˢ (MulOpposite.op '' Ω')) := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod,
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod,
         MulOpposite.op_injective.mem_set_image]
     rw [e]
     exact h
@@ -104,7 +104,7 @@ theorem UpperTheory.V.Z.Tf.Orb.gLTop :
   have hMo : IsOpen M := by
     have e : M = ⋂ i, ⋂ j, (fun A : Matrix (Fin n) (Fin n) E => A i j) ⁻¹' {x : E | valuation E x ≤ 1} := by
       ext A
-      simp only [M, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+      simp only [M, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
       rfl
     rw [e]
     exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>

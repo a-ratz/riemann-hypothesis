@@ -178,7 +178,7 @@ theorem neg_one_zpow_congr {n m : ℤ} (h : Even (n - m)) : (-1 : ℂ) ^ n = (-1
 theorem cf_int (T : Tor D) (x y : VC D N N') (b : ℤ) (hb : (Hf D T x y).im = b) :
     cf T x y = (-1 : ℂ) ^ (-b) := by
   unfold cf
-  rw [hb, ← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+  rw [hb, ← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring
@@ -235,15 +235,15 @@ theorem finite_quot_of_smul {V : Type*} [AddCommGroup V] (La₁ La₂ R : AddSub
     [Module.Finite ℤ R] (hle : La₂ ≤ R) (k : ℤ) (hk : k ≠ 0) (hkR : ∀ z ∈ R, k • z ∈ La₁) :
     Finite (La₂ ⧸ La₁.addSubgroupOf La₂) := by
   classical
-  haveI : IsNoetherian ℤ R := by
+  have : IsNoetherian ℤ R := by
     first
     | exact isNoetherian_of_isNoetherianRing_of_finite ℤ R
     | infer_instance
   have hinj : Function.Injective (AddSubgroup.inclusion hle).toIntLinearMap := by
     intro a b h
     exact AddSubgroup.inclusion_injective hle h
-  haveI : Module.Finite ℤ La₂ := Module.Finite.of_injective _ hinj
-  haveI : Module.Finite ℤ (La₂ ⧸ La₁.addSubgroupOf La₂) :=
+  have : Module.Finite ℤ La₂ := Module.Finite.of_injective _ hinj
+  have : Module.Finite ℤ (La₂ ⧸ La₁.addSubgroupOf La₂) :=
     Module.Finite.of_surjective (QuotientAddGroup.mk' (La₁.addSubgroupOf La₂)).toIntLinearMap
       (QuotientAddGroup.mk'_surjective _)
   apply Module.finite_of_fg_torsion
@@ -278,7 +278,7 @@ theorem Phi_smul_eq {N N' : ℕ} (δ : ℂ) (M : ℤ) (hM : M ≠ 0) (n : ℕ)
     intro j0 hj0
     simp [FL.ins, Ne.symm hj0]
   have h3 : FL.ins D i j (fun τ => δ * n * embT D τ ((A i j : 𝓞 D.host.E) : D.host.E)) τ i j =
-      δ * n * embT D τ ((A i j : 𝓞 D.host.E) : D.host.E) := if_pos ⟨rfl, rfl⟩
+      δ * n * embT D τ ((A i j : 𝓞 D.host.E) : D.host.E) := ite_eq_left ⟨rfl, rfl⟩
   rw [Fintype.sum_eq_single i h1, Fintype.sum_eq_single j h2, h3]
   show ((n : ℤ) * M) • (δ / M * embT D τ ((A i j : 𝓞 D.host.E) : D.host.E)) = _
   rw [zsmul_eq_mul]
@@ -298,7 +298,7 @@ theorem La_index_finite (cc : Ideal (𝓞 D.host.K)) (hcc : IsCurveIdeal D cc) (
       (La D (tor0 D cc δ) L₁ L₁').addSubgroupOf (La D (tor0 D cc δ) L₂ L₂')) := by
   obtain ⟨M, hM, hup⟩ := FL.La_upper D L₂ L₂' h₂ cc δ
   obtain ⟨n, hn, hlow⟩ := FL.La_lower D L₁ L₁' h₁ cc hcc δ
-  haveI : Module.Finite ℤ (FL.Phi D (N := N) (N' := N') (δ / M)).range :=
+  have : Module.Finite ℤ (FL.Phi D (N := N) (N' := N') (δ / M)).range :=
     Module.Finite.of_surjective (FL.Phi D (N := N) (N' := N') (δ / M)).rangeRestrict.toIntLinearMap
       (AddMonoidHom.rangeRestrict_surjective _)
   refine finite_quot_of_smul _ _ _ hup ((n : ℤ) * M)
@@ -312,7 +312,7 @@ theorem La_index_ne_zero (cc : Ideal (𝓞 D.host.K)) (hcc : IsCurveIdeal D cc) 
     (L₁' L₂' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E))
     (h₁ : admitted D N N' L₁ L₁') (h₂ : admitted D N N' L₂ L₂') :
     ((La D (tor0 D cc δ) L₁ L₁').addSubgroupOf (La D (tor0 D cc δ) L₂ L₂')).index ≠ 0 := by
-  haveI := La_index_finite cc hcc δ L₁ L₂ L₁' L₂' h₁ h₂
+  have := La_index_finite cc hcc δ L₁ L₂ L₁' L₂' h₁ h₂
   exact AddSubgroup.index_ne_zero_of_finite
 
 end Formalism.L2.Ker.Cd.IntegralLatticeDensity.IO

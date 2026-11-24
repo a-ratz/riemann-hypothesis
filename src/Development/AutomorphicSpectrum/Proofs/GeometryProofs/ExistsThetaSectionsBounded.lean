@@ -703,8 +703,8 @@ theorem transl_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     simp only [ofMul_mul, ofMul_inv, ofMul_pow]
     abel
   obtain ⟨K', _, _, _, e₁, he₁, hr⟩ := exists_root_gen hL (m ^ 2) (Nat.one_le_pow _ _ hm) x.left A hA
-  letI : Algebra L K' := ((algebraMap K K').comp (algebraMap L K)).toAlgebra
-  haveI : IsScalarTower L K K' := .of_algebraMap_eq' rfl
+  let : Algebra L K' := ((algebraMap K K').comp (algebraMap L K)).toAlgebra
+  have : IsScalarTower L K K' := .of_algebraMap_eq' rfl
   refine ⟨K', inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, ?_⟩
   intro L' _ _ _ _ _ D' eD
   have hring : (algebraMap (𝓞 L') L').comp (algebraMap (𝓞 L) (𝓞 L')) =
@@ -811,7 +811,7 @@ theorem continuous_hh_diag : Continuous fun w : Fin g → ℂ => hh Hm w w := by
 theorem dense_torsion (Λ : Submodule ℤ (Fin g → ℂ)) [DiscreteTopology Λ]
     (hs : Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤) :
     Dense {w : Fin g → ℂ | ∃ N : ℕ, 1 ≤ N ∧ (N : ℂ) • w ∈ Λ} := by
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
+  have : IsZLattice ℝ Λ := ⟨hs⟩
   let b := (Module.Free.chooseBasis ℤ Λ).ofZLatticeBasis ℝ Λ
   intro w
   rw [Metric.mem_closure_iff]
@@ -899,7 +899,7 @@ theorem exists_reps (Λ : Submodule ℤ (Fin g → ℂ)) [DiscreteTopology Λ]
     (r : Ix → Fin g → ℂ) (hrep : ∀ w : Fin g → ℂ, (m : ℂ) • w ∈ Λ → ∃ i, w - r i ∈ Λ) :
     ∃ (J : Type) (_ : Fintype J) (s : J → Ix), Fintype.card J = (m ^ 2) ^ g ∧
       ∀ a b, r (s a) - r (s b) ∈ Λ → a = b := by
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
+  have : IsZLattice ℝ Λ := ⟨hs⟩
   have hmc : (m : ℂ) ≠ 0 := by exact_mod_cast (show m ≠ 0 by omega)
   let b0 := Module.Free.chooseBasis ℤ Λ
   have hcard : Fintype.card (Module.Free.ChooseBasisIndex ℤ Λ) = 2 * g := by
@@ -953,7 +953,7 @@ theorem card_le_of_unimodular (Λ : Submodule ℤ (Fin g → ℂ)) [hd : Discret
     (hf : ∀ k, Differentiable ℂ (f k) ∧ ∀ (l : Λ) z, f k (z + l) =
       (χ l * cexp (Real.pi * hh Hm z l + Real.pi / 2 * hh Hm l l)) ^ n * f k z)
     (hli : LinearIndependent ℂ f) : N ≤ n ^ g := by
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
+  have : IsZLattice ℝ Λ := ⟨hs⟩
   choose k hk using hint
   let Ef : LinearMap.BilinForm ℤ Λ := LinearMap.mk₂ ℤ k
     (fun a b c => Int.cast_injective (α := ℝ) (by
@@ -1263,7 +1263,7 @@ end Frame
 theorem theta_span : ∀ {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] {P : RigLB G} {z : Sp ℂ ⟶ S} {g : ℕ} (a : ArchFrame P z g), (∀ l l' : a.u.Λ, ∃ k : ℤ, (a.herm l l').im = k) → (∀ w : Fin g → ℂ, (∀ l : a.u.Λ, ∃ k : ℤ, (a.herm w l).im = k) → w ∈ a.u.Λ) → (∀ l l' : a.u.Λ, a.χ (l + l') = a.χ l * a.χ l' * Complex.exp (Real.pi * Complex.I * (a.herm l l').im)) → ∀ (m : ℕ) (θ : (Fin g → ℂ) → ℂ) (Ix : Type) [Fintype Ix] (r : Ix → Fin g → ℂ) (f : Ix → (Fin g → ℂ) → ℂ), 1 ≤ m → a.IsTheta 1 θ → θ ≠ 0 → (∀ w : Fin g → ℂ, (m : ℂ) • w ∈ a.u.Λ → ∃ i, w - r i ∈ a.u.Λ) → (∀ i, (m : ℂ) • r i ∈ a.u.Λ) → (∀ i, a.IsTheta (m ^ 2) (f i)) → (∀ i (w : Fin g → ℂ) (N : ℕ), 1 ≤ N → (N : ℂ) • w ∈ a.u.Λ → a.nrm (m ^ 2) (f i) w = a.nrm 1 θ (r i + (m : ℂ) • w)) → (∀ i w, a.nrm (m ^ 2) (f i) w = a.nrm 1 θ (r i + (m : ℂ) • w)) ∧ ∀ F, a.IsTheta (m ^ 2) F → ∃ c : Ix → ℂ, F = ∑ i, c i • f i := by
   intro S G _ _ P z g a hint huni _ m θ Ix _ r f hm hθ hθ0 hrep _ hf hnorm
   obtain ⟨hH, hpos, hχ, -⟩ := a.ah
-  haveI := a.u.discrete
+  have := a.u.discrete
   have hs := a.u.full
   have hall : ∀ i w, a.nrm (m ^ 2) (f i) w = a.nrm 1 θ (r i + (m : ℂ) • w) := by
     intro i
@@ -1387,7 +1387,7 @@ theorem exists_common_ext (K : Type) [Field K] [NumberField K] {Ix : Type} [Fini
     (le_iSup (fun i => (f i).fieldRange) i) (AlgHom.mem_fieldRange.2 ⟨x, rfl⟩)
   let c : ∀ i, K' i →ₐ[K] E := fun i => (f i).codRestrict E.toSubalgebra (hle i)
   refine ⟨E, inferInstance, hE, inferInstance, fun i => (c i).toRingHom.toAlgebra, fun i => ?_⟩
-  letI := (c i).toRingHom.toAlgebra
+  let := (c i).toRingHom.toAlgebra
   exact IsScalarTower.of_algebraMap_eq fun x => ((c i).commutes x).symm
 
 section Scal
@@ -1681,15 +1681,15 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   obtain ⟨K, _, _, _, x, hxm, hxu⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.TorsRat.torsion_rational E H L D m hm
   have ht := fun i => _root_.GlobalTheory.CompanionTheory.Ar.Sl.Transl.transl_main E H L D th m K (x i) hm (hxm i)
   choose K' fK nK aK aL tw hK' using ht
-  letI := fK
-  haveI := nK
-  letI := aK
-  letI := aL
-  haveI := tw
+  let := fK
+  have := nK
+  let := aK
+  let := aL
+  have := tw
   obtain ⟨L', _, _, aKL, aKL', tw'⟩ := exists_common_ext K K'
-  letI : Algebra L L' := ((algebraMap K L').comp (algebraMap L K)).toAlgebra
+  let : Algebra L L' := ((algebraMap K L').comp (algebraMap L K)).toAlgebra
   have hLL : ∀ a : L, algebraMap L L' a = algebraMap K L' (algebraMap L K a) := fun _ => rfl
-  haveI hTow : ∀ i, IsScalarTower L (K' i) L' := fun i => IsScalarTower.of_algebraMap_eq fun a => by
+  have hTow : ∀ i, IsScalarTower L (K' i) L' := fun i => IsScalarTower.of_algebraMap_eq fun a => by
     rw [hLL, IsScalarTower.algebraMap_apply L K (K' i) a, ← IsScalarTower.algebraMap_apply K (K' i) L']
   obtain ⟨⟨D', e⟩⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Sl.ext_baseChange E H L D L').1
   have hg : D'.g = D.g := ((_root_.GlobalTheory.CompanionTheory.Ar.Sl.ext_baseChange E H L D L').2 D' e).1

@@ -151,7 +151,7 @@ private theorem trivCrys_Dcris_eq :
 include PD in
 private theorem trivCrysMap_injective :
     Function.Injective (trivCrysMap (Qp := Qp) (LL := LL) (K₀ := K₀) (B := B)) := by
-  haveI := trivCrys_nontrivial_B PD
+  have := trivCrys_nontrivial_B PD
   have hi : Function.Injective (trivCrysIncl (Qp := Qp) (K₀ := K₀) (B := B)) :=
     (algebraMap K₀ B).injective
   have h2 := Module.Flat.lTensor_preserves_injective_linearMap (M := LL) _ hi

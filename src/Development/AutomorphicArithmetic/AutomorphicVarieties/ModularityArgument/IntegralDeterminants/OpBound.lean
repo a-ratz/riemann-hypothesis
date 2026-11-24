@@ -197,8 +197,8 @@ theorem absBound :
   have hC : 0 ≤ C := (nu_nonneg' ι _).trans (hRK 1 K.one_mem i0 i0)
 
   obtain ⟨B, hB0, hB⟩ : ∃ B : ℝ, 0 ≤ B ∧ ∀ g i, nu ι (Nf g i) ≤ B := by
-    haveI := hfin
-    letI := Fintype.ofFinite (DoubleCoset.Quotient (Γ : Set G) (K : Set G))
+    have := hfin
+    let := Fintype.ofFinite (DoubleCoset.Quotient (Γ : Set G) (K : Set G))
     set B0 : ℝ := ∑ q : DoubleCoset.Quotient (Γ : Set G) (K : Set G), ∑ i, nu ι (Nf q.out i) with hB0
     have hB0n : 0 ≤ B0 := Finset.sum_nonneg fun q _ => Finset.sum_nonneg fun i _ => nu_nonneg' ι _
     have hle : ∀ (q : DoubleCoset.Quotient (Γ : Set G) (K : Set G)) j, nu ι (Nf q.out j) ≤ B0 := by
@@ -391,7 +391,7 @@ theorem UpperTheory.V.Z.Int.vecForm :
     fun v => span_sub (σ v) (ρ.comp (s v)) (π.rep.comp (embU n (φ v)).subtype) (hirr v)
       (Submodule.inclusion hNV) (Submodule.inclusion_injective hNV) (fun g y => Subtype.ext rfl)
       (_root_.GlobalTheory.DefU.iSup_range_weight_eq_top E n π (φ v) (lam v) (hW v))
-  haveI : Nontrivial N := ⟨⟨⟨φ₀, (hmemN _).2 ⟨hφ₀, hfix⟩⟩, 0, fun h => hne (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial N := ⟨⟨⟨φ₀, (hmemN _).2 ⟨hφ₀, hfix⟩⟩, 0, fun h => hne (congrArg Subtype.val h)⟩⟩
   obtain ⟨F, hF0, hF⟩ := GlobalTheory.T.exists_multilinearMap_of_isotypic_commuting_subgroups (InfinitePlace E) (infU E n) N (fun v => embU n (φ v))
     (fun v => nablaSq ℂ n (lam v)) ρ s σ inferInstance hirr hcomm hspan
   let f : MultilinearMap (RingHom.id ℂ) (fun v => nablaSq ℂ n (lam v)) (UA E n → ℂ) := N.subtype.compMultilinearMap F
@@ -621,12 +621,12 @@ private theorem exists_places (w : HeightOneSpectrum (𝓞 E)) (hw : IsSplitAt w
     if h : ∃ τ ∈ Ov ι w, InfinitePlace.mk τ = v then h.choose else v.embedding
   have hφ : ∀ v, InfinitePlace.mk (φ v) = v := fun v => by
     by_cases h : ∃ τ ∈ Ov ι w, InfinitePlace.mk τ = v
-    · simp only [φ, dif_pos h]
+    · simp only [φ, dite_eq_left h]
       exact h.choose_spec.2
-    · simp only [φ, dif_neg h]
+    · simp only [φ, dite_eq_right h]
       exact InfinitePlace.mk_embedding v
   have hφw : ∀ v, (∃ τ ∈ Ov ι w, InfinitePlace.mk τ = v) → φ v ∈ Ov ι w := fun v h => by
-    simp only [φ, dif_pos h]
+    simp only [φ, dite_eq_left h]
     exact h.choose_spec.1
   have hP := fun v => placeHom _ ι E (φ v)
   choose u ψ h1 h2 h3 using hP
@@ -808,7 +808,7 @@ private theorem core (hn : 1 ≤ n) (σ : Submodule ℂ (UA E n → ℂ)) (hσ :
   have hD1 : ∀ v, 1 ≤ D v := fun v => le_max_right _ _
   have hD0 : ∀ v, 0 ≤ D v := fun v => zero_le_one.trans (hD1 v)
   let M := fun v => mv (ψ v) (lam (φ v)) (e v)
-  letI : DecidableEq (∀ v, Fin (d v)) := fun a b => Classical.propDecidable (a = b)
+  let : DecidableEq (∀ v, Fin (d v)) := fun a b => Classical.propDecidable (a = b)
   let F : finU (E := E) (n := n) → (∀ v, Fin (d v)) → ℂ := fun g i => f (fun v => e v (i v)) g.1
   have hsF : ∀ x ∈ s, x ∈ finU (E := E) (n := n) := fun x hx => (Subgroup.mem_inf.1 (hsU x hx)).1
   have hleft : ∀ x, ∀ γ ∈ ratU E n, ∀ g, f x (γ * g) = f x g := fun x => (hσ.aut (f x) (hfσ x)).left
@@ -854,7 +854,7 @@ private theorem core (hn : 1 ≤ n) (σ : Submodule ℂ (UA E n → ℂ)) (hσ :
     by_cases h : u v = w
     · have h1 := hW _ hL' (u v) h (φ v) ((hOv v).2 h) (ψ v) (hψ v) (hint v) (d v) (e v) (C0 v) (hRB v) (j v) (i v)
       rw [← hp, List.length_map] at h1
-      rw [if_pos h]
+      rw [ite_eq_left h]
       simp only [M, mv_apply, hinv]
       refine (by simpa only [map_inv] using h1 : _ ≤ C0 v * B (φ v) ^ L.length).trans ?_
       exact mul_le_mul_of_nonneg_right (le_max_left _ _) (pow_nonneg (hB _) _)
@@ -864,7 +864,7 @@ private theorem core (hn : 1 ≤ n) (σ : Submodule ℂ (UA E n → ℂ)) (hσ :
         have h3 := h2 (u v)
         rw [Subgroup.mem_iInf] at h3
         exact MonoidHom.mem_ker.1 (h3 (hund v h))
-      rw [if_neg h, mul_one]
+      rw [ite_eq_right h, mul_one]
       simp only [M, mv_apply, hinv, h1, inv_one, map_one]
       rw [show (1 : Module.End ℂ _) = LinearMap.id from rfl, LinearMap.toMatrix_id, Matrix.one_apply]
       split_ifs

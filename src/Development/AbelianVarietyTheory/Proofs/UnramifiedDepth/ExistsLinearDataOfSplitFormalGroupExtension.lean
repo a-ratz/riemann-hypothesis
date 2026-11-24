@@ -459,17 +459,17 @@ namespace GlobalTheory
 theorem character_on_torsion_points_eq_series : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] (d : ℕ) (F : FGLaw O d), FH p F.F → ∀ (k : ℕ) (κ : (PS O 1 d →ₐ[O] O) → C), (∀ φ φ' ψ, Killed F.F (p ^ k) φ → Killed F.F (p ^ k) φ' → IsSum F.F φ φ' ψ → κ ψ = κ φ * κ φ') → (∀ φ, (∀ f, φ f = MvPowerSeries.constantCoeff f) → κ φ = 1) → ∃ u : PS O 1 d, ∀ φ, Killed F.F (p ^ k) φ → algebraMap O C (φ u) = κ φ := by
   intro p _ C _ _ _ v O _ _ hv _ _ d F hFH k κ hmul hone
   obtain ⟨inst, hsum, hzero, hkill⟩ := GlobalTheory.T.exists_addCommMonoid_algHom_powerSeries_fgLaw p C v O hv d F
-  letI := inst
+  let := inst
   obtain ⟨hfree, hfin, -⟩ := hFH k
   have hinj : Function.Injective (algebraMap O C) := hv.hom_inj
-  haveI : IsDomain O := hinj.isDomain (algebraMap O C)
+  have : IsDomain O := hinj.isDomain (algebraMap O C)
   set J : Ideal (PS O 1 d) := Ideal.span (Set.range (mulF F.F (p ^ k))) with hJ
   let N : AddSubmonoid (PS O 1 d →ₐ[O] O) :=
     { carrier := {φ | (p ^ k) • φ = 0}
       zero_mem' := nsmul_zero _
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [nsmul_add, ha, hb, add_zero] }
   have hN : ∀ n : N, Killed F.F (p ^ k) n.1 := fun n => (hkill _ _).1 n.2
   have hNJ : ∀ n : N, ∀ u ∈ J, n.1 u = 0 := by
@@ -487,7 +487,7 @@ theorem character_on_torsion_points_eq_series : ∀ (p : ℕ) [Fact p.Prime] (C 
     apply AlgHom.ext
     intro u
     rw [← hL, ← hL, hab]
-  haveI : Finite N := Finite.of_injective L hLinj
+  have : Finite N := Finite.of_injective L hLinj
   let T : QF F.F (p ^ k) →ₗ[O] (N → C) :=
     LinearMap.pi fun n => (Algebra.linearMap O C).comp (L n).toLinearMap
   have hmem : ∀ f : N → C, f ∈ LinearMap.range T ↔
@@ -582,7 +582,7 @@ private theorem exists_ringHom_eval {A B σ : Type} [CommRing A] [CommRing B] [F
     (J : Ideal B) (hJ : IsAdicComplete J B) (E : A →+* B) (b : σ → B)
     (hb : ∀ q, ∃ M : ℕ, b q ^ M ∈ J) :
     ∃ T : MvPowerSeries σ A →+* B, (∀ u, T (C u) = E u) ∧ ∀ q, T (X q) = b q := by
-  letI : Algebra A B := E.toAlgebra
+  let : Algebra A B := E.toAlgebra
   obtain ⟨T, hT⟩ := (mvPowerSeries_eval_of_pow_mem B J σ b hb).1 hJ A
   exact ⟨T.toRingHom, fun u => T.commutes u, hT⟩
 
@@ -626,13 +626,13 @@ private theorem exists_curry :
     · rw [map_C]
       exact ((S.comp E₀).commutes t).trans (hc t)
     · change S (E₀ (X q)) = _
-      rw [hX₀, hS, if_pos rfl, hq]
+      rw [hX₀, hS, ite_eq_left rfl, hq]
   have h1 : S.toRingHom.comp E₁.toRingHom = C := by
     refine (mvPowerSeries_eval_of_pow_mem _ K (Fin 1 × Fin d) (fun q => C (X q)) hCK).2
       inferInstance O _ _ (fun t => ?_) (fun q => ?_) (fun q => rfl)
     · exact ((S.comp E₁).commutes t).trans (hc t)
     · change S (E₁ (X q)) = _
-      rw [hX₁, hS, if_neg (by simp), hq]
+      rw [hX₁, hS, ite_eq_right (by simp), hq]
   refine ⟨S, ?_, fun u => ?_, fun u => ?_⟩
   · obtain ⟨T, hTC, hTX⟩ : ∃ T : MvPowerSeries (Fin 1 × Fin d) (PS O 1 d) →+* PS O 2 d,
         (∀ u, T (C u) = E₁ u) ∧ ∀ q, T (X q) = X (0, q.2) :=
@@ -814,7 +814,7 @@ theorem exists_isCh_of_tors : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] 
     rw [← neg_sub]
     exact neg_mem h2
   obtain ⟨inst, hinst⟩ := GlobalTheory.T.exists_addCommMonoid_algHom_powerSeries_fgLaw p C v O hv d F
-  letI := inst
+  let := inst
   obtain ⟨hsum, hzero, hkill⟩ := hinst
   refine ⟨u, ⟨?_, ?_⟩, hval⟩
   · apply hinj
@@ -898,9 +898,9 @@ private theorem extend_group {A B : Type} [AddCommGroup A] [AddCommGroup B] (j :
     apply Additive.toMul.injective
     ext
     simpa using hz
-  letI : DivisibleBy (Additive Cˣ) ℕ :=
+  let : DivisibleBy (Additive Cˣ) ℕ :=
     divisibleByOfSMulRightSurj (Additive Cˣ) ℕ (fun {n} hn x => hsurj n hn x)
-  letI : DivisibleBy (Additive Cˣ) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
+  let : DivisibleBy (Additive Cˣ) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
   obtain ⟨κ, hκ⟩ := (Module.Baer.of_divisible (Additive Cˣ)).extension_property_addMonoidHom
     j hj χ
   exact ⟨κ, fun a => DFunLike.congr_fun hκ a⟩
@@ -1037,8 +1037,8 @@ private theorem exists_pow_eq {A : Type} [CommRing A] {p : ℕ} (hp : p.Prime) (
 private theorem exists_primitiveRoot_integers {C : Type} [Field C] [IsAlgClosed C] [CharZero C]
     {v : Valuation C NNReal} {O : Type} [CommRing O] [Algebra O C] (hv : v.Integers O) {N : ℕ}
     (hN : 0 < N) : ∃ ζ : O, IsPrimitiveRoot ζ N := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C N
+  have : NeZero N := ⟨hN.ne'⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C N
   have hvz : v z ≤ 1 := by
     have : v z ^ N = 1 := by rw [← map_pow, hz.pow_eq_one, map_one]
     exact ((pow_eq_one_iff_of_nonneg zero_le hN.ne').1 this).le
@@ -1050,7 +1050,7 @@ theorem fh_gmF : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed 
     ∀ [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] (r : ℕ), FH p (gmF O r) := by
   intro p hp C _ _ _ v O _ _ hv _ hc r k
   classical
-  haveI : IsDomain O := hv.hom_inj.isDomain _
+  have : IsDomain O := hv.hom_inj.isDomain _
   have hN : 0 < p ^ k := pow_pos hp.out.pos k
   obtain ⟨ζ, hζ⟩ := exists_primitiveRoot_integers hv hN
   have hmul := (gmLaw_chars_mul O r).2.2 (p ^ k)

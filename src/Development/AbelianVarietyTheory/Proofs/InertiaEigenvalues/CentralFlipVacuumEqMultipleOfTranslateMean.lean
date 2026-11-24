@@ -385,7 +385,7 @@ theorem card_add {D : D7} {S T : HSp D} (Λ : AddSubgroup (WO S T))
 
 theorem card_zero {D : D7} {S T : HSp D} (Λ : AddSubgroup (WO S T)) (N : ℕ) :
     Nat.card (DQ Λ (0 : AE D) N) = 1 := by
-  haveI : Subsingleton (DQ Λ (0 : AE D) N) := by
+  have : Subsingleton (DQ Λ (0 : AE D) N) := by
     constructor
     intro q₁ q₂
     induction q₁ using QuotientAddGroup.induction_on with
@@ -478,7 +478,7 @@ theorem flip_reps : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D
     · intro i hi j hj hij; rw [← map_mul, GlobalTheory.Tow.idemAt_orth (hes i hi) (hes j hj) hij, map_zero]
   have hfin : Finite (GlobalTheory.DivPtFourier.DQ Λ (cA D eT) m) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact flipIdx_ne_zero V W T hm0.ne')
-  letI := Fintype.ofFinite (GlobalTheory.DivPtFourier.DQ Λ (cA D eT) m)
+  let := Fintype.ofFinite (GlobalTheory.DivPtFourier.DQ Λ (cA D eT) m)
   have hhalf : ∀ y : WO V W, cA D eT • y = y → IsHalf (cA D eT) y := fun y hy =>
     (GlobalTheory.PlaceModel.isHalf_iff V W).2 ((GlobalTheory.PlaceModel.mem_half V W).2 hy)
   have hhalf' : ∀ y : WO V W, IsHalf (cA D eT) y → cA D eT • y = y := fun y hy =>
@@ -927,7 +927,7 @@ theorem eq_smul_vacuum {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     intro g hg hl v hv z
     have hv' : finRat S T (-v) ∈ Λ := (Λ.comap (finRat S T)).neg_mem hv
     rw [apply_add_infRat h hψ hg v (hε2 _ hv' g hl) z, ← j2]
-    simp only [c, dif_pos hv']
+    simp only [c, dite_eq_left hv']
   have hli := _root_.GlobalTheory.VacuumLine.not_linearIndependent (RW T S) (jO S T sS sT) (omO S T) j1 j2 j3 j4 (Matrix (Fin T.rank) (Fin S.rank) D.host.E)
     (infRat S T) (infRat_injective S T) hsp (Λ.comap (finRat S T))
     (fun x => by

@@ -226,8 +226,8 @@ theorem isFractionRing_evaluation (X : Scheme.{0}) [IsIntegral X] {U : X.Opens}
     letI := (X.evaluation U x hxU).hom.toAlgebra
     IsFractionRing Γ(X, U) (X.residueField x) := by
   subst hx
-  letI := (X.evaluation U _ hxU).hom.toAlgebra
-  haveI : Nonempty U := ⟨⟨_, hxU⟩⟩
+  let := (X.evaluation U _ hxU).hom.toAlgebra
+  have : Nonempty U := ⟨⟨_, hxU⟩⟩
   have := functionField_isFractionRing_of_isAffineOpen X U hU
   let φ : X.functionField →+* X.residueField (genericPoint X) := (X.residue _).hom
   let e : X.functionField ≃ₐ[Γ(X, U)] X.residueField (genericPoint X) :=
@@ -260,18 +260,18 @@ theorem dim_le_of_residueDegree_pos {Z' Z : Scheme.{0}} [IsIntegral Z'] [IsInteg
   have : Nonempty U := ⟨⟨_, hxU⟩⟩
   have : Nonempty V := ⟨⟨_, hxV⟩⟩
   have : IsNoetherianRing Γ(Z, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  letI := (f.appLE U V hVU).hom.toAlgebra
+  let := (f.appLE U V hVU).hom.toAlgebra
   have : Algebra.FiniteType Γ(Z, U) Γ(Z', V) := f.finiteType_appLE hU hV hVU
   have hηV : genericPoint Z' ∈ V :=
     ((genericPoint_spec Z').mem_open_set_iff V.isOpen).mpr ⟨x, trivial, hxV⟩
   have hyU : f (genericPoint Z') ∈ U := hVU hηV
-  letI := (Z.evaluation U _ hyU).hom.toAlgebra
-  letI := (f.residueFieldMap (genericPoint Z')).hom.toAlgebra
-  letI : Algebra Γ(Z, U) (Z'.residueField (genericPoint Z')) :=
+  let := (Z.evaluation U _ hyU).hom.toAlgebra
+  let := (f.residueFieldMap (genericPoint Z')).hom.toAlgebra
+  let : Algebra Γ(Z, U) (Z'.residueField (genericPoint Z')) :=
     (Z.evaluation U _ hyU ≫ f.residueFieldMap (genericPoint Z')).hom.toAlgebra
-  haveI : IsScalarTower Γ(Z, U) (Z.residueField (f (genericPoint Z')))
+  have : IsScalarTower Γ(Z, U) (Z.residueField (f (genericPoint Z')))
       (Z'.residueField (genericPoint Z')) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI := isFractionRing_evaluation Z hU hg hyU
+  have := isFractionRing_evaluation Z hU hg hyU
   have : Algebra.IsAlgebraic Γ(Z, U) (Z.residueField (f (genericPoint Z'))) :=
     IsLocalization.isAlgebraic _ (nonZeroDivisors Γ(Z, U))
   have : Module.Finite (Z.residueField (f (genericPoint Z'))) (Z'.residueField (genericPoint Z')) :=

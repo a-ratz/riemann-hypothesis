@@ -819,7 +819,7 @@ theorem admissible_of_congr_unitriangular {E : Type} [Field E] [NumberField E] [
         exact ⟨c, by simpa [ξ, h1, h2] using hc⟩
   refine ⟨ξ, fun a b hab => by simp [ξ, hab], fun a => by simp [ξ], ?_⟩
   intro b P hP
-  haveI := P.isPrime
+  have := P.isPrime
   have hsplit : frame F' b - frameAct (frame F) ξ b =
       (frame F' b - ∑ a, M a b • frame F a) + ∑ a, (M a b - (ξ a b : E)) • frame F a := by
     simp only [frameAct, sub_smul, Finset.sum_sub_distrib]; abel
@@ -865,7 +865,7 @@ theorem map_Xflag_le (F : LFlag S r T) (a : S.V ≃ₗ[E] S.V)
   unfold Formalism.MainNotions.S.FlagG.Xa
   rw [Submodule.span_le]
   rintro _ ⟨i, hi, rfl⟩
-  simp only [Set.mem_setOf_eq] at hi
+  simp only [Set.mem_ofPred_eq] at hi
   simp only [SetLike.mem_coe, Submodule.mem_comap, LinearEquiv.coe_coe]
   have hb := h (Fin.castSucc i)
   have hf : frame F (Fin.castSucc i) = F.fl.e i := by
@@ -877,7 +877,7 @@ theorem map_Xflag_le (F : LFlag S r T) (a : S.V ≃ₗ[E] S.V)
     apply Submodule.span_mono
     apply Set.image_mono
     intro k hk
-    simp only [Set.mem_setOf_eq] at hk ⊢
+    simp only [Set.mem_ofPred_eq] at hk ⊢
     omega
   have he : F.fl.e i ∈ F.fl.Xa j := by
     unfold Formalism.MainNotions.S.FlagG.Xa
@@ -889,7 +889,7 @@ theorem map_Xflag_le (F : LFlag S r T) (a : S.V ≃ₗ[E] S.V)
 theorem map_Xflag_eq (F : LFlag S r T) (a : S.V ≃ₗ[E] S.V)
     (h : ∀ b : Fin (r + 1), a (frame F b) - frame F b ∈ Xflag F b.val) (j : ℕ) :
     (Xflag F j).map (a : S.V →ₗ[E] S.V) = Xflag F j := by
-  haveI : FiniteDimensional E (Xflag F j) := by
+  have : FiniteDimensional E (Xflag F j) := by
     show FiniteDimensional E (Submodule.span E (F.fl.e '' {i | i.1 < j}))
     exact FiniteDimensional.span_of_finite E (Set.toFinite _)
   exact Submodule.eq_of_le_of_finrank_eq (map_Xflag_le F a h j) (LinearEquiv.finrank_map_eq a _)
@@ -990,7 +990,7 @@ theorem modG_sum {Λ : Submodule (𝓞 E) S.V} {g : ℕ} {ι : Type*} (s : Finse
 theorem mem_localization_aut (P : HeightOneSpectrum (𝓞 E)) {Λ : Submodule (𝓞 E) S.V} {a : S.V ≃ₗ[E] S.V}
     (ha : Formalism.HermitianLatticesTheory.gmap a Λ = Λ) {x : S.V} (hx : x ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal Λ)) :
     a x ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal Λ) := by
-  haveI := P.isPrime
+  have := P.isPrime
   rw [← ha, Formalism.L2.SG.Pf.gmap_locP, Formalism.L2.SG.Pf.gmap_apply_mem]
   exact hx
 
@@ -998,7 +998,7 @@ theorem frame_locP (Λ : Submodule (𝓞 E) S.V) (g : ℕ) {T : E} (F : LFlag S 
     (hl : IsLift Λ F) : ∀ P : HeightOneSpectrum (𝓞 E), (g : 𝓞 E) ∈ P.asIdeal → ∀ b,
       frame F b ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal Λ) := by
   intro P hP b
-  haveI := P.isPrime
+  have := P.isPrime
   have hsub : ∀ (M : Submodule (𝓞 E) S.V), ∀ y ∈ M, y ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal M :=
     fun M y hy => ⟨1, P.asIdeal.primeCompl.one_mem, by simpa using hy⟩
   refine Fin.lastCases ?_ (fun i => ?_) b
@@ -1022,7 +1022,7 @@ theorem triM_lower (w : Fin (r + 1) → Fin r → E) (hw : ∀ b (c : Fin r), b.
     ∀ c b, b < c → triM w c b = 0 := by
   intro c b hbc
   unfold triM
-  rw [if_neg hbc.ne']
+  rw [ite_eq_right hbc.ne']
   split_ifs with h
   · rw [hw b _ (le_of_lt (Fin.lt_def.1 hbc))]; simp
   · simp
@@ -1031,7 +1031,7 @@ theorem triM_diag (w : Fin (r + 1) → Fin r → E) (hw : ∀ b (c : Fin r), b.v
     ∀ b, triM w b b = 1 := by
   intro b
   unfold triM
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
   split_ifs with h
   · rw [hw b _ le_rfl]; simp
   · simp
@@ -1051,7 +1051,7 @@ theorem triM_IA (P : HeightOneSpectrum (𝓞 E)) (w : Fin (r + 1) → Fin r → 
 theorem triM_sum {T : E} (F : LFlag S r T) (w : Fin (r + 1) → Fin r → E) (b : Fin (r + 1)) :
     ∑ c, triM w c b • frame F c = frame F b + ∑ i, w b i • F.fl.e i := by
   simp only [triM, add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   congr 1
   rw [Fin.sum_univ_castSucc]
   simp [frame, FlagG.fvec]

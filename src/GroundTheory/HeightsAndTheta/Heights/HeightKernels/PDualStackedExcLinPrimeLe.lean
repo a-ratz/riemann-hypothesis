@@ -310,7 +310,7 @@ end StackedExceptionalLinearPrimeBound
 open StackedExceptionalLinearPrimeBound StackedExceptionalFirstGeometric in
 theorem DualStackedExcLinPrimeLe.proof (hK : DualCotangentKer.Statement) : DualStackedExcLinPrimeLe.Statement := by
   intro K _ _ i F F' T _ _ b b' a _ hlt hcov hab k _ α M hdata P hPp hP hrel
-  haveI := hPp
+  have := hPp
   obtain ⟨ρ, ρ', σ, hρ, -, hσ, hker, hsl', hsl, hα, hM⟩ := hdata
   obtain ⟨c, hc⟩ : ∃ c : T, graphFirst c ∉ P := hrel (Sum.inl ())
 

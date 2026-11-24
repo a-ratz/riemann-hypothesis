@@ -58,7 +58,7 @@ variable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem continuous_mirProj (n : ℕ) : Continuous (mirabolicProjection k n) := by
   have hval : Continuous fun g : Mir k n =>
       ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hblock : Continuous fun g : Mir k n =>
       ((mirabolicProjection k n g : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
     refine continuous_pi fun i => continuous_pi fun j => ?_

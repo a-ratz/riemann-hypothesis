@@ -109,7 +109,7 @@ theorem exists_good_integral (ξ : Spec (CommRingCat.of (FractionRing R))) {X : 
     (s : X ⟶ Spec (CommRingCat.of R)) [IsSeparated s] :
     ∃ J, Good L ξ J ∧ ∀ p : Spec (CommRingCat.of R) ⟶ X, p ≫ s = 𝟙 _ →
       p (closedPoint R) ∈ L.U (J (jK R ≫ p)) := by
-  haveI : IsDominant (jK R) := DVR.isDominant_jK
+  have : IsDominant (jK R) := DVR.isDominant_jK
   choose pick hpk using fun p : Spec (CommRingCat.of R) ⟶ X => exists_chart hL (p (closedPoint R))
   obtain ⟨J, hJ, e⟩ := exists_good L hL ξ (K := {p : Spec (CommRingCat.of R) ⟶ X // p ≫ s = 𝟙 _})
     (fun p => jK R ≫ p.1) (fun p => pick p.1)
@@ -161,9 +161,9 @@ theorem coord_balance {O : Type} [Ring O] [StarRing O] (D : DegPre R) [Module O 
     (a b : D.X) {r₁ r₂ r₃ s₁ s₂ s₃ : R} (h₁ : PsiCoord D (x • a + b) r₁) (h₂ : PsiCoord D (x • a) r₂)
     (h₃ : PsiCoord D b r₃) (k₁ : PsiCoord D (a + star x • b) s₁) (k₂ : PsiCoord D a s₂)
     (k₃ : PsiCoord D (star x • b) s₃) : ∃ u : Rˣ, u * (r₁ * s₂ * s₃) = s₁ * r₂ * r₃ := by
-  haveI := ρ.onB.hom x
-  haveI := ρ.onB.hom (star x)
-  haveI : IsProper D.P.A.hom := D.P.isAb.proper
+  have := ρ.onB.hom x
+  have := ρ.onB.hom (star x)
+  have : IsProper D.P.A.hom := D.P.isAb.proper
   obtain ⟨w, hw, h₀⟩ := exists_ros GlobalTheory.globalFns_holds D.P.isAb D.P.isLB _ _ (ρ.onB.rosati x)
   have hc := ρ.tau_bal x w hw h₀ a b
   obtain ⟨ξ⟩ : Nonempty (Spec (CommRingCat.of (FractionRing R))) := ⟨⟨⊥, Ideal.isPrime_bot⟩⟩
@@ -220,10 +220,10 @@ theorem norm_unit {R C : Type} [CommRing R] [NormedField C] (f : R →+* C) (hf 
 
 theorem betaAt_balanced : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CharZero R] (t : SAB H (Sp R)) (U : PELUnif (maximalIdeal R) t) (C : Type) [NormedField C] [IsUltrametricDist C] (f : R →+* C) (p : ℕ), IsIntegrallyClosed R → (∀ a, ‖f a‖ ≤ 1) → (∀ χ r, PsiCoord U.D.toPre χ r → f r ≠ 0) → ∀ (x : 𝓞 E) a b, betaAt U.D.toPre f p (x • a) b = betaAt U.D.toPre f p a (H.bar x • b) := by
   intro E _ _ _ H R _ _ _ _ t U C _ _ f p hR hf hne x a b
-  letI := H.starRing
+  let := H.starRing
   have hex : ∀ χ, ∃ r, PsiCoord U.D.toPre χ r := fun χ =>
     ((GlobalTheory.PsiCoordLocal.main R U.D hR χ).1).imp fun _ h => h.1
-  have hv : ∀ χ, vPsiAt U.D.toPre f p χ = -Real.logb p ‖f (hex χ).choose‖ := fun χ => dif_pos (hex χ)
+  have hv : ∀ χ, vPsiAt U.D.toPre f p χ = -Real.logb p ‖f (hex χ).choose‖ := fun χ => dite_eq_left (hex χ)
   have hn : ∀ χ, ‖f (hex χ).choose‖ ≠ 0 := fun χ => norm_ne_zero_iff.2 (hne χ _ (hex χ).choose_spec)
   obtain ⟨u, hu⟩ := coord_balance U.D.toPre U.oD x a b (hex (x • a + b)).choose_spec (hex (x • a)).choose_spec
     (hex b).choose_spec (hex (a + H.bar x • b)).choose_spec (hex a).choose_spec (hex (H.bar x • b)).choose_spec

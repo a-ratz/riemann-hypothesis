@@ -214,11 +214,11 @@ theorem rational_proj_section_of_span : ∀ (F : Type) [Field F] [NumberField F]
   have hπ : ∀ y, π y = 0 ↔ y ∈ L₁ := by
     intro y
     simp only [π, LinearMap.comp_apply, Submodule.coe_subtype, ZeroMemClass.coe_eq_zero]
-    exact Submodule.linearProjOfIsCompl_apply_eq_zero_iff hC.symm
+    exact Submodule.projectionOnto_apply_eq_zero_iff hC.symm
   have hq : ∀ y ∈ L₁, (y, q y) ∈ T := by
     intro y hy
     have h1 : Submodule.linearProjOfIsCompl L₁ C hC y = ⟨y, hy⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left hC ⟨y, hy⟩
+      Submodule.projectionOnto_apply_left hC ⟨y, hy⟩
     have h2 : f.rangeRestrict (g ⟨y, hy⟩) = ⟨y, hy⟩ := LinearMap.congr_fun hg ⟨y, hy⟩
     have h3 : ((g ⟨y, hy⟩ : T) : (κ → F) × (κ → F)).1 = y := by
       have := congrArg Subtype.val h2

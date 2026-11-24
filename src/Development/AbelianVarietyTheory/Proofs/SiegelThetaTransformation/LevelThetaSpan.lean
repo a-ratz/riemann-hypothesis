@@ -111,7 +111,7 @@ namespace GlobalTheory.SW
 theorem sum_mul_conj_orthonormalBasis {V ι : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
     [FiniteDimensional ℂ V] [Fintype ι] (b b' : OrthonormalBasis ι ℂ V) (l l' : V →ₗ[ℂ] ℂ) :
     ∑ j, l (b j) * conj (l' (b j)) = ∑ j, l (b' j) * conj (l' (b' j)) := by
-  have := FiniteDimensional.complete ℂ V
+  have := FiniteDimensional.completeSpace ℂ V
   have h (l : V →ₗ[ℂ] ℂ) : ∃ a : V, ∀ v, l v = inner ℂ a v :=
     ⟨(InnerProductSpace.toDual ℂ V).symm (LinearMap.toContinuousLinearMap l), fun v => by
       rw [InnerProductSpace.toDual_symm_apply]; rfl⟩
@@ -136,8 +136,8 @@ theorem exists_family_invariant_of_fockInner {σ : Type} (W : Submodule ℂ (MvP
       definite := fun x hx => by
         rw [MvPoly.fockInner_self] at hx
         exact Subtype.ext (MvPoly.fockNormSq_eq_zero.mp (RCLike.ofReal_eq_zero.mp hx)) }
-  letI : NormedAddCommGroup W := cr.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ W := InnerProductSpace.ofCore cr.toCore
+  let : NormedAddCommGroup W := cr.toNormedAddCommGroup
+  let : InnerProductSpace ℂ W := InnerProductSpace.ofCore cr.toCore
   let b := stdOrthonormalBasis ℂ W
   have hpos : 0 < Module.finrank ℂ W := by
     rw [Nat.pos_iff_ne_zero, Ne, Submodule.finrank_eq_zero]; exact hW
@@ -270,7 +270,7 @@ theorem continuous_lact {Ψ : Finset (E →+* ℂ)} (γ : GL (Fin r) E) :
 
 omit [IsCMField E] in
 theorem countable_fg : {L : Lt E r | L.FG}.Countable := by
-  have : Countable E := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable E := Countable.of_moduleFinite (R := ℚ)
   refine (Set.countable_range fun s : Finset (Fin r → E) =>
     Submodule.span (𝓞 E) (s : Set (Fin r → E))).mono ?_
   rintro L ⟨s, hs⟩
@@ -357,15 +357,15 @@ theorem exists_fundamentalDomain : ∀ (E : Type) [Field E] [NumberField E] [IsC
   intro E _ _ _ r X Δ 𝓛 hun hlat hstab
   have hc : 𝓛.Countable := countable_fg.mono fun L hL => (hlat L hL).1
   refine ⟨hc, mapL_mul, mapL_one, ?_⟩
-  have : Countable E := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable E := Countable.of_moduleFinite (R := ℚ)
   have : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
   have : Countable (GL (Fin r) E) := Units.val_injective.countable
   have : Countable 𝓛 := hc.to_subtype
-  letI : TopologicalSpace 𝓛 := ⊥
+  let : TopologicalSpace 𝓛 := ⊥
   have : DiscreteTopology 𝓛 := ⟨rfl⟩
-  letI : MeasurableSpace 𝓛 := ⊤
+  let : MeasurableSpace 𝓛 := ⊤
   have : OpensMeasurableSpace 𝓛 := ⟨le_top⟩
-  letI act : MulAction Δ (𝓛 × X.dom) :=
+  let act : MulAction Δ (𝓛 × X.dom) :=
     { smul := fun γ p => (⟨mapL γ p.1, hstab _ γ.2 _ p.1.2⟩, ⟨lact γ p.2, (hun _ γ.2).lact_mem p.2.2⟩)
       one_smul := fun p => Prod.ext (Subtype.ext (mapL_one _)) (Subtype.ext (lact_one _))
       mul_smul := fun γ γ' p =>
@@ -377,11 +377,11 @@ theorem exists_fundamentalDomain : ∀ (E : Type) [Field E] [NumberField E] [IsC
     · exact (measurable_from_top (f := fun L : 𝓛 => (⟨mapL γ L, hstab _ γ.2 _ L.2⟩ : 𝓛))).comp
         measurable_fst
     · exact (((continuous_lact (γ : GL (Fin r) E)).measurable.comp
-        measurable_subtype_coe).comp measurable_snd).subtype_mk⟩
+        measurable_subtypeVal).comp measurable_snd).subtype_mk⟩
   have hdisc : ∀ p : 𝓛 × X.dom, ∃ U ∈ 𝓝 p, ∀ γ : Δ, γ • p ∈ U → γ = 1 := fun p => by
     obtain ⟨U, hU, h⟩ := exists_nhds X (hlat _ p.1.2).1 (hlat _ p.1.2).2 p.2.2
     refine ⟨{p.1} ×ˢ (Subtype.val ⁻¹' U), prod_mem_nhds ((isOpen_discrete _).mem_nhds rfl)
-      (continuous_subtype_val.continuousAt.preimage_mem_nhds hU), fun γ hγ => ?_⟩
+      (continuous_subtypeVal.continuousAt.preimage_mem_nhds hU), fun γ hγ => ?_⟩
     exact Subtype.ext (h γ (congrArg Subtype.val hγ.1) hγ.2)
   have hfree : ∀ (γ : Δ) (p : 𝓛 × X.dom), γ • p = p → γ = 1 := fun γ p h => by
     obtain ⟨U, hU, h'⟩ := hdisc p
@@ -400,7 +400,7 @@ theorem exists_fundamentalDomain : ∀ (E : Type) [Field E] [NumberField E] [IsC
   refine ⟨fun L => {y | ∃ (hL : L ∈ 𝓛) (hy : y ∈ X.dom), ((⟨L, hL⟩, ⟨y, hy⟩) : 𝓛 × X.dom) ∈ D},
     fun L => ⟨?_, fun y hy => hy.2.1⟩, fun L hL x hx => ?_⟩
   · by_cases hL : L ∈ 𝓛
-    · have h := (MeasurableEmbedding.subtype_coe
+    · have h := (MeasurableEmbedding.subtypeVal
         (FourierCoefficientDomain.isOpen_dom X).measurableSet).measurableSet_image.2
         (measurable_prodMk_left (x := (⟨L, hL⟩ : 𝓛)) hD)
       convert h using 1
@@ -433,26 +433,26 @@ private theorem integrable_tsum_of_summable_integral_norm' {ι Y E : Type} [Coun
     (μ : Measure Y) (F : ι → Y → E) (hF : ∀ i, Integrable (F i) μ)
     (hs : Summable fun i => ∫ y, ‖F i y‖ ∂μ) :
     Integrable (fun y => ∑' i, F i y) μ ∧ ∀ᵐ y ∂μ, Summable fun i => ‖F i y‖ := by
-  have hmeas : ∀ i, AEMeasurable (fun y => ‖F i y‖ₑ) μ := fun i => (hF i).1.enorm
+  have hmeas : ∀ i, AEMeasurable (fun y => ‖F i y‖ₑ) μ := fun i => (hF i).1.eNorm
 
   have htot : ∫⁻ y, ∑' i, ‖F i y‖ₑ ∂μ ≠ ⊤ := by
     rw [lintegral_tsum hmeas]
     have h : ∀ i, ∫⁻ y, ‖F i y‖ₑ ∂μ = ENNReal.ofReal (∫ y, ‖F i y‖ ∂μ) := fun i =>
-      (ofReal_integral_norm_eq_lintegral_enorm (hF i)).symm
+      (ofReal_integral_norm_eq_lintegral_eNorm (hF i)).symm
     simp_rw [h]
     rw [← ENNReal.ofReal_tsum_of_nonneg (fun i => integral_nonneg fun y => norm_nonneg _) hs]
     exact ENNReal.ofReal_ne_top
 
   have hsum : ∀ᵐ y ∂μ, Summable fun i => ‖F i y‖ := by
     filter_upwards [ae_lt_top' (AEMeasurable.tsum hmeas) htot] with y hy
-    exact tsum_enorm_ne_top_iff_summable_norm.1 hy.ne
+    exact tsum_eNorm_ne_top_iff_summable_norm.1 hy.ne
   refine ⟨⟨?_, ?_⟩, hsum⟩
   · refine aestronglyMeasurable_of_tendsto_ae (Filter.atTop : Filter (Finset ι))
       (f := fun s y => ∑ i ∈ s, F i y) (fun s => ?_) ?_
     · exact Finset.aestronglyMeasurable_fun_sum s fun i _ => (hF i).1
     · filter_upwards [hsum] with y hy
       exact hy.of_norm.hasSum
-  · exact lt_of_le_of_lt (lintegral_mono fun y => enorm_tsum_le_tsum_enorm) htot.lt_top
+  · exact lt_of_le_of_lt (lintegral_mono fun y => eNorm_tsum_le_tsum_eNorm) htot.lt_top
 
 theorem integrable_tsum_of_summable_integral_norm {ι Y : Type} [Countable ι] [MeasurableSpace Y]
     (μ : Measure Y) (F : ι → Y → ℂ) (hF : ∀ i, Integrable (F i) μ)
@@ -1538,7 +1538,7 @@ theorem unfold_frames (Δ : Subgroup (GL (Fin r) E)) (𝓛 : Set (Lt E r)) (hun 
   have : Countable 𝓛 := hcount.to_subtype
   have : Countable (GL (Fin r) E) := countable_gl
   have := sFinite_frame X
-  letI : MulAction Δ 𝓛 :=
+  let : MulAction Δ 𝓛 :=
     { smul := fun γ L => ⟨mapL γ L, hstab γ γ.2 L L.2⟩
       one_smul := fun L => Subtype.ext (hone _)
       mul_smul := fun γ γ' L => Subtype.ext (hmul _ _ _) }
@@ -1585,7 +1585,7 @@ theorem theta_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r :
   have hB' : ∀ L ∈ 𝓛, ∀ x ∈ slab X δ, ‖F' L x‖ ≤ B' := fun L hL =>
     hB0 _ (hF'.bor L hL) (hB L hL)
   have : Finite (Cls E n M) := (finite_cls_and_stab E n M hM).1
-  letI : Fintype (Cls E n M) := Fintype.ofFinite _
+  let : Fintype (Cls E n M) := Fintype.ofFinite _
   have hae : ∀ᵐ y ∂(volume.restrict (slab X δ)), y ∈ slab X δ := ae_restrict_mem hmeas
   have hi : ∀ x₁ ∈ X.dom, ∀ L ∈ 𝓛, Integrable (fun y => kern X hr idx P x₁ y * F' L y)
       (volume.restrict (slab X δ)) := fun x₁ hx₁ L hL =>

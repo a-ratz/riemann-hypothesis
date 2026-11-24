@@ -195,7 +195,7 @@ theorem thetaOf_gen_pow (L : GlobalTheory.GLq.LabelDatum p) {d : ℕ} (hd : 0 < 
 
 theorem exists_gen_pow (L : GlobalTheory.GLq.LabelDatum p) {d : ℕ} (hd : 0 < d) (u : Tor p d) :
     ∃ n : ℕ, ((u : (Fbar p)ˣ) : Fbar p) = L.gen d ^ n := by
-  haveI : NeZero (p ^ d - 1) := ⟨(g_pow_sub_pos hd).ne'⟩
+  have : NeZero (p ^ d - 1) := ⟨(g_pow_sub_pos hd).ne'⟩
   have hprim : IsPrimitiveRoot (L.gen d) (p ^ d - 1) := L.gen_order d hd ▸ IsPrimitiveRoot.orderOf _
   have hu : ((u : (Fbar p)ˣ) : Fbar p) ^ (p ^ d - 1) = 1 := by
     rw [← Units.val_pow_eq_pow_val, (mem_rootsOfUnity _ _).1 u.2, Units.val_one]
@@ -329,7 +329,7 @@ variable {D : D7}
 
 theorem star_conj (x : D.host.E) : star x = D.host.conj x := by
   apply D.host.φ₀.injective
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   show D.host.φ₀ (IsCMField.complexConj D.host.E x) = _
   rw [NumberField.IsCMField.complexEmbedding_complexConj, Formalism.HC.HostAx.conjE_apply]
 
@@ -376,7 +376,7 @@ theorem cover (k : Fin 2) (w : Pl D.host.E) (hw : ((D.host.g k : ℕ) : 𝓞 D.h
     rw [h1, h5]; ring
   have hc : Nat.card (Formalism.BasicNotions.placesOver D.host.E (D.host.g k)) = Nat.card (D.nd.PlG k ⊕ D.nd.PlG k) := by
     rw [Nat.card_coe_set_eq, D.nd.g_split k, hE, Nat.card_sum, Nat.card_eq_fintype_card, D.nd.card_PlG k, two_mul]
-  haveI : Finite (Formalism.BasicNotions.placesOver D.host.E (D.host.g k)) := by
+  have : Finite (Formalism.BasicNotions.placesOver D.host.E (D.host.g k)) := by
     refine Nat.finite_of_card_ne_zero ?_
     rw [Nat.card_coe_set_eq, D.nd.g_split k]
     exact Module.finrank_pos.ne'
@@ -530,7 +530,7 @@ theorem irr_one_ne_zero {G : Type} [Group G] [Fintype G] {χ : G → ℂ} (h : I
     have := hV 1
     rw [FDRep.char_one, h0] at this
     exact_mod_cast this
-  haveI : Subsingleton V := Module.finrank_zero_iff.1 h2
+  have : Subsingleton V := Module.finrank_zero_iff.1 h2
   have h3 : ∀ x, χ x = 0 := fun x => by
     rw [← hV, FDRep.character, Subsingleton.elim (V.ρ x) 0, map_zero]
   simp [ip, h3] at h1
@@ -547,8 +547,8 @@ theorem eq_of_prod_eq {ι : Type} [Fintype ι] {G : ι → Type} [∀ i, Group (
   by_contra hne
   have h1 := (_root_.GlobalTheory.GLq.ZOrth.zorth _ _ _ (h i) (h i)).2.2
   have h2 := (_root_.GlobalTheory.GLq.ZOrth.zorth _ _ _ (h i) (h' i)).2.2
-  rw [if_pos rfl] at h1
-  rw [if_neg hne] at h2
+  rw [ite_eq_left rfl] at h1
+  rw [ite_eq_right hne] at h2
   have h3 : ip (χ i) (χ i) * ∏ k ∈ Finset.univ.erase i, χ k 1 = ip (χ i) (χ' i) * ∏ k ∈ Finset.univ.erase i, χ' k 1 := by
     simp only [ip, mul_assoc, Finset.sum_mul, ← key, e]
   rw [h1, h2, one_mul, zero_mul] at h3
@@ -598,7 +598,7 @@ theorem TameTie.idemTie (hG : Green) {om : ∀ i : Fin 2, (ZMod (D.host.g i))ˣ 
   choose S hS using exs
   have tup : ∀ s y, LevelCuspCharacters.tupleChar (H := D.host) (K := ℂ) s y =
       ∏ kv : (Σ k : Fin 2, D.nd.PlG k), LevelCuspCharacters.typeChar (s ⟨kv.1, below kv.1 kv.2⟩) (pull y kv) := fun s y => by
-    letI := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
+    let := Fintype.ofFinite (LevelCuspCharacters.Sq D.host)
     exact (Fintype.prod_equiv (sqEquiv D) _ _ fun kv => rfl).symm
   intro y
   show (∑ᶠ a : (∀ kv : (Σ k : Fin 2, D.nd.PlG k), (Fin D.R.r → ZMod (D.host.g kv.1))),

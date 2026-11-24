@@ -147,15 +147,15 @@ theorem coeff_truncD (d : ℕ) (f : MvPowerSeries ι K) (n : ι →₀ ℕ) :
 
 theorem low_sub_truncD (d : ℕ) (f : MvPowerSeries ι K) : Low d (f - truncD d f) := by
   intro n hn
-  rw [map_sub, coeff_truncD, if_pos hn, sub_self]
+  rw [map_sub, coeff_truncD, ite_eq_left hn, sub_self]
 
 theorem coeff_truncD_self {d : ℕ} (f : MvPowerSeries ι K) {n : ι →₀ ℕ} (hn : n.degree = d) :
     MvPowerSeries.coeff n (truncD d f) = 0 := by
-  rw [coeff_truncD, if_neg (by omega)]
+  rw [coeff_truncD, ite_eq_right (by omega)]
 
 theorem constantCoeff_truncD {d : ℕ} (hd : 0 < d) (f : MvPowerSeries ι K) :
     MvPowerSeries.constantCoeff (truncD d f) = MvPowerSeries.constantCoeff f := by
-  rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply, coeff_truncD, if_pos (by simpa using hd),
+  rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply, coeff_truncD, ite_eq_left (by simpa using hd),
     MvPowerSeries.coeff_zero_eq_constantCoeff_apply]
 
 omit [Finite ι] in
@@ -349,7 +349,7 @@ theorem norm_fact_bound (hp : p.Prime) (hnp : ‖(p : K)‖ = (p : ℝ)⁻¹) (k
   have hp1 : (1 : ℝ) < p := by exact_mod_cast hp.one_lt
   have hlt : ‖(p : K)‖ < 1 := by rw [hnp]; exact inv_lt_one_of_one_lt₀ hp1
   have hv : padicValNat p (k + 1).factorial ≤ k := by
-    have h := sub_one_mul_padicValNat_factorial_lt_of_ne_zero (p := p) (n := k + 1) (by omega)
+    have h := sub_one_mul_multiplicity_factorial_lt_of_ne_zero (p := p) (n := k + 1) (by omega)
     rw [← Nat.padicValNat_def] at h
     have h2 : 1 ≤ p - 1 := by have := hp.two_le; omega
     have h3 : 1 * padicValNat p (k + 1).factorial ≤ (p - 1) * padicValNat p (k + 1).factorial :=

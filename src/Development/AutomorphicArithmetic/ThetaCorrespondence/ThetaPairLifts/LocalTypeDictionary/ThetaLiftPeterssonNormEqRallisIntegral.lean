@@ -162,7 +162,7 @@ theorem integral_const_coef : ∀ {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ t0 :
       ∫ g in openOff X.A (stdLat X.A) Sf, wcoef X.om ν 𝓕 Φ Φ g ∂X.m = c := by
   intro D cc δ t0 Q P X hX hL hint a ν 𝓕 ha Sf Φ c hc h0
   have hF := hX.1
-  haveI := hF.haarA
+  have := hF.haarA
   set K : Set (GA D X.A) := openOff X.A (stdLat X.A) ∅ with hKdef
   have hdec : ∀ g : GA D X.A, ∃ x k, k ∈ GinfC X.A ∧ g = X.ιA x * k := by
     intro g
@@ -182,7 +182,7 @@ theorem integral_const_coef : ∀ {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ t0 :
   have hmem : ∀ x k S, k ∈ GinfC X.A →
       (X.ιA x * k ∈ openOff X.A (stdLat X.A) S ↔ X.ιA x ∈ openOff X.A (stdLat X.A) S) := by
     intro x k S hk
-    simp only [GlobalTheory.Core.Rk.IP.openOff, Set.mem_setOf_eq, map_mul, hproj k hk, mul_one]
+    simp only [GlobalTheory.Core.Rk.IP.openOff, Set.mem_ofPred_eq, map_mul, hproj k hk, mul_one]
   have hw : ∀ g ∈ openOff X.A (stdLat X.A) Sf, wcoef X.om ν 𝓕 Φ Φ g = K.indicator (fun _ => c) g := by
     intro g hg
     obtain ⟨x, k, hk, rfl⟩ := hdec g
@@ -499,7 +499,7 @@ theorem locIdx_mul_locNorm_mul_dSfun : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E
   have hsplitf : Set.mulIndicator {v | v ∉ (∅ : Set (HeightOneSpectrum (𝓞 D.host.F)))} f =
       Set.mulIndicator {v | v ∉ (Sf : Set (HeightOneSpectrum (𝓞 D.host.F)))} f * Set.mulIndicator (Sf : Set _) f := by
     funext v
-    simp only [Pi.mul_apply, Set.mulIndicator_apply, Set.mem_setOf_eq, Finset.mem_coe, Set.mem_empty_iff_false]
+    simp only [Pi.mul_apply, Set.mulIndicator_apply, Set.mem_ofPred_eq, Finset.mem_coe, Set.mem_empty_iff_false]
     by_cases hv : v ∈ Sf <;> simp [hv]
   rw [hsplitf] at h0
   have key : GlobalTheory.LFun.dSfun D.host.E (∅ : Set (HeightOneSpectrum (𝓞 D.host.F))) a (a + a') s =
@@ -686,7 +686,7 @@ theorem main : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {μ₀ : T}
       GlobalTheory.Cont.HolValueAt (GlobalTheory.LFun.charL χ⁻¹ ((sfB G t : Finset (FinPl D)) : Set (FinPl D))) s (Λ s) := by
   intro D T L sc μ₀ hL hF G t i j χ hχ
   classical
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hm : 1 ≤ D.R.m - (i : ℕ) ∧ D.R.m - (i : ℕ) ≤ D.R.m := ⟨by omega, by omega⟩
   have hunr : ∀ w : HeightOneSpectrum (𝓞 D.host.E), w.under (𝓞 D.host.F) ∉ sfB G t → (nuH G t i j).UnrAt w := by
     intro w hw
@@ -739,9 +739,9 @@ theorem main : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {μ₀ : T}
     exact ⟨fun h => inv_inv χ ▸ h.inv, fun h => h.inv⟩
   have hfam : GlobalTheory.LFun.charFam χ⁻¹ = GlobalTheory.LFun.heckeFam (nuH G t i j)⁻¹ := funext fun w => by
     by_cases h : (nuH G t i j)⁻¹.UnrAt w
-    · rw [GlobalTheory.LFun.heckeFam_of_unrAt h, GlobalTheory.LFun.charFam, if_pos ((hu w).2 h), GlobalTheory.LFun.val_inv,
+    · rw [GlobalTheory.LFun.heckeFam_of_unrAt h, GlobalTheory.LFun.charFam, ite_eq_left ((hu w).2 h), GlobalTheory.LFun.val_inv,
         GlobalTheory.LFun.val_eq_of_chrEq hχ, GlobalTheory.UnrCharZeta.val_inv]
-    · rw [GlobalTheory.LFun.heckeFam_of_not_unrAt h, GlobalTheory.LFun.charFam, if_neg (mt (hu w).1 h)]
+    · rw [GlobalTheory.LFun.heckeFam_of_not_unrAt h, GlobalTheory.LFun.charFam, ite_eq_right (mt (hu w).1 h)]
   have hΛ' := GlobalTheory.CMVal.isHeckeL_inv_of_trivOnF D.host.E (nuH G t i j) Λ hT hΛ
   have hr' : ∀ w ∈ GlobalTheory.LFun.above D.host.E ((sfB G t : Finset (FinPl D)) : Set (FinPl D)),
       ¬ (nuH G t i j)⁻¹.UnrAt w := fun w hw h =>
@@ -1010,8 +1010,8 @@ theorem theta_lift_petersson_norm_eq_rallis_integral (hP : _root_.GlobalTheory.F
     (fun x hx k hk => (wcoef_fock hX ν 𝓕 T _ hk).trans (by rw [hX.2.fixA x hx T]))
     (fun x hx hx' k hk => (wcoef_fock hX ν 𝓕 T _ hk).trans (ip_fock_zero hX hPair.covol T (h.std.ptA x).1 (hs x hx hx')))
   refine hK.meas.elim fun 𝓕₀ h𝓕₀ => hX.1.measA.elim fun 𝓕A h𝓕A => ?_
-  haveI := hX.1.haarA
-  haveI : μ₀.IsHaarMeasure := h𝓕₀.1.1
+  have := hX.1.haarA
+  have : μ₀.IsHaarMeasure := h𝓕₀.1.1
   have hA : GlobalTheory.Cusp.wittIndex X.A = 0 := GlobalTheory.Cusp.wittIndex_eq_zero_iff_isAniso.2 (GlobalTheory.Mem.ColAd.isAniso_of_gram hX.1.gramA)
   have hB : GlobalTheory.Cusp.wittIndex X.B = 0 := GlobalTheory.Cusp.wittIndex_eq_zero_iff_isAniso.2 (GlobalTheory.Mem.ColAd.isAniso_of_gram hX.1.gramB)
   have key := _root_.GlobalTheory.BottomRallis.rallis_inner_product_bottom_norm_eq hP hPair hA hB (isFockVec_fock hX T) hU X.m μ₀

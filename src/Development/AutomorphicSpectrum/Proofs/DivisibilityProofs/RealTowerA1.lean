@@ -466,17 +466,17 @@ theorem telescope (g : ℕ → ℝ) (k n : ℕ) (h : k ≤ n) :
   induction n, h using Nat.le_induction with
   | base =>
     rw [sub_self]
-    refine Finset.sum_eq_zero fun i hi => if_neg ?_
+    refine Finset.sum_eq_zero fun i hi => ite_eq_right ?_
     have := Finset.mem_range.1 hi
     omega
-  | succ n hn ih => rw [Finset.sum_range_succ, ih, if_pos hn]; ring
+  | succ n hn ih => rw [Finset.sum_range_succ, ih, ite_eq_left hn]; ring
 
 private theorem sum_gap_of_le_eq {Ψ : Type} {N : ℕ} (lam : Ψ × Fin N → ℝ) (ψ : Ψ) (j : Fin N) :
     ∑ k : Fin N, (if j ≤ k then PB.gap lam (ψ, k) else 0) = lam (ψ, j) := by
   set g : ℕ → ℝ := fun i => if h : i < N then lam (ψ, ⟨i, h⟩) else 0 with hgdef
   have hg : ∀ k : Fin N, PB.gap lam (ψ, k) = g k - g (k + 1) := by
     intro k
-    simp only [PB.gap, PB.gapX, map_sub, eval_X, hgdef, dif_pos k.2]
+    simp only [PB.gap, PB.gapX, map_sub, eval_X, hgdef, dite_eq_left k.2]
     split_ifs with h
     · simp
     · simp
@@ -801,8 +801,8 @@ open MvPolynomial ReciprocityTheory.ChartRestriction.G.Geo Filter Topology Globa
 
 theorem RootFieldNumerics.real_tower_mean_slope_condition : PB.Inputs → ∀ II : IntersectionSystem, IsFullIntersectionSystem II → ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (T : RootTower Ψ N) (R : RealTower T), R.Smooth → R.Flat → R.Pos → T.A1 := by
   intro _hin II _hII Ψ _ _ N T R hSm hFl hPos
-  haveI := T.finC
-  haveI := T.neC
+  have := T.finC
+  have := T.neC
   intro abelian₂
   set b : ℝ := abelian₂ + l1 T.nu with hb
   have hex : ∀ c : T.Comp, ∃ s₀ > (0 : ℝ), ∀ s, 0 < s → s ≤ s₀ → scale s ≤ (R.Sys c).t₀ ∧
@@ -835,7 +835,7 @@ theorem RootFieldNumerics.real_tower_mean_slope_condition : PB.Inputs → ∀ II
   have hpsh := hmain mu hbd hdom
   have hk : ((T.M B c).kA : ℝ) = ((T.M 2 c).kA : ℕ) := by rw [R.kA_eq B 2 c]
   obtain ⟨hJ, alg, hsmooth⟩ := hSm B c
-  letI := alg
+  let := alg
   have ht0 : 0 < scale s := Real.exp_pos _
   intro z hz w hw
   refine RootFieldNumerics.Levi.levi_nonneg (T.M B c).Ω (T.M B c).y (dimFl Ψ N) (T.M B c).arith hsmooth hJ

@@ -59,7 +59,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 
 theorem wtC_of (hB : BorChartF Xo c) (hA : AllTest Xo c) (σ : c.F →+* ℂ) : WtC Xo c σ := by
   intro a n _ f hf t y y' hb
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   exact wtField_of_borChart hB a n f hf (CAt σ) t y y' (hA _ y) (hA _ y') hb
 
 end Test

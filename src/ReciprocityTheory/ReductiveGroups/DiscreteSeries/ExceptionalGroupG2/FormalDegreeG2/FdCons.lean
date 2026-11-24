@@ -343,7 +343,7 @@ theorem sum_pairs_pmat_fp {ε : Fin n → Bool} (w : Fin n → Fin n → ℝ) (z
 private theorem pmat_apply_eq_zero_of_sign_eq {ε : Fin n → Bool} (y : PCoord ε → ℂ) {a b : Fin n} (he : ε a = ε b) :
     pmat y a b = 0 := by
   simp only [pmat]
-  rw [dif_neg (fun h => h.2 he), dif_neg (fun h => h.2 he.symm)]
+  rw [dite_eq_right (fun h => h.2 he), dite_eq_right (fun h => h.2 he.symm)]
 
 theorem qForm_term {ε : Fin n → Bool} (y : PCoord ε → ℂ) (a b : Fin n) :
     -((((Dvec n a : ℝ) : ℂ) - ((Dvec n b : ℝ) : ℂ)) * (pmat y a b * Lap.Base.partNM ε (Dvec n) (pmat y) b a)) =
@@ -388,8 +388,8 @@ theorem matrix_coefficient_pointwise_limit (hB3 : Lap.Base.TangentPairingStateme
   refine squeeze_zero' (Filter.Eventually.of_forall fun _ => norm_nonneg _) ?_ hC0
   filter_upwards [hsm, Filter.eventually_ge_atTop 1] with t ht ht1
   obtain ⟨H', i1, i2, σ', w', hw', heq⟩ := ht
-  letI := i1
-  letI := i2
+  let := i1
+  let := i2
   have hlow : lowK ε (lamT lam t) = (t : ℝ) • Dvec n + lowK ε lam := by
     ext a
     simp only [lowK, lamT, Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]

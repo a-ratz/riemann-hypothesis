@@ -131,7 +131,7 @@ def rho {O : Type} [CommRing O] (act : OAct O G) (M : LieModel G x E) : O →+* 
     rw [diff_spec, M.add, diff_spec, diff_spec, act.add, comp_mul]
 
 theorem rho_isActOf {O : Type} [CommRing O] (act : OAct O G) (M : LieModel G x E) : M.IsActOf act.act (rho act M) :=
-  fun a e => by letI := act.hom a; exact diff_spec M (act.act a) e
+  fun a e => by let := act.hom a; exact diff_spec M (act.act a) e
 
 end PositivityTheory.Xgf.TransportLieModel
 
@@ -140,20 +140,20 @@ namespace PositivityTheory.Xgf
 open TransportLieModel in
 theorem lie_model_action_base_change : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (S : Scheme.{0}) (t : SAB H S) (R : Type) [CommRing R] [IsLocalRing R] (x : Sp R ⟶ S), ∃ (n : ℕ) (M : LieModel t.G x (Fin n → R)) (ρ : 𝓞 E →+* Module.End R (Fin n → R)), M.IsActOf t.act.act ρ ∧ ∀ (R' : Type) [CommRing R'] (f : R →+* R') (x' : Sp R' ⟶ S), x' = spMap f ≫ x → ∃ (M' : LieModel t.G x' (Fin n → R')) (ρ' : 𝓞 E →+* Module.End R' (Fin n → R')), M'.IsActOf t.act.act ρ' ∧ (∀ u, (M'.pt (f ∘ u)).left = spMap (dualMap f) ≫ (M.pt u).left) ∧ ∀ a u, ρ' a (f ∘ u) = f ∘ ρ a u := by
   intro E _ _ _ H S t R _ _ x
-  letI := t.grp
-  haveI := t.comm
-  haveI : Smooth t.G.hom := t.semi.smooth
+  let := t.grp
+  have := t.comm
+  have : Smooth t.G.hom := t.semi.smooth
   obtain ⟨L, _, _, ⟨M0⟩⟩ := lieModel_exists S t.G R x
   obtain ⟨hfin, hproj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective S t.G R x L M0
-  haveI := hfin
-  haveI := hproj
-  haveI : Module.Free R L := Module.free_of_flat_of_isLocalRing
+  have := hfin
+  have := hproj
+  have : Module.Free R L := Module.free_of_flat_of_isLocalRing
   let b := Module.finBasis R L
   let M := transport M0 b.equivFun
   refine ⟨Module.finrank R L, M, rho t.act M, rho_isActOf t.act M, ?_⟩
   intro R' _ f x' hx'
   subst hx'
-  letI : Algebra R R' := f.toAlgebra
+  let : Algebra R R' := f.toAlgebra
   obtain ⟨T', _, _, _, _, M1, j, hj, hbc⟩ := FlagFib.lieModel_liftBaseChange S t.G R R' x L M0
   let b' := hbc.basis b
   let M' : LieModel t.G (spMap f ≫ x) (Fin (Module.finrank R L) → R') := transport M1 b'.equivFun

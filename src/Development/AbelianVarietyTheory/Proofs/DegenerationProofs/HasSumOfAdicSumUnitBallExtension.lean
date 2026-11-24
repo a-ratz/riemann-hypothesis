@@ -143,7 +143,7 @@ theorem _root_.GlobalTheory.Ex.AdicNormSum.main : ∀ (R : Type) [CommRing R] [I
     (s : C), _root_.GlobalTheory.UT.SumF I C x s → HasSum x s := by
   intro R _ _ _ I C _ _ _ hC Ix x s hs
   obtain ⟨hle, hlt⟩ := hC
-  letI : Module R C := Module.compHom C (algebraMap R (FractionRing R))
+  let : Module R C := Module.compHom C (algebraMap R (FractionRing R))
   have hs' : _root_.GlobalTheory.UT.SumI I x s := hs
   unfold _root_.GlobalTheory.UT.SumI at hs'
   obtain ⟨N, hNfg, -, -, hconv⟩ := hs'

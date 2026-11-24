@@ -134,8 +134,8 @@ theorem liftMor_pull_eq_const_add_eps : GlobalTheory.Published.AbelianDeRham →
         (DualNumber.eps : DualNumber K) • (constMor A).pull b := by
   intro P K _ A _ A' _ i h g hA hg x
   have a₀ : IsAbelianScheme A := by
-    haveI := hA.comm
-    haveI : IsCommMonObj A := by
+    have := hA.comm
+    have : IsCommMonObj A := by
       rw [isCommMonObj_iff_isMulCommutative]
       intro T
       refine ⟨⟨fun x y => Over.OverMorphism.ext (h.1.hom_ext ?_ (by rw [Over.w, Over.w]))⟩⟩
@@ -409,7 +409,7 @@ theorem cechKS_lifts : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A] (A'
   refine ⟨J, W, c, fun k P ↦ @lam k (DualNumber P.B) _ (dualMap (algebraMap K P.B)).toAlgebra P.cst.x,
     hcov, hWc, ?_, ?_, ?_⟩
   · intro k P hP
-    letI : Algebra (DualNumber K) (DualNumber P.B) := (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap K P.B)).toAlgebra
+    let : Algebra (DualNumber K) (DualNumber P.B) := (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap K P.B)).toAlgebra
     obtain ⟨h1, h2, -⟩ := hlift k (DualNumber P.B) P.cst.x (hx P) hP.cst
     refine ⟨(congrArg (_ ≫ ·) (Category.comp_id _)).trans h1, ?_⟩
     let I := Ideal.span {algebraMap (DualNumber K) (DualNumber P.B) DualNumber.eps}
@@ -432,8 +432,8 @@ theorem cechKS_lifts : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A] (A'
           rw [← Category.assoc, ← Category.assoc, ← Cris.spMap_comp, hq, Category.assoc]
       _ = P.x ≫ i := by rw [cst_red]
   · intro k P Q φ hP
-    letI : Algebra (DualNumber K) (DualNumber P.B) := (dualMap (algebraMap K P.B)).toAlgebra
-    letI : Algebra (DualNumber K) (DualNumber Q.B) := (dualMap (algebraMap K Q.B)).toAlgebra
+    let : Algebra (DualNumber K) (DualNumber P.B) := (dualMap (algebraMap K P.B)).toAlgebra
+    let : Algebra (DualNumber K) (DualNumber Q.B) := (dualMap (algebraMap K Q.B)).toAlgebra
     let ρ : DualNumber P.B →ₐ[DualNumber K] DualNumber Q.B :=
       { dualMap (φ.ρ : P.B →+* Q.B) with
         commutes' := fun r ↦ by
@@ -444,7 +444,7 @@ theorem cechKS_lifts : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A] (A'
       rw [← φ.pt, ← Category.assoc, ← Category.assoc, ← Cris.spMap_comp, ← Cris.spMap_comp, dualMap_comp_algebraMap]
     exact h3.trans (congrArg _ hc)
   · intro k k' P U f hk hk' hU
-    letI : Algebra (DualNumber K) (DualNumber P.B) := (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap K P.B)).toAlgebra
+    let : Algebra (DualNumber K) (DualNumber P.B) := (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap K P.B)).toAlgebra
     have ht : ∀ a, IsTransl ((algebraMap (DualNumber K) (DualNumber P.B)).comp (algebraMap K (DualNumber K)))
         P.cst.x (u a) (P.cst.trx (u a)) := fun a ↦ by
       rw [show (algebraMap (DualNumber K) (DualNumber P.B)).comp (algebraMap K (DualNumber K)) =
@@ -563,7 +563,7 @@ theorem chern_eq_sum_cup_form : GlobalTheory.Published.AbelianDeRham → ∀ (K 
     simpa using this
   have h0 : ∑ k, exteriorPower.ιMulti K 2
       ![((pN (a k) : primDR A) : FirstDeRham (A.hom ≫ 𝟙 (Sp K))), ((pN (b k) : primDR A) : FirstDeRham _)] = 0 := by
-    haveI : FiniteDimensional K (FirstDeRham (A.hom ≫ 𝟙 (Sp K))) := hfin
+    have : FiniteDimensional K (FirstDeRham (A.hom ≫ 𝟙 (Sp K))) := hfin
     apply wedge_two_eq_zero
     intro f
 
@@ -970,7 +970,7 @@ theorem βa_step {I : Type} {U : I → A.left.Opens} {β : ∀ P Q : GPt A, P.Ho
       β P T (φ.comp ψ) = ψ.ρ (β P Q φ) + β Q T ψ) (a : Idx U) {P Q : GPt A} (h : P.In a.1.2.1)
     (φ : P.Hom Q) : βa β a Q = φ.ρ (βa β a P) + β P Q φ := by
   have hQ : Q.In a.1.2.1 := h.map φ
-  simp only [βa, dif_pos h, dif_pos hQ]
+  simp only [βa, dite_eq_left h, dite_eq_left hQ]
   rw [← affVal_comp a.1.2 h φ]
   exact hβ _ P Q _ φ ⟨a.1.1, (aff_in a.1.2).mono a.2⟩
 
@@ -1007,7 +1007,7 @@ theorem exists_coboundary_snd_tr : ∀ (K : Type) [Field K] (A : Over (Sp K)) [G
     have e2 := hψ h.choose a P hb ha
     change βa β h.choose (P.tr v) - βa β a (P.tr v) = valR (P.trx v) _ (φab h.choose a) at e1
     rw [← e1, TrivSqZeroExt.snd_sub] at e2
-    simp only [G, dif_pos h]
+    simp only [G, dite_eq_left h]
     linear_combination e2
   refine ⟨G, fun i V hVU P Q φ hP ↦ ?_⟩
   let a : Idx U := ⟨(i, V), hVU⟩
@@ -1162,7 +1162,7 @@ theorem prismContractionTwoCochain_coboundary (β : C1 (OSmall U)) {v : epsR K �
   have ht : ∀ x : DualNumber Q.B, (Q.tan hv).φ x = x := fun _ ↦ rfl
   have hd : ∀ x : DualNumber P.B, φ.dual.φ x = dualAlg φ.ρ x := fun _ ↦ rfl
   rw [prism, k1, k2, k3, k4, triv_sec φ, triv_tan φ hv]
-  simp only [hs, ht, hd, cochainTangentDiffCoeff, dif_pos h, dif_pos hQ]
+  simp only [hs, ht, hd, cochainTangentDiffCoeff, dite_eq_left h, dite_eq_left hQ]
   exact snd_d1_lemma φ.ρ _ _ _ _ _ _ _ _ _
 
 private theorem ev2_pullback_cupZ (c : Z1 (O (dp0 K) (A.hom ≫ 𝟙 (Sp K)))) (ω : Form (A.hom ≫ 𝟙 (Sp K)))
@@ -1328,13 +1328,13 @@ theorem isRep_chern_tanVal : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj 
     (by
       intro P Q T φ ψ hP
       have hQ : ∃ i, Q.In (L.U i) := hP.imp fun _ e ↦ e.map φ
-      simp only [dif_pos hP, dif_pos hQ]
+      simp only [dite_eq_left hP, dite_eq_left hQ]
       exact triv_coc_lemma_7 c ω β ℓ (fun T T' T'' φ ψ ↦ (hℓ T T' T'' φ ψ).1) hβ P Q T φ ψ hP) v hv
   refine ⟨fun j P ↦ N (τ j) P - ∑ k, cupContractionCorrectionTerm (c k) (ω k) hv P - G3 P + cochainTangentDiffCoeff β hv P, ?_, ?_⟩
   · intro j P Q φ hP
     have hP' : P.In (L.U (τ j)) := hP.mono (hV j)
     have h3 := hG3 (τ j) (V j) (hV j) P Q φ hP
-    simp only [dif_pos (show ∃ i, (P.tr v).In (L.U i) from ⟨τ j, hP'.tr hv⟩)] at h3
+    simp only [dite_eq_left (show ∃ i, (P.tr v).In (L.U i) from ⟨τ j, hP'.tr hv⟩)] at h3
     exact prism_eq_of_pullback_cup_sub_d1 hA c ω β ℓ.1 hℓ1 hv (N (τ j)) G3 φ ⟨τ j, hP'⟩ (hN (τ j) P Q φ hP') h3
   · intro j j' P hj hj'
     have := hNd (τ j) (τ j') P (hj.mono (hV j)) (hj'.mono (hV j'))
@@ -1412,9 +1412,9 @@ theorem exists_isRep_eps {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] {A' :
       hP.mono (j.2.trans inf_le_left)
     refine ⟨fun j P ↦ if hP : P.In (W j.1.1) then (liftVal h ω'.1 (hl _ P hP)).snd + G P else 0,
       fun j P Q φ hP ↦ ?_, fun j j' P hj hj' ↦ ?_⟩
-    · simp only [dif_pos (hin j P hP), dif_pos (hin j Q (hP.map φ))]
+    · simp only [dite_eq_left (hin j P hP), dite_eq_left (hin j Q (hP.map φ))]
       exact hG P Q φ _ _ _ _ (hn _ P Q φ (hin j P hP))
-    · simp only [dif_pos (hin j P hj), dif_pos (hin j' P hj')]
+    · simp only [dite_eq_left (hin j P hj), dite_eq_left (hin j' P hj')]
       have hU : P.In (i ⁻¹ᵁ j.1.2.1.1) := hj.mono (j.2.trans inf_le_right)
       rw [add_sub_add_right_eq_sub, ← TrivSqZeroExt.snd_sub]
       exact GlobalTheory.T.firstOrderDeformation_form_lift_values_sub K A A' i h hA ω' _ j.1.2.1.2 P hU _ _ _ _ n u _ hu
@@ -1454,7 +1454,7 @@ theorem isKSValue_of_isCechKS (P : GlobalTheory.Published.AbelianDeRham) {K : Ty
   obtain ⟨I, _, c, ω, hω, hch, hψf⟩ := GlobalTheory.T.firstChern_eq_sum_cup_invariantForms P K A g hA hg L hL ψ hψ
   choose z hz using fun k ↦ H1.mk_surjective _ (c k).1
   have key : k - ∑ a, (∑ b, θ a b * ψ f (hb b)) • hb a ∈ Fil A := by
-    letI : Algebra (DualNumber K) K := (TrivSqZeroExt.fstHom K K K).toRingHom.toAlgebra
+    let : Algebra (DualNumber K) K := (TrivSqZeroExt.fstHom K K K).toRingHom.toAlgebra
     obtain ⟨-, hF⟩ := P.2.2.1 (DualNumber K) A' g hA' hg' K A i h
     rw [Fil, hF, Submodule.mem_dualAnnihilator]
     intro x hx

@@ -79,13 +79,13 @@ theorem exists_finset_isPushout_model (K A : Type) [Field K] [CommRing A] [Algeb
     ∃ s : Finset K, ∀ (k : Type) [Field k] (β : k →+* K), (s : Set K) ⊆ Set.range β →
       ∃ (A₀ : CommRingCat.{0}) (f : CommRingCat.of k ⟶ A₀) (g : A₀ ⟶ CommRingCat.of A),
         IsPushout f (CommRingCat.ofHom β) g (CommRingCat.ofHom (algebraMap K A)) := by
-  haveI : Algebra.FinitePresentation K A := Algebra.FinitePresentation.of_finiteType.mp ‹_›
+  have : Algebra.FinitePresentation K A := Algebra.FinitePresentation.of_finiteType.mp ‹_›
   let P := Algebra.Presentation.ofFinitePresentation K A
   refine ⟨P.finite_coeffs.toFinset, fun k _ β hs => ?_⟩
-  letI : Algebra k K := β.toAlgebra
-  letI : Algebra k A := ((algebraMap K A).comp β).toAlgebra
-  haveI : IsScalarTower k K A := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : P.HasCoeffs k := ⟨fun x hx => hs (by simpa using hx)⟩
+  let : Algebra k K := β.toAlgebra
+  let : Algebra k A := ((algebraMap K A).comp β).toAlgebra
+  have : IsScalarTower k K A := IsScalarTower.of_algebraMap_eq' rfl
+  have : P.HasCoeffs k := ⟨fun x hx => hs (by simpa using hx)⟩
   let e := P.tensorModelOfHasCoeffsEquiv k
   have h := (CommRingCat.isPushout_tensorProduct k K (P.ModelOfHasCoeffs k)).flip
   refine ⟨CommRingCat.of (P.ModelOfHasCoeffs k), CommRingCat.ofHom (algebraMap k _),
@@ -108,8 +108,8 @@ theorem exists_finset_model_of_isAffine :
     (X.left.isoSpec.inv ≫ X.hom)
   have h1 : LocallyOfFiniteType (Spec.map ψ) := by rw [hψ]; infer_instance
   rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)] at h1
-  letI : Algebra K Γ(X.left, ⊤) := ψ.hom.toAlgebra
-  haveI : Algebra.FiniteType K Γ(X.left, ⊤) := h1
+  let : Algebra K Γ(X.left, ⊤) := ψ.hom.toAlgebra
+  have : Algebra.FiniteType K Γ(X.left, ⊤) := h1
   obtain ⟨s, hs⟩ := exists_finset_isPushout_model K Γ(X.left, ⊤)
   refine ⟨s, fun k _ β hβ => ?_⟩
   obtain ⟨A₀, f, g, h⟩ := hs k β hβ

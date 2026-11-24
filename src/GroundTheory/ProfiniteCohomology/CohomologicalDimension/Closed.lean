@@ -132,7 +132,7 @@ theorem isLocallyConstant_supExtend [TopologicalSpace G] [IsTopologicalGroup G]
   intro x
   have hev : ∀ i, ∀ᶠ x' in 𝓝 x, ((x i : G))⁻¹ * (x' i : G) ∈ V := fun i => by
     have hcont : Continuous fun x' : Fin n → ↥(H ⊔ V) => ((x i : G))⁻¹ * (x' i : G) :=
-      continuous_const.mul (continuous_subtype_val.comp (continuous_apply i))
+      continuous_const.mul (continuous_subtypeVal.comp (continuous_apply i))
     exact hcont.continuousAt.preimage_mem_nhds (hV.mem_nhds (by simp))
   filter_upwards [Filter.eventually_all.2 hev] with x' hx'
   exact supExtend_eq hc x' _ fun i => inv_mul_mem_trans (supSection_spec H V (x i)) (hx' i)

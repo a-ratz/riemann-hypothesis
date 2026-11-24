@@ -126,7 +126,7 @@ theorem unipMin_cocompact : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   have hsub : ∀ g : Subgroup.closure (radSet σ J X Fin.val), g.1 ∈ unipMin σ J X := fun g => by
     rw [unipMin_eq_radSet]
     exact closure_radSet_subset hσ hJ hC hW.xx g.2
-  refine ⟨Subtype.val '' K, hK.image continuous_subtype_val, fun u hu => ?_⟩
+  refine ⟨Subtype.val '' K, hK.image continuous_subtypeVal, fun u hu => ?_⟩
   rw [unipMin_eq_radSet] at hu
   obtain ⟨γ, hγ, k, hk, e⟩ := hcov ⟨u, Subgroup.subset_closure hu⟩
   exact ⟨γ.1, hγ, hsub γ, k.1, ⟨k, hk, rfl⟩, hsub k, congrArg Subtype.val e⟩

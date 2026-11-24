@@ -85,10 +85,10 @@ open NumberField IsDedekindDomain in
 theorem _root_.GlobalTheory.Published.exists_primitiveRoot_pow (F Ω : Type) [Field F] [NumberField F]
     [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (r : ℕ) : ∃ ζ : Ω, IsPrimitiveRoot ζ (l ^ r) := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ r)
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ r)
 
 
 open NumberField IsDedekindDomain in
@@ -97,8 +97,8 @@ theorem _root_.GlobalTheory.Published.PoitouTateDuality.cohDimTwoGlobal
   unfold _root_.GlobalTheory.Published.CohDimTwoGlobal
   intro F Ω _ _ _ _ _ _ l _ r M _ _ _ _ _ S rhoS hS hρ n hn
   rcases Nat.eq_zero_or_pos r with rfl | hr
-  · haveI : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
-    haveI : Subsingleton M := Module.subsingleton (ZMod (l ^ 0)) M
+  · have : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
+    have : Subsingleton M := Module.subsingleton (ZMod (l ^ 0)) M
     obtain ⟨k, rfl⟩ : ∃ k, n = k + 1 := ⟨n - 1, by omega⟩
     rw [_root_.GlobalTheory.Published.subsingleton_Hn_succ_iff]
     intro f _ _

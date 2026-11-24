@@ -236,7 +236,7 @@ theorem eOOf_spec (h0 : (p : G.O) ≠ 0) : Associated (p : G.O) (vpOf G ^ eOOf G
 
 theorem p_ne_zero_of_place (v : Fin G.P.nV) : (p : G.O) ≠ 0 := by
   have hS := G.P.setting v
-  haveI := hS.frac_alt
+  have := hS.frac_alt
   intro h
   have hW : (p : G.P.W v) ≠ 0 := hS.p_unif.ne_zero
   apply hW
@@ -283,8 +283,8 @@ variable {p : ℕ} [Fact p.Prime] (X : Sys p)
 
 theorem stab_fin (h : FinStab X.Lv) : ∀ j (La : X.Lt j), (X.Pj j).IsLatTup La.2 → 0 < X.stab j La := by
   intro j La hLa
-  haveI := h j La.1 La.2 hLa
-  haveI : Nonempty {γ : (X.Lv.lev j La.1).Γ // (X.Lv.lev j La.1).smul γ La.2 = La.2} := ⟨⟨1, lsmul_one _ _⟩⟩
+  have := h j La.1 La.2 hLa
+  have : Nonempty {γ : (X.Lv.lev j La.1).Γ // (X.Lv.lev j La.1).smul γ La.2 = La.2} := ⟨⟨1, lsmul_one _ _⟩⟩
   exact Nat.card_pos
 
 def Aw (_v : X.Pl) (j : ℕ) : Type := X.Lt j × X.Lt (j + 1)

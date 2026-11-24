@@ -151,11 +151,11 @@ private theorem lam_map {n : ℕ} {A B G : Type} [CommRing A] [CommRing B] [Grou
 theorem UpperTheory.V.Pa.Core.piSurj :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (A : TWAut u J Unit D T) (W : RRObj Λ A) (m : RMaps W), Adapted T (r := r) → GenBy O (pairVals u ∪ {(A.b.lam (MvPowerSeries.X (.inl ())))}) → Function.Surjective m.π := by
   intro l _ L G0 T Λ n O _ _ _ _ _ r B _ _ _ u J D A W m hAd hgen
-  letI := W.ring
-  letI := W.alg
-  haveI := W.co
+  let := W.ring
+  let := W.alg
+  have := W.co
   obtain ⟨⟨hco, -, -, hadj⟩, -⟩ := spoCo l L G0 T Λ n O r B u J D A hAd
-  haveI := hco
+  have := hco
   obtain ⟨hD, hψ, -, hU, -⟩ := m.π_maps
   have hsurj : Function.Surjective (Λ.h.p₀.comp (πo0 Λ)) :=
     (Glob.Hom.p₀_surj Λ.h).comp (Lim.πo0_surj Λ)

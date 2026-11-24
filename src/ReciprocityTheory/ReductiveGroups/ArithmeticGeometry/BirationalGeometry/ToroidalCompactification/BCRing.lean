@@ -78,7 +78,7 @@ theorem frameLieBC_loc {S : Type} [CommRing S] (G : Over (Spec (CommRingCat.of S
     (hu' : ∀ i, (u' i).left ≫ F = Geo.Tor.spMap (dualMapR φ) ≫ (u i).left) : Geo.Tor.IsLieBasis u' := by
   classical
   set p := (IsLocalRing.maximalIdeal k).comap φ with hp
-  haveI : p.IsPrime := Ideal.comap_isPrime φ (IsLocalRing.maximalIdeal k)
+  have : p.IsPrime := Ideal.comap_isPrime φ (IsLocalRing.maximalIdeal k)
   have hunit : ∀ y : p.primeCompl, IsUnit (φ y) := fun y => by
     by_contra hy
     exact y.2 ((IsLocalRing.mem_maximalIdeal _).mpr hy)
@@ -88,10 +88,10 @@ theorem frameLieBC_loc {S : Type} [CommRing S] (G : Over (Spec (CommRingCat.of S
     rw [← hφ, Geo.Tor.spMap_comp]
   have h2 : Geo.Tor.IsGrpPullback G' G (Geo.Tor.spMap φp ≫ fB S (Localization.AtPrime p)) F :=
     h.congr hsp rfl
-  haveI hGs : ∀ s : S, Smooth (Gs G s).hom := fun s => by
+  have hGs : ∀ s : S, Smooth (Gs G s).hom := fun s => by
     show Smooth (pullback.snd G.hom (fB S (Localization.Away s)))
     infer_instance
-  haveI : Smooth ((Over.pullback (fB S (Localization.AtPrime p))).obj G).hom := by
+  have : Smooth ((Over.pullback (fB S (Localization.AtPrime p))).obj G).hom := by
     show Smooth (pullback.snd G.hom (fB S (Localization.AtPrime p)))
     infer_instance
   have h3 := isGrpPullback_factor (fB S (Localization.AtPrime p)) (Geo.Tor.spMap φp) h2

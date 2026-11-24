@@ -94,7 +94,7 @@ private theorem isIntegral_algEquiv_apply_iff (σ : H.E ≃ₐ[ℚ] H.E) (t : H.
 theorem kc_mem_dual_iff (y : H.E) :
     y ∈ FractionalIdeal.dual (𝓞 H.K) H.K (1 : FractionalIdeal (𝓞 H.E)⁰ H.E) ↔
       ∀ x : 𝓞 H.E, IsIntegral ℤ (∑ τ : H.E ≃ₐ[H.K] H.E, τ (y * x)) := by
-  haveI := H.galois
+  have := H.galois
   rw [FractionalIdeal.mem_dual (kc_one_ne H)]
   have key : ∀ w : H.E, Algebra.trace H.K H.E w ∈ (algebraMap (𝓞 H.K) H.K).range ↔
       IsIntegral ℤ (∑ τ : H.E ≃ₐ[H.K] H.E, τ w) := by

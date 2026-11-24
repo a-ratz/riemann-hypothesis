@@ -75,7 +75,7 @@ theorem norm_adr [IsTotallyReal F] (w u : InfinitePlace F) (r : ℝ) : ‖(adr w
 theorem piInf_adr (h : IsCMExt F E σ) (τ' : ∀ w : InfinitePlace F, EmbOver E w) (w u : InfinitePlace F) (r : ℝ) :
     haveI := h.1
     piInf (τ' u) (algebraMap (AF F) (AE F E) (adr w r)) = ((if u = w then r else 1 : ℝ) : ℂ) := by
-  haveI := h.1
+  have := h.1
   show GlobalTheory.AdelicU.infEmb (τ' u) (GlobalTheory.AdelicU.compInf F E u (algebraMap (AF F) (AE F E) (adr w r))) = _
   rw [Algebra.TensorProduct.algebraMap_apply]
   show GlobalTheory.AdelicU.infEmb (τ' u)
@@ -88,13 +88,13 @@ theorem piInf_adr (h : IsCMExt F E σ) (τ' : ∀ w : InfinitePlace F, EmbOver E
 theorem finOne_smul_adr (h : IsCMExt F E σ) (w : InfinitePlace F) (r : ℝ) :
     haveI := h.1
     finOne F • algebraMap (AF F) (AE F E) (adr w r) = finOne F • (1 : AE F E) := by
-  haveI := h.1
+  have := h.1
   rw [Algebra.smul_def, Algebra.smul_def, ← map_mul, finOne_adr, mul_one]
 
 theorem absE_adrU (h : IsCMExt F E σ) (w : InfinitePlace F) (τ : ℝ) :
     haveI := h.1
     ((absE F E (Units.map (algebraMap (AF F) (AE F E)).toMonoidHom (adrU w τ)) : ℝ≥0) : ℝ) = Real.exp (2 * τ) := by
-  haveI := h.1
+  have := h.1
   have hfin : ∀ v, GlobalTheory.Doubling.absEv F E v (GlobalTheory.Doubling.unitFin F E v
       (Units.map (algebraMap (AF F) (AE F E)).toMonoidHom (adrU w τ))) = 1 := by
     intro v
@@ -122,27 +122,27 @@ theorem absE_adrU (h : IsCMExt F E σ) (w : InfinitePlace F) (τ : ℝ) :
       rw [Algebra.TensorProduct.map_tmul, evInf_adr, AlgHom.id_apply]
       rfl
     have hmult : u.mult = 1 := by
-      rw [NumberField.InfinitePlace.mult, if_pos (NumberField.IsTotallyReal.isReal u)]
+      rw [NumberField.InfinitePlace.mult, ite_eq_left (NumberField.IsTotallyReal.isReal u)]
     show ((‖Algebra.norm u.Completion ((GlobalTheory.Doubling.unitInf F E u
         (Units.map (algebraMap (AF F) (AE F E)).toMonoidHom (adrU w τ)) : (TensorProduct F u.Completion E)ˣ) :
           TensorProduct F u.Completion E)‖₊ ^ u.mult : ℝ≥0) : ℝ) = _
-    rw [hval, hmult, pow_one, Algebra.norm_algebraMap, Module.finrank_baseChange, h.2.2.1, coe_nnnorm,
+    rw [hval, hmult, pow_one, Algebra.norm_algebraMap, Module.finrank_baseChange, h.2.2.1, coe_nnNorm,
       norm_pow, norm_adr]
   show (((∏ u, GlobalTheory.Doubling.absEw F E u (GlobalTheory.Doubling.unitInf F E u
       (Units.map (algebraMap (AF F) (AE F E)).toMonoidHom (adrU w τ)))) *
       ∏ᶠ v, GlobalTheory.Doubling.absEv F E v (GlobalTheory.Doubling.unitFin F E v
       (Units.map (algebraMap (AF F) (AE F E)).toMonoidHom (adrU w τ))) : ℝ≥0) : ℝ) = _
   rw [finprod_eq_one_of_forall_eq_one hfin, mul_one, NNReal.coe_prod, Finset.prod_eq_single w]
-  · rw [hinf, if_pos rfl, Real.abs_exp, sq, ← Real.exp_add, two_mul]
+  · rw [hinf, ite_eq_left rfl, Real.abs_exp, sq, ← Real.exp_add, two_mul]
   · intro b _ hb
-    rw [hinf, if_neg hb, abs_one, one_pow]
+    rw [hinf, ite_eq_right hb, abs_one, one_pow]
   · intro hw
     exact absurd (Finset.mem_univ w) hw
 
 theorem chi_adrU (d : SD σ) (w : InfinitePlace F) (τ : ℝ) :
     haveI := d.cm.1
     (d.χ (Units.map (algebraMap (AF F) (AE F E)).toMonoidHom (adrU w τ)) : ℂ) = 1 := by
-  haveI := d.cm.1
+  have := d.cm.1
   have hmem : adrU w τ ∈ (Units.map (Algebra.norm (AF F) (S := AE F E))).range := by
     refine ⟨Units.map (algebraMap (AF F) (AE F E)).toMonoidHom (adrU w (τ / 2)), ?_⟩
     apply Units.ext

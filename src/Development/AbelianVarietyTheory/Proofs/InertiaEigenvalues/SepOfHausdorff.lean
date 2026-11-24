@@ -244,7 +244,7 @@ variable {G G' : Type} [Group G] [TopologicalSpace G] [Group G'] [TopologicalSpa
     {πA : RA} (E : EtTie W RA RW inclR φR gR πA) (E' : EtTie W' RA RW inclR φR gR' πA)
 
 theorem n_ne_zero (W : LocWach PD LL O v n) : n ≠ 0 := by
-  haveI := PD.finK₀
+  have := PD.finK₀
   rw [W.n_eq]
   exact Module.finrank_pos.ne'
 
@@ -260,7 +260,7 @@ theorem io_mem (hO : Function.Injective (algebraMap O LL)) (hd : Descends E') (h
     (hH : ∀ g' : G', W'.resΓ g' = 1 → ∃ g : G, W.resΓ g = 1 ∧ gR g = gR' g')
     (hsep : ∀ x : RA, (∀ k : ℕ, πA ^ k ∣ x) → x = 0) (a : LetA O n) : ∃ a', E'.io a' = E.io a := by
   classical
-  haveI : NeZero n := ⟨n_ne_zero W⟩
+  have : NeZero n := ⟨n_ne_zero W⟩
   have h1 := hd (ZMod n) (fun i j => if j = i - 1 then 1 else 0)
     (fun i => E.ioE (algebraMap (LetA O n) W.EE (letE i))) ?_ ?_
   · have h2 : ∀ i, ∃ a', E'.io a' = E.io (letE i) := by
@@ -287,7 +287,7 @@ theorem io_mem (hO : Function.Injective (algebraMap O LL)) (hd : Descends E') (h
     rw [← e, ← ioE_γE E hO, hg, map_one]
     rfl
   · intro i
-    rw [Finset.sum_eq_single (i - 1) (fun j _ hj => by simp [hj]) (by simp), if_pos rfl, map_one, one_mul,
+    rw [Finset.sum_eq_single (i - 1) (fun j _ hj => by simp [hj]) (by simp), ite_eq_left rfl, map_one, one_mul,
       ← ioE_φE E hO, W.φE_ext]
     exact congrArg _ (congrArg _ (φA_letE W i).symm)
 

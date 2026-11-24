@@ -117,7 +117,7 @@ private theorem isoPick_mod {R M : Type} {I : Type 1} [Ring R] [AddCommGroup M] 
         by_contra hcon
         push Not at hcon
         exact h (sSup_eq_bot.2 fun m ⟨e⟩ => ((hcon m).false e).elim)
-      haveI : IsSimpleModule R m := IsSimpleModule.congr e
+      have : IsSimpleModule R m := IsSimpleModule.congr e
       exact ⟨m, ‹_›, (LinearEquiv.isotypicComponent_eq e).symm⟩
   let T : Set (Submodule R M) := isotypicComponents R M ∩ Set.range fun i => isotypicComponent R M (S i)
   have hind : iSupIndep (Subtype.val : T → Submodule R M) :=
@@ -158,7 +158,7 @@ private theorem isoPick_range {H S Y : Type} [Group H] [AddCommGroup S] [Module 
     (σ : Representation ℂ H S) (π : Representation ℂ H Y) (hσ : σ.IsIrreducible)
     (f : S →ₗ[ℂ] Y) (hf : ∀ g v, f (σ g v) = π g (f v)) (s : S) :
     π.asModuleEquiv.symm (f s) ∈ isotypicComponent (MonoidAlgebra ℂ H) π.asModule σ.asModule := by
-  haveI : IsSimpleModule (MonoidAlgebra ℂ H) σ.asModule :=
+  have : IsSimpleModule (MonoidAlgebra ℂ H) σ.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule σ).mp hσ
   let F : σ.asModule →ₗ[MonoidAlgebra ℂ H] π.asModule :=
     Representation.IntertwiningMap.equivLinearMapAsModule σ π ⟨f, fun g => LinearMap.ext (hf g)⟩
@@ -225,7 +225,7 @@ private theorem isoPick_gen {H Y : Type} {I : Type 1} [Group H] [AddCommGroup Y]
     (hspan : ∀ y, y ∈ ⨆ (i : I) (f : {f : V i →ₗ[ℂ] Y // ∀ g v, f (ρ i g v) = π g (f v)}), LinearMap.range f.1)
     (y : Y) (hy : y ≠ 0) :
     ∃ i₀ : I, y ∉ ⨆ (i : {i : I // IsEmpty ((ρ i₀).Equiv (ρ i))}) (f : {f : V i.1 →ₗ[ℂ] Y // ∀ g v, f (ρ i.1 g v) = π g (f v)}), LinearMap.range f.1 := by
-  haveI : ∀ i, IsSimpleModule (MonoidAlgebra ℂ H) (ρ i).asModule := fun i =>
+  have : ∀ i, IsSimpleModule (MonoidAlgebra ℂ H) (ρ i).asModule := fun i =>
     (Representation.irreducible_iff_isSimpleModule_asModule _).mp (hρ i)
   have hne : π.asModuleEquiv.symm y ≠ 0 := fun h => hy (by simpa using congrArg π.asModuleEquiv h)
   obtain ⟨i₀, h⟩ := isoPick_mod (fun i => (ρ i).asModule) (π.asModuleEquiv.symm y) hne (mem_iSup_isotypicComponent_of_span V ρ hρ π hspan y)
@@ -356,7 +356,7 @@ private theorem stab_N {Q : Type} [Finite Q] [DecidableEq Q] {H : Q → Type} [�
 theorem UpperTheory.GalN.V.isoRefine :
         (∀ (H Y : Type) (I : Type 1) [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [AddCommGroup Y] [Module ℂ Y] (σ : I → SmIrr H) (π : Representation ℂ H Y), (∀ y, y ∈ ⨆ (i : I) (f : {f : (σ i).V →ₗ[ℂ] Y // ∀ g v, f ((σ i).ρ g v) = π g (f v)}), LinearMap.range f.1) → ∀ y : Y, y ≠ 0 → ∃ i₀ : I, y ∉ ⨆ (i : {i : I // IsEmpty ((σ i₀).ρ.Equiv (σ i).ρ)}) (f : {f : (σ i.1).V →ₗ[ℂ] Y // ∀ g v, f ((σ i.1).ρ g v) = π g (f v)}), LinearMap.range f.1) → ∀ (Q : Type) [Finite Q] [DecidableEq Q] (H : Q → Type) [∀ q, Group (H q)] [∀ q, TopologicalSpace (H q)] [∀ q, IsTopologicalGroup (H q)] (Y : Type) (I : Type 1) [AddCommGroup Y] [Module ℂ Y] (σ : I → ∀ q, SmIrr (H q)) (π : Representation ℂ (∀ q, H q) Y), (∀ q y, y ∈ ⨆ (i : I) (f : {f : (σ i q).V →ₗ[ℂ] Y // ∀ g v, f ((σ i q).ρ g v) = π (Pi.mulSingle q g) (f v)}), LinearMap.range f.1) → ∀ y : Y, y ≠ 0 → ∃ (Y' : Type) (_ : AddCommGroup Y') (_ : Module ℂ Y') (π' : Representation ℂ (∀ q, H q) Y') (p : Y →ₗ[ℂ] Y') (c : Q → I), p y ≠ 0 ∧ (∀ g v, p (π g v) = π' g (p v)) ∧ ∀ q, IsoSum (π'.comp (MonoidHom.mulSingle H q)) ⊤ (σ (c q) q) := by
   intro hPick Q _ _ H _ _ _ Y I _ _ σ π hs y hy
-  haveI := Fintype.ofFinite Q
+  have := Fintype.ofFinite Q
   have key : ∀ T : Finset Q, ∃ (Y' : Type) (_ : AddCommGroup Y') (_ : Module ℂ Y')
       (π' : Representation ℂ (∀ q, H q) Y') (p : Y →ₗ[ℂ] Y') (c : Q → I),
       Function.Surjective p ∧ p y ≠ 0 ∧ (∀ g v, p (π g v) = π' g (p v)) ∧
@@ -421,12 +421,12 @@ private theorem irreducible_subrep_isotypic {H Y V : Type} {I : Type 1} {S : I �
     (y : Y) :
     y ∈ ⨆ (i : I) (f : {f : S i →ₗ[ℂ] Y // ∀ g v, f (σ i g v) = π g (f v)}), LinearMap.range f.1 := by
   let R := MonoidAlgebra ℂ H
-  haveI hsim : ∀ i, IsSimpleModule R (σ i).asModule := fun i =>
+  have hsim : ∀ i, IsSimpleModule R (σ i).asModule := fun i =>
     (Representation.irreducible_iff_isSimpleModule_asModule (σ i)).mp (hσ i)
   let J : π.asModule →ₗ[R] ρ.asModule :=
     Representation.IntertwiningMap.equivLinearMapAsModule π ρ ⟨j, fun g => LinearMap.ext (he g)⟩
   let s : Set (Submodule R ρ.asModule) := {m | ∃ i, Nonempty (m ≃ₗ[R] (σ i).asModule)}
-  haveI hs : ∀ m : s, IsSimpleModule R m := by
+  have hs : ∀ m : s, IsSimpleModule R m := by
     rintro ⟨m, i, ⟨e⟩⟩
     exact IsSimpleModule.congr e
   have h1 : ∀ v ∈ ⨆ (i : I) (f : {f : S i →ₗ[ℂ] V // ∀ g v, f (σ i g v) = ρ g (f v)}), LinearMap.range f.1,
@@ -451,23 +451,23 @@ private theorem irreducible_subrep_isotypic {H Y V : Type} {I : Type 1} {S : I �
       rw [map_add]; exact add_mem ha hb
   have hJ : ∀ x, J x ∈ sSup s := fun x => h1 _ (h (π.asModuleEquiv x))
   have hJi : Function.Injective J := hj
-  haveI : IsSemisimpleModule R (sSup s : Submodule R ρ.asModule) := by
+  have : IsSemisimpleModule R (sSup s : Submodule R ρ.asModule) := by
     rw [sSup_eq_iSup]
     exact isSemisimpleModule_biSup_of_isSemisimpleModule_submodule fun m hm =>
       haveI := hs ⟨m, hm⟩
       inferInstance
   let J' : π.asModule →ₗ[R] (sSup s : Submodule R ρ.asModule) := J.codRestrict _ hJ
   have hJ' : Function.Injective J' := fun a b hab => hJi (congrArg Subtype.val hab)
-  haveI : IsSemisimpleModule R π.asModule := IsSemisimpleModule.of_injective J' hJ'
+  have : IsSemisimpleModule R π.asModule := IsSemisimpleModule.of_injective J' hJ'
   have h3 : π.asModuleEquiv.symm y ∈ sSup {m : Submodule R π.asModule | IsSimpleModule R m} := by
     rw [IsSemisimpleModule.sSup_simples_eq_top]; trivial
   rw [sSup_eq_iSup'] at h3
   rw [← π.asModuleEquiv.apply_symm_apply y]
   refine Submodule.iSup_induction _ (motive := fun z => π.asModuleEquiv z ∈ _) h3 ?_ ?_ ?_
   · rintro ⟨m, hm⟩ z hz
-    haveI : IsSimpleModule R m := hm
+    have : IsSimpleModule R m := hm
     let e0 : m ≃ₗ[R] m.map J := Submodule.equivMapOfInjective J hJi m
-    haveI : IsSimpleModule R (m.map J) := IsSimpleModule.congr e0.symm
+    have : IsSimpleModule R (m.map J) := IsSimpleModule.congr e0.symm
     have hle : m.map J ≤ sSup s := by
       rintro _ ⟨x, -, rfl⟩
       exact hJ x
@@ -674,7 +674,7 @@ theorem UpperTheory.V.Hi.piPts_n_alt :
   have hord : ∀ K, H.MK θ a K ≤ H.X.Ord (H.τA A) θ (H.lev K) := fun K => inf_le_left
   obtain ⟨K0, hK0⟩ := dir {z}
   replace hK0 := hord K0 (hK0 z (Finset.mem_singleton_self z))
-  haveI := (hcomm K0).2.2.1
+  have := (hcomm K0).2.2.1
   let b := Module.Free.chooseBasis A (H.X.Ord (H.τA A) θ (H.lev K0))
   obtain ⟨i0, hi0⟩ : ∃ i, b.repr ⟨z, hK0⟩ i ≠ 0 := by
     by_contra hcon
@@ -707,7 +707,7 @@ theorem UpperTheory.V.Hi.piPts_n_alt :
       ∀ Y : H.PartAltAlt ι lam ξ, Y.Y ⊓ EK K ≠ ⊥ → ∃ x : R →+* Qbar l, D.map x = W.GDet.ofRep (W.mat Y.r) ∧
         ∀ t (F : EK K), (F : Fin H.m → H.X.Fn ℂ d) ∈ Y.Y → act t F = ι (x t) • F := by
     intro K hzK
-    haveI : Fact (CommOn (H.MK θ a K) (H.op A)) := ⟨((hcomm K).2.2.2 a).1⟩
+    have : Fact (CommOn (H.MK θ a K) (H.op A)) := ⟨((hcomm K).2.2.2 a).1⟩
     obtain ⟨_, -⟩ := hiAlg L Ω l n c H hH A θ hθ a K fun h => hz (Subtype.ext (by rwa [h] at hzK))
     obtain ⟨f, ψ, huniv, hf⟩ := hα K
     obtain ⟨hE, act, a1, a2, -, -, a5⟩ := _root_.UpperTheory.V.Hi.partAct0_alt Lit L Ω l n c H hH A θ hθ ι P hP x0 lam d ξ c0 sp hsp hlam a K (EK K) rfl

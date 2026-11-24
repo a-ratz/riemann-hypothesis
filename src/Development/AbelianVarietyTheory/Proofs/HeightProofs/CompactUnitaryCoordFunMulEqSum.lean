@@ -58,7 +58,7 @@ variable {n : ℕ}
 
 theorem integral_conjK (ε : Fin n → Bool) (f : KG ε → ℂ) (a : KG ε) :
     ∫ k, f (a * k * a⁻¹) ∂(muK ε) = ∫ k, f k ∂(muK ε) := by
-  haveI : Measure.IsMulRightInvariant (muK ε) := ⟨(compact_haar_holds n ε).2.2.1⟩
+  have : Measure.IsMulRightInvariant (muK ε) := ⟨(compact_haar_holds n ε).2.2.1⟩
   have h1 := integral_mul_right_eq_self (μ := muK ε) (fun k => f (a * k)) a⁻¹
   have h2 := integral_mul_left_eq_self (μ := muK ε) f a
   simp only [mul_assoc] at h1 ⊢
@@ -66,7 +66,7 @@ theorem integral_conjK (ε : Fin n → Bool) (f : KG ε → ℂ) (a : KG ε) :
 
 theorem integrable_of_continuousK {ε : Fin n → Bool} {f : KG ε → ℂ} (hf : Continuous f) :
     Integrable f (muK ε) := by
-  haveI : IsFiniteMeasure (muK ε) := ⟨isCompact_univ.measure_lt_top⟩
+  have : IsFiniteMeasure (muK ε) := ⟨isCompact_univ.measure_lt_top⟩
   exact hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace f)
 
 theorem lowV_le (ε : Fin n → Bool) (i : ℕ) : lowV ε i ≤ polyV ε i := by

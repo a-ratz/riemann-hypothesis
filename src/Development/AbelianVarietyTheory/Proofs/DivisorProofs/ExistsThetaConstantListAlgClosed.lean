@@ -158,7 +158,7 @@ theorem exists_thG_of_polFib : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsC
   have := P.isAb.comm
   obtain ⟨ρ', hρ', hr⟩ := exists_rigidificationPullbackCompatibleIso hp hw hL hL₁ hρ
   let τ : (baseOver (Sp K)).left ⟶ (Over.mk x).left := 𝟙 (Sp K)
-  haveI : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
+  have : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
   have hτ : τ ≫ (Over.mk x).hom = (baseOver (Sp K)).hom ≫ x := rfl
   have hi : inv τ = 𝟙 (Sp K) := IsIso.inv_eq_of_hom_inv_id (Category.id_comp _)
   obtain ⟨q, hq, hqm⟩ := exists_torsion_down hp τ hτ p hpm

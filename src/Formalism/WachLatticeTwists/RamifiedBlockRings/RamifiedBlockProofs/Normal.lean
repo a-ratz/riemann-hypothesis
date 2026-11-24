@@ -75,12 +75,12 @@ variable {O : Type*} [CommRing O] {r : Type} [Fintype r] [DecidableEq r]
 theorem free_of_isCompl [IsLocalRing O] (p q : Submodule O (r → O)) (h : IsCompl p q) :
     Module.Free O p ∧ Module.Finite O p := by
   have hsurj : Function.Surjective (Submodule.linearProjOfIsCompl p q h) :=
-    fun x => ⟨(x : r → O), Submodule.linearProjOfIsCompl_apply_left h x⟩
+    fun x => ⟨(x : r → O), Submodule.projectionOnto_apply_left h x⟩
   have hfin : Module.Finite O p := Module.Finite.of_surjective _ hsurj
-  haveI : Module.Projective O p :=
+  have : Module.Projective O p :=
     Module.Projective.of_split p.subtype (Submodule.linearProjOfIsCompl p q h)
-      (LinearMap.ext fun x => Submodule.linearProjOfIsCompl_apply_left h x)
-  haveI : Module.FinitePresentation O p := by
+      (LinearMap.ext fun x => Submodule.projectionOnto_apply_left h x)
+  have : Module.FinitePresentation O p := by
     first
     | infer_instance
     | exact Module.finitePresentation_of_projective _ _
@@ -133,7 +133,7 @@ theorem rank_map_conj {F : Type*} [Field F] (f : O →+* F) (P Q : Matrix r r O)
     (hd : ∀ j, d j = 0 ∨ d j = 1) (hPQ : P * Q = 1) (hQP : Q * P = 1) :
     ((P * Matrix.diagonal d * Q).map f).rank = Nat.card {j // d j = 1} := by
   classical
-  haveI : Nontrivial O := f.domain_nontrivial
+  have : Nontrivial O := f.domain_nontrivial
   have hmap : (P * Matrix.diagonal d * Q).map f = P.map f * Matrix.diagonal (fun j => f (d j)) * Q.map f := by
     rw [Matrix.map_mul, Matrix.map_mul, Matrix.diagonal_map (map_zero f)]
   have h1 : P.map f * Q.map f = 1 := by

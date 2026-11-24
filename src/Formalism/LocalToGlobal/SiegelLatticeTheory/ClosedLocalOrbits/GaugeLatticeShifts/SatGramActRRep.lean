@@ -94,7 +94,7 @@ theorem mem_fam_iff (TR : TypedRed X) (cs : ColSys X u what₂) (cs' : ColSys X 
   simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hS
   rcases hS with rfl | rfl | rfl <;>
     simp only [Formalism.FourierDecayAlt.PB.Terms.genSet, Formalism.FourierDecayAlt.PB.Terms.ngSet, Formalism.FourierDecayAlt.PB.Terms.degSet,
-      Set.mem_setOf_eq, tOf, hG, hg, hi]
+      Set.mem_ofPred_eq, tOf, hG, hg, hi]
 
 end Rel
 

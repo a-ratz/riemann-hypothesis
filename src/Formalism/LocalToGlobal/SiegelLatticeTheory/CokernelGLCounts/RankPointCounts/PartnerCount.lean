@@ -292,11 +292,11 @@ theorem tupZ_eq_x0L_at (hA : ∀ p, Agree δ M p) (u u' : D.what₂.Word) {w : P
     ext a b
     rw [modMat_apply', Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.map_apply, ptMat_apply']
     by_cases hb : b = sgF w a
-    · rw [if_pos hb, if_pos hb, modMat_blk Zd]
+    · rw [ite_eq_left hb, ite_eq_left hb, modMat_blk Zd]
       simp only [twist, qE, tau0, hR, Ring.inverse_one, mul_one, ite_self, sub_zero, map_mul, fr]
       subst hb
       ring
-    · rw [if_neg hb, if_neg hb, map_zero, mul_zero, zero_mul]
+    · rw [ite_eq_right hb, ite_eq_right hb, map_zero, mul_zero, zero_mul]
   have hY : CntLocal.ZZP (M := M) δ u u' p Z * LsDatumB.sgnP p =
       Matrix.diagonal fr * (Z * Sg D.host.E D.R.rS).map ι * Matrix.diagonal fr :=
     zzp_sgn_ord Zd u u' p hM Z
@@ -355,7 +355,7 @@ theorem atMat_zT (hN : PairVal.NormRepExists D u u' F0 what₂) (hrows : IsRowRe
   obtain ⟨y, hy⟩ := hN γ w hat hrel hgen
   have hex : ∃ x : Point D.host.E (D.R.rS + 1) × LFlag (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E) × PairVal.MatR D ×
       PairVal.MatR D, PairVal.NormRep γ x.1 x.2.1 x.2.2.1 x.2.2.2 := ⟨(w, y), hy⟩
-  have hn : nrep γ = some hex.choose := dif_pos hex
+  have hn : nrep γ = some hex.choose := dite_eq_left hex
   obtain ⟨hRep, -, hL, hU, e⟩ := hex.choose_spec
   have hz : zT γ = ZhatL (lf D F0) hex.choose.2.1 := by unfold zT; rw [hn]
   obtain ⟨F₁, hR₁, -, hc₁⟩ := hat
@@ -511,7 +511,7 @@ theorem frCount_of (hG : FrGlob Zd u u' F0 what₂) (hL : FrLoc Zd u u' F0 what�
   rw [hc]
   have hcast := (Nat.castRingHom ℂ).toMonoidHom.map_finprod_of_injective Nat.cast_injective
     (fun p => Nat.card (locSet Zd p (tLoc Zd p γ) (locF' Zd p F'₂) (φ p) (φ' p)))
-  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Nat.coe_castRingHom] at hcast
+  simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Nat.coe_castRingHom] at hcast
   rw [hcast]
   exact finprod_congr fun p => hL γ w hγ w' hG' hk Z hZ F'₂ p (φ p) (φ' p) hF (hT p)
 
@@ -656,7 +656,7 @@ theorem cornerSh_eq_of_kind (δ : ∀ p, (D.s.atP p).Fp) (T T' : ℕ) (p : PlF D
     (h : kind w = kind w') : cornerSh δ T T' p w = cornerSh δ T T' p w' := by
   unfold kind at h
   unfold cornerSh
-  by_cases h0 : Dmin w D.R.rS = 0 <;> by_cases h0' : Dmin w' D.R.rS = 0 <;> simp only [h0, h0', if_true, if_false] at h ⊢
+  by_cases h0 : Dmin w D.R.rS = 0 <;> by_cases h0' : Dmin w' D.R.rS = 0 <;> simp only [h0, h0', ite_true, ite_false] at h ⊢
   · exact absurd h (by simp)
   · exact absurd h (by simp)
   · rw [Option.some_inj.1 h]
@@ -681,13 +681,13 @@ theorem toIntegral_mul_three {p : PlF D} (l Y ρ : MatP D p) (h1 : ∀ a b, l a 
 theorem det_toR_lo {p : PlF D} {l : MatP D p} (hl : TieN.IntLow (M p) l) : (toR (M := M) l hl.2.2).det = 1 := by
   have hbt : (toR (M := M) l hl.2.2).BlockTriangular OrderDual.toDual := fun i j hij => by
     apply Subtype.ext; exact hl.2.1 i j hij
-  rw [Matrix.det_of_lowerTriangular _ hbt]
+  rw [Matrix.det_of_isLowerTriangular _ hbt]
   exact Finset.prod_eq_one fun a _ => Subtype.ext (hl.1 a)
 
 theorem det_toR_up {p : PlF D} {ρ : MatP D p} (hρ : TieN.IntUp (M p) ρ) : (toR (M := M) ρ hρ.2.2).det = 1 := by
   have hbt : (toR (M := M) ρ hρ.2.2).BlockTriangular id := fun i j hij => by
     apply Subtype.ext; exact hρ.2.1 i j hij
-  rw [Matrix.det_of_upperTriangular hbt]
+  rw [Matrix.det_of_isUpperTriangular hbt]
   exact Finset.prod_eq_one fun a _ => Subtype.ext (hρ.1 a)
 
 theorem clsOf_orb {p : PlF D} {Y Y' l ρ l' ρ' : MatP D p} (hl : TieN.IntLow (M p) l) (hρ : TieN.IntUp (M p) ρ)
@@ -711,7 +711,7 @@ theorem clsOf_orb {p : PlF D} {Y Y' l ρ l' ρ' : MatP D p} (hl : TieN.IntLow (M
   unfold clsOf
   by_cases hc : (∀ a b, (Y + cornE p s) a b ∈ (M p).R) ∧ IsUnit (Y + cornE p s).det
   · have hc' : (∀ a b, (Y' + cornE p s) a b ∈ (M p).R) ∧ IsUnit (Y' + cornE p s).det := ⟨hint.2 hc.1, hdet ▸ hc.2⟩
-    rw [dif_pos hc, dif_pos hc']
+    rw [dite_eq_left hc, dite_eq_left hc']
     congr 1
     apply Eq.symm
     apply Quotient.sound
@@ -732,8 +732,8 @@ theorem clsOf_orb {p : PlF D} {Y Y' l ρ l' ρ' : MatP D p} (hl : TieN.IntLow (M
       rw [toR_map]
       have hi := isUp_inv hU
       by_cases hb : b = Fin.last D.R.rS
-      · subst hb; rw [if_pos rfl]; exact hi.1 _
-      · rw [if_neg hb]; exact hi.2 b _ (lt_of_le_of_ne (Fin.le_last b) hb)
+      · subst hb; rw [ite_eq_left rfl]; exact hi.1 _
+      · rw [ite_eq_right hb]; exact hi.2 b _ (lt_of_le_of_ne (Fin.le_last b) hb)
     refine ⟨?_⟩
     have key := isoLR (M p) ⟨Matrix.of fun a b => ⟨(Y + cornE p s) a b, hc.1 a b⟩, by
         have : (Matrix.of fun a b => (⟨(Y + cornE p s) a b, hc.1 a b⟩ : (M p).R)).map (M p).R.subtype = Y + cornE p s := rfl
@@ -811,14 +811,14 @@ theorem inOrbP_shape {δ : ∀ p : PlF D, (D.s.atP p).Fp} {T T' : ℕ} {p : PlF 
 theorem repL_spec {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     {T T' : ℕ} {p : PlF D} {w : Point D.host.E (D.R.rS + 1)} {O : Set (MatP D p)} (h : IsLCls M δ T T' p w O) :
     IntP M p (repL M δ T T' p w O) ∧ O = kkOrb M p (repL M δ T T' p w O) := by
-  unfold repL; rw [dif_pos h]; exact ⟨h.choose_spec.1, h.choose_spec.2.2⟩
+  unfold repL; rw [dite_eq_left h]; exact ⟨h.choose_spec.1, h.choose_spec.2.2⟩
 
 theorem kL_of_orb {M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.atP p).Ep} {δ : ∀ p : PlF D, (D.s.atP p).Fp}
     {T T' : ℕ} {p : PlF D} {w : Point D.host.E (D.R.rS + 1)} {P₂ : MatP D p}
     (hcls : IsLCls M δ T T' p w (kkOrb M p P₂)) (τ : Option ((M p).Cls D.R.rS)) :
     kL M δ T T' p w τ (kkOrb M p P₂) = (nIsoO M p τ (clsOf (M p) (P₂ + cornE p (cornerSh δ T T' p w))) : ℂ) := by
   unfold kL
-  rw [if_pos hcls]
+  rw [ite_eq_left hcls]
   obtain ⟨-, hO⟩ := repL_spec hcls
   generalize repL M δ T T' p w (kkOrb M p P₂) = Y at hO ⊢
   have hm1 : Y ∈ kkOrb M p P₂ := by rw [hO]; exact mem_kkOrb_self p Y
@@ -835,7 +835,7 @@ theorem repF_cell (hN : PairVal.NormRepExists D u u' F0 what₂) (hrows : IsRowR
   obtain ⟨y, hy⟩ := hN γ w hat (eligRel_holds γ w ⟨⟨hgen, hG⟩, hat⟩) hgen
   have hex : ∃ x : Point D.host.E (D.R.rS + 1) × LFlag (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E) × PairVal.MatR D ×
       PairVal.MatR D, PairVal.NormRep γ x.1 x.2.1 x.2.2.1 x.2.2.2 := ⟨(w, y), hy⟩
-  have hn : nrep γ = some hex.choose := dif_pos hex
+  have hn : nrep γ = some hex.choose := dite_eq_left hex
   have hz : zT γ = ZhatL (lf D F0) (repF γ) := by unfold zT repF; rw [hn]; rfl
   have hA := atMat_zT hN hrows ⟨⟨hgen, hG⟩, hat⟩ (eligRel_holds γ w ⟨⟨hgen, hG⟩, hat⟩)
   rw [hz] at hA

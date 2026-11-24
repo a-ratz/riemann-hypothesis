@@ -193,7 +193,7 @@ theorem br_actM_mem_of_kStable (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn 
     have hYJ : Commute ((t : ℂ) • X) (Jm ε) := by
       show (t : ℂ) • X * Jm ε = Jm ε * ((t : ℂ) • X)
       rw [smul_mul_assoc, mul_smul_comm, hXJ]
-    simp only [Kset, Set.mem_setOf_eq]
+    simp only [Kset, Set.mem_ofPred_eq]
     refine ⟨?_, ?_⟩
     · rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, ← Matrix.exp_conjTranspose, hYH,
         ← Matrix.exp_add_of_commute _ _ hcomm, add_neg_cancel, NormedSpace.exp_zero]
@@ -206,9 +206,9 @@ theorem br_actM_mem_of_kStable (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn 
       calc NormedSpace.exp ((t : ℂ) • X) * Jm ε
           = Jm ε * NormedSpace.exp ((t : ℂ) • X) * Jm ε * Jm ε := by rw [← hc]
         _ = Jm ε * NormedSpace.exp ((t : ℂ) • X) := by rw [mul_assoc, hJJ, mul_one]
-  haveI := hS
+  have := hS
   have hWc : IsClosed ((LinearMap.range (D.subtype.comp S.subtype) : Submodule ℂ H) : Set H) :=
-    Submodule.closed_of_finiteDimensional _
+    Submodule.isClosed_of_finiteDimensional _
   have hmem : ∀ t : ℝ, σ (NormedSpace.exp ((t : ℂ) • X)) (v : H) ∈
       LinearMap.range (D.subtype.comp S.subtype) := by
     intro t
@@ -258,7 +258,7 @@ theorem isKStableSub_of_kStable (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn
       · obtain ⟨rfl, rfl⟩ := h2
         rw [hab]
         ring
-      · rw [if_neg h1, if_neg h2]
+      · rw [ite_eq_right h1, ite_eq_right h2]
         ring
   set X₁ : Matrix (Fin n) (Fin n) ℂ := Matrix.of fun i j => (if i = a ∧ j = b then (1 : ℂ) else 0) +
       (if i = b ∧ j = a then (-1 : ℂ) else 0) with hX₁
@@ -275,7 +275,7 @@ theorem isKStableSub_of_kStable (hσ : IsURepOn (UJset ε) σ) (hD : IsDerivedOn
       · obtain ⟨rfl, rfl⟩ := h2
         rw [hab]
         ring
-      · rw [if_neg h1, if_neg h2]
+      · rw [ite_eq_right h1, ite_eq_right h2]
         ring
   have hJ₂ : X₂ * Jm ε = Jm ε * X₂ := hcommJ Complex.I
   have hH₁ : X₁ᴴ = -X₁ := by

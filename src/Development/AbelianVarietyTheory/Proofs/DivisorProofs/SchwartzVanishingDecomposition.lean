@@ -248,15 +248,15 @@ theorem hadamard (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDi
 
   let a : Fin (Module.finrank ℝ V) → V → ℂ := fun i x => ((L i x * invCut (q x) : ℝ) : ℂ)
   have ha : ∀ i, (a i).HasTemperateGrowth := fun i =>
-    Function.Complex.hasTemperateGrowth_ofReal.comp ((L i).hasTemperateGrowth.mul (hasTemperateGrowth_invCut.comp hq))
+    Complex.hasTemperateGrowth_ofReal.comp ((L i).hasTemperateGrowth.mul (hasTemperateGrowth_invCut.comp hq))
   have hLc : ∀ i, (fun x => (L i x : ℂ)).HasTemperateGrowth := fun i =>
-    Function.Complex.hasTemperateGrowth_ofReal.comp (L i).hasTemperateGrowth
+    Complex.hasTemperateGrowth_ofReal.comp (L i).hasTemperateGrowth
   let h : Fin (Module.finrank ℝ V) → SchwartzMap V ℂ := fun i =>
     (hnear i).toSchwartzMap (hnears i) + SchwartzMap.smulLeftCLM ℂ (a i) f
   have hh : ∀ i x, h i x = (β x : ℂ) * k i x + a i x * f x := by
     intro i x
     have e : ((hnear i).toSchwartzMap (hnears i) : V → ℂ) x = (β x : ℂ) * k i x := rfl
-    simp only [h, SchwartzMap.add_apply, e, SchwartzMap.smulLeftCLM_apply_apply (ha i), smul_eq_mul]
+    simp only [h, add_apply, e, SchwartzMap.smulLeftCLM_apply_apply (ha i), smul_eq_mul]
   refine ⟨Module.finrank ℝ V, L, h, fun i => SchwartzMap.smulLeftCLM ℂ (fun x => (L i x : ℂ)) (h i),
     fun i x => by rw [SchwartzMap.smulLeftCLM_apply_apply (hLc i), smul_eq_mul], fun x => ?_⟩
   simp only [SchwartzMap.smulLeftCLM_apply_apply (hLc _), smul_eq_mul, hh]

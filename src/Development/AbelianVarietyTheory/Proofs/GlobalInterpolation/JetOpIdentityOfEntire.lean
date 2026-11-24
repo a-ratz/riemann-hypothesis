@@ -126,10 +126,10 @@ theorem jetC_sum (cD : ι → ℂ) {I : Type} [Fintype I] (c : I → ℂ) (G : I
     funext z; simp
   unfold jetC derivAt0
   rw [e, iteratedFDeriv_sum (f := fun i => c i • G i) (fun i _ => (hc i _).const_smul (c i))]
-  simp only [Finset.sum_apply, ContinuousMultilinearMap.sum_apply, Finset.mul_sum]
+  simp only [Finset.sum_apply, sum_apply, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [iteratedFDeriv_const_smul_apply (hc i _).contDiffAt]
-  simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 theorem map_desc {K : Type} [Field K] (σ : K →+* ℂ) {z : ℂ} (h : ∃ k : K, σ k = z) : σ (desc σ z) = z := by

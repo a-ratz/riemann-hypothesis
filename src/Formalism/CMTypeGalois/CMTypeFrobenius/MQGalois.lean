@@ -102,7 +102,7 @@ lemma mq_injective (h : IsMQ a α) : Function.Injective (galSign α) := by
   intro σ τ hst
   have hsub : ∀ x ∈ Set.range α, (σ : E →ₐ[ℚ] E) x = (τ : E →ₐ[ℚ] E) x := by
     rintro _ ⟨i, rfl⟩
-    simp only [AlgEquiv.coe_algHom]
+    simp only [AlgEquiv.coe_toAlgHom]
     rw [mq_sigma h σ i, mq_sigma h τ i, hst]
   have := AlgHom.ext_of_adjoin_eq_top (mq_algAdjoin h) hsub
   ext x
@@ -130,11 +130,11 @@ lemma mq_isGalois (h : IsMQ a α) : IsGalois ℚ E := by
       ring
     rw [hfac]
     exact (Splits.X_sub_C _).mul (Splits.X_sub_C _)
-  haveI : p.IsSplittingField ℚ E := by
+  have : p.IsSplittingField ℚ E := by
     refine Polynomial.IsSplittingField.mk hsplit ?_
     rw [eq_top_iff, ← mq_algAdjoin h]
     exact Algebra.adjoin_mono (by rintro _ ⟨i, rfl⟩; exact hroot i)
-  haveI : Normal ℚ E := Normal.of_isSplittingField p
+  have : Normal ℚ E := Normal.of_isSplittingField p
   exact IsGalois.mk
 
 end MQ

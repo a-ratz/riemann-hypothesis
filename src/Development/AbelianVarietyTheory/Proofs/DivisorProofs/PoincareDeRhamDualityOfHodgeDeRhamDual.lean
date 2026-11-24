@@ -333,8 +333,8 @@ theorem subsingleton_coker₂ [Module.Finite R M] [Module.Projective R M] [Modul
       (∀ c, y' (f' c) = algebraMap R Ω (y c)) → φ' x' y' = algebraMap R Ω (y (θ x))) :
     Subsingleton (Ω ⊗[R] (N ⧸ LinearMap.range θ)) := by
   let e := LinearEquiv.ofBijective _ hf'
-  haveI : Module.Finite Ω N' := Module.Finite.equiv e
-  haveI : Module.Projective Ω N' := Module.Projective.of_equiv e
+  have : Module.Finite Ω N' := Module.Finite.equiv e
+  have : Module.Projective Ω N' := Module.Projective.of_equiv e
   let π : N' →ₗ[Ω] Ω ⊗[R] (N ⧸ LinearMap.range θ) :=
     (LinearMap.range θ).mkQ.baseChange Ω ∘ₗ e.symm.toLinearMap
   have hπ : Function.Surjective π :=

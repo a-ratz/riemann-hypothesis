@@ -401,12 +401,12 @@ private theorem neg_one_lt_discrep_of_mult_lt_and_le {k : Type} [Field k] [CharZ
 theorem kltAt_lcAt_iff_of_isLogRes : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] [GlobalTheory.IsNormalScheme X] (p : X ⟶ Sp k) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ (Δ : X → ℚ) (η : RatForms p n) (m : ℕ) (G : CartierDiv X) (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (s : Y ⟶ X) [IsDominant s] (K : CartierDiv Y) (B : Closeds Y), IsLogMult p n Δ η m G → IsLogRes p n η m G s K B → ∀ x : X, (KltAt p n Δ x ↔ ∀ w : Y, s w ⤳ x → (pullCart s G - m • K).mult w < m) ∧ (LcAt p n Δ x ↔ ∀ w : Y, s w ⤳ x → (pullCart s G - m • K).mult w ≤ m) := by
   intro k _ _ X _ _ _ p n hproj hn Δ η m G Y _ _ s _ K B hlm hres x
   obtain ⟨N, i, hi, hpi⟩ := hproj
-  haveI : IsSeparated p := hpi ▸ inferInstance
-  haveI : LocallyOfFiniteType p := hpi ▸ inferInstance
-  haveI := hres.smooth
-  haveI : Smooth (s ≫ p) := SmoothOfRelativeDimension.smooth n _
-  haveI : LocallyOfFiniteType (s ≫ p) := inferInstance
-  haveI : IsNormalScheme Y := ModifSections.isNormalScheme_of_smooth (s ≫ p)
+  have : IsSeparated p := hpi ▸ inferInstance
+  have : LocallyOfFiniteType p := hpi ▸ inferInstance
+  have := hres.smooth
+  have : Smooth (s ≫ p) := SmoothOfRelativeDimension.smooth n _
+  have : LocallyOfFiniteType (s ≫ p) := inferInstance
+  have : IsNormalScheme Y := ModifSections.isNormalScheme_of_smooth (s ≫ p)
   have hdimY : topologicalKrullDim Y = n :=
     HSCore.VanishNumberField.topologicalKrullDim_eq_of_smooth (s ≫ p) n hres.smooth
   have hη' : EtaleKlt.ratPull p s n η ≠ 0 := by

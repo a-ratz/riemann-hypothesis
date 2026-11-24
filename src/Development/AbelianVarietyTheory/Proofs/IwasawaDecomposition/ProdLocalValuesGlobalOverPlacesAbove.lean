@@ -84,7 +84,7 @@ theorem finite_setOf_valuation_ne_one (F : Type) [Field F] [NumberField F] (x : 
   · right
     show 1 < v.valuation F ((x : F)⁻¹)
     rw [map_inv₀]
-    exact (one_lt_inv₀ (zero_lt_iff.2 h0)).2 h
+    exact (one_lt_inv₀ (pos_iff_ne_zero.2 h0)).2 h
   · left
     exact h
 
@@ -127,7 +127,7 @@ theorem finite_setOf_under_eq {E K : Type} [Field E] [NumberField E] [Field K] [
     rw [Ne, Ideal.zero_eq_bot, Ideal.map_eq_bot_iff_of_injective (FaithfulSMul.algebraMap_injective _ _)]
     exact v.ne_bot
   refine (Ideal.finite_factors h0).subset fun w hw => ?_
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   rw [Ideal.dvd_iff_le, Ideal.map_le_iff_le_comap, ← (under_eq_iff w v).mp hw]
 
 end GlobalTheory.NormCompat
@@ -146,12 +146,12 @@ theorem prod_locUnit_eq_prod_locUnit_norm : ∀ (E K : Type) [Field E] [NumberFi
     TE.biUnion (fun v => (finite_setOf_under_eq (K := K) v).toFinset) with hTK
   have memTK : ∀ w, w ∈ TK ↔ w.under (𝓞 E) ∈ TE := by
     intro w
-    simp only [hTK, Finset.mem_biUnion, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [hTK, Finset.mem_biUnion, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     exact ⟨fun ⟨v, hv, h⟩ => h ▸ hv, fun h => ⟨_, h, rfl⟩⟩
   have memTE : ∀ v, v ∈ TE ↔ v ∉ S ∧ ((∃ w : HeightOneSpectrum (𝓞 K), w.valuation K (a : K) ≠ 1 ∧
       w.under (𝓞 E) = v) ∨ v.valuation E (Na : E) ≠ 1) := by
     intro v
-    simp only [hTE, Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_union, Set.mem_image, Set.mem_setOf_eq]
+    simp only [hTE, Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_union, Set.mem_image, Set.mem_ofPred_eq]
     exact and_comm
   have hcomap : ∀ w : HeightOneSpectrum (𝓞 K),
       w.asIdeal.comap (algebraMap (𝓞 E) (𝓞 K)) = (w.under (𝓞 E)).asIdeal := fun w => rfl
@@ -208,7 +208,7 @@ theorem prod_locUnit_eq_prod_locUnit_norm : ∀ (E K : Type) [Field E] [NumberFi
       · intro h
         exact ⟨(memTK w).mpr (h ▸ hv), h⟩
     have key := _root_.GlobalTheory.NormValuation.log_valuation_norm_eq_sum E K v a _ hs
-    simp only [ordF, hNa, Units.coe_map, MonoidHom.coe_coe] at key ⊢
+    simp only [ordF, hNa, Units.coe_map, MonoidHom.coe_ofClass] at key ⊢
     rw [key, ← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun w _ => ?_
     ring

@@ -156,7 +156,7 @@ theorem actO_fix {e e₁ : AE D} (he : e * cA D e = 0) (h1 : e₁ * e = e₁) {g
       rw [← hh i k, mul_comm (e₁ + cA D e₁), mul_assoc, hz k j, mul_zero]
     have h3 : ∑ k, ((mt T h) - 1) i k * t k j = 0 := Finset.sum_eq_zero fun k _ => h2 k
     simp only [Matrix.sub_apply, sub_mul, Finset.sum_sub_distrib, Matrix.one_apply, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true] at h3
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h3
     rw [Matrix.mul_apply]
     exact sub_eq_zero.1 h3
   have hR : HMul.hMul (t : Matrix (Fin T.rank) (Fin S.rank) (AE D)) (mt S g) = t := by
@@ -165,7 +165,7 @@ theorem actO_fix {e e₁ : AE D} (he : e * cA D e = 0) (h1 : e₁ * e = e₁) {g
       rw [← hg k j, ← mul_assoc, mul_comm (t i k), hz i k, zero_mul]
     have h3 : ∑ k, t i k * ((mt S g) - 1) k j = 0 := Finset.sum_eq_zero fun k _ => h2 k
     simp only [Matrix.sub_apply, mul_sub, Finset.sum_sub_distrib, Matrix.one_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true] at h3
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h3
     rw [Matrix.mul_apply]
     exact sub_eq_zero.1 h3
   have hinv : HMul.hMul (mt S g) (mt S g⁻¹) = (1 : Matrix (Fin S.rank) (Fin S.rank) (AE D)) := by
@@ -203,8 +203,8 @@ theorem evalYZero_zero (ψ : AddChar (AF D.host.F) ℂ) {e e₁ : AE D} (he₁ :
       obtain ⟨r, hr, v, hv, hve, huv⟩ := hR u (mi hu).1 (mi hu).2
       exact ⟨r, hr, v, AddSubgroup.mem_inf.2 ⟨hv, hve⟩, huv⟩
   have htf : ∀ j : ℕ, 0 < j → ∀ t : WO S T, j • t = 0 → t = 0 := fun j hj t h => nsmul_eq_zero_WO S T hj h
-  haveI := Four.Gk_finite hfinY htf hK
-  letI := Fintype.ofFinite (Four.Gk Λ (halfSub S T (cA D e₁)) (k * k))
+  have := Four.Gk_finite hfinY htf hK
+  let := Fintype.ofFinite (Four.Gk Λ (halfSub S T (cA D e₁)) (k * k))
   let G := Four.Gk Λ (halfSub S T (cA D e₁)) (k * k)
   have hgY : ∀ g : G, IsHalf (cA D e₁) (k • ((g : Four.QY Λ (halfSub S T (cA D e₁))).out)) := fun g i j => by
     rw [Matrix.smul_apply, nsmul_eq_mul, mul_left_comm, (Four.Gk_out g).1 i j]
@@ -855,7 +855,7 @@ theorem splitLin_of (hPD : PlaceLatDual D) (hlev : LatLevel D) : SplitLin D := b
         · have h1' : symplO S T t (actO S T g⁻¹ h⁻¹ u) = symplO S T (actO S T g h t) u := by
             rw [← Formalism.IndefR.Eqv.symplO_actO S T g h t (actO S T g⁻¹ h⁻¹ u), Formalism.IndefR.Eqv.actO_inv_actO]
           rw [h1', (hd2 u (chalf_sub_of S T h1 hue)).2 hu _ hc.1 hc.2, one_mul]
-        · have : halfInd e (latAll S T ΛS ΛT) (actO S T g h t) = 0 := by unfold halfInd; rw [if_neg hc]
+        · have : halfInd e (latAll S T ΛS ΛT) (actO S T g h t) = 0 := by unfold halfInd; rw [ite_eq_right hc]
           rw [this, mul_zero]
     have hfix : ∀ u ∈ latAll S T ΛS ΛT, (IsHalf e₁ u ∨ IsHalf (cA D e₁) u) →
         heisO ψ S T u (om (g, h) (Tm (fun t => halfInd e (latAll S T ΛS ΛT) (actO S T g h t))) - c • f₀) =
@@ -923,7 +923,7 @@ theorem splitLin_of (hPD : PlaceLatDual D) (hlev : LatLevel D) : SplitLin D := b
       · have h2 := (isHalf_actO_iff S T g h t).2 ht
         simp only [hstab t ht, ht, h2, and_true]
       · have h2 : ¬ IsHalf e (actO S T g h t) := fun h' => ht ((isHalf_actO_iff S T g h t).1 h')
-        simp only [ht, h2, and_false, if_false]
+        simp only [ht, h2, and_false, ite_false]
     rw [hindeq, hf₀T] at hw
     have hU := hω.om_unit μ 𝓕 hHaar hFD (g, h) f₀ hf₀
     rw [hw] at hU
@@ -939,12 +939,12 @@ theorem splitLin_of (hPD : PlaceLatDual D) (hlev : LatLevel D) : SplitLin D := b
       rw [h3]
       congr 1
       funext w
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     have hsm : (fun w => ‖(c • f₀) w‖ₑ ^ 2) = fun w => ‖c‖ₑ ^ 2 * ‖f₀ w‖ₑ ^ 2 := by
       funext w
-      rw [Pi.smul_apply, smul_eq_mul, enorm_mul, mul_pow]
+      rw [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow]
     rw [hsm, lintegral_const_mul' _ _ (by simp), hI, mul_one] at hU
-    rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _), ENNReal.ofReal_eq_one] at hU
+    rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _), ENNReal.ofReal_eq_one] at hU
     have hcn : ‖c‖ = 1 := (pow_eq_one_iff_of_nonneg (norm_nonneg c) two_ne_zero).1 hU
     have hsf : ‖(splitFacO χS χT x y : ℂ)‖ = 1 := Circle.norm_coe _
     rw [hcdef, norm_mul, hsf, mul_one, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hr] at hcn

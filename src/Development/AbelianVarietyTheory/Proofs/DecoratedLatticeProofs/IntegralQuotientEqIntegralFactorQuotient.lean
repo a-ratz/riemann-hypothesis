@@ -212,7 +212,7 @@ theorem isInvInvariant_of_prod {A B P : Type} [Group A] [TopologicalSpace A] [Is
     ext p
     simp only [Set.mem_inv, Set.mem_prod, Prod.fst_inv, Prod.snd_inv]
     rw [← Set.mem_inv (s := U), hUi]
-  rw [h3, Measure.smul_apply, Measure.smul_apply, Measure.prod_prod, Measure.prod_prod, hU1, one_mul, one_mul] at h2
+  rw [h3, smul_apply, smul_apply, Measure.prod_prod, Measure.prod_prod, hU1, one_mul, one_mul] at h2
   have hc0 : (c : ℝ≥0∞) ≠ 0 := by exact_mod_cast hc.ne'
   simpa [smul_eq_mul, ENNReal.mul_right_inj hc0 ENNReal.coe_ne_top] using h2
 
@@ -222,7 +222,7 @@ theorem measure_setOf_mul_mem {B : Type} [Group B] [MeasurableSpace B] [Measurab
   have h : {b | b * b₀ ∈ V} = ((fun b => b₀⁻¹ * b) ⁻¹' V)⁻¹ := by
     ext b
     have hinv : ∀ x, x⁻¹ ∈ V ↔ x ∈ V := fun x => by rw [← Set.mem_inv, hV]
-    simp only [Set.mem_setOf_eq, Set.mem_inv, Set.mem_preimage]
+    simp only [Set.mem_ofPred_eq, Set.mem_inv, Set.mem_preimage]
     rw [← _root_.mul_inv_rev, hinv]
   rw [h, Measure.measure_inv, measure_preimage_mul, ← Measure.measure_inv, hV]
 
@@ -234,14 +234,14 @@ theorem collapse_factor : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopol
   intro H _ _ _ _ _ _ _ _ G G₁ G₂ R K₁ K₂ hG hG₁ hG₂ hR h1 h2 hc he0 hRm hK₁ hK₂ hK₁c hK₂c hK₁o hK₂o ρ μ ρ₁ μ₁
     _ _ _ _ _ hμ₁ hρ₁ f z hf1 hf2 hf3 hq
   obtain ⟨e, he⟩ := he0
-  haveI : LocallyCompactSpace G := hG.locallyCompactSpace
-  haveI : LocallyCompactSpace G₁ := hG₁.locallyCompactSpace
-  haveI : LocallyCompactSpace G₂ := hG₂.locallyCompactSpace
+  have : LocallyCompactSpace G := hG.locallyCompactSpace
+  have : LocallyCompactSpace G₁ := hG₁.locallyCompactSpace
+  have : LocallyCompactSpace G₂ := hG₂.locallyCompactSpace
   have hRc : ∀ S : Subgroup H, IsClosed ((R.subgroupOf S : Subgroup S) : Set S) :=
-    fun S => hR.preimage continuous_subtype_val
-  haveI : LocallyCompactSpace (R.subgroupOf G) := (hRc G).locallyCompactSpace
-  haveI : LocallyCompactSpace (R.subgroupOf G₁) := (hRc G₁).locallyCompactSpace
-  haveI : LocallyCompactSpace (R.subgroupOf G₂) := (hRc G₂).locallyCompactSpace
+    fun S => hR.preimage continuous_subtypeVal
+  have : LocallyCompactSpace (R.subgroupOf G) := (hRc G).locallyCompactSpace
+  have : LocallyCompactSpace (R.subgroupOf G₁) := (hRc G₁).locallyCompactSpace
+  have : LocallyCompactSpace (R.subgroupOf G₂) := (hRc G₂).locallyCompactSpace
   set E := mulProdEquiv hc e he with hE
   set ER := mulProdEquivR hc e he hRm with hER
 
@@ -253,7 +253,7 @@ theorem collapse_factor : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopol
   let μ₂ : Measure G₂ := Measure.haarMeasure P₂
   have hμ₂ : μ₂ K₂' = 1 := Measure.haarMeasure_self
   let U₂ : Set (R.subgroupOf G₂) := {b | ((b : G₂) : H) ∈ K₂}
-  have hU₂o : IsOpen U₂ := hK₂'o.preimage continuous_subtype_val
+  have hU₂o : IsOpen U₂ := hK₂'o.preimage continuous_subtypeVal
   have hU₂c : IsCompact U₂ := isCompact_setOf_val hK₂'c (hRc G₂)
   let Q₂ : TopologicalSpace.PositiveCompacts (R.subgroupOf G₂) :=
     ⟨⟨U₂, hU₂c⟩, ⟨1, by rw [hU₂o.interior_eq]; exact K₂.one_mem⟩⟩
@@ -278,7 +278,7 @@ theorem collapse_factor : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopol
         exact ⟨ha, hb⟩
       · rintro ⟨ha, hb⟩
         exact ⟨_, ha, _, hb, rfl⟩
-    rw [Measure.real, hμe', ME.map_apply, hpre, Measure.smul_apply, Measure.prod_prod, hμ₁, hμ₂]
+    rw [Measure.real, hμe', ME.map_apply, hpre, smul_apply, Measure.prod_prod, hμ₁, hμ₂]
     simp
   have hvρ : ρ.real {g | ∃ a ∈ K₁, ∃ b ∈ K₂, g.1.1 = a * b} = cρ := by
     have hpre : MR ⁻¹' {g : R.subgroupOf G | ∃ a ∈ K₁, ∃ b ∈ K₂, g.1.1 = a * b} =
@@ -296,17 +296,17 @@ theorem collapse_factor : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopol
         exact ⟨ha, hb⟩
       · rintro ⟨ha, hb⟩
         exact ⟨_, ha, _, hb, rfl⟩
-    rw [Measure.real, hρe', MR.map_apply, hpre, Measure.smul_apply, Measure.prod_prod, hρ₁, hρ₂]
+    rw [Measure.real, hρe', MR.map_apply, hpre, smul_apply, Measure.prod_prod, hρ₁, hρ₂]
     simp
 
-  haveI : ρ₂.IsInvInvariant := by
+  have : ρ₂.IsInvInvariant := by
     refine isInvInvariant_of_prod ER ρ ρ₁ ρ₂ cρ hcρ hρe (U := {a : R.subgroupOf G₁ | ((a : G₁) : H) ∈ K₁}) ?_ hρ₁
     ext a
     simp [Set.mem_inv]
 
   let T : G₂ → Set (R.subgroupOf G₂) := fun y => {b | (b : G₂) * y ∈ K₂'}
   have hTm : ∀ y, MeasurableSet (T y) := fun y =>
-    (hK₂'o.preimage (continuous_subtype_val.mul continuous_const)).measurableSet
+    (hK₂'o.preimage (continuous_subtypeVal.mul continuous_const)).measurableSet
   have hT1 : ∀ y (b₀ : R.subgroupOf G₂), (b₀ : G₂) * y ∈ K₂' → ρ₂ (T y) = 1 := by
     intro y b₀ hb₀
     have hk : ((b₀ : G₂) : H) * (y : H) ∈ K₂ := hb₀

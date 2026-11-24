@@ -417,7 +417,7 @@ theorem exists_hasAnConst (hL : L.IsLB) {χ : u.Λ → ℂ} (hAH : u.IsAH Hm χ)
   have R2 : ∀ (l : u.Λ) z, ρ (z + l) = cf l * ρ z := by
     intro l z
     have hr1 : r (z + l) = r z * Complex.exp (-(k * Real.pi * hermForm Hm x l)) := by
-      rw [← R1 l z, ← Complex.exp_int_mul, _root_.mul_assoc, ← Complex.exp_add]
+      rw [← R1 l z, ← Complex.exp_intCast_mul, _root_.mul_assoc, ← Complex.exp_add]
       have h0 : (k : ℂ) * (Real.pi * (x ⬝ᵥ Hm.mulVec (star (l : Fin g → ℂ)))) +
           -(k * Real.pi * hermForm Hm x l) = 0 := by
         unfold hermForm
@@ -491,7 +491,7 @@ private theorem valAt'_presheaf_map_homOfLE {Z : Scheme.{0}} (x : Sp ℂ ⟶ Z) 
     (h : ⊤ ≤ x ⁻¹ᵁ V) (f : Γ(Z, U)) :
     valAt' x V (Z.presheaf.map (homOfLE hVU).op f) = valAt' x U f := by
   unfold valAt'
-  rw [dif_pos h, dif_pos (h.trans fun p hp => hVU hp)]
+  rw [dite_eq_left h, dite_eq_left (h.trans fun p hp => hVU hp)]
   unfold valAt
   congr 1
   rw [← Scheme.Hom.map_appLE x h (homOfLE hVU).op]
@@ -518,14 +518,14 @@ private theorem valAt'_app_eq_valAt'_comp' {Z Z' : Scheme.{0}} (x : Sp ℂ ⟶ Z
     (h : ⊤ ≤ (x ≫ q) ⁻¹ᵁ U) (f : Γ(Z, U)) :
     valAt' x (q ⁻¹ᵁ U) (q.app U f) = valAt' (x ≫ q) U f := by
   unfold valAt'
-  rw [dif_pos h, dif_pos (show ⊤ ≤ x ⁻¹ᵁ q ⁻¹ᵁ U from h)]
+  rw [dite_eq_left h, dite_eq_left (show ⊤ ≤ x ⁻¹ᵁ q ⁻¹ᵁ U from h)]
   unfold valAt
   congr 1
 
 private theorem valAt'_one_moduli {Z : Scheme.{0}} (x : Sp ℂ ⟶ Z) (U : Z.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) :
     valAt' x U 1 = 1 := by
   unfold valAt'
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   unfold valAt
   rw [map_one, map_one]
 
@@ -533,7 +533,7 @@ private theorem valAt'_finset_prod {Z : Scheme.{0}} {I : Type} (x : Sp ℂ ⟶ Z
     (h : ⊤ ≤ x ⁻¹ᵁ U) (s : Finset I) (f : I → Γ(Z, U)) :
     valAt' x U (∏ i ∈ s, f i) = ∏ i ∈ s, valAt' x U (f i) := by
   unfold valAt'
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   unfold valAt
   rw [map_prod, map_prod]
 
@@ -728,7 +728,7 @@ theorem pow_mul_eq_one (hL : L.IsLB) {χ : u.Λ → ℂ} (hAH : u.IsAH Hm χ)
   have h0 : hermForm Hm 0 (l : Fin g → ℂ) = 0 := zero_dotProduct _
   have hexp : Complex.exp ((Real.pi : ℂ) * hermForm Hm 0 l + (Real.pi : ℂ) / 2 * hermForm Hm l l) ^ k *
       Complex.exp (-((k : ℂ) * (Real.pi : ℂ) * ((n : ℂ) ^ 2 / 2) * hermForm Hm x x)) = 1 := by
-    rw [← Complex.exp_int_mul, ← Complex.exp_add, h0, ← hl, hermForm_smul_left, hermForm_smul_right,
+    rw [← Complex.exp_intCast_mul, ← Complex.exp_add, h0, ← hl, hermForm_smul_left, hermForm_smul_right,
       star_natCast, ← Complex.exp_zero]
     congr 1
     ring

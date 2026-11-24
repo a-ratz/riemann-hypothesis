@@ -147,7 +147,7 @@ namespace GlobalTheory.CuspidalSupportZero
 theorem exists_isCuspSupport_zero (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (π : Irr k 0) :
     ∃ (s : ℕ) (d : Fin s → ℕ) (σ : ∀ a, Irr k (d a)), IsCuspSupport π.π d (fun a => (σ a).π) := by
-  haveI : Subsingleton (GL (Fin 0) k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
+  have : Subsingleton (GL (Fin 0) k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
   let d : Fin 0 → ℕ := fun a => a.elim0
   let σ : ∀ a, Irr k (d a) := fun a => a.elim0
   refine ⟨0, d, σ, π.irr, fun a => a.elim0, ?_⟩

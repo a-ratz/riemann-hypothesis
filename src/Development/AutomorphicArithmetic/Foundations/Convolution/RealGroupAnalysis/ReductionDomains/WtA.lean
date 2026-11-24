@@ -46,7 +46,7 @@ open UpperTheory.ConvolutionTheory.R2
 theorem UpperTheory.ConvolutionTheory.R2.M.wtA :
     ∀ (F : Type) [Field F] [NumberField F] (M₀ : Meas F) (β u : G1 F → ℝ≥0∞) (c : ℝ≥0∞), Measurable β → (∀ g, ∫⁻ b, β (nU b * g) ∂(adeleMeasure F) = c) → Measurable u → (∀ b g, u (nU b * g) = u g) → ∫⁻ g, u g * β g ∂M₀.μ = c * M.J0 M₀ u := by
   intro F _ _ M₀ β u c hβ hc hu hinv
-  haveI := M₀.prob
+  have := M₀.prob
   have hm : Measurable fun p : IdeleGroup F × G1 F => mD p.1 * p.2 :=
     ((M.continuous_mD.comp continuous_fst).mul continuous_snd).measurable
   have hJ : Measurable fun p : IdeleGroup F × G1 F => M.wt p.1 * u (mD p.1 * p.2) :=

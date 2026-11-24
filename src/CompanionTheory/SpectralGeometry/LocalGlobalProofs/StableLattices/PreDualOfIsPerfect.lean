@@ -95,7 +95,7 @@ theorem pull_lam_sq {S S' : Scheme.{0}} {b : S' ⟶ S} {G : Over S} {G' : Over S
 theorem ktrivDual : KTrivModel → FinDual → KTrivDual := by
   intro hM hF R _ A _ g hA hg L hL hK
   obtain ⟨R₀, _, σ, A₀, _, φ, L₀, _, hA₀, hg₀, hp, hL₀, hK₀, hiso⟩ := hM R A g hA hg L hL hK
-  haveI := hA₀.comm
+  have := hA₀.comm
   have hperf : IsPerfect A₀ A₀ (abelian₂ A₀ L₀) := isPerfect_lam hL₀ hK₀
   have hd : IsDual A₀ A₀ (abelian₂ A₀ L₀) :=
     hF R₀ A₀ A₀ g hA₀ hA₀ hg₀ hg₀ _ (preDual_of_isPerfect hA₀ hA₀ hperf)

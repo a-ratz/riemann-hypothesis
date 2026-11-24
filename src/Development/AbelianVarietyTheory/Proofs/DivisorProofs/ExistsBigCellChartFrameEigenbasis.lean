@@ -94,7 +94,7 @@ theorem isCombAtG_perm (t : SAB H X0) {S : Type} [CommRing S] (x0 : Sp S ⟶ X0)
   obtain ⟨u, hu, hp⟩ := h
   refine ⟨fun j => u (p j), fun j => hu (p j), ?_⟩
   rw [← hp]
-  letI : CommMonoid (tEpsG x0 ⟶ t.G) := Hom.commMonoid
+  let : CommMonoid (tEpsG x0 ⟶ t.G) := Hom.commMonoid
   exact congrArg Over.Hom.left ((List.prod_ofFn (f := fun j => u (p j))).trans
     ((Equiv.prod_comp p u).trans (List.prod_ofFn (f := u)).symm))
 
@@ -441,7 +441,7 @@ theorem frameVector_isCombination_tangentBasis_flagCover_point {E : Type} [Field
     rw [e2] at h
     rw [(GlobalTheory.LieMet.isComb_iff V _ _).1 h]
     simp [Pi.single_apply]
-  letI : Algebra c.F S := φ.toAlgebra
+  let : Algebra c.F S := φ.toAlgebra
   have hs := GlobalTheory.FlagEmb.EigSpread.splits (E := E) c
   have hu : ∀ z : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)),
       ReciprocityTheory.ChartRestriction.G.PullbackSections.IsEigV (ReciprocityTheory.ChartRestriction.G.PullbackSections.actR Y.t.act) (embK c z.1) (V (e z)) :=

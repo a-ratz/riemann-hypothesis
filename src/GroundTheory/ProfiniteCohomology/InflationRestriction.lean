@@ -519,7 +519,7 @@ theorem exists_isTgLift (hN : IsClosed (N : Set G)) (z : cocycles (Rep.res N.sub
   have hΦ : IsLocallyConstant fun p : (G ⧸ N) × N => φ p.1 p.2 := by
     have hconj : Continuous fun p : (G ⧸ N) × N => GroundTheory.GroupCoh.conjHom N (s p.1) p.2 :=
       Continuous.subtype_mk (((hs.comp continuous_fst).inv.mul
-        (continuous_subtype_val.comp continuous_snd)).mul (hs.comp continuous_fst)) _
+        (continuous_subtypeVal.comp continuous_snd)).mul (hs.comp continuous_fst)) _
     exact (isLocallyConstant_ρ_apply A (hs.comp continuous_fst)
       (hXlc.comp_continuous hconj)).sub (hXlc.comp_continuous continuous_snd)
   have hφ : ∀ c₀, ∀ᶠ c in nhds c₀, φ c = φ c₀ := by
@@ -859,7 +859,7 @@ theorem exists_transgression_eq (t : cohomology (A.quotientToInvariants N) 2)
     (y₀.2.comp_continuous (continuous_pi fun _ => continuous_id)).sub (IsLocallyConstant.const c)
 
   let zc : locallyConstantCochains (Rep.res N.subtype A) 1 :=
-    ⟨fun g => Y (g 0 : G), hYc.comp_continuous (continuous_subtype_val.comp (continuous_apply 0))⟩
+    ⟨fun g => Y (g 0 : G), hYc.comp_continuous (continuous_subtypeVal.comp (continuous_apply 0))⟩
   have hzc : ((cochainsComplex (Rep.res N.subtype A)).d 1 (1 + 1)).hom zc = 0 :=
     (cochainsComplex_d_one_eq_zero_iff (Rep.res N.subtype A) zc).2 fun a b => hmr a b
   set z := cocycleOf 1 zc hzc with hzdef

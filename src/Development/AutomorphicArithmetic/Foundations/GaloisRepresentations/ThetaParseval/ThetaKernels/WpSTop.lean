@@ -133,8 +133,8 @@ theorem resEtaF_of_resEtaPow_k : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   apply Circle.ext
   rw [key a, Circle.coe_pow]
   by_cases ha : a ∈ normGrp F E
-  · rw [if_pos ha, hS a ha]; simp
-  rw [if_neg ha]
+  · rw [ite_eq_left ha, hS a ha]; simp
+  rw [ite_eq_right ha]
   rcases Nat.even_or_odd n with ⟨k, rfl⟩ | hn
   · rw [← two_mul, pow_mul, pow_mul, neg_one_sq, one_pow, ← Circle.coe_pow, sq, hsq a]; simp
   have hn1 : ((-1 : ℂ)) ^ n = -1 := hn.neg_one_pow
@@ -146,7 +146,7 @@ theorem resEtaF_of_resEtaPow_k : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have hab : a * b ∈ normGrp F E := by
     by_contra hn2
     have e := key (a * b)
-    rw [map_mul, map_mul, Circle.coe_mul, key a, key b, if_neg ha, if_neg hbS, if_neg hn2, hn1] at e
+    rw [map_mul, map_mul, Circle.coe_mul, key a, key b, ite_eq_right ha, ite_eq_right hbS, ite_eq_right hn2, hn1] at e
     norm_num at e
   have hηb : (η b : ℂ) = -1 := GlobalTheory.VolHeckeCompare.circle_eq_neg_one (hsq b) hb
   have e2 : (η a : ℂ) * η b = 1 := by rw [← Circle.coe_mul, ← map_mul, hS _ hab]; simp
@@ -329,20 +329,20 @@ theorem GlobalTheory.LagrThetaInv.lagrInt_rho_inv_k : ∀ (F E : Type) [Field F]
     show GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ φ (dC (AF F ⊗[F] E) nT * (_ + v)) = _
     simp only [hg, GlobalTheory.WeilSchrodinger.thetaTr, Darboux.rho]
     rw [← schr_dC, hr, dC_mul_rat, hyz, GlobalTheory.ThetaQuasiRat.thetaSum_schr_rat F B.ψ hB.std.2.1 y z]
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
-  haveI : ContinuousAdd (WOF F E nS nT) := inferInstanceAs (ContinuousAdd (Fin nT → Fin nS → AF F ⊗[F] E))
-  haveI : MeasurableAdd (WOF F E nS nT) :=
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : ContinuousAdd (WOF F E nS nT) := inferInstanceAs (ContinuousAdd (Fin nT → Fin nS → AF F ⊗[F] E))
+  have : MeasurableAdd (WOF F E nS nT) :=
     ⟨fun c => (continuous_const_add c).measurable, fun c => (continuous_add_const c).measurable⟩
-  haveI : MeasurableConstVAdd (ratLF F E nS nT) (WOF F E nS nT) :=
+  have : MeasurableConstVAdd (ratLF F E nS nT) (WOF F E nS nT) :=
     ⟨fun r => (continuous_const_add (r : WOF F E nS nT)).measurable⟩
-  haveI : VAddInvariantMeasure (ratLF F E nS nT) (WOF F E nS nT) ν :=
+  have : VAddInvariantMeasure (ratLF F E nS nT) (WOF F E nS nT) ν :=
     ⟨fun r s _ => measure_preimage_add ν (r : WOF F E nS nT) s⟩
-  haveI : VAddCommClass (WOF F E nS nT) (ratLF F E nS nT) (WOF F E nS nT) :=
+  have : VAddCommClass (WOF F E nS nT) (ratLF F E nS nT) (WOF F E nS nT) :=
     ⟨fun a r x => add_left_comm a (r : WOF F E nS nT) x⟩
-  haveI : Countable (ratLF F E nS nT) := by
-    haveI : Countable E := by
-      haveI : FiniteDimensional ℚ E := inferInstance
+  have : Countable (ratLF F E nS nT) := by
+    have : Countable E := by
+      have : FiniteDimensional ℚ E := inferInstance
       exact ((Module.finBasis ℚ E).equivFun).injective.countable
     have : Countable (Matrix (Fin nT) (Fin nS) E) := inferInstanceAs (Countable (Fin nT → Fin nS → E))
     exact (Set.countable_range ((incAF F E).toAddMonoidHom.mapMatrix (m := Fin nT) (n := Fin nS))).to_subtype
@@ -388,7 +388,7 @@ theorem exists_lagrInt_ne_zero_k : ∀ (F E : Type) [Field F] [NumberField F] [F
       ∃ φ ∈ schA F κ, GlobalTheory.LagrTheta.lagrInt ν 𝓕 ((diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id) (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ φ) ≠ 0 := by
   intro F E _ _ _ _ _ σ B hB nS nT JT JB ξ κ _ co hco ν 𝓕 hν h𝓕
   have hstd : IsStd B.ψ := hB.std
-  haveI : IsModuleTopology (AF F) (WOF F E nS nT) :=
+  have : IsModuleTopology (AF F) (WOF F E nS nT) :=
     inferInstanceAs (IsModuleTopology (AF F) (Fin nT → Fin nS → AF F ⊗[F] E))
   set C : Matrix (Fin (nT + nT)) (Fin nT) (AF F ⊗[F] E) :=
     (diagCols (Fin nT) : Matrix (Fin nT ⊕ Fin nT) (Fin nT) (AF F ⊗[F] E)).submatrix finSumFinEquiv.symm id with hC
@@ -399,7 +399,7 @@ theorem exists_lagrInt_ne_zero_k : ∀ (F E : Type) [Field F] [NumberField F] [F
     obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
     rcases i with i | i <;> by_cases h : i = j <;>
       simp only [hC, hC₀, incM, diagCols, Matrix.submatrix_apply, Matrix.map_apply, Equiv.symm_apply_apply, id,
-        Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.one_apply, h, if_true, if_false, map_one, map_zero]
+        Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.one_apply, h, ite_true, ite_false, map_one, map_zero]
   let mC : WOF F E nS nT →ₗ[AF F] Matrix (Fin (nT + nT)) (Fin nS) (AF F ⊗[F] E) :=
     { toFun := fun u => C * u
       map_add' := fun u v => Matrix.mul_add _ _ _
@@ -599,7 +599,7 @@ theorem commF_eventually_k (hB : _root_.UpperTheory.TP.W.GoodK σ B) {e : AEF F 
   have hφ : Continuous φ :=
     (GlobalTheory.HeisThetaF.continuous_symplOHF_right g).sub (GlobalTheory.HeisThetaF.continuous_symplOHF_left g)
   let ρ : conjHalf σ e nS nT → Af F := fun u => (φ u.1).2
-  have hρ : Continuous ρ := continuous_snd.comp (hφ.comp continuous_subtype_val)
+  have hρ : Continuous ρ := continuous_snd.comp (hφ.comp continuous_subtypeVal)
   have h0 : ρ 0 = 0 := by
     show (symplOHF σ JS JT ξ₀ g 0 - symplOHF σ JS JT ξ₀ 0 g).2 = 0
     rw [GlobalTheory.HeisThetaF.symplOHF_zero_left, GlobalTheory.HeisThetaF.symplOHF_zero_right, sub_zero]
@@ -701,12 +701,12 @@ theorem exists_form_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
             ℓ f' = (R : ℂ) * k * ℓ f := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ hσξ ν 𝓕 hν h𝓕 e he f₀ hf₀ hne
   obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
-  letI : MeasurableSpace (GlobalTheory.SplitInvFormF.conjHalf σ e nS nT) := borel _
-  haveI : BorelSpace (GlobalTheory.SplitInvFormF.conjHalf σ e nS nT) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (GlobalTheory.SplitInvFormF.conjHalf σ e nS nT) :=
+  let : MeasurableSpace (GlobalTheory.SplitInvFormF.conjHalf σ e nS nT) := borel _
+  have : BorelSpace (GlobalTheory.SplitInvFormF.conjHalf σ e nS nT) := ⟨rfl⟩
+  have : LocallyCompactSpace (GlobalTheory.SplitInvFormF.conjHalf σ e nS nT) :=
     (isClosed_conjHalf e).isClosedEmbedding_subtypeVal.locallyCompactSpace
   let μ : Measure (GlobalTheory.SplitInvFormF.conjHalf σ e nS nT) := Measure.addHaar
-  haveI : μ.IsAddHaarMeasure := inferInstanceAs (Measure.addHaar (G := GlobalTheory.SplitInvFormF.conjHalf σ e nS nT)).IsAddHaarMeasure
+  have : μ.IsAddHaarMeasure := inferInstanceAs (Measure.addHaar (G := GlobalTheory.SplitInvFormF.conjHalf σ e nS nT)).IsAddHaarMeasure
   have hth := _root_.GlobalTheory.HeisThetaF.isThetaFunOF_heisOF_k F E σ B hB nS (nT + nT) JS
     (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) ξ₀
   let L : GlobalTheory.WeilPartsF.thetaSubF σ JS (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) ξ₀ B.ψ →ₗ[ℂ] ℂ :=

@@ -62,8 +62,8 @@ theorem cgA_pow_of_mem_nonunits {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
     [hl : Fact l.Prime] (A : ValuationSubring Ω) (hlA : ((l : ℕ) : Ω) ∈ A.nonunits)
     (x : Ω) (hx : x ∈ A.nonunits) : ∃ k : ℕ, CgA A l 1 (x ^ k) 0 := by
   classical
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hl0 : ((l : ℕ) : Ω) ≠ 0 := by exact_mod_cast hl.out.ne_zero
   have hvl : A.valuation (l : Ω) < 1 := (A.mem_nonunits_iff).1 hlA
   have hvx : A.valuation x < 1 := (A.mem_nonunits_iff).1 hx
@@ -72,7 +72,7 @@ theorem cgA_pow_of_mem_nonunits {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
     intro k hk
     refine ⟨x ^ k / l, ?_, ?_⟩
     · rw [← A.valuation_le_one_iff, map_div₀, map_pow]
-      exact (div_le_one₀ (zero_lt_iff.2 hvl0)).2 hk
+      exact (div_le_one₀ (pos_iff_ne_zero.2 hvl0)).2 hk
     · rw [sub_zero, pow_one]; field_simp
   by_contra H
   push_neg at H
@@ -119,7 +119,7 @@ theorem cgA_pow_of_mem_nonunits {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
     by_contra h
     push_neg at h
     have hu := hqprim (l : ℤ) ((C_dvd_iff_dvd_coeff _ _).2 h)
-    exact hpl.not_unit hu
+    exact hpl.not_isUnit hu
   set i0 := Nat.find hex with hi0
   have hi0spec : ¬ (l : ℤ) ∣ q.coeff i0 := Nat.find_spec hex
   have hi0min : ∀ i < i0, (l : ℤ) ∣ q.coeff i := fun i hi => by
@@ -146,13 +146,13 @@ theorem cgA_pow_of_mem_nonunits {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
     rcases lt_or_gt_of_ne hne with h | h
     · calc A.valuation (q.coeff i : Ω) * A.valuation x ^ i
             ≤ A.valuation (l : Ω) * 1 :=
-              mul_le_mul' (hdvd _ (hi0min i h)) (pow_le_one₀ zero_le' hvx.le)
+              mul_le_mul' (hdvd _ (hi0min i h)) (pow_le_one₀ zero_le hvx.le)
         _ = A.valuation (l : Ω) := mul_one _
         _ < A.valuation x ^ i0 := hlt i0
     · calc A.valuation (q.coeff i : Ω) * A.valuation x ^ i
             ≤ 1 * A.valuation x ^ i := mul_le_mul' (hint _) le_rfl
         _ = A.valuation x ^ i := one_mul _
-        _ < A.valuation x ^ i0 := pow_lt_pow_right_of_lt_one₀ (zero_lt_iff.2 hvx0) hvx h
+        _ < A.valuation x ^ i0 := pow_lt_pow_right_of_lt_one₀ (pos_iff_ne_zero.2 hvx0) hvx h
   have htot : A.valuation (aeval x q) = A.valuation x ^ i0 := by
     rw [hsum, ← Finset.add_sum_erase _ _ (Finset.mem_range.2 hi0deg),
       Valuation.map_add_eq_of_lt_left _ (by rw [hfi0]; exact hrest), hfi0]

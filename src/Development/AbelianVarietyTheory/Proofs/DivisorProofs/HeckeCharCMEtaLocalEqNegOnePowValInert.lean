@@ -143,7 +143,7 @@ namespace GlobalTheory.MuInert
 theorem valuation_eq_uniformizer {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
     {x : w.adicCompletion E} (hx : Valued.v x = WithZero.exp (-1 : ℤ)) :
     ValuativeRel.valuation (w.adicCompletion E) x = ValuativeRel.uniformizer (w.adicCompletion E) := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E)) Valued.v
   apply le_antisymm
@@ -155,14 +155,14 @@ theorem valuation_eq_uniformizer {E : Type} [Field E] [NumberField E] (w : Heigh
       rw [← he.lt_one_iff_lt_one, hy]; exact ValuativeRel.uniformizer_lt_one
     rw [he.le_iff_le, hx]
     by_cases hy0 : Valued.v y = 0
-    · rw [hy0]; exact zero_le'
+    · rw [hy0]; exact zero_le
     · rw [← WithZero.exp_log hy0] at h1 ⊢
       rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h1
       rw [WithZero.exp_le_exp]; omega
 
 theorem valued_eq_one {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
     {x : w.adicCompletion E} (hx : ValuativeRel.valuation (w.adicCompletion E) x = 1) : Valued.v x = 1 := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E)) Valued.v).eq_one_iff_eq_one.1 hx
 
@@ -189,7 +189,7 @@ theorem loc_eq_unrChar_neg_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hun : Formalism.MainNotions.SchurIrreducible.IsUnram (E := E) (w.under (𝓞 (maximalRealSubfield E))) := by
     refine GlobalTheory.LFun.isUnram_iff.2 fun u hu => ?_
     obtain rfl := GlobalTheory.LFun.eq_of_not_isSplit hns hu rfl
-    haveI := u.isPrime
+    have := u.isPrime
     exact Algebra.isUnramifiedAt_iff_of_isDedekindDomain.1 (hU u)
   have he : w.asIdeal.ramificationIdx (𝓞 (maximalRealSubfield E)) = 1 := GlobalTheory.LFun.isUnram_iff.1 hun w rfl
   obtain ⟨ϖ, hϖ⟩ := GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.exists_isUniformiser (w.under (𝓞 (maximalRealSubfield E)))

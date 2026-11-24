@@ -67,7 +67,7 @@ theorem antiJ_submatrix (L : Type) [Field L] (m : ℕ) :
   · have := i.2; have := j.2
     simp only [submatrix_apply, antiJ, ee, Wm, Equiv.trans_apply, Equiv.sumCongr_apply, Sum.map_inl, Equiv.refl_apply,
       finSumFinEquiv_apply_left, Fin.val_castAdd, fromBlocks_apply₁₁, Matrix.zero_apply]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   · have := i.2; have := j.2
     simp only [submatrix_apply, antiJ, ee, Wm, Equiv.trans_apply, Equiv.sumCongr_apply, Sum.map_inl, Sum.map_inr,
       Equiv.refl_apply, finSumFinEquiv_apply_left, finSumFinEquiv_apply_right, Fin.val_castAdd, Fin.val_natAdd,
@@ -81,7 +81,7 @@ theorem antiJ_submatrix (L : Type) [Field L] (m : ℕ) :
   · have := i.2; have := j.2
     simp only [submatrix_apply, antiJ, ee, Wm, Equiv.trans_apply, Equiv.sumCongr_apply, Sum.map_inr,
       finSumFinEquiv_apply_right, Fin.val_natAdd, fromBlocks_apply₂₂, Matrix.zero_apply, Fin.revPerm_apply, Fin.val_rev]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
 
 theorem Wm_map {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (β : Type) [DecidableEq β] :
     (Wm A β).map f = Wm B β := by
@@ -169,7 +169,7 @@ theorem group_main {ϖ : L} {q : ℕ} (hU : IsUnramInv ϖ c q) {m : ℕ} {G : Ty
     rw [hinv, map_mul]
     exact (congrArg c (hk3 j i)).trans (map_zero c)
   · let A : Subring L := (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring.toSubring
-    haveI : IsLocalRing A :=
+    have : IsLocalRing A :=
       inferInstanceAs (IsLocalRing (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring)
     have hA : ∀ z, z ∈ A ↔ Valued.v z ≤ 1 := fun _ => Iff.rfl
     let σ : A →+* A := c.restrict A A fun z hz => by rw [hA, hv]; exact hz

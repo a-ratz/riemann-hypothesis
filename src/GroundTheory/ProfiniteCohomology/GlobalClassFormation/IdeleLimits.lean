@@ -864,7 +864,7 @@ theorem placeProj_idelesCohomologySum (n : ℕ) (ξ : ⨁ v : Place K, cohomolog
       rw [placeEmbed_comp_placeProj, cohomologyMap_id, DirectSum.of_eq_same]
       rfl
     · rw [placeEmbed_comp_placeProj_of_ne h, cohomologyMap_zero]
-      simp only [DirectSum.of_apply, dif_neg h]
+      simp only [DirectSum.of_apply, dite_eq_right h]
       rfl
   | add ξ η hξ hη => rw [map_add (f := _), map_add (f := _), hξ, hη, DirectSum.add_apply]
 
@@ -1051,16 +1051,16 @@ abbrev levelTransitionG {p q : GLevel K} (h : p ≤ q) :
 
 theorem levelTransitionG_comp_levelInfl {p q : GLevel K} (h : p ≤ q) (y : cohomology (ideleRep K.1 p.1.1) n) :
     (levelInfl K q.1 n).hom ((levelTransitionG n h).hom y) = (levelInfl K p.1 n).hom y := by
-  haveI : Fact (p.1 ≤ q.1) := ⟨h⟩
+  have : Fact (p.1 ≤ q.1) := ⟨h⟩
   exact congrArg (fun φ => φ.hom y) (levelTransition_comp_levelInfl (K := K) (F := p.1) (E := q.1) n)
 
 theorem levelTransitionG_trans {p q r : GLevel K} (h₁ : p ≤ q) (h₂ : q ≤ r)
     (y : cohomology (ideleRep K.1 p.1.1) n) :
     (levelTransitionG n h₂).hom ((levelTransitionG n h₁).hom y) =
       (levelTransitionG n (h₁.trans h₂)).hom y := by
-  haveI : Fact (p.1 ≤ q.1) := ⟨h₁⟩
-  haveI : Fact (q.1 ≤ r.1) := ⟨h₂⟩
-  haveI : Fact (p.1 ≤ r.1) := ⟨h₁.trans h₂⟩
+  have : Fact (p.1 ≤ q.1) := ⟨h₁⟩
+  have : Fact (q.1 ≤ r.1) := ⟨h₂⟩
+  have : Fact (p.1 ≤ r.1) := ⟨h₁.trans h₂⟩
   exact congrArg (fun φ => φ.hom y)
     (levelTransition_comp_levelTransition (K := K) (F := p.1) (E := q.1) (M := r.1) n)
 
@@ -1209,10 +1209,10 @@ theorem limitCohomologyHom_surjective : Function.Surjective (limitCohomologyHom 
   rw [levelSum_apply, ← idelesCohomologyEquiv_symm_apply hn, AddEquiv.symm_apply_apply]
   by_cases hv : v ∈ ζ.support
   · have : ξ v = (D.e v r).symm (D.lt v (hpr v hv) (z v)) := by
-      simp only [ξ, DFinsupp.mk_apply, dif_pos hv]
+      simp only [ξ, DFinsupp.mk_apply, dite_eq_left hv]
     rw [this, AddEquiv.apply_symm_apply, T.infl_compat, hz]
   · have : ξ v = 0 := by
-      simp only [ξ, DFinsupp.mk_apply, dif_neg hv]
+      simp only [ξ, DFinsupp.mk_apply, dite_eq_right hv]
     rw [this, map_zero, map_zero, DFinsupp.notMem_support_iff.1 hv]
 
 def limitCohomologyEquiv : cohomology (limitRep K) n ≃+ ⨁ v : Place K.1, T.T v :=

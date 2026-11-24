@@ -126,7 +126,7 @@ theorem ddIdeal_ne_bot (D : D7) :
 theorem one_mem_ddS_zpow_neg (D : D7) (m : ℕ) :
     (1 : D.host.E) ∈ (ddS D ^ (-(m : ℤ)) : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) := by
   rw [zpow_neg, zpow_natCast, ddS, ← FractionalIdeal.coeIdeal_pow]
-  refine FractionalIdeal.one_mem_inv_coe_ideal ?_
+  refine FractionalIdeal.one_mem_inv_coeIdeal ?_
   rw [← Ideal.zero_eq_bot]
   exact pow_ne_zero _ (by rw [Ideal.zero_eq_bot]; exact ddIdeal_ne_bot D)
 
@@ -225,7 +225,7 @@ theorem GCoord.c_eq_one_of_gS_mem : ∀ (D : D7) (X : HidaSetting D) (Y : Full X
       have := hne 0; have := hne 1; have := hne i
       field_simp
     rw [h1, map_one]
-  haveI : Nontrivial (D.s.atP p).Ep :=
+  have : Nontrivial (D.s.atP p).Ep :=
     Module.nontrivial_of_finrank_pos (R := (D.s.atP p).Fp) (by rw [(D.s.atP p).rank]; norm_num)
   have hv : ((G.c p).val : (D.s.atP p).Fp) = 1 :=
     (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).injective hone
@@ -349,24 +349,24 @@ theorem exists_upUni (F : LFlag S r T) (n : S.V ≃ₗ[E] S.V)
         exact this
       obtain ⟨l, hl0, hl⟩ := exists_coef_of_mem_span_image F.fl.e _ hm
       refine ⟨l, fun k hk => hl0 k ?_, ?_⟩
-      · simp only [Set.mem_setOf_eq, not_lt]; exact Fin.castSucc_le_castSucc_iff.mp hk
+      · simp only [Set.mem_ofPred_eq, not_lt]; exact Fin.castSucc_le_castSucc_iff.mp hk
       · rw [hf, ← hl]; abel
   choose l hl0 hl using key
   refine ⟨Matrix.of fun a b => Fin.snoc (α := fun _ => E) (l b) 0 a + if a = b then 1 else 0, ?_, ?_, ?_⟩
   · intro a b hab
-    simp only [Matrix.of_apply, if_neg (ne_of_gt hab), add_zero]
+    simp only [Matrix.of_apply, ite_eq_right (ne_of_gt hab), add_zero]
     induction a using Fin.lastCases with
     | last => simp
     | cast k => simp only [Fin.snoc_castSucc]; exact hl0 b k hab.le
   · intro a
-    simp only [Matrix.of_apply, if_pos rfl]
+    simp only [Matrix.of_apply, ite_eq_left rfl]
     induction a using Fin.lastCases with
     | last => simp
     | cast k => simp only [Fin.snoc_castSucc]; rw [hl0 _ k le_rfl]; simp
   · intro b
     rw [hl b]
     simp only [Matrix.of_apply, add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [Fin.sum_univ_castSucc]
     simp [frame, FlagG.fvec, add_comm]
 
@@ -596,8 +596,8 @@ theorem frames_congr : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpa
   have hCt : C.BlockTriangular id := fun a b h => hC0 a b h
   have hC't : C'.BlockTriangular id := fun a b h => hC'0 a b h
   have hdet : C.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hCt]; simp [hC1]
-  letI : Invertible C := Matrix.invertibleOfIsUnitDet C (by rw [hdet]; exact isUnit_one)
+    rw [Matrix.det_of_isUpperTriangular hCt]; simp [hC1]
+  let : Invertible C := Matrix.invertibleOfIsUnitDet C (by rw [hdet]; exact isUnit_one)
   have hCit : C⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hCt
   have hCi1 : ∀ a, C⁻¹ a a = 1 := fun a => by
     have h1 := diag_mul hCit hCt a
@@ -686,7 +686,7 @@ theorem smul_mem_iff_of_unit {R M : Type} [CommRing R] [AddCommGroup M] [Module 
 theorem resChar_eq_of_mem (p : HeightOneSpectrum (𝓞 F)) {q : ℕ} (hq : q.Prime)
     (h : ((q : ℕ) : 𝓞 F) ∈ p.asIdeal) : Formalism.MainNotions.S.Loc.resChar p = q := by
   unfold Formalism.MainNotions.S.Loc.resChar
-  haveI := p.isPrime
+  have := p.isPrime
   have h0 : ((q : ℕ) : 𝓞 F ⧸ p.asIdeal) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk p.asIdeal)]
     exact Ideal.Quotient.eq_zero_iff_mem.2 h
@@ -702,7 +702,7 @@ open IsDedekindDomain ValuativeRel
 
 theorem inTh_lat_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) {T T' : D.host.E} (F00 : LFlag (D.sp.Y 0) D.R.rS T) (F'0 : LFlag (D.sp.Y 0) D.R.rS T') (FP : ∀ p : PlF D, LocNG.FPair (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS) (G : GFrames (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)) D.R.rS D.R.k) (c : GCoord (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) F00 F'0 FP G) (P : IsDedekindDomain.HeightOneSpectrum (𝓞 D.host.E)), ((gS D : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal → ∀ (Λ : G.Lt) (x : (G.S (below D P)).V), (G.S (below D P)).InTh ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).lat (below D P) Λ) x ↔ x ∈ (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).lat (below D P) (Ideal.span {((gS D : ℕ) : 𝓞 D.host.E)} • Λ) := by
   intro D X Y T T' F00 F'0 FP G c P hP Λ x
-  haveI := P.isPrime
+  have := P.isPrime
   have hmem : ∀ i : Fin 2, ((D.host.g i : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal →
       Formalism.MainNotions.S.Loc.resChar (below D P) = D.host.g i := by
     intro i hi
@@ -738,8 +738,8 @@ theorem inTh_lat_iff : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) {T T' : D.h
   have hgg := (c.c (below D P)).gg_some g' hM
   have hth : (G.S (below D P)).th = ((D.host.g i : ℕ) : (D.s.atP (below D P)).Fp) := by
     unfold Frames.th
-    rw [if_pos hgg.1, hgg.2, hq, sg.q_eq, hres]
-  haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).char0
+    rw [ite_eq_left hgg.1, hgg.2, hq, sg.q_eq, hres]
+  have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).char0
   have hgj0 : ((D.host.g j : ℕ) : ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).Fp) ≠ 0 :=
     Nat.cast_ne_zero.2 (D.host.g_prime j).ne_zero
   have hval : (below D P).valuation D.host.F ((D.host.g j : ℕ) : D.host.F) = 1 := by
@@ -878,8 +878,8 @@ theorem loc_cong : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what�
     simp only [map_smul, c.f'_eq]
   have hmemc : ∀ v ∈ t₀.lam, c.e ((ρ * n) v) ∈ c.lat (ρ * n) t₀.lam := fun v hv =>
     Submodule.mem_map.2 ⟨v, hv, rfl⟩
-  haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).lf
-  haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).char0
+  have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).lf
+  have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).char0
   obtain ⟨ξp, hξO, hξ1, hξ2, hξT⟩ := _root_.GlobalTheory.HL.FrameChange.frames_congr _ D.R.rS D.R.k (G.S (below D P)) (d (below D P))
     ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).lat (below D P) (c.lat (ρ * n) t₀.lam)) (hloc (below D P))
     (fun b => (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).bc (below D P) (c.e ((ρ * n) (frame (lf D (X.Fu u)) b))))
@@ -964,7 +964,7 @@ theorem frame_mem_locP (D : D7) {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) (Λ 
     (hL : IsLift Λ (lf D F0)) (hF : FrameOK D Λ (lf D F0))
     (P : IsDedekindDomain.HeightOneSpectrum (𝓞 D.host.E)) (hP : ((gS D : ℕ) : 𝓞 D.host.E) ∈ P.asIdeal)
     (a : Fin (D.R.rS + 1)) : frame (lf D F0) a ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal Λ) := by
-  haveI := P.isPrime
+  have := P.isPrime
   induction a using Fin.lastCases with
   | last =>
     refine ⟨1, P.asIdeal.primeCompl.one_mem, ?_⟩
@@ -1225,10 +1225,10 @@ theorem good_places (A : Places F E sig) (r k : ℕ) (G : GFrames A r k) (hk : 4
   by_contra hq
   rw [Set.mem_union, not_or] at hq
   obtain ⟨h1, h2⟩ := hq
-  simp only [Set.mem_setOf_eq, ne_eq, not_not] at h1 h2 hp
+  simp only [Set.mem_ofPred_eq, ne_eq, not_not] at h1 h2 hp
   obtain ⟨-, -, -, d₀, hW, -, -, -, -, -⟩ := h2
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
+  have := (A.loc p).lf
+  have := (A.loc p).char0
   have hT0 := hloc p
   rw [h1] at hT0 hp
   have hd : d p = d₀ := by
@@ -1258,8 +1258,8 @@ theorem global_witnesses : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
     intro p
     by_cases h : (G.S p).IsTermW (d p) (A.lat p Λ) 1 1
     · exact ⟨1, h, fun _ => rfl⟩
-    · haveI := (A.loc p).lf
-      haveI := (A.loc p).char0
+    · have := (A.loc p).lf
+      have := (A.loc p).char0
       exact ⟨(G.S p).wit (d p) (A.lat p Λ),
         (GlobalTheory.HL.TermBasic.term_basic (A.L p) r k (G.S p) (d p) (A.lat p Λ) (hloc p)).2.1,
         fun h' => absurd h' h⟩
@@ -1272,17 +1272,17 @@ theorem global_witnesses : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
     (hq p).2 (by simpa using hp)
   have hfinN : {p | ((q p).1)⁻¹ • A.lat p Λ ≠ A.lat p Λ}.Finite := hfin.subset fun p hp => by
     by_contra h
-    rw [Set.mem_setOf_eq, hone p h] at hp
+    rw [Set.mem_ofPred_eq, hone p h] at hp
     exact hp (by simp)
   have hfinN' : {p | ((q p).2)⁻¹ • A.lat p Λ ≠ A.lat p Λ}.Finite := hfin.subset fun p hp => by
     by_contra h
-    rw [Set.mem_setOf_eq, hone p h] at hp
+    rw [Set.mem_ofPred_eq, hone p h] at hp
     exact hp (by simp)
   have hcfin : {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) =
       (Units.mk0 (G.S p).th (th_ne (G.S p)) : ((A.loc p).Fp)ˣ)}.Finite := by
     refine G.gg_fin.subset fun p hp => ?_
     by_contra hg
-    rw [Set.mem_setOf_eq] at hp hg
+    rw [Set.mem_ofPred_eq] at hp hg
     apply hp
     refine ⟨1, ?_⟩
     rw [Units.val_mk0]
@@ -1292,8 +1292,8 @@ theorem global_witnesses : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
   obtain ⟨g', hg'N, hg'P⟩ := (GlobalTheory.T.strong_approximation_unipotent_alt A r k G Λ hfull (fun p => Units.mk0 (G.S p).th (th_ne (G.S p)))
     hcfin (fun p => ((q p).2)⁻¹) hfinN').2 (fun p => inv_mem (hmem p).2)
   refine ⟨⟨g⁻¹, inv_mem hgN, g'⁻¹, inv_mem hg'N, fun p m m' hm hm' => ?_⟩, fun m m' hmm => ?_⟩
-  · haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
+  · have := (A.loc p).lf
+    have := (A.loc p).char0
     have hmN : m ∈ (G.S p).N := by
       obtain ⟨m₀, hm₀, hext⟩ := exists_mem_Ext_of_mem_rat A (K := fun p => (G.S p).N) (inv_mem hgN) p
       rwa [((GlobalTheory.HL.RatExt.rational_extend A _ p).2.2.1 g⁻¹).unique hm hext]
@@ -1309,8 +1309,8 @@ theorem global_witnesses : ∀ {F E : Type} [Field F] [NumberField F] [Field E] 
       exact ⟨y, hy, hxy⟩
   · unfold GFrames.om
     refine finprod_congr fun p => ?_
-    haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
+    have := (A.loc p).lf
+    have := (A.loc p).char0
     exact (GlobalTheory.HL.WitIndep.witness_independence (A.L p) r k (G.S p) (d p) (A.lat p Λ) (m p) (m' p)
       (hmm p)).1
 
@@ -1567,8 +1567,8 @@ theorem exists_term_of_global : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u
     rfl rfl ⟨hn₂, hm₂, hlin⟩).2 (by
       rw [← hΓ₂]
       funext p
-      haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).lf
-      haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).char0
+      have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).lf
+      have := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc p).char0
       exact (GlobalTheory.HL.DatumOf.datOf_term (G.S p) (hΓ.2 p)).symm)
   exact ⟨t, n * a⁻¹, m * b, hrow, ⟨hn₂, hm₂, hlin⟩, hΓ₂⟩
 

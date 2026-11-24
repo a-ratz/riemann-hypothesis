@@ -62,8 +62,8 @@ theorem baseLevelCharacter_eq_prod_superdiagonalSum {Pg : Finset (Pl D.host.E)} 
   change ↥(Subgroup.pi Set.univ fun PP : ↥Pg => unip (kP PP.1) r) at y
   change (((∏ PP : ↥Pg, (addCharHom (ψ PP.1) (supHom (kP PP.1) r)).comp
     (LevelP.prj (fun PP : ↥Pg => unip (kP PP.1) r) PP)) y : D.what₂.LLˣ) : D.what₂.LL) = _
-  letI : IsOneApply (↥(Subgroup.pi Set.univ fun PP : ↥Pg => unip (kP PP.1) r) →* D.what₂.LLˣ) := ⟨fun _ => rfl⟩
-  letI : IsMulApply (↥(Subgroup.pi Set.univ fun PP : ↥Pg => unip (kP PP.1) r) →* D.what₂.LLˣ) := ⟨fun _ _ _ => rfl⟩
+  let : IsOneApply (↥(Subgroup.pi Set.univ fun PP : ↥Pg => unip (kP PP.1) r) →* D.what₂.LLˣ) := ⟨fun _ => rfl⟩
+  let : IsMulApply (↥(Subgroup.pi Set.univ fun PP : ↥Pg => unip (kP PP.1) r) →* D.what₂.LLˣ) := ⟨fun _ _ _ => rfl⟩
   rw [prod_apply, Units.coe_prod]
   rfl
 
@@ -79,10 +79,10 @@ theorem supSum_map {κ : Type} [CommRing κ] {n : ℕ} (e : κ →+* ZMod n) {r 
   refine Finset.sum_congr rfl fun b _ => ?_
   by_cases h : (b : ℕ) = a + 1
   · have h' : supEdge a b := h
-    rw [if_pos h, if_pos h']
+    rw [ite_eq_left h, ite_eq_left h']
     rfl
   · have h' : ¬ supEdge a b := h
-    rw [if_neg h, if_neg h', map_zero]
+    rw [ite_eq_right h, ite_eq_right h', map_zero]
 
 def thOf (ζ : Fin 2 → ↥D.LL0) (hp : ∀ k, ζ k ^ D.host.g k = 1) (k : Fin 2) :
     Multiplicative (ZMod (D.host.g k)) →* (↥D.LL0)ˣ :=
@@ -99,7 +99,7 @@ theorem pow_of_emb (ζ : Fin 2 → ↥D.LL0)
   apply Subtype.ext
   apply D.what₂.embLL.injective
   have e1 : ((ζ k ^ D.host.g k : ↥D.LL0) : D.what₂.LL) = (ζ k : D.what₂.LL) ^ D.host.g k := rfl
-  rw [e1, map_pow, hζ, ← Complex.exp_nat_mul]
+  rw [e1, map_pow, hζ, ← Complex.exp_natCast_mul]
   have e2 : ((D.host.g k : ℕ) : ℂ) * (2 * Real.pi * Complex.I / (D.host.g k : ℂ)) = 2 * Real.pi * Complex.I := by
     field_simp
   rw [e2, Complex.exp_two_pi_mul_I]
@@ -121,7 +121,7 @@ theorem roots_g (x : St P) (k : Fin 2) : ∃ ζ : ↥(Dof x).LL0,
   have hg1 : 1 < (Dof x).host.g k := ((Dof x).host.g_prime k).one_lt
   refine ⟨⟨z ^ ((Dof x).host.g k - 1), (w.st x.o.Z).B.Ks_le (pow_mem hz _)⟩, ?_⟩
   show (w.st x.o.Z).B.embLL (z ^ ((Dof x).host.g k - 1)) = _
-  rw [map_pow, hz', ← Complex.exp_nat_mul]
+  rw [map_pow, hz', ← Complex.exp_natCast_mul]
   congr 1
   have hc : (((Dof x).host.g k - 1 : ℕ) : ℂ) = ((Dof x).host.g k : ℂ) - 1 := by
     rw [Nat.cast_sub hg1.le, Nat.cast_one]

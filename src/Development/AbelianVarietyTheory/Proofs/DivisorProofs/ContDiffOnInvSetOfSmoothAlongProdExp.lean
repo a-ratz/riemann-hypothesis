@@ -83,9 +83,9 @@ theorem prod_ofFn_eq_of_ne {M : Type*} [Monoid M] {k : ℕ} (f : Fin k → M) (i
 theorem contDiff_prodExp (y : Lie E d) {k : ℕ} (X : Fin k → Matrix (Fin d) (Fin d) (Cinf E)) :
     ContDiff ℝ ∞ (fun t : Fin k → ℝ =>
       toL (Matrix.of y * (List.ofFn fun i => NormedSpace.exp (t i • X i)).prod)) := by
-  letI : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   let T : Matrix (Fin d) (Fin d) (Cinf E) →L[ℝ] Lie E d :=
     LinearMap.toContinuousLinearMap (LinearMap.id : Lie E d →ₗ[ℝ] Lie E d)
   have hexp : ContDiff ℝ ∞ (NormedSpace.exp : Matrix (Fin d) (Fin d) (Cinf E) → _) :=
@@ -113,9 +113,9 @@ variable {E : Type} [Field E] [NumberField E] {d : ℕ}
 
 theorem hasDerivAt_mulExp (y : Lie E d) (Z : Matrix (Fin d) (Fin d) (Cinf E)) :
     HasDerivAt (fun s : ℝ => toL (Matrix.of y * NormedSpace.exp (s • Z))) (toL (Matrix.of y * Z)) 0 := by
-  letI : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   let T : Matrix (Fin d) (Fin d) (Cinf E) →L[ℝ] Lie E d :=
     LinearMap.toContinuousLinearMap (LinearMap.id : Lie E d →ₗ[ℝ] Lie E d)
   have h := ((hasDerivAt_exp_smul_const' (𝕂 := ℝ) Z (0 : ℝ)).const_mul (Matrix.of y))
@@ -166,9 +166,9 @@ theorem contDiffOn_of_prodExp : ∀ (E : Type) [Field E] [NumberField E] (d : �
   refine ContDiffAt.contDiffWithinAt ?_
 
   obtain ⟨b, hbS, hbspan, hbli⟩ := exists_linearIndependent ℝ S
-  haveI : Module.Finite ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := inferInstance
-  haveI : Finite b := hbli.finite
-  letI : Fintype b := Fintype.ofFinite b
+  have : Module.Finite ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := inferInstance
+  have : Finite b := hbli.finite
+  let : Fintype b := Fintype.ofFinite b
   set m := Fintype.card b
   let e := Fintype.equivFin b
   let X : Fin m → Matrix (Fin d) (Fin d) (Cinf E) := fun i => (e.symm i).1
@@ -221,7 +221,7 @@ theorem contDiffOn_of_prodExp : ∀ (E : Type) [Field E] [NumberField E] (d : �
     exact h
   have hn : (∞ : ℕ∞ω) ≠ 0 := by simp
   have hΨ := hΘ.contDiffAt.to_localInverse hD hn
-  have hinv := (hΘ.contDiffAt.hasStrictFDerivAt' hD hn).eventually_right_inverse
+  have hinv := (hΘ.contDiffAt.hasStrictFDerivAt hD hn).eventually_right_inverse
   have hc : ContDiffAt ℝ ∞ (f ∘ Θ ∘ hΘ.contDiffAt.localInverse hD hn) (Θ 0) :=
     (hf m X hXS x₀ hx₀).contDiffAt.comp _ hΨ
   rw [hΘ0] at hc hinv

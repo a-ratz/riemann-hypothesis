@@ -61,7 +61,7 @@ theorem exists_open_conjStable_sub_level (E : Type) [Field E] [NumberField E] [I
       N ≤ K'.map (UL n w).subtype ∧ (∀ k ∈ GlobalTheory.LFun.KGL w (n := n), ∀ x ∈ N, k⁻¹ * x * k ∈ N) ∧
       (K' = KL n w → N = GlobalTheory.LFun.KGL w (n := n)) := by
   obtain ⟨hKo, hKc⟩ := GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL (E := E) w n
-  have hUtop : UL n w = ⊤ := by unfold UL; rw [if_pos hw]
+  have hUtop : UL n w = ⊤ := by unfold UL; rw [ite_eq_left hw]
   have hUo : IsOpen (UL n w : Set (GLw n w)) := by rw [hUtop]; exact isOpen_univ
   have hmemU : ∀ x : GLw n w, x ∈ UL n w := fun x => by rw [hUtop]; trivial
   by_cases hKL : K' = KL n w
@@ -75,16 +75,16 @@ theorem exists_open_conjStable_sub_level (E : Type) [Field E] [NumberField E] [I
   · set S : Subgroup (GLw n w) := K'.map (UL n w).subtype with hSdef
     have hSo : IsOpen (S : Set (GLw n w)) := by
       rw [hSdef, Subgroup.coe_map]
-      exact hUo.isOpenMap_subtype_val _ hK.1
-    haveI : CompactSpace (GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hKc
+      exact hUo.isOpenMap_subtypeVal _ hK.1
+    have : CompactSpace (GlobalTheory.LFun.KGL w (n := n)) := isCompact_iff_compactSpace.1 hKc
     have hWo : IsOpen ((S.subgroupOf (GlobalTheory.LFun.KGL w (n := n)) : Subgroup _) : Set (GlobalTheory.LFun.KGL w (n := n))) := by
       rw [Subgroup.coe_subgroupOf]
-      exact hSo.preimage continuous_subtype_val
+      exact hSo.preimage continuous_subtypeVal
     obtain ⟨V, hV⟩ := IsTopologicalGroup.exist_openNormalSubgroup_sub_clopen_nhds_of_one
       ⟨Subgroup.isClosed_of_isOpen _ hWo, hWo⟩ (Subgroup.one_mem _)
     refine ⟨V.toSubgroup.map (GlobalTheory.LFun.KGL w (n := n)).subtype, ?_, ?_, ?_, fun h => absurd h hKL⟩
     · rw [Subgroup.coe_map]
-      exact hKo.isOpenMap_subtype_val _ V.isOpen'
+      exact hKo.isOpenMap_subtypeVal _ V.isOpen'
     · rintro _ ⟨v, hv, rfl⟩
       have := hV hv
       rw [SetLike.mem_coe, Subgroup.mem_subgroupOf] at this

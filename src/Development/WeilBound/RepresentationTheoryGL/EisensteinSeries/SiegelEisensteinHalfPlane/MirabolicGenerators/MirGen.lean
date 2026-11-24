@@ -107,7 +107,7 @@ theorem pointwise_bound {K P : Subgroup G} {c : G → ℂ} {ρ : K →* (W →L[
       (φ v - ((‖φ v‖ : ℝ) : ℂ)) • w + φ v • (c r • ρ r u) := by
     have h2 : ρ v w = w + u := by simp [hu]
     have h3 : ρ (r * v) w = ρ r w + ρ r u := by
-      rw [map_mul, ContinuousLinearMap.mul_apply, h2, map_add (f := _)]
+      rw [map_mul, mul_apply_eq_comp, h2, map_add (f := _)]
     rw [hnorm, hφ, h3, smul_add, mul_comm, mul_smul, hwr, sub_smul, mul_smul]
     abel
   rw [hexp, hnorm]
@@ -123,7 +123,7 @@ theorem avg_sub_bound [FiniteDimensional ℂ W] {K : Subgroup G} [MeasurableSpac
     {φ : K → ℂ} (hφ : Continuous φ) (w : W)
     (h : ∀ κ, ‖φ κ • ρ κ w - ((‖φ κ‖ : ℝ) : ℂ) • w‖ ≤ ‖φ κ‖ * ‖w‖ / 2) :
     ‖avg μ ρ φ w - ((∫ κ, ‖φ κ‖ ∂μ : ℝ) : ℂ) • w‖ ≤ (∫ κ, ‖φ κ‖ ∂μ) * ‖w‖ / 2 := by
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hint : Integrable (fun κ => φ κ • ρ κ) μ :=
     (hφ.smul hρ).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hint2 : Integrable (fun κ => ‖φ κ‖) μ :=
@@ -145,7 +145,7 @@ theorem avg_sub_bound [FiniteDimensional ℂ W] {K : Subgroup G} [MeasurableSpac
 theorem mass_pos {K : Subgroup G} [MeasurableSpace K] [BorelSpace K] [CompactSpace K]
     [IsTopologicalGroup K] (μ : Measure K) [IsProbabilityMeasure μ] [μ.IsOpenPosMeasure]
     {φ : K → ℂ} (hφ : Continuous φ) (h1 : φ 1 = 1) : 0 < ∫ κ, ‖φ κ‖ ∂μ := by
-  refine hφ.norm.integral_pos_of_hasCompactSupport_nonneg_nonzero
+  refine hφ.norm.integral_pos_of_hasCompactSupport_nonneg_ne_zero
     (HasCompactSupport.of_compactSpace _) (fun _ => norm_nonneg _) (x := 1) ?_
   simp [h1]
 
@@ -153,9 +153,9 @@ end Abstract
 
 theorem avgInv_of_avgMem : AvgMem → AvgInv := by
   intro hA G _ _ _ _ _ W _ _ _ K ρ hK hρ _ _ μ hH hP Γ P c hPar
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  haveI := hH
-  haveI := hP
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have := hH
+  have := hP
   obtain ⟨M, hM1, hM⟩ : ∃ M : ℝ, 1 ≤ M ∧ ∀ κ, ‖ρ κ‖ ≤ M := by
     obtain ⟨C, hC⟩ := (isCompact_range hρ).isBounded.exists_norm_le
     exact ⟨max 1 C, le_max_left _ _, fun κ => (hC _ ⟨κ, rfl⟩).trans (le_max_right _ _)⟩
@@ -207,9 +207,9 @@ namespace GlobalTheory.CompanionTheory.EisMirGen
 theorem avgMem : AvgMem := by
   unfold AvgMem ForRep
   intro G _ _ _ _ _ W _ _ _ K ρ hK hρ _ _ μ hHaar _ _Γ P c _ φ hφ hLaw w
-  haveI := hHaar
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have := hHaar
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   change ∀ r : K, (r : G) ∈ P → c r • ρ r (avg μ ρ φ w) = avg μ ρ φ w
   intro r hr
   have hcont : Continuous fun κ : K => φ κ • ρ κ := hφ.smul hρ
@@ -285,7 +285,7 @@ theorem gauss_bound (b c : ℝ) : ∃ M : ℝ, 0 ≤ M ∧ ∀ z : ℂ, b ≤ z.
     have := Real.add_one_le_exp (y ^ 2 / 2)
     rw [hEdef]; linarith
   have hEE : E ^ 2 = Real.exp (y ^ 2) := by
-    rw [hEdef, ← Real.exp_nat_mul]
+    rw [hEdef, ← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -414,8 +414,8 @@ theorem differentiable_of_pointwise {K : Type} [TopologicalSpace K] [CompactSpac
 theorem exists_integralCLM {K : Type} [TopologicalSpace K] [CompactSpace K] [MeasurableSpace K] [BorelSpace K]
     {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [FiniteDimensional ℂ E] (μ : Measure K) [IsProbabilityMeasure μ]
     (r : K → E) (hr : Continuous r) : ∃ L : C(K, ℂ) →L[ℂ] E, ∀ f : C(K, ℂ), L f = ∫ κ, f κ • r κ ∂μ := by
-  haveI : ProperSpace E := FiniteDimensional.proper_rclike ℂ E
-  haveI : CompleteSpace E := FiniteDimensional.complete ℂ E
+  have : ProperSpace E := FiniteDimensional.proper_rclike ℂ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
   have hint : ∀ f : C(K, ℂ), Integrable (fun κ => f κ • r κ) μ := fun f =>
     (f.continuous.smul hr).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   let rc : C(K, E) := ⟨r, hr⟩
@@ -486,11 +486,11 @@ theorem gauss_bound (b a : ℝ) : ∃ M : ℝ, 0 ≤ M ∧ ∀ z : ℂ, b ≤ z.
 
 theorem hGood : HGood := by
   intro G _ _ _ _ _ W _ _ _ K ρ hK hρ _ _ μ hμ hprob Φ hΦ
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   obtain ⟨L, hL⟩ := exists_integralCLM μ (fun κ => ρ κ) hρ
   let Ψ₀ : C((ℂ × G) × K, ℂ) := ⟨fun p => Φ p.1.1 (p.1.2 * p.2),
     hΦ.cont.comp ((continuous_fst.comp continuous_fst).prodMk
-      ((continuous_snd.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)))⟩
+      ((continuous_snd.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)))⟩
   let Ψ : C(ℂ × G, C(K, ℂ)) := Ψ₀.curry
   have hA : ∀ (z : ℂ) (g : G), avg μ ρ (fun κ => Φ z (g * κ)) = L (Ψ (z, g)) := by
     intro z g
@@ -676,16 +676,16 @@ theorem sec_top_apply {G : Type} [Group G] [TopologicalSpace G] {W : Type} [Norm
 
 theorem mirGen_of_core : SecLaw → TestSph → AvgMem → AvgInv → SideOf → TestK → Core → MirGen := by
   intro _hSec hSph hMem hInv hSide hTK hCore G _ _ _ _ _ W _ _ _ K ρ hK hρ k _ _ ι _ _ π Γ i₀ i₁ ω d c η η' l hSC hMD
-  haveI := hSC
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  letI : MeasurableSpace K := borel K
-  haveI : BorelSpace K := ⟨rfl⟩
+  have := hSC
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  let : MeasurableSpace K := borel K
+  have : BorelSpace K := ⟨rfl⟩
   let μ : Measure K := Measure.haarMeasure ⊤
   have hHaar : μ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
   have hProb : IsProbabilityMeasure μ := ⟨by
     have h := Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts K))
     simpa using h⟩
-  haveI := hProb
+  have := hProb
   have hN1 : (1 : ℝ) < Fintype.card ι := by
     have h2 := hMD.two
     exact_mod_cast (show 1 < Fintype.card ι by omega)
@@ -1125,7 +1125,7 @@ theorem sideUnfold : EpConv → Unfold → Lines → Term → ZetaK → SideUnfo
   have hCc : IsCompact (Set.range fun κ : K => ((π (g * κ) * dgl d)⁻¹ : GL ι 𝔸[k])) := by
     refine isCompact_range ?_
     have hπ := hS.cont
-    exact ((hπ.comp (continuous_const.mul continuous_subtype_val)).mul continuous_const).inv
+    exact ((hπ.comp (continuous_const.mul continuous_subtypeVal)).mul continuous_const).inv
   obtain ⟨u, hu, hub⟩ := (hE k ι Ψ hΨ).2 s.re _ (max_lt hs1 hs |>.trans_le le_rfl) hCc
   have hbound : ∀ (q : Cos P Γ) (κ : K), ‖T (rep q * (g * κ))‖ ≤ (u ∘ e) q := fun q κ => by
     rw [← key]
@@ -1243,8 +1243,8 @@ end Concrete
 
 theorem testK : StdGood → BdetLaw → TestFun → TestK := by
   intro hStd hB hT G _ _ _ _ K hK k _ _ ι _ _ π Γ P i ω d c η hSide V hV
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : CompactSpace ((adStd k).kGL ι) := isCompact_iff_compactSpace.1 ((hStd k).kcpt ι)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace ((adStd k).kGL ι) := isCompact_iff_compactSpace.1 ((hStd k).kcpt ι)
   obtain ⟨hcl, hmul, hcb, -, -, -⟩ := hB k 𝔸[k] (adStd k) (hStd k) ι ({i} : Set ι)
   let j : K →* (adStd k).kGL ι :=
     { toFun := fun κ => ⟨kap π d κ, hSide.piK κ κ.2⟩
@@ -1253,9 +1253,9 @@ theorem testK : StdGood → BdetLaw → TestFun → TestK := by
   have hj : Continuous j := by
     refine Continuous.subtype_mk ?_ _
     unfold kap
-    exact (continuous_const.mul (hSide.cont.comp continuous_subtype_val)).mul continuous_const
+    exact (continuous_const.mul (hSide.cont.comp continuous_subtypeVal)).mul continuous_const
   let S : Subgroup ((adStd k).kGL ι) := (stab 𝔸[k] ({i} : Set ι)).comap ((adStd k).kGL ι).subtype
-  have hS : IsClosed (S : Set ((adStd k).kGL ι)) := hcl.preimage continuous_subtype_val
+  have hS : IsClosed (S : Set ((adStd k).kGL ι)) := hcl.preimage continuous_subtypeVal
   have hb1 : bdet ({i} : Set ι) (1 : GL ι 𝔸[k]) = 1 := by
     have := hmul 1 (one_mem _) 1 (one_mem _)
     simpa using this
@@ -1266,8 +1266,8 @@ theorem testK : StdGood → BdetLaw → TestFun → TestK := by
     simp [HeckeCharacter.toIdele_apply]
   have hfc : ContinuousOn f (S : Set ((adStd k).kGL ι)) := by
     have h1 : ContinuousOn (fun p : (adStd k).kGL ι => bdet ({i} : Set ι) p.1) (S : Set ((adStd k).kGL ι)) :=
-      hcb.comp continuous_subtype_val.continuousOn fun p hp => hp
-    exact continuous_subtype_val.comp_continuousOn (ω.continuous_toIdele.comp_continuousOn h1)
+      hcb.comp continuous_subtypeVal.continuousOn fun p hp => hp
+    exact continuous_subtypeVal.comp_continuousOn (ω.continuous_toIdele.comp_continuousOn h1)
   obtain ⟨N₁, hN₁, hNf⟩ : ∃ N₁ ∈ 𝓝 (1 : (adStd k).kGL ι), ∀ p ∈ S, p ∈ N₁ → ‖f p - 1‖ ≤ 1 / 4 := by
     have h := hfc 1 (one_mem S)
     have hm : f ⁻¹' Metric.closedBall 1 (1 / 4) ∈ 𝓝[(S : Set ((adStd k).kGL ι))] (1 : (adStd k).kGL ι) :=
@@ -1352,7 +1352,7 @@ theorem integrable_of_continuous (μ : Measure K) [IsProbabilityMeasure μ] {F :
 theorem exists_avgCLM (μ : Measure K) [IsProbabilityMeasure μ] {ρ : K →* (W →L[ℂ] W)}
     (hρ : Continuous ρ) :
     ∃ A : C(K, ℂ) →L[ℂ] (W →L[ℂ] W), ∀ f : C(K, ℂ), A f = avg μ ρ f := by
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hρ.continuousOn
   have hint : ∀ f : C(K, ℂ), Integrable (fun κ => f κ • ρ κ) μ := fun f =>
     integrable_of_continuous μ (f.continuous.smul hρ)
@@ -1376,7 +1376,7 @@ theorem exists_avgCLM (μ : Measure K) [IsProbabilityMeasure μ] {ρ : K →* (W
 theorem avg_translate (μ : Measure K) [μ.IsHaarMeasure] [IsProbabilityMeasure μ]
     {ρ : K →* (W →L[ℂ] W)} (hρ : Continuous ρ) {φ : K → ℂ} (hφ : Continuous φ) (κ₁ : K) :
     avg μ ρ (fun κ => φ (κ₁ * κ)) = ρ κ₁⁻¹ * avg μ ρ φ := by
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hc : Continuous fun κ : K => κ₁ * κ := continuous_const.mul continuous_id
   have hI : Integrable (fun κ => φ (κ₁ * κ) • ρ (κ₁ * κ)) μ :=
     integrable_of_continuous μ ((hφ.comp hc).smul (hρ.comp hc))
@@ -1399,8 +1399,8 @@ end SlopeTestRemainingChoices
 theorem unfold : SecLaw → AvgMem → Unfold := by
   intro hSec hAvg G _ _ _ _ _ W _ _ _ K ρ hK hρ _ _ μ hμ hpr Γ P c hpar φ Λ T hφ hLaw hΛ hT g u hu
     hb w
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hsec := (hSec G W K ρ hK hρ Γ P c hpar).1
   have hmem := hAvg G W K ρ hK hρ μ hμ hpr Γ P c hpar φ hφ hLaw w
   have key : ∀ q : Cos P Γ, ∃ (p : G) (κ₁ : K), p ∈ P ∧ rep q * g = p * κ₁ := fun q => by
@@ -1834,7 +1834,7 @@ theorem zetaK : EpConv → ZetaK := by
     fun κ => ⟨κ, κ.2, rfl⟩
   refine ⟨fun κ => differentiableOn_lineZeta hΨc ω hM (hmem κ), ?_, ?_⟩
   · have hmap : Continuous fun y : ℂ × K => (y.1, (kap π d (y.2 : G))⁻¹) :=
-      continuous_fst.prodMk (hcont.comp (continuous_subtype_val.comp continuous_snd))
+      continuous_fst.prodMk (hcont.comp (continuous_subtypeVal.comp continuous_snd))
     have hS' : Set.MapsTo (fun y : ℂ × K => (y.1, (kap π d (y.2 : G))⁻¹))
         ({s : ℂ | 1 < s.re} ×ˢ Set.univ)
         ({s : ℂ | 1 < s.re} ×ˢ ((fun g : G => (kap π d g)⁻¹) '' (K : Set G))) :=
@@ -1871,8 +1871,8 @@ variable {k : Type} [Field k] [NumberField k]
 theorem lineZeta_ratV_unit (Ψ₁ : (Unit → 𝔸[k]) → ℂ) (ω : HeckeCharacter k) (z : ℂ)
     (ξ : Unit → k) (hξ : ξ ≠ 0) : lineZeta Ψ₁ ω z (ratV ξ) = tate Ψ₁ ω z := by
   have h0 : ξ () ≠ 0 := fun h => hξ (funext fun i => by cases i; exact h)
-  haveI := isHaarMeasure_ideleMeasure k
-  haveI := IdeleGroup.borelSpace k
+  have := isHaarMeasure_ideleMeasure k
+  have := IdeleGroup.borelSpace k
   have key := integral_mul_left_eq_self (μ := ideleMeasure k)
     (fun x : IdeleGroup k => Ψ₁ (fun _ => (x : 𝔸[k])) * ((ω.toIdele x : Circle) : ℂ) *
       ((((IdeleGroup.ideleModule k x : {r : ℝ // 0 < r}) : ℝ) : ℂ) ^ z))
@@ -1902,7 +1902,7 @@ theorem epstein_unit_one (Ψ₁ : (Unit → 𝔸[k]) → ℂ) (ω : HeckeCharact
   rw [tsum_eq_single (Projectivization.mk k (fun _ : Unit => (1 : k)) hne)
     (fun b hb => absurd (proj_unit_eq b _) hb)]
   simp only [inv_one, Units.val_one, Matrix.one_mulVec]
-  exact lineZeta_ratV_unit Ψ₁ ω z _ (Projectivization.rep_nonzero _)
+  exact lineZeta_ratV_unit Ψ₁ ω z _ (Projectivization.rep_ne_zero _)
 
 theorem zetaOne_of_epMain : EpMain → ZetaOne := by
   intro h

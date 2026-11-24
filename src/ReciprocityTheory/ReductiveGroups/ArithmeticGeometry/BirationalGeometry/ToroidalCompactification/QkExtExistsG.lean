@@ -86,7 +86,7 @@ theorem exists_level (hG : GlobalFnsSt) {y : (TF (R := k) F).left} {J} (hJ : Goo
       QkExt (algebraMap _ F) (a.eta v) q₀ ∧ q₀.y + l.M • z = star m • q.y ∧
       q₀.g.b * cP a.D₀ _ z = q.g.b ≫ a.oa.onB.act (star m) ∧ (q.g.b = 1 → ∀ χ, gx (𝟙 _) hJ q₀.g χ * ix (𝟙 _) hJ z χ =
         ⟨1, val (q.g.s (m • χ)) (𝟙 _) y J⟩) := by
-  letI := H.starRing
+  let := H.starRing
   have hM0 : 0 < l.M := by have := l.three_le; omega
   let r : c.F := ⟨H.rt0, c.le (IntermediateField.subset_adjoin _ _ (by simp))⟩
   let z : c.F := ⟨zeta l.A, c.le (IntermediateField.subset_adjoin _ _ (by simp))⟩

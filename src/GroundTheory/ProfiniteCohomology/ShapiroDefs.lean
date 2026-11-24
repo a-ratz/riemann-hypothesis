@@ -163,7 +163,7 @@ theorem isLocallyConstant_coind (f : Rep.coind (U : Subgroup G).subtype B) :
   intro x
   set S : Set G := Subtype.val '' (stabilizer B.ρ (f.1 x) : Set (U : Subgroup G))
   have hS : IsOpen S :=
-    IsOpen.isOpenMap_subtype_val (s := (U : Set G)) U.isOpen _ (isOpen_stabilizer B (f.1 x))
+    IsOpen.isOpenMap_subtypeVal (s := (U : Set G)) U.isOpen _ (isOpen_stabilizer B (f.1 x))
   have h1 : S ∈ 𝓝 (1 : G) := hS.mem_nhds ⟨1, (stabilizer B.ρ (f.1 x)).one_mem, rfl⟩
   have hc : Continuous fun y : G => y * x⁻¹ := continuous_id.mul continuous_const
   have h2 : ∀ᶠ y in 𝓝 x, y * x⁻¹ ∈ S := hc.continuousAt.preimage_mem_nhds (by simpa using h1)

@@ -182,14 +182,14 @@ theorem UpperTheory.V.Af.locFixed :
     have hlt : ∀ x : ValueGroupWithZero (w.adicCompletion F),
         x < γ ↔ x ≤ valuation _ (M : w.adicCompletion F) := fun x => by
       show x < _ / _ ↔ _
-      rw [lt_div_iff₀ (zero_lt_iff.2 hu0)]
+      rw [lt_div_iff₀ (pos_iff_ne_zero.2 hu0)]
       refine ⟨fun h1 => not_lt.1 fun h2 => h1.not_ge ?_, fun h1 => (mul_le_mul_left h1 _).trans_lt
-        (mul_lt_of_lt_one_right (zero_lt_iff.2 hv0) uniformizer_lt_one)⟩
-      have hx : 0 < x := (zero_lt_iff.2 hv0).trans h2
+        (mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hv0) uniformizer_lt_one)⟩
+      have hx : 0 < x := (pos_iff_ne_zero.2 hv0).trans h2
       rwa [← div_le_iff₀' hx, le_uniformizer_iff, div_lt_one₀ hx]
     have hγ : γ ≤ 1 := by
       show _ / _ ≤ (1 : ValueGroupWithZero (w.adicCompletion F))
-      rw [div_le_one₀ (zero_lt_iff.2 hu0), le_uniformizer_iff]
+      rw [div_le_one₀ (pos_iff_ne_zero.2 hu0), le_uniformizer_iff]
       exact hv
     obtain ⟨s, hs⟩ := GlobalTheory.LocGL.SupportRing.exists_hasSupport P.litN.loc.zel (algNorm σ)
     have hch : ∀ y ∈ s, ∃ χ hχ, y = IrrGL.ofChar χ hχ ∧ ∀ u : (w.adicCompletion F)ˣ,
@@ -256,7 +256,7 @@ theorem UpperTheory.V.Af.wdAway :
   have hx' : IsWDOf ι r' x := hx.of_conj hl g fun s => by rw [hr', inv_mul_cancel_right]
   obtain ⟨t, ht, φ, hφ, N, a, hN, ha, rfl⟩ := hx'
   have hs : IsSmooth (r'.comp (Weil h).subtype) := by
-    refine .of_open ((UpperTheory.V.Af.isOpen_fixMu (F := F) (Ω := Ω) hM).preimage continuous_subtype_val)
+    refine .of_open ((UpperTheory.V.Af.isOpen_fixMu (F := F) (Ω := Ω) hM).preimage continuous_subtypeVal)
       (fun ζ _ => rfl) fun σ hσ => Units.ext ?_
     change (r' σ : Matrix (Fin n) (Fin n) (Qbar l)) = 1
     rw [hr', hg σ σ.2]
@@ -449,7 +449,7 @@ theorem UpperTheory.V.Hi.ordA :
   let σ := (twist ((ofChar (torusChar μ)).comp (leviTorus k (Fin n)).symm.toMonoidHom) (deltaHalf k _)).comp
     (leviProj k (points (Fin n)))
   have hσ : ∀ p x, σ p x = χ p * x := fun p x => by
-    simp only [χ, dif_pos p.2]
+    simp only [χ, dite_eq_left p.2]
     show (deltaHalf k _ _ : ℂ) • ofChar _ _ x = _
     rw [ofChar_apply]
     simp [Ψ, mul_assoc]
@@ -463,7 +463,7 @@ theorem UpperTheory.V.Hi.ordA :
   have hN : ∀ x ∈ unipB k (Fin n), χ x = 1 := by
     intro x hx
     have h := unipRad_le_parab k _ hx
-    simp only [χ, dif_pos h]
+    simp only [χ, dite_eq_left h]
     rw [(coe_mem_unipRad k ⟨x, h⟩).1 hx, map_one, Units.val_one]
   have hD : ∀ t, diagT k (Fin n) t ∈ parab k (points (Fin n)) := fun t => leviEmb_mem_parab k _ _
   have hT : ∀ t, χ (diagT k (Fin n) t) =
@@ -471,7 +471,7 @@ theorem UpperTheory.V.Hi.ordA :
     intro t
     have hd : ∀ i, Matrix.GeneralLinearGroup.det (leviTorus k (Fin n) t i) = t i :=
       congrFun ((leviTorus k (Fin n)).left_inv t)
-    simp only [χ, dif_pos (hD t)]
+    simp only [χ, dite_eq_left (hD t)]
     rw [show leviProj k _ ⟨_, hD t⟩ = leviTorus k (Fin n) t from leviProj_leviEmb k _ _]
     simp [Ψ, deltaHalf_apply, hd, Finset.prod_mul_distrib]
   have hφ' : ∀ t : (glIwa k n).T, χ t = ((φ t)⁻¹ : ℂˣ) ∧ ((t : GL (Fin n) k) ∈ (glIwa k n).Tc c → χ t = 1) := by
@@ -490,7 +490,7 @@ theorem UpperTheory.V.Hi.ordA :
     simp
   have hmul : ∀ a ∈ parab k (points (Fin n)), ∀ b ∈ parab k (points (Fin n)), χ (a * b) = χ a * χ b := by
     intro a ha b hb
-    simp only [χ, dif_pos ha, dif_pos hb, dif_pos (mul_mem ha hb)]
+    simp only [χ, dite_eq_left ha, dite_eq_left hb, dite_eq_left (mul_mem ha hb)]
     rw [← Units.val_mul, ← map_mul, ← map_mul]
     rfl
   obtain ⟨f, hf1, hf⟩ := _root_.UpperTheory.Reformulated.B.Gr28.indVec _ ((glIwa k n).I1 c) σ (hI c).1 1 (by
@@ -503,9 +503,9 @@ theorem UpperTheory.V.Hi.ordA :
     show χ (x * t * y) = 1
     rw [hmul _ (mul_mem hx' ht') _ hy', hmul _ hx' _ ht', hN x hx.1, (hφ' ⟨t, ht.1⟩).2 ht,
       hN y ((mem_unipB k).2 ⟨(mem_borel k).1 hy', (GlAx.mem_low.1 hy.1).2⟩), one_mul, one_mul])
-  haveI : FiniteDimensional ℂ (GlobalTheory.PRep.fixed (PS ω) ((glIwa k n).I1 c)) :=
+  have : FiniteDimensional ℂ (GlobalTheory.PRep.fixed (PS ω) ((glIwa k n).I1 c)) :=
     (GlobalTheory.SmGL.ParIndAdm.isAdmissible_parInd _ _).2 _ (hI c).1 (hI c).2
-  haveI : FiniteDimensional ℂ (fixd π ((glIwa k n).I1 c)) :=
+  have : FiniteDimensional ℂ (fixd π ((glIwa k n).I1 c)) :=
     Module.Finite.of_injective (e.toLinearEquiv.toLinearMap.restrict (p := fixd π ((glIwa k n).I1 c))
       (q := GlobalTheory.PRep.fixed (PS ω) ((glIwa k n).I1 c)) fun v hv u => by
         show PS ω u (e.toLinearEquiv v) = _
@@ -638,7 +638,7 @@ private theorem up_ord {A : Type} [CommRing A] (θ : H.X.I.T →* Aˣ) (x : A �
     fun v _ => ⟨Up.singleP I v _ (I v).z_mem, (Up.uOpPi I _ v _ (I v).z_mem F hN).trans (hz v)⟩).2
   have hzz : (Finset.univ.toList.map fun v => (Pi.mulSingle v (I v).z : GV n H.Sl)).prod = H.X.I.z := by
     funext w
-    rw [up_list (fun v => (I v).z) w _ (Finset.nodup_toList _), if_pos (by simp)]
+    rw [up_list (fun v => (I v).z) w _ (Finset.nodup_toList _), ite_eq_left (by simp)]
     rfl
   rw [hzz, Finset.prod_map_toList] at hZ
   have hl : ∀ v, ((List.range n).map (psEig (ω v))).prod = ∏ j ∈ Finset.range n, psEig (ω v) j := fun v => rfl
@@ -669,8 +669,8 @@ theorem UpperTheory.V.Hi.coreUp :
     ∀ (ι : Qbar l ≃+* ℂ), ∀ (x : A →ₐ[c.O] Qbar l) (lam : Wt L l n) (d : ℕ) (ξ : GV n H.Sl →* GL (Fin d) ℂ) (c0 : ℕ) (sp : H.X.Fn A H.m → Fin H.m → H.X.Fn ℂ d), H.IsSpec θ ι x.toRingHom lam ξ c0 sp →
     ∀ (Y : H.Part ι lam ξ) (K : H.Lev), (∀ q, fixd (Y.σq q).ρ (K.1 q) ≠ ⊥) → ∀ ω : ∀ v, Fin n → ((H.Sl v).adicCompletion L)ˣ →* ℂˣ, (∀ v, Nonempty ((Y.σl v).ρ.Equiv (PS (ω v)))) → (∀ v i (u : Uo ((H.Sl v).adicCompletion L)), (ω v i u : ℂ) * ι (H.finPart θ x.toRingHom lam v i u) = 1) → ∀ a : H.Op → c.O, (∀ w (j : Fin n), ‖ι.symm (Y.a w (j + 1)) - algebraMap c.O (Qbar l) (a (.inl (w, j)))‖ < 1) → (∀ v (j : Fin n), ‖ι.symm ((H.lowVal ι lam v (j + 1))⁻¹ * psEig (ω v) (j + 1))‖ = 1 ∧ ‖ι.symm ((H.lowVal ι lam v (j + 1))⁻¹ * psEig (ω v) (j + 1)) - algebraMap c.O (Qbar l) (a (.inr (v, j)))‖ < 1) → ∀ [Fact (CommOn (H.MK θ a K) (H.op A))], H.MK θ a K ≠ ⊥ ∧ ∃ y : H.TK θ a K →ₐ[c.O] Qbar l, y.toRingHom.comp (algebraMap A _) = x.toRingHom ∧ (∀ w (j : Fin n), ι (y (H.gen θ a K (.inl (w, j)))) = Y.a w (j + 1)) ∧ ∀ v (j : Fin n), ι (y (H.gen θ a K (.inr (v, j)))) = (H.lowVal ι lam v (j + 1))⁻¹ * psEig (ω v) (j + 1) := by
   intro hL L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ ι x lam d ξ c0 sp hsp Y K hK ω hω1 hω2 a ha1 ha2 hFact
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
-  haveI : IsCNL A := IsCNL.ofCO c.O A
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : IsCNL A := IsCNL.ofCO c.O A
   obtain ⟨hC, hfin, hfree, -⟩ := hiComm L Ω l n c H hH A θ hθ K
   choose φ hφ using fun v => Up.exInv (ω v)
   obtain ⟨F, hF, h0, hV, hQ⟩ := up_vec H ι hL hH Y K hK ω hω1 c0 (fun v i y hy => by
@@ -689,7 +689,7 @@ theorem UpperTheory.V.Hi.coreUp :
     have h2 : x.toRingHom b = x.toRingHom (b - algebraMap c.O A o) + x (algebraMap c.O A o) := by simp
     rw [h2]
     exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hx2 _ ho).le h1)
-  haveI : Fact (CommOn (locPart (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) fun i => algebraMap c.O A (a i)) (H.op A)) := hFact
+  have : Fact (CommOn (locPart (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) fun i => algebraMap c.O A (a i)) (H.op A)) := hFact
   obtain ⟨hne, y, hy1, hy2⟩ := Up.eigPt (H.X.Ord (H.τA A) θ (H.lev K)) (H.op A) hC ι x.toRingHom hx1 hx2 sp
     (hsp.add K) (hsp.smul K) (hsp.indep K) (H.opC ι lam d) (hsp.op K) F hO h0
     (Sum.elim (fun p => Y.a p.1 (p.2 + 1)) fun p => (H.lowVal ι lam p.1 (p.2 + 1))⁻¹ * psEig (ω p.1) (p.2 + 1))
@@ -800,13 +800,13 @@ private theorem ne_type {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [F
       ∃ F : Fin m → UA L n → ℂ, F ≠ 0 ∧ (∀ i, F i ∈ σ ⊓ fixd (RU L n) K) ∧
         ∀ (k : KT n wt) i, ∑ a, τ₀ k i a • RU L n (J k) (F a) = F i := by
   classical
-  letI := Fintype.ofFinite St
+  let := Fintype.ofFinite St
   obtain ⟨J, hJ, j1, j2, j3, j4⟩ := ne_J hinj j h1 h2 h3
   let M := σ ⊓ fixd (RU L n) K
   have hst : ∀ g, ∀ φ ∈ M, ((RU L n).comp J) g φ ∈ M := fun g φ hφ => ⟨hσ.stable _ _ hφ.1, fun k hk => by
     change RU L n k (RU L n (J g) φ) = RU L n (J g) φ
     rw [GlobalTheory.DefU.RU_RU, (j4 g k (hK k hk)).eq, ← GlobalTheory.DefU.RU_RU, hφ.2 k hk]⟩
-  haveI : Nontrivial M := Submodule.nontrivial_iff_ne_bot.2 h0
+  have : Nontrivial M := Submodule.nontrivial_iff_ne_bot.2 h0
   let ρ : Representation ℂ (GV n wt) M := GlobalTheory.PRep.sub ((RU L n).comp J) M hst
   obtain ⟨F, hF0, hF⟩ := (hT.2 M ρ τ fun u => ne_iso (h1 u) (h2 u) (h3 u) hσ (τ u) (hτ u) M inf_le_left _ fun g y => by
     change RU L n (J (Pi.mulSingle u g)) y = _
@@ -820,8 +820,8 @@ private theorem ne_type {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [F
 private theorem ne_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  haveI : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
-  haveI : PerfectRing (ResidueField O) l := inferInstance
+  have : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
+  have : PerfectRing (ResidueField O) l := inferInstance
   let j : ResidueField O →+* Perfection (O ⧸ maximalIdeal O) l :=
     Perfection.lift l (ResidueField O) (O ⧸ maximalIdeal O) (RingHom.id (ResidueField O))
   have hj : ∀ x, Perfection.coeff (O ⧸ maximalIdeal O) l 0 (j x) = x := fun x => by
@@ -833,8 +833,8 @@ private theorem ne_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Is
 private theorem ne_isTeich {l : ℕ} [hl : Fact l.Prime] {F : W.GFrame l} (c : Coef l) {n : ℕ} (r : Resid F c.O n) :
     ∃ t, r.IsTeich t := by
   obtain ⟨hc, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : Finite (ResidueField c.O) := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have : Finite (ResidueField c.O) := hfin
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm
@@ -1040,7 +1040,7 @@ private theorem types (hn : 1 ≤ n) (x : B.Pt) {σ : Submodule ℂ (UA L n → 
   refine ⟨τ, hτ, fun rc hrc => wd_type hu _ (fun i => ?_) P hP ((hl _ hw τ hτ _ _ rc hrc).1 hu)⟩
   obtain ⟨-, hfin, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
   refine Subgroup.isOpen_mono (H₁ := (r.chib i).ker.comap (V.pr.comp (Ine (F := L) (s.A u)).subtype)) (fun g hg => ?_)
-    ((r.chib_open i).preimage ((V.pr_cont W.continuous_resP).comp continuous_subtype_val))
+    ((r.chib_open i).preimage ((V.pr_cont W.continuous_resP).comp continuous_subtypeVal))
   have h1 : residue c.O (t i (V.pr g)) = 1 := (ht i _).1.trans (congrArg Units.val hg)
   have h2 : ((t i (V.pr g) : c.O)) ^ (Nat.card (ResidueField c.O) - 1) = 1 :=
     (Units.val_pow_eq_pow_val _ _).symm.trans (congrArg Units.val (ht i _).2)
@@ -1051,7 +1051,7 @@ private theorem types (hn : 1 ≤ n) (x : B.Pt) {σ : Submodule ℂ (UA L n → 
 
     simp only [map_sum, map_pow, h1, one_pow, Finset.sum_const, Finset.card_range, nsmul_one, map_zero] at h6
     rw [Nat.cast_pred Nat.card_pos] at h6
-    letI := Fintype.ofFinite (ResidueField c.O)
+    let := Fintype.ofFinite (ResidueField c.O)
     simp [Nat.card_eq_fintype_card] at h6))
   exact (congrArg (Units.map (algebraMap c.O (Qbar l) : c.O →* Qbar l)) h4).trans (map_one _)
 
@@ -1118,7 +1118,7 @@ theorem UpperTheory.V.Hi.Up.main :
       (fun v => (UpperTheory.building_component_uniqueness L n σ hσ _ (split_w (Or.inl v.2)) _ _ _ _ (hY v) (hτ v)).elim fun a => (hω v).elim fun b =>
         ⟨a.trans b⟩) hfin R.a hsph (fun v => unif_val R x hN hA v (ho v))
   rcases hJ with ⟨hb, -⟩ | ⟨hc, hco, f, -, hmap, -, -, rfl⟩
-  · haveI := Fact.mk ((hiComm L Ω l n c _ hA Λ.Λ R.θ R.isWt K).2.2.2 R.a).1
+  · have := Fact.mk ((hiComm L Ω l n c _ hA Λ.Λ R.θ R.isWt K).2.2.2 R.a).1
     exact absurd hb up.1
   obtain ⟨-, y, hy, hy1, hy2⟩ := up
   obtain ⟨F, hF, hF0⟩ := (Submodule.ne_bot_iff _).1 Y.ne
@@ -1126,7 +1126,7 @@ theorem UpperTheory.V.Hi.Up.main :
     rw [hy1]
     exact Y.sph w _ F hF
   obtain ⟨hcp, hfn, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : CharP (ResidueField c.O) l := by
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero Fact.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm
@@ -1229,7 +1229,7 @@ variable {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAl
 
 private theorem algPow_add (d e : (L →+* Qbar l) → ℤ) (x : (w.adicCompletion L)ˣ) :
     algPow w (d + e) (x : w.adicCompletion L) = algPow w d (x : w.adicCompletion L) * algPow w e (x : w.adicCompletion L) := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
   unfold algPow
   rw [← finprod_mul_distrib (Set.toFinite _) (Set.toFinite _)]
   exact finprod_congr fun j => by rw [Pi.add_apply, zpow_add₀ ((map_ne_zero j.1).2 x.ne_zero)]
@@ -1238,8 +1238,8 @@ private theorem sum_zero [Fintype (W.Emb l w)] (ha : IsLocalArtin h a) (d : (L �
     (χ : Dec (F := L) A →* (Qbar l)ˣ) (hχ : Continuous χ)
     (hv : ∀ s : Weil h, (χ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) = algPow w d (a s : w.adicCompletion L)) :
     ∑ j : W.Emb l w, d (j.1.comp (algebraMap L _)) = 0 := by
-  haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hl : (l : Qbar l) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
   obtain ⟨s, hs⟩ := ha.surj (Units.mk0 (l : w.adicCompletion L) (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero))
   have h1 := norm_one χ (Units.continuous_val.comp hχ) (Subgroup.inclusion (Weil_le_Dec h) s)
@@ -1256,20 +1256,20 @@ private theorem not_linked (H : GlobalTheory.Published.GlobalArtinReciprocity) (
     (hO : ∀ j, OrdChar ι a (ω j) (hh j) (ψ j))
     (hne : ∀ i j, ψ i ≠ ψ j * (cycBar L Ω l).comp (Dec (F := L) A).subtype) (i j : Fin n) (hij : i ≠ j) :
     ω i ≠ ω j ∧ ω i ≠ ω j * absPow (w.adicCompletion L) 1 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
   let inc := Subgroup.inclusion (Weil_le_Dec h)
   let ε := (cycBar L Ω l).comp (Dec (F := L) A).subtype
   have hεc : Continuous ε := ((Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ L Ω l)).comp continuous_subtype_val
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ L Ω l)).comp continuous_subtypeVal
   have hε : ∀ s : Weil h, (ε (inc s) : Qbar l) = ((normV w : ℕ) : Qbar l) ^ deg s * algPow w 1 (a s : w.adicCompletion L) :=
     UpperTheory.V.Loc.epsArt H h hw a ha
   have hv : ∀ k (s : Weil h), (ψ k (inc s) : Qbar l) = ι.symm (ω k (a s)) * algPow w (-hh k) (a s : w.adicCompletion L) :=
     fun k s => (hO k).val s _ rfl (Set.mem_univ _)
   have hN : Nonempty (W.Emb l w) := by
     by_contra hE
-    haveI : IsEmpty (W.Emb l w) := not_nonempty_iff.1 hE
-    haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+    have : IsEmpty (W.Emb l w) := not_nonempty_iff.1 hE
+    have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
     have h1 := norm_one ε (Units.continuous_val.comp hεc) (inc (frob h))
     rw [hε, deg_frob, zpow_one, algPow, finprod_of_isEmpty, mul_one, GlobalTheory.Pst.normV_eq_pow (l := l) hw, Nat.cast_pow, norm_pow] at h1
     have h2 := (pow_eq_one_iff_of_nonneg (norm_nonneg _) (fun h0 => by
@@ -1332,7 +1332,7 @@ private theorem dual_of_weights {n : ℕ} (μ ν : DomWeight n)
     add_lt_add_of_le_of_lt (μ.anti (Fin.rev_le_rev.2 hij.le)) (by exact_mod_cast hij)
   have m2 : StrictMono fun j : Fin n => -ν.w j + (j : ℕ) := fun i j hij =>
     add_lt_add_of_le_of_lt (neg_le_neg (ν.anti hij.le)) (by exact_mod_cast hij)
-  have h2 := (m1.range_inj m2).1 (Set.ext fun z => by simpa using (congrArg (z ∈ ·) h1).to_iff)
+  have h2 := (m1.range_inj_of_wellFoundedLT m2).1 (Set.ext fun z => by simpa using (congrArg (z ∈ ·) h1).to_iff)
   obtain ⟨u, hu⟩ := ν
   have h3 : u = μ.dual.w := funext fun j => by
     have := congrFun h2 j
@@ -1397,7 +1397,7 @@ private theorem above [IsCMField L] (P : Af.Hypotheses₂) (hl : l ≠ 2) {ρ : 
   have ha : IsLocalArtin h (artOf h) := by
     obtain ⟨a, ha, -⟩ := hrc
     exact Classical.epsilon_spec ⟨a, ha⟩
-  have hc : Continuous (ρ.comp (Dec (F := L) A).subtype) := hρ.comp continuous_subtype_val
+  have hc : Continuous (ρ.comp (Dec (F := L) A).subtype) := hρ.comp continuous_subtypeVal
   choose ω hω using fun i => (Loc.ordCharIff P.litN.aut.art h ι _ ha (htW lam i) (ψ i)).1.2 ⟨flag_cont hc hf i, hψ i⟩
   have hD : DRat ι h (ρ.comp (Dec (F := L) A).subtype) HT fun s => (rc (algNorm τ)).charPol s := fun O _ _ _ Bw hj =>
     have h1 := HG w A h O Bw hj
@@ -1476,7 +1476,7 @@ private theorem chi_comap {n : ℕ} {A Γ H : Type} [CommRing A] [Group Γ] [Gro
 private theorem ker_le {n : ℕ} {k Γ H : Type} [Field k] [CharZero k] [Group Γ] [Group H] {D : W.GDet n k Γ} {φ : H →* Γ}
     {ρ : H →* GL (Fin n) k} (hn : 1 ≤ n) (e : D.comap φ = W.GDet.ofRep (W.mat ρ)) (hs : Formalism.MainNotions.N.IsSSRep ρ) {g : H}
     (hg : φ g = 1) : ρ g = 1 := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   refine UpperTheory.eq_one_of_trace_translation_invariant_semisimple H k n ρ hs g fun y => ?_
   have h1 : ∀ z, (ρ z : Matrix (Fin n) (Fin n) k).charpoly = D.chi (MonoidAlgebra.single (φ z) 1) := fun z =>
     ((AlgebraTools.Det.repApi (W.mat ρ)).2.1 z).symm.trans (by rw [← e, chi_comap])

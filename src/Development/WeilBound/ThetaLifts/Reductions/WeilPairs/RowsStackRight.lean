@@ -61,7 +61,7 @@ theorem sig_sig (h : IsCMExt F E σ) (x : E) : σ (σ x) = x := by
 
 theorem exists_nsmul_mem {n : ℕ} {L : Submodule (𝓞 E) (Fin n → E)} (h : L.IsFullLattice E) (v : Fin n → E) :
     ∃ N : ℕ, 0 < N ∧ N • v ∈ L := by
-  letI := h
+  let := h
   have hv : v ∈ Submodule.span E (L : Set (Fin n → E)) := by rw [Submodule.IsFullLattice.span_eq_top]; trivial
   obtain ⟨t, ht⟩ := multiple_mem_span_of_mem_localization_span (nonZeroDivisors (𝓞 E)) E _ v hv
   rw [Submodule.span_eq] at ht
@@ -135,13 +135,13 @@ theorem latH_of {B : Base F E} (hcm : IsCMExt F E σ) {X : Spc F E n} {W : Spc F
       inv_mul_cancel₀ (neg_ne_zero.2 hξ), one_smul])
   have e2 : ξ₀ • (-ξ₀ • W.J⁻¹)⁻¹ = -W.J := by
     rw [e1, smul_smul, inv_neg, mul_neg, mul_inv_cancel₀ hξ, neg_one_smul]
-  letI : StarRing E :=
+  let : StarRing E :=
     { star := σ
       star_involutive := sig_sig hcm
       star_mul := fun a b => by show σ (a * b) = σ b * σ a; rw [map_mul, mul_comm]
       star_add := fun a b => map_add σ a b }
   obtain ⟨m, u, u', hu, hd⟩ := GlobalTheory.LatVacDual.exists_dual_family X.Jᵀ (fun i j => hX.herm i j)
-    (by rwa [Matrix.det_transpose]) X.L hX.lat.fg (by letI := hX.lat; exact Submodule.IsFullLattice.span_eq_top) (fun y hy => (hX.dual y).2 fun x hx => by
+    (by rwa [Matrix.det_transpose]) X.L hX.lat.fg (by let := hX.lat; exact Submodule.IsFullLattice.span_eq_top) (fun y hy => (hX.dual y).2 fun x hx => by
       obtain ⟨b, hb⟩ := hy x hx
       have : form σ X.J y x = b := by
         rw [hb, Finset.sum_comm]

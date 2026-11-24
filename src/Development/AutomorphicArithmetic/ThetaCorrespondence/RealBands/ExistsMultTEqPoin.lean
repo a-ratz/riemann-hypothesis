@@ -103,12 +103,12 @@ namespace GlobalTheory
 theorem integral_haar_eq_zero_of_fibre_integrals_eq_zero :
     ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [LocallyCompactSpace H] [SecondCountableTopology H] [T2Space H] [MeasurableSpace H] [BorelSpace H] (μ : Measure H), μ.IsHaarMeasure → ∀ (P Q : Subgroup H), IsClosed (P : Set H) → IsClosed (Q : Set H) → (∀ p ∈ P, ∀ q ∈ Q, p * q = q * p) → (∀ h, ∃ p ∈ P, ∃ q ∈ Q, h = p * q) → (∀ h, h ∈ P → h ∈ Q → h = 1) → ∀ F : H → ℂ, (∀ ν : Measure P, ν.IsHaarMeasure → ∀ q ∈ Q, ∫ p, F ((p : H) * q) ∂ν = 0) → ∫ h, F h ∂μ = 0 := by
   intro H _ _ _ _ _ _ _ _ μ hμ P Q hP hQ hcomm hgen hdisj F hF
-  haveI : LocallyCompactSpace P := hP.locallyCompactSpace
-  haveI : LocallyCompactSpace Q := hQ.locallyCompactSpace
-  haveI : SecondCountableTopology P := TopologicalSpace.Subtype.secondCountableTopology (P : Set H)
-  haveI : SecondCountableTopology Q := TopologicalSpace.Subtype.secondCountableTopology (Q : Set H)
-  haveI : BorelSpace P := Subtype.borelSpace (fun x => x ∈ (P : Set H))
-  haveI : BorelSpace Q := Subtype.borelSpace (fun x => x ∈ (Q : Set H))
+  have : LocallyCompactSpace P := hP.locallyCompactSpace
+  have : LocallyCompactSpace Q := hQ.locallyCompactSpace
+  have : SecondCountableTopology P := TopologicalSpace.Subtype.secondCountableTopology (P : Set H)
+  have : SecondCountableTopology Q := TopologicalSpace.Subtype.secondCountableTopology (Q : Set H)
+  have : BorelSpace P := Subtype.borelSpace (fun x => x ∈ (P : Set H))
+  have : BorelSpace Q := Subtype.borelSpace (fun x => x ∈ (Q : Set H))
   let m : P × Q →* H :=
     { toFun := fun x => (x.1 : H) * x.2
       map_one' := by simp
@@ -121,7 +121,7 @@ theorem integral_haar_eq_zero_of_fibre_integrals_eq_zero :
           _ = p * q * (p' * q') := by simp only [mul_assoc] }
   have hm : ∀ x : P × Q, m x = (x.1 : H) * x.2 := fun _ => rfl
   have hcont : Continuous m :=
-    (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+    (continuous_subtypeVal.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
   have hsurj : Function.Surjective m := by
     intro h
     obtain ⟨p, hp, q, hq, rfl⟩ := hgen h
@@ -139,10 +139,10 @@ theorem integral_haar_eq_zero_of_fibre_integrals_eq_zero :
   let φ : (P × Q) ≃ₜ H := e.toEquiv.toHomeomorphOfContinuousOpen hcont hopen
   let νP : Measure P := Measure.haar
   let νQ : Measure Q := Measure.haar
-  haveI : νP.IsHaarMeasure := inferInstance
-  haveI : νQ.IsHaarMeasure := inferInstance
-  haveI : (νP.prod νQ).IsHaarMeasure := inferInstance
-  haveI : ((νP.prod νQ).map e).IsHaarMeasure :=
+  have : νP.IsHaarMeasure := inferInstance
+  have : νQ.IsHaarMeasure := inferInstance
+  have : (νP.prod νQ).IsHaarMeasure := inferInstance
+  have : ((νP.prod νQ).map e).IsHaarMeasure :=
     e.isHaarMeasure_map (νP.prod νQ) φ.continuous φ.symm.continuous
   have hμeq := Measure.isMulLeftInvariant_eq_smul μ ((νP.prod νQ).map e)
   have hzero : ∫ h, F h ∂((νP.prod νQ).map e) = 0 := by
@@ -177,7 +177,7 @@ theorem unfolding_cover_bound (G H : Type) [Group G] [Group H] [MeasurableSpace 
     ∑' q : Γ ⧸ ι.range.subgroupOf Γ, ∫⁻ h, F ((q.out : Γ) * ι h) ∂μ
       ≤ ∫⁻ h in Kc, ∑' γ : Γ, F (γ * ι h) ∂μ := by
   classical
-  haveI hcH : Countable (Γ.comap ι) := by
+  have hcH : Countable (Γ.comap ι) := by
     have : Function.Injective (fun δ : Γ.comap ι => (⟨ι δ, δ.2⟩ : Γ)) := by
       intro a b hab
       apply Subtype.ext
@@ -211,7 +211,7 @@ theorem unfolding_cover_bound (G H : Type) [Group G] [Group H] [MeasurableSpace 
             _ = ∫⁻ k, F (g * ι (e k)) ∂(μ.restrict (e ⁻¹' ((fun h => (δ:H) * h) ⁻¹' Kc))) :=
                 lintegral_map_equiv _ _
             _ = _ := by rw [hpre]; simp [e, mul_assoc]
-  haveI : Countable (Γ ⧸ ι.range.subgroupOf Γ) := QuotientGroup.mk_surjective.countable
+  have : Countable (Γ ⧸ ι.range.subgroupOf Γ) := QuotientGroup.mk_surjective.countable
   let φ : (Γ ⧸ ι.range.subgroupOf Γ) × Γ.comap ι → Γ := fun p =>
     (p.1.out : Γ) * ⟨ι ((p.2 : H)⁻¹), by simpa using Γ.inv_mem p.2.2⟩
   have hφ : Function.Injective φ := by
@@ -327,7 +327,7 @@ theorem GlobalTheory.PoinAut.partialSum_bdd : ∀ (D : D7) (θ : InfFam D), IsIn
         C * P * ∏ τ, ((1 + hsn (cmp θ τ (c * (γ : GA D V) * x))) ^ N)⁻¹ := by
     intro γ hγ
     unfold coef
-    rw [if_pos (Finset.mem_filter.1 hγ).2]
+    rw [ite_eq_left (Finset.mem_filter.1 hγ).2]
     have := hCb (c * (γ : GA D V) * x) 1
     rwa [mul_one] at this
   have hx0 : 0 ≤ height V x := (height_pos V x).le
@@ -339,7 +339,7 @@ theorem GlobalTheory.PoinAut.partialSum_bdd : ∀ (D : D7) (θ : InfFam D), IsIn
           ‖coef θ M K v (fun τ => (a τ : M.H τ)) (c * (γ : GA D V) * x)‖ := by
         refine (Finset.sum_filter_of_ne fun γ _ h => ?_).symm
         by_contra hn
-        exact h (by unfold coef; rw [if_neg hn, norm_zero])
+        exact h (by unfold coef; rw [ite_eq_right hn, norm_zero])
     _ ≤ ∑ γ ∈ s.filter (fun γ : GQ V => Lev.finE V (c * (γ : GA D V) * x) ∈ K),
           C * P * ∏ τ, ((1 + hsn (cmp θ τ (c * (γ : GA D V) * x))) ^ N)⁻¹ := Finset.sum_le_sum hterm
     _ = C * P * ∑ γ ∈ s.filter (fun γ : GQ V => Lev.finE V (c * (γ : GA D V) * x) ∈ K),
@@ -588,23 +588,23 @@ theorem hasDerivAt_coef_oneP : ∀ (D : D7), GlobalTheory.Published.HarishChandr
   swap
   · have e : (fun s : ℝ => coef θ M K v b (x * oneP θ V τ X s)) = fun _ => 0 := by
       funext s
-      simp only [coef, hfin s, hK, if_false]
+      simp only [coef, hfin s, hK, ite_false]
     rw [e]
     have e2 : coef θ M K v (Function.update b τ (dRep (M.rep τ) X (b τ))) x = 0 := by
-      simp only [coef, hK, if_false]
+      simp only [coef, hK, ite_false]
     rw [e2]
     exact hasDerivAt_const _ _
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have hstd := GlobalTheory.TypeSum.std_of_isDS hHC (M.ds τ)
   have hsv : SmoothVec (lieAt V τ) (M.rep τ) (b τ) :=
     hHC.smoothVec hstd.1 hstd.2.1 hb (M.fr_unit τ) (M.fr_gram τ)
   have hd0 := Formalism.IndefR.SchurOrthogonalityAlt.gp_sv_hasDerivAt hsv hX 0
-  rw [zero_smul, NormedSpace.exp_zero, Formalism.IndefR.SchurOrthogonalityAlt.gp_rep_one, ContinuousLinearMap.one_apply] at hd0
+  rw [zero_smul, NormedSpace.exp_zero, Formalism.IndefR.SchurOrthogonalityAlt.gp_rep_one, one_apply_eq_self] at hd0
   set c : ℂ := ∏ τ' ∈ Finset.univ.erase τ, ⟪v τ', M.rep τ' (cmp θ τ' x) (b τ')⟫_ℂ with hc
   have hfun : ∀ s : ℝ, coef θ M K v b (x * oneP θ V τ X s) =
       c * ⟪v τ, M.rep τ (cmp θ τ x) (M.rep τ (NormedSpace.exp (s • X)) (b τ))⟫_ℂ := by
     intro s
-    simp only [coef, hfin s, hK, if_true, coefR]
+    simp only [coef, hfin s, hK, ite_true, coefR]
     rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ τ)]
     congr 1
     · refine Finset.prod_congr rfl fun τ' hτ' => ?_
@@ -618,7 +618,7 @@ theorem hasDerivAt_coef_oneP : ∀ (D : D7), GlobalTheory.Published.HarishChandr
       rfl
   have hval : coef θ M K v (Function.update b τ (dRep (M.rep τ) X (b τ))) x =
       c * ⟪v τ, M.rep τ (cmp θ τ x) (dRep (M.rep τ) X (b τ))⟫_ℂ := by
-    simp only [coef, hK, if_true, coefR]
+    simp only [coef, hK, ite_true, coefR]
     rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ τ), Function.update_self]
     congr 1
     refine Finset.prod_congr rfl fun τ' hτ' => ?_
@@ -777,7 +777,7 @@ theorem poin_smooth_growth_deriv : GlobalTheory.Published.HarishChandraModules �
     obtain ⟨C, hC0, hC⟩ := termBound θ hθ M K v hv b hb
     refine ⟨C * C₀, fun g => ?_⟩
     refine hB (fun x => ‖coef θ M K v b x‖) C (fun _ => norm_nonneg _) (fun x hx => ?_) hC g
-    simp only [coef, if_neg hx, norm_zero]
+    simp only [coef, ite_eq_right hx, norm_zero]
   have grow : ∀ b : ∀ τ, M.H τ, (∀ τ, b τ ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ) → ModGrowthExp V A (poin θ M K v c b) := by
     intro b hb
     obtain ⟨C, hC⟩ := hsum b hb
@@ -806,7 +806,7 @@ theorem poin_smooth_growth_deriv : GlobalTheory.Published.HarishChandraModules �
       simp only [hu]; split_ifs
       · exact mul_nonneg (mul_nonneg hC'0 hL0) (hprod x)
       · exact le_rfl
-    have huK : ∀ x, Lev.finE V x ∉ K → u x = 0 := fun x hx => by simp only [hu, if_neg hx]
+    have huK : ∀ x, Lev.finE V x ∉ K → u x = 0 := fun x hx => by simp only [hu, ite_eq_right hx]
     have huC : ∀ x, u x ≤ (C' * L) * ∏ τ', ((1 + hsn (cmp θ τ' x)) ^ (2 * V.rank ^ 2 + 1))⁻¹ := fun x => by
       simp only [hu]; split_ifs
       · exact le_rfl
@@ -816,12 +816,12 @@ theorem poin_smooth_growth_deriv : GlobalTheory.Published.HarishChandraModules �
       by_cases hx : Lev.finE V x ∈ K
       · have h1 := hC' (x * oneP θ V τ X y)
         have h2 := hL x y (abs_lt.2 ⟨hy.1, hy.2⟩)
-        simp only [hu, if_pos hx]
+        simp only [hu, ite_eq_left hx]
         calc _ ≤ _ := h1
           _ ≤ C' * (L * ∏ τ', ((1 + hsn (cmp θ τ' x)) ^ (2 * V.rank ^ 2 + 1))⁻¹) := mul_le_mul_of_nonneg_left h2 hC'0
           _ = _ := by ring
       · have : coef θ M K v b' (x * oneP θ V τ X y) = 0 := by
-          simp only [coef, finE_mul_oneP, if_neg hx]
+          simp only [coef, finE_mul_oneP, ite_eq_right hx]
         rw [this, norm_zero]
         exact hu0 x
     have hS := (hB u (C' * L) hu0 huK huC g).1
@@ -931,21 +931,21 @@ theorem poin_isCuspFun : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : 
   intro D θ hθ V S M Λ 𝔪 hΛ h𝔪 v hv c hT a
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   intro r C hC μ 𝓕 hμ h𝓕 g
-  haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5; haveI := i7
-  haveI : LocallyCompactSpace (NI V C) := (GlobalTheory.CuspDecay.Model.isClosed_NI V hC).locallyCompactSpace
-  haveI : SecondCountableTopology (NI V C) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI := hμ
+  have := i1; have := i2; have := i3; have := i4; have := i5; have := i7
+  have : LocallyCompactSpace (NI V C) := (GlobalTheory.CuspDecay.Model.isClosed_NI V hC).locallyCompactSpace
+  have : SecondCountableTopology (NI V C) := TopologicalSpace.Subtype.secondCountableTopology _
+  have := hμ
   set K := congLev D.sp.cm V.gram Λ 𝔪 with hK
   have hm : Measurable (coef θ M K v fun τ => (a τ : M.H τ)) := GlobalTheory.T.measurable_level_indicator_coefficient_test_function D θ hθ V S M Λ 𝔪 hΛ h𝔪 v _
   set f : GA D V → ℂ := fun y => coef θ M K v (fun τ => (a τ : M.H τ)) (c * y * g) with hf
   have hfm : ∀ γ : GA D V, Measurable fun h : NI V C => f (γ * (NI V C).subtype h) := fun γ =>
-    hm.comp ((continuous_const.mul (continuous_const.mul continuous_subtype_val)).mul continuous_const).measurable
+    hm.comp ((continuous_const.mul (continuous_const.mul continuous_subtypeVal)).mul continuous_const).measurable
   obtain ⟨-, Kc, hKc, hcov⟩ := GlobalTheory.Mem.UnipCocompact.radicals_cocompact D V r C ⟨hC.2.1, hC.2.2⟩
   have hcov' : ∀ h : NI V C, ∃ δ ∈ (GQ V).comap (NI V C).subtype, δ * h ∈ Kc := fun h => by
     obtain ⟨γ, hγ, k, hk, rfl⟩ := hcov h
     exact ⟨γ⁻¹, Subgroup.inv_mem _ hγ, by simpa using hk⟩
   obtain ⟨B, hB⟩ := GlobalTheory.T.poincareSeries_partialSums_bounded_compact D θ hθ V S M Λ 𝔪 hΛ v hv hT c a ((fun h : NI V C => (h : GA D V) * g) '' Kc)
-    (hKc.image (continuous_subtype_val.mul continuous_const))
+    (hKc.image (continuous_subtypeVal.mul continuous_const))
   have hpt : ∀ h ∈ Kc, ∑' γ : GQ V, ‖f (γ * (NI V C).subtype h) * 1‖ₑ ≤ ENNReal.ofReal B := by
     intro h hh
     rw [ENNReal.tsum_eq_iSup_sum]
@@ -953,13 +953,13 @@ theorem poin_isCuspFun : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : 
     have e : ∀ γ : GQ V, f (↑γ * (NI V C).subtype h) * 1 =
         coef θ M K v (fun τ => (a τ : M.H τ)) (c * (γ : GA D V) * ((h : GA D V) * g)) := fun γ => by
       simp only [hf, mul_one, Subgroup.coe_subtype, mul_assoc]
-    simp only [e, ← ofReal_norm_eq_enorm]
+    simp only [e, ← ofReal_norm]
     rw [← ENNReal.ofReal_sum_of_nonneg (fun _ _ => norm_nonneg _)]
     exact ENNReal.ofReal_le_ofReal (hB _ ⟨h, hh, rfl⟩ s)
   have hfin : (∑' q : GQ V ⧸ (NI V C).subtype.range.subgroupOf (GQ V),
       ∫⁻ h, ‖f ((q.out : GQ V) * (NI V C).subtype h) * 1‖ₑ ∂μ) ≠ ⊤ := by
     refine ne_top_of_le_ne_top ?_ (_root_.GlobalTheory.unfolding_cover_bound (GA D V) (NI V C) μ (NI V C).subtype Subtype.val_injective (GQ V) Kc hcov'
-      (fun y => ‖f y * 1‖ₑ) (fun γ => ((hfm γ).mul_const 1).enorm))
+      (fun y => ‖f y * 1‖ₑ) (fun γ => ((hfm γ).mul_const 1).eNorm))
     refine ne_top_of_le_ne_top (ENNReal.mul_ne_top (ENNReal.ofReal_ne_top (r := B)) (hKc.measure_lt_top (μ := μ)).ne) ?_
     calc _ ≤ ∫⁻ _ in Kc, ENNReal.ofReal B ∂μ := setLIntegral_mono measurable_const hpt
       _ = ENNReal.ofReal B * μ Kc := setLIntegral_const _ _

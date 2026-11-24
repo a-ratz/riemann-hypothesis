@@ -87,8 +87,8 @@ theorem etFF_respectsIso : EtFF.RespectsIso := by
 
 theorem finiteType_of_etFF {A B : CommRingCat.{0}} (g : A ⟶ B) (hg : EtFF g)
     (hA : Algebra.FiniteType ℤ A) : Algebra.FiniteType ℤ B := by
-  letI := g.hom.toAlgebra
-  haveI : Algebra.Etale A B := RingHom.Etale.toAlgebra hg.1
+  let := g.hom.toAlgebra
+  have : Algebra.Etale A B := RingHom.Etale.toAlgebra hg.1
   exact Algebra.FiniteType.trans hA inferInstance
 
 theorem etFF_basic :

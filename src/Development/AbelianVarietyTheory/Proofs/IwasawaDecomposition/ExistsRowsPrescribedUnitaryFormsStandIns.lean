@@ -249,7 +249,7 @@ theorem standIn_rowsStd (B : Base) (C : Cols B) (hC : SpectralModel.ColsPos C) (
       dall := rfl
       delp := rfl
       ft := ⟨fun x => nomatch x⟩
-      mult := fun a j hj => subsingleton_std (if_neg hj)
+      mult := fun a j hj => subsingleton_std (ite_eq_right hj)
       io := fun _ _ => rfl
       mj := fun _ => subsingleton_std rfl
       mt := fun _ _ => subsingleton_std rfl

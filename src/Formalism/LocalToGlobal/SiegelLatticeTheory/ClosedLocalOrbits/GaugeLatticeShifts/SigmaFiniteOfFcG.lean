@@ -71,7 +71,7 @@ theorem pull (S : Subgroup G) (hS : IsClosed (S : Set G)) (ν : Measure G) (hνc
       IsFiniteMeasureOnCompacts (ν.comap (Subtype.val : S → G)) ∧
       (ν.comap (Subtype.val : S → G)).map Subtype.val = ν := by
   have hme : MeasurableEmbedding (Subtype.val : S → G) :=
-    MeasurableEmbedding.subtype_coe hS.measurableSet
+    MeasurableEmbedding.subtypeVal hS.measurableSet
   have hmap : (ν.comap (Subtype.val : S → G)).map Subtype.val = ν := by
     rw [hme.map_comap, Subtype.range_coe]
     exact Measure.restrict_eq_self_of_ae_mem (ae_iff.2 hνc)
@@ -88,14 +88,14 @@ theorem pull (S : Subgroup G) (hS : IsClosed (S : Set G)) (ν : Measure G) (hνc
             Subtype.val := (hme.comap_map _).symm
       _ = ν.comap Subtype.val := by rw [h1]
   · rw [hme.comap_apply]
-    exact (hK.image continuous_subtype_val).measure_lt_top
+    exact (hK.image continuous_subtypeVal).measure_lt_top
 
 theorem haar_unique (S : Subgroup G) (hS : IsClosed (S : Set G)) (μ m : Measure G) (hμ0 : μ ≠ 0)
     (hμc : μ (S : Set G)ᶜ = 0) (hμi : ∀ s ∈ S, μ.map (fun x => s * x) = μ) (hμf : IsFiniteMeasureOnCompacts μ)
     (hmc : m (S : Set G)ᶜ = 0) (hmi : ∀ s ∈ S, m.map (fun x => s * x) = m) (hmf : IsFiniteMeasureOnCompacts m) :
     ∃ c : ℝ≥0∞, c ≠ ∞ ∧ m = c • μ := by
-  haveI : LocallyCompactSpace S := hS.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology S :=
+  have : LocallyCompactSpace S := hS.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology S :=
     TopologicalSpace.Subtype.secondCountableTopology (S : Set G)
   obtain ⟨hμl, hμk, hμm⟩ := pull S hS μ hμc hμi hμf
   obtain ⟨hml, hmk, hmm⟩ := pull S hS m hmc hmi hmf
@@ -112,7 +112,7 @@ theorem haar_unique (S : Subgroup G) (hS : IsClosed (S : Set G)) (μ m : Measure
   refine ⟨((c / d : ℝ≥0) : ℝ≥0∞), ENNReal.coe_ne_top, ?_⟩
   have hm'' : m' = (c / d) • μ' := by
     rw [hm, hμ, smul_smul, div_mul_cancel₀ c hd]
-  rw [← hmm, ← hμm, hm'', Measure.map_smul _ measurable_subtype_coe.aemeasurable]
+  rw [← hmm, ← hμm, hm'', Measure.map_smul _ measurable_subtypeVal.aemeasurable]
   rfl
 
 end Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.JL.HaarCore

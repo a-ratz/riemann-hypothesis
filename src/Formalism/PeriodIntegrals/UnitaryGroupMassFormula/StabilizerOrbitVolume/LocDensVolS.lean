@@ -167,7 +167,7 @@ theorem adele_character_trivial_open (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F
     rw [this]
     rfl
   have hx0U : x0 ∈ Φ ⁻¹' U := by
-    simp only [Set.mem_preimage, hx0, hUdef, Set.mem_setOf_eq, AddChar.map_zero_eq_one,
+    simp only [Set.mem_preimage, hx0, hUdef, Set.mem_ofPred_eq, AddChar.map_zero_eq_one,
       Complex.one_re]
     norm_num
   obtain ⟨I, u, hu, hsub⟩ := isOpen_pi_iff.1 (hU.preimage hΦ) x0 hx0U
@@ -207,7 +207,7 @@ theorem adele_character_trivial_open (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F
       show pairA F 0 _ = _
       congr 1
     have := hsub hx
-    simp only [Set.mem_preimage, e, hUdef, Set.mem_setOf_eq] at this
+    simp only [Set.mem_preimage, e, hUdef, Set.mem_ofPred_eq] at this
     exact this
   intro y hy
   apply eq_one_of_pow _ (hψ.2.1 _)
@@ -272,7 +272,7 @@ theorem condExact_of (hS : SAf) (hC : ChInf) : CondExact := by
 
   have key : ∀ v ∈ X, v ∉ I → ∃ a : F, 1 < Valued.v (algebraMap F (Fv F v) a) ∧ a ∈ lamPsi ψ := by
     intro v hvX hvI
-    simp only [hX, Set.mem_setOf_eq, not_forall] at hvX
+    simp only [hX, Set.mem_ofPred_eq, not_forall] at hvX
     obtain ⟨t, ht, htO⟩ := hvX
     have ht1 : 1 < Valued.v t := (HeightOneSpectrum.notMem_adicCompletionIntegers (𝓞 F) F v).1 htO
     obtain ⟨a, ha⟩ := hS F (U0 I n) (isOpen_adelic_neighbourhood I n) (singleV F v t)
@@ -337,7 +337,7 @@ theorem condExact_of (hS : SAf) (hC : ChInf) : CondExact := by
 
   have hne' : ∀ c : F, ∃ v, v ∈ X ∧ v ∉ I ∧ v ∉ HeightOneSpectrum.Support (𝓞 F) c := by
     intro c
-    obtain ⟨v, hv⟩ := ((hne.diff I.finite_toSet).diff (HeightOneSpectrum.Support.finite (𝓞 F) c)).nonempty
+    obtain ⟨v, hv⟩ := ((hne.sdiff I.finite_toSet).sdiff (HeightOneSpectrum.Support.finite (𝓞 F) c)).nonempty
     exact ⟨v, hv.1.1, hv.1.2, hv.2⟩
   have h0 : ∃ c : F, c ≠ 0 ∧ c ∈ lamPsi ψ := by
     obtain ⟨v, hvX, hvI, -⟩ := hne' 1
@@ -350,7 +350,7 @@ theorem condExact_of (hS : SAf) (hC : ChInf) : CondExact := by
     obtain ⟨v, hvX, hvI, hvc⟩ := hne' c
     obtain ⟨a, ha1, ha⟩ := key v hvX hvI
     obtain ⟨r, rfl⟩ := hall a ha
-    simp only [HeightOneSpectrum.Support, Set.mem_setOf_eq, not_lt] at hvc
+    simp only [HeightOneSpectrum.Support, Set.mem_ofPred_eq, not_lt] at hvc
     have hc : Valued.v (algebraMap F (Fv F v) c) ≤ 1 := by
       have e : Valued.v ((c : v.adicCompletion F)) = v.valuation F c :=
         HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v c

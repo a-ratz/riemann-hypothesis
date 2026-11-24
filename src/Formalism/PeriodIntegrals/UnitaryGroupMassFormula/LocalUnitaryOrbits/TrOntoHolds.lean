@@ -64,8 +64,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem sigQ_ne (hstd : StdHyp σ J ψ) (hun : UnramAt (E := E) v) : sigQ σ v ≠ RingHom.id _ := by
   by_cases hp : (IE (E := E) v).IsPrime
   · exact qInert_holds σ J ψ v hstd hun hp
-  · haveI : v.asIdeal.IsMaximal := v.isMaximal
-    letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  · have : v.asIdeal.IsMaximal := v.isMaximal
+    let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
     obtain ⟨e, he⟩ := qSplit_holds σ J ψ v hstd hun hp
     intro hid
     have h := he (e.symm (1, 0))

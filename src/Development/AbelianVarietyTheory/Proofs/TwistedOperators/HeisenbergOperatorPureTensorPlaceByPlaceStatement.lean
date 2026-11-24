@@ -217,7 +217,7 @@ theorem isPure_heisO : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
   · refine (hfin.union hfinV).subset ?_
     intro p hp
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
     apply hp
     show heisO ψ S T (wAt p w) (x p) = f₀
     rw [hc.1, hc.2]

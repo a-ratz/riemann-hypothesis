@@ -129,7 +129,7 @@ variable {g : ℕ} in
 theorem _root_.GlobalTheory.HolTheta.canMult_add (a c : Fin g → ℝ) (m n m' n' : Fin g → ℤ) :
     _root_.GlobalTheory.CanTh.canMult a c (m + m') (n + n') = _root_.GlobalTheory.CanTh.canMult a c m n * _root_.GlobalTheory.CanTh.canMult a c m' n' * (-1) ^ (n ⬝ᵥ m' - m ⬝ᵥ n') := by
   have hneg : ∀ k : ℤ, ((-1 : ℂ)) ^ k = Complex.exp (k * (Real.pi * Complex.I)) := by
-    intro k; rw [Complex.exp_int_mul, Complex.exp_pi_mul_I]
+    intro k; rw [Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
   unfold _root_.GlobalTheory.CanTh.canMult
   rw [hneg, ← Complex.exp_add, ← Complex.exp_add, Complex.exp_eq_exp_iff_exists_int]
   refine ⟨m ⬝ᵥ n', ?_⟩
@@ -165,12 +165,12 @@ theorem _root_.GlobalTheory.HolTheta.eq_of_cocycle {La κ : Type*} [AddCommGroup
     { carrier := {x | χ x = ψ x}
       add_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [hχ, hψ, hx, hy]
       zero_mem' := h0
       neg_mem' := by
         intro x hx
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         have h1 := hχ x (-x)
         have h2 := hψ x (-x)
         rw [add_neg_cancel] at h1 h2
@@ -193,8 +193,8 @@ private theorem finrank_eq_two_mul_of_discrete_spanning_embedding {La : Type} [A
     (hdisc : DiscreteTopology P.range) (hspan : Submodule.span ℝ (Set.range P) = ⊤) :
     Module.finrank ℤ La = 2 * g := by
   let L : Submodule ℤ (Fin g → ℂ) := LinearMap.range P.toIntLinearMap
-  haveI : DiscreteTopology L := hdisc
-  haveI : IsZLattice ℝ L := ⟨by simpa [L, LinearMap.coe_range] using hspan⟩
+  have : DiscreteTopology L := hdisc
+  have : IsZLattice ℝ L := ⟨by simpa [L, LinearMap.coe_range] using hspan⟩
   have h1 := ZLattice.rank ℝ L
   have h2 := (LinearEquiv.ofInjective P.toIntLinearMap hinj).finrank_eq
   rw [h2, h1, Module.finrank_pi_fintype]
@@ -246,7 +246,7 @@ private theorem exists_characteristics_eq_canMult_of_semicharacter {La : Type} [
       rw [key]
       rcases hpm (bs (Sum.inl j)) with h | h
       · simp [c, h]
-      · simp only [c, h, if_neg (show (-1 : ℂ) ≠ 1 by norm_num)]
+      · simp only [c, h, ite_eq_right (show (-1 : ℂ) ≠ 1 by norm_num)]
         exact hhalf'.symm
     · have hm : (fun k => bs.repr (bs (Sum.inr j)) (Sum.inr k)) = Pi.single j 1 := by
         ext k; simp [Finsupp.single_apply, Pi.single_apply, eq_comm]
@@ -261,7 +261,7 @@ private theorem exists_characteristics_eq_canMult_of_semicharacter {La : Type} [
       rw [key]
       rcases hpm (bs (Sum.inr j)) with h | h
       · simp [a, h]
-      · simp only [a, h, if_neg (show (-1 : ℂ) ≠ 1 by norm_num)]
+      · simp only [a, h, ite_eq_right (show (-1 : ℂ) ≠ 1 by norm_num)]
         exact hhalf.symm
 
 open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj NumberField in

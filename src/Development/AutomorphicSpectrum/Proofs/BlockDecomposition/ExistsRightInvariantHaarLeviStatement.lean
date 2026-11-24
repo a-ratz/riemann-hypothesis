@@ -198,8 +198,8 @@ variable {n : Type} [Fintype n] [DecidableEq n]
 theorem hom_eq_one_reduced {B : Type} [CommRing B] [IsArtinianRing B] [IsReduced B] (Δ : GL n B →* ℝ≥0)
     (hc : ∀ g, (∀ h, g * h = h * g) → Δ g = 1) (g : GL n B) : Δ g = 1 := by
   classical
-  letI : Fintype (MaximalSpectrum B) := Fintype.ofFinite _
-  letI : ∀ I : MaximalSpectrum B, Field (B ⧸ I.asIdeal) := fun I =>
+  let : Fintype (MaximalSpectrum B) := Fintype.ofFinite _
+  let : ∀ I : MaximalSpectrum B, Field (B ⧸ I.asIdeal) := fun I =>
     @Ideal.Quotient.field _ _ _ I.isMaximal
   let ψ : B ≃+* ∀ I : MaximalSpectrum B, B ⧸ I.asIdeal := (IsArtinianRing.equivPi B).toRingEquiv
   let Φ : GL n B ≃* GL n (∀ I : MaximalSpectrum B, B ⧸ I.asIdeal) :=
@@ -217,15 +217,15 @@ theorem isReduced_tensor {F E R : Type} [Field F] [Field E] [Algebra F E] [Modul
     [Algebra.IsSeparable F E] [CommRing R] [Algebra F R] [IsArtinianRing R] [IsReduced R] :
     IsReduced (R ⊗[F] E) := by
   classical
-  letI : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
-  letI : ∀ I : MaximalSpectrum R, Field (R ⧸ I.asIdeal) := fun I =>
+  let : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
+  let : ∀ I : MaximalSpectrum R, Field (R ⧸ I.asIdeal) := fun I =>
     @Ideal.Quotient.field _ _ _ I.isMaximal
   have hk : ∀ I : MaximalSpectrum R, IsReduced (E ⊗[F] (R ⧸ I.asIdeal)) := fun I => by
-    haveI : Algebra.FormallyUnramified F E := (Algebra.FormallyUnramified.iff_isSeparable F E).2 inferInstance
-    haveI : Algebra.FormallyUnramified (R ⧸ I.asIdeal) ((R ⧸ I.asIdeal) ⊗[F] E) :=
+    have : Algebra.FormallyUnramified F E := (Algebra.FormallyUnramified.iff_isSeparable F E).2 inferInstance
+    have : Algebra.FormallyUnramified (R ⧸ I.asIdeal) ((R ⧸ I.asIdeal) ⊗[F] E) :=
       Algebra.FormallyUnramified.base_change (R ⧸ I.asIdeal)
-    haveI : Algebra.EssFiniteType (R ⧸ I.asIdeal) ((R ⧸ I.asIdeal) ⊗[F] E) := inferInstance
-    haveI : IsReduced ((R ⧸ I.asIdeal) ⊗[F] E) :=
+    have : Algebra.EssFiniteType (R ⧸ I.asIdeal) ((R ⧸ I.asIdeal) ⊗[F] E) := inferInstance
+    have : IsReduced ((R ⧸ I.asIdeal) ⊗[F] E) :=
       Algebra.FormallyUnramified.isReduced_of_field (R ⧸ I.asIdeal) _
     exact isReduced_of_injective (Algebra.TensorProduct.comm F E (R ⧸ I.asIdeal)).toRingEquiv.toRingHom
       (Algebra.TensorProduct.comm F E (R ⧸ I.asIdeal)).injective
@@ -404,11 +404,11 @@ theorem exists_split_reduced {κ : Type} [Finite κ]
   choose a ha using fun k => exists_sum_tmul (x k)
   obtain ⟨R, _, _, p, e, hR, hp, hpe, hker, hint⟩ :=
     exists_split_adele (κ := κ × _) fun q => a q.1 q.2
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsArtinianRing (R ⊗[F] E) := IsArtinianRing.of_finite R _
-  haveI : IsReduced (AF F) := isReduced_adele F
-  haveI : IsReduced R := isReduced_of_split p.toRingHom hp e hpe hker
-  haveI : Algebra.IsSeparable F E := inferInstance
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsArtinianRing (R ⊗[F] E) := IsArtinianRing.of_finite R _
+  have : IsReduced (AF F) := isReduced_adele F
+  have : IsReduced R := isReduced_of_split p.toRingHom hp e hpe hker
+  have : Algebra.IsSeparable F E := inferInstance
   refine ⟨R ⊗[F] E, inferInstance, (Algebra.TensorProduct.map p (AlgHom.id F E)).toRingHom,
     e ⊗ₜ 1, inferInstance, isReduced_tensor, Algebra.TensorProduct.map_surjective _ _ hp Function.surjective_id,
     ?_, fun y hy => ?_, fun k => ?_⟩
@@ -440,12 +440,12 @@ theorem modularCharacterFun_GL_of_split (C : NonUnitalSubring A) (hCc : IsCompac
       IsArtinianRing B ∧ IsReduced B ∧ Function.Surjective π ∧ π e = 1 ∧
       (∀ x, π x = 0 → e * x = 0) ∧ ∀ k, (1 - e) * x k ∈ C) (a : GL (Fin r) A) :
     Measure.modularCharacterFun a = 1 := by
-  haveI : SecondCountableTopology (Matrix (Fin r) (Fin r) A) :=
+  have : SecondCountableTopology (Matrix (Fin r) (Fin r) A) :=
     inferInstanceAs (SecondCountableTopology (Fin r → Fin r → A))
-  haveI : T2Space (Matrix (Fin r) (Fin r) A) := inferInstanceAs (T2Space (Fin r → Fin r → A))
-  haveI : SecondCountableTopology (Matrix (Fin r) (Fin r) A)ᵐᵒᵖ :=
+  have : T2Space (Matrix (Fin r) (Fin r) A) := inferInstanceAs (T2Space (Fin r → Fin r → A))
+  have : SecondCountableTopology (Matrix (Fin r) (Fin r) A)ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin r) (Fin r) A)).symm.secondCountableTopology
-  haveI : SecondCountableTopology (GL (Fin r) A) :=
+  have : SecondCountableTopology (GL (Fin r) A) :=
     (Units.isClosedEmbedding_embedProduct (α := Matrix (Fin r) (Fin r) A)).isEmbedding.secondCountableTopology
   borelize (GL (Fin r) A)
   obtain ⟨B, _, π, e, hA, hR, hs, h1, hk, hint⟩ := hsplit
@@ -474,11 +474,11 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem modularCharacterFun_GL_adele : ∀ (D : D7) (r : ℕ) [LocallyCompactSpace (GL (Fin r) (AE D))]
     (a : GL (Fin r) (AE D)), Measure.modularCharacterFun a = 1 := by
   intro D r _ a
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele D.host.F
   obtain ⟨h⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (AF D.host.F)
-  haveI h2 : T2Space (AE D) := h.isEmbedding.t2Space
-  haveI h3 : SecondCountableTopology (AE D) := h.secondCountableTopology
+  have h2 : T2Space (AE D) := h.isEmbedding.t2Space
+  have h3 : SecondCountableTopology (AE D) := h.secondCountableTopology
   obtain ⟨C, hCc, hC⟩ := exists_compact_subring (F := D.host.F) (E := D.host.E) (intFin D.host.F)
     (isCompact_intFin D.host.F)
   exact modularCharacterFun_GL_of_split C hCc (fun x => exists_split_reduced C hC x) a
@@ -570,14 +570,14 @@ theorem continuous_levEquiv : Continuous (levEquiv d) := by
 theorem continuous_levEquiv_symm : Continuous (levEquiv d).symm := by
   have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   have hv : Continuous fun m : levM d => ((m : GlobalTheory.RegSW.stab d) : GA D B) :=
-    continuous_subtype_val.comp continuous_subtype_val
+    continuous_subtypeVal.comp continuous_subtypeVal
   refine Continuous.prodMk (continuous_of_mt W ?_) ?_
   · have hc : Continuous fun m : levM d => d.p0 ⬝ (mt B ((m : GlobalTheory.RegSW.stab d) : GA D B) ⬝ d.j0) :=
       continuous_const.matrix_mul (((continuous_mt B).comp hv).matrix_mul continuous_const)
     refine hc.congr fun m => ?_
     have := mt_eq_of_levPair d ((levEquiv d).symm m)
     rwa [show levPair d ((levEquiv d).symm m) = m from (levEquiv d).apply_symm_apply m] at this
-  · refine ((GlobalTheory.RegSW.continuous_onX d).comp continuous_subtype_val).congr fun m => ?_
+  · refine ((GlobalTheory.RegSW.continuous_onX d).comp continuous_subtypeVal).congr fun m => ?_
     have := onX_levPair d ((levEquiv d).symm m)
     rwa [show levPair d ((levEquiv d).symm m) = m from (levEquiv d).apply_symm_apply m] at this
 
@@ -592,8 +592,8 @@ theorem GlobalTheory.CompanionTheory.QKAvg.exists_haar_of_prod {G₁ G₂ M : Ty
     (h₂ : ∀ a : G₂, Measure.modularCharacterFun a = 1) :
     ∃ νM : Measure M, νM.IsHaarMeasure ∧ νM.IsMulRightInvariant := by
   borelize G₂
-  haveI hr1 : (Measure.haar : Measure G₁).IsMulRightInvariant := h₁ _ inferInstance
-  haveI hr2 : (Measure.haar : Measure G₂).IsMulRightInvariant := GlobalTheory.ParAvg.isMulRightInvariant_of_modular _ h₂
+  have hr1 : (Measure.haar : Measure G₁).IsMulRightInvariant := h₁ _ inferInstance
+  have hr2 : (Measure.haar : Measure G₂).IsMulRightInvariant := GlobalTheory.ParAvg.isMulRightInvariant_of_modular _ h₂
   obtain ⟨ν, hνH, hνR⟩ : ∃ ν : Measure (G₁ × G₂), ν.IsHaarMeasure ∧ ν.IsMulRightInvariant :=
     ⟨(Measure.haar : Measure G₁).prod Measure.haar, inferInstance, inferInstance⟩
   refine ⟨Measure.map e ν, MulEquiv.isHaarMeasure_map ν e he he', ⟨fun m => ?_⟩⟩
@@ -608,10 +608,10 @@ theorem GlobalTheory.CompanionTheory.QKAvg.exists_haar_of_prod {G₁ G₂ M : Ty
 theorem GlobalTheory.CompanionTheory.QKAvg.top_GL (D : D7) (t : ℕ) : LocallyCompactSpace (GL (Fin t) (AE D)) ∧
     SecondCountableTopology (GL (Fin t) (AE D)) ∧ T2Space (GL (Fin t) (AE D)) := by
   obtain ⟨-, m2, m3, m4, -⟩ := lattice_Mx D t t
-  haveI : LocallyCompactSpace (Mx D t t)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (Mx D t t)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : T2Space (Mx D t t)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isEmbedding.t2Space
-  haveI : T1Space (Mx D t t) := @T2Space.t1Space _ _ m4
+  have : LocallyCompactSpace (Mx D t t)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (Mx D t t)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : T2Space (Mx D t t)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isEmbedding.t2Space
+  have : T1Space (Mx D t t) := @T2Space.t1Space _ _ m4
   exact ⟨(Units.isClosedEmbedding_embedProduct (α := Mx D t t)).locallyCompactSpace,
     (Units.isEmbedding_embedProduct (M := Mx D t t)).secondCountableTopology,
     (Units.isEmbedding_embedProduct (M := Mx D t t)).t2Space⟩

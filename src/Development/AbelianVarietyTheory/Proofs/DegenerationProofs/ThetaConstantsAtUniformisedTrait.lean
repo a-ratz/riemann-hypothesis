@@ -180,7 +180,7 @@ theorem theta_at_trait : HV → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hL₀ := t.PP.isLB
   have hL₁ := t'.PP.isLB
   let τ : (Over.mk (𝟙 (Sp V))).left ⟶ (Over.mk χ).left := 𝟙 (Sp V)
-  haveI : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp V)))
+  have : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp V)))
   have hτ : τ ≫ (Over.mk χ).hom = (Over.mk (𝟙 (Sp V))).hom ≫ χ := rfl
   obtain ⟨σ', hs⟩ := exists_secRel hp τ hτ hw hL₀ hL₁ σ
   have hσ' : NZ t'.G t'.PP.L (𝟙 (Sp V)) σ' := by
@@ -209,7 +209,7 @@ theorem theta_at_trait : HV → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       Over.homMk (jFK (R := V) F ≫ jK V) (Category.comp_id _)
     obtain ⟨k₁, x, c, k₂, k₃⟩ := (key ϖ hϖ F v hv).2 n h₁ h₂ h₃ ξ'
     let τ' : (Over.mk (jFK (R := V) F ≫ jK V)).left ⟶ (Over.mk x').left := 𝟙 (Sp F)
-    haveI : IsIso τ' := inferInstanceAs (IsIso (𝟙 (Sp F)))
+    have : IsIso τ' := inferInstanceAs (IsIso (𝟙 (Sp F)))
     have hτ' : τ' ≫ (Over.mk x').hom = (Over.mk (jFK (R := V) F ≫ jK V)).hom ≫ χ :=
       (Category.id_comp _).trans ((Over.w ξ).symm.trans (congrArg (· ≫ χ) hξ))
     have hs' := SecRel.pullS hp τ hτ hs τ' hτ' ξ' ξ

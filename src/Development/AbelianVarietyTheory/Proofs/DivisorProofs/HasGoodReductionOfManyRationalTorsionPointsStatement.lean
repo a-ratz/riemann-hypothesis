@@ -549,9 +549,9 @@ theorem pairs : ∀ (R : Type) [CommRing R] (X : Over (Sp R)), IsSeparated X.hom
     by_cases h : p.1 ∈ t ∧ p.2 ∈ t ∧ p.1 ≠ p.2
     · have hs := Classical.choose_spec
         (sep_elem R X hX K e p.1 p.2 (ht _ h.1) (ht _ h.2.1) (hsep _ h.1 _ h.2.1 h.2.2))
-      simp only [g, dif_pos h]
+      simp only [g, dite_eq_left h]
       exact ⟨hs.1, fun F _ ψ hψ _ _ _ => hs.2 F ψ hψ⟩
-    · simp only [g, dif_neg h]
+    · simp only [g, dite_eq_right h]
       exact ⟨by simp, fun F _ ψ _ h1 h2 h3 => absurd ⟨h1, h2, h3⟩ h⟩
   refine ⟨∏ p ∈ t ×ˢ t, g p, ?_, ?_⟩
   · rw [map_prod]
@@ -745,7 +745,7 @@ theorem group_sections_curve_descend : ∀ (k : Type) [Field k] (G : Over (Sp k)
   obtain ⟨R₀, G₀, i₀, ic₀, φ, -, hR₀, s₁, s₂, s₃, hφ⟩ :=
     GlobalTheory.smooth_grpScheme_descends_to_fg_subring k G ∅ h1 h2 h3
 
-  haveI := s₁; haveI := s₂; haveI := s₃
+  have := s₁; have := s₂; have := s₃
   set L := Localization.Away P with hL
 
   have hu₀ : (u ≫ φ) ≫ G₀.hom = spMap (algebraMap R₀ L) := by
@@ -788,7 +788,7 @@ theorem group_sections_curve_descend : ∀ (k : Type) [Field k] (G : Over (Sp k)
   have hjn : R'.subtype.comp jn = R₀.subtype := rfl
   have hjnsp : spMap R'.subtype ≫ spMap jn = spMap R₀.subtype := ModelDescent.spMap_comp_eq hjn
   let G₁ : Over (Sp R') := (Over.pullback (spMap jn)).obj G₀
-  letI : GrpObj G₁ := Functor.grpObjObj
+  let : GrpObj G₁ := Functor.grpObjObj
   have hG₁c : IsCommMonObj G₁ := Functor.isCommMonObj_obj
   have hψ := ReciprocityTheory.ChartRestriction.G.Chart.isGrpPullback_factor (spMap jn) (spMap R'.subtype)
     (hφ.congr hjnsp.symm rfl)
@@ -826,7 +826,7 @@ theorem group_sections_curve_descend : ∀ (k : Type) [Field k] (G : Over (Sp k)
     refine Subtype.ext (Over.OverMorphism.ext (hφ.1.hom_ext e' ?_))
     rw [Over.w i.1, Over.w j.1]
   have hsec_inj : Function.Injective sec := fun i j e => hdist i j (by rw [e])
-  haveI hsep₁ : IsSeparated G₁.hom := show IsSeparated (pullback.snd _ _) from inferInstance
+  have hsep₁ : IsSeparated G₁.hom := show IsSeparated (pullback.snd _ _) from inferInstance
   have hpow : ∀ i : s, sec i ^ m = 1 := by
     intro i
     have A := GlobalTheory.FrameMove.pow_comm hψ (hkey i) m
@@ -977,24 +977,24 @@ theorem isJacobsonRing_integers : IsJacobsonRing ℤ := by
 
 theorem closedPt_of_finiteType_int : ∀ (R : Type) [CommRing R] [IsDomain R] [Algebra.FiniteType ℤ R] (f : R), f ≠ 0 → ∃ M : Ideal R, M.IsMaximal ∧ f ∉ M ∧ ∃ p : ℕ, p.Prime ∧ (p : R) ∈ M := by
   intro R _ _ _ f hf
-  haveI := isJacobsonRing_integers
+  have := isJacobsonRing_integers
   let S := Localization.Away f
   have hinj : Function.Injective (algebraMap R S) :=
     IsLocalization.injective S (powers_le_nonZeroDivisors_of_noZeroDivisors hf)
-  haveI : Nontrivial S := hinj.nontrivial
-  haveI : Algebra.FiniteType R S := IsLocalization.finiteType_of_monoid_fg (Submonoid.powers f) S
-  haveI : Algebra.FiniteType ℤ S := Algebra.FiniteType.trans (S := R) inferInstance inferInstance
+  have : Nontrivial S := hinj.nontrivial
+  have : Algebra.FiniteType R S := IsLocalization.finiteType_of_monoid_fg (Submonoid.powers f) S
+  have : Algebra.FiniteType ℤ S := Algebra.FiniteType.trans (S := R) inferInstance inferInstance
   obtain ⟨n, hn⟩ := Ideal.exists_maximal S
-  letI : Field (S ⧸ n) := Ideal.Quotient.field n
-  haveI : Algebra.FiniteType ℤ (S ⧸ n) := inferInstance
-  haveI hfin := finite_of_finite_type_of_isJacobsonRing ℤ (S ⧸ n)
+  let : Field (S ⧸ n) := Ideal.Quotient.field n
+  have : Algebra.FiniteType ℤ (S ⧸ n) := inferInstance
+  have hfin := finite_of_finite_type_of_isJacobsonRing ℤ (S ⧸ n)
   have hZ : (algebraMap ℤ (S ⧸ n)).IsIntegral := fun x => IsIntegral.of_finite ℤ x
   let ψ : R →+* S ⧸ n := (Ideal.Quotient.mk n).comp (algebraMap R S)
   have hcomp : ψ.comp (Int.castRingHom R) = algebraMap ℤ (S ⧸ n) := RingHom.ext_int _ _
   have hψ : ψ.IsIntegral := RingHom.IsIntegral.tower_top (Int.castRingHom R) ψ (hcomp ▸ hZ)
-  haveI hbot : (⊥ : Ideal (S ⧸ n)).IsMaximal := Ideal.bot_isMaximal
+  have hbot : (⊥ : Ideal (S ⧸ n)).IsMaximal := Ideal.bot_isMaximal
   let M : Ideal R := (⊥ : Ideal (S ⧸ n)).comap ψ
-  have hM : M.IsMaximal := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' ψ hψ ⊥
+  have hM : M.IsMaximal := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal ψ hψ ⊥
   refine ⟨M, hM, ?_, ?_⟩
   · intro hfM
     have h0 : ψ f = 0 := by simpa [M] using hfM
@@ -1006,7 +1006,7 @@ theorem closedPt_of_finiteType_int : ∀ (R : Type) [CommRing R] [IsDomain R] [A
       have : M.comap (Int.castRingHom R) = (⊥ : Ideal (S ⧸ n)).comap (algebraMap ℤ (S ⧸ n)) := by
         rw [← hcomp, ← Ideal.comap_comap]
       rw [this]
-      exact Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' _ hZ ⊥
+      exact Ideal.isMaximal_comap_of_isIntegral_of_isMaximal _ hZ ⊥
     obtain ⟨a, ha⟩ := Submodule.IsPrincipal.principal (M.comap (Int.castRingHom R))
     change _ = Ideal.span {a} at ha
     have ha0 : a ≠ 0 := by
@@ -1053,8 +1053,8 @@ theorem exists_charP_specialization : ∀ (k : Type) [Field k] [IsAlgClosed k] [
   have hm0 : (m : k) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
   obtain ⟨R, G₁, _, hfg, hmR, hcomm, hsm, hsep, hqc, hgc, hrd, ⟨s₁, hcard, hs₁, hdist⟩, P₁, hP₁, u₁, α, β, hα, hβ,
     hu₁, hαβ⟩ := GlobalTheory.T.exists_fg_subring_descent_group_sections_curve k G hG g hg m hm hm0 s hs P hP u a b hu hab
-  haveI : Algebra.FiniteType ℤ R := hfg
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  have : Algebra.FiniteType ℤ R := hfg
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
   have hinj : Function.Injective R.subtype := Subtype.val_injective
   obtain ⟨f₁, hf₁, H₁⟩ := GlobalTheory.T.exists_basicOpen_smoothOfRelativeDimension_of_generic R G₁ hsm hqc k R.subtype hinj g hrd
   obtain ⟨f₂, hf₂, H₂⟩ := GlobalTheory.T.exists_basicOpen_geometricallyConnected_fibres_of_generic R G₁ hsm hqc k R.subtype hinj hgc
@@ -1104,7 +1104,7 @@ theorem exists_charP_specialization : ∀ (k : Type) [Field k] [IsAlgClosed k] [
     simp only [map_mul] at this
     exact (mul_ne_zero (mul_ne_zero (mul_ne_zero (mul_ne_zero hf₁ hf₂) hf₃) hf₄) hlc) this
   obtain ⟨M, hM, hfM, p, hp, hpM⟩ := _root_.GlobalTheory.closedPt_of_finiteType_int R f hf
-  letI := Ideal.Quotient.field M
+  let := Ideal.Quotient.field M
   let ψ : R →+* AlgebraicClosure (R ⧸ M) := (algebraMap (R ⧸ M) _).comp (Ideal.Quotient.mk M)
   have hψ : ∀ r, r ∉ M → IsUnit (ψ r) := by
     intro r hr
@@ -1114,7 +1114,7 @@ theorem exists_charP_specialization : ∀ (k : Type) [Field k] [IsAlgClosed k] [
   have hu := hψ f hfM
   simp only [hfdef, map_mul, IsUnit.mul_iff] at hu
   obtain ⟨⟨⟨⟨u1, u2⟩, u3⟩, u4⟩, u5⟩ := hu
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hpF : CharP (AlgebraicClosure (R ⧸ M)) p := by
     rw [CharP.charP_iff_prime_eq_zero hp, ← map_natCast ψ, RingHom.comp_apply,
       Ideal.Quotient.eq_zero_iff_mem.mpr hpM, map_zero]
@@ -1192,7 +1192,7 @@ theorem comp_linear_ne_zero {p : Polynomial k} (hp : p ≠ 0) {c e : k} (hc : c 
   · exact hp h
   · have := congrArg (fun p : Polynomial k => p.coeff 1) h
     simp only [Polynomial.coeff_add, Polynomial.coeff_C_mul, Polynomial.coeff_X_one, Polynomial.coeff_C,
-      one_ne_zero, if_false, mul_one, add_zero] at this
+      one_ne_zero, ite_false, mul_one, add_zero] at this
     exact hc (by simpa using this)
 
 theorem exists_rational_family {G : Over (Sp k)} [GrpObj G] (hG : SmConn G)
@@ -1545,10 +1545,10 @@ theorem GlobalTheory.properOfInfinitelyManyLargeTorsionCounts :
     lt_of_le_of_lt hle (Nat.mul_lt_mul_of_pos_right hCm hcard)
   obtain ⟨p, hp⟩ := CharP.exists k
   rcases CharP.char_is_prime_or_zero k p with hpp | hp0
-  · haveI : Fact p.Prime := ⟨hpp⟩
+  · have : Fact p.Prime := ⟨hpp⟩
     exact GlobalTheory.T.isProper_smoothConnGroup_of_many_torsion_charP k p G hG g hsm m hm0 s hs hlt
   · subst hp0
-    haveI : CharZero k := CharP.charP_to_charZero k
+    have : CharZero k := CharP.charP_to_charZero k
     exact GlobalTheory.T.isProper_of_many_torsion_points_charZero k G hG g hsm m s hs hlt
 end -- clump:auto
 end -- clump:auto

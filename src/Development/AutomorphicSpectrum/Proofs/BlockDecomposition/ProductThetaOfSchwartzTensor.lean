@@ -128,11 +128,11 @@ theorem absA_ne_zero (u : (AE D)ˣ) : absA D u ≠ 0 := by
 
 theorem prodTh_of_schwTensor : SchwTensor → ProdTh := by
   intro hT D r s p μr 𝓕r μs 𝓕s hμr hμs ψ hψ χr χs θ hθ br bs b hb Ωr Ωs hr hs
-  haveI : BorelSpace (Mx D r p) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D s p) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D (r + s) p) := ⟨rfl⟩
-  haveI : SecondCountableTopology (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).2.2.1
-  haveI : SecondCountableTopology (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).2.2.1
+  have : BorelSpace (Mx D r p) := ⟨rfl⟩
+  have : BorelSpace (Mx D s p) := ⟨rfl⟩
+  have : BorelSpace (Mx D (r + s) p) := ⟨rfl⟩
+  have : SecondCountableTopology (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).2.2.1
+  have : SecondCountableTopology (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).2.2.1
   refine ⟨fun h => hT D θ hθ r s p _ (hr.mem h) _ (hs.mem h), ?_, ?_, ?_, ?_, ?_⟩
   · have c1 : Continuous fun u : G D p × Mx D (r + s) p => ((u.1, rowT u.2) : G D p × Mx D r p) :=
       continuous_fst.prodMk (continuous_rowT.comp continuous_snd)
@@ -155,10 +155,10 @@ theorem prodTh_of_schwTensor : SchwTensor → ProdTh := by
       AddChar.map_add_eq_mul]
     ring
   · intro g hg h x
-    haveI := hμr.1
-    haveI := hμs.1
-    haveI : LocallyCompactSpace (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).2.1
-    haveI : LocallyCompactSpace (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).2.1
+    have := hμr.1
+    have := hμs.1
+    have : LocallyCompactSpace (Mx D r p) := (GlobalTheory.MixModel.lattice_Mx D r p).2.1
+    have : LocallyCompactSpace (Mx D s p) := (GlobalTheory.MixModel.lattice_Mx D s p).2.1
     have hemb : MeasurableEmbedding (fun z : Mx D r p × Mx D s p => rowJ z.1 z.2) :=
       (rowHomeo (D := D) (r := r) (s := s) (p := p)).measurableEmbedding
     rw [hemb.integral_map, hr.weyl g hg h, hs.weyl g hg h, ← integral_prod_mul]

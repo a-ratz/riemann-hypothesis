@@ -119,7 +119,7 @@ theorem inv_pow_mem (l : ℕ) [Fact (Nat.Prime l)] (c : UpperTheory.V.HV.Coef l)
     (((x : ZMod (l ^ r)).val : Qbar l) ^ e)⁻¹ ∈ c.O := by
   rcases Nat.eq_zero_or_pos r with rfl | hr
   · have h0 : (x : ZMod (l ^ 0)).val = 0 := by
-      haveI : NeZero (l ^ 0) := ⟨by simp⟩
+      have : NeZero (l ^ 0) := ⟨by simp⟩
       exact Nat.lt_one_iff.mp (by simpa only [pow_zero] using ZMod.val_lt (x : ZMod (l ^ 0)))
     rw [h0]
     rcases Nat.eq_zero_or_pos e with rfl | he
@@ -309,8 +309,8 @@ namespace GlobalTheory
 open Polynomial in
 theorem coefO_dvd_pow_l {l : ℕ} [Fact l.Prime] (c : Coef l) {x : Qbar l} (hx : x ∈ c.O)
     (h0 : x ≠ 0) : ∃ k : ℕ, ∃ u ∈ c.O, x * u = ((l : ℕ) : Qbar l) ^ k := by
-  haveI := c.fin
-  haveI := c.dvr
+  have := c.fin
+  have := c.dvr
   set x' : c.O := ⟨x, hx⟩
   have hx0 : x' ≠ 0 := fun h => h0 (congrArg Subtype.val h)
   have hint : IsIntegral ℤ_[l] x' := Algebra.IsIntegral.isIntegral x'
@@ -527,7 +527,7 @@ theorem key (r e a b : ℕ) (ha : ¬ l ∣ a) (hb : b = a % l ^ r) (hb' : 1 ≤ 
 theorem powCong : ∀ (l : ℕ) [Fact l.Prime] (e r : ℕ) (x : (ZMod (l ^ (r + 1)))ˣ), ‖(((x : ZMod (l ^ (r + 1))).val : Qbar l) ^ e)⁻¹ - (((((Units.map (ZMod.castHom (pow_dvd_pow l (Nat.le_succ r)) (ZMod (l ^ r))).toMonoidHom) x : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)).val : Qbar l) ^ e)⁻¹‖ ≤ ‖((l : ℕ) : Qbar l) ^ r‖ ∧ ‖((x : ZMod (l ^ (r + 1))).val : Qbar l) ^ e - ((((Units.map (ZMod.castHom (pow_dvd_pow l (Nat.le_succ r)) (ZMod (l ^ r))).toMonoidHom) x : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)).val : Qbar l) ^ e‖ ≤ ‖((l : ℕ) : Qbar l) ^ r‖ := by
   intro l hl e r x
   have hp : l.Prime := hl.out
-  haveI : NeZero (l ^ (r + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ (r + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have notdvd : ∀ {k : ℕ}, 1 ≤ k → (u : (ZMod (l ^ k))ˣ) → ¬ l ∣ (u : ZMod (l ^ k)).val := by
     intro k hk u hd
     have hc := ZMod.val_coe_unit_coprime u
@@ -536,7 +536,7 @@ theorem powCong : ∀ (l : ℕ) [Fact l.Prime] (e r : ℕ) (x : (ZMod (l ^ (r + 
     exact hp.one_lt.ne' (Nat.dvd_one.mp this)
   refine key (l := l) r e _ _ (notdvd (by omega) x) ?_ (fun hr => notdvd hr _)
   rw [Units.coe_map]
-  simp only [MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, ZMod.castHom_apply]
+  simp only [MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, ZMod.castHom_apply]
   rw [ZMod.cast_eq_val, ZMod.val_natCast]
 
 end GlobalTheory.PowCong
@@ -557,7 +557,7 @@ namespace GlobalTheory.KA.TameLim
 variable {l : ℕ} [Fact l.Prime]
 
 theorem norm_le_one_of_mem (c : Coef l) {x : Qbar l} (hx : x ∈ c.O) : ‖x‖ ≤ 1 := by
-  haveI : Module.Finite ℤ_[l] c.O := c.fin
+  have : Module.Finite ℤ_[l] c.O := c.fin
   have hi : IsIntegral ℤ_[l] x := by
     have h := (isIntegral_algHom_iff (c.O.val.restrictScalars ℤ_[l]) Subtype.val_injective).2
       (Algebra.IsIntegral.isIntegral (⟨x, hx⟩ : c.O))
@@ -590,7 +590,7 @@ theorem val_unit (r : ℕ) (x : (ZMod (l ^ r))ˣ) :
   have hp : l.Prime := Fact.out
   rcases Nat.eq_zero_or_pos r with rfl | hr
   · left
-    haveI : NeZero (l ^ 0) := ⟨by simp⟩
+    have : NeZero (l ^ 0) := ⟨by simp⟩
     have := ZMod.val_lt (x : ZMod (l ^ 0))
     exact Nat.lt_one_iff.mp (lt_of_lt_of_eq this (pow_zero l))
   · right
@@ -789,7 +789,7 @@ namespace GlobalTheory.KZ
 
 theorem tame_of_shCoc : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (c : Coef l) (W : R2 Ω l) (y : G ℚ Ω → Fin 2 → Qbar l) (n : ℕ) (w : Pl) (ψ : G ℚ Ω →* Multiplicative (ZMod (l ^ n))) (Y : G ℚ Ω → Multiplicative (ZMod (l ^ n)) → Fin 2 → Qbar l) (P u : Qbar l) (b : Fin 2 → Qbar l), ShCoc (mat W) ψ Y → (∀ x i, Continuous fun s => Y s x i) → (∀ s x i, Y s x i ∈ c.O) → P ∈ c.O → ‖u‖ = 1 → (∀ i, b i ∈ c.O) → (∀ s, ∑ x, Y s x = P • y s + (mat W s *ᵥ b - b)) → (∀ (B : ValuationSubring Ω) (σ : G ℚ Ω), IsPlaceOver B w → IsFrob B (normV w) σ → Cg n P (u * (mat W σ - 1).det)) → (∀ q : Pl, q ≠ w → ((l : ℕ) : 𝓞 ℚ) ∉ q.asIdeal → ∃ B : ValuationSubring Ω, IsPlaceOver B q ∧ ∃ t : Multiplicative (ZMod (l ^ n)) → Fin 2 → Qbar l, (∀ x i, t x i ∈ c.O) ∧ ∀ s ∈ Ine (F := ℚ) B, ∀ x, Y s x = mat W s *ᵥ t x - t x) → Tame c W y n w ψ := by
   intro l _ Ω _ _ c W y n w ψ Y P u b hY hcont hint hP hu hb hsum hfrob hunr
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero n (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero n (Fact.out : l.Prime).ne_zero⟩
   refine ⟨fun s a => Y s (Multiplicative.ofAdd (-a)), P, u, b, ?_, fun s a i => hint s _ i, hP, hu, hb, ?_, ?_, hfrob, ?_⟩
   · exact continuous_pi fun a => continuous_pi fun i => hcont _ i
   · intro s t a
@@ -1018,8 +1018,8 @@ theorem exists_cob_of_coprime : ∀ (Γ : Type) [Group Γ] [TopologicalSpace Γ]
   obtain ⟨N, hn, ho, hN⟩ := exists_open_ker M hcop
     (by
       rintro (i | i) (k | k)
-      · exact (hρc i k).comp continuous_subtype_val
-      · exact (hzc i).comp continuous_subtype_val
+      · exact (hρc i k).comp continuous_subtypeVal
+      · exact (hzc i).comp continuous_subtypeVal
       · exact continuous_const
       · exact continuous_const)
     (by

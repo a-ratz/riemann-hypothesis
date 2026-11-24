@@ -62,7 +62,7 @@ open IsLocalRing Matrix Polynomial UpperTheory.V.Alg UpperTheory.V.U3 UpperTheor
 private theorem chi_map_ofRep {n : ℕ} {A K G : Type} [CommRing A] [CommRing K] [Group G] (f : A →+* K)
     (ρ : G →* Matrix (Fin n) (Fin n) A) (g : G) :
     ((GDet.ofRep ρ).map f).chi (MonoidAlgebra.single g 1) = (ρ g).charpoly.map f := by
-  letI : Algebra A K[X] := ((algebraMap K K[X]).comp f).toAlgebra
+  let : Algebra A K[X] := ((algebraMap K K[X]).comp f).toAlgebra
   rw [← Matrix.charpoly_map]
   change (GDet.repAlg ρ K[X] _).det = (Matrix.charmatrix _).det
   congr 1
@@ -79,7 +79,7 @@ private theorem charpoly_flag {H k : Type} [Group H] [CommRing k] {n : ℕ} (r :
   have h1 := Matrix.charpoly_units_conj g (gm r s)
   have h2 : ((g * r s * g⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).BlockTriangular id :=
     fun i j hij => (hg s).1 i j hij
-  have h3 := Matrix.charpoly_of_upperTriangular _ h2
+  have h3 := charpoly_of_isUpperTriangular _ h2
   rw [← h1]
   simp only [Units.val_mul, Matrix.coe_units_inv] at h3
   rw [h3]
@@ -159,13 +159,13 @@ theorem UpperTheory.V.Pr.niceIrr :
   obtain ⟨v, rfl⟩ := T.K.e.surjective v'
 
   have hfi : U.FiniteIndex := by
-    haveI : CompactSpace T.G.G₀ :=
+    have : CompactSpace T.G.G₀ :=
       isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ T.G.η_open).isCompact
-    haveI := Subgroup.quotient_finite_of_isOpen U hU
+    have := Subgroup.quotient_finite_of_isOpen U hU
     exact Subgroup.finiteIndex_of_finite_quotient
   have hUo : IsOpen (U.normalCore : Set T.G.G₀) :=
     Subgroup.isOpen_of_isClosed_of_finiteIndex _ (Subgroup.normalCore_isClosed U (Subgroup.isClosed_of_isOpen U hU))
-  haveI : T.G.G'.Normal := MonoidHom.normal_ker _
+  have : T.G.G'.Normal := MonoidHom.normal_ker _
   have key := irrNormal T.G.G₀ y.Fb y.K y.A n hn (pushRep (algebraMap y.Fr y.Fb) y.ρF) hirr φ _ _ hφ hred
     (T.G.Gv v) (T.G.φ v) (fun i => pushCh φ (y.ψ v i)) (fun g => ?_) (U.normalCore ⊓ T.G.G') (fun a b hab => ?_) ?_
   · intro W hW

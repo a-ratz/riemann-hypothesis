@@ -124,7 +124,7 @@ theorem GlobalTheory.PolFan.cell_gen_on_ray : ∀ (O : Type) [CommRing O] (bar :
         have := LinearMap.congr_fun₂ hkd a b
         simp only [LinearMap.smul_apply, LinearMap.sum_apply, toReal_apply, nsmul_eq_mul] at this ⊢
         simp only [Pi.single_apply, ite_smul, zero_smul, LinearMap.smul_apply, toReal_apply, smul_eq_mul,
-          Finset.sum_ite_eq', Finset.mem_univ, if_true, Nat.cast_ite, Nat.cast_zero, ite_mul, zero_mul]
+          Finset.sum_ite_eq', Finset.mem_univ, ite_true, Nat.cast_ite, Nat.cast_zero, ite_mul, zero_mul]
         exact_mod_cast this.symm) j (by exact_mod_cast hd)
     exact ⟨kj, e, hkj, fun _ => he⟩
   choose kk e hkk he using hB
@@ -149,16 +149,16 @@ theorem GlobalTheory.PolFan.cell_gen_on_ray : ∀ (O : Type) [CommRing O] (bar :
     exact Finset.sum_congr rfl fun l _ => (Finset.sum_smul).symm
   have hFG := Fintype.linearIndependent_iffₛ.1 hli (fun l => ((∑ j, d j * Kj j * e j l : ℕ) : ℤ))
     (fun l => if l = i then ((K * k : ℕ) : ℤ) else 0) (by
-      simp only [Nat.cast_smul_eq_nsmul, ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [Nat.cast_smul_eq_nsmul, ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       exact key.symm)
   have hoff : ∀ l, l ≠ i → ∀ j, d j * Kj j * e j l = 0 := by
     intro l hl j
     have := hFG l
-    simp only [if_neg hl, Nat.cast_eq_zero] at this
+    simp only [ite_eq_right hl, Nat.cast_eq_zero] at this
     exact (Finset.sum_eq_zero_iff.1 this) j (Finset.mem_univ _)
   have hon : ∑ j, d j * Kj j * e j i ≠ 0 := by
     have := hFG i
-    rw [if_pos rfl, Nat.cast_inj] at this
+    rw [ite_eq_left rfl, Nat.cast_inj] at this
     rw [this]
     exact (Nat.mul_pos hKpos hk).ne'
   obtain ⟨j, -, hj⟩ := Finset.exists_ne_zero_of_sum_ne_zero hon
@@ -322,8 +322,8 @@ theorem maxMult_lt_top : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     by_cases hk : ∃ (X : Type) (_ : AddCommGroup X) (_ : Module (𝓞 E) X) (_ : Module.Finite (𝓞 E) X)
       (_ : Module.Projective (𝓞 E) X), Module.finrank (𝓞 E) X ≤ q ∧ Nonempty (X ≃ₗ[𝓞 E] Y k)
     · obtain ⟨X, _, _, _, _, hX, ⟨e⟩⟩ := hk
-      haveI : Module.Finite (𝓞 E) (Y k) := Module.Finite.equiv e
-      haveI : Module.Projective (𝓞 E) (Y k) := Module.Projective.of_equiv e
+      have : Module.Finite (𝓞 E) (Y k) := Module.Finite.equiv e
+      have : Module.Projective (𝓞 E) (Y k) := Module.Projective.of_equiv e
       have hYr : Module.finrank (𝓞 E) (Y k) ≤ q := e.finrank_eq ▸ hX
       obtain ⟨C, hC⟩ := perModule (hφ (Y k) hYr) (_root_.GlobalTheory.PolFan.toReal_mem_psdCone_of_nonneg E H (Y k))
       refine ⟨C, fun X' _ _ _ _ _ he' m δ h hl hp => ?_⟩
@@ -333,7 +333,7 @@ theorem maxMult_lt_top : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       exact hC m _ h' hl' hp'
     · exact ⟨0, fun X _ _ _ _ hX he => (hk ⟨X, _, _, inferInstance, inferInstance, hX, he⟩).elim⟩
   choose C hC using hb
-  refine lt_of_le_of_lt (b := ((Finset.univ.sup C : ℕ) : ℕ∞)) ?_ (ENat.coe_lt_top _)
+  refine lt_of_le_of_lt (b := ((Finset.univ.sup C : ℕ) : ℕ∞)) ?_ (ENat.natCast_lt_top _)
   unfold maxMult
   refine iSup_le fun X => iSup_le fun _ => iSup_le fun _ => iSup_le fun _ => iSup_le fun _ => iSup_le fun hX =>
     iSup_le fun m => iSup_le fun δ => iSup_le fun h => iSup_le fun hl => iSup_le fun hp => ?_

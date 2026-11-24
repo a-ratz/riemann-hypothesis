@@ -75,7 +75,7 @@ def avg (Γ : AddSubgroup G) (Φ : G → ℂ) : ℂ :=
   then ∫ x in h.choose.2, Φ x ∂h.choose.1 else 0
 
 theorem avg_const_mul (Γ : AddSubgroup G) (c : ℂ) (Φ : G → ℂ) : avg Γ (fun x => c * Φ x) = c * avg Γ Φ := by
-  letI : MeasurableSpace G := borel G
+  let : MeasurableSpace G := borel G
   simp only [avg]
   split_ifs
   · exact integral_const_mul _ _
@@ -101,7 +101,7 @@ theorem isCoLat_ratV (ι : Type) [Finite ι] : IsCoLat (ratV E ι) := by
     refine discreteTopology_of_isOpen_singleton_zero ?_
     have hW : IsOpen (Set.pi Set.univ fun _ : ι => V) :=
       isOpen_set_pi Set.finite_univ fun _ _ => hVo
-    convert hW.preimage (continuous_subtype_val (p := fun x => x ∈ ratV E ι)) using 1
+    convert hW.preimage (continuous_subtypeVal (p := fun x => x ∈ ratV E ι)) using 1
     ext ⟨_, x, rfl⟩
     constructor
     · intro h p _

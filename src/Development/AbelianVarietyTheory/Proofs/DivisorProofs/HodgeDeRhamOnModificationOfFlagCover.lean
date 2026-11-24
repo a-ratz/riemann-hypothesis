@@ -211,8 +211,8 @@ theorem exists_basis_kaehler_D {k A : Type} [CommRing k] [CommRing A] [Algebra k
     ∃ (f : Fin D → A) (B : Module.Basis (Fin D) A Ω[A⁄k]), ∀ i, B i = KaehlerDifferential.D k A (f i) := by
   classical
   obtain ⟨ι, σ, _, _, P, hP⟩ := ‹Algebra.IsStandardSmoothOfRelativeDimension D k A›.out
-  letI := Fintype.ofFinite ι
-  letI := Fintype.ofFinite σ
+  let := Fintype.ofFinite ι
+  let := Fintype.ofFinite σ
   have hc : Fintype.card ((Set.range P.map)ᶜ : Set ι) = D := by
     rw [Fintype.card_compl_set, Set.card_range_of_injective P.map_inj, ← hP]
     simp [Algebra.Presentation.dimension]
@@ -245,7 +245,7 @@ theorem snd_eq_sum_of_basis {k A : Type} [CommRing k] [CommRing A] [Algebra k A]
 
 theorem snd_eq_zero_of_isAlgebraic {F K : Type} [Field F] [CharZero F] [Algebra.IsAlgebraic ℚ F] [Field K]
     (φ : F →+* DualNumber K) (a : F) : (φ a).snd = 0 := by
-  letI : Algebra ℚ (DualNumber K) := (φ.comp (algebraMap ℚ F)).toAlgebra
+  let : Algebra ℚ (DualNumber K) := (φ.comp (algebraMap ℚ F)).toAlgebra
   have : Algebra.FormallyUnramified ℚ F := Algebra.FormallyUnramified.of_isSeparable ℚ F
   have := Algebra.FormallyUnramified.ext' (R := ℚ) (A := F) (B := DualNumber K)
     (TrivSqZeroExt.fstHom K K K).toRingHom ⟨2, TrivSqZeroExt.kerIdeal_sq K K⟩ φ.toRatAlgHom
@@ -280,8 +280,8 @@ theorem exists_derivFrame (M : Modif (str₀ X Z) (U₀ X Z) (GlobalTheory.FlagT
       (dimFlag Dw) := by
     rw [← resG_comp_algX M.str (M.X.basicOpen_le (t : Γ(M.X, V)))]
     exact h₁
-  letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX M.str (M.X.basicOpen (t : Γ(M.X, V)))).toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension (dimFlag Dw) c.F Γ(M.X, M.X.basicOpen (t : Γ(M.X, V))) := h₂
+  let := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX M.str (M.X.basicOpen (t : Γ(M.X, V)))).toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension (dimFlag Dw) c.F Γ(M.X, M.X.basicOpen (t : Γ(M.X, V))) := h₂
   obtain ⟨f, B, hB⟩ := exists_basis_kaehler_D (D := dimFlag Dw) (k := c.F) (A := Γ(M.X, M.X.basicOpen (t : Γ(M.X, V))))
   refine ⟨_, IsAffineOpen.basicOpen hV _, fun b => derivHom ((B.coord b).compDer (KaehlerDifferential.D c.F _)),
     hxt, (M.X.basicOpen_le _).trans (hVW.trans le_rfl), fun b s => by simp [derivHom], fun K _ θ =>
@@ -333,7 +333,7 @@ theorem affineOpen_exists_field_point_basicOpen_commonDenom :
   intro X U hU p hp
   classical
   let P := hU.primeIdealOf ⟨p, hp⟩
-  haveI : P.asIdeal.IsPrime := P.isPrime
+  have : P.asIdeal.IsPrime := P.isPrime
   let K := FractionRing (Γ(X, U) ⧸ P.asIdeal)
   let ψ : Γ(X, U) →+* K := (algebraMap (Γ(X, U) ⧸ P.asIdeal) K).comp (Ideal.Quotient.mk P.asIdeal)
   have hψ : ∀ g, ψ g ≠ 0 ↔ g ∉ P.asIdeal := by
@@ -386,7 +386,7 @@ open scoped Classical
 
 theorem GlobalTheory.HorFrame.exists_ksComb_eq_single : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} {X : GlobalTheory.FlagMod.FlagCover Y} {Z : Comp Xo c} (M : Modif (str₀ X Z) (U₀ X Z) (GlobalTheory.FlagTan.dimFlag Dw)), (∀ (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K), KSIso (psiSet H) y) → ∀ (k : X.F.J) {W₁ : M.X.Opens} (hW₁ : IsAffineOpen W₁), W₁ ≤ M.off → ∀ (hk₁ : ⊤ ≤ (tau hW₁ ≫ toFlag M) ⁻¹ᵁ X.F.U k) [Algebra c.F Γ(M.X, W₁)] (Q₀ : FrPt Xo c Γ(M.X, W₁)), X.F.ChartFr k _ hk₁ Q₀ → ∀ (d : Fin (dimFlag Dw) → (Γ(M.X, W₁) →+* DualNumber Γ(M.X, W₁))), (∀ a s, (d a s).fst = s) → (∀ (K : Type) [Field K] (θ : Γ(M.X, W₁) →+* DualNumber K), ∃ m : Fin (dimFlag Dw) → K, ∀ s, (θ s).snd = ∑ b, m b * (TrivSqZeroExt.fstHom K K K).toRingHom (θ (d b s).snd)) → ∀ (Mx : Fin (dimFlag Dw) → HIx Dw (psiSet H) → Γ(M.X, W₁)), (∀ a (K : Type) [Field K] [Algebra c.F K] (ψ : Γ(M.X, W₁) →ₐ[c.F] K) (y' : FrPt Xo c K), FrMap ψ Q₀ y' → GlobalTheory.FlagTan.IsKS (psiSet H) y' (spMap (dualMap ψ.toRingHom) ≫ spMap (d a) ≫ Q₀.x) (ψ ∘ Mx a)) → ∀ (K : Type) [Field K] (ψ : Γ(M.X, W₁) →+* K) (b : HIx Dw (psiSet H)), ∃ m : Fin (dimFlag Dw) → K, ∑ a, m a • (ψ ∘ Mx a) = Pi.single b 1 := by
   intro E _ _ _ H Dw l Xo c Y X Z M hKS k W₁ hW₁ hoff hk₁ _ Q₀ hQ₀ d hd hspan Mx hMx K _ ψ b
-  letI : Algebra c.F K := (ψ.comp (algebraMap c.F Γ(M.X, W₁))).toAlgebra
+  let : Algebra c.F K := (ψ.comp (algebraMap c.F Γ(M.X, W₁))).toAlgebra
   let ψA : Γ(M.X, W₁) →ₐ[c.F] K := { ψ with commutes' := fun _ => rfl }
   obtain ⟨Qp, hQp⟩ := GlobalTheory.FlagMod.exists_frMap ψA Q₀
   have hk : ⊤ ≤ ((spMap ψ ≫ tau hW₁) ≫ toFlag M) ⁻¹ᵁ X.F.U k := by
@@ -682,7 +682,7 @@ theorem ksRow_exists_lieComb_ring : ∀ {R : Type} [CommRing R] {A : Over (Sp R)
     rw [hval, e, Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply]
 
   have hact : ∀ z, act (dp0 R) (𝟙 _) a z f = χ τ z • f := fun z => by
-    haveI := a.hom z
+    have := a.hom z
     have hz : act (dp0 R) (𝟙 _) a z f ∈ Fil A := by
       rw [act_apply]; exact push_mem_Fil _ hf
     have hf' : act (dp0 R) (𝟙 _) a z f - χ τ z • f ∈ Fil A :=
@@ -774,7 +774,7 @@ theorem IsKSValue.exists_of_isAbelianScheme_ring (P : AbelianDeRham) {K : Type} 
       MorphismProperty.of_isPullback (P := @GeometricallyConnected) h.1 hA.geomConnected⟩
   have g₀ := (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback h.1 hg
   have hL := (P.2.1 K A g a₀ g₀).1
-  letI : Algebra (DualNumber K) K := (TrivSqZeroExt.fstHom K K K).toRingHom.toAlgebra
+  let : Algebra (DualNumber K) K := (TrivSqZeroExt.fstHom K K K).toRingHom.toAlgebra
   obtain ⟨-, hF⟩ := P.2.2.1 (DualNumber K) A' g hA hg K A i h
   obtain ⟨-, ⟨N, hN⟩, -⟩ := P.2.1 (DualNumber K) A' g hA hg
   obtain ⟨-, hproj, -⟩ := P.1.prim hA hg
@@ -1128,7 +1128,7 @@ theorem GlobalTheory.HorFrame.exists_horizontal_lift : ∀ {E : Type} [Field E] 
           GlobalTheory.FlagTan.IsKS (psiSet H) Q w.x (Pi.single b 1) ∧
           spMap ((dualMap ψ).comp (e b)) ≫ tau hW' ≫ toFlag M = X.ptY w := by
   intro E _ _ _ H Dw l Xo c Y X Z M hP hKS k W hW p hp
-  haveI := c.fin
+  have := c.fin
   obtain ⟨W₁, hW₁, d, hpW₁, hW₁W, hd, hspan⟩ := GlobalTheory.T.exists_affine_cover_with_dual_number_derivations M W p hp
   have hoff : W₁ ≤ M.off := fun x hx => (hW (hW₁W hx)).1
   have hτ : ⊤ ≤ tau hW₁ ⁻¹ᵁ W₁ := tau_le hW₁ le_rfl
@@ -1160,7 +1160,7 @@ theorem GlobalTheory.HorFrame.exists_horizontal_lift : ∀ {E : Type} [Field E] 
   set g : Γ(M.X, W₁) := (B * MxM).det with hg
   have hW' : IsAffineOpen (M.X.basicOpen g) := hW₁.basicOpen g
   have hW'W₁ : M.X.basicOpen g ≤ W₁ := M.X.basicOpen_le g
-  haveI := hW₁.isLocalization_basicOpen g
+  have := hW₁.isLocalization_basicOpen g
   set ρ := algebraMap Γ(M.X, W₁) Γ(M.X, M.X.basicOpen g) with hρ
   choose d' hd'1 hd'2 using fun b => _root_.GlobalTheory.dualNumber_deformation_extends_away (S' := Γ(M.X, M.X.basicOpen g)) g (d b) (hd b)
   have hunit : IsUnit ((B * MxM).map ρ).det := by

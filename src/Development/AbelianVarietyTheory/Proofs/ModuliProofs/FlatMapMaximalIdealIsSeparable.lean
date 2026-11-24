@@ -72,7 +72,7 @@ theorem exists_local_of_algHom {A S B : Type} [CommRing A] [IsLocalRing A] [Comm
       (_ : Algebra.EssFiniteType A L) (φ : L →ₐ[A] S) (_ : IsLocalHom φ) (x : L),
       φ x = g b := by
   let P : Ideal B := (maximalIdeal S).comap (g : B →+* S)
-  haveI hP : P.IsPrime := Ideal.comap_isPrime _ _
+  have hP : P.IsPrime := Ideal.comap_isPrime _ _
   have hu : ∀ y : P.primeCompl, IsUnit (g y) := by
     intro y
     by_contra h
@@ -94,9 +94,9 @@ theorem exists_local_of_algHom {A S B : Type} [CommRing A] [IsLocalRing A] [Comm
     have := ha.map φ
     rw [AlgHom.commutes] at this
     exact IsLocalHom.map_nonunit a this
-  haveI : Algebra.FormallyUnramified B (Localization.AtPrime P) :=
+  have : Algebra.FormallyUnramified B (Localization.AtPrime P) :=
     Algebra.FormallyUnramified.of_isLocalization P.primeCompl
-  haveI : Algebra.EssFiniteType B (Localization.AtPrime P) :=
+  have : Algebra.EssFiniteType B (Localization.AtPrime P) :=
     Algebra.EssFiniteType.of_isLocalization _ P.primeCompl
   exact ⟨Localization.AtPrime P, inferInstance, inferInstance, inferInstance, hA,
     Algebra.FormallyUnramified.comp A B _, Algebra.EssFiniteType.comp A B _, φ, hloc,
@@ -114,8 +114,8 @@ theorem exists_local_unramified_of_isIndEtale {A S : Type} [CommRing A] [IsLocal
   obtain ⟨hE, hcomp⟩ := H j
   let f : A →+* D.obj j := (t.app j).hom
   let g₀ : D.obj j →+* S := (c.app j).hom
-  letI : Algebra A (D.obj j) := f.toAlgebra
-  haveI : Algebra.Etale A (D.obj j) := hE
+  let : Algebra A (D.obj j) := f.toAlgebra
+  have : Algebra.Etale A (D.obj j) := hE
   have hg : ∀ a : A, g₀ (f a) = algebraMap A S a := fun a =>
     congrArg (fun k : CommRingCat.of A ⟶ CommRingCat.of S => k.hom a) hcomp
   let g : D.obj j →ₐ[A] S := { g₀ with commutes' := hg }

@@ -141,13 +141,13 @@ theorem an_fiber [Fintype L] {n m q : ℕ} {M : Matrix (Fin n) (Fin n) L}
         | zero => simpa [Matrix.diagonal_apply] using hxx
         | succ j =>
           simp only [Fin.cons_zero, Fin.cons_succ, Matrix.diagonal_apply,
-            (Fin.succ_ne_zero j).symm, if_false]
+            (Fin.succ_ne_zero j).symm, ite_false]
           exact hxU j
       | succ i =>
         induction j using Fin.cases with
         | zero =>
           simp only [Fin.cons_zero, Fin.cons_succ, Matrix.diagonal_apply, Fin.succ_ne_zero,
-            if_false]
+            ite_false]
           exact hUx i
         | succ j =>
           simp only [Fin.cons_succ, Matrix.diagonal_apply, Fin.succ_inj]
@@ -158,7 +158,7 @@ theorem an_fiber [Fintype L] {n m q : ℕ} {M : Matrix (Fin n) (Fin n) L}
     rw [Finset.mem_coe, Finset.mem_filter]
     refine ⟨Finset.mem_univ _, fun i => ⟨hXW _, ?_⟩, hXi.comp _ (Fin.succ_injective _), ?_⟩
     · change hf q M (X i.succ) x = 0
-      rw [← hX0, hXg, Matrix.diagonal_apply, if_neg (Fin.succ_ne_zero i)]
+      rw [← hX0, hXg, Matrix.diagonal_apply, ite_eq_right (Fin.succ_ne_zero i)]
     · intro i j
       rw [hXg, Matrix.diagonal_apply, Matrix.diagonal_apply]
       simp only [Fin.succ_inj, Fin.cons_succ]
@@ -199,7 +199,7 @@ theorem anisoPeel_of_valCount (hv : ValCount) : AnisoPeel := by
         x ∈ W ∧ hf (Fintype.card K) M x x = b)).card : ℤ) =
         valN (Fintype.card K) (Module.finrank L W) := by
       have h0 := hv K L h2 n M W hM hW b hbf
-      rw [if_neg hb0] at h0
+      rw [ite_eq_right hb0] at h0
       rw [← h0, ← Set.ncard_coe_finset]
       congr 2
       ext v
@@ -246,7 +246,7 @@ theorem top_cnt_fin_zero {L : Type} [Field L] {n : ℕ} (q : ℕ) (M : Matrix (F
   have h : {X : Fin 0 → Fin n → L | (∀ i, X i ∈ W) ∧ LinearIndependent L X ∧
       ∀ i j, hf q M (X i) (X j) = B i j} = Set.univ := by
     ext X
-    simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
     exact ⟨fun i => i.elim0, linearIndependent_empty_type, fun i => i.elim0⟩
   rw [h, Set.ncard_univ]
   simp
@@ -307,7 +307,7 @@ theorem top_nondeg_top {L : Type} [Field L] {n : ℕ} (q : ℕ) (hq : 0 < q)
     funext l0
     have h := hw (Pi.single l0 1) Submodule.mem_top
     simp only [hf, Pi.single_apply, ite_pow, one_pow, zero_pow hq.ne', mul_ite, mul_one,
-      mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+      mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
     simpa [Matrix.vecMul, dotProduct] using h
   calc w = Matrix.vecMul w (M * M⁻¹) := by rw [Matrix.mul_nonsing_inv _ hdet, Matrix.vecMul_one]
     _ = Matrix.vecMul (Matrix.vecMul w M) M⁻¹ := by rw [Matrix.vecMul_vecMul]
@@ -610,8 +610,8 @@ end
 theorem hermitianDiagonalization : Diag := by
   intro K L _ _ _ _ _ h2 m B hB
   obtain ⟨n, hp, hcard⟩ := FiniteField.card K (ringChar K)
-  haveI : Fact (ringChar K).Prime := ⟨hp⟩
-  haveI : CharP L (ringChar K) := charP_of_injective_algebraMap (algebraMap K L).injective _
+  have : Fact (ringChar K).Prime := ⟨hp⟩
+  have : CharP L (ringChar K) := charP_of_injective_algebraMap (algebraMap K L).injective _
   have hadd : ∀ a b : L, (a + b) ^ Fintype.card K = a ^ Fintype.card K + b ^ Fintype.card K := fun a b => by
     rw [hcard]
     exact add_pow_char_pow a b _ _
@@ -739,10 +739,10 @@ theorem iso_fiber [Fintype L] {n c q : ℕ} {M : Matrix (Fin n) (Fin n) L}
     (fun X => ((fun i => hf q M (X i.succ) y), fun i => X i.succ - hf q M (X i.succ) y • x))
     (fun p => Fin.cons x (fun i => p.2 i + p.1 i • x)) ?_ ?_ ?_ ?_
   · rintro X hX
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hX
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hX
     obtain ⟨⟨hW, hli, hiso⟩, hX0⟩ := hX
     simp only [Finset.coe_product, Finset.coe_univ, Finset.coe_filter, Finset.mem_univ, true_and,
-      Set.mem_prod, Set.mem_univ, Set.mem_setOf_eq]
+      Set.mem_prod, Set.mem_univ, Set.mem_ofPred_eq]
     refine ⟨fun i => ?_, ?_, fun i j => ?_⟩
     · refine Submodule.mem_inf.2 ⟨Submodule.mem_inf.2 ⟨?_, ?_⟩, ?_⟩
       · exact W.sub_mem (hW _) (W.smul_mem _ hxW)
@@ -759,13 +759,13 @@ theorem iso_fiber [Fintype L] {n c q : ℕ} {M : Matrix (Fin n) (Fin n) L}
       simp [hiso]
   · rintro ⟨a, U⟩ hp
     simp only [Finset.coe_product, Finset.coe_univ, Finset.coe_filter, Finset.mem_univ, true_and,
-      Set.mem_prod, Set.mem_univ, Set.mem_setOf_eq] at hp
+      Set.mem_prod, Set.mem_univ, Set.mem_ofPred_eq] at hp
     obtain ⟨hUW, hUli, hUiso⟩ := hp
     have hU : ∀ i, U i ∈ W ∧ hf q M (U i) x = 0 ∧ hf q M (U i) y = 0 := fun i => by
       have := hUW i
       simp only [Submodule.mem_inf, LinearMap.mem_ker] at this
       exact ⟨this.1.1, this.1.2, this.2⟩
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
     refine ⟨⟨fun i => ?_, ?_, fun i j => ?_⟩, rfl⟩
     · refine Fin.cases ?_ (fun j => ?_) i
       · simpa using hxW
@@ -783,14 +783,14 @@ theorem iso_fiber [Fintype L] {n c q : ℕ} {M : Matrix (Fin n) (Fin n) L}
           hzero _ _ (hU j').2.1, hUiso]
         ring
   · intro X hX
-    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hX
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hX
     funext i
     refine Fin.cases ?_ (fun j => ?_) i
     · simp [hX.2]
     · simp
   · rintro ⟨a, U⟩ hp
     simp only [Finset.coe_product, Finset.coe_univ, Finset.coe_filter, Finset.mem_univ, true_and,
-      Set.mem_prod, Set.mem_univ, Set.mem_setOf_eq] at hp
+      Set.mem_prod, Set.mem_univ, Set.mem_ofPred_eq] at hp
     have hUy : ∀ i, hf q M (U i) y = 0 := fun i => by
       have := hp.1 i
       simp only [Submodule.mem_inf, LinearMap.mem_ker] at this
@@ -814,8 +814,8 @@ theorem isoPeel_of_valCount (hv : ValCount) : IsoPeel := by
     rw [← pow_mul, ← sq, ← hcardL, FiniteField.pow_card]
   have hadd : ∀ a b : L, (a + b) ^ q = a ^ q + b ^ q := by
     obtain ⟨nn, hp, hpn⟩ := FiniteField.card K (ringChar K)
-    haveI : Fact (ringChar K).Prime := ⟨hp⟩
-    haveI : CharP L (ringChar K) :=
+    have : Fact (ringChar K).Prime := ⟨hp⟩
+    have : CharP L (ringChar K) :=
       charP_of_injective_algebraMap (algebraMap K L).injective (ringChar K)
     intro a b
     rw [hq_def, hpn]
@@ -910,7 +910,7 @@ theorem isoPeel_of_valCount (hv : ValCount) : IsoPeel := by
     ring
 
   have hval := hv K L hKL n M W hM hW 0 (by rw [zero_pow hq0])
-  simp only [if_true] at hval
+  simp only [ite_true] at hval
   have hT : ({v : Fin n → L | v ∈ W ∧ hf q M v v = 0}.ncard) =
       (Finset.univ.filter fun v => v ∈ W ∧ hf q M v v = 0).card := by
     rw [← Set.ncard_coe_finset]
@@ -1011,15 +1011,15 @@ theorem cg_hf_right (K L : Type) [Field K] [Fintype K] [Field L] [Algebra K L] {
       ∑ l, c l ^ Fintype.card K * hf (Fintype.card K) M x (y l) := by
   obtain ⟨p, hch⟩ := CharP.exists K
   obtain ⟨n, hp, hq⟩ := FiniteField.card K p
-  haveI := Fact.mk hp
-  haveI : CharP L p := charP_of_injective_algebraMap (algebraMap K L).injective p
+  have := Fact.mk hp
+  have : CharP L p := charP_of_injective_algebraMap (algebraMap K L).injective p
   have hfr : ∀ (s : Finset (Fin m)) (f : Fin m → L),
       (∑ i ∈ s, f i) ^ Fintype.card K = ∑ i ∈ s, f i ^ Fintype.card K := by
     intro s f
     rw [hq]
     first
     | exact sum_pow_char_pow s f
-    | (haveI : ExpChar L p := ExpChar.prime hp
+    | (have : ExpChar L p := ExpChar.prime hp
        have h := map_sum (iterateFrobenius L p n) f s
        simp only [iterateFrobenius_def] at h
        exact h)
@@ -1056,15 +1056,15 @@ theorem cg_map_mul (K L : Type) [Field K] [Fintype K] [Field L] [Algebra K L] {m
       A.map (fun y => y ^ Fintype.card K) * C.map (fun y => y ^ Fintype.card K) := by
   obtain ⟨p, hch⟩ := CharP.exists K
   obtain ⟨n, hp, hq⟩ := FiniteField.card K p
-  haveI := Fact.mk hp
-  haveI : CharP L p := charP_of_injective_algebraMap (algebraMap K L).injective p
+  have := Fact.mk hp
+  have : CharP L p := charP_of_injective_algebraMap (algebraMap K L).injective p
   have hfr : ∀ (s : Finset (Fin m)) (f : Fin m → L),
       (∑ i ∈ s, f i) ^ Fintype.card K = ∑ i ∈ s, f i ^ Fintype.card K := by
     intro s f
     rw [hq]
     first
     | exact sum_pow_char_pow s f
-    | (haveI : ExpChar L p := ExpChar.prime hp
+    | (have : ExpChar L p := ExpChar.prime hp
        have h := map_sum (iterateFrobenius L p n) f s
        simp only [iterateFrobenius_def] at h
        exact h)

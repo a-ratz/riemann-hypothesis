@@ -95,7 +95,7 @@ theorem comp_vecHom (T : Tens D D' W) {Z : Over (Spec (CommRingCat.of R))} (p q 
 
 theorem zero_vecHom (T : Tens D D' W) (v : Vec r) : lift η[D'.P.A] η[D'.P.A] ≫ vecHom T v = 1 := by
   have h : ∀ k, η[D'.P.A] ≫ T.pr k = 1 := fun k => by
-    haveI := T.pr_hom k
+    have := T.pr_hom k
     rw [IsMonHom.one_hom, Hom.one_def, toUnit_unique (toUnit _) (𝟙 _), Category.id_comp]
   simp only [comp_vecHom, h, one_zpow, Finset.prod_const_one, _root_.mul_one]
 

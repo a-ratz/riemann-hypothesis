@@ -91,7 +91,7 @@ private theorem isTestH_trM {a b : ℕ} {E : Type} [Field E] [NumberField E] [Is
 private theorem lef_zero (lam : Fin 0 → ℤ) (μ : Measure (G 0)) [μ.IsHaarMeasure] (k : Mat 0 → ((lefE 0 lam).V →L[ℂ] (lefE 0 lam).V))
     (val : Inf 0 → ℂ) (T : ℝ) (hm : IsMult μ (lefE 0 lam) k val T) :
     (μ.real Set.univ : ℂ) * phiOf (lefE 0 lam) (lefT 0 lam) k 1 = val (infOf lam) := by
-  haveI : BorelSpace (G 0) := ⟨rfl⟩
+  have : BorelSpace (G 0) := ⟨rfl⟩
   have h := ((lefModel 0 lam (fun i => i.elim0)).2.2.2 μ k val T hm).2 1 (fun i => i.elim0)
     (Subsingleton.elim _ _) (fun a => a.elim0) (Function.injective_of_subsingleton _)
   have e : (fun x : G 0 => phiOf (lefE 0 lam) (lefT 0 lam) k (PositivityTheory.RgTw.tw x 1)) =
@@ -120,8 +120,8 @@ def CmbPiA : Prop := ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Glo
 
 theorem cmbPiA : UpperTheory.V.Z.Mult.PiTermA → TwTrSum → CmbPiA := by
   intro hPi hSum E _ _ _ hU n hn l l₂ D A u₁ u₂ hu₁
-  haveI := A.ha
-  haveI := A.hb
+  have := A.ha
+  have := A.hb
   have hμ : D.μ.IsHaarMeasure := by
     obtain ⟨h1, -, h3, h4⟩ := D.haar
     exact { }
@@ -144,7 +144,7 @@ theorem cmbPiA : UpperTheory.V.Z.Mult.PiTermA → TwTrSum → CmbPiA := by
     intro w hw
     have h := ((locAlg E n 0 Z L w).2.2.2.1 (φ w) (hφ w hw)).1
     funext g
-    simp only [seen, if_pos (hZ w hw).2]
+    simp only [seen, ite_eq_left (hZ w hw).2]
     exact congrFun h (g, 1)
   have hX : (∏ w ∈ Z, trc (τ w).ρ (KGL w (n := n)) fun g => seen φ L.ln w (g, 1)) =
       ∏ w ∈ Z, trc (τ w).ρ (KGL w (n := n)) fun g => φ w (g, 1) :=

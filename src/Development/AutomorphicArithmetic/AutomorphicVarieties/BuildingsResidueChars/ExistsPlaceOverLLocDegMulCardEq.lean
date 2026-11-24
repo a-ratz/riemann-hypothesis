@@ -65,7 +65,7 @@ private theorem td_count (l : ℕ) [hl : Fact l.Prime] (F : Type) [Field F] [Num
   let p : Ideal ℤ := Ideal.span {((l : ℕ) : ℤ)}
   have hpp : p.IsPrime :=
     (Ideal.span_singleton_prime (by exact_mod_cast hl.out.ne_zero)).2 (Nat.prime_iff_prime_int.1 hl.out)
-  haveI hpmax : p.IsMaximal :=
+  have hpmax : p.IsMaximal :=
     hpp.isMaximal (by rw [Ne, Ideal.span_singleton_eq_bot]; exact_mod_cast hl.out.ne_zero)
   have hlo : ∀ P : Ideal (𝓞 F), P.IsPrime → ((l : ℕ) : 𝓞 F) ∈ P → P.LiesOver p := by
     intro P hP hlP
@@ -97,7 +97,7 @@ private theorem td_count (l : ℕ) [hl : Fact l.Prime] (F : Type) [Field F] [Num
     rw [← Nat.card_coe_set_eq]
     exact (Nat.card_eq_of_bijective f hf).symm
   have hG := Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn p (𝓞 F) (F ≃ₐ[ℚ] F)
-  haveI := hlo _ (pl v).isPrime (hm v)
+  have := hlo _ (pl v).isPrime (hm v)
   rw [Ideal.ramificationIdxIn_eq_ramificationIdx p (pl v).asIdeal (F ≃ₐ[ℚ] F),
     Ideal.inertiaDegIn_eq_inertiaDeg p (pl v).asIdeal (F ≃ₐ[ℚ] F), key,
     IsGalois.card_aut_eq_finrank] at hG
@@ -107,9 +107,9 @@ private theorem td_count (l : ℕ) [hl : Fact l.Prime] (F : Type) [Field F] [Num
 theorem UpperTheory.exists_place_over_l_locDeg_mul_card_eq :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (T : Tower D) (v : T.ι), ∃ w : HeightOneSpectrum (𝓞 T.F), IsPlaceOver (T.pl v) w ∧ ((l : ℕ) : 𝓞 T.F) ∈ w.asIdeal ∧ locDeg w * Nat.card T.ι = T.d := by
   intro Ω _ _ _ l _ c D T v
-  haveI := T.nF
-  haveI := T.abF
-  haveI hac : IsAlgClosure T.F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have := T.nF
+  have := T.abF
+  have hac : IsAlgClosure T.F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
   have hlt : ∀ (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 T.F)), IsPlaceOver A w →
       (A.valuation (l : Ω) < 1 ↔ ((l : ℕ) : 𝓞 T.F) ∈ w.asIdeal) := by
     intro A w hA

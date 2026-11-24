@@ -207,7 +207,7 @@ theorem push_hkMap (hx : x = h ≫ Z.π₁) (hx' : x' = h ≫ Z.π₂) {T' : Sch
   simp only [Category.assoc]
 
 theorem isLinHom_hkMap (hx : x = h ≫ Z.π₁) (hx' : x' = h ≫ Z.π₂) : IsLinHom (hkMap Z hx hx') := by
-  haveI : IsMonHom Z.ψ := Z.isog.1.1
+  have : IsMonHom Z.ψ := Z.isog.1.1
   refine ⟨hkMap_fst Z hx hx', fun T' t a₁ a₂ b₁ b₂ h₁ h₂ => ?_, fun r => ?_⟩
   · have e : (t ≫ h) ≫ Z.π₂ = t ≫ x' := by rw [hx', Category.assoc]
     have key := Z.m₂.cart.2 (Over.mk (t ≫ h)) (hkLiftPt Z hx t a₁ ≫ Z.ψ) (hkLiftPt Z hx t a₂ ≫ Z.ψ) (overCast e ≫ b₁)
@@ -290,7 +290,7 @@ theorem hkMap_ptSec_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
         Z.m₁.cm.e_comm, Z.m₁.base, ← Category.assoc, ← hx]
     · rw [Category.assoc, hkLift_hom, ptSecT, GlobalTheory.HeckeFrCompare.lift_l_fst_assoc, Category.assoc, eSec_hom]
       simp
-  haveI := Z.isog.1.1
+  have := Z.isog.1.1
   have hψ : eSec Z.o₁.t.G ≫ Z.ψ.left = eSec Z.o₂.t.G := by
     rw [eSec, eSec, ← Over.comp_left, IsMonHom.one_hom]
   apply GlobalTheory.HeckeFrCompare.gx_ext

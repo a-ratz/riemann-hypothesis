@@ -149,7 +149,7 @@ theorem seed_gal_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK 
         G (bk.iA τ) ^ s.N • s.W := by
   intro l _ K bk τ _ d ρ _ s g hg G hG
   obtain ⟨h0, h1⟩ := bk.ρ₀_pos_lt_one_galPer
-  haveI : IsDomain (bk.DA bk.ρ₀) := (_root_.GlobalTheory.BSP.discAinf_isDomain l K bk bk.ρ₀ h0 h1).1
+  have : IsDomain (bk.DA bk.ρ₀) := (_root_.GlobalTheory.BSP.discAinf_isDomain l K bk bk.ρ₀ h0 h1).1
   obtain ⟨ι, ⟨tb⟩⟩ := _root_.GlobalTheory.BSP.AinfTopBasis.main l K bk
   have hinj : Function.Injective bk.iA := (_root_.GlobalTheory.BSP.toDisc_injective_of_topBasis l K bk (Ainf l) bk.ev ι tb bk.ρ₀ h0 h1).1
   have hGS : ∀ a, G (bk.iA (bk.ev a)) = bk.iA (bk.ev a) := fun a => by

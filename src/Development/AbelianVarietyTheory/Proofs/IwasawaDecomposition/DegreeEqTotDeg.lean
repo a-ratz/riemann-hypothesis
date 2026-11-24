@@ -125,15 +125,15 @@ theorem exists_integral_dual_family (E M : Type) [Field E] [NumberField E] [Fiel
     ∃ (k : ℕ) (b : Fin k → 𝓞 M) (l : Fin k → M →ₗ[E] E),
       (∀ j (c : 𝓞 M), ∃ a : 𝓞 E, l j (c : M) = (a : E)) ∧
       ∀ y : M, y = ∑ j, (b j : M) * algebraMap E M (l j y) := by
-  haveI : Module.Finite (𝓞 E) (𝓞 M) := inferInstance
-  haveI : Module.Flat (𝓞 E) (𝓞 M) := inferInstance
-  haveI : Module.FinitePresentation (𝓞 E) (𝓞 M) := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 E) (𝓞 M) := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite (𝓞 E) (𝓞 M) := inferInstance
+  have : Module.Flat (𝓞 E) (𝓞 M) := inferInstance
+  have : Module.FinitePresentation (𝓞 E) (𝓞 M) := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 E) (𝓞 M) := Module.Flat.projective_of_finitePresentation
   obtain ⟨k, π, hπ⟩ := Module.Finite.exists_fin' (𝓞 E) (𝓞 M)
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property π LinearMap.id hπ
-  haveI hL : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 M) (nonZeroDivisors (𝓞 E))) M :=
+  have hL : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 M) (nonZeroDivisors (𝓞 E))) M :=
     IsIntegralClosure.isLocalization (𝓞 E) E M (𝓞 M)
-  haveI hL' : IsLocalizedModule (nonZeroDivisors (𝓞 E))
+  have hL' : IsLocalizedModule (nonZeroDivisors (𝓞 E))
       (IsScalarTower.toAlgHom (𝓞 E) (𝓞 M) M).toLinearMap :=
     isLocalizedModule_iff_isLocalization.mpr hL
   have hu : ∀ x : nonZeroDivisors (𝓞 E), IsUnit (algebraMap (𝓞 E) (Module.End (𝓞 E) E) x) :=
@@ -514,7 +514,7 @@ theorem exists_pow_eq_span_singleton_of_fg (E : Type) [Field E] [NumberField E]
   rw [ClassGroup.mk_eq_one_iff] at h1
   obtain ⟨β, hβ⟩ := h1
   refine ⟨n, β, ?_⟩
-  rw [← hβ, Units.val_pow_eq_pow_val, FractionalIdeal.coe_pow]
+  rw [← hβ, Units.val_pow_eq_pow_val, FractionalIdeal.coeToSubmodule_pow]
   rfl
 
 theorem span_image_eq_span_root {E M : Type} [Field E] [Field M] (ψ : E →+* M)
@@ -584,10 +584,10 @@ theorem exists_finite_extension_capitulation :
   choose γ hγ using fun τ => IsAlgClosed.exists_pow_nat_eq (φ (β τ)) (Nat.succ_pos (n τ))
   let φ' : E →ₐ[ℚ] ℂ := φ.toRatAlgHom
   let K : IntermediateField ℚ ℂ := φ'.fieldRange
-  haveI hK : FiniteDimensional ℚ K :=
+  have hK : FiniteDimensional ℚ K :=
     LinearEquiv.finiteDimensional (AlgEquiv.ofInjectiveField φ').toLinearEquiv
-  haveI : Finite (Set.range γ) := Set.finite_range γ
-  haveI hL : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (Set.range γ)) := by
+  have : Finite (Set.range γ) := Set.finite_range γ
+  have hL : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (Set.range γ)) := by
     apply IntermediateField.finiteDimensional_adjoin
     rintro _ ⟨τ, rfl⟩
     apply IsIntegral.of_pow (Nat.succ_pos (n τ))
@@ -673,7 +673,7 @@ theorem exists_elt {R : Ranks} (H : Host R) (p : ℕ) (hp : p.Prime) (hs : Th.Sp
       push_cast
       ring
   · have hj : jacobiSym (-(H.d : ℤ)) p = 1 := hs.resolve_left h2
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     rw [← jacobiSym.legendreSym.to_jacobiSym] at hj
     have hne : ((-(H.d : ℤ) : ℤ) : ZMod p) ≠ 0 := by
       intro h
@@ -936,9 +936,9 @@ theorem nonempty_isoKG : ∀ (K E : Type) [Field K] [CharZero K] [Field E] [Alge
       simp only [this]
       split_ifs <;> simp
     · have : w ≠ w' := fun t => hi (by rw [t])
-      rw [if_neg this, ho _ _ (fun t => hi (e.injective t)), mul_zero]
+      rw [ite_eq_right this, ho _ _ (fun t => hi (e.injective t)), mul_zero]
   have hbl : LinearIndependent K b :=
-    linearIndependent_of_orthogonal H b (fun i => by rw [hb]; simp) (fun i j hij => by rw [hb, if_neg hij])
+    linearIndependent_of_orthogonal H b (fun i => by rw [hb]; simp) (fun i j hij => by rw [hb, ite_eq_right hij])
   have : Nonempty ι := by
     rw [← Fintype.card_pos_iff, hcard]; exact Module.finrank_pos
   have hc : Fintype.card (Fin 4 × ι) = Module.finrank K (Fin 4 → E) := by
@@ -1275,7 +1275,7 @@ def ellE (τ : Tau R) : Submodule (𝓞 H.E) H.E :=
   (Submodule.span (𝓞 H.E) (conjVec H)).comap (LinearMap.single (𝓞 H.E) (fun _ : Tau R => H.E) τ)
 
 theorem ellE_fg (τ : Tau R) : (ellE H τ).FG := by
-  letI : DecidableEq (Tau R) := fun a b => Classical.propDecidable (a = b)
+  let : DecidableEq (Tau R) := fun a b => Classical.propDecidable (a = b)
   obtain ⟨d, hd, hA⟩ := H.AA0.isFractional
   have hd0 : (d : H.E) ≠ 0 := by exact_mod_cast nonZeroDivisors.ne_zero hd
   let g := H.sigmaOf (τ : R.GG)
@@ -1299,11 +1299,11 @@ theorem ellE_fg (τ : Tau R) : (ellE H τ).FG := by
 theorem exists_dgen : ∃ cD, Th.IsDgen H (embT H) cD := by
   obtain ⟨M, hM, hφ, hs⟩ := _root_.GlobalTheory.exists_finite_extension_capitulation H.E H.φ₀ (Tau R) (ellE H) (ellE_fg H)
   choose s hs using hs
-  haveI : NumberField M := ⟨⟩
-  letI : Algebra H.E M := (H.φ₀.codRestrict M hφ).toAlgebra
+  have : NumberField M := ⟨⟩
+  let : Algebra H.E M := (H.φ₀.codRestrict M hφ).toAlgebra
   have hal : ∀ x : H.E, ((algebraMap H.E M x : M) : ℂ) = H.φ₀ x := fun _ => rfl
   refine ⟨fun τ => s τ, M, inferInstance, fun τ x => hφ _, fun τ => ⟨s τ, rfl, ?_⟩⟩
-  have hl : ∀ x : H.E, TaylorLogMetric.liftM M (H.φ₀ x) = algebraMap H.E M x := fun x => dif_pos (hφ x)
+  have hl : ∀ x : H.E, TaylorLogMetric.liftM M (H.φ₀ x) = algebraMap H.E M x := fun x => dite_eq_left (hφ x)
   have h1 : Th.mmM H (embT H) M =
       Submodule.span (𝓞 M) ((fun (v : Tau R → H.E) (i : Tau R) => algebraMap H.E M (v i)) '' conjVec H) := by
     unfold Th.mmM

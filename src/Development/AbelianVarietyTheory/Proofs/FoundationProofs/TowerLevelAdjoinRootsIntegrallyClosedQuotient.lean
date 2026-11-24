@@ -59,7 +59,7 @@ open Polynomial
 theorem mem_adjoin_inv_of_isIntegral {R K : Type*} [CommRing R] [Field K] [Algebra R K] {z : K}
     (hz : z ≠ 0) (hi : IsIntegral R z) : z ∈ Algebra.adjoin R {z⁻¹} := by
   obtain ⟨f, hm, hf⟩ := hi
-  letI : Invertible z := invertibleOfNonzero hz
+  let : Invertible z := invertibleOfNonzero hz
   have h1 := eval₂_reverse_mul_pow (algebraMap R K) z f
   rw [hf, invOf_eq_inv] at h1
   have h2 : eval₂ (algebraMap R K) z⁻¹ f.reverse = 0 := by

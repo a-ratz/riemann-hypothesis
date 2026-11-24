@@ -435,8 +435,8 @@ theorem connForm_algHom {B B' : Type} [CommRing B] [Algebra R B] [CommRing B'] [
     (x' : Sp B' ⟶ X) (hx' : x' ≫ s = spMap (algebraMap R B')) (e : spMap (α : B →+* B') ≫ x = x') :
     connForm f x' hx' = (SemiHom.of_algHom α).m1 (connForm f x hx) +
       D R B' (ev f (Thick.trivHom (hx := hx) (T := Thick.triv B' x' hx') α e)) := by
-  letI : Algebra B B' := (α : B →+* B').toAlgebra
-  haveI : IsScalarTower R B B' := IsScalarTower.of_algebraMap_eq fun r ↦ (α.commutes r).symm
+  let : Algebra B B' := (α : B →+* B').toAlgebra
+  have : IsScalarTower R B B' := IsScalarTower.of_algebraMap_eq fun r ↦ (α.commutes r).symm
   rw [SemiHom.oneFormMap_eq_kaehlerDifferential_map _ fun _ ↦ rfl]
   exact eq_add_of_sub_eq' (connForm_map f x hx x' hx' e)
 

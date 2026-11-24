@@ -55,8 +55,8 @@ open UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite TensorProduct
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordAdm_maximalIdeal_and_finite_quotients :
     ∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] [IsNoetherianRing R] [IsLocalRing R] [IsAdicComplete (IsLocalRing.maximalIdeal R) R] [Module.Finite R M], OrdAdm (M := M) (IsLocalRing.maximalIdeal R) ∧ (Finite (IsLocalRing.ResidueField R) → ∀ k : ℕ, Finite (M ⧸ (IsLocalRing.maximalIdeal R ^ k • ⊤ : Submodule R M))) := by
   intro R _ M _ _ _ _ _ _
-  haveI : IsArtinianRing (R ⧸ IsLocalRing.maximalIdeal R) := by
-    letI := Ideal.Quotient.field (IsLocalRing.maximalIdeal R)
+  have : IsArtinianRing (R ⧸ IsLocalRing.maximalIdeal R) := by
+    let := Ideal.Quotient.field (IsLocalRing.maximalIdeal R)
     infer_instance
   have hOrd : OrdAdm (M := M) (IsLocalRing.maximalIdeal R) := by
     refine ⟨UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.completeFin (IsLocalRing.maximalIdeal R), fun k => ?_⟩
@@ -83,17 +83,17 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordAdm_maximalIdeal
           Ideal.Quotient.mk_surjective h1 with h | h
       · exact absurd (h2 ▸ h) hp.ne_top
       · exact h2 ▸ h
-    haveI := hArtPow k
+    have := hArtPow k
     rw [isFiniteLength_iff_isNoetherian_isArtinian]
     refine ⟨inferInstance, ?_⟩
-    haveI : Module.Finite (R ⧸ IsLocalRing.maximalIdeal R ^ k)
+    have : Module.Finite (R ⧸ IsLocalRing.maximalIdeal R ^ k)
         (M ⧸ (IsLocalRing.maximalIdeal R ^ k • ⊤ : Submodule R M)) :=
       Module.Finite.of_restrictScalars_finite R _ _
     exact isArtinian_of_surjective_algebraMap (R := R ⧸ IsLocalRing.maximalIdeal R ^ k)
       Ideal.Quotient.mk_surjective
   refine ⟨hOrd, fun hfin k => ?_⟩
-  haveI : Finite (R ⧸ IsLocalRing.maximalIdeal R) := hfin
-  haveI : IsNoetherian R M := isNoetherian_of_isNoetherianRing_of_finite R M
+  have : Finite (R ⧸ IsLocalRing.maximalIdeal R) := hfin
+  have : IsNoetherian R M := isNoetherian_of_isNoetherianRing_of_finite R M
   induction k with
   | zero =>
     rw [pow_zero, Ideal.one_eq_top, Submodule.top_smul]

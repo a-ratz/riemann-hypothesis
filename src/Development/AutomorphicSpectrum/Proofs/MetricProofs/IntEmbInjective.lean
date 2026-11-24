@@ -79,7 +79,7 @@ theorem intEmb_injective (s : 𝓞 E →+* ℂ) : Function.Injective s := by
   have hc : (RingHom.ker s).comap (algebraMap ℤ (𝓞 E)) = ⊥ := by
     rw [RingHom.comap_ker]
     exact (RingHom.injective_iff_ker_eq_bot _).1 (RingHom.injective_int _)
-  exact (RingHom.injective_iff_ker_eq_bot s).2 (Ideal.eq_bot_of_comap_eq_bot hc)
+  exact (RingHom.injective_iff_ker_eq_bot s).2 (Ideal.eq_bot_of_under_eq_bot hc)
 
 def embOf (s : 𝓞 E →+* ℂ) : E →+* ℂ := IsFractionRing.lift (intEmb_injective s)
 

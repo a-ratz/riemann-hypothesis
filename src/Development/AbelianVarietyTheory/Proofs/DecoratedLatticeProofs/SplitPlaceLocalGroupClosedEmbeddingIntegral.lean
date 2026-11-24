@@ -96,7 +96,7 @@ variable {Y : Type} [Fintype Y] [DecidableEq Y] {F : Frame k V.rank Y} {gl : GL 
 theorem map_one' {n : ℕ} : (1 : Matrix (Fin n) (Fin n) (AE D)).map q.pr = 1 := Matrix.map_one _ (map_zero _) (map_one _)
 
 theorem continuous_mt_gl (h : ∀ g, (ofSplit q).IsLoc F (gl g) g) : Continuous fun g => Formalism.L2.Theta.mt V (gl g) := by
-  haveI : IsTopologicalRing (AE D) := by
+  have : IsTopologicalRing (AE D) := by
     obtain ⟨h1, h2, h3⟩ := Formalism.IndefR.Eqv.G5.af_facts D.host.F
     exact (Formalism.IndefR.Eqv.G5.tens_facts (AF D.host.F) D.sp.cm.deg2).1
   have h2 : ∀ g, (Formalism.L2.Theta.mt V (gl g)).map q.pr = F.β * g.val * F.γ := fun g => (h g).2
@@ -142,10 +142,10 @@ def comp (x : GA D V) : GL Y k :=
     key x x⁻¹ (mul_inv_cancel x), key x⁻¹ x (inv_mul_cancel x)⟩
 
 theorem continuous_comp : Continuous (comp q F) := by
-  haveI : IsTopologicalGroup (GA D V) := by
+  have : IsTopologicalGroup (GA D V) := by
     obtain ⟨h1, h2, h3⟩ := Formalism.IndefR.Eqv.G5.af_facts D.host.F
     exact (Formalism.IndefR.Eqv.G5.ha_facts (AF D.host.F) D.sp.cm.deg2 D.sp.cm.sig V.gram).1
-  have c0 : Continuous (Formalism.L2.Theta.mt V) := Units.continuous_val.comp continuous_subtype_val
+  have c0 : Continuous (Formalism.L2.Theta.mt V) := Units.continuous_val.comp continuous_subtypeVal
   have c : Continuous fun x : GA D V => F.γ * (Formalism.L2.Theta.mt V x).map q.pr * F.β :=
     (continuous_const.matrix_mul (c0.matrix_map q.cont_pr)).matrix_mul continuous_const
   exact Units.continuous_iff.2 ⟨c, c.comp continuous_inv⟩
@@ -159,7 +159,7 @@ theorem comp_gl (h : ∀ g, (ofSplit q).IsLoc F (gl g) g) (g : GL Y k) : comp q 
   rw [F.γβ, Matrix.mul_one, ← Matrix.mul_assoc, F.γβ, Matrix.one_mul]
 
 theorem isClosedEmbedding_gl (h : ∀ g, (ofSplit q).IsLoc F (gl g) g) : Topology.IsClosedEmbedding gl := by
-  haveI : T2Space (GA D V) := by
+  have : T2Space (GA D V) := by
     obtain ⟨h1, h2, h3⟩ := Formalism.IndefR.Eqv.G5.af_facts D.host.F
     exact (Formalism.IndefR.Eqv.G5.ha_facts (AF D.host.F) D.sp.cm.deg2 D.sp.cm.sig V.gram).2.1
   exact Function.LeftInverse.isClosedEmbedding (f := comp q F) (comp_gl q h) (continuous_comp q) (continuous_gl q h)

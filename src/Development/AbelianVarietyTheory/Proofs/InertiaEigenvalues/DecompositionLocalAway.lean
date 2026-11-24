@@ -66,11 +66,11 @@ theorem locC_cont' (C : TruncatedSeriesCountingIdentities.CoefExt D i w hw) {k :
     (hM : Continuous fun g => M g) : Continuous fun g => TruncatedSeriesCountingIdentities.locC C M g := by
   refine continuous_matrix fun a b => ?_
   have h1 : Continuous fun g : Br.G D.nbr i w hw => M ((Br.iota D.nbr i w hw g : Gw D.nd w) : GE D.nd) a b :=
-    (hM.matrix_elem a b).comp (continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw))
+    (hM.matrix_elem a b).comp (continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw))
   have h2 : Continuous fun y : D.nd.O i => (((D.nbr i w hw).eO y : ↥(OL (D.nbr i w hw).LL)) :
-      ↥(D.nbr i w hw).LL.1) := continuous_subtype_val.comp (D.nbr i w hw).eO_cont
+      ↥(D.nbr i w hw).LL.1) := continuous_subtypeVal.comp (D.nbr i w hw).eO_cont
   have h3 : Continuous fun y : ↥(D.nbr i w hw).LL.1 => C.inc y :=
-    Continuous.subtype_mk continuous_subtype_val _
+    Continuous.subtype_mk continuous_subtypeVal _
   exact h3.comp (h2.comp h1)
 
 theorem sub_crys (C : TruncatedSeriesCountingIdentities.CoefExt D i w hw)

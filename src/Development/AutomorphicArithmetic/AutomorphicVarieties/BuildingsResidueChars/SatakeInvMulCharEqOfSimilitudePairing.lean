@@ -99,14 +99,14 @@ private theorem exists_fixed_pair [TopologicalSpace G] [IsTopologicalGroup G] (h
     ∃ y' ∈ fixed ρ K, l y' = l y := by
   classical
   open GlobalTheory.OrbitAvg in
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have hfi : (GlobalTheory.OrbitAvg.stab ρ K y).FiniteIndex := by
-    have ho : IsOpen (GlobalTheory.OrbitAvg.stab ρ K y : Set K) := (hρ y).preimage continuous_subtype_val
-    haveI := (GlobalTheory.OrbitAvg.stab ρ K y).quotient_finite_of_isOpen ho
+    have ho : IsOpen (GlobalTheory.OrbitAvg.stab ρ K y : Set K) := (hρ y).preimage continuous_subtypeVal
+    have := (GlobalTheory.OrbitAvg.stab ρ K y).quotient_finite_of_isOpen ho
     exact Subgroup.finiteIndex_of_finite_quotient
   refine ⟨GlobalTheory.OrbitAvg.avg ρ K y,
     GlobalTheory.LGrp.mem_fixed.2 fun u hu => GlobalTheory.OrbitAvg.avg_invariant ρ K hfi ⟨u, hu⟩, ?_⟩
-  haveI := Fintype.ofFinite (K ⧸ GlobalTheory.OrbitAvg.stab ρ K y)
+  have := Fintype.ofFinite (K ⧸ GlobalTheory.OrbitAvg.stab ρ K y)
   have hc : ((GlobalTheory.OrbitAvg.stab ρ K y).index : ℂ) ≠ 0 := by exact_mod_cast hfi.index_ne_zero
   have h1 : ∀ q : K ⧸ GlobalTheory.OrbitAvg.stab ρ K y, l (ρ (q.out : K) y) = l y := fun q => hl _ q.out.2 y
 
@@ -154,10 +154,10 @@ theorem UpperTheory.satake_inv_mul_char_eq_of_similitude_pairing :
       obtain ⟨a, ha, b, hb, e⟩ : ∃ a ∈ GLint (Fin n) (Ov E w), ∃ b ∈ GLint (Fin n) (Ov E w),
           g = a * dGL n ϖ j * b := by
         by_contra hn
-        exact hg (if_neg hn)
+        exact hg (ite_eq_right hn)
       refine ⟨a, ha, b, hb, _, (GlobalTheory.LFun.ConjPlace.invT c n).symm_apply_eq.2 (invT_dGL c ϖ j).symm, e, ?_⟩
       rw [GlobalTheory.SphGal.loc_det_of_Tj hχ hp hj, Units.val_pow_eq_pow_val]
-      rw [Tj_apply, if_pos ⟨1, one_mem _, 1, one_mem _, by rw [one_mul, mul_one]; rfl⟩]
+      rw [Tj_apply, ite_eq_left ⟨1, one_mem _, 1, one_mem _, by rw [one_mul, mul_one]; rfl⟩]
       exact one_ne_zero)
   rw [hx'.2.2.2 _ hp j hj, hy'.2.2.2 _ hp j hj, map_smul, map_smul, LinearMap.smul_apply,
     smul_eq_mul, smul_eq_mul, ← mul_assoc] at key

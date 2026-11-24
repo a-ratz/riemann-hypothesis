@@ -555,17 +555,17 @@ namespace GlobalTheory.CuspKillProof
 theorem cuspKill_holds : ∀ D : D7, CuspKill D := by
   intro D W ν hν s I hI Γ hΓQ hNΓ hnorm 𝓓 h𝓓 Φ φ hΦc hΦΓ hΦN hφ hcusp hint
   obtain ⟨i1, i2, i3⟩ := GlobalTheory.MemberAdelicTop.locallyCompact_secondCountable_t2 D W
-  haveI : BorelSpace (GA D W) := ⟨rfl⟩
-  haveI : Countable (GQ W) := GlobalTheory.AutomorphicL2Unitary.countable_of_discrete
-  haveI : Countable Γ := Function.Injective.countable (Subgroup.inclusion_injective hΓQ)
+  have : BorelSpace (GA D W) := ⟨rfl⟩
+  have : Countable (GQ W) := GlobalTheory.AutomorphicL2Unitary.countable_of_discrete
+  have : Countable Γ := Function.Injective.countable (Subgroup.inclusion_injective hΓQ)
   have hNc : IsClosed (NI W I : Set (GA D W)) := by
     rw [← GlobalTheory.Cusp.NA_frameFlag hI]
-    haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+    have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
     exact GlobalTheory.Cusp.IsoFlag.isClosed_unip _ _ _
   have hcc : GlobalTheory.Cusp.Cocompact (GQ W) (NI W I) := by
     rw [← GlobalTheory.Cusp.NA_frameFlag hI]
     exact GlobalTheory.Cusp.cocompact_single _
-  haveI : LocallyCompactSpace (NI W I) := hNc.locallyCompactSpace
+  have : LocallyCompactSpace (NI W I) := hNc.locallyCompactSpace
   have hsub : Γ.subgroupOf (NI W I) = (GQ W).subgroupOf (NI W I) := by
     ext x
     simp only [Subgroup.mem_subgroupOf]
@@ -740,7 +740,7 @@ theorem tsum_comm (hS : SWSetup ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr) 
   have h := (Move.termMove D ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr hS f₂ f₁ h₂ h₁).1 (lagSwap W Y) _
     (isLagFrame_lagSwap W Y (fr Y) (hS.frame Y))
   change ‖lagTerm μ 𝓕 (fr (lagSwap W Y)) f₂ f₁‖ₑ = _
-  rw [← h, lagTerm_swap, ← ofReal_norm_eq_enorm, norm_star, ofReal_norm_eq_enorm]
+  rw [← h, lagTerm_swap, ← ofReal_norm, norm_star, ofReal_norm]
 
 theorem tsum_left (hS : SWSetup ψ V W χV χW om νV 𝓗 νW 𝓖 μ 𝓕 fr) {f₁ f₂ : WO V W → ℂ} (h₁ : IsThetaFunO ψ V W f₁)
     (h₂ : IsThetaFunO ψ V W f₂) {γ : GA D W} (hγ : γ ∈ GQ W) :
@@ -834,8 +834,8 @@ theorem lintegral_ne_top_of_bounds {X : Type*} [MeasurableSpace X] [Mul X] (ν :
               (abs_nonneg _)
         _ = |C| * 4 ^ M * (q g₁ ^ M * q g₂ ^ M) := by
             rw [show (2 * q g₁) * (2 * q g₂) = 4 * (q g₁ * q g₂) by ring, mul_pow, mul_pow]; ring
-    have hn1 : ‖a g₁‖ₑ = ENNReal.ofReal ‖a g₁‖ := (ofReal_norm_eq_enorm _).symm
-    have hn2 : ‖b g₂‖ₑ = ENNReal.ofReal ‖b g₂‖ := (ofReal_norm_eq_enorm _).symm
+    have hn1 : ‖a g₁‖ₑ = ENNReal.ofReal ‖a g₁‖ := (ofReal_norm _).symm
+    have hn2 : ‖b g₂‖ₑ = ENNReal.ofReal ‖b g₂‖ := (ofReal_norm _).symm
     have a1 := hC₁ g₁
     have a2 := hC₂ g₂
     have p1 : 0 ≤ ‖a g₁‖ * q g₁ ^ M := mul_nonneg (norm_nonneg _) (pow_nonneg hq₁ M)
@@ -1018,7 +1018,7 @@ theorem swPair (hW : GlobalTheory.Published.WeilSiegelFormulaUnitary) (D : D7) :
   · exact Model.swPair_rank_zero hs h0 f₁ f₂
   obtain ⟨omh, hω, hK⟩ := kernel D ψ V W χV χW om hs.weil
   obtain ⟨hF, hθ⟩ := hK f₁ f₂ h₁ h₂
-  haveI := hs.haarV
+  have := hs.haarV
   have hwitt : Formalism.MainNotions.SchurIrreducible.wittIdx V = 0 := by
     rw [GlobalTheory.RallisIP.wittIdx_eq_wittIndex]
     exact GlobalTheory.Cusp.wittIndex_eq_zero_iff_isAniso.2 (GlobalTheory.Per.isAniso_of_posDef hs.sigOK hs.pos)
@@ -1198,17 +1198,17 @@ theorem integral_fundamentalDomain_eq_iterated_split : ∀ (D : D7) (r m s t : �
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D s m
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := GlobalTheory.MixModel.lattice_Mx D t m
   obtain ⟨l1, l2, l3, l4, l5, KK, hKK, hKKc⟩ := GlobalTheory.MixModel.lattice_Mx D r m
-  haveI : BorelSpace (Mx D s m) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D t m) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D r m) := ⟨rfl⟩
-  haveI : Countable (GlobalTheory.MixModel.ratMx D s m) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : Countable (GlobalTheory.MixModel.ratMx D t m) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : Countable (GlobalTheory.MixModel.ratMx D r m) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := hμ.1
-  haveI := hν.1
-  haveI := hη.1
-  haveI : IsFiniteMeasure (ν.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hν.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure (η.restrict 𝓥) := ⟨by rw [Measure.restrict_apply_univ, hη.2.2]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (Mx D s m) := ⟨rfl⟩
+  have : BorelSpace (Mx D t m) := ⟨rfl⟩
+  have : BorelSpace (Mx D r m) := ⟨rfl⟩
+  have : Countable (GlobalTheory.MixModel.ratMx D s m) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (GlobalTheory.MixModel.ratMx D t m) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (GlobalTheory.MixModel.ratMx D r m) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := hμ.1
+  have := hν.1
+  have := hη.1
+  have : IsFiniteMeasure (ν.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, hν.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (η.restrict 𝓥) := ⟨by rw [Measure.restrict_apply_univ, hη.2.2]; exact ENNReal.one_lt_top⟩
   set rJ : Mx D r s := J.map (incA D) with hrJ
   set rK : Mx D r t := K.map (incA D) with hrK
   set rL : Mx D s r := L.map (incA D) with hrL
@@ -1242,9 +1242,9 @@ theorem integral_fundamentalDomain_eq_iterated_split : ∀ (D : D7) (r m s t : �
   let Me : (Mx D t m × Mx D s m) ≃ᵐ Mx D r m := Ec.toHomeomorph.toMeasurableEquiv
   have hMe : ∀ p, Me p = Ec p := fun _ => rfl
   set lam : Measure (Mx D t m × Mx D s m) := η.prod ν with hlam
-  haveI : lam.IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : lam.IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   set mm : Measure (Mx D r m) := lam.map Me with hm
-  haveI : mm.IsAddHaarMeasure := Ec.isAddHaarMeasure_map lam
+  have : mm.IsAddHaarMeasure := Ec.isAddHaarMeasure_map lam
   have hμm := Measure.isAddLeftInvariant_eq_smul μ mm
   set c := Measure.addHaarScalarFactor μ mm with hcdef
   have hc : 0 < c := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure μ mm
@@ -1269,7 +1269,7 @@ theorem integral_fundamentalDomain_eq_iterated_split : ∀ (D : D7) (r m s t : �
   have hFDP : IsAddFundamentalDomain Γ (𝓥 ×ˢ 𝓨) lam := isAddFundamentalDomain_prod hη.2.1 hν.2.1
   have hac : lam.map Me ≪ μ := by
     intro A hA
-    rw [hμm, Measure.smul_apply] at hA
+    rw [hμm, smul_apply] at hA
     exact (smul_eq_zero.1 hA).resolve_left hc.ne'
   have hqmp : Measure.QuasiMeasurePreserving Me lam μ := ⟨Me.measurable.aemeasurable, hac⟩
   let eΓ : GlobalTheory.MixModel.ratMx D r m → Γ := fun g => ⟨Ec.symm g, (hmemΓ _).2 (by simpa using g.2)⟩
@@ -1278,7 +1278,7 @@ theorem integral_fundamentalDomain_eq_iterated_split : ∀ (D : D7) (r m s t : �
     · have := congrArg (fun q : Γ => Ec q.1) h
       simpa [eΓ] using this
     · simp [eΓ]
-  haveI : Countable Γ := heΓ.2.countable
+  have : Countable Γ := heΓ.2.countable
   have hFDE : IsAddFundamentalDomain Γ (Me ⁻¹' 𝓕) lam :=
     hμ.2.1.preimage_of_equiv hqmp heΓ (fun g p => by
       show Me ((Ec.symm g : _) + p) = (g : Mx D r m) + Me p
@@ -1440,8 +1440,8 @@ theorem covolOne_map {a b c d : ℕ} (f : Mx D a b ≃+ Mx D c d) (hf : Continuo
       ∀ g : Mx D c d → ℂ, ∫ x in f.symm ⁻¹' 𝓖, g x ∂(μ.map f) = ∫ y in 𝓖, g (f y) ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D a b
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D c d
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D c d) := ⟨rfl⟩
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have : BorelSpace (Mx D c d) := ⟨rfl⟩
   let m : Mx D a b ≃ᵐ Mx D c d :=
     { toEquiv := f.toEquiv
       measurable_toFun := hf.measurable

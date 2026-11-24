@@ -191,7 +191,7 @@ theorem continuous_actTup (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (R : Type)
     [TopologicalSpace R] [IsTopologicalRing R] [LocallyCompactSpace R] [SecondCountableTopology R]
     [T2Space R] {M n : ℕ} (g : GL (Fin M) (R ⊗[F] E)) :
     Continuous (actTup R g : (Fin n → Fin M → R ⊗[F] E) → _) := by
-  haveI : IsTopologicalRing (R ⊗[F] E) := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R).1
+  have : IsTopologicalRing (R ⊗[F] E) := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R).1
   refine continuous_pi fun a => continuous_pi fun i => ?_
   simp only [actTup, Matrix.mulVec, dotProduct]
   exact continuous_finsetSum _ fun j _ => continuous_const.mul
@@ -201,7 +201,7 @@ theorem measurable_actTup (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (R : Type)
     [TopologicalSpace R] [IsTopologicalRing R] [LocallyCompactSpace R] [SecondCountableTopology R]
     [T2Space R] {M n : ℕ} (g : GL (Fin M) (R ⊗[F] E)) :
     Measurable (actTup R g : (Fin n → Fin M → R ⊗[F] E) → _) := by
-  haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) :=
+  have : BorelSpace (Fin n → Fin M → R ⊗[F] E) :=
     (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R).2.2.2.2.2.2.2.1 n M
   exact (continuous_actTup σ hCM R g).measurable
 
@@ -272,11 +272,11 @@ theorem theta_map (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M n : ℕ} (J : M
   have hJ' := isHermND_conj σ hCM J hJ g
   obtain ⟨tg, -, -, -, bs, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
   obtain ⟨tg', -, -, -, bs', hact'⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M _ hJ' (AF F)
-  haveI := tg
-  haveI := tg'
-  haveI := bs
-  haveI := bs'
-  haveI : BorelSpace (Fin n → Fin M → AF F ⊗[F] E) :=
+  have := tg
+  have := tg'
+  have := bs
+  have := bs'
+  have : BorelSpace (Fin n → Fin M → AF F ⊗[F] E) :=
     (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)).2.2.2.2.2.2.2.1 n M
   set G : GL (Fin M) (AF F ⊗[F] E) := bc (inclR (AF F)) g with hG
   have hmG := measurable_actTup (n := n) σ hCM (AF F) G
@@ -367,10 +367,10 @@ theorem haar_of_loc (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (R : Type) [Comm
     (b : Module.Basis (Fin d) F E) (lam : Measure R) (hlam : lam.IsAddHaarMeasure) (n M : ℕ) :
     (coordW R b lam n M).IsAddHaarMeasure ∧ (coordHerm R σ b lam n).IsAddHaarMeasure := by
   obtain ⟨r1, r2, r3, r4, -⟩ := hR
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
+  have := r1
+  have := r2
+  have := r3
+  have := r4
   have h := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM R d b lam hlam
   exact ⟨h.2.1 n M, h.2.2 n⟩
 
@@ -378,10 +378,10 @@ theorem measurable_of_loc (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (R : Type)
     [TopologicalSpace R] (hR : IsLocR R) {M n : ℕ} (g : GL (Fin M) (R ⊗[F] E)) :
     Measurable (actTup R g : (Fin n → Fin M → R ⊗[F] E) → _) := by
   obtain ⟨r1, r2, r3, r4, -⟩ := hR
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
+  have := r1
+  have := r2
+  have := r3
+  have := r4
   exact measurable_actTup σ hCM R g
 
 theorem swMeas_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (g : GL (Fin M) E) (J' : Matrix (Fin M) (Fin M) E), J' = cT (σ : E →+* E) (g : Matrix (Fin M) (Fin M) E) * J * g → ∀ n : ℕ, ∀ (T : Matrix (Fin n) (Fin n) E) (hT : ∀ a b, σ (T b a) = T a b), T.det ≠ 0 → SWMeas σ J' T hT → SWMeas σ J T hT := by
@@ -390,17 +390,17 @@ theorem swMeas_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   have hJ' := isHermND_conj σ hCM J hJ g
   intro d b laminf lam hinf hlam μ 𝓕 hμ h𝓕 minf m hminf hm
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   obtain ⟨e, hmat, hrat⟩ := GlobalTheory.CompanionTheory.SW.HIsom.unitaryIsom_of_isometry F E σ hCM M J hJ g _ rfl (AF F)
   obtain ⟨tg, -, -, -, bs, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
   obtain ⟨tg', -, -, -, bs', -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M _ hJ' (AF F)
-  haveI := tg
-  haveI := tg'
-  haveI := bs
-  haveI := bs'
-  haveI : μ.IsHaarMeasure := hμ
+  have := tg
+  have := tg'
+  have := bs
+  have := bs'
+  have : μ.IsHaarMeasure := hμ
   let He := e.toHomeomorph.toMeasurableEquiv
   have hμ' : IsHaarH F E σ M _ (μ.map He.symm) := ContinuousMulEquiv.isHaarMeasure_map μ e.symm
   have hmm : (μ.map He.symm).map He = μ := by
@@ -413,8 +413,8 @@ theorem swMeas_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
 
   have hLi : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hWi := haar_of_loc σ hCM (Ainf F) hLi b laminf hinf.1 n M
   have hWv := fun v => haar_of_loc σ hCM (Fv F v) (hLv v) b (lam v) (hlam v).1 n M
   obtain ⟨minf', hminf'⟩ := _root_.GlobalTheory.CompanionTheory.SW.GramExist.exists_gramFib F E σ hCM M _ hJ' (Ainf F) hLi n _ _ hWi.1 hWi.2
@@ -424,7 +424,7 @@ theorem swMeas_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   have hEul := hSW d b laminf lam hinf hlam (μ.map He.symm) (He ⁻¹' 𝓕) hμ' h𝓕' minf' m' hminf' hm'
   have hfin : ∀ v, m v (hermOf (Fv F v) σ T hT) (latV b v) < ⊤ := by
     intro v
-    haveI := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM M J hJ (Fv F v) (hLv v) n _ _ (m v) (hWv v).1 (hWv v).2 (hm v)
+    have := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM M J hJ (Fv F v) (hLv v) n _ _ (m v) (hWv v).1 (hWv v).2 (hm v)
       (hermOf (Fv F v) σ T hT)).1
     exact ((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d b n M).2.2.2.1 v).1.measure_lt_top
   have hproj : ∀ X : Fin n → Fin M → AF F ⊗[F] E,

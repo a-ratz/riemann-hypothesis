@@ -101,7 +101,7 @@ theorem exists_torMatch : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
   rw [s4 F c τ hτk q a rfl hqy hq ha, ← Category.assoc, s4' F c τ' hτ'k q' a' rfl hq'y hq' ha']
   obtain ⟨O, hO, hloc⟩ := IsLocalRing.exists_factor_valuationRing c
   let φ : R →+* O := c.codRestrict O.toSubring hO
-  haveI : IsLocalHom φ := hloc
+  have : IsLocalHom φ := hloc
   have hc : c = O.subtype.comp φ := rfl
   obtain ⟨τO, hτO⟩ := GlobalTheory.ToricTorsionCompare.units_of_pow_eq_one F O _ k hk1 τ' hτ'k
   have hτOk : τO ^ k = 1 := by

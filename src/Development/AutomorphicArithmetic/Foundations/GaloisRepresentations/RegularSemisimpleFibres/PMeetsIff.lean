@@ -58,7 +58,7 @@ private theorem sum_ne_iff {H V W : Type} [Group H] [Fintype H] [AddCommGroup V]
     (∑ g : H, κ.character g⁻¹ * ρ.character g ≠ 0) ↔
       ∃ f : W →ₗ[ℂ] V, f ≠ 0 ∧ ∀ g x, f (κ g x) = ρ g (f x) := by
   classical
-  haveI : Invertible (Nat.card H : ℂ) :=
+  have : Invertible (Nat.card H : ℂ) :=
     invertibleOfNonzero (Nat.cast_ne_zero.mpr Nat.card_pos.ne')
   have key := Representation.card_inv_mul_sum_char_mul_char_eq_finrank κ ρ
   have hsum : (∑ g : H, κ.character g⁻¹ * ρ.character g) =
@@ -72,7 +72,7 @@ private theorem sum_ne_iff {H V W : Type} [Group H] [Fintype H] [AddCommGroup V]
       intro h0
       rw [h0, Nat.cast_zero] at key
       exact h ((mul_eq_zero.mp key).resolve_left hc)
-    haveI := Module.nontrivial_of_finrank_pos (Nat.pos_of_ne_zero hpos)
+    have := Module.nontrivial_of_finrank_pos (Nat.pos_of_ne_zero hpos)
     obtain ⟨φ, hφ⟩ := exists_ne (0 : Representation.IntertwiningMap κ ρ)
     refine ⟨φ.toLinearMap, ?_, fun g x => Representation.IntertwiningMap.isIntertwining κ ρ φ g x⟩
     intro h0
@@ -99,7 +99,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.meetsIff :
     MeetsIff := by
   intro H V W _ _ _ _ _ _ _ _ ρ κ
   classical
-  haveI := Fintype.ofFinite H
+  have := Fintype.ofFinite H
   have hstar : ∀ g : H, star (LinearMap.trace ℂ W (κ g)) = κ.character g⁻¹ := by
     intro g
     have hmem : (fun g => algebraMap ℂ ℂ (κ.character g)) ∈ GlobalTheory.BI.Virt ℂ ℂ H :=

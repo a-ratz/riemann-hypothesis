@@ -102,32 +102,32 @@ theorem dCinCE : DCinCE := by
       simpa using h
     have hv : ∀ v, E.ρ k (E.ρ k⁻¹ v) = v := by
       intro v
-      rw [← ContinuousLinearMap.mul_apply, rho_mul_inv]
+      rw [← mul_apply_eq_comp, rho_mul_inv]
       rfl
     have hdF : ∀ (X : Mat n) (v : E.V), (fderiv ℝ Fr 1 X) (E.ρ k⁻¹ v)
         = E.ρ k⁻¹ (fderiv ℝ Fr 1 (k.1 * X * (k.1)ᴴ) v) := by
       intro X v
       have h := dFr_conj hD k (k.1 * X * (k.1)ᴴ)
       rw [hb_conj_back k X] at h
-      rw [h, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, hv]
+      rw [h, mul_apply_eq_comp, mul_apply_eq_comp, hv]
     have heps : ∀ (X : Mat n), IsHermitian X → ∀ w,
         ε X (E.ρ k⁻¹ w) = E.ρ k⁻¹ (ε (k.1 * X * (k.1)ᴴ) w) := by
       intro X hX w
-      rw [← ContinuousLinearMap.mul_apply, eps_rho_inv hD k X hX, ContinuousLinearMap.mul_apply]
+      rw [← mul_apply_eq_comp, eps_rho_inv hD k X hX, mul_apply_eq_comp]
     let B : Mat n →ₗ[ℝ] Mat n →ₗ[ℝ] E.V :=
       LinearMap.mk₂ ℝ (fun Y Z => ε Y (Rd Z f g + fderiv ℝ Fr 1 Z (f g)))
         (by
           intro a b c
-          simp only [map_add (f := _), ContinuousLinearMap.add_apply]
+          simp only [map_add (f := _), add_apply]
           abel)
-        (by intro c a b; simp only [map_smul, ContinuousLinearMap.smul_apply])
+        (by intro c a b; simp only [map_smul, smul_apply])
         (by
           intro a b c
-          simp only [Rd, Matrix.mul_add, map_add (f := _), ContinuousLinearMap.add_apply]
+          simp only [Rd, Matrix.mul_add, map_add (f := _), add_apply]
           abel)
         (by
           intro c a b
-          simp only [Rd, Matrix.mul_smul, map_smul, ContinuousLinearMap.smul_apply]
+          simp only [Rd, Matrix.mul_smul, map_smul, smul_apply]
           rw [← smul_add]
           exact (ε a).map_smul_of_tower c _)
     have key := basis_inv B k

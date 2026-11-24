@@ -201,7 +201,7 @@ theorem UpperTheory.ConvolutionTheory.R2.H.stdAe :
       rw [cosetIndicator_apply] at hi
       have hm : (x i).2 - b i ∈ idealFiniteAdeles J := by
         by_contra hc
-        exact hi (if_neg hc)
+        exact hi (ite_eq_right hc)
       have hv := (mem_idealFiniteAdeles J).1 hm v
       rw [hJ, neg_zero, WithZero.exp_zero] at hv
       have e : (x i).2 v = ((x i).2 - b i) v + (b i) v := by
@@ -950,7 +950,7 @@ private theorem dM_one' {F : Type} [Field F] [NumberField F] : dM (1 : (A F)ˣ) 
 
 private theorem coordinate_embedNorm_zero {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (D : Dat F E) (u : A F) :
     D.co (D.mkE u 0) = Pi.single 0 u := by
-  letI : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
+  let : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
   have e : D.mkE u 0 = u • AdeleBaseChange.adeleBasis D.b 0 := by
     rw [AdeleBaseChange.adeleBasis_apply, D.b0, map_one, Algebra.smul_def, mul_one, Dat.mkE, map_zero, zero_mul, add_zero]
     rfl
@@ -1100,7 +1100,7 @@ open scoped Classical
 private theorem below_ev {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     {p : P F → Prop} (h : ∀ᶠ v in cofinite, p v) : ∀ᶠ w : P E in cofinite, ∀ v, Below v w → p v := by
   have hfin : ∀ v : P F, {w : P E | Below v w}.Finite := fun v => by
-    haveI := v.isMaximal
+    have := v.isMaximal
     refine Set.Finite.of_finite_image (f := HeightOneSpectrum.asIdeal)
       ((IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 E)).subset ?_) (fun _ _ _ _ h => HeightOneSpectrum.ext h)
     rintro _ ⟨w, hw, rfl⟩
@@ -1197,7 +1197,7 @@ theorem UpperTheory.ConvolutionTheory.R2.H.unrInert :
     have h3 := hin.norm
     rw [e] at h3
     nlinarith
-  rw [if_neg hn] at hval
+  rw [ite_eq_right hn] at hval
   obtain ⟨α, β, rfl⟩ := Multiset.card_eq_two.1 (GlobalTheory.LFun.HasSatGL.card hB)
   obtain ⟨α', β', rfl⟩ := Multiset.card_eq_two.1 (GlobalTheory.LFun.HasSatGL.card hB')
   obtain ⟨p, hp⟩ : ∃ p, Formalism.UG.IsUnifV F v p := v.valuedAdicCompletion_surjective F _
@@ -1507,7 +1507,7 @@ theorem UpperTheory.ConvolutionTheory.R2.unr :
         fun _ _ _ _ e => HeightOneSpectrum.ext e
       rintro _ ⟨w, hw, rfl⟩
       exact ⟨w.isPrime, ⟨hw⟩⟩
-    · simp only [Set.mem_setOf_eq, not_forall] at hw
+    · simp only [Set.mem_ofPred_eq, not_forall] at hw
       obtain ⟨v, hv, hn⟩ := hw
       exact Set.mem_biUnion (show v ∈ {v | ¬ ∃ B, π.HasSat v B} from hn) hv
   filter_upwards [hs, placeAe F E D, unrInert F E D W M π h0 Q hQ] with w h1 h2 h3 v hv f hf

@@ -132,7 +132,7 @@ theorem exists_good_cmPt_at_frame : ∀ (E : Type) [Field E] [NumberField E] [Is
   have hfd : FiniteDimensional ℚ c.F := inferInstance
   obtain ⟨K₁, nf, hk, ρ, X, y, t₀, m, m', -, -, -, -, -, hle, hρ, hhh, hy, hpt, -⟩ :=
     GlobalTheory.CM.cmExists_holds E H Dw l Xo W.g _ W.F (W.ik k) W.Pm W.per Z c.F hfd
-  letI : Algebra c.F K₁ := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  let : Algebra c.F K₁ := (IntermediateField.inclusion hle).toRingHom.toAlgebra
   obtain ⟨Φ⟩ := GlobalTheory.LamT.nonempty_fibKey E H Dw l Xo K₁ y (by have := hU.1; omega)
   obtain ⟨n, -⟩ := (GlobalTheory.sabMap_cancel_and_comp_over E H _ _ _ Xo.univ.t t₀ Φ.T.t y y (𝟙 _) m Φ.m
     (Category.id_comp _).symm).1

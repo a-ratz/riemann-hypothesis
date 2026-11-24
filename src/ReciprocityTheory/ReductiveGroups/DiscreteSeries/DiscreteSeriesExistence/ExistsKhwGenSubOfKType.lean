@@ -135,7 +135,7 @@ theorem exists_khw_genSub_of_kType (hσ : IsURepOn (UJset ε) σ) (hD : IsDerive
   have hLk := kStable_of_isKStableSub hσ hD (layer ε E V m) hLf (layer_kStable hE hVk m)
   set W : Submodule ℂ H := (layer ε E V m).map D.subtype with hWdef
   have : FiniteDimensional ℂ W := inferInstance
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hWK : ∀ k ∈ Kset ε, ∀ x ∈ W, σ k x ∈ W := by
     rintro k hk _ ⟨u, hu, rfl⟩
     obtain ⟨w, hw, e⟩ := hLk k hk u hu

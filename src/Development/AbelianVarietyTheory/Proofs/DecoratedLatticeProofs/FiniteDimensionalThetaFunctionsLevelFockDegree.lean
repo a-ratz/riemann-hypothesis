@@ -93,7 +93,7 @@ theorem norm_le_half {R : Type} [NormedAddCommGroup R] [NormedSpace ℝ R] {F : 
     rw [← hY] at h4
     have e1 : Y 1 = x := by simp [hY]
     have e2 : Y I = y := by simp [hY]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply,
+    simp only [add_apply, smul_apply, sub_apply,
       ContinuousLinearMap.comp_apply, e1, e2, hA, hB, smul_eq_mul, Function.comp, Pi.add_apply, Pi.sub_apply,
       Pi.mul_apply, I_re, I_im, one_re, one_im, ofReal_zero, ofReal_one]
     generalize cexp _ = E
@@ -213,7 +213,7 @@ theorem fg_vacua (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {κ : Type}
     (hv : ∀ f ∈ V, ∀ τ k, annih (heisO ψ S T) θ τ (cplxO (sS τ) (sT τ)) (b k) f = 0) : V.FG := by
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨i1, -, -, -, -, K, hK, hKc⟩ := GlobalTheory.MixModel.lattice_Mx D T.rank S.rank
-  haveI : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
+  have : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
   let J := GlobalTheory.VacUnique.jO S T sS sT
   have hπ := continuous_pi' hθ T S
   have hq : Continuous fun x : RW T S => omO S T (J x) x := by

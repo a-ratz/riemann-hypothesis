@@ -52,7 +52,7 @@ theorem UpperTheory.galois_character_frobenius_compatibility :
       exact_mod_cast (Fact.out : Nat.Prime l).ne_zero
     refine Filter.eventually_cofinite.2 ((Ideal.finite_factors hne).subset ?_)
     intro v hv
-    simp only [Set.mem_setOf_eq, not_not] at hv ⊢
+    simp only [Set.mem_ofPred_eq, not_not] at hv ⊢
     rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     exact hv
   filter_upwards [GlobalTheory.GalChar.unr_ae χ, hl] with v hu hv

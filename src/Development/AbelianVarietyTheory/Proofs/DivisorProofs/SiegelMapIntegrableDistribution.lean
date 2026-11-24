@@ -156,7 +156,7 @@ theorem pullback_mem_SB : ∀ (F : Type) [Field F] [NumberField F] (ι κ : Type
       (fun w : ι → FiniteAdeleRing (𝓞 F) F => g (D.map (algebraMap F (FiniteAdeleRing (𝓞 F) F)) *ᵥ w)) ∈
         SB (ι → FiniteAdeleRing (𝓞 F) F) := by
   intro F _ _ ι κ _ _ D hD g hg
-  haveI : T2Space (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : T2Space (FiniteAdeleRing (𝓞 F) F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
   set A := algebraMap F (FiniteAdeleRing (𝓞 F) F)
   have hinj : Function.Injective (Matrix.toLin' D) := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
@@ -265,11 +265,11 @@ theorem integral_pull_injective : ∀ (F : Type) [Field F] [NumberField F] (ι �
         ∀ f : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ, (letI : MeasurableSpace (ι → AF F) := borel _;
           ∫ w, pureA F f g (D.map (algebraMap F (AF F)) *ᵥ w) ∂ν) = T f := by
   intro F _ _ ι κ _ _ D hD ν hν
-  letI : MeasurableSpace (ι → AF F) := borel _
-  haveI : BorelSpace (ι → AF F) := ⟨rfl⟩
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := hν
-  haveI : ((mu F ι).map (glueE F ι)).IsAddHaarMeasure := (glueE F ι).isAddHaarMeasure_map _
+  let : MeasurableSpace (ι → AF F) := borel _
+  have : BorelSpace (ι → AF F) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := hν
+  have : ((mu F ι).map (glueE F ι)).IsAddHaarMeasure := (glueE F ι).isAddHaarMeasure_map _
   have h := Measure.isAddLeftInvariant_eq_smul ν ((mu F ι).map (glueE F ι))
   set c := Measure.addHaarScalarFactor ν ((mu F ι).map (glueE F ι))
   have me := (glueE F ι).toHomeomorph.measurableEmbedding
@@ -288,7 +288,7 @@ theorem integral_pull_injective : ∀ (F : Type) [Field F] [NumberField F] (ι �
     change c • ∫ p, (fun p : Vi F ι × Vf F ι => pureA F f g (D.map (algebraMap F (AF F)) *ᵥ glue p)) p ∂(mu F ι) = _
     rw [e, mu, integral_prod_mul (fun u : Vi F ι => SchwartzMap.compCLMOfContinuousLinearEquiv ℂ (eI F ι) (T f) u)
       (fun v : Vf F ι => g (D.map (algebraMap F (FiniteAdeleRing (𝓞 F) F)) *ᵥ v))]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, SchwartzMap.integralCLM_apply,
+    simp only [smul_apply, ContinuousLinearMap.comp_apply, SchwartzMap.integralCLM_apply,
       smul_eq_mul, NNReal.smul_def, Complex.real_smul]
     ring
 

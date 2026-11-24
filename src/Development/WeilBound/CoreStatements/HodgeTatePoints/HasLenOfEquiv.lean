@@ -89,10 +89,10 @@ lemma fg_of_iff {V : Type} [AddCommGroup V] [Module R V] {A B : Submodule R V} (
 lemma free_of_fg (hv : v.Integers R) {Y : Type} (A : Submodule R (Y → C)) (hA : A.FG) :
     Module.Free R A := by
   classical
-  haveI := hv.hom_inj.isDomain
-  haveI := ValuationRing.of_integers v hv
-  haveI : Module.Finite R A := Module.Finite.iff_fg.mpr hA
-  haveI : Module.Flat R A := by
+  have := hv.hom_inj.isDomain
+  have := ValuationRing.of_integers v hv
+  have : Module.Finite R A := Module.Finite.iff_fg.mpr hA
+  have : Module.Flat R A := by
     rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
     intro m hm
     obtain ⟨⟨r, hr⟩, h⟩ := (Submodule.mem_torsion_iff m).1 hm
@@ -114,7 +114,7 @@ lemma fg_ker (hv : v.Integers R) {P Y : Type} [AddCommGroup P] [Module R P] [Mod
   have hfg : (LinearMap.range φ).FG := by
     rw [LinearMap.range_eq_map]
     exact Module.Finite.fg_top.map φ
-  haveI : Module.Free R (LinearMap.range φ) := free_of_fg hv _ hfg
+  have : Module.Free R (LinearMap.range φ) := free_of_fg hv _ hfg
   obtain ⟨s, hs⟩ := Module.projective_lifting_property φ.rangeRestrict LinearMap.id
     (LinearMap.surjective_rangeRestrict φ)
   have hker : LinearMap.ker φ = LinearMap.range (LinearMap.id - s.comp φ.rangeRestrict) := by
@@ -137,8 +137,8 @@ lemma fg_inf_comap (hv : v.Integers R) {V Y : Type} [AddCommGroup V] [Module R V
     (A : Submodule R V) (hA : A.FG) (φ : V →ₗ[R] (Y → C)) (B : Submodule R (Y → C)) (hB : B.FG) :
     (A ⊓ B.comap φ).FG := by
   classical
-  haveI : Module.Finite R A := Module.Finite.iff_fg.mpr hA
-  haveI : Module.Finite R B := Module.Finite.iff_fg.mpr hB
+  have : Module.Finite R A := Module.Finite.iff_fg.mpr hA
+  have : Module.Finite R B := Module.Finite.iff_fg.mpr hB
   let ψ : (A × B) →ₗ[R] (Y → C) :=
     φ.comp (A.subtype.comp (LinearMap.fst R A B)) - B.subtype.comp (LinearMap.snd R A B)
   have hk := fg_ker hv ψ
@@ -160,9 +160,9 @@ lemma fg_inf_comap (hv : v.Integers R) {V Y : Type} [AddCommGroup V] [Module R V
 lemma exists_hasLen (hv : v.Integers R) {Y : Type} (A B : Submodule R (Y → C)) (hA : A.FG)
     (hB : B.FG) : ∃ x, HasLen v R (A ⧸ B.comap A.subtype) x := by
   classical
-  haveI := hv.hom_inj.isDomain
-  haveI : Module.Finite R A := Module.Finite.iff_fg.mpr hA
-  haveI : Module.Free R A := free_of_fg hv A hA
+  have := hv.hom_inj.isDomain
+  have : Module.Finite R A := Module.Finite.iff_fg.mpr hA
+  have : Module.Free R A := free_of_fg hv A hA
   set K : Submodule R A := B.comap A.subtype with hK
   have hKfg : K.FG := by
     apply Submodule.fg_of_fg_map_injective A.subtype A.injective_subtype
@@ -202,7 +202,7 @@ lemma exists_hasLen (hv : v.Integers R) {Y : Type} (A B : Submodule R (Y → C))
 
 lemma len_ne_zero_iff (hv : v.Integers R) {M : Type} [AddCommGroup M] [Module R M] {x : NNReal}
     (h : HasLen v R M x) : x ≠ 0 ↔ ∃ r : R, r ≠ 0 ∧ ∀ m : M, r • m = 0 := by
-  haveI := hv.hom_inj.isDomain
+  have := hv.hom_inj.isDomain
   obtain ⟨m, c, ⟨f⟩, rfl⟩ := h
   have hvc : ∀ i, v (algebraMap R C (c i)) = 0 ↔ c i = 0 := fun i => by
     rw [Valuation.zero_iff, map_eq_zero_iff _ hv.hom_inj]
@@ -308,8 +308,8 @@ private theorem exists_smul_delta_mem_of_isLat {C : Type} [Field C] {R : Type} [
     (M : Submodule R (N → C)) (hM : IsLat R M) :
     ∃ d : R, d ≠ 0 ∧ ∀ x : N, (fun y => if y = x then algebraMap R C d else 0) ∈ M := by
   classical
-  haveI := hv.hom_inj.isDomain
-  haveI := hv.isFractionRing
+  have := hv.hom_inj.isDomain
+  have := hv.isFractionRing
   obtain ⟨B, hB, rfl⟩ := hM
   obtain ⟨⟨d, hd⟩, hint⟩ := IsLocalization.exist_integer_multiples_of_finset (nonZeroDivisors R)
     (Finset.univ.image (fun q : N × N => B⁻¹ q.1 q.2))
@@ -338,7 +338,7 @@ private theorem exists_smul_augIdeal_mem_sqIdeal_of_isLat {C : Type} [Field C] {
     [DecidableEq N] (M : Submodule R (N → C)) (hM : IsLat R M) (hint : M ≤ intFun R N) :
     ∃ r : R, r ≠ 0 ∧ ∀ f ∈ augIdeal M, r • f ∈ sqIdeal (augIdeal M) := by
   classical
-  haveI := hv.hom_inj.isDomain
+  have := hv.hom_inj.isDomain
   obtain ⟨d, hd, hδ⟩ := exists_smul_delta_mem_of_isLat hv M hM
   refine ⟨d * d, mul_ne_zero hd hd, fun f hf => ?_⟩
   set δ : N → (N → C) := fun x y => if y = x then algebraMap R C d else 0 with hδdef
@@ -362,7 +362,7 @@ private theorem exists_smul_augIdeal_mem_sqIdeal_of_isLat {C : Type} [Field C] {
       intro x hx
       simp [Ne.symm (Finset.ne_of_mem_erase hx)]
     · rw [Finset.sum_eq_single y]
-      · rw [if_pos (rfl : y = y), Algebra.smul_def, Algebra.smul_def, ← hc y, map_mul]
+      · rw [ite_eq_left (rfl : y = y), Algebra.smul_def, Algebra.smul_def, ← hc y, map_mul]
         ring
       · intro b _ hb
         simp [Ne.symm hb]
@@ -375,7 +375,7 @@ private theorem exists_smul_augIdeal_mem_sqIdeal_of_isLat {C : Type} [Field C] {
 theorem lens : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N], (∀ x : N, p • x = 0) → ∀ AA : HopfOrder (C := C) R N, ∃ cA cN cO : NNReal, cA ≠ 0 ∧ cN ≠ 0 ∧ cO ≠ 0 ∧ HasLen v R (AFQuot p AA.carrier) cA ∧ HasColen R v AA.carrier cN ∧ HasLen v R (OmAA AA.carrier) cO := by
   intro p _ C _ _ _ v R _ _ hv hp N _ _ _ hN AA
   classical
-  haveI := hv.hom_inj.isDomain
+  have := hv.hom_inj.isDomain
   have hMfg : AA.carrier.FG := by
     obtain ⟨B, -, hB⟩ := AA.lat
     rw [hB]

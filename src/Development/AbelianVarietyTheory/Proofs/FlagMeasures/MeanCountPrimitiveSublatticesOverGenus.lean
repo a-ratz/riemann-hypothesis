@@ -724,7 +724,7 @@ theorem num_top (c₀ C L rd HH de N E : ℝ) (k m f : ℕ) (hc : 0 < c₀) (hC 
   have hN0 : 0 < N := by linarith
   have h1 : rd ^ f ≤ HH := by
     refine le_trans ?_ hH
-    rw [← Real.exp_mul, ← Real.exp_log (show 0 < rd by linarith), ← Real.exp_nat_mul]
+    rw [← Real.exp_mul, ← Real.exp_log (show 0 < rd by linarith), ← Real.exp_natCast_mul]
     apply Real.exp_le_exp.2
     have a1 : L / c₀ ≤ L * C := by
       rw [div_eq_mul_one_div]; gcongr
@@ -798,7 +798,7 @@ theorem one_le_rdE (D : D7) : 1 ≤ D.host.rdE := by
 theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ ≤ C → ∀ (D : D7) (large₂ : SizeData₂ D) (u u' : D.what₂.Word) (C' Cl Cg cb Cu cT CT C0 A : ℝ), c₀ ≤ Cl → UnitaryVolumeMass.congruence_at_split_frobenius_holds D large₂ u u' C' Cl Cg cb Cu cT CT C0 A C := by
   intro c₀ hc₀
   refine ⟨max 16 (1 / c₀), fun C hC D large₂ u u' C' Cl Cg cb Cu cT CT C0 A hCl => ?_⟩
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro hyp F0 he hz Λ hΛ reps hreps s hs2 hsk de hde HH hHH
   have hC1 : 16 ≤ C := le_trans (le_max_left _ _) hC
   have hC2 : 1 / c₀ ≤ C := le_trans (le_max_right _ _) hC
@@ -849,7 +849,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
     rw [e1] at H2
     have e2 : ((Lat.Tu D u ^ (2 * D.R.f) : ℕ) : ℝ) = Cnt.NT D u ^ 2 := by
       rw [Cnt.NT, ← pow_mul, mul_comm D.R.f]; push_cast; rfl
-    rw [e2, finrank_E, Cnt.XiS, Cnt.Xi, if_pos ⟨hs2, hmid⟩]
+    rw [e2, finrank_E, Cnt.XiS, Cnt.Xi, ite_eq_left ⟨hs2, hmid⟩]
     push_cast
     exact H2
   · have hk : 1 ≤ D.R.k := by omega
@@ -874,7 +874,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
         exact one_le_mul_of_one_le_of_one_le (one_le_pow₀ (by linarith)) (one_le_pow₀ hde')
     · rw [o2, ← hm1, mul_comm, ← ENNReal.ofReal_mul hm2.le]
       refine ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_left ?_ hm2.le)
-      rw [Cnt.XiS, Cnt.Xi, if_neg (fun a => hmid a.2), if_pos (by omega)]
+      rw [Cnt.XiS, Cnt.Xi, ite_eq_right (fun a => hmid a.2), ite_eq_left (by omega)]
       exact H2
 
 end GlobalTheory.Mass.PrimMeanRow

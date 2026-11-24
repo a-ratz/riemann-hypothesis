@@ -100,7 +100,7 @@ theorem enum_eq {n : ℕ} {S : SPar} {c : Fin n → ℚ} (hc : StrictAnti c) (hm
     rw [Finset.card_image_of_injective _ hq'.injective, Finset.card_image_of_injective _ hc.injective])
   have hr : Set.range c = Set.range q := by
     simpa using congrArg (fun s : Finset ℚ => (s : Set ℚ)) heq
-  rw [hq, (hc.range_inj hq').1 hr]
+  rw [hq, (hc.range_inj_of_wellFoundedGT hq').1 hr]
 
 variable {D : D7}
 

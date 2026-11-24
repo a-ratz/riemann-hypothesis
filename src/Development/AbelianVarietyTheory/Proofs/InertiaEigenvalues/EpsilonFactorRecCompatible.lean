@@ -104,7 +104,7 @@ theorem sat_of_lawsLit : LanglandsExhaustionGL → LanglandsMultisegments → St
     (rc : IrrGL (k := w.adicCompletion E) → WD h), LawsLit a ha e rc → ∀ (x : IrrGL (k := w.adicCompletion E)) (α : Fin x.1 → ℂˣ),
     HasSatake x.rep α → rc x = WD.mk (WDRep.diag h fun i => (α i)⁻¹) := by
   intro h1 h2 h3 h4 h5 h6 E Ω _ _ _ _ _ A w h a ha e rc H x α hα
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   have hL := GlobalTheory.T.spherical_satake_eq_langlandsQuotient_unramified h1 h2 h3 h4 h5 h6 (w.adicCompletion E) x α hα
   rw [Fin.univ_val_map] at hL
   rw [H.langlands _ x hL, segSum, List.map_ofFn, ← sumList_ofFn_diag]

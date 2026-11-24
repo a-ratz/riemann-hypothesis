@@ -136,7 +136,7 @@ private theorem pres_new_low {R S σ : Type} [CommRing R] [CommRing S] [Finite �
       exact Ideal.mul_mem_right _ _ (hIn hp)
     · rw [map_add (f := _), map_add (f := _)]; exact add_mem ha hb
   have h := key (e (g - (truncTotal n g : MvPolynomial σ R))) (by
-    rw [AdicCompletion.pow_smul_top_eq_ker_eval (MvPolynomial.idealOfVars_fg σ R), LinearMap.mem_ker,
+    rw [AdicCompletion.pow_smul_top_eq_ker_eval (MvPolynomial.fg_idealOfVars σ R), LinearMap.mem_ker,
       AdicCompletion.eval_apply, toAdicCompletionAlgEquiv_apply, toAdicCompletion_apply_eq_mk_truncTotal]
     have : truncTotal n (g - ((truncTotal n g : MvPolynomial σ R) : MvPowerSeries σ R)) = 0 := by
       ext x
@@ -160,11 +160,11 @@ private theorem pres_new_wcomp {O σ X : Type} [CommRing O] [AddCommGroup X] [De
   rw [coeff_wcomp]
   by_cases hij : i = j
   · subst hij
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     split_ifs with h1
     · rfl
     · exact (hh a h1).symm
-  · rw [if_neg hij]
+  · rw [ite_eq_right hij]
     split_ifs with h1
     · rw [map_zero]
       exact hh a (h1 ▸ Ne.symm hij)
@@ -226,8 +226,8 @@ theorem UpperTheory.V.Alg.pres_new :
       maximalIdeal R ≤ Ideal.span (Set.range z) ⊔ (maximalIdeal O).map (algebraMap O R) ⊔ maximalIdeal R ^ 2 →
       ∃ (W' : WPres O X R) (e : τ ≃ W'.σ), ∀ s, W'.z (e s) = z s ∧ W'.wt (e s) = wt s := by
   intro O _ _ _ _ Y _ _ _ _ R _ _ _ W _ τ _ wt z hz hgen
-  haveI : IsCO O (MvPowerSeries W.σ O) := co_mvps O O W.σ
-  haveI : IsCO O (MvPowerSeries τ O) := co_mvps O O τ
+  have : IsCO O (MvPowerSeries W.σ O) := co_mvps O O W.σ
+  have : IsCO O (MvPowerSeries τ O) := co_mvps O O τ
   choose f hf hfz using fun s => (hz s).2
   have hfz' : ∀ s, W.π (f s) = z s := hfz
   have hfm : ∀ s, f s ∈ maximalIdeal (MvPowerSeries W.σ O) := fun s hu =>

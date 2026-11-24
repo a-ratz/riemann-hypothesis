@@ -121,10 +121,10 @@ theorem real_ae_zero (μ : Measure X) (e : A → X →ᵇ ℂ) (h1 : ∃ a, e a 
       exact h0 a
     | zero => simp
     | add p q _ _ hp hq =>
-      simp only [BoundedContinuousFunction.add_apply, smul_add]
+      simp only [add_apply, smul_add]
       rw [integral_add (hint hi p) (hint hi q), hp, hq, add_zero]
     | smul c p _ hp =>
-      simp only [BoundedContinuousFunction.smul_apply, smul_comm (h _) c]
+      simp only [smul_apply, smul_comm (h _) c]
       rw [integral_smul, hp, smul_zero]
   have hfin : ∀ {k : X → ℝ}, Integrable k μ → IsFiniteMeasure (μ.withDensity fun x => ENNReal.ofReal (k x)) :=
     fun hk => isFiniteMeasure_withDensity_ofReal hk.2
@@ -147,7 +147,7 @@ theorem real_ae_zero (μ : Measure X) (e : A → X →ᵇ ℂ) (h1 : ∃ a, e a 
       refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
       simp only [← sub_smul, Pi.neg_apply, max_zero_sub_max_neg_zero_eq_self]
   have hae := (withDensity_eq_iff hi.aemeasurable.ennreal_ofReal hi.neg.aemeasurable.ennreal_ofReal
-    ((lintegral_ofReal_le_lintegral_enorm h).trans_lt hi.2).ne).1 hPP
+    ((lintegral_ofReal_le_lintegral_eNorm h).trans_lt hi.2).ne).1 hPP
   filter_upwards [hae] with x hx
   have := congrArg ENNReal.toReal hx
   simp only [ENNReal.toReal_ofReal', Pi.neg_apply] at this

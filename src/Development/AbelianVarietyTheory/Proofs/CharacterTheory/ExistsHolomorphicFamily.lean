@@ -103,15 +103,15 @@ theorem exists_etale_away {R S : Type} [CommRing R] [CommRing S] [Algebra R S] [
         fun i => algebraMap S (Localization.Away g) (s i)).Etale := by
   obtain ⟨g, m, s, b, hg, hb⟩ := exists_basis_away (R := R) p
   refine ⟨g, m, s, hg, ?_⟩
-  letI : Algebra (MvPolynomial (Fin m) R) (Localization.Away g) :=
+  let : Algebra (MvPolynomial (Fin m) R) (Localization.Away g) :=
     (MvPolynomial.eval₂Hom (algebraMap R (Localization.Away g))
         fun i => algebraMap S (Localization.Away g) (s i)).toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin m) R) (Localization.Away g) :=
+  have : IsScalarTower R (MvPolynomial (Fin m) R) (Localization.Away g) :=
     IsScalarTower.of_algebraMap_eq fun r => by
       rw [RingHom.algebraMap_toAlgebra]
       simp
-  haveI : Algebra.Smooth S (Localization.Away g) := Algebra.Smooth.of_isLocalization_Away g
-  haveI : Algebra.Smooth R (Localization.Away g) := Algebra.Smooth.comp R S _
+  have : Algebra.Smooth S (Localization.Away g) := Algebra.Smooth.of_isLocalization_Away g
+  have : Algebra.Smooth R (Localization.Away g) := Algebra.Smooth.comp R S _
   refine GlobalTheory.EtaleCoordJacobian.etale_of_basis R (Localization.Away g) (Fin m) b fun i => ?_
   rw [hb, RingHom.algebraMap_toAlgebra]
   simp
@@ -131,7 +131,7 @@ theorem exists_finset_of_mem_nhds {A : Type} {x : A → ℂ} {U : Set (A → ℂ
 
 theorem exists_holomorphic_family : ∀ (K A : Type) [Field K] [CharZero K] [CommRing A] [Algebra K A] [Algebra.Smooth K A] (σ : K →+* ℂ) (φ₀ : A →+* ℂ), φ₀.comp (algebraMap K A) = σ → ∃ (m : ℕ) (s : Fin m → A) (B : Set (Fin m → ℂ)) (φ : (Fin m → ℂ) → (A →+* ℂ)) (S : Finset A) (ε : ℝ), IsOpen B ∧ 0 < ε ∧ (∀ b ∈ B, (φ b).comp (algebraMap K A) = σ ∧ ∀ i, φ b (s i) = b i) ∧ (∀ a : A, DifferentiableOn ℂ (fun b => φ b a) B) ∧ ∀ ψ : A →+* ℂ, ψ.comp (algebraMap K A) = σ → (∀ a ∈ S, ‖ψ a - φ₀ a‖ < ε) → (fun i => ψ (s i)) ∈ B ∧ φ (fun i => ψ (s i)) = ψ := by
   intro K A _ _ _ _ _ σ φ₀ h₀
-  haveI : (RingHom.ker φ₀).IsPrime := RingHom.ker_isPrime φ₀
+  have : (RingHom.ker φ₀).IsPrime := RingHom.ker_isPrime φ₀
   obtain ⟨g, m, s, hg, het⟩ := exists_etale_away (R := K) (RingHom.ker φ₀)
   have hg₀ : φ₀ g ≠ 0 := hg
   let R := Localization.Away g

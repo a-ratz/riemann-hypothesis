@@ -310,9 +310,9 @@ theorem curv_unit {TT : ℝ} {u : ℂ → ℂ} (hu : ContDiffOn ℝ ((⊤ : ℕ�
       simp only [Function.comp_apply, Complex.reCLM_apply]
       exact re_conj_fderiv hu h1 hw k
     have he := congrArg (fun L : ℂ →L[ℝ] ℝ => L k) (hre.unique h0)
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
+    simp only [ContinuousLinearMap.comp_apply, add_apply, FunLike.coe_smul,
       Pi.smul_apply, ContinuousLinearMap.flip_apply, ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply,
-      Complex.reCLM_apply, ContinuousLinearMap.zero_apply, smul_eq_mul] at he
+      Complex.reCLM_apply, zero_apply, smul_eq_mul] at he
     rw [← he, Complex.star_def]
     congr 1
     ring
@@ -330,9 +330,9 @@ theorem curv_unit {TT : ℝ} {u : ℂ → ℂ} (hu : ContDiffOn ℝ ((⊤ : ℕ�
         (fderiv ℝ u ζ 1 - Complex.I * fderiv ℝ u ζ Complex.I) + star (u ζ) * (S 1 1 + S Complex.I Complex.I)) := by
     unfold NF.dZb
     rw [hF.fderiv]
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
+    simp only [ContinuousLinearMap.comp_apply, add_apply, FunLike.coe_smul,
       Pi.smul_apply, ContinuousLinearMap.flip_apply, ContinuousLinearEquiv.coe_coe, Complex.conjCLE_apply,
-      ContinuousLinearMap.sub_apply, smul_eq_mul]
+      sub_apply, smul_eq_mul]
     unfold NF.dZ
     simp only [Complex.star_def, hsym]
     ring_nf

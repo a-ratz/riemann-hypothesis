@@ -67,7 +67,7 @@ theorem exists_section_of_isIntegral {Y : Scheme.{0}} [GlobalTheory.IsNormalSche
     (hp : p.Monic) (r : Y.residueField (genericPoint Y))
     (hr : p.eval₂ (Y.evaluation ⊤ (genericPoint Y) trivial).hom r = 0) :
     ∃ s : Γ(Y, ⊤), (Y.evaluation ⊤ (genericPoint Y) trivial).hom s = r ∧ p.eval s = 0 := by
-  haveI : Nonempty (⊤ : Y.Opens) := ⟨Nonempty.some inferInstance, trivial⟩
+  have : Nonempty (⊤ : Y.Opens) := ⟨Nonempty.some inferInstance, trivial⟩
   obtain ⟨t, rfl⟩ := Y.residue_surjective (genericPoint Y) r
   let ρ : Y.functionField →+* Y.residueField (genericPoint Y) := (Y.residue (genericPoint Y)).hom
   have e : (Y.evaluation ⊤ (genericPoint Y) trivial).hom = ρ.comp (algebraMap Γ(Y, ⊤) Y.functionField) := rfl
@@ -144,7 +144,7 @@ theorem mem_range_of_fixed {K L : Type} [Field K] [Field L] [Countable L] [Algeb
     (h : ∀ τ : ℂ ≃+* ℂ, (∀ x : K, τ (algebraMap K ℂ x) = algebraMap K ℂ x) → τ (φ r) = φ r) :
     r ∈ (algebraMap K L).range := by
   let M := IntermediateField.adjoin K {r}
-  haveI : FiniteDimensional K M := IntermediateField.adjoin.finiteDimensional hr
+  have : FiniteDimensional K M := IntermediateField.adjoin.finiteDimensional hr
   have key : ∀ ψ : M →ₐ[K] ℂ, ψ = φ.comp M.val := by
     intro ψ
     obtain ⟨τ, hτ⟩ := GlobalTheory.CompRat.exists_ringEquiv_complex_comp_eq M (φ.comp M.val).toRingHom ψ.toRingHom

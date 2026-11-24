@@ -222,7 +222,7 @@ theorem dense_linearIndependent {m d : ℕ} (h : m ≤ d) :
       · have : ι l ≠ ι k := fun e => hkl (Fin.castLE_injective h e).symm
         simp [A, g, LinearMap.funLeft_apply, Matrix.one_apply, hkl, Pi.single_apply, this]
     rw [hfun]
-    exact Matrix.linearIndependent_rows_iff_isUnit.2 hU
+    exact linearIndependent_row_iff_isUnit.2 hU
   have hT : Tendsto (fun t : ℂ => f₀ + t • g) (𝓝[≠] 0) (𝓝 f₀) := by
     have hc : Continuous fun t : ℂ => f₀ + t • g := continuous_const.add (continuous_id.smul continuous_const)
     simpa using (hc.tendsto 0).mono_left nhdsWithin_le_nhds
@@ -321,7 +321,7 @@ theorem proof : TransverseSliceGeneral.Statement := by
         ext i j
         simp [w, gradAt_apply, LinearMap.funLeft_apply]
       rw [hfun]
-      exact Matrix.linearIndependent_rows_iff_isUnit.2 hdet
+      exact linearIndependent_row_iff_isUnit.2 hdet
     have hle : Submodule.span ℂ (Set.range w) ≤ gradSpace W q := by
       rw [Submodule.span_le]
       rintro _ ⟨i, rfl⟩

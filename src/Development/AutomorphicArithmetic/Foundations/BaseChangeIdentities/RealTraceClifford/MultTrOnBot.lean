@@ -297,7 +297,7 @@ theorem UpperTheory.RealTr.mult :
     exact hy (by rw [hch, inf_bot_eq, mult_trOn_bot])
   · obtain ⟨ν₁, S₁, S₂, hS1, hne1, hsup, hdisj, hst1, hst2, hcm12, hoth, hsplit⟩ :=
       isoSplit n V F hF S hfin hstb hS0
-    haveI := hfin
+    have := hfin
     have hf1 : FiniteDimensional ℂ S₁ := Submodule.finiteDimensional_of_le (hsup ▸ le_sup_left)
     have hf2 : FiniteDimensional ℂ S₂ := Submodule.finiteDimensional_of_le (hsup ▸ le_sup_right)
     obtain ⟨hcm1, hcm2⟩ := hcm12 B hcm
@@ -306,8 +306,8 @@ theorem UpperTheory.RealTr.mult :
     have hadd2 : ∀ (T : Submodule ℂ V), (∀ x ∈ T, B x ∈ T) →
         trOn (T ⊓ S₁ ⊔ T ⊓ S₂) B = trOn (T ⊓ S₁) B + trOn (T ⊓ S₂) B := by
       intro T hT
-      haveI := hf1
-      haveI := hf2
+      have := hf1
+      have := hf2
       exact (trAdd V B).1 _ _ inferInstance inferInstance (hdisj.mono inf_le_right inf_le_right)
         (fun x hx => Submodule.mem_inf.2 ⟨hT x (Submodule.mem_inf.1 hx).1, hcm1.2 x (Submodule.mem_inf.1 hx).2⟩)
         (fun x hx => Submodule.mem_inf.2 ⟨hT x (Submodule.mem_inf.1 hx).1, hcm2.2 x (Submodule.mem_inf.1 hx).2⟩)

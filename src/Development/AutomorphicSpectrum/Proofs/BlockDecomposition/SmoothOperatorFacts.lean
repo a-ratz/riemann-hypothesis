@@ -81,7 +81,7 @@ theorem phi_keeps_sections : ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (
       ∀ (h : C₀(ℝ, ℂ)) (f : Mat n → E.V), Sob μ f → IsSec E f →
         ∃ f', Sob μ f' ∧ IsSec E f' ∧ cls μ f' = F.Φ h (cls μ f) := by
   intro n _ _ μ _ E
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   intro Ω T F hL hU hR hSG hCS hΩ h f hf hs
   obtain ⟨-, -, -, -, hC, hO, hCp, -, hP, hCT, -, hFr, hOF, hI, hD⟩ := hCS
   have hrep : ∀ x ∈ Msob μ E.V, ∃ f, Sob μ f ∧ cls μ f = x :=
@@ -212,7 +212,7 @@ theorem lap_sec : ∀ (n : ℕ) (E : KMod n), RCalc → OmFormula → ∃ Q : E.
   refine ⟨(-(1 / 2 : ℂ)) • ∑ a, ∑ c, (BY a c * BY a c + BZ a c * BZ a c), fun f hf g hg => ?_⟩
   rw [Lap_eq hO hf.1 hg]
   congr 1
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply]
+  simp only [smul_apply, sum_apply, add_apply]
   congr 1
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun c _ => ?_
   rw [sq _ _ (hBY a c) f hf g hg, sq _ _ (hBZ a c) f hf g hg]
@@ -404,7 +404,7 @@ theorem sectionBound : ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] 
   intro n _ _ μ _ E Q _ _ hR _ hL j
   obtain ⟨C, -, h⟩ := strong μ E Q hR hL j
   refine ⟨C * ‖(1 : E.V →L[ℂ] E.V)‖, fun f hS hs => ?_⟩
-  simpa only [ContinuousLinearMap.one_apply] using h f hS hs 1
+  simpa only [one_apply_eq_self] using h f hS hs 1
 
 end GlobalTheory.CompanionTheory.LapSec
 end -- clump:auto
@@ -698,7 +698,7 @@ theorem ae_eq_of_tendsto {K : ℕ → Mat n → V} {L : Mat n → V} {y : Lp V 2
   obtain ⟨ns, hns0, hns⟩ := hm.exists_seq_tendsto_ae
   have hc : ∀ᵐ g ∂μ, ∀ k, (cls μ (K k) : G n → V) g = K k (g : G n).val :=
     ae_all_iff.2 fun k => by
-      have e : cls μ (K k) = (hK k).toLp _ := dif_pos (hK k)
+      have e : cls μ (K k) = (hK k).toLp _ := dite_eq_left (hK k)
       rw [e]
       exact (hK k).coeFn_toLp
   filter_upwards [hns, hc] with g h1 h2
@@ -815,7 +815,7 @@ theorem word_est (hAE : AlgEst) (hL : LgFacts) (hU : Unimod) (hR : RCalc) (hC : 
       (∀ (f : Mat n → E.V) (hf : cls μ f ∈ Msob μ E.V), Sob μ f → (Ω ⟨cls μ f, hf⟩ : Lp E.V 2 μ) = cls μ (Om f)) →
       ∀ w : List (Bool × Fin n × Fin n), ∃ C : ℝ, ∀ f f' : Mat n → E.V, IsSec E f' → Sob μ f' →
         cls μ f' = F.Φ h (cls μ f) → ‖cls μ (Rw w f')‖ ≤ C * ‖cls μ f‖ := by
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   intro Ω T F hΩ w
   obtain ⟨-, -, -, -, hCF, -, -, -, -, -, -, -, hOF, hIb, -⟩ := hC
   choose hm hhm using hh
@@ -874,7 +874,7 @@ end
 
 theorem smoothOp : SmoothOp := by
   intro n _ _ μ _ E
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   intro Ω T F hL hU hR hS hAE hC hΩ h hh
   have hW := word_est μ E hAE hL hU hR hC h hh Ω T F hΩ
   choose Cw hCw using hW

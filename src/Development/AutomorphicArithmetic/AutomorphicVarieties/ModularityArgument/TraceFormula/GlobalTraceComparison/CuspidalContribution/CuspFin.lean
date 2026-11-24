@@ -114,9 +114,9 @@ theorem main : FinDisc := by
       · have e : ∀ x, ‖(((c : ℂ) • φ : Sm E N)).1 x‖ₑ ^ 2 = ENNReal.ofReal (c ^ 2) * ‖φ.1 x‖ₑ ^ 2 := by
           intro x
           have h2 : ((((c : ℂ) • φ : Sm E N)).1 x) = (c : ℂ) * φ.1 x := rfl
-          rw [h2, enorm_mul, mul_pow]
+          rw [h2, eNorm_mul, mul_pow]
           congr 1
-          rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hc0,
+          rw [← ofReal_norm, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hc0,
             ENNReal.ofReal_pow hc0.le]
         simp only [e]
         rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, ← hL]
@@ -201,7 +201,7 @@ open PositivityTheory.Rg.BcB.SpectralAccumulation PositivityTheory.Rg.Rs Measure
 
 private theorem expV_cusp {E : Type} [Field E] [NumberField E] [IsCMField E] {N : ℕ} (π : CuspSub E N)
     {r : ℕ} (hr : 0 < r) (hrN : r < N) : ExpV r π.V = ∅ := by
-  letI : MeasurableSpace (BlockIx N r → Ad E) := _root_.borel _
+  let : MeasurableSpace (BlockIx N r → Ad E) := _root_.borel _
   refine Set.eq_empty_of_forall_notMem ?_
   rintro c ⟨φ, hφ, F₀, ⟨μ, 𝓕, hμ, h𝓕, e⟩, F, hF, hF0, -⟩
   have h0 : F₀ = 0 := by
@@ -236,8 +236,8 @@ private theorem isDiscrete_of_norm' {E : Type} [Field E] [NumberField E] [IsCMFi
 private theorem cuspFin_of (hF : FinDisc) : CuspFin := by
   set_option synthInstance.maxHeartbeats 200000 in
     intro E _ _ _ N hN K W R hK hW
-    letI : MeasurableSpace (GA E N) := _root_.borel _
-    haveI : BorelSpace (GA E N) := ⟨rfl⟩
+    let : MeasurableSpace (GA E N) := _root_.borel _
+    have : BorelSpace (GA E N) := ⟨rfl⟩
     let μ : Measure (GA E N) := Measure.haar
     obtain ⟨V₀, hV₀⟩ := hF E N μ K W R 1 hK hW one_pos (PositivityTheory.Rg.BcB.CG.reproEx_holds E N μ K W R hK hW)
     have hex : ∀ π : {π : CuspSub E N | GlobalTheory.DiscSpec.IsNormalised π ∧ HasType K W π.V ∧ InfBdd R π.V},
@@ -252,7 +252,7 @@ private theorem cuspFin_of (hF : FinDisc) : CuspFin := by
       have e : f a = f b := congrArg Subtype.val hab
       have h := iso_of_isoV (hfi a) (e ▸ hfi b)
       exact Subtype.ext ((UpperTheory.ConvolutionTheory.Dp.isoEq E N _ _).1 h)
-    haveI := Finite.of_injective g hg
+    have := Finite.of_injective g hg
     exact Set.toFinite _
 
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Cusp.cuspFin :

@@ -186,10 +186,10 @@ theorem firstRel_mul_iff (x : Matrix (Fin n) (Fin ρ) E) (j : Fin ρ) (u : Matri
     (hd : ∀ i, u i i = 1) (hu : ∀ i k, k < i → u i k = 0) :
     FirstRel x j ↔ FirstRel (x * u) j := by
   have hdet : u.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (fun i k h => hu i k h)]
+    rw [det_of_isUpperTriangular (fun i k h => hu i k h)]
     simp [hd]
   have hunit : IsUnit u.det := by rw [hdet]; exact isUnit_one
-  letI : Invertible u := Matrix.invertibleOfIsUnitDet u hunit
+  let : Invertible u := Matrix.invertibleOfIsUnitDet u hunit
   have huv : u * u⁻¹ = 1 := Matrix.mul_nonsing_inv u hunit
   have hvu : u⁻¹ * u = 1 := Matrix.nonsing_inv_mul u hunit
   have hv : ∀ i k, k < i → u⁻¹ i k = 0 := fun i k h =>

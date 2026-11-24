@@ -59,7 +59,7 @@ theorem exists_rename_notMem {K : Type} [Field K] {σ : Type} (p : Ideal (MvPoly
     (hp : p.IsPrime ∧ p.height = 1) :
     ∃ e0 : σ, ∀ q : MvPolynomial {e // e ≠ e0} K, q ≠ 0 → rename Subtype.val q ∉ p := by
   classical
-  haveI : UniqueFactorizationMonoid (MvPolynomial σ K) := MvPolynomial.uniqueFactorizationMonoid σ
+  have : UniqueFactorizationMonoid (MvPolynomial σ K) := MvPolynomial.uniqueFactorizationMonoid σ
   obtain ⟨hprime, hh⟩ := hp
   have hne : p ≠ ⊥ := by
     intro h
@@ -67,23 +67,23 @@ theorem exists_rename_notMem {K : Type} [Field K] {σ : Type} (p : Ideal (MvPoly
     exact zero_ne_one hh
   obtain ⟨g, hgp, hgprime⟩ := hprime.exists_mem_prime_of_ne_bot hne
   have hg0 : g ≠ 0 := hgprime.ne_zero
-  haveI hPprime : (Ideal.span {g}).IsPrime := (Ideal.span_singleton_prime hg0).mpr hgprime
+  have hPprime : (Ideal.span {g}).IsPrime := (Ideal.span_singleton_prime hg0).mpr hgprime
   have hPle : Ideal.span {g} ≤ p := (Ideal.span_singleton_le_iff_mem p).mpr hgp
   have hPeq : Ideal.span {g} = p := by
     by_contra hneq
     have hlt : Ideal.span {g} < p := lt_of_le_of_ne hPle hneq
-    haveI : p.FiniteHeight := ⟨Or.inr (by rw [hh]; exact ENat.one_ne_top)⟩
+    have : p.FiniteHeight := ⟨Or.inr (by rw [hh]; exact ENat.one_ne_top)⟩
     have h1 : (Ideal.span {g}).height < p.height := Ideal.height_strict_mono_of_isPrime_of_isPrime hlt
     rw [hh] at h1
     have hPh : (Ideal.span {g}).height = 0 := ENat.lt_one_iff_eq_zero.mp h1
-    haveI : (Ideal.span {g}).FiniteHeight := ⟨Or.inr (by rw [hPh]; exact ENat.zero_ne_top)⟩
+    have : (Ideal.span {g}).FiniteHeight := ⟨Or.inr (by rw [hPh]; exact ENat.zero_ne_top)⟩
     have hbot : (⊥ : Ideal (MvPolynomial σ K)) < Ideal.span {g} := by
       rw [bot_lt_iff_ne_bot, Ne, Ideal.span_singleton_eq_bot]
       exact hg0
     have h2 : (⊥ : Ideal (MvPolynomial σ K)).height < (Ideal.span {g}).height :=
       Ideal.height_strict_mono_of_isPrime_of_isPrime hbot
     rw [hPh] at h2
-    exact absurd h2 not_lt_zero'
+    exact absurd h2 not_lt_zero
   have hvars : g.vars.Nonempty := by
     by_contra hemp
     rw [Finset.not_nonempty_iff_eq_empty] at hemp
@@ -104,7 +104,7 @@ theorem exists_rename_notMem {K : Type} [Field K] {σ : Type} (p : Ideal (MvPoly
       intro ha0
       apply hg0
       rw [htd, ha0, map_zero]
-    apply hgprime.not_unit
+    apply hgprime.not_isUnit
     rw [htd]
     exact (isUnit_iff_ne_zero.mpr ha).map MvPolynomial.C
   obtain ⟨e0, he0⟩ := hvars
@@ -180,7 +180,7 @@ theorem w_eq_scalarRatio_smul (hd : d.AxH 𝒜) (c : ι) (j : Fin (d.N + 1)) :
     d.w j c = ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c) • d.w (d.jc c) c := by
   have hmem := hd.w_mem
   have hne : (⟨d.w (d.jc c) c, hmem _ c⟩ : 𝒜 c d.wL) ≠ 0 := fun h => hd.w_base c (congrArg Subtype.val h)
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hne).mp (hd.finrank_one c d.wL) ⟨d.w j c, hmem j c⟩
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hne).mp (hd.finrank_one c d.wL) ⟨d.w j c, hmem j c⟩
   have hex : ∃ a : Ω c, d.w j c = a • d.w (d.jc c) c := by
     refine ⟨a, ?_⟩
     have h2 := congrArg Subtype.val ha
@@ -298,7 +298,7 @@ theorem genericHomAt_relation (hd : d.AxH 𝒜) (c : ι) (j0 : Fin (d.N + 1)) (h
         (fun k => MvPolynomial.X (Sum.inr (i, k))) j) := by
     intro j
     rw [← hTdef]
-    simp only [Data.sH, sHom, MvPolynomial.aeval_X, sImg, if_neg hi]
+    simp only [Data.sH, sHom, MvPolynomial.aeval_X, sImg, ite_eq_right hi]
   have hCr : ∀ a : Ω c, algebraMap (MvPolynomial (SVar d.D d.N) (Ω c)) (OmS (Ω c) d.D d.N) (MvPolynomial.C a) =
       algebraMap (Ω c) (OmS (Ω c) d.D d.N) a := by
     intro a

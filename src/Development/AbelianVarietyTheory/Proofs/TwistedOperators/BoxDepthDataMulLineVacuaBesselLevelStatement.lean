@@ -541,7 +541,7 @@ theorem scalar_mem_idS {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : Gr
       rw [← WithZero.exp_zero, WithZero.exp_le_exp]
       omega
     · rw [h, map_mul, e2 w hw, zero_mul, map_zero]
-      exact zero_le'
+      exact zero_le
   refine ⟨⟨s, hs⟩, ?_, rfl⟩
   rw [GlobalTheory.FunObj.Comparison₂.mem_idS_modul]
   intro w hw
@@ -650,7 +650,7 @@ theorem valuation_le_of_mem {K : Type} [Field K] [NumberField K] (w : IsDedekind
     {I : FractionalIdeal (𝓞 K)⁰ K} {b : K} (hb : b ∈ I) :
     w.valuation K b ≤ WithZero.exp (-FractionalIdeal.count K w I) := by
   by_cases hb0 : b = 0
-  · rw [hb0, map_zero]; exact zero_le'
+  · rw [hb0, map_zero]; exact zero_le
   have h1 : FractionalIdeal.count K w I ≤ FractionalIdeal.count K w (FractionalIdeal.spanSingleton (𝓞 K)⁰ b) :=
     FractionalIdeal.count_mono K w (FractionalIdeal.spanSingleton_ne_zero_iff.mpr hb0)
       ((FractionalIdeal.spanSingleton_le_iff_mem).mpr hb)
@@ -929,7 +929,7 @@ theorem GlobalTheory.LineZero.adj_mem_lineLat : OnStd fun {D} _ _ {sc} {G} W F =
     simp [Matrix.mulVec, dotProduct]
   show _ ∈ (latCore G 0).comap _
   rw [AddSubgroup.mem_comap]
-  simp only [AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_comp, AddMonoidHom.coe_coe, Function.comp_apply,
+  simp only [AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_comp, AddMonoidHom.coe_ofClass, Function.comp_apply,
     AddMonoidHom.inr_apply]
   rw [GlobalTheory.MixModel.OrthDec.resT_symm_apply, Matrix.mul_zero, zero_add (F.oz.jB * _)]
   refine ⟨?_, fun e he => ?_⟩
@@ -1072,7 +1072,7 @@ theorem star_smul_mem_span : ∀ (D : D7) (n : ℕ) (I J : FractionalIdeal (𝓞
     obtain ⟨c, hc, y, hy, rfl⟩ := hx
     have hm : star a * c ∈ (D.host.AA * J : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) :=
       hIJ (FractionalIdeal.mul_mem_mul hsa hc)
-    rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_mul] at hm
+    rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_mul] at hm
     rw [smul_smul]
     have key : ∀ z ∈ ((D.host.AA : Submodule (𝓞 D.host.E) D.host.E) * (J : Submodule (𝓞 D.host.E) D.host.E)),
         z • y ∈ Submodule.span (𝓞 D.host.E) {y | ∃ a' ∈ D.host.AA, ∃ s' ∈ idLat J Λ, y = a' • s'} := by

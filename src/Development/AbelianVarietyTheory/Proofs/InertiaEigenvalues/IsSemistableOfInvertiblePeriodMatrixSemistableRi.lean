@@ -62,8 +62,8 @@ theorem isSst_of_periodMatrix : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (A
     (∀ g : ↥(GK K), (LinearMap.toMatrix b b (ρ g)).map (algebraMap ℚ_[l] (Bst P)) *
       (Q : Matrix n n (Bst P)).map (actSt P (g : GQ l)) = Q) → IsSst P ρ := by
   intro l _ P AI T n _ _ K V _ _ b ρ Q hQ
-  haveI : IsDomain P.R.B := GlobalTheory.RegularRing.isDomain_of_tied T K
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
+  have : IsDomain P.R.B := GlobalTheory.RegularRing.isDomain_of_tied T K
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     haveI := K.2
     FiniteDimensional.of_injective (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective (inf_le_left : K0 K ≤ K.1))

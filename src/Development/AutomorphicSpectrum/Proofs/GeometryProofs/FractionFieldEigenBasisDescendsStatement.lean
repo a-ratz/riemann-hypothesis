@@ -73,7 +73,7 @@ theorem exists_retraction {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuat
     [AddCommGroup M] [Module O M] [Module.Finite O M] (N : Submodule O M)
     (hN : ∀ (c : O) (x : M), c ≠ 0 → c • x ∈ N → x ∈ N) :
     ∃ r : M →ₗ[O] N, r ∘ₗ N.subtype = LinearMap.id := by
-  haveI : NoZeroSMulDivisors O (M ⧸ N) := by
+  have : NoZeroSMulDivisors O (M ⧸ N) := by
     refine ⟨fun {c y} h => ?_⟩
     by_cases hc : c = 0
     · exact Or.inl hc
@@ -81,7 +81,7 @@ theorem exists_retraction {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuat
       obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective N y
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h
       exact (Submodule.Quotient.mk_eq_zero N).2 (hN c x hc h)
-  haveI : Module.Free O (M ⧸ N) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free O (M ⧸ N) := Module.free_of_finite_type_torsion_free'
   obtain ⟨s, hs⟩ := Module.projective_lifting_property N.mkQ LinearMap.id N.mkQ_surjective
   refine ⟨LinearMap.codRestrict N (LinearMap.id - s ∘ₗ N.mkQ) ?_, ?_⟩
   · intro x
@@ -151,7 +151,7 @@ theorem exists_integral_leftInverse {V K : Type} [CommRing V] [IsDomain V]
     rw [hr', hrep, Finsupp.single_apply]
     by_cases h : i = i'
     · subst h; simp
-    · rw [if_neg (Ne.symm h), if_neg h]
+    · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
   have hsum : F i (β i') = ∑ k, β i' k * F i (fun j => if k = j then 1 else 0) := by
     rw [LinearMap.pi_apply_eq_sum_univ (F i) (β i')]
     simp only [smul_eq_mul]
@@ -254,9 +254,9 @@ theorem eigSub_baseChange : ∀ (E : Type) [Field E] [NumberField E] (K C V A : 
         rw [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply,
           sub_eq_zero, RingHom.comp_apply] at h2
         exact h2
-      letI : Algebra K C := j.toAlgebra
+      let : Algebra K C := j.toAlgebra
       let S : Submodule K C := Submodule.span K (Set.range x)
-      haveI : Module.Finite K S := Module.Finite.span_of_finite K (Set.finite_range x)
+      have : Module.Finite K S := Module.Finite.span_of_finite K (Set.finite_range x)
       let bS := Module.finBasis K S
       let c : Fin (Module.finrank K S) → C := fun t => (bS t : C)
       have hc : LinearIndependent K c := bS.linearIndependent.map' S.subtype S.ker_subtype

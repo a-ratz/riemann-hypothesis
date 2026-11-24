@@ -323,8 +323,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {S : Sc
 theorem SAB_exists_isRos (t : SAB H S) (a : 𝓞 E) :
     ∃ r : LB.Gen (LB.LinComb t.PP.L (rosatiφ t.G (t.act.act a) (t.act.act (H.bar a))) rosatiε),
       GlobalTheory.TorusExt.IsRos t.PP.L (t.act.act a) (t.act.act (H.bar a)) r := by
-  haveI := t.act.hom a
-  haveI := t.act.hom (H.bar a)
+  have := t.act.hom a
+  have := t.act.hom (H.bar a)
   obtain ⟨u, hu⟩ := gen_of_lbIso (LBIso.symm (t.adj a))
   obtain ⟨v, hv, -⟩ := exists_gen t.PP.isLB (φ' := rosatiφ t.G (t.act.act a) (t.act.act (H.bar a))) (ε' := rosatiε)
     (fun U _ k => by
@@ -385,8 +385,8 @@ theorem hodgeInnerProduct_act_adjoint : ∀ (E : Type) [Field E] [NumberField E]
   intro E _ _ _ H X t z v w a c hfib hv hw
   obtain ⟨V, _, _, ⟨M⟩⟩ := lieModel_exists X t.G ℂ z
   obtain ⟨h, hh, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_hodgeInnerProduct_form E H X t z V M hfib
-  haveI := t.act.hom a
-  haveI := t.act.hom (H.bar a)
+  have := t.act.hom a
+  have := t.act.hom (H.bar a)
   obtain ⟨x', hx'⟩ := M.onto _ (isTanAt_comp (t.act.act a) hv)
   obtain ⟨y', hy'⟩ := M.onto _ (isTanAt_comp (t.act.act (H.bar a)) hw)
   obtain ⟨x, rfl⟩ := M.onto v hv
@@ -394,7 +394,7 @@ theorem hodgeInnerProduct_act_adjoint : ∀ (E : Type) [Field E] [NumberField E]
   rw [← hx', ← hy', hh, hh]
   suffices e : h x' y = h x y' by rw [e]
   obtain ⟨hL, -, -, A, _, φ, g, u, Hm, χ, v₁, w₁, α, β, hpb, hAH, e₁, e₂, d₁, d₂, -⟩ := (hh x y _).2 rfl
-  haveI := isCommMonObj_of_pullback hpb
+  have := isCommMonObj_of_pullback hpb
   obtain ⟨f, _, hf⟩ := exists_endo hpb (t.act.act a)
   obtain ⟨f', _, hf'⟩ := exists_endo hpb (t.act.act (H.bar a))
   obtain ⟨F, hF⟩ := exists_linear_compare u u f

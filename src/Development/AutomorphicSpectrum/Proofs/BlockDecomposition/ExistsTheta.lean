@@ -113,7 +113,7 @@ theorem poly_tau_pow (S : Finset (Fin d)) (N : ℕ) :
     ∃ (g : Gam n d) (hg : g ∈ (cone S : AddSubmonoid (Gam n d))), (∀ e, g e = N) ∧
       poly n K S (tau K n d ^ N) = mon K g hg := by
   refine ⟨N • ∑ e, oneE e, (cone S).nsmul_mem ((cone S).sum_mem fun e _ => oneE_mem S e) N, fun e => ?_, ?_⟩
-  · simp only [Pi.smul_apply, Finset.sum_apply, oneE, Pi.single_apply, Finset.sum_ite_eq, Finset.mem_univ, if_true, nsmul_eq_mul, mul_one]
+  · simp only [Pi.smul_apply, Finset.sum_apply, oneE, Pi.single_apply, Finset.sum_ite_eq, Finset.mem_univ, ite_true, nsmul_eq_mul, mul_one]
   · rw [map_pow, tau, map_prod]
     simp only [poly_X]
     rw [mon_prod, mon_pow]
@@ -166,8 +166,8 @@ variable {A : Type} [CommRing A] [Algebra K A] (C : ChartRings K A n d)
 theorem eq_zero_of_mul {T : Finset (Fin d)} (θ' : R0 K n d T →ₐ[K] C.R T)
     (hθ' : ∀ b, θ' (poly n K T b) = toR C T (phi C b)) (hb : IsBaseChange (Aa C) (thetaLin C θ' hθ'))
     (N : ℕ) (z : C.R T) (hz : toR C T (phi C (tau K n d ^ N)) * z = 0) : z = 0 := by
-  haveI := etale_Aa C
-  haveI : Module.Flat (Bp K n d) (Aa C) := Algebra.Smooth.flat _ _
+  have := etale_Aa C
+  have : Module.Flat (Bp K n d) (Aa C) := Algebra.Smooth.flat _ _
   let f : R0 K n d T →ₗ[Bp K n d] R0 K n d T := LinearMap.mulLeft (Bp K n d) (poly n K T (tau K n d ^ N))
   have hf : Function.Injective f := mul_injective T N
   have hl := Module.Flat.lTensor_preserves_injective_linearMap (M := Aa C) f hf
@@ -291,27 +291,27 @@ theorem baseChange_loc {B A P P' Q Q' : Type} [CommRing B] [CommRing A] [CommRin
     (hQ : letI := r.toAlgebra; IsLocalization.Away (t₁ c) Q')
     (f₁ : P →ₗ[B] Q) (hf₁ : ∀ x, f₁ x = t₁ x) (f : P' →ₗ[B] Q') (hf : ∀ x, f x = t x)
     (h : IsBaseChange A f₁) : IsBaseChange A f := by
-  letI a1 : Algebra P P' := i.toAlgebra
-  letI a2 : Algebra Q Q' := r.toAlgebra
-  letI a3 : Algebra P Q := t₁.toAlgebra
-  letI a4 : Algebra P' Q' := t.toAlgebra
-  letI a5 : Algebra P Q' := (t.comp i).toAlgebra
-  haveI : IsScalarTower B P P' := .of_algebraMap_eq fun b => (hi b).symm
-  haveI : IsScalarTower B P Q := .of_algebraMap_eq fun b => (ht₁ b).symm
-  haveI : IsScalarTower B P' Q' := .of_algebraMap_eq fun b => (ht b).symm
-  haveI : IsScalarTower B P Q' := .of_algebraMap_eq fun b => by
+  let a1 : Algebra P P' := i.toAlgebra
+  let a2 : Algebra Q Q' := r.toAlgebra
+  let a3 : Algebra P Q := t₁.toAlgebra
+  let a4 : Algebra P' Q' := t.toAlgebra
+  let a5 : Algebra P Q' := (t.comp i).toAlgebra
+  have : IsScalarTower B P P' := .of_algebraMap_eq fun b => (hi b).symm
+  have : IsScalarTower B P Q := .of_algebraMap_eq fun b => (ht₁ b).symm
+  have : IsScalarTower B P' Q' := .of_algebraMap_eq fun b => (ht b).symm
+  have : IsScalarTower B P Q' := .of_algebraMap_eq fun b => by
     change _ = t (i _)
     rw [hi, ht]
-  haveI : IsScalarTower P P' Q' := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower P Q Q' := .of_algebraMap_eq fun x => hcomm x
-  haveI : IsScalarTower A Q Q' := .of_algebraMap_eq fun a => (hr a).symm
-  haveI : IsScalarTower B Q Q' := .of_algebraMap_eq fun b => by
+  have : IsScalarTower P P' Q' := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower P Q Q' := .of_algebraMap_eq fun x => hcomm x
+  have : IsScalarTower A Q Q' := .of_algebraMap_eq fun a => (hr a).symm
+  have : IsScalarTower B Q Q' := .of_algebraMap_eq fun b => by
     rw [IsScalarTower.algebraMap_apply B A Q, IsScalarTower.algebraMap_apply B A Q']
     exact (hr _).symm
   have e1 : f₁ = (IsScalarTower.toAlgHom B P Q).toLinearMap := LinearMap.ext hf₁
   have p1 : Algebra.IsPushout B A P Q := ⟨by rw [← e1]; exact h⟩
-  haveI p2 : Algebra.IsPushout B P A Q := p1.symm
-  haveI : IsLocalization.Away c P' := hP
+  have p2 : Algebra.IsPushout B P A Q := p1.symm
+  have : IsLocalization.Away c P' := hP
   have hQ' : IsLocalization (Algebra.algebraMapSubmonoid Q (Submonoid.powers c)) Q' := by
     have e : Algebra.algebraMapSubmonoid Q (Submonoid.powers c) = Submonoid.powers (t₁ c) := by
       simp only [Algebra.algebraMapSubmonoid, Submonoid.map_powers]
@@ -398,9 +398,9 @@ theorem theta_loc : ∀ {K : Type} [Field K] {n d : ℕ} {A : Type} [CommRing A]
       mon_sum S _ _
     rw [e, map_prod]
     exact Finset.prod_congr rfl fun j _ => hu j
-  letI aP : Algebra (R0 K n d {k}) (R0 K n d S) := (incl (K := K) hle).toRingHom.toAlgebra
-  letI aQ : Algebra (C.R {k}) (C.R S) := (C.res hsk).toRingHom.toAlgebra
-  haveI hP' : IsLocalization.Away (mon K (cE S k) hc) (R0 K n d S) := hP
+  let aP : Algebra (R0 K n d {k}) (R0 K n d S) := (incl (K := K) hle).toRingHom.toAlgebra
+  let aQ : Algebra (C.R {k}) (C.R S) := (C.res hsk).toRingHom.toAlgebra
+  have hP' : IsLocalization.Away (mon K (cE S k) hc) (R0 K n d S) := hP
   have hQ : IsLocalization.Away (θ₁ (mon K (cE S k) hc)) (C.R S) := by
     rw [hθc]
     exact C.loc S k hk
@@ -569,12 +569,12 @@ theorem isBaseChange_core {P Q R₀ R M N U V : Type*} [CommRing P] [CommRing Q]
     (hU : ∀ (c : R₀) x, ∃ x', u x' = c • u x) (g : U →ₗ[P] V) (j : V →+ N) (hj : Function.Injective j)
     (hq : ∀ (q : Q) v, j (q • v) = algebraMap Q R q • j v) (hg : ∀ x, j (g x) = φ (u x))
     (hs : ∀ v, j v ∈ Submodule.span R (Set.range fun x => φ (u x))) : IsBaseChange Q g := by
-  letI : Module Q N := Module.compHom N (algebraMap Q R)
-  letI : Module P N := Module.compHom N (algebraMap P R)
-  haveI : IsScalarTower Q R N := ⟨fun q r n => by
+  let : Module Q N := Module.compHom N (algebraMap Q R)
+  let : Module P N := Module.compHom N (algebraMap P R)
+  have : IsScalarTower Q R N := ⟨fun q r n => by
     change (q • r) • n = algebraMap Q R q • (r • n)
     rw [Algebra.smul_def, mul_smul]⟩
-  haveI : IsScalarTower P Q N := ⟨fun p q n => by
+  have : IsScalarTower P Q N := ⟨fun p q n => by
     change algebraMap Q R (p • q) • n = algebraMap P R p • algebraMap Q R q • n
     rw [Algebra.smul_def, map_mul, ← IsScalarTower.algebraMap_apply, mul_smul]⟩
   let f : M →ₗ[P] N :=
@@ -683,7 +683,7 @@ theorem relOm_le_span {K R₀ R : Type} [CommRing K] [CommRing R₀] [CommRing R
       by_cases hi : i = k
       · subst hi
         simpa using (hJ2 _ hk).1
-      · simp only [if_neg hi, Set.image_univ]
+      · simp only [ite_eq_right hi, Set.image_univ]
         exact hD _)
     rw [one_smul] at h3
     exact T.smul_mem g₀ h3
@@ -697,15 +697,15 @@ theorem isBaseChange_relOm {K P Q R₀ R : Type} [CommRing K] [CommRing P] [Comm
     (hj : Function.Injective j) (hq : ∀ (q : Q) v, j (q • v) = algebraMap Q R q • j v)
     (hr : ∀ v, j v ∈ relOm K J a) (g : relOm K I₀ a →ₗ[P] V)
     (hg : ∀ x, j (g x) = omMap θ a (x : Om K R₀ a)) : IsBaseChange Q g := by
-  letI : Algebra R₀ R := θ.toRingHom.toAlgebra
-  haveI : IsScalarTower K R₀ R := .of_algHom θ
-  haveI : IsScalarTower P R₀ R := .of_algebraMap_eq fun p => (hθ p).symm
-  haveI hpo : Algebra.IsPushout P Q R₀ R := ⟨by
+  let : Algebra R₀ R := θ.toRingHom.toAlgebra
+  have : IsScalarTower K R₀ R := .of_algHom θ
+  have : IsScalarTower P R₀ R := .of_algebraMap_eq fun p => (hθ p).symm
+  have hpo : Algebra.IsPushout P Q R₀ R := ⟨by
     have e : (IsScalarTower.toAlgHom P R₀ R).toLinearMap = f := LinearMap.ext fun x => (hf x).symm
     rw [e]
     exact hb⟩
-  haveI : Algebra.IsPushout P R₀ Q R := Algebra.IsPushout.symm hpo
-  haveI : Algebra.FormallyEtale R₀ R := Algebra.FormallyEtale.of_equiv (Algebra.IsPushout.equiv P R₀ Q R)
+  have : Algebra.IsPushout P R₀ Q R := Algebra.IsPushout.symm hpo
+  have : Algebra.FormallyEtale R₀ R := Algebra.FormallyEtale.of_equiv (Algebra.IsPushout.equiv P R₀ Q R)
   have h1 := KaehlerDifferential.isBaseChange_of_formallyEtale K R₀ R
   have hD : ∀ ω : Ω[R⁄K], ω ∈ Submodule.span R (Set.range fun h => KaehlerDifferential.D K R (θ h)) := by
     intro ω
@@ -753,10 +753,10 @@ end RelBC
 theorem isBaseChange_psi {K : Type} [Field K] {n d : ℕ} {A : Type} [CommRing A] [Algebra K A] (C : ChartRings K A n d)
     {S : Finset (Fin d)} (θ : R0 K n d S →ₐ[K] C.R S) (hθ : ∀ b, θ (poly n K S b) = toR C S (phi C b))
     (hb : IsBaseChange (Aa C) (thetaLin C θ hθ)) (a : ℕ) : IsBaseChange (Aa C) (psi C θ hθ a) := by
-  haveI := etale_Aa C
-  letI i1 : Algebra (Aa C) (C.R S) := inferInstanceAs (Algebra (Aa C) (Rb C S))
-  letI i2 : Algebra (Bp K n d) (C.R S) := inferInstanceAs (Algebra (Bp K n d) (Rb C S))
-  haveI i3 : IsScalarTower (Bp K n d) (Aa C) (C.R S) := inferInstanceAs (IsScalarTower (Bp K n d) (Aa C) (Rb C S))
+  have := etale_Aa C
+  let i1 : Algebra (Aa C) (C.R S) := inferInstanceAs (Algebra (Aa C) (Rb C S))
+  let i2 : Algebra (Bp K n d) (C.R S) := inferInstanceAs (Algebra (Bp K n d) (Rb C S))
+  have i3 : IsScalarTower (Bp K n d) (Aa C) (C.R S) := inferInstanceAs (IsScalarTower (Bp K n d) (Aa C) (Rb C S))
   have hJ : C.I S ≤ Ideal.span (θ '' (I0 n K S : Set (R0 K n d S))) := by
     refine Ideal.span_le.2 ?_
     rintro _ ⟨k, hk, rfl⟩
@@ -1003,9 +1003,9 @@ theorem free_of_formallyEtale (K A B : Type) [CommRing K] [CommRing A] [CommRing
 
 theorem free_of_bijective {K A B : Type} [CommRing K] [CommRing A] [CommRing B] [Algebra K A] [Algebra K B]
     (φ : A →ₐ[K] B) (hφ : Function.Bijective φ) [Module.Free A Ω[A⁄K]] : Module.Free B Ω[B⁄K] := by
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K A B := IsScalarTower.of_algHom φ
-  haveI : Algebra.FormallyEtale A B :=
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  have : IsScalarTower K A B := IsScalarTower.of_algHom φ
+  have : Algebra.FormallyEtale A B :=
     Algebra.FormallyEtale.of_equiv (AlgEquiv.ofBijective (Algebra.ofId A B) hφ)
   exact free_of_formallyEtale K A B
 
@@ -1061,7 +1061,7 @@ theorem exists_add_nsmul_mem {k : Fin d} {S : Finset (Fin d)} (hk : k ∈ S) (g 
       Finset.single_le_sum (f := fun j => (g (Sum.inr j)).natAbs) (fun _ _ => Nat.zero_le _) (Finset.mem_univ j)
     simp only [Pi.add_apply, Pi.smul_apply, cS_inr k S hne]
     by_cases hS : j ∈ S
-    · simp only [hS, if_true, nsmul_eq_mul, mul_one]
+    · simp only [hS, ite_true, nsmul_eq_mul, mul_one]
       omega
     · simpa [hS] using hg.2.1 j hS
   · rw [tdeg_add]
@@ -1075,27 +1075,27 @@ theorem exists_add_nsmul_mem {k : Fin d} {S : Finset (Fin d)} (hk : k ∈ S) (g 
     exact hg.2.2
 
 theorem free_singleton (k : Fin d) : Module.Free (R0 K n d {k}) Ω[R0 K n d {k}⁄K] := by
-  haveI : Module.Free (Bp K n d) Ω[Bp K n d⁄K] := free_Bp
+  have : Module.Free (Bp K n d) Ω[Bp K n d⁄K] := free_Bp
   exact free_of_bijective _ (ChartBij.chart_bijective (K := K) (n := n) k)
 
 theorem free_of_mem {k : Fin d} {S : Finset (Fin d)} (hk : k ∈ S) :
     Module.Free (R0 K n d S) Ω[R0 K n d S⁄K] := by
   have hle : (cone {k} : AddSubmonoid (Gam n d)) ≤ cone S :=
     cone_mono (Finset.singleton_subset_iff.2 hk)
-  letI : Algebra (R0 K n d {k}) (R0 K n d S) := (incl (K := K) hle).toRingHom.toAlgebra
-  haveI : IsScalarTower K (R0 K n d {k}) (R0 K n d S) := IsScalarTower.of_algHom (incl (K := K) hle)
-  haveI : IsLocalization.Away (mon K (cS k S) (cS_mem k S)) (R0 K n d S) :=
+  let : Algebra (R0 K n d {k}) (R0 K n d S) := (incl (K := K) hle).toRingHom.toAlgebra
+  have : IsScalarTower K (R0 K n d {k}) (R0 K n d S) := IsScalarTower.of_algHom (incl (K := K) hle)
+  have : IsLocalization.Away (mon K (cS k S) (cS_mem k S)) (R0 K n d S) :=
     Away.isLocalization_away hle (cS k S) (cS_mem k S) (neg_cS_mem hk) fun g hg => exists_add_nsmul_mem hk g hg
-  haveI : Algebra.FormallyEtale (R0 K n d {k}) (R0 K n d S) :=
+  have : Algebra.FormallyEtale (R0 K n d {k}) (R0 K n d S) :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers (mon K (cS k S) (cS_mem k S)))
-  haveI : Module.Free (R0 K n d {k}) Ω[R0 K n d {k}⁄K] := free_singleton k
+  have : Module.Free (R0 K n d {k}) Ω[R0 K n d {k}⁄K] := free_singleton k
   exact free_of_formallyEtale K (R0 K n d {k}) (R0 K n d S)
 
 theorem free_om : ∀ {K : Type} [Field K] {n d : ℕ} (S : Finset (Fin d)),
     Module.Free (R0 K n d S) Ω[R0 K n d S⁄K] := by
   intro K _ n d S
   rcases S.eq_empty_or_nonempty with rfl | ⟨k, hk⟩
-  · haveI : Module.Free (Bp K n d) Ω[Bp K n d⁄K] := free_Bp
+  · have : Module.Free (Bp K n d) Ω[Bp K n d⁄K] := free_Bp
     exact free_of_bijective _ (PolyBij.poly_bijective (K := K) (n := n) (d := d))
   · exact free_of_mem hk
 
@@ -1158,18 +1158,18 @@ theorem injective_of_isBaseChange {A B M N : Type*} [CommRing A] [CommRing B] [A
 theorem omMap_incl_injective : ∀ {K : Type} [Field K] {n d : ℕ} (S : Finset (Fin d)) (a : ℕ),
     Function.Injective (omMap (K := K) (incl (le_top : (cone S : AddSubmonoid (Gam n d)) ≤ ⊤)) a) := by
   intro K _ n d S a
-  letI : Algebra (R0 K n d S) (Lr K n d) :=
+  let : Algebra (R0 K n d S) (Lr K n d) :=
     (incl (K := K) (le_top : (cone S : AddSubmonoid (Gam n d)) ≤ ⊤)).toRingHom.toAlgebra
-  haveI : IsScalarTower K (R0 K n d S) (Lr K n d) :=
+  have : IsScalarTower K (R0 K n d S) (Lr K n d) :=
     IsScalarTower.of_algHom (incl (K := K) (le_top : (cone S : AddSubmonoid (Gam n d)) ≤ ⊤))
-  haveI hl : IsLocalization.Away (mon K (allE n d) (allE_mem S)) (Lr K n d) :=
+  have hl : IsLocalization.Away (mon K (allE n d) (allE_mem S)) (Lr K n d) :=
     Away.isLocalization_away le_top (allE n d) (allE_mem S) (AddSubmonoid.mem_top _)
       (fun g _ => exists_add_nsmul_mem S g)
-  haveI : Algebra.FormallyEtale (R0 K n d S) (Lr K n d) :=
+  have : Algebra.FormallyEtale (R0 K n d S) (Lr K n d) :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers (mon K (allE n d) (allE_mem S)))
   have hb := KaehlerDifferential.isBaseChange_of_formallyEtale K (R0 K n d S) (Lr K n d)
   have hE := GlobalTheory.TopForm.isBaseChange_exteriorPower hb a
-  haveI : Module.Free (R0 K n d S) Ω[R0 K n d S⁄K] := _root_.GlobalTheory.CompanionTheory.SurjectionOntoH4.FreeOm.free_om S
+  have : Module.Free (R0 K n d S) Ω[R0 K n d S⁄K] := _root_.GlobalTheory.CompanionTheory.SurjectionOntoH4.FreeOm.free_om S
   have hinj := injective_of_isBaseChange hE (Away.incl_injective le_top)
   have heq : ∀ ω, omMap (K := K) (incl (le_top : (cone S : AddSubmonoid (Gam n d)) ≤ ⊤)) a ω =
       exteriorPowerMapOver (Lr K n d) a (KaehlerDifferential.map K K (R0 K n d S) (Lr K n d)) ω := by
@@ -1345,13 +1345,13 @@ theorem contr_sup {n : ℕ} (C : (Fin (n + 1) → ι) → W) (hC : ∀ i, Sup b 
   intro l hl
   rw [contr_apply] at hl
   by_cases h : good' l
-  · rw [dif_pos h] at hl
+  · rw [dite_eq_left h] at hl
     obtain ⟨-, hT⟩ := hC _ l hl
     refine ⟨h, fun x hx => ?_⟩
     rcases mem_ent_cons (hT hx) with rfl | hx'
     · exact absurd hx (ha l h)
     · exact hx'
-  · rw [dif_neg h] at hl
+  · rw [dite_eq_right h] at hl
     exact absurd rfl hl
 
 theorem homotopy {n : ℕ} (C : (Fin (n + 1) → ι) → W) (hC : ∀ i, Sup b good' T (ent i) (C i))
@@ -1363,7 +1363,7 @@ theorem homotopy {n : ℕ} (C : (Fin (n + 1) → ι) → W) (hC : ∀ i, Sup b g
   rw [coord_sum]
   simp only [contr_apply]
   by_cases h : good' l
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     have hz := congrArg (fun w => b.repr w l) (hZ (Fin.cons (a l h) i))
     rw [Fin.sum_univ_succ] at hz
 
@@ -1373,7 +1373,7 @@ theorem homotopy {n : ℕ} (C : (Fin (n + 1) → ι) → W) (hC : ∀ i, Sup b g
     neg_smul, Finset.sum_neg_distrib, map_neg, Finsupp.coe_neg, Pi.neg_apply] at hz
     rw [← sub_eq_add_neg, sub_eq_zero] at hz
     exact hz.symm
-  · simp only [dif_neg h, smul_zero, Finset.sum_const_zero]
+  · simp only [dite_eq_right h, smul_zero, Finset.sum_const_zero]
     by_contra hne
     exact h (hC i l (Ne.symm hne)).1
 
@@ -1663,8 +1663,8 @@ theorem exists_basis_dl : ∀ {K : Type} [Field K] {n d : ℕ},
   intro K _ n d
   have hle : (cone ∅ : AddSubmonoid (Gam n d)) ≤ ⊤ := le_top
   let φ : MvPolynomial (E n d) K →ₐ[K] Lr K n d := (incl (K := K) hle).comp (poly n K ∅)
-  letI : Algebra (MvPolynomial (E n d) K) (Lr K n d) := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K (MvPolynomial (E n d) K) (Lr K n d) := IsScalarTower.of_algHom φ
+  let : Algebra (MvPolynomial (E n d) K) (Lr K n d) := φ.toRingHom.toAlgebra
+  have : IsScalarTower K (MvPolynomial (E n d) K) (Lr K n d) := IsScalarTower.of_algHom φ
   let s0 : MvPolynomial (E n d) K := (PolyBij.polyEquiv K).symm (mon K (allE : Gam n d) allE_mem)
   have hpe : ∀ a, poly n K ∅ ((PolyBij.polyEquiv (n := n) (d := d) K).symm a) = a := by
     intro a
@@ -1680,7 +1680,7 @@ theorem exists_basis_dl : ∀ {K : Type} [Field K] {n d : ℕ},
   have hunit : IsUnit (φ s0) := ⟨⟨φ s0, _, hmul, by rw [mul_comm]; exact hmul⟩, rfl⟩
   have hinj : Function.Injective φ :=
     (Away.incl_injective (K := K) hle).comp (PolyBij.poly_bijective (K := K) (n := n) (d := d)).1
-  haveI : IsLocalization (Submonoid.powers s0) (Lr K n d) := by
+  have : IsLocalization (Submonoid.powers s0) (Lr K n d) := by
     refine ⟨?_, ?_, ?_⟩
     · intro y
       obtain ⟨k, hk⟩ := (Submonoid.mem_powers_iff _ _).mp y.2
@@ -1913,7 +1913,7 @@ theorem model_ex (a : ℕ) : ExP (fun S : Finset (Fin d) => relOm K (I0 n K S) a
 theorem h4a : ChartFormsCechExact := by
   intro K _ _ A _ _ n d hd C a P e he
   obtain ⟨θ, hθ, nat, bc⟩ := exists_theta C
-  haveI := etale_Aa C
+  have := etale_Aa C
   have h1 := model_ex (K := K) (n := n) (d := d) a
   have h2 : ExP (fun S => relA C S a) (fun {S T} h => relMap (C.res h) (res_mem_I C (S := S) (T := T) h) a) := by
     refine _root_.GlobalTheory.CompanionTheory.SurjectionOntoH4.ExFlat.exP_flat (B := Bp K n d) (A := Aa C) (fun S => relOm K (I0 n K S) a) (fun S => relA C S a) _ ?_ _ ?_

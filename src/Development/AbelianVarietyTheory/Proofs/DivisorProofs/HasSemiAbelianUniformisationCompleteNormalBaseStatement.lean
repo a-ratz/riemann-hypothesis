@@ -200,7 +200,7 @@ namespace GlobalTheory.Mum
 theorem has_of_subsingleton : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) →
     ∀ D : DegData R (maximalIdeal R), Subsingleton D.toPre.X → Has D := by
   intro R _ _ _ hR D hX
-  haveI : IsNoetherianRing R := hR.1
+  have : IsNoetherianRing R := hR.1
   let A : PolAV (Spec (CommRingCat.of (FractionRing R))) := GlobalTheory.AmpleSpecialisation.baseChange D.toPre.P (jK R)
   let eA : (Over.pullback (jK R)).obj D.toPre.P.A ≅ A.A := by
     with_unfolding_all exact Iso.refl _
@@ -313,8 +313,8 @@ theorem qc_qs_tensor {S : Scheme.{0}} (A : Over S) [IsProper A.hom] :
 
 theorem exists_galois_polAV : ∀ (K : Type) [Field K] [CharZero K] (A : Over (Sp K)) [GrpObj A] [IsCommMonObj A], IsAbelianScheme A → ∀ PP : LB (G2 A).left, PP.IsLB → ∀ (Ω : Type) [Field Ω] [Algebra K Ω] [IsAlgClosed Ω] [Algebra.IsAlgebraic K Ω] (κ : (G2 ((Over.pullback (spMap (algebraMap K Ω))).obj A)).left ⟶ (G2 A).left), Geo.Tor.IsSquare (pullback.fst A.hom (spMap (algebraMap K Ω))) κ → ∀ L : LB ((Over.pullback (spMap (algebraMap K Ω))).obj A).left, L.IsLB → Out.Sym ((Over.pullback (spMap (algebraMap K Ω))).obj A) L → LBIso (abelian₂ ((Over.pullback (spMap (algebraMap K Ω))).obj A) L) (PP.pull κ) → Out.RelAmple ((Over.pullback (spMap (algebraMap K Ω))).obj A) L → Out.KTriv ((Over.pullback (spMap (algebraMap K Ω))).obj A) L → ∃ (E : Type) (_ : Field E) (_ : Algebra K E), FiniteDimensional K E ∧ IsGalois K E ∧ ∃ (A₁ : PolAV (Sp E)) (gen : (Over.pullback (spMap (algebraMap K E))).obj A ≅ A₁.A), IsMonHom gen.hom ∧ ∀ κ : (G2 ((Over.pullback (spMap (algebraMap K E))).obj A)).left ⟶ (G2 A).left, Geo.Tor.IsSquare (pullback.fst A.hom (spMap (algebraMap K E))) κ → LBIso (abelian₂ ((Over.pullback (spMap (algebraMap K E))).obj A) (A₁.L.pull gen.hom.left)) (PP.pull κ) := by
   intro K _ _ A _ _ hA PP hPP Ω _ _ _ _ κ hκ L hL hS hΛ hAmp hKT
-  haveI := hA.proper
-  haveI := hA.smooth
+  have := hA.proper
+  have := hA.smooth
   let σΩ : K →+* Ω := algebraMap K Ω
   let AΩ := (Over.pullback (spMap σΩ)).obj A
   have hAΩ : IsAbelianScheme AΩ := isAbelianScheme_pullback_obj _ A hA
@@ -361,21 +361,21 @@ theorem exists_galois_polAV : ∀ (K : Type) [Field K] [CharZero K] (A : Over (S
       (GlobalTheory.LamPull.lbIso_lam_pull hj hL₁ hL hw hjm₂).symm
       (LBIso.trans hΛΩ (pull_isLB hPPlb _) (pull_isLB hNF _) hΛ
         (GlobalTheory.ArcDataDescent.lbIso_pull_pull hPPlb κF jm₂ eΩ).symm)
-  haveI := hAF.proper
-  haveI := hAF.smooth
+  have := hAF.proper
+  have := hAF.smooth
   have hqq := qc_qs_tensor AF
   obtain ⟨s, hs⟩ := GlobalTheory.lbIso_descends_to_subfield_containing_finset F Ω (algebraMap F Ω) (G2 AF) (G2 AΩ) jm₂
     (abelian₂ AF L₁) (PP.pull κF) (GlobalTheory.SiegelDescent.isPullback_square hj.1 jm₂ hjm₂) hqq.1 hqq.2 hΛF hNF isoΩ
 
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
+  have : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
   let F' : IntermediateField K Ω := F ⊔ IntermediateField.adjoin K (s : Set Ω)
-  haveI : FiniteDimensional K (IntermediateField.adjoin K (s : Set Ω)) :=
+  have : FiniteDimensional K (IntermediateField.adjoin K (s : Set Ω)) :=
     IntermediateField.finiteDimensional_adjoin fun y _ => (Algebra.IsAlgebraic.isAlgebraic y).isIntegral
-  haveI : FiniteDimensional K F' := IntermediateField.finiteDimensional_sup _ _
+  have : FiniteDimensional K F' := IntermediateField.finiteDimensional_sup _ _
   let E : IntermediateField K Ω := IntermediateField.normalClosure K F' Ω
-  haveI hEf : FiniteDimensional K E := normalClosure.is_finiteDimensional K F' Ω
-  haveI hEg : IsGalois K E := by
-    haveI : Normal K E := inferInstance
+  have hEf : FiniteDimensional K E := normalClosure.is_finiteDimensional K F' Ω
+  have hEg : IsGalois K E := by
+    have : Normal K E := inferInstance
     exact IsGalois.mk
   have hFE : F ≤ E := le_sup_left.trans F'.le_normalClosure
   have hsE : (s : Set Ω) ⊆ E := fun y hy =>
@@ -428,8 +428,8 @@ theorem exists_galois_polAV : ∀ (K : Type) [Field K] [CharZero K] (A : Over (S
     LBIso.trans hL (pull_isLB hL₁ jm) (pull_isLB hLE jE) hw
       (GlobalTheory.ArcDataDescent.lbIso_pull_pull hL₁ χ jE ejm).symm
   have hd := GlobalTheory.PolDescent.rigidified_sym_kTriv_descend E Ω (algebraMap E Ω) AE AΩ jE LE L hAE hjE hLE hL hwE
-  haveI := hAE.proper
-  haveI := hAE.smooth
+  have := hAE.proper
+  have := hAE.smooth
   have ha := GlobalTheory.AmpleDescent.proper_relAmple_kTriv_of_fieldExtension E Ω (algebraMap E Ω) AE AΩ jE hjE LE L hLE hL
     hwE hAΩ.proper hAmp hKT
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim E AE hAE
@@ -490,15 +490,15 @@ namespace GlobalTheory.GalClosure
 
 theorem exists_finExt_fractionRing_of_galois : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (E : Type) [Field E] [Algebra (FractionRing R) E], FiniteDimensional (FractionRing R) E → IsGalois (FractionRing R) E → ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (t : E →+* FractionRing R'), FinExt ρ ∧ ∀ r : R, t (algebraMap (FractionRing R) E (algebraMap R (FractionRing R) r)) = algebraMap R' (FractionRing R') (ρ r) := by
   intro R _ _ _ hR E _ _ hfd hgal
-  letI := hfd
-  letI := hgal
+  let := hfd
+  let := hgal
   obtain ⟨hloc, hfe⟩ := finExt_integralClosure (E := E) hR
-  letI : Algebra R E := (baseMap R E).toAlgebra
-  haveI : IsScalarTower R (FractionRing R) E := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsIntegrallyClosed R := hR.1.2.2.1
-  haveI : CharZero R := hR.2
+  let : Algebra R E := (baseMap R E).toAlgebra
+  have : IsScalarTower R (FractionRing R) E := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsIntegrallyClosed R := hR.1.2.2.1
+  have : CharZero R := hR.2
   set R₂ := integralClosure R E
-  haveI : IsFractionRing R₂ E := integralClosure.isFractionRing_of_finite_extension (FractionRing R) E
+  have : IsFractionRing R₂ E := integralClosure.isFractionRing_of_finite_extension (FractionRing R) E
   let t : E ≃ₐ[R₂] FractionRing R₂ := IsLocalization.algEquiv (nonZeroDivisors R₂) E (FractionRing R₂)
   refine ⟨R₂, inferInstance, inferInstance, hloc, algebraMap R R₂, t.toRingEquiv.toRingHom, hfe, ?_⟩
   intro r
@@ -643,7 +643,7 @@ theorem exists_principal_algClosure : ∀ (K : Type) [Field K] [CharZero K] (A :
   have w := h.1.w
   obtain rfl := GlobalTheory.LamPull.isSquare_unique hκ (GlobalTheory.LamPull.exists_isSquare w)
   have hAΩab : IsAbelianScheme AΩ := GlobalTheory.isAbelianScheme_pullback_obj f A hA
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
   have hP' := pull_isLB hP (lift (pushPt w (fst AΩ AΩ)) (pushPt w (snd AΩ AΩ))).left
   have pmul : ∀ {T : Over (Sp Ω)} (x y : T ⟶ AΩ), pushPt w (x * y) = pushPt w x * pushPt w y :=
     fun x y => map_mul (pushHom h _) x y
@@ -778,14 +778,14 @@ theorem exists_extLam_finExt : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
   have hp := isGrpPullback_pullback G (jK R)
   obtain ⟨κ₀, hκ₀⟩ : ∃ κ₀ : (G2 ((Over.pullback (jK R)).obj G)).left ⟶ (G2 G).left,
       Geo.Tor.IsSquare (pullback.fst G.hom (jK R)) κ₀ := ⟨_, GlobalTheory.LamPull.exists_isSquare hp.1.w⟩
-  haveI : CharZero R := hR.2
-  haveI : CharZero (FractionRing R) :=
+  have : CharZero R := hR.2
+  have : CharZero (FractionRing R) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective R (FractionRing R))
   obtain ⟨E, _, _, hfd, hgal, A₁, gen, hgen, hLam⟩ :=
     exists_polAV_field (FractionRing R) ((Over.pullback (jK R)).obj G) hab (PP.pull κ₀) (pull_isLB hPP κ₀)
       (hsym κ₀ hκ₀) (hadd κ₀ hκ₀) (hamp κ₀ hκ₀) (hker κ₀ hκ₀)
   obtain ⟨R', _, _, _, ρ, t, hρ, ht⟩ := GlobalTheory.T.exists_finiteLocalExtension_fractionRing_of_galois R hR E hfd hgal
-  haveI := hgen
+  have := hgen
   have hsq : (spMap t) ≫ (spMap (algebraMap (FractionRing R) E)) ≫ jK R = jK R' ≫ spMap ρ := by
     simp only [jK, spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
     congr 2
@@ -1178,9 +1178,9 @@ theorem lam_rosati_field (K : Type) [Field K] (P : PolAV (Sp K)) (O : Type) [Rin
     (o : O) {T' : Over (Sp K)} (x z : T' ⟶ P.A) :
     haveI := P.isAb.comm
     lam (cls P.L P.isLB) (x ≫ oA.act (star o)) z = lam (cls P.L P.isLB) x (z ≫ oA.act o) := by
-  haveI := P.isAb.comm
-  haveI := oA.hom (star o)
-  haveI := oA.hom o
+  have := P.isAb.comm
+  have := oA.hom (star o)
+  have := oA.hom o
   have hr := oA.rosati (star o)
   rw [star_star] at hr
   obtain ⟨u, hu, -⟩ := exists_ros GlobalTheory.globalFns_holds P.isAb P.isLB _ _ hr
@@ -1190,7 +1190,7 @@ theorem lam_rosati_field (K : Type) [Field K] (P : PolAV (Sp K)) (O : Type) [Rin
 
 theorem kill_of_lam_triv : ∀ (K : Type) [Field K] (P : PolAV (Sp K)) (O : Type) [Ring O] [StarRing O] (oA : P.OAct O) (e f : O) (H : Over (Sp K)) (a : H ⟶ P.A) (r : P.A ⟶ H), r ≫ a = oA.act e → ∀ (T : Over (Sp K)) (y : T ⟶ P.A), (∃ t : LB.Gen (letI := P.isAb.comm; (abelian₂ P.A P.L).pull (lift (snd H T ≫ y) (fst H T ≫ a ≫ oA.act f) : H ⊗ T ⟶ G2 P.A).left), t.IsGen) → y ≫ oA.act (star e * star f) = toUnit T ≫ η[P.A] := by
   intro K _ P O _ _ oA e f H a r hra T y ⟨t, ht⟩
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   have h0 : lam (cls P.L P.isLB) (snd H T ≫ y) (fst H T ≫ a ≫ oA.act f) = 0 := by
     have := (cls_eq_zero_iff (pull_isLB (GlobalTheory.FullSiegel.isLB_lam P.isLB) _)).2 ⟨t, ht⟩
     rwa [GlobalTheory.FullSiegel.cls_lam_pull P.isLB] at this
@@ -1397,7 +1397,7 @@ theorem exists_trait_of_unif (R₀ : Type) [CommRing R₀] [IsDomain R₀] [IsLo
   have := hR.2
   have := hR.1.1
   obtain ⟨W, _, _, _, φ, hW, hφ, hc⟩ := GlobalTheory.PrimeUnif.exists_cdvr R₀ (maximalIdeal R₀)
-  haveI hloc : IsLocalHom φ := ((IsLocalRing.local_hom_tfae φ).out 1 5).mpr hc
+  have hloc : IsLocalHom φ := ((IsLocalRing.local_hom_tfae φ).out 1 5).mpr hc
   have := hW.1
   have hW' : AdmBase W (maximalIdeal W) := ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
   obtain ⟨hL, -, -, h4, h5⟩ := GlobalTheory.firstFiveLaws
@@ -1416,7 +1416,7 @@ theorem factor_unif_at_trait : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
     GlobalTheory.T.exists_finExt_cubicalSymmetric_even_factor R hR D D' F hA A' G' hG' U' oA oG hO G hG inc pr hinc hpr h1 h2
   obtain ⟨R₀, _, _, _, ρ₀, D₀, G₀, _, _, β₀, β₀₂, P, A₀, gen₀, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10⟩ :=
     GlobalTheory.T.semiabelian_uniformization_linear_action_descent R hR D D' F A' G' hG' U' oA oG hO G hG inc pr hinc hpr h1 h2 R₉ ρ₉ G₉ β₉ β₉₂ P₉ A₉ gen₉ a1 a2 a3 a4 a5 a6 a7 a8
-  haveI := hR.2
+  have := hR.2
   have hR₀ : Base R₀ := ⟨c1.1, charZero_of_injective_ringHom c1.2.1⟩
   obtain ⟨D'', U'', hLG, -⟩ := GlobalTheory.T.exists_uniformisation_completeLocal_evenOnTorus R₀ hR₀ G₀ P c5 c7 A₀ gen₀ c8 c9
   obtain ⟨W, _, _, _, φ, GW, _, _, β, DW, AW, UW, w1, w2, w3, w4, w5, -⟩ := exists_trait_of_unif R₀ hR₀ D'' A₀ G₀ c5 U''
@@ -1465,7 +1465,7 @@ theorem factor_unif : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], 
   obtain ⟨R₀, _, _, _, ρ₀, D₀, G₀, _, _, β₀, β₀₂, P, W, _, _, _, φ, GW, _, _, β, DW, AW, UW,
     hF₀, hD₀, hβ₀, hsq₀, hG₀, hW, hφi, hφl, hβ, hL, hDW, hLam⟩ :=
     GlobalTheory.T.semiabelian_uniformization_linear_action_transfer R hB D D' F hA A' G' hG' U' oA oG hlin G hG inc pr hinc hpr hip hpi
-  haveI := hB.2
+  have := hB.2
   have hB₀ : Base R₀ := ⟨hF₀.1, charZero_of_injective_ringHom hF₀.2.1⟩
   obtain ⟨R₁, _, _, _, ρ₁, D₁, G₁, _, _, β₁, A₁, U₁, hF₁, hD₁, hβ₁, hL₁⟩ :=
     GlobalTheory.T.exists_finiteExtension_uniformisation_of_trait_unif R₀ hB₀ D₀ G₀ P hG₀ W hW φ hφi hφl GW β DW AW UW hβ hL hDW

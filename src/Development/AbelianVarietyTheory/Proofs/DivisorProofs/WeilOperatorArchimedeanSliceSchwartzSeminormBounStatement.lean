@@ -115,9 +115,9 @@ theorem GlobalTheory.WeilCont.slice_bounds : ∀ (D : D7) (ψ : AddChar (AF D.ho
       ∀ᶠ p in nhds p0, ∀ x : κ → mixedEmbedding.mixedSpace D.host.F,
         ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x => om p Φ (GlobalTheory.WeilCont.adeleJoin D.host.F x y)) x‖ ≤ C := by
   intro D ψ hψ S T χS χT hS hT hrS hrT JA JB ξ hA hJB κ _ co hco ω hω om hom Φ hΦ y p0 k n
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace D.host.F) := Pi.borelSpace
-  haveI : MeasurableAdd (mixedEmbedding.mixedSpace D.host.F) := ContinuousAdd.measurableAdd
-  haveI : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace D.host.F)).IsAddHaarMeasure :=
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace D.host.F) := Pi.borelSpace
+  have : MeasurableAdd (mixedEmbedding.mixedSpace D.host.F) := ContinuousAdd.measurableAdd
+  have : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace D.host.F)).IsAddHaarMeasure :=
     MeasureTheory.Measure.pi.isAddHaarMeasure _
   obtain ⟨N, C, hC, hsob⟩ := _root_.GlobalTheory.schwartz_pow_mul_iteratedFDeriv_le_sqrt_sum_weighted_sq (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace D.host.F)) k n
   choose B hB using fun i j => GlobalTheory.T.weilTransport_archimedeanSlice_sobolev_bounds D ψ hψ S T χS χT hS hT hrS hrT JA JB ξ hA hJB κ co hco ω hω om hom Φ hΦ y p0 i j

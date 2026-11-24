@@ -1559,7 +1559,7 @@ theorem SliceLocalDimUpperZariski.ringKrullDim_le_of_finite {R S : Type*} [CommR
     (fun p : PrimeSpectrum S => PrimeSpectrum.comap (algebraMap R S) p) ?_
   intro p p' h
   have h' : p.asIdeal < p'.asIdeal := h
-  exact Ideal.IsIntegral.comap_lt_comap (R := R) h'
+  exact Ideal.IsIntegral.under_lt_under (R := R) h'
 
 theorem SliceLocalDimUpperZariski.localDim_le {n : ℕ} (I : Ideal (MvPolynomial (Fin n) ℂ))
     (q : Fin n → ℂ) (hq : q ∈ zeroSet I) :

@@ -203,7 +203,7 @@ theorem exists_model_abelian_lb : ∀ (R : Type) [CommRing R] (A : Over (Sp R)) 
   intro R _ A _ hA L hL
   obtain ⟨S0, B, gB, φ, -, hft, hB, hpb⟩ := GlobalTheory.T.abelianScheme_spreads_out_finiteType_subring R A ∅ hA
   have hpb' : IsGrpPullback A B (spMap (algebraMap S0 R)) φ := hpb
-  haveI : IsProper B.hom := IsAbelianScheme.proper (A := B)
+  have : IsProper B.hom := IsAbelianScheme.proper (A := B)
   have hqc : QuasiCompact B.hom := inferInstance
   have hsep : IsSeparated B.hom := inferInstance
   obtain ⟨R', hR', M, hM, hσ⟩ :=

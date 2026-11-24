@@ -94,8 +94,8 @@ theorem sum_emb_eq_trace_complex (K E : Type) [Field K] [Field E] [NumberField K
     (hres : ∀ i (y : K), emb i (algebraMap K E y) = φ₀ y)
     (hcard : Fintype.card ι = Module.finrank K E) (a : E) :
     ∑ i, emb i a = φ₀ (Algebra.trace K E a) := by
-  letI : Algebra K ℂ := φ₀.toAlgebra
-  haveI : FiniteDimensional K E := Module.Finite.of_restrictScalars_finite ℚ K E
+  let : Algebra K ℂ := φ₀.toAlgebra
+  have : FiniteDimensional K E := Module.Finite.of_restrictScalars_finite ℚ K E
   let f : ι → (E →ₐ[K] ℂ) := fun i => { emb i with commutes' := fun y => hres i y }
   have hfinj : Function.Injective f := fun i j h => hinj (RingHom.ext fun x => AlgHom.congr_fun h x)
   have hbij : Function.Bijective f :=
@@ -141,7 +141,7 @@ theorem sum_emb_dualBasis_complex (K E : Type) [Field K] [Field E] [NumberField 
   have h := hLI (fun i' => (∑ j, emb i' (e j) * emb k (((Algebra.traceForm K E).dualBasis (traceForm_nondegenerate K E) e) j)) - if i' = k then 1 else 0) (by
     funext x
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply, sub_mul,
-      Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [sub_eq_zero, hexp x]
     exact Finset.sum_congr rfl fun _ _ => mul_comm _ _) i
   rwa [sub_eq_zero] at h
@@ -333,7 +333,7 @@ theorem mem_mmR_iff (K E : Type) [Field K] [Field E] [NumberField K] [NumberFiel
   set P := (I : Submodule (𝓞 E) E).restrictScalars (𝓞 K)
   obtain ⟨s, hs, hspan, hli⟩ := exists_linearIndependent K ((I : Submodule (𝓞 E) E) : Set E)
   let e : Module.Basis s K E := Module.Basis.mk hli (by rw [Subtype.range_coe, hspan, fractional_ideal_span_top K E I hI])
-  letI : Fintype s := @Fintype.ofFinite _ (Module.Finite.finite_basis e)
+  let : Fintype s := @Fintype.ofFinite _ (Module.Finite.finite_basis e)
   have he : ∀ l, e l ∈ P := fun l => by rw [Module.Basis.mk_apply]; exact hs l.2
   obtain ⟨n, g, f, hg, hfg⟩ := fractional_ideal_dual_family K E I
   choose b hb using fun j => trace_dual_of_functional K E P e he (f j)
@@ -432,12 +432,12 @@ theorem mem_imI_iff {E : Type} [Field E] [NumberField E] (M : IntermediateField 
       ∀ b ∈ ((J⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E), x * liftM M (σ b) ∈ (algebraMap (𝓞 M) M).range := by
   have hJJ : (1 : E) ∈ (J : Submodule (𝓞 E) E) * ((J⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) :
       Submodule (𝓞 E) E) := by
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hJ, FractionalIdeal.coe_one]
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hJ, FractionalIdeal.coeToSubmodule_one]
     exact Submodule.mem_one.2 ⟨1, map_one _⟩
   have hint : ∀ z ∈ (J : Submodule (𝓞 E) E) * ((J⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) :
       Submodule (𝓞 E) E), liftM M (σ z) ∈ (algebraMap (𝓞 M) M).range := by
     intro z hz
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hJ, FractionalIdeal.coe_one] at hz
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hJ, FractionalIdeal.coeToSubmodule_one] at hz
     obtain ⟨y, rfl⟩ := Submodule.mem_one.1 hz
     exact liftM_int_ext M σ hσ y
   constructor
@@ -605,7 +605,7 @@ theorem index_imI {E : Type} [Field E] [NumberField E] (M : IntermediateField �
         (imI M σ J).toAddSubgroup).index : ℕ) : ℝ) ^ Module.finrank ℚ E *
       ((FractionalIdeal.absNorm J : ℚ) : ℝ) ^ Module.finrank ℚ M =
       |((Algebra.norm ℚ s : ℚ) : ℝ)| ^ Module.finrank ℚ E := by
-  letI : Algebra E M := (σ.codRestrict M hσ).toAlgebra
+  let : Algebra E M := (σ.codRestrict M hσ).toAlgebra
   have hlift : ∀ a, algebraMap E M a = liftM M (σ a) := fun a =>
     Subtype.ext (by rw [show ((liftM M (σ a) : M) : ℂ) = σ a by simp [liftM, hσ a]]; rfl)
   have hI : imI M σ J = Submodule.span (𝓞 M) (algebraMap E M '' (J : Set E)) := by

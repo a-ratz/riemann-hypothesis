@@ -132,7 +132,7 @@ theorem succ_trdeg_le_ringKrullDim (B : Type) [CommRing B] [IsDomain B] [CharZer
   obtain ⟨m, hm⟩ := Ideal.exists_maximal B
   have hft : Algebra.FiniteType ℤ (B ⧸ m) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℤ m) Ideal.Quotient.mk_surjective
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   have : @Algebra.FiniteType ℤ (B ⧸ m) _ _ (Ring.toIntAlgebra (B ⧸ m)) := by
     convert hft using 2 <;> first | rfl | exact Subsingleton.elim _ _
   have := finite_field_of_finiteType_int (B ⧸ m)

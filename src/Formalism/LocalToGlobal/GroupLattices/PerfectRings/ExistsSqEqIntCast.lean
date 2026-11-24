@@ -149,7 +149,7 @@ theorem frob_iter_WQ (x : WQ p n) : (WittVector.frobenius^[n]) x = x := by
       rw [Function.iterate_succ_apply', WittVector.coeff_frobenius_charP, ih, ← pow_mul, pow_succ]
   ext k
   rw [hit]
-  haveI : Fintype (F1 p n) := Fintype.ofFinite _
+  have : Fintype (F1 p n) := Fintype.ofFinite _
   have hcard : Fintype.card (F1 p n) = p ^ n := by
     rw [Fintype.card_eq_nat_card]; exact GaloisField.card p n (NeZero.ne n)
   rw [← hcard, FiniteField.pow_card]
@@ -325,8 +325,8 @@ private theorem isAdicComplete_span_p_wittVector (k : Type) [Field k] [CharP k p
     intro i hi
     simp only [WittVector.coeff_mk]
     exact ((hmod (i + 1) (f (i + 1)) (f m)).mp (hf (by omega)) i (by omega)).symm
-  haveI := H
-  haveI := P
+  have := H
+  have := P
   constructor
 
 private theorem mem_span_pow_smul_top_pi_iff {R : Type*} [CommRing R] (π : R) (d m : ℕ) (v : Fin d → R) :
@@ -350,9 +350,9 @@ private theorem mem_span_pow_smul_top_pi_iff {R : Type*} [CommRing R] (π : R) (
 
 theorem jW_finite : (jW p n).Finite := by
   classical
-  haveI hc1 := isAdicComplete_span_p_wittVector p (F1 p n)
-  haveI hc2 := isAdicComplete_span_p_wittVector p (F2 p n)
-  haveI : IsPrecomplete (Ideal.span {(p : WQ p n)}) (Fin 2 → WQ p n) := precomplete_pi _ 2
+  have hc1 := isAdicComplete_span_p_wittVector p (F1 p n)
+  have hc2 := isAdicComplete_span_p_wittVector p (F2 p n)
+  have : IsPrecomplete (Ideal.span {(p : WQ p n)}) (Fin 2 → WQ p n) := precomplete_pi _ 2
   have hfr : Module.finrank (F1 p n) (F2 p n) = 2 := FiniteField.finrank_extension _ _ _
   let b : Module.Basis (Fin 2) (F1 p n) (F2 p n) := Module.finBasisOfFinrankEq _ _ hfr
   let e : Fin 2 → W2 p n := fun j => WittVector.teichmuller p (b j)
@@ -401,7 +401,7 @@ theorem jW_finite : (jW p n).Finite := by
         Finset.mul_sum]
       ring
   unfold RingHom.Finite
-  letI : Algebra (WQ p n) (W2 p n) := (jW p n).toAlgebra
+  let : Algebra (WQ p n) (W2 p n) := (jW p n).toAlgebra
   refine ⟨⟨Finset.univ.image e, ?_⟩⟩
   rw [Submodule.eq_top_iff']
   intro w
@@ -454,8 +454,8 @@ theorem jW_finite : (jW p n).Finite := by
 theorem isSquare_algebraMap (hp2 : p ≠ 2) (a : F1 p n) : IsSquare (algebraMap (F1 p n) (F2 p n) a) := by
   by_cases ha : a = 0
   · rw [ha, map_zero]; exact ⟨0, by simp⟩
-  haveI : Fintype (F1 p n) := Fintype.ofFinite _
-  haveI : Fintype (F2 p n) := Fintype.ofFinite _
+  have : Fintype (F1 p n) := Fintype.ofFinite _
+  have : Fintype (F2 p n) := Fintype.ofFinite _
   have hq : Fintype.card (F1 p n) = p ^ n := by
     rw [Fintype.card_eq_nat_card]; exact GaloisField.card p n (NeZero.ne n)
   have hq2 : Fintype.card (F2 p n) = (p ^ n) ^ 2 := by
@@ -476,8 +476,8 @@ theorem isSquare_algebraMap (hp2 : p ≠ 2) (a : F1 p n) : IsSquare (algebraMap 
 omit [NeZero n] in
 theorem sq_lift (c : W2 p n) (y0 : F2 p n) (hc : c.coeff 0 = y0 * y0) (hy00 : y0 ≠ 0)
     (h2 : (2 : F2 p n) ≠ 0) : ∃ y : W2 p n, y ^ 2 = c := by
-  haveI := isAdicComplete_span_p_wittVector p (F2 p n)
-  haveI := IsAdicComplete.henselianRing (W2 p n) (Ideal.span {(p : W2 p n)})
+  have := isAdicComplete_span_p_wittVector p (F2 p n)
+  have := IsAdicComplete.henselianRing (W2 p n) (Ideal.span {(p : W2 p n)})
   have hmon : (Polynomial.X ^ 2 - Polynomial.C c).Monic := Polynomial.monic_X_pow_sub_C c (by norm_num)
   set a0 : W2 p n := WittVector.teichmuller p y0 with ha0
   have ha00 : WittVector.constantCoeff a0 = y0 := WittVector.teichmuller_coeff_zero p y0

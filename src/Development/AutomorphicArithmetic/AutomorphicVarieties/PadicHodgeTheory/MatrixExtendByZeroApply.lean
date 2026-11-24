@@ -165,7 +165,7 @@ private theorem triv {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalS
   constructor
   · intro h
     rcases subsingleton_or_nontrivial A with hA | hA
-    · haveI := Module.subsingleton A V
+    · have := Module.subsingleton A V
       rw [Subsingleton.elim c 0]
       exact zero_mem _
     · refine key.1 (((isCrys_isDR_sub_quot φ hφ σ ρ' hcont hρ' j hjρ).1 ?_).1 h)
@@ -284,17 +284,17 @@ theorem UpperTheory.V.Loc.crExt :
     · have h1 := hcτ (g * h)
       rw [map_mul, Module.End.mul_apply, hcτ, map_add (f := _), hcτ, ← hfτ, add_assoc, add_right_inj] at h1
       rw [map_add (f := _), h1]
-  haveI : H.FiniteIndex := by
+  have : H.FiniteIndex := by
     obtain ⟨K, e, -, he, -⟩ := openField φ hφ
-    haveI := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK K
-    haveI : CompactSpace G := e.symm.surjective.compactSpace he
-    haveI := H.quotient_finite_of_isOpen hH
+    have := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK K
+    have : CompactSpace G := e.symm.surjective.compactSpace he
+    have := H.quotient_finite_of_isOpen hH
     exact H.finiteIndex_of_finite_quotient
   have hφH : IsOpenEmbedding (φ.comp H.subtype) := hφ.comp hH.isOpenEmbedding_subtypeVal
   have res : ∀ {X : Type} [AddCommGroup X] [Module A X] [TopologicalSpace X] (π : Representation A G X),
       ReciprocityTheory.Gal.ContAction π → ReciprocityTheory.Gal.ContAction (π.comp H.subtype : Representation A H X) :=
-    fun π hπ => hπ.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
-  have hκH : Continuous fun g : H => ((κ.comp H.subtype) g : A) := hκ.comp continuous_subtype_val
+    fun π hπ => hπ.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
+  have hκH : Continuous fun g : H => ((κ.comp H.subtype) g : A) := hκ.comp continuous_subtypeVal
   have hκH' := cont_inv _ hκH
   have hκcr' : IsCr (φ.comp H.subtype) (chRep (κ.comp H.subtype)) := hκcr
   have hinv := isCr_inv _ hφH (κ.comp H.subtype) hκH hκcr'
@@ -321,4 +321,4 @@ theorem UpperTheory.V.Loc.crExt :
     rwa [h4] at h3
   rw [CrOn, h2, z1fDesc φ (twist κ⁻¹ ρ) H c hZ]
   exact triv _ hφH _ _ (res _ hτ) (res _ hτ') f p s (fun h : H => c h) hf hex hs (fun g => hfτ g) (fun g => hcτ g)
-    ⟨hZ.1.comp continuous_subtype_val, fun g h => hZ.2 g h⟩ h1
+    ⟨hZ.1.comp continuous_subtypeVal, fun g h => hZ.2 g h⟩ h1

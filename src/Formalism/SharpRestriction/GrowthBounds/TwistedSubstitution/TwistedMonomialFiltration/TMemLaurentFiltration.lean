@@ -209,7 +209,7 @@ theorem flt_hom_monomial {B₀ B' : Type*} [CommRing B₀] [CommRing B'] {σ : T
   · simpa using Fl'.one_mem
   · intro a b f _ _ ih
     have e : monomial (Finsupp.single a b + f) (1 : B₀) = monomial (Finsupp.single a b) 1 * monomial f 1 := by
-      rw [monomial_mul, one_mul]
+      rw [monomial_mul_monomial, one_mul]
     rw [e, ← X_pow_eq_monomial, map_mul, map_pow, map_add (f := _)]
     refine Fl'.mul_mem ?_ ih
     have hp := flt_pow_mem Fl' (hX a) b

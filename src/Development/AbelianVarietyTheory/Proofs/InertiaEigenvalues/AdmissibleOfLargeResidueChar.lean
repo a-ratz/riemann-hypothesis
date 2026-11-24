@@ -108,16 +108,16 @@ theorem exists_retr_abs {Z O O' K K' : Type} [CommRing Z] [CommRing O] [CommRing
     (f : O →+* O') (hf : ∀ c, algebraMap Z O' c = f (algebraMap Z O c)) (j : O' →+* K') (φ : K →+* K')
     (hc : ∀ a, φ (algebraMap O K a) = j (f a)) (hs : ∀ x : K', ∃ a : K, a ≠ 0 ∧ ∃ y, j y = φ a * x) :
     ∃ R : K' →+ K, (∀ a x, R (φ a * x) = a * R x) ∧ (∀ a, R (φ a) = a) ∧ ∀ x, ∃ y, j y = φ (R (j x)) := by
-  letI : Algebra K K' := φ.toAlgebra
-  letI : Algebra O K' := (φ.comp (algebraMap O K)).toAlgebra
-  letI : Algebra O O' := f.toAlgebra
-  letI : Algebra O' K' := j.toAlgebra
-  haveI : IsScalarTower O K K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower O O' K' := IsScalarTower.of_algebraMap_eq hc
-  haveI : IsScalarTower Z O O' := IsScalarTower.of_algebraMap_eq hf
-  haveI : Module.Finite O O' := Module.Finite.of_restrictScalars_finite Z _ _
+  let : Algebra K K' := φ.toAlgebra
+  let : Algebra O K' := (φ.comp (algebraMap O K)).toAlgebra
+  let : Algebra O O' := f.toAlgebra
+  let : Algebra O' K' := j.toAlgebra
+  have : IsScalarTower O K K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower O O' K' := IsScalarTower.of_algebraMap_eq hc
+  have : IsScalarTower Z O O' := IsScalarTower.of_algebraMap_eq hf
+  have : Module.Finite O O' := Module.Finite.of_restrictScalars_finite Z _ _
   let L : Submodule O K' := LinearMap.range (IsScalarTower.toAlgHom O O' K').toLinearMap
-  haveI : Module.Finite O L := inferInstance
+  have : Module.Finite O L := inferInstance
   have hsp : Submodule.span K (L : Set K') = ⊤ := by
     rw [eq_top_iff]
     intro x _
@@ -180,11 +180,11 @@ variable {l : ℕ} [Fact l.Prime]
 theorem exists_retr {LL LL' : FinExt l} (h : LL.1 ≤ LL'.1) :
     ∃ R : ↥LL'.1 →+ ↥LL.1, (∀ a x, R (IntermediateField.inclusion h a * x) = a * R x) ∧
       (∀ a, R (IntermediateField.inclusion h a) = a) ∧ ∀ x ∈ OL LL', R x ∈ OL LL := by
-  haveI := LL.2
-  haveI := LL'.2
-  haveI : IsDedekindDomain ↥(OL LL) := integralClosure.isDedekindDomain ℤ_[l] ℚ_[l] ↥LL.1
-  haveI : IsFractionRing ↥(OL LL) ↥LL.1 := integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
-  haveI : Module.Finite ℤ_[l] ↥(OL LL') :=
+  have := LL.2
+  have := LL'.2
+  have : IsDedekindDomain ↥(OL LL) := integralClosure.isDedekindDomain ℤ_[l] ℚ_[l] ↥LL.1
+  have : IsFractionRing ↥(OL LL) ↥LL.1 := integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
+  have : Module.Finite ℤ_[l] ↥(OL LL') :=
     IsIntegralClosure.finite ℤ_[l] ℚ_[l] ↥LL'.1 (integralClosure ℤ_[l] ↥LL'.1)
   obtain ⟨R, h1, h2, h3⟩ := exists_retr_abs (Z := ℤ_[l]) (O := ↥(OL LL)) (O' := ↥(OL LL')) (K := ↥LL.1)
     (K' := ↥LL'.1) (incO h) (fun _ => rfl) (OL LL').val.toRingHom (IntermediateField.inclusion h).toRingHom
@@ -281,10 +281,10 @@ theorem chiT_cont_isCrys_multV : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (
     rw [e]
     exact (D.nd.chi_cont i c).mul ((D.nd.chi_cont i 1).comp continuous_inv)
   have hi : Continuous (IntermediateField.inclusion C.le) :=
-    continuous_induced_rng.2 continuous_subtype_val
+    continuous_induced_rng.2 continuous_subtypeVal
   have hψc : Continuous fun g => ((tableLineDegreeTwo.charL (LL := ↥C.LL.1) ψ g : (↥C.LL.1)ˣ) : ↥C.LL.1) :=
-    hi.comp (continuous_subtype_val.comp ((D.nbr i w hw).eO_cont.comp
-      (hO.comp (continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw)))))
+    hi.comp (continuous_subtypeVal.comp ((D.nbr i w hw).eO_cont.comp
+      (hO.comp (continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw)))))
   have e2 : (fun g => ((tableLineDegreeTwo.charL (LL := ↥C.LL.1) (chiT C θ c) g : (↥C.LL.1)ˣ) : ↥C.LL.1)) =
       fun g => ((tableLineDegreeTwo.charL (LL := ↥C.LL.1) ψ g : (↥C.LL.1)ˣ) : ↥C.LL.1) *
         ((tableLineDegreeTwo.charL (LL := ↥C.LL.1) θ g : (↥C.LL.1)ˣ) : ↥C.LL.1) := funext hsplit
@@ -406,16 +406,16 @@ theorem finiteDimensional_Ks_one {l : ℕ} [Fact l.Prime] (K : FinExt l) (hK : K
   have hfin : ({x : Om l | x ^ (l ^ 1) = 1}).Finite := by
     apply ((Polynomial.nthRoots (l ^ 1) (1 : Om l)).toFinset.finite_toSet).subset
     intro x hx
-    simp only [Set.mem_setOf_eq] at hx
+    simp only [Set.mem_ofPred_eq] at hx
     rw [Finset.mem_coe, Multiset.mem_toFinset]
     exact (Polynomial.mem_nthRoots (pow_pos hl 1)).2 hx
-  haveI : Finite ({x : Om l | x ^ (l ^ 1) = 1}) := hfin.to_subtype
+  have : Finite ({x : Om l | x ^ (l ^ 1) = 1}) := hfin.to_subtype
   have hA : FiniteDimensional ℚ_[l]
       ↥(IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ 1) = 1}) := by
     apply IntermediateField.finiteDimensional_adjoin
     intro x hx
     refine ⟨Polynomial.X ^ (l ^ 1) - 1, Polynomial.monic_X_pow_sub_C 1 (pow_pos hl 1).ne', ?_⟩
-    simp only [Set.mem_setOf_eq] at hx
+    simp only [Set.mem_ofPred_eq] at hx
     simp only [pow_one] at hx
     simp [hx]
   unfold Ks
@@ -428,11 +428,11 @@ theorem exists_caseA_enl : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (�
   intro D i w hw hs hq hd
   have h2 : D.nd.l i ≠ 2 := UpperTheory.Small.ne_two D.host hs
   have hur : (D.nbr i w hw).Kw.1 ≤ MaximalUnramifiedExtension (D.nd.l i) := GlobalTheory.HubLoc.kw_le_Kur_all D i hs hq hd w hw
-  haveI := finiteDimensional_Ks_one (D.nbr i w hw).Kw hur
-  haveI : FiniteDimensional ℚ_[D.nd.l i] ↥(D.nbr i w hw).LL.1 := (D.nbr i w hw).LL.2
+  have := finiteDimensional_Ks_one (D.nbr i w hw).Kw hur
+  have : FiniteDimensional ℚ_[D.nd.l i] ↥(D.nbr i w hw).LL.1 := (D.nbr i w hw).LL.2
   let N : IntermediateField ℚ_[D.nd.l i] (Om (D.nd.l i)) :=
     IntermediateField.normalClosure ℚ_[D.nd.l i] ↥(Ks (D.nbr i w hw).Kw 1) (Om (D.nd.l i))
-  haveI hN : FiniteDimensional ℚ_[D.nd.l i] ↥N := normalClosure.is_finiteDimensional _ _ _
+  have hN : FiniteDimensional ℚ_[D.nd.l i] ↥N := normalClosure.is_finiteDimensional _ _ _
   let LL : FinExt (D.nd.l i) := ⟨N ⊔ (D.nbr i w hw).LL.1, inferInstance⟩
   refine ⟨⟨LL, le_sup_right⟩, hur, h2, le_rfl, fun h => absurd h h2, ?_, ?_⟩
   · have h0 : K0 (D.nbr i w hw).Kw = (D.nbr i w hw).Kw.1 := inf_eq_left.mpr hur
@@ -593,10 +593,10 @@ theorem jTil_shift_block : ∀ (l n t : ℕ) (h w η : ZMod n → ℕ) (typ : ZM
       unfold Formalism.WachCohomologyFacts.V2.InWinN
       cases hty : typ a
       · have := hB hty
-        simp only [Bool.false_eq_true, if_false]
+        simp only [Bool.false_eq_true, ite_false]
         constructor <;> omega
       · have := hG hty
-        simp only [if_true]
+        simp only [ite_true]
         constructor <;> omega
     have hy : b + (w a : ℤ) ∈ Formalism.WachCohomologyFacts.Top.GlobalTheory (w a) t := by
       unfold Formalism.WachCohomologyFacts.Top.GlobalTheory
@@ -608,13 +608,13 @@ theorem jTil_shift_block : ∀ (l n t : ℕ) (h w η : ZMod n → ℕ) (typ : ZM
   unfold tableLineDegreeTwo.jTil
   by_cases hbS : (b : ℚ) ∈ S
   · have hn := hboth hbS
-    rw [if_pos (Or.inl hbS), if_neg (by rwa [hwin]), hcS hbS]
+    rw [ite_eq_left (Or.inl hbS), ite_eq_right (by rwa [hwin]), hcS hbS]
     simp
   · rw [hcN hbS]
     by_cases hbl : 0 ≤ b ∧ b ≤ (t : ℤ) - 1
-    · rw [if_pos (Or.inr (hblk.2 hbl)), if_pos (hwin.2 hbl)]
+    · rw [ite_eq_left (Or.inr (hblk.2 hbl)), ite_eq_left (hwin.2 hbl)]
       simp
-    · rw [if_neg (by rintro (h1 | h1); exact hbS h1; exact hbl (hblk.1 h1)), if_neg (by rwa [hwin])]
+    · rw [ite_eq_right (by rintro (h1 | h1); exact hbS h1; exact hbl (hblk.1 h1)), ite_eq_right (by rwa [hwin])]
       simp
 
 end GlobalTheory
@@ -633,7 +633,7 @@ namespace GlobalTheory.UseLoc.JumpBlock
 
 theorem reflS_blockJ_iff (D : D7) (q : ℚ) :
     AdmissibleParameterJ.refl D q ∈ AdmissibleParameterJ.blockJ D ↔ ∃ c : ℕ, c < D.R.t ∧ q = c := by
-  simp only [AdmissibleParameterJ.refl, AdmissibleParameterJ.blockJ, Set.mem_setOf_eq]
+  simp only [AdmissibleParameterJ.refl, AdmissibleParameterJ.blockJ, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨c, hc, hq⟩
     refine ⟨D.R.t - 1 - c, by omega, ?_⟩
@@ -653,10 +653,10 @@ theorem jumps_iff : ∀ (D : D7) (up : Bool) (j : ℕ) (ρ : D.what₂.Tau) (q :
   intro D up j ρ q
   cases up
   · simp only [AdmissibleParameterJ.JJ, AdmissibleParameterJ.JW, AdmissibleParameterJ.Jm, AdmissibleParameterJ.Jp, AdmissibleParameterJ.cloudT, AdmissibleParameterJ.lowT, AdmissibleParameterJ.reflS,
-      Set.mem_union, Set.mem_setOf_eq, Bool.false_eq_true, if_false]
+      Set.mem_union, Set.mem_ofPred_eq, Bool.false_eq_true, ite_false]
     rw [reflS_blockJ_iff]
   · simp only [AdmissibleParameterJ.JJ, AdmissibleParameterJ.JW, AdmissibleParameterJ.Jp, AdmissibleParameterJ.cloudT, AdmissibleParameterJ.lowT, AdmissibleParameterJ.blockJ,
-      Set.mem_union, Set.mem_setOf_eq, if_true]
+      Set.mem_union, Set.mem_ofPred_eq, ite_true]
 
 end GlobalTheory.UseLoc.JumpBlock
 end -- clump:auto
@@ -889,9 +889,9 @@ set_option synthInstance.maxHeartbeats 200000 in
 set_option maxHeartbeats 800000 in
 theorem charpoly_congr : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))) (ρ : D.nd.X i → (GE D.nd →* GL (Fin D.R.r) (D.nd.O i))) (π : D.nd.X i) (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : w ∈ placesOver D.host.E (D.nd.l i)) (C : TruncatedSeriesCountingIdentities.CoefExt D i w hw) (θ : Br.G D.nbr i w hw →* (↥(OL C.LL))ˣ) (lam : ↥(OL C.LL)), Irreducible lam → TruncatedSeriesCountingIdentities.admG3 i r ρ π → ∀ (x : D.nd.X i) (g : Br.G D.nbr i w hw) (k : ℕ), ∃ y : ↥(OL C.LL), (LinearMap.charpoly (repV C (twistM (locOC C (rTwO D.nd i r x)) θ) g) - tableLineDegreeTwo.resPoly (repV C (twistM (locOC C (WpO D.nd i ρ π)) θ)) (chiT C θ) D.R.t g).coeff k = algebraMap (↥(OL C.LL)) (↥C.LL.1) (lam * y) := by
   intro D i r ρ π w hw C θ lam hlam hG3 x g k
-  haveI : CharZero ↥C.LL.1 :=
+  have : CharZero ↥C.LL.1 :=
     charZero_of_injective_algebraMap (algebraMap ℚ_[D.nd.l i] ↥C.LL.1).injective
-  haveI : Infinite ↥(OL C.LL) := Infinite.of_injective (fun n : ℕ => (n : ↥(OL C.LL))) (fun a b hab => by
+  have : Infinite ↥(OL C.LL) := Infinite.of_injective (fun n : ℕ => (n : ↥(OL C.LL))) (fun a b hab => by
     have := congrArg (fun z : ↥(OL C.LL) => (z : ↥C.LL.1)) hab
     simpa using this)
   obtain ⟨s, hs_def⟩ : ∃ s : ↥(OL C.LL), s = ((θ g : (↥(OL C.LL))ˣ) : ↥(OL C.LL)) *
@@ -945,12 +945,12 @@ theorem twistM_repV_cont : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (�
     have e : (fun y : ↥(OL (D.nbr i w hw).LL) => ((incO C.le y : ↥(OL C.LL)) : ↥C.LL.1)) =
         fun y => IntermediateField.inclusion C.le y.1 := rfl
     rw [e]
-    exact (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+    exact (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
   have hmat : Continuous fun g => mapM (algebraMap ↥(OL C.LL) ↥C.LL.1) (twistM (locOC C M) θ) g := by
     refine continuous_matrix fun a b => ?_
     have h1 : Continuous fun g : Br.G D.nbr i w hw =>
         M ((decS D.nd w) ((Br.ι (D.nbr i w hw)) g)) a b :=
-      (hM.matrix_elem a b).comp (continuous_subtype_val.comp (Br.ι_cont (D.nbr i w hw)))
+      (hM.matrix_elem a b).comp (continuous_subtypeVal.comp (Br.ι_cont (D.nbr i w hw)))
     have h2 := hinc.comp ((D.nbr i w hw).eO_cont.comp h1)
     have e : (fun g => mapM (algebraMap ↥(OL C.LL) ↥C.LL.1) (twistM (locOC C M) θ) g a b) =
         fun g => ((tableLineDegreeTwo.charL (LL := ↥C.LL.1) θ g : (↥C.LL.1)ˣ) : ↥C.LL.1) *
@@ -1008,8 +1008,8 @@ theorem exists_setC : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
   choose τa _hτa hτu using hτ
   have hJτ := fun a => hJ i r hGood w hw C (τa a)
   choose gA ρA _hRead hX hW using hJτ
-  haveI := (Br.PD D.loc D.nbr i w hw).finK₀
-  haveI : NeZero (finrank ℚ_[D.nd.l i] ↥(K0 (D.nbr i w hw).Kw)) := ⟨Module.finrank_pos.ne'⟩
+  have := (Br.PD D.loc D.nbr i w hw).finK₀
+  have : NeZero (finrank ℚ_[D.nd.l i] ↥(K0 (D.nbr i w hw).Kw)) := ⟨Module.finrank_pos.ne'⟩
   obtain ⟨h, w', η, typ, U, hS, hU⟩ := hPosition _ (fun a => decide (AdmissibleParameterJ.TypeU D ep (gA a))) ρA
   obtain ⟨θ, hθc, hθcr, hθj⟩ := (hB3 (D.nd.l i) (D.nbr i w hw).Kw C.LL hA).1 (fun a => (w' a : ℤ))
   have hθj' : ∀ a τ, tableLineDegreeTwo.Over (embC HW C hA) a τ → ∀ b,
@@ -1027,9 +1027,9 @@ theorem exists_setC : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     rw [hτu a τ hO, ((hW a) ρ π hZ hDec b).2.1]
     obtain ⟨h1, h2⟩ := hU a b
     by_cases hb : ((b : ℤ) : ℚ) ∈ AdmissibleParameterJ.JW D (decide (AdmissibleParameterJ.TypeU D ep (gA a))) (D.nd.j i) (ρA a)
-    · rw [if_pos hb, h1.2 hb]
+    · rw [ite_eq_left hb, h1.2 hb]
       simp
-    · rw [if_neg hb]
+    · rw [ite_eq_right hb]
       have : (U a).count (b + w' a) ≠ 1 := fun e => hb (h1.1 e)
       omega
   have hL6 := GlobalTheory.UseLoc.crys_Wp_rTw D i r ρ π w hw C hGood hZ hG2 hDec
@@ -1097,8 +1097,8 @@ theorem algebraMap_ne_zero (LL : FinExt l) {d : ℤ_[l]} (hd : d ≠ 0) : algebr
   exact (map_eq_zero_iff _ (IsFractionRing.injective ℤ_[l] ℚ_[l])).1 h1
 
 theorem exists_mul (LL : FinExt l) (x : LL.1) : ∃ d : ℤ_[l], d ≠ 0 ∧ IsIntegral ℤ_[l] (d • x) := by
-  haveI := LL.2
-  haveI : Algebra.IsAlgebraic ℤ_[l] LL.1 :=
+  have := LL.2
+  have : Algebra.IsAlgebraic ℤ_[l] LL.1 :=
     (IsFractionRing.comap_isAlgebraic_iff (A := ℤ_[l]) (K := ℚ_[l]) (C := LL.1)).2 inferInstance
   exact (Algebra.IsAlgebraic.isAlgebraic x).exists_integral_multiple
 
@@ -1211,7 +1211,7 @@ theorem exists_linRetraction_of_isTorsionFree {R S : Type} [CommRing R] [IsDomai
     [Module.IsTorsionFree R (S ⧸ LinearMap.range (Algebra.linearMap R S))] :
     ∃ r : S →ₗ[R] R, r 1 = 1 := by
   set N := LinearMap.range (Algebra.linearMap R S) with hN
-  haveI : Module.Free R (S ⧸ N) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free R (S ⧸ N) := Module.free_of_finite_type_torsion_free'
   obtain ⟨s, hs⟩ := Module.projective_lifting_property N.mkQ LinearMap.id N.mkQ_surjective
   let φ : S →ₗ[R] S := LinearMap.id - s ∘ₗ N.mkQ
   have hφ : ∀ x, φ x ∈ N := by
@@ -1282,13 +1282,13 @@ set_option synthInstance.maxHeartbeats 400000 in
 theorem exists_intRetraction : ∀ {l : ℕ} [Fact l.Prime] {LL LL' : FinExt l} (h : LL.1 ≤ LL'.1),
     ∃ r : ↥(OL LL') →+ ↥(OL LL), (∀ (a : ↥(OL LL)) (x : ↥(OL LL')), r (incO h a * x) = a * r x) ∧ r 1 = 1 := by
   intro l _ LL LL' h
-  letI A : Algebra ↥(OL LL) ↥(OL LL') := (incO h).toAlgebra
-  haveI : IsDiscreteValuationRing ↥(OL LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr LL
-  haveI T : IsScalarTower ℤ_[l] ↥(OL LL) ↥(OL LL') := IsScalarTower.of_algebraMap_eq (fun x => by
+  let A : Algebra ↥(OL LL) ↥(OL LL') := (incO h).toAlgebra
+  have : IsDiscreteValuationRing ↥(OL LL) := Formalism.BasicNotions.Examples₂.LB.OL_dvr LL
+  have T : IsScalarTower ℤ_[l] ↥(OL LL) ↥(OL LL') := IsScalarTower.of_algebraMap_eq (fun x => by
     apply Subtype.ext; apply Subtype.ext; rfl)
-  haveI : Module.Finite ℤ_[l] ↥(OL LL') := Formalism.BasicNotions.Examples₂.LB.OL_finite LL'
-  haveI : Module.Finite ↥(OL LL) ↥(OL LL') := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
-  haveI := isTorsionFree_quot_range (R := ↥(OL LL)) (S := ↥(OL LL')) (fun a ha b z hb => incO_div h ha hb)
+  have : Module.Finite ℤ_[l] ↥(OL LL') := Formalism.BasicNotions.Examples₂.LB.OL_finite LL'
+  have : Module.Finite ↥(OL LL) ↥(OL LL') := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
+  have := isTorsionFree_quot_range (R := ↥(OL LL)) (S := ↥(OL LL')) (fun a ha b z hb => incO_div h ha hb)
   obtain ⟨r, hr⟩ := exists_linRetraction_of_isTorsionFree (R := ↥(OL LL)) (S := ↥(OL LL')) (incO_injective h)
   refine ⟨r.toAddMonoidHom, fun a x => ?_, hr⟩
   show r (incO h a * x) = a * r x

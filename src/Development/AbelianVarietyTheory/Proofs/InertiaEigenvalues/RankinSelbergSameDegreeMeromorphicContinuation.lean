@@ -168,7 +168,7 @@ theorem measurable_chart_prod {F : GA E a → ℂ} (hF : Continuous F) :
     by_cases hp : p ∈ (Set.univ ×ˢ invSet E a : Set (GA E a × Lie E a))
     · rw [Set.piecewise_eq_of_mem _ _ _ hp]
     · rw [Set.piecewise_eq_of_notMem _ _ _ hp]
-      exact dif_neg fun h => hp ⟨Set.mem_univ _, h⟩
+      exact dite_eq_right fun h => hp ⟨Set.mem_univ _, h⟩
   rw [e]
   exact h1.measurable_piecewise continuousOn_const (isOpen_univ.prod isOpen_invSet).measurableSet
 
@@ -223,9 +223,9 @@ theorem pet_kerInf_left (hω : ω.IsUnitary) {X : Type} [MeasurableSpace X] {ν 
     (h : F ∈ bddForms E a ω) (h' : ψ ∈ bddForms E a ω) :
     pet (latticeGL E a) μ (fun g => ∫ x, k x * F (g * infGL E a (γ x)) ∂ν) ψ =
       ∫ x, k x * pet (latticeGL E a) μ (fun g => F (g * infGL E a (γ x))) ψ ∂ν := by
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have hD := isFundamentalDomain_stdDom (latticeGL E a) μ
-  haveI : IsFiniteMeasure (μ.restrict (stdDom (latticeGL E a))) :=
+  have : IsFiniteMeasure (μ.restrict (stdDom (latticeGL E a))) :=
     ⟨by rw [Measure.restrict_apply_univ, ← quotMeasure_univ hD]; exact measure_lt_top _ _⟩
   obtain ⟨C, hC⟩ := h.2.2.2
   obtain ⟨D, hD'⟩ := h'.2.2.2
@@ -527,7 +527,7 @@ theorem integral_absDet_cpow_entire : ∀ (E : Type) [Field E] [NumberField E] [
   set δ : GA E a → ℝ := fun g => (ideleModule E (GeneralLinearGroup.det g) : ℝ) with hδdef
   have hδc : Continuous δ := GlobalTheory.RSThetaLow.continuous_absDet
   have hae : ∀ᵐ g ∂(μ.restrict S), g ∈ S := ae_restrict_mem₀ hS
-  haveI : IsFiniteMeasure (μ.restrict S) := isFiniteMeasure_restrict.mpr hμS.ne
+  have : IsFiniteMeasure (μ.restrict S) := isFiniteMeasure_restrict.mpr hμS.ne
   have key := GlobalTheory.integral_mul_cpow_of_rapid_decay_entire (GA E a) (μ.restrict S) δ F hδc.measurable
     (hae.mono fun g hg => ⟨lt_of_lt_of_le hc (hδ g hg).1, (hδ g hg).2⟩)
     (by
@@ -580,7 +580,7 @@ theorem integral_low_geometric : ∀ (E : Type) [Field E] [NumberField E] [_root
     rw [Real.exp_one_pow, hLdef]; push_cast; rfl
   have hδk : ∀ (k : ℕ) g, δ (e ^ k * g) = Real.exp (L * k) * δ g := fun k g => by
     have h := GlobalTheory.RSTheta.absDet_zpow_mul (E := E) (a := a) (k : ℤ) g
-    rw [zpow_natCast, hTL, zpow_natCast, ← Real.exp_nat_mul, mul_comm (k : ℝ)] at h
+    rw [zpow_natCast, hTL, zpow_natCast, ← Real.exp_natCast_mul, mul_comm (k : ℝ)] at h
     exact h
   have hFk : ∀ (k : ℕ) g, F (e ^ k * g) = χ ^ k * F g := by
     intro k
@@ -600,7 +600,7 @@ theorem integral_low_geometric : ∀ (E : Type) [Field E] [NumberField E] [_root
 
   have hSU : (⋃ k, S k) = {g | δ g ≤ 1} := by
     ext g
-    simp only [hS, Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [hS, Set.mem_iUnion, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨k, -, h2⟩
       exact h2.trans (Real.exp_le_one_iff.2 (by have : (0:ℝ) ≤ k := k.cast_nonneg; nlinarith))
@@ -653,16 +653,16 @@ theorem integral_low_geometric : ∀ (E : Type) [Field E] [NumberField E] [_root
     have hc : starRingEnd ℂ χ * χ = 1 := by
       rw [mul_comm, Complex.mul_conj, Complex.normSq_eq_norm_sq, hχ]; simp
     have he1 : Complex.exp (((L * k : ℝ) : ℂ) * (s - 1)) = Complex.exp (((L : ℝ) : ℂ) * (s - 1)) ^ k := by
-      rw [← Complex.exp_nat_mul]; congr 1; push_cast; ring
+      rw [← Complex.exp_natCast_mul]; congr 1; push_cast; ring
     rw [he1, ← mul_pow, ← mul_pow, hr]
     have : starRingEnd ℂ χ * Complex.exp (-(((L : ℝ) : ℂ) * (s - 1))) * (χ * Complex.exp (((L : ℝ) : ℂ) * (s - 1))) =
         (starRingEnd ℂ χ * χ) * (Complex.exp (-(((L : ℝ) : ℂ) * (s - 1))) * Complex.exp (((L : ℝ) : ℂ) * (s - 1))) := by ring
     rw [this, hc, ← Complex.exp_add, neg_add_cancel, Complex.exp_zero]; simp
 
-  haveI : Countable (ratGL E a).range := by
-    haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-    haveI : Countable (Matrix (Fin a) (Fin a) E) := inferInstanceAs (Countable (Fin a → Fin a → E))
-    haveI : Countable (GL (Fin a) E) := Units.val_injective.countable
+  have : Countable (ratGL E a).range := by
+    have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+    have : Countable (Matrix (Fin a) (Fin a) E) := inferInstanceAs (Countable (Fin a → Fin a → E))
+    have : Countable (GL (Fin a) E) := Units.val_injective.countable
     exact (ratGL E a).rangeRestrict_surjective.countable
   have hexp : ∀ t : ℝ, ((Real.exp t : ℝ) : ℂ) ^ (s - 1) = Complex.exp (((t : ℝ) : ℂ) * (s - 1)) := by
     intro t
@@ -679,7 +679,7 @@ theorem integral_low_geometric : ∀ (E : Type) [Field E] [NumberField E] [_root
   have hG0 : ∀ (γ : (ratGL E a).range) (x : GA E a), (S 0).indicator f (γ • x) = (S 0).indicator f x := by
     rintro ⟨_, γ, rfl⟩ x
     show (S 0).indicator f (ratGL E a γ * x) = (S 0).indicator f x
-    simp only [Set.indicator_apply, hS, Set.mem_setOf_eq, hδr, hfr]
+    simp only [Set.indicator_apply, hS, Set.mem_ofPred_eq, hδr, hfr]
   have hshell : ∀ k : ℕ, ∫ g in S k, f g ∂(μ.restrict 𝓕) = r ^ k * ∫ g in S 0, f g ∂(μ.restrict 𝓕) := by
     intro k
     have hX : 0 < Real.exp (L * k) := Real.exp_pos _
@@ -792,7 +792,7 @@ theorem isFundamentalDomain_shell : ∀ (E : Type) [Field E] [NumberField E] [_r
         {x | ¬∃ γ : (ratGL E a).range, γ • x ∈ 𝓕}) = 0 :=
       measure_iUnion_null fun n => (measurePreserving_mul_left μ _).quasiMeasurePreserving.preimage_null hN
     refine Filter.mem_of_superset (compl_mem_ae_iff.2 hB) fun x hx => ?_
-    simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_preimage, Set.mem_setOf_eq, not_exists, not_not] at hx
+    simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_preimage, Set.mem_ofPred_eq, not_exists, not_not] at hx
     obtain ⟨m, hm1, hm2⟩ := exists_mem_Ioc_zpow (hδ0 x) hT1
     obtain ⟨γ, hγ⟩ := not_forall_not.1 (hx (-(m + 1)))
     obtain ⟨γ0, hγ0⟩ := γ.2
@@ -1044,9 +1044,9 @@ theorem theta_integral_continuation : ∀ (E : Type) [Field E] [NumberField E] [
       χ * GlobalTheory.RSThetaLow.rsHat ℓ φ.1 φ'.1 Φ J η g 0 := fun g => by rw [hz0]; exact r4 z0 g
 
   have hS := isFundamentalDomain_shell ha μ h𝓕
-  haveI : DiscreteTopology (latticeGL E a) := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL
-  haveI : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
+  have : DiscreteTopology (latticeGL E a) := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL
+  have : Countable (latticeGL E a) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := GlobalTheory.CovolGL.isFiniteMeasure_quotMeasure E a μ
   have hSfin := hS
   replace hSfin : μ (𝓕 ∩ {g | Real.exp (-((a : ℝ) * (Module.finrank ℚ E : ℝ))) <
       (ideleModule E (GeneralLinearGroup.det g) : ℝ) ∧ (ideleModule E (GeneralLinearGroup.det g) : ℝ) ≤ 1}) < ⊤ := by
@@ -1105,12 +1105,12 @@ theorem theta_integral_continuation : ∀ (E : Type) [Field E] [NumberField E] [
       rcases le_total (ideleModule E (GeneralLinearGroup.det g) : ℝ) 1 with h' | h'
       · exact Or.inl ⟨hg, h'⟩
       · exact Or.inr ⟨hg, h'⟩
-    have s1 := integral_inter_add_diff hlowm hint
-    have s2 := integral_inter_add_diff hlowm iUp
+    have s1 := integral_inter_add_sdiff hlowm hint
+    have s2 := integral_inter_add_sdiff hlowm iUp
     have eset : (𝓕 ∩ {g : GA E a | 1 ≤ (ideleModule E (GeneralLinearGroup.det g) : ℝ)}) \ {g : GA E a | (ideleModule E (GeneralLinearGroup.det g) : ℝ) ≤ 1} =
         𝓕 \ {g | (ideleModule E (GeneralLinearGroup.det g) : ℝ) ≤ 1} := by
       ext g
-      simp only [Set.mem_diff, Set.mem_inter_iff, Set.mem_setOf_eq, not_le]
+      simp only [Set.mem_sdiff, Set.mem_inter_iff, Set.mem_ofPred_eq, not_le]
       exact ⟨fun h' => ⟨h'.1.1, h'.2⟩, fun h' => ⟨⟨h'.1, h'.2.le⟩, h'.2⟩⟩
     rw [eset] at s2
     have sK : ∫ g in 𝓕 ∩ {g : GA E a | 1 ≤ (ideleModule E (GeneralLinearGroup.det g) : ℝ)} ∩
@@ -1297,14 +1297,14 @@ open GlobalTheory.CuspRep.CuspidalL2GL in
 theorem exists_fundamentalDomain_NE : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ) (μ : Measure (GA E n)) [μ.IsHaarMeasure],
   ∃ 𝓕₀ : Set (GA E n), IsFundamentalDomain (GlobalTheory.CellDec.NE E n) 𝓕₀ μ := by
   intro E _ _ n μ _
-  haveI := CuspidalL2GL.locallyCompactSpace_GA E n
-  haveI := CuspidalL2GL.t2Space_GA E n
-  haveI := CuspidalL2GL.secondCountableTopology_GA E n
-  haveI : DiscreteTopology (ratGL E n).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E n
+  have := CuspidalL2GL.locallyCompactSpace_GA E n
+  have := CuspidalL2GL.t2Space_GA E n
+  have := CuspidalL2GL.secondCountableTopology_GA E n
+  have : DiscreteTopology (ratGL E n).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E n
   have hsub : (GlobalTheory.CellDec.NE E n : Set (GA E n)) ⊆ ((ratGL E n).range : Set (GA E n)) := by
     rintro _ ⟨u, -, rfl⟩
     exact ⟨u, rfl⟩
-  haveI : DiscreteTopology (GlobalTheory.CellDec.NE E n) := DiscreteTopology.of_subset (inferInstance : DiscreteTopology ((ratGL E n).range : Set (GA E n))) hsub
+  have : DiscreteTopology (GlobalTheory.CellDec.NE E n) := DiscreteTopology.of_subset (inferInstance : DiscreteTopology ((ratGL E n).range : Set (GA E n))) hsub
   obtain ⟨𝓕, -, -, h𝓕⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (GlobalTheory.CellDec.NE E n)
   exact ⟨𝓕, h𝓕 _⟩
 
@@ -1335,10 +1335,10 @@ theorem zint_eq_mul_partialL_smooth : ∀ (E : Type) [Field E] [NumberField E] [
   subst hπ hπ'
   obtain ⟨μ₀, hμ₀, 𝓕₁, h𝓕₁⟩ : ∃ (μ : Measure (GA E (m + 1))) (_ : μ.IsHaarMeasure) (𝓕 : Set (GA E (m + 1))),
       IsFundamentalDomain (ratGL E (m + 1)).range 𝓕 μ := by
-    haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E (m + 1)
-    haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E (m + 1)
-    haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E (m + 1)
-    haveI : DiscreteTopology (ratGL E (m + 1)).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E (m + 1)
+    have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E (m + 1)
+    have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E (m + 1)
+    have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E (m + 1)
+    have : DiscreteTopology (ratGL E (m + 1)).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E (m + 1)
     obtain ⟨𝓕, -, -, h𝓕⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (ratGL E (m + 1)).range
     exact ⟨Measure.haar, inferInstance, 𝓕, h𝓕 _⟩
   have hfin : ∀ x : ℝ, 1 < x → GlobalTheory.RSPole.eulD (fun w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} => Ideal.absNorm w.1.asIdeal)
@@ -1352,11 +1352,11 @@ theorem zint_eq_mul_partialL_smooth : ∀ (E : Type) [Field E] [NumberField E] [
   classical
   let αe : HeightOneSpectrum (𝓞 E) → Fin (m + 1) → ℂˣ := fun w => if h : w ∉ T then α ⟨w, h⟩ else fun _ => 1
   let αe' : HeightOneSpectrum (𝓞 E) → Fin (m + 1) → ℂˣ := fun w => if h : w ∉ T then α' ⟨w, h⟩ else fun _ => 1
-  have hαe : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, αe w.1 = α w := fun w => dif_pos w.2
-  have hαe' : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, αe' w.1 = α' w := fun w => dif_pos w.2
+  have hαe : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, αe w.1 = α w := fun w => dite_eq_left w.2
+  have hαe' : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, αe' w.1 = α' w := fun w => dite_eq_left w.2
   have hsatσ : ∀ (ρ : CuspSub E (m + 1)) (w : HeightOneSpectrum (𝓞 E)), (∃ B, (CG.mk ρ).HasSat w B) →
       HasSatGL w (ρ.locRep w) (sat (CG.mk ρ) w) := fun ρ w h => by
-    rw [← CG.hasSat_mk, sat, dif_pos h]
+    rw [← CG.hasSat_mk, sat, dite_eq_left h]
     exact h.choose_spec
   have hs : ∀ w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, Finset.univ.val.map (αe w.1) = sat (CG.mk π) w.1 := fun w => by
     rw [hαe w]; exact hα w
@@ -1463,7 +1463,7 @@ theorem secInv_eq {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTot
       · intro h; subst h; exact hℓ
     by_cases h : i = ℓ
     · simp [h, hℓ]
-    · rw [if_neg (fun h' => h (this.1 h')), if_neg h]
+    · rw [ite_eq_right (fun h' => h (this.1 h')), ite_eq_right h]
   unfold GlobalTheory.RSJ.secInv
   by_cases hu : IsUnit (u ℓ)
   · have hd : IsUnit (GlobalTheory.RSJ.secRow u).det := by rw [hrow, GlobalTheory.RSTheta.det_rowMat]; exact hu
@@ -1481,7 +1481,7 @@ theorem indN_eq {E : Type} [Field E] [NumberField E] {a : ℕ} (N : ℕ) (hN : 0
     GlobalTheory.RSJ.indN N v = (GlobalTheory.ThetaPoisson.latt a J).indicator 1 (v - Pi.single ℓ 1) := by
   have key : (∀ i : Fin a, v i - (if (i : ℕ) + 1 = a then 1 else 0) ∈ GlobalTheory.RSJ.natLat E N) ↔
       v - Pi.single ℓ 1 ∈ GlobalTheory.ThetaPoisson.latt a J := by
-    simp only [GlobalTheory.ThetaPoisson.latt, Set.mem_setOf_eq, Pi.sub_apply]
+    simp only [GlobalTheory.ThetaPoisson.latt, Set.mem_ofPred_eq, Pi.sub_apply]
     refine forall_congr' fun i => ?_
     have e : (if (i : ℕ) + 1 = a then (1 : Af E) else 0) = (Pi.single ℓ (1 : Af E) : Fin a → Af E) i := by
       by_cases h : i = ℓ
@@ -1491,8 +1491,8 @@ theorem indN_eq {E : Type} [Field E] [NumberField E] {a : ℕ} (N : ℕ) (hN : 0
     rw [e, natLat_iff E N hN J hJ]
   unfold GlobalTheory.RSJ.indN
   by_cases h : ∀ i : Fin a, v i - (if (i : ℕ) + 1 = a then 1 else 0) ∈ GlobalTheory.RSJ.natLat E N
-  · rw [if_pos h, Set.indicator_of_mem (key.1 h)]; rfl
-  · rw [if_neg h, Set.indicator_of_notMem (fun h' => h (key.2 h'))]
+  · rw [ite_eq_left h, Set.indicator_of_mem (key.1 h)]; rfl
+  · rw [ite_eq_right h, Set.indicator_of_notMem (fun h' => h (key.2 h'))]
 
 theorem zint_eq_thetaZ {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ} (μ : Measure (GA E a))
     (𝓕 : Set (GA E a)) (φ φ' : GA E a → ℂ) (Φ : (Fin a → Cinf E) → ℂ) (N : ℕ) (hN : 0 < N) (ℓ : Fin a)
@@ -1514,10 +1514,10 @@ open GlobalTheory.CuspRep.CuspidalL2GL in
 theorem haarFD (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) :
     ∃ (μ : Measure (GA E a)) (_ : μ.IsHaarMeasure) (𝓕 𝓕' : Set (GA E a)),
       IsFundamentalDomain (ratGL E a).range 𝓕 μ ∧ IsFundamentalDomain (latticeGL E a) 𝓕' μ := by
-  haveI := CuspidalL2GL.locallyCompactSpace_GA E a
-  haveI := CuspidalL2GL.t2Space_GA E a
-  haveI := CuspidalL2GL.secondCountableTopology_GA E a
-  haveI : DiscreteTopology (ratGL E a).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E a
+  have := CuspidalL2GL.locallyCompactSpace_GA E a
+  have := CuspidalL2GL.t2Space_GA E a
+  have := CuspidalL2GL.secondCountableTopology_GA E a
+  have : DiscreteTopology (ratGL E a).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E a
   obtain ⟨𝓕, -, -, h𝓕⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (ratGL E a).range
   obtain ⟨𝓕', -, -, h𝓕'⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup (latticeGL E a)
   exact ⟨Measure.haar, inferInstance, 𝓕, 𝓕', h𝓕 _, h𝓕' _⟩

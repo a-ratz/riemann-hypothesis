@@ -103,7 +103,7 @@ theorem eq_succAbove_of_snoc_eq_perm {n : ℕ} (I : Fin n → Fin (n + 1)) (k : 
       have hx : x ≠ Fin.last n := fun hx => hy (by rw [hx, hlast])
       obtain ⟨i, rfl⟩ := Fin.exists_castSucc_eq.2 hx
       exact ⟨i, (hcast i).symm⟩
-  exact (StrictMono.range_inj hI (Fin.strictMono_succAbove k)).1 hrange
+  exact (StrictMono.range_inj_of_wellFoundedLT hI (Fin.strictMono_succAbove k)).1 hrange
 
 end GlobalTheory.CompanionTheory.ConeLocal.SnocPerm
 end -- clump:auto
@@ -125,11 +125,11 @@ namespace GlobalTheory.CompanionTheory.ConeLocal
 
 theorem idx_self_eq {d : ℕ} (I : Idx d d) : I.1 = id := by
   have hs : Function.Surjective I.1 := Finite.injective_iff_surjective.1 I.2.injective
-  exact (StrictMono.range_inj I.2 strictMono_id).1 (by rw [hs.range_eq, Set.range_id])
+  exact (StrictMono.range_inj_of_wellFoundedLT I.2 strictMono_id).1 (by rw [hs.range_eq, Set.range_id])
 
 theorem sum_idx_self {M : Type*} [AddCommMonoid M] {d : ℕ} [Fintype (Idx d d)] (g : Idx d d → M) :
     ∑ I, g I = g ⟨id, strictMono_id⟩ := by
-  letI : Unique (Idx d d) :=
+  let : Unique (Idx d d) :=
     { default := ⟨id, strictMono_id⟩, uniq := fun I => Subtype.ext (idx_self_eq I) }
   exact Fintype.sum_unique g
 
@@ -156,7 +156,7 @@ theorem coef_map : ∀ {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X
     ∃ φ : HQ (KS q s {W}) r (r + 1) d →ₗ[K] Γ(X, W), Function.Injective φ ∧ ∀ (y : Γ(X, W)) (c : HQ (KS q s {W}) r (r + 1) d),
       CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {W}) r) (sFil (KS q s {W}) (r + 1)) (E.form σ id (ε y)) c → φ c = y := by
   intro K _ _ X q W d t s E ε hL σ r hr hs
-  letI := (strV q W).toAlgebra
+  let := (strV q W).toAlgebra
   obtain ⟨hE, hU⟩ := _root_.GlobalTheory.CompanionTheory.ConeLocal.loc_coef q t s E ε hL σ d r hr hs
   have ex : ∀ c : HQ (KS q s {W}) r (r + 1) d, ∃ y : Γ(X, W),
       CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {W}) r) (sFil (KS q s {W}) (r + 1)) (E.form σ id (ε y)) c := by
@@ -227,7 +227,7 @@ namespace GlobalTheory.CompanionTheory.ConeLocal
 def I0 (m : ℕ) : Idx m m := ⟨id, strictMono_id⟩
 
 theorem idx_eq {m : ℕ} (I : Idx m m) : I = I0 m := by
-  refine Subtype.ext ((StrictMono.range_inj I.2 strictMono_id).1 ?_)
+  refine Subtype.ext ((StrictMono.range_inj_of_wellFoundedLT I.2 strictMono_id).1 ?_)
   have h : Function.Surjective I.1 := (Finite.injective_iff_surjective).1 I.2.injective
   rw [h.range_eq, Function.surjective_id.range_eq]
 
@@ -240,7 +240,7 @@ theorem sgn_det {B : Type} [CommRing B] {m : ℕ} (c : Fin m → Fin m → B) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [Finset.sum_eq_single (⇑π)]
-  · simp only [I0, Function.id_comp, if_true]
+  · simp only [I0, Function.id_comp, ite_true]
     rw [Units.smul_def]
     simp
   · intro J _ hJ
@@ -250,7 +250,7 @@ theorem sgn_det {B : Type} [CommRing B] {m : ℕ} (c : Fin m → Fin m → B) :
 theorem sgn_snoc {n : ℕ} (I : Idx n (n + 1)) (k : Fin (n + 1)) (h : I.1 ≠ k.succAbove) :
     sgn (I0 (n + 1)) (Fin.snoc (α := fun _ => Fin (n + 1)) I.1 k) = 0 := by
   refine Finset.sum_eq_zero fun π _ => ?_
-  rw [if_neg]
+  rw [ite_eq_right]
   intro e
   exact h (_root_.GlobalTheory.CompanionTheory.ConeLocal.SnocPerm.eq_succAbove_of_snoc_eq_perm I.1 k π I.2 e)
 
@@ -429,9 +429,9 @@ theorem addC_eq (hL : IsLoc q s t E ε) (k : Fin d) (u : ComposableArrows (KS q 
       E.a σ k (u.map (homOfLE (Fin.zero_le (Fin.last 1)))) := by
     simp only [DlogApprox.form_one]
     rw [Finset.sum_eq_single k]
-    · rw [if_pos rfl, map_one, mul_one]
+    · rw [ite_eq_left rfl, map_one, mul_one]
     · intro b _ hb
-      rw [if_neg (Ne.symm hb), map_zero, mul_zero]
+      rw [ite_eq_right (Ne.symm hb), map_zero, mul_zero]
     · simp
   have e2 : E.a σ k (u.map (homOfLE (Fin.zero_le (Fin.last 1)))) =
       ((sP (KS q s {V})).A.map (σ _)).hom (ε (t k)) -
@@ -464,7 +464,7 @@ theorem sum_fc_delta (m : ℕ) (E : Frame Φ m) (σ : ∀ T : C, E.D ⟶ T) :
       by_contra hh
       push_neg at hh
       exact hI (funext fun k => (hh k).symm)
-    rw [Finset.prod_eq_zero (Finset.mem_univ k) (if_neg hk), fc_zero]
+    rw [Finset.prod_eq_zero (Finset.mem_univ k) (ite_eq_right hk), fc_zero]
   · simp
 end
 
@@ -569,7 +569,7 @@ theorem main : CrystallineSemistableComparison.Pb.KH.LocGr → CrystallineSemist
       ∃ η : Fin (n + 1) → Γ(X, V), (∀ k, η k ∈ jacSpan hVV (RingHom.id _) (fun k => D k) (Fin.succAbove k)) ∧
         Rep (sFil (KS q s {V}) ((n : ℤ) + 1)) (sFil (KS q s {V}) ((n : ℤ) + 1 + 1)) (xdtC s V c.t (∑ k : Fin (n + 1), (-1 : Γ(X, V)) ^ (k : ℕ) * D k (η k))) (resKS q s hVV _ _ _ x) := by
   intro _ _ _ K _ _ X q n _ s hs V V' hVV hV' c D hD f hf hdf x hx
-  haveI : Smooth q := SmoothOfRelativeDimension.smooth (n + 1) q
+  have : Smooth q := SmoothOfRelativeDimension.smooth (n + 1) q
   obtain ⟨E, ε, hL⟩ := _root_.GlobalTheory.CompanionTheory.ConeLocal.exists_loc q c s (by omega)
   let σ : ∀ T, E.D ⟶ T := fun T => (E.ne T).some
   have hF := GlobalTheory.CompanionTheory.DPFil.isFil_sFil (KS q s {V})

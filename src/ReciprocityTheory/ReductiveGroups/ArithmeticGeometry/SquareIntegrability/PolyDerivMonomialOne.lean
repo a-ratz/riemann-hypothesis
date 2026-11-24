@@ -71,7 +71,7 @@ theorem itD_differentiable {f : W → ℂ} (hf : ContDiff ℂ (⊤ : ℕ∞) f) 
   have hD : Differentiable ℂ (iteratedFDeriv ℂ l.length f) := by
     refine hf.differentiable_iteratedFDeriv ?_
     first
-      | exact_mod_cast ENat.coe_lt_top _
+      | exact_mod_cast ENat.natCast_lt_top _
       | exact WithTop.coe_lt_coe.2 (ENat.coe_lt_top _)
       | simp
   unfold itD
@@ -82,7 +82,7 @@ theorem itD_cons {f : W → ℂ} (hf : ContDiff ℂ (⊤ : ℕ∞) f) (e : W) (l
   have hD : Differentiable ℂ (iteratedFDeriv ℂ l.length f) := by
     refine hf.differentiable_iteratedFDeriv ?_
     first
-      | exact_mod_cast ENat.coe_lt_top _
+      | exact_mod_cast ENat.natCast_lt_top _
       | exact WithTop.coe_lt_coe.2 (ENat.coe_lt_top _)
       | simp
   show iteratedFDeriv ℂ (l.length + 1) f z (fun j => (e :: l).get j) = _
@@ -106,8 +106,8 @@ theorem fderiv_prod_single {n : ℕ} {h : Fin n → W → ℂ} (hh : ∀ k, Diff
         ((fderiv ℂ (h k) (x k)).comp (ContinuousLinearMap.proj k))) x :=
     HasFDerivAt.finsetProd (fun k _ => hd k)
   rw [hP.fderiv]
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
-    Pi.smul_apply, ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.proj_apply,
+  simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
+    Pi.smul_apply, ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearMap.proj_apply,
     smul_eq_mul]
   rw [Finset.sum_eq_single k0]
   · simp
@@ -144,8 +144,8 @@ theorem itD_prod {n : ℕ} {g : Fin n → W → ℂ} (hg : ∀ k, ContDiff ℂ (
     rw [← Finset.prod_erase_mul Finset.univ _ (Finset.mem_univ a.1)]
     congr 1
     · refine Finset.prod_congr rfl fun k hk => ?_
-      rw [colL_cons, if_neg (Ne.symm (Finset.ne_of_mem_erase hk))]
-    · rw [colL_cons, if_pos rfl, itD_cons (hg _)]
+      rw [colL_cons, ite_eq_right (Ne.symm (Finset.ne_of_mem_erase hk))]
+    · rw [colL_cons, ite_eq_left rfl, itD_cons (hg _)]
 
 theorem itD_col {s : (Fin 1 → W) → ℂ} (hs : ContDiff ℂ (⊤ : ℕ∞) s) (l : List W) :
     itD (fun z : W => s (fun _ => z)) l 0 = iteratedFDeriv ℂ l.length s 0 (fun j _ => l.get j) := by
@@ -204,7 +204,7 @@ theorem polyDeriv_monomial_one (m : σ →₀ ℕ) (u : σ → W) (F : W → ℂ
     polyDeriv (MvPolynomial.monomial m (1 : ℂ)) u F x = pdTerm u F x m := by
   classical
   rw [polyDeriv_eq_of_subset _ u F x (S := {m}) MvPolynomial.support_monomial_subset,
-    Finset.sum_singleton, MvPolynomial.coeff_monomial, if_pos rfl, one_mul]
+    Finset.sum_singleton, MvPolynomial.coeff_monomial, ite_eq_left rfl, one_mul]
 
 theorem pdTerm_eq_itD (u : σ → W) (F : W → ℂ) (x : W) (m : σ →₀ ℕ) :
     pdTerm u F x m = itD F ((Finsupp.toMultiset m).toList.map u) x := by

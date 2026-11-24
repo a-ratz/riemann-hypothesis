@@ -88,7 +88,7 @@ theorem trace_evI [IsTotallyReal F] (a : AF F) :
     Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (evI F a) =
       ∑ w : InfinitePlace F, (InfinitePlace.Completion.extensionEmbedding w (a.1 w)).re := by
   have hreal : ∀ v : InfinitePlace F, v.IsReal := IsTotallyReal.isReal
-  haveI : IsEmpty {v : InfinitePlace F // v.IsComplex} :=
+  have : IsEmpty {v : InfinitePlace F // v.IsComplex} :=
     ⟨fun v => (InfinitePlace.not_isReal_iff_isComplex.2 v.2) (hreal v.1)⟩
   rw [Algebra.trace_prod_apply]
   have h2 : (evI F a).2 = 0 := Subsingleton.elim _ _
@@ -254,10 +254,10 @@ theorem exists_neg_pair : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
   have hmain : piInf (B.emb w) (GlobalTheory.WeilM.hTens (cA σ) (incM F X.J) (incM F W.J) u u') =
       (x ⬝ᵥ (X.J.map (B.emb w).1) *ᵥ star (X.θ w *ᵥ x)) *
         (y ⬝ᵥ (Complex.I • W.J.map (B.emb w).1) *ᵥ star (W.θ w *ᵥ y)) := by
-    rw [piInf_hTens h, hu w, hu' w, if_pos rfl, hs, mul_vecMulVec_mul_transpose', sum_rank_one]
+    rw [piInf_hTens h, hu w, hu' w, ite_eq_left rfl, hs, mul_vecMulVec_mul_transpose', sum_rank_one]
   have hzero : ∀ w', w' ≠ w → piInf (B.emb w') (GlobalTheory.WeilM.hTens (cA σ) (incM F X.J) (incM F W.J) u u') = 0 := by
     intro w' hne
-    rw [piInf_hTens h, hu w', if_neg hne]
+    rw [piInf_hTens h, hu w', ite_eq_right hne]
     simp
   simp only [GlobalTheory.WeilM.symp]
   rw [trace_evI_trace h B.emb, Finset.sum_eq_single w]

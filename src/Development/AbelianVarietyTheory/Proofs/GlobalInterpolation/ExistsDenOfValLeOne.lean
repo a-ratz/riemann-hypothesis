@@ -67,7 +67,7 @@ variable {K : Type} [Field K] [NumberField K] in
 theorem _root_.GlobalTheory.HAtBasis.isLattice_of_basisAt {n : ℕ} (w : HeightOneSpectrum (𝓞 K))
     {M : Submodule (𝓞 K) (Fin n → K)} (hM : M.FG)
     {B : GL (Fin n) K} (hB : _root_.Formalism.L2.DIV.IsBasisAt w M B) : Submodule.IsFullLattice K M := by
-  haveI : Submodule.IsLattice K M := ⟨hM, fun s hs hli =>
+  have : Submodule.IsLattice K M := ⟨hM, fun s hs hli =>
     (LinearIndependent.iff_fractionRing _ _).mp hli⟩
   refine ⟨?_⟩
   have hcol : ∀ j, (fun i => (B : Matrix (Fin n) (Fin n) K) i j) ∈

@@ -57,8 +57,8 @@ theorem avg_add_of_per : ∀ (G : Type) [AddCommGroup G] [TopologicalSpace G] [I
     [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] (Γ : AddSubgroup G), IsCoLat Γ →
     ∀ Φ Φ' : G → ℂ, Per Γ Φ → Per Γ Φ' → avg Γ (fun x => Φ x + Φ' x) = avg Γ Φ + avg Γ Φ' := by
   intro G _ _ _ _ _ _ Γ hΓ Φ Φ' h h'
-  letI : MeasurableSpace G := borel G
-  haveI : BorelSpace G := ⟨rfl⟩
+  let : MeasurableSpace G := borel G
+  have : BorelSpace G := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, hF, h1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one G Γ hΓ
   have hs : Per Γ (fun x => Φ x + Φ' x) :=
     ⟨h.1.add h'.1, fun γ hγ x => by simp only [h.2 γ hγ x, h'.2 γ hγ x]⟩

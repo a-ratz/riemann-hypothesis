@@ -63,7 +63,7 @@ theorem ext_of_schDom {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSe
   let Y' : Over Z := Over.mk s
   let f' : X' ⟶ Y' := Over.homMk f
   let g' : X' ⟶ Y' := Over.homMk g h.symm
-  haveI : IsSeparated Y'.hom := ‹IsSeparated s›
+  have : IsSeparated Y'.hom := ‹IsSeparated s›
   let U' : Over Z := Over.mk (i ≫ f ≫ s)
   let i' : U' ⟶ X' := Over.homMk i
   have e : i' ≫ f' = i' ≫ g' := by
@@ -76,7 +76,7 @@ theorem ext_of_schDom {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSe
     apply le_bot_iff.1
     calc _ ≤ (l.left ≫ (equalizer.ι f' g').left).ker := Scheme.Hom.le_ker_comp _ _
       _ = ⊥ := by rw [← hi]; exact i.ker_eq_bot
-  haveI : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
+  have : IsIso (equalizer.ι f' g').left := IsClosedImmersion.isIso_iff_ker_eq_bot.2 hker
   have h0 : IsIso ((Over.forget Z).map (equalizer.ι f' g')) := (inferInstance : IsIso (equalizer.ι f' g').left)
   have : IsIso (equalizer.ι f' g') := isIso_of_reflects_iso _ (Over.forget Z)
   have hfg : f' = g' := (cancel_epi (equalizer.ι f' g')).1 (equalizer.condition f' g')
@@ -84,7 +84,7 @@ theorem ext_of_schDom {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSe
 
 theorem schDom_spec_map {A B : Type} [CommRing A] [CommRing B] [IsReduced A] (φ : A →+* B)
     (hφ : Function.Injective φ) : IsSchemeTheoreticallyDominant (Spec.map (CommRingCat.ofHom φ)) := by
-  haveI : IsDominant (Spec.map (CommRingCat.ofHom φ)) := by
+  have : IsDominant (Spec.map (CommRingCat.ofHom φ)) := by
     rw [isDominant_iff]
     show DenseRange (PrimeSpectrum.comap φ)
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical, (RingHom.injective_iff_ker_eq_bot φ).1 hφ]

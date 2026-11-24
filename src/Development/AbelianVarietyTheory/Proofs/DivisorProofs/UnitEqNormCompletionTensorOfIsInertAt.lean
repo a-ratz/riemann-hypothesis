@@ -65,8 +65,8 @@ theorem exists_root_quadratic_of_approx {F : Type} [Field F] [NumberField F]
     ∃ a : v.adicCompletionIntegers F, a ^ 2 + p * a + q = 0 := by
   by_cases he0 : a₀ ^ 2 + p * a₀ + q = 0
   · exact ⟨a₀, he0⟩
-  haveI := (GlobalTheory.CNorm.isAdicComplete_and_card_quotient_adicCompletionIntegers F v).1 _ h₀
-  haveI : HenselianRing (v.adicCompletionIntegers F) (Ideal.span {a₀ ^ 2 + p * a₀ + q}) :=
+  have := (GlobalTheory.CNorm.isAdicComplete_and_card_quotient_adicCompletionIntegers F v).1 _ h₀
+  have : HenselianRing (v.adicCompletionIntegers F) (Ideal.span {a₀ ^ 2 + p * a₀ + q}) :=
     IsAdicComplete.henselianRing _ _
   have hf : (X ^ 2 + C p * X + C q : (v.adicCompletionIntegers F)[X]).Monic := by monicity!
   obtain ⟨a, ha, -⟩ := HenselianRing.is_henselian (I := Ideal.span {a₀ ^ 2 + p * a₀ + q}) _ hf a₀
@@ -172,10 +172,10 @@ theorem exists_approx_mod {F : Type} [Field F] [NumberField F] (v : HeightOneSpe
     ∃ r s : 𝓞 F, r ^ 2 - b * r * s + c * s ^ 2 - u₀ ∈ v.asIdeal ∧
       (2 * r - b * s ∉ v.asIdeal ∨ 2 * c * s - b * r ∉ v.asIdeal) := by
   classical
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
-  letI : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
+  let : Fintype (𝓞 F ⧸ v.asIdeal) := Fintype.ofFinite _
   let π := Ideal.Quotient.mk v.asIdeal
   have hz : ∀ e : 𝓞 F, π e = 0 ↔ e ∈ v.asIdeal := fun e => Ideal.Quotient.eq_zero_iff_mem
   have h2k : (2 : 𝓞 F ⧸ v.asIdeal) ≠ 0 := by
@@ -185,7 +185,7 @@ theorem exists_approx_mod {F : Type} [Field F] [NumberField F] (v : HeightOneSpe
     by_contra hc
     have hc0 : Fintype.card (𝓞 F ⧸ v.asIdeal) % 2 = 0 := by omega
     have hch := FiniteField.even_card_iff_char_two.2 hc0
-    haveI : CharP (𝓞 F ⧸ v.asIdeal) 2 := by rw [← hch]; exact ringChar.charP _
+    have : CharP (𝓞 F ⧸ v.asIdeal) 2 := by rw [← hch]; exact ringChar.charP _
     exact h2k (by exact_mod_cast CharP.cast_eq_zero (𝓞 F ⧸ v.asIdeal) 2)
   obtain ⟨h, hh⟩ : ∃ h : 𝓞 F ⧸ v.asIdeal, 2 * h = 1 := ⟨2⁻¹, mul_inv_cancel₀ h2k⟩
   have hroot' : ∀ x : 𝓞 F ⧸ v.asIdeal, x ^ 2 + π b * x + π c ≠ 0 := by

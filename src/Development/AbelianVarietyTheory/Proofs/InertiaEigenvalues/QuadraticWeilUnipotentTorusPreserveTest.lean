@@ -63,7 +63,7 @@ theorem isLocallyConstant_of_stdChar {ψ : AddChar F ℂ} (hψ : IsStdChar ψ) :
     _ = ψ a := by rw [AddChar.map_add_eq_mul, h1, mul_one]
 
 theorem continuous_mulLeft (A : Et F E) (c : A.L) : Continuous fun y : A.L => c * y := by
-  haveI : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
+  have : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
   exact IsModuleTopology.continuous_of_linearMap (LinearMap.mulLeft F c)
 
 def smulHomeo (A : Et F E) (s : A.Kˣ) : A.L ≃ₜ A.L where

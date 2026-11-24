@@ -179,7 +179,7 @@ variable {a b c : Type} [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b] 
 theorem _root_.GlobalTheory.RankStrataProof.continuous_lAct (s : Set ℕ) : Continuous fun p : _root_.GlobalTheory.IndefiniteRowSideFullHecke.OpenClosedSequences.RankIn k a b s × GL b k => _root_.GlobalTheory.RankStrataProof.lAct s p.1 p.2 := by
   have h : Continuous fun p : _root_.GlobalTheory.IndefiniteRowSideFullHecke.OpenClosedSequences.RankIn k a b s × GL b k => ((p.2⁻¹ : GL b k) : Matrix b b k) * p.1.1 :=
     (Units.continuous_val.comp (continuous_inv.comp continuous_snd)).matrix_mul
-      (continuous_subtype_val.comp continuous_fst)
+      (continuous_subtypeVal.comp continuous_fst)
   refine Continuous.subtype_mk (h.congr fun p => (_root_.GlobalTheory.RankStrataProof.lAct_val s p.1 p.2).symm) _
 
 end Open

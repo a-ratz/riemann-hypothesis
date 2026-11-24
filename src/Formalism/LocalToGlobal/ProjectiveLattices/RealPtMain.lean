@@ -87,7 +87,7 @@ open IsLocalRing
 
 theorem complSt_holds : ComplSt := by
   intro W _ _ _ _
-  haveI : CharZero (AdicCompletion (maximalIdeal W) W) :=
+  have : CharZero (AdicCompletion (maximalIdeal W) W) :=
     charZero_of_injective_algebraMap (GlobalTheory.algebraMap_adicCompletion_injective_of_dvr W)
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
   have hl : IsLocalHom (algebraMap W (AdicCompletion (maximalIdeal W) W)) := inferInstance
@@ -290,23 +290,23 @@ def evRp : Rp X' la N →+* Fd :=
   (Algebra.TensorProduct.lift (Algebra.ofId (Kp X' la N) Fd) vl (fun _ _ => Commute.all _ _)).toRingHom
 
 theorem evRp_alg (k : Kp X' la N) : evRp la N kap χ hχ (algebraMap (Kp X' la N) (Rp X' la N) k) = kap k := by
-  letI : Algebra (Kp X' la N) Fd := kap.toAlgebra
-  letI : Algebra (X'.Kl la) Fd := (kap.comp (algebraMap (X'.Kl la) (Kp X' la N))).toAlgebra
-  letI : Algebra B.KO Fd := (kap.comp ((algebraMap (X'.Kl la) (Kp X' la N)).comp (algebraMap B.KO (X'.Kl la)))).toAlgebra
-  haveI : IsScalarTower B.KO (X'.Kl la) Fd := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower (X'.Kl la) (Kp X' la N) Fd := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (Kp X' la N) Fd := kap.toAlgebra
+  let : Algebra (X'.Kl la) Fd := (kap.comp (algebraMap (X'.Kl la) (Kp X' la N))).toAlgebra
+  let : Algebra B.KO Fd := (kap.comp ((algebraMap (X'.Kl la) (Kp X' la N)).comp (algebraMap B.KO (X'.Kl la)))).toAlgebra
+  have : IsScalarTower B.KO (X'.Kl la) Fd := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (X'.Kl la) (Kp X' la N) Fd := IsScalarTower.of_algebraMap_eq fun _ => rfl
   unfold evRp
   erw [Algebra.TensorProduct.algebraMap_apply, Algebra.TensorProduct.lift_tmul]
   erw [map_one, mul_one]
   rfl
 
 theorem evRp_emb (F : X'.Forms) : evRp la N kap χ hχ (emb X' la N F) = χ F := by
-  letI : Algebra (Kp X' la N) Fd := kap.toAlgebra
-  letI : Algebra (X'.Kl la) Fd := (kap.comp (algebraMap (X'.Kl la) (Kp X' la N))).toAlgebra
-  letI : Algebra B.KO Fd :=
+  let : Algebra (Kp X' la N) Fd := kap.toAlgebra
+  let : Algebra (X'.Kl la) Fd := (kap.comp (algebraMap (X'.Kl la) (Kp X' la N))).toAlgebra
+  let : Algebra B.KO Fd :=
     (kap.comp ((algebraMap (X'.Kl la) (Kp X' la N)).comp (algebraMap B.KO (X'.Kl la)))).toAlgebra
-  haveI : IsScalarTower B.KO (X'.Kl la) Fd := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower (X'.Kl la) (Kp X' la N) Fd := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower B.KO (X'.Kl la) Fd := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (X'.Kl la) (Kp X' la N) Fd := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have e : emb X' la N F =
       ((1 : Kp X' la N) ⊗ₜ[X'.Kl la] ((1 : X'.Kl la) ⊗ₜ[B.KO] F : X'.Vl la) :
         TensorProduct (X'.Kl la) (Kp X' la N) (X'.Vl la)) := rfl
@@ -355,15 +355,15 @@ theorem realPt_of (h : LawsP T) (j : ℕ) (hj : InR D j) (hG : GenFrEx (T.Q.Xo j
     RealPtNZSt h j hj hG G la hU := by
   have hWD := h.toLawsCore.evalWD j hj
   intro ζ
-  haveI hD : IsDVRAt (show Pts (Op (xplus (recPJ h j hj) (extAll h j hj) (intAtExt_extAll h j hj)) la G.N)
+  have hD : IsDVRAt (show Pts (Op (xplus (recPJ h j hj) (extAll h j hj) (intAtExt_extAll h j hj)) la G.N)
       (OsK (xplus (recPJ h j hj) (extAll h j hj) (intAtExt_extAll h j hj)) la G.w) from ζ) :=
     ‹∀ ζ : PtsG G la, IsDVRAt ζ› ζ
-  haveI : CharZero (Loc ζ) := loc_charZero hU ζ
+  have : CharZero (Loc ζ) := loc_charZero hU ζ
   obtain ⟨Tc, ι, hloc, hunr⟩ := complSt_holds (Loc ζ)
   have hι : AddValPres ζ ι := addVal_map_of_unr ι hunr
   let kap : Kp (recPlus h j hj) la G.N →+* Tc.Fr :=
     kapA (X := recPJ h j hj) (E := extAll h j hj) (hM := intAtExt_extAll h j hj) hU ζ Tc ι hι
-  letI instK : Algebra (Kp (recPlus h j hj) la G.N) Tc.Fr := kap.toAlgebra
+  let instK : Algebra (Kp (recPlus h j hj) la G.N) Tc.Fr := kap.toAlgebra
   let φ : OsK (recPlus h j hj) la G.w →ₐ[Kp (recPlus h j hj) la G.N] Tc.Fr :=
     { toRingHom := phiAt ζ Tc.Fr ι hU hι, commutes' := fun _ => by rfl }
   obtain ⟨alg, y₀, ⟨Z, ψ, hψ⟩, halg, hs0, hrat⟩ := hPt hwL Tc.Fr φ
@@ -375,7 +375,7 @@ theorem realPt_of (h : LawsP T) (j : ℕ) (hj : InR D j) (hG : GenFrEx (T.Q.Xo j
     exact overLa_kapA (X := recPJ h j hj) (E := extAll h j hj) (hM := intAtExt_extAll h j hj) hU ζ Tc ι hι
   obtain ⟨O, _, β, Y, -, hPI, hB⟩ := hMod
   obtain ⟨b, hb⟩ := hB Tc alg _ ho
-  letI := alg.toAlgebra
+  let := alg.toAlgebra
   obtain ⟨y, t, hbor⟩ := intFr_of_model hIF Tc alg Y hPI b hb y₀
   obtain ⟨p, φ', y', hm⟩ := hT Z
   have hm2 : FrMap (ψ.comp φ') y' y₀ := frMap_trans _ _ _ φ' ψ y' (genFr hG Z) y₀ hm hψ

@@ -565,7 +565,7 @@ theorem mod_lattice_absolute_value : ModXAbs := by
     have hq : q ∈ LinearMap.ker (φ - LinearMap.id : Qt F' →ₗ[E] Qt F') :=
       hle (by
         first
-        | letI : Submodule.IsFullLattice E (Lb F' Λ) := hLb
+        | let : Submodule.IsFullLattice E (Lb F' Λ) := hLb
           rw [Submodule.IsFullLattice.span_eq_top]
           exact Submodule.mem_top
         | obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective (Pk F') q

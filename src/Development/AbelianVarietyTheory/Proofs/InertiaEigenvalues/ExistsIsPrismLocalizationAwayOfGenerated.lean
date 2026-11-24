@@ -148,7 +148,7 @@ theorem regular_and_torsion_bounded : ∀ (l : ℕ) [Fact l.Prime] (L : Type) [C
   intro l _ L _ Q _ i d N hd hbd hc
   set J : Ideal L := Ideal.span {(l : L)} ⊔ Ideal.span {d} with hJ
   set I : Ideal Q := J.map i with hI
-  haveI : IsAdicComplete I Q := hc.complete
+  have : IsAdicComplete I Q := hc.complete
   have hpow : ∀ n, (J ^ n).map i = I ^ n := fun n => Ideal.map_pow _ _ _
   have surj : ∀ (x : Q) n, ∃ a, x - i a ∈ I ^ n := fun x n => by
     obtain ⟨a, ha⟩ := hc.surj x n; exact ⟨a, by rwa [← hpow]⟩
@@ -282,7 +282,7 @@ theorem pow_mul_eq_zero_of_invertible {A : Type} [CommRing A] (I : Ideal A) (hI 
   obtain ⟨S, hS⟩ := hfg
   let k : A → ℕ := fun x => if hx : x ∈ I then (h x hx).choose else 0
   have hk : ∀ x ∈ I, f ^ k x * (c * x) = 0 := fun x hx => by
-    simp only [k, dif_pos hx]; exact (h x hx).choose_spec
+    simp only [k, dite_eq_left hx]; exact (h x hx).choose_spec
   refine ⟨S.sup k, ?_⟩
   have hle : I ≤ LinearMap.ker (LinearMap.mulLeft A (f ^ S.sup k * c)) := by
     rw [← hS, Submodule.span_le]
@@ -547,7 +547,7 @@ theorem GenAway₂ : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (B : O
       rw [hJdef, Ideal.map_sup, Ideal.map_span, Ideal.map_span, Set.image_singleton, Set.image_singleton,
         map_natCast, hla]
       exact sup_le_sup_left (Ideal.span_le.2 (Set.singleton_subset_iff.2 (gC.f_I d hg.1))) _
-    haveI := C.complete
+    have := C.complete
     have hhaus : IsHausdorff (JJ C) C.A := inferInstance
     obtain ⟨h, hh⟩ := _root_.GlobalTheory.BSP.exists_ringHom_comp_of_isCompl _ Q C.A i J (JJ C) hi C.complete lift hJle
     have hhi : ∀ y, h (i y) = lift y := fun y => RingHom.congr_fun hh y
@@ -638,7 +638,7 @@ theorem isLoc_of_locP (hrig : ∀ (B B' : Obj l R) (f : Hom B B'), B.I.map f.f =
   have hJ : ∀ m, adI L.Q ^ m = (adI B ^ m).map L.inl.f :=
     adI_pow_eq_map_of_map_I L.inl (hrig _ _ _)
   refine ⟨fun m => ?_, fun Q a ha => ?_⟩
-  · letI := (qmap L.inl m).toAlgebra
+  · let := (qmap L.inl m).toAlgebra
     have hmap : ∀ b : B.A, algebraMap (B.A ⧸ adI B ^ m) (L.Q.A ⧸ adI L.Q ^ m) (Ideal.Quotient.mk _ b) =
         Ideal.Quotient.mk _ (L.inl.f b) := fun b => rfl
     refine (isLocalization_iff _ _).2 ⟨?_, ?_, ?_⟩

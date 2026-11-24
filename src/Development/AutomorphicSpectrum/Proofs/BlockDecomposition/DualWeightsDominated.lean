@@ -111,9 +111,9 @@ theorem exists_top_add (φ : (Fin n → ℤ) →+ ℤ) (f g : LP n) (hf : f ≠ 
     simp only [Finsupp.sum]
     rw [Finset.sum_eq_single a]
     · rw [Finset.sum_eq_single b]
-      · rw [if_pos rfl]
+      · rw [ite_eq_left rfl]
       · intro y _ hne
-        rw [if_neg]
+        rw [ite_eq_right]
         intro he
         exact hne (add_left_cancel he)
       · intro h
@@ -122,7 +122,7 @@ theorem exists_top_add (φ : (Fin n → ℤ) →+ ℤ) (f g : LP n) (hf : f ≠ 
     · intro x hx hne
       apply Finset.sum_eq_zero
       intro y hy
-      rw [if_neg]
+      rw [ite_eq_right]
       intro he
       have h1 : D x < D a := lt_of_le_of_ne (hamax x hx) (hD.ne hne)
       have h2 : D y ≤ D b := hbmax y hy
@@ -154,7 +154,7 @@ theorem Bd.mul {φ : (Fin n → ℤ) →+ ℤ} {f g : LP n} {B C : ℤ} (hf : Bd
   by_cases he : x + y = ν
   · rw [← he, map_add (f := _)]
     exact add_le_add (hf x (Finsupp.mem_support_iff.1 hx)) (hg y (Finsupp.mem_support_iff.1 hy))
-  · exact absurd (if_neg he) hy'
+  · exact absurd (ite_eq_right he) hy'
 
 theorem Bd.add {φ : (Fin n → ℤ) →+ ℤ} {f g : LP n} {B : ℤ} (hf : Bd φ f B) (hg : Bd φ g B) :
     Bd φ (f + g) B := by
@@ -176,7 +176,7 @@ theorem bd_single (φ : (Fin n → ℤ) →+ ℤ) (m : Fin n → ℤ) (r : ℂ) 
   rw [AddMonoidAlgebra.coeff_single, Finsupp.single_apply] at hν
   by_cases h : m = ν
   · rw [h]
-  · exact absurd (if_neg h) hν
+  · exact absurd (ite_eq_right h) hν
 
 theorem Bd.sum {ι : Type*} {φ : (Fin n → ℤ) →+ ℤ} (s : Finset ι) (F : ι → LP n) {B : ℤ}
     (h : ∀ i ∈ s, Bd φ (F i) B) : Bd φ (∑ i ∈ s, F i) B := by
@@ -244,7 +244,7 @@ theorem coeff_altL_delZ : (altL (delZ n)).coeff (delZ n) = 1 := by
   · simp
   · intro σ _ hσ
     rw [AddMonoidAlgebra.coeff_smul, Finsupp.smul_apply, AddMonoidAlgebra.coeff_single, Finsupp.single_apply,
-      if_neg, smul_zero]
+      ite_eq_right, smul_zero]
     intro he
     apply hσ
     ext i
@@ -303,10 +303,10 @@ theorem range_sums (k N : ℕ) :
   | succ N ih =>
     rw [Finset.sum_range_succ, Finset.sum_range_succ, ih.1, ih.2]
     by_cases hN : N < k
-    · rw [if_pos hN, min_eq_left hN.le, min_eq_left (Nat.succ_le_of_lt hN)]
+    · rw [ite_eq_left hN, min_eq_left hN.le, min_eq_left (Nat.succ_le_of_lt hN)]
       push_cast
       constructor <;> ring
-    · rw [if_neg hN]
+    · rw [ite_eq_right hN]
       push_neg at hN
       rw [min_eq_right hN, min_eq_right (by omega)]
       simp
@@ -356,7 +356,7 @@ theorem domLE_of_mul_eq : ∀ {n : ℕ} (lam : Fin n → ℤ), Antitone lam → 
     exact Finset.sum_congr rfl fun a _ => by simp only [wk]; split_ifs <;> simp
   have hm0 : ∀ a, m0 lam a = ((2 * lam a + ((n : ℤ) - 1 - 2 * ((a : ℕ) : ℤ)) : ℤ) : ℝ) := by
     intro a; simp only [m0]; push_cast; ring
-  have hw1 : ∀ a : Fin n, wk n a = 1 := fun a => if_pos a.isLt
+  have hw1 : ∀ a : Fin n, wk n a = 1 := fun a => ite_eq_left a.isLt
   have htot : ∑ a : Fin n, ((n : ℤ) - 1 - 2 * ((a : ℕ) : ℤ)) = 0 := by
     have := sum_max_eq (n := n) n
     simp only [hw1, sub_self, max_self, Finset.sum_const_zero, one_mul] at this
@@ -417,7 +417,7 @@ def torus : (Fin n → Circle) →* Matrix.unitaryGroup (Fin n) ℂ where
 theorem continuous_torus : Continuous (torus (n := n)) := by
   apply Continuous.subtype_mk
   apply Continuous.matrix_diagonal
-  exact continuous_pi fun a => continuous_subtype_val.comp (continuous_apply a)
+  exact continuous_pi fun a => continuous_subtypeVal.comp (continuous_apply a)
 
 variable (E : KMod n)
 
@@ -425,7 +425,7 @@ theorem inner_rho (k : Matrix.unitaryGroup (Fin n) ℂ) (x y : E.V) : ⟪E.ρ k 
   (⟨(E.ρ k : E.V →ₗ[ℂ] E.V), E.iso k⟩ : E.V →ₗᵢ[ℂ] E.V).inner_map_map x y
 
 theorem rho_inv_apply (k : Matrix.unitaryGroup (Fin n) ℂ) (y : E.V) : E.ρ k (E.ρ k⁻¹ y) = y := by
-  rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one, ContinuousLinearMap.one_apply]
+  rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]
 
 theorem inner_rho_left (k : Matrix.unitaryGroup (Fin n) ℂ) (x y : E.V) :
     ⟪E.ρ k x, y⟫_ℂ = ⟪x, E.ρ k⁻¹ y⟫_ℂ := by
@@ -484,7 +484,7 @@ theorem span_V : ⨆ χ : (Fin n → Circle) → ℂ, ⨅ t, eigenspace (rhoT E 
     have h : torus s * torus t = torus t * torus s := by rw [← map_mul, ← map_mul, mul_comm]
     refine LinearMap.ext fun x => ?_
     simp only [rhoT, Module.End.mul_apply, ContinuousLinearMap.coe_coe]
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, h, map_mul, ContinuousLinearMap.mul_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, h, map_mul, mul_apply_eq_comp]
   · intro t
     refine ⟨t⁻¹, fun x y => ?_⟩
     simp only [rhoT, ContinuousLinearMap.coe_coe]
@@ -498,11 +498,11 @@ theorem exists_weight {χ : (Fin n → Circle) → ℂ} {v : E.V}
   have hmul : ∀ s t, χ (s * t) = χ s * χ t := by
     intro s t
     have h := hχ (s * t)
-    rw [map_mul, map_mul, ContinuousLinearMap.mul_apply, hχ t, map_smul, hχ s, smul_smul] at h
+    rw [map_mul, map_mul, mul_apply_eq_comp, hχ t, map_smul, hχ s, smul_smul] at h
     rw [← smul_left_injective ℂ hv0 h, mul_comm]
   have hone : χ 1 = 1 := by
     have h := hχ 1
-    rw [map_one, map_one, ContinuousLinearMap.one_apply] at h
+    rw [map_one, map_one, one_apply_eq_self] at h
     exact (smul_left_injective ℂ hv0 (h.symm.trans (one_smul ℂ v).symm))
   have hvv : ⟪v, v⟫_ℂ ≠ 0 := inner_self_ne_zero.2 hv0
   have hform : ∀ t, χ t = ⟪v, E.ρ (torus t) v⟫_ℂ / ⟪v, v⟫_ℂ := by
@@ -568,7 +568,7 @@ namespace GlobalTheory.CompanionTheory.RealCount.Tope
 open PositivityTheory.RgBcC Module.End GlobalTheory.CompanionTheory.RealCount.TorusSpan
 
 theorem iSup_wtDual_eq_top {n : ℕ} (E : KMod n) : (⨆ μ, wtDual E μ) = ⊤ := by
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   rw [eq_top_iff]
   intro ξ _
   obtain ⟨v, rfl⟩ := (InnerProductSpace.toDual ℂ E.V).surjective ξ
@@ -584,7 +584,7 @@ theorem iSup_wtDual_eq_top {n : ℕ} (E : KMod n) : (⨆ μ, wtDual E μ) = ⊤ 
     intro k z hk
     obtain ⟨t, rfl, htz⟩ := exists_torus k z hk
     ext w
-    rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, InnerProductSpace.toDual_apply_apply,
+    rw [ContinuousLinearMap.comp_apply, smul_apply, InnerProductSpace.toDual_apply_apply,
       InnerProductSpace.toDual_apply_apply, ← inner_rho_left, hμ, inner_smul_left, smul_eq_mul]
     congr 1
     rw [map_prod]
@@ -670,7 +670,7 @@ theorem torChar_injective : Function.Injective (torChar (n := n)) := by
   have h2 : w ^ (μ a - ν a) = 1 := by
     rw [zpow_sub₀ hw0, h1, div_self (zpow_ne_zero _ hw0)]
   have h3 : w ^ (μ a - ν a) = -1 := by
-    rw [hw, ← Complex.exp_int_mul]
+    rw [hw, ← Complex.exp_intCast_mul]
     have hd' : ((μ a - ν a : ℤ) : ℂ) ≠ 0 := Int.cast_ne_zero.2 hd
     have : (((μ a - ν a : ℤ)) : ℂ) * (((Real.pi / ((μ a - ν a : ℤ) : ℝ) : ℝ) : ℂ) * Complex.I) =
         (Real.pi : ℂ) * Complex.I := by
@@ -1016,7 +1016,7 @@ theorem topeG : ∀ {n : ℕ} (lam : Fin n → ℤ), Antitone lam → ∀ (E : K
   have hmem : ∀ μ, wtDual E μ ≠ ⊥ → μ ∈ s := fun μ h => by simpa [hs] using h
   obtain ⟨h1, -⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.Tope.Ident.lefK_laurent_ident lam E T hT hspan hind s hmem
   refine ⟨hspan, fun μ hμ => _root_.GlobalTheory.CompanionTheory.RealCountG.DomA.domLE_of_mul_eq lam hlam _ h1 μ ?_⟩
-  rw [cPoly_coeff, if_pos (hmem μ hμ), trOn_dualT_id]
+  rw [cPoly_coeff, ite_eq_left (hmem μ hμ), trOn_dualT_id]
   have : Module.finrank ℂ (wtDual E μ) ≠ 0 := fun h0 => hμ (Submodule.finrank_eq_zero.1 h0)
   exact_mod_cast this
 

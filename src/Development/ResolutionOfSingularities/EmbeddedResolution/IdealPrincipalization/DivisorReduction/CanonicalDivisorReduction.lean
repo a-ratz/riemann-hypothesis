@@ -879,14 +879,14 @@ private theorem take_eraseIdx_append_singleton {α : Type*} (A : List α) (e : �
     List.take n ((A ++ [e]).eraseIdx j) = A.eraseIdx j := by
   subst hn
   have hlen : (A.eraseIdx j).length = A.length - 1 := by
-    rw [List.length_eraseIdx, if_pos hj]
+    rw [List.length_eraseIdx, ite_eq_left hj]
   rw [List.eraseIdx_append_of_lt_length hj, ← hlen, List.take_left]
 
 private theorem take_length_sub_one_eraseIdx {α : Type*} (A : List α) (j n : ℕ) (hj : j < A.length)
     (hn : n = A.length - 1) : List.take n (A.eraseIdx j) = A.eraseIdx j := by
   subst hn
   refine List.take_of_length_le ?_
-  rw [List.length_eraseIdx, if_pos hj]
+  rw [List.length_eraseIdx, ite_eq_left hj]
 
 private theorem top_pow {Y : Scheme.{u}} (m : ℕ) :
     (⊤ : Y.IdealSheafData) ^ m = ⊤ := by
@@ -1287,9 +1287,9 @@ theorem orderAtLeastLocus_withBoundary_baseChange_eq_preimage (T : MarkedIdealWi
     (E' : List (T.baseChange K f).scheme.IdealSheafData) (m : ℕ) :
     orderAtLeastLocus ((T.baseChange K f).withBoundary E').ideal m =
       (fieldBaseChangeProjection T K f) ⁻¹' orderAtLeastLocus T.ideal m := by
-  haveI : CharZero T.base := hV.charZero
-  haveI : CharZero K := (RingHom.charZero_iff f.injective).mp hV.charZero
-  haveI : AlgebraicGeometry.Smooth T.structMap := hV.smooth
+  have : CharZero T.base := hV.charZero
+  have : CharZero K := (RingHom.charZero_iff f.injective).mp hV.charZero
+  have : AlgebraicGeometry.Smooth T.structMap := hV.smooth
   exact orderAtLeastLocus_comap_fieldBaseChange T.structMap (CommRingCat.ofHom f) T.ideal m
 
 end FunctorialResolution.EmbeddedResolution

@@ -88,15 +88,15 @@ theorem isClopen_setOf_genPt_specializes (X : Scheme.{0}) (Ω : Type) [Field Ω]
   · rw [isOpen_iff_mem_nhds]
     intro p hp
     obtain ⟨U, hU, hpU, -⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := p) trivial
-    haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+    have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
     obtain ⟨V, hV, hpV, hVq⟩ := @exists_isOpen_common_generization U _
       (noetherianSpace_of_isAffineOpen U hU) U.isOpen.isOpenEmbedding_subtypeVal.quasiSober
       ⟨p, hpU⟩
-    have hopen : IsOpen (Subtype.val '' V : Set X) := U.isOpen.isOpenMap_subtype_val V hV
+    have hopen : IsOpen (Subtype.val '' V : Set X) := U.isOpen.isOpenMap_subtypeVal V hV
     refine Filter.mem_of_superset (hopen.mem_nhds ⟨_, hpV, rfl⟩) ?_
     rintro _ ⟨q, hq, rfl⟩
     obtain ⟨z, hzp, hzq⟩ := hVq q hq
     exact (genPt_specializes_of_specializes ξ h (p := p) hp
-      (hzp.map continuous_subtype_val)).trans (hzq.map continuous_subtype_val)
+      (hzp.map continuous_subtypeVal)).trans (hzq.map continuous_subtypeVal)
 
 end GlobalTheory.CompanionTheory.Ar

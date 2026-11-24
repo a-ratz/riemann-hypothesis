@@ -87,7 +87,7 @@ theorem isBounded_sublevel {g : ℕ} (Hm : Matrix (Fin g) (Fin g) ℂ)
     (a := 0) (fun b hb => hp b (by rintro rfl; simp at hb))
   refine (Metric.isBounded_closedBall (x := (0 : Fin g → ℂ)) (r := 1 + c / m)).subset ?_
   intro z hz
-  simp only [Set.mem_setOf_eq] at hz
+  simp only [Set.mem_ofPred_eq] at hz
   rw [mem_closedBall_zero_iff]
   by_cases h0 : z = 0
   · subst h0
@@ -138,7 +138,7 @@ theorem finite_order {g : ℕ} {L : Type} [AddCommGroup L] [Module.Finite ℤ L]
     intro a
     have hfin := Metric.finite_isBounded_inter_isClosed (s := (P.range : Set (Fin g → ℂ)))
       DiscreteTopology.isDiscrete (isBounded_sublevel Hm hp (hermForm Hm (P a) (P a)).re)
-      AddSubgroup.isClosed_of_discrete
+      AddSubgroup.isClosed_of_discreteTopology
     obtain ⟨m, n, hmn, he⟩ := Set.Finite.exists_lt_map_eq_of_forall_mem
       (f := fun n : ℕ => P ((δ ^ n) a)) (t := _ ∩ (P.range : Set (Fin g → ℂ))) (fun n => Set.mem_inter
         (show P ((δ ^ n) a) ∈ {z : Fin g → ℂ | (hermForm Hm z z).re ≤ (hermForm Hm (P a) (P a)).re}
@@ -193,12 +193,12 @@ theorem ex_eq_of_level_group : (∀ (Y : Type) [AddCommGroup Y] [Module.Free ℤ
       exact ⟨e + e', by rw [map_add (f := _), he, he', smul_add]; abel⟩
   have f₀ := GlobalTheory.LevelHalf.trivial_mod_of_trivial_on_half E H (U.Di i) l gam hiso hM
   have f₁ := GlobalTheory.LevelHalf.trivial_mod_of_trivial_on_half E H (U.Di i) l gam₁ hiso₁ hM₁'
-  haveI := (U.Di i).fin
-  haveI : Module.Finite ℤ (U.Di i).La := Module.Finite.trans (𝓞 E) _
+  have := (U.Di i).fin
+  have : Module.Finite ℤ (U.Di i).La := Module.Finite.trans (𝓞 E) _
   obtain ⟨-, hinj, hd, hsp, Hm, -, hp, hE⟩ := hP'
-  haveI : Module.IsTorsionFree ℤ (U.Di i).La :=
+  have : Module.IsTorsionFree ℤ (U.Di i).La :=
     Function.Injective.moduleIsTorsionFree P' hinj (fun r x => map_zsmul P' r x)
-  haveI : Module.Free ℤ (U.Di i).La := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ (U.Di i).La := Module.free_of_finite_type_torsion_free'
   let δ : (U.Di i).La ≃ₗ[ℤ] (U.Di i).La := (gam₁.symm.trans gam).toAddEquiv.toIntLinearEquiv
   have hδ : ∀ a, δ a = gam (gam₁.symm a) := fun a => rfl
   obtain ⟨n, hn, hδn⟩ := finite_order P' hinj hd hsp Hm hp δ

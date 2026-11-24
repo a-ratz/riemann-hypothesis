@@ -114,7 +114,7 @@ private lemma hessC_add_potential {D : ℕ} {f g : (Fin D → ℂ) → ℝ} {y :
     rw [hd.fderiv_eq]
     exact fderiv_add hf2 hg2
   ext i k
-  simp only [hessC, hH, Matrix.add_apply, ContinuousLinearMap.add_apply]
+  simp only [hessC, hH, Matrix.add_apply, add_apply]
   push_cast
   ring
 
@@ -148,7 +148,7 @@ private lemma hessC_re_of_analyticAt {D : ℕ} {H : (Fin D → ℂ) → ℂ} {y 
       | rfl
       | simp
   ext i k
-  simp only [hessC, hv, Matrix.zero_apply, map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [hessC, hv, Matrix.zero_apply, map_smul, smul_apply, smul_eq_mul]
   simp [Complex.mul_re, Complex.mul_im]
 
 theorem st_maDens_cons_congr {n : ℕ} {f g : (Fin (n + 1) → ℂ) → ℝ}
@@ -190,7 +190,7 @@ theorem st_mInt_eq_piece [CompactSpace X] [T2Space X] (A : FinHolAtlas e X)
     mInt A Ψ g = ∫ y in (A.chart j).target ∩ (A.chart j).symm ⁻¹' G,
       g ((A.chart j).symm y) * locDens A Ψ j y := by
   rw [st_mInt_eq_chart A Ψ hΨ j g hg (hgs.trans hG)]
-  refine setIntegral_eq_of_subset_of_forall_diff_eq_zero (A.chart j).open_target.measurableSet
+  refine setIntegral_eq_of_subset_of_forall_sdiff_eq_zero (A.chart j).open_target.measurableSet
     inter_subset_left ?_
   intro y hy
   have hyG : (A.chart j).symm y ∉ G := fun h' => hy.2 ⟨hy.1, h'⟩

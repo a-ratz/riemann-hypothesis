@@ -109,7 +109,7 @@ theorem exists_sub_X_eq_X_mul :
   obtain ⟨G, hG⟩ := hdvd
   refine ⟨G, ?_, hG⟩
   have h := congrArg (coeff (Finsupp.single 1 1)) hG
-  rw [map_sub, F.lin_coeff_Y, coeff_X, if_neg (by
+  rw [map_sub, F.lin_coeff_Y, coeff_X, ite_eq_right (by
     intro e; simpa using congrArg (fun d => d 1) e)] at h
   have e := coeff_add_monomial_mul (m := Finsupp.single (1 : Fin 2) 1) (n := 0) (φ := G) (1 : R)
   rw [add_zero, one_mul, ← X_def] at e
@@ -428,10 +428,10 @@ theorem sum_enatMin_lowerIndex_lubinTateField (hf : IsLubinTateSeries π f) {n k
       · rw [hi, enatMin_coe, enatMin_coe, hS]
         push_cast
         by_cases hkm : k + 1 ≤ m
-        · rw [if_pos hkm, min_eq_right (pow_le_pow_right₀ hqR hkm),
+        · rw [ite_eq_left hkm, min_eq_right (pow_le_pow_right₀ hqR hkm),
             min_eq_right (pow_le_pow_right₀ hqR (by omega))]
           ring
-        · rw [if_neg hkm, min_eq_left (pow_le_pow_right₀ hqR (by omega)),
+        · rw [ite_eq_right hkm, min_eq_left (pow_le_pow_right₀ hqR (by omega)),
             min_eq_left (pow_le_pow_right₀ hqR (by omega))]
           ring
     simp_rw [h1]
@@ -462,7 +462,7 @@ theorem herbrandPhi_lubinTateField (hf : IsLubinTateSeries π f) {n k : ℕ} (hk
       Module.finrank K (lubinTateField Ω hπ hf n) :=
     (Nat.card_congr (lubinTateGalEquiv (Ω := Ω) hπ hf n).toEquiv).trans
       (card_units_quotient_eq_finrank (Ω := Ω) (hπ := hπ) hf n)
-  haveI : IsGalois K (lubinTateField Ω hπ hf n) := IsGalois.of_card_aut_eq_finrank K _ hc
+  have : IsGalois K (lubinTateField Ω hπ hf n) := IsGalois.of_card_aut_eq_finrank K _ hc
   have he : (IsLocalRing.maximalIdeal 𝒪[lubinTateField Ω hπ hf n]).ramificationIdx 𝒪[K] =
       Nat.card (lubinTateField Ω hπ hf n ≃ₐ[K] lubinTateField Ω hπ hf n) := by
     change ramificationIndex K (lubinTateField Ω hπ hf n) = _
@@ -541,7 +541,7 @@ theorem restrictAb_localArtinMap_lubinTate {n : ℕ} (hn : 0 < n) (E : Intermedi
         (⟨τ, by simp⟩ : ((⊤ : OpenSubgroup (Ω ≃ₐ[K] Ω)) : Subgroup (Ω ≃ₐ[K] Ω)))) := by
     rw [MulEquiv.symm_apply_eq, ClassFieldData.reciprocityAbEquiv_of]
     exact hrec.symm
-  rw [h3, abelianizationCongr_of, baseQuotientEquiv_mk]
+  rw [h3, Group.abelianizationCongr_of, baseQuotientEquiv_mk]
   rfl
 
 section Compositum

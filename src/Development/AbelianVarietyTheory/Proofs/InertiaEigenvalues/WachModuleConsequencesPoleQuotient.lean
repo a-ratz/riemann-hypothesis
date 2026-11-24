@@ -130,13 +130,13 @@ theorem conv_X_pow_mul {f : ℤ → M} {m₀ : ℤ} (hf : ∀ k < m₀, f k = 0)
   rw [conv_eq_sum _ f k _ hN', conv_eq_sum _ f (k - m) N hN, Finset.sum_range_add]
   rw [Finset.sum_eq_zero, zero_add]
   · refine Finset.sum_congr rfl fun j _ => ?_
-    rw [PowerSeries.coeff_X_pow_mul', if_pos (by omega), show m + j - m = j by omega]
+    rw [PowerSeries.coeff_X_pow_mul', ite_eq_left (by omega), show m + j - m = j by omega]
     congr 2
     push_cast
     ring
   · intro j hj
     rw [Finset.mem_range] at hj
-    rw [PowerSeries.coeff_X_pow_mul', if_neg (by omega), zero_smul]
+    rw [PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega), zero_smul]
 
 theorem combine {ι : Type} [Fintype ι] (F : ι → ℤ → M) (m₀ : ι → ℤ) (hbd : ∀ j, ∀ k < m₀ j, F j k = 0)
     (c : L) (e p : ι → PowerSeries L) (m : ℕ) (k : ℤ) :
@@ -162,8 +162,8 @@ theorem approx : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonO
   have hW := (GlobalTheory.NL.WDiv.weierstrass_dense D HW l K s LL h).2.2.1 i ζ hζ'
   choose a c hc hdiv using fun j => hW (e j) m
   choose p hp using hdiv
-  haveI := LL.2
-  haveI : IsFractionRing ↥(OL LL) ↥LL.1 :=
+  have := LL.2
+  have : IsFractionRing ↥(OL LL) ↥LL.1 :=
     integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
   obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors ↥(OL LL)) c
   have ho : ∀ j, ∃ o : ↥(OL LL), algebraMap ↥(OL LL) ↥LL.1 o = (b : ↥(OL LL)) • c j :=
@@ -661,10 +661,10 @@ theorem finite_quo (T : LocLat G Qp LL O) (q : LetA O n)
       change q • (u • x) ∈ W.N T
       rw [hinv]
       exact hx
-  haveI : Module.Finite (LetA O n) ↥(invN W T q) := by
+  have : Module.Finite (LetA O n) ↥(invN W T q) := by
     rw [hS]
     exact Module.Finite.iff_fg.2 ((W.N_fg T).map φu)
-  haveI : Module.Finite (LetA O n) (quo W T (invN W T q) (W.N T)) :=
+  have : Module.Finite (LetA O n) (quo W T (invN W T q) (W.N T)) :=
     Module.Finite.quotient (LetA O n) _
   refine finite_of_killed q (fun m => ?_) F hF
   induction m using Submodule.Quotient.induction_on with

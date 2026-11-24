@@ -312,9 +312,9 @@ theorem GlobalTheory.UnifGenPoint.main : ∀ (E : Type) [Field E] [NumberField E
     exact pullback.lift_fst _ _ _
   refine ⟨ψ, ξ, hψ, hξ1, hξ2, ?_⟩
 
-  haveI : Smooth t.G.hom := t.semi.smooth
-  haveI : GeometricallyConnected t.G.hom := t.semi.geomConnected
-  haveI : IrreducibleSpace t.G.left :=
+  have : Smooth t.G.hom := t.semi.smooth
+  have : GeometricallyConnected t.G.hom := t.semi.geomConnected
+  have : IrreducibleSpace t.G.left :=
     GlobalTheory.irreducibleSpace_of_smooth_of_geometricallyConnected_domain R t.G inferInstance inferInstance
       ⟨x' (IsLocalRing.closedPoint Ω)⟩
   set q := u (IsLocalRing.closedPoint L) with hq
@@ -341,19 +341,19 @@ theorem GlobalTheory.UnifGenPoint.main : ∀ (E : Type) [Field E] [NumberField E
       exact (hbW this).2
     exact (h1.antisymm (genericPoint_specializes q)).eq
 
-  haveI : Smooth P.A.A.hom := P.A.isAb.smooth
-  haveI : GeometricallyConnected P.A.A.hom := P.A.isAb.geomConnected
-  haveI : IrreducibleSpace P.A.A.left :=
+  have : Smooth P.A.A.hom := P.A.isAb.smooth
+  have : GeometricallyConnected P.A.A.hom := P.A.isAb.geomConnected
+  have : IrreducibleSpace P.A.A.left :=
     GlobalTheory.irreducibleSpace_of_smooth_of_geometricallyConnected_domain (FractionRing R) P.A.A inferInstance
       inferInstance ⟨ξ (IsLocalRing.closedPoint L)⟩
-  haveI : IsIntegral P.A.A.left := GlobalTheory.isIntegral_of_smooth_field_of_connectedSpace P.A.A.hom
+  have : IsIntegral P.A.A.left := GlobalTheory.isIntegral_of_smooth_field_of_connectedSpace P.A.A.hom
   set y := ξ (IsLocalRing.closedPoint L) with hy
   let mm : P.A.A.left ⟶ t.G.left := P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R)
-  haveI : IsIso P.U.gen.inv.left := ⟨⟨P.U.gen.hom.left, by
+  have : IsIso P.U.gen.inv.left := ⟨⟨P.U.gen.hom.left, by
     rw [← Over.comp_left, P.U.gen.inv_hom_id, Over.id_left], n₁⟩⟩
-  haveI : IsPreimmersion (jK R) := IsPreimmersion.of_isLocalization (nonZeroDivisors R)
-  haveI : IsPreimmersion (pullback.fst t.G.hom (jK R)) := MorphismProperty.of_isPullback (IsPullback.of_hasPullback t.G.hom (jK R)).flip inferInstance
-  haveI : IsPreimmersion mm := inferInstance
+  have : IsPreimmersion (jK R) := IsPreimmersion.of_isLocalization (nonZeroDivisors R)
+  have : IsPreimmersion (pullback.fst t.G.hom (jK R)) := MorphismProperty.of_isPullback (IsPullback.of_hasPullback t.G.hom (jK R)).flip inferInstance
+  have : IsPreimmersion mm := inferInstance
   have hmy : mm y = q := by
     rw [hq, ← hξ2]
     rfl

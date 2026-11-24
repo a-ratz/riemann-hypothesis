@@ -116,8 +116,8 @@ theorem eq_of_le_of_comap_eq_of_indEtale : ∀ (B O : Type) [CommRing B] [CommRi
     exact hne (le_antisymm hle h)
   obtain ⟨i, hi⟩ := hcov x
   obtain ⟨E, _, _, _, P, _, ⟨e⟩⟩ := hloc i
-  haveI : Algebra.QuasiFinite B (Localization.AtPrime P) := inferInstance
-  haveI : Algebra.QuasiFinite B (Si i) := (Algebra.QuasiFinite.iff_of_algEquiv e).mp inferInstance
+  have : Algebra.QuasiFinite B (Localization.AtPrime P) := inferInstance
+  have : Algebra.QuasiFinite B (Si i) := (Algebra.QuasiFinite.iff_of_algEquiv e).mp inferInstance
   have key := Algebra.QuasiFinite.eq_of_le_of_under_eq (R := B)
     (p.comap (algebraMap (Si i) O)) (p'.comap (algebraMap (Si i) O)) (Ideal.comap_mono hle)
     (by
@@ -167,7 +167,7 @@ theorem exists_pow_eq_one_isUnit_one_sub_pow (T : Type) [CommRing T] [IsDomain T
     (hT : ∀ f : Polynomial T, f.Monic → 0 < f.natDegree → ∃ x : T, f.eval x = 0) :
     ∃ ζ : T, ζ ^ q = 1 ∧ ∀ k : ℕ, 0 < k → k < q → IsUnit (1 - ζ ^ k) := by
   classical
-  haveI : NeZero (q : T) := ⟨hq.ne_zero⟩
+  have : NeZero (q : T) := ⟨hq.ne_zero⟩
   obtain ⟨x, hx⟩ := hT (Polynomial.cyclotomic q T) (Polynomial.cyclotomic.monic q T)
     (by rw [Polynomial.natDegree_cyclotomic]; exact Nat.totient_pos.2 hq0)
   have hprim : IsPrimitiveRoot x q := (Polynomial.isRoot_cyclotomic_iff).1 hx
@@ -406,7 +406,7 @@ variable {B : Type} [CommRing B] {L : Type} [AddCommGroup L] [Module B L] {q : �
 theorem smul_top_ne_top [Module.Invertible B L]
     (φ : MultilinearMap (RingHom.id B) (fun _ : Fin (q + 1) => L) B) (m : Ideal B) [hm : m.IsMaximal]
     (e : L) (he : φ (fun _ => e) ∉ m) : m • (⊤ : Submodule B (Alg φ)) ≠ ⊤ := by
-  letI : Field (B ⧸ m) := Ideal.Quotient.field m
+  let : Field (B ⧸ m) := Ideal.Quotient.field m
   let K := AlgebraicClosure (B ⧸ m)
   have hK : ∀ b : B, algebraMap B K b = algebraMap (B ⧸ m) K (Ideal.Quotient.mk m b) := fun b =>
     IsScalarTower.algebraMap_apply B (B ⧸ m) K b
@@ -475,8 +475,8 @@ theorem away_finite_projective [Module.Invertible B L]
   have hmon : (Polynomial.X ^ (q + 1) - Polynomial.C (algebraMap B Bf (φ (fun _ => e)))).Monic :=
     Polynomial.monic_X_pow_sub_C _ (Nat.succ_ne_zero q)
   let pb := AdjoinRoot.powerBasis' hmon
-  haveI := Module.Free.of_basis pb.basis
-  haveI := Module.Finite.of_basis pb.basis
+  have := Module.Free.of_basis pb.basis
+  have := Module.Finite.of_basis pb.basis
   let eq := (awayEquiv φ e).toLinearEquiv
   exact ⟨Module.Finite.equiv eq.symm, Module.Projective.of_equiv eq.symm⟩
 
@@ -503,20 +503,20 @@ theorem finite_projective_faithfullyFlat : ∀ (B : Type) [CommRing B] (L : Type
       Module.Projective (Localization.Away g.1) (F g) := by
     rintro ⟨_, e, rfl⟩
     exact away_finite_projective φ e
-  haveI (g : s) : Module.Finite (Localization.Away g.1) (F g) := (hfp g).1
-  haveI (g : s) : Module.Projective (Localization.Away g.1) (F g) := (hfp g).2
-  haveI (g : s) : IsLocalizedModule (Submonoid.powers g.1) (ϕ g) :=
+  have (g : s) : Module.Finite (Localization.Away g.1) (F g) := (hfp g).1
+  have (g : s) : Module.Projective (Localization.Away g.1) (F g) := (hfp g).2
+  have (g : s) : IsLocalizedModule (Submonoid.powers g.1) (ϕ g) :=
     (isLocalizedModule_iff_isBaseChange (Submonoid.powers g.1) (Localization.Away g.1) (ϕ g)).2
       (TensorProduct.isBaseChange B (Alg φ) (Localization.Away g.1))
-  haveI (g : s) : Module.Flat B (F g) := by
-    haveI : Module.Flat B (Localization.Away g.1) := IsLocalization.flat _ (Submonoid.powers g.1)
-    haveI : Module.Flat (Localization.Away g.1) (F g) := Module.Flat.of_projective
+  have (g : s) : Module.Flat B (F g) := by
+    have : Module.Flat B (Localization.Away g.1) := IsLocalization.flat _ (Submonoid.powers g.1)
+    have : Module.Flat (Localization.Away g.1) (F g) := Module.Flat.of_projective
     exact Module.Flat.trans B (Localization.Away g.1) (F g)
-  haveI : Module.FinitePresentation B (Alg φ) :=
+  have : Module.FinitePresentation B (Alg φ) :=
     Module.FinitePresentation.of_localizationSpan' s hs (Mₚ := F)
       (Rₚ := fun g : s => Localization.Away g.1) ϕ
       fun _ => Module.finitePresentation_of_projective _ _
-  haveI : Module.Flat B (Alg φ) :=
+  have : Module.Flat B (Alg φ) :=
     Module.flat_of_isLocalized_span B (Alg φ) s hs F ϕ fun _ => inferInstance
   refine ⟨inferInstance, Module.Flat.projective_of_finitePresentation, ?_⟩
   constructor
@@ -756,9 +756,9 @@ theorem sum_E (c : L →₀ B) (hc : (c.sum fun f a => a • φ fun _ => f) = 1)
   rw [← Finset.smul_sum, Finset.sum_comm]
   simp_rw [← Finset.sum_smul]
   rw [Finset.sum_eq_single 0]
-  · rw [sum_tw_pow ζ hζ hk 0 (Nat.succ_pos n), if_pos rfl, T_zero φ c hc, smul_smul, hs, one_smul]
+  · rw [sum_tw_pow ζ hζ hk 0 (Nat.succ_pos n), ite_eq_left rfl, T_zero φ c hc, smul_smul, hs, one_smul]
   · intro j hj hj0
-    rw [sum_tw_pow ζ hζ hk j (Finset.mem_range.1 hj), if_neg hj0, zero_smul]
+    rw [sum_tw_pow ζ hζ hk j (Finset.mem_range.1 hj), ite_eq_right hj0, zero_smul]
   · intro h; exact absurd (Finset.mem_range.2 (Nat.succ_pos n)) h
 
 theorem ev_E (c : L →₀ B) (hc : (c.sum fun f a => a • φ fun _ => f) = 1) (s : B)
@@ -845,7 +845,7 @@ theorem bijective_succ (hq : IsUnit ((n + 1 : ℕ) : B))
 
     simp only [ψ, map_sum, map_mul, ev_tmul, map_one, mul_one, hEh,
     ev_E φ c hc s hs ζ hζ hk, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true]
+    ite_true]
 
 end
 
@@ -913,7 +913,7 @@ theorem kummer_step : ∀ (B : Type) [CommRing B] (q : ℕ), 0 < q → IsUnit (q
         (Pi.algHom B (fun _ : Multiplicative (ZMod q) => D) (fun g => (act g).toAlgHom))) → Nonempty (D →ₐ[B] B)) →
     ∀ c : CommRing.Pic B, c ^ q = 1 → c = 1 := by
   intro B _ q hq hqu ⟨ζ, hζ, hζk⟩ hT c hc
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : NeZero q := ⟨hq.ne'⟩
   obtain ⟨φ, hφ⟩ := p4 B q c hc
   obtain ⟨hfin, hproj, hff⟩ := p1 B (CommRing.Pic.AsModule c) q φ hq hφ
   obtain ⟨s⟩ := hT (Alg φ) hfin hproj hff (act φ ζ hζ) (p2 B (CommRing.Pic.AsModule c) q φ hqu hφ ζ hζ hζk)
@@ -971,9 +971,9 @@ theorem exists_maximal_over_closedPt : ∀ (T E : Type) [CommRing T] [IsLocalRin
   obtain ⟨y, hy, hQy⟩ := Ideal.exists_le_maximal Q hQp.ne_top
   have hPy : P ≤ y.comap f := hQ ▸ Ideal.comap_mono hQy
 
-  letI : Field (T ⧸ maximalIdeal T) := Ideal.Quotient.field _
+  let : Field (T ⧸ maximalIdeal T) := Ideal.Quotient.field _
   have eP := Ideal.polynomialQuotientEquivQuotientPolynomial (maximalIdeal T)
-  haveI : IsJacobsonRing (T[X] ⧸ P) := isJacobsonRing_of_surjective ⟨eP.toRingHom, eP.surjective⟩
+  have : IsJacobsonRing (T[X] ⧸ P) := isJacobsonRing_of_surjective ⟨eP.toRingHom, eP.surjective⟩
   have hPnf : ¬ P.IsMaximal := by
     intro hm
     have hf : IsField (T[X] ⧸ P) := (Ideal.Quotient.maximal_ideal_iff_isField_quotient P).1 hm
@@ -986,10 +986,10 @@ theorem exists_maximal_over_closedPt : ∀ (T E : Type) [CommRing T] [IsLocalRin
     rw [hcomp]
     exact RingHom.FiniteType.comp (RingHom.FiniteType.of_surjective _ Ideal.Quotient.mk_surjective)
       (RingHom.finiteType_algebraMap.mpr inferInstance)
-  letI : Field (E ⧸ y) := Ideal.Quotient.field y
-  letI : Algebra (T[X] ⧸ P) (E ⧸ y) := φ.toAlgebra
-  haveI : Algebra.FiniteType (T[X] ⧸ P) (E ⧸ y) := hft
-  haveI : Module.Finite (T[X] ⧸ P) (E ⧸ y) := finite_of_finite_type_of_isJacobsonRing _ _
+  let : Field (E ⧸ y) := Ideal.Quotient.field y
+  let : Algebra (T[X] ⧸ P) (E ⧸ y) := φ.toAlgebra
+  have : Algebra.FiniteType (T[X] ⧸ P) (E ⧸ y) := hft
+  have : Module.Finite (T[X] ⧸ P) (E ⧸ y) := finite_of_finite_type_of_isJacobsonRing _ _
   have hker : (RingHom.ker φ).IsMaximal := by
     have := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := T[X] ⧸ P) (⊥ : Ideal (E ⧸ y))
     change (Ideal.comap φ ⊥).IsMaximal at this
@@ -1119,7 +1119,7 @@ theorem exists_section_strictHenselisation_at_closed : GlobalTheory.LocAcyc.KeyC
     exact Submonoid.mem_map.mpr ⟨t, ht, IsScalarTower.algebraMap_apply T E S t⟩
   let f : GlobalTheory.LocAcyc.GenFib T E →+* GlobalTheory.LocAcyc.GenFib T S :=
     IsLocalization.map (S := GlobalTheory.LocAcyc.GenFib T E) (GlobalTheory.LocAcyc.GenFib T S) (algebraMap E S) hMN
-  letI : Algebra (GlobalTheory.LocAcyc.GenFib T E) (GlobalTheory.LocAcyc.GenFib T S) := f.toAlgebra
+  let : Algebra (GlobalTheory.LocAcyc.GenFib T E) (GlobalTheory.LocAcyc.GenFib T S) := f.toAlgebra
   obtain ⟨act', -, htor'⟩ :=
     GlobalTheory.T.isZModTorsorFiniteProjective_baseChange (GlobalTheory.LocAcyc.GenFib T E) (GlobalTheory.LocAcyc.GenFib T S) DE q hq actE htor
   obtain ⟨σ⟩ := (GlobalTheory.LocAcyc.torsorsTrivial_iff _ q).mp htriv _ act' htor'
@@ -1213,9 +1213,9 @@ theorem keyGeneric_of_keyClosedPts : KeyClosedPts → KeyGeneric := by
   obtain ⟨E, _, _, _, _, _, ψ, DE, _, _, actE, hDE, hred⟩ := spread_torsor T O P φ hφ hSH.2.2.2 q hq D act hD
 
   set Q : Ideal E := (maximalIdeal O).comap ψ.toRingHom with hQdef
-  haveI : Q.IsPrime := Ideal.comap_isPrime _ _
+  have : Q.IsPrime := Ideal.comap_isPrime _ _
   have hloc : (maximalIdeal O).comap φ = maximalIdeal (Localization.AtPrime P) := by
-    haveI := hSH.2.2.1
+    have := hSH.2.2.1
     apply le_antisymm
     · exact IsLocalRing.le_maximalIdeal (Ideal.comap_ne_top _ (Ideal.IsMaximal.ne_top inferInstance))
     · intro x hx
@@ -1229,12 +1229,12 @@ theorem keyGeneric_of_keyClosedPts : KeyClosedPts → KeyGeneric := by
     rw [h1, ← Ideal.comap_comap, hloc]
     exact Localization.AtPrime.under_maximalIdeal (R := Polynomial T) (I := P)
   obtain ⟨y, hymax, hQy, hyne, hyT⟩ := exists_maximal_over_closedPt T E Q (hQP.trans hPeq)
-  haveI : y.IsPrime := hymax.isPrime
+  have : y.IsPrime := hymax.isPrime
   obtain ⟨S, _, _, _, _, _, hSy, hSflat, hSpieces, s, hs⟩ :=
     section_at_closedPt hC T E hAIC y hyT hyne q hq hqu DE actE hDE
-  letI : Algebra E O := ψ.toRingHom.toAlgebra
-  haveI : HenselianLocalRing O := hSH.1
-  haveI : IsSepClosed (ResidueField O) := hSH.2.1
+  let : Algebra E O := ψ.toRingHom.toAlgebra
+  have : HenselianLocalRing O := hSH.1
+  have : IsSepClosed (ResidueField O) := hSH.2.1
   obtain ⟨σ⟩ := specialisation_map E S O Q y hQy hSy rfl hSflat hSpieces
   have hσT : ∀ t : T, σ (algebraMap T S t) = algebraMap T O t := by
     intro t
@@ -1557,7 +1557,7 @@ namespace GlobalTheory
 theorem pic_localization_strictHenselisation_no_torsion : ∀ (T O : Type) [CommRing T] [IsDomain T] [IsLocalRing T] [CommRing O] [Algebra T O] [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O] [HenselianLocalRing O] [IsSepClosed (ResidueField O)] (q : ℕ), (IsDomain T ∧ ∀ f : Polynomial T, f.Monic → 0 < f.natDegree → ∃ x : T, f.eval x = 0) → IsUnit (q : T) → 0 < q → (∃ (ι : Type) (_ : Preorder ι) (_ : IsDirected ι (· ≤ ·)) (_ : Nonempty ι) (Si : ι → Subalgebra (Polynomial T) O), Monotone Si ∧ (∀ s : O, ∃ i, s ∈ Si i) ∧ ∀ i, ∃ (A : Type) (_ : CommRing A) (_ : Algebra (Polynomial T) A) (_ : Algebra.Etale (Polynomial T) A) (q : Ideal A) (_ : q.IsPrime), Nonempty (Localization.AtPrime q ≃ₐ[(Polynomial T)] Si i)) → ∀ c : CommRing.Pic (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))), c ^ q = 1 → c = 1 := by
   intro T O _ _ _ _ _ _ _ _ _ q hT hq hq0 hSi c hc
   obtain ⟨P, hP, φ, hφ, hsh⟩ := GlobalTheory.StrictHensUnion.isStrictHenselisation_of_directed_union T O hSi
-  haveI : IsLocalRing O := hsh.1.toIsLocalRing
+  have : IsLocalRing O := hsh.1.toIsLocalRing
   obtain ⟨ζ, hζ, hζu⟩ := GlobalTheory.exists_pow_eq_one_isUnit_one_sub_pow T q hq0 hq hT.2
   refine GlobalTheory.T.picard_torsion_trivial_of_torsors_have_sections _ q hq0 ?_ ⟨algebraMap T _ ζ, ?_, ?_⟩ ?_ c hc
   · simpa using hq.map (algebraMap T (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))))
@@ -1588,8 +1588,8 @@ theorem incomp : ∀ (B O : Type) [CommRing B] [CommRing O] [Algebra B O], (∃ 
 theorem poly : ∀ (T : Type) [CommRing T] [IsDomain T] (P P' : Ideal (Polynomial T)), P.IsPrime → P'.IsPrime → P ≤ P' → P ≠ ⊥ → P'.comap (algebraMap T (Polynomial T)) = ⊥ → P = P' := by
   intro T _ _ P P' hP hP' hle h0 hC
   let K := FractionRing T
-  letI : Algebra (Polynomial T) (Polynomial K) := Polynomial.algebra T K
-  haveI : IsLocalization (Submonoid.map Polynomial.C (nonZeroDivisors T)) (Polynomial K) :=
+  let : Algebra (Polynomial T) (Polynomial K) := Polynomial.algebra T K
+  have : IsLocalization (Submonoid.map Polynomial.C (nonZeroDivisors T)) (Polynomial K) :=
     Polynomial.isLocalization (nonZeroDivisors T) K
   set M := Submonoid.map Polynomial.C (nonZeroDivisors T) with hM
   have hdisj' : Disjoint (M : Set (Polynomial T)) (P' : Set (Polynomial T)) := by
@@ -1650,8 +1650,8 @@ end GlobalTheory.QPic
 open GlobalTheory.QPic in
 theorem GlobalTheory.pic_generic_fibre_quotient_strictHenselisation_no_torsion : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [IsLocalRing T], AIC T → IsUnit (q : T) → ∀ (O : Type) [CommRing O] [Algebra T O] [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O] [HenselianLocalRing O] [IsSepClosed (IsLocalRing.ResidueField O)], (∃ (ι : Type) (_ : Preorder ι) (_ : IsDirected ι (· ≤ ·)) (_ : Nonempty ι) (Si : ι → Subalgebra (Polynomial T) O), Monotone Si ∧ (∀ s : O, ∃ i, s ∈ Si i) ∧ ∀ i, ∃ (E : Type) (_ : CommRing E) (_ : Algebra (Polynomial T) E) (_ : Algebra.Etale (Polynomial T) E) (P : Ideal E) (_ : P.IsPrime), Nonempty (Localization.AtPrime P ≃ₐ[(Polynomial T)] Si i)) → ∀ (A : Type) [CommRing A] [Algebra (Polynomial T) A] [Algebra T A] [IsScalarTower T (Polynomial T) A] (π : O →ₐ[Polynomial T] A), Function.Surjective π → ∀ c : CommRing.Pic (TensorProduct T (FractionRing T) A), c ^ q = 1 → c = 1 := by
   intro q _ T _ _ _ hAIC hq O _ _ _ _ _ _ hind A _ _ _ _ π hπ c hc
-  haveI : IsIntegrallyClosed T := GlobalTheory.LocIndEtale.isIntegrallyClosed_of_forall_monic_root T hAIC
-  haveI : IsDomain O := (GlobalTheory.indEtale_isDomain_isIntegrallyClosed (Polynomial T) O hind).1
+  have : IsIntegrallyClosed T := GlobalTheory.LocIndEtale.isIntegrallyClosed_of_forall_monic_root T hAIC
+  have : IsDomain O := (GlobalTheory.indEtale_isDomain_isIntegrallyClosed (Polynomial T) O hind).1
   let eA := Localization.tensorRightAlgEquiv (nonZeroDivisors T) A
   by_cases hI : RingHom.ker (π : O →+* A) = ⊥
   · have hinj : Function.Injective π := (RingHom.injective_iff_ker_eq_bot _).mpr hI

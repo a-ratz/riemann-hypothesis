@@ -60,10 +60,10 @@ theorem BlowUpChart.proof : BlowUpChart.Statement := by
     intro h0
     apply hj
     have h1 := hi j
-    rw [h0, map_zero, map_zero, le_zero_iff, Valuation.zero_iff] at h1
+    rw [h0, map_zero, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at h1
     exact hinj (by rw [h1, map_zero])
   have hvi : 0 < V.valuation (algebraMap A K (x i)) := by
-    rw [zero_lt_iff, Valuation.ne_zero_iff]
+    rw [pos_iff_ne_zero, Valuation.ne_zero_iff]
     exact fun h => hxi (hinj (by rw [h, map_zero]))
   have hle : ∀ y ∈ blowUpChart K x i, y ∈ V := by
     intro y hy

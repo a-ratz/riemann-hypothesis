@@ -74,8 +74,8 @@ theorem subsingleton_freePresheaf_hom_of_isEmpty (Z : Scheme.{0}) [IsEmpty Z] (M
   apply NatTrans.ext; funext U
   apply ModuleCat.hom_ext; apply LinearMap.ext; intro x
   by_cases h : IsEmpty ((Opposite.unop U : Scheme.{0}) : Type)
-  · haveI := hM _ h; exact Subsingleton.elim _ _
-  · haveI : IsEmpty (Opposite.unop U ⟶ Z) := ⟨fun f => h ⟨fun y => isEmptyElim (f.base y)⟩⟩
+  · have := hM _ h; exact Subsingleton.elim _ _
+  · have : IsEmpty (Opposite.unop U ⟶ Z) := ⟨fun f => h ⟨fun y => isEmptyElim (f.base y)⟩⟩
     have hs : Subsingleton (((freeP R).obj (yoneda.obj Z)).obj U) := by
       change Subsingleton (ULift.{1} (Opposite.unop U ⟶ Z) →₀ ULift.{1} R); infer_instance
     rw [Subsingleton.elim x 0, map_zero, map_zero]
@@ -83,7 +83,7 @@ theorem subsingleton_freePresheaf_hom_of_isEmpty (Z : Scheme.{0}) [IsEmpty Z] (M
 theorem free_zero (Z : Scheme.{0}) [IsEmpty Z] : IsZero ((free R).obj (yoneda.obj Z)) := by
   rw [IsZero.iff_id_eq_zero]
   have h1 := subsingleton_freePresheaf_hom_of_isEmpty (R := R) Z ((sheafToPresheaf Scheme.etaleTopology _).obj ((free R).obj (yoneda.obj Z)))
-    (fun U hU => by haveI := hU; exact sec_sub _ U)
+    (fun U hU => by have := hU; exact sec_sub _ U)
   apply ((sheafificationAdjunction Scheme.etaleTopology _).homEquiv ((freeP R).obj (yoneda.obj Z))
     ((free R).obj (yoneda.obj Z))).injective
   exact h1.elim _ _

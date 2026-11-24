@@ -67,7 +67,7 @@ private theorem gdet_ofRep_diagRep_map_eq_ofRep_pushCh {n : ℕ} {A A' G : Type}
 private theorem gdet_map_chi_mapRingHom_eq_map_chi {n : ℕ} {A G : Type} [CommRing A] [Group G] (D : GDet n A G)
     {A' : Type} [CommRing A'] (f : A →+* A') (x : MonoidAlgebra A G) :
     (D.map f).chi (MonoidAlgebra.mapRingHom G f x) = (D.chi x).map f := by
-  letI : Algebra A (Polynomial A') := ((algebraMap A' (Polynomial A')).comp f).toAlgebra
+  let : Algebra A (Polynomial A') := ((algebraMap A' (Polynomial A')).comp f).toAlgebra
   let φ : Polynomial A →ₐ[A] Polynomial A' :=
     { Polynomial.mapRingHom f with
       commutes' := fun a => by simp [RingHom.algebraMap_toAlgebra] }
@@ -158,12 +158,12 @@ theorem UpperTheory.V.Pa.BC.pair_bc :
       simpa [pushCh] using this
     · intro x
       have h1 := (p.psi v i).red x
-      simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+      simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
       rw [hres, h1, hr.2.1 v i]
       simp [pushCh]
     · intro x
       have h1 := (p.psi v i).mu x
-      simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+      simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
       rw [h1, hg, hr.2.2 v i]
       simp [pushCh]
   · intro i h
@@ -195,7 +195,7 @@ theorem UpperTheory.V.Pa.BC.pair_bc :
       rw [hr.1 i] at h2
       ext
       have h3 := congrArg (fun u : (ResidueField O')ˣ => (u : ResidueField O')) h2
-      simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, Units.val_one] at h3
+      simp only [pushCh, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, Units.val_one] at h3
       apply (ResidueField.map (algebraMap O O')).injective
       rw [h3, Units.val_one, map_one]
     have e : MonoidAlgebra.single h (1 : R') * (MonoidAlgebra.single x 1 - 1)

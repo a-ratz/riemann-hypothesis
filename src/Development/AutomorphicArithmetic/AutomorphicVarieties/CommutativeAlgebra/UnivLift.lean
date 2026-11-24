@@ -109,9 +109,9 @@ private theorem mk_inj {R : Type} [CommRing R] (I : Ideal R) (h : I = ⊥) :
 
 private theorem finite_of_pow (O : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueField O)]
     (A : Type) [CommRing A] [Algebra O A] [IsCO O A] (N : ℕ) (h : maximalIdeal A ^ N = ⊥) : Finite A := by
-  haveI : Finite (ResidueField A) := Finite.of_surjective _ (resMap_bijective O A).2
-  haveI : Finite (A ⧸ maximalIdeal A) := this
-  haveI := Ideal.finite_quotient_pow (IsNoetherian.noetherian (maximalIdeal A)) N
+  have : Finite (ResidueField A) := Finite.of_surjective _ (resMap_bijective O A).2
+  have : Finite (A ⧸ maximalIdeal A) := this
+  have := Ideal.finite_quotient_pow (IsNoetherian.noetherian (maximalIdeal A)) N
   exact Finite.of_injective _ (mk_inj _ h)
 
 private theorem sub_co (O : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueField O)] (N : ℕ)
@@ -121,11 +121,11 @@ private theorem sub_co (O : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueF
     (hres : ∀ x, res O A₁ (p₁ x) = res O A₂ (p₂ x)) :
     ∃ _ : IsCO O B, maximalIdeal B ^ N = ⊥ := by
   classical
-  haveI : Finite A₁ := finite_of_pow O A₁ N h₁
-  haveI : Finite A₂ := finite_of_pow O A₂ N h₂
+  have : Finite A₁ := finite_of_pow O A₁ N h₁
+  have : Finite A₂ := finite_of_pow O A₂ N h₂
   have hinj' : Function.Injective (fun x : B => (p₁ x, p₂ x)) := fun x y hxy =>
     hinj x y (congrArg Prod.fst hxy) (congrArg Prod.snd hxy)
-  haveI : Finite B := Finite.of_injective _ hinj'
+  have : Finite B := Finite.of_injective _ hinj'
   let φ : B →ₐ[O] ResidueField O := (res O A₁).comp p₁
   have hφ1 : ∀ x, φ x = res O A₁ (p₁ x) := fun x => rfl
   have hφ2 : ∀ x, φ x = res O A₂ (p₂ x) := fun x => hres x
@@ -151,11 +151,11 @@ private theorem sub_co (O : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueF
     have hy' : x * y = 1 := hy
     exact ⟨⟨x, y, hy', by rw [mul_comm]; exact hy'⟩, rfl⟩
   have hnon : ∀ x : B, IsUnit x → φ x ≠ 0 := fun x hx => (hx.map φ).ne_zero
-  haveI : Nontrivial B := ⟨⟨0, 1, fun h01 => by
+  have : Nontrivial B := ⟨⟨0, 1, fun h01 => by
     have e := congrArg φ h01
     rw [map_zero, map_one] at e
     exact zero_ne_one e⟩⟩
-  haveI : IsLocalRing B := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
+  have : IsLocalRing B := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
     by_cases ha : φ a = 0
     · right
       apply hunit
@@ -172,7 +172,7 @@ private theorem sub_co (O : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueF
       exact hx (hunit x hne)
     · intro hx hu
       exact hnon x hu hx
-  haveI : IsNoetherian B B := inferInstance
+  have : IsNoetherian B B := inferInstance
   have hpow : maximalIdeal B ^ N = ⊥ := by
     rw [eq_bot_iff]
     intro x hx
@@ -226,7 +226,7 @@ theorem UpperTheory.exists_lift_dominating_pair_of_maximalIdeal_pow_eq_bot :
   have hres : ∀ x : S, res O A₁ (p₁ x) = res O A₂ (p₂ x) := fun x =>
     (AlgHom.mem_equalizer _ _ _).mp (hle x.2)
   obtain ⟨hCO, hpow⟩ := sub_co O N A₁ A₂ h₁ h₂ S p₁ p₂ hinj hres
-  haveI := hCO
+  have := hCO
   let M : Γ → Matrix ι ι S := fun g => Matrix.of fun a b =>
     ⟨(r₁.hom g a b, r₂.hom g a b), Algebra.subset_adjoin ⟨g, a, b, rfl⟩⟩
   have hMv : ∀ g a b, ((M g a b : S) : A₁ × A₂) = (r₁.hom g a b, r₂.hom g a b) := fun _ _ _ => rfl
@@ -292,17 +292,17 @@ private theorem pullback_fin_relation (l : ℕ) [Fact l.Prime] (k : Type) [Field
     Finite {r : Γ →* Matrix ι ι (DualNumber k) //
       (∀ g a b, (r g a b).fst = rbar g a b) ∧ ∀ a b, IsLocallyConstant fun g => r g a b} := by
   classical
-  letI : Algebra (ZMod l) k := ZMod.algebra k l
+  let : Algebra (ZMod l) k := ZMod.algebra k l
   have hHopen : IsOpen (rbar.ker : Set Γ) := by
     have h := hlc.isOpen_fiber 1
     convert h using 1
     ext x
     simp [MonoidHom.mem_ker]
-  haveI : Finite (Γ ⧸ rbar.ker) := Subgroup.quotient_finite_of_isOpen _ hHopen
-  haveI := hΦ rbar.ker hHopen
-  haveI : Finite (Module.Dual (ZMod l) k) :=
+  have : Finite (Γ ⧸ rbar.ker) := Subgroup.quotient_finite_of_isOpen _ hHopen
+  have := hΦ rbar.ker hHopen
+  have : Finite (Module.Dual (ZMod l) k) :=
     Finite.of_injective (fun f => (f : k → ZMod l)) DFunLike.coe_injective
-  haveI : Finite (DualNumber k) := inferInstanceAs (Finite (k × k))
+  have : Finite (DualNumber k) := inferInstanceAs (Finite (k × k))
   have hfst : ∀ r : {r : Γ →* Matrix ι ι (DualNumber k) //
       (∀ g a b, (r g a b).fst = rbar g a b) ∧ ∀ a b, IsLocallyConstant fun g => r g a b},
       ∀ x ∈ rbar.ker, ∀ a b, (r.1 x a b).fst = (1 : Matrix ι ι k) a b := by
@@ -336,7 +336,7 @@ private theorem pullback_fin_relation (l : ℕ) [Fact l.Prime] (k : Type) [Field
   have hφopen : ∀ r a b f, IsOpen ((φ r a b f).ker : Set rbar.ker) := by
     intro r a b f
     have hlc' : IsLocallyConstant fun x : rbar.ker => φ r a b f x :=
-      ((r.2.2 a b).comp_continuous continuous_subtype_val).comp
+      ((r.2.2 a b).comp_continuous continuous_subtypeVal).comp
         (fun z => Multiplicative.ofAdd (f z.snd))
     have h := hlc'.isOpen_fiber 1
     convert h using 1
@@ -403,7 +403,7 @@ theorem UpperTheory.finite_lift_dualNumber_of_phiCond :
     intro x y hxy
     rw [Ideal.Quotient.mk_eq_mk_iff_sub_mem, hsq, Ideal.mem_bot, sub_eq_zero] at hxy
     exact hxy
-  haveI := pullback_fin_relation l (ResidueField O) Γ ι rbar hΦ hlc
+  have := pullback_fin_relation l (ResidueField O) Γ ι rbar hΦ hlc
   refine Finite.of_injective
     (fun r : Lift O rbar (DualNumber (ResidueField O)) =>
       (⟨r.hom, fun g a b => by rw [← hres]; exact r.red g a b,
@@ -482,7 +482,7 @@ private theorem fin_quot (O A : Type) [CommRing O] [IsLocalRing O] [Finite (Resi
 
 private theorem co_trunc (O A : Type) [CommRing O] [IsLocalRing O] [CommRing A]
     [Algebra O A] [IsCO O A] (n : ℕ) : IsCO O (A ⧸ maximalIdeal A ^ (n + 1)) := by
-  haveI : Nontrivial (A ⧸ maximalIdeal A ^ (n + 1)) := Ideal.Quotient.nontrivial_iff.mpr (by
+  have : Nontrivial (A ⧸ maximalIdeal A ^ (n + 1)) := Ideal.Quotient.nontrivial_iff.mpr (by
     intro h
     have hle : maximalIdeal A ^ (n + 1) ≤ maximalIdeal A := Ideal.pow_le_self (Nat.succ_ne_zero n)
     rw [h] at hle
@@ -568,7 +568,7 @@ private theorem level [Finite (ResidueField O)] (hs : Seps rbar s) (hc : IsLocal
       maximalIdeal A ^ (N + 1) = ⊥ ∧ Gen r ∧ ∀ (A' : Type) [CommRing A'] [Algebra O A'] [IsCO O A']
         (r' : Lift O rbar A'), maximalIdeal A' ^ (N + 1) = ⊥ → ∃ f : A →ₐ[O] A', r.map f = r' := by
   classical
-  haveI hk : IsCO O (ResidueField O) := (co_res O).1
+  have hk : IsCO O (ResidueField O) := (co_res O).1
   have hres0 : ∀ x : ResidueField O, res O (ResidueField O) x = x := by
     intro x
     obtain ⟨c, rfl⟩ := residue_surjective x
@@ -596,7 +596,7 @@ private theorem level [Finite (ResidueField O)] (hs : Seps rbar s) (hc : IsLocal
     exact this
   have hfinT : Set.Finite {J : Ideal (MvPowerSeries (σ × ι × ι) O) |
       maximalIdeal (MvPowerSeries (σ × ι × ι) O) ^ (N + 1) ≤ J} := by
-    haveI := fin_quot O (MvPowerSeries (σ × ι × ι) O) (N + 1)
+    have := fin_quot O (MvPowerSeries (σ × ι × ι) O) (N + 1)
     have hQ : Finite (Ideal (MvPowerSeries (σ × ι × ι) O ⧸ maximalIdeal (MvPowerSeries (σ × ι × ι) O) ^ (N + 1))) :=
       Finite.of_injective
         (fun J : Ideal (MvPowerSeries (σ × ι × ι) O ⧸ maximalIdeal (MvPowerSeries (σ × ι × ι) O) ^ (N + 1)) =>
@@ -664,7 +664,7 @@ private theorem assemble (hs : Seps rbar s) (A : ℕ → Type) [∀ N, CommRing 
         (r' : Lift O rbar A'), maximalIdeal A' ^ (N + 1) = ⊥ → ∃ f : A N →ₐ[O] A', (r N).map f = r') :
     ∃ (R : Type) (_ : CommRing R) (_ : Algebra O R) (_ : IsCO O R) (r : Lift O rbar R),
       Represents (fun _ _ _ _ _ => True) r := by
-  haveI hPc : IsAdicComplete (maximalIdeal (MvPowerSeries (σ × ι × ι) O)) (MvPowerSeries (σ × ι × ι) O) :=
+  have hPc : IsAdicComplete (maximalIdeal (MvPowerSeries (σ × ι × ι) O)) (MvPowerSeries (σ × ι × ι) O) :=
     IsCO.complete (O := O)
   choose F hF hFu using fun N => ev_exu s (r N)
   have hsurj : ∀ N, Function.Surjective (F N) := fun N => ev_surj s hs (h2 N) (hF N)
@@ -682,7 +682,7 @@ private theorem assemble (hs : Seps rbar s) (A : ℕ → Type) [∀ N, CommRing 
   have hJ2 : ∀ N, RingHom.ker (F N) ≤
       RingHom.ker (F (N + 1)) ⊔ maximalIdeal (MvPowerSeries (σ × ι × ι) O) ^ (N + 1) := by
     intro N y hy
-    haveI : IsCO O (A (N + 1) ⧸ maximalIdeal (A (N + 1)) ^ (N + 1)) := co_trunc O (A (N + 1)) N
+    have : IsCO O (A (N + 1) ⧸ maximalIdeal (A (N + 1)) ^ (N + 1)) := co_trunc O (A (N + 1)) N
     obtain ⟨f, hf⟩ := h3 N _ ((r (N + 1)).map (Ideal.Quotient.mkₐ O (maximalIdeal (A (N + 1)) ^ (N + 1))))
       (trunc_pow (O := O) (A := A (N + 1)) (N + 1))
     have hfc : f.comp (π N) = Ideal.Quotient.mkₐ O (maximalIdeal (A (N + 1)) ^ (N + 1)) := by
@@ -726,13 +726,13 @@ private theorem assemble (hs : Seps rbar s) (A : ℕ → Type) [∀ N, CommRing 
     intro x y
     rw [Ideal.Quotient.eq, hmemJ]
     simp only [map_sub, sub_eq_zero]
-  haveI : Nontrivial (MvPowerSeries (σ × ι × ι) O ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr (by
+  have : Nontrivial (MvPowerSeries (σ × ι × ι) O ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr (by
     intro hJ
     have h1m : (1 : MvPowerSeries (σ × ι × ι) O) ∈ J := by rw [hJ]; exact Submodule.mem_top
     have h10 := (hmemJ 1).1 h1m 0
     rw [map_one] at h10
     exact one_ne_zero h10)
-  haveI hRc : IsCO O (MvPowerSeries (σ × ι × ι) O ⧸ J) :=
+  have hRc : IsCO O (MvPowerSeries (σ × ι × ι) O ⧸ J) :=
     co_quot O _ _ (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
   have hanti : ∀ N K, N ≤ K → RingHom.ker (F K) ≤ RingHom.ker (F N) := by
     intro N K hNK
@@ -858,7 +858,7 @@ private theorem assemble (hs : Seps rbar s) (A : ℕ → Type) [∀ N, CommRing 
   intro R' _ _ _
   refine ⟨fun _ => trivial, fun r' _ => ?_⟩
   obtain ⟨F', hF', hF'u⟩ := ev_exu s r'
-  haveI : ∀ N, IsCO O (R' ⧸ maximalIdeal R' ^ (N + 1)) := fun N => co_trunc O R' N
+  have : ∀ N, IsCO O (R' ⧸ maximalIdeal R' ^ (N + 1)) := fun N => co_trunc O R' N
   choose fT hfT using fun N => h3 N (R' ⧸ maximalIdeal R' ^ (N + 1))
     (r'.map (Ideal.Quotient.mkₐ O (maximalIdeal R' ^ (N + 1)))) (trunc_pow (O := O) (A := R') (N + 1))
   have hcomm : ∀ N, (Ideal.Quotient.mkₐ O (maximalIdeal R' ^ (N + 1))).comp F' = (fT N).comp (F N) := by
@@ -905,8 +905,8 @@ theorem UpperTheory.V.Alg.univ_lift :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] (Γ ι : Type) [Group Γ] [TopologicalSpace Γ] [Fintype ι] [DecidableEq ι] (rbar : Γ →* Matrix ι ι (ResidueField O)) [IsTopologicalGroup Γ] [CompactSpace Γ] [TotallyDisconnectedSpace Γ] [T2Space Γ], PhiCond (Γ := Γ) l → IsLocallyConstant rbar →
       ∃ (R : Type) (_ : CommRing R) (_ : Algebra O R) (_ : IsCO O R) (r : Lift O rbar R), Represents (fun _ _ _ _ _ => True) r := by
   intro l _ O _ _ _ _ _ _ Γ ι _ _ _ _ rbar _ _ _ _ hphi hc
-  haveI hD : IsCO O (DualNumber (ResidueField O)) := (co_res O).2
-  haveI : Finite (Lift O rbar (DualNumber (ResidueField O))) := UpperTheory.finite_lift_dualNumber_of_phiCond l O Γ ι rbar hphi hc
+  have hD : IsCO O (DualNumber (ResidueField O)) := (co_res O).2
+  have : Finite (Lift O rbar (DualNumber (ResidueField O))) := UpperTheory.finite_lift_dualNumber_of_phiCond l O Γ ι rbar hphi hc
   have hne : ∀ p : {p : Lift O rbar (DualNumber (ResidueField O)) × Lift O rbar (DualNumber (ResidueField O)) //
       p.1 ≠ p.2}, ∃ g, p.1.1.hom g ≠ p.1.2.hom g := by
     intro p
@@ -919,9 +919,9 @@ theorem UpperTheory.V.Alg.univ_lift :
     exact (hne ⟨(r, r'), hrr⟩).choose_spec (h ⟨(r, r'), hrr⟩)
   have hlev := fun N => level (fun p => (hne p).choose) hs hc N
   choose A iA aA cA r h1 h2 h3 using hlev
-  letI := iA
-  letI := aA
-  haveI := cA
+  let := iA
+  let := aA
+  have := cA
   exact assemble (fun p => (hne p).choose) hs A r h1 h2 h3
 end -- clump:auto
 end -- clump:auto

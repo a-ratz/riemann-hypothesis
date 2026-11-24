@@ -161,7 +161,7 @@ theorem model_mul {E : Type} [Field E] [NumberField E] [Algebra F E] {σ : E →
   have htr : trForm F y x = GlobalTheory.GaussLine.pairInf F (Fin n × Fin d) x q := by
     rw [trForm_apply, GlobalTheory.GaussLine.pairInf_apply]
     simp only [hy, evI_liftInf]
-  rw [SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply (mult F y).hasTemperateGrowth, mult_apply, htr,
+  rw [smul_apply, SchwartzMap.smulLeftCLM_apply_apply (mult F y).hasTemperateGrowth, mult_apply, htr,
     smul_eq_mul, smul_eq_mul, ← mul_assoc, ← mul_assoc, inv_mul_cancel₀ hne, one_mul]
 
 end GlobalTheory.PolMul

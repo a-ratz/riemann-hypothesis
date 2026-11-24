@@ -75,8 +75,8 @@ theorem sep_sum (X : Type) [NormedAddCommGroup X] [NormedSpace ℝ X] [FiniteDim
     ∃ C : ℝ, 0 ≤ C ∧ ∀ ρ : ℝ, 0 < ρ → ∀ P : Finset X, (∀ p ∈ P, ρ ≤ ‖p‖) →
       (∀ p ∈ P, ∀ q ∈ P, p ≠ q → ρ ≤ ‖p - q‖) →
       ∑ p ∈ P, ((1 + ‖p‖) ^ (Module.finrank ℝ X + 1))⁻¹ ≤ C * (ρ ^ Module.finrank ℝ X)⁻¹ := by
-  letI : MeasurableSpace X := borel X
-  haveI : BorelSpace X := ⟨rfl⟩
+  let : MeasurableSpace X := borel X
+  have : BorelSpace X := ⟨rfl⟩
   rcases subsingleton_or_nontrivial X with hX | hX
   · refine ⟨0, le_rfl, fun ρ hρ P h1 _ => ?_⟩
     have hP : P = ∅ := Finset.eq_empty_of_forall_notMem fun p hp => by
@@ -212,7 +212,7 @@ theorem fin_bd (C : Set (Fin k → Af E)) (hC : IsCompact C) : ∃ B : ℝ, 1 �
   set b' : HeightOneSpectrum (𝓞 E) → ℝ := fun v => if v ∈ S then b v else 1 with hb'
   have hsub : Function.mulSupport b' ⊆ (S : Set _) := fun v hv => by
     by_contra h
-    exact hv (by simp only [hb', if_neg (show v ∉ S from h)])
+    exact hv (by simp only [hb', ite_eq_right (show v ∉ S from h)])
   refine (finprod_le_finprod_of_nonneg hfc.finite_mulSupport ((S.finite_toSet).subset hsub)
     (fun v => norm_nonneg _) fun v => ?_).trans (le_of_eq ?_)
   · simp only [hb']
@@ -220,7 +220,7 @@ theorem fin_bd (C : Set (Fin k → Af E)) (hC : IsCompact C) : ∃ B : ℝ, 1 �
     · exact hb v _ hy
     · exact (pi_norm_le_iff_of_nonneg zero_le_one).2 fun i => norm_le_one_of_mem v (hS _ hy v hv i)
   · rw [finprod_eq_prod_of_mulSupport_subset b' hsub]
-    exact Finset.prod_congr rfl fun v hv => by simp only [hb', if_pos hv]
+    exact Finset.prod_congr rfl fun v hv => by simp only [hb', ite_eq_left hv]
 
 theorem norm_pInf (a : Ad E) (w : InfinitePlace E) : ‖pInf E a w‖ = ‖a.1 w‖ :=
   (InfinitePlace.Completion.isometry_extensionEmbedding w).norm_map_of_map_zero (map_zero _) _

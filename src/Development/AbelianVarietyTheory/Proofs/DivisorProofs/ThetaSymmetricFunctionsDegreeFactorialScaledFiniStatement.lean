@@ -83,7 +83,7 @@ theorem symTup_eq_finite (K : Type) [Field K] (N : ℕ) (e : Fin N → K) :
       have hj : (j : ℕ) + 1 = k := by simp [j]; omega
       have hpos : 0 < N.factorial / ((j : ℕ) + 1) :=
         Nat.div_pos ((Nat.succ_le_of_lt j.isLt).trans (Nat.self_le_factorial N)) (Nat.succ_pos _)
-      refine (Polynomial.finite_setOf_isRoot (X_pow_sub_C_ne_zero hpos (e j))).subset ?_
+      refine (finite_setOfPred_isRoot (X_pow_sub_C_ne_zero hpos (e j))).subset ?_
       intro x hx
       simp [IsRoot, hx.2 j hj]
   let V : Set (Fin (N + 1) → K) := Set.pi Set.univ A
@@ -94,7 +94,7 @@ theorem symTup_eq_finite (K : Type) [Field K] (N : ℕ) (e : Fin N → K) :
   have hR : R.Finite := (hV.image poly).biUnion fun p _ => Multiset.finite_toSet p.roots
   refine (Set.Finite.pi (t := fun _ : Fin N => R) fun _ => hR).subset ?_
   intro c hc
-  simp only [Set.mem_setOf_eq] at hc
+  simp only [Set.mem_ofPred_eq] at hc
   let m : Multiset K := Finset.univ.val.map c
   have hm : Multiset.card m = N := by simp [m]
   let s : Fin (N + 1) → K := fun k => m.esymm k
@@ -111,7 +111,7 @@ theorem symTup_eq_finite (K : Type) [Field K] (N : ℕ) (e : Fin N → K) :
   intro a _
   simp only [R, Set.mem_iUnion, Set.mem_image]
   refine ⟨poly s, ⟨s, hs, rfl⟩, ?_⟩
-  simp only [Set.mem_setOf_eq, hpoly, Polynomial.roots_multiset_prod_X_sub_C]
+  simp only [Set.mem_ofPred_eq, hpoly, Polynomial.roots_multiset_prod_X_sub_C]
   exact Multiset.mem_map_of_mem c (Finset.mem_univ a)
 
 theorem symTup_scale_finite : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : ℕ) (e : Fin N → K), ∃ T : Finset (Fin N → K),
@@ -125,7 +125,7 @@ theorem symTup_scale_finite : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : ℕ)
     rw [zero_pow (Nat.factorial_pos N).ne'] at hmu
     exact inv_ne_zero ha hmu.symm
   refine ⟨mu, hmu0, ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   funext j
   rw [symTup_mul_left, hmu, hc, ← _root_.mul_assoc, inv_mul_cancel₀ ha, _root_.one_mul]
 

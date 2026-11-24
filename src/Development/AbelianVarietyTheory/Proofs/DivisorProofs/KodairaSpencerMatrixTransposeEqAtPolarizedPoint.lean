@@ -150,7 +150,7 @@ theorem exists_symm_of_ksCoc_grp (l₁ : Out.Laws) (l₂ : Out.Laws2)
 open GlobalTheory.LogKSBal in
 theorem map_transpose_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X) (V : X.Opens) (U : X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left)), (∀ i, IsTanAtG t (chart U) (v i)) → (∀ w, IsTanAtG t (chart U) w → ∃! cf : Fin n → Γ(X, U.1), IsCombAtG t (chart U) v cf w) → ∀ (K : Type) [Field K] [CharZero K] (x₀ : Γ(X, U.1) →+* K) (P₀ : Out.PolAV (Sp K)) (mm : P₀.A.left ⟶ t.G.left), IsGrpPullback P₀.A t.G (spMap x₀ ≫ chart U) mm → LBIso P₀.L (t.PP.L.pull mm) → U.1 ≤ V → ∀ (D : Γ(X, U.1) → Γ(X, U.1)) (Θ : Matrix (Fin n) (Fin n) Γ(X, U.1)), IsKS t V U v D Θ → (Θ.map x₀)ᵀ = Θ.map x₀ := by
   intro E _ _ _ H X t V U n v hv hb K _ _ x₀ P₀ mm hpq hPL hUV D Θ hKS
-  letI : GrpObj ((Over.pullback (chart U)).obj t.G) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback (chart U)).obj t.G) := Functor.grpObjObj
   let G := (Over.pullback (chart U)).obj t.G
   have hs := IsSemiAbelian.pullback (chart U) t.G t.semi
   have : IsSeparated G.hom := hs.separated

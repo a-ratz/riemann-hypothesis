@@ -83,7 +83,7 @@ theorem kill {X : Type} [TopologicalSpace X] (N : Submodule ℂ (X → ℂ)) (Y�
   have hmm : ∀ Y, Y ≠ Y₁ → IsLocallyConstant (mm Y) ∧ mm Y Y ≠ mm Y Y₁ ∧
       ∀ Φ ∈ SB X, (fun y => (mm Y y - mm Y Y₁) * Φ y) ∈ N := by
     intro Y hY
-    simp only [mm, dif_neg hY]
+    simp only [mm, dite_eq_right hY]
     exact Classical.choose_spec (h Y hY)
   let U : X → Set X := fun Y => {y | mm Y y ≠ mm Y Y₁}
   have hUc : ∀ Y, Y ≠ Y₁ → IsClopen (U Y) := by
@@ -182,9 +182,9 @@ private theorem coord_lemma {M : ℕ} (hM : M ≠ 0) (v : Pl F) (a : Fv F v) :
   have hS : {z : Fv F v | Valued.v (z - a) ≤ v.intValuation (M : 𝓞 F)} =
       (fun z => (z - a) * π⁻¹) ⁻¹' (v.adicCompletionIntegers F : Set (Fv F v)) := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe,
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe,
       IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀, ← hv]
-    rw [mul_inv_le_iff₀ (zero_lt_iff.mpr hv0), one_mul]
+    rw [mul_inv_le_iff₀ (pos_iff_ne_zero.mpr hv0), one_mul]
   have hO : IsClopen (v.adicCompletionIntegers F : Set (Fv F v)) :=
     Valued.isClopen_valuationSubring _
   have hcont : Continuous (fun z : Fv F v => (z - a) * π⁻¹) :=
@@ -247,8 +247,8 @@ theorem ball_cof {M : ℕ} (hM : M ≠ 0) (c : κ → Af F) :
       exact hM'
     rw [Filter.eventually_cofinite]
     refine (Ideal.finite_factors hI).subset (fun v hv => ?_)
-    simp only [Set.mem_setOf_eq, IsDedekindDomain.HeightOneSpectrum.intValuation_eq_one_iff, not_not] at hv
-    rw [Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+    simp only [Set.mem_ofPred_eq, IsDedekindDomain.HeightOneSpectrum.intValuation_eq_one_iff, not_not] at hv
+    rw [Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
     exact hv
   have h2 : ∀ᶠ v in cofinite, ∀ i, evalV F v (c i) ∈ (v : Pl F).adicCompletionIntegers F := by
     rw [Filter.eventually_all]
@@ -257,7 +257,7 @@ theorem ball_cof {M : ℕ} (hM : M ≠ 0) (c : κ → Af F) :
   filter_upwards [h1, h2] with v hv1 hv2
   have hset : ballAt M c v = {x : κ → Fv F v | ∀ i, x i ∈ v.adicCompletionIntegers F} := by
     ext z
-    simp only [ballAt, Set.mem_setOf_eq, hv1]
+    simp only [ballAt, Set.mem_ofPred_eq, hv1]
     refine forall_congr' (fun i => ?_)
     have hc := (IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).mp (hv2 i)
     rw [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers]
@@ -342,7 +342,7 @@ private theorem valuation_le_natCast_iff_inv_mul_mem_integers {M : ℕ} (hM : M 
     congr 2
   have happ : (algebraMap F (Af F) ((M : F)⁻¹) * a) v = (((M : F)⁻¹ : F) : Fv F v) * a v := rfl
   rw [happ, IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, hval,
-    inv_mul_le_iff₀ (zero_lt_iff.mpr hv0), mul_one]
+    inv_mul_le_iff₀ (pos_iff_ne_zero.mpr hv0), mul_one]
 
 private theorem isOpen_isCompact_adelic_integers :
     IsOpen {a : Af F | ∀ v : Pl F, a v ∈ v.adicCompletionIntegers F} ∧
@@ -351,7 +351,7 @@ private theorem isOpen_isCompact_adelic_integers :
   · exact RestrictedProduct.isOpen_forall_mem (fun v => Valued.isOpen_valuationSubring _)
   · have hr := RestrictedProduct.range_structureMap (fun v : Pl F => Fv F v)
       (fun v => (v.adicCompletionIntegers F : Set (Fv F v))) (𝓕 := cofinite)
-    haveI : ∀ v : Pl F, CompactSpace (v.adicCompletionIntegers F) := fun v =>
+    have : ∀ v : Pl F, CompactSpace (v.adicCompletionIntegers F) := fun v =>
       GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
     have hc := isCompact_range (RestrictedProduct.isEmbedding_structureMap (R := fun v : Pl F => Fv F v)
       (A := fun v => (v.adicCompletionIntegers F : Set (Fv F v))) (𝓕 := cofinite)).continuous
@@ -361,7 +361,7 @@ private theorem isOpen_isCompact_adelic_integers :
 private theorem exists_nat_valuation_le_subset_of_mem_nhds_zero {W : Set (Af F)} (hW : W ∈ 𝓝 (0 : Af F)) :
     ∃ n : ℕ, n ≠ 0 ∧ ∀ a : Af F, (∀ v : Pl F, Valued.v (a v) ≤ v.intValuation (n : 𝓞 F)) → a ∈ W := by
   obtain ⟨W', hW'W, hW'o, h0⟩ := mem_nhds_iff.mp hW
-  haveI : Nonempty {n : ℕ // n ≠ 0} := ⟨⟨1, one_ne_zero⟩⟩
+  have : Nonempty {n : ℕ // n ≠ 0} := ⟨⟨1, one_ne_zero⟩⟩
   let D : {n : ℕ // n ≠ 0} → Set (Af F) := fun n =>
     {a | ∀ v : Pl F, Valued.v (a v) ≤ v.intValuation ((n : ℕ) : 𝓞 F)}
   have hDclosed : ∀ n, IsClosed (D n) := by
@@ -415,7 +415,7 @@ private theorem isOpen_setOf_near {M : ℕ} (hM : M ≠ 0) (c : κ → Af F) : I
   have hset : {y | Near M c y} = ⋂ i, (fun y : κ → Af F => algebraMap F (Af F) ((M : F)⁻¹) * (y i - c i)) ⁻¹'
       {a : Af F | ∀ v : Pl F, a v ∈ v.adicCompletionIntegers F} := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, Near]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, Near]
     rw [forall_comm]
     refine forall_congr' (fun i => ?_)
     rw [← valuation_le_natCast_iff_inv_mul_mem_integers hM]
@@ -446,7 +446,7 @@ private theorem exists_near_subset_of_mem_nhds (y : κ → Af F) {U : Set (κ �
   have h1 := hz v i
   have h2 : v.intValuation (((∏ j, n j : ℕ)) : 𝓞 F) ≤ v.intValuation ((n i : ℕ) : 𝓞 F) := by
     rw [Nat.cast_prod, map_prod, ← Finset.mul_prod_erase _ _ (Finset.mem_univ i)]
-    exact mul_le_of_le_one_right' (Finset.prod_le_one' (fun j _ =>
+    exact mul_le_of_le_one_right' (Finset.prod_le_one (fun j _ =>
       IsDedekindDomain.HeightOneSpectrum.intValuation_le_one _ _))
   have e : (z - y) i v = evalV F v (z i) - evalV F v (y i) := by
     rw [Pi.sub_apply, ← map_sub]

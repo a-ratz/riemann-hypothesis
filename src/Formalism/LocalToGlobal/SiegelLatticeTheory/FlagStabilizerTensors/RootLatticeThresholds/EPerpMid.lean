@@ -67,7 +67,7 @@ theorem Qi_spanLt (hT : TrHyp F Qm Qim c) {a : ℕ} {v : Fin n → ℂ} (hv : v 
     intro i hi
     rw [Qi_e hT b]
     have hne : i ≠ Formalism.QuantumDeterminants.eI k r b := fun h => by
-      have := congrArg Fin.val h; simp only [Formalism.QuantumDeterminants.eI] at this; simp only [Set.mem_setOf_eq] at hb; omega
+      have := congrArg Fin.val h; simp only [Formalism.QuantumDeterminants.eI] at this; simp only [Set.mem_ofPred_eq] at hb; omega
     simp [Formalism.QuantumDeterminants.bvec, Pi.single_apply, hne]
   | zero => intro i _; simp
   | add x y _ _ hx hy => intro i hi; rw [Matrix.mulVec_add, Pi.add_apply, hx i hi, hy i hi, add_zero]
@@ -82,7 +82,7 @@ theorem e_perp_mid (hT : TrHyp F Qm Qim c) (a : Fin r) (j : Fin (2 * r + k + 1))
     have hsum : a.val + j.val ≠ 2 * r + k := by omega
     unfold Formalism.QuantumDeterminants.Hpk
     simp only [Formalism.QuantumDeterminants.eI, hsum, not_lt.mpr hj1, not_le.mpr ha,
-      and_false, false_and, if_false]
+      and_false, false_and, ite_false]
   rw [he, PtRepPf.hJ_smul_left, ← herm_Q hT]
   simp only [Formalism.QuantumDeterminants.herm, Formalism.QuantumDeterminants.bvec,
     ← Pi.single_star, star_one, single_dotProduct, Matrix.mulVec_single_one,

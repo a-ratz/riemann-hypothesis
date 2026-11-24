@@ -297,7 +297,7 @@ theorem stdGood : PositivityTheory.RgEis.StdGood := by
   · change Real.log ((IdeleGroup.ideleModule K (x * y) : _) : ℝ) = _
     rw [map_mul]
     exact Real.log_mul (IdeleGroup.ideleModule K x).2.ne' (IdeleGroup.ideleModule K y).2.ne'
-  · exact (continuous_subtype_val.comp IdeleGroup.continuous_ideleModule).log
+  · exact (continuous_subtypeVal.comp IdeleGroup.continuous_ideleModule).log
       fun x => (IdeleGroup.ideleModule K x).2.ne'
   · change Real.log ((IdeleGroup.ideleModule K (IdeleGroup.diagonal K x) : _) : ℝ) = 0
     rw [IdeleGroup.ideleModule_diagonal]

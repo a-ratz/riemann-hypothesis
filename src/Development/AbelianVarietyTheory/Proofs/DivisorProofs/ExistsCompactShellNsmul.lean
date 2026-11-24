@@ -67,7 +67,7 @@ theorem exists_compact_shell_nsmul : ∀ (F : Type) [Field F] [NumberField F] (v
       ∃ K : Set (Fin N → v.adicCompletion F), IsCompact K ∧ (0 : Fin N → v.adicCompletion F) ∉ K ∧
         ∀ t, t ∉ V → ∃ n : ℕ, n • t ∈ K := by
   intro F _ _ v N V hV
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
   obtain ⟨r, hr, hrV⟩ := Metric.mem_nhds_iff.1 hV
   set q : ℕ := Ideal.absNorm v.asIdeal with hqdef
   have hq0 : q ≠ 0 := by

@@ -790,7 +790,7 @@ theorem van {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ Spec (
   have hV : IsAffineOpen (capO U.U i) := by
     rw [capO_eq_iInf_image]
     exact U.inter _ ⟨i 0, Finset.mem_image_of_mem i (Finset.mem_univ 0)⟩
-  haveI := CrystallineSemistableComparison.Pb.gr_aff q (capO U.U i) hV (a + 1) a r (Nat.lt_succ_self a) hr
+  have := CrystallineSemistableComparison.Pb.gr_aff q (capO U.U i) hV (a + 1) a r (Nat.lt_succ_self a) hr
   exact e.injective.subsingleton
 
 end GlobalTheory.CompanionTheory.CapVan
@@ -1007,7 +1007,7 @@ def capM : CH.Mor ((capT (Vk q U a) i).ι ⋙ Fk q U a) ((KS q (a + 1) {capO U.U
   nat _ _ := rfl
 
 theorem capM_bij (r : ℕ) : Function.Bijective ((capM q U a n i).pull r) := by
-  haveI : (capM q U a n i).G.IsLeftAdjoint := (capE q U a n i).isLeftAdjoint_functor
+  have : (capM q U a n i).G.IsLeftAdjoint := (capE q U a n i).isLeftAdjoint_functor
   exact CrystallineSemistableComparison.P.adj_mor (capM q U a n i) (fun _ => Function.bijective_id) r
 
 end Cap
@@ -1521,7 +1521,7 @@ theorem tq_spec (e : ∀ {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K)) [I
     (q : X ⟶ Spec (CommRingCat.of K)) [Smooth q] (V : X.Opens) (hV : IsAffineOpen V) (a : ℕ) (z : HT.Hdg (V.ι ≫ q) a a) :
     haveI : IsAffine V.toScheme := hV
     fb q V a (tq e m hm q V hV a ((m q V (a + 1) a).pull a ((trM (V.ι ≫ q) (a + 1) a).pull a z))) = e (V.ι ≫ q) a z := by
-  haveI : IsAffine V.toScheme := hV
+  have : IsAffine V.toScheme := hV
   have h1 := (LinearEquiv.ofBijective ((m q V (a + 1) a).pull a) (hm q V (a + 1) a a)).symm_apply_apply
     ((trM (V.ι ≫ q) (a + 1) a).pull a z)
   have h2 := (LinearEquiv.ofBijective ((trM (V.ι ≫ q) (a + 1) a).pull a) (trM_bij _ _ _ (Nat.lt_succ_self a) a)).symm_apply_apply z
@@ -1549,8 +1549,8 @@ theorem term_aff : ∀ (K : Type) [Field K] [CharZero K],
   obtain ⟨m, hm, hn⟩ := _root_.GlobalTheory.CompanionTheory.OpenThick.open_thick K
   refine ⟨fun q _ V hV a => tq (@e) (@m) (@hm) q V hV a, ?_⟩
   intro X Y q p _ _ u hu V W hV hW h a hG x
-  haveI : IsAffine V.toScheme := hV
-  haveI : IsAffine W.toScheme := hW
+  have : IsAffine V.toScheme := hV
+  have : IsAffine W.toScheme := hW
   obtain ⟨y, rfl⟩ := (hm p W (a + 1) a a).2 x
   obtain ⟨z, rfl⟩ := (trM_bij (W.ι ≫ p) (a + 1) a (Nat.lt_succ_self a) a).2 y
   have hh := over_res hu h

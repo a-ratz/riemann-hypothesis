@@ -74,7 +74,7 @@ theorem dual_sub (Z : LocDat D) (p : PlF D) (z : (D.s.atP p).Fp)
     (hz : haveI := (D.s.atP p).ellPrime; ∀ c ∈ 𝒪[(D.s.atP p).Fp],
       ‖Algebra.trace ℚ_[Loc.resChar p] (D.s.atP p).Fp (c * z)‖ ≤ 1) :
     Z.δ p * z ∈ 𝒪[(D.s.atP p).Fp] := by
-  haveI : Fact (Loc.resChar p).Prime := (D.s.atP p).ellPrime
+  have : Fact (Loc.resChar p).Prime := (D.s.atP p).ellPrime
   obtain ⟨-, hδ, -, hO, hpsi, -⟩ := Z.agree p
   have hx : algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (Z.δ p * z) ∈ (Z.M p).L.O := by
     rw [← (Z.M p).L.additive_character_dual_ring]
@@ -117,8 +117,8 @@ theorem diff_sub (Z : LocDat D) (p : PlF D) (x : 𝓞 D.host.F) (hx : x ∈ diff
 theorem dual_glob (Z : LocDat D) (p : PlF D) (t : D.host.F)
     (ht : ∀ a : 𝓞 D.host.F, ∃ n : ℤ, Algebra.trace ℚ D.host.F (t * a) = n) :
     Z.δ p * (D.s.atP p).ιF t ∈ 𝒪[(D.s.atP p).Fp] := by
-  haveI : Fact (Loc.resChar p).Prime := (D.s.atP p).ellPrime
-  haveI := (D.s.atP p).lf
+  have : Fact (Loc.resChar p).Prime := (D.s.atP p).ellPrime
+  have := (D.s.atP p).lf
   exact dual_sub Z p _ (fun c hc => trace_dual_local D.host.F p (D.s.atP p).Fp (D.s.atP p).qlCont
     (D.s.atP p).qlFin (D.s.atP p).ιF (D.s.atP p).dense (D.s.atP p).val t ht c hc)
 
@@ -153,7 +153,7 @@ theorem span_different_eq : ∀ (D : D7) (Z : LocDat D) (p : PlF D), Submodule.s
         FractionalIdeal.dual ℤ ℚ (1 : FractionalIdeal (nonZeroDivisors (𝓞 D.host.F)) D.host.F)) →
         algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (Z.δ p * (D.s.atP p).ιF y) ∈ N := by
       intro y hy
-      rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_mul] at hy
+      rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_mul] at hy
       refine Submodule.mul_induction_on hy ?_ ?_
       · intro m hm n hn
         obtain ⟨x, hx, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 hm

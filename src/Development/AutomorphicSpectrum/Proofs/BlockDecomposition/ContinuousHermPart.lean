@@ -94,7 +94,7 @@ theorem isCoLat_herm : GlobalTheory.CuspGeneric.IsCoLat (ratHerm D r) := by
     have hinj : Function.Injective φ := fun a b h =>
       Subtype.ext (Subtype.ext (by simpa [φ] using congrArg Subtype.val h))
     have hcont : Continuous φ :=
-      ((continuous_subtype_val.comp continuous_subtype_val)).subtype_mk _
+      ((continuous_subtypeVal.comp continuous_subtypeVal)).subtype_mk _
     exact DiscreteTopology.of_continuous_injective hcont hinj
   · let P : Mx D r r → hermA D r := fun x => ⟨hermPart D r x, hermPart_mem x⟩
     have hP : Continuous P := continuous_hermPart.subtype_mk _
@@ -108,14 +108,14 @@ theorem isCoLat_herm : GlobalTheory.CuspGeneric.IsCoLat (ratHerm D r) := by
 theorem exists_isCovolOneH : ∀ (D : Formalism.BasicNotions.D7) (r : ℕ), ∃ (lam : Measure (PositivityTheory.GramSchwartzFunctions.BC.hermA D r)) (𝓖 : Set (PositivityTheory.GramSchwartzFunctions.BC.hermA D r)), PositivityTheory.GramSchwartzFunctions.BC.IsCovolOneH lam 𝓖 := by
   intro D r
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D r r
-  haveI : IsTopologicalAddGroup (Mx D r r) := i1
-  haveI : LocallyCompactSpace (Mx D r r) := i2
-  haveI : SecondCountableTopology (Mx D r r) := i3
-  haveI : T2Space (Mx D r r) := i4
-  haveI : SecondCountableTopology (hermA D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space (hermA D r) := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (hermA D r) := (isClosed_hermA (D := D) (r := r)).locallyCompactSpace
+  have : IsTopologicalAddGroup (Mx D r r) := i1
+  have : LocallyCompactSpace (Mx D r r) := i2
+  have : SecondCountableTopology (Mx D r r) := i3
+  have : T2Space (Mx D r r) := i4
+  have : SecondCountableTopology (hermA D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space (hermA D r) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : LocallyCompactSpace (hermA D r) := (isClosed_hermA (D := D) (r := r)).locallyCompactSpace
   obtain ⟨μ, 𝓕, hμ, hF, h1⟩ :=
     GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one (hermA D r) _ isCoLat_herm
   exact ⟨μ, 𝓕, hμ, hF, h1⟩

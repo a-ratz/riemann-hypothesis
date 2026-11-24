@@ -159,8 +159,8 @@ theorem mem_localization_ker (emb : ι → E →+* K) (σ : K →+* ℂ) (lam : 
         (fun τ => if τ = e P then atInf (embAt σ emb) ((B'⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) τ
           else atInf (embAt σ emb) ((B⁻¹ : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) τ) (MvPolynomial.map σ z) := by
   have hfull : Submodule.IsFullLattice E (d.LshKer P) := by
-    letI := hd.L_full_lattice
-    letI := hd.LshKer_lattice ha P
+    let := hd.L_full_lattice
+    let := hd.LshKer_lattice ha P
     exact Submodule.IsFullLattice.of_le E (fun x hx =>
       (hd.mem_LshKer ha P x).2 ⟨hd.L_le_Lsh hx, ((hd.mem_L x).1 hx).2 P⟩)
   rw [mem_localization_delAtr_fn emb σ lam w hfull (fun τ => if τ = e P then B' else B)]
@@ -175,9 +175,9 @@ theorem mem_localization_ker (emb : ι → E →+* K) (σ : K →+* ℂ) (lam : 
     rw [he]
     by_cases hQ : Q = P
     · subst hQ
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact (localization_LshKer_eq_localization_sup hd ha Q).trans (isBasisAt_of_isLocBasis hT Q.1 (hST Q) hB')
-    · rw [if_neg fun h => hQ (e.injective h)]
+    · rw [ite_eq_right fun h => hQ (e.injective h)]
       exact (hd.locP_LshKer_ne ha hQ).trans (isBasisAt_of_isLocBasis hT Q.1 (hST Q) hB)
 
 theorem dualL_std (s : E →+* E) (hs : ∀ x, s x = star x) (L : Submodule (𝓞 E) (Sp E n)) :
@@ -201,7 +201,7 @@ theorem mem_localization_latticeOf [StarRing K] (S : GStep E K n) [Finite S.Cl] 
   · rintro ⟨s, hs, hx⟩ c
     exact (mem_locP w _ _).2 ⟨s, hs, hx c⟩
   · intro hx
-    haveI := Fintype.ofFinite S.Cl
+    have := Fintype.ofFinite S.Cl
     choose t ht hx using fun c => (mem_locP w _ _).1 (hx c)
     refine ⟨∏ c, t c, fun hm => ?_, fun c => ?_⟩
     · obtain ⟨a, -, ha⟩ := (Ideal.IsPrime.prod_mem_iff (hp := w.isPrime)).1 hm
@@ -245,7 +245,7 @@ theorem bw_tie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pin
   have hX := (GlobalTheory.Mem.FieldsLaws.fields_satisfy_definite_laws B).1
   have hs' : seenC (B.primes X) u w := @of_decide_eq_true _ (Classical.propDecidable _) hs
   have hT : (B.T u).Prime := l.pr.T_prime u
-  haveI : Fact (B.T u).Prime := ⟨hT⟩
+  have : Fact (B.T u).Prime := ⟨hT⟩
   have hd : ∀ c, LdG (I.rec7 l Z) i hi (latCrd (I.rec7 l Z) i hi (I.latAt u a i c)) = ((I.stp u a i).rep c).1.1.deco.1.Lsh := by
     intro c
     have h1 := dualL_std (E := B.host.E) (sigD (I.rec7 l Z)).toRingHom (fun x => rfl) ((I.stp u a i).rep c).1.1.deco.1.L
@@ -282,7 +282,7 @@ theorem bw_tie : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pin
     rw [← hlam]
     exact h
   have hfin : Finite (I.stp u a i).Cl := by
-    haveI := ((l.ch u a).step i).fin_orb
+    have := ((l.ch u a).step i).fin_orb
     exact Finite.instSigma
   have h1 : x ∈ (I.fm l u a).Bw i w v ↔ ∀ c, x.1 c ∈ localization₂ w.asIdeal
       (delAtr B.fields.emb (GlobalTheory.Mem.Col2.lamT (B.hcW u) i) (((I.stp u a i).rep c).1.1.deco.1.LshKer v)) :=

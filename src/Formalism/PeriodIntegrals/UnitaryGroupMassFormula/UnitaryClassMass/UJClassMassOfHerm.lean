@@ -343,9 +343,9 @@ namespace PI.UnitaryGroupMassFormula.UJClassMass
 
 theorem resChar {E : Type} [Field E] [NumberField E] (P : Ideal (𝓞 E)) (hP : P.IsMaximal) :
     ∃ p : ℕ, p.Prime ∧ ∀ m : ℕ, ¬ p ∣ m → (m : 𝓞 E) ∉ P := by
-  letI := Ideal.Quotient.field P
+  let := Ideal.Quotient.field P
   set p := ringChar (𝓞 E ⧸ P)
-  haveI : CharP (𝓞 E ⧸ P) p := ringChar.charP _
+  have : CharP (𝓞 E ⧸ P) p := ringChar.charP _
   have hP0 : P ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)
   have hmem : ((Ideal.absNorm P : ℕ) : 𝓞 E) ∈ P := Ideal.absNorm_mem P
   have hN0 : Ideal.absNorm P ≠ 0 := by rwa [Ne, Ideal.absNorm_eq_zero_iff]
@@ -823,8 +823,8 @@ theorem evT_compl (X : Set (HeightOneSpectrum (𝓞 F))) : 1 - evT Xᶜ = evT X 
   intro u
   rw [af_sub_apply, af_one_apply, evT_apply, evT_apply]
   by_cases h : u ∈ X
-  · rw [if_neg (fun h' => h' h), if_pos h, sub_zero]
-  · rw [if_pos (show u ∈ Xᶜ from h), if_neg h, sub_self]
+  · rw [ite_eq_right (fun h' => h' h), ite_eq_left h, sub_zero]
+  · rw [ite_eq_left (show u ∈ Xᶜ from h), ite_eq_right h, sub_self]
 
 theorem evT_inv_int (X : Set (HeightOneSpectrum (𝓞 F))) (t : 𝓞 F) (ht : ∀ u ∈ X, t ∉ u.asIdeal) :
     evT X * algebraMap F (Af F) ((algebraMap (𝓞 F) F t)⁻¹) ∈ intAf F := by
@@ -836,18 +836,18 @@ theorem evT_mul_of_subset {X Y : Set (HeightOneSpectrum (𝓞 F))} (hXY : X ⊆ 
   intro u
   rw [af_mul_apply, evT_apply, evT_apply]
   by_cases h : u ∈ X
-  · rw [if_pos h, if_pos (hXY h), mul_one]
-  · rw [if_neg h, zero_mul]
+  · rw [ite_eq_left h, ite_eq_left (hXY h), mul_one]
+  · rw [ite_eq_right h, zero_mul]
 
 theorem evT_split {B S : Set (HeightOneSpectrum (𝓞 F))} (hBS : B ⊆ S) : evT S = evT B + evT (S \ B) := by
   apply af_ext
   intro u
   rw [af_add_apply, evT_apply, evT_apply, evT_apply]
   by_cases h1 : u ∈ B
-  · rw [if_pos (hBS h1), if_pos h1, if_neg (fun h => h.2 h1), add_zero]
+  · rw [ite_eq_left (hBS h1), ite_eq_left h1, ite_eq_right (fun h => h.2 h1), add_zero]
   · by_cases h2 : u ∈ S
-    · rw [if_pos h2, if_neg h1, if_pos ⟨h2, h1⟩, zero_add]
-    · rw [if_neg h2, if_neg h1, if_neg (fun h => h2 h.1), add_zero]
+    · rw [ite_eq_left h2, ite_eq_right h1, ite_eq_left ⟨h2, h1⟩, zero_add]
+    · rw [ite_eq_right h2, ite_eq_right h1, ite_eq_right (fun h => h2 h.1), add_zero]
 
 theorem t_lemma (v : HeightOneSpectrum (𝓞 F)) (m : 𝓞 F) (hm : m ≠ 0) :
     ∃ t : 𝓞 F, t ∉ v.asIdeal ∧
@@ -886,11 +886,11 @@ theorem t_lemma (v : HeightOneSpectrum (𝓞 F)) (m : 𝓞 F) (hm : m ≠ 0) :
       rw [e1, HeightOneSpectrum.valuedAdicCompletion_eq_valuation', map_div₀,
         HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap]
       have hw' : w ≠ v := fun h => hw (by rw [h]; exact Set.mem_singleton v)
-      have hpos : 0 < w.intValuation m := zero_lt_iff.2 (HeightOneSpectrum.intValuation_ne_zero w m hm)
+      have hpos : 0 < w.intValuation m := pos_iff_ne_zero.2 (HeightOneSpectrum.intValuation_ne_zero w m hm)
       by_cases hmw : m ∈ w.asIdeal
       · have hws : w ∈ s := Finset.mem_insert_of_mem ((Set.Finite.mem_toFinset _).2 hmw)
         have h1 := ht w hws
-        simp only [if_neg hw', sub_zero] at h1
+        simp only [ite_eq_right hw', sub_zero] at h1
         have hle := (HeightOneSpectrum.intValuation_le_pow_iff_mem w t (n w)).2 h1
         have hnot : ¬ w.intValuation m ≤ WithZero.exp (-((n w : ℕ) : ℤ)) :=
           fun h => hn w ((HeightOneSpectrum.intValuation_le_pow_iff_mem w m (n w)).1 h)
@@ -1202,7 +1202,7 @@ theorem local_patching : PatchF := by
   let e : Bool → AF F ⊗[F] E := fun i => if i then ε else 1 - ε
   have he : ∀ i j, e i * e j = if i = j then e i else 0 := by
     intro i j
-    cases i <;> cases j <;> simp only [e, if_true, if_false, Bool.false_eq_true, ↓reduceIte]
+    cases i <;> cases j <;> simp only [e, ite_true, ite_false, Bool.false_eq_true, ↓reduceIte]
     · calc (1 - ε) * (1 - ε) = 1 - ε - (ε - ε * ε) := by ring
         _ = 1 - ε := by rw [hε, sub_self, sub_zero]
     · calc (1 - ε) * ε = ε - ε * ε := by ring
@@ -1212,11 +1212,11 @@ theorem local_patching : PatchF := by
     · exact hε
   have hs : ∑ i, e i = 1 := by
     rw [Fintype.sum_bool]
-    simp only [e, if_true, Bool.false_eq_true, ↓reduceIte]
+    simp only [e, ite_true, Bool.false_eq_true, ↓reduceIte]
     abel
   have hσe : ∀ i, PI.UJClassFin.sigR (AF F) σ (e i) = e i := by
     intro i
-    cases i <;> simp only [e, if_true, Bool.false_eq_true, ↓reduceIte]
+    cases i <;> simp only [e, ite_true, Bool.false_eq_true, ↓reduceIte]
     · rw [map_sub, map_one, sigR_epsT]
     · exact sigR_epsT σ _
   let γB : Bool → GL (Fin M) E := fun i => if i then (γ : GL (Fin M) E) else 1
@@ -1240,7 +1240,7 @@ theorem local_patching : PatchF := by
     exact tmul_mem_Oh (evT_int _) isIntegral_one
   refine ⟨patchHA σ J e he hs hσe γB hγB, ?_⟩
   ext x
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   show (finMat σ J (patchHA σ J e he hs hσe γB hγB)⁻¹).mulVec
       (PI.UnitaryGroupMassFormula.UJClassFin.vinc (F := F) (b.equivFun x)) ∈ latHat F E (crdOf b L0) ↔ _
   rw [patch_mulVec, latHat_split (crdOf b L0) (crd_int_smul b L0) _ hf hO, Bool.forall_bool]
@@ -1251,7 +1251,7 @@ theorem local_patching : PatchF := by
   rw [e0, flocHat_iff b L0 hsat, flocHat_iff b L0 hsat]
   have e1 : γB true = (γ : GL (Fin M) E) := rfl
   rw [e1]
-  simp only [if_true, Bool.false_eq_true, ↓reduceIte, Set.mem_compl_iff, Finset.mem_coe]
+  simp only [ite_true, Bool.false_eq_true, ↓reduceIte, Set.mem_compl_iff, Finset.mem_coe]
   constructor
   · rintro ⟨h0, h1⟩
     exact ⟨fun v hv => (floc_gmap v _ L0 x).2 (h1 v hv), h0⟩

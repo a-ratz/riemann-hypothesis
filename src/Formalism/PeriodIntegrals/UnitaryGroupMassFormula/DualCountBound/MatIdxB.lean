@@ -486,7 +486,7 @@ theorem card_quot_prod {R : Type} [CommRing R] [IsDomain R] {ι : Type} (s : Fin
   induction s using Finset.induction_on with
   | empty =>
     rw [Finset.prod_empty, Finset.prod_empty, Ideal.span_singleton_one]
-    haveI : Subsingleton (R ⧸ (⊤ : Ideal R)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+    have : Subsingleton (R ⧸ (⊤ : Ideal R)) := Ideal.Quotient.subsingleton_iff.mpr rfl
     exact Nat.card_of_subsingleton (0 : R ⧸ ⊤)
   | insert i s hi ih =>
     rw [Finset.prod_insert hi, Finset.prod_insert hi,
@@ -507,10 +507,10 @@ theorem card_coker_matrix {R : Type} [CommRing R] [IsDomain R] [IsPrincipalIdeal
       rw [hprod]
       exact mul_ne_zero (mul_ne_zero hUd.ne_zero hA) hVd.ne_zero
     exact fun i _ => (Finset.prod_ne_zero_iff.mp h0) i (Finset.mem_univ i)
-  letI := hU.invertible
+  let := hU.invertible
   let Ue : (Fin n → R) ≃ₗ[R] (Fin n → R) := Matrix.toLinearEquiv' U inferInstance
   have hVs : LinearMap.range V.mulVecLin = ⊤ := by
-    letI := hV.invertible
+    let := hV.invertible
     rw [LinearMap.range_eq_top]
     intro y
     exact ⟨Matrix.mulVec (⅟V) y, by simp [Matrix.mulVecLin_apply, Matrix.mulVec_mulVec]⟩

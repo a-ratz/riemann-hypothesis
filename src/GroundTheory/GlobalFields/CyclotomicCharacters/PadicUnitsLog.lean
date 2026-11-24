@@ -94,7 +94,7 @@ theorem pow_torsionExponent (x : (ZMod (ℓ ^ unitsLevel ℓ))ˣ) : x ^ torsionE
   · subst h
     have key : ∀ y : ZMod 8, (∃ z : ZMod 8, y * z = 1) → y ^ 2 = 1 := by decide
     have h8 : (2 : ℕ) ^ unitsLevel 2 = 8 := by simp [unitsLevel]
-    rw [torsionExponent, if_pos rfl]
+    rw [torsionExponent, ite_eq_left rfl]
     refine Units.ext ?_
     rw [Units.val_pow_eq_pow_val, Units.val_one]
     revert x
@@ -103,8 +103,8 @@ theorem pow_torsionExponent (x : (ZMod (ℓ ^ unitsLevel ℓ))ˣ) : x ^ torsionE
     exact key _ ⟨_, x.mul_inv⟩
   · have : NeZero ℓ := ⟨hℓ.out.ne_zero⟩
     have hc : Fintype.card (ZMod (ℓ ^ unitsLevel ℓ))ˣ = ℓ - 1 := by
-      rw [ZMod.card_units_eq_totient, unitsLevel, if_neg h, pow_one, Nat.totient_prime hℓ.out]
-    rw [torsionExponent, if_neg h, ← hc, pow_card_eq_one]
+      rw [ZMod.card_units_eq_totient, unitsLevel, ite_eq_right h, pow_one, Nat.totient_prime hℓ.out]
+    rw [torsionExponent, ite_eq_right h, ← hc, pow_card_eq_one]
 
 def unitsKer (n : ℕ) : Subgroup (ZMod (ℓ ^ (n + unitsLevel ℓ)))ˣ :=
   (ZMod.unitsMap (pow_dvd_pow ℓ (Nat.le_add_left (unitsLevel ℓ) n))).ker
@@ -156,7 +156,7 @@ theorem genUnit_pow_eq_one (n : ℕ) : genUnit ℓ n ^ (ℓ ^ n) = 1 := by
 theorem genUnit_mem_unitsKer (n : ℕ) : genUnit ℓ n ∈ unitsKer ℓ n := by
   rw [unitsKer, MonoidHom.mem_ker]
   refine Units.ext ?_
-  simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, coe_genUnit, map_add (f := _), map_one,
+  simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass, coe_genUnit, map_add (f := _), map_one,
     map_pow, map_natCast, Units.val_one]
   rw [← Nat.cast_pow, ZMod.natCast_self, add_zero]
 
@@ -230,7 +230,7 @@ theorem unitsMap_genUnit {m n : ℕ} (h : m ≤ n) :
     ZMod.unitsMap (pow_dvd_pow ℓ (by omega : m + unitsLevel ℓ ≤ n + unitsLevel ℓ)) (genUnit ℓ n) =
       genUnit ℓ m := by
   refine Units.ext ?_
-  simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, coe_genUnit, map_add (f := _), map_one,
+  simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass, coe_genUnit, map_add (f := _), map_one,
     map_pow, map_natCast]
 
 theorem castHom_logMod {m n : ℕ} (h : m ≤ n) (x : (ZMod (ℓ ^ (n + unitsLevel ℓ)))ˣ) :
@@ -286,7 +286,7 @@ noncomputable def redUnits (k : ℕ) : ℤ_[ℓ]ˣ →* (ZMod (ℓ ^ k))ˣ :=
 theorem unitsMap_redUnits {k k' : ℕ} (h : k ≤ k') (u : ℤ_[ℓ]ˣ) :
     ZMod.unitsMap (pow_dvd_pow ℓ h) (redUnits ℓ k' u) = redUnits ℓ k u := by
   refine Units.ext ?_
-  simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe, coe_redUnits,
+  simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass, coe_redUnits,
     ZMod.castHom_apply]
   exact PadicInt.cast_toZModPow _ _ h _
 
@@ -441,7 +441,7 @@ theorem mem_torsion_iff (u : ℤ_[ℓ]ˣ) :
 
 theorem mem_torsion_two_iff (u : ℤ_[2]ˣ) :
     u ∈ CommGroup.torsion ℤ_[2]ˣ ↔ u = 1 ∨ u = -1 := by
-  rw [mem_torsion_iff, torsionExponent, if_pos rfl]
+  rw [mem_torsion_iff, torsionExponent, ite_eq_left rfl]
   constructor
   · intro h
     have h1 := congrArg Units.val h

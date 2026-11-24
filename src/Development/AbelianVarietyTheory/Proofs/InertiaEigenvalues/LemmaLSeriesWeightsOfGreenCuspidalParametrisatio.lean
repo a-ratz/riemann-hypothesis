@@ -68,7 +68,7 @@ theorem rank_eq_k_add_two_mul (R : Formalism.BasicNotions.Ranks) : R.r = R.k + 2
 
 theorem lemmaL_series_weights_of_greenCuspidalParametrisation : Green → ∀ D : Formalism.BasicNotions.D7, ESerTie D → admLq D := by
   intro hG D hT k ψ hψ
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   obtain ⟨L, -, hL⟩ := hT k
   have hw : ∀ a f, wtOf D k a f = wtC L a f := by
     intro a f

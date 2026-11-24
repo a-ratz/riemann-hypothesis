@@ -94,7 +94,7 @@ theorem sizes_record_at {D : D7} (L : SizeData₂ D) (h : SizesAt L) (Cs : ℝ) 
   · refine le_trans ?_ (hG j j).1
     have e : Real.exp (8 * L.sc.x ^ L.sc.eps) = L.sc.b ^ 8 := by
       unfold Scale.b Scale.L
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       norm_num
     have hb : 0 < L.sc.b := Real.exp_pos _
     rw [e]

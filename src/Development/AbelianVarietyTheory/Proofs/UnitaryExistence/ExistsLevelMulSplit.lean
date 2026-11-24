@@ -78,7 +78,7 @@ private theorem mul_eq_span_inter_subalgebra {R : Type*} [CommRing R] (A : Subal
     rintro _ ⟨x, hx, y, hy, rfl⟩
     exact A.mul_mem hx.2 hy.2
   have hIJ : I * J = Ideal.span ({a | a ∈ I ∧ a ∈ A} * {a | a ∈ J ∧ a ∈ A}) := by
-    rw [← Ideal.span_mul_span']
+    rw [← Ideal.span_mul_span]
     exact congrArg₂ (· * ·) hI hJ
   rw [hIJ]
   exact span_eq_span_inter_subalgebra A _ hsub
@@ -156,7 +156,7 @@ theorem _root_.GlobalTheory.exists_level_mul_split : ∀ (E : Type) [Field E] [N
         Nat.cast_mul]
     · unfold _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level.Dvd
       exact ⟨dvd_mul_right _ _, Ideal.mul_le_left, dvd_rfl⟩
-  · haveI := Fact.mk hp
+  · have := Fact.mk hp
     obtain ⟨y, hy⟩ := ZMod.isSquare_of_jacobiSym_eq_one hJ
     push_cast at hy
     obtain ⟨m, hm⟩ : ∃ m : ℕ, 2 * m = pd + 1 := by
@@ -222,7 +222,7 @@ theorem _root_.GlobalTheory.exists_level_mul_split : ∀ (E : Type) [Field E] [N
           (Algebra.subset_adjoin (Set.mem_singleton _)) (Subalgebra.intCast_mem _ _))⟩)
     · rw [hmap]
       apply le_antisymm
-      · rw [Ideal.span_mul_span', Ideal.span_le]
+      · rw [Ideal.span_mul_span, Ideal.span_le]
         rintro _ ⟨x, hx, w, hw', rfl⟩
         simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hx hw'
         rw [SetLike.mem_coe, Ideal.mem_span_singleton]

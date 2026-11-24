@@ -217,15 +217,15 @@ theorem integrable_of_tendsto_of_integral_le {α : Type*} [MeasurableSpace α] {
     (hC : ∀ n, ∫ x, G n x ∂μ ≤ C) : Integrable F μ := by
   refine ⟨aestronglyMeasurable_of_tendsto_ae atTop (fun n => (hG n).1) hlim, ?_⟩
   have hF : ∫⁻ x, ‖F x‖ₑ ∂μ ≤ liminf (fun n => ∫⁻ x, ‖G n x‖ₑ ∂μ) atTop :=
-    lintegral_congr_ae (by filter_upwards [hlim] with x hx using hx.enorm.liminf_eq) ▸
-      lintegral_liminf_le' (fun n => (hG n).1.aemeasurable.enorm)
+    lintegral_congr_ae (by filter_upwards [hlim] with x hx using hx.eNorm.liminf_eq) ▸
+      lintegral_liminf_le' (fun n => (hG n).1.aemeasurable.eNorm)
   have hb : ∀ n, ∫⁻ x, ‖G n x‖ₑ ∂μ ≤ ENNReal.ofReal C := by
     intro n
     have h1 : ∫⁻ x, ‖G n x‖ₑ ∂μ = ENNReal.ofReal (∫ x, G n x ∂μ) := by
       rw [ofReal_integral_eq_lintegral_ofReal (hG n) (h0 n)]
       refine lintegral_congr_ae ?_
       filter_upwards [h0 n] with x hx
-      exact Real.enorm_eq_ofReal hx
+      exact Real.eNorm_eq_ofReal hx
     rw [h1]
     exact ENNReal.ofReal_le_ofReal (hC n)
   exact (hF.trans (liminf_le_of_frequently_le' (Frequently.of_forall hb))).trans_lt

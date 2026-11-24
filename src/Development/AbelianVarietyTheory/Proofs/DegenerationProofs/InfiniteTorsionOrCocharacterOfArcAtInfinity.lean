@@ -134,7 +134,7 @@ private lemma leading_polynomial_eq_zero_iff_lt_weightedOrder {k : Type} [Field 
     rw [Polynomial.finsetSum_coeff, Finset.sum_eq_single e]
     · simp [Polynomial.coeff_C_mul_X_pow]
     · intro e' he' hne
-      rw [Polynomial.coeff_C_mul_X_pow, if_neg]
+      rw [Polynomial.coeff_C_mul_X_pow, ite_eq_right]
       intro h1
       apply hne
       have w1 := (hS e').1 he'
@@ -185,9 +185,9 @@ private lemma coeff_pow_mul_pow_of_le_order {k : Type} [Field k] {m n : ℕ} {z 
   have hprod : (X ^ m * z') ^ a * (X ^ n * w') ^ b = X ^ (m * a + n * b) * (z' ^ a * w' ^ b) := by
     rw [mul_pow, mul_pow, ← pow_mul, ← pow_mul, pow_add]; ring
   rw [hprod]
-  refine ⟨fun j hj => by rw [coeff_X_pow_mul', if_neg (by omega)], ?_⟩
-  rw [coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self, coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self,
-    coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self, coeff_zero_eq_constantCoeff, map_mul, map_pow,
+  refine ⟨fun j hj => by rw [coeff_X_pow_mul', ite_eq_right (by omega)], ?_⟩
+  rw [coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self, coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self,
+    coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self, coeff_zero_eq_constantCoeff, map_mul, map_pow,
     map_pow]
 
 open CategoryTheory Limits MonoidalCategory CartesianMonoidalCategory MonObj AlgebraicGeometry in
@@ -248,7 +248,7 @@ theorem _root_.GlobalTheory.SS.exists_polynomial_leading_quotient_subst :
   intro k _ _ m n hm hn r h d hd hdh
   have hfin : ((MvPowerSeries.weightedOrder (![m, n] : Fin 2 → ℕ) d).toNat : ℕ∞) =
       MvPowerSeries.weightedOrder (![m, n] : Fin 2 → ℕ) d :=
-    ENat.coe_toNat ((MvPowerSeries.weightedOrder_eq_top_iff _).not.2 hd)
+    ENat.natCast_toNat ((MvPowerSeries.weightedOrder_eq_top_iff _).not.2 hd)
   set D := (MvPowerSeries.weightedOrder (![m, n] : Fin 2 → ℕ) d).toNat with hD_def
   have hWpos : ∀ x, (![m, n] : Fin 2 → ℕ) x ≠ 0 := by
     intro x; fin_cases x <;> simp <;> omega
@@ -256,7 +256,7 @@ theorem _root_.GlobalTheory.SS.exists_polynomial_leading_quotient_subst :
     fun e => Finsupp.weight (![m, n] : Fin 2 → ℕ) e = D with hS_def
   have hS : ∀ e, e ∈ S ↔ Finsupp.weight (![m, n] : Fin 2 → ℕ) e = D := by
     intro e
-    simp only [hS_def, Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [hS_def, Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     exact ⟨fun h => h.2, fun h => ⟨h.le, h⟩⟩
   have hDd : (D : ℕ∞) ≤ MvPowerSeries.weightedOrder (![m, n] : Fin 2 → ℕ) d := hfin.le
   have hDh : ∀ i, (D : ℕ∞) ≤ MvPowerSeries.weightedOrder (![m, n] : Fin 2 → ℕ) (h i) :=
@@ -290,7 +290,7 @@ theorem _root_.GlobalTheory.SS.exists_polynomial_leading_quotient_subst :
         coeff_subst_eq_zero_of_lt hz hw hsub hf hj
       refine ⟨g, hg, ?_⟩
       have := coeff_subst_eq_pow_mul_eval_leading hz hw hsub hzs hwt hf S hS
-      rw [hg, PowerSeries.coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self,
+      rw [hg, PowerSeries.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self,
         PowerSeries.coeff_zero_eq_constantCoeff] at this
       exact this
     obtain ⟨gd, hgd, hgd0⟩ := factor d hDd
@@ -646,8 +646,8 @@ theorem infinite_pow_char_eq_one_of_additive_family :
     have : {t : k | Pd.eval t ≠ 0} = {t : k | Pd.IsRoot t}ᶜ := by
       ext t; simp
     rw [this]
-    exact (Polynomial.finite_setOf_isRoot hPd).infinite_compl
-  haveI : Infinite {t : k | Pd.eval t ≠ 0} := hU.to_subtype
+    exact (Polynomial.finite_setOfPred_isRoot hPd).infinite_compl
+  have : Infinite {t : k | Pd.eval t ≠ 0} := hU.to_subtype
   let g : {t : k | Pd.eval t ≠ 0} → {x : M // x ^ p = 1} := fun t => ⟨em (ψ t.1), hpow t.1 t.2⟩
   obtain ⟨y, hy⟩ := Finite.exists_infinite_fiber g
   obtain ⟨⟨t₀, ht₀⟩⟩ : Nonempty (g ⁻¹' {y}) := inferInstance
@@ -665,7 +665,7 @@ theorem infinite_pow_char_eq_one_of_additive_family :
       rw [ht, ht₀]
     have h2 : ψ t.1 = χ := hinj (congrArg Subtype.val h1)
     have h3 := hval t.1 t.2 i
-    simp only [Set.mem_setOf_eq, Polynomial.eval_mul, Polynomial.eval_C]
+    simp only [Set.mem_ofPred_eq, Polynomial.eval_mul, Polynomial.eval_C]
     rw [← h3, h2]
   have hconst : ∀ t, Pd.eval t ≠ 0 → ψ t = χ := by
     intro t ht
@@ -768,7 +768,7 @@ def sig (z : PowerSeries k) : FractionRing (PowerSeries k) →ₐ[k] FractionRin
 
 theorem sig_apply {z : PowerSeries k} (h : PowerSeries.constantCoeff z = 0) (h0 : z ≠ 0) (x : PowerSeries k) :
     sig z (algebraMap _ _ x) = toK k (x.subst z) := by
-  rw [sig, dif_pos ⟨h, h0⟩]
+  rw [sig, dite_eq_left ⟨h, h0⟩]
   exact (exists_sig ⟨h, h0⟩).choose_spec x
 
 section Rel
@@ -927,7 +927,7 @@ theorem TwoVar.gen_of_lt (hc : IsChart G j ε f) (ht : TwoVar j f a h d) (hd : d
     rw [zero_pow (by omega)] at hs
     exact hz0 hs.symm
   refine ⟨insert 0 ((fun t => s ^ n * t) '' {t | Pd.IsRoot t}),
-    ((Polynomial.finite_setOf_isRoot hPd).image _).insert _, fun t hS => ?_⟩
+    ((Polynomial.finite_setOfPred_isRoot hPd).image _).insert _, fun t hS => ?_⟩
   have e : s ^ n * (t / s ^ n) = t := mul_div_cancel₀ _ (pow_ne_zero _ hs0)
   have ht0 : t ≠ 0 := fun e => hS (Or.inl e)
   have hp : Pd.eval (t / s ^ n) ≠ 0 := fun e' => hS (Or.inr ⟨_, e', e⟩)
@@ -961,7 +961,7 @@ theorem TwoVar.shear (hc : IsChart G j ε f) (ht : TwoVar j f a h d) (hd : (MvPo
   obtain ⟨χ, h1, h2⟩ := ht.rel hc z0 (by rwa [map_sub, z0, sub_zero] at w0)
     (ne_zero_of_coeff (n := m) (by rw [cz]; exact pow_ne_zero _ hs)) hw0 hD y (fun i => (hy i).1)
   have e : ∃ χ : A →ₐ[k] k, ∀ i, χ (f i) * Pd.eval t = (P i).eval t := ⟨χ, fun i => by rw [h1, (hy i).2]⟩
-  simp only [dif_pos e]
+  simp only [dite_eq_left e]
   have : e.choose = χ := hc.hom_ext fun i =>
     mul_right_cancel₀ hp (by rw [e.choose_spec i, h1, (hy i).2])
   exact ⟨e.choose_spec, by rwa [this]⟩
@@ -1039,7 +1039,7 @@ theorem dichotomy_alg (p : ℕ) [CharP k p] (hG : SmConn G)
     have g11 := ch1 1 1 (fun z hz => by
       have hz0 := coeff_ne_of_order hz
       refine ⟨insert 0 ((fun t => (t + 1) * PowerSeries.coeff 1 z) '' {t | Pd.IsRoot t}),
-        ((Polynomial.finite_setOf_isRoot hPd).image _).insert _, fun t hS => ?_⟩
+        ((Polynomial.finite_setOfPred_isRoot hPd).image _).insert _, fun t hS => ?_⟩
       have e : t / PowerSeries.coeff 1 z * PowerSeries.coeff 1 z = t := div_mul_cancel₀ _ hz0
       have ht0 : t ≠ 0 := fun e => hS (Or.inl e)
       have hp : Pd.eval (t / PowerSeries.coeff 1 z - 1) ≠ 0 := fun e' =>

@@ -76,7 +76,7 @@ theorem rc_isIntegral (v : HeightOneSpectrum (𝓞 F)) (x : E ⊗[F] v.adicCompl
       (v.adicCompletionIntegers F).toSubring) :
     @IsIntegral (v.adicCompletionIntegers F) (E ⊗[F] v.adicCompletion F) _ _
       (rcIntAlg (E := E) v) x := by
-  letI := rcIntAlg (E := E) v
+  let := rcIntAlg (E := E) v
   unfold Formalism.UG.tensInt Formalism.UG.intOE at hx
   refine (Subring.closure_le (t := (integralClosure (v.adicCompletionIntegers F)
     (E ⊗[F] v.adicCompletion F)).toSubring).2 ?_) hx
@@ -96,7 +96,7 @@ theorem rc_idem_zero (v : HeightOneSpectrum (𝓞 F)) (f t : E ⊗[F] v.adicComp
     (c : v.adicCompletion F) (hc : Valued.v c < 1) (hf : f * f = f)
     (hft : f = ((1 : E) ⊗ₜ[F] c) * t)
     (ht : letI := rcIntAlg (E := E) v; IsIntegral (v.adicCompletionIntegers F) t) : f = 0 := by
-  letI := rcIntAlg (E := E) v
+  let := rcIntAlg (E := E) v
   obtain ⟨p, hpm, hp⟩ := ht
   have hc1 : Valued.v c ≤ 1 := le_of_lt hc
   obtain ⟨c', hc'⟩ : ∃ c' : v.adicCompletionIntegers F, (c' : v.adicCompletion F) = c :=
@@ -191,7 +191,7 @@ theorem reduction_structure_holds : RedCore := by
   have hsum : e + e' = 1 := by linear_combination -hf0
   have hfr : Module.finrank (v.adicCompletion F) (E ⊗[F] v.adicCompletion F) = 2 := by
     rw [rc_finrank, h2]
-  haveI : Nontrivial (E ⊗[F] v.adicCompletion F) := by
+  have : Nontrivial (E ⊗[F] v.adicCompletion F) := by
     have hpos : 0 < Module.finrank (v.adicCompletion F) (E ⊗[F] v.adicCompletion F) := by
       rw [hfr]; norm_num
     exact Module.nontrivial_of_finrank_pos hpos
@@ -253,7 +253,7 @@ theorem reduction_structure_holds : RedCore := by
     exact huniq _ _ (by rw [← hr, hee, one_smul])
   · intro x hx
     have hint := rc_isIntegral v x hx
-    letI := rcIntAlg (E := E) v
+    let := rcIntAlg (E := E) v
     have hint' : IsIntegral (v.adicCompletionIntegers F) (r x) := by
       refine IsIntegral.map_of_comp_eq (RingHom.id _) r ?_ hint
       refine RingHom.ext fun y => ?_

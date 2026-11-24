@@ -168,9 +168,9 @@ private theorem top_bound {ω : Set (AdelicGLn.AdelicGL K (2 + 2))} (h : Bor ω)
   have hex : ∀ b : ω, _ := fun b : ω => split_low b.1 (low_of_borel (hB b.2)) (low_of_borel (inv_mem (hB b.2)))
   choose c d hc1 X hX using hex
   have c1 : Continuous fun b : ω => (b.1 : AdelicGLn.AdelicGL K (2 + 2)).val :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have c2 : Continuous fun b : ω => ((b.1 : AdelicGLn.AdelicGL K (2 + 2))⁻¹).val :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   have cc : Continuous c := by
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
     · refine continuous_matrix fun i j => ?_
@@ -186,7 +186,7 @@ private theorem top_bound {ω : Set (AdelicGLn.AdelicGL K (2 + 2))} (h : Bor ω)
       rw [e]
       exact c2.matrix_elem _ _
   have hf : Continuous fun b : ω => Real.log (detModule K 2 (c b)).1 :=
-    (continuous_subtype_val.comp (continuous_detModule.comp cc)).log fun p => (detModule K 2 _).2.ne'
+    (continuous_subtypeVal.comp (continuous_detModule.comp cc)).log fun p => (detModule K 2 _).2.ne'
   obtain ⟨B, hB'⟩ := (isCompact_range hf.abs).bddAbove
   exact ⟨B, fun b hb => ⟨X ⟨b, hb⟩, c ⟨b, hb⟩, d ⟨b, hb⟩, hX ⟨b, hb⟩, hB' ⟨⟨b, hb⟩, rfl⟩⟩⟩
 
@@ -218,7 +218,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.sgBasics :
   intro K _ _ ω hω
   obtain ⟨B₁, h₁⟩ := top_bound hω
   obtain ⟨p, q, hp, hpq, h₂⟩ := exists_pos_bounds hω.1 (f := fun b => (detModule K (2 + 2) b).1)
-    (continuous_subtype_val.comp continuous_detModule) fun b _ => (detModule K (2 + 2) b).2
+    (continuous_subtypeVal.comp continuous_detModule) fun b _ => (detModule K (2 + 2) b).2
   obtain ⟨M, hM⟩ := exists_height_le_of_isCompact hω.1
   set B₂ := max |Real.log p| |Real.log q| with hB₂
   have hB₂0 : 0 ≤ B₂ := (abs_nonneg _).trans (le_max_left _ _)

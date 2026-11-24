@@ -448,7 +448,7 @@ theorem ann_isLat_pf {ψ : AddChar k Circle} (hψ : Continuous ψ) (hψ1 : ψ �
   · refine (ann ψ A).isOpen_of_mem_nhds (g := 0) (Filter.mem_of_superset (pi_lt_mem_nhds hδ) ?_)
     intro η hη a ha
     apply hball
-    have hpos : 0 < valuation k (s : k) := zero_lt_iff.mpr hvs
+    have hpos : 0 < valuation k (s : k) := pos_iff_ne_zero.mpr hvs
     show valuation k (∑ j, η j * a j) < γ
     refine Valuation.map_sum_lt _ hγ fun j _ => ?_
     have h1 : valuation k (η j) * valuation k (s : k) < γ := (lt_div_iff₀ hpos).1 (hη j (Set.mem_univ j))
@@ -591,7 +591,7 @@ theorem good_nbhd_pf {m : ℕ} (K : Subgroup (GL (Fin (m + 1)) k)) (hK : IsOpen 
   have hv : {x : k | valuation k x < 1} ∈ nhds (0 : k) :=
     (IsValuativeTopology.mem_nhds_zero_iff _).2 ⟨1, fun x hx => by simpa using hx⟩
   have hS : {η : Fin (m + 1) → k | ∀ i, valuation k (η i) < 1} ∈ nhds (0 : Fin (m + 1) → k) := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine Filter.iInter_mem.2 fun i => ?_
     have h1 : (fun η : Fin (m + 1) → k => η i) ⁻¹' {x : k | valuation k x < 1} ∈
         nhds (0 : Fin (m + 1) → k) :=
@@ -690,7 +690,7 @@ private theorem exists_tr_lemma {n : ℕ} (C D : AddSubgroup (Fin n → k)) (hC 
   classical
   have : CompactSpace C := isCompact_iff_compactSpace.mp hC
   have hfin : Finite (C ⧸ D.addSubgroupOf C) :=
-    AddSubgroup.quotient_finite_of_isOpen _ (hD.preimage continuous_subtype_val)
+    AddSubgroup.quotient_finite_of_isOpen _ (hD.preimage continuous_subtypeVal)
   have := Fintype.ofFinite (C ⧸ D.addSubgroupOf C)
   let f : (C ⧸ D.addSubgroupOf C) → Fin n → k := fun q => ((Quotient.out q : C) : Fin n → k)
   have hf : Function.Injective f := by

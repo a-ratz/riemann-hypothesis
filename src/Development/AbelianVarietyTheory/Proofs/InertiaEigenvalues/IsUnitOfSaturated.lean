@@ -220,11 +220,11 @@ theorem shape_mul {T : Type*} [CommRing T] {d : ℕ} (I : Finset (Fin d)) (P P' 
   ext i j
   rw [Matrix.mul_apply, Finset.sum_eq_single j]
   · by_cases hj : j ∈ I
-    · rw [hP' j hj j, if_pos rfl, mul_one]
+    · rw [hP' j hj j, ite_eq_left rfl, mul_one]
     · rw [hP i j hj, zero_mul]
   · intro k _ hk
     by_cases hkI : k ∈ I
-    · rw [hP' k hkI j, if_neg hk, mul_zero]
+    · rw [hP' k hkI j, ite_eq_right hk, mul_zero]
     · rw [hP i k hkI, zero_mul]
   · intro h
     exact absurd (Finset.mem_univ j) h
@@ -258,7 +258,7 @@ theorem two_copies {l : ℕ} [Fact l.Prime] {C : Type} [Field C] [CharP C l] {d 
       i₁ (Q j.1 j.2) - i₂ (Q j.1 j.2) = ∑ i : Fin d × Fin d, (i₁ (Q i.1 i.2) - i₂ (Q i.1 i.2)) ^ l * c i j := by
   rcases subsingleton_or_nontrivial T with hT | hT
   · exact ⟨0, fun _ => Subsingleton.elim _ _⟩
-  haveI : CharP T l := charP_of_injective_ringHom i₁.injective l
+  have : CharP T l := charP_of_injective_ringHom i₁.injective l
   have e1 : Q.map i₂ * Q.map i₁ = Q.map i₂ := shape_map I Q h₁ h₂ i₂ i₁
   have e2 : Q.map i₁ = A.map i₂ * (Q.map (frobenius C l)).map i₁ * Λ.map i₁ := by
     rw [← hA, ← Matrix.map_mul, ← Matrix.map_mul, ← hΛ]
@@ -367,7 +367,7 @@ theorem isUnit_of_saturated : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : 
     (∀ v : Fin d → WCb l, (∀ i, v i ∈ bk.OE) → (∀ i, ((l : ℕ) : WCb l) ∣ Y.mulVec v i) → ∀ i, ((l : ℕ) : WCb l) ∣ v i) →
     IsUnit Y := by
   intro l _ K bk d Y A hY hA hφ hg hsat
-  haveI : PerfectRing (Cb l) l := perfectRing_tilt_fraction_field l
+  have : PerfectRing (Cb l) l := perfectRing_tilt_fraction_field l
   set c : WCb l →+* Cb l := WittVector.constantCoeff (p := l) (R := Cb l) with hc
 
   have hdetA : IsUnit A.det := by

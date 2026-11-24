@@ -107,12 +107,12 @@ theorem continuous_locHom (q : SplitPt D k) (S : HSp D) (F : GlobalTheory.LocMod
 theorem vol_mul_relIndex {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [MeasurableSpace G]
     [BorelSpace G] (μ : Measure G) [μ.IsMulLeftInvariant] (H H' : Subgroup G) (hle : H' ≤ H)
     (hc : IsCompact (H : Set G)) (ho : IsOpen (H' : Set G)) : μ.real H' * (H'.relIndex H : ℝ) = μ.real H := by
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hc
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hc
   have hHo : IsOpen (H : Set G) := Subgroup.isOpen_mono hle ho
-  have ho' : IsOpen ((H'.subgroupOf H : Subgroup H) : Set H) := ho.preimage continuous_subtype_val
-  haveI : Finite (H ⧸ H'.subgroupOf H) := (H'.subgroupOf H).quotient_finite_of_isOpen ho'
-  haveI : (H'.subgroupOf H).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
-  have hemb : MeasurableEmbedding (H.subtype : H → G) := MeasurableEmbedding.subtype_coe hHo.measurableSet
+  have ho' : IsOpen ((H'.subgroupOf H : Subgroup H) : Set H) := ho.preimage continuous_subtypeVal
+  have : Finite (H ⧸ H'.subgroupOf H) := (H'.subgroupOf H).quotient_finite_of_isOpen ho'
+  have : (H'.subgroupOf H).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have hemb : MeasurableEmbedding (H.subtype : H → G) := MeasurableEmbedding.subtypeVal hHo.measurableSet
   have : (μ.comap (H.subtype : H → G)).IsMulLeftInvariant := Measure.IsMulLeftInvariant.comap μ hemb
   have key := (H'.subgroupOf H).index_mul_measure ho'.measurableSet (μ.comap (H.subtype : H → G))
   rw [hemb.comap_apply, hemb.comap_apply] at key

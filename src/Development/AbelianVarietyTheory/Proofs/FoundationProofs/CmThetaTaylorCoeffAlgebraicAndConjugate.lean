@@ -201,7 +201,7 @@ theorem area_conj (Λ : AddSubgroup ℂ) : area (Λ.map (starRingEnd ℂ).toAddM
   unfold area
   congr 1
   ext a
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine and_congr_right fun _ => ⟨?_, ?_⟩
   · rintro ⟨_, ⟨w₁, h₁, rfl⟩, _, ⟨w₂, h₂, rfl⟩, rfl⟩
     refine ⟨w₁, h₁, w₂, h₂, ?_⟩
@@ -294,7 +294,7 @@ theorem exists_ext (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ) :
     ∃ σ : ℂ →+* ℂ, ∀ x, x ∈ M → x ∈ TaylorLogMetric.Qbar → cj M ρ x = σ x := by
   have hc : Set.Countable ((M ⊓ TaylorLogMetric.Qbar : IntermediateField ℚ ℂ) : Set ℂ) :=
     (Algebraic.countable ℚ ℂ).mono fun x hx => mem_algebraicClosure_iff.1 hx.2
-  haveI : Countable (M ⊓ TaylorLogMetric.Qbar : IntermediateField ℚ ℂ) := hc.to_subtype
+  have : Countable (M ⊓ TaylorLogMetric.Qbar : IntermediateField ℚ ℂ) := hc.to_subtype
   obtain ⟨σ, hσ⟩ := GlobalTheory.GaloisDescent.exists_complex_ringEquiv_comp_eq
     (K := (M ⊓ TaylorLogMetric.Qbar : IntermediateField ℚ ℂ)) (M ⊓ TaylorLogMetric.Qbar : IntermediateField ℚ ℂ).val.toRingHom
     (ρ.comp (IntermediateField.inclusion inf_le_left)).toRingHom

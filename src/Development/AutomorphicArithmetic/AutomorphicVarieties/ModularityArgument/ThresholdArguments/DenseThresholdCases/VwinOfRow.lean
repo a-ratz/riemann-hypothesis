@@ -574,9 +574,9 @@ private theorem central [CharZero F] (ha : a ≠ 0) (hb : b ≠ 0) : Algebra.IsC
 
 private theorem definite (τ : F →+* ℝ) (ha : τ a < 0) (hb : τ b < 0) :
     letI := τ.toAlgebra; NoZeroDivisors (ℝ ⊗[F] ℍ[F,a,0,b]) := by
-  letI := τ.toAlgebra
+  let := τ.toAlgebra
   have h := (lift_bij ℝ a b (AlgHom.id _ _) Function.bijective_id).1
-  haveI : NoZeroDivisors ℍ[ℝ,algebraMap F ℝ a,0,algebraMap F ℝ b] := ⟨fun {x y} hxy => by
+  have : NoZeroDivisors ℍ[ℝ,algebraMap F ℝ a,0,algebraMap F ℝ b] := ⟨fun {x y} hxy => by
     by_cases hx : x = 0
     · exact Or.inl hx
     · exact Or.inr ((isUnit_of_neg _ _ (RingHom.id ℝ) ha hb x hx).mul_right_eq_zero.1 hxy)⟩
@@ -588,12 +588,12 @@ open GlobalTheory.QuadSymbol GlobalTheory.IdeleNormChar in
 private theorem arith (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (h : Even (Module.finrank ℚ F)) :
     ∃ b : F, (∀ τ : F →+* ℝ, τ b < 0) ∧ ∃ p q : Af F, algebraMap F (Af F) b = p ^ 2 + q ^ 2 := by
   obtain ⟨w₀⟩ : Nonempty (InfinitePlace F) := inferInstance
-  haveI : Fact (∀ r : F, r ^ 2 ≠ -1 + 0 * r) := ⟨fun r hr => by
+  have : Fact (∀ r : F, r ^ 2 ≠ -1 + 0 * r) := ⟨fun r hr => by
     have := congrArg (InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w₀)) hr
     simp only [map_pow, zero_mul, add_zero, map_neg, map_one] at this
     nlinarith [sq_nonneg (InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w₀) r)]⟩
-  haveI := Model.isQuadratic (-1 : F)
-  haveI := Model.numberField (-1 : F)
+  have := Model.isQuadratic (-1 : F)
+  have := Model.numberField (-1 : F)
   let a₀ : AdeleRing (𝓞 F) F := ((-1 : InfiniteAdeleRing F), (1 : Af F))
   have ha₀ : a₀ * a₀ = 1 := Prod.ext (neg_one_mul (-1 : InfiniteAdeleRing F) |>.trans (neg_neg 1)) (one_mul (1 : Af F))
   let a : (AdeleRing (𝓞 F) F)ˣ := ⟨a₀, a₀, ha₀, ha₀⟩
@@ -643,11 +643,11 @@ theorem UpperTheory.V.Af.defQuatExists :
   let τ : F →+* ℝ := InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w)
   have hb0 : b ≠ 0 := fun e => by simpa [e] using hb τ
   have hm : ∀ σ : F →+* ℝ, σ (-1) < 0 := fun σ => by simp
-  letI : DivisionRing ℍ[F,-1,0,b] := DivisionRing.ofIsUnitOrEqZero fun x =>
+  let : DivisionRing ℍ[F,-1,0,b] := DivisionRing.ofIsUnitOrEqZero fun x =>
     (em (x = 0)).symm.imp_left (isUnit_of_neg _ _ τ (hm τ) (hb τ) x)
   have hc : ∀ v : InfinitePlace F, ∃ j : ℍ[F,-1,0,b] →+* Matrix (Fin 2) (Fin 2) ℂ,
       ∀ x, j (algebraMap F _ x) = algebraMap ℂ _ (v.embedding x) := fun v => by
-    letI := v.embedding.toAlgebra
+    let := v.embedding.toAlgebra
     obtain ⟨s, hs⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap F ℂ b) two_pos
     let g := ((spl s 0 (c := algebraMap F ℂ (-1)) (d := algebraMap F ℂ b) (by simp) (by simp [hs])).restrictScalars F).comp
       (bc ℂ (-1) b)
@@ -1002,9 +1002,9 @@ theorem hodgeTate : ∀ (F Ω : Type) [Field F] [NumberField F] [IsTotallyReal F
       apply Multiset.map_injective (f := fun n : ℤ => (n : ℂ)) Int.cast_injective
       rw [hG.weights τ, h3, e]
     refine ⟨hK, fun τ => ?_⟩
-    letI : Algebra F (Qbar l) := τ.toAlgebra
-    haveI : Module.Finite F K := Module.finite_of_finrank_pos (by omega)
-    haveI : Algebra.IsAlgebraic F K := Algebra.IsAlgebraic.of_finite F K
+    let : Algebra F (Qbar l) := τ.toAlgebra
+    have : Module.Finite F K := Module.finite_of_finrank_pos (by omega)
+    have : Algebra.IsAlgebraic F K := Algebra.IsAlgebraic.of_finite F K
     let τ' : K →ₐ[F] Qbar l := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -1461,7 +1461,7 @@ theorem UpperTheory.V.Af.clozelCohC_alt :
   have hreg : (CG.mk π).IsRegAlg := (GlobalTheory.CuspRep.CG.isRegAlg_iff _).2 fun τ => by
     obtain ⟨m', e1, e2, e3⟩ := GlobalTheory.AlgInfChar.exists_dualInfChar E a Ξ τ
     have e : m τ = m' := msetSep _ _ fun u => by
-      haveI : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
+      have : Nonempty (Fin Ξ.d) := ⟨⟨0, Ξ.pos⟩⟩
       exact smul_left_injective ℂ one_ne_zero (((hd τ).2 u).symm.trans (e1.2 u))
     have h3 : (CG.mk π).HasInfChar τ (m τ) := h1 τ
     rw [h3.infChar_eq, e]

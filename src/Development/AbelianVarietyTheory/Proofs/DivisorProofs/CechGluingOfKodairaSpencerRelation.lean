@@ -740,8 +740,8 @@ namespace GlobalTheory.SepAffInf
 theorem isAffineOpen_inf_of_le_preimage {X Z : Scheme.{0}} (h : Z ⟶ X) [IsSeparated h]
     (U : X.affineOpens) (Ω₁ Ω₂ : Z.affineOpens)
     (h₁ : Ω₁.1 ≤ h ⁻¹ᵁ U.1) (h₂ : Ω₂.1 ≤ h ⁻¹ᵁ U.1) : IsAffineOpen (Ω₁.1 ⊓ Ω₂.1) := by
-  haveI : IsAffine U.1 := U.2
-  haveI : (h ⁻¹ᵁ U.1).toScheme.IsSeparated := by
+  have : IsAffine U.1 := U.2
+  have : (h ⁻¹ᵁ U.1).toScheme.IsSeparated := by
     constructor
     rw [← terminal.comp_from (h ∣_ U.1)]
     infer_instance

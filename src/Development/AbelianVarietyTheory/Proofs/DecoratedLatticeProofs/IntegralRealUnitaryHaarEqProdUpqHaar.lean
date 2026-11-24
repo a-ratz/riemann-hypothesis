@@ -175,7 +175,7 @@ def bwd (us : ∀ τ, Formalism.REAL.UJ (M.ε τ)) : GinfC V :=
     famH_mem_GinfC D V _ _⟩
 
 theorem continuous_matA : Continuous (matA D V) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_famM : Continuous (famM D V) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
@@ -184,12 +184,12 @@ theorem continuous_famM : Continuous (famM D V) := by
 
 theorem continuous_fwd : Continuous (fwd M) := by
   refine continuous_pi fun τ => Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · refine (((continuous_const (y := M.fr τ)).matrix_mul (((continuous_matA).comp continuous_subtype_val).matrix_map
+  · refine (((continuous_const (y := M.fr τ)).matrix_mul (((continuous_matA).comp continuous_subtypeVal).matrix_map
       (continuous_psiT D τ))).matrix_mul (continuous_const (y := (M.fr τ)⁻¹))).congr fun g => ?_
     show M.fr τ * _ * _ = toJ M τ (infMat D.sp.cm.sig V.gram (thetaC D τ) (g : GA D V))
     rw [toJ, infMat_thetaC]; rfl
   · have c0 : Continuous fun g : GinfC V => (matA D V (g : GA D V)).map (psiT D τ) :=
-      ((continuous_matA).comp continuous_subtype_val).matrix_map (continuous_psiT D τ)
+      ((continuous_matA).comp continuous_subtypeVal).matrix_map (continuous_psiT D τ)
     refine (((continuous_const (y := M.fr τ)).matrix_mul (((continuous_const (y := (gramAt D V τ)⁻¹)).matrix_mul
       c0.matrix_conjTranspose).matrix_mul (continuous_const (y := gramAt D V τ)))).matrix_mul
       (continuous_const (y := (M.fr τ)⁻¹))).congr fun g => ?_
@@ -198,7 +198,7 @@ theorem continuous_fwd : Continuous (fwd M) := by
 
 theorem continuous_bwd : Continuous (bwd M) := by
   have hu : ∀ τ, Continuous fun us : (∀ τ, Formalism.REAL.UJ (M.ε τ)) => umat (us τ) := fun τ =>
-    (Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply τ)
+    (Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply τ)
   have hg : Continuous fun us : (∀ τ, Formalism.REAL.UJ (M.ε τ)) => fun τ => GlobalTheory.IndefiniteRowSideFullHecke.ThetaSourceAction.ofFr M τ (umat (us τ)) :=
     continuous_pi fun τ => (continuous_const.matrix_mul (hu τ)).matrix_mul continuous_const
   refine Continuous.subtype_mk (continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)) _
@@ -247,7 +247,7 @@ theorem integral_prod_eq : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar)
   intro D V S M θ hθ mR μ hmR hμ
   obtain rfl : θ = thetaC D := eq_thetaC D hθ
   set e := eqv M
-  haveI : (mR.map e).IsHaarMeasure := e.isHaarMeasure_map mR
+  have : (mR.map e).IsHaarMeasure := e.isHaarMeasure_map mR
   set c := (mR.map e).haarScalarFactor (Measure.pi μ)
   have hc : 0 < c := Measure.haarScalarFactor_pos_of_isHaarMeasure _ _
   have key : mR.map e = c • Measure.pi μ := Measure.isMulLeftInvariant_eq_smul _ _

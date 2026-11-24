@@ -542,7 +542,7 @@ theorem exists_colength_one (k A : Type) [Field k] [CommRing A] [Algebra k A] [F
           _ = a := by rw [hsa, hfix a ha, ih]
     obtain ⟨n, hn⟩ := hnil (1 - r) hs
     rw [Ideal.mem_bot, ← hpow n, hn, zero_mul]
-  obtain ⟨t, htJ, htW⟩ := SetLike.not_le_iff_exists.mp hJ
+  obtain ⟨t, htJ, htW⟩ := IsConcreteLE.not_le_iff_exists.mp hJ
   let W : Submodule k A := (m * J).restrictScalars k
   have hq : W.mkQ t ≠ 0 := by
     rw [Ne, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
@@ -578,7 +578,7 @@ theorem exists_colength_one (k A : Type) [Field k] [CommRing A] [Algebra k A] [F
         exact hlW _ (Ideal.mul_mem_mul (hdec c) ha.1) }
   have hmemJ₁ : ∀ a, a ∈ J₁ ↔ a ∈ J ∧ l a = 0 := fun a => Iff.rfl
   refine ⟨J₁, t, l, ?_, htJ, ?_, ?_, ?_, hlt⟩
-  · rw [SetLike.lt_iff_le_and_exists]
+  · rw [IsConcreteLE.lt_iff_le_and_exists]
     refine ⟨fun a ha => ((hmemJ₁ a).mp ha).1, t, htJ, fun h => ?_⟩
     have := ((hmemJ₁ t).mp h).2
     rw [hlt] at this
@@ -673,7 +673,7 @@ theorem freeAt_of_basis_lattice (K : Type) [Field K] (C : ACurve K) (V : Type) [
     rw [map_sum, LinearMap.sum_apply]
     refine Finset.sum_congr rfl fun j _ => ?_
     dsimp only
-    rw [if_pos rfl, map_zsmul, Int.cast_smul_eq_zsmul]
+    rw [ite_eq_left rfl, map_zsmul, Int.cast_smul_eq_zsmul]
     rfl
   refine ⟨x, fun l s => ∑ j, algebraMap k K (l (1 ⊗ₜ[ℤ] b j)) • B.coord (s, j), ?_, ?_, ?_, ?_⟩
   · intro s
@@ -744,7 +744,7 @@ open GlobalTheory.CompanionTheory.Ar.Crv GlobalTheory.CompanionTheory.Ar.Crv.Spl
 theorem exists_idem (A : Type) [CommRing A] [Finite A] (m : Ideal A) :
     ∃ e : A, IsIdempotentElem e ∧ 1 - e ∈ m ∧ ∀ t ∈ m, IsNilpotent (e * t) := by
   classical
-  haveI := Fintype.ofFinite A
+  have := Fintype.ofFinite A
   have hpow : ∀ t : A, ∃ n : ℕ, 0 < n ∧ IsIdempotentElem (t ^ n) := fun t => by
     obtain ⟨i, j, hij, h⟩ : ∃ i j : ℕ, i < j ∧ t ^ i = t ^ j := by
       obtain ⟨i, j, hne, h⟩ := Finite.exists_ne_map_eq_of_infinite (fun n : ℕ => t ^ n)
@@ -882,8 +882,8 @@ theorem exists_finite_subfield (K O : Type) [Field K] [CommRing O] [IsDomain O]
       rw [RingHom.mem_ker, map_natCast]; exact CharP.cast_eq_zero K p
     rw [h, Ideal.mem_bot] at hp
     exact (Fact.out : p.Prime).ne_zero (by exact_mod_cast hp)
-  haveI : Finite (O ⧸ RingHom.ker χ) := Ideal.finiteQuotientOfFreeOfNeBot _ hker
-  haveI : Finite χ.range := Finite.of_equiv _ (RingHom.quotientKerEquivRange χ).toEquiv
+  have : Finite (O ⧸ RingHom.ker χ) := Ideal.finiteQuotientOfFreeOfNeBot _ hker
+  have : Finite χ.range := Finite.of_equiv _ (RingHom.quotientKerEquivRange χ).toEquiv
   have hinv : ∀ x ∈ χ.range, x⁻¹ ∈ χ.range := by
     intro x hx
     by_cases h0 : x = 0
@@ -992,7 +992,7 @@ theorem frobT_iterate [CharP k p] (n : ℕ) (hn : ∀ c : k, c ^ p ^ n = c)
 theorem vanish [Finite k] [CharP k p] (hk : ∀ i (c : k), C.v i (algebraMap k K c) ≤ 1)
     (x : TensorProduct ℤ k O) (hx : IsIdempotentElem x) :
     subDeg C D.H (LinearMap.range (act k D.ρH x)) = 0 := by
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   obtain ⟨n, hp, hc⟩ := FiniteField.card k p
   have hn : ∀ c : k, c ^ p ^ (n : ℕ) = c := fun c => by rw [← hc]; exact FiniteField.pow_card c
   have key : ∀ j : ℕ, IsIdempotentElem ((frobT k O p)^[j] x) ∧
@@ -1024,7 +1024,7 @@ variable {K : Type} [Field K] (C : ACurve K) {V : Type} [AddCommGroup V] [Module
   [FiniteDimensional K V]
 
 theorem subDeg_bot (L : C.I → AddSubgroup V) : subDeg C L ⊥ = 0 := by
-  haveI : IsEmpty (Fin (Module.finrank K (⊥ : Submodule K V))) := by
+  have : IsEmpty (Fin (Module.finrank K (⊥ : Submodule K V))) := by
     rw [finrank_bot]; infer_instance
   simp [subDeg, deg, Module.Basis.det_apply, Matrix.det_isEmpty]
 
@@ -1052,7 +1052,7 @@ theorem deg_count (L : C.I → AddSubgroup V) (k A : Type) [Field k] [Algebra k 
     (hnil : ∀ t ∈ RingHom.ker χ, IsNilpotent (e * t)) :
     ∃ n : ℕ, 0 < n ∧ subDeg C L (LinearMap.range (τ e)) =
       n * deg C (quot C L (idealV τ (RingHom.ker χ))) := by
-  haveI : Finite (Ideal A) :=
+  have : Finite (Ideal A) :=
     Finite.of_injective (fun J : Ideal A => (J : Set A)) SetLike.coe_injective
   have claim : ∀ J : Ideal A, J ≤ Ideal.span {e} → ∃ n : ℕ,
       subDeg C L (idealV τ J) = n * deg C (quot C L (idealV τ (RingHom.ker χ))) ∧
@@ -1087,18 +1087,18 @@ theorem v_le_one_of_finite {K : Type} [Field K] (C : ACurve K) (k : Type) [Field
   obtain ⟨n, hn, hc⟩ := isOfFinOrder_iff_pow_eq_one.1 (isOfFinOrder_of_finite (Units.mk0 c h))
   have h1 : c ^ n = 1 := by simpa using congrArg Units.val hc
   have h2 : C.v i (algebraMap k K c) ^ n = 1 := by rw [← map_pow, ← map_pow, h1]; simp
-  exact (pow_eq_one_iff_of_nonneg (zero_le') hn.ne').1 h2 |>.le
+  exact (pow_eq_one_iff_of_nonneg (zero_le) hn.ne').1 h2 |>.le
 
 
 open NumberField in
 theorem deg_quot_eq_zero : ∀ (E : Type) [Field E] [NumberField E] [StarRing (𝓞 E)] (K : Type) [Field K] (C : ACurve K) (p : ℕ) [Fact p.Prime] [CharP K p] (d r : ℕ) (D : ConjData C p (𝓞 E) d) (χ : 𝓞 E →+* K), (∀ a : 𝓞 E, ((Algebra.lmul ℤ (𝓞 E) a : Module.End ℤ (𝓞 E)).charpoly.map (Int.castRingHom K)).Splits) → (∀ i, ∃ x : Fin r → (Fin d → K) × (Fin d → K), LinearIndependent K (fun q : Fin r × Module.Free.ChooseBasisIndex ℤ (𝓞 E) => D.ρH (RingOfIntegers.basis E q.2) (x q.1)) ∧ ∀ y, y ∈ D.H i ↔ ∃ c : Fin r × Module.Free.ChooseBasisIndex ℤ (𝓞 E) → K, (∀ q, C.v i (c q) ≤ 1) ∧ y = ∑ q, c q • D.ρH (RingOfIntegers.basis E q.2) (x q.1)) → deg C (quot C D.H (⨆ a : 𝓞 E, LinearMap.range (D.ρH a - χ a • LinearMap.id))) = 0 := by
   intro E _ _ _ K _ C p _ _ d r D χ _ hfr
   obtain ⟨k, hfin, hχ⟩ := exists_finite_subfield K (𝓞 E) p χ
-  haveI : CharP k p := (RingHom.charP_iff (algebraMap k K) (algebraMap k K).injective p).2 inferInstance
+  have : CharP k p := (RingHom.charP_iff (algebraMap k K) (algebraMap k K).injective p).2 inferInstance
   let χ₀ : 𝓞 E →+* k := χ.codRestrict k hχ
   have hχ₀ : ∀ a, algebraMap k K (χ₀ a) = χ a := fun a => rfl
   have hk : ∀ i (c : k), C.v i (algebraMap k K c) ≤ 1 := fun i c => v_le_one_of_finite C k i c
-  haveI : Finite (TensorProduct ℤ k (𝓞 E)) := Module.finite_of_finite k
+  have : Finite (TensorProduct ℤ k (𝓞 E)) := Module.finite_of_finite k
   obtain ⟨e, he, h1e, hnil⟩ := exists_idem (TensorProduct ℤ k (𝓞 E)) (RingHom.ker (chiT χ₀))
   have h1 : chiT χ₀ e = 1 := by
     have : chiT χ₀ (1 - e) = 0 := h1e

@@ -97,9 +97,9 @@ theorem isIntegral_of_scale (S : CDVR) {W L : Type} [CommRing W] [IsDomain W] [I
       map_zero' := hinj (by simp [hg0])
       map_add' := fun a b => hinj (by simp [hg0]) }
   have hg : ∀ a, algebraMap W L (g a) = φ (algebraMap S.V S.Fr a) := hg0
-  letI : Algebra S.V W := g.toAlgebra
-  letI : Algebra S.Fr L := φ.toAlgebra
-  letI : Algebra S.V L := (φ.comp (algebraMap S.V S.Fr)).toAlgebra
+  let : Algebra S.V W := g.toAlgebra
+  let : Algebra S.Fr L := φ.toAlgebra
+  let : Algebra S.V L := (φ.comp (algebraMap S.V S.Fr)).toAlgebra
   have t1 : IsScalarTower S.V W L := IsScalarTower.of_algebraMap_eq fun a => (hg a).symm
   have t2 : IsScalarTower S.V S.Fr L := IsScalarTower.of_algebraMap_eq fun a => rfl
   have : FiniteDimensional S.Fr L := hφ
@@ -165,8 +165,8 @@ theorem exists_extension (S S' : CDVR) (φ : S.Fr →+* S'.Fr) (hφ : φ.Finite)
     ∃ f' : S'.Fr →+* C, f'.comp φ = f ∧ (∀ a : S'.V, ‖f' (algebraMap S'.V S'.Fr a)‖ ≤ 1) ∧
       ∀ a ∈ maximalIdeal S'.V, ‖f' (algebraMap S'.V S'.Fr a)‖ < 1 := by
   obtain ⟨f', hf'⟩ : ∃ f' : S'.Fr →+* C, f'.comp φ = f := by
-    letI : Algebra S.Fr S'.Fr := φ.toAlgebra
-    letI : Algebra S.Fr C := f.toAlgebra
+    let : Algebra S.Fr S'.Fr := φ.toAlgebra
+    let : Algebra S.Fr C := f.toAlgebra
     have : FiniteDimensional S.Fr S'.Fr := hφ
     exact ⟨(IsAlgClosed.lift (R := S.Fr) (S := S'.Fr) (M := C)).toRingHom,
       RingHom.ext fun x => (IsAlgClosed.lift (R := S.Fr) (S := S'.Fr) (M := C)).commutes x⟩
@@ -262,13 +262,13 @@ namespace GlobalTheory.UnifPoint
 
 theorem exists_uniformised_chart : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (la : HeightOneSpectrum (𝓞 T.Q.c.F)) (y : T.PtA j la), letI := T.Q.H.starRing; ∃ (T' : CDVR) (io : T.Q.c.F →+* T'.Fr) (e : ℕ) (_ : OverLa la T'.V io e) (z : IntFr (T.Q.Xo j) T.Q.c T' io) (_ : z.IsAlg) (_ : T.G.lies j la T' io z (imgV y)) (C : IntegralChartA3 (T.Q.Xo j) T.Q.c T' io z) (P : PELUnif (maximalIdeal T'.V) C.I.G), FrTrunc C.I.G (𝟙 (Sp T'.V)) (chD C.ch) C.xT C.eT ∧ P.TorsionIso ∧ ∀ w : WeightFamilies.Wt D j, ∀ f ∈ T.th j w, vAtV y f = nval T'.V e (evI z f) := by
   intro D T h j hj la y
-  letI := T.Q.H.starRing
+  let := T.Q.H.starRing
   obtain ⟨q, S, io, e, ho, z, hz, eta, heta, rfl⟩ := y
   obtain ⟨S', io', z', r, hz', hr, hU, φ, hv, hm⟩ := GlobalTheory.T.exists_extension_all_models_uniformized _ _ _ _ (T.Q.Xo j) T.Q.c S io z hz
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let ψ : S.Fr →+* S'.Fr := letI := io'.toAlgebra; φ.toRingHom
   have hio : io' = ψ.comp io := by
-    letI := io'.toAlgebra
+    let := io'.toAlgebra
     exact RingHom.ext fun a => (φ.commutes a).symm
   have hv' : ∀ a : S.Fr, vV S'.V (ψ a) = (r : ℤ) * vV S.V a := fun a => by
     by_cases ha : a = 0

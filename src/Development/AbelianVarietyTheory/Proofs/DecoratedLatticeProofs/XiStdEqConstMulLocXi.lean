@@ -96,7 +96,7 @@ theorem hat_eq_zero [MeasurableSpace k] [BorelSpace k] {n : Type} [Fintype n] [D
       cosetInd (box n (1 : kˣ)) (Submodule.Quotient.mk y₀) x := fun z hz x => by
     have : (Submodule.Quotient.mk (x + z) : (n → k) ⧸ box n (1 : kˣ)) = Submodule.Quotient.mk x :=
       (Submodule.Quotient.eq _).2 (by simpa using hz)
-    simp only [cosetInd, Set.indicator_apply, Set.mem_setOf_eq, this]
+    simp only [cosetInd, Set.indicator_apply, Set.mem_ofPred_eq, this]
   refine Eq.trans ?_ (FourierPi.fourier_eq_zero_pi (Measure.pi fun _ => ν) hψ (s := 1)
     (fun z hz x => hs z (fun i => hz i trivial) x) (y := ε • η) fun h' => hη fun i => ?_)
   · simp only [hat, dotProduct_smul, smul_eq_mul, dotProduct_comm]
@@ -120,7 +120,7 @@ theorem symmetricChain_psi_base_eq_one_of_maximalIdeal {d : XIx (Fin κ) t (s + 
   refine (S.cond 1).2 (by simp) _ ?_
   have h := (S.unif _).1 (hd (Sum.inl (Sum.inr 0)))
   have h0 : (0 : ValueGroupWithZero k) < valuation k (S.ϖ : k) := by
-    rw [zero_lt_iff]; simp
+    rw [pos_iff_ne_zero]; simp
   simp only [SymData.y0, dotProduct_single, neg_mul, one_mul, Valuation.map_neg, map_mul, map_one,
     Units.val_inv_eq_inv_val, map_inv₀]
   rw [← div_eq_mul_inv]
@@ -269,7 +269,7 @@ theorem intAt_sub_of_near {P : HeightOneSpectrum (𝓞 E)} {q : E} (hq : P.valua
     {f : Sp E n ≃ₗ[E] Sp E n} (hf : ∀ i j : Fin n, P.valuation E (f (Pi.single j 1) i - if i.val = j.val then 1 else 0) < 1)
     {y : Sp E n} (hy : ∀ i, IntAt P (q * y i)) (i : Fin n) : IntAt P (f y i - y i) := by
   have e : f y i - y i = ∑ j, (f (Pi.single j 1) i - if i.val = j.val then 1 else 0) * y j := by
-    simp only [_root_.sub_mul, Finset.sum_sub_distrib, ← Fin.ext_iff, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [_root_.sub_mul, Finset.sum_sub_distrib, ← Fin.ext_iff, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     congr 1
 
     conv_lhs => rw [pi_eq_sum_univ' y, map_sum, Finset.sum_apply]
@@ -291,7 +291,7 @@ theorem intAt_sub_of_near {P : HeightOneSpectrum (𝓞 E)} {q : E} (hq : P.valua
 
 theorem isLiftFr_base [NeZero n] {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))} (w : SG) :
     IsLiftFr (DecoF.base (E := E) (n := n) (ST := ST) (SG := SG) (Q := Q)).deco.1 w 1 :=
-  ⟨fun _ => Iff.rfl, fun x hx => if_pos hx⟩
+  ⟨fun _ => Iff.rfl, fun x hx => ite_eq_left hx⟩
 
 
 omit [StarRing E] in
@@ -360,8 +360,8 @@ theorem top_near (hI : I.Ok) (hA : A.Is) (P : BadPr I a) (hP : P.1 ∈ (B.primes
     HeightOneSpectrum.valuation B.fields.E P.1
       (Formalism.L2.Col.frsF I.sel (I.tup a) (A.p0 j β).1.1 P (Pi.single c 1) r - if r.val = c.val then 1 else 0) < 1 := by
   subst hj
-  letI := GlobalTheory.Mem.Col2.starE B
-  haveI : NeZero (B.R.N B.R.m - 1) := ⟨by
+  let := GlobalTheory.Mem.Col2.starE B
+  have : NeZero (B.R.N B.R.m - 1) := ⟨by
     have h1 := B.R.two_le_m
     have h2 : B.R.N B.R.m = B.R.k + B.R.m * (B.R.t + 1) := rfl
     have h3 : B.R.m ≤ B.R.m * (B.R.t + 1) := Nat.le_mul_of_pos_right _ (Nat.succ_pos _)
@@ -371,7 +371,7 @@ theorem top_near (hI : I.Ok) (hA : A.Is) (P : BadPr I a) (hP : P.1 ∈ (B.primes
   have h1 := hA.top β (Formalism.L2.Col.DecoF.base _ _ _ _ _) 1 1 (isPtOf_base _)
     ⟨(Matrix.one_mul _).trans (Matrix.mul_one _).symm, Matrix.one_mulVec _⟩
   rw [one_mul] at h1
-  have e : Formalism.L2.Col.frsF I.sel (I.tup a) (A.p0 B.R.m β).1.1 P = (A.p0 B.R.m β).1.1.deco.1.liftFr ⟨P.1, hP⟩ := dif_pos hP
+  have e : Formalism.L2.Col.frsF I.sel (I.tup a) (A.p0 B.R.m β).1.1 P = (A.p0 B.R.m β).1.1.deco.1.liftFr ⟨P.1, hP⟩ := dite_eq_left hP
   have hu := unitOf_val (Formalism.L2.Col.piT_notMem_vGs l.pr u ⟨P.1, hP⟩)
   rw [e]
   refine lift_near_of_lift h1 (hA.base _ le_rfl β).1 (hA.base _ le_rfl β).2 ⟨P.1, hP⟩
@@ -396,7 +396,7 @@ theorem intAt_q_mul (P : BadPr I a) (hP : P.1 ∈ (B.primes X).vGs) {j : ℕ} (h
   rw [hY] at h0
   have h1 := (Formalism.L2.Col.mem_locLat _ _ _ _).1 hy P
   have h2 := (Formalism.L2.Col.mem_locLat _ _ _ _).1 h0 P
-  simp only [if_pos hP, zpow_zero, inv_one, one_smul, _root_.zpow_neg, inv_inv, zpow_one] at h1 h2
+  simp only [ite_eq_left hP, zpow_zero, inv_one, one_smul, _root_.zpow_neg, inv_inv, zpow_one] at h1 h2
   have h3 : ((Formalism.L2.Col.qOf P.1 : ℕ) : B.fields.E) • z ∈ Formalism.HermitianLatticesTheory.localization₂ P.1.asIdeal (A.p0 j β).1.1.deco.1.N := by
     have h4 := add_mem h1 (Submodule.smul_mem _ ((Formalism.L2.Col.qOf P.1 : ℕ) : 𝓞 B.fields.E) h2)
     convert h4 using 1

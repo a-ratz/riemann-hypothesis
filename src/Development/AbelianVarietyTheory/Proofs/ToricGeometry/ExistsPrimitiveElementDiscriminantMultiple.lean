@@ -165,8 +165,8 @@ theorem exists_primitive_element_discriminant_multiple (R A K L : Type*) [CommRi
     [IsFractionRing A L] [Algebra K L] [Algebra R L] [IsScalarTower R K L] [IsScalarTower R A L] :
     ∃ (a : A) (q : R), q ≠ 0 ∧ C q ∈ Ideal.span {minpoly R a, (minpoly R a).derivative} ∧
       ∀ b : A, ∃ r : R[X], algebraMap R A q * b = aeval a r := by
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid A R⁰) L := inferInstance
-  haveI : Module.Finite K L := Module.Finite.of_isLocalization R A R⁰
+  have : IsLocalization (Algebra.algebraMapSubmonoid A R⁰) L := inferInstance
+  have : Module.Finite K L := Module.Finite.of_isLocalization R A R⁰
   obtain ⟨α, hα⟩ := Field.exists_primitive_element K L
   obtain ⟨⟨a, ⟨_, t, ht, rfl⟩⟩, hat⟩ := IsLocalization.surj (Algebra.algebraMapSubmonoid A R⁰) α
   have ht' : algebraMap R K t ≠ 0 :=
@@ -201,7 +201,7 @@ theorem exists_primitive (R A : Type*) [CommRing R] [IsDomain R] [IsIntegrallyCl
     [CharZero R] [CommRing A] [IsDomain A] [Algebra R A] [FaithfulSMul R A] [Module.Finite R A] :
     ∃ (a : A) (q : R), q ≠ 0 ∧ C q ∈ Ideal.span {minpoly R a, (minpoly R a).derivative} ∧
       ∀ b : A, ∃ r : R[X], algebraMap R A q * b = aeval a r := by
-  letI : Algebra (FractionRing R) (FractionRing A) := FractionRing.liftAlgebra R (FractionRing A)
+  let : Algebra (FractionRing R) (FractionRing A) := FractionRing.liftAlgebra R (FractionRing A)
   exact exists_primitive_element_discriminant_multiple R A (FractionRing R) (FractionRing A)
 
 end GlobalTheory.NoetherPrimitive
@@ -213,10 +213,10 @@ theorem GlobalTheory.noetherNormalization_primitive :
     (∀ (A : Type) [CommRing A] [IsDomain A] [Algebra ℂ A] [Algebra.FiniteType ℂ A], ∃ (d : ℕ) (j : MvPolynomial (Fin d) ℂ →ₐ[ℂ] A) (a : A) (p : Polynomial (MvPolynomial (Fin d) ℂ)) (q : MvPolynomial (Fin d) ℂ), ringKrullDim A = d ∧ Function.Injective j ∧ j.toRingHom.Finite ∧ p.Monic ∧ Irreducible p ∧ (∀ r : Polynomial (MvPolynomial (Fin d) ℂ), r.eval₂ j.toRingHom a = 0 ↔ p ∣ r) ∧ q ≠ 0 ∧ Polynomial.C q ∈ Ideal.span {p, p.derivative} ∧ ∀ b : A, ∃ r : Polynomial (MvPolynomial (Fin d) ℂ), j q * b = r.eval₂ j.toRingHom a) := by
   intro A _ _ _ _
   obtain ⟨d, j, hinj, hfin⟩ := exists_finite_inj_algHom_of_fg ℂ A
-  letI : Algebra (MvPolynomial (Fin d) ℂ) A := j.toRingHom.toAlgebra
-  haveI : Module.Finite (MvPolynomial (Fin d) ℂ) A := hfin
+  let : Algebra (MvPolynomial (Fin d) ℂ) A := j.toRingHom.toAlgebra
+  have : Module.Finite (MvPolynomial (Fin d) ℂ) A := hfin
   have hinj' : Function.Injective (algebraMap (MvPolynomial (Fin d) ℂ) A) := hinj
-  haveI : FaithfulSMul (MvPolynomial (Fin d) ℂ) A :=
+  have : FaithfulSMul (MvPolynomial (Fin d) ℂ) A :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj'
   obtain ⟨a, q, hq, hq₁, hq₂⟩ := GlobalTheory.NoetherPrimitive.exists_primitive (MvPolynomial (Fin d) ℂ) A
   have hint : IsIntegral (MvPolynomial (Fin d) ℂ) a := Algebra.IsIntegral.isIntegral a

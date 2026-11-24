@@ -85,7 +85,7 @@ theorem inv_eq_zero_iff {S : Scheme.{0}} (A : Over S) [GrpObj A] {T : Scheme.{0}
 theorem sym_of_regular_section : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] (L : LB A.left) (θ : L.Sec), L.IsLB → (∀ (i : L.ι) (V : Scheme.Opens A.left) (h : V ≤ L.U i), resG A.left h (θ.f i) ∈ nonZeroDivisors Γ(A.left, V)) → (∀ (T : Scheme.{0}) (t : T ⟶ A.left) (i : L.ι) (h : ⊤ ≤ t ⁻¹ᵁ L.U i), (t.appLE (L.U i) ⊤ h).hom (θ.f i) = 0 ↔ t = t ≫ A.hom ≫ eSec A) → Out.Sym A L := by
   intro S A _ L θ hL hreg hz s
   refine ⟨⊤, trivial, ?_⟩
-  haveI : IsIso (GrpObj.inv : A ⟶ A).left :=
+  have : IsIso (GrpObj.inv : A ⟶ A).left :=
     inferInstanceAs (IsIso ((Over.forget S).map (GrpObj.inv : A ⟶ A)))
   refine _root_.GlobalTheory.SameZeroScheme.exists_isGen_linComb A.left _ L θ _ _ hL
     (fun i V h => appLE_mem_nonZeroDivisors _ _ _ (hreg i) V h)

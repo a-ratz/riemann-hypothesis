@@ -79,7 +79,7 @@ theorem unfoldCoeff_main (Λ : Submodule ℤ V) [DiscreteTopology Λ] [IsZLattic
     (hμ : μ ∈ dual Λ) :
     ∫ y in D, (∑' l : Λ, f ((l : V) + y)) *
         Complex.exp (-(2 * Real.pi * Complex.I * (⟪μ, y⟫ : ℝ))) = (𝓕 f : V → ℂ) μ := by
-  haveI : VAddInvariantMeasure Λ V volume := ⟨fun l s _ => measure_preimage_add volume (l : V) s⟩
+  have : VAddInvariantMeasure Λ V volume := ⟨fun l s _ => measure_preimage_add volume (l : V) s⟩
   set e : V → ℂ := fun x => Complex.exp (-(2 * Real.pi * Complex.I * (⟪μ, x⟫ : ℝ))) with he
   have hper : ∀ (l : Λ) (y : V), e ((l : V) + y) = e y := fun l y =>
     unfoldCoeff_char_periodic Λ hμ l y

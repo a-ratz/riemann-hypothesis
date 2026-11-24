@@ -108,7 +108,7 @@ theorem isAdicComplete_of_pow_le {A : Type} [CommRing A] {I J : Ideal A} {N : �
 
 theorem ringHom_ext_of_sep {R B : Type} [CommRing R] [CommRing B] (f g : R⟦X⟧ →+* B)
     (hC : ∀ r, f (C r) = g (C r)) (hX : f X = g X) (hs : ∀ x : B, (∀ n, f X ^ n ∣ x) → x = 0) : f = g := by
-  letI : Algebra R B := (f.comp C).toAlgebra
+  let : Algebra R B := (f.comp C).toAlgebra
   exact congrArg AlgHom.toRingHom (GlobalTheory.Cyc.IoMap.algHom_unique (R := R)
     { toRingHom := f, commutes' := fun _ => rfl } { toRingHom := g, commutes' := fun r => (hC r).symm } hX hs)
 
@@ -157,7 +157,7 @@ theorem finite_sol (R : Type) [CommRing R] [IsDomain R] : {x : R | x ^ l ^ a = x
   have h : (Polynomial.X ^ l ^ a - Polynomial.X : Polynomial R) ≠ 0 := fun h => by
     have := congrArg (fun p : Polynomial R => p.coeff 1) h
     simp [Polynomial.coeff_X_pow, (one_lt_pow_l l a).ne] at this
-  refine (Polynomial.finite_setOf_isRoot h).subset fun x hx => ?_
+  refine (Polynomial.finite_setOfPred_isRoot h).subset fun x hx => ?_
   simpa [sub_eq_zero] using hx
 
 instance : Finite (Fq l a) := (finite_sol l a (OCb l)).to_subtype
@@ -167,7 +167,7 @@ theorem exists_gen : ∃ (z : Fq l a) (ω : Om l), IsPrimitiveRoot ω (l ^ a - 1
   have h1 := one_lt_pow_l l a
   have h0 : 0 < l ^ a - 1 := by omega
   have : NeZero (l ^ a - 1) := ⟨h0.ne'⟩
-  obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ a - 1)
+  obtain ⟨ω, hω⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ a - 1)
   have hd : ¬ l ∣ l ^ a - 1 := fun h => hl.out.not_dvd_one
     ((Nat.dvd_sub_iff_right h1.le (dvd_pow_self l (NeZero.ne a))).1 h)
   obtain ⟨x, hx⟩ := GlobalTheory.MemLoc.exists_isTiltOf ω _ h0 hd hω.pow_eq_one
@@ -416,7 +416,7 @@ def GKinf : Subgroup (GQ l) := ϖ.Kinf.fixingSubgroup
 def GfieldInf : Subgroup (GQ l) := (ϖ.fieldInf a).fixingSubgroup
 
 theorem exists_ev : ∃ f : (Wq l a)⟦X⟧ →+* Ainf l, f X = ϖ.teich ∧ ∀ w, f (C w) = wA l a w := by
-  letI : Algebra (Wq l a) (Ainf l) := (wA l a).toRingHom.toAlgebra
+  let : Algebra (Wq l a) (Ainf l) := (wA l a).toRingHom.toAlgebra
   have := ϖ.complete_teich
   obtain ⟨f, hf⟩ := GlobalTheory.Cyc.IoMap.algHom_exists (R := Wq l a) ϖ.teich
     (GlobalTheory.Per.AinfComplete.summ_of_precomplete _) ϖ.sep_teich
@@ -457,7 +457,7 @@ theorem l_eq_zero : (l : (Fq l a)⟦X⟧) = 0 := by
   rw [← map_natCast (C : Fq l a →+* (Fq l a)⟦X⟧)]; simp
 
 theorem l_ne_zero : (l : (Wq l a)⟦X⟧) ≠ 0 := fun h =>
-  WittVector.p_nonzero l (Fq l a) (by simpa using congrArg constantCoeff h)
+  WittVector.p_ne_zero l (Fq l a) (by simpa using congrArg constantCoeff h)
 
 theorem frobS_eq (x : (Wq l a)⟦X⟧) : ∃ b, frobS l a x = x ^ l + (l : (Wq l a)⟦X⟧) * b := by
   obtain ⟨b, hb⟩ := dvd_of_map_eq_zero l a (frobS l a x - x ^ l) (by
@@ -664,7 +664,7 @@ theorem coeff_le_one {l : ℕ} [hl : Fact l.Prime]
   have his : i ∈ s := by simp [hs, hi, hci]
   have hpw : Set.Pairwise (s : Set ℕ) (fun j k => ‖c j * π ^ j‖ ≠ ‖c k * π ^ k‖) := by
     intro j hj k hk hjk h
-    simp only [hs, Finset.coe_filter, Finset.mem_range, Set.mem_setOf_eq] at hj hk
+    simp only [hs, Finset.coe_filter, Finset.mem_range, Set.mem_ofPred_eq] at hj hk
     obtain ⟨n, -, hn⟩ := key j hj.2
     obtain ⟨m, -, hm⟩ := key k hk.2
     rw [hn, hm] at h

@@ -59,7 +59,7 @@ theorem finite_of_pos_lat {Y : Type} [AddCommGroup Y] {n : ℕ} (eb : Y ≃ₗ[�
     (fun x => by rw [happ]; exact hn _)
     (fun x hx => by rw [happ]; exact hp _ (by simpa using hx)) B
   refine (h.preimage eb.injective.injOn).subset fun x hx => ?_
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, happ, LinearEquiv.symm_apply_apply]
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, happ, LinearEquiv.symm_apply_apply]
   exact hx
 
 theorem finite_minimiser_systems_lat : ∀ (Y : Type) [AddCommGroup Y] (n N : ℕ) [NeZero N] (eb : Y ≃ₗ[ℤ] (Fin n → ℤ)) (m : ℕ) (γ : Fin m → LinearMap.BilinForm ℤ Y), (∀ j x y, γ j x y = γ j y x) → (∀ j y, 0 ≤ γ j y y) → (∀ x, x ≠ 0 → 0 < ∑ j, γ j x x) → ∃ S : Finset ((Fin n → ZMod N) → Y), ∀ (b : LinearMap.BilinForm ℤ Y) (k : ℕ) (cf : Fin m → ℕ), 0 < k → (∀ j, 0 < cf j) → k • b = ∑ j, cf j • γ j → ∀ μ : (Fin n → ZMod N) → Y, (∀ cl i, ((eb (μ cl) i : ℤ) : ZMod N) = cl i) → (∀ cl (α : Y), (∀ i, ((eb α i : ℤ) : ZMod N) = cl i) → b (μ cl) (μ cl) ≤ b α α) → μ ∈ S := by
@@ -80,7 +80,7 @@ theorem finite_minimiser_systems_lat : ∀ (Y : Type) [AddCommGroup Y] (n N : �
   have hfin : {μ : (Fin n → ZMod N) → Y | ∀ c, μ c ∈ {α | G α α ≤ Bd c}}.Finite :=
     Set.Finite.pi' fun c => finite_of_pos_lat eb G hGsym hGnn hGpos (Bd c)
   refine ⟨hfin.toFinset, fun b k cf hk hcf hkb μ hμ hmin => ?_⟩
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   intro c
   obtain ⟨β, hβF, hβ⟩ := hF c ⟨μ c, hμ c⟩
   have hle : ∀ j, γ j β.1 β.1 ≤ γ j (μ c) (μ c) := fun j => by

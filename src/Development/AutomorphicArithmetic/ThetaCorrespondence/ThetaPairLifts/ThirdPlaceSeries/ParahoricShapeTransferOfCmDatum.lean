@@ -503,15 +503,15 @@ theorem tameVal_delta (hGAR : GlobalTheory.Published.GlobalArtinReciprocity) (cf
     (y : D.host.Eˣ) (hu : a ∉ P.asIdeal) (hy : (y : D.host.E) = (a : D.host.E)) :
     IsUnitAt P (atFin P y) ∧ e (NX.ofO0 D i k (NX.tameVal (D.ntw.delta i) P (if b then 1 else -1) a).1) =
       (((cf.delAt (D.ntw.l i)).locK P y : ℂˣ) : ℂ) := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
   obtain ⟨art, ha⟩ := hGAR D.host.E D.nd.Om
   have hA : IsPlaceOver (D.nd.plOm.1 P) P := D.nd.plOm.2 P
   obtain ⟨hq2, hq1⟩ := GlobalTheory.TameValChar.two_le_normV_and_not_mem P
   obtain ⟨ϖ, hϖ1, hϖ2⟩ : ∃ ϖ0 : 𝓞 D.host.E, ϖ0 ∈ P.asIdeal ∧ ϖ0 ∉ P.asIdeal ^ 2 := by
     have hlt := Ideal.pow_succ_lt_pow (P := P.asIdeal) P.ne_bot 1
     rw [pow_one] at hlt
-    obtain ⟨x, hx, hx'⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx, hx'⟩ := IsConcreteLE.exists_of_lt hlt
     exact ⟨x, hx, hx'⟩
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap D.host.E D.nd.Om (ϖ : D.host.E))
     (show 0 < normV P - 1 by omega)
@@ -632,15 +632,15 @@ theorem tameVal_eq_locK (hGAR : GlobalTheory.Published.GlobalArtinReciprocity) (
     (hl : ((D.ntw.l i : ℕ) : 𝓞 D.host.E) ∉ P'.asIdeal) (a : 𝓞 D.host.E) (y : D.host.Eˣ)
     (ha : a ∉ P'.asIdeal) (hy : (y : D.host.E) = (a : D.host.E)) :
     e (NX.ofOk D i k (NX.tameVal ψ P' 1 a).1) = ((χ.locK P' y : ℂˣ) : ℂ) := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
   obtain ⟨art, hart, hH⟩ := hR
   obtain ⟨A, hA⟩ := ReciprocityTheory.Gal.exists_isPlaceOver D.nd.Om P'
   obtain ⟨hq2, hq1⟩ := GlobalTheory.TameValChar.two_le_normV_and_not_mem P'
   obtain ⟨ϖ, hϖ1, hϖ2⟩ : ∃ ϖ0 : 𝓞 D.host.E, ϖ0 ∈ P'.asIdeal ∧ ϖ0 ∉ P'.asIdeal ^ 2 := by
     have hlt := Ideal.pow_succ_lt_pow (P := P'.asIdeal) P'.ne_bot 1
     rw [pow_one] at hlt
-    obtain ⟨x, hx, hx'⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx, hx'⟩ := IsConcreteLE.exists_of_lt hlt
     exact ⟨x, hx, hx'⟩
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap D.host.E D.nd.Om (ϖ : D.host.E))
     (show 0 < normV P' - 1 by omega)
@@ -707,12 +707,12 @@ theorem locComp_of_isRc_classMapD_cenLoc : _root_.GlobalTheory.HeightCounting.Up
   rw [h3]
   unfold TwDat.xiTw
   split_ifs with hc
-  · rw [if_pos hc] at hp'
+  · rw [ite_eq_left hc] at hp'
     have hd := f.isDel'.unr P' hp' _ hxu
     show _ = (((f.del'.loc P') ((atFin P') y) * ((T.psi v).loc P') ((atFin P') y) : ℂˣ) : ℂ)
     rw [hd, one_mul]
     rfl
-  · rw [if_neg hc] at hp'
+  · rw [ite_eq_right hc] at hp'
     have hd := f.isDel.unr P' hp' _ hxu
     show _ = (((f.del.loc P') ((atFin P') y) * ((T.psi v).loc P') ((atFin P') y) : ℂˣ) : ℂ)
     rw [hd, one_mul]
@@ -771,7 +771,7 @@ theorem tameVal_eq_one {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algeb
   obtain ⟨ϖ, hϖ1, hϖ2⟩ : ∃ ϖ : 𝓞 E, ϖ ∈ P.asIdeal ∧ ϖ ∉ P.asIdeal ^ 2 := by
     have hlt := Ideal.pow_succ_lt_pow (P := P.asIdeal) P.ne_bot 1
     rw [pow_one] at hlt
-    obtain ⟨x, hx, hx'⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx, hx'⟩ := IsConcreteLE.exists_of_lt hlt
     exact ⟨x, hx, hx'⟩
   have hϖne : algebraMap E Ω (ϖ : E) ≠ 0 := by
     intro h

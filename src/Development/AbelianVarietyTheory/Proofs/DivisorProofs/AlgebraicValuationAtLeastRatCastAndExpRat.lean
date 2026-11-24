@@ -73,14 +73,14 @@ theorem sz_ratCast (l : ℕ) [Fact l.Prime] (lam : algebraicClosure ℚ ℂ →+
   rw [e, map_ratCast, norm_ratCast]
   by_cases hq : q = 0
   · subst hq; simp only [padicNorm.zero, Rat.cast_zero]; exact Real.rpow_nonneg (by linarith) r
-  · rw [padicNorm.eq_zpow_of_nonzero hq, Rat.cast_zpow, Rat.cast_natCast, ← Real.rpow_intCast]
+  · rw [padicNorm.eq_zpow_of_ne_zero hq, Rat.cast_zpow, Rat.cast_natCast, ← Real.rpow_intCast]
     exact Real.rpow_le_rpow_of_exponent_le hl (by push_cast; exact hr)
 
 theorem sz_exp (l : ℕ) [Fact l.Prime] (lam : algebraicClosure ℚ ℂ →+* ℂ_[l]) (q : ℚ) :
     Sz l lam 0 (Complex.exp ((2 * Real.pi * Complex.I) * (q : ℂ))) := by
   set ζ := Complex.exp ((2 * Real.pi * Complex.I) * (q : ℂ)) with hζ
   have hpow : ζ ^ q.den = 1 := by
-    rw [hζ, ← Complex.exp_nat_mul]
+    rw [hζ, ← Complex.exp_natCast_mul]
     have : (q.den : ℂ) * ((2 * Real.pi * Complex.I) * (q : ℂ)) = (q.num : ℂ) * (2 * Real.pi * Complex.I) := by
       have hq : (q : ℂ) = (q.num : ℂ) / (q.den : ℂ) := by exact_mod_cast (Rat.num_div_den q).symm
       have hd : (q.den : ℂ) ≠ 0 := by exact_mod_cast q.den_nz

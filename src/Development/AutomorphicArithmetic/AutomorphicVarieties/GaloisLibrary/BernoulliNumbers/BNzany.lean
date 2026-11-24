@@ -68,8 +68,8 @@ private theorem nz_iff {R S : Type} [Field R] [Algebra ℚ R] [Field S] [Algebra
 theorem UpperTheory.V.Bern.b_nzany :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] {N : ℕ} [NeZero N] (χ : DirichletCharacter Ω N) (k : ℕ), 1 ≤ k → χ (-1) = (-1) ^ k → Bprim k χ ≠ 0 ∧ (2 ≤ k → genB k χ ≠ 0) := by
   intro Ω _ _ N _ χ k hk hχ
-  haveI : NeZero (Monoid.exponent (ZMod N)ˣ) := ⟨Monoid.exponent_ne_zero_of_finite⟩
-  haveI : Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) := AlgebraicClosure.isAlgebraic ℚ
+  have : NeZero (Monoid.exponent (ZMod N)ˣ) := ⟨Monoid.exponent_ne_zero_of_finite⟩
+  have : Algebra.IsAlgebraic ℚ (AlgebraicClosure ℚ) := AlgebraicClosure.isAlgebraic ℚ
   let i : Ω →+* AlgebraicClosure Ω := algebraMap _ _
   let f : AlgebraicClosure ℚ →+* AlgebraicClosure Ω :=
     (IsAlgClosed.lift : AlgebraicClosure ℚ →ₐ[ℚ] AlgebraicClosure Ω).toRingHom

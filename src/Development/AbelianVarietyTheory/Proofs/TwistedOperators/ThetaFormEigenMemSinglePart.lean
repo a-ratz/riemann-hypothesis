@@ -171,10 +171,10 @@ private theorem mult_map_mul_right_eq_of_chi_eq_one {θ} {V : HSp D} {S : D.what
   | zero => intro v g; rfl
   | add T T' _ _ h1 h2 =>
     intro v g
-    simp only [MultilinearMap.add_apply, Pi.add_apply, h1 v g, h2 v g]
+    simp only [add_apply, Pi.add_apply, h1 v g, h2 v g]
   | smul c T _ h1 =>
     intro v g
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, h1 v g]
+    simp only [smul_apply, Pi.smul_apply, h1 v g]
 
 theorem mem_one_part : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T0 : Type} {A : FamIn D.what₂.LL G Pl0 T0 D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks), R.toLevCh.Is A.μ0 → R.models_HW → ∀ (i : Fin D.R.m) (σ : D.what₂.LL →+* ℂ) (b : Pl D.host.E → List ℤ → ℂ), ∃ ev, ∀ w : (R.HW i σ).H, (∀ P d, GlobalTheory.Hk3.Good R A.μ0 P → GlobalTheory.ConjScalar.RelLab (Wc D i) P d → postOn (R.MW i σ) (GlobalTheory.Hk3.hk (Wc D i) P (Finsupp.single d 1)) ((R.HW i σ).e w) = b P d • (R.HW i σ).e w) → w ∈ GlobalTheory.LiftLower.partH R i σ ev := by
   intro D G _ _ Pl0 T0 A Ks _ _ _ R hL hM i σ b

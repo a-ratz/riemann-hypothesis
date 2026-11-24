@@ -571,7 +571,7 @@ theorem cellJacquetFun_mem {f : parabolicIndSpace F n β σ} (hf : f ∈ support
   · obtain ⟨U, hU, hUf⟩ := exists_cellJacquet_mul_right (γ := γ) (w := w) σ f
     refine ⟨U.subgroupOf (levi F n γ), ?_, fun k hk m => hUf k hk m⟩
     rw [Subgroup.coe_subgroupOf]
-    exact hU.preimage continuous_subtype_val
+    exact hU.preimage continuous_subtypeVal
 
 variable (hYQ : ∀ g ∈ Y, ∀ q ∈ blockUpper F n γ, g * q ∈ Y)
 

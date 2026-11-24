@@ -74,7 +74,7 @@ namespace GlobalTheory.TorsRat
 theorem exists_factor_of_isFinite {K₀ K : Type} [Field K₀] [IsAlgClosed K₀] [Field K]
     (e : K₀ →+* K) {Z : Scheme.{0}} (s : Z ⟶ Sp K₀) [IsFinite s] (w : Sp K ⟶ Z)
     (hw : w ≫ s = spMap e) : ∃ w₀ : Sp K₀ ⟶ Z, w = spMap e ≫ w₀ := by
-  haveI : IsAffine Z := isAffine_of_isAffineHom s
+  have : IsAffine Z := isAffine_of_isAffineHom s
   let φ : CommRingCat.of K₀ ⟶ Γ(Z, ⊤) := Spec.preimage (Z.isoSpec.inv ≫ s)
   have hφ : Spec.map φ = Z.isoSpec.inv ≫ s := Spec.map_preimage _
   have hF : IsFinite (Spec.map φ) := by rw [hφ]; infer_instance
@@ -84,9 +84,9 @@ theorem exists_factor_of_isFinite {K₀ K : Type} [Field K₀] [IsAlgClosed K₀
   have hφψ : φ ≫ ψ = CommRingCat.ofHom e := by
     apply Spec.map_injective
     rw [Spec.map_comp, hψ, hφ, Category.assoc, Iso.hom_inv_id_assoc, hw]
-  letI : Algebra K₀ Γ(Z, ⊤) := φ.hom.toAlgebra
-  letI : Algebra K₀ K := e.toAlgebra
-  haveI : Module.Finite K₀ Γ(Z, ⊤) := hF'
+  let : Algebra K₀ Γ(Z, ⊤) := φ.hom.toAlgebra
+  let : Algebra K₀ K := e.toAlgebra
+  have : Module.Finite K₀ Γ(Z, ⊤) := hF'
   have hmem : ∀ b, ψ.hom b ∈ e.range := by
     intro b
     have hb : IsIntegral K₀ b := Algebra.IsIntegral.isIntegral b
@@ -114,7 +114,7 @@ theorem torsion_point_rational : ∀ (K₀ K : Type) [Field K₀] [IsAlgClosed K
     rcases Nat.eq_zero_or_pos n with h | h
     · subst h; simp at hn
     · exact h
-  haveI := GlobalTheory.MulFiniteAny.isFinite_mulA K₀ Y hY n hn1
+  have := GlobalTheory.MulFiniteAny.isFinite_mulA K₀ Y hY n hn1
   let o : Sp K₀ ⟶ Y.left := (η[Y] : 𝟙_ (Over (Sp K₀)) ⟶ Y).left
   have hyo : y.left ≫ (mulA Y n).left = spMap e ≫ o := by
     have h1 : y ≫ mulA Y n = 1 := by

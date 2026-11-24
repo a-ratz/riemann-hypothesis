@@ -111,7 +111,7 @@ variable {E R}
 
 theorem extendToClosure_of_mem {x : ℂ_[p]} (hx : x ∈ closureInCp E) :
     extendToClosure E R x = extendOnClosure E R ⟨x, hx⟩ :=
-  dif_pos hx
+  dite_eq_left hx
 
 theorem isClosed_image_coe (k : IntermediateField ℚ_[p] (PadicAlgCl p))
     [FiniteDimensional ℚ_[p] k] :
@@ -119,7 +119,7 @@ theorem isClosed_image_coe (k : IntermediateField ℚ_[p] (PadicAlgCl p))
   have : FiniteDimensional ℚ_[p] (Subalgebra.toSubmodule k.toSubalgebra) :=
     ‹FiniteDimensional ℚ_[p] k›
   have hc : IsComplete (k : Set (PadicAlgCl p)) :=
-    Submodule.complete_of_finiteDimensional (Subalgebra.toSubmodule k.toSubalgebra)
+    Submodule.isComplete_of_finiteDimensional (Subalgebra.toSubmodule k.toSubalgebra)
   exact ((UniformSpace.Completion.isUniformEmbedding_coe
     (PadicAlgCl p)).isUniformInducing.isComplete_iff.2 hc).isClosed
 
@@ -173,7 +173,7 @@ theorem extendToClosure_induction {P : ℂ_[p] → ℂ_[p] → Prop}
   intro x hx
   rw [extendToClosure_of_mem hx]
   have hcont : Continuous fun s : closureInCp E => ((s : ℂ_[p]), extendOnClosure E R s) :=
-    continuous_subtype_val.prodMk (continuous_extendOnClosure hadd hbound)
+    continuous_subtypeVal.prodMk (continuous_extendOnClosure hadd hbound)
   refine (denseRange_toClosureInCp E).induction_on (p := fun s : closureInCp E =>
     P (s : ℂ_[p]) (extendOnClosure E R s)) ⟨x, hx⟩ (hP.preimage hcont) fun y => ?_
   rw [extendOnClosure_toClosureInCp hadd hbound]
@@ -196,8 +196,8 @@ theorem extendToClosure_sub {x x' : ℂ_[p]} (hx : x ∈ closureInCp E) (hx' : x
   have he := continuous_extendOnClosure hadd hbound
   have hdiff : Continuous fun q : closureInCp E × closureInCp E =>
       (⟨(q.1 : ℂ_[p]) - q.2, hsub q.1 q.2⟩ : closureInCp E) :=
-    ((continuous_subtype_val.comp continuous_fst).sub
-      (continuous_subtype_val.comp continuous_snd)).subtype_mk _
+    ((continuous_subtypeVal.comp continuous_fst).sub
+      (continuous_subtypeVal.comp continuous_snd)).subtype_mk _
   refine (denseRange_toClosureInCp E).induction_on₂ (p := fun s t : closureInCp E =>
     extendOnClosure E R ⟨(s : ℂ_[p]) - t, hsub s t⟩ = extendOnClosure E R s - extendOnClosure E R t)
     (isClosed_eq (he.comp hdiff) ((he.comp continuous_fst).sub (he.comp continuous_snd)))
@@ -283,7 +283,7 @@ theorem extendToClosure_mul {a : PadicAlgCl p} (ha : a ∈ k) {x : ℂ_[p]}
   have he := continuous_extendOnClosure hadd hbound
   have hcont : Continuous fun s : closureInCp E =>
       (⟨(a : ℂ_[p]) * s, hmem s⟩ : closureInCp E) :=
-    (continuous_const.mul continuous_subtype_val).subtype_mk _
+    (continuous_const.mul continuous_subtypeVal).subtype_mk _
   refine (denseRange_toClosureInCp E).induction_on (p := fun s : closureInCp E =>
     extendOnClosure E R ⟨(a : ℂ_[p]) * s, hmem s⟩ = (a : ℂ_[p]) * extendOnClosure E R s)
     ⟨x, hx⟩ (isClosed_eq (he.comp hcont) (continuous_const.mul he)) fun y => ?_
@@ -316,7 +316,7 @@ theorem extendToClosure_smul (σ : Gal(PadicAlgCl p/K₀)) (hσ : ∀ y ∈ E, �
   rw [extendToClosure_of_mem hx, extendToClosure_of_mem (hmem ⟨x, hx⟩)]
   have he := continuous_extendOnClosure hadd hbound
   have hcont : Continuous fun s : closureInCp E => (⟨σ • (s : ℂ_[p]), hmem s⟩ : closureInCp E) :=
-    ((continuous_const_smul σ).comp continuous_subtype_val).subtype_mk _
+    ((continuous_const_smul σ).comp continuous_subtypeVal).subtype_mk _
   refine (denseRange_toClosureInCp E).induction_on (p := fun s : closureInCp E =>
     extendOnClosure E R ⟨σ • (s : ℂ_[p]), hmem s⟩ = σ • extendOnClosure E R s)
     ⟨x, hx⟩ (isClosed_eq (he.comp hcont) ((continuous_const_smul σ).comp he)) fun y => ?_

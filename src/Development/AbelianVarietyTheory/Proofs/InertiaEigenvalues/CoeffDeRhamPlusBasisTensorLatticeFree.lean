@@ -138,7 +138,7 @@ theorem UpperTheory.Reformulated.B.LatticePowerSmul.exists_pow_smul_mem_lattice_
     ∀ {l : ℕ} [inst : Fact (Nat.Prime l)] (LL : Formalism.BasicNotions.Loc.FinExt l) (T : GlobalTheory.BKGal.QLat LL) (v : T.V),
       ∃ (n : ℕ), (↑l : ↥(↑LL : IntermediateField ℚ_[l] (Formalism.BasicNotions.Loc.Om l))) ^ n • v ∈ T.L.T := by
   intro l inst LL T v
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   exact UpperTheory.exists_pow_smul_mem_alt T.L.T (fun c hc => ⟨⟨c, hc⟩, rfl⟩) T.L.span v
 end -- clump:auto
 end -- clump:auto
@@ -310,12 +310,12 @@ private theorem linearIndependent_smul_basis_pairs {Z Q O L V κ σ : Type*} [Co
     [IsScalarTower O L V] [IsScalarTower Q L V] (M : Submodule O V) (b : Module.Basis κ O M)
     (ω : Module.Basis σ Z O) :
     LinearIndependent Q (fun p : σ × κ => (algebraMap O L (ω p.1)) • ((b p.2 : M) : V)) := by
-  letI : Module Z V := Module.compHom V (algebraMap Z L)
-  haveI : IsScalarTower Z Q V := ⟨fun z q v => by
+  let : Module Z V := Module.compHom V (algebraMap Z L)
+  have : IsScalarTower Z Q V := ⟨fun z q v => by
     show (z • q) • v = algebraMap Z L z • (q • v)
     rw [← algebraMap_smul L (z • q) v, ← algebraMap_smul L q v, smul_smul, Algebra.smul_def z q,
       map_mul, ← IsScalarTower.algebraMap_apply Z Q L]⟩
-  haveI : IsScalarTower Z O V := ⟨fun z o v => by
+  have : IsScalarTower Z O V := ⟨fun z o v => by
     show (z • o) • v = algebraMap Z L z • (o • v)
     rw [Algebra.smul_def z o, mul_smul, ← algebraMap_smul L (algebraMap Z O z) (o • v),
       ← IsScalarTower.algebraMap_apply Z O L]⟩
@@ -417,8 +417,8 @@ private theorem abstract_indep {R K O B V C σ κ : Type} [CommRing R] [Field K]
 theorem _root_.UpperTheory.KN.linearIndependent_Ql_productBasis_of_Zl_lattice :
     ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l) (T : QLat LL) (Pl : LocPrime l) (AI : LocAinf l Pl) (Td : LocTied l Pl AI) (act : OD l ↥(OL LL) →+ (T.V ⊗[ℚ_[l]] Pl.R.BdR →+ T.V ⊗[ℚ_[l]] Pl.R.BdR)), (∀ (o : ↥(OL LL)) (b : Per.BdRp l) (v : T.V) (c : Pl.R.BdR), act (o ⊗ₜ[ℤ_[l]] b) (v ⊗ₜ[ℚ_[l]] c) = ((o : ↥LL.1) • v) ⊗ₜ[ℚ_[l]] (GlobalTheory.BKGal.JumpDR.cD Td b * c)) → ∀ (κ : Type) [Fintype κ] (b : Module.Basis κ ↥(OL LL) ↥T.L.T), ∀ d : κ → OD l ↥(OL LL), ∑ k, act (d k) (((b k : ↥T.L.T) : T.V) ⊗ₜ[ℚ_[l]] (1 : Pl.R.BdR)) = 0 → ∀ k, d k = 0 := by
   intro l _ LL T Pl AI Td act hact κ _ b d hd k
-  haveI : Module.Free ℤ_[l] ↥(OL LL) := inferInstance
-  haveI : Module.Finite ℤ_[l] ↥(OL LL) := inferInstance
+  have : Module.Free ℤ_[l] ↥(OL LL) := inferInstance
+  have : Module.Finite ℤ_[l] ↥(OL LL) := inferInstance
   have hinj := (UpperTheory.KN.fil_zero_eq_range_cD_and_cD_injective l Pl AI Td LL).2
   refine abstract_indep (Module.Free.chooseBasis ℤ_[l] ↥(OL LL)) act
     (fun k => ((b k : ↥T.L.T) : T.V) ⊗ₜ[ℚ_[l]] (1 : Pl.R.BdR)) _

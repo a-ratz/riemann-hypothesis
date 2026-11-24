@@ -71,7 +71,7 @@ theorem meas_G (γ : Mx k r) (b : ℝ) :
   have mγ : Measurable (fun _ : B.SS k r => (Matrix.of.symm γ : Formalism.QuantumDeterminants.Mt k r)) := measurable_const
   have M := meas_matmul (meas_matmul (meas_matmul (meas_matmul m1 m2) mγ) m3) m4
   have hg : Continuous (fun y : Formalism.QuantumDeterminants.Mt k r => B.gN (Matrix.of y)) := gN_cont.comp mt_cont
-  exact ((hg.measurable.comp M).pow_const (-b)).enorm
+  exact ((hg.measurable.comp M).pow_const (-b)).eNorm
 
 def Phi3 (e1 e2 : Mx k r → ℂ) (γi : Mx k r) (x : Formalism.QuantumDeterminants.Mt k r) (p q : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r) :
     ℝ≥0∞ :=
@@ -84,9 +84,9 @@ theorem triple_integrand_measurable {α : Type*} [TopologicalSpace α] [Measurab
     Measurable (fun t => Phi3 e1 e2 γi (X t) (Pp t) (Qq t)) := by
   unfold Phi3
   exact ((he1.comp (((mt_cont.comp hP.fst).matrix_mul (mt_cont.comp hP.snd)).matrix_mul
-    (mt_cont.comp hX))).enorm.measurable).mul
+    (mt_cont.comp hX))).eNorm.measurable).mul
     ((he2.comp (((mt_cont.comp hQ.fst).matrix_mul (mt_cont.comp hQ.snd)).matrix_mul
-    (continuous_const.matrix_mul (mt_cont.comp hX)))).enorm.measurable)
+    (continuous_const.matrix_mul (mt_cont.comp hX)))).eNorm.measurable)
 
 theorem triple_lintegral_product {e1 e2 : Mx k r → ℂ} (he1 : Continuous e1) (he2 : Continuous e2) (γi : Mx k r)
     (μp μq : Measure (Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r)) (x : Formalism.QuantumDeterminants.Mt k r) :
@@ -97,10 +97,10 @@ theorem triple_lintegral_product {e1 e2 : Mx k r → ℂ} (he1 : Continuous e1) 
   have ha : Measurable fun p : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r =>
       ‖e1 (Matrix.of p.1 * Matrix.of p.2 * Matrix.of x)‖ₑ :=
     (he1.comp (((mt_cont.comp continuous_fst).matrix_mul (mt_cont.comp continuous_snd)).matrix_mul
-      continuous_const)).enorm.measurable
+      continuous_const)).eNorm.measurable
   rw [← lintegral_mul_const _ ha]
   refine lintegral_congr fun p => ?_
-  rw [lintegral_const_mul' _ _ enorm_ne_top]
+  rw [lintegral_const_mul' _ _ eNorm_ne_top]
 
 theorem triple_lintegral_swap {e1 e2 : Mx k r → ℂ} (he1 : Continuous e1) (he2 : Continuous e2) (γi : Mx k r)
     (μG : Measure (Formalism.QuantumDeterminants.Mt k r)) (μp μq : Measure (Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r))

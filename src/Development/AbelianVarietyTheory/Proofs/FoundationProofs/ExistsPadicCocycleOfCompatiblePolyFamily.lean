@@ -176,13 +176,13 @@ theorem unif_level : ∀ (N l : ℕ) (R : Type) [CommRing R] (Φ : SL(2, ℤ) �
   have Hmono : ∀ {M M' : ℕ}, M ∣ M' → H M ≤ H M' := by
     intro M M' hd γ hγ δ hδ
     exact hγ δ (gamma_le_of_dvd hd hδ)
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero l := ⟨hl.ne'⟩
-  haveI : Group.FG SL(2, ℤ) := by
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero l := ⟨hl.ne'⟩
+  have : Group.FG SL(2, ℤ) := by
     rw [Group.fg_iff]
     exact ⟨{ModularGroup.S, ModularGroup.T}, SpecialLinearGroup.SL2Z_generators, Set.toFinite _⟩
-  haveI : (Gam N l).FiniteIndex := by unfold Gam; infer_instance
-  haveI : Group.FG (Gam N l) := Subgroup.fg_of_index_ne_zero _
+  have : (Gam N l).FiniteIndex := by unfold Gam; infer_instance
+  have : Group.FG (Gam N l) := Subgroup.fg_of_index_ne_zero _
   obtain ⟨_, S, _, hS⟩ := (Group.fg_iff').1 (inferInstance : Group.FG (Gam N l))
   choose Mf hMf hMeq using fun s : Gam N l => hinv s.1 s.2
   let M := ∏ s ∈ S, Mf s
@@ -267,7 +267,7 @@ theorem exists_coc_near : ∀ (N l w : ℕ), 0 < N → l.Prime → l ≠ 2 → �
   have hnK : l ^ n ∣ M' * N * l ^ (max b n) := dvd_trans hnA (dvd_mul_left _ _)
   obtain ⟨L1, L2, L3, -, -, L6, L7⟩ := _root_.GlobalTheory.KZ.polySlash_laws (ZMod (l ^ n))
   have hΔ : ((CongruenceSubgroup.Gamma (M' * N * l ^ (max b n))).subgroupOf (Gam N l)).Normal := by
-    haveI := CongruenceSubgroup.Gamma_normal (M' * N * l ^ (max b n))
+    have := CongruenceSubgroup.Gamma_normal (M' * N * l ^ (max b n))
     exact Subgroup.normal_subgroupOf
   have h2 : IsUnit (2 : ZMod (l ^ n)) := by
     have hc : Nat.Coprime 2 (l ^ n) :=
@@ -313,10 +313,10 @@ theorem exists_coc_near : ∀ (N l w : ℕ), 0 < N → l.Prime → l ≠ 2 → �
   classical
   refine ⟨fun γ => if h : γ ∈ Gam N l then z ⟨γ, h⟩ else 0, ⟨?_, ?_⟩, ?_⟩
   · intro γ hγ
-    simp only [dif_pos hγ]
+    simp only [dite_eq_left hγ]
     exact (MvPolynomial.mem_homogeneousSubmodule _ _).mp (hzS _)
   · intro γ hγ δ hδ
-    simp only [dif_pos hγ, dif_pos hδ, dif_pos (mul_mem hγ hδ)]
+    simp only [dite_eq_left hγ, dite_eq_left hδ, dite_eq_left (mul_mem hγ hδ)]
     simpa using hzc ⟨γ, hγ⟩ ⟨δ, hδ⟩
   · refine ⟨M' * N * l ^ (max b n) * l,
       Nat.mul_pos (Nat.mul_pos (Nat.mul_pos hM'pos hN) (pow_pos hl.pos _)) hl.pos, fun δ hδ => ?_⟩
@@ -324,7 +324,7 @@ theorem exists_coc_near : ∀ (N l w : ℕ), 0 < N → l.Prime → l ≠ 2 → �
       mem_Gam_of_Gamma (dvd_mul_of_dvd_left ⟨M' * l ^ (max b n), by ring⟩ _) (dvd_mul_left _ _) hδ
     have hδK : δ ∈ CongruenceSubgroup.Gamma (M' * N * l ^ (max b n)) :=
       mem_Gamma_of_dvd (dvd_mul_right _ _) hδ
-    simp only [dif_pos hδG]
+    simp only [dite_eq_left hδG]
     exact hzΔ ⟨δ, hδG⟩ (Subgroup.mem_subgroupOf.mpr hδK)
 
 end GlobalTheory.KZ.H3
@@ -520,7 +520,7 @@ theorem adj_of_near : ∀ (N l w n : ℕ), 0 < N → l.Prime → l ≠ 2 → ¬ 
     intro g v hv
     exact L3 _ w v hv
   have hΔn : Δ.Normal := by
-    haveI := CongruenceSubgroup.Gamma_normal (M * N * l ^ a)
+    have := CongruenceSubgroup.Gamma_normal (M * N * l ^ a)
     exact Subgroup.normal_subgroupOf
   have hM'K : M' ∣ K := by
     rw [hMe]
@@ -542,7 +542,7 @@ theorem adj_of_near : ∀ (N l w n : ℕ), 0 < N → l.Prime → l ≠ 2 → ¬ 
       rw [map_intCast] at h1
       rw [h1]
       by_cases hij : i = j
-      · subst hij; rw [if_pos rfl, map_neg, map_one]; simp [Matrix.neg_apply]
+      · subst hij; rw [ite_eq_left rfl, map_neg, map_one]; simp [Matrix.neg_apply]
       · simp [hij, Matrix.neg_apply, Matrix.one_apply]
     rw [L6 _ _ v hent, L7 w v hv, hw.neg_one_pow, neg_one_smul]
   have hc2 : ∀ g, c' * g * c'⁻¹ * g⁻¹ ∈ Δ := by
@@ -616,8 +616,8 @@ theorem step (N l w : ℕ) [Fact l.Prime] (hN : 0 < N) (hl2 : l ≠ 2) (hlN : ¬
     ∃ y' : SL(2, ℤ) → MvPolynomial (Fin 2) (ZMod (l ^ (n + 1))), IsCoc w (Gam N l) y' ∧ Near y' (Φ (n + 1)) ∧
       ∀ γ ∈ Gam N l, MvPolynomial.map (ZMod.castHom (pow_dvd_pow l (Nat.le_succ n)) (ZMod (l ^ n))) (y' γ) = y γ := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
-  haveI : NeZero (l ^ (n + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ (n + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
   obtain ⟨z', hz', hz'n⟩ := _root_.GlobalTheory.KZ.H3.exists_coc_near N l w hN hp hl2 hlN hw Φ hΦ (n + 1)
   set c := ZMod.castHom (pow_dvd_pow l (Nat.le_succ n)) (ZMod (l ^ n)) with hc
   have L := GlobalTheory.KZ.polySlash_laws (ZMod (l ^ n))
@@ -698,18 +698,18 @@ theorem cocycle_lift_of_fam : ∀ (N l w : ℕ) [Fact l.Prime], 0 < N → l ≠ 
     fun n => hF3 n (seq n).1 (seq n).2.1 (seq n).2.2
   let fam : SL(2, ℤ) → (n : ℕ) → MvPolynomial (Fin 2) (ZMod (l ^ n)) :=
     fun δ n => if δ ∈ Gam N l then (seq n).1 δ else 0
-  have hfam : ∀ δ ∈ Gam N l, ∀ n, fam δ n = (seq n).1 δ := fun δ hδ n => if_pos hδ
+  have hfam : ∀ δ ∈ Gam N l, ∀ n, fam δ n = (seq n).1 δ := fun δ hδ n => ite_eq_left hδ
   have hhom : ∀ δ n, (fam δ n).IsHomogeneous w := by
     intro δ n
     by_cases hδ : δ ∈ Gam N l
     · rw [hfam δ hδ]; exact (seq n).2.1.1 δ hδ
-    · simp only [fam, if_neg hδ]; exact MvPolynomial.isHomogeneous_zero _ _ _
+    · simp only [fam, ite_eq_right hδ]; exact MvPolynomial.isHomogeneous_zero _ _ _
   have hcomp : ∀ δ n, MvPolynomial.map (ZMod.castHom (pow_dvd_pow l (Nat.le_succ n)) (ZMod (l ^ n)))
       (fam δ (n + 1)) = fam δ n := by
     intro δ n
     by_cases hδ : δ ∈ Gam N l
     · rw [hfam δ hδ, hfam δ hδ]; exact hseq n δ hδ
-    · simp only [fam, if_neg hδ, map_zero]
+    · simp only [fam, ite_eq_right hδ, map_zero]
   choose q hq using fun δ => homogeneous_lift_compatible l w (fam δ) (hhom δ) (hcomp δ)
   have L := GlobalTheory.KZ.polySlash_laws ℤ_[l]
   refine ⟨q, ⟨fun γ _ => (hq γ).1, fun γ hγ δ hδ => ?_⟩, fun n => ?_⟩

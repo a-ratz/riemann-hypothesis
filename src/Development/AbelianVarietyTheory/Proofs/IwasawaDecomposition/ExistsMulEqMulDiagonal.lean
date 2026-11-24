@@ -79,8 +79,8 @@ theorem _root_.GlobalTheory.SmithBetween.exists_mul_eq_mul_diagonal {R : Type} [
   let g : Fin m ≃ n := Equiv.ofBijective snf.f hf
   let eN := LinearEquiv.ofInjective M.mulVecLin hinj
   let bQ : Module.Basis n R (n → R) := (snf.bN.map eN.symm).reindex g
-  letI := (Pi.basisFun R n).invertibleToMatrix snf.bM
-  letI := (Pi.basisFun R n).invertibleToMatrix bQ
+  let := (Pi.basisFun R n).invertibleToMatrix snf.bM
+  let := (Pi.basisFun R n).invertibleToMatrix bQ
   refine ⟨(Pi.basisFun R n).toMatrix snf.bM, (Pi.basisFun R n).toMatrix bQ, ?_, ?_,
     fun j => snf.a (g.symm j), ?_⟩
   · exact isUnit_det_of_invertible _
@@ -137,7 +137,7 @@ theorem _root_.GlobalTheory.SmithBetween.smith_between (R : Type) [CommRing R] [
       rcases hϖ.isUnit_or_isUnit hb with h' | h'
       · exact absurd h' h
       · refine ⟨h'.unit⁻¹, ?_⟩
-        simp only [d, h, if_false, hb]
+        simp only [d, h, ite_false, hb]
         rw [mul_assoc, IsUnit.mul_val_inv, mul_one]
   choose u hu using hu
 

@@ -102,12 +102,12 @@ theorem splitsCompletely_of_tower {K E M : Type*} [Field K] [NumberField K] [Fie
 theorem infinite_setOf_splitsCompletely (E : Type) [Field E] [NumberField E] :
     {u : HeightOneSpectrum (𝓞 ℚ) | SplitsCompletely E u}.Infinite := by
   classical
-  haveI : Algebra.IsAlgebraic ℚ (AlgebraicClosure E) := Algebra.IsAlgebraic.trans ℚ E (AlgebraicClosure E)
-  haveI : IsAlgClosure ℚ (AlgebraicClosure E) := ⟨inferInstance, inferInstance⟩
+  have : Algebra.IsAlgebraic ℚ (AlgebraicClosure E) := Algebra.IsAlgebraic.trans ℚ E (AlgebraicClosure E)
+  have : IsAlgClosure ℚ (AlgebraicClosure E) := ⟨inferInstance, inferInstance⟩
   let M := IntermediateField.normalClosure ℚ E (AlgebraicClosure E)
-  haveI : IsGalois ℚ (AlgebraicClosure E) := IsAlgClosure.isGalois ℚ _
-  haveI : IsGalois ℚ M := IsGalois.normalClosure ℚ E (AlgebraicClosure E)
-  haveI : NumberField M := { to_charZero := inferInstance, to_finiteDimensional := inferInstance }
+  have : IsGalois ℚ (AlgebraicClosure E) := IsAlgClosure.isGalois ℚ _
+  have : IsGalois ℚ M := IsGalois.normalClosure ℚ E (AlgebraicClosure E)
+  have : NumberField M := { to_charZero := inferInstance, to_finiteDimensional := inferInstance }
   have hd := GroundTheory.Global.hasDirichletDensity_setOf_splitsCompletely ℚ M
   have hsub : {u : HeightOneSpectrum (𝓞 ℚ) | SplitsCompletely M u} ⊆
       {u : HeightOneSpectrum (𝓞 ℚ) | SplitsCompletely E u} := fun u hu => splitsCompletely_of_tower (M := M) hu
@@ -125,7 +125,7 @@ theorem primesOver_rat_eq (E : Type) [Field E] [NumberField E] (u : HeightOneSpe
     ⟨Rat.ringOfIntegersEquiv x, by
       rw [eq_intCast, ← map_intCast Rat.ringOfIntegersEquiv.symm, Int.cast_id, RingEquiv.symm_apply_apply]⟩
   ext Q
-  simp only [Ideal.primesOver, Set.mem_setOf_eq]
+  simp only [Ideal.primesOver, Set.mem_ofPred_eq]
   refine and_congr_right fun _ => ?_
   constructor
   · intro h
@@ -144,7 +144,7 @@ theorem GlobalTheory.SplitAway.exists_splitsFully_notMem : ∀ (F E : Type) [Fie
     ∃ v ∉ P, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SplitsFully E v ∧ Nonempty (E →ₐ[F] Fv F v) := by
   intro F E _ _ _ _ _ P
   classical
-  obtain ⟨u, huS, huT⟩ := ((infinite_setOf_splitsCompletely E).diff
+  obtain ⟨u, huS, huT⟩ := ((infinite_setOf_splitsCompletely E).sdiff
     (P.finite_toSet.image fun v : HeightOneSpectrum (𝓞 F) => v.under (𝓞 ℚ))).nonempty
   have hu : SplitsCompletely E u := huS
   obtain ⟨⟨v, hv⟩⟩ := GroundTheory.Global.nonempty_placesOver F u
@@ -155,13 +155,13 @@ theorem GlobalTheory.SplitAway.exists_splitsFully_notMem : ∀ (F E : Type) [Fie
     rw [e1, ← primesOver_rat_eq]
     exact (splitsCompletely_iff_ncard_primesOver E u).1 hu
   · have hF : SplitsCompletely E v := hu.of_liesOver v
-    haveI := (splitsCompletely_iff_isFiniteSplit (L := E) v).1 hF
+    have := (splitsCompletely_iff_isFiniteSplit (L := E) v).1 hF
     obtain ⟨n, ⟨e⟩⟩ := Algebra.IsFiniteSplit.nonempty_algEquiv_fun (v.adicCompletion F)
       (v.adicCompletion F ⊗[F] E)
     have hn : 0 < n := by
       rcases Nat.eq_zero_or_pos n with rfl | h
       · exfalso
-        haveI : Subsingleton (v.adicCompletion F ⊗[F] E) := e.toEquiv.subsingleton
+        have : Subsingleton (v.adicCompletion F ⊗[F] E) := e.toEquiv.subsingleton
         have h1 : Module.finrank (v.adicCompletion F) (v.adicCompletion F ⊗[F] E) = Module.finrank F E :=
           Module.finrank_baseChange
         rw [Module.finrank_zero_of_subsingleton] at h1

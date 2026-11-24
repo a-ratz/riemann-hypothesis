@@ -157,7 +157,7 @@ private theorem sat_card {F : Type} [Field F] [NumberField F] [_root_.NumberFiel
 
 private theorem unrAt_iff {F : Type} [Field F] [NumberField F] (χ : HChar F) (w : HeightOneSpectrum (𝓞 F)) :
     χ.UnrAt w ↔ IsUnram (χ.loc w) := by
-  haveI : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   refine forall_congr' fun x => imp_congr_left ?_
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion F)) Valued.v).eq_one_iff_eq_one.symm
@@ -312,7 +312,7 @@ private theorem norm_units (K L : Type) [Field K] [NumberField K] [Field L] [Num
       IsSmoothChar θ → IsUnram (θ.comp (nm w)) → IsUnram θ := by
   obtain ⟨η, h1, h3⟩ := normCnt K L hd
   refine ⟨(Filter.eventually_cofinite.1 h1).toFinset, fun u hu w θ hθ hn => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hu
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hu
   have hc := ((h3 u w).2.2 θ hθ).2.2 hn
   have hpos : 0 < ∑ w' : PlacesOver L u, fdeg w' := by
     have : 0 < fdeg w := (normVal K L u w 1).2.2.1
@@ -369,7 +369,7 @@ theorem matchBCX : MatchBCX := by
     have a : u ∉ S₁ := fun h => hu ((hS₀ u).2 (by tauto))
     have b : u ∉ T := fun h => hu ((hS₀ u).2 (by tauto))
     have c : u ∉ (Filter.eventually_cofinite.1 hη).toFinset := fun h => hu ((hS₀ u).2 (by tauto))
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at c
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at c
     exact ⟨a, b, c⟩
   choose tK htK using fun u => suppTw K n h1 π u χ _ (hsK u)
   choose rK hrK using fun j u => suppTw K n h1 (π.twist χ) u (η ^ j) _ (htK u).1

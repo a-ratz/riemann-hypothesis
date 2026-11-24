@@ -289,7 +289,7 @@ theorem PerLev.level {P : Out.PolAV (Sp ℂ)} {g k : ℕ} {τ : Matrix (Fin g) (
     exact (u.ker _).2 ((hΛ _).2 ⟨a, rfl⟩)
   · rw [hl, hl]
     refine hw k a b _ hk ?_
-    rw [Units.val_zpow_eq_zpow_val, hz, ← Complex.exp_int_mul]
+    rw [Units.val_zpow_eq_zpow_val, hz, ← Complex.exp_intCast_mul]
     congr 1
     ring
 
@@ -437,7 +437,7 @@ theorem exists_point_over_of_idempotent {F A B : Type} [Field F] [IsAlgClosed F]
     (h : ∀ e : A, IsIdempotentElem e → P (f e) = Q e) (E : B) (hE : IsIdempotentElem E)
     (hP : P E = 1) : ∃ Q' : B →ₐ[F] F, Q' E = 1 ∧ ∀ a, Q' (f a) = Q a := by
   algebraize [f.toRingHom]
-  haveI : Algebra.FinitePresentation A B :=
+  have : Algebra.FinitePresentation A B :=
     Algebra.FinitePresentation.of_finiteType.1 inferInstance
   have hcl : IsClopen (PrimeSpectrum.basicOpen E : Set (PrimeSpectrum B)) :=
     PrimeSpectrum.isClopen_iff.2 ⟨E, hE, rfl⟩
@@ -478,7 +478,7 @@ theorem exists_point_over_of_idempotent {F A B : Type} [Field F] [IsAlgClosed F]
     rw [this]
     exact RingHom.IsIntegral.trans _ _ hfin.to_isIntegral
       (RingHom.isIntegral_of_surjective _ Ideal.Quotient.mk_surjective)
-  haveI : Algebra.IsIntegral F (B ⧸ 𝔮.asIdeal) := ⟨hint⟩
+  have : Algebra.IsIntegral F (B ⧸ 𝔮.asIdeal) := ⟨hint⟩
   have hbij : Function.Bijective (Algebra.ofId F (B ⧸ 𝔮.asIdeal)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let φ := (AlgEquiv.ofBijective _ hbij).symm
@@ -533,9 +533,9 @@ theorem finite_flat_tensor_map (K F R R₁ : Type) [CommRing K] [CommRing F] [Al
 
 theorem exists_geomInt_piece_of_finite_etale : ∀ (K : Type) [Field K] [NumberField K] [Algebra K ℂ] (R R₁ : Type) [CommRing R] [Algebra K R] [Algebra.Smooth K R] [CommRing R₁] [Algebra R R₁] [Algebra K R₁] [IsScalarTower K R R₁] (K₁ : Type) [Field K₁] [NumberField K₁] [Algebra K K₁] (σ₁ : K₁ →ₐ[K] ℂ) (p : R₁ →ₐ[K] ℂ) (q : R →ₐ[K] K₁), (Module.Finite R R₁ ∧ Algebra.Etale R R₁ ∧ Module.FaithfullyFlat R R₁) → (∀ e : ℂ ⊗[K] R, IsIdempotentElem e → Algebra.TensorProduct.lift (AlgHom.id ℂ ℂ) (p.comp (IsScalarTower.toAlgHom K R R₁)) (fun _ _ => Commute.all _ _) e = Algebra.TensorProduct.lift (AlgHom.id ℂ ℂ) (σ₁.comp q) (fun _ _ => Commute.all _ _) e) → ∃ (k : Type) (_ : Field k) (_ : NumberField k) (S : Type) (_ : CommRing S) (_ : Algebra k S) (j : R₁ →+* S) (s : S →+* ℂ) (s₀ : S →ₐ[k] k) (ii : K₁ →+* k), GeomInt k S ∧ s.comp j = p.toRingHom ∧ (s₀.toRingHom.comp j).comp (algebraMap R R₁) = ii.comp q.toRingHom := by
   intro K _ _ _ R R₁ _ _ _ _ _ _ _ K₁ _ _ _ σ₁ p q ⟨hfin, het, hff⟩ hidem
-  haveI : Algebra.Smooth K R₁ := Algebra.Smooth.comp K R R₁
+  have : Algebra.Smooth K R₁ := Algebra.Smooth.comp K R R₁
   obtain ⟨k₀, e, hk₀, he, hpe, hgi⟩ := GlobalTheory.T.exists_finite_ext_geom_integral_localization K R₁ p
-  haveI : IsNoetherianRing (ℂ ⊗[K] R) := Algebra.FiniteType.isNoetherianRing ℂ _
+  have : IsNoetherianRing (ℂ ⊗[K] R) := Algebra.FiniteType.isNoetherianRing ℂ _
   let f : ℂ ⊗[K] R →ₐ[ℂ] ℂ ⊗[K] R₁ :=
     Algebra.TensorProduct.map (AlgHom.id ℂ ℂ) (IsScalarTower.toAlgHom K R R₁)
   obtain ⟨hf1, hf2⟩ : f.toRingHom.Finite ∧ f.toRingHom.Flat := finite_flat_tensor_map K ℂ R R₁
@@ -565,8 +565,8 @@ theorem exists_geomInt_piece_of_finite_etale : ∀ (K : Type) [Field K] [NumberF
     simpa [f, q'] using this
   have hq'int : ∀ x, IsIntegral K (q' x) := by
     intro x
-    letI : Algebra K₁ ℂ := σ₁.toRingHom.toAlgebra
-    haveI : IsScalarTower K K₁ ℂ := IsScalarTower.of_algebraMap_eq fun a => (σ₁.commutes a).symm
+    let : Algebra K₁ ℂ := σ₁.toRingHom.toAlgebra
+    have : IsScalarTower K K₁ ℂ := IsScalarTower.of_algebraMap_eq fun a => (σ₁.commutes a).symm
     have h1 : IsIntegral K₁ (q' x) :=
       (Algebra.IsIntegral.isIntegral (R := R) x).map_of_comp_eq q.toRingHom q'.toRingHom
         (RingHom.ext fun r => (hq' r).symm)
@@ -575,13 +575,13 @@ theorem exists_geomInt_piece_of_finite_etale : ∀ (K : Type) [Field K] [NumberF
   obtain ⟨s₂, hs₂, hs₂i, hs₂U⟩ := exists_finset_integral_of_finiteType σ₁
     (fun x => (Algebra.IsIntegral.isIntegral (R := K) x).map σ₁)
   let k : IntermediateField k₀ ℂ := IntermediateField.adjoin k₀ (s₁ ∪ s₂)
-  haveI : Finite ↥(s₁ ∪ s₂) := (hs₁.union hs₂).to_subtype
-  haveI : FiniteDimensional k₀ k := IntermediateField.finiteDimensional_adjoin (by
+  have : Finite ↥(s₁ ∪ s₂) := (hs₁.union hs₂).to_subtype
+  have : FiniteDimensional k₀ k := IntermediateField.finiteDimensional_adjoin (by
     rintro x (hx | hx)
     · exact (hs₁i x hx).tower_top
     · exact (hs₂i x hx).tower_top)
-  haveI : NumberField k₀ := NumberField.of_module_finite K k₀
-  haveI : NumberField k := NumberField.of_module_finite k₀ k
+  have : NumberField k₀ := NumberField.of_module_finite K k₀
+  have : NumberField k := NumberField.of_module_finite k₀ k
   have hm₁ : ∀ x, q' x ∈ k := hs₁U (k.toSubalgebra.restrictScalars K)
     (fun y hy => IntermediateField.subset_adjoin k₀ (s₁ ∪ s₂) (Or.inl hy))
   have hm₂ : ∀ x, σ₁ x ∈ k := hs₂U (k.toSubalgebra.restrictScalars K)
@@ -790,8 +790,8 @@ theorem exists_translate (hL : Out.Laws) {h k : ℕ} {o : Type} [CommRing o] {ζ
 
 theorem exists_lift_point {R R₁ : Type} [CommRing R] [CommRing R₁] [Algebra R R₁] [Module.Finite R R₁]
     [Module.FaithfullyFlat R R₁] (p : R →+* ℂ) : ∃ p₁ : R₁ →+* ℂ, p₁.comp (algebraMap R R₁) = p := by
-  letI := p.toAlgebra
-  haveI : Nontrivial (ℂ ⊗[R] R₁) := Module.FaithfullyFlat.rTensor_nontrivial R R₁ ℂ
+  let := p.toAlgebra
+  have : Nontrivial (ℂ ⊗[R] R₁) := Module.FaithfullyFlat.rTensor_nontrivial R R₁ ℂ
   obtain ⟨a⟩ := exists_algHom_of_finiteType_of_isAlgClosed ℂ (ℂ ⊗[R] R₁) ℂ
   refine ⟨a.toRingHom.comp Algebra.TensorProduct.includeRight.toRingHom, RingHom.ext fun r => ?_⟩
   show a (Algebra.TensorProduct.includeRight (algebraMap R R₁ r)) = p r
@@ -829,9 +829,9 @@ theorem GlobalTheory.KeyFam.polFam : Out.Laws → Out.Laws2 → ThetaUnifAV → 
   have hq' : (spMap σ₁ ≫ q) ≫ F.s = spMap σ := by rw [Category.assoc, hq, ← spMap_comp, hσ]
   have hc := GlobalTheory.T.siegelFamily_standard_level_points_same_component hL hL2 hU hA P.g k K ζ σ F hg hk ho hζ τ τ' p _ hp hq' ⟨P, lev, χ, hper, hP, hlev⟩ hpt
   obtain ⟨R, _, i, a, p', q', hi, ha, rfl, rfl⟩ := exists_affine F.s F.qproj p q
-  letI := σ.toAlgebra
-  letI := j₁.toAlgebra
-  letI := a.toAlgebra
+  let := σ.toAlgebra
+  let := j₁.toAlgebra
+  let := a.toAlgebra
   have hp' : p'.comp a = σ := spMap_inj (by rw [spMap_comp, ← ha, ← hp, Category.assoc])
   have hq'' : q'.comp a = j₁ := spMap_inj (by rw [spMap_comp, ← ha, ← hq, Category.assoc])
   let pA : R →ₐ[K] ℂ := { p' with commutes' := fun r => DFunLike.congr_fun hp' r }
@@ -844,11 +844,11 @@ theorem GlobalTheory.KeyFam.polFam : Out.Laws → Out.Laws2 → ThetaUnifAV → 
     have e : spMap (σA.comp qA).toRingHom ≫ i = spMap σ₁ ≫ spMap q' ≫ i := by
       rw [← Category.assoc, ← spMap_comp]; rfl
     rw [e]; exact hc)
-  haveI : Algebra.Smooth K R := by
+  have : Algebra.Smooth K R := by
     have : Smooth (spMap a) := ha ▸ inferInstance
     exact RingHom.smooth_algebraMap.1 ((HasRingHomProperty.Spec_iff (P := @Smooth)).1 this)
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing K R
-  letI : Algebra ℚ R := (a.comp (algebraMap ℚ K)).toAlgebra
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing K R
+  let : Algebra ℚ R := (a.comp (algebraMap ℚ K)).toAlgebra
   have hu : IsUnit ζ := by
     refine isUnit_iff_ne_zero.2 fun h0 => ?_
     rw [h0, map_zero] at hζ
@@ -857,8 +857,8 @@ theorem GlobalTheory.KeyFam.polFam : Out.Laws → Out.Laws2 → ThetaUnifAV → 
   obtain ⟨p₁, hp₁⟩ := exists_lift_point (R₁ := R₁) p'
   obtain ⟨Q', φ', ψ, hQ', hψ⟩ := exists_translate hL F.univ _ Q φ hQ hT (spMap p₁) P χ (by
     rw [← Category.assoc, ← spMap_comp, hp₁]; exact hP)
-  letI : Algebra K R₁ := ((algebraMap R R₁).comp a).toAlgebra
-  haveI : IsScalarTower K R R₁ := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra K R₁ := ((algebraMap R R₁).comp a).toAlgebra
+  have : IsScalarTower K R R₁ := IsScalarTower.of_algebraMap_eq' rfl
   let p₁A : R₁ →ₐ[K] ℂ :=
     { p₁ with commutes' := fun r => (DFunLike.congr_fun hp₁ (a r)).trans (DFunLike.congr_fun hp' r) }
   have hpp : p₁A.comp (IsScalarTower.toAlgHom K R R₁) = pA := AlgHom.ext fun r => DFunLike.congr_fun hp₁ r

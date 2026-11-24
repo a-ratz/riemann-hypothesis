@@ -486,10 +486,10 @@ theorem exists_uTest_isBC : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra
     GlobalTheory.ClassicalPt.extend_completion o' Ω M x R j hcpl p y hCen.1
   have hevi : ev = i.comp ev₀ := huniq ev hev
   have hinj : Function.Injective ((OO p).subtype.comp i) := Subtype.val_injective.comp hiinj
-  letI alg : Algebra (FractionRing V) (PadicAlgCl p) := (IsFractionRing.lift (K := FractionRing V) hinj).toAlgebra
-  haveI := ArithBase.ded (o := o') (Ω := Ω)
-  haveI := M.lft
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  let alg : Algebra (FractionRing V) (PadicAlgCl p) := (IsFractionRing.lift (K := FractionRing V) hinj).toAlgebra
+  have := ArithBase.ded (o := o') (Ω := Ω)
+  have := M.lft
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
   let Wab : M.Z.Opens := ⟨abLocus FinalForm.G, GlobalTheory.AbLocusOpenGlobal.isOpen_abLocus_of_locallyNoetherian FinalForm.G FinalForm.semi⟩
   let W : (Sp R).Opens := (spMap j ≫ M.Z.fromSpecStalk x) ⁻¹ᵁ Wab
   have hgenU : (spMap j ≫ M.Z.fromSpecStalk x) (spMap ev₀ (genericPoint (Sp V))) ∈ U₀ := by
@@ -508,7 +508,7 @@ theorem exists_uTest_isBC : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra
   have hgenW : spMap ev₀ (genericPoint (Sp V)) ∈ W := hU₀ab hgenU
   have hsemi : IsSemiAbelian G := by
     obtain ⟨e, he, -⟩ := grpPullback_iso hgm (isGrpPullback_pullback FinalForm.G _)
-    haveI := he
+    have := he
     exact GlobalTheory.isSemiAbelian_of_grpIso e (IsSemiAbelian.pullback _ FinalForm.G FinalForm.semi)
   have hadm : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hVc⟩
   obtain ⟨D', A', hD, U', hU'⟩ := GlobalTheory.T.uniformisation_baseChange_of_kernel_in_generating_open R hBase D A G hsemi U V hadm ev₀ hev₀ W hpsi hgenW
@@ -563,8 +563,8 @@ theorem exists_uTest_isBC : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra
       t ≫ FinalForm.φ = genMap U' ≫ pullback.fst G.hom (specOf ev₀) ≫ gm ∧ t ≫ pullback.snd ρ.P.A.hom FinalForm.u₀ = A'.A.hom ≫ m :=
     ⟨FinalForm.cart.1.lift _ _ hβ, FinalForm.cart.1.lift_fst _ _ _, FinalForm.cart.1.lift_snd _ _ _⟩
   have hcart : IsGrpPullback A'.A ρ.P.A (spMap yK) (t ≫ pullback.fst ρ.P.A.hom FinalForm.u₀) := by
-    haveI := U'.gen_hom
-    haveI : IsMonHom U'.gen.symm.hom := by show IsMonHom U'.gen.inv; infer_instance
+    have := U'.gen_hom
+    have : IsMonHom U'.gen.symm.hom := by show IsMonHom U'.gen.inv; infer_instance
     have c1 : IsGrpPullback A'.A ((Over.pullback (jK V)).obj ((Over.pullback (specOf ev₀)).obj G)) (𝟙 _)
         U'.gen.symm.hom.left := isGrpPullback_of_iso U'.gen.symm
     have c := ((c1.comp (isGrpPullback_pullback _ (jK V))).comp (isGrpPullback_pullback G (specOf ev₀))).comp hgm
@@ -718,7 +718,7 @@ namespace GlobalTheory.ToricTorsionSpec
 theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (k : ℕ), 1 ≤ k → ∀ τ : Multiplicative D.toPre.X →* Rˣ, τ ^ k = 1 → ∃ s : 𝟙_ (Over (Sp R)) ⟶ G, s ^ k = 1 ∧ ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (maximalIdeal V) V → ∀ (ev₀ : R →+* V), IsLocalHom ev₀ → ∀ (G' : Over (Sp V)) [GrpObj G'] [IsCommMonObj G'] (bc : G' ≅ (Over.pullback (specOf ev₀)).obj G), IsMonHom bc.hom → ∀ (D' : DegData V (maximalIdeal V)) (A' : PolAV (Sp (FractionRing V))) (hD : IsPullDeg ev₀ D.toPre D'.toPre) (U' : Unif (maximalIdeal V) D' A' G'), IsPullUnif ev₀ hD bc U U' → ∀ (K : Type) [Field K] [IsAlgClosed K] [Algebra (FractionRing V) K] (τ' : Multiplicative D'.toPre.X →* Kˣ), (∀ χ', ((τ' χ' : Kˣ) : K) = algebraMap (FractionRing V) K (algebraMap V (FractionRing V) (ev₀ ((τ (Multiplicative.ofAdd (hD.xe (Multiplicative.toAdd χ'))) : Rˣ) : R)))) → ∀ (q : QkPt D'.toPre K k) (x' : TFK (R := V) K ⟶ A'.A), q.y = 0 → GlobalTheory.UT.IsTor τ' q.g → QkToAkU U'.toUnifPre K k q x' → x'.left ≫ genMap U' ≫ bc.hom.left ≫ pullback.fst G.hom (specOf ev₀) = spMap ((algebraMap (FractionRing V) K).comp ((algebraMap V (FractionRing V)).comp ev₀)) ≫ s.left := by
   intro R _ _ _ hB G _ _ hG D A U k hk τ hτ
   obtain ⟨hR, hC⟩ := hB
-  haveI := hC
+  have := hC
   obtain ⟨N, g₀, x₀, hfin, -, -, hU, htors, hform⟩ := GlobalTheory.ToricTorsionSecUnif.exists_torsion_toG R hR G D A U k hk
   let u : D.toPre.X →+ Additive Γ((𝟙_ (Over (Sp R))).left, ⊤)ˣ :=
     AddMonoidHom.mk' (fun χ => Additive.ofMul (unitOn (τ (Multiplicative.ofAdd χ)))) (fun χ χ' => by
@@ -757,7 +757,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalT
     let ρ : Over.mk ((𝟙_ (Over (Sp V))).hom ≫ spMap ev₀) ⟶ N := Over.homMk ξ hh'
     have e : pushHom gG _ x₁' = ρ ≫ x₀ := Over.OverMorphism.ext e₁
     rw [map_pow, map_one, e, ← MonObj.comp_pow, htors, MonObj.comp_one])
-  haveI : IsMonHom bc.inv := inferInstance
+  have : IsMonHom bc.inv := inferInstance
   have hk₁ : x₁ ^ k = 1 := by
     show (x₁' ≫ bc.inv) ^ k = 1
     rw [← MonObj.pow_comp, hk₁', MonObj.one_comp]
@@ -950,8 +950,8 @@ theorem torsion_section_label : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Alg
       exact hgW
     let eg : Sp K ⟶ W.toScheme := IsOpenImmersion.lift W.ι e0 hr
     have heg : eg ≫ W.ι = e0 := IsOpenImmersion.lift_fac _ _ _
-    haveI : IsDominant eg := isDominant_of_generic W eg (fun w => by rw [← Scheme.Hom.comp_apply, heg, he0])
-    haveI : IsSeparated ρ.P.A.hom := by haveI := ρ.P.isAb.proper; infer_instance
+    have : IsDominant eg := isDominant_of_generic W eg (fun w => by rw [← Scheme.Hom.comp_apply, heg, he0])
+    have : IsSeparated ρ.P.A.hom := by have := ρ.P.isAb.proper; infer_instance
     let T : Over (Sp R) := Over.mk e0
     have htu : (toUnit T).left = e0 := (Category.comp_id _).symm.trans (Over.w (toUnit T))
     let x1 : T ⟶ G := toUnit T ≫ s
@@ -1062,7 +1062,7 @@ theorem val_gPt_of_stalk : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o 
     have : M.Z.fromSpecStalk x (spMap j w) ∈ Set.range (M.Z.fromSpecStalk x) := ⟨_, rfl⟩
     rw [Scheme.range_fromSpecStalk] at this
     exact this
-  obtain ⟨U, hx, f, hf⟩ := M.Z.presheaf.germ_exist ((M.stalkEquiv x).symm c)
+  obtain ⟨U, hx, f, hf⟩ := M.Z.presheaf.exists_germ_eq ((M.stalkEquiv x).symm c)
   have hc : c = ⟨valF M.pt U f, RatModel.valF_mem_O hx f⟩ := by
     rw [← RatModel.stalkEquiv_germ hx, hf, RingEquiv.apply_symm_apply]
   have hU : ⊤ ≤ (spMap j ≫ M.Z.fromSpecStalk x) ⁻¹ᵁ U := fun w _ => (hsp w).mem_open U.isOpen hx
@@ -1124,7 +1124,7 @@ theorem exists_label : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' �
   intro o' Ω _ _ _ _ S ρ hBig M U₀ EE FinalForm hAdm hEE x hx R _ _ _ j hBase hCpl G _ _ gm hpb D A U hLB hPsi lam
   have hj : IsLocalHom j := GlobalTheory.UPoinc.ClosedPt.isLocalHom_of_isCpl hCpl
   have hk0 : S.r * S.N ≠ 0 := Nat.mul_ne_zero (by have := S.r_pos; omega) (by have := S.N_ge; omega)
-  haveI : NeZero (S.r * S.N) := ⟨hk0⟩
+  have : NeZero (S.r * S.N) := ⟨hk0⟩
   set ζR : R := j ((M.stalkEquiv x).symm (algebraMap o' (M.O x) S.ζ)) with hζR
   have hζpow : ζR ^ ((S.r * S.N) ^ 2) = 1 := by
     rw [hζR, ← map_pow, ← map_pow, ← map_pow, S.prim.pow_eq_one, map_one, map_one, map_one]
@@ -1145,14 +1145,14 @@ theorem exists_label : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' �
     rw [← pow_mul, mul_comm, pow_mul, hw, one_pow]
   have hsemi : IsSemiAbelian G := by
     obtain ⟨e, he, -⟩ := grpPullback_iso hpb (isGrpPullback_pullback FinalForm.G _)
-    haveI := he
+    have := he
     exact GlobalTheory.isSemiAbelian_of_grpIso e (IsSemiAbelian.pullback _ FinalForm.G FinalForm.semi)
   obtain ⟨s, hs, hspec⟩ := GlobalTheory.ToricTorsionSpec.main R hBase G hsemi D A U (S.r * S.N) (Nat.one_le_iff_ne_zero.2 hk0) τ hτ
   obtain ⟨b, hb⟩ := GlobalTheory.Poinc.LabIndex.torsion_section_label o' Ω S ρ hBig M U₀ EE FinalForm hAdm hEE x hx R j hBase hCpl G gm hpb D A U hLB hPsi s hs
   refine ⟨b, ?_⟩
   intro p _ y ev hCen hy y₀ hAt u ε hBC τ' hτ' q x' hq hTor hQk
   obtain ⟨ev₀, hloc, hD, bc, hmon, hpull, hxe, hev, t, ht1, ht2⟩ := hBC
-  haveI : CharZero u.V :=
+  have : CharZero u.V :=
     RingHom.charZero ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V (FractionRing u.V)))
   have hring : (algebraMap (FractionRing u.V) (PadicAlgCl p)).comp ((algebraMap u.V (FractionRing u.V)).comp ev₀) =
       (OO p).subtype.comp ev := RingHom.ext hev
@@ -1229,7 +1229,7 @@ theorem char_eq_weil_of_label : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algeb
   have hG : GlobalFnsSt := hL.1.globalFns
   have hk : 1 ≤ S.r * S.N :=
     Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (by have := S.r_pos; omega) (by have := S.N_ge; omega))
-  haveI : CharZero u.V := CharZero.mk (fun m n hmn => by
+  have : CharZero u.V := CharZero.mk (fun m n hmn => by
     have e0 := congrArg ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V (FractionRing u.V))) hmn
     simpa only [map_natCast, Nat.cast_inj] using e0)
   obtain ⟨f, hf1, -, -, -, hfW⟩ := GlobalTheory.ZH.uTors_closed u.V u.complete u.A u.G u.D u.U (PadicAlgCl p) (S.r * S.N) hk
@@ -1258,7 +1258,7 @@ theorem char_eq_weil_of_label : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algeb
   · rw [hh, map_unitOn] at W₃
     have e := unitOn_injective (GlobalTheory.CommutatorPairing.weilIs_unique hG u.A.isAb u.A.isLB W₂ W₃)
     have e' := congrArg Units.val e
-    simp only [MonoidHom.coe_coe, Units.coe_map, Units.val_pow_eq_pow_val, c₀, IsUnit.unit_spec,
+    simp only [MonoidHom.coe_ofClass, Units.coe_map, Units.val_pow_eq_pow_val, c₀, IsUnit.unit_spec,
       RingHom.toMonoidHom_eq_coe] at e'
     have hq : (QuotientAddGroup.mk β : u.D.toPre.X ⧸ (nsmulAddMonoidHom (S.r * S.N) : u.D.toPre.X →+ u.D.toPre.X).range) =
         QuotientAddGroup.mk pk.y := hβ.symm.trans (l.yy_eq a pk x hpkx hxo)
@@ -1377,7 +1377,7 @@ theorem main : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [Arit
       ∀ (l : u.Lab) (a : S.Gam) (β : u.D.toPre.X), l.yy a = QuotientAddGroup.mk β →
       ∀ lam : D.toPre.X →+ ZMod (S.r * S.N), lam (ε.symm β) = ((sg : ℤ) • eStd S.g _ (bOf lam) a) := by
     intro p _ y ev hCen hev y₀ hAt u ε hbc l a β hβ lam
-    haveI : IsDomain o' := (ArithBase.ded (o := o') (Ω := Ω)).toIsDomain
+    have : IsDomain o' := (ArithBase.ded (o := o') (Ω := Ω)).toIsDomain
     set f : o' →+* PadicAlgCl p := y₀.comp (algebraMap o' S.R) with hf
     have hω : IsPrimitiveRoot (f (S.ζ ^ (S.r * S.N))) (S.r * S.N) := by
       have h1 := hζk.isRoot_cyclotomic hk0
@@ -1391,7 +1391,7 @@ theorem main : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [Arit
         rw [zmultiplesHom_apply, natCast_zsmul, ← ofMul_pow, hωk, ofMul_one]⟩
     have hψ : ∀ z : ZMod (S.r * S.N), ((Additive.toMul (ψ z) : (PadicAlgCl p)ˣ) : PadicAlgCl p) = f (S.ζ ^ (S.r * S.N)) ^ z.val := by
       intro z
-      haveI : NeZero (S.r * S.N) := NeZero.of_pos hk0
+      have : NeZero (S.r * S.N) := NeZero.of_pos hk0
       conv_lhs => rw [← ZMod.intCast_zmod_cast z]
       rw [ZMod.lift_coe]
       simp only [Subtype.coe_mk, zmultiplesHom_apply, toMul_zsmul, toMul_ofMul, ZMod.cast_eq_val, zpow_natCast]
@@ -1682,7 +1682,7 @@ theorem main : ∀ (o' Ω : Type) [CommRing o'] [Field Ω] [Algebra o' Ω] [Arit
     rw [hnorm _ s hs, AddEquiv.apply_symm_apply]
   have hN : (S.N : ℝ) ≠ 0 := by have := S.N_ge; positivity
   have hexp : Real.exp (-(τ.q (ε α₀ + S.N • v) / S.N)) ^ S.N = Real.exp (-τ.q (ε α₀ + S.N • v)) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     field_simp
   have hδ : ‖y₀ ⟨S.th x₀, S.th_mem x₀⟩‖ = τ.δ := (mem_supI_iff_norm hO hc hat τ x₀).1 hx₀

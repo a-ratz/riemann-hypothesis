@@ -104,8 +104,8 @@ theorem eq_one_of_geometric (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMonO
   let X : Over AT.left := Over.mk (sec 1 ≫ f)
   let fx : X ⟶ Y := Over.homMk (sec x) key
   let f1 : X ⟶ Y := Over.homMk (sec 1) rfl
-  haveI : LocallyOfFiniteType Y.hom := hff
-  haveI : FormallyUnramified Y.hom := hfu
+  have : LocallyOfFiniteType Y.hom := hff
+  have : FormallyUnramified Y.hom := hfu
   have hpt : ∀ t : T.left, t ∈ Set.range (GlobalTheory.FinEt.agreeι fx f1) := by
     intro t
     obtain ⟨k, _, _, a, ha⟩ := GlobalTheory.FinEt.exists_algClosed_point T.left t

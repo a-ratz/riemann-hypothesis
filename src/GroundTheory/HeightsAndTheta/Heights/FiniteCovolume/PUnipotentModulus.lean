@@ -293,12 +293,12 @@ theorem UnipotentModulus.proof (h : HermitianForm F E W) (v : Basis ι E W) :
       abel
     rw [e]
     have hfc : Continuous f := continuous_pi fun w => Complex.continuous_im.comp
-      (continuous_hForm_right _ _ ((continuous_apply w).comp continuous_subtype_val))
+      (continuous_hForm_right _ _ ((continuous_apply w).comp continuous_subtypeVal))
     refine MeasurePreserving.skew_product (f := fun y => p.1 + y)
       (g := fun y t => (p.2 - f y) + t) (measurePreserving_add_left _ p.1) ?_
       (Filter.Eventually.of_forall fun y => (measurePreserving_add_left volume _).map_eq)
     exact ((continuous_const.sub (hfc.comp continuous_fst)).add continuous_snd).measurable
-  rw [hmap, ← Measure.map_map continuous_subtype_val.measurable hcm,
+  rw [hmap, ← Measure.map_map continuous_subtypeVal.measurable hcm,
     map_eq_of_measurePreserving_coordinates lam φ hL c hC μ]
 
 end

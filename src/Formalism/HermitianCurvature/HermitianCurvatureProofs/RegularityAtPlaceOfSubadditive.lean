@@ -103,7 +103,7 @@ lemma hsVec_real_smul_sq (x : ℝ) (Y : Wq →L[ℂ] Wp) :
     ‖B.hsVec ((x : ℂ) • Y)‖ ^ 2 = x ^ 2 * ‖B.hsVec Y‖ ^ 2 := by
   rw [hsVec_normSq, hsVec_normSq, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
-  rw [ContinuousLinearMap.smul_apply, norm_smul, Complex.norm_real, Real.norm_eq_abs, mul_pow, sq_abs]
+  rw [smul_apply, norm_smul, Complex.norm_real, Real.norm_eq_abs, mul_pow, sq_abs]
 
 end hs
 
@@ -115,13 +115,13 @@ variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [Norm
 lemma ew_not_loc (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) {γ : C.LPt}
     (hγ : ¬ D.IsLocPt γ (P.r + 1)) : Ew p (fun _ => 1) F (P.r + 1) [] γ = 0 := by
   unfold Ew NP KB.Pl.RR D.RRplace
-  rw [dif_neg (fun h => hγ h.1)]
+  rw [dite_eq_right (fun h => hγ h.1)]
   simp
 
 lemma V_zero (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) {γ : C.LPt}
     (hγ : ¬ (D.IsLocPt γ (P.r + 1) ∧ 0 < Gp p γ)) : p.V F γ = 0 := by
   unfold KB.Pl.V D.vecV
-  exact dif_neg hγ
+  exact dite_eq_right hγ
 
 lemma ew_zero_of (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) {γ : C.LPt}
     (hγ : ¬ (D.IsLocPt γ (P.r + 1) ∧ 0 < Gp p γ)) : Ew p (fun _ => 1) F (P.r + 1) [] γ = 0 := by

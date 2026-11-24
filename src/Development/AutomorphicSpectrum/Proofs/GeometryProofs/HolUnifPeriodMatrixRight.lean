@@ -379,21 +379,21 @@ open GlobalTheory.CompanionTheory.Ar.QuotLoc.Lat
 
 theorem periods_map_onto_lattice : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] (t : SAB H (Sp R)) (g n : ℕ) (M : LieModel t.G (𝟙 (Sp R)) (Fin g → R)) (B : Set (Fin n → ℂ)) (ψ : (Fin n → ℂ) → (R →+* ℂ)) (e : Flat.FamExp t.G M B ψ) (b : Fin n → ℂ) (P : AbPart t (spMap (ψ b))) (A : Over (Sp ℂ)) (_ : GrpObj A) (φ : A.left ⟶ P.tB.G.left) (g' : ℕ) (u : HolUnif A (P.tB.PP.L.pull φ) g') (Hm : Matrix (Fin g') (Fin g') ℂ) (χ : u.Λ → ℂ) (ℓ : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ)), b ∈ B → IsGrpPullback A P.tB.G (𝟙 _) φ → u.IsAH Hm χ → IsPrincipal P.tB → GlobalTheory.CompanionTheory.Ar.QuotLoc.IsAbLift e b P φ u ℓ → (∀ y ∈ e.per b, ℓ y ∈ u.Λ) ∧ ∀ p ∈ u.Λ, ∃ y ∈ e.per b, ℓ y = p := by
   intro E _ _ _ H R _ t g n M B ψ e b P A _ φ g' u Hm χ ℓ hb hA hAH hP hL
-  letI := P.τ.grpB
-  letI := P.τ.addCommGroup
-  haveI := P.τ.free
-  haveI := P.τ.finite
-  haveI := P.τ.q_hom
-  haveI := P.τ.i_hom
-  haveI : IsMonHom P.e.hom := P.e_hom
-  haveI := u.discrete
+  let := P.τ.grpB
+  let := P.τ.addCommGroup
+  have := P.τ.free
+  have := P.τ.finite
+  have := P.τ.q_hom
+  have := P.τ.i_hom
+  have : IsMonHom P.e.hom := P.e_hom
+  have := u.discrete
   let c₁ : Over.mk (spMap (ψ b)) ⟶ Over.mk ((𝟙_ (Over (Sp ℂ))).hom ≫ spMap (ψ b)) :=
     Over.homMk (𝟙 _) (by simp)
   let c₂ : 𝟙_ (Over (Sp ℂ)) ⟶ Over.mk ((𝟙_ (Over (Sp ℂ))).hom ≫ 𝟙 (Sp ℂ)) :=
     Over.homMk (𝟙 _) (by simp)
-  haveI : IsIso c₁ := by
+  have : IsIso c₁ := by
     refine ⟨Over.homMk (𝟙 _) (by simp), ?_, ?_⟩ <;> exact Over.OverMorphism.ext (Category.id_comp _)
-  haveI : IsIso c₂ := by
+  have : IsIso c₂ := by
     refine ⟨Over.homMk (𝟙 _) (by simp), ?_, ?_⟩ <;> exact Over.OverMorphism.ext (Category.id_comp _)
   let P₁ := ptU P.m.cart c₁
   let D := ptU hA c₂

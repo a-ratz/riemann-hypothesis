@@ -236,7 +236,7 @@ theorem mul_lintegral_rpow_le_of_shell_bound :
             _ = B * (ENNReal.ofReal r) ^ j := by
                 congr 1
                 rw [hc, ← ENNReal.ofReal_mul (Real.exp_pos _).le, ← ENNReal.ofReal_pow hr0.le,
-                  hr, ← Real.exp_add, ← Real.exp_nat_mul]
+                  hr, ← Real.exp_add, ← Real.exp_natCast_mul]
                 congr 2; ring
       _ = B * (1 - ENNReal.ofReal r)⁻¹ := by
           rw [ENNReal.tsum_mul_left, ENNReal.tsum_geometric]
@@ -276,7 +276,7 @@ theorem setLIntegral_tsum_unfold (G : Type) [Group G] [TopologicalSpace G] [IsTo
     (hF : IsFundamentalDomain Γ 𝓕 μ) (hD : IsFundamentalDomain Λ D μ)
     (f : G → ℝ≥0∞) (hf : Measurable f) (hinv : ∀ γ ∈ Λ, ∀ g, f (γ * g) = f g) :
     ∫⁻ g in 𝓕, ∑' t : T, f (t.1.1 * g) ∂μ = ∫⁻ g in D, f g ∂μ := by
-  haveI : Countable Λ := (Subgroup.inclusion_injective hle).countable
+  have : Countable Λ := (Subgroup.inclusion_injective hle).countable
   let e0 : T × Λ → Γ := fun p => Subgroup.inclusion hle p.2 * p.1.1
   have hbij : Function.Bijective e0 := by
     constructor
@@ -825,8 +825,8 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     rw [hdd]; linarith
   let μ : Measure (GAd σ J) := Measure.haar
   let Λ : Subgroup (GAd σ J) := ratPts σ J ⊓ GlobalTheory.StdPar.frameStab σ J X ⊤
-  haveI : DiscreteTopology Λ := inferInstance
-  haveI : Countable (ratPts σ J) := inferInstance
+  have : DiscreteTopology Λ := inferInstance
+  have : Countable (ratPts σ J) := inferInstance
   have h𝓕 := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom (ratPts σ J) μ
   have hDom := GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom Λ μ
   obtain ⟨B₀, hB₀, hsh⟩ := _root_.GlobalTheory.ResidueEisenstein.measure_shell_le F E σ n J r X Y L a h hD μ _ inferInstance hDom
@@ -907,7 +907,7 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
           have := mul_le_mul_of_nonneg_left ht hM0.le
           rwa [mul_inv_cancel₀ hM0.ne'] at this
         linarith
-      rw [if_pos ht, if_pos hle, ← ENNReal.ofReal_mul hc₀0.le]
+      rw [ite_eq_left ht, ite_eq_left hle, ← ENNReal.ofReal_mul hc₀0.le]
       refine ENNReal.ofReal_le_ofReal ?_
       have hp := hht.pos t.1.1
       have hq := hht.pos (t.1.1 * u)
@@ -920,7 +920,7 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       have h7 : 0 < m ^ (d + 1) := by positivity
       rw [hc₀, inv_mul_le_iff₀ h7]
       exact h4.trans (mul_le_mul_of_nonneg_right h5 h6)
-    · rw [if_neg ht]; simp
+    · rw [ite_eq_right ht]; simp
   have hB₁ : ∀ ε : ℝ, 0 < ε → ε ≤ 1 → ENNReal.ofReal ε * (μ U * (ENNReal.ofReal c₀ * ∑' t : T, ENNReal.ofReal (b ε t))) ≤ 2 * B₀ := by
     intro ε h0 h1
     refine le_trans (mul_le_mul_right ?_ _) (hint ε h0 h1)
@@ -981,7 +981,7 @@ theorem frame_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
 
 theorem continuous_chart_symm (D : D7) (A : HSp D) (μ : D.host.E) (hμ : IsSkew μ) (κ : GA D (dblSp A) ≃* G D A.rank)
     (hκ : IsChart A μ κ) : Continuous κ.symm := by
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   obtain ⟨-, hdet, -⟩ := GlobalTheory.T.doubledBasisSkewColumnMatrix_gram_inverse D A μ hμ
   have hTi' : rat (Tm A μ) * rat (Tm A μ)⁻¹ = 1 := by
     rw [← rat_mul, Matrix.mul_nonsing_inv _ hdet, rat_one]

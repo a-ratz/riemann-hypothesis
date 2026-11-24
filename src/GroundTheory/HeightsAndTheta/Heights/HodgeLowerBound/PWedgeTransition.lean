@@ -66,7 +66,7 @@ theorem alternating_sum_smul {R M : Type*} [CommRing R] [AddCommGroup M] [Module
   have hT : ∀ x, T x = ∑ a, x a • v a := fun x => by
     simp [T, Basis.constr_apply_fintype]
   have hTe : (fun i => T (Pi.basisFun R (Fin n) i)) = v := funext fun i => by simp [T]
-  simp only [AlternatingMap.compLinearMap_apply, AlternatingMap.smul_apply, Pi.basisFun_det_apply,
+  simp only [AlternatingMap.compLinearMap_apply, smul_apply, Pi.basisFun_det_apply,
     smul_eq_mul] at h
   have e1 : (fun i => T fun a => A a i) = fun q => ∑ a, A a q • v a := funext fun q => hT _
   rw [e1, hTe] at h

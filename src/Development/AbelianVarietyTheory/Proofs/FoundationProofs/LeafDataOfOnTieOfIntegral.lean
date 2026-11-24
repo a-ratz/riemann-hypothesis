@@ -209,7 +209,7 @@ theorem trace_mem_thetaEig (hT : LawsFull T) (hj : InR D j) (hxi : TwistTrivialO
   have hc : ∀ f ∈ T.toTop.sh j w, f ∈ cutR T.C j w := fun f hf => by
     rw [cutR_eq T.C hj]
     exact hT.sh.shCusp j hj _ _ (dom_wtA w) hl' (dom_wtA w) hl' hf
-  letI : Algebra T.Q.c.F K := ‹Algebra (recB h.toLawsCore).KO K›
+  let : Algebra T.Q.c.F K := ‹Algebra (recB h.toLawsCore).KO K›
   exact spanK_spanIn_le T.C j w z hc
     (M := (thetaEig h j w z U ψ ℓ).comap ((trace ρ U ψ).restrictScalars (𝓞 K)))
     (fun F hF => trace_gen_mem hT hj hxi hn hρ hact hdet hc F hF) hy
@@ -243,7 +243,7 @@ theorem clauses_of_onTie {T : Full D} [Algebra T.J.Q.c.F D.what₂.LL] {R : Real
     (hfg : (O.ThK v i).FG) :
     (O.Th0 v i).FG ∧ O.Th0 v i ≤ (eig (O.ρ i) O.U O.ψ).restrictScalars (𝓞 D.what₂.LL) ∧
       sc ((Nat.card O.U : ℕ) : D.what₂.LL) (cut (eig (O.ρ i) O.U O.ψ) (O.ThK v i)) ≤ O.Th0 v i := by
-  haveI := Fintype.ofFinite O.U
+  have := Fintype.ofFinite O.U
   have hU : ∀ u ∈ O.U, inc u ∈ U := fun u hu => by rwa [t.U_eq] at hu
   have h1 : O.ψ 1 = 1 := RingOfIntegers.ext ((t.ψ_eq 1 (hU 1 (one_mem _))).trans (by
     rw [show (⟨inc 1, hU 1 (one_mem _)⟩ : U) = 1 from Subtype.ext (map_one inc), map_one]; rfl))
@@ -309,7 +309,7 @@ theorem detOneOn_of_pins (hT : LawsFull T)
     {ℓ : G → (LaMod (T.Q.Dw ((ι : ℕ) + 1)) T.Q.l ≃ₗ[𝓞 D.host.E] LaMod (T.Q.Dw ((ι : ℕ) + 1)) T.Q.l)}
     (hℓ : LevelPin R ι ℓ) (hH : HalfPin R) {U : Subgroup G} (hU : UnipPin R U) : DetOneOn U ℓ := fun u hu =>
   detOne_of_levelPin hT hℓ hH fun PP => by
-    rw [Matrix.det_of_upperTriangular fun _ _ h => ((hU u).1 hu PP).1 h]
+    rw [Matrix.det_of_isUpperTriangular fun _ _ h => ((hU u).1 hu PP).1 h]
     exact Finset.prod_eq_one fun a _ => ((hU u).1 hu PP).2 a
 
 theorem twistTrivial_of_runPin (hT : LawsFull T) {n : ℕ} {v : HeightOneSpectrum (𝓞 D.what₂.LL)} {p : ℕ}

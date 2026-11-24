@@ -210,7 +210,7 @@ theorem finite_of_triangular (m : ℕ) (B : Subalgebra ℂ (AddMonoidAlgebra ℂ
           have := step 0 (by simp) (by simpa using Finset.sum_nonneg fun i _ => abs_nonneg (ε i)) (by
             intro h0
             have h1 : ε i0 = 0 := by rw [← h0]; rfl
-            simp only [hε, cut, hj0, if_true, Int.sign_eq_zero_iff_zero] at h1
+            simp only [hε, cut, hj0, ite_true, Int.sign_eq_zero_iff_zero] at h1
             rw [h1] at hj0
             simp at hj0
             omega)
@@ -397,8 +397,8 @@ theorem exists_eigenvalue_GL {x : V} {y : W} (hx : IsSatVecGL w π x B) (hy : Is
 variable (w n) in
 theorem isOpen_isCompact_KGL : IsOpen (KGL w (n := n) : Set (GL (Fin n) (w.adicCompletion E))) ∧
     IsCompact (KGL w (n := n) : Set (GL (Fin n) (w.adicCompletion E))) := by
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   rw [KGL, ← GlobalTheory.SmGL.SphCompletion.KO_completion w n]
   exact ⟨GlobalTheory.SplitFlip.isOpen_KO, GlobalTheory.SplitFlip.isCompact_KO⟩
 
@@ -409,8 +409,8 @@ theorem isSphericalGL_iff (α : Fin n → ℂˣ) (φ : GL (Fin n) (w.adicComplet
       ∀ (b : (borelGL (w.adicCompletion E) (Fin n)).Q) g, ∀ k ∈ KGL w (n := n), φ (b * g * k) =
         ((borelGL (w.adicCompletion E) (Fin n)).deltaHalf b : ℂ) *
           unrTorus (vZ (w.adicCompletion E)) α ((borelGL (w.adicCompletion E) (Fin n)).p b) * φ g := by
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   have e0 : unrTorus (vZ (w.adicCompletion E)) α = unrTorus
       (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).toMonoidWithZeroHom α := by
     refine MonoidHom.ext fun t => ?_
@@ -432,8 +432,8 @@ theorem hasSatGL_of_hasSatakeGL :
     letI := GlobalTheory.LocalData.complRel w
     haveI := GlobalTheory.LocalData.isLocalField w
     HasSatakeGL π B → HasSatGL w π B := by
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   rintro ⟨⟨α, rfl, -, hq⟩, hs⟩
   rw [GlobalTheory.SmGL.SphCompletion.KO_completion w n] at hs
   refine ⟨hs, fun x hx h0 => ⟨h0, hx, by simp, fun ϖ hϖ j hj => ?_⟩⟩
@@ -444,8 +444,8 @@ theorem hasSatakeGL_of_isSatVecGL (hπ : IsIrrSmooth π) {x : V} (hx : IsSatVecG
     letI := GlobalTheory.LocalData.complRel w
     haveI := GlobalTheory.LocalData.isLocalField w
     HasSatakeGL π B := by
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   obtain ⟨α, rfl⟩ : ∃ α : Fin n → ℂˣ, Finset.univ.val.map α = B := by
     obtain ⟨l, rfl⟩ := Quot.exists_rep B
     obtain rfl : l.length = n := hx.2.2.1
@@ -513,7 +513,7 @@ section Characters
 theorem exists_algHom_extend {A : Type} [CommRing A] [Algebra ℂ A] (B : Subalgebra ℂ A) [Module.Finite B A]
     (χ : B →ₐ[ℂ] ℂ) : ∃ ψ : A →ₐ[ℂ] ℂ, ∀ b : B, ψ b = χ b := by
   have hs : Function.Surjective χ := fun c => ⟨algebraMap ℂ B c, by simp⟩
-  haveI := RingHom.ker_isMaximal_of_surjective χ.toRingHom hs
+  have := RingHom.ker_isMaximal_of_surjective χ.toRingHom hs
   obtain ⟨Q, hQ, e⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := A) (RingHom.ker χ.toRingHom) (by
     rw [(RingHom.injective_iff_ker_eq_bot _).1 Subtype.val_injective]; exact bot_le)
   have key : ∀ b : B, Ideal.Quotient.mk Q b = algebraMap ℂ (A ⧸ Q) (χ b) := fun b => by
@@ -521,8 +521,8 @@ theorem exists_algHom_extend {A : Type} [CommRing A] [Algebra ℂ A] (B : Subalg
       change b - algebraMap ℂ B (χ b) ∈ Ideal.under B Q
       rw [e, RingHom.mem_ker]; simp
     exact Ideal.Quotient.eq.2 this
-  letI := Ideal.Quotient.field Q
-  haveI : Algebra.IsIntegral ℂ (A ⧸ Q) := ⟨fun z => by
+  let := Ideal.Quotient.field Q
+  have : Algebra.IsIntegral ℂ (A ⧸ Q) := ⟨fun z => by
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective z
     exact (Algebra.IsIntegral.isIntegral (R := B) a).map_of_comp_eq χ.toRingHom (Ideal.Quotient.mk Q)
       (RingHom.ext fun b => (key b).symm)⟩
@@ -585,7 +585,7 @@ theorem labInd_eq {d : List ℤ} {t : GU σ n}
   congr 1
   ext g
   rw [GlobalTheory.WeylGL.mem_doset, ← ht]
-  simp only [Set.mem_setOf_eq, ← Units.val_mul, Units.val_inj, ← Subgroup.coe_mul, Subtype.val_inj]
+  simp only [Set.mem_ofPred_eq, ← Units.val_mul, Units.val_inj, ← Subgroup.coe_mul, Subtype.val_inj]
 
 theorem exists_labInd_eq (hU : IsUnramInv ϖ σ q) (g : GU σ n) :
     ∃ d, Good n d ∧ labInd σ n ϖ d = dosetInd ℂ (KU σ n) g := by
@@ -666,7 +666,7 @@ theorem exists_satU_eq (hU : IsUnramInv ϖ σ q) (l : Hecke ℂ (KU σ n) →ₗ
   have hR : ∀ (f : Hecke ℂ (KU σ n)) (s : (Fin (n / 2) → ℤ) →₀ ℂ),
       (∀ α : Fin (n / 2) → ℂ, SatU ϖ q f.1 α = s.sum fun a c => c * ∏ i, α i ^ a i) → R (.ofCoeff s) f :=
     fun f s e α => by rw [ev_apply, e]
-  haveI : Module.Finite B (AddMonoidAlgebra ℂ (Fin (n / 2) → ℤ)) := by
+  have : Module.Finite B (AddMonoidAlgebra ℂ (Fin (n / 2) → ℤ)) := by
     refine _root_.GlobalTheory.LaurentFinite.finite_of_triangular _ B fun ε hε => ?_
     obtain ⟨t, ht⟩ := P.fSatake_tMat_exists (n := n) hU (Nat.mul_div_le n 2) ε
     obtain ⟨s, e, hs, ht'⟩ := _root_.GlobalTheory.LFun.SatCoef.satU_laurent L ϖ σ q n hU _ (Final.DosetIndMem _ (KU σ n) ℂ t)

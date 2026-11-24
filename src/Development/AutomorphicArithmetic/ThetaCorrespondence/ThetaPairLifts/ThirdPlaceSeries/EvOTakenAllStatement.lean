@@ -276,11 +276,11 @@ variable {R : Ranks} {H : Host R} {what₂ : Rows.Data R} {N₀ N₁ : NData R H
   {i₀ : N₀.Loc} {i₁ : N₁.Loc} (a : LocExt N₀ N₁ A₀ A₁ i₀ i₁)
 
 theorem continuous_φ : Continuous a.φ := by
-  letI := a.φ.toAlgebra
+  let := a.φ.toAlgebra
   obtain ⟨_, _, _⟩ := exists_algebra a.l_eq (N₀.O i₀) (N₁.O i₁) a.φ_alg
-  haveI : Algebra.IsIntegral (N₀.O i₀) (N₁.O i₁) := Algebra.IsIntegral.tower_top ℤ_[N₁.l i₁]
-  haveI : FaithfulSMul (N₀.O i₀) (N₁.O i₁) := (faithfulSMul_iff_algebraMap_injective _ _).2 (Model.φ_injective a)
-  haveI : IsLocalHom a.φ := Algebra.IsIntegral.isLocalHom (N₀.O i₀) (N₁.O i₁)
+  have : Algebra.IsIntegral (N₀.O i₀) (N₁.O i₁) := Algebra.IsIntegral.tower_top ℤ_[N₁.l i₁]
+  have : FaithfulSMul (N₀.O i₀) (N₁.O i₁) := (faithfulSMul_iff_algebraMap_injective _ _).2 (Model.φ_injective a)
+  have : IsLocalHom a.φ := Algebra.IsIntegral.isLocalHom (N₀.O i₀) (N₁.O i₁)
   exact continuous_of_isLocalHom (N₀.O_adic i₀) (N₁.O_adic i₁) a.φ
 
 theorem goodR_ext {rep : N₀.X i₀ → (GE N₀ →* GL (Fin R.nV) (N₀.O i₀))} (h : GoodR N₀ i₀ rep) :
@@ -290,8 +290,8 @@ theorem goodR_ext {rep : N₀.X i₀ → (GE N₀ →* GL (Fin R.nV) (N₀.O i�
   refine ⟨(h1.comp a.γ_cont).matrix_map (continuous_φ a), ?_, fun w hw B σ hB hσ => ?_⟩
   · let ψ : Kf N₀ i₀ →+* Kf N₁ i₁ := IsFractionRing.map (Model.φ_injective a)
     have hψ : ∀ z, ψ (algebraMap _ _ z) = algebraMap _ _ (a.φ z) := fun z => by simp [ψ, IsFractionRing.map]
-    letI := ψ.toAlgebra
-    haveI : CharZero (Kf N₀ i₀) := ((A₀.iotaQC i₀).toRingHom.comp (A₀.iotaQ i₀)).charZero
+    let := ψ.toAlgebra
+    have : CharZero (Kf N₀ i₀) := ((A₀.iotaQC i₀).toRingHom.comp (A₀.iotaQ i₀)).charZero
     have h4 : IsSSRep (mapRep ψ _) := ssAscent (Kf N₀ i₀) (Kf N₁ i₁) _ _ _ (isSSRep_comp a.γ h2)
     convert h4 using 1
     ext g b c
@@ -318,7 +318,7 @@ end Record
 theorem takenWild_of_locExt : ∀ {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N₀ N₁ : NData R H what₂) (A₀ : NAut N₀) (A₁ : NAut N₁) (i₀ : N₀.Loc) (i₁ : N₁.Loc), LocExt N₀ N₁ A₀ A₁ i₀ i₁ → ∀ S : Set ℂ, Chosen N₀ A₀ i₀ S → Contains N₁ A₁ i₁ S → ∃ r ρ, GoodR N₁ i₁ r ∧ TakenWild N₁ i₁ r ρ := by
   intro R H what₂ N₀ N₁ A₀ A₁ i₀ i₁ a S hC hS
   obtain ⟨rep, ρ, hG, hSet, hch⟩ := hC
-  letI := a.φ.toAlgebra
+  let := a.φ.toAlgebra
   obtain ⟨j1, j2, j3⟩ := exists_algebra a.l_eq (N₀.O i₀) (N₁.O i₁) a.φ_alg
   refine ⟨_, fun x => mapRep a.φ (pullR a.e a.γ ρ x), goodR_ext a hG, N₀.O i₀, inferInstance, inferInstance,
     inferInstance, j1, j2, inferInstance, j3, pullT a.e (N₀.T i₀), pullR a.e a.γ rep, pullR a.e a.γ ρ,
@@ -483,8 +483,8 @@ theorem trace_eq (hC : GlobalTheory.TwSys.Cheb) (a : LocExt N₀ N₁ A₀ A₁ 
     (r₀ : GE N₀ →* GL (Fin R.nV) (N₀.O i₀)) (r₁ : GE N₁ →* GL (Fin R.nV) (N₁.O i₁))
     (h₀ : IsHeckeGalois N₀ i₀ (a.e x) r₀) (h₁ : IsHeckeGalois N₁ i₁ x r₁) (g : GE N₁) :
     a.φ (mat r₀ (a.γ g)).trace = (mat r₁ g).trace := by
-  haveI := (N₁.O_complete i₁).toIsHausdorff
-  haveI : T2Space (N₁.O i₁) := (N₁.O_adic i₁).isHausdorff_iff.1 inferInstance
+  have := (N₁.O_complete i₁).toIsHausdorff
+  have : T2Space (N₁.O i₁) := (N₁.O_adic i₁).isHausdorff_iff.1 inferInstance
   refine congrFun (GlobalTheory.BlockComplement.AE.eq_of_continuous (N := N₁) hC
     (f := fun g => a.φ (mat r₀ (a.γ g)).trace) (f' := fun g => (mat r₁ g).trace)
     ((continuous_φ a).comp (h₀.1.matrix_trace.comp a.γ_cont)) h₁.1.matrix_trace ?_) g
@@ -509,9 +509,9 @@ theorem live_of_locExt : GlobalTheory.TwSys.Cheb → ∀ {R : Ranks} {H : Host R
     rw [trace_of_isDecomp _ _ _ hd₀, trace_of_isDecomp _ _ _ hd, map_add (f := _), map_sum,
     Finset.sum_congr rfl fun (c : Fin R.t) _ => a.chi ((c : ℕ) + 1) (by omega) c.2 g] at h
     exact add_right_cancel h
-  haveI := isLocalHom_φ a
+  have := isLocalHom_φ a
   have hpos := pos_of_absIrrSub _ habs
-  haveI : Nonempty (Fin R.r) := ⟨⟨0, hpos⟩⟩
+  have : Nonempty (Fin R.r) := ⟨⟨0, hpos⟩⟩
   refine absIrrSub_of_span_eq_top hpos _ (span_eq_top_of_map (IsLocalRing.ResidueField.map a.φ) _ ?_)
   have h := span_eq_top_of_trace_eq
     ((mapRep (IsLocalRing.ResidueField.map a.φ) (mapRep (IsLocalRing.residue (N₀.O i₀)) ρ₀)).comp a.γ.toMonoidHom)
@@ -562,7 +562,7 @@ theorem maximalIdeal_le_comap {p q : ℕ} [Fact p.Prime] [Fact q.Prime] (h : p =
   have hc : φ.comp (algebraMap ℤ_[p] O₀) = algebraMap ℤ_[p] O₁ := by
     ext z
     exact hφ z z HEq.rfl
-  haveI : (Ideal.comap φ (IsLocalRing.maximalIdeal O₁)).IsPrime := Ideal.comap_isPrime _ _
+  have : (Ideal.comap φ (IsLocalRing.maximalIdeal O₁)).IsPrime := Ideal.comap_isPrime _ _
   have h1 : (Ideal.comap (algebraMap ℤ_[p] O₀) (Ideal.comap φ (IsLocalRing.maximalIdeal O₁))).IsMaximal := by
     rw [Ideal.comap_comap, hc]
     exact Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := ℤ_[p])
@@ -675,7 +675,7 @@ theorem GlobalTheory.ChiExtend.chi_eq_of_ext_alt : HeckeStdPlain → ∀ (D : D7
   have hone : (fun σ : GE L₁.lay.fixZ.nd => ((L₁.lay.fixZ.nd.chi i₁ 1 σ : (L₁.lay.fixZ.nd.O i₁)ˣ) :
       L₁.lay.fixZ.nd.O i₁)) = fun σ => φ ((L₀.lay.fixZ.nd.chi i₀ 1 σ : (L₀.lay.fixZ.nd.O i₀)ˣ) :
       L₀.lay.fixZ.nd.O i₀) := by
-    haveI := L₁.lay.fixZ.nd.O_complete i₁
+    have := L₁.lay.fixZ.nd.O_complete i₁
     refine eq_of_dense (L₁.lay.fixZ.nd.O_adic i₁) inferInstance (L₁.lay.fixZ.nd.chi_cont i₁ 1)
       ((continuous_of_le_comap (L₀.lay.fixZ.nd.O_adic i₀) (L₁.lay.fixZ.nd.O_adic i₁) φ
         (maximalIdeal_le_comap hl φ hφalg)).comp (L₀.lay.fixZ.nd.chi_cont i₀ 1)) (hCheb hfin.toFinset) ?_
@@ -699,7 +699,7 @@ theorem GlobalTheory.ChiExtend.chi_eq_of_ext_alt : HeckeStdPlain → ∀ (D : D7
     rw [hu1]
     refine congrArg _ (congrArg (· ^ _) ?_)
     apply Units.ext
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     exact (hφalg _ _ (cyc_heq _ _ hl σ)).symm
   exact congrArg Units.val key
 end
@@ -847,8 +847,8 @@ theorem GlobalTheory.CoefDuty.ExtRing.ext_ring_alt : HeckeStdPlain → ∀ (D : 
   change L₀.X.nd.w i₀ = L₁.X.nd.w i₁ at hw
   have hl : L₀.X.nd.l i₀ = L₁.X.nd.l i₁ := by
     exact (L₀.X.nd.w_l i₀).symm.trans ((congrArg _ hw).trans (L₁.X.nd.w_l i₁))
-  haveI := L₀.X.nd.lPrime i₀
-  haveI := L₁.X.nd.lPrime i₁
+  have := L₀.X.nd.lPrime i₀
+  have := L₁.X.nd.lPrime i₁
   have key : ∀ w (_ : L₀.X.nd.w i₀ = w) (h₁ : D.what₂.places.resChar w = L₁.X.nd.l i₁),
       qCast h₁ (A.pl.ι w) = qCast hl (qCast (L₀.X.nd.w_l i₀) (A.pl.ι (L₀.X.nd.w i₀))) := by
     intro w hw' h₁
@@ -905,7 +905,7 @@ theorem main_alt_alt : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D
   classical
   obtain ⟨Sp, ⟨Au⟩, -⟩ := hB
   obtain ⟨-, y, hy, hcy⟩ := hc
-  haveI := Formalism.L2.finite_chooseBasisIndex (D := D) j w
+  have := Formalism.L2.finite_chooseBasisIndex (D := D) j w
   let b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j)
   have hjb := D.what₂.jMt_basis (D.what₂.muTw w) j b
   have hb := Sp.B.iV_basis j w b
@@ -917,7 +917,7 @@ theorem main_alt_alt : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D
       rw [hjb.2]; exact Submodule.mem_top
     rw [Set.range_eq_empty, Submodule.span_empty, Submodule.mem_bot] at hy'
     exact hy'
-  haveI : Nontrivial (Sp.B.V j w) := ⟨⟨Sp.B.iV j w (b a), 0, hb.1.ne_zero a⟩⟩
+  have : Nontrivial (Sp.B.V j w) := ⟨⟨Sp.B.iV j w (b a), 0, hb.1.ne_zero a⟩⟩
   obtain ⟨I0, hI0⟩ := Ideal.exists_maximal (heckeAlg Sp.B j w)
   obtain ⟨i0, hi0, -⟩ := Sp.mx_all j w h1 h2 hw I0 hI0
   have hinjC : Function.Injective (Sp.iotaC j w) := by
@@ -973,7 +973,7 @@ theorem main_alt_alt : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D
     if hvk : GenAt D (D.what₂.places.resChar w) (Sp.B.Qc j w) v k then Classical.choose (key v k hvk) else 0
   have hκF : ∀ v k (hvk : GenAt D (D.what₂.places.resChar w) (Sp.B.Qc j w) v k), φ (algebraMap _ _ (κF v k)) = c v k := by
     intro v k hvk
-    simp only [κF, dif_pos hvk]
+    simp only [κF, dite_eq_left hvk]
     exact Classical.choose_spec (key v k hvk)
   obtain ⟨e, hene, he⟩ := GlobalTheory.PtLocalEig.eig_descends D M Sp.B j w (D.what₂.muTw w) h1 h2 rfl φ hφ
     (fun v k => algebraMap _ _ (κF v k)) y hy (by
@@ -1165,14 +1165,14 @@ theorem sys_eq_iota_of_gen_at {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : _
     (h : GenAt D (D.what₂.places.resChar w) (C.Q w) v k) :
     sys L i x v k = iotaO L.X.nd L.Y.naut i ((L.X.nd.hT i v k : L.X.nd.X i → L.X.nd.O i) x) := by
   unfold sys
-  rw [if_pos ((_root_.GlobalTheory.PtExt.splitOut_iff_genAt_alt hB hi v k).2 h)]
+  rw [ite_eq_left ((_root_.GlobalTheory.PtExt.splitOut_iff_genAt_alt hB hi v k).2 h)]
 theorem sys_eq_zero_of_not_gen_at {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : _root_.GlobalTheory.HeightCounting.CharFrameHostEmbedding D cf jE} {M : MtFam D} {C : NChoice D}
     {tup : D.what₂.Tup → Fin D.R.m → HChar D.host.E} {big : D.what₂.places.Pl → Finset ℂ} {L : LocAll (lay0 D)}
     (hB : _root_.GlobalTheory.CoefDuty.BuiltAlt A M C tup big L) {j : ℕ} {w : D.what₂.places.Pl} {i : L.X.nd.Loc}
     (hi : i ∈ L.X.nd.locs j w) (x : L.X.nd.X i) {v : PlE D.host} {k : ℕ}
     (h : ¬ GenAt D (D.what₂.places.resChar w) (C.Q w) v k) : sys L i x v k = 0 := by
   unfold sys
-  rw [if_neg (fun h' => h ((_root_.GlobalTheory.PtExt.splitOut_iff_genAt_alt hB hi v k).1 h'))]
+  rw [ite_eq_right (fun h' => h ((_root_.GlobalTheory.PtExt.splitOut_iff_genAt_alt hB hi v k).1 h'))]
 theorem sys_mem_eig_set_of_built {cf : CharFrame D} {jE : D.host.E →+* Qb} {A : _root_.GlobalTheory.HeightCounting.CharFrameHostEmbedding D cf jE} {M : MtFam D} {C : NChoice D}
     {tup : D.what₂.Tup → Fin D.R.m → HChar D.host.E} {big : D.what₂.places.Pl → Finset ℂ} {L : LocAll (lay0 D)}
     (hB : _root_.GlobalTheory.CoefDuty.BuiltAlt A M C tup big L) {j : ℕ} {w : D.what₂.places.Pl} (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) {i : L.X.nd.Loc}
@@ -1672,7 +1672,7 @@ theorem setting_of_live_alt_alt : GlobalTheory.TwSys.Cheb → ∀ (D : D7), _roo
   have hρ : ∀ x ∈ D.nd.Z i, ∃ e, IsDecomp (t := D.R.t) (rep x) (ρ x) (D.nd.chi i) e := by
     intro x hx
     have := Classical.choose_spec (hZ x hx (rep x) (hr x))
-    simp only [ρ, dif_pos hx]
+    simp only [ρ, dite_eq_left hx]
     exact this
   obtain ⟨π, hπ, r0, ρ0, hr0, h0, habs⟩ := hL
   refine ⟨rep, ρ, hr, D.nd.T_local i, D.nd.T_sep i, fun x => ?_, fun h d => ?_,
@@ -1687,7 +1687,7 @@ theorem setting_of_live_alt_alt : GlobalTheory.TwSys.Cheb → ∀ (D : D7), _roo
     rw [this]
     exact f.2
   · have hpos := pos_of_absIrrSub _ habs
-    haveI : Nonempty (Fin D.R.r) := ⟨⟨0, hpos⟩⟩
+    have : Nonempty (Fin D.R.r) := ⟨⟨0, hpos⟩⟩
     refine absIrrSub_of_span_eq_top hpos _ ?_
     refine span_eq_top_of_trace_eq _ (mapRep (IsLocalRing.residue (D.nd.O i)) ρ0) (fun g => ?_)
       (GlobalTheory.BurnsideField.span_mat_eq_top_of_absIrrSub _ habs)
@@ -1804,7 +1804,7 @@ theorem evO_takenAll_alt : GlobalTheory.TwSys.Cheb → HeckeStdPlain → ∀ (D 
   have hex : ∃ S : Finset ℂ, Chosen (withLoc L₀).nd (withLoc L₀).naut i₀ ↑S :=
     _root_.GlobalTheory.T.exists_finset_chosen_of_cheb_oSplit hCh (withLoc L₀) hQ₀.1 hQ₀.2.1 i₀ (hQ₀.2.2 i₀) (hc₀i.2.2.1.2 hlive₀)
   have hch : Chosen (withLoc L₀).nd (withLoc L₀).naut i₀ ↑(S0 i₀) := by
-    simp only [S0, dif_pos hex]
+    simp only [S0, dite_eq_left hex]
     exact hex.choose_spec
   have hch' := (hc₀i.2.2.2.2.1 _).1 hch
   have hsub : S0 i₀ ⊆ big (L₁.X.nd.w i₁) := by

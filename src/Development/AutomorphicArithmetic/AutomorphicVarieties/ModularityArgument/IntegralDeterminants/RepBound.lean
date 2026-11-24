@@ -242,7 +242,7 @@ private theorem decomp (hψ : ∀ x, Valued.v x ≤ 1 → nu ι (ψ x) ≤ 1) {n
       rw [← this]
       exact h2
     rw [map_zpow₀] at h3
-    exact (zpow_le_one_iff_right_of_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)) hlt).1 h3
+    exact (zpow_le_one_iff_right_of_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)) hlt).1 h3
   · have h1 : g.val.det = k₁.val.det * (∏ i, ((ϖ ^ a i : (u.adicCompletion E)ˣ) : u.adicCompletion E)) * k₂.val.det := by
       rw [e']
       simp only [Units.val_mul, Matrix.det_mul]

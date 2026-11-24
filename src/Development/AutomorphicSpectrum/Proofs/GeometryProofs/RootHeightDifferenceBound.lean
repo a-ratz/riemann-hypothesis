@@ -66,7 +66,7 @@ lemma log_sup_support {ι : Type} [Fintype ι] (x : ι → L) (hx : ∃ i, x i �
     (Function.support fun v : FinitePlace L => Real.log (⨆ i, v (x i))).Finite := by
   classical
   obtain ⟨i₀, hi₀⟩ := hx
-  haveI : Nonempty ι := ⟨i₀⟩
+  have : Nonempty ι := ⟨i₀⟩
   have hS : (⋃ i ∈ Finset.univ.filter (fun i => x i ≠ 0),
       Function.mulSupport fun v : FinitePlace L => v (x i)).Finite := by
     refine Set.Finite.biUnion (Finset.finite_toSet _) fun i hi => ?_

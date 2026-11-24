@@ -72,9 +72,9 @@ namespace GlobalTheory.StripVanish
 
 theorem mean_eq_zero_of_strips : ∀ (D : D7) (W : HSp D) (vW : GlobalTheory.Unf.Vol W) (R K : Subgroup (GA D W)), IsClosed (R : Set (GA D W)) → (∀ a ∈ GinfC W, ∀ b ∈ GfC W, a * b ∈ R → a ∈ R ∧ b ∈ R) → K ≤ GfC W → IsCompact (K : Set (GA D W)) → IsOpen ((K.subgroupOf (GfC W) : Subgroup (GfC W)) : Set (GfC W)) → ∀ (μR : Measure R), μR.IsHaarMeasure → μR.IsInvInvariant → ∀ (𝓡 : Set R) (𝓑 : Set (GA D W)), IsFundamentalDomain ((GQ W ⊓ R).subgroupOf R) 𝓡 μR → IsFundamentalDomain (GQ W ⊓ R : Subgroup (GA D W)) 𝓑 vW.μ → ∀ f : GA D W → ℂ, Measurable f → (∀ γ ∈ GQ W ⊓ R, ∀ g, f (γ * g) = f g) → IntegrableOn f 𝓑 vW.μ → (∀ h, IntegrableOn (fun r : R => f (r * h)) 𝓡 μR) → (Continuous fun h => ∫ r in 𝓡, f ((r : GA D W) * h) ∂μR) → (∀ k ∈ K, ∀ g, f (g * k) = f g) → (∀ h, f h ≠ 0 → ∃ r ∈ R, ∃ a ∈ GinfC W, ∃ k ∈ K, h = r * a * k) → (∀ C : Set (GA D W), IsCompact C → C ⊆ GinfC W → MeasurableSet (strip W R C) ∧ ∫ h in 𝓑 ∩ strip W R C, f h ∂vW.μ = 0) → ∫ r in 𝓡, f r ∂μR = 0 := by
   intro D W vW R K hRc hsplit hKf hKc hKo μR hμR hμRinv 𝓡 𝓑 h𝓡 h𝓑 f hfm hfl hfi hfiR hTc hfK hsupp hstrip
-  haveI := vW.haar
-  haveI : LocallyCompactSpace R := hRc.locallyCompactSpace
-  haveI : μR.IsMulRightInvariant := by rw [← Measure.inv_eq_self μR]; infer_instance
+  have := vW.haar
+  have : LocallyCompactSpace R := hRc.locallyCompactSpace
+  have : μR.IsMulRightInvariant := by rw [← Measure.inv_eq_self μR]; infer_instance
   obtain ⟨hinfC, -, hcomm, ⟨e, he⟩, -⟩ := GlobalTheory.AdelicSplit.adelic_split D W
   obtain ⟨hΓc, hΓd, -⟩ :=
     GlobalTheory.RationalSubgroupFund.countable_discrete_exists_fundamentalDomain D W (GQ W ⊓ R) inf_le_left
@@ -132,14 +132,14 @@ theorem mean_eq_zero_of_strips : ∀ (D : D7) (W : HSp D) (vW : GlobalTheory.Unf
   have h1U : (1 : GA D W) ∈ U := by
     show (1 : ℝ) / 2 < (T 1 / T 1).re
     rw [div_self hT1]; norm_num
-  haveI : LocallyCompactSpace (GinfC W) := hinfC.locallyCompactSpace
-  have hU'o : IsOpen ((Subtype.val : GinfC W → GA D W) ⁻¹' U) := hUo.preimage continuous_subtype_val
+  have : LocallyCompactSpace (GinfC W) := hinfC.locallyCompactSpace
+  have hU'o : IsOpen ((Subtype.val : GinfC W → GA D W) ⁻¹' U) := hUo.preimage continuous_subtypeVal
   obtain ⟨C', hC'n, hC'U, hC'c⟩ :=
     local_compact_nhds (hU'o.mem_nhds (show ((1 : GinfC W) : GA D W) ∈ U from h1U))
   set C : Set (GA D W) := Subtype.val '' C' with hCdef
   have hCinf : C ⊆ GinfC W := by rintro _ ⟨y, -, rfl⟩; exact y.2
   have hCU : C ⊆ U := by rintro _ ⟨y, hy, rfl⟩; exact hC'U hy
-  obtain ⟨hSm, hS0⟩ := hstrip C (hC'c.image continuous_subtype_val) hCinf
+  obtain ⟨hSm, hS0⟩ := hstrip C (hC'c.image continuous_subtypeVal) hCinf
   set S := strip W R C with hSdef
   have hSinv : ∀ s ∈ R, ∀ x, s * x ∈ S ↔ x ∈ S := by
     intro s hs x
@@ -207,7 +207,7 @@ theorem mean_eq_zero_of_strips : ∀ (D : D7) (W : HSp D) (vW : GlobalTheory.Unf
   have hAm : MeasurableSet A := hSm.inter (hTc.measurable (measurableSet_singleton (0 : ℂ)).compl)
   have hAinv : ∀ s ∈ R, ∀ x, s * x ∈ A ↔ x ∈ A := by
     intro s hs x
-    simp only [hAdef, Set.mem_inter_iff, Set.mem_setOf_eq, hSinv s hs x, hTl s hs x]
+    simp only [hAdef, Set.mem_inter_iff, Set.mem_ofPred_eq, hSinv s hs x, hTl s hs x]
   set g : GA D W → ENNReal := A.indicator fun x => (β x : ENNReal) with hgdef
   have hgm : Measurable g := hβ.1.coe_nnreal_ennreal.indicator hAm
   have hg0 : ∫⁻ x, g x ∂vW.μ = 0 := by
@@ -225,7 +225,7 @@ theorem mean_eq_zero_of_strips : ∀ (D : D7) (W : HSp D) (vW : GlobalTheory.Unf
 
   have hA0 : vW.μ A = 0 := by
     have hmul : Measurable fun p : GA D W × R => (p.2 : GA D W) * p.1 :=
-      (measurable_subtype_coe.comp measurable_snd).mul measurable_fst
+      (measurable_subtypeVal.comp measurable_snd).mul measurable_fst
     have e1 : vW.μ A = ∫⁻ x, ∫⁻ t : R, g ((t : GA D W) * x) ∂μR ∂vW.μ := by
       rw [← lintegral_indicator_one hAm]
       refine lintegral_congr fun x => ?_
@@ -254,7 +254,7 @@ theorem mean_eq_zero_of_strips : ∀ (D : D7) (W : HSp D) (vW : GlobalTheory.Unf
     rw [hTr _ hk]
     intro h0
     have := hC'U (interior_subset hp1)
-    simp only [Set.mem_preimage, hUdef, Set.mem_setOf_eq, h0, zero_div, Complex.zero_re] at this
+    simp only [Set.mem_preimage, hUdef, Set.mem_ofPred_eq, h0, zero_div, Complex.zero_re] at this
     linarith
   have hpos := hOo.measure_pos vW.μ ⟨1, h1O⟩
   exact hpos.ne' (measure_mono_null hOA hA0)

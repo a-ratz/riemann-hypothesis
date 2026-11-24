@@ -115,8 +115,8 @@ theorem q_frame_degree (D : D7) : QFrameDeg D := by
   have := (columnHypotheses D u).tc
   have hQ := CV.Q_good c τ
   have hn : 0 < D.R.N 0 := rank_zero_pos D
-  haveI : Nonempty (Fin (D.R.N 0)) := ⟨⟨0, hn⟩⟩
-  haveI : Nonempty (CV.Q c τ).ι := ⟨(CV.eQ c τ).symm ⟨0, hn⟩⟩
+  have : Nonempty (Fin (D.R.N 0)) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (CV.Q c τ).ι := ⟨(CV.eQ c τ).symm ⟨0, hn⟩⟩
   have hfr : Module.finrank D.what₂.LL (CV.Q c τ).V = D.R.N 0 := by
     rw [Module.finrank_eq_card_basis (CV.Q c τ).b, Fintype.card_congr (CV.eQ c τ), Fintype.card_fin]
   choose bK hbK using fun p : FinPl D.what₂.LL => exists_basis_locP (toH p) hQ.2.1 hQ.2.2 hfr

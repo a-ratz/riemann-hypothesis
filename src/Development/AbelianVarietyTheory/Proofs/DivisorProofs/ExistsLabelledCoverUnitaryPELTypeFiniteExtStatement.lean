@@ -163,16 +163,16 @@ theorem exists_labels_finExt_emb : ∀ (R : Type) [CommRing R] [IsDomain R] [IsL
   have hB := D.tau_bimult
   obtain rfl := eq_fracMap hρ.2.1 hga
   obtain rfl := eq_fracMap i₀ hg₀
-  letI : Algebra (FractionRing R) (Kb R₁) := ((algebraMap (FractionRing R₁) (Kb R₁)).comp (fracMap hρ.2.1)).toAlgebra
+  let : Algebra (FractionRing R) (Kb R₁) := ((algebraMap (FractionRing R₁) (Kb R₁)).comp (fracMap hρ.2.1)).toAlgebra
   have c' : Compat ρ (Kb R₁) := fun r => congrArg (algebraMap (FractionRing R₁) (Kb R₁)) (hga r)
 
   obtain ⟨W, _, _, _, io, φ, hW, iio, lio, lφ, hc⟩ :=
     _root_.GlobalTheory.FieldExtensionExists.exists_extension R R₁ ρ hρ.2.1 hρ.2.2 W₀ hW₀ φ₀ l₀
   have iφ : Function.Injective φ := by
-    letI := ρ.toAlgebra
-    haveI : Module.Finite R R₁ := hρ.2.2
+    let := ρ.toAlgebra
+    have : Module.Finite R R₁ := hρ.2.2
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := R) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := R) ?_
     change Ideal.comap ρ (RingHom.ker φ) = ⊥
     rw [RingHom.comap_ker, hc, ← RingHom.injective_iff_ker_eq_bot]
     exact iio.comp i₀
@@ -194,9 +194,9 @@ theorem exists_labels_finExt_emb : ∀ (R : Type) [CommRing R] [IsDomain R] [IsL
       exact congrArg _ (RingHom.congr_fun hc r))
   obtain ⟨a₁, e₁, gp₁, lb₁⟩ := exists_fib_cancel (g' := spMap (fracMap iφ))
     ((Geo.Tor.spMap_comp _ _).symm.trans ((congrArg spMap fr).trans (Geo.Tor.spMap_comp _ _))) gpa la gp₀ lb₀ gpb lb
-  letI : Algebra (FractionRing R₁) (Kb W) := ((algebraMap (FractionRing W) (Kb W)).comp (fracMap iφ)).toAlgebra
-  letI : Algebra (FractionRing W₀) (Kb W) := ((algebraMap (FractionRing W) (Kb W)).comp (fracMap iio)).toAlgebra
-  letI : Algebra (FractionRing R) (Kb W) :=
+  let : Algebra (FractionRing R₁) (Kb W) := ((algebraMap (FractionRing W) (Kb W)).comp (fracMap iφ)).toAlgebra
+  let : Algebra (FractionRing W₀) (Kb W) := ((algebraMap (FractionRing W) (Kb W)).comp (fracMap iio)).toAlgebra
+  let : Algebra (FractionRing R) (Kb W) :=
     ((algebraMap (FractionRing W) (Kb W)).comp ((fracMap iφ).comp (fracMap hρ.2.1))).toAlgebra
   have cφ : Compat φ (Kb W) := fun r => congrArg (algebraMap (FractionRing W) (Kb W)) (fracMap_algebraMap iφ r)
   have cio : Compat io (Kb W) := fun r => congrArg (algebraMap (FractionRing W) (Kb W)) (fracMap_algebraMap iio r)
@@ -217,8 +217,8 @@ theorem exists_labels_finExt_emb : ∀ (R : Type) [CommRing R] [IsDomain R] [IsL
       (congrArg (algebraMap (FractionRing W) (Kb W)) (RingHom.congr_fun fr t).symm)⟩
 
   obtain ⟨em'⟩ := nonempty_lift (FractionRing R) (Kb R₁)
-  letI : Algebra (Kb R) (Kb W) := (emR.comp em').toRingHom.toAlgebra
-  haveI : IsScalarTower (FractionRing R) (Kb R) (Kb W) :=
+  let : Algebra (Kb R) (Kb W) := (emR.comp em').toRingHom.toAlgebra
+  have : IsScalarTower (FractionRing R) (Kb R) (Kb W) :=
     IsScalarTower.of_algebraMap_eq fun x => ((emR.comp em').commutes x).symm
   let emK : Kb R →ₐ[FractionRing R] Kb R₁ := em'.comp ((jR.comp em₀).restrictNormal (Kb R))
   have hK : (emR.comp emK).toRingHom = (jR.comp em₀).toRingHom :=
@@ -326,19 +326,19 @@ theorem isAlgebraic_kb {R R₁ : Type} [CommRing R] [IsDomain R] [CommRing R₁]
     (hc : ∀ r, algebraMap (FractionRing R) (Kb R₁) (algebraMap R _ r) =
       algebraMap (FractionRing R₁) (Kb R₁) (algebraMap R₁ _ (ρ r))) :
     Algebra.IsAlgebraic (FractionRing R) (Kb R₁) := by
-  letI : Algebra R R₁ := ρ.toAlgebra
+  let : Algebra R R₁ := ρ.toAlgebra
   have h1 : ∀ r : R, algebraMap R (Kb R₁) r = algebraMap R₁ (Kb R₁) (ρ r) := fun r => by
     rw [IsScalarTower.algebraMap_apply R (FractionRing R₁) (Kb R₁), IsScalarTower.algebraMap_apply R R₁ (FractionRing R₁),
       IsScalarTower.algebraMap_apply R₁ (FractionRing R₁) (Kb R₁)]
     rfl
-  haveI : IsScalarTower R R₁ (Kb R₁) := IsScalarTower.of_algebraMap_eq fun r => h1 r
-  haveI : IsScalarTower R (FractionRing R) (Kb R₁) := IsScalarTower.of_algebraMap_eq fun r => by
+  have : IsScalarTower R R₁ (Kb R₁) := IsScalarTower.of_algebraMap_eq fun r => h1 r
+  have : IsScalarTower R (FractionRing R) (Kb R₁) := IsScalarTower.of_algebraMap_eq fun r => by
     rw [h1, hc, IsScalarTower.algebraMap_apply R₁ (FractionRing R₁) (Kb R₁)]
-  haveI : Module.Finite R R₁ := hρ
-  haveI : Algebra.IsAlgebraic R R₁ := Algebra.IsAlgebraic.of_finite R R₁
-  haveI : Algebra.IsAlgebraic R₁ (Kb R₁) :=
+  have : Module.Finite R R₁ := hρ
+  have : Algebra.IsAlgebraic R R₁ := Algebra.IsAlgebraic.of_finite R R₁
+  have : Algebra.IsAlgebraic R₁ (Kb R₁) :=
     (IsFractionRing.comap_isAlgebraic_iff (A := R₁) (K := FractionRing R₁)).2 inferInstance
-  haveI : Algebra.IsAlgebraic R (Kb R₁) := Algebra.IsAlgebraic.trans R R₁ (Kb R₁)
+  have : Algebra.IsAlgebraic R (Kb R₁) := Algebra.IsAlgebraic.trans R R₁ (Kb R₁)
   exact (IsFractionRing.comap_isAlgebraic_iff (A := R) (K := FractionRing R)).1 inferInstance
 
 theorem galEqN_of_rel {R R₁ : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [CommRing R₁] [IsDomain R₁]
@@ -357,7 +357,7 @@ theorem galEqN_of_rel {R R₁ : Type} [CommRing R] [IsDomain R] [IsLocalRing R] 
   have hK : algebraMap (FractionRing R) (Kb R₁) = (algebraMap (FractionRing R₁) (Kb R₁)).comp ga :=
     IsLocalization.ringHom_ext (nonZeroDivisors R) (RingHom.ext fun r => by
       simp only [RingHom.comp_apply, hga, hc])
-  haveI : Algebra.IsAlgebraic (FractionRing R) (Kb R₁) := isAlgebraic_kb ρ hρ.2.2 hc
+  have : Algebra.IsAlgebraic (FractionRing R) (Kb R₁) := isAlgebraic_kb ρ hρ.2.2 hc
   let mu : Kb R₁ →ₐ[FractionRing R] Kb R := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -692,7 +692,7 @@ theorem exists_base (R₁ : Type) [CommRing R₁] [IsDomain R₁] [CharZero R₁
     ∃ (o : Type) (_ : CommRing o) (b : o →+* R₁) (ze : oˣ), IsDedekindDomain o ∧ Algebra.FiniteType ℤ o ∧
       Function.Injective b ∧ IsUnit (n : o) ∧ b ze = ζ := by
   let K := CyclotomicField m ℚ
-  haveI : IsCyclotomicExtension {m} ℚ K := CyclotomicField.isCyclotomicExtension m ℚ
+  have : IsCyclotomicExtension {m} ℚ K := CyclotomicField.isCyclotomicExtension m ℚ
   have hK := IsCyclotomicExtension.zeta_spec m ℚ K
   let pb := hK.integralPowerBasis
   have hmin : Polynomial.aeval ζ (minpoly ℤ pb.gen) = 0 := by
@@ -709,7 +709,7 @@ theorem exists_base (R₁ : Type) [CommRing R₁] [IsDomain R₁] [CharZero R₁
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx
     have hb : RingHom.ker σ = ⊥ := by
-      refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+      refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
       refine eq_bot_iff.2 fun a ha => ?_
       have : σ (algebraMap ℤ (𝓞 K) a) = 0 := ha
       rw [eq_intCast (algebraMap ℤ (𝓞 K)), map_intCast] at this
@@ -794,7 +794,7 @@ theorem descends_to_fg_field_lb : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Alg
   obtain ⟨hr, hs, hk⟩ := _root_.GlobalTheory.PolDescent.rigidified_sym_kTriv_descend _ K (gen β s).subtype A₁ t.A ψ L₁ t.L hab hG hL₁ t.isLB hL
   have hamp := GlobalTheory.AmpleDescent.relAmple_of_fieldExtension _ K (gen β s).subtype A₁ t.A ψ L₁ t.L hab hG hL₁ t.isLB hL
     t.ample
-  letI : Algebra o (gen β s) := (β.codRestrict _ (mem_gen β s)).toAlgebra
+  let : Algebra o (gen β s) := (β.codRestrict _ (mem_gen β s)).toAlgebra
   obtain ⟨R₀, hfg, hfrac⟩ := exists_fg_subalgebra β s
   refine ⟨gen β s, inferInstance, inferInstance, ⟨(gen β s).subtype, fun _ => rfl⟩, R₀,
     ⟨A₁, hab, t.g, hdim _ t.smoothDim, L₁, hL₁, hr t.rigid, hs t.sym, hamp, hk t.ktriv⟩, ψ, hfg, hfrac, rfl, hG, ?_, ?_, hL⟩
@@ -810,14 +810,14 @@ namespace GlobalTheory.Mum
 theorem exists_thetaSys_spread : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R₁] [CharZero R₁] (A₁ : PolAV (Sp (FractionRing R₁))), (letI := A₁.isAb.comm; GlobalTheory.ZH.HypS A₁.A A₁.L) → ∀ (n k j : ℕ), n.Prime → Odd n → 2 ≤ k → 1 ≤ j → IsUnit (n : R₁) → ∀ (ζ : R₁ˣ), ReciprocityTheory.ChartRestriction.G.Out.Level A₁ ((n ^ j * (n ^ k) ^ 2) ^ 2) (unitOn (Units.map (algebraMap R₁ (FractionRing R₁)).toMonoidHom ζ)) → ∃ (o Ω : Type) (_ : CommRing o) (_ : Field Ω) (_ : Algebra o Ω) (_ : GlobalTheory.ZH.ArithBase o Ω) (S : GlobalTheory.ZH.ThetaSys o Ω) (ρS : S.Real) (b : o →+* R₁) (e : Ω →+* FractionRing R₁) (φ : A₁.A.left ⟶ ρS.P.A.left), S.g = A₁.g ∧ S.N = (n ^ k) ^ 2 ∧ S.r = n ^ j ∧ (∀ x : o, e (algebraMap o Ω x) = algebraMap R₁ (FractionRing R₁) (b x)) ∧ IsGrpPullback A₁.A ρS.P.A (spMap (e.comp S.R.val.toRingHom)) φ ∧ LBIso A₁.L (ρS.P.L.pull φ) := by
   intro R₁ _ _ _ A₁ hS n k j hn ho hk hj hu ζ lev
   obtain ⟨hL, hL₂⟩ := GlobalTheory.abelianSchemeLaws_all
-  haveI : NeZero n := ⟨hn.ne_zero⟩
-  haveI : NeZero ((n ^ j * (n ^ k) ^ 2) ^ 2) := ⟨by have := hn.pos; positivity⟩
+  have : NeZero n := ⟨hn.ne_zero⟩
+  have : NeZero ((n ^ j * (n ^ k) ^ 2) ^ 2) := ⟨by have := hn.pos; positivity⟩
   let F := FractionRing R₁
   have hζ : IsPrimitiveRoot (ζ : R₁) ((n ^ j * (n ^ k) ^ 2) ^ 2) :=
     (IsPrimitiveRoot.map_iff_of_injective (f := algebraMap R₁ F) (IsFractionRing.injective R₁ F)).1
       (IsPrimitiveRoot.coe_units_iff.2 ((GlobalTheory.SymLevelDescent.isPrimitiveRoot_unitOn_iff _ _).1 lev.prim))
   obtain ⟨o, _, b, ze, hded, hft, hbi, hun, hbz⟩ := GlobalTheory.SpreadTheta.exists_base R₁ n _ hu ζ hζ
-  letI : Algebra o F := ((algebraMap R₁ F).comp b).toAlgebra
+  let : Algebra o F := ((algebraMap R₁ F).comp b).toAlgebra
   have hze : Units.map (algebraMap R₁ F).toMonoidHom ζ = Units.map (algebraMap o F).toMonoidHom ze :=
     Units.ext (by show algebraMap R₁ F ζ = algebraMap R₁ F (b ze); rw [hbz])
   have lev₀ : Nonempty (Out.Level A₁ ((n ^ j * (n ^ k) ^ 2) ^ 2) (unitOn (Units.map (algebraMap o F).toMonoidHom ze))) :=
@@ -825,8 +825,8 @@ theorem exists_thetaSys_spread : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R�
   obtain ⟨Ω₀, _, _, jj, R₀, Q₀, ψ, hR₀, hfr, hg, hψ, hS₀, ⟨lev₁⟩, hLψ⟩ :=
     GlobalTheory.SpreadTheta.descends_to_fg_field_lb o F A₁ _ ze hS lev₀
   have hcomp : ∀ x : o, jj (algebraMap o Ω₀ x) = algebraMap R₁ F (b x) := fun x => jj.commutes x
-  haveI : CharZero Ω₀ := RingHom.charZero jj.toRingHom
-  haveI : GlobalTheory.ZH.ArithBase o Ω₀ := ⟨hded, hft, inferInstance, fun x y hxy =>
+  have : CharZero Ω₀ := RingHom.charZero jj.toRingHom
+  have : GlobalTheory.ZH.ArithBase o Ω₀ := ⟨hded, hft, inferInstance, fun x y hxy =>
     hbi (IsFractionRing.injective R₁ F (by rw [← hcomp, ← hcomp, hxy]))⟩
   have hM : IsUnit (((n ^ j * (n ^ k) ^ 2) ^ 2 : ℕ) : o) := by
     push_cast
@@ -994,7 +994,7 @@ theorem exists_uCover : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
     push_cast; exact ((hnu.pow _).mul ((hnu.pow _).pow _)).pow _
   obtain ⟨R₁, _, _, _, ρ, A₁, a, ζ, lev, hfin, hfib, hg, hS⟩ :=
     GlobalTheory.T.exists_symplecticLevel_after_finiteExtension_base R hR A hA _ (Nat.one_le_iff_ne_zero.2 (pow_ne_zero _ (mul_ne_zero (pow_ne_zero _ hn.ne_zero) (pow_ne_zero _ (pow_ne_zero _ hn.ne_zero))))) hmu
-  haveI : CharZero R₁ := ⟨fun x y h => by
+  have : CharZero R₁ := ⟨fun x y h => by
     have := hR.2
     exact Nat.cast_injective (hfin.2.1 (by simpa using h))⟩
   have hnu₁ : IsUnit (n : R₁) := by simpa using hnu.map ρ
@@ -1349,12 +1349,12 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
     rw [← (hg₀' k hk _ x).1 (H₀ k hk p p₁ _ x t₁ t₂ t₃ hx)]
     exact hx
 
-  haveI := lφ
+  have := lφ
   obtain ⟨DW, ⟨hWp⟩⟩ := GlobalTheory.MumPull.exists_pull R W φ iφ lφ D
   have hBW := DW.tau_bimult
   obtain ⟨C, _, _, _, _, _, gam, hgam, hC⟩ := GlobalTheory.T.exists_complete_isAlgClosed_cExt' W (Kb W)
   have : CharZero C := (RingHom.charZero_iff (algebraMap (FractionRing W) C).injective).1 inferInstance
-  letI : Algebra (FractionRing R) C := ((algebraMap (FractionRing W) C).comp (fracMap iφ)).toAlgebra
+  let : Algebra (FractionRing R) C := ((algebraMap (FractionRing W) C).comp (fracMap iφ)).toAlgebra
   have cC : Compat φ C := fun r => congrArg (algebraMap (FractionRing W) C) (fracMap_algebraMap iφ r)
   obtain ⟨em⟩ := nonempty_lift (FractionRing R) C
 
@@ -1362,7 +1362,7 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
   let fW : ∀ k, QkPt DW.toPre C k → (TFK (R := W) C ⟶ A'.A) := fun k q =>
     if hk : 1 ≤ k then ε (lab k ((Equiv.ofBijective _ (tr_bij hWp cC em hBW hk)).symm q)) else 1
   have hfW : ∀ k (hk : 1 ≤ k) p, fW k (tr hWp cC em hBW p) = ε (lab k p) := fun k hk p => by
-    simp only [fW, dif_pos hk, Equiv.ofBijective_symm_apply_apply]
+    simp only [fW, dite_eq_left hk, Equiv.ofBijective_symm_apply_apply]
   have GW : GoodLab DW.toPre A' C fW := (goodLab_move hWp cC em hBW hfib lab fW fun k hk p => by
     rw [hfW k hk p]; exact (hε _ _).1 rfl).1 Glab
   obtain ⟨f', G'', hf'⟩ := exists_goodLab bW hG' U' C
@@ -1390,8 +1390,8 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
     obtain ⟨p₀, rfl⟩ := (tr_bij hWp cC em hBW hk).2 p
     let σR : C →ₐ[FractionRing R] C := ⟨(σ : C →+* C), fun t => σ.commutes (fracMap iφ t)⟩
     obtain ⟨ρ, hρ⟩ : ∃ ρ : Kb R →ₐ[FractionRing R] Kb R, em.toRingHom.comp ρ.toRingHom = (σR.comp em).toRingHom := by
-      letI : Algebra (Kb R) C := em.toRingHom.toAlgebra
-      haveI : IsScalarTower (FractionRing R) (Kb R) C := IsScalarTower.of_algebraMap_eq fun x => (em.commutes x).symm
+      let : Algebra (Kb R) C := em.toRingHom.toAlgebra
+      have : IsScalarTower (FractionRing R) (Kb R) C := IsScalarTower.of_algebraMap_eq fun x => (em.commutes x).symm
       exact ⟨(σR.comp em).restrictNormal (Kb R), RingHom.ext fun x => (σR.comp em).restrictNormal_commutes (Kb R) x⟩
     obtain ⟨p₀ρ, hρp⟩ := exists_ext hB ρ p₀
     obtain ⟨p₁, t₁, t₂, t₃⟩ := (lies_iff hWp cC em hBW p₀ _).2 rfl
@@ -1525,8 +1525,8 @@ theorem lab_indep_level {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} {F :
     (h₁ : QkExt τ₁.toRingHom p r) (h₂ : QkExt τ₂.toRingHom q r) :
     spMap τ₁.toRingHom ≫ (lab k p).left = spMap τ₂.toRingHom ≫ (lab k q).left := by
   obtain ⟨σ, hσ⟩ : ∃ σ : Kb R →ₐ[FractionRing R] Kb R, τ₂.toRingHom.comp σ.toRingHom = τ₁.toRingHom := by
-    letI : Algebra (Kb R) F := τ₂.toRingHom.toAlgebra
-    haveI : IsScalarTower (FractionRing R) (Kb R) F := IsScalarTower.of_algebraMap_eq fun x => (τ₂.commutes x).symm
+    let : Algebra (Kb R) F := τ₂.toRingHom.toAlgebra
+    have : IsScalarTower (FractionRing R) (Kb R) F := IsScalarTower.of_algebraMap_eq fun x => (τ₂.commutes x).symm
     exact ⟨τ₁.restrictNormal (Kb R), RingHom.ext fun x => τ₁.restrictNormal_commutes (Kb R) x⟩
   obtain ⟨q', hq'⟩ := exists_ext hB σ p
   obtain ⟨r', hr'⟩ := exists_ext hB τ₂ q'
@@ -1547,7 +1547,7 @@ theorem induces_of_one_embedding : ∀ (R : Type) [CommRing R] [IsDomain R] [IsL
   have hB' := D'.tau_bimult
   have hk : 1 ≤ n ^ j := Nat.one_le_pow _ _ hn.pos
   have bW : AdmBase W (maximalIdeal W) := ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
-  letI : Algebra (FractionRing R) (Kb W) := ((algebraMap (FractionRing W) (Kb W)).comp ga).toAlgebra
+  let : Algebra (FractionRing R) (Kb W) := ((algebraMap (FractionRing W) (Kb W)).comp ga).toAlgebra
   have cK : Compat φ (Kb W) := fun r => congrArg (algebraMap (FractionRing W) (Kb W)) (hga r)
   obtain ⟨e⟩ := nonempty_lift (FractionRing R) (Kb W)
 
@@ -1684,7 +1684,7 @@ noncomputable section
 namespace GlobalTheory.Mum.UCoverLab
 
 theorem jK_mono (R : Type) [CommRing R] [IsDomain R] : Mono (jK R) := by
-  haveI : Scheme.Spec.IsRightAdjoint := ΓSpec.adjunction.isRightAdjoint
+  have : Scheme.Spec.IsRightAdjoint := ΓSpec.adjunction.isRightAdjoint
   have : Mono (Scheme.Spec.map (CommRingCat.ofHom (algebraMap R (FractionRing R))).op) := inferInstance
   exact this
 
@@ -1694,7 +1694,7 @@ theorem gp_mono {R : Type} [CommRing R] [IsDomain R] (M : Modif R) : Mono M.gp :
 
 theorem mono_α {R : Type} [CommRing R] [IsDomain R] {M : Modif R} {X : Over M.S} [GrpObj X]
     {A : Over (Sp (FractionRing R))} [GrpObj A] {α : A.left ⟶ X.left} (h : IsGrpPullback A X M.gp α) : Mono α := by
-  haveI := gp_mono M
+  have := gp_mono M
   refine ⟨fun u v huv => h.1.hom_ext huv ?_⟩
   apply (cancel_mono M.gp).1
   rw [Category.assoc, Category.assoc, ← h.1.w, ← Category.assoc, huv, Category.assoc]
@@ -1721,7 +1721,7 @@ theorem GlobalTheory.Mum.UCover.labCover : ∀ (R : Type) [CommRing R] [IsDomain
             trait := ?_ }⟩
   intro W _ _ _ hW φ ξ hφ hloc hξ
   obtain ⟨W', _, _, _, io, G', _, _, β, D', A', U', hW', hio, hfin, hcart, hlb⟩ := C.trait W hW φ ξ hφ hξ
-  haveI : IsLocalHom io := hfin.to_isIntegral.isLocalHom hio
+  have : IsLocalHom io := hfin.to_isIntegral.isLocalHom hio
   have hsemi : IsSemiAbelian G' := semiAbelian_of_pull hcart C.semi
   have hγ : IsGrpPullback A'.A G' (jK W') (U'.gen.inv.left ≫ pullback.fst G'.hom (jK W')) :=
     GlobalTheory.ThetaBaseChange.grp_generic U'.toUnifPre
@@ -1756,7 +1756,7 @@ theorem GlobalTheory.Mum.UCover.labCover : ∀ (R : Type) [CommRing R] [IsDomain
     hio, hfin, hcart, hlb, ?_⟩
   intro F _ _ _ _ em hF j p p₁ p' x' h₁ h₂ h₃ h₄
   refine hind j F em hF p p₁ p' x' h₁ h₂ h₃ ?_
-  haveI := mono_α C.α_cart
+  have := mono_α C.α_cart
   rw [← cancel_mono C.α, Category.assoc, ha]
   simpa only [Category.assoc] using h₄
 end -- clump:auto

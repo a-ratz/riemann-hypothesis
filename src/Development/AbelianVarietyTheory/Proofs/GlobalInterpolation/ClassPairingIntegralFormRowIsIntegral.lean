@@ -60,7 +60,7 @@ variable {E K ι : Type} [Field E] [NumberField E] [StarRing E] [Field K] [Numbe
 
 theorem petersson_single_left (g w : Q.S'.Cl → GlobalTheory.Mem.Col2.Fr emb σ (R.N R.m - 1) → ℂ) (c : Q.S'.Cl) [DecidableEq Q.S'.Cl] :
     Q.ipP emb σ hQ (fun c' => if c' = c then g c' else 0) w = Q.wt c * ipVal emb σ Q.sgT (g c) (w c) := by
-  letI := Q.clFin hQ
+  let := Q.clFin hQ
   simp only [PerIn.ipP, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
   refine (Finset.sum_eq_single c (fun b _ hb => ?_) (fun h => absurd (Finset.mem_univ c) h)).trans ?_
   · simp [hb]
@@ -68,7 +68,7 @@ theorem petersson_single_left (g w : Q.S'.Cl → GlobalTheory.Mem.Col2.Fr emb σ
 
 theorem petersson_single_right (g w : Q.S'.Cl → GlobalTheory.Mem.Col2.Fr emb σ (R.N R.m - 1) → ℂ) (c : Q.S'.Cl) [DecidableEq Q.S'.Cl] :
     Q.ipP emb σ hQ g (fun c' => if c' = c then w c' else 0) = Q.wt c * ipVal emb σ Q.sgT (g c) (w c) := by
-  letI := Q.clFin hQ
+  let := Q.clFin hQ
   simp only [PerIn.ipP, LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
   refine (Finset.sum_eq_single c (fun b _ hb => ?_) (fun h => absurd (Finset.mem_univ c) h)).trans ?_
   · simp [hb]
@@ -79,7 +79,7 @@ theorem period_single (hI : I.Ok) (hc : ι → HCParam R) (G : Q.Mt emb σ)
     (Q.per emb σ hI hQ hc).period (fun c' => if c' = c then w c' else 0) G =
       Q.wt c * pairB Q.sgT (polOf (Gr emb σ (R.N R.m - 1)) (shiftOf Q.sgT) (fr0 emb σ (R.N R.m - 1)) (w c))
         (Q.rd emb σ G c) := by
-  letI := Q.clFin hQ
+  let := Q.clFin hQ
   simp only [LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul]
   refine (Finset.sum_eq_single c (fun b _ hb => ?_) (fun h => absurd (Finset.mem_univ c) h)).trans ?_
   · simp [hb]
@@ -91,7 +91,7 @@ theorem pair_integral : ∀ {E K ι : Type} [Field E] [NumberField E] [StarRing 
   intro E K ι _ _ _ _ _ _ _ emb σ R I Q hI hQ hc hF G g hP c _ y hy hG x hx
   have hfin := hQ.step.fin_stab c.1 (Q.S'.rep c)
   have hne : ((Nat.card (Q.S'.Stab c) : ℕ) : ℂ) ≠ 0 := by
-    haveI := hfin
+    have := hfin
     exact_mod_cast Nat.card_pos.ne'
   have hint := ((GlobalTheory.PeriodClassSum.pairBDual E K ι _ emb Q.sgT _ (hQ.step.lsh_full_lat c.1 (Q.S'.rep c)) (x.1 c)).1.1
     (hx c)) y hy

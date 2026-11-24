@@ -300,7 +300,7 @@ theorem range_subset_abLocus_of_levelTrait : ∀ (g n : ℕ) (F : SFam g n (zeta
     isAbelianScheme_pullback_obj (τ ≫ q) _ (AbelianSchemeGerms.isAbelianScheme_powObj F.univ.A F.univ.ab 7)
   have hz : LocallyOfFiniteType (M.s ≫ spMap (algebraMap ℤ o)) := by
     have := M.lft
-    haveI := ArithBase.ft (o := o) (Ω := Ω)
+    have := ArithBase.ft (o := o) (Ω := Ω)
     have : LocallyOfFiniteType (spMap (algebraMap ℤ o)) :=
       (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).2 (RingHom.finiteType_algebraMap.2 inferInstance)
     infer_instance
@@ -354,11 +354,11 @@ namespace GlobalTheory.ProjModelSurj
 theorem surjective_of_isProjOver (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (X M : RatModel o Ω) (f : M.Z ⟶ X.Z)
     (hf : X.IsHom M (AlgHom.id o Ω) f) (hM : IsProjOver M.s) : Function.Surjective f := by
   obtain ⟨N, i, hi, hs⟩ := hM
-  haveI : IsProper (PSpace.str o N) := isProper_str o N
-  haveI : IsProper M.s := hs ▸ inferInstance
-  haveI : IsSeparated X.s := X.sep
-  haveI : IsProper (f ≫ X.s) := by rw [hf.inducedModelMorphism_comp_structureMap]; infer_instance
-  haveI : IsProper f := IsProper.of_comp f X.s
+  have : IsProper (PSpace.str o N) := isProper_str o N
+  have : IsProper M.s := hs ▸ inferInstance
+  have : IsSeparated X.s := X.sep
+  have : IsProper (f ≫ X.s) := by rw [hf.inducedModelMorphism_comp_structureMap]; infer_instance
+  have : IsProper f := IsProper.of_comp f X.s
   have hcl : IsClosed (Set.range f) := f.isClosedMap.isClosed_range
   have hgen : genericPoint X.Z ∈ Set.range f := by
     have w : Sp Ω := IsLocalRing.closedPoint Ω

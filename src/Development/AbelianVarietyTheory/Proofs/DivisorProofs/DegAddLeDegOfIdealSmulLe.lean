@@ -112,7 +112,7 @@ theorem deg_add_le_deg_of_ideal_smul_le : ∀ (K V : Type) [Field K] [NumberFiel
     simp [deg, h1, hrk]
   obtain ⟨⟨n, ⟨b, X⟩, hG⟩⟩ := hN
   obtain ⟨⟨n', ⟨b', X'⟩, hG'⟩⟩ := hN'
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   have hI : ((𝔞 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)) ≠ 0 := FractionalIdeal.coeIdeal_ne_zero.2 h𝔞
   have hsm : Formalism.HermitianLatticesTheory.idealSmul (((𝔞 : FractionalIdeal (nonZeroDivisors (𝓞 K)) K)) : Submodule (𝓞 K) K)
       (L.map (φ.restrictScalars (𝓞 K))) ≤ L' := by

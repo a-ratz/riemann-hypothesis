@@ -126,11 +126,11 @@ theorem hensel_main (μ : Measure V) (ν : Measure X) [μ.IsAddHaarMeasure] [ν.
     rw [hS0]
   | succ m ih =>
 
-    haveI : DiscreteTopology (X ⧸ H (m + 1)) := QuotientAddGroup.discreteTopology (hHo (m + 1))
+    have : DiscreteTopology (X ⧸ H (m + 1)) := QuotientAddGroup.discreteTopology (hHo (m + 1))
     set C : Set (X ⧸ H (m + 1)) := (QuotientAddGroup.mk : X → X ⧸ H (m + 1)) '' (H m : Set X)
       with hC
     have hCf : C.Finite := ((hHc m).image QuotientAddGroup.continuous_mk).finite_of_discrete
-    haveI : Fintype C := hCf.fintype
+    have : Fintype C := hCf.fintype
     have hxc : ∀ c : C, ∃ u ∈ H m, (u : X ⧸ H (m + 1)) = c := fun c => c.2
     choose x hxm hxq using hxc
     have htc : ∀ c : C, ∃ W ∈ Λ m, D W = x c := by

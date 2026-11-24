@@ -569,7 +569,7 @@ theorem exists_mReal_of_realises : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (
   have hck : ∀ k, c k = ∑ i, U i k • (b.baseChange (WCb l)) i := fun k => ((b.baseChange (WCb l)).sum_repr (c k)).symm
   have hcj : ∀ k, c k = j (M.tr bk.ι (e k)) := fun k => by rw [hc, he']
   refine ⟨b, U, ⟨?_, ?_, ?_⟩, fun k => ?_⟩
-  · letI := (b.baseChange (WCb l)).invertibleToMatrix c
+  · let := (b.baseChange (WCb l)).invertibleToMatrix c
     exact isUnit_of_invertible _
   · have hu : IsUnit (inclW l (bk.ev bk.E)) := isUnit_inclW_of_span bk.span_ev
     let t : ↥(ainfObj K).I := ⟨bk.ι.f bk.E, bk.ι.f_I _ (Ideal.mem_span_singleton_self _)⟩
@@ -627,7 +627,7 @@ theorem exists_mReal_of_realises : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (
 
     simp only [map_smul, map_sum, Finsupp.smul_apply, Finsupp.coe_finsetSum, Finset.sum_apply,
     repr_map_baseChange, LinearMap.toMatrix_id, Matrix.one_apply, smul_eq_mul, apply_ite (algebraMap ℤ_[l] (WCb l)),
-    map_one, map_zero, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+    map_one, map_zero, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
     AlgHom.toLinearMap_apply] at h
     simp only [Matrix.smul_apply, Matrix.map_apply, Matrix.mul_apply, smul_eq_mul, hev, U,
       Module.Basis.toMatrix_apply]
@@ -744,7 +744,7 @@ theorem frob_matrix_general {R Mo : Type} [CommRing R] [IsDomain R] [AddCommGrou
     (hu : SemiBC u) {d : ℕ} (e : Module.Basis (Fin d) R Mo) :
     ∃ (a b : ℕ) (A A' : Matrix (Fin d) (Fin d) R), A * A' = x ^ b • (1 : Matrix (Fin d) (Fin d) R) ∧
       ∀ j, IsFrac x (u (e j)) (∑ i, A i j • e i) a := by
-  haveI : Module.Free R Mo := Module.Free.of_basis e
+  have : Module.Free R Mo := Module.Free.of_basis e
   have h1 : ∀ j, ∃ m k, IsFrac x (u (e j)) m k := fun j => exists_isFrac _ _
   choose m k hmk using h1
   let a := ∑ j, k j
@@ -794,7 +794,7 @@ end GlobalTheory.BSP.FrobMat
 
 theorem GlobalTheory.BSP.frob_matrix_bk : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (d : ℕ) (M : FCrys l ↥(OL K)) (e : Module.Basis (Fin d) bk.prism.A (M.M bk.prism)), ∃ (a b : ℕ) (A A' : Matrix (Fin d) (Fin d) bk.S), A * A' = bk.E ^ b • (1 : Matrix (Fin d) (Fin d) bk.S) ∧ ∀ j : Fin d, IsFrac (bk.toP bk.E) (M.Φ bk.prism ⟨bk.toP bk.E, Ideal.mem_span_singleton_self _⟩ (e j)) (∑ i, bk.toP (A i j) • e i) a := by
   intro l _ K bk d M e
-  haveI : IsDomain bk.prism.A := inferInstanceAs (IsDomain bk.S)
+  have : IsDomain bk.prism.A := inferInstanceAs (IsDomain bk.S)
   exact GlobalTheory.BSP.FrobMat.frob_matrix_general (R := bk.prism.A) bk.prism.D.φ (bk.toP bk.E) bk.E_ne_zero
     (M.Φ bk.prism ⟨bk.toP bk.E, Ideal.mem_span_singleton_self _⟩)
     (M.Φ_bc bk.prism ⟨bk.toP bk.E, Ideal.mem_span_singleton_self _⟩) e

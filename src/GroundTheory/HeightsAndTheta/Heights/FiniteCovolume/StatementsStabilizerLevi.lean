@@ -114,7 +114,7 @@ theorem isClosed_unipRadical (h : HermitianForm F E W) (v : Basis ι E W) (x₀ 
     IsClosed (unipRadical h v x₀ : Set (archUnitary h v)) := by
   have hc : ∀ w, Continuous fun g : archUnitary h v =>
       ((g : InfinitePlace E → GL ι ℂ) w : Matrix ι ι ℂ) :=
-    fun w => Units.continuous_val.comp ((continuous_apply w).comp continuous_subtype_val)
+    fun w => Units.continuous_val.comp ((continuous_apply w).comp continuous_subtypeVal)
   have : (unipRadical h v x₀ : Set (archUnitary h v)) = ⋂ w, ({g : archUnitary h v |
       ((g : InfinitePlace E → GL ι ℂ) w : Matrix ι ι ℂ) *ᵥ vecAt v x₀ w = vecAt v x₀ w} ∩
       ⋂ z ∈ {z : ι → ℂ | star (vecAt v x₀ w) ⬝ᵥ (gramAt h v w *ᵥ z) = 0},
@@ -128,7 +128,7 @@ theorem isClosed_unipRadical (h : HermitianForm F E W) (v : Basis ι E W) (x₀ 
   rw [this]
   refine isClosed_iInter fun w => (isClosed_eq ((hc w).matrix_mulVec continuous_const)
     continuous_const).inter (isClosed_biInter fun z _ => ?_)
-  exact (Submodule.closed_of_finiteDimensional _).preimage
+  exact (Submodule.isClosed_of_finiteDimensional _).preimage
     (((hc w).matrix_mulVec continuous_const).sub continuous_const)
 
 instance locallyCompactSpace_unipRadical (h : HermitianForm F E W) (v : Basis ι E W) (x₀ : W) :

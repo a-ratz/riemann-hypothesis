@@ -77,7 +77,7 @@ theorem GlobalTheory.AnVal.genRd_const : ∀ (S : Scheme.{0}) (A : Over S) [GrpO
     (fun k => (LinearMap.toContinuousLinearMap (Λ k)).differentiable) hqe
   have hprod : ∀ gm z, ∏ k, Φ.fac (Λ k gm) (Λ k z) ^ ε k = ∏ k, Φ.χ (Λ k gm) ^ ε k := by
     intro gm z
-    simp only [AnFr.fac, mul_zpow, Finset.prod_mul_distrib, ← Complex.exp_int_mul, ← Complex.exp_sum]
+    simp only [AnFr.fac, mul_zpow, Finset.prod_mul_distrib, ← Complex.exp_intCast_mul, ← Complex.exp_sum]
     have h : ∑ k, (ε k : ℂ) * (Real.pi * hermForm Φ.Hm (Λ k z) (Λ k gm) +
         Real.pi / 2 * hermForm Φ.Hm (Λ k gm) (Λ k gm)) =
         Real.pi * ∑ k, (ε k : ℂ) * hermForm Φ.Hm (Λ k z) (Λ k gm) +

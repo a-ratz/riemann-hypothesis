@@ -64,7 +64,7 @@ theorem inv_congr {n : Type*} [Fintype n] [DecidableEq n] (A B : Matrix n n k)
   by_contra h
   push_neg at h
   obtain ⟨i₁, j₁, h₁⟩ := h
-  haveI : Nonempty (n × n) := ⟨(i₁, j₁)⟩
+  have : Nonempty (n × n) := ⟨(i₁, j₁)⟩
   obtain ⟨⟨i₀, j₀⟩, hm⟩ := Finite.exists_max
     (fun p : n × n => valuation k (B p.1 p.2 - (1 : Matrix n n k) p.1 p.2))
   have hm' : ∀ l j, valuation k (B l j - (1 : Matrix n n k) l j) ≤
@@ -72,7 +72,7 @@ theorem inv_congr {n : Type*} [Fintype n] [DecidableEq n] (A B : Matrix n n k)
   have hM : valuation k t < valuation k (B i₀ j₀ - (1 : Matrix n n k) i₀ j₀) :=
     h₁.trans_le (hm' i₁ j₁)
   have hM0 : 0 < valuation k (B i₀ j₀ - (1 : Matrix n n k) i₀ j₀) :=
-    lt_of_le_of_lt zero_le' hM
+    lt_of_le_of_lt zero_le hM
   have hmat : (A - 1) * (B - 1) = -(A - 1) - (B - 1) := by
     simp only [sub_mul, mul_sub, hAB, one_mul, mul_one]
     abel
@@ -142,7 +142,7 @@ theorem isOpen_congGL (n : Type*) [Fintype n] [DecidableEq n] {t : k} (ht : t �
 
 theorem isCompact_congGL (n : Type*) [Fintype n] [DecidableEq n] {t : k} (ht : t ≠ 0)
     (ht1 : valuation k t < 1) : IsCompact (congGL n t) := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   rw [Units.isEmbedding_embedProduct.isCompact_iff]
   have hc : IsCompact ((congSet n t ×ˢ (MulOpposite.op '' congSet n t)) ∩
       {p : Matrix n n k × (Matrix n n k)ᵐᵒᵖ |

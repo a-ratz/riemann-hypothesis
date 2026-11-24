@@ -60,7 +60,7 @@ private theorem val_ae {K : Type} [Field K] [NumberField K] (a : K) (ha : a ≠ 
     have : v.valuation K a⁻¹ ≤ 1 := not_lt.1 hv2
     rwa [map_inv₀] at this
   have h0 : v.valuation K a ≠ 0 := (Valuation.ne_zero_iff _).2 ha
-  exact le_antisymm n1 ((inv_le_one₀ (zero_lt_iff.2 h0)).1 n2)
+  exact le_antisymm n1 ((inv_le_one₀ (pos_iff_ne_zero.2 h0)).1 n2)
 
 private theorem good_of_goodAt {K : Type} [Field K] [NumberField K] (v : P K)
     (h : UpperTheory.V.Af.Smo.GoodAt v (UpperTheory.V.Af.Smo.psiL v)) :
@@ -77,7 +77,7 @@ private theorem good_of_goodAt {K : Type} [Field K] [NumberField K] (v : P K)
     have hx0 : x ≠ 0 := by
       rintro rfl
       rw [map_zero] at hlt
-      exact not_lt_zero' hlt
+      exact not_lt_zero hlt
     have hv0 : Valued.v x ≠ 0 := (Valuation.ne_zero_iff _).2 hx0
     have hxe : WithZero.exp (1 : ℤ) ≤ Valued.v x := by
       rw [← WithZero.exp_log hv0]
@@ -93,7 +93,7 @@ private theorem good_of_goodAt {K : Type} [Field K] [NumberField K] (v : P K)
     have hc : IsInt (y * x⁻¹) := by
       change Valued.v (y * x⁻¹) ≤ 1
       rw [map_mul, map_inv₀]
-      exact mul_inv_le_one_of_le₀ (hye.trans hxe) zero_le'
+      exact mul_inv_le_one_of_le₀ (hye.trans hxe) zero_le
     have := hx _ hc
     rw [mul_assoc, inv_mul_cancel₀ hx0, mul_one] at this
     exact hy1 ((psi_sg v y).symm.trans this)

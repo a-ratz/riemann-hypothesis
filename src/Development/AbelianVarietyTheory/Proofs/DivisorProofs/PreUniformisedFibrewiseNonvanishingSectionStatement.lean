@@ -181,7 +181,7 @@ theorem isUnit_gc {K : Type} [Field K] {Z : Scheme.{0}} (q : Z ⟶ Spec (CommRin
     IsUnit (gc q z c) := by
   have h1 : gc q z (1 : K) = 1 := by
     unfold gc gs
-    exact (dif_pos trivial).trans ((congrArg _ ((congrArg _ (map_one _)).trans (map_one _))).trans (map_one _))
+    exact (dite_eq_left trivial).trans ((congrArg _ ((congrArg _ (map_one _)).trans (map_one _))).trans (map_one _))
   exact IsUnit.of_mul_eq_one (gc q z c⁻¹) (by rw [← gc_mul, mul_inv_cancel₀ hc, h1])
 
 theorem exists_ne_zero {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {D : DegPre R}
@@ -631,7 +631,7 @@ theorem integral_of_sqPow_bdd (R : Type) [CommRing R] [IsDomain R] [IsNoetherian
     rw [SetLike.mem_coe, this]
     exact Submodule.smul_mem _ s (Submodule.mem_span_singleton_self _)
   have hfg : (Subalgebra.toSubmodule S).FG := by
-    haveI := isNoetherian_of_fg_of_noetherian _ (Submodule.fg_span_singleton (R := R) ((c ^ 4)⁻¹ : FractionRing R))
+    have := isNoetherian_of_fg_of_noetherian _ (Submodule.fg_span_singleton (R := R) ((c ^ 4)⁻¹ : FractionRing R))
     have h1 : ((Subalgebra.toSubmodule S).comap (Submodule.span R {(c ^ 4)⁻¹}).subtype).FG := IsNoetherian.noetherian _
     have h2 := h1.map (Submodule.span R {(c ^ 4)⁻¹}).subtype
     rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hle] at h2
@@ -645,8 +645,8 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
   obtain ⟨⟨h₁, h₂, -, -, -⟩, -⟩ := GlobalTheory.lawsAndExpansions
   have hE := GlobalTheory.LN.ega_of_laws h₁ h₂
   have hR : AdmBase R (maximalIdeal R) := hB.1
-  haveI : IsNoetherianRing R := hR.1
-  haveI : IsIntegrallyClosed R := hR.2.2.1
+  have : IsNoetherianRing R := hR.1
+  have : IsIntegrallyClosed R := hR.2.2.1
   have hmR : maximalIdeal R ≠ ⊤ := (maximalIdeal.isMaximal R).ne_top
   have := hV.1
   have hV' : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hV.2.1⟩
@@ -712,13 +712,13 @@ theorem exists_coefData_of_ne_zero : ∀ (R : Type) [CommRing R] [IsDomain R] [I
   refine ⟨σ, f, g, q, hq0, hf, fun α => ?_, ?_, fun α hα => ⟨c α, hcm α hα, H₁ α, ?_⟩⟩
   · by_cases h0 : α = 0
     · subst h0
-      simp only [g, dif_pos rfl]
+      simp only [g, dite_eq_left rfl]
       exact GlobalTheory.T.secIsMul_of_baseMultiple_thetaSection R D th (f 0) q hq
-    · simp only [g, dif_neg h0]
+    · simp only [g, dite_eq_right h0]
       exact GlobalTheory.T.secIsMul_of_translatedThetaCoefficient_proportional R D α (ga α) th (f α) (G₁ α) (b α) (c α) q (hb α) (hG₁ α) (hbc α)
-  · simp only [g, dif_pos rfl]
+  · simp only [g, dite_eq_left rfl]
     exact hth
-  · simp only [g, dif_neg hα]
+  · simp only [g, dite_eq_right hα]
     exact GlobalTheory.T.secIsMul_of_translatedThetaCoefficient_proportional R D α (ga α) th (G₁ α) (H₁ α) (c α) 1 (c α) (hG₁ α) (hH₁ α) (_root_.mul_one _).symm
 
 end GlobalTheory.Mum
@@ -975,7 +975,7 @@ namespace GlobalTheory.Mum
 
 theorem exists_secIsMul_of_germ_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] (X : Scheme.{0}) (p : X ⟶ Spec (CommRingCat.of R)), Flat p → ∀ (L : LB X) (s : LB.Sec L) (q : R), q ≠ 0 → (∀ (x : X) j, x ∈ L.U j → ∃ t, gs (𝟙 X) x (L.U j) (s.f j) = cst p x q * t) → ∃ t : LB.Sec L, ReciprocityTheory.ChartRestriction.G.DVR.SecIsMul p q s t := by
   intro R _ _ X p hp L s q hq h
-  haveI : Flat (X := X) (Y := Sp R) p := hp
+  have : Flat (X := X) (Y := Sp R) p := hp
   have loc : ∀ j, ∃ g : Γ(X, L.U j), s.f j = constFn p (L.U j) q * g := fun j =>
     exists_div p hq (L.U j) (s.f j) (fun x hx => h x j hx)
   choose t ht using loc
@@ -1031,8 +1031,8 @@ theorem mem_span_of_forall_pow {O : Type} [CommRing O] [IsNoetherianRing O] [IsL
     (h : ∀ n : ℕ, s ∈ Ideal.span {a} ⊔ maximalIdeal O ^ (n + 1)) : s ∈ Ideal.span {a} := by
   by_cases ht : Ideal.span {a} = ⊤
   · rw [ht]; trivial
-  haveI : Nontrivial (O ⧸ Ideal.span {a}) := Ideal.Quotient.nontrivial_iff.2 ht
-  haveI : IsLocalRing (O ⧸ Ideal.span {a}) :=
+  have : Nontrivial (O ⧸ Ideal.span {a}) := Ideal.Quotient.nontrivial_iff.2 ht
+  have : IsLocalRing (O ⧸ Ideal.span {a}) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
   have hl : IsLocalHom (Ideal.Quotient.mk (Ideal.span {a})) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
   rw [← Ideal.Quotient.eq_zero_iff_mem, ← Ideal.mem_bot, ← Ideal.iInf_pow_eq_bot_of_isLocalRing
@@ -1053,8 +1053,8 @@ theorem ker_stalkMap_le {X H : Scheme.{0}} (j : H ⟶ X) [IsClosedImmersion j] (
     (hℓ : ℓ ≫ j = Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I)) ≫ X.fromSpecStalk (j z)) :
     RingHom.ker (j.stalkMap z).hom ≤ I := by
   intro a ha
-  haveI : Nontrivial (X.presheaf.stalk (j z) ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
-  haveI : IsLocalRing (X.presheaf.stalk (j z) ⧸ I) :=
+  have : Nontrivial (X.presheaf.stalk (j z) ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
+  have : IsLocalRing (X.presheaf.stalk (j z) ⧸ I) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   have hl : IsLocalHom (Ideal.Quotient.mk I) := IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
   have e : ℓ (IsLocalRing.closedPoint _) = z := by
@@ -1109,8 +1109,8 @@ theorem cst_stalkMap' {V : Type} [CommRing V] {X Z : Scheme.{0}} (r : Z ⟶ X) (
 
 theorem germ_dvd_of_expT_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegPre R) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (U : GlobalTheory.UU.PreU (maximalIdeal R) D A G) (σ : U.SecGT (𝟙_ _) 1) (f g : ∀ α, GlobalTheory.UU.SecBT D (𝟙_ _) 1 α) (q : R), U.ExpT (𝟙_ _) 1 σ f → (∀ α, ReciprocityTheory.ChartRestriction.G.DVR.SecIsMul (𝟙_ _ ⊗ D.P.A).hom q (f α) (g α)) → ∀ (x : (𝟙_ (Over (Sp R)) ⊗ G).left), (𝟙_ (Over (Sp R)) ⊗ G).hom x = closedPoint R → ∀ (j : Fin 1 → U.P.L.L.ι), x ∈ LB.wchart U.P.L.L (fun _ : Fin 1 => (snd (𝟙_ (Over (Sp R))) G).left) j → ∃ t, gs (𝟙 _) x (LB.wchart U.P.L.L (fun _ : Fin 1 => (snd (𝟙_ (Over (Sp R))) G).left) j) (σ.f j) = cst (𝟙_ (Over (Sp R)) ⊗ G).hom x q * t := by
   intro R _ _ _ hR D A G _ _ U σ f g q hE hM x hx j hxj
-  haveI : IsNoetherianRing R := hR.1.1
-  haveI : Smooth G.hom := U.semi.smooth
+  have : IsNoetherianRing R := hR.1.1
+  have : Smooth G.hom := U.semi.smooth
   have lam : (snd (𝟙_ (Over (Sp R))) G).left ≫ (λ_ G).inv.left = 𝟙 _ := by
     rw [← Over.comp_left, ← leftUnitor_hom, Iso.hom_inv_id, Over.id_left]
   have lam' : (λ_ G).inv.left ≫ (snd (𝟙_ (Over (Sp R))) G).left = 𝟙 _ := by
@@ -1130,9 +1130,9 @@ theorem germ_dvd_of_expT_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
   refine mem_span_of_forall_pow _ _ fun e => ?_
   have hxg : G.hom ((snd (𝟙_ (Over (Sp R))) G).left x) = closedPoint R := by
     rw [← Scheme.Hom.comp_apply, hpG]; exact hx
-  haveI : Nontrivial (R ⧸ maximalIdeal R ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2
+  have : Nontrivial (R ⧸ maximalIdeal R ^ (e + 1)) := Ideal.Quotient.nontrivial_iff.2
     (ne_top_of_le_ne_top (maximalIdeal.isMaximal R).ne_top (Ideal.pow_le_self (Nat.succ_ne_zero e)))
-  haveI : IsLocalRing (R ⧸ maximalIdeal R ^ (e + 1)) :=
+  have : IsLocalRing (R ⧸ maximalIdeal R ^ (e + 1)) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
   have hl : IsLocalHom (Ideal.Quotient.mk (maximalIdeal R ^ (e + 1))) :=
     IsLocalHom.of_surjective _ Ideal.Quotient.mk_surjective
@@ -1149,7 +1149,7 @@ theorem germ_dvd_of_expT_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
     IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective
 
   haveI : IsIso (λ_ G).inv.left := ⟨⟨(snd (𝟙_ (Over (Sp R))) G).left, lam', lam⟩⟩
-  haveI : IsClosedImmersion (pullback.fst G.hom (thick R (maximalIdeal R) e)) := inferInstance
+  have : IsClosedImmersion (pullback.fst G.hom (thick R (maximalIdeal R) e)) := inferInstance
   haveI : IsClosedImmersion (pullback.fst G.hom (thick R (maximalIdeal R) e) ≫ (λ_ G).inv.left) := inferInstance
 
   have hmap : Ideal.map (cstHom (𝟙_ (Over (Sp R)) ⊗ G).hom
@@ -1256,7 +1256,7 @@ namespace GlobalTheory.Mum
 
 theorem secIsMul_cancel : ∀ (R : Type) [CommRing R] [IsDomain R] (X : Scheme.{0}) (p : X ⟶ Spec (CommRingCat.of R)), Flat p → ∀ (L : LB X) (q : R), q ≠ 0 → ∀ s t t' : LB.Sec L, ReciprocityTheory.ChartRestriction.G.DVR.SecIsMul p q s t → ReciprocityTheory.ChartRestriction.G.DVR.SecIsMul p q s t' → t = t' := by
   intro R _ _ X p hp L q hq s t t' h h'
-  haveI := hp
+  have := hp
   have key : ∀ j, t.f j = t'.f j := by
     intro j
     refine fn_ext fun x hx => ?_
@@ -1574,11 +1574,11 @@ theorem exists_expT_of_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   have hB' : AdmBase R (maximalIdeal R) ∧ CharZero R := hB
   have h1 : IsNoetherianRing R ∧ IsDomain R ∧ IsIntegrallyClosed R ∧ IsAdicComplete (maximalIdeal R) R := hB'.1
   obtain ⟨hN, -, hIC, hC⟩ := h1
-  haveI := hN
-  haveI := hIC
+  have := hN
+  have := hIC
   have hs := U.semi
-  haveI := hs.smooth
-  haveI := hs.geomConnected
+  have := hs.smooth
+  have := hs.geomConnected
   haveI : IsIso (λ_ G).hom.left := inferInstanceAs (IsIso ((Over.forget _).mapIso (λ_ G)).hom)
   have hSm : Smooth (𝟙_ (Over (Sp R)) ⊗ G).hom := by
     rw [← Over.w (λ_ G).hom]
@@ -1607,7 +1607,7 @@ theorem exists_expT_of_dvd : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   have hff' : f' = f := GlobalTheory.CompleteBaseExpansion.expT_unique hjac U 1 σ f' f hσf' hσ
   have hflatD : Flat (𝟙_ (Over (Sp R)) ⊗ D.P.A).hom := by
     haveI : IsIso (λ_ D.P.A).hom.left := inferInstanceAs (IsIso ((Over.forget _).mapIso (λ_ D.P.A)).hom)
-    haveI : Smooth D.P.A.hom := D.P.isAb.smooth
+    have : Smooth D.P.A.hom := D.P.isAb.smooth
     rw [← Over.w (λ_ D.P.A).hom]
     infer_instance
   have hhg : h = g := by

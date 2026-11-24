@@ -57,7 +57,7 @@ theorem card_strictMono_le (a d : ℕ) [Fintype {s : Fin a → Fin d // StrictMo
   have h : Function.Injective
       (fun s : {s : Fin a → Fin d // StrictMono s} => (Set.range s.1 : Set (Fin d))) := by
     intro s t hst
-    exact Subtype.ext ((s.2.range_inj t.2).1 hst)
+    exact Subtype.ext ((s.2.range_inj_of_wellFoundedLT t.2).1 hst)
   have := Fintype.card_le_of_injective _ h
   simpa using this
 
@@ -82,7 +82,7 @@ theorem prod_monomial {σ ι : Type} (s : Finset ι) (α : ι → σ →₀ ℕ)
   | empty => simp
   | insert i s hi ih =>
     rw [Finset.prod_insert hi, Finset.prod_insert hi, Finset.sum_insert hi, ih,
-      MvPolynomial.monomial_mul]
+      MvPolynomial.monomial_mul_monomial]
 
 noncomputable def expo (D : D7) {a d : ℕ} {n : D.what₂.Tau → ℕ} (T : Tup D a d n)
     (p : ∀ τ, Fin (n τ) → Equiv.Perm (Fin a)) : Mono D a d :=
@@ -120,13 +120,13 @@ theorem expo_le (D : D7) {a d : ℕ} {n : D.what₂.Tau → ℕ} (T : Tup D a d 
           rw [Finset.sum_eq_single c]
           · rw [Finsupp.single_apply]; split_ifs <;> simp
           · intro i _ hi
-            rw [Finsupp.single_apply, if_neg]
+            rw [Finsupp.single_apply, ite_eq_right]
             simp [hi]
           · simp
       _ = n τ0 := by simp
   · intro τ _ hτ
     refine Finset.sum_eq_zero fun j _ => Finset.sum_eq_zero fun i _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     simp [hτ]
   · simp
 
@@ -144,7 +144,7 @@ theorem minor_bound : ∀ (D : D7) (a d : ℕ) (n : D.what₂.Tau → ℕ) (G : 
   constructor
   · simp only [Fintype.card_pi, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
     rw [pow_mul, ← Finset.prod_pow_eq_pow_sum]
-    exact Finset.prod_le_prod' fun τ _ => Nat.pow_le_pow_left (card_strictMono_le a d) _
+    exact Finset.prod_le_prod fun τ _ => Nat.pow_le_pow_left (card_strictMono_le a d) _
   · intro T
     obtain ⟨L, hL1, hL2⟩ := sum_coeff_monomial
       (fun α : Mono D a d => (α.prod fun _ n => (n.factorial : ℂ)) * taylor D G α)

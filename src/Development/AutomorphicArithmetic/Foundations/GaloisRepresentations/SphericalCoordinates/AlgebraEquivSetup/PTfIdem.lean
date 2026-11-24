@@ -150,7 +150,7 @@ private theorem finsum_cosets (K K₀ : Subgroup X) (hle : K₀ ≤ K) (hi : K�
     · rw [Set.indicator_of_notMem (fun h => hz ((hrange z).1 h)), h0 z hz]
   rw [hG, ← finsum_mem_def, finsum_mem_range hinj]
   have hfin : Finite (K ⧸ K₀.subgroupOf K) := Nat.finite_of_card_ne_zero (by exact hi)
-  haveI := Fintype.ofFinite (K ⧸ K₀.subgroupOf K)
+  have := Fintype.ofFinite (K ⧸ K₀.subgroupOf K)
   rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   congr 1
   rw [← Nat.card_eq_fintype_card]

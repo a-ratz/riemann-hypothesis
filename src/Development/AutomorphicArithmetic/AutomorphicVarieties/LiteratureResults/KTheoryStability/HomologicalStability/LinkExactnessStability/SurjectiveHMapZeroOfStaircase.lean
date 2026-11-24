@@ -129,7 +129,7 @@ theorem main : ∀ (k G : Type) [CommRing k] [Group G] (i : ℕ) (C : ℕ → Re
   have epi0 : ∀ (X Y : Rep.{0, 0, 0} k G) (f : X ⟶ Y), Function.Surjective f.hom →
       Function.Surjective (hMap f 0).hom := by
     intro X Y f hf
-    haveI : Epi f := (Rep.epi_iff_surjective f).mpr hf
+    have : Epi f := (Rep.epi_iff_surjective f).mpr hf
     exact (ModuleCat.epi_iff_surjective _).mp (groupHomology.epi_map_0_of_epi f)
   have liftSurj : ∀ p, p + 1 ≤ i →
       Function.Surjective (kernel.lift (d p) (d (p + 1)) (hd p)).hom := by

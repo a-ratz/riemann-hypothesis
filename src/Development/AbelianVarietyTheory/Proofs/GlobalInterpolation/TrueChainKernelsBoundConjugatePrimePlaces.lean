@@ -315,11 +315,11 @@ theorem finite_inDeg {ι : Type} [Fintype ι] (lam : ι → DomWeight a) (s' : �
   have h : (m.degree : ℤ) = ∑ τ, ∑ i : Fin a, ((lam τ).w i + s' τ) := by
     rw [Finsupp.degree_eq_sum, Fintype.sum_prod_type, Nat.cast_sum]
     exact Finset.sum_congr rfl fun τ _ => by rw [← hm τ, Fintype.sum_prod_type]
-  rw [Set.mem_setOf_eq, ← h, Int.toNat_natCast]
+  rw [Set.mem_ofPred_eq, ← h, Int.toNat_natCast]
 
 theorem val_le_one_iff {ι : X.K →+* ℂ_[p]} {w : HeightOneSpectrum (𝓞 X.K)} (h : Induces ι w) (x : X.K) :
     NormedField.valuation (ι x) ≤ 1 ↔ w.valuation X.K x ≤ 1 := by
-  rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
+  rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]
   exact ⟨GlobalTheory.DatumJets.Place.valuation_le_one_of_norm ι w h x, GlobalTheory.MomPlace.norm_le_one_of_valuation X.K p ι w h x⟩
 
 def ptMat (ι : X.K →+* ℂ_[p]) (un : X.Tau → ℂ_[p]) (x : HomE X.E a b) (τ : X.Tau) : Matrix (Fin a) (Fin b) ℂ_[p] :=
@@ -352,7 +352,7 @@ theorem admissible_adjointRationalPointPadicMatrix {ι : X.K →+* ℂ_[p]} {w :
         refine (mem_locP _ _ _).2 ⟨X.embO τ s, hs, Submodule.subset_span ⟨_, hsx, ?_⟩⟩
         exact bc_bcV_osmul (X.emb τ) s _
       have h2 : NormedField.valuation (un τ) ≤ 1 := by
-        rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnnorm, hun, NNReal.coe_one]
+        rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnNorm, hun, NNReal.coe_one]
       exact Submodule.smul_mem _ (⟨un τ, h2⟩ : (NormedField.valuation (K := ℂ_[p])).integer)
         (GlobalTheory.ExtLatMatrix.mem_extLat_of_mem_locP (val_le_one_iff h) _ _ h1)
     | zero =>
@@ -402,9 +402,9 @@ theorem jetOp_of_closure {ι : X.K →+* ℂ_[p]} {w : HeightOneSpectrum (𝓞 X
   let e := c.support.equivFin.symm
   refine ⟨c.support.card, fun i => c (e i), fun i => ptMat ι un (e i), fun i => ?_,
     fun i => admissible_adjointRationalPointPadicMatrix h hun (hS _ (hc1 (e i).2)), fun m hm => ?_⟩
-  · rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
+  · rw [NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]
     exact hc2 _
-  · rw [NormedField.valuation_apply, NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnnorm, coe_nnnorm]
+  · rw [NormedField.valuation_apply, NormedField.valuation_apply, ← NNReal.coe_le_coe, coe_nnNorm, coe_nnNorm]
     refine le_of_eq_of_le ?_ (hc3 m (by simpa using hm)).le
     congr 2
     rw [Finsupp.sum, ← Finset.sum_coe_sort c.support, ← e.sum_comp, Finset.mul_sum]
@@ -426,7 +426,7 @@ theorem unramOver {S : Set ℕ} (mu : Tup X.F X.E X.K S) {l : ℕ} (hl : l.Prime
   have h6 : ringChar (𝓞 X.F ⧸ v.asIdeal) ∣ l := by
     rw [← ringChar.spec, ← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     exact h5
-  haveI := v.isPrime
+  have := v.isPrime
   rcases (Nat.dvd_prime hl).1 h6 with h7 | h7
   · exact absurd h7 CharP.ringChar_ne_one
   · change ringChar (𝓞 X.F ⧸ v.asIdeal) ∈ S
@@ -466,7 +466,7 @@ theorem barStd : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments 
   classical
   have hX := hyp.ok.fields
   have hPr := hyp.ok.primes
-  haveI : Fact (Z.Pr.T u).Prime := ⟨hPr.T_prime u⟩
+  have : Fact (Z.Pr.T u).Prime := ⟨hPr.T_prime u⟩
   have hTw := hw.T_mem hX hPr
   have hsd : IsSdLat d.1.N := ⟨d.2.lat, d.2.uni⟩
   have hsd' : IsSdLat d'.1.N := ⟨d'.2.lat, d'.2.uni⟩
@@ -506,8 +506,8 @@ theorem barStd : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments 
     (by simpa only [map_one, one_mul] using hclo) y
     (localization_mono _ (Submodule.comap_mono (usage₁₁ _ _)) hy)
   have hfullLsh : Submodule.IsFullLattice Z.X.E d'.1.Lsh := by
-    letI := Formalism.L2.Ker.full_of_sd hsd'
-    letI := d'.2.Lsh_lattice
+    let := Formalism.L2.Ker.full_of_sd hsd'
+    let := d'.2.Lsh_lattice
     exact Submodule.IsFullLattice.of_le Z.X.E d'.2.N_le_Lsh
   rw [← GlobalTheory.KerT.localization_delAtr_eq_localization_nabAtr hP Z.X _ _ _ (hPr.T_prime u) hAl w hTw _ (by first | exact hfullLsh | exact hfullLsh.toIsLattice)] at hG
   have hT0 : (Z.Pr.T u : Z.X.K) ≠ 0 := Nat.cast_ne_zero.2 (hPr.T_prime u).ne_zero

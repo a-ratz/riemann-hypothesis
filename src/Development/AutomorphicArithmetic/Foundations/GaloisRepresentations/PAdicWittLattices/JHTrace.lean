@@ -199,16 +199,16 @@ open UpperTheory.Gal.G3.HeckeTraceSheaves in
 theorem UpperTheory.Gal.G3.jHTrace :
     (∀ (k k' : Type) [Field k] [Field k'] {X X' Y Y' : Scheme.{0}} (s : X ⟶ Sp k) (s' : X' ⟶ Sp k') (g : X' ⟶ X) (r : Y ⟶ Sp k) (r' : Y' ⟶ Sp k') (e : Y' ⟶ Y) (f : Y ⟶ X) (f' : Y' ⟶ X') [IsFinite f] [Etale f] [IsFinite f'] [Etale f'], IsPullback e f' f g → ∀ (U : X.Opens) (hU : IsAffineOpen U) (hU' : IsAffineOpen (g ⁻¹ᵁ U)) (hle : f' ⁻¹ᵁ (g ⁻¹ᵁ U) ≤ e ⁻¹ᵁ (f ⁻¹ᵁ U)) (b : Sec r (f ⁻¹ᵁ U)), appSecS s s' g U (secTrace s r hU b) = secTrace s' r' hU' (Sec.res r' hle (appSecS r r' e (f ⁻¹ᵁ U) b))) → PositivityTheory.AutomorphicGaloisHodgeTate.G8.HBC.P_affine → ∀ (k k' : Type) [Field k] [Field k'] (φ : k →+* k') {X X' Y Y' : Scheme.{0}} (s : X ⟶ Sp k) (s' : X' ⟶ Sp k') (g : X' ⟶ X) (h : IsPullback g s' s (spMap φ)) (r : Y ⟶ Sp k) (r' : Y' ⟶ Sp k') (e : Y' ⟶ Y) (he : IsPullback e r' r (spMap φ)) (f : Y ⟶ X) (hf : f ≫ s = r) (f' : Y' ⟶ X') (hf' : f' ≫ s' = r'), e ≫ f = f' ≫ g → ∀ (a b : ℕ) [IsFinite f] [Etale f] [IsFinite f'] [Etale f'] (y : hodgeH r a b), hodgePullS h.w a b (hodgeTrace hf a b y) = hodgeTrace hf' a b (hodgePullS he.w a b y) := by
   intro hT hP k k' _ _ φ X X' Y Y' s s' g h r r' e he f hf f' hf' w a b _ _ _ _ y
-  haveI : IsAffineHom g := hP k k' φ X X' s s' g h
+  have : IsAffineHom g := hP k k' φ X X' s s' g h
   have hpb : IsPullback e f' f g := by
     subst hf hf'
     exact IsPullback.of_bot he w h
   have hid := sheaf_id h.w he.w hf hf' w
     (fun U hU hV hle b => hT k k' s s' g r r' e f f' hpb U hU hV hle b) a
-  letI := algΓ s
-  letI := algΓ s'
-  letI := algΓ r
-  letI := algΓ r'
+  let := algΓ s
+  let := algΓ s'
+  let := algΓ r
+  let := algΓ r'
   obtain ⟨z, rfl⟩ := (coh.pushforwardEquiv k (appTop_algebraMap hf) (Omega r a) b).surjective y
   change cohOn.pull (appTop_algebraMapS h.w) (omegaPullS h.w a) _ b
       (cohOn.map k (omegaTrace hf a) ⊤ b

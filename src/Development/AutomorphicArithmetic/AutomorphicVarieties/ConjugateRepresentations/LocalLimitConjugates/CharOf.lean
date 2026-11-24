@@ -450,7 +450,7 @@ theorem UpperTheory.V.Cj.H.charOf :
     simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, map_sub, map_smul, this]) ω h3
   have h0 := (sqOrth E a ha n e he Ξ r q).1 _ hv hc hx
   have h5 := congrArg (fun η : Co Ξ q => cmp i (η X)) h0
-  simp only [app_apply, cmp_rT, AlternatingMap.zero_apply, map_zero, LinearMap.sub_apply, LinearMap.smul_apply,
+  simp only [app_apply, cmp_rT, zero_apply, map_zero, LinearMap.sub_apply, LinearMap.smul_apply,
     Module.End.one_apply] at h5
   exact sub_eq_zero.1 h5
 end -- clump:auto

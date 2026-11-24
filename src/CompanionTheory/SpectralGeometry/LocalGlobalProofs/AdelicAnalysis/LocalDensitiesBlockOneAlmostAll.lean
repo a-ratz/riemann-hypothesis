@@ -162,19 +162,19 @@ theorem coordK_map_unit [NumberField E] (σ : E →ₐ[F] E) (hCM : IsCMExt F E 
     (coordK (Fv F v) b lam).map (fun y => inclR (Fv F v) (algebraMap F E t) * y) =
       (1 : ℝ≥0) • coordK (Fv F v) b lam := by
   obtain ⟨r1, r2, r3, r4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := r1
+  have := r2
+  have := r3
+  have := r4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
-  haveI := i1
-  haveI := i2
-  haveI := i3
-  haveI := i4
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI := hlam.1
-  haveI := (_root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b lam hlam.1).1
+  have := i1
+  have := i2
+  have := i3
+  have := i4
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have := hlam.1
+  have := (_root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b lam hlam.1).1
   have hinv : inclR (F := F) (Fv F v) (algebraMap F E t) * inclR (F := F) (Fv F v) (algebraMap F E t⁻¹) = 1 := by
     rw [← map_mul, ← map_mul, mul_inv_cancel₀ ht, map_one, map_one]
   let e : (Fv F v ⊗[F] E) ≃+ (Fv F v ⊗[F] E) :=
@@ -244,15 +244,15 @@ theorem blockFibre_mass : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     simpa using h1' k
   have hlocR := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   obtain ⟨r1, r2, r3, r4, -⟩ := id hlocR
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := r1
+  have := r2
+  have := r3
+  have := r4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨-, -, -, -, -, -, -, hB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
   have hmeas : ∀ p q : ℕ, MeasurableSet (latV (M := q) (n := p) b v) := by
     intro p q
-    haveI := hB p q
+    have := hB p q
     exact (_root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hCM d b p q v).2.1.measurableSet
   have hc := coordK_map_unit σ hCM v lam hlam t ht htv d b
   let φ : (Fin (n + 1) → Fin (M + 1) → Fv F v ⊗[F] E) → ℝ≥0∞ := (latV b v).indicator 1

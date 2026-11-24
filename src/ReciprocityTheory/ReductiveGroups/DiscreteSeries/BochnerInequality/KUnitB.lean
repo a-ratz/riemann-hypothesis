@@ -164,7 +164,7 @@ theorem re_inner_casimirK_le (hA : IsGlRep A) (hU : IsKUnitary ε A) {S : Submod
     (hfd : FiniteDimensional ℂ S) (hS : IsKStableSub ε A S) (C : ℝ)
     (hC : ∀ w ∈ S, w ≠ 0 → ∀ μ : Fin n → ℝ, IsKHWVec ε A μ w → casValK ε μ ≤ C) :
     ∀ x ∈ S, RCLike.re (inner ℂ (casimirK ε A x) x) ≤ C * ‖x‖ ^ 2 := by
-  haveI := hfd
+  have := hfd
   intro x hx
   let T : S →ₗ[ℂ] S := (casimirK ε A).restrict (fun y hy => casimirK_mem_of_kStable hS hy)
   have hTc : ∀ y : S, ((T y : S) : X) = casimirK ε A y := fun y => rfl
@@ -192,11 +192,11 @@ theorem lift_khw (hU : IsKUnitary ε A) {Y : Type*} [AddCommGroup Y] [Module ℂ
     {μ : Fin n → ℝ} (hy : IsKHWVec ε B μ (f x₀)) :
     ∃ x ∈ S, (∀ z ∈ S, f z = 0 → inner ℂ z x = 0) ∧ IsKHWVec ε A μ x ∧ f x = f x₀ := by
   classical
-  haveI := hfd
+  have := hfd
   obtain ⟨K, hK⟩ : ∃ K : Submodule ℂ X, ∀ z, z ∈ K ↔ z ∈ S ∧ f z = 0 :=
     ⟨S ⊓ LinearMap.ker f, fun z => by simp⟩
   have hKS : K ≤ S := fun z hz => ((hK z).1 hz).1
-  haveI : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le hKS
+  have : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le hKS
   obtain ⟨y, hyK, x, hxo, hsum⟩ := K.exists_add_mem_mem_orthogonal x₀
   have hyS := (hK y).1 hyK
   have hxS : x ∈ S := by

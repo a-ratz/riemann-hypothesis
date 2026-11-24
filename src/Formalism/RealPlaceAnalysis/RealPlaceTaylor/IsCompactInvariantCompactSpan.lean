@@ -125,7 +125,7 @@ theorem kIrr_of (he : KHiExist) (hu : KHiUniq) : KIrr := by
   by_cases h0 : S = ⊥
   · exact Or.inl h0
   right
-  haveI := hfd
+  have := hfd
   have hfdS : FiniteDimensional ℂ S := Submodule.finiteDimensional_of_le hS
   obtain ⟨y, hyS, hy0, ν, hy⟩ := he V n ε F S hfdS hrel hunit hSst h0
   rcases hu V n ε F μ ν x y hrel hunit hx (hS hyS) hy with h | ⟨-, c, hc⟩
@@ -144,12 +144,12 @@ theorem weighted_sum_rootVector_shift {n : ℕ} (ν : Fin n → ℝ) (a b : Fin 
       (∑ i : Fin n, -((i : ℕ) : ℝ) * ν i) + (((b : ℕ) : ℝ) - ((a : ℕ) : ℝ)) := by
   simp only [root, Pi.add_apply, Pi.sub_apply, mul_add, mul_sub, Finset.sum_add_distrib,
     Finset.sum_sub_distrib, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   ring
 
 theorem highestWeightExists_holds : KHiExist := by
   intro V _ _ n ε F S hfd hrel hunit hst hne
-  haveI := hfd
+  have := hfd
   have hcomm : ∀ a b : Fin n, F a a * F b b = F b b * F a a := by
     intro a b
     have h := hrel a a b b rfl rfl
@@ -164,8 +164,8 @@ theorem highestWeightExists_holds : KHiExist := by
     | empty => exact ⟨S, le_rfl, hne, fun a w hw => hst a a rfl w hw, 0, by simp⟩
     | @insert a s ha ih =>
       obtain ⟨W, hWS, hW0, hWst, lam, hlam⟩ := ih
-      haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
-      haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.2 hW0
+      have : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le hWS
+      have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.2 hW0
       obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue ((F a a).restrict (hWst a))
       obtain ⟨⟨v, hvW⟩, hv⟩ := hc.exists_hasEigenvector
       have hker : ∀ y, y ∈ LinearMap.ker (F a a - c • 1) ↔ F a a y = c • y := by
@@ -203,7 +203,7 @@ theorem highestWeightExists_holds : KHiExist := by
       (fun a => ?_)).subset ?_
     · exact (Module.End.finite_hasEigenvalue _).preimage (fun _ _ _ _ h => Complex.ofReal_injective h)
     · rintro ν ⟨v, hvS, hv0, hvw⟩
-      simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq]
+      simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq]
       intro a
       apply Module.End.hasEigenvalue_of_hasEigenvector (x := ⟨v, hvS⟩)
       refine ⟨?_, ?_⟩

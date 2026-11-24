@@ -121,7 +121,7 @@ theorem exists_s_ne {X : Data E r} {Xa : ArchInM X} (Fl : FlatM X Xa) :
     simp [h k _ hz]
   rw [hev.fderiv_eq, fderiv_const_apply]
   have hn := Xa.n_ge
-  haveI : Nonempty (Fin (nd X)) := ⟨⟨0, by omega⟩⟩
+  have : Nonempty (Fin (nd X)) := ⟨⟨0, by omega⟩⟩
   have := LinearMap.det_zero' (EuclideanSpace.basisFun (Fin (nd X)) ℂ).toBasis
   simpa [ContinuousLinearMap.det] using this
 

@@ -71,8 +71,8 @@ theorem sum_finrank_le_of_indep {ι K V : Type*} [Field K] [AddCommGroup V] [Mod
       have hfa : f a ≤ T := h a (Finset.mem_insert_self a s)
       have e : (⨆ i ∈ insert a s, f i) = f a ⊔ ⨆ i ∈ s, f i := by
         rw [Finset.iSup_insert]
-      haveI : FiniteDimensional K (f a) := Submodule.finiteDimensional_of_le hfa
-      haveI : FiniteDimensional K (⨆ i ∈ s, f i : Submodule K V) := Submodule.finiteDimensional_of_le h1
+      have : FiniteDimensional K (f a) := Submodule.finiteDimensional_of_le hfa
+      have : FiniteDimensional K (⨆ i ∈ s, f i : Submodule K V) := Submodule.finiteDimensional_of_le h1
       have hd : Disjoint (f a) (⨆ i ∈ s, f i) := hf.disjoint_biSup ha
       refine ⟨by rw [e]; exact sup_le hfa h1, ?_⟩
       rw [Finset.sum_insert ha, h2, e]
@@ -97,7 +97,7 @@ theorem span_SSZ_fin (aTop : Fin X.s → ℕ) (aPlus : ℕ) (b : SegBlock X.s X.
   set W := Submodule.span (KK X.O) ((Dd.SSZ X.O (r := X.r) : Submodule X.O (MvPolynomial (BVar (2 * X.s + 1) X.r Dd.T.t) (KK X.O))) :
       Set (MvPolynomial (BVar (2 * X.s + 1) X.r Dd.T.t) (KK X.O))) with hW
   show FiniteDimensional ℚ_[X.p] V0
-  haveI : FiniteDimensional (KK X.O) W := span_SSZ_finite Dd
+  have : FiniteDimensional (KK X.O) W := span_SSZ_finite Dd
   have hmemW : ∀ x ∈ V0, MvPolynomial.map (iotaX X) x ∈ W := by
     intro x hx
     induction hx using Submodule.span_induction with
@@ -143,7 +143,7 @@ theorem sum_gens_le (p : ℕ) [Fact p.Prime] {N r : ℕ} [NeZero r] (G : Formali
 theorem restSumSpan_proved : RestSumSpan C0 CE1 CE2 X := by
   classical
   intro aTop _ aPlus _ b _
-  haveI := span_SSZ_fin C0 CE1 CE2 X aTop aPlus b
+  have := span_SSZ_fin C0 CE1 CE2 X aTop aPlus b
   have hr : 1 ≤ X.r := Nat.pos_of_ne_zero X.hm
   refine sum_gens_le X.p (gB C0 CE1 CE2 X aTop aPlus b) (gB_blockOK C0 CE1 CE2 X aTop aPlus b) hr
     (lv C0 CE1 CE2 X aTop b) (fun x hx => ?_)

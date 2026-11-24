@@ -174,7 +174,7 @@ theorem inner_sum_eq (F : Y → Γ → ℂ)
     ∑ᶠ o' : MulAction.orbitRel.Quotient (MulAction.stabilizer Γ y) (ConjSelf Γ),
         pairTerm F (y, Quotient.out o') =
       ((Nat.card (MulAction.stabilizer Γ y) : ℕ) : ℂ)⁻¹ * ∑ᶠ γ : Γ, F y γ := by
-  haveI : Finite (MulAction.stabilizer Γ y) := hfin.to_subtype
+  have : Finite (MulAction.stabilizer Γ y) := hfin.to_subtype
   have hinv : ∀ (k : MulAction.stabilizer Γ y) (z : ConjSelf Γ),
       F y (val (k • z)) = F y (val z) := by
     intro k z
@@ -363,8 +363,8 @@ theorem stabilizer_inf_centralizer_infinite (F : Y → Γ → ℂ)
     (hs : (Function.support (F y)).Finite) (c : Γ) (hc : F y c ≠ 0)
     (hinf : (stabilizer Γ y : Set Γ).Infinite) :
     ((stabilizer Γ y ⊓ Subgroup.centralizer {c} : Subgroup Γ) : Set Γ).Infinite := by
-  haveI : Infinite (stabilizer Γ y) := hinf.to_subtype
-  haveI : Finite (Function.support (F y)) := hs.to_subtype
+  have : Infinite (stabilizer Γ y) := hinf.to_subtype
+  have : Finite (Function.support (F y)) := hs.to_subtype
   let f : stabilizer Γ y → Function.support (F y) := fun η =>
     ⟨(η : Γ) * c * (η : Γ)⁻¹, by
       show F y _ ≠ 0
@@ -432,7 +432,7 @@ theorem finsum_orbits_eq_finsum_conjClasses_of_any_stabilizer : ∀ {Γ Y : Type
     · by_contra hn
       apply hy
       have hinf : ¬ (stabilizer Γ y : Set Γ).Finite := fun h => hn ⟨⟨y, h⟩, rfl⟩
-      haveI : Infinite (stabilizer Γ y) := Set.Infinite.to_subtype hinf
+      have : Infinite (stabilizer Γ y) := Set.Infinite.to_subtype hinf
       rw [Nat.card_eq_zero_of_infinite (α := stabilizer Γ y), Nat.cast_zero, inv_zero, zero_mul]
   · set c' := Quotient.out c
     refine (finsum_orbits_restrict (G := Subgroup.centralizer {c'}) (Y := Y) (Y' := S)
@@ -455,7 +455,7 @@ theorem finsum_orbits_eq_finsum_conjClasses_of_any_stabilizer : ∀ {Γ Y : Type
       · simp [hc]
       have hI := stabilizer_inf_centralizer_infinite F hF y (hs y) c' hc hinf
       have h0 : Nat.card (stabilizer Γ y ⊓ Subgroup.centralizer {c'} : Subgroup Γ) = 0 := by
-        haveI : Infinite (stabilizer Γ y ⊓ Subgroup.centralizer {c'} : Subgroup Γ) := hI.to_subtype
+        have : Infinite (stabilizer Γ y ⊓ Subgroup.centralizer {c'} : Subgroup Γ) := hI.to_subtype
         exact Nat.card_eq_zero_of_infinite
       rw [h0, Nat.cast_zero, inv_zero, zero_mul]
 

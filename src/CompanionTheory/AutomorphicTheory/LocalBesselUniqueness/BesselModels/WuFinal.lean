@@ -248,7 +248,7 @@ variable {D : D7} (X : HidaSetting D)
 theorem pv_conv (v : InfinitePlace X.B.I.F) (y : Formalism.REAL.UJ (X.B.I.ε v)) :
     Integrable (fun g => Pv X v g * Pv X v (g⁻¹ * y)) (Formalism.REAL.muG (X.B.I.ε v)) ∧
       ∫ g, Pv X v g * Pv X v (g⁻¹ * y) ∂(Formalism.REAL.muG (X.B.I.ε v)) = Pv X v y := by
-  haveI : (Formalism.REAL.muG (X.B.I.ε v)).IsInvInvariant := ⟨Formalism.REAL.invInvariant _ (X.B.I.ε v)⟩
+  have : (Formalism.REAL.muG (X.B.I.ε v)).IsInvInvariant := ⟨Formalism.REAL.invInvariant _ (X.B.I.ε v)⟩
   have hds := X.ds v
   have hU := hds.2.2.1
   have hURep : Formalism.L2.SG.ProjRows.IsURep (fun g : Formalism.REAL.UJ (X.B.I.ε v) => X.B.σ v (uMat g)) := by
@@ -258,7 +258,7 @@ theorem pv_conv (v : InfinitePlace X.B.I.F) (y : Formalism.REAL.UJ (X.B.I.ε v))
     · show X.B.σ v (uMat (a * b)) = (X.B.σ v (uMat a)).comp (X.B.σ v (uMat b))
       rw [Formalism.L2.SG.WuDecayPf.uMat_mul']; exact hU.1.2 _ a.2 _ b.2
     · exact (hU.2.2 w).comp_continuous Formalism.L2.SG.WuDecayPf.continuous_uMat (fun g => g.2)
-  haveI : Nontrivial (X.B.H v) := hds.2.1
+  have : Nontrivial (X.B.H v) := hds.2.1
   obtain ⟨d', hd'⟩ := PIW.HCFdeg.formal_degree_abstract_form _ (X.B.I.ε v) (X.B.H v) (X.B.σ v) hds.2.2.1 hds.2.2.2.1 hds.2.2.2.2.1
   have hw1 : ‖X.B.w v‖ = 1 := (X.low v).1
   have hw0 : X.B.w v ≠ 0 := by intro h; rw [h, norm_zero] at hw1; exact zero_ne_one hw1
@@ -396,7 +396,7 @@ theorem local_scalar_reduction : LocScalarStep := by
       apply (lintegral_eq_zero_iff (mf.pow_const 2)).2
       have : ∀ᵐ y ∂ν', y ∉ E := measure_eq_zero_iff_ae_notMem.1 h0
       filter_upwards [this] with y hy
-      simp only [hE, Set.mem_setOf_eq, not_not] at hy
+      simp only [hE, Set.mem_ofPred_eq, not_not] at hy
       simp [hy]
     have hle : ∀ y, E.indicator (fun _ => (⊤ : ℝ≥0∞)) y ≤ ‖f y‖ₑ * A y := by
       intro y
@@ -490,7 +490,7 @@ theorem besselOfW_gap (hJ : CompanionTheory.Lime.BM.UniqGap) :
     Formalism.L2.SG.LocWSOf.BesselOfW := by
   intro k r z c u lam ε h H _ _ _ σ hlam hσ hgap hok hz hT hc Vp _ _ _ π hπ w hw μG μW μN ν hG hW hN hq W hWc hWeq
     hRe hne hfin
-  have : CompleteSpace Vp := FiniteDimensional.complete ℂ Vp
+  have : CompleteSpace Vp := FiniteDimensional.completeSpace ℂ Vp
   have hS : Side k r ε lam h σ w z c u π μW μN μG ν := ⟨hlam, hσ, hgap, hok, hw, hz, hT, hc, hπ, hW, hN, hG, hq⟩
   obtain ⟨l, hlB, hla, -⟩ := CompanionTheory.Lime.BM.dDFormOne hJ CompanionTheory.Lime.BM.inputs
     k r ε lam h H σ w Vp z c u π μW μN μG ν hS
@@ -709,7 +709,7 @@ theorem locUniq_gen (hBW : Formalism.L2.SG.LocWSOf.BesselOfW) (hM1 : CompanionTh
       have h0' : 0 ≤ nuH k r (zBv k r T) (Matrix.of (cM (Qi (eps48 k r) e f wf (z0v T z)) P0 x)) :=
         Real.iInf_nonneg fun _ => Formalism.L2.SG.WuDecayPf.opn_nonneg _
       have hle := nuLoc_le hF hCP (zBv k r T) x
-      rw [hWeq x, enorm_smul, hKdef]
+      rw [hWeq x, eNorm_smul, hKdef]
       have h2 : ENNReal.ofReal (nuLoc (e := e) (f := f) (wf := wf) (z0 := z0v T z) (zBv k r T) x ^ N1H k r) ≤
           ENNReal.ofReal ((opn (Qm e f wf (z0v T z)) * opn B0) ^ N1H k r) *
             ENNReal.ofReal (nuH k r (zBv k r T) (Matrix.of (cM (Qi (eps48 k r) e f wf (z0v T z)) P0 x)) ^ N1H k r) := by
@@ -723,8 +723,8 @@ theorem locUniq_gen (hBW : Formalism.L2.SG.LocWSOf.BesselOfW) (hM1 : CompanionTh
             gcongr
         _ = _ := by ring
     refine lt_of_le_of_lt (lintegral_mono hpt) ?_
-    rw [lintegral_const_mul' _ _ (ENNReal.mul_ne_top enorm_ne_top ENNReal.ofReal_ne_top)]
-    refine ENNReal.mul_lt_top (lt_top_iff_ne_top.2 (ENNReal.mul_ne_top enorm_ne_top ENNReal.ofReal_ne_top)) ?_
+    rw [lintegral_const_mul' _ _ (ENNReal.mul_ne_top eNorm_ne_top ENNReal.ofReal_ne_top)]
+    refine ENNReal.mul_lt_top (lt_top_iff_ne_top.2 (ENNReal.mul_ne_top eNorm_ne_top ENNReal.ofReal_ne_top)) ?_
     have h3 := hwt0
     rw [lintegral_smul_measure, smul_eq_mul, embX.lintegral_map] at h3
     have h4 : ∫⁻ x, ‖W0 (Matrix.of (cM (Qi (eps48 k r) e f wf (z0v T z)) P0 x))‖ₑ *

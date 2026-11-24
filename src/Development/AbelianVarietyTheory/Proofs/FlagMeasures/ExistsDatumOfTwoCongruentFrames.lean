@@ -183,7 +183,7 @@ theorem ideal_eq_top_of_inv [IsNonarchimedeanLocalField F] [CharZero F] (L : Loc
       exact k.2)
     exact Ideal.span_singleton_eq_top.2 (IsUnit.of_mul_eq_one (a := a) ⟨b, hbO⟩ (Subtype.ext hb))
   · exfalso
-    haveI : Module.Finite F E := Module.finite_of_finrank_eq_succ L.rank
+    have : Module.Finite F E := Module.finite_of_finrank_eq_succ L.rank
     have hns : ¬ Function.Surjective (LinearMap.mulLeft F (a : E)) := fun h => hu (by
       obtain ⟨b, hb⟩ := h 1
       exact IsUnit.of_mul_eq_one b hb)
@@ -222,8 +222,8 @@ end Local
 
 theorem exists_dual_family : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r : ℕ) (Fr : FrameD H r) (Λ : Submodule M.L.O V), H.IsSelfDual Λ → H.IsFrame Λ r Fr.f Fr.T → ∃ y : Fin (r + 1) → V, (∀ b, y b ∈ Λ) ∧ ∀ a b, H.h (y b) (Fr.f a) = if a = b then 1 else 0 := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r Fr Λ hsd hfr
-  letI := hM.loc
-  haveI := hM.char0
+  let := hM.loc
+  have := hM.char0
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[F]
   obtain ⟨-, hO2, -⟩ := GlobalTheory.UnramOrder.order_facts M.L ϖ hϖ
   have hcj : ∀ x ∈ M.L.O, M.L.cj x ∈ M.L.O := fun x hx => (hO2 x hx).1
@@ -357,10 +357,10 @@ namespace GlobalTheory.StdLatInner
 
 theorem exists_inner : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r : ℕ) (Fr : FrameD H r) (Λ : Submodule M.L.O V), H.IsSelfDual Λ → H.IsFrame Λ r Fr.f Fr.T → ∀ y : Fin r → V, (∀ a, y a ∈ Λ) → (∀ a b, H.h (y a) (Fr.f b) = if b = a.castSucc then 1 else 0) → ∃ L : Submodule M.L.O (H.Wb Fr.f), (L : Set (H.Wb Fr.f)) = H.Lset Λ Fr.f ∧ Fr.IsInner L := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r Fr Λ hSD hFr yv hyΛ hy
-  letI := hM.loc
-  haveI := hM.char0
+  let := hM.loc
+  have := hM.char0
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[F]
-  haveI hPIR : IsPrincipalIdealRing M.L.O := (GlobalTheory.UnramOrder.order_facts M.L ϖ hϖ).2.2.2.1
+  have hPIR : IsPrincipalIdealRing M.L.O := (GlobalTheory.UnramOrder.order_facts M.L ϖ hϖ).2.2.2.1
   have hXiso : H.X Fr.f ≤ H.perp (H.X Fr.f) := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨a, rfl⟩
@@ -549,8 +549,8 @@ end Herm
 
 theorem isotropic_dual : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r : ℕ) (Fr : FrameD H r) (Λ : Submodule M.L.O V), H.IsSelfDual Λ → H.IsFrame Λ r Fr.f Fr.T → ∀ y : Fin r → V, (∀ a, y a ∈ Λ) → (∀ a b, H.h (y a) (Fr.f b) = if b = a.castSucc then 1 else 0) → ∃ y' : Fin r → V, (∀ a, y' a ∈ Λ) ∧ (∀ a b, H.h (y' a) (Fr.f b) = if b = a.castSucc then 1 else 0) ∧ ∀ a b, H.h (y' a) (y' b) = 0 := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r Fr Λ hSD hFr y hy hyf
-  letI := hM.loc
-  haveI := hM.char0
+  let := hM.loc
+  have := hM.char0
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[F]
   obtain ⟨htr, -, -, -, hmem, -⟩ := GlobalTheory.UnramOrder.order_facts M.L ϖ hϖ
   have hint : ∀ a b, H.h (y a) (y b) ∈ M.L.O := fun a b => (hSD.2.2 (y a)).1 (hy a) (y b) (hy b)
@@ -575,10 +575,10 @@ theorem isotropic_dual : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalS
     · intro a b
       dsimp only
       rcases lt_trichotomy a b with h | rfl | h
-      · rw [if_pos h, if_neg (not_lt.2 h.le), if_neg h.ne', map_zero, add_zero]
-      · rw [if_neg (lt_irrefl a), if_pos rfl]
+      · rw [ite_eq_left h, ite_eq_right (not_lt.2 h.le), ite_eq_right h.ne', map_zero, add_zero]
+      · rw [ite_eq_right (lt_irrefl a), ite_eq_left rfl]
         exact hxe a
-      · rw [if_neg (not_lt.2 h.le), if_neg h.ne', if_pos h, map_neg, ← H.h_herm (y b) (y a),
+      · rw [ite_eq_right (not_lt.2 h.le), ite_eq_right h.ne', ite_eq_left h, map_neg, ← H.h_herm (y b) (y a),
           zero_add]
   have he : ∀ k : Fin r, Fr.f k.castSucc ∈ Λ := fun k => hFr.1.1 k.castSucc
   have hEf : ∀ (k : Fin r) b, H.h (Fr.f k.castSucc) (Fr.f b) = 0 := fun k b =>
@@ -598,7 +598,7 @@ theorem isotropic_dual : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalS
       add_zero, hyf]
   · simp only [H.h_add_left, h_add_right, h_sum_left, h_sum_right, H.h_smul_left, h_smul_right,
       hyE, hEy, hEf, mul_zero, mul_ite, mul_one, Finset.sum_const_zero, add_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     linear_combination hm a b
 
 end GlobalTheory.IsotropicDual
@@ -717,7 +717,7 @@ lemma ey (a b : Fin r) : H.h (Fr.f b.castSucc) (y a) = if b = a then 1 else 0 :=
 
 include hy1 in
 lemma yz (a : Fin r) : H.h (y a) (Fr.f (Fin.last r)) = 0 := by
-  rw [hy1, if_neg (Fin.castSucc_lt_last a).ne']
+  rw [hy1, ite_eq_right (Fin.castSucc_lt_last a).ne']
 
 lemma Nl_e (b : Fin r) : Nl Fr y (Fr.f b.castSucc) = 0 := by
   rw [Nl_apply, prF_e]; simp [e_e, HermSp.h_zero_left]

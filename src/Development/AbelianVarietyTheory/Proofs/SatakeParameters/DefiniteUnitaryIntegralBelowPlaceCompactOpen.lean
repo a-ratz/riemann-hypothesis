@@ -88,11 +88,11 @@ theorem isOpen_intU (w : HeightOneSpectrum (𝓞 E)) :
     simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, Set.mem_preimage]
     exact mem_intU_iff_of_mem_locU x.2
   rw [e]
-  exact (isOpen_KGL w a).preimage ((continuous_cLoc w).comp continuous_subtype_val)
+  exact (isOpen_KGL w a).preimage ((continuous_cLoc w).comp continuous_subtypeVal)
 
 theorem isCompact_intU (w : HeightOneSpectrum (𝓞 E)) :
     IsCompact (intU a w : Set (UA E a)) := by
-  haveI : ∀ u : HeightOneSpectrum (𝓞 E), T2Space (GL (Fin a) (u.adicCompletion E)) :=
+  have : ∀ u : HeightOneSpectrum (𝓞 E), T2Space (GL (Fin a) (u.adicCompletion E)) :=
     fun _ => Units.isEmbedding_embedProduct.t2Space
   let T : Set (finU (E := E) (n := a)) := {x | x.1 ∈ intU a w}
   have hK0 : IsCompact {x : finU (E := E) (n := a) | ((x : UA E a) : GA E a) ∈
@@ -115,16 +115,16 @@ theorem isCompact_intU (w : HeightOneSpectrum (𝓞 E)) :
   have hTe : T = (⋂ u, ⋂ (_ : Apart u w), {x : finU (E := E) (n := a) | cLoc u x.1 = 1}) ∩
       ⋂ u, ⋂ (_ : ¬ Apart u w), {x : finU (E := E) (n := a) | cLoc u x.1 ∈ GlobalTheory.LFun.KGL u (n := a)} := by
     ext x
-    simp only [T, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, mem_intU,
+    simp only [T, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, mem_intU,
       GlobalTheory.Cong.LevelExt.mem_locU_iff]
     exact ⟨fun h => ⟨h.1.2, h.2⟩, fun h => ⟨⟨x.2, h.1⟩, h.2⟩⟩
   have hTc : IsClosed T := by
     rw [hTe]
     refine (isClosed_iInter fun u => isClosed_iInter fun _ => ?_).inter
       (isClosed_iInter fun u => isClosed_iInter fun _ => ?_)
-    · exact isClosed_eq ((continuous_cLoc u).comp continuous_subtype_val) continuous_const
-    · exact (isClosed_KGL u a).preimage ((continuous_cLoc u).comp continuous_subtype_val)
-  have hT := (hK0.of_isClosed_subset hTc hTsub).image continuous_subtype_val
+    · exact isClosed_eq ((continuous_cLoc u).comp continuous_subtypeVal) continuous_const
+    · exact (isClosed_KGL u a).preimage ((continuous_cLoc u).comp continuous_subtypeVal)
+  have hT := (hK0.of_isClosed_subset hTc hTsub).image continuous_subtypeVal
   have e : Subtype.val '' T = (intU a w : Set (UA E a)) := by
     ext y
     constructor

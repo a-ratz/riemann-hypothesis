@@ -93,9 +93,9 @@ theorem UpperTheory.V.Kum.fnCyc :
   intro F Ω _ _ _ _ _ l _ n
   have hl : l.Prime := Fact.out
   have hk : l ^ n ≠ 0 := pow_ne_zero _ hl.ne_zero
-  haveI : NeZero (l ^ n) := ⟨hk⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : NeZero (l ^ n) := ⟨hk⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have hFn : Fn F Ω l n = IntermediateField.adjoin F {b : Ω | ∃ m ∈ ({l ^ n} : Set ℕ), m ≠ 0 ∧ b ^ m = 1} := by
     show IntermediateField.adjoin F _ = _
     rw [rootSet_X_pow_sub_one_eq_setOf_exists_mem_singleton F Ω _ hk]
@@ -105,7 +105,7 @@ theorem UpperTheory.V.Kum.fnCyc :
     intro m hm _
     rw [Set.mem_singleton_iff] at hm
     subst hm
-    exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+    exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   · intro τ σ h
     have hs : IsLift τ.symm σ.symm := by
       intro x
@@ -120,7 +120,7 @@ theorem UpperTheory.V.Kum.fnCyc :
     intro x
     rfl
   · intro hn2
-    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+    obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
     have hzmem : z ∈ Fn F Ω l n := by
       rw [hFn]
       exact IntermediateField.subset_adjoin _ _ ⟨l ^ n, rfl, hk, hz.pow_eq_one⟩

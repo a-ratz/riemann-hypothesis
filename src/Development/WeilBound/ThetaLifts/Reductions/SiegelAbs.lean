@@ -86,7 +86,7 @@ theorem norm_evInf_rId [IsTotallyReal F] (w : InfinitePlace F) (c : ℝ) : ‖ev
 
 theorem absE_rIdU [IsTotallyReal F] (h2 : Module.finrank F E = 2) (c : ℝ) :
     (GlobalTheory.Doubling.absE F E (rIdU F E c) : ℝ) = Real.exp (2 * Module.finrank ℚ F * c) := by
-  haveI : Nontrivial (AF F) := by
+  have : Nontrivial (AF F) := by
     obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
     exact (evInf F w).toRingHom.domain_nontrivial
   have hn : Algebra.norm (AF F) (rIdU F E c : AF F ⊗[F] E) = rId F c ^ 2 := by
@@ -95,16 +95,16 @@ theorem absE_rIdU [IsTotallyReal F] (h2 : Module.finrank F E = 2) (c : ℝ) :
     rw [GlobalTheory.Doubling.absEv_unitFin, hn, map_pow]
     have e : evFin F v (rId F c) = 1 := by
       rw [evFin, AlgHom.comp_apply, show sndA F (rId F c) = 1 from rId_snd c, map_one]
-    rw [e, one_pow, nnnorm_one]
+    rw [e, one_pow, nnNorm_one]
   have hm : ∀ w : InfinitePlace F, w.mult = 1 := fun w => by
-    rw [InfinitePlace.mult, if_pos (IsTotallyReal.isReal w)]
+    rw [InfinitePlace.mult, ite_eq_left (IsTotallyReal.isReal w)]
   have hw : ∀ w : InfinitePlace F,
       (GlobalTheory.Doubling.absEw F E w (GlobalTheory.Doubling.unitInf F E w (rIdU F E c)) : ℝ) = Real.exp (2 * c) := fun w => by
-    rw [GlobalTheory.Doubling.absEw_unitInf, hn, map_pow, hm, pow_one, coe_nnnorm, norm_pow, norm_evInf_rId, ← Real.exp_nat_mul]
+    rw [GlobalTheory.Doubling.absEw_unitInf, hn, map_pow, hm, pow_one, coe_nnNorm, norm_pow, norm_evInf_rId, ← Real.exp_natCast_mul]
     norm_num
   rw [GlobalTheory.Doubling.absE_apply, finprod_eq_one_of_forall_eq_one hfin, mul_one, NNReal.coe_prod,
     Finset.prod_congr rfl fun w _ => hw w, Finset.prod_const, Finset.card_univ, card_infinitePlace,
-    ← Real.exp_nat_mul]
+    ← Real.exp_natCast_mul]
   congr 1
   push_cast
   ring
@@ -240,7 +240,7 @@ theorem inv_mem_minimal_parabolic (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW 
   obtain ⟨B, hB, e⟩ := hp
   obtain ⟨Q, h3⟩ : ∃ Q, Q * B = 1 := ⟨_, (pfrA h hJ hW).inv_coef (unitaryA_matHom p) e⟩
   have h4 : B * Q = 1 := mul_eq_one_comm.1 h3
-  haveI : Invertible B := ⟨Q, h3, h4⟩
+  have : Invertible B := ⟨Q, h3, h4⟩
   have hinv : B⁻¹ = Q := Matrix.inv_eq_left_inv h3
   refine ⟨Q, by rw [← hinv]; exact Matrix.blockTriangular_inv_of_blockTriangular hB, ?_⟩
   have e2 : (matHom _ σ J p⁻¹).1 * (matHom _ σ J p).1 = 1 := by
@@ -264,8 +264,8 @@ theorem isClosed_minimal_parabolic (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW
     IsClosed (minPar σ J X) := by
   have hF := pfrA h hJ hW
   have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : T2Space (AF F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : T2Space (AF F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
   have hBc : Continuous (Bm σ J X Y) := continuous_Bm
   have e : minPar σ J X = {p | (Bm σ J X Y p).BlockTriangular id} ∩
       {p | (matHom _ σ J p).1 * GlobalTheory.SiegelSet.adMat F X = GlobalTheory.SiegelSet.adMat F X * Bm σ J X Y p} := by
@@ -321,7 +321,7 @@ theorem exists_torus_section (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsW
     ∃ τ : P → Fin r → ℝ, Continuous τ ∧ (∀ p q, τ (p * q) = τ p + τ q) ∧ (∀ t, τ (ta t) = t) ∧
       (∀ p (hp : p ∈ minParOne σ J X), τ ⟨p, (hP p).2 (minParOne_sub hp)⟩ = 0) ∧
       ∀ p : P, p.1 * (a (τ p))⁻¹ ∈ minParOne σ J X := by
-  haveI := h.1
+  have := h.1
   have hF := pfrA h hJ hW
   have m1 : ∀ p : P, p.1 ∈ minPar σ J X := fun p => (hP _).1 p.2
   have hpos : ∀ x : (AF F ⊗[F] E)ˣ, (0 : ℝ) < GlobalTheory.Doubling.absE F E x := fun x => NNReal.coe_pos.2 (pos_hom' _ x)
@@ -334,8 +334,8 @@ theorem exists_torus_section (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsW
   have hcont : ∀ i, Continuous fun p : P => uP σ J X Y h hJ hW P hP p i := fun i => by
     have hBc : Continuous (Bm σ J X Y) := continuous_Bm
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
-    · exact (hBc.comp continuous_subtype_val).matrix_elem i i
-    · exact (hBc.comp (continuous_subtype_val.comp continuous_inv)).matrix_elem i i
+    · exact (hBc.comp continuous_subtypeVal).matrix_elem i i
+    · exact (hBc.comp (continuous_subtypeVal.comp continuous_inv)).matrix_elem i i
   have key : ∀ (p : P) (s : Fin r → ℝ), (∀ i, 2 * (Module.finrank ℚ F : ℝ) * s i =
       Real.log (GlobalTheory.Doubling.absE F E (uP σ J X Y h hJ hW P hP p i))) → p.1 * (a s)⁻¹ ∈ minParOne σ J X := by
     intro p s hs

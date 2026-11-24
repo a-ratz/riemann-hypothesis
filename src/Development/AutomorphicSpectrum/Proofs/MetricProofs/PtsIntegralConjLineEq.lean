@@ -192,7 +192,7 @@ theorem madens_cx (D : ℕ) (φ : (Fin D → ℂ) → ℝ) (y : Fin D → ℂ) :
     · subst h; simp
     · simp [Pi.single_apply, h]
   ext i j
-  simp only [cxHessian, Matrix.map_apply, hf, madens_hess, h1, h2, map_neg, ContinuousLinearMap.neg_apply, neg_neg]
+  simp only [cxHessian, Matrix.map_apply, hf, madens_hess, h1, h2, map_neg, neg_apply, neg_neg]
   rw [hc y]
   generalize fderiv ℝ (fderiv ℝ φ) (fun i => starRingEnd ℂ (y i)) = H
   simp only [map_div₀, map_add (f := _), map_sub, map_mul, Complex.conj_ofReal, Complex.conj_I, map_ofNat, sub_neg_eq_add, Complex.ofReal_add, Complex.ofReal_sub, Complex.ofReal_neg]

@@ -85,7 +85,7 @@ theorem dom_rmul {x b : Frame X.Ψ r} (hx : x ∈ X.dom) (hb : b ∈ Bor X.Ψ r)
   · have hd := (hx τ).2 i
     have hdiag : ∀ j, mat b τ j j ≠ 0 := by
       intro j
-      rw [Matrix.det_of_upperTriangular hN] at hbd
+      rw [det_of_isUpperTriangular hN] at hbd
       exact Finset.prod_ne_zero_iff.1 hbd j (Finset.mem_univ j)
     have hP0 : (∏ j : Fin i, mat b τ (Fin.castLE (Nat.le_of_lt_succ i.isLt) j)
         (Fin.castLE (Nat.le_of_lt_succ i.isLt) j)) ≠ 0 :=

@@ -54,7 +54,7 @@ private theorem finrank_quotient_eq_add_finrank_ker_factor (κ Λ : Type) [Field
     [Module.Finite κ Λ] (I J : Ideal Λ) (h : I ≤ J) :
     Module.finrank κ (Λ ⧸ I) = Module.finrank κ (Λ ⧸ J) +
       Module.finrank κ (LinearMap.ker (Ideal.Quotient.factorₐ κ h).toLinearMap) := by
-  haveI : Module.Finite κ (Λ ⧸ I) :=
+  have : Module.Finite κ (Λ ⧸ I) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ κ I).toLinearMap Ideal.Quotient.mk_surjective
   have hs : Function.Surjective (Ideal.Quotient.factorₐ κ h).toLinearMap :=
     Ideal.Quotient.factor_surjective h
@@ -68,8 +68,8 @@ private theorem ideal_eq_span_pow_of_finrank (κ Λ : Type) [Field κ] [CommRing
     ∀ J : Ideal Λ, Module.finrank κ (Λ ⧸ J) = q → J = Ideal.span {t ^ q} := by
   classical
   intro J hJ
-  haveI : IsArtinianRing Λ := IsArtinianRing.of_finite κ Λ
-  haveI hfin : ∀ I : Ideal Λ, Module.Finite κ (Λ ⧸ I) := fun I ↦
+  have : IsArtinianRing Λ := IsArtinianRing.of_finite κ Λ
+  have hfin : ∀ I : Ideal Λ, Module.Finite κ (Λ ⧸ I) := fun I ↦
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ κ I).toLinearMap Ideal.Quotient.mk_surjective
   have tm : t ∈ IsLocalRing.maximalIdeal Λ := by
     rw [ht]
@@ -119,7 +119,7 @@ private theorem ideal_eq_span_pow_of_finrank (κ Λ : Type) [Field κ] [CommRing
     | zero =>
       intro _
       rw [pow_zero, Ideal.span_singleton_one]
-      haveI : Subsingleton (Λ ⧸ (⊤ : Ideal Λ)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+      have : Subsingleton (Λ ⧸ (⊤ : Ideal Λ)) := Ideal.Quotient.subsingleton_iff.mpr rfl
       exact Module.finrank_zero_of_subsingleton
     | succ k ih =>
       intro hk
@@ -174,7 +174,7 @@ private theorem ideal_eq_span_pow_of_finrank (κ Λ : Type) [Field κ] [CommRing
         exact le_top
       obtain ⟨k, rfl⟩ : ∃ k, k0 = k + 1 := Nat.exists_eq_succ_of_ne_zero hk0pos
       have hJk : J ≤ Ideal.span {t ^ k} := hmin k (by omega)
-      obtain ⟨x, hxJ, hx⟩ := SetLike.not_le_iff_exists.1 hk0
+      obtain ⟨x, hxJ, hx⟩ := IsConcreteLE.not_le_iff_exists.1 hk0
       obtain ⟨a, rfl⟩ := (mem_pow _ _).1 (hJk hxJ)
       have ha : a ∉ IsLocalRing.maximalIdeal Λ := by
         intro ham

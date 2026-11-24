@@ -88,14 +88,14 @@ private lemma continuous_adjE {n : ℕ} :
 
 private lemma haarE (n : ℕ) :
     (volume : Measure (Fin n → Fin n → ℂ)).IsAddHaarMeasure := by
-  haveI : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure :=
+  have : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure fun _ : Fin n => (volume : Measure ℂ)
   exact Measure.pi.isAddHaarMeasure fun _ : Fin n => (volume : Measure (Fin n → ℂ))
 
 private lemma exists_pair (n : ℕ) :
     ∃ V K : Set (Fin n → Fin n → ℂ), IsCompact V ∧ IsCompact K ∧ 0 < volume V ∧
       ∀ y, ∀ v ∈ V, ∀ w ∈ V, mulE y v = w → y ∈ K := by
-  haveI := haarE n
+  have := haarE n
   have hU : IsOpen {v : Fin n → Fin n → ℂ | (Matrix.of v).det ≠ 0} :=
     isOpen_ne_fun continuous_detE continuous_const
   have h1 : (Matrix.of.symm (1 : Matrix (Fin n) (Fin n) ℂ)) ∈

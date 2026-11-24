@@ -78,7 +78,7 @@ theorem Lower.inv {g : Mat m K} (hg : Lower g) : Lower g⁻¹ := fun τ => by
       (Matrix.blockTriangular_inv_of_blockTriangular ((lower_iff_blockTriangular g τ).1 (hg τ)))
 
 theorem Lower.det_eq {g : Mat m K} (hg : Lower g) (τ : ι) : (g τ).det = ∏ i, g τ i i :=
-  Matrix.det_of_lowerTriangular _ ((lower_iff_blockTriangular g τ).1 (hg τ))
+  Matrix.det_of_isLowerTriangular _ ((lower_iff_blockTriangular g τ).1 (hg τ))
 
 theorem lower_one : Lower (1 : Mat m K) := fun _ _ _ hik => Matrix.one_apply_ne hik.ne
 

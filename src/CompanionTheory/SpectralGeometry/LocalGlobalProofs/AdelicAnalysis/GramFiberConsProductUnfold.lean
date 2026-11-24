@@ -99,7 +99,7 @@ theorem tmul_one_eq_smul (x : R) : x ⊗ₜ[F] (1 : E) = x • (1 : R ⊗[F] E) 
 
 theorem continuous_tmul_one [TopologicalSpace R] :
     Continuous fun x : R => x ⊗ₜ[F] (1 : E) := by
-  haveI : ContinuousSMul R (R ⊗[F] E) := ModuleTopology.continuousSMul R (R ⊗[F] E)
+  have : ContinuousSMul R (R ⊗[F] E) := ModuleTopology.continuousSMul R (R ⊗[F] E)
   have h : Continuous fun x : R => x • (1 : R ⊗[F] E) := by fun_prop
   simpa only [tmul_one_eq_smul] using h
 
@@ -138,7 +138,7 @@ theorem measurable_sTil (D : StageData σ J t n b lam m₁ m' s B₀ a κ₁ cm)
   have hSC := D.hR.2.2.1
   have hT2 := D.hR.2.2.2.1
   obtain ⟨k1, k2, k3, k4, hsigc, htrc, -, hbw, -, hgramc⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ D.hCM R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hq : Continuous fun y : Fin 1 → Fin (M + 1) → R ⊗[F] E =>
       s0 R (gramR R σ (blockOne (algebraMap F E t) J) y) := by
     unfold s0
@@ -156,13 +156,13 @@ theorem measurable_chi (D : StageData σ J t n b lam m₁ m' s B₀ a κ₁ cm)
   have hSC := D.hR.2.2.1
   have hT2 := D.hR.2.2.2.1
   obtain ⟨k1, k2, k3, k4, -, -, -, hbw, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ D.hCM R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hJ' := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.isHermND_blockOne_algebraMap F E σ M J D.hJ t D.ht
   obtain ⟨h1, h2, h3, h4, h5, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ D.hCM (M + 1) _ hJ' R
   have hact' := (hact n).1.measurable
   obtain ⟨hK, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ D.hCM R d b lam D.hlam
-  haveI : SigmaFinite (coordK R b lam) := inferInstance
-  haveI : SigmaFinite (coordW R b lam n M) := by unfold coordW; infer_instance
+  have : SigmaFinite (coordK R b lam) := inferInstance
+  have : SigmaFinite (coordW R b lam n M) := by unfold coordW; infer_instance
   have hG : Measurable fun q : ((Fin 1 → Fin (M + 1) → R ⊗[F] E) × (Fin n → R ⊗[F] E)) ×
       (Fin n → Fin M → R ⊗[F] E) =>
       φ (Fin.cons (q.1.1 0) (actW R σ (blockOne (algebraMap F E t) J) (sTil σ J t s a q.1.1)
@@ -226,7 +226,7 @@ theorem first_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   have hSC := D.hR.2.2.1
   have hT2 := D.hR.2.2.2.1
   obtain ⟨k1, k2, k3, k4, -, -, -, hbw, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ D.hCM R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hJ' := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.isHermND_blockOne_algebraMap F E σ M J D.hJ t D.ht
 
   have hUm : MeasurableSet (Uset σ J t B₀ a : Set (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E)) := by

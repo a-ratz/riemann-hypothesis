@@ -57,10 +57,10 @@ theorem exists_norm_eq_neg_one {k : Type} [Field k] [Finite k] (σ : k →+* k) 
     {y : k} (hy : y - σ y ≠ 0) : ∃ a, a * σ a = -1 := by
   classical
   by_cases h2 : ringChar k = 2
-  · haveI : CharP k 2 := ringChar.of_eq h2
+  · have : CharP k 2 := ringChar.of_eq h2
     exact ⟨1, by rw [map_one, one_mul, CharTwo.neg_eq]⟩
   let k0 : Subfield k := RingHom.eqLocusField σ (RingHom.id k)
-  haveI : Fintype k0 := Fintype.ofFinite _
+  have : Fintype k0 := Fintype.ofFinite _
   have hδ : σ (y - σ y) = -(y - σ y) := by rw [map_sub, hσ]; ring
   let d : k0 := ⟨(y - σ y) ^ 2, by
     show σ _ = _
@@ -68,8 +68,8 @@ theorem exists_norm_eq_neg_one {k : Type} [Field k] [Finite k] (σ : k →+* k) 
   have hd : d ≠ 0 := fun h => pow_ne_zero 2 hy (congrArg Subtype.val h)
   have hc : ringChar k0 ≠ 2 := by
     intro h
-    haveI : CharP k0 2 := ringChar.of_eq h
-    haveI : CharP k 2 := charP_of_injective_ringHom (f := k0.subtype) Subtype.val_injective 2
+    have : CharP k0 2 := ringChar.of_eq h
+    have : CharP k 2 := charP_of_injective_ringHom (f := k0.subtype) Subtype.val_injective 2
     exact h2 (ringChar.eq k 2)
   obtain ⟨a, b, hab⟩ := FiniteField.exists_root_sum_quadratic
     (f := (Polynomial.X ^ 2 + Polynomial.C 1 : Polynomial k0)) (g := Polynomial.C (-d) * Polynomial.X ^ 2)
@@ -90,7 +90,7 @@ theorem exists_pair_seq {R : Type} [CommRing R] (bar : R ≃+* R) (hbb : ∀ x, 
       ∀ k, u k * bar (u k) + a k * bar (a k) ∈ w ^ k := by
   by_cases hs : w.comap bar = w
   · have hmem : ∀ x ∈ w, bar x ∈ w := fun x hx => by rw [← hs] at hx; exact hx
-    letI := Ideal.Quotient.field w
+    let := Ideal.Quotient.field w
     let σ : R ⧸ w →+* R ⧸ w := Ideal.Quotient.lift w ((Ideal.Quotient.mk w).comp bar.toRingHom)
       fun x hx => Ideal.Quotient.eq_zero_iff_mem.2 (hmem x hx)
     have hσ : ∀ x, σ (Ideal.Quotient.mk w x) = Ideal.Quotient.mk w (bar x) := fun x => rfl
@@ -206,7 +206,7 @@ theorem bar_bar (H : Host E) (x : 𝓞 E) : H.bar (H.bar x) = x := by
 theorem exists_sub_bar_notMem (H : Host E) {w : Ideal (𝓞 E)} (hw : w ≠ ⊤) : ∃ y, y - H.bar y ∉ w := by
   by_contra hn
   push Not at hn
-  haveI := H.unram
+  have := H.unram
   have e : ∀ x, IsCMField.ringOfIntegersComplexConj E x = H.bar x := fun x => by
     apply RingOfIntegers.ext
     rw [H.bar_eq]; simp
@@ -247,8 +247,8 @@ theorem exists_isIsoCols (c : Coeff l) (T : CDVR) (io : c.F →+* T.Fr) (p : ℕ
       rw [Ideal.mem_comap, map_natCast]; exact hp
     rw [h, Ideal.mem_bot] at this
     exact hp0 (by exact_mod_cast this)
-  haveI hm : ((IsLocalRing.maximalIdeal T.V).comap φ).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hb
-  haveI : Finite (𝓞 E ⧸ (IsLocalRing.maximalIdeal T.V).comap φ) := Ideal.finiteQuotientOfFreeOfNeBot _ hb
+  have hm : ((IsLocalRing.maximalIdeal T.V).comap φ).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hb
+  have : Finite (𝓞 E ⧸ (IsLocalRing.maximalIdeal T.V).comap φ) := Ideal.finiteQuotientOfFreeOfNeBot _ hb
   obtain ⟨y, hy⟩ := exists_sub_bar_notMem H hm.ne_top
   obtain ⟨α, hα⟩ := exists_pair H.bar (bar_bar H) φ hy (q := p) (by rw [map_natCast]; exact_mod_cast hp0)
   let c1 : Fin i → Fin n := fun b => g ⟨b, by omega⟩
@@ -299,7 +299,7 @@ theorem exists_isCols : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   choose B hB using fun f : {f : Lt1 Dw // cx f ≠ 0} =>
     exists_isIsoCols c T io p hp f.1.1 (fun j => blk ⟨f, j⟩) fun j j' h => by simpa using blk.injective h
   refine ⟨fun f => if h : cx f ≠ 0 then B ⟨f, h⟩ else 0, blk, fun f => ?_⟩
-  simp only [dif_pos f.2]
+  simp only [dite_eq_left f.2]
   exact hB f
 
 end GlobalTheory.IsoCols

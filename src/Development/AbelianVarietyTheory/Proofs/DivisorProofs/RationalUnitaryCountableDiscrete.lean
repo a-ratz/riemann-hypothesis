@@ -52,9 +52,9 @@ namespace GlobalTheory.RatUDisc
 
 theorem countable_ratU (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) : Countable (ratU σ J) := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
-  haveI : Countable (GL (Fin n) E) := Units.val_injective.countable
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have : Countable (GL (Fin n) E) := Units.val_injective.countable
   refine Function.Injective.countable (f := fun x : ratU σ J =>
     (Classical.choose (Subgroup.mem_subgroupOf.1 x.2) : GL (Fin n) E)) ?_
   intro x y h
@@ -72,7 +72,7 @@ theorem discrete_ratU (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
   let f : ratU σ J → Matrix (Fin n) (Fin n) (AF F ⊗[F] E) :=
     fun g => ((g.1.1 : GL (Fin n) (AF F ⊗[F] E)) : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)) - 1
   have hf : Continuous f :=
-    (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).sub
+    (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).sub
       continuous_const
   have hf1 : f 1 = 0 := sub_self _
   rw [isOpen_singleton_iff_nhds_eq_pure]

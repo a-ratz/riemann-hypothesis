@@ -84,7 +84,7 @@ theorem coordK_map_unit (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {d : ℕ} (b
     (GlobalTheory.CompanionTheory.SW.coordK R b lam).map (fun y => algebraMap R (R ⊗[F] E) (u : R) * y) =
       (c ^ d) • GlobalTheory.CompanionTheory.SW.coordK R b lam := by
   obtain ⟨hr, -, -, -, -, -, hh, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hb := hh d b
   have hemb : MeasurableEmbedding (fun (y : R ⊗[F] E) (k : Fin d) =>
       (Algebra.TensorProduct.basis R b).repr y k) :=
@@ -104,10 +104,10 @@ end U
 theorem coordW_map_unit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure (Ainf F)), lam.IsAddHaarMeasure → ∀ t : Ainf F, IsUnit t → ∀ c : ℝ≥0, lam.map (fun y => t * y) = c • lam → (GlobalTheory.CompanionTheory.SW.coordW (Ainf F) b lam 1 M).map (fun X p i => algebraMap (Ainf F) (Ainf F ⊗[F] E) t * X p i) = (c ^ (d * M)) • GlobalTheory.CompanionTheory.SW.coordW (Ainf F) b lam 1 M := by
   intro F E _ _ _ _ _ σ hσ M d b lam hlam t ht c h
   obtain ⟨j1, j2, j3, j4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
-  haveI : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨hK, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Ainf F) d b lam hlam
-  haveI := hK
+  have := hK
   obtain ⟨u, rfl⟩ := ht
   set f : Ainf F ⊗[F] E → Ainf F ⊗[F] E := fun y => algebraMap (Ainf F) (Ainf F ⊗[F] E) (u : Ainf F) * y with hf
   have hfm : Measurable f := (continuous_const.mul continuous_id).measurable

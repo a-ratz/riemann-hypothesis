@@ -135,7 +135,7 @@ theorem exists_isStdInf : ∃ laminf : Measure (Ainf F), IsStdInf laminf := by
     have hv : ((μ₀ D₀).toNNReal : ℝ≥0∞) = μ₀ D₀ := ENNReal.coe_toNNReal ht
     have hne : (μ₀ D₀).toNNReal ≠ 0 := ENNReal.toNNReal_ne_zero.2 ⟨h0, ht⟩
     change (c • μ₀) D₀ = 1
-    rw [Measure.smul_apply, ← hv, ENNReal.smul_def, smul_eq_mul, hv, ← hv, ← ENNReal.coe_mul,
+    rw [smul_apply, ← hv, ENNReal.smul_def, smul_eq_mul, hv, ← hv, ← ENNReal.coe_mul,
       inv_mul_cancel₀ hne, ENNReal.coe_one]
   let E : Ainf F ≃ᵐ mixedSpace F :=
     (Homeomorph.mk e.toEquiv hce hcs).toMeasurableEquiv

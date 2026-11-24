@@ -87,7 +87,7 @@ theorem integrable {I : Type} [Fintype I] (hb : B1b) (hK : KapInt) (k : I → �
     refine ⟨hm.aestronglyMeasurable, ?_⟩
     unfold HasFiniteIntegral
     calc ∫⁻ w, ‖Kap k z w‖ₑ = ∫⁻ w, ENNReal.ofReal (Kap k z w) := by
-          congr 1; funext w; exact Real.enorm_eq_ofReal (Kap_nonneg k z w)
+          congr 1; funext w; exact Real.eNorm_eq_ofReal (Kap_nonneg k z w)
       _ ≤ C1 := hl
       _ < ⊤ := ENNReal.coe_lt_top
   have hc : 0 ≤ ∏ v, (((k v : ℝ) - 1) / (4 * Real.pi)) := Finset.prod_nonneg fun v _ => by

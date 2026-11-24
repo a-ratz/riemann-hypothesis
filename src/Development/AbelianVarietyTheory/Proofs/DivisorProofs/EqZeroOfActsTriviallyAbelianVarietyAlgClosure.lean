@@ -84,7 +84,7 @@ theorem eq_zero_of_act_pullback_eq_one : ∀ (K Ω : Type) [Field K] [Field Ω] 
     | succ m ih => rw [Nat.cast_succ, α.add, comp_mul, ih, α.one, Category.comp_id, pow_succ]
   have hall : ∀ y : ptOver K L ⟶ A, y ^ n = 1 := by
     intro y
-    haveI := α.hom r
+    have := α.hom r
     rw [← hnat, hr, α.mul, ← Category.assoc, h1, one_comp]
   obtain ⟨v, m, hlm, hnm⟩ := Nat.exists_eq_pow_mul_and_not_dvd hn0 l hl'.ne_one
   have hsub : ∀ y : ptOver K L ⟶ A, y ^ (l ^ (v + 1)) = 1 → y ^ (l ^ v) = 1 := by

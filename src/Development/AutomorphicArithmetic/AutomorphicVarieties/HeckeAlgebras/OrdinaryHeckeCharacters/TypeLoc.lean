@@ -135,8 +135,8 @@ private theorem UpperTheory.exists_dual_family_of_linearIndependent' (O : Type) 
     {G : Type} [Fintype G] {m : ℕ} (u : Fin m → G → O) (hu : LinearIndependent O u) :
     ∃ c : Fin m → G → ℂ, ∀ k j, ∑ h, c k h * algebraMap O ℂ (u j h) = if k = j then 1 else 0 := by
   classical
-  letI : Algebra (FractionRing O) ℂ := FractionRing.liftAlgebra O ℂ
-  haveI : IsScalarTower O (FractionRing O) ℂ := FractionRing.isScalarTower_liftAlgebra O ℂ
+  let : Algebra (FractionRing O) ℂ := FractionRing.liftAlgebra O ℂ
+  have : IsScalarTower O (FractionRing O) ℂ := FractionRing.isScalarTower_liftAlgebra O ℂ
   let w : Fin m → G → FractionRing O := fun j h => algebraMap O (FractionRing O) (u j h)
   have hw : LinearIndependent (FractionRing O) w := by
     rw [← LinearIndependent.iff_fractionRing O (FractionRing O)]
@@ -285,15 +285,15 @@ section -- clump:auto
 private theorem UpperTheory.exists_mul_eq_algebraMap_of_galois_fixed (O : Type) [CommRing O] [IsDomain O] [Algebra O ℂ] [FaithfulSMul O ℂ]
     [Algebra.IsAlgebraic O ℂ] (z : ℂ) (hz : ∀ γ : ℂ ≃ₐ[O] ℂ, γ z = z) :
     ∃ a b : O, b ≠ 0 ∧ algebraMap O ℂ b * z = algebraMap O ℂ a := by
-  letI : Algebra (FractionRing O) ℂ := FractionRing.liftAlgebra O ℂ
-  haveI : IsScalarTower O (FractionRing O) ℂ := FractionRing.isScalarTower_liftAlgebra O ℂ
-  haveI : Algebra.IsAlgebraic (FractionRing O) ℂ :=
+  let : Algebra (FractionRing O) ℂ := FractionRing.liftAlgebra O ℂ
+  have : IsScalarTower O (FractionRing O) ℂ := FractionRing.isScalarTower_liftAlgebra O ℂ
+  have : Algebra.IsAlgebraic (FractionRing O) ℂ :=
     Algebra.IsAlgebraic.extendScalars (FaithfulSMul.algebraMap_injective O (FractionRing O))
-  haveI : CharZero (FractionRing O) := RingHom.charZero (algebraMap (FractionRing O) ℂ)
-  haveI : Algebra.IsSeparable (FractionRing O) ℂ := Algebra.IsAlgebraic.isSeparable_of_perfectField
-  haveI : IsAlgClosure (FractionRing O) ℂ := ⟨inferInstance, inferInstance⟩
-  haveI : Normal (FractionRing O) ℂ := inferInstance
-  haveI : IsGalois (FractionRing O) ℂ := ⟨⟩
+  have : CharZero (FractionRing O) := RingHom.charZero (algebraMap (FractionRing O) ℂ)
+  have : Algebra.IsSeparable (FractionRing O) ℂ := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have : IsAlgClosure (FractionRing O) ℂ := ⟨inferInstance, inferInstance⟩
+  have : Normal (FractionRing O) ℂ := inferInstance
+  have : IsGalois (FractionRing O) ℂ := ⟨⟩
   have hmem : z ∈ Set.range (algebraMap (FractionRing O) ℂ) :=
     (InfiniteGalois.mem_range_algebraMap_iff_fixed z).2 (fun f => hz (f.restrictScalars O))
   obtain ⟨q, rfl⟩ := hmem
@@ -309,7 +309,7 @@ theorem UpperTheory.le_span_integralValued_of_galoisStable :
     ∀ (O : Type) [CommRing O] [IsDomain O] [Algebra O ℂ] [FaithfulSMul O ℂ] [Algebra.IsAlgebraic O ℂ] (X : Type) [Finite X] (I : Submodule ℂ (X → ℂ)), (∀ γ : ℂ ≃ₐ[O] ℂ, ∀ x ∈ I, (fun g => γ (x g)) ∈ I) → I ≤ Submodule.span ℂ {x | x ∈ I ∧ ∀ g, x g ∈ (algebraMap O ℂ).range} := by
   intro O _ _ _ _ _ X _ I hI
   classical
-  haveI := Fintype.ofFinite X
+  have := Fintype.ofFinite X
   have hfix : ∀ x ∈ I, (∀ γ : ℂ ≃ₐ[O] ℂ, (fun g => γ (x g)) = x) →
       x ∈ Submodule.span ℂ {x | x ∈ I ∧ ∀ g, x g ∈ (algebraMap O ℂ).range} := by
     intro x hx hγ
@@ -514,17 +514,17 @@ open UpperTheory.V.Hi.TyLoc in
 theorem UpperTheory.V.Hi.typeLoc : ∀ (O : Type) [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] [Algebra O ℂ] [FaithfulSMul O ℂ] [Algebra.IsAlgebraic O ℂ] (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (K : Subgroup G), IsCompact (K : Set G) → ∀ (P : SmIrr G → Prop) (d : ℕ) (ξ : Representation ℂ K (Fin d → ℂ)), GlobalTheory.PRep.IsSmooth ξ → (∀ π : SmIrr G, (∃ f : (Fin d → ℂ) →ₗ[ℂ] π.V, f ≠ 0 ∧ ∀ k v, f (ξ k v) = π.ρ k (f v)) ↔ P π) → (∀ (γ : ℂ ≃ₐ[O] ℂ) (σ σ' : SmIrr G) (f : σ.V ≃+ σ'.V), (∀ (z : ℂ) v, f (z • v) = γ z • f v) → (∀ g v, f (σ.ρ g v) = σ'.ρ g (f v)) → P σ → P σ') → ∃ (m : ℕ) (τ : K →* GL (Fin m) O), IsOpen (τ.ker : Set K) ∧ ∀ π : SmIrr G, (∃ y : Fin m → π.V, y ≠ 0 ∧ ∀ (k : K) i, ∑ a, algebraMap O ℂ (τ k i a) • π.ρ k (y a) = y i) ↔ P π := by
   intro O _ _ _ _ _ _ G _ _ _ K hK P d ξ hξ hP hγ
   classical
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   let U : Subgroup K := MonoidHom.ker ξ
   have hU : IsOpen (U : Set K) := by
     have : (U : Set K) = ⋂ i : Fin d, {g | ξ g (Pi.single i 1) = Pi.single i 1} := by
       ext g
-      simp only [U, SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [U, SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_iInter, Set.mem_ofPred_eq]
       refine ⟨fun h i => by rw [h]; rfl, fun h => (Pi.basisFun ℂ (Fin d)).ext fun i => by simpa using h i⟩
     rw [this]
     exact isOpen_iInter_of_finite fun i => hξ _
-  haveI : Finite (K ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
-  letI : Fintype (K ⧸ U) := Fintype.ofFinite _
+  have : Finite (K ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
+  let : Fintype (K ⧸ U) := Fintype.ofFinite _
   let R : ∀ π : SmIrr G, Representation ℂ K π.V := fun π => π.ρ.comp K.subtype
   let N : ∀ π : SmIrr G, Submodule ℂ π.V := fun π => Representation.invariants ((R π).comp U.subtype)
   let RQ : ∀ π : SmIrr G, Representation ℂ (K ⧸ U) (N π) := fun π => (R π).quotientToInvariants U

@@ -86,7 +86,7 @@ theorem transporter_finite {Γ Y : Type} [Group Γ] [MulAction Γ Y] (u v : Y)
   by_cases h : u ∈ MulAction.orbit Γ v
   · obtain ⟨δ, rfl⟩ := h
     exact Finite.of_equiv _ (transporterEquiv v δ).symm
-  · haveI := transporter_isEmpty u v h
+  · have := transporter_isEmpty u v h
     infer_instance
 
 theorem sum_transporter {Γ Y I' : Type} [Group Γ] [MulAction Γ Y] [Fintype I'] (y : I' → Y)
@@ -97,7 +97,7 @@ theorem sum_transporter {Γ Y I' : Type} [Group Γ] [MulAction Γ Y] [Fintype I'
   obtain ⟨j, hj, huniq⟩ := hy u
   rw [Finset.sum_eq_single j]
   · obtain ⟨δ, rfl⟩ := hj
-    haveI := hf j
+    have := hf j
     have h1 : Nat.card {γ : Γ // γ • (δ • y j) = y j} = Nat.card (MulAction.stabilizer Γ (y j)) :=
       Nat.card_congr (transporterEquiv (y j) δ)
     have h2 : (Nat.card (MulAction.stabilizer Γ (y j)) : ℂ) ≠ 0 := by
@@ -105,7 +105,7 @@ theorem sum_transporter {Γ Y I' : Type} [Group Γ] [MulAction Γ Y] [Fintype I'
     show _ * (Nat.card {γ : Γ // γ • (δ • y j) = y j} : ℂ) = 1
     rw [h1, inv_mul_cancel₀ h2]
   · intro k _ hk
-    haveI := transporter_isEmpty (Γ := Γ) u (y k) (fun h => hk (huniq k h))
+    have := transporter_isEmpty (Γ := Γ) u (y k) (fun h => hk (huniq k h))
     simp
   · simp
 
@@ -123,12 +123,12 @@ theorem fibre_sum {Γ X Y Z I' : Type} [Group Γ] [MulAction Γ Y] [Fintype I']
     (hf : ∀ i, Finite (MulAction.stabilizer Γ (y i))) (hx : {z | p z = x₀}.Finite) :
     ∑ᶠ z ∈ {z | p z = x₀}, φ z = ∑ j, ((Nat.card (MulAction.stabilizer Γ (y j)) : ℂ))⁻¹ *
       ∑ᶠ t : {t : Z × Γ // p t.1 = x₀ ∧ t.2 • q t.1 = y j}, φ t.1.1 := by
-  haveI : Fintype {z | p z = x₀} := hx.fintype
+  have : Fintype {z | p z = x₀} := hx.fintype
   have key : ∀ j, ∑ᶠ t : {t : Z × Γ // p t.1 = x₀ ∧ t.2 • q t.1 = y j}, φ t.1.1 =
       ∑ z : {z | p z = x₀}, (Nat.card {γ : Γ // γ • q z.1 = y j} : ℂ) * φ z.1 := by
     intro j
-    haveI := hf j
-    haveI : ∀ z : {z | p z = x₀}, Fintype {γ : Γ // γ • q z.1 = y j} := fun z =>
+    have := hf j
+    have : ∀ z : {z | p z = x₀}, Fintype {γ : Γ // γ • q z.1 = y j} := fun z =>
       @Fintype.ofFinite _ (transporter_finite _ _)
     rw [← finsum_comp_equiv (pairEquiv p q x₀ (y j)), finsum_eq_sum_of_fintype, Fintype.sum_sigma]
     refine Finset.sum_congr rfl fun z _ => ?_
@@ -243,7 +243,7 @@ theorem exists_pairing {Γ W : Type} [Group Γ] [NormedAddCommGroup W] [InnerPro
     inner ℂ (F (H.choose * H.choose_spec.choose)) (F' H.choose) else 0, ?_⟩
   intro h a ha hx
   have H : Rel J L x (h : G ⧸ J) ((h * a : G) : G ⧸ J) := ⟨h, a, ha, hx, rfl, rfl⟩
-  simp only [dif_pos H]
+  simp only [dite_eq_left H]
   obtain ⟨hb, -, e1, e2⟩ := H.choose_spec.choose_spec
   generalize H.choose_spec.choose = b at hb e2 ⊢
   generalize H.choose = g at e1 e2 ⊢
@@ -273,7 +273,7 @@ open DoubleCosetAdjoint in
 theorem adInner_dcOp_adjoint : ∀ {G Γ W I : Type} [Group G] [Group Γ] [NormedAddCommGroup W] [InnerProductSpace ℂ W] [Fintype I] (ι : Γ →* G) (ρ : Γ →* Module.End ℂ W) (J L : Subgroup G) (χ : J →* ℂˣ) (y : I → G) (x : G) (A A' : Finset G), (∀ γ u u', inner ℂ (ρ γ u) (ρ γ u') = inner ℂ u u') → (∀ k, ‖(χ k : ℂ)‖ = 1) → IsReps ι J y → (∀ i, Finite (stab ι J (y i))) → (∀ k ∈ J, ∃ k₁ ∈ J, ∃ k₂ ∈ J, k₁ ∈ L ∧ k = k₁ * k₂ ∧ ∀ l ∈ L, Commute k₂ l) → (∀ k : J, (k : G) ∈ L → χ k = 1) → (∀ a ∈ A, a ∈ L) → (∀ a ∈ A', a ∈ L) → IsDC J x A → IsDC J x⁻¹ A' → ∀ F ∈ AdForms ι ρ J χ, ∀ F' ∈ AdForms ι ρ J χ, adInner ι J y (dcOp A F) F' = adInner ι J y F (dcOp A' F') := by
   intro G Γ W I _ _ _ _ _ ι ρ J L χ y x A A' hρ hn hy hfin hd hχ hA hA' hD hD' F hF F' hF'
   obtain ⟨φ, hφ⟩ := exists_pairing ι ρ χ x hn hd hχ hF hF'
-  letI : MulAction Γ (G ⧸ J) := MulAction.compHom (G ⧸ J) ι
+  let : MulAction Γ (G ⧸ J) := MulAction.compHom (G ⧸ J) ι
   have hs : ∀ (γ : Γ) (g : G), γ • (g : G ⧸ J) = ((ι γ * g : G) : G ⧸ J) := fun _ _ => rfl
   let S : SubMulAction Γ ((G ⧸ J) × (G ⧸ J)) :=
     { carrier := {z | Rel J L x z.1 z.2}

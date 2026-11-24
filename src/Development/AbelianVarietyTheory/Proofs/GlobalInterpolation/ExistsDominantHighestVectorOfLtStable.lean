@@ -135,7 +135,7 @@ theorem GlobalTheory.Alc.exists_dominant_highest_vector_of_lt : ∀ (k : Type) [
   let S : Set ℕ := {h | ∃ (μ : Fin N → ℕ) (v : MvPolynomial (Fin N × Fin N) k), v ∈ M' ∧ v ∉ M ∧
     IsWeightedHomogeneous (rowW N N) v μ ∧ height N μ = h}
   have hne : S.Nonempty := by
-    obtain ⟨f, hfM', hfM⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨f, hfM', hfM⟩ := IsConcreteLE.exists_of_lt hlt
     by_contra hcon
     apply hfM
     rw [← sum_weightedHomogeneousComponent (rowW N N) f,

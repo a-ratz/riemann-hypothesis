@@ -81,7 +81,7 @@ theorem ringKrullDim_quotient_add_one_le_of_lt {W' W : Ideal (MvPolynomial (Fin 
     ringKrullDim (MvPolynomial (Fin n) F ⧸ W) + 1 ≤ ringKrullDim (MvPolynomial (Fin n) F ⧸ W') := by
   set p : Ideal (MvPolynomial (Fin n) F ⧸ W') := W.map (Ideal.Quotient.mk W')
   have hp : p ≠ ⊥ := by
-    obtain ⟨x, hxW, hxW'⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hxW, hxW'⟩ := IsConcreteLE.exists_of_lt hlt
     intro h
     apply hxW'
     rw [← Ideal.Quotient.eq_zero_iff_mem]

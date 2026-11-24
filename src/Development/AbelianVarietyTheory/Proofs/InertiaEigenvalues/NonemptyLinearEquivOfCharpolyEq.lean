@@ -108,7 +108,7 @@ theorem finrank_eq_zero_of_hom [CharZero k] [FiniteDimensional k V] [FiniteDimen
         · simp [e₂]
         · exact e₁.symm }
   let b := Module.finBasis k (V × W)
-  haveI : IsSemisimpleModule A (V × W) := by
+  have : IsSemisimpleModule A (V × W) := by
     have hs := IsSemisimpleModule.sup (IsSemisimpleModule.range (LinearMap.inl A V W))
       (IsSemisimpleModule.range (LinearMap.inr A V W))
     rw [LinearMap.sup_range_inl_inr] at hs
@@ -138,10 +138,10 @@ theorem split_of_hom [FiniteDimensional k V] [FiniteDimensional k W]
       ((LinearEquiv.refl A _).prodCongr
         ((Submodule.quotientEquivOfIsCompl _ _ hP').symm.trans f.quotKerEquivRange))
   let e₂ : W ≃ₗ[A] Q × (LinearMap.range f) := (Submodule.prodEquivOfIsCompl _ _ hQ.symm).symm
-  haveI := finiteDimensional_sub (k := k) (LinearMap.ker f)
-  haveI := finiteDimensional_sub (k := k) (LinearMap.range f)
-  haveI := finiteDimensional_sub (k := k) Q
-  haveI : Nontrivial (LinearMap.range f) :=
+  have := finiteDimensional_sub (k := k) (LinearMap.ker f)
+  have := finiteDimensional_sub (k := k) (LinearMap.range f)
+  have := finiteDimensional_sub (k := k) Q
+  have : Nontrivial (LinearMap.range f) :=
     Submodule.nontrivial_iff_ne_bot.2 fun h => hf (LinearMap.range_eq_bot.1 h)
   have hpos : 0 < finrank k (LinearMap.range f) := Module.finrank_pos
   refine ⟨_, Q, _, ⟨e₁⟩, ⟨e₂⟩, ?_, ?_⟩
@@ -163,9 +163,9 @@ theorem nonempty_linear_equiv_of_charpoly_eq [CharZero k] (n : ℕ) : ∀ (V W :
       Nonempty (V ≃ₗ[A] W) := by
     intro V W _ _ _ _ _ _ _ _ _ _ _ _ hn h f hf
     obtain ⟨P, Q, S, ⟨e₁⟩, ⟨e₂⟩, hP, hQ⟩ := split_of_hom (k := k) f hf
-    haveI := finiteDimensional_sub (k := k) P
-    haveI := finiteDimensional_sub (k := k) Q
-    haveI := finiteDimensional_sub (k := k) S
+    have := finiteDimensional_sub (k := k) P
+    have := finiteDimensional_sub (k := k) Q
+    have := finiteDimensional_sub (k := k) S
     obtain ⟨e⟩ := ih (finrank k P + finrank k Q) (by omega) P Q le_rfl fun a => by
       have := h a
       rw [tr_congr e₁, tr_congr e₂, tr_prod, tr_prod] at this
@@ -174,8 +174,8 @@ theorem nonempty_linear_equiv_of_charpoly_eq [CharZero k] (n : ℕ) : ∀ (V W :
   intro V W _ _ _ _ _ _ _ _ _ _ _ _ hn h
   by_cases h₁ : ∀ f : V →ₗ[A] W, f = 0
   · by_cases h₂ : ∀ f : W →ₗ[A] V, f = 0
-    · haveI : Subsingleton V := Module.finrank_zero_iff.1 (finrank_eq_zero_of_hom h h₁ h₂)
-      haveI : Subsingleton W :=
+    · have : Subsingleton V := Module.finrank_zero_iff.1 (finrank_eq_zero_of_hom h h₁ h₂)
+      have : Subsingleton W :=
         Module.finrank_zero_iff.1 (finrank_eq_zero_of_hom (fun a => (h a).symm) h₂ h₁)
       exact ⟨LinearEquiv.ofSubsingleton V W⟩
     · push_neg at h₂
@@ -192,8 +192,8 @@ theorem exists_equiv_of_trace_eq [CharZero k] {Γ V W : Type} [Monoid Γ] [AddCo
     (hσ : σ.IsSemisimpleRepresentation)
     (h : ∀ g, LinearMap.trace k V (ρ g) = LinearMap.trace k W (σ g)) :
     ∃ e : V ≃ₗ[k] W, ∀ g v, e (ρ g v) = σ g (e v) := by
-  haveI := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule ρ).1 hρ
-  haveI := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule σ).1 hσ
+  have := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule ρ).1 hρ
+  have := (Representation.isSemisimpleRepresentation_iff_isSemisimpleModule_asModule σ).1 hσ
   have key : ∀ a : MonoidAlgebra k Γ, tr k ρ.asModule a = tr k σ.asModule a := by
     intro a
     unfold tr

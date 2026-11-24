@@ -65,19 +65,19 @@ variable {G : Subgroup 𝔸ˣ} {𝔤 : Submodule ℝ 𝔸} (h : IsExpLieAlgebra 
 
 private theorem UpperTheory.ConvolutionTheory.Tf.smooth_inv {f : G → ℂ} (hf : h.IsSmoothFun f) :
     h.IsSmoothFun fun g => f g⁻¹ := by
-  letI := h.chartedSpace
-  haveI := h.lieGroup ∞
+  let := h.chartedSpace
+  have := h.lieGroup ∞
   exact ContMDiff.comp (I' := 𝓘(ℝ, 𝔤)) hf (contMDiff_id.inv)
 
 private theorem UpperTheory.ConvolutionTheory.Tf.smooth_cont {f : G → ℂ} (hf : h.IsSmoothFun f) : Continuous f := by
-  letI := h.chartedSpace
+  let := h.chartedSpace
   exact ContMDiff.continuous hf
 
 private theorem UpperTheory.ConvolutionTheory.Tf.deriv_zero {f : G → ℂ} {U : Set G} (hU : IsOpen U) (h0 : ∀ g ∈ U, f g = 0)
     (X : 𝔤) : ∀ g ∈ U, h.rightDeriv X f g = 0 := by
   intro g hg
   have hc : Continuous fun Y : 𝔤 => g * h.expG Y := by
-    letI := h.chartedSpace
+    let := h.chartedSpace
     exact continuous_const.mul h.contMDiff_expG.continuous
   have he : (fun Y : 𝔤 => f (g * h.expG Y)) =ᶠ[𝓝 0] fun _ => 0 := by
     have : (fun Y : 𝔤 => g * h.expG Y) ⁻¹' U ∈ 𝓝 (0 : 𝔤) :=

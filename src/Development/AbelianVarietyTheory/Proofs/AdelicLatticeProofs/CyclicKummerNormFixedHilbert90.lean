@@ -95,7 +95,7 @@ theorem _root_.GlobalTheory.CNorm.kummer_basic : ∀ (p : ℕ) (F E : Type) [Fie
     rw [← AlgEquiv.coe_pow, ← hord, pow_orderOf_eq_one]
     rfl
   · intro y hy
-    haveI : IsCyclic Gal(E/F) := ⟨⟨σ, fun τ => by
+    have : IsCyclic Gal(E/F) := ⟨⟨σ, fun τ => by
       obtain ⟨k, hk⟩ := Subgroup.mem_zpowers_iff.1 (hgen τ)
       exact ⟨k, hk⟩⟩⟩
     have hn : Algebra.norm F y = 1 :=
@@ -104,7 +104,7 @@ theorem _root_.GlobalTheory.CNorm.kummer_basic : ∀ (p : ℕ) (F E : Type) [Fie
     refine ⟨(z : E)⁻¹, inv_ne_zero z.ne_zero, ?_⟩
     rw [map_inv₀, inv_div_inv, hz]
   · intro u y hy
-    haveI : NeZero p := ⟨hp.ne_zero⟩
+    have : NeZero p := ⟨hp.ne_zero⟩
     have hζ := h.root.map_of_injective (algebraMap F E).injective
     by_cases hy0 : y = 0
     · refine ⟨1, 0, ?_⟩
@@ -151,7 +151,7 @@ theorem _root_.GlobalTheory.CNorm.kummer_basic : ∀ (p : ℕ) (F E : Type) [Fie
         rw [Algebra.norm_zero] at hn
         exact x.ne_zero hn.symm
       refine ⟨Units.map (e : E →* AdjoinRoot (X ^ p - C δ)) (Units.mk0 y hy0), ?_⟩
-      simp only [Units.coe_map, Units.val_mk0, MonoidHom.coe_coe, RingHom.id_apply]
+      simp only [Units.coe_map, Units.val_mk0, MonoidHom.coe_ofClass, RingHom.id_apply]
       rw [Algebra.norm_eq_of_algEquiv, hn]
 
 end GlobalTheory.CNorm

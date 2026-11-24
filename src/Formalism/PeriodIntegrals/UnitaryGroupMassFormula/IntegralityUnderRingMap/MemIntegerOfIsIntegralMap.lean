@@ -64,7 +64,7 @@ open Formalism.MainNotions.S.Loc Formalism.MainNotions.S.LocNG
 
 theorem algebraMap_inj {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E) : Function.Injective (algebraMap F E) := by
-  haveI : Nontrivial E := Module.nontrivial_of_finrank_pos (by rw [M.L.rank]; norm_num)
+  have : Nontrivial E := Module.nontrivial_of_finrank_pos (by rw [M.L.rank]; norm_num)
   exact (algebraMap F E).injective
 
 theorem mem_integer_of_isIntegral {F : Type} [Field F] [ValuativeRel F] {s : F}
@@ -184,7 +184,7 @@ theorem disc_ne_zero {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
       rw [map_sub, map_mul, map_pow, ht, hn, map_ofNat]
       ring
     rw [← h1, h0, map_zero]
-  haveI := M.L.reduced
+  have := M.L.reduced
   have hz : w - M.L.cj w = 0 := IsReduced.eq_zero _ ⟨2, hsq⟩
   have hfix : M.L.cj w = w := (sub_eq_zero.mp hz).symm
   obtain ⟨a, ha⟩ := (M.L.cj_fix w).mp hfix
@@ -208,7 +208,7 @@ theorem coords_unique {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 theorem coords_exist {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E) {w : E} (hwn : w ∉ Set.range (algebraMap F E)) (x : E) :
     ∃ a b : F, x = algebraMap F E a + algebraMap F E b * w := by
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
   have hli : LinearIndependent F ![(1 : E), w] := by
     rw [LinearIndependent.pair_iff]
     intro s t hst

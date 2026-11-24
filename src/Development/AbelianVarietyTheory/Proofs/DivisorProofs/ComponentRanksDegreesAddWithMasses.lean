@@ -71,7 +71,7 @@ namespace GlobalTheory.NormScale
 
 theorem deg_scale : ∀ (K V : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (N N' : (K →+* ℂ) → V → ℝ) (t : (K →+* ℂ) → ℝ), HasGram N → (∀ σ, 0 < t σ) → (∀ σ, t ((starRingEnd ℂ).comp σ) = t σ) → (∀ σ x, N' σ x = t σ * N σ x) → HasGram N' ∧ ∀ L : Submodule (𝓞 K) V, L.FG → deg N' L = deg N L - (Formalism.HN.rkK L : ℝ) * ((∑ σ : K →+* ℂ, Real.log (t σ)) / (Module.finrank ℚ K : ℝ)) := by
   intro K V _ _ _ _ _ _ _ N N' t hN ht hc hN'
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   obtain ⟨⟨n, ⟨b, X⟩, hG⟩⟩ := hN
   set X' : InfinitePlace K → Matrix (Fin n) (Fin n) ℂ := fun v => ((t v.embedding : ℂ)⁻¹) • X v with hX'
   have htc : ∀ v : InfinitePlace K, (t v.embedding : ℂ) ≠ 0 := fun v => by
@@ -104,7 +104,7 @@ theorem deg_scale : ∀ (K V : Type) [Field K] [NumberField K] [_root_.NumberFie
       t v.embedding ^ (2 * j) * (Formalism.HN.gramPl b X v e).det.re := by
     intro v j e
     rw [hgram, Matrix.det_smul, Fintype.card_fin, ← Complex.ofReal_pow, Complex.re_ofReal_mul, ← pow_mul]
-  haveI : Module.Finite K V := Module.Finite.of_basis b
+  have : Module.Finite K V := Module.Finite.of_basis b
   obtain ⟨e, heL, hsp, he⟩ := Submodule.exists_fun_fin_finrank_span_eq K (L : Set V)
   have hj : Formalism.HN.rkK L = Module.finrank K (Submodule.span K (L : Set V)) := rfl
   generalize Module.finrank K (Submodule.span K (L : Set V)) = j at e heL hsp he hj
@@ -276,8 +276,8 @@ theorem pyth [Fintype (Comp Xo c)] (hO : Orthogonal U V dict G) (σ : c.F →+* 
 theorem goodW_of (hS : Splits U G) (hO : Orthogonal U V dict G) (h : ∀ Z, GoodOn U (xiR D) V dict Z G) :
     GoodW U (xiR D) V dict G := by
   classical
-  haveI : Finite (Comp Xo c) := CompFin.finite_comp Xo c
-  letI := Fintype.ofFinite (Comp Xo c)
+  have : Finite (Comp Xo c) := CompFin.finite_comp Xo c
+  let := Fintype.ofFinite (Comp Xo c)
   refine ⟨?_, ?_, ?_⟩
   · exact GlobalTheory.OrthSumGram.orth_sum_hasGram c.F (cuspW Xo c U G) (Comp Xo c) (normW U (xiR D) V dict G)
       (fun Z => sub U Z G) (fun σ x => petAt_nonneg _ _ _ _ _ _ _) (sub_indep hS) (sub_iSup hS)
@@ -348,8 +348,8 @@ theorem degRes_eq [_root_.NumberField.IsTotallyComplex c.F] (hO : Orthogonal U V
 theorem sums [_root_.NumberField.IsTotallyComplex c.F] (hS : Splits U G) (hO : Orthogonal U V dict G) (hW : GoodW U (xiR D) V dict G)
     (hOn : ∀ Z, GoodOn U (xiR D) V dict Z G) :
     rankW U G = ∑ᶠ Z : Comp Xo c, rankOn U Z G ∧ degW U (xiR D) V dict G = ∑ᶠ Z : Comp Xo c, degRes U V dict Z G := by
-  haveI : Finite (Comp Xo c) := CompFin.finite_comp Xo c
-  letI := Fintype.ofFinite (Comp Xo c)
+  have : Finite (Comp Xo c) := CompFin.finite_comp Xo c
+  let := Fintype.ofFinite (Comp Xo c)
   have hrd := fun Z => (GlobalTheory.RestrictNorm.restrict_deg c.F (cuspW Xo c U G) (cuspOn U Z G)
     (normW U (xiR D) V dict G) (Submodule.inclusion (cuspOn_le U Z G)) (Submodule.inclusion_injective _)
     hW.1).2 (latOn U Z G) (hOn Z).2.1
@@ -371,9 +371,9 @@ theorem adds : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Ho
     (dict : ∀ σ, GA D (V σ) → Σ k, Frame ((U σ).X k).Ψ r) (G : WTZ D.host.E),
     Splits U G → Orthogonal U V dict G → Adds U V dict G := by
   intro D H Dw l Xo c r U V dict G hS hO
-  haveI : Finite (Comp Xo c) := CompFin.finite_comp Xo c
-  letI := Fintype.ofFinite (Comp Xo c)
-  haveI : IsTotallyComplex c.F := totallyComplex c
+  have : Finite (Comp Xo c) := CompFin.finite_comp Xo c
+  let := Fintype.ofFinite (Comp Xo c)
+  have : IsTotallyComplex c.F := totallyComplex c
   refine ⟨⟨fun h Z => GlobalTheory.HSApp.goodOn_of_goodW U (xiR D) V dict Z G h, goodW_of hS hO⟩, fun hW => ?_⟩
   have hOn : ∀ Z, GoodOn U (xiR D) V dict Z G := fun Z => GlobalTheory.HSApp.goodOn_of_goodW U (xiR D) V dict Z G hW
   have hRes : ∀ Z, HasGram (normRes U V dict Z G) := fun Z => hasGram_normRes U V dict Z G (hOn Z).1

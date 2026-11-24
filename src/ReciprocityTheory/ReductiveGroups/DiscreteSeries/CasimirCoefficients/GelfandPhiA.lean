@@ -75,16 +75,16 @@ def smoothS (n : ℕ) : Submodule ℂ (Matrix (Fin n) (Fin n) ℂ → ℂ) where
 
 private theorem isOpen_OmegaSet' : IsOpen (OmegaSet n) := by
   show IsOpen {z : Matrix (Fin n) (Fin n) ℂ | ∀ i : Fin n, lead ((i : ℕ) + 1) z ≠ 0}
-  rw [Set.setOf_forall]
+  rw [Set.ofPred_forall]
   refine isOpen_iInter_of_finite fun i => isOpen_ne_fun ?_ continuous_const
   show Continuous fun z : Matrix (Fin n) (Fin n) ℂ => lead ((i : ℕ) + 1) z
   by_cases h : (i : ℕ) + 1 ≤ n
   · have e : (fun z : Matrix (Fin n) (Fin n) ℂ => lead ((i : ℕ) + 1) z) =
-        fun z => (z.submatrix (Fin.castLE h) (Fin.castLE h)).det := funext fun z => dif_pos h
+        fun z => (z.submatrix (Fin.castLE h) (Fin.castLE h)).det := funext fun z => dite_eq_left h
     rw [e]
     exact (continuous_id.matrix_submatrix _ _).matrix_det
   · have e : (fun z : Matrix (Fin n) (Fin n) ℂ => lead ((i : ℕ) + 1) z) = fun _ => 0 :=
-      funext fun z => dif_neg h
+      funext fun z => dite_eq_right h
     rw [e]
     exact continuous_const
 

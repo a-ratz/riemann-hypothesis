@@ -62,7 +62,7 @@ variable {S S₀ : Scheme.{0}} {f : S ⟶ S₀}
 theorem hom_ext_of_points [Flat f] [Surjective f] {X Y : Over S₀} {a b : X ⟶ Y}
     (h : ∀ (T : Over S) (t : Over.mk (T.hom ≫ f) ⟶ X), t ≫ a = t ≫ b) : a = b := by
   apply Over.OverMorphism.ext
-  haveI := Flat.epi_of_flat_of_surjective (pullback.fst X.hom f)
+  have := Flat.epi_of_flat_of_surjective (pullback.fst X.hom f)
   rw [← cancel_epi (pullback.fst X.hom f)]
   exact congrArg (fun z => z.left) (h (Over.mk (pullback.snd X.hom f))
     (Over.homMk (pullback.fst X.hom f) (by simpa using pullback.condition)))
@@ -113,9 +113,9 @@ theorem isPullback_of_baseChange [Flat f] [Surjective f] [QuasiCompact f] {T G B
     {i₀ : T₀ ⟶ G₀} {t₀ : T₀ ⟶ S₀} {q₀ : G₀ ⟶ B₀} {e₀ : S₀ ⟶ B₀}
     {τ : T ⟶ T₀} {g : G ⟶ G₀} {φ : B ⟶ B₀} (hτ : IsPullback τ t t₀ f) (hγ : IsPullback g q q₀ φ)
     (hi : τ ≫ i₀ = i ≫ g) (he : f ≫ e₀ = e ≫ φ) : IsPullback i₀ t₀ q₀ e₀ := by
-  haveI : Flat τ := (fpqc_of_isPullback hτ).1.2
-  haveI : Surjective τ := (fpqc_of_isPullback hτ).1.1
-  haveI := Flat.epi_of_flat_of_surjective τ
+  have : Flat τ := (fpqc_of_isPullback hτ).1.2
+  have : Surjective τ := (fpqc_of_isPullback hτ).1.1
+  have := Flat.epi_of_flat_of_surjective τ
   have w : i₀ ≫ q₀ = t₀ ≫ e₀ := by
     rw [← cancel_epi τ, reassoc_of% hi, hγ.w, reassoc_of% H.w, reassoc_of% hτ.w, he]
   let c : T₀ ⟶ pullback q₀ e₀ := pullback.lift i₀ t₀ w
@@ -129,7 +129,7 @@ theorem isPullback_of_baseChange [Flat f] [Surjective f] [QuasiCompact f] {T G B
     refine IsPullback.of_bot ?_ (by simp) hp
     rw [c₂, Category.id_comp]
     exact hτ
-  haveI : IsIso c := MorphismProperty.of_isPullback_of_descendsAlong
+  have : IsIso c := MorphismProperty.of_isPullback_of_descendsAlong
     (P := MorphismProperty.isomorphisms Scheme.{0})
     (Q := @Surjective ⊓ @Flat ⊓ @QuasiCompact) hc.flip
     (fpqc_of_isPullback hp) (inferInstanceAs (IsIso (𝟙 T)))
@@ -144,17 +144,17 @@ open ExtDescent
 theorem splitTorus_extension_descends :
     ∀ (k K : Type) [Field k] [Field K] (β : k →+* K) (G B : Over (Sp K)) [GrpObj G] [GrpObj B] (G₀ B₀ : Over (Sp k)) [GrpObj G₀] [GrpObj B₀] (X : Type) [AddCommGroup X] (φG : G.left ⟶ G₀.left) (φ : B.left ⟶ B₀.left), IsGrpPullback G G₀ (spMap β) φG → IsGrpPullback B B₀ (spMap β) φ → ∀ (q : G ⟶ B) (i : splitTorus (Sp K) X ⟶ G) (q₀ : G₀ ⟶ B₀) (i₀ : splitTorus (Sp k) X ⟶ G₀), φG ≫ q₀.left = q.left ≫ φ → GlobalTheory.SplitTorus.bcMap (spMap β) X ≫ i₀.left = i.left ≫ φG → IsMonHom q → Flat q.left → Surjective q.left → QuasiCompact q.left → IsMonHom i → IsPullback i (toUnit _) q (η[B] : 𝟙_ _ ⟶ B) → IsMonHom q₀ ∧ Flat q₀.left ∧ Surjective q₀.left ∧ QuasiCompact q₀.left ∧ IsMonHom i₀ ∧ IsPullback i₀ (toUnit _) q₀ (η[B₀] : 𝟙_ _ ⟶ B₀) := by
   intro k K _ _ β G B _ _ G₀ B₀ _ _ X _ φG φ hG hB q i q₀ i₀ wq wi hq hfl hsu hqc hi H
-  haveI h₁ : Flat (spMap β) := inferInstance
-  haveI h₂ : Surjective (spMap β) := inferInstance
-  haveI h₃ : QuasiCompact (spMap β) := inferInstance
+  have h₁ : Flat (spMap β) := inferInstance
+  have h₂ : Surjective (spMap β) := inferInstance
+  have h₃ : QuasiCompact (spMap β) := inferInstance
   have hγ : IsPullback φG q.left q₀.left φ := by
     refine IsPullback.of_bot ?_ wq hB.1
     rw [Over.w, Over.w]
     exact hG.1
   have hφ : (@Surjective ⊓ @Flat ⊓ @QuasiCompact : MorphismProperty Scheme.{0}) φ :=
     fpqc_of_isPullback hB.1
-  haveI := flat_descendsAlong_fpqc
-  haveI := quasiCompact_descendsAlong_fpqc.{0}
+  have := flat_descendsAlong_fpqc
+  have := quasiCompact_descendsAlong_fpqc.{0}
   have hT := SplitTorus.isGrpPullback_bcMap (spMap β) X
   refine ⟨isMonHom_of_grpPullback hG hB q q₀ wq,
     MorphismProperty.of_isPullback_of_descendsAlong (P := @Flat) hγ.flip hφ hfl,

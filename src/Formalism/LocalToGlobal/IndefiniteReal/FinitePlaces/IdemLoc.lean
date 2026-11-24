@@ -270,7 +270,7 @@ theorem roots_exist (t N : 𝓞 F) (hN : N ∈ v.asIdeal) (ht : t ∉ v.asIdeal)
       rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
       intro x hx
       have hx' : r < Valued.v x := not_le.mp hx
-      have hx0 : Valued.v x ≠ 0 := (lt_of_le_of_lt zero_le' hx').ne'
+      have hx0 : Valued.v x ≠ 0 := (lt_of_le_of_lt zero_le hx').ne'
       have hmem : {y : (v.adicCompletion F) | Valued.v y = Valued.v x} ∈ 𝓝 x := by
         first
         | exact Valuation.loc_const hx0
@@ -328,9 +328,9 @@ theorem roots_exist (t N : 𝓞 F) (hN : N ∈ v.asIdeal) (ht : t ∉ v.asIdeal)
         show Valued.v (g n - g k) ≤ _
         rw [← Valuation.map_neg, neg_sub]; exact hg n k hk
       exact { toIsHausdorff := h1, toIsPrecomplete := h2 }
-    haveI : IsAdicComplete (maximalIdeal (v.adicCompletionIntegers F)) (v.adicCompletionIntegers F) := adicInt_isAdicComplete
-    haveI : HenselianRing (v.adicCompletionIntegers F) (maximalIdeal (v.adicCompletionIntegers F)) := inferInstance
-    haveI : HenselianLocalRing (v.adicCompletionIntegers F) := by
+    have : IsAdicComplete (maximalIdeal (v.adicCompletionIntegers F)) (v.adicCompletionIntegers F) := adicInt_isAdicComplete
+    have : HenselianRing (v.adicCompletionIntegers F) (maximalIdeal (v.adicCompletionIntegers F)) := inferInstance
+    have : HenselianLocalRing (v.adicCompletionIntegers F) := by
       refine ⟨fun f hf a₀ h₁ h₂ => ?_⟩
       exact HenselianRing.is_henselian f hf a₀ h₁ (h₂.map _)
     have hI : (Valued.v : Valuation (v.adicCompletion F) _).Integers (v.adicCompletionIntegers F) :=

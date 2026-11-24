@@ -130,7 +130,7 @@ theorem mem_etaleLocus_of_flat {A B C : Type} [CommRing A] [CommRing B] [CommRin
     [Module.Flat A C] (Q : PrimeSpectrum (C ⊗[A] B)) (hQ : Q ∈ Algebra.etaleLocus C (C ⊗[A] B)) :
     PrimeSpectrum.comap (algebraMap B (C ⊗[A] B)) Q ∈ Algebra.etaleLocus A B := by
   rw [Algebra.etaleLocus_eq_compl_support] at hQ ⊢
-  haveI : Module.Flat B (C ⊗[A] B) :=
+  have : Module.Flat B (C ⊗[A] B) :=
     Module.Flat.of_linearEquiv (Algebra.IsPushout.equiv A B C (C ⊗[A] B)).toLinearEquiv.symm
   refine ⟨notMem_support_of_flat (KaehlerDifferential.map A C B (C ⊗[A] B)) ?_ Q hQ.1,
     notMem_support_of_flat (Algebra.H1Cotangent.map A C B (C ⊗[A] B)) ?_ Q hQ.2⟩
@@ -199,13 +199,13 @@ theorem exists_etale_of_isAffine {U T S : Scheme.{0}} [IsAffine S] (τ : U ⟶ S
   obtain ⟨C, k, _, t, ht⟩ := T.exists_Spec_apply_eq (pullback.snd τ h p)
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (i ≫ τ ≫ S.isoSpec.hom)
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (k ≫ h ≫ S.isoSpec.hom)
-  letI := φ.hom.toAlgebra
-  letI := ψ.hom.toAlgebra
-  letI : Algebra B (C ⊗[Γ(S, ⊤)] B) := Algebra.TensorProduct.rightAlgebra
-  haveI : Algebra.FinitePresentation Γ(S, ⊤) B := by
+  let := φ.hom.toAlgebra
+  let := ψ.hom.toAlgebra
+  let : Algebra B (C ⊗[Γ(S, ⊤)] B) := Algebra.TensorProduct.rightAlgebra
+  have : Algebra.FinitePresentation Γ(S, ⊤) B := by
     have : LocallyOfFinitePresentation (Spec.map φ) := by rw [hφ]; infer_instance
     exact (HasRingHomProperty.Spec_iff (P := @LocallyOfFinitePresentation)).1 this
-  haveI : Module.Flat Γ(S, ⊤) C := by
+  have : Module.Flat Γ(S, ⊤) C := by
     have : Flat (Spec.map ψ) := by rw [hψ]; infer_instance
     exact (HasRingHomProperty.Spec_iff (P := @Flat)).1 this
   have hpb : IsPullback (Spec.map (CommRingCat.ofHom (algebraMap B (C ⊗[Γ(S, ⊤)] B))))
@@ -240,10 +240,10 @@ theorem exists_etale_of_isAffine {U T S : Scheme.{0}} [IsAffine S] (τ : U ⟶ S
 
 theorem etale_nhds_of_flat_baseChange : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (U : Over (Sp R)) (g : ℕ) (τ : U.left ⟶ 𝔸(Fin g; Sp R)), LocallyOfFiniteType U.hom → τ ≫ (𝔸(Fin g; Sp R) ↘ Sp R) = U.hom → ∀ (T : Scheme.{0}) (h : T ⟶ 𝔸(Fin g; Sp R)), Flat h → ∀ (W : (pullback τ h).Opens) (p : ↥(pullback τ h)), p ∈ W → Etale (W.ι ≫ pullback.snd τ h) → ∃ V : U.left.Opens, pullback.fst τ h p ∈ V ∧ Etale (V.ι ≫ τ) := by
   intro R _ _ _ hR U g τ hU hτ T h hh W p hp hW
-  haveI := hR.1
-  haveI : LocallyOfFiniteType (τ ≫ (𝔸(Fin g; Sp R) ↘ Sp R)) := by rw [hτ]; exact hU
-  haveI : LocallyOfFiniteType τ := locallyOfFiniteType_of_comp τ (𝔸(Fin g; Sp R) ↘ Sp R)
-  haveI : IsLocallyNoetherian 𝔸(Fin g; Sp R) := LocallyOfFiniteType.isLocallyNoetherian (𝔸(Fin g; Sp R) ↘ Sp R)
+  have := hR.1
+  have : LocallyOfFiniteType (τ ≫ (𝔸(Fin g; Sp R) ↘ Sp R)) := by rw [hτ]; exact hU
+  have : LocallyOfFiniteType τ := locallyOfFiniteType_of_comp τ (𝔸(Fin g; Sp R) ↘ Sp R)
+  have : IsLocallyNoetherian 𝔸(Fin g; Sp R) := LocallyOfFiniteType.isLocallyNoetherian (𝔸(Fin g; Sp R) ↘ Sp R)
   exact exists_etale_of_isAffine τ h W p hp hW
 
 end GlobalTheory.EtaleAtDescent
@@ -1382,16 +1382,16 @@ theorem GlobalTheory.FibOpen.fibre_universallyOpen : ∀ (R : Type) [CommRing R]
     rw [← hc₂, ← Category.assoc, ← hφ₁, Category.assoc]
   suffices h : UniversallyOpen ψ by
     rw [← hψ₁]; infer_instance
-  haveI : IsProper a := hap
-  haveI : IsProper π := hπp
-  haveI : IsProper (a.fiberToSpecResidueField x) :=
+  have : IsProper a := hap
+  have : IsProper π := hπp
+  have : IsProper (a.fiberToSpecResidueField x) :=
     MorphismProperty.pullback_snd (P := @IsProper) _ _ hap
-  haveI : IsSeparated (pullback.fst (𝔸(Fin g; Sp R) ↘ Sp R) π) := MorphismProperty.pullback_fst (P := @IsSeparated) _ _ inferInstance
-  haveI : IsSeparated ((pullback.fst (𝔸(Fin g; Sp R) ↘ Sp R) π).fiberToSpecResidueField (τ x)) :=
+  have : IsSeparated (pullback.fst (𝔸(Fin g; Sp R) ↘ Sp R) π) := MorphismProperty.pullback_fst (P := @IsSeparated) _ _ inferInstance
+  have : IsSeparated ((pullback.fst (𝔸(Fin g; Sp R) ↘ Sp R) π).fiberToSpecResidueField (τ x)) :=
     MorphismProperty.pullback_snd (P := @IsSeparated) _ _ inferInstance
   haveI : IsProper (ψ ≫ pullback.snd _ _) := by rw [hψ₂]; infer_instance
-  haveI : IsProper ψ := IsProper.of_comp ψ (pullback.snd ((pullback.fst (𝔸(Fin g; Sp R) ↘ Sp R) π).fiberToSpecResidueField (τ x)) (Spec.map (τ.residueFieldMap x)))
-  haveI : UniversallyInjective ψ := by
+  have : IsProper ψ := IsProper.of_comp ψ (pullback.snd ((pullback.fst (𝔸(Fin g; Sp R) ↘ Sp R) π).fiberToSpecResidueField (τ x)) (Spec.map (τ.residueFieldMap x)))
+  have : UniversallyInjective ψ := by
     refine ((tfae_universallyInjective ψ).out 1 2).mpr ?_
     intro K _ q q' hq
     simp only at hq
@@ -1405,7 +1405,7 @@ theorem GlobalTheory.FibOpen.fibre_universallyOpen : ∀ (R : Type) [CommRing R]
       (by rw [ea]; exact GlobalTheory.FibOpen.range_comp_fromSpecResidueField x _) (by rw [ea, ea, e₂])
       (by rw [Category.assoc, Category.assoc, hb, ← Category.assoc q, e₃, Category.assoc])
     exact GlobalTheory.FibOpen.fiber_hom_ext a x key e₂
-  haveI : Surjective ψ := by
+  have : Surjective ψ := by
     constructor
     intro y
     let Ω := AlgebraicClosure ((pullback ((pullback.fst (𝔸(Fin g; Sp R) ↘ Sp R) π).fiberToSpecResidueField (τ x)) (Spec.map (τ.residueFieldMap x))).residueField y)
@@ -1476,18 +1476,18 @@ namespace GlobalTheory.Mum
 
 theorem surjective_of_isProper_of_app_injective : ∀ (X Y : Scheme.{0}) (a : X ⟶ Y), IsProper a → (∀ V : Y.Opens, Function.Injective (a.app V).hom) → Function.Surjective a := by
   intro X Y a ha hinj
-  haveI := ha
+  have := ha
   by_contra hne
   simp only [Function.Surjective, not_forall] at hne
   obtain ⟨y, hy⟩ := hne
   have hcl : IsClosed (Set.range a) := by
     simpa using a.isClosedMap _ isClosed_univ
   let V : Y.Opens := ⟨(Set.range a)ᶜ, hcl.isOpen_compl⟩
-  haveI : Nonempty V := ⟨⟨y, fun ⟨p, hp⟩ => hy ⟨p, hp⟩⟩⟩
+  have : Nonempty V := ⟨⟨y, fun ⟨p, hp⟩ => hy ⟨p, hp⟩⟩⟩
   have hV : a ⁻¹ᵁ V = ⊥ := by
     ext p
     simp [V]
-  haveI : Subsingleton Γ(X, a ⁻¹ᵁ V) :=
+  have : Subsingleton Γ(X, a ⁻¹ᵁ V) :=
     CommRingCat.subsingleton_of_isTerminal (X.sheaf.isTerminalOfEqEmpty hV)
   have : Subsingleton Γ(Y, V) := (hinj V).subsingleton
   exact not_subsingleton Γ(Y, V) this
@@ -1504,11 +1504,11 @@ theorem isolated_in_coordinate_fibre : ∀ (R : Type) [CommRing R] [IsDomain R] 
   have hφ2 : φ ≫ F.fiberToSpecResidueField (τ x) = a.fiberToSpecResidueField x ≫ Spec.map (τ.residueFieldMap x) :=
     pullback.lift_snd _ _ _
   have hUO := GlobalTheory.T.proper_surjective_affine_chart_bijective_sections R hR S X π U a b g τ c hπp hπs hπΓ hUf hUs hap haV hτ hc1 hc2 hc x hxc hxR hinj hsurj φ hφ1 hφ2
-  haveI : IsPreimmersion (F.fiberι (τ x)) := inferInstance
+  have : IsPreimmersion (F.fiberι (τ x)) := inferInstance
   obtain ⟨W, hW⟩ := GlobalTheory.T.exists_open_range_eq_inter_preimage_etale_univOpen X _ _ _ c (F.fiberι (τ x)) (a.fiberι x) φ hc inferInstance hUO hφ1.symm
   rw [Scheme.Hom.range_fiberι, Scheme.Hom.range_fiberι] at hW
   have hs := surjective_of_isProper_of_app_injective X U.left a hap (fun V => (haV V).1)
-  haveI := hap
+  have := hap
   refine ⟨⟨(a '' (W : Set X)ᶜ)ᶜ, (a.isClosedMap _ W.isOpen.isClosed_compl).isOpen_compl⟩, ?_, ?_⟩
   · rintro ⟨p, hp, hpx⟩
     have : p ∈ a ⁻¹' {x} := hpx

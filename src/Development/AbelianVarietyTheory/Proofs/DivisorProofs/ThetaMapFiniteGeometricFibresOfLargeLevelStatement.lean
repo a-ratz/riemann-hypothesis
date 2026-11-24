@@ -105,7 +105,7 @@ theorem finite_oActs : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     [IsAlgClosed K] [CharZero K] (P : PolAV (Sp K)), letI := H.starRing;
     Set.Finite {act : 𝓞 E → (P.A ⟶ P.A) | ∃ ρ : P.OAct (𝓞 E), ∀ a, ρ.act a = act a} := by
   intro E _ _ _ H K _ _ _ P
-  letI := H.starRing
+  let := H.starRing
   have h₂ := GlobalTheory.thetaPtDetermines_and_endDeterminedOnTorsion.2
   choose cn hcn using GlobalTheory.exists_starNormLE_of_isCMField E (fun a => H.bar_eq a)
   obtain ⟨s, hs⟩ := (Module.Finite.fg_top : (⊤ : Submodule ℤ (𝓞 E)).FG)
@@ -118,7 +118,7 @@ theorem finite_oActs : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       _ ≤ M ^ 2 := Nat.le_self_pow two_ne_zero _
   have hK : (M : K) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
   let T := {x : baseOver (Sp K) ⟶ P.A // x ^ M = 1}
-  haveI : Finite T := GlobalTheory.AbTorsionFinite.finite_torsion K P.A P.isAb M hM1
+  have : Finite T := GlobalTheory.AbTorsionFinite.finite_torsion K P.A P.isAb M hM1
   classical
   let F : (𝓞 E → (P.A ⟶ P.A)) → (s → T → Option T) := fun act a x =>
     if h : (x.1 ≫ act a) ^ M = 1 then some ⟨_, h⟩ else none
@@ -313,7 +313,7 @@ theorem rosati_fibre (t : SAB H S) {K : Type} [Field K] (P : PolAV (Sp K)) (x : 
     {α : P.A.left ⟶ t.G.left} (hα : IsGrpPullback P.A t.G x α) (hL : LBIso P.L (t.PP.L.pull α))
     {a b : P.A ⟶ P.A} (c : 𝓞 E) (ha : a.left ≫ α = α ≫ (t.act.act c).left)
     (hb : b.left ≫ α = α ≫ (t.act.act (H.bar c)).left) : RosatiAdj P.A P.L a b := by
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   let U₂ := lift (pushPt hα.1.w (fst P.A P.A)) (pushPt hα.1.w (snd P.A P.A))
   have u₁ : U₂.left ≫ (fst t.G t.G).left = (fst P.A P.A).left ≫ α := TripleDescent.lift_left_fst _ _
   have u₂ : U₂.left ≫ (snd t.G t.G).left = (snd P.A P.A).left ≫ α := TripleDescent.lift_left_snd _ _
@@ -337,10 +337,10 @@ theorem exists_oact (t : SAB H S) {K : Type} [Field K] (P : PolAV (Sp K)) (x : S
     {α : P.A.left ⟶ t.G.left} (hα : IsGrpPullback P.A t.G x α) (hL : LBIso P.L (t.PP.L.pull α)) :
     letI := H.starRing
     ∃ ρ : P.OAct (𝓞 E), ∀ c, (ρ.act c).left ≫ α = α ≫ (t.act.act c).left := by
-  letI := H.starRing
-  haveI := P.isAb.comm
+  let := H.starRing
+  have := P.isAb.comm
   obtain ⟨β, hβm, hβ⟩ := grpPullback_iso (isGrpPullback_pullback t.G x) hα
-  haveI := hβm
+  have := hβm
   let j' : OAct (𝓞 E) P.A := PolPartPull.oActIso β (OAct.pullback x t.G t.act)
   have hj : ∀ c, (j'.act c).left ≫ α = α ≫ (t.act.act c).left := fun c => by
     show (β.inv ≫ (Over.pullback x).map (t.act.act c) ≫ β.hom).left ≫ α = _
@@ -357,10 +357,10 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 theorem range_finite {La Q : Type} [AddCommGroup La] [Module.Finite ℤ La] [CommGroup Q] (f : La → Q)
     (hf : ∀ a b, f (a + b) = f a * f b) (n : ℕ) (hn : 0 < n) (hk : ∀ a, f (n • a) = 1) : (Set.range f).Finite := by
   let φ : Multiplicative La →* Q := MonoidHom.mk' (fun a => f a.toAdd) (fun a b => hf _ _)
-  haveI : Group.FG (Multiplicative La) := AddGroup.fg_iff_mul_fg.1 (Module.Finite.iff_addGroup_fg.1 ‹_›)
+  have : Group.FG (Multiplicative La) := AddGroup.fg_iff_mul_fg.1 (Module.Finite.iff_addGroup_fg.1 ‹_›)
   have hpow : ∀ a : Multiplicative La, φ a ^ n = 1 := fun a => by
     rw [← map_pow]; exact hk a.toAdd
-  haveI : Finite φ.range := CommGroup.finite_of_fg_isMulTorsion _ (fun y => by
+  have : Finite φ.range := CommGroup.finite_of_fg_isMulTorsion _ (fun y => by
     obtain ⟨_, a, rfl⟩ := y
     exact isOfFinOrder_iff_pow_eq_one.2 ⟨n, hn, Subtype.ext (hpow a)⟩)
   have : Set.range f = (φ.range : Set Q) := by
@@ -373,8 +373,8 @@ theorem tors_finite (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) {K :
     (P : PolAV (Sp K)) (x : Sp K ⟶ Xo.X) {α : P.A.left ⟶ Xo.univ.t.G.left}
     (hα : IsGrpPullback P.A Xo.univ.t.G x α) (n : ℕ) (hn : 0 < n) :
     {z : baseOver (Sp K) ⟶ P.A | z ^ n = 1}.Finite := by
-  haveI := Dw.fin
-  haveI : Module.Finite ℤ Dw.La := Module.Finite.trans (𝓞 E) Dw.La
+  have := Dw.fin
+  have : Module.Finite ℤ Dw.La := Module.Finite.trans (𝓞 E) Dw.La
   have hs : x ≫ Xo.s = spMap (Spec.preimage (x ≫ Xo.s)).hom := by simp [spMap]
   obtain ⟨-, I, -⟩ := Xo.univ.geom K x _ hs
   have hR : (Set.range (I.ev n)).Finite := range_finite (I.ev n) (I.add n) n hn (fun a =>
@@ -419,11 +419,11 @@ theorem pow_of_add {La Q : Type} [AddCommGroup La] [Group Q] (f : La → Q) (hf 
 
 theorem finite_points : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (K : Type) [Field K] [IsAlgClosed K] (P : PolAV (Sp K)) (s₀ : Sp K ⟶ Sp (KA l)), Set.Finite {x : Sp K ⟶ Xo.X | x ≫ Xo.s = s₀ ∧ ∃ α : P.A.left ⟶ Xo.univ.t.G.left, IsGrpPullback P.A Xo.univ.t.G x α ∧ LBIso P.L (Xo.univ.t.PP.L.pull α)} := by
   intro E _ _ _ H Dw l Xo K _ _ P s₀
-  haveI := P.isAb.comm
-  letI := H.starRing
-  haveI := Dw.fin
-  haveI : Module.Finite ℤ Dw.La := Module.Finite.trans (𝓞 E) Dw.La
-  haveI : CharZero K := charZero_of_injective_ringHom
+  have := P.isAb.comm
+  let := H.starRing
+  have := Dw.fin
+  have : Module.Finite ℤ Dw.La := Module.Finite.trans (𝓞 E) Dw.La
+  have : CharZero K := charZero_of_injective_ringHom
     (((Spec.preimage s₀).hom.comp (algebraMap ℚ (KA l))).injective)
   set X0 := {x : Sp K ⟶ Xo.X | x ≫ Xo.s = s₀ ∧ ∃ α : P.A.left ⟶ Xo.univ.t.G.left,
     IsGrpPullback P.A Xo.univ.t.G x α ∧ LBIso P.L (Xo.univ.t.PP.L.pull α)} with hX0
@@ -476,7 +476,7 @@ theorem finite_points : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
         rw [congrFun h2 a]; exact ObjPull.secPull_left (hα x') _⟩)
       (fun a => ⟨pt x (Xo.univ.etaA a), ObjPull.secPull_left (hα x) _, by
         rw [congrFun h3 a]; exact ObjPull.secPull_left (hα x') _⟩)
-  haveI := (hA.prod (hFM.prod hFA)).to_subtype
+  have := (hA.prod (hFM.prod hFA)).to_subtype
   exact Set.finite_coe_iff.1 (Finite.of_injective (fun x => (⟨F x, mem x⟩ : ↥(As ×ˢ FM ×ˢ FA)))
     (fun x x' h => inj (congrArg Subtype.val h)))
 
@@ -606,7 +606,7 @@ theorem exists_thetaData (Xo : Moduli Dw l) (c : Coeff l) {o : Type} [CommRing o
   rw [hy] at hP1
   obtain ⟨a, ha0, ha⟩ := (GlobalTheory.T.projectiveHomogeneousCoords_field_determine_descend).2.1 o K n (x ≫ f) e (symTup cy) he hP1
   obtain ⟨mu, hmu0, hmuT⟩ := hT cy a ha0 ha
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨rig, hrig⟩ := P.rigid
   have hP : HasTh P.A P.L rig (3 ^ j * 81) (𝟙 (Sp K)) cy := by
     rw [hasTh_iff] at hH ⊢
@@ -622,20 +622,20 @@ namespace GlobalTheory.UMin.QF
 
 theorem finite_fibre_thMap : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (o : Type) [CommRing o] (j n : ℕ) (f : Xo.XF c ⟶ PSpace o n), 81 ^ (Module.finrank ℚ E / 2 * (Dw.p + Dw.q)) * (Module.finrank ℚ E / 2 * (Dw.p + Dw.q)).factorial < 3 ^ j * 81 → n + 1 = (3 ^ j * 81) ^ (4 * (Module.finrank ℚ E / 2 * (Dw.p + Dw.q))) → ThMap Xo.univ.t.G Xo.univ.t.PP.L Xo.univ.t.PP.rig (3 ^ j * 81) (pullback.fst _ _ : Xo.XF c ⟶ Xo.X) f → ∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ Xo.XF c), Set.Finite {y : Sp K ⟶ Xo.XF c | y ≫ pullback.snd _ _ = x ≫ pullback.snd _ _ ∧ y ≫ f = x ≫ f} := by
   intro E _ _ _ H Dw l Xo c o _ j n f hbig hn hth K _ _ x
-  haveI : CharZero K := charZero_of_pt (x ≫ pullback.snd _ _)
+  have : CharZero K := charZero_of_pt (x ≫ pullback.snd _ _)
   set g := Module.finrank ℚ E / 2 * (Dw.p + Dw.q) with hg
   have hm0 : ((3 ^ j * 81 : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.2 (by positivity)
   have h3 : ((3 : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.2 (by norm_num)
   have hpos : 0 < (3 ^ j * 81) ^ 2 := by positivity
-  haveI : NeZero (((3 ^ j * 81) ^ 2 : ℕ) : K) := ⟨Nat.cast_ne_zero.2 hpos.ne'⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K ((3 ^ j * 81) ^ 2)
+  have : NeZero (((3 ^ j * 81) ^ 2 : ℕ) : K) := ⟨Nat.cast_ne_zero.2 hpos.ne'⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K ((3 ^ j * 81) ^ 2)
   let eK := (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.symm
   have hz' := hz.map_of_injective eK.injective
   set ze : Γ(Sp K, ⊤)ˣ := (hz'.isUnit hpos.ne').unit with hzedef
   have hze : IsPrimitiveRoot ze ((3 ^ j * 81) ^ 2) := hz'.isUnit_unit hpos.ne'
   obtain ⟨⟨e, he⟩, -⟩ := (GlobalTheory.T.projectiveHomogeneousCoords_basic_properties).2.2 o K n (x ≫ f)
   obtain ⟨T, hT⟩ := GlobalTheory.T.thetaSymmetricFunctionsDegreeFactorial_scaled_finite K (n + 1) e
-  haveI : NeZero ((3 ^ j * 81) ^ 2) := ⟨hpos.ne'⟩
+  have : NeZero ((3 ^ j * 81) ^ 2) := ⟨hpos.ne'⟩
   refine (Set.finite_iUnion fun d : T × ((Fin (2 * g) → ZMod ((3 ^ j * 81) ^ 2)) → Fin (n + 1)) =>
     finite_thetaData Xo c g j hbig K h3 ze x
       (fun a => GlobalTheory.ZH.fn ((d.1 : Fin (n + 1) → K) (d.2 a)))).subset ?_

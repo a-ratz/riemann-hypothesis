@@ -82,7 +82,7 @@ theorem exists_mk {μ : Representation ℂ G V} (K : Subrepresentation μ) :
 theorem exists_minimal {τ : Representation ℂ G Y} {μ : Representation ℂ G V} (hl : HasFiniteLength μ)
     (h : IsSubquotient τ μ) :
     ∃ K : Subrepresentation μ, IsSubquotient τ (subQuot ⊤ K) ∧ NoProper τ (subQuot ⊤ K) := by
-  haveI := ((hasFiniteLength_iff_wellFounded μ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded μ).1 hl).1
   have h0 : IsSubquotient τ (subQuot ⊤ (⊥ : Subrepresentation μ)) := by
     obtain ⟨q, -, hq⟩ := exists_mk (⊥ : Subrepresentation μ)
     exact h.trans (.of_injective q ((injective_iff_map_eq_zero _).2 fun v hv => (hq v).1 hv))
@@ -121,7 +121,7 @@ theorem NoProper.sub {τ : Representation ℂ G Y} {μ : Representation ℂ G V}
 theorem NoProper.central {τ : Representation ℂ G Y} {μ : Representation ℂ G V} (hτ : τ.IsIrreducible)
     (hl : HasFiniteLength μ) (h : IsSubquotient τ μ) (hn : NoProper τ μ) (z : G) (hz : ∀ g, g * z = z * g)
     (c : ℂ) (hc : ∀ y, τ z y = c • y) (v : V) : μ z v = c • v := by
-  haveI := ((hasFiniteLength_iff_wellFounded μ).1 hl).2
+  have := ((hasFiniteLength_iff_wellFounded μ).1 hl).2
   have hzg : ∀ g v, μ z (μ g v) = μ g (μ z v) := fun g v => by
     rw [← Module.End.mul_apply, ← map_mul, ← hz, map_mul, Module.End.mul_apply]
   let T : V →ₗ[ℂ] V := μ z - c • LinearMap.id
@@ -143,7 +143,7 @@ theorem NoProper.central {τ : Representation ℂ G Y} {μ : Representation ℂ 
   have hXi : X.toRepresentation.IsIrreducible :=
     GlobalTheory.Parabolic.isIrreducible_of_equiv a.symm (isIrreducible_subQuot hX.bot_covBy)
   obtain ⟨b⟩ := (hn.sub hτ h X hX.1).nonempty_equiv hτ hXi
-  haveI := nontrivial_of_irreducible hXi
+  have := nontrivial_of_irreducible hXi
   obtain ⟨x, hx⟩ := exists_ne (0 : X.toSubmodule)
   have h1 : b.toLinearEquiv (X.toRepresentation z x) = τ z (b.toLinearEquiv x) :=
     Representation.IntertwiningMap.isIntertwining _ _ b.toIntertwiningMap z x
@@ -202,7 +202,7 @@ theorem exists_quot {G V Y W : Type} [Group G] [TopologicalSpace G] [IsTopologic
     refine hn.central hτ hl' hK (ψ z) (fun g => ?_) _ (hτω z hz) v
     obtain ⟨x, g', rfl, hg'⟩ := hdec g
     rw [mul_assoc, ← hg', ← mul_assoc, ← map_mul, Subgroup.mem_center_iff.1 hz x, map_mul, mul_assoc]
-  haveI := hA
+  have := hA
   have hsc := GlobalTheory.CompanionTheory.CuspNotInd.isSupercuspidal_of_isCuspidal hAc
   let N : Subrepresentation μ' := ⟨isotypicKernel A (μ'.comp ψ), fun g v hv => by
     obtain ⟨x, g', rfl, hg'⟩ := hdec g
@@ -227,11 +227,11 @@ theorem exists_quot {G V Y W : Type} [Group G] [TopologicalSpace G] [IsTopologic
     have h2 : isotypicKernel A (μ'.comp ψ) = ⊥ := congrArg Subrepresentation.toSubmodule hN
     rw [h2] at h1
     exact eq_top_of_isCompl_bot h1
-  haveI := ((hasFiniteLength_iff_wellFounded μ').1 hl').1
+  have := ((hasFiniteLength_iff_wellFounded μ').1 hl').1
   have hne : (⊥ : Subrepresentation μ') ≠ ⊤ := by
     intro hbt
     obtain ⟨S, f, hf⟩ := hK
-    haveI := nontrivial_of_irreducible hτ
+    have := nontrivial_of_irreducible hτ
     obtain ⟨y, hy⟩ := exists_ne (0 : Y)
     obtain ⟨v, rfl⟩ := hf y
     have h1 : v.1 ∈ (⊥ : Subrepresentation μ').toSubmodule := by rw [hbt]; trivial

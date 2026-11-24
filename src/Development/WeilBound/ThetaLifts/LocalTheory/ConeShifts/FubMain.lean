@@ -189,7 +189,7 @@ theorem locW {B : Base F E} (hB : B.IsGood σ) {ν : Chr F E} {z : ℕ} (hz : 1 
     (γ : Measure (part (PI (F := F)) ⊤ (ew F w))) (hγ : γ.IsHaarMeasure ∧ γ {x | x.1 ∈ (UI F E : Set (AE F E)ˣ)} = 1) :
     Integrable (fun x : part PI ⊤ (ew F w) => (if vw w x.1 ≤ WithZero.exp (-m) then (1 : ℂ) else 0) * wt ν z x.1) γ ∧
       ∫ x : part PI ⊤ (ew F w), (if vw w x.1 ≤ WithZero.exp (-m) then (1 : ℂ) else 0) * wt ν z x.1 ∂γ = tw ν z m w := by
-  haveI := hγ.1
+  have := hγ.1
   have hs : ∀ x : part (PI (F := F)) ⊤ (ew F w), -WithZero.log (vw w x.1) = 0 ↔ x.1 ∈ UI F E := fun x => by
     refine ⟨fun h u => ?_, fun h => by rw [h w]; simp⟩
     by_cases hu : u = w
@@ -198,7 +198,7 @@ theorem locW {B : Base F E} (hB : B.IsGood σ) {ν : Chr F E} {z : ℕ} (hz : 1 
   have hs' : {x : part (PI (F := F)) ⊤ (ew F w) | -WithZero.log (vw w x.1) = 0} = {x | x.1 ∈ (UI F E : Set (AE F E)ˣ)} := Set.ext hs
   have := tate γ (fun x => -WithZero.log (vw w x.1)) (fun x y => by
       rw [Subgroup.coe_mul, vw_mul, WithZero.log_mul (vw_ne _ _) (vw_ne _ _)]; ring)
-    (by rw [hs']; exact isOpen_UI.preimage continuous_subtype_val) (by rw [hs']; exact hγ.2) ⟨pw F w, loc_mem w _⟩
+    (by rw [hs']; exact isOpen_UI.preimage continuous_subtypeVal) (by rw [hs']; exact hγ.2) ⟨pw F w, loc_mem w _⟩
     (by show -WithZero.log (vw w (pw F w)) = 1; rw [vw_pw]; simp) ((wtH ν z).comp (Subgroup.subtype _))
     (fun x hx => by
       show wt ν z x.1 = 1
@@ -230,7 +230,7 @@ theorem prodW {B : Base F E} (hB : B.IsGood σ) {ν : Chr F E} {z : ℕ} (hz : 1
   choose γ hγ using fun w => hex (ew_idem w) (inf_ew (F := F) w)
   obtain ⟨β, hβ⟩ := hex hc h0
   have mU : MeasurableSet {x : part (PI (F := F)) ⊤ c | x.1 ∈ (UI F E : Set (AE F E)ˣ)} :=
-    (isOpen_UI.preimage continuous_subtype_val).measurableSet
+    (isOpen_UI.preimage continuous_subtypeVal).measurableSet
   have eg : (fun x : part (PI (F := F)) ⊤ c => (if x.1 ∈ UI F E then (1 : ℂ) else 0)) =
       Set.indicator {x | x.1 ∈ (UI F E : Set (AE F E)ˣ)} fun _ => 1 := funext fun x => by simp [Set.indicator_apply]
   obtain ⟨p1, p2⟩ := sysI.prod (ew F) ew_idem (fun _ _ => ew_orth) c hc γ hγ β hβ W hW
@@ -244,7 +244,7 @@ theorem prodW {B : Base F E} (hB : B.IsGood σ) {ν : Chr F E} {z : ℕ} (hz : 1
       wt ν z x.1) = fun x : part PI ⊤ b => (∏ w ∈ W, (if vw w (PI (ew F w) x.1) ≤ WithZero.exp (-m w) then (1 : ℂ) else 0) *
         wt ν z (PI (ew F w) x.1)) * (if PI c x.1 ∈ UI F E then 1 else 0) := funext fun x => by
     have hv : ∀ w, vw w (PI (ew F w) x.1) = vw w x.1 := fun w => by
-      rw [vw, cw_PI_one (ew_idem w) (by rw [cw_ew, if_pos rfl])]; rfl
+      rw [vw, cw_PI_one (ew_idem w) (by rw [cw_ew, ite_eq_left rfl])]; rfl
     by_cases hu : PI c x.1 ∈ UI F E
     · have hx : x.1 = (∏ w ∈ W, PI (ew F w) x.1) * PI c x.1 := by
         rw [← PI_sum _ ew_idem (fun _ _ => ew_orth) c hc W hW, ← hb]; exact x.2.2.symm
@@ -255,7 +255,7 @@ theorem prodW {B : Base F E} (hB : B.IsGood σ) {ν : Chr F E} {z : ℕ} (hz : 1
         show _ * wt ν z _ = _
         rw [wt, hνc _ (PI_mem hc _) hu, abs_UI hc h0 (PI_mem hc _) hu]
         simp [wtH]
-      simp only [hv, hu, and_true, if_true, mul_one, Finset.prod_mul_distrib, Finset.prod_boole, hw]
+      simp only [hv, hu, and_true, ite_true, mul_one, Finset.prod_mul_distrib, Finset.prod_boole, hw]
     · simp [hu]
   rw [e]
   exact ⟨p1, p2.trans (by simp)⟩
@@ -308,7 +308,7 @@ theorem nu_rest {ν : Chr F E} (hc : Continuous ν) {T : Finset (Pl F)} (hν : U
         fun w => by
           rw [((mem_part_iff (hi _) (h0 _) x).1 (hx' {w.under (𝓞 F)}).1).2 w (rest_zero.2 (Finset.mem_singleton_self _)),
             Units.val_one, map_one])
-      exact (isOpen_lt ((continuous_subtype_val.comp hc).sub continuous_const).norm continuous_const).mem_nhds
+      exact (isOpen_lt ((continuous_subtypeVal.comp hc).sub continuous_const).norm continuous_const).mem_nhds
         (show ‖((ν 1 : Circle) : ℂ) - 1‖ < 1 by rw [map_one]; simp)
   have hx : l = (∏ w ∈ ab ((T ∪ T₀) \ T), PI (ew F w) l) * PI (io (rest (T ∪ T₀))) l := by
     rw [← PI_sum _ ew_idem (fun _ _ => ew_orth) _ (hi _) _ fun w hw => ew_rest (Finset.mem_sdiff.1 (mem_ab.1 hw)).1,
@@ -406,15 +406,15 @@ theorem tail {B : Base F E} (hB : B.IsGood σ) {z : ℕ} (hz : 2 ≤ z) (𝔞 : 
     Integrable (fun x : part PI ⊤ (io (rest T)) => (if ∀ v ∉ T, InAt 𝔞 v (x.1 : AE F E) then (1 : ℂ) else 0) * wt ν z x.1) β ∧
       Tendsto (fun T' : Finset (Pl F) => ∏ w ∈ ab ((T' ∪ T₀) \ T), tw ν z (FractionalIdeal.count E w 𝔞) w) atTop
         (𝓝 (∫ x : part PI ⊤ (io (rest T)), (if ∀ v ∉ T, InAt 𝔞 v (x.1 : AE F E) then (1 : ℂ) else 0) * wt ν z x.1 ∂β)) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
+  have := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
   have hi := fun T : Finset (Pl F) => io_idem (E := E) (rest_idem T)
   let D : Finset (Pl F) → Set (part (PI (F := F) (E := E)) ⊤ (io (rest T))) := fun T' => {x | PI (io (rest (T' ∪ T₀))) x.1 ∈ UI F E}
   have mD : ∀ T', MeasurableSet (D T') := fun T' =>
-    (isOpen_UI.preimage ((unitInvariant_continuous (hi _)).comp continuous_subtype_val)).measurableSet
+    (isOpen_UI.preimage ((unitInvariant_continuous (hi _)).comp continuous_subtypeVal)).measurableSet
   have hD : ∀ (A : Finset (Pl F)) (x : (AE F E)ˣ), PI (io (rest A)) x ∈ UI F E ↔
       ∀ w : HeightOneSpectrum (𝓞 E), w.under (𝓞 F) ∉ A → vw w x = 1 := fun A x => by
     have e : ∀ w : HeightOneSpectrum (𝓞 E), w.under (𝓞 F) ∉ A → vw w (PI (io (rest A)) x) = vw w x := fun w hw => by
-      rw [vw, cw_PI_one (hi A) (by rw [cw_rest, if_neg hw])]; rfl
+      rw [vw, cw_PI_one (hi A) (by rw [cw_rest, ite_eq_right hw])]; rfl
     refine ⟨fun h w hw => (e w hw).symm.trans (h w), fun h w => ?_⟩
     by_cases hw : w.under (𝓞 F) ∈ A
     · rw [vw, cw_PI_zero (hi A) (rest_zero.2 hw), map_one]
@@ -453,7 +453,7 @@ theorem tail {B : Base F E} (hB : B.IsGood σ) {z : ℕ} (hz : 2 ≤ z) (𝔞 : 
         by_cases h1 : w.under (𝓞 F) ∈ T' ∪ T₀
         · exact h.1 w (mem_ab.2 (Finset.mem_sdiff.2 ⟨h1, hv⟩))
         · rw [(hD _ _).1 hx w h1, hm w fun h2 => h1 (Finset.mem_union_right _ h2)]; simp
-      · rw [Set.indicator_of_notMem (show x ∉ D T' from hx), if_neg fun h => hx h.2, zero_mul]
+      · rw [Set.indicator_of_notMem (show x ∉ D T' from hx), ite_eq_right fun h => hx h.2, zero_mul]
     rw [e]
     convert this
   have u1 : UnrOff (1 : Chr F E) (T : Set (Pl F)) := fun w _ x _ => map_one Circle.toUnits
@@ -494,7 +494,7 @@ theorem euler {ν : Chr F E} {z : ℕ} (hz : 2 ≤ z) (𝔞 : FractionalIdeal (�
         ⟨Finset.mem_union_right _ (Finset.mem_image_of_mem _ hw), fun h => fin.mem_toFinset.1 hw (hram w h).2⟩)
       rw [← Finset.prod_subset hsub fun w _ hw => by rw [not_not.1 (mt fin.mem_toFinset.2 hw), zpow_zero], idealVal,
         finprod_eq_prod_of_mulSupport_subset _ (s := fin.toFinset) fun w hw => by
-          simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+          simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
           intro h; exact hw (by simp only [h, zpow_zero])]
       simp only [mul_zpow, Finset.prod_mul_distrib, Units.coe_prod, Units.val_zpow_eq_zpow_val]
       ring
@@ -502,7 +502,7 @@ theorem euler {ν : Chr F E} {z : ℕ} (hz : 2 ≤ z) (𝔞 : FractionalIdeal (�
       refine (tprod_subtype {w | w ∉ above E (S : Set (Pl F))} fun w => locL (charFam ν) w (z : ℂ)).trans
         (Eq.trans (tprod_congr fun w => ?_) (tprod_subtype {w | w ∉ above E (S₀ : Set (Pl F))} fun w => locL (charFam ν) w (z : ℂ)).symm)
       by_cases h : w.under (𝓞 F) ∈ S
-      · have : locL (charFam ν) w (z : ℂ) = 1 := by rw [locL, charFam, if_neg (hram w h).1, eulerFac_zero]
+      · have : locL (charFam ν) w (z : ℂ) = 1 := by rw [locL, charFam, ite_eq_right (hram w h).1, eulerFac_zero]
         simp only [Set.mulIndicator_apply, this, ite_self]
       · rw [Set.mulIndicator_of_mem (show w ∈ {w | w ∉ above E (S : Set (Pl F))} from h),
           Set.mulIndicator_of_mem (show w ∈ {w | w ∉ above E (S₀ : Set (Pl F))} from fun h' => h (hS h'))]
@@ -531,7 +531,7 @@ theorem ideleFub : IdeleFub := by
   have sp := sy.split hr (hi ∅) (io_orth (real_rest ∅))
   let et : (⊤ : Subgroup (AE F E)ˣ) ≃ₜ* (AE F E)ˣ :=
     { Subgroup.topEquiv with
-      continuous_toFun := continuous_subtype_val
+      continuous_toFun := continuous_subtypeVal
       continuous_invFun := continuous_id.subtype_mk _ }
   have hme : MeasurableEmbedding et.symm := et.symm.toHomeomorph.measurableEmbedding
   obtain ⟨μ', m1, -, m3⟩ := transport e1 _ BorelSpace.measurable_eq (μ.map et.symm)
@@ -541,7 +541,7 @@ theorem ideleFub : IdeleFub := by
     ⟨g1 v (hm.xf v).1, by rw [g2, ← units_eq]; exact (hm.xf v).2⟩
   choose β hβ using fun T : Finset (Pl F) => exists_haar _ (sy.closed (hi T)) _ (UI F E).one_mem
     (co_I (hi T) (inf_io (rest_fst T))).1 (co_I (hi T) (inf_io (rest_fst T))).2
-  haveI := m1 (ContinuousMulEquiv.isHaarMeasure_map μ et.symm); haveI := a1 hm.xi; haveI := (hβ ∅).1
+  have := m1 (ContinuousMulEquiv.isHaarMeasure_map μ et.symm); have := a1 hm.xi; have := (hβ ∅).1
   obtain ⟨c, c0, c1, -⟩ := sp.fub μ' α (β ∅)
   have fin : {w | ¬ FractionalIdeal.count E w 𝔞 = 0}.Finite := FractionalIdeal.finite_factors 𝔞
   let κa : ℂ := ∏ w ∈ fin.toFinset, npow w (-(z : ℂ)) ^ FractionalIdeal.count E w 𝔞
@@ -604,7 +604,7 @@ theorem ideleFub : IdeleFub := by
       forall₂_congr fun v h => by
         simp only [inAt_iff]
         refine forall₂_congr fun w hw => ?_
-        rw [vw, cw_PI_one (hi T) (by rw [cw_rest, hw, if_neg h])]; rfl
+        rw [vw, cw_PI_one (hi T) (by rw [cw_rest, hw, ite_eq_right h])]; rfl
     simp only [fun v => unitInvariant_comp (hv v) (hi ∅) x, unitInvariant_comp (hi T) (hi ∅) x, r1, r2, hin, ← extendByZeroOnSubset_apply_coe gi,
       ← fun v => extendByZeroOnSubset_apply_coe (g v), Finset.prod_mul_distrib]
     rw [hx]; ring

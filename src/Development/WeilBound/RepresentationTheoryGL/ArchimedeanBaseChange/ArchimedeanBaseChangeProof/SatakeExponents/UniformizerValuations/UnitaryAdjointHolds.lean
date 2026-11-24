@@ -127,9 +127,9 @@ theorem exists_finite_part (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M : ℕ}
     (hJ : IsHermND σ J) : ∃ C : Set (Af F ⊗[F] E), IsCompact C ∧
     ∀ g : HA (AF F) σ J, ∃ γ ∈ ratQ σ J, ∀ B : Matrix (Fin M) (Fin M) E, (∀ a b, IsIntegral ℤ (B a b)) →
       ∀ a b, finP ((matA (g * γ) * B.map (inclR (F := F) (AF F))) a b) ∈ C := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   obtain ⟨π, hπ, -⟩ := GlobalTheory.Mass.existsUnique_isFinProj σ J
   obtain ⟨S, hS⟩ := GlobalTheory.Mem.ClassFinite.exists_finset_classes F E σ hcm M J hJ _ (GlobalTheory.Mass.isOpen_stdLevel σ J)
   obtain ⟨C, hC, hCe⟩ := (GlobalTheory.Mass.intTens_open_compact F E).2
@@ -164,7 +164,7 @@ theorem exists_real_part (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M : ℕ} (
       ∃ u ∈ ratQ σ J, ∃ B : Matrix (Fin M) (Fin M) E, ∃ N ∈ 𝓒,
         matA u = (B * N).map (inclR (F := F) (AF F)) ∧ (∀ a b, IsIntegral ℤ (B a b)) ∧
         ∀ a b ρ, ‖θ ρ (infP ((matA x * B.map (inclR (F := F) (AF F))) a b))‖ ≤ R := by
-  haveI := hcm.2.1
+  have := hcm.2.1
   obtain ⟨R, 𝓒, h𝓒, H⟩ := GlobalTheory.Mem.AnisoQuotient.exists_bounded_unitary (σ := (σ : E →+* E)) hτ
     (fun ρ x => hcm.2.2.2 _ x) hJ han
   refine ⟨R, 𝓒, h𝓒, fun x => ?_⟩
@@ -200,18 +200,18 @@ theorem exists_real_part (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M : ℕ} (
 theorem exists_compact (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {M : ℕ} (J : Matrix (Fin M) (Fin M) E)
     (hJ : IsHermND σ J) (han : ∀ x, x ≠ 0 → Formalism.UG.hform (σ : E →+* E) J x x ≠ 0) :
     ∃ K : Set (HA (AF F) σ J), IsCompact K ∧ ∀ g, ∃ γ ∈ ratQ σ J, ∃ k ∈ K, g = γ * k := by
-  haveI := hcm.1
+  have := hcm.1
   let τ : InfinitePlace E → (E →+* ℂ) := fun w => w.embedding
   have hτ : GlobalTheory.Mem.Vol.IsCMFam τ := by
     have : (fun w => InfinitePlace.mk (τ w)) = id := funext fun w => InfinitePlace.mk_embedding w
     unfold GlobalTheory.Mem.Vol.IsCMFam; rw [this]; exact Function.bijective_id
   choose θ hθ1 hθ2 using fun ρ => GlobalTheory.InfAdeleCM.exists_hom (F := F) (τ ρ)
   have hθ : ∀ ρ, Formalism.MainNotions.StandardLattice.IsInfEmb (τ ρ) (θ ρ) := fun ρ => ⟨hθ1 ρ, hθ2 ρ⟩
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : IsTopologicalGroup (HA (AF F) σ J) := inferInstanceAs (IsTopologicalGroup (HR (AF F) σ J))
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalGroup (HA (AF F) σ J) := inferInstanceAs (IsTopologicalGroup (HR (AF F) σ J))
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   obtain ⟨C₁, hC₁, H₁⟩ := exists_finite_part σ hcm J hJ
   obtain ⟨R, 𝓒, h𝓒, H₂⟩ := exists_real_part σ hcm J hJ.2 han hτ hθ
   obtain ⟨C₂, hC₂, hCe₂⟩ := GlobalTheory.Mem.VolExists.exists_compact_adele hcm hτ hθ R C₁ hC₁
@@ -340,7 +340,7 @@ theorem isMulRightInvariant_of_cover (hc : ∃ C : Set G, IsCompact C ∧ ∀ g,
     h.preimage_of_equiv ⟨(measurable_mul_const g).aemeasurable, e ▸ Measure.smul_absolutelyContinuous⟩ Function.bijective_id
       fun γ x => mul_assoc _ _ _
   have h1 := h'.measure_eq h
-  rw [← Measure.map_apply (measurable_mul_const g) (measurableSet_stdDom _), e, Measure.smul_apply, ENNReal.smul_def,
+  rw [← Measure.map_apply (measurable_mul_const g) (measurableSet_stdDom _), e, smul_apply, ENNReal.smul_def,
     smul_eq_mul, ENNReal.mul_eq_right (h.measure_ne_zero (NeZero.ne μ)) hfin, ENNReal.coe_eq_one] at h1
   rw [e, h1, one_smul]⟩
 
@@ -350,8 +350,8 @@ theorem isUnitarisable_of_embedding (hc : ∃ C : Set G, IsCompact C ∧ ∀ g, 
     (hcont : ∀ v, Continuous (f v)) (hleft : ∀ v, LeftInv Γ (f v))
     (heq : ∀ x v y, f (ρ (p x) v) y = f v (y * ι x)) : GlobalTheory.LGrp.IsUnitarisable ρ := by
   let μ : Measure G := Measure.haar
-  haveI : μ.IsMulRightInvariant := isMulRightInvariant_of_cover Γ hc μ
-  haveI := compactSpace_quot Γ hc
+  have : μ.IsMulRightInvariant := isMulRightInvariant_of_cover Γ hc μ
+  have := compactSpace_quot Γ hc
   have hm : ∀ v, MemL2Quotient Γ μ (f v) := fun v =>
     (GlobalTheory.AutomorphicL2Cocompact.cocompact G Γ μ inferInstance).2.2 _ (hleft v) (hcont v)
   let T : V →ₗ[ℂ] L2 Γ μ :=
@@ -441,10 +441,10 @@ theorem setup (n : ℕ) : IsTopologicalGroup (UA E n) ∧ LocallyCompactSpace (U
     · subst e; simp
     · simp [Matrix.one_apply, e, Ne.symm e]
   obtain ⟨K, hK, hKe⟩ := GlobalTheory.AnisoCocompact.exists_compact σ₀ hcm 1 hherm hform_one_ne_zero
-  haveI := GlobalTheory.RationalDiscrete.discreteTopology_HFinIn σ₀ (1 : Matrix (Fin n) (Fin n) E)
+  have := GlobalTheory.RationalDiscrete.discreteTopology_HFinIn σ₀ (1 : Matrix (Fin n) (Fin n) E)
   have hcf : Continuous (fun x : ratU E n =>
       (⟨j x.1, (hj _).1 x.2⟩ : HFinIn (AF F₀) σ₀ (1 : Matrix (Fin n) (Fin n) E))) :=
-    (j.continuous.comp continuous_subtype_val).subtype_mk _
+    (j.continuous.comp continuous_subtypeVal).subtype_mk _
   refine ⟨inferInstance, j.toHomeomorph.isClosedEmbedding.locallyCompactSpace,
     j.toHomeomorph.secondCountableTopology, j.toHomeomorph.isEmbedding.t2Space,
     .of_continuous_injective hcf (fun a b h => Subtype.ext (j.injective (congrArg Subtype.val h))),
@@ -480,7 +480,7 @@ theorem surjective_of_cLoc (n : ℕ) (w : Pl E) (p : locU n w →* UL n w) (hp :
   · obtain ⟨h1, h2⟩ := cj_props hs
     obtain ⟨e, he⟩ := GlobalTheory.DefU.Inert.locU_equiv E n w (cj w) h1 h2
     have hg : g.1 ∈ UJ (cj w) (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) := by
-      have h : UL n w = UJ (cj w) 1 := if_neg hs
+      have h : UL n w = UJ (cj w) 1 := ite_eq_right hs
       have key : ∀ y : GLw n w, y ∈ UL n w → y ∈ UJ (cj w) (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) :=
         fun y hy => by rwa [h] at hy
       exact key g.1 g.2
@@ -492,8 +492,8 @@ theorem compUnit : PositivityTheory.Rg.BcB.F.Eig.CompUnit := by
   rintro E _ _ _ n π hπ w σ ⟨p, hp, hirr, f, hf0, hfm, hf⟩
   obtain ⟨t1, t2, t3, t4, t5, t6⟩ := setup (E := E) n
   have hs := surjective_of_cLoc n w p hp
-  letI : MeasurableSpace (UA E n) := borel _
-  haveI : BorelSpace (UA E n) := ⟨rfl⟩
+  let : MeasurableSpace (UA E n) := borel _
+  have : BorelSpace (UA E n) := ⟨rfl⟩
   have hinj : Function.Injective f := by
     rw [← LinearMap.ker_eq_bot]
     obtain ⟨-, h1⟩ := (GlobalTheory.CuspRep.isIrreducible_iff _).1 hirr
@@ -538,8 +538,8 @@ theorem cT_antiJ (σ : L →+* L) : cT σ (antiJ L n) = antiJ L n := by
   ext i j
   simp only [cT, Matrix.transpose_apply, Matrix.map_apply, antiJ]
   by_cases h : i.val + j.val + 1 = n
-  · rw [if_pos h, if_pos (by omega)]; simp
-  · rw [if_neg h, if_neg (by omega)]; simp
+  · rw [ite_eq_left h, ite_eq_left (by omega)]; simp
+  · rw [ite_eq_right h, ite_eq_right (by omega)]; simp
 
 theorem wJ_mem_GU (σ : L →+* L) : wJ L n ∈ GU σ n := by
   change cT σ (antiJ L n) * antiJ L n * antiJ L n = antiJ L n
@@ -669,7 +669,7 @@ theorem relIndex_conj_KL_ne_zero (n : ℕ) (w : Pl E) (g : UL n w) :
 
 theorem gelPair_split (n : ℕ) (w : Pl E) (hw : IsSplitAt w) : GelPair (KL n w) := by
   have hmem : ∀ x : GLw n w, x ∈ UL n w := fun x => by
-    have h : UL n w = ⊤ := if_pos hw
+    have h : UL n w = ⊤ := ite_eq_left hw
     rw [h]
     exact Subgroup.mem_top x
   refine ⟨relIndex_conj_KL_ne_zero n w, fun g => ⟨Formalism.UG.P.heckecomm_tr g.1, hmem _⟩, ?_, ?_, ?_, ?_⟩
@@ -782,7 +782,7 @@ section Line
 variable {M : Type} [AddCommGroup M] [Module ℂ M]
 
 theorem end_eq_trace_smul (h : Module.finrank ℂ M = 1) (f : Module.End ℂ M) : f = LinearMap.trace ℂ M f • 1 := by
-  haveI : FiniteDimensional ℂ M := Module.finite_of_finrank_eq_succ h
+  have : FiniteDimensional ℂ M := Module.finite_of_finrank_eq_succ h
   let b : Module.Basis (Fin 1) ℂ M := Module.finBasisOfFinrankEq ℂ M h
   apply b.ext
   intro i
@@ -795,7 +795,7 @@ theorem end_eq_trace_smul (h : Module.finrank ℂ M = 1) (f : Module.End ℂ M) 
 
 theorem trace_mul_of_finrank_one (h : Module.finrank ℂ M = 1) (f g : Module.End ℂ M) :
     LinearMap.trace ℂ M (f * g) = LinearMap.trace ℂ M f * LinearMap.trace ℂ M g := by
-  haveI : FiniteDimensional ℂ M := Module.finite_of_finrank_eq_succ h
+  have : FiniteDimensional ℂ M := Module.finite_of_finrank_eq_succ h
   have hf := end_eq_trace_smul h f
   have hg := end_eq_trace_smul h g
   calc LinearMap.trace ℂ M (f * g)
@@ -858,7 +858,7 @@ theorem sphStar : LocAlg → SphStarU := by
   refine ⟨?_, ?_, ?_⟩
   · rw [trc, hmul, trace_mul_of_finrank_one hrank, ← tr1, ← tr2]
   · obtain ⟨B, hBh, hBpos, hBinv⟩ := hU
-    haveI : Nontrivial (fixed σ.ρ (KL n w)) := Module.nontrivial_of_finrank_eq_succ hrank
+    have : Nontrivial (fixed σ.ρ (KL n w)) := Module.nontrivial_of_finrank_eq_succ hrank
     obtain ⟨v, hv0⟩ := exists_ne (0 : fixed σ.ρ (KL n w))
     have hvfix := mem_fixed_iff.1 v.2
     let φ : UL n w → ℂ := fun x => B (σ.ρ x v) v
@@ -1125,13 +1125,13 @@ theorem pu_prod (hL : LocAlg) (h1 : SphOne) (hC : CompUnit) (hS : SphStarU) (hE 
             simp [show w0 ∈ S \ ↑B from ⟨hw0, hw0B⟩]
           · refine (Set.finite_singleton w0).subset fun w hw => ?_
             by_contra hne
-            exact hw.2 (if_neg hne)
+            exact hw.2 (ite_eq_right hne)
         · intro w hw
           rcases eq_or_ne w w0 with rfl | hne
-          · rw [if_pos rfl, pu_sph_self]
+          · rw [ite_eq_left rfl, pu_sph_self]
             exact (pu_tw h1 hC hS hE hB i w hw.1 hw.2 h _ hh (pu_sph_hecke hL hB l (fun y hy => hl y
               (List.mem_cons_of_mem _ hy)) w hw.2)).1
-          · rw [if_neg hne, one_mul, pu_sph_ne _ _ _ _ (Ne.symm hne)]
+          · rw [ite_eq_right hne, one_mul, pu_sph_ne _ _ _ _ (Ne.symm hne)]
       rw [List.map_cons, List.prod_cons, ih']
       show t0 * (UGen.sc l * _) = (1 * UGen.sc l) * _
       rw [hP, one_mul, mul_left_comm]
@@ -1156,19 +1156,19 @@ theorem uWordOfU : DiagAlg → LocAlg → SphOne → CompUnit → SphStarU → U
   have hT : IsTest (KL n) K' (fam B K' g k l) := by
     refine ⟨fun w => ?_, ?_⟩
     · by_cases hw : w ∈ B
-      · rw [fam, if_pos hw]
+      · rw [fam, ite_eq_left hw]
         exact (pu_lpow hL w (K' w) (hB.2.1.1 w) (g w) (hg w hw) (SmIrr.triv _) k).1
-      · rw [fam, if_neg hw, hB.2.2 w hw]
+      · rw [fam, ite_eq_right hw, hB.2.2 w hw]
         exact pu_sph_hecke hL hB l hl w hw
     · rw [Filter.eventually_cofinite]
       refine (B ∪ pu_pls l).finite_toSet.subset fun w hw => ?_
       by_contra hc
       simp only [Finset.coe_union, Set.mem_union, Finset.mem_coe, not_or] at hc
-      exact hw (by rw [fam, if_neg hc.1, pu_sph_off l w hc.2])
+      exact hw (by rw [fam, ite_eq_right hc.1, pu_sph_off l w hc.2])
   refine ⟨hT, fun hreg => ?_⟩
   have hloc : ∀ i, ∀ w ∈ B, locOp (F.σ i w) (K' w) (fam B K' g k l w) = locOp (F.σ i w) (K' w) (g w) ^ k :=
     fun i w hw => by
-      rw [fam, if_pos hw]
+      rw [fam, ite_eq_left hw]
       exact (pu_lpow hL w (K' w) (hB.2.1.1 w) (g w) (hg w hw) (F.σ i w) k).2
   have e1 := R.tr k _ hT hloc
   rw [F.tf _ hT hreg] at e1
@@ -1177,7 +1177,7 @@ theorem uWordOfU : DiagAlg → LocAlg → SphOne → CompUnit → SphStarU → U
     funext i
     rw [Pi.mul_apply, pu_prod hL h1 hC hS hE hB i l hl]
     congr 1
-    exact finprod_mem_congr rfl fun w hw => by rw [fam, if_neg (show w ∉ B from hw.2)]
+    exact finprod_mem_congr rfl fun w hw => by rw [fam, ite_eq_right (show w ∉ B from hw.2)]
   rw [pu_opprod hD R l, e2, (hD F.ι R.d R.blk (fun _ => UGen.sc l) _ 0).1, (hD F.ι R.d R.blk 0 0 (UGen.sc l)).2.2.1,
     smul_mul_assoc, one_mul, mul_smul_comm, ContinuousLinearMap.toLinearMap_smul, map_smul, smul_eq_mul, e1]
 

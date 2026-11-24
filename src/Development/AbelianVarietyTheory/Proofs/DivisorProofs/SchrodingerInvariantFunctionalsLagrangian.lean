@@ -418,11 +418,11 @@ theorem kills_linear_mul : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace �
     rw [SchwartzMap.smulLeftCLM_apply_apply (hE j), smul_eq_mul]
   have hsum : g = ∑ j, (f' j - k j) := by
     ext x
-    rw [SchwartzMap.sum_apply, hg x]
+    rw [sum_apply, hg x]
     conv_lhs => rw [hdiv (L x)]
     rw [Finset.sum_mul]
     refine Finset.sum_congr rfl fun j _ => ?_
-    rw [SchwartzMap.sub_apply, hf, hk, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    rw [sub_apply, hf, hk, smul_apply, smul_eq_mul]
     ring
 
   rw [hsum, map_sum]
@@ -462,7 +462,7 @@ theorem arch (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimens
   obtain ⟨n, L, h, g, hg, hsum⟩ := _root_.GlobalTheory.SchwartzDiv.hadamard V _ h0
   have e : f - f 0 • f₀ = ∑ i, g i := by
     ext x
-    rw [hsum x, SchwartzMap.sum_apply]
+    rw [hsum x, sum_apply]
   have : T (f - f 0 • f₀) = 0 := by
 
     rw [e, map_sum]
@@ -558,7 +558,7 @@ theorem eval_mem_adm {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype �
   refine ⟨g (fun i => (x i).2) • ((BoundedContinuousFunction.evalCLM ℂ
     (fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (x i).1)).comp
     (SchwartzMap.toBoundedContinuousFunctionCLM ℂ _ ℂ)), fun f => ?_⟩
-  simp only [LinearMap.proj_apply, pureA, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+  simp only [LinearMap.proj_apply, pureA, smul_apply, ContinuousLinearMap.comp_apply,
     BoundedContinuousFunction.evalCLM_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply,
     SchwartzMap.toBoundedContinuousFunction_apply, smul_eq_mul]
   ring

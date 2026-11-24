@@ -70,7 +70,7 @@ theorem app_smul (l : SB X →ₗ[ℂ] V) (z : ℂ) (f : X → ℂ) : app l (z �
     rw [zero_smul, zero_smul, this]
   · by_cases hf : f ∈ SB X
     · have hzf : z • f ∈ SB X := (SB X).smul_mem z hf
-      simp only [app, hf, hzf, dif_pos]
+      simp only [app, hf, hzf, dite_eq_left]
       rw [← map_smul]
       rfl
     · have hzf : z • f ∉ SB X := fun h => hf (((SB X).smul_mem_iff hz).1 h)
@@ -83,9 +83,9 @@ end Lemmas
 
 theorem quotInt_posOne : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n n' : Type) [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] (c : ℕ) (_ : 1 ≤ c) (ψ : AddChar k Circle) (_ : Continuous ψ) (_ : HasConductor ψ 1) (ν : Measure k) (_ : IsUnitVol ν) (μ : kˣ →* ℂˣ) (_ : IsOpen (μ.ker : Set kˣ)) (m : Measure (GL n k)) [m.IsHaarMeasure] (μG : Measure (GL (n ⊕ Fin c) k)) [μG.IsHaarMeasure] (L : Level (GL (n ⊕ Fin c) k)) (_ : IsCO L.J) (_ : μG L.J = 1) (b : GL (n ⊕ Fin c) k) (A : Type) [AddCommGroup A] [Module ℂ A] (σ : Representation ℂ (GL (n ⊕ Fin c) k) A) (_ : IsSmoothRep σ) (B : SB (Matrix n n' k) →ₗ[ℂ] A →ₗ[ℂ] ℂ) (_ : BilPos ψ μ 1 σ B) (F : A) (_ : ∀ j : L.J, σ (j : GL (n ⊕ Fin c) k) F = (L.lam j : ℂ) • F) (Φ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k)) (_ : ∀ j : L.J, om μ 1 (j : GL (n ⊕ Fin c) k) Φ.1 = (((L.lam j)⁻¹ : ℂˣ) : ℂ) • Φ.1) (h' : GL (n' ⊕ Fin (c + 1)) k) (T : Finset (GL (n ⊕ Fin c) k)) (_ : Covers 1 L.J T fun h => flat ψ ν μ Φ.1 h' h), IsQuotInt ν (rescale ν b m) μG 1 (tInt ψ ν μ 1 σ B F (om μ h' 1 Φ.1)) (∑ h ∈ T, (((m (prX (Cgrp L.J h))).toReal⁻¹ : ℝ) : ℂ) * app B (xi ψ ν μ Φ.1 L.J b h' h) (σ h F)) := by
   intro k _ _ _ _ _ _ n n' _ _ _ _ c hc ψ hψ hψc ν hν μ hμ m _ μG _ L hJ hJ1 b A _ _ σ hσ B hB F hF Φ hΦ h' T hT
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   have hr := volN_stabLat (n := n) (c := c) ν b
-  haveI : (rescale ν b m).IsHaarMeasure := by
+  have : (rescale ν b m).IsHaarMeasure := by
     unfold rescale
     exact Measure.IsHaarMeasure.smul m (ENNReal.inv_ne_zero.2 (ENNReal.toReal_pos_iff.1 hr).2.ne)
       (ENNReal.inv_ne_top.2 (ENNReal.toReal_pos_iff.1 hr).1.ne')
@@ -153,7 +153,7 @@ theorem quotInt_posOne : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     refine lintegral_congr fun g => ?_
     congr 1
     ext u
-    simp only [Set.mem_setOf_eq, mem_Cgrp]
+    simp only [Set.mem_ofPred_eq, mem_Cgrp]
     refine ⟨fun H => ⟨?_, H⟩, fun H => H.2⟩
     exact (R k n c 1).mul_mem (Subgroup.mem_sup_left (MonoidHom.mem_range.2 ⟨g, rfl⟩)) (Subgroup.mem_sup_right u.2)
   have hxi : xi ψ ν μ Φ.1 L.J b h' h = (((volNat ν b (Cgrp L.J h))⁻¹ : ℝ) : ℂ) • flat ψ ν μ Φ.1 h' h := rfl

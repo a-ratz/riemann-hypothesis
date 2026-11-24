@@ -256,7 +256,7 @@ theorem dsig_skew {σ : Mat k r → (H →L[ℂ] H)} (hσ : IsURepOn (GG k r) σ
       simp
     have h := inner_map hσ (exp_mem hX (-t)) (σ (NormedSpace.exp ((t : ℂ) • X)) v) w
     rw [← ContinuousLinearMap.comp_apply, ← hσ.1.2 _ (exp_mem hX (-t)) _ (exp_mem hX t), hm, hσ.1.1,
-      ContinuousLinearMap.one_apply] at h
+      one_apply_eq_self] at h
     exact h.symm
   have hw'' : HasDerivAt (fun t : ℝ => σ (NormedSpace.exp ((t : ℂ) • X)) w) (dsig σ X w) (-0) := by
     rw [neg_zero]; exact hw'
@@ -425,7 +425,7 @@ theorem word_quot_tendsto {σ : Mat k r → (H →L[ℂ] H)} (hσ : IsURepOn (GG
     show (1 : Mat k r)ᴴ * Hpk k r * 1 = Hpk k r
     simp
   have hd := (dsigW_orbit hσ hx W hW (dsigW_orbit_smooth hσ hx W hW) X hX).2 1 h1
-  simp only [mul_one, hσ.1.1, ContinuousLinearMap.one_apply] at hd
+  simp only [mul_one, hσ.1.1, one_apply_eq_self] at hd
   have hsl := (hasDerivAt_iff_tendsto_slope.1 hd).sub_const (dsigW σ W (dsig σ X x))
   rw [sub_self] at hsl
   refine hsl.congr' (Filter.Eventually.of_forall fun t => ?_)
@@ -433,7 +433,7 @@ theorem word_quot_tendsto {σ : Mat k r → (H →L[ℂ] H)} (hσ : IsURepOn (GG
   dsimp only
   rw [dsigW_comb hσ W hW _ hxt hx (sm_dsig hσ hx hX), slope_def_module]
   simp only [sub_zero, Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1,
-    ContinuousLinearMap.one_apply]
+    one_apply_eq_self]
   rw [← Complex.ofReal_inv, Complex.coe_smul t⁻¹]
 
 theorem orbit_hasDerivAt {σ : Mat k r → (H →L[ℂ] H)} (hσ : IsURepOn (GG k r) σ) {x : H} (hx : IsSmoothVec σ x)

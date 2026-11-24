@@ -78,7 +78,7 @@ theorem fildR_le_ddR (τ : K →ₐ[Qp] LL) (a : ℤ) : FildR PD ρ τ a ≤ DdR
 theorem jump_iff_of_finite [FiniteDimensional LL ↥(DdR PD ρ)] (τ : K →ₐ[Qp] LL) (a : ℤ) :
     FiniteDimensional LL ↥(FildR PD ρ τ a) ∧ 0 ≤ multV PD ρ τ a ∧
       (IsJumpV PD ρ τ a ↔ multV PD ρ τ a ≠ 0) := by
-  haveI : FiniteDimensional LL ↥(FildR PD ρ τ a) :=
+  have : FiniteDimensional LL ↥(FildR PD ρ τ a) :=
     Submodule.finiteDimensional_of_le (fildR_le_ddR PD ρ τ a)
   have hle := fildR_succ_le PD ρ τ a
   refine ⟨this, ?_, ?_, ?_⟩
@@ -97,7 +97,7 @@ end General
 
 theorem jump_iff_mult_ne_zero : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V) (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) (a : ℤ), FiniteDimensional ↥LL.1 ↥(FildR (P.PD K) ρ τ a) ∧ 0 ≤ multV (P.PD K) ρ τ a ∧ (IsJumpV (P.PD K) ρ τ a ↔ multV (P.PD K) ρ τ a ≠ 0) := by
   intro l _ P AI T K LL V _ _ _ _ _ ρ τ a
-  haveI := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL V ρ).1
+  have := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K LL V ρ).1
   exact jump_iff_of_finite (P.PD K) ρ τ a
 
 end GlobalTheory.Per.JumpMult

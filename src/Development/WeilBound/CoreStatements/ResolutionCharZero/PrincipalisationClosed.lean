@@ -141,7 +141,7 @@ theorem exists_glue {W Y : Scheme.{0}} (W₁ W₂ : W.Opens) (h : W₁ ⊔ W₂ 
   let f : ∀ b : Bool, (U b).toScheme ⟶ Y := fun b => match b with
     | true => σ₁
     | false => σ₂
-  haveI : ∀ b : Bool, IsOpenImmersion (𝒰.f b) := fun b => inferInstanceAs (IsOpenImmersion (U b).ι)
+  have : ∀ b : Bool, IsOpenImmersion (𝒰.f b) := fun b => inferInstanceAs (IsOpenImmersion (U b).ι)
   have aux₁ : ∀ {A B C : Scheme.{0}} (p : A ⟶ C) (q : B ⟶ C), IsOpenImmersion q → IsOpenImmersion (pullback.fst p q) :=
     fun _ _ _ => inferInstance
   have aux₂ : ∀ {A B C : Scheme.{0}} (p : A ⟶ C) (q : B ⟶ C), IsOpenImmersion p → IsOpenImmersion (pullback.snd p q) :=
@@ -297,7 +297,7 @@ theorem cartAt_comap_of_cartAt {X Y : Scheme.{0}} (J : Y.IdealSheafData) (f : X 
   have hJD : J.ideal (Y.affineBasicOpen h0) = Ideal.span {r} := by
     rw [← J.map_ideal_basicOpen V h0, hJ, Ideal.map_span, Set.image_singleton]
   have hr : r ∈ nonZeroDivisors Γ(Y, Y.basicOpen h0) := by
-    haveI := hV.isLocalization_basicOpen h0
+    have := hV.isLocalization_basicOpen h0
     exact algebraMap_mem_nonZeroDivisors_of_isLocalization (Submonoid.powers h0) hg
   let s : Γ(Y, Y.basicOpen h0) →+* Γ(Y, f ''ᵁ f ⁻¹ᵁ Y.basicOpen h0) :=
     (Y.presheaf.map (homOfLE hWD).op).hom
@@ -425,24 +425,24 @@ theorem GlobalTheory.CompanionTheory.Hypotheses₂.Conormal.finite_projective_co
       ((Ideal.Quotient.mk I).comp φ).Smooth →
         Module.Finite (A ⧸ I) I.Cotangent ∧ Module.Projective (A ⧸ I) I.Cotangent := by
   intro k A _ _ φ I h1 h2
-  letI := φ.toAlgebra
-  haveI hA : Algebra.Smooth k A := h1
+  let := φ.toAlgebra
+  have hA : Algebra.Smooth k A := h1
   have halg : (Ideal.Quotient.algebra k : Algebra k (A ⧸ I)) =
       ((Ideal.Quotient.mk I).comp φ).toAlgebra := Algebra.algebra_ext _ _ fun _ => rfl
   have hQ : Algebra.FormallySmooth k (A ⧸ I) := by
     have hs : @Algebra.Smooth k _ (A ⧸ I) _ ((Ideal.Quotient.mk I).comp φ).toAlgebra := h2
     rw [← halg] at hs
     exact hs.formallySmooth
-  haveI : Algebra.FormallySmooth k A := hA.formallySmooth
-  haveI : Module.Projective A (KaehlerDifferential k A) :=
+  have : Algebra.FormallySmooth k A := hA.formallySmooth
+  have : Module.Projective A (KaehlerDifferential k A) :=
     Algebra.FormallySmooth.projective_kaehlerDifferential
-  haveI : Algebra.FinitePresentation k A := hA.finitePresentation
-  haveI : Algebra.FiniteType k A := Algebra.FiniteType.of_finitePresentation
-  haveI : Algebra.EssFiniteType k A := Algebra.EssFiniteType.of_finiteType k A
-  haveI : Module.Finite A (KaehlerDifferential k A) := KaehlerDifferential.finite k A
-  haveI : Module.Finite (A ⧸ I) ((A ⧸ I) ⊗[A] KaehlerDifferential k A) :=
+  have : Algebra.FinitePresentation k A := hA.finitePresentation
+  have : Algebra.FiniteType k A := Algebra.FiniteType.of_finitePresentation
+  have : Algebra.EssFiniteType k A := Algebra.EssFiniteType.of_finiteType k A
+  have : Module.Finite A (KaehlerDifferential k A) := KaehlerDifferential.finite k A
+  have : Module.Finite (A ⧸ I) ((A ⧸ I) ⊗[A] KaehlerDifferential k A) :=
     Module.Finite.base_change A (A ⧸ I) _
-  haveI : IsScalarTower A (A ⧸ I) I.Cotangent := by
+  have : IsScalarTower A (A ⧸ I) I.Cotangent := by
     first
     | infer_instance
     | exact IsScalarTower.of_algebraMap_smul fun _ _ => rfl
@@ -569,17 +569,17 @@ theorem rankAtStalk_cotangent_eq_one {A : Type} [CommRing A] [IsDomain A] (I : I
       (fun hs => Ideal.mem_primeCompl_iff.mp hu (Ideal.mem_comap.mp hs)) hu0
   have hfree : Module.Free (Localization.AtPrime P.asIdeal)
       (LocalizedModule P.asIdeal.primeCompl I.Cotangent) := by
-    haveI : Module.Flat (A ⧸ I) I.Cotangent := Module.Flat.of_projective
+    have : Module.Flat (A ⧸ I) I.Cotangent := Module.Flat.of_projective
     have hmem : P ∈ Module.freeLocus (A ⧸ I) I.Cotangent := by
       rw [Module.freeLocus_eq_univ]
       trivial
     exact Module.mem_freeLocus.mp hmem
-  haveI : Module.Finite (Localization.AtPrime P.asIdeal)
+  have : Module.Finite (Localization.AtPrime P.asIdeal)
       (LocalizedModule P.asIdeal.primeCompl I.Cotangent) :=
     Module.Finite.of_fg_top ⟨{LocalizedModule.mk (I.toCotangent ⟨f, hf⟩) 1}, by
       rw [Finset.coe_singleton]
       exact hspan⟩
-  haveI := nontrivial_of_ne _ _ hx
+  have := nontrivial_of_ne _ _ hx
   have hle : Module.finrank (Localization.AtPrime P.asIdeal)
       (LocalizedModule P.asIdeal.primeCompl I.Cotangent) ≤ 1 := by
     have := finrank_le_of_span_eq_top (R := Localization.AtPrime P.asIdeal)
@@ -707,9 +707,9 @@ theorem locPrincipal_of_cartAt : ∀ {X : Scheme.{0}} [IsIntegral X] (Z : X.Idea
   have hWV : X.basicOpen f ≤ V.1 := by
     rw [hfg]
     exact X.basicOpen_le g
-  haveI : Nonempty (X.basicOpen f) := ⟨⟨_, hxf⟩⟩
-  haveI : Nonempty (V.1 : X.Opens) := ⟨⟨_, hxV⟩⟩
-  haveI : IsDomain Γ(X, V.1) := IsIntegral.component_integral V.1
+  have : Nonempty (X.basicOpen f) := ⟨⟨_, hxf⟩⟩
+  have : Nonempty (V.1 : X.Opens) := ⟨⟨_, hxV⟩⟩
+  have : IsDomain Γ(X, V.1) := IsIntegral.component_integral V.1
   have hZW : Z.ideal (X.affineBasicOpen f) =
       Ideal.span {(X.presheaf.map (homOfLE hWV).op).hom h} := by
     have hmap := Z.map_ideal (U := X.affineBasicOpen f) (V := V) hWV
@@ -718,8 +718,8 @@ theorem locPrincipal_of_cartAt : ∀ {X : Scheme.{0}} [IsIntegral X] (Z : X.Idea
       | exact hmap.symm
       | (rw [← hmap]; rfl)
       | (convert hmap.symm using 3)
-  letI : Algebra Γ(X, U.1) Γ(X, X.basicOpen f) := (X.presheaf.map (homOfLE hWU).op).hom.toAlgebra
-  haveI : IsLocalization.Away f Γ(X, X.basicOpen f) := U.2.isLocalization_basicOpen f
+  let : Algebra Γ(X, U.1) Γ(X, X.basicOpen f) := (X.presheaf.map (homOfLE hWU).op).hom.toAlgebra
+  have : IsLocalization.Away f Γ(X, X.basicOpen f) := U.2.isLocalization_basicOpen f
   have hb : (X.presheaf.map (homOfLE hWV).op).hom h ≠ 0 := by
     intro h0
     apply nonZeroDivisors.ne_zero hh
@@ -759,12 +759,12 @@ theorem exists_generator_of_rankAtStalk_eq_one {B M : Type*} [CommRing B] [AddCo
     [Module B M] [Module.Finite B M] [Module.Projective B M] (P : PrimeSpectrum B)
     (h : Module.rankAtStalk M P = 1) :
     ∃ m : M, ∀ x : M, ∃ s : B, s ∉ P.asIdeal ∧ ∃ b : B, s • x = b • m := by
-  haveI : Module.Flat B M := Module.Flat.of_projective
+  have : Module.Flat B M := Module.Flat.of_projective
   let S := P.asIdeal.primeCompl
   let f := LocalizedModule.mkLinearMap S M
-  haveI : Module.Free (Localization.AtPrime P.asIdeal) (LocalizedModule S M) :=
+  have : Module.Free (Localization.AtPrime P.asIdeal) (LocalizedModule S M) :=
     Module.mem_freeLocus.mp (by simp only [Module.freeLocus_eq_univ, Set.mem_univ])
-  haveI : Module.Finite (Localization.AtPrime P.asIdeal) (LocalizedModule S M) :=
+  have : Module.Finite (Localization.AtPrime P.asIdeal) (LocalizedModule S M) :=
     Module.Finite.of_isLocalizedModule S f
   let e := Module.finBasisOfFinrankEq (Localization.AtPrime P.asIdeal) (LocalizedModule S M) h
   obtain ⟨⟨m, s0⟩, hm⟩ := IsLocalizedModule.surj S f (e 0)
@@ -795,7 +795,7 @@ theorem locPrincipal_of_rankAtStalk_eq_one {A : Type} [CommRing A] [IsDomain A]
     (hP : Module.rankAtStalk I.Cotangent P = 1) :
     LocPrincipal I (P.asIdeal.comap (Ideal.Quotient.mk I)) := by
   set p := P.asIdeal.comap (Ideal.Quotient.mk I) with hp_def
-  haveI hpP : p.IsPrime := Ideal.comap_isPrime _ _
+  have hpP : p.IsPrime := Ideal.comap_isPrime _ _
   have hIp : I ≤ p := fun x hx => by
     rw [hp_def, Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.mpr hx]
     exact P.asIdeal.zero_mem
@@ -874,7 +874,7 @@ theorem locPrincipal_of_rankAtStalk_eq_one {A : Type} [CommRing A] [IsDomain A]
       · rw [h] at ht
         exact absurd p.zero_mem ht
       · exact h
-    haveI : Subsingleton I.Cotangent := ⟨fun a b => by
+    have : Subsingleton I.Cotangent := ⟨fun a b => by
       obtain ⟨a', rfl⟩ := Ideal.toCotangent_surjective I a
       obtain ⟨b', rfl⟩ := Ideal.toCotangent_surjective I b
       rw [hbot a', hbot b']⟩

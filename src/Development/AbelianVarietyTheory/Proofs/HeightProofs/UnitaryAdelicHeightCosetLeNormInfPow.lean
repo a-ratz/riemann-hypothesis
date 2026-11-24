@@ -102,7 +102,7 @@ theorem infNorm_mul_le (τ : D.what₂.Tau) (x g : GA D V) :
     infNorm θ V τ (x * g) ≤ infNorm θ V τ x * infNorm θ V τ g := by
   unfold infNorm
   rw [infMat_mul', map_mul]
-  exact nnnorm_mul_le _ _
+  exact nnNorm_mul_le _ _
 
 theorem infHt_mul_le (τ : D.what₂.Tau) (x g : GA D V) :
     infHt θ V τ (x * g) ≤ infHt θ V τ x * infHt θ V τ g := by
@@ -131,11 +131,11 @@ theorem infNorm_le_normInf (τ : D.what₂.Tau) (g : GA D V) :
 theorem infHt_le_normInf (hV : 0 < V.rank) (τ : D.what₂.Tau) (g : GA D V) :
     (infHt θ V τ g : ℝ) ≤ normInf θ V g := by
   obtain ⟨h1, h2⟩ := infNorm_le_normInf θ V τ g
-  haveI : Nonempty (Fin V.rank) := ⟨⟨0, hV⟩⟩
+  have : Nonempty (Fin V.rank) := ⟨⟨0, hV⟩⟩
   have h3 : infNorm θ V τ 1 = 1 := by
     unfold infNorm
     rw [infMat_one', map_one]
-    exact nnnorm_one
+    exact nnNorm_one
   have h4 : (1 : ℝ) ≤ infNorm θ V τ g * infNorm θ V τ g⁻¹ := by
     have := infNorm_mul_le θ V τ g g⁻¹
     rw [mul_inv_cancel, h3] at this
@@ -151,7 +151,7 @@ theorem infHt_le_normInf (hV : 0 < V.rank) (τ : D.what₂.Tau) (g : GA D V) :
   exact max_le h5 (max_le h1 h2)
 
 theorem infHt_rank_zero (hV : V.rank = 0) (τ : D.what₂.Tau) (g : GA D V) : infHt θ V τ g = 1 := by
-  haveI : IsEmpty (Fin V.rank) := by rw [hV]; infer_instance
+  have : IsEmpty (Fin V.rank) := by rw [hV]; infer_instance
   have h : ∀ g, infNorm θ V τ g ≤ 1 := fun g => by
     have := opNorm_le_sum (infMat D.sp.cm.sig V.gram (θ τ) g)
     rw [Finset.univ_eq_empty, Finset.sum_empty] at this

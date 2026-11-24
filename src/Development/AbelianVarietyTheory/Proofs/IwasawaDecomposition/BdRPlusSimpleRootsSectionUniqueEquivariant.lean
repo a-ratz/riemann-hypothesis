@@ -83,7 +83,7 @@ theorem padicInt_hom_ext_pt {R : Type} [CommRing R] [IsHausdorff (Ideal.span {((
   ring
 
 theorem sigA_zA (g : Per.Gq l) (z : ℤ_[l]) : Per.σA g (Per.zA l z) = Per.zA l z := by
-  haveI : IsAdicComplete (Ideal.span {((l : ℕ) : Per.Ainf l)}) (Per.Ainf l) :=
+  have : IsAdicComplete (Ideal.span {((l : ℕ) : Per.Ainf l)}) (Per.Ainf l) :=
     WittVector.isAdicCompleteIdealSpanP
   exact padicInt_hom_ext_pt ((Per.σA g).comp (Per.zA l)) (Per.zA l) z
 

@@ -85,7 +85,7 @@ theorem zeroLocus_eq_iUnion [IsClosedImmersion i] {f : Pol n} {a : Fin (m + 1) �
     ⋃ c : ∀ k, Bk n k, {y | y ∈ ptsIn (i ≫ mpStr ℤ m n) σ₀ (i ⁻¹ᵁ mchart c) ∧
       ev (i ≫ mpStr ℤ m n) σ₀ (i ⁻¹ᵁ mchart c) (i.app _ (dehomog c f)) y = 0} := by
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_iUnion]
+  simp only [Set.mem_ofPred_eq, Set.mem_iUnion]
   constructor
   · rintro ⟨z, hz, h0⟩
     have hc : y ∈ ptsIn (i ≫ mpStr ℤ m n) σ₀
@@ -104,7 +104,7 @@ theorem measurableSet_ev_eq_zero {Y : Scheme.{0}} (q : Y ⟶ Sp ℤ) (W : Y.Open
   have e : {y : GlobalTheory.CxPts q σ₀ | y ∈ ptsIn q σ₀ W ∧ ev q σ₀ W g y = 0} =
       ptsIn q σ₀ W \ (ptsIn q σ₀ W ∩ ev q σ₀ W g ⁻¹' {0}ᶜ) := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_diff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_compl_iff,
+    simp only [Set.mem_ofPred_eq, Set.mem_sdiff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_compl_iff,
       Set.mem_singleton_iff, not_and, not_not]
     exact ⟨fun h => ⟨h.1, fun _ => h.2⟩, fun h => ⟨h.1, h.2 h.1⟩⟩
   rw [e]

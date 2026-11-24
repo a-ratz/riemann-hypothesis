@@ -162,8 +162,8 @@ theorem inner_realify {n : ℕ} (X Y : Matrix (Fin n) (Fin n) ℂ) :
     ⟪realify n X, realify n Y⟫_ℝ = (Xᴴ * Y).trace.re := by
   show ⟪WithLp.toLp 2 (realifyFun X), WithLp.toLp 2 (realifyFun Y)⟫_ℝ = _
   simp only [PiLp.inner_apply, Fintype.sum_prod_type, Fintype.sum_bool, realifyFun, Matrix.trace, Matrix.diag_apply,
-    Matrix.mul_apply, Matrix.conjTranspose_apply, Complex.re_sum, RCLike.inner_apply, conj_trivial, if_true,
-    Bool.false_eq_true, if_false, Complex.mul_re, Complex.star_def, Complex.conj_re, Complex.conj_im]
+    Matrix.mul_apply, Matrix.conjTranspose_apply, Complex.re_sum, RCLike.inner_apply, conj_trivial, ite_true,
+    Bool.false_eq_true, ite_false, Complex.mul_re, Complex.star_def, Complex.conj_re, Complex.conj_im]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   ring
@@ -555,8 +555,8 @@ theorem omegaDensity_of_hasDens (e : Fin P ⊕ Fin Q ≃ Fin n) (μ : Measure (U
   have := hl.2.2.2.2.1
   have hme : MeasurableEmbedding (emb e) := (isClosedEmbedding_emb e).measurableEmbedding
   have hLme : MeasurableEmbedding (lieCoord e).symm := (lieCoord e).symm.toHomeomorph.measurableEmbedding
-  letI := GlobalTheory.HaarDensityUpq.sumNorm P Q
-  letI : NormedSpace ℝ (lieU P Q) := ⟨fun a X => by
+  let := GlobalTheory.HaarDensityUpq.sumNorm P Q
+  let : NormedSpace ℝ (lieU P Q) := ⟨fun a X => by
     show ‖GlobalTheory.HaarDensityUpq.toL1 P Q (a • X)‖ ≤ ‖a‖ * ‖GlobalTheory.HaarDensityUpq.toL1 P Q X‖
     rw [map_smul]
     exact norm_smul_le a _⟩

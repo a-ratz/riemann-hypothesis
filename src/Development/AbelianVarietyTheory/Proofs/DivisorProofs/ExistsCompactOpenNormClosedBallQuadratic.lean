@@ -80,8 +80,8 @@ open ValuativeRel in
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] in
 private lemma exists_sq_eq_one_sub_four_mul {t : F} (ht : valuation F t < 1) :
     ∃ w : F, (1 + 2 * w) ^ 2 = 1 - 4 * t := by
-  letI := IsTopologicalAddGroup.rightUniformSpace F
-  haveI := isUniformAddGroup_of_addCommGroup (G := F)
+  let := IsTopologicalAddGroup.rightUniformSpace F
+  have := isUniformAddGroup_of_addCommGroup (G := F)
   have hH : HenselianRing 𝒪[F] (IsLocalRing.maximalIdeal 𝒪[F]) :=
     IsAdicComplete.henselianRing _ _
   have htmem : t ∈ 𝒪[F] := (Valuation.mem_integer_iff _ _).2 ht.le
@@ -169,7 +169,7 @@ open ValuativeRel in
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] in
 private lemma mem_union_of_valuation_sq_le (u : Fˣ) {y : F} (h : valuation F y ^ 2 ≤ valuation F (u : F)) :
     y ∈ _root_.GlobalTheory.SplitWeil.cball (1 : Fˣ) ∪ _root_.GlobalTheory.SplitWeil.cball u := by
-  simp only [_root_.GlobalTheory.SplitWeil.cball, Set.mem_union, Set.mem_setOf_eq, Units.val_one, map_one]
+  simp only [_root_.GlobalTheory.SplitWeil.cball, Set.mem_union, Set.mem_ofPred_eq, Units.val_one, map_one]
   by_cases hy : valuation F y ≤ 1
   · exact Or.inl hy
   · right
@@ -186,7 +186,7 @@ private lemma isCompact_isOpen_normFormBall {d : F} (hd : ∀ r : F, r ^ 2 ≠ d
     (h2 : (2 : F) ≠ 0) (s : Fˣ) :
     IsCompact ((_root_.GlobalTheory.NormBall.ballSub hd s : AddSubgroup (F × F)) : Set (F × F)) ∧
       IsOpen ((_root_.GlobalTheory.NormBall.ballSub hd s : AddSubgroup (F × F)) : Set (F × F)) := by
-  haveI := (_root_.GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := F)).2
+  have := (_root_.GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := F)).2
   have hq : Continuous fun p : F × F => p.1 ^ 2 - d * p.2 ^ 2 := by fun_prop
   have hset : ((_root_.GlobalTheory.NormBall.ballSub hd s : AddSubgroup (F × F)) : Set (F × F)) =
       (fun p : F × F => p.1 ^ 2 - d * p.2 ^ 2) ⁻¹' _root_.GlobalTheory.SplitWeil.cball s := rfl
@@ -227,7 +227,7 @@ open ValuativeRel in
 variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] in
 theorem _root_.GlobalTheory.NormBall.exists_normBall : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (E : Type) [Field E] [Algebra F E] [TopologicalSpace E] [IsModuleTopology F E] (c : E →ₐ[F] E) (δ : E) (hE : _root_.GlobalTheory.WeilM.IsQuad c δ) (s : Fˣ), ∃ L : AddSubgroup E, (L : Set E) = {z | Algebra.norm F z ∈ _root_.GlobalTheory.SplitWeil.cball s} ∧ IsCompact (L : Set E) ∧ IsOpen (L : Set E) := by
   intro F _ _ _ _ _ E _ _ _ _ c δ hE s
-  haveI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
+  have : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   have hneg : c δ = -δ := hE.anti
   have hfix : c (δ ^ 2) = δ ^ 2 := by rw [map_pow, hneg, neg_sq]
   obtain ⟨d, hdδ⟩ := hE.exists_of_fixed hfix
@@ -275,8 +275,8 @@ theorem _root_.GlobalTheory.NormBall.exists_normBall : ∀ (F : Type) [Field F] 
     have h := bs.sum_equivFun z
     rw [Fin.sum_univ_two, hb0, hb1] at h
     exact h
-  haveI : ContinuousSMul F E := IsModuleTopology.toContinuousSMul F E
-  haveI : ContinuousAdd E := IsModuleTopology.toContinuousAdd F E
+  have : ContinuousSMul F E := IsModuleTopology.toContinuousSMul F E
+  have : ContinuousAdd E := IsModuleTopology.toContinuousAdd F E
   have hφ : Continuous fun p : F × F => p.1 • (1 : E) + p.2 • δ :=
     (continuous_fst.smul continuous_const).add (continuous_snd.smul continuous_const)
   obtain ⟨hK, hU⟩ := isCompact_isOpen_normFormBall hd hd0 two_ne_zero s

@@ -173,7 +173,7 @@ theorem exists_equiv_of_jm_ne_zero {l N : ℕ} (x y : Fin l → IrrGL (k := k)) 
     (hy : ∑ a, (y a).1 = N) (hxc : ∀ a, (x a).IsCusp) (hyp : ∀ a, 0 < (y a).1)
     (h : jm y hy (prodIrr x hx) ≠ 0) : ∃ e : Fin l ≃ Fin l, ∀ a, y a = x (e a) := by
   classical
-  haveI : Fintype (SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1)) := Fintype.ofFinite _
+  have : Fintype (SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1)) := Fintype.ofFinite _
   have hτ : (piTensor fun j => (y j).rep).IsIrreducible :=
     _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness k _ _ fun j => (y j).2.rep
   let f : ∀ (b : SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1)) i, (Σ j, Fin (b.1 i j)) ≃ Fin (x i).1 :=
@@ -252,7 +252,7 @@ theorem surjective_of_jm (hA : IrreducibleAdmissibleGL) {x y : IrrGL (k := k)} (
   have hsum : x.1 + y.1 = N := by simpa [Fin.sum_univ_two] using hd
   have hN : 0 < N := by have := hx.1; omega
   obtain ⟨u, hu, hu0, g, hg⟩ := GlobalTheory.CompanionTheory.JacquetLeft.exists_embedding hA τ hτs hτi hN
-  haveI hYn : Nontrivial Y' := GlobalTheory.JacFactor.nontrivial_of_isIrreducible hτi
+  have hYn : Nontrivial Y' := GlobalTheory.JacFactor.nontrivial_of_isIrreducible hτi
   have hg0 : ∃ v, g v ≠ 0 := by
     obtain ⟨v, hv⟩ := exists_ne (0 : Y')
     exact ⟨v, fun h => hv (hg (h.trans (map_zero g).symm))⟩

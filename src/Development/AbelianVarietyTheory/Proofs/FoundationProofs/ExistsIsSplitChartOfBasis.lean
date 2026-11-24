@@ -118,7 +118,7 @@ def dGL (n : ℕ) (ϖ : Kˣ) (j : ℕ) : GL (Fin n) K :=
 open Classical in
 theorem Tj_apply (O : Subring K) (ϖ : Kˣ) (j : ℕ) (g : GL (Fin n) K) : Tj ℂ n O ϖ j g =
     if ∃ a ∈ GLint (Fin n) O, ∃ b ∈ GLint (Fin n) O, g = a * dGL n ϖ j * b then 1 else 0 := by
-  simp only [Tj, Set.indicator_apply, Set.mem_setOf_eq, Units.ext_iff, Units.val_mul, Pi.one_apply]
+  simp only [Tj, Set.indicator_apply, Set.mem_ofPred_eq, Units.ext_iff, Units.val_mul, Pi.one_apply]
   rfl
 
 theorem dGL_zero (ϖ : Kˣ) : dGL n ϖ 0 = 1 := Units.ext (by simp [dGL, diagJ])
@@ -311,8 +311,8 @@ theorem valued_complMap (hE : IsCMExt F E σ) (h : w.under (𝓞 F) = v) {τ : E
   have h4 : Valued.v (complMap h (algebraMap F (Fv F v) x / a)) ≤ 1 :=
     complMap_mem h (by rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, h1, div_self h0])
   rw [map_div₀, map_div₀, h2] at h3 h4
-  exact le_antisymm ((div_le_one₀ (zero_lt_iff.2 h0)).1 h3)
-    ((div_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 ((map_ne_zero _).2 ha)))).1 h4)
+  exact le_antisymm ((div_le_one₀ (pos_iff_ne_zero.2 h0)).1 h3)
+    ((div_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 ((map_ne_zero _).2 ha)))).1 h4)
 
 theorem qV_splitPrime (τ τ' : E →ₐ[F] Fv F v) : qV E (splitPrime τ) = qV E (splitPrime τ') := by
   rw [qV, qV, Ideal.absNorm_apply, Ideal.absNorm_apply, Submodule.cardQuot_apply, Submodule.cardQuot_apply]

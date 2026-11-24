@@ -157,7 +157,7 @@ theorem embLL_chi : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B p
     intro h0
     have : y = 0 := by exact_mod_cast h0
     rw [this, map_zero] at hy
-    haveI : Nontrivial (kP w) := Ideal.Quotient.nontrivial_iff.2 w.isPrime.ne_top
+    have : Nontrivial (kP w) := Ideal.Quotient.nontrivial_iff.2 w.isPrime.ne_top
     exact c.ne_zero hy.symm
   have h1 := (hI.ch_tied.mu0 s).atg ⟨w, hw⟩ (Units.mk0 _ hy0) y c rfl hy.symm
   have h2 := hL.is.chi s w (hL.Pg ▸ hw) y (Units.mk0 _ hy0) c rfl hy.symm
@@ -179,7 +179,7 @@ theorem embLL_resChar : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X
     intro h0
     have : y = 0 := by exact_mod_cast h0
     rw [this, map_zero] at hy
-    haveI : Nontrivial (kP P) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
+    have : Nontrivial (kP P) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
     exact c.ne_zero hy.symm
   have hr := hI.xi_reads (ixOf I U t)
   rw [tup_ixOf, ← hL.xiH t] at hr
@@ -215,14 +215,14 @@ theorem prod_uSG {E : Type} [Field E] [NumberField E] {M : Type} [CommMonoid M] 
   have h1 : ∏ w, f w = ∏ w : Formalism.L2.Col.uSG A B, (fun P => if P ∈ A then a P else b P) w.1 := by
     refine Finset.prod_congr rfl fun w _ => ?_
     by_cases h : w.1 ∈ A
-    · simp only [h, if_true]; exact ha w h
-    · simp only [h, if_false]; exact hb w h ((Finset.mem_union.mp w.2).resolve_left h)
+    · simp only [h, ite_true]; exact ha w h
+    · simp only [h, ite_false]; exact hb w h ((Finset.mem_union.mp w.2).resolve_left h)
   rw [h1, Finset.prod_coe_sort (Formalism.L2.Col.uSG A B) (fun P => if P ∈ A then a P else b P)]
   have h2 : Disjoint A B := Finset.disjoint_right.2 fun P hP => hd P hP
   rw [Finset.prod_union h2]
   congr 1
-  · exact Finset.prod_congr rfl fun P hP => if_pos hP
-  · exact Finset.prod_congr rfl fun P hP => if_neg (hd P hP)
+  · exact Finset.prod_congr rfl fun P hP => ite_eq_left hP
+  · exact Finset.prod_congr rfl fun P hP => ite_eq_right (hd P hP)
 
 theorem lam_congr {κ K : Type} [CommRing κ] [Field K] {n : ℕ} {l l' : Formalism.L2.Col.Lev κ K n} (e : l = l') (u : GL (Fin n) κ)
     (h : u ∈ l.inv.H) : l.inv.lam ⟨u, h⟩ = l'.lam⁻¹ ⟨u, e ▸ h⟩ := by

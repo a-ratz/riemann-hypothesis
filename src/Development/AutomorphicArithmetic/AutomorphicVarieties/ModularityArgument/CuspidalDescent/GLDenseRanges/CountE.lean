@@ -98,7 +98,7 @@ private theorem box_apply (ρ : Representation ℂ G W) (τ : Representation ℂ
 
 private theorem irr_eq {ρ : Representation ℂ G W} (h : ρ.IsIrreducible) (S : Submodule ℂ W)
     (hS : ∀ g, ∀ v ∈ S, ρ g v ∈ S) {v : W} (hv : v ∈ S) (h0 : v ≠ 0) : S = ⊤ := by
-  haveI := h
+  have := h
   rcases eq_bot_or_eq_top (⟨S, fun g _ hx => hS g _ hx⟩ : Subrepresentation ρ) with h1 | h1
   · exfalso
     apply h0
@@ -110,7 +110,7 @@ private theorem irr_eq {ρ : Representation ℂ G W} (h : ρ.IsIrreducible) (S :
 private theorem exists_ne {ρ : Representation ℂ G W} (h : ρ.IsIrreducible) : ∃ v : W, v ≠ 0 := by
   by_contra hc
   push Not at hc
-  haveI := h
+  have := h
   apply bot_ne_top (α := Subrepresentation ρ)
   apply Subrepresentation.toSubmodule_injective
   ext x
@@ -268,7 +268,7 @@ theorem boxIrr : BoxIrr := by
   have hct₀ : ∀ u, ct (w₀ ⊗ₜ[ℂ] u) = u := fun u => by rw [hct, hφ₀, one_smul]
   have hne : w₀ ⊗ₜ[ℂ] u₀ ≠ 0 := fun h0 => hu₀ (by rw [← hct₀ u₀, h0, map_zero])
   refine ⟨?_, ?_⟩
-  · haveI : Nontrivial (Subrepresentation (box ρ τ)) := ⟨⊥, ⊤, fun h => hne (by
+  · have : Nontrivial (Subrepresentation (box ρ τ)) := ⟨⊥, ⊤, fun h => hne (by
       have h1 : (⊥ : Submodule ℂ (W ⊗[ℂ] W')) = ⊤ := congrArg Subrepresentation.toSubmodule h
       have h2 : w₀ ⊗ₜ[ℂ] u₀ ∈ (⊥ : Submodule ℂ (W ⊗[ℂ] W')) := by
         rw [h1]
@@ -446,7 +446,7 @@ theorem UpperTheory.V.Z.J.D.boxIsot :
     Step → BoxIsot := by
   intro hStep G H W W' _ _ _ _ _ _ ρ τ hρ _ X _ _ κ h1 h2
   obtain ⟨Y, _, _, κ', f, hf⟩ := hStep G H X W κ ρ hρ h1
-  haveI : Nontrivial W := by
+  have : Nontrivial W := by
     by_contra hcon
     rw [not_nontrivial_iff_subsingleton] at hcon
     obtain ⟨s, t, hst⟩ := hρ.1.toNontrivial.exists_pair_ne
@@ -471,7 +471,7 @@ variable {G W W' : Type} [Group G] [AddCommGroup W] [Module ℂ W] [AddCommGroup
 
 private lemma stable_eq {τ : Representation ℂ G W'} (hτ : τ.IsIrreducible) (P : Submodule ℂ W')
     (hP : ∀ g, ∀ v ∈ P, τ g v ∈ P) : P = ⊥ ∨ P = ⊤ := by
-  haveI : IsSimpleOrder (Subrepresentation τ) := hτ
+  have : IsSimpleOrder (Subrepresentation τ) := hτ
   rcases eq_bot_or_eq_top (⟨P, fun g _ hv => hP g _ hv⟩ : Subrepresentation τ) with h | h
   · left
     exact congrArg Subrepresentation.toSubmodule h
@@ -855,7 +855,7 @@ private theorem span_pi {I : Type} [Finite I] {M : I → Type} [∀ i, AddCommGr
     (h : ∀ i, Submodule.span ℂ (Set.range fun x : H i => ρ i x) = ⊤) :
     Submodule.span ℂ (Set.range fun x : Gi => PiTensorProduct.map fun i => ρ i x) = ⊤ := by
   classical
-  haveI := Fintype.ofFinite I
+  have := Fintype.ofFinite I
   set S := Submodule.span ℂ (Set.range fun x : Gi => PiTensorProduct.map fun i => ρ i x)
   have hx : ∀ (y : ∀ i, H i) (T : Finset I), ∃ x ∈ Gi, ∀ i, ρ i x = if i ∈ T then ρ i (y i) else 1 := fun y T => by
     induction T using Finset.induction_on with
@@ -871,7 +871,7 @@ private theorem span_pi {I : Type} [Finite I] {M : I → Type} [∀ i, AddCommGr
   have hm : S.mkQ.compMultilinearMap (PiTensorProduct.mapMultilinear ℂ M M) = 0 := by
     refine MultilinearMap.ext_of_span_eq_top (g := fun i (x : H i) => ρ i x) h fun y => ?_
     obtain ⟨x, hx, hx'⟩ := hx y Finset.univ
-    simp only [Finset.mem_univ, if_true] at hx'
+    simp only [Finset.mem_univ, ite_true] at hx'
     refine (Submodule.Quotient.mk_eq_zero S).2 (Submodule.subset_span ⟨⟨x, hx⟩, ?_⟩)
     simp only [hx']
     rfl
@@ -1005,7 +1005,7 @@ theorem UpperTheory.V.Z.J.D.infDim :
     MonoidHom.prod (away l L n).rangeRestrict (Pi.monoidHom fun v : V.frame.Vl => cLoc (s.w v.1))
   obtain ⟨hinj, -, htr, -, hsur⟩ := UpperTheory.V.Hi.formU l L Ω s n hn V Q c m τ₀ ι lam d e ξ hξ J (fun _ => rfl)
   obtain ⟨hfin, hb⟩ := UpperTheory.placeEmbeddings_bijective_infinitePlaces l L Ω s V ι
-  haveI := e.finiteDimensional
+  have := e.finiteDimensional
   let tf : (Ga l L n × GV n (fun v : V.frame.Vl => s.w v.1) → Fin d → ℂ) →ₗ[ℂ]
       Module.Dual ℂ (⨂[ℂ] e : Emb l (fun v : V.frame.Vl => s.w v.1), nablaSq ℂ n (lam e.res)) →ₗ[ℂ] (UA L n → ℂ) :=
     LinearMap.mk₂ ℂ (toForm ι e)
@@ -1227,11 +1227,11 @@ private lemma piIsot_card (hB : BoxIsot) (hP : PiIrr) (n : ℕ) :
   induction n with
   | zero =>
     intro I _ _ hc Gi Wi _ _ _ τ _ X _ _ κ _
-    haveI : IsEmpty I := Fintype.card_eq_zero_iff.1 hc
+    have : IsEmpty I := Fintype.card_eq_zero_iff.1 hc
     exact piIsot_empty Gi Wi τ κ
   | succ n ih =>
     intro I _ _ hc Gi Wi _ _ _ τ hτ X _ _ κ hκ
-    haveI : Nonempty I := Fintype.card_pos_iff.1 (by omega)
+    have : Nonempty I := Fintype.card_pos_iff.1 (by omega)
     obtain ⟨i₀⟩ := ‹Nonempty I›
     have hJ : Fintype.card {i // i ≠ i₀} = n := by
       simp [Fintype.card_subtype_compl, hc]
@@ -1645,7 +1645,7 @@ theorem UpperTheory.V.Z.J.D.isotS :
   intro hSec hSch hBI hPI hPr hBr l _ L Ω _ _ _ _ _ _ s n hn V hV Q c ι m τ₀ lam d e ξ hξ σ hσ C
   classical
   obtain ⟨hb, hcomm, -⟩ := hSec l L Ω s n hn V hV
-  haveI := V.frame.finV
+  have := V.frame.finV
   have hu := (UpperTheory.under_chosen_place_and_isSplitAt_of_decomp_le l L Ω s).1
   let ρ : Representation ℂ (GL' n V × GS n s) (VS V ι e ξ Q τ₀ σ) :=
     (⟨VS V ι e ξ Q τ₀ σ, fun g y hy => vs_stable hn Q c τ₀ hξ hσ hcomm g y hy⟩ : Subrepresentation (actS n V d)).toRepresentation
@@ -1714,9 +1714,9 @@ open UpperTheory.V.Z.J.D
 theorem UpperTheory.V.Z.J.D.schurGL :
     SchurGL := by
   intro L _ _ n w τ
-  letI := τ.acg
-  letI := τ.mod
-  haveI : τ.ρ.IsIrreducible := τ.irred
+  let := τ.acg
+  let := τ.mod
+  have : τ.ρ.IsIrreducible := τ.irred
   have hsm : GroundTheory.Automorphic.IsSmooth τ.ρ := τ.smooth
   refine ⟨τ.irred, fun f hf => ?_⟩
   let φ : Representation.IntertwiningMap τ.ρ τ.ρ :=

@@ -170,7 +170,7 @@ theorem lsB_sd (D : Formalism.BasicNotions.D7) (cc : Ideal (𝓞 D.host.K)) (r :
     intro j
     by_cases hj : j = i
     · subst hj; simpa using hu
-    · simp only [Pi.single_apply, hj, if_false]; exact zero_mem _
+    · simp only [Pi.single_apply, hj, ite_false]; exact zero_mem _
   rw [GlobalTheory.InertSign.sd_iff]
   refine ⟨?_, ?_, ?_⟩
   · obtain ⟨x₀, hx₀, hne⟩ := exists_ne_zero D cc r hn hs
@@ -178,7 +178,7 @@ theorem lsB_sd (D : Formalism.BasicNotions.D7) (cc : Ideal (𝓞 D.host.K)) (r :
     let M := Submodule.span (𝓞 D.host.E)
       (Set.range fun i : Fin a => (Pi.single i (D.host.conj x₀)⁻¹ : Fin a → D.host.E))
     have hM : M.FG := Submodule.fg_span (Set.finite_range _)
-    haveI := isNoetherian_of_fg_of_noetherian M hM
+    have := isNoetherian_of_fg_of_noetherian M hM
     refine Submodule.FG.of_le_of_isNoetherian (T := M) ?_
     intro y hy
     rw [mem_lsB] at hy

@@ -104,13 +104,13 @@ theorem dg_uh (u : ℂ) (hu : star u * u = 1) : dg k r u ∈ UH (Hpk k r) := by
   by_cases hi : i = p0 k r <;> by_cases hj : j = p0 k r
   · subst hi
     subst hj
-    simp only [Pi.star_apply, if_true]
+    simp only [Pi.star_apply, ite_true]
     linear_combination (Hpk k r (p0 k r) (p0 k r)) * hu
   · subst hi
-    simp only [Pi.star_apply, if_true, if_neg hj, splitHermForm_firstMiddle_apply j hj, mul_zero, zero_mul]
+    simp only [Pi.star_apply, ite_true, ite_eq_right hj, splitHermForm_firstMiddle_apply j hj, mul_zero, zero_mul]
   · subst hj
-    simp only [Pi.star_apply, if_true, if_neg hi, splitHermForm_apply_firstMiddle i hi, mul_zero, zero_mul]
-  · simp only [Pi.star_apply, if_neg hi, if_neg hj, star_one, one_mul, mul_one]
+    simp only [Pi.star_apply, ite_true, ite_eq_right hi, splitHermForm_apply_firstMiddle i hi, mul_zero, zero_mul]
+  · simp only [Pi.star_apply, ite_eq_right hi, ite_eq_right hj, star_one, one_mul, mul_one]
 
 theorem dg_fix (u : ℂ) (e : Fin (2 * r + k + 1)) (he : e ≠ p0 k r) : dg k r u *ᵥ bvec e = bvec e := by
   funext x
@@ -174,7 +174,7 @@ theorem haarOn_smul (S : Set (Mat k r)) (ν : Measure (Mt k r)) (c : ℝ≥0) (h
     rw [← Measure.measure_univ_eq_zero]
     have h1 := congrArg (fun μ : Measure (Mt k r) => μ Set.univ) h0
     simpa [hc] using h1
-  · rw [Measure.smul_apply, h.2.2.1, smul_zero]
+  · rw [smul_apply, h.2.2.1, smul_zero]
   · rw [Measure.map_smul, h.2.2.2 s hs]
     exact (HU.lmulM_cont s).measurable.aemeasurable
 
@@ -216,7 +216,7 @@ theorem gaugeExists_of (hH : HaarDens) (hL : ChartLim) : GaugeExists := by
     have hhigh : νh (bBall k r ρ) ≤ (δ 0 + 1) * volume (Metric.ball (0 : lieE (UWb k r)) ρ) := by
       rw [hI, ← setLIntegral_const]
       exact setLIntegral_mono' hmeas fun x hx => (hbd x hx).1.le
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
     constructor
     · exact ENNReal.mul_pos (by exact_mod_cast hc)
         (lt_of_lt_of_le (ENNReal.mul_pos (ENNReal.half_pos hδ0).ne' hvpos.ne') hlow).ne'
@@ -228,7 +228,7 @@ theorem gaugeExists_of (hH : HaarDens) (hL : ChartLim) : GaugeExists := by
     have key : (fun ρ : ℝ => ((c • νh) (tBall k r m ρ)).toReal / bVol k r ρ) = fun ρ => (c : ℝ) *
         ((νh (expC k r '' Metric.ball 0 ρ)).toReal / (volume (Metric.ball (0 : lieE (UWb k r)) ρ)).toReal) := by
       funext ρ
-      rw [tBall_mass _ hg m hm ρ, Measure.smul_apply, ENNReal.toReal_smul, NNReal.smul_def, smul_eq_mul, bBall_eq,
+      rw [tBall_mass _ hg m hm ρ, smul_apply, ENNReal.toReal_smul, NNReal.smul_def, smul_eq_mul, bBall_eq,
         bVol, mul_div_assoc]
     have h1 : (c : ℝ) * (δ 0).toReal = 1 := by
       rw [hcdef, NNReal.coe_inv, ENNReal.coe_toNNReal_eq_toReal]

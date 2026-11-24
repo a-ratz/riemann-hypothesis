@@ -144,7 +144,7 @@ theorem exists_goodV (ξ : Spec (CommRingCat.of (FractionRing V))) {X : Scheme.{
     (s : X ⟶ Spec (CommRingCat.of V)) [IsSeparated s] :
     ∃ J, Good L ξ J ∧ ∀ p : Spec (CommRingCat.of V) ⟶ X, p ≫ s = 𝟙 _ →
       p (closedPoint V) ∈ L.U (J (jK V ≫ p)) := by
-  haveI : IsDominant (jK V) := isDominant_jK
+  have : IsDominant (jK V) := isDominant_jK
   choose pick hpk using fun p : Spec (CommRingCat.of V) ⟶ X => exists_chart hL (p (closedPoint V))
   obtain ⟨J, hJ, e⟩ := exists_good L hL ξ (K := {p : Spec (CommRingCat.of V) ⟶ X // p ≫ s = 𝟙 _})
     (fun p => jK V ≫ p.1) (fun p => pick p.1)

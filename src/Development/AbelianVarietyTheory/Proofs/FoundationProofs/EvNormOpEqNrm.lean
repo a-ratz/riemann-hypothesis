@@ -53,9 +53,9 @@ theorem ev_normOp_eq_nrm (R : Type) [CommRing R] (p m : ℕ) [hp : Fact p.Prime]
     (hR : IsAdicComplete (Ideal.span {(p : R)}) R) (h : PowerSeries R) :
     ev R p m (normOp p h) = nrm p m hm (ev R p (m + 1) h) := by
   obtain ⟨b, hb⟩ := GlobalTheory.Col.exists_basis_one_add_X_pow R p hR
-  letI iA : Algebra (PowerSeries R) (PowerSeries R) := (phi (R := R) p hp.out.pos).toRingHom.toAlgebra
-  letI iM : Module (PowerSeries R) (PowerSeries R) := @Algebra.toModule _ _ _ _ iA
-  letI iS : SMul (PowerSeries R) (PowerSeries R) := iM.toSMul
+  let iA : Algebra (PowerSeries R) (PowerSeries R) := (phi (R := R) p hp.out.pos).toRingHom.toAlgebra
+  let iM : Module (PowerSeries R) (PowerSeries R) := @Algebra.toModule _ _ _ _ iA
+  let iS : SMul (PowerSeries R) (PowerSeries R) := iM.toSMul
   have F1 : ∀ x : PowerSeries R, ∑ i, phi (R := R) p hp.out.pos (b.repr x i) * (1 + X) ^ (i : ℕ) = x := by
     intro x
     conv_rhs => rw [← b.sum_repr x]
@@ -75,7 +75,7 @@ theorem ev_normOp_eq_nrm (R : Type) [CommRing R] (p m : ℕ) [hp : Fact p.Prime]
     have : phi (R := R) p hp.out.pos a * x = a • x := rfl
     rw [this, LinearEquiv.map_smul]; rfl
 
-  letI iU : Algebra (lev R p m) (lev R p (m + 1)) := (up (R := R) p m hm).toAlgebra
+  let iU : Algebra (lev R p m) (lev R p (m + 1)) := (up (R := R) p m hm).toAlgebra
   have hup : ∀ a : PowerSeries R, up (R := R) p m hm (ev R p m a) = ev R p (m + 1) (phi (R := R) p hp.out.pos a) :=
     fun a => rfl
   have hsm : ∀ (a : PowerSeries R) (y : PowerSeries R),

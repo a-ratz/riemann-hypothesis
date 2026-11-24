@@ -106,7 +106,7 @@ theorem le_one_of_map (i : K →+* K') (hi : Continuous i) {y : K} (h : valuatio
   have h2 := lt_one_of_map i hi h1
   rw [map_inv₀, map_inv₀] at h2
   have h0 : (0 : ValueGroupWithZero K') < valuation K' (i y) := by
-    rw [zero_lt_iff, Valuation.ne_zero_iff]
+    rw [pos_iff_ne_zero, Valuation.ne_zero_iff]
     exact (map_ne_zero i).2 hy
   exact absurd h (not_le.2 ((inv_lt_one₀ h0).1 h2))
 

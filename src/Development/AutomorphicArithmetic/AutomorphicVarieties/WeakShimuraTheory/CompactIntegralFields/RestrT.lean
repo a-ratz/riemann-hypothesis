@@ -130,16 +130,16 @@ theorem UpperTheory.V.Ws.Rt.splitMod :
   have hom : D.om γ = 1 := hdec hγ
   have hbar := hD.om_bar γ
   simp only [Raw.bar, hom, chiO, MonoidHom.comp_apply, Units.coe_map, Units.val_one, map_one,
-    MonoidHom.coe_coe, hγl] at hbar
+    MonoidHom.coe_ofClass, hγl] at hbar
   have hbar' : residue c.O (algebraMap ℤ_[l] c.O (w : ℤ_[l])) = 1 := hbar.symm
   have hint : Algebra.IsIntegral ℤ_[l] c.O := by
-    haveI := c.fin
+    have := c.fin
     infer_instance
   have key : ((w : ℤ_[l]) - 1) ∈ IsLocalRing.maximalIdeal ℤ_[l] := by
     have h0 : residue c.O (algebraMap ℤ_[l] c.O ((w : ℤ_[l]) - 1)) = 0 := by
       rw [map_sub, map_one, map_sub, map_one, hbar', sub_self]
     have hm := (IsLocalRing.residue_eq_zero_iff _).mp h0
-    letI := hint
+    let := hint
     have hmax : (IsLocalRing.maximalIdeal c.O).comap (algebraMap ℤ_[l] c.O) = IsLocalRing.maximalIdeal ℤ_[l] :=
       IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (IsLocalRing.maximalIdeal c.O))
     rw [← hmax]
@@ -181,7 +181,7 @@ private theorem UpperTheory.V.Ws.Rt.wild_mem_ker
     refine ⟨j - i, Nat.sub_pos_of_lt hlt, ?_⟩
     intro x hx
     have hx' := congrArg (fun φ => φ ⟨x, hx⟩) he
-    simp only [f, AlgHom.comp_apply, IntermediateField.val_mk, AlgHom.coe_coe] at hx'
+    simp only [f, AlgHom.comp_apply, IntermediateField.val_mk, AlgHom.coe_ofClass] at hx'
     have hx'' : (σ.1 ^ i) x = (σ.1 ^ j) x := hx'
     have hj : σ.1 ^ j = σ.1 ^ i * σ.1 ^ (j - i) := by
       rw [← pow_add, Nat.add_sub_cancel' hlt.le]
@@ -293,7 +293,7 @@ private theorem thetaEx_val {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {m 
     (h : ζ ^ m = 1) : A.valuation ζ = 1 := by
   have h2 := congrArg A.valuation h
   rw [map_pow, map_one] at h2
-  exact (pow_eq_one_iff_of_nonneg zero_le' hm).mp h2
+  exact (pow_eq_one_iff_of_nonneg zero_le hm).mp h2
 
 private theorem thetaEx_pow {Ω : Type} [Field Ω] (A : ValuationSubring Ω) {η : Ω} (h1 : A.valuation η = 1)
     (h : A.valuation (η - 1) < 1) (i : ℕ) : A.valuation (1 - η ^ i) < 1 := by
@@ -362,9 +362,9 @@ theorem UpperTheory.V.Ws.Rt.thetaEx :
       ∃ θ : G ℚ Ω →* Multiplicative (ZMod l), IsOpen (θ.ker : Set (G ℚ Ω)) ∧ (∀ A, Raw.Away {w} A → Ine (F := ℚ) A ≤ θ.ker) ∧
         ∀ A : ValuationSubring Ω, A.valuation (w : Ω) < 1 → ∃ g ∈ Ine (F := ℚ) A, θ g ≠ 1 := by
   intro Ω _ _ _ l _ w hw h
-  haveI : Fact w.Prime := ⟨hw⟩
-  haveI : NeZero w := ⟨hw.ne_zero⟩
-  haveI : Fact (1 < w) := ⟨hw.one_lt⟩
+  have : Fact w.Prime := ⟨hw⟩
+  have : NeZero w := ⟨hw.ne_zero⟩
+  have : Fact (1 < w) := ⟨hw.one_lt⟩
   obtain ⟨φ, b, hb⟩ := thetaEx_hom l w h
   refine ⟨φ.comp (UpperTheory.V.B1.cycN ℚ Ω w), ?_, ?_, ?_⟩
   · have ho := (UpperTheory.V.B1.cycCompat ℚ Ω w).1
@@ -389,7 +389,7 @@ theorem UpperTheory.V.Ws.Rt.thetaEx :
       rw [MonoidHom.mem_ker]
       have hk : ordCompl[w] w = 1 := by
         rw [hw.factorization_self, pow_one, Nat.div_self hw.pos]
-      haveI : Subsingleton (ZMod (ordCompl[w] w)) := by
+      have : Subsingleton (ZMod (ordCompl[w] w)) := by
         rw [ZMod.subsingleton_iff]
         exact hk
       exact Subsingleton.elim _ _
@@ -441,7 +441,7 @@ private theorem UpperTheory.V.Ws.Rt.pow_char_graded {k : Type} [Field k] (l : �
     ext i j
     rw [Matrix.zero_apply]
     exact UpperTheory.V.Ws.Rt.pow_graded h N hN l i j (by have := hl j; omega)
-  haveI : CharP (Matrix (Fin 4) (Fin 4) k) l := inferInstance
+  have : CharP (Matrix (Fin 4) (Fin 4) k) l := inferInstance
   rw [hXN, add_pow_char_of_commute (p := l) (h := Commute.one_left N), one_pow, hNl, add_zero]
 
 theorem UpperTheory.V.Ws.Rt.unipPow :
@@ -471,18 +471,18 @@ section SlopeTestRemainingChoices
 variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω]
 
 private theorem algCl (F : IntermediateField ℚ Ω) : IsAlgClosure F Ω := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) F
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) F
   exact ⟨inferInstance, inferInstance⟩
 
 private theorem cont_resQ (F : IntermediateField ℚ Ω) [NumberField F] : Continuous (resQ F) := by
-  haveI := algCl F
+  have := algCl F
   exact (galEmbTop ℚ F Ω).1.continuous
 
 private theorem cont_resLe {F F' : IntermediateField ℚ Ω} [NumberField F] [NumberField F'] (h : F ≤ F') :
     Continuous (resLe h) := by
-  haveI := algCl F
-  haveI := algCl F'
+  have := algCl F
+  have := algCl F'
   rw [(galEmbTop ℚ F Ω).1.isInducing.continuous_iff]
   have e : (galEmb ℚ F Ω) ∘ (resLe h) = galEmb ℚ F' Ω := by
     funext g
@@ -523,8 +523,8 @@ private theorem lc_mat {ι Γ k : Type} [Group Γ] [TopologicalSpace Γ] [Field 
 variable {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c}
 
 private theorem charP_of {k : Type} [Field k] (a : c.O →+* k) (ha : ∀ x ∈ maximalIdeal c.O, a x = 0) : CharP k l := by
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   have hp : l.Prime := Fact.out
   have hloc : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
   have hmem : (l : c.O) ∈ maximalIdeal c.O := by
@@ -559,10 +559,10 @@ private theorem killW (hD : D.Good) (T : Tower D) {k : Type} [Field k] (a : c.O 
     (hS : T.Splits w) {F' : IntermediateField ℚ Ω} (hd : Dies l w F') {A : ValuationSubring Ω} (hA : A.valuation (w : Ω) < 1)
     (hl : ¬ A.valuation (l : Ω) < 1) {g : G T.F Ω} (hg : g ∈ Ine (F := T.F) A) (hF : resQ T.F g ∈ F'.fixingSubgroup) :
     s.r g = 1 := by
-  haveI := T.nF
-  haveI : IsAlgClosure T.F Ω := algCl T.F
+  have := T.nF
+  have : IsAlgClosure T.F Ω := algCl T.F
   have hlp : l.Prime := Fact.out
-  haveI : CharP k l := charP_of a ha
+  have : CharP k l := charP_of a ha
   have hSp := hS A hA
   have hdec : ∀ σ ∈ Ine (F := T.F) A, resQ T.F σ ∈ Dec (F := ℚ) A := fun σ hσ => Ine_le_Dec (F := T.F) A hσ
   have hom : Dec (F := ℚ) A ≤ D.om.ker := fun x hx => (hSp hx).2
@@ -572,7 +572,7 @@ private theorem killW (hD : D.Good) (T : Tower D) {k : Type} [Field k] (a : c.O 
   let φ : ↥(Ine (F := T.F) A) →* UpperTheory.V.GradeZeroInterpolatingElement.M4 k := s.r.comp (Ine (F := T.F) A).subtype
   let θ : ↥(Ine (F := T.F) A) →* Multiplicative (ZMod l) := (θ0.comp (resQ T.F)).comp (Ine (F := T.F) A).subtype
   have hφlc : IsLocallyConstant ⇑φ :=
-    (lc_mat hs.cont).comp_continuous continuous_subtype_val
+    (lc_mat hs.cont).comp_continuous continuous_subtypeVal
   have hφl : ∀ σ : ↥(Ine (F := T.F) A), φ σ ^ l = 1 := by
     intro σ
     apply Rt.unipPow k l
@@ -593,7 +593,7 @@ private theorem killW (hD : D.Good) (T : Tower D) {k : Type} [Field k] (a : c.O 
         have := hD.l_odd
         omega
   have hθo' : IsOpen (θ.ker : Set ↥(Ine (F := T.F) A)) :=
-    hθo.preimage ((cont_resQ T.F).comp continuous_subtype_val)
+    hθo.preimage ((cont_resQ T.F).comp continuous_subtypeVal)
   have hθne' : θ ≠ 1 := by
     obtain ⟨g', hg'I, hg'⟩ := hθne A hA
     have hfix : g' ∈ T.F.fixingSubgroup := (hSp (Ine_le_Dec (F := ℚ) A hg'I)).1.1
@@ -612,8 +612,8 @@ theorem UpperTheory.V.Ws.restrT :
       ∀ s : PD T.ι (G T.F Ω) k, (T.fr W).IsRes a s → (5 ≤ l ∨ Supp qQ s.r ∨ (T.fr ∅).IsRes a s) →
       ∃ s' : PD T'.ι (G T'.F Ω) k, (T'.fr ∅).IsRes a s' ∧ T.OverT hT s s' := by
   intro Ω _ _ _ l _ c D hD T T' hT hFit k _ a ha W hW hWd s hs h5
-  haveI := T.nF
-  haveI := T'.nF
+  have := T.nF
+  have := T'.nF
   have hle : T.F ≤ T'.F := hT.le
   have hQ : ∀ g : G T'.F Ω, resQ T.F (resLe hle g) = resQ T'.F g := fun g => by
     ext x
@@ -668,7 +668,7 @@ theorem UpperTheory.V.Ws.restrT :
     refine h3.trans ?_
     simp only [Tower.fr, MonoidHom.comp_apply, map_mul, map_inv]
     rw [mul_comm _ ((chi D T.pr i) ((resQ T.F) (resLe hle t))), inv_mul_cancel_right, hQ, hT.pr]
-  haveI := charP_of (c := c) a ha
+  have := charP_of (c := c) a ha
   refine ⟨s', ⟨⟨?_, ?_, ?_, hnlow, ?_, ?_⟩, ⟨hdiag, hchar, ?_⟩, hcont⟩, ⟨rfl, ?_⟩⟩
   · intro g
     have := hs.pair.mult (resLe hle g)

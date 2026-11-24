@@ -158,9 +158,9 @@ private theorem exists_nat_mul_mem_principal_of_rightIdeal_index_ne_zero {B : Ty
     push_neg at hcon
     have hle : m + 1 ≤ D := le_trans (Nat.le_self_pow hk.ne' _) hcon
     exact Nat.findGreatest_is_greatest (P := fun m => m ^ k ≤ D) (Nat.lt_succ_self m) hle hcon
-  haveI : I.FiniteIndex := ⟨hD⟩
-  haveI : Finite (B ⧸ I) := AddSubgroup.finite_quotient_of_finiteIndex
-  letI := Fintype.ofFinite (B ⧸ I)
+  have : I.FiniteIndex := ⟨hD⟩
+  have : Finite (B ⧸ I) := AddSubgroup.finite_quotient_of_finiteIndex
+  let := Fintype.ofFinite (B ⧸ I)
   let f : (Module.Free.ChooseBasisIndex ℤ B → Fin (m + 1)) → B ⧸ I :=
     fun c => QuotientAddGroup.mk (∑ i, ((c i : ℕ) : ℤ) • b i)
   have hcard : Fintype.card (B ⧸ I) < Fintype.card (Module.Free.ChooseBasisIndex ℤ B → Fin (m + 1)) := by
@@ -238,7 +238,7 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
     obtain ⟨γ, rfl⟩ := hσ y hy hy0
     calc z = σ γ⁻¹ * (σ γ * z) := by rw [← mul_assoc, (hunit γ).2, one_mul]
       _ = z' := by rw [h, ← mul_assoc, (hunit γ).2, one_mul]
-  haveI : NoZeroSMulDivisors ℤ (R.comap j) := ⟨fun {c x} h => by
+  have : NoZeroSMulDivisors ℤ (R.comap j) := ⟨fun {c x} h => by
     by_contra hc
     push_neg at hc
     obtain ⟨hc0, hx0⟩ := hc
@@ -251,8 +251,8 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
       calc (c : A) = (c : A) * (σ γ * σ γ⁻¹) := by rw [(hunit γ).1, mul_one]
         _ = 0 := by rw [← mul_assoc, hγ, h1, zero_mul]
     exact hc0 (Int.cast_eq_zero.1 h3)⟩
-  haveI : Module.Free ℤ (R.comap j) := Module.free_of_finite_type_torsion_free'
-  haveI : Nontrivial (R.comap j) := inferInstance
+  have : Module.Free ℤ (R.comap j) := Module.free_of_finite_type_torsion_free'
+  have : Nontrivial (R.comap j) := inferInstance
   obtain ⟨N, hN0, hNA⟩ := exists_nat_mul_mem_principal_of_rightIdeal_index_ne_zero (B := R.comap j) (fun x hx z z' h =>
     Subtype.ext (hinjA _ x.2 (fun h' => hx (Subtype.ext h')) _ _ (congrArg Subtype.val h)))
   let good : G → Prop := fun k => ρ k⁻¹ ∈ R ∧ (N : M) * ρ k ∈ R
@@ -299,7 +299,7 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
     have hle : (LinearMap.range (LinearMap.mulLeft ℤ (n' : R.comap j))).toAddSubgroup ≤ I := by
       rintro _ ⟨z, rfl⟩
       exact hIr _ hn'I z
-    haveI : (LinearMap.range (LinearMap.mulLeft ℤ (n' : R.comap j))).toAddSubgroup.FiniteIndex :=
+    have : (LinearMap.range (LinearMap.mulLeft ℤ (n' : R.comap j))).toAddSubgroup.FiniteIndex :=
       ⟨by rw [hidx]; exact Int.natAbs_ne_zero.2 hdet⟩
     have hIidx : I.index ≠ 0 := (AddSubgroup.finiteIndex_of_le hle).index_ne_zero
     obtain ⟨x, ⟨r0, hr0R, hr0⟩, hx0, hxdiv⟩ := hNA I hIr hIidx
@@ -346,8 +346,8 @@ theorem cls_abs {A M Γ G : Type} [Ring A] [CharZero A] [Ring M] [Group Γ] [Gro
   obtain ⟨hKidx, hKdet⟩ := index_range_mulLeft_eq_natAbs_det_and_det_ne_zero (N : R.comap j) (fun z z' h =>
     Subtype.ext (hinjA _ (N : R.comap j).2 (fun h' => hN0B (Subtype.ext h')) _ _ (congrArg Subtype.val h)))
   set K := (LinearMap.range (LinearMap.mulLeft ℤ (N : R.comap j))).toAddSubgroup with hKd
-  haveI : K.FiniteIndex := ⟨by rw [hKidx]; exact Int.natAbs_ne_zero.2 hKdet⟩
-  haveI : Finite (R.comap j ⧸ K) := AddSubgroup.finite_quotient_of_finiteIndex
+  have : K.FiniteIndex := ⟨by rw [hKidx]; exact Int.natAbs_ne_zero.2 hKdet⟩
+  have : Finite (R.comap j ⧸ K) := AddSubgroup.finite_quotient_of_finiteIndex
   let φ : G → Set (R.comap j ⧸ K) := fun k =>
     (QuotientAddGroup.mk : R.comap j → R.comap j ⧸ K) '' {y | ∃ r ∈ R, j (y : A) = r * ρ k⁻¹}
   have hsub : ∀ s k, good s → good k → φ s ⊆ φ k → ρ (s⁻¹ * k) ∈ R := by
@@ -394,9 +394,9 @@ theorem cls_of_relIndex {Γ G : Type} [Group Γ] [Group G] (ι : Γ →* G) (U U
     ∃ S : Finset G, ∀ g, ∃ γ, ∃ s ∈ S, ∃ u ∈ U', g = ι γ * s * u := by
   classical
   obtain ⟨S, hS⟩ := hS
-  haveI : (U'.subgroupOf U).FiniteIndex := ⟨h⟩
-  haveI : Finite (U ⧸ U'.subgroupOf U) := Subgroup.finite_quotient_of_finiteIndex
-  letI := Fintype.ofFinite (U ⧸ U'.subgroupOf U)
+  have : (U'.subgroupOf U).FiniteIndex := ⟨h⟩
+  have : Finite (U ⧸ U'.subgroupOf U) := Subgroup.finite_quotient_of_finiteIndex
+  let := Fintype.ofFinite (U ⧸ U'.subgroupOf U)
   refine ⟨(S ×ˢ (Finset.univ.image (fun q : U ⧸ U'.subgroupOf U => ((Quotient.out q : U) : G)))).image
     (fun p => p.1 * p.2), fun g => ?_⟩
   obtain ⟨γ, s, hs, u, hu, rfl⟩ := hS g
@@ -979,16 +979,16 @@ open Matrix UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc UpperTheory.V.Z.Sym.Glob
 private theorem relIndex_ne {Γ X : Type} [Group Γ] (C H : Subgroup Γ) (φ : Γ → X) (s : Set X) (hs : s.Finite)
     (hmem : ∀ γ ∈ H, φ γ ∈ s) (hinj : ∀ γ δ, φ γ = φ δ → γ⁻¹ * δ ∈ C) : C.relIndex H ≠ 0 := by
   classical
-  haveI : Finite s := hs.to_subtype
+  have : Finite s := hs.to_subtype
   let F : s → H ⧸ C.subgroupOf H := fun x =>
     if h : ∃ a : H, φ a = (x : X) then QuotientGroup.mk h.choose else QuotientGroup.mk 1
-  haveI : Finite (H ⧸ C.subgroupOf H) := by
+  have : Finite (H ⧸ C.subgroupOf H) := by
     refine Finite.of_surjective F ?_
     intro q
     refine QuotientGroup.induction_on q fun a => ?_
     have hex : ∃ b : H, φ b = ((⟨φ a, hmem a a.2⟩ : s) : X) := ⟨a, rfl⟩
     refine ⟨⟨φ a, hmem a a.2⟩, ?_⟩
-    simp only [F, dif_pos hex]
+    simp only [F, dite_eq_left hex]
     rw [QuotientGroup.eq, Subgroup.mem_subgroupOf]
     simpa using hinj _ _ hex.choose_spec
   exact Subgroup.index_ne_zero_of_finite
@@ -1074,7 +1074,7 @@ private theorem finK_fin (F : Type) [Field F] [NumberField F] (Δ : F) (D : Dat 
     (∃ S : Finset (DA Δ), ∀ g, ∃ γ, ∃ s ∈ S, ∃ u ∈ D.UZ, g = ι γ * s * u) ∧
     ∀ g, (ZD Δ).relIndex ((D.UZ.map (MulAut.conj g).toMonoidHom).comap ι) ≠ 0 := by
   classical
-  haveI := hD.real
+  have := hD.real
   have hΔ : Δ ≠ 0 := by
     intro h0
     obtain ⟨σ, -⟩ := FK.real_emb (Classical.arbitrary (F →+* ℂ))
@@ -1115,8 +1115,8 @@ private theorem finK_fin (F : Type) [Field F] [NumberField F] (Δ : F) (D : Dat 
     exact FK.qm_mem (Ov v) isIntegral_zero isIntegral_one
   refine ⟨?_, fun g => stab_F hΔ (jj Δ) (RR Δ) ι (rho Δ) hιρ D.UZ hU FK.den_rho hfin
     (Nat.cast_ne_zero.2 hc0) hq1 hq2 g⟩
-  haveI := FK.lam_fg hΔ
-  haveI : CharZero (Matrix (Fin 2) (Fin 2) (Lsq F Δ)) :=
+  have := FK.lam_fg hΔ
+  have : CharZero (Matrix (Fin 2) (Fin 2) (Lsq F Δ)) :=
     charZero_of_injective_algebraMap (algebraMap F _).injective
   have hbig := cls_abs (jj Δ) (RR Δ) ι (sg Δ) (rho Δ) hιρ
     ((rpg (fun v => DX ((cv v) Δ)) fun v => KD ((cv v) Δ) (Ov v)).box fun v => KD ((cv v) Δ) (Ov v))
@@ -1135,10 +1135,10 @@ private theorem finK_fin (F : Type) [Field F] [NumberField F] (Δ : F) (D : Dat 
   refine cls_of_relIndex ι _ D.UZ ?_ hbig
   refine box_relIndex _ _ _ D.Sg (fun v hv => ?_) (fun v hv => ?_)
   · unfold Dat.J2v
-    rw [if_pos hv]
+    rw [ite_eq_left hv]
     exact ne_zero_of_dvd_ne_zero (hD.sig v hv).levelTwoFiniteIndex (Subgroup.relIndex_dvd_of_le_left _ le_sup_right)
   · unfold Dat.J2v
-    rw [if_neg hv]
+    rw [ite_eq_right hv]
     exact le_sup_right
 
 theorem UpperTheory.V.Z.Sym.Glob.finK :

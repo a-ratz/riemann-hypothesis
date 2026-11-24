@@ -96,11 +96,11 @@ theorem mem_and_comm (a : G → M →+ M)
       one_mem' := by simp [h1]
       mul_mem' := by
         intro g h hg hh
-        simp only [Set.mem_setOf_eq, hZm] at hg hh ⊢
+        simp only [Set.mem_ofPred_eq, hZm] at hg hh ⊢
         exact J.add_mem hg (hJa g _ hh)
       inv_mem' := by
         intro g hg
-        simp only [Set.mem_setOf_eq, coc_inv a Z hZm h1] at hg ⊢
+        simp only [Set.mem_ofPred_eq, coc_inv a Z hZm h1] at hg ⊢
         exact J.neg_mem (hJa _ _ hg) }
   have hS : IsClosed (S : Set G) := hJ.preimage hZc
   have hall : ∀ g, Z g ∈ J := fun g =>
@@ -131,11 +131,11 @@ theorem uniq (a : G → M →+ M)
       one_mem' := by simp [h1, h1']
       mul_mem' := by
         intro g h hg hh
-        simp only [Set.mem_setOf_eq, hZm, hZm'] at hg hh ⊢
+        simp only [Set.mem_ofPred_eq, hZm, hZm'] at hg hh ⊢
         rw [hg, hh]
       inv_mem' := by
         intro g hg
-        simp only [Set.mem_setOf_eq, coc_inv a Z hZm h1, coc_inv a Z' hZm' h1'] at hg ⊢
+        simp only [Set.mem_ofPred_eq, coc_inv a Z hZm h1, coc_inv a Z' hZm' h1'] at hg ⊢
         rw [hg] }
   exact eq_top_of_closed lam hlam g₀ h₀ S (isClosed_eq hZc hZc')
     (fun h hh => by change Z h = Z' h; rw [hZk h hh, hZk' h hh]) h₀' g
@@ -211,13 +211,13 @@ theorem zg_formula_let : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (
     have hg₀γ : W.resΓ (g₀ : ↥(GK K)) = W.gam := (hlg g₀).mp hg₀
     have htop := _root_.GlobalTheory.WeakClosed.jD_piN_closed D HW F l K s LL h T hT
     rcases htop with ⟨τ, hT2, hTG, hact, hemb, hclo⟩
-    letI := τ
-    letI : Algebra ↥(OL LL) (RW LL) := inferInstance
+    let := τ
+    let : Algebra ↥(OL LL) (RW LL) := inferInstance
     let M := TW (RW LL) T
     let gRW (g : ↥(GK K)) := (D.locA l).gRW LL (g : GQ l)
     let a (g : ↥W.GKs) : M →+ M := (TWact (gRW g) T (g : ↥(GK K))).toAddMonoidHom
     have ha (b : M) : Continuous fun g : ↥W.GKs => a g b :=
-      (hact b).comp continuous_subtype_val
+      (hact b).comp continuous_subtypeVal
     have hamul (g g' : ↥W.GKs) (x : M) : a (g * g') x = a g (a g' x) :=
       GlobalTheory.HerrClassMaps.TWact_mul (gRW (g * g' : ↥W.GKs)) (gRW g) (gRW g')
         (GlobalTheory.HerrClassMaps.gRW_mul (D.locA l) LL

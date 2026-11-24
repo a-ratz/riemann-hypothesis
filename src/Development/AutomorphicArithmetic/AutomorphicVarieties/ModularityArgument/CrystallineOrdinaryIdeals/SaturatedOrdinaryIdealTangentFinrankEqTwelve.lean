@@ -84,7 +84,7 @@ private theorem sum_dim {E G : Type} [Field E] (S : Submodule E (G → Matrix (F
   classical
   let T : Fin 5 → Submodule E (G → Matrix (Fin 3) (Fin 3) E) := fun j =>
     S ⊓ Submodule.pi Set.univ fun _ => UpperTheory.V.U3.gw E (((j : ℕ) : ℤ) - 2)
-  haveI : ∀ j, Module.Finite E (T j) := fun j => Submodule.finiteDimensional_of_le (inf_le_left : T j ≤ S)
+  have : ∀ j, Module.Finite E (T j) := fun j => Submodule.finiteDimensional_of_le (inf_le_left : T j ≤ S)
   let f : (∀ j, T j) →ₗ[E] S :=
     { toFun := fun x => ⟨∑ j, (x j : G → Matrix (Fin 3) (Fin 3) E), S.sum_mem fun j _ => (x j).2.1⟩
       map_add' := fun x y => by ext1; simp [Finset.sum_add_distrib]
@@ -110,20 +110,20 @@ private theorem sum_dim {E G : Type} [Field E] (S : Submodule E (G → Matrix (F
       · rw [(x j).2.2 g trivial a b hj, (y j).2.2 g trivial a b hj]
     · intro γ
       refine ⟨fun j => ⟨_, h (((j : ℕ) : ℤ) - 2) γ γ.2, fun g _ a b hab => ?_⟩, ?_⟩
-      · simp only [Matrix.of_apply, if_neg hab]
+      · simp only [Matrix.of_apply, ite_eq_right hab]
       · apply Subtype.ext
         funext g
         ext a b
         obtain ⟨j, hj⟩ := wt_cases a b
         rw [hval _ g a b j hj]
-        simp only [Matrix.of_apply, if_pos hj]
+        simp only [Matrix.of_apply, ite_eq_left hj]
   rw [← (LinearEquiv.ofBijective f hb).finrank_eq, Module.finrank_pi_fintype]
 
 theorem UpperTheory.finrank_local_cocycles_adjoint_unitaryThree_eq_twelve :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [TopologicalSpace E] [IsModuleTopology ℚ_[l] E] [IsTopologicalRing E], finrank E ↥(finiteCocycles (MonoidHom.id _) (adRep (D.rz E))) = 12 := by
   intro hP l _ O _ _ _ _ _ _ _ D E _ _ _ _ _ _ _ _ _ _
   have H := fun j => UpperTheory.V.Loc.dim_Z1f_crystalline_deformation hP D E j
-  haveI := (H 0).1
+  have := (H 0).1
   rw [sum_dim _ fun j => (H j).2.2.1, Finset.sum_congr rfl fun j _ => (H _).2.1]
   decide
 end -- clump:auto
@@ -396,9 +396,9 @@ private theorem tangent (T : Submodule E (U.R →ₗ[O] E))
       rfl
     have hy : (fun g : D.HL => γ g) ∈ Z1 (adGL (glOn (D.rz E) h1)) := by
       rw [← had]
-      exact ⟨hγ.1.comp continuous_subtype_val, fun g h => hγ.2 g h⟩
+      exact ⟨hγ.1.comp continuous_subtypeVal, fun g h => hγ.2 g h⟩
     have hdeform := deformCr D.HL.subtype hH.isOpenEmbedding_subtypeVal (glOn (D.rz E) h1)
-      ((rz_cont D U E x hx).comp continuous_subtype_val) _ hy (glOn r' h1')
+      ((rz_cont D U E x hx).comp continuous_subtypeVal) _ hy (glOn r' h1')
       (fun g i j => (hd g).2 i j) ⊤ (by simp)
     rw [isLCr_iff r' h1', isLCr_iff (D.rz E) h1, ← crOn_top, ← crOn_top, hdeform,
       z1fDesc (MonoidHom.id _) (adRep (D.rz E)) D.HL γ hγ, had, MonoidHom.id_comp]
@@ -464,9 +464,9 @@ theorem GlobalTheory.OrdLoc.tangent_finrank_eq_twelve :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing O E] (x : U.R →ₐ[O] O), IsBase D.η D.Ψ U.r.hom x → ∀ T : Submodule E (U.R →ₗ[O] E), (∀ δ, δ ∈ T ↔ (∀ a b, δ (a * b) = algebraMap O E (x a) * δ b + algebraMap O E (x b) * δ a) ∧ ∀ a ∈ GlobalTheory.OrdLoc.IY D U, δ a = 0) → finrank E ↥T = 12 := by
   intro hL l _ O _ _ _ _ _ _ _ D U E _ _ _ _ _ _ _ _ x hx T hT
   obtain ⟨hPC, hCP⟩ := _root_.GlobalTheory.OrdLoc.ideal_cuts_crystalline_locus hL D U
-  letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+  let : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
   rw [GlobalTheory.OrdLoc.TangentDual.tangent D U E x hx hPC hCP T hT (GlobalTheory.OrdLoc.TangentDual.le_ker D U E x hx hCP),
     UpperTheory.finrank_local_cocycles_adjoint_unitaryThree_eq_twelve hL D E]
 end -- clump:auto

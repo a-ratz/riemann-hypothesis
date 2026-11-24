@@ -65,7 +65,7 @@ theorem vF_lt_of_notMem {𝔭 : Ideal (𝓞 F)} {n : 𝓞 F} {e : ℕ} (h : n �
   exact hlt _ (Nat.sSup_mem hne hbdd)
 
 theorem ne_bot_of_isMaximal {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) : 𝔭 ≠ ⊥ := by
-  haveI := h𝔭
+  have := h𝔭
   exact Ideal.IsMaximal.ne_bot_of_isIntegral_int 𝔭
 
 theorem one_lt_absNorm {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) : (1 : ℝ) < (Ideal.absNorm 𝔭 : ℝ) := by

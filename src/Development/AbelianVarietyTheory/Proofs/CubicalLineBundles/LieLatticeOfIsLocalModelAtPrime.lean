@@ -156,9 +156,9 @@ theorem lieLat_of_isLocalModel : HomExtDvr → ∀ (K : Type) [Field K] [NumberF
   intro hE K _ _ P F hg rig hr th hth 𝔭 a M
     ⟨R, _, _, _, _, _, y, th', hth', v', hv', hR, _, hM, ψ, _, _, hgg, Φ, hψ, _, _, _, hΦ₁, hΦ₂, hv⟩
   obtain ⟨f, hf⟩ := exists_ringHom (K := K) (R := R)
-  letI : Algebra (𝓞 K) R := f.toAlgebra
-  haveI : IsScalarTower (𝓞 K) R K := IsScalarTower.of_algebraMap_eq fun x => (hf x).symm
-  haveI := isLocalization 𝔭 hR
+  let : Algebra (𝓞 K) R := f.toAlgebra
+  have : IsScalarTower (𝓞 K) R K := IsScalarTower.of_algebraMap_eq fun x => (hf x).symm
+  have := isLocalization 𝔭 hR
   obtain rfl := eq_dualMapR _ Φ hΦ₁ hΦ₂
   change F.P₀.g = y.P.g at hgg
   change IsGrpPullback F.P₀.A y.P.A (spMap (algebraMap R K)) ψ at hψ

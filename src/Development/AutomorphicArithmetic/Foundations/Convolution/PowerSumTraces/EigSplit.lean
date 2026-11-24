@@ -81,10 +81,10 @@ theorem UpperTheory.cfc_apply_of_eigenvector :
     rintro ⟨u, hu⟩
     apply hv0
     have h0 : (u : H →L[ℂ] H) v = 0 := by
-      rw [hu, ContinuousLinearMap.sub_apply, halg, hv, sub_self]
+      rw [hu, sub_apply, halg, hv, sub_self]
     have h1 : ((↑u⁻¹ * ↑u : H →L[ℂ] H)) v = v := by
       rw [Units.inv_mul]; rfl
-    rw [← h1, ContinuousLinearMap.mul_apply, h0, map_zero]
+    rw [← h1, mul_apply_eq_comp, h0, map_zero]
   have key : ∀ f : C(spectrum ℝ A, ℝ), (cfcHom hA f : H →L[ℂ] H) v = ((f ⟨x, hx⟩ : ℝ) : ℂ) • v := by
     intro f
     induction f using ContinuousMap.induction_on_of_compact with
@@ -97,10 +97,10 @@ theorem UpperTheory.cfc_apply_of_eigenvector :
     | star_id =>
       rw [star_trivial, cfcHom_id hA, hv]; rfl
     | add f g hf hg =>
-      rw [map_add (f := _), ContinuousLinearMap.add_apply, hf, hg]
+      rw [map_add (f := _), add_apply, hf, hg]
       simp [add_smul]
     | mul f g hf hg =>
-      rw [map_mul, ContinuousLinearMap.mul_apply, hg, map_smul, hf, smul_smul]
+      rw [map_mul, mul_apply_eq_comp, hg, map_smul, hf, smul_smul]
       simp [mul_comm]
     | frequently f hf =>
       have hc : IsClosed {g : C(spectrum ℝ A, ℝ) | (cfcHom hA g : H →L[ℂ] H) v = ((g ⟨x, hx⟩ : ℝ) : ℂ) • v} := by
@@ -177,7 +177,7 @@ theorem UpperTheory.eigIn_finite_above_of_isCompactOperator :
     have hx0 : (x : ℂ) ≠ 0 := by
       have : x ≠ 0 := (hη.trans hx).ne'
       exact_mod_cast this
-    haveI : FiniteDimensional ℂ (Module.End.eigenspace ((A ∘L prj W : H →L[ℂ] H) : H →ₗ[ℂ] H) (x : ℂ)) :=
+    have : FiniteDimensional ℂ (Module.End.eigenspace ((A ∘L prj W : H →L[ℂ] H) : H →ₗ[ℂ] H) (x : ℂ)) :=
       ContinuousLinearMap.finite_dimensional_eigenspace hC _ hx0
     exact Submodule.finiteDimensional_of_le (hle x)
 end -- clump:auto
@@ -415,8 +415,8 @@ theorem UpperTheory.ConvolutionTheory.C.eigSplit :
   have hF := UpperTheory.cfc_apply_of_eigenvector H A hsa φ hφ μ _ hμ
   have hD : (prj W ∘L cfc φ A ∘L prj W - ∑ x ∈ hfin.toFinset, (φ x : ℂ) • prj (eigIn W A x)) (b i) =
       (if μ ∈ hfin.toFinset then 0 else (φ μ : ℂ)) • prj W (b i) := by
-    simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.sum_apply,
-      ContinuousLinearMap.smul_apply, hF, map_smul, hPP, UpperTheory.prj_eigIn_of_eigenvector_prj H W A hW hsa (b i) μ _ hμ, smul_ite, smul_zero,
+    simp only [sub_apply, ContinuousLinearMap.comp_apply, sum_apply,
+      smul_apply, hF, map_smul, hPP, UpperTheory.prj_eigIn_of_eigenvector_prj H W A hW hsa (b i) μ _ hμ, smul_ite, smul_zero,
       Finset.sum_ite_eq']
     split_ifs <;> simp
   rw [hD]

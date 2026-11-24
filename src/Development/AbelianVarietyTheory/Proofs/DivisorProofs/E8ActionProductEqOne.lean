@@ -213,9 +213,9 @@ theorem cube_class_e8Bundle_eighth_power (W : Matrix (Fin 8) (Fin 8) ℤ) {A : O
   rw [cls_cube2 L hL u v hc, cechPicard_pullback_e8Bundle_class W pr L hL M h, cechPicard_pullback_e8Bundle_class W pr L hL M h, cechPicard_pullback_e8Bundle_class W pr L hL M h,
     cechPicard_pullback_e8Bundle_class W pr L hL M h]
   have hm : (fun a => (u * v) ≫ pr a) = (fun a => u ≫ pr a) * (fun a => v ≫ pr a) := funext fun a => by
-    haveI := hpr a; exact MonObj.mul_comp u v (pr a)
+    have := hpr a; exact MonObj.mul_comp u v (pr a)
   have h1 : (fun a => (1 : T ⟶ A) ≫ pr a) = 1 := funext fun a => by
-    haveI := hpr a; exact MonObj.one_comp (pr a)
+    have := hpr a; exact MonObj.one_comp (pr a)
   rw [hm, h1]
   exact bil_mul M cub W _ _
 
@@ -250,7 +250,7 @@ theorem e8_act_endomorphism_prod_eq_id : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), I
   LBIso (cubeLB P'.A ![fst P'.A P'.A ≫ act 0, snd P'.A P'.A] P'.L) (cubeLB P'.A ![fst P'.A P'.A, snd P'.A P'.A ≫ act 1] P'.L) ∧
   LBIso P'.L (cubeLB P'.A ![𝟙 P'.A, act 0] P'.L) := by
   intro W hW gQ K _ P' B _ _ M pr hF hP hE act hact hacts
-  letI := P'.isAb.comm
+  let := P'.isAb.comm
   obtain ⟨cub⟩ := hF.2.2.1
   have hmon : ∀ a, IsMonHom (pr a) := hP.1
   have hpre : ∀ {T : Over (Sp K)} (s : T ⟶ P'.A) (i : Fin 2),
@@ -261,7 +261,7 @@ theorem e8_act_endomorphism_prod_eq_id : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), I
   · obtain ⟨x, -, hx⟩ := hP.2 P'.A pr
     have h1 : ∀ a, (act 0 * act 1) ≫ pr a = pr a := by
       intro a
-      haveI := hmon a
+      have := hmon a
       rw [MonObj.mul_comp, hacts 0 a, hacts 1 a, ← Finset.prod_mul_distrib]
       have hs := mat_sum W hW
       rw [Finset.prod_eq_single a]

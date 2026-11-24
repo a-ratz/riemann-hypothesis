@@ -155,7 +155,7 @@ theorem finite_bad (y : GR n) :
     rw [← hev, h0, Polynomial.eval_zero]
   apply (p.roots.toFinset.finite_toSet.preimage Complex.ofReal_injective.injOn).subset
   intro l hl
-  simp only [Set.mem_setOf_eq] at hl
+  simp only [mem_ofPred_eq] at hl
   rw [Set.mem_preimage, Finset.mem_coe, Multiset.mem_toFinset, Polynomial.mem_roots hp]
   exact (hev _).trans hl
 
@@ -165,14 +165,14 @@ theorem dense_cell : Dense {y : GR n | (mR y).toBlocks₂₁.det ≠ 0} := by
   have hS := finite_bad y
   set S := {l : ℝ | ((l : ℂ) • (mR y).toBlocks₁₁ + (mR y).toBlocks₂₁).det = 0} with hSdef
   have hT : (S \ {0})ᶜ ∈ 𝓝 (0 : ℝ) :=
-    (hS.diff (s := S) (t := {0})).isClosed.isOpen_compl.mem_nhds (by simp)
+    (hS.sdiff (s := S) (t := {0})).isClosed.isOpen_compl.mem_nhds (by simp)
   have hcont : Continuous fun t : ℝ => nbG (n := n) t * y := cont_nbG.mul continuous_const
   have htend : Tendsto (fun t : ℝ => nbG (n := n) t * y) (𝓝[≠] 0) (𝓝 y) := by
     have h := (hcont.tendsto 0).mono_left (nhdsWithin_le_nhds (s := {0}ᶜ))
     simpa [nbG_zero] using h
   apply mem_closure_of_tendsto htend
   filter_upwards [nhdsWithin_le_nhds hT, self_mem_nhdsWithin] with t h1 h2
-  simp only [Set.mem_setOf_eq, nbG_low]
+  simp only [mem_ofPred_eq, nbG_low]
   intro hdet
   exact h1 ⟨hdet, h2⟩
 

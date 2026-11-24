@@ -76,7 +76,7 @@ theorem UpperTheory.Reformulated.B.Yt3.exists_reps :
   set H : Subgroup K :=
     (Subgroup.map (MulEquiv.toMonoidHom ((MulAut.conj : G → MulAut G) g)) K).subgroupOf K with hH
   have hfin : Finite (K ⧸ H) := Nat.finite_of_card_ne_zero h
-  letI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  let : Fintype (K ⧸ H) := Fintype.ofFinite _
   have key : ∀ (a b : K) (k : G), k ∈ K →
       ((((a : G) * g)⁻¹ * ((b : G) * g * k) ∈ K) ↔ (a : K ⧸ H) = (b : K ⧸ H)) := by
     intro a b k hk
@@ -171,7 +171,7 @@ theorem relIndex_conj_ne_zero {G : Type} [Group G] [TopologicalSpace G] [IsTopol
   have : CompactSpace J := isCompact_iff_compactSpace.1 hJ
   have h1 : U'.relIndex J ≠ 0 := by
     have : Finite (J ⧸ U'.subgroupOf J) :=
-      Subgroup.quotient_finite_of_isOpen _ (hU'.preimage continuous_subtype_val)
+      Subgroup.quotient_finite_of_isOpen _ (hU'.preimage continuous_subtypeVal)
     exact Subgroup.index_ne_zero_of_finite
   have h2 : U'.relIndex (J ⊓ L) ≠ 0 := fun h => h1 (Subgroup.relIndex_eq_zero_of_le_right inf_le_left h)
   rw [← Subgroup.inf_relIndex_right] at h2

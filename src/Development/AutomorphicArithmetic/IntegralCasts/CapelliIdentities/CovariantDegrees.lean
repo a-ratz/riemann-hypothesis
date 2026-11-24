@@ -107,7 +107,7 @@ theorem aux11 : ∀ {l : ℕ} [hl : Fact (Nat.Prime l)] {Ω : Type}
   letI : Algebra Ω (PadicAlgCl l) := j.toAlgebra
   IsScalarTower ℚ Ω (PadicAlgCl l) := by
   intro l hl Ω _ _ j
-  letI : Algebra Ω (PadicAlgCl l) := j.toAlgebra
+  let : Algebra Ω (PadicAlgCl l) := j.toAlgebra
   exact IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
 
 theorem aux12 : ∀ {Ω : Type} [inst : Field Ω] [inst_1 : CharZero Ω]
@@ -128,9 +128,9 @@ noncomputable def resQ : {l : ℕ} →
 private theorem j_resQ {l : ℕ} [Fact l.Prime] {Ω : Type} [Field Ω] [CharZero Ω]
     [IsAlgClosure ℚ Ω] (j : Ω →+* PadicAlgCl l) (σ : GQ l) (x : Ω) :
     j (resQ j σ x) = σ (j x) := by
-  letI : Algebra Ω (PadicAlgCl l) := j.toAlgebra
-  haveI := aux11 j
-  haveI : Normal ℚ Ω := aux12
+  let : Algebra Ω (PadicAlgCl l) := j.toAlgebra
+  have := aux11 j
+  have : Normal ℚ Ω := aux12
   exact AlgHom.restrictNormal_commutes (σ.restrictScalars ℚ).toAlgHom Ω x
 
 private theorem jE_mem {l : ℕ} [Fact l.Prime] {E Ω : Type} [Field E] [NumberField E]
@@ -315,7 +315,7 @@ theorem continuous_rHom : ∀ {l : ℕ} [hl : Fact (Nat.Prime l)] {E Ω : Type}
         ∀ i, σ.1 (j (b i)) = j (b i) := by
       refine Filter.eventually_all.2 fun i => ?_
       have ho := (stabilizer_isOpen_of_isIntegral (K := ℚ_[l]) (j (b i))).preimage
-        (continuous_subtype_val (p := fun σ => σ ∈ (KwF (E := E) j).fixingSubgroup))
+        (continuous_subtypeVal (p := fun σ => σ ∈ (KwF (E := E) j).fixingSubgroup))
       exact ho.mem_nhds (Subgroup.one_mem (MulAction.stabilizer _ _))
     refine hU.mono fun σ hσ => hLs ?_
     refine (IntermediateField.mem_fixingSubgroup_iff _ _).2 fun x hx => ?_

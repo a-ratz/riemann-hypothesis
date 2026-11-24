@@ -116,9 +116,9 @@ theorem exists_levelCover : ∀ (g n ℓ j : ℕ) (F : SFam g n (zetaAway n)), 1
     exact Q.base
   have hq : SRel F'.univ F.univ ((ℓ ^ j) ^ 2) 1 q :=
     sRel_comp ((sRel_one_one_iff Q.univ F.univ e.hom).2 hpb) hlow
-  haveI := Q.fin
-  haveI := Q.etale
-  haveI := Q.onto
+  have := Q.fin
+  have := Q.etale
+  have := Q.onto
   have hinv : ∀ a, ρ a ≫ q = q := by
     intro a
     obtain ⟨c, hc⟩ := (GlobalTheory.siegPre_pullback g n (cycAway n) (zetaAway n) F.X F'.X F.s (q ≫ F.s) q F.univ rfl).1

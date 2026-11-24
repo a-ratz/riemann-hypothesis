@@ -255,7 +255,7 @@ theorem sameClass : ∀ (D : D7) (W : HSp D) (γ γ' : GA D (GlobalTheory.Doubli
   intro D W γ γ' g₀ g₀' hγ hγ' Y Y' hY hY'
   have hinj : Function.Injective (incA D) :=
     Algebra.TensorProduct.includeRight_injective (NumberField.AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F)
-  haveI := hinj.nontrivial
+  have := hinj.nontrivial
   have hu : IsUnit (g₀.map (incA D)).det := by
     rw [← hγ, ← Matrix.isUnit_iff_isUnit_det]
     exact (matHom (GlobalTheory.Doubling.dblSp W) γ).isUnit
@@ -834,8 +834,8 @@ namespace GlobalTheory.SWChangeVar
 
 theorem integral_adjO_eq : ∀ (D : D7) (V W : HSp D) (ν : Measure (Mx D V.rank W.rank)) (𝓖' : Set (Mx D V.rank W.rank)) (μ : Measure (WO V W)) (𝓕 : Set (WO V W)), IsCovolOne (ratL V W) ν 𝓖' → IsCovolOne (ratL W V) μ 𝓕 → ∀ (Φ : WO V W → ℂ), (∀ (γ : Matrix (Fin W.rank) (Fin V.rank) D.host.E) (u : WO V W), Φ (ratW W V γ + u) = Φ u) → ∫ y in 𝓖', Φ (GlobalTheory.PairLift.adjO V W y) ∂ν = ∫ u in 𝓕, Φ u ∂μ := by
   intro D V W ν 𝓖' μ 𝓕 hν hμ Φ hΦ
-  haveI : BorelSpace (Mx D V.rank W.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D W.rank V.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank W.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D W.rank V.rank) := ⟨rfl⟩
   let A : Mx D V.rank W.rank ≃+ Mx D W.rank V.rank :=
     { toFun := GlobalTheory.PairLift.adjO V W
       invFun := GlobalTheory.PairLift.adjO W V
@@ -848,7 +848,7 @@ theorem integral_adjO_eq : ∀ (D : D7) (V W : HSp D) (ν : Measure (Mx D V.rank
       continuous_invFun := GlobalTheory.AdjLawPf.adj_cont W V }
   let e : Mx D V.rank W.rank ≃ᵐ Mx D W.rank V.rank := L.toHomeomorph.toMeasurableEquiv
   have he : ∀ y, e y = GlobalTheory.PairLift.adjO V W y := fun _ => rfl
-  haveI := hν.1
+  have := hν.1
   have hH : (ν.map e).IsAddHaarMeasure := L.isAddHaarMeasure_map ν
   have hmp : MeasurePreserving e ν (ν.map e) := e.measurable.measurePreserving ν
   let r : ratL W V ≃ ratL V W :=

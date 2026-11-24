@@ -187,14 +187,14 @@ theorem countable_range_rt {f : GAf L n → ℂ} {N : ℕ} (hN : 0 < N)
     (hf : ∀ κ, Cong L n N κ → rt L n κ f = f) :
     (Set.range fun h : GAf L n => rt L n h f).Countable := by
   classical
-  haveI := countable_field (L := L)
+  have := countable_field (L := L)
   choose p _ hp2 hp3 using exists_code (L := L) (n := n) N hN
   let Ψ : ℕ × (Fin n → Fin n → L) → (GAf L n → ℂ) := fun q =>
     if hq : ∃ g, p g = q then rt L n hq.choose f else 0
   have key : ∀ g, rt L n g f = Ψ (p g) := by
     intro g
     have hq : ∃ g', p g' = p g := ⟨g, rfl⟩
-    simp only [Ψ, dif_pos hq]
+    simp only [Ψ, dite_eq_left hq]
     have e := hq.choose_spec
     have h3 := hp3 hq.choose
     rw [e] at h3

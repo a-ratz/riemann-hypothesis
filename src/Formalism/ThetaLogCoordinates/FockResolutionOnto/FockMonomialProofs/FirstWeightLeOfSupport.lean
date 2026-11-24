@@ -69,7 +69,7 @@ theorem cartan_eigC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (μ : Fin r
   by_cases h : AddMonoidAlgebra.coeff x m = 0
   · simp [h]
   · have hm := hx (Finset.mem_coe.mpr (mem_support_iff.mpr h))
-    rw [Set.mem_setOf_eq] at hm
+    rw [Set.mem_ofPred_eq] at hm
     rw [hm c hc]
 
 theorem comm_wtspC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
@@ -179,12 +179,12 @@ theorem glAct_wtspC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (c d : Fin 
   refine glAct_keep LL j c d {m | ∀ e ∈ Cs, wt LL j e m = μ e}
     {m | ∀ e ∈ Cs, wt LL j e m = shiftW μ c d e} ?_ ?_ x hx
   · intro i hi hv m hm h1
-    rw [Set.mem_setOf_eq] at hm ⊢
+    rw [Set.mem_ofPred_eq] at hm ⊢
     intro e he
     rw [(wt_shift LL j c d e i hi m).1 hv h1, hm e he]
     rfl
   · intro i hi hv m hm h1
-    rw [Set.mem_setOf_eq] at hm ⊢
+    rw [Set.mem_ofPred_eq] at hm ⊢
     intro e he
     rw [(wt_shift LL j c d e i hi m).2 hv h1, hm e he]
     rfl
@@ -269,7 +269,7 @@ theorem exists_hwC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
     rw [WtSpC, mem_restrictSupport_iff] at hz ⊢
     intro m hm
     have := hz hm
-    rw [Set.mem_setOf_eq] at this ⊢
+    rw [Set.mem_ofPred_eq] at this ⊢
     intro c hc
     rw [this c hc, hμν c hc]
   set M0 := (multiDeg_finite (r := r) LL).toFinset with hM0
@@ -286,7 +286,7 @@ theorem exists_hwC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
       wcomp_memC LL j Cs S hSd _ x hx, ?_, ?_⟩
     · intro h0
       have := congrArg (AddMonoidAlgebra.coeff · m0) h0
-      rw [coeff_compP, if_pos (fun c _ => rfl), AddMonoidAlgebra.coeff_zero] at this
+      rw [coeff_compP, ite_eq_left (fun c _ => rfl), AddMonoidAlgebra.coeff_zero] at this
       exact (mem_support_iff.mp hm0) this
     · rw [WtSpC, mem_restrictSupport_iff]
       intro m hm
@@ -327,7 +327,7 @@ theorem exists_hwC (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r))
         ∑ e ∈ Cs, ((-((e : ℕ) : ℤ) * wt LL j e ms + (if c = e then -((e : ℕ) : ℤ) else 0)) -
           (if d = e then -((e : ℕ) : ℤ) else 0)) from
         Finset.sum_congr rfl (fun e _ => by simp only [shiftW]; split_ifs <;> ring),
-      Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq, if_pos hc, if_pos hd]
+      Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq, ite_eq_left hc, ite_eq_left hd]
     ring
   have hlt' : (c : ℕ) < (d : ℕ) := hlt
   have : ((c : ℕ) : ℤ) < ((d : ℕ) : ℤ) := by exact_mod_cast hlt'
@@ -433,7 +433,7 @@ theorem first_weight_le_of_support [NeZero r] (LL : Letters N) (j : ℕ) (Cs : F
   rw [WtSpC, mem_restrictSupport_iff] at h3
   have a := h1 (Finset.mem_coe.mpr hm)
   have b := h3 (Finset.mem_coe.mpr hm)
-  rw [Set.mem_setOf_eq] at a b
+  rw [Set.mem_ofPred_eq] at a b
   rw [← b 0 h0]
   exact a
 
@@ -509,22 +509,22 @@ theorem glRest_mem (LL : Letters N) (j j' : ℕ) (hjj : j ≤ j') (c d : Fin r) 
   refine Subalgebra.sum_mem _ fun i _ => ?_
   by_cases h1 : (i : ℕ) < j
   · have h2 : (i : ℕ) < j' := lt_of_lt_of_le h1 hjj
-    simp only [if_pos h1, if_pos h2, sub_self]
+    simp only [ite_eq_left h1, ite_eq_left h2, sub_self]
     exact Subalgebra.zero_mem _
   · have hm : ∀ e : Fin r, (i, e) ∈ {v : Fin N × Fin r | j ≤ (v.1 : ℕ)} := fun e => not_lt.mp h1
     by_cases h2 : (i : ℕ) < j'
-    · simp only [if_pos h2, if_neg h1, sub_zero]
+    · simp only [ite_eq_left h2, ite_eq_right h1, sub_zero]
       split_ifs
       · exact Subalgebra.mul_mem _ (FockB.mulLeftX_mem (hm c)) (FockB.pderiv_mem (hm d))
       · exact Subalgebra.neg_mem _ (Subalgebra.mul_mem _ (FockB.mulLeftX_mem (hm d)) (FockB.pderiv_mem (hm c)))
-    · simp only [if_neg h2, if_neg h1, sub_zero]
+    · simp only [ite_eq_right h2, ite_eq_right h1, sub_zero]
       exact Subalgebra.zero_mem _
 
 theorem glRest_comm (LL : Letters N) (j j' : ℕ) (hjj : j ≤ j') (c d a b : Fin r)
     (x : MvPolynomial (Fin N × Fin r) ℚ_[p]) :
     glRest p LL j j' c d (glAct p LL j a b x) = glAct p LL j a b (glRest p LL j j' c d x) := FockB.ops_apply_comm (S := {v : Fin N × Fin r | j ≤ (v.1 : ℕ)}) (S' := {v : Fin N × Fin r | (v.1 : ℕ) < j})
   (Set.disjoint_left.mpr fun v h1 h2 => by
-    simp only [Set.mem_setOf_eq] at h1 h2
+    simp only [Set.mem_ofPred_eq] at h1 h2
     omega)
   (glRest_mem LL j j' hjj c d) (glAct_mem LL j a b) x
 

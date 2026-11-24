@@ -138,10 +138,10 @@ theorem mem_JGsym_of_cong (hq : q ≠ 0) (k rS r t n c : ℕ) {κ : Sp E (n + c)
   rw [mem_sclLat]
   intro i
   by_cases hi : i.1 = fIdx k c n (symIdxInv k rS s)
-  · simp only [Pi.smul_apply, eN, hi, if_true, smul_eq_mul, mul_one]
+  · simp only [Pi.smul_apply, eN, hi, ite_true, smul_eq_mul, mul_one]
     rw [inv_mul_cancel₀ (zpow_ne_zero _ hq')]
     exact intAt_one P
-  · simp only [Pi.smul_apply, eN, hi, if_false, smul_eq_mul, mul_zero]
+  · simp only [Pi.smul_apply, eN, hi, ite_false, smul_eq_mul, mul_zero]
     exact intAt_zero P
 
 end
@@ -178,7 +178,7 @@ theorem card_index_le_sharp : ∃ C : ℝ, 0 ≤ C ∧ ∀ (CY : ℝ) (D : D7) (
     · obtain ⟨b, hb⟩ := hI.zero_uniq
       exact (Fintype.card_le_one_iff.2 fun a a' => (hb a).trans (hb a').symm).trans (Nat.one_le_pow _ _ hgg)
     · set n := N.R.N (i + 1) + cOf N.R (i + 1) with hn
-      haveI : ∀ P : rowSG Pr sel mu, Finite (𝓞 X.E ⧸ P.1.asIdeal) := fun P => finite_res P.1
+      have : ∀ P : rowSG Pr sel mu, Finite (𝓞 X.E ⧸ P.1.asIdeal) := fun P => finite_res P.1
       let φ : I.β (i + 1) → ∀ P : rowSG Pr sel mu, Fin n × Fin n → 𝓞 X.E ⧸ P.1.asIdeal := fun b P =>
         resMat P.1 (Formalism.L2.Col.qOf P.1) (scE (N.R.N (i + 1)) fun i => i + 1) (I.h (i + 1) b P)
       have hφ : Function.Injective φ := by
@@ -188,10 +188,10 @@ theorem card_index_le_sharp : ∃ C : ℝ, 0 ≤ C ∧ ∀ (CY : ℝ) (D : D7) (
         have s1 := hI.stabG _ b P hP
         have s2 := hI.stabG _ b' P hP
         unfold lamYat at s1 s2
-        rw [if_pos hP] at s1 s2
+        rw [ite_eq_left hP] at s1 s2
         refine ⟨1, Subgroup.one_mem _, (I.h (i + 1) b P)⁻¹ * I.h (i + 1) b' P, ?_, by group⟩
         unfold Jat
-        rw [if_pos hP, hsh, if_pos rfl]
+        rw [ite_eq_left hP, hsh, ite_eq_left rfl]
         exact mem_JGsym_of_cong _ _ (hq _) _ _ _ _ _ _ (Subgroup.mul_mem _ (Subgroup.inv_mem _ s1) s2)
           (cong_of_resMat_eq _ _ (hq _) (GlobalTheory.TypePrimeUnif.intAt_div_qOf X Pr hX.ok hPr P.1 hP) s1 s2 (congrFun hbb P))
       have h2 := Nat.card_le_card_of_injective φ hφ
@@ -221,7 +221,7 @@ theorem card_index_le_sharp : ∃ C : ℝ, 0 ≤ C ∧ ∀ (CY : ℝ) (D : D7) (
     _ ≤ ((N.g 0 : ℝ) * N.g 1 * Pr.T u) ^ (N.R.f * N.Nm ^ 2) := pow_le_pow_left₀ (by linarith) ggT _
     _ ≤ ((N.g 0 : ℝ) * N.g 1 * Pr.T u) ^ (N.R.f * (N.R.m ^ 2 * N.Nm ^ 2)) := pow_le_pow_right₀ (gg.trans ggT) he
     _ = Real.exp (1 * errUnit N (Pr.T u)) := by
-      rw [← Real.exp_log (show 0 < (N.g 0 : ℝ) * N.g 1 * Pr.T u by linarith), ← Real.exp_nat_mul, Real.exp_eq_exp]
+      rw [← Real.exp_log (show 0 < (N.g 0 : ℝ) * N.g 1 * Pr.T u by linarith), ← Real.exp_natCast_mul, Real.exp_eq_exp]
       unfold errUnit
       push_cast
       ring

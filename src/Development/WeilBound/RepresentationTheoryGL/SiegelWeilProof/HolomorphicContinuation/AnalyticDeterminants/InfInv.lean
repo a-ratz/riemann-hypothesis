@@ -636,7 +636,7 @@ theorem infInv_of (hL : LeftDeriv) (hP : LawDeriv) (hI : PtId) (hC : CDiff) : In
           (F1 (ι k) • fderiv ℂ F2 (ι k) + F2 (ι k) • fderiv ℂ F1 (ι k)) (ι k) :=
         hd1.hasFDerivAt.mul hd2.hasFDerivAt
       rw [h.fderiv]
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+      simp only [add_apply, smul_apply, smul_eq_mul]
       ring
     rw [← hprod]
     exact hI n (fun y => F1 y * F2 y) (ι k) Z (hKk k) ((hΘc.contDiffAt hnh).of_le (by simp))

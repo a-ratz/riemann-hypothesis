@@ -307,7 +307,7 @@ theorem countable_compactOpen (X : Type) [TopologicalSpace X] [SecondCountableTo
   have hb := TopologicalSpace.isBasis_countableBasis X
   have hc := TopologicalSpace.countable_countableBasis X
   have hfin : {t : Set (Set X) | t.Finite ∧ t ⊆ TopologicalSpace.countableBasis X}.Countable :=
-    Set.countable_setOf_finite_subset hc
+    Set.countable_ofPred_finite_subset hc
   refine (hfin.image fun t => ⋃₀ t).mono ?_
   rintro U ⟨hU, hK⟩
   obtain ⟨S, hS, rfl⟩ := hb.open_eq_sUnion hU
@@ -358,8 +358,8 @@ theorem rank_SB_le (X : Type) [TopologicalSpace X] [SecondCountableTopology X] :
 theorem rank_SB_Fv : ∀ {F : Type} [Field F] [NumberField F] (v : Pl F) (κ : Type) [Finite κ],
     Module.rank ℂ (GlobalTheory.WeilM.SB (κ → Fv F v)) ≤ Cardinal.aleph0 := by
   intro F _ _ v κ _
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
-  haveI : SecondCountableTopology (Fv F v) := secondCountable_of_proper
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have : SecondCountableTopology (Fv F v) := secondCountable_of_proper
   exact rank_SB_le _
 
 theorem cartan_one {n r : ℕ} {M θ : Matrix (Fin n) (Fin n) ℂ} (hs : HasSig M r 0) (h : IsCartan M θ) : θ = 1 := by
@@ -400,7 +400,7 @@ theorem deriv_mem {κ : Type} [Fintype κ] (U : Submodule ℂ (SInf F κ)) [Fini
     refine (h x).tendsto_slope_zero.congr fun t => ?_
     show _ = (t : ℂ)⁻¹ * (u t x - u 0 x)
     rw [zero_add, Complex.real_smul, Complex.ofReal_inv]
-  obtain ⟨g, hg, e⟩ := (U.map c).closed_of_finiteDimensional.mem_of_tendsto h1
+  obtain ⟨g, hg, e⟩ := (U.map c).isClosed_of_finiteDimensional.mem_of_tendsto h1
     (Eventually.of_forall fun t => ⟨_, U.smul_mem _ (sub_mem (hu t) (hu 0)), rfl⟩)
   exact (DFunLike.coe_injective e : g = f) ▸ hg
 
@@ -424,7 +424,7 @@ theorem irr_inf (hO : ArchOp) (hF : PolFin) (hm : IsMatched B G X om om' R Rf) (
   choose b hb hb' using this
   let y : Fin a × Fin (a + a') → Af F := fun i => ⟨fun v => b v i, hM.std.mono fun v e => hb' v e i⟩
   have hc : (∏ᶠ v, G.M.vac v (b v)) ≠ 0 := finprod_induction (· ≠ 0) one_ne_zero (fun _ _ => mul_ne_zero) hb
-  haveI : FiniteDimensional ℂ ↥(U ⊓ N.comap R.p) := Submodule.finiteDimensional_inf_left _ _
+  have : FiniteDimensional ℂ ↥(U ⊓ N.comap R.p) := Submodule.finiteDimensional_inf_left _ _
   refine (deriv_mem (U ⊓ N.comap R.p) (fun t => A t f) (fun t => ⟨H _ (hk t) _ (hA t f hf).2,
     h _ (hk t) f hf _ (hA t f hf).2 hN⟩) f₁ fun x => ?_).2
   let z : Fin a × Fin (a + a') → AF F := fun i => (((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (x i), y i) : Ainf F × Af F)

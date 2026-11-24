@@ -138,7 +138,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.rig_sep :
       rw [← Matrix.det_mul, Units.inv_mul, Matrix.det_one]
     have h3 : (x • (1 : Matrix (Fin 3) (Fin 3) (PadicAlgCl l)) - T).det =
         ∏ k, (x • (1 : Matrix (Fin 3) (Fin 3) (PadicAlgCl l)) - T) k k := by
-      apply Matrix.det_of_upperTriangular
+      apply det_of_isUpperTriangular
       intro a b hab
       have hne : a ≠ b := (ne_of_lt hab).symm
       simp [Matrix.sub_apply, Matrix.one_apply, hne, hT a b hab]

@@ -304,7 +304,7 @@ theorem cPoint_y {k : ℕ} (p : QkPt D F k) : cP D _ p.y = p.g.b ^ k := by
       rw [h0.1, Fin.val_zero, pow_zero]
       rfl
     | succ i ih =>
-      rw [(hadd i).1, Fin.val_succ, pow_succ, ← Fin.coe_castSucc, ← ih]
+      rw [(hadd i).1, Fin.val_succ, pow_succ, ← Fin.val_castSucc, ← ih]
       rfl
   show DegPre.cF D F p.y = _
   rw [← hio.1, ← hlast, key (Fin.last k), Fin.val_last]

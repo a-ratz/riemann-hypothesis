@@ -121,7 +121,7 @@ theorem free_of_invertible_of_forall_isMaximal
   obtain ⟨S, hS⟩ := ((Module.Invertible.linearEquiv R M).symm 1).exists_finset
   replace hS : 1 = ∑ i ∈ S, i.1 i.2 := by
     simpa [LinearEquiv.symm_apply_eq, Module.Invertible.linearEquiv] using hS
-  letI : LinearOrder (Module.Dual R M × M) := IsWellOrder.linearOrder WellOrderingRel
+  let : LinearOrder (Module.Dual R M × M) := IsWellOrder.linearOrder WellOrderingRel
   choose e b he hab hep using
     fun i : Module.Dual R M × M => exists_isIdempotentElem_mul_of_forall_isMaximal hR (i.1 i.2)
 

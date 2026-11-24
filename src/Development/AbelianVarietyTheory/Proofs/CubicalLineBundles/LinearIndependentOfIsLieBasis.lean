@@ -175,9 +175,9 @@ theorem exists_unique_isHerm : ThetaUnifAV → Out.Laws → ∀ (K : Type) [Fiel
           IsPolFibre s F.P₀ Q ψ ∧ u.IsAH Hm χ ∧ (∀ i, IsVecOver s ψ (F.v i) (v' i) ∧ u.IsDiff (W i) (v' i)) ∧
           ∀ i j, G i j = Real.pi * hermForm Hm (W j) (W i) := fun s => by
       obtain ⟨Q, ψ, h⟩ := exists_isPolFibre hL.polBaseChange s F.P₀
-      haveI := F.P₀.isAb.comm
-      haveI := Q.isAb.comm
-      haveI := F.P₀.smoothDim
+      have := F.P₀.isAb.comm
+      have := Q.isAb.comm
+      have := F.P₀.smoothDim
       obtain ⟨v', hb, hv'⟩ := exists_isLieBasis_baseChange K ℂ s F.P₀.A Q.A ψ h.2.1
         (SmoothOfRelativeDimension.smooth F.P₀.g _) _ F.v F.basis
       obtain ⟨rig, hrig⟩ := Q.rigid

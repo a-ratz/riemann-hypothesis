@@ -69,8 +69,8 @@ theorem adele_top : ∀ (F : Type) [Field F] [NumberField F],
     GlobalTheory.AdelicUnitaryTop.secondCountable_adele F, ?_⟩,
     GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F,
     GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F, t2Space_finiteAdeleRing_of_numberField F⟩
-  haveI : T2Space (FiniteAdeleRing (𝓞 F) F) := t2Space_finiteAdeleRing_of_numberField F
-  haveI := t2Space_infiniteAdeleRing_of_numberField_field F
+  have : T2Space (FiniteAdeleRing (𝓞 F) F) := t2Space_finiteAdeleRing_of_numberField F
+  have := t2Space_infiniteAdeleRing_of_numberField_field F
   exact inferInstanceAs (T2Space (InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F))
 
 end GlobalTheory.CompanionTheory.AdeleTop

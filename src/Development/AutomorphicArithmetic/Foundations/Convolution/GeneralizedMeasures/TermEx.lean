@@ -204,8 +204,8 @@ theorem UpperTheory.finprod_local_factors_with_iwahori_at_place :
     · simp [hw]
     · simp [hw]
   let h' : ∀ w : Pl E, GL (Fin n) (w.adicCompletion E) → ℂ := fun w => if w ∈ T then 1 else h w
-  have hh'T : ∀ w ∈ T, h' w = 1 := fun w hw => by simp only [h', if_pos hw]
-  have hh'N : ∀ w ∉ T, h' w = h w := fun w hw => by simp only [h', if_neg hw]
+  have hh'T : ∀ w ∈ T, h' w = 1 := fun w hw => by simp only [h', ite_eq_left hw]
+  have hh'N : ∀ w ∉ T, h' w = h w := fun w hw => by simp only [h', ite_eq_right hw]
   have hUfin : (T ∪ (κ : Set (Pl E))).Finite := hTfin.union κ.finite_toSet
   have hU : ∀ w ∉ T ∪ (κ : Set (Pl E)), h' w = (GLnLocal.integralGL (w.adicCompletion E) n : Set _).indicator 1 := by
     intro w hw
@@ -233,10 +233,10 @@ theorem UpperTheory.finprod_local_factors_with_iwahori_at_place :
   have hfac : ∀ v, φ v (X v) = A v * B v := by
     intro v
     by_cases hv : v ∈ insert q S
-    · simp only [A, if_pos hv, hB1 v hv, mul_one]
+    · simp only [A, ite_eq_left hv, hB1 v hv, mul_one]
     · have hv' := Finset.mem_insert.not.1 hv
       push_neg at hv'
-      simp only [A, if_neg hv, one_mul, B]
+      simp only [A, ite_eq_right hv, one_mul, B]
       rw [hoff v hv'.2 hv'.1]
       unfold prodFn
       refine finprod_congr fun w => ?_
@@ -248,7 +248,7 @@ theorem UpperTheory.finprod_local_factors_with_iwahori_at_place :
   have hAsub : Function.mulSupport A ⊆ (insert q S : Finset (Pl F)) := by
     intro v hv
     by_contra hc
-    exact hv (if_neg hc)
+    exact hv (ite_eq_right hc)
   have hAfin : (Function.mulSupport A).Finite := (Finset.finite_toSet _).subset hAsub
   have hBfin : (Function.mulSupport B).Finite := by
     refine (hafin.image fun w : Pl E => w.under (𝓞 F)).subset ?_
@@ -267,9 +267,9 @@ theorem UpperTheory.finprod_local_factors_with_iwahori_at_place :
   have hAprod : ∏ᶠ v, A v = iwFn w₀ m (X q) * ∏ v ∈ S, ψ v (X v) := by
     rw [finprod_eq_prod_of_mulSupport_subset _ hAsub, Finset.prod_insert hq]
     congr 1
-    · simp only [A, Finset.mem_insert_self, if_true, hqφ]
+    · simp only [A, Finset.mem_insert_self, ite_true, hqφ]
     · refine Finset.prod_congr rfl fun v hv => ?_
-      simp only [A, if_pos (Finset.mem_insert_of_mem hv), hS v hv]
+      simp only [A, ite_eq_left (Finset.mem_insert_of_mem hv), hS v hv]
   have hBprod : ∏ᶠ v, B v = ∏ᶠ w, h' w (cf w x) := hten
   have haprod : ∏ᶠ w, h' w (cf w x) = (Cnd S q κ).indicator 1 x * ∏ w ∈ κ, h w (cf w x) := by
     by_cases hx : x ∈ Cnd S q κ
@@ -393,7 +393,7 @@ theorem UpperTheory.prodFn_isLocallyConstant_hasCompactSupport :
         (∀ w, IsLocallyConstant (h w) ∧ HasCompactSupport (h w)) →
         IsLocallyConstant (prodFn h) ∧ HasCompactSupport (prodFn h) := by
   intro F E _ _ _ _ _ n v h hh
-  haveI : Fintype (PlacesOver E v) := Fintype.ofFinite _
+  have : Fintype (PlacesOver E v) := Fintype.ofFinite _
   have hp : prodFn h = fun g => ∏ w, h w (UpperTheory.ConvolutionTheory.GM.cmp w g) := by
     funext g
     exact finprod_eq_prod_of_fintype _
@@ -459,7 +459,7 @@ private theorem iwCoset_eq (w : Pl E) (m : Fin n → ℤ) :
     iwCoset w m = ((GLnLocal.iwahori (w.adicCompletion E) n : Set (GL (Fin n) (w.adicCompletion E))) *
       ({Cartan.diagPow (w.adicCompletion E) n m} : Set (GL (Fin n) (w.adicCompletion E)))) * (GLnLocal.iwahori (w.adicCompletion E) n : Set (GL (Fin n) (w.adicCompletion E))) := by
   ext g
-  simp only [iwCoset, Set.mem_setOf_eq, Set.mem_mul, Set.mem_singleton_iff, SetLike.mem_coe]
+  simp only [iwCoset, Set.mem_ofPred_eq, Set.mem_mul, Set.mem_singleton_iff, SetLike.mem_coe]
   constructor
   · rintro ⟨a, ha, b, hb, rfl⟩
     exact ⟨_, ⟨a, ha, _, rfl, rfl⟩, b, hb, rfl⟩
@@ -577,8 +577,8 @@ private theorem rF_congr (S : Finset (Pl F)) {q : Pl F} (w₀ : PlacesOver E q)
     · exact Finset.prod_congr rfl h1
     · refine finprod_congr fun w => ?_
       by_cases hw : w = w₀
-      · rw [if_pos hw, if_pos hw]
-      · rw [if_neg hw, if_neg hw]
+      · rw [ite_eq_left hw, ite_eq_left hw]
+      · rw [ite_eq_right hw, ite_eq_right hw]
         by_cases hb : cf w.1 b ∈ iwCoset w.1 (0 : Fin n → ℤ)
         · rw [Set.indicator_of_mem hb, Set.indicator_of_mem ((h2 w hw).2 hb)]; rfl
         · rw [Set.indicator_of_notMem hb, Set.indicator_of_notMem (mt (h2 w hw).1 hb)]
@@ -658,10 +658,10 @@ private theorem supp (S : Finset (Pl F)) {q : Pl F} (w₀ : PlacesOver E q)
   obtain ⟨hs, hw⟩ := mul_ne_zero_iff.1 hr1
   refine ⟨Finset.prod_ne_zero_iff.1 hs, Set.mem_of_indicator_ne_zero hi, fun w hw' => ?_, Finset.prod_ne_zero_iff.1 hκ,
     Set.mem_of_indicator_ne_zero hc⟩
-  haveI := Fintype.ofFinite (PlacesOver E q)
+  have := Fintype.ofFinite (PlacesOver E q)
   rw [finprod_eq_prod_of_fintype] at hw
   have := Finset.prod_ne_zero_iff.1 hw w (Finset.mem_univ _)
-  rw [if_neg hw'] at this
+  rw [ite_eq_right hw'] at this
   exact Set.mem_of_indicator_ne_zero this
 
 private theorem regroup (S : Finset (Pl F)) {q : Pl F} (hq : q ∉ S) (w₀ : PlacesOver E q)
@@ -923,8 +923,8 @@ private theorem loc_bd (w : Pl K) {C : Set (GL (Fin n) (w.adicCompletion K))} (h
   have hc : Continuous (locHeight : GL (Fin n) (w.adicCompletion K) → ℝ) := by
     unfold locHeight
     refine continuous_const.max (NNReal.continuous_coe.comp (Continuous.finset_sup_apply (fun p _ => Continuous.max ?_ ?_)))
-    · exact (Units.continuous_val.matrix_elem _ _).nnnorm
-    · exact (Units.continuous_coe_inv.matrix_elem _ _).nnnorm
+    · exact (Units.continuous_val.matrix_elem _ _).nnNorm
+    · exact (Units.continuous_coe_inv.matrix_elem _ _).nnNorm
   obtain ⟨B, hB⟩ := (hC.image hc).bddAbove
   exact ⟨max 1 B, le_max_left _ _, fun g hg => (hB ⟨g, hg, rfl⟩).trans (le_max_right _ _)⟩
 
@@ -965,7 +965,7 @@ private theorem ht_le (q : Pl K) (T : Finset (Pl K)) (B : Pl K → ℝ) (hB : �
     have hc' : v ∉ T := hc
     by_cases hq : v = q
     · simp [hq]
-    · simp only [ne_eq, hq, not_false_eq_true, if_true]
+    · simp only [ne_eq, hq, not_false_eq_true, ite_true]
       exact h2 v hq hc'
 
 private theorem ind_inv {G : Type*} [Group G] (H : Subgroup G) {k : G} (hk : k ∈ H) (x : G) :
@@ -1006,10 +1006,10 @@ theorem UpperTheory.ConvolutionTheory.GM.termF :
   have hψt : ∀ v ∈ T, IsLocallyConstant (ψ v) ∧ HasCompactSupport (ψ v) := by
     intro v hv
     by_cases hvS : v ∈ L.S
-    · simp only [hψ, hvS, if_true]
+    · simp only [hψ, hvS, ite_true]
       exact ⟨(L.test v hvS).2.2.1, (L.test v hvS).2.2.2⟩
     · have hvk : v ∈ κ := (Finset.mem_union.1 hv).resolve_left hvS
-      simp only [hψ, hvS, if_false]
+      simp only [hψ, hvS, ite_false]
       have := (sphEx F n hn v).2.2 (p v) (h v) (hsph v hvk)
       exact ⟨this.1, this.2.1⟩
   have hBex : ∀ v, ∃ b : ℝ, 1 ≤ b ∧ (v ∈ T → ∀ g, ψ v g ≠ 0 → locHeight g ≤ b) := by
@@ -1025,8 +1025,8 @@ theorem UpperTheory.ConvolutionTheory.GM.termF :
   have hφψ : ∀ v, v ≠ q₁ → φ v = ψ v := by
     intro v hv
     by_cases hvS : v ∈ L.S
-    · simp only [hψ, hvS, if_true]; exact hφS v hvS
-    · simp only [hψ, hvS, if_false]; exact hφo v hvS hv
+    · simp only [hψ, hvS, ite_true]; exact hφS v hvS
+    · simp only [hψ, hvS, ite_false]; exact hφo v hvS hv
   have hφoff : ∀ v ∉ insert q₁ T, φ v = (GLnLocal.integralGL (v.adicCompletion F) n : Set _).indicator 1 := by
     intro v hv
     rw [Finset.mem_insert, not_or] at hv
@@ -1067,7 +1067,7 @@ theorem UpperTheory.ConvolutionTheory.GM.termF :
     by_cases hv : v ∈ s
     · simp [hv]
     · have hvw : v ≠ w := fun h' => hv (h' ▸ hw)
-      simp only [hv, if_false, cf_loc hvw]
+      simp only [hv, ite_false, cf_loc hvw]
   have hφr : ∀ v ∉ s, φ v = L.f v := by
     intro v hv
     rw [Finset.mem_insert, not_or] at hv
@@ -1087,13 +1087,13 @@ theorem UpperTheory.ConvolutionTheory.GM.termF :
     rw [he, fp_split _ (hφs x) s]
     have hrx : (∏ᶠ v, if v ∈ s then (1 : ℂ) else φ v (cf v x)) = r x := finprod_congr fun v => by
       by_cases hv : v ∈ s
-      · simp only [hv, if_true]
-      · simp only [hv, if_false]
+      · simp only [hv, ite_true]
+      · simp only [hv, ite_false]
         rw [hφr v hv]
     rw [hrx, hs, Finset.prod_insert hq₁κ, hφq, mul_assoc]
     refine congrArg₂ _ rfl (congrArg₂ _ rfl (Finset.prod_congr rfl fun v hv => ?_))
     rw [hφψ v (hκq v hv)]
-    simp only [hψ, hκS v hv, if_false]
+    simp only [hψ, hκS v hv, ite_false]
   have hUc : ∀ u ∈ 𝔣.toAmp.U, cf q₁ u ∈ GLnLocal.iwahori (q₁.adicCompletion F) n ∧ ∀ x, r (u * x) = r x := by
     intro u hu
     rw [hU] at hu
@@ -1101,7 +1101,7 @@ theorem UpperTheory.ConvolutionTheory.GM.termF :
     refine ⟨L.at_q.2.2.2 ▸ hu' q₁, fun x => finprod_congr fun v => ?_⟩
     by_cases hv : v ∈ s
     · simp [hv]
-    · simp only [hv, if_false, cf_mul]
+    · simp only [hv, ite_false, cf_mul]
       rw [Finset.mem_insert, not_or] at hv
       by_cases hvS : v ∈ L.S
       · exact (L.inv v hvS).2 _ (hu' v) _
@@ -1168,19 +1168,19 @@ variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Meas
 omit [MeasurableSpace G] [BorelSpace G] in
 private theorem relIndex_ne (I K : Subgroup G) (hIo : IsOpen (I : Set G)) (hK : IsCompact (K : Set G)) :
     I.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  have hopen : IsOpen ((I.subgroupOf K : Subgroup K) : Set K) := hIo.preimage continuous_subtype_val
-  haveI : Finite (K ⧸ I.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hopen
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have hopen : IsOpen ((I.subgroupOf K : Subgroup K) : Set K) := hIo.preimage continuous_subtypeVal
+  have : Finite (K ⧸ I.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hopen
   rw [Subgroup.relIndex, Subgroup.index_eq_card]
   exact Nat.card_pos.ne'
 
 private theorem vol_sub (I K : Subgroup G) (hIK : I ≤ K) (hIo : IsOpen (I : Set G)) (hK : IsCompact (K : Set G))
     (μ : Measure G) [μ.IsMulLeftInvariant] (h1 : μ (K : Set G) = 1) :
     I.relIndex K ≠ 0 ∧ μ.real (I : Set G) = ((I.relIndex K : ℕ) : ℝ)⁻¹ := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  have hopen : IsOpen ((I.subgroupOf K : Subgroup K) : Set K) := hIo.preimage continuous_subtype_val
-  haveI : Finite (K ⧸ I.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hopen
-  letI : Fintype (K ⧸ I.subgroupOf K) := Fintype.ofFinite _
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have hopen : IsOpen ((I.subgroupOf K : Subgroup K) : Set K) := hIo.preimage continuous_subtypeVal
+  have : Finite (K ⧸ I.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hopen
+  let : Fintype (K ⧸ I.subgroupOf K) := Fintype.ofFinite _
   let r : (K ⧸ I.subgroupOf K) → G := fun q => ((q.out : K) : G)
   let S : (K ⧸ I.subgroupOf K) → Set G := fun q => (fun x => r q * x) '' (I : Set G)
   have hcov : (K : Set G) = ⋃ q, S q := by
@@ -1461,13 +1461,13 @@ private theorem cmp_cont {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
 private theorem prodFn_test {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ} {v : Pl F}
     (h : ∀ w : PlacesOver E v, GL (Fin n) (w.1.adicCompletion E) → ℂ) (hc : ∀ w, Continuous (h w) ∧ HasCompactSupport (h w)) :
     Continuous (prodFn h) ∧ HasCompactSupport (prodFn h) := by
-  haveI : Fintype (PlacesOver E v) := Fintype.ofFinite _
+  have : Fintype (PlacesOver E v) := Fintype.ofFinite _
   have e : prodFn h = fun g => ∏ w, h w (cmp w g) := funext fun g => finprod_eq_prod_of_fintype _
   rw [e]
   refine ⟨continuous_finsetProd _ fun w _ => (hc w).1.comp (cmp_cont w), ?_⟩
-  haveI : T2Space (CompletionsOver E v) := Pi.t2Space
-  haveI : T2Space (GL (Fin n) (CompletionsOver E v)) := Units.instT2Space
-  haveI : R1Space (GL (Fin n) (CompletionsOver E v)) := T2Space.r1Space
+  have : T2Space (CompletionsOver E v) := Pi.t2Space
+  have : T2Space (GL (Fin n) (CompletionsOver E v)) := Units.instT2Space
+  have : R1Space (GL (Fin n) (CompletionsOver E v)) := T2Space.r1Space
   refine HasCompactSupport.intro ((isCompact_univ_pi fun w => (hc w).2.isCompact).image glue_cont) fun g hg => ?_
   by_contra hne
   refine hg ⟨fun w => cmp w g, fun w _ => subset_tsupport _ ?_, ?_⟩
@@ -1477,7 +1477,7 @@ private theorem prodFn_test {F E : Type} [Field F] [NumberField F] [Field E] [Nu
 private theorem prodFn_unit {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ} {v : Pl F} :
     (prodFn fun w : PlacesOver E v => (GLnLocal.integralGL (w.1.adicCompletion E) n : Set _).indicator 1) =
       (unitSet E n v).indicator 1 := by
-  haveI : Fintype (PlacesOver E v) := Fintype.ofFinite _
+  have : Fintype (PlacesOver E v) := Fintype.ofFinite _
   funext g
   rw [prodFn, finprod_eq_prod_of_fintype]
   by_cases hg : g ∈ unitSet E n v
@@ -1538,10 +1538,10 @@ theorem UpperTheory.ConvolutionTheory.GM.termEx :
     LocUnit → TermEx := by
   intro hU F E _ _ _ _ _ _ _ _ σ hσ hp n hn μE iμE μF iμF θ q w₀ q₀ hq νE _ νF _ aE aF ci hci hA
   classical
-  letI : MeasurableSpace (GL (Fin n) (InfiniteAdeleRing E)) := borel _
-  haveI : BorelSpace (GL (Fin n) (InfiniteAdeleRing E)) := ⟨rfl⟩
-  letI : MeasurableSpace (GL (Fin n) (InfiniteAdeleRing F)) := borel _
-  haveI : BorelSpace (GL (Fin n) (InfiniteAdeleRing F)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (InfiniteAdeleRing E)) := borel _
+  have : BorelSpace (GL (Fin n) (InfiniteAdeleRing E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (InfiniteAdeleRing F)) := borel _
+  have : BorelSpace (GL (Fin n) (InfiniteAdeleRing F)) := ⟨rfl⟩
   choose s1 b1 s2 b2 mE mF hm using fun v => (matchOne F E σ n v).1
   obtain ⟨k, hk, H4⟩ := UpperTheory.ConvolutionTheory.G.g4 F E σ hσ n hn hp μE μF (νE.map (archEquiv E n).symm) (νF.map (archEquiv F n).symm) mE mF
     iμE iμF ((archEquiv E n).symm.isHaarMeasure_map νE) ((archEquiv F n).symm.isHaarMeasure_map νF)
@@ -1594,17 +1594,17 @@ theorem UpperTheory.ConvolutionTheory.GM.termEx :
   obtain ⟨φ, φS, φq, φo⟩ : ∃ φ : ∀ v : Pl F, GL (Fin n) (CompletionsOver E v) → ℂ, (∀ v ∈ L.S, φ v = L.φ v) ∧
       φ q = iwFn w₀ (fun i => (j : ℤ) * ν i) ∧ ∀ v ∉ L.S, v ≠ q → φ v = prodFn fun w : PlacesOver E v => h w.1 :=
     ⟨Function.update (fun v => if v ∈ L.S then L.φ v else prodFn fun w : PlacesOver E v => h w.1) q (iwFn w₀ fun i => (j : ℤ) * ν i),
-      fun v hv => by rw [Function.update_of_ne (fun e : v = q => L.q_not (e ▸ hv)), if_pos hv], Function.update_self ..,
-      fun v hv hvq => by rw [Function.update_of_ne hvq, if_neg hv]⟩
+      fun v hv => by rw [Function.update_of_ne (fun e : v = q => L.q_not (e ▸ hv)), ite_eq_left hv], Function.update_self ..,
+      fun v hv hvq => by rw [Function.update_of_ne hvq, ite_eq_right hv]⟩
   obtain ⟨ψ, ψS, ψq, ψo⟩ : ∃ ψ : ∀ v : Pl F, GL (Fin n) (v.adicCompletion F) → ℂ, (∀ v ∈ L.S, ψ v = L.f v) ∧
       ψ q = (iwCoset q fun i => (j : ℤ) * ν i).indicator 1 ∧ ∀ v ∉ L.S, v ≠ q → ψ v = f v :=
     ⟨Function.update (fun v => if v ∈ L.S then L.f v else f v) q ((iwCoset q fun i => (j : ℤ) * ν i).indicator 1),
-      fun v hv => by rw [Function.update_of_ne (fun e : v = q => L.q_not (e ▸ hv)), if_pos hv], Function.update_self ..,
-      fun v hv hvq => by rw [Function.update_of_ne hvq, if_neg hv]⟩
+      fun v hv => by rw [Function.update_of_ne (fun e : v = q => L.q_not (e ▸ hv)), ite_eq_left hv], Function.update_self ..,
+      fun v hv hvq => by rw [Function.update_of_ne hvq, ite_eq_right hv]⟩
   obtain ⟨c, cS, cq', co⟩ : ∃ c : Pl F → ℂ, (∀ v ∈ L.S, c v = L.c v) ∧ c q = cq ∧ ∀ v ∉ L.S, v ≠ q → c v = 1 :=
     ⟨Function.update (fun v => if v ∈ L.S then L.c v else 1) q cq,
-      fun v hv => by rw [Function.update_of_ne (fun e : v = q => L.q_not (e ▸ hv)), if_pos hv], Function.update_self ..,
-      fun v hv hvq => by rw [Function.update_of_ne hvq, if_neg hv]⟩
+      fun v hv => by rw [Function.update_of_ne (fun e : v = q => L.q_not (e ▸ hv)), ite_eq_left hv], Function.update_self ..,
+      fun v hv hvq => by rw [Function.update_of_ne hvq, ite_eq_right hv]⟩
   obtain ⟨fE, e1, e2, e3⟩ := TE evE hE j wd φ φS φq φo
   obtain ⟨fF, g1, g2, g3⟩ := TF evF hF j (wd.map (resIx F)) ψ ψS ψq ψo
   have hpoly : (map C (∏ w ∈ κ, atPl w (γ w)) * monomial β (mono wd) : PR E n) =

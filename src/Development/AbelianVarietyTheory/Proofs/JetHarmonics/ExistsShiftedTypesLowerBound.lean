@@ -618,7 +618,7 @@ theorem EB_tensor_std : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace
     by_cases hd : d = b
     · subst hd
       have e : herm (Hpk k r) ((1 : ℂ) • B a) (B c) = herm (Hpk k r) (B a) (B c) := by rw [one_smul]
-      rw [if_pos rfl, if_pos rfl, e, this]
+      rw [ite_eq_left rfl, ite_eq_left rfl, e, this]
       simp only [eq_comm]
     · simp [hd, herm]
   show dOp πt _ y c + Complex.I • dOp πt _ y c = (dOp π _ (y c) + Complex.I • dOp π _ (y c)) + _
@@ -675,7 +675,7 @@ theorem tenOp_norm (C : Fin k → Fin k → ℂ) (A : V →L[ℂ] V)
       refine Finset.sum_congr rfl fun c _ => ?_
       simp only [Complex.star_def]
       ring
-    simp only [hterm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [hterm, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [norm_eq_sqrt_re_inner (𝕜 := ℂ), norm_eq_sqrt_re_inner (𝕜 := ℂ), key]
 
 end GlobalTheory.TensorStd
@@ -784,9 +784,9 @@ theorem opNorm_sum_smul_sq_le {V V₂ κ : Type} [Fintype κ] [NormedAddCommGrou
   have h1 : ‖∑ c, l c • a c‖ ≤ Real.sqrt (∑ c, ‖l c‖ ^ 2) := by
     refine ContinuousLinearMap.opNorm_le_bound _ (Real.sqrt_nonneg _) fun y => ?_
     have h2 : ‖(∑ c, l c • a c) y‖ ≤ ∑ c, ‖l c‖ * ‖a c y‖ := by
-      rw [ContinuousLinearMap.sum_apply]
+      rw [sum_apply]
       refine (norm_sum_le _ _).trans (le_of_eq (Finset.sum_congr rfl fun c _ => ?_))
-      rw [ContinuousLinearMap.smul_apply, norm_smul]
+      rw [smul_apply, norm_smul]
     have h3 := Finset.sum_mul_sq_le_sq_mul_sq Finset.univ (fun c => ‖l c‖) (fun c => ‖a c y‖)
     rw [ha y] at h3
     refine h2.trans ?_
@@ -819,7 +819,7 @@ theorem contraction_wigMap :
       obtain ⟨h1, h2⟩ := hW (B d) (hB.1 d) (hB.2.2 d z (by simp))
       rw [← herm_sum_smul_left, ← hcomp _ h1 h2, hiso]
 
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
+    simp only [ContinuousLinearMap.comp_apply, sum_apply, smul_apply,
     map_sum, map_smul, hequi h hh, Finset.smul_sum, smul_smul]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun d _ => ?_
@@ -965,7 +965,7 @@ theorem splitCasimir_eigenspace_irreducible_standard : ∀ (V : Type) [NormedAdd
     have hν := hwtV _ _ hc0 hcw
     have hcl : c = l := by
       have h1 := hν c
-      simp only [if_true] at h1
+      simp only [ite_true] at h1
       have h2 : (L c : ℂ) = L l := by linear_combination -h1 - hlam
       exact hyp.anti.injective (by exact_mod_cast h2)
     subst hcl
@@ -1187,7 +1187,7 @@ theorem adjoint_eval_subspace {V : Type} [NormedAddCommGroup V] [InnerProductSpa
       = S.orthogonalProjectionOnto (PiLp.single 2 c v) := by
   apply ext_inner_left ℂ
   intro y
-  rw [ContinuousLinearMap.adjoint_inner_right, Submodule.inner_orthogonalProjection_eq_of_mem_left,
+  rw [ContinuousLinearMap.adjoint_inner_right, Submodule.inner_orthogonalProjectionOnto_eq_of_mem_left,
     PiLp.inner_apply, Finset.sum_eq_single c]
   · simp
   · intro b _ hb
@@ -1391,7 +1391,7 @@ theorem norm_adjoint_real_pow_smul {V U : Type} [NormedAddCommGroup V] [InnerPro
     (A : U →L[ℂ] V) (t : ℝ) (d : ℕ) (v : V) :
     ‖ContinuousLinearMap.adjoint (((t : ℂ) ^ d) • A) v‖ ^ 2 =
       (t ^ 2) ^ d * ‖ContinuousLinearMap.adjoint A v‖ ^ 2 := by
-  rw [LinearIsometryEquiv.map_smulₛₗ, ContinuousLinearMap.smul_apply, norm_smul, mul_pow]
+  rw [LinearIsometryEquiv.map_smulₛₗ, smul_apply, norm_smul, mul_pow]
   congr 1
   rw [RCLike.norm_conj, norm_pow, Complex.norm_real, Real.norm_eq_abs, ← pow_mul, mul_comm, pow_mul, sq_abs]
 

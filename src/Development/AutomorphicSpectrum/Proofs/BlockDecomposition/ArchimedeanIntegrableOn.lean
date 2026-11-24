@@ -224,7 +224,7 @@ theorem measurableSet_inter_preimage {α β : Type*} [TopologicalSpace α] [Meas
     [BorelSpace α] [TopologicalSpace β] [MeasurableSpace β] [BorelSpace β] {f : α → β} {s : Set α}
     {t : Set β} (hf : ContinuousOn f s) (hs : MeasurableSet s) (ht : MeasurableSet t) :
     MeasurableSet (s ∩ f ⁻¹' t) := by
-  have hm : Measurable (s.restrict f) := (continuousOn_iff_continuous_restrict.1 hf).measurable
+  have hm : Measurable (s.restrict f) := (continuousOn_iff_continuous_domRestrict.1 hf).measurable
   have := hs.subtype_image (hm ht)
   convert this using 1
   ext v
@@ -268,7 +268,7 @@ theorem chartMeas_le_sum {D n : ℕ} {Y : Type*} [TopologicalSpace Y] [Measurabl
     have hder : ∀ u ∈ T j, HasFDerivWithinAt (G j) (fderiv ℝ (G j) u) (T j) u := fun u hu =>
       (hdet j u hu.1 hu.2.1.1 hu.2.2).1.hasFDerivAt.hasFDerivWithinAt
     have hae : AEMeasurable (P j) ((volume.restrict (K j \ P j ⁻¹' Z)).withDensity (w j)) :=
-      (((hP j).mono diff_subset).aemeasurable (hM j)).mono_ac
+      (((hP j).mono sdiff_subset).aemeasurable (hM j)).mono_ac
         (withDensity_absolutelyContinuous _ _)
     rw [← measurePreserving_toV.setLIntegral_comp_emb (toV D).toHomeomorph.measurableEmbedding,
       lintegral_image_eq_lintegral_abs_det_fderiv_mul volume (hT j) hder hinjG,
@@ -293,7 +293,7 @@ theorem chartMeas_le_sum {D n : ℕ} {Y : Type*} [TopologicalSpace Y] [Measurabl
     _ = ∑ j, ∫⁻ v in toV D '' (G j '' T j), ρ (e.symm v) := tsum_fintype _
     _ ≤ ∑ j, Measure.map (P j) ((volume.restrict (K j \ P j ⁻¹' Z)).withDensity (w j)) S :=
         Finset.sum_le_sum fun j _ => hterm j
-    _ = _ := by rw [Measure.finsetSum_apply]
+    _ = _ := by rw [sum_apply]
 
 theorem ofReal_abs_norm_mul_le (d : ℂ) (x : ℝ) (ε : ℤˣ) :
     ENNReal.ofReal |Algebra.norm ℝ d| * ENNReal.ofReal ((ε : ℤ) * x) ≤
@@ -376,7 +376,7 @@ theorem exists_local_quot {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X
   have hb := mem_pick ψ.isLB y
   obtain ⟨W, hW, hyW, hWb⟩ := exists_isAffineOpen_mem_and_subset (mem_ptsIn.1 hb)
   have hg : genericPoint X ∈ W := gen_mem hyW
-  haveI : Nonempty W := ⟨⟨_, hg⟩⟩
+  have : Nonempty W := ⟨⟨_, hg⟩⟩
   have := functionField_isFractionRing_of_isAffineOpen X W hW
   obtain ⟨a, d, hd, e⟩ := IsFractionRing.div_surjective (A := Γ(X, W)) (r (pick ψ.isLB y) : X.functionField)
   have hd0 : fnOf W hg d ≠ 0 := by
@@ -467,9 +467,9 @@ theorem lintegral_logNorm_locDens_lt_top : ∀ {k : Type} [CommRing k] {X : Sche
         ENNReal.ofReal |locDens A (fun _ => φ.locPot.pullback F hF) j u| < ⊤) ?_ ?_ ?_ ?_
   · simp
   · intro s t hst ht
-    exact (lintegral_mono_set (diff_subset_diff_left hst)).trans_lt ht
+    exact (lintegral_mono_set (sdiff_subset_sdiff_left hst)).trans_lt ht
   · intro s t hs ht
-    rw [union_diff_distrib]
+    rw [union_sdiff_distrib]
     exact (lintegral_union_le _ _ _).trans_lt (ENNReal.add_lt_top.2 ⟨hs, ht⟩)
   intro u0 hu0
   obtain ⟨l, hl⟩ := hcov (F ((A.chart j).symm u0))
@@ -504,7 +504,7 @@ theorem lintegral_logNorm_locDens_lt_top : ∀ {k : Type} [CommRing k] {X : Sche
   obtain ⟨M, hM⟩ := hBc.exists_bound_of_continuousOn (hdc.mono hBt)
   have hYm : MeasurableSet (Bl \ (F ∘ (A.chart j).symm) ⁻¹' Z) := by
     have hc : Continuous (fun u : Bl => (F ∘ (A.chart j).symm) u.1) :=
-      continuousOn_iff_continuous_restrict.1 (hGc.mono hBt)
+      continuousOn_iff_continuous_domRestrict.1 (hGc.mono hBt)
     have h1 : MeasurableSet (Subtype.val '' ((fun u : Bl => (F ∘ (A.chart j).symm) u.1) ⁻¹' Z)) :=
       hBm.subtype_image (hc.measurable hZ)
     have h2 : Bl \ (F ∘ (A.chart j).symm) ⁻¹' Z =
@@ -529,7 +529,7 @@ theorem lintegral_logNorm_locDens_lt_top : ∀ {k : Type} [CommRing k] {X : Sche
     by_cases hS : F ((A.chart j).symm u) ∈ S
     · rw [indicator_of_mem hS]
       refine mul_le_mul' ?_ (ENNReal.ofReal_le_ofReal ?_)
-      · rw [← ofReal_norm_eq_enorm]
+      · rw [← ofReal_norm]
         refine ENNReal.ofReal_le_ofReal ?_
         rw [hg l _ (hBV huB).2 hS huZ, Real.norm_eq_abs]
         have h1 := abs_sub (Real.log ‖ev q σ (W l) (a l) (F ((A.chart j).symm u))‖ -
@@ -554,7 +554,7 @@ theorem lintegral_logNorm_locDens_lt_top : ∀ {k : Type} [CommRing k] {X : Sche
         ENNReal.ofReal (|Real.log ‖ev q σ (W l) (a l) (F ((A.chart j).symm u))‖| +
           |Real.log ‖ev q σ (W l) (d l) (F ((A.chart j).symm u))‖| +
           |ψ.φ (b l) (F ((A.chart j).symm u))| / 2) * ENNReal.ofReal M :=
-        lintegral_mono_set diff_subset
+        lintegral_mono_set sdiff_subset
     _ = (∫⁻ u in Bl,
         ENNReal.ofReal (|Real.log ‖ev q σ (W l) (a l) (F ((A.chart j).symm u))‖| +
           |Real.log ‖ev q σ (W l) (d l) (F ((A.chart j).symm u))‖| +
@@ -666,7 +666,7 @@ theorem integrableOn_of_modif {X : Scheme.{0}} [IsIntegral X] {q : X ⟶ Sp ℤ}
     have e : {y | y ∈ ptsIn q σ (W l) ∧ ev q σ (W l) (d l) y = 0} =
         ptsIn q σ (W l) \ (ptsIn q σ (W l) ∩ ev q σ (W l) (d l) ⁻¹' {0}ᶜ) := by
       ext y
-      simp only [Set.mem_setOf_eq, Set.mem_diff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_compl_iff,
+      simp only [Set.mem_ofPred_eq, Set.mem_sdiff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_compl_iff,
         Set.mem_singleton_iff, not_and, not_not]
       exact ⟨fun h => ⟨h.1, fun _ => h.2⟩, fun h => ⟨h.1, h.2 h.1⟩⟩
     rw [e]
@@ -697,7 +697,7 @@ theorem integrableOn_of_modif {X : Scheme.{0}} [IsIntegral X] {q : X ⟶ Sp ℤ}
   refine ⟨hgc.aestronglyMeasurable hSo.measurableSet, ?_⟩
   set h : GlobalTheory.CxPts q σ → ENNReal := S.indicator fun y => ‖g y‖ₑ with hh
   have hhm : Measurable h := by
-    have := (hgc.enorm).measurable_piecewise (continuousOn_const (c := (0 : ENNReal)) (s := Sᶜ)) hSo.measurableSet
+    have := (hgc.eNorm).measurable_piecewise (continuousOn_const (c := (0 : ENNReal)) (s := Sᶜ)) hSo.measurableSet
     rwa [show S.piecewise (fun y => ‖g y‖ₑ) (fun _ => (0 : ENNReal)) = h from Set.piecewise_eq_indicator] at this
   show ∫⁻ y, ‖g y‖ₑ ∂(φ.chernPart D ε).restrict S < ⊤
   rw [← lintegral_indicator hSo.measurableSet]
@@ -708,7 +708,7 @@ theorem integrableOn_of_modif {X : Scheme.{0}} [IsIntegral X] {q : X ⟶ Sp ℤ}
   have hc : ContinuousOn (F ∘ (A.chart j).symm) (A.chart j).target :=
     hF.comp_continuousOn (A.chart j).continuousOn_symm
   have hsub : (A.chart j) '' tsupport (Pt.χ j) \ (F ∘ (A.chart j).symm) ⁻¹' Z' ⊆ (A.chart j).target :=
-    Set.diff_subset.trans (hKK j).2
+    Set.sdiff_subset.trans (hKK j).2
   have hm₀ : AEMeasurable (F ∘ (A.chart j).symm)
       (volume.restrict ((A.chart j) '' tsupport (Pt.χ j) \ (F ∘ (A.chart j).symm) ⁻¹' Z')) :=
     (hc.aemeasurable hT).mono_measure (Measure.restrict_mono hsub le_rfl)

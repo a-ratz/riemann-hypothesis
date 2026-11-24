@@ -74,7 +74,7 @@ theorem linearDisjoint_algebraicClosure {F Ω L : Type} [Field F] [CharZero F] [
   refine Subalgebra.LinearDisjoint.of_linearDisjoint_finite_left _ _ fun B hB _ => ?_
   have halg : B.IsAlgebraic := fun x hx => (mem_algebraicClosure_iff (F := F)).1 (hB hx)
   let M : IntermediateField F L := halg.toIntermediateField
-  haveI : FiniteDimensional F M := ‹Module.Finite F B›
+  have : FiniteDimensional F M := ‹Module.Finite F B›
   change M.LinearDisjoint Ω
   obtain ⟨θ, hθ⟩ := Field.exists_primitive_element F M
   have hi : IsIntegral F (θ : L) := (Algebra.IsIntegral.isIntegral (R := F) θ).map M.val
@@ -116,18 +116,18 @@ theorem linearIndependent_base {O Ω O' Ω' : Type} [CommRing O] [IsDomain O]
     (hinj : Function.Injective (algebraMap O' Ω')) {ι : Type} {e : ι → O'}
     (hli : LinearIndependent O e) :
     LinearIndependent Ω (fun i => algebraMap O' Ω' (e i)) := by
-  haveI := hcl
+  have := hcl
   have hOΩ : Function.Injective (algebraMap O Ω) := IsIntegralClosure.algebraMap_injective O O Ω
-  haveI : FaithfulSMul O Ω := (faithfulSMul_iff_algebraMap_injective O Ω).2 hOΩ
+  have : FaithfulSMul O Ω := (faithfulSMul_iff_algebraMap_injective O Ω).2 hOΩ
   let F := FractionRing O
-  letI : Algebra F Ω := FractionRing.liftAlgebra O Ω
-  haveI : IsScalarTower O F Ω := FractionRing.isScalarTower_liftAlgebra O Ω
-  letI : Algebra F Ω' := ((algebraMap Ω Ω').comp (algebraMap F Ω)).toAlgebra
-  haveI : IsScalarTower F Ω Ω' := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower O F Ω' := IsScalarTower.of_algebraMap_eq fun a => by
+  let : Algebra F Ω := FractionRing.liftAlgebra O Ω
+  have : IsScalarTower O F Ω := FractionRing.isScalarTower_liftAlgebra O Ω
+  let : Algebra F Ω' := ((algebraMap Ω Ω').comp (algebraMap F Ω)).toAlgebra
+  have : IsScalarTower F Ω Ω' := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower O F Ω' := IsScalarTower.of_algebraMap_eq fun a => by
     change algebraMap O Ω' a = algebraMap Ω Ω' (algebraMap F Ω (algebraMap O F a))
     rw [← IsScalarTower.algebraMap_apply O F Ω, ← IsScalarTower.algebraMap_apply O Ω Ω']
-  haveI : CharZero F := RingHom.charZero (algebraMap F Ω)
+  have : CharZero F := RingHom.charZero (algebraMap F Ω)
   have hclosed : ∀ a : Ω, IsAlgebraic F a → a ∈ Set.range (algebraMap F Ω) := by
     intro a ha
     obtain ⟨r, hr, hint⟩ := ((IsFractionRing.isAlgebraic_iff O F Ω).2 ha).exists_integral_multiple
@@ -154,9 +154,9 @@ theorem exists_decomp {O O' σ : Type} [CommRing O] [IsDomain O] [IsPrincipalIde
       f = ∑ i, C (e i) * MvPolynomial.map (algebraMap O O') (g i) := by
   classical
   let M : Submodule O O' := Submodule.span O (↑(f.support.image (fun m => AddMonoidAlgebra.coeff f m)) : Set O')
-  haveI : Module.Finite O M := Module.Finite.span_of_finite O (Finset.finite_toSet _)
-  haveI : FaithfulSMul O O' := (faithfulSMul_iff_algebraMap_injective O O').2 hinj
-  haveI : Module.Free O M := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite O M := Module.Finite.span_of_finite O (Finset.finite_toSet _)
+  have : FaithfulSMul O O' := (faithfulSMul_iff_algebraMap_injective O O').2 hinj
+  have : Module.Free O M := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis O M
   have hm : ∀ m, AddMonoidAlgebra.coeff f m ∈ M := by
     intro m
@@ -380,7 +380,7 @@ open GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.NumbersDVR.Bundl
 
 theorem GlobalTheory.CompanionTheory.Ar.Num.model_baseChange_algebraic : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (Ω : Type) [Field Ω] [CharZero Ω] [Algebra O Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (d : ℕ), IsModelOver (pointIdeal O y) d → IsIntegrallyClosedIn O Ω → ∀ (O' : Type) [CommRing O'] [IsDomain O'] [IsDiscreteValuationRing O'] [Algebra O O'] [IsLocalHom (algebraMap O O')] [Algebra.IsAlgebraic O O'] (Ω' : Type) [Field Ω'] [Algebra Ω Ω'] [Algebra O' Ω'] [Algebra O Ω'] [IsScalarTower O O' Ω'] [IsScalarTower O Ω Ω'], Function.Injective (algebraMap O' Ω') → pointIdeal O' (fun v => algebraMap Ω Ω' (y v)) = (pointIdeal O y).map (MvPolynomial.map (algebraMap O O')) ∧ IsModelOver (pointIdeal O' (fun v => algebraMap Ω Ω' (y v))) d := by
   intro O _ _ _ Ω _ _ _ K _ _ J _ y d hM hcl O' _ _ _ _ _ _ Ω' _ _ _ _ _ _ hinj
-  haveI := hcl
+  have := hcl
   have hOΩ : Function.Injective (algebraMap O Ω) := IsIntegralClosure.algebraMap_injective O O Ω
   have hOO' : Function.Injective (algebraMap O O') := by
     intro a b h
@@ -401,7 +401,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Num.model_baseChange_algebraic : ∀ (O 
     refine ⟨i, fun h => hi ?_⟩
     rw [← hcomap]
     exact Ideal.mem_comap.2 (by rwa [map_X])
-  haveI := hM.multiProj.isPrime
+  have := hM.multiProj.isPrime
   have htr := BaseChange.trdeg_eq hOO' hcomap hM.noTorsion hC'
   have hd := GroundTheory.Heights₂.Heights.NumbersDVR.DvrConeDimTrdeg.proof O K J _ hM.multiProj hM.noTorsion
   have hd' := GroundTheory.Heights₂.Heights.NumbersDVR.DvrConeDimTrdeg.proof O' K J _ hmp hC'

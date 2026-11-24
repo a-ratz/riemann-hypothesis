@@ -119,7 +119,7 @@ def Pn (i : ι) : Measure (W i) := (m i (L i))⁻¹ • (m i).restrict (L i)
 
 lemma Pn_prob {i : ι} (h : m i (L i) ≠ 0 ∧ m i (L i) ≠ ⊤) : IsProbabilityMeasure (Pn m L i) := by
   constructor
-  simp only [Pn, Measure.smul_apply, Measure.restrict_apply_univ, smul_eq_mul]
+  simp only [Pn, smul_apply, Measure.restrict_apply_univ, smul_eq_mul]
   exact ENNReal.inv_mul_cancel h.1 h.2
 
 
@@ -188,8 +188,8 @@ lemma kap_eval_null {S : Finset ι} {i : ι} {A : Set (W i)} (hA : MeasurableSet
     have h0 : Qm m L S (Function.eval (⟨i, hi⟩ : {i // i ∉ S}) ⁻¹' A) = 0 := by
       unfold Qm
       split_ifs with hc
-      · rw [Measure.smul_apply]
-        haveI hprob : ∀ j : {j // j ∉ S}, IsProbabilityMeasure (Pn m L j.1) :=
+      · rw [smul_apply]
+        have hprob : ∀ j : {j // j ∉ S}, IsProbabilityMeasure (Pn m L j.1) :=
           fun j => Pn_prob m L (hc j.1 j.2)
         have e := Measure.infinitePi_map_eval (fun j : {j // j ∉ S} => Pn m L j.1) ⟨i, hi⟩
         have e2 : Measure.infinitePi (fun j : {j // j ∉ S} => Pn m L j.1)
@@ -211,14 +211,14 @@ lemma kap_ae [Countable ι] (hLm : ∀ i, MeasurableSet (L i)) (S : Finset ι) :
       kap_eval_null (hLm i) (by simp [mu, hi, Measure.restrict_apply (hLm i)])
     refine measure_mono_null ?_ h0
     intro x hx
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     by_contra hxL
     exact hx ⟨fun _ => hxL, fun h => absurd hi h⟩
   · have h0 : kap m L S {x | x i ∈ (L i)ᶜ} = 0 :=
       kap_eval_null (hLm i).compl (by simp [mu, hi, Measure.restrict_apply (hLm i).compl])
     refine measure_mono_null ?_ h0
     intro x hx
-    simp only [Set.mem_setOf_eq, Set.mem_compl_iff] at hx ⊢
+    simp only [Set.mem_ofPred_eq, Set.mem_compl_iff] at hx ⊢
     intro hxL
     exact hx ⟨fun h => absurd h hi, fun _ => hxL⟩
 

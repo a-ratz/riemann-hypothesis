@@ -104,7 +104,7 @@ variable (K : Subgroup G) (F : Submodule ℂ V) [FiniteDimensional ℂ F]
 include hunit hF horb in
 theorem proj {U : Submodule ℂ V} (hU : Stab ρ U) {x : V} (hx : x ∈ F) :
     ∃ u ∈ U ⊓ F, ∀ y ∈ U, inner ℂ (x - u) y = 0 := by
-  haveI : FiniteDimensional ℂ ↥(U ⊓ F) := Submodule.finiteDimensional_of_le inf_le_right
+  have : FiniteDimensional ℂ ↥(U ⊓ F) := Submodule.finiteDimensional_of_le inf_le_right
   obtain ⟨u, huU, hu⟩ := GlobalTheory.IsotOrth.exists_proj ρ hunit K U (U ⊓ F) hU inf_le_left
     (fun w hw k hk => (hF w).1 hw.2 k hk) (fun w hw hfix => ⟨hw, (hF w).2 hfix⟩)
     (fun y _ => horb y) x ((hF x).1 hx)
@@ -124,7 +124,7 @@ theorem proj {U : Submodule ℂ V} (hU : Stab ρ U) {x : V} (hx : x ∈ F) :
 
 include hunit hF horb in
 theorem mem_sSup_irr : ∀ x ∈ F, x ∈ sSup {W | IrrSub ρ W} := by
-  haveI hfd : ∀ U : Submodule ℂ V, FiniteDimensional ℂ ↥(U ⊓ F) :=
+  have hfd : ∀ U : Submodule ℂ V, FiniteDimensional ℂ ↥(U ⊓ F) :=
     fun U => Submodule.finiteDimensional_of_le inf_le_right
   suffices key : ∀ d : ℕ, ∀ U : Submodule ℂ V, Stab ρ U → Module.finrank ℂ ↥(U ⊓ F) ≤ d →
       ∀ x ∈ U ⊓ F, x ∈ sSup {W | IrrSub ρ W} by
@@ -326,13 +326,13 @@ theorem span_isotIn : ∀ (D : D7) (n : ℕ) (A : Type) [AddCommGroup A] [Module
   intro D n A _ _ ρ C B h1 h2 h3 h4 h5 h6 h7 x hx
   obtain ⟨N, hN, hxN⟩ := h7 x hx
   let core := GlobalTheory.IsotOrth.coreOf C B h1 h2 h3
-  letI : NormedAddCommGroup C := core.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ C := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup C := core.toNormedAddCommGroup
+  let : InnerProductSpace ℂ C := InnerProductSpace.ofCore core.toCore
   let ρC := GlobalTheory.IsotOrth.rhoC ρ C h4
   have hρC : ∀ g (c : C), ((ρC g c : C) : A) = ρ g c := fun g c => rfl
   have hunit : ∀ g (x y : C), inner ℂ (ρC g x) (ρC g y) = inner ℂ x y := fun g x y => h5 g x x.2 y y.2
   let F : Submodule ℂ C := fixN ρC N
-  haveI := h6 N hN
+  have := h6 N hN
   let ι : F →ₗ[ℂ] ↥(Submodule.span ℂ {x | x ∈ C ∧ ∀ κ, Cong D.host.E n N κ → ρ κ x = x}) :=
     (C.subtype.comp F.subtype).codRestrict _ (fun w => Submodule.subset_span ⟨w.1.2, fun κ hκ => by
       have := congrArg Subtype.val (w.2 κ hκ)
@@ -340,7 +340,7 @@ theorem span_isotIn : ∀ (D : D7) (n : ℕ) (A : Type) [AddCommGroup A] [Module
   have hι : Function.Injective ι := fun a b h => by
     have h' := congrArg Subtype.val h
     exact Subtype.ext (Subtype.ext h')
-  haveI : FiniteDimensional ℂ F := FiniteDimensional.of_injective ι hι
+  have : FiniteDimensional ℂ F := FiniteDimensional.of_injective ι hι
   have hF : ∀ v, v ∈ F ↔ ∀ k ∈ GlobalTheory.IsotOrth.congSub D.host.E n N, ρC k v = v := fun v => Iff.rfl
   have horb : ∀ y : C, ((fun k => ρC k y) '' (GlobalTheory.IsotOrth.congSub D.host.E n N : Set (GAf D.host.E n))).Finite := by
     intro y

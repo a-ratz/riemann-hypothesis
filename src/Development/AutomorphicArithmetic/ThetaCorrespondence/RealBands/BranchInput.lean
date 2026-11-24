@@ -243,7 +243,7 @@ theorem isHCParam_sub {N : ℕ} {lam : Fin N → ℝ} (s : Fin N) (hl : Formalis
       push_cast
       linarith
     · refine ⟨m, ?_⟩
-      simp only [Pi.sub_apply, Pi.single_apply, if_neg ha]
+      simp only [Pi.sub_apply, Pi.single_apply, ite_eq_right ha]
       linarith
 
 theorem gap_sub {N : ℕ} (ε : Fin N → Bool) (lam : Fin N → ℝ) (s : Fin N) {h : ℝ}
@@ -271,9 +271,9 @@ theorem fdegHC_le {N : ℕ} (lam : Fin N → ℝ) (s : Fin N) (hw : ∀ a c, a <
     · subst ha
       have e1 : lam' a = lam a - 1 := by simp [hlam']
       have e2 : lam' b = lam b := by simp [hlam', Pi.single_apply, hne.symm]
-      rw [if_pos rfl, e1, e2, abs_of_pos (by linarith), abs_of_pos (by linarith)]
+      rw [ite_eq_left rfl, e1, e2, abs_of_pos (by linarith), abs_of_pos (by linarith)]
       linarith
-    · rw [if_neg ha, one_mul]
+    · rw [ite_eq_right ha, one_mul]
       by_cases hb : b = s
       · subst hb
         have e1 : lam' a = lam a := by simp [hlam', Pi.single_apply, ha]
@@ -286,7 +286,7 @@ theorem fdegHC_le {N : ℕ} (lam : Fin N → ℝ) (s : Fin N) (hw : ∀ a c, a <
   have hcount : ∏ a : Fin N, ∏ b ∈ univ.filter (fun b : Fin N => a < b), (if a = s then (2 : ℝ) else 1) ≤
       2 ^ (N - 1) := by
     rw [Finset.prod_eq_single s (fun a _ ha => by simp [ha]) (fun h => absurd (Finset.mem_univ s) h)]
-    simp only [if_pos rfl, Finset.prod_const]
+    simp only [ite_eq_left rfl, Finset.prod_const]
     apply pow_le_pow_right₀ (by norm_num)
     have hsub : univ.filter (fun b : Fin N => s < b) ⊆ univ.erase s := by
       intro b hb
@@ -548,7 +548,7 @@ theorem one_le_hsn {m : ℕ} {ε : Fin m → Bool} (hm : 1 ≤ m) (g : UJ ε) : 
   have h : (umat g)ᴴ * Jm ε * umat g = Jm ε := g.2
   have h2 := congrFun (congrFun h a) a
   simp only [Jm, Matrix.mul_diagonal, Matrix.diagonal_apply_eq] at h2
-  simp only [Matrix.mul_apply, Matrix.diagonal_apply, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, Matrix.conjTranspose_apply] at h2
+  simp only [Matrix.mul_apply, Matrix.diagonal_apply, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Matrix.conjTranspose_apply] at h2
   have hn : (1 : ℝ) ≤ ∑ l, ‖umat g l a‖ ^ 2 := by
     have e1 : ‖((if ε a = true then 1 else -1 : ℂ))‖ = 1 := by split_ifs <;> simp
     rw [← e1, ← h2]
@@ -562,7 +562,7 @@ theorem one_le_hsn {m : ℕ} {ε : Fin m → Bool} (hm : 1 ≤ m) (g : UJ ε) : 
 
 theorem continuous_hsn_umat {m : ℕ} (ε : Fin m → Bool) : Continuous fun g : UJ ε => hsn (umat g) := by
   unfold hsn
-  have hu : Continuous fun g : UJ ε => umat g := Units.continuous_val.comp continuous_subtype_val
+  have hu : Continuous fun g : UJ ε => umat g := Units.continuous_val.comp continuous_subtypeVal
   refine Real.continuous_sqrt.comp ?_
   fun_prop
 
@@ -573,10 +573,10 @@ namespace GlobalTheory.SepReal.powerIntegrability
 theorem const_le (m : ℕ) (hm : 1 ≤ m) : 2 * (33 : ℝ) ^ (2 * m ^ 2) ≤ Real.exp (10 * (m : ℝ) ^ 2) := by
   have hk : 1 ≤ m ^ 2 := Nat.one_le_pow _ _ hm
   have e1 : Real.exp (10 * (m : ℝ) ^ 2) = Real.exp 10 ^ (m ^ 2) := by
-    rw [← Real.exp_nat_mul]; push_cast; ring_nf
+    rw [← Real.exp_natCast_mul]; push_cast; ring_nf
   have e10 : (2178 : ℝ) ≤ Real.exp 10 := by
     have h1 := Real.exp_one_gt_d9
-    have : Real.exp 10 = Real.exp 1 ^ 10 := by rw [← Real.exp_nat_mul]; norm_num
+    have : Real.exp 10 = Real.exp 1 ^ 10 := by rw [← Real.exp_natCast_mul]; norm_num
     rw [this]
     calc (2178 : ℝ) ≤ 2.7182818283 ^ 10 := by norm_num
       _ ≤ Real.exp 1 ^ 10 := pow_le_pow_left₀ (by norm_num) h1.le 10
@@ -655,7 +655,7 @@ theorem powInt_of_volBall : VolBall → PowInt := by
             _ = ENNReal.ofReal (r ^ j * (1 + 2 * ((2 : ℝ) ^ (j + 1)) ^ 2 / (1 / 4)) ^ (2 * m ^ 2)) * μN := by
                 rw [← mul_assoc, ← ENNReal.ofReal_mul (by positivity)]
             _ ≤ ENNReal.ofReal (33 ^ (2 * m ^ 2) * (1 / 2) ^ j) * μN := by
-                exact mul_le_mul_of_nonneg_right (ENNReal.ofReal_le_ofReal (term_le m A hA j)) (zero_le')
+                exact mul_le_mul_of_nonneg_right (ENNReal.ofReal_le_ofReal (term_le m A hA j)) (zero_le)
             _ = ENNReal.ofReal (33 ^ (2 * m ^ 2)) * 2⁻¹ ^ j * μN := by
                 have h2 : ENNReal.ofReal ((1 / 2 : ℝ) ^ j) = 2⁻¹ ^ j := by
                   rw [ENNReal.ofReal_pow (by norm_num), one_div, ENNReal.ofReal_inv_of_pos (by norm_num), ENNReal.ofReal_ofNat]
@@ -770,8 +770,8 @@ theorem norm_exp_sub_one_le' {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [C
 
 theorem hsn_exp_le {m : ℕ} (Y : Mat m) (t : ℝ) (ht : |t| ≤ 1) (hY : hsn Y ≤ 1) :
     hsn (NormedSpace.exp (t • Y)) ≤ Real.sqrt m + 3 := by
-  letI : NormedRing (Mat m) := Matrix.frobeniusNormedRing
-  letI : NormedAlgebra ℝ (Mat m) := Matrix.frobeniusNormedAlgebra
+  let : NormedRing (Mat m) := Matrix.frobeniusNormedRing
+  let : NormedAlgebra ℝ (Mat m) := Matrix.frobeniusNormedAlgebra
   have hn : ∀ g : Mat m, hsn g = ‖g‖ := fun g => by
     rw [Matrix.frobenius_norm_def, hsn, Real.sqrt_eq_rpow]
     simp only [Real.rpow_two]
@@ -801,7 +801,7 @@ theorem hsn_exp_le {m : ℕ} (Y : Mat m) (t : ℝ) (ht : |t| ≤ 1) (hY : hsn Y 
   exact key
 
 theorem hsn_pos {m : ℕ} (hm : 1 ≤ m) (g : Mat m) (hg : IsUnit g) : 0 < hsn g := by
-  haveI : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
+  have : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
   rcases (Real.sqrt_nonneg _).lt_or_eq with h | h
   · exact h
   · exfalso
@@ -838,7 +838,7 @@ theorem const_le (C₀ : ℝ) (hC₀ : 0 < C₀) (m L R : ℝ) (hm : 4 ≤ m) (h
   have hF1 : 2 + (L ^ 2 * R ^ 2) ^ 2 ≤ Real.exp (5 * l + 4 * r) := by
     have e : Real.exp (5 * l + 4 * r) = L ^ 5 * R ^ 4 := by
       rw [Real.exp_add, hl, hr, show (5 : ℝ) * Real.log L = ((5 : ℕ) : ℝ) * Real.log L by norm_num,
-        show (4 : ℝ) * Real.log R = ((4 : ℕ) : ℝ) * Real.log R by norm_num, Real.exp_nat_mul, Real.exp_nat_mul,
+        show (4 : ℝ) * Real.log R = ((4 : ℕ) : ℝ) * Real.log R by norm_num, Real.exp_natCast_mul, Real.exp_natCast_mul,
         Real.exp_log hL0, Real.exp_log hR0]
     rw [e]
     have h1 : 1 ≤ R ^ 4 := one_le_pow₀ hR1
@@ -913,7 +913,7 @@ theorem derBounds_of : EmbLaws → PowInt → DecPow → LieBound → DerBounds 
   refine ⟨100 + 50 * C₀, by positivity, ?_⟩
   intro n e ε lam ε' mu B hpar H H' _ _ _ _ π σ hπ hσ v₀ hv₀ g₀ hg₀ hgn X hX hX1
   obtain ⟨hmapH, hmul, hcont, hinv, hcol, hstab, hlie, hexp, hsnH, hsnL, hcolle, hUJ, hsub⟩ := hE n e ε ε' hpar.signs
-  haveI : CompleteSpace H := hπ.1
+  have : CompleteSpace H := hπ.1
   have hU : IsURepOn (UJset ε) π := hπ.2.2.1
   have hU' : IsURepOn (Formalism.QuantumDeterminants.UH (Jm ε)) π := hU
   have hJ : IsUnit (Jm ε) := ⟨⟨Jm ε, Jm ε, Jm_mul_self ε, Jm_mul_self ε⟩, rfl⟩
@@ -1067,7 +1067,7 @@ theorem derBounds_of : EmbLaws → PowInt → DecPow → LieBound → DerBounds 
           _ = ‖d2‖ := by rw [hU.2.1 _ ha, hU.2.1 _ hb, hv1, mul_one]
           _ ≤ M2 := hM2)
       hτ0 (min_le_left _ _)
-    simp only [zero_smul, NormedSpace.exp_zero, hU.1.1, ContinuousLinearMap.one_apply] at key
+    simp only [zero_smul, NormedSpace.exp_zero, hU.1.1, one_apply_eq_self] at key
     have hsplit : (hsn b / K0) ^ (-A) = K0 ^ A * hsn b ^ (-A) := by
       rw [Real.rpow_neg (div_nonneg hbpos.le hK0p.le), Real.div_rpow hbpos.le hK0p.le, inv_div, div_eq_mul_inv,
         ← Real.rpow_neg hbpos.le]
@@ -1079,7 +1079,7 @@ theorem derBounds_of : EmbLaws → PowInt → DecPow → LieBound → DerBounds 
       _ ≤ K1 * hsn (umat h) ^ (-A) := by gcongr
 
   have hcontF : Continuous (fun h : UJ ε' => ⟪d1, π (embH e (umat h)) v⟫_ℂ) := by
-    have hum : Continuous (fun h : UJ ε' => umat h) := Units.continuous_val.comp continuous_subtype_val
+    have hum : Continuous (fun h : UJ ε' => umat h) := Units.continuous_val.comp continuous_subtypeVal
     have h1 : Continuous (fun h : UJ ε' => π (embH e (umat h)) v) :=
       (hU.2.2 v).comp_continuous (hcont.comp hum) (fun h => hmapH _ h.2)
     exact continuous_const.inner h1
@@ -1157,7 +1157,7 @@ theorem inv_facts {x : Mat m} (hx : x ∈ UJset ε) :
 theorem hsn_nonneg (x : Mat m) : 0 ≤ hsn x := Real.sqrt_nonneg _
 
 theorem hsn_pos (hm : 0 < m) {x : Mat m} (hx : x ∈ UJset ε) : 0 < hsn x := by
-  haveI : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
+  have : Nonempty (Fin m) := ⟨⟨0, hm⟩⟩
   have hne : x ≠ 0 := (isUnit_of_mem hx).ne_zero
   obtain ⟨i, j, hij⟩ : ∃ i j, x i j ≠ 0 := by
     by_contra h
@@ -1358,7 +1358,7 @@ theorem intBounds_of (hE : EmbLaws) (hBo : Boost) (hP : PowInt) (hD : DecPow) : 
           mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hrb (Real.rpow_nonneg (hsn_nonneg _) _)) (Real.exp_pos _).le
       _ = _ := by ring
   have hcont : Continuous (fun y : Formalism.REAL.UJ ε' => ⟪π g₀ v₀, π (g * embH e (umat y)) (π g₀ v₀)⟫_ℂ) := by
-    have hcu : Continuous (fun y : Formalism.REAL.UJ ε' => umat y) := Units.continuous_val.comp continuous_subtype_val
+    have hcu : Continuous (fun y : Formalism.REAL.UJ ε' => umat y) := Units.continuous_val.comp continuous_subtypeVal
     have hc1' : Continuous (fun y : Formalism.REAL.UJ ε' => g * embH e (umat y)) := continuous_const.mul (hEc.comp hcu)
     have hc2 : Continuous (fun y : Formalism.REAL.UJ ε' => π (g * embH e (umat y)) (π g₀ v₀)) :=
       (hURep.2.2 (π g₀ v₀)).comp_continuous hc1' (fun y => mul_mem hg (hEmb _ y.2))

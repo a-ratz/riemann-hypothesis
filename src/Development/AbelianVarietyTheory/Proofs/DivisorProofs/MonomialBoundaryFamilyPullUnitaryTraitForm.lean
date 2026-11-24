@@ -106,7 +106,7 @@ theorem trait_pull {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
     · convert hu' using 1
       simp only [Fin.prod_univ_one, Matrix.cons_val_zero, map_mul, map_prod, map_pow, hs, Units.val_mul,
         Units.coe_map, Units.coe_prod, Units.val_pow_eq_pow_val, mul_pow, Finset.prod_mul_distrib,
-        ← pow_mul, Finset.prod_pow_eq_pow_sum, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+        ← pow_mul, Finset.prod_pow_eq_pow_sum, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
       ring
   · have hsum : (∑ i, (w i : ℤ) • pull e.toLinearMap ((l.M' : ℤ) • C.δ i)) =
         pull e.toLinearMap (∑ i, (w i : ℤ) • ((l.M' : ℤ) • C.δ i)) := by

@@ -343,7 +343,7 @@ theorem isOpen_and_uniformised (W : Type) [CommRing W] [IsDomain W] [IsDiscreteV
   have hW : GlobalTheory.LN.CDvr W := ⟨inferInstance, hc, hz⟩
   have hadm : GlobalTheory.LN.admitted W (maximalIdeal W) := by
     refine ⟨⟨inferInstance, inferInstance, inferInstance, inferInstance⟩, hc, hz, inferInstance, ?_⟩
-    letI := Ideal.Quotient.field (maximalIdeal W)
+    let := Ideal.Quotient.field (maximalIdeal W)
     infer_instance
   have ho := isOpen_of_range_generic_subset W _ (abLocusOne _ _ t.semi _ _ hp.1)
   obtain ⟨A, -, gen, hg, hw, -⟩ := GlobalTheory.LN.exists_polAV_of_polAt L₁ L₂ E H W t hp

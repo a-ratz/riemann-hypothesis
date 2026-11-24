@@ -91,7 +91,7 @@ theorem eq_of_zpow_eq {n m : ℤ} (h : ∀ w : ℂ, ‖w‖ = 1 → w ^ n = w ^ 
   have hd' : ((n - m : ℤ) : ℂ) ≠ 0 := by exact_mod_cast sub_ne_zero.2 hne
   have e : ((n - m : ℤ) : ℂ) * (((Real.pi / ((n - m : ℤ) : ℝ) : ℝ) : ℂ) * Complex.I) = Real.pi * Complex.I := by
     rw [Complex.ofReal_div, Complex.ofReal_intCast]; field_simp
-  rw [← Complex.exp_int_mul, e, Complex.exp_pi_mul_I] at h2
+  rw [← Complex.exp_intCast_mul, e, Complex.exp_pi_mul_I] at h2
   norm_num at h2
 
 theorem hasInfExp_unique {χ : IdC D} {τ : D.what₂.Tau} {a a' : ℚ} (h : HasInfExp D χ τ a) (h' : HasInfExp D χ τ a') :
@@ -100,10 +100,10 @@ theorem hasInfExp_unique {χ : IdC D} {τ : D.what₂.Tau} {a a' : ℚ} (h : Has
   obtain ⟨m, hm, -, h2⟩ := h'
   have e : n = m := eq_of_zpow_eq fun w hw => by
     obtain ⟨x, hx1, hx2⟩ := exists_idele_at hθ τ w (by rintro rfl; simp at hw)
-    have ho : ∀ τ', τ' ≠ τ → θ τ' (infPart D (x : AE D)) = 1 := fun τ' hτ => by rw [hx2, if_neg hτ]
+    have ho : ∀ τ', τ' ≠ τ → θ τ' (infPart D (x : AE D)) = 1 := fun τ' hτ => by rw [hx2, ite_eq_right hτ]
     have e1 := h1 θ hθ x hx1 ho
     have e2 := h2 θ hθ x hx1 ho
-    rw [hx2, if_pos rfl, hw, Complex.ofReal_one, div_one] at e1 e2
+    rw [hx2, ite_eq_left rfl, hw, Complex.ofReal_one, div_one] at e1 e2
     exact e1.symm.trans e2
   subst e
   linarith

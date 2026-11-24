@@ -162,7 +162,7 @@ theorem latt_eq_rowSpace : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [Is
   obtain ⟨-, hofP, hmu, -, -, hphi⟩ := _root_.GlobalTheory.PDivLat.ghost_values p C v O hv ε hε
   have hε1 : IsPrimitiveRoot (root ε).untilt p := by simpa [zeta] using hε 1
   obtain ⟨hdom, -, -, -, hν, hξ, -⟩ := GlobalTheory.AinfXi.ainf_local_xi_order p C v O hv ε hε1
-  haveI := hdom
+  have := hdom
   have hμ : Sandwich.mu ε ≠ 0 := by
     rw [← xi_mul_nu]
     exact mul_ne_zero hξ fun h0 => hν (by rw [h0, map_zero])

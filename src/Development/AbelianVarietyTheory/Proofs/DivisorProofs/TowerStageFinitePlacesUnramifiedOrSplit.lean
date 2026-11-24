@@ -118,7 +118,7 @@ private theorem levelLe_one_of_unrAt {L : Type} [Field L] [NumberField L] {χ : 
 private theorem natCast_mem_of_card {E : Type} [Field E] [NumberField E] {P : HeightOneSpectrum (𝓞 E)} {ℓ : ℕ}
     (hℓ : ℓ.Prime) (h : Nat.card (𝓞 E ⧸ P.asIdeal) = ℓ) : (ℓ : 𝓞 E) ∈ P.asIdeal := by
   have : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (h ▸ hℓ.ne_zero)
-  letI := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
+  let := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
   have h0 : ((Fintype.card (𝓞 E ⧸ P.asIdeal) : ℕ) : 𝓞 E ⧸ P.asIdeal) = 0 := Nat.cast_card_eq_zero _
   rw [← Nat.card_eq_fintype_card, h] at h0
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]

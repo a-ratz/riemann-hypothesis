@@ -110,7 +110,7 @@ theorem exists_prod_norm (e : (A × B) ≃ₜ* P) (μ : Measure P) (m : Measure 
 theorem inv_of_prod (e : (A × B) ≃ₜ* P) (μ : Measure P) (m : Measure B) [μ.IsHaarMeasure] [m.IsHaarMeasure]
     [m.IsInvInvariant] (hA : ∀ μ' : Measure A, μ'.IsHaarMeasure → μ'.IsInvInvariant) : μ.IsInvInvariant := by
   obtain ⟨μ', h, hμ⟩ := exists_prod e μ m
-  haveI := hA μ' h
+  have := hA μ' h
   have h1 : (μ'.prod m).map Inv.inv = μ'.prod m := by
     have := Measure.map_prod_map μ' m (measurable_inv (G := A)) (measurable_inv (G := B))
     rw [Measure.map_inv_eq_self, Measure.map_inv_eq_self] at this
@@ -162,8 +162,8 @@ theorem side_abs {A B P : Type} [Group A] [TopologicalSpace A] [Group B] [Topolo
     ∃ (μ' : Measure A) (ρ' : Measure RA) (p : Measure (RA.prod RB)), μ'.IsHaarMeasure ∧ ρ'.IsHaarMeasure ∧ μ' UA = 1 ∧
       ρ' {x | x.1 ∈ UA} = 1 ∧ p.map (Subgroup.prodEquiv RA RB) = ρ'.prod s ∧
       ∀ (f : P → ℂ) (z : ℂ), IsQuotIntL1 p (μ'.prod m) (fun x => f (e x)) z → IsQuotIntL1 ρ μ f z := by
-  haveI := cA.locallyCompactSpace
-  haveI := cB.locallyCompactSpace
+  have := cA.locallyCompactSpace
+  have := cB.locallyCompactSpace
   obtain ⟨μ', a1, a2, a3⟩ := exists_prod_norm e μ m hU h1 h3
   obtain ⟨ρ', b1, b2, b3⟩ := exists_prod_norm (resEquiv e hm) ρ s (UA := {x | x.1 ∈ UA}) (fun a b => hU a.1 b.1) h2 h4
   let pe := prodMeas RA RB
@@ -250,8 +250,8 @@ theorem off_of_not {P' : Pl D → Prop} (hw : ¬ P' w) {x : GA D V} (hx : x ∈ 
 theorem IsLocGrp.exists_equiv (h : IsLocGrp V w gl) {P P' : Pl D → Prop} (hP : ∀ v, P v ↔ w = v ∨ P' v) (hw : ¬ P' w) :
     ∃ e : (grpAt V P' × GL Y k) ≃ₜ* grpAt V P, ∀ x, (e x : GA D V) = x.1.1 * gl x.2 := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := (GlobalTheory.FinPl.KOpen.isClosed_grpAt V P).locallyCompactSpace
-  haveI := (GlobalTheory.FinPl.KOpen.isClosed_grpAt V P').locallyCompactSpace
+  have := (GlobalTheory.FinPl.KOpen.isClosed_grpAt V P).locallyCompactSpace
+  have := (GlobalTheory.FinPl.KOpen.isClosed_grpAt V P').locallyCompactSpace
   let f : (grpAt V P' × GL Y k) →* grpAt V P :=
     { toFun := fun x => ⟨x.1.1 * gl x.2, mul_mem (grpAt_mono (fun p hp => (hP p).2 (Or.inr hp)) x.1.2)
         (grpAt_mono (fun p hp => (hP p).2 (Or.inl hp.symm)) (h.2.1 x.2))⟩
@@ -260,7 +260,7 @@ theorem IsLocGrp.exists_equiv (h : IsLocGrp V w gl) {P P' : Pl D → Prop} (hP :
         simp only [Prod.fst_mul, Prod.snd_mul, Subgroup.coe_mul, map_mul, mul_assoc]
         rw [← mul_assoc (gl x.2), h.2.2.2 _ _ (off_of_not hw y.1.2), mul_assoc]) }
   have hc : Continuous f :=
-    ((continuous_subtype_val.comp continuous_fst).mul (h.1.comp continuous_snd)).subtype_mk _
+    ((continuous_subtypeVal.comp continuous_fst).mul (h.1.comp continuous_snd)).subtype_mk _
   have hs : Function.Surjective f := fun y => by
     obtain ⟨g, hg, -⟩ := h.2.2.1 y.1
     refine ⟨(⟨y.1 * (gl g)⁻¹, grpAt_of_off (fun v hv => (hP v).1 hv) (mul_mem y.2 (inv_mem
@@ -316,8 +316,8 @@ theorem IsLocSub.mul_mem_iff (h : IsLocGrp V w gl) (hR : IsLocSub w gl R R₀) {
 
 theorem exists_haar_sub (hc : IsClosed (R₀ : Set (GL Y k))) :
     ∃ s : Measure R₀, s.IsHaarMeasure ∧ s {x | x.1 ∈ KO k Y} = 1 := by
-  haveI : BorelSpace (GL Y k) := GlobalTheory.SplitFlip.borel_GL
-  have ho : IsOpen {x : R₀ | x.1 ∈ KO k Y} := GlobalTheory.SplitFlip.isOpen_KO.preimage continuous_subtype_val
+  have : BorelSpace (GL Y k) := GlobalTheory.SplitFlip.borel_GL
+  have ho : IsOpen {x : R₀ | x.1 ∈ KO k Y} := GlobalTheory.SplitFlip.isOpen_KO.preimage continuous_subtypeVal
   have hk : IsCompact {x : R₀ | x.1 ∈ KO k Y} := GlobalTheory.CollapseFactor.isCompact_setOf_val GlobalTheory.SplitFlip.isCompact_KO hc
   let K : TopologicalSpace.PositiveCompacts R₀ := ⟨⟨_, hk⟩, ⟨1, by rw [ho.interior_eq]; exact (KO k Y).one_mem⟩⟩
   exact ⟨Measure.haarMeasure K, inferInstance, Measure.haarMeasure_self (K₀ := K)⟩
@@ -326,17 +326,17 @@ theorem inv_step (h : IsLocGrp V w gl) (hR : IsLocSub w gl R R₀) {P P' : Pl D 
     (hw : ¬ P' w) (ih : ∀ ρ : Measure (R.subgroupOf (grpAt V P')), ρ.IsHaarMeasure → ρ.IsInvInvariant)
     (ρ : Measure (R.subgroupOf (grpAt V P))) (hρ : ρ.IsHaarMeasure) : ρ.IsInvInvariant := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := (GlobalTheory.FinPl.KOpen.isClosed_grpAt V P').locallyCompactSpace
-  haveI : BorelSpace (GL Y k) := GlobalTheory.SplitFlip.borel_GL
-  have c1 : IsClosed ((R.subgroupOf (grpAt V P') : Subgroup _) : Set (grpAt V P')) := hR.1.preimage continuous_subtype_val
-  haveI := c1.locallyCompactSpace
-  haveI := (hR.closed h).locallyCompactSpace
+  have := (GlobalTheory.FinPl.KOpen.isClosed_grpAt V P').locallyCompactSpace
+  have : BorelSpace (GL Y k) := GlobalTheory.SplitFlip.borel_GL
+  have c1 : IsClosed ((R.subgroupOf (grpAt V P') : Subgroup _) : Set (grpAt V P')) := hR.1.preimage continuous_subtypeVal
+  have := c1.locallyCompactSpace
+  have := (hR.closed h).locallyCompactSpace
   obtain ⟨e, he⟩ := h.exists_equiv hP hw
   have hm : ∀ a b, e (a, b) ∈ R.subgroupOf (grpAt V P) ↔ a ∈ R.subgroupOf (grpAt V P') ∧ b ∈ R₀ := fun a b => by
     rw [Subgroup.mem_subgroupOf, Subgroup.mem_subgroupOf, he]
     exact hR.mul_mem_iff h (off_of_not hw a.2) b
   obtain ⟨s, hs, hs1⟩ := exists_haar_sub (hR.closed h)
-  haveI := hR.2.2.2 s hs hs1
+  have := hR.2.2.2 s hs hs1
   exact inv_of_prod (resEquiv e hm) ρ s ih
 
 theorem inv_base {P : Pl D → Prop} (hP : ∀ v, ¬ P v) (ρ : Measure (R.subgroupOf (grpAt V P))) : ρ.IsInvInvariant := by
@@ -356,11 +356,11 @@ theorem side_step (h : IsLocGrp V w gl) (hR : IsLocSub w gl R R₀) {P P' : Pl D
       (∀ x, (e x : GA D V) = x.1.1 * gl x.2) ∧
       ∀ (f : grpAt V P → ℂ) (z : ℂ), IsQuotIntL1 p (μ'.prod m) (fun x => f (e x)) z → IsQuotIntL1 ρ μ f z := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := (GlobalTheory.FinPl.KOpen.isClosed_grpAt V P').locallyCompactSpace
-  haveI : BorelSpace (GL Y k) := GlobalTheory.SplitFlip.borel_GL
-  have c1 : IsClosed ((R.subgroupOf (grpAt V P') : Subgroup _) : Set (grpAt V P')) := hR.1.preimage continuous_subtype_val
-  haveI := c1.locallyCompactSpace
-  haveI := (hR.closed h).locallyCompactSpace
+  have := (GlobalTheory.FinPl.KOpen.isClosed_grpAt V P').locallyCompactSpace
+  have : BorelSpace (GL Y k) := GlobalTheory.SplitFlip.borel_GL
+  have c1 : IsClosed ((R.subgroupOf (grpAt V P') : Subgroup _) : Set (grpAt V P')) := hR.1.preimage continuous_subtypeVal
+  have := c1.locallyCompactSpace
+  have := (hR.closed h).locallyCompactSpace
   obtain ⟨e, he⟩ := h.exists_equiv hP hw
   have hm : ∀ a b, e (a, b) ∈ R.subgroupOf (grpAt V P) ↔ a ∈ R.subgroupOf (grpAt V P') ∧ b ∈ R₀ := fun a b => by
     rw [Subgroup.mem_subgroupOf, Subgroup.mem_subgroupOf, he]
@@ -447,10 +447,10 @@ theorem reduce : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (S : D
     side_step (loc₂ (Q 0)) (sub₂ (Q 0)) (places_succ Q) (not_places h) (fun x => ∀ i, IntAt (Q i).q.v (Q i).gl₂ x)
       (fun x => ∀ i : Fin r, IntAt (Q i.succ).q.v (Q i.succ).gl₂ x) (int₂ h) μ₂ ρ₂ a3 a4 a7 a8
   obtain ⟨i₁, i₂⟩ := inv_places r (fun i => Q i.succ) (h.comp (Fin.succ_injective _))
-  haveI := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D S.J.W).1
-  haveI := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D S.B'.V).1
+  have := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D S.J.W).1
+  have := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D S.B'.V).1
   refine ⟨(GlobalTheory.FinPl.KOpen.isClosed_grpAt _ _).locallyCompactSpace, (GlobalTheory.FinPl.KOpen.isClosed_grpAt _ _).locallyCompactSpace,
-    (sub₁ (Q 0)).1.preimage continuous_subtype_val, (sub₂ (Q 0)).1.preimage continuous_subtype_val,
+    (sub₁ (Q 0)).1.preimage continuous_subtypeVal, (sub₂ (Q 0)).1.preimage continuous_subtypeVal,
     (sub₁ (Q 0)).closed (loc₁ (Q 0)), (sub₂ (Q 0)).closed (loc₂ (Q 0)), μ₁', ρ₁', μ₂', ρ₂', m₁, s₁, m₂, s₂, p₁, p₂,
     ⟨b1, b2, c1, c2, b3, b4, c3, c4⟩, ⟨b5, b6, b7, b8, c5, c6, c7, c8⟩, i₁ _ b2, i₂ _ c2, b9, c9, b10, c10, ?_⟩
   rintro F z ⟨f₁, hf, hf'⟩

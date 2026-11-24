@@ -195,9 +195,9 @@ theorem exists_unimod_through (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodul
     ∃ B : Submodule (𝓞 K) V, Submodule.IsFullLattice K B ∧ Formalism.HermitianLatticesTheory.IsIntegralLat h B ∧
       Formalism.HermitianLatticesTheory.IsUnimodularAt h P B ∧ x₀ ∈ B := by
   classical
-  letI : P.IsPrime := hP
+  let : P.IsPrime := hP
   have hfull : Submodule.IsFullLattice K L := by
-    letI : Submodule.IsLattice K L := hL
+    let : Submodule.IsLattice K L := hL
     refine ⟨?_⟩
     by_contra hspan
     obtain ⟨φ, hφ₀, hφ⟩ := Submodule.exists_le_ker_of_lt_top _ (lt_top_iff_ne_top.mpr hspan)
@@ -217,7 +217,7 @@ theorem exists_unimod_through (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodul
           congr 1
           rw [← hs.eq (b i) (bs j), hbs]
           split_ifs <;> simp
-        simp only [hk, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        simp only [hk, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       intro v
       rw [key]
     have hμd : μ ∈ Formalism.HermitianLatticesTheory.dualAt h P L := by
@@ -271,7 +271,7 @@ theorem exists_unimod_through (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodul
   set B : Submodule (𝓞 K) V := (L ⊓ Formalism.HermitianLatticesTheory.dual h X) ⊔ X with hB
   have hBfg : B.FG := (hL.fg.of_le inf_le_left).sup (Submodule.fg_span_singleton x₀)
   have lat2 : Submodule.IsFullLattice K (Formalism.HermitianLatticesTheory.dual h L ⊔ X) := by
-    letI := (DL L hfull).1
+    let := (DL L hfull).1
     exact Submodule.IsFullLattice.of_le_of_fg K le_sup_left
       ((DL L hfull).1.fg.sup (Submodule.fg_span_singleton x₀))
   have e1 : L ⊓ Formalism.HermitianLatticesTheory.dual h X = Formalism.HermitianLatticesTheory.dual h (Formalism.HermitianLatticesTheory.dual h L ⊔ X) := by

@@ -82,14 +82,14 @@ theorem nonempty_equiv_of_jhMult_eq_one :
     GlobalTheory.JHMult.step_iff.mp
       (hall _ (subQuot P Q) (GlobalTheory.SmGL.isIrreducible_subQuot h) (isSubquotient_subQuot_self P Q))
   have hwf : WellFounded ((· < ·) : Subrepresentation J → Subrepresentation J → Prop) := by
-    haveI : IsArtinian (MonoidAlgebra ℂ G) J.asModule :=
+    have : IsArtinian (MonoidAlgebra ℂ G) J.asModule :=
       (isFiniteLength_iff_isNoetherian_isArtinian.mp
         (show IsFiniteLength (MonoidAlgebra ℂ G) J.asModule from hfin)).2
     exact (Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := J)).toOrderEmbedding.ltEmbedding.wellFounded
       wellFounded_lt
   have hne : (⊥ : Subrepresentation J) ≠ ⊤ := by
     intro h
-    haveI : Subsingleton V := ⟨fun a b => by
+    have : Subsingleton V := ⟨fun a b => by
       have ha : a ∈ (⊤ : Subrepresentation J).toSubmodule := Submodule.mem_top
       have hb : b ∈ (⊤ : Subrepresentation J).toSubmodule := Submodule.mem_top
       rw [← h] at ha hb

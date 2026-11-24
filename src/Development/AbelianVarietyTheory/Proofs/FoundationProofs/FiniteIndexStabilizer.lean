@@ -54,12 +54,12 @@ theorem cycMod_Ine_surjective (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [A
     Function.Surjective ((cycMod ℚ Ω l n).comp (Ine (F := ℚ) A).subtype) := by
   intro u
   rcases Nat.eq_zero_or_pos n with rfl | hn
-  · haveI : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
+  · have : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
     exact ⟨1, Subsingleton.elim _ _⟩
-  haveI : Fact (1 < l ^ n) := ⟨Nat.one_lt_pow hn.ne' (Fact.out : l.Prime).one_lt⟩
+  have : Fact (1 < l ^ n) := ⟨Nat.one_lt_pow hn.ne' (Fact.out : l.Prime).one_lt⟩
   have hs : Function.Surjective (PadicInt.toZModPow n : ℤ_[l] →+* ZMod (l ^ n)) :=
     ZMod.ringHom_surjective _
-  haveI := IsLocalHom.of_surjective _ hs
+  have := IsLocalHom.of_surjective _ hs
   obtain ⟨v, hv⟩ := IsLocalRing.surjective_units_map_of_local_ringHom _ hs this u
   obtain ⟨σ, hσ, hσv⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω l A hA v
   refine ⟨⟨σ, hσ⟩, ?_⟩

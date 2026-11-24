@@ -91,7 +91,7 @@ private theorem nsa_lte (s n : ℕ) (hs : s ≠ 0) (hn : Odd n) :
       rw [emultiplicity_pow_sub_pow_of_prime hpz hxy hx (by exact_mod_cast hnd), hs',
         Nat.factorization_eq_zero_of_not_dvd hnd, add_zero]
     · rw [Int.emultiplicity_pow_sub_pow hp (hp.odd_of_ne_two hl) hxy hx n, hs',
-        Nat.factorization_def n hp, Nat.cast_add, padicValNat_eq_emultiplicity hn0]
+        Nat.factorization_def n hp, Nat.cast_add, multiplicity_eq_emultiplicity hn0]
   rw [one_pow] at key
   intro h
   have := le_emultiplicity_of_pow_dvd h
@@ -114,7 +114,7 @@ theorem exists_unit_not_dvd (C n : ℕ) (hC : C ≠ 0) (h2 : 2 ∣ C) (hn : Odd 
       ¬ (l : ℤ_[l]) ^ (C.factorization l + (if l ∣ C then n.factorization l else 0) + 1) ∣ (u : ℤ_[l]) ^ n - 1 := by
   have hp : l.Prime := Fact.out
   by_cases hlC : l ∣ C
-  · rw [if_pos hlC]
+  · rw [ite_eq_left hlC]
     have hs : C.factorization l ≠ 0 := (hp.factorization_pos_of_dvd hC hlC).ne'
     generalize C.factorization l = s at hs ⊢
     have hU : IsUnit (1 + (l : ℤ_[l]) ^ s) := by
@@ -124,7 +124,7 @@ theorem exists_unit_not_dvd (C n : ℕ) (hC : C ≠ 0) (h2 : 2 ∣ C) (hn : Odd 
     refine ⟨hU.unit, by simp, fun h => nsa_lte l s n hs hn ?_⟩
     rw [← PadicInt.pow_p_dvd_int_iff]
     simpa using h
-  · rw [if_neg hlC, Nat.factorization_eq_zero_of_not_dvd hlC]
+  · rw [ite_eq_right hlC, Nat.factorization_eq_zero_of_not_dvd hlC]
     refine ⟨-1, by simp, fun h => hlC ?_⟩
     have e : ((-1 : ℤ_[l]ˣ) : ℤ_[l]) ^ n - 1 = -((2 : ℕ) : ℤ_[l]) := by
       simp only [Units.val_neg, Units.val_one, hn.neg_one_pow]

@@ -469,11 +469,11 @@ theorem exists_finite_factor {F R K L : Type} [Field F] [CommRing R] [Field K] [
     ∃ (M : Type) (_ : Field M) (_ : Algebra F M) (i : K →ₐ[F] M) (j : M →ₐ[F] L) (χ : R →ₐ[F] M),
       j.comp i = φ ∧ i.toRingHom.Finite ∧ j.comp χ = ψ := by
   classical
-  letI : Algebra K L := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower F K L := IsScalarTower.of_algebraMap_eq fun a => (φ.commutes a).symm
+  let : Algebra K L := φ.toRingHom.toAlgebra
+  have : IsScalarTower F K L := IsScalarTower.of_algebraMap_eq fun a => (φ.commutes a).symm
   obtain ⟨s, hs⟩ := (inferInstance : Algebra.FiniteType F R).out
   let M : IntermediateField K L := IntermediateField.adjoin K ((s.image ψ : Finset L) : Set L)
-  haveI hM : FiniteDimensional K M :=
+  have hM : FiniteDimensional K M :=
     IntermediateField.finiteDimensional_adjoin fun x _ => hφ x
   have hmem : ∀ r : R, ψ r ∈ M.toSubalgebra.restrictScalars F := by
     intro r
@@ -492,7 +492,7 @@ theorem frPt_descends_finite :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K L : Type) [Field K] [Field L] [Algebra c.F K] [Algebra c.F L] (φ : K →ₐ[c.F] L) (z : FrPt Xo c L), φ.toRingHom.IsIntegral → ∃ (M : Type) (_ : Field M) (_ : Algebra c.F M) (i : K →ₐ[c.F] M) (j : M →ₐ[c.F] L) (z₁ : FrPt Xo c M), j.comp i = φ ∧ i.toRingHom.Finite ∧ FrMap j z₁ z := by
   intro E _ _ _ H Dw l Xo c K L _ _ _ _ φ z hφ
   obtain ⟨p, ψ, u, hu⟩ := GlobalTheory.FlagTan.fromTest_of_isLocalRing z
-  haveI : Algebra.FiniteType c.F p.R := inferInstance
+  have : Algebra.FiniteType c.F p.R := inferInstance
   obtain ⟨M, _, _, i, j, χ, h1, h2, h3⟩ := exists_finite_factor φ hφ ψ
   obtain ⟨z₁, hz⟩ := GlobalTheory.FlagTan.exists_frMap χ u
   exact ⟨M, inferInstance, inferInstance, i, j, z₁, h1, h2,
@@ -1163,9 +1163,9 @@ open GlobalTheory.FlagTan GlobalTheory.IndefiniteRowSideFullHecke.UnusedSlot39
 
 theorem exists_lift {L L' Ω : Type} [Field L] [Field L'] [Field Ω] [IsAlgClosed Ω] (j : L →+* Ω) (i : L →+* L')
     (hi : i.Finite) : ∃ j' : L' →+* Ω, j'.comp i = j := by
-  letI := j.toAlgebra
-  letI := i.toAlgebra
-  haveI : Module.Finite L L' := hi
+  let := j.toAlgebra
+  let := i.toAlgebra
+  have : Module.Finite L L' := hi
   let τ : L' →ₐ[L] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1234,7 +1234,7 @@ theorem exists_hkOver {K Ω : Type} [Field K] [Field Ω] [IsAlgClosed Ω] [Algeb
     rw [← Category.assoc, TorsionRat.sp_comp, e₃]
   obtain ⟨M, _, i₄, j₄, e₄, f₄, hM⟩ := GlobalTheory.T.fibreIsogenyPair_defined_over_finite_subextension E H Dw l Xo L₃ Ω j₃ (spMap a ≫ y₁.x) (spMap a ≫ z₁.x) w.x z.x g g'
     hint (hw₁.1.trans (sq _)) (hz₁.1.trans (sq _)) h.1.1 h.1.2.1
-  letI : Algebra c.F M := ((i₄.comp a).comp (algebraMap c.F L₁)).toAlgebra
+  let : Algebra c.F M := ((i₄.comp a).comp (algebraMap c.F L₁)).toAlgebra
   let b : L₁ →ₐ[c.F] M := ⟨i₄.comp a, fun _ => rfl⟩
   have eb : ∀ u, j₄ (b u) = j₁ u := fun u =>
     (DFunLike.congr_fun e₄ (a u)).trans (DFunLike.congr_fun e₃ u)
@@ -1287,7 +1287,7 @@ theorem theta_low (hp : IsUnit (p : T.V)) (y y' : IntFr Xo c T io)
     letI := io.toAlgebra
     ∀ (z : FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), HkOver p y.1 z → FrBor t y'.1 z →
       (t none : T.Fr) ∈ Set.range (algebraMap T.V T.Fr) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro z t h hb
   obtain ⟨u, tan, eig, basis, s, gen, rfl, hs⟩ := frBor_reduce hb
   obtain ⟨-, -, f, f', hP, -, hT⟩ := h
@@ -1304,7 +1304,7 @@ theorem theta_high (hpp : p.Prime) (hp : IsUnit (p : T.V)) (y y' : IntFr Xo c T 
     letI := io.toAlgebra
     ∀ (z : FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), HkOver p y.1 z → FrBor t y'.1 z →
       vV T.V (t none : T.Fr) ≤ 0 := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro z t h hb
   obtain ⟨u, tan, eig, basis, s, gen, rfl, hs⟩ := frBor_reduce hb
   obtain ⟨-, hR, f, f', hP, -, hT⟩ := h
@@ -1347,28 +1347,28 @@ theorem exists_intFr_up {T' : CDVR} {io' : c.F →+* T'.Fr} {e : ℕ} (he : 0 < 
     letI := io.toAlgebra; letI := io'.toAlgebra
     ∀ (φ : T.Fr →ₐ[c.F] T'.Fr), (∀ a : T.Fr, a ≠ 0 → vV T'.V (φ a) = (e : ℤ) * vV T.V a) →
       ∀ w : IntFr Xo c T io, ∃ w' : IntFr Xo c T' io', FrMap φ w.1 w'.1 := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have key : ∀ (i : T.Fr →+* T'.Fr), io' = i.comp io → letI := io'.toAlgebra
       ∀ (φ : T.Fr →ₐ[c.F] T'.Fr), φ.toRingHom = i → (∀ a : T.Fr, a ≠ 0 → vV T'.V (i a) = (e : ℤ) * vV T.V a) →
       ∀ w : IntFr Xo c T io, ∃ w' : IntFr Xo c T' io', FrMap φ w.1 w'.1 := by
     rintro i rfl φ hφ hv w
     obtain ⟨w', ψ, hψ, hm⟩ := GlobalTheory.IntFrBaseChange.exists_intFr_baseChange E H Dw l Xo c T T' io w i e he hv
-    letI := (i.comp io).toAlgebra
-    obtain rfl : ψ = φ := AlgHom.coe_ringHom_injective (hψ.trans hφ.symm)
+    let := (i.comp io).toAlgebra
+    obtain rfl : ψ = φ := AlgHom.toRingHom_injective (hψ.trans hφ.symm)
     exact ⟨w', hm⟩
-  letI := io'.toAlgebra
+  let := io'.toAlgebra
   exact fun φ hφ => key φ.toRingHom (RingHom.ext fun a => (φ.commutes a).symm) φ rfl hφ
 
 theorem theta_unit (hpp : p.Prime) (hp : IsUnit (p : T.V)) (hT : T.FinRes) (y y' : IntFr Xo c T io) :
     letI := io.toAlgebra
     ∀ (z : FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), HkOver p y.1 z → FrBor t y'.1 z →
       vV T.V (t none : T.Fr) = 0 := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro z t h hb
   apply le_antisymm
   · obtain ⟨T', io', y₁', e, -, he, hU, φ, hφ, hm'⟩ :=
       GlobalTheory.IntegralPull.exists_ext_all_models_uniformised E H Dw l Xo c T io y' hT
-    letI := io'.toAlgebra
+    let := io'.toAlgebra
     obtain ⟨y₁, hm⟩ := exists_intFr_up he φ hφ y
     obtain ⟨z₁, hz⟩ := exists_frMap φ z
     have := theta_high hpp (isUnit_natCast_up hp φ.toRingHom hφ) y₁ y₁' hU z₁ _ (h.up φ hpp.pos hm hz)
@@ -1378,7 +1378,7 @@ theorem theta_unit (hpp : p.Prime) (hp : IsUnit (p : T.V)) (hT : T.FinRes) (y y'
     exact nonpos_of_mul_nonpos_right e₁ (by exact_mod_cast he)
   · obtain ⟨T', io', y₁, e, -, he, hU, φ, hφ, hm⟩ :=
       GlobalTheory.IntegralPull.exists_ext_all_models_uniformised E H Dw l Xo c T io y hT
-    letI := io'.toAlgebra
+    let := io'.toAlgebra
     obtain ⟨y₁', hm'⟩ := exists_intFr_up he φ hφ y'
     obtain ⟨z₁, hz⟩ := exists_frMap φ z
     obtain ⟨b, hb'⟩ := theta_low (isUnit_natCast_up hp φ.toRingHom hφ) y₁ y₁' hU z₁ _ (h.up φ hpp.pos hm hz)
@@ -1408,7 +1408,7 @@ theorem exists_frBor_unit (hpp : p.Prime) (hp : IsUnit (p : T.V)) (hT : T.FinRes
     ∀ z : FrPt Xo c T.Fr, z.x = y₀.1.x → HkOver p y.1 z →
       ∃ (y' : IntFr Xo c T io) (u : Ix Dw → T.Vˣ), (GlobalTheory.GoodPts.Good y → GlobalTheory.GoodPts.Good y') ∧
         FrBor (fun a => Units.map (algebraMap T.V T.Fr).toMonoidHom (u a)) y'.1 z := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro z hx h
   obtain ⟨x, xo, u, tan, eig, basis, s, gen⟩ := z
   dsimp only at hx
@@ -1448,19 +1448,19 @@ theorem heckeFrameInt (cls : PtClass Xo c)
     (hcls : ∀ T io y T' io' y', cls T io y → (GlobalTheory.GoodPts.Good y → GlobalTheory.GoodPts.Good y') → cls T' io' y') :
     HeckeFrameInt Xo c cls := by
   intro la P p n hP hla T io e ho y hy hc Ω _ _ _
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro k hk w hw C z hz
   have hpp : p.Prime := hP.2.2.1
   have hk' : k.toRingHom.IsIntegral := by
-    letI := k.toRingHom.toAlgebra
-    haveI := hk
+    let := k.toRingHom.toAlgebra
+    have := hk
     exact fun a => Algebra.IsIntegral.isIntegral (R := T.Fr) a
   obtain ⟨L, _, _, i₁, j₁, y₁, z₁, e₁, f₁, hy₁, hz₁, h₁⟩ :=
     exists_hkOver k hk' hpp.pos hw (GlobalTheory.T.exists_linear_heckeIsogeny_inverse_up_to_p_sq E H Dw l Xo c P p n hP Ω w C z hz)
   obtain ⟨T₁, iT, r₁, ψ, hr₁, hv₁, hψ, hT₁⟩ : ∃ (T₁ : CDVR) (iT : T.Fr →+* T₁.Fr) (r : ℕ) (ψ : L ≃+* T₁.Fr), 0 < r ∧
       (∀ a : T.Fr, vV T₁.V (iT a) = (r : ℤ) * vV T.V a) ∧ (∀ a, ψ (i₁ a) = iT a) ∧ T₁.FinRes := by
-    letI := i₁.toRingHom.toAlgebra
-    haveI : FiniteDimensional T.Fr L := f₁
+    let := i₁.toRingHom.toAlgebra
+    have : FiniteDimensional T.Fr L := f₁
     obtain ⟨T₁, iT, r, ψ, -, a, b, d, -, g⟩ := GlobalTheory.PlaceExtField.exists_cdvr_finite_extension T L
     exact ⟨T₁, iT, r, ψ, a, b, d, g hy⟩
   obtain ⟨T₂, i₂, r₂, hr₂, hv₂, hT₂, y₀, hx₀⟩ := intFrExt Xo c T₁ (iT.comp io) hT₁ (spMap ψ.toRingHom ≫ z₁.x) (by
@@ -1474,7 +1474,7 @@ theorem heckeFrameInt (cls : PtClass Xo c)
   have hr : 0 < r₂ * r₁ := Nat.mul_pos hr₂ hr₁
   obtain ⟨j, hj⟩ := exists_lift (j₁.toRingHom.comp ψ.symm.toRingHom) i₂ (GlobalTheory.T.ringHom_finite_and_isIntegral_of_valuation_scaled T₁ T₂ i₂ r₂ hr₂ hv₂ hT₂).1
   have hj' : ∀ a : L, j (i₂ (ψ a)) = j₁ a := fun a => by simpa using DFunLike.congr_fun hj (ψ a)
-  letI := (i.comp io).toAlgebra
+  let := (i.comp io).toAlgebra
   let b : L →ₐ[c.F] T₂.Fr := ⟨i₂.comp ψ.toRingHom, fun a =>
     congrArg i₂ ((congrArg ψ (i₁.commutes a).symm).trans (hψ _))⟩
   let φ : T.Fr →ₐ[c.F] T₂.Fr := ⟨i, fun _ => rfl⟩
@@ -1495,12 +1495,12 @@ theorem heckeFrameInt (cls : PtClass Xo c)
 
 theorem heckeValueInt (cls : PtClass Xo c) (h : HeckeFrameInt Xo c cls) : HeckeValueInt Xo c cls := by
   intro la P p n hP hla T io e ho y hy hc Ω _ _ _
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro k hk w hw C z hz
   refine ⟨fromTest_of_isLocalRing z, fun a m f hf hv => ?_⟩
   obtain ⟨T', i, ⟨-, r, hr, hi⟩, j, hj, y', hy', -, w', u, hw', hb⟩ :=
     h la P p n hP hla T io e ho y hy hc Ω k hk w hw C z hz
-  letI := (i.comp io).toAlgebra
+  let := (i.comp io).toAlgebra
   have h0 : 0 ≤ nval T'.V (r * e) (evI y' f) := hv _ ⟨PtV.mk la (ho.bc i hr hi) y' hy' () trivial, rfl⟩
   obtain ⟨b, hb'⟩ : evI y' f ∈ Set.range (algebraMap T'.V T'.Fr) := by
     by_cases hx : evI y' f = 0

@@ -164,7 +164,7 @@ theorem lim_mem {d : ℕ} {I : Fin 2 → Type} [∀ g, Fintype (I g)] {κ : Type
     (hx : ∀ k, x k ∈ X.TySet V g) (hlim : VLim V x x') : x' ∈ X.TySet V g := by
   classical
   unfold RawChart.TySet at hx ⊢
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   choose γk lamk hγk hlamk hA hB using hx
   obtain ⟨T, hTdef⟩ : ∃ T : ℕ → κ → PowerSeries C,
       T = fun k i => ∑ c : I g, X.u g c i • tyS V.l (fun s => x k s (Sum.inl c)) := ⟨_, rfl⟩

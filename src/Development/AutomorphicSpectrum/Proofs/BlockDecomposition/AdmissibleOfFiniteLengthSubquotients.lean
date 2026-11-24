@@ -182,9 +182,9 @@ private theorem isAdmissible_of_hasFiniteLength_lemma_4 [TopologicalSpace G] (K 
       exact ⟨m, by rw [hp]; exact hm⟩
     have hNsub : IsSubquotient (Representation.ofModule' (k := ℂ) (G := G) N)
         (Representation.ofModule' (k := ℂ) (G := G) M) := IsSubquotient.of_injective i hinj
-    haveI : FiniteDimensional ℂ (fixed (Representation.ofModule' (k := ℂ) (G := G) N) K) :=
+    have : FiniteDimensional ℂ (fixed (Representation.ofModule' (k := ℂ) (G := G) N) K) :=
       ih (fun W _ _ σ hσ hirr => hsub W σ (hσ.trans hNsub) hirr) hKo hKc
-    haveI : FiniteDimensional ℂ (fixed (Representation.ofModule' (k := ℂ) (G := G) (M ⧸ N)) K) := by
+    have : FiniteDimensional ℂ (fixed (Representation.ofModule' (k := ℂ) (G := G) (M ⧸ N)) K) := by
       have hirr : (Representation.ofModule' (k := ℂ) (G := G) (M ⧸ N)).IsIrreducible :=
         isAdmissible_of_hasFiniteLength_lemma_5
       have hadm := hsub _ _ (IsSubquotient.of_surjective p hsurj) hirr
@@ -196,8 +196,8 @@ theorem isAdmissible_of_hasFiniteLength : ∀ {G V : Type} [Group G] [Topologica
   intro G V _ _ _ _ _ ρ hsm hfl hirr
   unfold IsAdmissible
   refine ⟨hsm, fun K hKo hKc => ?_⟩
-  letI instA : Module (MonoidAlgebra ℂ G) V := Module.compHom V ρ.asAlgebraHom.toRingHom
-  haveI instT : IsScalarTower ℂ (MonoidAlgebra ℂ G) V := ⟨fun c a v => by
+  let instA : Module (MonoidAlgebra ℂ G) V := Module.compHom V ρ.asAlgebraHom.toRingHom
+  have instT : IsScalarTower ℂ (MonoidAlgebra ℂ G) V := ⟨fun c a v => by
     show ρ.asAlgebraHom (c • a) v = c • ρ.asAlgebraHom a v
     rw [map_smul]
     rfl⟩

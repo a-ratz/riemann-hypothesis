@@ -84,21 +84,21 @@ theorem isIntegral_quotient_of_isMaximal_of_comap_eq {S : Type*} [CommRing S] [A
     [Algebra.FiniteType P S] (𝔑 : Ideal S) [𝔑.IsMaximal]
     (h : 𝔑.comap (algebraMap P S) = maximalIdeal P) : Algebra.IsIntegral P (S ⧸ 𝔑) := by
   classical
-  letI : Field (P ⧸ maximalIdeal P) := Ideal.Quotient.field _
-  letI : Field (S ⧸ 𝔑) := Ideal.Quotient.field _
-  letI : Algebra (P ⧸ maximalIdeal P) (S ⧸ 𝔑) :=
+  let : Field (P ⧸ maximalIdeal P) := Ideal.Quotient.field _
+  let : Field (S ⧸ 𝔑) := Ideal.Quotient.field _
+  let : Algebra (P ⧸ maximalIdeal P) (S ⧸ 𝔑) :=
     (Ideal.quotientMap 𝔑 (algebraMap P S) h.ge).toAlgebra
-  haveI : IsScalarTower P (P ⧸ maximalIdeal P) (S ⧸ 𝔑) := by
+  have : IsScalarTower P (P ⧸ maximalIdeal P) (S ⧸ 𝔑) := by
     first
     | exact IsScalarTower.of_algebraMap_eq (fun p => rfl)
-  haveI : Algebra.FiniteType P (S ⧸ 𝔑) := by
+  have : Algebra.FiniteType P (S ⧸ 𝔑) := by
     first
     | infer_instance
-  haveI : Algebra.FiniteType (P ⧸ maximalIdeal P) (S ⧸ 𝔑) :=
+  have : Algebra.FiniteType (P ⧸ maximalIdeal P) (S ⧸ 𝔑) :=
     Algebra.FiniteType.of_restrictScalars_finiteType P _ _
-  haveI : Module.Finite (P ⧸ maximalIdeal P) (S ⧸ 𝔑) :=
+  have : Module.Finite (P ⧸ maximalIdeal P) (S ⧸ 𝔑) :=
     finite_of_finite_type_of_isJacobsonRing _ _
-  haveI : Algebra.IsIntegral P (P ⧸ maximalIdeal P) := by
+  have : Algebra.IsIntegral P (P ⧸ maximalIdeal P) := by
     first
     | infer_instance
   exact Algebra.IsIntegral.trans (P ⧸ maximalIdeal P)
@@ -107,11 +107,11 @@ theorem isMaximal_comap_of_isMaximal_of_comap_eq {S' S : Type*} [CommRing S'] [C
     [Algebra P S'] [Algebra P S] [Algebra S' S] [IsScalarTower P S' S] [Algebra.FiniteType P S]
     (𝔑 : Ideal S) [𝔑.IsMaximal] (h : 𝔑.comap (algebraMap P S) = maximalIdeal P) :
     (𝔑.comap (algebraMap S' S)).IsMaximal := by
-  haveI := isIntegral_quotient_of_isMaximal_of_comap_eq 𝔑 h
-  haveI : Algebra.IsIntegral S' (S ⧸ 𝔑) := by
+  have := isIntegral_quotient_of_isMaximal_of_comap_eq 𝔑 h
+  have : Algebra.IsIntegral S' (S ⧸ 𝔑) := by
     first
     | exact Algebra.IsIntegral.tower_top P
-  letI : Field (S ⧸ 𝔑) := Ideal.Quotient.field _
+  let : Field (S ⧸ 𝔑) := Ideal.Quotient.field _
   have hbot := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := S') (⊥ : Ideal (S ⧸ 𝔑))
   have heq : (⊥ : Ideal (S ⧸ 𝔑)).comap (algebraMap S' (S ⧸ 𝔑)) = 𝔑.comap (algebraMap S' S) := by
     ext y
@@ -125,7 +125,7 @@ theorem exists_monic_aeval_mem_of_isMaximal {S : Type*} [CommRing S] [Algebra P 
     [Algebra.FiniteType P S] (𝔑 : Ideal S) [𝔑.IsMaximal]
     (h : 𝔑.comap (algebraMap P S) = maximalIdeal P) (x : S) :
     ∃ g : P[X], g.Monic ∧ aeval x g ∈ 𝔑 := by
-  haveI := isIntegral_quotient_of_isMaximal_of_comap_eq 𝔑 h
+  have := isIntegral_quotient_of_isMaximal_of_comap_eq 𝔑 h
   obtain ⟨g, hg, hgx⟩ := Algebra.IsIntegral.isIntegral (R := P) (Ideal.Quotient.mk 𝔑 x)
   refine ⟨g, hg, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem]
@@ -181,7 +181,7 @@ theorem isWeaklyRegular_map_C_append_monic {S : Type*} [CommRing S] {rs : List S
 
 theorem isWeaklyRegular_map_ringEquiv {S T : Type*} [CommRing S] [CommRing T] (e : S ≃+* T)
     {rs : List S} (hrs : IsWeaklyRegular S rs) : IsWeaklyRegular T (rs.map e) := by
-  letI : Algebra S T := e.toRingHom.toAlgebra
+  let : Algebra S T := e.toRingHom.toAlgebra
 
   let l : T ≃ₗ[S] S :=
     { e.symm.toAddEquiv with
@@ -189,7 +189,7 @@ theorem isWeaklyRegular_map_ringEquiv {S T : Type*} [CommRing S] [CommRing T] (e
         change e.symm (algebraMap S T c * t) = c * e.symm t
         rw [RingHom.algebraMap_toAlgebra, map_mul]
         simp }
-  haveI : Module.Flat S T := Module.Flat.of_linearEquiv l
+  have : Module.Flat S T := Module.Flat.of_linearEquiv l
   exact hrs.of_flat
 
 end ReciprocityTheory.CA
@@ -229,10 +229,10 @@ theorem exists_isWeaklyRegular_mvPolynomial {P : Type*} [CommRing P] [IsLocalRin
   | succ N ih =>
     let e : MvPolynomial (Fin (N + 1)) P ≃ₐ[P] Polynomial (MvPolynomial (Fin N) P) :=
       MvPolynomial.finSuccEquiv P N
-    haveI : Algebra.FiniteType P (Polynomial (MvPolynomial (Fin N) P)) :=
+    have : Algebra.FiniteType P (Polynomial (MvPolynomial (Fin N) P)) :=
       Algebra.FiniteType.trans (S := MvPolynomial (Fin N) P) inferInstance inferInstance
     let 𝔑' : Ideal (Polynomial (MvPolynomial (Fin N) P)) := 𝔑.map e.toRingEquiv
-    haveI : 𝔑'.IsMaximal := Ideal.map_isMaximal_of_equiv e.toRingEquiv
+    have : 𝔑'.IsMaximal := Ideal.map_isMaximal_of_equiv e.toRingEquiv
     have hc' : 𝔑'.comap (algebraMap P (Polynomial (MvPolynomial (Fin N) P))) = maximalIdeal P := by
       have hA : algebraMap P (Polynomial (MvPolynomial (Fin N) P)) =
           (e.toRingEquiv : MvPolynomial (Fin (N + 1)) P →+* Polynomial (MvPolynomial (Fin N) P)).comp
@@ -244,7 +244,7 @@ theorem exists_isWeaklyRegular_mvPolynomial {P : Type*} [CommRing P] [IsLocalRin
       rw [Ideal.comap_coe, Ideal.comap_map_of_bijective _ e.toRingEquiv.bijective]
       exact h
     let 𝔐 : Ideal (MvPolynomial (Fin N) P) := 𝔑'.comap (algebraMap (MvPolynomial (Fin N) P) (Polynomial (MvPolynomial (Fin N) P)))
-    haveI : 𝔐.IsMaximal := isMaximal_comap_of_isMaximal_of_comap_eq (S' := MvPolynomial (Fin N) P) 𝔑' hc'
+    have : 𝔐.IsMaximal := isMaximal_comap_of_isMaximal_of_comap_eq (S' := MvPolynomial (Fin N) P) 𝔑' hc'
     have hc'' : 𝔐.comap MvPolynomial.C = maximalIdeal P := by
       show (𝔑'.comap (algebraMap (MvPolynomial (Fin N) P) (Polynomial (MvPolynomial (Fin N) P)))).comap
         (algebraMap P (MvPolynomial (Fin N) P)) = maximalIdeal P
@@ -290,7 +290,7 @@ theorem isCM_localization_mvPolynomial {P : Type*} [CommRing P] [IsLocalRing P] 
     (h : 𝔑.comap MvPolynomial.C = maximalIdeal P) :
     IsCM (Localization.AtPrime 𝔑) ∧ (𝔑.height : WithBot ℕ∞) = ringKrullDim P + N := by
   obtain ⟨hnoeth, n, hdim, rs, hlen, hmem, hreg⟩ := hP
-  haveI := hnoeth
+  have := hnoeth
   obtain ⟨ss, hsslen, hssmem, hssreg⟩ :=
     exists_isWeaklyRegular_mvPolynomial hmem hreg.toIsWeaklyRegular N 𝔑 h
   have hle : ((rs.length + N : ℕ) : ℕ∞) ≤ 𝔑.height := by
@@ -323,7 +323,7 @@ theorem height_eq_add_of_isCM_localization {S : Type*} [CommRing S] (𝔑 𝔔 :
     rw [Set.disjoint_left]
     intro x hx hxQ
     exact hx (hle hxQ)
-  haveI : (𝔔.map (algebraMap S (Localization.AtPrime 𝔑))).IsPrime :=
+  have : (𝔔.map (algebraMap S (Localization.AtPrime 𝔑))).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint 𝔑.primeCompl _ 𝔔 ‹_› hdisj
   have h1 := h.height_add_ringKrullDim_quotient (𝔔.map (algebraMap S (Localization.AtPrime 𝔑)))
   rw [IsLocalization.height_map_of_disjoint 𝔑.primeCompl 𝔔 hdisj,

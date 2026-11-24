@@ -95,7 +95,7 @@ theorem ell_part (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)] (hst : ∀
     letI := io.toAlgebra
     ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹) *
       ∑ i, hv Xo c nab y.1 (N ^ 2) (F i) P) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨A, hsim⟩ := GlobalTheory.T.exists_adapted_similitude_data_at_prime E H n Λ N M ℓ hU hL hp
   have hN : Odd N := hL.1
   have hkN : Odd (A.k * N) := A.odd.mul hN
@@ -173,7 +173,7 @@ theorem ell_part (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)] (hst : ∀
 theorem bound_of_coprime : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ChBound C e ρ w n → ∀ (ℓ : ℕ), ℓ.Prime → ¬ IsUnit (ℓ : T.V) → ∀ (Λ : GenLat E n) (N M : ℕ), Λ.Unimod → Λ.LevOK N M → ∀ P : MvPolynomial (LtN Dw n) c.F, P ∈ harmL c Λ w → ∀ (z : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (tp : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (F : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo (xOf y)))), (∀ i, InZh Xo Λ N (z i)) → GeoInj Xo (xOf y) z → (∀ b, tp b ^ (N ^ 2) = 1) → (∀ i b, IsUUOver Xo.univ.t.G Xo.univ.t.PP N (sOf1 y) (z i b) (tp b) (F i b)) → AllRat Xo (xOf y) (N ^ 2) → (∃ m : ℕ, Nat.Coprime m ℓ ∧ ∀ b, tp b ^ m = 1) → letI := io.toAlgebra; ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹) * ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P) := by
   intro E _ _ _ H Dw l Xo c _ hst T io y C hC nab hnab e ρ w n he hB ℓ hp hl Λ N M hU hL P hP z tp F hz hg
     htp hF hR ⟨m', hm', htm⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨J, J', _, _, a, a', σ, hinj, ha, ⟨m, hm, ham⟩, hσ, -⟩ :=
     GlobalTheory.T.isotropic_group_primary_decomposition E H Dw l Xo T.Fr (xOf y) n Λ N M ℓ hU hL hp z hz hg
   rw [← Equiv.sum_comp σ, Fintype.sum_prod_type_right, Finset.mul_sum]
@@ -193,7 +193,7 @@ open GlobalTheory.PlaceInt.ShortTriv
 theorem bound_of_trivAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ChBound C e ρ w n → ∀ (ℓ : ℕ), ℓ.Prime → ¬ IsUnit (ℓ : T.V) → ∀ (Λ : GenLat E n) (N M : ℕ), Λ.Unimod → Λ.LevOK N M → ∀ P : MvPolynomial (LtN Dw n) c.F, P ∈ harmL c Λ w → ∀ (z : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (tp : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (F : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo (xOf y)))), (∀ i, InZh Xo Λ N (z i)) → GeoInj Xo (xOf y) z → (∀ b, tp b ^ (N ^ 2) = 1) → (∀ i b, IsUUOver Xo.univ.t.G Xo.univ.t.PP N (sOf1 y) (z i b) (tp b) (F i b)) → Λ.TrivAt ℓ → ∀ (n' A Bn j : ℕ) (α β₀ : 𝓞 E), Nat.Coprime n' ℓ → (N : 𝓞 E) = β₀ * α * n' → α * H.bar α = (A : 𝓞 E) → β₀ * H.bar β₀ = (Bn : 𝓞 E) → A * Bn = ℓ ^ j → (∀ b, (tp b ≫ Xo.univ.t.act.act β₀) ^ (n' ^ 2 * A) = 1) → letI := io.toAlgebra; ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (nrm Dw c w α * (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹)) * ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P) := by
   intro E _ _ _ H Dw l Xo c _ hst T io y C hC nab hnab e ρ w n he hb ℓ hℓ hlu Λ N M hU hL P hP z tp F hz hg ht hF
     htr n' A Bn j α β₀ hn' hfac hA hB hAB htp
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hN : Odd N := hL.1
   obtain ⟨hfz, hm0, hT⟩ := GlobalTheory.T.lattice_trivial_at_prime_indices_and_units E H Dw l c n Λ N M ℓ hU hL hℓ htr
   obtain ⟨-, hFF⟩ := hT T io hlu
@@ -240,7 +240,7 @@ theorem bound_of_trivAt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   obtain ⟨m', hm'c, hm'⟩ : ∃ m' : ℕ, Nat.Coprime m' ℓ ∧ Λ.mIdx N (Dw.p + Dw.q) = Fintype.card J * m' :=
     ⟨_, (Nat.coprime_ordCompl hℓ hm0).symm, by rw [hcard, hfz, Nat.ordProj_mul_ordCompl_eq_self]⟩
   have hm'u := isUnit_of_coprime T hm'c hlu
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   have hm'0 : (m' : T.Fr) ≠ 0 := by
     have : m' ≠ 0 := by rintro rfl; simp at hm'u
     exact_mod_cast this
@@ -320,7 +320,7 @@ open IsDedekindDomain Formalism.BasicNotions Formalism.MainNotions GlobalTheory.
 theorem vV_prod_nat (T : CDVR) (s : Finset ℕ) (hs : ∀ p ∈ s, p ≠ 0) :
     vV T.V ((∏ p ∈ s, p : ℕ) : T.Fr) = ∑ p ∈ s, vV T.V (p : T.Fr) := by
   classical
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   induction s using Finset.induction_on with
   | empty => simpa using vV_one
   | insert a s ha ih =>
@@ -362,12 +362,12 @@ theorem exists_smul_short_nonneg (D : D7) (H : ReciprocityTheory.ChartRestrictio
   obtain ⟨T', iT, r, io₂, y₂, C, ζ, z, tp, F, hr, hiT, hfr, hio, hC, hrat, hζ, hz, hgi, htp, hF, hval⟩ :=
     GlobalTheory.PlaceInt.short_value_on_cover _ _ _ _ Xo c n d hlev hnab 1 hroot Λ N hU hTM hN w P hP x0 g hsec hR
       Tc io yI hy
-  haveI : CharZero T'.Fr := algebraRat.charZero _
+  have : CharZero T'.Fr := algebraRat.charZero _
   have he' : 0 < r * e := Nat.mul_pos hr ho.1
   have heR : (0 : ℝ) < ((r * e : ℕ) : ℝ) := by exact_mod_cast he'
   rw [← nval_bc iT hr hiT e, map_mul, hval, ← hio]
   obtain ⟨ℓ, hℓ, hu⟩ := exists_resChar T' hfr
-  have hsq : ¬ ℓ ^ 2 ∣ d.l₂.M := fun hd => hℓ.prime.not_unit (hsf ℓ (by rwa [← pow_two]))
+  have hsq : ¬ ℓ ^ 2 ∣ d.l₂.M := fun hd => hℓ.prime.not_isUnit (hsf ℓ (by rwa [← pow_two]))
   obtain ⟨α, hαM, hα⟩ : ∃ α : ℕ, α ∣ d.l₂.M ∧ ((¬ ℓ ∣ d.l₂.M ∧ (α : 𝓞 D.host.E) = 1) ∨
       (ℓ ∣ d.l₂.M ∧ (α : 𝓞 D.host.E) * H.bar α = (ℓ : 𝓞 D.host.E) ∧ d.l₂.Mb ≤ Ideal.span {H.bar α}) ∨
       (ℓ ∣ d.l₂.M ∧ (α : 𝓞 D.host.E) = (ℓ : 𝓞 D.host.E))) := by
@@ -378,7 +378,7 @@ theorem exists_smul_short_nonneg (D : D7) (H : ReciprocityTheory.ChartRestrictio
   have ha0 : α ≠ 0 := left_ne_zero_of_mul (hα' ▸ hM0)
   have ha0' : α' ≠ 0 := right_ne_zero_of_mul (hα' ▸ hM0)
   have hch := GlobalTheory.PlaceInt.HostChart.chBound_host D _ Dw _ d.Xo₂ d.c₂ hnab.1 T' io₂ y₂ C (r * e) he' w n _ le_rfl
-  haveI := Nat.finite_of_card_ne_zero hc0
+  have := Nat.finite_of_card_ne_zero hc0
   have hu0 : io₂ (nrm Dw d.c₂ w (α : 𝓞 D.host.E)) ≠ 0 :=
     (map_ne_zero io₂).2 (nrm_ne_zero _ _ (Nat.cast_ne_zero.2 ha0))
   have key := le_nval_avg (V := T'.V) (r * e) (fun q => io₂ (d.w x0 q)) _ ζ _

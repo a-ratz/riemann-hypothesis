@@ -227,7 +227,7 @@ namespace GlobalTheory.CompanionTheory.CFin
 
 theorem matrices_bounded_denominator_finite : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E], IsTotallyReal F → ∀ {ι : Type} [Finite ι] (d : ℕ) (B : ℝ), 0 < d → {N : Matrix ι ι E | (∀ u v, IsIntegral ℤ ((d : E) * N u v)) ∧ ∀ (w : InfinitePlace F) (τ : EmbOver E w) (u v : ι), ‖τ.1 (N u v)‖ ≤ B}.Finite := by
   intro F E _ _ _ _ _ hF ι _ d B hd
-  haveI := hF
+  have := hF
   have hS : {x : E | IsIntegral ℤ x ∧ ∀ φ : E →+* ℂ, ‖φ x‖ ≤ (d : ℝ) * B}.Finite :=
     Embeddings.finite_of_norm_le E ℂ _
   have hd0 : (d : E) ≠ 0 := Nat.cast_ne_zero.2 hd.ne'
@@ -275,7 +275,7 @@ theorem archMat_entries_bounded_of_isCompact (F E : Type) [Field F] [NumberField
     obtain ⟨b, hb⟩ := hC.bddAbove_image hc.continuousOn
     exact ⟨b, fun g hg => hb ⟨g, hg, rfl⟩⟩
   choose b hb using hb
-  haveI : Fintype (InfinitePlace F) := inferInstance
+  have : Fintype (InfinitePlace F) := inferInstance
   refine ⟨∑ w : InfinitePlace F, ∑ τ : EmbOver E w, ∑ i : Fin n, ∑ j : Fin n, |b w τ i j|,
     Finset.sum_nonneg fun w _ => Finset.sum_nonneg fun τ _ => Finset.sum_nonneg fun i _ =>
       Finset.sum_nonneg fun j _ => abs_nonneg _, fun g hg w τ i j => ?_⟩
@@ -344,7 +344,7 @@ theorem exists_nat_mul_isIntegral_of_isCompact (F E : Type) [Field F] [NumberFie
     [Algebra F E] {𝒦 : Set (Af F ⊗[F] E)} (h𝒦 : IsCompact 𝒦) :
     ∃ d : ℕ, 0 < d ∧ ∀ e : E, inclR (F := F) (Af F) e ∈ 𝒦 → IsIntegral ℤ ((d : E) * e) := by
   classical
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
   let b := Module.finBasis F E
   let bb := Algebra.TensorProduct.basis (Af F) b
   have hc : ∀ i, Continuous (fun x : Af F ⊗[F] E => bb.coord i x) := fun i =>
@@ -390,8 +390,8 @@ namespace GlobalTheory.CompanionTheory.CFin
 theorem bounded_denominators : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (𝒞 : Set (GFin σ J)), IsCompact 𝒞 → ∀ {ι : Type} [Fintype ι] (A : Matrix ι (Fin n) E) (B : Matrix (Fin n) ι E), ∃ d : ℕ, 0 < d ∧ ∀ δ : GRat σ J, projFin σ J (ratEmb σ J δ) ∈ 𝒞 → ∀ u v, IsIntegral ℤ ((d : E) * (A * δ.1.1 * B) u v) := by
   intro F E _ _ _ _ _ σ n J 𝒞 h𝒞 ι _ A B
   classical
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   let f : ι → ι → GFin σ J → Af F ⊗[F] E := fun u v y =>
     (A.map (inclR (F := F) (Af F)) * (matHom (Af F) σ J y).1 * B.map (inclR (F := F) (Af F))) u v
   have hmat : Continuous fun y : GFin σ J => ((matHom (Af F) σ J y).1 : Matrix (Fin n) (Fin n) (Af F ⊗[F] E)) :=
@@ -439,9 +439,9 @@ namespace GlobalTheory.CompanionTheory.CFin.Ratio
 
 def ext {r : ℕ} (t : Fin r → ℝ) (n : ℕ) : ℝ := if h : n < r then t ⟨n, h⟩ else 1
 
-theorem ext_of_lt {r : ℕ} (t : Fin r → ℝ) {n : ℕ} (h : n < r) : ext t n = t ⟨n, h⟩ := dif_pos h
+theorem ext_of_lt {r : ℕ} (t : Fin r → ℝ) {n : ℕ} (h : n < r) : ext t n = t ⟨n, h⟩ := dite_eq_left h
 
-theorem ext_of_ge {r : ℕ} (t : Fin r → ℝ) {n : ℕ} (h : r ≤ n) : ext t n = 1 := dif_neg (not_lt.mpr h)
+theorem ext_of_ge {r : ℕ} (t : Fin r → ℝ) {n : ℕ} (h : r ≤ n) : ext t n = 1 := dite_eq_right (not_lt.mpr h)
 
 def bnd (r : ℕ) (c t₁ : ℝ) : ℝ := max ((t₁ / (min c 1) ^ r) ^ r) (((min c 1)⁻¹) ^ r)
 
@@ -888,14 +888,14 @@ theorem levi_unitary {ι L : Type} [Fintype ι] [DecidableEq ι] [Field L] (s : 
   have hbdtri : (bd b (Qi * g * Q)).BlockTriangular b := by
     intro i j hij
     simp only [bd, Matrix.of_apply]
-    rw [if_neg (ne_of_gt hij)]
+    rw [ite_eq_right (ne_of_gt hij)]
   have hdet : (bd b (Qi * g * Q)).det = (Qi * g * Q).det := by
     rw [hbdtri.det, hB.det]
     refine Finset.prod_congr rfl (fun a _ => ?_)
     congr 1
     ext i j
     simp only [Matrix.toSquareBlock_def, Matrix.of_apply, bd]
-    rw [if_pos (i.2.trans j.2.symm)]
+    rw [ite_eq_left (i.2.trans j.2.symm)]
   have hbdunit : IsUnit (bd b (Qi * g * Q)) := by
     rw [Matrix.isUnit_iff_isUnit_det, hdet, ← Matrix.isUnit_iff_isUnit_det]
     exact hGunit
@@ -1062,7 +1062,7 @@ theorem inv_neg_tri {ι : Type} [Fintype ι] [DecidableEq ι] {L : Type} [Field 
     (hM : ∀ u v, lv v < lv u → lv v < 0 → M u v = 0) :
     ∀ u v, lv v < lv u → lv v < 0 → M' u v = 0 := by
   intro u v huv hv
-  letI : Invertible M := ⟨M', mul_eq_one_comm.mp h, h⟩
+  let : Invertible M := ⟨M', mul_eq_one_comm.mp h, h⟩
   have hinv : M⁻¹ = M' := Matrix.inv_eq_right_inv h
   have hb : M.BlockTriangular (fun w => if lv w ≤ lv v then (0 : ℤ) else 1) := by
     intro a b hab
@@ -1476,7 +1476,7 @@ theorem block_diagonal_bound_weighted : ∀ {ι : Type} [Fintype ι] [DecidableE
   have hinv : P⁻¹ = P' := Matrix.inv_eq_right_inv hPP
   have hP'P : P' * P = 1 := by rw [← hinv]; exact Matrix.nonsing_inv_mul P hdet
   have hP' : P'.BlockTriangular b := by
-    haveI := P.invertibleOfIsUnitDet hdet
+    have := P.invertibleOfIsUnitDet hdet
     rw [← hinv]
     exact Matrix.blockTriangular_inv_of_blockTriangular hP
   have e : P * diagonal (fun u => (w u : ℂ)) * M * diagonal (fun u => (((w u)⁻¹ : ℝ) : ℂ)) * P' = P * T * P' := by

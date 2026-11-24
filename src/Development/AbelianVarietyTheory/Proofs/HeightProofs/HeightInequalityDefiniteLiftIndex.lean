@@ -162,10 +162,10 @@ theorem exists_nat_comb {ι : Type} [Finite ι] {Ω : ι → Type} [∀ Z, Field
     have h1 := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q (k : ℕ)) h0
     simp only [p, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finsupp.single_apply,
       Polynomial.coeff_zero] at h1
-    rw [Finset.sum_eq_single k (fun b _ hb => if_neg fun e => hb (Fin.ext e)) (by simp), if_pos rfl] at h1
+    rw [Finset.sum_eq_single k (fun b _ hb => ite_eq_right fun e => hb (Fin.ext e)) (by simp), ite_eq_left rfl] at h1
     exact hk h1
   have hfin : ∀ Z, {t : ℕ | (p Z).IsRoot (t : Ω Z)}.Finite := fun Z =>
-    Set.Finite.preimage (f := fun t : ℕ => (t : Ω Z)) Nat.cast_injective.injOn (Polynomial.finite_setOf_isRoot (hp Z))
+    Set.Finite.preimage (f := fun t : ℕ => (t : Ω Z)) Nat.cast_injective.injOn (Polynomial.finite_setOfPred_isRoot (hp Z))
   obtain ⟨t, ht⟩ := (Set.finite_iUnion hfin).exists_notMem
   refine ⟨fun k => t ^ (k : ℕ), fun Z h0 => ht (Set.mem_iUnion.2 ⟨Z, ?_⟩)⟩
   show (p Z).eval (t : Ω Z) = 0
@@ -550,7 +550,7 @@ theorem le_of_generic {h : GenFrEx Xo c} (C : FChart h) (σ : c.F →+* ℂ) (F 
     (hF : @Continuous _ _ (TopologicalSpace.induced (fun x (a : C.R) => Formalism.L2.PjFree.toC (x a)) inferInstance) _ F)
     (M : ℝ) (hM : ∀ (x : C.R →ₐ[c.F] CAt σ) (P : Om C.Z →+* ℂ), P ∈ T0.PT (Ω := Om C.Z) σ →
       (∀ a, Formalism.L2.PjFree.toC (x a) = P a) → F x ≤ M) (ψ : C.R →ₐ[c.F] CAt σ) : F ψ ≤ M := by
-  letI : TopologicalSpace (C.R →ₐ[c.F] CAt σ) :=
+  let : TopologicalSpace (C.R →ₐ[c.F] CAt σ) :=
     TopologicalSpace.induced (fun x (a : C.R) => Formalism.L2.PjFree.toC (x a)) inferInstance
   have hcl : IsClosed {x | F x ≤ M} := isClosed_le hF continuous_const
   refine hcl.closure_subset (mem_closure_iff_nhds.2 fun t ht => ?_)
@@ -566,8 +566,8 @@ theorem le_of_generic {h : GenFrEx Xo c} (C : FChart h) (σ : c.F →+* ℂ) (F 
     filter_upwards [Ioo_mem_nhdsGT hδ] with ε hε
     exact (Metric.ball_subset_ball hε.2.le).trans hb
   obtain ⟨ε, hε, hε0⟩ := (hev.and self_mem_nhdsWithin).exists
-  haveI := C.sm
-  haveI := isFractionRing_chart C
+  have := C.sm
+  have := isFractionRing_chart C
   let φ : C.R →+* ℂ := ψ.toRingHom
   have hφ : φ.comp (algebraMap c.F C.R) = σ := RingHom.ext fun k => ψ.commutes k
   obtain ⟨P, hP, hPε⟩ := GlobalTheory.generic_points_dense GlobalTheory.exists_algIndep_tuple_near c.F C.R (Om C.Z) σ φ hφ I ε hε0
@@ -605,7 +605,7 @@ theorem pn_frBor (hd : Dom a n) (hg : g ∈ sec Xo c a n) {σ : c.F →+* ℂ}
   · have hσ' : Formalism.L2.PjFree.GoodEmb c ((starRingEnd ℂ).comp σ) := by
       have := Formalism.L2.PjFree.goodEmb_goodOf c σ
       unfold Formalism.L2.PjFree.goodOf at this
-      rwa [if_neg hσ] at this
+      rwa [ite_eq_right hσ] at this
     have hL := (_root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1
     obtain ⟨z, hz⟩ := hL.bc _ _ (conjAlg σ) y
     obtain ⟨z', hz'⟩ := hL.bc _ _ (conjAlg σ) y'
@@ -635,9 +635,9 @@ theorem pn_continuous (hg : g ∈ sec Xo c a n) {h : GenFrEx Xo c} (C : FChart h
     (y : (C.R →ₐ[c.F] CAt σ) → FrPt Xo c (CAt σ)) (hy : ∀ x, FrMap x C.y (y x)) :
     @Continuous _ _ (TopologicalSpace.induced (fun x (b : C.R) => Formalism.L2.PjFree.toC (x b)) inferInstance) _
       fun x => pn fn σ a n g (y x) := by
-  letI : TopologicalSpace (C.R →ₐ[c.F] CAt σ) :=
+  let : TopologicalSpace (C.R →ₐ[c.F] CAt σ) :=
     TopologicalSpace.induced (fun x (b : C.R) => Formalism.L2.PjFree.toC (x b)) inferInstance
-  haveI := C.sm
+  have := C.sm
   have hL := (_root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1
   have hc : ∀ b : C.R, Continuous fun x : C.R →ₐ[c.F] CAt σ => Formalism.L2.PjFree.toC (x b) := fun b =>
     (continuous_apply b).comp
@@ -677,7 +677,7 @@ theorem supC_le_iSup_generic : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     Real.iSup_nonneg fun P => mul_nonneg (norm_nonneg _)
       (Finset.prod_nonneg fun i _ => zpow_nonneg (abs_nonneg _) _)
   refine ⟨hbdd, Real.iSup_le (fun y => ?_) hnn⟩
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   obtain ⟨C, ψ, z, t, hz, hb⟩ := hA h (CAt σ) y
   change pn fn σ a n g y ≤ _
   rw [pn_frBor hU hx hfn hd hgs hb]
@@ -750,7 +750,7 @@ theorem supPTGe_of_fnPin : ∀ (D : D7) (T : Core D) (h : LawsCore T) (j : ℕ) 
       F.1 hFc g hg h1 h0 sg).2
     change cutN T.C T.Ns j ka sg ⟨g, hg'⟩ ≤ _
     unfold cutN
-    rw [if_pos hj]
+    rw [ite_eq_left hj]
     exact h4
 
 theorem exists_frame {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
@@ -766,11 +766,11 @@ theorem exists_frame {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Rec
     (fun σ => Formalism.L2.PjFree.Unf.ofPj (U σ)) hU xR fn hx hfn
   have hg := goodEmb_goodOf c σ
   by_cases hσ : GoodEmb c σ
-  · have e : goodOf c σ = σ := if_pos hσ
+  · have e : goodOf c σ = σ := ite_eq_left hσ
     rw [e]
     obtain ⟨k, x, t, ht⟩ := (hU σ hσ).2.2.1 y
     exact ⟨k, x, fun a n hd f hf => h2 σ hσ k x t y ht a n hd f hf⟩
-  · have e : goodOf c σ = (starRingEnd ℂ).comp σ := if_neg hσ
+  · have e : goodOf c σ = (starRingEnd ℂ).comp σ := ite_eq_right hσ
     rw [e] at hg ⊢
     obtain ⟨y', hy'⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _
       (GlobalTheory.FrameNorm.conjAlg σ) y
@@ -1027,10 +1027,10 @@ theorem eq_of_wtZ_eq {Q : Par D} (hp : Q.PinHost) {w w' : WeightFamilies.Wt D j}
 theorem exists_wsize {Q : Par D} (hp : Q.PinHost) (w w' : WeightFamilies.Wt D j) :
     ∃ s : WTZ D.host.E → ℝ, s (wtZ (wtA w) w.n) = w.size ∧ s (wtZ (wtA w') w'.n) = w'.size := by
   classical
-  refine ⟨fun u => if u = wtZ (wtA w) w.n then w.size else w'.size, if_pos rfl, ?_⟩
+  refine ⟨fun u => if u = wtZ (wtA w) w.n then w.size else w'.size, ite_eq_left rfl, ?_⟩
   by_cases e : wtZ (wtA w') w'.n = wtZ (wtA w) w.n
-  · exact (if_pos e).trans (by rw [eq_of_wtZ_eq hp e])
-  · exact if_neg e
+  · exact (ite_eq_left e).trans (by rw [eq_of_wtZ_eq hp e])
+  · exact ite_eq_right e
 
 end Weights
 

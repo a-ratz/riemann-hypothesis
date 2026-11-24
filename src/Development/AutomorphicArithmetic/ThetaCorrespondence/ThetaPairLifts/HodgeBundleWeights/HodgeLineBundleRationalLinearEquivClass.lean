@@ -309,14 +309,14 @@ theorem fixes_stalk : ∀ (X : Scheme.{0}) [IsIntegral X] (b : X ≅ X) (x : X),
   have h1 : (show Sp (X.presheaf.stalk x) ⟶ X from X.fromSpecStalk x) ≫ b.hom =
       spMap st.hom ≫ X.fromSpecStalk x := by
     simpa only [spMap, CommRingCat.ofHom_hom] using h0
-  haveI : IsIso (X.presheaf.stalkSpecializes hs) :=
+  have : IsIso (X.presheaf.stalkSpecializes hs) :=
     ⟨⟨X.presheaf.stalkSpecializes hs', by simp, by simp⟩⟩
-  haveI : IsLocalHom st.hom := by
+  have : IsLocalHom st.hom := by
     show IsLocalHom (X.presheaf.stalkSpecializes hs ≫ b.hom.stalkMap x).hom
     rw [CommRingCat.hom_comp]
     infer_instance
-  haveI : IsLocalHom (X.residue x).hom := inferInstanceAs (IsLocalHom (IsLocalRing.residue _))
-  haveI : IsLocalHom (st ≫ X.residue x).hom := by
+  have : IsLocalHom (X.residue x).hom := inferInstanceAs (IsLocalHom (IsLocalRing.residue _))
+  have : IsLocalHom (st ≫ X.residue x).hom := by
     rw [CommRingCat.hom_comp]
     infer_instance
   refine ⟨st.hom, h1, ?_, ?_⟩
@@ -403,7 +403,7 @@ theorem ffMap_comp {X Y Z : Scheme.{0}} [IsIntegral X] [IsIntegral Y] [IsIntegra
         genericFieldPoint Z := by
     rw [specMap_functionFieldMap, CommRingCat.ofHom_comp, Spec.map_comp, Category.assoc,
       specMap_functionFieldMap, ← Category.assoc, ← Category.assoc, specMap_functionFieldMap]
-  haveI : Mono (genericFieldPoint Z) := inferInstanceAs (Mono (Z.fromSpecStalk _))
+  have : Mono (genericFieldPoint Z) := inferInstanceAs (Mono (Z.fromSpecStalk _))
   exact congrArg CommRingCat.Hom.hom (Spec.map_injective ((cancel_mono _).mp e))
 
 theorem unitAt_ffMap {X W : Scheme.{0}} [IsIntegral X] [IsIntegral W] (q : X ⟶ W) [IsDominant q] (x : X)
@@ -420,9 +420,9 @@ end Frames
 theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c) [IsIntegral (X₀ TF.Y Z)] (φ₀ : c.F →+* (X₀ TF.Y Z).functionField) (f₀ : GlobalTheory.ShFam.EigFrame TF.Y φ₀ ((show Sp (X₀ TF.Y Z).functionField ⟶ X₀ TF.Y Z from (X₀ TF.Y Z).fromSpecStalk (genericPoint (X₀ TF.Y Z))) ≫ (barComp TF.Y Z).ι)) (a : (E →+* ℂ) → ℤ) (D : CartierDiv (X₀ TF.Y Z)), (show Sp (X₀ TF.Y Z).functionField ⟶ X₀ TF.Y Z from (X₀ TF.Y Z).fromSpecStalk (genericPoint (X₀ TF.Y Z))) ≫ s₀ TF.Y Z = spMap φ₀ → GlobalTheory.HodgeLin.DetEqns TF Z φ₀ f₀ a D → ∀ (Γ : Type) [Group Γ] (X' : Scheme.{0}) [IsIntegral X'] (φ : X' ⟶ X₀ TF.Y Z) (ρ' : Γ →* Aut X'), IsDominant φ → (∀ γ, (ρ' γ).asIso.hom ≫ φ ≫ s₀ TF.Y Z = φ ≫ s₀ TF.Y Z) → ∀ (G' : Over X') [GrpObj G'] (ψ : G'.left ⟶ TF.Y.t.G.left) (act' : OAct (𝓞 E) G') (m : Γ → (G'.left ⟶ G'.left)), GlobalTheory.HodgeLin.EqvLin TF.Y.t (φ ≫ (barComp TF.Y Z).ι) ρ' G' ψ act' m → RatLin ρ' ((toLB D).pull φ) (LB.isLB_pull (isLB_toLB D) φ) := by
   intro E _ _ _ H Dw l Xo c TF Z _ φ₀ f₀ a D hφ₀ hD Γ _ X' _ φ ρ' hd hρ G' _ ψ act' m hE
   obtain ⟨hG, hact, hm, hmact, hmul, hfix⟩ := hE
-  haveI := hd
+  have := hd
   have hdom : ∀ γ, IsDominant (ρ' γ).asIso.hom := fun γ => by
-    haveI : IsIso (ρ' γ).asIso.hom := Iso.isIso_hom (ρ' γ).asIso
+    have : IsIso (ρ' γ).asIso.hom := Iso.isIso_hom (ρ' γ).asIso
     infer_instance
   obtain ⟨D', hcls, hD'⟩ := _root_.GlobalTheory.Cartier.exists_pullback_cartierDiv (X₀ TF.Y Z) X' φ D
 
@@ -576,7 +576,7 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
       rw [Matrix.det_mul, Matrix.det_mul, ← RingHom.mapMatrix_apply, ← RingHom.map_det, ← RingHom.mapMatrix_apply,
         ← RingHom.map_det, hdet, hdet] at e
       refine Units.ext ?_
-      simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, IsUnit.unit_spec]
+      simp only [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, IsUnit.unit_spec]
       rw [mul_comm (functionFieldMap φ (d x τ : (X₀ TF.Y Z).functionField)), ← e]
     simp only [fnAct, cc, map_prod, map_zpow]
     rw [← Finset.prod_inv_distrib, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
@@ -624,7 +624,7 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     have hu : ∀ τ, ((S (γ * δ)).isUnit_det_co (T (γ * δ)) τ).unit =
         Units.map (functionFieldMap (ρ' δ).asIso.hom).toMonoidHom ((S γ).isUnit_det_co (T γ) τ).unit *
           ((S δ).isUnit_det_co (T δ) τ).unit := fun τ => Units.ext (by
-      simp only [IsUnit.unit_spec, Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+      simp only [IsUnit.unit_spec, Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
       rw [hB τ, Matrix.det_mul, RingHom.map_det]
       rfl)
     simp only [cc, fnAct, hu, mul_zpow, Finset.prod_mul_distrib, map_prod, map_zpow]
@@ -689,7 +689,7 @@ theorem ratLin_pull : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
         rw [map_units_inv, IsUnit.unit_spec]
       have e2 := congrArg Units.val hr
       simp only [Units.val_mul, Units.val_inv_eq_inv_val, Units.coe_map, RingHom.toMonoidHom_eq_coe,
-        MonoidHom.coe_coe] at e2
+        MonoidHom.coe_ofClass] at e2
       have eg : (g : X'.functionField) = algebraMap (X'.presheaf.stalk x) X'.functionField b *
           (Units.map (functionFieldMap φ).toMonoidHom (∏ τ, d x τ ^ (-a τ)) : X'.functionFieldˣ) := by
         rw [hbv, div_mul_cancel₀ _ (Units.ne_zero _)]
@@ -757,8 +757,8 @@ theorem hodgeLineBundle_rationally_linear : _root_.GlobalTheory.CovTop.Published
       refine dense_iff_closure_eq.2 (Set.eq_univ_of_univ_subset ?_)
       rw [← (genericPoint_spec (X₀ TF.Y Z)).def]
       exact closure_mono (Set.singleton_subset_iff.2 ⟨ℓ v, by rw [← Scheme.Hom.comp_apply, hj, hv]⟩)⟩
-    haveI : Nonempty (V₀ TF.Y Z) := ⟨v⟩
-    haveI : IsDominant ℓ := ⟨ℓ.isOpenEmbedding.isOpen_range.dense (Set.range_nonempty _)⟩
+    have : Nonempty (V₀ TF.Y Z) := ⟨v⟩
+    have : IsDominant ℓ := ⟨ℓ.isOpenEmbedding.isOpen_range.dense (Set.range_nonempty _)⟩
     have hρ : ∀ γ, (ρ' γ).asIso.hom ≫ φ ≫ s₀ TF.Y Z = φ ≫ s₀ TF.Y Z := fun γ => by
       refine ext_of_isDominant ℓ ?_
       rw [← Category.assoc, ← heq, Category.assoc, ← Category.assoc ℓ φ, hj]

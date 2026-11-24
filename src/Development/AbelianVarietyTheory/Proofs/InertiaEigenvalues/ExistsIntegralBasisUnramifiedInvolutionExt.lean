@@ -100,11 +100,11 @@ theorem exists_key (h : IsUnrExt K K' d φ) :
     ∃ w : Fin d → K'.E, ∀ (a : Fin d → K.E) (m : Fin d), (∀ k, adicVal K (a k) ≤ adicVal K (a m)) →
       adicVal K' (∑ k, φ (a k) * w k) = adicVal K (a m) := by
   obtain ⟨ι, hι⟩ := exists_lift h
-  haveI : IsLocalHom ι := ⟨fun a ha => by
+  have : IsLocalHom ι := ⟨fun a ha => by
     rw [← adicVal_eq_one_iff] at ha ⊢; rwa [hι, adicVal_map h] at ha⟩
-  letI : Algebra (ResidueField K.O) (ResidueField K'.O) := (ResidueField.map ι).toAlgebra
-  letI : Fintype (ResidueField K.O) := Fintype.ofFinite _
-  letI : Fintype (ResidueField K'.O) := Fintype.ofFinite _
+  let : Algebra (ResidueField K.O) (ResidueField K'.O) := (ResidueField.map ι).toAlgebra
+  let : Fintype (ResidueField K.O) := Fintype.ofFinite _
+  let : Fintype (ResidueField K'.O) := Fintype.ofFinite _
   have hf : Module.finrank (ResidueField K.O) (ResidueField K'.O) = d := by
     have hc := Module.card_eq_pow_finrank (K := ResidueField K.O) (V := ResidueField K'.O)
     rw [← Nat.card_eq_fintype_card, ← Nat.card_eq_fintype_card, K'.card_res, K.card_res, h.1, ← pow_mul,
@@ -112,17 +112,17 @@ theorem exists_key (h : IsUnrExt K K' d φ) :
     have h2 : 2 ≤ K.q ^ 2 := by
       rw [← K.card_res]; exact Finite.one_lt_card
     exact (Nat.pow_right_injective h2 hc).symm
-  haveI : Module.Finite (ResidueField K.O) (ResidueField K'.O) := Module.Finite.of_finite
+  have : Module.Finite (ResidueField K.O) (ResidueField K'.O) := Module.Finite.of_finite
   let bk := Module.finBasisOfFinrankEq _ _ hf
   choose w' hw' using fun i => residue_surjective (bk i)
   refine ⟨fun i => algebraMap K'.O K'.E (w' i), fun a m hm => ?_⟩
   by_cases ham : a m = 0
   · have h0 : ∀ k, a k = 0 := fun k => by
       have := hm k; rw [ham, map_zero] at this
-      exact (Valuation.zero_iff _).1 (le_antisymm this zero_le')
+      exact (Valuation.zero_iff _).1 (le_antisymm this zero_le)
     simp [h0]
   have hb : ∀ k, ∃ b : K.O, algebraMap K.O K.E b = a k / a m := fun k =>
-    (adicVal_le_one_iff K _).1 (by rw [map_div₀]; exact div_le_one_of_le₀ (hm k) zero_le')
+    (adicVal_le_one_iff K _).1 (by rw [map_div₀]; exact div_le_one_of_le₀ (hm k) zero_le)
   choose b hb using hb
   have hbm : b m = 1 := IsFractionRing.injective K.O K.E (by rw [hb, div_self ham, map_one])
   set s : K'.O := ∑ k, ι (b k) * w' k with hs
@@ -150,9 +150,9 @@ theorem intBasis : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K
     ∃ w : Module.Basis (Fin d) K.E K'.E, ∀ z : K'.E,
       (∃ y : K'.O, algebraMap K'.O K'.E y = z) ↔ ∀ k, ∃ a : K.O, algebraMap K.O K.E a = w.repr z k := by
   intro K K' d φ h hd
-  letI : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.E K'.E := φ.toAlgebra
   obtain ⟨w, key⟩ := exists_key h
-  haveI : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
+  have : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
   have hmax : ∀ a : Fin d → K.E, ∃ m, ∀ k, adicVal K (a k) ≤ adicVal K (a m) := fun a =>
     Finite.exists_max (fun k => adicVal K (a k))
   have hli : LinearIndependent K.E w := by
@@ -163,7 +163,7 @@ theorem intBasis : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K
     rw [hg, map_zero] at hk
     have hgm : g m = 0 := (Valuation.zero_iff _).1 hk.symm
     intro k; have := hm k; rw [hgm, map_zero] at this
-    exact (Valuation.zero_iff _).1 (le_antisymm this zero_le')
+    exact (Valuation.zero_iff _).1 (le_antisymm this zero_le)
   let B := basisOfLinearIndependentOfCardEqFinrank hli (by rw [Fintype.card_fin]; exact h.2.2.2.2.symm)
   refine ⟨B, fun z => ?_⟩
   have hz : ∑ k, φ (B.repr z k) * w k = z := by

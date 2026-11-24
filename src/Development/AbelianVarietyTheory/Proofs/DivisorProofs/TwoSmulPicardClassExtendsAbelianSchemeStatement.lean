@@ -992,17 +992,17 @@ namespace GlobalTheory.TranslateSurj
 
 theorem exists_translates_surjective : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAbelianScheme A → ∀ (V : A.left.Opens) (B : Over S) (j : B ⟶ A), (∀ b, j.left b ∈ V) → Smooth B.hom → GeometricallyIntegral B.hom → Surjective ((((fst (A ⊗ A) B ≫ fst A A) * (fst (A ⊗ A) B ≫ snd A A)).left ⁻¹ᵁ V ⊓ ((fst (A ⊗ A) B ≫ fst A A) * (fst (A ⊗ A) B ≫ snd A A)⁻¹).left ⁻¹ᵁ V ⊓ ((snd (A ⊗ A) B ≫ j) * (fst (A ⊗ A) B ≫ snd A A)).left ⁻¹ᵁ V ⊓ ((snd (A ⊗ A) B ≫ j) * (fst (A ⊗ A) B ≫ snd A A)⁻¹).left ⁻¹ᵁ V).ι ≫ (fst (A ⊗ A) B ≫ fst A A).left) := by
   intro S A _ hA V B j hjV hBs hBg
-  haveI := hA.smooth
-  haveI := hA.geomConnected
-  haveI := hBs
-  haveI := hBg
-  haveI : GeometricallyConnected B.hom := GlobalTheory.geometricallyConnected_of_geometricallyIntegral _
-  haveI : Smooth (fst (A ⊗ A) B ≫ fst A A).left := by
+  have := hA.smooth
+  have := hA.geomConnected
+  have := hBs
+  have := hBg
+  have : GeometricallyConnected B.hom := GlobalTheory.geometricallyConnected_of_geometricallyIntegral _
+  have : Smooth (fst (A ⊗ A) B ≫ fst A A).left := by
     show Smooth (pullback.fst (A ⊗ A).hom B.hom ≫ pullback.fst A.hom A.hom); infer_instance
-  haveI : GeometricallyConnected (fst (A ⊗ A) B ≫ fst A A).left := by
+  have : GeometricallyConnected (fst (A ⊗ A) B ≫ fst A A).left := by
     show GeometricallyConnected (pullback.fst (A ⊗ A).hom B.hom ≫ pullback.fst A.hom A.hom)
     exact GeometricallyConnected.comp _ _
-  haveI : GeometricallyIntegral (fst (A ⊗ A) B ≫ fst A A).left := GlobalTheory.geometricallyIntegral_of_smooth _
+  have : GeometricallyIntegral (fst (A ⊗ A) B ≫ fst A A).left := GlobalTheory.geometricallyIntegral_of_smooth _
   have hq : Surjective (fst A B).left := by
     show Surjective (pullback.fst A.hom B.hom); infer_instance
   have key : ∀ (a₀ : A ⊗ B ⟶ A) (w : (A ⊗ A) ⊗ B ⟶ A),
@@ -1358,7 +1358,7 @@ theorem gs_cst_top {C : Type} [CommRing C] {Z : Scheme.{0}} (f : Z ⟶ Sp C) (z 
 theorem exists_sec_near : ∀ (B C : Type) [CommRing B] [IsNoetherianRing B] [CommRing C] (g : B →+* C), g.Flat → ∀ (W : (Sp B).Opens), Function.Bijective ((Sp C).presheaf.map (homOfLE (le_top : spMap g ⁻¹ᵁ W ≤ ⊤)).op).hom → ∀ (M : LB W.toScheme), M.IsLB → Triv (M.pull (spMap g ∣_ W)) → ∀ y : Sp C, ∃ (s : M.Sec) (D : (Sp C).Opens), y ∈ D ∧ ∀ z : (spMap g ⁻¹ᵁ W).toScheme, (spMap g ⁻¹ᵁ W).ι z ∈ D → (spMap g ∣_ W) z ∈ Out.nonzeroLocus s := by
   intro B C _ _ _ g hg W hbij M hM hT y
   classical
-  haveI : CompactSpace W.toScheme :=
+  have : CompactSpace W.toScheme :=
     isCompact_iff_compactSpace.mp (TopologicalSpace.NoetherianSpace.isCompact (W : Set (Sp B)))
   obtain ⟨t, ht⟩ := hT
   obtain ⟨n, c, u, hcomb⟩ := FlatSec.exists_comb_of_flat B C g hg W.toScheme W.ι _ (spMap g ∣_ W)
@@ -1457,9 +1457,9 @@ theorem hartogs_chart : ∀ (Y : Scheme.{0}) (V : Y.Opens) (hV : IsAffineOpen V)
   have hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme (Sp Γ(Y, V)) := fun p => by
     let e := (asIso (hV.fromSpec.stalkMap p)).commRingCatIsoToRingEquiv
     obtain ⟨h1, h2⟩ := hY (hV.fromSpec p)
-    haveI := h1
-    haveI := h2
-    haveI : IsDomain ((Sp Γ(Y, V)).presheaf.stalk p) := MulEquiv.isDomain _ e.symm.toMulEquiv
+    have := h1
+    have := h2
+    have : IsDomain ((Sp Γ(Y, V)).presheaf.stalk p) := MulEquiv.isDomain _ e.symm.toMulEquiv
     exact ⟨inferInstance, IsIntegrallyClosed.of_equiv e⟩
   have hb := ((GlobalTheory.extension_over_codim_two (Sp Γ(Y, V)) hN).1 U fun p hp => hU p (by
     let e := (asIso (hV.fromSpec.stalkMap p)).commRingCatIsoToRingEquiv
@@ -1584,19 +1584,19 @@ namespace GlobalTheory.DoubleClassExtension
 
 theorem two_smul_extends : ∀ (S : Scheme.{0}) [IsIntegral S] [IsLocallyNoetherian S], ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S → ∀ (A : Over S) [GrpObj A], IsAbelianScheme A → ∀ (U : S.Opens) (V : A.left.Opens), (U : Set S).Nonempty → (∀ s : S, ∃ x ∈ V, A.hom x = s) → ∀ c : Pic (A.hom ⁻¹ᵁ U ⊔ V).toScheme, GlobalTheory.CechPic.pull (A.left.homOfLE (le_sup_right : V ≤ A.hom ⁻¹ᵁ U ⊔ V)) c = 0 → ∃ c' : Pic A.left, GlobalTheory.CechPic.pull (A.hom ⁻¹ᵁ U ⊔ V).ι c' = 2 • c := by
   intro S _ _ hS A _ hA U V hU hV c hc
-  haveI : Smooth A.hom := hA.smooth
-  haveI : GeometricallyConnected A.hom := hA.geomConnected
-  haveI : GeometricallyIntegral A.hom := GlobalTheory.geometricallyIntegral_of_smooth A.hom
-  haveI : GlobalTheory.IsNormalScheme S := GlobalTheory.IsNormalScheme.of_pred hS
-  haveI : GlobalTheory.IsNormalScheme A.left := GlobalTheory.isNormalScheme_of_smooth A.hom
-  haveI : IsLocallyNoetherian A.left := LocallyOfFiniteType.isLocallyNoetherian A.hom
+  have : Smooth A.hom := hA.smooth
+  have : GeometricallyConnected A.hom := hA.geomConnected
+  have : GeometricallyIntegral A.hom := GlobalTheory.geometricallyIntegral_of_smooth A.hom
+  have : GlobalTheory.IsNormalScheme S := GlobalTheory.IsNormalScheme.of_pred hS
+  have : GlobalTheory.IsNormalScheme A.left := GlobalTheory.isNormalScheme_of_smooth A.hom
+  have : IsLocallyNoetherian A.left := LocallyOfFiniteType.isLocallyNoetherian A.hom
   have hbig := GlobalTheory.T.mem_preimage_sup_of_stalk_krullDim_le_one_flat A.left S A.hom V U hV hU
   obtain ⟨Y, x, a, v, p, e, _, hxs, hxsurj, hpv, hmem, hsm2, hgi2, he⟩ := GlobalTheory.T.exists_parameterScheme_triples_abelianScheme S A hA V hV
-  haveI := hxs
-  haveI := hxsurj
+  have := hxs
+  have := hxsurj
   have h2 := GlobalTheory.T.cechPicard_two_nsmul_pullback_eq_zero_on_tripleParameterScheme S hS A hA U V (A.hom ⁻¹ᵁ U ⊔ V) le_sup_right hU hV le_sup_left le_rfl c hc
     Y x a v p e hpv hmem hsm2 hgi2 he
-  haveI : GlobalTheory.IsNormalScheme Y.left := GlobalTheory.isNormalScheme_of_smooth x.left
+  have : GlobalTheory.IsNormalScheme Y.left := GlobalTheory.isNormalScheme_of_smooth x.left
   have hbigY := GlobalTheory.T.flat_preimage_contains_codim_le_one_points A.left Y.left x.left _ hbig
   have hloc := GlobalTheory.T.picardClass_locally_trivial_of_trivial_smooth_normal_cover A.left Y.left x.left (GlobalTheory.IsNormalScheme.pred _) _ hbigY (2 • c) h2
   exact GlobalTheory.T.cechPicard_extend_of_locally_trivial_normal_codimTwo A.left (GlobalTheory.IsNormalScheme.pred _) _ hbig (2 • c) hloc

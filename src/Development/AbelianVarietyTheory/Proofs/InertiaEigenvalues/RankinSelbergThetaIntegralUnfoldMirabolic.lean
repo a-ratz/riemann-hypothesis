@@ -68,14 +68,14 @@ theorem continuous_secRow {n : ℕ} :
 
 theorem continuousOn_secInv {n : ℕ} :
     ContinuousOn (fun y : Fin n → Cinf E => secInv y) {y | IsUnit (secRow y).det} := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · have h1 : ∀ y : ↥{y : Fin n → Cinf E | IsUnit (secRow y).det},
         ((secInv y.1 : GL (Fin n) (Cinf E)) : Matrix (Fin n) (Fin n) (Cinf E)) = (secRow y.1)⁻¹ := fun y => by
       rw [secInv, dite_eq_left (show IsUnit (secRow y.1).det from y.2), Matrix.coe_units_inv]
       rfl
     have hc : Continuous fun y : ↥{y : Fin n → Cinf E | IsUnit (secRow y).det} => secRow y.1 :=
-      continuous_secRow.comp continuous_subtype_val
+      continuous_secRow.comp continuous_subtypeVal
     refine continuous_iff_continuousAt.2 fun y => ?_
     have hinv : ContinuousAt Ring.inverse (secRow y.1).det := by
       have := NormedRing.inverse_continuousAt y.2.unit
@@ -90,7 +90,7 @@ theorem continuousOn_secInv {n : ℕ} :
         (((secInv y.1)⁻¹ : GL (Fin n) (Cinf E)) : Matrix (Fin n) (Fin n) (Cinf E)) = secRow y.1 := fun y => by
       rw [secInv, dite_eq_left (show IsUnit (secRow y.1).det from y.2), inv_inv]
       rfl
-    convert (continuous_secRow.comp continuous_subtype_val :
+    convert (continuous_secRow.comp continuous_subtypeVal :
       Continuous fun z : ↥{y : Fin n → Cinf E | IsUnit (secRow y).det} => secRow z.1) using 1
     funext z
     exact h1 z
@@ -125,8 +125,8 @@ theorem measurable_mulSec :
         g * infGL E (m + 1) (secInv fun i => pInf E (GlobalTheory.ZEul.lastRow g i))) s :=
       continuousOn_id.mul (GlobalTheory.ConstTermSmooth.continuous_infGL.comp_continuousOn
         (continuousOn_secInv.comp hy.continuousOn fun g hg => hg))
-    exact hc.restrict.measurable
-  · convert (measurable_subtype_coe : Measurable (Subtype.val : (sᶜ : Set (GA E (m + 1))) → GA E (m + 1))) using 1
+    exact hc.domRestrict.measurable
+  · convert (measurable_subtypeVal : Measurable (Subtype.val : (sᶜ : Set (GA E (m + 1))) → GA E (m + 1))) using 1
     funext g
     have hg : ¬ IsUnit (secRow fun i => pInf E (GlobalTheory.ZEul.lastRow g.1 i)).det := g.2
     show g.1 * infGL E (m + 1) (secInv fun i => pInf E (GlobalTheory.ZEul.lastRow g.1 i)) = g.1
@@ -140,7 +140,7 @@ theorem measurable_integrand {φ φ' : GA E (m + 1) → ℂ} (hφ : Measurable �
   have hI : Measurable fun g : GA E (m + 1) => indN N (fun i => GlobalTheory.RSJ.pFin E (GlobalTheory.ZEul.lastRow g i)) := by
     have hS : IsClosed {g : GA E (m + 1) | ∀ i : Fin (m + 1),
         GlobalTheory.RSJ.pFin E (GlobalTheory.ZEul.lastRow g i) - (if (i : ℕ) + 1 = m + 1 then 1 else 0) ∈ natLat E N} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isClosed_iInter fun i => (isClosed_natLat N).preimage
         (((continuous_snd : Continuous (GlobalTheory.RSJ.pFin E)).comp ((continuous_apply i).comp continuous_lastRow)).sub
           continuous_const)
@@ -187,7 +187,7 @@ theorem GlobalTheory.ZUnfTheta.zint_eq_mirabolic : ∀ (E : Type) [Field E] [Num
   have hm : Measurable fun g => F g (GlobalTheory.ZEul.lastRow g) := GlobalTheory.ZUnfTheta.measurable_integrand hφm hφ'm hΦ N x
   have h𝓕P' : IsFundamentalDomain ((mirU E (m + 1) m).map (ratGL E (m + 1))) 𝓕P μ := h𝓕P
   have hlin := GlobalTheory.ThetaUnfold.lintegral_tsum_vecMul μ hv hP' h𝓕 h𝓕P' (fun g y => ‖F g y‖ₑ)
-    (fun γ g y => by simp only [hF]) (by simp only [he]; exact hm.enorm.aemeasurable)
+    (fun γ g y => by simp only [hF]) (by simp only [he]; exact hm.eNorm.aemeasurable)
   have hfin' : ∫⁻ g in 𝓕, ∑' ξ : {ξ : Fin (m + 1) → E // ξ ≠ 0},
       ‖F g ((algebraMap E (Ad E) ∘ ξ.1) ᵥ* g.val)‖ₑ ∂μ ≠ ⊤ := by
     rw [hlin]

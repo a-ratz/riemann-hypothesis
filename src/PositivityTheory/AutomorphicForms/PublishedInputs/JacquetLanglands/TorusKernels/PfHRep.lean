@@ -171,8 +171,8 @@ theorem hecke_eq_dc {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (ρ :
     heckeVec ρ K h x = Hi.dc ρ K K a x := by
   classical
   have hfin : (MulAction.orbit K (a : G ⧸ K)).Finite := hf.subset fun c hc => by
-    rw [Set.mem_setOf_eq, h1 _ (by rwa [QuotientGroup.out_eq'])]; exact one_ne_zero
-  letI := hfin.fintype
+    rw [Set.mem_ofPred_eq, h1 _ (by rwa [QuotientGroup.out_eq'])]; exact one_ne_zero
+  let := hfin.fintype
   rw [Hi.dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply, ← finsum_eq_sum_of_fintype,
     finsum_set_coe_eq_finsum_mem (f := fun c : G ⧸ K => ρ c.out x), heckeVec]
   refine finsum_congr fun c => ?_
@@ -185,7 +185,7 @@ variable {F : Type} [Field F] [NumberField F] (w : HeightOneSpectrum (𝓞 F))
 theorem iwahori_level_zero_eq : K1 w 0 = KGL w (n := 2) := by
   ext g
   refine ⟨fun ⟨k, _, e⟩ => ⟨k, e⟩, fun ⟨k, e⟩ => ⟨k, ?_, e⟩⟩
-  haveI : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) :=
+  have : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) :=
     Ideal.Quotient.subsingleton_iff.2 (by simp)
   exact Subsingleton.elim _ _
 
@@ -242,8 +242,8 @@ theorem uop_map {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [M
     (hx : x ∈ Hi.fixd ρ (K1 w c)) (hx' : f x ∈ Hi.fixd ρ' (K1 w c)) :
     Uop w ρ' c (f x) = ((χ (atFin w (unif w)) : ℂˣ) : ℂ) • f (Uop w ρ c x) := by
   classical
-  haveI := Formalism.UG.P.glint_finite_residueField w
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField (w.adicCompletionIntegers F))
+  have := Formalism.UG.P.glint_finite_residueField w
+  let := Fintype.ofFinite (IsLocalRing.ResidueField (w.adicCompletionIntegers F))
   choose s hs using (IsLocalRing.residue_surjective (R := w.adicCompletionIntegers F))
   have hS : Set.BijOn (IsLocalRing.residue _) ((Finset.univ.image s : Finset _) : Set (w.adicCompletionIntegers F)) Set.univ := by
     refine ⟨fun _ _ => trivial, fun u hu u' hu' e => ?_, fun r _ => ⟨s r, by simp, hs r⟩⟩

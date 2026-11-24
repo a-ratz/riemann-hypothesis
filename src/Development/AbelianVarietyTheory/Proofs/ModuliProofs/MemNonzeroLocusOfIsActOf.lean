@@ -120,7 +120,7 @@ end General
 theorem dense_torsion (hA : AmpleSt) (hK : KerPowSt) (hI : IrredSt) (k : Type) [Field k] [IsAlgClosed k] [CharZero k]
     (P : PolAV (Sp k)) {p : ℕ} (hp : p.Prime) :
     Dense (⋃ x ∈ {x : 𝟙_ (Over (Sp k)) ⟶ P.A | ∃ n : ℕ, 0 < n ∧ n.Coprime p ∧ x ^ n = 1}, Set.range x.left) := by
-  haveI : IsCommMonObj P.A := P.isAb.comm
+  have : IsCommMonObj P.A := P.isAb.comm
   rw [dense_iff_inter_open]
   rintro U hU ⟨y₀, hy₀⟩
   by_contra hne

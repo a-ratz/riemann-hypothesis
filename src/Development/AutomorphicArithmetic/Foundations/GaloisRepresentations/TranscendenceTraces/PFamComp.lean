@@ -117,8 +117,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.famComp_of :
     obtain ⟨b2, e2, s2⟩ := h (sqB r p A) b1
     refine ⟨b2, (congrArg ((τ.deg 0).app (sqB r p A)) e1).trans e2, ?_⟩
     intro Ω _ _ x
-    haveI fB : IsFinite (pullback.snd p A.u) := Sq.finite (sqB r p A)
-    haveI fC : IsFinite (cr r p A) := Sq.finite (sqC r p A)
+    have fB : IsFinite (pullback.snd p A.u) := Sq.finite (sqB r p A)
+    have fC : IsFinite (cr r p A) := Sq.finite (sqC r p A)
     have key := hS (cr r p A) (pullback.snd p A.u) Ω x (Sec (tw q i) (gp Ω))
       (fun z => (Wt.mul r w' w) Ω (z ≫ A.v) • Sec.res z a)
     rw [cr_snd] at key

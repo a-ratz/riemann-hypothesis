@@ -173,7 +173,7 @@ theorem isCompact_exh (c : V n) (r a : ℝ) : IsCompact {y | y ∈ ball c r ∧ 
   by_cases ha : a ≤ 0
   · have : {y | y ∈ ball c r ∧ exh c r y ≤ a} = ∅ := by
       ext y
-      simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and, not_le]
+      simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and, not_le]
       intro hy
       have hp : 0 < r ^ 2 - sqd c y := sub_pos.2 (sqd_lt hy)
       exact lt_of_le_of_lt ha (inv_pos.2 hp)
@@ -181,7 +181,7 @@ theorem isCompact_exh (c : V n) (r a : ℝ) : IsCompact {y | y ∈ ball c r ∧ 
   push_neg at ha
   have heq : {y | y ∈ ball c r ∧ exh c r y ≤ a} = {y | sqd c y ≤ r ^ 2 - a⁻¹} := by
     ext y
-    simp only [Set.mem_setOf_eq, exh]
+    simp only [Set.mem_ofPred_eq, exh]
     constructor
     · rintro ⟨hy, hle⟩
       have hp : 0 < r ^ 2 - sqd c y := sub_pos.2 (sqd_lt hy)
@@ -201,7 +201,7 @@ theorem isCompact_exh (c : V n) (r a : ℝ) : IsCompact {y | y ∈ ball c r ∧ 
     (isClosed_le (contDiff_sqd c).continuous continuous_const) ?_
   refine (Metric.isBounded_closedBall (x := c) (r := r)).subset fun y hy => ?_
   have hai : 0 < a⁻¹ := inv_pos.2 ha
-  have h1 : sqd c y ≤ r ^ 2 := by simp only [Set.mem_setOf_eq] at hy; linarith
+  have h1 : sqd c y ≤ r ^ 2 := by simp only [Set.mem_ofPred_eq] at hy; linarith
   rw [mem_closedBall, dist_eq_norm]
   unfold sqd at h1
   nlinarith [norm_nonneg (y - c)]
@@ -288,7 +288,7 @@ theorem hormander_ball : ∀ (n : ℕ) (c : V n) (r t : ℝ) (φ : V n → ℝ) 
       rw [hX, levi_val hU]
       exact le_trans (by positivity) (hlevi x.1 x.2 ξ))
     (by rw [hX]; exact smooth_val hF0)
-    (hh.comp measurable_subtype_coe) (fun x ξ => by
+    (hh.comp measurable_subtypeVal) (fun x ξ => by
       have := hb x.1 x.2 ξ
       rw [hX]
       show ENNReal.ofReal (‖dbarDot n Subtype.val (fun x : ball c r => F0 x.1) x ξ‖ ^ 2) ≤

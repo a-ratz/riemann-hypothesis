@@ -75,7 +75,7 @@ theorem conj_conj (c : E ≃ₐ[F] E) (h2 : Module.finrank F E = 2) (hc : c ≠ 
 
 theorem exists_trace (c : E ≃ₐ[F] E) (h2 : Module.finrank F E = 2) (hc : c ≠ 1) (x : E) :
     ∃ t : F, x + c x = algebraMap F E t := by
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   have : x + c x ∈ Set.range (algebraMap F E) := by
     rw [IsGalois.mem_range_algebraMap_iff_fixed]
     intro g
@@ -212,7 +212,7 @@ open Classical in
 theorem compAt_locF (P : HeightOneSpectrum (𝓞 L)) (v : HeightOneSpectrum (𝓞 F)) (k : Fˣ) :
     compAt P (locF F v k) = if v = P.under (𝓞 F) then algebraMap L _ (algebraMap F L k) else 1 := by
   rw [locF, map_prod]
-  simp only [compAt_localIdele, Finset.prod_ite_eq', aboveF, Set.Finite.mem_toFinset, Set.mem_setOf_eq,
+  simp only [compAt_localIdele, Finset.prod_ite_eq', aboveF, Set.Finite.mem_toFinset, Set.mem_ofPred_eq,
     eq_comm (a := v)]
   rfl
 
@@ -230,7 +230,7 @@ theorem div_sub_one_lt {K Γ : Type*} [Field K] [LinearOrderedCommGroupWithZero 
     simp at h
   have hv : w y = w x := Valuation.map_eq_of_sub_lt _ (by rwa [Valuation.map_sub_swap])
   refine ⟨hy, ?_⟩
-  rw [div_sub_one hy, map_div₀, div_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hy)), hv]
+  rw [div_sub_one hy, map_div₀, div_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hy)), hv]
   exact h
 
 theorem finite_compAt_ne_one (a : Ideles L) :
@@ -263,14 +263,14 @@ theorem exists_locF_approx (a : Ideles L) (T₀ : Set (HeightOneSpectrum (𝓞 L
     intro P hP
     obtain ⟨h, h'⟩ := div_sub_one_lt _ (h1 P hP)
     have hk0 : k ≠ 0 := fun h0 => h (by rw [h0, map_zero, map_zero])
-    rw [map_div, compAt_prod_locF, if_pos hP, hu hk0]
+    rw [map_div, compAt_prod_locF, ite_eq_left hP, hu hk0]
     exact h'
   have h3 : ∀ P, Valued.v (compAt P (a / ∏ v ∈ S, locF F v u)) = 1 := by
     intro P
     by_cases hP : P.under (𝓞 F) ∈ S
     · have := Valuation.map_one_add_of_lt _ (h2 P hP)
       rwa [add_sub_cancel] at this
-    · rw [map_div, compAt_prod_locF, if_neg hP, div_one]
+    · rw [map_div, compAt_prod_locF, ite_eq_right hP, div_one]
       by_contra h
       exact hP (hS P (Or.inr h))
   exact ⟨S, u, a / ∏ v ∈ S, locF F v u, (div_mul_cancel _ _).symm, h3,

@@ -395,10 +395,10 @@ theorem heat_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       opV_rsT π _ dd' hdd' Θ₁ u (d i') (hd i') (pf i') (pf' i') k le_rfl (hW i') inf_le_right,
       rsT_rsT (hWc i) inf_le_left, rsT_rsT (hWc i') inf_le_right, hs, hgl]
     ring
-  haveI := t.semi.quasiCompact
-  haveI := t.semi.separated
-  haveI : CompactSpace t.G.left := QuasiCompact.compactSpace_of_compactSpace t.G.hom
-  haveI : QuasiSeparatedSpace t.G.left := quasiSeparatedSpace_of_quasiSeparated t.G.hom
+  have := t.semi.quasiCompact
+  have := t.semi.separated
+  have : CompactSpace t.G.left := QuasiCompact.compactSpace_of_compactSpace t.G.hom
+  have : QuasiSeparatedSpace t.G.left := quasiSeparatedSpace_of_quasiSeparated t.G.hom
   obtain ⟨tt, htt, htF⟩ := _root_.GlobalTheory.GlueOver.exists_glue M hM (t.G.left.basicOpen f) W (fun i _ => j i) F (by rw [hcov, hb]) hWc hF
   obtain ⟨N, s, hs⟩ := _root_.GlobalTheory.SecAff.sec_extend_basicOpen t.G.left M hM f tt htt
   refine ⟨c ^ N, s, pow_ne_zero N hc, fun i => ?_⟩
@@ -658,7 +658,7 @@ theorem eventually_zero {X : Scheme.{0}} {Ω : Type} [CommRing Ω] [IsDomain Ω]
   have hξU : ⊤ ≤ ξ ⁻¹ᵁ U := le_preimage_comp (V := ⊤) _ x hxU (le_preimage_top _)
   have hpU : p ∈ U := hξU (Set.mem_univ _)
   have hpO : p ∈ O := hO (Set.mem_univ _)
-  letI : Algebra Γ(X, U) (X.presheaf.stalk p) := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨p, hpU⟩
+  let : Algebra Γ(X, U) (X.presheaf.stalk p) := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨p, hpU⟩
   have hloc : IsLocalization.AtPrime (X.presheaf.stalk p) (hU.primeIdealOf ⟨p, hpU⟩).asIdeal :=
     hU.isLocalization_stalk ⟨p, hpU⟩
   obtain ⟨⟨a, s⟩, hmk⟩ := IsLocalization.mk'_surjective (hU.primeIdealOf ⟨p, hpU⟩).asIdeal.primeCompl
@@ -812,11 +812,11 @@ end Der
 theorem formallySmooth_of_charZero (F K : Type) [Field F] [CharZero F] [Field K] [Algebra F K] :
     Algebra.FormallySmooth F K := by
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis F K
-  haveI := hs.isAlgebraic_field
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
-  haveI : CharZero (IntermediateField.adjoin F (Set.range ((↑) : s → K))) :=
+  have := hs.isAlgebraic_field
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap F K).injective
+  have : CharZero (IntermediateField.adjoin F (Set.range ((↑) : s → K))) :=
     charZero_of_injective_algebraMap (algebraMap F _).injective
-  haveI : Algebra.IsSeparable (IntermediateField.adjoin F (Set.range ((↑) : s → K))) K :=
+  have : Algebra.IsSeparable (IntermediateField.adjoin F (Set.range ((↑) : s → K))) K :=
     Algebra.IsAlgebraic.isSeparable_of_perfectField
   exact Algebra.FormallySmooth.of_algebraicIndependent_of_isSeparable hs.1
 
@@ -826,11 +826,11 @@ theorem exists_derivation_fractionRing : ∀ (X : Scheme.{0}) (Ω : Type) [CommR
   set ξ := spMap (algebraMap Ω K) ≫ x with hξ
   have H := eventually_zero x hx
   set F := valField ξ W hW
-  haveI : CharZero K := ⟨fun m n h => by
+  have : CharZero K := ⟨fun m n h => by
     rw [← map_natCast (algebraMap Ω K) m, ← map_natCast (algebraMap Ω K) n] at h
     exact Nat.cast_injective (IsFractionRing.injective Ω K h)⟩
-  haveI : CharZero F := ⟨fun m n h => Nat.cast_injective (R := K) (by simpa using congrArg Subtype.val h)⟩
-  haveI : Algebra.FormallySmooth F K := formallySmooth_of_charZero F K
+  have : CharZero F := ⟨fun m n h => Nat.cast_injective (R := K) (by simpa using congrArg Subtype.val h)⟩
+  have : Algebra.FormallySmooth F K := formallySmooth_of_charZero F K
   obtain ⟨d', hadd, hmul, hext⟩ := GlobalTheory.KS.exists_derivation_extend_of_formallySmooth F K K (RingHom.id K)
     (valDer ξ W hW d) (valDer_add H hW d hd) (fun a b => valDer_mul H hW d hd a b)
   refine ⟨{ toFun := d'
@@ -1138,8 +1138,8 @@ theorem valR_generic : ∀ (X : Scheme.{0}) (Ω : Type) [CommRing Ω] [IsDomain 
   have hWU : W ≤ U := X.basicOpen_le s
   have hW : ⊤ ≤ ξ ⁻¹ᵁ W := fun q _ => by
     rw [Subsingleton.elim q q₀]; exact hsmem
-  letI : Algebra Γ(X, U) Γ(X, W) := (resG X hWU).toAlgebra
-  haveI : IsLocalization.Away s Γ(X, W) := hU.isLocalization_basicOpen s
+  let : Algebra Γ(X, U) Γ(X, W) := (resG X hWU).toAlgebra
+  have : IsLocalization.Away s Γ(X, W) := hU.isLocalization_basicOpen s
   obtain ⟨⟨a, m⟩, hm⟩ := IsLocalization.surj (Submonoid.powers s) (resG X hWO f)
   have hmu : IsUnit (resG X hWU (m : Γ(X, U))) := IsLocalization.map_units Γ(X, W) m
   change resG X hWO f * resG X hWU (m : Γ(X, U)) = resG X hWU a at hm
@@ -1224,7 +1224,7 @@ theorem valR_cst_eq_iota : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) (Ω : T
   let F : Γ(Sp R, (Sp R).basicOpen s) →+* FractionRing Ω :=
     (Scheme.ΓSpecIso (CommRingCat.of (FractionRing Ω))).hom.hom.comp (z.appLE (GlobalTheory.HeatV.bo R c).1 ⊤ h').hom
   have hF : ∀ θ, valR z (GlobalTheory.HeatV.bo R c).1 θ = F θ := fun θ => by
-    simp only [valR, dif_pos h']; rfl
+    simp only [valR, dite_eq_left h']; rfl
   suffices e : F = iota by rw [hF]; exact DFunLike.congr_fun e θ
   refine IsLocalization.ringHom_ext (Submonoid.powers s) (S := Γ(Sp R, (Sp R).basicOpen s)) ?_
   ext y0
@@ -1312,8 +1312,8 @@ theorem value_opV_ringOp : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   intro E _ _ _ H R _ _ _ _ _ _ t c hc n v' D Ω _ _ _ φ x' δ dd' hadic hx' hinv hδφ hval hinj g hg δL hδL Θ₁ DV hDV iota hiota J W j d u pf pf' hW hcov hWU hfield hlift hglue
   have hφ : Function.Injective φ := GlobalTheory.T.injective_ringMap_of_pointValues_detect_functions R t.G Ω φ x' hx' hinj
   have hφc : φ c ≠ 0 := fun h => hc (hφ (by rw [h, map_zero]))
-  haveI : CharZero Ω := charZero_of_injective_ringHom (φ.comp (algebraMap ℚ R)).injective
-  haveI : CharZero (FractionRing Ω) :=
+  have : CharZero Ω := charZero_of_injective_ringHom (φ.comp (algebraMap ℚ R)).injective
+  have : CharZero (FractionRing Ω) :=
     charZero_of_injective_ringHom (IsFractionRing.injective Ω (FractionRing Ω))
   obtain ⟨i0, hi0⟩ := GlobalTheory.T.exists_cover_member_containing_fractionField_point R t.G Ω φ x' hx' c hφc J W hcov
   obtain ⟨dt0, hdt0⟩ := GlobalTheory.T.exists_derivation_fractionRing_of_vectorField t.G.left Ω x' hinj (W i0) (d i0) (hfield i0) hi0

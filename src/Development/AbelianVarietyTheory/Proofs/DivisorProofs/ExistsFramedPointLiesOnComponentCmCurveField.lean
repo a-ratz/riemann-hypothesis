@@ -160,10 +160,10 @@ theorem exists_fixed_point (hD : 1 ≤ Dw.p + Dw.q)
   obtain ⟨F⟩ := GlobalTheory.closing_of_abelianSchemeLaws E H Dw l Xo σ₀ g ty hD hσ₀ hty
 
   obtain ⟨L, _, _, j, g₀, hg₀, hZ₀⟩ := GlobalTheory.FlatLine.exists_numberField_point Z
-  letI : Algebra c.F L := j.toAlgebra
-  haveI : IsScalarTower ℚ c.F L := IsScalarTower.of_algebraMap_eq (fun a => by
+  let : Algebra c.F L := j.toAlgebra
+  have : IsScalarTower ℚ c.F L := IsScalarTower.of_algebraMap_eq (fun a => by
     rw [RingHom.algebraMap_toAlgebra, eq_ratCast (algebraMap ℚ c.F), eq_ratCast (algebraMap ℚ L), map_ratCast])
-  haveI : Algebra.IsAlgebraic c.F L := Algebra.IsAlgebraic.tower_top (K := ℚ) c.F
+  have : Algebra.IsAlgebraic c.F L := Algebra.IsAlgebraic.tower_top (K := ℚ) c.F
   let φ : L →ₐ[c.F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -217,7 +217,7 @@ open AlgebraicGeometry CategoryTheory
 
 theorem exists_frPt_liesOn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), 1 ≤ Dw.p + Dw.q → (Dw.p = 0 ∨ Dw.q = 0 ∨ (3 ≤ Dw.p + Dw.q ∧ (∃ D₁ : Datum H, D₁.p = 1 ∧ D₁.q = 0))) → ∀ (K : IntermediateField ℚ ℂ) [NumberField K] (hle : c.F ≤ K), GlobalTheory.CompRat.CurveOver H K l.M' → ∀ Z : Comp Xo c, (letI : Algebra c.F K := (IntermediateField.inclusion hle).toRingHom.toAlgebra; ∃ y : FrPt Xo c K, LiesOn Z y) := by
   intro E _ _ _ H Dw l Xo c hD hsig K _ hle hK Z
-  letI : Algebra c.F K := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  let : Algebra c.F K := (IntermediateField.inclusion hle).toRingHom.toAlgebra
   obtain ⟨x, _, hxZ, hxfix⟩ := exists_fixed_point (H := H) (Xo := Xo) (c := c) hD hsig Z
   obtain ⟨g, hg⟩ := exists_descent K x (fun τ hτ => hxfix τ (fun a ha => hτ a (hle ha)) (hK τ hτ))
   have hcancel : ∀ a b : Sp K ⟶ Sp c.F, spMap (algebraMap K ℂ) ≫ a = spMap (algebraMap K ℂ) ≫ b → a = b := by

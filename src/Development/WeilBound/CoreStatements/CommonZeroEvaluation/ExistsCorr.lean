@@ -220,7 +220,7 @@ theorem span_eig (hinj : Function.Injective (algebraMap R F)) (z : Spec (CommRin
     have hE' := (mem_eigSp ρ _ e).1 hE
     have hv1 : ∀ a, v ≫ act a = sc z (σ a) ≫ v := by
       intro a
-      haveI := hA a
+      have := hA a
       refine LieCarrier.tan_ext _ hinj z _ _ ((LieEx.isTanAt_iff _ _ _).2 ?_) (isTanAt_sc hvT _) ?_
       · rw [← Category.assoc, (LieEx.isTanAt_iff _ _ _).1 hvT, one_comp]
       · have e1 : j ≫ v ≫ act a = j ≫ sc z (σ a) ≫ v := by

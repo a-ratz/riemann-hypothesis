@@ -293,15 +293,15 @@ private lemma uMat_expU_inv_mul {n : ℕ} {ε : Fin n → Bool} (X : gLie ε) (t
 theorem convolution_hasDerivAt : ∀ (B : RowsAut) (A : (InfinitePlace B.I.F → Fin B.I.n → Fin B.I.n → ℂ) → ℂ) (χ : B.I.Gf → ℂ) (ψ : B.I.GA → ℂ) (E : gInf B), ContDiff ℝ ∞ A → HasCompactSupport A → Continuous χ → HasCompactSupport χ → (∀ y, ψ y = A (fun v i j => uMat (y.1 v) i j) * χ y.2) → Continuous ψ ∧ HasCompactSupport ψ ∧ ∃ ψ' : B.I.GA → ℂ, Continuous ψ' ∧ HasCompactSupport ψ' ∧ ∀ F : B.I.L2 B.μf B.fund, HasDerivAt (fun t : ℝ => B.R ((fun v => expU (t • E v)), 1) (∫ y, ψ y • B.R y F ∂(B.I.muA B.μf))) (∫ y, ψ' y • B.R y F ∂(B.I.muA B.μf)) 0 ∧ ∀ x : B.I.GA, HasDerivAt (fun t : ℝ => ∫ z, ψ ((x * ((fun v => expU (t • E v)), 1))⁻¹ * z) * B.I.ext F z ∂(B.I.muA B.μf)) (∫ z, ψ' (x⁻¹ * z) * B.I.ext F z ∂(B.I.muA B.μf)) 0 := by
   intro B A χ ψ E hA hAs hχ hχs hψ
   obtain ⟨hT2f, -, hSCf, -⟩ := _root_.GlobalTheory.CongTop.adelic_topology B.I
-  haveI := hT2f
-  haveI := hSCf
-  haveI : IsFiniteMeasureOnCompacts (B.I.muA B.μf) := by
+  have := hT2f
+  have := hSCf
+  have : IsFiniteMeasureOnCompacts (B.I.muA B.μf) := by
     unfold AutInst.muA
     infer_instance
   obtain ⟨-, hRmul, -, hRc, hRext⟩ := _root_.GlobalTheory.RightRegFund.rightReg_unitary_continuous B
-  haveI : (B.I.muA B.μf).IsMulLeftInvariant := ⟨fun g => (_root_.GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf).1 g⟩
+  have : (B.I.muA B.μf).IsMulLeftInvariant := ⟨fun g => (_root_.GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf).1 g⟩
   have hu : ∀ v, Continuous fun y : B.I.GA => uMat (y.1 v) := fun v =>
-    (Units.continuous_val.comp continuous_subtype_val).comp ((continuous_apply v).comp continuous_fst)
+    (Units.continuous_val.comp continuous_subtypeVal).comp ((continuous_apply v).comp continuous_fst)
   let m : B.I.GA → (InfinitePlace B.I.F → Fin B.I.n → Fin B.I.n → ℂ) := fun y v i j => uMat (y.1 v) i j
   let D : B.I.GA → (InfinitePlace B.I.F → Fin B.I.n → Fin B.I.n → ℂ) := fun y v i j =>
     ((((-(E v)) : gLie (B.I.ε v)) : Matrix (Fin B.I.n) (Fin B.I.n) ℂ) * uMat (y.1 v)) i j
@@ -342,7 +342,7 @@ theorem convolution_hasDerivAt : ∀ (B : RowsAut) (A : (InfinitePlace B.I.F →
     rcases hsplit y hy with h | h
     · have h0 : fderiv ℝ A (m y) = 0 :=
         Function.notMem_support.1 fun h' => h (support_fderiv_subset ℝ h')
-      rw [h0, ContinuousLinearMap.zero_apply, zero_mul]
+      rw [h0, zero_apply, zero_mul]
     · rw [h, mul_zero]
   have hcc : Continuous c := (continuous_pi fun v => continuous_expU (E v)).prodMk continuous_const
   have hc0 : c 0 = 1 := by
@@ -484,7 +484,7 @@ theorem conv_avg (B : RowsAut) (T : B.Hs →L[ℂ] B.I.L2 B.μf B.fund)
     · simp [h0]
     · have e1 : B.R (g, k) (T w) = T (B.σs g w) := by
         have : ((g, k) : B.I.GA) = (g, 1) * (1, k) := by simp
-        rw [this, hmul, ContinuousLinearMap.mul_apply, hk w k (hχ k h0)]
+        rw [this, hmul, mul_apply_eq_comp, hk w k (hχ k h0)]
         exact (congrArg (fun S : B.Hs →L[ℂ] B.I.L2 B.μf B.fund => S w) (hT g)).symm
       simp only [e1, map_smul, smul_smul, mul_comm]
   simp_rw [hpt]
@@ -508,7 +508,7 @@ theorem repsExist : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ), IsDSDat
   have hFr : ∀ u f, IsContRep B (T u) f → Fr u = f := by
     intro u f hf
     have h : ∃ f, IsContRep B (T u) f := ⟨f, hf⟩
-    have : Fr u = h.choose := dif_pos h
+    have : Fr u = h.choose := dite_eq_left h
     rw [this]
     exact huniq _ _ _ h.choose_spec hf
   refine ⟨Fr, fun P u hu => ?_⟩

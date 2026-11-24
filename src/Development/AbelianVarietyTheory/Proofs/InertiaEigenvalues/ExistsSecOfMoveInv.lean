@@ -89,7 +89,7 @@ theorem value_descends (d : DeltaDat Xo c n) (hlev : d.IsLev) (G : Rul d.Xo₂ d
   have hN := GlobalTheory.LevelMapsAnyRank.levelMaps Dw
   have hWD := (GlobalTheory.Frames.algebraic_laws hL.secBaseChange E H Dw d.l₂ d.Xo₂ d.c₂).2.2.1
   have hAT := GlobalTheory.Frames.allTest_of_secBaseChange hL.secBaseChange E H Dw d.l₂ d.Xo₂ d.c₂
-  haveI : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  have : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
   have hbc := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw l Xo c
   have hbc₂ := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw d.l₂ d.Xo₂ d.c₂
   have hcomp := (GlobalTheory.framedPoint_baseChange_laws E H Dw l Xo c).2.1
@@ -103,13 +103,13 @@ theorem value_descends (d : DeltaDat Xo c n) (hlev : d.IsLev) (G : Rul d.Xo₂ d
   obtain ⟨hov1, hov2, -⟩ := GlobalTheory.T.framedPoints_lift_to_levelCover hL E H Dw l Xo c n { d with r := r, m := m }
   obtain ⟨S, _, φ, j, x₂, f1, f2, f3, hj, hx, hx'⟩ :=
     exists_cover_point d.hF.symm r rF h1 h2 p.R y.x y.x_over
-  letI : Algebra p.R S := φ.toAlgebra
-  letI : Algebra c.F S := (φ.comp (algebraMap c.F p.R)).toAlgebra
-  letI : Algebra d.c₂.F S := j.toAlgebra
-  haveI : Module.Finite p.R S := f1
-  haveI : Algebra.Smooth p.R S := f2
-  haveI : Module.FaithfullyFlat p.R S := f3
-  haveI := isReduced_of_smooth_algebra p.R S
+  let : Algebra p.R S := φ.toAlgebra
+  let : Algebra c.F S := (φ.comp (algebraMap c.F p.R)).toAlgebra
+  let : Algebra d.c₂.F S := j.toAlgebra
+  have : Module.Finite p.R S := f1
+  have : Algebra.Smooth p.R S := f2
+  have : Module.FaithfullyFlat p.R S := f3
+  have := isReduced_of_smooth_algebra p.R S
   have hS : ∀ a : c.F, algebraMap d.c₂.F S (d.eF a) = algebraMap c.F S a := fun a =>
     RingHom.congr_fun hj a
   let φa : p.R →ₐ[c.F] S := { φ with commutes' := fun _ => rfl }
@@ -142,8 +142,8 @@ theorem value_descends (d : DeltaDat Xo c n) (hlev : d.IsLev) (G : Rul d.Xo₂ d
         (∀ a : c.F, algebraMap d.c₂.F k (d.eF a) = algebraMap c.F k a) ∧ χa.toRingHom = χ ∧
         FrMap χa y z ∧ FrOver d z₂ z := by
     intro k _ _ χ
-    letI i1 : Algebra c.F k := (χ.comp (algebraMap c.F p.R)).toAlgebra
-    letI i2 : Algebra d.c₂.F k := ((algebraMap c.F k).comp d.eF.symm.toRingEquiv.toRingHom).toAlgebra
+    let i1 : Algebra c.F k := (χ.comp (algebraMap c.F p.R)).toAlgebra
+    let i2 : Algebra d.c₂.F k := ((algebraMap c.F k).comp d.eF.symm.toRingEquiv.toRingHom).toAlgebra
     have hk : ∀ a : c.F, algebraMap d.c₂.F k (d.eF a) = algebraMap c.F k a := fun a =>
       congrArg (algebraMap c.F k) (d.eF.symm_apply_apply a)
     let χa : p.R →ₐ[c.F] k := { χ with commutes' := fun _ => rfl }
@@ -256,8 +256,8 @@ theorem sum_values_eq [StarRing (𝓞 E)] (nab : NabV Xo c) (hnab : IsNab Xo c n
   classical
   rcases isEmpty_or_nonempty T with hT0 | ⟨⟨t₀⟩⟩
   · simp
-  haveI := ShortValue.finite_levelQuotient Dw l
-  haveI := Fintype.ofFinite (Fin n → LevQ Dw l)
+  have := ShortValue.finite_levelQuotient Dw l
+  have := Fintype.ofFinite (Fin n → LevQ Dw l)
   obtain ⟨S', _, _, φ, y', z, tp, F, hf, hm, hz, hg, ht, hF, -⟩ := hv t₀
   have hid : (AlgHom.id c.F S').toRingHom.FaithfullyFlat :=
     RingHom.FaithfullyFlat.of_bijective Function.bijective_id

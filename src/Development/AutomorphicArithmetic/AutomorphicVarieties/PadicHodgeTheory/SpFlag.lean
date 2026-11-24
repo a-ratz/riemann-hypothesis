@@ -147,7 +147,7 @@ theorem sandwich {X : M4 R} {h : (M4 R)ˣ} {c : Fin 4 → R} (hd : ∀ i j, i �
   · intro h0
     have h1 := hW j i
     rw [h0] at h1
-    simp only [Matrix.zero_apply, if_pos rfl] at h1
+    simp only [Matrix.zero_apply, ite_eq_left rfl] at h1
     exact (isUnit_dd hd j).mul_right_eq_zero.mp ((isUnit_dd hd i).mul_left_eq_zero.mp h1.symm)
   · intro h0
     ext a b
@@ -155,7 +155,7 @@ theorem sandwich {X : M4 R} {h : (M4 R)ˣ} {c : Fin 4 → R} (hd : ∀ i j, i �
     by_cases ha : a = j
     · by_cases hb : b = i
       · subst ha hb
-        rw [if_pos rfl, if_pos rfl, h0, mul_zero, zero_mul, Matrix.zero_apply]
+        rw [ite_eq_left rfl, ite_eq_left rfl, h0, mul_zero, zero_mul, Matrix.zero_apply]
       · simp [hb]
     · simp [ha]
 
@@ -317,12 +317,12 @@ theorem exists_symp (π : R →+* E) (hπ : ∀ a, π a = 1 → IsUnit a) {X : M
     · have hr : ¬ ((a.rev : ℕ) < 2) := by
         rw [Fin.val_rev]
         omega
-      rw [if_neg hr, if_pos ha, one_mul, mul_comm, hw1]
+      rw [ite_eq_right hr, ite_eq_left ha, one_mul, mul_comm, hw1]
     · have hr : (a.rev : ℕ) < 2 := by
         rw [Fin.val_rev]
         have := a.isLt
         omega
-      rw [if_pos hr, if_neg ha, mul_one, ← hdiag a, hw1]
+      rw [ite_eq_left hr, ite_eq_right ha, mul_one, ← hdiag a, hw1]
   have hHu : IsUnit ((k : M4 R) * Matrix.diagonal d) :=
     k.isUnit.mul (Matrix.isUnit_diagonal.mpr (Pi.isUnit_iff.mpr hdu))
   refine ⟨hHu.unit, ?_, ?_, ?_⟩
@@ -421,7 +421,7 @@ theorem ord_iff {H : Type} [Group H] (π : R →+* E) (hπ : ∀ a, π a = 1 →
     have hkt := hktri (hG s₀)
     have hkinv : ((k⁻¹ : (M4 R)ˣ) : M4 R).BlockTriangular id := by
       rw [Matrix.coe_units_inv]
-      letI := k.invertible
+      let := k.invertible
       exact Matrix.blockTriangular_inv_of_blockTriangular hkt
     have hh' : r s₀ * ((h * k : (M4 R)ˣ) : M4 R) =
         ((h * k : (M4 R)ˣ) : M4 R) * Matrix.diagonal fun a => ps a s₀ := by

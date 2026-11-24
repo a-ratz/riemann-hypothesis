@@ -98,8 +98,8 @@ theorem baseChange_isConn_isEt : ∀ (p : ℕ) [Fact p.Prime] (k k' : Type) [Fie
       intro a ha
       exact (hG n a ha).map _
     exact hle hmem
-  · haveI : PerfectField k := PerfectRing.toPerfectField k p
-    haveI : IsReduced (G.A n) := hG n
+  · have : PerfectField k := PerfectRing.toPerfectField k p
+    have : IsReduced (G.A n) := hG n
     exact GlobalTheory.ReducedAlg.isReduced_field_tensor k' (G.A n)
 
 end GlobalTheory.Dieu

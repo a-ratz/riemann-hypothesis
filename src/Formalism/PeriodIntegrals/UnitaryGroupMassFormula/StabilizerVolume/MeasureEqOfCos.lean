@@ -155,7 +155,7 @@ theorem cosDens_holds : CosDens := by
     intro n y
     have hmeas : MeasurableSet {z : X | z - y ∈ H n} :=
       ((hHo n).preimage (continuous_id.sub continuous_const)).measurableSet
-    rw [Measure.restrict_apply hmeas, Measure.smul_apply, smul_eq_mul]
+    rw [Measure.restrict_apply hmeas, smul_apply, smul_eq_mul]
     by_cases hy : y - c0 ∈ H 0
     · have hsub : {z : X | z - y ∈ H n} ∩ {z | z - c0 ∈ H 0} = {z | z - y ∈ H n} := by
         apply inter_eq_left.mpr
@@ -180,6 +180,6 @@ theorem cosDens_holds : CosDens := by
       rw [hempty, measure_empty, mul_zero]
       exact measure_mono_null (fun z hz => hout z hz) hm0
   rw [measure_eq_of_cos m _ H hHo hanti hb hcos' S hS hS.isClosed,
-    Measure.restrict_apply hS.isClosed.measurableSet, Measure.smul_apply, smul_eq_mul]
+    Measure.restrict_apply hS.isClosed.measurableSet, smul_apply, smul_eq_mul]
 
 end PI.VolStabS

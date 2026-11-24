@@ -90,8 +90,8 @@ theorem fderiv_fderiv_log_apply {F : (J → ℂ) → ℝ} {z : J → ℂ} (hF : 
     (hasFDerivAt_inv hpos.ne').comp z (hF.differentiableAt (by norm_num)).hasFDerivAt
   have hP := hinv.fun_smul hH
   rw [hev.fderiv_eq, hP.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, smul_eq_mul,
-    ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.coe_comp', Function.comp_apply,
+  simp only [add_apply, FunLike.coe_smul, Pi.smul_apply, smul_eq_mul,
+    ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.coe_comp, Function.comp_apply,
     ContinuousLinearMap.toSpanSingleton_apply]
   field_simp
   ring

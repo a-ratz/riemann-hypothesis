@@ -446,8 +446,8 @@ theorem exists_isPullback_field {O O' F : Type} [CommRing O] [CommRing O'] [IsDo
     (hβ : @IsFractionRing O _ F _ β.toAlgebra) (b : O →+* O') (hb : Function.Injective b) [IsFinite (spMap b)] :
     ∃ (F' : Type) (_ : Field F') (β' : O' →+* F') (κ : F →+* F'), Function.Injective β' ∧
       IsPullback (spMap β') (spMap κ) (spMap b) (spMap β) := by
-  letI := β.toAlgebra
-  letI := b.toAlgebra
+  let := β.toAlgebra
+  let := b.toAlgebra
   have : IsDomain O := hb.isDomain b
   have hfin : b.Finite := (IsFinite.SpecMap_iff (CommRingCat.ofHom b)).1 ‹_›
   have : Module.Finite O O' := hfin
@@ -456,7 +456,7 @@ theorem exists_isPullback_field {O O' F : Type} [CommRing O] [CommRing O'] [IsDo
   have hi : Function.Injective (algebraMap O F') := by
     rw [IsScalarTower.algebraMap_eq O O' F']
     exact (IsFractionRing.injective O' F').comp hb
-  letI : Algebra F F' := (IsFractionRing.lift hi).toAlgebra
+  let : Algebra F F' := (IsFractionRing.lift hi).toAlgebra
   have : IsScalarTower O F F' := IsScalarTower.of_algebraMap_eq fun x => (IsFractionRing.lift_algebraMap hi x).symm
   refine ⟨F', inferInstance, algebraMap O' F', algebraMap F F', IsFractionRing.injective O' F', ?_⟩
   exact isPullback_SpecMap_of_isPushout _ _ _ _ (CommRingCat.isPushout_of_isPushout O O' F F')
@@ -487,7 +487,7 @@ theorem fibre_fixed_of_finite_order_of_level_fixed : Out.Laws → Out.Laws2 → 
   obtain ⟨F', _, β', κ, hβ', sq⟩ := exists_isPullback_field β hfrac b hbi
   obtain ⟨_, -, -, _, _, _, _⟩ : IsLocallyNoetherian C.X ∧ CompactSpace C.X ∧ C.X.IsSeparated ∧
       IsPreimmersion C.j ∧ Flat C.j ∧ IsDominant C.j ∧ QuasiCompact C.j := by
-    letI := β.toAlgebra
+    let := β.toAlgebra
     exact GlobalTheory.genericPart_dense_proOpen _ (KA l) C.X Xo.X C.s C.jQ C.flat C.proj C.jQ_open C.jQ_dense
   have hjs : C.j ≫ C.s = Xo.s ≫ spMap β := by
     rw [Cpt.j, Category.assoc, pullback.condition, ← Category.assoc, C.jQ_over]

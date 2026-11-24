@@ -110,7 +110,7 @@ theorem integrableOn_chart [CompactSpace X] [T2Space X] (A : FinHolAtlas e X)
       | exact hI.continuousOn_mul (hχc.mono hKt) hKc
       | exact IntegrableOn.continuousOn_mul (hχc.mono hKt) hI hKc
   simp only [mul_assoc]
-  refine hI2.of_forall_diff_eq_zero (A.chart j).open_target.measurableSet ?_
+  refine hI2.of_forall_sdiff_eq_zero (A.chart j).open_target.measurableSet ?_
   rintro u ⟨hut, huK⟩
   have hn : (A.chart j).symm u ∉ tsupport (Pt.χ j) := fun h =>
     huK ⟨_, h, (A.chart j).right_inv hut⟩

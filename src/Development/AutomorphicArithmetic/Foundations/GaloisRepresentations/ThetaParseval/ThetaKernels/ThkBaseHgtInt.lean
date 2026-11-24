@@ -107,7 +107,7 @@ theorem hasIwasawa_fin'_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ 
     (hJ : Y.J.det ≠ 0) {ξ : E} (hξ : ξ ≠ 0) (hh : ∀ i j, σ ((ξ • Y.Jᵀ) j i) = (ξ • Y.Jᵀ) i j) (v : Pl F) :
     HasIwasawa σ (dblGram finSumFinEquiv (ξ • Y.Jᵀ)) (GlobalTheory.Doubling.KFin σ _ Y.L v) := by
   have hσ := cm_conj_conj hB.cm
-  haveI hL : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
+  have hL : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
   obtain ⟨P, h1, h2⟩ := Frames.exists_rational_frame Y.L v
   obtain ⟨δ, h0, G', hG', b1, b2⟩ : ∃ δ : E, δ ≠ 0 ∧ ∃ G' : Matrix (Fin n) (Fin n) E, G' * (P.1ᵀ * Y.J * P.1.map σ) = 1 ∧
       (∀ i j, LocInt v (δ⁻¹ * (P.1ᵀ * Y.J * P.1.map σ) i j)) ∧ ∀ i j, LocInt v (δ * G' i j) := by
@@ -215,11 +215,11 @@ theorem hgtEx_core_k {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) {r
   have := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   have := t2Space_adeleRing' (F := F)
   have := t2Space_tensorProduct_finiteExtension (F := F) (E := E) (R := AF F)
-  have hI := iwasawaOf_of_isCompact (ν := absE F E) continuous_subtype_val continuous_absE hK (_root_.GlobalTheory.ThK.Dbl.Hgt.iwasawa2_k hB hY)
+  have hI := iwasawaOf_of_isCompact (ν := absE F E) continuous_subtypeVal continuous_absE hK (_root_.GlobalTheory.ThK.Dbl.Hgt.iwasawa2_k hB hY)
   refine ⟨⟨_, fun x => hgtOf (Equiv.refl _) (UG (cA σ) (dbl (incM F Y.J))).subtype (absE F E) (stab2 σ Y B) x, isStab2_stab2 B,
     ⟨fun x => ?_, fun p t hp k hk => ?_⟩,
-    NNReal.continuous_coe.comp (hI.continuous_hgtOf continuous_subtype_val continuous_absE hK), fun x => hgtOf_pos x⟩,
-    emb2 σ Y, ((continuous_blkGL _).comp (continuous_subtype_val.prodMap continuous_subtype_val)).subtype_mk _, fun _ _ => rfl⟩
+    NNReal.continuous_coe.comp (hI.continuous_hgtOf continuous_subtypeVal continuous_absE hK), fun x => hgtOf_pos x⟩,
+    emb2 σ Y, ((continuous_blkGL _).comp (continuous_subtypeVal.prodMap continuous_subtypeVal)).subtype_mk _, fun _ _ => rfl⟩
   · obtain ⟨p, h⟩ := _root_.GlobalTheory.ThK.Dbl.Hgt.iwasawa2_k hB hY x
     exact ⟨p, leviOf _ _ p, isPar_iff.2 ⟨mem_siegelOf.1 p.2, rfl⟩, h⟩
   · obtain ⟨h1, h2⟩ := isPar_iff.1 hp
@@ -265,7 +265,7 @@ theorem hgtInt_of_k (hC : _root_.GlobalTheory.ThK.Dbl.Stab2Cpt_k) : _root_.Globa
   let T : G2 σ Y → Matrix (Fin n) (Fin n) (AE F E) := fun k => (mat2 k⁻¹ * diagCols (E := AE F E) (Fin n)).toRows₁
   let T' : G2 σ Y → Matrix (Fin n) (Fin n) (AE F E) := fun k => (mat2 k⁻¹ * diagCols (E := AE F E) (Fin n)).toRows₂
   have cm : Continuous fun k : G2 σ Y => (mat2 k⁻¹ * diagCols (E := AE F E) (Fin n)) :=
-    ((Units.continuous_val.comp continuous_subtype_val).comp continuous_inv).matrix_mul continuous_const
+    ((Units.continuous_val.comp continuous_subtypeVal).comp continuous_inv).matrix_mul continuous_const
   have cT : Continuous T := cm.matrix_submatrix _ _
   have cT' : Continuous T' := cm.matrix_submatrix _ _
   have : IsModuleTopology (AF F) (Matrix (Fin n) (Fin n) (AE F E)) :=

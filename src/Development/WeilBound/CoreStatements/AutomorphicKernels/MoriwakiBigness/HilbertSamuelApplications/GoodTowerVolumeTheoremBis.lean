@@ -409,7 +409,7 @@ theorem not_sq_dvd (E : Type) [Field E] [NumberField E] (p : ℕ) (hp : p.Prime)
     ¬ w ^ 2 ∣ Ideal.span {(p : 𝓞 E)} := by
   intro h
   have hpz : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
-  haveI : (Ideal.span {(p : ℤ)}).IsMaximal :=
+  have : (Ideal.span {(p : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible hpz.irreducible
   have hne : Ideal.span {(p : ℤ)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
@@ -598,18 +598,18 @@ theorem orbit_abstract {p : ℕ} (hp : p.Prime) (hd : ¬ (p : ℤ) ∣ NumberFie
         (∀ t, (∀ a, r t a = 0 ↔ pq (Ideal.Quotient.mk _ a) = 0) → t ∈ Set.range e) ∧ IsSec pq sc := by
   classical
   set w₀ : Ideal (𝓞 E) := RingHom.ker (r t₀) with hw₀
-  haveI hprime : w₀.IsPrime := RingHom.ker_isPrime _
+  have hprime : w₀.IsPrime := RingHom.ker_isPrime _
   have hpw : (p : 𝓞 E) ∈ w₀ := by
     rw [hw₀, RingHom.mem_ker, map_natCast, hpk]
   have hp0 : (p : 𝓞 E) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
   have hne : w₀ ≠ ⊥ := fun h => hp0 (by rwa [h, Ideal.mem_bot] at hpw)
-  haveI hmax : w₀.IsMaximal := Ideal.IsPrime.isMaximal hprime hne
-  letI fld : Field (𝓞 E ⧸ w₀) := Ideal.Quotient.field w₀
-  haveI hfinq : Finite (𝓞 E ⧸ w₀) := Ideal.finiteQuotientOfFreeOfNeBot w₀ hne
-  letI fin : Fintype (𝓞 E ⧸ w₀) := Fintype.ofFinite _
+  have hmax : w₀.IsMaximal := Ideal.IsPrime.isMaximal hprime hne
+  let fld : Field (𝓞 E ⧸ w₀) := Ideal.Quotient.field w₀
+  have hfinq : Finite (𝓞 E ⧸ w₀) := Ideal.finiteQuotientOfFreeOfNeBot w₀ hne
+  let fin : Fintype (𝓞 E ⧸ w₀) := Fintype.ofFinite _
   have hle : Ideal.span {(p : 𝓞 E)} ≤ w₀ := (Ideal.span_singleton_le_iff_mem _).2 hpw
   have hchar : CharP (𝓞 E ⧸ w₀) p := by
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     refine (CharP.charP_iff_prime_eq_zero hp).2 ?_
     have : ((p : 𝓞 E) : 𝓞 E ⧸ w₀) = 0 := Ideal.Quotient.eq_zero_iff_mem.2 hpw
     simpa using this
@@ -636,7 +636,7 @@ theorem orbit_abstract {p : ℕ} (hp : p.Prime) (hd : ¬ (p : ℤ) ∣ NumberFie
   let f : Sg → Sg := fun τ => ⟨φ τ.1, (hker τ.1).trans τ.2⟩
   have hfi : Function.Injective f := fun a b h =>
     Subtype.ext (φ.injective (congrArg Subtype.val h))
-  haveI : Finite Sg := inferInstance
+  have : Finite Sg := inferInstance
   let φ' : Equiv.Perm Sg := Equiv.ofBijective f (Finite.injective_iff_bijective.1 hfi)
   let σ : Sg → (𝓞 E ⧸ w₀) →+* k := fun τ => Ideal.Quotient.lift w₀ (r τ.1) fun a ha => by
     have : a ∈ RingHom.ker (r τ.1) := by rw [τ.2]; exact ha
@@ -702,7 +702,7 @@ theorem exists_point (A : HodgeCpt Y S y) : ∃ x : Sp Ω ⟶ Xo.XF c, A.ξ ≫ 
 
 theorem exists_root (A : HodgeCpt Y S y) (hpq : 0 < D.p + D.q) {p : ℕ} (hp : p.Prime) (hpS : p ∈ S) :
     ∃ ζ : Ω, IsPrimitiveRoot ζ p := by
-  haveI : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
   obtain ⟨x, hx⟩ := exists_point A
   obtain ⟨s0, o, ⟨m0⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ObjAt.exists_obj_at E H D l Xo c O₀ β Y A.X A.f A.t A.m Ω A.ξ x hx
   have hN : 0 < p ^ A.R p := pow_pos hp.pos _
@@ -717,7 +717,7 @@ theorem orbit_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d _ hpq p hfact hpS _ hp2 hdisc φ hφ A _ _ _ m _ hpm O _ _ _ _ _ _ _ t₀
   have hp : p.Prime := hfact.out
   have hinj := algebraMap_injective (Ω := Ω) (A := A) (m := m) (O := O)
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   obtain ⟨ζ, hζ⟩ := exists_root 𝔐 hpq hp hpS
   have hζi : IsIntegral ℤ ζ := IsIntegral.of_pow hp.pos (by rw [hζ.pow_eq_one]; exact isIntegral_one)
   obtain ⟨z, hz⟩ := exists_of_integral (A := A) (m := m) (O := O) ζ hζi
@@ -764,7 +764,7 @@ theorem orbit_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   · intro t ht
     exact a6 t fun a => ht a (g t a) (hg t a)
   · unfold HT.IsCp
-    rw [if_neg hp2]
+    rw [ite_eq_right hp2]
     exact ⟨ζ, hζ, by rw [map_sub, map_one, hz]⟩
 
 end GlobalTheory.CompanionTheory.Ar.Num.FamEx.Orbit
@@ -890,7 +890,7 @@ theorem sp_id {A : Type} [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := by
 
 theorem isDominant_spMap {A B : Type} [Field A] [Field B] (i : A →+* B) : IsDominant (spMap i) := by
   refine ⟨Function.Surjective.denseRange fun y => ?_⟩
-  haveI : Subsingleton (Spec (CommRingCat.of A)) := inferInstanceAs (Subsingleton (PrimeSpectrum A))
+  have : Subsingleton (Spec (CommRingCat.of A)) := inferInstanceAs (Subsingleton (PrimeSpectrum A))
   exact ⟨(default : PrimeSpectrum B), Subsingleton.elim _ _⟩
 
 theorem exists_inv {Ω : Type} [Field Ω] {O : Type} [CommRing O] [Algebra O Ω] (R : Subalgebra O Ω)
@@ -954,9 +954,9 @@ theorem PositivityTheory.Xgn.full_torsion_packing : ∀ (X : Scheme.{0}) (G : Ov
     have h1 : preHom G v (x₀ ^ N) = preHom G v 1 := by
       rw [map_pow, hv, hgN, map_one]
     have h2 : x₀ ^ N = 1 := by
-      haveI := hG.separated
-      haveI := isDominant_spMap (a.comp e')
-      haveI : IsReduced (Over.mk ξ).left := inferInstanceAs (IsReduced (Spec (CommRingCat.of Ω)))
+      have := hG.separated
+      have := isDominant_spMap (a.comp e')
+      have : IsReduced (Over.mk ξ).left := inferInstanceAs (IsReduced (Spec (CommRingCat.of Ω)))
       ext1
       refine ext_of_isDominant_of_isSeparated G.hom ?_ (spMap (a.comp e')) ?_
       · rw [Over.w, Over.w]
@@ -1082,7 +1082,7 @@ theorem finite_torsT (E : Type) [Field E] [NumberField E] (N n : ℕ) (hn : n �
   have hI : Ideal.span {(n : 𝓞 E)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hn
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(n : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
+  have : Finite (𝓞 E ⧸ Ideal.span {(n : 𝓞 E)}) := Ideal.finiteQuotientOfFreeOfNeBot _ hI
   exact inferInstanceAs (Finite (Fin N → (𝓞 E ⧸ Ideal.span {(n : 𝓞 E)})))
 
 theorem qhom_surjective (E : Type) [Field E] [NumberField E] (N n : ℕ) : Function.Surjective (qhom (E := E) N n) := fun t => by
@@ -1114,8 +1114,8 @@ theorem qhom_eq_one_iff (E : Type) [Field E] [NumberField E] (N n : ℕ) (y : Fi
 theorem chartPack_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), ReciprocityTheory.ChartRestriction.G.Geo.IsArithVar (mCoordIdeal y) (d + 1) → 0 < D.p + D.q → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → HT.HTFree 𝔐 p → p ≠ 2 → ¬ (p : ℤ) ∣ NumberField.discr E → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω], ∀ (G : GenTors 𝔐 p) (c' : ∀ k, J k), mseg y c' ≠ 0 → Nonempty (ChartPack G O c') := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hv hpq p _ hpS hHT hp2 hdisc A _ _ _ m _ hm O _ _ _ _ _ _ _ G c' hc
   obtain ⟨hΩ, hno, hic, hfr, x, hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.ChartFacts.chartRing_over_place_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hv p hpS A m hm O c' hc
-  haveI := hno; haveI := hic; haveI := hfr; haveI := hΩ
-  haveI : CharZero (CR O y c') := ⟨fun a b h => by
+  have := hno; have := hic; have := hfr; have := hΩ
+  have : CharZero (CR O y c') := ⟨fun a b h => by
     have h2 := congrArg (algebraMap (CR O y c') Ω) h
     simpa using h2⟩
   have hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
@@ -1137,11 +1137,11 @@ theorem chartPack_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hne : G.ζ ≠ 0 := G.ζ_prim.ne_zero hn0
   obtain ⟨ζ, hζ⟩ : ∃ u : (CR O y c')ˣ, ((u : CR O y c') : Ω) = G.ζ :=
     ⟨⟨⟨G.ζ, hmem _ hz1⟩, ⟨G.ζ⁻¹, hmem _ hz2⟩, Subtype.ext (mul_inv_cancel₀ hne), Subtype.ext (inv_mul_cancel₀ hne)⟩, rfl⟩
-  haveI hfinT : Finite (TorsT E (D.p + D.q) (p ^ 𝔐.R p)) := finite_torsT E _ _ hn0
+  have hfinT : Finite (TorsT E (D.p + D.q) (p ^ 𝔐.R p)) := finite_torsT E _ _ hn0
   have hsurj : Function.Surjective (qhom (E := E) (D.p + D.q) (p ^ 𝔐.R p)) := qhom_surjective E _ _
   have hker : ∀ y₁, qhom (E := E) (D.p + D.q) (p ^ 𝔐.R p) (Multiplicative.ofAdd y₁) = 1 ↔ ∃ y', y₁ = (p ^ 𝔐.R p) • y' :=
     qhom_eq_one_iff E _ _
-  haveI hiso := isIso_spMap_fracToField (CR O y c')
+  have hiso := isIso_spMap_fracToField (CR O y c')
   have hlin : ∀ (a : 𝓞 E) y₁, (Γ₂.pt (qhom _ _ (Multiplicative.ofAdd (a • y₁)))).left ≫ i₂' =
         (Γ₂.pt (qhom _ _ (Multiplicative.ofAdd y₁))).left ≫ i₂' ≫ (𝔐.t.act.act a).left := by
     intro a y₁
@@ -1240,7 +1240,7 @@ open GlobalTheory.CompanionTheory.Ar.BT
 
 theorem familyExistsPos_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → GlobalTheory.CompanionTheory.Ar.GR.QuotientByFiniteFlatStatement → GlobalTheory.CompanionTheory.Ar.GR.ZarhinStatement → GlobalTheory.CompanionTheory.Ar.GR.HodgeTateDatumStatement → GlobalTheory.CompanionTheory.Ar.GR.OrdinaryCurveStatement → GlobalTheory.CompanionTheory.Ar.Num.FamilyExistsPos := by
   intro hF hQ hZ hH hOrd E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d ha hpq b hb p hpS hfree h2 hdisc φ hφ A _ _ _ m _ hm O _ _ _ _ _ _ _ t₀
-  haveI : Fact p.Prime := ⟨𝔐.S_prime p hpS⟩
+  have : Fact p.Prime := ⟨𝔐.S_prime p hpS⟩
   obtain ⟨Sg, _, e, φ', F, _, _, _, pq, sc, w, σ, hO, hS⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.Orbit.orbit_exists E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc φ hφ A m hm O t₀
   obtain ⟨G⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.nonempty_genTors E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc
@@ -1254,13 +1254,13 @@ theorem familyExistsPos_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeT
   let i : ∀ (c' : ∀ k, J k) (τ : Sg), (Fin (labelRk D (e τ)) → Ω) →ₗ[Ω] (Fin (D.p + D.q) → Ω) :=
     fun c' τ => if h : mseg y c' ≠ 0 then (hQs c' h τ).choose else 0
   have hi : ∀ (c' : ∀ k, J k) (h : mseg y c' ≠ 0) (τ : Sg), SeqHyp (CR O y c') (algebraMap O Ω w) (coordLat O y (𝔐.HT p (e τ)) (b (e τ)) c') (dotDual (CR O y c') (coordLat O y (𝔐.HT p (e τ).swap) (b (e τ).swap) c')) (i c' τ) (qMap (P c' h) (b (e τ).swap)) ∧ ∀ σE : E →+* Ω, (∀ a : 𝓞 E, σE (a : E) = 𝔐.emb (e τ) a) → DualSeq (P c' h) σE (𝔐.R p - 2) (coordLat O y (𝔐.HT p (e τ)) (b (e τ)) c') (b (e τ)) (i c' τ) := fun c' h τ => by
-    have heq : i c' τ = (hQs c' h τ).choose := dif_pos h
+    have heq : i c' τ = (hQs c' h τ).choose := dite_eq_left h
     rw [heq]
     exact (hQs c' h τ).choose_spec
   have hw0 : algebraMap O Ω w ≠ 0 := by
     have h3 := hcp
     unfold HT.IsCp at h3
-    rw [if_neg h2] at h3
+    rw [ite_eq_right h2] at h3
     obtain ⟨ζ, hζ, e1⟩ := h3
     rw [e1]
     exact hζ.sub_one_ne_zero (Fact.out : p.Prime).one_lt

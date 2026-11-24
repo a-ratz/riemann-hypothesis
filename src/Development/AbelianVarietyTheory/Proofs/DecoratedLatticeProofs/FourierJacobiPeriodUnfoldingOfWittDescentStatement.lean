@@ -104,7 +104,7 @@ theorem absConv_of_invariant : ∀ (D : D7) (σ : ℕ) (B : BesLev D σ), ∀ f 
 
   let Φ : NFlag B.V B.d.e × GA D B.A → GA D B.V := fun p => p.1.1 * embA B.d B.o p.2 * h
   have hΦ : Continuous Φ :=
-    ((continuous_subtype_val.comp continuous_fst).mul (hemb.comp continuous_snd)).mul continuous_const
+    ((continuous_subtypeVal.comp continuous_fst).mul (hemb.comp continuous_snd)).mul continuous_const
   have hΩ : IsCompact (Φ '' (KN ×ˢ KA)) := (hKN.prod hKA).image hΦ
   obtain ⟨C, hC⟩ := hΩ.exists_bound_of_continuousOn hf.continuousOn
 
@@ -136,10 +136,10 @@ theorem absConv_of_invariant : ∀ (D : D7) (σ : ℕ) (B : BesLev D σ), ∀ f 
       hcov' (fun _ => (1 : ℂ)) continuous_const fun _ _ _ => rfl
     simpa using (integrableOn_const_iff (C := (1 : ℂ))).1 h1
   have hfinN : B.vN.ν B.vN.𝓝 < ⊤ := by rw [B.vN.unit.2.2]; exact ENNReal.one_lt_top
-  haveI : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.2 hfinA.ne
-  haveI : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 hfinN.ne
+  have : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.2 hfinA.ne
+  have : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 hfinN.ne
   have hK : Continuous (Function.uncurry fun (h₁ : GA D B.A) (n : flagN B.d) => f (n.1 * embA B.d B.o h₁ * h)) :=
-    hf.comp (((continuous_subtype_val.comp continuous_snd).mul (hemb.comp continuous_fst)).mul continuous_const)
+    hf.comp (((continuous_subtypeVal.comp continuous_snd).mul (hemb.comp continuous_fst)).mul continuous_const)
   exact Integrable.of_bound hK.aestronglyMeasurable C (Filter.Eventually.of_forall fun p => hbd p.1 p.2)
 
 end GlobalTheory.Unf.BesInt
@@ -269,8 +269,8 @@ theorem quasiFam_bdd_on_compact {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ :
 
 theorem unfolded_integrable : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J : JacLev D (σ + 1)) (B : BesLev D σ) (s : StepFB ψ J B), ∀ (vL : VolM D B.L.rank J.W₀.rank) (Y : GA D J.W₀ → WO J.W₀ B.L → ℂ) (G : GA D B.V → ℂ) (Φ : WO J.W B.V → ℂ), IsQuasiFam ψ J.W₀ B.L Y → RapidDec B.V G → IsThetaFunO ψ J.W B.V Φ → ∀ 𝓑 : Set (GA D B.V), IsFundamentalDomain (GQ B.V ⊓ besGrp B.d B.o : Subgroup (GA D B.V)) 𝓑 s.vW.μ → Integrable (Function.uncurry fun h₀ h => G h * tFlat s vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ)) ((J.v0.μ.restrict J.v0.𝓕).prod (s.vW.μ.restrict 𝓑)) := by
   intro D hD ψ σ J B s vL Y G Φ hY hG hΦ 𝓑 h𝓑
-  haveI := J.v0.haar
-  haveI := s.vW.haar
+  have := J.v0.haar
+  have := s.vW.haar
   obtain ⟨hcont, hinv, -⟩ := GlobalTheory.T.pairedFlatMap_family_continuous_invariant_integral D hD ψ σ J B s vL Y Φ hY hΦ
   obtain ⟨x₀, hx₀, hbase, hR, -, -⟩ := GlobalTheory.T.fourierBesselBasePoint_isUnfoldingBasePoint_spec D σ B
   obtain ⟨om', hom'⟩ := (hD ψ J.W B.V s.χV s.χW s.om s.weil).1 J.W₀ (σ + 1) J.d
@@ -297,7 +297,7 @@ theorem unfolded_integrable : ∀ (D : D7), Descent D → ∀ (ψ : AddChar (AF 
             ‖J.d.mixS B.V ψ s.vS.μ s.vS.𝓕 (s.om (J.d.emb0 h₀, h) Φ) ((rat x₀ : Mx D B.V.rank (σ + 1)) ⬝ u.1.1)
               ((rat x₀ : Mx D B.V.rank (σ + 1)) ⬝ b)‖ₑ ∂vb.μ ∂s.vU.ν) ∂s.vW.μ := by
           refine lintegral_mono fun h => ?_
-          rw [enorm_mul, mul_left_comm]
+          rw [eNorm_mul, mul_left_comm]
           have := (GlobalTheory.T.unfoldedTerm_basePoint_eq_flatMap_pairing D ψ σ J B s vb vL (Y h₀) (s.om (J.d.emb0 h₀, h) Φ) (quasi_of_fam hY h₀)
             (s.weil.om_pres _ _ hΦ)).2 M (hM h₀ hh₀)
           rw [hx₀]
@@ -493,7 +493,7 @@ open GlobalTheory.Unf GlobalTheory.Unf.FB
 
 theorem GlobalTheory.Unf.unfFB_of_descent : ∀ D : D7, Descent D → UnfFB D := by
   intro D hD ψ σ J B s vL Y G Φ hY hG hΦ
-  haveI := s.vW.haar
+  have := s.vW.haar
   obtain ⟨hcnt, hdisc, hfd⟩ := GlobalTheory.RationalSubgroupFund.countable_discrete_exists_fundamentalDomain D B.V (GQ B.V ⊓ besGrp B.d B.o) inf_le_left
   obtain ⟨𝓑, h𝓑⟩ := hfd s.vW.μ s.vW.haar
   obtain ⟨hcont, hclN, hnorm, huniq, hrat⟩ := GlobalTheory.Unf.besSemi D σ B

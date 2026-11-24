@@ -233,7 +233,7 @@ theorem exists_comb {n : ℕ} (v : Module.Basis (Fin n) R (TanM (𝟙 (Sp R)) Y.
   obtain ⟨φ', hφ'⟩ := Spec.map_surjective (R := CommRingCat.of R) (S := CommRingCat.of S) (g ≫ Y.H.hom)
   let φ : R →+* S := φ'.hom
   have hφ : g ≫ Y.H.hom = spMap φ := hφ'.symm
-  letI : Algebra R S := φ.toAlgebra
+  let : Algebra R S := φ.toAlgebra
   let z : sp (R₀ := R) S ⟶ Y.H := Over.homMk g hφ
   let ψ : DualNumber R →ₐ[R] DualNumber S := SqZero.dualMap (Algebra.ofId R S)
   have hψ : ∀ a : R, ψ (inr a) = inr (φ a) := fun a => SqZero.dualMap_inr _ _

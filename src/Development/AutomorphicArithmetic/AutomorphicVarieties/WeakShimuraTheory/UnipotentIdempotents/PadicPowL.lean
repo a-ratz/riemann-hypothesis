@@ -51,7 +51,7 @@ private theorem kill {Γ M : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologic
     (hf : IsClosed (f.ker : Set Γ)) {g : Γ} {n : ℕ} (hg : g ^ n ∈ (commutator Γ).topologicalClosure) : f g ^ n = 1 := by
   rw [← map_pow]
   have hle : (commutator Γ).topologicalClosure ≤ f.ker :=
-    Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker f) hf
+    Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker f) hf
   exact hle hg
 
 private theorem padic_pow_l {l : ℕ} [hl : Fact l.Prime] (h2 : l ≠ 2) (x : ℤ_[l]) (hx : x ^ l = 1) : x = 1 := by
@@ -72,12 +72,12 @@ private theorem padic_pow_l {l : ℕ} [hl : Fact l.Prime] (h2 : l ≠ 2) (x : �
     rw [hx] at h1
     exact hp.not_dvd_one h1
   have key := emultiplicity_pow_prime_sub_pow_prime hp hodd hdvd hnd
-  rw [hx, one_pow, sub_self, emultiplicity_zero] at key
+  rw [hx, one_pow, sub_self, emultiplicity_zero_right] at key
   by_contra hne
   have hfin : FiniteMultiplicity (l : ℤ_[l]) (x - 1) :=
-    FiniteMultiplicity.of_not_isUnit hp.not_unit (sub_ne_zero.2 hne)
+    FiniteMultiplicity.of_not_isUnit hp.not_isUnit (sub_ne_zero.2 hne)
   rw [hfin.emultiplicity_eq_multiplicity] at key
-  exact ENat.coe_ne_top (multiplicity (l : ℤ_[l]) (x - 1) + 1) (by push_cast; exact key.symm)
+  exact ENat.natCast_ne_top (multiplicity (l : ℤ_[l]) (x - 1) + 1) (by push_cast; exact key.symm)
 
 private theorem padic_pow {l : ℕ} [Fact l.Prime] (h2 : l ≠ 2) (a : ℕ) (x : ℤ_[l]) (hx : x ^ l ^ a = 1) : x = 1 := by
   induction a generalizing x with
@@ -94,8 +94,8 @@ theorem UpperTheory.V.Ws.Lk.kapMu :
   have h2 : l ≠ 2 := Raw.Good.l_odd hD
   have hl := (Fact.out : l.Prime)
   have hcLe : Continuous (resLe (K_le T)) := by
-    letI : Algebra T.K T.L := (IntermediateField.inclusion (K_le T)).toAlgebra
-    haveI : IsScalarTower T.K T.L Ω := IsScalarTower.of_algebraMap_eq (fun x => rfl)
+    let : Algebra T.K T.L := (IntermediateField.inclusion (K_le T)).toAlgebra
+    have : IsScalarTower T.K T.L Ω := IsScalarTower.of_algebraMap_eq (fun x => rfl)
     exact Af.continuous_restrictScalarsHom T.K T.L Ω
   have ht : P.tL g = 1 := by
     have hk : IsClosed ((P.t.comp (resLe (K_le T))).ker : Set (G T.L Ω)) :=

@@ -82,7 +82,7 @@ theorem interior_frontier_preimage_of_isConstructible {f : Y → Z} (hf : Contin
 theorem dense_interior_of_interior_frontier_eq_empty {S : Set Y} (hS : Dense S)
     (h : interior (frontier S) = ∅) : Dense (interior S) := by
   have h1 : frontier S = (interior S)ᶜ := by
-    rw [frontier, hS.closure_eq, Set.compl_eq_univ_diff]
+    rw [frontier, hS.closure_eq, Set.compl_eq_univ_sdiff]
   rwa [h1, interior_eq_empty_iff_dense_compl, compl_compl] at h
 
 theorem exists_isOpen_inter_closure_subset_of_isConstructible {f : Y → Z} (hf : Continuous f)
@@ -91,7 +91,7 @@ theorem exists_isOpen_inter_closure_subset_of_isConstructible {f : Y → Z} (hf 
       closure (V ∩ closure (f ⁻¹' C)) = closure (f ⁻¹' C) := by
   set S := f ⁻¹' C with hS
   have h1 := interior_frontier_preimage_of_isConstructible
-    (hf.comp (continuous_subtype_val (p := fun y => y ∈ closure S))) hC
+    (hf.comp (continuous_subtypeVal (p := fun y => y ∈ closure S))) hC
   rw [Set.preimage_comp, ← hS] at h1
   have hd : Dense ((↑) ⁻¹' S : Set (closure S)) := by
     rw [Subtype.dense_iff]
@@ -247,8 +247,8 @@ theorem mem_of_isClosed_torusZariski {H : Subgroup (Multiplicative X →* Rˣ)}
 
 theorem finite_setOf_pow_eq_one_torus [Module.Finite ℤ X] {m : ℕ} (hm : m ≠ 0) :
     {s : Multiplicative X →* Rˣ | s ^ m = 1}.Finite := by
-  haveI : NeZero m := ⟨hm⟩
-  haveI : AddGroup.FG X := Module.Finite.iff_addGroup_fg.1 inferInstance
+  have : NeZero m := ⟨hm⟩
+  have : AddGroup.FG X := Module.Finite.iff_addGroup_fg.1 inferInstance
   obtain ⟨T, hT⟩ := Group.exists_of_isMulFG (Multiplicative X)
   let φ : {s : Multiplicative X →* Rˣ | s ^ m = 1} → (T → rootsOfUnity m R) := fun s x =>
     ⟨s.1 x, by simpa using DFunLike.congr_fun (show s.1 ^ m = 1 from s.2) x.1⟩
@@ -280,9 +280,9 @@ theorem exists_zpow_eq_one_of_isClosed_torusZariski [Module.Finite ℤ X] {n : �
   have hN : (⊤ : Submodule ℤ X) ≤ N := by
     intro x _
     by_contra hx
-    haveI : Finite (X ⧸ N) := Module.finite_of_fg_torsion _ fun q =>
+    have : Finite (X ⧸ N) := Module.finite_of_fg_torsion _ fun q =>
       ⟨⟨n, mem_nonZeroDivisors_of_ne_zero (Nat.cast_ne_zero.2 (NeZero.ne n))⟩, hnQ q⟩
-    haveI : HasEnoughRootsOfUnity R (Monoid.exponent (Multiplicative (X ⧸ N))) :=
+    have : HasEnoughRootsOfUnity R (Monoid.exponent (Multiplicative (X ⧸ N))) :=
       HasEnoughRootsOfUnity.of_dvd R (Monoid.exponent_dvd_of_forall_pow_eq_one hnQ')
     obtain ⟨φ, hφ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity
       (Multiplicative (X ⧸ N)) R (a := Multiplicative.ofAdd (N.mkQ x))
@@ -308,7 +308,7 @@ theorem finite_of_isClosed_torusZariski_of_pow_eq_one [Module.Finite ℤ X] {n :
     [HasEnoughRootsOfUnity R n] {H : Subgroup (Multiplicative X →* Rˣ)}
     (hH : IsClosed[torusZariski R X] (H : Set (Multiplicative X →* Rˣ)))
     (hn : ∀ s ∈ H, s ^ n = 1 → s = 1) : Finite H ∧ (Nat.card H).Coprime n := by
-  haveI : NeZero n := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
   obtain ⟨r, hr, hrH⟩ := exists_zpow_eq_one_of_isClosed_torusZariski hH hn
   have hr0 : r.natAbs ≠ 0 := by
     rw [Int.natAbs_ne_zero]
@@ -320,7 +320,7 @@ theorem finite_of_isClosed_torusZariski_of_pow_eq_one [Module.Finite ℤ X] {n :
   have hfin : Finite H := (finite_setOf_pow_eq_one_torus (R := R) (X := X) hr0).subset
     (t := (H : Set (Multiplicative X →* Rˣ))) fun s hs => pow_natAbs_eq_one.2 (hrH s hs)
   refine ⟨hfin, Nat.coprime_of_dvd fun p hp hpH hpn => ?_⟩
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨s, hs⟩ := exists_prime_orderOf_dvd_card' p hpH
   have h1 : s ^ n = 1 := orderOf_dvd_iff_pow_eq_one.1 (hs ▸ hpn)
   have h3 : s = 1 := Subtype.ext (hn s s.2 (congrArg Subtype.val h1))

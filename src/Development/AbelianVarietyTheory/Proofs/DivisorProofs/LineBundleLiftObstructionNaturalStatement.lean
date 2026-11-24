@@ -450,8 +450,8 @@ theorem isObU_unique : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
   rw [H2.mk_eq_mk]
   refine ⟨fun T T' a ↦ -y T T' a, ?_⟩
   funext T T' T'' a b
-  haveI := L.smooth T''
-  haveI : Module.Flat R (L.B T'') := Algebra.Smooth.flat R _
+  have := L.smooth T''
+  have : Module.Flat R (L.B T'') := Algebra.Smooth.flat R _
   have nat := sig_natural R R₀ I hI π hπ hk R₁ α (L.B T') (F.obj T') (L.p T') (L.semi T') (L.surj T') (L.ker T')
     (L.B T'') (F.obj T'') (L.p T'') (L.semi T'') (L.surj T'') (L.ker T'') (L.ρ b) (mp F b) (L.nat b)
     (σ T') (σ T'') (hσ T') (hσ T'')

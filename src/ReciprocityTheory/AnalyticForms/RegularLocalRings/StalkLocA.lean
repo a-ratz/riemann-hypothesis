@@ -60,7 +60,7 @@ theorem mk_mem_ptQ {K : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin n → ℂ} (h
 
 theorem ptQ_isPrime {K : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin n → ℂ} (hK : K ≤ ptIdeal p) :
     (ptQ K p).IsPrime := by
-  haveI : (ptIdeal p).IsPrime := RingHom.ker_isPrime _
+  have : (ptIdeal p).IsPrime := RingHom.ker_isPrime _
   exact Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hK)
 
 theorem algebraMap_quot_mk (K : Ideal (MvPolynomial (Fin n) ℂ)) (p : Fin n → ℂ)
@@ -72,7 +72,7 @@ theorem algebraMap_quot_mk (K : Ideal (MvPolynomial (Fin n) ℂ)) (p : Fin n →
 theorem isLocalization_locRing {K : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin n → ℂ}
     (hK : K ≤ ptIdeal p) :
     letI := ptQ_isPrime hK; IsLocalization.AtPrime (locRing K p) (ptQ K p) := by
-  letI := ptQ_isPrime hK
+  let := ptQ_isPrime hK
   have hM : Algebra.algebraMapSubmonoid (MvPolynomial (Fin n) ℂ ⧸ K) (ptIdeal p).primeCompl =
       (ptQ K p).primeCompl := by
     ext x
@@ -91,21 +91,21 @@ theorem isLocalization_locRing {K : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin n
 
 theorem isLocalRing_locRing {K : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin n → ℂ}
     (hK : K ≤ ptIdeal p) : IsLocalRing (locRing K p) := by
-  letI := ptQ_isPrime hK
-  haveI := isLocalization_locRing hK
+  let := ptQ_isPrime hK
+  have := isLocalization_locRing hK
   exact IsLocalization.AtPrime.isLocalRing (locRing K p) (ptQ K p)
 
 theorem maximalIdeal_locRing {K : Ideal (MvPolynomial (Fin n) ℂ)} {p : Fin n → ℂ}
     (hK : K ≤ ptIdeal p) [IsLocalRing (locRing K p)] :
     IsLocalRing.maximalIdeal (locRing K p) = (ptIdeal p).map (algebraMap _ (locRing K p)) := by
-  letI := ptQ_isPrime hK
-  haveI := isLocalization_locRing hK
+  let := ptQ_isPrime hK
+  have := isLocalization_locRing hK
   rw [← IsLocalization.AtPrime.map_eq_maximalIdeal (ptQ K p) (locRing K p), ptQ, Ideal.map_map]
   congr 1
 
 theorem le_ptIdeal_iff' (K : Ideal (MvPolynomial (Fin n) ℂ)) (p : Fin n → ℂ) :
     K ≤ ptIdeal p ↔ ∀ h ∈ K, eval p h = 0 := by
-  simp [ptIdeal, SetLike.le_def, RingHom.mem_ker]
+  simp [ptIdeal, IsConcreteLE.le_iff, RingHom.mem_ker]
 
 end
 end ReciprocityTheory.AnForm.R

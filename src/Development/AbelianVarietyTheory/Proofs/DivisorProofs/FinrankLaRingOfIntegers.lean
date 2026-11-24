@@ -61,9 +61,9 @@ theorem Datum.finrank_La_ringOfIntegers :
       letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
       Module.finrank (𝓞 D.F) D.La = D.m * D.n := by
   intro p _ D
-  letI iL : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
-  letI iV : Module (𝓞 D.F) D.VF := Module.compHom D.VF (algebraMap (𝓞 D.F) D.F)
-  haveI : IsScalarTower (𝓞 D.F) D.F D.VF :=
+  let iL : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  let iV : Module (𝓞 D.F) D.VF := Module.compHom D.VF (algebraMap (𝓞 D.F) D.F)
+  have : IsScalarTower (𝓞 D.F) D.F D.VF :=
     ⟨fun c x v => by
       show (algebraMap (𝓞 D.F) D.F c * x) • v = algebraMap (𝓞 D.F) D.F c • (x • v)
       rw [mul_smul]⟩

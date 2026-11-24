@@ -79,14 +79,14 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem exists_ne_zero_of_injective {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
     [Module ℂ W] {ρ : Representation ℂ G V} {σ : Representation ℂ G W} (hρ : ρ.IsIrreducible)
     (φ : ρ.IntertwiningMap σ) (hφ : Function.Injective φ) : ∃ v, φ v ≠ 0 := by
-  haveI := Model.nontrivial_of_isIrreducible hρ
+  have := Model.nontrivial_of_isIrreducible hρ
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   exact ⟨v, fun e => hv (hφ (e.trans (map_zero φ).symm))⟩
 
 theorem exists_ne_zero_of_surjective {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
     [Module ℂ W] {ρ : Representation ℂ G V} {σ : Representation ℂ G W} (hσ : σ.IsIrreducible)
     (φ : ρ.IntertwiningMap σ) (hφ : Function.Surjective φ) : ∃ v, φ v ≠ 0 := by
-  haveI := Model.nontrivial_of_isIrreducible hσ
+  have := Model.nontrivial_of_isIrreducible hσ
   obtain ⟨u, hu⟩ := exists_ne (0 : W)
   obtain ⟨v, rfl⟩ := hφ u
   exact ⟨v, hu⟩
@@ -96,7 +96,7 @@ theorem bot_ne_top_of_isSubquotient {G V W : Type} [Group G] [AddCommGroup V] [M
     (h : IsSubquotient σ ρ) : (⊥ : Subrepresentation ρ) ≠ ⊤ := by
   obtain ⟨S, f, hf⟩ := h
   intro hb
-  haveI := Model.nontrivial_of_isIrreducible hσ
+  have := Model.nontrivial_of_isIrreducible hσ
   obtain ⟨u, hu⟩ := exists_ne (0 : W)
   obtain ⟨v, rfl⟩ := hf u
   have hv : (v : V) ∈ (⊥ : Subrepresentation ρ) := hb ▸ trivial
@@ -184,7 +184,7 @@ theorem isLSeg_of_dec : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
   let e := stdBlocks (fun a => (dec Δ a).1) hd
   have hfl : HasFiniteLength (jac e L.ρ) :=
     GlobalTheory.CompanionTheory.JacquetBridge.jacquetFiniteLength k _ _ _ e _ L.ρ L.smooth (hasFiniteLength_of_isIrreducible L.irr)
-  haveI : WellFoundedGT (Subrepresentation (jac e L.ρ)) := ((hasFiniteLength_iff_wellFounded _).1 hfl).1
+  have : WellFoundedGT (Subrepresentation (jac e L.ρ)) := ((hasFiniteLength_iff_wellFounded _).1 hfl).1
   have h0 : jm (dec Δ) hd L.ρ ≠ 0 := by rw [hone]; exact one_ne_zero
   have hne : (⊥ : Subrepresentation (jac e L.ρ)) ≠ ⊤ :=
     bot_ne_top_of_isSubquotient (GlobalTheory.CompanionTheory.FrobJm.piTensor_rep_isIrreducible hA (dec Δ)) (jhMult_ne_zero_iff.1 h0)

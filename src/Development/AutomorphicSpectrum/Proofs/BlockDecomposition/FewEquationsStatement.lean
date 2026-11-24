@@ -426,12 +426,12 @@ theorem dep_fibre : DepSt → ∀ (R : Type) [CommRing R] [IsLocalRing R] (X : S
   have hsurj : Function.Surjective (IsLocalRing.residue R) := Ideal.Quotient.mk_surjective
   obtain ⟨hfin, hrank⟩ := hfib _ s' φ hpb
   have hSp : ∀ (T : Type) [CommRing T], (Sp T).IsSeparated := fun T _ => by unfold Sp; infer_instance
-  haveI hXsep : X.IsSeparated := ⟨by rw [← terminal.comp_from s]; infer_instance⟩
-  haveI hsep : (pullback s g).IsSeparated := ⟨by rw [← terminal.comp_from s']; infer_instance⟩
-  haveI hg : IsAffineHom g := by
+  have hXsep : X.IsSeparated := ⟨by rw [← terminal.comp_from s]; infer_instance⟩
+  have hsep : (pullback s g).IsSeparated := ⟨by rw [← terminal.comp_from s']; infer_instance⟩
+  have hg : IsAffineHom g := by
     show IsAffineHom (Spec.map (CommRingCat.ofHom (algebraMap R (IsLocalRing.ResidueField R))))
     infer_instance
-  haveI haff : IsAffineHom φ := MorphismProperty.pullback_fst (P := @IsAffineHom) s g hg
+  have haff : IsAffineHom φ := MorphismProperty.pullback_fst (P := @IsAffineHom) s g hg
   let V' : A → (pullback s g).Opens := fun a => φ ⁻¹ᵁ V a
   have hV' : ⨆ a, V' a = ⊤ := by
     have h1 : ⨆ a, V' a = φ ⁻¹ᵁ (⨆ a, V a) := (TopologicalSpace.Opens.map_iSup φ.base V).symm
@@ -523,8 +523,8 @@ theorem minimal_generators_flat_independent :
   have hmin0 : ∀ x : Fin r → R, ∑ i, x i * t i = 0 → ∀ i, x i ∈ IsLocalRing.maximalIdeal R :=
     fun x hx => hmin x (by rw [hx]; exact Ideal.zero_mem _)
   have h3 : y i - a i ∈ (IsLocalRing.maximalIdeal R).map c := by
-    letI := c.toAlgebra
-    haveI : Module.Flat R S := hc
+    let := c.toAlgebra
+    have : Module.Flat R S := hc
     exact mem_map_maximalIdeal_of_flat t hmin0 y a hsum.symm i
   have h4 := Ideal.add_mem _ h3 (ha i)
   rwa [sub_add_cancel] at h4
@@ -701,7 +701,7 @@ theorem not_le_hyperplane {R : Type} [CommRing R] [IsLocalRing R] (I : Ideal R) 
   have hsum : ∑ i, z i * t i = p := by
     have h1 : ∑ i, z i * t i = -(e l * ∑ i, x i * t i) + (1 + S) * t l := by
       simp only [z, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.mul_sum, neg_mul, Finset.sum_neg_distrib]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true, Finset.mul_sum, neg_mul, Finset.sum_neg_distrib]
       congr 1
       · congr 1
         exact Finset.sum_congr rfl fun i _ => by ring
@@ -714,7 +714,7 @@ theorem not_le_hyperplane {R : Type} [CommRing R] [IsLocalRing R] (I : Ideal R) 
   have hzm := hz z (hsum ▸ hp)
   have hxm : ∀ i, i ≠ l → x i ∈ IsLocalRing.maximalIdeal R := fun i hi => by
     have := hzm i
-    simp only [z, if_neg hi, add_zero, neg_mem_iff] at this
+    simp only [z, ite_eq_right hi, add_zero, neg_mem_iff] at this
     exact (Ideal.unit_mul_mem_iff_mem _ hl).1 (by rwa [mul_comm])
   have hS : S - x l * e l ∈ IsLocalRing.maximalIdeal R := by
     have : S - x l * e l = ∑ j ∈ Finset.univ.erase l, x j * e j := by
@@ -725,7 +725,7 @@ theorem not_le_hyperplane {R : Type} [CommRing R] [IsLocalRing R] (I : Ideal R) 
     rw [this]
     exact Ideal.sum_mem _ fun j hj => Ideal.mul_mem_right _ _ (hxm j (Finset.ne_of_mem_erase hj))
   have h3 := hzm l
-  simp only [z, if_true] at h3
+  simp only [z, ite_true] at h3
   have h4 : (1 : R) ∈ IsLocalRing.maximalIdeal R := by
     have : (1 : R) = (-(x l * e l) + (1 + S)) - (S - x l * e l) := by ring
     rw [this]
@@ -988,7 +988,7 @@ theorem fewEq : FewEqSt := by
     have : IsSeparated (s ≫ terminal.from (Sp R)) := inferInstance
     rw [Subsingleton.elim (s ≫ terminal.from (Sp R)) (terminal.from X)] at this
     exact ⟨this⟩
-  haveI : Flat s := inferInstance
+  have : Flat s := inferInstance
 
   let A := {q : M.ι × X.Opens // IsAffineOpen q.2 ∧ q.2 ≤ M.U q.1}
   let V : A → X.Opens := fun a => a.1.2
@@ -1008,10 +1008,10 @@ theorem fewEq : FewEqSt := by
     · rw [Ideal.span_le]
       rintro _ ⟨i, rfl⟩
       by_cases h : i.1 < r
-      · simp only [h, dif_pos]
+      · simp only [h, dite_eq_left]
         rw [← ht]
         exact Ideal.subset_span ⟨_, rfl⟩
-      · simp only [h, dif_neg, not_false_eq_true]
+      · simp only [h, dite_eq_right, not_false_eq_true]
         exact zero_mem _
     · rw [← ht, Ideal.span_le]
       rintro _ ⟨i, rfl⟩

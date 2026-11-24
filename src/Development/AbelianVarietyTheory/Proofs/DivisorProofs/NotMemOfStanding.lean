@@ -593,7 +593,7 @@ theorem val_xiAt (w : Pl D.host.E)
   have h3 : w.valuation D.host.E D.host.sqrtMinusD = 1 := by
     have := congrArg (w.valuation D.host.E) D.host.sqrtMinusD_sq
     rw [map_pow, Valuation.map_neg, h2] at this
-    exact (pow_eq_one_iff_of_nonneg zero_le' two_ne_zero).1 this
+    exact (pow_eq_one_iff_of_nonneg zero_le two_ne_zero).1 this
   have h4 : w.valuation D.host.E D.host.xi0 = 1 := by
     unfold Formalism.BasicNotions.Host.xi0
     rw [map_div₀, map_mul, h1, h3, Valuation.map_neg, map_one, mul_one, div_one]
@@ -1116,7 +1116,7 @@ theorem GlobalTheory.StdPairSBDepth.stdPair_mem_SB : ∀ (k : Type) [Field k] [V
       GlobalTheory.StdPairCone.stdA ν ϖ c a a' ∈ GlobalTheory.WeilM.SB (Matrix (Fin a) (Fin (a + a')) k) ∧
         GlobalTheory.StdPairCone.stdB ν ϖ c a a' ∈ GlobalTheory.WeilM.SB (Matrix (Fin a') (Fin (a + a')) k) := by
   intro k _ _ _ _ ν ϖ n c a a' hϖ hν
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hc1 : ∀ m : ℕ, Continuous fun X : Matrix (Fin m) (Fin (a + a')) k => blk₁ X := by
     intro m; exact continuous_pi fun i => continuous_pi fun j => continuous_id.matrix_elem i (Fin.castAdd a' j)
   have hc2 : ∀ m : ℕ, Continuous fun X : Matrix (Fin m) (Fin (a + a')) k => blk₂ X := by
@@ -1218,7 +1218,7 @@ theorem mul_mem_cball {n m p : ℕ} {s : kˣ} {M : Matrix (Fin n) (Fin m) k} {Y 
     (hM : ∀ i j, M i j ∈ 𝒪[k]) (hY : ∀ i j, Y i j ∈ GlobalTheory.SplitWeil.cball s) :
     ∀ i j, (M * Y) i j ∈ GlobalTheory.SplitWeil.cball s := by
   intro i j
-  simp only [GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq, Matrix.mul_apply] at hY ⊢
+  simp only [GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq, Matrix.mul_apply] at hY ⊢
   refine Valuation.map_sum_le _ fun l _ => ?_
   rw [map_mul]
   exact (mul_le_mul' ((Valuation.mem_integer_iff _ _).1 (hM i l)) (hY l j)).trans_eq (one_mul _)
@@ -1246,8 +1246,8 @@ theorem bigF_stdA_eq (ν : kˣ →* ℂˣ) (ϖ : kˣ) (c a a' : ℕ) (hϖ : IsUn
       Set.indicator {M : Matrix (Fin a) (Fin a') k | ∀ i j, M i j ∈ cball (ϖ ^ c)} 1 Y with hC
   set S : Set (GL (Fin a) k) := (fun g => g * g₁) ⁻¹' (KO k (Fin a) : Set (GL (Fin a) k)) with hSdef
   have hSm : @MeasurableSet (GL (Fin a) k) Units.instMeasurableSpace S := by
-    letI : MeasurableSpace (GL (Fin a) k) := Units.instMeasurableSpace
-    haveI : BorelSpace (GL (Fin a) k) := borel_GL
+    let : MeasurableSpace (GL (Fin a) k) := Units.instMeasurableSpace
+    have : BorelSpace (GL (Fin a) k) := borel_GL
     exact (isOpen_KO.preimage (continuous_mul_const _)).measurableSet
   have hS1 : (haarVol (KO k (Fin a))).real S = 1 := by
     simp [hSdef, Measure.real, measure_preimage_mul_right, haarVol_self isOpen_KO le_rfl]
@@ -1424,8 +1424,8 @@ theorem GlobalTheory.StdPairZetaB.smallF_stdB : ∀ {k : Type} [Field k] [Valuat
       Set.indicator {M : Matrix (Fin a') (Fin a) k | ∀ i j, M i j ∈ cball (ϖ ^ c)} 1 ((g₂⁻¹).val * blk₁ Y) with hC
     set S : Set (GL (Fin a') k) := (fun g => g * g₂) ⁻¹' (KO k (Fin a') : Set (GL (Fin a') k)) with hSdef
     have hSm : @MeasurableSet (GL (Fin a') k) Units.instMeasurableSpace S := by
-      letI : MeasurableSpace (GL (Fin a') k) := Units.instMeasurableSpace
-      haveI : BorelSpace (GL (Fin a') k) := borel_GL
+      let : MeasurableSpace (GL (Fin a') k) := Units.instMeasurableSpace
+      have : BorelSpace (GL (Fin a') k) := borel_GL
       exact (isOpen_KO.preimage (continuous_mul_const _)).measurableSet
     have hS1 : (haarVol (KO k (Fin a'))).real S = 1 := by
       simp [hSdef, Measure.real, measure_preimage_mul_right, haarVol_self isOpen_KO le_rfl]
@@ -1580,7 +1580,7 @@ theorem GlobalTheory.StdZetaAgree.bigZetaIntegral_stdA_eq_smallZetaIntegral_stdB
     generalize (g₁⁻¹).val * blk₂ X = Z
     have hiff : (-Zᵀ) ∈ {M : Matrix (Fin a') (Fin a) k | ∀ i j, M i j ∈ cball (ϖ ^ c)} ↔
         Z ∈ {M : Matrix (Fin a) (Fin a') k | ∀ i j, M i j ∈ cball (ϖ ^ c)} := by
-      simp only [Set.mem_setOf_eq, GlobalTheory.SplitWeil.cball, Matrix.neg_apply, Matrix.transpose_apply, Valuation.map_neg]
+      simp only [Set.mem_ofPred_eq, GlobalTheory.SplitWeil.cball, Matrix.neg_apply, Matrix.transpose_apply, Valuation.map_neg]
       exact forall_comm
     by_cases hZ : Z ∈ {M : Matrix (Fin a) (Fin a') k | ∀ i j, M i j ∈ cball (ϖ ^ c)}
     · rw [Set.indicator_of_mem hZ, Set.indicator_of_mem (hiff.2 hZ)]; rfl
@@ -1674,7 +1674,7 @@ theorem smallP_haarVol [MeasurableSpace k] [BorelSpace k] {J : Subgroup (GL A' k
       smallP (haarVol J) σ ν α Ψ = ((((haarVol (KO k A')).real J : ℝ) : ℂ))⁻¹ • smallP (haarVol (KO k A')) σ ν α Ψ := by
   obtain ⟨h0, h1⟩ := haar_ne_zero_ne_top (haarVol (KO k A')) ho hK
   have e : (haarVol (KO k A') J)⁻¹ • haarVol (KO k A') = haarVol J := by
-    haveI : ((haarVol (KO k A') J)⁻¹ • haarVol (KO k A')).IsHaarMeasure :=
+    have : ((haarVol (KO k A') J)⁻¹ • haarVol (KO k A')).IsHaarMeasure :=
       Measure.IsHaarMeasure.smul _ (ENNReal.inv_ne_zero.2 h1) (ENNReal.inv_ne_top.2 h0)
     exact eq_haarVol _ ho hK (by simp [ENNReal.inv_mul_cancel h0 h1])
   refine ⟨ENNReal.toReal_ne_zero.2 ⟨h0, h1⟩, ?_⟩
@@ -1693,9 +1693,9 @@ theorem fourierSum_ind (ψ : AddChar k Circle) {ϖ : kˣ} (hϖ : IsUnif ϖ) (P :
       Set.ext fun Z => mem_matLat_stdLat.symm
     rw [e]
     exact this
-  · haveI : Subsingleton (Res k 0) := Ideal.Quotient.subsingleton_iff.2 (by simp)
-    haveI : Unique (A → P → Res k 0) := ⟨⟨0⟩, fun _ => Subsingleton.elim _ _⟩
-    rw [fourierSum_apply, if_pos (by simp), Fintype.sum_unique, Pi.smul_apply, Set.indicator_of_mem]
+  · have : Subsingleton (Res k 0) := Ideal.Quotient.subsingleton_iff.2 (by simp)
+    have : Unique (A → P → Res k 0) := ⟨⟨0⟩, fun _ => Subsingleton.elim _ _⟩
+    rw [fourierSum_apply, ite_eq_left (by simp), Fintype.sum_unique, Pi.smul_apply, Set.indicator_of_mem]
     · simp [pairCols]
     · intro r s
       simp only [setCols, Matrix.of_apply]
@@ -1729,8 +1729,8 @@ theorem local_charts (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (t : T) (i j 
         Rf.p _ φ = (l * c) • Rf.p' _ φ' := by
   classical
   set v := w.under (𝓞 D.host.F) with hv
-  letI := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.measFv v
-  haveI := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.borelFv v
+  let := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.measFv v
+  have := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.borelFv v
   have hT := hm.triple
   have hvT : v ∈ X.T := (hti.1.2.2.1 v).2 ⟨w, hw, rfl⟩
   let v' : Bs.P := ⟨v, hT.chars.sub hvT⟩
@@ -1766,8 +1766,8 @@ theorem local_charts (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (t : T) (i j 
       ((pairM_comm _ _).trans h0) φ hφ φ₁ h₁ ha).2 ιB hB)
     fun x u hx hu => by
       rw [GlobalTheory.T.tensorSymplecticForm_at_split_finite_place hT.base.cm Γ.V' Γ.W hT.geo.hV'.herm hT.geo.hW.skew W.ψ (Bs.τ v') (Γ.V'.bas v) (Γ.W.bas v) x u hx hu, neg_sub]
-  haveI := isHaarMeasure_haarVol (k := Kw w) (n := Fin (spW₁ G i j).rank) isOpen_KO le_rfl
-  haveI := isHaarMeasure_haarVol (k := Fv D.host.F v) (n := Fin (spW₁ G i j).rank) isOpen_KO le_rfl
+  have := isHaarMeasure_haarVol (k := Kw w) (n := Fin (spW₁ G i j).rank) isOpen_KO le_rfl
+  have := isHaarMeasure_haarVol (k := Fv D.host.F v) (n := Fin (spW₁ G i j).rank) isOpen_KO le_rfl
   obtain ⟨l₂, hl₂, z₂⟩ := GlobalTheory.T.zetaIdentity_persists_row_column_changes (Kw w) _ _ (rankW G t i j w) _ _ _ _ (finCongr (rankW₁ G t i j w)) (colsEq t e w) finSumFinEquiv
     (stdSplit ((locGrid G t w).rank_square i j)) (haarVol (KO (Kw w) _)) (haarVol (KO (Kw w) _))
     (unifAt w) ((locGrid G t w).nu i j) 1 g g' cc hg
@@ -1814,7 +1814,7 @@ theorem zeta_flip (hL : L.Is μ₀) (W : G.Weil) {t : T} (i j : Fin D.R.m) (hst 
   have hS := (Good.isGood_of_notMem hL W hw (notMem_of_standing hst hw)).square i i.2 j j.2
   have h1 := GivenAdm.givenLevel_open hL hw ((i : ℕ), (j : ℕ))
   have h2 := isOpen_map_invT h1.1 h1.2
-  haveI hμ := isHaarMeasure_haarVol h2.1 h2.2
+  have hμ := isHaarMeasure_haarVol h2.1 h2.2
   have key := smallP_haarVol h2.1 h2.2 (stdSplit ((locGrid G t w).rank_square i j)) ((locGrid G t w).nu i j)
     ((locGrid G t w).nu i j * 1)
   refine ⟨(key 0).1, fun n Φ hn hΦ => ?_⟩

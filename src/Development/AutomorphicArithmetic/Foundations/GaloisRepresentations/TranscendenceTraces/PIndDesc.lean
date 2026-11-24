@@ -82,7 +82,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.indDesc_of :
   obtain ⟨j, q, -⟩ := IsFinitelyPresentable.exists_hom_of_isColimit hFc
     (underOf g ≫ (pushIso A B O).inv)
   let E : Type := (D.obj j).right
-  letI : Algebra A E := (D.obj j).hom.hom.toAlgebra
+  let : Algebra A E := (D.obj j).hom.hom.toAlgebra
   refine ⟨E, inferInstance, inferInstance, ?_, ?_, ?_⟩
   · exact RingHom.etale_algebraMap.mp (hD j)
   · refine ⟨{ (ι.app j).right.hom with commutes' := fun a => ?_ }⟩

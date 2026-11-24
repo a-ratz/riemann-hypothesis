@@ -78,14 +78,14 @@ theorem upT_spec {A : Matrix (Fin N) (Fin N) ℂ} (h : ∀ b, (cutRows A b).det 
     have e1 : (cutRows A b *ᵥ ((cutRows A b)⁻¹ *ᵥ Pi.single b 1)) a =
         ((1 : Matrix (Fin N) (Fin N) ℂ) *ᵥ ((cutRows A b)⁻¹ *ᵥ Pi.single b 1)) a := by
       generalize (cutRows A b)⁻¹ *ᵥ Pi.single b 1 = w
-      simp only [Matrix.mulVec, dotProduct, cutRows, Matrix.of_apply, if_neg (not_le.2 hba)]
+      simp only [Matrix.mulVec, dotProduct, cutRows, Matrix.of_apply, ite_eq_right (not_le.2 hba)]
     rw [e1, Matrix.one_mulVec, Pi.single_eq_of_ne hba.ne'] at k1
     exact k1
   · intro hab
     have e1 : (cutRows A b *ᵥ ((cutRows A b)⁻¹ *ᵥ Pi.single b 1)) a = (A * upT A) a b := by
       simp only [Matrix.mul_apply, upT, Matrix.of_apply]
       generalize (cutRows A b)⁻¹ *ᵥ Pi.single b 1 = w
-      simp only [Matrix.mulVec, dotProduct, cutRows, Matrix.of_apply, if_pos hab]
+      simp only [Matrix.mulVec, dotProduct, cutRows, Matrix.of_apply, ite_eq_left hab]
     rw [← e1, k1, Matrix.one_apply, Pi.single_apply]
 
 theorem an_mul {f g : (Fin e → ℂ) → Matrix (Fin N) (Fin N) ℂ} {t : Fin e → ℂ}
@@ -97,8 +97,8 @@ theorem an_mul {f g : (Fin e → ℂ) → Matrix (Fin N) (Fin N) ℂ} {t : Fin e
 theorem an_cut {f : (Fin e → ℂ) → Matrix (Fin N) (Fin N) ℂ} {t : Fin e → ℂ}
     (hf : ∀ a b, AnalyticAt ℂ (fun z => f z a b) t) (b a c : Fin N) : AnalyticAt ℂ (fun z => cutRows (f z) b a c) t := by
   by_cases h : a ≤ b
-  · simpa only [cutRows, Matrix.of_apply, if_pos h] using hf a c
-  · simpa only [cutRows, Matrix.of_apply, if_neg h] using analyticAt_const
+  · simpa only [cutRows, Matrix.of_apply, ite_eq_left h] using hf a c
+  · simpa only [cutRows, Matrix.of_apply, ite_eq_right h] using analyticAt_const
 
 theorem an_upT {f : (Fin e → ℂ) → Matrix (Fin N) (Fin N) ℂ} {t : Fin e → ℂ}
     (hf : ∀ a b, AnalyticAt ℂ (fun z => f z a b) t) (h : ∀ b, (cutRows (f t) b).det ≠ 0) (c b : Fin N) :
@@ -119,7 +119,7 @@ theorem dM_mul {f g : (Fin e → ℂ) → Matrix (Fin N) (Fin N) ℂ} {t : Fin e
       (hf a c).differentiableAt.hasFDerivAt.fun_mul (hg c b).differentiableAt.hasFDerivAt
   simp only [dM, Matrix.of_apply, Matrix.add_apply, Matrix.mul_apply]
   rw [h.fderiv, ← Finset.sum_add_distrib]
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [sum_apply, add_apply, smul_apply, smul_eq_mul]
   exact Finset.sum_congr rfl fun c _ => by ring
 
 theorem dM_const (A : Matrix (Fin N) (Fin N) ℂ) (t v : Fin e → ℂ) : dM (fun _ => A) t v = 0 := by
@@ -133,7 +133,7 @@ theorem dM_zero {f : (Fin e → ℂ) → Matrix (Fin N) (Fin N) ℂ} {t : Fin e 
 
 theorem eq_zero_of_tri {L W : Matrix (Fin N) (Fin N) ℂ} (hd : IsUnit L.det) (hL : ∀ a b, a < b → L a b = 0)
     (hW : W.BlockTriangular id) (h : ∀ a b, a ≤ b → (L * W) a b = 0) : W = 0 := by
-  letI := L.invertibleOfIsUnitDet hd
+  let := L.invertibleOfIsUnitDet hd
   have hL' : L.BlockTriangular OrderDual.toDual := fun a b hab => hL a b hab
   have hI := Matrix.blockTriangular_inv_of_blockTriangular hL'
   ext a b
@@ -191,7 +191,7 @@ theorem flagImm_of : RankLem → FlagImm := by
       ext a b
       simpa [Φ] using congrFun ht'.2 (q.symm (τ, a, b))
     have hu : IsUnit (T τ t').det := IsUnit.mk0 _ ((hW t' ht'.1).2.2 τ)
-    letI := (T τ t').invertibleOfIsUnitDet hu
+    let := (T τ t').invertibleOfIsUnitDet hu
     refine ⟨T τ t * (T τ t')⁻¹, (hTt t ht τ).mul (Matrix.blockTriangular_inv_of_blockTriangular (hTt t' ht'.1 τ)), ?_⟩
     show gm τ t' = gm τ t * (T τ t * (T τ t')⁻¹)
     rw [← Matrix.mul_assoc, ← hgL, ← e1, hgL, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.mul_one])
@@ -201,7 +201,7 @@ theorem flagImm_of : RankLem → FlagImm := by
     have hu : IsUnit (T τ t).det := IsUnit.mk0 _ ((hW t ht).2.2 τ)
     have hg := hdet t (hW t ht).1 τ
     have hg0 := hdet t₀ ht₀ τ
-    letI := (T τ t).invertibleOfIsUnitDet hu
+    let := (T τ t).invertibleOfIsUnitDet hu
     have e1 : dM (fun z => gm τ t₀ * L τ z) t v = dM (fun z => gm τ z * T τ z) t v := by simp only [hgL]
     rw [dM_mul (f := fun _ => gm τ t₀) (fun _ _ => analyticAt_const) (hL t ht τ), dM_const, Matrix.zero_mul, zero_add,
       dM_mul (fun a b => han τ a b t (hW t ht).1) (hT t ht τ)] at e1

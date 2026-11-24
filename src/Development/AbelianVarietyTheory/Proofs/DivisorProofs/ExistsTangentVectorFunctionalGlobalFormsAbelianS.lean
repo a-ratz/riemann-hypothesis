@@ -248,8 +248,8 @@ theorem connForm_eq_zero {K : Type} [Field K] {X : Over (Sp K)} (hX : Smooth X.h
     (U : X.left.affineOpens) :
     connForm f.1 (affPt (X.hom ≫ 𝟙 (Sp K)) U) (affPt_w (X.hom ≫ 𝟙 (Sp K)) U) = 0 := by
   have hsm : Smooth (X.hom ≫ 𝟙 (Sp K)) := by rw [Category.comp_id]; exact hX
-  haveI : Algebra.Smooth K (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) := sec_smooth _ hsm U
-  haveI : _root_.IsReduced (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) :=
+  have : Algebra.Smooth K (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) := sec_smooth _ hsm U
+  have : _root_.IsReduced (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) :=
     _root_.GlobalTheory.isReduced_of_smooth_over_field K (Sec (X.hom ≫ 𝟙 (Sp K)) U.1)
   refine _root_.GlobalTheory.eq_zero_of_forall_residueField_functional (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) Ω[Sec (X.hom ≫ 𝟙 (Sp K)) U.1⁄K] _ ?_
   intro p _ l
@@ -390,9 +390,9 @@ open GlobalTheory.CechDR in
 theorem cmpForm_surjective (hC : GlobalTheory.Published.CrystallineSmoothLift) (hH : GlobalTheory.Published.AbelianHodgeDeRham)
     (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ) (hab : IsAbelianScheme A)
     (hdim : SmoothOfRelativeDimension g A.hom) : Function.Surjective (cmpForm (A.hom ≫ 𝟙 (Sp R))) := by
-  have hsm : Smooth (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.smooth; infer_instance
-  have hsep : IsSeparated (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.proper; infer_instance
-  have hqc : QuasiCompact (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.proper; infer_instance
+  have hsm : Smooth (A.hom ≫ 𝟙 (Sp R)) := by have := hab.smooth; infer_instance
+  have hsep : IsSeparated (A.hom ≫ 𝟙 (Sp R)) := by have := hab.proper; infer_instance
+  have hqc : QuasiCompact (A.hom ≫ 𝟙 (Sp R)) := by have := hab.proper; infer_instance
   have hcmp := (cechDeRham_comparison_bijective_cup_smooth hC R A.left _ hsm hsep hqc).1
   have hcl : Function.Injective (clForm (A.hom ≫ 𝟙 (Sp R))) := (hH R A g hab hdim).2.2.2.2.1.2.1
   intro ω
@@ -413,14 +413,14 @@ theorem cmpForm_eq_zero_of_tangent (hC : GlobalTheory.Published.CrystallineSmoot
     (hdim : SmoothOfRelativeDimension g B.hom) (f : Form (B.hom ≫ 𝟙 (Sp K)))
     (hf : ∀ v : epsR K ⟶ B, IsTangent v → tanVal v f = 0) :
     GlobalTheory.CechDR.cmpForm (B.hom ≫ 𝟙 (Sp K)) f = 0 := by
-  haveI := hab.comm
+  have := hab.comm
   have hsm : Smooth B.hom := hab.smooth
   obtain ⟨y, hy⟩ := GlobalTheory.T.exists_lieBasis_smooth_commGroupScheme_field K B g hdim
   refine GlobalTheory.T.cmpForm_eq_zero_of_pullback_vanishing K B hsm f fun L _ σ ↦ ?_
-  letI : GrpObj ((Over.pullback (spMap σ)).obj B) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback (spMap σ)).obj B) := Functor.grpObjObj
   have hG := isGrpPullback_pullback B (spMap σ)
   have hab' := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hab hG
-  haveI := hab'.comm
+  have := hab'.comm
   have hdim' : SmoothOfRelativeDimension g ((Over.pullback (spMap σ)).obj B).hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback hG.1 hdim
   have m : IsMor (dp0 K) (B.hom ≫ 𝟙 (Sp K)) (dp0 L) (((Over.pullback (spMap σ)).obj B).hom ≫ 𝟙 (Sp L)) σ
@@ -444,10 +444,10 @@ def lieVal (K : Type) [Field K] (B : Over (Sp K)) [GrpObj B] [IsCommMonObj B] :
 
 theorem eq_of_tanVal_eq : GlobalTheory.Published.CrystallineSmoothLift → GlobalTheory.Published.AbelianHodgeDeRham → ∀ (K : Type) [Field K] (B : Over (Sp K)) [GrpObj B] (g : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → ∀ v w : epsR K ⟶ B, IsTangent v → IsTangent w → (∀ f : Form (B.hom ≫ 𝟙 (Sp K)), tanVal v f = tanVal w f) → v = w := by
   intro hC hH K _ B _ g hab hdim v w hv hw h
-  haveI := hab.comm
+  have := hab.comm
   obtain ⟨y, hy⟩ := GlobalTheory.T.exists_lieBasis_smooth_commGroupScheme_field K B g hdim
   let b := Serre.Lie.basis (Serre.intAct B) hy
-  haveI := Module.Finite.of_basis b
+  have := Module.Finite.of_basis b
   have hL : Module.finrank K (Serre.Lie (Serre.intAct B)) = g := by
     rw [Module.finrank_eq_card_basis b, Fintype.card_fin]
   have htop : GlobalTheory.CechDR.ClosedForm (B.hom ≫ 𝟙 (Sp K)) = ⊤ := (hH K B g hab hdim).2.2.2.2.1.1
@@ -459,7 +459,7 @@ theorem eq_of_tanVal_eq : GlobalTheory.Published.CrystallineSmoothLift → Globa
     have h' := hrk (IsLocalRing.closedPoint K)
     rwa [Module.rankAtStalk_eq_finrank_of_free] at h'
   let eC : GlobalTheory.CechDR.ClosedForm (B.hom ≫ 𝟙 (Sp K)) ≃ₗ[K] GlobalTheory.CechDR.GlobForm (B.hom ≫ 𝟙 (Sp K)) := LinearEquiv.ofTop _ htop
-  haveI : Module.Finite K (GlobalTheory.CechDR.ClosedForm (B.hom ≫ 𝟙 (Sp K))) := Module.Finite.equiv eC.symm
+  have : Module.Finite K (GlobalTheory.CechDR.ClosedForm (B.hom ≫ 𝟙 (Sp K))) := Module.Finite.equiv eC.symm
   have hC' : Module.finrank K (GlobalTheory.CechDR.ClosedForm (B.hom ≫ 𝟙 (Sp K))) = g := by rw [eC.finrank_eq, hG]
   let c := GlobalTheory.CechDR.cmpForm (B.hom ≫ 𝟙 (Sp K))
   have hcs : Function.Surjective c := cmpForm_surjective hC hH K B g hab hdim
@@ -613,9 +613,9 @@ theorem isPullForm_glob {X X' : Scheme.{0}} {s : X ⟶ Sp R} {s' : X' ⟶ Sp R'}
 theorem glob_surjective (hC : GlobalTheory.Published.CrystallineSmoothLift) (hH : GlobalTheory.Published.AbelianHodgeDeRham)
     (A : Over (Sp R)) [GrpObj A] (g : ℕ) (hab : IsAbelianScheme A)
     (hdim : SmoothOfRelativeDimension g A.hom) : Function.Surjective (glob (A.hom ≫ 𝟙 (Sp R))) := by
-  have hsm : Smooth (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.smooth; infer_instance
-  have hsep : IsSeparated (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.proper; infer_instance
-  have hqc : QuasiCompact (A.hom ≫ 𝟙 (Sp R)) := by haveI := hab.proper; infer_instance
+  have hsm : Smooth (A.hom ≫ 𝟙 (Sp R)) := by have := hab.smooth; infer_instance
+  have hsep : IsSeparated (A.hom ≫ 𝟙 (Sp R)) := by have := hab.proper; infer_instance
+  have hqc : QuasiCompact (A.hom ≫ 𝟙 (Sp R)) := by have := hab.proper; infer_instance
   have hcmp := (GlobalTheory.CechDR.cechDeRham_comparison_bijective_cup_smooth hC R A.left _ hsm hsep hqc).1
   have hcl : Function.Injective (clForm (A.hom ≫ 𝟙 (Sp R))) := (hH R A g hab hdim).2.2.2.2.1.2.1
   have htop : ClosedForm (A.hom ≫ 𝟙 (Sp R)) = ⊤ := (hH R A g hab hdim).2.2.2.2.1.1
@@ -690,7 +690,7 @@ theorem exists_tangent_field (hC : GlobalTheory.Published.CrystallineSmoothLift)
     have h := hrk (IsLocalRing.closedPoint K)
     rwa [Module.rankAtStalk_eq_finrank_of_free] at h
   let b := Serre.Lie.basis (Serre.intAct B) hy
-  haveI := Module.Finite.of_basis b
+  have := Module.Finite.of_basis b
   exact exists_eq_comp (by rw [hG, Module.finrank_eq_card_basis b, Fintype.card_fin]) (glob _) hs
     (lieVal B) (fun v w h ↦ Serre.Lie.ext
       (GlobalTheory.LieInjField.eq_of_tanVal_eq hC hH K B g hab hdim _ _ v.isTangent w.isTangent (LinearMap.congr_fun h)))
@@ -717,14 +717,14 @@ theorem exists_lieBasis_lift {K : Type} [Field K] (σ : R →+* K) (A : Over (Sp
       IsGrpPullback B A (spMap σ) φ ∧ ∃ y : Fin g → (epsR K ⟶ B), IsLieBasis y ∧
         ∀ i, ∃ (u : K) (w : epsR R ⟶ A), u ≠ 0 ∧ IsTangent w ∧
           (spMap (epsScaleR u) ≫ (y i).left) ≫ φ = spMap (Chart.dualMapR σ) ≫ w.left := by
-  haveI : Smooth A.hom := hdim.smooth
+  have : Smooth A.hom := hdim.smooth
   obtain ⟨r, hr, hCh, v, hv⟩ := LieProj.exists_chart_lieBasis A g hdim
     ⟨RingHom.ker σ, RingHom.ker_isPrime σ⟩
   have hr' : σ r ≠ 0 := hr
   let τ : Localization.Away r →+* K := IsLocalization.Away.lift r (IsUnit.mk0 _ hr')
   have hτ : τ.comp (algebraMap R _) = σ := IsLocalization.Away.lift_comp r _
   have hτ' : ∀ x, τ (algebraMap R _ x) = σ x := RingHom.congr_fun hτ
-  haveI : ∀ s : R, Smooth (Chart.Gs A s).hom := fun s =>
+  have : ∀ s : R, Smooth (Chart.Gs A s).hom := fun s =>
     show Smooth (pullback.snd A.hom _) from inferInstance
   have h₁ := isGrpPullback_pullback A (Chart.fB R (Localization.Away r))
   have h₂ := isGrpPullback_pullback (Chart.Gs A r) (spMap τ)
@@ -816,7 +816,7 @@ theorem exists_tangent_residue (hC : GlobalTheory.Published.CrystallineSmoothLif
 
 theorem exists_tangent_of_functional : GlobalTheory.Published.CrystallineSmoothLift → GlobalTheory.Published.AbelianHodgeDeRham → ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ φ : Form (A.hom ≫ 𝟙 (Sp R)) →ₗ[R] R, (∀ f, GlobalTheory.CechDR.cmpForm (A.hom ≫ 𝟙 (Sp R)) f = 0 → φ f = 0) → ∃ v : epsR R ⟶ A, IsTangent v ∧ ∀ f, tanVal v f = φ f := by
   intro hC hH R _ A _ g hab hdim φ hφ
-  haveI := hab.comm
+  have := hab.comm
   have hs := glob_surjective hC hH A g hab hdim
   obtain ⟨hfin, hproj, -⟩ : Module.Finite R (GlobForm (A.hom ≫ 𝟙 (Sp R))) ∧
       Module.Projective R (GlobForm (A.hom ≫ 𝟙 (Sp R))) ∧
@@ -825,7 +825,7 @@ theorem exists_tangent_of_functional : GlobalTheory.Published.CrystallineSmoothL
   obtain ⟨ψ, hψ⟩ := exists_factor hs φ hφ
   have hN := eq_top_of_residue
     ((LinearMap.range (lieVal A)).comap (glob (A.hom ≫ 𝟙 (Sp R))).dualMap) fun m hm α ↦ by
-      letI := Ideal.Quotient.field m
+      let := Ideal.Quotient.field m
       obtain ⟨v, hv⟩ := exists_tangent_residue hC hH (R ⧸ m) Ideal.Quotient.mk_surjective A g hab hdim α
       obtain ⟨χ, hχ⟩ := exists_factor hs (lieVal A v) (GlobalTheory.T.formValueOnTangentVector_eq_zero_of_globalForm_zero R A v.hom)
       refine ⟨χ, ⟨v, LinearMap.ext fun f ↦ (hχ f).symm⟩, fun x ↦ ?_⟩

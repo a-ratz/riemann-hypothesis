@@ -307,7 +307,7 @@ theorem isOpen_snd_image : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G], Smooth 
     ((U.isOpen.preimage (fst G G).left.continuous)).inter (U.isOpen.preimage (μ[G]).left.continuous)
   convert hmap _ hW using 1
   ext y
-  simp only [Set.mem_setOf_eq, Set.mem_image, Set.mem_inter_iff, Set.mem_preimage, SetLike.mem_coe]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, Set.mem_inter_iff, Set.mem_preimage, SetLike.mem_coe]
   constructor
   · rintro ⟨w, h1, h2, h3⟩; exact ⟨w, ⟨h1, h2⟩, h3⟩
   · rintro ⟨w, ⟨h1, h2⟩, h3⟩; exact ⟨w, h1, h2, h3⟩
@@ -728,7 +728,7 @@ theorem smooth_genericFibre_closure_partition : ∀ (R : Type) [CommRing R] [IsD
     obtain ⟨φ, hφ⟩ := Spec.map_surjective (j ≫ f)
     have hs : Smooth (Spec.map φ) := by rw [hφ]; infer_instance
     have hφs : φ.hom.Smooth := (HasRingHomProperty.Spec_iff (P := @Smooth)).mp hs
-    letI : Algebra R A := φ.hom.toAlgebra
+    let : Algebra R A := φ.hom.toAlgebra
     have hA : Algebra.Smooth R A := hφs
     have hcl : ∀ S : Set X, j ⁻¹' closure S = closure (j ⁻¹' S) := fun S =>
       j.isOpenEmbedding.isOpenMap.preimage_closure_eq_closure_preimage j.continuous S
@@ -840,7 +840,7 @@ theorem section_mem_component_generic_of_closed :
     (isOpen_component_fibre_subtype f g₀ ⟨e g₀, ha⟩)
   obtain ⟨hd, hu⟩ := _root_.GlobalTheory.smooth_genericFibre_closure_partition V X f hf (connectedComponentIn (f ⁻¹' {g₀}) (e g₀))
     (f ⁻¹' {g₀} \ connectedComponentIn (f ⁻¹' {g₀}) (e g₀))
-    (Set.union_diff_cancel (connectedComponentIn_subset _ _)) h1 h2
+    (Set.union_sdiff_cancel (connectedComponentIn_subset _ _)) h1 h2
   by_contra hne
   have hσ' : σ m ∈ closure (f ⁻¹' {g₀} \ connectedComponentIn (f ⁻¹' {g₀}) (e g₀)) :=
     (hsp.map σ.continuous).mem_closed isClosed_closure (subset_closure ⟨hfσ g₀, hne⟩)
@@ -887,7 +887,7 @@ theorem stableUnderGeneralization_sectionComponents :
   have hσq : σ ≫ pullback.fst f p = g := pullback.lift_fst _ _ _
   have he'f : e' ≫ pullback.snd f p = 𝟙 _ := pullback.lift_snd _ _ _
   have he'q : e' ≫ pullback.fst f p = p ≫ e := pullback.lift_fst _ _ _
-  haveI : Smooth f := hf
+  have : Smooth f := hf
   have hf' : Smooth (pullback.snd f p) := inferInstance
   have key := _root_.GlobalTheory.sectionComponents_preimage_of_isPullback X S (pullback f p) (Spec (CommRingCat.of V)) f (pullback.snd f p) p
     (pullback.fst f p) e e' hf hpb hef he'f he'q

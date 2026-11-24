@@ -151,7 +151,7 @@ theorem eq_zero_of_prod {T : Type} [Fintype T] [DecidableEq T] {ι : T → Type}
           rw [Finset.sum_comm]
           refine Finset.sum_congr rfl fun I' _ => ?_
           rw [Finset.sum_ite_eq]
-          simp only [Finset.mem_univ, if_true]
+          simp only [Finset.mem_univ, ite_true]
           ring)
         exact congrFun hc i
       have h3 := IH _ (step (I s)) I
@@ -206,7 +206,7 @@ def genUpperTri (n : ℕ) : Matrix (Fin n) (Fin n) (MvPolynomial (Fin n × Fin n
 theorem genUpperTri_blockTriangular (n : ℕ) : (genUpperTri n).BlockTriangular id := by
   intro i j hij
   simp only [genUpperTri, Matrix.of_apply]
-  rw [if_neg (not_le.mpr (show j < i from hij))]
+  rw [ite_eq_right (not_le.mpr (show j < i from hij))]
 
 theorem colAct_intCast_of_mem {n : ℕ} {la : Fin n → ℕ} {f : Pol n ℤ} (hf : f ∈ nabla la ℤ)
     {S : Type} [CommRing S] (b : Matrix (Fin n) (Fin n) S) (hb : b.BlockTriangular id) :
@@ -346,15 +346,15 @@ theorem exists_points {ι Z K : Type} [Fintype ι] [DecidableEq ι] [Field K] (�
     simp [fun i => congrFun hc i]
   obtain ⟨κ, a, -, hsp, hli⟩ := exists_linearIndependent' K v
   rw [hspan] at hsp
-  haveI : Finite κ := hli.finite
-  haveI := Fintype.ofFinite κ
+  have : Finite κ := hli.finite
+  have := Fintype.ofFinite κ
   let bas := Basis.mk hli hsp.ge
   have hcard : Fintype.card κ = Fintype.card ι := by
     have := Module.finrank_eq_card_basis bas
     simpa using this.symm
   let e : ι ≃ κ := Fintype.equivOfCardEq hcard.symm
   refine ⟨a ∘ e, ?_⟩
-  rw [← Matrix.linearIndependent_cols_iff_isUnit]
+  rw [← Matrix.linearIndependent_col_iff_isUnit]
   exact hli.comp e e.injective
 
 end GlobalTheory.TensorValue
@@ -373,7 +373,7 @@ theorem tval_eq {T : Type} [Fintype T] [DecidableEq T] {N : T → ℕ} (la : ∀
 theorem exists_good_points {n : ℕ} (la : Fin n → ℕ) (K : Type) [Field K] [CharZero K] :
     ∃ z : Idx la → Matrix (Fin n) (Fin n) K, (∀ k, (z k).det ≠ 0) ∧
       IsUnit (Matrix.of fun i k => bval la i (z k)) := by
-  haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
+  have : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
   obtain ⟨p, hp⟩ := exists_points (Z := {w : Matrix (Fin n) (Fin n) K // w.det ≠ 0})
     (fun i w => bval la i w.1) fun c hc => by
       have hq : ∑ i, c i • map (Int.castRingHom K) (intVec la i) = 0 := by
@@ -404,7 +404,7 @@ theorem exists_slice (G : MvPolynomial (FrVar N) K)
       evalFr G (fun t => y t * b t) = (∏ t, diagChar (la t) (b t)) * evalFr G y)
     (a : T) (y : ∀ t, Matrix (Fin (N t)) (Fin (N t)) K) (hy : ∀ t, (y t).det ≠ 0) :
     ∃ c : Idx (la a) → K, ∀ w, evalFr G (Function.update y a w) = ∑ i, c i * bval (la a) i w := by
-  haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
+  have : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
   let Y : ∀ t, Matrix (Fin (N t)) (Fin (N t)) (Pol (N a) K) :=
     Function.update (fun t => (y t).map C) a (Matrix.of fun i j => X (i, j))
   let p : Pol (N a) K := evalFr (map C G) Y
@@ -492,7 +492,7 @@ theorem transfer {T : Type} [Fintype T] [DecidableEq T] {N : T → ℕ} (la : �
     (h : ∀ y : ∀ t, Matrix (Fin (N t)) (Fin (N t)) K, (∀ t, (y t).det ≠ 0) → evalFr G y = tval la x y)
     (S : Type) [CommRing S] (φ : K →+* S) (y : ∀ t, Matrix (Fin (N t)) (Fin (N t)) S) :
     evalFr (map φ G) y = tval la (fun I => φ (x I)) y := by
-  haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
+  have : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
   have hG : G = tpoly la x := by
     rw [← sub_eq_zero]
     refine eq_zero_of_evalFr _ fun y hy => ?_
@@ -789,7 +789,7 @@ theorem exists_coord {f : Rul Xo c} (hf : f ∈ sec Xo c a n) (hs : f ∈ suppOn
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.TensorValue.exists_tval_of_triangular _ Dw.mult (part Dw a) c.F G fun y b hy hb => by
     have h := GlobalTheory.LamT.evalFr_mul_tri hf hG inferInstance (AlgHom.id c.F c.F) y b (fun τ => (hy τ).isUnit)
       (fun τ => by
-        rw [Matrix.det_of_upperTriangular (hb τ).1]
+        rw [Matrix.det_of_isUpperTriangular (hb τ).1]
         exact (Finset.prod_ne_zero_iff.2 fun i _ => (hb τ).2 i).isUnit)
       (fun τ i j hij => (hb τ).1 hij) fun τ i => ((hb τ).2 i).isUnit
     have h2 : MvPolynomial.map (AlgHom.id c.F c.F).toRingHom G = G := MvPolynomial.map_id G

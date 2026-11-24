@@ -525,7 +525,7 @@ theorem Loc.orthM (h : Loc A B ϖ J J' x v w T y) (h0 : ϖ ≠ 0) :
 
 theorem Loc.unit (h : Loc A B ϖ J J' x v w T y) (h0 : ϖ ≠ 0) (hϖ : ϖ ∈ regAt ξ y) (hn : ¬ unitAt ξ y ϖ) :
     unitAt ξ y (frameDet (Mat (J x) v) T) := by
-  haveI := EigSplit.isLocalRing_regAt y
+  have := EigSplit.isLocalRing_regAt y
   obtain ⟨-, Rm, hR1, hR2⟩ := h.sa
   obtain ⟨P, hP, hPc⟩ := split_matrix (A y) h.fa.1 h.fa.2 (J x) Rm hR1 hR2
   exact unit_frameDet hϖ hn h.intJ h.intS h.ti hP (h.orthM h0) hPc h.tc
@@ -609,7 +609,7 @@ theorem trivMod_lineLat : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec
     · rw [← hs, mul_smul]; rfl
   choose v w T U α β hD using H
   refine ⟨fun x => (α x / β x) / frameDet (Mat (J x) (v x)) (T x), fun x hx => ⟨U x, (hD x hx).1, fun y hy hy' => ?_⟩⟩
-  haveI := EigSplit.isLocalRing_regAt y
+  have := EigSplit.isLocalRing_regAt y
   have Lx := (hD x hx).2.1 y hy hy'
   have Ly := (hD y hy').2.1 y (hD y hy').1 hy'
   have gx := hFr y trivial (v x) (w x) (α x) (β x) Lx.fa Lx.fb (hD x hx).2.2.1 (hD x hx).2.2.2

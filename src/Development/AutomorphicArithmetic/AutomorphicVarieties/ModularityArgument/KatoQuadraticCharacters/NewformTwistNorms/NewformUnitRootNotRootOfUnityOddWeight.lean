@@ -61,7 +61,7 @@ theorem norm_eq_one_of_pow_eq_one' {R : Type} [NormedDivisionRing R] {z : R} {n 
 
 theorem dirichlet_pow_card_eq_one {M : ℕ} (hM : 0 < M) (χ : DirichletCharacter ℂ M) (l : ℕ) (h : l.Coprime M) :
     ∃ n : ℕ, 0 < n ∧ χ (l : ZMod M) ^ n = 1 := by
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   refine ⟨Fintype.card (ZMod M)ˣ, Fintype.card_pos, ?_⟩
   rw [← ZMod.coe_unitOfCoprime l h, ← map_pow, ← Units.val_pow_eq_pow_val, pow_card_eq_one, Units.val_one,
     map_one]

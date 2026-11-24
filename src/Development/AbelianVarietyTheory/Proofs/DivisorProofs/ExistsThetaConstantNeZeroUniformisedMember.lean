@@ -53,8 +53,8 @@ namespace GlobalTheory.GSep
 
 theorem GMem.exists_th_ne_zero : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X₁.M.Z) (act : I → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (ev : X₁.M.Z.presheaf.stalk z₁ →+* V) (X : Type) [AddCommGroup X] (t : X → V) (δ : I → X → X) (𝔪 : GlobalTheory.GSep.GMem X₁ z₁ act V ev X t δ), ∃ b, 𝔪.yK ⟨X₁.S.th b, X₁.S.th_mem b⟩ ≠ 0 := by
   intro I X₁ z₁ act V _ _ _ ev X _ t δ 𝔪
-  haveI : CharZero V := 𝔪.cn.2.2.2
-  haveI : CharZero (FractionRing V) :=
+  have : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero (FractionRing V) :=
     (RingHom.charZero_iff (IsFractionRing.injective V (FractionRing V))).1 inferInstance
   exact GlobalTheory.ThetaGeneric.exists_th_ne_zero GlobalTheory.abelianSchemeLaws_all.1 GlobalTheory.abelianSchemeLaws_all.2 _ _ X₁.S X₁.ρ
     (FractionRing V) 𝔪.yK

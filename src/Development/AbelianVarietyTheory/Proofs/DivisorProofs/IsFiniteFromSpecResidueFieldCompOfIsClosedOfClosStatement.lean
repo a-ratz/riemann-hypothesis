@@ -69,8 +69,8 @@ namespace GlobalTheory
 
 theorem isFinite_fromSpecResidueField_comp_of_isClosed_of_closedPoint : ∀ (R : Type) [CommRing R] [IsLocalRing R] (X : Over (Sp R)), LocallyOfFiniteType X.hom → ∀ x : X.left, X.hom x = closedPoint R → IsClosed ({x} : Set X.left) → IsFinite (X.left.fromSpecResidueField x ≫ X.hom) := by
   intro R _ _ X hX x hx hc
-  haveI := hX
-  haveI := isClosed_singleton_iff_isClosedImmersion.mp hc
+  have := hX
+  have := isClosed_singleton_iff_isClosedImmersion.mp hc
   have hf : LocallyOfFiniteType (X.left.fromSpecResidueField x ≫ X.hom) := inferInstance
   have hpt : ∀ p : Spec (X.left.residueField x), (X.left.fromSpecResidueField x ≫ X.hom) p = closedPoint R := by
     intro p
@@ -94,8 +94,8 @@ theorem isFinite_fromSpecResidueField_comp_of_isClosed_of_closedPoint : ∀ (R :
     ext a; rfl
   rw [hφ] at hf ⊢
   have hψ : ψ.FiniteType := RingHom.FiniteType.of_comp_finiteType hf
-  letI : Algebra k K := ψ.toAlgebra
-  haveI : Algebra.FiniteType k K := hψ
+  let : Algebra k K := ψ.toAlgebra
+  have : Algebra.FiniteType k K := hψ
   have : Module.Finite k K := finite_of_finite_type_of_isJacobsonRing k K
   have hψf : ψ.Finite := this
   exact hψf.comp (RingHom.Finite.of_surjective _ Ideal.Quotient.mk_surjective)

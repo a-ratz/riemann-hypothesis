@@ -473,7 +473,7 @@ theorem isAdmissible_reduce : AbelianDeRham → ∀ (R R₁ R₀ : Type) [CommRi
       ∀ y : HdR A₁, y ∈ F₁ ↔ ∃ x ∈ F, (redMor h₂).Corr x y := by
   intro P R R₁ R₀ _ _ _ I J I₁ κ π hJ ρ κ₁ π₁ hs g A₀ _ A₁ _ A _ i₁ i₂ i h₁ h₂ h hi hA hg F hF
   obtain ⟨PF, -, PB, -, -⟩ := P
-  letI : Algebra R R₁ := ρ.toAlgebra
+  let : Algebra R R₁ := ρ.toAlgebra
   have hbc : (AbelianDeRham.bcMor h₂).IsBC := (PB R A g hA hg R₁ A₁ i₂ h₂).1
   obtain ⟨hfin, hproj, -⟩ := PF.prim hA hg
 
@@ -523,9 +523,9 @@ theorem isAdmissible_reduce : AbelianDeRham → ∀ (R R₁ R₀ : Type) [CommRi
     obtain ⟨k, j, d, hj, hsum⟩ := dual_eq_sum_of_ker ρ (f - n) hx
     have hfp : f = (Submodule.linearProjOfIsCompl F N hN (f - n) : HdR A) := by
       have e1 : Submodule.linearProjOfIsCompl F N hN f = ⟨f, hf⟩ :=
-        Submodule.linearProjOfIsCompl_apply_left hN ⟨f, hf⟩
+        Submodule.projectionOnto_apply_left hN ⟨f, hf⟩
       have e2 : Submodule.linearProjOfIsCompl F N hN n = 0 :=
-        (Submodule.linearProjOfIsCompl_apply_eq_zero_iff hN).2 hn
+        (Submodule.projectionOnto_apply_eq_zero_iff hN).2 hn
       rw [map_sub, e1, e2, sub_zero]
     refine LinearMap.ext fun c₁ ↦ ?_
     obtain ⟨c, rfl⟩ := hPs c₁
@@ -964,7 +964,7 @@ theorem liftHom_of_isStep : AbelianDeRham → ∀ (R R₁ R₀ : Type) [CommRing
     let f₁' : A₁ ⟶ B₁ := Over.homMk (k₂.1.lift (i₂ ≫ f'.left) A₁.hom
       (by rw [Category.assoc, Over.w f', h₂.1.w])) (k₂.1.lift_snd _ _ _)
     have e₁ : f₁'.left ≫ j₂ = i₂ ≫ f'.left := k₂.1.lift_fst _ _ _
-    haveI := ReciprocityTheory.ChartRestriction.G.Out.PullGtPf.isMonHom_of_grpPullback h₂ k₂ f' f₁' e₁
+    have := ReciprocityTheory.ChartRestriction.G.Out.PullGtPf.isMonHom_of_grpPullback h₂ k₂ f' f₁' e₁
     have e₂ : i₁ ≫ f₁'.left = f₀.left ≫ j₁ := by
       refine k₂.1.hom_ext ?_ ?_
       · rw [Category.assoc, e₁, ← Category.assoc, ei, ef', Category.assoc, ej]
@@ -1093,7 +1093,7 @@ theorem red_descent [Module.Projective S P] [Module.Finite R P'] [Module.Project
       obtain ⟨c, hc, rfl⟩ := hc
       exact (hy' c).trans (by rw [(Submodule.mem_dualAnnihilator _).1 hy c hc, map_zero])
     obtain ⟨_, ⟨w, rfl⟩, hx'⟩ := (H y').1 m
-    letI : Algebra S S₀ := π₁.toAlgebra
+    let : Algebra S S₀ := π₁.toAlgebra
     let t : P →ₗ[S] S₀ :=
       { toFun c := y (r₁ c)
         map_add' := by simp
@@ -1185,7 +1185,7 @@ theorem bc_facts (P : AbelianDeRham) {S R : Type} [CommRing S] [CommRing R] {σ 
     Submodule.span R (Set.range (redMor h).pull) = ⊤ ∧
       (∀ x : HdR B, ∃ x' : HdR A, ∀ c, x' ((redMor h).pull c) = σ (x c)) ∧
       PrimitiveSubmodule A = Submodule.span R ((redMor h).pull '' (PrimitiveSubmodule B)) := by
-  letI : Algebra S R := σ.toAlgebra
+  let : Algebra S R := σ.toAlgebra
   obtain ⟨h₁, h₂⟩ := P.2.2.1 S B g hB hg R A φ h
   refine ⟨top_le_iff.1 fun c _ ↦ ?_, h₁.exists, h₂⟩
   obtain ⟨z, rfl⟩ := h₁.2 c
@@ -1201,15 +1201,15 @@ theorem exists_noeth_model (P : AbelianDeRham) {R : Type} [CommRing R] {g : ℕ}
       ∀ (x : HdR B) (x' : HdR A), (∀ c, x' ((redMor h).pull c) = σ (x c)) →
         ∀ c, e x' ((redMor h).pull c) = σ (e₁ x c) := by
   obtain ⟨S, B, _, φ, -, hS, hB, hgB, h⟩ := GlobalTheory.T.abelianScheme_descends_to_finitelyGenerated_subring R g A ∅ hA hg
-  haveI : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℤ S
+  have : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℤ S
   obtain ⟨hf, hp, -⟩ := P.1.prim hB hgB
   obtain ⟨n, p, l, hpl⟩ := exists_frame (S := S) (P := primDR B)
   obtain ⟨b₁, b₂, -⟩ := bc_facts P h hB hgB
   choose l' hl using fun i ↦ b₂ (l i)
   let a : Fin n × Fin n → R := fun ij ↦ e (l' ij.1) ((redMor h).pull (p ij.2))
   let T := Algebra.adjoin S (Set.range a)
-  haveI : Algebra.FiniteType S T := Algebra.FiniteType.adjoin_of_finite (Set.finite_range a)
-  haveI : IsNoetherianRing T := Algebra.FiniteType.isNoetherianRing S T
+  have : Algebra.FiniteType S T := Algebra.FiniteType.adjoin_of_finite (Set.finite_range a)
+  have : IsNoetherianRing T := Algebra.FiniteType.isNoetherianRing S T
   obtain ⟨C, _, ψ, χ, h₀, h₁, hc, hC, hgC⟩ := exists_factor (f := spMap (algebraMap S T))
     (k := spMap T.val.toRingHom) h (Cris.spMap_comp _ _).symm hB hgB
   obtain ⟨c₁, c₂, -⟩ := bc_facts P h₀ hB hgB
@@ -1662,7 +1662,7 @@ theorem push_mem_liftFil_of_injective : AbelianDeRham →
     hASab hASg φA ψA hφA hψA hiA g' B₀ _ B _ j hB BS₀ _ BS _ jS hBS hBab hBg hBSab hBSg φB ψB hφB hψB hjB
     f₀ _ fS₀ _ hf hyp d hd
   obtain ⟨_, _, HBC, HR, _⟩ := H
-  letI : Algebra S R := σ.toAlgebra
+  let : Algebra S R := σ.toAlgebra
   have hJI : ∀ a ∈ J, σ a ∈ I := fun a ha ↦ by
     rw [← hI, RingHom.mem_ker]
     have : πS a = 0 := by rw [← RingHom.mem_ker, hJk]; exact ha
@@ -1778,7 +1778,7 @@ theorem liftHom_exists_of_noetherian : AbelianDeRham → (∀ (R : Type) [CommRi
     rw [Ideal.zero_eq_bot, eq_bot_iff]
     refine (Ideal.le_comap_pow _ 2).trans ?_
     rw [h, Ideal.zero_eq_bot, Ideal.comap_bot_of_injective _ Subtype.val_injective]
-  haveI : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℤ S
+  have : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℤ S
   have hfilS := GlobalTheory.T.push_mem_liftFil_of_injective_alt P R I h R₀ π hπ hker S S.subtype Subtype.val_injective (I.comap S.subtype) hS
     (S ⧸ I.comap S.subtype) (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective (Ideal.mk_ker) ι₀ hι
     g A₀ A i hA AS₀ AS iS hAS abA smA abAS smAS φA ψA pA qA cA

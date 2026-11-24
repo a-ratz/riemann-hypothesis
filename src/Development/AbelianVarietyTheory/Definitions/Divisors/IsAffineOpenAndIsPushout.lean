@@ -482,11 +482,11 @@ theorem ofAugCot_d (a : Γ(X, W)) :
 variable [QuasiCompact e]
 
 theorem ofAugCot_bijective : Function.Bijective (c.ofAugCot he) := by
-  letI := c.algebra
-  letI := appLEAlgebra e c.le
-  letI := QCoh.appLEModule e ((Scheme.Modules.pullback e).obj (ideal e)) c.le
-  haveI := QCoh.appLE_isScalarTower e ((Scheme.Modules.pullback e).obj (ideal e)) c.le
-  haveI := AugCot.isScalarTower_of_algebraMap_eq (c.aug he) fun _ => rfl
+  let := c.algebra
+  let := appLEAlgebra e c.le
+  let := QCoh.appLEModule e ((Scheme.Modules.pullback e).obj (ideal e)) c.le
+  have := QCoh.appLE_isScalarTower e ((Scheme.Modules.pullback e).obj (ideal e)) c.le
+  have := AugCot.isScalarTower_of_algebraMap_eq (c.aug he) fun _ => rfl
   have hb := QCoh.isBaseChange_pullbackSections e (ideal e) c.affine_base c.affine c.le
   let g : Γ(ideal e, W) →ₗ[Γ(X, W)] AugCot (c.aug he) := (RingHom.ker (c.aug he)).toCotangent ∘ₗ
     (QCoh.appLinear (idealSub e).incl W).codRestrict (RingHom.ker (c.aug he)) fun s =>
@@ -513,7 +513,7 @@ theorem augCotEquiv_d (a : Γ(X, W)) :
     letI := c.algebra; c.augCotEquiv he (AugCot.d (c.aug he) a) = d he c.le a := c.ofAugCot_d he a
 
 theorem d_surjective : Function.Surjective (d he c.le) := fun s => by
-  letI := c.algebra
+  let := c.algebra
   obtain ⟨x, rfl⟩ := (c.augCotEquiv he).surjective s
   obtain ⟨a, rfl⟩ := AugCot.d_surjective _ x
   exact ⟨a, (c.augCotEquiv_d he a).symm⟩
@@ -567,12 +567,12 @@ theorem IsChart.exists_isBaseChange [QuasiCompact e] (c : IsChart π e U W) {R A
     (hα : ∀ a, e.appLE W U c.le (α a) = algebraMap R Γ(S, U) (ε a)) :
     ∃ l : AugCot ε →ₗ[R] Γ(conormal e, U), IsBaseChange Γ(S, U) l ∧
       ∀ a, l (AugCot.d ε a) = d he c.le (α a) := by
-  letI := c.algebra
-  letI := α.toAlgebra
-  letI : Algebra R Γ(X, W) := (α.comp (algebraMap R A)).toAlgebra
-  haveI : IsScalarTower R A Γ(X, W) := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R Γ(S, U) Γ(X, W) := .of_algebraMap_eq fun r => congr($(po.w) r)
-  haveI : Algebra.IsPushout R Γ(S, U) A Γ(X, W) := (CommRingCat.isPushout_iff_isPushout.1 po).symm
+  let := c.algebra
+  let := α.toAlgebra
+  let : Algebra R Γ(X, W) := (α.comp (algebraMap R A)).toAlgebra
+  have : IsScalarTower R A Γ(X, W) := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R Γ(S, U) Γ(X, W) := .of_algebraMap_eq fun r => congr($(po.w) r)
+  have : Algebra.IsPushout R Γ(S, U) A Γ(X, W) := (CommRingCat.isPushout_iff_isPushout.1 po).symm
   have hb := AugCot.isBaseChange_of_isPushout (ε := ε) (ε' := c.aug he) hα
   refine ⟨(c.augCotEquiv he).toLinearMap.restrictScalars R ∘ₗ
     AugCot.mapBase (ε' := c.aug he) (IsScalarTower.toAlgHom R A Γ(X, W)) hα,
@@ -587,9 +587,9 @@ theorem IsChart.isFrame_d [QuasiCompact e] (c : IsChart π e U W) {R A ι : Type
       (CommRingCat.ofHom α) (π.appLE U W c.le_base))
     (hα : ∀ a, e.appLE W U c.le (α a) = ρ (ε a)) (b : Module.Basis ι R (AugCot ε)) (a : ι → A)
     (hb : ∀ i, b i = AugCot.d ε (a i)) : IsFrame fun i => d he c.le (α (a i)) := by
-  letI := ρ.toAlgebra
-  letI : Module R Γ(conormal e, U) := Module.compHom _ ρ
-  haveI : IsScalarTower R Γ(S, U) Γ(conormal e, U) := .of_algebraMap_smul fun _ _ => rfl
+  let := ρ.toAlgebra
+  let : Module R Γ(conormal e, U) := Module.compHom _ ρ
+  have : IsScalarTower R Γ(S, U) Γ(conormal e, U) := .of_algebraMap_smul fun _ _ => rfl
   obtain ⟨l, hl, hd⟩ := c.exists_isBaseChange he ε α po hα
   convert Summand.isFrame_of_affine_basis c.affine_base (hl.basis b) using 2 with i
   rw [IsBaseChange.basis_apply, hb, hd]
@@ -608,12 +608,12 @@ theorem isIso_baseMap {π' : X' ⟶ S'} {e' : S' ⟶ X'} {φ : X' ⟶ X} {f : S'
     have c' : IsChart π' e' T (φ ⁻¹ᵁ W ⊓ π' ⁻¹ᵁ T) := ⟨hT, hW,
       le_inf (le_of_sq we c.le k) ((le_preimage_iff he').2 le_rfl), inf_le_right⟩
     refine ⟨T, hxT, hle.trans inf_le_left, ?_⟩
-    letI := c.algebra
-    letI := appLEAlgebra f k
-    letI := QCoh.appLEModule f (conormal e') k
-    haveI := QCoh.appLE_isScalarTower f (conormal e') k
-    letI := QCoh.appLEModule f ((Scheme.Modules.pullback f).obj (conormal e)) k
-    haveI := QCoh.appLE_isScalarTower f ((Scheme.Modules.pullback f).obj (conormal e)) k
+    let := c.algebra
+    let := appLEAlgebra f k
+    let := QCoh.appLEModule f (conormal e') k
+    have := QCoh.appLE_isScalarTower f (conormal e') k
+    let := QCoh.appLEModule f ((Scheme.Modules.pullback f).obj (conormal e)) k
+    have := QCoh.appLE_isScalarTower f ((Scheme.Modules.pullback f).obj (conormal e)) k
     obtain ⟨l, hl, hd⟩ := c'.exists_isBaseChange he' (c.aug he) (φ.appLE W _ inf_le_left).hom po
       fun a => by
         have k' : T ≤ (f ≫ e) ⁻¹ᵁ W := k.trans (f.preimage_mono c.le)
@@ -639,7 +639,7 @@ include he in
 theorem exists_isFrame [QuasiCompact e] [Smooth π] (x : S) :
     ∃ (U : S.Opens) (n : ℕ) (s : Fin n → Γ(conormal e, U)), x ∈ U ∧ IsFrame s := by
   obtain ⟨U, W, hx, -, c⟩ := exists_isChart he (x := x) (V := ⊤) trivial
-  letI := c.algebra
+  let := c.algebra
   have : Algebra.Smooth Γ(S, U) Γ(X, W) := Smooth.smooth_appLE π c.affine_base c.affine c.le_base
   have := Module.Finite.equiv (c.augCotEquiv he)
   have := Module.Projective.of_equiv (c.augCotEquiv he)
@@ -652,7 +652,7 @@ theorem isVB_conormal [QuasiCompact e] (n : ℕ) [h : SmoothOfRelativeDimension 
   obtain ⟨U, hU, W, hW, hx, k, hs⟩ := h.exists_isStandardSmoothOfRelativeDimension (e x)
   obtain ⟨U', hx', -, hle, c⟩ := exists_isChart_inf he hU hW k hx (V := ⊤) trivial
   have po := (isAffineOpen_and_isPushout (IsPullback.id_horiz π) hU c.affine_base hW hle k).2
-  letI := c.algebra
+  let := c.algebra
   have : Algebra.IsStandardSmoothOfRelativeDimension n Γ(S, U') Γ(X, W ⊓ π ⁻¹ᵁ U') :=
     (RingHom.isStableUnderCobaseChange_toMorphismProperty_iff.2
       (RingHom.isStandardSmoothOfRelativeDimension_isStableUnderBaseChange n)).of_isPushout

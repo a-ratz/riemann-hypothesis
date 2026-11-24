@@ -371,7 +371,7 @@ theorem eq_zero_of (ψ : AddChar (AF F) ℂ) (a : Fin N → F) (hψ : IsCharAF F
     rw [e, integral_complex_ofReal] at hint0
     exact_mod_cast hint0
   have hInt : IntegrableOn (fun u => ‖P u‖ ^ 2) D μ := by
-    haveI : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 hDf
+    have : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 hDf
     refine Integrable.mono' (integrable_const (C ^ 2)) (hPc.norm.pow 2).aestronglyMeasurable
       (Filter.Eventually.of_forall fun u => ?_)
     rw [Real.norm_eq_abs, abs_of_nonneg (by positivity)]
@@ -384,11 +384,11 @@ theorem eq_zero_of (ψ : AddChar (AF F) ℂ) (a : Fin N → F) (hψ : IsCharAF F
     have h1 : (μ.restrict D) t = 0 := by
       rw [Filter.EventuallyEq, ae_iff] at hae
       refine measure_mono_null (fun u hu => ?_) hae
-      simp only [Set.mem_setOf_eq, Pi.zero_apply]
+      simp only [Set.mem_ofPred_eq, Pi.zero_apply]
       intro h0
       exact hu (by simpa using h0)
     rwa [Measure.restrict_apply hto.measurableSet] at h1
-  haveI : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
+  have : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
   have hcount : Countable (Lat F N) := by
     have hs : ((Lat F N : Set (Fin N → AF F))).Countable := by
       have : (Lat F N : Set (Fin N → AF F)) = Set.range (rat : (Fin N → F) → (Fin N → AF F)) := by
@@ -404,7 +404,7 @@ theorem eq_zero_of (ψ : AddChar (AF F) ℂ) (a : Fin N → F) (hψ : IsCharAF F
     intro g
     ext u
     rw [Set.mem_vadd_set_iff_neg_vadd_mem]
-    simp only [ht, Set.mem_setOf_eq]
+    simp only [ht, Set.mem_ofPred_eq]
     have := periodic_of hL hPp (-(g : Fin N → AF F)) (neg_mem g.2) u
     show P (-(g : Fin N → AF F) + u) ≠ 0 ↔ P u ≠ 0
     rw [this]
@@ -477,7 +477,7 @@ end GlobalTheory.SWQ.FourierSeries
 namespace GlobalTheory.SWQ.FourierSeries
 
 theorem countable_fn (F : Type) [Field F] [NumberField F] (N : ℕ) : Countable (Fin N → F) := by
-  haveI : Countable F := (Module.finBasis ℚ F).equivFun.toEquiv.injective.countable
+  have : Countable F := (Module.finBasis ℚ F).equivFun.toEquiv.injective.countable
   infer_instance
 
 theorem fourier_series : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ : AddChar (AF F) ℂ) (lam : InfinitePlace F → ℝ) (ν : Measure (AF F)) (a : Fin N → F), Ctx ψ lam ν a → ∀ D : Set (Fin N → AF F), IsAddFundamentalDomain (AddSubgroup.closure (Set.range (rat : (Fin N → F) → (Fin N → AF F)))) D (muV N ν) → muV N ν D = 1 → ∀ (P : (Fin N → AF F) → ℂ) (c : (Fin N → F) → ℂ), Continuous P → (∀ ξ u, P (rat ξ + u) = P u) → (∀ ξ, ∫ u in D, P u * ψ (-(Bd (AF F) a u (rat ξ))) ∂(muV N ν) = c ξ) → Summable (fun ξ => ‖c ξ‖) → ∀ u, P u = ∑' ξ, c ξ * ψ (Bd (AF F) a u (rat ξ)) := by
@@ -486,8 +486,8 @@ theorem fourier_series : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ 
   have hC' := hC
   obtain ⟨_, ⟨hψc, hψn, hψF, -⟩, -, hcov, -⟩ := hC'
   obtain ⟨-, -, -, ⟨K, hK, hKc⟩, -⟩ := _root_.GlobalTheory.SWQ.rat_lattice_fundamentalDomain F N ν hcov
-  haveI : Countable (Fin N → F) := countable_fn F N
-  haveI : IsFiniteMeasure ((muV N ν).restrict D) := isFiniteMeasure_restrict.mpr (by rw [hD1]; simp)
+  have : Countable (Fin N → F) := countable_fn F N
+  have : IsFiniteMeasure ((muV N ν).restrict D) := isFiniteMeasure_restrict.mpr (by rw [hD1]; simp)
   have hmass : ((muV N ν).restrict D) Set.univ = 1 := by rw [Measure.restrict_apply_univ, hD1]
   have he : ∀ ξ, Continuous fun u : Fin N → AF F => ψ (Bd (AF F) a u (rat ξ)) :=
     fun ξ => hψc.comp (continuous_bd a ξ)

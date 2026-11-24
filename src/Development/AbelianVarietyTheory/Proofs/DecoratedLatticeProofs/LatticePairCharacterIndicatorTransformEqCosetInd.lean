@@ -96,10 +96,10 @@ theorem exists_sb_ext_eq : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [T
     have hV : IsOpen {z : Matrix Y Y' k | (k₀ : k)⁻¹ • z ∈ A} :=
       hAo.preimage (continuous_const_smul _)
     have h0 : (x - x) ∈ {z : Matrix Y Y' k | (k₀ : k)⁻¹ • z ∈ A} := by
-      simp only [sub_self, Set.mem_setOf_eq, smul_zero]; exact A.zero_mem
+      simp only [sub_self, Set.mem_ofPred_eq, smul_zero]; exact A.zero_mem
     have hn := (continuous_sub_right x).continuousAt.preimage_mem_nhds (hV.mem_nhds h0)
     filter_upwards [hn] with y hy
-    simp only [Set.mem_preimage, Set.mem_setOf_eq] at hy
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hy
     have hy' : y = x + k₀ • ((k₀ : k)⁻¹ • (y - x)) := by
       rw [hnsmul, smul_smul, mul_inv_cancel₀ hkk, one_smul, add_sub_cancel]
     show Φ (p.up FS FT y) = Φ (p.up FS FT x)
@@ -219,10 +219,10 @@ theorem openCompact : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
   intro D k _ _ _ _ p S T LS LT hLS hLT Y Y' _ _ _ _ FS FT
   have hF := GlobalTheory.PlaceModel.isSelfDualC_latFrame S
   have hG := GlobalTheory.PlaceModel.isSelfDualC_latFrame T
-  letI := hLS
-  letI := hLT
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hF
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hG
+  let := hLS
+  let := hLT
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hF
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hG
   obtain ⟨M, hM, hM'⟩ := GlobalTheory.DiagLiftFix.exists_nsmul_latO
     (ΛS' := GlobalTheory.PlaceModel.latFrame S) (ΛT' := GlobalTheory.PlaceModel.latFrame T)
     hLS.toIsLattice.fg hLT.toIsLattice.fg inferInstance inferInstance
@@ -263,8 +263,8 @@ open GlobalTheory.FinPl.ExtZero (colFun rowFun)
 
 theorem _root_.GlobalTheory.T.splitPlace_homLattice_completion_openCompact : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (p : SplitPt D k) (S T : HSp D) (LS : Lat S) (LT : Lat T), Submodule.IsFullLattice D.host.E LS → Submodule.IsFullLattice D.host.E LT → ∀ (Y Y' : Type) [Fintype Y] [DecidableEq Y] [Fintype Y'] [DecidableEq Y'] (FS : GlobalTheory.LocMod.Frame k S.rank Y') (FT : GlobalTheory.LocMod.Frame k T.rank Y), IsOpen (((latO S T (LS : Set (Fin S.rank → D.host.E)) (LT : Set (Fin T.rank → D.host.E)) (· = p.v)).comap (GlobalTheory.LocMod.Witness.upH (GlobalTheory.LocMod.Place.ofSplitPt p) FS FT) : AddSubgroup (Matrix Y Y' k)) : Set (Matrix Y Y' k)) ∧ IsCompact (((latO S T (LS : Set (Fin S.rank → D.host.E)) (LT : Set (Fin T.rank → D.host.E)) (· = p.v)).comap (GlobalTheory.LocMod.Witness.upH (GlobalTheory.LocMod.Place.ofSplitPt p) FS FT) : AddSubgroup (Matrix Y Y' k)) : Set (Matrix Y Y' k)) := by
   intro D k _ _ _ _ p S T LS LT hLS hLT
-  letI := hLS
-  letI := hLT
+  let := hLS
+  let := hLT
   exact GlobalTheory.OpenCompactLat.openCompact D k p S T LS LT inferInstance inferInstance
 end -- clump:auto
 end -- clump:auto
@@ -289,7 +289,7 @@ theorem isFullLattice_span {D : D7} {L : HSp D} {ζ : Fin L.rank → D.host.E} (
   have hζ : ζ ≠ 0 := by
     rintro rfl
     exact h.2 (by simp)
-  letI : Submodule.IsLattice D.host.E
+  let : Submodule.IsLattice D.host.E
       (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) :=
     Submodule.IsLattice.of_fg D.host.E (Submodule.fg_span_singleton ζ)
   refine ⟨?_⟩
@@ -303,16 +303,16 @@ theorem exists_placeModel_ext : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel 
   classical
   set P := GlobalTheory.LocMod.Place.ofSplitPt p with hP
   set Λ := latO S L'' (LS : Set _) ((Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ₀} : Lat L'') : Set _) (· = p.v) with hΛ
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S LS hLS
-  letI := isFullLattice_span hζ
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S LS hLS
+  let := isFullLattice_span hζ
   obtain ⟨hAo, hAc⟩ := GlobalTheory.T.splitPlace_homLattice_completion_openCompact D k p S L'' LS
     (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ₀}) inferInstance inferInstance Unit n FS FL''
   have hinj : Function.Injective (Witness.ext P FS FL'') := by
     intro Φ Ψ h
     apply Subtype.ext; funext x
     have := congrFun h (P.up FS FL'' x)
-    rwa [Witness.ext_apply, Witness.ext_apply, if_pos (Witness.up_half P FS FL'' x),
-      if_pos (Witness.up_half P FS FL'' x), Witness.down_up] at this
+    rwa [Witness.ext_apply, Witness.ext_apply, ite_eq_left (Witness.up_half P FS FL'' x),
+      ite_eq_left (Witness.up_half P FS FL'' x), Witness.down_up] at this
   obtain ⟨G, hG⟩ := LinearMap.exists_leftInverse_of_injective (Witness.ext P FS FL'') (LinearMap.ker_eq_bot.2 hinj)
   set T₃ : (WO S L'' → ℂ) →ₗ[ℂ] (WO S L'' → ℂ) := TL ∘ₗ G with hT₃d
   have hT₃ : ∀ Φ, T₃ (Witness.ext P FS FL'' Φ) = TL Φ := fun Φ => by
@@ -330,13 +330,13 @@ theorem exists_placeModel_ext : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel 
     rw [Witness.ext_apply, halfInd]
     change (if IsHalf p.e t then _ else _) = _
     by_cases ht : IsHalf p.e t
-    · rw [if_pos ht]
+    · rw [ite_eq_left ht]
       change (A : Set (Matrix Unit n k)).indicator 1 _ = _
       rw [Set.indicator_apply, ← hA]
       refine if_congr ?_ rfl rfl
       change P.up FS FL'' (P.down FS FL'' t) ∈ Λ ↔ _
       rw [Witness.up_down P FS FL'' ht, and_iff_left ht]
-    · rw [if_neg ht, if_neg fun h => ht h.2]
+    · rw [ite_eq_right ht, ite_eq_right fun h => ht h.2]
   refine ⟨TL Φ₀, T₃, hTL.theta Φ₀, ⟨fun Φ hΦ x hx => ?_, fun Φ hΦ y hy => ?_, ?_⟩, hT₃⟩
   · obtain ⟨Φ', rfl⟩ := hsb Φ hΦ
     let Φ'' : SB (Matrix Unit n k) := ⟨fun s => Φ'.1 (s + P.down FS FL'' x),
@@ -401,15 +401,15 @@ theorem isModel_ext : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
   have hζ0 : ζ ≠ 0 := by
     rintro rfl
     exact hζ.2 (by simp)
-  letI : Submodule.IsLattice D.host.E
+  let : Submodule.IsLattice D.host.E
       (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) :=
     Submodule.IsLattice.of_fg _ (Submodule.fg_span_singleton ζ)
-  letI : Submodule.IsFullLattice D.host.E
+  let : Submodule.IsFullLattice D.host.E
       (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) :=
     ⟨by
       rw [Submodule.span_span_of_tower]
       exact (finrank_eq_one_iff_of_ne_zero ζ hζ0).1 (by rw [Module.finrank_fin_fun, hζ.1])⟩
-  letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S LS hS
+  let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull S LS hS
   have hA : ∀ u ∈ latO L S ((Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) : Set _) (LS : Set _)
       (fun _ => True), IsHalf p.e u →
       u ∈ latO L S ((Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) : Set _) (LS : Set _) (· = p.v) :=
@@ -422,7 +422,7 @@ theorem isModel_ext : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
       (latO L S ((Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) : Set _) (LS : Set _) (· = p.v))
       (GlobalTheory.LocMod.Witness.ext (GlobalTheory.LocMod.Place.ofSplitPt p) FL FS Φ) := fun Φ => by
     have h0 := GlobalTheory.LocMod.Witness.ext_sb (GlobalTheory.LocMod.Place.ofSplitPt p) FL FS dL hS Φ
-    letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ dL
+    let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ dL
     have hfg : (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L).FG :=
       Submodule.fg_span_singleton ζ
     obtain ⟨M₁, p₁, h₁⟩ := GlobalTheory.DiagLiftFix.exists_nsmul_latO (ΛS' := GlobalTheory.PlaceModel.latFrame L)
@@ -506,7 +506,7 @@ theorem rowExt : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topological
       exact congrArg (· * _) (hFL i).symm
     have h2 : u j = f h * FL.γ () j := by
       rw [← hu1, Finset.sum_mul]
-      simp only [mul_assoc, h1, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [mul_assoc, h1, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [h2, inv_mul_cancel_left₀ h0]
   funext r
   simp only [GlobalTheory.LocMod.Place.down, GlobalTheory.FinPl.ExtZero.zrow, Pi.smul_apply, smul_eq_mul, Matrix.mul_apply, hγ, Matrix.map_apply]
@@ -525,9 +525,9 @@ open GlobalTheory.IndefiniteRowSideFullHecke.AppendedVectorData (Lifts InDual re
 theorem fourier : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : MeasureTheory.Measure k), ν.IsAddHaarMeasure → ∀ (n : Type) [Fintype n] [DecidableEq n] (χ : AddChar k Circle) (hχ : HasConductor χ 1) (q : Unif k) (ψk : AddChar k Circle) (xi s : k), (∀ x, ψk x = χ (xi * x)) → s ≠ 0 → ∀ w : 𝒪[k]ˣ, -(xi * s) = ((w : 𝒪[k]) : k) → ∀ Q : Pair k n, ∃ (C : ℂ) (c : SB (Matrix n Unit k)) (Ψ : SB (Matrix Unit n k)), (∀ M, c.1 M = charInd (resChar χ hχ q) Q (s⁻¹ • fun r => M r ())) ∧ (∀ M, Ψ.1 M = cosetInd q Q.lat ((GlobalTheory.IndefiniteRowSideFullHecke.AppendedVectorData.resUnit w)⁻¹ • Q).red (M ())) ∧ ∀ η, C * Ψ.1 η = GlobalTheory.StepData.hat ψk ν (-1) (fun y => c.1 (Matrix.of fun r _ => y r)) (η ()) := by
   intro k _ _ _ _ _ _ ν hν n _ _ χ hχ q ψk xi s hψk hs w hw Q
   classical
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
-  haveI := secondCountable k
-  haveI := hν
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have := secondCountable k
+  have := hν
   obtain ⟨F, hF⟩ := GlobalTheory.FinPl.CosetPairing.exists_lifts Q
   set wk : k := ((w : 𝒪[k]) : k) with hwk
   set wi : k := (((w⁻¹ : 𝒪[k]ˣ) : 𝒪[k]) : k) with hwi
@@ -556,7 +556,7 @@ theorem fourier : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     · have hy' : y ∈ L' := hy
       obtain ⟨t, ht, hr⟩ := hF ⟨_, hy⟩
       have hr' : Q.ev (s⁻¹ • y) = residue 𝒪[k] t := ((Q.hasVal_fn ⟨_, hy⟩).ev_eq).trans hr.symm
-      rw [charInd, vecInd, vecInd, if_pos hy, if_pos hy', hr', ← map_neg, resChar_residue, hψk, mul_one, one_mul,
+      rw [charInd, vecInd, vecInd, ite_eq_left hy, ite_eq_left hy', hr', ← map_neg, resChar_residue, hψk, mul_one, one_mul,
         ← Circle.coe_mul, ← AddChar.map_add_eq_mul]
       congr 2
       have ht' : (t : k) = s⁻¹ * (F ⬝ᵥ y) := by rw [ht]; simp
@@ -564,7 +564,7 @@ theorem fourier : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
       rw [hη', sub_dotProduct, smul_dotProduct, smul_dotProduct, Subring.coe_neg, ht', hx, smul_eq_mul, smul_eq_mul]
       linear_combination (q.inv * s⁻¹ * (F ⬝ᵥ y)) * hww
     · have hy' : y ∉ L' := hy
-      rw [charInd, vecInd, vecInd, if_neg hy, if_neg hy', mul_zero, zero_mul, zero_mul]
+      rw [charInd, vecInd, vecInd, ite_eq_right hy, ite_eq_right hy', mul_zero, zero_mul, zero_mul]
   show _ * cosetInd q Q.lat ((resUnit w)⁻¹ • Q).red (η ()) =
     ∫ y, charInd (resChar χ hχ q) Q (s⁻¹ • y) * (ψk (-1 * (η () ⬝ᵥ y)) : ℂ) ∂(MeasureTheory.Measure.pi fun _ => ν)
   simp only [e2]
@@ -580,7 +580,7 @@ theorem fourier : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
         simp [mul_assoc, hwk]
       rw [apply_int_eq_one hχ ⟨_, h1⟩]
       simp
-    · rw [vecInd, if_neg hy, zero_mul]
+    · rw [vecInd, ite_eq_right hy, zero_mul]
   · rw [mul_zero]
     obtain ⟨y, hy, hn⟩ : ∃ y ∈ Q.lat, η' ⬝ᵥ y ∉ 𝒪[k] := by
       by_contra h
@@ -593,7 +593,7 @@ theorem fourier : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
       exact hn ((Valuation.mem_integer_iff _ _).2 (by simpa using (hχ _).1 h))
     have ht : z / (η' ⬝ᵥ y) ∈ 𝒪[k] := by
       rw [Valuation.mem_integer_iff, map_div₀]
-      exact div_le_one_of_le₀ hz zero_le'
+      exact div_le_one_of_le₀ hz zero_le
     let t : 𝒪[k] := (w⁻¹ : 𝒪[k]ˣ) * ⟨_, ht⟩
     have hy₀ : s • t • y ∈ L' := by
       show s⁻¹ • s • t • y ∈ Q.lat
@@ -616,8 +616,8 @@ theorem kapStep : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologica
   let w : 𝒪[k]ˣ := ⟨⟨l, hlO⟩, ⟨l⁻¹, hliO⟩, Subtype.ext (mul_inv_cancel₀ hl0), Subtype.ext (inv_mul_cancel₀ hl0)⟩
   refine ⟨(GlobalTheory.IndefiniteRowSideFullHecke.AppendedVectorData.resUnit w)⁻¹, ?_⟩
   intro β LS hLS Q g₁ T₁ hg₁ hT₁
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   have hν : (MeasureTheory.Measure.addHaar : MeasureTheory.Measure k).IsAddHaarMeasure := inferInstance
   have hxi : P.xi ≠ 0 := GlobalTheory.LocMod.Witness.xi_ne P
   set s : k := -l / P.xi with hs

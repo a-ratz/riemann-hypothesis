@@ -83,7 +83,7 @@ theorem cont_HA_iff {T : Type*} [TopologicalSpace T] {n : ℕ} {J : Matrix (Fin 
   constructor
   · intro hf
     have h1 : Continuous (fun t => ((toHR (f t) : HR R σ J) : GL (Fin n) (R ⊗[F] E))) :=
-      continuous_subtype_val.comp hf
+      continuous_subtypeVal.comp hf
     exact ⟨Units.continuous_val.comp h1, Units.continuous_coe_inv.comp h1⟩
   · rintro ⟨h1, h2⟩
     have h3 : Continuous (fun t => ((toHR (f t) : HR R σ J) : GL (Fin n) (R ⊗[F] E))) :=

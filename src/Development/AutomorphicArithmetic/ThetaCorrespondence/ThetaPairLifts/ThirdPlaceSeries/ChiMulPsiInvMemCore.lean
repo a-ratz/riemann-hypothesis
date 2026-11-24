@@ -93,7 +93,7 @@ theorem det_of_mem_unip {κ : Type} [CommRing κ] {r : ℕ} {g : GL (Fin r) κ} 
     Matrix.GeneralLinearGroup.det g = 1 := by
   apply Units.ext
   rw [Matrix.GeneralLinearGroup.val_det_apply, Units.val_one,
-    Matrix.det_of_upperTriangular (fun i j hij => hg.1 hij)]
+    Matrix.det_of_isUpperTriangular (fun i j hij => hg.1 hij)]
   exact Finset.prod_eq_one fun i _ => hg.2 i
 
 variable {D : Formalism.BasicNotions.D7} {L : Formalism.BasicNotions.SizeData₂ D} {hT : Formalism.BasicNotions.GatTies D} {Gi : Formalism.MainNotions.G.Inst D L}
@@ -176,7 +176,7 @@ theorem chi_mul_psi_inv_mem_core_alt (p : GlobalTheory.BigTop.PtAt ex Csz) (i : 
   have hz : IsPrimitiveRoot (⟨ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta p.T.Q.l.M', p.T.Q.c.zeta_mem⟩ : p.T.Q.c.F) p.T.Q.l.M' :=
     IsPrimitiveRoot.of_map_of_injective (f := p.T.Q.c.F.val) (Complex.isPrimitiveRoot_exp _ hN0) Subtype.val_injective
   have hz' := hz.map_of_injective (f := algebraMap p.T.Q.c.F D.what₂.LL) (algebraMap p.T.Q.c.F D.what₂.LL).injective
-  haveI : NeZero p.T.Q.l.M' := ⟨hN0⟩
+  have : NeZero p.T.Q.l.M' := ⟨hN0⟩
   obtain ⟨k, -, hk⟩ := hz'.eq_pow_of_pow_eq_one hy
   exact ⟨_ ^ k, by rw [map_pow, hk]⟩
 end GlobalTheory.CovTop

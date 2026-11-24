@@ -60,7 +60,7 @@ namespace GlobalTheory.LatClass
 section Pow
 variable {k : Type} [Field k] [ValuativeRel k] {ϖ : kˣ}
 
-theorem val_pos (x : kˣ) : 0 < valuation k (x : k) := by simp [zero_lt_iff]
+theorem val_pos (x : kˣ) : 0 < valuation k (x : k) := by simp [pos_iff_ne_zero]
 
 theorem mem_pow {e : ℤ} {s : k} : s ∈ powInt ϖ e ↔ valuation k s ≤ valuation k (ϖ : k) ^ e := by
   simp [powInt]

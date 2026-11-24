@@ -77,7 +77,7 @@ theorem exists_finite_pt {R K L : Type} [CommRing R] [Field K] [Field L] [Algebr
     apply Spec.map_injective
     rw [Spec.map_comp, hφ, ← Category.assoc, hψ, hx]
   have hc' : ∀ c : R, ψ.hom (φ.hom c) = algebraMap K L (j c) := fun c => congrArg (fun f => f.hom c) hc
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   obtain ⟨t, ht⟩ : (⊤ : Subalgebra R A).FG := h₁.out
   have : Finite (ψ.hom '' t) := (t.finite_toSet.image _)
   let M := IntermediateField.adjoin K (ψ.hom '' t)
@@ -312,9 +312,9 @@ theorem IsTower.exists_isPullQk (C : IsTower h₁ h₂ h) (hG : GlobalFnsSt) (hB
     (e : (algebraMap K (FractionRing K)).comp β = f) {k : ℕ} (z : QkPt D₀ K₁ k) (x : QkPt D (FractionRing K) k)
     (hy : x.y = h.xe.symm z.y) (hx : IsPullGtF (β.comp α) h (FractionRing K) (gtExt D₀ f hf z.g) x.g) :
     ∃ x₂, IsPullQk h₂ x₂ x := by
-  letI : Algebra (FractionRing K₀) (FractionRing K₁) :=
+  let : Algebra (FractionRing K₀) (FractionRing K₁) :=
     ((algebraMap K₁ (FractionRing K₁)).comp (algebraMap (FractionRing K₀) K₁)).toAlgebra
-  letI : Algebra (FractionRing K₁) (FractionRing K) := (fracMap β.injective).toAlgebra
+  let : Algebra (FractionRing K₁) (FractionRing K) := (fracMap β.injective).toAlgebra
   have c₁ : Compat α (FractionRing K₁) := fun r => congrArg (algebraMap K₁ (FractionRing K₁)) (hα r)
   have c₂ : Compat β (FractionRing K) := fracMap_algebraMap β.injective
   have c₃ : Compat α (FractionRing K) := fun r => (hF r).trans (c₂ (α r)).symm
@@ -353,7 +353,7 @@ theorem exists_numberField_qk : Known → ∀ (K : Type) [Field K] [NumberField 
   intro hK K _ _ σ₁ D₁ DC p n N _ hN hBC _
   have hG := hK.laws.globalFns
   have hB := PullDescent.tauBimult_desc hG σ₁.injective p hBC
-  letI : Algebra (FractionRing K) (FractionRing ℂ) := (ArcPull.fracMap σ₁.injective).toAlgebra
+  let : Algebra (FractionRing K) (FractionRing ℂ) := (ArcPull.fracMap σ₁.injective).toAlgebra
   have hF : ArcPull.Compat σ₁ (FractionRing ℂ) := ArcPull.fracMap_algebraMap σ₁.injective
   let ε : FractionRing ℂ ≃ₐ[ℂ] ℂ := FractionRing.algEquiv ℂ ℂ
   have : IsAlgClosed (FractionRing ℂ) := IsAlgClosed.of_ringEquiv ℂ _ ε.symm.toRingEquiv

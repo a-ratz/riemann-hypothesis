@@ -62,7 +62,7 @@ theorem withBot_lt_of_add_one_le_nat {a : WithBot ℕ∞} {n : ℕ} (h : a + 1 �
 
 theorem topSelf_pull_eq_zero_of_not_dominant : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] (p : X ⟶ Sp k) (q : Y ⟶ Sp k) (D : ℕ), IsProjOver q → topologicalKrullDim X ≤ D → topologicalKrullDim Y ≤ D → ∀ (π : Y ⟶ X), π (genericPoint Y) ≠ genericPoint X → ∀ B : LB X, B.IsLB → letI := GlobalTheory.algebraΓOfHom q; topSelfIntersection k (B.pull π) D = 0 := by
   intro k _ X Y _ _ p q D hq hX hY π hπ B hB
-  letI := GlobalTheory.algebraΓOfHom q
+  let := GlobalTheory.algebraΓOfHom q
   have hs : strHom k Y = q := GlobalTheory.strHom_eq (f := q) fun _ => rfl
   have hη : genericPoint X ∈ (closure ({π (genericPoint Y)} : Set X))ᶜ := fun h =>
     hπ (((specializes_iff_mem_closure.2 h).antisymm (genericPoint_specializes _)).eq)

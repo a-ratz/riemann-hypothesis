@@ -92,7 +92,7 @@ namespace GlobalTheory
 theorem exists_extend_of_ringEquiv_of_isAlgebraic {K L M F : Type} [Field K] [Field L] [Field M] [Field F]
     [IsAlgClosed F] [Algebra L M] [Algebra.IsAlgebraic L M] (φ : K ≃+* L) (g : K →+* F) :
     ∃ g' : M →+* F, g'.comp ((algebraMap L M).comp φ.toRingHom) = g := by
-  letI : Algebra L F := (g.comp φ.symm.toRingHom).toAlgebra
+  let : Algebra L F := (g.comp φ.symm.toRingHom).toAlgebra
   let g' : M →ₐ[L] F := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -595,7 +595,7 @@ theorem exists_prime {O : Type} [CommRing O] [IsDomain O] {ϖ : O} (h : GlobalTh
     ∃ n : ℕ, n.Prime ∧ Odd n ∧ IsUnit (n : O) := by
   have : IsLocalRing O := by
     rcases h with h | h
-    · letI := h.1.toField; infer_instance
+    · let := h.1.toField; infer_instance
     · have := h.1; infer_instance
   rcases IsLocalRing.isUnit_or_isUnit_of_add_one (a := ((3 : ℕ) : O) * 2) (b := ((5 : ℕ) : O) * (-1)) (by push_cast; ring) with
     h | h
@@ -703,10 +703,10 @@ theorem main : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN.HomEx
   obtain ⟨v, hv, hint⟩ := hθ n 1 hn₁ hn₂ hn₃ le_rfl
   have : IsNoetherianRing O' := by
     rcases hϖ with h | h
-    · letI := h.1.toField; infer_instance
+    · let := h.1.toField; infer_instance
     · have := h.1; infer_instance
   have : IsNoetherianRing R₁ := by
-    letI := g.toAlgebra
+    let := g.toAlgebra
     have : Module.Finite (PowerSeries O') R₁ := hfin
     exact IsNoetherianRing.of_finite (PowerSeries O') R₁
   have : CharZero (PowerSeries O') := (RingHom.charZero_iff (PowerSeries.C_injective (R := O'))).1 ‹_›

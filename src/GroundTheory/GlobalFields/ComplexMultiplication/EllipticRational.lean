@@ -88,7 +88,7 @@ lemma isEllipticFunction_weierstrassP : IsEllipticFunction L ℘[L] :=
 lemma weierstrassP_eq_zpow_mul {z : ℂ} (hz : z ≠ 0) :
     ℘[L] z = z ^ (-2 : ℤ) * (z ^ 2 * L.weierstrassPExcept 0 z + 1) := by
   have h := L.ite_eq_one_sub_sq_mul_weierstrassP 0 L.lattice.zero_mem z
-  rw [if_neg hz] at h
+  rw [ite_eq_right hz] at h
   have h' : z ^ 2 * ℘[L] z = z ^ 2 * L.weierstrassPExcept 0 z + 1 := by
     simpa using h
   have h2 : z ^ (-2 : ℤ) * z ^ 2 = 1 := by
@@ -252,7 +252,7 @@ theorem exists_polynomial_mul_analyticAt_off_lattice {f : ℂ → ℂ} (hf : Mer
   have hφ : AnalyticAt ℂ (fun w ↦ ℘[L] w - ℘[L] z) z := h℘.sub analyticAt_const
   have hdφ : AnalyticAt ℂ (dslope (fun w ↦ ℘[L] w - ℘[L] z) z) z := by
     obtain ⟨p, hp'⟩ := hφ
-    exact ⟨_, hp'.has_fpower_series_dslope_fslope⟩
+    exact ⟨_, hp'.dslope_fslope⟩
   have hφeq : ∀ w, ℘[L] w - ℘[L] z = (w - z) * dslope (fun w ↦ ℘[L] w - ℘[L] z) z w := by
     intro w
     have := sub_smul_dslope_of_zero (f := fun w ↦ ℘[L] w - ℘[L] z) (sub_self _) w
@@ -301,7 +301,7 @@ lemma eventually_codiscrete_ne_zero_of_nhdsNE {F : ℂ → ℂ} (hF : Meromorphi
   have hall : ∀ u ∈ (univ : Set ℂ), meromorphicOrderAt F u ≠ ⊤ := fun u _ ↦
     (hF.meromorphicOn (s := univ)).meromorphicOrderAt_ne_top_of_isPreconnected
       isPreconnected_univ (mem_univ 0) (mem_univ u) h0
-  exact MeromorphicAt.MeromorphicOn.codiscreteWithin_setOfPred_ne_zero
+  exact MeromorphicOn.codiscreteWithin_setOfPred_ne_zero
     (hF.meromorphicOn (s := univ)) hall
 
 lemma eventually_codiscrete_eval_weierstrassP_ne_zero {Q : ℂ[X]} (hQ : Q ≠ 0) :

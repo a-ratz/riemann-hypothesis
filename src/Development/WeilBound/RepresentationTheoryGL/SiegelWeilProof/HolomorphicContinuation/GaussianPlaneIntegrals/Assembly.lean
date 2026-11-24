@@ -137,7 +137,7 @@ def Tf (hA : Avg) (q : PV ι A B) : PV ι A B := res (Classical.choose (hA (NN �
 
 theorem continuous_toMK (N : ℕ) :
     Continuous fun k : Formalism.REAL.KG (fun _ : Fin N => true) => Formalism.REAL.toMK k :=
-  Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+  Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
 
 theorem continuous_blk : Continuous fun k : Formalism.REAL.KG (fun _ : Fin (NN ι A B) => true) =>
     blk (ι := ι) (A := A) (B := B) (Formalism.REAL.toMK k) :=
@@ -480,7 +480,7 @@ theorem Tlin_injective (hS : Stable) (hE : Ext) (hA : Avg) (hP : Pos) (d : ℕ) 
     rw [hT0]; simp [gip]
   have hre : 0 < ∫ k, (gip (sub 1 (Mk (ι := ι) (A := A) (B := B) k) (q : PV ι A B)) (q : PV ι A B)).re
       ∂(Formalism.REAL.muK (fun _ : Fin (NN ι A B) => true)) := by
-    refine (Complex.continuous_re.comp hΨc).integral_pos_of_hasCompactSupport_nonneg_nonzero
+    refine (Complex.continuous_re.comp hΨc).integral_pos_of_hasCompactSupport_nonneg_ne_zero
       (IsCompact.of_isClosed_subset isCompact_univ (isClosed_tsupport _) (Set.subset_univ _))
       (fun k => (hP ι A B (Mk (ι := ι) (A := A) (B := B) k) (Mk_psd k) _).1) (x := 1) ?_
     have h1 := (hP ι A B (Mk (ι := ι) (A := A) (B := B) 1) (Mk_psd 1) (q : PV ι A B)).2.2 (by rw [Mk_one]; exact Matrix.PosDef.one) hq

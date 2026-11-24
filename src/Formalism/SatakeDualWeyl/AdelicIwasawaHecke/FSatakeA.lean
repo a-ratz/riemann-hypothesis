@@ -73,21 +73,21 @@ theorem fSatake_nontriv {ϖ : L} {σ : L →+* L} {q : ℕ} (hU : IsUnramInv ϖ 
 
 theorem isCommensurated_integral_unitary_of_unramified {ϖ : L} {σ : L →+* L} {q : ℕ} (hU : IsUnramInv ϖ σ q) (n : ℕ) :
     IsCommensurated (KU σ n) := by
-  haveI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
+  have : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
     fSatake_nontriv hU
   obtain ⟨-, -, -, hvϖ, -, hq2, hq⟩ := hU
   set A := (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring with hA
-  haveI : IsCyclic (WithZero (Multiplicative ℤ))ˣ :=
+  have : IsCyclic (WithZero (Multiplicative ℤ))ˣ :=
     isCyclic_of_surjective (WithZero.unitsWithZeroEquiv (α := Multiplicative ℤ)).symm.toMonoidHom
       (MulEquiv.surjective _)
-  haveI hD : IsDiscreteValuationRing ↥A.toSubring := Valuation.valuationSubring_isDiscreteValuationRing _
+  have hD : IsDiscreteValuationRing ↥A.toSubring := Valuation.valuationSubring_isDiscreteValuationRing _
   have hRes : Finite (IsLocalRing.ResidueField ↥A.toSubring) := by
     apply Nat.finite_of_card_ne_zero
     rw [show Nat.card (IsLocalRing.ResidueField ↥A.toSubring) = q ^ 2 from hq]
     exact pow_ne_zero 2 (by omega)
   intro g
   obtain ⟨c, hc0, hg1, hg2⟩ := Formalism.UG.P.glint_exists_denom A (g : GL (Fin n) L)
-  haveI : Finite (↥A.toSubring ⧸ Ideal.span {c * c}) :=
+  have : Finite (↥A.toSubring ⧸ Ideal.span {c * c}) :=
     glint_finite_quotient_of_dvr hRes _ (by
       rw [Ne, Ideal.span_singleton_eq_bot]
       exact mul_ne_zero hc0 hc0)

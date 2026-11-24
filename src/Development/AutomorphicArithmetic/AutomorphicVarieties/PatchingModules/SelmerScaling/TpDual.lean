@@ -109,7 +109,7 @@ private theorem tp_abs {O R F : Type} [CommRing O] [IsLocalRing O] [CommRing R] 
     obtain ⟨b, rfl⟩ := N.mkQ_surjective w
     rw [← map_smul, Algebra.smul_def]
     exact hNJ _ (J.mul_mem_right _ (hO o ((hm _).2 ho)))
-  letI : SMul F (R ⧸ N) := ⟨fun c w => Function.surjInv hs c • w⟩
+  let : SMul F (R ⧸ N) := ⟨fun c w => Function.surjInv hs c • w⟩
   have hsm : ∀ (o : O) (w : R ⧸ N), (r.comp (algebraMap O R)) o • w = o • w := fun o w => by
     show Function.surjInv hs _ • w = o • w
     rw [← sub_eq_zero, ← sub_smul]
@@ -117,7 +117,7 @@ private theorem tp_abs {O R F : Type} [CommRing O] [IsLocalRing O] [CommRing R] 
     have := Function.surjInv_eq hs ((r.comp (algebraMap O R)) o)
     rw [map_sub, map_sub, sub_eq_zero]
     exact this
-  letI : Module F (R ⧸ N) := Function.Surjective.moduleLeft (r.comp (algebraMap O R)) hs hsm
+  let : Module F (R ⧸ N) := Function.Surjective.moduleLeft (r.comp (algebraMap O R)) hs hsm
   have hder : ∀ b b' : R, N.mkQ (b * b') = r b • N.mkQ b' + r b' • N.mkQ b := fun b b' => by
     obtain ⟨o, x, hx, rfl⟩ := hdec b
     obtain ⟨o', x', hx', rfl⟩ := hdec b'
@@ -134,7 +134,7 @@ private theorem tp_abs {O R F : Type} [CommRing O] [IsLocalRing O] [CommRing R] 
     obtain ⟨b, rfl⟩ := N.mkQ_surjective w
     obtain ⟨o, x, hx, rfl⟩ := hdec b
     exact ⟨x, hx, by rw [map_add (f := _), hNO, zero_add]⟩
-  haveI : Module.Finite F (R ⧸ N) := by
+  have : Module.Finite F (R ⧸ N) := by
     obtain ⟨s, hs'⟩ := IsNoetherian.noetherian (maximalIdeal R)
     refine ⟨Submodule.fg_def.2 ⟨N.mkQ '' s, s.finite_toSet.image _, eq_top_iff.2 fun w _ => ?_⟩⟩
     obtain ⟨b, hb, rfl⟩ := hsurj w
@@ -195,7 +195,7 @@ private theorem tp_abs {O R F : Type} [CommRing O] [IsLocalRing O] [CommRing R] 
 theorem UpperTheory.V.Pa.tpDual :
     ∀ (l : ℕ) [Fact l.Prime] (S : Ctx l), Module.Finite S.F S.Tp ∧ (∀ b ∈ maximalIdeal S.Bh, (∀ α ∈ S.Tp, α b = 0) → b ∈ S.J2) ∧ ∀ ξ : Module.Dual S.F S.Tp, ∃ b ∈ maximalIdeal S.Bh, ∀ α : S.Tp, (α : S.Bh →+ S.F) b = ξ α := by
   intro l _ S
-  haveI : IsNoetherianRing S.Bh := { noetherian := S.d6.noetherian }
+  have : IsNoetherianRing S.Bh := { noetherian := S.d6.noetherian }
   have hI : ired S.U.N ≤ maximalIdeal S.Bh := by
     refine Ideal.span_le.2 ?_
     rintro b ⟨x, hx, y, hy, e⟩

@@ -63,8 +63,8 @@ theorem exists_complex_fibre : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   obtain ⟨⟨B', mB, -⟩, hB2⟩ := GlobalTheory.LamT.pat_pullback E H (𝓞 K) ℂ (σ₁.comp (algebraMap (𝓞 K) K)) B
   obtain ⟨-, -, wA, hwA⟩ := hA2 A' mA inferInstance
   obtain ⟨-, -, wB, hwB⟩ := hB2 B' mB inferInstance
-  haveI := hf₁.isMonHom
-  haveI := hf₂.isMonHom
+  have := hf₁.isMonHom
+  have := hf₂.isMonHom
   obtain ⟨f₁', hm₁, e₁⟩ := GlobalTheory.PairingFibre.exists_hom mA.cart mB.cart f₁
   obtain ⟨f₂', hm₂, e₂⟩ := GlobalTheory.PairingFibre.exists_hom mA.cart mB.cart f₂
   have lin : ∀ (f : A.t.G ⟶ B.t.G) (f' : A'.t.G ⟶ B'.t.G), Serre.IsLinearHom A.t.act B.t.act f → IsMonHom f' →

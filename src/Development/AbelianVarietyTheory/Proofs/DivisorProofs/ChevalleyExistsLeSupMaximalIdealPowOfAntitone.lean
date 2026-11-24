@@ -76,9 +76,9 @@ theorem exists_le_sup_maximalIdeal_pow_of_antitone :
       ∀ k : ℕ, ∃ e : ℕ, K e ≤ J ⊔ maximalIdeal A ^ k := by
   intro A _ _ _ K J hK hmK hJ k
   let B := AdicCompletion (maximalIdeal A) A
-  haveI : IsNoetherianRing B := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion A _
-  haveI : Module.Flat A B := AdicCompletion.flat_of_isNoetherian _
-  haveI : Module.FaithfullyFlat A B := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have : IsNoetherianRing B := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion A _
+  have : Module.Flat A B := AdicCompletion.flat_of_isNoetherian _
+  have : Module.FaithfullyFlat A B := Module.FaithfullyFlat.of_flat_of_isLocalHom
   let f := algebraMap A B
   have hmB : ∀ n, maximalIdeal B ^ n = (maximalIdeal A ^ n).map f := fun n ↦ by
     rw [AdicCompletion.maximalIdeal_eq_map, Ideal.map_pow]

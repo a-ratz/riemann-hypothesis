@@ -769,7 +769,7 @@ theorem germIs_of_rel (hFT : ReciprocityTheory.ChartRestriction.G.PullbackSectio
     {σ : LB.Sec (LPow C.I.G.G C.I.G.PP.L (k : ℤ) (baseOver (Sp T.V)))} (h₁ : RelFibre C s F) (h₂ : RelModel C s σ)
     {g : PS T.V 1 (chD C.ch)} (hg : IsGermG C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.actT C.eT C.wPT k σ g) :
     GermIs C k F g := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨x', hx1, hx2, eL', heL'⟩ := hFT T io y C
   refine (isGerm_iff y.1 _ _ _ _ _ _ _ _).2
     (isGerm_of_sv ((isChart_iff y.1 _ _ _ _ _).1 C.ch.chart) C.ch.prim.1 C.ch.frame.gen fun m z J hJ => ?_)
@@ -823,7 +823,7 @@ theorem germIs_of_rel (hFT : ReciprocityTheory.ChartRestriction.G.PullbackSectio
 
 theorem exists_rel (C : IntegralChartA3 Xo c T io y) {k : ℕ} {F : SecN Xo (xOf y) k} (hF : Regular C k F) :
     ∃ s σ, RelFibre C s F ∧ RelModel C s σ := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨σ, σt, hT1, hT2⟩ := hF
   obtain ⟨σ', hσ'⟩ := exists_sec_id C.I.G (k : ℤ) σ (baseOver (Sp T.V))
   obtain ⟨s, hs⟩ := exists_sec_id C.I.t' (k : ℤ) σt (baseOver (Sp T.Fr))
@@ -850,7 +850,7 @@ theorem exists_rel (C : IntegralChartA3 Xo c T io y) {k : ℕ} {F : SecN Xo (xOf
 
 theorem germIs_translate : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (k : ℕ), Odd k → ∀ (a : ptO Xo (xOf y) ⟶ Xo.univ.t.G) (aV : baseOver (Sp T.V) ⟶ C.I.G.G) (r : Sp T.Fr ⟶ C.I.t'.G.left), r ≫ C.I.t'.G.hom = 𝟙 _ → r ≫ C.I.m1.φ = a.left → r ≫ C.I.m2.φ = spMap (algebraMap T.V T.Fr) ≫ aV.left → ∀ U : ThetaGrp C.I.G.G C.I.G.PP.L (k : ℤ) (baseOver (Sp T.V)), SymLift C.I.G.G C.I.G.PP.L (k : ℤ) k aV U → ∀ (F F' : SecN Xo (xOf y) k) (f f' : PS T.V 1 (chD C.ch)), Regular C k F → GermIs C k F f → Moves Xo a F F' → (∀ σ σ' : LB.Sec (LPow C.I.G.G C.I.G.PP.L (k : ℤ) (baseOver (Sp T.V))), IsGermG C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.actT C.eT C.wPT k σ f → IsActOf C.I.G.G C.I.G.PP.L (k : ℤ) U σ σ' → IsGermG C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.actT C.eT C.wPT k σ' f') → GermIs C k F' f' := by
   intro E _ _ _ H Dw l Xo c _ hstar T io y C hC k hk a aV r hr hr1 hr2 U hU F F' f f' hF hf hM hyp
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hFT := GlobalTheory.PlaceInt.frameTie_holds E H Dw l Xo c hstar
   have hA : IsAbelianScheme C.I.t'.G := isAbelianScheme_of_pullback_univ E H Dw l Xo _ C.I.t' _ C.I.m1
   obtain ⟨hak, U₀, hU₀, hact⟩ := hM

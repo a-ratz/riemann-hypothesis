@@ -67,7 +67,7 @@ theorem exists_eigen_of_sep {Y V : Type} [AddCommGroup Y] [AddCommGroup V] [Modu
     (hsep : ∀ y, y ∉ Q → ∃ χ ∈ X, χ y ≠ 1) :
     ∃ χ ∈ X, ∃ w ∈ Submodule.span ℂ (Set.range fun y => ρ y v), w ≠ 0 ∧ ∀ y, χ y • ρ y w = w := by
   classical
-  haveI : Fintype (Y ⧸ Q) := Fintype.ofFinite _
+  have : Fintype (Y ⧸ Q) := Fintype.ofFinite _
   let wf : (Y → ℂ) → V := fun χ => ∑ a : Y ⧸ Q, χ (Quotient.out a) • ρ (Quotient.out a) v
   have hout : ∀ a : Y ⧸ Q, ((Quotient.out a : Y) : Y ⧸ Q) = a := fun a => QuotientAddGroup.out_eq' a
 
@@ -300,7 +300,7 @@ theorem exists_vac_split : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     rw [hm, mul_nsmul]
     exact heisOF_nsmul_fix he' (nsmul_mem (hGX' g hg) _) (hNg g hg) m
 
-  haveI : Finite (YK ⧸ Q) := by
+  have : Finite (YK ⧸ Q) := by
     let S := (Polynomial.nthRoots N (1 : ℂ)).toFinset
     refine Finite.of_injective (β := G → S) (fun a g => ⟨commF σ JS JT ξ₀ B.ψ g (Quotient.out a : YK), ?_⟩) ?_
     · rw [Multiset.mem_toFinset, Polynomial.mem_nthRoots hN0]

@@ -184,7 +184,7 @@ variable {a a' : ℕ} {B : Base F E} {G : Geo σ a a'} {X : Chars F E} {om : Rep
 theorem maxFinP (m : IsMatched B G X om om' R Rf) (v : Pl F) :
     Maximal (fun P => GlobalTheory.Published.ThetaSub om v P ∧ P ≠ SB _) (LinearMap.ker (Rf.p v) ⊓ SB _) ∧
       Maximal (fun P => GlobalTheory.Published.ThetaSub om' v P ∧ P ≠ SB _) (LinearMap.ker (Rf.p' v) ⊓ SB _) := by
-  haveI := m.fin.nontriv v
+  have := m.fin.nontriv v
   have hecke_div {χ χ' : Chr F E} (h : IsHecke F E χ) (h' : IsHecke F E χ') : IsHecke F E (χ / χ') :=
     ⟨h.1.div' h'.1, fun x => by rw [MonoidHom.div_apply, h.2, h'.2, div_one]⟩
   have res_div {K : Subgroup (AF F)ˣ} {χ χ' : Chr F E} {n k l : ℕ}
@@ -215,7 +215,7 @@ theorem maxInfP (hO : ArchOp) (hL : ArchLie) (hQ : ArchUniq) (m : IsMatched B G 
         (LinearMap.ker R.p ⊓ G.M.Pol B.ψ B.emb) ∧
       Maximal (fun P => GlobalTheory.Published.ThetaSubInf G.M' B.ψ B.emb om' P ∧ P ≠ G.M'.Pol B.ψ B.emb)
         (LinearMap.ker R.p' ⊓ G.M'.Pol B.ψ B.emb) := by
-  haveI := m.real.nontriv
+  have := m.real.nontriv
   have hecke_div {χ χ' : Chr F E} (h : IsHecke F E χ) (h' : IsHecke F E χ') : IsHecke F E (χ / χ') :=
     ⟨h.1.div' h'.1, fun x => by rw [MonoidHom.div_apply, h.2, h'.2, div_one]⟩
   have res_div {K : Subgroup (AF F)ˣ} {χ χ' : Chr F E} {n k l : ℕ}

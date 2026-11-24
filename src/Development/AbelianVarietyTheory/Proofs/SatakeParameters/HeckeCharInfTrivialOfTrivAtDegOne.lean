@@ -128,7 +128,7 @@ theorem continuous_char_units_complex : ∀ ψ : ℂˣ →* ℂˣ, Continuous ψ
   have hunit : (z : ℂ) / ‖(z : ℂ)‖ = Complex.exp (Complex.arg z * Complex.I) := by
     rw [div_eq_iff hnz, mul_comm]
     exact (Complex.norm_mul_exp_arg_mul_I (z : ℂ)).symm
-  rw [← hEz, hL, hEz, hunit, ← Complex.exp_int_mul, ← Complex.exp_add, hlog, map_add (f := _), map_smul, map_smul,
+  rw [← hEz, hL, hEz, hunit, ← Complex.exp_intCast_mul, ← Complex.exp_add, hlog, map_add (f := _), map_smul, map_smul,
     hLI, Complex.real_smul, Complex.real_smul]
   congr 1
   ring
@@ -599,7 +599,7 @@ theorem infinitePlace_eq_of_embedding_comp_algebraMap_eq (F E : Type) [Field F] 
   have hτreal : ComplexEmbedding.IsReal τ := by
     have := IsTotallyReal.isReal (InfinitePlace.mk τ)
     exact InfinitePlace.isReal_mk_iff.mp this
-  letI : Algebra F ℂ := τ.toAlgebra
+  let : Algebra F ℂ := τ.toAlgebra
   have mkAlg : ∀ σ : E →+* ℂ, σ.comp (algebraMap F E) = τ → ∃ a : E →ₐ[F] ℂ, (a : E →+* ℂ) = σ :=
     fun σ hσ => ⟨{ σ with
       commutes' := fun r => by
@@ -867,7 +867,7 @@ theorem inf_trivial_of_trivAt_degOne : ∀ (F E : Type) [Field F] [NumberField F
   set S := hfin.toFinset with hS
   have hnotS : ∀ v, v ∉ S → UnrAt χ v ∧ (DegOne F v → TrivAt χ v) ∧ e0 ∉ v.asIdeal := by
     intro v hv
-    simp only [hS, Set.Finite.mem_toFinset, Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hv
+    simp only [hS, Set.Finite.mem_toFinset, Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hv
     exact ⟨hv.1.1, hv.1.2, hv.2⟩
   choose n hn using hcond
   have hπ : ∀ v : HeightOneSpectrum (𝓞 E), ∃ π : 𝓞 E, π ∈ v.asIdeal ∧ π ≠ 0 := fun v =>
@@ -876,7 +876,7 @@ theorem inf_trivial_of_trivAt_degOne : ∀ (F E : Type) [Field F] [NumberField F
   set P : 𝓞 E := ∏ v ∈ S, π v ^ n v with hP
   have hP0 : P ≠ 0 := Finset.prod_ne_zero_iff.2 fun v _ => pow_ne_zero _ (hπ0 v)
   set m : Ideal (𝓞 F) := (Ideal.span {θ * P}).comap (algebraMap (𝓞 F) (𝓞 E)) with hm
-  have hm0 : m ≠ ⊥ := Ideal.comap_ne_bot_of_integral_mem (mul_ne_zero hθ0' hP0)
+  have hm0 : m ≠ ⊥ := Ideal.under_ne_bot_of_integral_mem (mul_ne_zero hθ0' hP0)
     (Ideal.mem_span_singleton_self _) (Algebra.IsIntegral.isIntegral _)
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.residueClass_relativelyDense F m 0 hm0
   set t : Eˣ := Units.mk0 (θ : E) hθ0 with ht
@@ -915,8 +915,8 @@ theorem inf_trivial_of_trivAt_degOne : ∀ (F E : Type) [Field F] [NumberField F
           loc_unit χ v t θ rfl (fun h => he0v (Ideal.mul_mem_left _ _ h)) hu
         rw [htv, inv_one, mul_one]
         by_cases hmem : algebraMap (𝓞 F) (𝓞 E) b + θ ∈ v.asIdeal
-        · haveI := v.isPrime
-          haveI := v.isMaximal
+        · have := v.isPrime
+          have := v.isMaximal
           have hdeg1 : DegOne F v := _root_.GlobalTheory.residue_degree_one_of_linear_mem (𝓞 F) (𝓞 E) v.asIdeal θ D b 1
             (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := 𝓞 F) v.asIdeal) hDspan
             (fun h => he0v (Ideal.mul_mem_right _ _ h))
@@ -958,14 +958,14 @@ theorem inf_trivial_of_trivAt_degOne : ∀ (F E : Type) [Field F] [NumberField F
     refine (pi_norm_le_iff_of_nonneg (le_max_right _ _)).2 fun i => ?_
     have hy' : y' (τ i) = y i := by
       have h : ∃ j, τ j = τ i := ⟨i, rfl⟩
-      simp only [y', dif_pos h]
+      simp only [y', dite_eq_left h]
       rw [hτinj h.choose_spec]
     rw [Pi.sub_apply, Real.norm_eq_abs, ← hy']
     exact (hbC (τ i)).trans (le_max_left _ _)
   · rintro _ ⟨b, hb, rfl⟩ z hz
     have hzb : z = fun w => Units.map w.1.embedding.toMonoidHom (xb b) := funext fun i => Units.ext (by
       rw [hz i, Units.coe_map, hτapp]
-      simp only [hxbdef, Units.val_mk0, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+      simp only [hxbdef, Units.val_mk0, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
       rw [← map_add (f := _), ← coe_algebraMap]
       rfl)
     rw [hzb]

@@ -82,8 +82,8 @@ open scoped ComplexConjugate in
 lemma _root_.GlobalTheory.PerMove.det_of_triangular {n α : Type*} [Fintype n] [DecidableEq n] [LinearOrder α] (f : n → α)
     (hf : Function.Injective f) (M : Matrix n n ℂ) (hM : ∀ k l, f l < f k → M k l = 0) :
     M.det = ∏ k, M k k := by
-  letI : LinearOrder n := LinearOrder.lift' f hf
-  exact Matrix.det_of_upperTriangular fun k l h => hM k l h
+  let : LinearOrder n := LinearOrder.lift' f hf
+  exact det_of_isUpperTriangular fun k l h => hM k l h
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 
@@ -188,7 +188,7 @@ omit [NumberField E] [IsCMField E] in
 lemma _root_.GlobalTheory.PerMove.bor_diag_ne {Ψ : Finset (E →+* ℂ)} {b : _root_.ReciprocityTheory.ChartRestriction.G.FD.Frame Ψ r} (hb : b ∈ _root_.ReciprocityTheory.ChartRestriction.G.FD.Bor Ψ r) (τ : Ψ)
     (a : Fin r) : _root_.ReciprocityTheory.ChartRestriction.G.FD.mat b τ a a ≠ 0 := by
   have h := (hb τ).1
-  rw [Matrix.det_of_upperTriangular (_root_.GlobalTheory.PerMove.bor_tri hb τ)] at h
+  rw [det_of_isUpperTriangular (_root_.GlobalTheory.PerMove.bor_tri hb τ)] at h
   exact Finset.prod_ne_zero_iff.mp h a (Finset.mem_univ a)
 
 open NumberField Matrix in
@@ -198,7 +198,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ} in
 omit [NumberField E] [IsCMField E] in
 lemma _root_.GlobalTheory.PerMove.bor_inv_tri {Ψ : Finset (E →+* ℂ)} {b : _root_.ReciprocityTheory.ChartRestriction.G.FD.Frame Ψ r} (hb : b ∈ _root_.ReciprocityTheory.ChartRestriction.G.FD.Bor Ψ r) (τ : Ψ) :
     (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat b τ)⁻¹.BlockTriangular id := by
-  letI := (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat b τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.mpr (hb τ).1)
+  let := (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat b τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.mpr (hb τ).1)
   exact Matrix.blockTriangular_inv_of_blockTriangular (_root_.GlobalTheory.PerMove.bor_tri hb τ)
 
 open NumberField Matrix in
@@ -412,7 +412,7 @@ theorem _root_.GlobalTheory.per_move :
         · rw [show (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat b (idx k).1)⁻¹ (idx k).2 c = 0 from _root_.GlobalTheory.PerMove.bor_inv_tri hb _ (by
             simp only [id_eq, Fin.lt_def]; omega), zero_mul, zero_mul]
         · rfl
-    · simp only [h, coeff, Matrix.of_apply, if_true]
+    · simp only [h, coeff, Matrix.of_apply, ite_true]
       split_ifs
       · rfl
       · exact _root_.GlobalTheory.PerMove.bor_inv_diag hb _ _

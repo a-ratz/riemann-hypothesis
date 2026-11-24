@@ -129,9 +129,9 @@ theorem integral_xi_mul_Ph : Hyps → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) 
     intro U μ h
     have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
     infer_instance
-  haveI := hsf D.haarW
-  haveI := hsf D.haarN
-  haveI := hsf D.haarW'
+  have := hsf D.haarW
+  have := hsf D.haarN
+  have := hsf D.haarW'
   have hN := (GlobalTheory.T.isHaarOn_iff_groups_unitary_unipotent k r D.μN).2.1.2 D.haarN
   have hW := ((GlobalTheory.T.isHaarOn_iff_groups_unitary_unipotent k r D.μW).2.2 D.z D.z_mem D.T_pos D.k_pos).2 D.haarW
   have hW' := ((GlobalTheory.T.isHaarOn_iff_groups_unitary_unipotent k r D.μW').2.2 D.z' D.z'_mem D.T'_pos D.k_pos).2 D.haarW'
@@ -190,7 +190,7 @@ theorem integral_xi_mul_Ph : Hyps → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) 
         rw [Matrix.mul_assoc, ← Matrix.mul_assoc a, aa, Matrix.one_mul, nn]
       rw [this, hone]
     rw [e1, e2, e3, (psinv n h2).2, (pscj a' h3 n' h4).2.2.2, star_star]
-    simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [map_smul, smul_apply, smul_eq_mul]
     ring
   have hae' := hae.mono key
   have hInt' : Integrable (fun p => B.xiTau D (1, 1) p *
@@ -249,7 +249,7 @@ theorem hsInner_sum_sum {m : ℕ} (A C : Fin m → (Wq →L[ℂ] Wp)) :
   have h : ∀ A : Fin m → (Wq →L[ℂ] Wp), B.hsVec (∑ i, A i) = ∑ i, B.hsVec (A i) := by
     intro A
     ext t
-    simp [B.hsVec, ContinuousLinearMap.sum_apply]
+    simp [B.hsVec, sum_apply]
   unfold B.hsInner
   rw [h, h, inner_sum]
   exact Finset.sum_congr rfl fun i _ => sum_inner _ _ _
@@ -272,7 +272,7 @@ theorem Ph_sum [FiniteDimensional ℂ Wp] (D : B.RealPlaceData k r Wp Wq) {m : �
     unfold B.rho
     rw [hF _ (Formalism.FourierDecayAlt.P.B6.conj_product_mem_unitary_group D hp hg)]
     ext v
-    simp [ContinuousLinearMap.sum_apply]
+    simp [sum_apply]
   simp only
   rw [h1, hF _ hg, hsInner_sum_sum]
 

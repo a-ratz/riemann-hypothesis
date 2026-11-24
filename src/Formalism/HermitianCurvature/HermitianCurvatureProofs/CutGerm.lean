@@ -133,7 +133,7 @@ theorem lattice_poissonPD (E : ℂ → ℝ) (hE0 : ∀ z, 0 ≤ E z) (hEl : Lowe
         (‖(Real.pi⁻¹ : ℂ) * (∫ z : ℂ, P5.fsv σ.1 z * (E z : ℂ)) + A σ.1‖₊ : ℝ≥0∞)) = ⊤ := by
       by_contra hne
       exact hsum ((NNReal.summable_coe.2 (ENNReal.tsum_coe_ne_top_iff_summable.1 hne)).congr
-        fun σ => coe_nnnorm _)
+        fun σ => coe_nnNorm _)
     rw [htop]
     exact le_top
   have hpi : (Real.pi : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 Real.pi_ne_zero
@@ -183,7 +183,7 @@ theorem lattice_poissonPD (E : ℂ → ℝ) (hE0 : ∀ z, 0 ≤ E z) (hEl : Lowe
         ‖(Real.pi⁻¹ : ℂ) * (∫ z : ℂ, P5.fsv σ.1 z * (E z : ℂ)) + A σ.1‖) := by
     rw [ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) hsum]
     refine tsum_congr fun σ => ?_
-    rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
+    rw [← coe_nnNorm, ENNReal.ofReal_coe_nnreal]
   rw [hRHS, ENNReal.tsum_eq_iSup_sum, ENNReal.mul_iSup]
   refine iSup_le fun T => ?_
   have hinj : Set.InjOn (fun ab : ℤ × ℤ => fun _ : Fin 1 => z₀ + (ab.1 : ℂ) * ω₁ + (ab.2 : ℂ) * ω₂)

@@ -67,14 +67,14 @@ theorem eventually_isUnram : ∀ᶠ v : HeightOneSpectrum (𝓞 F) in cofinite, 
   have hfin := (Ideal.finite_factors (differentIdeal_ne_bot (A := 𝓞 F) (B := 𝓞 E))).image
     (fun P : HeightOneSpectrum (𝓞 E) => P.under (𝓞 F))
   refine Filter.eventually_cofinite.2 (hfin.subset fun v hv => ?_)
-  simp only [Set.mem_setOf_eq] at hv
+  simp only [Set.mem_ofPred_eq] at hv
   rw [GlobalTheory.LFun.isUnram_iff] at hv
   push_neg at hv
   obtain ⟨P, hP, h1⟩ := hv
   refine ⟨P, ?_, hP⟩
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   by_contra hnd
-  haveI := not_dvd_differentIdeal_iff.1 hnd
+  have := not_dvd_differentIdeal_iff.1 hnd
   exact h1 Ideal.ramificationIdx_eq_one_of_isUnramifiedAt
 
 variable {σ : E →ₐ[F] E} {n : ℕ} {J : Matrix (Fin n) (Fin n) E} {L : Submodule (𝓞 E) (Fin n → E)}

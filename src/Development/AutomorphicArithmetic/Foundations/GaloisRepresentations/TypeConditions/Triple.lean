@@ -107,9 +107,9 @@ theorem exists_aut {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O]
       letI := f.toAlgebra
       haveI : Module.IsTorsionFree O (Qbar l) := Module.isTorsionFree_iff_algebraMap_injective.2 hf
       IsAlgClosure O (Qbar l) := fun f hf hf' => by
-    letI := f.toAlgebra
-    haveI : Module.IsTorsionFree O (Qbar l) := Module.isTorsionFree_iff_algebraMap_injective.2 hf
-    haveI : IsScalarTower ℤ_[l] O (Qbar l) := IsScalarTower.of_algebraMap_eq fun z => (hf' z).symm
+    let := f.toAlgebra
+    have : Module.IsTorsionFree O (Qbar l) := Module.isTorsionFree_iff_algebraMap_injective.2 hf
+    have : IsScalarTower ℤ_[l] O (Qbar l) := IsScalarTower.of_algebraMap_eq fun z => (hf' z).symm
     have hi : Function.Injective (algebraMap ℤ_[l] O) := fun x y h => by
       have := (hf' x).symm.trans ((congrArg f h).trans (hf' y))
       exact Subtype.ext ((algebraMap ℚ_[l] (Qbar l)).injective this)
@@ -263,7 +263,7 @@ theorem conj_of_frobMatch_alt : ∀ (D : D7) (T : GlobalTheory.RowTie.WDTie D.nd
     rcases Nat.eq_zero_or_pos a with ha | ha
     · subst ha
       simp [Matrix.trace]
-    · haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+    · have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
       rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, e]
   exact GlobalTheory.TraceConj.conj_of_trace_eq _ _ a r r' h.ss hss' htr
 
@@ -333,7 +333,7 @@ theorem exists_conj_br_alt (hF : FrobDense D) (hG : UpperTheory.GalS.GalHodgeN D
     ext g a b
     exact (hγ _).symm
   obtain ⟨r, A, h, hA⟩ := exists_isAttachedHodgeS_conj_mapRep hF hG hc hr hρ hM (φ := brEmb i v hv)
-    (continuous_subtype_val.comp (continuous_subtype_val.comp (D.ntwbr i v hv).eO_cont)) h3
+    (continuous_subtypeVal.comp (continuous_subtypeVal.comp (D.ntwbr i v hv).eO_cont)) h3
     (h4 ▸ GlobalTheory.TraceSemisimple.isSSRep_mapRep _ _ _ _ _ _ hs)
   exact ⟨_, r, A, h3, h, fun g => hA g⟩
 

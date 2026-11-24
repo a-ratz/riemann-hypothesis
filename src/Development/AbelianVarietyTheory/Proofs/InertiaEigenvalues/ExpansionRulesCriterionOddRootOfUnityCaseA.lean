@@ -349,10 +349,10 @@ theorem main : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf 
   intro D HW F Cm hN l _ K LL hA
   obtain ⟨p1, -, p3, p4, p5, -, -, -, p9, -⟩ := hN
   have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI := Formalism.MainNotions.UnusedSlot80.neZero_finrank_max_unramified K
-  haveI : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
-  haveI : IsFractionRing ↥(OL LL) ↥LL.1 := Formalism.MainNotions.UnusedSlot80.BCF.isFrac_OL LL
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) :=
+  have := Formalism.MainNotions.UnusedSlot80.neZero_finrank_max_unramified K
+  have : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
+  have : IsFractionRing ↥(OL LL) ↥LL.1 := Formalism.MainNotions.UnusedSlot80.BCF.isFrac_OL LL
+  have : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) :=
     Formalism.MainNotions.N.Pv.LocalLengthBound.OLC.complete_max LL
   have hLT := GlobalTheory.LevelClauseOdd.main D HW F Cm p4 p9 l K LL hA
   have C := ((Cm l).C K 1 LL hA.2.2).tie

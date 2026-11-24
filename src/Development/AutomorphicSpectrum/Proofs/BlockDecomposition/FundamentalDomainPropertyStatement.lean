@@ -295,11 +295,11 @@ theorem fin_dom (D : D7) (a b c : ℕ) (ι : Fin c → Fin b)
     (hg : g ∈ WeilM.SB (Fin a → Fin b → Af D.host.F ⊗[D.host.F] D.host.E)) :
     ∃ G ∈ WeilM.SB (Fin a → Fin c → Af D.host.F ⊗[D.host.F] D.host.E),
       (∀ y, 0 ≤ (G y).re ∧ (G y).im = 0) ∧ ∀ x, ‖g x‖ ≤ (G fun i j => x i (ι j)).re := by
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI h1 : IsTopologicalAddGroup (Af D.host.F ⊗[D.host.F] D.host.E) :=
-    IsModuleTopology.topologicalAddGroup (Af D.host.F) _
-  haveI h2 : IsTopologicalAddGroup (Fin c → Af D.host.F ⊗[D.host.F] D.host.E) := Pi.topologicalAddGroup
-  haveI h3 : IsTopologicalAddGroup (Fin a → Fin c → Af D.host.F ⊗[D.host.F] D.host.E) := Pi.topologicalAddGroup
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have h1 : IsTopologicalAddGroup (Af D.host.F ⊗[D.host.F] D.host.E) :=
+    IsModuleTopology.isTopologicalAddGroup (Af D.host.F) _
+  have h2 : IsTopologicalAddGroup (Fin c → Af D.host.F ⊗[D.host.F] D.host.E) := Pi.isTopologicalAddGroup
+  have h3 : IsTopologicalAddGroup (Fin a → Fin c → Af D.host.F ⊗[D.host.F] D.host.E) := Pi.isTopologicalAddGroup
   obtain ⟨U, hUc, hUk, h0⟩ := GlobalTheory.AfTensNbhd.exists_clopen_compact_nbhd_zero D a c
   exact fin_gen (fun x i j => x i (ι j))
     (continuous_pi fun i => continuous_pi fun j => (continuous_apply (ι j)).comp (continuous_apply i))

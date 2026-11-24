@@ -64,7 +64,7 @@ theorem lfT_of_same : ∀ (B : Base) (C : Cols B) (a b : Late B C) (G : Type) [G
   obtain rfl : PW' = fun i => rowPsi b (y.PW i) :=
     funext fun i => frame_eq_of_map_eq _ _ ((by with_unfolding_all exact ((congrFun e4 i) :)))
   obtain rfl : jL' = (by with_unfolding_all exact (jL :)) := eq_of_heq hj
-  letI := alg b iK
+  let := alg b iK
   have prt_eq (i : Fin a.D.R.m) (π : Formalism.L2.NG.FinTyp a.D.host.E a.D.R.r) :
       y.prtW F i π = yb.prtW (face b F) i π := by
     unfold Hd.prtW

@@ -84,7 +84,7 @@ theorem exists_theta (m : ℕ) : ∃ θ : kb p, IsPrimitiveRoot θ (p ^ (2 * (m 
     rw [Nat.cast_sub h1, Nat.cast_pow, ZMod.natCast_self, zero_pow (by omega), Nat.cast_one,
       zero_sub]
     exact neg_ne_zero.mpr one_ne_zero⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (kb p) _
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot (kb p) _
 
 theorem pow_lt_q (m i : ℕ) (hi : i ≤ m) : p ^ (2 * i) < p ^ (2 * (m + 1)) - 1 := by
   have h2 : 2 ≤ p := (Fact.out : p.Prime).two_le

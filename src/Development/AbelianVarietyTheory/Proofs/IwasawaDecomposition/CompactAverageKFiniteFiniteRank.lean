@@ -65,12 +65,12 @@ theorem isKFin_of_mem_closure (hσ : IsURepOn (UJset ε) σ) {U : Set H} {M : �
   obtain ⟨b, hbt, hsp, hli⟩ := exists_linearIndependent ℂ t
   have hfin : b.Finite := by
     by_contra hinf
-    haveI : Infinite b := Set.infinite_coe_iff.2 hinf
+    have : Infinite b := Set.infinite_coe_iff.2 hinf
     let e : Fin (M + 1) ↪ b := Fin.valEmbedding.trans (Infinite.natEmbedding b)
     choose k hk using fun i => hbt (e i).2
     have hc : Continuous fun w : H => fun i : Fin (M + 1) => σ (toMK (k i)) w :=
       continuous_pi fun i => (σ _).continuous
-    have ho := (isOpen_setOf_linearIndependent (𝕜 := ℂ) (E := H) (ι := Fin (M + 1))).preimage hc
+    have ho := (isOpen_setOfPred_linearIndependent (𝕜 := ℂ) (E := H) (ι := Fin (M + 1))).preimage hc
     have hu' : LinearIndependent ℂ fun i : Fin (M + 1) => σ (toMK (k i)) u := by
       have := hli.comp e e.injective
       rwa [show (Subtype.val ∘ e : Fin (M + 1) → H) = _ from funext fun i => (hk i).symm] at this
@@ -102,19 +102,19 @@ theorem exists_word_clm (h : Std ε σ) (W : Submodule ℂ H) [CompleteSpace W] 
   have h1 : Tendsto (fun j => ⟪y, A (s j)⟫_ℂ) atTop (𝓝 ⟪y, z⟫_ℂ) := tendsto_const_nhds.inner hz
   simp only [hA, fun x : W => inner_Dw h.1 hl hy (hW _ x.2)] at h1 ⊢
   exact tendsto_nhds_unique h1
-    (tendsto_const_nhds.mul (tendsto_const_nhds.inner ((continuous_subtype_val.tendsto x).comp hs)))
+    (tendsto_const_nhds.mul (tendsto_const_nhds.inner ((continuous_subtypeVal.tendsto x).comp hs)))
 
 theorem finiteDimensional_of_smooth (h : Std ε σ) (W : Submodule ℂ H) [CompleteSpace W]
     (hW : ∀ w ∈ W, Sm ε σ w) : FiniteDimensional ℂ W := by
   obtain ⟨S, C, hS, hC, hts⟩ := _root_.GlobalTheory.TypeSum.SobHS.sobolev_hilbertSchmidt n ε H σ h
   choose A hA using fun l : {l // l ∈ S} => exists_word_clm h W hW (hS l.1 l.2)
-  haveI : Finite {l // l ∈ S} := (List.finite_toSet S).to_subtype
+  have : Finite {l // l ∈ S} := (List.finite_toSet S).to_subtype
   obtain ⟨B, hB⟩ := (Set.finite_range fun l => ‖A l‖ ^ 2).bddAbove
   have hB' : ∀ l, ‖A l‖ ^ 2 ≤ |B| := fun l => (hB ⟨l, rfl⟩).trans (le_abs_self B)
   obtain ⟨w, b, -⟩ := exists_hilbertBasis ℂ W
   have hfin : Finite w := by
     by_contra hinf
-    haveI : Infinite w := not_finite_iff_infinite.1 hinf
+    have : Infinite w := not_finite_iff_infinite.1 hinf
     obtain ⟨m, hm⟩ := exists_nat_gt (C * |B|)
     let e : Fin m ↪ w := Fin.valEmbedding.trans (Infinite.natEmbedding w)
     have ho : Orthonormal ℂ fun j => b (e j) := b.orthonormal.comp e e.injective
@@ -138,7 +138,7 @@ theorem finiteDimensional_of_smooth (h : Std ε σ) (W : Submodule ℂ H) [Compl
     simp at key
     have h0 : 0 ≤ C * |B| := mul_nonneg hC (abs_nonneg B)
     nlinarith
-  haveI := Fintype.ofFinite w
+  have := Fintype.ofFinite w
   exact b.toOrthonormalBasis.toBasis.finiteDimensional_of_finite
 
 end GlobalTheory.TypeSum.admitted
@@ -150,8 +150,8 @@ theorem finiteDimensional_of_bounded_orbits : ∀ (n : ℕ) (ε : Fin n → Bool
     (∀ u ∈ U, ∃ S : Submodule ℂ H, FiniteDimensional ℂ S ∧ Module.finrank ℂ S ≤ M ∧ u ∈ S ∧ IsKStableOn ε σ S) →
       FiniteDimensional ℂ U := by
   intro n ε H _ _ _ σ h U M hU
-  haveI : CompleteSpace U.topologicalClosure := U.isClosed_topologicalClosure.completeSpace_coe
-  haveI := admitted.finiteDimensional_of_smooth h U.topologicalClosure fun w hw =>
+  have : CompleteSpace U.topologicalClosure := U.isClosed_topologicalClosure.completeSpace_coe
+  have := admitted.finiteDimensional_of_smooth h U.topologicalClosure fun w hw =>
     h.2.2.1 w (admitted.isKFin_of_mem_closure h.1 (U := U) hU hw)
   exact Submodule.finiteDimensional_of_le U.le_topologicalClosure
 
@@ -225,7 +225,7 @@ theorem kAvg_finite_rank : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [Norme
     rintro _ ⟨w, rfl⟩
     have := KAvgRank.exists_stable hσ hc (fun φ hφ k₀ => (ht φ hφ k₀).1) heF w
     rwa [← hQ] at this
-  haveI : FiniteDimensional ℂ U := _root_.GlobalTheory.TypeSum.finiteDimensional_of_bounded_orbits n ε H σ h U _ hU
+  have : FiniteDimensional ℂ U := _root_.GlobalTheory.TypeSum.finiteDimensional_of_bounded_orbits n ε H σ h U _ hU
   let b := stdOrthonormalBasis ℂ U
   refine ⟨_, fun j => (b j : H), fun j => ContinuousLinearMap.adjoint Q (b j), ?_, fun j => ?_, fun j => ?_,
     fun w => ?_⟩

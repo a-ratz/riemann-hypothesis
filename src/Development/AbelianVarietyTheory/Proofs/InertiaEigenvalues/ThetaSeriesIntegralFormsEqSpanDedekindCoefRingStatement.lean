@@ -121,14 +121,14 @@ theorem mem_span_ker [IsDedekindDomain R] {L : Submodule R V} (hL : L.FG) {M : S
   have hN : Indep N := fun I f hf => hM I f fun a => by
     obtain ⟨y, hy, e⟩ := hf a
     exact e ▸ hT y hy
-  haveI : Module.Finite R N := Module.Finite.iff_fg.2 (hL.map t)
-  haveI : Module.Flat R N := by
+  have : Module.Finite R N := Module.Finite.iff_fg.2 (hL.map t)
+  have : Module.Flat R N := by
     rw [IsDedekindDomain.flat_iff_torsion_eq_bot, eq_bot_iff]
     rintro n ⟨a, ha⟩
     have h1 : ((a.1 : R) : ℂ) • (n : W) = 0 := congrArg Subtype.val ha
     exact Subtype.ext ((smul_eq_zero.1 h1).resolve_left fun e => nonZeroDivisors.coe_ne_zero a (Subtype.ext e))
-  haveI : Module.FinitePresentation R N := Module.finitePresentation_of_finite R N
-  haveI : Module.Projective R N := Module.Flat.projective_of_finitePresentation
+  have : Module.FinitePresentation R N := Module.finitePresentation_of_finite R N
+  have : Module.Projective R N := Module.Flat.projective_of_finitePresentation
   obtain ⟨s, hs⟩ := Module.projective_lifting_property (t.submoduleMap L) (LinearMap.id : N →ₗ[R] N) (t.submoduleMap_surjective L)
   obtain ⟨s', hs'⟩ := exists_extend hN (L.subtype ∘ₗ s)
   have e : x = x - s' (T x) := by rw [h0, map_zero, sub_zero]
@@ -167,7 +167,7 @@ theorem mem_span_iInf_ker [IsDedekindDomain R] {M : Submodule R W} (hM : Indep M
     obtain ⟨a, y, hy, hy0⟩ := h
     let L' : Submodule R V := L ⊓ (LinearMap.ker (T a)).restrictScalars R
     have hL' : L'.FG := hL.of_le inf_le_left
-    haveI : Module.Finite ℂ (Submodule.span ℂ (L : Set V)) := by
+    have : Module.Finite ℂ (Submodule.span ℂ (L : Set V)) := by
       obtain ⟨s, rfl⟩ := hL
       rw [Submodule.span_span_of_tower]
       exact Module.Finite.span_finset ℂ s
@@ -207,7 +207,7 @@ theorem law_mem_span [IsDedekindDomain R] {G Γ : Type} [Group G] [Group Γ] (ι
   have hEf : E (fun i => f (y i)) = f := funext fun g => by
     rw [hE, ← mem_lawForms.1 hf, ← hg g]
   have hx : (fun i => f (y i)) ∈ Submodule.span O (L : Set (I → W)) := by
-    haveI := Fintype.ofFinite I
+    have := Fintype.ofFinite I
     rw [← Finset.univ_sum_single (fun i => f (y i))]
     refine Submodule.sum_mem _ fun i _ => ?_
     have := Submodule.mem_map_of_mem (f := LinearMap.single O (fun _ : I => W) i) (hv (y i))
@@ -232,12 +232,12 @@ theorem law_mem_span [IsDedekindDomain R] {G Γ : Type} [Group G] [Group Γ] (ι
 
 theorem indep_closure {I : Type} {f : I → W} (h : LinearIndependent R f) :
     LinearIndependent (Subfield.closure (R : Set ℂ)) f := by
-  letI : Algebra R (Subfield.closure (R : Set ℂ)) :=
+  let : Algebra R (Subfield.closure (R : Set ℂ)) :=
     (Subring.inclusion (S := R) (T := (Subfield.closure (R : Set ℂ)).toSubring) Subfield.subset_closure).toAlgebra
-  haveI : IsScalarTower R (Subfield.closure (R : Set ℂ)) W := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : FaithfulSMul R (Subfield.closure (R : Set ℂ)) :=
+  have : IsScalarTower R (Subfield.closure (R : Set ℂ)) W := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : FaithfulSMul R (Subfield.closure (R : Set ℂ)) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (Subring.inclusion_injective _)
-  haveI : IsFractionRing R (Subfield.closure (R : Set ℂ)) := IsFractionRing.of_field _ _ fun z => by
+  have : IsFractionRing R (Subfield.closure (R : Set ℂ)) := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨a, ha, b, hb, e⟩ := Subfield.mem_closure_iff.1 z.2
     rw [Subring.closure_eq] at ha hb
     exact ⟨⟨a, ha⟩, ⟨b, hb⟩, Subtype.ext e.symm⟩
@@ -280,16 +280,16 @@ theorem mtLat_eq_span : ∀ (D : D7) (S T : HSp D) (B : Base S T), B.Good → �
   (∀ k : B.levJ ψ, ((B.levLam ψ k : ℂˣ) : ℂ) ∈ φ.range) → ∀ O : Subring ℂ, φ.range ≤ O →
   B.mtLat σ emb O ψ = Submodule.span O (B.mtLat σ emb φ.range ψ : Set (Bridge.Gf S → PolF D T.rank S.rank)) := by
   intro D S T B hB ψ _ _ K _ _ σ emb R _ _ φ hφ hc hlam O hO
-  haveI : IsDedekindDomain φ.range := by
-    letI : Algebra R φ.range := φ.rangeRestrict.toAlgebra
-    haveI : IsLocalization (⊥ : Submonoid R) φ.range :=
+  have : IsDedekindDomain φ.range := by
+    let : Algebra R φ.range := φ.rangeRestrict.toAlgebra
+    have : IsLocalization (⊥ : Submonoid R) φ.range :=
       IsLocalization.of_le_isUnit_of_bijective (by rintro _ ⟨x, hx, rfl⟩; rw [Submonoid.mem_bot.1 hx, map_one]; exact one_mem _)
         ⟨fun _ _ e => hφ (congrArg Subtype.val e), φ.rangeRestrict_surjective⟩
     exact IsLocalization.isDedekindDomain R (M := ⊥) bot_le _
   have hfull : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
       IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
     intro V Λ hΛ
-    haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+    have : Submodule.IsLattice D.host.E Λ := hΛ.1
     refine ⟨?_⟩
     obtain ⟨s, hs⟩ := hΛ.1.fg
     apply eq_top_iff.mpr
@@ -351,7 +351,7 @@ theorem mtLat_eq_span : ∀ (D : D7) (S T : HSp D) (B : Base S T), B.Good → �
     have := law_mem_span (O := O) (Bridge.ratF S) (B.act.comp (GQ S).subtype) (B.levJ ψ) (B.levLam ψ) hlam
       (B.coefLat σ emb φ.range)
       (fun g => by
-        haveI : Submodule.IsFullLattice D.host.E (B.latAt g) :=
+        have : Submodule.IsFullLattice D.host.E (B.latAt g) :=
           Formalism.UG.P.csGlob_lattice _ (Module.Finite.iff_fg.2 hB.frame.sdS.1.fg)
             (hfull S B.F.ΛS hB.frame.sdS).span_eq_top _
         exact (HarmLattice.harmLat_fg_span D _ _ _ _ _ _ _ _ _ hB.wt (pq_le hB) hc

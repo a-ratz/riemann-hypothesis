@@ -194,7 +194,7 @@ instance : IsScalarTower ℂ (ResidueField (locR K p)) (CotangentSpace (locR K p
 
 theorem finrank_residueField : Module.finrank ℂ (ResidueField (locR K p)) = 1 := by
   have hK : K ≤ ptI p := le_ptIdeal_of_nontrivial (K := K) (p := p)
-  rw [finrank_eq_one_iff_of_nonzero' (1 : ResidueField (locR K p)) one_ne_zero]
+  rw [finrank_eq_one_iff_of_ne_zero' (1 : ResidueField (locR K p)) one_ne_zero]
   intro w
   obtain ⟨x, rfl⟩ := IsLocalRing.residue_surjective w
   refine ⟨evRing K hK x, ?_⟩
@@ -207,8 +207,8 @@ theorem finrank_cot_eq :
     Module.finrank (ResidueField (locR K p)) (CotangentSpace (locR K p))
       + Module.finrank ℂ (jacS K p) = n := by
   have h := finrank_cot_complex p K
-  haveI : Module.Free ℂ (ResidueField (locR K p)) := Module.Free.of_divisionRing ℂ _
-  haveI : Module.Free (ResidueField (locR K p)) (CotangentSpace (locR K p)) :=
+  have : Module.Free ℂ (ResidueField (locR K p)) := Module.Free.of_divisionRing ℂ _
+  have : Module.Free (ResidueField (locR K p)) (CotangentSpace (locR K p)) :=
     Module.Free.of_divisionRing (ResidueField (locR K p)) _
   rw [← (letI : Module.Free (ResidueField (locR K p)) (CotangentSpace (locR K p)) := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank ℂ (ResidueField (locR K p)) (CotangentSpace (locR K p))),
     finrank_residueField, one_mul] at h
@@ -223,14 +223,14 @@ theorem isNoetherianRing_locPt (p : Fin n → ℂ) : IsNoetherianRing (localizat
 
 theorem locRing_isLocalRing_isNoetherian' (K : Ideal (MvPolynomial (Fin n) ℂ)) (p : Fin n → ℂ)
     (hp : ∀ h ∈ K, eval p h = 0) : IsLocalRing (locR K p) ∧ IsNoetherianRing (locR K p) := by
-  haveI := isNoetherianRing_locPt p
+  have := isNoetherianRing_locPt p
   have hK : K ≤ ptI p := fun h hh => by rw [ptI, RingHom.mem_ker]; exact hp h hh
   have hle : Ideal.map (algebraMap (MvPolynomial (Fin n) ℂ) (localization₂ p)) K ≤ IsLocalRing.maximalIdeal (localization₂ p) := by
     rw [← Localization.AtPrime.map_eq_maximalIdeal]
     exact Ideal.map_mono hK
   have hne : Ideal.map (algebraMap (MvPolynomial (Fin n) ℂ) (localization₂ p)) K ≠ ⊤ :=
     fun h => (IsLocalRing.maximalIdeal.isMaximal (localization₂ p)).ne_top (top_le_iff.mp (h ▸ hle))
-  haveI : Nontrivial (locR K p) := Ideal.Quotient.nontrivial_iff.mpr hne
+  have : Nontrivial (locR K p) := Ideal.Quotient.nontrivial_iff.mpr hne
   exact ⟨IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective, inferInstance⟩
 
 theorem exists_jacobian_cut' (K : Ideal (MvPolynomial (Fin n) ℂ)) (p : Fin n → ℂ) (e : ℕ)
@@ -386,8 +386,8 @@ theorem locRing_isLocalRing_isNoetherian (K : Ideal (MvPolynomial (Fin n) ℂ)) 
     exact h2
   have hne : Ideal.map (algebraMap (MvPolynomial (Fin n) ℂ) (locPt p)) K ≠ ⊤ :=
     ne_top_of_le_ne_top (IsLocalRing.maximalIdeal.isMaximal _).ne_top hK
-  haveI : Nontrivial (locRing K p) := Ideal.Quotient.nontrivial_iff.2 hne
-  haveI : IsNoetherianRing (locPt p) :=
+  have : Nontrivial (locRing K p) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : IsNoetherianRing (locPt p) :=
     IsLocalization.isNoetherianRing (ptIdeal p).primeCompl _ inferInstance
   exact ⟨IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective,
     inferInstance⟩

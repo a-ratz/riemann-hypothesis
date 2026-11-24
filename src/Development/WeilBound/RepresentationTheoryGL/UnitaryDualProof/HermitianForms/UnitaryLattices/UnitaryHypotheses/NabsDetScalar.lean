@@ -116,27 +116,27 @@ theorem blkAt_mirU_apply {n N : ℕ} (h : n + 1 ≤ N) (u : Mir k n) (hu : mirab
       if a = b then 1 else 0 := by
   rw [blkAt_apply]
   by_cases ha : (a : ℕ) < n + 1
-  · rw [dif_pos ha]
+  · rw [dite_eq_left ha]
     by_cases hb : (b : ℕ) < n + 1
-    · rw [dif_pos hb, mirU_apply u hu _ _ (by simpa using hab)]
+    · rw [dite_eq_left hb, mirU_apply u hu _ _ (by simpa using hab)]
       by_cases e : a = b
       · subst e
         simp
-      · rw [if_neg e, if_neg]
+      · rw [ite_eq_right e, ite_eq_right]
         intro e'
         exact e (Fin.ext (by simpa using congrArg Fin.val e'))
-    · rw [dif_neg hb, if_neg]
+    · rw [dite_eq_right hb, ite_eq_right]
       intro e
       subst e
       exact hb ha
-  · rw [dif_neg ha]
+  · rw [dite_eq_right ha]
 
 theorem blkAt_mirU_mem {n N : ℕ} (h : n + 1 ≤ N) (u : Mir k n) (hu : mirabolicProjection k n u = 1) :
     blkAt k (n + 1) N h (u : GL (Fin (n + 1)) k) ∈ derUnip k N n := by
   refine ⟨(mem_unipB k).2 ⟨fun i j hji => ?_, fun i => ?_⟩, (GlobalTheory.CompanionTheory.BZMirStep.mem_colFix_iff _).2 fun i j hj => ?_⟩
   · rw [Fin.lt_def] at hji
-    rw [blkAt_mirU_apply h u hu i j (by omega), if_neg (fun e => by rw [e] at hji; omega)]
-  · rw [blkAt_mirU_apply h u hu i i (by omega), if_pos rfl]
+    rw [blkAt_mirU_apply h u hu i j (by omega), ite_eq_right (fun e => by rw [e] at hji; omega)]
+  · rw [blkAt_mirU_apply h u hu i i (by omega), ite_eq_left rfl]
   · rw [blkAt_mirU_apply h u hu i j (by omega), Matrix.one_apply]
 
 theorem derChar_blkAt_mirU (ψ : AddChar k Circle) {n N : ℕ} (h : n + 1 ≤ N) (u : Mir k n)
@@ -147,7 +147,7 @@ theorem derChar_blkAt_mirU (ψ : AddChar k Circle) {n N : ℕ} (h : n + 1 ≤ N)
   intro p hp
   obtain ⟨h1, h2⟩ := (Finset.mem_filter.1 hp).2
   show ((blkAt k (n + 1) N h (u : GL (Fin (n + 1)) k) : GL (Fin N) k) : Matrix (Fin N) (Fin N) k) p.1 p.2 = 0
-  rw [blkAt_mirU_apply h u hu _ _ (by omega), if_neg (fun e => by rw [e] at h1; omega)]
+  rw [blkAt_mirU_apply h u hu _ _ (by omega), ite_eq_right (fun e => by rw [e] at h1; omega)]
 
 theorem blkAt_levi {n N : ℕ} (h : n + 1 ≤ N) (g : GL (Fin n) k) :
     blkAt k (n + 1) N h ((levi k n g : Mir k n) : GL (Fin (n + 1)) k) = blkAt k n N (by omega) g := by
@@ -158,26 +158,26 @@ theorem blkAt_levi {n N : ℕ} (h : n + 1 ≤ N) (g : GL (Fin n) k) :
     fun _ _ => rfl
   by_cases ha : (a : ℕ) < n
   · have ha' : (a : ℕ) < n + 1 := by omega
-    rw [dif_pos ha', dif_pos ha]
+    rw [dite_eq_left ha', dite_eq_left ha]
     by_cases hb : (b : ℕ) < n
     · have hb' : (b : ℕ) < n + 1 := by omega
-      rw [dif_pos hb', dif_pos hb, hl, glEmbMat_apply']
-      simp only [ha, hb, dif_pos]
-    · rw [dif_neg hb]
+      rw [dite_eq_left hb', dite_eq_left hb, hl, glEmbMat_apply']
+      simp only [ha, hb, dite_eq_left]
+    · rw [dite_eq_right hb]
       by_cases hb' : (b : ℕ) < n + 1
-      · rw [dif_pos hb', hl, glEmbMat_apply']
-        simp only [ha, hb, dif_pos, dif_neg, not_false_eq_true]
-      · rw [dif_neg hb']
-  · rw [dif_neg ha]
+      · rw [dite_eq_left hb', hl, glEmbMat_apply']
+        simp only [ha, hb, dite_eq_left, dite_eq_right, not_false_eq_true]
+      · rw [dite_eq_right hb']
+  · rw [dite_eq_right ha]
     by_cases ha' : (a : ℕ) < n + 1
-    · rw [dif_pos ha']
+    · rw [dite_eq_left ha']
       by_cases hb' : (b : ℕ) < n + 1
-      · rw [dif_pos hb', hl, glEmbMat_apply']
-        simp only [ha, dif_neg, not_false_eq_true]
+      · rw [dite_eq_left hb', hl, glEmbMat_apply']
+        simp only [ha, dite_eq_right, not_false_eq_true]
         simp only [Fin.ext_iff]
-      · rw [dif_neg hb']
+      · rw [dite_eq_right hb']
         split_ifs with e <;> first | rfl | (simp only [Fin.ext_iff] at e; omega)
-    · rw [dif_neg ha']
+    · rw [dite_eq_right ha']
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
 theorem det_mir {n : ℕ} (p : Mir k n) :
@@ -305,7 +305,7 @@ theorem exists_orth_decomp {G D : Type} [Group G] [TopologicalSpace G] [IsTopolo
     rw [IsLocallyConstant.iff_exists_open]
     intro k0
     refine ⟨(fun k : K => (k0 : G)⁻¹ * (k : G)) ⁻¹' {g | ρ g w' = w'},
-      (hA.1 w').preimage (continuous_const.mul continuous_subtype_val), ?_, ?_⟩
+      (hA.1 w').preimage (continuous_const.mul continuous_subtypeVal), ?_, ?_⟩
     · simp
     · intro k hk
       simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hk

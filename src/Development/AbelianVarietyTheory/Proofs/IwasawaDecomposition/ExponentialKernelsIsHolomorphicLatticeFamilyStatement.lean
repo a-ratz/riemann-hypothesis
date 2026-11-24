@@ -94,17 +94,17 @@ theorem isOpen_ne_one [IsSeparated G.hom] {V : Type} [NormedAddCommGroup V] [Nor
   have hcont : Continuous fun q : D => c q := by
     refine Points.continuous_iff_valAt'.2 fun U => ⟨?_, fun f => ?_⟩
     · have : IsOpen ((fun q : D => (q : V)) ⁻¹' {b ∈ D | ⊤ ≤ c b ⁻¹ᵁ U}) :=
-        (hc U 0).1.preimage continuous_subtype_val
+        (hc U 0).1.preimage continuous_subtypeVal
       convert this using 1
       ext q
       simp [q.2]
-    · have h := (hc U f).2.continuousOn.comp (f := fun q : D => (q : V)) continuous_subtype_val.continuousOn
+    · have h := (hc U f).2.continuousOn.comp (f := fun q : D => (q : V)) continuous_subtypeVal.continuousOn
         (t := {b ∈ D | ⊤ ≤ c b ⁻¹ᵁ U}) (s := {b : D | ⊤ ≤ c b ⁻¹ᵁ U}) fun q hq => ⟨q.2, hq⟩
       exact h
   have hR := (Points.isClosedEmbedding_comp (C := ℂ) (pullback.diagonal G.hom)).isClosed_range
   have hop : IsOpen ((fun q : D => c q) ⁻¹' (Set.range fun x : Sp ℂ ⟶ G.left => x ≫ pullback.diagonal G.hom)ᶜ) :=
     hR.isOpen_compl.preimage hcont
-  have := hD.isOpenMap_subtype_val _ hop
+  have := hD.isOpenMap_subtypeVal _ hop
   convert this using 1
   ext q
   constructor
@@ -164,7 +164,7 @@ theorem exists_analytic_zero_graph {m g g' : ℕ} {F : (Fin m → ℂ) × (Fin g
     exact hasFDerivAt_fst.prodMk hD
   have hc : ContDiffAt ℂ ⊤ Φ (b₀, 0) := hΦ.contDiffAt
   have hinv := hc.to_localInverse hd (by simp)
-  have hs := hc.hasStrictFDerivAt' hd (by simp)
+  have hs := hc.hasStrictFDerivAt hd (by simp)
   set R := hc.localInverse hd (by simp) with hR
   have hΦ0 : Φ (b₀, 0) = (b₀, 0) := Prod.ext rfl h0
   have h1 : ∀ᶠ w in 𝓝 (Φ (b₀, 0)), Φ (R w) = w := hs.eventually_right_inverse

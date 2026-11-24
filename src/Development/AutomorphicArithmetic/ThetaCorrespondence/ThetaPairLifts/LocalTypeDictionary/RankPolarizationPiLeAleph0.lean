@@ -111,7 +111,7 @@ theorem countable_compactOpen (X : Type) [TopologicalSpace X] [SecondCountableTo
     {K : Set X | IsCompact K ∧ IsOpen K}.Countable := by
   classical
   have hB := isBasis_countableBasis X
-  haveI : Countable (countableBasis X) := (countable_countableBasis X).to_subtype
+  have : Countable (countableBasis X) := (countable_countableBasis X).to_subtype
   refine (Set.countable_range fun t : Finset (countableBasis X) => ⋃ b ∈ t, (b : Set X)).mono ?_
   rintro K ⟨hKc, hKo⟩
   obtain ⟨t, ht⟩ := hKc.elim_finite_subcover (fun b : {b : countableBasis X // (b : Set X) ⊆ K} => (b.1 : Set X))
@@ -179,9 +179,9 @@ theorem rank_sb_le_aleph0 (X : Type) [TopologicalSpace X] [SecondCountableTopolo
 theorem rank_sb_localField_le : ∀ {F : Type} [Field F] [NumberField F] (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F)) (κ : Type) [Fintype κ],
     Module.rank ℂ (GlobalTheory.WeilM.SB (κ → Fv F v)) ≤ Cardinal.aleph0 := by
   intro F _ _ v κ _
-  letI := GlobalTheory.LocalData.complRel v
-  haveI := GlobalTheory.LocalData.isLocalField v
-  haveI := GlobalTheory.LocAtTopology.secondCountable_localField (Fv F v)
+  let := GlobalTheory.LocalData.complRel v
+  have := GlobalTheory.LocalData.isLocalField v
+  have := GlobalTheory.LocAtTopology.secondCountable_localField (Fv F v)
   exact rank_sb_le_aleph0 _
 
 end GlobalTheory.SBCount

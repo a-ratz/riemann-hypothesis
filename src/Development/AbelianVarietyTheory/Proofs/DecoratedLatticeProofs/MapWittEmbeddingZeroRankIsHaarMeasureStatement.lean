@@ -68,10 +68,10 @@ namespace GlobalTheory.HaarEmb
 
 theorem map_wittEmbedding_zero_rank_isHaarMeasure : ∀ (D : D7) (S S₀ : HSp D) (d : HypDec S S₀ 0) (μ : Measure (GA D S₀)), μ.IsHaarMeasure → (Measure.map d.emb0 μ).IsHaarMeasure := by
   intro D S S₀ d μ hμ
-  haveI : BorelSpace (GA D S) := ⟨rfl⟩
-  haveI : BorelSpace (GA D S₀) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (GA D S₀) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D S) := ⟨rfl⟩
+  have : BorelSpace (GA D S₀) := ⟨rfl⟩
+  have : IsTopologicalGroup (GA D S₀) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hbkc : Continuous (GlobalTheory.WeilSrc.Zero.back d) := continuous_of_mt S₀ (by
     simp only [GlobalTheory.WeilSrc.Zero.back, mt_ofMat]
     exact (continuous_const.matrix_mul (continuous_mt S)).matrix_mul continuous_const)

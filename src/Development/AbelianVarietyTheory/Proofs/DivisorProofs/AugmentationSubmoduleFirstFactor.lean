@@ -206,7 +206,7 @@ theorem nonempty_emb_of_splitsFully {F E : Type} [Field F] [NumberField F] [Fiel
   have hqne : q ≠ ⊥ := by
     intro h0
     apply v.ne_bot
-    exact Ideal.eq_bot_of_comap_eq_bot h0
+    exact Ideal.eq_bot_of_under_eq_bot h0
   have hg0 : g ≠ 0 := by rintro rfl; apply hqne; rw [hg]; simp
   have hp : (g.natAbs).Prime := by
     have hI : (Ideal.span {((g.natAbs : ℕ) : ℤ)}).IsPrime := hqs ▸ (Ideal.IsPrime.under ℤ v.asIdeal)
@@ -283,7 +283,7 @@ theorem exists_isLinW : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [F
     simp only [GlobalTheory.FinPl.SplitPoint.mem_integer_iff]
     exact hunr x
   have hcoT : ∀ Y, coW G t (uT Y) = 0 := fun Y => coW_eq_zero G t _ (hT Y).2.1
-  haveI : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F _).injective
+  have : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F _).injective
   obtain ⟨ι, hbij, htr, hmu⟩ := GlobalTheory.T.stoneVonNeumann_schwartzBruhat_transverseLagrangians (GlobalTheory.LatVac.psiAt B.ψ v) hψc hunr'
     ((GlobalTheory.LatVac.locCo G.M.co v).comp uT) ((GlobalTheory.LatVac.locCo G.M.co v).comp uM)
     (fun Y Y' => by
@@ -863,7 +863,7 @@ theorem core (hT : IsTriple B G X om om') (v : Pl (F := F)) (t : E →ₐ[F] Fv 
   let c : UA σ G.W.J → ℂ := fun h => if hh : h ∈ UAt σ G.W (evFin F v) then (hS h hh).choose else 0
   have hc : ∀ h (hh : h ∈ UAt σ G.W (evFin F v)), P h (c h) := by
     intro h hh
-    simp only [c, dif_pos hh]
+    simp only [c, dite_eq_left hh]
     exact (hS h hh).choose_spec
   have P1 : P 1 1 := by
     intro φ hφ φ₁ hφ₁ hA Y

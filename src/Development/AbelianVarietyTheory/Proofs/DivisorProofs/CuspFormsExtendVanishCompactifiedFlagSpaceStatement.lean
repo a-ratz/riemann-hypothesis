@@ -116,7 +116,7 @@ theorem not_eventually_re_pos_of_periodic {f : ℂ → ℂ} {M : ℝ} (hM : 0 < 
     Function.Periodic.eventually_differentiableAt_cuspFunction_nhds_ne_zero hM hper hd
   have hp1 : ∀ᶠ q in 𝓝[≠] (0 : ℂ), 0 < (F q).re := by
     filter_upwards [(Function.Periodic.invQParam_tendsto hM).eventually hpos, self_mem_nhdsWithin] with q hq hq0
-    rwa [hF, Function.Periodic.cuspFunction_eq_of_nonzero _ _ hq0]
+    rwa [hF, Function.Periodic.cuspFunction_eq_of_ne_zero _ _ hq0]
   have hd2 : ∀ᶠ q in 𝓝 (0 : ℂ), DifferentiableAt ℂ (fun z => Complex.exp (-F z)) q := by
     filter_upwards [eventually_nhdsWithin_iff.mp hd1] with q hq
     by_cases hq0 : q = 0
@@ -145,14 +145,14 @@ theorem not_tendsto_re_atTop_of_periodic {L : ℂ → ℂ} {T M : ℝ} (hM : 0 <
   have hpos : ∀ᶠ w in imTop, 0 < (L w).re := ht.eventually (eventually_gt_atTop 0)
   classical
   set f : ℂ → ℂ := fun w => if T < w.im then (L w)⁻¹ else 0 with hf
-  have hfe : ∀ w : ℂ, T < w.im → f w = (L w)⁻¹ := fun w hw => if_pos hw
+  have hfe : ∀ w : ℂ, T < w.im → f w = (L w)⁻¹ := fun w hw => ite_eq_left hw
   refine not_eventually_re_pos_of_periodic (f := f) hM ?_ ?_ ?_ ?_
   · intro w
     by_cases hw : T < w.im
     · have hw' : T < (w + M).im := by simpa using hw
       rw [hfe _ hw, hfe _ hw', hper w hw]
     · have hw' : ¬ T < (w + M).im := by simpa using hw
-      simp only [hf, if_neg hw, if_neg hw']
+      simp only [hf, ite_eq_right hw, ite_eq_right hw']
   · filter_upwards [hT, hpos] with w hw hw0
     have hne : L w ≠ 0 := fun h => by simp [h] at hw0
     refine ((hd.differentiableAt (hopen.mem_nhds hw)).inv hne).congr_of_eventuallyEq ?_
@@ -280,7 +280,7 @@ theorem tendsto_val {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     (hb : IsBdArc Z σ φ x ψ r) (hm : ∀ u ∈ Metric.ball (0 : ℂ) r, u ≠ 0 → Matches fr (ψ u) (y u)) (p q : A)
     (hpq : ∀ u ∈ Metric.ball (0 : ℂ) r, u ≠ 0 → ψ u q ≠ 0 ∧ toC (evR Xo c g (y u)) * ψ u q = ψ u p) :
     Tendsto (fun u => toC (evR Xo c g (y u))) (𝓝[≠] 0) (𝓝 0) := by
-  haveI : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
+  have : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
   obtain ⟨k, T, M₀, γ₀, xx, hT, hO₀, hL⟩ := _root_.GlobalTheory.ShFam.ArcLift.exists_orbit_lift E H Dw l Xo c O β Z σ N U A φ x fr ψ r y hσ hU hb.1 hm
   obtain ⟨M, γ, hO, hγ⟩ := _root_.GlobalTheory.ShFam.OrbitUnip.exists_isOrbit_unipotent E N _ T M₀ γ₀ xx hO₀
   have hne : γ ≠ 1 := by
@@ -307,7 +307,7 @@ theorem tendsto_val {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Reci
     rw [hsec.2.1 _ (hγd w hw) b hb1, hsec.2.2 γ hΓ _ (hdom w hw), hχ k γ hΓ]
     simp [ReciprocityTheory.ChartRestriction.G.FD.bchar, hb2]
   · rw [Complex.exp_zero, norm_one, mul_one]
-    have rd : rdU U g k (xx w) = toC (evR Xo c g (U.un k ⟨xx w, h⟩)) := dif_pos h
+    have rd : rdU U g k (xx w) = toC (evR Xo c g (U.un k ⟨xx w, h⟩)) := dite_eq_left h
     show ‖toC (evR Xo c g (y (eTwoPi w)))‖ = ‖rdU U g k (xx w)‖
     rw [rd, GlobalTheory.ShFam.KeyRel.evR_sameLie he hg hl]
 
@@ -365,7 +365,7 @@ theorem arc_bridge : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
     exact congrArg CommRingCat.Hom.hom (Spec.map_injective h1)
   have key : ∀ (u : ℂ) (s : Sp ℂ), (spMap (ψ u) ≫ (show Sp Γ(Y₀ TF.X Z, W) ⟶ Y₀ TF.X Z from hW.fromSpec)) s ∈ U₀ TF.X Z ↔ (spMap (ψ u) ≫ x) s ∉ genBd TF.Y := by
     intro u s
-    haveI := GlobalTheory.LogKS.isIso_fst TF.Y
+    have := GlobalTheory.LogKS.isIso_fst TF.Y
     have e : (spMap (ψ u) ≫ (show Sp Γ(Y₀ TF.X Z, W) ⟶ Y₀ TF.X Z from hW.fromSpec)) s ∈ U₀ TF.X Z ↔ genι TF.Y ((spMap (ψ u) ≫ x) s) ∈ Set.range TF.Y.j := by
       rw [← Scheme.Hom.comp_apply, Category.assoc, ← hx]
       exact Iff.rfl
@@ -387,7 +387,7 @@ theorem arc_bridge : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
     refine ⟨?_, by exact_mod_cast (half_pos this).ne'⟩
     rw [mem_ball_zero_iff, Complex.norm_real, Real.norm_of_nonneg (half_pos this).le]
     exact half_lt_self this
-  haveI : Nonempty (FrPt Xo c (CAt σ)) := ⟨(hy' _ hr).choose⟩
+  have : Nonempty (FrPt Xo c (CAt σ)) := ⟨(hy' _ hr).choose⟩
   choose! yy hyy using hy'
   refine ⟨φ, x, fr, yy, hb, fun u hu h => hyy u ⟨hu, h⟩, fun g u hu h hO hi => ?_⟩
   exact _root_.GlobalTheory.CompHS.BridgeValue.val_sec₀_eq_evR TF Z la σ W hW i φ x hx hz fr hfr (ψ u) (yy u) (hφu u hu) (hyy u ⟨hu, h⟩) g hO hi
@@ -553,7 +553,7 @@ theorem exists_extension_of_arcZero : ∀ (E : Type) [Field E] [NumberField E] [
   have e' : resG _ hPL (m.loc i) * resG _ hPW (p ^ M) = resG _ hPW a := e
   have hφ : Spec.map (Spec.preimage ((show Sp Γ(Y₀ X Z, W) ⟶ Y₀ X Z from hW.fromSpec) ≫ str₀ X Z)) =
       (show Sp Γ(Y₀ X Z, W) ⟶ Y₀ X Z from hW.fromSpec) ≫ str₀ X Z := Spec.map_preimage _
-  letI : Algebra c.F Γ(Y₀ X Z, W) :=
+  let : Algebra c.F Γ(Y₀ X Z, W) :=
     (Spec.preimage ((show Sp Γ(Y₀ X Z, W) ⟶ Y₀ X Z from hW.fromSpec) ≫ str₀ X Z)).hom.toAlgebra
   obtain ⟨b, hab, hb⟩ := exists_eq_mul_pow_of_tendsto_zero c.F Γ(Y₀ X Z, W) hsm σ p a M hp
     fun ψ r hψ hσ h0 h1 => by
@@ -645,7 +645,7 @@ theorem arcPt_mem_basicOpen (hW : IsAffineOpen W) (φ : Γ(Y, W) →+* ℂ) (q :
     (spMap φ ≫ (show Sp Γ(Y, W) ⟶ Y from hW.fromSpec)) s ∈ Y.basicOpen q ↔ φ q ≠ 0 := by
   change (spMap φ) s ∈ hW.fromSpec ⁻¹ᵁ Y.basicOpen q ↔ _
   rw [hW.fromSpec_preimage_basicOpen q]
-  haveI := s.isPrime
+  have := s.isPrime
   have hs : s.asIdeal = ⊥ := Ideal.eq_bot_of_prime _
   change q ∉ (Ideal.comap φ s.asIdeal) ↔ _
   rw [hs]
@@ -701,7 +701,7 @@ theorem exists_quot_along_arc : ∀ {k : Type} [CommRing k] {Y : Scheme.{0}} {p 
     arcPt_top_le hW (ψ (r / 2 : ℝ)) (show s ∈ (⊤ : (Sp ℂ).Opens) from trivial)
   obtain ⟨q, hqle, hqy⟩ := hW.exists_basicOpen_le (V := O ⊓ B.U i) ⟨_, hyO, hWi hyW⟩ hyW
   have hq0 : ψ (r / 2 : ℝ) q ≠ 0 := (arcPt_mem_basicOpen hW _ q s).1 hqy
-  haveI := hW.isLocalization_basicOpen q
+  have := hW.isLocalization_basicOpen q
   obtain ⟨n, a, hna⟩ := IsLocalization.Away.surj q (resG Y hqle (m.loc i))
   obtain ⟨ρ, hρ, hρr, hne⟩ := exists_punctured_ne_zero (hhol q) hu₀ hq0 hr
   refine ⟨ρ, a, q ^ n, hρ, hρr, fun u hu hu0 => ?_⟩
@@ -856,7 +856,7 @@ theorem exists_chart_bd : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     mem_iff_not_mem_basicOpen _ U' g hD
 
   have hs : Smooth (str₀ TF.X Z) := by
-    haveI := hV.1
+    have := hV.1
     exact SmoothOfRelativeDimension.smooth (GlobalTheory.FlagTan.dimFlag Dw) (str₀ TF.X Z)
   obtain ⟨-, hn, hl⟩ := GlobalTheory.isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field c.F _ _ hs
   have := GlobalTheory.IsNormalScheme.of_pred hn
@@ -936,7 +936,7 @@ open GlobalTheory.ShFam GlobalTheory.ShFam.BdArc GlobalTheory.Toroidal GlobalThe
 
 theorem arcZero_cusp : ∀ (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : ℕ) (o : ℝ), Y.Good e o → ∀ (Z : Comp Y.d.Xo₂ Y.d.c₂) (TF : TorFlag Y.d.Xo₂ Y.d.c₂) (la : AllWt.Weight (T.Q.Dw j)), ∀ σ : Y.d.c₂.F →+* ℂ, GoodEmb Y.d.c₂ σ → ∀ f : Cusp Z Y.U la, ArcZero TF.X Z la σ (cuspSec TF.X Z Y.U la f) := by
   intro D T j Y e o hY Z TF la σ hσ f
-  haveI : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
+  have : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
   have hU := hY.unf σ hσ
   obtain ⟨hfW, -⟩ := Submodule.mem_inf.1 f.2
   obtain ⟨-, hhol⟩ := AllWt.mem_cuspW.1 hfW

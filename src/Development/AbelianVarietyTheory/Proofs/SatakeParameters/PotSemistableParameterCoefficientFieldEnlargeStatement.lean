@@ -96,8 +96,8 @@ theorem wdRep_iso (s : ↥L₁.1 →+* ↥L₂.1) (hs : ∀ a, (s a : Om l) = (a
   set_option synthInstance.maxHeartbeats 200000 in
   have hT : ∀ (a : ↥L₁.1) (x : ↥(Dpst P ρ₁)), dQ P hf (a • x) = s a • dQ P hf x := fun a x =>
     Subtype.ext (tensQ_smul P s hfs a x.1)
-  letI := algC ι L₁
-  letI := algC ι L₂
+  let := algC ι L₁
+  let := algC ι L₂
   let Φ := chg (mulD P ρ₁) (mulD P ρ₂) ℂ (urC ι) s (fun a => congrArg ι (hs a)) (dQ P hf) hT (dQ_mulD P hf)
   have hΦρ : ∀ σ y, Φ (wdRho P ι Bw h hj ρ₁ σ y) = wdRho P ι Bw h hj ρ₂ σ (Φ y) := fun σ y =>
     chg_letterMap _ _ _ _ _ _ _ _ _ _ (weilD_mulD Bw h P ρ₁ hj σ) _ (weilD_mulD Bw h P ρ₂ hj σ)
@@ -137,8 +137,8 @@ theorem wdPst_enlarge {l : ℕ} [Fact l.Prime] (P : LocPrime l) (ι : Om l ≃+*
       wdPst P ι Bw h hj (Bw.repE L₁ r₁) := by
   intro hV₁
   have hV₂ := GlobalTheory.PstExt.isPst_enlarge P Bw hL r₁ hV₁
-  haveI := hV₁.finite
-  haveI := hV₂.finite
+  have := hV₁.finite
+  have := hV₂.finite
   obtain ⟨n, b, π, hπ, hsum⟩ := exists_decomp hL (m := m)
   have hf : ∀ g v, incV hL m (Bw.repE L₁ r₁ g v) =
       Bw.repE L₂ (mapRep (IntermediateField.inclusion hL).toRingHom r₁) g (incV hL m v) :=

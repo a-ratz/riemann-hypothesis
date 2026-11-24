@@ -78,13 +78,13 @@ private theorem dirG_unr {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
 private theorem not_dvd_card {Γ O : Type} [Group Γ] [CommRing O] [IsDomain O] (φ : Γ →* Oˣ) {m l : ℕ} [Fact l.Prime]
     (hm : m ≠ 0) (hl : l.Coprime m) (h : φ ^ m = 1) (H : Subgroup Γ) : ¬ l ∣ Nat.card (H.map φ) := by
   intro hdvd
-  haveI : NeZero m := ⟨hm⟩
+  have : NeZero m := ⟨hm⟩
   have hle : H.map φ ≤ rootsOfUnity m O := by
     rintro _ ⟨x, -, rfl⟩
     rw [mem_rootsOfUnity]
     have := congrArg (fun f => f x) h
     simpa [MonoidHom.pow_apply] using this
-  haveI : Finite (H.map φ) := Finite.of_injective _ (Subgroup.inclusion_injective hle)
+  have : Finite (H.map φ) := Finite.of_injective _ (Subgroup.inclusion_injective hle)
   obtain ⟨y, hy⟩ := exists_prime_orderOf_dvd_card' (G := H.map φ) l hdvd
   have hym : orderOf y ∣ m := by
     apply orderOf_dvd_of_pow_eq_one

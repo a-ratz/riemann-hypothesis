@@ -78,15 +78,15 @@ variable [TopologicalSpace Γ] [IsTopologicalGroup Γ] [TopologicalSpace Γ'] [I
 
 theorem relIndex_ne_zero {K L : Subgroup Γ} (hK : IsCompact (K : Set Γ)) (hL : IsOpen (L : Set Γ)) :
     L.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  have ho : IsOpen ((L.subgroupOf K : Subgroup K) : Set K) := hL.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen (L.subgroupOf K) ho
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have ho : IsOpen ((L.subgroupOf K : Subgroup K) : Set K) := hL.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen (L.subgroupOf K) ho
   exact Subgroup.index_ne_zero_of_finite
 
 theorem hint_lin {K L : Subgroup Γ} {C : Set Γ} (hK : IsCompact (K : Set Γ)) (hL : IsOpen (L : Set Γ)) (hLK : L ≤ K)
     (hC : IsCompact C) : ∃ (T : Finset (Γ ⧸ L)) (c : ℂ), ∀ u : Γ → ℂ, (∀ l ∈ L, ∀ x, u (x * l) = u x) →
       (∀ x, u x ≠ 0 → x ∈ C) → hint K u = c * ∑ q ∈ T, u q.out := by
-  haveI : DiscreteTopology (Γ ⧸ L) := QuotientGroup.discreteTopology hL
+  have : DiscreteTopology (Γ ⧸ L) := QuotientGroup.discreteTopology hL
   have hf : ((QuotientGroup.mk : Γ → Γ ⧸ L) '' C).Finite :=
     (hC.image QuotientGroup.continuous_mk).finite_of_discrete
   refine ⟨hf.toFinset, ((L.relIndex K : ℕ) : ℂ)⁻¹, fun u hu hs => ?_⟩

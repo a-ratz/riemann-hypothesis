@@ -74,14 +74,14 @@ theorem norm_lt_of_isRoot_map_eval {n : ℕ} {P : Polynomial (MvPolynomial (Fin 
   have hlt := Polynomial.IsRoot.norm_lt_cauchyBound hQm.ne_zero ha
   have hcb : Polynomial.cauchyBound (P.map (eval x)) ≤
       (∑ j ∈ Finset.range P.natDegree, ‖eval x (P.coeff j)‖₊) + 1 := by
-    rw [Polynomial.cauchyBound, hQm.leadingCoeff, nnnorm_one, div_one, hPm.natDegree_map]
+    rw [Polynomial.cauchyBound, hQm.leadingCoeff, nnNorm_one, div_one, hPm.natDegree_map]
     gcongr
     refine Finset.sup_le fun j hj => ?_
     rw [Polynomial.coeff_map]
     exact Finset.single_le_sum (f := fun j => ‖eval x (P.coeff j)‖₊) (fun _ _ => zero_le) hj
   have h := hlt.trans_le hcb
-  rw [← NNReal.coe_lt_coe, NNReal.coe_add, NNReal.coe_sum, coe_nnnorm, NNReal.coe_one] at h
-  simp only [coe_nnnorm] at h
+  rw [← NNReal.coe_lt_coe, NNReal.coe_add, NNReal.coe_sum, coe_nnNorm, NNReal.coe_one] at h
+  simp only [coe_nnNorm] at h
   linarith
 
 theorem NormalModelProper.proof : NormalModelProper.Statement := by

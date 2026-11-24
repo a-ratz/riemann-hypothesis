@@ -93,10 +93,10 @@ theorem nonempty_ringHom_complex (K : Type) [Field K] [CharZero K] (h : #K ≤ �
     rw [← Cardinal.mk_real]
     exact Cardinal.mk_le_of_injective (MvPolynomial.X_injective (σ := ℝ) (R := K))
   have hF : #(FractionRing (MvPolynomial ℝ K)) = 𝔠 := (FractionRing.cardinalMk (MvPolynomial ℝ K)).trans (le_antisymm hP1 hP2)
-  haveI : CharZero (FractionRing (MvPolynomial ℝ K)) :=
+  have : CharZero (FractionRing (MvPolynomial ℝ K)) :=
     charZero_of_injective_ringHom (f := (algebraMap (MvPolynomial ℝ K) (FractionRing (MvPolynomial ℝ K))).comp MvPolynomial.C)
       ((IsFractionRing.injective (MvPolynomial ℝ K) (FractionRing (MvPolynomial ℝ K))).comp (MvPolynomial.C_injective ℝ K))
-  haveI : CharZero (AlgebraicClosure (FractionRing (MvPolynomial ℝ K))) := charZero_of_injective_ringHom (algebraMap (FractionRing (MvPolynomial ℝ K)) (AlgebraicClosure (FractionRing (MvPolynomial ℝ K)))).injective
+  have : CharZero (AlgebraicClosure (FractionRing (MvPolynomial ℝ K))) := charZero_of_injective_ringHom (algebraMap (FractionRing (MvPolynomial ℝ K)) (AlgebraicClosure (FractionRing (MvPolynomial ℝ K)))).injective
   have hΩ1 : #(AlgebraicClosure (FractionRing (MvPolynomial ℝ K))) ≤ 𝔠 := (Algebra.IsAlgebraic.cardinalMk_le_max (FractionRing (MvPolynomial ℝ K)) (AlgebraicClosure (FractionRing (MvPolynomial ℝ K)))).trans
     (max_le hF.le Cardinal.aleph0_le_continuum)
   have hΩ2 : 𝔠 ≤ #(AlgebraicClosure (FractionRing (MvPolynomial ℝ K))) := hF ▸ Cardinal.mk_le_of_injective (algebraMap (FractionRing (MvPolynomial ℝ K)) (AlgebraicClosure (FractionRing (MvPolynomial ℝ K)))).injective
@@ -129,14 +129,14 @@ theorem GlobalTheory.FixedCx.exists_fixed_complex_point : ∀ (E : Type) [Field 
   simp only [Scheme.SpecToEquivOfField_symm_apply] at hx
   have hι : Xo.X.fromSpecResidueField p ≫ ρ = Xo.X.fromSpecResidueField p :=
     cancel_spec_field φ.hom _ _ (by rw [Category.assoc] at hx; exact hx)
-  haveI := Xo.smooth
-  haveI := SmoothOfRelativeDimension.smooth Dw.dim Xo.s
+  have := Xo.smooth
+  have := SmoothOfRelativeDimension.smooth Dw.dim Xo.s
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (Xo.X.fromSpecResidueField p ≫ Xo.s)
   have hess := GlobalTheory.SS.essFiniteType_residueField_of_locallyOfFiniteType Xo.s p ψ hψ
-  letI : Algebra (KA l) (Xo.X.residueField p) := ψ.hom.toAlgebra
-  haveI : Algebra.EssFiniteType (KA l) (Xo.X.residueField p) := hess
-  haveI : CharZero (KA l) := charZero_of_injective_ringHom (algebraMap ℚ (KA l)).injective
-  haveI : CharZero (Xo.X.residueField p) := charZero_of_injective_ringHom ψ.hom.injective
+  let : Algebra (KA l) (Xo.X.residueField p) := ψ.hom.toAlgebra
+  have : Algebra.EssFiniteType (KA l) (Xo.X.residueField p) := hess
+  have : CharZero (KA l) := charZero_of_injective_ringHom (algebraMap ℚ (KA l)).injective
+  have : CharZero (Xo.X.residueField p) := charZero_of_injective_ringHom ψ.hom.injective
   have hK : #(KA l) ≤ 𝔠 := (Cardinal.mk_subtype_le _).trans Cardinal.mk_complex.le
   have hc : #(Xo.X.residueField p) ≤ 𝔠 :=
     mk_le_of_essFiniteType.trans (max_le hK Cardinal.aleph0_le_continuum)

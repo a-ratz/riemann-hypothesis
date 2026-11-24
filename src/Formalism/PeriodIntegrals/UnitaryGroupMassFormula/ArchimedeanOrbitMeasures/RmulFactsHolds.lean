@@ -56,8 +56,8 @@ open scoped TensorProduct
 
 theorem rmulFacts_holds : RmulFacts := by
   intro D X
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : BorelSpace (TupI X) :=
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : BorelSpace (TupI X) :=
     PI.AprimeInfT.borelSpace_tup (F := X.B.I.F) (E := X.B.I.E) (Ainf X.B.I.F) (D.R.rS + 1 + D.R.rS)
   have hcont : ∀ a : MfI X, Continuous (rmulT X a) := by
     intro a

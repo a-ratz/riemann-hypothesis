@@ -69,7 +69,7 @@ theorem exists_universal (q : ℕ) [NeZero q] :
       rw [aeval_def] at hz
       simpa [eq_intCast] using hz
     exact ⟨AdjoinRoot.lift _ z h, AdjoinRoot.lift_root h⟩
-  haveI hdom : IsDomain (AdjoinRoot (cyclotomic q ℤ)) :=
+  have hdom : IsDomain (AdjoinRoot (cyclotomic q ℤ)) :=
     AdjoinRoot.isDomain_of_prime (cyclotomic.irreducible hq).prime
   refine ⟨AdjoinRoot (cyclotomic q ℤ), inferInstance, hdom, AdjoinRoot.root _, ?_, hlift⟩
   obtain ⟨ψ, hψ⟩ := hlift ℂ (Complex.exp (2 * Real.pi * Complex.I / q)) (by
@@ -78,7 +78,7 @@ theorem exists_universal (q : ℕ) [NeZero q] :
       (isRoot_cyclotomic_iff).2 hp
     rw [aeval_def, eval₂_eq_eval_map, map_cyclotomic]
     exact this)
-  haveI : NeZero ((q : ℕ) : AdjoinRoot (cyclotomic q ℤ)) := ⟨fun h0 => by
+  have : NeZero ((q : ℕ) : AdjoinRoot (cyclotomic q ℤ)) := ⟨fun h0 => by
     have := congrArg ψ h0
     rw [map_natCast, map_zero] at this
     exact NeZero.ne q (by exact_mod_cast this)⟩

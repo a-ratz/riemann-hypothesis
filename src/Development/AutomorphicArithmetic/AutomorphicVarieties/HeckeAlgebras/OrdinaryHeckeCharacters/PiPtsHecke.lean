@@ -245,7 +245,7 @@ private theorem piPts_sum {H Y V : Type} [Group H] [TopologicalSpace H] [IsTopol
       ∀ y, j y ∈ Z) : IsoSum π ⊤ σ := by
   intro F _
   have := PiLin.iso_sub σ.ρ π ρ σ.irred j hj he (h _ ?_) F
-  · refine SetLike.le_def.1 (iSup_le fun f => ?_) this
+  · refine IsConcreteLE.le_iff.1 (iSup_le fun f => ?_) this
     exact le_iSup_of_le ⟨f.1, f.2, le_top⟩ le_rfl
   · rintro W σ' hW ⟨e⟩
     refine le_trans hW (iSup_le fun f => ?_)
@@ -265,7 +265,7 @@ theorem UpperTheory.V.Hi.piPts :
   have hord : ∀ K, H.MK θ a K ≤ H.X.Ord (H.τA A) θ (H.lev K) := fun K => inf_le_left
   obtain ⟨K0, hK0⟩ := dir {z}
   replace hK0 := hord K0 (hK0 z (Finset.mem_singleton_self z))
-  haveI := (hcomm K0).2.2.1
+  have := (hcomm K0).2.2.1
   let b := Module.Free.chooseBasis A (H.X.Ord (H.τA A) θ (H.lev K0))
   obtain ⟨i0, hi0⟩ : ∃ i, b.repr ⟨z, hK0⟩ i ≠ 0 := by
     by_contra hcon
@@ -298,7 +298,7 @@ theorem UpperTheory.V.Hi.piPts :
       ∀ Y : H.Part ι lam ξ, Y.Y ⊓ EK K ≠ ⊥ → ∃ x : R →+* Qbar l, D.map x = W.GDet.ofRep (W.mat Y.r) ∧
         ∀ t (F : EK K), (F : Fin H.m → H.X.Fn ℂ d) ∈ Y.Y → act t F = ι (x t) • F := by
     intro K hzK
-    haveI : Fact (CommOn (H.MK θ a K) (H.op A)) := ⟨((hcomm K).2.2.2 a).1⟩
+    have : Fact (CommOn (H.MK θ a K) (H.op A)) := ⟨((hcomm K).2.2.2 a).1⟩
     obtain ⟨_, -⟩ := hiAlg L Ω l n c H hH A θ hθ a K fun h => hz (Subtype.ext (by rwa [h] at hzK))
     obtain ⟨f, ψ, huniv, hf⟩ := hα K
     obtain ⟨hE, act, a1, a2, -, -, a5⟩ := partAct0 Lit L Ω l n c H hH A θ hθ ι P hP x0 lam d ξ c0 sp hsp hlam a K (EK K) rfl

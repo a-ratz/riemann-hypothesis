@@ -227,7 +227,7 @@ theorem exists_transport [MeasurableSpace (GL (Fin n) F')] [BorelSpace (GL (Fin 
         satakeTransform m H = satakeTransform m' H' := by
   borelize (GL (Fin n) F)
   let m : Measure (GL (Fin n) F) := Measure.map e.symm m'
-  haveI hm : m.IsHaarMeasure := (e.symm.toMulEquiv).isHaarMeasure_map m' e.symm.continuous e.continuous
+  have hm : m.IsHaarMeasure := (e.symm.toMulEquiv).isHaarMeasure_map m' e.symm.continuous e.continuous
   have hset : (e.symm ⁻¹' (integralGL F n : Set (GL (Fin n) F))) = (integralGL F' n : Set (GL (Fin n) F')) := by
     ext x
     simp only [Set.mem_preimage, SetLike.mem_coe]
@@ -271,16 +271,16 @@ private theorem haar_uniq {G : Type*} [Group G] [TopologicalSpace G] [IsTopologi
     (hm : m.IsHaarMeasure) (hm' : m'.IsHaarMeasure) (h : m K = 1) (h' : m' K = 1) : m = m' := by
   have e := Measure.isMulLeftInvariant_eq_smul m m'
   have e2 : m K = (Measure.haarScalarFactor m m' • m') K := by rw [← e]
-  rw [h, Measure.smul_apply, h', ENNReal.smul_def, smul_eq_mul, mul_one] at e2
+  rw [h, smul_apply, h', ENNReal.smul_def, smul_eq_mul, mul_one] at e2
   have e3 : Measure.haarScalarFactor m m' = 1 := by exact_mod_cast e2.symm
   rw [e3, one_smul] at e
   exact e
 
 private theorem gl_sc (R : Type*) [CommRing R] [TopologicalSpace R] [IsTopologicalRing R]
     [SecondCountableTopology R] (n : ℕ) : SecondCountableTopology (GL (Fin n) R) := by
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → R))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
@@ -294,7 +294,7 @@ private theorem sph_at [ms : MeasurableSpace (GL (Fin n) (v.adicCompletion K))]
       satakeTransform m H = polyEmb (n := n) (MvPolynomial.aeval (fun i : Fin n => MvPolynomial.esymm (Fin n) ℂ (i + 1)) p) := by
   obtain ⟨ms', bs', m', hm', h1', H, hH, S⟩ := hs
   obtain rfl : ms' = ms := bs'.measurable_eq.trans bs.measurable_eq.symm
-  haveI := gl_sc (v.adicCompletion K) n
+  have := gl_sc (v.adicCompletion K) n
   obtain rfl := haar_uniq hm hm' h1 h1'
   exact ⟨H, hH, S⟩
 
@@ -570,7 +570,7 @@ private theorem haar_eq {G : Type} [Group G] [TopologicalSpace G] [IsTopological
     {A : Set G} (hm : m A = 1) (hm' : m' A = 1) : m' = m := by
   have h1 := Measure.isMulLeftInvariant_eq_smul m' m
   have h2 := congrArg (fun μ : Measure G => μ A) h1
-  simp only [Measure.smul_apply, hm, hm'] at h2
+  simp only [smul_apply, hm, hm'] at h2
   have h3 : Measure.haarScalarFactor m' m = 1 := by
     simpa [ENNReal.smul_def] using h2.symm
   rw [h1, h3, one_smul]
@@ -600,11 +600,11 @@ theorem UpperTheory.ConvolutionTheory.H.locHeckeInert :
   obtain ⟨w', hw'⟩ := placeUniq_holds F E hp v hsp
   have hw : ∀ x : PlacesOver E v, x = w := fun x => (hw' x).trans (hw' w).symm
   obtain ⟨i1, i2, i3, i4, s, hs, hr, h1, h2, h3⟩ := placeData_holds F E σ hσ v w hw
-  letI : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
-  haveI : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
-  letI mv : MeasurableSpace (GL (Fin n) (v.adicCompletion F)) := borel _
-  haveI bv : BorelSpace (GL (Fin n) (v.adicCompletion F)) := ⟨rfl⟩
-  haveI : CharZero (v.adicCompletion F) := algebraRat.charZero _
+  let : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
+  have : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
+  let mv : MeasurableSpace (GL (Fin n) (v.adicCompletion F)) := borel _
+  have bv : BorelSpace (GL (Fin n) (v.adicCompletion F)) := ⟨rfl⟩
+  have : CharZero (v.adicCompletion F) := algebraRat.charZero _
   obtain ⟨μE, hμE, vE⟩ := haar_ex _ (unitSB_holds (w.1.adicCompletion E) n).2.1 (unitSB_holds (w.1.adicCompletion E) n).1
   obtain ⟨μF, hμF, vF⟩ := haar_ex _ (unitSB_holds (v.adicCompletion F) n).2.1 (unitSB_holds (v.adicCompletion F) n).1
   obtain ⟨z, hz⟩ := exists_point t ht h0
@@ -659,7 +659,7 @@ private theorem sph_unique {K : Type} [Field K] [NumberField K] {n : ℕ} (w : P
   obtain rfl : μ1 = μ2 := by
     have h := Measure.isMulLeftInvariant_eq_smul μ1 μ2
     have h3 := congrArg (fun m : Measure _ => m (GLnLocal.integralGL (w.adicCompletion K) n)) h
-    simp only [Measure.smul_apply, hμ1, hμ2] at h3
+    simp only [smul_apply, hμ1, hμ2] at h3
     have h4 : Measure.haarScalarFactor μ1 μ2 = 1 := by
       have : ((Measure.haarScalarFactor μ1 μ2 : NNReal) : ENNReal) = 1 := by
         rw [h3]; simp [ENNReal.smul_def]
@@ -747,8 +747,8 @@ theorem UpperTheory.ConvolutionTheory.GM.locAll :
   · refine UpperTheory.ConvolutionTheory.L1.locHeckeSplit F E σ hσ hp n hn v hs (fun w => if w.1 ∈ κ then γ w.1 * p w.1 else 1)
       (fun w => h w.1) f (fun w => ?_) ?_
     · by_cases hw : w.1 ∈ κ
-      · simpa only [if_pos hw] using hh _ hw
-      · simp only [if_neg hw, hh' _ hw]
+      · simpa only [ite_eq_left hw] using hh _ hw
+      · simp only [ite_eq_right hw, hh' _ hw]
         exact (sphEx E n hn w.1).2.1
     · rw [finprod_eq_prod_of_fintype]
       convert hf using 2 with w
@@ -761,9 +761,9 @@ theorem UpperTheory.ConvolutionTheory.GM.locAll :
       exact finprod_eq_single _ w fun b hb => absurd (hw b) hb
     rw [e]
     by_cases hk : w.1 ∈ κ
-    · rw [if_pos hk, resDeg_inert v hv w hw] at hf
+    · rw [ite_eq_left hk, resDeg_inert v hv w hw] at hf
       exact hγ2 w.1 hk v w.2 hs (p w.1) (hpD _ hk) _ f (hh _ hk) hf
-    · rw [if_neg hk] at hf
+    · rw [ite_eq_right hk] at hf
       rw [sph_unique v 1 _ _ hf (sphEx F n hn v).2.1, hh' _ hk]
       have e2 : (fun g => (GLnLocal.integralGL (w.1.adicCompletion E) n : Set _).indicator
           (1 : GL (Fin n) (w.1.adicCompletion E) → ℂ) (cmp w g)) =

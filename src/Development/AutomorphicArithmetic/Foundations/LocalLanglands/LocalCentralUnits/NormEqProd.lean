@@ -125,9 +125,9 @@ theorem res_twFD (τ : FDRep ℂ (Gn g n)) (χ₀ : (ZMod g)ˣ →* ℂˣ) {a : 
   refine Finset.sum_congr rfl fun x _ => ?_
   by_cases hx : InPar a (x : Mt g n) ∧ tl a (x : Mt g n) = ((1 : Gn g a) : Mt g a) ∧
       br a (n - a) (x : Mt g n) = ((1 : Gn g (n - a)) : Mt g (n - a))
-  · rw [if_pos hx, if_pos hx, character_twFD,
+  · rw [ite_eq_left hx, ite_eq_left hx, character_twFD,
       det_eq_one_of_mem ((GlobalTheory.SerSys.TameGen.mem_unipRadical_iff ha x).2 hx), map_one, Units.val_one, one_mul]
-  · rw [if_neg hx, if_neg hx]
+  · rw [ite_eq_right hx, ite_eq_right hx]
 
 theorem isCusp_twFD (τ : FDRep ℂ (Gn g n)) (χ₀ : (ZMod g)ˣ →* ℂˣ) (hτ : IsCusp τ.character) :
     IsCusp (twFD τ χ₀).character := by
@@ -141,9 +141,9 @@ theorem det_eq_norm (K : Type) [Field K] [Algebra (ZMod g) K] (hK : Nat.card K =
     (hy : Irreducible (y : Mt g n).charpoly) (z : Kˣ) (hz : aeval (z : K) (y : Mt g n).charpoly = 0) :
     Matrix.GeneralLinearGroup.det y = Units.map (Algebra.norm (ZMod g) : K →* ZMod g) z := by
   have hg : 1 < g := (Fact.out : g.Prime).one_lt
-  haveI : Finite K := Nat.finite_of_card_ne_zero (by rw [hK]; exact pow_ne_zero _ (by omega))
-  letI : Fintype K := Fintype.ofFinite K
-  haveI : Module.Finite (ZMod g) K := by
+  have : Finite K := Nat.finite_of_card_ne_zero (by rw [hK]; exact pow_ne_zero _ (by omega))
+  let : Fintype K := Fintype.ofFinite K
+  have : Module.Finite (ZMod g) K := by
     first
     | exact Module.finite_of_finite (ZMod g)
     | exact inferInstance
@@ -271,7 +271,7 @@ private theorem norm_eq_prod {g : ℕ} [Fact g.Prime] {n : ℕ} {K : Type} [Fiel
     (hK : Nat.card K = g ^ n) (hn : 0 < n) (z : Kˣ) :
     algebraMap (ZMod g) K (Algebra.norm (ZMod g) (z : K)) = ∏ j ∈ Finset.range n, ((z ^ g ^ j : Kˣ) : K) := by
   have hg : 2 ≤ g := (Fact.out : g.Prime).two_le
-  haveI : Finite K := Nat.finite_of_card_ne_zero (by rw [hK]; exact pow_ne_zero _ (by omega))
+  have : Finite K := Nat.finite_of_card_ne_zero (by rw [hK]; exact pow_ne_zero _ (by omega))
   rw [FiniteField.algebraMap_norm_eq_pow, hK, Nat.card_zmod]
   simp only [Units.val_pow_eq_pow_val]
   rw [Finset.prod_pow_eq_pow_sum, Nat.geomSum_eq hg]
@@ -310,7 +310,7 @@ end UpperTheory.Zero.LLC
 open UpperTheory.Zero.LLC in
 theorem UpperTheory.Zero.LLC.parTw : UpperTheory.Zero.LLC.ParTw := by
   intro E Ω _ _ _ _ _ A w h a ha g _ i hi y hy hdz V hV χ hχ ht
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_ringHom (f := i.toRingHom) i.injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_ringHom (f := i.toRingHom) i.injective
   obtain ⟨⟨ω₀, -, hω₀, -⟩, htw, h1, -⟩ := clBasic (w.adicCompletion E) y
   obtain ⟨⟨ω₁, -, -, huniq⟩, -⟩ := clBasic (w.adicCompletion E) (y.tw χ hχ)
   obtain ⟨hd, -, -, hmul, hcen⟩ := htw χ hχ
@@ -329,7 +329,7 @@ theorem UpperTheory.Zero.LLC.parTw : UpperTheory.Zero.LLC.ParTw := by
     obtain ⟨χ₀, hχ₀⟩ := exists_red i' hi' χ ht
     have hrank : Module.finrank (ZMod g') D.K = n := ((resEx E Ω A w h g' i' hi' n hn D).2 R hR).rank
     have hK : Nat.card D.K = g' ^ n := by
-      haveI : Module.Finite (ZMod g') D.K := Module.finite_of_finrank_pos (by omega)
+      have : Module.Finite (ZMod g') D.K := Module.finite_of_finrank_pos (by omega)
       rw [Module.natCard_eq_pow_finrank (K := ZMod g'), Nat.card_zmod, hrank]
     have hχi : IsSmoothChar χ⁻¹ := IsSmoothChar.inv hχ
     have hl : ∀ (u : ℤ_[g']ˣ) (x : (w.adicCompletion E)ˣ), (x : w.adicCompletion E) = i' ((u : ℤ_[g']) : ℚ_[g']) →

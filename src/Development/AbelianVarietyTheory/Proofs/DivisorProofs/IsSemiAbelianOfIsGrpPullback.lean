@@ -64,11 +64,11 @@ theorem isSemiAbelian_of_isGrpPullback {S S' : Scheme.{0}} {G : Over S} [GrpObj 
     [IsCommMonObj G'] {f : S' ⟶ S} {β : G'.left ⟶ G.left} (h : IsGrpPullback G' G f β) (hG : IsSemiAbelian G) :
     IsSemiAbelian G' := by
   obtain ⟨e, he, -⟩ := grpPullback_iso h (isGrpPullback_pullback G f)
-  haveI := he
+  have := he
   exact GlobalTheory.isSemiAbelian_of_grpIso e (IsSemiAbelian.pullback _ G hG)
 
 theorem mono_jK (R : Type) [CommRing R] [IsDomain R] : Mono (jK R) := by
-  haveI : Scheme.Spec.IsRightAdjoint := ΓSpec.adjunction.isRightAdjoint
+  have : Scheme.Spec.IsRightAdjoint := ΓSpec.adjunction.isRightAdjoint
   have : Mono (Scheme.Spec.map (CommRingCat.ofHom (algebraMap R (FractionRing R))).op) := inferInstance
   exact this
 
@@ -88,9 +88,9 @@ theorem GlobalTheory.Mum.evenOn_of_trait_unif : ∀ (R : Type) [CommRing R] [IsD
   obtain ⟨W₁, _, _, _, iw, φ₁, -, hW₁, hiwi, -, hiwl, hφ₁i, hφ₁l, hcomm, -, -⟩ :=
     GlobalTheory.T.exists_finite_complete_trait_extension_of_base R W R' hW φ hφi hφl ρ hfin (Kb W) e he
   have hAW : AdmBase W (maximalIdeal W) := by
-    haveI := hW.1; exact ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
+    have := hW.1; exact ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
   have hAW₁ : AdmBase W₁ (maximalIdeal W₁) := by
-    haveI := hW₁.1; exact ⟨inferInstance, inferInstance, inferInstance, hW₁.2.1⟩
+    have := hW₁.1; exact ⟨inferInstance, inferInstance, inferInstance, hW₁.2.1⟩
   have hGW' : IsSemiAbelian GW := isSemiAbelian_of_isGrpPullback hGW hG
   have hG₁' : IsSemiAbelian G₁ := isSemiAbelian_of_isGrpPullback hG₁ hG
 
@@ -147,7 +147,7 @@ theorem GlobalTheory.Mum.evenOn_of_trait_unif : ∀ (R : Type) [CommRing R] [IsD
     refine ⟨pullback.lift _ (pullback.snd _ _ ≫ GlobalTheory.ArcPull.genMap hφ₁i) ?_, pullback.lift_fst _ _ _⟩
     rw [Category.assoc, hβ2, ← Category.assoc, c2, Category.assoc, Category.assoc, e2]
   have hkk : kW ≫ κ = kG ≫ κ₁ := by
-    haveI := mono_jK R
+    have := mono_jK R
     apply (cancel_mono (pullback.fst G.hom (jK R))).1
     rw [Category.assoc, Category.assoc, hκ, hκ₁, ← Category.assoc, ← Category.assoc, hkW, hkG, Category.assoc,
       Category.assoc, hβ1]
@@ -170,10 +170,10 @@ theorem GlobalTheory.Mum.evenOn_of_trait_unif : ∀ (R : Type) [CommRing R] [IsD
       (LBIso.trans (pull_isLB UW.LG.isLB _) hLg (pull_isLB (pull_isLB P.L.isLB _) _) gb
         (LBIso.trans hLg (pull_isLB P.L.isLB _) (pull_isLB (pull_isLB P.L.isLB _) _) gc.symm gd))
 
-  haveI : IsNoetherianRing W₁ := hAW₁.1
-  haveI : IsIntegrallyClosed W₁ := hAW₁.2.2.1
-  haveI : Smooth ((Over.pullback (specOf iw)).obj GW).hom := hGW₁.smooth
-  haveI : GeometricallyIntegral ((Over.pullback (specOf iw)).obj GW).hom :=
+  have : IsNoetherianRing W₁ := hAW₁.1
+  have : IsIntegrallyClosed W₁ := hAW₁.2.2.1
+  have : Smooth ((Over.pullback (specOf iw)).obj GW).hom := hGW₁.smooth
+  have : GeometricallyIntegral ((Over.pullback (specOf iw)).obj GW).hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hGW₁.smooth hGW₁.geomConnected
   have hLB : LBIso U''.LG.L (P.L.L.pull β'') :=
     GlobalTheory.Mum.lbIso_of_generic_local W₁ _ (eSec ((Over.pullback (specOf iw)).obj GW))

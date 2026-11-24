@@ -48,14 +48,14 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.W.lamEx :
     LocCFTAll → LamEx := by
   intro h l hl L Ω _ _ _ _ _ _ s V c n r
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
-  haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : CharP (ResidueField ℤ_[l]) l :=
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+  have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : CharP (ResidueField ℤ_[l]) l :=
     charP_of_injective_ringHom (f := (PadicInt.residueField (p := l)).symm.toRingHom)
       (PadicInt.residueField (p := l)).symm.injective l
-  haveI : CharP (ResidueField c.O) l :=
+  have : CharP (ResidueField c.O) l :=
     charP_of_injective_ringHom (algebraMap (ResidueField ℤ_[l]) (ResidueField c.O)).injective l
   obtain ⟨d₀, hd, hA⟩ := h l L Ω s
   let d : V.frame.Vl → ℕ := d₀

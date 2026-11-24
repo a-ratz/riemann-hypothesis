@@ -84,13 +84,13 @@ theorem lintegral_fun_norm {E : Type*} [NormedAddCommGroup E] [InnerProductSpace
         simp
     _ = μ.toSphere univ * ∫⁻ y : Ioi (0 : ℝ), F y ∂(Measure.volumeIoiPow (Module.finrank ℝ E - 1)) := by
         rw [lintegral_prod (fun p : (Metric.sphere (0 : E) 1) × Ioi (0 : ℝ) => F (p.2 : ℝ))
-          (hF.comp (measurable_subtype_coe.comp measurable_snd)).aemeasurable]
+          (hF.comp (measurable_subtypeVal.comp measurable_snd)).aemeasurable]
         dsimp only
         rw [lintegral_const, mul_comm]
     _ = _ := by
         have hw := lintegral_withDensity_eq_lintegral_mul (Measure.comap Subtype.val volume)
           (f := fun r : Ioi (0 : ℝ) => ENNReal.ofReal ((r : ℝ) ^ (Module.finrank ℝ E - 1))) (by fun_prop)
-          (g := fun y : Ioi (0 : ℝ) => F y) (hF.comp measurable_subtype_coe)
+          (g := fun y : Ioi (0 : ℝ) => F y) (hF.comp measurable_subtypeVal)
         rw [Measure.volumeIoiPow, hw]
         simp only [Pi.mul_apply, Function.comp_apply]
         rw [lintegral_subtype_comap measurableSet_Ioi (fun y : ℝ => ENNReal.ofReal (y ^ (Module.finrank ℝ E - 1)) * F y)]
@@ -281,7 +281,7 @@ theorem polarHyp : PolarHyp := by
         rw [hF2]; have : 0 ≤ T * ρ ^ 2 := by positivity
         linarith
       simp only [hwR]
-      rw [if_pos hle, hF2]
+      rw [ite_eq_left hle, hF2]
       congr 1; ring
     have hHF : Hh F = H ρ := by
       have h1 : Real.sqrt ((F ^ 2 - T * T') / T) = ρ := by

@@ -241,7 +241,7 @@ theorem UpperTheory.V.Th.Coc.flagC :
       rw [(flagC_up_mul hS hT).2, Matrix.diagonal_apply_eq, (hdg i).1, (hdg i).2]
     · rw [hST i j h, Matrix.diagonal_apply_ne _ h]
   have hdet : S.det ≠ 0 := by
-    rw [Matrix.det_of_upperTriangular (fun i j h => hS i j h)]
+    rw [det_of_isUpperTriangular (fun i j h => hS i j h)]
     exact Finset.prod_ne_zero_iff.2 fun i _ => by rw [(hdg i).1]; exact hΔ i
   have hE : ∀ i j, j < i → Matrix.diagonal e i j = 0 := fun i j h => Matrix.diagonal_apply_ne _ h.ne'
   have h1 : S * T * Matrix.diagonal e = d • (1 : Matrix (Fin n) (Fin n) O) := by
@@ -848,7 +848,7 @@ theorem UpperTheory.V.Th.Coc.gma :
   intro n O R G _ _ _ _ _ _ D χ hn hχ hred
   obtain ⟨E, _, _, q, DE, hsurj, hDE, hCH, -⟩ := chQuot D.toDet
   obtain ⟨π0, hs0, -, -, hchi0⟩ := CA.f_chars χ hχ
-  letI : Algebra R (ResidueField O) := (res O R : R →+* ResidueField O).toAlgebra
+  let : Algebra R (ResidueField O) := (res O R : R →+* ResidueField O).toAlgebra
   have hal : algebraMap R (ResidueField O) = (res O R : R →+* ResidueField O) := rfl
   let ρ : MonoidAlgebra R G →ₐ[R] (Fin n → ResidueField O) :=
     (π0.restrictScalars R).comp (MonoidAlgebra.mapAlgHom G (Algebra.ofId R (ResidueField O)))
@@ -886,7 +886,7 @@ theorem UpperTheory.V.Th.Coc.gma :
   have hchiE : ∀ x, (DE.chi x).map (algebraMap R (ResidueField O)) = ∏ i, (Polynomial.X - Polynomial.C (π x i)) := fun x => by
     obtain ⟨y, rfl⟩ := hsurj x
     rw [hπ, hal, hchi]
-  haveI : IsLocalHom (algebraMap R (ResidueField O)) := ⟨fun a ha => by
+  have : IsLocalHom (algebraMap R (ResidueField O)) := ⟨fun a ha => by
     by_contra hn
     exact ha.ne_zero ((res_eq_zero_iff O R a).2 hn)⟩
   obtain ⟨-, e, he, -⟩ := CA.f_gma DE π hCH hπs hchiE
@@ -1476,7 +1476,7 @@ theorem UpperTheory.V.Th.coc :
   choose c₁ hc₁ hloc using fun v => locAt y v
   have h2O : (2 : O) ≠ 0 := by
     intro e
-    haveI := hO.char
+    have := hO.char
     have h3 : ((2 : ℕ) : ResidueField O) = 0 := by
       rw [← map_natCast (residue O), Nat.cast_ofNat, e, map_zero]
     exact h2 ((Nat.prime_dvd_prime_iff_eq hl.out Nat.prime_two).1 ((CharP.cast_eq_zero_iff _ l 2).1 h3))
@@ -1487,7 +1487,7 @@ theorem UpperTheory.V.Th.coc :
   have hsurj : Function.Surjective h.p₀ := fun g => by
     obtain ⟨g', e⟩ := h.surj g
     exact ⟨⟨g', by rw [MonoidHom.mem_ker, ← h.η, e]; exact g.2⟩, Subtype.ext e⟩
-  have hcont : Continuous h.p₀ := (h.cont.comp continuous_subtype_val).subtype_mk _
+  have hcont : Continuous h.p₀ := (h.cont.comp continuous_subtypeVal).subtype_mk _
   have hsp' : ∀ Z : Matrix (Fin n) (Fin n) O, c₀ • Z ∈ Submodule.span O (Set.range (mat (y.ρ.comp h.p₀))) := fun Z => by
     have e : Set.range (mat (y.ρ.comp h.p₀)) = Set.range (mat y.ρ) := hsurj.range_comp (mat y.ρ)
     rw [e]

@@ -274,7 +274,7 @@ theorem twD_rep (m : ℕ) (h : Formalism.MainNotions.S.IsURepOn (Formalism.MainN
   refine ⟨⟨by simp [twD, h.1.1], fun a ha b hb => ?_⟩, fun g hg v => ?_, fun v => ?_⟩
   · simp only [twD]
     rw [h.1.2 a ha b hb, det_mul, mul_pow, ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, smul_smul]
-  · simp only [twD, ContinuousLinearMap.smul_apply, norm_smul, norm_pow, norm_detD hg, one_pow, one_mul, h.2.1 g hg]
+  · simp only [twD, smul_apply, norm_smul, norm_pow, norm_detD hg, one_pow, one_mul, h.2.1 g hg]
   · exact ((continuous_id.matrix_det).pow m).continuousOn.smul (h.2.2 v)
 
 theorem twD_irr (m : ℕ) (h : Formalism.MainNotions.S.IsIrredOn (Formalism.MainNotions.S.UJset ε) σ) :
@@ -294,7 +294,7 @@ variable {p q : ℕ} {T : GrpData p q} {πU : URep T} {M : GKMod p q} {io : M.V 
 
 theorem skewD (h : IsHCMod πU M io) : SkewD M io := fun Y hY v w => by
   have h1 := (h.2.2 Y hY v).inner ℂ (h.2.2 Y hY w)
-  simp only [inner_piC, zero_smul, T.expt_zero, map_one, ContinuousLinearMap.one_apply] at h1
+  simp only [inner_piC, zero_smul, T.expt_zero, map_one, one_apply_eq_self] at h1
   have h2 := h1.unique (hasDerivAt_const _ _)
   linear_combination h2
 

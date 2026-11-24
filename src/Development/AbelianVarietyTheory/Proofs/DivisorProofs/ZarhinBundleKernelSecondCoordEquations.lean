@@ -157,8 +157,8 @@ theorem zarhinBundle_kernel : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (
   intro h M d S t c B _ _ Q la mu hZ T x hx j
   have hQ : IsDual c.A B Q := hZ.2.1
   have hQ' : IsDual B c.A (swap Q) := hZ.2.2.1
-  haveI hla : IsMonHom la := hZ.2.2.2.1
-  haveI hmu : IsMonHom mu := hZ.2.2.2.2.1
+  have hla : IsMonHom la := hZ.2.2.2.1
+  have hmu : IsMonHom mu := hZ.2.2.2.2.1
   have hlm : la ≫ mu = 𝟙 c.A ^ d := hZ.2.2.2.2.2.1
   have hPQ := hZ.2.2.2.2.2.2.2
   have hzP := zarhinBundle_isLineBundle c.A B c.isLB hQ.isLB d mu
@@ -177,12 +177,12 @@ theorem zarhinBundle_kernel : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (
   have t2 : ∀ i, ∑ j', quat d j' i • evc hQ.isLB ((snd c.A T ≫ x) ≫ pa c.A B i)
       (if j' = j then fst c.A T ≫ la else 1) = quat d j i • evc hQ.isLB ((snd c.A T ≫ x) ≫ pa c.A B i) (fst c.A T ≫ la) :=
     fun i => by
-      rw [Fintype.sum_eq_single j (fun j' hj' => by rw [if_neg hj', evc_one_right hQ.isLB hQ.zero, smul_zero]),
-        if_pos rfl]
+      rw [Fintype.sum_eq_single j (fun j' hj' => by rw [ite_eq_right hj', evc_one_right hQ.isLB hQ.zero, smul_zero]),
+        ite_eq_left rfl]
   have t4 : ∑ j', evc hQ.isLB ((if j' = j then fst c.A T ≫ la else 1) ≫ mu) ((snd c.A T ≫ x) ≫ pb c.A B j') =
       evc hQ.isLB ((fst c.A T ≫ la) ≫ mu) ((snd c.A T ≫ x) ≫ pb c.A B j) := by
-    rw [Fintype.sum_eq_single j (fun j' hj' => by rw [if_neg hj', MonObj.one_comp, hQ.additive.evc_one hQ.isLB]),
-      if_pos rfl]
+    rw [Fintype.sum_eq_single j (fun j' hj' => by rw [ite_eq_right hj', MonObj.one_comp, hQ.additive.evc_one hQ.isLB]),
+      ite_eq_left rfl]
   simp only [t2, t4, evc_one_right c.isLB c.rig₂, hQ.additive.evc_one hQ.isLB, smul_zero, Finset.sum_const_zero,
     zero_add, add_zero] at e
   have hPev : ∀ {Y : Over S} (p q : Y ⟶ c.A), evc c.isLB p q = evc hQ.isLB p (q ≫ la) := by

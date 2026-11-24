@@ -77,7 +77,7 @@ theorem length_eq (J W : Ideal S) [W.IsPrime] (hW : Disjoint (M : Set S) W)
     IsLocalization.under_map_of_isPrime_disjoint M T ‹_› hW
   have hnot : ∀ x : S, x ∉ W → algebraMap S T x ∉ W' := fun x hx h =>
     hx (hcomap ▸ Ideal.mem_comap.mpr h)
-  haveI : IsLocalization.AtPrime (Localization.AtPrime W') W := by
+  have : IsLocalization.AtPrime (Localization.AtPrime W') W := by
     have := IsLocalization.isLocalization_isLocalization_atPrime_isLocalization M
       (Localization.AtPrime W') W'
     unfold IsLocalization.AtPrime at this ⊢
@@ -86,13 +86,13 @@ theorem length_eq (J W : Ideal S) [W.IsPrime] (hW : Disjoint (M : Set S) W)
   let σ : Localization.AtPrime W ≃ₐ[S] Localization.AtPrime W' :=
     IsLocalization.algEquiv W.primeCompl _ _
   let N := LocalizedModule W'.primeCompl (T ⧸ J')
-  letI iAN : Module (Localization.AtPrime W) N :=
+  let iAN : Module (Localization.AtPrime W) N :=
     Module.compHom N (σ : Localization.AtPrime W →+* Localization.AtPrime W')
-  letI iAB : Algebra (Localization.AtPrime W) (Localization.AtPrime W') :=
+  let iAB : Algebra (Localization.AtPrime W) (Localization.AtPrime W') :=
     (σ : Localization.AtPrime W →+* Localization.AtPrime W').toAlgebra
-  haveI : IsScalarTower (Localization.AtPrime W) (Localization.AtPrime W') N :=
+  have : IsScalarTower (Localization.AtPrime W) (Localization.AtPrime W') N :=
     ⟨fun a b n => mul_smul (σ a) b n⟩
-  haveI : IsScalarTower S (Localization.AtPrime W) N := by
+  have : IsScalarTower S (Localization.AtPrime W) N := by
     refine ⟨fun s a n => ?_⟩
     calc (s • a) • n = σ (s • a) • n := rfl
       _ = (algebraMap S (Localization.AtPrime W') s * σ a) • n := by
@@ -121,7 +121,7 @@ theorem length_eq (J W : Ideal S) [W.IsPrime] (hW : Disjoint (M : Set S) W)
     rcases (inferInstance : W'.IsPrime).mem_or_mem this with h | h
     · exact ht h
     · exact hm m' (hcomap ▸ Ideal.mem_comap.mpr h)
-  haveI hg : IsLocalizedModule W.primeCompl g := by
+  have hg : IsLocalizedModule W.primeCompl g := by
     constructor
     · intro s
       rw [Module.End.isUnit_iff]
@@ -235,7 +235,7 @@ theorem GenericCycleCorresp.proof : GenericCycleCorresp.Statement.{u} := by
   have hkey : ∀ W : Ideal (MRing ι O), W ∈ J.minimalPrimes → (C ϖ : MRing ι O) ∉ W →
       divCycle P s W = divCycle (genFib P) s' (genFib W) := by
     intro W hWm hWϖ
-    haveI hWp : W.IsPrime := hWm.1.1
+    have hWp : W.IsPrime := hWm.1.1
     obtain ⟨hWp', hcomap⟩ := hcorr W hWp hWϖ
     have hrel : IsRelevant (genFib W) ↔ IsRelevant W := by
       refine forall_congr' fun k => exists_congr fun i => not_congr ?_
@@ -247,7 +247,7 @@ theorem GenericCycleCorresp.proof : GenericCycleCorresp.Statement.{u} := by
       intro h₁ h₂
       unfold multAt
       rw [hJ]
-      haveI : (W.map (algebraMap (MRing ι O) (MRing ι (FractionRing O)))).IsPrime := h₂
+      have : (W.map (algebraMap (MRing ι O) (MRing ι (FractionRing O)))).IsPrime := h₂
       exact GenericCycleCorresp.length_eq M J W
         (GenericCycleCorresp.disjoint_nonZeroDivisors hϖ W hWϖ)
     unfold divCycle
@@ -279,7 +279,7 @@ theorem GenericCycleCorresp.proof : GenericCycleCorresp.Statement.{u} := by
     rw [Set.indicator_apply_eq_self]
     intro hW
     by_cases hϖW : (C ϖ : MRing ι O) ∈ W
-    · rw [if_pos hϖW, mul_zero]
+    · rw [ite_eq_left hϖW, mul_zero]
     · have : divCycle P s W = 0 := by
         by_contra h
         exact hW ⟨hsupp0 W h, hϖW⟩
@@ -314,7 +314,7 @@ theorem GenericCycleCorresp.proof : GenericCycleCorresp.Statement.{u} := by
         (IsLocalization.map_units (MRing ι (FractionRing O)) (⟨_, hϖM⟩ : M)))
     · exact IsLocalization.map_under M (MRing ι (FractionRing O)) W'
   · intro W hW
-    rw [if_neg hW.2, hkey W hW.1 hW.2]
+    rw [ite_eq_right hW.2, hkey W hW.1 hW.2]
 
 end
 

@@ -62,9 +62,9 @@ open GlobalTheory.SplitScalar GlobalTheory.FinWeil GlobalTheory.WeilParts
 theorem relIndex_ne_zero_of_finite {G Y : Type} [AddCommGroup G] (H K : AddSubgroup G) {R : Set Y} (hR : R.Finite)
     (rel : G → Y → Prop) (h1 : ∀ k ∈ K, ∃ r ∈ R, rel k r) (h2 : ∀ k k' r, rel k r → rel k' r → k - k' ∈ H) :
     H.relIndex K ≠ 0 := by
-  haveI := hR.to_subtype
+  have := hR.to_subtype
   choose f hf hf' using h1
-  haveI : Finite (K ⧸ H.addSubgroupOf K) := by
+  have : Finite (K ⧸ H.addSubgroupOf K) := by
     refine Finite.of_injective (fun q => (⟨f _ (Quotient.out q : K).2, hf _ _⟩ : R)) fun q q' h => ?_
     have h3 : f _ (Quotient.out q : K).2 = f _ (Quotient.out q' : K).2 := congrArg Subtype.val h
     have h4 := h2 _ _ _ (hf' _ (Quotient.out q : K).2) (h3 ▸ hf' _ (Quotient.out q' : K).2)

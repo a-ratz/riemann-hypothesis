@@ -122,7 +122,7 @@ theorem finiteDimensional_stable_le_iSup_eigen :
   have hf0 : f ≠ 0 := (LinearMap.charpoly_monic T).ne_zero
   have hfT : Polynomial.aeval T f = 0 := LinearMap.aeval_self_charpoly T
   have hsfin : (lam ⁻¹' {z | f.IsRoot z}).Finite :=
-    (Polynomial.finite_setOf_isRoot hf0).preimage hinj.injOn
+    (Polynomial.finite_setOfPred_isRoot hf0).preimage hinj.injOn
   let s : Finset ℕ := hsfin.toFinset
   have hout : ∀ m, m ∉ s → ∀ e ∈ E m, ∀ y ∈ W, ⟪e, y⟫_ℂ = 0 := by
     intro m hm e he y hy
@@ -135,7 +135,7 @@ theorem finiteDimensional_stable_le_iSup_eigen :
     simp only [LinearMap.zero_apply, map_zero] at this
     exact (mul_eq_zero.mp this.symm).resolve_left hne
   let F : Submodule ℂ H := ⨆ m ∈ s, E m
-  haveI hF : FiniteDimensional ℂ F := by
+  have hF : FiniteDimensional ℂ F := by
     have : F = s.sup E := by simp [F, Finset.sup_eq_iSup]
     rw [this]; infer_instance
   have hFle : F ≤ ⨆ m, E m := iSup₂_le fun m _ => le_iSup E m

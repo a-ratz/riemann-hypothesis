@@ -203,13 +203,13 @@ theorem conj_mem (d : ℕ) (t : kˣ) (ht : valuation k (t : k) ≤ 1) {m : ℕ} 
     exact ⟨hzc i j, hzint i j⟩
   · have hi : blk (blk2 d) i = 1 := by
       have := (blk (blk2 d) i).isLt; have := (blk (blk2 d) j).isLt
-      ext; simp only [Fin.lt_iff_val_lt_val] at hgt; omega
+      ext; simp only [Fin.lt_def] at hgt; omega
     have hj : blk (blk2 d) j = 0 := by
       have := (blk (blk2 d) j).isLt
-      ext; simp only [Fin.lt_iff_val_lt_val] at hgt; omega
+      ext; simp only [Fin.lt_def] at hgt; omega
     have hij : i ≠ j := fun h => by rw [h] at hgt; exact lt_irrefl _ hgt
     rw [Matrix.one_apply_ne hij, sub_zero]
-    simp only [zd, hi, hj, if_pos, one_ne_zero, if_false, inv_one, Units.val_one, one_mul]
+    simp only [zd, hi, hj, ite_eq_left, one_ne_zero, ite_false, inv_one, Units.val_one, one_mul]
     have h1 := hzc i j
     rw [Matrix.one_apply_ne hij, sub_zero] at h1
     refine ⟨?_, ?_⟩
@@ -421,10 +421,10 @@ theorem bound_main : Bound k := by
     rw [GlobalTheory.LGrp.mem_fixed]
     intro κ hκ
     exact Subtype.ext (hm1 (GroundTheory.Automorphic.GLnLocal.congruenceSubgroup_antitone k (d + d) (le_max_left m1 1) hκ))
-  haveI hfd : FiniteDimensional ℂ (fixed (parInd (blk2 d) τ) K) := hadm.2 K hKo hKc
+  have hfd : FiniteDimensional ℂ (fixed (parInd (blk2 d) τ) K) := hadm.2 K hKo hKc
 
   set H : Subgroup K := (K.map (MulAut.conj (Zt d t)).toMonoidHom).subgroupOf K with hH
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
   have hHo : IsOpen (H : Set K) := by
     have : (H : Set K) = (fun x : K => (Zt d t)⁻¹ * (x : GL (Fin (d + d)) k) * Zt d t) ⁻¹' (K : Set _) := by
       ext x
@@ -432,8 +432,8 @@ theorem bound_main : Bound k := by
       exact GlobalTheory.HeckeAvg.mem_conj
     rw [this]
     exact hKo.preimage (by fun_prop)
-  haveI : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
-  letI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
+  let : Fintype (K ⧸ H) := Fintype.ofFinite _
   have hmaps : ∀ x ∈ fixed (parInd (blk2 d) τ) K,
       ((Fintype.card (K ⧸ H) : ℂ)⁻¹ • (avL (parInd (blk2 d) τ) K H ∘ₗ parInd (blk2 d) τ (Zt d t))) x ∈
         fixed (parInd (blk2 d) τ) K := by
@@ -585,7 +585,7 @@ theorem complementary_of (h : Signature) : Complementary := by
   intro G V _ _ _ _ _ K₀ hK₀o hK₀c F hF hall h0 s hs
   have hsm : IsSmooth (F 0) := (hall 0 le_rfl).2.1
   have hirr : (F s).IsIrreducible := (hall s hs).2.2.1
-  haveI := irr_nontrivial hirr
+  have := irr_nontrivial hirr
   obtain ⟨H, hH0, hHh, hHi⟩ := exists_herm (hall s hs).2.2.2
   obtain ⟨B₀, hB₀h, hB₀p, hB₀i⟩ := h0
   have key : ∀ K : Subgroup G, IsOpen (K : Set G) → K ≤ K₀ → fixed (F 0) K ≠ ⊥ →
@@ -593,7 +593,7 @@ theorem complementary_of (h : Signature) : Complementary := by
     intro K hKo hKle hW
     have hKc : IsCompact (K : Set G) := hK₀c.of_isClosed_subset (Subgroup.isClosed_of_isOpen K hKo) hKle
     set W := fixed (F 0) K with hWdef
-    haveI : FiniteDimensional ℂ W := (hall 0 le_rfl).1.2 K hKo hKc
+    have : FiniteDimensional ℂ W := (hall 0 le_rfl).1.2 K hKo hKc
     set e := idem hsm hKc with he
     have hconst : ∀ t, ∀ x ∈ K, F t x = F 0 x := fun t x hx => hF.const t x (hKle hx)
     have hker : ∀ t (C : V →ₗ[ℂ] V →ₛₗ[starRingEnd ℂ] ℂ), (∀ g v w, C (F t g v) (F t g w) = C v w) →
@@ -688,7 +688,7 @@ theorem complementary_of (h : Signature) : Complementary := by
       have hw : (⟨e w, idem_mem hsm hKc _⟩ : W) = w := Subtype.ext (idem_of_mem hsm hKc w.2)
       rw [← hw]
       exact hmem w (hSt ▸ Submodule.mem_top)
-    haveI : Nontrivial W := (Submodule.nontrivial_iff_ne_bot).2 hW
+    have : Nontrivial W := (Submodule.nontrivial_iff_ne_bot).2 hW
     have hresne : ∀ t (C : V →ₗ[ℂ] V →ₛₗ[starRingEnd ℂ] ℂ), (∀ g v w, C (F t g v) (F t g w) = C v w) →
         (F t).IsIrreducible → C ≠ 0 → resF C W ≠ 0 := by
       intro t C hCi hi hC0 h0'
@@ -793,26 +793,26 @@ theorem conjDual (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
       { carrier := {g | ρ g v = v}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hb, ha]
         one_mem' := by simp
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
     let H₂ : Subgroup (GL (Fin n) k) :=
       { carrier := {g | ρ.dual g (B.flip v) = B.flip v}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hb, ha]
         one_mem' := by
           show ρ.dual 1 (B.flip v) = B.flip v
           rw [map_one, Module.End.one_apply]
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
     have hle : H₁ ≤ H₂ := by
@@ -1126,7 +1126,7 @@ theorem base (hc : Continuous ψ) (h1 : ψ ≠ 1) (Y : Representation ℂ (GL (F
       obtain ⟨z, hz⟩ := hs (Ψ v)
       have := hrange (Ψ v) ⟨z, hz⟩
       rwa [LinearEquiv.symm_apply_apply] at this
-    haveI : Subsingleton (TwJacquet Y (rightUnip k n t) (rightWhit k ψ n t)) :=
+    have : Subsingleton (TwJacquet Y (rightUnip k n t) (rightWhit k ψ n t)) :=
       ⟨fun x y => by
         induction x using Submodule.Quotient.induction_on with
         | H a =>
@@ -1138,12 +1138,12 @@ theorem base (hc : Continuous ψ) (h1 : ψ ≠ 1) (Y : Representation ℂ (GL (F
     have hnt : Nontrivial (B ⧸ K) := Submodule.Quotient.nontrivial_iff.2 htop
     have hfr : Module.finrank ℂ (B ⧸ K) = 1 := by
       have hfin : Module.rank ℂ (B ⧸ K) < Cardinal.aleph0 := lt_of_le_of_lt hrk Cardinal.one_lt_aleph0
-      haveI : Module.Finite ℂ (B ⧸ K) := Module.rank_lt_aleph0_iff.1 hfin
+      have : Module.Finite ℂ (B ⧸ K) := Module.rank_lt_aleph0_iff.1 hfin
       have h2 : (Module.finrank ℂ (B ⧸ K) : Cardinal) ≤ 1 := by rw [Module.finrank_eq_rank]; exact hrk
       have h3 : 0 < Module.finrank ℂ (B ⧸ K) := Module.finrank_pos
       have h4 : Module.finrank ℂ (B ⧸ K) ≤ 1 := by exact_mod_cast h2
       omega
-    haveI : Module.Finite ℂ (B ⧸ K) := Module.finite_of_finrank_eq_succ hfr
+    have : Module.Finite ℂ (B ⧸ K) := Module.finite_of_finrank_eq_succ hfr
     let q : (B ⧸ K) ≃ₗ[ℂ] ℂ := LinearEquiv.ofFinrankEq _ _ (by simp [hfr])
     let ℓ : B →ₗ[ℂ] ℂ := q.toLinearMap ∘ₗ K.mkQ
     have hℓs : Function.Surjective ℓ := q.surjective.comp (Submodule.mkQ_surjective K)
@@ -1230,8 +1230,8 @@ theorem finLen (hc : Continuous ψ) (h1 : ψ ≠ 1) (Mr : Representation ℂ (GL
     intro T ihT hTS
     rcases eq_or_lt_of_le hTS with hEq | hlt'
     · subst hEq
-      haveI := GlobalTheory.ParIndExact.subsingleton_subQuot_self T
-      haveI := subsingleton_tw (ρ := subQuot T T) (rightUnip k n t) (rightWhit k ψ n t)
+      have := GlobalTheory.ParIndExact.subsingleton_subQuot_self T
+      have := subsingleton_tw (ρ := subQuot T T) (rightUnip k n t) (rightWhit k ψ n t)
       exact GlobalTheory.ProdLength.hasFiniteLength_of_subsingleton _
     by_cases hcov : T ⋖ S
     · exact base ψ hc h1 _ ((GlobalTheory.ParIndExact.isSubquotient_subQuot S T).isSmooth hMs)
@@ -1610,7 +1610,7 @@ theorem smooth_of_equiv [TopologicalSpace G] {π : Representation ℂ G V} {σ :
   intro w
   have e : {g : G | σ g w = w} = {g : G | π g (E.toLinearEquiv.symm w) = E.toLinearEquiv.symm w} := by
     ext g
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [← intw_symm E]
     exact ⟨fun h => by rw [h], fun h => E.toLinearEquiv.symm.injective h⟩
   rw [e]
@@ -1619,7 +1619,7 @@ theorem smooth_of_equiv [TopologicalSpace G] {π : Representation ℂ G V} {σ :
 theorem admissible_of_equiv [TopologicalSpace G] {π : Representation ℂ G V} {σ : Representation ℂ G W} (E : π.Equiv σ)
     (h : IsAdmissible π) : IsAdmissible σ := by
   refine ⟨smooth_of_equiv E h.1, fun K hK hc => ?_⟩
-  haveI := h.2 K hK hc
+  have := h.2 K hK hc
   have hle : fixed σ K ≤ (fixed π K).map E.toLinearEquiv.toLinearMap := by
     intro w hw
     refine ⟨E.toLinearEquiv.symm w, ?_, E.toLinearEquiv.apply_symm_apply w⟩
@@ -1720,7 +1720,7 @@ theorem someRed_of (h1 : Complementary) (h2 : Compact k) (h3 : Bound k) (h4 : He
   obtain ⟨t, -, ht⟩ := GlobalTheory.CentralExponent.exists_nabs_lt_one k
   have hω1 : ‖(ω t : ℂ)‖ = 1 := by
     obtain ⟨B, b1, b2, b3⟩ := hu
-    haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
+    have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
     obtain ⟨v, hv⟩ := exists_ne (0 : x.2.rep.V)
     have e := b3 (Matrix.GeneralLinearGroup.scalar (Fin x.1) t) v v
     rw [hω t v, B.map_smul, LinearMap.smul_apply, (B _).map_smulₛₗ, smul_eq_mul, smul_eq_mul, ← mul_assoc,
@@ -1755,7 +1755,7 @@ theorem someRed_of (h1 : Complementary) (h2 : Compact k) (h3 : Bound k) (h4 : He
     by_contra hW
     rw [not_nontrivial_iff_subsingleton] at hW
     have hi := irr_of_equiv (hFe s).some (irr_of_equiv (hE s).symm (hirr s hs0))
-    haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hi
+    have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hi
     obtain ⟨f, f', hff⟩ := exists_pair_ne (IndSp (blk2 d) (twist τ (chi k d s)))
     exact hff (Subtype.ext (Subtype.ext (funext fun _ => Subsingleton.elim _ _)))
   have hb := h3 d _ (twist τ (chi k d s))
@@ -1843,7 +1843,7 @@ theorem hasSesq_of {G V V₁ V₂ : Type} [Group G] [TopologicalSpace G] [IsTopo
   have hΦ : ∀ v, Φ v = e₂ (φ0 (e₁ v)) := fun _ => rfl
   have hΦb : Function.Injective Φ := (e₂.toLinearEquiv.injective.comp hφb.1).comp e₁.toLinearEquiv.injective
   have hΦi : ∀ g v, Φ (π g v) = contra π g (Φ v) := fun g v => by rw [hΦ, hΦ, eqv e₁, hφi, eqv e₂]
-  haveI := nontriv _ hi
+  have := nontriv _ hi
   refine ⟨LinearMap.mk₂'ₛₗ (RingHom.id ℂ) (starRingEnd ℂ) (fun v w => (Φ w : Module.Dual ℂ V) v)
     (fun v v' w => map_add _ v v') (fun c v w => map_smul _ c v)
     (fun v w w' => by rw [map_add (f := _)]; rfl) (fun c v w => by rw [map_smulₛₗ]; rfl), ?_, ?_⟩

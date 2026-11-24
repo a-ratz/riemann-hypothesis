@@ -154,7 +154,7 @@ theorem exists_upts_det {n : ℕ} (hn : 0 < n) (Gm : Matrix (Fin n) (Fin n) E) (
       _ = _ := by rw [hdd, Matrix.mul_one]
   · ext
     simp only [Matrix.GeneralLinearGroup.val_det_apply, Units.val_mul, Matrix.det_mul, hd, Matrix.det_diagonal]
-    rw [← Units.coe_prod, hf, Finset.prod_pi_mulSingle', if_pos (Finset.mem_univ _)]
+    rw [← Units.coe_prod, hf, Finset.prod_pi_mulSingle', ite_eq_left (Finset.mem_univ _)]
     calc _ = (Matrix.det ((Cb⁻¹ : GL (Fin n) (E ⊗[F] R)) : Matrix (Fin n) (Fin n) (E ⊗[F] R)) *
           Matrix.det (Cb : Matrix (Fin n) (Fin n) (E ⊗[F] R))) * (x : E ⊗[F] R) := by ring
       _ = _ := by rw [← Matrix.det_mul, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.det_one, one_mul]
@@ -305,7 +305,7 @@ theorem natCast_mem_heightOneSpectrum_coprime :
   intro E _ _ p hp P hpP
   have hN : Ideal.absNorm P.asIdeal ≠ 0 := by
     rw [Ne, Ideal.absNorm_eq_zero_iff]; exact P.ne_bot
-  haveI : P.asIdeal.IsPrime := P.isPrime
+  have : P.asIdeal.IsPrime := P.isPrime
   have hmem : ∀ n : ℕ, ((n : 𝓞 E) ∈ P.asIdeal ↔ ringChar (𝓞 E ⧸ P.asIdeal) ∣ n) := by
     intro n
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
@@ -389,7 +389,7 @@ open Formalism.BasicNotions NumberField IsDedekindDomain Formalism.MainNotions F
 theorem GlobalTheory.TwV.Xc.exists_pow_lt_of_lt_one_intZ (x γ : WithZero (Multiplicative ℤ)) (hx : x ≠ 0) (hγ : γ < 1) :
     ∃ n : ℕ, γ ^ n < x := by
   by_cases h0 : γ = 0
-  · exact ⟨1, by simp [h0, zero_lt_iff.2 hx]⟩
+  · exact ⟨1, by simp [h0, pos_iff_ne_zero.2 hx]⟩
   obtain ⟨a, rfl⟩ := WithZero.ne_zero_iff_exists.1 hx
   obtain ⟨g, rfl⟩ := WithZero.ne_zero_iff_exists.1 h0
   have hg : Multiplicative.toAdd g < 0 := by
@@ -441,7 +441,7 @@ theorem GlobalTheory.TwV.Xc.adIso_comp_zero_of_div : ∀ {F E F' E' : Type} [Fie
   have hb := hbound n
   rw [hval, map_div₀, map_pow] at hb
   have hpos : (0 : WithZero (Multiplicative ℤ)) < P.valuation E' (ℓ : E') ^ n :=
-    zero_lt_iff.2 (pow_ne_zero _ hℓ0)
+    pos_iff_ne_zero.2 (pow_ne_zero _ hℓ0)
   have : P.valuation E' (D : E') * Valued.v (y P) ≤ P.valuation E' (ℓ : E') ^ n := by
     have he : P.valuation E' (D : E') * Valued.v (y P)
         = P.valuation E' (D : E') / P.valuation E' (ℓ : E') ^ n * Valued.v (y P) * P.valuation E' (ℓ : E') ^ n := by
@@ -629,7 +629,7 @@ theorem mu_mem_LL : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fa
   set T := hfin.toFinset with hT
   have hmemT : ∀ P, P ∈ T ↔ ((D.what₂.places.resChar w : ℕ) : 𝓞 t.X.E) ∈ P.asIdeal := by
     intro P
-    rw [hT, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+    rw [hT, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   have h1 : ∀ P, P ∉ T → (b : AdeleRing (𝓞 t.X.E) t.X.E).2 P = 1 := by
     intro P hP
     rw [hmemT] at hP
@@ -685,7 +685,7 @@ theorem mu_mem_LL : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fa
   · obtain ⟨ξ, hξ, hmt⟩ := J.pins.tw μ hμ rfl
     have e : (t.O u μ).mt (j + 1) = D.muTil (j + 1) * ξ := by
       rw [hmt u]
-      exact if_pos (⟨by omega, by omega⟩ : 1 ≤ j + 1 ∧ j + 1 ≤ D.R.m)
+      exact ite_eq_left (⟨by omega, by omega⟩ : 1 ≤ j + 1 ∧ j + 1 ≤ D.R.m)
     obtain ⟨r, hr⟩ := hK ((kU : t.X.K) * ((t.tup μ : Chr t.X.F t.X.E t.X.K) x : t.X.K))
     refine ⟨r, ?_⟩
     rw [hr, e, MonoidHom.mul_apply, Units.val_mul, hmuTil, hξ x, ← hk, map_mul]
@@ -756,8 +756,8 @@ theorem GlobalTheory.TwV.Xc.two_units : Sites (fun {D L hT Gi Gl Kc Dx cX ex u �
     · exact ((GlobalTheory.TwV.Xc.OrdA.ordA_props _ _ _ _ _ (A0 J) (GlobalTheory.TwV.LbB.locInt_locAt _) hS.1 v').2.2.2 v (Ne.symm h) π hπ.2.1)
   have hsum : (∑ v' : (sysS H X std).Pl, (sysS H X std).vm v' (j + 1) * ordA (A0 J) v' π) = (sysS H X std).vm v (j + 1) := by
     rw [Finset.sum_eq_single v]
-    · rw [hord v, if_pos rfl, mul_one]
-    · intro b _ hb; rw [hord b, if_neg hb, mul_zero]
+    · rw [hord v, ite_eq_left rfl, mul_one]
+    · intro b _ hb; rw [hord b, ite_eq_right hb, mul_zero]
     · intro h; exact absurd (Finset.mem_univ v) h
   rw [hsum] at hnorm
   obtain ⟨𝔞, h𝔞, hχ⟩ := (GlobalTheory.T.charOnNormOneIdeles_mul_unramified_classValue S hD hS).2.2.2 π hπU

@@ -143,7 +143,7 @@ theorem genSub_tw (ε : Fin n → Bool) (E : Fin n → Fin n → Module.End ℂ 
   unfold genSub
   congr 1
   ext T
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine and_congr_right fun _ => ⟨fun hT a b v hv => ?_, fun hT a b v hv => ?_⟩
   · rw [← twE_twE ε E, twE_apply]
     exact T.smul_mem _ (hT _ _ v hv)

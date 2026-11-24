@@ -218,7 +218,7 @@ theorem exists_esymm_pow_div_mem_of_isLocalRing : ∀ (K : Type) [Field K] (O : 
   have h1 : V.valuation (x a) ^ D ≤ V.valuation c := by
     have := (V.valuation_le_one_iff _).2 (hle (hO a))
     rw [map_div₀, map_pow] at this
-    exact (div_le_one₀ (zero_lt_iff.2 hvc)).1 this
+    exact (div_le_one₀ (pos_iff_ne_zero.2 hvc)).1 this
   have h2 : V.valuation c ≤ V.valuation (x a) ^ D := by
     rw [← hce, map_pow, hes]
     have hb : V.valuation (∑ t ∈ (Finset.univ : Finset A).powersetCard k, ∏ b ∈ t, x b) ≤ V.valuation (x a) ^ k := by
@@ -227,7 +227,7 @@ theorem exists_esymm_pow_div_mem_of_isLocalRing : ∀ (K : Type) [Field K] (O : 
       have hcard := (Finset.mem_powersetCard.1 ht).2
       rw [← hcard]
       exact Finset.prod_le_pow_card _ _ _ (fun b _ => ha b (Finset.mem_univ b))
-    calc _ ≤ (V.valuation (x a) ^ k) ^ (D / k) := pow_le_pow_left₀ zero_le' hb _
+    calc _ ≤ (V.valuation (x a) ^ k) ^ (D / k) := pow_le_pow_left₀ zero_le hb _
       _ = V.valuation (x a) ^ D := by rw [← pow_mul, Nat.mul_div_cancel' hkD]
   have heq : V.valuation (x a) ^ D = V.valuation c := le_antisymm h1 h2
   have hxa : x a ≠ 0 := by
@@ -279,7 +279,7 @@ theorem pow_div_mem_of_esymm_pow_div_mem (K : Type) [Field K] (V : ValuationSubr
   have hvc : v c ≠ 0 := (Valuation.ne_zero_iff v).mpr hc
   have mem_iff : ∀ y : K, y / c ∈ V ↔ v y ≤ v c := by
     intro y
-    rw [← V.valuation_le_one_iff, ← hv, map_div₀, div_le_one₀ (zero_lt_iff.mpr hvc)]
+    rw [← V.valuation_le_one_iff, ← hv, map_div₀, div_le_one₀ (pos_iff_ne_zero.mpr hvc)]
   rw [mem_iff]
   by_contra hlt
   push_neg at hlt
@@ -290,13 +290,13 @@ theorem pow_div_mem_of_esymm_pow_div_mem (K : Type) [Field K] (V : ValuationSubr
     rw [mem_iff, Valuation.map_pow] at hmem
     by_contra hge
     push_neg at hge
-    have hp : (v (x a) ^ k) ^ (D / k) ≤ v (s.esymm k) ^ (D / k) := pow_le_pow_left₀ zero_le' hge _
+    have hp : (v (x a) ^ k) ^ (D / k) ≤ v (s.esymm k) ^ (D / k) := pow_le_pow_left₀ zero_le hge _
     rw [← pow_mul, Nat.mul_div_cancel' hkD] at hp
     exact absurd (hp.trans hmem) (not_le.mpr hlt)
   have hpos : 0 < v (x a) := by
     have := key 1 le_rfl hn
     rw [pow_one] at this
-    exact lt_of_le_of_lt zero_le' this
+    exact lt_of_le_of_lt zero_le this
   have h0 : (s.map fun t => X - C t).prod.eval (x a) = 0 := by
     rw [Polynomial.eval_multiset_prod, Multiset.prod_eq_zero_iff]
     simp only [Multiset.map_map, Function.comp_def, eval_sub, eval_X, eval_C]
@@ -341,14 +341,14 @@ theorem hasDiv_of_hasDiv_symTup : ∀ (k Ω : Type) [CommRing k] [Field Ω] [Alg
     (c : Fin N → Ω), Geo.Tor.IsNormalScheme M.Z → M.HasDiv (symTup c) → M.HasDiv c := by
   intro k Ω _ _ _ M N c hn hd z
   obtain ⟨j, he, hdiv⟩ := hd z
-  haveI := RatModel.isIntegrallyClosed_O hn z
+  have := RatModel.isIntegrallyClosed_O hn z
   set D := N.factorial with hD
   set e := symTup c j with he'
   have hD1 : 1 ≤ D := Nat.factorial_pos N
 
-  haveI : IsFractionRing (M.O z).toSubring Ω := inferInstanceAs (IsFractionRing (M.O z) Ω)
-  haveI : IsIntegrallyClosed (M.O z).toSubring := inferInstanceAs (IsIntegrallyClosed (M.O z))
-  haveI hcl : IsIntegrallyClosedIn (M.O z).toSubring Ω :=
+  have : IsFractionRing (M.O z).toSubring Ω := inferInstanceAs (IsFractionRing (M.O z) Ω)
+  have : IsIntegrallyClosed (M.O z).toSubring := inferInstanceAs (IsIntegrallyClosed (M.O z))
+  have hcl : IsIntegrallyClosedIn (M.O z).toSubring Ω :=
     (isIntegrallyClosed_iff_isIntegrallyClosedIn Ω).1 inferInstance
   have h1 : ∀ a, c a ^ D / e ∈ M.O z := by
     intro a
@@ -362,7 +362,7 @@ theorem hasDiv_of_hasDiv_symTup : ∀ (k Ω : Type) [CommRing k] [Field Ω] [Alg
       exact this
     rw [← Subring.eq_iInf_of_isIntegrallyClosedIn] at hmem
     exact hmem
-  haveI : IsLocalRing (M.O z).toSubring := inferInstanceAs (IsLocalRing (M.O z))
+  have : IsLocalRing (M.O z).toSubring := inferInstanceAs (IsLocalRing (M.O z))
   obtain ⟨a, ha, hea⟩ := exists_esymm_pow_div_mem_of_isLocalRing Ω (M.O z).toSubring (Fin N) c D ((j : ℕ) + 1) e hD1
     (by omega) (Nat.dvd_factorial (by omega) (by omega)) he rfl h1
   refine ⟨a, ha, fun b => ?_⟩
@@ -626,7 +626,7 @@ theorem norm_key_eq_one : ∀ κ : Rule, Rule4 κ → ∀ (V : Type) [CommRing V
   obtain ⟨β, π, hπ0, hπ1, hfinβ, hexp⟩ := GlobalTheory.T.exists_integralForm_parameter_of_discreteNorms C N q (toF V C ϖ) hq ht0 ht1 hdisc m hm1
   choose bd hbd using fun a j => GlobalTheory.T.thetaTranslateTerms_jets_bounded V D C hCE N ν hInt q hq m hmOdd (Q a) (s' a) (ff a) (hs'V a)
     (hfam a).2.2.2.1 (gm₀ j) (gm j) (hT j).2.1 (hT j).2.2
-  haveI : NeZero (m ^ 2) := ⟨by omega⟩
+  have : NeZero (m ^ 2) := ⟨by omega⟩
   set B : ℝ := ∑ a, ∑ j, |bd a j| with hB
   have hbB : ∀ a j, bd a j ≤ B := fun a j =>
     (le_abs_self _).trans ((Finset.single_le_sum (f := fun j => |bd a j|) (fun _ _ => abs_nonneg _)
@@ -700,26 +700,26 @@ theorem exists_cExt_complex : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscre
   obtain ⟨w, hw, hw1, hwa⟩ := GlobalTheory.exists_absoluteValue_of_isDiscreteValuationRing V K hϖ.ne_zero hϖm
     (r := 1 / 2) (by norm_num) (by norm_num)
 
-  letI : NontriviallyNormedField (WithAbs w) :=
+  let : NontriviallyNormedField (WithAbs w) :=
     { (inferInstance : NormedField (WithAbs w)) with
       non_trivial := ⟨(WithAbs.toAbs w (algebraMap V K ϖ))⁻¹, by
         rw [norm_inv]
         change 1 < (w (algebraMap V K ϖ))⁻¹
         rw [hwa]
         norm_num⟩ }
-  haveI : IsUltrametricDist (WithAbs w) :=
+  have : IsUltrametricDist (WithAbs w) :=
     IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm fun x y => hw x.ofAbs y.ofAbs
   let K₁ := UniformSpace.Completion (WithAbs w)
-  letI : NontriviallyNormedField K₁ := completionNontriviallyNormedField (WithAbs w)
-  haveI : IsUltrametricDist K₁ := IsUltrametricDist.of_normedAlgebra (WithAbs w)
+  let : NontriviallyNormedField K₁ := completionNontriviallyNormedField (WithAbs w)
+  have : IsUltrametricDist K₁ := IsUltrametricDist.of_normedAlgebra (WithAbs w)
   let K₂ := AlgebraicClosure K₁
-  letI : NontriviallyNormedField K₂ := spectralNorm.nontriviallyNormedField K₁ K₂
-  letI : NormedAlgebra K₁ K₂ := spectralNorm.normedAlgebra K₁ K₂
-  haveI : IsUltrametricDist K₂ := IsUltrametricDist.of_normedAlgebra K₁
+  let : NontriviallyNormedField K₂ := spectralNorm.nontriviallyNormedField K₁ K₂
+  let : NormedAlgebra K₁ K₂ := spectralNorm.normedAlgebra K₁ K₂
+  have : IsUltrametricDist K₂ := IsUltrametricDist.of_normedAlgebra K₁
   let C := UniformSpace.Completion K₂
-  letI : NontriviallyNormedField C := completionNontriviallyNormedField K₂
-  haveI : IsUltrametricDist C := IsUltrametricDist.of_normedAlgebra K₂
-  haveI : IsAlgClosed C := isAlgClosed_of_denseRange (K := K₂) UniformSpace.Completion.denseRange_coe
+  let : NontriviallyNormedField C := completionNontriviallyNormedField K₂
+  have : IsUltrametricDist C := IsUltrametricDist.of_normedAlgebra K₂
+  have : IsAlgClosed C := isAlgClosed_of_denseRange (K := K₂) UniformSpace.Completion.denseRange_coe
   let i : K →+* C := (algebraMap K₂ C).comp ((algebraMap K₁ K₂).comp
     ((algebraMap (WithAbs w) K₁).comp (WithAbs.equiv w).symm.toRingHom))
   have hi : ∀ x : K, ‖i x‖ = w x := by
@@ -730,10 +730,10 @@ theorem exists_cExt_complex : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscre
       fun y => UniformSpace.Completion.norm_coe y
     simp only [i, RingHom.comp_apply, h₁, h₂, h₃]
     rfl
-  letI : Algebra K C := i.toAlgebra
+  let : Algebra K C := i.toAlgebra
   have hiV : Function.Injective (i.comp (algebraMap V K)) :=
     i.injective.comp (IsFractionRing.injective V K)
-  haveI : CharZero C := charZero_of_injective_ringHom hiV
+  have : CharZero C := charZero_of_injective_ringHom hiV
 
   have hc0 : #(WithAbs w) ≤ 𝔠 := by
     rw [Cardinal.mk_congr (WithAbs.equiv w).toEquiv, Cardinal.mk_fractionRing]; exact hcV
@@ -819,7 +819,7 @@ theorem key_unit_trait (κ : Rule) (hR : Rule4 κ) (V : Type) [CommRing V] [IsDo
     show θ.inv.left ≫ pullback.fst G.hom (jK V) = φ
     rw [← hθφ, ← Category.assoc, ← Over.comp_left, θ.inv_hom_id, Over.id_left, Category.id_comp]
   have hFd := dualMapR_eq_of_map _ F hF1 hF2
-  haveI : IsMonHom θ.hom := hθm
+  have : IsMonHom θ.hom := hθm
   refine key_unit_unif κ hR V hA hF D x G hSA U' w₀ ⟨hw₀, x.rig_gen, ?_⟩ y hLie (fun i => ?_) σ' ?_ ?_
   · exact GlobalTheory.T.iso_preserves_rigidification_at_origin V G x.P.A θ.hom φ hθφ hφe x.P.L L.L U.LG.L x.P.isLB L.isLB U.LG.isLB x.rig L.rig U.LG.rig ψ e' w₀ hPW hRig heR
   · show (x.v i).left ≫ (U'.gen.inv.left ≫ pullback.fst G.hom (jK V)) = _
@@ -853,7 +853,7 @@ namespace GlobalTheory.KeyValsGen
 theorem smooth_bG : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (g : ℕ) (R : Type) [CommRing R] (ξ : Sp R ⟶ S),
     SmoothOfRelativeDimension g G.hom → SmoothOfRelativeDimension g (KeyVals.bG G ξ).hom := by
   intro S G _ g R _ ξ h
-  haveI := smoothOfRelativeDimension_isStableUnderBaseChange g
+  have := smoothOfRelativeDimension_isStableUnderBaseChange g
   exact MorphismProperty.of_isPullback (P := @SmoothOfRelativeDimension g) (isGrpPullback_pullback G ξ).1 h
 
 theorem semi_bG : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (R : Type) [CommRing R] (ξ : Sp R ⟶ S),
@@ -896,7 +896,7 @@ theorem abLocus_affine : ∀ (S : Scheme.{0}) [IsIntegral S] (G : Over S) [GrpOb
     IsOpen (abLocus G) → genericPoint S ∈ abLocus G → IsOpen (abLocus (KeyVals.bG G hW.fromSpec)) ∧
       Set.range (spMap (algebraMap Γ(S, W) (FractionRing Γ(S, W)))).base ⊆ abLocus (KeyVals.bG G hW.fromSpec) := by
   intro S _ G _ W hW hne hop h
-  haveI : Nonempty W := ⟨⟨hne.some, hne.some_mem⟩⟩
+  have : Nonempty W := ⟨⟨hne.some, hne.some_mem⟩⟩
   have e : abLocus (KeyVals.bG G hW.fromSpec) = hW.fromSpec ⁻¹' abLocus G :=
     Set.ext fun q => ⟨mem_abLocus_of_bG (R := Γ(S, W)) G hW.fromSpec q, mem_abLocus_bG (R := Γ(S, W)) G hW.fromSpec q⟩
   have ho : IsOpen (hW.fromSpec ⁻¹' abLocus G) := hop.preimage hW.fromSpec.continuous
@@ -953,12 +953,12 @@ theorem keyVal_unit : ∀ κ : Rule, Funct κ → ∀ (S : Scheme.{0}) [IsIntegr
     exact ((genericPoint_spec S).mem_open_set_iff hop).2 ⟨p, trivial, hp⟩
   obtain ⟨W, hW, hpW, hle⟩ := (TopologicalSpace.Opens.isBasis_iff_nbhd.1 S.isBasis_affineOpens) hp
   have hW : IsAffineOpen W := hW
-  haveI : Nonempty W := ⟨⟨p, hpW⟩⟩
+  have : Nonempty W := ⟨⟨p, hpW⟩⟩
   have hring : IsDomain Γ(S, W) ∧ IsNoetherianRing Γ(S, W) ∧ IsIntegrallyClosed Γ(S, W) :=
     GlobalTheory.affineOpen_ring_isDomain_noetherian_integrallyClosed S inferInstance hN hs ⟨W, hW⟩
       ((TopologicalSpace.Opens.ne_bot_iff_nonempty _).2 ⟨p, hpW⟩)
   obtain ⟨-, hnoeth, hic⟩ := hring
-  haveI : CharZero Γ(S, W) := by
+  have : CharZero Γ(S, W) := by
     exact charZero_of_injective_ringHom (f := (S.presheaf.map (homOfLE (le_top : W ≤ ⊤)).op).hom)
       (map_injective_of_isIntegral S (homOfLE (le_top : W ≤ ⊤)))
   have hr : ∀ U : S.Opens, W ≤ U → ⊤ ≤ hW.fromSpec ⁻¹ᵁ U := fun U h q _ =>
@@ -1032,7 +1032,7 @@ theorem keyVals : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ →
           S.presheaf.germ _ (genericPoint S) h1
             ((VB.det (LieVB.omega G) g).g c c' : Γ(S, (VB.det (LieVB.omega G) g).U c ⊓ (VB.det (LieVB.omega G) g).U c')) ^ 4 * f c' i') := by
   intro κ hH hF S _ G _ _ g L δ σ hg hN hs h0 hsa hsm hne hop hsym hδ hpol hnz hL
-  haveI : CharZero (KeyVals.FF S) :=
+  have : CharZero (KeyVals.FF S) :=
     charZero_of_injective_ringHom (f := (S.presheaf.germ ⊤ (genericPoint S) trivial).hom)
       (germ_injective_of_isIntegral S (U := ⊤) (genericPoint S) trivial)
   let f : (VB.det (LieVB.omega G) g).ι → δ.ι → S.presheaf.stalk (genericPoint S) := fun c i =>
@@ -1040,7 +1040,7 @@ theorem keyVals : ∀ κ : Rule, Homog (fun _ => 1) κ → Funct κ →
   have hf : ∀ c i, genericPoint S ∈ (VB.det (LieVB.omega G) g).U c ⊓ δ.U i → KeyVals.IsKeyVal κ g L σ c i (f c i) := by
     intro c i h
     have ex := exists_keyVal κ S G g L δ σ hg hsa hsm hne hop hsym hδ hpol hnz c i h
-    simp only [f, dif_pos ex]
+    simp only [f, dite_eq_left ex]
     exact ex.choose_spec
   have hgen : ∀ U : S.Opens, (U : Set S).Nonempty → genericPoint S ∈ U := fun U ⟨p, hp⟩ =>
     ((genericPoint_spec S).mem_open_set_iff U.isOpen).2 ⟨p, trivial, hp⟩
@@ -1139,14 +1139,14 @@ theorem dvd_of_forall_small : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoethe
   intro p _ hp
   obtain ⟨-, hD, -⟩ := h1 p hp
   let D := primeLocalSubalgebra K p
-  haveI : IsDiscreteValuationRing D := hD
+  have : IsDiscreteValuationRing D := hD
   let W := AdicCompletion (IsLocalRing.maximalIdeal D) D
   let iW : D →+* W := algebraMap D W
   let φ : R →+* W := iW.comp (algebraMap R D)
   have hRD : Function.Injective (algebraMap R D) := fun x y hxy =>
     IsFractionRing.injective R K (congrArg Subtype.val hxy)
   have hφ : Function.Injective φ := (algebraMap_adicCompletion_injective_of_dvr D).comp hRD
-  haveI : CharZero W := (RingHom.charZero_iff hφ).1 inferInstance
+  have : CharZero W := (RingHom.charZero_iff hφ).1 inferInstance
   have hW : GlobalTheory.LN.CDvr W := ⟨inferInstance, inferInstance, inferInstance⟩
   have hcD : #D ≤ 𝔠 := by
     refine (Cardinal.mk_le_of_injective (f := fun d : D => (d : K)) Subtype.val_injective).trans ?_
@@ -1301,17 +1301,17 @@ theorem key_unit_normal (κ : Rule) (hR : Rule4 κ) (A : Type) [CommRing A] [IsD
     ∃ u : Aˣ, (κ (FractionRing A) x : FractionRing A) = algebraMap A (FractionRing A) u := by
   have hkey0 := hkey
   obtain ⟨φ, -, -, -, hpb, -⟩ := hkey
-  haveI : IsProper x.P.A.hom := x.P.isAb.proper
+  have : IsProper x.P.A.hom := x.P.isAb.proper
   have hab := GlobalTheory.range_subset_abLocus_of_isProper t.semi hpb.1
   obtain ⟨f, hf0, hfab⟩ := LocPf.exists_away_subset (abLocus t.G) hopen hab
   have hle : Submonoid.powers f ≤ nonZeroDivisors A := powers_le_nonZeroDivisors_of_noZeroDivisors hf0
-  haveI : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
-  haveI : IsNoetherianRing (Localization.Away f) :=
+  have : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hle
+  have : IsNoetherianRing (Localization.Away f) :=
     IsLocalization.isNoetherianRing (Submonoid.powers f) (Localization.Away f) inferInstance
-  haveI : IsIntegrallyClosed (Localization.Away f) :=
+  have : IsIntegrallyClosed (Localization.Away f) :=
     isIntegrallyClosed_of_isLocalization (Localization.Away f) (Submonoid.powers f) hle
   have hinj : Function.Injective (algebraMap A (Localization.Away f)) := IsLocalization.injective _ hle
-  haveI : CharZero (Localization.Away f) := charZero_of_injective_algebraMap hinj
+  have : CharZero (Localization.Away f) := charZero_of_injective_algebraMap hinj
   obtain ⟨xB, hgB, hkB⟩ := GlobalTheory.T.exists_keyDatum_abelianLocus_point A (Localization.Away f) (algebraMap A _) t.G L σ x.P.g y x.g_pos t.semi hsm hopen
     hsym hpol hy hσ hfab
   obtain ⟨u, hu⟩ := hR.2.2.2 (Localization.Away f) xB
@@ -1329,15 +1329,15 @@ theorem key_unit_normal (κ : Rule) (hR : Rule4 κ) (A : Type) [CommRing A] [IsD
         ∃ w : Wˣ, h u = algebraMap W (FractionRing W) w := by
     intro V _ _ _ hV hcV a ha
     obtain ⟨hd, hcomp, h0⟩ := (GlobalTheory.LN.cDvr_iff V).1 hV
-    haveI := hd
-    haveI := h0
+    have := hd
+    have := h0
     obtain ⟨W, _, _, _, _, g, hcW, hgi, hginj, hgl, Ex, hEx⟩ :=
       GlobalTheory.SplitExtDVR.exists_complete_dvr_split_ext V hcomp (pullT (spMap a) t).G (pullT (spMap a) t).semi
     refine ⟨W, inferInstance, inferInstance, g, hginj, hgl, fun h hh => ?_⟩
     have hW : #W ≤ 𝔠 := by
-      letI := g.toAlgebra
-      haveI : Algebra.IsIntegral V W := ⟨hgi⟩
-      haveI : Module.IsTorsionFree V W := Module.isTorsionFree_iff_algebraMap_injective.2 hginj
+      let := g.toAlgebra
+      have : Algebra.IsIntegral V W := ⟨hgi⟩
+      have : Module.IsTorsionFree V W := Module.isTorsionFree_iff_algebraMap_injective.2 hginj
       exact (Algebra.IsAlgebraic.cardinalMk_le_max V W).trans (max_le hcV aleph0_le_continuum)
     have hrange : Set.range (spMap ((algebraMap W (FractionRing W)).comp (g.comp a))) ⊆ abLocus t.G := by
       rw [← hh]
@@ -1349,11 +1349,11 @@ theorem key_unit_normal (κ : Rule) (hR : Rule4 κ) (A : Type) [CommRing A] [IsD
       GlobalTheory.T.keyDatum_fibre_of_composable_baseChange A (Localization.Away f) (FractionRing W) (algebraMap A _) h t.G L σ x.P.g y xB xV hgB hgV hkB
         (by rw [hh]; exact hkV)
     have hvalV := hu _ h xV hpbV
-    haveI : IsCommMonObj ((Over.pullback (spMap a)).obj t.G) := (pullT (spMap a) t).comm
+    have : IsCommMonObj ((Over.pullback (spMap a)).obj t.G) := (pullT (spMap a) t).comm
     obtain ⟨L₁, σ₁, y₁, hiso₁, hy₁, hσ₁, hk₁⟩ := GlobalTheory.T.keyDatum_pullback_baseChange_lieBasis A V (FractionRing W) a ((algebraMap W _).comp g) t.G L σ xV
       (fun i => y (i.cast hgV)) t.semi (LocPf.isLieBasis_cast hgV y hy) hσ hkV
     have e₁ := pullT_iso (spMap a) t L.isLB hL L₁.isLB hiso₁
-    haveI : IsCommMonObj ((Over.pullback (spMap g)).obj ((Over.pullback (spMap a)).obj t.G)) :=
+    have : IsCommMonObj ((Over.pullback (spMap g)).obj ((Over.pullback (spMap a)).obj t.G)) :=
       (pullT (spMap g) (pullT (spMap a) t)).comm
     obtain ⟨L₂, σ₂, y₂, hiso₂, hy₂, hσ₂, hk₂⟩ := GlobalTheory.T.keyDatum_pullback_baseChange_lieBasis V W (FractionRing W) g (algebraMap W _)
       ((Over.pullback (spMap a)).obj t.G) L₁ σ₁ xV y₁ (pullT (spMap a) t).semi hy₁ hσ₁ hk₁
@@ -1454,7 +1454,7 @@ theorem mk_le_of_lft {k A : Type} [Field k] [CommRing A] (hk : #k ≤ 𝔠) (s :
     #A ≤ 𝔠 := by
   obtain ⟨φ, rfl⟩ := Spec.map_surjective s
   have hft : φ.hom.FiniteType := (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1 ‹_›
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   obtain ⟨n, p, hp⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 (show Algebra.FiniteType k A from hft)
   refine (Cardinal.mk_le_of_surjective hp).trans (MvPolynomial.cardinalMk_le_max.trans ?_)
   exact max_le (max_le hk ((Cardinal.lt_aleph0_of_finite _).le.trans aleph0_le_continuum)) aleph0_le_continuum
@@ -1774,10 +1774,10 @@ theorem key_on_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   obtain ⟨hsmY, hvY⟩ := GlobalTheory.T.modelSemiAbelian_relDim_cotangent_vectorBundle E H Dw l Xo c Y
   have hsm : SmoothOfRelativeDimension (Module.finrank ℚ E / 2 * (Dw.p + Dw.q)) t.G.hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback mt.cart.1 hsmY
-  haveI := M.lft
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have := M.lft
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
   have hne : ((⊤ : M.Z.Opens) : Set M.Z).Nonempty := ⟨M.pt (IsLocalRing.closedPoint Ω), trivial⟩
-  haveI : CharZero Γ(M.Z, ⊤) := (M.res ⊤ hne).charZero
+  have : CharZero Γ(M.Z, ⊤) := (M.res ⊤ hne).charZero
   have hne2 : (abLocus t.G).Nonempty := by
     refine ⟨M.pt (IsLocalRing.closedPoint Ω), ?_⟩
     rw [hab]

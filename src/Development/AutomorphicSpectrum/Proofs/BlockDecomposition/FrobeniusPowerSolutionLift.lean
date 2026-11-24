@@ -57,7 +57,7 @@ theorem exists_frobenius_iterate (p : ℕ) [Fact p.Prime] (R : Type) [CommRing R
     (h : (p : R) = 0) (k : ℕ) : ∃ f : R →+* R, ∀ x, f x = x ^ p ^ k := by
   rcases subsingleton_or_nontrivial R with hs | hn
   · exact ⟨RingHom.id R, fun x => Subsingleton.elim _ _⟩
-  · haveI : CharP R p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 h
+  · have : CharP R p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 h
     exact ⟨iterateFrobenius R p k, fun x => iterateFrobenius_def p k x⟩
 
 theorem solv_pow : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A](S : Type) [CommRing S] [Algebra A S] (B : Type) [CommRing B] [Algebra A B] (i : S →ₐ[A] B) (I : Ideal S) (m n : ℕ) (a : Fin m → Fin n → A) (c : Fin m → A), (p : A) = 0 → PQ p (i : S →+* B) I → Solv B a c → ∃ (k : ℕ) (s : Fin n → S), ∀ t, ∑ j, a t j ^ p ^ k • s j - algebraMap A S (c t ^ p ^ k) ∈ I := by

@@ -81,7 +81,7 @@ theorem card_le : ∀ (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [Gr
   classical
   intro k _ _ G _ hGc X _ _ _ B _ i q hQ hB a ha m hm s hs
   obtain ⟨hi, hq, -, -, -, hk, -⟩ := hQ
-  haveI := hGc
+  have := hGc
   let P := 𝟙_ (Over (Sp k))
   let I := IsMonHom.monoidHom i P
   let Q := IsMonHom.monoidHom q P
@@ -90,12 +90,12 @@ theorem card_le : ∀ (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [Gr
 
   obtain ⟨e⟩ := GlobalTheory.SemiAbTorsionCount.nonempty_torus_points_mulEquiv k X
   obtain ⟨-, hTcard⟩ := GlobalTheory.SemiAbTorsionCount.divisible_and_card e m hm
-  haveI hTfin : Finite {t : P ⟶ splitTorus (Sp k) X // t ^ m = 1} :=
+  have hTfin : Finite {t : P ⟶ splitTorus (Sp k) X // t ^ m = 1} :=
     Nat.finite_of_card_ne_zero (by rw [hTcard]; exact pow_ne_zero _ hm0)
-  letI : Fintype {t : P ⟶ splitTorus (Sp k) X // t ^ m = 1} := Fintype.ofFinite _
+  let : Fintype {t : P ⟶ splitTorus (Sp k) X // t ^ m = 1} := Fintype.ofFinite _
 
   have hBcard := GlobalTheory.UU.TorsionCount.card_torsion_points_unconditional k B a m hB ha hm
-  haveI hBfin : Finite {b : P ⟶ B // b ^ m = 1} :=
+  have hBfin : Finite {b : P ⟶ B // b ^ m = 1} :=
     Nat.finite_of_card_ne_zero (by rw [hBcard]; exact pow_ne_zero _ hm0)
 
   have himg : (s.image Q).card ≤ m ^ (2 * a) := by
@@ -305,9 +305,9 @@ theorem main : ∀ (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [Fact p.Prime]
   have hexp := (Nat.pow_lt_pow_iff_right (by omega)).mp hlt
   have ht : Module.finrank ℤ X = 0 := by omega
   have hgg : g ≤ g' := by omega
-  haveI hP : IsProper N.hom := GlobalTheory.T.isProper_of_isQuot_abelian_of_finrank_eq_zero k N X B i q hq hB ht
-  haveI : IsIso ν.left := by
-    haveI := hiso hgg
+  have hP : IsProper N.hom := GlobalTheory.T.isProper_of_isQuot_abelian_of_finrank_eq_zero k N X B i q hq hB ht
+  have : IsIso ν.left := by
+    have := hiso hgg
     exact Functor.map_isIso (Over.forget (Sp k)) ν
   have hw : G.hom = inv ν.left ≫ N.hom := by
     rw [← Over.w ν]

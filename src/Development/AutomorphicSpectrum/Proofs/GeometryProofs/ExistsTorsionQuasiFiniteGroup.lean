@@ -71,7 +71,7 @@ theorem pow_eq_one_of_res {A B : Scheme.{0}} (u : A ⟶ B) [Epi u] (ξ : B ⟶ X
 theorem epi_spMap {K L : Type} [Field K] [Field L] (a : K →+* L) : Epi (spMap a) := by
   have : Flat (spMap a) := by
     rw [spMap, Flat.SpecMap_iff]
-    letI := a.toAlgebra
+    let := a.toAlgebra
     exact (RingHom.flat_algebraMap_iff (R := K) (S := L)).2 inferInstance
   have : Surjective (spMap a) := by
     refine ⟨fun y => ?_⟩
@@ -92,7 +92,7 @@ theorem torsion_qfGroup : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherian
   have hfin : Finite T := by
     let L := AlgebraicClosure (FractionRing R)
     let a : FractionRing R →+* L := algebraMap (FractionRing R) L
-    haveI := epi_spMap a
+    have := epi_spMap a
     let t : Sp L ⟶ X := spMap a ≫ ξ
     have h0 := GlobalTheory.finite_torsion_semiAbelian L ((Over.pullback t).obj G) (IsSemiAbelian.pullback t G hG) n hn
     have h1 : Finite {g : Over.mk t ⟶ G // g ^ n = 1} :=
@@ -107,7 +107,7 @@ theorem torsion_qfGroup : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherian
   obtain ⟨Γ, i, h, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.Tors.exists_qfGroup_torsion R T X G hG x n hn T.subtype Subtype.val_injective hT
     (fun Ω _ _ a g hg => by
       obtain ⟨y, hy⟩ := hF Ω a g hg
-      haveI := epi_spMap a
+      have := epi_spMap a
       exact ⟨⟨y, MonoidHom.mem_ker.2 (pow_eq_one_of_res G (spMap a) ξ y n g hy hg)⟩, hy⟩)
   exact ⟨T, inferInstance, hfin, Γ, i, h⟩
 

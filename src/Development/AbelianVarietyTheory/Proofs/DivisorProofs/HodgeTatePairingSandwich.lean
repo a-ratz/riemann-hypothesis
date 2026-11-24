@@ -103,7 +103,7 @@ theorem finrank_ker_of_sat {O M : Type} [CommRing O] [IsDomain O] [AddCommGroup 
     exact (H _).2 ⟨1, one_ne_zero, m, one_smul _ _⟩
   have h1 := Submodule.rank_quotient_add_rank (R := O) ((LinearMap.range b).comap (LinearMap.ker a).subtype)
   have h2 : Module.rank O (LinearMap.ker a ⧸ (LinearMap.range b).comap (LinearMap.ker a).subtype) = 0 := by
-    rw [rank_eq_zero_iff_isTorsion]
+    rw [Module.rank_eq_zero_iff_isTorsion]
     intro x
     obtain ⟨⟨y, hy⟩, rfl⟩ := Submodule.mkQ_surjective _ x
     obtain ⟨c, hc, m, hm⟩ := (H y).1 hy
@@ -124,12 +124,12 @@ theorem finrank_dual_ker {O : Type} [CommRing O] [IsDomain O] [ValuationRing O] 
       rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout]
       exact Submodule.isTorsionFree_iff_torsion_eq_bot.1 inferInstance
     exact Module.free_of_flat_of_isLocalRing
-  haveI := free (LinearMap.range b)
+  have := free (LinearMap.range b)
   obtain ⟨s, hs⟩ := LinearMap.exists_rightInverse_of_surjective b.rangeRestrict
     (LinearMap.range_rangeRestrict b)
   have hb : ∀ m, b (s (b.rangeRestrict m)) = b m := fun m =>
     congrArg Subtype.val (LinearMap.congr_fun hs (b.rangeRestrict m))
-  haveI : Module.Finite O (LinearMap.ker b) := by
+  have : Module.Finite O (LinearMap.ker b) := by
     refine Module.Finite.of_surjective
       (LinearMap.codRestrict (LinearMap.ker b) (LinearMap.id - s ∘ₗ b.rangeRestrict) (fun m => by
         simp [hb])) ?_
@@ -137,7 +137,7 @@ theorem finrank_dual_ker {O : Type} [CommRing O] [IsDomain O] [ValuationRing O] 
     refine ⟨m, Subtype.ext ?_⟩
     have : b.rangeRestrict m = 0 := Subtype.ext hm
     simp [this]
-  haveI := free (LinearMap.ker b)
+  have := free (LinearMap.ker b)
   rw [Module.finrank_linearMap, Module.finrank_self, mul_one]
 
 section
@@ -227,8 +227,8 @@ end
 theorem ker_hodgeTateLinear : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] [IsDomain O] (ε : PreTilt O p) (hε : GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta.IsPrimitiveSystem ε), GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta.HodgeTateSandwichAt hε → ∀ (G : PDivGroup p O) (ζ : (PDivGroup.mu p O).Tate) (B : G.Tate →ₗ[ℤ_[p]] G.dual.Tate →ₗ[ℤ_[p]] ℤ_[p]), v.Integers O → Function.Bijective (fun a : ℤ_[p] => a • ζ) → (∀ s χ, pairing G O s χ = B s χ • ζ) → (∀ x : O ⊗[ℤ_[p]] G.Tate, G.hodgeTateLinear x = 0 ↔ ∃ (c : O) (y : G.Lie), c ≠ 0 ∧ ∀ χ, c * (TensorProduct.rid ℤ_[p] O) ((B.flip χ).baseChange O x) = y (dlog (G := G) χ)) ∧ Module.finrank O (LinearMap.ker G.hodgeTateLinear) + Module.finrank O (LinearMap.ker G.dual.hodgeTateLinear) = G.height := by
   intro p _ C _ _ _ v O _ _ _ _ _ _ ε hε hS G ζ B hv hζ hB
   obtain ⟨u₁, u₂, hS⟩ := hS
-  haveI : IsFractionRing O C := hv.isFractionRing
-  haveI : ValuationRing O := by
+  have : IsFractionRing O C := hv.isFractionRing
+  have : ValuationRing O := by
     refine @ValuationRing.mk O _ _ ⟨fun a b => ?_⟩
     rcases le_total (v (algebraMap O C a)) (v (algebraMap O C b)) with h | h
     · obtain ⟨c, hc⟩ := hv.dvd_iff_le.2 h

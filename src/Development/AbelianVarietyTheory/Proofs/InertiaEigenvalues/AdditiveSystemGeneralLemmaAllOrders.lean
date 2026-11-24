@@ -677,7 +677,7 @@ theorem lang_basis [FiniteDimensional k V] (q : ℕ) (hq : 1 < q) (F : V →+ V)
   have hs : ⊤ ≤ Submodule.span k {v : V | F v = v} := (lang_span q hq F hF hinj).ge
   let b' := Module.Basis.ofSpan hs
   haveI : Finite _ := Module.Finite.finite_basis b'
-  letI := Fintype.ofFinite ((linearIndepOn_empty k id).extend (Set.empty_subset {v : V | F v = v}))
+  let := Fintype.ofFinite ((linearIndepOn_empty k id).extend (Set.empty_subset {v : V | F v = v}))
   let e := Fintype.equivFinOfCardEq (Module.finrank_eq_card_basis b').symm
   refine ⟨b'.reindex e, fun i => ?_⟩
   have h1 : b' (e.symm i) ∈ {v : V | F v = v} := Module.Basis.ofSpan_subset hs ⟨e.symm i, rfl⟩
@@ -945,7 +945,7 @@ theorem lin_normal (K : ℕ) (M : ℕ → Matrix m m F) (h : Normal (K + 1) M) :
   · intro n hn r c
     have h0 : n ≠ 0 := by omega
     have h1 : n ≠ 1 := by omega
-    simp only [lin, h0, h1, if_false]
+    simp only [lin, h0, h1, ite_false]
     split_ifs
     · exact h.small _ (by omega) _ _
     · simp

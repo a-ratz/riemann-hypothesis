@@ -146,7 +146,7 @@ theorem isUnit_diag_of_lower {O : Type} [CommRing O] [IsLocalRing O] {n : ℕ} (
         IsLocalRing.residue O (x : Matrix (Fin n) (Fin n) O).det := (RingHom.map_det _ _).symm
     rw [e]
     exact ((Matrix.isUnit_iff_isUnit_det _).1 x.isUnit).map _
-  rw [Matrix.det_of_upperTriangular h1] at h2
+  rw [Matrix.det_of_isUpperTriangular h1] at h2
   have h3 := isUnit_of_dvd_unit (Finset.dvd_prod_of_mem _ (Finset.mem_univ i)) h2
   simp only [Matrix.map_apply] at h3
   exact isUnit_of_map_unit (IsLocalRing.residue O) _ h3
@@ -164,7 +164,7 @@ theorem iwahori_roots : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValu
   intro O _ _ _ _ E _ _ _ _ ϖ hϖ n a ha x y hx hy
   have hspan := (IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ
   have hm : ϖ ∈ IsLocalRing.maximalIdeal O := by rw [hspan]; exact Ideal.mem_span_singleton_self ϖ
-  haveI : IsAdicComplete (Ideal.span {ϖ}) O := by rw [← hspan]; infer_instance
+  have : IsAdicComplete (Ideal.span {ϖ}) O := by rw [← hspan]; infer_instance
   have hinj : Function.Injective (algebraMap O E) := IsFractionRing.injective O E
   have hϖ0 : algebraMap O E ϖ ≠ 0 := (map_ne_zero_iff _ hinj).2 hϖ.ne_zero
   obtain ⟨N, hNa⟩ : ∃ N : ℤ, ∀ i, N ≤ a i := by
@@ -260,8 +260,8 @@ theorem regular_split : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     let g := x * GlobalTheory.GLDoubling.torusElt k (Fin N) ϖ ν * y
     (g : Matrix (Fin N) (Fin N) k).charpoly.Separable ∧ (g : Matrix (Fin N) (Fin N) k).charpoly.Splits := by
   intro k _ _ _ _ N ϖ hϖ ν hν x hx y hy
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
   have hlt : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
   let w : 𝒪[k] := ⟨ϖ, hlt.le⟩
   have hw : Irreducible w := by
@@ -367,7 +367,7 @@ theorem torusElt_pow (ϖ : kˣ) (ν : Fin N → ℤ) (m : ℕ) :
 theorem dom_pow {t : Fin N → kˣ} (ht : UpperTheory.V.AlgebraTools.Dom t) (m : ℕ) : UpperTheory.V.AlgebraTools.Dom (t ^ m) := by
   intro i j hij
   simp only [Pi.pow_apply, Units.val_pow_eq_pow_val, map_pow]
-  exact pow_le_pow_left₀ zero_le' (ht i j hij) m
+  exact pow_le_pow_left₀ zero_le (ht i j hij) m
 
 theorem exists_equiv_doubleCoset (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (N : ℕ) (ϖ : kˣ) (hϖ : valuation k (ϖ : k) = uniformizer k)
@@ -834,7 +834,7 @@ private theorem eventually_integral {E : Type} [Field E] [NumberField E] (u : Pl
   filter_upwards [Filter.eventually_ge_atTop M₀] with M hM
   rw [IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, Nat.cast_pow, map_pow]
   have h2 : Valued.v (r : u.adicCompletion E) ^ M ≤ (Valued.v x)⁻¹ :=
-    (pow_le_pow_of_le_one zero_le' h1.le hM).trans hM₀.le
+    (pow_le_pow_of_le_one zero_le h1.le hM).trans hM₀.le
   calc _ ≤ (Valued.v x)⁻¹ * Valued.v x := mul_le_mul' h2 le_rfl
     _ = 1 := inv_mul_cancel₀ hv
 
@@ -900,11 +900,11 @@ theorem UpperTheory.isCommensurated_iwahori_gl :
       Set (GL (Fin n) k)) := by
     rw [hset]
     exact hO.preimage (by fun_prop)
-  haveI : CompactSpace (iwahori k n) := isCompact_iff_compactSpace.mp hC
+  have : CompactSpace (iwahori k n) := isCompact_iff_compactSpace.mp hC
   have hU : IsOpen ((((iwahori k n).map (MulAut.conj g).toMonoidHom).subgroupOf (iwahori k n) :
       Subgroup (iwahori k n)) : Set (iwahori k n)) :=
-    hOc.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ hU
+    hOc.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ hU
   exact Subgroup.index_ne_zero_of_finite
 end -- clump:auto
 end -- clump:auto
@@ -1215,7 +1215,7 @@ theorem auxFn : ExistsIdempotentHeckeOperatorWithRegularSupport := by
   obtain ⟨g₀, hg₀, hg₀u⟩ : ∃ g₀ : GUf E n, F.j g₀ = τ⁻¹ ∧ ∀ u : Plc E, (r : 𝓞 E) ∉ u.asIdeal → comp u g₀ = 1 := by
     have hτ' := inv_mem hτ
     generalize τ⁻¹ = σ at hτ'
-    haveI : Fact r.Prime := ⟨hA.prime⟩
+    have : Fact r.Prime := ⟨hA.prime⟩
     induction hτ' using Subgroup.closure_induction with
     | mem y hy =>
       obtain ⟨w, hwW, rfl⟩ := hy
@@ -1248,7 +1248,7 @@ theorem auxFn : ExistsIdempotentHeckeOperatorWithRegularSupport := by
     rw [hD, ← map_mul, ← map_mul, (hTy.fac w).1, map_mul, map_mul, Units.val_mul, Units.val_mul, hdcw, hdrw]
     simp only [smul_mul_assoc, one_mul, smul_smul, Nat.cast_mul]
   have hs0 : ∀ w : Spl E p, ((c * r ^ M * c : ℕ) : w.1.adicCompletion E) ≠ 0 := fun w => by
-    haveI : CharZero (w.1.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+    have : CharZero (w.1.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
     exact Nat.cast_ne_zero.2 (Nat.mul_pos (Nat.mul_pos hc (pow_pos hA.prime.pos M)) hc).ne'
   have hτH : Ty.tf τ ∈ Hecke ℂ Ty.K₀ := (pTfAdm _ _ Ty τ hτ0).1.1
   have h1H : Ty.tf 1 ∈ Hecke ℂ Ty.K₀ := (pTfAdm _ _ Ty 1 (map_one _)).1.1

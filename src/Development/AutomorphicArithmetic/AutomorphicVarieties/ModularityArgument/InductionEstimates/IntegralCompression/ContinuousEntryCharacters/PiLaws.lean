@@ -107,10 +107,10 @@ private noncomputable def glH (i : ι) : GL2C →* G1 K 2 :=
   MonoidHom.mk' (fun g => C.gl i g.1) fun a b => (coLaws K ι C).2.2.2.2.1 i a.1 b.1
 
 private theorem glH_cont (i : ι) : Continuous (glH C i) :=
-  ((coLaws K ι C).2.2.2.1 i).comp continuous_subtype_val
+  ((coLaws K ι C).2.2.2.1 i).comp continuous_subtypeVal
 
 private theorem continuous_arch_compact_inclusion : Continuous (arc1 : archCompact K 2 → G1 K 2) :=
-  continuous_archP.comp continuous_subtype_val
+  continuous_archP.comp continuous_subtypeVal
 
 private theorem int_κ {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] (f : archCompact K 2 → E) :
     ∫ k, f k ∂C.κ₂ = ∫ m, f ((C.Φ 2).symm m) ∂(Measure.pi fun _ : ι => μK) :=
@@ -180,12 +180,12 @@ private theorem part1 (i : ι) (n : ℕ) (q : ℤ) : ∃ P : H →L[ℂ] H, (∀
     ext1 v
     have key := congrArg (fun T => ((T ⟨KT.P (sg C ρ i) n q v, KT.P_mem_alt _ n q v⟩ : KT.W (sg C ρ i) n q) : H))
       (KT.compr_comm (sg C ρ i) n q ⟨a, Subgroup.mem_top a⟩ ⟨b, Subgroup.mem_top b⟩)
-    simp only [ContinuousLinearMap.mul_apply, KT.coe_compr_apply, sg_apply] at key
-    simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply, KT.PL_apply, KT.P_P]
+    simp only [mul_apply_eq_comp, KT.coe_compr_apply, sg_apply] at key
+    simp only [mul_apply_eq_comp, ContinuousLinearMap.comp_apply, KT.PL_apply, KT.P_P]
     simpa only [KT.P_P, sg_apply] using key
   · intro h hh
     ext1 v
-    simp only [ContinuousLinearMap.mul_apply, hP]
+    simp only [mul_apply_eq_comp, hP]
     exact PiH_comm C ρ i n q h hh v
   · intro τ hc hi v hv
     rw [hP]
@@ -203,7 +203,7 @@ private theorem part4 (i : ι) (v : H) (hv : ∀ n q g, PiH C ρ i n q (ρ g v) 
     rw [this]
     exact isClosed_iInter fun n => isClosed_iInter fun q => isClosed_iInter fun g =>
       isClosed_eq ((KT.PL (sg C ρ i) n q).continuous.comp (ρ g).continuous) continuous_const
-  haveI : CompleteSpace Wd := hcl.completeSpace_coe
+  have : CompleteSpace Wd := hcl.completeSpace_coe
   have hinv : ρ.IsInvariant Wd := fun g y hy n q g' => by
     rw [← UnitaryRep.map_mul_apply]; exact hy n q (g' * g)
   let σ' : UnitaryRep GL2C Wd := (ρ.restrict Wd hinv).compHom (glH C i) (glH_cont C i)

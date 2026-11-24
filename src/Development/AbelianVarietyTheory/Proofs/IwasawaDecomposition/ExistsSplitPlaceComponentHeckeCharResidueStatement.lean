@@ -82,7 +82,7 @@ theorem exists_isCompAt_res : ∀ (D : D7) (s : ReciprocityTheory.Aut.SplitPlace
       rwa [add_sub_cancel] at this
     · show Valued.v (e u - 1) ≤ WithZero.exp (-((1 : ℕ) : ℤ))
       rcases eq_or_ne (Valued.v (e u - 1)) 0 with h0 | h0
-      · rw [h0]; exact zero_le'
+      · rw [h0]; exact zero_le
       · rw [← WithZero.exp_log h0, ← WithZero.exp_zero, WithZero.exp_lt_exp] at hu'
         rw [← WithZero.exp_log h0, WithZero.exp_le_exp]
         push_cast; omega
@@ -97,8 +97,8 @@ theorem exists_isCompAt_res : ∀ (D : D7) (s : ReciprocityTheory.Aut.SplitPlace
   intro u x w hxu hxw
   obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective (I := s.w.asIdeal) (w : kP s.w)
   obtain ⟨hai, hφa⟩ := hres a
-  haveI : s.w.asIdeal.IsMaximal := s.w.isMaximal
-  haveI : Nontrivial (kP s.w) := Ideal.Quotient.nontrivial_iff.2 s.w.isPrime.ne_top
+  have : s.w.asIdeal.IsMaximal := s.w.isMaximal
+  have : Nontrivial (kP s.w) := Ideal.Quotient.nontrivial_iff.2 s.w.isPrime.ne_top
   have hw0 : (w : kP s.w) ≠ 0 := w.ne_zero
   have hva : Valued.v (s.i (a : D.host.E)) = 1 := by
     refine le_antisymm hai (not_lt.1 fun h => hw0 ?_)

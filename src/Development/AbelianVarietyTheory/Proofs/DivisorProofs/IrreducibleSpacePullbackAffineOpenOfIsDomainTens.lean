@@ -60,9 +60,9 @@ theorem irreducibleSpace_pullback_of_isDomain_tensor : ∀ {F : Type} [Field F] 
     letI : Algebra F k := f.toAlgebra
     IsDomain (k ⊗[F] Γ(X, V)) → IrreducibleSpace ↑(pullback (V.ι ≫ g) (spMap f))) := by
   intro F _ X g V hV k _ f
-  letI : Algebra F Γ(X, V) :=
+  let : Algebra F Γ(X, V) :=
     ((Scheme.ΓSpecIso (CommRingCat.of F)).inv ≫ g.appTop ≫ X.presheaf.map (homOfLE le_top).op).hom.toAlgebra
-  letI : Algebra F k := f.toAlgebra
+  let : Algebra F k := f.toAlgebra
   intro hdom
   have hφ : hV.fromSpec ≫ g = Spec.map (CommRingCat.ofHom (algebraMap F Γ(X, V))) := by
     rw [← IsAffineOpen.SpecMap_appLE_fromSpec g (isAffineOpen_top _) hV le_top,
@@ -74,9 +74,9 @@ theorem irreducibleSpace_pullback_of_isDomain_tensor : ∀ {F : Type} [Field F] 
     (by rw [Category.comp_id, e1]) (by simp; rfl)
   let E : pullback (V.ι ≫ g) (spMap f) ≅ Spec (CommRingCat.of (Γ(X, V) ⊗[F] k)) :=
     asIso m ≪≫ pullbackSpecIso F Γ(X, V) k
-  haveI : IsDomain (Γ(X, V) ⊗[F] k) :=
+  have : IsDomain (Γ(X, V) ⊗[F] k) :=
     MulEquiv.isDomain (k ⊗[F] Γ(X, V)) (Algebra.TensorProduct.comm F Γ(X, V) k).toRingEquiv.toMulEquiv
-  haveI : IrreducibleSpace (Spec (CommRingCat.of (Γ(X, V) ⊗[F] k))) :=
+  have : IrreducibleSpace (Spec (CommRingCat.of (Γ(X, V) ⊗[F] k))) :=
     PrimeSpectrum.irreducibleSpace (R := Γ(X, V) ⊗[F] k)
   exact Function.Surjective.irreducibleSpace E.inv.homeomorph.continuous E.inv.homeomorph.surjective
 

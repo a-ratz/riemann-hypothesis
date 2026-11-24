@@ -69,7 +69,7 @@ theorem rel_of_frames {Xo : Moduli Dw l} {c : Coeff l} {σ : c.F →+* ℂ} {r :
     (z : FrPt Xo c (CAt σ)) (hz : FromTest (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) z) :
     ∑ i, g i * toC (evR Xo c (fs i) z) = 0 := by
   obtain ⟨k, x, t, hbor⟩ := hU3 z
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   have hv : ∀ i, evR Xo c (fs i) z = wchar (ex Dw a n) t * evR Xo c (fs i) (U.un k x) :=
     fun i => hF a n (fs i) (hfs i) (CAt σ) t _ z (hT k x) hz hbor
   calc ∑ i, g i * toC (evR Xo c (fs i) z)

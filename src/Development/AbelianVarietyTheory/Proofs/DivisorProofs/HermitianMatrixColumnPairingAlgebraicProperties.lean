@@ -121,7 +121,7 @@ theorem pr_alg : ∀ (F : Type) [Field F] [CharZero F] (E : Type) [Field E] [Alg
     rw [hap, hap, h, ht]
   ·
     obtain ⟨bE, -, -⟩ := hE.basis
-    haveI : Module.Finite F E := Module.Finite.of_basis bE
+    have : Module.Finite F E := Module.Finite.of_basis bE
     have htr : Algebra.trace F E 1 ≠ 0 := by
       rw [← map_one (algebraMap F E), Algebra.trace_algebraMap, nsmul_eq_mul, mul_one]
       exact Nat.cast_ne_zero.mpr Module.finrank_pos.ne'

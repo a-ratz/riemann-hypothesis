@@ -398,7 +398,7 @@ include hG
 theorem lieImg_smulPt {ν : GtPt a.D₀ (epsR A)} {v : epsR (PowerSeries A) ⟶ W.t.G} (hv : LieImg W ν v) (x : 𝓞 E) :
     letI := H.starRing
     LieImg W (smulPt hG a.oa x ν) (v ≫ W.t.act.act x) := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨g, hg, hp⟩ := exists_tr W hG hv
   obtain ⟨g', hg'⟩ := exists_tr_down hG W.spec.1 W.spec.2.1 W.e.toAddEquiv W.spec.2.2.2.2.1 (cstE A)
     (LieCombBaseChange.dualMap_over _) (smulPt hG a.oa x ν)
@@ -485,7 +485,7 @@ theorem IsEigBasis.of_cor {O' : Type} [CommRing O'] {β' : O' →+* c.F} {Y' : M
     (ho : letI := H.starRing; ∀ x : 𝓞 E, (a'.oa.onB.act x).left ≫ prj p = prj p ≫ (a.oa.onB.act x).left)
     {r : 𝓞 E →+* A} {m : ℕ} {u : Fin m → GtPt a.D₀ (epsR A)} {u' : Fin m → GtPt a'.D₀ (epsR A)}
     (hu : ∀ k, Cor p (u' k) (u k)) (h : IsEigBasis hG r u) : IsEigBasis hG r u' := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨o, ho₀⟩ := exists_gtComb (D := a.D₀) (m := 0) Fin.elim0 Fin.elim0
   obtain ⟨o', ho'⟩ := exists_cor_left p hG o
   have ho₁ : GtComb (m := 0) Fin.elim0 Fin.elim0 o' := (Cor.gtComb_iff hG _ (fun i => i.elim0) ho').2 ho₀

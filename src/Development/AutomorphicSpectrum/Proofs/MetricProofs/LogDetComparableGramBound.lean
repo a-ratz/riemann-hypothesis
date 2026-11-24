@@ -105,13 +105,13 @@ theorem gramLog_inv (N : ℕ) (hd : Fin N → ℝ) (k : ℕ) (g u b : Matrix (Fi
     have hdiag : ∀ i, b i i ≠ 0 := by
       intro i hi
       have h0 : b.det = 0 := by
-        rw [Matrix.det_of_upperTriangular hb]
+        rw [det_of_isUpperTriangular hb]
         exact Finset.prod_eq_zero (Finset.mem_univ i) hi
       rw [h0] at hdet
       exact not_isUnit_zero hdet
     have hdetk : (b.submatrix (Subtype.val : {a : Fin N // (a : ℕ) < k} → Fin N)
         Subtype.val).det = ∏ a : {a : Fin N // (a : ℕ) < k}, b a a :=
-      Matrix.det_of_upperTriangular hbk
+      det_of_isUpperTriangular hbk
     have hminor : GlobalTheory.CompanionTheory.Ar.PB.gramHead hd k (g * b) =
         (b.submatrix (Subtype.val : {a : Fin N // (a : ℕ) < k} → Fin N) Subtype.val)ᴴ *
           GlobalTheory.CompanionTheory.Ar.PB.gramHead hd k g *

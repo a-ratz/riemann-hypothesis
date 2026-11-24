@@ -54,7 +54,7 @@ theorem exists_isAffineOpen_le_of_isQProjOver :
       ∀ (F : Set X) (U : X.Opens), F.Finite → F ⊆ U →
         ∃ V : X.Opens, IsAffineOpen V ∧ F ⊆ V ∧ V ≤ U := by
   intro R _ X s hs F U hF hFU
-  haveI := FiniteSubsetsInAffineOpens.of_isQProjOver hs
+  have := FiniteSubsetsInAffineOpens.of_isQProjOver hs
   exact FiniteSubsetsInAffineOpens.exists_isAffineOpen_le hF U hFU
 
 end GlobalTheory

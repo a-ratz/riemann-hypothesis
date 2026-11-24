@@ -115,7 +115,7 @@ theorem step (Λ : Submodule R (Fin n → K)) (f : (Fin n → K) →ₗ[K] K)
       intro v hv
       have hmem : f v ∈ (I : Submodule R K) :=
         Submodule.mem_map_of_mem (f := f.restrictScalars R) hv
-      rw [hI0, FractionalIdeal.coe_zero, Submodule.mem_bot] at hmem
+      rw [hI0, FractionalIdeal.coeToSubmodule_zero, Submodule.mem_bot] at hmem
       exact hmem
     have he : Λ ⊓ (LinearMap.ker f).restrictScalars R = Λ := by
       refine inf_eq_left.mpr (fun v hv' => ?_)
@@ -135,7 +135,7 @@ theorem step (Λ : Submodule R (Fin n → K)) (f : (Fin n → K) →ₗ[K] K)
         obtain ⟨lam, hlam, hfl⟩ := Submodule.mem_map.mp ha
         have hab : a * b ∈ (1 : FractionalIdeal R⁰ K) := by
           rw [← hmul]
-          exact FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coe.mp ha) (FractionalIdeal.mem_coe.mp hb)
+          exact FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coeToSubmodule.mp ha) (FractionalIdeal.mem_coeToSubmodule.mp hb)
         obtain ⟨r1, hr1⟩ := (FractionalIdeal.mem_one_iff R⁰).mp hab
         have hgen : ∀ y ∈ latG φ O Λ, φ (a * b) • y - (fP φ f y * φ b) • bcG φ lam ∈ M := by
           intro y hy
@@ -147,7 +147,7 @@ theorem step (Λ : Submodule R (Fin n → K)) (f : (Fin n → K) →ₗ[K] K)
               Submodule.mem_map_of_mem (f := f.restrictScalars R) hv
             have hbf : b * f v ∈ (1 : FractionalIdeal R⁰ K) := by
               rw [← hmul']
-              exact FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coe.mp hb) (FractionalIdeal.mem_coe.mp hfv)
+              exact FractionalIdeal.mul_mem_mul (FractionalIdeal.mem_coeToSubmodule.mp hb) (FractionalIdeal.mem_coeToSubmodule.mp hfv)
             obtain ⟨r2, hr2⟩ := (FractionalIdeal.mem_one_iff R⁰).mp hbf
             have hfl' : f lam = a := hfl
             have hwΛ : r1 • v - r2 • lam ∈ Λ := Λ.sub_mem (Λ.smul_mem r1 hv) (Λ.smul_mem r2 hlam)
@@ -183,7 +183,7 @@ theorem step (Λ : Submodule R (Fin n → K)) (f : (Fin n → K) →ₗ[K] K)
         simp only [map_add (f := _), add_smul]
         exact M.add_mem h1 h2
     have h1 : (1 : K) ∈ (I : Submodule R K) * ((I⁻¹ : FractionalIdeal R⁰ K) : Submodule R K) := by
-      rw [← FractionalIdeal.coe_mul, hmul]
+      rw [← FractionalIdeal.coeToSubmodule_mul, hmul]
       exact FractionalIdeal.one_mem_one _
     have := claim 1 h1
     rwa [map_one, one_smul] at this
@@ -248,7 +248,7 @@ theorem sat (Λ : Submodule R (Fin n → K)) (hΛ : Λ.FG) (W : Submodule K (Fin
   · rintro x ⟨hxΛ, hxW⟩
 
     let b := Module.Basis.ofVectorSpace K W.dualAnnihilator
-    haveI : Fintype (Module.Basis.ofVectorSpaceIndex K W.dualAnnihilator) := Fintype.ofFinite _
+    have : Fintype (Module.Basis.ofVectorSpaceIndex K W.dualAnnihilator) := Fintype.ofFinite _
     let g : Module.Basis.ofVectorSpaceIndex K W.dualAnnihilator → (Fin n → K) →ₗ[K] K := fun i => (b i : Module.Dual K _)
     have hg : ∀ i w, w ∈ W → g i w = 0 := by
       intro i w hw

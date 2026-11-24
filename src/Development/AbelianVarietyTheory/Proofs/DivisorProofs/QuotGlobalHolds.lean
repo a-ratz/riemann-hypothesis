@@ -110,7 +110,7 @@ theorem exists_local_quotient : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] (A 
           snd ((Over.pullback (S.affineCover.f j)).obj H) ((Over.pullback (S.affineCover.f j)).obj A))
         (snd ((Over.pullback (S.affineCover.f j)).obj H) ((Over.pullback (S.affineCover.f j)).obj A)) q q := by
   intro S _ A _ H _ i hA hi hm hf hfl j
-  haveI : IsOpenImmersion (S.affineCover.f j) := S.affineCover.map_prop j
+  have : IsOpenImmersion (S.affineCover.f j) := S.affineCover.map_prop j
   exact @exists_quotient_of_openImmersion S _ _ (S.affineCover.f j) this A _ H _ i hA hi hm hf hfl
 
 end GlobalTheory.AbQuotientLocal
@@ -436,12 +436,12 @@ theorem exists_transition : ∀ (S : Scheme.{0}) (𝒰 : S.OpenCover.{0}) (A H :
         (w : T ⟶ pullback ((B j).hom ≫ 𝒰.f j) (𝒰.f k)), y ≫ pullback.fst _ _ = z ≫ pullback.fst _ _ →
         w ≫ pullback.fst _ _ = y ≫ (q j).left → w ≫ pullback.snd _ _ = z ≫ pullback.snd _ _ →
         w ≫ b = z ≫ (q k).left := fun j k => by
-    haveI := hf j; haveI := hs j; haveI := hqc j
+    have := hf j; have := hs j; have := hqc j
     exact exists_trans (𝒰.f j) (𝒰.f k) A (B j) (B k) (q j) (q k) H i (hpb j) (hpb k)
   choose b hb1 hb3 using key
   refine ⟨b, hb1, fun j k => ?_, hb3⟩
-  haveI := hf j; haveI := hs j; haveI := hqc j
-  haveI := hf k; haveI := hs k; haveI := hqc k
+  have := hf j; have := hs j; have := hqc j
+  have := hf k; have := hs k; have := hqc k
   exact isPullback_trans (𝒰.f j) (𝒰.f k) A (B j) (B k) (q j) (q k) (b j k) (b k j) (hb1 j k) (hb1 k j)
     (hb3 j k) (hb3 k j)
 
@@ -776,10 +776,10 @@ theorem cocycle_local_quotient_transition : ∀ (S : Scheme.{0}) (𝒰 : S.OpenC
   let α : pullback (x ≫ pullback.fst _ _) (q j).left ⟶ pullback A.hom (𝒰.f j) := pullback.snd _ _
   have hκα : κ ≫ x ≫ pullback.fst _ _ = α ≫ (q j).left := by
     simpa [κ, α, Category.assoc] using pullback.condition (f := x ≫ pullback.fst _ _) (g := (q j).left)
-  haveI : Flat κ := by dsimp [κ]; infer_instance
-  haveI : Surjective κ := by dsimp [κ]; infer_instance
-  haveI : QuasiCompact κ := by dsimp [κ]; infer_instance
-  haveI : Epi κ := Flat.epi_of_flat_of_surjective _
+  have : Flat κ := by dsimp [κ]; infer_instance
+  have : Surjective κ := by dsimp [κ]; infer_instance
+  have : QuasiCompact κ := by dsimp [κ]; infer_instance
+  have : Epi κ := Flat.epi_of_flat_of_surjective _
   have hqj : (q j).left ≫ (B j).hom = pullback.snd A.hom (𝒰.f j) := by
     simpa using Over.w (q j)
   have ha : (α ≫ pullback.fst _ _) ≫ A.hom = κ ≫ x ≫ pullback.fst _ _ ≫ (B j).hom ≫ 𝒰.f j := by

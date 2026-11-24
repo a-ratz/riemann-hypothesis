@@ -83,16 +83,16 @@ theorem gaussRed_coeff {Ω U : Type} [Field Ω] [Field U] [Algebra Ω U] {σ : T
   rw [MvPolynomial.coeff_sum]
   by_cases h : α ∈ p.support
   · rw [Finset.sum_eq_single α]
-    · rw [MvPolynomial.coeff_monomial, if_pos rfl]
+    · rw [MvPolynomial.coeff_monomial, ite_eq_left rfl]
     · intro b _ hb
-      rw [MvPolynomial.coeff_monomial, if_neg hb]
+      rw [MvPolynomial.coeff_monomial, ite_eq_right hb]
     · intro h'
       exact absurd h h'
   · have h0 : p.coeff α = 0 := by simpa [MvPolynomial.mem_support_iff] using h
     have hz : (⟨p.coeff α, hc α⟩ : V.comap (algebraMap Ω U)) = 0 := Subtype.ext h0
     rw [Finset.sum_eq_zero, hz, map_zero]
     intro b hb
-    rw [MvPolynomial.coeff_monomial, if_neg]
+    rw [MvPolynomial.coeff_monomial, ite_eq_right]
     rintro rfl
     exact h hb
 
@@ -103,7 +103,7 @@ theorem gaussRed_eval {Ω U : Type} [Field Ω] [Field U] [Algebra Ω U] {σ : Ty
     ∃ h : aeval t p ∈ V, IsLocalRing.residue V ⟨aeval t p, h⟩ =
       aeval (fun s => IsLocalRing.residue V ⟨t s, ht s⟩) (gaussRed V p hc) := by
   try dsimp only
-  letI := residueAlgebra V (algebraMap Ω U)
+  let := residueAlgebra V (algebraMap Ω U)
   classical
   obtain ⟨y, hydef⟩ : ∃ y : V, y = ∑ α ∈ p.support,
       comapInclusion V (algebraMap Ω U) ⟨p.coeff α, hc α⟩ *
@@ -145,9 +145,9 @@ open MvPolynomial
 
 theorem residueTrdeg_holds (hTR : TRStatement) : ResidueTrdegStatement := by
   intro K Ω U _ _ _ _ _ D hD σ _ t V ht τ _ u p hp hcard hpu hind
-  letI _iW := residueAlgebra V (algebraMap Ω U)
-  letI _io := residueAlgebra (V.comap (algebraMap Ω U)) (algebraMap K Ω)
-  letI : Algebra (IsLocalRing.ResidueField
+  let _iW := residueAlgebra V (algebraMap Ω U)
+  let _io := residueAlgebra (V.comap (algebraMap Ω U)) (algebraMap K Ω)
+  let : Algebra (IsLocalRing.ResidueField
       ((V.comap (algebraMap Ω U)).comap (algebraMap K Ω))) (IsLocalRing.ResidueField V) :=
     ((algebraMap _ (IsLocalRing.ResidueField V)).comp
       (algebraMap _ (IsLocalRing.ResidueField (V.comap (algebraMap Ω U))))).toAlgebra
@@ -178,7 +178,7 @@ theorem residueTrdeg_holds (hTR : TRStatement) : ResidueTrdegStatement := by
   obtain ⟨h2, h3⟩ := gauss_card_arith hW hTRW (hσ ▸ gauss_trdeg_adjoin_le _)
   refine ⟨?_, h2, gauss_indep_of_le_trdeg _ (hσ.trans h3.symm).le⟩
   intro k₁ hk₁
-  letI : Algebra k₁ (IsLocalRing.ResidueField V) :=
+  let : Algebra k₁ (IsLocalRing.ResidueField V) :=
     ((algebraMap (IsLocalRing.ResidueField (V.comap (algebraMap Ω U)))
       (IsLocalRing.ResidueField V)).comp (algebraMap k₁ _)).toAlgebra
   have hST1 : IsScalarTower
@@ -217,11 +217,11 @@ open MvPolynomial DerivationAlgebraicIndependence
 theorem trdeg_sField {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] (D m : ℕ) :
     Algebra.trdeg K (SField Ω D m) = Algebra.trdeg K Ω + ((1 + (D + 1) * m : ℕ) : Cardinal) := by
   classical
-  haveI : FaithfulSMul K Ω :=
+  have : FaithfulSMul K Ω :=
     (faithfulSMul_iff_algebraMap_injective K Ω).2 (algebraMap K Ω).injective
-  haveI : FaithfulSMul Ω (MvPolynomial (SVars D m) Ω) :=
+  have : FaithfulSMul Ω (MvPolynomial (SVars D m) Ω) :=
     (faithfulSMul_iff_algebraMap_injective Ω _).2 (MvPolynomial.C_injective _ _)
-  haveI : FaithfulSMul (MvPolynomial (SVars D m) Ω) (SField Ω D m) :=
+  have : FaithfulSMul (MvPolynomial (SVars D m) Ω) (SField Ω D m) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2
       (IsFractionRing.injective (MvPolynomial (SVars D m) Ω) (SField Ω D m))
   have h1 := trdeg_add_eq K (MvPolynomial (SVars D m) Ω) (A := SField Ω D m)
@@ -285,7 +285,7 @@ theorem genericImageFinite : FieldOfSStatement := by
   let S : Set (SField Ω D m) := f '' (s : Set Ω) ∪
     Set.range (fun i => algebraMap (MvPolynomial (SVars D m) Ω) (SField Ω D m) (MvPolynomial.X i))
   have hSfin : S.Finite := (s.finite_toSet.image _).union (Set.finite_range _)
-  haveI : Finite S := hSfin.to_subtype
+  have : Finite S := hSfin.to_subtype
   let L := IntermediateField.adjoin E S
   have hK : IntermediateField.adjoin K (f '' (s : Set Ω)) ≤ L.restrictScalars K := by
     rw [IntermediateField.adjoin_le_iff]
@@ -470,11 +470,11 @@ theorem normOrd_length_residue (O B : Type) [CommRing O] [IsLocalRing O] [CommRi
     length O (B ⧸ Q) = Q.inertiaDeg O := by
   classical
   set p := Q.under O with hp
-  haveI : p.IsMaximal := Ideal.IsMaximal.under O Q
-  haveI : Q.LiesOver p := ⟨rfl⟩
-  rw [← Ideal.inertiaDeg_eq_inertiaDeg' p Q, Ideal.inertiaDeg_algebraMap]
-  letI : Field (O ⧸ p) := Ideal.Quotient.field p
-  haveI : Module.Finite (O ⧸ p) (B ⧸ Q) := Module.Finite.of_restrictScalars_finite O _ _
+  have : p.IsMaximal := Ideal.IsMaximal.under O Q
+  have : Q.LiesOver p := ⟨rfl⟩
+  rw [← Ideal.inertiaDeg'_eq_inertiaDeg p Q, Ideal.inertiaDeg'_algebraMap]
+  let : Field (O ⧸ p) := Ideal.Quotient.field p
+  have : Module.Finite (O ⧸ p) (B ⧸ Q) := Module.Finite.of_restrictScalars_finite O _ _
   rw [← Module.length_eq_finrank]
   have hsurj : Function.Surjective (algebraMap O (O ⧸ p)) := Ideal.Quotient.mk_surjective
   let e : Submodule (O ⧸ p) (B ⧸ Q) ≃o Submodule O (B ⧸ Q) :=

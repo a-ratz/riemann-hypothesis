@@ -72,7 +72,7 @@ theorem emb_star (v : InfinitePlace X.B.I.F) (t : D.host.E) :
   first
     | exact NumberField.IsCMField.complexEmbedding_complexConj _ t
     | (simp only [Formalism.MainNotions.S.embS]; exact NumberField.IsCMField.complexEmbedding_complexConj _ t)
-    | (haveI := D.host.isCMField_hostE
+    | (have := D.host.isCMField_hostE
        rw [show (star t : D.host.E) = NumberField.IsCMField.complexConj D.host.E t from rfl]
        exact NumberField.IsCMField.complexEmbedding_complexConj _ _ t)
     | (haveI := D.host.isCMField_hostE

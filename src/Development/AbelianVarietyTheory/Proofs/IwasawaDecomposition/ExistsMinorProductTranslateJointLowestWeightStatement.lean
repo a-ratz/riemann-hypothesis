@@ -176,12 +176,12 @@ theorem detM_submatrix (ε : Fin m → Bool) (σ : Equiv.Perm (Fin m)) (h : ∀ 
     simp [h1, h2]
 
 theorem det_lo {u : Matrix (Fin m) (Fin m) ℂ} (hu : GlobalTheory.Dec.IsLo u) : u.det = ∏ j, u j j :=
-  Matrix.det_of_lowerTriangular u (fun i j h => hu i j (by simpa using h))
+  det_of_isLowerTriangular u (fun i j h => hu i j (by simpa using h))
 
 theorem inv_transpose_lo {g : Matrix (Fin m) (Fin m) ℂ} (hg : IsUnit g) (hl : GlobalTheory.Dec.IsLo g) :
     (∀ a b, (g⁻¹)ᵀ a b ≠ 0 → a ≤ b) ∧ ∀ a, (g⁻¹)ᵀ a a = (g a a)⁻¹ := by
   have hd := (Matrix.isUnit_iff_isUnit_det g).1 hg
-  letI := hg.invertible
+  let := hg.invertible
   have hb : g.BlockTriangular OrderDual.toDual := fun i j h => hl i j (by simpa using h)
   have hi := Matrix.blockTriangular_inv_of_blockTriangular hb
   have h0 : ∀ a b, a < b → g⁻¹ a b = 0 := fun a b h => hi (by simpa using h)
@@ -262,8 +262,8 @@ theorem eigen (D : D7) (m n : ℕ) (ε : D.what₂.Tau → Fin m → Bool) (p q 
     by_cases h : (a : ℕ) < p τ
     · simp [h, zpow_add₀ (hk0 τ _), mul_comm]
     · have h4 : m - 1 - (p τ + (m - 1 - a)) = a - p τ := by omega
-      simp only [h, if_false, decide_false, Bool.false_eq_true, _root_.one_zpow, one_mul, h4]
-      rw [if_neg (by omega), zpow_add₀ (hk0 τ _), mul_comm]
+      simp only [h, ite_false, decide_false, Bool.false_eq_true, _root_.one_zpow, one_mul, h4]
+      rw [ite_eq_right (by omega), zpow_add₀ (hk0 τ _), mul_comm]
   · rw [← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun j _ => ?_
     rw [← zpow_add₀ (hu0 j)]
@@ -348,7 +348,7 @@ theorem exists_joint_bottom : ∀ (D : D7) (m n : ℕ) (ε : D.what₂.Tau → F
   · refine (hK τ _ ⟨isUnit_diag_exp θ, ?_⟩ (hdl _)).trans ?_
     · simp [Formalism.REAL.Jm, Matrix.diagonal_mul_diagonal, mul_comm]
     · congr 1
-      simp only [Matrix.diagonal_apply_eq, ← Complex.exp_neg, ← Complex.exp_int_mul, ← Complex.exp_sum]
+      simp only [Matrix.diagonal_apply_eq, ← Complex.exp_neg, ← Complex.exp_intCast_mul, ← Complex.exp_sum]
       congr 1
       push_cast
       rw [Finset.sum_mul]
@@ -357,7 +357,7 @@ theorem exists_joint_bottom : ∀ (D : D7) (m n : ℕ) (ε : D.what₂.Tau → F
     simpa [fun a => (hl a a).2 rfl] using this
   · refine (hU τ _ (isUnit_diag_exp θ) (hdl _)).trans ?_
     congr 1
-    simp only [Matrix.diagonal_apply_eq, ← Complex.exp_int_mul, ← Complex.exp_sum]
+    simp only [Matrix.diagonal_apply_eq, ← Complex.exp_intCast_mul, ← Complex.exp_sum]
     congr 1
     push_cast
     rw [Finset.sum_mul]

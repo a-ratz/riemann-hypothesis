@@ -303,7 +303,7 @@ private lemma homog_of_scale (P : MvPolynomial σ B) (d : ℕ)
   rw [← Finsupp.degree_eq_weight_one]
   by_contra hne
   apply hα
-  rw [if_neg hne]
+  rw [ite_eq_right hne]
   simp
 
 open MvPolynomial in
@@ -318,10 +318,10 @@ private lemma coeff_kill [DecidableEq σ] (T : Finset σ) (P : MvPolynomial σ B
       rw [aeval_monomial, monomial_eq]
       split_ifs with hb
       · congr 1
-        exact Finset.prod_congr rfl fun s hs => by simp only [if_pos (hb hs)]
+        exact Finset.prod_congr rfl fun s hs => by simp only [ite_eq_left (hb hs)]
       · obtain ⟨s, hs, hsT⟩ := Finset.not_subset.1 hb
         rw [Finsupp.prod, Finset.prod_eq_zero hs, mul_zero]
-        rw [if_neg hsT, zero_pow (Finsupp.mem_support_iff.1 hs)]
+        rw [ite_eq_right hsT, zero_pow (Finsupp.mem_support_iff.1 hs)]
     rw [e]
     by_cases hab : β = α
     · subst hab; split_ifs <;> simp
@@ -403,23 +403,23 @@ private lemma exists_phi (D : GDet n A G) : ∃ c : (Fin n → G) → A,
       rw [Finsupp.mem_support_iff, coeff_tens_gam] at hg
       rw [Fintype.mem_piFinset]
       by_contra h
-      exact hg (if_neg h)
+      exact hg (ite_eq_right h)
     have e : ∀ g ∈ Fintype.piFinset fun _ : Fin n => S, AddMonoidAlgebra.coeff ((tens fun _ => gam A S).coeff g * algebraMap A (MvPolynomial G A) (c g))
         α =
           if typ g = α then c g else 0 := by
       intro g hg
-      rw [coeff_tens_gam, if_pos (Fintype.mem_piFinset.1 hg), mul_comm, MvPolynomial.algebraMap_eq,
+      rw [coeff_tens_gam, ite_eq_left (Fintype.mem_piFinset.1 hg), mul_comm, MvPolynomial.algebraMap_eq,
         MvPolynomial.coeff_C_mul, MvPolynomial.coeff_monomial]
       simp
     rw [Finset.sum_congr rfl e]
     by_cases h : α.degree = n ∧ α.support ⊆ S
     · have hr : typ (Function.invFun typ α : Fin n → G) = α := Function.invFun_eq (exists_typ n α h.1)
       rw [Finset.sum_eq_single (Function.invFun typ α)]
-      · simp only [hr, c, c0, if_true]
-        rw [kill S _ α h.2, if_pos subset_rfl]
+      · simp only [hr, c, c0, ite_true]
+        rw [kill S _ α h.2, ite_eq_left subset_rfl]
       · intro g _ hg
         split_ifs with h1
-        · simp only [c, h1, if_neg hg]
+        · simp only [c, h1, ite_eq_right hg]
         · rfl
       · intro h1
         refine absurd (Fintype.mem_piFinset.2 fun i => h.2 ?_) h1
@@ -427,10 +427,10 @@ private lemma exists_phi (D : GDet n A G) : ∃ c : (Fin n → G) → A,
         rwa [hr] at this
     · rw [Finset.sum_eq_zero]
       · by_cases h1 : α.degree = n
-        · rw [kill S S α subset_rfl, if_neg fun h2 => h ⟨h1, h2⟩]
+        · rw [kill S S α subset_rfl, ite_eq_right fun h2 => h ⟨h1, h2⟩]
         · exact (hom S).coeff_eq_zero h1
       · intro g hg
-        rw [if_neg]
+        rw [ite_eq_right]
         rintro rfl
         refine h ⟨by simp [typ], fun a ha => ?_⟩
         obtain ⟨i, rfl⟩ := mem_support_typ.1 ha
@@ -530,11 +530,11 @@ private lemma theta_mul_ext (η : B' →ₐ[B] MonoidAlgebra B H) (v : MonoidAlg
 
 private lemma exists_aeval_of_commute {σ W : Type} [Ring W] [Algebra B W] (p : σ → W)
     (h : ∀ i j, Commute (p i) (p j)) : ∃ η : MvPolynomial σ B →ₐ[B] W, ∀ j, η (MvPolynomial.X j) = p j := by
-  letI : IsMulCommutative (Algebra.adjoin B (Set.range p)) :=
+  let : IsMulCommutative (Algebra.adjoin B (Set.range p)) :=
     Algebra.isMulCommutative_adjoin (R := B) (s := Set.range p) (by
       rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩ _; exact h i j)
   open scoped IsMulCommutative in
-    letI : CommRing (Algebra.adjoin B (Set.range p)) := inferInstance
+    let : CommRing (Algebra.adjoin B (Set.range p)) := inferInstance
   exact ⟨(Subalgebra.val (Algebra.adjoin B (Set.range p))).comp
     (MvPolynomial.aeval (R := B) fun j =>
     (⟨p j, Algebra.subset_adjoin ⟨j, rfl⟩⟩ : Algebra.adjoin B (Set.range p))), fun j => by simp⟩
@@ -988,7 +988,7 @@ private lemma matrix_units [IsLocalHom (algebraMap A k)] (π : S →ₐ[A] Matri
     exact Matrix.sum_single_one)
   apply hu.mul_left_cancel
   rw [Finset.sum_mul_sum, mul_one]
-  simp only [p6, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [p6, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 private lemma exists_iso [IsLocalHom (algebraMap A k)] (hf : Function.Surjective (algebraMap A k))
     (π : S →ₐ[A] Matrix (Fin n) (Fin n) k) (hπs : Function.Surjective π) (o : Fin n)
@@ -1309,7 +1309,7 @@ private theorem main [IsLocalRing A] [IsAdicComplete (IsLocalRing.maximalIdeal A
         ring
       rw [h3, h1, map_one, ← Polynomial.comp_eq_aeval] at h2
       have h4 := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q 1) h2
-      simp only [Polynomial.comp_C_mul_X_coeff, pow_one, Polynomial.coeff_one, one_ne_zero, if_false] at h4
+      simp only [Polynomial.comp_C_mul_X_coeff, pow_one, Polynomial.coeff_one, one_ne_zero, ite_false] at h4
       have h5 : IsUnit ((D.D (Polynomial A) y).coeff 1) := by
         apply isUnit_of_map_unit (algebraMap A k)
         have e : mapRingHom G (Polynomial.mapRingHom (algebraMap A k)) y =
@@ -1384,8 +1384,8 @@ theorem UpperTheory.Reformulated.B.CayleyHamiltonSymmetric.detRep :
               ∃ (ρ' : G →* GL (Fin n) A),
                 D = UpperTheory.V.W.GDet.ofRep (UpperTheory.V.W.mat ρ') ∧ UpperTheory.V.W.pushRep f ρ' = ρ ∧ UpperTheory.Reformulated.B.CayleyHamiltonSymmetric.Full ρ' := by
   intro A k G _ _ _ _ _ f hl _ n D ρ hn hf hρ hD
-  letI : Algebra A k := f.toAlgebra
-  haveI : IsLocalHom (algebraMap A k) := hl
+  let : Algebra A k := f.toAlgebra
+  have : IsLocalHom (algebraMap A k) := hl
   obtain ⟨ρ', h1, h2, h3⟩ := main D (UpperTheory.V.W.mat ρ) ⟨0, hn⟩ hf ((full_iff ρ).1 hρ) (by
     intro B _ inst _ _ y
     obtain rfl : inst = ((algebraMap k B).comp f).toAlgebra :=
@@ -1507,11 +1507,11 @@ theorem UpperTheory.V.Ws.Eb.liftRep :
     ∀ {l : ℕ} [Fact l.Prime] {F : W.GFrame l} {c : Coef l} {n : ℕ} {r : W.Resid F c.O n} (B : W.UniversalOrdinaryDeterminantRing r) (x' : B.B →ₐ[c.O] DualNumber (PadicAlgCl l)) (ρ : F.G₀ →* GL (Fin n) (PadicAlgCl l)), 1 ≤ n → Full ρ → B.u.D.map ((dF _).comp (x' : B.B →+* DualNumber (PadicAlgCl l))) = W.GDet.ofRep (W.mat ρ) →
         ∃ (ρ' : F.G₀ →* GL (Fin n) (DualNumber (PadicAlgCl l))) (y : F.G₀ → Matrix (Fin n) (Fin n) (PadicAlgCl l)), B.u.D.map (x' : B.B →+* DualNumber (PadicAlgCl l)) = W.GDet.ofRep (W.mat ρ') ∧ W.pushRep (dF _) ρ' = ρ ∧ Full ρ' ∧ Continuous ρ ∧ y ∈ Z1 (Loc.adGL ρ) ∧ IsTan ρ y ρ' := by
   intro l _ F c n r B x' ρ hn hρ hD
-  haveI : Module.Finite (PadicAlgCl l) (DualNumber (PadicAlgCl l)) :=
+  have : Module.Finite (PadicAlgCl l) (DualNumber (PadicAlgCl l)) :=
     inferInstanceAs (Module.Finite (PadicAlgCl l) (PadicAlgCl l × PadicAlgCl l))
-  haveI : IsArtinianRing (DualNumber (PadicAlgCl l)) := IsArtinianRing.of_finite (PadicAlgCl l) _
-  haveI : IsAdicComplete (maximalIdeal (DualNumber (PadicAlgCl l))) (DualNumber (PadicAlgCl l)) := inferInstance
-  haveI : IsLocalHom (dF (PadicAlgCl l)) := ⟨fun a ha => TrivSqZeroExt.isUnit_iff_isUnit_fst.2 ha⟩
+  have : IsArtinianRing (DualNumber (PadicAlgCl l)) := IsArtinianRing.of_finite (PadicAlgCl l) _
+  have : IsAdicComplete (maximalIdeal (DualNumber (PadicAlgCl l))) (DualNumber (PadicAlgCl l)) := inferInstance
+  have : IsLocalHom (dF (PadicAlgCl l)) := ⟨fun a ha => TrivSqZeroExt.isUnit_iff_isUnit_fst.2 ha⟩
   obtain ⟨ρ', h1, h2, h3⟩ := detRep (dF (PadicAlgCl l)) (B.u.D.map (x' : B.B →+* DualNumber (PadicAlgCl l))) ρ hn
     (fun a => ⟨TrivSqZeroExt.inl a, rfl⟩) hρ (((AlgebraTools.Det.mapApi B.u.D _).2.2.2.2.2.2.1 _).trans hD)
   have htr : ∀ g, (W.mat ρ' g).trace = x' (B.u.D.lam 1 (MonoidAlgebra.single g 1)) := fun g => by

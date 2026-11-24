@@ -309,10 +309,10 @@ namespace GlobalTheory.LatticeCard
 theorem card_lattice_quot_pow : ∀ (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [TopologicalSpace G] (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A : GRep G ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ) (r : ℕ), Nat.card (↥LA.T ⧸ (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA.T)) = Nat.card (O ⧸ Ideal.span {((l : ℕ) : O)}) ^ (r * finrank LL A.V) := by
   intro l _ G _ _ LL _ _ _ O _ _ hG A LA r
   obtain ⟨⟨hD, -, hFr⟩, -, -, -, -⟩ := hG
-  haveI := hD
-  haveI := hFr
-  haveI : Module.Free O LA.T := LA.free
-  haveI : Module.Finite O LA.T := Module.Finite.iff_fg.2 LA.fg
+  have := hD
+  have := hFr
+  have : Module.Free O LA.T := LA.free
+  have : Module.Finite O LA.T := Module.Finite.iff_fg.2 LA.fg
   let b := Module.Free.chooseBasis O LA.T
   have hli : LinearIndependent LL (fun i => (b i : A.V)) := by
     rw [← LinearIndependent.iff_fractionRing O LL]
@@ -361,12 +361,12 @@ theorem exists_trace_form_integral_iff : ∀ (l : ℕ) [Fact l.Prime] (LL : Type
   intro l _ LL _ _ _ O _ _ hG
   have hint := (good_coeff_integers l LL O hG).1
   obtain ⟨⟨hD, hDVR, hFr⟩, hfin, hmod, htop, hopen⟩ := hG
-  haveI := hD
-  haveI := hDVR
-  haveI := hFr
-  haveI : FiniteDimensional ℚ_[l] LL := hfin
-  letI : Algebra ℤ_[l] LL := ((algebraMap ℚ_[l] LL).comp (algebraMap ℤ_[l] ℚ_[l])).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] LL := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have := hD
+  have := hDVR
+  have := hFr
+  have : FiniteDimensional ℚ_[l] LL := hfin
+  let : Algebra ℤ_[l] LL := ((algebraMap ℚ_[l] LL).comp (algebraMap ℤ_[l] ℚ_[l])).toAlgebra
+  have : IsScalarTower ℤ_[l] ℚ_[l] LL := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let A : Subring LL := (algebraMap O LL).range
   have hZ : ∀ u : ℤ_[l], algebraMap ℤ_[l] LL u ∈ A := fun u =>
     padicInt_mem A (by rw [RingHom.coe_range]; exact hopen) u
@@ -376,17 +376,17 @@ theorem exists_trace_form_integral_iff : ∀ (l : ℕ) [Fact l.Prime] (LL : Type
   have hψ : ∀ a : A, algebraMap O LL (ψ.symm a) = a := fun a =>
     congrArg Subtype.val (ψ.apply_symm_apply a)
   let f : ℤ_[l] →+* O := ψ.symm.toRingHom.comp ((algebraMap ℤ_[l] LL).codRestrict A hZ)
-  letI : Algebra ℤ_[l] O := f.toAlgebra
-  haveI : IsScalarTower ℤ_[l] O LL := IsScalarTower.of_algebraMap_eq
+  let : Algebra ℤ_[l] O := f.toAlgebra
+  have : IsScalarTower ℤ_[l] O LL := IsScalarTower.of_algebraMap_eq
     (fun u => (hψ ((algebraMap ℤ_[l] LL).codRestrict A hZ u)).symm)
-  haveI : IsIntegralClosure O ℤ_[l] LL :=
+  have : IsIntegralClosure O ℤ_[l] LL :=
     { algebraMap_injective := hinj
       isIntegral_iff := fun {x} => by
         rw [← Set.mem_range]
         exact (hint x).symm }
   let D : FractionalIdeal (nonZeroDivisors O) LL := FractionalIdeal.dual ℤ_[l] ℚ_[l] 1
   have hD0 : D ≠ 0 := FractionalIdeal.dual_ne_zero ℤ_[l] ℚ_[l] one_ne_zero
-  haveI hP : (D : Submodule O LL).IsPrincipal := FractionalIdeal.isPrincipal D
+  have hP : (D : Submodule O LL).IsPrincipal := FractionalIdeal.isPrincipal D
   set c : LL := Submodule.IsPrincipal.generator (D : Submodule O LL) with hc
   have hDc : (D : Submodule O LL) = Submodule.span O {c} :=
     (Submodule.IsPrincipal.span_singleton_generator _).symm
@@ -395,7 +395,7 @@ theorem exists_trace_form_integral_iff : ∀ (l : ℕ) [Fact l.Prime] (LL : Type
     apply hD0
     apply FractionalIdeal.coeToSubmodule_injective
     show (D : Submodule O LL) = ((0 : FractionalIdeal (nonZeroDivisors O) LL) : Submodule O LL)
-    rw [hDc, h, FractionalIdeal.coe_zero]
+    rw [hDc, h, FractionalIdeal.coeToSubmodule_zero]
     exact Submodule.span_singleton_eq_bot.2 rfl
   refine ⟨(Algebra.trace ℚ_[l] LL).comp (LinearMap.mulLeft ℚ_[l] c), fun a => ?_⟩
   have key : (∀ b : O, ∃ u : ℤ_[l], (Algebra.trace ℚ_[l] LL) (c * (a * algebraMap O LL b)) = (u : ℚ_[l]))
@@ -415,7 +415,7 @@ theorem exists_trace_form_integral_iff : ∀ (l : ℕ) [Fact l.Prime] (LL : Type
       rw [← hu]
       rfl
   simp only [LinearMap.comp_apply, LinearMap.mulLeft_apply]
-  rw [key, ← FractionalIdeal.mem_coe, hDc, Submodule.mem_span_singleton]
+  rw [key, ← FractionalIdeal.mem_coeToSubmodule, hDc, Submodule.mem_span_singleton]
   constructor
   · rintro ⟨z, hz⟩
     refine ⟨z, ?_⟩
@@ -442,9 +442,9 @@ namespace GlobalTheory.InertiaEigenvalues
 theorem actQ_pow_isLocallyConstant : ∀ (l : ℕ) [Fact l.Prime] (G : Type) [Group G] [TopologicalSpace G] (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A : GRep G ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ) (r : ℕ) (hI : StableSub LA (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA.T)) (x : ↥LA.T ⧸ (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA.T)), IsLocallyConstant fun g : G => actQ LA _ hI g x := by
   intro l _ G _ _ LL _ _ _ O _ _ hG A LA r hI x
   obtain ⟨_, _, _, hTR, hO⟩ := hG
-  haveI := hTR
-  haveI : CharZero LL := charZero_of_injective_algebraMap (algebraMap ℚ_[l] LL).injective
-  haveI := IsModuleTopology.topologicalAddGroup LL A.V
+  have := hTR
+  have : CharZero LL := charZero_of_injective_algebraMap (algebraMap ℚ_[l] LL).injective
+  have := IsModuleTopology.isTopologicalAddGroup LL A.V
   set c : LL := ((l : ℕ) : LL) ^ r with hc
   have hc0 : c ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
   have hT : IsOpen (LA.T : Set A.V) :=
@@ -872,14 +872,14 @@ theorem core_pos (hT : Formalism.GaloisCohomology.LocalTateDualityK) (hE : Forma
     have := hfinO 1
     rw [pow_one] at this
     exact Nat.card_pos.ne'
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hcM : Nat.card M = Nat.card (O ⧸ Ideal.span {((l : ℕ) : O)}) ^ (r * finrank LL A.V) := by
     rw [← Nat.card_congr e.toEquiv]
     exact _root_.GlobalTheory.LatticeCard.card_lattice_quot_pow l _ LL O hG A LA r
   have hcM' : Nat.card (↥LA'.T ⧸ (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA'.T)) =
       Nat.card (O ⧸ Ideal.span {((l : ℕ) : O)}) ^ (r * finrank LL A.V) := by
     rw [_root_.GlobalTheory.LatticeCard.card_lattice_quot_pow l _ LL O hG A' LA' r, ← hm.1.2.2.2]
-  haveI : Finite M := Nat.finite_of_card_ne_zero (by rw [hcM]; exact pow_ne_zero _ hcO)
+  have : Finite M := Nat.finite_of_card_ne_zero (by rw [hcM]; exact pow_ne_zero _ hcO)
   have htor : ∀ x : M, l ^ r • x = 0 := by
     intro x
     rw [← e.apply_symm_apply x, ← map_nsmul]
@@ -889,7 +889,7 @@ theorem core_pos (hT : Formalism.GaloisCohomology.LocalTateDualityK) (hE : Forma
       rw [← Submodule.Quotient.mk_smul, (Submodule.Quotient.mk_eq_zero _).2, map_zero]
       rw [← Nat.cast_smul_eq_nsmul O, Nat.cast_pow]
       exact Submodule.smul_mem_smul (Ideal.mem_span_singleton_self _) Submodule.mem_top
-  haveI instM : Module (ZMod (l ^ r)) M := AddCommGroup.zmodModule htor
+  have instM : Module (ZMod (l ^ r)) M := AddCommGroup.zmodModule htor
   let φ : ↥(GK K) ≃* Formalism.GaloisCohomology.GK l K.1 := IntermediateField.fixingSubgroupEquiv K.1
   have hφ : Continuous φ ∧ Continuous φ.symm :=
     GlobalTheory.fixingSubgroupEquiv_bicontinuous ℚ_[l] (Om l) K.1
@@ -976,8 +976,8 @@ theorem card_H1Q_eq : Formalism.GaloisCohomology.LocalTateDualityK → Formalism
         Subsingleton (X ⧸ (Ideal.span {((l : ℕ) : O) ^ 0} • ⊤ : Submodule O X)) := by
       intro X _ _
       rw [Submodule.Quotient.subsingleton_iff, pow_zero, Ideal.span_singleton_one, Submodule.top_smul]
-    haveI := hs ↥LA.T
-    haveI := hs ↥LA'.T
+    have := hs ↥LA.T
+    have := hs ↥LA'.T
     have e1 : Nat.card (QuotientCohomology LA _ hI) = 1 := by
       haveI : Subsingleton (QuotientCohomology LA _ hI) := (Submodule.Quotient.mk_surjective _).subsingleton
       exact Nat.card_unique
@@ -1072,10 +1072,10 @@ namespace GlobalTheory.H1Rank
 theorem pow_smul_mem_lattice : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A : GRep ↥(GK K) ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ) (x : A.V), ∃ n : ℕ, ((l : ℕ) : O) ^ n • x ∈ LA.T := by
   intro l _ K LL _ _ _ O _ _ hG A LA x
   obtain ⟨-, -, hmod, htop, hopen⟩ := hG
-  haveI := hmod
-  haveI := htop
+  have := hmod
+  have := htop
   have hT : IsOpen (LA.T : Set A.V) := GlobalTheory.Cyc.isOpen_of_fg_of_span_eq_top hopen LA.T LA.fg LA.span
-  haveI := IsModuleTopology.toContinuousSMul LL A.V
+  have := IsModuleTopology.toContinuousSMul LL A.V
   have h1 : Filter.Tendsto (fun n : ℕ => (l : ℚ_[l]) ^ n) Filter.atTop (nhds 0) :=
     tendsto_pow_atTop_nhds_zero_of_norm_lt_one Padic.norm_p_lt_one
   have h2 : Filter.Tendsto (fun n : ℕ => algebraMap ℚ_[l] LL ((l : ℚ_[l]) ^ n) • x) Filter.atTop (nhds 0) := by
@@ -1127,7 +1127,7 @@ namespace GlobalTheory.H1Rank
 theorem finite_finrank_of_localizes : ∀ (O LL M N : Type) [CommRing O] [IsDomain O] [Field LL] [Algebra O LL] [IsFractionRing O LL] [AddCommGroup M] [Module O M] [Module.Finite O M] [AddCommGroup N] [Module LL N] [Module O N] [IsScalarTower O LL N] (f : M →ₗ[O] N) (t : O), t ≠ 0 → (∀ y : N, ∃ n : ℕ, ∃ x : M, f x = t ^ n • y) → (∀ x : M, f x = 0 → ∃ n : ℕ, t ^ n • x = 0) → Module.Finite LL N ∧ finrank LL N = finrank O M := by
   intro O LL M N _ _ _ _ _ _ _ _ _ _ _ _ f t ht hs hk
   have htn : ∀ n : ℕ, t ^ n ∈ nonZeroDivisors O := fun n => pow_mem (mem_nonZeroDivisors_of_ne_zero ht) n
-  haveI : IsLocalizedModule (nonZeroDivisors O) f :=
+  have : IsLocalizedModule (nonZeroDivisors O) f :=
     { map_units := by
         intro s
         rw [Module.End.isUnit_iff]
@@ -1161,13 +1161,13 @@ theorem pow_smul_mem_B1T : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Typ
 
 theorem pow_smul_mem_Z1T : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A : GRep ↥(GK K) ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ), ∀ c ∈ continuousCocycles A.ρ, ∃ n : ℕ, ((l : ℕ) : O) ^ n • c ∈ latticeCocycles LA := by
   intro l _ K LL _ _ _ O _ _ hG A LA c hc
-  haveI : CompactSpace ↥(GK K) := by
-    haveI := K.2
+  have : CompactSpace ↥(GK K) := by
+    have := K.2
     exact isCompact_iff_compactSpace.1 (IntermediateField.fixingSubgroup_isClosed K.1).isCompact
   have hG' := hG
   obtain ⟨-, -, hmod, htop, hopen⟩ := hG'
-  haveI := hmod
-  haveI := htop
+  have := hmod
+  have := htop
   have hT : IsOpen (LA.T : Set A.V) := GlobalTheory.Cyc.isOpen_of_fg_of_span_eq_top hopen LA.T LA.fg LA.span
   let U : ℕ → Set A.V := fun n => (fun v : A.V => ((l : ℕ) : O) ^ n • v) ⁻¹' (LA.T : Set A.V)
   have hUo : ∀ n, IsOpen (U n) := by
@@ -1230,9 +1230,9 @@ theorem growth_H1T_dim_H1V : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (LL : T
   intro l _ K LL _ _ _ O _ _ hG A LA hfin
   have hG' := hG
   obtain ⟨⟨hD, hDVR, hFr⟩, -, -, -, -⟩ := hG'
-  haveI := hD
-  haveI := hDVR
-  haveI := hFr
+  have := hD
+  have := hDVR
+  have := hFr
   have hl0 : ((l : ℕ) : O) ≠ 0 := by
     intro h
     have h1 : algebraMap O LL ((l : ℕ) : O) = 0 := by rw [h, map_zero]

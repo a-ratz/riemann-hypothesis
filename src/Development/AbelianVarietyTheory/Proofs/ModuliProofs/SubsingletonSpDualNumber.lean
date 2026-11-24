@@ -60,7 +60,7 @@ theorem eq_comp_section_of_const {X T Y : Scheme.{0}} (p : X ⟶ T) (ε : T ⟶ 
     g = p ≫ ε ≫ g := by
   obtain ⟨_, ⟨W, hW, rfl⟩, hyW, -⟩ :=
     Y.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ y) isOpen_univ
-  haveI : IsAffine W := hW
+  have : IsAffine W := hW
   have hr : Set.range g ⊆ Set.range (Scheme.Opens.ι W) := by
     rintro _ ⟨x, rfl⟩
     rw [hy x, Scheme.Opens.range_ι]

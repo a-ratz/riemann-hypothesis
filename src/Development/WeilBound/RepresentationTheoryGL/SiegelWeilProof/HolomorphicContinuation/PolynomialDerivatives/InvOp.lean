@@ -170,7 +170,7 @@ theorem op_sum {ι : Type*} (S : Finset ι) (u : ι → Sym m n) (f : PX m n) : 
 
 theorem op_monomial (t : Ix m n ⊕ Ix m n →₀ ℕ) (a : ℂ) (f : PX m n) : op (monomial t a) f = a • opMono t f := by
   classical
-  rw [op_eq_of_subset _ {t} (MvPolynomial.support_monomial_subset), Finset.sum_singleton, coeff_monomial, if_pos rfl]
+  rw [op_eq_of_subset _ {t} (MvPolynomial.support_monomial_subset), Finset.sum_singleton, coeff_monomial, ite_eq_left rfl]
 
 theorem op_add_f (u : Sym m n) (f g : PX m n) : op u (f + g) = op u f + op u g := by
   simp only [op, opMono_add, smul_add, Finset.sum_add_distrib]
@@ -224,7 +224,7 @@ theorem op_mul_inl (u : Sym m n) (k : Ix m n) (f : PX m n) : op (u * X (Sum.inl 
   rw [op_sum]
   conv_rhs => rw [op, Finset.mul_sum]
   refine Finset.sum_congr rfl fun t _ => ?_
-  rw [X, monomial_mul, mul_one, op_monomial, opMono_add_inl, mul_smul_comm]
+  rw [X, monomial_mul_monomial, mul_one, op_monomial, opMono_add_inl, mul_smul_comm]
 
 theorem op_mul_inr (u : Sym m n) (k : Ix m n) (f : PX m n) : op (u * X (Sum.inr k)) f = op u (pderiv k f) := by
   classical
@@ -232,7 +232,7 @@ theorem op_mul_inr (u : Sym m n) (k : Ix m n) (f : PX m n) : op (u * X (Sum.inr 
   rw [op_sum]
   conv_rhs => rw [op]
   refine Finset.sum_congr rfl fun t _ => ?_
-  rw [X, monomial_mul, mul_one, op_monomial, opMono_add_inr]
+  rw [X, monomial_mul_monomial, mul_one, op_monomial, opMono_add_inr]
 
 theorem op_X_mul (u : Sym m n) : ∀ (k : Ix m n) (g : PX m n),
     op u (X k * g) = X k * op u g + op (pderiv (Sum.inr k) u) g := by
@@ -243,17 +243,17 @@ theorem op_X_mul (u : Sym m n) : ∀ (k : Ix m n) (g : PX m n),
     intro k g
     rcases j with j | j
     · rw [op_mul_inl, op_mul_inl, hp, pderiv_mul, pderiv_X, op_add, op_mul_inl]
-      simp only [Pi.single_apply, Sum.inl.injEq, reduceCtorEq, if_false, mul_zero, op_zero, add_zero]
+      simp only [Pi.single_apply, Sum.inl.injEq, reduceCtorEq, ite_false, mul_zero, op_zero, add_zero]
       ring
     · rw [op_mul_inr, op_mul_inr, pderiv_mul, pderiv_mul, pderiv_X, pderiv_X, op_add_f, op_add, hp, op_mul_inr]
       by_cases h : j = k
       · subst h
-        simp only [Pi.single_apply, if_true, mul_one, one_mul]
+        simp only [Pi.single_apply, ite_true, mul_one, one_mul]
         ring
       · have h' : (Sum.inr k : Ix m n ⊕ Ix m n) ≠ Sum.inr j := fun e => h (Sum.inr_injective e).symm
         have e1 : ¬ (k = j) := fun e => h e.symm
         have e2 : ¬ ((Sum.inr j : Ix m n ⊕ Ix m n) = Sum.inr k) := fun e => h (Sum.inr_injective e)
-        simp only [Pi.single_apply, e1, e2, if_false, zero_mul, mul_zero, op_zero, add_zero, op_zero_f, zero_add]
+        simp only [Pi.single_apply, e1, e2, ite_false, zero_mul, mul_zero, op_zero, add_zero, op_zero_f, zero_add]
 
 end PositivityTheory.Rg.Sw.LC.PolynomialDifferentialOperators
 end -- clump:auto
@@ -379,7 +379,7 @@ theorem first_family_symbol_mul_variable_pow {u : Sym m n} (hu : SymbolInFirstFa
   have hs : ∀ k, ((Finsupp.single (Sum.inl a) b : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inl k) ≠ 0 ∨
       (Finsupp.single (Sum.inl a) b : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inr k) ≠ 0) → inF1 ε k := by
     intro k hk
-    simp only [Finsupp.single_apply, Sum.inl.injEq, reduceCtorEq, if_false, ne_eq, not_true, or_false] at hk
+    simp only [Finsupp.single_apply, Sum.inl.injEq, reduceCtorEq, ite_false, ne_eq, not_true, or_false] at hk
     split_ifs at hk with h
     · subst h; exact ha
     · exact absurd rfl hk
@@ -447,14 +447,14 @@ theorem kpow {a : Ix m n} (ha : inF1 ε a) (b : ℕ) : ∀ (d : ℕ) (u : Sym m 
     have hX : ∀ k, ((Finsupp.single (Sum.inl a) 1 : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inl k) ≠ 0 ∨
         (Finsupp.single (Sum.inl a) 1 : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inr k) ≠ 0) → inF1 ε k := by
       intro k hk
-      simp only [Finsupp.single_apply, Sum.inl.injEq, reduceCtorEq, if_false, ne_eq, not_true, or_false] at hk
+      simp only [Finsupp.single_apply, Sum.inl.injEq, reduceCtorEq, ite_false, ne_eq, not_true, or_false] at hk
       split_ifs at hk with h
       · subst h; exact ha
       · exact absurd rfl hk
     have hXb : ∀ k, ((Finsupp.single (Sum.inl a) b : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inl k) ≠ 0 ∨
         (Finsupp.single (Sum.inl a) b : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inr k) ≠ 0) → inF1 ε k := by
       intro k hk
-      simp only [Finsupp.single_apply, Sum.inl.injEq, reduceCtorEq, if_false, ne_eq, not_true, or_false] at hk
+      simp only [Finsupp.single_apply, Sum.inl.injEq, reduceCtorEq, ite_false, ne_eq, not_true, or_false] at hk
       split_ifs at hk with h
       · subst h; exact ha
       · exact absurd rfl hk
@@ -474,7 +474,7 @@ theorem mapDomain_inl_inl (γ : Ix m n →₀ ℕ) (k : Ix m n) :
 
 theorem mapDomain_inl_inr (γ : Ix m n →₀ ℕ) (k : Ix m n) :
     (γ.mapDomain Sum.inl : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inr k) = 0 :=
-  Finsupp.mapDomain_notin_range γ _ (by simp)
+  Finsupp.mapDomain_of_notMem_range γ _ (by simp)
 
 theorem mapDomain_inr_inr (γ : Ix m n →₀ ℕ) (k : Ix m n) :
     (γ.mapDomain Sum.inr : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inr k) = γ k :=
@@ -482,7 +482,7 @@ theorem mapDomain_inr_inr (γ : Ix m n →₀ ℕ) (k : Ix m n) :
 
 theorem mapDomain_inr_inl (γ : Ix m n →₀ ℕ) (k : Ix m n) :
     (γ.mapDomain Sum.inr : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inl k) = 0 :=
-  Finsupp.mapDomain_notin_range γ _ (by simp)
+  Finsupp.mapDomain_of_notMem_range γ _ (by simp)
 
 theorem k2 (γ : Ix m n →₀ ℕ) : (∀ k ∈ γ.support, inF1 ε k) → ∀ (d : ℕ) (u : Sym m n), SymbolInFirstFamily ε u → EtaLe u d →
     ∃ r, Good ε d r ∧ ∀ g, op u (monomial γ 1 * g) = op (u * monomial (γ.mapDomain Sum.inl) 1) g + op r g := by
@@ -527,7 +527,7 @@ theorem op_dvE (w : Sym m n) (δ : Ix m n →₀ ℕ) (f : PX m n) :
   conv_rhs => rw [w.as_sum, Finset.sum_mul, op_sum]
   conv_lhs => rw [op]
   refine Finset.sum_congr rfl fun t _ => ?_
-  rw [monomial_mul, mul_one, op_monomial, opMono_eq, opMono_eq, comapDomain_inl_add]
+  rw [monomial_mul_monomial, mul_one, op_monomial, opMono_eq, opMono_eq, comapDomain_inl_add]
   have h1 : (δ.mapDomain Sum.inr : Ix m n ⊕ Ix m n →₀ ℕ).comapDomain Sum.inl Sum.inl_injective.injOn = 0 := by
     ext j; simp [Finsupp.comapDomain_apply, mapDomain_inr_inl]
   have h2 : (fun k : Ix m n => (t + δ.mapDomain Sum.inr : Ix m n ⊕ Ix m n →₀ ℕ) (Sum.inr k)) =
@@ -574,7 +574,7 @@ theorem compSt : CompSt := by
     have hδ : (fun k : Ix m n => t (Sum.inr k)) =
         fun k => (t.comapDomain Sum.inr Sum.inr_injective.injOn) k := by
       ext k; simp [Finsupp.comapDomain_apply]
-    rw [hδ, op_dvE, op_dvE, mul_assoc, monomial_mul, mul_one, decomp]
+    rw [hδ, op_dvE, op_dvE, mul_assoc, monomial_mul_monomial, mul_one, decomp]
   choose! R hR using key
   refine ⟨∑ t ∈ v.support, AddMonoidAlgebra.coeff v t • R t, ?_, ?_, fun f => ?_⟩
   · exact (good_sum _ _ fun t ht => good_smul _ (hR t ht).1).1
@@ -904,7 +904,7 @@ private theorem list_prod_pderiv_pow_monomial (e : Fin m × Fin n × Bool → �
     have h0 : (∑ k ∈ L.toFinset, Finsupp.single k (e k)) a = 0 := by
       rw [Finsupp.finsetSum_apply]
       refine Finset.sum_eq_zero fun k hk => ?_
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       rintro rfl
       exact haL hk
     congr 1
@@ -922,7 +922,7 @@ theorem opMono_monomial (t : (Fin m × Fin n × Bool) ⊕ (Fin m × Fin n × Boo
       monomial (γ - ∑ k, Finsupp.single k (t (Sum.inr k))) (∏ k, ((γ k).descFactorial (t (Sum.inr k)) : ℂ)) := by
     unfold Dfun
     rw [list_prod_pderiv_pow_monomial _ _ (Finset.nodup_toList _), Finset.toList_toFinset, one_mul]
-  rw [hD, monomial_mul, one_mul]
+  rw [hD, monomial_mul_monomial, one_mul]
 
 theorem op_inj {s : Sym m n} (h : ∀ f, op s f = 0) : s = 0 := by
   classical
@@ -938,7 +938,7 @@ theorem op_inj {s : Sym m n} (h : ∀ f, op s f = 0) : s = 0 := by
   simp only [coeff_sum, AddMonoidAlgebra.coeff_zero] at h2
   simp only [MvPolynomial.coeff_smul, coeff_monomial, smul_eq_mul] at h2
   rw [Finset.sum_eq_single t0] at h2
-  · rw [if_pos] at h2
+  · rw [ite_eq_left] at h2
     · refine absurd h2 (mul_ne_zero (mem_support_iff.1 ht0) ?_)
       refine Finset.prod_ne_zero_iff.2 fun k _ => ?_
       rw [Finsupp.comapDomain_apply, Nat.descFactorial_self]
@@ -1265,14 +1265,14 @@ theorem sum_ite_l (g : Fin n → ℂ) (F : Fin n → MvPolynomial (FinalTheorems
     ∑ x, C (if j0 = x then g x else 0) * F x = C (g j0) * F j0 := by
   rw [Finset.sum_eq_single j0]
   · simp
-  · intro x _ hx; rw [if_neg (Ne.symm hx)]; simp
+  · intro x _ hx; rw [ite_eq_right (Ne.symm hx)]; simp
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem sum_ite_r (g : Fin n → ℂ) (F : Fin n → MvPolynomial (FinalTheorems m n) ℂ) (j0 : Fin n) :
     ∑ x, C (if x = j0 then g x else 0) * F x = C (g j0) * F j0 := by
   rw [Finset.sum_eq_single j0]
   · simp
-  · intro x _ hx; rw [if_neg hx]; simp
+  · intro x _ hx; rw [ite_eq_right hx]; simp
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem act_transvection (t : Matrix.TransvectionStruct (Fin n) ℂ) (p : MvPolynomial (FinalTheorems m n) ℂ)

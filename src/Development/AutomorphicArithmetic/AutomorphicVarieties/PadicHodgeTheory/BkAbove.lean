@@ -55,7 +55,7 @@ open Formalism.ConjugateSelfDual Formalism.BasicNotions Formalism.BasicNotions.L
 theorem UpperTheory.V.Loc.decJFacts :
     ∀ {F Ω : Type} [Field F] [NumberField F] [Field Ω] [CharZero Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ} [Fact l.Prime] (j : Ω →+* Om l), IsOpenEmbedding ((MonoidHom.snd _ _).comp (UpperTheory.V.Af.decJ F j).subtype) ∧ IsEmbedding ((MonoidHom.fst _ _).comp (UpperTheory.V.Af.decJ F j).subtype) ∧ ((MonoidHom.fst _ _).comp (UpperTheory.V.Af.decJ F j).subtype).range = Dec (F := F) (placeJ j) := by
   intro F Ω _ _ _ _ _ _ l _ j
-  haveI : IsAlgClosure ℚ Ω := Examples₂.LB.isAlgClosureQ F Ω
+  have : IsAlgClosure ℚ Ω := Examples₂.LB.isAlgClosureQ F Ω
   have hj : ∀ x : Ω, x ∈ placeJ j ↔ ‖j x‖ ≤ 1 := by
     intro x
     change (Valued.v : Valuation (Om l) NNReal) (j x) ≤ 1 ↔ _
@@ -84,8 +84,8 @@ theorem UpperTheory.V.Loc.decJFacts :
         exact this⟩
       left_inv := fun x => Subtype.ext (Prod.ext (hfst x) rfl)
       right_inv := fun σ => rfl
-      continuous_toFun := (continuous_snd.comp continuous_subtype_val).subtype_mk _
-      continuous_invFun := ((continuous_subtype_val.comp hes).prodMk continuous_subtype_val).subtype_mk _ }
+      continuous_toFun := (continuous_snd.comp continuous_subtypeVal).subtype_mk _
+      continuous_invFun := ((continuous_subtypeVal.comp hes).prodMk continuous_subtypeVal).subtype_mk _ }
   let e' : ↥(Examples₂.LB.KwF (E := F) j).fixingSubgroup ≃ₜ ↥(Dec (F := F) (placeJ j)) :=
     { toEquiv := e.symm.toEquiv, continuous_toFun := hes, continuous_invFun := he }
   have h1 : ⇑((MonoidHom.fst _ _).comp (UpperTheory.V.Af.decJ F j).subtype) = Subtype.val ∘ (h.trans e') :=
@@ -114,7 +114,7 @@ private theorem bkAbove_avg {k G W : Type} [Field k] [CharZero k] [Group G] [Add
     (hf : ∀ g h, f (g * h) = f g + a g (f h)) (H : Subgroup G) [H.FiniteIndex] (x : W)
     (hx : ∀ h ∈ H, f h = a h x - x) : ∃ y, ∀ g, f g = a g y - y := by
   classical
-  haveI : Fintype (G ⧸ H) := Fintype.ofFinite _
+  have : Fintype (G ⧸ H) := Fintype.ofFinite _
   set f' : G → W := fun g => f g - (a g x - x) with hf'
   have hc : ∀ g h, f' (g * h) = f' g + a g (f' h) := by
     intro g h
@@ -160,15 +160,15 @@ theorem UpperTheory.V.Loc.bkAbove :
   let p : ↥(UpperTheory.V.Af.decJ F j) →* G F Ω := (MonoidHom.fst _ _).comp (UpperTheory.V.Af.decJ F j).subtype
   have hs : IsOpenEmbedding s := (UpperTheory.V.Loc.decJFacts (F := F) j).1
   have hθ : Continuous θ := hs.isEmbedding.continuous_iff.2 hφ.continuous
-  have hp : Continuous p := continuous_fst.comp continuous_subtype_val
+  have hp : Continuous p := continuous_fst.comp continuous_subtypeVal
   have hψ : Continuous ψ := hp.comp hθ
   constructor
   · rintro ⟨-, x, hx⟩
     refine ⟨⟨hc.1.comp hp, fun g h => hc.2 _ _⟩, ?_⟩
-    haveI : CompactSpace (GQ l) := inferInstanceAs (CompactSpace (Om l ≃ₐ[ℚ_[l]] Om l))
-    haveI : Finite (GQ l ⧸ φ.range) := Subgroup.quotient_finite_of_isOpen _ hφ.isOpen_range
-    haveI : φ.range.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
-    haveI : (φ.range.comap s).FiniteIndex := ⟨by
+    have : CompactSpace (GQ l) := inferInstanceAs (CompactSpace (Om l ≃ₐ[ℚ_[l]] Om l))
+    have : Finite (GQ l ⧸ φ.range) := Subgroup.quotient_finite_of_isOpen _ hφ.isOpen_range
+    have : φ.range.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : (φ.range.comap s).FiniteIndex := ⟨by
       rw [Subgroup.index_comap]
       exact Subgroup.FiniteIndex.index_ne_zero⟩
     refine bkAbove_avg (k := ℚ_[l]) (fun g => (actC s (ρ.comp p) g).restrictScalars ℚ_[l]) ?_

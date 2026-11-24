@@ -84,19 +84,19 @@ theorem UpperTheory.Reformulated.B.InvariantSumOfTranslates.main :
       one_mem' := by simp
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [hmul, hb, ha]
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have h1 : ω a⁻¹ (ω a f₀) = f₀ := by
           rw [← hmul]; simp
         rwa [ha] at h1 }
   have hmem : ∀ k, k ∈ H ↔ ω k f₀ = f₀ := fun k => Iff.rfl
   have hopen : IsOpen (H : Set K) :=
     H.isOpen_of_mem_nhds (g := 1) (Filter.mem_of_superset hU (fun k hk => hfix k hk))
-  haveI : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hopen
-  haveI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hopen
+  have : Fintype (K ⧸ H) := Fintype.ofFinite _
 
   let F : K ⧸ H → S := fun q => ω q.out f₀
   have hF : ∀ (g : K) (q : K ⧸ H), ω g (F q) = F (g • q) := by
@@ -216,19 +216,19 @@ theorem isVacSph_of (L : IsLocRep M ψ om v ω ρ) (H : IsHowe M v ω) (hKX : Is
     (smX : ∀ φ ∈ SB _, ∃ U ∈ 𝓝 (1 : UA σ X.J), ∀ g ∈ U, g ∈ UAt σ X (evFin F v) → ω (g, 1) φ = φ) :
     IsVacSph M om v ω := by
   classical
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
-  haveI : IsTopologicalGroup (GL (Fin n) (AE F E)) := inferInstance
-  haveI : IsTopologicalGroup (GL (Fin d) (AE F E)) := inferInstance
-  haveI : IsTopologicalGroup (UA σ X.J) := inferInstance
-  haveI : IsTopologicalGroup (UA σ W.J) := inferInstance
-  haveI : IsTopologicalGroup (KSub σ X v) := inferInstance
-  haveI : IsTopologicalGroup (KSub σ W v) := inferInstance
-  haveI : CompactSpace (KSub σ X v) := isCompact_iff_compactSpace.1 hKX
-  haveI : CompactSpace (KSub σ W v) := isCompact_iff_compactSpace.1 hKW
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+  have : IsTopologicalGroup (GL (Fin n) (AE F E)) := inferInstance
+  have : IsTopologicalGroup (GL (Fin d) (AE F E)) := inferInstance
+  have : IsTopologicalGroup (UA σ X.J) := inferInstance
+  have : IsTopologicalGroup (UA σ W.J) := inferInstance
+  have : IsTopologicalGroup (KSub σ X v) := inferInstance
+  have : IsTopologicalGroup (KSub σ W v) := inferInstance
+  have : CompactSpace (KSub σ X v) := isCompact_iff_compactSpace.1 hKX
+  have : CompactSpace (KSub σ W v) := isCompact_iff_compactSpace.1 hKW
   refine ⟨H.fixW, fun φ hφ => ?_, fun φ hφ => ?_⟩
   · obtain ⟨U, hU, hU'⟩ := smX φ hφ
     obtain ⟨m, k, hk⟩ := exists_fixed_sum (IsLocRep.onKX L) ⟨φ, hφ⟩
-      ⟨Subtype.val ⁻¹' U, continuous_subtype_val.continuousAt hU, fun k hk => Subtype.ext (hU' k.1 hk k.2.1)⟩
+      ⟨Subtype.val ⁻¹' U, continuous_subtypeVal.continuousAt hU, fun k hk => Subtype.ext (hU' k.1 hk k.2.1)⟩
     set f := ∑ i, ω ((k i).1, 1) φ with hf
     have hfS : f ∈ SB _ := sum_mem fun i _ => L.pres _ (k i).2.1 1 (one_mem_UAt W v) φ hφ
     have hfix : ∀ g ∈ KAt σ X v, ω (g, 1) f = f := fun g hg => by
@@ -247,7 +247,7 @@ theorem isVacSph_of (L : IsLocRep M ψ om v ω ρ) (H : IsHowe M v ω) (hKX : Is
     rw [← smul_add, sub_add_cancel, smul_smul, inv_mul_cancel₀ hc, one_smul]
   · obtain ⟨U, hU, hU'⟩ := L.smooth φ hφ
     obtain ⟨m, k, hk⟩ := exists_fixed_sum L.onK ⟨φ, hφ⟩
-      ⟨Subtype.val ⁻¹' U, continuous_subtype_val.continuousAt hU, fun k hk => Subtype.ext (hU' k.1 hk k.2.1)⟩
+      ⟨Subtype.val ⁻¹' U, continuous_subtypeVal.continuousAt hU, fun k hk => Subtype.ext (hU' k.1 hk k.2.1)⟩
     set f := ∑ i, ω (1, (k i).1) φ with hf
     have hfS : f ∈ SB _ := sum_mem fun i _ => L.pres 1 (one_mem_UAt X v) _ (k i).2.1 φ hφ
     have hfix : ∀ g ∈ KAt σ W v, ω (1, g) f = f := fun g hg => by

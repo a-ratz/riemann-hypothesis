@@ -262,7 +262,7 @@ theorem bM_transpose (G : Matrix κ κ ℤ) (R : Matrix κ κ ℝ) (hR : Rᵀ * 
     exact Finset.sum_congr rfl fun l _ => mul_comm _ _
   have hB : BF G (a • y) (Pi.single q.2 (ω q.1)) = ∑ i, a * y i * ((G i q.2 : ℤ) : F) * ω q.1 := by
     simp only [BF, dotProduct, Matrix.mulVec, Pi.single_apply, Matrix.map_apply, Pi.smul_apply, smul_eq_mul,
-      mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     exact Finset.sum_congr rfl fun i _ => by ring
   rw [hB, ← sum_reAt]
 
@@ -713,7 +713,7 @@ theorem const_eq (k t : ℕ) (a : F) (c : Fˣ) (z : Hn F) (d : ℝ)
 
 theorem wcos : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (κ : Type) [Fintype κ] [DecidableEq κ] (G : Matrix κ κ ℤ), EvenPos G → ∀ t : ℕ, G.det = (t : ℤ) ^ 2 → ∀ k : ℕ, Fintype.card κ = 2 * k → ∀ (a : F) (c : Fˣ) (x₀ : κ → F), a ≠ 0 → sl0 k (toInf (wm c)) (th G fun x => open Classical in if x - x₀ ∈ aL κ a then 1 else 0) = th G (wT G k t a c {x₀} fun _ => 1) := by
   intro F _ _ _ κ _ _ G hG t ht k hk a c x₀ ha
-  letI : DecidableEq (InfinitePlace F) := Classical.decEq _
+  let : DecidableEq (InfinitePlace F) := Classical.decEq _
   obtain ⟨e, B, α, β, he, hα, hβ, hB, hdet⟩ := GlobalTheory.T.exists_realMatrix_for_lattice_and_dual_with_det F κ G hG t ht k hk a ha
   have hsm := (GlobalTheory.HilbertThetaSeries.formLatticeProps F κ G hG).2.1
   have hc : (c : F) ≠ 0 := c.ne_zero
@@ -751,7 +751,7 @@ theorem wcos : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (κ : 
       have h1 : (a / (c : F)) • (c : F) • (β m : κ → F) ∈ dualL F G := by
         rw [smul_smul, div_mul_cancel₀ _ hc]
         exact (β m).2
-      rw [wT, if_pos h1, Finset.sum_singleton, one_mul, (hsm _ _ x₀).1, (hsm _ _ x₀).2.1, mul_div_cancel_left₀ _ hc,
+      rw [wT, ite_eq_left h1, Finset.sum_singleton, one_mul, (hsm _ _ x₀).1, (hsm _ _ x₀).2.1, mul_div_cancel_left₀ _ hc,
         ez_QF G e he, et_BF G e he, hβ, mul_assoc, mul_comm (Complex.exp _)]
       simp only [map_pow, Complex.ofReal_pow]
     · intro y hy
@@ -762,7 +762,7 @@ theorem wcos : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (κ : 
       simp [smul_smul, hc]
   unfold sl0
   simp only [denom_wm]
-  rw [hL _ (fun x h => if_pos h) (fun x h => if_neg h), hP, hR, ← mul_assoc, const_eq k t a c z _ hdet]
+  rw [hL _ (fun x h => ite_eq_left h) (fun x h => ite_eq_right h), hP, hR, ← mul_assoc, const_eq k t a c z _ hdet]
 
 end GlobalTheory.WCos
 
@@ -804,7 +804,7 @@ theorem thetaSeries_periodic_slash_frickeMatrix : ∀ (F : Type) [Field F] [Numb
       rw [Finset.sum_eq_single y]
       · simp [hy]
       · intro x₀ hx₀ hne
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hm
         exact hne (huniq x₀ ⟨hx₀, hm⟩)
       · intro h
@@ -822,7 +822,7 @@ theorem thetaSeries_periodic_slash_frickeMatrix : ∀ (F : Type) [Field F] [Numb
     · intro x hx
       have hm : x - x₀ ∈ aL κ a := by
         by_contra hm
-        exact hx (if_neg hm)
+        exact hx (ite_eq_right hm)
       have := (aL κ b).add_mem (hab hm) (hT.1 x₀ hx₀)
       simpa using this
     · intro x

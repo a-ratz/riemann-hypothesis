@@ -164,12 +164,12 @@ private theorem exists_entry_ne_zero_of_irr {Γ K : Type} [Group Γ] [Field K] (
     { carrier := {M | M i j = 0}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, Matrix.add_apply] at *
+        simp only [Set.mem_ofPred_eq, Matrix.add_apply] at *
         rw [ha, hb, add_zero]
       zero_mem' := by simp
       smul_mem' := by
         intro c x hx
-        simp only [Set.mem_setOf_eq, Matrix.smul_apply, smul_eq_mul] at *
+        simp only [Set.mem_ofPred_eq, Matrix.smul_apply, smul_eq_mul] at *
         rw [hx, mul_zero] }
   have hle : Submodule.span K (Set.range r) ≤ W := by
     rw [Submodule.span_le]
@@ -284,7 +284,7 @@ private theorem UpperTheory.V.Ws.fib_gen {O Γ : Type} [CommRing O] [Group Γ] [
     ∃ T : Finset K, T.card ≤ 2 + 4 * Nat.card Φ.ι ∧ ∀ E : Subfield K, (∀ b, y (algebraMap X.B X.A b) ∈ E) → (∀ t ∈ T, t ∈ E) →
       (∀ (p : K[X]) (x : K), p.Monic → (∀ n, p.coeff n ∈ E) → p.IsRoot x → x ∈ E) → ∀ z, y z ∈ E := by
   classical
-  haveI := Fintype.ofFinite Φ.ι
+  have := Fintype.ofFinite Φ.ι
   have hp := X.pair.map y
   obtain ⟨s, t, hst⟩ := fibTorus (mapRep y X.P.r) _ Φ.g0 hp.mult hp.nrm hne hirr
   let u : Φ.ι × Fin 4 → K := fun x => y (X.P.n x.1 (![1, 2, 3, 2] x.2) (![0, 0, 0, 1] x.2))
@@ -324,10 +324,10 @@ theorem UpperTheory.V.Ws.fib :
       Irr (mapRep ((algebraMap (R ⧸ q) (FractionRing (R ⧸ q))).comp ((Ideal.Quotient.mk q).comp (f : X.A →+* R))) X.P.r) →
       ringKrullDim (R ⧸ q) ≤ ringKrullDim (X.B ⧸ q.comap ((f : X.A →+* R).comp (algebraMap X.B X.A))) + (2 + 4 * Nat.card Φ.ι : ℕ) := by
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a hΦ X c hc R _ _ _ f hf q hq hirr
-  haveI := X.noeth
-  haveI := X.ft
-  letI : Algebra X.A R := (f : X.A →+* R).toAlgebra
-  haveI : IsScalarTower Λ X.A R := IsScalarTower.of_algebraMap_eq fun z => (f.commutes z).symm
+  have := X.noeth
+  have := X.ft
+  let : Algebra X.A R := (f : X.A →+* R).toAlgebra
+  have : IsScalarTower Λ X.A R := IsScalarTower.of_algebraMap_eq fun z => (f.commutes z).symm
   have hff : IsScalarTower.toAlgHom Λ X.A R = f := AlgHom.ext fun _ => rfl
   obtain ⟨hx, hR⟩ := fibCpl (Λ := Λ) (A := X.A) (R := R) (fun R' _ _ _ g hg => by
     rw [hff] at hg ⊢
@@ -339,7 +339,7 @@ theorem UpperTheory.V.Ws.fib :
     ext b
     show (f.comp (IsScalarTower.toAlgHom Λ X.B X.A)) b ∈ maximalIdeal R ↔ _
     rw [← res_eq_zero_iff Λ, res_map, res_eq_zero_iff]
-  haveI hη : (q.comap (algebraMap X.A R)).IsPrime := Ideal.comap_isPrime _ q
+  have hη : (q.comap (algebraMap X.A R)).IsPrime := Ideal.comap_isPrime _ q
   obtain ⟨t, h1, h2⟩ := UpperTheory.V.CA.c3b Λ _ (UpperTheory.V.CA.IsCL.of_isCO Λ X.B) hxB (q.comap (algebraMap X.A R))
     (Ideal.comap_mono (le_maximalIdeal hq.ne_top))
   obtain ⟨T, hT, hE⟩ := fib_gen X _ (fun i j hij e => by

@@ -162,11 +162,11 @@ theorem fam_baire [CompleteSpace H] {σ : Mx n → (H →L[ℂ] H)} (hσ : IsURe
     rw [pow_zero, mul_one]
     exact ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun v => by rw [hσ.2.1 g hg v, one_mul]⟩
   obtain ⟨d, b, φ, hb⟩ := exists_frame ε
-  haveI : IsUniformAddGroup (Fam ε σ) := (Fam ε σ).toAddSubgroup.isUniformAddGroup
-  haveI : CompleteSpace (Fam ε σ) := (GlobalTheory.T.isClosed_derivativeFamilies_moderateGrowth n ε H σ hρ).completeSpace_coe
-  haveI := (withSeminorms_sn (ρ := σ) hb).firstCountableTopology
-  haveI : (_root_.uniformity (Fam ε σ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
-  letI := UniformSpace.pseudoMetricSpace (Fam ε σ)
+  have : IsUniformAddGroup (Fam ε σ) := (Fam ε σ).toAddSubgroup.isUniformAddGroup
+  have : CompleteSpace (Fam ε σ) := (GlobalTheory.T.isClosed_derivativeFamilies_moderateGrowth n ε H σ hρ).completeSpace_coe
+  have := (withSeminorms_sn (ρ := σ) hb).firstCountableTopology
+  have : (_root_.uniformity (Fam ε σ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  let := UniformSpace.pseudoMetricSpace (Fam ε σ)
   infer_instance
 
 theorem exists_lift (l : List (Mx n)) (hl : ∀ X ∈ l, X ∈ lieSet ε) :
@@ -221,8 +221,8 @@ theorem unif_model [CompleteSpace H] {σ : Mx n → (H →L[ℂ] H)} (hσ : IsUR
     ∃ (S : List (List (Mx n))) (C : ℝ), (∀ l ∈ S, ∀ X ∈ l, X ∈ lieSet ε) ∧
       ∀ i w, SmoothVec (lieSet ε) σ w → ‖ℓ i w‖ ≤ C * sobNorm σ S w := by
   obtain ⟨d, b, φ, hb⟩ := exists_frame ε
-  haveI : IsUniformAddGroup (Fam ε σ) := (Fam ε σ).toAddSubgroup.isUniformAddGroup
-  haveI : BaireSpace (Fam ε σ) := fam_baire hσ
+  have : IsUniformAddGroup (Fam ε σ) := (Fam ε σ).toAddSubgroup.isUniformAddGroup
+  have : BaireSpace (Fam ε σ) := fam_baire hσ
   have hW := withSeminorms_sn (ρ := σ) hb
   let ev0 : Fam ε σ →ₗ[ℂ] H := (LinearMap.proj []).comp (Fam ε σ).subtype
   let Λ : ι → Fam ε σ →ₗ[ℂ] ℂ := fun i => (ℓ i).comp ev0
@@ -300,7 +300,7 @@ end GlobalTheory.SobUnif
 open GlobalTheory.SobUnif in
 theorem GlobalTheory.Core.Mi.sobolev_unif_bound : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ), IsInfFam θ → ∀ T : MMap M, IsMultMap θ M J χ T → ∀ Ω : Set (GA D V), IsCompact Ω → ∀ τ (v : M.Vec), ∃ (L : List (List (Matrix (Fin V.rank) (Fin V.rank) ℂ))) (C : ℝ), (∀ l ∈ L, ∀ Y ∈ l, Y ∈ lieAt V τ) ∧ ∀ w : M.sm τ, ∀ g ∈ Ω, ‖T (Function.update v τ w) g‖ ≤ C * (L.map fun l => ‖l.foldr (dRep (M.rep τ)) (w : M.H τ)‖).sum := by
   intro D θ V S M J χ _ T hT Ω hΩ τ v
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have hσ : IsURepOn (UJset (M.ε τ)) (M.σ τ) := (M.ds τ).2.2.1
   have hP := M.fr_unit τ
   have hG := M.fr_gram τ

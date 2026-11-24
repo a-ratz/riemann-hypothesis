@@ -185,7 +185,7 @@ private theorem exists_nrm {G T : Type} [Group G] [TopologicalSpace G] [IsTopolo
   have hIpos : ∀ x, 0 < I x := by
     intro x
     obtain ⟨_, ⟨t, rfl⟩, ht⟩ := hpos x
-    exact (hc1 x).integral_pos_of_hasCompactSupport_nonneg_nonzero (hcs x)
+    exact (hc1 x).integral_pos_of_hasCompactSupport_nonneg_ne_zero (hcs x)
       (fun s => hf0 _) ht.ne'
   have hIinv : ∀ s x, I (j s * x) = I x := by
     intro s x
@@ -212,9 +212,9 @@ private theorem exists_nrm {G T : Type} [Group G] [TopologicalSpace G] [IsTopolo
 theorem normEx : NormEx := by
   intro G _ _ _ _ _ _ _ _ T _ _ _ _ _ _ _ _ μ j ν hp
   obtain ⟨-, hj, hν⟩ := hp
-  haveI := hν.1
-  haveI := hν.2
-  haveI : ν.IsMulRightInvariant := by
+  have := hν.1
+  have := hν.2
+  have : ν.IsMulRightInvariant := by
     have h : ν.inv.IsMulRightInvariant := inferInstance
     rwa [Measure.inv_eq_self] at h
   obtain ⟨f, hf, hf0, hpos, hsupp⟩ := exists_bump (Set.range j) hj.isClosed_range

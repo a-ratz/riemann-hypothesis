@@ -239,28 +239,28 @@ theorem htpy_AIC : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T]
         apply (GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties (ZMod q)).2.2.1 α 0
         intro p s h U x
         have hs : s < 0 := by omega
-        haveI := ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness (ZMod q) (tw q i) U).2.2.2 s hs)
+        have := ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness (ZMod q) (tw q i) U).2.2.2 s hs)
         exact Subsingleton.elim _ _
       refine ⟨fun a b => ?_⟩
       obtain ⟨a, rfl⟩ := a.mk_surjective
       obtain ⟨b, rfl⟩ := b.mk_surjective
       have : a = b := CochainComplex.HomComplex.Cocycle.ext (by rw [hz a.1, hz b.1])
       rw [this]
-    haveI := hneg (sp T)
-    haveI := hneg (sp (Polynomial T))
+    have := hneg (sp T)
+    have := hneg (sp (Polynomial T))
     exact bijective_of_subsingleton _
   · exact GlobalTheory.T.h_zero_pullback_twist_bijective q T (Polynomial T) Polynomial.C hq (exists_cyclotomic_root_of_AIC q T hA) inferInstance
       (fun e he => IsIdempotentElem.iff_eq_zero_or_one.mp he) (fun e he => IsIdempotentElem.iff_eq_zero_or_one.mp he) i
-  · haveI hT : Subsingleton (Ht q (sp T) n i) := GlobalTheory.T.absolutelyIntegrallyClosed_domain_tateTwistAcyclic q T hA hq n i hn
-    haveI : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
+  · have hT : Subsingleton (Ht q (sp T) n i) := GlobalTheory.T.absolutelyIntegrallyClosed_domain_tateTwistAcyclic q T hA hq n i hn
+    have : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
     have hqK : IsUnit (q : FractionRing T) := by simpa using hq.map (algebraMap T (FractionRing T))
-    haveI hKt : Subsingleton (Ht q (sp (Polynomial (FractionRing T))) n i) := GlobalTheory.T.tateTwistAcyclic_spectrum_polynomial_of_isAlgClosed q (FractionRing T) hqK n i hn
+    have hKt : Subsingleton (Ht q (sp (Polynomial (FractionRing T))) n i) := GlobalTheory.T.tateTwistAcyclic_spectrum_polynomial_of_isAlgClosed q (FractionRing T) hqK n i hn
     let e : TensorProduct T (FractionRing T) (Polynomial T) ≃+* Polynomial (FractionRing T) :=
       (polyEquivTensor T (FractionRing T)).symm.toRingEquiv
-    haveI hTens : Subsingleton (Ht q (sp (TensorProduct T (FractionRing T) (Polynomial T))) n i) :=
+    have hTens : Subsingleton (Ht q (sp (TensorProduct T (FractionRing T) (Polynomial T))) n i) :=
       (pull_bijective_of_ringEquiv e (tw q i) n).1.subsingleton
     have hC3 := GlobalTheory.T.etale_cohomology_ind_etale_base_change q T hA hq (Polynomial T) i n
-    haveI : Subsingleton (Ht q (sp (Polynomial T)) n i) := hC3.1.subsingleton
+    have : Subsingleton (Ht q (sp (Polynomial T)) n i) := hC3.1.subsingleton
     exact bijective_of_subsingleton _
 
 end GlobalTheory.EtC.HtpyLine
@@ -297,7 +297,7 @@ theorem isAlgClosed_fractionRing_atPrime_of_etale : ∀ (T E : Type) [CommRing T
     [IsDomain (Localization.AtPrime P)],
     IsAlgClosed (FractionRing T) → IsAlgClosed (FractionRing (Localization.AtPrime P)) := by
   intro T E _ _ _ _ _ P _ _ hK
-  haveI : Module.Flat T (Localization.AtPrime P) := Module.Flat.trans T E (Localization.AtPrime P)
+  have : Module.Flat T (Localization.AtPrime P) := Module.Flat.trans T E (Localization.AtPrime P)
   have hTEp : Function.Injective (algebraMap T (Localization.AtPrime P)) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro t ht
@@ -310,10 +310,10 @@ theorem isAlgClosed_fractionRing_atPrime_of_etale : ∀ (T E : Type) [CommRing T
   have hTL : Function.Injective (algebraMap T (FractionRing (Localization.AtPrime P))) := by
     rw [IsScalarTower.algebraMap_eq T (Localization.AtPrime P) (FractionRing (Localization.AtPrime P))]
     exact (IsFractionRing.injective (Localization.AtPrime P) (FractionRing (Localization.AtPrime P))).comp hTEp
-  haveI : FaithfulSMul T (FractionRing (Localization.AtPrime P)) := (faithfulSMul_iff_algebraMap_injective T (FractionRing (Localization.AtPrime P))).2 hTL
-  letI : Algebra (FractionRing T) (FractionRing (Localization.AtPrime P)) := FractionRing.liftAlgebra T (FractionRing (Localization.AtPrime P))
-  haveI : IsScalarTower T (FractionRing T) (FractionRing (Localization.AtPrime P)) := FractionRing.isScalarTower_liftAlgebra T (FractionRing (Localization.AtPrime P))
-  haveI : Module.Finite (FractionRing T) ((FractionRing T) ⊗[T] E) := Algebra.FormallyUnramified.finite_of_free (FractionRing T) ((FractionRing T) ⊗[T] E)
+  have : FaithfulSMul T (FractionRing (Localization.AtPrime P)) := (faithfulSMul_iff_algebraMap_injective T (FractionRing (Localization.AtPrime P))).2 hTL
+  let : Algebra (FractionRing T) (FractionRing (Localization.AtPrime P)) := FractionRing.liftAlgebra T (FractionRing (Localization.AtPrime P))
+  have : IsScalarTower T (FractionRing T) (FractionRing (Localization.AtPrime P)) := FractionRing.isScalarTower_liftAlgebra T (FractionRing (Localization.AtPrime P))
+  have : Module.Finite (FractionRing T) ((FractionRing T) ⊗[T] E) := Algebra.FormallyUnramified.finite_of_free (FractionRing T) ((FractionRing T) ⊗[T] E)
   let φ : (FractionRing T) ⊗[T] E →ₐ[(FractionRing T)] (FractionRing (Localization.AtPrime P)) := Algebra.TensorProduct.lift (Algebra.ofId (FractionRing T) (FractionRing (Localization.AtPrime P)))
     (IsScalarTower.toAlgHom T E (FractionRing (Localization.AtPrime P))) (fun _ _ => Commute.all _ _)
   have hE : ∀ e : E, IsIntegral (FractionRing T) (algebraMap E (FractionRing (Localization.AtPrime P)) e) := by
@@ -340,7 +340,7 @@ theorem isAlgClosed_fractionRing_atPrime_of_etale : ∀ (T E : Type) [CommRing T
     intro z
     obtain ⟨x, y, -, rfl⟩ := IsFractionRing.div_surjective (Localization.AtPrime P) z
     exact (mem_algebraicClosure_iff.1 (div_mem (hEp x) (hEp y))).isIntegral
-  haveI := hK
+  have := hK
   exact IsAlgClosed.of_ringEquiv (FractionRing T) (FractionRing (Localization.AtPrime P))
     (RingEquiv.ofBijective (algebraMap (FractionRing T) (FractionRing (Localization.AtPrime P))) (IsAlgClosed.ringHom_bijective_of_isIntegral _ hL))
 
@@ -388,7 +388,7 @@ theorem isDomain_aic_of_indEt : ∀ (T O : Type) [CommRing T] [CommRing O] [IsLo
   have hdom : IsDomain O := by
     refine @NoZeroDivisors.to_isDomain O _ _ ⟨fun {x y} hxy => ?_⟩
     let I : Ideal (MvPolynomial (Fin 2) T) := Ideal.span {MvPolynomial.X 0 * MvPolynomial.X 1}
-    haveI : Algebra.FinitePresentation T (MvPolynomial (Fin 2) T ⧸ I) :=
+    have : Algebra.FinitePresentation T (MvPolynomial (Fin 2) T ⧸ I) :=
       Algebra.FinitePresentation.quotient (Submodule.fg_span_singleton _)
     let g : (MvPolynomial (Fin 2) T ⧸ I) →ₐ[T] O :=
       Ideal.Quotient.liftₐ I (MvPolynomial.aeval ![x, y]) (by
@@ -406,7 +406,7 @@ theorem isDomain_aic_of_indEt : ∀ (T O : Type) [CommRing T] [CommRing O] [IsLo
         exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_span_singleton_self _)
       simp only [w, ← map_mul, this, map_zero]
     obtain ⟨φ, hφ⟩ := lift_atComap (v : W →+* O)
-    haveI := (hE W ((maximalIdeal O).comap (v : W →+* O))).1
+    have := (hE W ((maximalIdeal O).comap (v : W →+* O))).1
     have hm : algebraMap W (Localization.AtPrime ((maximalIdeal O).comap (v : W →+* O))) (w 0) *
         algebraMap W _ (w 1) = 0 := by rw [← map_mul, h0, map_zero]
     rcases mul_eq_zero.mp hm with h1 | h1
@@ -449,7 +449,7 @@ theorem isDomain_aic_of_indEt : ∀ (T O : Type) [CommRing T] [CommRing O] [IsLo
     rw [← e1]
   obtain ⟨φ, hφ⟩ := lift_atComap (v : W →+* O)
   set L := Localization.AtPrime ((maximalIdeal O).comap (v : W →+* O))
-  haveI := (hE W ((maximalIdeal O).comap (v : W →+* O))).1
+  have := (hE W ((maximalIdeal O).comap (v : W →+* O))).1
   have hL := (hE W ((maximalIdeal O).comap (v : W →+* O))).2
   have hmL : (p'.map (algebraMap W L)).Monic := hp'm.map _
   have hdL : 0 < (p'.map (algebraMap W L)).natDegree := by
@@ -525,7 +525,7 @@ theorem alg (T O : Type) [CommRing T] [IsDomain T] [CommRing O] [Algebra T O] :
   intro hT hSH hInd
   obtain ⟨hH, -⟩ := hSH
   obtain ⟨-, hac⟩ := (GlobalTheory.T.monicPolynomialsHaveRoots_iff_integrallyClosed_algClosed T).1 hT
-  haveI : IsIntegrallyClosed T := ((GlobalTheory.T.monicPolynomialsHaveRoots_iff_integrallyClosed_algClosed T).1 hT).1
+  have : IsIntegrallyClosed T := ((GlobalTheory.T.monicPolynomialsHaveRoots_iff_integrallyClosed_algClosed T).1 hT).1
   refine GlobalTheory.T.isDomain_monicRoots_of_isIndEtale_local T O hInd ?_
   intro E _ _ _ P _
   obtain ⟨hd, hc⟩ := GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_of_etale T P (Localization.AtPrime P)
@@ -542,7 +542,7 @@ theorem tensor_map_eq (T O : Type) [CommRing T] [CommRing O] [Algebra T O] :
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul o t =>
-    simp only [RingHom.comp_apply, AlgEquiv.coe_toRingEquiv, RingEquiv.coe_toRingHom, AlgEquiv.coe_ringEquiv,
+    simp only [RingHom.comp_apply, AlgEquiv.coe_toRingEquiv, RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv,
       Algebra.TensorProduct.rid_tmul, polyEquivTensor_apply, Polynomial.eval₂_C]
     simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, Algebra.TensorProduct.map_tmul, AlgHom.id_apply,
       Algebra.TensorProduct.includeLeft_apply, Algebra.ofId_apply, Polynomial.algebraMap_eq]
@@ -600,7 +600,7 @@ private theorem ringKrullDim_le_quotient_of_algebraMap_eq_zero (R S : Type) [Com
     simp only [PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe, Ideal.span_le,
       Set.singleton_subset_iff, SetLike.mem_coe, Ideal.mem_comap, hs, Ideal.zero_mem]
   exact Order.krullDim_le_of_strictMono (fun P => ⟨_, hmem P⟩)
-    (fun P Q h => Subtype.mk_lt_mk.mpr (Ideal.IsIntegral.comap_lt_comap (R := R) h))
+    (fun P Q h => Subtype.mk_lt_mk.mpr (Ideal.IsIntegral.under_lt_under (R := R) h))
 
 private theorem hInv_adjoin_of_dim_quotient_lt (q : ℕ) [NeZero q] (d : ℕ)
     (hlow : ∀ (R : Type) [CommRing R] [Algebra.FiniteType ℤ R], IsUnit (q : R) → ringKrullDim R < d → HInv q R)
@@ -857,7 +857,7 @@ theorem mem_range_of_AIC_of_eval₂_eq_zero {T L : Type} [CommRing T] [CommRing 
     (hA : AIC T) (f : T →+* L) (x : L) :
     ∀ (n : ℕ) (p : T[X]), p.natDegree = n → p.Monic → p.eval₂ f x = 0 → x ∈ Set.range f := by
   intro n
-  haveI : Nontrivial T := f.domain_nontrivial
+  have : Nontrivial T := f.domain_nontrivial
   induction n with
   | zero =>
     intro p hd hm hx
@@ -894,7 +894,7 @@ theorem exists_retraction_of_AIC : ∀ (D T E : Type) [CommRing D] [IsDomain D] 
   let f : T →ₐ[D] E ⧸ Q := π.comp ι
 
   have hker : RingHom.ker (f : T →+* E ⧸ Q) = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := D)
+    apply Ideal.eq_bot_of_under_eq_bot (R := D)
     rw [← hQD]
     ext d
     simp only [Ideal.mem_comap, RingHom.mem_ker]
@@ -924,7 +924,7 @@ theorem exists_retraction_of_AIC : ∀ (D T E : Type) [CommRing D] [IsDomain D] 
   let eqv : T ≃ₐ[D] E ⧸ Q := AlgEquiv.ofBijective f ⟨hinj, hsurj⟩
   refine ⟨(eqv.symm : E ⧸ Q →ₐ[D] T).comp π, ?_, ?_⟩
   · ext t
-    simp only [AlgHom.comp_apply, AlgHom.id_apply, AlgHom.coe_coe]
+    simp only [AlgHom.comp_apply, AlgHom.id_apply, AlgHom.coe_ofClass]
     apply eqv.injective
     change eqv (eqv.symm (π (ι t))) = eqv t
     rw [AlgEquiv.apply_symm_apply]
@@ -1052,7 +1052,7 @@ theorem homotopyInv_quot_iInf_ker_retractions : ∀ (q : ℕ) [NeZero q] (D T E 
     · obtain ⟨y, hyI, hyP⟩ := Set.not_subset.mp hIP
       have hy0 : χ y ≠ 0 := fun h => hyP (RingHom.mem_ker.mpr h)
       have hint : IsIntegral D (χ y) := Algebra.IsIntegral.isIntegral _
-      have hne := Ideal.comap_ne_bot_of_integral_mem hy0 (Ideal.mem_span_singleton_self (χ y)) hint
+      have hne := Ideal.under_ne_bot_of_integral_mem hy0 (Ideal.mem_span_singleton_self (χ y)) hint
       obtain ⟨s, hsmem, hs0⟩ := Submodule.ne_bot_iff _ |>.mp hne
       rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at hsmem
       obtain ⟨u, hu⟩ := hsmem
@@ -1353,7 +1353,7 @@ theorem hInv_tensorPower_integralClosure : ∀ (q : ℕ) [NeZero q] (d : ℕ), (
   · intro F
     simpa using (hqS F).map (subalgebraOfSubringEquiv (firstAndFinite D (integralClosure D (AlgebraicClosure (FractionRing D))) k F))
   · intro F
-    haveI := GlobalTheory.T.tensorPowerFirstFactorAdjoinFinset_isIntegral D (integralClosure D (AlgebraicClosure (FractionRing D))) k F
+    have := GlobalTheory.T.tensorPowerFirstFactorAdjoinFinset_isIntegral D (integralClosure D (AlgebraicClosure (FractionRing D))) k F
     obtain ⟨F', hF'⟩ := GlobalTheory.T.tensorPowerFirstFactorAdjoinFinset_fg_over_first D (integralClosure D (AlgebraicClosure (FractionRing D))) k F
     exact _root_.GlobalTheory.EtC.hInv_of_ringEquiv q _ _ (subalgebraOfSubringEquiv _)
       (hInv_of_finite_over_aic q d hH D hq hd _ (GlobalTheory.T.monicPolynomialsHaveRoots_integralClosure_algClosure D) hTq _ (firstIncl D _ k F) F' hF')
@@ -1466,7 +1466,7 @@ theorem hInv_of_domains_of_dim_lt : ∀ (q : ℕ) [NeZero q] (d : ℕ),
     induction s using Finset.induction_on with
     | empty =>
       intro _
-      haveI : Subsingleton (R ⧸ (∅ : Finset (Ideal R)).inf id) :=
+      have : Subsingleton (R ⧸ (∅ : Finset (Ideal R)).inf id) :=
         Ideal.Quotient.subsingleton_iff.mpr (by simp)
       exact _root_.GlobalTheory.EtC.hInv_of_subsingleton q _ inferInstance
     | insert p s hps ih =>
@@ -1489,7 +1489,7 @@ theorem hInv_of_domains_of_dim_lt : ∀ (q : ℕ) [NeZero q] (d : ℕ),
           refine withBot_lt_of_add_one_le _ d ?_
           exact (ringKrullDim_quot_sup_succ_le R p (s.inf id) hJ).trans
             ((ringKrullDim_le_of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective).trans hd)
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
   have hfin := minimalPrimes.finite_of_isNoetherianRing R
   have hN : hfin.toFinset.inf id = nilradical R := by
     rw [Finset.inf_id_eq_sInf, Set.Finite.coe_toFinset, minimalPrimes, Ideal.sInf_minimalPrimes]

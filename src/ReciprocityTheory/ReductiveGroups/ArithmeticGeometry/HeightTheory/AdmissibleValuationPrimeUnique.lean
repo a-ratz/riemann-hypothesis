@@ -126,9 +126,9 @@ private theorem diag_cS_Pimg (j₀ : Fin (N + 1)) (x : Fin N → Ω) (b : Fin (D
   · rw [Pimg_self]
     by_cases hi : i = 0
     · subst hi
-      rw [if_pos rfl, diag_X]
+      rw [ite_eq_left rfl, diag_X]
       rfl
-    · rw [if_neg hi, map_neg, map_sum, mul_neg, Finset.mul_sum]
+    · rw [ite_eq_right hi, map_neg, map_sum, mul_neg, Finset.mul_sum]
       apply congrArg Neg.neg
       apply Finset.sum_congr rfl
       intro k hk
@@ -374,7 +374,7 @@ theorem sImg_rel {Ω : Type} [Field Ω] {D N : ℕ} (jc : Fin (N + 1)) (b : Fin 
     ∑ j, sImg (D := D) jc (fun k => b (jc.succAbove k)) (i, j) *
       algebraMap Ω (OmS Ω D N) (b j) = 0 := by
   rw [Fin.sum_univ_succAbove _ jc]
-  simp only [sImg, GaussValuationUniqueness.sac_same, GaussValuationUniqueness.sac_succAbove, if_neg hi, hb, map_one,
+  simp only [sImg, GaussValuationUniqueness.sac_same, GaussValuationUniqueness.sac_succAbove, ite_eq_right hi, hb, map_one,
     mul_one]
 
   simp only [IsScalarTower.algebraMap_apply Ω (MvPolynomial (SVar D N) Ω) (OmS Ω D N),
@@ -462,7 +462,7 @@ theorem admissibleValuation_prime_subsingleton {K : Type} [Field K] [NumberField
   have hQne : RingHom.ker
       (GaussValuationUniqueness.psiR (D := d.D) v hK j0
         (fun k => ⟨a (j0.succAbove k), ha _⟩)) ≠ ⊥ := by
-    letI := resAlg (F := K) v
+    let := resAlg (F := K) v
     intro hbot
     let S : Set (IsLocalRing.ResidueField (vRing v)) :=
       {r | ∃ j, ∃ h : a j ∈ vRing v, r = IsLocalRing.residue (vRing v) ⟨_, h⟩}
@@ -510,7 +510,7 @@ theorem admissibleValuation_prime_subsingleton {K : Type} [Field K] [NumberField
     exact hf (Ideal.mem_bot.mp hmem)
   set Q := RingHom.ker (GaussValuationUniqueness.psiR (D := d.D) v hK j0 (fun k => ⟨a (j0.succAbove k), ha _⟩))
     with hQ
-  haveI : Q.IsPrime := RingHom.ker_isPrime _
+  have : Q.IsPrime := RingHom.ker_isPrime _
 
   have hbase := hd.w_base c
   have hline := hd.finrank_one c d.wL
@@ -564,8 +564,8 @@ theorem admissibleValuation_prime_subsingleton {K : Type} [Field K] [NumberField
     have hfac := GaussValuationUniqueness.sHom_factor v hK (d.jc c) j0 (d.x c) a ha ha0 hrel f
     rw [← hfac] at hpos
     exact (hOv.2 f).2.mp hpos
-  haveI := hH1.1
-  haveI := hH2.1
+  have := hH1.1
+  have := hH2.1
   have e1 := GaussValuationUniqueness.eq_of_le_ht hH1.2 hQne (key p1 w1 hw1 hv1)
   have e2 := GaussValuationUniqueness.eq_of_le_ht hH2.2 hQne (key p2 w2 hw2 hv2)
   rw [← e1, ← e2]

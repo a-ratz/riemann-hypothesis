@@ -83,8 +83,8 @@ private theorem block_le₂ {R Γ M : Type} [CommRing R] [Group Γ] [Topological
 theorem UpperTheory.V.Th.locSup :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G G0 : Glob l L) (h : G.Hom G0) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (n : ℕ) (y : Pt G0.frame O n) (m : ℕ) (rep : Representation O G.Γ (Mm O n m)) (v : L.Vl), IsAd0 h y m rep → LC rep → Finite (Zbor y m v) → ((Bl (rep.comp (G.η.ker.subtype.comp (G.φ v)) : Representation O (L.Gv v) _)).toAddSubgroup ⊔ Zbor y m v ≤ (Zl (rep.comp (G.η.ker.subtype.comp (G.φ v)) : Representation O (L.Gv v) _)).toAddSubgroup) ∧ Finite ↥((Bl (rep.comp (G.η.ker.subtype.comp (G.φ v)) : Representation O (L.Gv v) _)).toAddSubgroup ⊔ Zbor y m v) ∧ Nat.card ↥((Bl (rep.comp (G.η.ker.subtype.comp (G.φ v)) : Representation O (L.Gv v) _)).toAddSubgroup ⊔ Zbor y m v) * Nat.card (ResidueField O) ^ (m * (n + n.choose 2)) ≤ Nat.card (Mm O n m) * Nat.card (Zbor y m v) := by
   intro l _ L G G0 h O _ _ _ _ _ n y m rep v hrep hLC hZ
-  haveI : Finite (Om O m) := ((omFacts l O).2 m).1
-  haveI : Finite (Mm O n m) := inferInstanceAs (Finite (Fin n → Fin n → Om O m))
+  have : Finite (Om O m) := ((omFacts l O).2 m).1
+  have : Finite (Mm O n m) := inferInstanceAs (Finite (Fin n → Fin n → Om O m))
   have hpφ : ∀ g, h.p₀ (G.φ v g) = G0.φ v g := fun g => Subtype.ext (h.φ v g)
   have hv : ∀ (g : L.Gv v) (Z : Mm O n m), rep (G.φ v g : G.Γ) Z =
       y.ρ0 m (G0.φ v g) * Z * y.ρ0 m (G0.φ v g)⁻¹ := fun g Z => by
@@ -92,7 +92,7 @@ theorem UpperTheory.V.Th.locSup :
     simp only [one_smul, Pt.ρm, map_inv, hpφ] at this
     exact this
   have hLCv : LC (rep.comp (G.η.ker.subtype.comp (G.φ v)) : Representation O (L.Gv v) _) := fun Z =>
-    (hLC Z).comp_continuous (continuous_subtype_val.comp (G.φ_cont v))
+    (hLC Z).comp_continuous (continuous_subtypeVal.comp (G.φ_cont v))
   have hle := block_le₂ _ hLCv
   refine ⟨sup_le hle fun β hβ => ⟨hβ.1, fun g g' => ?_⟩, ?_⟩
   · exact (hβ.2.1 g g').trans (congrArg (_ + ·) (hv g (β g')).symm)

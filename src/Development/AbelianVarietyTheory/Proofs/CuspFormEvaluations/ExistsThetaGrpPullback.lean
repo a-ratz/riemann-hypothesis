@@ -65,7 +65,7 @@ private theorem gm_res_eq_gm {X Z : Scheme.{0}} (r : Z ⟶ X) (z : Z) {U V : X.O
   unfold gm res pullU
   rw [dite_eq_left hz, dite_eq_left (hle hz)]
   ext
-  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+  simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
   exact congrArg (fun φ => φ.hom (a : Γ(X, U))) key
 
 private theorem exists_isGen_linComb_val_eq_of_eq {X Y : Scheme.{0}} {L : LB X} {K : Type} [Fintype K] {φ φ' : K → (Y ⟶ X)}

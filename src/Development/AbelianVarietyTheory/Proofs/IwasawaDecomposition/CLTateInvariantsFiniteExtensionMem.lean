@@ -69,10 +69,10 @@ theorem invariants_finExt : ∀ (l : ℕ) [Fact l.Prime], ∀ (K : FinExt l) (x 
     · intro hy g hg
       exact (IntermediateField.mem_fixingSubgroup_iff K.1 g).1 hg y hy
   rw [hset] at h
-  haveI : FiniteDimensional ℚ_[l] K.1 := K.2
-  haveI : FiniteDimensional ℚ_[l] K.1.toSubalgebra.toSubmodule := K.2
+  have : FiniteDimensional ℚ_[l] K.1 := K.2
+  have : FiniteDimensional ℚ_[l] K.1.toSubalgebra.toSubmodule := K.2
   have hc : IsComplete (K.1 : Set (Om l)) :=
-    Submodule.complete_of_finiteDimensional (𝕜 := ℚ_[l]) K.1.toSubalgebra.toSubmodule
+    Submodule.isComplete_of_finiteDimensional (𝕜 := ℚ_[l]) K.1.toSubalgebra.toSubmodule
   have hc2 : IsComplete ((fun y : Om l => (y : ℂ_[l])) '' (K.1 : Set (Om l))) :=
     (isComplete_image_iff (UniformSpace.Completion.isUniformInducing_coe (Om l))).2 hc
   rw [hc2.isClosed.closure_eq] at h

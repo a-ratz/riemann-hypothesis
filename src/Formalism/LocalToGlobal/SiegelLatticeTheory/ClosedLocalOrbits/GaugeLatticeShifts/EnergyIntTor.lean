@@ -55,7 +55,7 @@ variable {k r : ℕ}
 
 theorem tE_eq_one_of_mem_middle_block (μ : ℂ) (i : Fin (2 * r + k + 1)) (h1 : r ≤ i.val) (h2 : i.val ≤ r + k) : tE μ k r i = 1 := by
   unfold Formalism.L2.SG.Pf.Choice.tE
-  rw [if_neg (by omega), if_neg (by omega)]
+  rw [ite_eq_right (by omega), ite_eq_right (by omega)]
 
 theorem torS_apply (μ : ℂ) (m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (i j : Fin (2 * r + k + 1)) :
     (torS μ k r * m * torS μ⁻¹ k r) i j = tE μ k r i * m i j * tE μ⁻¹ k r j := by

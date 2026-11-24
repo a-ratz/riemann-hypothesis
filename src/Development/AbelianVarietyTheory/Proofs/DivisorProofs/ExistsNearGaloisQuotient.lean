@@ -112,7 +112,7 @@ theorem exists_basicOpen_between_finset_and_open : ∀ (X : Scheme.{0}) (W : X.O
     exact h
   let P : X → Ideal Γ(X, W) := fun x => if h : x ∈ W then (hW.primeIdealOf ⟨x, h⟩).asIdeal else ⊤
   have hPx : ∀ x (h : x ∈ W), P x = (hW.primeIdealOf ⟨x, h⟩).asIdeal := fun x h => by
-    simp only [P, dif_pos h]
+    simp only [P, dite_eq_left h]
   have hP : ∀ i ∈ s, i ≠ x₀ → i ≠ x₀ → (P i).IsPrime := by
     intro x hx _ _
     rw [hPx x (hVW (hs x hx))]
@@ -226,7 +226,7 @@ theorem norm_not_mem_iff (A B : Type) [CommRing A] [CommRing B] [Algebra A B]
       rw [Algebra.norm_localization A P.asIdeal.primeCompl] at h1
       exact (IsLocalization.AtPrime.isUnit_to_map_iff Rₘ P.asIdeal _).mp h1 hN
     obtain ⟨M, hM, hfM⟩ := exists_max_ideal_of_mem_nonunits hnu
-    haveI : Module.Finite Rₘ Sₘ := Module.Finite.of_basis
+    have : Module.Finite Rₘ Sₘ := Module.Finite.of_basis
       ((Module.Free.chooseBasis A B).localizationLocalization Rₘ P.asIdeal.primeCompl Sₘ)
     have hMc : M.comap (algebraMap Rₘ Sₘ) = IsLocalRing.maximalIdeal Rₘ :=
       IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := Rₘ) M)
@@ -307,7 +307,7 @@ theorem exists_basis_Gamma {R R₁ : Type} [CommRing R] [CommRing R₁] [Algebra
     [Fintype J] (c' : Module.Basis J R R₁) :
     letI := ((spMap (algebraMap R R₁)).appLE ⊤ ⊤ le_top).hom.toAlgebra
     Nonempty (Module.Basis J Γ(Sp R, ⊤) Γ(Sp R₁, ⊤)) := by
-  letI := ((spMap (algebraMap R R₁)).appLE ⊤ ⊤ le_top).hom.toAlgebra
+  let := ((spMap (algebraMap R R₁)).appLE ⊤ ⊤ le_top).hom.toAlgebra
   let σ : Γ(Sp R, ⊤) ≃+* R := (Scheme.ΓSpecIso (CommRingCat.of R)).commRingCatIsoToRingEquiv
   let σ₁ : Γ(Sp R₁, ⊤) ≃+* R₁ := (Scheme.ΓSpecIso (CommRingCat.of R₁)).commRingCatIsoToRingEquiv
   have hnat : ∀ a, σ₁ (algebraMap Γ(Sp R, ⊤) Γ(Sp R₁, ⊤) a) = algebraMap R R₁ (σ a) := fun a => by
@@ -357,11 +357,11 @@ theorem exists_norm_basicOpen : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁]
   · refine ⟨0, fun x => ?_⟩
     exact absurd (Subsingleton.elim _ _ : (p x).asIdeal = ⊤) (p x).isPrime.ne_top
   let c' := Module.Free.chooseBasis R R₁
-  letI a0 : Algebra Γ(Sp R, ⊤) Γ(Sp R₁, ⊤) :=
+  let a0 : Algebra Γ(Sp R, ⊤) Γ(Sp R₁, ⊤) :=
     ((spMap (algebraMap R R₁)).appLE ⊤ ⊤ le_top).hom.toAlgebra
   obtain ⟨c⟩ := exists_basis_Gamma c'
-  letI aX : ∀ U : X.Opens, Algebra Γ(Sp R, ⊤) Γ(X, U) := fun U => (p.appLE ⊤ U le_top).hom.toAlgebra
-  letI aB : ∀ U : X.Opens, Algebra Γ(X, U) Γ(X₁, b ⁻¹ᵁ U) :=
+  let aX : ∀ U : X.Opens, Algebra Γ(Sp R, ⊤) Γ(X, U) := fun U => (p.appLE ⊤ U le_top).hom.toAlgebra
+  let aB : ∀ U : X.Opens, Algebra Γ(X, U) Γ(X₁, b ⁻¹ᵁ U) :=
     fun U => (b.appLE U (b ⁻¹ᵁ U) le_rfl).hom.toAlgebra
   have key : ∀ U : X.Opens, IsIso (pushoutSection H (US := ⊤) (UT := ⊤) (UX := U) le_top le_top
       (show b ⁻¹ᵁ U = b ⁻¹ᵁ U ⊓ p₁ ⁻¹ᵁ ⊤ by simp)) →
@@ -379,8 +379,8 @@ theorem exists_norm_basicOpen : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁]
       fun a t => AffDesc.isoPushout_desc_tmul _ _ _ a t
     obtain ⟨e, he⟩ := exists_basis_of_ringEquiv c Φe (fun a => by rw [fΦ, map_one, _root_.mul_one]; rfl)
     exact ⟨e, fun i => by rw [he, fΦ, map_one, _root_.one_mul]⟩
-  haveI : Module.Flat R R₁ := inferInstance
-  haveI : Flat (spMap (algebraMap R R₁)) :=
+  have : Module.Flat R R₁ := inferInstance
+  have : Flat (spMap (algebraMap R R₁)) :=
     Flat.SpecMap_iff.mpr (RingHom.flat_algebraMap_iff.mpr inferInstance)
   obtain ⟨e, he⟩ := key V (isIso_pushoutSection_of_isQuasiSeparated_of_flat_right H le_top le_top _
     (isAffineOpen_top _) (isAffineOpen_top _) hVc hVq)
@@ -390,7 +390,7 @@ theorem exists_norm_basicOpen : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁]
   · exact ⟨fun h => absurd (X.basicOpen_le _ h) hxV, fun h => absurd h.1 hxV⟩
   obtain ⟨U, hU, hxU, hUV⟩ := exists_isAffineOpen_mem_and_subset hxV
   have hUV' : U ≤ V := hUV
-  haveI : IsAffineHom b := MorphismProperty.of_isPullback H.flip inferInstance
+  have : IsAffineHom b := MorphismProperty.of_isPullback H.flip inferInstance
   have hU₁ : IsAffineOpen (b ⁻¹ᵁ U) := hU.preimage b
   obtain ⟨e', he'⟩ := key U (isIso_pushoutSection_of_isAffineOpen H le_top le_top _
     (isAffineOpen_top _) (isAffineOpen_top _) hU)
@@ -403,8 +403,8 @@ theorem exists_norm_basicOpen : ∀ (R R₁ : Type) [CommRing R] [CommRing R₁]
       rw [Scheme.Hom.appLE_map, Scheme.Hom.map_appLE]
     · rw [he, he']
       exact congrArg (fun φ => CommRingCat.Hom.hom φ (c i)) (Scheme.Hom.appLE_map p₁ _ _)
-  haveI : Module.Free Γ(X, U) Γ(X₁, b ⁻¹ᵁ U) := Module.Free.of_basis e'
-  haveI : Module.Finite Γ(X, U) Γ(X₁, b ⁻¹ᵁ U) := Module.Finite.of_basis e'
+  have : Module.Free Γ(X, U) Γ(X₁, b ⁻¹ᵁ U) := Module.Free.of_basis e'
+  have : Module.Finite Γ(X, U) Γ(X₁, b ⁻¹ᵁ U) := Module.Finite.of_basis e'
   have I := GlobalTheory.T.norm_not_mem_iff_forall_over_not_mem Γ(X, U) Γ(X₁, b ⁻¹ᵁ U) (ψ.hom f) (hU.primeIdealOf ⟨x, hxU⟩)
   have hsq := IsAffineOpen.SpecMap_appLE_fromSpec b hU hU₁ le_rfl
   have hpt : ∀ Q, b (hU₁.fromSpec Q) = hU.fromSpec (Spec.map (b.appLE U (b ⁻¹ᵁ U) le_rfl) Q) :=
@@ -589,7 +589,7 @@ theorem eq_of_specializes_of_fst_eq_of_snd_eq :
       ∀ p q : (G ⊗ G).left, (fst G G).left p = x → (fst G G).left q = x →
         (snd G G).left p = (snd G G).left q → p ⤳ q → p = q := by
   intro R _ _ G _ hG x hx hxc p q hp hq hpq hs
-  haveI : Smooth G.hom := hG.smooth
+  have : Smooth G.hom := hG.smooth
   have hfin : IsFinite (G.left.fromSpecResidueField x ≫ G.hom) := GlobalTheory.T.isFinite_fromSpecResidueField_comp_of_closed R G inferInstance x hx hxc
 
   let j : pullback (pullback.fst G.hom G.hom) (G.left.fromSpecResidueField x) ⟶ pullback G.hom G.hom :=
@@ -648,7 +648,7 @@ theorem GlobalTheory.Mum.isClosed_image_snd_of_subset_fibre_closedPoint :
       IsClosed ((snd G G).left '' N) := by
   intro R _ _ G _ hG x hx hxc N hN hNZ
   have hlft : LocallyOfFiniteType G.hom := by
-    haveI := hG.smooth; infer_instance
+    have := hG.smooth; infer_instance
   have hfin : IsFinite (G.left.fromSpecResidueField x ≫ G.hom) :=
     GlobalTheory.T.isFinite_fromSpecResidueField_comp_of_closed R G hlft x hx hxc
   set k := G.left.fromSpecResidueField x
@@ -661,8 +661,8 @@ theorem GlobalTheory.Mum.isClosed_image_snd_of_subset_fibre_closedPoint :
     (pullbackRightPullbackFstIso_hom_snd f f k).symm
   have hcl : IsClosedMap (i ≫ pullback.snd f f) := by
     rw [hcomp]
-    haveI := hfin
-    haveI : IsFinite (pullback.snd (k ≫ f) f) := inferInstance
+    have := hfin
+    have : IsFinite (pullback.snd (k ≫ f) f) := inferInstance
     exact ((pullbackRightPullbackFstIso f f k).hom ≫ pullback.snd (k ≫ f) f).isClosedMap
   have hNi : (snd G G).left '' N = (i ≫ pullback.snd f f) '' (i ⁻¹' N) := by
     rw [Scheme.Hom.comp_base, TopCat.coe_comp, Set.image_comp, Set.image_preimage_eq_of_subset]
@@ -710,7 +710,7 @@ theorem isIrreducible_fibre_fst : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) 
   let p₁ : pullback G.hom G.hom ⟶ G.left := pullback.fst G.hom G.hom
   have hp : (fst G G).left = p₁ := rfl
   have hirr0 := GlobalTheory.SemiAbFibre.irreducibleSpace_fibre _ G hG _ (j ≫ G.hom)
-  haveI hirr : IrreducibleSpace (pullback G.hom (j ≫ G.hom) : Scheme.{0}) := hirr0
+  have hirr : IrreducibleSpace (pullback G.hom (j ≫ G.hom) : Scheme.{0}) := hirr0
   let e : pullback G.hom (j ≫ G.hom) ≅ p₁.fiber x :=
     pullbackSymmetry _ _ ≪≫ (pullbackRightPullbackFstIso G.hom G.hom j).symm ≪≫ pullbackSymmetry _ _
   have hr := (IrreducibleSpace.isIrreducible_univ (pullback G.hom (j ≫ G.hom) : Scheme.{0})).image _
@@ -915,9 +915,9 @@ theorem translate_baseChange_affineOpen : ∀ (R R₁ : Type) [CommRing R] [Comm
     simp only [T', MonObj.comp_mul, Category.comp_id, GrpObj.comp_inv, hc, T, mul_inv_cancel_right]
   have h₂ : T' ≫ T = 𝟙 G₁ := by
     simp only [T, MonObj.comp_mul, Category.comp_id, T', hc, inv_mul_cancel_right]
-  haveI : IsIso T := ⟨⟨T', h₁, h₂⟩⟩
-  haveI : IsIso T.left := Functor.map_isIso (Over.forget _) T
-  haveI : IsAffineHom (pullback.fst G.hom f) :=
+  have : IsIso T := ⟨⟨T', h₁, h₂⟩⟩
+  have : IsIso T.left := Functor.map_isIso (Over.forget _) T
+  have : IsAffineHom (pullback.fst G.hom f) :=
     isAffineHom_isStableUnderBaseChange.of_isPullback (IsPullback.of_hasPullback G.hom f).flip
       (inferInstanceAs (IsAffineHom (spMap ρ)))
   refine ⟨(T.left ≫ pullback.fst G.hom f) ⁻¹ᵁ V, hV.preimage _, ?_⟩
@@ -979,11 +979,11 @@ theorem exists_affine_open_of_finset_closedFibre :
     ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ s : Finset G.left,
     (∀ x ∈ s, G.hom x = closedPoint R) → ∃ O : G.left.Opens, IsAffineOpen O ∧ ∀ x ∈ s, x ∈ O := by
   intro R _ _ _ hR G _ _ hG s hs
-  haveI : IsNoetherianRing R := hR.1
-  haveI : QuasiCompact G.hom := hG.quasiCompact
-  haveI : IsSeparated G.hom := hG.separated
-  haveI : Smooth G.hom := hG.smooth
-  haveI : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
+  have : IsNoetherianRing R := hR.1
+  have : QuasiCompact G.hom := hG.quasiCompact
+  have : IsSeparated G.hom := hG.separated
+  have : Smooth G.hom := hG.smooth
+  have : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
 
   rcases s.eq_empty_or_nonempty with hs0 | ⟨x₀, hx₀⟩
   · exact ⟨⊥, isAffineOpen_bot _, by simp [hs0]⟩
@@ -1017,11 +1017,11 @@ theorem exists_affine_open_of_finset_closedFibre :
 
   obtain ⟨R₁, _, _, _, ρ, a, hfin, het, ha, haO⟩ :=
     GlobalTheory.T.exists_finiteEtale_section_of_smooth_closedFibre R hR G hG.smooth O ⟨u, huO, hu⟩
-  letI : Algebra R R₁ := ρ.toAlgebra
-  haveI : Module.Finite R R₁ := hfin.2.2
-  haveI : Algebra.Etale R R₁ := het
-  haveI : Module.Flat R R₁ := inferInstance
-  haveI : Module.Free R R₁ := Module.free_of_flat_of_isLocalRing
+  let : Algebra R R₁ := ρ.toAlgebra
+  have : Module.Finite R R₁ := hfin.2.2
+  have : Algebra.Etale R R₁ := het
+  have : Module.Flat R R₁ := inferInstance
+  have : Module.Free R R₁ := Module.free_of_flat_of_isLocalRing
 
   let A : Over.mk (spMap ρ) ⟶ G := Over.homMk a ha
   obtain ⟨W, hW, hzW⟩ := GlobalTheory.T.exists_affineOpen_translate_baseChange R R₁ ρ G V hV A
@@ -1183,7 +1183,7 @@ theorem eq_closedPoint_of_finite {R R' : Type} [CommRing R] [IsLocalRing R] [Com
   have h₁ : Ideal.comap ρ (PrimeSpectrum.asIdeal p) = maximalIdeal R := congrArg PrimeSpectrum.asIdeal hp
   have h₂ : (PrimeSpectrum.asIdeal p).IsMaximal := by
     have := PrimeSpectrum.isPrime p
-    refine Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' ρ hρ.to_isIntegral _ ?_
+    refine Ideal.isMaximal_of_isIntegral_of_isMaximal_comap ρ hρ.to_isIntegral _ ?_
     rw [h₁]
     infer_instance
   exact PrimeSpectrum.ext (eq_maximalIdeal h₂)

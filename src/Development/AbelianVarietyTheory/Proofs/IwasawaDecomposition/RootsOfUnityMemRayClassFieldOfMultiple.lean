@@ -104,7 +104,7 @@ theorem _root_.GlobalTheory.Mem.RayZeta.root_mem_rayField : ∀ (K M L : Type) [
       Ideal.absNorm I ≡ 1 [MOD p]) → ∀ ζ : L, ζ ^ p = 1 → ζ ∈ Set.range (algebraMap M L) := by
   intro K M L _ _ _ _ _ _ _ _ _ _ _ 𝔮 p hp hq hM hgen hnorm ζ hζ
   obtain ⟨hab, hunr, -, hray⟩ := hM
-  haveI : IsGalois K M := hab.toIsGalois
+  have : IsGalois K M := hab.toIsGalois
   have hpow : ∀ a b : ℕ, a ≡ b [MOD p] → ζ ^ a = ζ ^ b := by
     intro a b h
     rw [← Nat.mod_add_div a p, ← Nat.mod_add_div b p, pow_add, pow_add, pow_mul, pow_mul, hζ,
@@ -174,7 +174,7 @@ theorem _root_.GlobalTheory.Mem.RayZeta.root_mem_rayField : ∀ (K M L : Type) [
         rw [← pow_succ, Nat.sub_add_cancel (orderOf_pos σ), pow_orderOf_eq_one]
       rw [this]
       exact hpowQ _
-  haveI := IsGalois.tower_top_of_isGalois K M L
+  have := IsGalois.tower_top_of_isGalois K M L
   rw [InfiniteGalois.mem_range_algebraMap_iff_fixed]
   intro τ
   obtain ⟨I, hI0, hIq, hIχ, hIζ⟩ := hall (τ.restrictScalars K)

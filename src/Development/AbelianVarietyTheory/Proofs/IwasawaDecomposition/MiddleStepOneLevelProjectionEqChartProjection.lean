@@ -61,7 +61,7 @@ theorem pr_lvC_eq_lv : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → 
   have hcl : clsCrd (I.rec7 l Z) u i hi c = (((I.stp u I.mu0 i).rep c).1.1.deco).1.L := hlat
   have hres := hF.res
   have hsep := sepElt_of_ok l.pr u
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   have hLd : Ld (I.rec7 l Z) u i hi c = (((I.stp u I.mu0 i).rep c).1.1.deco).1.Lsh := by
     show dualL (sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E) (gramN (I.rec7 l Z) i hi) (clsCrd (I.rec7 l Z) u i hi c) = _
     rw [hg, hcl]

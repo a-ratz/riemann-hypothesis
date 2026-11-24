@@ -119,7 +119,7 @@ theorem res_arch : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype
   | mem Φ h =>
     obtain ⟨f, g, _, rfl⟩ := h
     refine ⟨g 0 • f, fun t => ?_⟩
-    simp only [pureA, RingEquiv.apply_symm_apply, SchwartzMap.smul_apply, smul_eq_mul]
+    simp only [pureA, RingEquiv.apply_symm_apply, smul_apply, smul_eq_mul]
     rw [mul_comm]
     rfl
   | zero => exact ⟨0, fun t => rfl⟩
@@ -128,12 +128,12 @@ theorem res_arch : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype
     obtain ⟨f₂, hf₂⟩ := h2
     exact ⟨f₁ + f₂, fun t => by
       show Φ₁ _ + Φ₂ _ = _
-      rw [hf₁, hf₂, SchwartzMap.add_apply]⟩
+      rw [hf₁, hf₂, add_apply]⟩
   | smul a Φ _ h =>
     obtain ⟨f, hf⟩ := h
     exact ⟨a • f, fun t => by
       show a • Φ _ = _
-      rw [hf, SchwartzMap.smul_apply]⟩
+      rw [hf, smul_apply]⟩
 
 theorem comm_fin {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
     {n d : ℕ} {X : Spc F E n} {W : Spc F E d} (M : Model σ X W) (ψ : AddChar (AF F) ℂ) (χX χW : Chr F E) (om : Rep σ X W)

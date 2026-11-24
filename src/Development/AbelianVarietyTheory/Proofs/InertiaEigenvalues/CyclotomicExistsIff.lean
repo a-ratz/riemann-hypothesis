@@ -203,7 +203,7 @@ theorem phiPi_coeff_not (x : k⸨X⸩) (n : ℤ) (h : ¬ (l : ℤ) ∣ n) : (One
   exact h ⟨q, rfl⟩
 
 theorem coeff_neg (a : k⟦X⟧) {n : ℤ} (h : n < 0) : (a : k⸨X⸩).coeff n = 0 := by
-  rw [PowerSeries.coeff_coe, if_pos h]
+  rw [PowerSeries.coeff_coe, ite_eq_left h]
 
 theorem phiPi_eq (x : k⸨X⸩) : OnePlusPowerCharacters.phiPi k l x = FrobeniusBinomialReduction.frobπ k l x := by
   have hp := hl.out.ne_zero
@@ -222,13 +222,13 @@ theorem phiPi_eq (x : k⸨X⸩) : OnePlusPowerCharacters.phiPi k l x = Frobenius
     · rw [coeff_neg k a hq, coeff_neg k _ (mul_neg_of_pos_of_neg hpos hq)]
     · obtain ⟨m, rfl⟩ := Int.eq_ofNat_of_zero_le hq
       rw [← Nat.cast_mul, LaurentSeries.coeff_coe_powerSeries, LaurentSeries.coeff_coe_powerSeries,
-        PowerSeries.coeff_subst_X_pow hp, if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hl.out.pos]
+        PowerSeries.coeff_subst_X_pow hp, ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hl.out.pos]
       simp
   · rw [phiPi_coeff_not k l _ _ hd]
     rcases lt_or_ge n 0 with hq | hq
     · rw [coeff_neg k _ hq]
     · obtain ⟨m, rfl⟩ := Int.eq_ofNat_of_zero_le hq
-      rw [LaurentSeries.coeff_coe_powerSeries, PowerSeries.coeff_subst_X_pow hp, if_neg]
+      rw [LaurentSeries.coeff_coe_powerSeries, PowerSeries.coeff_subst_X_pow hp, ite_eq_right]
       exact fun h => hd (Int.natCast_dvd_natCast.2 h)
 
 def assembleX (y : Fin l → k⸨X⸩) : k⸨X⸩ := ∑ j : Fin l, vv k ^ (j : ℕ) * OnePlusPowerCharacters.phiPi k l (y j)
@@ -284,7 +284,7 @@ theorem assembleX_bijective : Function.Bijective (assembleX k l) := by
 theorem assemble_bijective : Function.Bijective (OnePlusPowerCharacters.assemble k l) := by
   let T : Matrix (Fin l) (Fin l) k⸨X⸩ := Matrix.of fun m j => (((j : ℕ).choose m : ℕ) : k⸨X⸩)
   have hdet : T.det = 1 := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [Matrix.det_of_isUpperTriangular]
     · simp [T]
     · intro i j h
       simp only [T, Matrix.of_apply]

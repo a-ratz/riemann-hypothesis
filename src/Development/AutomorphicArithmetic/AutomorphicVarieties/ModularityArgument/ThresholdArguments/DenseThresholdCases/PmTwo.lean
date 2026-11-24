@@ -208,15 +208,15 @@ theorem UpperTheory.V.Z.Bc.third :
   intro K K' Ω _ _ _ _ _ _ _ _ _ _ _ _ _ hK hK' l _ n r hr hr'
   classical
   obtain ⟨K₀, _, _, _, hK2, hKc⟩ := Br.quadFam (4 * n ^ 2 + 1)
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   let emb : ∀ i, K₀ i →ₐ[ℚ] Ω := fun i => IsAlgClosed.lift
-  letI alg : ∀ i, Algebra (K₀ i) Ω := fun i => (emb i).toRingHom.toAlgebra
-  haveI tow : ∀ i, IsScalarTower ℚ (K₀ i) Ω := fun i =>
+  let alg : ∀ i, Algebra (K₀ i) Ω := fun i => (emb i).toRingHom.toAlgebra
+  have tow : ∀ i, IsScalarTower ℚ (K₀ i) Ω := fun i =>
     IsScalarTower.of_algebraMap_eq fun x => ((emb i).commutes x).symm
-  haveI clo : ∀ i, IsAlgClosure (K₀ i) Ω := fun i => ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
-  haveI : IsAlgClosure K' Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have clo : ∀ i, IsAlgClosure (K₀ i) Ω := fun i => ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have : IsAlgClosure K' Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
   choose δ _ _ hδ _ using fun i => UpperTheory.exists_quadratic_sign_character ℚ (K₀ i) Ω l (hK2 _)
   have hδi : Function.Injective δ := fun i j hij => by
     by_contra hne
@@ -248,16 +248,16 @@ section
 open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual ReciprocityTheory.Gal Formalism.MainNotions.N GlobalTheory.CuspRep GlobalTheory.HeckeGal GlobalTheory.GalOfCusp UpperTheory.V UpperTheory.V.Af UpperTheory.V.Af.Bc UpperTheory.V.Z.Bc
 open scoped Matrix
 private theorem across_cc (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] : ∃ c : G ℚ Ω, IsConjEl c := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   let j : Ω →ₐ[ℚ] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω ℂ := j.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  let : Algebra Ω ℂ := j.toRingHom.toAlgebra
+  have : IsScalarTower ℚ Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   let τ : ℂ ≃ₐ[ℚ] ℂ := AlgEquiv.ofRingEquiv (f := starRingAut) fun x => by simp
   exact ⟨τ.restrictNormal Ω, algebraMap Ω ℂ, fun x => AlgEquiv.restrictNormal_commutes τ Ω x⟩
 private theorem across_pair {F₀ F Ω k : Type} [Field F₀] [Field F] [Field Ω] [Algebra F₀ F] [Algebra F₀ Ω] [Algebra F Ω]
@@ -289,12 +289,12 @@ private theorem across_irr {Γ Δ Δ' k : Type} [Group Γ] [Group Δ] [Group Δ'
 theorem UpperTheory.V.Z.Bc.across_alt :
     _root_.UpperTheory.V.Af.HypothesesH' → SolC → BiQuad → Across := by
   intro _ hS hB K K' Ω _ _ _ _ _ _ _ iA _ _ iT iT' iC hK hK' l _ ι n hn r θ hr hθ hd hirr haut
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   obtain rfl : iA = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
   obtain ⟨M, _, _, iM, _, _, _, _, _, _, _, hs, hs', hM, -⟩ := hB K K' Ω hK hK'
-  haveI := across_up K Ω
-  haveI := across_up K' Ω
-  haveI := across_up M Ω
+  have := across_up K Ω
+  have := across_up K' Ω
+  have := across_up M Ω
   obtain ⟨c, hc⟩ := across_cc Ω
   have he : (r.comp (resG ℚ K Ω)).comp (resG K M Ω) = (r.comp (resG ℚ K' Ω)).comp (resG K' M Ω) :=
     MonoidHom.ext fun s => rfl
@@ -359,11 +359,11 @@ theorem UpperTheory.GalN.V.isAutomorphicOverImagQuad_of_restriction_aut_irr (H :
     (hK : Module.finrank ℚ K = 2) (hgal : IsGalois ℚ L) (hsol : IsSolvable (L ≃ₐ[ℚ] L)) (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ)
     (n : ℕ) (hn : 1 ≤ n) (r : G ℚ Ω →* GL (Fin n) (Qbar l)) (θ : G ℚ Ω →* (Qbar l)ˣ) (hr : Continuous r) (hθ : IsAlgChar ι θ)
     (hd : DualTw r θ) (hirr : IsIrr (r.comp (resG ℚ L Ω))) (haut : IsAut ι (r.comp (resG ℚ L Ω))) : IsAutomorphicOverImagQuad ι r := by
-  letI : Algebra K L := (IntermediateField.inclusion hle).toRingHom.toAlgebra
-  haveI : IsScalarTower K L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI : IsGalois K L := IsGalois.tower_top_of_isGalois ℚ K L
-  haveI : Group.IsSolvable (L ≃ₐ[ℚ] L) := hsol
+  let : Algebra K L := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  have : IsScalarTower K L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : IsGalois K L := IsGalois.tower_top_of_isGalois ℚ K L
+  have : Group.IsSolvable (L ≃ₐ[ℚ] L) := hsol
   have s2 : IsSolvable (L ≃ₐ[K] L) :=
     Group.isSolvable_of_isSolvable_injective (f := (AlgEquiv.restrictScalarsHom ℚ : (L ≃ₐ[K] L) →* (L ≃ₐ[ℚ] L)))
       (AlgEquiv.restrictScalars_injective ℚ)
@@ -411,7 +411,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem comm_le_fix {k Ω : Type} [Field k] [Field Ω] [Algebra k Ω] (F : IntermediateField k Ω)
     (hF : IsAbelianGalois k F) : commutator (Ω ≃ₐ[k] Ω) ≤ F.fixingSubgroup := by
-  haveI : Normal k F := IsGalois.to_normal
+  have : Normal k F := IsGalois.to_normal
   rw [← IntermediateField.restrictNormalHom_ker]
   rw [commutator_def, Subgroup.commutator_le]
   intro a _ b _
@@ -422,8 +422,8 @@ private theorem comm_le_rbar {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure 
     (D : Raw Ω c) (hD : D.Good) : commutator (G ℚ Ω) ≤ D.rbar.ker := by
   have hb := (UpperTheory.V.Ws.barFacts D hD).2.2.2.2.2.1
   intro g hg
-  have h1 : g ∈ D.ξ.ker := Abelianization.commutator_subset_ker D.ξ hg
-  have h2 : g ∈ D.Psi.ker := Abelianization.commutator_subset_ker D.Psi hg
+  have h1 : g ∈ D.ξ.ker := Group.Abelianization.commutator_le_ker D.ξ hg
+  have h2 : g ∈ D.Psi.ker := Group.Abelianization.commutator_le_ker D.Psi hg
   rw [MonoidHom.mem_ker] at h1 h2 ⊢
   rw [hb]
   simp [Raw.bar, h1, h2]
@@ -431,8 +431,8 @@ private theorem comm_le_rbar {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure 
 theorem UpperTheory.V.Keep.ineQ : UpperTheory.V.Keep.IneQ := by
   unfold UpperTheory.V.Keep.IneQ
   intro hI Ω _ _ _ l _ c D T hD c' h X y _ r hr
-  haveI := T.nF
-  haveI := T.abF
+  have := T.nF
+  have := T.abF
   apply hI Ω l 4 r.toHomUnits (T.F.fixingSubgroup ⊓ D.rbar.ker)
   · rw [Subgroup.coe_inf]
     exact (IntermediateField.fixingSubgroup_isOpen T.F).inter
@@ -527,11 +527,11 @@ private theorem exists_normal (F : IntermediateField ℚ Ω) [NumberField F] (U 
     (hU : IsOpen (U : Set (G F Ω))) :
     ∃ N : Subgroup (G ℚ Ω), N.Normal ∧ IsOpen (N : Set (G ℚ Ω)) ∧ ∀ s ∈ N, ∃ u ∈ U, resQ F u = s := by
   obtain ⟨E, hE, hEU⟩ := (krullTopology_mem_nhds_one_iff F Ω U).1 (hU.mem_nhds U.one_mem)
-  haveI : FiniteDimensional F E := hE
-  haveI : FiniteDimensional ℚ E := Module.Finite.trans F E
+  have : FiniteDimensional F E := hE
+  have : FiniteDimensional ℚ E := Module.Finite.trans F E
   let E' : IntermediateField ℚ Ω := E.restrictScalars ℚ
-  haveI : FiniteDimensional ℚ E' := ‹FiniteDimensional ℚ E›
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : FiniteDimensional ℚ E' := ‹FiniteDimensional ℚ E›
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   obtain ⟨N, hN⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one
     (IntermediateField.fixingSubgroup_isOpen E') E'.fixingSubgroup.one_mem
   refine ⟨N.toSubgroup, inferInstance, N.isOpen', fun s hs => ?_⟩
@@ -1053,11 +1053,11 @@ theorem UpperTheory.V.Z.Win.Dn.pmDown_alt :
     ⟨P, fun s => by simpa using hP s⟩ hi1 h3
   obtain ⟨hI, hFl, hU⟩ := UpperTheory.V.Keep.ptLaws D T hG hF.1 hF.1.locL c' h X y hW r hr
   have hle : T.K ≤ T.L := T.hL ▸ le_sup_right
-  letI : Algebra T.K T.L := (IntermediateField.inclusion hle).toRingHom.toAlgebra
-  haveI : IsScalarTower T.K T.L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℚ T.K T.L := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI : IsGalois T.K T.L := IsGalois.tower_top_of_isGalois ℚ T.K T.L
-  haveI : Group.IsSolvable (T.L ≃ₐ[ℚ] T.L) := hsol
+  let : Algebra T.K T.L := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  have : IsScalarTower T.K T.L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℚ T.K T.L := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : IsGalois T.K T.L := IsGalois.tower_top_of_isGalois ℚ T.K T.L
+  have : Group.IsSolvable (T.L ≃ₐ[ℚ] T.L) := hsol
   have s2 : Group.IsSolvable (T.L ≃ₐ[T.K] T.L) :=
     Group.isSolvable_of_isSolvable_injective (f := (AlgEquiv.restrictScalarsHom ℚ : (T.L ≃ₐ[T.K] T.L) →* (T.L ≃ₐ[ℚ] T.L)))
       (AlgEquiv.restrictScalars_injective ℚ)
@@ -1430,9 +1430,9 @@ theorem UpperTheory.V.Ws.auPsiCont :
       rw [resLe_mem_Dec, ← K.hA v]
       exact g.2
     rw [heq]
-    refine (htw.comp continuous_subtype_val).mul ?_
+    refine (htw.comp continuous_subtypeVal).mul ?_
     unfold PD.ψ
-    exact ((continuous_const.matrix_mul (hcont.comp continuous_subtype_val)).matrix_mul
+    exact ((continuous_const.matrix_mul (hcont.comp continuous_subtypeVal)).matrix_mul
       continuous_const).matrix_elem i i
   rw [Units.continuous_iff]
   refine ⟨hval, ?_⟩
@@ -1502,8 +1502,8 @@ private theorem pf_const [IsDomain R] (h0 : ∀ a ∈ maximalIdeal O, algebraMap
   obtain ⟨a, ha⟩ := IsCO.res_surj (O := O) y
   refine ⟨a, ?_⟩
   by_contra hne
-  letI : Algebra (ResidueField O) R := (Ideal.Quotient.lift (maximalIdeal O) (algebraMap O R) h0).toAlgebra
-  haveI : IsScalarTower O (ResidueField O) R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (ResidueField O) R := (Ideal.Quotient.lift (maximalIdeal O) (algebraMap O R) h0).toAlgebra
+  have : IsScalarTower O (ResidueField O) R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have h1 : IsIntegral (ResidueField O) (y - algebraMap O R a) := (hy.sub isIntegral_algebraMap).tower_top
   exact ha (h1.isUnit (sub_ne_zero.2 hne))
 private theorem pf_sect (h0 : ∀ a ∈ maximalIdeal O, algebraMap O R a = 0) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] :
@@ -1602,9 +1602,9 @@ private theorem pf_lift {g : G T.F Ω} (hg : resQ T.F g ∈ T.K.fixingSubgroup) 
   rw [IntermediateField.mem_fixingSubgroup_iff] at h2
   exact ⟨{ g.toRingEquiv with commutes' := fun x => h2 x.1 x.2 }, AlgEquiv.ext fun _ => rfl⟩
 private theorem pf_sqK (g : G ℚ Ω) : g ^ 2 ∈ T.K.fixingSubgroup := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsGalois ℚ Ω := inferInstance
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsGalois ℚ Ω := inferInstance
   have hi : T.K.fixingSubgroup.index = 2 := by
     rw [← T.degK]
     exact (IntermediateField.finrank_eq_fixingSubgroup_index Ω T.K).symm
@@ -1621,7 +1621,7 @@ theorem UpperTheory.V.Ws.exists_pow_maximalIdeal_le_of_modular_phi :
   have hl : l ∈ D.S := hT.2.elim (fun x => x.1.1.l_mem) fun x => x.1.1.l_mem
   let π : X.B →ₐ[c'.O] X.B ⧸ q := Ideal.Quotient.mkₐ c'.O q
   have : Nontrivial (X.B ⧸ q) := Ideal.Quotient.nontrivial_iff.mpr hp.ne_top
-  haveI : IsCO c'.O (X.B ⧸ q) := co_quot c'.O X.B _ π Ideal.Quotient.mk_surjective
+  have : IsCO c'.O (X.B ⧸ q) := co_quot c'.O X.B _ π Ideal.Quotient.mk_surjective
   have hπ : ∀ b, π b = 0 ↔ b ∈ q := fun b => Ideal.Quotient.eq_zero_iff_mem
   have h0 : ∀ a ∈ maximalIdeal c'.O, algebraMap c'.O (X.B ⧸ q) a = 0 := fun a ha => by
     rw [← π.commutes, hπ]

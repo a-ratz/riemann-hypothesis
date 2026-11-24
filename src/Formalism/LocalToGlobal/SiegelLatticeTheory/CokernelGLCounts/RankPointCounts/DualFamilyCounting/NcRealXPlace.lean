@@ -127,7 +127,7 @@ theorem coordW_exact (r k : ℕ) (T T' sc : ℝ) (hk : 1 ≤ k) (hT : 0 < T) (hT
           · rw [hg]
             exact mul_pos (Finset.prod_pos fun a _ => pow_pos (norm_pos_iff.2 (mul_ne_zero (hlam0 a) (hq0 a))) 2)
               (by linarith)
-        rw [Gi, Set.indicator_of_mem hmem, hw, Formalism.QuantumDeterminants.bcWeight, if_pos hz.le, ENNReal.ofReal_mul hΛ0.le, mul_assoc]
+        rw [Gi, Set.indicator_of_mem hmem, hw, Formalism.QuantumDeterminants.bcWeight, ite_eq_left hz.le, ENNReal.ofReal_mul hΛ0.le, mul_assoc]
       · have hlt : Complex.normSq q.2 < T * T' := lt_of_le_of_ne (not_lt.1 hz) hq
         have hnot : coordSc r sc q ∉ GoodLoc (r := r) T T' := by
           rintro ⟨-, hp⟩
@@ -135,7 +135,7 @@ theorem coordW_exact (r k : ℕ) (T T' sc : ℝ) (hk : 1 ≤ k) (hT : 0 < T) (hT
           exact absurd hp (not_lt.2 (mul_nonpos_of_nonneg_of_nonpos
             (Finset.prod_nonneg fun a _ => by positivity) (sub_neg.2 hlt).le))
         rw [Gi, Set.indicator_apply_eq_zero.2 (fun h => absurd h hnot), Formalism.QuantumDeterminants.bcWeight,
-          if_neg (not_le.2 hlt), ENNReal.ofReal_zero, zero_mul, mul_zero]
+          ite_eq_right (not_le.2 hlt), ENNReal.ofReal_zero, zero_mul, mul_zero]
     · push_neg at hq0
       obtain ⟨a, ha⟩ := hq0
       have hnot : coordSc r sc q ∉ GoodLoc (r := r) T T' := by
@@ -152,7 +152,7 @@ theorem coordW_exact (r k : ℕ) (T T' sc : ℝ) (hk : 1 ≤ k) (hT : 0 < T) (hT
   have hnull : ∀ᵐ c : Fin (r + 1) → ℂ, Complex.normSq (c (Fin.last r)) ≠ T * T' := by
     have hS : (volume : Measure ℂ) {ζ | Complex.normSq ζ = T * T'} = 0 := by
       refine measure_mono_null (fun ζ hζ => ?_) (Measure.addHaar_sphere volume (0 : ℂ) (Real.sqrt (T * T')))
-      simp only [Set.mem_setOf_eq] at hζ
+      simp only [Set.mem_ofPred_eq] at hζ
       rw [mem_sphere_zero_iff_norm, ← hζ, Complex.normSq_eq_norm_sq, Real.sqrt_sq (norm_nonneg _)]
     have h0 : (volume : Measure (Fin (r + 1) → ℂ)) {c | Complex.normSq (c (Fin.last r)) = T * T'} = 0 := by
       exact Measure.pi_eval_preimage_null (fun _ : Fin (r + 1) => (volume : Measure ℂ)) (i := Fin.last r) hS
@@ -275,7 +275,7 @@ theorem norm_sq_realifyE (Y : Matrix (Fin m) (Fin m) ℂ) : ‖realifyE Y‖ ^ 2
   simp only [Fintype.sum_prod_type, Fintype.sum_bool, trace, diag, Matrix.mul_apply, conjTranspose_apply, Complex.re_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
-  simp only [realifyE_apply, realifyFun, if_true, Bool.false_eq_true, if_false, Real.norm_eq_abs, sq_abs,
+  simp only [realifyE_apply, realifyFun, ite_true, Bool.false_eq_true, ite_false, Real.norm_eq_abs, sq_abs,
     Complex.mul_re, Complex.star_def, Complex.conj_re, Complex.conj_im]
   ring
 
@@ -357,7 +357,7 @@ theorem exp_conjP (h1 : Pᴴ * P = 1) (X : Matrix (Fin (2 * r + k + 1)) (Fin (2 
 theorem lieOf_conj (hPJ : Pᴴ * Formalism.REAL.Jm ε * P = Hpk k r) (h1 : Pᴴ * P = 1) (h2 : P * Pᴴ = 1)
     (X : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :
     Pᴴ * X * P ∈ lieOf (UH (Hpk k r)) ↔ X ∈ lieOf {g | Formalism.REAL.inUJ ε g} := by
-  simp only [lieOf, Set.mem_setOf_eq]
+  simp only [lieOf, Set.mem_ofPred_eq]
   refine forall_congr' fun t => ?_
   rw [show ((t : ℂ) • (Pᴴ * X * P)) = Pᴴ * ((t : ℂ) • X) * P by rw [Matrix.mul_smul, Matrix.smul_mul],
     exp_conjP h1, conj_UH_iff hPJ h1 h2]
@@ -405,7 +405,7 @@ variable {r k : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {P : Matrix (Fin (2 * r
 theorem sigmaFinite_smul' {α : Type*} [MeasurableSpace α] (μ : Measure α) [SigmaFinite μ] {c : ℝ≥0∞}
     (hc : c ≠ ⊤) : SigmaFinite (c • μ) := by
   have hfin : ∀ i, (c • μ) (spanningSets μ i) < ⊤ := fun i => by
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top hc.lt_top (measure_spanningSets_lt_top μ i)
   exact ⟨⟨⟨spanningSets μ, fun _ => trivial, hfin, iUnion_spanningSets μ⟩⟩⟩
 
@@ -415,15 +415,15 @@ theorem isHaarOn_smul {S : Set (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1
   refine ⟨sigmaFinite_smul' ν hc, ?_, ?_, fun s hs => ?_⟩
   · intro h0
     have := congrArg (fun μ : Measure (Mt k r) => μ Set.univ) h0
-    simp only [Measure.smul_apply, smul_eq_mul, Measure.coe_zero, Pi.zero_apply, mul_eq_zero, hc0, false_or] at this
+    simp only [smul_apply, smul_eq_mul, FunLike.coe_zero, Pi.zero_apply, mul_eq_zero, hc0, false_or] at this
     exact h2 (Measure.measure_univ_eq_zero.1 this)
-  · rw [Measure.smul_apply, h3, smul_zero]
+  · rw [smul_apply, h3, smul_zero]
   · rw [Measure.map_smul c (measurable_lmulM (k := k) (r := r) s).aemeasurable, h4 s hs]
 
 theorem preimage_expBall (hPJ : Pᴴ * Formalism.REAL.Jm ε * P = Hpk k r) (h1 : Pᴴ * P = 1) (h2 : P * Pᴴ = 1) (ρ : ℝ) :
     cM (ε := ε) Pᴴ P ⁻¹' expBall (UH (Hpk k r)) ρ = Formalism.MainNotions.S.Gauge.expSet ε (Metric.ball 0 ρ) := by
   ext g
-  simp only [Set.mem_preimage, expBall, Set.mem_image, Formalism.MainNotions.S.Gauge.expSet, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, expBall, Set.mem_image, Formalism.MainNotions.S.Gauge.expSet, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨x, hx, hxe⟩
     set y := (lieIso hPJ h1 h2).symm x
@@ -514,7 +514,7 @@ theorem gaugeTr_of {r k : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {e f : Fin r 
           (volume (Metric.ball (0 : lieE (UH (Hpk k r))) ρ)).toReal =
         (Formalism.MainNotions.S.Gauge.gaugeU ε)⁻¹ * Formalism.MainNotions.S.Gauge.ratioAt ε ρ := by
       intro ρ
-      rw [emb.map_apply, preimage_expBall hPJ h1 h2, volume_ball_lie hPJ h1 h2, Measure.smul_apply, smul_eq_mul,
+      rw [emb.map_apply, preimage_expBall hPJ h1 h2, volume_ball_lie hPJ h1 h2, smul_apply, smul_eq_mul,
         ENNReal.toReal_mul, hc, ENNReal.toReal_inv, ENNReal.toReal_ofReal hgpos.le, Formalism.MainNotions.S.Gauge.ratioAt,
         mul_div_assoc]
     have hlim : Tendsto (fun ρ => (Formalism.MainNotions.S.Gauge.gaugeU ε)⁻¹ * Formalism.MainNotions.S.Gauge.ratioAt ε ρ) (𝓝[>] 0)
@@ -574,14 +574,14 @@ theorem jacLocX_of (hJ : JacGauge) : JacLocX := by
   have hμs : IsSection k r zB zB' μs := by
     refine ⟨fun i j => (hμ.1 i j).congr fun ζ hζ => ?_, fun ζ hζ => ?_⟩
     · have hζ' : Tz k r zB * Tz k r zB' < Complex.normSq ζ := hζ
-      simp only [μs, if_pos hζ']
-    · simp only [μs, if_pos hζ]
+      simp only [μs, ite_eq_left hζ']
+    · simp only [μs, ite_eq_left hζ]
       exact hμ.2 ζ hζ
   have hU : ∀ ζ, (μs ζ)ᴴ * Hb k * μs ζ = Hb k := by
     intro ζ
     by_cases hζ : Tz k r zB * Tz k r zB' < Complex.normSq ζ
-    · simp only [μs, if_pos hζ]; exact (hμ.2 ζ hζ).1
-    · simp only [μs, if_neg hζ, Matrix.conjTranspose_one, Matrix.one_mul, Matrix.mul_one]
+    · simp only [μs, ite_eq_left hζ]; exact (hμ.2 ζ hζ).1
+    · simp only [μs, ite_eq_right hζ, Matrix.conjTranspose_one, Matrix.one_mul, Matrix.mul_one]
   have hMuj : ∀ q : (Fin r → ℂ) × ℂ, (∀ a, q.1 a ≠ 0) →
       Formalism.REAL.inUJ ε (Qm e f wf z0 * bigCell k r q.1 (μs q.2) * (Qm e f wf z0)⁻¹) := fun q hq =>
     JL.inUJ_conj (gramQ hF) hdet (JL.bigMem_holds k r q.1 (μs q.2) hq (hU q.2))
@@ -592,7 +592,7 @@ theorem jacLocX_of (hJ : JacGauge) : JacLocX := by
       uMat (h0 (JL.coordSc r 1 q)) = Qm e f wf z0 * bigCell k r q.1 (μs q.2) * (Qm e f wf z0)⁻¹ := by
     intro q hq
     have hq' : ∀ a, (JL.qOf r 1 (JL.coordSc r 1 q)).1 a ≠ 0 := by rw [JL.qOf_coordSc r one_pos]; exact hq
-    simp only [h0, dif_pos hq', JL.uMat_ujOf, JL.qOf_coordSc r one_pos]
+    simp only [h0, dite_eq_left hq', JL.uMat_ujOf, JL.qOf_coordSc r one_pos]
   have hh0 : IsSecLoc ε 1 e (Qm e f wf z0 *ᵥ zB) (Qm e f wf z0 *ᵥ zB') (Tz k r zB) (Tz k r zB') h0 := by
     intro c hc
     have hq1 : ∀ a, (JL.qOf r 1 c).1 a ≠ 0 := fun a =>
@@ -672,7 +672,7 @@ theorem jacLocX_of (hJ : JacGauge) : JacLocX := by
             (volume (Metric.ball (0 : lieE (UH (Hpk k r))) ρ)).toReal =
           (Formalism.MainNotions.S.Gauge.gaugeU ε)⁻¹ * Formalism.MainNotions.S.Gauge.ratioAt ε ρ := by
         intro ρ
-        rw [emb.map_apply, preimage_expBall hPJ h1 h2, volume_ball_lie hPJ h1 h2, Measure.smul_apply, smul_eq_mul,
+        rw [emb.map_apply, preimage_expBall hPJ h1 h2, volume_ball_lie hPJ h1 h2, smul_apply, smul_eq_mul,
           ENNReal.toReal_mul, hc, ENNReal.toReal_inv, ENNReal.toReal_ofReal hgpos.le, Formalism.MainNotions.S.Gauge.ratioAt,
           mul_div_assoc]
       have hlim : Tendsto (fun ρ => (Formalism.MainNotions.S.Gauge.gaugeU ε)⁻¹ * Formalism.MainNotions.S.Gauge.ratioAt ε ρ) (𝓝[>] 0)
@@ -841,7 +841,7 @@ theorem placeStep (hJG : JacGauge) {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : 
     (by rw [hTzB']; exact hT') hG μH μH' hHB hHB' a a' ha ha' hma hma' κ hκ h hhB
   rw [hTzB, hTzB'] at hD
   have hD2 := disint_smul_right (c := κ' / κ) (div_pos hκ' hκ) hD
-  haveI : SigmaFinite μH' := hH'.1
+  have : SigmaFinite μH' := hH'.1
   have hm : muSL μH' (ENNReal.ofReal κ' • refN ε e f wf (z0v T z)) =
       ENNReal.ofReal (κ' / κ) • muSL μH' (ENNReal.ofReal κ • refN ε e f wf (z0v T z)) := by
     rw [muSL_smul, muSL_smul, smul_smul, ← ENNReal.ofReal_mul (div_pos hκ' hκ).le, div_mul_cancel₀ _ hκ.ne']

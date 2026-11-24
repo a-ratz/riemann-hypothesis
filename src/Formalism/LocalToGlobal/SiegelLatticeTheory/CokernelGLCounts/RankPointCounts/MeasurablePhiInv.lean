@@ -221,14 +221,14 @@ theorem fund_index {V : Type} [AddCommGroup V] [MeasurableSpace V] [MeasurableAd
     μ FΛ = k * μ FL := by
   classical
   have hcard : Nat.card (L ⧸ Λ.addSubgroupOf L) = k := hk
-  haveI : Finite (L ⧸ Λ.addSubgroupOf L) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hk0)
-  haveI : Fintype (L ⧸ Λ.addSubgroupOf L) := Fintype.ofFinite _
-  haveI : Countable Λ := Function.Injective.countable (AddSubgroup.inclusion_injective hle)
-  haveI : MeasurableVAdd Λ V := by
+  have : Finite (L ⧸ Λ.addSubgroupOf L) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hk0)
+  have : Fintype (L ⧸ Λ.addSubgroupOf L) := Fintype.ofFinite _
+  have : Countable Λ := Function.Injective.countable (AddSubgroup.inclusion_injective hle)
+  have : MeasurableVAdd Λ V := by
     first
     | infer_instance
     | exact ⟨fun c => measurable_const_add (c : V), fun v => (measurable_add_const v).comp measurable_subtype_coe⟩
-  haveI : VAddInvariantMeasure Λ V μ := by
+  have : VAddInvariantMeasure Λ V μ := by
     first
     | infer_instance
     | exact ⟨fun c s _ => measure_preimage_add μ (c : V) s⟩
@@ -284,11 +284,11 @@ theorem idealCovol (K : Type) [Field K] [NumberField K] [IsEmpty {w : InfinitePl
     intro a; funext i
     simp only [phiMap, mixedEmbedding_apply_isComplex]
     by_cases hi : cj i
-    · rw [if_pos hi]
+    · rw [ite_eq_left hi]
       rcases hφ i with h | h
       · exact absurd h hi
       · rw [h, ComplexEmbedding.conjugate_coe_eq]
-    · rw [if_neg hi]
+    · rw [ite_eq_right hi]
       have : φ i = (σ i).1.embedding := not_not.1 hi
       rw [this]
   set emb : K →+ mixedSpace K := (mixedEmbedding K).toAddMonoidHom

@@ -106,7 +106,7 @@ theorem opPoly_mul_of_commute {D : Λ → B} (hD : ∀ l l', Commute (D l) (D l'
     | monomial β b =>
       have hp : (ord (α + β)).Perm (ord α ++ ord β) := by
         rw [← Multiset.coe_eq_coe, ← Multiset.coe_add, h, h, h, map_add (f := _)]
-      rw [MvPolynomial.monomial_mul, opPoly_monomial, opPoly_monomial, opPoly_monomial,
+      rw [MvPolynomial.monomial_mul_monomial, opPoly_monomial, opPoly_monomial, opPoly_monomial,
         opWord_perm hD hp, opWord_append, smul_mul_smul_comm]
 
 theorem IsOrderingRule.ord_zero {ord : (Λ →₀ ℕ) → List Λ} (h : IsOrderingRule ord) :

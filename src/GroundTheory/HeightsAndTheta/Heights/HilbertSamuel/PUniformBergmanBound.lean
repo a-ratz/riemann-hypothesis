@@ -147,7 +147,7 @@ theorem gauss_local (hP : PolydiscSubmean.Statement) {n : ℕ} (hn : 0 < n) {r M
   have hnorm : ∀ z, ‖f z‖ ^ 2 = ‖F (y + z)‖ ^ 2 * Real.exp (-(n : ℝ) * ℓ z) := fun z => by
     have : (-(n : ℂ) * ℓc z / 2).re = -(n : ℝ) * ℓ z / 2 := by
       rw [← hre z]; simp [Complex.mul_re]
-    rw [hf, norm_mul, Complex.norm_exp, this, mul_pow, ← Real.exp_nat_mul]
+    rw [hf, norm_mul, Complex.norm_exp, this, mul_pow, ← Real.exp_natCast_mul]
     congr 2; push_cast; ring
   have hf0 : f 0 = F y := by simp [hf]
   have key := hP D n (fun _ => M) r f hn hr (fun _ => hM) hfa

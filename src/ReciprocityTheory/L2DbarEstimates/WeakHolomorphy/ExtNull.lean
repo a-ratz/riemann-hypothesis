@@ -62,15 +62,15 @@ theorem ext : ExtStatement := by
   obtain ⟨U, hU, hae⟩ := reg n Ω _ hΩ (extWeak n Ω F u hΩ hF hu hint)
   refine ⟨U, hU, ?_⟩
   have hW : IsOpen (Ω \ {z | F z = 0}) := by
-    rw [Set.diff_eq]
+    rw [Set.sdiff_eq]
     exact hF.continuousOn.isOpen_inter_preimage hΩ isOpen_compl_singleton
   have hae' : (Ω \ {z | F z = 0}).indicator u =ᵐ[volume.restrict (Ω \ {z | F z = 0})] U :=
-    ae_restrict_of_ae_restrict_of_subset diff_subset hae
+    ae_restrict_of_ae_restrict_of_subset sdiff_subset hae
   have hae'' : u =ᵐ[volume.restrict (Ω \ {z | F z = 0})] U := by
     filter_upwards [hae', ae_restrict_mem hW.measurableSet] with z hz hzW
     rw [← hz, Set.indicator_of_mem hzW]
   exact (Measure.eqOn_open_of_ae_eq hae'' hW hu.continuousOn
-    (hU.continuousOn.mono diff_subset)).symm
+    (hU.continuousOn.mono sdiff_subset)).symm
 
 theorem extNull : ExtNullStatement := by
   rintro n c R F hF ⟨z0, hz0, hFz0⟩
@@ -78,23 +78,23 @@ theorem extNull : ExtNullStatement := by
   set Z := {z | F z = 0} with hZdef
   have hΩ : IsOpen Ω := isOpen_ball
   have hW : IsOpen (Ω \ Z) := by
-    rw [Set.diff_eq]
+    rw [Set.sdiff_eq]
     exact hF.continuousOn.isOpen_inter_preimage hΩ isOpen_compl_singleton
   have hmeas : MeasurableSet (Ω ∩ Z) := by
-    rw [← Set.diff_diff_right_self]
+    rw [← Set.sdiff_sdiff_right_self]
     exact hΩ.measurableSet.diff hW.measurableSet
 
   have hint : IntegrableOn (fun z => ‖(fun _ => (1 : ℂ)) z‖ ^ 2) (Ω \ Z) := by
     simp only [norm_one, one_pow]
-    exact integrableOn_const ((measure_mono diff_subset).trans_lt measure_ball_lt_top).ne
+    exact integrableOn_const ((measure_mono sdiff_subset).trans_lt measure_ball_lt_top).ne
   have hwk := extWeak n Ω F (fun _ => 1) hΩ hF (differentiableOn_const 1) hint
   obtain ⟨U, hU, hae⟩ := reg n Ω _ hΩ hwk
   have hae1 : (fun _ => (1 : ℂ)) =ᵐ[volume.restrict (Ω \ Z)] U := by
-    filter_upwards [ae_restrict_of_ae_restrict_of_subset diff_subset hae,
+    filter_upwards [ae_restrict_of_ae_restrict_of_subset sdiff_subset hae,
       ae_restrict_mem hW.measurableSet] with z hz hzW
     rw [← hz, Set.indicator_of_mem hzW]
   have hEq1 : EqOn (fun _ => (1 : ℂ)) U (Ω \ Z) :=
-    Measure.eqOn_open_of_ae_eq hae1 hW continuousOn_const (hU.continuousOn.mono diff_subset)
+    Measure.eqOn_open_of_ae_eq hae1 hW continuousOn_const (hU.continuousOn.mono sdiff_subset)
   have hz0W : z0 ∈ Ω \ Z := ⟨hz0, hFz0⟩
 
   have hUall : EqOn U (fun _ => (1 : ℂ)) Ω := by

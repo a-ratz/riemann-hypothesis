@@ -130,16 +130,16 @@ theorem Phi_remb (k : ℕ) (z : (F →+* ℝ) → ℂ) (ν : F) :
       if ∀ τ : F →+* ℝ, 0 < (SignType.sign (z τ).im : ℝ) * τ ν then rhsTerm k z ν else 0 := by
   unfold Phi
   by_cases hc : ∀ τ : F →+* ℝ, 0 < (SignType.sign (z τ).im : ℝ) * τ ν
-  · rw [if_pos hc, Finset.prod_congr rfl fun τ _ => by rw [remb_apply, phi1, if_pos (hc τ)],
+  · rw [ite_eq_left hc, Finset.prod_congr rfl fun τ _ => by rw [remb_apply, phi1, ite_eq_left (hc τ)],
       Finset.prod_mul_distrib, ← Complex.exp_sum, rhsTerm, Finset.abs_prod, ← Finset.prod_pow, Complex.ofReal_prod]
     congr 2
     rw [Finset.mul_sum]
     refine Finset.sum_congr rfl fun τ _ => ?_
     ring
-  · rw [if_neg hc]
+  · rw [ite_eq_right hc]
     push Not at hc
     obtain ⟨τ, hτ⟩ := hc
-    exact Finset.prod_eq_zero (Finset.mem_univ τ) (by rw [remb_apply, phi1, if_neg (not_lt.2 hτ)])
+    exact Finset.prod_eq_zero (Finset.mem_univ τ) (by rw [remb_apply, phi1, ite_eq_right (not_lt.2 hτ)])
 
 theorem fourier_Phi (k : ℕ) (hk : 2 ≤ k) (he : Even k) (z : (F →+* ℝ) → ℂ) (hz : ∀ τ, (z τ).im ≠ 0)
     (a : F) : 𝓕 (Phi k z) (remb F a) =
@@ -154,12 +154,12 @@ theorem fourier_Phi (k : ℕ) (hk : 2 ≤ k) (he : Even k) (z : (F →+* ℝ) �
 
 theorem lipschitz : Lipschitz := by
   intro F _ _ _ M hM k hk he z hz
-  haveI : DiscreteTopology (latOf M) := latOf_discrete M
-  haveI : IsZLattice ℝ (latOf M) := latOf_isZLattice M hM
+  have : DiscreteTopology (latOf M) := latOf_discrete M
+  have : IsZLattice ℝ (latOf M) := latOf_isZLattice M hM
   set L := Formalism.H.dual (latOf M) with hL
   obtain ⟨h1, h2⟩ := Formalism.H.dualIsLattice (RSp F) (latOf M)
-  haveI : DiscreteTopology L := h1
-  haveI : IsZLattice ℝ L := h2
+  have : DiscreteTopology L := h1
+  have : IsZLattice ℝ L := h2
   have hdd : Formalism.H.dual L = latOf M := Formalism.H.dualDual (RSp F) (latOf M)
   have hcov : ZLattice.covolume L = (covol M)⁻¹ := by
     rw [Formalism.H.covolumeDual (RSp F) (latOf M), covolume_latOf M hM]
@@ -170,8 +170,8 @@ theorem lipschitz : Lipschitz := by
   obtain ⟨hcont, hdec⟩ := Phi_cont_decay k hk z hz
   obtain ⟨hint, hsumx, hGc, hGper⟩ := Formalism.H.poisson_periodization (RSp F) L (Phi k z) hcont
     ((Module.finrank ℝ (RSp F) : ℝ) + 1) (by linarith) (hdec _)
-  haveI : Module.Free ℤ L := ZLattice.module_free ℝ L
-  haveI : Module.Finite ℤ L := ZLattice.module_finite ℝ L
+  have : Module.Free ℤ L := ZLattice.module_free ℝ L
+  have : Module.Finite ℤ L := ZLattice.module_finite ℝ L
   have hD := ZLattice.isAddFundamentalDomain (Module.Free.chooseBasis ℤ L) (volume : Measure (RSp F))
   set D := ZSpan.fundamentalDomain ((Module.Free.chooseBasis ℤ L).ofZLatticeBasis ℝ L)
   have hcoef : ∀ μ : Formalism.H.dual L, (∫ y in D, (∑' l : L, Phi k z ((l : RSp F) + y)) *

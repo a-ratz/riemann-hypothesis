@@ -158,21 +158,21 @@ theorem continuousOn_atTau (hθ : IsInfFam θ) (V : HSp D) (τ : D.what₂.Tau) 
     ContinuousOn (atTau θ V τ) (Formalism.QuantumDeterminants.UH (gramAt D V τ)) := by
   classical
   obtain ⟨σ, hσ⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) _
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : ContinuousAdd (AE D) := IsModuleTopology.toContinuousAdd (AF D.host.F) _
   have key : ∀ (i j : Fin V.rank), Continuous fun g : Matrix (Fin V.rank) (Fin V.rank) ℂ =>
       (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j +
         σ (Pi.single τ (g i j - (1 : Matrix (Fin V.rank) (Fin V.rank) ℂ) i j)) := fun i j =>
     continuous_const.add (hσ.cont.comp ((continuous_single (A := fun _ : D.what₂.Tau => ℂ) τ).comp
       ((continuous_id.matrix_elem i j).sub continuous_const)))
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   refine continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)
   · refine continuous_pi fun i => continuous_pi fun j => ?_
-    refine ((key i j).comp continuous_subtype_val).congr fun g => ?_
+    refine ((key i j).comp continuous_subtypeVal).congr fun g => ?_
     exact (entry_eq hσ V τ (atTau_spec hθ V τ g.2) i j).symm
   · refine continuous_pi fun i => continuous_pi fun j => ?_
     have c : Continuous fun g : Formalism.QuantumDeterminants.UH (gramAt D V τ) => (gramAt D V τ)⁻¹ * g.1ᴴ * gramAt D V τ :=
-      (continuous_const.matrix_mul continuous_subtype_val.matrix_conjTranspose).matrix_mul continuous_const
+      (continuous_const.matrix_mul continuous_subtypeVal.matrix_conjTranspose).matrix_mul continuous_const
     refine ((key i j).comp c).congr fun g => ?_
     exact (entry_eq hσ V τ (isAtTau_inv V τ g.2 (atTau_spec hθ V τ g.2)) i j).symm
 

@@ -179,7 +179,7 @@ theorem exists_intHom (φ : F →+* Ω) (hz : z ∈ mcPts (mCoordIdeal y)) {c : 
 
 theorem intHom_injective (τ : 𝓞 F →+* ℂ) : Function.Injective τ := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   rw [eq_bot_iff]
   intro n hn
   rw [Ideal.mem_comap, RingHom.mem_ker] at hn

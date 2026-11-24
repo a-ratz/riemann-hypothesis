@@ -113,7 +113,7 @@ theorem eq_zero_of_forall_pow_dvd (w : Wq l bk.a) (h : ∀ n : ℕ, (l : Wq l bk
   obtain ⟨m, b, hb0, hb⟩ := WittVector.exists_eq_pow_p_mul w hw
   obtain ⟨c, hc⟩ := h (m + 1)
   have hbc : b = (l : Wq l bk.a) * c := by
-    apply mul_left_cancel₀ (pow_ne_zero m (WittVector.p_nonzero l (Fq l bk.a)))
+    apply mul_left_cancel₀ (pow_ne_zero m (WittVector.p_ne_zero l (Fq l bk.a)))
     rw [← hb, hc]; ring
   apply hb0
   have := congrArg (WittVector.constantCoeff (p := l) (R := Fq l bk.a)) hbc

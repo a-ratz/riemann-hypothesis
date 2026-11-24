@@ -71,7 +71,7 @@ theorem sum_single_ite (a b : Fin n) (g : Fin n → Fin n → ℂ) :
 theorem sum_co_smul (M : Mat n) : ∑ q : Idx n, co q M • bs q = M := by
   ext a b
   simp only [Fintype.sum_prod_type, Fintype.sum_bool, co, bs, Matrix.sum_apply, Matrix.add_apply,
-    Matrix.smul_apply, Matrix.single_apply, if_true, Bool.false_eq_true, if_false, smul_ite,
+    Matrix.smul_apply, Matrix.single_apply, ite_true, Bool.false_eq_true, ite_false, smul_ite,
     smul_zero]
   rw [sum_single_ite a b (fun x i => (M x i).re • (1 : ℂ)),
     sum_single_ite a b (fun x i => (M x i).im • Complex.I)]
@@ -173,8 +173,8 @@ theorem exists_integralCombination_of_mem_completedLattice (L : List (Idx n)) :
             (fderiv ℝ (c i) y).smulRight (Rw (w i) f y))) y :=
         HasFDerivAt.fun_sum fun i _ => (hdc i).hasFDerivAt.fun_smul (hdr i).hasFDerivAt
       rw [hev.fderiv_eq, hd.fderiv]
-      simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply,
-        ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply]
+      simp only [sum_apply, add_apply,
+        smul_apply, ContinuousLinearMap.smulRight_apply]
       rw [Fintype.sum_sum_type, Fintype.sum_prod_type]
       simp only [Sum.elim_inl, Sum.elim_inr]
       rw [← Finset.sum_add_distrib]

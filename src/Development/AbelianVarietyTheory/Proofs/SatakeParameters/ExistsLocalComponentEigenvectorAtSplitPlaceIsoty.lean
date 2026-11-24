@@ -75,7 +75,7 @@ theorem exists_eigen_of_sum {M : Type} [AddCommGroup M] [Module ℂ M]
     (hf : ∀ g, ∑ i ∈ s, T i (π g (u i)) = ((θ g : ℂˣ) : ℂ) • f) :
     ∃ w : V, w ≠ 0 ∧ ∀ g, π g w = ((θ g : ℂˣ) : ℂ) • w := by
   classical
-  haveI : Fintype (G ⧸ H) := H.fintypeQuotientOfFiniteIndex
+  have : Fintype (G ⧸ H) := H.fintypeQuotientOfFiniteIndex
   let F : V → G → V := fun w x => ((θ x : ℂˣ) : ℂ)⁻¹ • π x w
   have hFg : ∀ w g x, π g (F w x) = ((θ g : ℂˣ) : ℂ) • F w (g * x) := by
     intro w g x
@@ -158,7 +158,7 @@ theorem finiteIndex_of_isOpen {G : Type} [Group G] [TopologicalSpace G] [IsTopol
     obtain ⟨g, hg⟩ : ∃ g ∈ t, (k : G) ∈ (fun h => g * h) ⁻¹' V⁻¹ := by
       simpa using ht (hKC k.2)
     exact Set.mem_biUnion hg.1 ⟨k, hg.2, rfl⟩
-  haveI : Finite (K ⧸ H) := Set.finite_univ_iff.1 hfin
+  have : Finite (K ⧸ H) := Set.finite_univ_iff.1 hfin
   exact Subgroup.finiteIndex_of_finite_quotient
 
 end Topology
@@ -201,12 +201,12 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
     refine isOpen_biInter_finset fun i _ => ?_
     have : (stabSub π (u i) : Set K) = (fun g : K => m g) ⁻¹' {x | σ.ρ x (u i) = u i} := rfl
     rw [this]
-    exact (σ.smooth (u i)).preimage (hm.comp continuous_subtype_val)
+    exact (σ.smooth (u i)).preimage (hm.comp continuous_subtypeVal)
   have hC : IsCompact (Formalism.UG.GLint (Fin n) (s.v.adicCompletionIntegers (maximalRealSubfield L)).toSubring :
       Set (GL (Fin n) (s.v.adicCompletion (maximalRealSubfield L)))) := by
     rw [(GlobalTheory.AdelicU.GLint_eq_KO_and_princ_eq_KOne s.v n).1]
     exact GlobalTheory.SplitFlip.isCompact_KO
-  haveI : H.FiniteIndex := finiteIndex_of_isOpen K hC (fun g hg => hK g hg) H hHo
+  have : H.FiniteIndex := finiteIndex_of_isOpen K hC (fun g hg => hK g hg) H hHo
   obtain ⟨w, hw0, hw⟩ := exists_eigen_of_sum π θ H inf_le_left φ.support u
     (fun i hi h hh => by
       have := (Subgroup.mem_iInf.1 (Subgroup.mem_inf.1 hh).2 i)

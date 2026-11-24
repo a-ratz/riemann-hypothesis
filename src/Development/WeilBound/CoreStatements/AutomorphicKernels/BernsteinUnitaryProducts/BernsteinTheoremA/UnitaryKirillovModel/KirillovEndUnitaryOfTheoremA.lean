@@ -193,9 +193,9 @@ theorem invFormScalar_of_admissible [IsTopologicalGroup G] [LocallyCompactSpace 
   obtain ⟨K, hKc, hKle⟩ := hasBasis_nhds_one_compactOpenSubgroup.mem_iff.1
     ((hadm.1 v0).mem_nhds (stabilizerOf ρ v0).one_mem)
   have hKo : IsOpen ((K : Subgroup G) : Set G) := K.isOpen
-  haveI : FiniteDimensional ℂ (fixedVectors ρ (K : Subgroup G)) := hadm.2 _ hKc hKo
+  have : FiniteDimensional ℂ (fixedVectors ρ (K : Subgroup G)) := hadm.2 _ hKc hKo
   have hv0W : v0 ∈ fixedVectors ρ (K : Subgroup G) := mem_fixedVectors.2 (fun k hk => hKle hk)
-  haveI : Nontrivial (fixedVectors ρ (K : Subgroup G)) :=
+  have : Nontrivial (fixedVectors ρ (K : Subgroup G)) :=
     ⟨⟨⟨v0, hv0W⟩, 0, fun h => hv0 (congrArg Subtype.val h)⟩⟩
   obtain ⟨c, x0, hx0W, hx0, hxy⟩ := eigen_lemma (fixedVectors ρ (K : Subgroup G)) B B₀ hpos
   refine ⟨c, ?_⟩

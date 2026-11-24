@@ -107,7 +107,7 @@ theorem isEnum_holPar_kapW {R : Ranks} (h : HCParam R) {n p q : ℕ} (hn : n = R
     obtain ⟨b, -, hb⟩ := Finset.mem_image.1 this
     exact ⟨b, hb⟩
   have e : f = fun a : Fin n => lamAt h a := by
-    refine (StrictMono.range_inj hfs.dual_right hg.dual_right).1 ?_ |> fun e => funext fun a => congrFun e a
+    refine (StrictMono.range_inj_of_wellFoundedLT hfs.dual_right hg.dual_right).1 ?_ |> fun e => funext fun a => congrFun e a
     ext x
     constructor
     · rintro ⟨a, rfl⟩
@@ -135,7 +135,7 @@ theorem holShape_of_good : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
       (R.MW i σ).ε ρ a = decide ((a : ℕ) < (D.R.sigW ((i : ℕ) + 1)).1) := fun ρ a => by
     have he := (R.MW i σ).enum ρ
     unfold Links.parAt at he
-    rw [if_pos ((GlobalTheory.ConjReading.branch_of_pins T ht.alg ht.laws.pins σ ρ).1 hσ)] at he
+    rw [ite_eq_left ((GlobalTheory.ConjReading.branch_of_pins T ht.alg ht.laws.pins σ ρ).1 hσ)] at he
     rw [← hs ρ]
     exact isEnum_holPar_kapW _ (rank_Wc i) (by rw [hs ρ]; exact hr) he a
   have hc : ∀ ρ, Formalism.QuantumDeterminants.IsHCParam ((R.MW i σ).lam ρ) := fun ρ => by

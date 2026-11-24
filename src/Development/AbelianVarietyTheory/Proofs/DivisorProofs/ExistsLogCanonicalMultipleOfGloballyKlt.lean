@@ -77,12 +77,12 @@ theorem exists_isFrame_genericPoint {k : Type} [Field k] [PerfectField k] {X : S
     (hn : topologicalKrullDim X = n) :
     ∃ (U : X.Opens) (ω : FormsOn p n U), genericPoint X ∈ U ∧ IsFrame ω := by
   obtain ⟨V, hV, hgV, -⟩ := exists_isAffineOpen_mem_and_subset (x := genericPoint X) (U := ⊤) trivial
-  haveI : Nonempty V := ⟨⟨_, hgV⟩⟩
-  letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p V).toAlgebra
+  have : Nonempty V := ⟨⟨_, hgV⟩⟩
+  let := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p V).toAlgebra
   have h1 : (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p V).FiniteType :=
     (p.finiteType_appLE (isAffineOpen_top _) hV _).comp
       (.of_surjective _ (ConcreteCategory.bijective_of_isIso _).2)
-  haveI : Algebra.FiniteType k Γ(X, V) := h1
+  have : Algebra.FiniteType k Γ(X, V) := h1
   have hd : ringKrullDim Γ(X, V) = n := by
     have h2 := GlobalTheory.OpenDim.topologicalKrullDim_open k p V ⟨_, hgV⟩
     rw [hn] at h2
@@ -112,9 +112,9 @@ theorem exists_isFrame_genericPoint {k : Type} [Field k] [PerfectField k] {X : S
 
 theorem finite_setOf_formOrd_ne_zero : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] [GlobalTheory.IsNormalScheme X] (p : X ⟶ Sp k) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ η : RatForms p n, η ≠ 0 → {z : X | ∃ E : DivOver p, E.IsAt z ∧ (fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) η ≠ 0}.Finite := by
   intro k _ _ X _ _ _ p n hp hn η hη
-  haveI : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hp).1
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
-  haveI : IsNoetherian X := {}
+  have : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hp).1
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
+  have : IsNoetherian X := {}
   obtain ⟨U, ω, hU, hω⟩ := exists_isFrame_genericPoint p n hn
   have hgen := isFreeGen_formOf hU hω
   have h0 : formOf U hU ω ≠ 0 := fun h =>
@@ -294,8 +294,8 @@ theorem exists_isLogCanonicalMultiple_of_kltAt :
       ∃ (m : ℕ) (G : CartierDiv X), 0 < m ∧ IsLogCanonicalMultiple p n Δ m G := by
   intro X _ _ _ p n hP hn Δ hΔ hklt
   classical
-  haveI : CompactSpace X := compactSpace_of_isProjOver' hP
-  haveI : LocallyOfFiniteType p := isProjOver_locallyOfFiniteType ℂ X p hP
+  have : CompactSpace X := compactSpace_of_isProjOver' hP
+  have : LocallyOfFiniteType p := isProjOver_locallyOfFiniteType ℂ X p hP
   obtain ⟨η₀, -, -, hη₀, -, -, -⟩ := hklt (genericPoint X)
   have hfin := GlobalTheory.FormOrdFinite.finite_setOf_formOrd_ne_zero ℂ X p n hP hn η₀ hη₀
   have h1 : ∀ x, ∃ (m : ℕ) (g : X.functionFieldˣ) (U : X.Opens), 0 < m ∧ x ∈ U ∧

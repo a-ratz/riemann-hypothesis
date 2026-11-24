@@ -123,8 +123,8 @@ theorem compact_open : IsCompact (intV b v) ∧ IsOpen (intV b v) := by
   let l := (Algebra.TensorProduct.basis (Fv F v) b).equivFun
   have h1 : Continuous l := IsModuleTopology.continuous_of_linearMap l.toLinearMap
   have h2 : Continuous l.symm := by
-    haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-    haveI : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul (Fv F v) _
+    have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+    have : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul (Fv F v) _
     exact IsModuleTopology.continuous_of_linearMap l.symm.toLinearMap
   let e : (Fv F v ⊗[F] E) ≃ₜ (Fin d → Fv F v) := ⟨l.toEquiv, h1, h2⟩
   have he : intV b v = e ⁻¹' Set.pi Set.univ fun _ => (v.adicCompletionIntegers F : Set (Fv F v)) := by

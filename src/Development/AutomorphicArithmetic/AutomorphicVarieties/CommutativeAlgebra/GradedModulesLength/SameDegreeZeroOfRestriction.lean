@@ -92,7 +92,7 @@ private theorem InP.add {n : ℕ} {t u : A} (ht : InP p i n t) (hu : InP p i n u
 private theorem InP.mul {n m : ℕ} {t u : A} (ht : InP p i n t) (hu : u ∈ N i ^ m) : InP p i (n + m) (t * u) := by
   obtain ⟨q, hq, e1⟩ := ht
   refine ⟨q * mono N (Finsupp.single i m) u ((lat_single_pow (N := N) i m).symm ▸ hu), p.mul_mem_right _ hq, ?_⟩
-  rw [Subalgebra.coe_mul, e1, Finsupp.single_add, ← MvPolynomial.monomial_mul]
+  rw [Subalgebra.coe_mul, e1, Finsupp.single_add, ← MvPolynomial.monomial_mul_monomial]
   rfl
 
 private theorem InP.of_mul (hp : p.IsPrime) {n m : ℕ} {t u : A} (ht : t ∈ N i ^ n) (hu : u ∈ N i ^ m)
@@ -101,7 +101,7 @@ private theorem InP.of_mul (hp : p.IsPrime) {n m : ℕ} {t u : A} (ht : t ∈ N 
   have : q = mono N (Finsupp.single i n) t ((lat_single_pow (N := N) i n).symm ▸ ht) *
       mono N (Finsupp.single i m) u ((lat_single_pow (N := N) i m).symm ▸ hu) := by
     apply Subtype.ext
-    rw [Subalgebra.coe_mul, e1, Finsupp.single_add, ← MvPolynomial.monomial_mul]
+    rw [Subalgebra.coe_mul, e1, Finsupp.single_add, ← MvPolynomial.monomial_mul_monomial]
     rfl
   rw [this] at hq
   exact (hp.mem_or_mem hq).imp (fun h => ⟨_, h, rfl⟩) (fun h => ⟨_, h, rfl⟩)
@@ -275,7 +275,7 @@ theorem UpperTheory.V.Alg.M.zp_holds :
   have hk : ∀ b, σ b = 0 ↔ algebraMap (𝒜 0) (mR Q) b ∈ p := fun b => by
     rw [← RingHom.mem_ker, hσ, Ideal.mem_comap]
   obtain ⟨f, hf, hfp⟩ := exists_not_inP hI 1
-  haveI := (ft_holds O A 𝒜 x hW).1
+  have := (ft_holds O A 𝒜 x hW).1
   obtain ⟨ξ, h0, hJ, hξ⟩ := ns_holds O (𝒜 0) A K σ (idJ p 1) f (fun b hb => zero_mem_idJ hpos ((hk b).1 hb))
     (fun b n hb => not_mem_idJ hp hpos hf hfp (fun h => hb ((hk b).2 h)) n)
   have hN : NegZero 𝒜 ξ := fun j hj g hg => hJ _ (neg_mem_idJ hp hpos hneg hD hj hg)
@@ -704,8 +704,8 @@ private theorem zm_f {B A : Type} [CommRing B] [CommRing A] [Algebra B A] {k : �
     ext m
     rw [MvPolynomial.coeff_monomial]
     by_cases hm : Finsupp.single i 1 = m
-    · rw [if_pos hm, hm]
-    · rw [if_neg hm]
+    · rw [ite_eq_left hm, hm]
+    · rw [ite_eq_right hm]
       apply hs'
       intro h
       exact hm (toDeg_injective (hdeg.trans h.symm))
@@ -736,7 +736,7 @@ theorem UpperTheory.V.Alg.M.zm_holds :
       convert this using 2
       push_cast
       ring
-    rw [Subalgebra.coe_mul, h1 _ _ hab, h1 _ _ ha, h1 _ _ hb, MvPolynomial.monomial_mul, Finsupp.single_add]
+    rw [Subalgebra.coe_mul, h1 _ _ hab, h1 _ _ ha, h1 _ _ hb, MvPolynomial.monomial_mul_monomial, Finsupp.single_add]
   obtain ⟨f, hfN, hfp⟩ := zm_f (mN 𝒜 F) p hirr 0
   have hf : f ∈ 𝒜 (-2) := (mem_oz 𝒜).1 hfN
   have hf1 : f ∈ 𝒜 (-(2 * ((1 : ℕ) : ℤ))) := by simpa using hf
@@ -833,7 +833,7 @@ theorem UpperTheory.V.Alg.M.zm_holds :
       exact hmem
     rw [RingHom.mem_ker] at hk
     exact hk
-  haveI := (ft_holds O A 𝒜 x hW).1
+  have := (ft_holds O A 𝒜 x hW).1
   obtain ⟨ξ, hξ1, hξ2, hξ3⟩ := ns_holds O (𝒜 0) A K σ (zmJ ι p) f ha hb'
   refine ⟨ξ, ?_, ?_, ?_, ?_⟩
   · show ∀ g ∈ Q.ideal, ξ g = 0

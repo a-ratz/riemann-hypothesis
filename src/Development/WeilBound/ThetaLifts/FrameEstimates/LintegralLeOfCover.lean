@@ -184,7 +184,7 @@ theorem le_exp_of_add {G : Type} [Group G] {r : ℕ} (h : G → ℝ≥0) (hm : �
     rw [norm_smul, norm_inv, Real.norm_of_nonneg h4.le, inv_mul_le_iff₀ h4]; linarith)
   rw [smul_inv_smul₀ h4.ne'] at h5
   refine h5.trans ?_
-  rw [← Real.exp_nat_mul, ← Real.exp_add]
+  rw [← Real.exp_natCast_mul, ← Real.exp_add]
   refine Real.exp_le_exp.2 ?_
   push_cast
   nlinarith [(k.cast_nonneg : (0 : ℝ) ≤ k)]

@@ -142,7 +142,7 @@ theorem exists_const (A : Over (Sp R)) [GrpObj A] :
     rw [Category.assoc, eid, Category.comp_id, Category.id_comp]
   have e1 : hφ.1.lift _ _ w ≫ φ = 𝟙 _ := hφ.1.lift_fst _ _ _
   have e2 : hφ.1.lift _ _ w ≫ C.hom = A.hom ≫ epsRed R := hφ.1.lift_snd _ _ _
-  haveI : IsMonHom (Iso.refl A).hom := inferInstanceAs (IsMonHom (𝟙 A))
+  have : IsMonHom (Iso.refl A).hom := inferInstanceAs (IsMonHom (𝟙 A))
   have hic : IsGrpPullback A C (epsRed R) (hφ.1.lift _ _ w) :=
     hφ.cancel ((isGrpPullback_of_iso (Iso.refl A)).congr eid.symm e1.symm) e2
   exact ⟨C, inferInstance, φ, _, hφ, hic, e1⟩
@@ -196,7 +196,7 @@ theorem crysLo_mem_Fil (P : AbelianDeRham) {A' : Over (Sp (DualNumber R))} [GrpO
     crysLo d ∈ Fil A := by
   have a₀ := PolPull.isAbelianScheme_of_isGrpPullback hA h
   have g₀ := (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback h.1 hg
-  letI : Algebra (DualNumber R) R := (TrivSqZeroExt.fstHom R R R).toRingHom.toAlgebra
+  let : Algebra (DualNumber R) R := (TrivSqZeroExt.fstHom R R R).toRingHom.toAlgebra
   obtain ⟨-, hF⟩ := P.2.2.1 (DualNumber R) A' g hA hg R A i h
   rw [Fil, hF, Submodule.mem_dualAnnihilator]
   intro c hc
@@ -270,7 +270,7 @@ theorem exists_retraction_of_isKSValue_one (P : AbelianDeRham) (GD : Grothendiec
   have hi : i ≫ e.inv.left = j := by
     rw [← he, Category.assoc, ← Over.comp_left, e.hom_inv_id, Over.id_left, Category.comp_id]
   refine ⟨e.inv.left ≫ φ, by rw [← Category.assoc, hi, e1], ?_⟩
-  haveI : IsMonHom e.symm.hom := inferInstanceAs (IsMonHom e.inv)
+  have : IsMonHom e.symm.hom := inferInstanceAs (IsMonHom e.inv)
   exact ((isGrpPullback_of_iso e.symm).comp hφ).congr (Category.id_comp _) rfl
 
 end GlobalTheory.DeRham

@@ -354,8 +354,8 @@ theorem latFrame_isFullLattice (S : HSp D) :
 
 theorem skLat_isFullLattice (S : HSp D) {d : ℕ} (e : Fin S.rank ≃ Fin d) :
     (skLat S e).IsFullLattice D.host.E := by
-  letI := skLat_isLattice S e
-  letI := latFrame_isFullLattice S
+  let := skLat_isLattice S e
+  let := latFrame_isFullLattice S
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
     (FractionalIdeal.coeToSubmodule_ne_bot.mpr (AA_ne (D := D)))
   have hmem : ∀ y ∈ GlobalTheory.PlaceModel.latFrame S,
@@ -434,11 +434,11 @@ theorem GlobalTheory.PlaceSpaces.spaces_of_triple : ∀ (D : D7) (W W₁ X : HSp
   have hσ : ∀ z : D.host.E, D.sp.cm.sig z = star z := fun _ => rfl
   have hherm : ∀ (S : HSp D) (a b : Fin S.rank), star (S.gram b a) = S.gram a b := fun S a b =>
     S.herm.eq (S.frame b) (S.frame a)
-  haveI hlW : (GlobalTheory.TripleSpaceW.conjSub (GlobalTheory.PlaceModel.latFrame W)).IsFullLattice D.host.E :=
+  have hlW : (GlobalTheory.TripleSpaceW.conjSub (GlobalTheory.PlaceModel.latFrame W)).IsFullLattice D.host.E :=
     GlobalTheory.TripleSpaceW.conjSub_isFullLattice (latFrame_isFullLattice W)
-  haveI hlW₁ : (GlobalTheory.TripleSpaceW.conjSub (GlobalTheory.PlaceModel.latFrame W₁)).IsFullLattice D.host.E :=
+  have hlW₁ : (GlobalTheory.TripleSpaceW.conjSub (GlobalTheory.PlaceModel.latFrame W₁)).IsFullLattice D.host.E :=
     GlobalTheory.TripleSpaceW.conjSub_isFullLattice (latFrame_isFullLattice W₁)
-  haveI hlX : (skLat X e).IsFullLattice D.host.E := skLat_isFullLattice X e
+  have hlX : (skLat X e).IsFullLattice D.host.E := skLat_isFullLattice X e
   have exW := fun v : Bs.P => GlobalTheory.AdelicU.exists_isSplitBasis (Bs.τ v) (GlobalTheory.TripleSpaceW.conjSub (GlobalTheory.PlaceModel.latFrame W)) hcm
   have exW₁ := fun v : Bs.P =>
     GlobalTheory.AdelicU.exists_isSplitBasis (Bs.τ v) (GlobalTheory.TripleSpaceW.conjSub (GlobalTheory.PlaceModel.latFrame W₁)) hcm

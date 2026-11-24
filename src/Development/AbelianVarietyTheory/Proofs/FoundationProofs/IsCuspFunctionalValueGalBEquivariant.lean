@@ -100,10 +100,10 @@ theorem prim_map (A : ValuationSubring Ω) (s : Ω ≃ₐ[ℚ] Ω) (hA : ∀ x, 
 
 theorem exists_root [IsAlgClosed Ω] (s : Ω ≃ₐ[ℚ] Ω) (M : ℕ) (hM : 0 < M) :
     ∃ (ζ : Ω) (d e : ℤ), IsPrimitiveRoot ζ M ∧ s ζ = ζ ^ d ∧ (d : ZMod M) * e = 1 := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero (M : Ω) := ⟨Nat.cast_ne_zero.2 hM.ne'⟩
-  haveI : NeZero M := ⟨hM.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero (M : Ω) := ⟨Nat.cast_ne_zero.2 hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   have hs : IsPrimitiveRoot (s ζ) M := hζ.map_of_injective s.injective
   obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one hs.pow_eq_one
   have hc : i.Coprime M := (hζ.pow_iff_coprime hM i).1 (hi ▸ hs)

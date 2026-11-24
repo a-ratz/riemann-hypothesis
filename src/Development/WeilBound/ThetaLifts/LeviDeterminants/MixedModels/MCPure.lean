@@ -66,7 +66,7 @@ theorem exists_triv (hψ : IsStd ψ) : ∃ T : Finset (Pl F), ∀ b : Af F,
   refine ⟨(Ideal.finite_factors h0).toFinset, fun b h1 h2 => h b fun v => ?_⟩
   by_cases hv : v ∈ (Ideal.finite_factors h0).toFinset
   · have : b v = 0 := h1 v hv
-    rw [this, map_zero]; exact zero_le'
+    rw [this, map_zero]; exact zero_le
   · have e : v.intValuation (M : 𝓞 F) = 1 := by
       by_contra e
       exact hv ((Set.Finite.mem_toFinset _).2
@@ -102,7 +102,7 @@ theorem psi_fin (hψ : IsStd ψ) (a : AF F) : ψ ((0 : Ainf F), a.2) = ∏ᶠ v,
     · exact Finset.sum_eq_zero fun v hv => evalV_singleFin_ne (fun e : u = v => h (e ▸ hv)) _
   have h1 : ψ ((0 : Ainf F), a.2 - s) = 1 := hT _ (fun v hv => by
       have : v ∈ U := by by_contra e; exact (hU v e).1 hv
-      rw [map_sub, hs, if_pos this]; exact sub_self _) fun v => by
+      rw [map_sub, hs, ite_eq_left this]; exact sub_self _) fun v => by
     rw [map_sub, hs]
     split_ifs with h
     · exact (sub_self (evFin F v a)).symm ▸ zero_mem _
@@ -148,7 +148,7 @@ theorem exists_isTr (w : (κ → AF F) × (κ → AF F)) (f : SInf F κ) : ∃ g
       simp only [c, beta, add_dotProduct, map_add (f := _), Complex.ofReal_add, mul_add, Complex.exp_add]
   refine ⟨Complex.exp (-(2 * Real.pi * Complex.I) * ((beta F κ (infV w.1) (infV w.2) / 2 : ℝ) : ℂ)) •
     SchwartzMap.smulLeftCLM ℂ c (SchwartzMap.compSubConstCLM ℂ (-infV w.1) f), fun x => ?_⟩
-  rw [SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT, SchwartzMap.compSubConstCLM_apply, sub_neg_eq_add,
+  rw [smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT, SchwartzMap.compSubConstCLM_apply, sub_neg_eq_add,
     Complex.ofReal_add, mul_add, Complex.exp_add]
   simp only [c, smul_eq_mul]
   ring

@@ -116,7 +116,7 @@ theorem lamU_one (w : D.what₂.Word) (v : InfinitePlace X.B.I.F) : lamU X w v 1
   rw [Matrix.mul_one, Bv_mul_Bv', Matrix.one_mulVec]
   unfold nxt
   split_ifs with h
-  · rw [hfe_v, if_neg]
+  · rw [hfe_v, ite_eq_right]
     intro h'
     have := congrArg Fin.val h'
     simp at this
@@ -352,7 +352,7 @@ theorem lieN_map (γ : S.V ≃ₗ[E] S.V) (hγ : γ ∈ Formalism.HermitianLatti
   obtain ⟨h0, h1, h2⟩ := h
   refine ⟨?_, ?_, ?_⟩
   · unfold LieU at h0 ⊢
-    simp only [Set.mem_setOf_eq, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply] at h0 ⊢
+    simp only [Set.mem_ofPred_eq, LinearMap.coe_comp, LinearEquiv.coe_coe, Function.comp_apply] at h0 ⊢
     intro x y
     have := h0 (γ.symm x) (γ.symm y)
     simp only [LinearEquiv.apply_symm_apply] at this

@@ -75,8 +75,8 @@ private theorem finite_dual [Finite M] : Finite (Module.Dual (ZMod N) M) :=
   Finite.of_injective (fun f : Module.Dual (ZMod N) M => (f : M → ZMod N)) DFunLike.coe_injective
 
 private theorem card_dual_le [Finite M] : Nat.card (Module.Dual (ZMod N) M) ≤ Nat.card M := by
-  haveI := finite_dual (N := N) (M := M)
-  haveI := Fintype.ofFinite M
+  have := finite_dual (N := N) (M := M)
+  have := Fintype.ofFinite M
   let Φ : Module.Dual (ZMod N) M → AddChar M ℂ := fun f =>
     ZMod.stdAddChar.compAddMonoidHom f.toAddMonoidHom
   have hΦ : Function.Injective Φ := by
@@ -134,8 +134,8 @@ theorem UpperTheory.V.Th.dualZ :
     exact Nat.card_pos.ne'
   refine ⟨KStar.Selmer.card_dual, fun v hv => sep v hv, ?_⟩
   intro V' _ _ _ b hl hr
-  haveI := fin (W := V)
-  haveI := fin (W := V')
+  have := fin (W := V)
+  have := fin (W := V')
   have inj : Function.Injective fun y : V' =>
       ((b.flip y).toZModLinearMap N : Module.Dual (ZMod N) V) := by
     intro y y' h

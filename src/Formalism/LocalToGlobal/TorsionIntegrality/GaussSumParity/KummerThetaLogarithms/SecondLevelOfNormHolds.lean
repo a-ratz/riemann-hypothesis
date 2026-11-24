@@ -256,10 +256,10 @@ theorem all {l : ℕ} {σ : K →+* K} (hU : UnrOK K l σ) {F : MvPowerSeries (F
   refine ⟨hFrame, hF1C, hFeq, ?_⟩
   have hiso := sigma_isometry K l σ hU
   have hσ1 : ∀ a : K, ‖a‖ ≤ 1 → ‖σ a‖ ≤ 1 := fun a ha => by rw [hiso a]; exact ha
-  letI : StarRing (Osub σ) := starO hσ1
+  let : StarRing (Osub σ) := starO hσ1
   have hσc : Continuous σ := (AddMonoidHomClass.isometry_of_norm σ hiso).continuous
   have hcs : Continuous (star : Osub σ → Osub σ) :=
-    (hσc.comp continuous_subtype_val).subtype_mk _
+    (hσc.comp continuous_subtypeVal).subtype_mk _
   have hfix : ∀ z : Osub σ, star z = z →
       (Osub σ).subtype z ∈ closure (Set.range (fun n : ℤ => (n : K))) := fun z hz => by
     have h1 : σ (z : K) = z := congrArg Subtype.val hz
@@ -279,7 +279,7 @@ theorem all {l : ℕ} {σ : K →+* K} (hU : UnrOK K l σ) {F : MvPowerSeries (F
     have hs := (mem_Osub.1 (u : Osub σ).2).2
     exact ⟨endInt hU hn.le hs, (phNorm_iff (l := l) (σ := σ) ph _).2 (hN _ hn hs)⟩
   have key := Formalism.L2.Th1.C.endoAll K (Formalism.G.unitBall K) (Formalism.L2.Th1.C.unit_ball_closed K)
-    (lgF K l) (expF K l) ph hFrame hF1C (Osub σ) (Osub σ).subtype continuous_subtype_val hcs hfix
+    (lgF K l) (expF K l) ph hFrame hF1C (Osub σ) (Osub σ).subtype continuous_subtypeVal hcs hfix
     hinv2 hu2 (two_units hU) (Set.range (fun u : (Osub σ)ˣ => (u : Osub σ)))
     (fun u => subset_closure ⟨u, rfl⟩) hDn
   intro α hα hs

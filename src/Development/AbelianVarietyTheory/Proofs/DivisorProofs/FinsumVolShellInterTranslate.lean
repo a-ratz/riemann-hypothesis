@@ -97,11 +97,11 @@ theorem _root_.GlobalTheory.PureMatch.ShellVolume.finsum_vol_shell_inter_transla
     ∑ᶠ m : {m : Fin a → ℤ // Antitone m}, (_root_.GlobalTheory.SplitFlip.haarVol (_root_.GlobalTheory.SplitWeil.KO k (Fin a))).real (_root_.GlobalTheory.SplitFlip.shellSet ϖ m.1 ∩ {g | u * g * u' ∈ _root_.GlobalTheory.SplitWeil.KO k (Fin a)}) = 1 := by
   intro k _ _ _ _ _ _ a ϖ u u' hϖ
   have hv : valuation k ↑ϖ = uniformizer k := hϖ
-  letI : MeasurableSpace (GL (Fin a) k) := Units.instMeasurableSpace
+  let : MeasurableSpace (GL (Fin a) k) := Units.instMeasurableSpace
   set K := _root_.GlobalTheory.SplitWeil.KO k (Fin a) with hK
   set μ := _root_.GlobalTheory.SplitFlip.haarVol K with hμ
-  haveI : μ.IsHaarMeasure := _root_.GlobalTheory.SplitFlip.isHaarMeasure_haarVol_KO
-  haveI : μ.IsMulRightInvariant := _root_.GlobalTheory.SplitFlip.isMulRightInvariant_of_haar μ
+  have : μ.IsHaarMeasure := _root_.GlobalTheory.SplitFlip.isHaarMeasure_haarVol_KO
+  have : μ.IsMulRightInvariant := _root_.GlobalTheory.SplitFlip.isMulRightInvariant_of_haar μ
   set S : Set (GL (Fin a) k) := {g | u * g * u' ∈ K} with hS
   have hshell : ∀ m : Fin a → ℤ,
       _root_.GlobalTheory.SplitFlip.shellSet ϖ m = _root_.GlobalTheory.GLDoubling.cell k (Fin a) ϖ m := by

@@ -133,8 +133,8 @@ private lemma avg_const {H : Type} [Group H] (c : ℂ) : avg (fun _ : H => c) = 
     simp [rStab]
   unfold avg
   rw [h, Subgroup.index_top]
-  haveI : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
-  haveI : Unique (H ⧸ (⊤ : Subgroup H)) := ⟨⟨QuotientGroup.mk 1⟩, fun _ => Subsingleton.elim _ _⟩
+  have : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
+  have : Unique (H ⧸ (⊤ : Subgroup H)) := ⟨⟨QuotientGroup.mk 1⟩, fun _ => Subsingleton.elim _ _⟩
   rw [finsum_unique]
   simp
 
@@ -373,8 +373,8 @@ private theorem prod_lt {R : Type} [CommMonoid R] (p : R) (j : ℕ) :
   | succ n ih =>
     rw [Finset.prod_range_succ, ih]
     by_cases h : n < j
-    · rw [if_pos h, min_eq_left h.le, min_eq_left (Nat.succ_le_of_lt h), pow_succ]
-    · rw [if_neg h, mul_one, min_eq_right (not_lt.1 h), min_eq_right (by omega)]
+    · rw [ite_eq_left h, min_eq_left h.le, min_eq_left (Nat.succ_le_of_lt h), pow_succ]
+    · rw [ite_eq_right h, mul_one, min_eq_right (not_lt.1 h), min_eq_right (by omega)]
 
 private theorem det_diagJ {L : Type} [Field L] (n : ℕ) (p : L) {i : ℕ} (hi : i ≤ n) : (diagJ n p i).det = p ^ i := by
   rw [diagJ, det_diagonal, Fin.prod_univ_eq_prod_range (fun k => if k < i then p else 1) n, prod_lt, min_eq_right hi]
@@ -389,7 +389,7 @@ private theorem v_le (w : Pl E) (n : ℕ) : ∀ k ∈ GLint (Fin n) (Ov E w),
 private theorem v_eq (w : Pl E) (n : ℕ) {k : GLw n w} (hk : k ∈ GLint (Fin n) (Ov E w)) :
     Valued.v ((GeneralLinearGroup.det k : (w.adicCompletion E)ˣ) : w.adicCompletion E) = 1 := by
   have h3 := v_le w n _ (inv_mem hk)
-  rw [map_inv, Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((_root_.map_ne_zero _).2 (Units.ne_zero _)))] at h3
+  rw [map_inv, Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((_root_.map_ne_zero _).2 (Units.ne_zero _)))] at h3
   exact le_antisymm (v_le w n k hk) h3
 
 private theorem unifV (w : Pl E) : IsUnifV E w (unif w) :=
@@ -698,7 +698,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.satSum :
     intro i hi
     have hs : i.1 + i.2 = j := (Finset.mem_filter.1 hi).2
     have hsc : (j : ℂ) = (i.1 : ℂ) + i.2 := by exact_mod_cast hs.symm
-    rw [if_pos hs, satEig_scale, satEig_scale]
+    rw [ite_eq_left hs, satEig_scale, satEig_scale]
     have e : ((j : ℂ) * (((a + b : ℕ) : ℂ) - j) - i.1 * (a - i.1) - i.2 * (b - i.2)) / 2 =
         (((i.1 : ℂ)) * ((b : ℂ) - i.2) + ((i.2 : ℂ)) * ((a : ℂ) - i.1)) / 2 := by
       rw [hsc]; push_cast; ring

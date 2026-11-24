@@ -71,7 +71,7 @@ theorem pmat_injective (ε : Fin n → Bool) : Function.Injective (pmat (ε := �
   intro z z' h
   funext ab
   have := congrFun (congrFun h ab.1.1) ab.1.2
-  simpa [pmat, dif_pos ab.2] using this
+  simpa [pmat, dite_eq_left ab.2] using this
 
 theorem polarM_injective (ε : Fin n → Bool) : Function.Injective (polarM (ε := ε)) := by
   rintro ⟨k, z⟩ ⟨k', z'⟩ h
@@ -102,7 +102,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 
 theorem polarM_continuous (ε : Fin n → Bool) : Continuous (polarM (ε := ε)) := by
   unfold polarM
-  exact ((continuous_toM ε).comp (continuous_subtype_val.comp continuous_fst)).mul
+  exact ((continuous_toM ε).comp (continuous_subtypeVal.comp continuous_fst)).mul
     (NormedSpace.exp_continuous.comp ((pmat_continuous ε).comp continuous_snd))
 
 def polarInvK (ε : Fin n → Bool) (g : UJset ε) : KG ε :=
@@ -122,7 +122,7 @@ theorem polarM_polarInv (ε : Fin n → Bool) (g : UJset ε) : polarM (polarInv 
 
 theorem polarInv_continuous (ε : Fin n → Bool) : Continuous (polarInv ε) := by
   have hL : Continuous fun g : UJset ε => PolarDecomposition.polar_L g.1 :=
-    (polarL_continuousOn ε).comp_continuous continuous_subtype_val (fun g => g.2)
+    (polarL_continuousOn ε).comp_continuous continuous_subtypeVal (fun g => g.2)
   have hind : Topology.IsInducing (fun k : KG ε => toMK k) :=
     (isClosedEmbedding_toM ε).isInducing.comp Topology.IsInducing.subtypeVal
   have hK : Continuous (polarInvK ε) := by
@@ -131,7 +131,7 @@ theorem polarInv_continuous (ε : Fin n → Bool) : Continuous (polarInv ε) := 
         fun g : UJset ε => g.1 * NormedSpace.exp (-PolarDecomposition.polar_L g.1) := by
       funext g; exact toMK_polarInvK ε g
     rw [this]
-    exact continuous_subtype_val.mul (NormedSpace.exp_continuous.comp hL.neg)
+    exact continuous_subtypeVal.mul (NormedSpace.exp_continuous.comp hL.neg)
   exact hK.prodMk (continuous_pi fun ab => hL.matrix_elem ab.1.1 ab.1.2)
 
 def polarHomeo (ε : Fin n → Bool) : KG ε × (PCoord ε → ℂ) ≃ₜ UJset ε where

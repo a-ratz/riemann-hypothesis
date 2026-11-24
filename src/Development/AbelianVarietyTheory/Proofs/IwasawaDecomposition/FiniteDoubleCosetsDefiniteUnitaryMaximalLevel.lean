@@ -177,7 +177,7 @@ theorem isOpen_intSet : IsOpen (intSet L) := by
     have := hy _ (Finset.mem_image_of_mem b0 (Finset.mem_univ i))
     simpa [Units.smul_def, Int.cast_smul_eq_zsmul] using this
   let B := Algebra.TensorProduct.basis (Af (maximalRealSubfield L)) b
-  haveI : IsModuleTopology (Af (maximalRealSubfield L))
+  have : IsModuleTopology (Af (maximalRealSubfield L))
       (TensorProduct (maximalRealSubfield L) (Af (maximalRealSubfield L)) L) := ⟨rfl⟩
   have hc : Continuous B.equivFun := IsModuleTopology.continuous_of_linearMap B.equivFun.toLinearMap
   let H : AddSubgroup (Fin 2 → Af (maximalRealSubfield L)) :=
@@ -187,7 +187,7 @@ theorem isOpen_intSet : IsOpen (intSet L) := by
   have hV : (Set.univ.pi fun _ : Fin 2 => {a : Af (maximalRealSubfield L) |
       ∀ v, a v ∈ HeightOneSpectrum.adicCompletionIntegers (maximalRealSubfield L) v}) ⊆ H := by
     intro c hc'
-    simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq] at hc'
+    simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq] at hc'
     change (swapAd L).symm (B.equivFun.symm c) ∈ ReciprocityTheory.Aut.ALint L
 
     rw [Module.Basis.equivFun_symm_apply, map_sum]

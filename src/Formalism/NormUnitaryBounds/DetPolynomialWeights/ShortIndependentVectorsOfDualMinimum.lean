@@ -157,7 +157,7 @@ theorem exists_ne_zero_norm_le_rank_div_of_dualMinimum (Q : Submodule ℤ E) [hQ
     have h1 := congrArg (fun y => inner ℝ (v l) y) hg
     simp only [inner_sum, inner_zero_right] at h1
     simp only [← Int.cast_smul_eq_zsmul ℝ, real_inner_smul_right, hbi, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true] at h1
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h1
     exact_mod_cast h1
   let bw := Basis.span hli
   have hcovD : Formalism.F.covol D = Real.sqrt (Matrix.gram ℝ w).det := by
@@ -246,7 +246,7 @@ theorem exists_starProjection_ne_zero_norm_le_of_dualMinimum (M : Submodule ℤ 
   have hQeq : ∀ q, q ∈ Formalism.F.quot M (Formalism.F.satur M N) ↔ ∃ m ∈ M, Wᗮ.starProjection m = q := by
     intro q
     simp [Formalism.F.quot, hSW, Submodule.mem_map]
-  haveI := hQd
+  have := hQd
   have hPzero : ∀ x ∈ W, Wᗮ.starProjection x = 0 := by
     intro x hx
     have h1 := Submodule.starProjection_add_starProjection_orthogonal (K := W) x
@@ -283,7 +283,7 @@ theorem exists_starProjection_ne_zero_norm_le_of_dualMinimum (M : Submodule ℤ 
   obtain ⟨m, hm, rfl⟩ := (hQeq q).mp hqQ
   refine ⟨m, hm, hq0, le_trans hqle ?_⟩
   have hMrk : Formalism.F.rk M = finrank ℝ E := by
-    haveI : IsZLattice ℝ M := ⟨hspan⟩
+    have : IsZLattice ℝ M := ⟨hspan⟩
     exact ZLattice.rank ℝ M
   have hle : Formalism.F.rk (Formalism.F.quot M (Formalism.F.satur M N)) ≤ finrank ℝ E := by
     rw [← hMrk, hrk]

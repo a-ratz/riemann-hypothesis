@@ -58,7 +58,7 @@ theorem rowGen_diag_monomial_one (R : Type) [CommRing R] {r n : ℕ} (a : Fin r)
   | zero => simp
   | add f g hf hg =>
     have e : (monomial (f + g) (1 : R) : MvPolynomial (Fin r × Fin n) R) = monomial f 1 * monomial g 1 := by
-      rw [monomial_mul, one_mul]
+      rw [monomial_mul_monomial, one_mul]
     rw [e, map_mul, hf, hg, map_add (f := _), Pi.add_apply, pow_add, map_mul]
     ring
   | single v c =>
@@ -71,7 +71,7 @@ theorem rowGen_diag_monomial_one (R : Type) [CommRing R] {r n : ℕ} (a : Fin r)
       have e : Finsupp.weight (rowW r n) (Finsupp.single (b, s) c) b = c := by
         simp [Finsupp.weight_apply, rowW, Finsupp.sum_single_index]
       rw [e, ← mul_pow]
-      simp only [if_true]
+      simp only [ite_true]
       congr 1
       ring
     · have e : Finsupp.weight (rowW r n) (Finsupp.single (b, s) c) a = 0 := by

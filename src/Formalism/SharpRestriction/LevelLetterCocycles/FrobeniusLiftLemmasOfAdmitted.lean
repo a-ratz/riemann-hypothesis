@@ -426,12 +426,12 @@ theorem lemGA_la_of [NeZero n] (W : LocWach PD LL O v n) (hT2 : Formalism.MainNo
   intro d T₁ T₂ F b S η m hset i hi y hyN hyD
   have hsetc := hset
   obtain ⟨hA, hp11, hn, ⟨hdom, -, -⟩, ⟨ζ, hζ⟩, hsur, -, -, hbig, -⟩ := hset
-  haveI := hdom
+  have := hdom
   have hs : W.s = 1 := hA.2.1
   have hc2 : IsCrys PD T₂.ρ := hsur.2.1
   have hO : ∀ c : O, ((PD.p : ℕ) : O) * c = 0 → c = 0 := by
     intro c hc
-    haveI : NeZero PD.p := ⟨by omega⟩
+    have : NeZero PD.p := ⟨by omega⟩
     have hpL : ((PD.p : ℕ) : LL) ≠ 0 := hζ.neZero'.out
     have hpO : ((PD.p : ℕ) : O) ≠ 0 := fun h =>
       hpL (by rw [← map_natCast (algebraMap O LL), h, map_zero])
@@ -736,7 +736,7 @@ theorem lemGA_x_of [NeZero n] (W : LocWach PD LL O v n)
   have hJ2 := hJ d T₁ T₂ F b S η m hS
   have hp5 := h5 T₂ (MiW d b S η) (hiW d b S η) hT hJ2
   have hpar1 := lemGAx_parity hn d i hi
-  have hMi : MiW d b S η i = η := by unfold MiW; rw [if_neg (by omega)]
+  have hMi : MiW d b S η i = η := by unfold MiW; rw [ite_eq_right (by omega)]
   have hM2 : MiW d b S η (i - 1 + 1) = η := by rw [sub_add_cancel]; exact hMi
   have hbH : b i ≤ hpar n b S := by
     unfold hpar; exact le_trans (Finset.le_sup (Finset.mem_univ i)) (Nat.le_add_right _ _)
@@ -823,7 +823,7 @@ theorem lemGA_x_of [NeZero n] (W : LocWach PD LL O v n)
   have hc00 : ∀ r : ℕ, r < η →
       PowerSeries.coeff r (W.lev i ζ (Formalism.MainNotions.LiftingTheory.qp W ^ η * Formalism.MainNotions.LiftingTheory.pk W 1 ^ h₂)) = 0 := by
     intro r hr
-    rw [hlevk, PowerSeries.coeff_X_pow_mul', if_neg (by omega)]
+    rw [hlevk, PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega)]
 
   have hg : ∀ k : ℤ, smulS (u ^ (b i + η)) dx k ∈
       lemGAx_F (R := LL) (b i : ℤ) (((2 * H : ℕ) : ℤ) - (b i : ℤ)) c0 k := by
@@ -961,9 +961,9 @@ theorem frobenius_sq_bound_of_local [NeZero n] (h3 : Formalism.MainNotions.Delta
   intro d T₁ T₂ F b S η m hset
   have hset' := hset
   obtain ⟨hCA, hl, hn, ⟨hDom, hDVR, hFrac⟩, -, hSur, -, -, -, -⟩ := hset'
-  haveI := hDom
-  haveI := hDVR
-  haveI := hFrac
+  have := hDom
+  have := hDVR
+  have := hFrac
   obtain ⟨hbij, hs, hp2⟩ := hCA
   have hK1 : Module.finrank K₀ K = 1 := Formalism.MainNotions.UnusedSlot80.SatW.finrank_one_of_bij' hbij
   obtain ⟨-, -, h9₁⟩ := h9 T₁ hSur.1 hs hp2
@@ -1005,10 +1005,10 @@ theorem frobenius_sq_bound_of_local [NeZero n] (h3 : Formalism.MainNotions.Delta
     rw [sub_add_cancel] at this
     omega
   have hc2m : c - 1 - 1 ∈ evens n d := Finset.mem_filter.2 ⟨Finset.mem_univ _, hc2⟩
-  have hMc : boxM d b S η c = b c + S := if_pos hcD
-  have hMc1 : boxM d b S η (c - 1) = η := if_neg (by omega)
-  have hHc1 : boxH d b S η (c - 1) = b (c - 1) + S := if_neg (by omega)
-  have hMc2 : boxM d b S η (c - 1 - 1) = b (c - 1 - 1) + S := if_pos hc2
+  have hMc : boxM d b S η c = b c + S := ite_eq_left hcD
+  have hMc1 : boxM d b S η (c - 1) = η := ite_eq_right (by omega)
+  have hHc1 : boxH d b S η (c - 1) = b (c - 1) + S := ite_eq_right (by omega)
+  have hMc2 : boxM d b S η (c - 1 - 1) = b (c - 1 - 1) + S := ite_eq_left hc2
   have hM₁ : ∀ z ∈ W.Nl T₁ (c - 1), W.Q ^ (b c + S) • W.φD T₁ z ∈ W.N T₁ := by
     rw [← hMc]; exact h5₁.1 c
   have hM₂ : ∀ z ∈ W.Nl T₂ (c - 1), W.Q ^ (b c + S) • W.φD T₂ z ∈ W.N T₂ := by
@@ -1052,7 +1052,7 @@ theorem frobenius_sq_bound_of_local [NeZero n] (h3 : Formalism.MainNotions.Delta
     rw [hpad', hk']
     push_cast
     ring
-  haveI := rk_fd_letter₂ W hset (c - 1)
+  have := rk_fd_letter₂ W hset (c - 1)
   have hw' : ∀ f, w f ∈ Formalism.MainNotions.RamifiedCoefficientChains.S9.NDl W T₂ c := hw
   refine ⟨?_, ?_⟩
   · exact frobenius_sq_bound_at W hs hR F h3₁ h3₂ hmod₁ hmod₂ hM₁ hM₂ hU hMη hM₂'
@@ -1140,7 +1140,7 @@ theorem rhoLift_of [NeZero n] (W : LocWach PD LL O v n) (hT2 : Formalism.MainNot
     intro c' hc' a ha
     have hpar' := Formalism.MainNotions.RamifiedCoefficientChains.S9.parity_succ hn d c'
     unfold Formalism.MainNotions.RamifiedCoefficientChains.JumpWinS at ha
-    rw [if_neg (by omega)] at ha
+    rw [ite_eq_right (by omega)] at ha
     simp only [Set.mem_union, Set.mem_Icc] at ha
     push_cast at ha
     omega
@@ -1368,8 +1368,8 @@ theorem truncation_clause_of_admitted (hA : admitted D HW F Cm CR CA CB CK) : Fo
   have hinj : Function.Injective (algebraMap ↥(OL LL) ↥LL.1) := Subtype.val_injective
   have hO2 : ∀ x : ↥LL.1, 0 ≤ (D.loc l).v LL x → ∃ o : ↥(OL LL), algebraMap ↥(OL LL) ↥LL.1 o = x :=
     fun x hx => ⟨⟨x, ((D.loc l).v_O LL x).1 hx⟩, rfl⟩
-  haveI : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) := Formalism.MainNotions.RamifiedCoefficientChains.S9.DLev.complete_max LL
+  have : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
+  have : IsAdicComplete (IsLocalRing.maximalIdeal ↥(OL LL)) ↥(OL LL) := Formalism.MainNotions.RamifiedCoefficientChains.S9.DLev.complete_max LL
   have hlm : (((((D.loc l).PD K).p : ℕ)) : ↥(OL LL)) ∈ IsLocalRing.maximalIdeal ↥(OL LL) := by
     rw [(D.loc l).PD_p K]; exact Formalism.BasicNotions.Examples₂.LB.l_mem_max LL
   exact ⟨Formalism.MainNotions.CrystallineLiftingInputs.truncatedSeriesData.tTool1_of _ hinj hO2 hP9 (hA.2.2.2.2.2.2.2.1 l K 1 LL hg),
@@ -1395,10 +1395,10 @@ theorem h2_bound_of_admitted (hA : admitted D HW F Cm CR CA CB CK) (l : ℕ) [Fa
   have C := ((Cm l).C K 1 LL hg).tie
   have hG := Formalism.MainNotions.N.Pv.LocalLengthBound.gam_of_tie _ hs C
   have hLev : Formalism.MainNotions.WachCoordinates.LevelMapHodgeFiltration ((HW l).W K 1 LL hg) := (level_tools_of_admitted D HW F Cm hA l K LL hCAl h5l).2
-  haveI : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) :=
+  have : IsAdicComplete (Ideal.span {((((D.loc l).PD K).p : ℕ) : ↥(OL LL))}) ↥(OL LL) :=
     Formalism.MainNotions.UnusedSlot80.eq_sum_herm_smul_frame_of_inW (D.loc l) K LL
   have hΔ : IsUnit ((((HW l).W K 1 LL hg).DelF.card : ℕ) : ↥(OL LL)) := by
-    haveI : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
+    have : IsLocalRing ↥(OL LL) := Formalism.MainNotions.LiftingTheory.lkd_local (D.loc l) LL
     have hcard : ((HW l).W K 1 LL hg).DelF.card = l - 1 :=
       Formalism.MainNotions.UnusedSlot80.LevR.card_delF D HW F (gamma_sub_one_in_coordinates D HW F Cm hA) l K LL hCAl
     by_contra hnu
@@ -1431,7 +1431,7 @@ theorem lemGA_rec (hA : admitted D HW F Cm CR CA CB CK) (l : ℕ) [Fact l.Prime]
   have hB : ∀ (l : ℕ) [Fact l.Prime] (K LL : Loc.FinExt l) (hg : Loc.Good K 1 LL)
       [NeZero (Module.finrank ℚ_[l] ↥(Loc.K0 K))], Formalism.MainNotions.RamifiedCoefficientChains.Sh.BasTool ((HW l).W K 1 LL hg) := by
     intro l _ K LL hg _
-    haveI : IsFractionRing ↥(OL LL) ↥LL.1 := Formalism.MainNotions.UnusedSlot80.BCF.isFrac_OL LL
+    have : IsFractionRing ↥(OL LL) ↥LL.1 := Formalism.MainNotions.UnusedSlot80.BCF.isFrac_OL LL
     exact Formalism.MainNotions.RamifiedCoefficientChains.Sh.basTool_of _ (hA.1 l K 1 LL hg).2.2.2.2.2.2.2.2.1
   have hEC := Formalism.MainNotions.N.Pv.LocalLengthBound.expCrit_D' D HW F Cm CR CA CB CK hA hLev hB
   have hCT := ((Cm l).C K 1 LL hg).tie

@@ -178,8 +178,8 @@ theorem oStr_of_noetherian : OStr := by
     exact wedge_of_isBaseChange hp1 hp2 (cup _) (cup _)
       ((hcomp.2.1 S R B.left A.left B.hom A.hom (algebraMap S R) φ hAB.w).1) eM heM
   · intro R' _ _ X' s' ψ h
-    letI : Algebra S R' := ((algebraMap R R').comp (algebraMap S R)).toAlgebra
-    haveI : IsScalarTower S R R' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    let : Algebra S R' := ((algebraMap R R').comp (algebraMap S R)).toAlgebra
+    have : IsScalarTower S R R' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     have es : spMap (algebraMap R R') ≫ spMap (algebraMap S R) = spMap (algebraMap S R') := by
       simp only [spMap, ← Spec.map_comp]; rfl
     have hc : IsPullback (ψ ≫ φ) s' B.hom (spMap (algebraMap S R')) := es ▸ h.paste_horiz hAB
@@ -188,8 +188,8 @@ theorem oStr_of_noetherian : OStr := by
       ((hcomp.1 S R B.left A.left B.hom A.hom (algebraMap S R) φ hAB.w R' X' s' (algebraMap R R') ψ h.w
         (algebraMap S R') (ψ ≫ φ) hc.w rfl (fun _ => rfl)).1) e1 he1 e3 he3
   · intro R' _ _ X' s' ψ h
-    letI : Algebra S R' := ((algebraMap R R').comp (algebraMap S R)).toAlgebra
-    haveI : IsScalarTower S R R' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    let : Algebra S R' := ((algebraMap R R').comp (algebraMap S R)).toAlgebra
+    have : IsScalarTower S R R' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     have es : spMap (algebraMap R R') ≫ spMap (algebraMap S R) = spMap (algebraMap S R') := by
       simp only [spMap, ← Spec.map_comp]; rfl
     have hc : IsPullback (ψ ≫ φ) s' B.hom (spMap (algebraMap S R')) := es ▸ h.paste_horiz hAB

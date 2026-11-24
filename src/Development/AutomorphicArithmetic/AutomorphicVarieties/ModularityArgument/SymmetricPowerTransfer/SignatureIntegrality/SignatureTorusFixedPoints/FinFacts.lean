@@ -66,7 +66,7 @@ private theorem exists_finite_residue_reps_mod_natCast {G : Type} [CommGroup G] 
       (QuotientGroup.mk (f (QuotientGroup.mk t)) : G ⧸ K) = QuotientGroup.mk t := by
     intro t ht hPt
     have h : ∃ s, s ∈ C ∧ P s ∧ (QuotientGroup.mk s : G ⧸ K) = QuotientGroup.mk t := ⟨t, ht, hPt, rfl⟩
-    simp only [f, dif_pos h]
+    simp only [f, dite_eq_left h]
     exact h.choose_spec
   refine ⟨(C.filter P).image (fun t : G => f (QuotientGroup.mk t)), ?_, ?_⟩
   · intro e he
@@ -128,8 +128,8 @@ theorem UpperTheory.V.Z.Sym.Sig.finFacts : UpperTheory.V.Z.Sym.Sig.FinFacts := b
     exact V.H.pow_mem hu 2
   obtain ⟨T, hTU, hT⟩ : ∃ T : Finset kˣ, (∀ t ∈ T, t ∈ Uo k) ∧ ∀ u ∈ Uo k, ∃ t ∈ T, u / t ∈ V.H := by
     classical
-    haveI : (V.H.subgroupOf (Uo k)).FiniteIndex := ⟨hH⟩
-    haveI := Fintype.ofFinite (Uo k ⧸ V.H.subgroupOf (Uo k))
+    have : (V.H.subgroupOf (Uo k)).FiniteIndex := ⟨hH⟩
+    have := Fintype.ofFinite (Uo k ⧸ V.H.subgroupOf (Uo k))
     refine ⟨Finset.univ.image (fun q : Uo k ⧸ V.H.subgroupOf (Uo k) => ((Quotient.out q : Uo k) : kˣ)), ?_, ?_⟩
     · intro t ht
       obtain ⟨q, -, rfl⟩ := Finset.mem_image.mp ht
@@ -212,7 +212,7 @@ theorem UpperTheory.V.Z.Sym.Sig.finFacts : UpperTheory.V.Z.Sym.Sig.FinFacts := b
     refine ⟨?_, hopen, hcpt, V.J_le_KO⟩
     intro x
     show (MulAction.orbit (V.J n) (x : GL (Fin n) k ⧸ V.J n)).Finite
-    haveI := QuotientGroup.discreteTopology hopen
+    have := QuotientGroup.discreteTopology hopen
     refine ((hcpt.image (f := fun g => ((g * x : GL (Fin n) k) : GL (Fin n) k ⧸ V.J n))
       (QuotientGroup.continuous_mk.comp (continuous_mul_const x))).finite_of_discrete).subset ?_
     rintro _ ⟨j, rfl⟩

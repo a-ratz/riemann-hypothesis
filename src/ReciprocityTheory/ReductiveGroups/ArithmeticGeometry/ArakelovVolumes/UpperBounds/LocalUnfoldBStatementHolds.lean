@@ -412,7 +412,7 @@ theorem Gf_le_off (Xa : ArchInM X) (Fl : FlatM X Xa) (g : Frame X.Ψ r → ℂ) 
       ENNReal.ofReal (X.pnorm (Xa.Fp + Xa.T • Xa.L) g x ^ 2 *
         (∑ k, X.pnorm Xa.L (Xa.w k) x ^ 2) ^ (-(Xa.T : ℝ))) := by
   unfold Gf WSk
-  rw [if_pos hx]
+  rw [ite_eq_left hx]
   have hnn : 0 < X.nfac (Xa.Fp + Xa.T • Xa.L) x := nfac_pos_of_mem_dom hx _
   have hexp : Real.exp (-phla X (Xa.Fp + Xa.T • Xa.L) x) = X.nfac (Xa.Fp + Xa.T • Xa.L) x ^ 2 := by
     unfold phla
@@ -707,7 +707,7 @@ theorem inFF_of (hLU : LocalUnfoldBStatement (E := E)) {Xa : ArchInM X} (Fl : Fl
           exact Gf_le_off Xa Fl g K hzd (hK _ hzd hz.2)
       _ ≤ ∫⁻ z in FF, C * ENNReal.ofReal (X.pnorm (Xa.Fp + Xa.T • Xa.L) g (cpt X x0 z) ^ 2 *
           (∑ k, X.pnorm Xa.L (Xa.w k) (cpt X x0 z) ^ 2) ^ (-(Xa.T : ℝ))) ∂muF X x0 :=
-          lintegral_mono_set Set.diff_subset
+          lintegral_mono_set Set.sdiff_subset
       _ = C * ∫⁻ z in FF, ENNReal.ofReal (X.pnorm (Xa.Fp + Xa.T • Xa.L) g (cpt X x0 z) ^ 2 *
           (∑ k, X.pnorm Xa.L (Xa.w k) (cpt X x0 z) ^ 2) ^ (-(Xa.T : ℝ))) ∂muF X x0 :=
           lintegral_const_mul' _ _ hC
@@ -786,7 +786,7 @@ theorem pow_step {p : ℕ} (g : Fin p → ℂ) (α : Fin p → ℕ) (k : Fin p) 
   congr 1
   have h : ∀ i, g i ^ (if i = k then 1 else 0) = if i = k then g i else 1 := by
     intro i; split_ifs <;> simp
-  simp only [h, Finset.prod_ite_eq', Finset.mem_univ, if_true]
+  simp only [h, Finset.prod_ite_eq', Finset.mem_univ, ite_true]
 
 theorem iter_div (hU : IsOpen U) (S : EtaleStein n U) (hz : S.z = Subtype.val) {p : ℕ}
     (g : Fin p → V n → ℂ) (ph0 : V n → ℝ) (hp : 2 ≤ p)
@@ -849,8 +849,8 @@ theorem iter_div (hU : IsOpen U) (S : EtaleStein n U) (hz : S.z = Subtype.val) {
           DifferentiableOn ℂ (fun y => if stp α k = β then hh α k y else 0) U := by
         intro α hα k _
         by_cases hk : stp α k = β
-        · simp only [hk, if_true]; exact hhd α hα k
-        · simp only [hk, if_false]; exact differentiableOn_const (c := (0 : ℂ))
+        · simp only [hk, ite_true]; exact hhd α hα k
+        · simp only [hk, ite_false]; exact differentiableOn_const (c := (0 : ℂ))
       have hα : ∀ α ∈ A, DifferentiableOn ℂ
           (fun y => ∑ k, if stp α k = β then hh α k y else 0) U := fun α hα =>
         (DifferentiableOn.sum (u := Finset.univ) (A := fun k y => if stp α k = β then hh α k y else 0)
@@ -918,7 +918,7 @@ theorem iter_div (hU : IsOpen U) (S : EtaleStein n U) (hz : S.z = Subtype.val) {
       rw [Finset.sum_comm]
       refine Finset.sum_congr rfl fun k _ => ?_
       simp only [mul_ite, mul_zero]
-      rw [Finset.sum_ite_eq, if_pos (mem_step hα k)]
+      rw [Finset.sum_ite_eq, ite_eq_left (mem_step hα k)]
 
 end UpDivB
 
@@ -950,7 +950,7 @@ theorem dense_nonzero {U : Set (V n)} (hU : IsOpen U) (hUc : IsPreconnected U) {
     by_contra h
     exact hy ⟨hyU, h⟩
   have hsub : U ⊆ {y | ∀ᶠ x in 𝓝 y, g x = 0} := by
-    refine hUc.subset_of_closure_inter_subset isOpen_setOf_eventually_nhds ⟨z, hz, hz0⟩ ?_
+    refine hUc.subset_of_closure_inter_subset isOpen_setOfPred_eventually_nhds ⟨z, hz, hz0⟩ ?_
     rintro y ⟨hycl, hyU⟩
     obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.mp hU y hyU
     obtain ⟨b, hb, hdist⟩ := Metric.mem_closure_iff.mp hycl ε hε
@@ -1188,7 +1188,7 @@ private theorem volume_ball_inter_zeroSet_eq_zero_of_ne_zero {U : Set (V n)} {g 
   have memA : ∀ t x, (t, x) ∈ A ↔ t ∈ Ioo (0:ℝ) 1 ∧ x ∈ ball z0 R ∧ g (z0 + t • (x - z0)) = 0 := by
     intro t x
     rw [hAdef]
-    simp only [Set.mem_diff, Set.mem_inter_iff, Set.mem_prod, Set.mem_preimage, Set.mem_compl_iff,
+    simp only [Set.mem_sdiff, Set.mem_inter_iff, Set.mem_prod, Set.mem_preimage, Set.mem_compl_iff,
       Set.mem_singleton_iff]
     tauto
   have hslice : ∀ x : V n, volume ((fun t : ℝ => (t, x)) ⁻¹' A) = 0 := by
@@ -1291,9 +1291,9 @@ private theorem volume_ball_inter_zeroSet_eq_zero_of_ne_zero {U : Set (V n)} {g 
       volume (Prod.mk t ⁻¹' A) := by
     intro t
     by_cases ht : t ∈ Ioo (R' / R) 1
-    · rw [Set.indicator_apply, if_pos ht]
+    · rw [Set.indicator_apply, ite_eq_left ht]
       exact hlow t ht
-    · rw [Set.indicator_apply, if_neg ht]
+    · rw [Set.indicator_apply, ite_eq_right ht]
       positivity
   have hle : ∫⁻ t, (Ioo (R' / R) 1).indicator (fun _ => volume (ball z0 R' ∩ {z | g z = 0})) t ≤
       ∫⁻ t, volume (Prod.mk t ⁻¹' A) := lintegral_mono hind
@@ -1301,13 +1301,13 @@ private theorem volume_ball_inter_zeroSet_eq_zero_of_ne_zero {U : Set (V n)} {g 
   have hpos : ENNReal.ofReal (1 - R' / R) ≠ 0 := by
     rw [Ne, ENNReal.ofReal_eq_zero, not_le, sub_pos, div_lt_one hR]
     exact hRR
-  exact (mul_eq_zero.mp (le_zero_iff.mp hle)).resolve_right hpos
+  exact (mul_eq_zero.mp (nonpos_iff_eq_zero.mp hle)).resolve_right hpos
 
 theorem zero_null {U : Set (V n)} (hU : IsOpen U) (hUc : IsPreconnected U) {g : V n → ℂ}
     (hg : DifferentiableOn ℂ g U) (hg0 : ∃ z ∈ U, g z ≠ 0) :
     volume (U ∩ {z | g z = 0}) = 0 := by
   classical
-  have hWopen : IsOpen {z : V n | ∀ᶠ y in 𝓝 z, g y = 0} := isOpen_setOf_eventually_nhds
+  have hWopen : IsOpen {z : V n | ∀ᶠ y in 𝓝 z, g y = 0} := isOpen_setOfPred_eventually_nhds
   have hclosed : ∀ z ∈ U, z ∈ closure {z : V n | ∀ᶠ y in 𝓝 z, g y = 0} → ∀ᶠ y in 𝓝 z, g y = 0 := by
     intro z hz hzc
     obtain ⟨r, hr, hrU⟩ := Metric.isOpen_iff.mp hU z hz
@@ -1400,7 +1400,7 @@ theorem loc_int {U U' : Set (V n)} (hU : IsOpen U) (hU'o : IsOpen U') {g : V n �
   refine ⟨ε / 2, by linarith, ball_subset_closedBall.trans hK, ?_⟩
   have hS : ball z (ε / 2) \ {y | g y = 0} = ball z (ε / 2) ∩ U' := by
     ext y
-    simp only [mem_diff, mem_inter_iff, mem_setOf_eq, hU']
+    simp only [Set.mem_sdiff, mem_inter_iff, mem_ofPred_eq, hU']
     constructor
     · rintro ⟨hy, hgy⟩
       exact ⟨hy, hK (ball_subset_closedBall hy), hgy⟩
@@ -1497,7 +1497,7 @@ theorem upDiv_holds : UpDivStatement (E := E) := by
       have hwp : 0 < ∑ k, X.pnorm Xa.L (Xa.w k) (cpt X x0 z) ^ 2 := by
         rw [sumL_eq X Xa x0 hz]; exact mul_pos (Real.exp_pos _) (Sw_pos X Xa x0 hz)
       unfold WSk
-      rw [if_pos hp, hs0, zero_div, ENNReal.ofReal_zero, ENNReal.zero_rpow_of_neg (by
+      rw [ite_eq_left hp, hs0, zero_div, ENNReal.ofReal_zero, ENNReal.zero_rpow_of_neg (by
         have : (1 : ℝ) ≤ Xa.T := by exact_mod_cast (show 1 ≤ Xa.T by omega)
         linarith)]
       refine ENNReal.mul_top ?_

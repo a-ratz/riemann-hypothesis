@@ -70,10 +70,10 @@ theorem galois_places_transitive : ∀ (F E : Type) [Field F] [NumberField F] [F
       rw [hfix]
     · intro y
       exact valuation_of_eq_comap σ.toRingEquiv w _ rfl y
-  · haveI := w.isPrime
-    haveI := w'.isPrime
-    haveI : w.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨rfl⟩
-    haveI : w'.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := hu ▸ ⟨rfl⟩
+  · have := w.isPrime
+    have := w'.isPrime
+    have : w.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨rfl⟩
+    have : w'.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := hu ▸ ⟨rfl⟩
     obtain ⟨σ, hσ⟩ := Ideal.exists_smul_eq_of_isGaloisGroup (w.under (𝓞 F)).asIdeal
       w'.asIdeal w.asIdeal (E ≃ₐ[F] E)
     refine ⟨σ, fun y => valuation_of_eq_comap σ.toRingEquiv w w' ?_ y⟩

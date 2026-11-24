@@ -60,9 +60,9 @@ namespace GlobalTheory.Cyc
 variable {l : ℕ} [Fact l.Prime]
 
 theorem exists_primRoot_pow (m : ℕ) : ∃ ζ : Om l, IsPrimitiveRoot ζ (l ^ m) := by
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI : NeZero ((l ^ m : ℕ) : Om l) := ⟨by exact_mod_cast pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ m)
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero ((l ^ m : ℕ) : Om l) := ⟨by exact_mod_cast pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ m)
 
 theorem padic_norm_sub_le_trans {x y z : ℚ_[l]} {r : ℝ} (h1 : ‖x - y‖ ≤ r) (h2 : ‖y - z‖ ≤ r) :
     ‖x - z‖ ≤ r := by
@@ -141,7 +141,7 @@ theorem IsCyc.continuous {χ : GQ l →* ℚ_[l]ˣ} (h : IsCyc χ) :
   have hg' : g ζ = ζ := (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg ζ
     (IntermediateField.mem_adjoin_simple_self _ _)
   have := h.norm_sub_one_le_of_prim g m hζ hg'
-  simp only [Set.mem_setOf_eq, map_one, dist_eq_norm]
+  simp only [Set.mem_ofPred_eq, map_one, dist_eq_norm]
   exact this.trans_lt hm
 
 theorem mem_fixingSubgroup_adjoin_iff (S : Set (Om l)) (g : GQ l) :

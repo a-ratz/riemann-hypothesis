@@ -67,8 +67,8 @@ theorem exists_fixed {S H P : Type} [AddCommGroup S] [Module ℂ S] [NormedAddCo
     [FiniteDimensional ℂ N] {f : S} (hf : f ∈ N) (hp : p f ≠ 0) :
     ∃ f₀ ∈ N, f₀ ≠ 0 ∧ ∀ g ∈ N, p g = p f₀ → ‖ι g‖ = ‖ι f₀‖ → g = f₀ := by
   let Z := (N ⊓ LinearMap.ker p).map ι
-  haveI : FiniteDimensional ℂ (N ⊓ LinearMap.ker p : Submodule ℂ S) := Submodule.finiteDimensional_of_le inf_le_left
-  haveI : CompleteSpace Z := FiniteDimensional.complete ℂ Z
+  have : FiniteDimensional ℂ (N ⊓ LinearMap.ker p : Submodule ℂ S) := Submodule.finiteDimensional_of_le inf_le_left
+  have : CompleteSpace Z := FiniteDimensional.completeSpace ℂ Z
   obtain ⟨_, ⟨z, hz, rfl⟩, y, hy, e⟩ := Z.exists_add_mem_mem_orthogonal (ι f)
   have e' : ι (f - z) = y := by rw [map_sub, e, add_sub_cancel_left]
   refine ⟨f - z, sub_mem hf hz.1, fun h => hp ?_, fun g hg h1 h2 => ?_⟩
@@ -104,7 +104,7 @@ theorem exists_dop_fin {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fi
     | smul t q _ h =>
       convert Submodule.smul_mem _ (t : ℂ) h
       ext x
-      simp only [dop_apply, Prod.smul_fst, Prod.smul_snd, map_smul, ContinuousLinearMap.smul_apply, SchwartzMap.smul_apply,
+      simp only [dop_apply, Prod.smul_fst, Prod.smul_snd, map_smul, smul_apply, smul_apply,
         smul_eq_mul, Complex.real_smul]
       push_cast
       ring
@@ -145,7 +145,7 @@ theorem vacSp_fin (h : IsCMExt F E σ) (M : Model σ X W) (τ : ∀ w : Infinite
       rw [linForm_apply, Finset.sum_eq_single i (fun j _ hj => by simp [hj]) (by simp), Pi.single_eq_same, mul_comm] at this
       exact this) J f.1 hf fun p y => by
     have := congrArg (fun g : SInf F (Fin n × Fin d) => g y) (f.2 (S p) (S (J p)) (sAt _) (sAt _) fun w => sJ p w)
-    simp only [dopL, LinearMap.coe_mk, AddHom.coe_mk, SchwartzMap.smul_apply, smul_eq_mul, dop_apply, aOf, lOf] at this
+    simp only [dopL, LinearMap.coe_mk, AddHom.coe_mk, smul_apply, smul_eq_mul, dop_apply, aOf, lOf] at this
     rw [show aOf M (S p) = p.1 from (sev _).1, show aOf M (S (J p)) = (J p).1 from (sev _).1, (sev _).2, (sev _).2] at this
     exact this
   obtain ⟨c, Q, Q', hc, -, e⟩ := GlobalTheory.CompanionTheory.Twist.schwartz_logDeriv_linear_gaussian f.1 hf m hm
@@ -220,8 +220,8 @@ theorem realInv_of (hA : PositivityTheory.ThKF.ArchOp) : RealInv := by
   have hs := hp.weil.isUSplitting
   obtain ⟨N, _, h1, h2⟩ := Dense.pol_finite hp.base.cm hp.base.std hs.toIsSplitting B.emb hf
   haveI : FiniteDimensional ℂ (N ⊓ M.Pol B.ψ B.emb : Submodule ℂ _) := Submodule.finiteDimensional_of_le inf_le_left
-  haveI := Dense.volume_isAddHaar F (Fin n × Fin d)
-  haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have := Dense.volume_isAddHaar F (Fin n × Fin d)
+  have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   obtain ⟨f₀, hf₀, hne, hfix⟩ := Dense.exists_fixed
     (SchwartzMap.toLpCLM ℂ ℂ 2 (volume : Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F))).toLinearMap
     (SchwartzMap.injective_toLp 2 _) p (N ⊓ M.Pol B.ψ B.emb) ⟨h1, hf⟩ h0

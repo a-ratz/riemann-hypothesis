@@ -126,7 +126,7 @@ theorem S_shift (l : ℕ) (f g : Ty P → ℂ) (h : ∀ π π', Up P l π π' �
   ext π' π
   rw [Matrix.diagonal_mul, Matrix.mul_diagonal]
   by_cases hu : Up P l π π'
-  · simp only [SS, Matrix.of_apply, if_pos hu, h π π' hu]
+  · simp only [SS, Matrix.of_apply, ite_eq_left hu, h π π' hu]
     exact (Algebra.commutes _ _)
   · simp [SS, hu]
 
@@ -173,7 +173,7 @@ theorem xEx_up {j : ℕ} {π π' : Ty P} (h : Up P j π π') (ex : Finset ℕ) (
   refine Finset.prod_congr rfl fun i hi => ?_
   have hi' := Finset.mem_sdiff.1 hi
   have hne : i ≠ j := fun e => hi'.2 (e ▸ hj)
-  rw [rho_up P h hi'.1, if_neg hne, add_zero]
+  rw [rho_up P h hi'.1, ite_eq_right hne, add_zero]
 
 def rr (j : ℕ) (u : ℂ) : Ty P → ℂ := fun π => (u + (rho P π j : ℂ))⁻¹
 
@@ -855,7 +855,7 @@ theorem Lam1 (u v : ℂ) (hu : Good P u) (hv : Good P v) :
   have h := comm_sum P (fun π => xC P π u)
     (fun j π => (u + (rho P π j : ℂ) - 1) * xEx P {j} π u) (-1) u v
     (fun j hj π π' hU => by
-      rw [xEx_up P hU {j} (Finset.mem_singleton_self j), rho_up P hU hj, if_pos rfl, xC_split P π u hj]
+      rw [xEx_up P hU {j} (Finset.mem_singleton_self j), rho_up P hU hj, ite_eq_left rfl, xC_split P π u hj]
       ring)
     (fun j hj π => by
       have h1 := good0 P hu π hj
@@ -878,7 +878,7 @@ theorem Lam2 (u v : ℂ) (hu : Good P u) (hv : Good P v) :
       have h1 := good1 P hu π' hj
       rw [xC_split P π' (u + 1) hj, xC_split P π (u + 1) hj,
         xEx_up P hU {j} (Finset.mem_singleton_self j), mul_inv, mul_inv]
-      rw [rho_up P hU hj, if_pos rfl] at h0 h1 ⊢
+      rw [rho_up P hU hj, ite_eq_left rfl] at h0 h1 ⊢
       generalize (xEx P {j} π (u + 1))⁻¹ = Ei
       have h2 : u + 1 + ((rho P π j : ℂ) + 1) ≠ 0 := by intro h; apply h1; rw [← h]; ring
       have h3 : u + 1 + (rho P π j : ℂ) ≠ 0 := by intro h; apply h0; rw [← h]; ring
@@ -930,7 +930,7 @@ theorem ee_diag {i : ℕ} (hi : i ∈ Icc 1 (P.k - 1)) (u v : ℂ) (hu : Good P 
   have h2 := good0 P hv π hi
   have h3 := goodm1 P hu π hi
   have h4 := goodm1 P hv π hi
-  simp only [ee, sh, rr, Pi.sub_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul, Pi.zero_apply, if_true]
+  simp only [ee, sh, rr, Pi.sub_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul, Pi.zero_apply, ite_true]
   field_simp
   ring
 
@@ -945,7 +945,7 @@ theorem ee_off_diagonal_first {i j : ℕ} (hi : i ∈ Icc 1 (P.k - 1)) (hj : j �
   have h2 := good0 P hv π hi
   have h3 := good0 P hu π hj
   have h4 := good0 P hv π hj
-  simp only [ee, cc, sh, rr, Pi.sub_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul, if_neg hne, sub_zero]
+  simp only [ee, cc, sh, rr, Pi.sub_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul, ite_eq_right hne, sub_zero]
   field_simp
   ring
 
@@ -958,7 +958,7 @@ theorem ee_off_diagonal_second {i j : ℕ} (hi : i ∈ Icc 1 (P.k - 1)) (hj : j 
   have h3 := good0 P hu π hj
   have h4 := good0 P hv π hj
   simp only [ee, cc, sh, rr, Pi.sub_apply, Pi.smul_apply, Pi.mul_apply, Pi.neg_apply, smul_eq_mul,
-    if_neg hne.symm, sub_zero]
+    ite_eq_right hne.symm, sub_zero]
   field_simp
   ring
 
@@ -969,21 +969,21 @@ theorem comm_tgt (hC : SSComm) (hP : P.OK) {i j : ℕ} (hi : i ∈ Icc 1 (P.k - 
   have h := hC P hP i hi j hj hne
   have a1 := S_shift P i (fun π => ((rho P π j - rho P π i - 1 : ℝ) : ℂ))
     (fun π => (rho P π j : ℂ) - (rho P π i : ℂ)) (fun π π' hU => by
-      rw [rho_up P hU hj, rho_up P hU hi, if_neg hne, if_pos rfl]
+      rw [rho_up P hU hj, rho_up P hU hi, ite_eq_right hne, ite_eq_left rfl]
       push_cast
       ring)
   have a2 := S_shift P j (fun π => (rho P π j : ℂ) - (rho P π i : ℂ))
     (fun π => (rho P π j : ℂ) - (rho P π i : ℂ) - 1) (fun π π' hU => by
-      rw [rho_up P hU hj, rho_up P hU hi, if_neg hne.symm, if_pos rfl]
+      rw [rho_up P hU hj, rho_up P hU hi, ite_eq_right hne.symm, ite_eq_left rfl]
       ring)
   have b1 := S_shift P j (fun π => ((rho P π j - rho P π i + 1 : ℝ) : ℂ))
     (fun π => (rho P π j : ℂ) - (rho P π i : ℂ)) (fun π π' hU => by
-      rw [rho_up P hU hj, rho_up P hU hi, if_neg hne.symm, if_pos rfl]
+      rw [rho_up P hU hj, rho_up P hU hi, ite_eq_right hne.symm, ite_eq_left rfl]
       push_cast
       ring)
   have b2 := S_shift P i (fun π => (rho P π j : ℂ) - (rho P π i : ℂ))
     (fun π => (rho P π j : ℂ) - (rho P π i : ℂ) + 1) (fun π π' hU => by
-      rw [rho_up P hU hj, rho_up P hU hi, if_neg hne, if_pos rfl]
+      rw [rho_up P hU hj, rho_up P hU hi, ite_eq_right hne, ite_eq_left rfl]
       ring)
   rw [← mul_assoc, a2, mul_assoc, a1, ← mul_assoc, h, mul_assoc, ← b1, ← mul_assoc, ← b2, mul_assoc]
 
@@ -1041,17 +1041,17 @@ def rr1 (j : ℕ) (u : ℂ) : Ty P → ℂ := fun π => (u + (rho P π j : ℂ) 
 theorem rr_up_same {j : ℕ} (hj : j ∈ Icc 1 (P.k - 1)) {π π' : Ty P} (h : Up P j π π') (u : ℂ) :
     rr P j u π' = rr1 P j u π := by
   unfold rr rr1
-  rw [rho_up P h hj, if_pos rfl, add_assoc]
+  rw [rho_up P h hj, ite_eq_left rfl, add_assoc]
 
 theorem rr_up_ne {i j : ℕ} (hj : j ∈ Icc 1 (P.k - 1)) (hne : j ≠ i) {π π' : Ty P} (h : Up P i π π') (u : ℂ) :
     rr P j u π' = rr P j u π := by
   unfold rr
-  rw [rho_up P h hj, if_neg hne, add_zero]
+  rw [rho_up P h hj, ite_eq_right hne, add_zero]
 
 theorem rho_unchanged_off_index {i j : ℕ} (hj : j ∈ Icc 1 (P.k - 1)) (hne : j ≠ i) {π π' : Ty P} (h : Up P i π π') (u : ℂ) :
     rr1 P j u π' = rr1 P j u π := by
   unfold rr1
-  rw [rho_up P h hj, if_neg hne, add_zero]
+  rw [rho_up P h hj, ite_eq_right hne, add_zero]
 
 theorem xC_rr {u : ℂ} (hu : Good P u) {j : ℕ} (hj : j ∈ Icc 1 (P.k - 1)) (π : Ty P) :
     xC P π u * rr P j u π = xEx P {j} π u := by

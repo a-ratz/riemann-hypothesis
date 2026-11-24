@@ -105,7 +105,7 @@ theorem genIndex_map_addEquiv {G : Type*} [AddCommGroup G] (m : G ≃+ G) (A B :
 
 theorem addSubgroup_fg_map {G H : Type*} [AddCommGroup G] [AddCommGroup H] {A : AddSubgroup G} (hA : A.FG)
     (f : G →+ H) : (A.map f).FG := by
-  letI : A.FG := hA
+  let : A.FG := hA
   infer_instance
 
 theorem CurveBoxLattice.proof (hF : CurveFieldNumber.Statement) (hE : CurveEmbedOrbit.Statement)

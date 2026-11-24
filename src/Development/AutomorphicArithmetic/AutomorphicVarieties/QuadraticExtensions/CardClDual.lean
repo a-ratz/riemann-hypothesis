@@ -103,7 +103,7 @@ private theorem cardLe_hom (A : Type) [CommGroup A] [Finite A] (l : ℕ) [Fact l
     apply hθ
     funext a
     rw [← hΦ p a, ← hΦ q a, h]
-  letI : Module (ZMod l) (Additive (A ⧸ (powMonoidHom l : A →* A).range)) := AddCommGroup.zmodModule hV
+  let : Module (ZMod l) (Additive (A ⧸ (powMonoidHom l : A →* A).range)) := AddCommGroup.zmodModule hV
   exact CardLe.of_injective (cardLe_dual_zmod_card l (Additive (A ⧸ (powMonoidHom l : A →* A).range))) _
     ((AddMonoidHom.toZModLinearMap_injective l (M := Additive (A ⧸ (powMonoidHom l : A →* A).range))
       (M₁ := ZMod l)).comp hinj)

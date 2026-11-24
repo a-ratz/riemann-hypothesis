@@ -82,8 +82,8 @@ open IsLocalRing Filter Formalism.MainNotions.V.Pf.V2.Calc UpperTheory.V.Alg Upp
 private theorem et_point (E K C : Type) [Field E] [Field K] [Algebra E K] [IsAlgClosed K] [CommRing C] [Algebra E C]
     [Algebra.FiniteType E C] (m : Ideal C) [m.IsMaximal] :
     ∃ ι : (C ⧸ m) →ₐ[E] K, Function.Injective ι := by
-  letI : Field (C ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite E (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing E (C ⧸ m)
+  let : Field (C ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite E (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing E (C ⧸ m)
   let ι : (C ⧸ m) →ₐ[E] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -98,7 +98,7 @@ private theorem et_unram (O K C : Type) [CommRing O] [Field K] [Algebra O K] [Co
   have key : ∀ m : Ideal C, m.IsMaximal → (⊤ : Submodule C Ω[C⁄O]) ≤ m • ⊤ := by
     intro m hm x _
     by_contra hx
-    letI : Field (C ⧸ m) := Ideal.Quotient.field m
+    let : Field (C ⧸ m) := Ideal.Quotient.field m
     obtain ⟨ι, hι⟩ := hp m hm
     have hq : Submodule.Quotient.mk (p := m • (⊤ : Submodule C Ω[C⁄O])) x ≠ 0 := by
       rwa [Ne, Submodule.Quotient.mk_eq_zero]
@@ -162,26 +162,26 @@ theorem UpperTheory.V.Alg.M.et_holds :
     intro y
     refine isUnit_iff_ne_zero.mpr (fun h0 => nonZeroDivisors.ne_zero y.2 (hinjK ?_))
     rw [h0, map_zero]
-  letI : Algebra (FractionRing O) C :=
+  let : Algebra (FractionRing O) C :=
     (IsLocalization.lift (M := nonZeroDivisors O) (S := FractionRing O) huC).toAlgebra
-  letI : Algebra (FractionRing O) K :=
+  let : Algebra (FractionRing O) K :=
     (IsLocalization.lift (M := nonZeroDivisors O) (S := FractionRing O) huK).toAlgebra
-  haveI : IsScalarTower O (FractionRing O) C := IsScalarTower.of_algebraMap_eq
+  have : IsScalarTower O (FractionRing O) C := IsScalarTower.of_algebraMap_eq
     (fun r => (IsLocalization.lift_eq (M := nonZeroDivisors O) (S := FractionRing O) huC r).symm)
-  haveI : IsScalarTower O (FractionRing O) K := IsScalarTower.of_algebraMap_eq
+  have : IsScalarTower O (FractionRing O) K := IsScalarTower.of_algebraMap_eq
     (fun r => (IsLocalization.lift_eq (M := nonZeroDivisors O) (S := FractionRing O) huK r).symm)
-  haveI : Algebra.FiniteType (FractionRing O) C :=
+  have : Algebra.FiniteType (FractionRing O) C :=
     Algebra.FiniteType.of_restrictScalars_finiteType O (FractionRing O) C
   have hpt : ∀ m : Ideal C, m.IsMaximal → ∃ ι : (C ⧸ m) →ₐ[O] K, Function.Injective ι := by
     intro m hm
-    haveI := hm
+    have := hm
     obtain ⟨ι, hι⟩ := et_point (FractionRing O) K C m
     exact ⟨ι.restrictScalars O, hι⟩
-  haveI : Algebra.FormallyUnramified O C := et_unram O K C hpt hD
-  haveI : Algebra.FormallyUnramified (FractionRing O) C :=
+  have : Algebra.FormallyUnramified O C := et_unram O K C hpt hD
+  have : Algebra.FormallyUnramified (FractionRing O) C :=
     Algebra.FormallyUnramified.of_restrictScalars O (FractionRing O) C
-  haveI : Module.Finite (FractionRing O) C := Algebra.FormallyUnramified.finite_of_free (FractionRing O) C
-  haveI : IsReduced C := Algebra.FormallyUnramified.isReduced_of_field (FractionRing O) C
+  have : Module.Finite (FractionRing O) C := Algebra.FormallyUnramified.finite_of_free (FractionRing O) C
+  have : IsReduced C := Algebra.FormallyUnramified.isReduced_of_field (FractionRing O) C
   refine ⟨?_, ?_⟩
   · have hcompat : ∀ ξ : C →ₐ[O] K, ∀ r : FractionRing O,
         ξ (algebraMap (FractionRing O) C r) = algebraMap (FractionRing O) K r := by
@@ -199,10 +199,10 @@ theorem UpperTheory.V.Alg.M.et_holds :
       intro ξ₁ ξ₂ h
       ext c
       exact AlgHom.congr_fun h c
-    haveI : Finite (C →ₐ[FractionRing O] K) := (linearIndependent_toLinearMap (FractionRing O) C K).finite
+    have : Finite (C →ₐ[FractionRing O] K) := (linearIndependent_toLinearMap (FractionRing O) C K).finite
     exact Finite.of_injective up hup
   · intro h hh
-    haveI : IsJacobsonRing C := isJacobsonRing_of_finiteType (A := FractionRing O)
+    have : IsJacobsonRing C := isJacobsonRing_of_finiteType (A := FractionRing O)
     have hrad : (⊥ : Ideal C).IsRadical := by
       intro x hx
       obtain ⟨n, hn⟩ := hx
@@ -211,7 +211,7 @@ theorem UpperTheory.V.Alg.M.et_holds :
     have hj := IsJacobsonRing.out' (⊥ : Ideal C) hrad
     rw [← Ideal.mem_bot, ← hj, Ideal.jacobson, Ideal.mem_sInf]
     rintro J ⟨-, hJ⟩
-    haveI := hJ
+    have := hJ
     obtain ⟨ι, hι⟩ := hpt J hJ
     have h5 := hh (ι.comp (Ideal.Quotient.mkₐ O J))
     rw [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, ← map_zero ι] at h5
@@ -279,7 +279,7 @@ theorem UpperTheory.V.Alg.M.slice_holds :
         ∃ (n : ℕ) (c : O), c ≠ 0 ∧ c • (g ^ n * h) ∈ I ⊔ Ideal.span {f - 1} := by
   intro O _ _ _ _ _ K _ _ _ _ A _ _ 𝒜 _ _ x hx I hI h2 h4 f hf g hg
   classical
-  haveI : CharZero K := charZero_of_injective_algebraMap (FaithfulSMul.algebraMap_injective O K)
+  have : CharZero K := charZero_of_injective_algebraMap (FaithfulSMul.algebraMap_injective O K)
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hπ0 : π ≠ 0 := hπ.ne_zero
   set J : Ideal A := I ⊔ Ideal.span {f - 1} with hJ
@@ -306,7 +306,7 @@ theorem UpperTheory.V.Alg.M.slice_holds :
     obtain ⟨n, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hc hπ
     rw [map_mul, map_pow]
     exact (u.isUnit.map _).mul (hπu.pow n)
-  haveI hft : Algebra.FiniteType O C := by
+  have hft : Algebra.FiniteType O C := by
     have h1 : Algebra.FiniteType O (A ⧸ I) := (ft_holds O A 𝒜 x hx).2 I h2
     have h3 : Algebra.FiniteType O (A ⧸ J) :=
       Algebra.FiniteType.of_surjective (Ideal.Quotient.factorₐ O (le_sup_left : I ≤ J))

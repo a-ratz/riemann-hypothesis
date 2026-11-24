@@ -56,10 +56,10 @@ theorem isGalois_of_aut (K L : IntermediateField ℚ ℂ) [FiniteDimensional ℚ
     (hs : ∀ s : ℂ ≃+* ℂ, (∀ a ∈ K, s a = a) → ∀ a ∈ L, s a ∈ L) :
     letI : Algebra K L := j.toAlgebra
     IsGalois K L := by
-  letI : Algebra K L := j.toAlgebra
-  haveI : IsScalarTower K L ℂ := IsScalarTower.of_algebraMap_eq fun a => (hj a).symm
-  haveI : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun a => by simp
-  haveI : Algebra.IsAlgebraic K L := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  let : Algebra K L := j.toAlgebra
+  have : IsScalarTower K L ℂ := IsScalarTower.of_algebraMap_eq fun a => (hj a).symm
+  have : IsScalarTower ℚ K L := IsScalarTower.of_algebraMap_eq fun a => by simp
+  have : Algebra.IsAlgebraic K L := Algebra.IsAlgebraic.tower_top (K := ℚ) K
   have : Normal K L := by
     refine normal_iff.2 fun x => ⟨Algebra.IsIntegral.isIntegral x, ?_⟩
     refine Polynomial.Splits.of_splits_map (algebraMap L ℂ) (IsAlgClosed.splits _) fun a ha => ?_
@@ -111,7 +111,7 @@ theorem laws_galois_pull : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCo
           rw [hM]
           exact hG.levelK
         modelW := hmod }
-  · haveI := Y.d.c₂.fin
+  · have := Y.d.c₂.fin
     refine isGalois_of_aut T.Q.c.F Y.d.c₂.F _ (fun a => rfl) fun s hs a ha => ?_
     have hF := Y.d.hF
     rw [hF] at ha ⊢
@@ -120,7 +120,7 @@ theorem laws_galois_pull : ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCo
     have hV := (rulBC_sec_val_linear D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c Y.c' Y.hle).1 a n f hf
     constructor
     · intro hP k _ _ _ _ hk y₂ y hO
-      letI : Algebra T.Q.c.F k := resAlg Y.hle k
+      let : Algebra T.Q.c.F k := resAlg Y.hle k
       have hA : AlgOver T.Q.c Y.c' Y.hle k := fun _ => rfl
       rw [hV.2 k hA y]
       exact hP k hA hk y₂ y (y.res Y.hle hA) hO rfl rfl HEq.rfl

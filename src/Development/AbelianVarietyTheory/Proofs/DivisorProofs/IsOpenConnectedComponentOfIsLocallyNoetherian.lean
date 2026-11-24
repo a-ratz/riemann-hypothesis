@@ -65,13 +65,13 @@ theorem GlobalTheory.isOpen_connectedComponent_of_isLocallyNoetherian :
   rw [isOpen_iff_forall_mem_open]
   intro y hy
   obtain ⟨U, hU, hyU, -⟩ := exists_isAffineOpen_mem_and_subset (X := X) (U := ⊤) (x := y) trivial
-  haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  haveI : NoetherianSpace (U : Set X) := noetherianSpace_of_isAffineOpen U hU
+  have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have : NoetherianSpace (U : Set X) := noetherianSpace_of_isAffineOpen U hU
   let y' : (U : Set X) := ⟨y, hyU⟩
   refine ⟨Subtype.val '' connectedComponent y', ?_,
     U.isOpen.isOpenEmbedding_subtypeVal.isOpenMap _ (GlobalTheory.ConnOpen.isOpen_connectedComponent_noetherian y'),
     ⟨y', mem_connectedComponent, rfl⟩⟩
   have hc : _root_.IsPreconnected (Subtype.val '' connectedComponent y' : Set X) :=
-    isPreconnected_connectedComponent.image _ continuous_subtype_val.continuousOn
+    isPreconnected_connectedComponent.image _ continuous_subtypeVal.continuousOn
   have := hc.subset_connectedComponent ⟨y', mem_connectedComponent, rfl⟩
   rwa [← connectedComponent_eq hy] at this

@@ -190,8 +190,8 @@ theorem inner_cls_eq {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V :
     [InnerProductSpace ℂ V] {a b : Mat n → V} (ha : MemLp (fun y : G n => a y.val) 2 μ)
     (hb : MemLp (fun y : G n => b y.val) 2 μ) :
     ⟪cls μ a, cls μ b⟫_ℂ = ∫ y : G n, ⟪a y.val, b y.val⟫_ℂ ∂μ := by
-  have e1 : cls μ a = ha.toLp _ := dif_pos ha
-  have e2 : cls μ b = hb.toLp _ := dif_pos hb
+  have e1 : cls μ a = ha.toLp _ := dite_eq_left ha
+  have e2 : cls μ b = hb.toLp _ := dite_eq_left hb
   rw [e1, e2, L2.inner_def]
   refine integral_congr_ae ?_
   filter_upwards [ha.coeFn_toLp, hb.coeFn_toLp] with y h1 h2
@@ -309,7 +309,7 @@ theorem adjoint_eq_sum {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ 
     ContinuousLinearMap.adjoint B =
       ∑ i, innerSmulRightR (stdOrthonormalBasis ℂ V i) (B (stdOrthonormalBasis ℂ V i)) := by
   ext w
-  rw [ContinuousLinearMap.sum_apply]
+  rw [sum_apply]
   simp only [innerSmulRightR_apply, ContinuousLinearMap.smulRight_apply, innerSL_apply_apply]
   rw [← (stdOrthonormalBasis ℂ V).sum_repr' (ContinuousLinearMap.adjoint B w)]
   refine Finset.sum_congr rfl fun i _ => ?_
@@ -424,7 +424,7 @@ theorem inner_cls_lTr {n : ℕ} [MeasurableSpace (G n)] [BorelSpace (G n)] (μ :
 theorem isSec_lTr {n : ℕ} {E : KMod n} (x : G n) {f : Mat n → E.V} (hf : IsSec E f) : IsSec E (lTr x f) := by
   intro g hg k
   have hxg : x.val * g ∈ GLs n := by
-    simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at hg ⊢
+    simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at hg ⊢
     exact mul_ne_zero (Matrix.isUnits_det_units x).ne_zero hg
   have := hf _ hxg k
   simpa only [lTr, mul_assoc] using this
@@ -569,7 +569,7 @@ theorem rowMatrix_holds : RowMatrix := by
   have hA : (fun y => (∑ i, (innerSL ℂ (e i)).smulRight (f i y)) v) =
       fun y => ∑ i ∈ Finset.univ, (⟪e i, v⟫_ℂ) • f i y := by
     funext y
-    simp [ContinuousLinearMap.sum_apply]
+    simp [sum_apply]
   obtain ⟨h1, h2, h3⟩ := RowLin.sum_sec μ E hLg hU hR hCl hOps f₀ hf₀.1 f (fun i => (hf i).1)
     (fun i => (hf i).2.1) (fun i => ⟪e i, v⟫_ℂ) Finset.univ
   show Row μ E F h v (fun y => (∑ i, (innerSL ℂ (e i)).smulRight (f i y)) v)
@@ -621,8 +621,8 @@ lemma sr_inner_cls {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V : T
     (hg : MemLp (fun y : G n => g y.val) 2 μ) :
     Integrable (fun y : G n => ⟪f y.val, g y.val⟫_ℂ) μ ∧
       ⟪cls μ f, cls μ g⟫_ℂ = ∫ y : G n, ⟪f y.val, g y.val⟫_ℂ ∂μ := by
-  have e1 : cls μ f = hf.toLp _ := dif_pos hf
-  have e2 : cls μ g = hg.toLp _ := dif_pos hg
+  have e1 : cls μ f = hf.toLp _ := dite_eq_left hf
+  have e2 : cls μ g = hg.toLp _ := dite_eq_left hg
   have hae : (fun y : G n => ⟪(hf.toLp _ : Lp V 2 μ) y, (hg.toLp _ : Lp V 2 μ) y⟫_ℂ) =ᵐ[μ]
       fun y : G n => ⟪f y.val, g y.val⟫_ℂ := by
     filter_upwards [hf.coeFn_toLp, hg.coeFn_toLp] with y a b
@@ -830,7 +830,7 @@ theorem isOpen_GLs (n : ℕ) : IsOpen (GLs n) := by
   exact isOpen_ne.preimage hc
 
 theorem mul_mem {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
 theorem val_mem (x : G n) : x.val ∈ GLs n := by
@@ -1085,9 +1085,9 @@ open PositivityTheory.RgBcC PositivityTheory.RgBcC.Fc
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem secondCountable_G (n : ℕ) : SecondCountableTopology (G n) := by
-  haveI : SecondCountableTopology (Mat n) :=
+  have : SecondCountableTopology (Mat n) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Mat n)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Mat n)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
   exact (Units.isEmbedding_embedProduct (M := Mat n)).secondCountableTopology
 
@@ -1100,7 +1100,7 @@ theorem continuous_lg (hL : LgFacts) {n : ℕ} : Continuous (fun y : G n => lg y
   exact h1.comp_continuous Units.continuous_val val_mem_GLs
 
 theorem locallyCompact_G (hL : LgFacts) (n : ℕ) : LocallyCompactSpace (G n) := by
-  haveI : WeaklyLocallyCompactSpace (G n) := ⟨fun x => ⟨{y : G n | lg y.val ≤ lg x.val + 1},
+  have : WeaklyLocallyCompactSpace (G n) := ⟨fun x => ⟨{y : G n | lg y.val ≤ lg x.val + 1},
     (hL n).2.2.2.2.1 _, by
       have : {y : G n | lg y.val < lg x.val + 1} ∈ 𝓝 x :=
         (isOpen_lt (continuous_lg hL) continuous_const).mem_nhds (by simp)
@@ -1110,7 +1110,7 @@ theorem locallyCompact_G (hL : LgFacts) (n : ℕ) : LocallyCompactSpace (G n) :=
 theorem sigmaCompact_G (hL : LgFacts) (n : ℕ) : SigmaCompactSpace (G n) := by
   refine ⟨⟨fun k : ℕ => {y : G n | lg y.val ≤ k}, fun k => (hL n).2.2.2.2.1 _, ?_⟩⟩
   ext y
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
   obtain ⟨k, hk⟩ := exists_nat_ge (lg y.val)
   exact ⟨k, hk⟩
 
@@ -1119,9 +1119,9 @@ theorem cls_inner {n : ℕ} [MeasurableSpace (G n)] (μ : Measure (G n)) {V : Ty
     (hf' : MemLp (fun y : G n => f' y.val) 2 μ) :
     ⟪cls μ f, cls μ f'⟫_ℂ = ∫ y : G n, ⟪f y.val, f' y.val⟫_ℂ ∂μ := by
   have e1 : cls μ f = hf.toLp _ := by
-    unfold cls; exact dif_pos hf
+    unfold cls; exact dite_eq_left hf
   have e2 : cls μ f' = hf'.toLp _ := by
-    unfold cls; exact dif_pos hf'
+    unfold cls; exact dite_eq_left hf'
   rw [e1, e2, L2.inner_def]
   apply integral_congr_ae
   filter_upwards [hf.coeFn_toLp, hf'.coeFn_toLp] with y h1 h2
@@ -1168,9 +1168,9 @@ theorem test_fubini {n : ℕ} [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : M
     {W : ℝ → G n → V} (hW : Continuous (Function.uncurry W)) {Ψ : G n → V} (hΨ : Continuous Ψ)
     (hΨc : HasCompactSupport Ψ) {γ : ℝ → ℂ} (hγ : Continuous γ) (hγc : HasCompactSupport γ) :
     ∫ y, ⟪Ψ y, ∫ t, γ t • W t y⟫_ℂ ∂μ = ∫ t, γ t * ∫ y, ⟪Ψ y, W t y⟫_ℂ ∂μ := by
-  haveI := secondCountable_G n
-  haveI := sigmaCompact_G hLg n
-  haveI : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
+  have := secondCountable_G n
+  have := sigmaCompact_G hLg n
+  have : SigmaFinite μ := Measure.IsHaarMeasure.sigmaFinite μ
   have h1 : ∀ y, ⟪Ψ y, ∫ t, γ t • W t y⟫_ℂ = ∫ t, γ t * ⟪Ψ y, W t y⟫_ℂ := by
     intro y
     have hc : Continuous (fun t => W t y) := hW.comp (by fun_prop : Continuous fun t : ℝ => (t, y))
@@ -1199,8 +1199,8 @@ theorem waveInt : WaveInt := by
   intro n _ _ μ _ E _ Ω T F c hS g T₀ hg N b U hN hW hU f' hf' hcls x hx
   obtain ⟨hLg, -, -, -, -, -, -, hCS, -, hPW, -⟩ := hS
   have hFc : Fcurve := hCS.2.2.1
-  haveI := secondCountable_G n
-  haveI := locallyCompact_G hLg n
+  have := secondCountable_G n
+  have := locallyCompact_G hLg n
   obtain ⟨hγ, hγc⟩ := bump_complex hg
   set γ : ℝ → ℂ := fun t => (g t : ℂ) with hγdef
 
@@ -1344,7 +1344,7 @@ theorem coreRep (E : KMod n) [CompleteSpace E.V] {Ω : Msob μ E.V →ₗ[ℂ] M
   have hstep : ∀ N j t, j + 2 ≤ 4 * N →
       F.Φ (toC0 (wv c (N + 1) j t)) (cls μ (Bn f (N + 1))) = F.Φ (toC0 (wv c N j t)) (cls μ (Bn f N)) := by
     intro N j t hj
-    rw [wv_step hW F (hC0 N j t hj) (hC0 (N + 1) j t (by omega)), ContinuousLinearMap.mul_apply]
+    rw [wv_step hW F (hC0 N j t hj) (hC0 (N + 1) j t (by omega)), mul_apply_eq_comp]
     exact congrArg _ (T_B hC hO hL hU hR hΩ hT (hbS N))
   have hpres := fun g (N : ℕ) => pres hC hO hL hU hR hSG hP F hrep hΩ g (hbS N)
   have hex : ∀ (j : ℕ) (t : ℝ), ∃ u, Sob μ u ∧ IsSec E u ∧
@@ -1370,7 +1370,7 @@ theorem coreRep (E : KMod n) [CompleteSpace E.V] {Ω : Msob μ E.V →ₗ[ℂ] M
     exact hd
   obtain ⟨hjoint, hder⟩ := hCJ n μ E.V U hL hR hSG hUS hd
   have hT2 : (T ^ 2) (cls μ (Bn f 2)) = cls μ f := by
-    rw [pow_two, ContinuousLinearMap.mul_apply]
+    rw [pow_two, mul_apply_eq_comp]
     have a1 : T (cls μ (Bn f 2)) = cls μ (Bn f 1) := T_B hC hO hL hU hR hΩ hT (hbS 1)
     have a2 : T (cls μ (Bn f 1)) = cls μ (Bn f 0) := T_B hC hO hL hU hR hΩ hT (hbS 0)
     rw [a1, a2]
@@ -1420,13 +1420,13 @@ theorem coreRep (E : KMod n) [CompleteSpace E.V] {Ω : Msob μ E.V →ₗ[ℂ] M
         congr 1
         rw [one_mul, pow_two (1 + y ^ 2), mul_inv]
     have hr : F.Φ (toC0 rf * toC0 rf) (cls μ (Bn f 2)) = cls μ f := by
-      rw [F.map_mul, F.res (toC0 rf) (fun y => by rw [coe_toC0 resolvent_function_vanishes_at_infinity]; rfl), ContinuousLinearMap.mul_apply]
+      rw [F.map_mul, F.res (toC0 rf) (fun y => by rw [coe_toC0 resolvent_function_vanishes_at_infinity]; rfl), mul_apply_eq_comp]
       have a1 : T (cls μ (Bn f 2)) = cls μ (Bn f 1) := T_B hC hO hL hU hR hΩ hT (hbS 1)
       have a2 : T (cls μ (Bn f 1)) = cls μ (Bn f 0) := T_B hC hO hL hU hR hΩ hT (hbS 0)
       rw [a1, a2]
       rfl
     have hw : F.Φ (toC0 (wv c 2 0 0)) (cls μ (Bn f 2)) = cls μ f := by
-      rw [map_sub, ContinuousLinearMap.sub_apply, hr, sub_eq_zero] at hcut
+      rw [map_sub, sub_apply, hr, sub_eq_zero] at hcut
       exact hcut.symm
     exact cls_eq_of_sob hC hU (hUS 0 0) (hbS 0) ((hUc 0 0).trans hw)
 
@@ -1589,7 +1589,7 @@ theorem adj_rho {n : ℕ} (E : KMod n) [CompleteSpace E.V] (k : Matrix.unitaryGr
 theorem kerCore_of (hFR : RowExists) (hRM : RowMatrix) (hAS : AdjSmooth) (hRL : RowLeft) (hAF : ActFormula)
     (hWR : WaveRep) (hWU : WaveUniq) (hPR : PhiRes) (hWI : WaveInt) (hSR : SupportRow) : KerCore := by
   intro n _ _ μ _ E g T₀ hb hLg hUn hRC hSG hAE hWS hWC hCS hSO hPW
-  haveI : CompleteSpace E.V := FiniteDimensional.complete ℂ E.V
+  have : CompleteSpace E.V := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨hAbsFC, hAbsCut, hFc, hWv, hCls, hSobOps, hCptSob, hSB, hPres, hConc, hCJ, hFr, hOmF, hIbp, hDD⟩ := id hCS
   obtain ⟨hMrep, Ω, T, hDense, hSym, hEx, hLeft, hOm⟩ :=
     hConc n μ E.V hLg hUn hRC hSG hPres hFr hCls hSobOps hCptSob hOmF hIbp hDD
@@ -1627,7 +1627,7 @@ theorem kerCore_of (hFR : RowExists) (hRM : RowMatrix) (hAS : AdjSmooth) (hRL : 
     intro k y hy
     have hk : (k.1 : Mat n).det ≠ 0 :=
       (Matrix.isUnit_det_of_right_inverse (Matrix.mem_unitaryGroup_iff.1 k.2)).ne_zero
-    simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at hy ⊢
+    simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at hy ⊢
     exact mul_ne_zero hk hy
   refine ⟨fun y => ContinuousLinearMap.adjoint (A y), hAS _ _ A _ fun v => (hA v).1.1, ⟨R, ?_⟩, ?_, ?_⟩
   · intro y hy hl

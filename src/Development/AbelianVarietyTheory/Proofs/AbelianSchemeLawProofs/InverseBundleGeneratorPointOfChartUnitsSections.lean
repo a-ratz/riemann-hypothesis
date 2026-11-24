@@ -111,7 +111,7 @@ theorem isRepresentable_of_charts (F : Scheme.{0}ᵒᵖ ⥤ Type)
       refine ⟨(Sigma.ι (fun j => yoneda.obj (X j)) j).app _ c, ?_⟩
       refine Eq.trans ?_ hc
       exact congrArg (fun φ : yoneda.obj (X j) ⟶ F'.1 => φ.app (op (W j Z y).toScheme) c)
-        (Sigma.ι_desc f j)
+        (Sigma.ι_comp_desc f j)
   exact Scheme.LocalRepresentability.isRepresentable hf
 
 theorem exists_torus (S : Scheme.{0}) (κ : Type) :

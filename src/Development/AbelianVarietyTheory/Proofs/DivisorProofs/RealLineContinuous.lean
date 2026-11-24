@@ -58,9 +58,9 @@ theorem continuous_of_isRealLine : ∀ (F E : Type) [Field F] [NumberField F] [F
       funext t i j; simp only [Function.comp_apply, GlobalTheory.Orb.matCoord, hy t]
     rw [e]
     have hexp : Continuous fun t : ℝ => NormedSpace.exp (t • Z) := by
-      letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-      letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-      letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
+      let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+      let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+      let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
       exact NormedSpace.exp_continuous.comp (continuous_id.smul continuous_const)
     exact continuous_pi fun i => continuous_pi fun j => (continuous_apply j).comp ((continuous_apply i).comp hexp)
   have : γ = fun t => embArch σ J w (y t) := funext hγ

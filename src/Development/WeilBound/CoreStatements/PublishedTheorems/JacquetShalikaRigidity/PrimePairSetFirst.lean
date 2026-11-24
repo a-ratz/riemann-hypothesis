@@ -129,7 +129,7 @@ theorem colT_rat (hψ : StdPsi ψ) (m : ℕ) (hmk : m + 1 < k) (f : GA E k → �
   · intro s _ hs
     have h0 : eLast (E := E) k (m + 1) s = 0 := by
       simp only [eLast]
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       apply hs
       have h2 := s.2.2
@@ -191,8 +191,8 @@ theorem p1_holds : N0 → P0 → P1 := by
     have ht := t.2.1
     simp only [eLast, Matrix.one_apply]
     by_cases h : (t.1.1 : ℕ) = m
-    · rw [if_pos (Fin.ext h.symm), if_pos (by omega)]
-    · rw [if_neg (fun e => h (congrArg Fin.val e).symm), if_neg (by omega)]
+    · rw [ite_eq_left (Fin.ext h.symm), ite_eq_left (by omega)]
+    · rw [ite_eq_right (fun e => h (congrArg Fin.val e).symm), ite_eq_right (by omega)]
   · intro j hj y g
     rcases Nat.lt_or_ge (m + 1) j with h1 | h1
     · exact primePairSetFirst.colT_law m f j h1 (hf.law j h1) y g

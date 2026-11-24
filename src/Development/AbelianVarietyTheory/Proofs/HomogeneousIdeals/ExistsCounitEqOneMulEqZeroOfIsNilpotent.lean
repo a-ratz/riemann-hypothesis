@@ -224,7 +224,7 @@ theorem mem_ker_counit_pow_of_isNilpotent [CharZero k] [Bialgebra k H] [Algebra.
     (n : ℕ) {y : H} (hy : IsNilpotent y) : y ∈ RingHom.ker (counitAlgHom k H) ^ n := by
   obtain ⟨m, x, D, hx, hD⟩ := exists_derivations_sum_sub_mem_sq (k := k) (H := H)
   set I := RingHom.ker (counitAlgHom k H) with hI
-  letI : Algebra ℚ H := ((algebraMap k H).comp (algebraMap ℚ k)).toAlgebra
+  let : Algebra ℚ H := ((algebraMap k H).comp (algebraMap ℚ k)).toAlgebra
   let E : Derivation k H H := ∑ i, x i • D i
   have hE : ∀ y, E y = ∑ i, x i * D i y := fun y ↦ by
     have := congr($(map_sum (Derivation.coeFnAddMonoidHom (R := k) (A := H) (M := H))
@@ -306,7 +306,7 @@ theorem isReduced_of_hopfAlgebra_of_isAlgClosed [IsAlgClosed k] [Algebra.FiniteT
     have : (1 : H) ∈ (Ideal.span {y}).annihilator := h ▸ Submodule.mem_top
     exact hne (by simpa using Submodule.mem_annihilator.1 this y (Ideal.mem_span_singleton_self y))
   obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal _ hA
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   have : Module.Finite k (H ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (H ⧸ m)
   let e : k ≃ₐ[k] H ⧸ m :=
     .ofBijective (Algebra.ofId k _) IsAlgClosed.algebraMap_bijective_of_isIntegral
@@ -349,8 +349,8 @@ variable {k : Type u} [Field k] [CharZero k] {G : Scheme.{u}} (f : G ⟶ Spec (.
   [GrpObj (Over.mk f)]
 
 theorem isReduced_of_grpObj_of_isAffine [IsAffine G] [LocallyOfFiniteType f] : IsReduced G := by
-  letI : G.Over (Spec (.of k)) := ⟨f⟩
-  letI : GrpObj (G.asOver (Spec (.of k))) := ‹GrpObj (Over.mk f)›
+  let : G.Over (Spec (.of k)) := ⟨f⟩
+  let : GrpObj (G.asOver (Spec (.of k))) := ‹GrpObj (Over.mk f)›
   obtain ⟨_, h⟩ := exists_hopfAlgebra_sections (.of k) G
   replace h : Spec.map (CommRingCat.ofHom (algebraMap k Γ(G, ⊤))) = G.isoSpec.inv ≫ f := h
   have : Algebra.FiniteType k Γ(G, ⊤) := by
@@ -373,7 +373,7 @@ theorem smooth_of_grpObj_of_isAffine [IsAffine G] [LocallyOfFiniteType f] : Smoo
 theorem smooth_of_hopfAlgebra (k H : Type u) [Field k] [CharZero k] [CommRing H] [HopfAlgebra k H]
     [Algebra.FiniteType k H] : Algebra.Smooth k H := by
   let f : Spec (.of H) ⟶ Spec (.of k) := Spec.map (CommRingCat.ofHom (algebraMap k H))
-  letI : GrpObj (Over.mk f) :=
+  let : GrpObj (Over.mk f) :=
     instGrpObjSpecAsOverSpec (R := CommRingCat.of k) (A := CommRingCat.of H)
   have : LocallyOfFiniteType f :=
     locallyOfFiniteType_specOverSpec (R := CommRingCat.of k) (A := CommRingCat.of H)

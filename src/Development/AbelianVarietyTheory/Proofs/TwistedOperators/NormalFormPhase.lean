@@ -74,7 +74,7 @@ theorem exists_field_roots {n : ℕ} (hn : 0 < n) : ∃ M : IntermediateField �
   set S : Set ℂ := {z | z ^ n = 1} with hSdef
   have hS : S = ((Polynomial.nthRoots n (1 : ℂ)).toFinset : Set ℂ) := by
     ext z; simp [S, Polynomial.mem_nthRoots hn]
-  haveI : Finite S := by rw [hS]; infer_instance
+  have : Finite S := by rw [hS]; infer_instance
   have hint : ∀ z ∈ S, IsIntegral ℚ z := fun z hz =>
     ⟨Polynomial.X ^ n - Polynomial.C 1, Polynomial.monic_X_pow_sub_C _ hn.ne', by
       simp [Polynomial.eval₂_sub, show z ^ n = 1 from hz]⟩
@@ -87,7 +87,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem val_resCard_le {ϖ : kˣ} (hϖ : IsUnif ϖ) : valuation k ((Nat.card 𝓀[k] : ℕ) : k) ≤ valuation k (ϖ : k) := by
   classical
-  letI := Fintype.ofFinite 𝓀[k]
+  let := Fintype.ofFinite 𝓀[k]
   have h0 : IsLocalRing.residue 𝒪[k] ((Nat.card 𝓀[k] : ℕ) : 𝒪[k]) = 0 := by
     rw [map_natCast, Nat.card_eq_fintype_card]
     exact FiniteField.cast_card_eq_zero _
@@ -105,7 +105,7 @@ theorem exists_pow_eq_one_of_le {ψ : AddChar k Circle} {ϖ : kˣ} (hψ : HasCon
     rw [map_mul, Nat.cast_pow, map_pow]
     calc valuation k ((Nat.card 𝓀[k] : ℕ) : k) ^ N * valuation k z
         ≤ valuation k (ϖ : k) ^ N * valuation k (((ϖ ^ N)⁻¹ : kˣ) : k) :=
-          mul_le_mul' (pow_le_pow_left₀ zero_le' (val_resCard_le hϖ) N) hz
+          mul_le_mul' (pow_le_pow_left₀ zero_le (val_resCard_le hϖ) N) hz
       _ = 1 := by
           rw [Units.val_inv_eq_inv_val, Units.val_pow_eq_pow_val, map_inv₀, map_pow]
           exact mul_inv_cancel₀ (pow_ne_zero _ (by simp))
@@ -200,16 +200,16 @@ theorem phases_core {D : D7} {T : Type} [Finite T] {L : LevCh D T} {sc : Consts}
     intro t Φ β w
     have hg := (Good.locGrid_isGood hL G W t hde (hc t)).1 w.1 w.2
     have h00 := hg.square 0 (by change 0 < D.R.m; omega) 0 (by change 0 < D.R.m; omega)
-    haveI := (isUnitVol_unitVol w.1).1
+    have := (isUnitVol_unitVol w.1).1
     obtain ⟨N, hN⟩ := phase_bounded (locGrid G t w.1) one_le_sLen (psiAt W w.1) (unitVol w.1) (unifAt w.1) (depthAt G w.1)
       (Tflip W S.B t Φ w.1) (keepAt G w.1) ((repsAt G t w.1).elt (β w)) hm h00.unif h00.cond
       (isTensor_Tflip hL W S.B t Φ hde (hc t) w.2)
     obtain ⟨n, hn, hpow⟩ := exists_pow_eq_one_of_le h00.cond h00.unif N
     exact ⟨n, hn, fun x y e h1 h2 => hpow _ (hN x y e h1 h2)⟩
   choose nf hnf hpow using hloc
-  haveI : ∀ t Φ, Finite (S.supp t Φ) := fun t Φ => ((S.sumOK_flat_fin_ex hL t Φ hde (hc t)).2.1).to_subtype
-  haveI : Finite G.Datum := G.finite_datum (GlobalTheory.DiagLiftFix.isLattice_of_isFrame (hL.βY 0 (by omega)).choose_spec.1).fg
-  letI : Fintype (Σ t : T, Σ Φ : G.Datum, (S.supp t Φ) × locPl G t) := Fintype.ofFinite _
+  have : ∀ t Φ, Finite (S.supp t Φ) := fun t Φ => ((S.sumOK_flat_fin_ex hL t Φ hde (hc t)).2.1).to_subtype
+  have : Finite G.Datum := G.finite_datum (GlobalTheory.DiagLiftFix.isLattice_of_isFrame (hL.βY 0 (by omega)).choose_spec.1).fg
+  let : Fintype (Σ t : T, Σ Φ : G.Datum, (S.supp t Φ) × locPl G t) := Fintype.ofFinite _
   set n := ∏ i : (Σ t : T, Σ Φ : G.Datum, (S.supp t Φ) × locPl G t), nf i.1 i.2.1 i.2.2.1.1 i.2.2.2 with hn
   have hn0 : 0 < n := Finset.prod_pos fun i _ => hnf _ _ _ _
   obtain ⟨M, hM, hMr⟩ := exists_field_roots hn0

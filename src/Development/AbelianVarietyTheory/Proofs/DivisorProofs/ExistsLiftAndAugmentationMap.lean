@@ -81,7 +81,7 @@ theorem PDPoly.exists_lift_and_aug : ∀ (B : Type) [CommRing B] (Q : PDPoly B),
     ∃ ε : Q.P →ₐ[B] B, ∀ p, p ∈ Q.aug ↔ ε p = 0 := by
   intro B _ Q
   refine ⟨fun C _ f c h0 hm ↦ ?_, ?_⟩
-  · letI := f.toAlgebra
+  · let := f.toAlgebra
     exact ⟨(Q.liftAlg c h0 hm).toRingHom, fun b ↦ (Q.liftAlg c h0 hm).commutes b,
       fun n ↦ Q.liftAlg_e c h0 hm n⟩
   · let d : ℕ → B := fun n ↦ if n = 0 then 1 else 0

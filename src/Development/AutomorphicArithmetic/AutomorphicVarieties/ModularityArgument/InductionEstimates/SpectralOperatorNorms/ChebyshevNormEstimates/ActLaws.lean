@@ -107,8 +107,8 @@ private theorem KK_add {A A' : L V →L[ℂ] L V} {s s'} (h : KK A s) (h' : KK A
   have h : Ker fun t => κ t + κ' t := ⟨hk.1.add hk'.1, hk.2.add hk'.2⟩
   refine ⟨_, h, ?_, ?_⟩
   · ext1 x
-    rw [ContinuousLinearMap.add_apply, conv_eq h, conv_eq hk, conv_eq hk', ← integral_add (conv_int hk x) (conv_int hk' x)]
-    simp only [map_add (f := _), ContinuousLinearMap.add_apply]
+    rw [add_apply, conv_eq h, conv_eq hk, conv_eq hk', ← integral_add (conv_int hk x) (conv_int hk' x)]
+    simp only [map_add (f := _), add_apply]
   · ext1 z
     simp only [symb, smul_add]
     rw [integral_add (symb_int hk z) (symb_int hk' z)]
@@ -188,7 +188,7 @@ private theorem KK_mul {A A' : L V →L[ℂ] L V} {s s'} (h : KK A s) (h' : KK A
     refine integral_congr_ae (Eventually.of_forall fun t => ?_)
     simp only [convolution_def, ← integral_smul]
     refine integral_congr_ae (Eventually.of_forall fun r => ?_)
-    simp only [map_smul, ContinuousLinearMap.smul_apply, smul_smul, ← Complex.exp_add]
+    simp only [map_smul, smul_apply, smul_smul, ← Complex.exp_add]
     congr 2
     push_cast; ring
 
@@ -198,7 +198,7 @@ private def syD (u : ℝ →₀ (V →L[ℂ] V)) (z : ℂ) : V →L[ℂ] V := u.
 
 private theorem opD_apply (u : ℝ →₀ (V →L[ℂ] V)) (x : L V) :
     opD u x = u.sum fun t c => c.compLpL 2 volume (sh V t x) := by
-  simp only [opD, Finsupp.sum, ContinuousLinearMap.sum_apply]; rfl
+  simp only [opD, Finsupp.sum, sum_apply]; rfl
 
 private theorem opD_add (u u' : ℝ →₀ (V →L[ℂ] V)) : opD (u + u') = opD u + opD u' :=
   Finsupp.sum_add_index' (fun _ => by simp) fun _ _ _ => by rw [map_add (f := _), ContinuousLinearMap.add_comp]
@@ -270,7 +270,7 @@ private theorem RR_mul {A A' : L V →L[ℂ] L V} {s s'} (h : RR A s) (h' : RR A
 private theorem RR_const (c : ℂ) : RR (c • (1 : L V →L[ℂ] L V)) fun _ => c • 1 := by
   have h := RR_single (c • (1 : V →L[ℂ] V)) 0
   have e : cL (c • (1 : V →L[ℂ] V)) ∘L sh V 0 = c • 1 := ContinuousLinearMap.ext fun x => by
-    rw [ContinuousLinearMap.comp_apply, map_smul, ContinuousLinearMap.smul_apply, cL_one, show sh V 0 x = x from (shF V).zero x]
+    rw [ContinuousLinearMap.comp_apply, map_smul, smul_apply, cL_one, show sh V 0 x = x from (shF V).zero x]
     rfl
   rw [e] at h
   simpa using h
@@ -302,9 +302,9 @@ private theorem act_iff (J : L V →ₗᵢ[ℂ] H) (Y : H →L[ℂ] H) (s : ℂ 
   constructor
   · rintro ⟨u, κ, hk, h1, h2⟩
     exact ⟨_, ⟨u, _, _, ⟨κ, hk, rfl, rfl⟩, rfl, funext h2⟩, fun x => by
-      rw [h1, ContinuousLinearMap.add_apply, opD_apply]⟩
+      rw [h1, add_apply, opD_apply]⟩
   · rintro ⟨_, ⟨u, _, _, ⟨κ, hk, rfl, rfl⟩, rfl, rfl⟩, h⟩
-    exact ⟨u, κ, hk, fun x => by rw [h, ContinuousLinearMap.add_apply, opD_apply], fun z => rfl⟩
+    exact ⟨u, κ, hk, fun x => by rw [h, add_apply, opD_apply], fun z => rfl⟩
 
 private theorem conv_iff (J : L V →ₗᵢ[ℂ] H) (Y : H →L[ℂ] H) {β : ℝ → V →L[ℂ] V} (hk : Ker β) :
     Conv J J Y β ↔ ∀ x, Y (J x) = J (conv β x) := by

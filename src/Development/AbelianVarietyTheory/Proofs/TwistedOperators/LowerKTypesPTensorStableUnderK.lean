@@ -72,9 +72,9 @@ theorem vmstab_entry_zero {ε : Fin n → Bool} {k : Matrix (Fin n) (Fin n) ℂ}
   have h1 := congrFun (congrFun h a) b
   simp only [Formalism.REAL.Jm, Matrix.mul_diagonal, Matrix.diagonal_mul] at h1
   cases ha : ε a <;> cases hb : ε b <;> simp only [ha, hb, ne_eq, not_true_eq_false] at hab
-  · simp only [ha, hb, Bool.false_eq_true, if_false, if_true] at h1
+  · simp only [ha, hb, Bool.false_eq_true, ite_false, ite_true] at h1
     linear_combination h1 / 2
-  · simp only [ha, hb, Bool.false_eq_true, if_false, if_true] at h1
+  · simp only [ha, hb, Bool.false_eq_true, ite_false, ite_true] at h1
     linear_combination -h1 / 2
 
 theorem vmstab_inK_ct {ε : Fin n → Bool} {Y : Matrix (Fin n) (Fin n) ℂ} (h : Formalism.REAL.inK ε Y) : Yᴴ = -Y := by
@@ -179,7 +179,7 @@ theorem vmAct_mul (τ : Matrix (Fin n) (Fin n) ℂ → (W →L[ℂ] W)) (k l : M
     vmAct τ (k * l) G = vmAct τ l (vmAct τ k G) := by
   ext q
 
-  simp only [vmAct_apply, Matrix.conjTranspose_mul, h, ContinuousLinearMap.mul_apply, map_sum, map_smul,
+  simp only [vmAct_apply, Matrix.conjTranspose_mul, h, mul_apply_eq_comp, map_sum, map_smul,
   Finset.smul_sum, smul_smul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun p _ => ?_
@@ -301,7 +301,7 @@ theorem vmstab_Vminus_stable (ε : Fin n → Bool) (E : Fin n → Fin n → Modu
 private theorem mem_submodule_of_hasDerivAt_linear_of_invariant {P : Type*} [NormedAddCommGroup P] [NormedSpace ℂ P] [FiniteDimensional ℂ P]
     (S : Submodule ℂ P) (A : P →ₗ[ℂ] P) (hA : ∀ x ∈ S, A x ∈ S) (x : ℝ → P)
     (hx : ∀ t, HasDerivAt x (A (x t)) t) (h0 : x 0 ∈ S) (t : ℝ) : x t ∈ S := by
-  haveI : IsClosed (S : Set P) := S.closed_of_finiteDimensional
+  have : IsClosed (S : Set P) := S.isClosed_of_finiteDimensional
   have hA' : S ≤ S.comap A := fun y hy => hA y hy
   let B : (P ⧸ S) →L[ℂ] (P ⧸ S) := LinearMap.toContinuousLinearMap (S.mapQ S A hA')
   have hf : ∀ s, HasDerivAt (fun s => S.mkQL (x s)) (B (S.mkQL (x s))) s := by
@@ -312,7 +312,7 @@ private theorem mem_submodule_of_hasDerivAt_linear_of_invariant {P : Type*} [Nor
     exact this
   have hu := ODE_solution_unique_univ (v := fun _ => (B : P ⧸ S → P ⧸ S)) (s := fun _ => Set.univ)
     (K := ‖B‖₊) (t₀ := 0) (f := fun s => S.mkQL (x s)) (g := fun _ => 0)
-    (fun _ => B.lipschitz.lipschitzOnWith) (fun s => ⟨hf s, trivial⟩)
+    (fun _ => B.lipschitzWith.lipschitzOnWith) (fun s => ⟨hf s, trivial⟩)
     (fun s => ⟨by simpa using hasDerivAt_const s (0 : P ⧸ S), trivial⟩)
     (by simpa using h0)
   have ht := congrFun hu t
@@ -412,7 +412,7 @@ theorem vminus_stable_under_K : ∀ (V W : Type) [NormedAddCommGroup V] [InnerPr
     rw [hfun]
     refine h3.congr_deriv ?_
     simp
-  haveI := hfd
+  have := hfd
   let S : Submodule ℂ (PiLp 2 (fun _ : Fin n × Fin n => W)) := (Vminus ε E Λ u).comap (isometryArrayLinearMap n j)
   have hA : ∀ x ∈ S, A x ∈ S := by
     intro x hx

@@ -490,7 +490,7 @@ theorem colLam_read_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.Mem.
   obtain ⟨A, -, hA'⟩ := GlobalTheory.FamTrace.TraceFwd.exists_red I hA.tr.ok
     ((TC.spaces_in_coordinates I hA.tr.ok hP l Z).2.2.2 0 (Nat.zero_le _)).1
     ((W.R.T.cols.forms u).cls 0 (Nat.zero_le _) (Or.inl rfl)).lev hR ⟨_, hy⟩ (a.pl i).1 hPP
-  letI := (a.G i).fld; letI := (a.G i).val; letI := (a.G i).top; letI := (a.G i).loc
+  let := (a.G i).fld; let := (a.G i).val; let := (a.G i).top; let := (a.G i).loc
   obtain ⟨z, hz, hz'⟩ := exists_close (a.G i).q ((ha.tie row col).2.idem i).1 ((I.rec7 l Z).sp.X 0)
     (Formalism.L2.Forms.rankN (I.rec7 l Z) 0 (Nat.zero_le _)) (show B.R.N 0 = B.R.k by simp [Ranks.N]) _
     ((ha.stdG i).1 0 (Nat.zero_le _)) hκy hA' g hg
@@ -550,7 +550,7 @@ open GlobalTheory.LocMod.PinEx GlobalTheory.IndefiniteRowSideFullHecke.FramePosi
 theorem chr_unif_congr {k : Type} [Field k] [ValuativeRel k] {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) {t : kˣ} (ht : IsUnif t)
     {p y : k} (hp : valuation k ((t : k) - p) < valuation k (t : k)) (hy : valuation k y ≤ 1) :
     ψ (((t⁻¹ : kˣ) : k) * y) = ψ (p⁻¹ * y) := by
-  have tp : 0 < valuation k (t : k) := zero_lt_iff.2 ((map_ne_zero _).2 t.ne_zero)
+  have tp : 0 < valuation k (t : k) := pos_iff_ne_zero.2 ((map_ne_zero _).2 t.ne_zero)
   have hpv : valuation k p = valuation k (t : k) := by
     refine Valuation.map_eq_of_sub_lt _ ?_
     rwa [Valuation.map_sub_swap]
@@ -1074,7 +1074,7 @@ theorem trace_chi_col_factor_alt : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTh
     fun j => {v | ((_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.g j : 𝓞 (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.F) ∈ v.asIdeal} with hS
   have hrange : S 0 ∪ S 1 = Set.range w := by
     ext v
-    simp only [Set.mem_union, hS, Set.mem_setOf_eq, Set.mem_range]
+    simp only [Set.mem_union, hS, Set.mem_ofPred_eq, Set.mem_range]
     constructor
     · intro hv
       have hv' : (((_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.g 0 * (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.g 1 : ℕ) : 𝓞 (_root_.GlobalTheory.Mem.assemble _ _ Z.W Z.V Z.S Z.N Z.G).host.F) ∈ v.asIdeal := (mem_type_prod_iff v).2 (Fin.exists_fin_two.2 hv)
@@ -1279,16 +1279,16 @@ theorem placedP_of_allTrue : ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.M
       · exact (X.piT u).2
       · exact isIntegral_zero
     · have h0 : TC.z0 X u ⟨B.R.N B.R.m - 1, Nat.sub_lt hpos one_pos⟩ = (X.piT u : B.host.E) :=
-        if_pos (Nat.sub_add_cancel hpos)
+        ite_eq_left (Nat.sub_add_cancel hpos)
       have h1 := (hT'.z0 (Fin.cast (Formalism.L2.Forms.rankN (I.rec7 l Z) _ le_rfl).symm
         ⟨B.R.N B.R.m - 1, Nat.sub_lt hpos one_pos⟩)).trans h0
       have h2 : (X.piT u : B.host.E) * B.host.conj (X.piT u : B.host.E) = (((B.T u : ℕ) : ℤ) : B.host.E) := by
         rw [Int.cast_natCast]; exact X.piT_norm u
       exact (congrArg (fun t : B.host.E => t * B.host.conj (X.piT u : B.host.E)) h1).trans h2
-  letI : Field a.k := a.fld
-  letI : ValuativeRel a.k := a.val
-  letI : TopologicalSpace a.k := a.top
-  letI : IsNonarchimedeanLocalField a.k := a.loc
+  let : Field a.k := a.fld
+  let : ValuativeRel a.k := a.val
+  let : TopologicalSpace a.k := a.top
+  let : IsNonarchimedeanLocalField a.k := a.loc
   constructor
   · exact ha.bot.1
   · exact ha.bot.2.2.1

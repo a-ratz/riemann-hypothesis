@@ -92,7 +92,7 @@ theorem pow_bracket (e : Matrix (Fin n) (Fin n) A)
       rw [e1, he a b c x, ih a b x d, sub_mul, mul_sub, ite_mul, ite_mul, mul_ite, mul_ite, zero_mul, mul_zero]
       abel
     rw [hp c d, Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib, Finset.sum_congr rfl fun x _ => key x]
-    simp only [Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     by_cases h2 : b = c <;> by_cases h3 : a = d <;> simp [h2, h3, hp]
 
 theorem pow_central (e : Matrix (Fin n) (Fin n) A)
@@ -433,7 +433,7 @@ section Main
 variable {V V' : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] [NormedAddCommGroup V'] [NormedSpace ℂ V']
 
 theorem mul_mem {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
 theorem rtr_smooth (h : Mat n) (hh : h ∈ GLs n) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f (GLs n)) :

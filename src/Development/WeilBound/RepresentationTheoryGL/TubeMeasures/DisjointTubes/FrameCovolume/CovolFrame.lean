@@ -119,13 +119,13 @@ namespace GlobalTheory.CovTop.VolUp
 
 theorem countable_inReal_of_numberField : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (Ψ : Finset (E →+* ℂ)) (G : Matrix (Fin r) (Fin r) E) (Γ : Subgroup (GL (Fin r) E)), Countable (inReal Ψ G Γ) := by
   intro E _ _ _ r Ψ G Γ
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
-  haveI : Countable (GL (Fin r) E) := Units.val_injective.countable
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
+  have : Countable (GL (Fin r) E) := Units.val_injective.countable
   have h : ((Γ.map (embGL Ψ r) : Subgroup (Ψ → GL (Fin r) ℂ)) : Set (Ψ → GL (Fin r) ℂ)).Countable := by
     rw [Subgroup.coe_map]
     exact (Set.to_countable _).image _
-  haveI : Countable (Γ.map (embGL Ψ r)) := h.to_subtype
+  have : Countable (Γ.map (embGL Ψ r)) := h.to_subtype
   refine Function.Injective.countable
     (f := fun x : inReal Ψ G Γ => (⟨x.1.1, x.2⟩ : Γ.map (embGL Ψ r))) ?_
   intro x y hxy
@@ -633,7 +633,7 @@ namespace GlobalTheory.CovTop.VolUp.DetImMeas
 
 theorem measurableSet_det_im_pos : ∀ (κ : Type) [Fintype κ] (p q : κ → ℕ) (ρ₀ : κ), MeasurableSet {b : ∀ ρ, UpqT (p ρ) (q ρ) | 0 < (UpqT.mat (b ρ₀)).det.im} := by
   intro κ _ p q ρ₀
-  haveI : BorelSpace (UpqT (p ρ₀) (q ρ₀)) := (GlobalTheory.UpqTopology.upq_lcsc (p ρ₀) (q ρ₀)).2.2.2.2.1
+  have : BorelSpace (UpqT (p ρ₀) (q ρ₀)) := (GlobalTheory.UpqTopology.upq_lcsc (p ρ₀) (q ρ₀)).2.2.2.2.1
   have hc : Continuous fun g : UpqT (p ρ₀) (q ρ₀) => (UpqT.mat g).det.im :=
     Complex.continuous_im.comp ((continuous_id.matrix_det).comp GlobalTheory.UpqTopology.continuous_mat)
   have hm : Measurable fun b : (∀ ρ, UpqT (p ρ) (q ρ)) => (UpqT.mat (b ρ₀)).det.im :=
@@ -857,11 +857,11 @@ theorem tube_disj (D : D7) (V : HSp D) (θ : InfFam D) (A : Frames V) (rp : GA D
     group⟩
   cases hkk
 
-  haveI : Nontrivial (Af D.host.F) := by
+  have : Nontrivial (Af D.host.F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 D.host.F)
     exact (Formalism.UG.evalV D.host.F ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField D.host.F)⟩).toRingHom.domain_nontrivial
-  haveI : Nontrivial (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  have : Nontrivial (Af D.host.F ⊗[D.host.F] D.host.E) :=
     (Algebra.TensorProduct.includeLeft_injective (R := D.host.F) (S := D.host.F) (A := Af D.host.F) (B := D.host.E)
       (algebraMap D.host.F D.host.E).injective).nontrivial
   have hinj : Function.Injective (inclR (F := D.host.F) (E := D.host.E) (Af D.host.F)) :=
@@ -1000,9 +1000,9 @@ theorem tube : VolSt → StabSt → IdxSt → TubeSt := by
   intro hvol hstab hidx D V P Q hV hsig hr M hM ι _ X g x0 hdist hX
   classical
   obtain ⟨hLC, hSC, hBor, hC⟩ := GlobalTheory.TwistAdelicTop.locallyCompact_secondCountable_borel_countable V
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   let μ : Measure (GA D V) := Measure.haar
-  haveI hμH : μ.IsHaarMeasure := by infer_instance
+  have hμH : μ.IsHaarMeasure := by infer_instance
   obtain ⟨𝓕, hFD⟩ := GlobalTheory.FundDomDiscrete.exists_fundDom D V μ hμH
   obtain ⟨θ, hθ⟩ := GlobalTheory.AdelicU.exists_isInfFam D
   obtain ⟨A, hA⟩ := exists_frames D V hV

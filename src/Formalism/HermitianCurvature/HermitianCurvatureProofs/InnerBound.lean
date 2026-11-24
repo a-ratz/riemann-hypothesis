@@ -79,7 +79,7 @@ theorem cmHalfIntegralGenerator_mem_algebraicClosure {ε : Fin (2 * r + k + 1) �
 theorem enorm_smulRight {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [NormedAddCommGroup F] [NormedSpace ℂ F] (a : E) (b : F) :
     ‖(innerSL ℂ a).smulRight b‖ₑ = ‖a‖ₑ * ‖b‖ₑ := by
-  rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm,
+  rw [← ofReal_norm, ← ofReal_norm, ← ofReal_norm,
     ContinuousLinearMap.norm_smulRight_apply, innerSL_apply_norm, ENNReal.ofReal_mul (norm_nonneg _)]
 
 theorem mt_cont : Continuous (fun y : Formalism.QuantumDeterminants.Mt k r => (Matrix.of y : Mx k r)) := by
@@ -108,7 +108,7 @@ theorem inner_bound (hNI : NormInv) {μG : Measure (Formalism.QuantumDeterminant
       he1.comp (continuous_const.matrix_mul mt_cont)
     have c2 : Continuous (fun x : Formalism.QuantumDeterminants.Mt k r => e2 (Q * (γi * Matrix.of x))) :=
       he2.comp (continuous_const.matrix_mul (continuous_const.matrix_mul mt_cont))
-    exact c1.measurable.enorm.mul c2.measurable.enorm
+    exact c1.measurable.eNorm.mul c2.measurable.eNorm
   have hNI' := hNI k r
   calc ∫⁻ x, F x ∂μG = ∫⁻ x, F (Formalism.QuantumDeterminants.lmulM P⁻¹ x) ∂μG := (lint_left hG hPi hFm).symm
     _ ≤ ∫⁻ x, (ENNReal.ofReal (|C1| * |C2|) * ‖B.gN Y ^ (-b)‖ₑ) * ‖B.gN (Matrix.of x) ^ (-(a - b))‖ₑ ∂μG := by
@@ -151,7 +151,7 @@ theorem inner_bound (hNI : NormInv) {μG : Measure (Formalism.QuantumDeterminant
           rw [ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm, ofReal_norm]
         have R : ENNReal.ofReal (|C1| * |C2|) * ‖B.gN Y ^ (-b)‖ₑ * ‖B.gN (Matrix.of x) ^ (-(a - b))‖ₑ =
             ENNReal.ofReal ((|C1| * |C2|) * B.gN Y ^ (-b) * B.gN (Matrix.of x) ^ (-(a - b))) := by
-          rw [Real.enorm_eq_ofReal hYp, Real.enorm_eq_ofReal hxp, ENNReal.ofReal_mul (mul_nonneg hC hYp),
+          rw [Real.eNorm_eq_ofReal hYp, Real.eNorm_eq_ofReal hxp, ENNReal.ofReal_mul (mul_nonneg hC hYp),
             ENNReal.ofReal_mul hC]
         rw [L, R]
         apply ENNReal.ofReal_le_ofReal

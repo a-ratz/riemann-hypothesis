@@ -63,7 +63,7 @@ private theorem second_cohomology_transfer {k Γ M : Type} [Field k] [Group Γ] 
     ∃ a : Γ → M, (∀ s, ∀ v ∈ V, a (s * v) = a s) ∧ dOne ρ a = κ := by
   classical
   have hfi : H.FiniteIndex := ⟨fun h => hH (by rw [h, Nat.cast_zero])⟩
-  letI : Fintype (Γ ⧸ H) := Fintype.ofFinite _
+  let : Fintype (Γ ⧸ H) := Fintype.ofFinite _
   let σ : Γ → Γ := fun g => (QuotientGroup.mk g : Γ ⧸ H).out
   have hσ : ∀ g, (σ g)⁻¹ * g ∈ H := fun g => QuotientGroup.eq.1 (Quotient.out_eq _)
   have hσh : ∀ g, ∀ h ∈ H, σ (g * h) = σ g := fun g h hh => by
@@ -178,8 +178,8 @@ theorem UpperTheory.V.Alg.exists_locallyConstant_dOne_eq_cocycle_of_tame_inertia
   classical
   have core : ∀ W : Subgroup Γ, IsOpen (W : Set Γ) → IsOpen (W.normalCore : Set Γ) := by
     intro W hW
-    haveI : Finite (Γ ⧸ W) := W.quotient_finite_of_isOpen hW
-    haveI : W.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : Finite (Γ ⧸ W) := W.quotient_finite_of_isOpen hW
+    have : W.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     exact Subgroup.isOpen_of_isClosed_of_finiteIndex _ (W.normalCore_isClosed (W.isClosed_of_isOpen hW))
   have gen : ∀ W : Subgroup Γ, IsOpen (W : Set Γ) → I ≤ W → fr ∈ W → W = ⊤ := by
     intro W hW h1 h2
@@ -210,7 +210,7 @@ theorem UpperTheory.V.Alg.exists_locallyConstant_dOne_eq_cocycle_of_tame_inertia
   have hV1 : IsOpen (V1 : Set Γ) := core _ (hV0.inter hker)
   have hV1le : V1 ≤ V0 ⊓ ρ.ker := Subgroup.normalCore_le _
   have hNV1 : N ≤ V1 := Subgroup.normal_le_normalCore.2 (le_inf hNV0 hNρ)
-  haveI : Finite (Γ ⧸ V1) := V1.quotient_finite_of_isOpen hV1
+  have : Finite (Γ ⧸ V1) := V1.quotient_finite_of_isOpen hV1
   let r := orderOf (fr : Γ ⧸ V1)
   have hr0 : r ≠ 0 := (orderOf_pos _).ne'
   have hfrr : fr ^ r ∈ V1 := by
@@ -237,7 +237,7 @@ theorem UpperTheory.V.Alg.exists_locallyConstant_dOne_eq_cocycle_of_tame_inertia
   let V : Subgroup Γ := V1 ⊓ U1
   have hV : IsOpen (V : Set Γ) := hV1.inter hU1
   have hNV : N ≤ V := le_inf hNV1 (hNI.trans hIU1)
-  haveI : Finite (Γ ⧸ V) := V.quotient_finite_of_isOpen hV
+  have : Finite (Γ ⧸ V) := V.quotient_finite_of_isOpen hV
   have hVV0 : V ≤ V0 := inf_le_left.trans (hV1le.trans inf_le_left)
   have hVρ : V ≤ ρ.ker := inf_le_left.trans (hV1le.trans inf_le_right)
   have wd : ∀ i j : ℕ, ((fr ^ i : Γ) : Γ ⧸ V) = (fr ^ j : Γ) → cocycleTrivializationOnPowers ρ κ fr i = cocycleTrivializationOnPowers ρ κ fr j := by
@@ -260,7 +260,7 @@ theorem UpperTheory.V.Alg.exists_locallyConstant_dOne_eq_cocycle_of_tame_inertia
   have ha0 : ∀ (g : Γ) (n : ℕ), ((fr ^ n : Γ) : Γ ⧸ V) = g → a0 g = cocycleTrivializationOnPowers ρ κ fr n := by
     intro g n hn
     have h : ∃ n : ℕ, ((fr ^ n : Γ) : Γ ⧸ V) = g := ⟨n, hn⟩
-    simp only [a0, dif_pos h]
+    simp only [a0, dite_eq_left h]
     exact wd _ _ (h.choose_spec.trans hn.symm)
   let H : Subgroup Γ := (Subgroup.zpowers (fr : Γ ⧸ V)).comap (QuotientGroup.mk' V)
   have hVH : V ≤ H := fun u hu => by

@@ -297,8 +297,8 @@ theorem isStdV_measure_singleton_zero : ∀ (F : Type) [Field F] [NumberField F]
     (lam : Measure (Fv F v)), IsStdV v lam → lam {0} = 0 := by
   intro F _ _ v lam hstd
   obtain ⟨hH, h1⟩ := hstd
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : CharZero (Fv F v) :=
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : CharZero (Fv F v) :=
     charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
   have hs : ∀ x : Fv F v, lam {x} = lam {0} := by
     intro x

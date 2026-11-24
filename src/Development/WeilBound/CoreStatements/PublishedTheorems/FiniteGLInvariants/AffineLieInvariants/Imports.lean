@@ -103,8 +103,8 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 
 theorem cuspFin_zero : CuspFin E 0 := by
   intro L hL W _ _ _ ρ hρ J hJ
-  haveI : Finite (GA E 0) := Finite.of_subsingleton
-  haveI : FiniteDimensional ℂ (GA E 0 → ℂ) := inferInstance
+  have : Finite (GA E 0) := Finite.of_subsingleton
+  have : FiniteDimensional ℂ (GA E 0 → ℂ) := inferInstance
   infer_instance
 
 theorem invariant_of_lie_oneL_eq_zero {a : ℕ} (ψ : Sm E a) (h : lie E a (oneL E a) ψ = 0) (t : ℝ) (g : GA E a) :
@@ -155,7 +155,7 @@ theorem cuspFin_pos {a : ℕ} (ha : 0 < a) : CuspFin E a := by
     obtain ⟨hg, hc⟩ := hVC v hv
     obtain ⟨h1, h2, h3⟩ := hχ v hg hc hzv
     exact Submodule.subset_span ⟨h1, h2, invariant_of_lie_oneL_eq_zero _ h3⟩
-  haveI := Submodule.finiteDimensional_of_le hle
+  have := Submodule.finiteDimensional_of_le hle
   exact LinearEquiv.finiteDimensional (Submodule.equivMapOfInjective _ (mulChi a χ).injective _).symm
 
 theorem cuspFin : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ), CuspFin E a := by

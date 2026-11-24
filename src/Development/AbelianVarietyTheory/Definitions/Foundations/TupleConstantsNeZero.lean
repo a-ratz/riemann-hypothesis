@@ -149,7 +149,7 @@ theorem vw_eq_zero_of_notMem (w : Pl K) {a : 𝓞 K} (ha : a ∉ w.asIdeal) : vw
     rintro rfl
     exact ha w.asIdeal.zero_mem
   unfold vw
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K _ ha0]
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K _ ha0]
   by_contra h
   have h' : (Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {a})).factors ≠ 0 := by
     intro h0

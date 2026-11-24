@@ -465,8 +465,8 @@ theorem UpperTheory.finprod_local_eq_indicator_mul_prod :
     intro v hv
     rw [hf v hv]
     by_cases h : finAt v (finEmb K n x) ∈ GLnLocal.integralGL (v.adicCompletion K) n
-    · rw [if_pos h]; exact Set.indicator_of_mem (s := (GLnLocal.integralGL (v.adicCompletion K) n : Set (Gw n v))) h _
-    · rw [if_neg h]; exact Set.indicator_of_notMem (s := (GLnLocal.integralGL (v.adicCompletion K) n : Set (Gw n v))) h _
+    · rw [ite_eq_left h]; exact Set.indicator_of_mem (s := (GLnLocal.integralGL (v.adicCompletion K) n : Set (Gw n v))) h _
+    · rw [ite_eq_right h]; exact Set.indicator_of_notMem (s := (GLnLocal.integralGL (v.adicCompletion K) n : Set (Gw n v))) h _
   have hsupp : Function.mulSupport (fun v => f v (finAt v (finEmb K n x))) ⊆ (S : Set (Pl K)) := by
     intro v hv
     by_contra hvS
@@ -476,7 +476,7 @@ theorem UpperTheory.finprod_local_eq_indicator_mul_prod :
     have h2 : finAt v (finEmb K n x) ∈ GLnLocal.integralGL (v.adicCompletion K) n := by
       by_contra h
       exact hvS (by simp only [hS, Finset.coe_union, Set.mem_union, Finset.mem_coe, Set.Finite.mem_toFinset]; exact Or.inl h)
-    exact hv ((hoff v h1).trans (if_pos h2))
+    exact hv ((hoff v h1).trans (ite_eq_left h2))
   rw [finprod_eq_prod_of_mulSupport_subset _ hsupp]
   by_cases hx : x ∈ ({y | ∀ v, v ∉ Set.range w → finAt v (finEmb K n y) ∈ GLnLocal.integralGL (v.adicCompletion K) n} : Set (AdelicGLn.FiniteAdelicGL K n))
   · rw [Set.indicator_of_mem hx, Pi.one_apply, one_mul]
@@ -486,7 +486,7 @@ theorem UpperTheory.finprod_local_eq_indicator_mul_prod :
     have h1 : v ∉ Set.range w := by
       rintro ⟨i, rfl⟩
       exact hv (by simp)
-    rw [hoff v h1, if_pos (hx v h1)]
+    rw [hoff v h1, ite_eq_left (hx v h1)]
   · rw [Set.indicator_of_notMem hx, zero_mul]
     have hx' : ∃ v, v ∉ Set.range w ∧ finAt v (finEmb K n x) ∉ GLnLocal.integralGL (v.adicCompletion K) n := by
       by_contra hc
@@ -495,7 +495,7 @@ theorem UpperTheory.finprod_local_eq_indicator_mul_prod :
     obtain ⟨v, h1, h2⟩ := hx'
     refine Finset.prod_eq_zero (i := v) ?_ ?_
     · simp only [hS, Finset.mem_union, Set.Finite.mem_toFinset]; exact Or.inl h2
-    · rw [hoff v h1, if_neg h2]
+    · rw [hoff v h1, ite_eq_right h2]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.LocalTestFunctions.FinprodLocalEqIndicatorMulProd =====
@@ -526,7 +526,7 @@ theorem UpperTheory.indicator_integral_away_mul_localEmbedding :
     rw [e, e, map_mul, RestrictedProduct.mul_apply, h1, one_mul]
   have hmem : (AdelicGLn.localEmbedding (w i) y * x ∈ ({y | ∀ v, v ∉ Set.range w → finAt v (finEmb K n y) ∈ GLnLocal.integralGL (v.adicCompletion K) n} : Set (AdelicGLn.FiniteAdelicGL K n))) ↔
       (x ∈ ({y | ∀ v, v ∉ Set.range w → finAt v (finEmb K n y) ∈ GLnLocal.integralGL (v.adicCompletion K) n} : Set (AdelicGLn.FiniteAdelicGL K n))) := by
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     exact forall₂_congr fun v hv => by rw [key v hv]
   by_cases hx : x ∈ ({y | ∀ v, v ∉ Set.range w → finAt v (finEmb K n y) ∈ GLnLocal.integralGL (v.adicCompletion K) n} : Set (AdelicGLn.FiniteAdelicGL K n))
   · rw [Set.indicator_of_mem hx, Set.indicator_of_mem (hmem.2 hx)]
@@ -673,7 +673,7 @@ private theorem map_right_eq_of_CO {G : Type} [Group G] [TopologicalSpace G] [Is
     (m : Measure G) [m.IsHaarMeasure] {J : Subgroup G} (hJ : CO J) {k : G} (hk : k ∈ J) :
     Measure.map (· * k) m = m := by
   have hcont : Measurable (· * k : G → G) := (continuous_mul_const k).measurable
-  haveI : (Measure.map (· * k) m).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right m k
+  have : (Measure.map (· * k) m).IsHaarMeasure := Measure.isHaarMeasure_map_mul_right m k
   have h := Measure.isMulLeftInvariant_eq_smul (Measure.map (· * k) m) m
   have hmeas : MeasurableSet (J : Set G) := hJ.2.measurableSet
   have hpre : (· * k : G → G) ⁻¹' (J : Set G) = J := by
@@ -682,7 +682,7 @@ private theorem map_right_eq_of_CO {G : Type} [Group G] [TopologicalSpace G] [Is
   have h0 : m (J : Set G) ≠ 0 := (hJ.2.measure_pos m ⟨1, J.one_mem⟩).ne'
   have hT : m (J : Set G) ≠ ⊤ := hJ.1.measure_lt_top.ne
   have e := congrArg (fun ν : Measure G => ν (J : Set G)) h
-  simp only [Measure.map_apply hcont hmeas, hpre, Measure.smul_apply] at e
+  simp only [Measure.map_apply hcont hmeas, hpre, smul_apply] at e
   have hc : Measure.haarScalarFactor (Measure.map (· * k) m) m = 1 := by
     have e' : m (J : Set G) = (Measure.haarScalarFactor (Measure.map (· * k) m) m : ENNReal) * m (J : Set G) := by
       simpa [ENNReal.smul_def] using e
@@ -821,10 +821,10 @@ theorem UpperTheory.ConvolutionTheory.Tf.finTens :
     rw [he₀U]
     exact UpperTheory.indicator_level_eq_prod_local_indicator K n r w J hJle U hUm x
   have hex : ∃ e : TF K n, ∀ x, e x = R x * ∏ i, f (w i) (finAt (w i) (finEmb K n x)) := by
-    letI : ∀ i, MeasurableSpace (Gw n (w i)) := fun _ => borel _
-    haveI : ∀ i, BorelSpace (Gw n (w i)) := fun _ => ⟨rfl⟩
+    let : ∀ i, MeasurableSpace (Gw n (w i)) := fun _ => borel _
+    have : ∀ i, BorelSpace (Gw n (w i)) := fun _ => ⟨rfl⟩
     let mw : ∀ i, Measure (Gw n (w i)) := fun i => Measure.haar
-    haveI : ∀ i, (mw i).IsHaarMeasure := fun i => inferInstanceAs (Measure.haar : Measure (Gw n (w i))).IsHaarMeasure
+    have : ∀ i, (mw i).IsHaarMeasure := fun i => inferInstanceAs (Measure.haar : Measure (Gw n (w i))).IsHaarMeasure
     obtain ⟨g, hg, -, -⟩ := UpperTheory.exists_testFunction_integral_prod_local_factors K n m r w hw mw J hJco ψ hψ R hfree e₀ he₀
     have hne : (∏ i, (((mw i).real (J i : Set (Gw n (w i))) : ℝ) : ℂ)) ≠ 0 := by
       refine Finset.prod_ne_zero_iff.2 fun i _ => ?_
@@ -839,13 +839,13 @@ theorem UpperTheory.ConvolutionTheory.Tf.finTens :
   have hRl : ∀ u h, u ∈ AdelicGLn.integralFiniteGL K n → R (u * h) = R h := fun u h hu => by
     have hiff : (u * h ∈ {y : AdelicGLn.FiniteAdelicGL K n | ∀ v, v ∉ Set.range w → finAt v (finEmb K n y) ∈ GLnLocal.integralGL (v.adicCompletion K) n}) ↔
         h ∈ {y : AdelicGLn.FiniteAdelicGL K n | ∀ v, v ∉ Set.range w → finAt v (finEmb K n y) ∈ GLnLocal.integralGL (v.adicCompletion K) n} := by
-      simp only [Set.mem_setOf_eq, ft_mul]
+      simp only [Set.mem_ofPred_eq, ft_mul]
       exact forall_congr' fun v => imp_congr_right fun _ => Subgroup.mul_mem_cancel_left _ (ft_int K n u hu v)
     exact ft_ind _ hiff
   have hRr : ∀ u h, u ∈ AdelicGLn.integralFiniteGL K n → R (h * u) = R h := fun u h hu => by
     have hiff : (h * u ∈ {y : AdelicGLn.FiniteAdelicGL K n | ∀ v, v ∉ Set.range w → finAt v (finEmb K n y) ∈ GLnLocal.integralGL (v.adicCompletion K) n}) ↔
         h ∈ {y : AdelicGLn.FiniteAdelicGL K n | ∀ v, v ∉ Set.range w → finAt v (finEmb K n y) ∈ GLnLocal.integralGL (v.adicCompletion K) n} := by
-      simp only [Set.mem_setOf_eq, ft_mul]
+      simp only [Set.mem_ofPred_eq, ft_mul]
       exact forall_congr' fun v => imp_congr_right fun _ => Subgroup.mul_mem_cancel_right _ (ft_int K n u hu v)
     exact ft_ind _ hiff
   refine ⟨e, fun h => ?_, ⟨U, hUo, fun u hu h => ⟨?_, ?_⟩⟩, ?_⟩
@@ -866,7 +866,7 @@ theorem UpperTheory.ConvolutionTheory.Tf.finTens :
       rw [ft_mul]
       exact (hJinv i _ (hk.2 i) _).2
   · intro _ _ mw hmw hmK T hT US hUS
-    haveI := hmw
+    have := hmw
     have hvne : ∀ i, (((mw i).real (J i : Set (Gw n (w i))) : ℝ) : ℂ) ≠ 0 := fun i => by
       have : (mw i).real (J i : Set (Gw n (w i))) ≠ 0 :=
         ENNReal.toReal_ne_zero.2 ⟨((hJco i).2.measure_pos (mw i) ⟨1, (J i).one_mem⟩).ne', (hJco i).1.measure_ne_top⟩

@@ -53,7 +53,7 @@ private theorem fixAux {K Ω : Type} [Field K] [NumberField K] [Field Ω] [CharZ
     [IsAlgClosure K Ω] (u : G ℚ Ω) (c : G K Ω ≃* G K Ω)
     (hc : ∀ s, galEmb ℚ K Ω (c s) = u * galEmb ℚ K Ω s * u⁻¹) (x : K) :
     ∃ y : K, algebraMap K Ω y = u (algebraMap K Ω x) := by
-  haveI : IsGalois K Ω := IsAlgClosure.isGalois K Ω
+  have : IsGalois K Ω := IsAlgClosure.isGalois K Ω
   have h1 : u (algebraMap K Ω x) ∈ (⊥ : IntermediateField K Ω) := by
     rw [← InfiniteGalois.fixedField_bot, IntermediateField.mem_fixedField_iff]
     intro s _
@@ -104,8 +104,8 @@ private theorem partialTrace_valuation_sum {K Ω : Type} [Field K] [NumberField 
     have e : (galEmb ℚ K Ω) ∘ c.symm = fun s => u⁻¹ * galEmb ℚ K Ω s * u := funext hc'
     rw [e]
     exact (continuous_const.mul hemb.continuous).mul continuous_const)
-  have hφ : Continuous φ := (hcc.comp continuous_subtype_val).subtype_mk _
-  have hφs : Continuous φ.symm := (hcs.comp continuous_subtype_val).subtype_mk _
+  have hφ : Continuous φ := (hcc.comp continuous_subtypeVal).subtype_mk _
+  have hφs : Continuous φ.symm := (hcs.comp continuous_subtypeVal).subtype_mk _
   let Bw' : LocBridge l K Ω (Dec (F := K) A') O :=
     { Kw := Bw.Kw, j := Bw.j.comp (u : Ω →+* Ω)
       j_E := fun x => by

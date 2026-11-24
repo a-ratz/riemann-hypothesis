@@ -113,17 +113,17 @@ theorem nefFib_of_primeField : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p :
       [Algebra (ZMod q) Γ(Z, ⊤)], topologicalKrullDim Z = 1 → 0 ≤ topSelfIntersection (ZMod q) (L.B.pull i) 1) →
     ArInt.NefFib L := by
   intro k _ X p L h Z i _ _ κ _ _ _ hdim
-  haveI : Fintype κ := Fintype.ofFinite κ
-  haveI hq : Fact (ringChar κ).Prime := ⟨CharP.char_is_prime κ (ringChar κ)⟩
-  letI : Algebra (ZMod (ringChar κ)) κ := ZMod.algebra κ (ringChar κ)
-  letI : Algebra (ZMod (ringChar κ)) Γ(Z, ⊤) :=
+  have : Fintype κ := Fintype.ofFinite κ
+  have hq : Fact (ringChar κ).Prime := ⟨CharP.char_is_prime κ (ringChar κ)⟩
+  let : Algebra (ZMod (ringChar κ)) κ := ZMod.algebra κ (ringChar κ)
+  let : Algebra (ZMod (ringChar κ)) Γ(Z, ⊤) :=
     ((algebraMap κ Γ(Z, ⊤)).comp (algebraMap (ZMod (ringChar κ)) κ)).toAlgebra
-  haveI : IsScalarTower (ZMod (ringChar κ)) κ Γ(Z, ⊤) := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower (ZMod (ringChar κ)) κ Γ(Z, ⊤) := IsScalarTower.of_algebraMap_eq' rfl
   have h1 := h Z i (ringChar κ) hdim
   have e := _root_.GlobalTheory.GroundFieldChange.interNum_fieldChange (ZMod (ringChar κ)) κ Z (structureModule Z) (fun _ : Fin 1 => L.B.pull i)
   rw [topSelf_def] at h1 ⊢
   rw [e] at h1
-  haveI : Module.Finite (ZMod (ringChar κ)) κ := Module.Finite.of_finite
+  have : Module.Finite (ZMod (ringChar κ)) κ := Module.Finite.of_finite
   have hpos : (0 : ℤ) < (Module.finrank (ZMod (ringChar κ)) κ : ℤ) := by
     exact_mod_cast Module.finrank_pos
   exact (mul_nonneg_iff_of_pos_left hpos).mp h1
@@ -232,7 +232,7 @@ theorem topSelf_pull_nonneg (t : X ⟶ Sp ℤ) [IsProper t] (hd : topologicalKru
   have hinj := appTop_injective_of_denseRange φ hdense
   have : CharP Γ(W, ⊤) ℓ := charP_of_injective_algebraMap (algebraMap (ZMod ℓ) Γ(W, ⊤)).injective ℓ
   have : CharP Γ(g.image, ⊤) ℓ := φ.appTop.hom.charP hinj ℓ
-  letI : Algebra (ZMod ℓ) Γ(g.image, ⊤) := ZMod.algebra _ ℓ
+  let : Algebra (ZMod ℓ) Γ(g.image, ⊤) := ZMod.algebra _ ℓ
   have hf (r : ZMod ℓ) : φ.appTop (algebraMap (ZMod ℓ) Γ(g.image, ⊤) r) = algebraMap (ZMod ℓ) Γ(W, ⊤) r :=
     RingHom.congr_fun (RingHom.ext_zmod (φ.appTop.hom.comp (algebraMap (ZMod ℓ) Γ(g.image, ⊤)))
       (algebraMap (ZMod ℓ) Γ(W, ⊤))) r

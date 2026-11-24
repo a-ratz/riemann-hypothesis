@@ -81,9 +81,9 @@ theorem LatIso_holds (D : D7) : Formalism.L2.SG.TermTieOf.LatIso D := by
   intro β hβ Λ
   obtain ⟨-, hloc, -, hU, hLat⟩ := Formalism.HermitianLatticesTheory.isomAct _ _ _ (VS D).hT β hβ Λ
   refine ⟨fun hΛ => ?_, hLat.2, hU.2⟩
-  simp only [Formalism.HermitianLatticesTheory.genus, Set.mem_setOf_eq] at hΛ ⊢
+  simp only [Formalism.HermitianLatticesTheory.genus, Set.mem_ofPred_eq] at hΛ ⊢
   obtain ⟨hΛL, hΛG⟩ := hΛ
-  letI := hLat.2 hΛL.toIsLattice
+  let := hLat.2 hΛL.toIsLattice
   refine ⟨?_, fun p hp => ?_⟩
   · refine { span_eq_top := ?_ }
     have he : ((Formalism.HermitianLatticesTheory.gmap β Λ : _) : Set _) =

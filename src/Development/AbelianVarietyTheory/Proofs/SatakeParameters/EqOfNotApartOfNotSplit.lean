@@ -147,7 +147,7 @@ theorem isCompact_of_le {w : HeightOneSpectrum (𝓞 E)} {H : Subgroup (UA E a)}
   have hc' : IsCompact (((intU a w).subgroupOf (locU a w)) : Set (locU a w)) := by
     rw [Topology.IsInducing.subtypeVal.isCompact_iff, coe_subgroupOf_image (intU_le_locU w)]
     exact hc
-  have h2 := (hc'.of_isClosed_subset hcl fun x hx => hH hx).image continuous_subtype_val
+  have h2 := (hc'.of_isClosed_subset hcl fun x hx => hH hx).image continuous_subtypeVal
   rwa [coe_subgroupOf_image (hH.trans (intU_le_locU w))] at h2
 
 end GlobalTheory.Cong.AdaptLev

@@ -100,10 +100,10 @@ theorem baseLevelCharacter_map_coefficientRingHom {E : Type} [Field E] [NumberFi
   subst hx
   show ((((∏ PP : ↥Pg, (addCharHom (ψ' PP.1) (supHom (kP PP.1) r)).comp (LevelP.prj (fun PP => unip (kP PP.1) r) PP)) ⟨x, hxm'⟩ : LL'ˣ)) : LL') =
     φ (((∏ PP : ↥Pg, (addCharHom (ψ PP.1) (supHom (kP PP.1) r)).comp (LevelP.prj (fun PP => unip (kP PP.1) r) PP)) ⟨x, hxm⟩ : LLˣ) : LL)
-  letI : IsOneApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LLˣ) := ⟨fun _ => rfl⟩
-  letI : IsMulApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LLˣ) := ⟨fun _ _ _ => rfl⟩
-  letI : IsOneApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LL'ˣ) := ⟨fun _ => rfl⟩
-  letI : IsMulApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LL'ˣ) := ⟨fun _ _ _ => rfl⟩
+  let : IsOneApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LLˣ) := ⟨fun _ => rfl⟩
+  let : IsMulApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LLˣ) := ⟨fun _ _ _ => rfl⟩
+  let : IsOneApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LL'ˣ) := ⟨fun _ => rfl⟩
+  let : IsMulApply ((Subgroup.pi Set.univ (fun PP : ↥Pg => unip (kP PP.1) r)) →* LL'ˣ) := ⟨fun _ _ _ => rfl⟩
   rw [prod_apply, prod_apply, Units.coe_prod, Units.coe_prod, map_prod]
   refine Finset.prod_congr rfl fun PP _ => ?_
   exact h PP.1 PP.2 _

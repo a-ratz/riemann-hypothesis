@@ -89,8 +89,8 @@ private theorem exists_algHom_apply_ne_zero_of_pointDerivation_eq_zero {C B : Ty
     apply hy
     simpa [hI] using h1
   obtain ⟨m, hm, hIm⟩ := Ideal.exists_le_maximal I hItop
-  letI : Field (B ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.IsIntegral C (B ⧸ m) := Algebra.IsIntegral.of_finite C (B ⧸ m)
+  let : Field (B ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.IsIntegral C (B ⧸ m) := Algebra.IsIntegral.of_finite C (B ⧸ m)
   have hbij := IsAlgClosed.algebraMap_bijective_of_isIntegral (k := C) (K := B ⧸ m)
   let e := AlgEquiv.ofBijective (Algebra.ofId C (B ⧸ m)) hbij
   let φ : B →ₐ[C] C := e.symm.toAlgHom.comp (Ideal.Quotient.mkₐ C m)
@@ -129,7 +129,7 @@ private theorem exists_algHom_apply_ne_zero_of_pointDerivation_eq_zero {C B : Ty
     have h2 : D x = ℓ x := by
       rw [hDapp, (hφ x).2 hx, map_zero, sub_zero]
     rw [← h2, hD0, LinearMap.zero_apply]
-  haveI : IsNoetherianRing B := isNoetherian_of_tower C inferInstance
+  have : IsNoetherianRing B := isNoetherian_of_tower C inferInstance
   have hidem : IsIdempotentElem m := le_antisymm Ideal.mul_le_left hmm
   obtain ⟨e', _he', hme⟩ := (Ideal.isIdempotentElem_iff_of_fg m (IsNoetherian.noetherian m)).1 hidem
   have he'm : e' ∈ m := hme ▸ Submodule.mem_span_singleton_self e'
@@ -150,10 +150,10 @@ private theorem finrank_eq_card_algHom_of_pointDerivation_eq_zero {C B : Type} [
       (∀ a b, D (a * b) = φ a * D b + φ b * D a) → D = 0) :
     Finite (B →ₐ[C] C) ∧ Module.finrank C B = Nat.card (B →ₐ[C] C) := by
   classical
-  haveI hfin : Finite (B →ₐ[C] C) :=
+  have hfin : Finite (B →ₐ[C] C) :=
     (linearIndependent_algHom_toLinearMap C B C).finite_of_isNoetherian
   refine ⟨hfin, le_antisymm ?_ (card_algHom_le_finrank C B C)⟩
-  letI := Fintype.ofFinite (B →ₐ[C] C)
+  let := Fintype.ofFinite (B →ₐ[C] C)
   let ev : B →ₗ[C] ((B →ₐ[C] C) → C) := LinearMap.pi fun φ => φ.toLinearMap
   have hev : Function.Injective ev := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
@@ -246,7 +246,7 @@ theorem _root_.GlobalTheory.finEtale_main :
     show algebraMap O C (eO.symm ⟨φA a, hmem a⟩) = φA a
     have h1 := congrArg Subtype.val (eO.apply_symm_apply ⟨φA a, hmem a⟩)
     exact h1
-  haveI hfinA : Finite (A →ₐ[O] O) := Finite.of_injective Ψ hΨ.1
+  have hfinA : Finite (A →ₐ[O] O) := Finite.of_injective Ψ hΨ.1
   refine ⟨hfinA, fun f hf => ?_, ?_⟩
   · have h1 : (1 : C) ⊗ₜ[O] f = 0 := by
       by_contra hne
@@ -261,7 +261,7 @@ theorem _root_.GlobalTheory.finEtale_main :
       exact h1
     have h3 : (1 : O) ⊗ₜ[O] f = 0 := hflat (by rw [h2, map_zero])
     simpa using congrArg (TensorProduct.lid O A) h3
-  · haveI : Nontrivial O := (algebraMap O C).domain_nontrivial
+  · have : Nontrivial O := (algebraMap O C).domain_nontrivial
     rw [← Module.finrank_baseChange (R := C), hrankB, Nat.card_eq_of_bijective Ψ hΨ]
 
 end GlobalTheory

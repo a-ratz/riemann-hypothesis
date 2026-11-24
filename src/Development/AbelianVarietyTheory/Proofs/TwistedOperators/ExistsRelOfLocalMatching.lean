@@ -100,13 +100,13 @@ theorem finsupp_sum_eq (m : σ₁ →₀ ℕ) (n : σ₂ →₀ ℕ) :
   rcases s with s | s
   · rw [Finsupp.add_apply, Finsupp.domCongr_apply, Finsupp.equivMapDomain_apply, Equiv.symm_apply_apply,
       Finsupp.sumElim_inl]
-    rw [show e (Sum.inl s) = (e ∘ Sum.inl) s from rfl, Finsupp.mapDomain_apply_of_injective h1, Finsupp.mapDomain_notin_range]
+    rw [show e (Sum.inl s) = (e ∘ Sum.inl) s from rfl, Finsupp.mapDomain_apply_of_injective h1, Finsupp.mapDomain_of_notMem_range]
     · simp
     · rintro ⟨u, hu⟩
       exact Sum.inl_ne_inr (e.injective hu).symm
   · rw [Finsupp.add_apply, Finsupp.domCongr_apply, Finsupp.equivMapDomain_apply, Equiv.symm_apply_apply,
       Finsupp.sumElim_inr]
-    rw [show e (Sum.inr s) = (e ∘ Sum.inr) s from rfl, Finsupp.mapDomain_apply_of_injective h2, Finsupp.mapDomain_notin_range]
+    rw [show e (Sum.inr s) = (e ∘ Sum.inr) s from rfl, Finsupp.mapDomain_apply_of_injective h2, Finsupp.mapDomain_of_notMem_range]
     · simp
     · rintro ⟨u, hu⟩
       exact Sum.inl_ne_inr (e.injective hu)
@@ -124,7 +124,7 @@ theorem polTens_tmul (p₁ : MvPolynomial σ₁ ℂ) (p₂ : MvPolynomial σ₂ 
       rw [Module.Basis.tensorProduct_apply, MvPolynomial.coe_basisMonomials, MvPolynomial.coe_basisMonomials]
     rw [h, polTens]
     erw [Module.Basis.equiv_apply]
-    simp only [MvPolynomial.coe_basisMonomials, MvPolynomial.rename_monomial, MvPolynomial.monomial_mul, mul_one,
+    simp only [MvPolynomial.coe_basisMonomials, MvPolynomial.rename_monomial, MvPolynomial.monomial_mul_monomial, mul_one,
       Equiv.trans_apply, AddEquiv.toEquiv_eq_coe, AddEquiv.coe_toEquiv, Finsupp.sumFinsuppEquivProdFinsupp_symm_apply]
     rw [finsupp_sum_eq]
   exact LinearMap.congr_fun₂ key p₁ p₂

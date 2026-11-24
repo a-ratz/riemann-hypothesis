@@ -94,7 +94,7 @@ theorem length_map (V W : Ideal R) [W.IsPrime] [(W.map (φ : R →+* R')).IsPrim
   have : (W'.map (Ideal.Quotient.mk V')).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hVW')
   have h' := ReciprocityTheory.ChartRestriction.G.AI.I1.SwapLoc.isLocData_atPrime_quot V' W' hVW'
-  letI : Algebra R (Localization.AtPrime (W'.map (Ideal.Quotient.mk V'))) :=
+  let : Algebra R (Localization.AtPrime (W'.map (Ideal.Quotient.mk V'))) :=
     ((algebraMap R' (Localization.AtPrime (W'.map (Ideal.Quotient.mk V')))).comp
       (φ : R →+* R')).toAlgebra
   have hal : ∀ r, algebraMap R (Localization.AtPrime (W'.map (Ideal.Quotient.mk V'))) r =

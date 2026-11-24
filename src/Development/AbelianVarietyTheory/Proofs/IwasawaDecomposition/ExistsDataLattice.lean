@@ -136,7 +136,7 @@ private theorem finite_GL_of_integral_bounded_scaled_entries (c : E) (hc : c ≠
     ext a b
     exact mul_left_cancel₀ hc (congrFun (congrFun h a) b)
   refine (hpi.preimage hinj.injOn).subset fun γ hγ => ?_
-  simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq]
   exact fun a b => hγ a b
 
 

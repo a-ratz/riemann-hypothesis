@@ -110,7 +110,7 @@ theorem transportRep_irreducible {V : Type} [AddCommGroup V] [Module L V] {n : �
           simpa [Submodule.mem_comap] using h h1
         · intro h x hx
           exact h hx }
-  haveI : IsSimpleOrder (Subrepresentation σ) := hσ
+  have : IsSimpleOrder (Subrepresentation σ) := hσ
   exact OrderIso.isSimpleOrder φ
 
 def ListDecomp {V : Type} [AddCommGroup V] [Module L V] (σ : Representation L G V) : Prop :=
@@ -209,7 +209,7 @@ theorem hasIrreducibleDecomposition_of_finrank_eq : ∀ (n : ℕ) (V : Type) [Ad
   intro V _ _ _ σ hn
   by_cases h0 : n = 0
   · subst h0
-    haveI : Subsingleton V := Module.finrank_zero_iff.mp hn
+    have : Subsingleton V := Module.finrank_zero_iff.mp hn
     refine ⟨[], by simp, fun g => ?_⟩
     have hz : σ g = 0 := LinearMap.ext fun v => Subsingleton.elim _ _
     show LinearMap.trace L V (σ g) = _
@@ -225,7 +225,7 @@ theorem hasIrreducibleDecomposition_of_finrank_eq : ∀ (n : ℕ) (V : Type) [Ad
       exact transportRep_irreducible e σ hirr
     · simp only [List.map_cons, List.map_nil, List.sum_cons, List.sum_nil, add_zero]
       exact (transportRep_character e σ g).symm
-  haveI hV : Nontrivial V := by
+  have hV : Nontrivial V := by
     by_contra hnt
     rw [not_nontrivial_iff_subsingleton] at hnt
     have := (Module.finrank_zero_iff (R := L)).mpr hnt

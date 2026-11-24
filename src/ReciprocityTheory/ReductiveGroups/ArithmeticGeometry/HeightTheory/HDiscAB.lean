@@ -113,8 +113,8 @@ theorem lattice_main {ϖ : R} (hϖ : Irreducible ϖ) (g : ∀ c, L c) (hg : ∀ 
       finrank R (integralClosure R (L c)) = finrank F (L c) := fun c => by
     obtain ⟨_, h1, h2, h3, _⟩ := ReciprocityTheory.MultiplicativeHeights.Closed.dedekindRank R F (L c)
     exact ⟨h1, h2, h3⟩
-  haveI : ∀ c, Module.Finite R (integralClosure R (L c)) := fun c => (hB c).1
-  haveI : ∀ c, Module.Free R (integralClosure R (L c)) := fun c => (hB c).2.1
+  have : ∀ c, Module.Finite R (integralClosure R (L c)) := fun c => (hB c).1
+  have : ∀ c, Module.Free R (integralClosure R (L c)) := fun c => (hB c).2.1
   let a := fun c => Module.Free.chooseBasis R (integralClosure R (L c))
   let α := Pi.basis a
   have hcard : Fintype.card (Σ c, Module.Free.ChooseBasisIndex R (integralClosure R (L c))) = m := by
@@ -207,7 +207,7 @@ theorem lattice_main {ϖ : R} (hϖ : Irreducible ϖ) (g : ∀ c, L c) (hg : ∀ 
       rw [Pi.single_eq_of_ne hc'']
       simp
     · simp
-  haveI : ∀ c, IsLocalization (Algebra.algebraMapSubmonoid (integralClosure R (L c))
+  have : ∀ c, IsLocalization (Algebra.algebraMapSubmonoid (integralClosure R (L c))
       (nonZeroDivisors R)) (L c) := fun c =>
     IsIntegralClosure.isLocalization R F (L c) (integralClosure R (L c))
   let a' := fun c => (a c).localizationLocalization F (nonZeroDivisors R) (L c)

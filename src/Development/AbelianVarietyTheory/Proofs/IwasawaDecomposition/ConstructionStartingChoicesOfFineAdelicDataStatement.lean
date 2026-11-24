@@ -576,9 +576,9 @@ theorem GlobalTheory.Mem.R3.Rw.exists_rowsRest_muW : ∀ (B : Base) (f : Fr B.to
     simp only [ma, hWt v, hmt v]
   have hor : ∀ v, ma v = w.C.mu0 ∨ ma v = mt v := fun v => by
     by_cases h : v ∈ Wt
-    · exact Or.inr (if_pos h)
-    · exact Or.inl (if_neg h)
-  refine ⟨reset R.W mt ma hmt hma hor, ⟨fun v => Classical.choose_spec (hmem v), fun v h => if_pos h, fun v h => if_neg h⟩,
+    · exact Or.inr (ite_eq_left h)
+    · exact Or.inl (ite_eq_right h)
+  refine ⟨reset R.W mt ma hmt hma hor, ⟨fun v => Classical.choose_spec (hmem v), fun v h => ite_eq_left h, fun v h => ite_eq_right h⟩,
     fun W' hb hs => kapDef_of_ka W' hb hs, GlobalTheory.MemN.shaOK_shaTrue B.toPre⟩
 end -- clump:auto
 end -- clump:auto
@@ -758,7 +758,7 @@ def zeVal (u : D.Word) (μ : D.Tup) : D.LLˣ :=
 
 theorem periodFactorisationScalar_referenceTuple_eq_one (u : D.Word) : zeVal D u D.mu0 = 1 := by
   unfold zeVal
-  exact if_pos rfl
+  exact ite_eq_left rfl
 
 @[reducible] def modLL (μ : D.Tup) (j : ℕ) : Module (𝓞 D.LL) (D.MtL μ j) :=
   Module.compHom _ (algebraMap (𝓞 D.LL) D.LL)
@@ -1007,7 +1007,7 @@ theorem zeOf_eq {R : Ranks} (Dd : Rows.Data R) (u : Dd.Word) (μ : Dd.Tup) (c : 
     have hex : ∃ z : Dd.LLˣ, ZeFact Dd u μ (Dd.embLL (z : Dd.LL)) :=
       ⟨Units.mk0 z hz0, by simpa [hz'] using h⟩
     unfold zeVal
-    rw [if_neg hμ, dite_eq_left hex]
+    rw [ite_eq_right hμ, dite_eq_left hex]
     exact hex.choose_spec.unique h
 
 end GlobalTheory.Mem.R3.Rw.NumDef
@@ -1151,12 +1151,12 @@ namespace GlobalTheory.Mem.R3.Rw.PkExist
 theorem rowPk_nonempty : ∀ (B : Base) (f : Fr B.toPre) (T : TwDat B) (w : ColW B f T) (Z₀ : w.Lt) (hX : B.fields.Ok) (Wt : Set B.places.Pl) (z₀ : Dat (w.st Z₀) w.I hX T Wt), Inputs (w.D Z₀) → (w.D Z₀).host.F = maximalRealSubfield (w.D Z₀).host.E → Seed.FrmC.StdLat (Yc (w.D Z₀) 0) → (∀ i, Seed.FrmC.StdLat (Wc (w.D Z₀) i)) → Holds z₀.R z₀.F → (∀ v, B.places.conj v ∈ Wt ↔ v ∈ Wt) → Nonempty (RowPk w z₀) := by
   intro B f T w Z₀ hX Wt z₀ hIn hF hY hW hH hWt
   classical
-  letI : Algebra z₀.core.Q.c.F (w.D Z₀).what₂.LL := z₀.alg
+  let : Algebra z₀.core.Q.c.F (w.D Z₀).what₂.LL := z₀.alg
   let tupT : w.I.ι → TupU w.I (usedOf w.I T Wt) := fun a =>
     if h : ∃ t, ixOf w.I (usedOf w.I T Wt) t = a then h.choose else mu0F (X := B.fields) (tuOf w.I (usedOf w.I T Wt))
   have htt : ∀ t, tupT (ixOf w.I (usedOf w.I T Wt) t) = t := fun t => by
     have h : ∃ t', ixOf w.I (usedOf w.I T Wt) t' = ixOf w.I (usedOf w.I T Wt) t := ⟨t, rfl⟩
-    simp only [tupT, dif_pos h]
+    simp only [tupT, dite_eq_left h]
     exact ixOf_injective w.I _ h.choose_spec
   obtain ⟨y, hy, -⟩ := HdExist.hd_exists (w.D Z₀) (Gc B w.px) (PlS B w.px) (PlI B w.px) (TupU w.I (usedOf w.I T Wt))
     (famR (w.st Z₀) w.I hX (usedOf w.I T Wt) z₀.Xg z₀.tr) z₀.core.Q.c.F z₀.R z₀.F z₀.cG z₀.pins hF hY hW

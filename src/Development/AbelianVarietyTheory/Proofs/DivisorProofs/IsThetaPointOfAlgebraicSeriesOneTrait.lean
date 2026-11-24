@@ -131,12 +131,12 @@ theorem isThetaPt_descend (hL : Laws) (hL₂ : Laws2) {S S' : Scheme.{0}} [IsLoc
   have hU : ∀ i, U ≫ x i = e (x' i) := fun i => Over.OverMorphism.ext ((hx i).symm.trans (he _).symm)
   have hkU : ∀ i, (U ≫ x i) ^ m ^ 2 = 1 := fun i => by rw [hU, ← map_pow, hk, map_one]
   have hkx : ∀ i, x i ^ m ^ 2 = 1 := fun i => by
-    letI := em.toAlgebra
-    haveI : Flat (spMap em) := by
+    let := em.toAlgebra
+    have : Flat (spMap em) := by
       rw [HasRingHomProperty.Spec_iff (P := @Flat)]
       exact (inferInstance : Module.Flat K C)
-    haveI : Surjective (spMap em) := ⟨fun p => ⟨(⊥ : PrimeSpectrum C), Subsingleton.elim (α := PrimeSpectrum K) _ _⟩⟩
-    haveI : Epi (spMap em) := Flat.epi_of_flat_of_surjective (spMap em)
+    have : Surjective (spMap em) := ⟨fun p => ⟨(⊥ : PrimeSpectrum C), Subsingleton.elim (α := PrimeSpectrum K) _ _⟩⟩
+    have : Epi (spMap em) := Flat.epi_of_flat_of_surjective (spMap em)
     have E : U ≫ (x i ^ m ^ 2) = U ≫ 1 := by rw [MonObj.comp_pow, hkU, MonObj.comp_one]
     exact Over.OverMorphism.ext ((cancel_epi (spMap em)).1 (congrArg (fun q => q.left) E))
   obtain ⟨t, ht⟩ := Specialise.exists_isThetaPt_local hL hL₂ P s hm (IsUnit.mk0 _ hmK) x hkx
@@ -177,7 +177,7 @@ theorem isThetaPt_of_series : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   generalize n ^ j = m at *
   obtain ⟨C, _, _, _, _, _, gam, hgam, hC⟩ := exists_complete_isAlgClosed_cExt W (Kb W)
   have : CharZero C := (RingHom.charZero_iff (algebraMap (FractionRing W) C).injective).1 inferInstance
-  letI : Algebra (FractionRing R) C := ((algebraMap (FractionRing W) C).comp ga).toAlgebra
+  let : Algebra (FractionRing R) C := ((algebraMap (FractionRing W) C).comp ga).toAlgebra
   have cC : Compat φ C := fun r => congrArg (algebraMap (FractionRing W) C) (hga r)
   have a₀K : algebraMap (FractionRing R) (Kb W) = (algebraMap (FractionRing W) (Kb W)).comp ga :=
     IsLocalization.ringHom_ext (nonZeroDivisors R) (RingHom.ext fun r => (c₀ r).trans

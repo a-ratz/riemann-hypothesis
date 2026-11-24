@@ -71,7 +71,7 @@ theorem hodge_bundle_nef_and_big : _root_.GlobalTheory.CovTop.Hypotheses'' → G
   intro hP hN hS hC hL E _ _ _ H Dw l Xo c TF Z r U P R ω x D V dict h f₁ f₂ th k hF hW
   obtain ⟨hsm, hpr, hgc⟩ := GlobalTheory.VarFlag.isVariety₀_flag E H Dw l Xo c TF Z hF
   have hsm' : Smooth (str₀ TF.X Z) := SmoothOfRelativeDimension.smooth (dimFlag Dw) (str₀ TF.X Z)
-  haveI : IsIntegral (Y₀ TF.X Z) := isIntegral_of_smooth_of_geometricallyConnected (str₀ TF.X Z)
+  have : IsIntegral (Y₀ TF.X Z) := isIntegral_of_smooth_of_geometricallyConnected (str₀ TF.X Z)
   set la : AllWt.Weight Dw := P.u₂ + dimFlag Dw • P.u₁ with hla
   have hg₁ := (GlobalTheory.HSApp.gaps_of_wtBig E H Dw P hW P.u₁ (by simp)).1
   have hg₂ := (GlobalTheory.HSApp.gaps_of_wtBig E H Dw P hW P.u₂ (by simp)).1
@@ -81,7 +81,7 @@ theorem hodge_bundle_nef_and_big : _root_.GlobalTheory.CovTop.Hypotheses'' → G
     have a₂ := hg₂ τ k hk
     simp only [hla, Pi.add_apply, Pi.smul_apply, gap_add, gap_nsmul]
     nlinarith
-  letI := algebraΓOfHom (str₀ TF.X Z)
+  let := algebraΓOfHom (str₀ TF.X Z)
   have hf₀ : ∀ r : c.F, algebraMap c.F Γ(Y₀ TF.X Z, ⊤) r =
       (str₀ TF.X Z).appTop ((Scheme.ΓSpecIso (.of c.F)).inv r) := fun _ => rfl
   have hs₀ : strHom c.F (Y₀ TF.X Z) = str₀ TF.X Z := strHom_eq hf₀
@@ -128,16 +128,16 @@ theorem hodge_bundle_nef_and_big : _root_.GlobalTheory.CovTop.Hypotheses'' → G
       (fun j => finite_coh_zero_twist_of_isProjOver hf₀ hpr (isLB_lbPow (isLB_L₀ TF.X Z la) j))
   have bigpull : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (g : Y ⟶ X), IsProjOver (g ≫ p) → topologicalKrullDim Y = topologicalKrullDim X → Dense (Set.range g) → ∀ N : LB X, (letI := algebraΓOfHom p; IsBig k N) → (letI := algebraΓOfHom (g ≫ p); IsBig k (N.pull g)) := fun k _ X Y _ p g hp hd hg N hN => GlobalTheory.BigPull.isBig_pull k X Y p g hp hd hg N hN
   obtain ⟨hprop₁, H₁, hH₁⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB _).1 R.proj
-  haveI : IsProper (strHom c.F (X := (Y₀ TF.X Z))) := hs₀ ▸ hprop₀
-  haveI : IsProper (R.σ ≫ str₀ TF.X Z) := hprop₁
-  haveI : IsProper R.σ := IsProper.of_comp R.σ (str₀ TF.X Z)
+  have : IsProper (strHom c.F (X := (Y₀ TF.X Z))) := hs₀ ▸ hprop₀
+  have : IsProper (R.σ ≫ str₀ TF.X Z) := hprop₁
+  have : IsProper R.σ := IsProper.of_comp R.σ (str₀ TF.X Z)
   have hcl : IsClosedMap R.σ := Scheme.Hom.isClosedMap R.σ
-  haveI : Nonempty R.X := by
+  have : Nonempty R.X := by
     obtain ⟨z⟩ : Nonempty (Sp c.F) := inferInstance
-    haveI : GeometricallyConnected R.str := h.conn
+    have : GeometricallyConnected R.str := h.conn
     obtain ⟨y, -⟩ := R.str.surjective z
     exact ⟨y⟩
-  haveI : Nonempty (Y₀ TF.X Z) := ⟨R.σ (Classical.arbitrary R.X)⟩
+  have : Nonempty (Y₀ TF.X Z) := ⟨R.σ (Classical.arbitrary R.X)⟩
   have hdim : topologicalKrullDim R.X = topologicalKrullDim (Y₀ TF.X Z) := by
     rw [GlobalTheory.HSCore.VanishNumberField.topologicalKrullDim_eq_of_smooth R.str (dimFlag Dw) R.smooth,
       GlobalTheory.HSCore.VanishNumberField.topologicalKrullDim_eq_of_smooth (str₀ TF.X Z) (dimFlag Dw) hsm]
@@ -150,7 +150,7 @@ theorem hodge_bundle_nef_and_big : _root_.GlobalTheory.CovTop.Hypotheses'' → G
     simp only [Scheme.Hom.comp_apply] at e
     rw [← e, hx]
     rfl
-  letI := algebraΓOfHom R.str
+  let := algebraΓOfHom R.str
   change IsNef c.F ((L₀ TF.X Z la).pull R.σ) ∧ IsBig c.F ((L₀ TF.X Z la).pull R.σ)
   exact ⟨GlobalTheory.PosBaseChange.isNef_pull nef₀ hH₀ hH₁ R.σ hcl,
     bigpull c.F (Y₀ TF.X Z) R.X (str₀ TF.X Z) R.σ R.proj hdim hdense _ big₀⟩

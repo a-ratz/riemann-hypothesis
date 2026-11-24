@@ -167,10 +167,10 @@ theorem UpperTheory.V.Fr.def_iso :
       rw [← L.unr]
       exact Ideal.mem_map_of_mem _ ((IsLocalRing.mem_maximalIdeal a).mpr h)
     exact (IsLocalRing.mem_maximalIdeal _).mp hm ha
-  haveI : IsLocalHom (algebraMap L.O' C) := IsCO.isLocalHom
-  haveI : IsLocalHom (algebraMap L.O' L.R) := IsCO.isLocalHom
-  letI : Algebra O C := ((algebraMap L.O' C).comp (algebraMap O L.O')).toAlgebra
-  haveI : IsScalarTower O L.O' C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsLocalHom (algebraMap L.O' C) := IsCO.isLocalHom
+  have : IsLocalHom (algebraMap L.O' L.R) := IsCO.isLocalHom
+  let : Algebra O C := ((algebraMap L.O' C).comp (algebraMap O L.O')).toAlgebra
+  have : IsScalarTower O L.O' C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hCloc : IsLocalHom (algebraMap O C) :=
     inferInstanceAs (IsLocalHom ((algebraMap L.O' C).comp (algebraMap O L.O')))
   have hCL : UpperTheory.V.CA.IsCL O C := by

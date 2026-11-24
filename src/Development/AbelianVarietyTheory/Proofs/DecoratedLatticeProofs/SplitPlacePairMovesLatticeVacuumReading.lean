@@ -140,7 +140,7 @@ theorem moves_reading : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
   set Λ' := (latO S T (ΛS' : Set (Fin S.rank → D.host.E)) (ΛT' : Set (Fin T.rank → D.host.E)) fun _ => True) with hΛ'
 
   have : (A₁.addSubgroupOf A₂).FiniteIndex := ⟨hidx⟩
-  letI : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := Fintype.ofFinite _
+  let : Fintype (A₂ ⧸ A₁.addSubgroupOf A₂) := Fintype.ofFinite _
   have hch : ∀ c : A₂ ⧸ A₁.addSubgroupOf A₂, ∃ γ, ((Quotient.out c : A₂) : VCx D.what₂.Tau a b) =
       embH (tauE D) δ (toHom S T hS hT γ) := fun c => hA₂γ _ (Quotient.out c).2
   choose γc hγc using hch

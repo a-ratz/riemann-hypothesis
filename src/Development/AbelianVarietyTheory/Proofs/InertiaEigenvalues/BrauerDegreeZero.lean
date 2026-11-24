@@ -80,7 +80,7 @@ theorem exists_lt_commutator_mem_of_ne_top {G : Type} [Group G] [Finite G] [Grou
     ∃ A : Subgroup G, K < A ∧ ∀ a ∈ A, ∀ b ∈ A, a * b * a⁻¹ * b⁻¹ ∈ K := by
   have hlt : K < Subgroup.normalizer (K : Set G) :=
     Group.normalizerCondition_of_isNilpotent K (lt_top_iff_ne_top.mpr hK)
-  obtain ⟨x, hxN, hxK⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨x, hxN, hxK⟩ := IsConcreteLE.exists_of_lt hlt
   have hconj : ∀ i : ℤ, ∀ k ∈ K, x ^ i * k * (x ^ i)⁻¹ ∈ K := fun i k hk =>
     (Subgroup.mem_normalizer_iff.mp (Subgroup.zpow_mem _ hxN i) k).mp hk
   let A : Subgroup G :=
@@ -95,7 +95,7 @@ theorem exists_lt_commutator_mem_of_ne_top {G : Type} [Group G] [Finite G] [Grou
         exact ⟨x ^ (-i) * k⁻¹ * (x ^ (-i))⁻¹, hconj (-i) _ (K.inv_mem hk), -i, by group⟩ }
   have hKA : K ≤ A := fun k hk => (⟨k, hk, 0, by simp⟩ : ∃ k' ∈ K, ∃ i : ℤ, k = k' * x ^ i)
   have hxA : x ∈ A := (⟨1, K.one_mem, 1, by simp⟩ : ∃ k ∈ K, ∃ i : ℤ, x = k * x ^ i)
-  refine ⟨A, SetLike.lt_iff_le_and_exists.mpr ⟨hKA, x, hxA, hxK⟩, ?_⟩
+  refine ⟨A, IsConcreteLE.lt_iff_le_and_exists.mpr ⟨hKA, x, hxA, hxK⟩, ?_⟩
   rintro _ ⟨k, hk, i, rfl⟩ _ ⟨k', hk', j, rfl⟩
   have h : k * x ^ i * (k' * x ^ j) * (k * x ^ i)⁻¹ * (k' * x ^ j)⁻¹ =
       k * (x ^ i * k' * (x ^ i)⁻¹) * (x ^ j * k⁻¹ * (x ^ j)⁻¹) * k'⁻¹ := by group
@@ -193,12 +193,12 @@ theorem ind_one_sub_index_mem_D0 {G : Type} [Group G] [Finite G] (K : Subgroup G
     (hK : ∀ a b : G, a * b * a⁻¹ * b⁻¹ ∈ K) :
     ind K (fun _ => (1 : ℂ)) - (fun _ => (K.index : ℂ)) ∈ D0 G := by
   classical
-  haveI := Fintype.ofFinite G
-  haveI hN : K.Normal := ⟨fun n hn g => by
+  have := Fintype.ofFinite G
+  have hN : K.Normal := ⟨fun n hn g => by
     have h1 := hK g n
     have : g * n * g⁻¹ = (g * n * g⁻¹ * n⁻¹) * n := by group
     rw [this]; exact K.mul_mem h1 hn⟩
-  letI : CommGroup (G ⧸ K) :=
+  let : CommGroup (G ⧸ K) :=
     { (inferInstance : Group (G ⧸ K)) with
       mul_comm := by
         intro x y
@@ -210,7 +210,7 @@ theorem ind_one_sub_index_mem_D0 {G : Type} [Group G] [Finite G] (K : Subgroup G
           have := hK b⁻¹ a⁻¹
           have e : (a * b)⁻¹ * (b * a) = b⁻¹ * a⁻¹ * b⁻¹⁻¹ * a⁻¹⁻¹ := by group
           rw [e]; exact this }
-  haveI : Fintype (G ⧸ K) := Fintype.ofFinite _
+  have : Fintype (G ⧸ K) := Fintype.ofFinite _
   let Q := Additive (G ⧸ K)
 
   let F : AddChar Q ℂ → G → ℂ := fun ψ g => ψ (Additive.ofMul (QuotientGroup.mk g : G ⧸ K))
@@ -252,8 +252,8 @@ theorem ind_one_sub_index_mem_D0 {G : Type} [Group G] [Finite G] (K : Subgroup G
     have hs : ∀ x : G, (if h : x⁻¹ * g * x ∈ K then (1 : ℂ) else 0) = if g ∈ K then 1 else 0 := by
       intro x
       by_cases hg : g ∈ K
-      · rw [dite_eq_left ((hconj x).2 hg), if_pos hg]
-      · rw [dite_eq_right (fun h => hg ((hconj x).1 h)), if_neg hg]
+      · rw [dite_eq_left ((hconj x).2 hg), ite_eq_left hg]
+      · rw [dite_eq_right (fun h => hg ((hconj x).1 h)), ite_eq_right hg]
     rw [Finset.sum_congr rfl (fun x _ => hs x), Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
       ← Nat.card_eq_fintype_card, ← K.card_mul_index]
     have : (Nat.card K : ℂ) ≠ 0 := by exact_mod_cast (Nat.card_pos (α := K)).ne'
@@ -271,8 +271,8 @@ theorem ind_one_sub_index_mem_D0 {G : Type} [Group G] [Finite G] (K : Subgroup G
     have he : (Additive.ofMul (QuotientGroup.mk g : G ⧸ K) = 0) ↔ g ∈ K := by
       rw [ofMul_eq_zero, QuotientGroup.eq_one_iff]
     by_cases hg : g ∈ K
-    · rw [if_pos (he.2 hg), if_pos hg, hc]
-    · rw [if_neg (fun h => hg (he.1 h)), if_neg hg]
+    · rw [ite_eq_left (he.2 hg), ite_eq_left hg, hc]
+    · rw [ite_eq_right (fun h => hg (he.1 h)), ite_eq_right hg]
   have hcard : (Fintype.card (AddChar Q ℂ) : ℂ) = (K.index : ℂ) := by
     rw [AddChar.card_eq, Subgroup.index, ← Nat.card_eq_fintype_card]; rfl
   have heq : ind K (fun _ => (1 : ℂ)) - (fun _ => (K.index : ℂ))
@@ -390,7 +390,7 @@ theorem central_case (G : Type) [Group G] [Finite G]
     obtain ⟨j, hj⟩ := hc y
     exact ⟨j, by rw [← QuotientGroup.mk_pow, QuotientGroup.eq_one_iff]; exact hj⟩
   have := hq.isNilpotent
-  haveI : Group.IsNilpotent G :=
+  have : Group.IsNilpotent G :=
     Subgroup.isNilpotent_of_ker_le_center (QuotientGroup.mk' (Subgroup.center G)) (by simp)
   have hab : AbByP G := ⟨l, hl, Subgroup.center G, inferInstance,
     fun a _ b hb => Subgroup.mem_center_iff.1 hb a, fun g => hc g⟩

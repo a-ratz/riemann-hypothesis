@@ -148,11 +148,11 @@ theorem regM_locInt {n : ℕ} (z : M → V n) (hz : IsLocalHomeomorph z)
   have hmeas : AEStronglyMeasurable (F ∘ e.symm) (volume.restrict K) :=
     (hFm.comp_aemeasurable (hcont.aemeasurable hK.measurableSet)).aestronglyMeasurable
   have h2 : ∫⁻ y in K, ‖(F ∘ e.symm) y‖ₑ ^ 2 < ⊤ := by
-    have h3 := regM_lintegral_image z hz e he (fun x => ‖F x‖ₑ ^ 2) (hFm.enorm.pow_const 2) K hK hKt
+    have h3 := regM_lintegral_image z hz e he (fun x => ‖F x‖ₑ ^ 2) (hFm.eNorm.pow_const 2) K hK hKt
     simp only [Function.comp_apply]
     rw [h3]
     exact hF.2 _ (hK.image_of_continuousOn hcont)
-  haveI : IsFiniteMeasure (volume.restrict K) :=
+  have : IsFiniteMeasure (volume.restrict K) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact hK.measure_lt_top⟩
   have hL2 : MemLp (F ∘ e.symm) 2 (volume.restrict K) := by
     rw [memLp_iff,

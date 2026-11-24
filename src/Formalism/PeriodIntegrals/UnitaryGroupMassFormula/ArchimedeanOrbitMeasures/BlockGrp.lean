@@ -158,19 +158,19 @@ private theorem emb0_smul (e : Fin k ≃ S) (c : ℂ) (X : Matrix (Fin k) (Fin k
 theorem continuous_embed (e : Fin k ≃ S) : Continuous (emb0 e) := by
   refine continuous_matrix fun i j => ?_
   by_cases h : i ∈ S ∧ j ∈ S
-  · simp only [emb0, dif_pos h]
+  · simp only [emb0, dite_eq_left h]
     exact continuous_id.matrix_elem _ _
-  · simp only [emb0, dif_neg h]
+  · simp only [emb0, dite_eq_right h]
     exact continuous_const
 
 
 set_option backward.isDefEq.respectTransparency false in
 theorem exp_embed (e : Fin k ≃ S) (X : Matrix (Fin k) (Fin k) ℂ) :
     NormedSpace.exp (emb0 e X) = emb0 e (NormedSpace.exp X) + (1 - emb0 e 1) := by
-  letI : NormedRing (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   have h1 := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) X
   have h2 := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) (emb0 e X)
   have h3 := (h1.map (blockEmbeddingAddHom e) (continuous_embed e)).add
@@ -483,7 +483,7 @@ theorem std_row (ε : Fin n → Bool) (u : UstdSub ε S) (i : Fin n) (hi : i ∉
       _ = (V : Matrix (Fin n) (Fin n) ℂ) := by rw [hJ, hJJ, Matrix.one_mul]
   have hcol := (u⁻¹).2 i hi j
   change (V : Matrix (Fin n) (Fin n) ℂ) j i = _ at hcol
-  rw [← hW, if_neg hji] at hcol
+  rw [← hW, ite_eq_right hji] at hcol
   simp only [Formalism.REAL.Jm, Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.conjTranspose_apply] at hcol
   have hd : ∀ a : Fin n, (if ε a = true then (1 : ℂ) else -1) ≠ 0 := fun a => by split_ifs <;> norm_num
   have := (mul_eq_zero.1 hcol).resolve_right (hd i)
@@ -569,8 +569,8 @@ theorem continuous_embHom (ε : Fin n → Bool) (hε : ∀ i ∈ S, ε i = true)
   apply Continuous.subtype_mk
   rw [Units.continuous_iff]
   constructor
-  · exact ((continuous_embed e).comp (Units.continuous_val.comp continuous_subtype_val)).add continuous_const
-  · exact ((continuous_embed e).comp (Units.continuous_coe_inv.comp continuous_subtype_val)).add continuous_const
+  · exact ((continuous_embed e).comp (Units.continuous_val.comp continuous_subtypeVal)).add continuous_const
+  · exact ((continuous_embed e).comp (Units.continuous_coe_inv.comp continuous_subtypeVal)).add continuous_const
 
 theorem blockHaarV_of (hU : UkChart) (hG : GaugeVolUD) : BlockHaarV := by
   intro n ε S k hk hε _
@@ -613,7 +613,7 @@ theorem blockHaarV_of (hU : UkChart) (hG : GaugeVolUD) : BlockHaarV := by
   have hgpos : 0 < Formalism.MainNotions.S.Gauge.gaugeU (fun _ : Fin k => true) := (hG k).1.2
   have hvol := (hG k).2
   unfold Formalism.MainNotions.S.Gauge.muGauge at hvol
-  rw [Measure.smul_apply, smul_eq_mul] at hvol
+  rw [smul_apply, smul_eq_mul] at hvol
   have hfin : Formalism.REAL.muG (fun _ : Fin k => true) Set.univ ≠ ⊤ := by
     intro htop
     rw [htop, ENNReal.mul_top (by simp [hgpos])] at hvol
@@ -638,7 +638,7 @@ theorem blockHaarV_of (hU : UkChart) (hG : GaugeVolUD) : BlockHaarV := by
       rw [PI.AprimeInfW.lie_entry] at h
       have ha : ((e a : S) : Fin n) ∈ S := (e a).2
       have hb : ((e b : S) : Fin n) ∈ S := (e b).2
-      simp only [hε _ ha, hε _ hb, if_true, mul_one, one_mul] at h
+      simp only [hε _ ha, hε _ hb, ite_true, mul_one, one_mul] at h
       simpa [resB, Matrix.conjTranspose_apply] using h
     rw [f2 _ hl, embed_restrict e M hM.2]
   · rw [hL₁]

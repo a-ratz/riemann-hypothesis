@@ -143,9 +143,9 @@ theorem exists_equiv_pi [Finite ι] (hinj : ∀ f : Fr, (∀ c, φ c f = 0) → 
     (∃ e : M ≃ₗ[K] (∀ c, R c ⧸ Ideal.map (φ c) J),
       ∀ (b : Fr) (c : ι), e (b • e0) c = Ideal.Quotient.mk (Ideal.map (φ c) J) (φ c b)) ∧
     n = ∑ᶠ c, Module.finrank K (R c ⧸ Ideal.map (φ c) J) := by
-  letI inst : ∀ c, Module K (R c ⧸ Ideal.map (φ c) J) := fun c =>
+  let inst : ∀ c, Module K (R c ⧸ Ideal.map (φ c) J) := fun c =>
     ((Ideal.Quotient.mk (Ideal.map (φ c) J)).comp (algebraMap K (R c))).toModule
-  letI : Fintype ι := Fintype.ofFinite ι
+  let : Fintype ι := Fintype.ofFinite ι
   let f : Fr →ₗ[K] M := (LinearMap.toSpanSingleton Fr M e0).restrictScalars K
   let g : Fr →ₗ[K] (∀ c, R c ⧸ Ideal.map (φ c) J) :=
     { toFun := fun b c => Ideal.Quotient.mk (Ideal.map (φ c) J) (φ c b)
@@ -178,9 +178,9 @@ theorem exists_equiv_pi [Finite ι] (hinj : ∀ f : Fr, (∀ c, φ c f = 0) → 
     rw [h1]; rfl
   refine ⟨⟨e, fun b c => congrFun (he b) c⟩, ?_⟩
   let bs : Module.Basis (Fin n) K M := Module.Basis.mk hli hsp.ge
-  haveI : Module.Finite K M := Module.Finite.of_basis bs
-  haveI : Module.Finite K (∀ c, R c ⧸ Ideal.map (φ c) J) := Module.Finite.equiv e
-  haveI : ∀ c, Module.Finite K (R c ⧸ Ideal.map (φ c) J) := fun c =>
+  have : Module.Finite K M := Module.Finite.of_basis bs
+  have : Module.Finite K (∀ c, R c ⧸ Ideal.map (φ c) J) := Module.Finite.equiv e
+  have : ∀ c, Module.Finite K (R c ⧸ Ideal.map (φ c) J) := fun c =>
     Module.Finite.of_surjective (LinearMap.proj (R := K) (φ := fun c => R c ⧸ Ideal.map (φ c) J) c)
       (Function.surjective_eval c)
   rw [finsum_eq_sum_of_fintype, ← Module.finrank_pi_fintype, ← e.finrank_eq, Module.finrank_eq_card_basis bs,
@@ -284,7 +284,7 @@ end Record
 
 theorem tieS : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (hG : GenFrEx (T.Q.Xo j) T.Q.c) (ka wL wF : WeightFamilies.Wt D j) (G : GlobalFamilyData (recPlus h j hj) ka wL wF) (hT : GenFromTest (T.Q.Xo j) T.Q.c hG) (S : Scal (recB h.toLawsCore)) (g0 : (recB h.toLawsCore).Cusp j wF) (la : HeightOneSpectrum (𝓞 (recB h.toLawsCore).KO)), CurveHyp h j hj hG ka wL wF G S g0 → InBasis G la → TieSSt h j hj hG hT G la g0 := by
   intro D T h j hj hG ka wL wF G hT S g0 la hH hB
-  haveI : Finite (Comp (T.Q.Xo j) T.Q.c) := CompFin.finite_comp _ _
+  have : Finite (Comp (T.Q.Xo j) T.Q.c) := CompFin.finite_comp _ _
   have hV := GlobalTheory.Reg.genValInj_record D T h j hj hG
   have hC := GlobalTheory.Reg.compSplit_record D T h j hj hG
   obtain ⟨M⟩ := _root_.GlobalTheory.CurveRecord.curveInst D T h j hj hG hT hV hC

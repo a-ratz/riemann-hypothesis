@@ -241,7 +241,7 @@ theorem exists_global_near_idempotent (E E' : Type) [Field E] [NumberField E] [F
     have hc : ContinuousAt (fun z : K => z + x₀) 0 := (continuous_id.add continuous_const).continuousAt
     have h' := hc.preimage_mem_nhds (by simpa using hl)
     filter_upwards [h'] with z hz
-    simp only [Set.mem_preimage, Set.mem_setOf_eq] at hz ⊢
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hz ⊢
     calc Valued.v z = Valued.v ((z + x₀) - x₀) := by rw [add_sub_cancel_right]
       _ ≤ max (Valued.v (z + x₀)) (Valued.v x₀) := Valuation.map_sub _ _ _
       _ = Valued.v x₀ := by rw [hz, max_self]
@@ -559,7 +559,7 @@ theorem norm_div_close_to_one : ∀ (E E' : Type) [Field E] [NumberField E] [Fie
   have hw'y : w'.valuation E' (y - 1) ≤ WithZero.exp (-(K₀ : ℤ)) := by
     rw [hy1, map_mul, Valuation.map_sub_swap]
     by_cases hz1 : w'.valuation E' (z - 1) = 0
-    · rw [hz1, mul_zero]; exact zero_le'
+    · rw [hz1, mul_zero]; exact zero_le
     calc w'.valuation E' (ε - 1) * w'.valuation E' (z - 1)
         ≤ WithZero.exp (-(n : ℤ)) * WithZero.exp m := by
           rw [hm, WithZero.exp_log hz1]; exact mul_le_mul' hw'ε le_rfl
@@ -882,7 +882,7 @@ theorem res_art_eq_art (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algeb
   obtain ⟨a, hap, hapos⟩ := _root_.GlobalTheory.FinPlaceApproxPos.approxpos_target E' TSK (fun u => if u = w' then (y : E') else 1) (P0 + m)
   have haW : w'.valuation E' (a - y) ≤ WithZero.exp (-((P0 : ℤ) + m)) := by
     have := hap w' hWT
-    rw [if_pos rfl] at this
+    rw [ite_eq_left rfl] at this
     exact val_le_of_le₁ w' this (by push_cast; omega)
   have hz : w'.valuation E' (a / y - 1) ≤ WithZero.exp (-(P0 : ℤ)) :=
     val_div_sub_one_le₁ w' y.ne_zero le_rfl haW
@@ -896,7 +896,7 @@ theorem res_art_eq_art (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algeb
   have hauy : au = y * zu := by simp [zu]
   have hoth : ∀ u ∈ TSK, u ≠ w' → u.valuation E' (a - 1) ≤ WithZero.exp (-(P0 : ℤ)) := fun u hu hne => by
     have := hap u hu
-    rw [if_neg hne] at this
+    rw [ite_eq_right hne] at this
     exact val_le_of_le₁ u this (by push_cast; omega)
 
   have F1 : ψ1 (locUnit E' w' au) = ψ1 (locUnit E' w' y) := by
@@ -967,7 +967,7 @@ theorem res_art_eq_art (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algeb
 
 theorem artin_of_placeIso : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (E' Ω' : Type) [Field E'] [NumberField E'] [Field Ω'] [Algebra E' Ω'] [IsAlgClosure E' Ω'] (A' : ValuationSubring Ω') (w' : HeightOneSpectrum (𝓞 E')) (h' : IsPlaceOver A' w') (φ : Ω ≃+* Ω') (j : E →+* E') (i : w.adicCompletion E ≃+* w'.adicCompletion E'), PlaceIso A w A' w' φ j i → ∀ (art : Neutral.B1.Ideles E →* GlobalTheory.HeckeGal.Gab E Ω) (art' : Neutral.B1.Ideles E' →* GlobalTheory.HeckeGal.Gab E' Ω'), GlobalTheory.HeckeGal.IsGlobalArtin art → GlobalTheory.HeckeGal.IsGlobalArtin art' → ∀ (σ : Weil h) (σ' : Weil h') (x : (w.adicCompletion E)ˣ), WeilRel φ σ σ' → art' (Neutral.B1.localIdele E' w' (Units.map i.toRingHom.toMonoidHom x)) = GlobalTheory.HeckeGal.toAb E' Ω' σ' → art (Neutral.B1.localIdele E w x) = GlobalTheory.HeckeGal.toAb E Ω σ := by
   intro E Ω _ _ _ _ _ A w h E' Ω' _ _ _ _ _ A' w' h' φ j i hPI art art' ha ha' σ σ' x hW hx
-  letI : Algebra E E' := j.toAlgebra
+  let : Algebra E E' := j.toAlgebra
   obtain ⟨ρ, hρc, hρ⟩ := _root_.GlobalTheory.HeckeGal.exists_abHom_of_ringEquiv E Ω E' Ω' φ j hPI.ext
   have key := res_art_eq_art E Ω E' Ω' φ hPI.ext w w' i hPI.cont hPI.loc art art' ha ha' ρ hρc hρ x
   have hσ : ρ (toAb E' Ω' σ') = toAb E Ω σ := hρ σ' σ hW

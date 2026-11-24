@@ -63,9 +63,9 @@ instance algKT (i : T.Tw) (b : Bool) : Algebra S.Ks (KT D T i b) := ((readT D T 
 
 def WKr (j : ℕ) : Submodule S.Ks (S.WL j) := if 1 ≤ j ∧ j ≤ D.R.m then (S.A j).WK else ⊥
 
-theorem WKr_of {j : ℕ} (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) : WKr D S j = (S.A j).WK := if_pos ⟨h1, h2⟩
+theorem WKr_of {j : ℕ} (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) : WKr D S j = (S.A j).WK := ite_eq_left ⟨h1, h2⟩
 
-theorem WKr_off {j : ℕ} (h : ¬ (1 ≤ j ∧ j ≤ D.R.m)) : WKr D S j = ⊥ := if_neg h
+theorem WKr_off {j : ℕ} (h : ¬ (1 ≤ j ∧ j ≤ D.R.m)) : WKr D S j = ⊥ := ite_eq_right h
 
 def FmT (i : T.Tw) (j : ℕ) (b : Bool) : Type := KT D T i b ⊗[S.Ks] ↥(WKr D S j)
 
@@ -232,7 +232,7 @@ theorem hkB_zero (hst : HkStab D T S In) (i : T.Tw) (j : ℕ) (b : Bool) (P : Pl
   exact absurd h.2.2.1 (by omega)
 
 theorem fg_BI (hfg : ∀ i j b, (BsupT D T S i j b).FG) (i : T.Tw) (j : ℕ) (b : Bool) : (BI D T S In i j b).FG := by
-  haveI : IsNoetherian (T.O i) ↥(BsupT D T S i j b) := isNoetherian_of_fg_of_noetherian _ (hfg i j b)
+  have : IsNoetherian (T.O i) ↥(BsupT D T S i j b) := isNoetherian_of_fg_of_noetherian _ (hfg i j b)
   have h1 : ((BI D T S In i j b).comap (BsupT D T S i j b).subtype).map (BsupT D T S i j b).subtype =
       BI D T S In i j b := by
     rw [Submodule.map_comap_subtype]
@@ -461,7 +461,7 @@ theorem fd_WKr (In : RatIn D S) (j : ℕ) : FiniteDimensional S.Ks ↥(WKr D S j
     infer_instance
 
 theorem fdFmT (In : RatIn D S) (i : T.Tw) (j : ℕ) (b : Bool) : FiniteDimensional (FractionRing (T.O i)) (FmT D T S i j b) := by
-  haveI := fd_WKr D S In j
+  have := fd_WKr D S In j
   exact (inferInstance : Module.Finite (KT D T i b) (KT D T i b ⊗[S.Ks] ↥(WKr D S j)))
 
 attribute [local instance] algKkT

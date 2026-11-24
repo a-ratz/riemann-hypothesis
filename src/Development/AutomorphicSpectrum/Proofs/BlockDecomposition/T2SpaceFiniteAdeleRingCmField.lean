@@ -183,7 +183,7 @@ theorem haar_split {X P Q : Type} [Group X] [TopologicalSpace X] [IsTopologicalG
       μ.map e = (μ₁.prod μ₁).prod μ₂ := by
   let μ₁ : Measure P := Measure.haar
   let μ₃ : Measure Q := Measure.haar
-  haveI : (μ.map e).IsHaarMeasure := e.isHaarMeasure_map μ
+  have : (μ.map e).IsHaarMeasure := e.isHaarMeasure_map μ
   have h := Measure.isMulLeftInvariant_eq_smul (μ.map e) ((μ₁.prod μ₁).prod μ₃)
   have hc := Measure.haarScalarFactor_pos_of_isHaarMeasure (μ.map e) ((μ₁.prod μ₁).prod μ₃)
   refine ⟨μ₁, Measure.haarScalarFactor (μ.map e) ((μ₁.prod μ₁).prod μ₃) • μ₃, inferInstance,
@@ -343,7 +343,7 @@ theorem q₃_embInf (h : v₁ ≠ v₂) {v : InfinitePlace E} (hv : v = v₁ ∨
     exact h₁.trans h₂.symm
 
 theorem t2Space_finiteAdeleRing_cmField : T2Space (Af E) := by
-  haveI : T2Space (InfiniteAdeleRing E × Af E) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
+  have : T2Space (InfiniteAdeleRing E × Af E) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
   have hinj : Function.Injective (fun x : Af E => ((0, x) : InfiniteAdeleRing E × Af E)) :=
     fun a b h => (Prod.ext_iff.1 h).2
   exact T2Space.of_injective_continuous hinj (continuous_const.prodMk continuous_id)
@@ -354,17 +354,17 @@ end Field
 open Classical in
 theorem splitAt2 : SplitAt2 := by
   intro E _ _ _ n v₁ v₂ hne _ _ μ _
-  haveI : T2Space (Af E) := t2Space_finiteAdeleRing_cmField
-  haveI : LocallyCompactSpace (Af E) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele E
-  haveI : SecondCountableTopology (Af E) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
-  haveI lc₁ : LocallyCompactSpace (GL (Fin n) ℂ) := gl_lc
-  haveI sc₁ : SecondCountableTopology (GL (Fin n) ℂ) := gl_sc
-  haveI lc₂ : LocallyCompactSpace (GL (Fin n) (Rest v₁ v₂)) := gl_lc
-  haveI sc₂ : SecondCountableTopology (GL (Fin n) (Rest v₁ v₂)) := gl_sc
-  letI m₁ : MeasurableSpace (GL (Fin n) ℂ) := borel _
-  haveI b₁ : BorelSpace (GL (Fin n) ℂ) := ⟨rfl⟩
-  letI m₂ : MeasurableSpace (GL (Fin n) (Rest v₁ v₂)) := borel _
-  haveI b₂ : BorelSpace (GL (Fin n) (Rest v₁ v₂)) := ⟨rfl⟩
+  have : T2Space (Af E) := t2Space_finiteAdeleRing_cmField
+  have : LocallyCompactSpace (Af E) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele E
+  have : SecondCountableTopology (Af E) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
+  have lc₁ : LocallyCompactSpace (GL (Fin n) ℂ) := gl_lc
+  have sc₁ : SecondCountableTopology (GL (Fin n) ℂ) := gl_sc
+  have lc₂ : LocallyCompactSpace (GL (Fin n) (Rest v₁ v₂)) := gl_lc
+  have sc₂ : SecondCountableTopology (GL (Fin n) (Rest v₁ v₂)) := gl_sc
+  let m₁ : MeasurableSpace (GL (Fin n) ℂ) := borel _
+  have b₁ : BorelSpace (GL (Fin n) ℂ) := ⟨rfl⟩
+  let m₂ : MeasurableSpace (GL (Fin n) (Rest v₁ v₂)) := borel _
+  have b₂ : BorelSpace (GL (Fin n) (Rest v₁ v₂)) := ⟨rfl⟩
   obtain ⟨μ₁, μ₂, h₁, h₂, h₃⟩ := haar_split (glQ (n := n) (qAd hne) (continuous_qAd hne) (continuous_qAd_symm hne)) μ
   have t₁ : ∀ x, q₁ (qAd hne) (conjAd E x) = starRingEnd ℂ (q₁ (qAd hne) x) := fun x => by
     rw [q₁_qAd]; exact cV_conjAd v₁ x

@@ -155,8 +155,8 @@ theorem UpperTheory.V.Ws.sxNearA :
   have hlev : ∀ N : ℕ, ∃ f : W.A →ₐ[Λ] R' ⧸ maximalIdeal R' ^ (N + 1),
       D'.map (f : W.A →+* _) = Q.map (Ideal.Quotient.mk (maximalIdeal R' ^ (N + 1))) := by
     intro N
-    haveI : Nontrivial (R' ⧸ maximalIdeal R' ^ (N + 1)) := nontrivial_quotient_maxIdeal_pow_succ N
-    haveI : IsCO Λ (R' ⧸ maximalIdeal R' ^ (N + 1)) :=
+    have : Nontrivial (R' ⧸ maximalIdeal R' ^ (N + 1)) := nontrivial_quotient_maxIdeal_pow_succ N
+    have : IsCO Λ (R' ⧸ maximalIdeal R' ^ (N + 1)) :=
       co_quot Λ R' _ (Ideal.Quotient.mkₐ Λ _) (Ideal.Quotient.mkₐ_surjective Λ _)
     exact liftNilpotent _ _ (isNilpotent_maxIdeal_quotient_maxIdeal_pow_succ N)
       (sxNearMap (Ideal.Quotient.mkₐ Λ (maximalIdeal R' ^ (N + 1))) hQ)
@@ -190,11 +190,11 @@ theorem UpperTheory.V.Ws.sxNearA :
   have huniq : ∀ (N : ℕ) (f f' : W.A →ₐ[Λ] R' ⧸ maximalIdeal R' ^ (N + 1)),
       (∀ s, f (W.zA s) = f' (W.zA s)) → f = f' := by
     intro N f f' h
-    haveI : Nontrivial (R' ⧸ maximalIdeal R' ^ (N + 1)) := nontrivial_quotient_maxIdeal_pow_succ N
-    haveI : IsCO Λ (R' ⧸ maximalIdeal R' ^ (N + 1)) :=
+    have : Nontrivial (R' ⧸ maximalIdeal R' ^ (N + 1)) := nontrivial_quotient_maxIdeal_pow_succ N
+    have : IsCO Λ (R' ⧸ maximalIdeal R' ^ (N + 1)) :=
       co_quot Λ R' _ (Ideal.Quotient.mkₐ Λ _) (Ideal.Quotient.mkₐ_surjective Λ _)
     exact sxExtA W hG.max _ f f' h
-  haveI : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := Λ)
+  have : IsAdicComplete (maximalIdeal R') R' := IsCO.complete (O := Λ)
   obtain ⟨F, hF⟩ := sxLimPt (Λ := Λ) (maximalIdeal R') W.zA y
     (fun N => ⟨fN N, fun s => hy s N (fN N) (hfN N)⟩) huniq
   have hcomp : ∀ N, (Ideal.Quotient.mkₐ Λ (maximalIdeal R' ^ (N + 1))).comp F = fN N := by

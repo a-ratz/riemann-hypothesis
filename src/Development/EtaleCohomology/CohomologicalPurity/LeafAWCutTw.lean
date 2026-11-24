@@ -117,7 +117,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 namespace LateralTheory.EtaleFoundations.TwFInj
 
 theorem prim_field {q : ℕ} {k : Type} [Field k] (ζ : Prim q k) : IsPrimitiveRoot ζ.1 q := by
-  haveI : NeZero (q : k) := ⟨ζ.2.1.ne_zero⟩
+  have : NeZero (q : k) := ⟨ζ.2.1.ne_zero⟩
   rw [← Polynomial.isRoot_cyclotomic_iff]
   have h := ζ.2.2
   simpa [Polynomial.aeval_def, Polynomial.eval₂_eq_eval_map, Polynomial.map_cyclotomic_int] using h
@@ -172,7 +172,7 @@ theorem LateralTheory.EtaleFoundations.twF_gen_inj_of : LateralTheory.EtaleFound
   intro q _ B _ hB i ζ c1 c2 hc
   simp only at hc
   obtain ⟨m, hm⟩ := Ideal.exists_maximal B
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   let π := Ideal.Quotient.mk m
   have hz := LateralTheory.EtaleFoundations.TwFInj.prim_field (ζ.map π)
   let Φ := Submodule.liftQ _ (LateralTheory.EtaleFoundations.TwFInj.L π hz i) (LateralTheory.EtaleFoundations.TwFInj.twRel_le_ker π hz i)

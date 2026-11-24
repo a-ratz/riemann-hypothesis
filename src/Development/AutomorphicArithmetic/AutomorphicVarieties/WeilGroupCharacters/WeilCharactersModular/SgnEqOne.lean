@@ -104,7 +104,7 @@ theorem UpperTheory.V.W.levEx :
     apply Subgroup.topologicalClosure_minimal _ _ hclosed
     apply Subgroup.normalClosure_le_normal
     intro σ hσ
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hσ
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hσ
     obtain ⟨v, hv, A, hA, hσA⟩ := hσ
     exact s.unr A v hA hσA
   have hcycClosed : IsClosed ((cycZ (Lp L) Ω l).ker : Set (G (Lp L) Ω)) := by
@@ -114,7 +114,7 @@ theorem UpperTheory.V.W.levEx :
     apply Subgroup.topologicalClosure_minimal _ _ hcycClosed
     apply Subgroup.normalClosure_le_normal
     intro σ hσ
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hσ
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hσ
     obtain ⟨v, hv, A, hA, hσA⟩ := hσ
     have hl : ((l : 𝓞 (Lp L))) ∉ v.asIdeal := fun h => hv (hsub (Or.inl h))
     exact GlobalTheory.WeilDeligne.cycZ_of_mem_Ine hA hl hσA
@@ -128,14 +128,14 @@ theorem UpperTheory.V.W.levEx :
     simp only [Set.mem_preimage, SetLike.mem_coe, MonoidHom.mem_ker]
     rw [← hsg g]
     exact Iff.rfl
-  haveI : (resP L Ω).range.FiniteIndex := ⟨by rw [hidx]; norm_num⟩
+  have : (resP L Ω).range.FiniteIndex := ⟨by rw [hidx]; norm_num⟩
   refine ⟨⟨S', hfin, hsub, hsplit, η, ?_, ?_, ?_, ε, ?_, ?_⟩, rfl⟩
   · intro g
     rw [hηg, hsg]
   · rw [← (QuotientGroup.isQuotientMap_mk (NS Ω S')).isOpen_preimage, hpre]
     exact Subgroup.isOpen_of_isClosed_of_finiteIndex _ hclosed
   · rw [hηg]
-    simp only [sgn, MonoidHom.mk'_apply, if_neg hc]
+    simp only [sgn, MonoidHom.mk'_apply, ite_eq_right hc]
   · exact MonoidHom.ext fun g => QuotientGroup.lift_mk _ hNS2 g
   · exact (QuotientGroup.isQuotientMap_mk (NS Ω S')).continuous_iff.mpr
       (by exact continuous_cycZ (Lp L) Ω l)

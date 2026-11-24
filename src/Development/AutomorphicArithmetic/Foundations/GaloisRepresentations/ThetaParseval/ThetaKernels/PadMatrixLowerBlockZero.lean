@@ -132,7 +132,7 @@ def prj_k : nA σ d.Y d.b →+ nA σ L.Y L.b where
 theorem prj_val_k (β : nA σ d.Y d.b) : (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L β).1 = β.1.submatrix L.em L.em := rfl
 theorem continuous_prj_k : Continuous (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.prj_k L) := by
   refine Continuous.subtype_mk ?_ _
-  exact continuous_subtype_val.matrix_submatrix L.em L.em
+  exact continuous_subtypeVal.matrix_submatrix L.em L.em
 theorem pad_matrix_lower_block_zero (M : Matrix (Fin L.n ⊕ Fin L.n) (Fin L.n ⊕ Fin L.n) (AE F E)) (hM : M.toBlocks₂₁ = 0) :
     (_root_.PositivityTheory.SiegelWeilFormula.Act.C4.padM_k L M).toBlocks₂₁ = 0 := by
   ext i k

@@ -116,7 +116,7 @@ theorem continuous_liftC [IsTotallyReal F] (τ : ∀ w : InfinitePlace F, EmbOve
       rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
     rw [this]
     exact (continuous_id (X := AF F)).smul (continuous_const (y := ((1 : AF F) ⊗ₜ[F] e)))
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
   refine ((ht 1).comp (continuous_liftR.comp ?_)).add ((ht ξ).comp (continuous_liftR.comp ?_))
   · exact continuous_pi fun w => (Complex.continuous_re.comp (continuous_apply w)).sub
       (((Complex.continuous_im.comp (continuous_apply w)).div_const _).mul continuous_const)
@@ -347,9 +347,9 @@ open scoped Matrix
 
 theorem continuous_exp_smul {ι : Type} [Fintype ι] [DecidableEq ι] (Y : Matrix ι ι ℂ) :
     Continuous fun t : ℝ => NormedSpace.exp (t • Y) := by
-  letI : NormedRing (Matrix ι ι ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix ι ι ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℚ (Matrix ι ι ℂ) := NormedAlgebra.restrictScalars ℚ ℂ (Matrix ι ι ℂ)
+  let : NormedRing (Matrix ι ι ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix ι ι ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℚ (Matrix ι ι ℂ) := NormedAlgebra.restrictScalars ℚ ℂ (Matrix ι ι ℂ)
   exact NormedSpace.exp_continuous.comp (continuous_id.smul continuous_const)
 
 end GlobalTheory.RealLift.OneParam
@@ -402,13 +402,13 @@ theorem exists_line_of_upq : LineEx := by
         exact piInf_cA hCM (τ w) z
       rw [Matrix.map_mul, Matrix.map_mul, hc, Matrix.transpose_map, hfπ]
       by_cases hb : b = 0
-      · haveI := isEmpty_of_zero (hb ▸ (hC w).1) (hC' w)
+      · have := isEmpty_of_zero (hb ▸ (hC w).1) (hC' w)
         ext i
         exact isEmptyElim i
       · have h1 := conj_unitary (hC w).1 (hC' w) (hY w) t
         rw [Matrix.mul_smul, Matrix.smul_mul] at h1
         exact smul_right_injective _ hb h1
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
   have hfc : Continuous f :=
     continuous_const.add ((continuous_liftM τ ξ).comp (continuous_pi fun w =>
       (((continuous_const.matrix_mul (continuous_exp_smul (Y w))).matrix_mul continuous_const).sub continuous_const)))

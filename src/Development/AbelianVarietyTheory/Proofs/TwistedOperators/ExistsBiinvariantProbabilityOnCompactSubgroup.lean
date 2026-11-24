@@ -65,7 +65,7 @@ theorem exists_biinvariant_probability_on_compact_subgroup :
     have := Measure.haarMeasure_self (G := K) (K₀ := ⊤)
     simpa using this⟩
   have : μ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
-  have hv : Measurable (Subtype.val : K → G) := measurable_subtype_coe
+  have hv : Measurable (Subtype.val : K → G) := measurable_subtypeVal
   have hKm : MeasurableSet (K : Set G) := hK.isClosed.measurableSet
   refine ⟨μ.map Subtype.val, inferInstance, ?_, ?_, ?_⟩
   · rw [Measure.map_apply hv hKm.compl]

@@ -201,8 +201,8 @@ theorem toFrac_tmul (a : O') (x : F) :
     toFrac O F O' (a ⊗ₜ x) = algebraMap O' (FractionRing O') a ⊗ₜ x := rfl
 
 theorem toFrac_injective : Function.Injective (toFrac O F O') := by
-  haveI : Module.Flat O (FractionRing O) := IsLocalization.flat _ (nonZeroDivisors O)
-  haveI : Module.Flat O F := Module.Flat.trans O (FractionRing O) F
+  have : Module.Flat O (FractionRing O) := IsLocalization.flat _ (nonZeroDivisors O)
+  have : Module.Flat O F := Module.Flat.trans O (FractionRing O) F
   have h := Module.Flat.rTensor_preserves_injective_linearMap (M := F)
     ((Algebra.linearMap O' (FractionRing O')).restrictScalars O) (IsFractionRing.injective O' _)
   have e : ∀ x, toFrac O F O' x =
@@ -307,9 +307,9 @@ variable {D : Formalism.BasicNotions.D7} {N : NData D.R D.host D.what₂} {X : N
   (Y : NExp D.R D.host D.what₂ D.LL0 N X) (i : X.Tw) (j : ℕ) (b : Bool)
 
 theorem card_ne_zero : ((D.what₂.restRowsFiniteGroupCard : ℕ) : X.O i) ≠ 0 := by
-  haveI : CharZero (FractionRing (X.O0 i)) := charZero_of_injective_ringHom (X.emb0 i).injective
-  haveI : CharZero (X.O0 i) := (algebraMap (X.O0 i) (FractionRing (X.O0 i))).charZero
-  haveI : CharZero (X.O i) := charZero_of_injective_ringHom (X.O_inj i)
+  have : CharZero (FractionRing (X.O0 i)) := charZero_of_injective_ringHom (X.emb0 i).injective
+  have : CharZero (X.O0 i) := (algebraMap (X.O0 i) (FractionRing (X.O0 i))).charZero
+  have : CharZero (X.O i) := charZero_of_injective_ringHom (X.O_inj i)
   exact Nat.cast_ne_zero.2 D.what₂.restRowsFiniteGroupCard_pos.ne'
 
 theorem eTh_isLatIn (Sg : Set (Y.Dat i j b))

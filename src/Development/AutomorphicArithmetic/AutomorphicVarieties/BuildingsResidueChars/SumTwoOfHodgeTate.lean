@@ -61,7 +61,7 @@ theorem UpperTheory.sum_two_of_hodge_tate :
   obtain ⟨p1, e1⟩ := b1 O Bw hj
   obtain ⟨p2, e2⟩ := b2 O Bw hj
   have p3 : IsPstAt (Loc.PP l) Bw ((Formalism.MainNotions.SumRepresentations.At.sumRep r r').comp (Dec (F := E) A).subtype) := by
-    refine H.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (hc.comp continuous_subtype_val)) ?_
+    refine H.litN.aut.berger.isPstAt T Bw _ (Units.continuous_val.comp (hc.comp continuous_subtypeVal)) ?_
     exact (hht w A h O Bw hj).1
   refine ⟨p3, ?_⟩
   have e : (Formalism.MainNotions.SumRepresentations.At.sumRep r r').comp (Dec (F := E) A).subtype =

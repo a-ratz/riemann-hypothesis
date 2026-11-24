@@ -75,16 +75,16 @@ theorem bijective_of_isFreeGen {k A : Type*} [CommRing k] [CommRing A] (α : k �
     (hA : α.IsStandardSmoothOfRelativeDimension m) (x : Fin m → A)
     (hx : IsFreeGen A (dForm α x)) :
     Function.Bijective (Fintype.linearCombination A fun i => dFun α (x i)) := by
-  letI := α.toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension m k A := hA
+  let := α.toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension m k A := hA
   cases subsingleton_or_nontrivial A with
   | inl _ =>
-    haveI := Module.subsingleton A (Omega α)
+    have := Module.subsingleton A (Omega α)
     exact ⟨fun _ _ _ => Subsingleton.elim _ _, fun _ => ⟨0, Subsingleton.elim _ _⟩⟩
   | inr _ =>
-    haveI := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth m (R := k) (S := A)
-    haveI : Module.Free A (Omega α) := inferInstanceAs (Module.Free A Ω[A⁄k])
-    haveI : Module.Finite A (Omega α) := inferInstanceAs (Module.Finite A Ω[A⁄k])
+    have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth m (R := k) (S := A)
+    have : Module.Free A (Omega α) := inferInstanceAs (Module.Free A Ω[A⁄k])
+    have : Module.Finite A (Omega α) := inferInstanceAs (Module.Finite A Ω[A⁄k])
     have hr : Module.finrank A (Omega α) = m := Module.finrank_eq_of_rank_eq
       (Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (R := k) (S := A) m)
     let b := Module.finBasisOfFinrankEq A (Omega α) hr
@@ -116,28 +116,28 @@ theorem bijective_of_isLocalization_span {k A : Type*} [CommRing k] [CommRing A]
     (H : ∀ t : s, Function.Bijective (Fintype.linearCombination (B t)
       fun i => dFun ((algebraMap A (B t)).comp α) (algebraMap A (B t) (x i)))) :
     Function.Bijective (Fintype.linearCombination A fun i => dFun α (x i)) := by
-  letI := α.toAlgebra
-  letI (t : s) : Algebra k (B t) := ((algebraMap A (B t)).comp α).toAlgebra
-  haveI (t : s) : IsScalarTower k A (B t) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI (t : s) : Algebra.FormallyEtale A (B t) :=
+  let := α.toAlgebra
+  let (t : s) : Algebra k (B t) := ((algebraMap A (B t)).comp α).toAlgebra
+  have (t : s) : IsScalarTower k A (B t) := IsScalarTower.of_algebraMap_eq' rfl
+  have (t : s) : Algebra.FormallyEtale A (B t) :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers t.1)
   let g : ∀ t : s, Ω[A⁄k] →ₗ[A] Ω[B t⁄k] := fun t => KaehlerDifferential.map k k A (B t)
-  haveI H₁ (t : s) : IsLocalizedModule.Away t.1 (g t) :=
+  have H₁ (t : s) : IsLocalizedModule.Away t.1 (g t) :=
     (isLocalizedModule_iff_isBaseChange (Submonoid.powers t.1) (B t) (g t)).2
       (KaehlerDifferential.isBaseChange_of_formallyEtale k A (B t))
   let π : ∀ t : s, (Fin m → A) →ₗ[A] (Fin m → B t) := fun t => (Algebra.linearMap A (B t)).compLeft (Fin m)
-  haveI H₂ (t : s) : IsLocalizedModule.Away t.1 (π t) :=
+  have H₂ (t : s) : IsLocalizedModule.Away t.1 (π t) :=
     (isLocalizedModule_iff_isBaseChange (Submonoid.powers t.1) (B t) (π t)).2
       (IsBaseChange.finitePow (Fin m) (IsBaseChange.linearMap A (B t)))
   let e : ∀ t : s, (Fin m → B t) ≃ₗ[A] Ω[B t⁄k] := fun t =>
     (LinearEquiv.ofBijective _ (H t)).restrictScalars A
-  haveI H₃ (t : s) : IsLocalizedModule.Away t.1 ((e t).toLinearMap ∘ₗ π t) :=
+  have H₃ (t : s) : IsLocalizedModule.Away t.1 ((e t).toLinearMap ∘ₗ π t) :=
     IsLocalizedModule.of_linearEquiv _ _ _
   have hcomp (t : s) : g t ∘ₗ (Fintype.linearCombination A fun i => dFun α (x i)) =
       (e t).toLinearMap ∘ₗ π t := by
     ext c
     simp [g, e, π, Fintype.linearCombination_apply, algebraMap_smul]
-  haveI H₄ (t : s) : IsLocalizedModule.Away t.1
+  have H₄ (t : s) : IsLocalizedModule.Away t.1
       (g t ∘ₗ (Fintype.linearCombination A fun i => dFun α (x i))) := by
     rw [hcomp t]; exact H₃ t
   refine bijective_of_isLocalized_span s hs (fun t => Ω[B t⁄k])
@@ -168,7 +168,7 @@ theorem exists_basis_of_isFrame : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (
     ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ le_top
   obtain ⟨s, hs, h⟩ := (RingHom.locally_iff_isLocalization
     RingHom.isStandardSmoothOfRelativeDimension_respectsIso _).1 h
-  haveI (t : (s : Set Γ(X, U))) := hU.isLocalization_basicOpen t.1
+  have (t : (s : Set Γ(X, U))) := hU.isLocalization_basicOpen t.1
   have hbij : Function.Bijective
       (Fintype.linearCombination Γ(X, U) fun i => dFun (algX p U) (x i)) := by
     refine bijective_of_isLocalization_span (algX p U) x (s : Set Γ(X, U)) hs

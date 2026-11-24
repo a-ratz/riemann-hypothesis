@@ -260,7 +260,7 @@ variable (c : Coeff l) in
 theorem wtfA_comb_eig [Algebra c.F S] (τ : E →+* ℂ) {m : ℕ} (V : Fin m → (tEps x ⟶ Xo.univ.t.G))
     (hV : ∀ j, IsEigAt c τ (V j).left) (a : Fin m → S) : IsEigAt c τ (wtfA_comb x V a).left := by
   intro a'
-  haveI := Xo.univ.t.act.hom a'
+  have := Xo.univ.t.act.hom a'
   have hV' : ∀ j, V j ≫ Xo.univ.t.act.act a' =
       wtfA_sO x (algebraMap c.F S (embK c τ a')) ≫ V j :=
     fun j => Over.OverMorphism.ext (hV j a')

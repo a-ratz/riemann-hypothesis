@@ -58,7 +58,7 @@ namespace GlobalTheory.EtaChar
 
 theorem exists_unif (F : Type) [NontriviallyNormedField F] [IsUltrametricDist F] [LocallyCompactSpace F] :
     ∃ π : F, 0 < ‖π‖ ∧ ‖π‖ < 1 ∧ ∀ x : F, x ≠ 0 → ∃ k : ℤ, ‖x‖ = ‖π‖ ^ k := by
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   have hc : IsCompact (Metric.ball (0 : F) 1) :=
     (isCompact_closedBall (0 : F) 1).of_isClosed_subset (IsUltrametricDist.isClosed_ball _ _)
       Metric.ball_subset_closedBall
@@ -148,8 +148,8 @@ theorem eta_of_norm_eq {F : Type} [NormedField F] {x y : F} (h : ‖x‖ = ‖y�
 
 theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E], (∀ x y : F, x ≠ 0 → y ≠ 0 → eta (x * y) = eta x * eta y) ∧ (∀ x : F, ‖x‖ = 1 → eta x = 1) ∧ (∀ x : F, x ≠ 0 → (eta x = 1 ↔ ∃ v : E, v * star v = algebraMap F E x)) ∧ IsLocallyConstant (fun x : {x : F // x ≠ 0} => eta x.1) := by
   intro F E _ _ _ _ hU
-  haveI : IsUltrametricDist F := hU.ultraF
-  haveI : LocallyCompactSpace F := hU.lcF
+  have : IsUltrametricDist F := hU.ultraF
+  have : LocallyCompactSpace F := hU.lcF
   refine ⟨fun x y hx hy => eta_mul F x y hx hy, fun x hx => ?_, fun x hx => ?_, ?_⟩
   · exact (eta_eq_one_iff x).2 ⟨1, by rw [hx, norm_one, one_pow]⟩
   · rw [eta_eq_one_iff]
@@ -175,7 +175,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
     have hx : 0 < ‖x.1‖ := norm_pos_iff.2 x.2
     have hmem : {y : {x : F // x ≠ 0} | ‖y.1 - x.1‖ < ‖x.1‖} ∈ 𝓝 x := by
       have : IsOpen {y : {x : F // x ≠ 0} | ‖y.1 - x.1‖ < ‖x.1‖} :=
-        isOpen_lt (continuous_norm.comp (continuous_subtype_val.sub continuous_const)) continuous_const
+        isOpen_lt (continuous_norm.comp (continuous_subtypeVal.sub continuous_const)) continuous_const
       exact this.mem_nhds (by simpa using hx)
     filter_upwards [hmem] with y hy
     apply eta_of_norm_eq

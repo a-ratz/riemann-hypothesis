@@ -89,7 +89,7 @@ theorem invOn_map_conj {N : Set G} (hNc : IsClosed N) (h : G)
     (hn1 : ∀ m ∈ N, h * m * h⁻¹ ∈ N) (hn2 : ∀ m ∈ N, h⁻¹ * m * h⁻¹⁻¹ ∈ N)
     {μ : Measure G} (hμ : InvOn μ N) : InvOn (μ.map (fun x => h * x * h⁻¹)) N := by
   obtain ⟨hsf, hne, hc, hinv⟩ := hμ
-  haveI := hsf
+  have := hsf
   have hm : Measurable (fun x : G => h * x * h⁻¹) := measurable_conj h
   have hm' : Measurable (fun x : G => h⁻¹ * x * h⁻¹⁻¹) := measurable_conj h⁻¹
   have hid : (fun x : G => h⁻¹ * x * h⁻¹⁻¹) ∘ (fun x : G => h * x * h⁻¹) = id := by
@@ -122,7 +122,7 @@ end
 
 theorem conjugation_invariant_measure : ConjInv := by
   intro G _ _ _ _ _ _ _ _ N H hN hH hGN hGH hnorm μ hμ hfin hpos h hh
-  haveI := hfin
+  have := hfin
   have hinvH : ∀ g ∈ H, g⁻¹ ∈ H := hGH.2.2
   have hinv : ∀ g ∈ H, InvOn (μ.map (fun x => g * x * g⁻¹)) N := fun g hg =>
     invOn_map_conj hN g (hnorm g hg) (hnorm g⁻¹ (hinvH g hg)) hμ
@@ -182,7 +182,7 @@ theorem conjugation_invariant_measure : ConjInv := by
       rw [hdmap h hh, Measure.map_smul, hdmap h⁻¹ (hinvH h hh), smul_smul, mul_comm]
       exact (measurable_conj h⁻¹).aemeasurable
     have h2 := congrArg (fun ν : Measure G => ν K0) h1
-    simp only [Measure.smul_apply, smul_eq_mul] at h2
+    simp only [smul_apply, smul_eq_mul] at h2
     rw [mul_comm]
     exact ennreal_eq_one_of_mul hK0pos hK0fin h2.symm
   have hone : d h hh = 1 := by

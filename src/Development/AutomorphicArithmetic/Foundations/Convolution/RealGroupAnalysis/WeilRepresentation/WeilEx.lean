@@ -162,7 +162,7 @@ theorem UpperTheory.ConvolutionTheory.R2.C.unrOf :
     intro i j
     by_cases hij : i = j
     · simp [Matrix.one_apply, hij]
-    · simp only [Matrix.one_apply, hij, if_false, Prod.snd_zero]
+    · simp only [Matrix.one_apply, hij, ite_false, Prod.snd_zero]
       change (0 : v.adicCompletion F) ∈ v.adicCompletionIntegers F
       exact zero_mem _
   set X : Fin 2 × Fin 2 → FiniteAdeleRing (𝓞 F) F :=
@@ -224,7 +224,7 @@ namespace UpperTheory.ConvolutionTheory.R2.C
 variable {F : Type} [Field F] [NumberField F]
 
 private theorem continuous_psi : Continuous (ψ : A F → ℂ) :=
-  continuous_subtype_val.comp (continuous_adelicChar (K := F))
+  continuous_subtypeVal.comp (continuous_adelicChar (K := F))
 
 private theorem norm_psi (x : A F) : ‖ψ x‖ = 1 := Circle.norm_coe _
 
@@ -429,8 +429,8 @@ theorem UpperTheory.ConvolutionTheory.R2.C.etaQuad :
     unfold GlobalTheory.LFun.etaU
     have hi := QuadraticHeckeCharacter.isSplit_iff_normV h2 w hw'
     by_cases hs : Formalism.MainNotions.SchurIrreducible.IsSplit (E := E) (w.under (𝓞 F))
-    · rw [if_pos hs, if_pos (hi.1 hs)]
-    · rw [if_neg hs, if_neg (mt hi.2 hs)]
+    · rw [ite_eq_left hs, ite_eq_left (hi.1 hs)]
+    · rw [ite_eq_right hs, ite_eq_right (mt hi.2 hs)]
   · have h3 : ((GlobalTheory.LFun.toHChar η hη'.isHeckeF).1 a : ℂ) = ((η a : Circle) : ℂ) := rfl
     rw [h3, he, MonoidHom.comp_apply]
     rcases Int.units_eq_one_or (GlobalTheory.IdeleNormChar.normSign E a) with e | e <;>
@@ -484,7 +484,7 @@ theorem UpperTheory.ConvolutionTheory.R2.C.etaEx :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (D : Dat F E), ∃ η : HChar F, IsQuadCharOf E η ∧ (∀ a, η.1 a ^ 2 = 1) ∧ (∀ z : (A E)ˣ, η.1 (ideleNorm F E z) = 1) ∧
     ∀ a, η.1 a = 1 → ∃ (t : F) (z : (A E)ˣ), t ≠ 0 ∧ (a : A F) = rt t * (ideleNorm F E z : (A F)ˣ) := by
   intro F E _ _ _ _ _ D
-  haveI : Algebra.IsQuadraticExtension F E :=
+  have : Algebra.IsQuadraticExtension F E :=
     ⟨by rw [Module.finrank_eq_card_basis D.b]; simp⟩
   have h0 : D.b 0 = 1 := D.b0
   have h1 : D.b 1 * D.b 1 = algebraMap F E D.δ := by
@@ -765,7 +765,7 @@ private lemma lt_card_of_inj {k : Type*} (n : ℕ) (f : Fin (n + 1) → k) (hf :
     simp only [Nat.card_eq_fintype_card, Fintype.card_fin] at this
     exact_mod_cast this
   · rw [ENat.card_eq_top_of_infinite]
-    exact ENat.coe_lt_top n
+    exact ENat.natCast_lt_top n
 
 theorem UpperTheory.ConvolutionTheory.R2.C.resBig :
     ∀ (F : Type) [Field F] [NumberField F] (n : ℕ), ∀ᶠ v : HeightOneSpectrum (𝓞 F) in cofinite, (n : ℕ∞) < ENat.card (IsLocalRing.ResidueField (v.adicCompletionIntegers F)) := by
@@ -812,7 +812,7 @@ private lemma fieldCase (K : Type) [Field K] [CharZero K] {ι : Type} (s : Finse
     Infinite.of_injective _ (IsLocalRing.residue K).injective
   have hc : ((s.image fun i => (c i, d i)).card : ℕ∞) < ENat.card (IsLocalRing.ResidueField K) := by
     rw [ENat.card_eq_top_of_infinite]
-    exact ENat.coe_lt_top _
+    exact ENat.natCast_lt_top _
   obtain ⟨t, ht⟩ := UpperTheory.ConvolutionTheory.R2.C.genLoc K (s.image fun i => (c i, d i)) (by
     intro p hp
     obtain ⟨i, hi, rfl⟩ := Finset.mem_image.1 hp
@@ -863,7 +863,7 @@ private lemma goodPlace {F : Type} [Field F] [NumberField F] (s : Finset (G1 F))
     fun x => if h : x ∈ v.adicCompletionIntegers F then ⟨x, h⟩ else 0
   have hto : ∀ x (h : x ∈ v.adicCompletionIntegers F), (toO x : v.adicCompletion F) = x := by
     intro x h
-    simp only [toO, dif_pos h]
+    simp only [toO, dite_eq_left h]
   let pr : G1 F → v.adicCompletionIntegers F × v.adicCompletionIntegers F :=
     fun g => (toO ((g 1 0).2 v), toO ((g 1 1).2 v))
   obtain ⟨t, ht⟩ := UpperTheory.ConvolutionTheory.R2.C.genLoc (v.adicCompletionIntegers F) (s.image pr) (by
@@ -886,7 +886,7 @@ theorem UpperTheory.ConvolutionTheory.R2.C.generic :
   intro F _ _ s
   have hI : ∀ w : InfinitePlace F, ∃ t : w.Completion, ∀ g ∈ s, (g 1 0).1 w + (g 1 1).1 w * t ≠ 0 := by
     intro w
-    haveI : CharZero w.Completion :=
+    have : CharZero w.Completion :=
       charZero_of_injective_algebraMap (algebraMap F w.Completion).injective
     refine fieldCase w.Completion s (fun g => (g 1 0).1 w) (fun g => (g 1 1).1 w) fun g _ => ?_
     have hdet : (g 0 0).1 w * (g 1 1).1 w - (g 0 1).1 w * (g 1 0).1 w = 1 :=

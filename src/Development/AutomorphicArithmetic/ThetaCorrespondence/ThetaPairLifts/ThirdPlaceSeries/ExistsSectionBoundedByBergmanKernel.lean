@@ -324,7 +324,7 @@ theorem exists_section {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.To
     have h1 := fun z hz => S.homN_mul_sig (G := (11 + 1) • wtZ 0 (2 * (Dw.p + Dw.q)) +
       wtOf Dw 0 (-(4 * ((3 * (Dw.p + Dw.q) : ℕ) : ℤ)))) (hev'.add K.even) ((f ^ 2) ^ (11 + 1) * K.sig) (σ := σ) (z := z) hz
     have h2 := fun z hz => K.homN_mul_sig hev' ((f ^ 2) ^ (11 + 1)) (σ := σ) (z := z) hz
-    rw [show goodOf c σ = σ from if_pos hσ] at h1 h2
+    rw [show goodOf c σ = σ from ite_eq_left hσ] at h1 h2
     intro z hz
     rw [← hG, ← homN_pow (U σ) x hev _ z hz.1, ← h2 z hz]
     exact h1 z hz
@@ -388,7 +388,7 @@ theorem exists_section {D : D7} {H : ReciprocityTheory.ChartRestriction.G.Geo.To
     generalize homN (U σ) x (wtZ 0 (2 * (Dw.p + Dw.q))) (f ^ 2) ⟨y.1, y.2.1⟩ = a at h1 ha
     have h2 : Real.exp (2 * (8 : ℕ) * (β / 2 + κ / 8 + Real.log (S.cInf σ) / 8)) =
         (Real.exp κ * S.cInf σ) ^ 2 * Real.exp β ^ 8 := by
-      rw [← Real.exp_log hs, ← Real.exp_add, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, Real.log_exp]
+      rw [← Real.exp_log hs, ← Real.exp_add, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, Real.log_exp]
       congr 1
       push_cast
       ring
@@ -488,8 +488,8 @@ theorem norm_pow_le_at_unit_frame (E : Type) [Field E] [NumberField E] [IsCMFiel
   have hR4 : 0 < R ^ 4 := pow_pos hR.pos 4
 
   have hval₀ := hf.tauValAt_evR hR (hA _ (U.un k x))
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   obtain ⟨ev, hevL⟩ := GlobalTheory.ThetaConst.exists_isLevOf_geometric Xo c hval₀.dvd (U.un k x).x
   have hev : IsFullLev Xo (R ^ 4) (U.un k x).x ev := hevL.2.1
   obtain ⟨a, ha, hgen⟩ := GlobalTheory.T.fullLinearLevel_eq_exp_periods_complexPoint E H Dw l Xo c σ _ _ Uw.F (Uw.ik k) (Uw.Pm k x) (U.un k x) hP hy (R ^ 4) hR4 ev hev
@@ -578,13 +578,13 @@ theorem normSq_thetaConst_le_exp : ∀ (E : Type) [Field E] [NumberField E] [IsC
     rw [hp _ _ hS, sq f, GlobalTheory.AllWt.rdU_mul, Pi.mul_apply, Pi.mul_apply, norm_mul, sq]
   rw [hN, ← hphi _]
   have hv : rdU U f k (rmul y b) =
-      Formalism.L2.PjFree.toC (evR Xo c f ((Formalism.L2.PjFree.Unf.ofPj U).un k ⟨rmul y b, hb⟩)) := dif_pos hb
+      Formalism.L2.PjFree.toC (evR Xo c f ((Formalism.L2.PjFree.Unf.ofPj U).un k ⟨rmul y b, hb⟩)) := dite_eq_left hb
   have key := ArchBound.norm_pow_le_at_unit_frame E H Dw l Xo c σ _ (Formalism.L2.PjFree.Unf.ofPj U) hσ
     ((Formalism.L2.PjFree.isUnf_ofPj U).2 hU) hA R hR h1R xs f hsp hf DF q m R0 hrun hm k ⟨rmul y b, hb⟩ hun
   rw [hv]
   have hn : R ^ 4 ≠ 0 := pow_ne_zero _ hR.pos.ne'
   have hR4 : (R : ℝ) ^ 4 ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hR.pos.ne')
-  rw [← pow_le_pow_iff_left₀ (sq_nonneg _) (Real.exp_pos _).le hn, ← pow_mul, ← Real.exp_nat_mul]
+  rw [← pow_le_pow_iff_left₀ (sq_nonneg _) (Real.exp_pos _).le hn, ← pow_mul, ← Real.exp_natCast_mul]
   refine le_of_le_of_eq key ?_
   congr 1
   push_cast
@@ -718,7 +718,7 @@ theorem theta_sup_le (hLw : Laws D j Xo c U dict) {σ : c.F →+* ℂ} (hσ : Go
     (hLw.chiTriv σ hσ a n hDom) hhol hpos
   have he2 : 2 ≤ Real.exp L := by have := Real.add_one_le_exp L; linarith
   have hpow : ∀ (x : ℝ) (m : ℕ), 0 < x → Real.log x ≤ m * L → x ≤ Real.exp L ^ m := fun x m h1 h2 => by
-    rw [← Real.exp_nat_mul]; exact (Real.log_le_iff_le_exp h1).1 h2
+    rw [← Real.exp_natCast_mul]; exact (Real.log_le_iff_le_exp h1).1 h2
   have hM0 : (0 : ℝ) < l.M := by have := l.three_le; exact_mod_cast (by omega : 0 < l.M)
   have hdd : (0 : ℝ) < D.host.d := by exact_mod_cast D.host.hyp.2.1.pos
   have hrde := hpow (rdE D.host.E) 3 (by linarith) (by exact_mod_cast hrdL)
@@ -753,7 +753,7 @@ theorem theta_sup_le (hLw : Laws D j Xo c U dict) {σ : c.F →+* ℂ} (hσ : Go
     (Formalism.L2.PjFree.Unf.ofPj (U σ)) hσ (hLw.unf σ hσ) hr1 (2 * xiR D) (by linarith)
     (fun k τ => congrArg (2 * ·) (hLw.xiAbs σ hσ k τ.1)) a n hDom _ nab hnab xx P hP f hf k xf hort _ (by positivity) hlam
   rw [hfd] at hv
-  have hrdv : rdU (U σ) f k xf.1 = Formalism.L2.PjFree.toC (evR Xo c f ((U σ).un k xf)) := dif_pos xf.2
+  have hrdv : rdU (U σ) f k xf.1 = Formalism.L2.PjFree.toC (evR Xo c f ((U σ).un k xf)) := dite_eq_left xf.2
   rw [hrdv] at hhalf
   have key := numbers D.R.f D.R.r n _ 1 L _ _ _ 1 _ ρ _ _ hL hf1 hr1 hrn hdκ hnκ hsz hfr hrd1 hrdL (by linarith)
     zero_le_one (Finset.sum_nonneg fun _ _ => norm_nonneg _) hρ0 (Nat.one_le_pow _ _ (Nat.succ_pos _))
@@ -781,7 +781,7 @@ theorem exists_large {ι : Type} [Fintype ι] [Nonempty ι] (u : ι → ℝ) (hu
   have h3 : Real.exp (-A) ≤ Real.sqrt (M ^ d * ∑ q, u q ^ 2) :=
     (Real.le_log_iff_exp_le (Real.sqrt_pos.2 hS)).1 (by linarith)
   have h4 : Real.exp ((d + N) * Real.log M) = M ^ (d + N) := by
-    rw [← Nat.cast_add, Real.exp_nat_mul, Real.exp_log hM0]
+    rw [← Nat.cast_add, Real.exp_natCast_mul, Real.exp_log hM0]
   rw [neg_add, Real.exp_add, Real.exp_neg ((d + N) * _), h4, mul_inv_le_iff₀' (by positivity)]
   exact h3.trans h2
 
@@ -812,7 +812,7 @@ theorem theta_lower (hLw : Laws D j Xo c U dict) {σ : c.F →+* ℂ} (hσ : Goo
   have hfin := GlobalTheory.SupDict.finrank_host D
   have hfd : fdeg D.host.E = D.R.f := by unfold fdeg; omega
   obtain ⟨hfinQ, hcard⟩ := GlobalTheory.card_levQ D.host.E H Dw l
-  haveI : Fintype (Fin n → LevQ Dw l) := Fintype.ofFinite _
+  have : Fintype (Fin n → LevQ Dw l) := Fintype.ofFinite _
   have hN : (Fintype.card (Fin n → LevQ Dw l) : ℝ) = (l.M : ℝ) ^ (D.R.f * D.R.r * n) := by
     rw [← Nat.card_eq_fintype_card, Nat.card_fun, hcard, Nat.card_eq_fintype_card, Fintype.card_fin, ← pow_mul, hfd,
       ← hUn.1]
@@ -823,12 +823,12 @@ theorem theta_lower (hLw : Laws D j Xo c U dict) {σ : c.F →+* ℂ} (hσ : Goo
   set lie := Real.exp (-(((Formalism.L2.Pj.DF Dw a : ℕ) : ℝ) / 2) * Real.log (Real.pi * (2 * xiR D))) with hlie
   have hl : lie ^ 2 = ((Real.pi * (2 * xiR D))⁻¹) ^ P.totalDegree := by
     have hp : 0 < Real.pi * (2 * xiR D) := by positivity
-    rw [hlie, hdeg, ← Real.exp_nat_mul, ← Real.exp_log (inv_pos.2 hp), ← Real.exp_nat_mul, Real.log_inv]
+    rw [hlie, hdeg, ← Real.exp_natCast_mul, ← Real.exp_log (inv_pos.2 hp), ← Real.exp_natCast_mul, Real.log_inv]
     congr 1
     push_cast
     ring
   have hval : ∀ q, ptN (laU (U σ) a n) (rdU (U σ) (g q)) ⟨k, x⟩ = ‖toC (evR Xo c (g q) ((U σ).un k ⟨_, hbd⟩))‖ :=
-    fun q => (hpn _ _ (hUn.2.2.2.2.1 a n hDom (g q) (hs q) k)).trans (congrArg norm (dif_pos hbd))
+    fun q => (hpn _ _ (hUn.2.2.2.2.1 a n hDom (g q) (hs q) k)).trans (congrArg norm (dite_eq_left hbd))
   have hkey : (Real.pi⁻¹) ^ P.totalDegree * Pr.Jbound n ≤
       (l.M : ℝ) ^ Formalism.L2.Pj.DF Dw a * ∑ q, (lie * ptN (laU (U σ) a n) (rdU (U σ) (g q)) ⟨k, x⟩) ^ 2 := by
     simp only [hval, mul_pow, hl]
@@ -968,7 +968,7 @@ theorem core_ratio (hLw : Laws D j Xo c U dict) (α : 𝓞 D.host.E) (hα : α *
     rwa [Real.log_pow, Nat.cast_ofNat] at this
   have hρ : ∑ m ∈ P.support, ‖σ (P.coeff m)‖ ≤ Real.exp ((Formalism.L2.Pj.DF Dw a : ℕ) * b) := by
     refine (hl1 σ).trans ?_
-    rw [Real.exp_nat_mul, ← hpq]
+    rw [Real.exp_natCast_mul, ← hpq]
     exact pow_le_pow_left₀ (by positivity) (by linarith [Real.add_one_le_exp b]) _
   have hla := ReciprocityTheory.ChartRestriction.G.AR.Inst.la1_pos_of_mem_dom ((U σ).X k) hr1.1 hx
   have hsq : ((U σ).X k).la1 x ^ 2 = ((U σ).X k).firstMinimumSq x := Real.sq_sqrt (MinimumGrowthBounds.minimumSq_nonneg _ hx)
@@ -1050,7 +1050,7 @@ theorem over_comp_lat : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestr
   obtain rfl : g₂ = g := by simpa using Fintype.card_congr (e₂.trans e.symm)
   obtain ⟨x₀, hx₀⟩ := GlobalTheory.UnifFamily.dom_nonempty ((U₂ σ₂).X k₂)
   obtain ⟨P₀, hP₀, hp₀, hu₀, -⟩ := hper₂ k₂ ⟨x₀, hx₀⟩
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   have hy : (F₂.u (ik₂ k₂) P₀ ≫ d.r) ≫ Xo.s = spMap (σ.comp (IntermediateField.inclusion c.le).toRingHom) := by
     rw [CategoryTheory.Category.assoc, GlobalTheory.ClsVal.Cmp.point_over_of_ne hpq hA d hle,
       ← CategoryTheory.Category.assoc, F₂.over_σ _ P₀ hp₀, GlobalTheory.ClsVal.Cmp.spMap_comp', hinc]
@@ -1101,7 +1101,7 @@ theorem over_comp_lat : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestr
     exact c₁
   have hu₂ : ∀ τ i, ((U₂ σ₂).un k₂ ⟨x, hx⟩).u τ i ≫ d.m.φ = ((U σ).un k ⟨x', hx'⟩).u τ i :=
     fun τ i => c₂ ⟨τ, i⟩ _ _ (hqv₁ τ i) (hqv₂ τ i)
-  letI : Algebra c.F (CAt σ₂) := σ.toAlgebra
+  let : Algebra c.F (CAt σ₂) := σ.toAlgebra
   obtain ⟨z, hzx, hzu, ho⟩ := exists_frOver_down (S := CAt σ₂) d ((U₂ σ₂).un k₂ ⟨x, hx⟩) ((U σ).un k ⟨x', hx'⟩) hx₂ hu₂
   obtain ⟨t, ht⟩ := GlobalTheory.GeoLevel.exists_frBor_gen (σ := σ) ((U σ).un k ⟨x', hx'⟩) z hzx hzu
   have hn' : (∀ τ i, ‖dmin ((U₂ σ₂).X k₂).Gm x τ i‖ = 1) → ∀ τ i, ‖dmin ((U σ).X k).Gm x' τ i‖ = 1 := by
@@ -1228,11 +1228,11 @@ theorem cover_transport (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore j) (
       rdU (T.U j (Y.resEmb σ)) f := by
     funext k x
     by_cases hx : x ∈ ((T.U j (Y.resEmb σ)).X k).dom
-    · refine (dif_pos hx).trans (Eq.trans ?_ (dif_pos hx).symm)
-      letI : Algebra T.Q.c.F (CAt (σ.comp (Y.d.eF : Y.c'.F →+* Y.d.c₂.F))) := (Y.resEmb σ).toAlgebra
+    · refine (dite_eq_left hx).trans (Eq.trans ?_ (dite_eq_left hx).symm)
+      let : Algebra T.Q.c.F (CAt (σ.comp (Y.d.eF : Y.c'.F →+* Y.d.c₂.F))) := (Y.resEmb σ).toAlgebra
       exact hV.2 (CAt (σ.comp (Y.d.eF : Y.c'.F →+* Y.d.c₂.F))) (fun _ => rfl) _
-    · have e₂ : rdU (T.U j (Y.resEmb σ)) f k x = 0 := dif_neg hx
-      exact (dif_neg hx).trans e₂.symm
+    · have e₂ : rdU (T.U j (Y.resEmb σ)) f k x = 0 := dite_eq_right hx
+      exact (dite_eq_right hx).trans e₂.symm
   refine ⟨g, hg, fun y hy => ?_⟩
   have h3 := h2 _ hV.1 g hgs ((hP a n f hs g).1 hgP) y hy
   rw [hrd] at h3
@@ -1279,13 +1279,13 @@ private theorem card_mul_succ_le_two_mul_ncol_copy {E : Type} [Field E] [NumberF
   simp only [h1]
   rw [GlobalTheory.RawThetaSup.sum_emb_eq H, Finset.mul_sum, mul_assoc, ← Finset.card_univ, ← smul_eq_mul, ← Finset.sum_const]
   refine Finset.sum_le_sum fun τ _ => ?_
-  rw [Datum.mult, if_pos τ.2, Datum.mult, if_neg (conj_not_mem τ)]
+  rw [Datum.mult, ite_eq_left τ.2, Datum.mult, ite_eq_right (conj_not_mem τ)]
   nlinarith [sq_nonneg ((Dw.p : ℤ) - Dw.q)]
 private theorem one_le_dimension_function_copy {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} (Dw : Datum H)
     (hp : 1 ≤ Dw.p) (hne : 0 < Fintype.card (Psi H)) {a : (E →+* ℂ) × ℕ → ℕ} (h : LastPos Dw a) :
     1 ≤ Formalism.L2.Pj.DF Dw a := by
   obtain ⟨τ⟩ := Fintype.card_pos_iff.1 hne
-  have hm : 0 < Dw.mult τ.1 := by rw [Datum.mult, if_pos τ.2]; exact hp
+  have hm : 0 < Dw.mult τ.1 := by rw [Datum.mult, ite_eq_left τ.2]; exact hp
   refine (h τ.1 τ.2 hm).trans_le ?_
   unfold Formalism.L2.Pj.DF
   refine le_trans ?_ (Finset.single_le_sum (f := fun τ : E →+* ℂ => ∑ i : Fin (Dw.mult τ), a (τ, i))
@@ -1333,7 +1333,7 @@ theorem cover_dimension_size_bounds_alt : _root_.GlobalTheory.CovTop.SizeConditi
   have hb : 1000 ≤ (Fm.L x ι).sc.b := by
     have e1 : Real.exp 10 ≤ (Fm.L x ι).sc.b := Real.exp_le_exp.2 hL10
     have e2 : (2 : ℝ) ^ 10 ≤ Real.exp 1 ^ 10 := by gcongr; linarith [Real.add_one_le_exp 1]
-    rw [← Real.exp_nat_mul] at e2
+    rw [← Real.exp_natCast_mul] at e2
     norm_num at e2
     linarith
   have hb1 : 1 ≤ (Fm.L x ι).sc.b := by linarith
@@ -1365,7 +1365,7 @@ theorem cover_dimension_size_bounds_alt : _root_.GlobalTheory.CovTop.SizeConditi
   have hg' : ∀ k, ((Fm.D x ι).host.g k : ℝ) ≤ (Fm.L x ι).sc.b ^ 35 := fun k => by
     have h0 : (0 : ℝ) < (Fm.D x ι).host.g k := by exact_mod_cast ((Fm.D x ι).host.g_prime k).pos
     unfold Formalism.BasicNotions.Scale.b
-    rw [← Real.exp_nat_mul, ← Real.log_le_iff_le_exp h0]
+    rw [← Real.exp_natCast_mul, ← Real.log_le_iff_le_exp h0]
     push_cast
     linarith only [hN.logg k, hL10]
   have hev : Even (GlobalTheory.RefSum.nCol (dat p i)) := q7.2
@@ -1465,7 +1465,7 @@ theorem exists_constant_twist_of_thin_divisor (hP : _root_.GlobalTheory.CovTop.P
   have key : ∀ z ∈ framesOn (Y.U (goodOf Y.d.c₂ σ)) Z,
       homN (Y.U (goodOf Y.d.c₂ σ)) (xiR D) (G + (wtOf (T.Q.Dw j) u 0 - G)) (f * tw.sig) z =
         homN (Y.U (goodOf Y.d.c₂ σ)) (xiR D) G f z * tw.cInf σ := fun z hz => tw.homN_mul_sig hB f hz
-  have e : goodOf Y.d.c₂ σ = σ := if_pos hσ
+  have e : goodOf Y.d.c₂ σ = σ := ite_eq_left hσ
   rw [e, hGG] at key
   have hl := lieFacZ_pos (Dw := T.Q.Dw j) (xiR D) (wtOf (T.Q.Dw j) u 0)
   refine ⟨f * tw.sig, hmem, lieFacZ (T.Q.Dw j) (xiR D) G * tw.cInf σ / lieFacZ (T.Q.Dw j) (xiR D) (wtOf (T.Q.Dw j) u 0),
@@ -1664,12 +1664,12 @@ theorem theta_function_le_bergman_kernel_alt : _root_.GlobalTheory.CovTop.Publis
     refine le_trans ?_ (mul_le_mul_right h3 _)
     rw [← ENNReal.ofReal_pow ha, ← ENNReal.ofReal_mul (Real.exp_pos _).le, ← Real.exp_add]
     refine ENNReal.ofReal_le_ofReal ((pow_le_pow_left₀ ha h1 3).trans ?_)
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     exact Real.exp_le_exp.2 (by exact_mod_cast h2)
   have d0 : a ≤ Real.exp (P / 625) := d.trans (Real.exp_le_exp.2 (by split_ifs <;> push_cast <;> linarith))
   refine ⟨d0.trans (Real.exp_le_exp.2 (by linarith)), ?_⟩
   rcases lt_or_ge ((Y.d.l₂.M : ℝ) * ((Y.U σ).X y.1).firstMinimumSq y.2.1) (Fm.L x ι).sc.b with h | h
-  · rw [if_pos (e4 h)] at d
+  · rw [ite_eq_left (e4 h)] at d
     exact key _ _ d (by push_cast; linarith) (e2 h)
   · exact key _ _ d0 (by linarith) (e3 h)
 

@@ -115,9 +115,9 @@ theorem continuous_dag : Continuous (dag (k := k) (r := r)) := by
     funext x i j
     unfold dag
     rw [Matrix.mul_assoc, hpk_mul_apply, Matrix.mul_apply, Finset.sum_eq_single (tau k r j)]
-    · rw [hpk_row, tau_tau, if_pos rfl, sgn_tau]; rfl
+    · rw [hpk_row, tau_tau, ite_eq_left rfl, sgn_tau]; rfl
     · intro m _ hm
-      rw [hpk_row, if_neg, mul_zero]
+      rw [hpk_row, ite_eq_right, mul_zero]
       intro e; apply hm; rw [e, tau_tau]
     · intro h'; exact absurd (Finset.mem_univ _) h'
   rw [h]
@@ -142,22 +142,22 @@ theorem hPart_mul {h n : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
   unfold hPart
   split_ifs with h1 h2
   · rw [Matrix.mul_apply, Finset.sum_eq_single j]
-    · rw [hn j j h1.2.2 (Or.inl le_rfl), if_pos rfl, mul_one]
+    · rw [hn j j h1.2.2 (Or.inl le_rfl), ite_eq_left rfl, mul_one]
     · intro l _ hl
       by_cases hlW : r ≤ l.val
-      · rw [hn l j h1.2.2 (Or.inr hlW), if_neg hl, mul_zero]
-      · rw [hh.1 i l (Or.inl (by omega)), if_neg, zero_mul]
+      · rw [hn l j h1.2.2 (Or.inr hlW), ite_eq_right hl, mul_zero]
+      · rw [hh.1 i l (Or.inl (by omega)), ite_eq_right, zero_mul]
         intro e; rw [e] at h1; omega
     · intro h'; exact absurd (Finset.mem_univ _) h'
   · subst h2
     by_cases hi : i.val < r ∨ r + k < i.val
-    · rw [hh.1 i i hi, if_pos rfl]
+    · rw [hh.1 i i hi, ite_eq_left rfl]
     · exfalso; apply h1; omega
   · by_cases hi : i.val < r ∨ r + k < i.val
-    · rw [hh.2 i j hi, if_neg h2]
+    · rw [hh.2 i j hi, ite_eq_right h2]
     · have hj : j.val < r ∨ r + k < j.val := by
         by_contra hj; apply h1; omega
-      rw [hh.1 i j hj, if_neg h2]
+      rw [hh.1 i j hj, ite_eq_right h2]
 
 def splitP (x : Mt k r) : Mt k r × Mt k r := (hPart x, mulP (dag (hPart x), x))
 
@@ -359,7 +359,7 @@ theorem shear_step {ι : Type} [Fintype ι] [DecidableEq ι] (ht : ι → ℕ) (
     simp only [e] at this
     simp [hi] at this ⊢
     linarith
-  · simp only [hi, if_false, dif_pos hi]
+  · simp only [hi, ite_false, dite_eq_left hi]
 
 theorem shearMP : ShearMP := by
   intro ι _ _ ht S hS hsh
@@ -371,21 +371,21 @@ theorem shearMP : ShearMP := by
   have hSpP : Sp P = id := by funext x i; simp [Sp, not_le.2 (hP i)]
   have hmeas : ∀ p, Measurable (Sp p) := fun p => Measurable.of_eval fun i => by
     by_cases h : p ≤ ht i
-    · simp only [Sp, h, if_true]; exact (measurable_pi_apply i).comp hS
-    · simp only [Sp, h, if_false]; exact measurable_pi_apply i
+    · simp only [Sp, h, ite_true]; exact (measurable_pi_apply i).comp hS
+    · simp only [Sp, h, ite_false]; exact measurable_pi_apply i
   have hfac : ∀ p, Sp p = (fun y : ι → ℝ => fun i => if ht i = p then S y i else y i) ∘ Sp (p + 1) := by
     intro p
     funext x i
     simp only [Function.comp, Sp]
     by_cases hi : ht i = p
-    · simp only [hi, le_refl, if_true, show ¬ (p + 1 ≤ p) by omega, if_false]
+    · simp only [hi, le_refl, ite_true, show ¬ (p + 1 ≤ p) by omega, ite_false]
       have := hsh i x (fun j => if p + 1 ≤ ht j then S x j else x j) (fun j hj => by
-        simp only [show ¬ (p + 1 ≤ ht j) by omega, if_false])
-      simp only [show ¬ (p + 1 ≤ ht i) by omega, if_false] at this
+        simp only [show ¬ (p + 1 ≤ ht j) by omega, ite_false])
+      simp only [show ¬ (p + 1 ≤ ht i) by omega, ite_false] at this
       linarith
     · by_cases h2 : p + 1 ≤ ht i
-      · simp only [hi, if_false, h2, if_true, show p ≤ ht i by omega]
-      · simp only [hi, if_false, h2, show ¬ p ≤ ht i by omega]
+      · simp only [hi, ite_false, h2, ite_true, show p ≤ ht i by omega]
+      · simp only [hi, ite_false, h2, show ¬ p ≤ ht i by omega]
   have key : ∀ q, q ≤ P → MeasurePreserving (Sp (P - q)) volume volume := by
     intro q
     induction q with
@@ -466,7 +466,7 @@ theorem Fil.mul {a b : ℕ} {X Y : Mat k r} (hX : Fil a X) (hY : Fil b Y) : Fil 
 
 theorem Fil.one : Fil 0 (1 : Mat k r) := by
   intro i j h
-  rw [Matrix.one_apply, if_neg]
+  rw [Matrix.one_apply, ite_eq_right]
   intro e; rw [e] at h; omega
 
 theorem Fil.eq_zero {X : Mat k r} {p : ℕ} (hp : 2 * r + 1 ≤ p) (h : Fil p X) : X = 0 := by
@@ -544,9 +544,9 @@ theorem adjH_apply (X : Mat k r) (i j : Fin (2 * r + k + 1)) :
     adjH X i j = sgn k r i * star (X (tau k r j) (tau k r i)) * sgn k r j := by
   unfold adjH
   rw [Matrix.mul_assoc, hpk_mul_apply, Matrix.mul_apply, Finset.sum_eq_single (tau k r j)]
-  · rw [hpk_row, tau_tau, if_pos rfl, sgn_tau, Matrix.conjTranspose_apply]; ring
+  · rw [hpk_row, tau_tau, ite_eq_left rfl, sgn_tau, Matrix.conjTranspose_apply]; ring
   · intro m _ hm
-    rw [hpk_row, if_neg, mul_zero]
+    rw [hpk_row, ite_eq_right, mul_zero]
     intro e; apply hm; rw [e, tau_tau]
   · intro h'; exact absurd (Finset.mem_univ _) h'
 
@@ -648,13 +648,13 @@ theorem mem_N_iff (g : Mat k r) : g ∈ Nset k r ↔ g ∈ UH (Hpk k r) ∧ Fil 
       have hi2 : r + k < i.val := by unfold dg at hij; split_ifs at hij <;> omega
       have e : g i j = adjH (adjH g) i j := by rw [adjH_adjH]
       have hτi : (tau k r i).val = 2 * r + k - i.val := by
-        rw [tau_val, if_pos (Or.inr (by unfold dg at hij; split_ifs at hij <;> omega))]
-      have hτj : (tau k r j).val = 2 * r + k - j.val := by rw [tau_val, if_pos (Or.inr (by omega))]
+        rw [tau_val, ite_eq_left (Or.inr (by unfold dg at hij; split_ifs at hij <;> omega))]
+      have hτj : (tau k r j).val = 2 * r + k - j.val := by rw [tau_val, ite_eq_left (Or.inr (by omega))]
       rw [e, adjH_apply, hc' (tau k r j) (tau k r i) (by omega) (by unfold dg at hij; split_ifs at hij <;> omega)]
       by_cases hij' : i = j
       · subst hij'
-        rw [if_pos rfl, if_pos rfl, star_one, mul_one, sgn_mul_self, sub_self]
-      · rw [if_neg (fun e' => hij' (by rw [← tau_tau (k := k) (r := r) i, ← e', tau_tau])), if_neg hij', star_zero,
+        rw [ite_eq_left rfl, ite_eq_left rfl, star_one, mul_one, sgn_mul_self, sub_self]
+      · rw [ite_eq_right (fun e' => hij' (by rw [← tau_tau (k := k) (r := r) i, ← e', tau_tau])), ite_eq_right hij', star_zero,
           mul_zero, zero_mul, sub_zero]
   · rintro ⟨hU, hF⟩
     refine ⟨hU, fun i j hj hi => ?_⟩
@@ -676,9 +676,9 @@ theorem exp_mem_N {X : Mat k r} (hX : X ∈ lieN k r) : NormedSpace.exp X ∈ Ns
 
 theorem exp_smul_inj {d : ℕ} (A B : Matrix (Fin d) (Fin d) ℂ)
     (h : ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • A) = NormedSpace.exp ((t : ℂ) • B)) : A = B := by
-  letI : SeminormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpSemiNormedRing
-  letI : NormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : SeminormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpSemiNormedRing
+  let : NormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedAlgebra
   have hA : HasDerivAt (fun u : ℝ => NormedSpace.exp (u • A)) (NormedSpace.exp ((0 : ℝ) • A) * A) 0 :=
     hasDerivAt_exp_smul_const A 0
   have hB : HasDerivAt (fun u : ℝ => NormedSpace.exp (u • B)) (NormedSpace.exp ((0 : ℝ) • B) * B) 0 :=
@@ -730,8 +730,8 @@ theorem lieOf_N : lieOf (Nset k r) = lieN k r := by
     · exact hcol i j hjk (by unfold dg at hij; split_ifs at hij <;> omega)
     · have hi2 : r + k < i.val := by unfold dg at hij; split_ifs at hij <;> omega
       have hτi : (tau k r i).val = 2 * r + k - i.val := by
-        rw [tau_val, if_pos (Or.inr (by unfold dg at hij; split_ifs at hij <;> omega))]
-      have hτj : (tau k r j).val = 2 * r + k - j.val := by rw [tau_val, if_pos (Or.inr (by omega))]
+        rw [tau_val, ite_eq_left (Or.inr (by unfold dg at hij; split_ifs at hij <;> omega))]
+      have hτj : (tau k r j).val = 2 * r + k - j.val := by rw [tau_val, ite_eq_left (Or.inr (by omega))]
       have e : X i j = -(adjH X i j) := by rw [hadj, Matrix.neg_apply, neg_neg]
       rw [e, adjH_apply, hcol (tau k r j) (tau k r i) (by omega) (by unfold dg at hij; split_ifs at hij <;> omega),
         star_zero, mul_zero, zero_mul, neg_zero]
@@ -745,13 +745,13 @@ theorem Fil.sub_Pg {p : ℕ} {M : Mat k r} (h : Fil p M) : Fil (p + 1) (M - Pg p
   rw [Matrix.sub_apply]
   unfold Pg
   by_cases e : dg k r j = dg k r i + p
-  · rw [if_pos e, sub_self]
-  · rw [if_neg e, h i j (by omega), sub_zero]
+  · rw [ite_eq_left e, sub_self]
+  · rw [ite_eq_right e, h i j (by omega), sub_zero]
 
 theorem Fil.Pg (p : ℕ) (M : Mat k r) : Fil p (Pg p M) := by
   intro i j hij
   unfold Formalism.MainNotions.BridgeCSB.Pg
-  rw [if_neg (by omega)]
+  rw [ite_eq_right (by omega)]
 
 theorem Pg_of_Fil {p : ℕ} {M : Mat k r} (h : Fil (p + 1) M) : Pg p M = 0 := by
   ext i j
@@ -775,8 +775,8 @@ theorem Pg_adjH (p : ℕ) (M : Mat k r) : Pg p (adjH M) = adjH (Pg p M) := by
   have hi := dg_le (k := k) (r := r) i
   have hj := dg_le (k := k) (r := r) j
   by_cases e : dg k r j = dg k r i + p
-  · rw [if_pos e, if_pos (by rw [dg_tau, dg_tau]; omega), adjH_apply]
-  · rw [if_neg e, if_neg (by rw [dg_tau, dg_tau]; omega), star_zero, mul_zero, zero_mul]
+  · rw [ite_eq_left e, ite_eq_left (by rw [dg_tau, dg_tau]; omega), adjH_apply]
+  · rw [ite_eq_right e, ite_eq_right (by rw [dg_tau, dg_tau]; omega), star_zero, mul_zero, zero_mul]
 
 theorem lieN_add {X Y : Mat k r} (hX : X ∈ lieN k r) (hY : Y ∈ lieN k r) : X + Y ∈ lieN k r := by
   refine ⟨hX.1.add hY.1, ?_⟩
@@ -876,11 +876,11 @@ theorem Pg_smul (p : ℕ) (c : ℝ) (M : Mat k r) : Pg p (c • M) = c • Pg p 
 theorem Pg_Pg (p q : ℕ) (M : Mat k r) : Pg q (Pg p M) = if p = q then Pg p M else 0 := by
   by_cases h : p = q
   · subst h
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     ext i j
     rw [Pg_apply, Pg_apply]
     split_ifs <;> rfl
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     ext i j
     rw [Pg_apply, Pg_apply, Matrix.zero_apply]
     split_ifs <;> first | rfl | omega
@@ -946,8 +946,8 @@ theorem Pg_Lc (q : Fin (2 * r + 1)) (x : Ix k r → ℝ) :
     show Pg q.val (bv i) = _
     rw [Pg_of_mem_nP (bv_mem i)]
     by_cases h : i.1 = q
-    · rw [if_pos (by rw [h]), if_pos h]
-    · rw [if_neg (fun e => h (Fin.ext e)), if_neg h]
+    · rw [ite_eq_left (by rw [h]), ite_eq_left h]
+    · rw [ite_eq_right (fun e => h (Fin.ext e)), ite_eq_right h]
   simp only [e, smul_ite, smul_zero]
   rw [Fintype.sum_sigma]
   rw [Finset.sum_eq_single q]
@@ -970,8 +970,8 @@ theorem Fil_Lc_iff (p : ℕ) (v : Ix k r → ℝ) : Fil p (Lc v) ↔ ∀ i, htI 
     refine Finset.sum_eq_zero fun i _ => ?_
     by_cases hi : htI i < p
     · rw [h i hi, zero_smul, Matrix.zero_apply]
-    · have hY : bv i = Pg i.1.val (bv i) := by rw [Pg_of_mem_nP (bv_mem i), if_pos rfl]
-      rw [Matrix.smul_apply, hY, Pg_apply, if_neg (by unfold htI at hi; omega), smul_zero]
+    · have hY : bv i = Pg i.1.val (bv i) := by rw [Pg_of_mem_nP (bv_mem i), ite_eq_left rfl]
+      rw [Matrix.smul_apply, hY, Pg_apply, ite_eq_right (by unfold htI at hi; omega), smul_zero]
 
 theorem Lc_injective : Function.Injective (Lc (k := k) (r := r)) := by
   intro x y h
@@ -987,9 +987,9 @@ theorem sum_Pg {X : Mat k r} (hX : Fil 0 X) : ∑ q : Fin (2 * r + 1), Pg q.val 
   by_cases h : dg k r i ≤ dg k r j
   · have hb := dg_le (k := k) (r := r) j
     rw [Finset.sum_eq_single ⟨dg k r j - dg k r i, by omega⟩]
-    · rw [if_pos (by simp; omega)]
+    · rw [ite_eq_left (by simp; omega)]
     · intro q _ hq
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e; apply hq; ext; simp; omega
     · intro h'; exact absurd (Finset.mem_univ _) h'
   · rw [hX i j (by omega)]
@@ -1107,7 +1107,7 @@ theorem isHaarOn_nuN : IsHaarOn (Nset k r) (nuN k r) := by
   · have hm : MeasurableSet {x : Mt k r | Matrix.of x ∉ Nset k r} := isClosed_N.measurableSet.compl
     rw [nuN, Measure.map_apply mEx hm]
     have : Ex ⁻¹' {x : Mt k r | Matrix.of x ∉ Nset k r} = ∅ := by
-      ext x; simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+      ext x; simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
       exact Ex_mem x
     rw [this, measure_empty]
   · intro n0 hn0
@@ -1167,7 +1167,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 theorem continuous_expLie (S : Set (Mat k r)) :
     Continuous fun x : lieE S => (fun i j => NormedSpace.exp (unrealify (x : EuclideanSpace ℝ _)) i j : Mt k r) := by
   have h2 : Continuous fun M : Mat k r => NormedSpace.exp M := NormedSpace.exp_continuous
-  exact h2.comp ((continuous_unrealify' _).comp continuous_subtype_val)
+  exact h2.comp ((continuous_unrealify' _).comp continuous_subtypeVal)
 
 end Cont2
 
@@ -1215,11 +1215,11 @@ theorem IsHaarOn.smul_nnreal {S : Set (Mat k r)} {μ : Measure (Mt k r)} (h : Is
   refine ⟨inferInstance, ?_, ?_, ?_⟩
   · intro h0
     have h1 : (a • μ) Set.univ = 0 := by rw [h0]; rfl
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, mul_eq_zero] at h1
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul, mul_eq_zero] at h1
     rcases h1 with h1 | h1
     · exact ha (by exact_mod_cast h1)
     · exact h.2.1 (Measure.measure_univ_eq_zero.1 h1)
-  · rw [Measure.smul_apply, h.2.2.1, smul_zero]
+  · rw [smul_apply, h.2.2.1, smul_zero]
   · intro s hs
     rw [Measure.map_smul a (continuous_lmulM s).measurable.aemeasurable, h.2.2.2 s hs]
 
@@ -1264,7 +1264,7 @@ theorem haarLieN : HaarLieN := by
   rw [he κ]
   have e : κ • (c • nuN k r) = (κ.toNNReal * c) • nuN k r := by
     ext s _
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.coe_mul, ENNReal.coe_toNNReal htop]
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.coe_mul, ENNReal.coe_toNNReal htop]
     ring
   rw [e]
   refine IsHaarOn.smul_nnreal (isHaarOn_nuN (k := k) (r := r)) (mul_ne_zero ?_ hc)

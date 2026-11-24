@@ -108,7 +108,7 @@ variable {X : Fields} {Pr : Primes X}
 
 theorem residue_natCast (hPr : Pr.Ok) {a : Fin 2} {w : HeightOneSpectrum (𝓞 X.E)} (hw : w ∈ Pr.vG a)
     (c : 𝓞 X.E ⧸ w.asIdeal) : ∃ k : ℕ, c = k := by
-  haveI : NeZero (Pr.g a) := ⟨(hPr.g_prime a).ne_zero⟩
+  have : NeZero (Pr.g a) := ⟨(hPr.g_prime a).ne_zero⟩
   have e := (nonempty_equiv_zmod (𝓞 X.E ⧸ w.asIdeal) (hPr.g_prime a) (by
     rw [← hPr.vG_norm a w hw, Ideal.absNorm_apply, Submodule.cardQuot_apply])).some
   exact ⟨(e.symm c).val, by rw [← map_natCast e, ZMod.natCast_zmod_val, RingEquiv.apply_symm_apply]⟩
@@ -154,7 +154,7 @@ theorem primes_over_places : ∀ (X : Fields) (Pr : Primes X) (hc : Formalism.Ba
     have hL : ∏ w, φ w = ∏ w ∈ Pr.vGs, φ' w := by
       rw [← Finset.prod_coe_sort Pr.vGs φ']
       refine Finset.prod_congr rfl fun w _ => ?_
-      simp only [φ', dif_pos w.2]
+      simp only [φ', dite_eq_left w.2]
     have hA : ∀ a : Fin 2, ∏ᶠ (v : HeightOneSpectrum (𝓞 X.F)) (h : (Pr.g a : 𝓞 X.F) ∈ v.asIdeal), φ (wOf a v h) =
         ∏ w ∈ Pr.vG a, φ' w := by
       intro a
@@ -166,7 +166,7 @@ theorem primes_over_places : ∀ (X : Fields) (Pr : Primes X) (hc : Formalism.Ba
         intro v hv
         have h' : (Pr.g a : 𝓞 X.F) ∈ v.asIdeal := by
           by_contra hn
-          exact hv (by simp only [f, dif_neg hn])
+          exact hv (by simp only [f, dite_eq_right hn])
         rw [Finset.coe_image]
         exact ⟨(wOf a v h').1, hin a v h', under_of_isOver (hspec a v h')⟩
       rw [e1, finprod_eq_prod_of_mulSupport_subset f hsupp, Finset.prod_image]
@@ -178,7 +178,7 @@ theorem primes_over_places : ∀ (X : Fields) (Pr : Primes X) (hc : Formalism.Ba
         have hw' : w ∈ Pr.vGs := mem_vGs hw
         have e2 : wOf a (w.under (𝓞 X.F)) hg = ⟨w, hw'⟩ :=
           ((h1 a _ hg ⟨w, hw'⟩).1 (isOver_of_under rfl)).symm
-        simp only [f, φ', dif_pos hg, dif_pos hw', e2]
+        simp only [f, φ', dite_eq_left hg, dite_eq_left hw', e2]
       · intro w hw w' hw' he
         have hg : (Pr.g a : 𝓞 X.F) ∈ (w.under (𝓞 X.F)).asIdeal := by
           show (Pr.g a : 𝓞 X.F) ∈ Ideal.comap (algebraMap (𝓞 X.F) (𝓞 X.E)) w.asIdeal

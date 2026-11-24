@@ -250,7 +250,7 @@ theorem corr_pt (hM : M.IsLB) {φ : K → (Sp F ⟶ X)} {ε : K → ℤ} {φ' : 
 
 theorem toStk_surj (y : Sp F) : Function.Surjective (toStk y) := by
   intro t
-  obtain ⟨V, hyV, s, rfl⟩ := TopCat.Presheaf.germ_exist (Sp F).presheaf t
+  obtain ⟨V, hyV, s, rfl⟩ := TopCat.Presheaf.exists_germ_eq (Sp F).presheaf t
   have hV : (⊤ : (Sp F).Opens) ≤ V := by
     intro x _
     have hx : x = y := by

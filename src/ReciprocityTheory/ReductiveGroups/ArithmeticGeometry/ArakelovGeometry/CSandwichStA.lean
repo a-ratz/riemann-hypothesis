@@ -93,10 +93,10 @@ theorem integral_sphProb_le {D : ℕ} (F : (Fin (D + 1) → ℂ) → ℝ) (hF0 :
   have hae : ∀ᵐ w ∂(sphProb (D + 1)), sqN w = 1 := by
     rw [ae_iff]
     exact sphProb_compl_sphere D
-  letI : IsProbabilityMeasure (sphProb (D + 1)) := by
+  let : IsProbabilityMeasure (sphProb (D + 1)) := by
     unfold sphProb
     infer_instance
-  letI : IsFiniteMeasure (sphProb (D + 1)) := ⟨by rw [measure_univ]; norm_num⟩
+  let : IsFiniteMeasure (sphProb (D + 1)) := ⟨by rw [measure_univ]; norm_num⟩
   calc ∫ w, F w ∂(sphProb (D + 1)) ≤ ∫ _w, B ∂(sphProb (D + 1)) :=
         integral_mono_of_nonneg (Filter.Eventually.of_forall hF0) (integrable_const B)
           (hae.mono fun w hw => hB w hw)

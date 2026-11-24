@@ -415,8 +415,8 @@ theorem MainStatements.WeightKernel.Dec.derVan : MainStatements.WeightKernel.Dec
     have e := key.unique (hasDerivAt_const (0 : ℝ) (0 : ℂ))
     simpa [GlobalTheory.UAut.ConstAut.realLine_zero h hb] using e
   · intro t
-    exact hfc.1.comp ((continuous_const.mul continuous_subtype_val).mul continuous_const)
-  · exact hf'c.1.comp ((continuous_const.mul (continuous_subtype_val.comp continuous_snd)).mul
+    exact hfc.1.comp ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
+  · exact hf'c.1.comp ((continuous_const.mul (continuous_subtypeVal.comp continuous_snd)).mul
       (continuous_const.mul (hbc.comp continuous_fst)))
   · intro t ht m hm
     have hnot : x * ↑m * (y * b t) ∉ tsupport f ∪ tsupport (lineDer b f) := fun hk =>
@@ -747,7 +747,7 @@ theorem variation : Variation := by
   have hK : IsCompact (T ⁻¹' tsupport f) := T.isCompact_preimage.2 hfs
   have hsupp : HasCompactSupport h :=
     HasCompactSupport.intro' (hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hK)
-      ((isClosed_tsupport f).preimage (T.continuous.comp continuous_subtype_val))
+      ((isClosed_tsupport f).preimage (T.continuous.comp continuous_subtypeVal))
       fun x hx => image_eq_zero_of_notMem_tsupport (f := f) (x := z * (x : GAd σ J) * g) hx
   have hint : Integrable h ν := hcont.integrable_of_hasCompactSupport hsupp
   have hV0 : ∫ m, h m ∂ν = 0 := hV ν z g
@@ -775,10 +775,10 @@ theorem variation : Variation := by
   have hae : ∀ᵐ x ∂(ν.restrict (stdDom ((ratPts σ J).subgroupOf (unipRad σ J C)))),
       HasSum (fun γ => F' γ x) (∑' γ, F' γ x) := by
     have h1 : ∫⁻ x in stdDom ((ratPts σ J).subgroupOf (unipRad σ J C)), ∑' γ, ‖F' γ x‖ₑ ∂ν ≠ ⊤ := by
-      rw [lintegral_tsum (fun γ => (hmeas γ).enorm)]; exact hlin
-    filter_upwards [ae_lt_top' (AEMeasurable.tsum fun γ => (hmeas γ).enorm) h1] with x hx
+      rw [lintegral_tsum (fun γ => (hmeas γ).eNorm)]; exact hlin
+    filter_upwards [ae_lt_top' (AEMeasurable.tsum fun γ => (hmeas γ).eNorm) h1] with x hx
     have hs : Summable fun γ => ‖F' γ x‖₊ :=
-      ENNReal.tsum_coe_ne_top_iff_summable.1 (by simpa [enorm_eq_nnnorm] using hx.ne)
+      ENNReal.tsum_coe_ne_top_iff_summable.1 (by simpa [eNorm_eq_nnNorm] using hx.ne)
     exact (Summable.of_norm (NNReal.summable_coe.2 hs)).hasSum
   have hΨm : AEStronglyMeasurable (fun x : unipRad σ J C => ∑' γ, F' γ x)
       (ν.restrict (stdDom ((ratPts σ J).subgroupOf (unipRad σ J C)))) :=
@@ -786,7 +786,7 @@ theorem variation : Variation := by
       (fun s => by first
         | exact Finset.aestronglyMeasurable_fun_sum s fun γ _ => hmeas γ
         | exact Finset.aestronglyMeasurable_sum s fun γ _ => hmeas γ) hae
-  haveI : IsFiniteMeasure (ν.restrict (stdDom ((ratPts σ J).subgroupOf (unipRad σ J C)))) :=
+  have : IsFiniteMeasure (ν.restrict (stdDom ((ratPts σ J).subgroupOf (unipRad σ J C)))) :=
     isFiniteMeasure_restrict.2 hfin
   have hΨi : IntegrableOn (fun x : unipRad σ J C => nsum (NF σ J C) f z ((x : GAd σ J) * g))
       (stdDom ((ratPts σ J).subgroupOf (unipRad σ J C))) ν := by

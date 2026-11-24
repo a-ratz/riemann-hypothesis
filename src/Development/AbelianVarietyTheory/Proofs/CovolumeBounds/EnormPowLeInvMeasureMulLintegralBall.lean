@@ -129,7 +129,7 @@ theorem measurePreserving_smul_of_norm_eq_one (μ : Measure E) [μ.IsAddHaarMeas
   have ht : μ (ball 0 1) ≠ ∞ := measure_ball_lt_top.ne
   refine ⟨hm, ?_⟩
   have h1 : Measure.addHaarScalarFactor (μ.map fun z : E => c • z) μ = 1 := by
-    rw [h, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hb
+    rw [h, smul_apply, ENNReal.smul_def, smul_eq_mul] at hb
     exact_mod_cast (ENNReal.mul_eq_right h0 ht).1 hb
   rw [h, h1, one_smul]
 
@@ -148,7 +148,7 @@ theorem enorm_pow_mul_lintegral_le_of_circular (μ : Measure E) [μ.IsAddHaarMea
   set g : E → ℝ≥0∞ := S.indicator fun z => ‖φ z‖ₑ ^ n * w z with hg
   have hgm : Measurable g := by
     have h1 : ContinuousOn (fun z => ‖φ z‖ₑ ^ n) S :=
-      (ENNReal.continuous_pow n).comp_continuousOn hφc.enorm
+      (ENNReal.continuous_pow n).comp_continuousOn hφc.eNorm
     have h3 := (h1.measurable_piecewise (g := fun _ => 0) continuousOn_const hS).mul hw
     convert h3 using 1
     ext z
@@ -170,7 +170,7 @@ theorem enorm_pow_mul_lintegral_le_of_circular (μ : Measure E) [μ.IsAddHaarMea
   · have h5 : ∀ t, g (circleMap 0 1 t • z) = ‖φ (circleMap 0 1 t • z)‖ₑ ^ n * w z := fun t => by
       rw [hg, indicator_of_mem (hSc _ (hn t) z hz), hwc _ (hn t) z hz]
     have h6 : Measurable fun t => ‖φ (circleMap 0 1 t • z)‖ₑ ^ n := by
-      refine Continuous.measurable ((ENNReal.continuous_pow n).comp (Continuous.enorm ?_))
+      refine Continuous.measurable ((ENNReal.continuous_pow n).comp (Continuous.eNorm ?_))
       exact hφc.comp_continuous ((continuous_circleMap 0 1).smul continuous_const)
         fun t => hSc _ (hn t) z hz
     simp only [indicator_of_mem hz, h5]
@@ -377,7 +377,7 @@ theorem measurePreserving_toLp_complex :
   refine ⟨hm, ?_⟩
   have h1 : Measure.addHaarScalarFactor ((volume : Measure (ι → ℂ)).map
       (WithLp.toLp 2 : (ι → ℂ) → EuclideanSpace ℂ ι)) volume = 1 := by
-    rw [h, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hb
+    rw [h, smul_apply, ENNReal.smul_def, smul_eq_mul] at hb
     exact_mod_cast (ENNReal.mul_eq_right h0 ht).1 hb
   rw [h, h1, one_smul]
 

@@ -78,7 +78,7 @@ private theorem harm_comb {q : ℕ} (c : ℂ)
   · refine AlternatingMap.ext fun X => ?_
     have h1 := DFunLike.congr_fun hω.closed X
     have h2 := DFunLike.congr_fun hη.closed X
-    rw [dCo_apply, AlternatingMap.zero_apply] at h1 h2 ⊢
+    rw [dCo_apply, zero_apply] at h1 h2 ⊢
     simp only [ap, map_add (f := _), map_smul, smul_add, Finset.sum_add_distrib, h2, add_zero]
     rw [← smul_zero c, ← h1, Finset.smul_sum]
     exact Finset.sum_congr rfl fun i _ => smul_comm _ _ _
@@ -88,7 +88,7 @@ private theorem harm_comb {q : ℕ} (c : ℂ)
       refine AlternatingMap.ext fun X => ?_
       have h1 := DFunLike.congr_fun (show del _ e ω = 0 from hω.coclosed) X
       have h2 := DFunLike.congr_fun (show del _ e η = 0 from hη.coclosed) X
-      rw [del_apply, AlternatingMap.zero_apply] at h1 h2 ⊢
+      rw [del_apply, zero_apply] at h1 h2 ⊢
       simp only [ap, map_add (f := _), map_smul, Finset.sum_add_distrib, h2, add_zero, ← Finset.smul_sum, h1, smul_zero]
 
 end SlopeTestRemainingChoices

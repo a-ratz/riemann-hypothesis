@@ -218,7 +218,7 @@ private theorem existsUnique_sec {U P : Scheme.{0}} (p' : P ⟶ U) {m : ℕ} (s'
     ∃! j, x0 ≫ s' j = y := by
   classical
   set D : ∐ (fun _ : Fin m => U) ⟶ P := Sigma.desc s' with hD
-  have hι : ∀ j, Sigma.ι (fun _ : Fin m => U) j ≫ D = s' j := fun j => Sigma.ι_desc _ _
+  have hι : ∀ j, Sigma.ι (fun _ : Fin m => U) j ≫ D = s' j := fun j => Sigma.ι_comp_desc _ _
   have huniq : ∀ j₁ j₂, x0 ≫ s' j₁ = x0 ≫ s' j₂ → j₁ = j₂ := by
     intro j₁ j₂ h
     rw [← hι j₁, ← hι j₂, ← Category.assoc, ← Category.assoc, cancel_mono] at h
@@ -295,7 +295,7 @@ private theorem push_one {W S : Scheme.{0}} (c : W ⟶ S) [IsFinite c] [Surjecti
       exact h'.symm)
     exact e.symm.injective (e1.trans e2.symm)
   rw [hfib, finsum_mem_range hinj]
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, Nat.card_eq_fintype_card]
   simp
 
@@ -322,11 +322,11 @@ theorem UpperTheory.Gal.Mod.corrOpEq :
   intro l _ S c _ hw hl T hT
   obtain ⟨W, c', G, _, _, a, J, _, σ, hgal, hsplit, hTx⟩ := hT
   obtain ⟨hfin, het, hsurj, -, -, hsc⟩ := hgal
-  haveI := hfin
-  haveI := het
-  haveI := hsurj
-  haveI : IsFinite c.p := c.fin
-  haveI : Nonempty G := ⟨1⟩
+  have := hfin
+  have := het
+  have := hsurj
+  have : IsFinite c.p := c.fin
+  have : Nonempty G := ⟨1⟩
   obtain ⟨hσ, hiso⟩ := hsplit
   obtain ⟨m, ⟨e⟩⟩ : ∃ m, Nonempty (Fin m ≃ J) := ⟨Fintype.card J, ⟨(Fintype.equivFin J).symm⟩⟩
   have hiso' := isIso_reindex e _ hiso
@@ -411,7 +411,7 @@ theorem UpperTheory.Gal.Mod.esStep :
   obtain ⟨ρ₀, ⟨b, hb⟩, hgr⟩ := hpc
   obtain ⟨C, p, f, hp, hpw, hnorm, hon, hC⟩ := hcong
   obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩ := hP E Ω w A hA
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hinv : ∀ σ : Gal(Ω/E), ∀ x ∈ piece l H Ω (Qbar l) θ,
       galV l H Ω (Qbar l) σ x ∈ piece l H Ω (Qbar l) θ := by
     intro σ
@@ -578,7 +578,7 @@ private theorem splits_fin {Z Y W : Scheme.{0}} {s : Y ⟶ Z} {c : W ⟶ Z} {J :
     refine Sigma.hom_ext _ _ fun i => ?_
     have hr : Sigma.ι (fun _ : Fin m => W) i ≫ (Sigma.reindex e (fun _ : J => W)).hom = Sigma.ι (fun _ : J => W) (e i) :=
       Sigma.ι_reindex_hom e (fun _ : J => W) i
-    rw [Sigma.ι_desc, ← Category.assoc, hr, Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc, ← Category.assoc, hr, Sigma.ι_comp_desc]
   rw [heq]
   infer_instance
 
@@ -635,10 +635,10 @@ theorem UpperTheory.Gal.Mod.fixDesc :
   have ha : ∀ δ, C.a δ ≫ H.q = H.q := fun δ => by
     calc C.a δ ≫ H.q = C.a δ ≫ pullback.lift C.π H.q C.ov ≫ pullback.snd C.p (sp (algebraMap O k)) := by rw [hu]
       _ = H.q := by rw [← Category.assoc, hs0 δ, hu]
-  haveI : IsFinite (pullback.lift C.π H.q C.ov) := C.finπ
-  haveI : Etale (pullback.lift C.π H.q C.ov) := C.etπ
-  haveI hF : IsFinite (piG C Ω) := fin_of_pb (gm_pb Ω H.q (pullback.lift C.π H.q C.ov) hu)
-  haveI hE : Etale (piG C Ω) := et_of_pb (gm_pb Ω H.q (pullback.lift C.π H.q C.ov) hu)
+  have : IsFinite (pullback.lift C.π H.q C.ov) := C.finπ
+  have : Etale (pullback.lift C.π H.q C.ov) := C.etπ
+  have hF : IsFinite (piG C Ω) := fin_of_pb (gm_pb Ω H.q (pullback.lift C.π H.q C.ov) hu)
+  have hE : Etale (piG C Ω) := et_of_pb (gm_pb Ω H.q (pullback.lift C.π H.q C.ov) hu)
   let aΩ : C.Δ → (H.geomZ Ω ⟶ H.geomZ Ω) := fun δ => geomMap Ω H.q (C.a δ) (ha δ)
   have hS : Splits (piG C Ω) (piG C Ω) aΩ := splits_geom Ω H.q (pullback.lift C.π H.q C.ov) hu C.a ha C.spl
   let e : Fin (Nat.card C.Δ) ≃ C.Δ := (Finite.equivFin C.Δ).symm
@@ -650,9 +650,9 @@ theorem UpperTheory.Gal.Mod.fixDesc :
     TranscendenceTraces.adic.2.2.2.2.2.2.2.2.2 l n 0 (piG C Ω) hlS _ (piG C Ω) _ (fun j => aΩ (e j)) hs' hi'
   have hopE : ∀ δ, ∃ g, hop l H Ω g = pullTot l (sch.map (aΩ δ)) ∧ θ g = 1 := fun δ => by
     obtain ⟨g, hiso, ht, h1⟩ := C.fix δ
-    haveI := hiso
+    have := hiso
     have e1 := hOp l k H Ω hl g 1 (fEt_iso _)
-    haveI hi2 : IsIso (H.sΩ Ω g) := gm_isIso Ω _ _ _
+    have hi2 : IsIso (H.sΩ Ω g) := gm_isIso Ω _ _ _
     have e2 : H.tΩ Ω g = H.sΩ Ω g ≫ aΩ δ := by
       apply pullback.hom_ext
       · change geomMap Ω (H.s g ≫ H.q) (H.t g) (H.comm g) ≫ _ =
@@ -681,7 +681,7 @@ theorem UpperTheory.Gal.Mod.fixDesc :
     simp only [Tr, pullTot, DirectSum.lmap_lof]
 
     rw [h3, map_sum]
-  haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ_[l] L).injective
+  have : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ_[l] L).injective
   have hc : (Nat.card C.Δ : L) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
   refine ⟨(Nat.card C.Δ : L)⁻¹ • Tr.baseChange L x, ?_⟩
   have h4 : (pullTot l (sch.map (piG C Ω))).baseChange L (Tr.baseChange L x) = (Nat.card C.Δ : L) • x := by
@@ -749,23 +749,23 @@ private theorem blkPart_mul (c : Fin d → ℕ) {M N : Matrix (Fin d) (Fin d) L}
   change (if c i = c j then (M * N) i j else 0) =
     ∑ k, (if c i = c k then M i k else 0) * (if c k = c j then N k j else 0)
   by_cases h : c i = c j
-  · rw [if_pos h, Matrix.mul_apply]
+  · rw [ite_eq_left h, Matrix.mul_apply]
     refine Finset.sum_congr rfl fun k _ => ?_
     by_cases h1 : c i = c k
     · have h2 : c k = c j := h1.symm.trans h
-      rw [if_pos h1, if_pos h2]
-    · rw [if_neg h1, zero_mul]
+      rw [ite_eq_left h1, ite_eq_left h2]
+    · rw [ite_eq_right h1, zero_mul]
       rcases lt_or_gt_of_ne h1 with h3 | h3
       · have h4 : c j < c k := h ▸ h3
         rw [hN h4, mul_zero]
       · rw [hM h3, zero_mul]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     symm
     refine Finset.sum_eq_zero fun k _ => ?_
     by_cases h1 : c i = c k
     · have h2 : ¬ c k = c j := fun e => h (h1.trans e)
-      rw [if_neg h2, mul_zero]
-    · rw [if_neg h1, zero_mul]
+      rw [ite_eq_right h2, mul_zero]
+    · rw [ite_eq_right h1, zero_mul]
 
 private theorem blkTri_pow (c : Fin d → ℕ) {M : Matrix (Fin d) (Fin d) L}
     (hM : M.BlockTriangular c) (n : ℕ) : (M ^ n).BlockTriangular c := by
@@ -873,12 +873,12 @@ theorem UpperTheory.Gal.Mod.hopOp :
     GalEx → CorrOpEq → HopOp := by
   intro hGal hOp l _ k _ H Ω _ _ hlΩ g d hd
   obtain ⟨hF, hE, hcard⟩ := hd
-  haveI := hF
-  haveI := hE
+  have := hF
+  have := hE
   have hpb : IsPullback (pullback.fst (H.s g ≫ H.q) (sp (algebraMap k Ω))) (H.sΩ Ω g) (H.s g)
       (pullback.fst H.q (sp (algebraMap k Ω))) := gm_pb Ω H.q (H.s g)
-  haveI hsF : IsFinite (H.sΩ Ω g) := fin_of_pb hpb
-  haveI hsE : Etale (H.sΩ Ω g) := et_of_pb hpb
+  have hsF : IsFinite (H.sΩ Ω g) := fin_of_pb hpb
+  have hsE : Etale (H.sΩ Ω g) := et_of_pb hpb
   have hFEt : FEt (H.sΩ Ω g) d :=
     ⟨hsF, hsE, fun K _ _ x => (card_pb hpb x).trans (hcard K _)⟩
   have hlZ : IsUnit (l : Γ(H.geomZ Ω, ⊤)) :=
@@ -900,7 +900,7 @@ theorem UpperTheory.Gal.Mod.hopOp :
       rw [← LinearMap.sum_apply, ← hcomp]; rfl⟩
   let cc : TranscendenceTraces.Corr (H.geomZ Ω) (H.geomZ Ω) :=
     ⟨_, H.sΩ Ω g, H.tΩ Ω g, Wt.const _ 1, inferInstance, isWt_one _⟩
-  haveI : Etale cc.p := hsE
+  have : Etale cc.p := hsE
   have hex : ∃ T, IsCorrOp l (H.sΩ Ω g) (H.tΩ Ω g) T := ⟨T, hT⟩
   have e1 := hOp l cc rfl hlZ T hT
   have e2 := hOp l cc rfl hlZ _ hex.choose_spec
@@ -1001,10 +1001,10 @@ theorem UpperTheory.Gal.Mod.liesOp :
   intro l _ p k L _ _ H θ O _ _ C Ω _ _ hl T g d m hF hLies c hBC
   obtain ⟨-, κ, h, hκt, hw⟩ := hLies
   obtain ⟨v, hvpb, hvf, hvb, hvw⟩ := hBC
-  haveI := c.fin
-  haveI : IsFinite (H.s g) := hF.1
-  haveI : Etale (H.s g) := hF.2.1
-  haveI : IsFinite (pullback.lift (H.s g) κ h) := hw.1
+  have := c.fin
+  have : IsFinite (H.s g) := hF.1
+  have : Etale (H.s g) := hF.2.1
+  have : IsFinite (pullback.lift (H.s g) κ h) := hw.1
   let π := piG C Ω
   have hπs : π ≫ pullback.fst _ _ ≫ pullback.fst _ _ = pullback.fst H.q (sp (algebraMap k Ω)) ≫ C.π := by
     change geomMap Ω H.q (pullback.lift C.π H.q C.ov) (pullback.lift_snd _ _ _) ≫ _ ≫ _ = _
@@ -1184,7 +1184,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.trPushQ_of :
     apply Subtype.ext
     funext k
     rw [LinearMap.comp_apply, hH l n i (h ≫ p) w hw hl, hH l n i p (Wt.push h w) (hW h p w hw) hl]
-    haveI : NeZero (l ^ k) := ⟨pow_ne_zero k (Fact.out : Nat.Prime l).ne_zero⟩
+    have : NeZero (l ^ k) := ⟨pow_ne_zero k (Fact.out : Nat.Prime l).ne_zero⟩
     exact hP (l ^ k) n i h p w hw (by push_cast; exact hl.pow k) (x.1 k)
   simp only [trHQ, pullHQ, ← key, LinearMap.baseChange_comp]
 end -- clump:auto
@@ -1216,8 +1216,8 @@ private theorem push_const_one {Z Z' : Scheme.{0}} (u : Z ⟶ Z') [IsFinite u] (
 theorem UpperTheory.Gal.Mod.opCover :
     OpCover := by
   intro l _ S S' c c' u _ δ hw hw' hp hf hl hδ k i
-  haveI := c.fin
-  haveI := c'.fin
+  have := c.fin
+  have := c'.fin
   have hadic := TranscendenceTraces.all_holds.2.2
   have hwl := TranscendenceTraces.all_holds.1.2.2.1
   have hwc : IsWt (u ≫ c'.p) (Wt.const c.Z 1) := by
@@ -1262,11 +1262,11 @@ theorem UpperTheory.Reformulated.B.Qk67.pow_sub_mem :
     (x : NumberField.RingOfIntegers E),
     x ^ (Ideal.absNorm : Ideal (NumberField.RingOfIntegers E) → ℕ) w.asIdeal - x ∈ w.asIdeal := by
   intro E _ _ w x
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  letI : Field (NumberField.RingOfIntegers E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
-  haveI : Finite (NumberField.RingOfIntegers E ⧸ w.asIdeal) :=
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  let : Field (NumberField.RingOfIntegers E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
+  have : Finite (NumberField.RingOfIntegers E ⧸ w.asIdeal) :=
     Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
-  letI : Fintype (NumberField.RingOfIntegers E ⧸ w.asIdeal) := Fintype.ofFinite _
+  let : Fintype (NumberField.RingOfIntegers E ⧸ w.asIdeal) := Fintype.ofFinite _
   have hcard : Ideal.absNorm w.asIdeal
       = Fintype.card (NumberField.RingOfIntegers E ⧸ w.asIdeal) := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
@@ -1565,22 +1565,22 @@ theorem UpperTheory.Gal.Mod.towES :
     exact zero_ne_one hlv
   obtain ⟨y, rfl⟩ := hFix l K L H θ O C Ω hlΩ x hx
   choose c hc using fun j : Fin (n + 1) => hBC p O K Ω hp0 C.Y C.p (T j) (hj j).1
-  haveI : IsProper C.p := GlobalTheory.ProperFamily.isProper_of_isProjOver C.proj
-  haveI : Smooth C.p := C.smooth
-  haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ_[l] L).injective
+  have : IsProper C.p := GlobalTheory.ProperFamily.isProper_of_isProjOver C.proj
+  have : Smooth C.p := C.smooth
+  have : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ_[l] L).injective
   let f0 : O →+* V := ((algebraMap K Ω).comp (algebraMap O K)).codRestrict V.toSubring hV
-  haveI : IsLocalHom f0 := by
+  have : IsLocalHom f0 := by
     refine ⟨fun a ha => ?_⟩
     by_contra hna
     have hm : a ∈ IsLocalRing.maximalIdeal O := (IsLocalRing.mem_maximalIdeal _).mpr (mem_nonunits_iff.mpr hna)
     have h1 := (V.valuation_eq_one_iff (f0 a)).mp ha
     have h2 := hmax a hm
     exact absurd h1 (ne_of_lt h2)
-  letI : Algebra (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField V) :=
+  let : Algebra (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField V) :=
     (IsLocalRing.ResidueField.map f0).toAlgebra
-  haveI : IsAlgClosed (FractionRing V) :=
+  have : IsAlgClosed (FractionRing V) :=
     IsAlgClosed.of_ringEquiv Ω _ (FractionRing.algEquiv V Ω).symm.toRingEquiv
-  haveI : IsAlgClosed (IsLocalRing.ResidueField V) := resClosed V
+  have : IsAlgClosed (IsLocalRing.ResidueField V) := resClosed V
   have hκ : algebraMap O (IsLocalRing.ResidueField O) ϖ = 0 :=
     (IsLocalRing.residue_eq_zero_iff ϖ).mpr ((IsLocalRing.mem_maximalIdeal _).mpr (mem_nonunits_iff.mpr hϖ.not_isUnit))
   have hrc : ∀ a : O, IsLocalRing.residue V ⟨algebraMap K Ω (algebraMap O K a), hV a⟩ =

@@ -89,18 +89,18 @@ theorem isSquare_card_of_involution {k : Type} [Field k] [Finite k] (s : k ≃+*
     exact hx (by rw [h]; rfl)
   have hord : orderOf s = 2 := orderOf_eq_prime hs2 hs1
 
-  haveI : Finite (k ≃+* k) := Finite.of_injective (fun f : k ≃+* k => (f : k → k))
+  have : Finite (k ≃+* k) := Finite.of_injective (fun f : k ≃+* k => (f : k → k))
     (fun a b h => RingEquiv.ext (congrFun h))
-  haveI : Fintype (Subgroup.zpowers s) := Fintype.ofFinite _
-  haveI : FaithfulSMul (Subgroup.zpowers s) k :=
+  have : Fintype (Subgroup.zpowers s) := Fintype.ofFinite _
+  have : FaithfulSMul (Subgroup.zpowers s) k :=
     ⟨fun {g₁ g₂} h => Subtype.ext (RingEquiv.ext h)⟩
   have hcardG : Fintype.card (Subgroup.zpowers s) = 2 := by
     rw [Fintype.card_eq_nat_card]
     exact (Nat.card_zpowers s).trans hord
   have hfin : Module.finrank (FixedPoints.subfield (Subgroup.zpowers s) k) k = 2 :=
     (FixedPoints.finrank_eq_card (Subgroup.zpowers s) k).trans hcardG
-  haveI : Fintype k := Fintype.ofFinite k
-  haveI : Fintype (FixedPoints.subfield (Subgroup.zpowers s) k) := Fintype.ofFinite _
+  have : Fintype k := Fintype.ofFinite k
+  have : Fintype (FixedPoints.subfield (Subgroup.zpowers s) k) := Fintype.ofFinite _
   have hk : Fintype.card k = Fintype.card (FixedPoints.subfield (Subgroup.zpowers s) k) ^
       Module.finrank (FixedPoints.subfield (Subgroup.zpowers s) k) k :=
     Module.card_eq_pow_finrank
@@ -119,8 +119,8 @@ theorem isSquare_absNorm : ∀ (E : Type) [Field E] [NumberField E] [StarRing E]
     intro x hx
     rw [Ideal.mem_comap, ← hP]
     exact Ideal.subset_span ⟨x, hx, hc x⟩
-  haveI hmax : P.asIdeal.IsMaximal := P.isMaximal
-  letI : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
+  have hmax : P.asIdeal.IsMaximal := P.isMaximal
+  let : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
   let sb : (𝓞 E ⧸ P.asIdeal) →+* (𝓞 E ⧸ P.asIdeal) := Ideal.quotientMap P.asIdeal c hle
   have hsb_mk : ∀ x : 𝓞 E, sb (Ideal.Quotient.mk P.asIdeal x) = Ideal.Quotient.mk P.asIdeal (c x) :=
     fun x => Ideal.quotientMap_mk
@@ -132,7 +132,7 @@ theorem isSquare_absNorm : ∀ (E : Type) [Field E] [NumberField E] [StarRing E]
     { sb with invFun := sb, left_inv := hsb, right_inv := hsb }
   have hN : Ideal.absNorm P.asIdeal = Nat.card (𝓞 E ⧸ P.asIdeal) := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := by
+  have : Finite (𝓞 E ⧸ P.asIdeal) := by
     apply Nat.finite_of_card_ne_zero
     rw [← hN]
     exact fun h => P.ne_bot (Ideal.absNorm_eq_zero_iff.mp h)
@@ -224,7 +224,7 @@ theorem exists_killed {M : Submodule (𝓞 K) V} (hM : Submodule.IsFullLattice K
     have hI0' : I ≠ 0 := by rwa [Ideal.zero_eq_bot]
     have h3 : P = 1 := mul_right_cancel₀ hI0' h2
     rwa [Ideal.one_eq_top] at h3
-  obtain ⟨j, hjJ, hjI⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hIJ hne)
+  obtain ⟨j, hjJ, hjI⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hIJ hne)
   refine ⟨j, fun hj => hjI ((hmemI j).2 hj), fun r hr => ?_⟩
   have hrj : r * j ∈ I := by
     rw [hJ]
@@ -281,7 +281,7 @@ theorem isSquare_disc (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (hn : h
     rw [hcard]
     exact hP ⟨P, hPmax.isPrime, hPbot⟩ heq
 
-  obtain ⟨w, hwZ', hwZ⟩ := SetLike.exists_of_lt hcov.lt
+  obtain ⟨w, hwZ', hwZ⟩ := IsConcreteLE.exists_of_lt hcov.lt
   have hy : ∀ r : 𝓞 K, r • w ∈ M → r ∈ P := by
     intro r hr
     by_contra hrP
@@ -411,7 +411,7 @@ theorem latDetH_nat (h : V →ₗ⋆[K] V →ₗ[K] K) (hs : h.IsSymm) (ha : ∀
     exact LinearMap.mem_range.2 ⟨⟨m, hMU m hm⟩, rfl⟩
   have hMUl : Submodule.IsFullLattice K MU := by
     have hfg : MU.FG := Submodule.fg_of_fg_map_injective φ hφ (hmapMU ▸ hM)
-    haveI : Submodule.IsLattice K MU := Submodule.IsLattice.of_fg K hfg
+    have : Submodule.IsLattice K MU := Submodule.IsLattice.of_fg K hfg
     refine ⟨?_⟩
     apply Submodule.map_injective_of_injective (f := U.subtype) Subtype.val_injective
     rw [Submodule.map_top, Submodule.range_subtype, Submodule.map_span]
@@ -514,10 +514,10 @@ variable {K V : Type} [Field K] [NumberField K] [AddCommGroup V] [Module (𝓞 K
 theorem index_eq (M : Submodule (𝓞 K) V) (hM : M.FG) (j : ℕ) (hj : 1 ≤ j) :
     (({P : Submodule (𝓞 K) V | P ≤ M ∧ Nat.card (M ⧸ P.comap M.subtype) = j}).encard : ℝ≥0∞) ≤
       ENNReal.ofReal ((j : ℝ) ^ ((finrank K V : ℝ) + Real.logb 2 (finrank ℚ K))) := by
-  haveI : Module.Finite (𝓞 K) M := Module.Finite.iff_fg.2 hM
-  haveI : Module.IsTorsionFree (𝓞 K) V := Module.IsTorsionFree.trans_faithfulSMul (𝓞 K) K V
-  haveI : Module.FinitePresentation (𝓞 K) M := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 K) M := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite (𝓞 K) M := Module.Finite.iff_fg.2 hM
+  have : Module.IsTorsionFree (𝓞 K) V := Module.IsTorsionFree.trans_faithfulSMul (𝓞 K) K V
+  have : Module.FinitePresentation (𝓞 K) M := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 K) M := Module.Flat.projective_of_finitePresentation
   have hr : finrank (𝓞 K) M ≤ finrank K V := by
     refine Module.finrank_le_of_rank_le ((Submodule.rank_le M).trans (le_of_eq ?_))
     rw [Module.finrank_eq_rank, IsLocalization.rank_eq K (nonZeroDivisors (𝓞 K)) le_rfl]

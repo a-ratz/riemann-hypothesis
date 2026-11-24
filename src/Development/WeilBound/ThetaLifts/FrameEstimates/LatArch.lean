@@ -216,7 +216,7 @@ theorem latArch_of (hb : FrameBasis) : LatArch := by
   change _ ≤ ENNReal.ofReal ((1 + d * K) ^ N) * _ * _
   rw [← ENNReal.ofReal_mul (by positivity), ← ENNReal.ofReal_mul (by positivity)]
   refine ENNReal.ofReal_le_ofReal (h3.trans_eq ?_)
-  rw [mul_pow, Real.exp_nat_mul]
+  rw [mul_pow, Real.exp_natCast_mul]
 
 end PositivityTheory.ThKEst
 

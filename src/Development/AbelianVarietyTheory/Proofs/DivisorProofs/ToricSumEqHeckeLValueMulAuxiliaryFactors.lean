@@ -211,7 +211,7 @@ theorem tsum_translate (hω : ∀ u ∈ U, ω u = 1) {M : Set G} (hM : Stable U 
     ∑' z, cs U ω {y | π⁻¹ * y ∈ M} z = ω π * ∑' z, cs U ω M z := by
   classical
   have hM' : Stable U {y | π⁻¹ * y ∈ M} := fun u hu y => by
-    simp only [Set.mem_setOf_eq, ← mul_assoc]; exact hM u hu _
+    simp only [Set.mem_ofPred_eq, ← mul_assoc]; exact hM u hu _
   rw [← (Equiv.mulLeft (QuotientGroup.mk π : G ⧸ U)).tsum_eq, ← tsum_mul_left]
   refine tsum_congr fun z => ?_
   obtain ⟨y, rfl⟩ := QuotientGroup.mk_surjective z
@@ -230,7 +230,7 @@ theorem tsum_split (hω : ∀ u ∈ U, ω u = 1) {B M M₁ M' : Set G} (hB : Sum
   rw [← tsum_translate hω hM', ← (summable_mono hB (h₁.trans h)).tsum_add
     (summable_mono (M := {y | π⁻¹ * y ∈ M'}) hB (fun y hy => h ((hπ y).1 hy).1))]
   refine tsum_congr fun z => ?_
-  simp only [cs, Set.indicator_apply, Set.mem_setOf_eq, hπ]
+  simp only [cs, Set.indicator_apply, Set.mem_ofPred_eq, hπ]
   by_cases a : z.out ∈ M₁
   · simp [a, h₁ a]
   · simp [a]
@@ -254,15 +254,15 @@ theorem tsum_fin (hω : ∀ u ∈ U, ω u = 1) {B M M' : Set G} (hB : Summable (
   rw [← h3, ← Summable.tsum_finsetSum fun r hr =>
     summable_mono (M := {y | (g r)⁻¹ * y ∈ M}) hB (fun y hy => h (h2 r hr y hy))]
   refine tsum_congr fun z => ?_
-  simp only [cs, Set.indicator_apply, Set.mem_setOf_eq]
+  simp only [cs, Set.indicator_apply, Set.mem_ofPred_eq]
   by_cases a : z.out ∈ M'
   · obtain ⟨r, ⟨hr, hr'⟩, hu⟩ := h1 _ a
-    rw [if_pos a, Finset.sum_eq_single r, if_pos hr']
+    rw [ite_eq_left a, Finset.sum_eq_single r, ite_eq_left hr']
     · intro b hb hne
-      exact if_neg fun hh => hne (hu b ⟨hb, hh⟩)
+      exact ite_eq_right fun hh => hne (hu b ⟨hb, hh⟩)
     · exact fun hh => absurd hr hh
-  · rw [if_neg a]
-    exact (Finset.sum_eq_zero fun r hr => if_neg fun hh => a (h2 r hr _ hh)).symm
+  · rw [ite_eq_right a]
+    exact (Finset.sum_eq_zero fun r hr => ite_eq_right fun hh => a (h2 r hr _ hh)).symm
 
 theorem tendsto_tsum_one (hω : ∀ u ∈ U, ω u = 1) {B : Set G} (hB : Summable (cs U ω B)) {ι : Type} (l : Filter ι)
     (M : ι → Set G) (h : ∀ s, M s ⊆ B) (h1 : ∀ y ∈ U, ∀ s, y ∈ M s) (h2 : ∀ y ∉ U, ∀ᶠ s in l, y ∉ M s) :
@@ -274,10 +274,10 @@ theorem tendsto_tsum_one (hω : ∀ u ∈ U, ω u = 1) {B : Set G} (hB : Summabl
     (Eventually.of_forall fun s z => norm_indicator_le_of_subset (h s) _ _)
   have h4 : z.out ∈ U ↔ z = 1 := by rw [← QuotientGroup.eq_one_iff, QuotientGroup.out_eq']
   by_cases a : z = 1
-  · rw [if_pos a]
+  · rw [ite_eq_left a]
     refine tendsto_const_nhds.congr fun s => ?_
     rw [cs, Set.indicator_of_mem (h1 _ (h4.2 a) s), hω _ (h4.2 a)]
-  · rw [if_neg a]
+  · rw [ite_eq_right a]
     refine tendsto_const_nhds.congr' ?_
     filter_upwards [h2 _ (fun hh => a (h4.1 hh))] with s hs
     rw [cs, Set.indicator_of_notMem hs]
@@ -292,7 +292,7 @@ theorem hasSum_classes {M : Set G} (hM : Stable U M) (hs : Summable (cs U ω M))
       rintro ⟨y, rfl, hy⟩
       obtain ⟨u, hu⟩ := QuotientGroup.mk_out_eq_mul U y
       rw [hu]; exact (hM u u.2 y).2 hy
-    simp only [cs, Set.indicator_apply, Set.mem_setOf_eq, this]
+    simp only [cs, Set.indicator_apply, Set.mem_ofPred_eq, this]
   have h2 := hs.hasSum
   rw [h1] at h2
   rw [h1]
@@ -440,7 +440,7 @@ theorem unif_shift {m : HeightOneSpectrum (OF E) → ℕ} {T : Finset (HeightOne
       by_cases hPw : P = w
       · subst hPw; exact hw1.2 ⟨h P hP, h'⟩
       · rw [shift_coord y (h1 P hPw)]; exact h P hP
-  simp only [MS, Set.mem_setOf_eq, Finset.forall_mem_insert]
+  simp only [MS, Set.mem_ofPred_eq, Finset.forall_mem_insert]
   rw [hT, forall_locIn_shift (m := m) (v := w.under (OF E)) (fun _ _ => rfl)
     (fun w' hw' => h1 w' fun h => hw' (h ▸ over_under w)), forall_locIn_iff m (w.under (OF E)), hm, hL]
   tauto
@@ -627,7 +627,7 @@ theorem GlobalTheory.CMVal.exists_idele_section_of_ideal : ∀ (E : Type) [Field
   refine ⟨fun J => if h : ∃ y : (Af E)ˣ, (∀ w, Valued.v ((y : Af E) w) ≤ 1) ∧ idealOf y = J then h.choose else 1,
     fun y hy => ⟨idealOf y, modF_eq hy, fun w => ?_⟩⟩
   have h : ∃ y' : (Af E)ˣ, (∀ w, Valued.v ((y' : Af E) w) ≤ 1) ∧ idealOf y' = idealOf y := ⟨y, hy, rfl⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   rw [Units.val_mul, mul_coord, inv_coord, map_mul, map_inv₀,
     val_eq_of_idealOf_eq h.choose_spec.1 hy h.choose_spec.2 w, inv_mul_cancel₀ (IdeleModule.coord_ne y w)]
 end -- clump:auto
@@ -740,10 +740,10 @@ theorem exists_representatives : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · exact ⟨P₂, fun e => h (h'.trans e.symm), h2⟩
     · exact ⟨P₁, h', h1⟩
   have hall := htwo P P' hP hP' hne.symm
-  haveI := q.isMaximal
-  letI : Field (OF E ⧸ q.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (OF E ⧸ q.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ q.ne_bot
-  letI : Fintype (OF E ⧸ q.asIdeal) := Fintype.ofFinite _
+  have := q.isMaximal
+  let : Field (OF E ⧸ q.asIdeal) := Ideal.Quotient.field _
+  have : Finite (OF E ⧸ q.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ q.ne_bot
+  let : Fintype (OF E ⧸ q.asIdeal) := Fintype.ofFinite _
   choose t ht using fun c : (OF E ⧸ q.asIdeal)ˣ => Ideal.Quotient.mk_surjective (c : OF E ⧸ q.asIdeal)
   have htq : ∀ c, t c ∉ q.asIdeal := fun c h => c.ne_zero (by rw [← ht c]; exact Ideal.Quotient.eq_zero_iff_mem.2 h)
   have h0 : ∀ c, iota (t c) P ≠ 0 := fun c h => by
@@ -818,9 +818,9 @@ theorem exists_split_unif_idele : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   set S := Formalism.L2.Host.aboveF (L := E) (maximalRealSubfield E) v with hS
   have hmem : ∀ P, P ∈ S ↔ Over P v := fun P => mem_aboveF P v
   have hin : ∀ P, Over P v → ((∏ P ∈ S, single P (coord P y) : (Af E)ˣ) : Af E) P = iota x P := fun P hP => by
-    rw [Fibre.prod_single_apply, if_pos ((hmem P).2 hP), hy]
+    rw [Fibre.prod_single_apply, ite_eq_left ((hmem P).2 hP), hy]
   have hout : ∀ P, ¬ Over P v → ((∏ P ∈ S, single P (coord P y) : (Af E)ˣ) : Af E) P = 1 := fun P hP => by
-    rw [Fibre.prod_single_apply, if_neg (fun h => hP ((hmem P).1 h))]
+    rw [Fibre.prod_single_apply, ite_eq_right (fun h => hP ((hmem P).1 h))]
   refine ⟨∏ P ∈ S, single P (coord P y), hin, hout, ?_, fun χ hχ => ?_⟩
   · have hS2 : S = {P₁, P₂} := by
       ext R
@@ -873,7 +873,7 @@ theorem span_sup_pow_eq_of_notMem_sq {R : Type} [CommRing R] [IsDedekindDomain R
 
 theorem eq_exp_neg_one_of_le_of_not_le {g : WithZero (Multiplicative ℤ)} (h1 : g ≤ WithZero.exp (-1 : ℤ))
     (h2 : ¬ g ≤ WithZero.exp (-2 : ℤ)) : g = WithZero.exp (-1 : ℤ) := by
-  have h0 : g ≠ 0 := fun h => h2 (h ▸ zero_le')
+  have h0 : g ≠ 0 := fun h => h2 (h ▸ zero_le)
   rw [← WithZero.exp_log h0] at h1 h2 ⊢
   rw [WithZero.exp_le_exp] at h1 h2
   congr 1
@@ -923,7 +923,7 @@ theorem locIn_succ_nonunit_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       rw [sub_sub_cancel] at h3
       have h4 : Valued.v (iota a Q) ≤ WithZero.exp (-((1 : ℕ) : ℤ)) := by
         by_cases h0 : Valued.v (iota a Q) = 0
-        · rw [h0]; exact zero_le'
+        · rw [h0]; exact zero_le
         · rw [← WithZero.exp_log h0] at h3 ⊢
           rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h3
           rw [WithZero.exp_le_exp]; push_cast; omega
@@ -1079,7 +1079,7 @@ theorem summable_intI {c : Ideal (OF E)} (hc : c ≠ ⊥) {χ : HChar E} (hu : I
     rfl
   have h4 := (summable_subtype_iff_indicator (f := fun z : (Af E)ˣ ⧸ hatOUnits c => omega χ S z.out) (s := A)).1 h3
   refine h4.congr fun z => ?_
-  simp only [cs, Set.indicator_apply, A, Set.mem_setOf_eq]
+  simp only [cs, Set.indicator_apply, A, Set.mem_ofPred_eq]
 
 def FS (c : Ideal (OF E)) (χ : HChar E) (S : ℂ) (m : HeightOneSpectrum (OF E) → ℕ) (T : Finset (HeightOneSpectrum (𝓞 E))) : ℂ :=
   ∑' z, cs (hatOUnits c) (omega χ S) (MS m T) z
@@ -1102,7 +1102,7 @@ theorem FS_union (T s : Finset (HeightOneSpectrum (𝓞 E))) (hs : ∀ w ∈ s, 
     obtain ⟨h1, h2, h3⟩ := hs w (Finset.mem_insert_self _ _)
     have h4 := tsum_split hω hB (MS_subset m (s ∪ T)) (MS_anti m (Finset.subset_insert w _)) (stable_MS hm (s ∪ T)) (unifAt w)
       (unif_shift h1 (by simp [hw, h2]))
-    have h5 : eulerFactor χ S w = (1 - omega χ S (unifAt w))⁻¹ := by rw [eulerFactor, if_pos h3, omega_unifAt]
+    have h5 : eulerFactor χ S w = (1 - omega χ S (unifAt w))⁻¹ := by rw [eulerFactor, ite_eq_left h3, omega_unifAt]
     have h6 := one_sub_omega_ne hu hS w
     rw [ih fun w' hw' => hs w' (Finset.mem_insert_of_mem hw'), Finset.prod_insert hw, Finset.insert_union, h5]
     have h7 : FS c χ S m (insert w (s ∪ T)) = (1 - omega χ S (unifAt w)) * FS c χ S m (s ∪ T) := by
@@ -1148,7 +1148,7 @@ theorem FS_step (hF : TrivOnF χ) (T : Finset (HeightOneSpectrum (𝓞 E))) {v :
   refine tsum_split hω hB (MS_subset m T) (MS_anti m Finset.subset_union_right) (stable_MS hm' T) π fun y => ?_
   have hT' : (∀ w' ∈ T, Valued.v (((π⁻¹ * y : (Af E)ˣ) : Af E) w') = 1) ↔ ∀ w' ∈ T, Valued.v ((y : Af E) w') = 1 :=
     forall₂_congr fun w' hw' => by rw [shift_coord y (h2 w' (hT w' hw'))]
-  simp only [MS, Set.mem_setOf_eq, Finset.forall_mem_union, mem_aboveF]
+  simp only [MS, Set.mem_ofPred_eq, Finset.forall_mem_union, mem_aboveF]
   rw [hT', forall_locIn_shift (m := m) (v := v) (fun _ e => Function.update_of_ne e _ _) h2, forall_locIn_iff m v,
     Function.update_self, hx' k π y h1, hk]
   tauto
@@ -1165,11 +1165,11 @@ theorem FS_resid (T : Finset (HeightOneSpectrum (𝓞 E))) {v : HeightOneSpectru
     have hT' : (∀ w' ∈ T, Valued.v ((((single P r)⁻¹ * y : (Af E)ˣ) : Af E) w') = 1) ↔
         ∀ w' ∈ T, Valued.v ((y : Af E) w') = 1 :=
       forall₂_congr fun w' _ => by rw [Units.val_mul, mul_coord, map_mul, val_inv_one (val_single (h2 r hr)), one_mul]
-    simp only [MS, Set.mem_setOf_eq]
+    simp only [MS, Set.mem_ofPred_eq]
     rw [hT', forall_locIn_shift (m := m) (v := v) (fun _ _ => rfl) (single_off hP r), hk, and_assoc]
   have key2 : ∀ y : (Af E)ˣ, y ∈ MS (Function.update m v 0) T ↔
       (∀ v' ≠ v, LocIn (m v') v' (y : Af E)) ∧ ∀ w ∈ T, Valued.v ((y : Af E) w) = 1 := fun y => by
-    simp only [MS, Set.mem_setOf_eq]
+    simp only [MS, Set.mem_ofPred_eq]
     rw [forall_locIn_iff _ v, Function.update_self, locIn_zero_iff]
     refine ⟨fun h => ⟨fun v' e => by simpa [Function.update_of_ne e] using h.1.2 v' e, h.2⟩,
       fun h => ⟨⟨fun w hw => (h.2 w (hT w hw)).le, fun v' e => by simpa [Function.update_of_ne e] using h.1 v' e⟩, h.2⟩⟩
@@ -1204,7 +1204,7 @@ theorem FS_ram (hF : TrivOnF χ) (T : Finset (HeightOneSpectrum (𝓞 E))) {v : 
     (hr : ∀ w, Over w v → ¬ UnrAt χ w) :
     FS c χ S m T = (∏ w ∈ fib v, eulerFactor χ S w) * FS c χ S m (fib v ∪ T) := by
   rw [FS_step hω hB hm hF T hv hk hT, FS_zero hω (update_le hm v hk) T hP (by rwa [Function.update_self]),
-    Finset.prod_eq_one fun w hw => by rw [eulerFactor, if_neg (hr w ((mem_aboveF w v).1 hw))]]
+    Finset.prod_eq_one fun w hw => by rw [eulerFactor, ite_eq_right (hr w ((mem_aboveF w v).1 hw))]]
   ring
 
 def eFactor (χ : HChar E) (S : ℂ) (q : HeightOneSpectrum (OF E)) (P : HeightOneSpectrum (𝓞 E)) : ℂ :=
@@ -1241,7 +1241,7 @@ theorem FS_unr (hF : TrivOnF χ) (T : Finset (HeightOneSpectrum (𝓞 E))) {v : 
   rw [FS_step hω hB hm hF T hv hk hT, h1, h2]
   conv => enter [1, 2, 2, 1]; rw [hfib]
   conv => enter [2, 1, 2]; rw [hfib]
-  rw [Finset.prod_pair hne, eulerFactor, eulerFactor, if_pos h, if_pos h', (s2 P hP).1, (s2 P' hP').1, hval,
+  rw [Finset.prod_pair hne, eulerFactor, eulerFactor, ite_eq_left h, ite_eq_left h', (s2 P hP).1, (s2 P' hP').1, hval,
     Units.val_inv_eq_inv_val, eFactor]
   generalize (1 - (val χ P : ℂ) * (Ideal.absNorm v.asIdeal : ℂ) ^ (-S)) = a at *
   generalize (1 - (val χ P : ℂ)⁻¹ * (Ideal.absNorm v.asIdeal : ℂ) ^ (-S)) = b at *
@@ -1304,7 +1304,7 @@ theorem hasSum_euler : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (I
   have he : ∏ v ∈ hfin.toFinset, e v = ∏ q ∈ Q.filter (fun q => UnrAt χ (Pq q)), eFactor χ S q (Pq q) := by
     rw [Finset.prod_ite_mem, Finset.inter_eq_right.2]
     intro v hv
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, hnQ v (Finset.mem_filter.1 hv).1]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, hnQ v (Finset.mem_filter.1 hv).1]
     exact one_ne_zero
   have h0 := hV hfin.toFinset fun v hv => hfin.mem_toFinset.1 hv
   rw [he] at h0

@@ -142,7 +142,7 @@ theorem UpperTheory.V.Z.Win.RR.purLocA_alt :
   obtain ⟨a, ha⟩ := Loc.laArtin H h
   obtain ⟨O, _, _, _, Bw, hj⟩ := Af.exists_bridge (l := l) h hw
   obtain ⟨hp, hcmp⟩ := hx O Bw hj
-  have hc : Continuous (r.comp (Dec (F := F) A).subtype) := hr.comp continuous_subtype_val
+  have hc : Continuous (r.comp (Dec (F := F) A).subtype) := hr.comp continuous_subtypeVal
   have hψc : ∀ i, Continuous (ψ i) := by
     intro i
     obtain ⟨g, hg⟩ := hf
@@ -167,8 +167,8 @@ theorem UpperTheory.V.Z.Win.RR.purLocA_alt :
   let χ : Fin n → ↥(Dec (F := F) A) →* (Qbar l)ˣ := fun i => ψ i * ε ^ (-m i)
   have hεc : Continuous ε :=
     ((Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-      ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp
-      (continuous_cycZ F Ω l)).comp continuous_subtype_val
+      ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp
+      (continuous_cycZ F Ω l)).comp continuous_subtypeVal
   have hχc : ∀ i, Continuous (χ i) := fun i => (hψc i).mul ((continuous_zpow (-m i)).comp hεc)
   have hq : ((normV w : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (one_lt_normV w).ne_bot
   have hq' : ((normV w : ℕ) : Qbar l) ≠ 0 := Nat.cast_ne_zero.mpr (one_lt_normV w).ne_bot

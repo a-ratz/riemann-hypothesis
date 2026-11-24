@@ -220,7 +220,7 @@ theorem exists_order [ValuationRing R] [Finite T] (Γ : QFGroup R T) (U : Γ.G.l
         (∀ z : subH Γ hF × subH Γ hF, valAt (lift (Γ.pt z.1) (Γ.pt z.2)).left ⊤ le_top s = algebraMap R _ (g z)) →
         g ∈ prodSpan A := by
   have hU := isAffineOpen_of_fin Γ hF
-  letI : Algebra R Γ(Γ.G.left, U) := (secRho Γ hU).toAlgebra
+  let : Algebra R Γ(Γ.G.left, U) := (secRho Γ hU).toAlgebra
   have hρ : hU.fromSpec ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R Γ(Γ.G.left, U))) :=
     fromSpec_hom Γ hU
   have hfin := sec_finite hρ hF

@@ -69,7 +69,7 @@ variable {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAl
 theorem mem_range_of_aeval_rat_eq_zero (ι : Ω →+* PadicAlgCl p) [IsAlgClosed Ω] {g : Polynomial ℚ} (hg : g ≠ 0)
     {b : PadicAlgCl p} (hb : Polynomial.aeval b g = 0) : b ∈ ι.range := by
   classical
-  haveI : CharZero Ω := RingHom.charZero ι
+  have : CharZero Ω := RingHom.charZero ι
   have hmap : (g.map (algebraMap ℚ Ω)).map ι = g.map (algebraMap ℚ (PadicAlgCl p)) := by
     rw [Polynomial.map_map]
     congr 1
@@ -185,10 +185,10 @@ theorem denseRange_of_isAlgClosed (ι : Ω →+* PadicAlgCl p) [IsAlgClosed Ω] 
       rw [Polynomial.coeff_sub, hG, hF, Polynomial.coeff_map, Polynomial.coeff_map]
       rcases Nat.lt_or_ge i (n + 1) with hi' | hi'
       · have hgc : g.coeff i = q i := by
-          rw [hg, Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg (by omega), zero_add, hs,
+          rw [hg, Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right (by omega), zero_add, hs,
             Polynomial.finsetSum_coeff]
           simp only [Polynomial.coeff_C_mul_X_pow]
-          rw [Finset.sum_ite_eq, if_pos (Finset.mem_range.mpr hi')]
+          rw [Finset.sum_ite_eq, ite_eq_left (Finset.mem_range.mpr hi')]
         rw [hgc, eq_ratCast (algebraMap ℚ (PadicAlgCl p)), ← map_ratCast (algebraMap ℚ_[p] (PadicAlgCl p)),
           ← map_sub, PadicAlgCl.norm_extends, norm_sub_rev]
         exact (hq i).le
@@ -238,7 +238,7 @@ theorem finiteDimensional_Kloc (ι : Ω →+* PadicAlgCl p) : FiniteDimensional 
     refine sum_mem fun i _ => ?_
     rw [map_rat_smul, Rat.smul_def, ← map_ratCast (algebraMap ℚ_[p] (PadicAlgCl p))]
     exact mul_mem (IntermediateField.algebraMap_mem _ _) (IntermediateField.subset_adjoin _ _ ⟨i, rfl⟩)
-  haveI : FiniteDimensional ℚ_[p] (IntermediateField.adjoin ℚ_[p] (Set.range fun i => f (b i))) :=
+  have : FiniteDimensional ℚ_[p] (IntermediateField.adjoin ℚ_[p] (Set.range fun i => f (b i))) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
   exact FiniteDimensional.of_injective (IntermediateField.inclusion hle).toLinearMap
     (IntermediateField.inclusion_injective hle)
@@ -250,7 +250,7 @@ theorem isAlgClosure_Kloc (ι : Ω →+* PadicAlgCl p) : IsAlgClosure (Kloc F ι
 variable (F) in
 include F in
 theorem denseRange (ι : Ω →+* PadicAlgCl p) : DenseRange ι := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   exact denseRange_of_isAlgClosed ι
 
 theorem norm_map (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (x : PadicAlgCl p) : ‖σ x‖ = ‖x‖ := by

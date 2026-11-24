@@ -322,9 +322,9 @@ theorem exists_baseChange_extension_of_flat {A K E M : Type*} [CommRing A] [Fiel
     (h : ∀ (a a' : A) (b b' : B),
       Θ (a • b + a' • b') = algebraMap A K a • Θ b + algebraMap A K a' • Θ b') :
     ∃ L : TensorProduct A K M →ₗ[K] E, ∀ b : B, L (1 ⊗ₜ[A] (b : M)) = Θ b := by
-  letI : Module A E := Module.compHom E (algebraMap A K)
+  let : Module A E := Module.compHom E (algebraMap A K)
   have hs : ∀ (a : A) (e : E), a • e = algebraMap A K a • e := fun _ _ => rfl
-  haveI : IsScalarTower A K E := ⟨fun a k e => by rw [hs, Algebra.smul_def, mul_smul]⟩
+  have : IsScalarTower A K E := ⟨fun a k e => by rw [hs, Algebra.smul_def, mul_smul]⟩
   let Θ' : B →ₗ[A] E :=
     { toFun := Θ
       map_add' := fun b b' => by simpa using h 1 1 b b'
@@ -332,7 +332,7 @@ theorem exists_baseChange_extension_of_flat {A K E M : Type*} [CommRing A] [Fiel
         have := h a 0 b b
         rwa [zero_smul, add_zero, map_zero, zero_smul, add_zero] at this }
   have hinj : Function.Injective (B.subtype.baseChange K) := by
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_preserves_injective_linearMap _ B.injective_subtype
   obtain ⟨r, hr⟩ := LinearMap.exists_leftInverse_of_injective (B.subtype.baseChange K)
     (LinearMap.ker_eq_bot.2 hinj)
@@ -405,8 +405,8 @@ theorem exists_linear_limit_of_compatible_family :
       (eventually_atTop.2 ⟨n + 1, fun m hm => ?_⟩)
     rw [← UniformSpace.Completion.coe_sub, PadicComplex.norm_extends, norm_sub_rev]
     exact htail n b b.2 y hy m hm
-  haveI : Module.Flat ℤ_[l] ℚ_[l] := IsLocalization.flat ℚ_[l] (nonZeroDivisors ℤ_[l])
-  haveI : Module.Flat ℤ_[l] (PadicAlgCl l) := Module.Flat.trans ℤ_[l] ℚ_[l] (PadicAlgCl l)
+  have : Module.Flat ℤ_[l] ℚ_[l] := IsLocalization.flat ℚ_[l] (nonZeroDivisors ℤ_[l])
+  have : Module.Flat ℤ_[l] (PadicAlgCl l) := Module.Flat.trans ℤ_[l] ℚ_[l] (PadicAlgCl l)
   obtain ⟨L, hL⟩ := exists_baseChange_extension_of_flat (K := PadicAlgCl l) B Θ (by
     intro a a' b b'
     have hA := ((tendsto_appr_padicComplex l a).mul (hΘ b)).add
@@ -481,7 +481,7 @@ theorem line_functional_eq_period_mul : ∀ (l : ℕ) [Fact l.Prime] (M S : Type
   set T : Finset (PadicAlgCl l) := F ∪ Finset.univ.biUnion (fun i => (Sf i).image Prod.fst) with hT
   set K : IntermediateField ℚ_[l] (PadicAlgCl l) := IntermediateField.adjoin ℚ_[l] (T : Set (PadicAlgCl l))
     with hK
-  haveI : FiniteDimensional ℚ_[l] K :=
+  have : FiniteDimensional ℚ_[l] K :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   have hTK : ∀ a ∈ T, a ∈ K := fun a ha => IntermediateField.subset_adjoin _ _ (by simpa using ha)
   have hFK : ∀ a ∈ F, a ∈ K := fun a ha => hTK a (Finset.mem_union_left _ ha)
@@ -562,12 +562,12 @@ theorem mem_span_eigen_of_baseChange_eigen (l : ℕ) [Fact l.Prime] (M S : Type)
   have hinj0 : Function.Injective (algebraMap ℤ_[l] (PadicAlgCl l)) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] (PadicAlgCl l), RingHom.coe_comp]
     exact (algebraMap ℚ_[l] (PadicAlgCl l)).injective.comp (IsFractionRing.injective ℤ_[l] ℚ_[l])
-  haveI : FaithfulSMul ℤ_[l] (PadicAlgCl l) := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj0
-  haveI : Module.IsTorsionFree ℤ_[l] (PadicAlgCl l) := inferInstance
-  haveI : Module.Flat ℤ_[l] (PadicAlgCl l) := inferInstance
+  have : FaithfulSMul ℤ_[l] (PadicAlgCl l) := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj0
+  have : Module.IsTorsionFree ℤ_[l] (PadicAlgCl l) := inferInstance
+  have : Module.Flat ℤ_[l] (PadicAlgCl l) := inferInstance
   obtain ⟨P, hP, z, rfl⟩ := Submodule.exists_fg_le_eq_rTensor_subtype x'
-  haveI : Module.Finite ℤ_[l] P := Module.Finite.iff_fg.2 hP
-  haveI : Module.Free ℤ_[l] P := inferInstance
+  have : Module.Finite ℤ_[l] P := Module.Finite.iff_fg.2 hP
+  have : Module.Free ℤ_[l] P := inferInstance
   let ω := Module.Free.chooseBasis ℤ_[l] P
   let Φ : P ⊗[ℤ_[l]] B →ₗ[ℤ_[l]] PadicAlgCl l ⊗[ℤ_[l]] M :=
     (B.subtype.lTensor (PadicAlgCl l)) ∘ₗ (P.subtype.rTensor B)
@@ -1313,7 +1313,7 @@ theorem discrete (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω
     ∃ c : ℕ, ∀ v : X.Fn l, v ∈ X.B N l w →
       (∀ s ∈ Ine (F := ℚ) A, (∀ y ∈ F, s y = y) → X.galB l s v = ((cycZ ℚ Ω l s : ℤ_[l]) ^ (w + 1)) • v) →
       ∀ (n : ℕ) (φ : HahnSeries ℚ Ω), IsThB X A N l n v φ → ∀ r, CgA A l n ((l : Ω) ^ c * φ.coeff r) 0 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.IntTate.integral_tate_inertia l Ω A hA (w + 1) (by omega) F
   refine ⟨c, fun v hv hgal n φ hφ r => ?_⟩
   have hφA : ∀ r, φ.coeff r ∈ A := by
@@ -1420,8 +1420,8 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 
 theorem exists_restrict [IsAlgClosure ℚ Ω] (j : Ω →+* Qbar l) (τ : Qbar l ≃+* Qbar l) :
     ∃ s : Ω ≃ₐ[ℚ] Ω, ∀ x, j (s x) = τ (j x) := by
-  letI : Algebra Ω (Qbar l) := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω (Qbar l) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra Ω (Qbar l) := j.toAlgebra
+  have : IsScalarTower ℚ Ω (Qbar l) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   let τ' : Qbar l ≃ₐ[ℚ] Qbar l := AlgEquiv.ofRingEquiv (f := τ) (fun x => by simp)
   exact ⟨τ'.restrictNormal Ω, fun x => τ'.restrictNormal_commutes Ω x⟩
 

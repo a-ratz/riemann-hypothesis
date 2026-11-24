@@ -91,15 +91,15 @@ theorem qdet_coeffs {A : Type} [Ring A] [Algebra ℂ A] (W : Subalgebra ℂ A) (
       exact hW _
   refine ⟨fun k => if k < m + 1 + 1 then c k else 0, t, fun k => ?_, ?_, ?_, fun u => ?_⟩
   · by_cases hk : k < m + 1 + 1
-    · simp only [if_pos hk]
+    · simp only [ite_eq_left hk]
       exact hm k hk
-    · simp only [if_neg hk]
+    · simp only [ite_eq_right hk]
       exact W.zero_mem
-  · simpa only [if_pos (Nat.lt_succ_self (m + 1))] using h1
-  · simpa only [if_pos (show m < m + 1 + 1 by omega)] using h2
+  · simpa only [ite_eq_left (Nat.lt_succ_self (m + 1))] using h1
+  · simpa only [ite_eq_left (show m < m + 1 + 1 by omega)] using h2
   · rw [h3 u]
     refine Finset.sum_congr rfl fun k hk => ?_
-    simp only [if_pos (Finset.mem_range.1 hk)]
+    simp only [ite_eq_left (Finset.mem_range.1 hk)]
 
 theorem qdet_commute_of {A : Type} [Ring A] [Algebra ℂ A] {n p : ℕ} (X : Fin n → Fin n → A) (Y : Fin p → Fin p → A)
     (h : ∀ i j k l, X i j * Y k l = Y k l * X i j) (u v : ℂ) :
@@ -187,7 +187,7 @@ theorem gens_comm (r s : ℕ) : ∀ a ∈ gens E r s, ∀ b ∈ gens E r s, a * 
 
 theorem capAlg_comm (r s : ℕ) : ∀ x ∈ capAlg E r s, ∀ y ∈ capAlg E r s, x * y = y * x := by
   intro x hx y hy
-  letI := Algebra.isMulCommutative_adjoin ℂ (s := gens E r s)
+  let := Algebra.isMulCommutative_adjoin ℂ (s := gens E r s)
     (fun a ha b hb _ => gens_comm (E := E) r s a ha b hb)
   exact setLike_mul_comm (s := Algebra.adjoin ℂ (gens E r s)) hx hy
 

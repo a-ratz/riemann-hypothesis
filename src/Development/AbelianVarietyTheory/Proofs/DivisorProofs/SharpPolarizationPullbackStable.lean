@@ -85,7 +85,7 @@ theorem sharpOver_pullback : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F
   have injφ : ∀ {T₁ : Over T'} {x y : T₁ ⟶ P'.A}, pushPt hφ.1.w x = pushPt hφ.1.w y → x = y :=
     fun e => GlobalTheory.SiegelPull.push_injective hφ _ e
   have hmon : ∀ a, IsMonHom (pr' a) := fun a => by
-    haveI := hpr a
+    have := hpr a
     refine isMonHom_of_mul _ fun T₁ x y => injψ ?_
     rw [push_comp, pmψ, push_comp, push_comp, pmφ]
     exact MonObj.mul_comp _ _ _

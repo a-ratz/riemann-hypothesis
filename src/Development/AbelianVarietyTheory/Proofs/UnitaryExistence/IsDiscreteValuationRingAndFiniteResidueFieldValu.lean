@@ -66,11 +66,11 @@ theorem _root_.GlobalTheory.isDiscreteValuationRing_and_finite_residueField_valu
         Finite (IsLocalRing.ResidueField
           ↥(IsDedekindDomain.HeightOneSpectrum.valuationSubringAtPrime K v)) := by
   let S := Localization.subalgebra.ofField K _ v.asIdeal.primeCompl_le_nonZeroDivisors
-  haveI : IsLocalization.AtPrime S v.asIdeal := Localization.subalgebra.isLocalization_ofField K _ _
+  have : IsLocalization.AtPrime S v.asIdeal := Localization.subalgebra.isLocalization_ofField K _ _
   have hD : IsDiscreteValuationRing S :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain R v.ne_bot S
-  haveI : IsLocalRing S := inferInstance
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
+  have : IsLocalRing S := inferInstance
+  have : v.asIdeal.IsMaximal := v.isMaximal
   have hS : Finite (ResidueField S) :=
     Finite.of_equiv _ (IsLocalization.AtPrime.equivQuotMaximalIdeal v.asIdeal S).toEquiv
   exact ⟨hD, hS⟩
@@ -134,7 +134,7 @@ theorem _root_.GlobalTheory.isDiscreteValuationRing_and_finite_residueField_of_n
   have hAW : A ≤ W := by
     intro x hx
     let S := Localization.subalgebra.ofField L _ v.asIdeal.primeCompl_le_nonZeroDivisors
-    haveI : IsLocalization.AtPrime S v.asIdeal := Localization.subalgebra.isLocalization_ofField L _ _
+    have : IsLocalization.AtPrime S v.asIdeal := Localization.subalgebra.isLocalization_ofField L _ _
     obtain ⟨⟨a, s⟩, hy⟩ := IsLocalization.mk'_surjective v.asIdeal.primeCompl (⟨x, hx⟩ : S)
     have hspec := congrArg Subtype.val (IsLocalization.mk'_spec S a s)
     simp only at hy

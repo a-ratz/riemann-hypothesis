@@ -115,9 +115,9 @@ private theorem continuous_ell_matrix_of {k r : ℕ} (z : Fin (2 * r + k + 1) �
   unfold Formalism.QuantumDeterminants.ell
   refine continuous_finsetSum _ (fun a _ => ?_)
   by_cases h : (a : ℕ) + 1 < r
-  · simp only [dif_pos h, Matrix.of_apply]
+  · simp only [dite_eq_left h, Matrix.of_apply]
     fun_prop
-  · simp only [dif_neg h, Matrix.mulVec, dotProduct, Matrix.of_apply]
+  · simp only [dite_eq_right h, Matrix.mulVec, dotProduct, Matrix.of_apply]
     exact continuous_finsetSum _ (fun j _ => by fun_prop)
 
 theorem besPhInt_xi_cont {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
@@ -140,7 +140,7 @@ private theorem isUnit_det_of_mem_UH_Hpk_of_inv_mem {k r : ℕ} (hk : 1 ≤ k)
   rw [Matrix.nonsing_inv_apply_not_isUnit g hu] at hg'
   have h0 : Formalism.QuantumDeterminants.Hpk k r = 0 := by
     have h1 := hg'
-    simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq, Matrix.conjTranspose_zero, Matrix.zero_mul] at h1
+    simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq, Matrix.conjTranspose_zero, Matrix.zero_mul] at h1
     exact h1.symm
   have hr : r < 2 * r + k + 1 := by omega
   have hk0 : k ≠ 0 := by omega
@@ -161,9 +161,9 @@ theorem integral_xi_mul_Ph : HypsG → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1)
     (_root_.GlobalTheory.T.isHaarOn_iff_groups_unitary_unipotent k r D.μN).2.1.2 D.haarN
   have hW'pi : PI.BesselPeriodGGP.IsHaarOn (Formalism.QuantumDeterminants.UWset k r D.z') D.μW' :=
     ((_root_.GlobalTheory.T.isHaarOn_iff_groups_unitary_unipotent k r D.μW').2.2 D.z' D.z'_mem D.T'_pos D.k_pos).2 D.haarW'
-  haveI : SigmaFinite D.μW := hWpi.1
-  haveI : SigmaFinite D.μN := hNpi.1
-  haveI : SigmaFinite D.μW' := hW'pi.1
+  have : SigmaFinite D.μW := hWpi.1
+  have : SigmaFinite D.μN := hNpi.1
+  have : SigmaFinite D.μW' := hW'pi.1
   have h55 := _root_.GlobalTheory.T.besselSubgroup_parameter_measurePreserving k r D.z D.μW D.μN D.k_pos D.z_mem D.T_pos hWpi hNpi
   have h55' := _root_.GlobalTheory.T.besselSubgroup_parameter_measurePreserving k r D.z' D.μW' D.μN D.k_pos D.z'_mem D.T'_pos hW'pi hNpi
   have h54 := _root_.GlobalTheory.T.besselCharacter_unipotentRadical_properties k r D.z Formalism.QuantumDeterminants.cStd D.z_mem
@@ -357,7 +357,7 @@ theorem hsInner_sum_sum {m : ℕ} (A C : Fin m → (Wq →L[ℂ] Wp)) :
   have h : ∀ A : Fin m → (Wq →L[ℂ] Wp), B.hsVec (∑ i, A i) = ∑ i, B.hsVec (A i) := by
     intro A
     ext t
-    simp [B.hsVec, ContinuousLinearMap.sum_apply]
+    simp [B.hsVec, sum_apply]
   unfold B.hsInner
   rw [h, h, inner_sum]
   exact Finset.sum_congr rfl fun i _ => sum_inner _ _ _
@@ -380,7 +380,7 @@ theorem Ph_sum [FiniteDimensional ℂ Wp] (D : B.RealPlaceData k r Wp Wq) {m : �
     unfold B.rho
     rw [hF _ (Formalism.FourierDecayAlt.P.B6.conj_product_mem_unitary_group D hp hg)]
     ext v
-    simp [ContinuousLinearMap.sum_apply]
+    simp [sum_apply]
   simp only
   rw [h1, hF _ hg, hsInner_sum_sum]
 

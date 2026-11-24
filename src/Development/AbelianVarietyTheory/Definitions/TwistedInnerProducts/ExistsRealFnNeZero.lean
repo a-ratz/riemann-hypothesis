@@ -121,7 +121,7 @@ theorem continuous_realFr (τ : D.what₂.Tau) : Continuous fun g => (realFr θ 
   exact (continuous_const.matrix_mul ((GlobalTheory.CoefModel.realGL_laws hθ V).1 τ)).matrix_mul continuous_const
 
 theorem continuous_rhoFr (Λ : Module.Dual ℂ (VV ℂ lam)) (v : VV ℂ lam) : Continuous fun g => Λ (rhoFr θ V lam B g v) := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have h1 : ∀ τ : D.what₂.Tau, ((fun _ => 1 : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ) τ).PosDef := fun _ => Matrix.PosDef.one
   have h := GlobalTheory.CoefModel.continuous_rhoH lam h1 (fun g => invTrK (realFr θ V B g)) (fun τ => by
     refine ((continuous_realFr B hθ τ).comp continuous_inv).matrix_transpose.congr fun g => ?_
@@ -182,7 +182,7 @@ theorem realFn_mul_fin (g : GA D (G.V X)) (k : FinPt G X) :
 variable (X) in
 theorem exists_realFn_ne_zero : ∃ (Λ : Module.Dual ℂ (VV ℂ (wt G X))) (v : VV ℂ (wt G X)),
     realFn θ N X Λ (fun _ => v) 1 ≠ 0 := by
-  haveI : Nontrivial (VV ℂ (wt G X)) :=
+  have : Nontrivial (VV ℂ (wt G X)) :=
     GlobalTheory.CoefModel.nontrivial_Hilb (wt G X) (G := fun _ => 1) fun _ => Matrix.PosDef.one
   obtain ⟨v, hv⟩ := exists_ne (0 : VV ℂ (wt G X))
   obtain ⟨Λ, h⟩ := not_forall.1 (mt (Module.forall_dual_apply_eq_zero_iff ℂ v).1 hv)

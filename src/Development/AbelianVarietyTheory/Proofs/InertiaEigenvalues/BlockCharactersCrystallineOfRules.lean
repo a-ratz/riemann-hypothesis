@@ -135,8 +135,8 @@ theorem dcris_trivial [FiniteDimensional Qp LL] :
     | add a b ha hb => simp only [map_add (f := _), ha, hb]
 
 theorem isCrys_trivial [FiniteDimensional Qp LL] : IsCrys PD (Representation.trivial LL G LL) := by
-  haveI := nontrivial_B PD
-  haveI := PD.finK₀
+  have := nontrivial_B PD
+  have := PD.finK₀
   unfold IsCrys
   rw [dcris_trivial, LinearMap.finrank_range_of_inj]
   · simp
@@ -267,7 +267,7 @@ theorem cyc_bridge (g : ↥(GK Bw.Kw)) :
     have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
     have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
     have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ m)
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ m)
     have hj : IsPrimitiveRoot (Bw.j ζ) (l ^ m) := hζ.map_of_injective Bw.j.injective
     obtain ⟨a, ha, hga⟩ := P.χQ_cyc (g : GQ l) m _ hj.pow_eq_one
     set b := (PadicInt.toZModPow m z).val with hbdef

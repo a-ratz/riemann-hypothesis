@@ -70,7 +70,7 @@ namespace GlobalTheory
 
 theorem interNumRed_of_cls_eq_nsmul_add : ∀ (k : Type) [Field k] (X : Scheme.{0}) (q : X ⟶ Sp k), IsProjOver q → letI := algebraΓOfHom q; ∀ (L M M' : LB X) (hL : L.IsLB) (hM : M.IsLB) (hM' : M'.IsLB) (a b : ℕ) (C : Closeds X), IsCompleteCurve k C → cls L hL = a • cls M hM + b • cls M' hM' → interNumRed k C ![L] = a * interNumRed k C ![M] + b * interNumRed k C ![M'] := by
   intro k _ X q hq
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   intro L M M' hL hM hM' a b C hC e
   obtain ⟨H, hH⟩ := exists_isAmpleLB_of_isProjOver hq
   rw [hC.interNumRed_of_cls_eq_add hH hL (isLB_lbPow hM a) (isLB_lbPow hM' b)

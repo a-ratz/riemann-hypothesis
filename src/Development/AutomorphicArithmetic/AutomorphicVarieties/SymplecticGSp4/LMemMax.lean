@@ -93,16 +93,16 @@ private theorem not_over {p q : ℕ} (hp : p.Prime) (hq : q.Prime) (e : q ≠ p)
 private theorem dvd_pred {M : Type} [CommGroup M] (ψ : G ℚ Ω →* M) (hψ : IsOpen (ψ.ker : Set (G ℚ Ω))) {p l : ℕ}
     (hp : p.Prime) (hl : l.Prime) (hne : p ≠ l) {A : ValuationSubring Ω} (hA : A.valuation (p : Ω) < 1)
     (h : l ∣ Nat.card ((Ine (F := ℚ) A).map ψ)) : l ∣ p - 1 := by
-  obtain ⟨N, hN, hfix⟩ := CF.kwAbs Ω ψ.ker hψ (Abelianization.commutator_subset_ker ψ)
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero (ordCompl[p] N) := ⟨(Nat.ordCompl_pos p hN.ne').ne'⟩
+  obtain ⟨N, hN, hfix⟩ := CF.kwAbs Ω ψ.ker hψ (Group.Abelianization.commutator_le_ker ψ)
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero (ordCompl[p] N) := ⟨(Nat.ordCompl_pos p hN.ne').ne'⟩
   have hle : (Chr.cls ℚ Ω N).ker ≤ ψ.ker := fun g hg => hfix g fun ζ hζ => by
     rw [Chr.cls_spec N g ζ hζ, MonoidHom.mem_ker.1 hg, Units.val_one, ZMod.val_one_eq_one_mod, ← pow_eq_pow_mod 1 hζ, pow_one]
-  haveI : ψ.ker.FiniteIndex := Subgroup.finiteIndex_of_le hle
-  haveI : Finite ψ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ψ).toEquiv
-  haveI : Finite ((Ine (F := ℚ) A).map ψ) :=
+  have : ψ.ker.FiniteIndex := Subgroup.finiteIndex_of_le hle
+  have : Finite ψ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ψ).toEquiv
+  have : Finite ((Ine (F := ℚ) A).map ψ) :=
     Finite.of_injective _ (Subgroup.inclusion_injective (Subgroup.map_le_range ψ _))
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   obtain ⟨⟨_, g, hg, rfl⟩, hx⟩ := exists_prime_orderOf_dvd_card' l h
   have hM : ¬ A.valuation ((ordCompl[p] N : ℕ) : Ω) < 1 := fun h' => by
     obtain ⟨q, hq, hq'⟩ := ((Chr.placesQ Ω).2.1 A _ (NeZero.ne _)).1 h'
@@ -319,10 +319,10 @@ private theorem rbar_open (h : D.Good) : IsOpen (D.rbar.ker : Set (G ℚ Ω)) :=
 
 private theorem rbar_ph (h : D.Good) : D.rbar D.ph = D.rbar (D.sg l) := by
   have hl : l.Prime := Fact.out
-  haveI : CharZero c.O := charZero_of_injective_algebraMap (dvrFacts l c.O).1
-  haveI : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
-  letI := Fintype.ofFinite (ResidueField c.O)
-  haveI : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl).2 (by
+  have : CharZero c.O := charZero_of_injective_algebraMap (dvrFacts l c.O).1
+  have : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
+  let := Fintype.ofFinite (ResidueField c.O)
+  have : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl).2 (by
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]; exact l_mem_max c)
   obtain ⟨f, -, hf⟩ := FiniteField.card (ResidueField c.O) l
   have h1 := h.ph_lim.eventually (((lc_of_ker _ (rbar_open h)).isOpen_fiber (D.rbar D.ph)).mem_nhds rfl)

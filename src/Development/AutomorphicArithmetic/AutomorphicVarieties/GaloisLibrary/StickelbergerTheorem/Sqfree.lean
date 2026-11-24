@@ -98,7 +98,7 @@ theorem UpperTheory.V.Stick.sqfree :
       | empty =>
         simp only [Finset.prod_empty]
         intro h
-        exact False.elim ((hP i).not_unit (isUnit_iff_dvd_one.mpr h))
+        exact False.elim ((hP i).not_isUnit (isUnit_iff_dvd_one.mpr h))
       | @insert a t ha ih =>
         rw [Finset.prod_insert ha]
         intro h

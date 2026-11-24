@@ -152,9 +152,9 @@ private theorem relNorm_ker (K K' : Type) [Field K] [NumberField K] [Field K'] [
     Ideal.relNorm (𝓞 K) (RingHom.ker π) = RingHom.ker (π.comp (algebraMap (𝓞 K) (𝓞 K'))) := by
   obtain ⟨h1, -⟩ := (UpperTheory.V.Stick.red K' p (RingHom.ker π)).2 π rfl
   obtain ⟨h2, h3, -⟩ := (UpperTheory.V.Stick.red K p _).2 (π.comp (algebraMap (𝓞 K) (𝓞 K'))) rfl
-  haveI : (RingHom.ker π).LiesOver (RingHom.ker (π.comp (algebraMap (𝓞 K) (𝓞 K')))) := ⟨by
+  have : (RingHom.ker π).LiesOver (RingHom.ker (π.comp (algebraMap (𝓞 K) (𝓞 K')))) := ⟨by
     ext x; simp [Ideal.under, RingHom.mem_ker]⟩
-  haveI := h3.isPrime
+  have := h3.isPrime
   obtain ⟨s, hs⟩ := Ideal.exists_relNorm_eq_pow_of_isPrime (RingHom.ker π)
     (RingHom.ker (π.comp (algebraMap (𝓞 K) (𝓞 K'))))
   have h4 := Ideal.absNorm_relNorm (𝓞 K) (𝓞 K') (RingHom.ker π)
@@ -181,8 +181,8 @@ private theorem jac_cong {F R R' S : Type} [Field F] [Fintype F] [CommRing R] [C
 
 private theorem pow_cong {R : Type} [CommRing R] (P : Ideal R) [hP : P.IsPrime] (q : ℕ) (hq : q.Prime)
     (hqP : (q : R) ∈ P) (a c : R) (h : a ^ q = c ^ q) : Ideal.Quotient.mk P a = Ideal.Quotient.mk P c := by
-  haveI := Fact.mk hq
-  haveI : CharP (R ⧸ P) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
+  have := Fact.mk hq
+  have : CharP (R ⧸ P) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
     rw [← map_natCast (Ideal.Quotient.mk P)]; exact Ideal.Quotient.eq_zero_iff_mem.2 hqP)
   have : (Ideal.Quotient.mk P a - Ideal.Quotient.mk P c) ^ q = 0 := by
     rw [sub_pow_char, ← map_pow, ← map_pow, h, sub_self]
@@ -274,7 +274,7 @@ theorem UpperTheory.V.ML.xCongJac :
   have hn : 2 * (q * M) ≠ 0 := mul_ne_zero two_ne_zero (NeZero.ne _)
   have hw0 : w ≠ 0 := by rintro h; rw [h, zero_pow hn] at hwp; exact zero_ne_one hwp
   refine ⟨ζ' / w, by rw [div_pow, hζ', hwp, div_one], fun v hv => ?_⟩
-  haveI := v.isPrime
+  have := v.isPrime
   have hpv : (p : 𝓞 K') ∉ v.asIdeal := fun h => by
     obtain ⟨a, c, hac⟩ := (Nat.isCoprime_iff_coprime.2 hcq).map (Int.castRingHom (𝓞 K'))
     simp only [eq_intCast, Int.cast_natCast] at hac
@@ -386,7 +386,7 @@ private theorem rel_val (v : HeightOneSpectrum (𝓞 K')) (hv : ∀ x, π x = 0 
 private theorem hom_ext {N q : ℕ} [NeZero N] [IsCyclotomicExtension {N} ℚ K'] (hq : q.Prime) [CharP k q]
     {ζ : K'} (hζ : IsPrimitiveRoot ζ N) (φ ψ : 𝓞 K' →+* k) (h : φ hζ.toInteger ^ q = ψ hζ.toInteger ^ q) :
     φ = ψ := by
-  haveI := Fact.mk hq
+  have := Fact.mk hq
   have h1 : φ hζ.toInteger = ψ hζ.toInteger := frobenius_inj k q h
   have h2 : φ.toIntAlgHom = ψ.toIntAlgHom :=
     AlgHom.ext_of_adjoin_eq_top (IsCyclotomicExtension.Rat.adjoin_singleton_eq_top hζ) (by
@@ -400,7 +400,7 @@ private theorem compat (M N : ℕ) [NeZero M] [NeZero N] (K K' : Type) [Field K]
     [IsCyclotomicExtension {M} ℚ K] [Field K'] [NumberField K'] [IsCyclotomicExtension {N} ℚ K'] [Algebra K K']
     (h : M ∣ N) (t : (ZMod N)ˣ) (x : K) :
     sg N K' t (algebraMap K K' x) = algebraMap K K' (sg M K (ZMod.unitsMap h t) x) := by
-  haveI : IsGalois ℚ K := IsCyclotomicExtension.isGalois {M} ℚ K
+  have : IsGalois ℚ K := IsCyclotomicExtension.isGalois {M} ℚ K
   have h1 := IsCyclotomicExtension.Rat.galEquivZMod_restrictNormal_apply N K' K h (sg N K' t)
   rw [sg, MulEquiv.apply_symm_apply] at h1
   rw [← h1, sg, sg, MulEquiv.symm_apply_apply, AlgEquiv.restrictNormal_commutes]
@@ -448,14 +448,14 @@ theorem UpperTheory.V.ML.xCongPrin :
       algebraMap K K' ((sg M K u)⁻¹ (∏ t : (ZMod M)ˣ, (sg M K t)⁻¹ (Algebra.norm K (y : K')) ^ th M b t))) < 1 := by
   intro M q _ _ K K' _ _ _ _ _ _ _ hq u hu b hb y hy v hv
   classical
-  haveI := Fact.mk hq
-  haveI : IsGalois ℚ K' := IsCyclotomicExtension.isGalois {q * M} ℚ K'
-  haveI : IsGalois K K' := IsGalois.tower_top_of_isGalois ℚ K K'
-  haveI := v.isMaximal
-  letI : Field (𝓞 K' ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have := Fact.mk hq
+  have : IsGalois ℚ K' := IsCyclotomicExtension.isGalois {q * M} ℚ K'
+  have : IsGalois K K' := IsGalois.tower_top_of_isGalois ℚ K K'
+  have := v.isMaximal
+  let : Field (𝓞 K' ⧸ v.asIdeal) := Ideal.Quotient.field _
   obtain ⟨π, hπ⟩ : ∃ π : 𝓞 K' →+* (𝓞 K' ⧸ v.asIdeal), ∀ x, π x = 0 ↔ x ∈ v.asIdeal :=
     ⟨Ideal.Quotient.mk _, fun x => Ideal.Quotient.eq_zero_iff_mem⟩
-  haveI : CharP (𝓞 K' ⧸ v.asIdeal) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
+  have : CharP (𝓞 K' ⧸ v.asIdeal) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
     rw [← map_natCast π, hπ]; exact hv)
   have hc : q.Coprime M := by
     rw [← ZMod.isUnit_iff_coprime, ← hu]; exact u.isUnit
@@ -588,7 +588,7 @@ private theorem alg_step {L Γ : Type} [Field L] [LinearOrderedCommGroupWithZero
 private theorem isX_unit (N : ℕ) [NeZero N] (K : Type) [Field K] [NumberField K] [IsCyclotomicExtension {N} ℚ K]
     (b q : ℕ) (𝔞 : Ideal (𝓞 K)) (X : K) (h0 : 𝔞 ≠ ⊥) (hc : IsCoprime 𝔞 (Ideal.span {(q : 𝓞 K)})) (hX : IsX N K b 𝔞 X)
     (v : HeightOneSpectrum (𝓞 K)) (hv : (q : 𝓞 K) ∈ v.asIdeal) : v.valuation K X = 1 := by
-  haveI := v.isPrime
+  have := v.isPrime
   obtain ⟨a, ha, c, hc', hac⟩ := Ideal.isCoprime_iff_exists.mp hc
   obtain ⟨r, rfl⟩ := Ideal.mem_span_singleton'.mp hc'
   have hne : ∀ t, conjI N K 𝔞 t ≠ ⊥ := by
@@ -616,7 +616,7 @@ private theorem isX_unit (N : ℕ) [NeZero N] (K : Type) [Field K] [NumberField 
     exact v.isPrime.ne_top ((Ideal.eq_top_iff_one _).mpr h1)
   have hcount : ∀ t, FractionalIdeal.count K v ((conjI N K 𝔞 t : Ideal (𝓞 K)) : FractionalIdeal (𝓞 K)⁰ K) = 0 := by
     intro t
-    rw [FractionalIdeal.count_coe K v (hne t), Nat.cast_eq_zero]
+    rw [FractionalIdeal.count_coeIdeal K v (hne t), Nat.cast_eq_zero]
     by_contra hc0
     have hdvd := (Associates.count_ne_zero_iff_dvd (hne t) v.irreducible).mp hc0
     exact hnle t (Ideal.le_of_dvd hdvd)
@@ -656,7 +656,7 @@ theorem UpperTheory.V.ML.xCong :
     exact (Ideal.finite_factors hne).subset (fun v hv => Ideal.dvd_span_singleton.mpr hv)
   obtain ⟨P, hPS, hPp, hPcl⟩ := degOne K' _ hS (ClassGroup.mk0 ⟨𝔞, h𝔞nz⟩)⁻¹
   set p := Ideal.absNorm P.asIdeal with hpdef
-  haveI : Fact p.Prime := ⟨hPp⟩
+  have : Fact p.Prime := ⟨hPp⟩
   obtain ⟨π, hπ⟩ := (red K' p P.asIdeal).1 rfl
   have hPnz : P.asIdeal ∈ (Ideal (𝓞 K'))⁰ := mem_nonZeroDivisors_of_ne_zero P.ne_bot
   have hprin : Submodule.IsPrincipal (P.asIdeal * 𝔞) := by
@@ -771,8 +771,8 @@ private theorem cyc_hom_ext {K Ω : Type} [Field K] [CharZero K] [Field Ω] [Cha
 private theorem card_gal (M q : ℕ) [NeZero M] [NeZero (q * M)] (K K' : Type) [Field K] [NumberField K]
     [IsCyclotomicExtension {M} ℚ K] [Field K'] [NumberField K'] [IsCyclotomicExtension {q * M} ℚ K'] [Algebra K K']
     [IsGalois K K'] (hq : q.Prime) (hc : q.Coprime M) : Nat.card (K' ≃ₐ[K] K') = q - 1 := by
-  haveI : IsScalarTower ℚ K K' := inferInstance
-  haveI : FiniteDimensional K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
+  have : IsScalarTower ℚ K K' := inferInstance
+  have : FiniteDimensional K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
   have h1 := IsCyclotomicExtension.finrank K' (Polynomial.cyclotomic.irreducible_rat (NeZero.pos (q * M)))
   have h2 := IsCyclotomicExtension.finrank K (Polynomial.cyclotomic.irreducible_rat (NeZero.pos M))
   rw [IsGalois.card_aut_eq_finrank]
@@ -785,12 +785,12 @@ theorem UpperTheory.norm_cyclotomic_prime_layer_eq_nrm_generator :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (M q : ℕ) [NeZero M] [NeZero (q * M)] (K K' : Type) [Field K] [NumberField K] [IsCyclotomicExtension {M} ℚ K] [Field K'] [NumberField K'] [IsCyclotomicExtension {q * M} ℚ K'] [Algebra K K'] (ι' : K' →+* Ω), q.Prime → q.Coprime M → ∀ τ ∈ fixMu ℚ Ω M, GenAt q τ → ∀ x : K', nrm q τ (ι' x) = ι' (algebraMap K K' (Algebra.norm K x)) := by
   intro Ω _ _ M q _ _ K K' _ _ _ _ _ _ _ ι' hq hc τ hτ hgen x
   classical
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : IsScalarTower ℚ K K' := inferInstance
-  haveI : FiniteDimensional K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
-  haveI : IsGalois ℚ K' := IsCyclotomicExtension.isGalois {q * M} ℚ K'
-  haveI : IsGalois K K' := IsGalois.tower_top_of_isGalois ℚ K K'
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : Fact q.Prime := ⟨hq⟩
+  have : IsScalarTower ℚ K K' := inferInstance
+  have : FiniteDimensional K K' := Module.Finite.of_restrictScalars_finite ℚ K K'
+  have : IsGalois ℚ K' := IsCyclotomicExtension.isGalois {q * M} ℚ K'
+  have : IsGalois K K' := IsGalois.tower_top_of_isGalois ℚ K K'
   obtain ⟨b, hbgen, hb⟩ := hgen
   have hb' : ∀ y : Ω, y ^ q = 1 → τ y = y ^ (b : ZMod q).val := hb
   have hτM : ∀ y : Ω, y ^ M = 1 → τ y = y := hτ
@@ -1003,7 +1003,7 @@ private theorem val_count_int {K : Type} [Field K] [NumberField K] (v : HeightOn
   have h2 : FractionalIdeal.spanSingleton (𝓞 K)⁰ (a : K)
       = ((Ideal.span {a} : Ideal (𝓞 K)) : FractionalIdeal (𝓞 K)⁰ K) :=
     (FractionalIdeal.coeIdeal_span_singleton a).symm
-  rw [h1, h2, v.intValuation_if_neg ha, FractionalIdeal.count_coe K v (by simpa using ha)]
+  rw [h1, h2, v.intValuation_if_neg ha, FractionalIdeal.count_coeIdeal K v (by simpa using ha)]
 
 private theorem val_count {K : Type} [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K)) (x : K) (hx : x ≠ 0) :
     v.valuation K x = WithZero.exp (-FractionalIdeal.count K v
@@ -1066,7 +1066,7 @@ theorem UpperTheory.V.ML.xEx :
     exact_mod_cast NeZero.ne M
   have hS : S.Finite := Ideal.finite_factors hM0
   obtain ⟨v, hvS, hprime, hvc⟩ := degOne K S hS (ClassGroup.mk0 ⟨𝔞, h𝔞0⟩)⁻¹
-  haveI : Fact (Ideal.absNorm v.asIdeal).Prime := ⟨hprime⟩
+  have : Fact (Ideal.absNorm v.asIdeal).Prime := ⟨hprime⟩
   obtain ⟨π, hπ⟩ := (red K (Ideal.absNorm v.asIdeal) v.asIdeal).1 rfl
   have hpv := ((red K (Ideal.absNorm v.asIdeal) v.asIdeal).2 π hπ).2.2.2
   have hcop : (Ideal.absNorm v.asIdeal).Coprime M := by
@@ -1172,7 +1172,7 @@ private theorem spanSingleton_sg_eq_prod_conjI_pow_th_mul_of_eq_prod (M : ℕ) [
 
 private theorem sg_algebraMap_eq_algebraMap_sg_unitsMap (M q : ℕ) [NeZero M] [NeZero (q * M)] (K K' : Type) [Field K] [NumberField K] [IsCyclotomicExtension {M} ℚ K] [Field K'] [NumberField K'] [IsCyclotomicExtension {q * M} ℚ K'] [Algebra K K'] (t : (ZMod (q * M))ˣ) (x : K) :
     sg (q * M) K' t (algebraMap K K' x) = algebraMap K K' (sg M K (ZMod.unitsMap (dvd_mul_left M q) t) x) := by
-  haveI : IsGalois ℚ K := IsCyclotomicExtension.isGalois {M} ℚ K
+  have : IsGalois ℚ K := IsCyclotomicExtension.isGalois {M} ℚ K
   have h := IsCyclotomicExtension.Rat.galEquivZMod_restrictNormal_apply (q * M) K' K (dvd_mul_left M q) (sg (q * M) K' t)
   have e2 : (sg (q * M) K' t).restrictNormal K = sg M K (ZMod.unitsMap (dvd_mul_left M q) t) := by
     unfold sg at h ⊢
@@ -1188,8 +1188,8 @@ private theorem cyclotomic_rat_algEquiv_apply_comm (N : ℕ) [NeZero N] (K' : Ty
 
 private theorem norm_sg_eq_sg_unitsMap_norm (M q : ℕ) [NeZero M] [NeZero (q * M)] (K K' : Type) [Field K] [NumberField K] [IsCyclotomicExtension {M} ℚ K] [Field K'] [NumberField K'] [IsCyclotomicExtension {q * M} ℚ K'] [Algebra K K'] (t : (ZMod (q * M))ˣ) (y : K') :
     Algebra.norm K (sg (q * M) K' t y) = sg M K (ZMod.unitsMap (dvd_mul_left M q) t) (Algebra.norm K y) := by
-  haveI : IsGalois ℚ K' := IsCyclotomicExtension.isGalois {q * M} ℚ K'
-  haveI : IsGalois K K' := IsGalois.tower_top_of_isGalois ℚ K K'
+  have : IsGalois ℚ K' := IsCyclotomicExtension.isGalois {q * M} ℚ K'
+  have : IsGalois K K' := IsGalois.tower_top_of_isGalois ℚ K K'
   apply (algebraMap K K').injective
   rw [← sg_algebraMap_eq_algebraMap_sg_unitsMap, Algebra.norm_eq_prod_automorphisms, Algebra.norm_eq_prod_automorphisms, map_prod]
   refine Finset.prod_congr rfl fun σ _ => ?_
@@ -1198,9 +1198,9 @@ private theorem norm_sg_eq_sg_unitsMap_norm (M q : ℕ) [NeZero M] [NeZero (q * 
 private theorem algebraMap_norm_eq_prod_sg_ker_unitsMap (M q : ℕ) [NeZero M] [NeZero (q * M)] (K K' : Type) [Field K] [NumberField K] [IsCyclotomicExtension {M} ℚ K] [Field K'] [NumberField K'] [IsCyclotomicExtension {q * M} ℚ K'] [Algebra K K'] (y : K') :
     algebraMap K K' (Algebra.norm K y) =
       ∏ k ∈ Finset.univ.filter (fun k : (ZMod (q * M))ˣ => ZMod.unitsMap (dvd_mul_left M q) k = 1), sg (q * M) K' k y := by
-  haveI : IsGalois ℚ K := IsCyclotomicExtension.isGalois {M} ℚ K
-  haveI : IsGalois ℚ K' := IsCyclotomicExtension.isGalois {q * M} ℚ K'
-  haveI : IsGalois K K' := IsGalois.tower_top_of_isGalois ℚ K K'
+  have : IsGalois ℚ K := IsCyclotomicExtension.isGalois {M} ℚ K
+  have : IsGalois ℚ K' := IsCyclotomicExtension.isGalois {q * M} ℚ K'
+  have : IsGalois K K' := IsGalois.tower_top_of_isGalois ℚ K K'
   rw [Algebra.norm_eq_prod_automorphisms]
   refine Finset.prod_bij (fun σ _ => IsCyclotomicExtension.Rat.galEquivZMod (q * M) K' (σ.restrictScalars ℚ))
     ?_ ?_ ?_ ?_
@@ -1297,10 +1297,10 @@ private theorem map_relNorm_eq_prod_conjI_ker_unitsMap (M q : ℕ) [NeZero M] [N
   simp_rw [algebraMap_sgO_eq_sg_algebraMap]
   refine Finset.prod_nbij' (·⁻¹) (·⁻¹) ?_ ?_ ?_ ?_ ?_
   · intro k hk
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_setOf_eq] at hk ⊢
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_ofPred_eq] at hk ⊢
     rw [map_inv, hk, inv_one]
   · intro k hk
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_setOf_eq] at hk ⊢
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_ofPred_eq] at hk ⊢
     rw [map_inv, hk, inv_one]
   · intro k _
     simp
@@ -1320,10 +1320,10 @@ private theorem map_conjI_relNorm_eq_prod_conjI_fiber_unitsMap (M q : ℕ) [NeZe
     map_relNorm_eq_prod_conjI_ker_unitsMap M q K K' 𝔞 h𝔞, ideal_comap_ringEquiv_prod]
   refine Finset.prod_nbij' (· * t₀) (· * t₀⁻¹) ?_ ?_ ?_ ?_ ?_
   · intro k hk
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_setOf_eq] at hk ⊢
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_ofPred_eq] at hk ⊢
     rw [map_mul, hk, one_mul]
   · intro k hk
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_setOf_eq] at hk ⊢
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_ofPred_eq] at hk ⊢
     rw [map_mul, hk, map_inv, mul_inv_cancel]
   · intro k _
     simp
@@ -1410,10 +1410,10 @@ theorem UpperTheory.V.ML.xNormDiv :
       ← thDist M q b hq hb u hu (ZMod.unitsMap (dvd_mul_left M q) t')]
     refine Finset.sum_nbij' (t' * ·) (t'⁻¹ * ·) ?_ ?_ ?_ ?_ ?_
     · intro k hk
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_setOf_eq] at hk ⊢
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_ofPred_eq] at hk ⊢
       rw [map_mul, hk, mul_one]
     · intro k hk
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_setOf_eq] at hk ⊢
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.coe_filter, Set.mem_ofPred_eq] at hk ⊢
       rw [map_mul, hk, map_inv, inv_mul_cancel]
     · intro k _
       simp
@@ -1457,7 +1457,7 @@ open scoped nonZeroDivisors Pointwise
 
 private theorem hom_ext {K Ω : Type} [Field K] [CharZero K] [Field Ω] (N : ℕ) [NeZero N]
     [IsCyclotomicExtension {N} ℚ K] (f g : K →+* Ω) (h : ∀ x : K, x ^ N = 1 → f x = g x) : f = g := by
-  haveI : CharZero Ω := f.charZero_iff f.injective |>.1 inferInstance
+  have : CharZero Ω := f.charZero_iff f.injective |>.1 inferInstance
   have hζ := IsCyclotomicExtension.zeta_spec N ℚ K
   have e : f.toRatAlgHom = g.toRatAlgHom :=
     AlgHom.ext_of_adjoin_eq_top (IsCyclotomicExtension.adjoin_primitive_root_eq_top hζ) fun x hx => by
@@ -1491,16 +1491,16 @@ private theorem inv_emb {K Ω : Type} [Field K] [NumberField K] [Field Ω] [Alge
 private theorem place_emb {K Ω : Type} [Field K] [NumberField K] [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω]
     (ι : K →+* Ω) (A : ValuationSubring Ω) (hA : A ≠ ⊤) :
     ∃ w : HeightOneSpectrum (𝓞 K), ∀ y : 𝓞 K, A.valuation (ι (y : K)) < 1 ↔ y ∈ w.asIdeal := by
-  letI : Algebra K Ω := ι.toAlgebra
-  haveI : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq fun q => by simp
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  let : Algebra K Ω := ι.toAlgebra
+  have : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq fun q => by simp
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure K Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
   exact (UpperTheory.V.Kum.placeDict K Ω).2.1 A hA
 
 private theorem ne_top {Ω : Type} [Field Ω] [Algebra ℚ Ω] {A : ValuationSubring Ω} {n : ℕ} (hn : n ≠ 0)
     (h : Over A n) : A ≠ ⊤ := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   rintro rfl
   have h1 : (⊤ : ValuationSubring Ω).valuation (n : Ω)⁻¹ ≤ 1 :=
     (ValuationSubring.valuation_le_one_iff _ _).2 (ValuationSubring.mem_top _)
@@ -1514,7 +1514,7 @@ private theorem val_top {Ω : Type} [Field Ω] {x : Ω} (hx : x ≠ 0) : (⊤ : 
   refine le_antisymm (h x) ?_
   have h1 := h x⁻¹
   rw [map_inv₀] at h1
-  exact (inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx))).1 h1
+  exact (inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx))).1 h1
 
 private theorem tower {K K' Ω : Type} [Field K] [NumberField K] [Field K'] [NumberField K'] [Field Ω] (M N : ℕ)
     [NeZero M] [NeZero N] [IsCyclotomicExtension {M} ℚ K] [IsCyclotomicExtension {N} ℚ K'] (h : M ∣ N)
@@ -1547,8 +1547,8 @@ private def XO {Ω : Type} [Field Ω] (N b : ℕ) (A₀ : ValuationSubring Ω) (
 
 private theorem xo_ex {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (N b : ℕ) (hb : b < N)
     (A₀ : ValuationSubring Ω) (hA : A₀ ≠ ⊤) : ∃ x, XO N b A₀ x := by
-  haveI : NeZero N := ⟨by omega⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero N := ⟨by omega⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   let K := CyclotomicField N ℚ
   haveI : @IsCyclotomicExtension {N} ℚ K _ _ DivisionRing.toRatAlgebra := by
     have h := CyclotomicField.isCyclotomicExtension N ℚ
@@ -1598,7 +1598,7 @@ private theorem xo_pair {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
   obtain ⟨_, K, _, _, _, ι, v, X, hv, hX, rfl⟩ := h
   obtain ⟨_, K', _, _, _, ι', v', X', hv', hX', rfl⟩ := h'
   obtain ⟨j, hj⟩ := tower M (q * M) (dvd_mul_left M q) ι ι'
-  letI : Algebra K K' := j.toAlgebra
+  let : Algebra K K' := j.toAlgebra
   have hj' : ∀ x, ι' (algebraMap K K' x) = ι x := hj
   obtain ⟨s, hs, hn⟩ := UpperTheory.relNorm_cyclotomic_prime_eq_pow_dvd_orderOf (q * M) r K K' hp hr' v v' ((hv' r).1 (by simpa using hr)) fun y => by
     rw [← hv, ← hv', ← hj']

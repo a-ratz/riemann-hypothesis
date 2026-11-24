@@ -78,7 +78,7 @@ theorem exists_monomial_eq_prod_X {σ : Type} (n : ℕ) : ∀ d : σ →₀ ℕ,
     refine ⟨Fin.cons i a, ?_⟩
     rw [Fin.prod_univ_succ]
     simp only [Fin.cons_zero, Fin.cons_succ]
-    rw [← ha, MvPolynomial.X, MvPolynomial.monomial_mul, one_mul]
+    rw [← ha, MvPolynomial.X, MvPolynomial.monomial_mul_monomial, one_mul]
 
 variable {ι : Type} [Fintype ι] [DecidableEq ι]
 

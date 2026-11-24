@@ -60,18 +60,18 @@ theorem exists_finite_ext_point_lift_of_surjective_lft :
         ∃ (K' : Type) (_ : Field K') (σ : K →+* K') (y : Sp K' ⟶ Y),
           σ.Finite ∧ y ≫ π = spMap σ ≫ x := by
   intro X Y π hft hs K _ x
-  haveI : Surjective π := ⟨hs⟩
+  have : Surjective π := ⟨hs⟩
   let P := Limits.pullback π x
   let s : P ⟶ Sp K := Limits.pullback.snd π x
-  haveI : LocallyOfFiniteType s := inferInstanceAs (LocallyOfFiniteType (Limits.pullback.snd π x))
-  haveI : Surjective s := inferInstanceAs (Surjective (Limits.pullback.snd π x))
-  haveI : JacobsonSpace P := LocallyOfFiniteType.jacobsonSpace s
+  have : LocallyOfFiniteType s := inferInstanceAs (LocallyOfFiniteType (Limits.pullback.snd π x))
+  have : Surjective s := inferInstanceAs (Surjective (Limits.pullback.snd π x))
+  have : JacobsonSpace P := LocallyOfFiniteType.jacobsonSpace s
   obtain ⟨p₀, -⟩ := s.surjective (default : Sp K)
   obtain ⟨z, -, hz⟩ := nonempty_inter_closedPoints (Z := (Set.univ : Set P)) ⟨p₀, trivial⟩
     isClosed_univ.isLocallyClosed
-  haveI : IsClosedImmersion (P.fromSpecResidueField z) :=
+  have : IsClosedImmersion (P.fromSpecResidueField z) :=
     isClosed_singleton_iff_isClosedImmersion.mp hz
-  haveI : IsFinite (P.fromSpecResidueField z ≫ s) :=
+  have : IsFinite (P.fromSpecResidueField z ≫ s) :=
     isFinite_iff_locallyOfFiniteType_of_jacobsonSpace.2 inferInstance
   let φ := Spec.preimage (P.fromSpecResidueField z ≫ s)
   have hφ : Spec.map φ = P.fromSpecResidueField z ≫ s := Spec.map_preimage _

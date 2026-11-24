@@ -51,7 +51,7 @@ open NumberField IsDedekindDomain ReciprocityTheory.Gal Formalism.ConjugateSelfD
 theorem UpperTheory.V.LDataCardLeFinrank.contScal :
     ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] [TopologicalSpace Γ] (ψ : Γ →* ℤ_[l]ˣ), (Continuous fun g => ((ψ g : ℤ_[l]ˣ) : ℤ_[l])) → ContAction (scalRep (QZ l) ψ) := by
   intro l _ Γ _ _ ψ hψ
-  haveI hd : DiscreteTopology (QZ l) := ⟨rfl⟩
+  have hd : DiscreteTopology (QZ l) := ⟨rfl⟩
   unfold ReciprocityTheory.Gal.ContAction
   apply continuous_prod_of_discrete_right.mpr
   intro a
@@ -75,7 +75,7 @@ theorem UpperTheory.V.LDataCardLeFinrank.contScal :
     rw [e]
     exact IsUltrametricDist.isOpen_closedBall y one_ne_zero
   have hc : Continuous fun g : Γ => ((ψ g : ℤ_[l]) : ℚ_[l]) * x :=
-    (continuous_subtype_val.comp hψ).mul continuous_const
+    (continuous_subtypeVal.comp hψ).mul continuous_const
   refine (hmk.comp hc).congr ?_
   intro g
   rfl

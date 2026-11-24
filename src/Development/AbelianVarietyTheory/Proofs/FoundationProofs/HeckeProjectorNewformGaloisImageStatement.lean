@@ -349,7 +349,7 @@ theorem cayleyHamilton_galV : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlg
     · simp [h]
   have hjinj : Function.Injective jm := by
     rw [show (jm : E ⊗[ℤ_[l]] B → E ⊗[ℤ_[l]] X.Fn l) = LinearMap.lTensor E B.subtype from
-      LinearMap.baseChange_eq_ltensor _]
+      LinearMap.baseChange_eq_lTensor _]
     exact Module.Flat.lTensor_preserves_injective_linearMap _ B.injective_subtype
 
   have hjG : ∀ s z, X.galV l E s (jm z) = jm ((gs s).baseChange E z) := by
@@ -509,9 +509,9 @@ theorem exists_decomp {E : Type} [Field E] {ι : Type} [Fintype ι] [DecidableEq
     rw [Module.End.mul_apply] at this
     rw [this]; split_ifs <;> rfl
   set W := LinearMap.range (P i₀ i₀)
-  have hW : ∀ k u, P i₀ k u ∈ W := fun k u => ⟨P i₀ k u, by rw [hPa, if_pos rfl]⟩
+  have hW : ∀ k u, P i₀ k u ∈ W := fun k u => ⟨P i₀ k u, by rw [hPa, ite_eq_left rfl]⟩
   have hfix : ∀ w ∈ W, P i₀ i₀ w = w := by
-    rintro _ ⟨u, rfl⟩; rw [hPa, if_pos rfl]
+    rintro _ ⟨u, rfl⟩; rw [hPa, ite_eq_left rfl]
   let b := Module.finBasis E W
   let π : Fin (Module.finrank E W) → U →ₗ[E] (ι → E) :=
     fun i => LinearMap.pi fun k => (b.coord i).comp (LinearMap.codRestrict W (P i₀ k) (hW k))
@@ -566,7 +566,7 @@ theorem exists_decomp {E : Type} [Field E] {ι : Type} [Fintype ι] [DecidableEq
 
       rw [map_sum] at this
       simp only [map_smul] at this
-      rw [this, hPa, if_pos rfl]
+      rw [this, hPa, ite_eq_left rfl]
     simp only [hk]
     rw [← LinearMap.sum_apply, h1, Module.End.one_apply]
 
@@ -739,14 +739,14 @@ namespace GlobalTheory.KZ.HeckeProj
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ}
 
 theorem gal_mul_apply (X : Tower Ω ε) (s s' : Ω ≃ₐ[ℚ] Ω) (f : X.K) : X.gal (s * s') f = X.gal s (X.gal s' f) := by
-  letI := X.fld; letI := X.alg
+  let := X.fld; let := X.alg
   apply (X.exp : X.K →+* HahnSeries ℚ Ω).injective
   refine HahnSeries.ext (funext fun r => ?_)
   show (X.exp (X.gal (s * s') f)).coeff r = (X.exp (X.gal s (X.gal s' f))).coeff r
   rw [X.gal_exp, X.gal_exp, X.gal_exp, AlgEquiv.mul_apply]
 
 theorem gal_one_apply (X : Tower Ω ε) (f : X.K) : X.gal 1 f = f := by
-  letI := X.fld; letI := X.alg
+  let := X.fld; let := X.alg
   apply (X.exp : X.K →+* HahnSeries ℚ Ω).injective
   refine HahnSeries.ext (funext fun r => ?_)
   show (X.exp (X.gal 1 f)).coeff r = (X.exp f).coeff r
@@ -754,7 +754,7 @@ theorem gal_one_apply (X : Tower Ω ε) (f : X.K) : X.gal 1 f = f := by
 
 theorem kmap_comp (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (φ ψ : X.K ≃+* X.K) :
     X.kmap l φ ∘ₗ X.kmap l ψ = X.kmap l (ψ.trans φ) := by
-  letI := X.fld
+  let := X.fld
   unfold Tower.kmap
   apply LinearMap.ext; intro x
   simp only [LinearMap.comp_apply, LinearMap.restrictScalars_apply]
@@ -766,7 +766,7 @@ theorem kmap_comp (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (φ ψ : X.K ≃+* 
   rw [h]
 
 theorem kmap_refl (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] : X.kmap l (RingEquiv.refl X.K) = LinearMap.id := by
-  letI := X.fld
+  let := X.fld
   unfold Tower.kmap
   have h : AddMonoidHom.toIntLinearMap (MonoidHom.toAdditive (Units.map (RingEquiv.refl X.K).toMonoidHom)) =
       LinearMap.id := by
@@ -883,7 +883,7 @@ theorem heckeProj_main : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosu
   have hUgal : ∀ s, ∀ u ∈ U, X.galV l E s u ∈ U := by
     rintro s u ⟨x, hx, rfl⟩
     exact ⟨X.galV l E s x, hgal s x hx, ((hPst x hx).2 s).symm⟩
-  haveI : FiniteDimensional E U := by rw [hU]; infer_instance
+  have : FiniteDimensional E U := by rw [hU]; infer_instance
   have hgm : ∀ s s', X.galV l E (s * s') = X.galV l E s * X.galV l E s' := by
     intro s s'
     simp only [Tower.galV, HeckeProj.galB_mul, LinearMap.baseChange_comp, Module.End.mul_eq_comp]

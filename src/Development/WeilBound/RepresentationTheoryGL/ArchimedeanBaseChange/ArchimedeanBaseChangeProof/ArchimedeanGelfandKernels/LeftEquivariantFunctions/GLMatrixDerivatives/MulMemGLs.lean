@@ -65,7 +65,7 @@ variable {n : ℕ}
 theorem mem_GLs_of (y : G n) : y.val ∈ GLs n := (Matrix.isUnit_iff_isUnit_det _).1 y.isUnit |>.ne_zero
 
 theorem mul_mem_GLs {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
 theorem act_congr [MeasurableSpace (G n)] (μ : Measure (G n)) (E : KMod n) (k : Mat n → (E.V →L[ℂ] E.V))
@@ -81,7 +81,7 @@ theorem act_dc (hDW : DCwave) (hP : ParamInt) (hZ : ZopDC) (hG : GelComm) (hWE :
     (w : List (Bool × ℕ)) (g : ℝ → ℝ) (T' : ℝ) (hgb : IsBump g T') (ks : Mat n → (E.V →L[ℂ] E.V))
     (hks : IsKer μ E w g ks) (f : Mat n → E.V) (hf : f ∈ CE E) :
     act μ E ks (DC ε Fr f) 1 = DC ε Fr (act μ E ks f) 1 := by
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨u, hu, hu0⟩ := hWE n E f hf
   have h1 : (1 : Mat n) ∈ GLs n := by simp [GLs]
   have hDu := hDW hG n lam E Fr ε ι S Γ T hC u hu

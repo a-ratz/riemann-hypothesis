@@ -464,9 +464,9 @@ theorem map_funLeft_extendZero : ∀ (F : Type) [Field F] [NumberField F] {κ₁
       have hC : IsCompact (Set.univ.pi C) := by
         refine isCompact_univ_pi fun k => ?_
         by_cases h : k ∈ Set.range j
-        · simp only [C, dif_pos h]
+        · simp only [C, dite_eq_left h]
           exact hcs.isCompact.image (continuous_apply _)
-        · simp only [C, dif_neg h]
+        · simp only [C, dite_eq_right h]
           exact hOk
       refine HasCompactSupport.intro hC fun x hx => ?_
       by_contra hne
@@ -476,11 +476,11 @@ theorem map_funLeft_extendZero : ∀ (F : Type) [Field F] [NumberField F] {κ₁
       apply hx
       intro k _
       by_cases h : k ∈ Set.range j
-      · simp only [C, dif_pos h]
+      · simp only [C, dite_eq_left h]
         refine ⟨x ∘ j, subset_tsupport _ hgx, ?_⟩
         simp only [Function.comp_apply]
         rw [Classical.choose_spec h]
-      · simp only [C, dif_neg h]
+      · simp only [C, dite_eq_right h]
         exact hxS k h
     · funext y
       rw [LinearMap.funLeft_apply]
@@ -653,8 +653,8 @@ theorem exists_isEv_mixedX_m : ∀ (F E : Type) [Field F] [NumberField F] [Field
       (LinearMap.funLeft ℂ ℂ (fun y : Fin n₁ × Fin d → Fv F v => Function.extend j y 0) ∘ₗ ev₁ v), ?_, ?_, ?_⟩
     · intro h
       have := congrArg (fun T : SInf F (Fin n × Fin d) →L[ℂ] SInf F (Fin n₁ × Fin d) => T f₀ 0) h
-      simp only [ContinuousLinearMap.comp_apply, hR, hf₀, extend_zero'_m hj, ContinuousLinearMap.zero_apply,
-        SchwartzMap.zero_apply] at this
+      simp only [ContinuousLinearMap.comp_apply, hR, hf₀, extend_zero'_m hj, zero_apply,
+        zero_apply] at this
       exact hb0 this
     · intro v
       refine ⟨?_, ?_⟩
@@ -999,7 +999,7 @@ theorem PositivityTheory.Mix.unitary_fixing_isotropic_complement : ∀ (F E : Ty
       unfold PositivityTheory.Mix.bf
       simp only [Pi.zero_apply, map_zero]
       rw [show (fun _ : Fin n => (0 : AE F E)) = 0 from rfl, Matrix.mulVec_zero, dotProduct_zero]
-    haveI : Subsingleton (AE F E) := subsingleton_of_zero_eq_one h01
+    have : Subsingleton (AE F E) := subsingleton_of_zero_eq_one h01
     apply matH_inj (σ := σ) X.J
     ext i j
     exact Subsingleton.elim _ _

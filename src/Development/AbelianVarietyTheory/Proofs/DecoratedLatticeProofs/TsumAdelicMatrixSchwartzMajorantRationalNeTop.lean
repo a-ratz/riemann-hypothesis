@@ -84,7 +84,7 @@ theorem maj_le_shift (θ : InfFam D) {m n : ℕ} (K C : Set (Mx D m n)) (N : ℕ
       refine ⟨k + w, Set.add_mem_add hk hwC, ?_⟩
       have : γ + w - (k + w) = γ - k := by abel
       rw [this]; exact hk0
-    rw [if_pos hγ, if_pos hbox]
+    rw [ite_eq_left hγ, ite_eq_left hbox]
     have h0 := realSize_nonneg θ γ
     have h1 := realSize_nonneg θ (γ + w)
     have h2 : 1 + realSize θ (γ + w) ≤ 2 * (1 + realSize θ γ) := by
@@ -94,7 +94,7 @@ theorem maj_le_shift (θ : InfFam D) {m n : ℕ} (K C : Set (Mx D m n)) (N : ℕ
     rw [← div_eq_mul_inv, inv_eq_one_div, div_le_div_iff₀ hq hp, one_mul]
     calc (1 + realSize θ (γ + w)) ^ N ≤ (2 * (1 + realSize θ γ)) ^ N := by gcongr
       _ = 2 ^ N * (1 + realSize θ γ) ^ N := by rw [mul_pow]
-  · rw [if_neg hγ]
+  · rw [ite_eq_right hγ]
     have := maj_nonneg θ (K + C) N (γ + w)
     unfold maj at this
     positivity
@@ -117,8 +117,8 @@ theorem tsum_maj_ne_top : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ m n 
     (∑' y : ratMx D m n, ENNReal.ofReal (maj θ K N y)) ≠ ⊤ := by
   intro D θ hθ m n
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   let μ : Measure (Mx D m n) := Measure.addHaar
   have hcont : Continuous (realSize θ : Mx D m n → ℝ) :=
     ((GlobalTheory.T.adelicMatrixSchwartzMajorant_measurable_rationalShift D θ hθ).1 m n ∅ isCompact_empty).2.1
@@ -163,7 +163,7 @@ theorem tsum_maj_ne_top : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ m n 
     have hxB : -(γ' : Mx D m n) + x ∈ B := (interior_subset hx').1.1.2
     have hmem : (-(γ : Mx D m n) + x, -(γ' : Mx D m n) + x) ∈ {p : Mx D m n × Mx D m n | p.1 - p.2 ∈ U} :=
       hAB ⟨hxA, hxB⟩
-    simp only [Set.mem_setOf_eq] at hmem
+    simp only [Set.mem_ofPred_eq] at hmem
     have e : -(γ : Mx D m n) + x - (-(γ' : Mx D m n) + x) = (γ' : Mx D m n) - γ := by abel
     rw [e] at hmem
     have := (hU _ (sub_mem γ'.2 γ.2)).1 hmem

@@ -307,7 +307,7 @@ theorem isIntegral_ringOn (hF : IsFinite q) (hg : M₂.pt ≫ q = spMap (algebra
     letI : Algebra (M₁.ringOn (U : Set M₁.Z)) (M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)) :=
       ((algebraMap Ω₁ Ω₂).restrict _ _ fun _ ha => map_mem_ringOn hg ha).toAlgebra
     Algebra.IsIntegral (M₁.ringOn (U : Set M₁.Z)) (M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)) := by
-  letI : Algebra (M₁.ringOn (U : Set M₁.Z)) (M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)) :=
+  let : Algebra (M₁.ringOn (U : Set M₁.Z)) (M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)) :=
     ((algebraMap Ω₁ Ω₂).restrict _ _ fun _ ha => map_mem_ringOn hg ha).toAlgebra
   refine ⟨fun c => ?_⟩
   obtain ⟨f, hf, hc, h0⟩ := GlobalTheory.T.ringOn_preimage_integral_of_finite_model_map _ _ _ _ M₁ M₂ q hF hg U hU hne c c.2
@@ -331,11 +331,11 @@ variable {o₁ Ω₁ o₂ Ω₂ : Type} [CommRing o₁] [Field Ω₁] [Algebra o
 theorem mem_O_of_isIntegral (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M₂.Z) (hg : M₂.pt ≫ q = spMap (algebraMap Ω₁ Ω₂) ≫ M₁.pt)
     (halg : ∀ x, algebraMap (M₁.Z.presheaf.stalk z₁) Ω₂ x = algebraMap Ω₁ Ω₂ (M₁.stalkHom z₁ x)) {b : Ω₂}
     (hb : IsIntegral (M₁.Z.presheaf.stalk z₁) b) {z' : M₂.Z} (hz' : q z' = z₁) : b ∈ M₂.O z' := by
-  haveI := isIntegrallyClosed_O hN z'
-  letI : Algebra (M₁.Z.presheaf.stalk z₁) (M₂.O z') :=
+  have := isIntegrallyClosed_O hN z'
+  let : Algebra (M₁.Z.presheaf.stalk z₁) (M₂.O z') :=
     (((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).codRestrict (M₂.O z') fun x =>
       map_mem_O hg (by rw [hz']; exact (M₁.stalkEquiv z₁ x).2)).toAlgebra
-  haveI : IsScalarTower (M₁.Z.presheaf.stalk z₁) (M₂.O z') Ω₂ :=
+  have : IsScalarTower (M₁.Z.presheaf.stalk z₁) (M₂.O z') Ω₂ :=
     IsScalarTower.of_algebraMap_eq fun x => halg x
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 (hb.tower_top (A := M₂.O z'))
   exact hy ▸ y.2
@@ -343,27 +343,27 @@ theorem mem_O_of_isIntegral (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.I
 theorem isIntegral_of_mem_O (hF : IsFinite q) (hg : M₂.pt ≫ q = spMap (algebraMap Ω₁ Ω₂) ≫ M₁.pt)
     (halg : ∀ x, algebraMap (M₁.Z.presheaf.stalk z₁) Ω₂ x = algebraMap Ω₁ Ω₂ (M₁.stalkHom z₁ x)) {b : Ω₂}
     (hb : ∀ z' : M₂.Z, q z' = z₁ → b ∈ M₂.O z') : IsIntegral (M₁.Z.presheaf.stalk z₁) b := by
-  haveI := hF
+  have := hF
   obtain ⟨U, hU, hz, -⟩ := exists_isAffineOpen_mem_and_subset (U := (⊤ : M₁.Z.Opens)) (x := z₁) trivial
   have hne : (U : Set M₁.Z).Nonempty := ⟨z₁, hz⟩
   have hU₂ : IsAffineOpen (q ⁻¹ᵁ U) := hU.preimage q
   have hne₂ := preimage_nonempty hg hne
-  letI : Algebra (M₁.ringOn (U : Set M₁.Z)) (M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)) :=
+  let : Algebra (M₁.ringOn (U : Set M₁.Z)) (M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)) :=
     ((algebraMap Ω₁ Ω₂).restrict _ _ fun _ ha => map_mem_ringOn hg ha).toAlgebra
-  haveI := isIntegral_ringOn hF hg hU hne
+  have := isIntegral_ringOn hF hg hU hne
   have hcoe : ∀ x : M₁.ringOn (U : Set M₁.Z),
       ((algebraMap (M₁.ringOn (U : Set M₁.Z)) (M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)) x : _) : Ω₂) =
         algebraMap Ω₁ Ω₂ x := fun _ => rfl
   let I : Ideal (M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)) :=
     { carrier := {c | (c : Ω₂) * b ∈ M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)}
       add_mem' := fun {c d} hc hd => by
-        simp only [Set.mem_setOf_eq, Subalgebra.coe_add, add_mul] at *
+        simp only [Set.mem_ofPred_eq, Subalgebra.coe_add, add_mul] at *
         exact add_mem hc hd
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, ZeroMemClass.coe_zero, zero_mul]
+        simp only [Set.mem_ofPred_eq, ZeroMemClass.coe_zero, zero_mul]
         exact zero_mem _
       smul_mem' := fun c d hd => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, Subalgebra.coe_mul, mul_assoc] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, Subalgebra.coe_mul, mul_assoc] at *
         exact mul_mem c.2 hd }
   have hz' : z₁ ∈ (U : Set M₁.Z) := hz
   by_cases hc : I.comap (algebraMap (M₁.ringOn (U : Set M₁.Z))
@@ -389,7 +389,7 @@ theorem isIntegral_of_mem_O (hF : IsFinite q) (hg : M₂.pt ≫ q = spMap (algeb
       rw [hbcd, mul_div_cancel₀ _ hd0]; exact hc'
     have := (hwQ ⟨d, hd⟩).1 (hIQ hdI)
     simp [hd0, hdinv] at this
-  · rw [SetLike.not_le_iff_exists] at hc
+  · rw [IsConcreteLE.not_le_iff_exists] at hc
     obtain ⟨s, hsI, hsp⟩ := hc
     rw [mem_pIdeal, not_not] at hsp
     have hsI' : algebraMap Ω₁ Ω₂ s * b ∈ M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z) := hsI
@@ -421,7 +421,7 @@ theorem maximal_point (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNorma
     (𝔷 : Ideal (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂)) (h𝔷 : 𝔷.IsMaximal) :
     ∃ z₂ : M₂.Z, q z₂ = z₁ ∧ ∀ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂,
       b ∈ 𝔷 ↔ ((b : Ω₂) = 0 ∨ (b : Ω₂)⁻¹ ∉ M₂.O z₂) := by
-  haveI := hF
+  have := hF
   obtain ⟨U, hU, hz, -⟩ := exists_isAffineOpen_mem_and_subset (U := (⊤ : M₁.Z.Opens)) (x := z₁) trivial
   have hne : (U : Set M₁.Z).Nonempty := ⟨z₁, hz⟩
   have hU₂ : IsAffineOpen (q ⁻¹ᵁ U) := hU.preimage q
@@ -430,7 +430,7 @@ theorem maximal_point (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNorma
   let ψ : M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z) →+* integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂ :=
     (RingHom.id Ω₂).restrict _ _ fun c hc =>
       (mem_integralClosure_iff _ _).2 (isIntegral_of_mem_ringOn hF hg halg hU hz hc)
-  haveI : (𝔷.comap ψ).IsPrime := Ideal.comap_isPrime _ _
+  have : (𝔷.comap ψ).IsPrime := Ideal.comap_isPrime _ _
   obtain ⟨z₂, hz₂U, hz₂Q⟩ := GlobalTheory.T.prime_of_ringOn_eq_nonunits_at_point _ _ M₂ _ hU₂ hne₂ (𝔷.comap ψ) inferInstance
   have hQ : ∀ (c : Ω₂) (hc : c ∈ M₂.ringOn ((q ⁻¹ᵁ U : M₂.Z.Opens) : Set M₂.Z)),
       ψ ⟨c, hc⟩ ∈ 𝔷 ↔ (c = 0 ∨ c⁻¹ ∉ M₂.O z₂) :=
@@ -468,7 +468,7 @@ theorem maximal_point (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNorma
         show algebraMap Ω₁ Ω₂ a * algebraMap Ω₁ Ω₂ a⁻¹ = 1
         rw [← map_mul, mul_inv_cancel₀ ha0, map_one]
       · intro hinv
-        haveI : Algebra.IsIntegral (M₁.Z.presheaf.stalk z₁) (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂) :=
+        have : Algebra.IsIntegral (M₁.Z.presheaf.stalk z₁) (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂) :=
           ⟨fun x => integralClosure.isIntegral x⟩
         have hm1 := Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := M₁.Z.presheaf.stalk z₁) 𝔷
         have hm2 := IsLocalRing.eq_maximalIdeal hm1
@@ -508,7 +508,7 @@ theorem point_unique (hF : IsFinite q) (hg : M₂.pt ≫ q = spMap (algebraMap �
     {z₂ z₂' : M₂.Z} (h₂ : q z₂ = z₁) (h₂' : q z₂' = z₁)
     (h : ∀ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂, (b : Ω₂)⁻¹ ∈ M₂.O z₂ ↔ (b : Ω₂)⁻¹ ∈ M₂.O z₂') :
     z₂ = z₂' := by
-  haveI := hF
+  have := hF
   obtain ⟨U, hU, hz, -⟩ := exists_isAffineOpen_mem_and_subset (U := (⊤ : M₁.Z.Opens)) (x := z₁) trivial
   refine GlobalTheory.T.model_affine_point_eq_of_inverse_mem_iff _ _ M₂ _ (hU.preimage q) z₂ z₂' (show q z₂ ∈ U by rw [h₂]; exact hz)
     (show q z₂' ∈ U by rw [h₂']; exact hz) fun a ha _ => h ⟨a, (mem_integralClosure_iff _ _).2
@@ -526,18 +526,18 @@ theorem mem_OO_of_ext (halg : ∀ x, algebraMap (M₁.Z.presheaf.stalk z₁) Ω�
     (e : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂ →+* PadicAlgCl p)
     (he : ∀ a, e (algebraMap (M₁.Z.presheaf.stalk z₁) _ a) = M₁.val (gPt p ≫ y₁) (M₁.stalkHom z₁ a))
     (b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂) : e b ∈ OO p := by
-  letI : Algebra (M₁.Z.presheaf.stalk z₁) (PadicAlgCl p) :=
+  let : Algebra (M₁.Z.presheaf.stalk z₁) (PadicAlgCl p) :=
     (e.comp (algebraMap (M₁.Z.presheaf.stalk z₁) (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂))).toAlgebra
   let eA : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂ →ₐ[M₁.Z.presheaf.stalk z₁] PadicAlgCl p :=
     { e with commutes' := fun _ => rfl }
   have h1 : IsIntegral (M₁.Z.presheaf.stalk z₁) (e b) := (integralClosure.isIntegral b).map eA
-  letI : Algebra (M₁.Z.presheaf.stalk z₁) (OO p) :=
+  let : Algebra (M₁.Z.presheaf.stalk z₁) (OO p) :=
     ((e.comp (algebraMap (M₁.Z.presheaf.stalk z₁) (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂))).codRestrict
       (OO p) fun a => by
         show e (algebraMap _ _ a) ∈ OO p
         rw [he, mem_OO_iff]
         exact norm_val_le_one hy₁ (M₁.stalkEquiv z₁ a).2).toAlgebra
-  haveI : IsScalarTower (M₁.Z.presheaf.stalk z₁) (OO p) (PadicAlgCl p) :=
+  have : IsScalarTower (M₁.Z.presheaf.stalk z₁) (OO p) (PadicAlgCl p) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 (h1.tower_top (A := OO p))
   exact hy ▸ y.2
@@ -549,7 +549,7 @@ theorem lift_point (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalSc
     (e : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂ →+* PadicAlgCl p)
     (he : ∀ a, e (algebraMap (M₁.Z.presheaf.stalk z₁) _ a) = M₁.val (gPt p ≫ y₁) (M₁.stalkHom z₁ a)) :
     ∃ y : Sp (OO p) ⟶ M₂.Z, y ≫ q = y₁ ∧ ∀ b, e b = M₂.val (gPt p ≫ y) (b : Ω₂) := by
-  haveI := hF
+  have := hF
   obtain ⟨U, hU, hz, -⟩ := exists_isAffineOpen_mem_and_subset (U := (⊤ : M₁.Z.Opens)) (x := z₁) trivial
   have hne : (U : Set M₁.Z).Nonempty := ⟨z₁, hz⟩
   have hU₂ : IsAffineOpen (q ⁻¹ᵁ U) := hU.preimage q
@@ -629,7 +629,7 @@ end
 open GlobalTheory.Poinc.FinPts in
 theorem GlobalTheory.Poinc.integralClosure_stalk_fibre : ∀ (o₁ Ω₁ o₂ Ω₂ : Type) [CommRing o₁] [Field Ω₁] [Algebra o₁ Ω₁] [CommRing o₂] [Field Ω₂] [Algebra o₂ Ω₂] [Algebra Ω₁ Ω₂] (M₁ : RatModel o₁ Ω₁) (M₂ : RatModel o₂ Ω₂) (q : M₂.Z ⟶ M₁.Z), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M₂.Z → IsFinite q → M₂.pt ≫ q = spMap (algebraMap Ω₁ Ω₂) ≫ M₁.pt → ∀ z₁ : M₁.Z, letI : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra; (∀ b : Ω₂, b ∈ integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂ ↔ ∀ z' : M₂.Z, q z' = z₁ → b ∈ M₂.O z') ∧ (∀ 𝔷 : Ideal (integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂), 𝔷.IsMaximal → ∃ z₂ : M₂.Z, q z₂ = z₁ ∧ ∀ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂, b ∈ 𝔷 ↔ ((b : Ω₂) = 0 ∨ (b : Ω₂)⁻¹ ∉ M₂.O z₂)) ∧ (∀ z₂ z₂' : M₂.Z, q z₂ = z₁ → q z₂' = z₁ → (∀ b : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂, (b : Ω₂)⁻¹ ∈ M₂.O z₂ ↔ (b : Ω₂)⁻¹ ∈ M₂.O z₂') → z₂ = z₂') ∧ ∀ (p : ℕ) [Fact p.Prime] (y₁ : Sp (OO p) ⟶ M₁.Z), y₁ (cPt p) = z₁ → ∀ e : integralClosure (M₁.Z.presheaf.stalk z₁) Ω₂ →+* PadicAlgCl p, (∀ a, e (algebraMap (M₁.Z.presheaf.stalk z₁) _ a) = M₁.val (gPt p ≫ y₁) (M₁.stalkHom z₁ a)) → ∃ y : Sp (OO p) ⟶ M₂.Z, y ≫ q = y₁ ∧ ∀ b, e b = M₂.val (gPt p ≫ y) (b : Ω₂) := by
   intro o₁ Ω₁ o₂ Ω₂ _ _ _ _ _ _ _ M₁ M₂ q hN hF hg z₁
-  letI : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra
+  let : Algebra (M₁.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap Ω₁ Ω₂).comp (M₁.stalkHom z₁)).toAlgebra
   have halg : ∀ x, algebraMap (M₁.Z.presheaf.stalk z₁) Ω₂ x = algebraMap Ω₁ Ω₂ (M₁.stalkHom z₁ x) := fun _ => rfl
   exact ⟨fun b => (mem_integralClosure_iff _ _).trans
       ⟨fun hb z' hz' => mem_O_of_isIntegral hN hg halg hb hz', isIntegral_of_mem_O hF hg halg⟩,

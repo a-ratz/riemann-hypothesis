@@ -117,13 +117,13 @@ theorem hasSum_IfrB : ∀ (D : Formalism.BasicNotions.D7) (r : ℕ) (V : Formali
     HasSum (fun β : PositivityTheory.GramSchwartzFunctions.HermE D r => PositivityTheory.GramSchwartzFunctions.BC.IfrB V ν φ β) (PositivityTheory.GramSchwartzFunctions.Ifr V ν φ) := by
   intro D r V θ hθ ν hν φ hφ habs
   have : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI := hν
-  haveI := GlobalTheory.ThetaTransformMeas.countable_field D.host.E
-  haveI : Countable (Matrix (Fin V.rank) (Fin r) D.host.E) :=
+  have := hν
+  have := GlobalTheory.ThetaTransformMeas.countable_field D.host.E
+  have : Countable (Matrix (Fin V.rank) (Fin r) D.host.E) :=
     inferInstanceAs (Countable (Fin V.rank → Fin r → D.host.E))
-  haveI : Countable (Matrix (Fin r) (Fin r) D.host.E) :=
+  have : Countable (Matrix (Fin r) (Fin r) D.host.E) :=
     inferInstanceAs (Countable (Fin r → Fin r → D.host.E))
-  haveI : Countable (HermE D r) :=
+  have : Countable (HermE D r) :=
     inferInstanceAs (Countable {b : Matrix (Fin r) (Fin r) D.host.E // _})
   have hcont : Continuous φ :=
     (GlobalTheory.CompanionTheory.WeilTheta.schwartzA_continuous_and_dominated D θ hθ _ _ φ hφ).1

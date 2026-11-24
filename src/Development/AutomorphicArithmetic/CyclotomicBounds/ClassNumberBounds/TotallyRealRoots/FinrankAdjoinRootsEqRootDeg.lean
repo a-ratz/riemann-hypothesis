@@ -107,7 +107,7 @@ theorem mem_galImage_iff_of_equiv {E E' : Type*} [Field E] [CharZero E] [Field E
   · rintro ⟨σ, rfl⟩
     let gr : Ω ≃+* Ω := ε.symm.trans (σ.toRingEquiv.trans ε)
     refine ⟨AlgEquiv.ofRingEquiv (f := gr) fun r ↦ ?_, ?_⟩
-    · simp only [gr, RingEquiv.trans_apply, hε', AlgEquiv.coe_ringEquiv, AlgEquiv.commutes, hε,
+    · simp only [gr, RingEquiv.trans_apply, hε', AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes, hε,
         RingEquiv.apply_symm_apply]
     · simp only [eps, MonoidHom.comp_apply]
       apply cyclotomicCharacter_eq_of_ringEquiv_conj l ε

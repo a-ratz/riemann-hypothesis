@@ -146,7 +146,7 @@ theorem cellJacquet_eq_zero_of_mk_eq_zero {f : parabolicIndSpace F n β σ}
   set K : Subgroup (GL (Fin n) F) := K'.map (unipotentRadical F n γ).subtype
   have hKc : IsCompact (K : Set (GL (Fin n) F)) := by
     rw [Subgroup.coe_map]
-    exact hK'c.image continuous_subtype_val
+    exact hK'c.image continuous_subtypeVal
   have hKN : K ≤ unipotentRadical F n γ := by
     rintro _ ⟨k, -, rfl⟩
     exact k.2

@@ -408,8 +408,8 @@ private theorem deg_two {Ω : Type} [Field Ω] [CharZero Ω] (A B M : Intermedia
     [FiniteDimensional ℚ B] (hM : M = A ⊔ B) (hA : Module.finrank ℚ A = 2) (hn : ¬ A ≤ B) [Algebra B M] [IsScalarTower ℚ B M] :
     Module.finrank B M = 2 := by
   have h1 : Module.finrank ℚ M ≤ Module.finrank ℚ A * Module.finrank ℚ B := hM ▸ IntermediateField.finrank_sup_le A B
-  haveI : FiniteDimensional ℚ M := hM ▸ IntermediateField.finiteDimensional_sup A B
-  haveI : Module.Free B M := Module.Free.of_divisionRing B M
+  have : FiniteDimensional ℚ M := hM ▸ IntermediateField.finiteDimensional_sup A B
+  have : Module.Free B M := Module.Free.of_divisionRing B M
   have h2 := Module.finrank_mul_finrank ℚ B M
   have h3 : 0 < Module.finrank ℚ B := Module.finrank_pos
   have h4 : 0 < Module.finrank ℚ M := Module.finrank_pos
@@ -422,11 +422,11 @@ private theorem deg_two {Ω : Type} [Field Ω] [CharZero Ω] (A B M : Intermedia
   interval_cases n <;> simp_all
 private theorem two_emb {L M : Type} [Field L] [Field M] [CharZero L] [Algebra L M] (h : Module.finrank L M = 2) (φ : L →+* ℂ) :
     ∃ τ τ' : M →+* ℂ, τ ≠ τ' ∧ τ.comp (algebraMap L M) = φ ∧ τ'.comp (algebraMap L M) = φ := by
-  letI : Algebra L ℂ := φ.toAlgebra
-  haveI : FiniteDimensional L M := Module.finite_of_finrank_pos (by omega)
+  let : Algebra L ℂ := φ.toAlgebra
+  have : FiniteDimensional L M := Module.finite_of_finrank_pos (by omega)
   have hc := AlgHom.card L M ℂ
   obtain ⟨a, b, hab⟩ := Fintype.exists_pair_of_one_lt_card (α := M →ₐ[L] ℂ) (by omega)
-  exact ⟨a, b, fun e => hab (AlgHom.coe_ringHom_injective e), a.comp_algebraMap, b.comp_algebraMap⟩
+  exact ⟨a, b, fun e => hab (AlgHom.toRingHom_injective e), a.comp_algebraMap, b.comp_algebraMap⟩
 private theorem hom_ext_sup {Ω : Type} [Field Ω] [CharZero Ω] (A B M : IntermediateField ℚ Ω) (hA : A ≤ M) (hB : B ≤ M)
     (hM : M ≤ A ⊔ B) (τ τ' : M →+* ℂ) (eA : ∀ x : A, τ ⟨x, hA x.2⟩ = τ' ⟨x, hA x.2⟩) (eB : ∀ x : B, τ ⟨x, hB x.2⟩ = τ' ⟨x, hB x.2⟩) :
     τ = τ' := by
@@ -462,7 +462,7 @@ private theorem tw_one {Γ k : Type} [Group Γ] [Field k] {n : ℕ} (r : Γ →*
 
 theorem UpperTheory.V.Cu.rank_four_automorphy_of_tensor_of_base_change_of_induction (H : _root_.UpperTheory.V.Af.HypothesesH') (hQ : UpQuadI) (hS : UpSolI) (hI : Z.InvariantSubmoduleMonicPolynomial.E.IndAutCs) (hP : PolOf4) (hB : BadOfW) : RankFourAutomorphyOfTensor := by
   intro Ω _ _ _ l _ ι K' _ h2 hc ρ hρ ⟨π, hreg, hatt⟩ hio hrw g0 m c₁ κ hg0 ⟨τ₀, s₀, h₀⟩
-  haveI : IsAlgClosure K' Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have : IsAlgClosure K' Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
   have RK := resFacts ℚ K' Ω l 2 ρ
   obtain ⟨P₀, reg₀, att₀, -⟩ := hQ ℚ K' Ω l ι h2 ρ π hρ hreg hatt (RK.2.2.2.1.1 (hio _ RK.2.1))
   obtain ⟨j, j1, j9, hj⟩ := Cu2.goodJ K' h2 P₀ reg₀ m (by simpa using h₀.pos)
@@ -505,36 +505,36 @@ theorem UpperTheory.V.Cu.rank_four_automorphy_of_tensor_of_base_change_of_induct
     rcases hemb φ with rfl | rfl
     · exact key N hN (Multiset.le_add_right _ _)
     · exact key N' hN' (Multiset.le_add_left _ _)
-  haveI : FiniteDimensional ℚ K' := NumberField.to_finiteDimensional
-  haveI : FiniteDimensional ℚ L := NumberField.to_finiteDimensional
+  have : FiniteDimensional ℚ K' := NumberField.to_finiteDimensional
+  have : FiniteDimensional ℚ L := NumberField.to_finiteDimensional
   obtain ⟨M, hM⟩ : ∃ M : IntermediateField ℚ Ω, M = K' ⊔ L := ⟨_, rfl⟩
-  haveI : FiniteDimensional ℚ M := hM ▸ IntermediateField.finiteDimensional_sup K' L
-  haveI : NumberField M := {}
+  have : FiniteDimensional ℚ M := hM ▸ IntermediateField.finiteDimensional_sup K' L
+  have : NumberField M := {}
   have hEM : K' ≤ M := hM ▸ le_sup_left
   have hLM : L ≤ M := hM ▸ le_sup_right
-  letI : Algebra L M := (IntermediateField.inclusion hLM).toRingHom.toAlgebra
-  letI : Algebra K' M := (IntermediateField.inclusion hEM).toRingHom.toAlgebra
-  haveI : IsScalarTower L M Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower K' M Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower ℚ L M := IsScalarTower.of_algebraMap_eq fun _ => by simp
-  haveI : IsScalarTower ℚ K' M := IsScalarTower.of_algebraMap_eq fun _ => by simp
-  haveI : IsTotallyComplex M := isTotallyComplex_of_algebra L _
-  haveI : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
-  haveI : Algebra.IsQuadraticExtension ℚ K' := { finrank_eq_two' := h2 }
-  haveI hK : IsAbelianGalois ℚ K' := IsAbelianGalois.of_isCyclic ℚ K'
-  haveI : IsAbelianGalois ℚ M := hM ▸ @GroundTheory.Global.isAbelianGalois_sup ℚ Ω _ _ _ _ K' L ‹_› ‹_› hK hLa
-  haveI : IsAbelianGalois K' M := IsAbelianGalois.tower_top ℚ _ _
-  haveI : Group.IsSolvable (M ≃ₐ[K'] M) := Group.isSolvable_of_comm fun a b => mul_comm' a b
+  let : Algebra L M := (IntermediateField.inclusion hLM).toRingHom.toAlgebra
+  let : Algebra K' M := (IntermediateField.inclusion hEM).toRingHom.toAlgebra
+  have : IsScalarTower L M Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower K' M Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower ℚ L M := IsScalarTower.of_algebraMap_eq fun _ => by simp
+  have : IsScalarTower ℚ K' M := IsScalarTower.of_algebraMap_eq fun _ => by simp
+  have : IsTotallyComplex M := isTotallyComplex_of_algebra L _
+  have : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) _⟩
+  have : Algebra.IsQuadraticExtension ℚ K' := { finrank_eq_two' := h2 }
+  have hK : IsAbelianGalois ℚ K' := IsAbelianGalois.of_isCyclic ℚ K'
+  have : IsAbelianGalois ℚ M := hM ▸ @GroundTheory.Global.isAbelianGalois_sup ℚ Ω _ _ _ _ K' L ‹_› ‹_› hK hLa
+  have : IsAbelianGalois K' M := IsAbelianGalois.tower_top ℚ _ _
+  have : Group.IsSolvable (M ≃ₐ[K'] M) := Group.isSolvable_of_comm fun a b => mul_comm' a b
   have dM : Module.finrank L M = 2 := deg_two K' L _ hM h2 hkL
   have RM := resFacts K' M Ω l 2 (ρ.comp (galEmb ℚ K' Ω))
   have hirrM : IsIrr ((tw (ρ.comp (galEmb ℚ K' Ω)) (κ ^ j)).comp (galEmb K' M Ω)) :=
     irr_tw_comp _ _ _ (RM.2.2.2.1.1 (RK.2.2.2.2.1 hio _ RM.2.1))
   obtain ⟨P, regP, att, inf⟩ := hS K' M Ω l ι _ (P₀.twist Y) (UpperTheory.galoisRep_irreducibility_criterion.2 _ _ _ _ _ (hρ.comp RK.1) hτ.kcont) reg₁ att₁ hirrM
-  haveI : IsCMField M := IsCMField.of_isAbelianGalois M
-  haveI : IsAbelianGalois L M := IsAbelianGalois.tower_top ℚ _ _
+  have : IsCMField M := IsCMField.of_isAbelianGalois M
+  have : IsAbelianGalois L M := IsAbelianGalois.tower_top ℚ _ _
   have hc0 : Continuous (tw (ρ.comp (galEmb ℚ K' Ω)) (κ ^ j)) := UpperTheory.galoisRep_irreducibility_criterion.2 _ _ _ _ _ (hρ.comp RK.1) hτ.kcont
   have hcont : Continuous ((tw (ρ.comp (galEmb ℚ K' Ω)) (κ ^ j)).comp (galEmb K' M Ω)) := hc0.comp RM.1
-  haveI : IsCMField K' := IsCMField.of_isAbelianGalois K'
+  have : IsCMField K' := IsCMField.of_isAbelianGalois K'
   have hW : AllW ι ((tw (ρ.comp (galEmb ℚ K' Ω)) (κ ^ j)).comp (galEmb K' M Ω)) :=
     _root_.UpperTheory.V.Z.Win.Birth.awChain_of_printsH H ℚ K' M Ω h2 l ι ρ (κ ^ j) hρ hrw ⟨hτ.kcont, art, Y, a, hart, hpos, hlad⟩ (RM.2.2.2.1.1 (RK.2.2.2.2.1 hio _ RM.2.1))
   have hbad : Z.InvariantSubmoduleMonicPolynomial.E.SplitBad L P := by

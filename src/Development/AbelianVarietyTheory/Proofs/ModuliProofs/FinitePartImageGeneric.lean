@@ -75,7 +75,7 @@ theorem exists_normal_factor (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
       (maximalIdeal R).map (a.comp (algebraMap R A)) ≤ maximalIdeal R' ∧
       ∀ y, algebraMap (FractionRing R') F (algebraMap R' _ (a y)) = ψ y := by
   obtain ⟨h₁, -, h₃, h₄⟩ := hR
-  letI : Algebra R F := ((algebraMap (FractionRing R) F).comp (algebraMap R _)).toAlgebra
+  let : Algebra R F := ((algebraMap (FractionRing R) F).comp (algebraMap R _)).toAlgebra
   have : IsScalarTower R (FractionRing R) F := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let ψ' : A →ₐ[R] F := { ψ with commutes' := hψ }
   have hi : ∀ y, IsIntegral R (ψ y) := fun y => (Algebra.IsIntegral.isIntegral (R := R) y).map ψ'
@@ -116,7 +116,7 @@ theorem exists_normal_point (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (x ≫ N.left.isoSpec.hom)
   have hf : IsFinite (Spec.map φ) := by rw [hφ]; infer_instance
   rw [IsFinite.SpecMap_iff] at hf
-  letI : Algebra R Γ(N.left, ⊤) := φ.hom.toAlgebra
+  let : Algebra R Γ(N.left, ⊤) := φ.hom.toAlgebra
   have : Module.Finite R Γ(N.left, ⊤) := hf
   have e : φ ≫ ψ = CommRingCat.ofHom (algebraMap R (FractionRing R)) ≫
       CommRingCat.ofHom (algebraMap (FractionRing R) F) := Spec.map_injective (by

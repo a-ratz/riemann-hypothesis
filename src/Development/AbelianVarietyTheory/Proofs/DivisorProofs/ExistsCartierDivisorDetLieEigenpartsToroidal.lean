@@ -86,7 +86,7 @@ end
 
 theorem unitAt_det_co : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c) [IsIntegral (X₀ TF.Y Z)] (x : X₀ TF.Y Z) (φ : c.F →+* (X₀ TF.Y Z).presheaf.stalk x) (f : GlobalTheory.ShFam.EigFrame TF.Y φ ((X₀ TF.Y Z).fromSpecStalk x ≫ (barComp TF.Y Z).ι)), (X₀ TF.Y Z).fromSpecStalk x ≫ s₀ TF.Y Z = spMap φ → ∃ U : (X₀ TF.Y Z).Opens, x ∈ U ∧ ∀ y ∈ U, ∀ (φ' : c.F →+* (X₀ TF.Y Z).presheaf.stalk y) (f' : GlobalTheory.ShFam.EigFrame TF.Y φ' ((X₀ TF.Y Z).fromSpecStalk y ≫ (barComp TF.Y Z).ι)) (φK : c.F →+* (X₀ TF.Y Z).functionField) (fK fK' : GlobalTheory.ShFam.EigFrame TF.Y φK ((X₀ TF.Y Z).fromSpecStalk (genericPoint (X₀ TF.Y Z)) ≫ (barComp TF.Y Z).ι)), (X₀ TF.Y Z).fromSpecStalk y ≫ s₀ TF.Y Z = spMap φ' → (X₀ TF.Y Z).fromSpecStalk (genericPoint (X₀ TF.Y Z)) ≫ s₀ TF.Y Z = spMap φK → (fun mapψ dstFrame => ∀ embτ basisIdx, _root_.GlobalTheory.ShFam.EigFrame.v dstFrame embτ basisIdx = _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (_root_.Formalism.L2.Pj.dualMap mapψ) ≫ _root_.GlobalTheory.ShFam.EigFrame.v f embτ basisIdx) (algebraMap _ (X₀ TF.Y Z).functionField) fK → (fun mapψ dstFrame => ∀ embτ basisIdx, _root_.GlobalTheory.ShFam.EigFrame.v dstFrame embτ basisIdx = _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (_root_.Formalism.L2.Pj.dualMap mapψ) ≫ _root_.GlobalTheory.ShFam.EigFrame.v f' embτ basisIdx) (algebraMap _ (X₀ TF.Y Z).functionField) fK' → ∀ τ, UnitAt y (fK'.co fK τ).det := by
   intro E _ _ _ H Dw l Xo c TF Z _ x φ f hφ
-  haveI : IsIso (genι TF.Y) := GlobalTheory.VarFlag.isIso_genι
+  have : IsIso (genι TF.Y) := GlobalTheory.VarFlag.isIso_genι
   let e : X₀ TF.Y Z ⟶ gen TF.Y := (barComp TF.Y Z).ι ≫ inv (genι TF.Y)
   have he : e ≫ genι TF.Y = (barComp TF.Y Z).ι := by simp [e]
   have hstrY : genStr TF.Y = genι TF.Y ≫ TF.Y.s := by
@@ -301,7 +301,7 @@ theorem detPow_chart (a : (E →+* ℂ) → ℤ) {Z : Scheme.{0}} {π : Z ⟶ Y.
   refine Finset.prod_congr rfl fun τ _ => ?_
   congr 1
   refine Units.ext ?_
-  rw [IsUnit.unit_spec, hco, Matrix.det_of_upperTriangular (F.B_map_tri k k' τ _), Units.coe_prod]
+  rw [IsUnit.unit_spec, hco, Matrix.det_of_isUpperTriangular (F.B_map_tri k k' τ _), Units.coe_prod]
   rfl
 
 end Frames
@@ -310,8 +310,8 @@ theorem exists_affine_frame (Y : Model Xo c (RingHom.id c.F)) (Z : Comp Xo c) (x
     (hx : x ∈ O) : ∃ (V : (X₀ Y Z).Opens) (hV : IsAffineOpen V) (φ : c.F →+* Γ(X₀ Y Z, V))
       (_ : EigFrame Y φ (tau hV ≫ (barComp Y Z).ι)), x ∈ V ∧ V ≤ O ∧ tau hV ≫ s₀ Y Z = spMap φ := by
   have hid : spMap (RingHom.id c.F) = 𝟙 _ := Spec.map_id _
-  haveI : IsIso (spMap (RingHom.id c.F)) := by rw [hid]; infer_instance
-  haveI : IsIso (GlobalTheory.Toroidal.genι Y) := inferInstanceAs (IsIso (pullback.fst Y.s (spMap (RingHom.id c.F))))
+  have : IsIso (spMap (RingHom.id c.F)) := by rw [hid]; infer_instance
+  have : IsIso (GlobalTheory.Toroidal.genι Y) := inferInstanceAs (IsIso (pullback.fst Y.s (spMap (RingHom.id c.F))))
   have hs : inv (GlobalTheory.Toroidal.genι Y) ≫ GlobalTheory.Toroidal.genStr Y = Y.s := by
     rw [IsIso.inv_comp_eq]
     calc GlobalTheory.Toroidal.genStr Y = GlobalTheory.Toroidal.genStr Y ≫ spMap (RingHom.id c.F) := by rw [hid, Category.comp_id]
@@ -558,8 +558,8 @@ namespace GlobalTheory.EigDiv
 theorem exists_eigFrame_stalk : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c) (R : Type) [CommRing R] [IsLocalRing R] (p : Sp R ⟶ X₀ TF.Y Z), ∃ (φ : c.F →+* R) (_ : GlobalTheory.ShFam.EigFrame TF.Y φ (p ≫ (barComp TF.Y Z).ι)), p ≫ s₀ TF.Y Z = spMap φ := by
   intro E _ _ _ H Dw l Xo c TF Z R _ _ p
   have hid : spMap (RingHom.id c.F) = 𝟙 _ := Spec.map_id _
-  haveI : IsIso (spMap (RingHom.id c.F)) := by rw [hid]; infer_instance
-  haveI : IsIso (GlobalTheory.Toroidal.genι TF.Y) := inferInstanceAs (IsIso (pullback.fst TF.Y.s (spMap (RingHom.id c.F))))
+  have : IsIso (spMap (RingHom.id c.F)) := by rw [hid]; infer_instance
+  have : IsIso (GlobalTheory.Toroidal.genι TF.Y) := inferInstanceAs (IsIso (pullback.fst TF.Y.s (spMap (RingHom.id c.F))))
   have hs : inv (GlobalTheory.Toroidal.genι TF.Y) ≫ GlobalTheory.Toroidal.genStr TF.Y = TF.Y.s := by
     rw [IsIso.inv_comp_eq]
     calc GlobalTheory.Toroidal.genStr TF.Y = GlobalTheory.Toroidal.genStr TF.Y ≫ spMap (RingHom.id c.F) := by rw [hid, Category.comp_id]

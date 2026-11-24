@@ -60,8 +60,8 @@ private theorem gr_nak {B A : Type} [CommRing B] [CommRing A] [Algebra B A] (�
     (η : Ideal A) (hη : η = Ideal.span {x | x ∈ η ∧ ∃ j, x ∈ 𝒜 j}) (j : ℤ) (hfg : (𝒜 j).FG)
     (h : ∀ y ∈ 𝒜 j, y ∈ η ⊔ m.map (algebraMap B A)) : ∀ y ∈ 𝒜 j, y ∈ η := by
   classical
-  letI : DirectSum.Decomposition 𝒜 := h1.chooseDecomposition
-  letI : GradedRing 𝒜 := { toGradedMonoid := h2, toDecomposition := ‹_› }
+  let : DirectSum.Decomposition 𝒜 := h1.chooseDecomposition
+  let : GradedRing 𝒜 := { toGradedMonoid := h2, toDecomposition := ‹_› }
   have hhom : η.IsHomogeneous 𝒜 := by
     rw [hη]
     exact Ideal.homogeneous_span 𝒜 _ (fun x hx => ⟨hx.2.choose, hx.2.choose_spec⟩)

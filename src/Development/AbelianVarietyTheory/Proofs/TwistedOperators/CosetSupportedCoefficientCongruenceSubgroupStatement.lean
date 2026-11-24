@@ -626,7 +626,7 @@ theorem hat_le_std {D : D7} (S T : HSp D) {A : Submodule (𝓞 D.host.E) (Fin S.
     (𝔪 : Ideal (𝓞 D.host.E)) : ∃ N : ℕ, 0 < N ∧ ∀ v ∈ GlobalTheory.ChiGrid.hatMx (𝔪 • GlobalTheory.ChiGrid.homLat A B),
       N • v ∈ GlobalTheory.AdForm.stdHom S T := by
   have hstd (n : ℕ) : Submodule.IsFullLattice D.host.E (Formalism.L2.Col.stdLat D.host.E n) := by
-    haveI := Formalism.L2.Col.stdLat_lattice (E := D.host.E) (n := n)
+    have := Formalism.L2.Col.stdLat_lattice (E := D.host.E) (n := n)
     refine ⟨?_⟩
     apply top_unique
     intro v _
@@ -1084,7 +1084,7 @@ theorem cong_assemble : ∀ (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.host.E)
 
   have h𝔪0 : 𝔪 ≠ ⊥ := by
     intro h0
-    haveI := GlobalTheory.LvT.Inh.ResFin.infinite_places D.host.E
+    have := GlobalTheory.LvT.Inh.ResFin.infinite_places D.host.E
     exact Set.infinite_univ (Z.finite_toSet.subset fun PP _ => h𝔪 PP (by rw [h0]; exact bot_le))
   have hrad : (∏ PP ∈ Z, PP.asIdeal) ≤ 𝔪.radical := by
     rw [Ideal.radical_eq_sInf]

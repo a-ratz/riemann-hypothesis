@@ -121,7 +121,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {M : ℕ}
 theorem continuous_slice (φ : Sm E M) (g : GA E M) :
     Continuous fun k : Kinf E M => φ.1 (g * infGL E M (Unitary.toUnits k)) := by
   have h1 : Continuous fun k : Kinf E M => (Unitary.toUnits k : GL (Fin M) (Cinf E)) :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_subtype_val.star⟩
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, continuous_subtypeVal.star⟩
   have e : (fun k : Kinf E M => φ.1 (g * infGL E M (Unitary.toUnits k))) =
       fun k => chart φ.1 g (toL (Unitary.toUnits k : GL (Fin M) (Cinf E)).val) := by
     funext k
@@ -137,7 +137,7 @@ theorem continuous_slice (φ : Sm E M) (g : GA E M) :
 
 theorem admissible_discrete_spaces : PositivityTheory.Rg.BcB.SpectralAccumulation.AdmDisc := by
   intro E _ _ _ M K' W' hK' hW' V hV
-  haveI := hW'
+  have := hW'
   have hsc : ∀ (τ : E →+* ℂ) (u : ℂ), ∃ c : ℂ, ∀ ψ ∈ V, cap τ u ψ = c • ψ := fun τ u =>
     GlobalTheory.DiscLocEx.exists_scalarD hV (Algebra.subset_adjoin ⟨τ, u, rfl⟩) (GlobalTheory.SpehInfChar.cap_commute_act τ u)
   choose c hc using hsc
@@ -147,7 +147,7 @@ theorem admissible_discrete_spaces : PositivityTheory.Rg.BcB.SpectralAccumulatio
     refine Submodule.span_le.2 ?_
     rintro _ ⟨φ, -, hφ, g, rfl⟩
     exact hφ.2 g
-  haveI : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le hYW
+  have : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le hYW
   have hYl : ∀ f ∈ Y, ∀ k, (fun x => f (k * x)) ∈ Y := by
     intro f hf k
     induction hf using Submodule.span_induction with
@@ -167,7 +167,7 @@ theorem admissible_discrete_spaces : PositivityTheory.Rg.BcB.SpectralAccumulatio
     | zero => exact continuous_const
     | add x y _ _ hx hy => exact hx.add hy
     | smul r x _ hx => exact hx.const_smul r
-  haveI hF := PositivityTheory.Rg.HF.GL.automorphicFormsFiniteGL E M K' hK' (Module.Dual ℂ Y) (dualRep Y hYl)
+  have hF := PositivityTheory.Rg.HF.GL.automorphicFormsFiniteGL E M K' hK' (Module.Dual ℂ Y) (dualRep Y hYl)
     (isContRep_dualRep Y hYl hYc) c
   have hle : {φ | φ ∈ V ∧ TypeB K' W' φ} ⊆ GlobalTheory.Published.AutFinGL.forms K' (dualRep Y hYl) c := by
     rintro φ ⟨hφV, hφ⟩

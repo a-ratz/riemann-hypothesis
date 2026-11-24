@@ -141,12 +141,12 @@ theorem value_cp (hg : IsCptGen ξ) {F : Type} [Field F] [CharZero F] {z : Spec 
     (hp : p.Prime) {κ : Ω} {r : F} (hκ : HT.IsCp p κ) (hv : ValAt ξ z κ r) :
     (p = 2 → r = 4) ∧ (p ≠ 2 → IsPrimitiveRoot (r + 1) p) := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rw [HT.IsCp, if_pos h] at hκ
+  · rw [HT.IsCp, ite_eq_left h] at hκ
     have h3 := value_aeval hg hv (Polynomial.X - Polynomial.C 4) (by
       simp only [map_sub, Polynomial.aeval_X, hκ, map_ofNat, sub_self])
     simp only [map_sub, Polynomial.aeval_X, map_ofNat] at h3
     exact sub_eq_zero.1 h3
-  · rw [HT.IsCp, if_neg h] at hκ
+  · rw [HT.IsCp, ite_eq_right h] at hκ
     obtain ⟨ζ, hζ, rfl⟩ := hκ
     have hp0 : NeZero (p : F) := ⟨Nat.cast_ne_zero.2 hp.ne_zero⟩
     have h3 := value_aeval hg hv ((Polynomial.cyclotomic p ℤ).comp (Polynomial.X + 1)) (by
@@ -185,11 +185,11 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 
 omit [∀ k, Fintype (J k)] in
 theorem emb_value (s : CMType H ⊕ CMType H) (a : 𝓞 E) : ∃ r, ValAt 𝔐.ξ z (𝔐.emb s a) r := by
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := { }
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := { }
   obtain ⟨ρ, hρ⟩ : ∃ ρ : 𝓞 c.F →+* R, spMap ρ = z ≫ 𝔐.f ≫ Y.s :=
     ⟨(Spec.preimage (z ≫ 𝔐.f ≫ Y.s)).hom, by simp [spMap]⟩
-  letI : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
+  let : Algebra (𝓞 c.F) Ω := (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)).toAlgebra
   have hint : IsIntegral ℤ (labelEmb c s a) :=
     (NumberField.RingOfIntegers.isIntegral a).map (labelEmb c s).toIntAlgHom
   have hm : algebraMap (𝓞 c.F) c.F (IsIntegralClosure.mk' (𝓞 c.F) _ hint) = labelEmb c s a :=
@@ -213,7 +213,7 @@ theorem val_mem_eig {s : CMType H ⊕ CMType H} {σ : 𝓞 E →+* R} (hσ : ∀
     (hx : 𝔐.M.ValAt (Spec.map (CommRingCat.ofHom (algebraMap R C)) ≫ z) e (MC.pt x)) :
     x ∈ eigSp ρC ((algebraMap R C).comp σ) := by
   refine mem_eigSp.2 fun a => ?_
-  haveI := 𝔐.t.act.hom a
+  have := 𝔐.t.act.hom a
   have h1 := PositivityTheory.HtPt.Gh.valAt_act 𝔐.M MC _ _ _ (𝔐.act a) (hact a) hx
   have h2 := PtHt.FinFrame.val_smul (LieTangent.valAt_base 𝔐.tie.gen (algebraMap R C) (hσ a)) hx
   rw [mem_eigSp.1 he a] at h1
@@ -243,7 +243,7 @@ theorem off_S (σ : CMType H ⊕ CMType H → (𝓞 E →+* R)) (hσ : ∀ s a, 
   refine le_antisymm (le_inf (Submodule.span_mono fun x ⟨h1, e, h2, h3⟩ => ⟨h1, e, h2.1, h3⟩) (hle s)) ?_
   rintro x ⟨hx1, hx2⟩
   refine mem_of_indep _ (eigSp_indep ρC _ hinj) _ hle s ?_ hx2
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
   obtain ⟨hli, hcard⟩ := _root_.GlobalTheory.CompanionTheory.Ar.labels_all_once E H l c
   have hσ' : Function.Injective 𝔐.emb := fun s s' h =>
     hli (RingHom.ext fun a => 𝔐.cst.injective (RingHom.congr_fun h a))
@@ -294,7 +294,7 @@ theorem on_S {p : ℕ} (hpS : p ∈ S) (κ : Ω) (hfree : HT.HTFree 𝔐 p) (hsa
       𝔐.M.fibAt 𝔐.M.lat z MC ⊓ (eigSp ρC ((algebraMap R C).comp σ)).restrictScalars R := by
   have hξ := 𝔐.tie.gen
   have hp : p.Prime := 𝔐.S_prime p hpS
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have h : genPt 𝔐.ξ ⤳ centre z := 𝔐.all _
   obtain ⟨h1, h2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hodge_tate_model_point_sandwich E H D l Xo c _ _ Y S Ω K J y 𝔐 p hpS κ hfree hsand C v R hv hvp z EC MC ρC s σ κz
     hact hσ hκ

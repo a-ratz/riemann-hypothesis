@@ -190,7 +190,7 @@ theorem isMultiHomog_cmp (D : K → ℕ) (p : MRingOver ℂ ι) : IsMultiHomog (
   intro m hm
   rw [coeff_cmp] at hm
   by_contra h
-  exact hm (if_neg h)
+  exact hm (ite_eq_right h)
 
 theorem cmp_of_homog {h : MRingOver ℂ ι} {b : K → ℕ} (hh : IsMultiHomog h b) (D : K → ℕ) :
     cmp D h = if b = D then h else 0 := by
@@ -202,7 +202,7 @@ theorem cmp_of_homog {h : MRingOver ℂ ι} {b : K → ℕ} (hh : IsMultiHomog h
   · by_cases hb : b = D
     · subst hb
       simp [hh m hm]
-    · rw [if_neg hb, AddMonoidAlgebra.coeff_zero, if_neg (by rw [hh m hm]; exact hb)]
+    · rw [ite_eq_right hb, AddMonoidAlgebra.coeff_zero, ite_eq_right (by rw [hh m hm]; exact hb)]
       rfl
 
 
@@ -213,7 +213,7 @@ theorem cmp_mul {q : MRingOver ℂ ι} {d : K → ℕ} (hq : IsMultiHomog q d) (
   rw [isMultiHomog_iff] at hq
   ext m
   rw [coeff_cmp]
-  by_cases hdD : d ≤ D <;> by_cases hm : bdeg m = D <;> simp only [hdD, hm, if_true, if_false]
+  by_cases hdD : d ≤ D <;> by_cases hm : bdeg m = D <;> simp only [hdD, hm, ite_true, ite_false]
   · rw [coeff_mul, coeff_mul]
     refine Finset.sum_congr rfl fun x hx => ?_
     rw [coeff_cmp]
@@ -221,7 +221,7 @@ theorem cmp_mul {q : MRingOver ℂ ι} {d : K → ℕ} (hq : IsMultiHomog q d) (
     · simp [hq0]
     · rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
       have h2 := hq x.2 hq0
-      rw [if_pos]
+      rw [ite_eq_left]
       funext k
       have h3 := congrFun hm k
       have h4 := hdD k
@@ -237,7 +237,7 @@ theorem cmp_mul {q : MRingOver ℂ ι} {d : K → ℕ} (hq : IsMultiHomog q d) (
     · simp [hq0]
     · rw [Finset.HasAntidiagonal.mem_antidiagonal] at hx
       have h2 := hq x.2 hq0
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       intro h1
       apply hm
       funext k
@@ -386,7 +386,7 @@ theorem rel_one {S : Set (MRingOver ℂ ι)} {G : MRingOver ℂ ι} {e : K → �
     · exact Nat.zero_le _
   have hmem : monomial μ (1 : ℂ) ∈ Ideal.span (insert G S) := by
     have : monomial μ (1 : ℂ) = monomial (spike c (fun _ => r)) 1 * monomial (μ - spike c (fun _ => r)) 1 := by
-      rw [monomial_mul, mul_one, add_tsub_cancel_of_le hle]
+      rw [monomial_mul_monomial, mul_one, add_tsub_cancel_of_le hle]
     rw [this]
     exact Ideal.mul_mem_right _ _ (hr c)
   obtain ⟨a, s, hs, hμa⟩ := Ideal.mem_span_insert.1 hmem
@@ -399,8 +399,8 @@ theorem rel_one {S : Set (MRingOver ℂ ι)} {G : MRingOver ℂ ι} {e : K → �
     rw [add_mul, one_mul, Nat.add_sub_cancel]
   refine ⟨cmp (M • e) a, isMultiHomog_cmp _ _, fun z hz => ?_⟩
   have h1 : monomial μ (1 : ℂ) = cmp ((M + 1) • e) (a * G) + cmp ((M + 1) • e) s := by
-    rw [← map_add (f := _), ← hμa, cmp_of_homog (isMultiHomog_monomial μ 1), if_pos hμ]
-  rw [h1, map_add (f := _), cmp_mul hG, if_pos heD, hDe, map_mul, eval_cmp_eq_zero hS hz hs, add_zero]
+    rw [← map_add (f := _), ← hμa, cmp_of_homog (isMultiHomog_monomial μ 1), ite_eq_left hμ]
+  rw [h1, map_add (f := _), cmp_mul hG, ite_eq_left heD, hDe, map_mul, eval_cmp_eq_zero hS hz hs, add_zero]
 
 theorem rel_direct {S : Set (MRingOver ℂ ι)} {G : MRingOver ℂ ι} {e : K → ℕ} (hG : IsMultiHomog G e)
     {N₀ M : ℕ} (hM : M ≤ N₀) (μ : (Σ k, ι k) →₀ ℕ) (hμ : bdeg μ = M • e) :
@@ -536,10 +536,10 @@ theorem isMultiHomog_X (k : K) (a : ι k) :
   by_cases h : k' = k
   · subst h
     simp [bdeg, Finsupp.single_apply]
-  · simp only [if_neg h, bdeg]
+  · simp only [ite_eq_right h, bdeg]
     symm
     refine Finset.sum_eq_zero fun i _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h'
     exact h (congrArg Sigma.fst h').symm
 
@@ -658,8 +658,8 @@ theorem AvoidFormFinite.proof : AvoidFormFinite.Statement := by
       · rw [map_prod] at h
         exact (Finset.prod_ne_zero_iff.2 fun j hj => hQi j hj) h
       · exact pow_ne_zero _ (hcone _ (pre i).2.1 (pre i).2.2) h
-  haveI : Finite V := hli.finite_of_isNoetherian
-  haveI := Fintype.ofFinite V
+  have : Finite V := hli.finite_of_isNoetherian
+  have := Fintype.ofFinite V
   refine ⟨Finset.univ.image fun v => (pre v).1, fun z hz hzS => ?_⟩
   let v : V := ⟨phi G e N₀ z, ⟨z, hz, hzS⟩, rfl⟩
   exact ⟨(pre v).1, Finset.mem_image_of_mem _ (Finset.mem_univ v),

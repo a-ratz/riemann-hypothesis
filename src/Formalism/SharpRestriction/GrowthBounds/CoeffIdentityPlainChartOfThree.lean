@@ -122,7 +122,7 @@ theorem coeffIdentity_plainChart_of_three [IsAlgClosed C] [CharZero C] (X : RawC
     (hA : StepA X V H) (hB : StepB X V) (hC : LemC X V) : IndependenceBoundPlain.PlainCoefficientIdentity X H := by
   intro _ g a _
   have : NeZero (V.l : C) := ⟨VF.l_ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C V.l
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C V.l
   have hl0 : 0 < V.l := V.l_prime.pos
   choose z ε m hz hε hrel hz1 hε1 hm using hB ζ hζ g
   refine ⟨fun q' q => m q q', fun w x hg hV => ?_⟩

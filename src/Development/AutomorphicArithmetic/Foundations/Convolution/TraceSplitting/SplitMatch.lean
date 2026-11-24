@@ -67,8 +67,8 @@ private theorem vol_ex [LocallyCompactSpace G] [SecondCountableTopology G] (K U 
     (hKc : IsCompact (K : Set G)) (hKo : IsOpen (K : Set G)) (hU : CO U) :
     ∃ r : ℝ, r ≠ 0 ∧ ∀ (iG : MeasurableSpace G) (_ : BorelSpace G) (μ : Measure G), μ.IsHaarMeasure →
       μ (K : Set G) = 1 → (μ (U : Set G)).toReal = r := by
-  letI iB : MeasurableSpace G := borel G
-  haveI bB : BorelSpace G := ⟨rfl⟩
+  let iB : MeasurableSpace G := borel G
+  have bB : BorelSpace G := ⟨rfl⟩
   let K₀ : TopologicalSpace.PositiveCompacts G :=
     ⟨⟨(K : Set G), hKc⟩, ⟨1, by
       change (1 : G) ∈ interior (K : Set G)
@@ -298,7 +298,7 @@ theorem UpperTheory.ConvolutionTheory.T.splitMatch :
   have hf : (fun g => ψ (mapGL n (completionMap v (e 0).1) g)) = ψ ∘ e₀ := funext fun g => by simp [he₀]
   refine ⟨?_, prod_test σ hσ m hm n v (e 0) hs h hT, ?_, ?_, ?_⟩
   · intro iE bE iF bF mE mF hE hF h1E h1F
-    haveI := hF
+    have := hF
     have key := hw h (fun u => ⟨(hT u).1.continuous, (hT u).2⟩) mF hF h1F mE mF hE hF h1E h1F
     have hcv := cvAll_ind mF U hU.2.measurableSet m (fun g => ψ (mapGL n (completionMap v (e 0).1) g)) hfR
       (fun i g => h (e i) (mapGL n (completionMap v (e i).1) g))

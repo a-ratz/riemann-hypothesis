@@ -102,15 +102,15 @@ theorem finv_hat_neg_one : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
       continuous_invFun := by fun_prop }
   set g : (n → k) → ℂ := fun y => c (Matrix.of fun r _ => y r) with hgdef
   have hg : g ∈ SB (n → k) := ⟨hc.1.comp_continuous e.continuous, hc.2.comp_homeomorph e⟩
-  letI : IsEmpty Empty := ⟨fun x => nomatch x⟩
-  letI : Unique (Empty → k) := ⟨⟨fun x => nomatch x⟩, fun f => funext fun x => nomatch x⟩
+  let : IsEmpty Empty := ⟨fun x => nomatch x⟩
+  let : Unique (Empty → k) := ⟨⟨fun x => nomatch x⟩, fun f => funext fun x => nomatch x⟩
   let p : (n → k) × (Empty → k) ≃ₜ (n → k) := Homeomorph.prodUnique (n → k) (Empty → k)
   set f : (n → k) × (Empty → k) → ℂ := fun q => g q.1 with hfdef
   have hf : f ∈ SB ((n → k) × (Empty → k)) := ⟨hg.1.comp_continuous continuous_fst, hg.2.comp_homeomorph p⟩
   set a : n → k := fun r => x r () with hadef
   obtain ⟨-, hinv⟩ := hC' Empty a f hf
   set μJ : Measure (Empty → k) := Measure.pi fun _ => ν with hμJ
-  letI : SFinite μJ := by
+  let : SFinite μJ := by
     rw [hμJ, Measure.pi_of_empty (x := fun e => e.elim)]
     infer_instance
   have hJ : μJ.real Set.univ = 1 := by
@@ -410,7 +410,7 @@ theorem kappa_model : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
   have hsy' : ∀ w w', symplO L S (κ w) (κ w') = symplO S L'' w w' := fun w w' => by
     rw [hsy]; push_cast; ring
   obtain ⟨C, hC⟩ := GlobalTheory.T.fourierInversion_inverseRowTransform_negOne k n ψk ν hcont hne hν
-  haveI := hν
+  have := hν
   let H : SB (Matrix Unit n k) →ₗ[ℂ] SB (Matrix n Unit k) :=
     { toFun := fun Φ => ⟨finv ψk ν C Φ.1, GlobalTheory.T.inverseRowFourierTransform_mem_schwartzBruhat k n ψk ν hcont hne hν C Φ.1 Φ.2⟩
       map_add' := fun Φ Ψ => Subtype.ext (finv_add ψk hcont ν C Φ.2 Ψ.2)

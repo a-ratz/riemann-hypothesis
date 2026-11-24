@@ -71,9 +71,9 @@ theorem choose_dite_congr {α E : Type*} [Zero E] (P Q : α → Prop) (hPQ : P =
 
 theorem one_mem_UW (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) :
     (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) ∈ UWset k r z := by
-  simp only [UWset, Set.mem_setOf_eq]
+  simp only [UWset, Set.mem_ofPred_eq]
   refine ⟨?_, fun a => ⟨Matrix.one_mulVec _, Matrix.one_mulVec _⟩, Matrix.one_mulVec _⟩
-  simp only [UH, Set.mem_setOf_eq, Matrix.conjTranspose_one, one_mul, mul_one]
+  simp only [UH, Set.mem_ofPred_eq, Matrix.conjTranspose_one, one_mul, mul_one]
 
 theorem Gf_sgs {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] (Ds : B.RealPlaceData k r Wp Wq) (q : B.SS k r)
@@ -145,7 +145,7 @@ theorem RR_top (p : KB.Pl P Wp Wq) (G : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (γ
     p.RR G (P.r + 1) [] γ γ = B.hsInner (p.V G γ) (p.V G γ) := by
   have h1 : ¬ (P.r + 1 ≤ P.r) := by omega
   unfold KB.Pl.RR KB.Pl.V D.RRplace
-  rw [dite_eq_left (And.intro hγ hγ), dite_eq_right h1, if_pos rfl, if_pos rfl]
+  rw [dite_eq_left (And.intro hγ hγ), dite_eq_right h1, ite_eq_left rfl, ite_eq_left rfl]
 
 theorem Ew_nil (p : KB.Pl P Wp Wq) (nn : ℝ → ℝ) (G : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (i : ℕ) (γ : C.LPt) :
     TBB.Ew p nn G i [] γ = TBB.Ew p (fun _ => 1) G i [] γ := by

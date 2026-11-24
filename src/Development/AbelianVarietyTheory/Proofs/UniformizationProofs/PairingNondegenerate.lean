@@ -127,7 +127,7 @@ theorem exists_embedding (V W : Type) [CommRing V] [IsDomain V] [CommRing W] [Is
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   refine ⟨φ.toRingHom, ?_, ?_⟩
   · rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := V) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := V) ?_
     change Ideal.comap (algebraMap V W) (RingHom.ker φ.toRingHom) = ⊥
     rw [RingHom.comap_ker, show φ.toRingHom.comp (algebraMap V W) = algebraMap V _ from φ.comp_algebraMap]
     exact (RingHom.injective_iff_ker_eq_bot _).1 i

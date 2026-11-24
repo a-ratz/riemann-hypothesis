@@ -65,7 +65,7 @@ theorem sum_exp_fin_div (l : ℕ) (hl : 0 < l) (m : ℕ) :
   have hζ : IsPrimitiveRoot ζ l := Complex.isPrimitiveRoot_exp l hl'
   have e : ∀ j : ℕ, cexp (2 * π * Complex.I * ((j : ℂ) * m) / l) = (ζ ^ m) ^ j := by
     intro j
-    rw [← pow_mul, ← Complex.exp_nat_mul]
+    rw [← pow_mul, ← exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -135,7 +135,7 @@ theorem Uo_qs_sum_slz : ∀ (k l : ℕ) (a : ℕ → ℂ), 1 ≤ k → 0 < l →
   rw [← hg.tsum_eq]
   · show ∑' m : ℕ, Uo l a m * cexp (2 * π * Complex.I * m * τ) = _
     refine tsum_congr fun m => ?_
-    simp only [Uo, dvd_mul_right, if_true]
+    simp only [Uo, dvd_mul_right, ite_true]
     rw [show (2 * π * Complex.I * ((l * m : ℕ) : ℂ) * τ / l : ℂ) = 2 * π * Complex.I * m * τ by
       push_cast
       field_simp]

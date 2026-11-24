@@ -153,7 +153,7 @@ theorem triplePhaseQuadratic : PsiQuadratic := by
   · intro z hz y hy hzy k
     simp only [psiT]
     rw [← smul_add, semi_nsmul hH hT.sc₃ hz, semi_nsmul hH hT.sc₂ hy, semi_nsmul hH hT.sc₁ hzy,
-      altE_nsmul_left, altE_nsmul_right, mul_pow, mul_pow, mul_pow, ← Complex.exp_nat_mul]
+      altE_nsmul_left, altE_nsmul_right, mul_pow, mul_pow, mul_pow, ← Complex.exp_natCast_mul]
     congr 2
     push_cast
     ring

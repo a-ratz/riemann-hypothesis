@@ -550,13 +550,13 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (L : LocE F E) (N : ℕ) (Hm : Matri
       have h1 : hf L Hm (Y 0) (u i.succ) = 0 := by
         rw [← GlobalTheory.HL.Eichler.hf_cj L hH, (hu i.succ 0 (Fin.zero_le _)).2, map_zero]
       have h2 : hf L Hm (Y 0) (X i.succ) = 0 := by
-        rw [← GlobalTheory.HL.Eichler.hf_cj L hH, hXY, if_neg (Fin.succ_ne_zero i), map_zero]
+        rw [← GlobalTheory.HL.Eichler.hf_cj L hH, hXY, ite_eq_right (Fin.succ_ne_zero i), map_zero]
       rw [he, eich, h1, h2]; simp
     have h0 : e 0 (Y 0) = Y 0 - (u 0 + s 0 • X 0) := by
       have h1 : hf L Hm (Y 0) (u 0) = 0 := by
         rw [← GlobalTheory.HL.Eichler.hf_cj L hH, (hu 0 0 le_rfl).2, map_zero]
       have h2 : hf L Hm (Y 0) (X 0) = 1 := by
-        rw [← GlobalTheory.HL.Eichler.hf_cj L hH, hXY, if_pos rfl, map_one]
+        rw [← GlobalTheory.HL.Eichler.hf_cj L hH, hXY, ite_eq_left rfl, map_one]
       rw [he, eich, h1, h2]; simp
     have hnY : ∀ j, (List.ofFn e).prod (Y 0) j ∈ L.O := (hn (Y 0)).2 (hY 0)
     rw [hprod, hfix, h0] at hnY
@@ -566,7 +566,7 @@ theorem finiteRing_sq_sub_mul_sq_eq_of_card (L : LocE F E) (N : ℕ) (Hm : Matri
       simpa using this
     have hs0 : s 0 ∈ L.O := by
       have h := hf_int L hI hw (hY 0)
-      rwa [GlobalTheory.HL.Eichler.hf_add_l, GlobalTheory.HL.Eichler.hf_smul_l, (hu 0 0 le_rfl).2, hXY, if_pos rfl,
+      rwa [GlobalTheory.HL.Eichler.hf_add_l, GlobalTheory.HL.Eichler.hf_smul_l, (hu 0 0 le_rfl).2, hXY, ite_eq_left rfl,
         mul_one, zero_add] at h
     have hu0 : ∀ j, u 0 j ∈ L.O := by
       intro j
@@ -629,7 +629,7 @@ theorem prod_update {G : Type*} [Group G] : ∀ {r : ℕ} (f : Fin r → G) (M :
     cases M using Fin.cases with
     | zero =>
       have : (fun i : Fin r => Function.update f 0 x i.succ) = fun i => f i.succ := by
-        funext i; rw [Function.update_apply, if_neg (Fin.succ_ne_zero i)]
+        funext i; rw [Function.update_apply, ite_eq_right (Fin.succ_ne_zero i)]
       rw [this, hf0]; simp
     | succ M' =>
       have : (fun i : Fin r => Function.update f M'.succ x i.succ) =
@@ -637,7 +637,7 @@ theorem prod_update {G : Type*} [Group G] : ∀ {r : ℕ} (f : Fin r → G) (M :
         funext i; simp only [Function.update_apply, Fin.succ_inj]
       rw [this, ih (fun i => f i.succ) M' x (fun i hi => hf _ (Fin.succ_le_succ_iff.mpr hi))]
       have h0 : Function.update f M'.succ x 0 = 1 := by
-        rw [Function.update_apply, if_neg (Fin.succ_ne_zero M').symm]; exact hf0
+        rw [Function.update_apply, ite_eq_right (Fin.succ_ne_zero M').symm]; exact hf0
       rw [h0, hf0]; simp
 
 section
@@ -820,7 +820,7 @@ theorem fix_next {g : Fin (r + 1) → S.V} {gs : Fin r → S.V}
     rw [(hfix a ham).2] at this
     rw [hf_sub_l, this, sub_self]
   · refine pairL S m.2.le (gs a) (fun c hc => ?_) _ hB
-    rw [H1, if_neg]
+    rw [H1, ite_eq_right]
     intro h
     rw [Fin.castSucc_inj] at h
     subst h
@@ -841,7 +841,7 @@ theorem eq_one {g : Fin (r + 1) → S.V} {gs : Fin r → S.V}
     refine pairR S le_rfl w (fun c _ => ?_)
     rw [hw, hf_sub_l, hf_sum_l]
     simp only [hf_smul_l, gsg S H1, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true, sub_self]
+      Finset.mem_univ, ite_true, sub_self]
   have ht : n w - w ∈ S.spanTo g r := hp.2 w hwp
   have h0 : n w - w = 0 := zero_of S H1 _ ht (fun a => by
     have := hiso' w (gs a)
@@ -902,7 +902,7 @@ theorem step {g : Fin (r + 1) → S.V} {gs : Fin r → S.V}
     intro j hj
     rw [hu, hf_sub_l, hf_sub_l, hf_smul_l, H2]
     rcases lt_or_eq_of_le hj with h | h
-    · rw [hys j h, H1, if_neg (by rw [Fin.castSucc_inj]; exact (ne_of_lt h).symm)]; simp
+    · rw [hys j h, H1, ite_eq_right (by rw [Fin.castSucc_inj]; exact (ne_of_lt h).symm)]; simp
     · subst h; rw [hgm, hP]; ring
   have e1 : hf L S.Hm (gs m) y = L.cj (hf L S.Hm y (gs m)) := (hf_cj L S.herm.1 _ _).symm
   have e2 : hf L S.Hm (g m.castSucc) y = L.cj (hf L S.Hm y (g m.castSucc)) := (hf_cj L S.herm.1 _ _).symm
@@ -929,7 +929,7 @@ theorem step {g : Fin (r + 1) → S.V} {gs : Fin r → S.V}
       have hus : hf L S.Hm (gs a) (-u) = 0 := by
         rw [hf_neg_r, ← hf_cj L S.herm.1 u (gs a), hugs a ha, map_zero, neg_zero]
       have hsx : hf L S.Hm (gs a) (g m.castSucc) = 0 := by
-        rw [gsg S H1, if_neg (ne_of_lt h).symm]
+        rw [gsg S H1, ite_eq_right (ne_of_lt h).symm]
       unfold eich; rw [hus, hsx]; simp
     · subst h
       rw [← hy, ← heq]
@@ -972,10 +972,10 @@ theorem desc {g : Fin (r + 1) → S.V} {gs : Fin r → S.V}
     refine ⟨Function.update u' ⟨m, hmr⟩ u0, Function.update s' ⟨m, hmr⟩ s0,
       Function.update e' ⟨m, hmr⟩ E0, fun i => ?_, fun i hi => ?_, ?_⟩
     · by_cases hi : i = ⟨m, hmr⟩
-      · subst hi; simp only [Function.update_apply, if_true]; exact hc0
-      · simp only [Function.update_apply, if_neg hi]; exact hc' i
+      · subst hi; simp only [Function.update_apply, ite_true]; exact hc0
+      · simp only [Function.update_apply, ite_eq_right hi]; exact hc' i
     · have hi' : i ≠ ⟨m, hmr⟩ := fun h => by rw [h] at hi; simp at hi
-      rw [Function.update_apply, if_neg hi']; exact h1' i (by omega)
+      rw [Function.update_apply, ite_eq_right hi']; exact h1' i (by omega)
     · rw [prod_update e' ⟨m, hmr⟩ E0 (fun i hi => h1' i (by rw [Fin.le_iff_val_le_val] at hi; simp at hi; omega)),
         ← hp', mul_inv_cancel_left]
 
@@ -986,8 +986,8 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
   have H0 : ∀ a b : Fin r, hf L S.Hm (g a.castSucc) (g b.castSucc) = 0 := by
     intro a b
     rcases hg with ⟨rfl, -⟩ | ⟨rfl, -⟩
-    · rw [S.gram, if_neg (fun h => Fin.castSucc_ne_last a h.1)]
-    · rw [S.gram', if_neg (fun h => Fin.castSucc_ne_last a h.1)]
+    · rw [S.gram, ite_eq_right (fun h => Fin.castSucc_ne_last a h.1)]
+    · rw [S.gram', ite_eq_right (fun h => Fin.castSucc_ne_last a h.1)]
   have H1 : ∀ (a : Fin (r + 1)) (j : Fin r), hf L S.Hm (g a) (gs j) = if a = j.castSucc then 1 else 0 := by
     rcases hg with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
     · exact S.dual
@@ -1135,7 +1135,7 @@ theorem common_denominator {K : Type} [Field K] [ValuativeRel K] [TopologicalSpa
     ∃ e ∈ Valuation.integer (ValuativeRel.valuation K), e ≠ (0 : K) ∧
       ∀ i : ι, ∃ o ∈ L.O, f i = algebraMap K R e⁻¹ * o := by
   classical
-  haveI : Module.Finite K R := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
+  have : Module.Finite K R := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
   choose e he0 he using fun i => exists_smul_integral (K := K) (f i)
   have hP : (∏ i, e i) ≠ 0 := Finset.prod_ne_zero_iff.mpr fun i _ => he0 i
   have hP' : ((∏ i, e i : 𝒪[K]) : K) ≠ 0 := fun h => hP (Subtype.ext h)
@@ -1299,7 +1299,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem sig_sig (A : Places F E sig) (y : E) : sig (sig y) = y := by
   obtain ⟨p⟩ := exists_place F
-  haveI := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
+  have := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
   apply (A.loc p).ιE.injective
   rw [← (A.loc p).cj_ιE, ← (A.loc p).cj_ιE, ← A.L_cj, (A.L p).cj_cj]
 
@@ -1369,13 +1369,13 @@ theorem strong_approx_params : ∀ {F E : Type} [Field F] [NumberField F] [Field
     have s6 : {p | (A.loc p).ιE (algebraMap F E 2⁻¹) ∉ (A.L p).O}.Finite := IL.2.1 _
     refine (((((s1.union s2).union s3).union hint).union hd).union s6).subset ?_
     intro p hp
-    simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_iUnion] at hp ⊢
+    simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_iUnion] at hp ⊢
     by_contra hc
     push_neg at hc
     obtain ⟨⟨⟨⟨⟨h1, h2⟩, h3⟩, h4⟩, h5⟩, h6⟩ := hc
     apply hp
     refine ⟨h1, h2, h3, h4, h5, ?_⟩
-    haveI := (A.loc p).char0
+    have := (A.loc p).char0
     rw [(A.loc p).compat, GlobalTheory.UnramOrder.algebraMap_mem_iff, map_inv₀, map_ofNat] at h6
     have h2m : (2 : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp] := by simpa using (𝒪[(A.loc p).Fp]).natCast_mem 2
     refine ⟨Units.mkOfMulEqOne ⟨2, h2m⟩ ⟨2⁻¹, h6⟩ (Subtype.ext ?_), rfl⟩
@@ -1416,7 +1416,7 @@ theorem strong_approx_params : ∀ {F E : Type} [Field F] [NumberField F] [Field
   have h2O : ∀ p, (2 : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp] := fun p => by
     simpa using (𝒪[(A.loc p).Fp]).natCast_mem 2
   have hne : ∀ p, (2 * d' p * e p ^ 5 : (A.loc p).Fp) ≠ 0 := fun p => by
-    haveI := (A.loc p).char0
+    have := (A.loc p).char0
     exact mul_ne_zero (mul_ne_zero two_ne_zero (hd'0 p)) (pow_ne_zero 5 (he0 p))
   let δ : ∀ p, ((A.loc p).Fp)ˣ := fun p => Units.mk0 _ (hne p)
   have hδ : {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = δ p}.Finite := by
@@ -1455,7 +1455,7 @@ theorem strong_approx_params : ∀ {F E : Type} [Field F] [NumberField F] [Field
     ((A.loc p).ιE t - hf (A.L p) (Hm.map (A.loc p).ιE) (up p) (up p))
   have hyd : ∀ p, Sm (A.L p) (d p) (y p - sp p) := by
     intro p
-    haveI := (A.loc p).char0
+    have := (A.loc p).char0
     have h1 : Sm (A.L p) (2⁻¹ : (A.loc p).Fp) (algebraMap (A.loc p).Fp (A.loc p).Ep 2⁻¹) :=
       ⟨1, (A.L p).O.one_mem, (mul_one _).symm⟩
     have h2 := sm_mul (A.L p) h1 (LC' p).2
@@ -1474,7 +1474,7 @@ theorem strong_approx_params : ∀ {F E : Type} [Field F] [NumberField F] [Field
     exact (A.L p).O.add_mem hg.2.2.2.1.2 (mem_of_sm (A.L p) (hyd p) hdO)
   have hytr : ∀ p, y p + (A.L p).cj (y p) = (A.loc p).ιE t := by
     intro p
-    haveI := (A.loc p).char0
+    have := (A.loc p).char0
     have hcH : (A.L p).cj (hf (A.L p) (Hm.map (A.loc p).ιE) (up p) (up p)) =
         hf (A.L p) (Hm.map (A.loc p).ιE) (up p) (up p) := by
       rw [← hs p, map_add (f := _), (A.L p).cj_cj, add_comm]
@@ -1830,7 +1830,7 @@ open scoped Pointwise ENNReal Classical
 
 theorem _root_.GlobalTheory.T.strong_approximation_unipotent_alt : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig), ∀ (r k : ℕ) (G : GFrames A r k), ∀ Λ : G.Lt, Submodule.IsFullLattice E Λ → ∀ c : ∀ p, ((A.loc p).Fp)ˣ, {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = c p}.Finite → ∀ n : ∀ p, (G.S p).GLV, {p | n p • A.lat p Λ ≠ A.lat p Λ}.Finite → ((∀ p, n p ∈ (G.S p).N) → ∃ g ∈ G.N, ∀ p g', A.Ext p g g' → ∀ x ∈ A.lat p Λ, ∃ y ∈ A.lat p Λ, (n p).symm (g' x) - x = algebraMap (A.loc p).Fp (A.loc p).Ep (c p) • y) ∧ ((∀ p, n p ∈ (G.S p).N') → ∃ g ∈ G.N', ∀ p g', A.Ext p g g' → ∀ x ∈ A.lat p Λ, ∃ y ∈ A.lat p Λ, (n p).symm (g' x) - x = algebraMap (A.loc p).Fp (A.loc p).Ep (c p) • y) := by
   intro F E _ _ _ _ _ sig A r k G Λ hΛ c hc n hn
-  letI := hΛ
+  let := hΛ
   exact GlobalTheory.HL.SAN.strong_approximation_unipotent A r k G Λ inferInstance c hc n hn
 end -- clump:auto
 end -- clump:auto

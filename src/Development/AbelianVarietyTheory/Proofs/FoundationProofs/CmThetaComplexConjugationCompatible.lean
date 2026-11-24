@@ -212,7 +212,7 @@ theorem Hf_add_add_re (T : Tor D) (z x : VC D N N') :
 theorem dens_U (T : Tor D) (x : VC D N N') (G : VC D N N' → ℂ) (z : VC D N N') :
     dens T (U D T x G) z = dens T G (z + x) := by
   simp only [dens, U, norm_mul, mul_pow, Complex.norm_exp, Hf_add_add_re]
-  rw [mul_assoc, ← Real.exp_nat_mul, ← Real.exp_add]
+  rw [mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 2
   simp
   ring
@@ -284,7 +284,7 @@ theorem discrete_of_qH_int {T : Tor D} (hT : 0 < area T.abelian₂) {A : AddSubg
         (Finset.mem_univ _)
       exact Complex.normSq_eq_zero.1 h4
   rw [this]
-  exact isOpen_Iio.preimage (hc.comp continuous_subtype_val)
+  exact isOpen_Iio.preimage (hc.comp continuous_subtypeVal)
 
 theorem average_bar {A B : AddSubgroup (VC D N N')} [Countable B]
     (hAB : ∀ x, vBar D x ∈ B ↔ x ∈ A) {f : VC D N N' → ℝ} (hf : ∀ a ∈ A, ∀ z, f (a + z) = f z)

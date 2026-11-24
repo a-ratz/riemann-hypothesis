@@ -98,7 +98,7 @@ theorem q_ne_zero {P : HeightOneSpectrum (𝓞 E)} (hP : DegOneUnram P) : (qOf P
 theorem exists_int_add_q_mul {P : HeightOneSpectrum (𝓞 E)} (hP : DegOneUnram P) {u : E} (hu : IntAt P u) :
     ∃ (k : ℤ) (u' : E), IntAt P u' ∧ u = k + (qOf P : E) * u' := by
   obtain ⟨r, s, hs, h⟩ := hu
-  haveI : Fact (qOf P).Prime := ⟨hP.1⟩
+  have : Fact (qOf P).Prime := ⟨hP.1⟩
   have hc : Nat.card (𝓞 E ⧸ P.asIdeal) = qOf P := by
     rw [qOf, Ideal.absNorm_apply, Submodule.cardQuot_apply]
   obtain ⟨k, hk⟩ := AddSubgroup.mem_zmultiples_iff.1

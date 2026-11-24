@@ -77,8 +77,8 @@ open IsLocalRing in
 private lemma prime_of_mem_maximalIdeal_of_not_mem_sq {A : Type} [CommRing A] [IsRegularLocalRing A]
     {x : A} (hx : x ∈ maximalIdeal A) (hx2 : x ∉ maximalIdeal A ^ 2) : Prime x := by
   have hx0 : x ≠ 0 := by rintro rfl; exact hx2 (Ideal.zero_mem _)
-  haveI := _root_.ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.quotient_span_singleton hx hx2
-  haveI : IsDomain (A ⧸ Ideal.span {x}) := _root_.ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain _
+  have := _root_.ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.quotient_span_singleton hx hx2
+  have : IsDomain (A ⧸ Ideal.span {x}) := _root_.ReciprocityTheory.CA.AB.RegA.IsRegularLocalRing.isDomain _
   rw [← Ideal.span_singleton_prime hx0]
   exact (Ideal.Quotient.isDomain_iff_prime _).1 inferInstance
 
@@ -118,7 +118,7 @@ private lemma isPrincipal_of_isPrincipal_map_away_prime {A : Type} [CommRing A] 
       rw [hy0]; exact Submodule.zero_mem _
     · rw [Submodule.span_le, Set.singleton_subset_iff]; exact p.zero_mem
   · obtain ⟨g, hag, hxg⟩ :=
-      (FiniteMultiplicity.of_not_isUnit hx.not_unit ha0).exists_eq_pow_mul_and_not_dvd
+      (FiniteMultiplicity.of_not_isUnit hx.not_isUnit ha0).exists_eq_pow_mul_and_not_dvd
     have hxr : x ^ multiplicity x (a : A) ∉ p := fun h => hxp (hp.mem_of_pow_mem _ h)
     have hg : g ∈ p := (hp.mem_or_mem (hag ▸ a.2)).resolve_left hxr
     refine ⟨g, le_antisymm (fun y hy => ?_) ?_⟩
@@ -157,16 +157,16 @@ private lemma uniqueFactorizationMonoid_localization_of_height_le
     · refine isPrincipal_of_isPrincipal_map_away_prime hxp hxmem ?_
       obtain ⟨N, hN⟩ := hPD (Localization.AtPrime Q) p
       refine hPrin _ x (Localization.Away x) p N hN ?_
-      haveI : Module.FinitePresentation (Localization.Away x)
+      have : Module.FinitePresentation (Localization.Away x)
           (p.map (algebraMap (Localization.AtPrime Q) (Localization.Away x))) :=
         Module.finitePresentation_of_finite _ _
       refine Module.projective_of_localization_maximal (fun q hq => ?_)
-      haveI := hq.isPrime
-      haveI hloc₁ : IsLocalization.AtPrime (Localization.AtPrime q)
+      have := hq.isPrime
+      have hloc₁ : IsLocalization.AtPrime (Localization.AtPrime q)
           (q.comap (algebraMap (Localization.AtPrime Q) (Localization.Away x))) :=
         IsLocalization.isLocalization_isLocalization_atPrime_isLocalization (Submonoid.powers x) _ q
       set q₁ := q.comap (algebraMap (Localization.AtPrime Q) (Localization.Away x)) with hq₁
-      haveI hloc₂ : IsLocalization.AtPrime (Localization.AtPrime q) (q₁.comap (algebraMap R (Localization.AtPrime Q))) :=
+      have hloc₂ : IsLocalization.AtPrime (Localization.AtPrime q) (q₁.comap (algebraMap R (Localization.AtPrime Q))) :=
         IsLocalization.isLocalization_isLocalization_atPrime_isLocalization Q.primeCompl _ q₁
       set q₂ := q₁.comap (algebraMap R (Localization.AtPrime Q)) with hq₂
       have hxq₁ : x ∉ q₁ := fun h => hq.ne_top (Ideal.eq_top_of_isUnit_mem _ h
@@ -187,11 +187,11 @@ private lemma uniqueFactorizationMonoid_localization_of_height_le
       have hlt : q₂.height < n := lt_of_lt_of_le (Ideal.height_strict_mono_of_isPrime hq₂Q) hQ
       obtain ⟨m, hm⟩ := ENat.ne_top_iff_exists.1 (ne_top_of_lt hlt)
       have hmn : m < n := by rw [← hm] at hlt; exact_mod_cast hlt
-      haveI := ih m hmn q₂ hm.symm.le
-      haveI : UniqueFactorizationMonoid (Localization.AtPrime q) :=
+      have := ih m hmn q₂ hm.symm.le
+      have : UniqueFactorizationMonoid (Localization.AtPrime q) :=
         (IsLocalization.algEquiv q₂.primeCompl (Localization.AtPrime q₂)
           (Localization.AtPrime q)).toMulEquiv.uniqueFactorizationMonoid inferInstance
-      haveI : IsDomain (Localization.AtPrime q) :=
+      have : IsDomain (Localization.AtPrime q) :=
         (IsLocalization.algEquiv q₂.primeCompl (Localization.AtPrime q₂)
           (Localization.AtPrime q)).toRingEquiv.symm.injective.isDomain _
       have hJ : (p.map (algebraMap (Localization.AtPrime Q) (Localization.Away x))).map
@@ -202,7 +202,7 @@ private lemma uniqueFactorizationMonoid_localization_of_height_le
         by_cases hdisj : p ≤ q₁
         · have hd : Disjoint (q₁.primeCompl : Set (Localization.AtPrime Q)) p :=
             Set.disjoint_left.2 fun a ha hap => ha (hdisj hap)
-          haveI := IsLocalization.isPrime_of_isPrime_disjoint q₁.primeCompl (Localization.AtPrime q) p ‹_› hd
+          have := IsLocalization.isPrime_of_isPrime_disjoint q₁.primeCompl (Localization.AtPrime q) p ‹_› hd
           exact UniqueFactorizationMonoid.isPrincipal_of_height_eq_one
             (by rw [IsLocalization.height_map_of_disjoint q₁.primeCompl p hd, hph])
         · obtain ⟨a, hap, haq⟩ := Set.not_subset.1 hdisj
@@ -212,7 +212,7 @@ private lemma uniqueFactorizationMonoid_localization_of_height_le
           rw [htop]
           exact ⟨1, Ideal.span_singleton_one.symm⟩
       obtain ⟨g, hg⟩ := hJprin
-      haveI : Module.Free (Localization.AtPrime q)
+      have : Module.Free (Localization.AtPrime q)
           (p.map (algebraMap (Localization.AtPrime Q) (Localization.AtPrime q))) := by
         by_cases hg0 : g = 0
         · have hbot : p.map (algebraMap (Localization.AtPrime Q) (Localization.AtPrime q)) = ⊥ := by
@@ -249,7 +249,7 @@ theorem _root_.GlobalTheory.uniqueFactorizationMonoid_of_isRegularRing_of_isLoca
       UniqueFactorizationMonoid R := by
   intro hPD hPrin R _ _ _ _
   obtain ⟨n, hn⟩ := ENat.ne_top_iff_exists.1 (Ideal.height_ne_top (maximalIdeal.isMaximal R).ne_top)
-  haveI := uniqueFactorizationMonoid_localization_of_height_le hPD hPrin n (maximalIdeal R) hn.symm.le
+  have := uniqueFactorizationMonoid_localization_of_height_le hPD hPrin n (maximalIdeal R) hn.symm.le
   exact (IsLocalization.atUnits R (maximalIdeal R).primeCompl
     (S := Localization.AtPrime (maximalIdeal R))
     (fun y hy => IsLocalRing.notMem_maximalIdeal.1 hy)).symm.toMulEquiv.uniqueFactorizationMonoid

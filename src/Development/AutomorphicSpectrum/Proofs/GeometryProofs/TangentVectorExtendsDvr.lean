@@ -114,8 +114,8 @@ theorem tangent_vector_extends_over_integers : ∀ (O K : Type) [CommRing O] [Is
   obtain ⟨jP, hjP, -⟩ := LieBaseChange.existsUnique_semilinear_lifts S G O (Localization.AtPrime P)
     (algebraMap O (Localization.AtPrime P)) x E EP M MP
   obtain ⟨eP, rfl⟩ := MP.onto w hw
-  letI : Module O EP := Module.compHom EP (algebraMap O (Localization.AtPrime P))
-  haveI : IsScalarTower O (Localization.AtPrime P) EP := ⟨fun a b m => by
+  let : Module O EP := Module.compHom EP (algebraMap O (Localization.AtPrime P))
+  have : IsScalarTower O (Localization.AtPrime P) EP := ⟨fun a b m => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
   let β : E →ₗ[O] EP :=
@@ -130,7 +130,7 @@ theorem tangent_vector_extends_over_integers : ∀ (O K : Type) [CommRing O] [Is
         have h2 := hjP e
         simp only [LieModel.Lifts, Category.comp_id] at h2
         exact h2)
-  haveI : IsLocalizedModule P.primeCompl β :=
+  have : IsLocalizedModule P.primeCompl β :=
     (isLocalizedModule_iff_isBaseChange P.primeCompl (Localization.AtPrime P) β).2 hbc
   obtain ⟨⟨e, s⟩, hes⟩ := IsLocalizedModule.surj P.primeCompl β eP
   have hes' : jP e = algebraMap O (Localization.AtPrime P) (s : O) • eP := hes.symm

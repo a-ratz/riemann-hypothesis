@@ -90,10 +90,10 @@ theorem exists_isUnit_add_mul_twist {R : Type} [CommRing R] (τ : R ≃+* R) (h�
     (a : R) (ha : IsUnit a) (hfin : {M : Ideal R | M.IsMaximal}.Finite)
     (x : R) (hx : IsUnit (τ x - x)) : ∃ y : R, IsUnit (y + a * τ y) := by
   classical
-  haveI : Finite {M : Ideal R // M.IsMaximal} := hfin.to_subtype
+  have : Finite {M : Ideal R // M.IsMaximal} := hfin.to_subtype
   obtain ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin {M : Ideal R // M.IsMaximal}
   let pt : {M : Ideal R // M.IsMaximal} → {M : Ideal R // M.IsMaximal} := fun M =>
-    ⟨M.1.comap (τ : R →+* R), by haveI := M.2; exact Ideal.comap_isMaximal_of_surjective _ τ.surjective⟩
+    ⟨M.1.comap (τ : R →+* R), by have := M.2; exact Ideal.comap_isMaximal_of_surjective _ τ.surjective⟩
   have mem_pt : ∀ M z, z ∈ (pt M).1 ↔ τ z ∈ M.1 := fun M z => Iff.rfl
   have pt_pt : ∀ M, pt (pt M) = M := by
     intro M; apply Subtype.ext; ext z; rw [mem_pt, mem_pt, hτ]
@@ -101,7 +101,7 @@ theorem exists_isUnit_add_mul_twist {R : Type} [CommRing R] (τ : R ≃+* R) (h�
     if pt M = M then (if 1 + a ∈ M.1 then x else 1) else if e M < e (pt M) then 1 else 0
   have hcop : Pairwise (Function.onFun IsCoprime fun M : {M : Ideal R // M.IsMaximal} => M.1) := by
     intro M N hne
-    haveI := M.2; haveI := N.2
+    have := M.2; have := N.2
     exact Ideal.isCoprime_of_isMaximal (fun h => hne (Subtype.ext h))
   obtain ⟨q, hq⟩ := Ideal.quotientInfToPiQuotient_surj hcop (fun M => Ideal.Quotient.mk M.1 (t M))
   obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective q
@@ -127,31 +127,31 @@ theorem exists_isUnit_add_mul_twist {R : Type} [CommRing R] (τ : R ≃+* R) (h�
       rw [this]
       exact M.1.sub_mem (M.1.sub_mem hyM' hd) (M.1.mul_mem_left _ (hτM _ hd))
     by_cases h1a : 1 + a ∈ M.1
-    · have htx : t M = x := by simp only [t, if_pos hfix, if_pos h1a]
+    · have htx : t M = x := by simp only [t, ite_eq_left hfix, ite_eq_left h1a]
       rw [htx] at ht
       have : a * (τ x - x) ∈ M.1 := by
         have : a * (τ x - x) = (x + a * τ x) - x * (1 + a) := by ring
         rw [this]; exact M.1.sub_mem ht (M.1.mul_mem_left _ h1a)
       exact hunit (ha.mul hx) this
-    · have ht1 : t M = 1 := by simp only [t, if_pos hfix, if_neg h1a]
+    · have ht1 : t M = 1 := by simp only [t, ite_eq_left hfix, ite_eq_right h1a]
       rw [ht1, map_one, mul_one, add_comm] at ht
       exact h1a (by rwa [add_comm])
   · have hfix' : pt (pt M) ≠ pt M := by rw [pt_pt]; exact Ne.symm hfix
     by_cases hlt : e M < e (pt M)
-    · have ht1 : t M = 1 := by simp only [t, if_neg hfix, if_pos hlt]
+    · have ht1 : t M = 1 := by simp only [t, ite_eq_right hfix, ite_eq_left hlt]
       have hlt' : ¬ e (pt M) < e (pt (pt M)) := by rw [pt_pt]; exact not_lt.2 hlt.le
-      have ht0 : t (pt M) = 0 := by simp only [t, if_neg hfix', if_neg hlt']
+      have ht0 : t (pt M) = 0 := by simp only [t, ite_eq_right hfix', ite_eq_right hlt']
       have h1 := hy M
       have h2 := hy (pt M)
       rw [ht1] at h1
       rw [ht0, sub_zero, mem_pt] at h2
       have : (1 : R) = (y + a * τ y) - (y - 1) - a * τ y := by ring
       exact hne1 (this ▸ M.1.sub_mem (M.1.sub_mem hyM' h1) (M.1.mul_mem_left _ h2))
-    · have ht0 : t M = 0 := by simp only [t, if_neg hfix, if_neg hlt]
+    · have ht0 : t M = 0 := by simp only [t, ite_eq_right hfix, ite_eq_right hlt]
       have hne : e (pt M) ≠ e M := fun h => hfix (e.injective h)
       have hlt' : e (pt M) < e (pt (pt M)) := by
         rw [pt_pt]; exact lt_of_le_of_ne (not_lt.1 hlt) hne
-      have ht1 : t (pt M) = 1 := by simp only [t, if_neg hfix', if_pos hlt']
+      have ht1 : t (pt M) = 1 := by simp only [t, ite_eq_right hfix', ite_eq_left hlt']
       have h1 := hy M
       have h2 := hy (pt M)
       rw [ht0, sub_zero] at h1
@@ -205,11 +205,11 @@ theorem σ_mem_adjoin {K : UQ} (B : InvAlg K) (hg : B.g * B.σ B.g = 1) (hint : 
 
 theorem maximal_finite {K : UQ} (B : InvAlg K) (hint : IsIntegral K.O B.g) :
     {M : Ideal (Algebra.adjoin K.O {B.g}) | M.IsMaximal}.Finite := by
-  haveI : Module.Finite K.O (Algebra.adjoin K.O {B.g}) := Module.Finite.iff_fg.mpr hint.fg_adjoin_singleton
+  have : Module.Finite K.O (Algebra.adjoin K.O {B.g}) := Module.Finite.iff_fg.mpr hint.fg_adjoin_singleton
   refine (Algebra.QuasiFinite.finite_primesOver (IsLocalRing.maximalIdeal K.O)).subset ?_
   intro M hM
   have hM' : M.IsMaximal := hM
-  letI : M.IsMaximal := hM'
+  let : M.IsMaximal := hM'
   have hc : (M.comap (algebraMap K.O (Algebra.adjoin K.O {B.g}))).IsMaximal :=
     Ideal.isMaximal_comap_of_isIntegral_of_isMaximal
       (algebraMap K.O (Algebra.adjoin K.O {B.g}))

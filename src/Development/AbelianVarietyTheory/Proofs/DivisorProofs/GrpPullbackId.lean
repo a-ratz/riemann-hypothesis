@@ -64,7 +64,7 @@ theorem Root.comp {S T T' : Scheme.{0}} {A : Over S} [GrpObj A] (hA : IsAbelianS
     {t : T ⟶ S} (h : Root A P t) (σ : T' ⟶ T) : Root A P (σ ≫ t) := by
   obtain ⟨A', _, _, β, β₂, hβ, hsq, L, hL, H⟩ := h
   obtain ⟨B', _, φ, hφ⟩ := GlobalTheory.FlagTan.exists_isGrpPullback A' σ
-  haveI : IsCommMonObj B' := by
+  have : IsCommMonObj B' := by
     rw [isCommMonObj_iff_isMulCommutative]
     intro T
     refine ⟨⟨fun x y => Over.OverMorphism.ext (hφ.1.hom_ext ?_ (by rw [Over.w, Over.w]))⟩⟩

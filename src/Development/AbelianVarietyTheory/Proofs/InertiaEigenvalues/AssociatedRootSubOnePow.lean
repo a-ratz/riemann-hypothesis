@@ -337,7 +337,7 @@ theorem assoc_l {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] (�
       rw [hcoe, Polynomial.coeToPowerSeries.ringHom_apply, Polynomial.coeff_coe]
       simpa [Polynomial.coeff_one_add_X_pow]
     rw [map_sub] at hc'
-    simp only [coeff_one, one_ne_zero, if_false, sub_zero, hp] at hc'
+    simp only [coeff_one, one_ne_zero, ite_false, sub_zero, hp] at hc'
     exact hc'
   rw [h1, map_prod] at h
   rw [h]
@@ -381,7 +381,7 @@ theorem assoc_sub {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] 
     Associated (φ (X ^ s * w) - φ' (X ^ s * w)) ((ζ - 1) ^ s) := by
   have hk : ((l : ℕ) : ResidueField O) = 0 := by
     rw [← map_natCast (residue O), residue_eq_zero_iff]; exact hl
-  haveI : CharP (ResidueField O) l := (CharP.charP_iff_prime_eq_zero Fact.out).2 hk
+  have : CharP (ResidueField O) l := (CharP.charP_iff_prime_eq_zero Fact.out).2 hk
   have hζ : residue O ζ = 1 := by
     have := (residue_eq_zero_iff _).2 hm
     rwa [map_sub, map_one, sub_eq_zero] at this
@@ -411,7 +411,7 @@ theorem assoc_sub {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] 
 theorem exists_roots : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (IsLocalRing.maximalIdeal O) O] [CharZero O] [Algebra ℤ_[l] O] (Δ : Subgroup ℤ_[l]ˣ) [Finite Δ] (ξ : O⟦X⟧), l ≠ 2 → ¬ IsUnit (l : O) → (∃ ζ : O, IsPrimitiveRoot ζ l) → Associated ξ (X ^ Nat.card Δ) → (∀ δ ∈ Δ, act O (δ : ℤ_[l]) ξ = ξ) → ∃ (e : ℕ) (ϖ : Fin e → O), e * Nat.card Δ = l - 1 ∧ (∀ τ, Associated (ϖ τ ^ e) (l : O)) ∧ (∀ τ τ', τ ≠ τ' → Associated (ϖ τ - ϖ τ') (ϖ τ)) ∧ Associated (∏ τ, (ξ - C (ϖ τ))) (lvl l O 0) ∧ ∀ τ, ∃ (ζ : O) (w : O⟦X⟧), IsPrimitiveRoot ζ l ∧ ξ - C (ϖ τ) = (X - C (ζ - 1)) * w ∧ ¬ (X - C (ζ - 1)) ∣ w := by
   intro l _ O _ _ _ _ _ _ Δ _ ξ hl2 hl ⟨ζ, hζ⟩ hξ hinv
   classical
-  haveI := Fintype.ofFinite Δ
+  have := Fintype.ofFinite Δ
   obtain ⟨e, a, hes, ha, hpow, hbij⟩ := _root_.GlobalTheory.exists_coset_representatives_of_finite_subgroup_padicInt_units Δ hl2
   have hm : ζ - 1 ∈ maximalIdeal O := fun h => hl ((assoc_l ζ hζ).isUnit (h.pow _))
   have hz : ∀ b : ZMod l, ζ ^ b.val - 1 ∈ maximalIdeal O := fun b =>
@@ -699,7 +699,7 @@ theorem lvlPoly_map (l : ℕ) {O F : Type} [CommRing O] [CommRing F] (j : O →+
 theorem lvlPoly_of_char {l : ℕ} [Fact l.Prime] {F : Type} [CommRing F] [IsDomain F]
     (h : (l : F) = 0) (k : ℕ) : lvlPoly l F k = Polynomial.X ^ (l ^ k * (l - 1)) := by
   have hl : l.Prime := Fact.out
-  haveI : CharP F l := (CharP.charP_iff_prime_eq_zero hl).2 h
+  have : CharP F l := (CharP.charP_iff_prime_eq_zero hl).2 h
   have e := geom_sum_mul ((1 + Polynomial.X : Polynomial F) ^ l ^ k) l
   rw [← pow_mul, ← pow_succ] at e
   change lvlPoly l F k * _ = _ at e
@@ -724,7 +724,7 @@ theorem lvlPoly_distinguished {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [
   rw [h1, Polynomial.natDegree_X_pow] at h2
   have h3 := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p n) h1
   rw [← h2] at hn
-  simp only [Polynomial.coeff_map, Polynomial.coeff_X_pow, hn.ne, if_false] at h3
+  simp only [Polynomial.coeff_map, Polynomial.coeff_X_pow, hn.ne, ite_false] at h3
   exact (IsLocalRing.residue_eq_zero_iff _).1 h3
 
 end GlobalTheory.CycFr.LvlInv
@@ -959,7 +959,7 @@ theorem lvlPoly_distinguished [hl : Fact l.Prime] [IsLocalRing R] (h : ¬ IsUnit
   refine ⟨⟨fun {n} hn => ?_⟩, lvlPoly_monic k⟩
   have h0 : (l : IsLocalRing.ResidueField R) = 0 := by
     rw [← map_natCast (IsLocalRing.residue R), IsLocalRing.residue_eq_zero_iff]; exact h
-  haveI : CharP (IsLocalRing.ResidueField R) l := (CharP.charP_iff_prime_eq_zero hl.out).2 h0
+  have : CharP (IsLocalRing.ResidueField R) l := (CharP.charP_iff_prime_eq_zero hl.out).2 h0
   have h1 := lvlPoly_map (l := l) (IsLocalRing.residue R) k
   rw [lvlPoly_charP] at h1
   have h2 : (lvlPoly l R k).natDegree = l ^ (k + 1) - l ^ k := by
@@ -967,7 +967,7 @@ theorem lvlPoly_distinguished [hl : Fact l.Prime] [IsLocalRing R] (h : ¬ IsUnit
       Polynomial.natDegree_X_pow]
   have h3 := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p n) h1
   rw [h2] at hn
-  simp only [Polynomial.coeff_map, Polynomial.coeff_X_pow, hn.ne, if_false] at h3
+  simp only [Polynomial.coeff_map, Polynomial.coeff_X_pow, hn.ne, ite_false] at h3
   exact (IsLocalRing.residue_eq_zero_iff _).1 h3
 
 theorem lvlPoly_separable {K : Type} [Field K] [CharZero K] [hl : Fact l.Prime] (k : ℕ) :
@@ -998,7 +998,7 @@ theorem lvl_dvd_of_dvd_sq {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDo
     exact ha.sub (hr.mul_right _)
   have h2 := GlobalTheory.NB.LT.poly_dvd_of_dvd H h1
   let K := FractionRing O
-  haveI : CharZero K := algebraRat.charZero K
+  have : CharZero K := algebraRat.charZero K
   have h3 := Polynomial.map_dvd (algebraMap O K) h2
   rw [Polynomial.map_pow, lvlPoly_map] at h3
   have h4 := (lvlPoly_separable (l := l) (K := K) k).squarefree.dvd_pow_iff_dvd two_ne_zero |>.1 h3
@@ -1064,7 +1064,7 @@ theorem _root_.GlobalTheory.CycFr.sub_one_mem_max [IsLocalRing O] (hl : ¬ IsUni
   have h0 : (l : IsLocalRing.ResidueField O) = 0 := by
     rw [← map_natCast (IsLocalRing.residue O), IsLocalRing.residue_eq_zero_iff]
     exact hl
-  haveI : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hp).2 h0
+  have : CharP (IsLocalRing.ResidueField O) l := (CharP.charP_iff_prime_eq_zero hp).2 h0
   rw [← IsLocalRing.residue_eq_zero_iff, map_sub, map_one]
   have h1 : (IsLocalRing.residue O ζ - 1) ^ l = 0 := by
     rw [sub_pow_char, ← map_pow, hζ, map_one, one_pow, sub_self]
@@ -1081,7 +1081,7 @@ theorem _root_.GlobalTheory.CycFr.prime_X_sub_C [IsLocalRing O]
     simpa using _root_.GlobalTheory.CycFr.algHom_C σ.toAlgHom d
   have hXσ : σ (X - C x) = X := by rw [map_sub, hσ, hσC]; ring
   refine ⟨?_, fun d hd => ?_⟩
-  · have : Prime (σ (X - C x)) := by rw [hXσ]; exact X_prime
+  · have : Prime (σ (X - C x)) := by rw [hXσ]; exact prime_X
     exact (MulEquiv.prime_iff σ.toMulEquiv).mp this
   · have h := map_dvd σ hd
     rw [hXσ, hσC, X_dvd_iff, constantCoeff_C] at h
@@ -1265,7 +1265,7 @@ theorem _root_.GlobalTheory.CycFr.exists_frame [IsDiscreteValuationRing O]
       obtain ⟨d', hd'⟩ : ∃ d', Nat.card Δ = d' + 1 := ⟨Nat.card Δ - 1, by omega⟩
       rw [hd', pow_succ', mul_assoc] at h2
       have h3 := (mul_dvd_mul_iff_left (X_ne_zero (R := O))).mp h2
-      obtain ⟨y, hy⟩ := (X_prime (R := O)).pow_dvd_of_dvd_mul_left d' hXlvl h3
+      obtain ⟨y, hy⟩ := (prime_X (R := O)).pow_dvd_of_dvd_mul_left d' hXlvl h3
       have h5 : X ^ Nat.card Δ * _root_.GlobalTheory.CycFr.lvl l O 0 ∣
           X * _root_.GlobalTheory.CycFr.lvl l O 0 * z :=
         ⟨y, by rw [hd', hy]; ring⟩
@@ -1478,7 +1478,7 @@ theorem _root_.GlobalTheory.CycFr.exists_frame [IsDiscreteValuationRing O]
       intro b
       set g : O⟦X⟧ →ₐ[O] O⟦X⟧ := σ'.toAlgHom.comp (j.comp (lev τ).symm.toAlgHom) with hg
       have hgX : X ∣ g X := by
-        simp only [hg, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe]
+        simp only [hg, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass]
         show X ∣ σ' (j ((lev τ).symm X))
         rw [hσinv, map_sub, hjX, hjC, hw, map_mul, map_sub, hσ', hσ'C, add_sub_cancel_right]
         exact dvd_mul_right _ _

@@ -91,7 +91,7 @@ theorem UpperTheory.V.Fr.pr_tbox :
     simp [p, ι, TrivSqZeroExt.algebraMap_eq_inl]
   have hloc : ∀ v, Continuous (F.loc v) := by
     intro v
-    exact continuous_subtype_val.comp (hF.loc_cont v)
+    exact continuous_subtypeVal.comp (hF.loc_cont v)
   have hlc : ∀ (f : Matrix (Fin n) (Fin n) (ResidueField O) → DualNumber (ResidueField O)) (N : ℕ),
       IsLocallyConstant fun s => Ideal.Quotient.mk (maximalIdeal (DualNumber (ResidueField O)) ^ N) (f (B.r s).mat) :=
     fun f N => hB.comp (fun M => Ideal.Quotient.mk _ (f M))
@@ -192,8 +192,8 @@ theorem UpperTheory.V.Fr.pr_tsurj :
     ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] {F : Frame l k} {C₀ n : ℕ}, F.Ok C₀ → ∀ (O : Type) [CommRing O] [IsLocalRing O], ∀ (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (ρ : NRep F n R) (B : Box F n R), ρ.Univ O → B.Of ρ → B.Cont (maximalIdeal R) → (ρ.bar O).Good → ∀ x ∈ Z1C F.loc (B.bar O).ad (B.bar O).b, ∃ D ∈ Tan O R, ∃ X, ∀ s, B.tanCo O D s = x.1 s + ((B.bar O).ad s X - X) := by
   intro l _ k _ _ F C₀ n hF O _ _ R _ _ _ ρ B hU hOf hCont hGood x hx
   obtain ⟨hco1, hco2⟩ := co_res O
-  haveI := hco1
-  haveI := hco2
+  have := hco1
+  have := hco2
   have hresk : ∀ c : ResidueField O, res O (ResidueField O) c = c := by
     intro c
     obtain ⟨a, rfl⟩ := IsLocalRing.residue_surjective c

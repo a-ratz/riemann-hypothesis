@@ -85,7 +85,7 @@ theorem eSerC_laws : ∀ (g : ℕ) [Fact g.Prime] (L : LabelDatum g), 5 ≤ g �
     refine Finset.sum_congr rfl fun χ hχ => ?_
     have hχi := ((hmem f χ).1 hχ).1
     rw [Finset.sum_congr rfl fun χ' hχ' => (horth χ χ' hχi ((hmem f χ').1 hχ').1).1,
-      Finset.sum_ite_eq, if_pos hχ]
+      Finset.sum_ite_eq, ite_eq_left hχ]
   · intro f a
     rw [he f, Finset.sum_mul, Finset.mul_sum]
     exact Finset.sum_congr rfl fun χ hχ =>
@@ -95,7 +95,7 @@ theorem eSerC_laws : ∀ (g : ℕ) [Fact g.Prime] (L : LabelDatum g), 5 ≤ g �
     refine Finset.sum_eq_zero fun χ hχ => Finset.sum_eq_zero fun χ' hχ' => ?_
     obtain ⟨hi, hl⟩ := (hmem f χ).1 hχ
     obtain ⟨hi', hl'⟩ := (hmem f' χ').1 hχ'
-    rw [(horth χ χ' hi hi').1, if_neg]
+    rw [(horth χ χ' hi hi').1, ite_eq_right]
     rintro rfl
     exact hff' ((huniq χ hi).unique hl hl')
   · intro f hf
@@ -105,7 +105,7 @@ theorem eSerC_laws : ∀ (g : ℕ) [Fact g.Prime] (L : LabelDatum g), 5 ≤ g �
     have hSmem : ∀ f, f ∈ hS.toFinset.filter (fun f => f.Monic ∧ f.coeff 0 ≠ 0) ↔
         f.Monic ∧ f.natDegree = n ∧ f.coeff 0 ≠ 0 := by
       intro f
-      simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+      simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
       tauto
     refine ⟨_, hSmem, ?_⟩
     calc ∑ f ∈ hS.toFinset.filter (fun f => f.Monic ∧ f.coeff 0 ≠ 0), eSerC L n f
@@ -120,9 +120,9 @@ theorem eSerC_laws : ∀ (g : ℕ) [Fact g.Prime] (L : LabelDatum g), 5 ≤ g �
           have hi : IsIrr χ := hfin.mem_toFinset.1 hχ
           obtain ⟨f0, hf0, hu⟩ := huniq χ hi
           rw [Finset.sum_eq_single f0]
-          · rw [if_pos hf0]
+          · rw [ite_eq_left hf0]
           · intro b _ hb
-            rw [if_neg]
+            rw [ite_eq_right]
             exact fun h => hb (hu b h)
           · intro h0
             exact absurd ((hSmem f0).2 (hprops χ f0 hf0)) h0

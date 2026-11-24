@@ -121,7 +121,7 @@ theorem ie_taylor_lin {m : ℕ} (c : Fin m → ℂ) (G : Fin m → VC D N N' →
 
 variable {p : ℕ} [Fact p.Prime]
 
-theorem ie_lamC_of_mem (lam : Qbar →+* ℂ_[p]) {x : ℂ} (h : x ∈ Qbar) : lamC lam x = lam ⟨x, h⟩ := dif_pos h
+theorem ie_lamC_of_mem (lam : Qbar →+* ℂ_[p]) {x : ℂ} (h : x ∈ Qbar) : lamC lam x = lam ⟨x, h⟩ := dite_eq_left h
 
 theorem ie_lamC_mul (lam : Qbar →+* ℂ_[p]) {x y : ℂ} (hx : x ∈ Qbar) (hy : y ∈ Qbar) :
     lamC lam (x * y) = lamC lam x * lamC lam y := by
@@ -158,7 +158,7 @@ variable {D : D7}
 theorem ie_emb_star (φ : D.host.E →+* ℂ) (x : D.host.E) :
     φ (@star D.host.E (@InvolutiveStar.toStar _ (@StarMul.toInvolutiveStar _ _
       (@StarRing.toStarMul _ _ D.host.cmStar))) x) = (starRingEnd ℂ) (φ x) := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   exact NumberField.IsCMField.complexEmbedding_complexConj D.host.E φ x
 
 theorem ie_mem_smulLat {n : ℕ} (γ : Matrix (Fin n) (Fin n) D.host.E) (L : Submodule (𝓞 D.host.E) (Fin n → D.host.E))
@@ -172,7 +172,7 @@ theorem ie_homL_pull (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix (Fin N
     {M' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)} {A : Matrix (Fin N') (Fin N) D.host.E}
     (hA : A ∈ homL D (SDLat.smulLat γ M) (SDLat.smulLat γ' M')) :
     (letI := D.host.cmStar; star γ' * A * γ) ∈ homL D M M' := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   induction hA using Submodule.span_induction with
   | mem A hA =>
     refine Submodule.subset_span fun x hx => ?_
@@ -188,7 +188,7 @@ theorem ie_yy_pull (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix (Fin N')
     {M' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)} {A : Matrix (Fin N') (Fin N) D.host.E}
     (hA : A ∈ YYl D (SDLat.smulLat γ M) (SDLat.smulLat γ' M')) :
     (letI := D.host.cmStar; star γ' * A * γ) ∈ YYl D M M' := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   induction hA using Submodule.span_induction with
   | mem B hB =>
     obtain ⟨a, ha, A₀, hA₀, rfl⟩ := hB
@@ -223,7 +223,7 @@ theorem ie_tPull_embV (γ : Matrix (Fin N) (Fin N) D.host.E) (γ' : Matrix (Fin 
     (A : Matrix (Fin N') (Fin N) D.host.E) :
     tPull D (tor0 D cc δ) γ γ' (embV D (tor0 D cc δ) A) =
       embV D (tor0 D cc δ) (letI := D.host.cmStar; star γ' * A * γ) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   funext τ
   have e1 : (star γ').map (embT D τ) = Matrix.conjTranspose (γ'.map (embT D τ)) := by
     ext i j

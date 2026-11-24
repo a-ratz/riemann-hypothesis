@@ -53,9 +53,9 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 private theorem exists_primitiveRoot_of_isAlgClosure' (k Ω : Type) [Field k] [NumberField k] [Field Ω] [Algebra k Ω]
     [IsAlgClosure k Ω] (N : ℕ) [NeZero N] : ∃ ζ : Ω, IsPrimitiveRoot ζ N := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed k
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
 
 private theorem cls_apply_root_of_unity_eq_pow (k Ω : Type) [Field k] [NumberField k] [Field Ω] [Algebra k Ω]
     [IsAlgClosure k Ω] (N : ℕ) [NeZero N] (σ : G k Ω) (ζ : Ω) (hζ : ζ ^ N = 1) :
@@ -108,9 +108,9 @@ theorem UpperTheory.V.Chr.clsFacts :
   intro k Ω _ _ _ _ _ N _
   refine ⟨?_, ?_, fun σ u h => cls_eq_of_forall_root_of_unity_apply_eq_pow k Ω N σ u h, ?_, ?_⟩
   · obtain ⟨ζ, hζ⟩ := exists_primitiveRoot_of_isAlgClosure' k Ω N
-    haveI : Algebra.IsAlgebraic k Ω := IsAlgClosure.isAlgebraic
+    have : Algebra.IsAlgebraic k Ω := IsAlgClosure.isAlgebraic
     have hi : IsIntegral k ζ := (Algebra.IsAlgebraic.isAlgebraic ζ).isIntegral
-    haveI : FiniteDimensional k (IntermediateField.adjoin k {ζ}) :=
+    have : FiniteDimensional k (IntermediateField.adjoin k {ζ}) :=
       IntermediateField.adjoin.finiteDimensional hi
     refine Subgroup.isOpen_mono ?_
       (IntermediateField.fixingSubgroup_isOpen (IntermediateField.adjoin k {ζ}))
@@ -139,7 +139,7 @@ theorem UpperTheory.V.Chr.clsFacts :
     rw [hval, root_of_unity_pow_natCast_zmod_val N ζ hζ, pow_sub₀ ζ h0 hN1, hζ, pow_one, one_mul]
     apply j.injective
     have hjζ := hj ζ
-    simp only [AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv] at hjζ
+    simp only [AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_toRingEquiv] at hjζ
     rw [hjζ, map_inv₀]
     have hz : (j ζ) ^ N = 1 := by rw [← map_pow, hζ, map_one]
     have hn : ‖j ζ‖ = 1 := Complex.norm_eq_one_of_pow_eq_one hz (NeZero.ne N)

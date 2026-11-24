@@ -269,7 +269,7 @@ theorem rankGrowth_lineBundleSections_le_image_forms : ∀ (k : Type) [Field k] 
   intro k _ _ S hS hb hbir
   obtain ⟨η, hη, hrat⟩ := hbir
   have : IsIntegral S.Y := HeightExists.isIntegral hS
-  letI : Algebra k (S.Y.residueField η) := (S.baseHom (resPt η)).toAlgebra
+  let : Algebra k (S.Y.residueField η) := (S.baseHom (resPt η)).toAlgebra
   let x : S.Pt (S.Y.residueField η) := ⟨resPt η, S.comp_str _⟩
   have hx : IsGenericPoint (ptOf x.1) Set.univ := by rw [ptOf_resPt]; exact hη
   let b := Pi.basisFun k (Fin S.N)
@@ -284,8 +284,8 @@ theorem rankGrowth_lineBundleSections_le_image_forms : ∀ (k : Type) [Field k] 
     funext m
     rw [one_mul, hI, DegCmp.hilb_eq_finrank_quotPiece k _ _ ev S.N b m]
   rw [hR]
-  letI (m : ℕ) : Module k (lbPow S.L m).Sec := Module.compHom _ (algebraMap k Γ(S.Y, ⊤))
-  haveI (m : ℕ) : IsScalarTower k Γ(S.Y, ⊤) (lbPow S.L m).Sec := IsScalarTower.of_compHom _ _ _
+  let (m : ℕ) : Module k (lbPow S.L m).Sec := Module.compHom _ (algebraMap k Γ(S.Y, ⊤))
+  have (m : ℕ) : IsScalarTower k Γ(S.Y, ⊤) (lbPow S.L m).Sec := IsScalarTower.of_compHom _ _ _
   have hinj : ∀ m, Function.Injective (powValLin S x m) := fun m => by
     refine (injective_iff_map_eq_zero _).2 fun s hs => sec_eq_zero_of_generic S hη (m := (m : ℤ)) s fun hm => ?_
     rw [← ptOf_resPt η] at hm

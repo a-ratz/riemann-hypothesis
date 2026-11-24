@@ -136,8 +136,8 @@ theorem abstract_cmp
     finrank LL ↥(DdR PD ρ) = finrank Qp K * finrank LL V ∧
       ∀ y ∈ DdR PD ρ, ∃ (m : ℕ) (c : Fin m → K) (d : Fin m → V ⊗[Qp] B), (∀ i, d i ∈ Dcris PD ρ) ∧
         y = ∑ i, mulVdR (K := K) (BdR := BdR) (V := V) (LL := LL) (c i) (ιV PD (LL := LL) (V := V) (d i)) := by
-  haveI := PD.finK
-  haveI : FiniteDimensional K₀ K := Module.Finite.of_restrictScalars_finite Qp K₀ K
+  have := PD.finK
+  have : FiniteDimensional K₀ K := Module.Finite.of_restrictScalars_finite Qp K₀ K
   let x := Module.finBasis K₀ K
   have hinj : Function.Injective (cmpMap PD ρ x) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -147,10 +147,10 @@ theorem abstract_cmp
     refine eq_zero_of_sum PD (LL := LL) x (hT _ x x.linearIndependent) (fun i => (d i : V ⊗[Qp] B)) ?_ i
     rw [← cmpMap_apply, hd]
     rfl
-  haveI hfdS : FiniteDimensional LL (Fin (finrank K₀ K) → ↥(Dcris PD ρ)) :=
+  have hfdS : FiniteDimensional LL (Fin (finrank K₀ K) → ↥(Dcris PD ρ)) :=
     FiniteDimensional.of_injective _ hinj
   have hpos : 0 < finrank K₀ K := finrank_pos
-  haveI : FiniteDimensional LL ↥(Dcris PD ρ) :=
+  have : FiniteDimensional LL ↥(Dcris PD ρ) :=
     Module.Finite.of_surjective
       (LinearMap.proj (R := LL) (φ := fun _ : Fin (finrank K₀ K) => ↥(Dcris PD ρ)) ⟨0, hpos⟩)
       (fun y => ⟨fun _ => y, rfl⟩)

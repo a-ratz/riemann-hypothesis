@@ -256,7 +256,7 @@ theorem exists_sec_sq : ∀ (A : Type) [CommRing A] [IsLocalRing A] (B : Over (S
     (LB.invGen O _ _ (LB.pullGen O (K := ULift.{0} (Finset (Fin 2))) (fun I => (psum B (x2 B) I.down).left)
       (fun I => (-1) ^ (2 - I.down.card)) u (lift (𝟙 B) ι[B]).left))
     (DVR.invGen_isGen _ _ _ _ (DVR.pullGen_isGen _ _ _ _ hu _))
-  haveI : IsIso (ι[B]).left := inferInstanceAs (IsIso ((Over.forget _).map ι[B]))
+  have : IsIso (ι[B]).left := inferInstanceAs (IsIso ((Over.forget _).map ι[B]))
   exact core M.L.isLB hO (ι[B]).left (1 : B ⟶ B).left p₀ (fun x => hp₀ (B.hom x))
     M.sym M.sym_gen t ht k s hs
 
@@ -528,7 +528,7 @@ theorem isIntegral_special {V : Type} [CommRing V] [IsLocalRing V]
     (hB : IsAbelianScheme B) : IsIntegral B.left := by
   have hm : (IsLocalRing.maximalIdeal V ^ (0 + 1)).IsMaximal := by
     rw [zero_add, pow_one]; infer_instance
-  letI := Ideal.Quotient.field (IsLocalRing.maximalIdeal V ^ (0 + 1))
+  let := Ideal.Quotient.field (IsLocalRing.maximalIdeal V ^ (0 + 1))
   have := forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ B.hom hB.smooth hB.geomConnected
   exact GeometricallyIntegral.geometrically_isIntegral (f := B.hom) _ _ _ (IsPullback.of_id_fst (f := B.hom))
 

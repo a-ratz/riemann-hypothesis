@@ -140,7 +140,7 @@ theorem nval_bounds {F : Type} [Field F] [NumberField F] {w : HeightOneSpectrum 
     omega
   have hD0 := pow_ne_zero 4 (left_ne_zero_of_mul hne)
   have he : (0 : ℝ) < e := by exact_mod_cast ho.1
-  rw [map_mul, map_pow, nval, if_neg (mul_ne_zero hD0 (hu u)), vV_mul hD0 (hu u), hu0, pw, add_zero]
+  rw [map_mul, map_pow, nval, ite_eq_right (mul_ne_zero hD0 (hu u)), vV_mul hD0 (hu u), hu0, pw, add_zero]
   have h2 : (0 : ℝ) ≤ vV T.V (algebraMap T.V T.Fr D) := by exact_mod_cast nn D
   have h3 : (vV T.V (algebraMap T.V T.Fr D) : ℝ) ≤ ∑ i, (n i : ℝ) * (e * (vLa w (x i) : ℝ)) := by
     have := nn q
@@ -299,7 +299,7 @@ theorem exists_tied_det {κ : KeyRule} (hκ : IsKeyRule κ) (hpq : 1 ≤ Dw.p + 
       (∀ τ k a, (A a).mulVec (U τ k) = τ' τ a • U τ k) ∧
       (κ T.Fr Φ.key : T.Fr) =
         algebraMap T.V T.Fr ((Matrix.of fun j k => U (e j).1 (e j).2 k).det ^ 4 * (u : T.V)) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨G, t', m1, m2, ⟨ub, u1, u2, u3, u4⟩, θ, hθ, w1, w2, σ, s1, θ2, r1, r2, i1, i2, hp, hs⟩ := hy
   obtain ⟨U₀, hU₀, hg₀⟩ := GlobalTheory.CM.exists_pat_of_obj E H Dw l _ _ _ _ Xo.univ
   obtain ⟨⟨P, rfl, hPg⟩, -⟩ := GlobalTheory.CM.PAT.exists_of_sabMap E H _ _ y.x U₀ t' (hU₀ ▸ m1)
@@ -353,7 +353,7 @@ theorem key_valuation_bounds : ∀ (κ : GlobalTheory.KeyCl.Rule), GlobalTheory.
   intro κ hκ E _ _ _ H Dw l Xo c g e K hpq hg _ hK w v hv
   classical
   obtain ⟨⟨_, T, io, r, ho, y, -, η, -, rfl⟩, rfl⟩ := hv
-  letI := io.toAlgebra
+  let := io.toAlgebra
   choose τ' hτ using fun τ : E →+* ℂ => GlobalTheory.EtaVal.exists_base_map_of_overLa (β := embK c τ)
     (fun a => w.valuation_le_one (K := c.F) (RingOfIntegers.mapRingHom (embF c τ) a)) T io r ho
   replace hτ : ∀ τ a, algebraMap T.V T.Fr (τ' τ a) = io (embK c τ a) := fun τ a => DFunLike.congr_fun (hτ τ) a

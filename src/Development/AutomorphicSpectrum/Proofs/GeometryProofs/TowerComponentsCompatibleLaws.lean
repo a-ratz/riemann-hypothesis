@@ -292,13 +292,13 @@ theorem affine_form_ne_zero {K L : Type} [Field K] [Field L] [Algebra K L] {n : 
   · apply ha
     have := congrArg (AddMonoidAlgebra.coeff · 0) hP0
     simpa [P, MvPolynomial.coeff_add, MvPolynomial.coeff_sum, MvPolynomial.coeff_C_mul,
-      MvPolynomial.coeff_C, MvPolynomial.coeff_X'] using this
+      MvPolynomial.coeff_C, MvPolynomial.coeff_X] using this
   · apply hj
     have := congrArg (AddMonoidAlgebra.coeff · (Finsupp.single j 1)) hP0
     have hne : (0 : Fin n →₀ ℕ) ≠ Finsupp.single j 1 :=
       (Finsupp.single_ne_zero.mpr one_ne_zero).symm
     simpa [P, hne, MvPolynomial.coeff_add, MvPolynomial.coeff_sum, MvPolynomial.coeff_C_mul,
-      MvPolynomial.coeff_C, MvPolynomial.coeff_X', Finsupp.single_left_inj, Finsupp.single_eq_single_iff] using this
+      MvPolynomial.coeff_C, MvPolynomial.coeff_X, Finsupp.single_left_inj, Finsupp.single_eq_single_iff] using this
 
 theorem schur_det_ne_zero {F : Type} [Field F] {n : ℕ} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) F)
     (x : Fin n → F) (hA : A.det ≠ 0) (q : Fin (n + 1) → F)
@@ -583,7 +583,7 @@ theorem adjoin_entries_eq (K L : Type) [Field K] [Field L] [Algebra K L] (n : �
     intro l k hkl
     exact hw0 l k hkl
   have hdetw : w.det ≠ 0 := by
-    rw [Matrix.det_of_upperTriangular hwT]
+    rw [det_of_isUpperTriangular hwT]
     exact Finset.prod_ne_zero_iff.2 fun k _ => hwd k
   have := Matrix.invertibleOfIsUnitDet w (isUnit_iff_ne_zero.2 hdetw)
   have hwiT : w⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hwT
@@ -786,7 +786,7 @@ theorem exists_change {K V : Type} [Field K] [AddCommGroup V] [Module K V] {r : 
       exact Finset.sum_comm
     have e2 : ∑ m, ((∑ j, P k j * Q j m) - (1 : Matrix (Fin r) (Fin r) K) k m) • c m = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, e1, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true, sub_self]
     have e3 := Fintype.linearIndependent_iff.1 hc _ e2 m
     simpa [Matrix.mul_apply, sub_eq_zero] using e3
   refine ⟨Matrix.of P, ?_, fun k => (hP k).symm⟩
@@ -969,8 +969,8 @@ theorem flags_setup (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (Z : C
       (∀ τ, LinearIndependent Or.𝔐.Ω₀ (ec τ)) ∧
       (∀ τ, LinearIndependent RM.Ω fun k => Or.Fl.j (ec τ k)) ∧
       (∀ s k, ec (Small.labelC s) k ∈ Or.Fl.V₀ s) := by
-  letI algΩ := Small.cstAlg Or
-  letI alg₀ : Algebra c.F Or.𝔐.Ω₀ := ((ψ.toRingHom).comp (algebraMap c.F (kap Z))).toAlgebra
+  let algΩ := Small.cstAlg Or
+  let alg₀ : Algebra c.F Or.𝔐.Ω₀ := ((ψ.toRingHom).comp (algebraMap c.F (kap Z))).toAlgebra
   let ψA : kap Z →ₐ[c.F] Or.𝔐.Ω₀ := { ψ.toRingHom with commutes' := fun _ => rfl }
   let fnA : Or.𝔐.Ω₀ →ₐ[c.F] RM.Ω := { Or.𝔐.fn with commutes' := fun a => hc a }
   have hS := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
@@ -1079,7 +1079,7 @@ theorem exists_lift {K₀ Ω₀ Ω V : Type} [Field K₀] [Field Ω₀] [Field �
     refine ⟨g.injective, fun y => ?_⟩
     obtain ⟨x, hx⟩ := hle y.2
     exact ⟨x, Subtype.ext hx⟩
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   let e := RingEquiv.ofBijective g hgb
   refine Algebra.finrank_eq_of_equiv_equiv e (RingEquiv.refl Ω) ?_
   ext x
@@ -1138,11 +1138,11 @@ theorem read_core (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (h : Gen
     (hgT : GenFromTest Xo c h)
     (hWD : EvalWD (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z))
     (hZ : GlobalTheory.CompanionTheory.Ar.genPt Fx.ξf = Y.j (Formalism.L2.Pj.genPt Z)) : Nonempty (Reading Fr h Z) := by
-  letI algΩ := Small.cstAlg Or
+  let algΩ := Small.cstAlg Or
   obtain ⟨ψ, hψ, hc⟩ := GlobalTheory.T.root_origin_component_generic_point E H Dw l Xo c Y SS RM Sys Fx Or Z hZ
   obtain ⟨hgx, y₀, hy₀, hy₀c⟩ := isGenFr_genFr h Z
   obtain ⟨N, ec, hx, hb, hj, hli₀, hli, hmem⟩ := flags_setup Or Fr Z ψ hψ hc y₀ hy₀
-  letI algfn : Algebra Or.𝔐.Ω₀ RM.Ω := Or.𝔐.fn.toAlgebra
+  let algfn : Algebra Or.𝔐.Ω₀ RM.Ω := Or.𝔐.fn.toAlgebra
   have hg' := generic_cast Or.Fl.j (labelRk Dw) (fun s => Dw.mult (Small.labelC s)) (Small.mult_labelC Dw) Or.Fl.V₀
     Or.Fl.b Or.Fl.deg Or.Fl.generic
   obtain ⟨v, Tm, hv1, hv0, hvi, hvd, hbT, hT0, hTd⟩ := lin_core Or.Fl.j Or.Fl.V₀ _ Or.Fl.deg hg'

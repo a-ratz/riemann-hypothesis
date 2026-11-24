@@ -89,7 +89,7 @@ theorem blkAt_val (n N : ℕ) (h : n ≤ N) (g : GL (Fin n) k) (i j : Fin N) :
   · simp only [hi, hj, dite_false, fromBlocks_apply₂₂, Matrix.one_apply, Fin.ext_iff]
     by_cases e : (i : ℕ) = j
     · simp [e]
-    · rw [if_neg (by omega), if_neg (by omega)]
+    · rw [ite_eq_right (by omega), ite_eq_right (by omega)]
 
 theorem glEmbMat_apply' (n : ℕ) (A : Matrix (Fin n) (Fin n) k) (i j : Fin (n + 1)) :
     glEmbMat k n A i j = if hi : (i : ℕ) < n then (if hj : (j : ℕ) < n then A ⟨i, hi⟩ ⟨j, hj⟩ else 0)
@@ -180,7 +180,7 @@ theorem det_unip' (n : ℕ) (v : Multiplicative (Fin n → k)) :
       rintro rfl
       exact absurd hij' (not_lt.2 (Fin.le_last i))
     simp [colMat, hj, one_apply, hij'.ne']
-  rw [e, Matrix.det_of_upperTriangular htri]
+  rw [e, det_of_isUpperTriangular htri]
   refine Finset.prod_eq_one fun i _ => ?_
   induction i using Fin.lastCases with
   | last => simp [colMat]
@@ -250,11 +250,11 @@ theorem conj_mat (N a : ℕ) (B C U : Matrix (Fin N) (Fin N) k) (hBC : B * C = 1
     rw [Matrix.mul_apply, Finset.sum_eq_single c]
     · by_cases hc : (c : ℕ) < a + 1
       · rw [hXcol r c hc, zero_mul]
-      · rw [hC c c (Or.inl (by omega)), if_pos rfl, mul_one]
+      · rw [hC c c (Or.inl (by omega)), ite_eq_left rfl, mul_one]
     · intro j _ hjc
       by_cases hj : (j : ℕ) < a + 1
       · rw [hXcol r j hj, zero_mul]
-      · rw [hC j c (Or.inl (by omega)), if_neg hjc, mul_zero]
+      · rw [hC j c (Or.inl (by omega)), ite_eq_right hjc, mul_zero]
     · intro hc
       exact absurd (Finset.mem_univ c) hc
   have hE : B * U * C = 1 + B * (U - 1) := by
@@ -267,9 +267,9 @@ theorem conj_mat (N a : ℕ) (B C U : Matrix (Fin N) (Fin N) k) (hBC : B * C = 1
   have hBXrow : ∀ r c : Fin N, a ≤ (r : ℕ) → (B * (U - 1)) r c = (U - 1) r c := by
     intro r c hr
     rw [Matrix.mul_apply, Finset.sum_eq_single r]
-    · rw [hB r r (Or.inl hr), if_pos rfl, one_mul]
+    · rw [hB r r (Or.inl hr), ite_eq_left rfl, one_mul]
     · intro l _ hl
-      rw [hB r l (Or.inl hr), if_neg (Ne.symm hl), zero_mul]
+      rw [hB r l (Or.inl hr), ite_eq_right (Ne.symm hl), zero_mul]
     · intro hn
       exact absurd (Finset.mem_univ r) hn
   rw [hE]
@@ -334,12 +334,12 @@ theorem lvlChar_colEl (ψ : AddChar k Circle) (m N : ℕ) (h : m + 2 ≤ N) (x :
   rw [lvlChar_apply]
   congr 2
   rw [Finset.sum_eq_single ((⟨m, by omega⟩ : Fin N), (⟨m + 1, by omega⟩ : Fin N))]
-  · rw [colEl_val, if_neg (by rw [Fin.ext_iff]; simp), dite_eq_left (by simp), if_pos rfl, zero_add]
+  · rw [colEl_val, ite_eq_right (by rw [Fin.ext_iff]; simp), dite_eq_left (by simp), ite_eq_left rfl, zero_add]
     rfl
   · intro p hp hne
     rw [Finset.mem_filter] at hp
     obtain ⟨_, hp2, hp1⟩ := hp
-    rw [colEl_val, if_neg (by rw [Fin.ext_iff]; omega)]
+    rw [colEl_val, ite_eq_right (by rw [Fin.ext_iff]; omega)]
     by_cases e1 : (p.1 : ℕ) < m + 1
     · exfalso
       apply hne
@@ -365,7 +365,7 @@ theorem lvlChar_succ (ψ : AddChar k Circle) (m N : ℕ) (u : GL (Fin N) k) (hu 
     have hp1 : (p.1 : ℕ) = m := by
       by_contra hc
       exact hnp hp.1 (by omega)
-    rw [h3 p.1 p.2 (by omega), if_neg (by rw [Fin.ext_iff]; omega)]
+    rw [h3 p.1 p.2 (by omega), ite_eq_right (by rw [Fin.ext_iff]; omega)]
 
 theorem twKer_le_succ (ψ : AddChar k Circle) {N : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     (π : Representation ℂ (GL (Fin N) k) V) (m : ℕ) :
@@ -380,7 +380,7 @@ theorem blkAt_val_out (n N : ℕ) (h : n ≤ N) (g : GL (Fin n) k) (r l : Fin N)
   rw [blkAt_val]
   by_cases hr : (r : ℕ) < n
   · have hl : ¬ (l : ℕ) < n := by omega
-    rw [dite_eq_left hr, dite_eq_right hl, if_neg (by rw [Fin.ext_iff]; omega)]
+    rw [dite_eq_left hr, dite_eq_right hl, ite_eq_right (by rw [Fin.ext_iff]; omega)]
   · rw [dite_eq_right hr]
 
 theorem conj_derUnip (m N : ℕ) (h' : m + 1 ≤ N) (g : GL (Fin (m + 1)) k) (u : GL (Fin N) k)
@@ -440,7 +440,7 @@ theorem continuous_unip (n : ℕ) : Continuous fun x : Fin n → k => unip k n (
     refine continuous_const.add (continuous_matrix fun i j => ?_)
     simp only [colMat]
     by_cases hj : j = Fin.last n
-    · simp only [hj, if_true]
+    · simp only [hj, ite_true]
       induction i using Fin.lastCases with
       | last => simpa using continuous_const
       | cast i => simpa using continuous_apply i

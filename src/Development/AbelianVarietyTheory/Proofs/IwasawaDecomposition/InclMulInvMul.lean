@@ -59,8 +59,8 @@ section Grp
 
 theorem kill_or {A M : Type} [CommRing A] [AddCommGroup M] [Module A M] {T : ℕ} (hT : T.Prime) (hM : Nat.card M = T)
     (p q : A) (hpq : p * q = (T : A)) : (∀ m : M, p • m = 0) ∨ ∀ m : M, q • m = 0 := by
-  haveI : Fact (Nat.card M).Prime := ⟨hM ▸ hT⟩
-  haveI : Finite M := Nat.finite_of_card_ne_zero (hM ▸ hT.ne_zero)
+  have : Fact (Nat.card M).Prime := ⟨hM ▸ hT⟩
+  have : Finite M := Nat.finite_of_card_ne_zero (hM ▸ hT.ne_zero)
   let φ : M →+ M := DistribSMul.toAddMonoidHom M p
   rcases AddSubgroup.eq_bot_or_eq_top_of_prime_card φ.range with h | h
   · left
@@ -79,8 +79,8 @@ theorem kill_or {A M : Type} [CommRing A] [AddCommGroup M] [Module A M] {T : ℕ
 theorem ker_of_prime {A M N : Type} [AddCommGroup A] [AddCommGroup M] [AddCommGroup N] (f : A →+ M) (ψ : A →+ N)
     (hN : (Nat.card N).Prime) (hf : ∃ a, f a ≠ 0) (hle : ∀ x, ψ x = 0 → f x = 0) (x : A) (hx : f x = 0) : ψ x = 0 := by
   by_contra h0
-  haveI : Fact (Nat.card N).Prime := ⟨hN⟩
-  haveI : Finite N := Nat.finite_of_card_ne_zero hN.ne_zero
+  have : Fact (Nat.card N).Prime := ⟨hN⟩
+  have : Finite N := Nat.finite_of_card_ne_zero hN.ne_zero
   obtain ⟨a, ha⟩ := hf
   have h1 : AddSubgroup.zmultiples (ψ x) = ⊤ := by
     rcases AddSubgroup.eq_bot_or_eq_top_of_prime_card (AddSubgroup.zmultiples (ψ x)) with h | h
@@ -468,7 +468,7 @@ theorem GlobalTheory.Mem.Col2.TC.charts_funKilled : ∀ {B : Base} {X : PreX B.t
   intro B X I hI hP l Z u a i hi bad Ch chOf K hK
   have hPr := l.pr
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   obtain ⟨-, -, -, hc⟩ := TC.spaces_in_coordinates I hI hP l Z
   obtain ⟨hgr, -, -⟩ := hc i hi
   have hB : BasePi ((B.primes X).vT u) (X.piT u) := by

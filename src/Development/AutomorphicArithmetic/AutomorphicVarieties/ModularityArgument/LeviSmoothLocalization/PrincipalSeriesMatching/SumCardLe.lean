@@ -72,9 +72,9 @@ private theorem sum_card_le {α ι : Type*} [Fintype ι] (Q : ι → α → Prop
     refine add_le_add ?_ ih
     by_cases h : ∃ c, Q c y
     · obtain ⟨c, hc⟩ := h
-      rw [if_pos ⟨c, hc⟩, Finset.sum_eq_single c (fun b _ hb => by rw [if_neg fun h => hb (hQ _ _ _ h hc)]; rfl) (by simp),
-        if_pos hc]
-    · rw [if_neg h, Finset.sum_eq_zero fun b _ => by rw [if_neg fun h' => h ⟨b, h'⟩]; rfl]
+      rw [ite_eq_left ⟨c, hc⟩, Finset.sum_eq_single c (fun b _ hb => by rw [ite_eq_right fun h => hb (hQ _ _ _ h hc)]; rfl) (by simp),
+        ite_eq_left hc]
+    · rw [ite_eq_right h, Finset.sum_eq_zero fun b _ => by rw [ite_eq_right fun h' => h ⟨b, h'⟩]; rfl]
       exact Nat.zero_le _
 
 private theorem comb {W : Type} [Fintype W] {α : W → Type 1} (r : Setoid (Fin 3)) (s : ∀ w, Multiset (α w))

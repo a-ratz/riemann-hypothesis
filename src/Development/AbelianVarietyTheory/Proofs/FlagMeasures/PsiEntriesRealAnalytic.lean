@@ -147,7 +147,7 @@ theorem analyticAt_posPart {g : Matrix (Fin n) (Fin n) ℂ} (hg : IsUnit g) : An
   have hL : AnalyticAt ℂ (hF.localInverse hf' hn) (p0 * p0) :=
     (hF.to_localInverse hf' hn).analyticAt
   have hleft : ∀ᶠ p in 𝓝 p0, hF.localInverse hf' hn (p * p) = p :=
-    (hF.hasStrictFDerivAt' hf' hn).eventually_left_inverse
+    (hF.hasStrictFDerivAt hf' hn).eventually_left_inverse
   have hev : posPart =ᶠ[𝓝 g] fun x => hF.localInverse hf' hn (xᴴ * x) := by
     filter_upwards [(continuousAt_posPart hg).eventually hleft, Units.isOpen.mem_nhds hg]
       with x hx hux

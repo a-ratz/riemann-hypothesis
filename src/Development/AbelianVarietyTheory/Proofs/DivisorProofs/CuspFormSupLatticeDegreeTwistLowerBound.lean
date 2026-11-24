@@ -123,13 +123,13 @@ theorem count_inv_span (w : HeightOneSpectrum (𝓞 K)) {c : 𝓞 K} (hc : c ≠
   rw [mul_inv_cancel₀ hI, FractionalIdeal.count_one] at h1
   have h2 : FractionalIdeal.count K w ((Ideal.span {c} : Ideal (𝓞 K)) : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) =
       vAdd w (algebraMap (𝓞 K) K c) := by
-    rw [FractionalIdeal.count_coe K w hspan]
+    rw [FractionalIdeal.count_coeIdeal K w hspan]
     exact vla_span hc w
   omega
 
 theorem vla_eq_count (w : HeightOneSpectrum (𝓞 K)) {I : Ideal (𝓞 K)} (hI : I ≠ ⊥) :
     (Formalism.L2.Pj.QAt.vla w I : ℤ) = FractionalIdeal.count K w (I : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) :=
-  (FractionalIdeal.count_coe K w hI).symm
+  (FractionalIdeal.count_coeIdeal K w hI).symm
 
 theorem exists_rounding (K : Type) [Field K] [NumberField K] (B : Finset ℕ) (ρ : HeightOneSpectrum (𝓞 K) → ℝ)
     (hB : ∀ p ∈ B, p.Prime) (hρ : (Function.support ρ).Finite)
@@ -196,7 +196,7 @@ theorem exists_rounding (K : Type) [Field K] [NumberField K] (B : Finset ℕ) (�
       (hρ.subset fun w h h0 => h (by simp [hf, h0]))
     have e5 : (∑ᶠ w, ρ w * lw K w) + ∑ᶠ w, (f w : ℝ) * lw K w ≤ ∑ᶠ w, (vAdd w (n : K) : ℝ) * lw K w := by
       rw [← finsum_add_distrib (fin_mul hρ _) hfinf]
-      refine finsum_le_finsum' ((fin_mul hρ _).union hfinf |>.subset (Function.support_add _ _))
+      refine finsum_le_finsum ((fin_mul hρ _).union hfinf |>.subset (Function.support_add _ _))
         (fin_mul (finite_vAdd (Nat.cast_ne_zero.2 hn0)) _) fun w => ?_
       rw [← add_mul]
       refine mul_le_mul_of_nonneg_right ?_ (lw_nonneg_here w)

@@ -172,7 +172,7 @@ theorem mu_functor (A : HLat K) (hA : A.Good) {J : Type} [Fintype J] [DecidableE
     (hfin : ∀ p, (F.Γ p).det ^ k = ∏ s, ((FQ s).Γ p).det ^ a s)
     (hinf : ∀ v, (gramJ A F.e v).det.re ^ k = g0 ^ k * ∏ s, (gramJ (Q s) (FQ s).e v).det.re ^ a s) :
     (Fintype.card J : ℝ) * A.mu = -Real.log g0 + ∑ s, (a s : ℝ) * (Q s).mu := by
-  haveI : ∀ s, Nonempty (Q s).ι := fun s => Fintype.card_pos_iff.1 (by rw [hcard s]; exact hk)
+  have : ∀ s, Nonempty (Q s).ι := fun s => Fintype.card_pos_iff.1 (by rw [hcard s]; exact hk)
   obtain ⟨-, hAf, hAmu⟩ := mu_of_frames A hA F
   have hQm : ∀ s, (k : ℝ) * (Q s).mu = -(infPart (fun v => (gramJ (Q s) (FQ s).e v).det.re) +
       finPart fun p => ((FQ s).Γ p).det) := by

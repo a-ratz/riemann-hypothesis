@@ -146,7 +146,7 @@ theorem globOf : GlobOf := by
     | exact Algebra.algebra_ext _ _ (fun x => (hcomp x).symm)
     | exact Algebra.algebra_ext _ _ (fun x => hcomp x)
   have hp2 := hp.two_le
-  haveI : FiniteDimensional (HeightOneSpectrum.adicCompletion F v) (HeightOneSpectrum.adicCompletion E w.1) :=
+  have : FiniteDimensional (HeightOneSpectrum.adicCompletion F v) (HeightOneSpectrum.adicCompletion E w.1) :=
     Module.finite_of_finrank_pos (by omega)
   let ψ : CompletionsOver E v ≃+* HeightOneSpectrum.adicCompletion E w.1 :=
     RingEquiv.ofBijective (Pi.evalRingHom (fun w' : PlacesOver E v => HeightOneSpectrum.adicCompletion E w'.1) w)
@@ -213,7 +213,7 @@ theorem globOf : GlobOf := by
         intro z
         show ψ (galFin (a * b) v (ψ.symm z)) = ψ (galFin a v (ψ.symm (ψ (galFin b v (ψ.symm z)))))
         rw [RingEquiv.symm_apply_apply, galFin_mul'] }
-  haveI : Nontrivial (CompletionsOver E v) := ψ.toEquiv.nontrivial
+  have : Nontrivial (CompletionsOver E v) := ψ.toEquiv.nontrivial
   have hinj : Function.Injective φ := by
     rw [injective_iff_map_eq_one]
     intro σ hσ
@@ -237,7 +237,7 @@ theorem globOf : GlobOf := by
   refine ⟨?_, hdeg, ?_⟩
   · intro hsplit
     have h1 : Module.finrank (HeightOneSpectrum.adicCompletion F v) (HeightOneSpectrum.adicCompletion E w.1) = 1 := by
-      rw [finrank_eq_one_iff_of_nonzero' (1 : HeightOneSpectrum.adicCompletion E w.1) one_ne_zero]
+      rw [finrank_eq_one_iff_of_ne_zero' (1 : HeightOneSpectrum.adicCompletion E w.1) one_ne_zero]
       intro z
       obtain ⟨c, hc⟩ := hsplit w z
       exact ⟨c, by rw [Algebra.smul_def, mul_one, ← hcomp, hc]⟩
@@ -295,7 +295,7 @@ private theorem cptConj_map {G H : Type} [Group G] [TopologicalSpace G] [IsTopol
   rw [MonoidHom.map_closure, MonoidHom.map_closure]
   congr 1
   ext y
-  simp only [Set.mem_image, Set.mem_setOf_eq]
+  simp only [Set.mem_image, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨x, ⟨hxS, hxc⟩, rfl⟩
     obtain ⟨t, htT, hxt⟩ := (hST x).mp hxS
@@ -319,12 +319,12 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cptConj :
     rw [Subgroup.coe_map]
     exact (hcpt.image hj.continuous).isClosed.measurableSet
   have hf : Measurable (fun x : S => h⁻¹ * (x : G) * h) :=
-    ((continuous_const.mul continuous_id).mul continuous_const).measurable.comp measurable_subtype_coe
-  have hg : Measurable (fun t : T => j (t : H)) := hj.continuous.measurable.comp measurable_subtype_coe
+    ((continuous_const.mul continuous_id).mul continuous_const).measurable.comp measurable_subtypeVal
+  have hg : Measurable (fun t : T => j (t : H)) := hj.continuous.measurable.comp measurable_subtypeVal
   have h1 : {x : S | (x : G) ∈ GlobalTheory.BCT.cptPart S} =
       (fun x : S => h⁻¹ * (x : G) * h) ⁻¹' (((GlobalTheory.BCT.cptPart T).map j : Subgroup G) : Set G) := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe]
     rw [← hmap, Subgroup.mem_map]
     constructor
     · intro hx
@@ -336,7 +336,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cptConj :
   have h2 : {t : T | (t : H) ∈ GlobalTheory.BCT.cptPart T} =
       (fun t : T => j (t : H)) ⁻¹' (((GlobalTheory.BCT.cptPart T).map j : Subgroup G) : Set G) := by
     ext t
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe]
     exact (Subgroup.mem_map_iff_mem hj.injective).symm
   simp only [Measure.real]
   rw [h1, h2, ← Measure.map_apply hf hCm, ← Measure.map_apply hg hCm, hμν]
@@ -364,7 +364,7 @@ private theorem isOpen_ball (c : (ValueGroupWithZero k)ˣ) :
   rw [IsValuativeTopology.mem_nhds_iff]
   refine ⟨c, ?_⟩
   rintro _ ⟨z, hz, rfl⟩
-  simp only [Set.mem_setOf_eq] at hz hx ⊢
+  simp only [Set.mem_ofPred_eq] at hz hx ⊢
   exact le_trans (Valuation.map_add _ _ _) (max_le hx (le_of_lt hz))
 
 private theorem isIntegral_of_cpt {n : ℕ} (g : GL (Fin n) k)
@@ -382,7 +382,7 @@ private theorem isIntegral_of_cpt {n : ℕ} (g : GL (Fin n) k)
       rw [Set.mem_iUnion]
       by_cases hy : valuation k y = 0
       · exact ⟨1, by simp [hy]⟩
-      · exact ⟨Units.mk0 _ hy, by simp only [Set.mem_setOf_eq, Units.val_mk0, le_refl]⟩
+      · exact ⟨Units.mk0 _ hy, by simp only [Set.mem_ofPred_eq, Units.val_mk0, le_refl]⟩
     · intro a b
       rcases le_total (a : ValueGroupWithZero k) b with h | h
       · exact ⟨b, fun y (hy : valuation k y ≤ _) => (le_trans hy h : valuation k y ≤ _), fun y hy => hy⟩
@@ -435,7 +435,7 @@ private theorem isIntegral_mul_of_mem_adjoin_singleton {k : Type} [Field k] [Val
     {n : ℕ} (A x y : Matrix (Fin n) (Fin n) k)
     (hx : x ∈ Algebra.adjoin k {A}) (hy : y ∈ Algebra.adjoin k {A})
     (hxi : IsIntegral 𝒪[k] x) (hyi : IsIntegral 𝒪[k] y) : IsIntegral 𝒪[k] (x * y) := by
-  letI : CommRing (Algebra.adjoin k {A}) := by
+  let : CommRing (Algebra.adjoin k {A}) := by
     open scoped IsMulCommutative in
       exact inferInstance
   let f : Algebra.adjoin k {A} →ₐ[𝒪[k]] Matrix (Fin n) (Fin n) k :=
@@ -450,7 +450,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.cptCpt :
     UpperTheory.Gal.InertialTypesAlt.L.CptCpt := by
   intro k _ _ _ _ n A T hA hT hcomm
   obtain ⟨-, -, hT2, -, hprop⟩ := UpperTheory.V.Z.Tf.Orb.gLTop_holds k n
-  haveI := hT2
+  have := hT2
   obtain ⟨c, hc⟩ := bounded_adjoin (A : Matrix (Fin n) (Fin n) k) hA
   have hΩ := isCompact_entries (k := k) n c
   have hC := hprop _ _ hΩ hΩ
@@ -533,7 +533,7 @@ namespace UpperTheory.Gal.InertialTypesAlt.L
 
 theorem avgInt : AvgInt := by
   intro G _ _ _ _ _ _ _ _ μ hμ K hKo hKc hK1 U hUo F hF q
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   set u : K → ℂ := fun y => F (q * (y : G)) with hu
   set S : Subgroup K := GlobalTheory.BCT.rStab u with hS
   have hUS : U.subgroupOf K ≤ S := by
@@ -544,8 +544,8 @@ theorem avgInt : AvgInt := by
     simp only [hu, Subgroup.coe_mul, ← mul_assoc]
     exact hF _ hk' _
   have hSo : IsOpen (S : Set K) := Subgroup.isOpen_mono hUS (Subgroup.subgroupOf_isOpen K U hUo)
-  haveI : Finite (K ⧸ S) := Subgroup.quotient_finite_of_isOpen S hSo
-  letI : Fintype (K ⧸ S) := Fintype.ofFinite _
+  have : Finite (K ⧸ S) := Subgroup.quotient_finite_of_isOpen S hSo
+  let : Fintype (K ⧸ S) := Fintype.ofFinite _
   have hconst : ∀ y : K, u y = u (Quotient.out (QuotientGroup.mk y : K ⧸ S)) := by
     intro y
     have hmem : (Quotient.out (QuotientGroup.mk y : K ⧸ S))⁻¹ * y ∈ S := by
@@ -554,7 +554,7 @@ theorem avgInt : AvgInt := by
     rw [mul_inv_cancel_left] at h
     exact h
   set S' : Set G := ((↑) : K → G) '' (S : Set K) with hS'
-  have hS'o : IsOpen S' := hKo.isOpenMap_subtype_val _ hSo
+  have hS'o : IsOpen S' := hKo.isOpenMap_subtypeVal _ hSo
   set A : K ⧸ S → Set G := fun c => (fun y => ((Quotient.out c : K) : G)⁻¹ * y) ⁻¹' S' with hA
   have hmemA : ∀ c y, y ∈ A c ↔ ∃ h : y ∈ K, (QuotientGroup.mk (⟨y, h⟩ : K) : K ⧸ S) = c := by
     intro c y
@@ -603,7 +603,7 @@ theorem avgInt : AvgInt := by
       rw [← ENNReal.eq_div_iff hne (by simp), ENNReal.div_eq_inv_mul, mul_one] at hsum
       exact hsum
     rw [Measure.real, hAμ, h1, ENNReal.toReal_inv, ENNReal.toReal_natCast, hcard]
-  haveI : IsFiniteMeasure (μ.restrict (K : Set G)) :=
+  have : IsFiniteMeasure (μ.restrict (K : Set G)) :=
     ⟨by rw [Measure.restrict_apply_univ, hK1]; exact ENNReal.one_lt_top⟩
   have hint : ∫ y in (K : Set G), F (q * y) ∂μ =
       ∫ y in (K : Set G), ∑ c, (A c).indicator (fun _ => u (Quotient.out c)) y ∂μ := by
@@ -644,12 +644,12 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.oneCoset :
     UpperTheory.Gal.InertialTypesAlt.L.OneCoset := by
   classical
   intro G _ _ _ _ _ _ _ _ μ hμ K hKo hKc hK1 T hTc hTcomm ν hν F hF hFT q
-  haveI := hμ
-  haveI := hν
+  have := hμ
+  have := hν
   obtain ⟨hsf, hinv, hright⟩ := haarComm_holds G T hTc hTcomm ν hν
-  haveI := hsf
-  haveI := hinv
-  haveI := hright
+  have := hsf
+  have := hinv
+  have := hright
   obtain ⟨ρ, hρ, -⟩ := normEx_holds G ⟨K, hKo, hKc⟩ T hTc ν hν hright
   set D : Set G := {g | ∃ t ∈ T, ∃ y ∈ K, g = t * q * y} with hD
   set Hs : Set T := {t : T | q⁻¹ * (t : G) * q ∈ K} with hHs
@@ -659,7 +659,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.oneCoset :
   have hDo : IsOpen D := by
     have : D = ⋃ t : T, (fun g : G => ((t : G) * q)⁻¹ * g) ⁻¹' (K : Set G) := by
       ext g
-      simp only [hD, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe]
+      simp only [hD, Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe]
       constructor
       · rintro ⟨t, ht, y, hy, rfl⟩
         refine ⟨⟨t, ht⟩, ?_⟩
@@ -669,14 +669,14 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.oneCoset :
     rw [this]
     exact isOpen_iUnion fun t => hKo.preimage (continuous_const.mul continuous_id)
   have hHo : IsOpen Hs :=
-    hKo.preimage (((continuous_const.mul continuous_subtype_val).mul continuous_const))
+    hKo.preimage (((continuous_const.mul continuous_subtypeVal).mul continuous_const))
   have hHc : IsCompact Hs := by
     have hS : IsCompact ((fun x : G => q * x * q⁻¹) '' (K : Set G)) :=
       hKc.image (by fun_prop)
     have hpc := hTc.isClosedEmbedding_subtypeVal.isCompact_preimage hS
     have e : Hs = Subtype.val ⁻¹' ((fun x : G => q * x * q⁻¹) '' (K : Set G)) := by
       ext t
-      simp only [hHs, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_image, SetLike.mem_coe]
+      simp only [hHs, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_image, SetLike.mem_coe]
       constructor
       · intro h
         exact ⟨_, h, by group⟩
@@ -715,7 +715,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.oneCoset :
         rw [hρ'def, Set.piecewise_eq_of_mem _ _ _ hmem]
         have hiff : (h : G) * (t₀ * q * y) ∈ qK ↔ h ∈ A := by
           have e : q⁻¹ * ((h : G) * (t₀ * q * y)) = (q⁻¹ * ((h : G) * t₀) * q) * y := by group
-          simp only [hqK, hA, hHs, Set.mem_setOf_eq, Set.mem_preimage, e, Subgroup.coe_mul]
+          simp only [hqK, hA, hHs, Set.mem_ofPred_eq, Set.mem_preimage, e, Subgroup.coe_mul]
           exact Subgroup.mul_mem_cancel_right K hy
         by_cases hh : h ∈ A
         · rw [Set.indicator_of_mem (hiff.2 hh), Set.indicator_of_mem hh]
@@ -835,7 +835,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.sumCoset :
       {g | DoubleCoset.mk T K g = q}.indicator F (h * g) =
         {g | DoubleCoset.mk T K g = q}.indicator F g := by
     intro q h hh g
-    simp only [Set.indicator_apply, Set.mem_setOf_eq, hmk h hh g, hFT h hh g]
+    simp only [Set.indicator_apply, Set.mem_ofPred_eq, hmk h hh g, hFT h hh g]
   have hq_eq : ∀ q : DoubleCoset.Quotient (T : Set G) (K : Set G),
       quotIntegral μ T ν ({g | DoubleCoset.mk T K g = q}.indicator F) =
         ∫ g, {g | DoubleCoset.mk T K g = q}.indicator
@@ -854,7 +854,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.sumCoset :
     apply hq
     have h0 : {g | DoubleCoset.mk T K g = q}.indicator F = 0 := by
       funext g
-      simp only [Set.indicator_apply, Set.mem_setOf_eq, Pi.zero_apply]
+      simp only [Set.indicator_apply, Set.mem_ofPred_eq, Pi.zero_apply]
       split_ifs with hg
       · by_contra hne
         exact hqQ (hg ▸ hkey g hne)
@@ -872,8 +872,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.sumCoset :
   · rw [Finset.sum_eq_single (DoubleCoset.mk T K g)]
     · simp [Set.indicator_apply]
     · intro b _ hb
-      simp only [Set.indicator_apply, Set.mem_setOf_eq]
-      rw [if_neg (fun h => hb h.symm)]
+      simp only [Set.indicator_apply, Set.mem_ofPred_eq]
+      rw [ite_eq_right (fun h => hb h.symm)]
     · intro hn
       exact absurd (hfin.mem_toFinset.2 (hkey g hg)) hn
 end -- clump:auto
@@ -958,12 +958,12 @@ theorem orbSum : OrbSum := by
         Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj q)) K} := by
     intro q
     ext t
-    simp only [Set.mem_setOf_eq, Subgroup.mem_inf, hmapK, SetLike.coe_mem, true_and]
+    simp only [Set.mem_ofPred_eq, Subgroup.mem_inf, hmapK, SetLike.coe_mem, true_and]
   have hopen : ∀ q : G, IsOpen {t : GlobalTheory.BCT.twCent θ δ | (t : G) ∈ GlobalTheory.BCT.twCent θ δ ⊓
       Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj q)) K} := by
     intro q
     rw [← hset q]
-    exact hKo.preimage ((continuous_const.mul continuous_subtype_val).mul continuous_const)
+    exact hKo.preimage ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
   have hvol : ∀ q : G, _ := fun q => volIdx G (GlobalTheory.BCT.twCent θ δ) (GlobalTheory.BCT.cptPart (GlobalTheory.BCT.twCent θ δ))
     (GlobalTheory.BCT.twCent θ δ ⊓ Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj q)) K) hTcl ν hν
     (cptPart_le _) hC
@@ -1034,11 +1034,11 @@ private theorem kSide (k : Type) [Field k] [CharZero k] [ValuativeRel k] [Topolo
         (t : GL (Fin n) k) ∈ GlobalTheory.BCT.cptPart (Subgroup.centralizer {γ})} : ℝ) : ℂ)⁻¹ *
         GlobalTheory.BCT.twOrb (MonoidHom.id _) (unitGL k) γ f := by
   obtain ⟨hLC, hSC, hT2, -, -⟩ := gLTop_holds k n
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨hKo, hKc, -⟩ := unitSB_holds k n
-  haveI : ValuativeExtension k k := ⟨by simp⟩
+  have : ValuativeExtension k k := ⟨by simp⟩
   obtain ⟨hgen, hσ1, hTw, -⟩ := untwist_holds k n μk γ
   have hT : Subgroup.centralizer {γ} = GlobalTheory.BCT.twCent (MonoidHom.id (GL (Fin n) k)) γ := by
     ext g
@@ -1089,13 +1089,13 @@ theorem matchOfSum : MatchOfSum := by
     hmatch hsurj
   obtain ⟨hgal, hnorm, htw, -, hpair, hnormOf⟩ := dict k E σ hgen n
   obtain ⟨hLCE, hSCE, hT2E, -, -⟩ := gLTop_holds E n
-  haveI := hLCE
-  haveI := hSCE
-  haveI := hT2E
+  have := hLCE
+  have := hSCE
+  have := hT2E
   obtain ⟨hLCk, hSCk, hT2k, -, -⟩ := gLTop_holds k n
-  haveI := hLCk
-  haveI := hSCk
-  haveI := hT2k
+  have := hLCk
+  have := hSCk
+  have := hT2k
   obtain ⟨hKo, hKc, -⟩ := unitSB_holds E n
   obtain ⟨-, -, hcontE⟩ := extCont_holds k E
   have hgalg : ∀ g : GL (Fin n) E, (GlobalTheory.LBC.galAct σ n) g = (sigmaGL σ) g :=
@@ -1173,7 +1173,7 @@ private theorem trace_range_eq {V : Type} [AddCommGroup V] [Module ℂ V] (T : V
   have hRF : LinearMap.range T ≤ F := by
     rintro _ ⟨x, rfl⟩
     exact h x
-  haveI : FiniteDimensional ℂ (LinearMap.range T) :=
+  have : FiniteDimensional ℂ (LinearMap.range T) :=
     FiniteDimensional.of_injective (Submodule.inclusion hRF) (Submodule.inclusion_injective hRF)
   let ι : LinearMap.range T →ₗ[ℂ] F := Submodule.inclusion hRF
   let π : F →ₗ[ℂ] LinearMap.range T := T.rangeRestrict ∘ₗ F.subtype
@@ -1267,7 +1267,7 @@ theorem trSum : TrSum := by
   obtain ⟨-, rfl⟩ := hT
   unfold GlobalTheory.BCT.twTr
   rw [dite_eq_left hmem]
-  haveI := hfd
+  have := hfd
   rw [trace_range_eq (B ∘ₗ A) (fixed ρ U) hTF]
   congr 1
   ext v
@@ -1294,7 +1294,7 @@ private theorem exists_eq_smul_id_of_irreducible {E : Type} [Field E] [Valuative
     [IsNonarchimedeanLocalField E] {n : ℕ} {X : Type} [AddCommGroup X] [Module ℂ X]
     (ρ : Representation ℂ (GL (Fin n) E) X) (hs : IsSmooth ρ) (hi : ρ.IsIrreducible)
     (φ : X →ₗ[ℂ] X) (hφ : ∀ g x, φ (ρ g x) = ρ g (φ x)) : ∃ c : ℂ, φ = c • LinearMap.id := by
-  haveI : ρ.IsIrreducible := hi
+  have : ρ.IsIrreducible := hi
   obtain ⟨c, hc⟩ := (GroundTheory.Automorphic.algebraMap_intertwiningMap_bijective_of_isSmooth
       (show GroundTheory.Automorphic.IsSmooth ρ from hs)).2
     (⟨φ, fun g => LinearMap.ext fun x => hφ g x⟩ : Representation.IntertwiningMap ρ ρ)
@@ -1305,7 +1305,7 @@ private theorem exists_eq_smul_id_of_irreducible {E : Type} [Field E] [Valuative
 theorem UpperTheory.Gal.InertialTypesAlt.L.twScale :
     UpperTheory.Gal.InertialTypesAlt.L.TwScale := by
   intro k E _ _ _ _ _ _ _ _ _ _ _ _ _ σ hgen n V _ _ ρ hs hi I hI
-  haveI := hi
+  have := hi
   set m := Module.finrank k E with hm
   have hmpos : 0 < m := Module.finrank_pos
   have hiter : ∀ j : ℕ, ∀ g x, ((I : V →ₗ[ℂ] V) ^ j) (ρ g x) =
@@ -1428,7 +1428,7 @@ private theorem twKer_keep {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V
 private theorem cmp_onto {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ} {v : Pl F}
     (w : PlacesOver E v) (hw : ∀ w' : PlacesOver E v, w' = w) (g : Gw n w.1) :
     ∃ y : GL (Fin n) (CompletionsOver E v), GM.cmp w y = g := by
-  letI : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
+  let : Unique (PlacesOver E v) := ⟨⟨w⟩, hw⟩
   let e := RingEquiv.piUnique (fun w : PlacesOver E v => w.1.adicCompletion E)
   refine ⟨mapGL n (e.symm : _ →+* _) g, ?_⟩
   refine Units.ext (Matrix.ext fun i j => ?_)
@@ -1441,7 +1441,7 @@ open UpperTheory.Gal.InertialTypesAlt.L.InflationTrace
 theorem UpperTheory.Gal.InertialTypesAlt.L.inflTrace :
     GlobalTheory.DZA.InflMatching → UpperTheory.Gal.InertialTypesAlt.G.VarEx → UpperTheory.Gal.InertialTypesAlt.G.VarTrace → UpperTheory.Gal.InertialTypesAlt.G.NormInt → UpperTheory.Gal.InertialTypesAlt.L.InflTrace := by
   intro hIM hVE hVT hNI F E _ _ _ _ _ _ _ _ hp n hn π P hconj hweak v w hw hunr _ _ _ _ hcm F₀ F₁ _ _ _ _ _ rk rK s sb hres τ τ' hτ hτ'
-  haveI : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
+  have : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   obtain ⟨hgen, hfr⟩ := UpperTheory.Gal.InertialTypesAlt.L.frobFacts _ _ F₀ F₁ rk rK s sb hres
   obtain ⟨hns, hdeg, hglob⟩ := UpperTheory.Gal.InertialTypesAlt.L.globOf F E hp v w hw hcm
   obtain ⟨σ, hσg, hσs⟩ := hglob s hgen
@@ -1466,8 +1466,8 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.inflTrace :
     rw [hI₀, map_smul]
 
   obtain ⟨i1, i2, i3, i4, mE, mF, hE, hF, h1, h2⟩ := (UpperTheory.ConvolutionTheory.GM.matchOne F E σ n v).1
-  letI : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
-  haveI : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
+  have : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
   obtain ⟨hH, hP⟩ := @UpperTheory.V.Z.Tf.Orb.placeOfLocal_holds F E _ _ _ _ _ _ σ hσg v w hw _ _ _ _ s hgen hdeg hcm hσs n _ _ _ _ mE mF hE hF _ _
   have hUS := UpperTheory.V.Z.Tf.Orb.unitSB_holds
   have hPI := UpperTheory.V.Z.Tf.Orb.placeInt_holds

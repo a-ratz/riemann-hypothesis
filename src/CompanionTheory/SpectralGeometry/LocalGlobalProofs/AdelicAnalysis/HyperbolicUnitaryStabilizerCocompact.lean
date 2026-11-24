@@ -115,7 +115,7 @@ theorem reduce_of_equiv {K : Type} [CommRing K] [TopologicalSpace K] {W : Type} 
       push_neg at hall
       have := hsum w
       simp [hall] at this
-    haveI : Nonempty (Fin M) := ⟨i₀⟩
+    have : Nonempty (Fin M) := ⟨i₀⟩
     obtain ⟨i, hi⟩ := Finite.exists_max fun j => ‖Φ (y 0 j) w‖
     refine ⟨i, hi, fun h0 => hi₀ ?_⟩
     have := hi i₀
@@ -163,7 +163,7 @@ theorem reduce_of_equiv {K : Type} [CommRing K] [TopologicalSpace K] {W : Type} 
 
     simp only [dotProduct, map_sum, Finset.sum_apply, map_mul, Pi.mul_apply, map_one, Pi.one_apply]
     rw [Finset.sum_congr rfl fun i _ => h1 i]
-    simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     exact inv_mul_cancel₀ (hu w)
 
 section
@@ -219,8 +219,8 @@ theorem exists_basis (σ : E →ₐ[F] E) (h : IsCMExt F E σ) {δ : E} (hδ : �
   · simp
 
 theorem exists_tau (w : InfinitePlace F) : ∃ τ : E →+* ℂ, τ.comp (algebraMap F E) = w.embedding := by
-  letI : Algebra F ℂ := w.embedding.toAlgebra
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  let : Algebra F ℂ := w.embedding.toAlgebra
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   refine ⟨(IsAlgClosed.lift : E →ₐ[F] ℂ).toRingHom, ?_⟩
   ext x
   exact (IsAlgClosed.lift : E →ₐ[F] ℂ).commutes x
@@ -289,7 +289,7 @@ theorem exists_equiv (σ : E →ₐ[F] E) (h : IsCMExt F E σ) :
     ∃ Φ : (Ainf F ⊗[F] E) ≃+* (InfinitePlace F → ℂ), IsHomeomorph Φ := by
   obtain ⟨δ, hδ, hδ0⟩ := exists_delta σ h
   obtain ⟨b, hb0, hb1⟩ := exists_basis σ h hδ hδ0
-  haveI hTR : IsTotallyReal F := h.1
+  have hTR : IsTotallyReal F := h.1
   choose τ hτ using fun w : InfinitePlace F => exists_tau (E := E) w
   let ρ : ∀ w : InfinitePlace F, w.Completion ≃+* ℝ := fun w =>
     InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w)
@@ -321,7 +321,7 @@ theorem exists_equiv (σ : E →ₐ[F] E) (h : IsCMExt F E σ) :
   let f : Ainf F →+* (InfinitePlace F → ℂ) :=
     Pi.ringHom fun w => (Complex.ofRealHom.comp (ρ w).toRingHom).comp (Pi.evalRingHom _ w)
   let g : E →+* (InfinitePlace F → ℂ) := Pi.ringHom τ
-  letI alg : Algebra F (InfinitePlace F → ℂ) := (g.comp (algebraMap F E)).toAlgebra
+  let alg : Algebra F (InfinitePlace F → ℂ) := (g.comp (algebraMap F E)).toAlgebra
   let fA : Ainf F →ₐ[F] (InfinitePlace F → ℂ) :=
     { toRingHom := f
       commutes' := fun x => funext fun w => hρF w x }
@@ -394,7 +394,7 @@ theorem primitiveCompact_of_multiplicative {K : Type*} [CommRing K] [Nontrivial 
     rw [hy0, dotProduct_zero] at hz
     exact zero_ne_one hz
   obtain ⟨j, hj⟩ := hex
-  haveI : Nonempty (Fin M) := ⟨j⟩
+  have : Nonempty (Fin M) := ⟨j⟩
   obtain ⟨i, hi⟩ := Finite.exists_max (fun k => ν (y k))
   have hyi : y i ≠ 0 := by
     intro h
@@ -574,7 +574,7 @@ variable [CommRing K] [Algebra L K] [TopologicalSpace K] (bs : Module.Basis (Fin
 
 theorem primitiveCompact_nonsplit (h0 : bs 0 = 1) {D : L} (hd : bs 1 * bs 1 = algebraMap L K D)
     (hD : ∀ s, s * s ≠ D) (hg : Continuous (gg (bs 1) : L × L → K)) (M : ℕ) : UniP K M := by
-  haveI := nontrivial_of_basis bs h0
+  have := nontrivial_of_basis bs h0
   refine primitiveCompact_of_multiplicative M (fun x => ‖Nf D (rr bs x)‖) ?_ ?_ ?_ (fun _ => norm_nonneg _) ?_ ?_
   · simp [rr_zero, Nf]
   · simp [rr_one bs h0, Nf]
@@ -690,7 +690,7 @@ theorem basis_of_not_mem (h2 : Module.finrank F E = 2) {d : E} (hd : d ∉ (alge
 
 theorem exists_delta [CharZero F] (h2 : Module.finrank F E = 2) :
     ∃ (b : Module.Basis (Fin 2) F E) (Δ : F), b 0 = 1 ∧ b 1 * b 1 = algebraMap F E Δ ∧ Δ ≠ 0 := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   obtain ⟨x, hx⟩ : ∃ x : E, x ∉ (algebraMap F E).range := by
     by_contra hcon
     push_neg at hcon
@@ -732,10 +732,10 @@ end Delta
 theorem exists_compact_unimodular_vectors_mod_units : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (v : HeightOneSpectrum (𝓞 F)), ∃ Ω : Set (Fin 1 → Fin M → Fv F v ⊗[F] E), IsCompact Ω ∧ ∀ y : Fin 1 → Fin M → Fv F v ⊗[F] E, (∃ z : Fin M → Fv F v ⊗[F] E, z ⬝ᵥ y 0 = 1) → ∃ (a : (Fv F v ⊗[F] E)ˣ) (z : Fin 1 → Fin M → Fv F v ⊗[F] E), (a : Fv F v ⊗[F] E) • y ∈ Ω ∧ z ∈ Ω ∧ z 0 ⬝ᵥ ((a : Fv F v ⊗[F] E) • y) 0 = 1 := by
   intro F E _ _ _ _ _ σ hσ M v
   obtain ⟨b, Δ, hb0, hb1, hΔ⟩ := exists_delta (F := F) (E := E) hσ.2.2.1
-  haveI hprop : ProperSpace (Fv F v) := Formalism.BasicNotions.Examples₂.LocF.proper v
-  haveI hmt : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := TopK.isModTop (F := F) (E := E) (Fv F v)
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-  haveI : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul (Fv F v) _
+  have hprop : ProperSpace (Fv F v) := Formalism.BasicNotions.Examples₂.LocF.proper v
+  have hmt : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := TopK.isModTop (F := F) (E := E) (Fv F v)
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+  have : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul (Fv F v) _
   let bs : Module.Basis (Fin 2) (Fv F v) (Fv F v ⊗[F] E) := Algebra.TensorProduct.basis (Fv F v) b
   have h0 : bs 0 = 1 := by
     simp [bs, Algebra.TensorProduct.basis_apply, hb0, Algebra.TensorProduct.one_def]
@@ -822,7 +822,7 @@ theorem val_norm (hsq : ∀ x : L, w (x - 1) < 1 → IsSquare x) {Δ : L} (hΔ :
         field_simp; ring
       have hs : IsSquare (Δ * (c / a) ^ 2) := by
         apply hsq
-        rw [e, Valuation.map_neg, map_div₀, ha2, div_lt_one₀ (pow_pos (zero_lt_iff.2 ha0) 2)]
+        rw [e, Valuation.map_neg, map_div₀, ha2, div_lt_one₀ (pow_pos (pos_iff_ne_zero.2 ha0) 2)]
         exact hlt
       obtain ⟨r, hr⟩ := hs
       refine ⟨r * a / c, ?_⟩
@@ -919,7 +919,7 @@ theorem inert_case (h0 : B 0 = 1) (h1 : B 1 * B 1 = algebraMap L K Δ)
     apply h10
     rw [← hz]
     simp [dotProduct, hall]
-  haveI : Nonempty (Fin M) := ⟨i₀⟩
+  have : Nonempty (Fin M) := ⟨i₀⟩
   obtain ⟨i, hi⟩ := Finite.exists_max (fun k => w (nrm B Δ (y k)))
   have hNv (x : K) : w (nrm B Δ x) = max (w (B.repr x 0)) (w (B.repr x 1)) ^ 2 :=
     val_norm w hsq hΔ hn _ _
@@ -1079,7 +1079,7 @@ theorem split_case (h0 : B 0 = 1) (h1 : B 1 * B 1 = algebraMap L K Δ)
       _ = 0 := by simp [mg, hall]
   obtain ⟨k₁, hk₁⟩ := hsum e s me he0
   obtain ⟨k₂, hk₂⟩ := hsum f (-s) mf hf0
-  haveI : Nonempty (Fin M) := ⟨k₁⟩
+  have : Nonempty (Fin M) := ⟨k₁⟩
   obtain ⟨i, hi⟩ := Finite.exists_max (fun k => w (ev B s (y k)))
   obtain ⟨j, hj⟩ := Finite.exists_max (fun k => w (ev B (-s) (y k)))
   have hpi : ev B s (y i) ≠ 0 := by
@@ -1102,7 +1102,7 @@ theorem split_case (h0 : B 0 = 1) (h1 : B 1 * B 1 = algebraMap L K Δ)
       ((p i)⁻¹ * p k) • e + ((q j)⁻¹ * q k) • f := by
     rw [← mul_ef hee hff hef, ← hdec (y k)]
   have hle (t₀ t : L) (h : w t ≤ w t₀) (h0 : t₀ ≠ 0) : w (t₀⁻¹ * t) ≤ 1 := by
-    rw [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff w).2 h0)), mul_one]
+    rw [map_mul, map_inv₀, inv_mul_le_iff₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff w).2 h0)), mul_one]
     exact h
   refine ⟨⟨(p i)⁻¹ • e + (q j)⁻¹ • f, p i • e + q j • f, huv, by rw [mul_comm]; exact huv⟩,
     Pi.single i e + Pi.single j f, ?_, ?_, ?_⟩
@@ -1120,7 +1120,7 @@ theorem split_case (h0 : B 0 = 1) (h1 : B 1 * B 1 = algebraMap L K Δ)
     simp only [Pi.add_apply, map_add (f := _), Finsupp.add_apply]
     exact (w.map_add _ _).trans (max_le (h1' e i he_int) (h1' f j hf_int))
   · simp only [Units.val_mk, Pi.add_apply, add_mul, Finset.sum_add_distrib, Pi.single_apply,
-      ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true, huy]
+      ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, huy]
     have a1 : e * (((p i)⁻¹ * p i) • e + ((q j)⁻¹ * q i) • f) = e := by
       rw [inv_mul_cancel₀ hpi', one_smul, mul_add, hee, mul_smul_comm, hef, smul_zero, add_zero]
     have a2 : f * (((p i)⁻¹ * p j) • e + ((q j)⁻¹ * q j) • f) = f := by
@@ -1293,7 +1293,7 @@ theorem unimodular_compact_mod_units : ∀ (F E : Type) [Field F] [NumberField F
         ∃ (a : (AF F ⊗[F] E)ˣ) (z : Fin 1 → Fin M → AF F ⊗[F] E),
           (a : AF F ⊗[F] E) • y ∈ Ω ∧ z ∈ Ω ∧ z 0 ⬝ᵥ ((a : AF F ⊗[F] E) • y) 0 = 1 := by
   intro F E _ _ _ _ _ σ hCM M
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let b := Module.finBasis F E
   obtain ⟨-, almM, glueM, cptM⟩ := _root_.GlobalTheory.CompanionTheory.SW.Glue.glue_main F E σ hCM _ b 1 M
   obtain ⟨ext1, alm1, glue1, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Glue.glue_main F E σ hCM _ b 1 1
@@ -1309,7 +1309,7 @@ theorem unimodular_compact_mod_units : ∀ (F E : Type) [Field F] [NumberField F
   classical
   obtain ⟨Cv, hCg, hCb⟩ : ∃ Cv : ∀ v : HeightOneSpectrum (𝓞 F), Set (Fin 1 → Fin M → Fv F v ⊗[F] E),
       (∀ v, good v → Cv v = latV b v) ∧ (∀ v, ¬ good v → Cv v = Ωv v) :=
-    ⟨fun v => if good v then latV b v else Ωv v, fun v h => if_pos h, fun v h => if_neg h⟩
+    ⟨fun v => if good v then latV b v else Ωv v, fun v h => ite_eq_left h, fun v h => ite_eq_right h⟩
   have hCcpt : ∀ v, IsCompact (Cv v) := by
     intro v
     by_cases h : good v
@@ -1676,13 +1676,13 @@ theorem iwasawa : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
     rw [hCM.2.2.2, hCM.2.2.2, star_star]
   have hJ' : IsHermND σ (hypJ J) := (_root_.GlobalTheory.CompanionTheory.SW.BlockForm.blockForms_isHermND F E σ hCM M J hJ).1
   obtain ⟨⟨lc, sc, t2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := lc
-  haveI := sc
-  haveI := t2
+  have := lc
+  have := sc
+  have := t2
   obtain ⟨hTG, -, -, -, -, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM (M + 2) (hypJ J) hJ' (AF F)
   obtain ⟨hTR, -, -, -, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := hTG
-  haveI := hTR
+  have := hTG
+  have := hTR
   obtain ⟨Ω, hΩ, hprim⟩ := _root_.GlobalTheory.CompanionTheory.SW.PrimA.unimodular_compact_mod_units F E σ hCM (M + 2)
   have hLh : ∀ i j, sigR (AF F) σ (JR (F := F) (AF F) (hypJ J) j i) = JR (F := F) (AF F) (hypJ J) i j := by
     intro i j

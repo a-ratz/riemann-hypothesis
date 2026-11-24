@@ -87,13 +87,13 @@ theorem pt_comp {X Y : Over (Sp k)} (y : 𝟙_ (Over (Sp k)) ⟶ X) (f : X ⟶ Y
 
 theorem continuous_comp {X Y : Over (Sp k)} (f : X ⟶ Y) :
     Continuous[zariski X, zariski Y] fun y => y ≫ f := by
-  letI := zariski X
-  letI := zariski Y
+  let := zariski X
+  let := zariski Y
   exact continuous_induced_rng.2 (f.left.continuous.comp continuous_induced_dom)
 
 theorem separatelyContinuousMul (B : Over (Sp k)) [GrpObj B] :
     @SeparatelyContinuousMul (𝟙_ (Over (Sp k)) ⟶ B) (zariski B) _ := by
-  letI := zariski B
+  let := zariski B
   have h : ∀ g y : 𝟙_ (Over (Sp k)) ⟶ B, y ≫ toUnit B ≫ g = g := fun g y => by
     rw [← Category.assoc, toUnit_unique (y ≫ toUnit B) (𝟙 _), Category.id_comp]
   refine ⟨fun {g} => ?_, fun {g} => ?_⟩
@@ -104,7 +104,7 @@ theorem separatelyContinuousMul (B : Over (Sp k)) [GrpObj B] :
 
 theorem continuousInv (B : Over (Sp k)) [GrpObj B] :
     @ContinuousInv (𝟙_ (Over (Sp k)) ⟶ B) (zariski B) _ := by
-  letI := zariski B
+  let := zariski B
   refine ⟨?_⟩
   convert continuous_comp (𝟙 B)⁻¹ using 2 with y
   rw [GrpObj.comp_inv, Category.comp_id]
@@ -166,9 +166,9 @@ open RationalPoint in
 theorem exists_isClosed_image_of_isClosed_subgroup :
     ∀ (k : Type) [Field k] [IsAlgClosed k] (G B : Over (Sp k)) [GrpObj G] [GrpObj B] (q : G ⟶ B), IsMonHom q → LocallyOfFiniteType G.hom → QuasiCompact G.hom → LocallyOfFiniteType B.hom → QuasiCompact B.hom → ∀ (C : Subgroup (𝟙_ (Over (Sp k)) ⟶ G)) (Z : Set G.left), IsClosed Z → (∀ x, x ∈ C ↔ Set.range x.left ⊆ Z) → ∃ Z' : Set B.left, IsClosed Z' ∧ ∀ y : (𝟙_ (Over (Sp k)) ⟶ B), (∃ x ∈ C, x ≫ q = y) ↔ Set.range y.left ⊆ Z' := by
   intro k _ _ G B _ _ q _ _ _ _ _ C Z hZ hC
-  letI := RationalPoint.zariski B
-  haveI := RationalPoint.separatelyContinuousMul B
-  haveI := RationalPoint.continuousInv B
+  let := RationalPoint.zariski B
+  have := RationalPoint.separatelyContinuousMul B
+  have := RationalPoint.continuousInv B
   let φ : (𝟙_ (Over (Sp k)) ⟶ G) →* (𝟙_ (Over (Sp k)) ⟶ B) :=
     MonoidHom.mk' (fun x => x ≫ q) fun x y => MonObj.mul_comp x y q
   have hcl : IsClosed (C.map φ : Set (𝟙_ (Over (Sp k)) ⟶ B)) := by

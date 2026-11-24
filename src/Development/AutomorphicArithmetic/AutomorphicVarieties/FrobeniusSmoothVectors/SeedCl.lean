@@ -112,8 +112,8 @@ open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal IsLocalRing U
 theorem UpperTheory.V.Fr.sc_disc :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (K : Type) [Field K] [NumberField K] [Algebra K Ω], Module.finrank ℚ K = 2 → (∀ B : ValuationSubring Ω, B.valuation (l : Ω) < 1 → Ine (F := ℚ) B ≤ galOf ℚ K Ω) → ¬ (l : ℤ) ∣ discr K := by
   intro Ω _ _ _ l _ K _ _ _ h2 hB
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h2⟩
-  haveI : IsGalois ℚ K := {}
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h2⟩
+  have : IsGalois ℚ K := {}
   have hl : l.Prime := Fact.out
   rw [← (UpperTheory.V.CF.unramIff).2.1 K l hl, (UpperTheory.V.CF.unramIff).1 K l hl]
   intro w hw
@@ -165,9 +165,9 @@ theorem UpperTheory.V.Fr.sc_quad :
     nlinarith [sq_nonneg x]
   have hmin : p = minpoly ℚ δ := minpoly.eq_of_irreducible_of_monic hirr hroot hmon
   have hint : IsIntegral ℚ δ := ⟨p, hmon, by rw [← Polynomial.aeval_def]; exact hroot⟩
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ ({δ} : Set Ω)) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ ({δ} : Set Ω)) :=
     IntermediateField.adjoin.finiteDimensional hint
-  haveI : NumberField (IntermediateField.adjoin ℚ ({δ} : Set Ω)) := by constructor
+  have : NumberField (IntermediateField.adjoin ℚ ({δ} : Set Ω)) := by constructor
   refine ⟨IntermediateField.adjoin ℚ ({δ} : Set Ω), inferInstance, inferInstance, inferInstance, ?_, ?_, ?_⟩
   · rw [IntermediateField.adjoin.finrank hint, ← hmin, hdeg]
   · refine ⟨fun v => ?_⟩
@@ -247,10 +247,10 @@ private theorem eq_idempotent_mul_add_of_mul_sub_eq {Ω : Type} [Field Ω] {a b 
 theorem UpperTheory.V.Fr.sc_strip :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (C : Type) [Group C] (χ : G ℚ Ω →* C) (r N : ℕ), N ≠ 0 → ¬ l ∣ N → Af.KillsMu (l ^ r * N) χ → ∀ B : ValuationSubring Ω, B.valuation (l : Ω) < 1 → Ine (F := ℚ) B ≤ χ.ker → Af.KillsMu N χ := by
   intro Ω _ _ _ l hl C _ χ r N hN hlN hχ B hB hI s hs
-  haveI : NeZero N := ⟨hN⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
-    haveI : NeZero ((l ^ i : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (pow_ne_zero _ hl.out.ne_zero)⟩
+  have : NeZero N := ⟨hN⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
+    have : NeZero ((l ^ i : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (pow_ne_zero _ hl.out.ne_zero)⟩
     infer_instance
   have hcop : Nat.Coprime l N := (Nat.Prime.coprime_iff_not_dvd hl.out).2 hlN
   obtain ⟨σ, hσ, hc⟩ := _root_.GlobalTheory.CycInertia.cycZ_Ine_surjective Ω l B hB (cycZ ℚ Ω l s)
@@ -303,9 +303,9 @@ open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal IsLocalRing U
 private theorem teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  haveI : CharP (O ⧸ maximalIdeal O) l := ‹CharP (ResidueField O) l›
-  haveI hp : PerfectRing (ResidueField O) l := inferInstance
-  haveI : PerfectRing (O ⧸ maximalIdeal O) l := hp
+  have : CharP (O ⧸ maximalIdeal O) l := ‹CharP (ResidueField O) l›
+  have hp : PerfectRing (ResidueField O) l := inferInstance
+  have : PerfectRing (O ⧸ maximalIdeal O) l := hp
   let f : (O ⧸ maximalIdeal O) →* O := (Perfection.teichmuller l (maximalIdeal O)).comp
     (Perfection.liftMonoidHom l (O ⧸ maximalIdeal O) (O ⧸ maximalIdeal O) (MonoidHom.id _))
   refine ⟨f, fun x => ?_⟩
@@ -316,7 +316,7 @@ private theorem teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLoc
 theorem UpperTheory.V.Fr.sc_teich :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (c : Coef l) [CharP (ResidueField c.O) l], Finite (ResidueField c.O) → ∃ T : (ResidueField c.O)ˣ →* (Qbar l)ˣ, Function.Injective T ∧ ∀ (u : c.Oˣ) (j : ℕ) (s : G ℚ Ω), ‖(GlobalTheory.GalOfCusp.cycBar ℚ Ω l s ^ j * T (Units.map (residue c.O).toMonoidHom u * (omO Ω l c.O s ^ j)⁻¹)).val - u.val.1‖ < 1 := by
   intro Ω _ _ _ l _ c _ hfin
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (dvrFacts l c.O).2.2.2.1
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (dvrFacts l c.O).2.2.2.1
   obtain ⟨τ, hτ⟩ := teich_ex l c.O
   let ι : c.O →* Qbar l := c.O.val.toRingHom.toMonoidHom
   refine ⟨Units.map (ι.comp τ), ?_, ?_⟩
@@ -335,7 +335,7 @@ theorem UpperTheory.V.Fr.sc_teich :
       change residue c.O _ = 0
       rw [map_sub, map_mul, map_pow, hτ, ← hω]
       simp only [w, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_pow_eq_pow_val,
-        Units.coe_map, MonoidHom.coe_coe]
+        Units.coe_map, MonoidHom.coe_ofClass]
       have hne : ((omO Ω l c.O s).val : ResidueField c.O) ^ j ≠ 0 := pow_ne_zero _ (Units.ne_zero _)
       rw [mul_left_comm, mul_inv_cancel₀ hne, mul_one]
       exact sub_self _
@@ -357,7 +357,7 @@ theorem UpperTheory.V.Fr.sc_theta :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (w : ℕ), w.Prime → w ≡ 1 [MOD l] → ∃ θ : G ℚ Ω →* (Qbar l)ˣ, θ.ker = Hth Ω l w ∧ θ ≠ 1 ∧ θ ^ l = 1 ∧ Af.KillsMu w θ := by
   intro Ω _ _ _ l _ w hw hwl
   obtain ⟨-, hc, hidx, -, -⟩ := hth Ω l w hw hwl
-  haveI hN : (Hth Ω l w).Normal := ⟨fun n hn g => by
+  have hN : (Hth Ω l w).Normal := ⟨fun n hn g => by
     have h0 := Subgroup.commutator_mem_commutator (Subgroup.mem_top g) (Subgroup.mem_top n)
     rw [commutatorElement_def] at h0
     have h1 := hc h0
@@ -365,8 +365,8 @@ theorem UpperTheory.V.Fr.sc_theta :
     rw [h2]
     exact (Hth Ω l w).mul_mem h1 hn⟩
   have hcardQ : Nat.card (G ℚ Ω ⧸ Hth Ω l w) = l := hidx
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Qbar l) l
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Qbar l) l
   have hcardR : Nat.card (rootsOfUnity l (Qbar l)) = l := hζ.card_rootsOfUnity
   let e := mulEquivOfPrimeCardEq hcardQ hcardR
   let θ : G ℚ Ω →* (Qbar l)ˣ :=
@@ -417,15 +417,15 @@ open NumberField Formalism.ConjugateSelfDual ReciprocityTheory.Gal IsLocalRing U
 
 private theorem so_cls {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [hl : Fact l.Prime] (s : G ℚ Ω) :
     Chr.cls ℚ Ω (l ^ 1) s = cycMod ℚ Ω l 1 s := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   refine (Chr.clsFacts ℚ Ω (l ^ 1)).2.2.1 s _ (fun ζ hζ => ?_)
   exact cyclotomicCharacter.spec l (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) ζ hζ
 
 theorem UpperTheory.V.Fr.sc_om :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O] [CharP (ResidueField O) l], Af.KillsMu l (omO Ω l O) ∧ ∀ σ : G ℚ Ω, IsCC σ → omO Ω l O σ = -1 := by
   intro Ω _ _ _ l _ O _ _ _
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact (Fact.out : l.Prime).one_lt⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact (Fact.out : l.Prime).one_lt⟩
   refine ⟨fun s hs => ?_, fun σ hσ => ?_⟩
   · have h1 : cycMod ℚ Ω l 1 s = 1 := by
       rw [← so_cls]
@@ -521,7 +521,7 @@ theorem UpperTheory.V.Fr.seed_cl :
     fun s => rfl
   have hord : ¬ l ∣ orderOf χ' := by
     classical
-    haveI := Fintype.ofFinite (ResidueField c.O)
+    have := Fintype.ofFinite (ResidueField c.O)
     have hpow : χ' ^ Fintype.card (ResidueField c.O)ˣ = 1 := MonoidHom.ext fun s => by
       show (T (φ s)) ^ Fintype.card (ResidueField c.O)ˣ = 1
       rw [← map_pow, pow_card_eq_one, map_one]

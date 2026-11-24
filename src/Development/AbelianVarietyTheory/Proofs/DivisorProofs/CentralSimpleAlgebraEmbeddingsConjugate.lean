@@ -169,10 +169,10 @@ end Prod
 theorem natDegree_minpoly_le (F L C : Type) [Field F] [Field L] [Algebra F L] [Ring C]
     [Algebra F C] [Algebra.IsCentral F C] [IsSimpleRing C] [FiniteDimensional F C] (n : ℕ) (hn : 0 < n)
     (ι : C →ₐ[F] Matrix (Fin n) (Fin n) L) (a : C) : (minpoly F a).natDegree ≤ n := by
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   let g : L ⊗[F] C →ₐ[L] Matrix (Fin n) (Fin n) L :=
     Algebra.TensorProduct.lift (Algebra.ofId L _) ι (fun l y ↦ Algebra.commute_algebraMap_left l _)
-  haveI : IsSimpleRing (L ⊗[F] C) := GroundTheory.Brauer.isSimpleRing_tensorProduct_of_right
+  have : IsSimpleRing (L ⊗[F] C) := GroundTheory.Brauer.isSimpleRing_tensorProduct_of_right
   have hg : Function.Injective g := GlobalTheory.CsaCharpoly.injective_of_isSimpleRing g.toRingHom
   have eg : g ((1 : L) ⊗ₜ a) = ι a := by
     simp only [g]; erw [Algebra.TensorProduct.lift_tmul]; simp

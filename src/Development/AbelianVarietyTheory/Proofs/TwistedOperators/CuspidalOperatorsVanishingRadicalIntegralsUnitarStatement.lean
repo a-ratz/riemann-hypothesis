@@ -112,7 +112,7 @@ theorem hasSum_trace_restrict {K : Type} [NormedAddCommGroup K] [InnerProductSpa
   have he : ∀ a, e a = v a := fun a => by simp [e]
   have hR : ∀ i, (T.restrict (hTW i)) = (W i).orthogonalProjection ∘L T ∘L (W i).subtypeL := fun i => by
     ext x
-    simp [Submodule.orthogonalProjection_mem_subspace_eq_self (K := W i) ⟨_, hTW i x x.2⟩]
+    simp [Submodule.orthogonalProjectionOnto_mem_subspace_eq_self (K := W i) ⟨_, hTW i x x.2⟩]
   have htc : ∀ i, IsTraceClass (T.restrict (hTW i)) := fun i => by
     rw [hR i]; exact hT.comp_comp _ _
   have hterm : ∀ a : Σ i, stdIndex (W i), ⟪e a, T (e a)⟫_ℂ = ⟪b a.1 a.2, T.restrict (hTW a.1) (b a.1 a.2)⟫_ℂ :=
@@ -140,7 +140,7 @@ theorem hasSum_multIn_repTrace {G K : Type} [Group G] [TopologicalSpace G] [Meas
       (Summable fun c : UDual G => ‖((multIn c.rep.π ρ ⊤).toNat : ℂ) * repTrace c.rep.π μ f‖) ∧
       HasSum (fun c : UDual G => ((multIn c.rep.π ρ ⊤).toNat : ℂ) * repTrace c.rep.π μ f) (trace (repOp ρ μ f)) := by
   obtain ⟨⟨ι, W, hWi, hs⟩, hfin⟩ := hD
-  haveI : ∀ i, CompleteSpace (W i) := fun i => (hWi i).1.completeSpace
+  have : ∀ i, CompleteSpace (W i) := fun i => (hWi i).1.completeSpace
   have hR : IsRepOp ρ μ f (repOp ρ μ f) := hρ.isRepOp hf hfs
   have hTW : ∀ i, ∀ x ∈ W i, repOp ρ μ f x ∈ W i := fun i x hx => (hWi i).1.map_mem_of_isRepOp hR hx
   obtain ⟨htc, hsn, hsum⟩ := hasSum_trace_restrict hs hT hTW
@@ -366,7 +366,7 @@ theorem ropG_mem_L2cusp : ∀ (D : D7) (V : HSp D) (μ : Measure (GA D V)) [μ.I
   refine mem_L2cusp_of_ae_eq ⟨hc, hl, (isCuspFun_iff hl).2 fun W hW => funext fun x => ?_⟩ he
   obtain ⟨hw1, hw2, hw3⟩ := GlobalTheory.T.constant_term_locally_integrable D V μ W hW F
   rw [hw3 f hfc hfs x, Pi.zero_apply]
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
   have hcl : IsClosed ((NA (.single hW) : Subgroup (GA D V)) : Set (GA D V)) :=
     IsoFlag.isClosed_unip (IsoFlag.single hW) D.sp.cm _
   exact _root_.GlobalTheory.CosetIntegralZero.integral_mul_eq_zero_of_coset_integral_eq_zero (GA D V) (NA (.single hW)) hcl (Measure.haar) μ (fun y => f (x⁻¹ * y)) _
@@ -428,11 +428,11 @@ theorem trace_comp_comp_of_comp_eq_id (S : K →L[ℂ] H) (P : H →L[ℂ] K) (h
   have h1 : HasSum (fun j => ⟪stdBasis (H := H) j, (S ∘L (∑ i, B i ∘L C i) ∘L P) (stdBasis (H := H) j)⟫_ℂ)
       (∑ i, trace (B i ∘L C i)) := by
     rw [e]
-    simpa only [ContinuousLinearMap.sum_apply, inner_sum, t] using
+    simpa only [sum_apply, inner_sum, t] using
       hasSum_sum fun i (_ : i ∈ Finset.univ) =>
         hasSum_trace_comp (stdBasis (H := H)) ((hB i).comp_left S) ((hC i).comp_right P)
   have h2 : HasSum (fun j => ⟪stdBasis (H := K) j, (∑ i, B i ∘L C i) (stdBasis (H := K) j)⟫_ℂ) (∑ i, trace (B i ∘L C i)) := by
-    simpa only [ContinuousLinearMap.sum_apply, inner_sum] using
+    simpa only [sum_apply, inner_sum] using
       hasSum_sum fun i (_ : i ∈ Finset.univ) => hasSum_trace_comp (stdBasis (H := K)) (hB i) (hC i)
   exact h1.tsum_eq.trans h2.tsum_eq.symm
 
@@ -452,10 +452,10 @@ theorem cuspidalOperators : GlobalTheory.Published.CuspTraceClass → ∀ (D : D
   have etr : trace (RopG V μ f) = trace (RcuspOp V μ f) := by
     rw [GlobalTheory.TraceDiagonal.RopG_eq_comp c.1 c.2 m2]
     exact trace_comp_comp_of_comp_eq_id _ _
-      (fun y => Submodule.orthogonalProjection_mem_subspace_eq_self y) (hCT D V μ f hf)
+      (fun y => Submodule.orthogonalProjectionOnto_mem_subspace_eq_self y) (hCT D V μ f hf)
   refine ⟨m1, fun F hF => ?_, hd.1, fun F p => ?_, fun F => ?_, hd.2.1, hd.2.2, fun c' => ?_, t1, t2, etr ▸ t3⟩
   · rw [GlobalTheory.TraceDiagonal.RopG_eq_comp c.1 c.2 m2]
-    simp [Submodule.orthogonalProjection_eq_zero_iff.2 hF]
+    simp [Submodule.orthogonalProjectionOnto_eq_zero_iff.2 hF]
   · induction p using Quotient.inductionOn with
     | h x => exact (hk F x).1
   · refine ae_quotMeasure_iff.2 ?_

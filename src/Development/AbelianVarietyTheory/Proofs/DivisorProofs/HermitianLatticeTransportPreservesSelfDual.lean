@@ -319,7 +319,7 @@ theorem isSDLat_of_isSdLat {E : Type} [Field E] [NumberField E] [StarRing E] {n 
 
 theorem seam_selfDual : ∀ (D : D7) (X : Fields) (s : Seam D X), s.Ok → ∀ (n : ℕ), StandardLatticesGL3.SD D (StandardLatticesGL3.stdL D n) ∧ ∀ L : Submodule (𝓞 X.E) (Sp X.E n), IsSdLat L → StandardLatticesGL3.SD D (s.lat L) := by
   intro D X s hs n
-  letI := D.host.cmStar
+  let := D.host.cmStar
   refine ⟨isSDLat_pi D.host.E n, fun L hL => ?_⟩
   exact isSDLat_image s.iE (fun x => (hs.2 x).trans (bridge_star_holds D.R D.host _).symm) L
     (isSDLat_of_isSdLat L hL)

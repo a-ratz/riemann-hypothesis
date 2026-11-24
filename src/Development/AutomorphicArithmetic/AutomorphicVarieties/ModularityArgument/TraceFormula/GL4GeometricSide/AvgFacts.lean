@@ -66,14 +66,14 @@ private theorem eq_of_univ (μ : Measure (Un n)) [IsFiniteMeasure μ] [μ.IsMulL
   have h1 : ν Set.univ = (c : ENNReal) * ν Set.univ := by
     rw [← h]
     conv_lhs => rw [e]
-    rw [h, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [h, smul_apply, ENNReal.smul_def, smul_eq_mul]
   have hc : (c : ENNReal) = 1 := (ENNReal.mul_left_inj h0 hT).1 (by simpa using h1.symm)
   have hc' : c = 1 := by exact_mod_cast hc
   rw [e, hc', one_smul]
 
 private theorem rightInv : ν.IsMulRightInvariant := by
   refine ⟨fun g => ?_⟩
-  haveI : (Measure.map (· * g) ν).IsMulLeftInvariant := by
+  have : (Measure.map (· * g) ν).IsMulLeftInvariant := by
     refine ⟨fun h => ?_⟩
     rw [Measure.map_map (measurable_const_mul h) (measurable_mul_const g)]
     have : ((h * ·) ∘ (· * g) : Un n → Un n) = (· * g) ∘ (h * ·) := by
@@ -86,7 +86,7 @@ private theorem rightInv : ν.IsMulRightInvariant := by
   simp
 
 private theorem invInv : ν.IsInvInvariant := by
-  haveI := rightInv ν
+  have := rightInv ν
   refine ⟨eq_of_univ ν _ ?_⟩
   simp [Measure.inv_apply]
 
@@ -115,7 +115,7 @@ private theorem intg (hσ : IsK σ) {c : Un n → ℂ} (hc : Continuous c) (v w 
 private theorem exists_in (hσ : IsK σ) {c : Un n → ℂ} (hc : Continuous c) {v : V} (S : Submodule ℂ V)
     [FiniteDimensional ℂ S] (hv : v ∈ S) (hS : ∀ k, ∀ w ∈ S, σ k w ∈ S) :
     ∃ p ∈ S, IsWk ν σ c v p := by
-  haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   let G : Un n → S := fun κ => ⟨σ κ v, hS κ v hv⟩
   let b := stdOrthonormalBasis ℂ S
   have hG : Continuous G := by
@@ -174,7 +174,7 @@ private theorem mem_stable (hσ : IsK σ) {c : Un n → ℂ} (hc : Continuous c)
     (hP : ∀ v, IsWk ν σ c v (P v)) (N : Submodule ℂ V) (hN : ∀ k, ∀ x ∈ N, σ k x ∈ N) {x : V} (hx : x ∈ N) :
     P x ∈ N := by
   obtain ⟨S, hfd, hv, hS⟩ := hσ.fin x
-  haveI : FiniteDimensional ℂ ↥(S ⊓ N) := Submodule.finiteDimensional_inf_left S N
+  have : FiniteDimensional ℂ ↥(S ⊓ N) := Submodule.finiteDimensional_inf_left S N
   obtain ⟨p, hp, hw⟩ := exists_in ν hσ hc (S ⊓ N) ⟨hv, hx⟩ fun k w hw => ⟨hS k w hw.1, hN k w hw.2⟩
   rw [wk_unique ν (hP x) hw]
   exact hp.2
@@ -218,19 +218,19 @@ private theorem exists_map [ν.IsMulLeftInvariant] (hσ : IsK σ) (E : KMod n) (
         refine ext_inner_left ℂ fun w => ?_
         rw [inner_add_right, hp, hp, hp, ← integral_add (intg ν hσ (hc a) x w) (intg ν hσ (hc b) x w)]
         refine integral_congr_ae (Filter.Eventually.of_forall fun κ => ?_)
-        simp only [ContinuousLinearMap.add_apply, add_mul]
+        simp only [add_apply, add_mul]
       map_smul' := fun a b => by
         refine ext_inner_left ℂ fun w => ?_
         rw [RingHom.id_apply, inner_smul_right, hp, hp, ← integral_const_mul]
         refine integral_congr_ae (Filter.Eventually.of_forall fun κ => ?_)
-        simp only [ContinuousLinearMap.smul_apply, smul_eq_mul, mul_assoc] }
+        simp only [smul_apply, smul_eq_mul, mul_assoc] }
   refine ⟨t, fun k ξ => ext_inner_left ℂ fun w => ?_, hp⟩
   show ⟪w, p _⟫_ℂ = ⟪w, σ k (p ξ)⟫_ℂ
   rw [moveσ hσ, hp, hp, ← integral_mul_left_eq_self _ k]
   refine integral_congr_ae (Filter.Eventually.of_forall fun κ => ?_)
   have e1 : E.ρ k⁻¹ (E.ρ (k * κ) e) = E.ρ κ e := by
-    rw [map_mul, ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel,
-      map_one, ContinuousLinearMap.one_apply]
+    rw [map_mul, mul_apply_eq_comp, ← mul_apply_eq_comp, ← map_mul, inv_mul_cancel,
+      map_one, one_apply_eq_self]
   have e2 : σ (k * κ) x = σ k (σ κ x) := by rw [map_mul, Module.End.mul_apply]
   simp only [ContinuousLinearMap.comp_apply, e1, e2]
   rw [moveσ hσ k w]
@@ -270,7 +270,7 @@ private theorem tr_class (E : KMod n) {T : E.V →L[ℂ] E.V} (hT : ∀ k, T * E
   have e1 : ((E.ρ g⁻¹ : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) * ((E.ρ g : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) = 1 := by
     refine LinearMap.ext fun x => ?_
     show (E.ρ g⁻¹ * E.ρ g) x = x
-    rw [← map_mul, inv_mul_cancel, map_one, ContinuousLinearMap.one_apply]
+    rw [← map_mul, inv_mul_cancel, map_one, one_apply_eq_self]
   rw [e]
   show LinearMap.trace ℂ E.V (((E.ρ g : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) * ((E.ρ κ * T : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) *
     ((E.ρ g⁻¹ : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V)) = _
@@ -280,8 +280,8 @@ end Abs
 
 theorem avgFacts : AvgFacts := by
   intro n _ _ ν _ V _ _ σ hσ E T P hT hP
-  haveI := rightInv ν
-  haveI := invInv ν
+  have := rightInv ν
+  have := invInv ν
   set c : Un n → ℂ := fun κ => LinearMap.trace ℂ E.V ((E.ρ κ * T : E.V →L[ℂ] E.V) : E.V →ₗ[ℂ] E.V) with hcdef
   have hc : Continuous c := by
     let L : (E.V →L[ℂ] E.V) →ₗ[ℂ] ℂ := (LinearMap.trace ℂ E.V).comp (ContinuousLinearMap.coeLM ℂ)

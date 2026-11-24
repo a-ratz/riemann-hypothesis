@@ -112,7 +112,7 @@ def negGA (V : HSp D) : GA D V ≃* GA D (negSp V) := MulEquiv.subgroupCongr (HR
 theorem mt_negGA (V : HSp D) (g : GA D V) : mt (negSp V) (negGA V g) = mt V g := rfl
 
 theorem continuous_negGA (V : HSp D) : Continuous (negGA V) :=
-  Continuous.subtype_mk (continuous_subtype_val (p := fun g => g ∈ HR (AF D.host.F) D.sp.cm.sig V.gram)) _
+  Continuous.subtype_mk (continuous_subtypeVal (p := fun g => g ∈ HR (AF D.host.F) D.sp.cm.sig V.gram)) _
 
 theorem isSelfDualC_neg {V : HSp D} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)} (h : IsSelfDualC V Λ) :
     IsSelfDualC (negSp V) Λ := by
@@ -232,7 +232,7 @@ theorem isIsoSub_iso (ρ : ℕ) (h : 2 * ρ ≤ c) : IsIsoSub B (d.iso ρ h) := 
     refine Matrix.ext fun p q => ?_
     have := p.2; have := q.2
     simp only [submatrix_apply, antiDiagonalSignGramMatrix, Fin.val_castLE, Matrix.zero_apply]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
 
 def besDat (hε : ε ≠ 0) (ρ : ℕ) (h : c = 2 * ρ + 1) : BesDat A B d.ι where
   ρ := ρ
@@ -344,7 +344,7 @@ theorem homLat_fg {m n : ℕ} {Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.
     {Λ' : Submodule (𝓞 D.host.E) (Fin m → D.host.E)} (h : Submodule.IsFullLattice D.host.E Λ) (h' : Λ'.FG) :
     Module.Finite (𝓞 D.host.E) (homLat Λ Λ') := by
   obtain ⟨s, hs⟩ := h.fg
-  haveI : Module.Finite (𝓞 D.host.E) Λ' := Module.Finite.iff_fg.2 h'
+  have : Module.Finite (𝓞 D.host.E) Λ' := Module.Finite.iff_fg.2 h'
   let f : homLat Λ Λ' →ₗ[𝓞 D.host.E] (s → Λ') :=
     { toFun := fun x y => ⟨x.1 *ᵥ y.1, x.2 _ (hs ▸ Submodule.subset_span y.2)⟩
       map_add' := fun x x' => funext fun y => Subtype.ext (add_mulVec x.1 x'.1 y.1)
@@ -358,9 +358,9 @@ theorem homLat_fg {m n : ℕ} {Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.
 theorem finite_cos {m n : ℕ} {Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.E)}
     {Λ' : Submodule (𝓞 D.host.E) (Fin m → D.host.E)} (h : Submodule.IsFullLattice D.host.E Λ) (h' : Λ'.FG)
     {𝔪 : Ideal (𝓞 D.host.E)} (h𝔪 : 𝔪 ≠ ⊥) : Finite (Cos Λ Λ' 𝔪) := by
-  haveI := homLat_fg h h'
-  haveI : Finite (𝓞 D.host.E ⧸ 𝔪) := Ideal.finiteQuotientOfFreeOfNeBot 𝔪 h𝔪
-  haveI : Module.Finite (𝓞 D.host.E ⧸ 𝔪) (homLat Λ Λ' ⧸ (𝔪 • ⊤ : Submodule (𝓞 D.host.E) (homLat Λ Λ'))) :=
+  have := homLat_fg h h'
+  have : Finite (𝓞 D.host.E ⧸ 𝔪) := Ideal.finiteQuotientOfFreeOfNeBot 𝔪 h𝔪
+  have : Module.Finite (𝓞 D.host.E ⧸ 𝔪) (homLat Λ Λ' ⧸ (𝔪 • ⊤ : Submodule (𝓞 D.host.E) (homLat Λ Λ'))) :=
     Module.Finite.of_restrictScalars_finite (𝓞 D.host.E) _ _
   exact Module.finite_of_finite (𝓞 D.host.E ⧸ 𝔪) (M := homLat Λ Λ' ⧸ (𝔪 • ⊤ : Submodule (𝓞 D.host.E) (homLat Λ Λ')))
 

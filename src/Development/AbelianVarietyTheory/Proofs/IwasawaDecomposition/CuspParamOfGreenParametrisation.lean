@@ -95,7 +95,7 @@ theorem isPrimeLab_charpoly {d : ℕ} (y : Gn g d) (hy : Irreducible (y : Mt g d
 theorem exists_gen_pow (L : LabelDatum g) {d : ℕ} (hd : 0 < d) {z : Formalism.CyclotomicNorms.Fbar g}
     (hz : z ^ (g ^ d - 1) = 1) : ∃ m : ℕ, L.gen d ^ m = z := by
   have h1 : 1 < g ^ d := Nat.one_lt_pow hd.ne' (Fact.out : g.Prime).one_lt
-  haveI : NeZero (g ^ d - 1) := ⟨by omega⟩
+  have : NeZero (g ^ d - 1) := ⟨by omega⟩
   have hp : IsPrimitiveRoot (L.gen d) (g ^ d - 1) := by
     rw [← L.gen_order d hd]; exact IsPrimitiveRoot.orderOf _
   obtain ⟨m, -, hm⟩ := hp.eq_pow_of_pow_eq_one hz
@@ -136,13 +136,13 @@ theorem hasCuspLabel_iff (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
 
 theorem nonempty_iso_of_character {G : Type} [Group G] [Fintype G] (V W : FDRep ℂ G) [Simple V] [Simple W]
     (h : V.character = W.character) : Nonempty (V ≅ W) := by
-  haveI : Invertible (Nat.card G : ℂ) := invertibleOfNonzero (by exact_mod_cast Nat.card_pos.ne')
-  haveI : Invertible (Fintype.card G : ℂ) := invertibleOfNonzero (by exact_mod_cast Fintype.card_pos.ne')
+  have : Invertible (Nat.card G : ℂ) := invertibleOfNonzero (by exact_mod_cast Nat.card_pos.ne')
+  have : Invertible (Fintype.card G : ℂ) := invertibleOfNonzero (by exact_mod_cast Fintype.card_pos.ne')
   have h1 := FDRep.char_orthonormal V W
   have h2 := FDRep.char_orthonormal V V
-  rw [← h, h2, if_pos ⟨Iso.refl V⟩] at h1
+  rw [← h, h2, ite_eq_left ⟨Iso.refl V⟩] at h1
   by_contra h3
-  rw [if_neg h3] at h1
+  rw [ite_eq_right h3] at h1
   exact one_ne_zero h1
 
 theorem cuspParam_of_green : GlobalTheory.Published.GreenCuspidal → ∀ (g : ℕ) [Fact g.Prime] (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)

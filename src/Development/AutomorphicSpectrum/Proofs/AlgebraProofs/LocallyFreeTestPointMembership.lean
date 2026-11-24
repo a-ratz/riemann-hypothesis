@@ -74,8 +74,8 @@ theorem PositivityTheory.Xgn.t_testpt_exists : ∀ {o Ω : Type} [CommRing o] [F
   have hp1 : ‖(p : C)‖ < 1 := by
     rw [hpA, map_natCast] at hr
     rw [hr]; norm_num
-  letI : Algebra o C := ((algebraMap Ω C).comp (algebraMap o Ω)).toAlgebra
-  haveI : IsScalarTower o Ω C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra o C := ((algebraMap Ω C).comp (algebraMap o Ω)).toAlgebra
+  have : IsScalarTower o Ω C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let RC : Subalgebra o C :=
     { (GlobalTheory.normIntegers C).toSubring.toSubsemiring with
       algebraMap_mem' := fun r =>

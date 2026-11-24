@@ -99,7 +99,7 @@ private lemma mul_single_rev_mul_eq_sum (A B : Matrix (Fin n) (Fin n) ℂ) (a b 
 
 private lemma toMK_inv_mul_and_mul_inv (g : KG ε) : toMK g⁻¹ * toMK g = 1 ∧ toMK g * toMK g⁻¹ = 1 := by
   have hg : toMK g ∈ Kset ε := g.2
-  simp only [Kset, Set.mem_setOf_eq] at hg
+  simp only [Kset, Set.mem_ofPred_eq] at hg
   rw [Ps1.toMK_inv_eq]
   refine ⟨?_, ?_⟩
   · first
@@ -125,7 +125,7 @@ theorem gelfand_psM (T : KType ε Λ) (μ : Fin n → ℤ) (lam : Fin n → ℝ)
             ((-1 : ℂ) ^ k * gval (icShift lam) k) • psM T μ z ∧
           opGelfand (fun a b => Lhol (Matrix.single (Fin.rev b) (Fin.rev a) (1 : ℂ))) k (psM T μ) z =
             gval (icShift (-lam)) k • psM T μ z := by
-  haveI := compactSpace_KG ε
+  have := compactSpace_KG ε
   obtain ⟨U₀, hU₀o, hpos, -, hdiff, -⟩ := psM_holo T μ
   refine ⟨U₀ ∩ Ps1.Uset ε, hU₀o.inter Ps1.isOpen_Uset,
     fun z hz => ⟨hpos hz, Ps1.posSet_subset_Uset hz⟩, hdiff.mono Set.inter_subset_left,

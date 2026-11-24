@@ -218,7 +218,7 @@ theorem exists_measurable_roots_enumeration :
   have hS : MeasurableSet S := by
     have : S = ⋂ i, ⋂ j, ⋂ _ : i ≤ j, {r : Fin δ → ℂ | e (r i) ≤ e (r j)} := by
       ext r
-      simp only [S, Set.mem_setOf_eq, Set.mem_iInter, Monotone, Function.comp]
+      simp only [S, Set.mem_ofPred_eq, Set.mem_iInter, Monotone, Function.comp]
     rw [this]
     refine MeasurableSet.iInter fun i => MeasurableSet.iInter fun j =>
       MeasurableSet.iInter fun _ => measurableSet_le ?_ ?_
@@ -227,7 +227,7 @@ theorem exists_measurable_roots_enumeration :
   let V : (Fin δ → ℂ) → (Fin δ → ℂ) := fun r i => (∏ j, (X - C (r j))).coeff i
   have hV : Measurable V :=
     (continuous_pi fun i => continuous_coeff_prod_X_sub_C _ _).measurable
-  haveI : StandardBorelSpace S := hS.standardBorel
+  have : StandardBorelSpace S := hS.standardBorel
   have hinj : Function.Injective fun x : S => V x := by
     rintro ⟨r, hr⟩ ⟨s, hs⟩ h
     have h1 : (∏ j, (X - C (r j)) : ℂ[X]) = ∏ j, (X - C (s j)) := by
@@ -248,9 +248,9 @@ theorem exists_measurable_roots_enumeration :
     ext i
     exact e.injective (congrFun h4 i)
   have hemb : MeasurableEmbedding fun x : S => V x :=
-    (hV.comp measurable_subtype_coe).measurableEmbedding hinj
+    (hV.comp measurable_subtypeVal).measurableEmbedding hinj
   obtain ⟨ρ, hρ, hρV⟩ := hemb.exists_measurable_extend (g := fun x : S => (x : Fin δ → ℂ))
-    measurable_subtype_coe fun _ => inferInstance
+    measurable_subtypeVal fun _ => inferInstance
   refine ⟨ρ, hρ, fun c => ?_⟩
   obtain ⟨r, hr⟩ := exists_prod_X_sub_C_eq c
   have hrS : r ∘ Tuple.sort (e ∘ r) ∈ S := Tuple.monotone_sort (e ∘ r)
@@ -261,12 +261,12 @@ theorem exists_measurable_roots_enumeration :
   have hc : V (r ∘ Tuple.sort (e ∘ r)) = c := by
     funext i
     simp only [V]
-    rw [hp, coeff_add, coeff_X_pow, if_neg i.2.ne, zero_add, Polynomial.finsetSum_coeff]
+    rw [hp, coeff_add, coeff_X_pow, ite_eq_right i.2.ne, zero_add, Polynomial.finsetSum_coeff]
     simp only [coeff_C_mul_X_pow]
     rw [Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      exact if_neg fun h => hj (Fin.ext h.symm)
+      exact ite_eq_right fun h => hj (Fin.ext h.symm)
     · simp
   have : ρ c = r ∘ Tuple.sort (e ∘ r) := by
     rw [← hc]
@@ -495,7 +495,7 @@ private lemma case_two_finite_lemma
     rw [hm] at hsum ⊢
     norm_cast at hsum ⊢
     omega
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap K F).injective
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap K F).injective
   have hfgF : (⊤ : IntermediateField F Ω).FG :=
     IntermediateField.FG.of_restrictScalars (K := K) (by rw [IntermediateField.restrictScalars_top]; exact hfg)
   have hnalg : ¬ Algebra.IsAlgebraic F Ω := by
@@ -715,7 +715,7 @@ theorem _root_.GlobalTheory.finite_support_admissible :
       exact htriv
   refine ⟨hfin, fun G e S he he0 hscale hzero f hf hf0 => ?_⟩
   obtain ⟨a, rfl⟩ : ∃ a : Ω c, a • e = f := by
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨e, he⟩ : 𝒜 c G)
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨e, he⟩ : 𝒜 c G)
       (by simpa using he0)).1 (hrk G) ⟨f, hf⟩
     exact ⟨a, congrArg Subtype.val ha⟩
   have ha : a ≠ 0 := by rintro rfl; simp at hf0
@@ -728,7 +728,7 @@ theorem _root_.GlobalTheory.finite_support_admissible :
   by_cases hva : v a = 0
   · right
     by_contra hS
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Finset.mem_coe, not_exists, not_and, not_lt] at hS
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Finset.mem_coe, not_exists, not_and, not_lt] at hS
     have h1 := hscale v hv a ha
     rw [hva, zero_add, hzero v hv fun s hs => hS s hs hv] at h1
     exact hord (by exact_mod_cast h1)
@@ -848,8 +848,8 @@ theorem injective_of_dvr {R Ω : Type} [CommRing R] [IsDomain R] [Field Ω] (φ 
 theorem nonneg_of_isIntegral {R Ω : Type} [CommRing R] [Field Ω] [Algebra R Ω]
     (w : AddValuation Ω (WithTop ℤ)) (h : ∀ r, 0 ≤ w (algebraMap R Ω r)) {b : Ω}
     (hb : IsIntegral R b) : 0 ≤ w b := by
-  letI : Algebra R (vRing w) := ((algebraMap R Ω).codRestrict (vRing w) h).toAlgebra
-  haveI : IsScalarTower R (vRing w) Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra R (vRing w) := ((algebraMap R Ω).codRestrict (vRing w) h).toAlgebra
+  have : IsScalarTower R (vRing w) Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hb' : IsIntegral (vRing w) b := hb.tower_top
   obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.1 hb'
   rw [← hy]
@@ -863,17 +863,17 @@ theorem finite_places {R Ω : Type} [CommRing R] [IsDomain R] [Field Ω] [CharZe
       ∀ x : R, 0 ≤ v (algebraMap R Ω x) ∧ (0 < v (algebraMap R Ω x) ↔ x ∈ P)}.Finite := by
   set O := Localization.AtPrime P
   set F := FractionRing R
-  letI : Algebra O Ω := ((algebraMap F Ω).comp (algebraMap O F)).toAlgebra
-  haveI : IsScalarTower O F Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower R O Ω := IsScalarTower.of_algebraMap_eq (fun r => by
+  let : Algebra O Ω := ((algebraMap F Ω).comp (algebraMap O F)).toAlgebra
+  have : IsScalarTower O F Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower R O Ω := IsScalarTower.of_algebraMap_eq (fun r => by
     rw [IsScalarTower.algebraMap_apply O F Ω, ← IsScalarTower.algebraMap_apply R O F,
       ← IsScalarTower.algebraMap_apply R F Ω])
-  haveI : CharZero F := RingHom.charZero (algebraMap F Ω)
+  have : CharZero F := RingHom.charZero (algebraMap F Ω)
   obtain ⟨hD, _, _, _, hmax, _⟩ := ReciprocityTheory.MultiplicativeHeights.Closed.dedekindRank O F Ω
-  haveI : IsFractionRing (integralClosure O Ω) Ω :=
+  have : IsFractionRing (integralClosure O Ω) Ω :=
     integralClosure.isFractionRing_of_finite_extension F Ω
-  haveI := hmax.to_subtype
-  haveI : Finite (HeightOneSpectrum (integralClosure O Ω)) := by
+  have := hmax.to_subtype
+  have : Finite (HeightOneSpectrum (integralClosure O Ω)) := by
     refine Finite.of_injective (fun v => (⟨v.asIdeal, v.isMaximal⟩ :
       {I : Ideal (integralClosure O Ω) | I.IsMaximal})) ?_
     intro v v' h
@@ -895,13 +895,13 @@ theorem finite_vertical_gauss_valuations : ∀ (K Ω : Type) [Field K] [NumberFi
   obtain ⟨v₀, -, -, la₀, h₀⟩ := Set.Infinite.nonempty hinf
   apply hinf
   clear hinf
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
   let ι : 𝓞 K →+* Ω := (algebraMap K Ω).comp (algebraMap (𝓞 K) K)
   have hι : Function.Injective ι :=
     (algebraMap K Ω).injective.comp (IsFractionRing.injective (𝓞 K) K)
   let φ : MvPolynomial (Fin D) (𝓞 K) →+* Ω := MvPolynomial.eval₂Hom ι x
   have hinj : Function.Injective φ := by
-    haveI := VerticalGauss.isDVR (Fin D) la₀
+    have := VerticalGauss.isDVR (Fin D) la₀
     obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot la₀.ne_bot
     refine VerticalGauss.injective_of_dvr φ (VerticalGauss.extPrime (Fin D) la₀) (fun r hr => ?_) (MvPolynomial.C a)
       (Ideal.mem_map_of_mem _ ha) ?_
@@ -910,28 +910,28 @@ theorem finite_vertical_gauss_valuations : ∀ (K Ω : Type) [Field K] [NumberFi
       rw [hr]; simp
     · simp only [φ, MvPolynomial.eval₂Hom_C]
       exact (map_ne_zero_iff _ hι).2 ha0
-  letI : Algebra (𝓞 K) Ω := ι.toAlgebra
-  haveI : IsScalarTower (𝓞 K) K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : FaithfulSMul (𝓞 K) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hι
+  let : Algebra (𝓞 K) Ω := ι.toAlgebra
+  have : IsScalarTower (𝓞 K) K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : FaithfulSMul (𝓞 K) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hι
   have hind : AlgebraicIndependent (𝓞 K) x := hinj
-  haveI : Algebra.IsAlgebraic (𝓞 K) K := IsLocalization.isAlgebraic K (nonZeroDivisors (𝓞 K))
+  have : Algebra.IsAlgebraic (𝓞 K) K := IsLocalization.isAlgebraic K (nonZeroDivisors (𝓞 K))
   have hB : IsTranscendenceBasis K x :=
     (hind.extendScalars K).isTranscendenceBasis_of_trdeg_le_of_finite (by simp [htr])
   have hB' : IsTranscendenceBasis (𝓞 K) x :=
     (Algebra.IsAlgebraic.isTranscendenceBasis_iff (𝓞 K) K).2 hB
   set R := MvPolynomial (Fin D) (𝓞 K)
-  letI : Algebra R Ω := φ.toAlgebra
-  haveI : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI halg : Algebra.IsAlgebraic R Ω := by
+  let : Algebra R Ω := φ.toAlgebra
+  have : FaithfulSMul R Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+  have halg : Algebra.IsAlgebraic R Ω := by
     have := hB'.isAlgebraic
     exact Algebra.IsAlgebraic.of_ringHom_of_comp_eq hind.aevalEquiv.toRingEquiv.toRingHom
       (RingHom.id Ω) hind.aevalEquiv.surjective Function.injective_id
       (RingHom.ext fun p => hind.algebraMap_aevalEquiv p)
-  letI : Algebra (FractionRing R) Ω := FractionRing.liftAlgebra R Ω
-  haveI : IsScalarTower R (FractionRing R) Ω := FractionRing.isScalarTower_liftAlgebra R Ω
-  haveI : Algebra.IsAlgebraic (FractionRing R) Ω := Algebra.IsAlgebraic.extendScalars
+  let : Algebra (FractionRing R) Ω := FractionRing.liftAlgebra R Ω
+  have : IsScalarTower R (FractionRing R) Ω := FractionRing.isScalarTower_liftAlgebra R Ω
+  have : Algebra.IsAlgebraic (FractionRing R) Ω := Algebra.IsAlgebraic.extendScalars
     (IsFractionRing.injective R (FractionRing R))
-  haveI : FiniteDimensional (FractionRing R) Ω := by
+  have : FiniteDimensional (FractionRing R) Ω := by
     obtain ⟨S, hS⟩ := hFG
     have htop : IntermediateField.adjoin (FractionRing R) (S : Set Ω) = ⊤ := by
       rw [eq_top_iff]
@@ -972,7 +972,7 @@ theorem finite_vertical_gauss_valuations : ∀ (K Ω : Type) [Field K] [NumberFi
       (0 < v (algebraMap R Ω y) ↔ y ∈ VerticalGauss.extPrime (Fin D) la) := fun y => by
     rw [VerticalGauss.mem_extPrime]; exact hla y
   refine Set.mem_biUnion (x := la) ?_ ⟨hv, hla'⟩
-  rw [Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+  rw [Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
   refine (VerticalGauss.mem_extPrime la _).1 ?_ m
   by_contra hrs
   have hz : ∀ y : R, y ∉ VerticalGauss.extPrime (Fin D) la → v (algebraMap R Ω y) = 0 := fun y hy =>
@@ -1009,7 +1009,7 @@ theorem finsum_embeddings_over_eq_sum_roots {F L : Type} [Field F] [Field L] [Al
     (hg : ∀ P : L →+* ℂ, P.comp (algebraMap F L) = τ → g P = g' (P pb.gen)) :
     ∑ᶠ P ∈ {P : L →+* ℂ | P.comp (algebraMap F L) = τ}, g P = ∑ k, g' (r k) := by
   classical
-  letI : Algebra F ℂ := τ.toAlgebra
+  let : Algebra F ℂ := τ.toAlgebra
   have hτ : algebraMap F ℂ = τ := rfl
   have hroot : ∀ k, aeval (r k) (minpoly F pb.gen) = 0 := by
     intro k
@@ -1058,7 +1058,7 @@ theorem measurable_sum_embeddings_over_generic_point :
   classical
   set R := MvPolynomial σ K with hR
   set F := FractionRing R with hF
-  haveI : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective R F)
+  have : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective R F)
   let pb : PowerBasis F L := Field.powerBasisOfFiniteOfSeparable F L
   obtain ⟨ρ, hρm, hρ⟩ := hρ pb.dim
   choose nu de hde hfr using fun z : F => IsFractionRing.div_surjective (A := R) z
@@ -1166,7 +1166,7 @@ private theorem fg_lemma {F K : Type} [Field F] [Field K] [Algebra F K] (σ : Ty
     (h : (⊤ : IntermediateField F K).FG) :
     (⊤ : IntermediateField F (FractionRing (MvPolynomial σ K))).FG := by
   rw [IntermediateField.fg_top_iff] at h ⊢
-  haveI : Algebra.EssFiniteType K (FractionRing (MvPolynomial σ K)) :=
+  have : Algebra.EssFiniteType K (FractionRing (MvPolynomial σ K)) :=
     Algebra.EssFiniteType.comp K (MvPolynomial σ K) _
   exact Algebra.EssFiniteType.comp F K _
 
@@ -1263,7 +1263,7 @@ theorem main : ∀ {d : ℕ} (p : Polynomial (MvPolynomial (Fin d) ℂ)) (x₀ :
   · refine ⟨{x | (evalFun p (x₀, a), x) ∈ φ.toOpenPartialHomeomorph.target}, ?_, ?_⟩
     · apply IsOpen.mem_nhds
       · exact φ.toOpenPartialHomeomorph.open_target.preimage (by fun_prop)
-      · simpa only [Set.mem_setOf_eq, φ, HasStrictFDerivAt.pt_implicitFunctionDataOfProdDomain,
+      · simpa only [Set.mem_ofPred_eq, φ, HasStrictFDerivAt.pt_implicitFunctionDataOfProdDomain,
           HasStrictFDerivAt.leftFun_implicitFunctionDataOfProdDomain,
           HasStrictFDerivAt.rightFun_implicitFunctionDataOfProdDomain, Prod.fst] using
           φ.map_pt_mem_toOpenPartialHomeomorph_target
@@ -1347,7 +1347,7 @@ theorem exists_embeddings_of_roots {F L : Type} [Field F] [Field L] [Algebra F L
     (hr : ∀ z, ((minpoly F pb.gen).map τ).eval z = 0 ↔ ∃ i, r i = z) :
     ∃ P : Fin n → (L →+* ℂ), (∀ k, P k pb.gen = r k) ∧
       Set.range P = {P : L →+* ℂ | P.comp (algebraMap F L) = τ} := by
-  letI : Algebra F ℂ := τ.toAlgebra
+  let : Algebra F ℂ := τ.toAlgebra
   have hτ : algebraMap F ℂ = τ := rfl
   have hroot : ∀ k, aeval (r k) (minpoly F pb.gen) = 0 := by
     intro k
@@ -1389,7 +1389,7 @@ theorem exists_continuousOn_embeddings (K : Type) [Field K] [CharZero K] (σ : T
   classical
   set R := MvPolynomial σ K with hR
   set F := FractionRing R with hF
-  haveI : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective R F)
+  have : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective R F)
   let pb : PowerBasis F L := Field.powerBasisOfFiniteOfSeparable F L
   choose nu de hde hfr using fun z : F => IsFractionRing.div_surjective (A := R) z
   let ev : F → (σ → ℂ) → ℂ := fun f t =>
@@ -1456,7 +1456,7 @@ theorem exists_continuousOn_embeddings (K : Type) [Field K] [CharZero K] (σ : T
         rw [hτa]
         exact hQ q
   have hU : cf ⁻¹' V ∈ 𝓝 t₀ := hcf t₀ ht₀ hV
-  haveI : Nonempty (Fin p.natDegree → (L →+* ℂ)) :=
+  have : Nonempty (Fin p.natDegree → (L →+* ℂ)) :=
     ⟨(key t₀ ⟨mem_of_mem_nhds hU, ht₀⟩).choose⟩
   choose! P hP1 hP2 hP3 using key
   refine ⟨_, hU, p.natDegree, fun k t => P t k, fun k a => ?_, fun t ht => ⟨?_, hP3 t ht⟩⟩
@@ -1507,8 +1507,8 @@ theorem exists_local_families (K Ω : Type) [Field K] [CharZero K] [Countable K]
   rw [hadj] at hw'
   have hJ := (exists_linearIndependent_D_iff_trdeg_adjoin_eq htr x).2 hw'
   obtain ⟨hinj, hfin⟩ := sImg_indep_finite K Ω D N j₀ x hfg htr hJ
-  letI : Algebra (FractionRing (MvPolynomial (TVar D N) K)) (OmS Ω D N) := (liftS hinj).toAlgebra
-  haveI := liftS_finite hinj hfin
+  let : Algebra (FractionRing (MvPolynomial (TVar D N) K)) (OmS Ω D N) := (liftS hinj).toAlgebra
+  have := liftS_finite hinj hfin
   obtain ⟨s₀, hs₀⟩ := exists_ae_cons _ (Measure.toSphere_ne_zero _) D _
     (ae_eval₂_ne_zero_pi_toSphere K sg (D + 1) N)
   let F : (Fin D → Metric.sphere (0 : EuclideanSpace ℂ (Fin (N + 1))) 1) → TVar D N → ℂ :=
@@ -1526,11 +1526,11 @@ theorem exists_local_families (K Ω : Type) [Field K] [CharZero K] [Countable K]
   let G : Set (TVar D N → ℂ) :=
     {τ | ∀ p : MvPolynomial (TVar D N) K, p ≠ 0 → MvPolynomial.eval₂ sg τ p ≠ 0}
   have hGm : MeasurableSet G := by
-    haveI := NPB.countable_mvPoly (σ := TVar D N) (R := K)
+    have := NPB.countable_mvPoly (σ := TVar D N) (R := K)
     have : G = ⋂ p : MvPolynomial (TVar D N) K, ⋂ _ : p ≠ 0,
         {τ | MvPolynomial.eval τ (MvPolynomial.map sg p) ≠ 0} := by
       ext τ
-      simp only [G, Set.mem_setOf_eq, Set.mem_iInter, MvPolynomial.eval_map]
+      simp only [G, Set.mem_ofPred_eq, Set.mem_iInter, MvPolynomial.eval_map]
     rw [this]
     exact MeasurableSet.iInter fun p => MeasurableSet.iInter fun _ =>
       (isOpen_ne_fun (MvPolynomial.continuous_eval _) continuous_const).measurableSet
@@ -1543,7 +1543,7 @@ theorem exists_local_families (K Ω : Type) [Field K] [CharZero K] [Countable K]
     fun k t => (Q k (F t)).comp (algebraMap Ω (OmS Ω D N)), fun k a => ?_, fun t ht => ?_⟩
   · exact (hQc k (algebraMap Ω (OmS Ω D N) a)).comp hF.continuousOn fun t ht => ht
   have hb := bijOn_restrict (K := K) j₀ x sg (F t) (fun Q hQ hrel => by
-    letI : Algebra K ℂ := sg.toAlgebra
+    let : Algebra K ℂ := sg.toAlgebra
     let φ : Ω →ₐ[K] ℂ := { Q with commutes' := fun r => DFunLike.congr_fun hQ r }
     refine existsUnique_ringHom_OmS K Ω ℂ D N j₀ x (F t) φ htr ?_ hrel
     rw [algebraicIndependent_iff]
@@ -1564,7 +1564,7 @@ theorem exists_local_families (K Ω : Type) [Field K] [CharZero K] [Countable K]
   rw [← Set.range_comp] at this
   refine Eq.trans this ?_
   ext P
-  simp only [Set.mem_setOf_eq, F, Fin.cons_succ]
+  simp only [Set.mem_ofPred_eq, F, Fin.cons_succ]
   refine and_congr_right fun _ => forall_congr' fun i => ?_
   rw [Fin.sum_univ_succAbove _ j₀, hw, map_one, mul_one]
 
@@ -1579,7 +1579,7 @@ namespace GlobalTheory.Reg
 
 theorem stLoc_of_trdeg : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ [Fintype (Comp Xo c)] (h : GenFrEx Xo c) (Dd N : ℕ) (uL : WtR E) (wR : Fin (N + 1) → Rul Xo c) (jc : Comp Xo c → Fin (N + 1)), FnFG Xo c → FnTrdeg Xo c Dd → (∀ Z, evC h Z (wR (jc Z)) ≠ 0) → (∀ Z, Algebra.trdeg c.F (IntermediateField.adjoin c.F (Set.range fun j => evC h Z (wR j) / evC h Z (wR (jc Z)))) = Dd) → STLoc h Dd N uL wR jc := by
   intro E _ _ _ H Dw l Xo c _ h Dd N uL wR jc hfg htr hw hw' _ _ _ Z sg
-  haveI : Countable c.F := Countable.of_equiv _ (Module.finBasis ℚ c.F).equivFun.toEquiv.symm
+  have : Countable c.F := Countable.of_equiv _ (Module.finBasis ℚ c.F).equivFun.toEquiv.symm
   have hr : ∀ j, T0.ratio (Ω := Om Z) (valG h uL (wR j) Z) (valG h uL (wR (jc Z)) Z) =
       evC h Z (wR j) / evC h Z (wR (jc Z)) := by
     intro j

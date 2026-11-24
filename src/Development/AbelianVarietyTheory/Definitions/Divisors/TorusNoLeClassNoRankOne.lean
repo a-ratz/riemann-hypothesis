@@ -98,7 +98,7 @@ theorem one_tmul_injective : Function.Injective fun x : E => (1 : FiniteAdeleRin
   have hA : Function.Injective (algebraMap F (FiniteAdeleRing (𝓞 F) F)) := by
     obtain ⟨p, hp0, hp⟩ := Ring.not_isField_iff_exists_prime.1 (RingOfIntegers.not_isField F)
     let v : HeightOneSpectrum (𝓞 F) := ⟨p, hp, hp0⟩
-    haveI : Nontrivial (FiniteAdeleRing (𝓞 F) F) := ⟨0, 1, fun h => by
+    have : Nontrivial (FiniteAdeleRing (𝓞 F) F) := ⟨0, 1, fun h => by
       have := congrArg (fun a : FiniteAdeleRing (𝓞 F) F => a v) h
       exact zero_ne_one (α := v.adicCompletion F) this⟩
     exact (algebraMap F _).injective

@@ -62,14 +62,14 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n N : ℕ}
 
 theorem classSum_mul {M : ℕ} (hM : 0 < M) (c : ℂ) (f : Lt E n → ℂ) :
     classSum M (fun Λ => c * f Λ) = c * classSum M f := by
-  haveI := (finite_cls_and_stab E n M hM).1
-  haveI := Fintype.ofFinite (Cls E n M)
+  have := (finite_cls_and_stab E n M hM).1
+  have := Fintype.ofFinite (Cls E n M)
   simp only [classSum, finsum_eq_sum_of_fintype, Finset.mul_sum, mul_left_comm]
 
 theorem classSum_add {M : ℕ} (hM : 0 < M) (f g : Lt E n → ℂ) :
     classSum M (fun Λ => f Λ + g Λ) = classSum M f + classSum M g := by
-  haveI := (finite_cls_and_stab E n M hM).1
-  haveI := Fintype.ofFinite (Cls E n M)
+  have := (finite_cls_and_stab E n M hM).1
+  have := Fintype.ofFinite (Cls E n M)
   simp only [classSum, finsum_eq_sum_of_fintype, mul_add, Finset.sum_add_distrib]
 
 theorem transl_mem {β : Matrix (Fin N) (Fin N) E} (hβ : ccT β = β) :

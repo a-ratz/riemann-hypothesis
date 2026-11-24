@@ -58,7 +58,7 @@ theorem UpperTheory.V.AlgebraTools.charpolyPowInt :
   intro R ι _ _ _ S M N hN h i
   rcases subsingleton_or_nontrivial R with hR | hR
   · exact ⟨1, Polynomial.monic_one, Subsingleton.elim _ _⟩
-  haveI : Nontrivial S := ⟨⟨0, 1, fun e => zero_ne_one (congrArg Subtype.val e)⟩⟩
+  have : Nontrivial S := ⟨⟨0, 1, fun e => zero_ne_one (congrArg Subtype.val e)⟩⟩
   have hdvd : M.charpoly ∣ (M ^ N).charpoly.comp (X ^ N) := by
     set A : Matrix ι ι R[X] := Matrix.scalar ι (X : R[X]) with hAdef
     set B : Matrix ι ι R[X] := (C : R →+* R[X]).mapMatrix M with hBdef

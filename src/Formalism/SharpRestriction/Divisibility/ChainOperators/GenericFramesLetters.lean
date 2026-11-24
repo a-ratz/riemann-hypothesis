@@ -142,7 +142,7 @@ theorem Lj_inl_inr (Th : MvPowerSeries (Lt × Fin N0 × Fin N1) ℂ_[l])
   | monomial α r =>
     induction q using MvPolynomial.induction_on' with
     | monomial β t =>
-      rw [rename_monomial, rename_monomial, monomial_mul, Lj_monomial, Sj_monomial, map_monomial,
+      rw [rename_monomial, rename_monomial, monomial_mul_monomial, Lj_monomial, Sj_monomial, map_monomial,
         atMon, sfe_inl_inr]
       simp only [smul_monomial, zsmul_eq_mul, smul_eq_mul, eq_intCast, Int.cast_mul]
       congr 1
@@ -831,7 +831,7 @@ theorem monomial_mem_sup (O : MonomialOrder σ) {ι : Type*} (c : ι → MvPolyn
     monomial e a ∈ Submodule.span R (Set.range c) ⊔
       restrictSupport R (Set.range fun i => O.degree (c i))ᶜ := by
   classical
-  haveI := O.wf
+  have := O.wellFoundedLT_syn
   have key : ∀ s : O.syn, ∀ e : σ →₀ ℕ, O.toSyn e = s → ∀ a : R,
       monomial e a ∈ Submodule.span R (Set.range c) ⊔
         restrictSupport R (Set.range fun i => O.degree (c i))ᶜ := by
@@ -857,9 +857,9 @@ theorem monomial_mem_sup (O : MonomialOrder σ) {ι : Type*} (c : ι → MvPolyn
         have hne : d ≠ O.degree (c i) := by
           intro hdeq
           apply hd'
-          rw [hdeq, hq, MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, if_pos rfl, hlc1, sub_self]
+          rw [hdeq, hq, MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, ite_eq_left rfl, hlc1, sub_self]
         have hci : (c i).coeff d ≠ 0 := by
-          rw [hq, MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, if_neg (Ne.symm hne),
+          rw [hq, MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, ite_eq_right (Ne.symm hne),
             sub_zero] at hd'
           exact hd'
         have hle := MonomialOrder.le_degree (m := O) (MvPolynomial.mem_support_iff.mpr hci)

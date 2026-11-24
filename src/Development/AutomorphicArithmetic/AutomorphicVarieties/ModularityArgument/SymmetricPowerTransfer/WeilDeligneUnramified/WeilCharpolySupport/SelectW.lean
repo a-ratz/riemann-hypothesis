@@ -49,14 +49,14 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem selectThrough {α β : Type} (f : α → β) (S : Set α) (a : α) (ha : a ∈ S) :
     ∃ P ⊆ S, a ∈ P ∧ Set.InjOn f P ∧ ∀ w ∈ S, ∃ w' ∈ P, f w' = f w := by
   classical
-  haveI : Nonempty α := ⟨a⟩
+  have : Nonempty α := ⟨a⟩
   let g : β → α := fun b => if b = f a then a else Function.invFunOn f S b
   have hg : ∀ b ∈ f '' S, g b ∈ S ∧ f (g b) = b := by
     intro b hb
     by_cases h : b = f a
-    · simp only [g, if_pos h]
+    · simp only [g, ite_eq_left h]
       exact ⟨ha, h.symm⟩
-    · simp only [g, if_neg h]
+    · simp only [g, ite_eq_right h]
       exact ⟨Function.invFunOn_mem hb, Function.invFunOn_eq hb⟩
   refine ⟨g '' (f '' S), ?_, ?_, ?_, ?_⟩
   · rintro _ ⟨b, hb, rfl⟩

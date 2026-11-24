@@ -73,7 +73,7 @@ theorem injective_of_isAlgebraic {o O : Type} [CommRing o] [IsDomain o] [CommRin
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro x hx
   by_contra hx0
-  refine Ideal.comap_ne_bot_of_algebraic_mem (I := RingHom.ker ψ) hx0 hx (ha.1 x) ?_
+  refine Ideal.under_ne_bot_of_algebraic_mem (I := RingHom.ker ψ) hx0 hx (ha.1 x) ?_
   rw [eq_bot_iff]
   intro n hn
   simpa [Ideal.mem_comap, RingHom.mem_ker] using hn

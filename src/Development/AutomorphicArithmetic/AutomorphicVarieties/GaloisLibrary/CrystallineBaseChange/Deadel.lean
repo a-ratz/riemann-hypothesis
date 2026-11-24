@@ -293,7 +293,7 @@ private theorem nsl_rot (k : ℕ) (f : ℍ → ℂ) (θ : ℝ) :
     simp [rot_val]
     linear_combination (Complex.sin θ) * Complex.I_mul_I
   simp only [nsl]
-  rw [e, e', rot_det, mul_div_cancel_right₀ _ (Complex.exp_ne_zero _), ← Complex.exp_int_mul]
+  rw [e, e', rot_det, mul_div_cancel_right₀ _ (Complex.exp_ne_zero _), ← Complex.exp_intCast_mul]
   have : ofComplex Complex.I = UpperHalfPlane.I := ofComplex_apply UpperHalfPlane.I
   simp only [abs_one, Real.one_rpow, sign_one, SignType.coe_one, Complex.ofReal_one, one_mul, this]
   congr 2
@@ -584,7 +584,7 @@ private theorem UpperTheory.V.Br.per_tendsto {g : ℂ → ℂ} {h : ℝ} (hh : 0
   have hO : Periodic.cuspFunction h g =O[𝓝[≠] 0] fun q : ℂ => |Real.log ‖q‖| ^ (m : ℝ) := by
     refine IsBigO.of_bound (|C| * (h / (2 * π)) ^ m) ?_
     filter_upwards [(Periodic.invQParam_tendsto hh).eventually (hev 1), self_mem_nhdsWithin] with q hq hq0
-    rw [Periodic.cuspFunction_eq_of_nonzero h g hq0]
+    rw [Periodic.cuspFunction_eq_of_ne_zero h g hq0]
     refine (hb' _ hq).trans ((le_abs_self _).trans (le_of_eq ?_))
     have : 0 < h / (2 * π) := by positivity
     rw [Periodic.im_invQParam, abs_mul, abs_pow, abs_mul, neg_div, abs_neg, abs_of_pos this,
@@ -782,7 +782,7 @@ open UpperTheory.V.Br in
 theorem UpperTheory.V.Br.deadel :
     UpperTheory.V.Br.Deadel := by
   intro k N hN χ ω hω φ hc hlow hK hz
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   have hlift := downLift k N hN φ hc.1.left hlow hK
   have hχ := downChar k N hN χ ω hω _ _ hlift hz
   refine ⟨⟨⟨down k φ.1, ?_⟩, downHol k φ hlow, ?_⟩, hχ, hlift⟩

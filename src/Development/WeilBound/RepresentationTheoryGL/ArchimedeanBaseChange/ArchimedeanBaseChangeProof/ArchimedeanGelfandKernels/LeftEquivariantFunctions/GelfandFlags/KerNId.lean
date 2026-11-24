@@ -74,8 +74,8 @@ theorem contOn_avg (hLg : LgCpt) [MeasurableSpace (G n)] [BorelSpace (G n)] {N :
     [NormedSpace ℝ X] (h : Mat n → X) (hc : ContinuousOn h (GLs n)) (R : ℝ)
     (hR : ∀ y ∈ GLs n, R < lg y → h y = 0) :
     ContinuousOn (fun y => ∫ u : N, h ((u : G n).val * y) ∂ν) (GLs n) := by
-  haveI : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : FirstCountableTopology (Mat n) := inferInstanceAs (FirstCountableTopology (Fin n → Fin n → ℂ))
+  have : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
+  have : FirstCountableTopology (Mat n) := inferInstanceAs (FirstCountableTopology (Fin n → Fin n → ℂ))
   intro y₀ hy₀
   obtain ⟨K, hKn, hKs, hK⟩ := local_compact_nhds (isOpen_GLs.mem_nhds hy₀)
   obtain ⟨M, hM⟩ := hK.bddAbove_image (lg_contOn.mono hKs)
@@ -120,19 +120,19 @@ theorem key (hLg : LgCpt) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measu
     (Rφ : ℝ) (hφR : ∀ y ∈ GLs n, Rφ < lg y → φ y = 0) :
     ∫ y : G n, k y.val (B y.val (∫ u : N, φ ((u : G n).val * y.val) ∂ν)) ∂μ =
       ∫ y : G n, (∫ u : N, k ((u : G n).val * y.val) ∂ν) (B y.val (φ y.val)) ∂μ := by
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin n) (Fin n) ℂ)).symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (G n) := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : SigmaCompactSpace (G n) := ⟨⟨fun m : ℕ => {y : G n | lg y.val ≤ m}, fun m => hLg n m, by
+  have : SecondCountableTopology (G n) := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : SigmaCompactSpace (G n) := ⟨⟨fun m : ℕ => {y : G n | lg y.val ≤ m}, fun m => hLg n m, by
     ext y
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
     exact exists_nat_ge _⟩⟩
-  haveI : SigmaCompactSpace N := ⟨⟨fun m : ℕ => {u : N | lg ((u : G n) : Mat n) ≤ m},
+  have : SigmaCompactSpace N := ⟨⟨fun m : ℕ => {u : N | lg ((u : G n) : Mat n) ≤ m},
     fun m => cptN hLg hNc m, by
     ext y
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
     exact exists_nat_ge _⟩⟩
   have iφ : ∀ y : G n, Integrable (fun u : N => φ ((u : G n).val * y.val)) ν := fun y =>
     integrable_N hLg hNc ν φ hφc Rφ hφR y.val (memGL y)
@@ -151,7 +151,7 @@ theorem key (hLg : LgCpt) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measu
       (hLg n Rk).prod (cptN hLg hNc (Rk + Rφ))
     refine cF.integrable_of_hasCompactSupport (HasCompactSupport.intro KF ?_)
     rintro ⟨y, u⟩ hp
-    simp only [Set.mem_prod, Set.mem_setOf_eq, not_and_or, not_le] at hp
+    simp only [Set.mem_prod, Set.mem_ofPred_eq, not_and_or, not_le] at hp
     show k y.val (B y.val (φ ((u : G n).val * y.val))) = 0
     by_cases hy : lg y.val ≤ Rk
     · have hu : Rk + Rφ < lg ((u : G n) : Mat n) := by
@@ -160,7 +160,7 @@ theorem key (hLg : LgCpt) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measu
         · exact h
       have h1 := lg_le_of_mul ((u : G n) : Mat n) y.val (memGL y)
       rw [hφR _ (mul_memGL _ _ (memGL y)) (by linarith), map_zero, map_zero]
-    · rw [hkR _ (memGL y) (lt_of_not_ge hy), ContinuousLinearMap.zero_apply]
+    · rw [hkR _ (memGL y) (lt_of_not_ge hy), zero_apply]
   have iH : Integrable (Function.uncurry H) (μ.prod ν) := by
     have cH : Continuous (Function.uncurry H) :=
       (hkc.comp_continuous cu2 (fun p => mul_memGL _ _ (memGL _))).clm_apply
@@ -169,7 +169,7 @@ theorem key (hLg : LgCpt) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measu
       (hLg n Rφ).prod (cptN hLg hNc (Rk + Rφ))
     refine cH.integrable_of_hasCompactSupport (HasCompactSupport.intro KH ?_)
     rintro ⟨y, u⟩ hp
-    simp only [Set.mem_prod, Set.mem_setOf_eq, not_and_or, not_le] at hp
+    simp only [Set.mem_prod, Set.mem_ofPred_eq, not_and_or, not_le] at hp
     show k ((u : G n).val * y.val) (B y.val (φ y.val)) = 0
     by_cases hy : lg y.val ≤ Rφ
     · have hu : Rk + Rφ < lg ((u : G n) : Mat n) := by
@@ -177,7 +177,7 @@ theorem key (hLg : LgCpt) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measu
         · exact absurd hy (not_le.mpr h)
         · exact h
       have h1 := lg_le_of_mul ((u : G n) : Mat n) y.val (memGL y)
-      rw [hkR _ (mul_memGL _ _ (memGL y)) (by linarith), ContinuousLinearMap.zero_apply]
+      rw [hkR _ (mul_memGL _ _ (memGL y)) (by linarith), zero_apply]
     · rw [hφR _ (memGL y) (lt_of_not_ge hy), map_zero, map_zero]
   have s1 : ∀ y : G n, k y.val (B y.val (∫ u : N, φ ((u : G n).val * y.val) ∂ν)) = ∫ u : N, F y u ∂ν := by
     intro y
@@ -237,13 +237,13 @@ private theorem integrable_of_continuousOn_of_eq_zero_lg_gt (hLg : LgCpt) {n : �
   refine hcont.integrable_of_hasCompactSupport ?_
   refine HasCompactSupport.intro (hLg n R) ?_
   intro y hy
-  simp only [Set.mem_setOf_eq, not_le] at hy
+  simp only [Set.mem_ofPred_eq, not_le] at hy
   exact hR _ (KN.memGL y) hy
 
 theorem kerNId_of' (hLg : LgCpt) : KerNId := by
   intro hNil hKZ hAvg n i1 i2 μ i3 E k hk hsupp hequi W₁ W₂ hW N hN ν i4 A hA hQ hcomm y hy
   obtain ⟨hNc, hInv⟩ := hNil n W₁ W₂ hW N hN
-  haveI := hInv ν
+  have := hInv ν
   obtain ⟨Rk, hRk⟩ := hsupp
   have hkc : ContinuousOn k (GLs n) := hk.continuousOn
   have hAc : ContinuousOn A (GLs n) := hA.1.continuousOn
@@ -288,7 +288,7 @@ theorem kerNId_of' (hLg : LgCpt) : KerNId := by
       (fun _ _ _ => rfl) f hfc Rf hRf
     have hc := hcomm _ hF.1 hF.2 1 h1
     simp only [act, one_mul] at hc
-    simp only [ContinuousLinearMap.one_apply] at k2
+    simp only [one_apply_eq_self] at k2
     simp only [hKapp] at k1 k2
     have I1 : Integrable (fun x : G n => K ↑x (A ↑x (f ↑x))) μ :=
       integrable_of_continuousOn_of_eq_zero_lg_gt hLg μ (fun x => K x (A x (f x)))
@@ -300,7 +300,7 @@ theorem kerNId_of' (hLg : LgCpt) : KerNId := by
     have I3 : Integrable (fun x : G n => K ↑x (f ↑x)) μ :=
       integrable_of_continuousOn_of_eq_zero_lg_gt hLg μ (fun x => K x (f x)) (hKc.clm_apply hfc) Rf
         (fun x hx h => by simp [hRf x hx h])
-    simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.mul_apply]
+    simp only [sub_apply, mul_apply_eq_comp]
     rw [integral_sub I1 I2, (A 1).integral_comp_comm I3, ← k1, ← k2, hc, sub_self]
   have hκ : K y * A y - A 1 * K y = 0 :=
     hKZ n μ E (fun x => K x * A x - A 1 * K x) hκc hκr hκi y hy

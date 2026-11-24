@@ -66,7 +66,7 @@ theorem eval_map_eq (z : (Σ k, ι k) → ℂ) (f : MRing ι) :
 
 theorem ptsOver_complex (P : Ideal (MRing ι)) : ptsOver ℂ P = mcPts P := by
   ext z
-  simp only [ptsOver, mcPts, Set.mem_setOf_eq, eval_map_eq]
+  simp only [ptsOver, mcPts, Set.mem_ofPred_eq, eval_map_eq]
 
 theorem hasVal_unique (y : (Σ k, ι k) → Ω) (a : K → ℤ) (s : Ω) {𝕜 : Type} [Field 𝕜]
     {z : (Σ k, ι k) → 𝕜} (hz : z ∈ ptsOver 𝕜 (mCoordIdeal y)) {w w' : 𝕜}

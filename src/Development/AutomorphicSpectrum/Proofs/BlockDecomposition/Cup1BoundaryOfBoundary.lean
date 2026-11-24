@@ -154,11 +154,11 @@ theorem dl_spec (n : ℕ) (i : Fin (n + 2)) (j : Fin (n + 1)) :
   rcases Nat.lt_or_ge (j : ℕ) i with h | h
   · left
     refine ⟨h, ?_⟩
-    rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def, Fin.coe_castSucc]; exact h),
-      Fin.coe_castSucc]
+    rw [Fin.succAbove_of_castSucc_lt _ _ (by rw [Fin.lt_def, Fin.val_castSucc]; exact h),
+      Fin.val_castSucc]
   · right
     refine ⟨h, ?_⟩
-    rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def, Fin.coe_castSucc]; exact h),
+    rw [Fin.succAbove_of_le_castSucc _ _ (by rw [Fin.le_def, Fin.val_castSucc]; exact h),
       Fin.val_succ]
 
 theorem front_val (n : ℕ) (j : Fin 2) : (front n j : ℕ) = j := rfl
@@ -325,7 +325,7 @@ theorem exists_dual_functionals_of_linearIndependent :
       ∀ x : ι → V, LinearIndependent R x →
         ∃ l : ι → V →ₗ[R] R, ∀ i j, l i (x j) = if i = j then 1 else 0 := by
   intro R V ι _ _ _ _ hR x hx
-  letI : Field R := hR.toField
+  let : Field R := hR.toField
   obtain ⟨b, hb⟩ : ∃ b : Module.Basis ι R (Submodule.span R (Set.range x)),
       ∀ k, (b k : V) = x k := ⟨Module.Basis.span hx, fun k => by rw [Module.Basis.span_apply hx k]⟩
   have hext : ∀ i : ι, ∃ g : V →ₗ[R] R,
@@ -375,7 +375,7 @@ theorem exists_factor_of_exact_isField {K A B D : Type} [CommRing K] (hK : IsFie
     [AddCommGroup A] [Module K A] [AddCommGroup B] [Module K B] [AddCommGroup D] [Module K D]
     (f : A →ₗ[K] B) (g : B →ₗ[K] D) (hfg : Function.Exact f g) (μ : B →ₗ[K] K)
     (hμ : ∀ a, μ (f a) = 0) : ∃ ρ : D →ₗ[K] K, μ = ρ ∘ₗ g := by
-  letI := hK.toField
+  let := hK.toField
   exact exists_factor_of_exact_field f g hfg μ hμ
 
 theorem exists_rho_of_exact {R : Type} [CommRing R] {C : Type} [Category.{0} C]
@@ -930,9 +930,9 @@ theorem sign_off (q : ℕ) (i : Fin (q + 2)) (k : Fin (q + 1)) :
   simp only [val_succAbove, val_predAbove, Fin.val_castSucc]
   by_cases h : (k : ℕ) < i
   · obtain ⟨m, hm⟩ : ∃ m, (i : ℕ) = m + 1 := ⟨(i : ℕ) - 1, by omega⟩
-    rw [if_pos h, if_pos h, if_pos (by omega), hm]
+    rw [ite_eq_left h, ite_eq_left h, ite_eq_left (by omega), hm]
     simp [pow_add, pow_succ]
-  · rw [if_neg h, if_neg (by omega), if_neg (by omega)]
+  · rw [ite_eq_right h, ite_eq_right (by omega), ite_eq_right (by omega)]
     simp [pow_add, pow_succ]
 
 def fwd (q : ℕ) (p : Fin (q + 2) × Fin (q + 1)) : Fin (q + 1) × Fin (q + 2) :=
@@ -1245,7 +1245,7 @@ theorem chains_finite (P : Type) [PartialOrder P] [Finite P] (n : ℕ) : Finite 
 
 theorem exists_extend_of_isField (hR : IsField R) {V : Type} [AddCommGroup V] [Module R V] (p : Submodule R V)
     (f : p →ₗ[R] R) : ∃ g : V →ₗ[R] R, g ∘ₗ p.subtype = f := by
-  letI := hR.toField
+  let := hR.toField
   exact LinearMap.exists_extend f
 
 variable {D : Type} [Category.{0} D] {F : C ⥤ CommAlgCat.{0} R} {G : D ⥤ CommAlgCat.{0} R}
@@ -1275,9 +1275,9 @@ theorem hopfLeSt : CxSt → DictSt → LowSt → HopfLeSt := by
   intro _ _ _ R _ P _ _ F g hR hSt hvan hH x hx
   obtain ⟨D, _, G, π, m, hπ, hprim, hb⟩ := hH
   obtain ⟨T₀, ε, -⟩ := hb trivial
-  haveI : Nontrivial R := ⟨hR.exists_pair_ne⟩
-  letI : Fintype (Fin 1 ⥤ Pᵒᵖ) := @Fintype.ofFinite _ (chains_finite P 0)
-  letI : Fintype (Fin 2 ⥤ Pᵒᵖ) := @Fintype.ofFinite _ (chains_finite P 1)
+  have : Nontrivial R := ⟨hR.exists_pair_ne⟩
+  let : Fintype (Fin 1 ⥤ Pᵒᵖ) := @Fintype.ofFinite _ (chains_finite P 0)
+  let : Fintype (Fin 2 ⥤ Pᵒᵖ) := @Fintype.ofFinite _ (chains_finite P 1)
   have hS := exact_of_stein hSt
   choose f hf using fun i ↦ H1.mk_surjective F (x i)
   choose xt hxt using fun i ↦ (GlobalTheory.CompanionTheory.Dict.L1_bijective_cochain F).2 (f i).1
@@ -1304,9 +1304,9 @@ theorem hopfLeSt : CxSt → DictSt → LowSt → HopfLeSt := by
     rw [LinearMap.comp_apply, hΛv i _ (hdd y), hΦd, map_zero]
     rfl
   have hΛ1 : ∀ i, Λ i (xt i) = 1 := fun i ↦ by
-    rw [hΛv i _ (hxc i), hΦx, hl, if_pos rfl]
+    rw [hΛv i _ (hxc i), hΦx, hl, ite_eq_left rfl]
   have hΛn : ∀ i j, i ≠ j → Λ i (xt j) = 0 := fun i j h ↦ by
-    rw [hΛv i _ (hxc j), hΦx, hl, if_neg h]
+    rw [hΛv i _ (hxc j), hΦx, hl, ite_eq_right h]
   have hpr : ∀ i, ∃ u, pulln π 1 (pulln (boxL F) 1 (xt i) + pulln (boxR F) 1 (xt i)) - pulln m 1 (xt i) =
       dn G 0 u := fun i ↦ by
     have h := hprim (x i)

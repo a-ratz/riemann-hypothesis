@@ -58,9 +58,9 @@ theorem lift_unique {R Q T : Type} [CommRing R] [CommRing Q] [CommRing T] [Hense
     (tQ : R →+* Q) (htQ : tQ.Etale) (b : R →+* T) (g₁ g₂ : Q →+* T)
     (h₁ : g₁.comp tQ = b) (h₂ : g₂.comp tQ = b)
     (h : (residue T).comp g₁ = (residue T).comp g₂) : g₁ = g₂ := by
-  letI : Algebra R Q := tQ.toAlgebra
-  letI : Algebra R T := b.toAlgebra
-  haveI : Algebra.Etale R Q := htQ
+  let : Algebra R Q := tQ.toAlgebra
+  let : Algebra R T := b.toAlgebra
+  have : Algebra.Etale R Q := htQ
   let G₁ : Q →ₐ[R] T := { g₁ with commutes' := fun r => DFunLike.congr_fun h₁ r }
   let G₂ : Q →ₐ[R] T := { g₂ with commutes' := fun r => DFunLike.congr_fun h₂ r }
   have := (GlobalTheory.EtaleHensel.bijective_residue_comp R Q T).1 (a₁ := G₁) (a₂ := G₂) (by
@@ -71,9 +71,9 @@ theorem lift_exists {R Q T : Type} [CommRing R] [CommRing Q] [CommRing T] [Hense
     (tQ : R →+* Q) (htQ : tQ.Etale) (b : R →+* T) (ψ : Q →+* ResidueField T)
     (hψ : ψ.comp tQ = (residue T).comp b) :
     ∃ g : Q →+* T, g.comp tQ = b ∧ (residue T).comp g = ψ := by
-  letI : Algebra R Q := tQ.toAlgebra
-  letI : Algebra R T := b.toAlgebra
-  haveI : Algebra.Etale R Q := htQ
+  let : Algebra R Q := tQ.toAlgebra
+  let : Algebra R T := b.toAlgebra
+  have : Algebra.Etale R Q := htQ
   let Ψ : Q →ₐ[R] ResidueField T := { ψ with commutes' := fun r => DFunLike.congr_fun hψ r }
   obtain ⟨G, hG⟩ := (GlobalTheory.EtaleHensel.bijective_residue_comp R Q T).2 Ψ
   refine ⟨G.toRingHom, RingHom.ext fun r => G.commutes r, RingHom.ext fun q => ?_⟩
@@ -130,10 +130,10 @@ theorem exists_ringHom_of_isStrictHenselisation {R S T : Type} [CommRing R] [IsL
     [IsLocalRing S] [CommRing T] [HenselianLocalRing T] [IsSepClosed (ResidueField T)]
     (a : R →+* S) (ha : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation a) (b : R →+* T) [IsLocalHom b] :
     ∃ g : S →+* T, g.comp a = b := by
-  letI : Algebra R S := a.toAlgebra
-  haveI : IsLocalHom (algebraMap R S) := ha.2.2.1
+  let : Algebra R S := a.toAlgebra
+  have : IsLocalHom (algebraMap R S) := ha.2.2.1
   obtain ⟨-, -, hsep⟩ := GlobalTheory.IndEtaleLocal.flat_map_maximalIdeal_isSeparable R S ha.2.2.2
-  letI : Algebra (ResidueField R) (ResidueField T) := (ResidueField.map b).toAlgebra
+  let : Algebra (ResidueField R) (ResidueField T) := (ResidueField.map b).toAlgebra
   let ι : ResidueField S →ₐ[ResidueField R] ResidueField T := IsSepClosed.lift
   refine exists_ringHom_of_isIndEtale a b ha.2.2.2 (ι.toRingHom.comp (residue S)) (RingHom.ext fun r => ?_)
   have h1 : residue S (a r) = algebraMap (ResidueField R) (ResidueField S) (residue R r) := rfl

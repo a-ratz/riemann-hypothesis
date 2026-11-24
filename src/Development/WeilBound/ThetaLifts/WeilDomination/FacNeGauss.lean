@@ -162,7 +162,7 @@ theorem gS_mul_unit (x : k) (hx : valuation k x ≤ 1) (u : kˣ) (hu : valuation
   let uO : 𝒪[k]ˣ := ⟨⟨u, hu1⟩, ⟨((u⁻¹ : kˣ) : k), hui⟩, Subtype.ext (by simp), Subtype.ext (by simp)⟩
   let ub : (Res k c)ˣ := Units.map (Ideal.Quotient.mk (IsLocalRing.maximalIdeal 𝒪[k] ^ c)).toMonoidHom uO
   have hϖ0 : valuation k (ϖ : k) ≠ 0 := (valuation k).ne_zero_iff.2 ϖ.ne_zero
-  have hpos : 0 < valuation k (ϖ : k) ^ c := zero_lt_iff.2 (pow_ne_zero _ hϖ0)
+  have hpos : 0 < valuation k (ϖ : k) ^ c := pos_iff_ne_zero.2 (pow_ne_zero _ hϖ0)
   have hcong : ∀ y : (Res k c)ˣ, valuation k (rep ((y * ub : (Res k c)ˣ) : Res k c) - rep (y : Res k c) * (u : k))
       ≤ valuation k (ϖ : k) ^ c := by
     intro y
@@ -213,7 +213,7 @@ theorem gS_eq_zero_of_lt (hmin : ∃ u ∈ unitCong (ϖ ^ (c - 1)), ν u ≠ 1) 
   have hu0v : valuation k (u0 : k) = 1 := hu0.1
   have hu0c : valuation k ((u0 : k) - 1) ≤ valuation k (((ϖ ^ (c - 1) : kˣ)) : k) := hu0.2
   have hϖ0 : valuation k (ϖ : k) ≠ 0 := (valuation k).ne_zero_iff.2 ϖ.ne_zero
-  have hϖpos : 0 < valuation k (ϖ : k) := zero_lt_iff.2 hϖ0
+  have hϖpos : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 hϖ0
   have hxle : valuation k x ≤ valuation k (ϖ : k) := by
     have hx1 : valuation k x ≤ 1 := hx.le
     let xO : 𝒪[k] := ⟨x, hx1⟩
@@ -251,7 +251,7 @@ theorem gS_eq_zero_of_lt (hmin : ∃ u ∈ unitCong (ϖ ^ (c - 1)), ν u ≠ 1) 
     rw [e, map_mul, map_mul, map_div₀, map_div₀, map_pow]
     have h1 : valuation k x / valuation k (ϖ : k) ≤ 1 := (div_le_one₀ hϖpos).2 hxle
     have h2 : valuation k ((u0 : k) - 1) / valuation k (ϖ : k) ^ (c - 1) ≤ 1 := by
-      rw [div_le_one₀ (zero_lt_iff.2 (pow_ne_zero _ hϖ0))]
+      rw [div_le_one₀ (pos_iff_ne_zero.2 (pow_ne_zero _ hϖ0))]
       simpa [Units.val_pow_eq_pow_val, map_pow] using hu0c
     have h3 := rep_le_one (y : Res k c)
     calc _ ≤ (1 : ValueGroupWithZero k) * 1 * 1 := by gcongr
@@ -280,7 +280,7 @@ theorem gS_one_ne_zero {ψl : k → ℂ} (hadd : ∀ x y, ψl (x + y) = ψl x * 
   classical
   intro hG
   have hpos : 0 < valuation k (ϖ : k) ^ c :=
-    zero_lt_iff.2 (pow_ne_zero _ ((valuation k).ne_zero_iff.2 ϖ.ne_zero))
+    pos_iff_ne_zero.2 (pow_ne_zero _ ((valuation k).ne_zero_iff.2 ϖ.ne_zero))
   have hψ0 : ψl 0 = 1 := hO 0 (by simp)
   have hzero : ∀ x : k, valuation k x ≤ 1 → gS ψl ν hϖ hc1 x = 0 := by
     intro x hx

@@ -134,10 +134,10 @@ theorem exists_half_character {a : AE D} (ha : IsHalfIdem D a) (V : HSp D) (χ :
   obtain ⟨haa, -, hinf, hsp', hns⟩ := ha
   have hsp : ∀ e, IsSplitIdem D e → a * (e + cA D e) = e ∨ a * (e + cA D e) = cA D e := fun e he =>
     (hsp' e he).imp (fun h => by rw [mul_add, h.1, h.2, add_zero]) fun h => by rw [mul_add, h.1, h.2, zero_add]
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
   let d : GA D V →* (AE D)ˣ := Matrix.GeneralLinearGroup.det.comp (matHom V)
   have hd : ∀ g, (d g : AE D) = (Formalism.L2.Theta.mt V g).det := fun _ => rfl
-  have hc : Continuous d := Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtype_val
+  have hc : Continuous d := Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtypeVal
   have htriv : ∀ g, (∀ i j, a * (Formalism.L2.Theta.mt V g - 1) i j = 0) → χ (cut a haa (d g)) = 1 := fun g hg => by
     have : cut a haa (d g) = 1 := Units.ext (by
       rw [cut_val, hd, mul_det a _ hg, add_sub_cancel, Units.val_one])
@@ -335,10 +335,10 @@ theorem finWeil_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdC
     · rw [ho p f hf]
       exact (thetaSub ψ S T).smul_mem _ (Om p ⟨f, hf⟩).2
     · simp only [ho _ f hf, Pi.smul_apply, smul_eq_mul]
-      exact (continuous_subtype_val.comp z3).mul (h.cont hS hT ⟨f, hf⟩ u)
+      exact (continuous_subtypeVal.comp z3).mul (h.cont hS hT ⟨f, hf⟩ u)
     · rw [← h.unit hlam μ 𝓕 hμ h𝓕 p ⟨f, hf⟩, ho p f hf]
       refine lintegral_congr fun u => ?_
-      rw [Pi.smul_apply, enorm_smul, ← ofReal_norm_eq_enorm (z p : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
+      rw [Pi.smul_apply, eNorm_smul, ← ofReal_norm (z p : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
     · rw [ho _ f hf, h.real_triv hg hk, show z (g, k) = 1 by simp [z, c2 g hg, d2 k hk], Circle.coe_one, one_smul]
     · obtain ⟨f', h1, h2⟩ := h.Heisenberg₂ hψ hg hk u ⟨f, hf⟩
       rw [ho _ f hf, heisO_smul, ← h2, ← h1]

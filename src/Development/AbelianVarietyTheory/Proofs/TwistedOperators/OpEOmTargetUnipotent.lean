@@ -180,13 +180,13 @@ theorem ch_mul_affPt {p : ℕ} {h : GL (n ⊕ Fin c) k} (hh : InN p h) (x₀ : M
   · congr 1
     refine Finset.sum_congr rfl fun j _ => ?_
     by_cases hl : lev (n := n) p (Sum.inr i) < lev (n := n) p (Sum.inr j)
-    · rw [if_pos hl]
+    · rw [ite_eq_left hl]
       simp only [lev, Sum.elim_inr] at hl
       rw [affPt_of_not_free _ _ _ (by simp only [Free, Fin.val_succ]; omega)]
       simp [basePt]
-    · rw [if_neg hl]
+    · rw [ite_eq_right hl]
       simp only [lev, Sum.elim_inr] at hl
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
   · intro r _
     split_ifs with hl
     · simp only [lev, Sum.elim_inr, Sum.elim_inl] at hl
@@ -216,7 +216,7 @@ theorem GlobalTheory.RootEx.opE_om_target_unipotent : ∀ (k : Type) [Field k] [
   have hom : ∀ x, om μ 1 g Φ x = Φ ((g⁻¹).val * x) := by
     intro x
     simp [om, hdet g hg, hn1]
-  haveI := secondCountable k
+  have := secondCountable k
   funext x₀
   let F : ({rs : (n ⊕ Fin c) × (n' ⊕ Fin (c + 1)) // Free p rs} → k) → ℂ := fun e =>
     Φ (affPt p x₀ e) * (ψ (-ch (affPt p x₀ e)) : ℂ)

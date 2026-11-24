@@ -78,12 +78,12 @@ theorem exists_primeDivisors_of_regularParams : ∀ (Y : Scheme.{0}) [IsIntegral
     Y.presheaf.germ_res_apply (homOfLE hVU') y hyV (a i)
   have hrsp' : FinalTheorems.Rsp (Y.presheaf.stalk y) c (fun i => Y.presheaf.germ V y hyV (b i)) := by
     simpa only [hgerm] using hrsp
-  haveI := hreg
+  have := hreg
   obtain ⟨q, hq⟩ := exists_parPrimes hV hyV b hrsp'
   have hprime : ∀ i, Prime (Y.presheaf.germ V y hyV (b i)) :=
     prime_of_regular_params _ hrsp'.1 hrsp'.2
-  haveI : Nonempty V := ⟨⟨y, hyV⟩⟩
-  haveI : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
+  have : Nonempty V := ⟨⟨y, hyV⟩⟩
+  have : IsNoetherianRing Γ(Y, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
   have hb0 : ∀ i, b i ≠ 0 := fun i h => (hprime i).ne_zero (by rw [h, map_zero])
   have hfn : ∀ i, fnOf U (gen_mem hy) (a i) = fnOf V (gen_mem hyV) (b i) := fun i =>
     (fnOf_resG hVU' (gen_mem hyV) (a i)).symm
@@ -112,8 +112,8 @@ theorem exists_primeDivisors_of_regularParams : ∀ (Y : Scheme.{0}) [IsIntegral
   have hpw : ∀ j, hV.primeIdealOf ⟨w j, hwV j⟩ = q j := fun j => pOf_fromSpec hV (q j)
   have hcoh : ∀ j, Order.coheight (w j) = 1 := by
     intro j
-    letI := Y.presheaf.algebra_section_stalk (⟨w j, hwV j⟩ : V)
-    haveI := hV.isLocalization_stalk ⟨w j, hwV j⟩
+    let := Y.presheaf.algebra_section_stalk (⟨w j, hwV j⟩ : V)
+    have := hV.isLocalization_stalk ⟨w j, hwV j⟩
     have := IsLocalization.AtPrime.ringKrullDim_eq_height (hV.primeIdealOf ⟨w j, hwV j⟩).asIdeal
       (Y.presheaf.stalk (w j))
     rw [ringKrullDim_stalk_eq_coheight, hpw, hq1] at this
@@ -134,9 +134,9 @@ theorem exists_primeDivisors_of_regularParams : ∀ (Y : Scheme.{0}) [IsIntegral
   refine ⟨rfl, fromSpec_specializes hq j, hcoh j, ?_, ?_, ?_⟩
   · intro h'
     exact hwb ((Y.basicOpen_res (a j) (homOfLE hVU').op).symm ▸ ⟨hwV j, h'⟩ : w j ∈ Y.basicOpen (b j))
-  · letI := Y.presheaf.algebra_section_stalk (⟨w j, hwV j⟩ : V)
-    haveI hloc0 := hV.isLocalization_stalk ⟨w j, hwV j⟩
-    haveI hloc : IsLocalization.AtPrime (Y.presheaf.stalk (w j)) (q j).asIdeal := by
+  · let := Y.presheaf.algebra_section_stalk (⟨w j, hwV j⟩ : V)
+    have hloc0 := hV.isLocalization_stalk ⟨w j, hwV j⟩
+    have hloc : IsLocalization.AtPrime (Y.presheaf.stalk (w j)) (q j).asIdeal := by
       rw [← hpw j]; exact hloc0
     have hgalg : Y.presheaf.germ V (w j) (hwV j) (b j) = algebraMap Γ(Y, V) (Y.presheaf.stalk (w j)) (b j) := rfl
     have hg0 : Y.presheaf.germ V (w j) (hwV j) (b j) ≠ 0 := fun h0 =>
@@ -151,9 +151,9 @@ theorem exists_primeDivisors_of_regularParams : ∀ (Y : Scheme.{0}) [IsIntegral
           Ideal.map_le_iff_le_comap]
         intro x hx
         rw [Ideal.mem_comap]
-        letI := Y.presheaf.algebra_section_stalk (⟨y, hyV⟩ : V)
-        haveI := hV.isLocalization_stalk ⟨y, hyV⟩
-        haveI : (Ideal.span {Y.presheaf.germ V y hyV (b j)}).IsPrime :=
+        let := Y.presheaf.algebra_section_stalk (⟨y, hyV⟩ : V)
+        have := hV.isLocalization_stalk ⟨y, hyV⟩
+        have : (Ideal.span {Y.presheaf.germ V y hyV (b j)}).IsPrime :=
           (Ideal.span_singleton_prime (hprime j).ne_zero).2 (hprime j)
         let P : Ideal Γ(Y, V) := Ideal.comap (algebraMap Γ(Y, V) (Y.presheaf.stalk y))
           (Ideal.span {Y.presheaf.germ V y hyV (b j)})
@@ -162,7 +162,7 @@ theorem exists_primeDivisors_of_regularParams : ∀ (Y : Scheme.{0}) [IsIntegral
           intro z hz
           have hz' : algebraMap Γ(Y, V) (Y.presheaf.stalk y) z ∈ IsLocalRing.maximalIdeal (Y.presheaf.stalk y) :=
             (Ideal.span_singleton_le_iff_mem _).2
-              ((IsLocalRing.mem_maximalIdeal _).2 (hprime j).not_unit) hz
+              ((IsLocalRing.mem_maximalIdeal _).2 (hprime j).not_isUnit) hz
           exact (IsLocalization.AtPrime.to_map_mem_maximal_iff (Y.presheaf.stalk y)
             (hV.primeIdealOf ⟨y, hyV⟩).asIdeal z).1 hz'
         have hbP : b j ∈ P := Ideal.mem_span_singleton_self _
@@ -198,15 +198,15 @@ theorem exists_primeDivisors_of_regularParams : ∀ (Y : Scheme.{0}) [IsIntegral
     have hle : q j ≤ hV.primeIdealOf ⟨v, hvV⟩ :=
       (hq.2.2.1 j _ ((specializes_iff_pOf hV hvV hyV).mp hvy)).mp hbQ
     have hQv1 : (hV.primeIdealOf ⟨v, hvV⟩).asIdeal.height = 1 := by
-      letI := Y.presheaf.algebra_section_stalk (⟨v, hvV⟩ : V)
-      haveI := hV.isLocalization_stalk ⟨v, hvV⟩
+      let := Y.presheaf.algebra_section_stalk (⟨v, hvV⟩ : V)
+      have := hV.isLocalization_stalk ⟨v, hvV⟩
       have := IsLocalization.AtPrime.ringKrullDim_eq_height (hV.primeIdealOf ⟨v, hvV⟩).asIdeal
         (Y.presheaf.stalk v)
       rw [ringKrullDim_stalk_eq_coheight, hv1] at this
       exact_mod_cast this.symm
     have heq : q j = hV.primeIdealOf ⟨v, hvV⟩ := by
       by_contra hne
-      haveI : (q j).asIdeal.FiniteHeight :=
+      have : (q j).asIdeal.FiniteHeight :=
         (q j).asIdeal.finiteHeight_iff.mpr (Or.inr (by rw [hq1 j]; exact ENat.one_ne_top))
       have hlt : (q j).asIdeal < (hV.primeIdealOf ⟨v, hvV⟩).asIdeal :=
         lt_of_le_of_ne hle (fun h => hne (PrimeSpectrum.ext h))

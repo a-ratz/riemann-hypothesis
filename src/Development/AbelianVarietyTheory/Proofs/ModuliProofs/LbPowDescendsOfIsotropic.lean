@@ -81,7 +81,7 @@ theorem exists_coboundary {C U : Type} [CommGroup C] [CommGroup U]
     have := hc 1 1 x
     simp only [_root_.one_mul] at this
     exact (mul_right_cancel this).symm
-  letI : CommGroup (CocycleExt a) :=
+  let : CommGroup (CocycleExt a) :=
     { mul := fun p q => ⟨p.u * q.u * a p.c q.c, p.c * q.c⟩
       one := ⟨(a 1 1)⁻¹, 1⟩
       inv := fun p => ⟨p.u⁻¹ * (a p.c⁻¹ p.c)⁻¹ * (a 1 1)⁻¹, p.c⁻¹⟩
@@ -111,10 +111,10 @@ theorem exists_coboundary {C U : Type} [CommGroup C] [CommGroup U]
     simp only [ofMul_mul, ofMul_inv]
     abel) (_root_.mul_one _).symm
   have hj : Function.Injective j := fun u v h => mul_right_cancel (congrArg CocycleExt.u h)
-  letI : DivisibleBy (Additive U) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn y => by
+  let : DivisibleBy (Additive U) ℕ := divisibleByOfSMulRightSurj _ _ fun {n} hn y => by
     obtain ⟨x, hx⟩ := hU n (Nat.pos_of_ne_zero hn) y.toMul
     exact ⟨Additive.ofMul x, congrArg Additive.ofMul hx⟩
-  letI : DivisibleBy (Additive U) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
+  let : DivisibleBy (Additive U) ℤ := AddGroup.divisibleByIntOfDivisibleByNat _
   obtain ⟨ρ, hρ⟩ := (Module.Baer.of_divisible (Additive U)).extension_property_addMonoidHom
     (MonoidHom.toAdditive j) hj (AddMonoidHom.id _)
   let σ : CocycleExt a →* U := AddMonoidHom.toMultiplicative ρ

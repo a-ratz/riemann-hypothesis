@@ -59,9 +59,9 @@ variable {χ : Chr F E} {z : ℂ} {f : G2 σ Y → ℂ} {e : UA σ Y.J × UA σ 
 theorem unfold0_k : _root_.GlobalTheory.ThK.Dbl.Unfold0_k := by
   intro F E _ _ _ _ _ σ B n Y r s hB hY h0 χ e hχ he f Ê z _ _ hs hf μ D hμ hD hi φ hφ h
   have hJ := _root_.GlobalTheory.ThK.Dbl.aniso_of_k hB hY h0
-  haveI := countable_ratU (σ := σ) (Y := Y)
-  haveI : BorelSpace (UA σ Y.J) := ⟨rfl⟩
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := countable_ratU (σ := σ) (Y := Y)
+  have : BorelSpace (UA σ Y.J) := ⟨rfl⟩
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   obtain ⟨C, hC⟩ := hφ.2.2 0
   let k : UA σ Y.J → ℂ := fun g => f (e (1, g)) * (detInv χ g * φ (h * g))
   have ik : Integrable k μ := hi.mul_bdd (c := C)

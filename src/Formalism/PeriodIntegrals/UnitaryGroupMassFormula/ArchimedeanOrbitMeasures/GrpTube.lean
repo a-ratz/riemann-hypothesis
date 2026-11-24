@@ -94,7 +94,7 @@ theorem tube_meas (μ : Measure G) [μ.IsHaarMeasure] (H : Subgroup G) (ν : Mea
   have hf : Measurable ((tubeS H V S).indicator (1 : G → ℝ≥0∞)) := measurable_one.indicator hT
   have hmeas2 : AEMeasurable (Function.uncurry fun (g : G) (h : H) =>
       (tubeS H V S).indicator (1 : G → ℝ≥0∞) (g * (h : G))) (μ.prod ν) :=
-    (hf.comp (continuous_fst.mul (continuous_subtype_val.comp continuous_snd)).measurable).aemeasurable
+    (hf.comp (continuous_fst.mul (continuous_subtypeVal.comp continuous_snd)).measurable).aemeasurable
   have e1 : ∫⁻ g, ∫⁻ h, (tubeS H V S).indicator (1 : G → ℝ≥0∞) (g * (h : G)) ∂ν ∂μ =
       ν univ * μ (tubeS H V S) := by
     rw [lintegral_lintegral_swap hmeas2]

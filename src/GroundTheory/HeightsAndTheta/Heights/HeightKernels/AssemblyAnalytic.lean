@@ -102,7 +102,7 @@ theorem rhs_eq (n : ℕ) :
   have ha : 0 ≤ 6 * √2 * Real.exp 2 * √(n : ℝ) := by positivity
   have hsq : 72 * Real.exp 4 * (n : ℝ) = (6 * √2 * Real.exp 2 * √(n : ℝ)) ^ 2 := by
     have h4 : Real.exp 2 ^ 2 = Real.exp 4 := by
-      rw [← Real.exp_nat_mul]; norm_num
+      rw [← exp_natCast_mul]; norm_num
     have : (6 * √2 * Real.exp 2 * √(n : ℝ)) ^ 2
         = 36 * (√2) ^ 2 * (Real.exp 2) ^ 2 * (√(n : ℝ)) ^ 2 := by ring
     rw [this, Real.sq_sqrt (by norm_num), Real.sq_sqrt hx, h4]
@@ -126,7 +126,7 @@ theorem exp_part (n : ℕ) (hn : 1 ≤ n) :
     rw [div_le_iff₀ (by positivity)]
     nlinarith [Real.pi_gt_three]
   have he : Real.exp √(n : ℝ) * Real.exp ((n : ℝ) / (2 * π)) ≤ Real.exp 2 ^ n := by
-    rw [← Real.exp_add, ← Real.exp_nat_mul]
+    rw [← Real.exp_add, ← exp_natCast_mul]
     exact Real.exp_le_exp.mpr (by linarith)
   exact mul_le_mul h2 he (by positivity) (by positivity)
 
@@ -837,7 +837,7 @@ theorem inv_one_sub_exp_neg_one_le_two : (1 - Real.exp (-1))⁻¹ ≤ 2 := by
   linarith
 
 theorem exp_neg_nat (m : ℕ) : Real.exp (-(m : ℝ)) = Real.exp (-1) ^ m := by
-  rw [← Real.exp_nat_mul]
+  rw [← exp_natCast_mul]
   congr 1
   ring
 
@@ -1185,7 +1185,7 @@ theorem onePipe_mul_conjTranspose {j m : ℕ} (Z : Matrix (Fin j) (Fin m) ℂ) :
     Fin.append_right, Matrix.add_apply]
   congr 1
   simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true]
+    ite_true]
   by_cases hab : a = b
   · subst hab; simp
   · simp [hab, Ne.symm hab]
@@ -1365,8 +1365,8 @@ theorem ThetaCharIntegral.proof : ThetaCharIntegral.Statement := by
       by_contra h
       push Not at h
       exact hm (funext h)
-    rw [if_neg hm]
-    exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+    rw [ite_eq_right hm]
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
 
 end
 
@@ -1617,7 +1617,7 @@ theorem ThetaInnerMean.proof (h₁ : ThetaSummandNorm.Statement) (h₂ : ThetaCu
   simp only [hN]
   rw [integral_mul_const, h₂ g c hcs, ← tsum_mul_right]
   refine tsum_congr fun k => ?_
-  rw [← mul_pow, hcE k, ← exp_nat_mul]
+  rw [← mul_pow, hcE k, ← exp_natCast_mul]
   congr 1
   push_cast
   ring

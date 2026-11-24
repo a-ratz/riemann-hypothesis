@@ -218,7 +218,7 @@ theorem pairUnfold_of (hM : MeasInvStatement (E := E)) (hK : KaUnfoldStatement (
             ((measurable_unfoldedDensity X hf0S.1.continuousOn hW.1).comp (cpt_cont X x0).measurable))
       _ < ⊤ := ENNReal.add_lt_top.2 ⟨hInAt, hI2⟩
   have hsum1 : ∑' γ : X.Γ, ∫⁻ z in FF, ‖Gu X P f0 W (lact γ.1 (cpt X x0 z))‖ₑ ∂muF X x0 < ⊤ := by
-    rw [lunfold D FF hM hx0 hFF (fun x => ‖Gu X P f0 W x‖ₑ) hGm.enorm hnB]; exact hfin
+    rw [lunfold D FF hM hx0 hFF (fun x => ‖Gu X P f0 W x‖ₑ) hGm.eNorm hnB]; exact hfin
 
   have hL : Set.EqOn (fun z => poin X la P (cpt X x0 z) * (starRingEnd ℂ) (f0 (cpt X x0 z)) *
       ((W (cpt X x0 z)).toReal : ℂ)) (fun z => ∑' γ : X.Γ, Gu X P f0 W (lact γ.1 (cpt X x0 z))) FF := by
@@ -249,7 +249,7 @@ theorem pairUnfold_of (hM : MeasInvStatement (E := E)) (hK : KaUnfoldStatement (
     have : ∀ γ : X.Γ, ∫⁻ z, ‖(T D FF).indicator (1 : Frame X.Ψ r → ℂ) (lact γ.1⁻¹ (cpt X x0 z)) *
         Gu X P f0 W (cpt X x0 z)‖ₑ ∂muF X x0 =
         ∫⁻ z in FF, ‖Gu X P f0 W (lact γ.1 (cpt X x0 z))‖ₑ ∂muF X x0 := fun γ => by
-      rw [lunfold_one D FF hM hx0 hFF (fun x => ‖Gu X P f0 W x‖ₑ) hGm.enorm hnB γ.2]
+      rw [lunfold_one D FF hM hx0 hFF (fun x => ‖Gu X P f0 W x‖ₑ) hGm.eNorm hnB γ.2]
       simp only [enorm_ind_mul]
     rw [tsum_congr this]; exact hsum1.ne
   rw [← integral_tsum hmeas2 hsum2]

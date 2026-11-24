@@ -75,7 +75,7 @@ theorem mem_stdLat (L : PeriodPair) (n : Type*) (x : n → ℂ) :
 
 theorem exp_pi_int (k : ℤ) :
     Complex.exp ((Real.pi : ℂ) * Complex.I * ((k : ℝ) : ℂ)) = (-1 : ℂ) ^ k := by
-  rw [← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+  rw [← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring
@@ -351,11 +351,11 @@ theorem ThStd_proof : ThStd := by
           simp
         · simp [Finset.mem_insert, hj]
       rw [h1]
-      simp only [hi, if_false]
+      simp only [hi, ite_false]
       ring
   funext z
   have h := key Finset.univ z
-  simp only [Finset.mem_univ, if_true] at h
+  simp only [Finset.mem_univ, ite_true] at h
   rw [h]
   simp only [Pi.smul_apply, smul_eq_mul, F0, prodFn]
   rw [mul_comm]

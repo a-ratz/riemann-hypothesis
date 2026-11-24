@@ -89,7 +89,7 @@ theorem of_basis (f : R →+* A) (u : Multiplicative X →* Aˣ)
     (hi : ∀ c : X →₀ R, (c.sum fun χ r => f r * (u (Multiplicative.ofAdd χ)).val) = 0 → c = 0) :
     f.Flat ∧ ∃ σ : A →+* R, σ.comp f = RingHom.id R :=  by
   classical
-  letI : Algebra R A := f.toAlgebra
+  let : Algebra R A := f.toAlgebra
   have hφ : ∀ c : AddMonoidAlgebra R X,
       AddMonoidAlgebra.lift R A X ((Units.coeHom A).comp u) c =
         c.coeff.sum fun χ r => f r * (u (Multiplicative.ofAdd χ)).val :=
@@ -116,7 +116,7 @@ end Algebra
 
 theorem hom_ext_appLE {Z Y : Scheme.{0}} {U : Y.Opens} (hU : IsAffineOpen U) {a b : Z ⟶ Y}
     (ha : ⊤ ≤ a ⁻¹ᵁ U) (hb : ⊤ ≤ b ⁻¹ᵁ U) (h : a.appLE U ⊤ ha = b.appLE U ⊤ hb) : a = b :=  by
-  haveI : IsAffine U.toScheme := hU
+  have : IsAffine U.toScheme := hU
   have h1 : a.resLE U ⊤ ha = b.resLE U ⊤ hb := by
     apply ext_of_isAffine
     show (a.resLE U ⊤ ha).app ⊤ = (b.resLE U ⊤ hb).app ⊤
@@ -213,11 +213,11 @@ theorem exists_sum (a : Γ(G.left, q.left ⁻¹ᵁ V)) : ∃ c : X →₀ Γ(B.l
   · intro χ hχ
     rw [Finsupp.mem_support_iff]
     intro h0
-    exact hχ (if_pos h0)
+    exact hχ (ite_eq_left h0)
   · rw [Finsupp.onFinset_sum]
     · rw [Finsupp.sum]
       refine Finset.sum_congr rfl fun χ hχ => ?_
-      rw [if_neg (Finsupp.mem_support_iff.1 hχ), hc, Units.inv_mul_cancel_right]
+      rw [ite_eq_right (Finsupp.mem_support_iff.1 hχ), hc, Units.inv_mul_cancel_right]
     · intro χ
       simp
 

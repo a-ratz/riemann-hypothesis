@@ -241,7 +241,7 @@ theorem exists_local (v : Pl (F := F)) : ∃ r₀ : (ι ⊕ ι → AF F) → ℂ
       (∀ φ ∈ SB (ι ⊕ ι → Fv F v), lDiag F ι (tens (evFin F v) φ r₀) = c₀ * ∫ x, φ (Sum.elim x x) ∂μ) ∧
       ∃ φ₀ ∈ SB (ι → Fv F v), ∫ x, φ₀ x * φ₀ x ∂μ ≠ 0 := by
   obtain ⟨f, hf⟩ := exists_arch (F := F) (ι := ι)
-  haveI := isAddHaarMeasure_muLoc (ι := ι) v
+  have := isAddHaarMeasure_muLoc (ι := ι) v
   refine ⟨pureA F f (ind v _), fun φ hφ => ⟨pureA_ind_add v f, ?_⟩, _, hf, muLoc v ι, this, fun φ hφ => ?_, ?_⟩
   · rw [tens_pureA]
     exact Submodule.subset_span ⟨f, _, mul_ind_mem_SB v hφ, rfl⟩

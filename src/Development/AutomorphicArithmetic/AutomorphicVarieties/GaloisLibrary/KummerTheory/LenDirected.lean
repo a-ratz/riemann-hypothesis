@@ -61,7 +61,7 @@ theorem UpperTheory.V.Kum.lenDirected :
   intro p
   have hstep : ∀ i : Fin p.length, ∃ x : W, x ∈ p i.succ ∧ x ∉ p i.castSucc := by
     intro i
-    exact SetLike.exists_of_lt (p.step i)
+    exact IsConcreteLE.exists_of_lt (p.step i)
   choose x hx1 hx2 using hstep
   have hdir : Directed (· ≤ ·) P := hP.directed_le
   have hmem : ∀ i : Fin p.length, ∃ n, (x i : X) ∈ P n := by

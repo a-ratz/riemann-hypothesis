@@ -80,24 +80,24 @@ theorem main {Ω : Type} [Field Ω] (S : Type) [CommRing S] [IsDomain S] [IsDede
   let M : Submodule S Ω :=
     { carrier := {z | A.valuation z < 1}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         exact Valuation.map_add_lt _ ha hb
       zero_mem' := by simp
       smul_mem' := by
         intro c z hz
-        simp only [Set.mem_setOf_eq, Algebra.smul_def, map_mul] at hz ⊢
+        simp only [Set.mem_ofPred_eq, Algebra.smul_def, map_mul] at hz ⊢
         calc A.valuation (algebraMap S Ω c) * A.valuation z ≤ 1 * A.valuation z := by
               gcongr; exact hSle c
           _ < 1 := by simpa using hz }
   let N : Submodule S Ω :=
     { carrier := {z | A.valuation z ≤ 1}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         exact (Valuation.map_add _ _ _).trans (max_le ha hb)
       zero_mem' := by simp
       smul_mem' := by
         intro c z hz
-        simp only [Set.mem_setOf_eq, Algebra.smul_def, map_mul] at hz ⊢
+        simp only [Set.mem_ofPred_eq, Algebra.smul_def, map_mul] at hz ⊢
         calc A.valuation (algebraMap S Ω c) * A.valuation z ≤ 1 * 1 := by
               gcongr; exact hSle c
           _ = 1 := one_mul 1 }
@@ -110,7 +110,7 @@ theorem main {Ω : Type} [Field Ω] (S : Type) [CommRing S] [IsDomain S] [IsDede
     rw [h] at hJ1
     exact one_ne_zero (le_antisymm hJ1 (zero_le _))
   have hJN : (J : Submodule S Ω) ≤ N := by
-    simp only [J, coe_add, coe_one, coe_spanSingleton]
+    simp only [J, coeToSubmodule_add, coeToSubmodule_one, coeToSubmodule_spanSingleton]
     refine sup_le ?_ ?_
     · intro z hz
       obtain ⟨c, rfl⟩ := Submodule.mem_one.1 hz
@@ -126,20 +126,20 @@ theorem main {Ω : Type} [Field Ω] (S : Type) [CommRing S] [IsDomain S] [IsDede
     obtain ⟨s, hs⟩ := (mem_one_iff S⁰).1 (by simpa using hy' 1 (hJ1 (one_mem_one _)))
     have hxJ : x ∈ J := by
       show x ∈ (J : Submodule S Ω)
-      simp only [J, coe_add, coe_one, coe_spanSingleton]
+      simp only [J, coeToSubmodule_add, coeToSubmodule_one, coeToSubmodule_spanSingleton]
       exact Submodule.mem_sup_right (Submodule.subset_span rfl)
     obtain ⟨t, ht⟩ := (mem_one_iff S⁰).1 (hy' x hxJ)
     show A.valuation y < 1
     rw [← hs] at ht ⊢
     exact lt_of_le_of_ne (hSle s) (fun h => hcon s t h ht.symm)
   have hmul : ((J * J⁻¹ : FractionalIdeal S⁰ Ω) : Submodule S Ω) ≤ M := by
-    rw [coe_mul, Submodule.mul_le]
+    rw [coeToSubmodule_mul, Submodule.mul_le]
     intro z hz y hy
     show A.valuation (z * y) < 1
     rw [map_mul]
     calc A.valuation z * A.valuation y ≤ 1 * A.valuation y := by gcongr; exact hJN hz
       _ < 1 := by rw [one_mul]; exact hinv hy
-  rw [mul_inv_cancel₀ hJ0, coe_one] at hmul
+  rw [mul_inv_cancel₀ hJ0, coeToSubmodule_one] at hmul
   have := hmul (Submodule.one_le.1 le_rfl)
   exact absurd this (by show ¬ A.valuation 1 < 1; simp)
 
@@ -159,8 +159,8 @@ theorem mem_valuationSubring_of_isIntegral {Ω : Type} [Field Ω] {R : Type} [Co
     [Algebra R Ω] (A : ValuationSubring Ω) (h : ∀ r : R, algebraMap R Ω r ∈ A) {b : Ω}
     (hb : IsIntegral R b) : b ∈ A := by
   let f : R →+* A := (algebraMap R Ω).codRestrict A h
-  letI : Algebra R A := f.toAlgebra
-  haveI : IsScalarTower R A Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra R A := f.toAlgebra
+  have : IsScalarTower R A Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hA : IsIntegral A b := hb.tower_top
   obtain ⟨y, hy⟩ := (IsIntegrallyClosed.isIntegral_iff (R := A) (K := Ω)).1 hA
   rw [← hy]
@@ -264,15 +264,15 @@ theorem exists_smul_eq_of_isAbove : ∀ (R K : Type) [CommRing R] [IsDomain R] [
     [FiniteDimensional K Ω] (V V' : ValuationSubring Ω), IsAbove R K V.toSubring →
     IsAbove R K V'.toSubring → ∃ g : Ω ≃ₐ[K] Ω, g • V = V' := by
   intro R K _ _ _ _ _ _ Ω _ _ _ _ V V' hV hV'
-  letI : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI hc : SMulCommClass (Ω ≃ₐ[K] Ω) R Ω := ⟨fun g r x => by
+  let : Algebra R Ω := ((algebraMap K Ω).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have hc : SMulCommClass (Ω ≃ₐ[K] Ω) R Ω := ⟨fun g r x => by
     rw [← IsScalarTower.algebraMap_smul K r x, ← IsScalarTower.algebraMap_smul K r (g • x)]
     exact map_smul g _ _⟩
-  haveI : IsDedekindDomain (integralClosure R Ω) := integralClosure.isDedekindDomain R K Ω
-  haveI : IsFractionRing (integralClosure R Ω) Ω :=
+  have : IsDedekindDomain (integralClosure R Ω) := integralClosure.isDedekindDomain R K Ω
+  have : IsFractionRing (integralClosure R Ω) Ω :=
     integralClosure.isFractionRing_of_finite_extension K Ω
-  haveI : Algebra.IsInvariant R (integralClosure R Ω) (Ω ≃ₐ[K] Ω) := by
+  have : Algebra.IsInvariant R (integralClosure R Ω) (Ω ≃ₐ[K] Ω) := by
     constructor
     intro b hb
     obtain ⟨k, hk⟩ := (InfiniteGalois.mem_range_algebraMap_iff_fixed (k := K) (b : Ω)).2

@@ -79,11 +79,11 @@ private lemma finrank_fiber_eq (hinj : Function.Injective (algebraMap B A))
     (b : Basis (Fin r) A (A ⊗[B] M)) (P : Ideal B) [P.IsMaximal] :
     letI := Ideal.Quotient.field P
     finrank (B ⧸ P) ((B ⧸ P) ⊗[B] M) = r := by
-  letI := Ideal.Quotient.field P
+  let := Ideal.Quotient.field P
   obtain ⟨Q, hQ, hQP⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := A) P
     (by rw [(RingHom.injective_iff_ker_eq_bot _).mp hinj]; exact bot_le)
-  haveI : Q.LiesOver P := ⟨hQP.symm⟩
-  letI := Ideal.Quotient.field Q
+  have : Q.LiesOver P := ⟨hQP.symm⟩
+  let := Ideal.Quotient.field Q
   have h1 : finrank (A ⧸ Q) ((A ⧸ Q) ⊗[A] (A ⊗[B] M)) = r := by
     rw [finrank_eq_card_basis (Algebra.TensorProduct.basis (A ⧸ Q) b), Fintype.card_fin]
   rw [← Module.finrank_baseChange (R := A ⧸ Q),
@@ -98,12 +98,12 @@ theorem _root_.GlobalTheory.nonempty_basis_of_basis_baseChange {B A M : Type*} [
     (hinj : Function.Injective (algebraMap B A)) (b : Basis (Fin r) A (A ⊗[B] M)) :
     Nonempty (Basis (Fin r) B M) := by
   classical
-  haveI := Fintype.ofFinite (MaximalSpectrum B)
+  have := Fintype.ofFinite (MaximalSpectrum B)
   have hfib : ∀ P : MaximalSpectrum B, ∃ e : Fin r → M,
       Submodule.span (B ⧸ P.asIdeal) (Set.range fun j => (1 : B ⧸ P.asIdeal) ⊗ₜ[B] e j) = ⊤ := by
     intro P
-    haveI := P.isMaximal
-    letI := Ideal.Quotient.field P.asIdeal
+    have := P.isMaximal
+    let := Ideal.Quotient.field P.asIdeal
     let β := Module.finBasisOfFinrankEq (B ⧸ P.asIdeal) _ (finrank_fiber_eq hinj b P.asIdeal)
     choose e he using fun j => TensorProduct.mk_surjective B M (B ⧸ P.asIdeal)
       Ideal.Quotient.mk_surjective (β j)
@@ -115,8 +115,8 @@ theorem _root_.GlobalTheory.nonempty_basis_of_basis_baseChange {B A M : Type*} [
       ∀ P' : MaximalSpectrum B, c - (if P' = P then 1 else 0) ∈ P'.asIdeal := fun P =>
     Ideal.exists_forall_sub_mem_ideal (I := fun P' : MaximalSpectrum B => P'.asIdeal)
       (fun P₁ P₂ h => by
-        haveI := P₁.isMaximal
-        haveI := P₂.isMaximal
+        have := P₁.isMaximal
+        have := P₂.isMaximal
         exact Ideal.isCoprime_of_isMaximal fun h' => h (MaximalSpectrum.ext h')) _
   choose c hc using hcrt
   let x : Fin r → M := fun j => ∑ P, c P • e P j
@@ -137,7 +137,7 @@ theorem _root_.GlobalTheory.nonempty_basis_of_basis_baseChange {B A M : Type*} [
       intro j
       simp only [x, tmul_sum, tmul_smul]
       simp only [hsm, hmk, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ,
-        if_true]
+        ite_true]
     have h0 : N.mkQ.baseChange (B ⧸ P.asIdeal) = 0 := by
       apply LinearMap.ext_on_range (he P)
       intro j
@@ -203,17 +203,17 @@ theorem _root_.GlobalTheory.finrank_eq_mul_of_basis_tensor_self (k B A : Type) [
     (hb : Nonempty (Module.Basis (Fin r) A (TensorProduct B A A))) :
     Module.finrank k A = r * Module.finrank k B := by
   rcases subsingleton_or_nontrivial B with hB | hB
-  · haveI : Subsingleton A := by
+  · have : Subsingleton A := by
       refine subsingleton_of_zero_eq_one ?_
       rw [← map_zero (algebraMap B A), ← map_one (algebraMap B A), Subsingleton.elim (0 : B) 1]
     simp [Module.finrank_zero_of_subsingleton]
-  haveI : Module.Finite k B :=
+  have : Module.Finite k B :=
     Module.Finite.of_injective (IsScalarTower.toAlgHom k B A).toLinearMap hinj
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite k B
-  haveI : Module.Finite B A := Module.Finite.of_restrictScalars_finite k B A
-  haveI : Algebra.IsIntegral B A := Algebra.IsIntegral.of_finite B A
+  have : IsArtinianRing B := IsArtinianRing.of_finite k B
+  have : Module.Finite B A := Module.Finite.of_restrictScalars_finite k B A
+  have : Algebra.IsIntegral B A := Algebra.IsIntegral.of_finite B A
   obtain ⟨β⟩ := _root_.GlobalTheory.nonempty_basis_of_basis_baseChange (M := A) hinj hb.some
-  haveI : Module.Free B A := Module.Free.of_basis β
+  have : Module.Free B A := Module.Free.of_basis β
   rw [← Module.finrank_mul_finrank k B A, finrank_eq_card_basis β, Fintype.card_fin, mul_comm]
 
 end GlobalTheory

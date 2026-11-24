@@ -118,14 +118,14 @@ theorem ct_zero (hO : OffOpen) (hU : PositivityTheory.ThKEnd.Grp.UnipUGood) (hE1
     (hi : ∀ t, t₀ ≤ t → Integrable (fun g => a (e (1, g)) ^ t) μ) {φ : UA σ Y.J → ℂ} (hφ : IsRapid φ) (hc : IsCusp Y φ) :
     ∀ s ∈ U, IsCusp Y fun h => ∫ h' in D, Ê s (e (h, h')) * detInv χ h' * φ h' ∂μ := by
   intro s hs V v1 v2 κ 𝓜 k1 k2 h
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   obtain ⟨g, -⟩ := hU F E σ hB.cm n Y (.inr hY.skew) d0 V
-  haveI := g.sc
-  haveI : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 fin.ne
-  haveI : IsFiniteMeasure (κ.restrict 𝓜) := isFiniteMeasure_restrict.2 (g.fin κ 𝓜 k1 k2).2.ne
-  haveI : SFinite (μ.restrict D) := sfin _
-  haveI : SFinite (κ.restrict 𝓜) := sfin _
-  haveI : SFinite μ := sfin' μ
+  have := g.sc
+  have : IsFiniteMeasure (μ.restrict D) := isFiniteMeasure_restrict.2 fin.ne
+  have : IsFiniteMeasure (κ.restrict 𝓜) := isFiniteMeasure_restrict.2 (g.fin κ 𝓜 k1 k2).2.ne
+  have : SFinite (μ.restrict D) := sfin _
+  have : SFinite (κ.restrict 𝓜) := sfin _
+  have : SFinite μ := sfin' μ
   obtain ⟨c, c1, -, c3⟩ := hH F E σ n Y
   obtain ⟨t₁, half⟩ := hE.half
   have cE : ∀ s ∈ U, Continuous (Ê s) := fun s hs =>
@@ -134,7 +134,7 @@ theorem ct_zero (hO : OffOpen) (hU : PositivityTheory.ThKEnd.Grp.UnipUGood) (hE1
     An.ident hE.isOpen hE.conn (hE.hol _) (hE.hol _) (fun s hs => ⟨(half s hs).1,
       (hf.flat ha a0 s).eis_rat hχ (half s hs).2 hγ _⟩) hs
   obtain ⟨Ω, hΩ, cov⟩ := g.cov
-  obtain ⟨b, hb'⟩ := hb _ ((hΩ.image continuous_subtype_val).image (continuous_mul_const h))
+  obtain ⟨b, hb'⟩ := hb _ ((hΩ.image continuous_subtypeVal).image (continuous_mul_const h))
   let k : ℂ → unipU σ Y V × UA σ Y.J → ℂ := fun s y => Ê s (e (y.1.1 * h, y.2)) * detInv χ y.2 * φ y.2
   have ck : ∀ s ∈ U, Continuous (k s) := fun s hs =>
     (((cE s hs).comp (ce.comp (by fun_prop))).mul ((continuous_detInv hχ).comp continuous_snd)).mul (hφ.1.comp continuous_snd)
@@ -186,12 +186,12 @@ theorem ct_zero (hO : OffOpen) (hU : PositivityTheory.ThKEnd.Grp.UnipUGood) (hE1
   have hfin : ∀ x, ∑' q : Cos σ Y, ∫⁻ y in D, ‖eisTerm (flat a f s₀ s) (e (x, y)) q * detInv χ y * φ y‖ₑ ∂μ ≠ ⊤ := fun x => by
     obtain ⟨M, hM⟩ := eis_bound he c1 c3 hφ C₁ N (ht x)
     have hM' := hM _ (fun c hc => (l1.flat ha a0 _).eis_rat h1 sm₁ hc) (hg _ (Metric.mem_ball_self h0)) x le_rfl
-    haveI : Countable (Cos σ Y) := by
+    have : Countable (Cos σ Y) := by
       exact Set.countable_univ_iff.1 ((sm₁ 1).summable.countable_support.mono fun q _ => mul_ne_zero
         (Complex.cpow_ne_zero_iff.2 (.inl (Complex.ofReal_ne_zero.2 (a0 _).ne')))
         (Complex.cpow_ne_zero_iff.2 (.inl (Complex.ofReal_ne_zero.2 (a0 _).ne'))))
     rw [← lintegral_tsum (f := fun q y => ‖eisTerm (flat a f s₀ s) (e (x, y)) q * detInv χ y * φ y‖ₑ) fun q => (((cs.comp (continuous_const.mul (ce.comp (Continuous.prodMk_right x)))).mul
-      (continuous_detInv hχ)).mul hφ.1).measurable.enorm.aemeasurable]
+      (continuous_detInv hχ)).mul hφ.1).measurable.eNorm.aemeasurable]
     refine ne_top_of_le_ne_top (b := ∫⁻ _ in D, ENNReal.ofReal (max C 0 * M) ∂μ)
       (by rw [setLIntegral_const]; exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top fin.ne) (lintegral_mono fun y => ?_)
     have t1 : ∀ q : Cos σ Y, eisTerm (flat a (fun x => (a x : ℂ) ^ ((0 : ℂ) + n / 2)) 0 (s.re : ℂ)) (e (x, y)) q =
@@ -205,7 +205,7 @@ theorem ct_zero (hO : OffOpen) (hU : PositivityTheory.ThKEnd.Grp.UnipUGood) (hE1
     have t3 := (t2.mul_right ‖φ y‖).mul_left (max C 0)
     refine (ENNReal.tsum_le_tsum fun q => ?_).trans ((ENNReal.ofReal_tsum_of_nonneg p0 t3.summable).symm.le.trans
       (ENNReal.ofReal_le_ofReal ?_))
-    · rw [← ofReal_norm_eq_enorm, norm_mul, norm_mul, norm_detInv, mul_one, ← mul_assoc]
+    · rw [← ofReal_norm, norm_mul, norm_mul, norm_detInv, mul_one, ← mul_assoc]
       exact ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_right ((hC _).trans
         (mul_le_mul_of_nonneg_right (le_max_left _ _) (Real.rpow_nonneg (a0 _).le _))) (norm_nonneg _))
     · rw [t3.tsum_eq]

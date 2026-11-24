@@ -185,8 +185,8 @@ theorem mass_eq_relIndex_mul {G : Type} [Group G] (Γ W K : Subgroup G) (hWK : W
     (hW : Finite (DC Γ W)) (hfin : ∀ t : G, Finite {γ : Γ // t⁻¹ * (γ : G) * t ∈ K}) :
     W.relIndex K ≠ 0 ∧ mass Γ W = (W.relIndex K : ℚ) * mass Γ K := by
   classical
-  haveI := hW
-  haveI : Finite (DC Γ K) := finite_dc_of_le hWK
+  have := hW
+  have : Finite (DC Γ K) := finite_dc_of_le hWK
 
   have hfibre : ∀ d : DC Γ W, Finite {x : K ⧸ W.subgroupOf K // dcOfCoset Γ W K 1 x = d} := by
     intro d
@@ -205,15 +205,15 @@ theorem mass_eq_relIndex_mul {G : Type} [Group G] (Γ W K : Subgroup G) (hWK : W
         exact (Nat.card_pos_iff.1 h3).2
     · push_neg at hne
       exact Finite.of_injective (β := Empty) (fun x => (hne x.1 x.2).elim) (fun x => (hne x.1 x.2).elim)
-  haveI : Finite (K ⧸ W.subgroupOf K) :=
+  have : Finite (K ⧸ W.subgroupOf K) :=
     Finite.of_equiv _ (Equiv.sigmaFiberEquiv (dcOfCoset Γ W K 1))
   have hidx : W.relIndex K = Nat.card (K ⧸ W.subgroupOf K) := rfl
   have hne0 : W.relIndex K ≠ 0 := by
     rw [hidx]; exact Nat.card_ne_zero.2 ⟨⟨(1 : K)⟩, inferInstance⟩
   refine ⟨hne0, ?_⟩
-  haveI := Fintype.ofFinite (DC Γ W)
-  haveI := Fintype.ofFinite (DC Γ K)
-  haveI := Fintype.ofFinite (K ⧸ W.subgroupOf K)
+  have := Fintype.ofFinite (DC Γ W)
+  have := Fintype.ofFinite (DC Γ K)
+  have := Fintype.ofFinite (K ⧸ W.subgroupOf K)
 
   have hfib : ∀ c : DC Γ K,
       ∑ d ∈ Finset.univ.filter (fun d => dcMapLe hWK d = c), ((stabCard Γ W d.out : ℕ) : ℚ)⁻¹ =

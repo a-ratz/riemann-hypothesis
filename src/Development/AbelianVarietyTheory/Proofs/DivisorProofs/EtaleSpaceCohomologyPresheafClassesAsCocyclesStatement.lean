@@ -87,7 +87,7 @@ theorem disc_elt_cls : ∀ (R : Type) [CommRing R] (F : Shv R), ∃ cl : ∀ (P 
   intro R _ F
   obtain ⟨e, -, hnat⟩ := chains_disc_homotopyEquiv R
   have hb : ∀ (P : PSh) (n : ℤ), Function.Bijective (HK.pull R (e P).hom F n) := fun P n => by
-    haveI : QuasiIso (e P).hom := (e P).quasiIso_hom
+    have : QuasiIso (e P).hom := (e P).quasiIso_hom
     exact quasiIso_hypercohomology_bijective' R (e P).hom F n
   let E : ∀ (P : PSh) (n : ℤ), H R (disc.obj P) F n ≃ HK R (sgl ((free R).obj P)) F n :=
     fun P n => Equiv.ofBijective _ (hb P n)

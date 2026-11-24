@@ -49,7 +49,7 @@ private theorem not_mem_of_norm {F : Type} [Field F] [NumberField F] {l p : ℕ}
     {v : HeightOneSpectrum (𝓞 F)} (hn : normV v = p) : ((l : ℕ) : 𝓞 F) ∉ v.asIdeal := by
   intro hmem
   have hcard : Nat.card (𝓞 F ⧸ v.asIdeal) = p := hn
-  haveI : Nontrivial (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr v.isPrime.ne_top
+  have : Nontrivial (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr v.isPrime.ne_top
   have h1 : addOrderOf (1 : 𝓞 F ⧸ v.asIdeal) ∣ p := hcard ▸ addOrderOf_dvd_natCard (1 : 𝓞 F ⧸ v.asIdeal)
   have h2 : addOrderOf (1 : 𝓞 F ⧸ v.asIdeal) ∣ l := by
     rw [addOrderOf_dvd_iff_nsmul_eq_zero, nsmul_one]

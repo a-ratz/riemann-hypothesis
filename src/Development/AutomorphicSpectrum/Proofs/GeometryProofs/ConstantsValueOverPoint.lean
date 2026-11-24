@@ -55,7 +55,7 @@ theorem closedPoint_germ_const {X : Scheme.{0}} {F : Type} [Field F] {O : Type} 
     (hz : z ≫ s = Spec.map (CommRingCat.ofHom φ)) (o : O) :
     (Scheme.stalkClosedPointTo z).hom ((X.presheaf.germ ⊤ (centre z) trivial).hom
       (s.appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of O)).inv.hom o))) = φ o := by
-  letI : Algebra O F := φ.toAlgebra
+  let : Algebra O F := φ.toAlgebra
   have h := GlobalTheory.CompanionTheory.Ar.Flat.ConstReg.genMap_germ_const z s hz ⟨genPt z, specializes_rfl⟩ o
   have e : genMap z ⟨genPt z, specializes_rfl⟩ = (Scheme.stalkClosedPointTo z).hom := by
     ext t
@@ -71,7 +71,7 @@ theorem val_const {X : Scheme.{0}} {Ω : Type} [Field Ω] {F : Type} [Field F] {
     (hs : ξ ≫ s = Spec.map (CommRingCat.ofHom ψ))
     (z : Spec (CommRingCat.of F) ⟶ X) (φ : O →+* F)
     (hz : z ≫ s = Spec.map (CommRingCat.ofHom φ)) (o : O) : ValAt ξ z (ψ o) (φ o) := by
-  letI : Algebra O Ω := ψ.toAlgebra
+  let : Algebra O Ω := ψ.toAlgebra
   exact ⟨all _, _, GlobalTheory.CompanionTheory.Ar.Flat.ConstReg.genMap_germ_const ξ s hs ⟨centre z, all _⟩ o, closedPoint_germ_const s z φ hz o⟩
 
 end GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.OverVal
@@ -93,8 +93,8 @@ theorem isOver_base {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
 
 theorem val_cst : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (z : Sp ℂ ⟶ 𝔐.X) (κ : c.F →+* ℂ) (p : Sp ℂ ⟶ Xo.X), IsOver 𝔐 z κ p → ∀ x : c.F, ValAt 𝔐.ξ z (𝔐.cst x) (κ x) := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 z κ p h x
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   have hc : ∀ o : 𝓞 c.F, ValAt 𝔐.ξ z (𝔐.cst (algebraMap (𝓞 c.F) c.F o)) (κ (algebraMap (𝓞 c.F) c.F o)) := fun o =>
     val_const 𝔐.ξ 𝔐.all (𝔐.f ≫ Y.s) (𝔐.cst.comp (algebraMap (𝓞 c.F) c.F)) 𝔐.cst_over z
       (κ.comp (algebraMap (𝓞 c.F) c.F)) (isOver_base h) o

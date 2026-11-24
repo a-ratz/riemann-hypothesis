@@ -61,7 +61,7 @@ namespace KummerIndex
 
 theorem hasEnoughRootsOfUnity_of_ringHom {F E : Type*} [Field F] [Field E] (f : F →+* E)
     (n : ℕ) [NeZero n] [HasEnoughRootsOfUnity F n] : HasEnoughRootsOfUnity E n := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F n
   exact ⟨⟨f ζ, hζ.map_of_injective f.injective⟩, rootsOfUnity.isCyclic E n⟩
 
 variable {K : Type*} [Field K] [NumberField K] (v : HeightOneSpectrum (𝓞 K))
@@ -79,7 +79,7 @@ theorem mem_localUnits_iff {x : (v.adicCompletion K)ˣ} :
   rw [mem_adicCompletionIntegers, mem_adicCompletionIntegers, Units.val_inv_eq_inv_val, map_inv₀]
   constructor
   · rintro ⟨h1, h2⟩
-    exact le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 hx)).1 h2)
+    exact le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 hx)).1 h2)
   · intro h
     rw [h, inv_one]
     exact ⟨le_rfl, le_rfl⟩

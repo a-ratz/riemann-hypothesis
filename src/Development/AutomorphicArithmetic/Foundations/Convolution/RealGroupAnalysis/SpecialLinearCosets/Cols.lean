@@ -52,7 +52,7 @@ theorem UpperTheory.ConvolutionTheory.R2.I.ptN :
       (∀ b, ψl v (-(b * X.det)) * Pt a X = Pt (fun m => a (m * !![1, b; 0, 1])) X) ∧
       ∀ s, Pt a (X * !![1, 0; -s, 1]) = Pt (fun m => ψl v (-(s * m.det)) * a m) X := by
   intro F _ _ v a X
-  haveI : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
+  have : (μ2 v).IsAddHaarMeasure := by unfold μ2; infer_instance
   have hadd := (UpperTheory.ConvolutionTheory.R2.I.psiLaws F v).2.2.1
   refine ⟨fun b => ?_, fun s => ?_⟩
   · unfold Pt

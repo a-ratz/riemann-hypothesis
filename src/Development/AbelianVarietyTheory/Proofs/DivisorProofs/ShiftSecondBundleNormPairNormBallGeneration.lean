@@ -65,7 +65,7 @@ theorem shiftA_nu (P : Pair p) (u : ℝ) (a b : ℤ) (σ : k →+* ℂ) (y : CxP
 theorem shiftA_Bl (P : Pair p) (u : ℝ) (a b : ℤ) (R : ℝ) :
     (shiftA P u).Bl a b R = P.Bl a b (R * Real.exp (b * u)) := by
   ext f
-  simp only [Pair.Bl, Set.mem_setOf_eq, shiftA_H, shiftA_nu]
+  simp only [Pair.Bl, Set.mem_ofPred_eq, shiftA_H, shiftA_nu]
   refine and_congr_right fun _ => forall_congr' fun σ => forall_congr' fun y => ?_
   rw [Real.exp_neg, ← div_eq_mul_inv, div_le_iff₀ (Real.exp_pos _)]
 

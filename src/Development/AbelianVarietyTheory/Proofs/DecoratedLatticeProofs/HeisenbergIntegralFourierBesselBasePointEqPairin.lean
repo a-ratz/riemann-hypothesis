@@ -63,7 +63,7 @@ theorem ell_vecMul_last {σ n : ℕ} (b : Mx D (σ + 1) n) : ell D (σ + 1) ᵥ*
   rw [Finset.sum_eq_single (Fin.last σ)]
   · simp
   · intro i _ hi
-    rw [if_neg (fun h => hi (Fin.ext (by simp only [Fin.val_last]; omega))), zero_mul]
+    rw [ite_eq_right (fun h => hi (Fin.ext (by simp only [Fin.val_last]; omega))), zero_mul]
   · simp
 
 theorem zEll_mul_eq {σ n : ℕ} (L : HSp D) (ζ : Fin L.rank → D.host.E) (b : Mx D (σ + 1) n) :
@@ -186,13 +186,13 @@ theorem heis_base : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D (σ + 1) S.rank
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D σ S.rank
   obtain ⟨k1, k2, k3, k4, k5, -⟩ := lattice_Mx D B.L.rank S.rank
-  haveI : BorelSpace (Mx D (σ + 1) S.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D σ S.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D B.L.rank S.rank) := ⟨rfl⟩
-  haveI : Countable (ratMx D (σ + 1) S.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := vT.covol.1
-  haveI := vL.covol.1
-  haveI := vB.covol.1
+  have : BorelSpace (Mx D (σ + 1) S.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D σ S.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D B.L.rank S.rank) := ⟨rfl⟩
+  have : Countable (ratMx D (σ + 1) S.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := vT.covol.1
+  have := vL.covol.1
+  have := vB.covol.1
 
   have hx : ∀ b : Mx D (σ + 1) S.rank, x0 B ⬝ b = B.d.incX S (e b).1 + B.d.inc0 S ((B.o.resT S).symm (0, (e b).2)) := fun b => fourierBesselBasePoint_mul_eq B S b
 
@@ -295,11 +295,11 @@ theorem heis_base : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
         congr 1
         funext v
         rw [hmix, ← integral_mul_const]
-  · have hψe : ∀ a, ‖ψ a‖ₑ = 1 := fun a => by rw [← ofReal_norm_eq_enorm, hψn, ENNReal.ofReal_one]
+  · have hψe : ∀ a, ‖ψ a‖ₑ = 1 := fun a => by rw [← ofReal_norm, hψn, ENNReal.ofReal_one]
     set K : Mx D σ S.rank × Mx D B.L.rank S.rank → ENNReal :=
       fun p => ‖f (B.d.incX S p.1 + B.d.inc0 S ((B.o.resT S).symm (0, p.2)))‖ₑ with hK
     have hKc : Continuous K := by
-      refine (hf.2.comp ?_).enorm
+      refine (hf.2.comp ?_).eNorm
       simp only [HypDec.incX_apply, HypDec.wittDecomp_inclAnisotropicHom_apply, OrthDec.resT_symm_apply]
       exact (continuous_const.matrix_mul continuous_fst).add (continuous_const.matrix_mul
         (continuous_const.add (continuous_const.matrix_mul continuous_snd)))
@@ -307,13 +307,13 @@ theorem heis_base : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D �
     have hper' : ∀ (γ : ratMx D (σ + 1) S.rank) (b : Mx D (σ + 1) S.rank),
         ‖f (x0 B ⬝ (γ +ᵥ b))‖ₑ = ‖f (x0 B ⬝ b)‖ₑ := by
       intro γ b
-      rw [AddSubgroup.vadd_def, vadd_eq_add, hfx γ γ.2 b, enorm_mul, hψe, one_mul]
+      rw [AddSubgroup.vadd_def, vadd_eq_add, hfx γ γ.2 b, eNorm_mul, hψe, one_mul]
     have hF'' : IsAddFundamentalDomain (ratMx D (σ + 1) S.rank) (e ⁻¹' s) vB.μ := hμeq ▸ hF'
     calc ∫⁻ v in vL.𝓕, ‖B.d.mixT S ψ vT.μ vT.𝓕 f 0 ((B.o.resT S).symm (0, v))‖ₑ ∂vL.μ
         ≤ ∫⁻ v in vL.𝓕, ∫⁻ ξ in vT.𝓕, K (ξ, v) ∂vT.μ ∂vL.μ := by
           refine lintegral_mono fun v => ?_
           rw [hmix]
-          exact enorm_integral_le_lintegral_enorm _
+          exact eNorm_integral_le_lintegral_eNorm _
       _ = ∫⁻ p in s, K p ∂P := by
         rw [hP, ← Measure.prod_restrict, lintegral_prod_symm _ hKc.measurable.aemeasurable]
       _ = ∫⁻ b in e ⁻¹' s, K (e b) ∂(P.map e.symm) :=

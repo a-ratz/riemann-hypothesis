@@ -524,7 +524,7 @@ theorem one_mem_ipow_mul {𝔡 : Ideal (𝓞 K)} (h : 𝔡 ≠ ⊥) (n : ℤ) : 
   have e : ((𝔡 : FractionalIdeal (𝓞 K)⁰ K)) ^ (-n) * (𝔡 : FractionalIdeal (𝓞 K)⁰ K) ^ n = 1 := by
     rw [← zpow_add₀ h0, neg_add_cancel, zpow_zero]
   unfold ipow
-  rw [← FractionalIdeal.coe_mul, e, FractionalIdeal.coe_one]
+  rw [← FractionalIdeal.coeToSubmodule_mul, e, FractionalIdeal.coeToSubmodule_one]
   exact Submodule.mem_one.2 ⟨1, map_one _⟩
 
 variable [StarRing K]
@@ -899,7 +899,7 @@ omit [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] in
 theorem ist_orth_Xa {n : ℕ} {b : Fin r} (hb : N.j ≤ b.val) (hn : n ≤ b.val) {x : V} (hx : x ∈ N.F.Xa n) :
     H.B (N.ist b) x = 0 := by
   have h : ∀ u ∈ N.F.Xa n, H.B u (N.ist b) = 0 := Formalism.HermitianLatticeCounting.P.perp_Xa N.F (fun c hc => by
-    rw [N.ist_e c b hb, if_neg]
+    rw [N.ist_e c b hb, ite_eq_right]
     rintro rfl
     omega)
   rw [← H.herm, h x hx, star_zero]
@@ -925,13 +925,13 @@ theorem exists_lead {Λ : Submodule (𝓞 K) V} (hF : IsFrame N.F Λ N.aa) {a : 
     rw [hy']
     exact sub_mem (Submodule.smul_mem _ _ (Formalism.HermitianLatticeCounting.P.e_mem_X N.F a)) (Formalism.HermitianLatticeCounting.P.Xa_le_X N.F _ hzX)
   · rw [hy', map_sub, map_smulₛₗ, ist_orth_Xa N ha le_rfl hzX, ← H.herm (N.F.e a.castSucc),
-      N.ist_e a a ha, if_pos rfl]
+      N.ist_e a a ha, ite_eq_left rfl]
     simp only [star_one, smul_eq_mul, mul_one, sub_zero]
     rw [starRingEnd_apply, star_star]
   · intro b hab
     have hb := ha.trans (hab' b hab)
     rw [hy', map_sub, map_smulₛₗ, ist_orth_Xa N hb (hab' b hab) hzX, ← H.herm (N.F.e a.castSucc),
-      N.ist_e a b hb, if_neg (ne_of_lt hab)]
+      N.ist_e a b hb, ite_eq_right (ne_of_lt hab)]
     simp
 private theorem exists_ne_zero_smul_mem_of_mem_span' {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V]
     [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] {H : HermSpace K V} {r : ℕ}
@@ -1538,10 +1538,10 @@ theorem om_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddComm
     have hfg : Λ.FG := by
       rw [hE, rs, Submodule.restrictScalars_bot, sup_bot_eq]
       exact hM
-    letI : Submodule.IsLattice K Λ := Submodule.IsLattice.of_fg K hfg
+    let : Submodule.IsLattice K Λ := Submodule.IsLattice.of_fg K hfg
     exact ⟨hsp⟩
   have hRefFull : Submodule.IsFullLattice K (N.Ref (latL N.F N.F' Λ)) := by
-    letI := hRef
+    let := hRef
     obtain ⟨_, _, hC, _, hWn, hUp, _, _, _, _, _, hPi⟩ :=
       _root_.GlobalTheory.DegCnt.NF.geometry K V H hK r N
     have hspan : Submodule.span K (N.Ref (latL N.F N.F' Λ) : Set V) = ⊤ := by

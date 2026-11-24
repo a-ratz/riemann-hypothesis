@@ -234,7 +234,7 @@ theorem exists_entry_bound {n : ℕ} (W : Spc F E n) (hL : W.L.IsFullLattice E) 
   obtain ⟨C, hC⟩ := exists_bound W hL.fg v
   choose D hD0 hD using fun x : (Σ _ : Fin n, Fin (Module.finrank F E)) =>
     exists_mul_mem W.L hL (Pi.single x.1 (Module.finBasis F E x.2))
-  haveI : CharZero (Fv F v) := algebraRat.charZero _
+  have : CharZero (Fv F v) := algebraRat.charZero _
   refine ⟨∑ y, |C| / ‖(D y : Fv F v)‖, fun t ht x y => ?_⟩
   set e := GlobalTheory.EmbChart.atPlace v (1 : Fv F v) with he
   have he1 : evFin F v e = 1 := GlobalTheory.EmbChart.evFin_atPlace v 1

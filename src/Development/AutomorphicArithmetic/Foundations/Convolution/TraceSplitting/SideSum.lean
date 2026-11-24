@@ -136,9 +136,9 @@ private theorem iw_pow_at {K : Type} [Field K] [NumberField K] {n : ℕ} (w : Pl
   set d : ENNReal := (m (GLnLocal.iwahori (w.adicCompletion K) n : Subgroup (Gw n w)))⁻¹ with hd
   have hd0 : d ≠ 0 := ENNReal.inv_ne_zero.2 htop
   have hdt : d ≠ ⊤ := ENNReal.inv_ne_top.2 hpos
-  haveI : (d • m).IsHaarMeasure := Measure.IsHaarMeasure.smul m hd0 hdt
+  have : (d • m).IsHaarMeasure := Measure.IsHaarMeasure.smul m hd0 hdt
   have h1 : (d • m) (GLnLocal.iwahori (w.adicCompletion K) n : Subgroup (Gw n w)) = 1 := by
-    rw [Measure.smul_apply, smul_eq_mul, hd, ENNReal.inv_mul_cancel hpos htop]
+    rw [smul_apply, smul_eq_mul, hd, ENNReal.inv_mul_cancel hpos htop]
   obtain ⟨Z, hZ0, -, hZ⟩ := UpperTheory.ConvolutionTheory.C.iwPow K n w (d • m) h1 σ ν hν hfd
   exact ⟨_, Z, hZ0, fun j => hasTrace_of_smul hd0 hdt (hZ j)⟩
 
@@ -160,7 +160,7 @@ private theorem trOn_bot' {H : Type} [NormedAddCommGroup H] [InnerProductSpace �
 theorem UpperTheory.ConvolutionTheory.T.sideSum :
     UpperTheory.ConvolutionTheory.T.SideSum := by
   intro F E _ _ _ _ _ _ σ n l hn μ _ ν _ _ _ m hm a q w₀ S UF e he p x hx
-  haveI hmH : ∀ v, (m v).IsHaarMeasure := fun v => (hm v).1
+  have hmH : ∀ v, (m v).IsHaarMeasure := fun v => (hm v).1
   by_cases hex : ∃ (L : GM.Loc σ n q w₀) (𝔣 : Side (Twist.id μ) l), L.S = S ∧ (∀ v ∈ S, L.UF v = UF v) ∧ GM.IsSideF L ν a e 𝔣
   swap
   · refine ⟨Empty, inferInstance, fun i => i.elim, fun i => i.elim, fun i => i.elim, fun i => i.elim, fun i => i.elim, ?_⟩
@@ -183,7 +183,7 @@ theorem UpperTheory.ConvolutionTheory.T.sideSum :
   choose c Z hZ0 hZ using hZ
   have hN := fun V : P => hT a q w₀ S V.1 (τ V) x V.2.1 hx (fun v _ => hτ V v)
   choose N hN using hN
-  letI : Fintype P := hPfin.fintype
+  let : Fintype P := hPfin.fintype
   refine ⟨P, inferInstance, fun V => V.1, τ, fun V => κ * x * N V * c V, Z, fun V => ⟨V.2.1, V.2.2.2, hZ0 V, hτ V⟩, ?_⟩
   intro L 𝔣 hS hU hF s hs j
   have hUF : L.UF = L₀.UF := by
@@ -205,7 +205,7 @@ theorem UpperTheory.ConvolutionTheory.T.sideSum :
     unfold Side.tr
     refine finsum_mem_inter_support_eq _ _ _ ?_
     ext V
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Function.mem_support, hP]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Function.mem_support, hP]
     constructor
     · rintro ⟨⟨h1, -, h3⟩, h4⟩
       refine ⟨⟨h1, fun h => h4 ?_, h3⟩, h4⟩

@@ -118,7 +118,7 @@ theorem commutator_le_ker_of_comm {G M : Type*} [Group G] [Group M] [IsMulCommut
 theorem le_maximalAbelianExtension (L : IntermediateField F Ω) [IsAbelianGalois F L] :
     L ≤ maximalAbelianExtension F Ω := by
   have : T1Space (L ≃ₐ[F] L) := @T2Space.t1Space _ _ krullTopology_t2
-  rw [maximalAbelianExtension, le_iff_le, ← L.restrictNormalHom_ker]
+  rw [maximalAbelianExtension, le_fixedField_iff_le_fixingSubgroup, ← L.restrictNormalHom_ker]
   refine Subgroup.topologicalClosure_minimal _ (commutator_le_ker_of_comm _) ?_
   exact isClosed_singleton.preimage (InfiniteGalois.restrictNormalHom_continuous L)
 

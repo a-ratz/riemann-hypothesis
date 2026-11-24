@@ -196,7 +196,7 @@ theorem fib_of_ratio_gen (μ : Measure V) (ν : Measure X) [ν.IsAddHaarMeasure]
     exact key
   · push_neg at hX
     have hall : ∀ z : X, z = T := hX
-    haveI : Subsingleton X := ⟨fun a b => (hall a).trans (hall b).symm⟩
+    have : Subsingleton X := ⟨fun a b => (hall a).trans (hall b).symm⟩
     have hTN : T ∈ Nb := mem_of_mem_nhds hNb
     have hQU : Q ⊆ U := fun x hx => hNbU x hx (by rw [hall (G x)]; exact hTN)
     obtain ⟨-, h2, -⟩ := hfib
@@ -208,7 +208,7 @@ theorem fib_of_ratio_gen (μ : Measure V) (ν : Measure X) [ν.IsAddHaarMeasure]
     have hr := hratio 0
     have hset : Q ∩ G ⁻¹' {z | z - T ∈ H 0} = Q := by
       ext x
-      simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_setOf_eq, and_iff_left_iff_imp]
+      simp only [Set.mem_inter_iff, Set.mem_preimage, mem_ofPred_eq, and_iff_left_iff_imp]
       intro _
       rw [hall (G x), sub_self]
       exact (H 0).zero_mem
@@ -285,7 +285,7 @@ theorem fibLatGen_holds : FibLatGen := by
     have hcos : ∀ y, q ⁻¹' {q y} = {x | x - y ∈ Λ 0} := by
       intro y
       ext x
-      simp only [mem_preimage, mem_singleton_iff, mem_setOf_eq, q]
+      simp only [mem_preimage, mem_singleton_iff, mem_ofPred_eq, q]
       exact QuotientAddGroup.eq_iff_sub_mem
     have hcount : ∀ n, μ (Pn n) * ν (H 0) = (Tf.card : ENNReal) * (μ (Λ 0) * ν (H n)) := by
       intro n
@@ -310,7 +310,7 @@ theorem fibLatGen_holds : FibLatGen := by
         have e : Pn n ∩ q ⁻¹' {q y} = {x | x - y ∈ Λ 0} ∩ G ⁻¹' {z | z - T ∈ H n} := by
           rw [hcos]
           ext x
-          simp only [hPndef, mem_inter_iff, mem_setOf_eq, mem_preimage]
+          simp only [hPndef, mem_inter_iff, mem_ofPred_eq, mem_preimage]
           constructor
           · rintro ⟨⟨_, hxS⟩, hxy⟩
             exact ⟨hxy, hxS⟩

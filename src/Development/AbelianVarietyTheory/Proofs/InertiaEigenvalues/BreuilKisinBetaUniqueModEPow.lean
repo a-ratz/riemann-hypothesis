@@ -100,7 +100,7 @@ theorem step {d : ℕ} (g : ↥(GK K)) (w : Ainf l)
     (m i : ℕ) (hi : 1 ≤ i) (him : i < m) (δ : Fin d → Fin d → bk.S)
     (hδ : ∀ a b, bk.ev bk.E ^ m ∣ ∑ c, P a c * Per.σA (g : GQ l) (bk.ev (δ c b)) - bk.ev (δ a b))
     (hdiv : ∀ a b, bk.E ^ i ∣ δ a b) : ∀ a b, bk.E ^ (i + 1) ∣ δ a b := by
-  haveI : IsDomain (Ainf l) := inclW_injective.isDomain (inclW l)
+  have : IsDomain (Ainf l) := inclW_injective.isDomain (inclW l)
   choose δ' hδ' using hdiv
   intro a b
   have hX : ∑ c, P a c * Per.σA (g : GQ l) (bk.ev (δ c b)) - bk.ev (δ a b) =
@@ -118,7 +118,7 @@ theorem step {d : ℕ} (g : ↥(GK K)) (w : Ainf l)
   rw [← theta_eq_zero_iff] at h1
 
   simp only [map_sub, map_mul, map_pow, map_sum, theta_gal_ev, hP, ite_mul, one_mul, zero_mul,
-  Finset.sum_ite_eq, Finset.mem_univ, if_true] at h1
+  Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h1
   have h4 : Per.θ l (bk.ev (δ' a b)) = 0 := by
     have h5 : (Per.θ l w ^ i - 1) * Per.θ l (bk.ev (δ' a b)) = 0 := by
       rw [sub_mul, one_mul]; exact h1
@@ -162,7 +162,7 @@ theorem GlobalTheory.BKLim.beta_unique : ∀ (l : ℕ) [Fact l.Prime] (K : FinEx
     have h := (BetaUniq.theta_eq_zero_iff bk _).2 ((dvd_pow_self _ hm.ne').trans (hent k β hβ a b))
 
     simp only [map_sub, map_sum, map_mul, BetaUniq.theta_gal_ev, hθβ, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true] at h
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h
     rw [sub_eq_zero] at h
     have hl := pow_ne_zero k (BetaUniq.l_ne_zero_OC (l := l))
     apply mul_right_cancel₀ hl

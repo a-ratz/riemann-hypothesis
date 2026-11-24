@@ -169,7 +169,7 @@ theorem exists_norm_maximal (hσ : ∀ x, σ (σ x) = x) (P : Ideal O) [hP : P.I
     refine ⟨c, Ideal.Quotient.eq.1 ?_⟩
     rw [map_mul, map_intCast, ← hτ]
     exact hc
-  · obtain ⟨x, hx, hx'⟩ := SetLike.not_le_iff_exists.1 h
+  · obtain ⟨x, hx, hx'⟩ := IsConcreteLE.not_le_iff_exists.1 h
     obtain ⟨y, e, he, hy⟩ := hP.exists_inv (x := σ x) hx'
     refine ⟨e + ν * (y * σ x), ?_⟩
     have hy' := congrArg σ hy

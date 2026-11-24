@@ -280,7 +280,7 @@ theorem exists_skew_scalar (D : D7) (𝔪 : Ideal (𝓞 D.host.E)) (h0 : 𝔪 �
       intro hb
       rw [hb, Ideal.mem_bot] at hMc
       exact hM.ne' (by exact_mod_cast hMc)
-    rw [FractionalIdeal.mem_coe, FractionalIdeal.mem_div_iff_of_ne_zero hc0]
+    rw [FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_div_iff_of_ne_zero hc0]
     simp only [FractionalIdeal.mem_coeIdeal]
 
     constructor

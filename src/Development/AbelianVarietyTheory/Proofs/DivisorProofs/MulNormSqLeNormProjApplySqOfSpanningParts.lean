@@ -62,7 +62,7 @@ theorem mul_norm_sq_le_norm_adjoint_sq_of_spanning_parts
     m * ‖u‖ ^ 2 ≤ ‖LinearMap.adjoint T u‖ ^ 2 := by
   by_cases hu : u = 0
   · simp [hu]
-  haveI : Nontrivial Y := ⟨⟨u, 0, hu⟩⟩
+  have : Nontrivial Y := ⟨⟨u, 0, hu⟩⟩
   set S : Y →ₗ[ℂ] Y := T ∘ₗ LinearMap.adjoint T with hS
   have hsym : S.IsSymmetric := by
     intro a b

@@ -86,9 +86,9 @@ theorem isOpen_intAE (D : D7) : IsOpen (intAE D : Set (Af D.host.F ⊗[D.host.F]
   exact this
 
 theorem isCompact_intAE (D : D7) : IsCompact (intAE D : Set (Af D.host.F ⊗[D.host.F] D.host.E)) := by
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (Af D.host.F) _
   obtain ⟨C, hC, hCd⟩ := GlobalTheory.SmoothForms.Cover.exists_compact_denom D 1 one_pos
   exact hC.of_isClosed_subset (AddSubgroup.isClosed_of_isOpen _ (isOpen_intAE D)) fun y hy => hCd y (by simpa using hy)
@@ -152,9 +152,9 @@ theorem coset_mem_SB {m n : ℕ} (W : AddSubgroup (Matrix (Fin m) (Fin n) (Af D.
     (fun a : Fin m → Fin n → Af D.host.F ⊗[D.host.F] D.host.E =>
       if (QuotientAddGroup.mk (show Matrix (Fin m) (Fin n) _ from a) : _ ⧸ W) = q then (1 : ℂ) else 0) ∈
       GlobalTheory.WeilM.SB (Fin m → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) := by
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (Af D.host.F) _
   have hmk : IsLocallyConstant
       (fun a : Matrix (Fin m) (Fin n) (Af D.host.F ⊗[D.host.F] D.host.E) => (a : _ ⧸ W)) := by
@@ -169,7 +169,7 @@ theorem coset_mem_SB {m n : ℕ} (W : AddSubgroup (Matrix (Fin m) (Fin n) (Af D.
   have hKcl : IsClosed K := (Homeomorph.addLeft q.out).isClosedMap _ hcl
   refine HasCompactSupport.intro' hKc hKcl fun x hx => ?_
   show (if (QuotientAddGroup.mk (show Matrix (Fin m) (Fin n) _ from x) : _ ⧸ W) = q then (1 : ℂ) else 0) = 0
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hq
   apply hx
   have h1 : (QuotientAddGroup.mk q.out : _ ⧸ W) = QuotientAddGroup.mk (show Matrix (Fin m) (Fin n) _ from x) := by
@@ -186,9 +186,9 @@ open Classical in
 theorem mem_schwartzA_of_isSchwartzBruhat : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (m n : ℕ) (φ : Mx D m n → ℂ),
     GlobalTheory.IndefiniteRowSideFullHecke.SchwartzBruhatMixedFamilies.IsSchwartzBruhat φ → φ ∈ GlobalTheory.IndefiniteRowSideFullHecke.ModerateGrowthSchwartz.schwartzA θ m n := by
   intro D θ hθ m n φ hφ
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (Af D.host.F) _
   obtain ⟨σ, hσ⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨s, hsc, hsf, hsi⟩ := exists_finSection D

@@ -206,17 +206,17 @@ theorem char_eq_one (χ : GL (Fin n) ℂ →* ℝ≥0)
 
 theorem unimod : PositivityTheory.RgBcC.Unimod := by
   intro n _ _ μ _
-  haveI : T2Space (Matrix (Fin n) (Fin n) ℂ) := inferInstanceAs (T2Space (Fin n → Fin n → ℂ))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  have : T2Space (Matrix (Fin n) (Fin n) ℂ) := inferInstanceAs (T2Space (Fin n → Fin n → ℂ))
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin n) (Fin n) ℂ)).symm.isEmbedding.secondCountableTopology
-  haveI : LocallyCompactSpace (PositivityTheory.RgTw.G n) :=
+  have : LocallyCompactSpace (PositivityTheory.RgTw.G n) :=
     (Units.isClosedEmbedding_embedProduct :
       Topology.IsClosedEmbedding (Units.embedProduct (Matrix (Fin n) (Fin n) ℂ))).locallyCompactSpace
-  haveI : SecondCountableTopology (PositivityTheory.RgTw.G n) :=
+  have : SecondCountableTopology (PositivityTheory.RgTw.G n) :=
     (Units.isEmbedding_embedProduct :
       Topology.IsEmbedding (Units.embedProduct (Matrix (Fin n) (Fin n) ℂ))).secondCountableTopology
   have hmap : ∀ g : PositivityTheory.RgTw.G n,

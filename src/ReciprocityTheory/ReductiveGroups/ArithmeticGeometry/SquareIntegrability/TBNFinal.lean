@@ -158,7 +158,7 @@ private theorem setAverage_preimage_linearEquiv_comp (X : PT E) (f : Vsp X.dim �
     rw [ENNReal.toReal_ofReal (abs_nonneg _)]
     exact abs_ne_zero.mpr (inv_ne_zero hdet)
   rw [setAverage_eq, setAverage_eq, h1, measureReal_def, h2, hmap, Measure.restrict_smul, integral_smul_measure,
-    Measure.smul_apply, smul_eq_mul (α := ENNReal), ENNReal.toReal_mul, ← measureReal_def]
+    smul_apply, smul_eq_mul (α := ENNReal), ENNReal.toReal_mul, ← measureReal_def]
   simp only [smul_eq_mul, mul_inv]
   linear_combination ((volume.real S)⁻¹ * ∫ x in S, g x) * inv_mul_cancel₀ hc0
 
@@ -286,7 +286,7 @@ theorem stepK : StepK := by
   have hf : ∀ c ∈ T, f c ∈ K ∧ ∀ k, π (c k - f c k) ∈ X.L := by
     intro c hc
     have h := hT c hc
-    simp only [f, dif_pos h]
+    simp only [f, dite_eq_left h]
     exact Classical.choose_spec (hK.2 c h).exists
   have hcard : T.card ≤ K.card := by
     apply Finset.card_le_card_of_injOn f
@@ -511,7 +511,7 @@ theorem span_part (hI : StepI) (hPos : StepPos) (hKc : StepK) (hD : StepD) (X : 
     · intro h; exact absurd hi h
   have hrange : Set.range f = (fun b => X.U q b (s0 X π s)) '' (K : Set _) := by
     ext x; simp [hf]
-  haveI : FiniteDimensional ℂ (X.Sec q n) := (hD E X q n hq).1
+  have : FiniteDimensional ℂ (X.Sec q n) := (hD E X q n hq).1
   have hle : Submodule.span ℂ (Set.range f) ≤ X.Sec q n := by
     rw [Submodule.span_le]
     rintro _ ⟨i, rfl⟩

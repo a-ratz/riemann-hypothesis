@@ -609,7 +609,7 @@ variable [IsGalois K L]
 omit [IsGalois K L] in
 theorem isPGroup_gal_fixedField_sylow {p : ℕ} (P : Sylow p Gal(L/K)) :
     IsPGroup p Gal(L/fixedField (P : Subgroup Gal(L/K))) :=
-  P.isPGroup'.of_equiv (subgroupEquivGalFixedField _)
+  P.isPGroup.of_equiv (subgroupEquivGalFixedField _)
 
 theorem isZero_groupCohomology_one_ideleClassRep :
     IsZero (groupCohomology (ideleClassRep K L) 1) := by

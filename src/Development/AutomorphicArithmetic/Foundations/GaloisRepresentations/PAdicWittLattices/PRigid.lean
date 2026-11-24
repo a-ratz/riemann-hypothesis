@@ -97,10 +97,10 @@ private theorem pull_diag_cls (m : GObjMap o' o f) :
 private theorem eq_at_point (hN : 3 ≤ N) (m m' : GObjMap o' o f) {K : Type} [Field K] [IsAlgClosed K] (j : Sp K ⟶ S') :
     pullback.fst o'.A.hom j ≫ m.φ = pullback.fst o'.A.hom j ≫ m'.φ := by
   have hA' : IsAbelianScheme ((Over.pullback j).obj o'.A) := by
-    haveI := o'.ab.comm
-    haveI := o'.ab.smooth
-    haveI := o'.ab.proper
-    haveI := o'.ab.geomConnected
+    have := o'.ab.comm
+    have := o'.ab.smooth
+    have := o'.ab.proper
+    have := o'.ab.geomConnected
     constructor
     · infer_instance
     · dsimp; infer_instance

@@ -146,7 +146,7 @@ theorem exists_invariant_form : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
     have h2 := congrArg Complex.re h
     rw [← RCLike.re_to_complex, ← integral_re ((memS _).1 (hSB _ hφ))] at h2
     refine ne_of_gt ?_ h2
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 0)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 0)
       (RCLike.continuous_re.comp (cc _ hφ).1) ((cc _ hφ).2.comp_left (g := RCLike.re) (map_zero _)) (fun t => ?_) ?_
     · by_cases ht : j t ∈ U
       · have := hKs (hUK ht)

@@ -182,12 +182,12 @@ theorem exists_norm_le [IsNoetherianRing A] (m : Ideal A) (φ : B →+* K) (hφ 
     { carrier := {b | ‖φ b‖ ≤ |r|}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at *
         exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
       zero_mem' := by simp
       smul_mem' := by
         intro c b hb
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, norm_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, norm_mul] at *
         exact (mul_le_of_le_one_left (norm_nonneg _) (hφ c)).trans hb }
   have hball : ∀ r b, b ∈ ball r ↔ ‖φ b‖ ≤ |r| := fun _ _ => Iff.rfl
   obtain ⟨s, hs⟩ := IsNoetherian.noetherian m
@@ -386,9 +386,9 @@ theorem sum_orbit_eq [Module.Free ℤ X] [Module.Finite ℤ X] {m s : ℕ} {K : 
   obtain ⟨γ, g1, g2, g3, g4⟩ := ((hS μ).1 hμ).1
   obtain ⟨c, hc, hc'⟩ := hC3 (fun j => γ (a j)) ⟨γ, g1, g2, g3, fun j => cm_refl _⟩
   have hμc : ∀ j, CongMod N (μ j) (k (c j)) := fun j => cm_trans (g4 j) (cm_map k (cm_symm (hc' j)))
-  rw [Finset.sum_eq_single_of_mem c hc, if_pos hμc]
+  rw [Finset.sum_eq_single_of_mem c hc, ite_eq_left hμc]
   intro c' hc'' hne
-  rw [if_neg]
+  rw [ite_eq_right]
   intro h
   exact hne (hC2 _ hc'' _ hc fun j => hinj _ _ (cm_trans (cm_symm (h j)) (hμc j)))
 

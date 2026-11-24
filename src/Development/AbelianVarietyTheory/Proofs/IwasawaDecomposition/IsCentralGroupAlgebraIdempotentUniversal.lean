@@ -46,8 +46,8 @@ namespace GlobalTheory.HeightCounting.FormsStep
 
 theorem eIdem_all : ∀ D : D7, EIdem D := by
   intro D
-  haveI : ∀ k, Fact (D.host.g k).Prime := fun k => ⟨D.host.g_prime k⟩
-  haveI : ∀ k, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
+  have : ∀ k, Fact (D.host.g k).Prime := fun k => ⟨D.host.g_prime k⟩
+  have : ∀ k, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
   let φ : ↥D.LL0 →+* ℂ := D.what₂.embLL.comp (algebraMap ↥D.LL0 D.what₂.LL)
   have hφ : Function.Injective φ := φ.injective
   let M := MonoidAlgebra.mapRingHom (G0g D.nd) φ

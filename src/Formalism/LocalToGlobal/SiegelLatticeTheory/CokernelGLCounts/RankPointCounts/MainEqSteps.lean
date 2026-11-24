@@ -91,7 +91,7 @@ theorem classInputG_of (h : ScalEquivOn (Y.tO u u)) (νL νB : X.B.I.Ginf → Me
   · rintro ⟨hrow, hs, hsc⟩
     obtain ⟨hs', hsc'⟩ := hsymm t ht t' ht' hrow hs hsc
     ext t''
-    simp only [clsG, Set.mem_setOf_eq]
+    simp only [clsG, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨hg, hr, h1, h2⟩
       exact ⟨hg, hr.trans hrow, htrans t' ht' t ht t'' hg hrow.symm hr.symm hs' hsc' h1 h2⟩
@@ -100,7 +100,7 @@ theorem classInputG_of (h : ScalEquivOn (Y.tO u u)) (νL νB : X.B.I.Ginf → Me
   · intro hcl
     have hmem : t' ∈ clsG Y u t' := ⟨ht', rfl, (hrefl t' ht').1, (hrefl t' ht').2⟩
     rw [← hcl] at hmem
-    simp only [clsG, Set.mem_setOf_eq] at hmem
+    simp only [clsG, Set.mem_ofPred_eq] at hmem
     obtain ⟨-, hr, h1, h2⟩ := hmem
     exact ⟨hr.symm, h1, h2⟩
 

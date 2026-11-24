@@ -52,7 +52,7 @@ private theorem one_of_ramified {K M : Type} [Field K] [NumberField K] [Field M]
     (hram : ¬ Algebra.IsUnramifiedAt (𝓞 K) w.asIdeal) :
     w.asIdeal.inertiaDeg (𝓞 K) = 1 ∧ ((w.asIdeal.under (𝓞 K)).primesOver (𝓞 M)).ncard = 1 := by
   have := w.isPrime
-  haveI : Module.Finite K M := Module.finite_of_finrank_pos hp.pos
+  have : Module.Finite K M := Module.finite_of_finrank_pos hp.pos
   have k := Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn (w.asIdeal.under (𝓞 K)) (𝓞 M) Gal(M/K)
   rw [Ideal.ramificationIdxIn_eq_ramificationIdx _ w.asIdeal Gal(M/K), Ideal.inertiaDegIn_eq_inertiaDeg _ w.asIdeal Gal(M/K),
     IsGalois.card_aut_eq_finrank] at k
@@ -85,9 +85,9 @@ theorem UpperTheory.ConvolutionTheory.Sph.normRam :
     rw [ha] at h1 h2
     exact HeightOneSpectrum.ext (h2.trans h1.symm)
   · let Ω := AlgebraicClosure M
-    haveI : Module.Finite K M := Module.finite_of_finrank_pos hp.pos
-    haveI : Algebra.IsAlgebraic M Ω := IsAlgClosure.isAlgebraic
-    haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed M, Algebra.IsAlgebraic.trans K M Ω⟩
+    have : Module.Finite K M := Module.finite_of_finrank_pos hp.pos
+    have : Algebra.IsAlgebraic M Ω := IsAlgClosure.isAlgebraic
+    have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed M, Algebra.IsAlgebraic.trans K M Ω⟩
     obtain ⟨A, hA⟩ := ReciprocityTheory.Gal.exists_isPlaceOver Ω w
     have hAv : IsPlaceOver A (w.under (𝓞 K)) := fun x => by
       rw [IsScalarTower.algebraMap_apply K M Ω]

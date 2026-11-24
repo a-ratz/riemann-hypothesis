@@ -70,9 +70,9 @@ theorem UpperTheory.ConvolutionTheory.G.quotMap_of :
   have hj'c : Continuous j' := hP'.2.1.continuous
   have hec : Continuous e := e.continuous_toFun
   have hejc : Continuous (fun t => e (j t)) := hec.comp hjc
-  haveI := hP.2.2.1
-  haveI := hP'.1.1
-  haveI := hP'.1.2
+  have := hP.2.2.1
+  have := hP'.1.1
+  have := hP'.1.2
   have hrange : ∀ t, e (j t) ∈ Set.range j' := by
     have hcl : IsClosed (Set.range j') := hP'.2.1.isClosed_range
     have ho : IsOpen (Set.range j')ᶜ := hcl.isOpen_compl
@@ -102,7 +102,7 @@ theorem UpperTheory.ConvolutionTheory.G.quotMap_of :
     rw [hν, h2, hρ.2] at h1
     simp only [map_mul, mul_assoc]
     exact h1.symm
-  haveI : μ'.IsMulRightInvariant := by
+  have : μ'.IsMulRightInvariant := by
     have h : μ'.inv.IsMulRightInvariant := inferInstance
     rwa [Measure.inv_eq_self] at h
   have hmp : MeasurePreserving (fun g : G => e g * y) μ μ' :=

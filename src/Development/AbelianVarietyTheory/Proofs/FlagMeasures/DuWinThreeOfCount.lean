@@ -84,7 +84,7 @@ theorem window {S T : ℝ} {f k : ℕ} (hS : 0 < S) (hT : 2 ≤ T) (hf : 1 ≤ f
       have h3 : 1 + 1 / ((f * k : ℕ) : ℝ) ≤ Real.exp (1 / ((f * k : ℕ) : ℝ)) := by
         have := Real.add_one_le_exp (1 / ((f * k : ℕ) : ℝ)); linarith
       calc _ ≤ Real.exp (1 / ((f * k : ℕ) : ℝ)) ^ (f * k) := pow_le_pow_left₀ (by positivity) h3 _
-        _ = Real.exp 1 := by rw [← Real.exp_nat_mul, mul_one_div_cancel hn'.ne']
+        _ = Real.exp 1 := by rw [← Real.exp_natCast_mul, mul_one_div_cancel hn'.ne']
         _ ≤ 3 := by have := Real.exp_one_lt_d9; linarith
     calc (T ^ k - 1) ^ f ≤ (T ^ k) ^ f := pow_le_pow_left₀ (by linarith) (by linarith) _
       _ = T ^ (f * k) := hpow

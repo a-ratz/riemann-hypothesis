@@ -119,7 +119,7 @@ theorem frame_values {O I : Type} (ev : L →+ ER) (hev : ∀ a : A, ∃ r : F, 
     have := ev_mem_span ev hev _ e (hcL e)
     rwa [← Set.range_comp] at this
   have hcard : Fintype.card (Fin g) = Module.finrank F ER := by simp [hER]
-  haveI : Module.Finite F ER := ⟨⟨Finset.univ.image f, by
+  have : Module.Finite F ER := ⟨⟨Finset.univ.image f, by
     rw [eq_top_iff]; simpa using hfspan⟩⟩
   have hfli : LinearIndependent F f := linearIndependent_of_top_le_span_of_card_eq_finrank hfspan hcard
 
@@ -282,7 +282,7 @@ theorem lat_eq_iSup (Z : CptOver Y U) (hβ : Function.Injective β)
     (hfr : ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) (x : Cpt (Z.ξ₀ ≫ Y.j)) (hx : x ∈ Z.genFib) :
     Z.M.lat x = ⨆ s : E →+* ℂ, Z.eig s x := by
   classical
-  haveI : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
+  have : CharZero Z.Ω := charZero_of_injective_ringHom Z.inc.injective
   let σ : (E →+* ℂ) → (𝓞 E →+* Z.Ω) := fun s => Z.inc.comp (tauIn c s)
   let φ : (E →+* ℂ) → (E →+* Z.Ω) := fun s => Z.inc.comp (Formalism.L2.Pj.embF c s)
   have hφ : Function.Injective φ := by
@@ -300,7 +300,7 @@ theorem lat_eq_iSup (Z : CptOver Y U) (hβ : Function.Injective β)
     obtain ⟨W, h, b, hb, hf⟩ := lat_isVB_of_smooth Y.t.semi.smooth Z.M p (Set.mem_univ _)
     exact ⟨W, h, b, hb, fun q _ hq => hf q (Set.mem_univ _) hq⟩
   have hst : ∀ p ∈ Z.genFib, ∀ a, ∀ e ∈ Z.M.lat p, Z.ρ a e ∈ Z.M.lat p := fun p _ a e he => by
-    haveI := Y.t.act.hom a
+    have := Y.t.act.hom a
     exact lat_stable Z.M _ (Z.ρ a) (Z.act a) p he
   have hreg : ∀ p ∈ Z.genFib, ∀ s a, σ s a ∈ regAt (Z.ξ₀ ≫ Y.j) p :=
     fun p hp s a => inc_mem_regAt Z hβ hfr p hp (tauIn c s a)
@@ -334,7 +334,7 @@ theorem valFam_eigFrame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   intro E _ _ _ H D l Xo c O _ β Y U Z τ hβ hτ F _ βF y hy _ h σ n b hb
   classical
   obtain ⟨hinj, -, hfr⟩ := id hβ
-  haveI : Smooth Y.t.G.hom := Y.t.semi.smooth
+  have : Smooth Y.t.G.hom := Y.t.semi.smooth
   let ξ := Z.ξ₀ ≫ Y.j
   let z := y ≫ Y.j
   let x : Cpt ξ := ⟨_, h⟩
@@ -350,7 +350,7 @@ theorem valFam_eigFrame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hEig : ∀ (s : E →+* ℂ) (e : Z.M.lat x), (e : Z.V) ∈ Z.eig s x → ∀ a : 𝓞 E,
       ρF a (ev e) = βF (tauIn c s a) • ev e := by
     intro s e he a
-    haveI := Y.t.act.hom a
+    have := Y.t.act.hom a
     have hmem : (e : Z.V) ∈ eigSp Z.ρ (Z.inc.comp (tauIn c s)) := he.2
     have hρ : Z.ρ a e = Z.inc (tauIn c s a) • (e : Z.V) := by
       simpa [eigSp, Submodule.mem_iInf, sub_eq_zero] using (Submodule.mem_iInf _).1 hmem a

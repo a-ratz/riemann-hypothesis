@@ -132,7 +132,7 @@ theorem locBasis_of_bounded {F : Type} [Field F] [NumberField F] (p : HeightOneS
       LinearIndependent F b := by
   obtain ⟨D, hD, hDM⟩ := hbd
   set A : ValuationSubring F := p.valuationSubringAtPrime F with hA
-  haveI : IsDiscreteValuationRing A :=
+  have : IsDiscreteValuationRing A :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 F) p.ne_bot _
   have memA : ∀ a : F, a ∈ A ↔ p.valuation F a ≤ 1 := by
     intro a
@@ -244,8 +244,8 @@ theorem finiteField_exists_generator_minpoly (l : ℕ) [Fact l.Prime] (K : Type)
     ∃ (a : K) (p : (ZMod l)[X]), p.Monic ∧ Irreducible p ∧ aeval a p = 0 ∧
       aeval a (derivative p) ≠ 0 ∧ (∀ y : K, ∃ q : (ZMod l)[X], aeval a q = y) ∧
       Nat.card K = l ^ p.natDegree := by
-  haveI : Fintype K := Fintype.ofFinite K
-  haveI : FiniteDimensional (ZMod l) K := Module.Finite.of_finite
+  have : Fintype K := Fintype.ofFinite K
+  have : FiniteDimensional (ZMod l) K := Module.Finite.of_finite
   let pb := Field.powerBasisOfFiniteOfSeparable (ZMod l) K
   refine ⟨pb.gen, minpoly (ZMod l) pb.gen, minpoly.monic pb.isIntegral_gen,
     minpoly.irreducible pb.isIntegral_gen, minpoly.aeval _ _, ?_, ?_, ?_⟩
@@ -289,12 +289,12 @@ theorem span_powers_of_uniformizer_of_nilpotent :
       refine ⟨fun j => if j = k then y else c j, z, ?_⟩
       rw [Finset.sum_range_succ]
       beta_reduce
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       have hsum : ∑ j ∈ Finset.range k, φ (if j = k then y else c j) * π ^ j
           = ∑ j ∈ Finset.range k, φ (c j) * π ^ j := by
         apply Finset.sum_congr rfl
         intro j hj
-        rw [if_neg (Finset.mem_range.mp hj).ne]
+        rw [ite_eq_right (Finset.mem_range.mp hj).ne]
       rw [hsum, hx]
       have hw : w = φ y + z * π := by rw [hz]; ring
       rw [hw]; ring
@@ -407,7 +407,7 @@ namespace GlobalTheory.LocalTraceNonzero
 theorem isUnit_of_cast_ne_zero (l b : ℕ) [Fact l.Prime] (hb : b ≠ 0) (x : ZMod (l ^ b))
     (hx : ZMod.castHom (dvd_pow_self l hb) (ZMod l) x ≠ 0) : IsUnit x := by
   have hl := (Fact.out : l.Prime)
-  haveI : NeZero (l ^ b) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ b) := ⟨pow_ne_zero _ hl.ne_zero⟩
   rw [← ZMod.natCast_zmod_val x] at hx ⊢
   rw [map_natCast, ne_eq, ZMod.natCast_eq_zero_iff] at hx
   rw [ZMod.isUnit_iff_coprime]
@@ -420,9 +420,9 @@ theorem henselian_of_finite (A : Type) [CommRing A] [Finite A] [IsLocalRing A] :
 
 theorem exists_trace_ne_zero_adjoinRoot (l : ℕ) [Fact l.Prime] (p : (ZMod l)[X]) (hp : Irreducible p) :
     ∃ z : AdjoinRoot p, Algebra.trace (ZMod l) (AdjoinRoot p) z ≠ 0 := by
-  haveI : Fact (Irreducible p) := ⟨hp⟩
-  haveI : FiniteDimensional (ZMod l) (AdjoinRoot p) := (AdjoinRoot.powerBasis hp.ne_zero).finite
-  haveI : Algebra.IsSeparable (ZMod l) (AdjoinRoot p) := inferInstance
+  have : Fact (Irreducible p) := ⟨hp⟩
+  have : FiniteDimensional (ZMod l) (AdjoinRoot p) := (AdjoinRoot.powerBasis hp.ne_zero).finite
+  have : Algebra.IsSeparable (ZMod l) (AdjoinRoot p) := inferInstance
   obtain ⟨z, hz⟩ := Algebra.trace_surjective (ZMod l) (AdjoinRoot p) 1
   exact ⟨z, by rw [hz]; exact one_ne_zero⟩
 
@@ -430,12 +430,12 @@ theorem exists_trace_ne_zero : ∀ (l b e : ℕ) [Fact l.Prime] (B : Type) [Comm
   intro l b e _ B _ _ _ π he hunit hspan hcard hdvd
   have hb : b ≠ 0 := by rintro rfl; exact hdvd (by simp)
   have hl := (Fact.out : l.Prime)
-  haveI : Nontrivial B := by
+  have : Nontrivial B := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     exact (hunit 0).2 (dvd_zero π) (by rw [Subsingleton.elim (0 : B) 1]; exact isUnit_one)
   have hnon : ∀ x : B, x ∈ nonunits B ↔ π ∣ x := fun x => hunit x
-  haveI : IsLocalRing B := IsLocalRing.of_nonunits_add
+  have : IsLocalRing B := IsLocalRing.of_nonunits_add
     (fun a c ha hc => (hnon _).2 (dvd_add ((hnon a).1 ha) ((hnon c).1 hc)))
   have hmax : IsLocalRing.maximalIdeal B = Ideal.span {π} := by
     ext x; rw [IsLocalRing.mem_maximalIdeal, hnon, Ideal.mem_span_singleton]
@@ -445,12 +445,12 @@ theorem exists_trace_ne_zero : ∀ (l b e : ℕ) [Fact l.Prime] (B : Type) [Comm
     have : ((l : ℕ) : B) ∈ Ideal.span {π ^ e} := hspan ▸ Ideal.mem_span_singleton_self _
     rw [Ideal.mem_span_singleton] at this
     exact (dvd_pow_self π he.ne').trans this
-  haveI : CharP K l := by
+  have : CharP K l := by
     rw [CharP.charP_iff_prime_eq_zero hl, ← map_natCast (IsLocalRing.residue B),
       IsLocalRing.residue_eq_zero_iff]
     exact hlmax
-  letI : Algebra (ZMod l) K := ZMod.algebra K l
-  haveI : Finite K := Finite.of_surjective _ IsLocalRing.residue_surjective
+  let : Algebra (ZMod l) K := ZMod.algebra K l
+  have : Finite K := Finite.of_surjective _ IsLocalRing.residue_surjective
   obtain ⟨a, p, hpm, hpirr, hpa, hpa', hgen, hcardK⟩ := _root_.GlobalTheory.finiteField_exists_generator_minpoly l K
   set g : ZMod (l ^ b) →+* ZMod l := ZMod.castHom (dvd_pow_self l hb) (ZMod l) with hg
   have hgs : Function.Surjective g := ZMod.ringHom_surjective g
@@ -462,7 +462,7 @@ theorem exists_trace_ne_zero : ∀ (l b e : ℕ) [Fact l.Prime] (B : Type) [Comm
       aeval a (q.map (algebraMap (ZMod (l ^ b)) B)) = aeval a (q.map g) := by
     intro q
     simp only [aeval_def, eval₂_map, hcomp]
-  haveI : HenselianLocalRing B := henselian_of_finite B
+  have : HenselianLocalRing B := henselian_of_finite B
   have H2 := ((HenselianLocalRing.TFAE B).out 1 2).mp ‹_›
   obtain ⟨ω, hω, hωa⟩ := H2 (h.map (algebraMap _ B)) (hmon.map _) a
     (by rw [key, hhp]; exact hpa)
@@ -487,7 +487,7 @@ theorem exists_trace_ne_zero : ∀ (l b e : ℕ) [Fact l.Prime] (B : Type) [Comm
     rw [map_natCast, hspan]; exact Ideal.mem_span_singleton_self _
   have hE := _root_.GlobalTheory.span_powers_of_uniformizer_of_nilpotent C B φ π (l : C) e b hsurj hpe (by rw [map_natCast]; exact hlb)
 
-  letI : Algebra C B := φ.toAlgebra
+  let : Algebra C B := φ.toAlgebra
   have hsmul : ∀ (c : C) (x : B), c • x = φ c * x := fun c x => Algebra.smul_def c x
   let T : (Fin e → C) →ₗ[C] B := Fintype.linearCombination C (fun j : Fin e => π ^ (j : ℕ))
   have hTsurj : Function.Surjective T := by
@@ -505,12 +505,12 @@ theorem exists_trace_ne_zero : ∀ (l b e : ℕ) [Fact l.Prime] (B : Type) [Comm
     change Nat.card K ^ (b * e) = _
     rw [hcardK, ← pow_mul, ← pow_mul, ← pow_mul]
     ring_nf
-  haveI : NeZero (l ^ b) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : Module.Finite (ZMod (l ^ b)) C := pb.finite
-  haveI : Finite C := Module.finite_of_finite (ZMod (l ^ b))
+  have : NeZero (l ^ b) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Module.Finite (ZMod (l ^ b)) C := pb.finite
+  have : Finite C := Module.finite_of_finite (ZMod (l ^ b))
   have hTbij : Function.Bijective T := hTsurj.bijective_of_nat_card_le hcardB.ge
   let bB : Module.Basis (Fin e) C B := Module.Basis.ofEquivFun (LinearEquiv.ofBijective T hTbij).symm
-  haveI : IsScalarTower (ZMod (l ^ b)) C B := IsScalarTower.of_algebraMap_eq' (RingHom.ext_zmod _ _)
+  have : IsScalarTower (ZMod (l ^ b)) C B := IsScalarTower.of_algebraMap_eq' (RingHom.ext_zmod _ _)
   have htr : ∀ y : C, Algebra.trace (ZMod (l ^ b)) B (φ y) = (e : ZMod (l ^ b)) * Algebra.trace (ZMod (l ^ b)) C y := by
     intro y
     rw [← Algebra.trace_trace_of_basis pb.basis bB]
@@ -625,16 +625,16 @@ theorem free_finite_fst_of_prod (l b : ℕ) [Fact l.Prime] (M N : Type) [AddComm
     [Module.Finite (ZMod (l ^ b)) (M × N)] :
     Module.Free (ZMod (l ^ b)) M ∧ Module.Finite (ZMod (l ^ b)) M := by
   rcases eq_or_ne b 0 with rfl | hb
-  · haveI : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
-    haveI : Subsingleton M := by
+  · have : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
+    have : Subsingleton M := by
       refine ⟨fun x y => ?_⟩
       rw [← one_smul (ZMod (l ^ 0)) x, ← one_smul (ZMod (l ^ 0)) y, Subsingleton.elim (1 : ZMod (l ^ 0)) 0,
         zero_smul, zero_smul]
     exact ⟨inferInstance, inferInstance⟩
-  haveI := isLocalRing_zmod_primePow l b hb
-  haveI : Module.Projective (ZMod (l ^ b)) M :=
+  have := isLocalRing_zmod_primePow l b hb
+  have : Module.Projective (ZMod (l ^ b)) M :=
     Module.Projective.of_split (LinearMap.inl _ M N) (LinearMap.fst _ M N) (by ext; simp)
-  haveI : Module.Finite (ZMod (l ^ b)) M :=
+  have : Module.Finite (ZMod (l ^ b)) M :=
     Module.Finite.of_surjective (LinearMap.fst _ M N) LinearMap.fst_surjective
   exact ⟨Module.free_of_flat_of_isLocalRing, inferInstance⟩
 
@@ -643,14 +643,14 @@ theorem intCast_trace_eq_trace_quotient_of_mem (L : Type) [Field L] [NumberField
     [Algebra (ZMod (l ^ b)) (𝓞 L ⧸ I)] (x : 𝓞 L) (hx : x ∈ Q) :
     ((Algebra.trace ℤ (𝓞 L) x : ℤ) : ZMod (l ^ b)) =
       Algebra.trace (ZMod (l ^ b)) (𝓞 L ⧸ I) (Ideal.Quotient.mk I x) := by
-  haveI : NeZero (l ^ b) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ b) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hnIQ : ((l ^ b : ℕ) : 𝓞 L) ∈ I * Q := by rw [hmul]; exact Ideal.mem_span_singleton_self _
   have hnQ : ((l ^ b : ℕ) : 𝓞 L) ∈ Q := (Ideal.mul_le_inf.trans inf_le_right) hnIQ
-  letI instJ : Algebra (ZMod (l ^ b)) (𝓞 L ⧸ Ideal.span {((l ^ b : ℕ) : 𝓞 L)}) :=
+  let instJ : Algebra (ZMod (l ^ b)) (𝓞 L ⧸ Ideal.span {((l ^ b : ℕ) : 𝓞 L)}) :=
     (zmodRingHomOfCastEqZero (l ^ b) (by
       rw [← map_natCast (Ideal.Quotient.mk (Ideal.span {((l ^ b : ℕ) : 𝓞 L)})), Ideal.Quotient.eq_zero_iff_mem]
       exact Ideal.mem_span_singleton_self _)).toAlgebra
-  letI instQ : Algebra (ZMod (l ^ b)) (𝓞 L ⧸ Q) :=
+  let instQ : Algebra (ZMod (l ^ b)) (𝓞 L ⧸ Q) :=
     (zmodRingHomOfCastEqZero (l ^ b) (by
       rw [← map_natCast (Ideal.Quotient.mk Q), Ideal.Quotient.eq_zero_iff_mem]
       exact hnQ)).toAlgebra
@@ -666,16 +666,16 @@ theorem intCast_trace_eq_trace_quotient_of_mem (L : Type) [Field L] [NumberField
     AlgEquiv.ofRingEquiv (f := e) (fun r => congrArg (fun f => f r)
       (Subsingleton.elim ((e : (𝓞 L ⧸ Ideal.span {((l ^ b : ℕ) : 𝓞 L)}) →+* _).comp (algebraMap (ZMod (l ^ b)) (𝓞 L ⧸ Ideal.span {((l ^ b : ℕ) : 𝓞 L)})))
         (algebraMap (ZMod (l ^ b)) ((𝓞 L ⧸ I) × (𝓞 L ⧸ Q)))))
-  haveI hfreeJ : Module.Free (ZMod (l ^ b)) (𝓞 L ⧸ Ideal.span {((l ^ b : ℕ) : 𝓞 L)}) :=
+  have hfreeJ : Module.Free (ZMod (l ^ b)) (𝓞 L ⧸ Ideal.span {((l ^ b : ℕ) : 𝓞 L)}) :=
     Module.Free.of_basis (quotSpanNatBasis (Module.Free.chooseBasis ℤ (𝓞 L)) (l ^ b))
-  haveI hfinJ : Module.Finite (ZMod (l ^ b)) (𝓞 L ⧸ Ideal.span {((l ^ b : ℕ) : 𝓞 L)}) :=
+  have hfinJ : Module.Finite (ZMod (l ^ b)) (𝓞 L ⧸ Ideal.span {((l ^ b : ℕ) : 𝓞 L)}) :=
     Module.Finite.of_basis (quotSpanNatBasis (Module.Free.chooseBasis ℤ (𝓞 L)) (l ^ b))
-  haveI : Module.Free (ZMod (l ^ b)) ((𝓞 L ⧸ I) × (𝓞 L ⧸ Q)) := Module.Free.of_equiv eA.toLinearEquiv
-  haveI : Module.Finite (ZMod (l ^ b)) ((𝓞 L ⧸ I) × (𝓞 L ⧸ Q)) := Module.Finite.equiv eA.toLinearEquiv
+  have : Module.Free (ZMod (l ^ b)) ((𝓞 L ⧸ I) × (𝓞 L ⧸ Q)) := Module.Free.of_equiv eA.toLinearEquiv
+  have : Module.Finite (ZMod (l ^ b)) ((𝓞 L ⧸ I) × (𝓞 L ⧸ Q)) := Module.Finite.equiv eA.toLinearEquiv
   obtain ⟨hfI, hfinI⟩ := free_finite_fst_of_prod l b (𝓞 L ⧸ I) (𝓞 L ⧸ Q)
-  haveI : Module.Free (ZMod (l ^ b)) ((𝓞 L ⧸ Q) × (𝓞 L ⧸ I)) :=
+  have : Module.Free (ZMod (l ^ b)) ((𝓞 L ⧸ Q) × (𝓞 L ⧸ I)) :=
     Module.Free.of_equiv (LinearEquiv.prodComm (ZMod (l ^ b)) (𝓞 L ⧸ I) (𝓞 L ⧸ Q))
-  haveI : Module.Finite (ZMod (l ^ b)) ((𝓞 L ⧸ Q) × (𝓞 L ⧸ I)) :=
+  have : Module.Finite (ZMod (l ^ b)) ((𝓞 L ⧸ Q) × (𝓞 L ⧸ I)) :=
     Module.Finite.equiv (LinearEquiv.prodComm (ZMod (l ^ b)) (𝓞 L ⧸ I) (𝓞 L ⧸ Q))
   obtain ⟨hfQ, hfinQ⟩ := free_finite_fst_of_prod l b (𝓞 L ⧸ Q) (𝓞 L ⧸ I)
   rw [intCast_trace_eq_trace_quotSpanNat (l ^ b) x, ← Algebra.trace_eq_of_algEquiv eA]
@@ -781,7 +781,7 @@ theorem quot_pow_maximal_charP_local_card : ∀ (L : Type) [Field L] [NumberFiel
       exact isUnit_of_mul_isUnit_right this
   have hmem : ∀ a : 𝓞 L, q a ∈ la.map q ↔ a ∈ la := fun a => Ideal.mem_quotient_iff_mem hle
 
-  obtain ⟨π₀, hπla, hπ2⟩ := SetLike.exists_of_lt ((Ideal.pow_right_strictAnti la hla0 hlatop) (by norm_num : 1 < 2))
+  obtain ⟨π₀, hπla, hπ2⟩ := IsConcreteLE.exists_of_lt ((Ideal.pow_right_strictAnti la hla0 hlatop) (by norm_num : 1 < 2))
   replace hπla : π₀ ∈ la := by simpa using hπla
   change π₀ ∉ la ^ 2 at hπ2
   have hQ : Ideal.span {π₀} ⊔ la ^ 2 = la := by
@@ -863,11 +863,11 @@ namespace GlobalTheory.TowerDifferent
 
 theorem not_pow_dvd_differentIdeal_int : ∀ (L : Type) [Field L] [NumberField L] (l e : ℕ), l.Prime → ∀ (la : Ideal (𝓞 L)) [la.IsPrime], la ≠ ⊥ → ((l : ℕ) : 𝓞 L) ∈ la → ((l : ℕ) : 𝓞 L) ∉ la ^ (e + 1) → ¬ la ^ (e * e + 1) ∣ differentIdeal ℤ (𝓞 L) := by
   intro L _ _ l e hl la _ hla h1 h2 hD
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI : la.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hla
+  have : Fact l.Prime := ⟨hl⟩
+  have : la.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hla
   obtain ⟨e', J, he0, hee, hcop, hfac⟩ := _root_.GlobalTheory.maxIdeal_exact_pow_dvd_span_prime L l e hl la h1 h2
   obtain ⟨hchar, hfin, ϖ, hϖ, hlϖ, hcard⟩ := _root_.GlobalTheory.quot_pow_maximal_charP_local_card L la J l e' e' hl he0 he0 hcop hfac
-  letI : Algebra (ZMod (l ^ e')) (𝓞 L ⧸ la ^ (e' * e')) := ZMod.algebra _ _
+  let : Algebra (ZMod (l ^ e')) (𝓞 L ⧸ la ^ (e' * e')) := ZMod.algebra _ _
   have hnd : ¬ l ^ e' ∣ e' := fun h => (Nat.lt_pow_self hl.one_lt).not_ge (Nat.le_of_dvd he0 h)
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.LocalTraceNonzero.exists_trace_ne_zero l e' e' (𝓞 L ⧸ la ^ (e' * e')) ϖ he0 hϖ hlϖ hcard hnd
   obtain ⟨c0, rfl⟩ := Ideal.Quotient.mk_surjective c
@@ -893,7 +893,7 @@ theorem not_pow_dvd_differentIdeal_int : ∀ (L : Type) [Field L] [NumberField L
     rw [← htr, (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mpr (by exact_mod_cast hm)]
   have hmap : la ^ (e' * e') * J ^ e' = Ideal.map (algebraMap ℤ (𝓞 L)) (Ideal.span {((l ^ e' : ℕ) : ℤ)}) := by
     rw [hmul, Ideal.map_span, Set.image_singleton, map_natCast]
-  have := not_dvd_differentIdeal_of_intTrace_not_mem (A := ℤ) (la ^ (e' * e')) (J ^ e') hmap (q * c0) hx hnot
+  have := not_dvd_differentIdeal_of_intTrace_notMem (A := ℤ) (la ^ (e' * e')) (J ^ e') hmap (q * c0) hx hnot
   apply this
   refine dvd_trans (pow_dvd_pow _ ?_) hD
   have := Nat.mul_le_mul hee hee
@@ -956,11 +956,11 @@ theorem le_one_at_lift : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalis
     obtain ⟨w, rfl⟩ := C.d.eF.surjective z
     exact hio₂ w
   subst hio
-  letI : Algebra C.c'.F T''.Fr := (iT.comp σ').toAlgebra
-  letI : Algebra C.d.c₂.F T''.Fr := (iT.comp τ).toAlgebra
-  letI : Algebra T.Q.c.F T''.Fr := (iT.comp (i.comp io)).toAlgebra
-  letI : Algebra T.Q.c.F T'.Fr := (i.comp io).toAlgebra
-  letI : Algebra C.c'.F T'.Fr := σ'.toAlgebra
+  let : Algebra C.c'.F T''.Fr := (iT.comp σ').toAlgebra
+  let : Algebra C.d.c₂.F T''.Fr := (iT.comp τ).toAlgebra
+  let : Algebra T.Q.c.F T''.Fr := (iT.comp (i.comp io)).toAlgebra
+  let : Algebra T.Q.c.F T'.Fr := (i.comp io).toAlgebra
+  let : Algebra C.c'.F T'.Fr := σ'.toAlgebra
   have hA : AlgOver T.Q.c C.c' C.hle T''.Fr := fun z => congrArg iT (hσ' z)
   let φ₂ : T'.Fr →ₐ[T.Q.c.F] T''.Fr := { iT with commutes' := fun _ => rfl }
   have hmap₂ : FrMap φ₂ (y₂.1.res C.hle hσ') (y₃.1.res C.hle hA) := by
@@ -970,7 +970,7 @@ theorem le_one_at_lift : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalis
   have hval : ∀ k, evI y₄ (g k) = iT (i (evI pt (β k))) := fun k => by
     have h1 := hpull k T''.Fr hA (fun _ => rfl) y₄.1 y₃.1 hover
     have h2 := GlobalTheory.FlagTan.evR_frMap (hβ k).1 hmap₂
-    letI : Algebra T.Q.c.F T0.Fr := io.toAlgebra
+    let : Algebra T.Q.c.F T0.Fr := io.toAlgebra
     have h3 := GlobalTheory.FlagTan.evR_frMap (hβ k).1 hmap
     rw [hy₂] at h2
     show evR _ _ (g k) y₄.1 = _
@@ -1276,7 +1276,7 @@ theorem nval_nonneg_iff {T : CDVR} {e : ℕ} (he : 0 < e) (z : T.Fr) : 0 ≤ nva
 theorem trace_comb_integral : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism.L2.Pj.InR D j → ∀ σ : T.Q.c.F →+* ℂ, GoodEmb T.Q.c σ → ∀ (a : (D.host.E →+* ℂ) × ℕ → ℕ) (n : ℕ), Dom a n → holSub0 (T.U j σ).X (laU (T.U j σ) a n) ≤ Submodule.span ℂ (rdU (T.U j σ) '' {f | f ∈ sec (T.Q.Xo j) T.Q.c a n ∧ rdU (T.U j σ) f ∈ holSub0 (T.U j σ).X (laU (T.U j σ) a n)}) → (∀ k ∈ T.Kf j σ, ∀ h, T.mu j σ (h * k) = T.mu j σ h) → ∀ C : Cover T j σ, C.IsUnif → C.IsPinned a n → ∀ (la : HeightOneSpectrum (𝓞 C.d.c₂.F)) (p : HeightOneSpectrum (𝓞 T.Q.c.F)), (letI : Algebra T.Q.c.F C.d.c₂.F := C.inc.toAlgebra; la.asIdeal.under (𝓞 T.Q.c.F) = p.asIdeal) → ∀ (m : ℕ) (β : Fin m → Rul (T.Q.Xo j) T.Q.c), (∀ k, β k ∈ sec (T.Q.Xo j) T.Q.c a n ∧ rdU (T.U j σ) (β k) ∈ holSub0 (T.U j σ).X (laU (T.U j σ) a n)) → (∀ k, ∀ v ∈ valSet (T.Q.Xo j) T.Q.c (algCls (T.Q.Xo j) T.Q.c) p, 0 ≤ v (β k)) → ∀ y : Fin m → C.d.c₂.F, (∑ k, C.σ₂ (y k) • T.phiJ j σ a (β k)) ∈ C.intForms a n {la} → ∃ N : ℕ, ∀ b : 𝓞 C.d.c₂.F, (∀ la' : HeightOneSpectrum (𝓞 C.d.c₂.F), la' ≠ la → (letI : Algebra T.Q.c.F C.d.c₂.F := C.inc.toAlgebra; la'.asIdeal.under (𝓞 T.Q.c.F) = p.asIdeal) → b ∈ la'.asIdeal ^ N) → ∀ v ∈ valSet (T.Q.Xo j) T.Q.c (algCls (T.Q.Xo j) T.Q.c) p, 0 ≤ v (∑ k, (letI : Algebra T.Q.c.F C.d.c₂.F := C.inc.toAlgebra; Algebra.trace T.Q.c.F C.d.c₂.F ((b : C.d.c₂.F) * y k)) • β k) := by
   intro D T hL j hj σ hσ a n hD hspan hmu C hU hP la p hla m β hβ hβi y hφ
   obtain ⟨g, hgs, hgp, hgi⟩ := (_root_.GlobalTheory.CoverPullComb.exists_pull_comb_integral D T hL j hj σ hσ a n hD C hU hP la m β (fun k => (hβ k).1) y hφ)
-  letI : Algebra T.Q.c.F C.d.c₂.F := C.inc.toAlgebra
+  let : Algebra T.Q.c.F C.d.c₂.F := C.inc.toAlgebra
   obtain ⟨N, hN⟩ := _root_.GlobalTheory.TraceSmall.trace_le_one T.Q.c.F C.d.c₂.F p la hla m y
   refine ⟨N, fun b hb v hv => ?_⟩
   have hx : ∀ k, 0 ≤ v (β k) := fun k => hβi k v hv
@@ -1402,7 +1402,7 @@ theorem intForm_descent_below (l e : ℕ) (hl : l.Prime) : ∃ c₀ : ℕ, ∀ (
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.TowerDifferent.relDifferent_order_bounded l e hl
   refine ⟨c, ?_⟩
   intro D T hL j hj w hlast hD hspan hK C hU hP la p hp0 hl1 hl2 φ hφ hφK
-  letI : Algebra T.Q.c.F C.d.c₂.F := C.inc.toAlgebra
+  let : Algebra T.Q.c.F C.d.c₂.F := C.inc.toAlgebra
   have hp : la.asIdeal.under (𝓞 T.Q.c.F) = p.asIdeal := by
     rw [← hp0]; ext x; rfl
   have hσ := T.toCore.good_σ₀

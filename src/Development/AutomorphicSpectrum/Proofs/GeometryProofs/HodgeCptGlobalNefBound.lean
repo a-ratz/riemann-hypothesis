@@ -233,7 +233,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Crv.ConjEq
 
 theorem eq_zero_of_scale {S : Type} [Finite S] (h : S → ℤ) (p : ℕ) (hp : 2 ≤ p)
     (H : ∀ s, ∃ u, h u = p * h s) (s : S) : h s = 0 := by
-  haveI : Nonempty S := ⟨s⟩
+  have : Nonempty S := ⟨s⟩
   obtain ⟨m, hm⟩ := Finite.exists_max (fun s => |h s|)
   obtain ⟨u, hu⟩ := H m
   have h1 : |h u| = p * |h m| := by
@@ -324,8 +324,8 @@ end Data
 theorem subDeg_eig_conj : ∀ (K : Type) [Field K] (C : ACurve K) (p : ℕ) [Fact p.Prime] [CharP K p] (O k S : Type) [CommRing O] [StarRing O] [Field k] [Algebra k K] [Fintype S] (χ : S → (O →+* k)) (d : ℕ) (D : ConjData C p O d), IsSplit χ → (∀ i (c : k), C.v i (algebraMap k K c) ≤ 1) → ∀ s t : S, (∀ a, χ t a = χ s (star a)) → subDeg C D.lie (eig (fun a => Matrix.toLin' (D.ρ a)) (fun a => algebraMap k K (χ s a))) = subDeg C D.lie (eig (fun a => Matrix.toLin' (D.ρ a)) (fun a => algebraMap k K (χ t a))) := by
   intro K _ C p _ _ O k S _ _ _ _ _ χ d D hχ hk s t hst
   have hp : p.Prime := Fact.out
-  haveI : CharP k p := (algebraMap k K).charP (algebraMap k K).injective p
-  haveI : ExpChar k p := ExpChar.prime hp
+  have : CharP k p := (algebraMap k K).charP (algebraMap k K).injective p
+  have : ExpChar k p := ExpChar.prime hp
   have hall := (isSplit_injective_and_exists O k S χ hχ).2
   have hconj : ∀ s, ∃ t, ∀ a, χ t a = χ s (star a) := fun s => by
     obtain ⟨t, ht⟩ := hall ((χ s).comp (starRingEnd O))
@@ -921,7 +921,7 @@ theorem map_eigSp {K V O : Type} [Field K] [AddCommGroup V] [Module K V] [CommRi
 theorem m2Curve_holds : CurveSemiAbelianConjecture := by
   intro E _ _ _ H X0 t hpow k K _ _ _ p _ _ hp C z Y hne hk hfib V _ _ _ M r hact T _ χ hsplit hχ
     j q w W L hj hq hW0 hL0 hWj hLq hgap
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨d, D, e, hlie, her⟩ := GlobalTheory.T.curve_lie_eigen_degree E H (fun _ => rfl) X0 t hpow K p C z Y hne hfib V M r hact
   let f : V →ₗ[K] (Fin d → K) := e
   have key := _root_.GlobalTheory.CompanionTheory.Ar.Crv.LmuDeg.lmuNum_nonneg_of_conjData K C p (𝓞 E) k (T ⊕ T) T χ d D Sum.inl Sum.inr j q w
@@ -1095,7 +1095,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 theorem flag_basis (Fl : 𝔐.Flag) (s : CMType H ⊕ CMType H) :
     LinearIndependent Ω (Fl.b s) ∧ Submodule.span Ω (Set.range (Fl.b s)) = eigSp 𝔐.ρ (𝔐.emb s) := by
   have hli : LinearIndependent Ω (Fl.b s) := by
-    letI := 𝔐.fn.toAlgebra
+    let := 𝔐.fn.toAlgebra
     obtain ⟨_, _, -, -, -, hli, -⟩ := Fl.generic
     exact hli s
   refine ⟨hli, ?_⟩
@@ -1125,8 +1125,8 @@ theorem drTie_of_hodgeCpt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     M.y 𝔐 Subtype.val_injective
   have hcard := (LabelCount.labels_injective_card E H l c M.Ω 𝔐.cst).2
   have hnoeth := (_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie 𝔐.X M.Ω 𝔐.ξ ℤ ((k : M.K) → M.ι k) _ 𝔐.tie).2 𝔐.all
-  haveI := hnoeth.1
-  haveI := hnoeth.2
+  have := hnoeth.1
+  have := hnoeth.2
   have hpow : PowFns 𝔐.t := GlobalTheory.T.powFns_of_abelian_generic E H 𝔐.X 𝔐.t inferInstance inferInstance fun z hz => by
     have h1 : genPt 𝔐.ξ = z := hz _ (𝔐.all z)
     rw [← h1]
@@ -1173,14 +1173,14 @@ theorem drTie_of_hodgeCpt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     exact h1
   · rw [Fintype.card_sum] at hcard
     omega
-  · have hidx : HodgeCpt.rootIdx D (τ, i) = ⟨.inl τ, ⟨i, h⟩⟩ := dif_pos h
-    have hsgn : HodgeCpt.rootSgn D (τ, i) = 1 := if_pos h
+  · have hidx : HodgeCpt.rootIdx D (τ, i) = ⟨.inl τ, ⟨i, h⟩⟩ := dite_eq_left h
+    have hsgn : HodgeCpt.rootSgn D (τ, i) = 1 := ite_eq_left h
     have h1 := hroot (τ, i)
     rw [hidx, hsgn] at h1
     exact deg_one (hG _) h1 fun q hq => gr_congr (hV _ q hq) _ _
   · have hn : ¬ (i : ℕ) < D.p := not_lt.2 hj
-    have hidx : HodgeCpt.rootIdx D (τ, i) = ⟨.inr τ, ⟨D.p + D.q - 1 - i, by have := i.2; show _ < D.q; omega⟩⟩ := dif_neg hn
-    have hsgn : HodgeCpt.rootSgn D (τ, i) = -1 := if_neg hn
+    have hidx : HodgeCpt.rootIdx D (τ, i) = ⟨.inr τ, ⟨D.p + D.q - 1 - i, by have := i.2; show _ < D.q; omega⟩⟩ := dite_eq_right hn
+    have hsgn : HodgeCpt.rootSgn D (τ, i) = -1 := ite_eq_right hn
     have h1 := hroot (τ, i)
     rw [hidx, hsgn] at h1
     rw [gr_cast]

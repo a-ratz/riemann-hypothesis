@@ -144,7 +144,7 @@ theorem shortThetaValue_linear : ChartIndepSt2 → ∀ (E : Type) [Field E] [Num
     intro i
     have h := hQ i
     unfold HHa at h
-    simp only [Set.mem_setOf_eq] at h
+    simp only [Set.mem_ofPred_eq] at h
     exact h.2.2
   have hQd := fun i => GlobalTheory.ShortValueLinear.isHomogeneous_of_rowDeg (hRow i)
   unfold ShortValAt at hv

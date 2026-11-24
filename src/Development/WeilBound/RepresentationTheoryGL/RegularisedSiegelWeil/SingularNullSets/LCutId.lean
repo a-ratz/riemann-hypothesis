@@ -321,7 +321,7 @@ theorem fc_eq {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (lam
 theorem cont_conj_pch {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (β : HermE D n) :
     Continuous fun x : hermA D n => conj (pch ψ x.1 (rat β.1)) :=
   Complex.continuous_conj.comp (hψ.1.comp (GlobalTheory.CompanionTheory.FourierN.continuous_halfTr.comp
-    ((continuous_subtype_val.matrix_mul continuous_const).matrix_trace)))
+    ((continuous_subtypeVal.matrix_mul continuous_const).matrix_trace)))
 
 theorem norm_conj_pch {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (x : hermA D n) (β : HermE D n) :
     ‖conj (pch ψ x.1 (rat β.1))‖ ≤ 1 := by
@@ -331,8 +331,8 @@ theorem norm_conj_pch {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F 
 theorem intOn {lam : Measure (hermA D n)} {𝓖 : Set (hermA D n)} (h : IsCovolOneH lam 𝓖) {f c : hermA D n → ℂ}
     (hf : Continuous f) (hp : ∀ γ ∈ ratHerm D n, ∀ x, f (γ + x) = f x) (hc : Continuous c) (hc1 : ∀ x, ‖c x‖ ≤ 1) :
     IntegrableOn (fun x => f x * c x) 𝓖 lam := by
-  haveI : BorelSpace (Mx D n n) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D n) := Subtype.borelSpace _
+  have : BorelSpace (Mx D n n) := ⟨rfl⟩
+  have : BorelSpace (hermA D n) := Subtype.borelSpace _
   obtain ⟨K, hK, hcov⟩ := GlobalTheory.CompanionTheory.FourierN.exists_compact_cover (D := D) (n := n)
   obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn hf.continuousOn
   have hb : ∀ x, ‖f x * c x‖ ≤ M := fun x => by

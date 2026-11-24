@@ -237,7 +237,7 @@ theorem farReg_of_lkt_unitIneq_farNum : LKTExists → Renumber → UnitIneq → 
   have hKU : CompanionTheory.D.DSIC.KUnit (ε ∘ s) (fun a b => E (s a) (s b)) := by
     intro a b he x y
     have h1 := hUn2 a b x y
-    have h2 : Formalism.REAL.sgn (ε ∘ s) a b = 1 := if_pos he
+    have h2 : Formalism.REAL.sgn (ε ∘ s) a b = 1 := ite_eq_left he
     rw [h2] at h1
     simpa using h1
   obtain ⟨σ, hσ⟩ := hK1 (ε ∘ s) (γ ∘ s) lev V (fun a b => E (s a) (s b)) hE' χ hG hKU hLF2 hMin2 hSC2 ⟨u, hu, hKH2⟩

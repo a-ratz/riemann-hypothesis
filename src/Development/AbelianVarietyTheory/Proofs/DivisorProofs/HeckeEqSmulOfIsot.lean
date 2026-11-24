@@ -257,7 +257,7 @@ theorem hecke_eq_smul_of_isot : ∀ {D : D7} {V : HSp D} {n : ℕ} (hF : D.host.
     apply MultilinearMap.ext
     intro v
     funext g
-    rw [MultilinearMap.sum_apply, Finset.sum_apply]
+    rw [sum_apply, Finset.sum_apply]
     show ∑ γ ∈ B, T v (g * γ) = _
     refine Finset.sum_congr rfl fun γ hγ => ?_
     rw [principalLevelFrame.actM_apply, hBG γ hγ]
@@ -322,7 +322,7 @@ theorem hecke_eq_smul_of_isot : ∀ {D : D7} {V : HSp D} {n : ℕ} (hF : D.host.
     exact ⟨N, hN, Submodule.subset_span ⟨Φ, hE.1, x, fun κ hκ => Subtype.ext (hx κ hκ), rfl⟩⟩
   obtain ⟨N, hN, hUN⟩ := hle hU
   have hfinq := finite_quot H hH hN (stabN π H N) (fun s hs x hx => hx _ hs)
-  letI : Fintype (H ⧸ stabN π H N) := Fintype.ofFinite _
+  let : Fintype (H ⧸ stabN π H N) := Fintype.ofFinite _
   let ρ1 : H →* Module.End ℂ π.S := (piRep π).comp H.subtype
   let ρ2 : H →* Module.End ℂ (MMap M) := (principalLevelFrame.actM Q M).comp H.subtype
   have hAU : avg (stabN π H N) ρ2 U = U := avg_of_fixed _ ρ2 fun k => hfixH k k.2

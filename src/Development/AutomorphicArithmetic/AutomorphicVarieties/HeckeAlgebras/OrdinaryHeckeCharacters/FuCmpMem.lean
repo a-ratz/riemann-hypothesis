@@ -58,7 +58,7 @@ private theorem fu_patch {G ι : Type} [Group G] [Finite ι] {H : ι → Type} [
     (P : Subgroup G) (b : ∀ i, H i) (h : ∀ i, ∃ y ∈ P, p i y = b i ∧ ∀ j, j ≠ i → p j y = 1) :
     ∃ y ∈ P, ∀ i, p i y = b i := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have key : ∀ T : Finset ι, ∃ y ∈ P, (∀ i ∈ T, p i y = b i) ∧ ∀ i ∉ T, p i y = 1 := fun T => by
     induction T using Finset.induction_on with
     | empty => exact ⟨1, one_mem _, by simp, fun i _ => map_one _⟩
@@ -131,14 +131,14 @@ private theorem fu_cmp_mem (w : Plc L) (g : UA L n) {P : Subgroup (GLw n w)} (hg
 
 private theorem fu_open : IsOpen ((⨅ w : Plc L, (KO (w.adicCompletion L) (Fin n)).comap (cLoc w) : Subgroup (UA L n)) : Set (UA L n)) := by
   let p : UA L n →* GL (Fin n) (Af L) := (Matrix.GeneralLinearGroup.map (pFin L)).comp (UA L n).subtype
-  have hp : Continuous p := GlobalTheory.DefU.continuous_map_pFin.comp continuous_subtype_val
+  have hp : Continuous p := GlobalTheory.DefU.continuous_map_pFin.comp continuous_subtypeVal
   have ho : IsOpen (GlobalTheory.GLIntegral.intSubring L : Set (Af L)) := RestrictedProduct.isOpen_forall_mem
     (A := fun v : HeightOneSpectrum (𝓞 L) => (v.adicCompletionIntegers L : Set (v.adicCompletion L)))
     (fun v => Valued.isOpen_valuationSubring _)
   refine Subgroup.isOpen_mono (H₁ := (GlobalTheory.GLIntegral.glSub (GlobalTheory.GLIntegral.intSubring L)).comap p) (fun g hg => ?_)
     ((GlobalTheory.GLIntegral.isOpen_glSub _ ho).preimage hp)
   have hv : ∀ (w : Plc L) (x : w.adicCompletion L), x ∈ w.adicCompletionIntegers L → x ∈ 𝒪[w.adicCompletion L] := fun w x hx => by
-    haveI : (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
+    have : (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
       Valuation.Compatible.ofValuation _
     rw [Valuation.mem_integer_iff, ← map_one (valuation _), ← Valuation.vle_iff_le, Valuation.vle_iff_le Valued.v, map_one]
     exact hx
@@ -206,7 +206,7 @@ theorem UpperTheory.V.Hi.finU :
     · exact fu_iInf _ fun q => (K.2 q).1.preimage (GlobalTheory.DefU.Inert.continuous_cLoc _)
     · exact fu_iInf _ fun v => ((glBridge _ n ℂ 1).2.2.1 0).1.preimage (GlobalTheory.DefU.Inert.continuous_cLoc _)
   obtain ⟨S, hS⟩ := GlobalTheory.DefU.ClassFin.classSet_finite L n (K0.comap (GlobalTheory.UnitaryBC.finU (E := L) (n := n)).subtype)
-    (ho.preimage continuous_subtype_val)
+    (ho.preimage continuous_subtypeVal)
   refine ⟨S.image Φ, fun g => ?_⟩
   obtain ⟨g, rfl⟩ := hsurj g
   obtain ⟨γ, hγ, x, hx, z, hz, k, ⟨⟨hk1, hk2⟩, hk3, hk4⟩, rfl⟩ := hS g

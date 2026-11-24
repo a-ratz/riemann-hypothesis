@@ -262,10 +262,10 @@ theorem adForm_lowT_equiv : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T
     exact hT.equiv τ _ hg _ _ (by rw [hrep]; exact hu)
   | zero => rfl
   | add S T _ _ hS hT =>
-    simp only [MultilinearMap.add_apply, hS, hT]
+    simp only [add_apply, hS, hT]
     rfl
   | smul a T _ hT =>
-    simp only [MultilinearMap.smul_apply, hT]
+    simp only [smul_apply, hT]
     rfl
 
 end GlobalTheory.EvalLowType
@@ -302,16 +302,16 @@ theorem GlobalTheory.EvalLowType.lowType_of_eval : ∀ (D : D7) (G : Type) [Grou
         rw [hu', hw]
       have e1 := GlobalTheory.EvalLowType.adForm_lowT_equiv R hcore.models.HW i (cuspTo hT.p fw i (f u)) ρ k hk w z hu2
       have e2 := GlobalTheory.T.singleThetaSeries_K_equivariant_lowest_type R F hcore i _ χ ξR _ ω φ hker _ _ φ' hvec h ((O i).c0' y) ((u : G)⁻¹) ρ k hk w z hu2
-      rw [MultilinearMap.sub_apply, hLf, hRt, e1, e2]
+      rw [sub_apply, hLf, hRt, e1, e2]
       change Formalism.L2.Theta.rTr (Wc D i) _ (Lf w) - D.what₂.embLL c • Formalism.L2.Theta.rTr (Wc D i) _ (act _) = 0
-      rw [hrs, ← hRt, ← MultilinearMap.sub_apply, h0]
+      rw [hrs, ← hRt, ← sub_apply, h0]
       rfl)
     (by
-      rw [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt]
+      rw [sub_apply, sub_eq_zero, hLf, hRt]
       exact hu w₀ fun ρ => rfl)
   intro w
   have := key w
-  rw [MultilinearMap.sub_apply, sub_eq_zero, hLf, hRt] at this
+  rw [sub_apply, sub_eq_zero, hLf, hRt] at this
   exact this
 end -- clump:auto
 end -- clump:auto
@@ -353,9 +353,9 @@ theorem mem_range_of_embeddings_const {K Ω : Type} [Field K] [CharZero K] [Fiel
     a ∈ (algebraMap K ℂ).range := by
   have hb : IsIntegral K b :=
     (isAlgebraic_of_norm_const P₀ fun P => by rw [h P, h P₀]).isIntegral
-  haveI : FiniteDimensional K K⟮b⟯ := adjoin.finiteDimensional hb
+  have : FiniteDimensional K K⟮b⟯ := adjoin.finiteDimensional hb
   have key : ∀ ψ : K⟮b⟯ →ₐ[K] ℂ, ψ (AdjoinSimple.gen K b) = a := fun ψ => by
-    letI : Algebra K⟮b⟯ ℂ := ψ.toRingHom.toAlgebra
+    let : Algebra K⟮b⟯ ℂ := ψ.toRingHom.toAlgebra
     obtain ⟨Q⟩ := GlobalTheory.nonempty_algHom_complex_of_countable K⟮b⟯ Ω
     let P : Ω →ₐ[K] ℂ := { Q.toRingHom with
       commutes' := fun k => (Q.commutes (algebraMap K K⟮b⟯ k)).trans (ψ.commutes k) }
@@ -390,7 +390,7 @@ theorem const_value_mem_range : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       ⟨x.2, liesOn_frBor ht (liesOn_frMap hm (liesOn_genFr h Z))⟩
     have h1 := hw _ hi
     have h2 : rdU U (idem Z) k x = 1 := by
-      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dif_pos]
+      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, x.2, dite_eq_left]
       exact evR_idem (S := CAt σ) hz.2 (haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ); hL.test _ _)
     have h3 : evC h Z (idem Z) = 1 := evR_idem (liesOn_genFr h Z) (hL.test _ _)
     rw [h2, h3, map_one, mul_one] at h1
@@ -399,10 +399,10 @@ theorem const_value_mem_range : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hfin : FiniteDimensional ℚ c.F := c.fin
   have hcF : Countable c.F := Cardinal.mk_le_aleph0_iff.1 (by
     simpa [Cardinal.mkRat] using Algebra.IsAlgebraic.cardinalMk_le_max ℚ c.F)
-  haveI hk : Countable (kap Z) :=
+  have hk : Countable (kap Z) :=
     GlobalTheory.GenericReading.countable_of_fg_top ((GlobalTheory.Reg.kap_fg_trdeg E H Dw l Xo c).1 Z)
   have hO : Countable (Om Z) := GlobalTheory.GenericReading.countable_fractionRing_mvPolynomial _ _
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   exact mem_range_of_embeddings_const (K := c.F) (b := evC h Z g) P₀ key
 
 end GlobalTheory.FlatLine
@@ -492,7 +492,7 @@ theorem covAt_mem (hR : GlobalTheory.Hk3.Core R F) (hT : TieIn T R κ v₀) (O :
       ⟨hper, hty⟩ hl hx hmark hma
     rw [← hfr, hxi, Circle.coe_one, _root_.mul_one] at h3
     obtain ⟨A', hA'', -⟩ := hA'
-    exact ⟨hd', (dif_pos hd').trans (h3 _ A' hA'')⟩
+    exact ⟨hd', (dite_eq_left hd').trans (h3 _ A' hA'')⟩
   obtain rfl : c0 = c1 := (key 1).2.symm.trans (hv 1)
   refine ⟨?_, hm⟩
   obtain ⟨hio, hx₀⟩ := GlobalTheory.TupleCover.iotaOK_and_frame T hT.laws _ (inR i) O.s0 (hs0 ▸ T.toCore.good_σ₀) (Wc D i) O.hV
@@ -658,7 +658,7 @@ theorem cover_value_root : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
       ((U₂ ()).X (dict₂ () 1).1).Ψ ((U₂ ()).X (dict₂ () 1).1).Gm ((U₂ ()).X (dict₂ () 1).1).Gm_herm
     have hd : (dict₂ () 1).2 ∈ ((U₂ ()).X (dict₂ () 1).1).dom := (hu2 _ hon).1
     obtain ⟨z, hz⟩ := value_mem T hT _ _ (inR i) _ hτ ((U₂ ()).un _ ⟨_, hd⟩)
-    have h2 : c0 * ((χ₁ x1 : Circle) : ℂ) = _ := ((hv 1 x1 hx1).symm.trans (dif_pos hd)).trans hz
+    have h2 : c0 * ((χ₁ x1 : Circle) : ℂ) = _ := ((hv 1 x1 hx1).symm.trans (dite_eq_left hd)).trans hz
     obtain ⟨y, hy⟩ := GlobalTheory.BigOn.CoreWit.exists_val_of_chrEq hχ x1
     obtain ⟨b, hb⟩ := hval0 y
     have hres := res_embLL T.J hI.alg hI.laws.pins.2.2.1
@@ -669,7 +669,7 @@ theorem cover_value_root : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
     obtain ⟨hon, γ, ⟨hγ, hl, hf⟩, hma, -⟩ := hat k
     obtain ⟨hd, hpt⟩ := point_eq (Formalism.L2.PjFree.Unf.ofPj (U₂ ())) hσ hU h1 hA hR.models.inf (Wc D i) (rank_Wc i) (iotaW T.J i)
       _ Wt (dict₂ () k).1 (dict₂ () k).2 γ k hγ (hmod _) hl hf hon hma X g bas idx e mk hX hp hsy hi hL hmk hk y₂ A₂ hA₂
-    exact (evR_eq_of_point _ hlev.2.2.2.2.2.2.2.1 _ y₂ hpt).trans ((dif_pos hd).symm.trans (hv k xk hxk))
+    exact (evR_eq_of_point _ hlev.2.2.2.2.2.2.2.1 _ y₂ hpt).trans ((dite_eq_left hd).symm.trans (hv k xk hxk))
 
 end GlobalTheory.OnCmp.CoverRoot
 end -- clump:auto
@@ -1459,7 +1459,7 @@ theorem GlobalTheory.OneMapExact.trace_of_terms {D : D7} {G : Type} [Group G] [F
   unfold levelTrace gaL
   rw [LinearMap.sum_apply]
   ext1 g
-  simp only [MultilinearMap.sum_apply, MultilinearMap.smul_apply, Finset.sum_apply, Pi.smul_apply, LinearMap.smul_apply,
+  simp only [sum_apply, smul_apply, Finset.sum_apply, Pi.smul_apply, LinearMap.smul_apply,
     H, smul_eq_mul]
   set Fn : G → ℂ := fun d => (if hg : d ∈ U then D.what₂.embLL ((ψ ⟨d, hg⟩)⁻¹ : D.what₂.LLˣ) else 0) *
     actL (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG d) S g with hFn
@@ -1468,9 +1468,9 @@ theorem GlobalTheory.OneMapExact.trace_of_terms {D : D7} {G : Type} [Group G] [F
     calc ∑ d : G, Fn d = ∑ d ∈ Finset.univ.filter (· ∈ U), Fn d :=
           (Finset.sum_filter_of_ne fun d _ h => by
             by_contra hd
-            exact h (by simp only [hFn, dif_neg hd, zero_mul])).symm
+            exact h (by simp only [hFn, dite_eq_right hd, zero_mul])).symm
       _ = ∑ u : U, Fn u := Finset.sum_subtype _ (by simp) Fn
-      _ = _ := Finset.sum_congr rfl fun u _ => by simp only [hFn, dif_pos u.2]
+      _ = _ := Finset.sum_congr rfl fun u _ => by simp only [hFn, dite_eq_left u.2]
   have e2 : ∑ u : U, D.what₂.embLL ((ψ u)⁻¹ : D.what₂.LLˣ) *
       actL (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG (u : G)) S g =
       ∑ u : U, D.what₂.embLL ((ψ u⁻¹)⁻¹ : D.what₂.LLˣ) *

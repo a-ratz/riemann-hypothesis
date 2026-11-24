@@ -87,11 +87,11 @@ theorem exists_closed_level (D : D7) (m n : ℕ) (N : Set (Mx D m n)) (hN : N �
       (∀ u ∈ K, u.map (infPart D) = 0) ∧
       ∃ U : AddSubgroup (Mx D m n), IsOpen (U : Set (Mx D m n)) ∧ ∀ u ∈ U, u.map (infPart D) = 0 → u ∈ K := by
   classical
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (AE D) := IsModuleTopology.topologicalAddGroup (AF D.host.F) _
-  haveI : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul _ _
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : T2Space (InfiniteAdeleRing D.host.F) := inferInstanceAs (T2Space ((v : InfinitePlace D.host.F) → v.Completion))
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (AE D) := IsModuleTopology.isTopologicalAddGroup (AF D.host.F) _
+  have : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul _ _
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : T2Space (InfiniteAdeleRing D.host.F) := inferInstanceAs (T2Space ((v : InfinitePlace D.host.F) → v.Completion))
   let b := Module.finBasis D.host.F D.host.E
   let B := Algebra.TensorProduct.basis (AF D.host.F) b
   let Φ : (Fin m × Fin n × Fin (Module.finrank D.host.F D.host.E) → Af D.host.F) → Mx D m n :=
@@ -156,7 +156,7 @@ theorem exists_closed_level (D : D7) (m n : ℕ) (N : Set (Mx D m n)) (hN : N �
 
 theorem exists_small_level : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (A T : HSp D), ∀ N ∈ 𝓝 (0 : WO A T), ∃ K : AddSubgroup (WO A T), IsCompact (K : Set (WO A T)) ∧ (K : Set (WO A T)) ⊆ N ∧ (∀ u ∈ K, u.map (infPart D) = 0) ∧ (∃ U : AddSubgroup (WO A T), IsOpen (U : Set (WO A T)) ∧ ∀ u ∈ U, u.map (infPart D) = 0 → u ∈ K) ∧ ∀ u ∈ K, ∀ u' ∈ K, ψ (symplOH A T u u') = 1 := by
   intro D ψ hψ A T N hN
-  haveI : LocallyCompactSpace (WO A T) := (GlobalTheory.MixModel.lattice_Mx D T.rank A.rank).2.1
+  have : LocallyCompactSpace (WO A T) := (GlobalTheory.MixModel.lattice_Mx D T.rank A.rank).2.1
   obtain ⟨C, hC, hC0⟩ := exists_compact_mem_nhds (0 : WO A T)
   have hs : Continuous fun p : WO A T × WO A T => (symplOH A T p.1 p.2).2 :=
     continuous_snd.comp (GlobalTheory.OrientedHeis.continuous_symplOH continuous_fst continuous_snd)
@@ -177,7 +177,7 @@ theorem exists_small_level : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsSt
     Prod.ext ((one_mul _).symm.trans (congrArg Prod.fst h3)) rfl
   rw [h4]
   have h5 := hPQ (Set.mk_mem_prod (hKN hu).2.1 (hKN hu').2.2)
-  rw [Set.mem_preimage, Set.mem_setOf_eq] at h5
+  rw [Set.mem_preimage, Set.mem_ofPred_eq] at h5
   exact h5
 
 end GlobalTheory.SmallLevel

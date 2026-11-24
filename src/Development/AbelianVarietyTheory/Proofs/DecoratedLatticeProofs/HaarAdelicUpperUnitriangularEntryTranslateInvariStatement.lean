@@ -100,12 +100,12 @@ def supMx (D : D7) (ρ : ℕ) : AddSubgroup (Mx D ρ ρ) where
 theorem isClosed_supMx : IsClosed (supMx D ρ : Set (Mx D ρ ρ)) := by
   have : (supMx D ρ : Set (Mx D ρ ρ)) = ⋂ i, ⋂ j, {s : Mx D ρ ρ | ¬ i < j → s i j = 0} := by
     ext s
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     rfl
   rw [this]
   refine isClosed_iInter fun i => isClosed_iInter fun j => ?_
   by_cases h : i < j
-  · simp only [h, not_true_eq_false, false_implies, Set.setOf_true, isClosed_univ]
+  · simp only [h, not_true_eq_false, false_implies, Set.ofPred_true, isClosed_univ]
   · simp only [h, not_false_eq_true, true_implies]
     exact isClosed_eq ((continuous_apply j).comp (continuous_apply i)) continuous_const
 
@@ -143,7 +143,7 @@ instance actSup : DistribMulAction (triGrp D ρ) (supMx D ρ) where
   smul_add g s t := Subtype.ext (Matrix.mul_add _ _ _)
 
 theorem ccs (D : D7) (ρ : ℕ) : ContinuousConstSMul (triGrp D ρ) (supMx D ρ) :=
-  ⟨fun g => Continuous.subtype_mk (continuous_const.matrix_mul continuous_subtype_val) _⟩
+  ⟨fun g => Continuous.subtype_mk (continuous_const.matrix_mul continuous_subtypeVal) _⟩
 
 attribute [local instance] ccs
 
@@ -224,7 +224,7 @@ theorem modChar_col {x : Mx D ρ ρ} (hx : x ∈ supMx D ρ) {j : Fin ρ} (hcol 
   · rw [one_apply_ne hik, zero_add, zero_add]
     by_cases hk : k = j
     · subst hk
-      rw [if_pos rfl, if_neg hik, mul_one, two_mul]
+      rw [ite_eq_left rfl, ite_eq_right hik, mul_one, two_mul]
     · rw [hcol i k hk]
       simp
 
@@ -243,12 +243,12 @@ theorem trunc_top (u : Mx D ρ ρ) : trunc u ρ = u := by
 theorem colPart_mem (u : Mx D ρ ρ) (k : ℕ) : colPart u k ∈ supMx D ρ := by
   intro i j h
   change (if j.1 = k ∧ i < j then u i j else 0) = 0
-  rw [if_neg (fun h' => h h'.2)]
+  rw [ite_eq_right (fun h' => h h'.2)]
 
 theorem colPart_col (u : Mx D ρ ρ) {k : ℕ} (hk : k < ρ) : ∀ i l, l ≠ ⟨k, hk⟩ → colPart u k i l = 0 := by
   intro i l hl
   change (if l.1 = k ∧ i < l then u i l else 0) = 0
-  rw [if_neg (fun h => hl (Fin.ext h.1))]
+  rw [ite_eq_right (fun h => hl (Fin.ext h.1))]
 
 theorem trunc_succ {u : Mx D ρ ρ} (hu : u ∈ GlobalTheory.UnitU.uniSet D ρ) (k : ℕ) :
     trunc u (k + 1) = trunc u k + colPart u k := by
@@ -258,7 +258,7 @@ theorem trunc_succ {u : Mx D ρ ρ} (hu : u ∈ GlobalTheory.UnitU.uniSet D ρ) 
   · simp [h, Nat.lt_succ_of_lt h, h.ne]
   · have h1 : j.1 < k + 1 := by omega
     have h2 : ¬ j.1 < k := by omega
-    simp only [h1, if_true, h2, if_false, h, true_and]
+    simp only [h1, ite_true, h2, ite_false, h, true_and]
     rcases lt_trichotomy i j with hij | rfl | hij
     · simp [hij, one_apply_ne hij.ne]
     · simp [(hu i i).2]
@@ -374,9 +374,9 @@ theorem haar_val_add_invariant : ∀ (D : D7) (ρ : ℕ) (ν : Measure (UX D ρ)
     let Ψ := coordU D ρ
     let ν' : Measure (UX D ρ) := lam.map Ψ.symm
     have hΨs : Measurable Ψ.symm := Ψ.symm.continuous.measurable
-    haveI : IsFiniteMeasureOnCompacts ν' := Measure.IsFiniteMeasureOnCompacts.map _ _
-    haveI : ν'.IsOpenPosMeasure := Ψ.symm.continuous.isOpenPosMeasure_map Ψ.symm.surjective
-    haveI : ν'.IsMulLeftInvariant := by
+    have : IsFiniteMeasureOnCompacts ν' := Measure.IsFiniteMeasureOnCompacts.map _ _
+    have : ν'.IsOpenPosMeasure := Ψ.symm.continuous.isOpenPosMeasure_map Ψ.symm.surjective
+    have : ν'.IsMulLeftInvariant := by
       refine ⟨fun g => ?_⟩
       have hsm : Measurable (fun s : supMx D ρ => ofUX g • s) := (continuous_const_smul _).measurable
       have e : (g * ·) ∘ Ψ.symm = Ψ.symm ∘ ((Ψ g + ·) ∘ (fun s : supMx D ρ => ofUX g • s)) := by
@@ -391,10 +391,10 @@ theorem haar_val_add_invariant : ∀ (D : D7) (ρ : ℕ) (ν : Measure (UX D ρ)
       rw [Measure.map_map (measurable_const_mul g) hΨs, e,
         ← Measure.map_map hΨs ((measurable_const_add _).comp hsm),
         ← Measure.map_map (measurable_const_add _) hsm, map_smul_addHaar, map_add_left_eq_self]
-    haveI : ν'.IsHaarMeasure := {}
+    have : ν'.IsHaarMeasure := {}
     have e1 := Measure.isMulLeftInvariant_eq_smul ν ν'
     have hf : Measurable (fun s : supMx D ρ => 1 + s.1) :=
-      (continuous_const.add continuous_subtype_val).measurable
+      (continuous_const.add continuous_subtypeVal).measurable
     have e2 : (fun u : UX D ρ => (u.1.1 : Mx D ρ ρ)) ∘ Ψ.symm = fun s => 1 + s.1 := rfl
     rw [e1, Measure.map_smul _ hΦ.aemeasurable,
       Measure.map_smul _ (measurable_add_const t).aemeasurable]

@@ -189,8 +189,8 @@ theorem frob_of (h1 : LiftMonomialDeterminantStatement) (h2 : FrobeniusBlockStat
   have hc : ∀ j, D.κ j = i → ∀ k, algebraMap R C (c j k) = linX D (fun y => xL D j y ^ p) k := by
     intro j hj k
     by_cases hk : D.κ k = U.φ i
-    · simp only [c, if_pos hk, linX, hr j, Function.comp_apply]
-    · simp only [c, if_neg hk, map_zero]
+    · simp only [c, ite_eq_left hk, linX, hr j, Function.comp_apply]
+    · simp only [c, ite_eq_right hk, map_zero]
       exact (h2a j k (by rw [hj]; exact hk)).symm
   have hcard : Fintype.card {j // D.κ j = i} = Fintype.card {l // D.κ l = U.φ i} := by
     rw [Fintype.card_subtype, Fintype.card_subtype, D.card_phi i]
@@ -572,12 +572,12 @@ lemma lift_one (hS : HodgeTateSetting p v R O σ cp) (hp2 : p ≠ 2) {H : HodgeT
     rw [← hS.cp_val, h0, zero_pow (by omega)]
   have hve : v (algebraMap R C cp) ≤ v (algebraMap R C e) := by
     rw [hc', map_mul, map_mul]
-    exact mul_le_of_le_one_right zero_le' (hS.integers.map_le_one c')
+    exact mul_le_of_le_one_right zero_le (hS.integers.map_le_one c')
   have he0 : algebraMap R C e ≠ 0 := by
     intro h0
     have h := hve
     rw [h0, map_zero] at h
-    exact hvcp (le_antisymm h zero_le')
+    exact hvcp (le_antisymm h zero_le)
   have hcp1 : v (algebraMap R C cp) < 1 := by
     rcases (hS.integers.map_le_one cp).lt_or_eq with h | h
     · exact h
@@ -589,7 +589,7 @@ lemma lift_one (hS : HodgeTateSetting p v R O σ cp) (hp2 : p ≠ 2) {H : HodgeT
     rw [← hS.cp_val]
     have hp3 : 2 ≤ p - 1 := by omega
     calc v (algebraMap R C cp) ^ (p - 1) ≤ v (algebraMap R C cp) ^ 2 :=
-          pow_le_pow_of_le_one zero_le' hcp1.le hp3
+          pow_le_pow_of_le_one zero_le hcp1.le hp3
       _ < v (algebraMap R C cp) := by
           rw [sq]
           exact mul_lt_of_lt_one_right (pos_iff_ne_zero.mpr hvcp) hcp1
@@ -598,7 +598,7 @@ lemma lift_one (hS : HodgeTateSetting p v R O σ cp) (hp2 : p ≠ 2) {H : HodgeT
     intro r
     have hve0 : 0 < v (algebraMap R C e) := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff v).mpr he0)
     rw [map_div₀, div_lt_one hve0, map_mul, map_mul]
-    exact lt_of_le_of_lt (mul_le_of_le_one_right zero_le' (hS.integers.map_le_one r)) hpe
+    exact lt_of_le_of_lt (mul_le_of_le_one_right zero_le (hS.integers.map_le_one r)) hpe
   have hrep : ∀ y : Nb p g, ∃ r : R,
       avgF β H U i ((hcardG.unit⁻¹ : Rˣ) : R) F y / algebraMap R C e =
         algebraMap R C (∑ k, lam k * ((y k).val : R)) + algebraMap R C (p * r) / algebraMap R C e := by
@@ -686,9 +686,9 @@ private lemma row_decomp {H : HodgeTateDatum p g v R O σ cp} (U : UnramData p g
   have hb : bt2 H U * U.εT i = U.εL i * H.Bt * U.εT i := by
     unfold bt2
     rw [Matrix.sum_mul, Finset.sum_eq_single i]
-    · rw [Matrix.mul_assoc, U.εT_orth, if_pos rfl]
+    · rw [Matrix.mul_assoc, U.εT_orth, ite_eq_left rfl]
     · intro x _ hx
-      rw [Matrix.mul_assoc, U.εT_orth, if_neg hx, Matrix.mul_zero]
+      rw [Matrix.mul_assoc, U.εT_orth, ite_eq_right hx, Matrix.mul_zero]
     · intro h
       exact absurd (Finset.mem_univ i) h
   have key : ∑ k, c k • (fromRows H.Ht (bt2 H U) * U.εT i) k =
@@ -705,7 +705,7 @@ theorem lifts_of (hG : EmbeddingSeparatingGroupStatement) (hE : EigenElementaryD
   obtain ⟨κ, Λ, ε, hΛdet, hΛblock, hεdiv, hεprod, hcard_n, hspan⟩ :=
     hE p g C v R O σ cp hS H U X hX
   obtain ⟨hrank, hrzero⟩ := hR p g C v R O σ cp hS H U
-  haveI : Nontrivial R := ⟨⟨(p : R), 0, fun h => hS.p_ne (by rw [h, map_zero, map_zero])⟩⟩
+  have : Nontrivial R := ⟨⟨(p : R), 0, fun h => hS.p_ne (by rw [h, map_zero, map_zero])⟩⟩
   have hεT : ∀ j, U.εT (κ j) ≠ 0 := by
     intro j h0
     have hb := hΛblock j
@@ -812,7 +812,7 @@ theorem unitVector_val (l j : Ix g) : ((e1 (p := p) l) j).val = if j = l then 1 
 theorem prod_pow_unitVector_val {M : Type} [CommMonoid M] (f : Ix g → M) (l : Ix g) :
     ∏ j, f j ^ ((e1 (p := p) l) j).val = f l := by
   simp only [unitVector_val]
-  rw [Finset.prod_eq_single l (fun j _ hj => by rw [if_neg hj, pow_zero]) (by simp), if_pos rfl,
+  rw [Finset.prod_eq_single l (fun j _ hj => by rw [ite_eq_right hj, pow_zero]) (by simp), ite_eq_left rfl,
     pow_one]
 
 theorem liftScalePow_unitVector (D : Lifts H U X) (l : Ix g) : epow D (e1 (p := p) l) = D.ε l := by
@@ -1026,7 +1026,7 @@ theorem res_bR (hv : v.Integers R) (hp1 : v (algebraMap R C (p : R)) < 1) (D : L
     rw [lam_p, MuR_map hv D]
     simp only [Matrix.mulVec, dotProduct, Matrix.of_apply, c, Finset.mul_sum, mul_ite, mul_zero]
     rw [Finset.sum_comm]
-    simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true, formMonomial_unitVector]
+    simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true, formMonomial_unitVector]
     exact Finset.sum_congr rfl fun _ _ => mul_comm _ _
   have hinv := Matrix.nonsing_inv_mul _ hdet
   have hinj : (fun α => IsLocalRing.residue R (bR hv D j α)) = c := by
@@ -1040,7 +1040,7 @@ theorem res_bR (hv : v.Integers R) (hp1 : v (algebraMap R C (p : R)) < 1) (D : L
   rw [Finset.sum_eq_single l]
   · simp
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     have h2 := congrFun h l
     simp [e1, Pi.single_apply, Ne.symm hb] at h2
@@ -1120,8 +1120,8 @@ theorem frobeniusBlock : FrobeniusBlockStatement := by
   intro p _ g C _ _ _ v R _ _ _ O _ _ σ cp _ hS H U X D
   have hv := hS.integers
   have hp1 := hS.p_lt
-  haveI := isLocal_of_integers hv
-  haveI : CharP (IsLocalRing.ResidueField R) p := by
+  have := isLocal_of_integers hv
+  have : CharP (IsLocalRing.ResidueField R) p := by
     have h0 := residue_p hv hp1
     first
       | exact (CharP.charP_iff_prime_eq_zero Fact.out).mpr h0
@@ -1396,7 +1396,7 @@ lemma sum_finrank {ι m : Type} [Fintype ι] [DecidableEq ι] [Fintype m] [Decid
       left_inv := fun x => hsum' x
       right_inv := fun y => by
         ext i : 1; apply Subtype.ext
-        simp only [Matrix.mulVec_sum, hmem, Finset.sum_ite_eq, Finset.mem_univ, if_true] }
+        simp only [Matrix.mulVec_sum, hmem, Finset.sum_ite_eq, Finset.mem_univ, ite_true] }
   have h1 := E.finrank_eq
   rw [Module.finrank_fintype_fun_eq_card, Module.finrank_pi_fintype] at h1
   exact h1.symm
@@ -1447,7 +1447,7 @@ variable {p : ℕ} [Fact p.Prime] {g : ℕ} {C : Type} [Field C] {v : Valuation 
 
 private lemma εL_eq_zero (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O σ cp)
     (U : UnramData p g v R O σ cp H) (i : Fin U.m) (h0 : U.εT i = 0) : U.εL i = 0 := by
-  haveI : IsDomain R := Function.Injective.isDomain (algebraMap R C) hS.integers.hom_inj
+  have : IsDomain R := Function.Injective.isDomain (algebraMap R C) hS.integers.hom_inj
   have hcp : cp ≠ 0 := by
     intro h
     have hv := hS.cp_val
@@ -1493,7 +1493,7 @@ private lemma r_eq_zero (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatu
     (U : UnramData p g v R O σ cp H) (i : Fin U.m) (h0 : U.εT i = 0) : U.r i = 0 := by
   have h := εL_eq_zero hS H U i h0
   obtain ⟨e⟩ := U.rank i
-  haveI : Nontrivial R :=
+  have : Nontrivial R :=
     (Function.Injective.isDomain (algebraMap R C) hS.integers.hom_inj).toNontrivial
   by_contra hr
   have hall : ∀ y : LinearMap.range (Matrix.mulVecLin (U.εL i)), y = 0 := by
@@ -1516,9 +1516,9 @@ private lemma εT_eig_left {H : HodgeTateDatum p g v R O σ cp} (U : UnramData p
           rw [Finset.mul_sum]
           exact Finset.sum_congr rfl fun i _ => U.εT_eig a i
   rw [hsum, Finset.mul_sum, Finset.sum_eq_single j]
-  · rw [Matrix.mul_smul, U.εT_orth, if_pos rfl]
+  · rw [Matrix.mul_smul, U.εT_orth, ite_eq_left rfl]
   · intro b _ hb
-    rw [Matrix.mul_smul, U.εT_orth, if_neg (Ne.symm hb), smul_zero]
+    rw [Matrix.mul_smul, U.εT_orth, ite_eq_right (Ne.symm hb), smul_zero]
   · intro h
     exact absurd (Finset.mem_univ j) h
 
@@ -1646,12 +1646,12 @@ end Rank
 theorem rank_eq_rank_of_perm_and_zero : EigenRankStatement := by
   intro p _ g C _ _ _ v R _ _ _ O _ _ σ cp hS H U
   classical
-  haveI : IsLocalRing R := isLocal_of_integers hS.integers
-  haveI : CharP (IsLocalRing.ResidueField R) p := charP_res hS
-  have hidem : ∀ i, U.εT i * U.εT i = U.εT i := fun i => by rw [U.εT_orth, if_pos rfl]
-  haveI hfree : ∀ i, Module.Free R (LinearMap.range (U.εT i).mulVecLin) :=
+  have : IsLocalRing R := isLocal_of_integers hS.integers
+  have : CharP (IsLocalRing.ResidueField R) p := charP_res hS
+  have hidem : ∀ i, U.εT i * U.εT i = U.εT i := fun i => by rw [U.εT_orth, ite_eq_left rfl]
+  have hfree : ∀ i, Module.Free R (LinearMap.range (U.εT i).mulVecLin) :=
     fun i => (RankA.free_range_idem _ (hidem i)).1
-  haveI hfin : ∀ i, Module.Finite R (LinearMap.range (U.εT i).mulVecLin) :=
+  have hfin : ∀ i, Module.Finite R (LinearMap.range (U.εT i).mulVecLin) :=
     fun i => (RankA.free_range_idem _ (hidem i)).2
   have hsn : ∀ i ∈ Finset.univ, ((U.εT i).map (IsLocalRing.residue R)).rank ≤
       Module.finrank R (LinearMap.range (U.εT i).mulVecLin) := fun i _ => RankA.rank_map_le _ _
@@ -1731,7 +1731,7 @@ lemma theta_kill (U : UnramData p g v R O σ cp H) {τ σ' : Fin U.m} (h : σ' �
   obtain ⟨x, hx⟩ := LinearMap.mem_range.1 ((U.rank τ).some.symm (Pi.single s 1)).2
   have hb : bvec U τ s = U.εL τ *ᵥ x := hx.symm
   show ((U.εL σ')ᵀ *ᵥ μ) ⬝ᵥ bvec U τ s = 0
-  rw [hb, mulVec_transpose, dotProduct_mulVec, vecMul_vecMul, U.εL_orth, if_neg h,
+  rw [hb, mulVec_transpose, dotProduct_mulVec, vecMul_vecMul, U.εL_orth, ite_eq_right h,
     vecMul_zero, zero_dotProduct]
 
 lemma theta_surj (U : UnramData p g v R O σ cp H) (τ : Fin U.m) :
@@ -1755,7 +1755,7 @@ lemma theta_surj (U : UnramData p g v R O σ cp H) (τ : Fin U.m) :
       (U.rank τ).some.symm (Pi.single s 1) := by
     apply Subtype.ext
     show U.εL τ *ᵥ bvec U τ s = bvec U τ s
-    rw [hb, mulVec_mulVec, U.εL_orth, if_pos rfl]
+    rw [hb, mulVec_mulVec, U.εL_orth, ite_eq_left rfl]
   simp only [LinearMap.comp_apply, hfix, LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply]
   simp [Pi.single_apply]
 

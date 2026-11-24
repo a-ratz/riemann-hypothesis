@@ -156,7 +156,7 @@ theorem ddW {f : GA E a → ℂ} (hf : f ∈ Sm E a) {K K2 Q r : ℝ} (hK : 0 �
       K * a * ‖invL x - oneL E a‖ + K2 * a * Q * ‖x - oneL E a‖ := by
   have hQ0 : 0 ≤ Q := (norm_nonneg _).trans (hQ x hx)
   refine ContinuousLinearMap.opNorm_le_bound _ (by positivity) fun Y => ?_
-  rw [ContinuousLinearMap.sub_apply, fderiv_chart hf g (hr hx)]
+  rw [sub_apply, fderiv_chart hf g (hr hx)]
   have e1 : fderiv ℝ (chart f g) (oneL E a) Y = lieD Y f g := rfl
   have e2 : chart (lieD (toL ((Matrix.of x)⁻¹ * Matrix.of Y)) f) g x - chart (lieD Y f) g x =
       chart (lieD (toL (Matrix.of (invL x - oneL E a) * Matrix.of Y)) f) g x := by
@@ -323,11 +323,11 @@ theorem koszulThree_of_det : jumpWindows.S1 → H0 → CuspDecayShortRowColumn �
     { carrier := {x | ∃ θ ∈ π.V, (J x : GA E k → ℂ) = θ.1}
       add_mem' := by
         rintro x y ⟨θ, hθ, hx⟩ ⟨θ', hθ', hy⟩
-        exact ⟨θ + θ', π.V.add_mem hθ hθ', by rw [map_add (f := _), BoundedContinuousFunction.coe_add, hx, hy, Submodule.coe_add]⟩
-      zero_mem' := ⟨0, π.V.zero_mem, by rw [map_zero, BoundedContinuousFunction.coe_zero, Submodule.coe_zero]⟩
+        exact ⟨θ + θ', π.V.add_mem hθ hθ', by rw [map_add (f := _), FunLike.coe_add, hx, hy, Submodule.coe_add]⟩
+      zero_mem' := ⟨0, π.V.zero_mem, by rw [map_zero, FunLike.coe_zero, Submodule.coe_zero]⟩
       smul_mem' := by
         rintro c x ⟨θ, hθ, hx⟩
-        exact ⟨c • θ, π.V.smul_mem c hθ, by rw [map_smul, BoundedContinuousFunction.coe_smul, hx, Submodule.coe_smul]⟩ }
+        exact ⟨c • θ, π.V.smul_mem c hθ, by rw [map_smul, FunLike.coe_smul, hx, Submodule.coe_smul]⟩ }
   obtain ⟨r0, hr0, Bw, hBw, hcb⟩ := WeightInverseContinuity.wtcmp (E := E) hH0 hK1 hk M
   have hder : ∀ v ∈ 𝒮, ∃ D : LieI (InfinitePlace E) k →L[ℝ] XB E k,
       HasFDerivAt (orb (ρ.comp (infGL E k)) v) D (oneI (InfinitePlace E) k) ∧ ∀ Z, D Z ∈ 𝒮 := by
@@ -373,7 +373,7 @@ theorem koszulThree_of_det : jumpWindows.S1 → H0 → CuspDecayShortRowColumn �
     have e : (orb (ρ.comp (infGL E k)) v N - orb (ρ.comp (infGL E k)) v (oneI (InfinitePlace E) k) -
         D (N - oneL E k)) g = (chart θ.1 g N - chart θ.1 g (oneL E k) -
           fderiv ℝ (chart θ.1 g) (oneL E k) (N - oneL E k)) / (wt M g : ℂ) := by
-      rw [BoundedContinuousFunction.coe_sub, BoundedContinuousFunction.coe_sub, Pi.sub_apply, Pi.sub_apply,
+      rw [FunLike.coe_sub, FunLike.coe_sub, Pi.sub_apply, Pi.sub_apply,
         horb, horb, sub_div, sub_div]
       rfl
     rw [e, norm_div, Complex.norm_real, Real.norm_of_nonneg hw.le, div_le_iff₀ hw]

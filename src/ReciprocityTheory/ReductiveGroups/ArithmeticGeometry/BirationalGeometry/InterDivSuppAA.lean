@@ -190,7 +190,7 @@ theorem dim_quot_add_height [IsNoetherianRing A] [IsJacobsonRing A] [FiniteRingK
       have hP : P ∈ I.minimalPrimes := hfin.mem_toFinset.mp (Finset.mem_of_mem_erase hPT)
       have : q ≤ P := hs.2 hP.1 hPq
       exact Finset.ne_of_mem_erase hPT (le_antisymm hPq this)
-    obtain ⟨g, hgT, hgq⟩ := SetLike.not_le_iff_exists.mp hT
+    obtain ⟨g, hgT, hgq⟩ := IsConcreteLE.not_le_iff_exists.mp hT
     have hjac : q.jacobson = q := IsJacobsonRing.out' q (Ideal.IsPrime.isRadical inferInstance)
     rw [← hjac, Ideal.jacobson, Submodule.mem_sInf] at hgq
     push Not at hgq

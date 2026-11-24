@@ -132,8 +132,8 @@ variable {π}
 
 theorem S_conj {H K : Subgroup G} {w : G} (h1 : ∀ u ∈ H, w * u * w⁻¹ ∈ K) (h2 : ∀ u ∈ K, w⁻¹ * u * w⁻¹⁻¹ ∈ H)
     (v : V) : π w (S π H v) = S π K (π w v) := by
-  haveI := Fintype.ofFinite H
-  haveI := Fintype.ofFinite K
+  have := Fintype.ofFinite H
+  have := Fintype.ofFinite K
 
   rw [S_apply, S_apply, map_sum]
   refine Fintype.sum_equiv ⟨fun u => ⟨_, h1 u u.2⟩, fun u => ⟨_, h2 u u.2⟩, fun u => Subtype.ext (by simp [mul_assoc]),
@@ -141,7 +141,7 @@ theorem S_conj {H K : Subgroup G} {w : G} (h1 : ∀ u ∈ H, w * u * w⁻¹ ∈ 
   simp [← Module.End.mul_apply, ← map_mul]
 
 theorem S_right {H : Subgroup G} {h : G} (hh : h ∈ H) (v : V) : S π H (π h v) = S π H v := by
-  haveI := Fintype.ofFinite H
+  have := Fintype.ofFinite H
   rw [S_apply, S_apply]
   refine Fintype.sum_equiv (Equiv.mulRight (⟨h, hh⟩ : H)) _ _ fun u => ?_
   simp
@@ -156,13 +156,13 @@ theorem S_comm {H : Subgroup G} {h : G} (hh : ∀ u ∈ H, h * u = u * h) (v : V
     (fun u hu => by rwa [inv_inv, mul_assoc, ← hh u hu, inv_mul_cancel_left]) v
 
 theorem S_S {H K : Subgroup G} (hle : H ≤ K) {v : V} (hv : S π K v = 0) : S π K (S π H v) = 0 := by
-  haveI := Fintype.ofFinite H
+  have := Fintype.ofFinite H
 
   rw [S_apply π H, map_sum]
   exact Finset.sum_eq_zero fun u _ => by rw [S_right (hle u.2), hv]
 
 theorem eq_zero_of_S {H : Subgroup G} {v : V} (hv : ∀ h ∈ H, π h v = v) (h0 : S π H v = 0) : v = 0 := by
-  haveI := Fintype.ofFinite H
+  have := Fintype.ofFinite H
   rw [S_apply, Finset.sum_congr rfl fun (u : H) _ => hv u u.2, Finset.sum_const, ← Nat.cast_smul_eq_nsmul ℂ] at h0
   exact (smul_eq_zero.1 h0).resolve_left (Nat.cast_ne_zero.2 Fintype.card_ne_zero)
 
@@ -207,7 +207,7 @@ theorem step {a b c d : R} (aa : a * a = a) (bb : b * b = b) (cc : c * c = c) (d
     rw [e, map_mul, Module.End.mul_apply, hz, S_left, S_U (p := a + c) (q := b + d), hv] <;>
       simp [mem_U, mul_add, add_mul, mul_assoc, H] <;> abel
   have k3 : S π (U (c + d) (a + b)) z = 0 := by
-    haveI := Fintype.ofFinite (U (a + c) (b + d))
+    have := Fintype.ofFinite (U (a + c) (b + d))
 
     rw [hz, S_apply π (U (a + c) (b + d)), map_sum]
     refine Finset.sum_eq_zero fun u _ => ?_
@@ -227,7 +227,7 @@ theorem step {a b c d : R} (aa : a * a = a) (bb : b * b = b) (cc : c * c = c) (d
     obtain ⟨x, hx⟩ := dec hu
     simp [mem_U, hx, mul_add, add_mul, mul_assoc, H]
   refine h1 z k1 (h2 _ (fun u hu => ?_) (eq_zero_of_S (fun u hu => ?_) (S_S l2 (S_S l1 k3))))
-  · haveI := Fintype.ofFinite (U c a)
+  · have := Fintype.ofFinite (U c a)
 
     rw [S_apply, map_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
@@ -256,7 +256,7 @@ theorem oppInj (hreg : ∀ x : R, ∃ y, x * y * x = x) {p q : R} (pp : p * p = 
   induction n using Nat.strong_induction_on generalizing p q with
   | _ n ih =>
   intro v hv h0
-  haveI := Fintype.ofFinite (U q p)
+  have := Fintype.ofFinite (U q p)
   have h1 : S π (U p q) (S π (U q p) v) = 0 := by rw [h0, map_zero]
 
   rw [S_apply π (U q p), map_sum, Finset.sum_eq_single 1 (fun u _ hu => ?_) (by simp)] at h1

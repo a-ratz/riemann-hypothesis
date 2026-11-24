@@ -137,9 +137,9 @@ private theorem colE_mul {n : ℕ} (S : Matrix (Fin n) (Fin n) ℂ) (U : Matrix 
 
 private theorem finite_det_add_smul_one_eq_zero {n : ℕ} (Y : Matrix (Fin n) (Fin n) ℂ) :
     ({t : ℂ | (Y + t • (1 : Matrix (Fin n) (Fin n) ℂ)).det = 0}).Finite := by
-  refine (Polynomial.finite_setOf_isRoot (Matrix.charpoly_monic (-Y)).ne_zero).subset ?_
+  refine (Polynomial.finite_setOfPred_isRoot (Matrix.charpoly_monic (-Y)).ne_zero).subset ?_
   intro t ht
-  simp only [Set.mem_setOf_eq] at ht ⊢
+  simp only [Set.mem_ofPred_eq] at ht ⊢
   rw [Polynomial.IsRoot, Matrix.eval_charpoly]
   have hm : Matrix.scalar (Fin n) t - -Y = Y + t • (1 : Matrix (Fin n) (Fin n) ℂ) := by
     rw [sub_neg_eq_add, add_comm]
@@ -355,9 +355,9 @@ private theorem evalFr_two_smul {B : Type} [Fintype B] [DecidableEq B] {m : B �
       have hdet : ∀ b', (if b' ∈ s then (2 : ℂ) • X b' else X b').det ≠ 0 := by
         intro b'
         by_cases h : b' ∈ s
-        · simp only [h, if_true, Matrix.det_smul]
+        · simp only [h, ite_true, Matrix.det_smul]
           exact mul_ne_zero (pow_ne_zero _ two_ne_zero) (hX b')
-        · simp only [h, if_false]
+        · simp only [h, ite_false]
           exact hX b'
       have h2 : ((2 : ℂ) • (1 : Matrix (Fin (m b0)) (Fin (m b0)) ℂ)).det ≠ 0 := by
         rw [Matrix.det_smul, Matrix.det_one, mul_one]

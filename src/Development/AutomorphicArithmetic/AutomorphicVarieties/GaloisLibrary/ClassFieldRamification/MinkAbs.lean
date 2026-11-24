@@ -89,7 +89,7 @@ theorem UpperTheory.V.CF.minkRam :
     intro h
     rw [h, le_bot_iff] at hDP
     exact differentIdeal_ne_bot hDP
-  haveI : NeZero P := ⟨hPne⟩
+  have : NeZero P := ⟨hPne⟩
   refine ⟨Ideal.absNorm (Ideal.under ℤ P), Nat.absNorm_under_prime P, fun hun => ?_⟩
   have hram := hun P hPmax.isPrime (Int.absNorm_under_mem P)
   rw [Ideal.ramificationIdx_eq_one_iff] at hram
@@ -113,7 +113,7 @@ theorem UpperTheory.V.CF.minkGen :
   have hconj : ∀ (τ : Gal(K/ℚ)) (w : HeightOneSpectrum (𝓞 K)), ∃ w' : HeightOneSpectrum (𝓞 K),
       ∀ σ ∈ w.asIdeal.inertia Gal(K/ℚ), τ * σ * τ⁻¹ ∈ w'.asIdeal.inertia Gal(K/ℚ) := by
     intro τ w
-    refine ⟨⟨τ • w.asIdeal, by haveI := w.isPrime; infer_instance, ?_⟩, ?_⟩
+    refine ⟨⟨τ • w.asIdeal, by have := w.isPrime; infer_instance, ?_⟩, ?_⟩
     · intro h
       apply w.ne_bot
       rw [eq_bot_iff]
@@ -125,7 +125,7 @@ theorem UpperTheory.V.CF.minkGen :
     · intro σ hσ x
       have hm := Ideal.smul_mem_pointwise_smul τ _ w.asIdeal (hσ (τ⁻¹ • x))
       rwa [smul_sub, smul_inv_smul, ← mul_smul, ← mul_smul] at hm
-  haveI hN : I.Normal := by
+  have hN : I.Normal := by
     constructor
     intro σ hσ τ
     have hle : I ≤ I.comap (MulAut.conj τ).toMonoidHom := by
@@ -135,8 +135,8 @@ theorem UpperTheory.V.CF.minkGen :
       exact le_iSup (fun w : HeightOneSpectrum (𝓞 K) => w.asIdeal.inertia Gal(K/ℚ)) w' (hw' σ' hσ')
     exact hle hσ
   set F := IntermediateField.fixedField I with hF
-  haveI hFgal := IsGalois.of_fixedField_normal_subgroup I
-  haveI hgF : IsGalois ℚ F := by
+  have hFgal := IsGalois.of_fixedField_normal_subgroup I
+  have hgF : IsGalois ℚ F := by
     convert hFgal
   have hunr : ∀ p, Nat.Prime p → UnramAt F p := by
     intro p hp
@@ -178,8 +178,8 @@ private theorem top_of_gen (K Ω : Type) [Field K] [NumberField K] [Field Ω] [A
     (V : Subgroup (G K Ω)) (hV : IsOpen (V : Set (G K Ω))) (hI : ∀ A : ValuationSubring Ω, Ine (F := K) A ≤ V) :
     V = ⊤ := by
   obtain ⟨L, hfin, hnorm, hL⟩ := (krullTopology_mem_nhds_one_iff_of_normal K Ω _).1 (hV.mem_nhds V.one_mem)
-  haveI : NumberField L := NumberField.of_module_finite K L
-  haveI : IsGalois K L := {}
+  have : NumberField L := NumberField.of_module_finite K L
+  have : IsGalois K L := {}
   have hker : (resTo K L Ω).ker ≤ V := by
     have h : (resTo K L Ω).ker = L.fixingSubgroup := IntermediateField.restrictNormalHom_ker L
     rw [h]

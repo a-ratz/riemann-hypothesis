@@ -176,7 +176,7 @@ theorem lie_lift {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] [Smoo
     ∃ b : V →+ V', (∀ e, (M'.pt (b e)).left = spMap (dualMap g) ≫ (M.pt e).left) ∧
       (∀ c e, b (c • e) = g c • b e) ∧ Submodule.span R' (Set.range b) = ⊤ ∧
       (Function.Injective g → Function.Injective b) := by
-  letI := g.toAlgebra
+  let := g.toAlgebra
   subst hx
   obtain ⟨T, _, _, _, _, M'', j, hl, hj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagFib.lieModel_liftBaseChange S G R R' x V M
   obtain ⟨f, hf, -⟩ := lieModel_existsUnique_equiv S G R' _ T V' M'' M'
@@ -194,8 +194,8 @@ theorem lie_lift {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] [Smoo
     | tmul m => exact Submodule.subset_span ⟨m, rfl⟩
     | smul s n h => rw [map_smul]; exact Submodule.smul_mem _ _ (h trivial)
     | add m n h h' => rw [map_add (f := _)]; exact Submodule.add_mem _ (h trivial) (h' trivial)
-  · haveI : Module.Projective R V := (LieProj.lie_finite_projective_baseChange S G R x V M).2.1
-    haveI : FaithfulSMul R R' := (faithfulSMul_iff_algebraMap_injective R R').2 hg
+  · have : Module.Projective R V := (LieProj.lie_finite_projective_baseChange S G R x V M).2.1
+    have : FaithfulSMul R R' := (faithfulSMul_iff_algebraMap_injective R R').2 hg
     intro a c hac
     have h1 : j a = j c := f.injective hac
     refine Module.Flat.tensorProduct_mk_injective R V R' (hj.equiv.injective ?_)
@@ -223,7 +223,7 @@ theorem frame_descend {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] 
   obtain ⟨MR, _, _, ⟨M⟩⟩ := lieModel_exists S G R x
   obtain ⟨T, _, _, ⟨MK⟩⟩ := lieModel_exists S G K xK
   obtain ⟨ρ, hρ, -⟩ := lieModel_exists_unique_act S G K xK T MK O act.act act.hom act.one act.mul act.add
-  haveI : Module.Finite R MR := (LieProj.lie_finite_projective_baseChange S G R x MR M).1
+  have : Module.Finite R MR := (LieProj.lie_finite_projective_baseChange S G R x MR M).1
   obtain ⟨N, s, hs⟩ := Module.Finite.exists_fin (R := R) (M := MR)
   obtain ⟨jK, hjK, hsK, hspK, -⟩ := lie_lift f hx M MK
   choose u hu using fun i => MK.onto (v i) (hv.1 i).1
@@ -287,7 +287,7 @@ theorem exists_point {X : Scheme.{0}} {F : Type} [Field F] (s : X ⟶ Sp F) [Loc
   obtain ⟨x, hx⟩ := hne
   obtain ⟨_, ⟨W, hW, rfl⟩, hxW, hWU⟩ := X.isBasis_affineOpens.exists_subset_of_mem_open hx hU
   replace hW : IsAffineOpen W := hW
-  haveI : IsOpenImmersion hW.fromSpec := hW.isOpenImmersion_fromSpec
+  have : IsOpenImmersion hW.fromSpec := hW.isOpenImmersion_fromSpec
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (hW.fromSpec ≫ s)
   have hft : ψ.hom.FiniteType := by
     have : LocallyOfFiniteType (Spec.map ψ) := by
@@ -296,9 +296,9 @@ theorem exists_point {X : Scheme.{0}} {F : Type} [Field F] (s : X ⟶ Sp F) [Loc
     exact (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1 this
   have hr : Set.range hW.fromSpec = (W : Set X) := hW.range_fromSpec
   obtain ⟨q, -⟩ : x ∈ Set.range hW.fromSpec := hr ▸ hxW
-  haveI : Nontrivial Γ(X, W) := PrimeSpectrum.nonempty_iff_nontrivial.1 ⟨q⟩
+  have : Nontrivial Γ(X, W) := PrimeSpectrum.nonempty_iff_nontrivial.1 ⟨q⟩
   obtain ⟨m, hm⟩ := Ideal.exists_maximal Γ(X, W)
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   refine ⟨Γ(X, W) ⧸ m, inferInstance, (Ideal.Quotient.mk m).comp ψ.hom,
     spMap (Ideal.Quotient.mk m) ≫ hW.fromSpec, ?_, ?_, ?_⟩
   · exact RingHom.finite_iff_finiteType_of_isJacobsonRing.2
@@ -313,10 +313,10 @@ theorem exists_framed {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
     (Xo : Moduli D l) (c : Coeff l) (U : Set (Xo.XF c)) (τ : E →+* ℂ) (hτ : τ (H.rt : E) = H.rt0) (hU : IsOpen U)
     (hne : U.Nonempty) : ∃ (K : Type) (_ : Field K) (_ : NumberField K) (β : c.F →+* K) (y : Sp K ⟶ Xo.XF c)
       (v : Vecs y D.p) (w : Vecs y D.q), IsFramed U τ β y v w := by
-  haveI := c.fin
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
-  haveI := Xo.univ.t.semi.smooth
+  have := c.fin
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
+  have := Xo.univ.t.semi.smooth
   obtain ⟨L, _, β, y, hfin, hy, hyU⟩ :=
     exists_point (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) U hU hne
   let k := AlgebraicClosure L
@@ -346,16 +346,16 @@ theorem exists_framed {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ho
   obtain ⟨Z₁, hZ₁, H₁⟩ := frame_descend (algebraMap L k) (under y) _ rfl _ _ v hv
   obtain ⟨Z₂, hZ₂, H₂⟩ := frame_descend (algebraMap L k) (under y) _ rfl _ _ w hw
   let K := IntermediateField.adjoin L (Z₁ ∪ Z₂)
-  haveI : Finite (Z₁ ∪ Z₂ : Set k) := (hZ₁.union hZ₂).to_subtype
-  haveI : FiniteDimensional L K :=
+  have : Finite (Z₁ ∪ Z₂ : Set k) := (hZ₁.union hZ₂).to_subtype
+  have : FiniteDimensional L K :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   let βK : c.F →+* K := (algebraMap L K).comp β
   have hβK : βK.Finite := (RingHom.finite_algebraMap.2 inferInstance).comp hfin
-  haveI : CharZero K := βK.charZero_iff βK.injective |>.1 inferInstance
-  haveI : NumberField c.F := { }
-  haveI : NumberField K := by
-    letI := βK.toAlgebra
-    haveI : Module.Finite c.F K := hβK
+  have : CharZero K := βK.charZero_iff βK.injective |>.1 inferInstance
+  have : NumberField c.F := { }
+  have : NumberField K := by
+    let := βK.toAlgebra
+    have : Module.Finite c.F K := hβK
     exact NumberField.of_module_finite c.F K
   have hZ : Z₁ ∪ Z₂ ⊆ Set.range (algebraMap K k) := fun z hz => ⟨⟨z, IntermediateField.subset_adjoin _ _ hz⟩, rfl⟩
   obtain ⟨v', hv', -⟩ := H₁ K (algebraMap K k) (algebraMap L K) (βK.comp (tauIn c τ))
@@ -395,7 +395,7 @@ theorem intFrame {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
       (TV : SAB H (Sp V)) (mV : SABMap TV T (spMap r)) (m' : SABMap tK TV (spMap (algebraMap V K))),
       Function.Injective (algebraMap V K) → Z ⊆ Set.range (algebraMap V K) → (algebraMap V K).comp r = f →
       (algebraMap V K).comp σV = σ → m₀.φ = m'.φ ≫ mV.φ → IsIntFrame m m' σ v := by
-  haveI := T.semi.smooth
+  have := T.semi.smooth
   obtain ⟨vK, hvK, eK⟩ := (frame_transfer m (𝟙 _) (under y) (Category.id_comp _).symm σ n).2 v hv
   obtain ⟨vT, hvT, eT⟩ := (frame_transfer m₀ (𝟙 _) (spMap f) (Category.id_comp _).symm σ n).1 vK hvK
   obtain ⟨Z, hZ, HZ⟩ := frame_descend f (𝟙 _) (spMap f) (Category.comp_id _).symm T.act σ vT hvT
@@ -430,8 +430,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat
 open LinePointFrame in
 theorem line_function_norm_zero_away : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (U : Set (Xo.XF c)) (τ : E →+* ℂ) (φ : FrameFn Xo c), τ (H.rt : E) = H.rt0 → IsOpen U → U.Nonempty → IsLineFn U τ φ → ∃ n : ℕ, 0 < n ∧ ∀ (p : Nat.Primes) (κ : c.F →+* ℂ_[p]) (t : ℝ), ¬ (p : ℕ) ∣ n → HasFinNorm U τ φ p κ t → t = 0 := by
   intro E _ _ _ H D l Xo c U τ φ hτ hU hne hφ
-  haveI := c.fin
-  haveI : NumberField c.F := { }
+  have := c.fin
+  have : NumberField c.F := { }
   obtain ⟨K, _, _, β, y, v, w, hfr⟩ := exists_framed Xo c U τ hτ hU hne
   obtain ⟨tK, ⟨m⟩⟩ := LinePointFrame.exists_sab (under y) Xo.univ.t
   have hprop : IsProper tK.G.hom := MorphismProperty.of_isPullback (P := @IsProper) m.cart.1 Xo.univ.proper
@@ -604,7 +604,7 @@ theorem thmFlatA_of_parts : PartI → FlatLineGenerator → FlatLineGeneratorCom
       (∀ s : c.F →+* ℂ, ∃ t, HasInfNorm U τ φ s t) ∧ ∃ t, HasFinNorm U τ φ p κ t := by
     intro p κ
     obtain ⟨W, hpW, hdvr, hκ⟩ := exists_place c p κ
-    haveI := hdvr
+    have := hdvr
     obtain ⟨-, hYi⟩ := hYs p W p.2 hpW
     obtain ⟨hSF, hN3, -⟩ := hYi ⟨l, c, hg p p.2⟩
     exact local_gen hA0 hA1 hC U τ FU i hpq hτ hty hU hUi hP W (Ys p W p.2 hpW ⟨l, c, hg p p.2⟩) hSF hN3 p κ hκ
@@ -627,7 +627,7 @@ theorem thmFlatA_of_parts : PartI → FlatLineGenerator → FlatLineGeneratorCom
   refine (((finite_primes_dvd hn.ne').union (finite_primes_dvd H.d_prime.ne_zero)).union hS).subset ?_
   rintro p ⟨ι₀, hι⟩
   by_contra hcon
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_exists, not_not] at hcon
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_exists, not_not] at hcon
   obtain ⟨⟨h1, h2⟩, h3⟩ := hcon
   obtain ⟨-, -, -, -, hd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.ValRing.exists_dvr_of_padic_embedding c.F p ι₀
   have hd' : ‖((H.d : ℕ) : ℂ_[p])‖ = 1 := by simpa using hd H.d h2

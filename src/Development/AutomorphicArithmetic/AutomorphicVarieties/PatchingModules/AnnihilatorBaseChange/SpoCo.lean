@@ -101,8 +101,8 @@ private theorem splitting_algebra_nontrivial_free_generated (R : Type) [CommRing
       Algebra.adjoin R (Set.range fun p : Fin q × Fin n => Sp.u P ut p.1 p.2) = ⊤ := by
   classical
   obtain ⟨bas, -⟩ := mSplitAlg_basis (Fin q) n R P (fun j => (h j).1) (fun j => (h j).2.1)
-  haveI : Module.Free R (MSplitAlg P n) := Module.Free.of_basis bas
-  haveI : Module.Finite R (MSplitAlg P n) := Module.Finite.of_basis bas
+  have : Module.Free R (MSplitAlg P n) := Module.Free.of_basis bas
+  have : Module.Finite R (MSplitAlg P n) := Module.Finite.of_basis bas
   have hχ : ∀ j, ∏ i, (Polynomial.X - Polynomial.C (residue R (ut j i))) =
       (P j).map (algebraMap R (ResidueField R)) := by
     intro j
@@ -118,21 +118,21 @@ private theorem splitting_algebra_nontrivial_free_generated (R : Type) [CommRing
     obtain ⟨r, rfl⟩ := residue_surjective y
     exact ⟨_, hχalg r⟩
   obtain ⟨n0, hn0⟩ : ∃ n0 : Ideal (MSplitAlg P n), n0 = RingHom.ker χ := ⟨_, rfl⟩
-  haveI : n0.IsMaximal := hn0 ▸ RingHom.ker_isMaximal_of_surjective χ hχs
+  have : n0.IsMaximal := hn0 ▸ RingHom.ker_isMaximal_of_surjective χ hχs
   obtain ⟨hBs, hBfin, hBloc, hBcpl, hBfree, -, hBuniv⟩ := local_factor R (MSplitAlg P n) n0
-  haveI := hBfin
-  haveI := hBloc
-  haveI : Module.Free R (Localization.AtPrime n0) := hBfree inferInstance
-  haveI : IsNoetherianRing (Localization.AtPrime n0) := isNoetherian_of_tower R (inferInstance : IsNoetherian R (Localization.AtPrime n0))
+  have := hBfin
+  have := hBloc
+  have : Module.Free R (Localization.AtPrime n0) := hBfree inferInstance
+  have : IsNoetherianRing (Localization.AtPrime n0) := isNoetherian_of_tower R (inferInstance : IsNoetherian R (Localization.AtPrime n0))
   have hmem0 : ∀ y, y ∈ n0 ↔ χ y = 0 := fun y => by rw [hn0, RingHom.mem_ker]
   have hinB : ∀ y ∈ n0, algebraMap (MSplitAlg P n) (Localization.AtPrime n0) y ∈ maximalIdeal (Localization.AtPrime n0) := fun y hy =>
     (IsLocalization.AtPrime.to_map_mem_maximal_iff (Localization.AtPrime n0) n0 y).2 hy
   have hroot : ∀ j i, MSplitAlg.root P n j i - algebraMap R (MSplitAlg P n) (ut j i) ∈ n0 := by
     intro j i
     rw [hmem0, map_sub, hχalg, hχr, sub_self]
-  haveI hRR : IsCO R R := @IsCO.mk R R _ _ _ _ _ _ inferInstance ⟨fun a ha => ha⟩
+  have hRR : IsCO R R := @IsCO.mk R R _ _ _ _ _ _ inferInstance ⟨fun a ha => ha⟩
     (fun x => ⟨x, by rw [Algebra.algebraMap_self, RingHom.id_apply, sub_self]; exact zero_mem _⟩)
-  haveI hRB : IsCO R (Localization.AtPrime n0) := @IsCO.mk R (Localization.AtPrime n0) _ _ _ _ _ _ hBcpl hBloc (fun x => by
+  have hRB : IsCO R (Localization.AtPrime n0) := @IsCO.mk R (Localization.AtPrime n0) _ _ _ _ _ _ hBcpl hBloc (fun x => by
     obtain ⟨y, rfl⟩ := hBs x
     obtain ⟨r, hr⟩ := residue_surjective (χ y)
     refine ⟨r, ?_⟩
@@ -157,8 +157,8 @@ private theorem splitting_algebra_nontrivial_free_generated (R : Type) [CommRing
     rw [← this, Polynomial.map_prod]
     simp only [Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C]
   obtain ⟨Φ, hΦ⟩ := spCo_desc P ut (fun j i => algebraMap (MSplitAlg P n) (Localization.AtPrime n0) (MSplitAlg.root P n j i)) hrootB F hFX
-  haveI : Nontrivial (Sp P ut) := Φ.toRingHom.domain_nontrivial
-  haveI : IsLocalRing (Sp P ut) := IsLocalRing.of_surjective' (Sp.mk P ut).toRingHom
+  have : Nontrivial (Sp P ut) := Φ.toRingHom.domain_nontrivial
+  have : IsLocalRing (Sp P ut) := IsLocalRing.of_surjective' (Sp.mk P ut).toRingHom
     (fun z => Ideal.Quotient.mk_surjective z)
   obtain ⟨Ψ, hΨ⟩ : ∃ Ψ : (MSplitAlg P n) →ₐ[R] Sp P ut, ∀ j i, Ψ (MSplitAlg.root P n j i) = Sp.u P ut j i :=
     ⟨MSplitAlg.lift P n _ (fun j => (spRoots R q n P ut j).1), MSplitAlg.lift_root P n _ _⟩
@@ -220,8 +220,8 @@ private theorem splitting_algebra_nontrivial_free_generated (R : Type) [CommRing
     refine AlgHom.ext fun x => ?_
     obtain ⟨y, rfl⟩ := hBs x
     exact AlgHom.congr_fun h1 y
-  haveI : IsCO R (MvPowerSeries (Fin q × Fin n) R) := co_mvps R R (Fin q × Fin n)
-  haveI : IsCO R (Sp P ut) := co_quot R (MvPowerSeries (Fin q × Fin n) R) (Sp P ut) (Sp.mk P ut)
+  have : IsCO R (MvPowerSeries (Fin q × Fin n) R) := co_mvps R R (Fin q × Fin n)
+  have : IsCO R (Sp P ut) := co_quot R (MvPowerSeries (Fin q × Fin n) R) (Sp P ut) (Sp.mk P ut)
     (fun z => Ideal.Quotient.mk_surjective z)
   have hmemSp : ∀ p : Fin q × Fin n, Sp.mk P ut (MvPowerSeries.X p) ∈ maximalIdeal (Sp P ut) := by
     intro p
@@ -269,12 +269,12 @@ private theorem splitting_algebra_nontrivial_free_generated (R : Type) [CommRing
 theorem UpperTheory.V.Pa.Core.spCo :
     ∀ (O R : Type) [CommRing O] [IsLocalRing O] [CommRing R] [Algebra O R] [IsCO O R] (q n : ℕ) (P : Fin q → Polynomial R) (ut : Fin q → Fin n → R), (∀ j, (P j).Monic ∧ (P j).natDegree = n ∧ (P j).map (residue R) = ∏ i, (Polynomial.X - Polynomial.C (residue R (ut j i)))) → IsCO O (Sp P ut) ∧ Module.Free R (Sp P ut) ∧ Module.Finite R (Sp P ut) ∧ Algebra.adjoin R (Set.range fun p : Fin q × Fin n => Sp.u P ut p.1 p.2) = ⊤ := by
   intro O R _ _ _ _ _ q n P ut h
-  haveI : IsNoetherianRing R := IsCO.toIsNoetherian (O := O)
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsNoetherianRing R := IsCO.toIsNoetherian (O := O)
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   obtain ⟨hnt, hfree, hadj⟩ := splitting_algebra_nontrivial_free_generated R q n P ut h
   obtain ⟨hfin, -⟩ := BC.sp_fin R q n P ut
-  haveI := hnt
-  haveI := co_mvps O R (Fin q × Fin n)
+  have := hnt
+  have := co_mvps O R (Fin q × Fin n)
   refine ⟨?_, hfree, hfin, hadj⟩
   exact co_quot O (MvPowerSeries (Fin q × Fin n) R) (Sp P ut) ((Sp.mk P ut).restrictScalars O)
     (fun z => Ideal.Quotient.mk_surjective z)

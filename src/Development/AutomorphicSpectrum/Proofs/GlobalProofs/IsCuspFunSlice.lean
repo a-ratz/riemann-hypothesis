@@ -176,11 +176,11 @@ theorem GlobalTheory.Cusp.constTermOn_eq_integral_semidirect : ∀ (G G₁ : Typ
     ∀ x : G, GlobalTheory.Cusp.constTermOn Γ N ψ x = ∫ u in 𝓕₁, ψ ((s u : G) * x) ∂μ₁ := by
   intro G G₁ _ _ _ _ _ _ _ _ _ _ _ _ _ _ Γ N N' Γ₁ N₁ _ _ _ _ hle hc hc' hc₁ s π hs hπ hπs hker hsΓ hπΓ ψ hψc hψN' hψΓ
     μ₁ 𝓕₁ hμ₁ h𝓕₁ h1 x
-  haveI := hμ₁
+  have := hμ₁
   have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have : DiscreteTopology (Γ ⊓ N' : Subgroup G) :=
     .of_continuous_injective (f := Subgroup.inclusion (inf_le_left : Γ ⊓ N' ≤ Γ))
-      (continuous_subtype_val.subtype_mk _) (Subgroup.inclusion_injective _)
+      (continuous_subtypeVal.subtype_mk _) (Subgroup.inclusion_injective _)
   obtain ⟨Δ, hΔ⟩ : ∃ Δ : Subgroup N, Δ = (Γ ⊓ N').subgroupOf N := ⟨_, rfl⟩
   subst hΔ
   have : Countable ((Γ ⊓ N').subgroupOf N) := Function.Injective.countable
@@ -195,7 +195,7 @@ theorem GlobalTheory.Cusp.constTermOn_eq_integral_semidirect : ∀ (G G₁ : Typ
   have : ν.IsMulRightInvariant := hν ▸ map_restrict_isMulRightInvariant N N₁ _ μ _ hD' s π hπ hπs hπΔ
   have : IsFiniteMeasureOnCompacts ν := hν ▸ map_restrict_isFiniteMeasureOnCompacts N N₁ _ μ _ hD' s π hs hπ hπs (by
     obtain ⟨K, hK, hKs⟩ := hc'
-    refine ⟨Subgroup.inclusion hle '' K, hK.image (continuous_subtype_val.subtype_mk _), fun v hv => ?_⟩
+    refine ⟨Subgroup.inclusion hle '' K, hK.image (continuous_subtypeVal.subtype_mk _), fun v hv => ?_⟩
     obtain ⟨γ, hγ, hγK⟩ := hKs ⟨v, (hker v).1 hv⟩
     refine ⟨Subgroup.inclusion hle γ, Subgroup.mem_subgroupOf.2 ⟨Subgroup.mem_subgroupOf.1 hγ, γ.2⟩, ⟨_, hγK, ?_⟩⟩
     exact Subtype.ext (by simp))
@@ -231,11 +231,11 @@ theorem GlobalTheory.Cusp.constTermOn_eq_integral_semidirect : ∀ (G G₁ : Typ
   rw [GlobalTheory.Cusp.Stages.constTermOn_eq' h𝓕 (fun γ hγ n => by
       simp only [Subgroup.coe_mul, mul_assoc]
       exact hψΓ _ (Subgroup.mem_subgroupOf.1 hγ) γ.2 _),
-    hint, measureReal_def, hmeas, hνc, Measure.smul_apply, hDe, Measure.restrict_smul, integral_smul_nnreal_measure,
+    hint, measureReal_def, hmeas, hνc, smul_apply, hDe, Measure.restrict_smul, integral_smul_nnreal_measure,
     hD₁.setIntegral_eq h𝓕₁ hinv1]
   have hc0 : c ≠ 0 := by
     have := h𝓕.measure_ne_zero (NeZero.ne μ)
-    rw [hmeas, hνc, Measure.smul_apply, hDe] at this
+    rw [hmeas, hνc, smul_apply, hDe] at this
     rintro rfl; simp at this
   first
   | (rw [ENNReal.smul_def, smul_eq_mul, mul_one, ENNReal.coe_toReal, NNReal.smul_def, smul_smul,
@@ -358,9 +358,9 @@ theorem exists_proj : ∀ (D : D7) (V : HSp D) (m : ℕ) (X Y : Matrix (Fin V.ra
     mt_eq_of_mem hι h hs (hf2 v.1 v.2)
   refine ⟨π, ?_, fun v u => ⟨fun e => e ▸ hf2 v.1 v.2, fun e => Subtype.ext (uniq v.1 _ _ (hf2 v.1 v.2) e)⟩, ?_⟩
   · refine Continuous.subtype_mk (GlobalTheory.MixModel.continuous_of_mt V' ?_) _
-    haveI := (ring_facts (F := D.host.F) (E := D.host.E)).1
+    have := (ring_facts (F := D.host.F) (E := D.host.E)).1
     have hm : Continuous fun v : N => (matHom V (v : GA D V)).1 :=
-      (GlobalTheory.MixModel.continuous_mt V).comp continuous_subtype_val
+      (GlobalTheory.MixModel.continuous_mt V).comp continuous_subtypeVal
     exact ((continuous_const.matrix_mul hm).matrix_mul continuous_const).congr fun v => (hmat v).symm
   · intro v hv
     refine (GlobalTheory.MixModel.mem_GQ_iff V' _).2 ?_
@@ -1282,7 +1282,7 @@ theorem isCuspFun_of_isConstAlong : ∀ (D : D7) (V : HSp D) (m : ℕ) (X Y : Ma
   let k : Fin m := ⟨r', by omega⟩
   have hC0 : IsIsoFrame V (GlobalTheory.StdPar.initCols X k) := isIsoFrame_initCols hW k
   have hcc : GlobalTheory.Cusp.Cocompact (GQ V) (GlobalTheory.Cusp.NA (GlobalTheory.Cusp.frameFlag hC0)) := GlobalTheory.Cusp.cocompact_single _
-  haveI : LocallyCompactSpace (GlobalTheory.Cusp.NA (GlobalTheory.Cusp.frameFlag hC0)) := by
+  have : LocallyCompactSpace (GlobalTheory.Cusp.NA (GlobalTheory.Cusp.frameFlag hC0)) := by
     rw [GlobalTheory.Cusp.NA_frameFlag hC0]
     exact (GlobalTheory.CuspDecay.Model.isClosed_NI V hC0).locallyCompactSpace
   have e : GlobalTheory.Cusp.NA (GlobalTheory.Cusp.frameFlag hC0) = GlobalTheory.SiegelSet.unipRad D.sp.cm.sig V.gram (GlobalTheory.StdPar.initCols X k) :=
@@ -1386,8 +1386,8 @@ theorem isCuspFun_slice : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F �
   have hκT : e k ∉ T := fun h => hκ ⟨_, h, le_rfl⟩
   have hTT' : T ⊂ insert (e k) T := Finset.ssubset_insert hκT
   have hψ0 := hψ.2 _ hTT'
-  haveI := locallyCompact_unip hcm hJ' hW' {k}
-  haveI := locallyCompact_unip hcm hJ hW (insert (e k) T)
+  have := locallyCompact_unip hcm hJ' hW' {k}
+  have := locallyCompact_unip hcm hJ hW (insert (e k) T)
   have hle := GlobalTheory.StdPar.unip_mono_of_subset _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW (insert (e k) T) T hTT'.1
   have hs1 := GlobalTheory.T.restricted_cusp_constant_term_vanish D V m X Y hW T V' ι hι hr m' e X' Y' hsl hW' s hs k
   have hdown := GlobalTheory.T.restricted_constant_term_compatible D V m X Y hW T V' ι hι hr m' e X' Y' hsl hW' s hs k
@@ -1404,7 +1404,7 @@ theorem isCuspFun_slice : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F �
   obtain ⟨π, hπc, hπ, hπQ⟩ := GlobalTheory.T.restricted_automorphic_invariance D V m X Y hW T V' ι hι hr s hs _ _ hnorm hdec
   let s₁ : unip D.sp.cm.sig V'.gram X' {k} →* unip D.sp.cm.sig V.gram X (insert (e k) T) :=
     (s.comp (unip D.sp.cm.sig V'.gram X' {k}).subtype).codRestrict _ fun u => hs1 _ u.2
-  have hs₁c : Continuous s₁ := (hsc.comp continuous_subtype_val).subtype_mk _
+  have hs₁c : Continuous s₁ := (hsc.comp continuous_subtypeVal).subtype_mk _
   have hπs : ∀ u, π (s₁ u) = u := fun u => (hπ _ _).2 (by
     change s u * (s u)⁻¹ ∈ _
     simp [one_mem])
@@ -1421,7 +1421,7 @@ theorem isCuspFun_slice : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F �
   obtain ⟨μ₀, 𝓕₀, a1, a2, a3⟩ := exists_mass_one cN
   have hz := hψ0 μ₀ 𝓕₀ a1 a2 a3 (s g * y)
   have hct : GlobalTheory.Cusp.constTermOn (GQ V) (unip D.sp.cm.sig V.gram X (insert (e k) T)) ψ (s g * y) = 0 := by
-    haveI := a1
+    have := a1
     have e1 := GlobalTheory.Cusp.Stages.constTermOn_eq' (Γ := GQ V) (φ := ψ) (x := s g * y) a2 (fun γ hγ n => by
       simp only [Subgroup.coe_mul, mul_assoc]
       exact hψl _ (ratPts_unip_le_leftSub D V m X Y hW T _ hTT'.1 ⟨hγ, (γ : unip _ _ _ _).2⟩) _)

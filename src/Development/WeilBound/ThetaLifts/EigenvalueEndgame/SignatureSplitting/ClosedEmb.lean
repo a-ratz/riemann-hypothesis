@@ -177,7 +177,7 @@ theorem bump_ex [T2Space R] {V Λ : Type} [NormedCommRing V] [CommRing Λ] [Topo
   have ec : Continuous e := by
     rw [funext he]
     exact continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ =>
-    dc.comp ((continuous_subtype_val.sub continuous_const).matrix_elem i j)
+    dc.comp ((continuous_subtypeVal.sub continuous_const).matrix_elem i j)
   have hs : ∀ y ∈ tsupport η, ∀ i j, ‖p ((y.1 - 1) i j)‖ ≤ ε ∧ q ((y.1 - 1) i j) ∈ L := fun y hy i j => by
     have h1 : e y ≤ ε := closure_minimal (s := Function.support η) (t := {y | e y ≤ ε})
       (fun z hz => le_of_not_gt fun h : ε < e z => hz ((hη z).trans (max_eq_right (by linarith))))
@@ -221,7 +221,7 @@ theorem lip_of [T2Space R] {V Λ : Type} [NormedCommRing V] [CommRing Λ] [Topol
     ⟨_, fun _ => rfl⟩
   have Tc : Continuous T := by
     rw [funext hT0]
-    have c : Continuous (Subtype.val : SL(2, R) → Matrix (Fin 2) (Fin 2) R) := continuous_subtype_val
+    have c : Continuous (Subtype.val : SL(2, R) → Matrix (Fin 2) (Fin 2) R) := continuous_subtypeVal
     have c1 : Continuous fun z : SL(2, R) × SL(2, R) => (z.1⁻¹).1 := c.comp (continuous_inv (G := SL(2, R)) |>.comp continuous_fst)
     have c2 : Continuous fun z : SL(2, R) × SL(2, R) => (z.1 * z.2).1 := c.comp (continuous_mul (M := SL(2, R)))
     exact (c1.matrix_mul continuous_const).matrix_mul c2

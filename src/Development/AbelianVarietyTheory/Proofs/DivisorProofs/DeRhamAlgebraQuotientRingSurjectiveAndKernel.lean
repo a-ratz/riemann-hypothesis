@@ -126,7 +126,7 @@ theorem SemiHom.mem_of_mDR_eq_zero (hq : Function.Surjective q) (K : Ideal (DR R
     (hr : ∀ x ∈ K, ∀ y, x * y ∈ K)
     (hk : ∀ b, q b = 0 → algebraMap B (DR R B) b ∈ K ∧ ι1 (D R B b) ∈ K)
     (x : DR R B) (hx : h.mDR x = 0) : x ∈ K := by
-  haveI : K.IsTwoSided := ⟨fun b ha ↦ hr _ ha b⟩
+  have : K.IsTwoSided := ⟨fun b ha ↦ hr _ ha b⟩
   let π : DR R B →+* DR R B ⧸ K := Ideal.Quotient.mk K
   let s : G → B := Function.surjInv hq
   have hs : Function.RightInverse s q := Function.surjInv_eq hq
@@ -139,7 +139,7 @@ theorem SemiHom.mem_of_mDR_eq_zero (hq : Function.Surjective q) (K : Ideal (DR R
     exact (Ideal.Quotient.eq_zero_iff_mem).2 (hk b hb).1⟩
   have hφ : ∀ b, φ (q b) = π (algebraMap B _ b) := fun b ↦
     q.liftOfRightInverse_comp_apply s hs _ b
-  letI : Algebra G (DR R B ⧸ K) := φ.toAlgebra' fun g y ↦ by
+  let : Algebra G (DR R B ⧸ K) := φ.toAlgebra' fun g y ↦ by
     obtain ⟨b, rfl⟩ := hq g
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
     change φ (q b) * π y = π y * φ (q b)
@@ -147,7 +147,7 @@ theorem SemiHom.mem_of_mDR_eq_zero (hq : Function.Surjective q) (K : Ideal (DR R
   have hsm : ∀ (g : G) (y : DR R B ⧸ K), g • y = φ g * y := fun _ _ ↦ rfl
   have hπr : ∀ (r : R) (z : DR R B), π (r • z) = r • π z := fun r z ↦
     map_smul (Ideal.Quotient.mkₐ R K) r z
-  haveI : IsScalarTower R G (DR R B ⧸ K) := ⟨fun r g y ↦ by
+  have : IsScalarTower R G (DR R B ⧸ K) := ⟨fun r g y ↦ by
     obtain ⟨b, rfl⟩ := hq g
     rw [hsm, hsm, show r • q b = q (r • b) from (h r b).symm, hφ, hφ,
       show algebraMap B (DR R B) (r • b) = r • algebraMap B (DR R B) b from

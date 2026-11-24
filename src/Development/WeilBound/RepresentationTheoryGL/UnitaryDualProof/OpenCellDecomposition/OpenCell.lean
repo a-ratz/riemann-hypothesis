@@ -305,7 +305,7 @@ theorem blockGL_mem_unipB (Y : Fin m × Fin r → k) : blockGL Y ∈ unipB k (Fi
   rw [mem_unipB]
   refine ⟨fun i j hji => ?_, fun i => ?_⟩
   · show (1 + blockE r Y) i j = 0
-    have hlt : (j : ℕ) < i := Fin.lt_iff_val_lt_val.mp hji
+    have hlt : (j : ℕ) < i := Fin.lt_def.mp hji
     rw [Matrix.add_apply, Matrix.one_apply_ne (ne_of_lt hji).symm, zero_add]
     unfold blockE
     rw [dite_eq_right (by omega)]
@@ -359,7 +359,7 @@ theorem ball_eq_smul (c : kˣ) : {x : k | valuation k x ≤ valuation k (c : k)}
   ext x
   rw [Set.mem_smul_set_iff_inv_smul_mem]
   have hc : 0 < valuation k (c : k) := by
-    rw [zero_lt_iff]
+    rw [pos_iff_ne_zero]
     simp
   have key : valuation k (((c⁻¹ : kˣ) : k) * x) = (valuation k (c : k))⁻¹ * valuation k x := by
     rw [map_mul, Units.val_inv_eq_inv_val, map_inv₀]
@@ -460,15 +460,15 @@ private theorem relIndex_map_smul_eq_inv_distribHaarChar {A : Type*} [AddCommGro
     exact ho.smul z
   have hne : T.relIndex S ≠ 0 := addRelIndex_ne_zero hTS le_rfl hc hTo (Set.inter_eq_left.2 hTS)
   have hSm : MeasurableSet (S : Set A) := ho.measurableSet
-  have hemb : MeasurableEmbedding (S.subtype) := MeasurableEmbedding.subtype_coe hSm
-  haveI : (μ.comap S.subtype).IsAddLeftInvariant := Measure.IsAddLeftInvariant.comap μ hemb
-  haveI : (T.addSubgroupOf S).FiniteIndex := ⟨hne⟩
+  have hemb : MeasurableEmbedding (S.subtype) := MeasurableEmbedding.subtypeVal hSm
+  have : (μ.comap S.subtype).IsAddLeftInvariant := Measure.IsAddLeftInvariant.comap μ hemb
+  have : (T.addSubgroupOf S).FiniteIndex := ⟨hne⟩
   have hHm : MeasurableSet ((T.addSubgroupOf S : AddSubgroup S) : Set S) :=
-    measurable_subtype_coe hTo.measurableSet
+    measurable_subtypeVal hTo.measurableSet
   have key := AddSubgroup.index_mul_measure (T.addSubgroupOf S) hHm (μ.comap S.subtype)
   rw [hemb.comap_apply, hemb.comap_apply, Set.image_univ, AddSubgroup.coe_addSubgroupOf,
     Set.image_preimage_eq_inter_range] at key
-  simp only [AddSubgroup.coe_subtype, Subtype.range_coe_subtype, SetLike.setOf_mem_eq] at key
+  simp only [AddSubgroup.coe_subtype, Subtype.range_coe_subtype, SetLike.setOfPred_mem_eq] at key
   rw [Set.inter_eq_left.2 hTS, hTset, addHaar_smul_set_eq_distribHaarChar_mul μ z hc.closure, ← mul_assoc] at key
   have hS0 : μ S ≠ 0 := (ho.measure_pos μ ⟨0, S.zero_mem⟩).ne'
   have hSt : μ S ≠ ∞ := hc.measure_lt_top.ne
@@ -578,7 +578,7 @@ theorem mem_congr_iff_box {r m : ℕ} (n : ℕ) {u : GL (Fin (r + m)) k}
         box (Fin m × Fin r) (valuation k (uniformizer k : k) ^ n) := by
   have hE := eq_one_add_blockE hu
   have hγ : valuation k (uniformizer k : k) ^ n ≤ 1 :=
-    pow_le_one₀ zero_le' (GroundTheory.Automorphic.GLnLocal.valuation_uniformizer_lt_one k).le
+    pow_le_one₀ zero_le (GroundTheory.Automorphic.GLnLocal.valuation_uniformizer_lt_one k).le
   rw [GroundTheory.Automorphic.GLnLocal.mem_congruenceSubgroup_iff, mem_box]
   constructor
   · rintro ⟨-, h⟩ ⟨i, j⟩
@@ -681,7 +681,7 @@ theorem vol_conj_aDiag (ψ : AddChar k Circle) {r m : ℕ} {W : Type} [AddCommGr
         ¬ ((i : ℕ) < m ∧ m ≤ (j : ℕ)) →
         (u : Matrix (Fin (r + m)) (Fin (r + m)) k) i j = (1 : Matrix (Fin (r + m)) (Fin (r + m)) k) i j} := by
       ext u
-      simp only [SetLike.mem_coe, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, Set.mem_ofPred_eq]
       rw [hU2]
       constructor
       · rintro ⟨-, hs⟩ i j hij
@@ -696,7 +696,7 @@ theorem vol_conj_aDiag (ψ : AddChar k Circle) {r m : ℕ} {W : Type} [AddCommGr
         · by_contra hc
           exact hne (H i j hc)
     rw [e]
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
       isClosed_eq (Units.continuous_val.matrix_elem i j) continuous_const
   have hL₀set : (L₀ : Set (GL (Fin (r + m)) k)) = (C : Set (GL (Fin (r + m)) k)) ∩ U := by
@@ -740,7 +740,7 @@ theorem vol_conj_aDiag (ψ : AddChar k Circle) {r m : ℕ} {W : Type} [AddCommGr
     simp only [blockY, Pi.smul_apply, Units.smul_def, smul_eq_mul, a, aDiag_conj_apply]
     have h1 : ((rowI (r := r) p.1 : Fin (r + m)) : ℕ) < m := p.1.2
     have h2 : ¬ ((colI (m := m) p.2 : Fin (r + m)) : ℕ) < m := by simp [colI]
-    rw [if_pos h1, if_neg h2, mul_one]
+    rw [ite_eq_left h1, ite_eq_right h2, mul_one]
   obtain ⟨hLL₀, hidx⟩ := relIndex_conj (Fin m × Fin r) U (blockEquiv U hU2) a z haU hscale L₀ hL₀U
     (box (Fin m × Fin r) (valuation k (c : k))) hS (isCompact_box _ c) (isOpen_box _ c)
     (fun x hx => smul_mem_box z hz hx)
@@ -853,7 +853,7 @@ theorem openJ : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [
     have hLB' : L ≤ unipB k (Fin N) := hLU.trans hUB
     let θL : L →* ℂˣ := (whitChar ψ N).comp (Subgroup.inclusion hLB')
     have hopen : IsOpen (θL.ker : Set L) :=
-      (GlobalTheory.Whittaker.isSmoothChar_whitChar (N := N) hψ).preimage (f := Subgroup.inclusion hLB') (continuous_subtype_val.subtype_mk fun x => hLB' x.2)
+      (GlobalTheory.Whittaker.isSmoothChar_whitChar (N := N) hψ).preimage (f := Subgroup.inclusion hLB') (continuous_subtypeVal.subtype_mk fun x => hLB' x.2)
     obtain ⟨f', hd1, hd2, hd3⟩ := _root_.GlobalTheory.CompanionTheory.TwAvgInd.exists_twisted_average_smInd _ _ L hLc θL hopen f.1
     have hsupp' : ∀ g, f'.1.1 g ≠ 0 → ∃ p ∈ parab k (stdBlocks d hd), ∃ u ∈ L, g = p * pm k (wOpen d hd) * u := by
       intro g hg
@@ -1277,8 +1277,8 @@ theorem mem_unipU_two {u : GL (Fin (r + m)) k} :
     intro a b i' j'
     rw [Matrix.one_apply]
     by_cases h : (⟨a, i'⟩ : Σ c, Fin (dd r m c)) = ⟨b, j'⟩
-    · rw [if_pos h, if_pos (by rw [h])]
-    · rw [if_neg h, if_neg (fun h' => h (e.injective ((w2 r m).symm.injective h')))]
+    · rw [ite_eq_left h, ite_eq_left (by rw [h])]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h (e.injective ((w2 r m).symm.injective h')))]
   constructor
   · intro hu
     refine ⟨hu.1, fun p q hpq => ?_⟩
@@ -1298,15 +1298,15 @@ theorem mem_unipU_two {u : GL (Fin (r + m)) k} :
       have h3 := (mem_parabLower_iff k).1 hP a b i' j' hab
       rw [wConj_apply, ← hp, ← hq] at h3
       apply hpq
-      rw [h3, hp, hq, hone, if_neg (fun h => hab.ne (congrArg Sigma.fst h))]
+      rw [h3, hp, hq, hone, ite_eq_right (fun h => hab.ne (congrArg Sigma.fst h))]
     · exfalso
       have h3 := hD a i' j'
       rw [wConj_apply, ← hp, ← hq] at h3
       apply hpq
       rw [h3, hp, hq, hone, Matrix.one_apply]
       by_cases h : i' = j'
-      · rw [if_pos h, if_pos (by rw [h])]
-      · rw [if_neg h, if_neg (fun h' => h (by simpa using h'))]
+      · rw [ite_eq_left h, ite_eq_left (by rw [h])]
+      · rw [ite_eq_right h, ite_eq_right (fun h' => h (by simpa using h'))]
     · have ha : a = 1 := by fin_cases a <;> fin_cases b <;> simp_all
       have hb : b = 0 := by fin_cases a <;> fin_cases b <;> simp_all
       refine ⟨hpa.2 ha, ?_⟩
@@ -1322,7 +1322,7 @@ theorem mem_unipU_two {u : GL (Fin (r + m)) k} :
       have hb : b = 1 := by fin_cases a <;> fin_cases b <;> simp_all
       by_contra hne
       have h1 := hc _ _ (by
-        rw [hone, if_neg (fun h => hab.ne (congrArg Sigma.fst h))]
+        rw [hone, ite_eq_right (fun h => hab.ne (congrArg Sigma.fst h))]
         exact hne)
       have h2 := (hblk a i').1 h1.1
       rw [ha] at h2
@@ -1334,7 +1334,7 @@ theorem mem_unipU_two {u : GL (Fin (r + m)) k} :
         by_cases h' : i' = j'
         · subst h'
           simp
-        · rw [if_neg (fun h => h' (by simpa using h)), if_neg h']
+        · rw [ite_eq_right (fun h => h' (by simpa using h)), ite_eq_right h']
       rw [← hpq]
       by_contra hne
       obtain ⟨h1, h2⟩ := hc _ _ hne
@@ -1408,7 +1408,7 @@ theorem openCellPar (ψ : AddChar k Circle) (hψ : Continuous ψ)
     exact hv ((Submodule.smul_mem_iff _ (Complex.ofReal_ne_zero.2 hpos.ne')).1 h2)
   · have hval : valuation k ((z ^ i : kˣ) : k) ≤ 1 := by
       rw [Units.val_pow_eq_pow_val, map_pow]
-      exact pow_le_one₀ zero_le' hz1
+      exact pow_le_one₀ zero_le hz1
     set a := aDiag k (r + m) m (z ^ i) with ha
     have hconj := conj_aDiag (r := r) (m := m) k (z ^ i)
     have hB : ∀ u ∈ unipB k (Fin (r + m)), a * u * a⁻¹ ∈ unipB k (Fin (r + m)) :=

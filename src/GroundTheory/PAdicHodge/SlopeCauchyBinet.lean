@@ -120,7 +120,7 @@ theorem exists_maxMinor_ne_zero_of_linearIndependent_alt {R : Type*} [CommRing R
     rw [hfam]
     exact hli.comp e he_inj
   have hdet : (B'.submatrix s.emb id).det ≠ 0 := by
-    have hu := Matrix.linearIndependent_rows_iff_isUnit.mp hrows
+    have hu := Matrix.linearIndependent_row_iff_isUnit.mp hrows
     exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
   intro h
   apply hdet

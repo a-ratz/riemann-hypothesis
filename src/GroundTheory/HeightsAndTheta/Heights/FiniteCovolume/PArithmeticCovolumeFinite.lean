@@ -68,7 +68,7 @@ theorem continuous_len_invApply {h : HermitianForm F E W} {v : Basis ι E W} (M 
     (y : InfinitePlace E → ι → ℂ) : Continuous fun g : archUnitary h v => M.len (invApply g y) := by
   have hw : ∀ w, Continuous fun g : archUnitary h v => invApply g y w := fun w =>
     (Units.continuous_val.comp ((continuous_apply w).comp
-      (continuous_subtype_val.comp continuous_inv))).matrix_mulVec continuous_const
+      (continuous_subtypeVal.comp continuous_inv))).matrix_mulVec continuous_const
   refine Real.continuous_sqrt.comp (continuous_finsetSum _ fun w _ => Complex.continuous_re.comp ?_)
   exact (hw w).star.dotProduct (continuous_const.matrix_mulVec (hw w))
 
@@ -158,7 +158,7 @@ theorem ArithmeticCovolumeFinite.proof (h : HermitianForm F E W) (v : Basis ι E
     obtain ⟨γ, hγS, hγK⟩ := hMah La g hLa hlam
     have hL : ∃ γ' : h.unitaryGroup, γ' • La = γ • La := ⟨γ, rfl⟩
     have hcL : c (γ • La) • La = γ • La := by
-      simp only [c, dif_pos hL]
+      simp only [c, dite_eq_left hL]
       exact hL.choose_spec
     have hstab : γ⁻¹ * c (γ • La) ∈ latticeStab h La := by
       change (γ⁻¹ * c (γ • La)) • La = La

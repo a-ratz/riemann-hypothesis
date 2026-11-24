@@ -75,8 +75,8 @@ variable {K M : Type} [Field K] [NumberField K] [Field M] [NumberField M] [Algeb
 private theorem nm_val {v : HeightOneSpectrum (𝓞 K)} (w : PlacesOver M v)
     (i : v.adicCompletion K ≃+* w.1.adicCompletion M) (hi : IsCompl i) (x : (w.1.adicCompletion M)ˣ) :
     ((nm w x : (v.adicCompletion K)ˣ) : v.adicCompletion K) = i.symm x := by
-  haveI : w.1.asIdeal.LiesOver v.asIdeal := w.2
-  haveI : FiniteDimensional (v.adicCompletion K) (w.1.adicCompletion M) := GroundTheory.Global.finite_adicCompletion v w.1
+  have : w.1.asIdeal.LiesOver v.asIdeal := w.2
+  have : FiniteDimensional (v.adicCompletion K) (w.1.adicCompletion M) := GroundTheory.Global.finite_adicCompletion v w.1
   have hmap : ∀ a, algebraMap (v.adicCompletion K) (w.1.adicCompletion M) a = i a := by
     intro a
     change completionMap v w.1 a = i a
@@ -206,7 +206,7 @@ private theorem exists_prime_index (Γ : Type) [Group Γ] [Finite Γ] [Nontrivia
     simpa using M.mul_mem h1 hn⟩
   refine ⟨M, hn, ?_⟩
   obtain ⟨p, hp, hd⟩ := Nat.exists_prime_and_dvd (n := Nat.card (Γ ⧸ M)) (mt Subgroup.index_eq_one.1 hM.1)
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨g, hg⟩ := exists_prime_orderOf_dvd_card' p hd
   have h1 : (Subgroup.zpowers g).comap (QuotientGroup.mk' M) = ⊤ := by
     refine hM.2 _ (lt_of_le_of_ne (fun x hx => ?_) fun e => ?_)
@@ -232,18 +232,18 @@ theorem UpperTheory.V.Z.Win.Birth.awUp :
   intro r hc ha hi hA
   by_cases h1 : Module.finrank F E = 1
   · exact allW_one h1 hn r ha hi hA
-  haveI : Nontrivial (E ≃ₐ[F] E) := by
+  have : Nontrivial (E ≃ₐ[F] E) := by
     rw [← Finite.one_lt_card_iff_nontrivial, IsGalois.card_aut_eq_finrank]
     have := Module.finrank_pos (R := F) (M := E)
     omega
   obtain ⟨M, hM, hp⟩ := exists_prime_index (E ≃ₐ[F] E)
   let K := IntermediateField.fixedField M
-  haveI : IsGalois F K := IsGalois.of_fixedField_normal_subgroup M
-  haveI : IsTotallyComplex K := isTotallyComplex_of_algebra F K
-  haveI : Module.IsTorsionFree K Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure K Ω := { isAlgClosed := IsAlgClosure.isAlgClosed E, isAlgebraic := Algebra.IsAlgebraic.trans K E Ω }
-  haveI : IsAlgClosure F Ω := { isAlgClosed := IsAlgClosure.isAlgClosed E, isAlgebraic := Algebra.IsAlgebraic.trans F E Ω }
-  haveI : Group.IsSolvable (E ≃ₐ[K] E) :=
+  have : IsGalois F K := IsGalois.of_fixedField_normal_subgroup M
+  have : IsTotallyComplex K := isTotallyComplex_of_algebra F K
+  have : Module.IsTorsionFree K Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure K Ω := { isAlgClosed := IsAlgClosure.isAlgClosed E, isAlgebraic := Algebra.IsAlgebraic.trans K E Ω }
+  have : IsAlgClosure F Ω := { isAlgClosed := IsAlgClosure.isAlgClosed E, isAlgebraic := Algebra.IsAlgebraic.trans F E Ω }
+  have : Group.IsSolvable (E ≃ₐ[K] E) :=
     Group.isSolvable_of_isSolvable_injective (f := AlgEquiv.restrictScalarsHom F) (AlgEquiv.restrictScalars_injective F)
   have hdeg : Module.finrank F K = M.index := by
     have h2 := Module.finrank_mul_finrank F K E

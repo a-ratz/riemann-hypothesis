@@ -82,7 +82,7 @@ theorem stalkMap_gm_comp {X Y Z : Scheme.{0}} (f : Z ⟶ Y) (g : Y ⟶ X) (z : Z
     rw [Units.coe_map, gm_val g (f z) U h, gm_val (f ≫ g) z U h]
     exact (Scheme.Hom.germ_stalkMap_apply f _ z h _).trans rfl
   · have h' : (f ≫ g) z ∉ U := h
-    simp only [gm, dif_neg h, dif_neg h', MonoidHom.one_apply, map_one]
+    simp only [gm, dite_eq_right h, dite_eq_right h', MonoidHom.one_apply, map_one]
 
 theorem val_stalk {X Y Y' Z : Scheme.{0}} {L : LB X} {K : Type} [Fintype K] {φ : K → (Y ⟶ X)} {ε : K → ℤ}
     (t : LB.Gen (LB.LinComb L φ ε)) (r : Z ⟶ Y') (g : Y' ⟶ Y) (q : Z ⟶ Y) (hq : r ≫ g = q) (z : Z)
@@ -602,7 +602,7 @@ theorem exists_balTau : ∀ (R : Type) [CommRing R] [IsLocalRing R] (B : Over (S
     ∃ τ : ∀ y z : X, LB.Gen (LB.LinComb M.L (GlobalTheory.PolDeg.lamPts (c y) (c z)) GlobalTheory.PolDeg.negε), GlobalTheory.UTau0.BalTau M cub act c τ := by
   intro R _ _ B _ _ hA M cub O _ _ act hros X _ _ _ _ _ c c_add c_lin
   have hG : GlobalFnsSt := GlobalTheory.globalFns_holds
-  haveI : ∀ a : O, IsMonHom (act.act a) := act.hom
+  have : ∀ a : O, IsMonHom (act.act a) := act.hom
   obtain ⟨τ₀, hg, hsym, hadd⟩ := GlobalTheory.TauLocal.exists_tau_local M cub c c_add
   have hadd2 : ∀ y z z' p J, Good M.L p J → val (τ₀ y (z + z')) (𝟙 _) p J * cubV cub p J (c z) (c z') (c y) =
       val (τ₀ y z) (𝟙 _) p J * val (τ₀ y z') (𝟙 _) p J := by
@@ -1099,8 +1099,8 @@ theorem exists_psi_rLaws : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
     ∃ ψ : ∀ y : D₀.X, LB.Gen (LB.LinComb D₀.P.L (K := PUnit) (fun _ => (D₀.c y).left) (fun _ => -1)),
       GlobalTheory.UTau0.RLaws D₀ onB w0 uw ψ := by
   intro R _ _ _ D₀ O _ _ _ onB hc w0 hw uw huw uw0 τ' hbal hsym
-  haveI := onB.hom w0
-  haveI := onB.hom (star w0)
+  have := onB.hom w0
+  have := onB.hom (star w0)
   obtain ⟨u, hu, hu0⟩ := exists_ros GlobalTheory.globalFns_holds D₀.P.isAb D₀.P.isLB (onB.act w0) (onB.act (star w0))
     (onB.rosati w0)
   have hfg : padd D₀.P.A (onB.act w0) (onB.act (star w0)) = 𝟙 _ := by
@@ -1438,8 +1438,8 @@ theorem symm_of_bal : ∀ (R : Type) [CommRing R] [IsLocalRing R] (B : Over (Sp 
     exact alg_second (isCub_cubV cub hJ) _ _ _ _ _ _ _ _ _ _ _ (hadd2 y (w0 • z) (w0 • z') p J hJ)
       (hadd1 (star w0 • z) (star w0 • z') y p J hJ)
   · intro a u hu hu0 y z p J hJ
-    haveI := act.hom a
-    haveI := act.hom (star a)
+    have := act.hom a
+    have := act.hom (star a)
     obtain ⟨ub, hub, hub0⟩ := exists_ros hG hA M.isLB (act.act (star a)) (act.act a)
       (by simpa only [star_star] using hros (star a))
     have hb := hbal (star a)
@@ -1457,8 +1457,8 @@ theorem symm_of_bal : ∀ (R : Type) [CommRing R] [IsLocalRing R] (B : Over (Sp 
     rw [hτ'v _ _ p J hJ, hτ'v _ _ p J hJ]
     exact alg_bal (isCub_cubV cub hJ) _ _ _ _ _ _ _ _ _ _ _ _ _ _ e₁ e₂ ra sw
   · intro y z p J hJ
-    haveI := act.hom w0
-    haveI := act.hom (star w0)
+    have := act.hom w0
+    have := act.hom (star w0)
     obtain ⟨u₀, hu₀, hu₀0⟩ := exists_ros hG hA M.isLB (act.act w0) (act.act (star w0)) (hros w0)
     obtain ⟨u₁, hu₁, hu₁0⟩ := exists_ros hG hA M.isLB (act.act (star w0)) (act.act w0)
       (by simpa only [star_star] using hros (star w0))
@@ -1568,7 +1568,7 @@ namespace GlobalTheory.UBaseData
 
 theorem main : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W] (t : SAB H (Sp W)), IsProper t.G.hom → Out.RelAmple t.G t.PP.L → Out.KTriv t.G t.PP.L → (∃ g, SmoothOfRelativeDimension g t.G.hom) → ∀ (X : Type) [AddCommGroup X] [Module (𝓞 E) X] [Module.Free ℤ X] [Module.Finite ℤ X] (x₀ : X → (𝟙_ (Over (Sp W)) ⟶ t.G)), (∀ y z, x₀ (y + z) = x₀ y * x₀ z) → (∀ (a : 𝓞 E) y, x₀ (a • y) = x₀ y ≫ t.act.act a) → ∃ (D : DegPre W) (_ : Module (𝓞 E) D.X) (oa : letI := H.starRing; D.OAct (𝓞 E)) (φB : t.G.left ⟶ D.P.A.left) (e : X ≃ₗ[𝓞 E] D.X), D.PsiEven ∧ D.TauBimult ∧ (∀ y, PsiUnitOn D y Set.univ) ∧ (letI := H.starRing; TraceFormTwistIso D oa H.w0) ∧ IsAbPart t D oa φB ∧ ∀ y, (x₀ y).left ≫ φB = (D.c (e y)).left := by
   intro E _ _ _ H W _ _ _ t hp hA hK ⟨g, hg⟩ X _ _ _ _ x₀ hadd hlin
-  letI := H.starRing
+  let := H.starRing
   let P := GlobalTheory.GenericPol.toPolAV t g hg hp hA hK
   obtain ⟨sym, hsym, hsym'⟩ := (GlobalTheory.isSymmetric_iff_exists_gen _ _ t.PP).1 t.sym
   have hψ0 : ∀ y : X, ∃ ψ : LB.Gen (LB.LinComb P.L (K := PUnit) (fun _ => ptK (x₀ y)) (fun _ => -1)), ψ.IsGen :=
@@ -1577,9 +1577,9 @@ theorem main : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
   let D₀ : DegPre W :=
     { P := P, rig := t.PP.rig, rig_gen := t.PP.rigGen, cub := t.cub, sym := sym, sym_gen := hsym, sym_rig := hsym',
       X := X, c := x₀, c_add := hadd, psi := ψ, psi_gen := hψ }
-  letI : Module (𝓞 E) D₀.X := ‹Module (𝓞 E) X›
-  haveI : Module.Projective (𝓞 E) D₀.X := GlobalTheory.PointStepCompare.projective_of_free E (X := X)
-  haveI : Module.Finite (𝓞 E) D₀.X := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) X
+  let : Module (𝓞 E) D₀.X := ‹Module (𝓞 E) X›
+  have : Module.Projective (𝓞 E) D₀.X := GlobalTheory.PointStepCompare.projective_of_free E (X := X)
+  have : Module.Finite (𝓞 E) D₀.X := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) X
   have := t.act.hom H.w0
   let onB : D₀.P.OAct (𝓞 E) := ⟨t.act.toRingAct, GlobalTheory.GenericPol.rosatiAdj t⟩
   obtain ⟨u, hu, hu0⟩ := GlobalTheory.ArcCM.CxFibre.exists_primGen t.PP (t.act.act H.w0) t.prim

@@ -73,18 +73,18 @@ theorem ρ₀_pos_lt (bk : BK K) : 0 < bk.ρ₀ ∧ bk.ρ₀ < 1 := by
 
 theorem complete_max (bk : BK K) :
     IsAdicComplete (IsLocalRing.maximalIdeal (Wq l bk.a)) (Wq l bk.a) := by
-  haveI : IsAdicComplete (Ideal.span {(l : Wq l bk.a)}) (Wq l bk.a) := WittVector.isAdicCompleteIdealSpanP
+  have : IsAdicComplete (Ideal.span {(l : Wq l bk.a)}) (Wq l bk.a) := WittVector.isAdicCompleteIdealSpanP
   have hsurj : Function.Surjective (WittVector.constantCoeff (p := l) (R := Fq l bk.a)) :=
     fun x => ⟨WittVector.teichmuller l x, by simp⟩
   have hm : IsLocalRing.maximalIdeal (Wq l bk.a) = Ideal.span {(l : Wq l bk.a)} := by
     rw [← WittVector.ker_constantCoeff]
-    haveI := RingHom.ker_isMaximal_of_surjective _ hsurj
+    have := RingHom.ker_isMaximal_of_surjective _ hsurj
     exact (IsLocalRing.eq_maximalIdeal this).symm
   exact hm ▸ inferInstance
 
 theorem dvd_E (bk : BK K) (s : bk.S) (h : toDisc l (X : bk.S) bk.ρ₀ bk.E ∣ toDisc l (X : bk.S) bk.ρ₀ s) :
     bk.E ∣ s := by
-  haveI := complete_max bk
+  have := complete_max bk
   have hg : PowerSeries.map (IsLocalRing.residue (Wq l bk.a)) bk.E ≠ 0 := by
     intro h0
     have h1 := congrArg (PowerSeries.coeff bk.Ep.natDegree) h0
@@ -122,7 +122,7 @@ theorem dvd_X (bk : BK K) (s : bk.S) (h : toDisc l (X : bk.S) bk.ρ₀ X ∣ toD
   exact (GlobalTheory.BSP.disc_zero_one l K bk).2.2.1 (h1.trans (map_zero _).symm)
 
 theorem toDisc_inj (bk : BK K) : Function.Injective (toDisc l (X : bk.S) bk.ρ₀) := by
-  haveI : IsAdicComplete bk.J bk.S := bk.complete
+  have : IsAdicComplete bk.J bk.S := bk.complete
   exact (GlobalTheory.BSP.toDisc_injective_of_topBasis l K bk bk.S (RingHom.id bk.S) Unit (TopBasis.self bk.J) bk.ρ₀
     (ρ₀_pos_lt bk).1 (ρ₀_pos_lt bk).2).1
 
@@ -178,7 +178,7 @@ theorem lift (bk : BK K) (g : bk.S) (hreg : toDisc l (X : bk.S) bk.ρ₀ g ∈ n
     exact (mul_cancel_left_mem_nonZeroDivisors hreg).1 e
   choose q hq1 hq2 using hq
   classical
-  haveI : IsAdicComplete bk.J bk.S := bk.complete
+  have : IsAdicComplete bk.J bk.S := bk.complete
   have hsmall := (GlobalTheory.BSP.toDisc_injective_of_topBasis l K bk bk.S (RingHom.id bk.S) Unit
     (TopBasis.self bk.J) bk.ρ₀ h0 h1).2.1
   have hfin : ∀ n, {i | q i ∉ bk.J ^ n}.Finite := by
@@ -198,7 +198,7 @@ theorem lift (bk : BK K) (g : bk.S) (hreg : toDisc l (X : bk.S) bk.ρ₀ g ∈ n
     rw [← Ideal.map_pow]; exact Ideal.mem_map_of_mem _ (hF n i hi)
   let f : ℕ → Ainf l := fun n => ∑ i ∈ F n, bk.ev (q i) * TB.b i
   have hmono : ∀ {m n : ℕ}, m ≤ n → F m ⊆ F n := fun {m n} hmn i hi => by
-    simp only [F, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hi ⊢
+    simp only [F, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hi ⊢
     exact fun hn => hi (Ideal.pow_le_pow_right hmn hn)
   have hsm : ∀ n : ℕ, (I ^ n • (⊤ : Submodule (Ainf l) (Ainf l))) = I ^ n := fun n => by
     rw [smul_eq_mul, Ideal.mul_top]
@@ -211,7 +211,7 @@ theorem lift (bk : BK K) (g : bk.S) (hreg : toDisc l (X : bk.S) bk.ρ₀ g ∈ n
     rw [e]
     refine neg_mem (Ideal.sum_mem _ fun i hi => Ideal.mul_mem_right _ _ (key m i ?_))
     exact (Finset.mem_sdiff.1 hi).2
-  haveI : IsAdicComplete I (Ainf l) := TB.complete
+  have : IsAdicComplete I (Ainf l) := TB.complete
   obtain ⟨L, hL⟩ := IsPrecomplete.prec (inferInstance : IsPrecomplete I (Ainf l)) hcauchy
   refine ⟨L, ?_⟩
   rw [← sub_eq_zero]

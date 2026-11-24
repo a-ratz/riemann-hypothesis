@@ -149,8 +149,8 @@ theorem flatS_biprod : ∀ (R : Type) [CommRing R] (M N : Shv R), FlatS M → Fl
     rw [hS' V g hg.1, hT' V g hg.2]
     rfl
   · intro U hU
-    haveI := f₁ U hU
-    haveI := f₂ U hU
+    have := f₁ U hU
+    have := f₂ U hU
     exact GlobalTheory.flat_prod (R := ULift.{1} R) (A := P₁.obj (op U)) (B := P₂.obj (op U))
 
 end

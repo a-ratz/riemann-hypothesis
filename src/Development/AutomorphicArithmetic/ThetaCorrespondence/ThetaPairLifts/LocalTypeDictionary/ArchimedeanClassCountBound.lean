@@ -485,11 +485,11 @@ theorem archimedean_class_count_bound : _root_.GlobalTheory.FunPr.ThetaLocalInpu
   have hK00 : 0 ≤ K0 := by positivity
   have hMK : M ≤ Real.exp K0 := by
     have e1 : hBd D N ≤ Real.exp ((6 * D.R.f * N ^ 2 : ℕ) * (8 * Real.log b)) := by
-      rw [Real.exp_nat_mul]
+      rw [Real.exp_natCast_mul]
       refine pow_le_pow_left₀ (by positivity) ?_ _
       rw [← Real.log_le_iff_le_exp (by positivity)]
       exact hlbase
-    have e2 : Real.exp (2 * sig ch.G) ^ (N ^ 2) = Real.exp ((N ^ 2 : ℕ) * (2 * sig ch.G)) := (Real.exp_nat_mul _ _).symm
+    have e2 : Real.exp (2 * sig ch.G) ^ (N ^ 2) = Real.exp ((N ^ 2 : ℕ) * (2 * sig ch.G)) := (Real.exp_natCast_mul _ _).symm
     rw [hM, e2, hK0]
     calc _ ≤ Real.exp ((6 * D.R.f * N ^ 2 : ℕ) * (8 * Real.log b)) * Real.exp ((N ^ 2 : ℕ) * (2 * sig ch.G)) :=
           mul_le_mul_of_nonneg_right e1 (Real.exp_pos _).le
@@ -517,7 +517,7 @@ theorem archimedean_class_count_bound : _root_.GlobalTheory.FunPr.ThetaLocalInpu
           mul_le_mul_of_nonneg_left (add_le_add t1 t2) hm00
       _ = D.R.m * aOne ch.G C b := by rw [aOne]; ring
   have hexp : Real.exp K0 ^ (2 * D.R.m + 1) ≤ Real.exp (D.R.m * aOne ch.G C b) := by
-    rw [← Real.exp_nat_mul]; exact Real.exp_le_exp.2 key
+    rw [← Real.exp_natCast_mul]; exact Real.exp_le_exp.2 key
   refine ⟨?_, fun Φ β hβ => ?_⟩
   ·
     have h := (_root_.GlobalTheory.ClassCount.card_clPlus_le ch.G ch.S.N).trans

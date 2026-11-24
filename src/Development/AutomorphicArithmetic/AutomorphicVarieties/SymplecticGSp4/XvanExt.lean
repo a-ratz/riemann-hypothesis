@@ -76,7 +76,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.xvanExt :
     have h0 := hred a ((mem_maximalIdeal a).2 hn)
     rw [h0] at ha
     exact not_isUnit_zero ha⟩
-  letI : Algebra (ResidueField c.O) k := (ResidueField.lift red).toAlgebra
+  let : Algebra (ResidueField c.O) k := (ResidueField.lift red).toAlgebra
   have hι : ∀ a : c.O, red a = algebraMap (ResidueField c.O) k (residue c.O a) := fun a =>
     (ResidueField.lift_residue_apply red a).symm
   have hX : D.XVan γ := by

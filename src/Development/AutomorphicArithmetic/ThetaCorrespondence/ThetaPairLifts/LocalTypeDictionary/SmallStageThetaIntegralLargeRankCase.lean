@@ -346,13 +346,13 @@ theorem rai_rai (i l : Fin b) (j k : Fin a) :
   · simp [h1, h2, smul_smul, mul_comm, mul_left_comm, mul_assoc]
   · have : ¬ ((τ, l, k) : Formalism.IndefR.Datum.FVar D b a) = (τ, i, j) := fun e => by
       simp only [Prod.mk.injEq, true_and] at e; exact h2 (e.1 ▸ e.2 ▸ h1)
-    simp only [h1, h2, if_true, if_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.neg_apply,
+    simp only [h1, h2, ite_true, ite_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.neg_apply,
       map_neg, LinearMap.mulLeft_apply, Derivation.coeFn_coe, pd_X, this, add_zero, smul_smul, mul_comm (sgn (ε k)), smul_neg]
   · have : ¬ ((τ, i, j) : Formalism.IndefR.Datum.FVar D b a) = (τ, l, k) := fun e => by
       simp only [Prod.mk.injEq, true_and] at e; exact h1 (e.1 ▸ e.2 ▸ h2)
-    simp only [h1, h2, if_true, if_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.neg_apply,
+    simp only [h1, h2, ite_true, ite_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.neg_apply,
       map_neg, LinearMap.mulLeft_apply, Derivation.coeFn_coe, pd_X, this, add_zero, smul_smul, mul_comm (sgn (ε k)), smul_neg]
-  · simp only [h1, h2, if_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.neg_apply,
+  · simp only [h1, h2, ite_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.neg_apply,
       map_neg, Derivation.coeFn_coe, smul_smul, mul_comm (sgn (ε k)), smul_neg, pd_pd (τ, i, j)]
 
 theorem low_low (i l : Fin b) (j k : Fin a) :
@@ -360,15 +360,15 @@ theorem low_low (i l : Fin b) (j k : Fin a) :
   refine LinearMap.ext fun P => ?_
   unfold lowO
   by_cases h1 : ε' i = ε j <;> by_cases h2 : ε' l = ε k
-  · simp only [h1, h2, if_true, Module.End.mul_apply, LinearMap.smul_apply, map_smul,
+  · simp only [h1, h2, ite_true, Module.End.mul_apply, LinearMap.smul_apply, map_smul,
       Derivation.coeFn_coe, smul_smul, mul_comm (sgn (ε k)), pd_pd (τ, i, j)]
   · have : ¬ ((τ, i, j) : Formalism.IndefR.Datum.FVar D b a) = (τ, l, k) := fun e => by
       simp only [Prod.mk.injEq, true_and] at e; exact h2 (e.1 ▸ e.2 ▸ h1)
-    simp only [h1, h2, if_true, if_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul,
+    simp only [h1, h2, ite_true, ite_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul,
       LinearMap.mulLeft_apply, Derivation.coeFn_coe, pd_X, this, add_zero, smul_smul, mul_comm (sgn (ε k))]
   · have : ¬ ((τ, l, k) : Formalism.IndefR.Datum.FVar D b a) = (τ, i, j) := fun e => by
       simp only [Prod.mk.injEq, true_and] at e; exact h1 (e.1 ▸ e.2 ▸ h2)
-    simp only [h1, h2, if_true, if_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul,
+    simp only [h1, h2, ite_true, ite_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul,
       LinearMap.mulLeft_apply, Derivation.coeFn_coe, pd_X, this, add_zero, smul_smul, mul_comm (sgn (ε k))]
   · simp [h1, h2, smul_smul, mul_comm, mul_left_comm, mul_assoc]
 
@@ -379,17 +379,17 @@ theorem low_rai (i : Fin b) (j : Fin a) (l : Fin b) (k : Fin a) :
   by_cases e : i = l ∧ j = k
   · obtain ⟨rfl, rfl⟩ := e
     by_cases h1 : ε' i = ε j
-    · simp only [h1, if_true, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.add_apply, and_self,
+    · simp only [h1, ite_true, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.add_apply, and_self,
         LinearMap.mulLeft_apply, Derivation.coeFn_coe, pd_X, smul_smul, GlobalTheory.LieFock.sgn_mul_self, one_smul,
         Module.End.one_apply]
-    · simp only [h1, if_true, if_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.add_apply, and_self,
+    · simp only [h1, ite_true, ite_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.add_apply, and_self,
         LinearMap.mulLeft_apply, Derivation.coeFn_coe, pd_X, smul_smul, GlobalTheory.LieFock.sgn_mul_self, one_smul,
         Module.End.one_apply, LinearMap.neg_apply, map_neg, smul_neg]
       ring
   · have t1 : ¬ ((τ, i, j) : Formalism.IndefR.Datum.FVar D b a) = (τ, l, k) := fun h => e (by simpa using h)
     have t2 : ¬ ((τ, l, k) : Formalism.IndefR.Datum.FVar D b a) = (τ, i, j) := fun h => t1 h.symm
     by_cases h1 : ε' i = ε j <;> by_cases h2 : ε' l = ε k <;>
-    simp only [e, h1, h2, if_true, if_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.neg_apply,
+    simp only [e, h1, h2, ite_true, ite_false, Module.End.mul_apply, LinearMap.smul_apply, map_smul, LinearMap.neg_apply,
       map_neg, LinearMap.mulLeft_apply, Derivation.coeFn_coe, pd_X, t1, t2, add_zero, smul_smul, mul_comm (sgn (ε k)),
       smul_neg, pd_pd (τ, i, j), mul_left_comm (X (τ, i, j))]
 
@@ -446,7 +446,7 @@ theorem ccr (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (A : Fr V) (B : Fr W
       GlobalTheory.LieFock.gram_onb (GlobalTheory.LieFock.fr_det A τ) (A.fr_gram τ)
     have gB : (B.onb τ)ᴴ * gramAt D W τ * B.onb τ = diagonal fun a => GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.sgn (B.ε τ a) :=
       GlobalTheory.LieFock.gram_onb (GlobalTheory.LieFock.fr_det B τ) (B.fr_gram τ)
-    simp only [if_true, GlobalTheory.FockVecInj.cplxO_unitMap (B := A.onb τ) (isUnit_nonsing_inv_det _ (GlobalTheory.LieFock.fr_det A τ))
+    simp only [ite_true, GlobalTheory.FockVecInj.cplxO_unitMap (B := A.onb τ) (isUnit_nonsing_inv_det _ (GlobalTheory.LieFock.fr_det A τ))
       (GlobalTheory.LieFock.cart_onb A τ) (GlobalTheory.LieFock.cart_onb B τ),
       Matrix.mul_smul, Matrix.trace_smul, GlobalTheory.FockVecInj.trace_unitMap (fun a => GlobalTheory.LieFock.sgn_mul_self _) gA gB,
       Prod.mk.injEq, true_and]
@@ -454,7 +454,7 @@ theorem ccr (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (A : Fr V) (B : Fr W
     have h1 := GlobalTheory.VacuumFockLaws.fockScale_sq (D := D) τ
     have h2 := GlobalTheory.VacuumFockLaws.fockScale_ne (D := D) τ
     by_cases e : a = c ∧ b = d
-    · rw [if_pos e, if_pos e, inv_mul_eq_iff_eq_mul₀ h2, mul_neg, h1]
+    · rw [ite_eq_left e, ite_eq_left e, inv_mul_eq_iff_eq_mul₀ h2, mul_neg, h1]
       unfold GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.sgn
       split_ifs <;> simp [hre] <;> ring_nf <;> simp only [I_sq] <;> ring1
     · simp [e]
@@ -476,7 +476,7 @@ theorem annih_ptF (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (A : Fr V) (B 
     (fun _ _ h h' => annih_add hψ hθ _ _ _ h h') (fun a _ h => annih_smul hψ hθ _ _ _ a h)
     (fun j g h => ccr hψ hθ A B k j h) hf.1 (hf.2 k.1 _) P
   refine h.trans ?_
-  simp only [ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true, map_smul]
+  simp only [ite_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_smul]
   rfl
 
 theorem ptF_raiO (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (A : Fr V) (B : Fr W) {f : WO V W → ℂ}
@@ -488,10 +488,10 @@ theorem ptF_raiO (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (A : Fr V) (B :
     unfold ptF; exact map_smul _ _ _
   unfold raiO
   by_cases hp : B.ε τ i = A.ε τ j
-  · rw [if_pos hp, one_smul] at hu
-    rw [if_pos hp, LinearMap.smul_apply, LinearMap.mulLeft_apply, lin, GlobalTheory.FockAdjoint.ptF_X_mul hψ hθ A B hf.1]
+  · rw [ite_eq_left hp, one_smul] at hu
+    rw [ite_eq_left hp, LinearMap.smul_apply, LinearMap.mulLeft_apply, lin, GlobalTheory.FockAdjoint.ptF_X_mul hψ hθ A B hf.1]
     simp only [aPlus, crea, hu, GlobalTheory.FockBaseChange.cplxO_one]
-  · rw [if_neg hp, neg_one_smul, ← neg_smul] at hu
+  · rw [ite_eq_right hp, neg_one_smul, ← neg_smul] at hu
     have h := annih_ptF hψ hθ A B hf (τ, i, j) P
     have hg := GlobalTheory.FockAdjoint.ptF_theta hψ hθ A B hf.1 P
     have h2 := GlobalTheory.VacuumFockLaws.fockScale_ne (D := D) τ
@@ -500,7 +500,7 @@ theorem ptF_raiO (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (A : Fr V) (B :
       have := GlobalTheory.FockBaseChange.dRho_dir_smul hψ hθ τ (-1) (I • unitMap (A.onb τ) (B.onb τ) i j) hg
       simpa only [ofReal_neg, ofReal_one, neg_smul, one_smul] using this
     simp only [annih, hu, hn] at h
-    rw [if_neg hp, LinearMap.smul_apply, LinearMap.neg_apply, lin, ← neg_one_smul ℂ, lin]
+    rw [ite_eq_right hp, LinearMap.smul_apply, LinearMap.neg_apply, lin, ← neg_one_smul ℂ, lin]
     simp only [aPlus, crea, GlobalTheory.FockBaseChange.cplxO_one, Derivation.coeFn_coe]
     congr 1
     rw [sub_eq_add_neg, ← smul_neg, h, smul_smul, mul_neg, inv_mul_cancel₀ h2]
@@ -909,7 +909,7 @@ theorem prod_mul_sum_mixS_le : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ), Is
     intro ξ
     by_cases h0 : (_root_.I195MixedCoordinates_a7ef93afe48c405dbaa34663.source d) X ψ μ' 𝓕' Ψ (HMul.hMul (ξ.map (incA D) : Mx D X.rank r) α) 0 = 0
     · change d.mixS X ψ μ' 𝓕' Ψ (HMul.hMul (ξ.map (incA D) : Mx D X.rank r) α) 0 = 0 at h0
-      rw [h0, enorm_zero, mul_zero]; exact bot_le
+      rw [h0, eNorm_zero, mul_zero]; exact bot_le
     have hfin : (HMul.hMul (ξ.map (incA D) : Mx D X.rank r) α).map (finPart D) =
         (ξ.map (incA D) : Mx D X.rank r).map (finPart D) := by
       rw [Matrix.map_mul, hα, Matrix.mul_one]
@@ -1172,7 +1172,7 @@ theorem integrableOn_thetaKO : GlobalTheory.Published.SiegelSetUnitary → ∀ (
       C₁ * (ENNReal.ofReal B * ∫⁻ t in GlobalTheory.SiegelSet.cone r c,
         ENNReal.ofReal ((GlobalTheory.SiegelSet.modulus D.host.F M.rank t * ∏ i, t i)⁻¹)) := by
     calc ∫⁻ g in 𝓕, ‖thetaKO ω g h Φ‖ₑ ∂ν ≤ ∫⁻ g in S, ‖thetaKO ω g h Φ‖ₑ ∂ν :=
-          _root_.GlobalTheory.lintegral_fundamentalDomain_le_of_meets_orbits (GQ M) ν hν.2 hSm hScov hcont.enorm.measurable
+          _root_.GlobalTheory.lintegral_fundamentalDomain_le_of_meets_orbits (GQ M) ν hν.2 hSm hScov hcont.eNorm.measurable
             (fun γ hγ g => by rw [hinv γ hγ g])
       _ ≤ C₁ * ∫⁻ t in GlobalTheory.SiegelSet.cone r c, ENNReal.ofReal B *
             ENNReal.ofReal ((GlobalTheory.SiegelSet.modulus D.host.F M.rank t * ∏ i, t i)⁻¹) :=
@@ -1631,7 +1631,7 @@ theorem thetaIntegral_line_hasDerivAt (hP : _root_.GlobalTheory.FunPr.ThetaLocal
         rw [hasDerivAt_iff_tendsto_slope]
         refine (((ev.tendsto c').comp hlim).mul_const _).congr' (Filter.Eventually.of_forall fun t => ?_)
         rw [slope_def_module, h0]
-        simp only [Function.comp_apply, SchwartzMap.smul_apply, SchwartzMap.sub_apply, sub_zero, Complex.real_smul]
+        simp only [Function.comp_apply, smul_apply, sub_apply, sub_zero, Complex.real_smul]
         ring
       simp only [hc]
       exact h2
@@ -1843,8 +1843,8 @@ theorem smallStage_thetaIntegral_of_large_rank : _root_.GlobalTheory.FunPr.Theta
       (X.ω t) (X.ω' t) (hIs.weil t) (hIs.weil' t)
     obtain ⟨Pf, rr, rr', e, -, -, hr, hr'⟩ := hfac _ _ _ _ _ _ _ hm
     have hy := h3 W i j p q0 A A' WW X hX FA FA' FW t hf hf' Pm rf rl pm pm' hm Pr Pf q q' rr rr' e hq hq' hr hr'
-    haveI : Nontrivial Pm := hm.irred.1
-    haveI : Nontrivial Pr := nontrivial_left e
+    have : Nontrivial Pm := hm.irred.1
+    have : Nontrivial Pr := nontrivial_left e
     obtain ⟨x, hx⟩ := exists_ne (0 : Pr)
     obtain ⟨P1, rfl⟩ := hq' x
     obtain ⟨hint, hker⟩ := hP0 _ _ hTr hInf _ _ _ _ _ _ _ hm _ hf'

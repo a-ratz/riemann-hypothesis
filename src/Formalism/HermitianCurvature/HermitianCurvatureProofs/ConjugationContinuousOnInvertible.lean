@@ -118,13 +118,13 @@ def inc (x : Gp U hU) : Mt k r := x.1
 
 theorem inc_mem (x : Gp U hU) : Matrix.of (inc x) ∈ U := x.2
 
-theorem inc_cont : Continuous (inc : Gp U hU → Mt k r) := continuous_subtype_val
+theorem inc_cont : Continuous (inc : Gp U hU → Mt k r) := continuous_subtypeVal
 
 theorem inc_closedEmb : IsClosedEmbedding (inc : Gp U hU → Mt k r) :=
   (amb_closed hU).isClosedEmbedding_subtypeVal
 
 theorem inc_memb : MeasurableEmbedding (inc : Gp U hU → Mt k r) :=
-  MeasurableEmbedding.subtype_coe (amb_closed hU).measurableSet
+  MeasurableEmbedding.subtypeVal (amb_closed hU).measurableSet
 
 theorem range_inc : Set.range (inc : Gp U hU → Mt k r) = amb U := Subtype.range_coe
 
@@ -245,7 +245,7 @@ theorem conjHaar : ConjHaar := by
   · intro h0
     apply hμ.ne_zero
     have := congrArg (fun ν : Measure (Mt k r) => ν Set.univ) h0
-    simp only [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, Measure.coe_zero, Pi.zero_apply] at this
+    simp only [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, FunLike.coe_zero, Pi.zero_apply] at this
     exact Measure.measure_univ_eq_zero.mp this
 
 theorem conjM_conjM (a b : Mat k r) (x : Mt k r) : conjM a (conjM b x) = conjM (a * b) x := by
@@ -302,7 +302,7 @@ theorem compactConjFromUnique : CompactConjFromUnique := by
   have hS0 : μ S ≠ 0 := fun h => hC0 (measure_mono_null hCS h)
   have hSt : μ S ≠ ∞ := (hμ.finite_compact S hSc).ne
   have h4 := congrArg (fun ν : Measure (Mt k r) => ν S) hc
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h4
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h4
   rw [Measure.map_apply hm hSc.isClosed.measurableSet, hpre] at h4
   have h5 : ((c : ℝ≥0) : ℝ≥0∞) * μ S = 1 * μ S := by rw [one_mul]; exact h4.symm
   have h6 : ((c : ℝ≥0) : ℝ≥0∞) = 1 := (ENNReal.mul_left_inj hS0 hSt).mp h5

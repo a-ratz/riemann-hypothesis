@@ -249,7 +249,7 @@ theorem exists_etale_linearisation : ∀ (R : Type) [CommRing R] (P : Out.PolAV 
   obtain ⟨R', _, _, het, -, hff, b, hb⟩ := GlobalTheory.CocycleSplit.exists_etale_splitting R₁ n C (fun x y => E₁ (a x y))
     (by simpa using hnR.map (algebraMap R R₁)) hn htor (fun x y => congrArg E₁ (hs x y))
     (fun x y z => (map_mul E₁ _ _).symm.trans ((congrArg E₁ (hc x y z)).trans (map_mul E₁ _ _)))
-  letI : Algebra R R' := ((algebraMap R₁ R').comp (algebraMap R R₁)).toAlgebra
+  let : Algebra R R' := ((algebraMap R₁ R').comp (algebraMap R R₁)).toAlgebra
   have : IsScalarTower R R₁ R' := IsScalarTower.of_algebraMap_eq' rfl
   have : Algebra.Etale R R₁ := Algebra.Etale.of_isLocalizationAway r
   refine ⟨R', inferInstance, inferInstance, Algebra.Etale.comp R R₁ R', ?_, ?_⟩

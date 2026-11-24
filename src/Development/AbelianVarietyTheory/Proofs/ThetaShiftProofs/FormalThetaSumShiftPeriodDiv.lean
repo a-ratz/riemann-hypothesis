@@ -235,7 +235,7 @@ theorem shift_mem_Theta {α : A.X} {th : (Fin A.gB → ℂ) → ℂ} (h : th ∈
       simp only [← Complex.exp_add]
       rw [Complex.exp_eq_exp_iff_exists_int, mul_left_comm (k : ℂ), mul_inv_cancel_left₀ hk]
       exact ⟨A.Ef la.l m, by linear_combination (Real.pi : ℂ) * h2⟩
-    rw [shift_apply', shift_apply', add_right_comm, h.2, ah_add, mul_pow, ← Complex.exp_nat_mul, degeneratingTori_basePeriodMap_snd,
+    rw [shift_apply', shift_apply', add_right_comm, h.2, ah_add, mul_pow, ← Complex.exp_natCast_mul, degeneratingTori_basePeriodMap_snd,
       H_smul_left, map_add, H_add_left, H_add_left, H_add_left]
     linear_combination (eTwoPi ((A.P0 la).1 α / k) * A.ah m z ^ k * th (z + (k : ℂ)⁻¹ • (A.ct la.y + la.l))) * h3
 
@@ -436,18 +436,18 @@ theorem hasSum_coeff_mul_FSum (j : ℕ) [NeZero j] (α : A.X) (th : (Fin A.gB �
     rw [coeff_FSum, Finset.mul_sum]
     convert hasSum_sum_of_ne_finset_zero (s := A.level j α p.2) (L := SummationFilter.unconditional _)
       (f := fun μ => if A.exponent j α μ = p.2 then r.coeff p.1 * A.term j α th μ v else 0)
-      fun μ hμ => if_neg (by simpa using hμ) using 1
-    exact Finset.sum_congr rfl fun μ hμ => (if_pos (by simpa using hμ)).symm
+      fun μ hμ => ite_eq_right (by simpa using hμ) using 1
+    exact Finset.sum_congr rfl fun μ hμ => (ite_eq_left (by simpa using hμ)).symm
   convert hasSum_sum fun p _ => h1 p using 2 with μ
   rw [Finset.sum_eq_single (n - A.exponent j α μ, A.exponent j α μ)]
   · simp
   · rintro ⟨a, b⟩ hab hne
-    refine if_neg fun hb => hne ?_
+    refine ite_eq_right fun hb => hne ?_
     have := (Finset.mem_antidiagonal.1 hab).2.2
     simp only at hb this
     ext <;> simp only <;> omega
   · intro hn
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     by_contra hc
     exact hn (Finset.mem_antidiagonal.2 ⟨left_ne_zero_of_mul hc, A.neg_be_le_exponent (NeZero.ne j) α μ, by simp⟩)
 
@@ -476,7 +476,7 @@ theorem linearIndepOn_sigma {X W C : Type*} {I : C → Type*} {rep : C → X} (h
   · obtain ⟨c, rfl⟩ := h
     have : {p : Σ c, I c | rep p.1 = rep c} = Set.range (Sigma.mk c) := by
       ext ⟨c', i⟩
-      simp only [Set.mem_setOf_eq, hrep.eq_iff, Set.mem_range]
+      simp only [Set.mem_ofPred_eq, hrep.eq_iff, Set.mem_range]
       exact ⟨by rintro rfl; exact ⟨i, rfl⟩, by rintro ⟨i', hi⟩; exact (congrArg Sigma.fst hi).symm⟩
     rw [this]
     exact (linearIndepOn_range_iff sigma_mk_injective _).2 (hth c)

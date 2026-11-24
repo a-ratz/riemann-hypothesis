@@ -120,7 +120,7 @@ theorem absNorm_of_split {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
     rw [← map_mul, ← hm, Ideal.absNorm_algebraMap]
     congr 1
     rw [← h2]
-    exact (Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E).symm
+    exact (IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E).symm
   have h1 : ∀ R : HeightOneSpectrum (𝓞 E), Ideal.absNorm R.asIdeal ≠ 1 := fun R h =>
     R.isPrime.ne_top (Ideal.absNorm_eq_one_iff.1 h)
   have hb := (hl.mul_eq_prime_sq_iff (h1 Q) (h1 Q')).1 hN
@@ -136,7 +136,7 @@ theorem plc_eq_absNorm {F : Type} [Field F] [NumberField F] {v : HeightOneSpectr
   have h6 : ringChar (𝓞 F ⧸ v.asIdeal) ∣ Ideal.absNorm v.asIdeal := by
     rw [← ringChar.spec, ← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     exact Ideal.absNorm_mem _
-  haveI := v.isPrime
+  have := v.isPrime
   exact ((Nat.dvd_prime hl).1 h6).resolve_left CharP.ringChar_ne_one
 
 theorem main : ∀ (Z : Dat) (u : Z.Pr.Word) (sel : HeightOneSpectrum (𝓞 Z.X.F) → HeightOneSpectrum (𝓞 Z.X.E)) (S : Set ℕ) (mu : Tup Z.X.F Z.X.E Z.X.K S), Z.Ok → IsSel Z.X sel → Z.Pr.T u ∈ S → (∀ i, Z.Pr.g i ∈ S) → (∀ P ∈ Sall sel mu u, conjPrime₂ P ∉ Sall sel mu u) ∧ ∀ P ∈ rowSG Z.Pr sel mu, (Formalism.L2.Col.qOf P).Prime ∧ Formalism.L2.Col.qOf P ≠ Z.Pr.T u ∧ ((Z.Pr.T u : ℕ) : 𝓞 Z.X.E) ∉ P.asIdeal ∧ ((∃ i, Formalism.L2.Col.qOf P = Z.Pr.g i) ∨ Formalism.L2.Col.qOf P ∉ S) := by
@@ -257,7 +257,7 @@ theorem exists_reps_sup_of_finite_quot (E : Type) [Field E] (H : Type) [AddCommG
       (∀ x ∈ R, ∀ y ∈ R, x - y ∈ Z₀.toAddSubgroup ⊔ C → x = y) ∧
       ∀ y ∈ Z₁, ∃ x ∈ R, y - x ∈ Z₀.toAddSubgroup ⊔ C := by
   classical
-  letI := Fintype.ofFinite (↥Z₁ ⧸ Z₀.comap Z₁.subtype)
+  let := Fintype.ofFinite (↥Z₁ ⧸ Z₀.comap Z₁.subtype)
   set Z : AddSubgroup H := Z₀.toAddSubgroup ⊔ C with hZ
   let s : (↥Z₁ ⧸ Z₀.comap Z₁.subtype) → ↥Z₁ :=
     Function.surjInv (Submodule.Quotient.mk_surjective (Z₀.comap Z₁.subtype))
@@ -290,7 +290,7 @@ theorem latSum_eq_sum_sum_reps : ∀ (E : Type) [Field E] [NumberField E] [StarR
   obtain ⟨hJC, hJinj, hJsurj⟩ := hJ
   refine ⟨R, hR, ?_⟩
   intro M _ f hf
-  letI := Fintype.ofFinite (↥Z₁ ⧸ Z₀.comap Z₁.subtype)
+  let := Fintype.ofFinite (↥Z₁ ⧸ Z₀.comap Z₁.subtype)
   have hmem : ∀ p ∈ R ×ˢ J, p.1 + p.2 ∈ Z₁ := fun p hp =>
     Z₁.add_mem (hR _ (Finset.mem_product.1 hp).1) (hC (hJC _ (Finset.mem_product.1 hp).2))
   unfold latSum
@@ -435,7 +435,7 @@ variable {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p])
 
 theorem lamC_mul {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar) :
     TaylorLogMetric.lamC lam (x * y) = TaylorLogMetric.lamC lam x * TaylorLogMetric.lamC lam y := by
-  simp only [TaylorLogMetric.lamC, dif_pos hx, dif_pos hy, dif_pos (mul_mem hx hy)]
+  simp only [TaylorLogMetric.lamC, dite_eq_left hx, dite_eq_left hy, dite_eq_left (mul_mem hx hy)]
   exact map_mul lam ⟨x, hx⟩ ⟨y, hy⟩
 
 theorem lamC_sum {κ : Type} (s : Finset κ) (f : κ → ℂ) (h : ∀ k ∈ s, f k ∈ TaylorLogMetric.Qbar) :
@@ -443,14 +443,14 @@ theorem lamC_sum {κ : Type} (s : Finset κ) (f : κ → ℂ) (h : ∀ k ∈ s, 
   classical
   induction s using Finset.induction_on with
   | empty =>
-    have : TaylorLogMetric.lamC lam 0 = lam 0 := dif_pos (zero_mem _)
+    have : TaylorLogMetric.lamC lam 0 = lam 0 := dite_eq_left (zero_mem _)
     simp only [Finset.sum_empty, this, map_zero]
   | insert k s hk ih =>
     have h1 := h k (Finset.mem_insert_self _ _)
     have h2 : ∀ j ∈ s, f j ∈ TaylorLogMetric.Qbar := fun j hj => h j (Finset.mem_insert_of_mem hj)
     have h3 := sum_mem h2
     rw [Finset.sum_insert hk, Finset.sum_insert hk, ← ih h2]
-    simp only [TaylorLogMetric.lamC, dif_pos h1, dif_pos h3, dif_pos (add_mem h1 h3)]
+    simp only [TaylorLogMetric.lamC, dite_eq_left h1, dite_eq_left h3, dite_eq_left (add_mem h1 h3)]
     exact map_add lam ⟨_, h1⟩ ⟨_, h3⟩
 
 theorem lamC_zero' : TaylorLogMetric.lamC lam 0 = 0 := by simpa using lamC_sum lam (∅ : Finset Unit) (fun _ => 0) (by simp)
@@ -459,7 +459,7 @@ theorem norm_lamC_ratio {n k c : ℕ} (hn : n ≠ 0) (hc : ¬ p ∣ c) (h : n �
     ‖TaylorLogMetric.lamC lam ((n : ℂ)⁻¹ * k)‖ ≤ 1 := by
   have hm : (n : ℂ)⁻¹ * k ∈ TaylorLogMetric.Qbar := mul_mem (inv_mem (natCast_mem _ n)) (natCast_mem _ k)
   have e : TaylorLogMetric.lamC lam ((n : ℂ)⁻¹ * k) = (n : ℂ_[p])⁻¹ * k := by
-    simp only [TaylorLogMetric.lamC, dif_pos hm]
+    simp only [TaylorLogMetric.lamC, dite_eq_left hm]
     have : (⟨_, hm⟩ : TaylorLogMetric.Qbar) = (n : TaylorLogMetric.Qbar)⁻¹ * k := Subtype.ext (by simp)
     rw [this]; simp
   obtain ⟨d, hd⟩ := h
@@ -820,7 +820,7 @@ section abelian₂
 
 variable {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p])
 
-theorem lamC_of_mem {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dif_pos h
+theorem lamC_of_mem {x : ℂ} (h : x ∈ TaylorLogMetric.Qbar) : TaylorLogMetric.lamC lam x = lam ⟨x, h⟩ := dite_eq_left h
 
 theorem lamC_mul {x y : ℂ} (hx : x ∈ TaylorLogMetric.Qbar) (hy : y ∈ TaylorLogMetric.Qbar) :
     TaylorLogMetric.lamC lam (x * y) = TaylorLogMetric.lamC lam x * TaylorLogMetric.lamC lam y := by
@@ -892,7 +892,7 @@ theorem assemble {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_
     subset_rfl (Set.subset_univ _) fun m hm => ?_
   · by_cases h : Ξ x = 0
     · simpa [h] using clo_zero Sup tab Set.univ
-    · simp only [if_neg h]
+    · simp only [ite_eq_right h]
       refine clo_mul (h3 x (hR x hx) h) _ ?_
       rw [norm_mul, hinv, norm_inv, hχ1, inv_one, mul_one]
       exact h2 x (hR x hx)
@@ -909,7 +909,7 @@ theorem assemble {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_
       intro j hj'
       have := hm (x + j) (add_mem (hR x hx) (hC (hJ.1 j hj'))) (by rw [hj j hj']; exact h)
       unfold Amb.jetK desc
-      rw [dif_pos this]
+      rw [dite_eq_left this]
       exact this.choose_spec
     have e : A.σ₀ (∑ j ∈ J, A.jetK S N N' c (x + j) m) =
         (A.chiF a b N N')⁻¹ * ∑ j ∈ J, jetC A.cD (A.thInd S N N' c (x + j)) m := by
@@ -944,8 +944,8 @@ theorem phiT_add (K : Type) [Field K] {d : Deco E a ST SG} {d' : Deco E b ST SG'
     simpa using this
   unfold phiT
   by_cases hx : x ∈ suppBar d d'
-  · exact (if_pos (h.2 hx)).trans (if_pos hx).symm
-  · exact (if_neg fun h' => hx (h.1 h')).trans (if_neg hx).symm
+  · exact (ite_eq_left (h.2 hx)).trans (ite_eq_left hx).symm
+  · exact (ite_eq_right fun h' => hx (h.1 h')).trans (ite_eq_right hx).symm
 
 theorem ker_of_mulLat {d : Deco E a ST SG} {d' : Deco E b ST SG'} (hd' : d'.Ok) {S : Finset (HeightOneSpectrum (𝓞 E))}
     (hS : ST ⊆ S) {c : ℕ} (hc : ∀ P ∈ ST, (c : 𝓞 E) ∈ P.asIdeal) {y : HomE E a b} (hy : y ∈ mulLat c (homAt S d.N d'.N)) :
@@ -1292,7 +1292,7 @@ theorem neg_one_zpow_round (q : ℝ)
     apply mul_left_cancel₀ h0
     linear_combination hn
   have hq' : q = n := by exact_mod_cast hq
-  rw [hq, hq', round_intCast, mul_comm, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [hq, hq', round_intCast, mul_comm, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
 
 theorem isHerm_HV {ι : Type} [Fintype ι] {a b : ℕ} (sc : ℝ) : IsHerm (HV (ι := ι) (a := a) (b := b) sc) := by
   intro x y
@@ -1313,7 +1313,7 @@ theorem move : ∀ (D : D7) (X : Fields) (s : Seam D X) (cc : Ideal (𝓞 D.host
   obtain ⟨hδ, hτ, -, -, -, hL⟩ := hL
   obtain ⟨t1, t2, t3, -⟩ := _root_.GlobalTheory.SeamTransport.transport D X s cc δ B χ cD a b hs
   set A := ambOf s B χ cD with hA
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have key := congrFun (hE.2.1 a b ⟨s.lat N, (t2 N N' ha hb hN hN').2.2.1⟩ ⟨s.lat N', (t2 N N' ha hb hN hN').2.2.2⟩
     ⟨s.lat N'', (t2 N N'' ha hb hN hN'').2.2.2⟩ ha hb) fun τ => z (s.iT.symm τ)
   refine key.trans (congrArg₂ (· * ·) rfl ?_)
@@ -1437,7 +1437,7 @@ theorem functional_frame {P : HeightOneSpectrum (𝓞 E)} {N : Submodule (𝓞 E
     exact this.symm
   have h5 := P.intValuation_le_pow_iff_mem (∑ i, r i * c i) 1
   have h6 : Ideal.Quotient.mk P.asIdeal s ≠ 0 := fun h => hs (Ideal.Quotient.eq_zero_iff_mem.1 h)
-  haveI := P.isPrime
+  have := P.isPrime
   rw [h4, ← mul_eq_zero_iff_left h6, h2, Ideal.Quotient.eq_zero_iff_mem]
   simpa using h5.symm
 

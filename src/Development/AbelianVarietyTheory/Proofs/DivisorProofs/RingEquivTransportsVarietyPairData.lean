@@ -300,8 +300,8 @@ theorem isLocModel_iff (R : Subring K) : IsLocModel c R ↔ IsLocModel c' (R.map
 
 include he in
 theorem trBasis_map {n : ℕ} {x : Fin n → K} (h : TrBasis c x) : TrBasis c' (e ∘ x) := by
-  letI := c.toAlgebra
-  letI := c'.toAlgebra
+  let := c.toAlgebra
+  let := c'.toAlgebra
   exact (AlgEquiv.ofRingEquiv (f := e) he).isTranscendenceBasis h
 
 end RingEquivTransport

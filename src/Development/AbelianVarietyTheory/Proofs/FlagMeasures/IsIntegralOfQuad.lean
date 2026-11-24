@@ -79,7 +79,7 @@ theorem val_lt_one_iff (T : LocAt F E sig p) (x : F) :
 
 theorem resQ_eq_absNorm (T : LocAt F E sig p) (ϖ : 𝒪[T.Fp]) (h : Irreducible ϖ) :
     resQ ϖ = Ideal.absNorm p.asIdeal := by
-  haveI := T.lf
+  have := T.lf
   have hm : ∀ z : 𝒪[T.Fp], z ∈ Ideal.span {ϖ} ↔ valuation T.Fp (z : T.Fp) < 1 := by
     intro z
     rw [← h.maximalIdeal_eq, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff,
@@ -126,13 +126,13 @@ theorem exists_trace_norm (A : Places F E sig) (x : E) :
   obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 F)
   let p : HeightOneSpectrum (𝓞 F) := ⟨P, hP.isPrime,
     Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField F)⟩
-  haveI := nontrivial_Ep (A.loc p)
+  have := nontrivial_Ep (A.loc p)
   have hss : ∀ y, sig (sig y) = y := by
     intro y
     apply (A.loc p).ιE.injective
     rw [← (A.loc p).cj_ιE, ← (A.loc p).cj_ιE, ← A.L_cj, (A.L p).cj_cj]
   have hfix : ∀ y, sig y = y → ∃ a, algebraMap F E a = y := by
-    haveI := Subalgebra.isSimpleOrder_of_finrank A.quad
+    have := Subalgebra.isSimpleOrder_of_finrank A.quad
     rcases eq_bot_or_eq_top (AlgHom.equalizer sig (AlgHom.id F E)) with h | h
     · intro y hy
       have : y ∈ AlgHom.equalizer sig (AlgHom.id F E) := hy
@@ -173,9 +173,9 @@ theorem isIntegral_of_quad {R S : Type} [CommRing R] [Nontrivial R] [CommRing S]
 theorem mem_O_iff (A : Places F E sig) (p : HeightOneSpectrum (𝓞 F)) (x : E) (t n : F)
     (ht : algebraMap F E t = x + sig x) (hn : algebraMap F E n = x * sig x) :
     (A.loc p).ιE x ∈ (A.L p).O ↔ p.valuation F t ≤ 1 ∧ p.valuation F n ≤ 1 := by
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
-  haveI := nontrivial_Ep (A.loc p)
+  have := (A.loc p).lf
+  have := (A.loc p).char0
+  have := nontrivial_Ep (A.loc p)
   have ht' : algebraMap _ (A.loc p).Ep ((A.loc p).ιF t)
       = (A.loc p).ιE x + (A.L p).cj ((A.loc p).ιE x) := by
     rw [← (A.loc p).compat, ht, map_add (f := _), A.L_cj, (A.loc p).cj_ιE]

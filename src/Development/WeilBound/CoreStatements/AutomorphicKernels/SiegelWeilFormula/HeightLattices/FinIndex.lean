@@ -71,19 +71,19 @@ theorem vol_sig (hcm : HeckeCharacterZeroLocus.SiegelWeilU.IsCMExt F E σ) (v : 
     (lam : Measure (Fin n → HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E)) [lam.IsAddHaarMeasure]
     (S : Set (Fin n → v.adicCompletion F ⊗[F] E)) :
     lam ((fun y i => HeckeCharacterZeroLocus.SiegelWeilU.sigR (v.adicCompletion F) σ (y i)) '' S) = lam S := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (v.adicCompletion F) (v.adicCompletion F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
-  haveI : T2Space (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
-  haveI := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (v.adicCompletion F) (v.adicCompletion F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : T2Space (v.adicCompletion F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
+  have := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
   let b := Algebra.TensorProduct.basis (v.adicCompletion F) (Module.finBasis F E)
   let coord : (v.adicCompletion F ⊗[F] E) ≃ₜ+ (Fin (Module.finrank F E) → v.adicCompletion F) :=
     { b.equivFun.toAddEquiv with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap
       continuous_invFun := IsModuleTopology.continuous_of_linearMap b.equivFun.symm.toLinearMap }
-  haveI : LocallyCompactSpace (v.adicCompletion F ⊗[F] E) :=
+  have : LocallyCompactSpace (v.adicCompletion F ⊗[F] E) :=
     coord.toHomeomorph.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (v.adicCompletion F ⊗[F] E) :=
+  have : SecondCountableTopology (v.adicCompletion F ⊗[F] E) :=
     coord.toHomeomorph.isEmbedding.secondCountableTopology
   have : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v ⊗[F] E) := ⟨rfl⟩
   set sg := HeckeCharacterZeroLocus.SiegelWeilU.sigR (v.adicCompletion F) σ with hsg
@@ -128,7 +128,7 @@ theorem vol_sig (hcm : HeckeCharacterZeroLocus.SiegelWeilU.IsCMExt F E σ) (v : 
   calc lam ((fun y i => sg (y i)) '' S) = (addEquivAddHaarChar φ • lam.map φ) ((fun y i => sg (y i)) '' S) := by
         rw [h1]
     _ = _ := by
-      rw [Measure.smul_apply, himg, hχ, one_smul]
+      rw [smul_apply, himg, hχ, one_smul]
       have : Measure.map φ lam = Measure.map φ.toHomeomorph.toMeasurableEquiv lam := rfl
       rw [this, MeasurableEquiv.map_apply, MeasurableEquiv.preimage_image]
 
@@ -207,7 +207,7 @@ theorem fin_index (hcm : HeckeCharacterZeroLocus.SiegelWeilU.IsCMExt F E σ) (v 
     exact (he.map sg).pow _
   have hnsc : ‖Algebra.norm (v.adicCompletion F) ((sg e • (1 : Matrix (Fin n) (Fin n) (v.adicCompletion F ⊗[F] E))).det)‖₊
       = 1 := by
-    rw [Matrix.det_smul, Matrix.det_one, mul_one, map_pow, norm_sig, nnnorm_pow]
+    rw [Matrix.det_smul, Matrix.det_one, mul_one, map_pow, norm_sig, nnNorm_pow]
     have : ‖Algebra.norm (v.adicCompletion F) e‖₊ = 1 := by ext; simpa using he1
     rw [this, one_pow]
   have hvX : lam X = ((‖Algebra.norm (v.adicCompletion F) D.det‖₊ : ℝ≥0) : ℝ≥0∞) * lam O := by
@@ -228,7 +228,7 @@ theorem fin_index (hcm : HeckeCharacterZeroLocus.SiegelWeilU.IsCMExt F E σ) (v 
     simpa using this
   show _ = _ * (lam X / lam (latM v (t.map sg) : Set (Fin n → v.adicCompletion F ⊗[F] E))).toReal
   rw [hvX, hvL1, ENNReal.mul_div_mul_right _ _ hO0 hOT, ENNReal.toReal_div, ENNReal.coe_toReal, ENNReal.coe_toReal,
-    coe_nnnorm, coe_nnnorm]
+    coe_nnNorm, coe_nnNorm]
   have : ‖Algebra.norm (v.adicCompletion F) t.det‖ ≠ 0 := by simpa using hnt
   field_simp
 

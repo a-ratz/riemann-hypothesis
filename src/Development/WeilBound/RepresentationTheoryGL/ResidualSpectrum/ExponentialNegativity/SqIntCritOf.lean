@@ -534,7 +534,7 @@ theorem escape : Escape := by
   set A : ℝ := adelicNorm (ratVec e) with hA
   have hA1 : 1 ≤ A := one_le_adelicNorm_ratVec he0
   have hcont : Continuous fun g : AdelicGLn.AdelicGL K n => (detModule K n g : ℝ) :=
-    continuous_subtype_val.comp continuous_detModule
+    continuous_subtypeVal.comp continuous_detModule
   obtain ⟨_, B, -, -, hB⟩ := exists_pos_bounds hT hcont fun g _ => (detModule K n g).2
   obtain ⟨b, _, hb, -, hb'⟩ := exists_pos_bounds hQ hcont fun g _ => (detModule K n g).2
   set c : ℝ := ε / (P * A) with hc

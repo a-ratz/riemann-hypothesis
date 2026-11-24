@@ -80,11 +80,11 @@ theorem Qi_spanLt (a : ℕ) (x : Fin X.B.I.n → ℂ) (hx : x ∈ spanLt (eV (X 
   induction hx using Submodule.span_induction with
   | mem x hx' =>
     obtain ⟨b, hb, rfl⟩ := hx'
-    rw [Qi_e, Pi.smul_apply, Pi.single_apply, if_neg, smul_zero]
+    rw [Qi_e, Pi.smul_apply, Pi.single_apply, ite_eq_right, smul_zero]
     intro h
     have := congrArg Fin.val h
     simp only [Formalism.QuantumDeterminants.eI] at this
-    simp only [Set.mem_setOf_eq] at hb
+    simp only [Set.mem_ofPred_eq] at hb
     omega
   | zero => simp
   | add x y _ _ hx hy => rw [Matrix.mulVec_add, Pi.add_apply, hx, hy, add_zero]
@@ -104,7 +104,7 @@ theorem Q_spanLt (a : ℕ) (ha : a ≤ D.R.rS) (w : Fin (2 * D.R.rS + D.R.k + 1)
     have e : i = Formalism.QuantumDeterminants.eI D.R.k D.R.rS ⟨i.val, hir⟩ := Fin.ext rfl
     rw [Matrix.mulVec_smul, e, Q_e]
     refine Submodule.smul_mem _ _ (Submodule.smul_mem _ _ (Submodule.subset_span ⟨⟨i.val, hir⟩, ?_, rfl⟩))
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     omega
 
 theorem hpk_eI (k r : ℕ) (a : Fin r) (v : Fin (2 * r + k + 1) → ℂ) :
@@ -116,7 +116,7 @@ theorem hpk_eI (k r : ℕ) (a : Fin r) (v : Fin (2 * r + k + 1) → ℂ) :
     simp only [Formalism.QuantumDeterminants.Hpk, Formalism.QuantumDeterminants.esI, Formalism.QuantumDeterminants.eI, Fin.ext_iff, Fin.val_mk]
     split_ifs <;> first | rfl | omega | (exfalso; omega)
   simp only [Matrix.mulVec, dotProduct, hrow, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true]
+    ite_true]
 
 theorem hJ_e (a : Fin D.R.rS) (y : Fin X.B.I.n → ℂ) :
     hJ (X.B.I.ε (vOf X τ)) (eV τ a) y = star ((frS D ^ (D.R.rS - a.val))⁻¹) * (C.Qi τ *ᵥ y) (Formalism.QuantumDeterminants.esI D.R.k D.R.rS a) := by
@@ -164,7 +164,7 @@ theorem inN_iff (z : Fin X.B.I.n → ℂ) (hz : Formalism.QuantumDeterminants.in
       rw [hcol (C.Qi τ * g * C.Q τ) i j]
       have horth : ∀ b : Fin D.R.rS, hJ (X.B.I.ε (vOf X τ)) (eV τ b) (C.Q τ *ᵥ Pi.single j 1) = 0 := by
         intro b
-        rw [hJ_e, Matrix.mulVec_mulVec, hQiQ, Matrix.one_mulVec, Pi.single_apply, if_neg, mul_zero]
+        rw [hJ_e, Matrix.mulVec_mulVec, hQiQ, Matrix.one_mulVec, Pi.single_apply, ite_eq_right, mul_zero]
         intro h
         have := congrArg Fin.val h
         simp only [Formalism.QuantumDeterminants.esI] at this

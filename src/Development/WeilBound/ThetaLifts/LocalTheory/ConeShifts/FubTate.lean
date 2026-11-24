@@ -104,7 +104,7 @@ theorem circle_one {z : Circle} (h : ∀ n : ℕ, ‖((z ^ n : Circle) : ℂ) - 
 
 theorem pow_mem_of_compact {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (U : Subgroup G) (hU : IsOpen (U : Set G))
     {K : Set G} (hK : IsCompact K) {x : G} (hx : ∀ n : ℕ, x ^ n ∈ K) : ∃ k : ℕ, 0 < k ∧ x ^ k ∈ U := by
-  haveI : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU
+  have : DiscreteTopology (G ⧸ U) := QuotientGroup.discreteTopology hU
   have hf : ((QuotientGroup.mk : G → G ⧸ U) '' K).Finite := (hK.image QuotientGroup.continuous_mk).finite_of_discrete
   obtain ⟨i, j, hij, e⟩ := Set.Finite.exists_lt_map_eq_of_forall_mem (f := fun n : ℕ => (QuotientGroup.mk (x ^ n) : G ⧸ U))
     (fun n => Set.mem_image_of_mem _ (hx n)) hf
@@ -130,7 +130,7 @@ theorem tate {H : Type} [CommGroup H] [TopologicalSpace H] [IsTopologicalGroup H
     exact one_ne_zero this
   let A : ℕ → Set H := fun k => {x | o x = m + k}
   have hA : ∀ k, A k = (fun x => ϖ ^ (-(m + k)) * x) ⁻¹' {x | o x = 0} := fun k => Set.ext fun x => by
-    simp only [A, Set.mem_setOf_eq, Set.mem_preimage, oz]; omega
+    simp only [A, Set.mem_ofPred_eq, Set.mem_preimage, oz]; omega
   have mA : ∀ k, MeasurableSet (A k) := fun k => by
     rw [hA]; exact (hU.preimage (continuous_const.mul continuous_id)).measurableSet
   have vA : ∀ k, γ (A k) = 1 := fun k => by rw [hA, measure_preimage_mul, h1]
@@ -139,13 +139,13 @@ theorem tate {H : Type} [CommGroup H] [TopologicalSpace H] [IsTopologicalGroup H
     rw [map_mul, map_zpow, zpow_neg, inv_mul_eq_one₀ (zpow_ne_zero _ h0)] at this
     rw [← this, zpow_add₀ h0, zpow_natCast]
   have dA : Pairwise (Function.onFun Disjoint A) := fun i j hij => Set.disjoint_left.2 fun x h h' => hij (by
-    simp only [A, Set.mem_setOf_eq] at h h'; omega)
+    simp only [A, Set.mem_ofPred_eq] at h h'; omega)
   have eU : (fun x => (if m ≤ o x then (1 : ℂ) else 0) * χ x) = (⋃ k, A k).indicator χ := funext fun x => by
     by_cases h : m ≤ o x
-    · rw [if_pos h, one_mul, Set.indicator_of_mem (Set.mem_iUnion.2 ⟨(o x - m).toNat, by simp only [A, Set.mem_setOf_eq]; omega⟩)]
-    · rw [if_neg h, zero_mul, Set.indicator_of_notMem fun h' => by
+    · rw [ite_eq_left h, one_mul, Set.indicator_of_mem (Set.mem_iUnion.2 ⟨(o x - m).toNat, by simp only [A, Set.mem_ofPred_eq]; omega⟩)]
+    · rw [ite_eq_right h, zero_mul, Set.indicator_of_notMem fun h' => by
         obtain ⟨k, hk⟩ := Set.mem_iUnion.1 h'
-        simp only [A, Set.mem_setOf_eq] at hk; omega]
+        simp only [A, Set.mem_ofPred_eq] at hk; omega]
   have iA : ∀ k, IntegrableOn χ (A k) γ := fun k =>
     (integrableOn_const (C := χ ϖ ^ m * χ ϖ ^ k) (by rw [vA]; simp)).congr_fun (fun x hx => (cA k x hx).symm) (mA k)
   have sA : ∀ k, ∫ x in A k, χ x ∂γ = χ ϖ ^ m * χ ϖ ^ k := fun k => by

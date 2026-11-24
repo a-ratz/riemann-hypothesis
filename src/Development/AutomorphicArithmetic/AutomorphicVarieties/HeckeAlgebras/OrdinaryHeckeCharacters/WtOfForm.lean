@@ -72,8 +72,8 @@ private theorem wt_of_form {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [Num
     (σ : Submodule ℂ (UA L n → ℂ)) (F : Ga l L n × GV n (fun v : V.frame.Vl => s.w v.1) → Fin d → ℂ) (hF : F ≠ 0)
     (hσ : ∀ ℓ, toForm ι e F ℓ ∈ σ) (y : Emb l (fun v : V.frame.Vl => s.w v.1)) :
     HasWeightAt σ (ι.toRingHom.comp y.res) (lam y.res).dual := by
-  haveI : Finite V.frame.Vl := @Finite.of_fintype _ V.frame.finV
-  haveI : ∀ v : V.frame.Vl, Finite (W.Emb l (s.w v.1)) := fun v => GlobalTheory.HeckeGal.finite_contEmb _
+  have : Finite V.frame.Vl := @Finite.of_fintype _ V.frame.finV
+  have : ∀ v : V.frame.Vl, Finite (W.Emb l (s.w v.1)) := fun v => GlobalTheory.HeckeGal.finite_contEmb _
   let Φ : Module.Dual ℂ (⨂[ℂ] e : Emb l (fun v : V.frame.Vl => s.w v.1), nablaSq ℂ n (lam e.res)) →ₗ[ℂ] (UA L n → ℂ) :=
     { toFun := fun ℓ => toForm ι e F ℓ
       map_add' := fun _ _ => rfl

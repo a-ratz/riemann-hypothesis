@@ -149,7 +149,7 @@ private theorem aut_conj (ι : PadicAlgCl l ≃+* ℂ) {r r' : G ℚ Ω →* M4 
 private theorem cont_small (𝔞 : Amb l) (e : 𝔞.K ≃+* PadicAlgCl l) (he : 𝔞.IsZero e) {ι Γ : Type} [Group Γ] [TopologicalSpace Γ]
     (P : PD ι Γ 𝔞.V) (hP : 𝔞.Small P) : Continuous (mapRep ((e : 𝔞.K →+* PadicAlgCl l).comp 𝔞.toK) P.r) := by
   obtain ⟨A, _, _, _, f, P₁, hf, hc, rfl⟩ := hP
-  haveI := hf.loc
+  have := hf.loc
   let φ : A →+* PadicAlgCl l := ((e : 𝔞.K →+* PadicAlgCl l).comp 𝔞.toK).comp f
   have h1 : ∀ x, ‖φ x‖ ≤ 1 := fun x => (he.2 _).1 (f x).2
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible A
@@ -183,7 +183,7 @@ private theorem comm_ab (E : Type) [Field E] [Algebra ℚ E] [Algebra E Ω] [IsS
   exact congrArg (algebraMap E Ω) (DFunLike.congr_fun h x)
 
 private theorem comm_L {D : Raw Ω c} (T : Tower D) (a b : G ℚ Ω) : a * b * a⁻¹ * b⁻¹ ∈ T.L.fixingSubgroup := by
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   rw [T.hL, IntermediateField.fixingSubgroup_sup]
   refine ⟨?_, ?_⟩
   · exact fun x => comm_ab T.F a b x
@@ -238,7 +238,7 @@ private theorem map_psi {ι Γ R R' : Type} [Group Γ] [CommRing R] [CommRing R'
 private theorem irr_L {D : Raw Ω c} (T : Tower D) (hT : T.Ok) (𝔞 : Amb l) (f : 𝔞.V →+* PadicAlgCl l) (hf : Function.Injective f)
     (r : G ℚ Ω →* M4 𝔞.V) (hr : ∀ g i j, r g i j - 𝔞.a c (D.r0 g i j) ∈ maximalIdeal 𝔞.V) (hi : Irr (mapRep f r)) :
     Irr ((mapRep f r).comp T.L.fixingSubgroup.subtype) := by
-  haveI : T.L.fixingSubgroup.Normal := ⟨fun n hn g => by
+  have : T.L.fixingSubgroup.Normal := ⟨fun n hn g => by
     have := mul_mem (comm_L T g n) hn
     rwa [inv_mul_cancel_right] at this⟩
   refine irr_sub f hf (residue 𝔞.V) r

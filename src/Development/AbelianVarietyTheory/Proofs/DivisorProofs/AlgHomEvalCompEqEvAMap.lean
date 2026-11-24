@@ -57,7 +57,7 @@ theorem algHom_eval_comp_eq_evA_map :
       ∀ hx : ∀ i, IsNilpotent (g (x i)), ∀ f,
         g (E f) = evA k (fun i => g (x i)) hx (map r f) := by
   intro p m O A k A' σ _ _ _ _ _ _ _ x E hE r g hg _ hx f
-  letI : Algebra O A' := ((algebraMap k A').comp r).toAlgebra
+  let : Algebra O A' := ((algebraMap k A').comp r).toAlgebra
   have hs : HasSubst (fun i => (C (g (x i)) : MvPowerSeries Empty A')) :=
     hasSubst_of_constantCoeff_nilpotent fun i => by simpa using hx i
   have hevX : ∀ i, evA k (fun i => g (x i)) hx (X i) = g (x i) := by

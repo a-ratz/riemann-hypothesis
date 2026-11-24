@@ -97,7 +97,7 @@ private theorem sum_push (hS : SumComp) (hF : FibFin) {q : ℕ} {i : ℤ} {Z Z' 
     [IsFinite h] [IsFinite p] (w : Wt Z) (A : Sq p) (a : Sec (tw q i) A.V) (b : Sec (tw q i) A.U)
     (hb : IsSum w (sqPush h p A) (Sec.res (pullback.snd h A.v) a) b) : IsSum (w.push h) A a b := by
   intro Ω _ _ x
-  haveI := A.finite
+  have := A.finite
   refine (hb Ω x).trans ((hS (pullback.snd h A.v) A.r Ω x _
     (fun z => w Ω (z ≫ pullback.fst h A.v) • Sec.res z (Sec.res (pullback.snd h A.v) a))).trans ?_)
   refine finsum_congr fun y => finsum_congr fun hy => ?_

@@ -100,8 +100,8 @@ theorem UpperTheory.card_fiber_reduction_eq_totient :
   intro l _ n m N _ hN z
   have hl : l.Prime := Fact.out
   have hdvd : l ^ (m + n) ∣ topM l n m (N * N) := Dvd.intro _ rfl
-  haveI : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : NeZero (topM l n m (N * N)) :=
+  have : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (topM l n m (N * N)) :=
     ⟨mul_ne_zero (pow_ne_zero _ hl.ne_zero) (mul_ne_zero (NeZero.ne N) (NeZero.ne N))⟩
   have key := fib_card (ZMod.unitsMap hdvd) (ZMod.unitsMap_surjective hdvd) z
   have hred : ∀ y, redTop l n m N y = ZMod.unitsMap hdvd y := fun y => rfl
@@ -153,7 +153,7 @@ private theorem eisF_shift {K : Type} [Field K] [CharZero K] (j M : ℕ) (ζ : K
     · have : ζ ^ (a₂ + e * a₁) = ζ ^ a₂ :=
         zpow_cg hM hζ (Int.ModEq.symm ((Int.modEq_iff_dvd).2 (by simpa using hd.mul_left e)))
       rw [this]
-    · simp only [if_neg hd]
+    · simp only [ite_eq_right hd]
   · unfold coefPos
     rw [Finset.mul_sum]
     refine Finset.sum_congr rfl fun d hd => ?_
@@ -428,7 +428,7 @@ theorem UpperTheory.gamma0_diamond_action_eq :
     ∀ {K : Type} [Field K] [CharZero K] (ζ : K) (l : ℕ) [Fact l.Prime] (L N : ℕ) [NeZero N] (x : ZMod N) (c d w : ℕ) (a : ℤ) (s : K →+* K) (u : ZMod (l ^ L)), ¬ l ∣ N → ζ ^ (N * l ^ L) = 1 → s (ζ ^ N) = (ζ ^ N) ^ u.val → ∀ g ∈ CongruenceSubgroup.Gamma0 N, ((en g 0 0 : ℤ) : ZMod N) = (a : ZMod N) → ∀ h : GL (Fin 2) (ZMod (l ^ L)), (h : Matrix (Fin 2) (Fin 2) (ZMod (l ^ L))) 0 0 = ((en g 0 0 : ℤ) : ZMod (l ^ L)) → (h : Matrix (Fin 2) (Fin 2) (ZMod (l ^ L))) 0 1 = u * (((N : ℤ) * en g 0 1 : ℤ) : ZMod (l ^ L)) → (N : ZMod (l ^ L)) * (h : Matrix (Fin 2) (Fin 2) (ZMod (l ^ L))) 1 0 = ((en g 1 0 : ℤ) : ZMod (l ^ L)) → (h : Matrix (Fin 2) (Fin 2) (ZMod (l ^ L))) 1 1 = u * ((en g 1 1 : ℤ) : ZMod (l ^ L)) → ∀ r : ℕ, s (cmul (smF (c : ℤ) (w + 1) (N * l ^ L) ζ (en g 0 0 * ((N : ℤ) + (x.val : ℤ) * (topT l L N : ℤ) * (l : ℤ) ^ L)) ((N : ℤ) ^ 2 * en g 0 1)) (smF (d : ℤ) 1 (N * l ^ L) ζ (en g 0 0 * (topT l L N : ℤ) * (l : ℤ) ^ L + en g 1 0) ((N : ℤ) * en g 1 1)) r) = cmul (smF (c : ℤ) (w + 1) (N * l ^ L) ζ (rowT N l L h 0 ((x.val : ℤ) * a * (topT l L N : ℤ), 0)).1 (rowT N l L h 0 ((x.val : ℤ) * a * (topT l L N : ℤ), 0)).2) (smF (d : ℤ) 1 (N * l ^ L) ζ (rowT N l L h 1 (a * (topT l L N : ℤ), 0)).1 (rowT N l L h 1 (a * (topT l L N : ℤ), 0)).2) r := by
   intro K _ _ ζ l hl L N _ x c d w a s u hlN hζ hs g hg ha h h00 h01 h10 h11 r
   have hP : 0 < l ^ L := pow_pos hl.out.pos L
-  haveI : NeZero (l ^ L) := ⟨hP.ne'⟩
+  have : NeZero (l ^ L) := ⟨hP.ne'⟩
   have hM : 0 < N * l ^ L := Nat.mul_pos (NeZero.pos N) hP
   have h0 : ζ ≠ 0 := by
     rintro rfl
@@ -551,7 +551,7 @@ open GlobalTheory.KZ GlobalTheory.K4 GlobalTheory.Glue GlobalTheory.KummerEisens
 theorem UpperTheory.isPrimitiveRoot_eOm_and_pow_compatible :
     ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (l : ℕ) [Fact l.Prime] (N : ℕ) [NeZero N], (∀ L : ℕ, IsPrimitiveRoot (eOm ε (1 / ((N * l ^ L : ℕ) : ℚ))) (N * l ^ L)) ∧ (∀ L : ℕ, eOm ε (1 / ((N * l ^ L : ℕ) : ℚ)) ^ N = zt ε l L) ∧ (∀ m n : ℕ, eOm ε (1 / ((N * l ^ (m + n) : ℕ) : ℚ)) ^ (l ^ n) = eOm ε (1 / ((N : ℚ) * (l : ℚ) ^ m))) := by
   intro Ω _ _ _ ε l hl N _
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hl0 : l ≠ 0 := hl.out.ne_zero
   have hN0 : N ≠ 0 := NeZero.ne N
   have hl1 : (l : ℚ) ≠ 0 := by exact_mod_cast hl0
@@ -607,7 +607,7 @@ private theorem siegel_function_root_power_eq {K : Type} [Field K] [CharZero K] 
     smF c j (N * l ^ m) (ζ ^ β) a ((N : ℤ) * (y.val : ℤ) + (l : ℤ) ^ m * 0) =
       smF c j (N * l ^ m) ζ a ((N : ℤ) * (((y * (β : ZMod (l ^ m))).val : ℕ) : ℤ) + (l : ℤ) ^ m * 0) := by
   have hl : 0 < l ^ m := pow_pos (Fact.out : l.Prime).pos m
-  haveI : NeZero (l ^ m) := ⟨hl.ne'⟩
+  have : NeZero (l ^ m) := ⟨hl.ne'⟩
   have hM : 0 < N * l ^ m := Nat.mul_pos hN hl
   have hζ0 : ζ ≠ 0 := by
     rintro rfl
@@ -628,7 +628,7 @@ theorem UpperTheory.pieceT_det_fiber_eq_pieceT_root_pow :
     ∀ {K : Type} [Field K] [CharZero K] (l : ℕ) [Fact l.Prime] (N m k : ℕ) (c d xt t : ℤ) (ζ : K) (β : ℕ) (z₀ : ZMod (l ^ m)), 0 < N → 1 ≤ m → ζ ^ (N * l ^ m) = 1 → IsUnit z₀ → (β : ZMod (l ^ m)) = z₀ → ∀ r : ℕ, pieceT N l m m k (1 : DirichletCharacter K (l ^ m)) c d (xt, 0) (t, 0) ζ ((unitSet l m).filter fun γ : GL (Fin 2) (ZMod (l ^ m)) => (((γ : Matrix (Fin 2) (Fin 2) (ZMod (l ^ m))).det.val : ℕ) : ZMod (l ^ m)) = z₀) r = pieceT N l m m k (1 : DirichletCharacter K (l ^ m)) c d (xt, 0) (t, 0) (ζ ^ β) ((unitSet l m).filter fun γ => (γ : Matrix (Fin 2) (Fin 2) (ZMod (l ^ m))).det = 1) r := by
   intro K _ _ l _ N m k c d xt t ζ β z₀ hN hm hζ hz hβ r
   have hl : 0 < l ^ m := pow_pos (Fact.out : l.Prime).pos m
-  haveI : NeZero (l ^ m) := ⟨hl.ne'⟩
+  have : NeZero (l ^ m) := ⟨hl.ne'⟩
   have hdet : (!![1, 0; 0, z₀] : Matrix (Fin 2) (Fin 2) (ZMod (l ^ m))).det = z₀ := by
     simp [Matrix.det_fin_two]
   obtain ⟨D, hD⟩ : ∃ D : GL (Fin 2) (ZMod (l ^ m)), (D : Matrix (Fin 2) (Fin 2) (ZMod (l ^ m))) = !![1, 0; 0, z₀] :=
@@ -680,9 +680,9 @@ open GlobalTheory.KZ GlobalTheory.K4 GlobalTheory.Glue GlobalTheory.KummerEisens
 theorem UpperTheory.repM_apply_zt_eq_pow_redTop :
     ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (l : ℕ) [Fact l.Prime] (n m N : ℕ) [NeZero N] (y : (ZMod (topM l n m (N * N)))ˣ), (repM (topM l n m (N * N)) y : Ω ≃ₐ[ℚ] Ω) (zt ε l (m + n)) = zt ε l (m + n) ^ ((redTop l n m N y : (ZMod (l ^ (m + n)))ˣ) : ZMod (l ^ (m + n))).val := by
   intro Ω _ _ _ ε l hl n m N _ y
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hl0 : l ^ (m + n) ≠ 0 := pow_ne_zero _ hl.out.ne_zero
-  haveI : NeZero (l ^ (m + n)) := ⟨hl0⟩
+  have : NeZero (l ^ (m + n)) := ⟨hl0⟩
   have h1 : zt ε l (m + n) ^ (l ^ (m + n)) = 1 := by
     have h := (isPrimitiveRoot_eOm ε hl0).pow_eq_one
     rw [Nat.cast_pow] at h
@@ -1078,7 +1078,7 @@ private theorem sum_cj_eq_sum_entries_not_dvd (l : ℕ) [Fact l.Prime] (k : ℕ)
         (fun h : SL(2, ZMod (l ^ k)) => ¬ l ∣ (h 0 0).val ∧ ¬ l ∣ (h 1 0).val), Φ h := by
   classical
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ k) := ⟨pow_ne_zero _ hl.ne_zero⟩
   set π := ZMod.castHom (dvd_pow_self l hk) (ZMod l) with hπ
   set B := Finset.univ.filter (fun δ : SL(2, ZMod (l ^ k)) => π (δ 1 0) = 0) with hB
   set S := Finset.univ.filter
@@ -1220,7 +1220,7 @@ theorem UpperTheory.Kd.L.count :
   obtain ⟨_, _, cop, _, _, _, _, g0, ga, col⟩ := hP
   unfold topMu
   have hk : m + n ≠ 0 := by omega
-  haveI : NeZero (l ^ (m + n) * (N * N)) :=
+  have : NeZero (l ^ (m + n) * (N * N)) :=
     ⟨mul_ne_zero (pow_ne_zero _ hl.ne_zero) (mul_ne_zero (NeZero.ne N) (NeZero.ne N))⟩
   have hcop : N.Coprime (l ^ (m + n)) :=
     Nat.Coprime.pow_right _ ((Nat.Prime.coprime_iff_not_dvd hl).2 cop).symm
@@ -1438,7 +1438,7 @@ theorem UpperTheory.Kd.L.arith :
     · have h0 : EE ε l (m + n) N x c d (gm r₀ * liftSL _ γ) r = 0 := by
         simp [EE, coefQ, not_le.2 hr]
       rw [h0]; exact hi0
-    · have h1 : (r.num : ℚ) = r := Rat.coe_int_num_of_den_eq_one hden
+    · have h1 : (r.num : ℚ) = r := Rat.intCast_num_of_den_eq_one hden
       have h2 : 0 ≤ r.num := Rat.num_nonneg.2 hr
       have h3 : r = ((r.num.toNat : ℕ) : ℚ) := by
         calc r = (r.num : ℚ) := h1.symm
@@ -1468,7 +1468,7 @@ theorem UpperTheory.Kd.L.arith :
     repM (topM l n m (N * N)) y (E r₀ γ) with hS2
   have hF : Fsum ε l n m N x c d w gm R z (i : ℚ) = (N : Ω) ^ 3 * ((l : Ω) ^ ((m + n) * w) * S1 + (l : Ω) ^ n * S2) := by
     unfold Fsum
-    rw [if_pos (by simp)]
+    rw [ite_eq_left (by simp)]
     congr 1
     simp only [hS1, hS2, Finset.mul_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun y _ => Finset.sum_congr rfl fun r₀ _ => Finset.sum_congr rfl fun γ hγ => ?_
@@ -1549,7 +1549,7 @@ theorem UpperTheory.Kd.L.arith :
     have hdiv : l ^ (m + n) * i = l ^ n * (l ^ m * i) := by rw [pow_add]; ring
     rw [hdiv]
     unfold vp
-    rw [if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ (pow_pos hl.pos n)]
+    rw [ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ (pow_pos hl.pos n)]
   rw [hvp] at down
   set Ks : Ω := ∑ γ ∈ ((unitSet l (m + n)).filter fun γ : GL (Fin 2) (ZMod (l ^ (m + n))) => (((γ : Matrix (Fin 2) (Fin 2) (ZMod (l ^ (m + n)))).det.val : ℕ) : ZMod (l ^ m)) = z₀),
     kg ζ l (m + n) N (c : ℤ) (d : ℤ) w ((x.val : ℤ) * a₀ * (topT l (m + n) N : ℤ), 0) (a₀ * (topT l (m + n) N : ℤ), 0) γ (l ^ (m + n) * i) with hKs

@@ -121,7 +121,7 @@ theorem exists_conj_level : ∀ (L : Type) [Field L] [NumberField L] [IsCMField 
     have := invTranspose_mem_GLint n _ (hK _ hg)
     rwa [invTranspose_invTranspose] at this
   · have hc : Continuous ((invTranspose n).subgroupComap K) :=
-      Continuous.subtype_mk ((continuous_invTranspose n).comp continuous_subtype_val) _
+      Continuous.subtype_mk ((continuous_invTranspose n).comp continuous_subtypeVal) _
     exact hθ.preimage hc
   · intro κ
     rw [conjSP_loc]

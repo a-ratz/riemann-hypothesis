@@ -72,9 +72,9 @@ theorem UpperTheory.V.HV.kstarRam :
     ∀ p : ℕ, p.Prime → p % 4 = 3 → ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] [Algebra (Kstar p) Ω] (A : ValuationSubring Ω), A.valuation (p : Ω) < 1 →
       ¬ Ine (F := ℚ) A ≤ galOf ℚ (Kstar p) Ω := by
   intro p hp hp4 Ω _ _ _ _ A hA hle
-  haveI := Fact.mk hp
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have := Fact.mk hp
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hp2 : p ≠ 2 := by rintro rfl; norm_num at hp4
   have hsub : Subsingleton (ZMod (ordCompl[p] p))ˣ := by
     have hd : ordCompl[p] p = 1 := by
@@ -87,8 +87,8 @@ theorem UpperTheory.V.HV.kstarRam :
     exact Subsingleton.elim _ _
   rw [← UpperTheory.V.B1.cycIne Ω p p A hA] at hmem
   obtain ⟨g, hg, hgb⟩ := hmem
-  haveI : NeZero ((p : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hp.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω p
+  have : NeZero ((p : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hp.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω p
   obtain ⟨s0, hs0⟩ := sqrt_kstar p
   set s : Ω := algebraMap (Kstar p) Ω s0 with hsdef
   have hodd : Odd (p / 2) := Nat.odd_iff.mpr (by omega)

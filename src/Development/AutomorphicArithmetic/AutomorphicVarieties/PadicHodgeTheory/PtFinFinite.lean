@@ -150,7 +150,7 @@ private theorem ptFin_finite {O S : Type} [CommRing O] [IsLocalRing O] [IsAdicCo
   set J : Ideal S := (maximalIdeal O).map (algebraMap O S) with hJ
   have hJle : J ≤ maximalIdeal S := Ideal.map_le_iff_le_comap.2 hloc
   have hJne : J ≠ ⊤ := fun h => (maximalIdeal.isMaximal S).ne_top (top_le_iff.1 (h ▸ hJle))
-  haveI : IsHausdorff (maximalIdeal O) S :=
+  have : IsHausdorff (maximalIdeal O) S :=
     IsHausdorff.map_algebraMap_iff.1 (IsHausdorff.of_isLocalRing J S hJne)
   have hrad : maximalIdeal S ≤ J.radical := by
     rw [Ideal.radical_eq_sInf]
@@ -194,15 +194,15 @@ theorem UpperTheory.V.Loc.ptFin :
     exact h1.add isIntegral_algebraMap
   let g : R →ₐ[O] f.range := f.rangeRestrict
   have hg : Function.Surjective g := f.rangeRestrict_surjective
-  haveI : IsLocalRing f.range := IsLocalRing.of_surjective' (g : R →+* f.range) hg
-  haveI : IsNoetherianRing f.range := isNoetherianRing_of_surjective R _ (g : R →+* f.range) hg
-  haveI : IsLocalHom (g : R →+* f.range) := IsLocalHom.of_surjective _ hg
+  have : IsLocalRing f.range := IsLocalRing.of_surjective' (g : R →+* f.range) hg
+  have : IsNoetherianRing f.range := isNoetherianRing_of_surjective R _ (g : R →+* f.range) hg
+  have : IsLocalHom (g : R →+* f.range) := IsLocalHom.of_surjective _ hg
   have hm : ∀ a ∈ maximalIdeal R, g a ∈ maximalIdeal f.range := fun a ha =>
     map_nonunit (g : R →+* f.range) a ha
-  haveI : Algebra.IsIntegral O f.range := ⟨fun x => by
+  have : Algebra.IsIntegral O f.range := ⟨fun x => by
     obtain ⟨a, rfl⟩ := hg x
     exact (isIntegral_algHom_iff f.range.val Subtype.val_injective).1 (hint a)⟩
-  haveI : Module.Finite O f.range := ptFin_finite
+  have : Module.Finite O f.range := ptFin_finite
     (fun a ha => by
       rw [← g.commutes]
       exact hm _ (map_nonunit (algebraMap O R) a ha))
@@ -218,7 +218,7 @@ theorem UpperTheory.V.Loc.ptFin :
     Set.range (fun i => (F (b i)).snd) ∪ (fun p => (F p).snd) '' (P : Set R)
   have hT : T.Finite :=
     (((Set.finite_range _).union (Set.finite_range _)).union (Set.finite_range _)).union (P.finite_toSet.image _)
-  haveI : Finite T := hT
+  have : Finite T := hT
   let E : IntermediateField ℚ_[l] (PadicAlgCl l) := IntermediateField.adjoin ℚ_[l] T
   have hE : FiniteDimensional ℚ_[l] E :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x

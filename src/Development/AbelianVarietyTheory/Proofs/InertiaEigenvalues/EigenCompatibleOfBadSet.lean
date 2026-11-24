@@ -294,7 +294,7 @@ theorem exists_hkDat (F : Face3 D A3) (hL : R.toLevCh.Is A3.A.μ0) (hsub : Sb �
     (hs : IsSplitPl D.host P) (hP : P ∉ Sb') {k : ℕ} (hk : k ≤ D.R.r) : ∃ α B, HkDat R Sb i k P α B ∧
       IsDiagOpAt (Wc D i) (levW R.toRealDat F.lv2 i) (chiW R.toRealDat F.lv2 i) ∅ P k B := by
   obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt P ((GlobalTheory.HeckeTieCompare.isSplitPl_iff P).1 hs)
-  obtain ⟨ϖ, h1, h2⟩ := SetLike.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
+  obtain ⟨ϖ, h1, h2⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
   obtain ⟨α, hα⟩ := ((GlobalTheory.SplitPlace.split_local (Wc D i) P e he).2.2 ϖ h1 h2).1 k ((rank_Wc i).symm ▸ hk)
   obtain ⟨B, hB, hD⟩ := exists_local (A3 := A3) (R := R.toRealDat) (F := F.lv2) hL i (hlow.offPg hL hP) hk ⟨e, ϖ, he, h1, h2, hα⟩
   exact ⟨α, B, ⟨hs, fun h => hP (hsub h), hlow.odd hP, hk, ⟨e, ϖ, he, h1, h2, hα⟩, hD⟩, hB⟩

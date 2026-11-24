@@ -264,9 +264,9 @@ def logOne : oneUnits v →* Multiplicative (𝓞 L ⧸ v.asIdeal) where
     exact lt_of_le_of_lt (mul_le_of_le_one_right' hy) hx
 
 theorem dvd_card {p : ℕ} (hp : p.Prime) (hv : (p : 𝓞 L) ∈ v.asIdeal) : p ∣ Nat.card (𝓞 L ⧸ v.asIdeal) := by
-  haveI : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  haveI := v.isPrime
-  haveI := Fact.mk hp
+  have : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have := v.isPrime
+  have := Fact.mk hp
   have h1 : p • (1 : 𝓞 L ⧸ v.asIdeal) = 0 := by
     rw [nsmul_one, ← map_natCast (Ideal.Quotient.mk v.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     exact hv
@@ -275,7 +275,7 @@ theorem dvd_card {p : ℕ} (hp : p.Prime) (hv : (p : 𝓞 L) ∈ v.asIdeal) : p 
 
 theorem coprime_card {p : ℕ} (hp : p.Prime) (hv : (p : 𝓞 L) ∈ v.asIdeal) :
     (Nat.card (𝓞 L ⧸ v.asIdeal) - 1).Coprime p := by
-  haveI : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
   refine ((Nat.Prime.coprime_iff_not_dvd hp).2 fun h => hp.one_lt.ne' (Nat.dvd_one.1 ?_)).symm
   have h2 := Nat.dvd_sub (dvd_card v hp hv) h
   have : 0 < Nat.card (𝓞 L ⧸ v.asIdeal) := Nat.card_pos
@@ -283,9 +283,9 @@ theorem coprime_card {p : ℕ} (hp : p.Prime) (hv : (p : 𝓞 L) ∈ v.asIdeal) 
 
 theorem pow_unitPart_mem (x : (v.adicCompletion L)ˣ) :
     unitPart v x ^ (Nat.card (𝓞 L ⧸ v.asIdeal) - 1) ∈ oneUnits v := by
-  haveI : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  haveI := v.isMaximal
-  letI := Ideal.Quotient.field v.asIdeal
+  have : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have := v.isMaximal
+  let := Ideal.Quotient.field v.asIdeal
   rw [← map_pow]
   set y := x ^ (Nat.card (𝓞 L ⧸ v.asIdeal) - 1) with hy
   have h1 : resPart v y = 1 := by
@@ -306,8 +306,8 @@ theorem exists_wild {p : ℕ} (hp : p.Prime) (hv : (p : 𝓞 L) ∈ v.asIdeal) :
       ∃ k : Lˣ, IsUnitAt v (atFin v k) ∧
         Valued.v (((atFin v k : (v.adicCompletion L)ˣ) : v.adicCompletion L) - 1) ≤ WithZero.exp (-1 : ℤ) ∧
         θ (atFin v k) ≠ 1 := by
-  haveI : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
-  haveI := v.isPrime
+  have : Finite (𝓞 L ⧸ v.asIdeal) := v.asIdeal.finiteQuotientOfFreeOfNeBot v.ne_bot
+  have := v.isPrime
   set m := Nat.card (𝓞 L ⧸ v.asIdeal) - 1 with hm
   have hne : Multiplicative.ofAdd (1 : 𝓞 L ⧸ v.asIdeal) ≠ 1 := fun h => one_ne_zero (ofAdd_eq_one.1 h)
   obtain ⟨ψ, hψ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity (Multiplicative (𝓞 L ⧸ v.asIdeal)) ℂ hne

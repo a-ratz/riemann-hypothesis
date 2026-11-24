@@ -104,7 +104,7 @@ private theorem UpperTheory.V.Fr.add_mul_self_eq_of_orthogonal_idempotents {C K 
 theorem UpperTheory.V.Fr.idem :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (K : Type) [CommRing K] [Algebra C K] (ρ : NRep F n K), Integral O C ρ → ∀ i, Matrix.single i i (1 : K) ∈ Submodule.span C (Set.range ρ.r) := by
   intro l _ O _ _ _ _ F C₀ n hF hn C _ _ _ K _ _ ρ hI i
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have : CharP (ResidueField O) l := IsCoef.char
   have hunit : ∀ x : C, res O C x ≠ 0 → IsUnit x := by
     intro x hx
     by_contra h

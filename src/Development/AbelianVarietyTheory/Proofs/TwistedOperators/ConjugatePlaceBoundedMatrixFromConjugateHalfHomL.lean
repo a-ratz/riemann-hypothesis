@@ -189,7 +189,7 @@ theorem conj_half_onto : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (𝓞 D.hos
   have hYint : ∀ l m, Valued.v (Y l m) ≤ 1 := by
     intro l m
     rw [hY, Matrix.smul_apply, smul_eq_mul, Valuation.map_mul, map_inv₀,
-      inv_mul_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 hc0))]
+      inv_mul_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 hc0))]
     exact hy l m
   choose σ hσ using hπ.1
   clear_value Y Z Gt Gs BT BS c

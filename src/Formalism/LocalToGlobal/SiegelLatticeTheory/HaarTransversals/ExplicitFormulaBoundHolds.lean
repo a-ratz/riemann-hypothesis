@@ -265,10 +265,10 @@ theorem multBound_of_latCount (I : AutInst) (hL : LatCount I) (hT : DistTri) : M
 
 theorem muA_isHaar (I : AutInst) (μf : Measure I.Gf) [SigmaFinite μf] [μf.IsHaarMeasure] :
     (I.muA μf).IsHaarMeasure := by
-  haveI : ∀ v, (Formalism.REAL.muG (I.ε v)).IsHaarMeasure := fun v => by
+  have : ∀ v, (Formalism.REAL.muG (I.ε v)).IsHaarMeasure := fun v => by
     unfold Formalism.REAL.muG
     infer_instance
-  haveI hpi : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := by
+  have hpi : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := by
     infer_instance
   unfold AutInst.muA
   exact Measure.prod.instIsHaarMeasure _ _

@@ -57,7 +57,7 @@ theorem UpperTheory.Kd.C7.pKumAlg :
   intro l hl _ Ω _ _ _ A _ ζ hζ m n _ s _
   have hne : ∀ r : ℕ, NeZero (l ^ r) := fun r => ⟨(pow_pos hl.out.pos r).ne'⟩
   have h1 : ∀ r, ζ r ^ l ^ r = 1 := fun r => (hζ r).1.pow_eq_one
-  haveI := hne n
+  have := hne n
   refine ⟨?_, ?_, ?_⟩
   · rintro u u' k k' ⟨v, rfl, hv⟩ ⟨v', rfl, hv'⟩
     refine ⟨⟨v * v', mul_pow _ _ _, ?_⟩, ⟨v⁻¹, inv_pow _ _, ?_⟩, fun a => ⟨v ^ a, ?_, ?_⟩⟩
@@ -70,7 +70,7 @@ theorem UpperTheory.Kd.C7.pKumAlg :
     · rw [map_pow, hv, ka_pw (h1 n) (k.val * a) (a * k) (by simp [mul_comm]), mul_pow, pow_mul]
   · rintro u k n' hn' - ⟨v, rfl, hv⟩
     obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hn'
-    haveI := hne n'
+    have := hne n'
     refine ⟨v ^ l ^ d, by rw [← pow_mul, ← pow_add, add_comm], ?_⟩
     rw [map_pow, hv, ka_pw (h1 n') k.val _ rfl, mul_pow, ← pow_mul, mul_comm k.val, pow_mul,
       ka_down (fun r => (hζ r).2)]

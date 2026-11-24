@@ -117,10 +117,10 @@ private theorem finrank_Z1_chRep_eq_two_of_ne_one_ne_cyc (hP : LocalPublishedThe
       ring
   have eB := Submodule.comapSubtypeEquivOfLe hBZ
   rw [hD, finrank_bot] at e2
-  rw [hH0, finrank_bot, e2, if_pos rfl, hr, Subgroup.index_top, finrank_self] at e1
-  haveI : Module.Finite E ↥(ReciprocityTheory.Gal.B1 (chRep κ)) := finite_of_finrank_pos (by omega)
-  haveI := Module.Finite.equiv eB.symm
-  haveI : Module.Finite E ↥(ReciprocityTheory.Gal.Z1 (chRep κ)) :=
+  rw [hH0, finrank_bot, e2, ite_eq_left rfl, hr, Subgroup.index_top, finrank_self] at e1
+  have : Module.Finite E ↥(ReciprocityTheory.Gal.B1 (chRep κ)) := finite_of_finrank_pos (by omega)
+  have := Module.Finite.equiv eB.symm
+  have : Module.Finite E ↥(ReciprocityTheory.Gal.Z1 (chRep κ)) :=
     Module.Finite.of_submodule_quotient ((ReciprocityTheory.Gal.B1 (chRep κ)).comap (ReciprocityTheory.Gal.Z1 (chRep κ)).subtype)
   have e3 := Submodule.finrank_quotient_add_finrank
     ((ReciprocityTheory.Gal.B1 (chRep κ)).comap (ReciprocityTheory.Gal.Z1 (chRep κ)).subtype)
@@ -145,9 +145,9 @@ theorem UpperTheory.exists_finrank_two_cocycles_char_ratio :
   have F7 := facts.2.2.2.2.2.2.1
   have LargeParameterEstimates := facts.2.2.2.2.2.2.2.2.2.2.1
   obtain ⟨φ, hφ, hr, hcy⟩ := dec_iso l (D.pl l) (hD.pl_over l Fact.out)
-  letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+  let : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
   have hinj : Function.Injective (algebraMap c.O E) := IsFractionRing.injective _ _
   let f : (c.O)ˣ →* Eˣ := Units.map (algebraMap c.O E : c.O →* E)
   have hf : Function.Injective f := Units.map_injective hinj
@@ -161,7 +161,7 @@ theorem UpperTheory.exists_finrank_two_cocycles_char_ratio :
       rw [hκ, map_inv (D.ps b), ← map_mul]
       rfl
     rw [this]
-    exact ((hps a).comp continuous_subtype_val).mul ((hps b).comp (continuous_subtype_val.inv))
+    exact ((hps a).comp continuous_subtypeVal).mul ((hps b).comp (continuous_subtypeVal.inv))
   have hce : ∀ g : D.Gp l, cycA l l E (φ g) = f (chiO ℚ Ω l c.O g) := fun g => Units.ext (by
     show algebraMap ℤ_[l] E (cyc l l (φ g) : ℤ_[l]ˣ) = algebraMap c.O E (algebraMap ℤ_[l] c.O (cycZ ℚ Ω l g : ℤ_[l]ˣ))
     rw [hcy, ← IsScalarTower.algebraMap_apply])
@@ -280,9 +280,9 @@ private theorem prj_diag {B : Type} [CommRing B] (c : Fin 4 → B) (i : Fin 4) :
     by_cases hai : a = i
     · subst hai
       simp
-    · rw [if_pos rfl, if_neg (fun h => hai h.1.symm)]
+    · rw [ite_eq_left rfl, ite_eq_right (fun h => hai h.1.symm)]
       exact Finset.prod_eq_zero (Finset.mem_erase.2 ⟨hai, Finset.mem_univ _⟩) (sub_self _)
-  · rw [if_neg hab, if_neg (fun h => hab (h.1.symm.trans h.2))]
+  · rw [ite_eq_right hab, ite_eq_right (fun h => hab (h.1.symm.trans h.2))]
 
 private theorem prj_mul_eq_zero {B : Type} [CommRing B] {h h' : M4 B} (e : h' * h = 1) (e' : h * h' = 1)
     {c : Fin 4 → B} (hc : ∀ i j, i ≠ j → IsUnit (c i - c j)) (M : M4 B) (i j : Fin 4) :
@@ -320,7 +320,7 @@ private theorem prj_mul_eq_zero {B : Type} [CommRing B] {h h' : M4 B} (e : h' * 
   constructor
   · intro hz
     have h1 := hent (h' * M * h) j i
-    rw [hz, if_pos ⟨rfl, rfl⟩] at h1
+    rw [hz, ite_eq_left ⟨rfl, rfl⟩] at h1
     have h2 : (ua : B) * (h' * M * h) j i * ub = 0 := h1.symm
     simpa using h2
   · intro hz
@@ -567,7 +567,7 @@ private theorem main {H : Type} [Group H] (I : Subgroup H) (s₀ : H) (hs : s₀
     set Y : M4 E := Matrix.of fun a b => if a = b then 0 else γ s₀ a b / (1 - p a s₀ / p b s₀) with hYdef
     have hY : ∀ a b, a ≠ b → γ s₀ a b = (1 - p a s₀ / p b s₀) * Y a b := by
       intro a b hab
-      simp only [hYdef, Matrix.of_apply, if_neg hab]
+      simp only [hYdef, Matrix.of_apply, ite_eq_right hab]
       rw [mul_div_assoc', eq_div_iff (hne a b hab), mul_comm]
     have hY' := (ord_iff I s₀ hs p hp hc γ r hr Y hY).1 hO
     refine ⟨hsp4, ⟨Y, ?_, hY'.1⟩, hY'.2⟩
@@ -579,7 +579,7 @@ private theorem main {H : Type} [Group H] (I : Subgroup H) (s₀ : H) (hs : s₀
     · subst hij
       simp
     · have hij' : j.rev ≠ i.rev := fun h => hij (Fin.rev_injective h).symm
-      rw [if_neg hij', if_neg hij, hrat s₀ i j, ← neg_div, ← hγ, smul_div_assoc]
+      rw [ite_eq_right hij', ite_eq_right hij, hrat s₀ i j, ← neg_div, ← hγ, smul_div_assoc]
   · rintro ⟨hsp4, ⟨X, hX, hlow⟩, hin⟩
     set Y : M4 E := Matrix.of fun a b => if b < a then X a b else γ s₀ a b / (1 - p a s₀ / p b s₀) with hYdef
     have hY : ∀ a b, a ≠ b → γ s₀ a b = (1 - p a s₀ / p b s₀) * Y a b := by
@@ -590,7 +590,7 @@ private theorem main {H : Type} [Group H] (I : Subgroup H) (s₀ : H) (hs : s₀
       · rw [mul_div_assoc', eq_div_iff (hne a b hab), mul_comm]
     refine ⟨hsp4, (ord_iff I s₀ hs p hp hc γ r hr Y hY).2 ⟨?_, hin⟩⟩
     intro g a b hba
-    simp only [hYdef, Matrix.of_apply, if_pos hba]
+    simp only [hYdef, Matrix.of_apply, ite_eq_left hba]
     exact hlow g a b hba
 
 end UpperTheory.V.Loc.SymplecticTangentProjection
@@ -688,7 +688,7 @@ private theorem hom_iff (χ : Fin 4 → H →* Eˣ) (γ : H → M4 E) :
     have u2 := Units.ne_zero (χ b h)
     rw [TrivSqZeroExt.ext_iff, Matrix.mul_apply, TrivSqZeroExt.snd_sum, TrivSqZeroExt.fst_sum]
     simp only [DualNumber.snd_mul, TrivSqZeroExt.fst_mul, hf, hs, Finset.sum_add_distrib, ite_mul, mul_ite, zero_mul,
-      mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul, Units.val_mul]
+      mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul, Units.val_mul]
     rw [and_iff_right (by split_ifs with h <;> simp [h])]
     constructor
     · intro e
@@ -724,7 +724,7 @@ private theorem wt_cases : ∀ j ∈ wts, j = 0 ∨ (∃ a b : Fin 4, a < b ∧ 
 private theorem wt_pos_ne : ∀ a b a' b' : Fin 4, a < b → b' ≤ a' → wt a' b' ≠ wt a b := by decide
 
 private theorem dimsL_out (j : ℤ × ℤ) (h : j ∉ wts) : dimsL j = 0 := by
-  rw [dimsL, if_neg h, if_neg]
+  rw [dimsL, ite_eq_right h, ite_eq_right]
   rintro (rfl | rfl | rfl | rfl | rfl) <;> exact h (by decide)
 
 private theorem sgn_rev : ∀ a b : Fin 4, sgn b.rev * sgn a.rev = sgn a * sgn b := by decide
@@ -774,7 +774,7 @@ private theorem dim_root [CharZero E] (χ : Fin 4 → H →* Eˣ) (I : H → Pro
     · rw [hv, hXw _ _ h, mul_zero]
   have hk : 1 - (χ a g0 : E) / χ b g0 ≠ 0 := fun h =>
     h0 (Units.ext ((div_eq_one_iff_eq (Units.ne_zero _)).1 (sub_eq_zero.1 h).symm))
-  refine (finrank_eq_one_iff_of_nonzero' (⟨v, hvS⟩ : S) fun h => ?_).2 fun ⟨γ, hγ⟩ => ?_
+  refine (finrank_eq_one_iff_of_ne_zero' (⟨v, hvS⟩ : S) fun h => ?_).2 fun ⟨γ, hγ⟩ => ?_
   · have := congrFun (congrFun (congrFun (congrArg Subtype.val h) g0) a) b
     exact mul_ne_zero hk hX0 this
   · obtain ⟨-, h1, ⟨Y, hY, h2⟩, -, -, h3⟩ := (hS γ).1 hγ
@@ -946,11 +946,11 @@ private theorem cont_of_open {H O E : Type} [Group H] [TopologicalSpace H] [IsTo
 theorem UpperTheory.tangent_space_deformation_at_l :
     LocalPublishedTheorems → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (hD : D.Good) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra ↥c.O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ↥c.O E] [IsScalarTower ℤ_[l] ℚ_[l] E] [IsFractionRing ↥c.O E] (j : ℤ × ℤ) (S : Submodule E (D.Gp l → M4 E)), (∀ s, s ∈ S ↔ (∃ r' : D.Gp l →* M4 (DualNumber E), (∀ g a b, r' g a b = ⟨algebraMap c.O E (D.r0At l g a b), s g a b⟩) ∧ EqL D r') ∧ (∀ a b, QCont l fun g => s g a b) ∧ ∀ g a b, wt a b ≠ j → s g a b = 0) → finrank E ↥S = dimsL j := by
   intro hL Ω _ _ _ l _ c D hD E _ _ _ _ _ _ _ _ j S hS
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
-  haveI : IsGalois ℚ Ω := {}
-  letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
+  have : IsGalois ℚ Ω := {}
+  let : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
   obtain ⟨-, f2, -, -, -, f4, f3, -, -, -, -, -, f5, -⟩ := facts D hD
   have hT : l ∈ D.T := Finset.mem_insert_self _ _
   have hp : l.Prime := Fact.out
@@ -970,7 +970,7 @@ theorem UpperTheory.tangent_space_deformation_at_l :
       IsModuleTopology.continuous_of_linearMap (Algebra.linearMap ℚ_[l] E)
     have h2 : Continuous fun g : G ℚ Ω => ((cycZ ℚ Ω l g : ℤ_[l]ˣ) : ℤ_[l]) :=
       Units.continuous_val.comp (continuous_cycZ ℚ Ω l)
-    refine (h1.comp (continuous_subtype_val.comp h2)).congr fun g => ?_
+    refine (h1.comp (continuous_subtypeVal.comp h2)).congr fun g => ?_
     show algebraMap ℚ_[l] E (algebraMap ℤ_[l] ℚ_[l] _) = algebraMap c.O E (algebraMap ℤ_[l] c.O _)
     rw [← IsScalarTower.algebraMap_apply, ← IsScalarTower.algebraMap_apply]
   have hal : Continuous fun g => algebraMap c.O E (D.al g : c.Oˣ) :=
@@ -987,7 +987,7 @@ theorem UpperTheory.tangent_space_deformation_at_l :
     · exact hPs
     · exact hal
     · exact continuous_const (y := algebraMap c.O E 1)
-  have hc : ∀ a, Continuous fun g => (χ a g : E) := fun a => (hps a).comp continuous_subtype_val
+  have hc : ∀ a, Continuous fun g => (χ a g : E) := fun a => (hps a).comp continuous_subtypeVal
   obtain ⟨hex, hun⟩ := UpperTheory.exists_unique_unramified_hom_of_frobenius_value l l hp (D.pl l) (hD.pl_over l hp) ⟨D.sg l, (f2 l hT).1⟩ (hD.sg_frob l hT) E
   refine dim_core χ (fun g => (g : G ℚ Ω) ∈ D.Ip l) (fun g => algebraMap c.O E (D.th g)) ⟨D.sg l, (f2 l hT).1⟩
     (fun g a => ?_) hc (fun a => ?_) (fun a b hab => ?_) hex hun (fun a b hab => ?_) (EqL D)

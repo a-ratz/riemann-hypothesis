@@ -125,12 +125,12 @@ theorem continuous_hermV (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (n : ℕ) (
     Continuous (hermV σ v : HermR (Af F) σ n → HermR (Fv F v) σ n) := by
   obtain ⟨-, hAfLC, hAfSC, hAfT2⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨t1, t2, t3, t4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  letI : MeasurableSpace (Af F) := borel _
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  letI : MeasurableSpace (Fv F v) := borel _
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  let : MeasurableSpace (Af F) := borel _
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  let : MeasurableSpace (Fv F v) := borel _
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨d, b⟩ : ∃ d, Nonempty (Module.Basis (Fin d) F E) := by
-    haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; omega)
+    have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; omega)
     exact ⟨_, ⟨Module.finBasis F E⟩⟩
   obtain ⟨b⟩ := b
   let ef := (hermVec_isHomeomorph hCM (Af F) b n).homeomorph _
@@ -156,15 +156,15 @@ theorem coordHerm_box (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} (b :
       ∏ v ∈ S, coordHerm (Fv F v) σ b (lam v) n (A v) := by
   obtain ⟨-, hAfLC, hAfSC, hAfT2⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   have hloc := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
-  haveI : ∀ v, T2Space (Fv F v) := fun v => (hloc v).2.2.2.1
-  haveI : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (HermR (Fv F v) σ n) := fun v => ⟨rfl⟩
+  have : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
+  have : ∀ v, T2Space (Fv F v) := fun v => (hloc v).2.2.2.1
+  have : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (HermR (Fv F v) σ n) := fun v => ⟨rfl⟩
   let ef := ((hermVec_isHomeomorph hCM (Af F) b n).homeomorph _).toMeasurableEquiv
   let ev := fun v => ((hermVec_isHomeomorph hCM (Fv F v) b n).homeomorph _).toMeasurableEquiv
   have hef : ∀ y, ef y = hermVec (Af F) σ b n y := fun _ => rfl
@@ -187,7 +187,7 @@ theorem coordHerm_box (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} (b :
     have hl : ∀ v, (hermV σ v y ∈ latH σ b v n ↔ ∀ i, evalV F v (ef y i) ∈ v.adicCompletionIntegers F) := fun v =>
       (mem_latH_iff_vec σ b n v (hermV σ v y)).trans (forall_congr' fun i => Iff.of_eq
         (congrArg (fun t => t ∈ v.adicCompletionIntegers F) (hermVec_hermV σ b n v y i)))
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, A', hsy]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, A', hsy]
     exact and_congr Iff.rfl (forall_congr' fun v => imp_congr_right fun _ => hl v)
   rw [hset, hF.measure_preimage_equiv, GlobalTheory.CompanionTheory.SW.AfBox.pi_box F lam hlam lf hlf h1 (Idx n d) S A' hA']
   refine Finset.prod_congr rfl fun v _ => ?_
@@ -211,19 +211,19 @@ theorem map_restrict_intH (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} 
       Measure.pi fun v : S => coordHerm (Fv F v.1) σ b (lam v.1) n := by
   classical
   have hloc := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
-  haveI : ∀ v, T2Space (Fv F v) := fun v => (hloc v).2.2.2.1
-  haveI : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
-  haveI : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (HermR (Fv F v) σ n) := fun v => ⟨rfl⟩
+  have : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
+  have : ∀ v, T2Space (Fv F v) := fun v => (hloc v).2.2.2.1
+  have : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (HermR (Fv F v) σ n) := fun v => ⟨rfl⟩
   have hSF : ∀ v, SigmaFinite (coordHerm (Fv F v) σ b (lam v) n) := fun v =>
     haveI : SigmaFinite (lam v) := Measure.IsAddHaarMeasure.sigmaFinite (lam v)
     sigmaFinite_of_mp ((hermVec_isHomeomorph hCM (Fv F v) b n).homeomorph _).toMeasurableEquiv
       (mp_hermVec hCM (Fv F v) b n (lam v))
-  haveI : ∀ v : S, SigmaFinite (coordHerm (Fv F v.1) σ b (lam v.1) n) := fun v => hSF v.1
+  have : ∀ v : S, SigmaFinite (coordHerm (Fv F v.1) σ b (lam v.1) n) := fun v => hSF v.1
   have hρ : Measurable (fun y (v : S) => hV σ v.1 y) :=
     Measurable.of_eval fun v => (continuous_hermV σ hCM n v.1).measurable
   symm
@@ -233,8 +233,8 @@ theorem map_restrict_intH (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} 
     fun v => if h : v ∈ S then s ⟨v, h⟩ else Set.univ
   have hA' : ∀ v, MeasurableSet (A' v) := fun v => by
     by_cases h : v ∈ S
-    · simp only [A', dif_pos h]; exact hs _
-    · simp only [A', dif_neg h]; exact MeasurableSet.univ
+    · simp only [A', dite_eq_left h]; exact hs _
+    · simp only [A', dite_eq_right h]; exact MeasurableSet.univ
   have key := coordHerm_box σ hCM b lam hlam lf hlf h1 n S A' hA'
   have hset : (fun y (v : S) => hV σ v.1 y) ⁻¹' Set.univ.pi s ∩ intHR σ b n S =
       ({y | (∀ v ∈ S, hermV σ v y ∈ A' v) ∧ ∀ v, v ∉ S → hermV σ v y ∈ latH σ b v n} : Set (HermR (Af F) σ n)) := by
@@ -242,12 +242,12 @@ theorem map_restrict_intH (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} 
     change (∀ v : S, v ∈ Set.univ → hV σ v.1 y ∈ s v) ∧ (∀ v, v ∉ S → hV σ v y ∈ (latH σ b v n : Set (HermR (Fv F v) σ n))) ↔
       (∀ v ∈ S, hV σ v y ∈ A' v) ∧ ∀ v, v ∉ S → hV σ v y ∈ (latH σ b v n : Set (HermR (Fv F v) σ n))
     refine and_congr ⟨fun h v hv => ?_, fun h v _ => ?_⟩ Iff.rfl
-    · simpa only [A', dif_pos hv] using h ⟨v, hv⟩ (Set.mem_univ _)
+    · simpa only [A', dite_eq_left hv] using h ⟨v, hv⟩ (Set.mem_univ _)
     · have := h v.1 v.2
-      simpa only [A', dif_pos v.2] using this
+      simpa only [A', dite_eq_left v.2] using this
   rw [hset, key, ← Finset.prod_coe_sort S]
   refine Finset.prod_congr rfl fun v _ => ?_
-  simp only [A', dif_pos v.2]
+  simp only [A', dite_eq_left v.2]
 
 end PositivityTheory.SiegelWeilFormula.GFac.HS
 
@@ -275,9 +275,9 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem measurableSet_latH_loc (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ)
     (v : HeightOneSpectrum (𝓞 F)) : MeasurableSet (latH σ b v n : Set (HermR (Fv F v) σ n)) := by
   obtain ⟨t1, t2, t3, t4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  letI : MeasurableSpace (Fv F v) := borel _
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
+  let : MeasurableSpace (Fv F v) := borel _
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
   have hO : IsOpen (v.adicCompletionIntegers F : Set (Fv F v)) := Valued.isOpen_valuationSubring _
   have hc := (GlobalTheory.CompanionTheory.SW.HermSd.hermVec_isHomeomorph hCM (Fv F v) b n).continuous
   have : (latH σ b v n : Set (HermR (Fv F v) σ n)) =
@@ -288,17 +288,17 @@ theorem measurableSet_latH_loc (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : 
 
 theorem measurableSet_intHR (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ)
     (S : Finset (HeightOneSpectrum (𝓞 F))) : MeasurableSet (HS.intHR σ b n S) := by
-  haveI := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
-  haveI : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
+  have := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
+  have : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
   have : HS.intHR σ b n S =
       ⋂ v, ⋂ (_ : v ∉ S), (HS.hV σ v) ⁻¹' (latH σ b v n : Set (HermR (Fv F v) σ n)) := by
     ext y
-    simp only [HS.intHR, Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [HS.intHR, Set.mem_ofPred_eq, Set.mem_iInter]
     rfl
   rw [this]
   refine MeasurableSet.iInter fun v => MeasurableSet.iInter fun _ => ?_
   obtain ⟨t1, t2, t3, t4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
+  have : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
   exact (HS.continuous_hermV σ hCM n v).measurable (measurableSet_latH_loc σ hCM b n v)
 
 theorem herm_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) (n d : ℕ)
@@ -327,36 +327,36 @@ theorem herm_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF
     rw [Finset.prod_eq_zero hv h0, mul_zero] at hprod
     exact zero_ne_one hprod
   have hloc := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
-  haveI : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
-  haveI : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
-  haveI : ∀ v, T2Space (Fv F v) := fun v => (hloc v).2.2.2.1
-  haveI : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
-  haveI : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (HermR (Fv F v) σ n) := fun v => ⟨rfl⟩
+  have : ∀ v, IsTopologicalRing (Fv F v) := fun v => (hloc v).1
+  have : ∀ v, LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
+  have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
+  have : ∀ v, T2Space (Fv F v) := fun v => (hloc v).2.2.2.1
+  have : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have : BorelSpace (HermR (Af F) σ n) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (HermR (Fv F v) σ n) := fun v => ⟨rfl⟩
   have hSF : ∀ v, SigmaFinite (GlobalTheory.CompanionTheory.SW.coordHerm (Fv F v) σ bs (lam v) n) := fun v =>
     haveI : SigmaFinite (lam v) := Measure.IsAddHaarMeasure.sigmaFinite (lam v)
     HS.sigmaFinite_of_mp ((GlobalTheory.CompanionTheory.SW.HermSd.hermVec_isHomeomorph hCM (Fv F v) bs n).homeomorph _).toMeasurableEquiv
       (GlobalTheory.CompanionTheory.SW.HermSd.mp_hermVec hCM (Fv F v) bs n (lam v))
-  haveI : ∀ v : S, SigmaFinite (GlobalTheory.CompanionTheory.SW.coordHerm (Fv F v.1) σ bs (lam v.1) n) := fun v => hSF v.1
+  have : ∀ v : S, SigmaFinite (GlobalTheory.CompanionTheory.SW.coordHerm (Fv F v.1) σ bs (lam v.1) n) := fun v => hSF v.1
   have hmp := HS.db_split σ hCM ψ hψ n ν hν bs laminf hinf lf hlf h1
   obtain ⟨-, -, -, -, -, -, -, -, hme0, -⟩ := GlobalTheory.T.hermitian_haar_splits_arch_times_finite F E σ hCM n ν hν.1
   have hme : MeasurableEmbedding (fun S : HermR (AF F) σ n => (HS.hInfR σ S, HS.hFinR σ S)) := hme0
-  haveI : SFinite (GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ bs laminf n) := by
+  have : SFinite (GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ bs laminf n) := by
     obtain ⟨hH, -⟩ := hinf
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-    haveI : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
+    have : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
     have hmpI := GlobalTheory.CompanionTheory.SW.HermSd.mp_hermVec hCM (Ainf F) bs n laminf
-    haveI : SigmaFinite laminf := Measure.IsAddHaarMeasure.sigmaFinite laminf
-    haveI := HS.sigmaFinite_of_mp ((GlobalTheory.CompanionTheory.SW.HermSd.hermVec_isHomeomorph hCM (Ainf F) bs n).homeomorph _).toMeasurableEquiv hmpI
+    have : SigmaFinite laminf := Measure.IsAddHaarMeasure.sigmaFinite laminf
+    have := HS.sigmaFinite_of_mp ((GlobalTheory.CompanionTheory.SW.HermSd.hermVec_isHomeomorph hCM (Ainf F) bs n).homeomorph _).toMeasurableEquiv hmpI
     infer_instance
-  haveI : SFinite (GlobalTheory.CompanionTheory.SW.coordHerm (Af F) σ bs lf n) := by
+  have : SFinite (GlobalTheory.CompanionTheory.SW.coordHerm (Af F) σ bs lf n) := by
     obtain ⟨-, hAfLC, hAfSC, hAfT2⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-    haveI : BorelSpace (Af F) := ⟨rfl⟩
+    have : BorelSpace (Af F) := ⟨rfl⟩
     have hmpF := GlobalTheory.CompanionTheory.SW.HermSd.mp_hermVec hCM (Af F) bs n lf
-    haveI : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
-    haveI := HS.sigmaFinite_of_mp ((GlobalTheory.CompanionTheory.SW.HermSd.hermVec_isHomeomorph hCM (Af F) bs n).homeomorph _).toMeasurableEquiv hmpF
+    have : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
+    have := HS.sigmaFinite_of_mp ((GlobalTheory.CompanionTheory.SW.HermSd.hermVec_isHomeomorph hCM (Af F) bs n).homeomorph _).toMeasurableEquiv hmpF
     infer_instance
 
   set fS : HermR (Af F) σ n → ℂ := fun y => ∏ v ∈ S, g v (HS.hV σ v y) with hfS
@@ -388,7 +388,7 @@ theorem herm_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF
           have h0 := hg v.1 v.2
           rw [eνv v.1] at h0
           refine h0.mono_ac (fun s hs => ?_)
-          rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, mul_eq_zero] at hs
+          rw [smul_apply, ENNReal.smul_def, smul_eq_mul, mul_eq_zero] at hs
           exact hs.resolve_left (by exact_mod_cast hcS v.1 v.2)
         exact hgv.comp_quasiMeasurePreserving (Measure.quasiMeasurePreserving_eval _ v))
     convert this using 1
@@ -504,7 +504,7 @@ theorem tmul_mem_intE {d : ℕ} (bs : Module.Basis (Fin d) F E) (v : HeightOneSp
 theorem eventually_good (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d M n : ℕ} (bs : Module.Basis (Fin d) F E)
     (J : Matrix (Fin M) (Fin M) E) (T : Matrix (Fin n) (Fin n) E) :
     ∀ᶠ v in cofinite, Good σ bs J T v := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis bs
+  have : FiniteDimensional F E := Module.Finite.of_basis bs
   have h2 : ∀ᶠ v in cofinite, ∀ k l, OkE bs v (bs k * bs l) :=
     Filter.eventually_all.2 fun k => Filter.eventually_all.2 fun l => ev_okE bs _
   have h3 : ∀ᶠ v in cofinite, ∀ k, OkE bs v (σ (bs k)) := Filter.eventually_all.2 fun k => ev_okE bs _
@@ -546,7 +546,7 @@ theorem diag_eq_halfTrace (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (v : Heigh
     (he : sigR (Fv F v) σ e = e) :
     e = algebraMap (Fv F v) (Fv F v ⊗[F] E) (algebraMap F (Fv F v) (1 / 2) *
       Algebra.trace (Fv F v) (Fv F v ⊗[F] E) e) := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; omega)
   obtain ⟨bs⟩ : Nonempty (Module.Basis (Fin (Module.finrank F E)) F E) := ⟨Module.finBasis F E⟩
   have h2 : e + e = algebraMap (Fv F v) (Fv F v ⊗[F] E) (Algebra.trace (Fv F v) (Fv F v ⊗[F] E) e) := by
     conv_lhs => rw [show e + e = e + sigR (Fv F v) σ e by rw [he]]
@@ -684,12 +684,12 @@ theorem psi_split (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) :
 
     rw [hr, map_sub, map_sum]
     by_cases hv : v ∈ S
-    · rw [if_pos hv, Finset.sum_eq_single v]
+    · rw [ite_eq_left hv, Finset.sum_eq_single v]
       · rw [evalV_singleV_same, sub_self]
       · intro w _ hw
         exact evalV_singleV_ne (Ne.symm hw) _
       · intro h; exact absurd hv h
-    · rw [if_neg hv, Finset.sum_eq_zero, sub_zero]
+    · rw [ite_eq_right hv, Finset.sum_eq_zero, sub_zero]
       intro w hw
       exact evalV_singleV_ne (by rintro rfl; exact hv hw) _
   have hmem : algebraMap F (Af F) ξ * r ∈ GroundTheory.Global.finiteInvDifferent F := by
@@ -697,9 +697,9 @@ theorem psi_split (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ) :
     have e1 : (algebraMap F (Af F) ξ * r) v = algebraMap F (Fv F v) ξ * evalV F v r := rfl
     rw [e1, hrv v]
     by_cases hv : v ∈ S
-    · rw [if_pos hv, mul_zero]
+    · rw [ite_eq_left hv, mul_zero]
       exact zero_mem _
-    · rw [if_neg hv]
+    · rw [ite_eq_right hv]
       have hξv : algebraMap F (Fv F v) ξ ∈ v.adicCompletionIntegers F := by
         by_contra h
         exact hv (hS (hfin.mem_toFinset.2 h))
@@ -882,24 +882,24 @@ theorem tup_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF 
     exact hU.2
 
   obtain ⟨-, hAfLC, hAfSC, hAfT2⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
+  have : BorelSpace (Af F) := ⟨rfl⟩
   have hBv : ∀ v, BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := fun v => by
     obtain ⟨t1, t2, t3, t4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
     exact (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)).2.2.2.2.2.2.2.1 n M
   have hSFv : ∀ v, SigmaFinite (GlobalTheory.CompanionTheory.SW.coordW (Fv F v) bs (lam v) n M) := fun v => by
     obtain ⟨t1, t2, t3, t4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-    haveI := (hlam v).1
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := (hlam v).1
     have hK : IsHomeomorph (GlobalTheory.CompanionTheory.SW.WBox.cK (F := F) (E := E) (Fv F v) bs) :=
       (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)).2.2.2.2.2.2.1 d bs
-    haveI := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK (Fv F v) hK (lam v)
+    have := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK (Fv F v) hK (lam v)
     unfold GlobalTheory.CompanionTheory.SW.coordW
     infer_instance
   have hcV : ∀ v, Continuous (projV v : (Fin n → Fin M → Af F ⊗[F] E) → _) :=
     (_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d bs n M).2.2.1
-  haveI hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
+  have hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
   have hpv : ∀ v, Measurable (projV v : (Fin n → Fin M → Af F ⊗[F] E) → _) := fun v => by
-    haveI := hBv v
+    have := hBv v
     exact (hcV v).measurable
   have hlat := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.DxEuler.measurableSet_latV σ hCM bs n M
   set A : Set (Fin n → Fin M → Af F ⊗[F] E) := {Y | ∀ v, v ∉ S → projV v Y ∈ latV bs v} with hA
@@ -911,7 +911,7 @@ theorem tup_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF 
 
   let ρ : (Fin n → Fin M → Af F ⊗[F] E) → ∀ v : S, (Fin n → Fin M → Fv F v.1 ⊗[F] E) := fun Y v => projV v.1 Y
   have hρ : Measurable ρ := Measurable.of_eval fun v => hpv v.1
-  haveI : ∀ v : S, SigmaFinite (GlobalTheory.CompanionTheory.SW.coordW (Fv F v.1) bs (lam v.1) n M) := fun v => hSFv v.1
+  have : ∀ v : S, SigmaFinite (GlobalTheory.CompanionTheory.SW.coordW (Fv F v.1) bs (lam v.1) n M) := fun v => hSFv v.1
   have hmap : ((GlobalTheory.CompanionTheory.SW.coordW (Af F) bs lf n M).restrict A).map ρ =
       Measure.pi fun v : S => GlobalTheory.CompanionTheory.SW.coordW (Fv F v.1) bs (lam v.1) n M := by
     symm
@@ -921,19 +921,19 @@ theorem tup_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF 
       fun v => if h : v ∈ S then s ⟨v, h⟩ else Set.univ
     have hA' : ∀ v, MeasurableSet (A' v) := fun v => by
       by_cases h : v ∈ S
-      · simp only [A', dif_pos h]; exact hs _
-      · simp only [A', dif_neg h]; exact MeasurableSet.univ
+      · simp only [A', dite_eq_left h]; exact hs _
+      · simp only [A', dite_eq_right h]; exact MeasurableSet.univ
     have key := GlobalTheory.CompanionTheory.SW.WBox.coordW_box F E σ hCM d bs lam hlam lf hlf h1 n M S A' hA'
     have hset : ρ ⁻¹' Set.univ.pi s ∩ A = {X | (∀ v ∈ S, projV v X ∈ A' v) ∧ ∀ v, v ∉ S → projV v X ∈ latV bs v} := by
       ext X
-      simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_pi, Set.mem_univ, forall_true_left, hA, Set.mem_setOf_eq]
+      simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_pi, Set.mem_univ, forall_true_left, hA, Set.mem_ofPred_eq]
       refine and_congr_left fun _ => ⟨fun h v hv => ?_, fun h v => ?_⟩
-      · simpa only [A', dif_pos hv] using h ⟨v, hv⟩
+      · simpa only [A', dite_eq_left hv] using h ⟨v, hv⟩
       · have := h v.1 v.2
-        simpa only [A', dif_pos v.2] using this
+        simpa only [A', dite_eq_left v.2] using this
     rw [hset, key, ← Finset.prod_coe_sort S]
     refine Finset.prod_congr rfl fun v _ => ?_
-    simp only [A', dif_pos v.2]
+    simp only [A', dite_eq_left v.2]
 
   have hgc : ∀ v : S, AEStronglyMeasurable (g v.1) (GlobalTheory.CompanionTheory.SW.coordW (Fv F v.1) bs (lam v.1) n M) := by
     intro v
@@ -963,14 +963,14 @@ theorem tup_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF 
     rw [e1, hmap, integral_fintype_prod_eq_prod (fun v : S => g v.1), ← Finset.prod_coe_sort S]
 
   obtain ⟨-, -, -, -, -, -, -, -, hme, -⟩ := GlobalTheory.T.adelic_haar_splits_as_arch_times_finite F E σ hCM M n μ hμ.1
-  haveI : SFinite (GlobalTheory.CompanionTheory.SW.coordW (Af F) bs lf n M) :=
+  have : SFinite (GlobalTheory.CompanionTheory.SW.coordW (Af F) bs lf n M) :=
     GlobalTheory.CompanionTheory.Hypotheses₂.OneV.DxEuler.sfinite_coordW σ hCM bs lf hlf n M
-  haveI : SFinite (GlobalTheory.CompanionTheory.SW.coordW (Ainf F) bs laminf n M) := by
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-    haveI := hinf.1
+  have : SFinite (GlobalTheory.CompanionTheory.SW.coordW (Ainf F) bs laminf n M) := by
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
+    have := hinf.1
     have hK : IsHomeomorph (GlobalTheory.CompanionTheory.SW.WBox.cK (F := F) (E := E) (Ainf F) bs) :=
       (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.1 d bs
-    haveI := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK (Ainf F) hK laminf
+    have := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK (Ainf F) hK laminf
     unfold GlobalTheory.CompanionTheory.SW.coordW
     infer_instance
   have hme' : MeasurableEmbedding (fun X : Fin n → Fin M → AF F ⊗[F] E => (projInf X, projFin X)) := hme
@@ -1173,7 +1173,7 @@ theorem jt_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n d : ℕ) (J : 
   have hmeas : ∀ v ∈ S, AEStronglyMeasurable (gv v) (μv v) := by
     intro v _
     obtain ⟨t1, t2, t3, t4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)).2.2.2.2.2.2.2.1 n M
+    have := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)).2.2.2.2.2.2.2.1 n M
     exact (continuous_locI σ hCM ψ hψ.1 v J _ (Φv v) (pure.1 v).1.continuous).aestronglyMeasurable
   have key := hSt S hStS gi gv hmeas
   have hlat := (_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d bs n M).2.2.2.2.2.1
@@ -1220,7 +1220,7 @@ theorem jt_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n d : ℕ) (J : 
         refine (hfinp.union (Filter.eventually_cofinite.1 (hlat (projFin Y)))).subset ?_
         intro w hw
         by_contra hcon
-        simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hcon
+        simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hcon
         apply hw
         show Φv w (projV w (projFin Y)) = 1
         rw [hcon.1, Set.indicator_of_mem hcon.2]
@@ -1312,7 +1312,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem tendsto_UH (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {d : ℕ} (bs : Module.Basis (Fin d) F E) (n : ℕ)
     (ν : Measure (HermR (AF F) σ n)) (f : HermR (AF F) σ n → ℂ) (hf : Integrable f ν) :
     Tendsto (fun S : Finset (HeightOneSpectrum (𝓞 F)) => ∫ b in UH σ bs n S, f b ∂ν) atTop (nhds (∫ b, f b ∂ν)) := by
-  haveI := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
+  have := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.placesCountable F
   have he : ∀ S, ∫ b in UH σ bs n S, f b ∂ν = ∫ b, (UH σ bs n S).indicator f b ∂ν := fun S =>
     (integral_indicator (measurableSet_UH σ hCM bs n S)).symm
   simp_rw [he]

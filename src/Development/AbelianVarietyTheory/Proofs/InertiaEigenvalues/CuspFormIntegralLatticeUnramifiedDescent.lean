@@ -78,7 +78,7 @@ namespace GlobalTheory.PlaceExtField
 
 theorem cdvrExtSt : PullbackSections.CDVRExtSt := by
   intro T hT K _ jK hfin
-  letI := jK.toAlgebra
+  let := jK.toAlgebra
   obtain ⟨T', iT, e, ψ, _, he, hv, hψ, _, hres⟩ := exists_cdvr_finite_extension T K
   refine ⟨T', ψ.toRingHom, e, he, fun a _ => ?_, hres hT⟩
 
@@ -148,7 +148,7 @@ theorem le_one_of_forall_conj {F ι : Type} [Field F] [Fintype ι] (v : Valuatio
   have hx0 : x j₀ ≠ 0 := (Valuation.ne_zero_iff v).1 h0
   have hz : ∀ j, x j / x j₀ ∈ v.valuationSubring := fun j => by
     rw [Valuation.mem_valuationSubring_iff, map_div₀]
-    exact div_le_one_of_le₀ (hj₀ j (Finset.mem_univ j)) zero_le'
+    exact div_le_one_of_le₀ (hj₀ j (Finset.mem_univ j)) zero_le
   let z : ι → v.valuationSubring := fun j => ⟨_, hz j⟩
   let ψ : 𝓞 L →+* v.valuationSubring :=
     (σ.comp (algebraMap (𝓞 L) L)).codRestrict v.valuationSubring fun a => h1 a
@@ -157,8 +157,8 @@ theorem le_one_of_forall_conj {F ι : Type} [Field F] [Fintype ι] (v : Valuatio
     rw [IsLocalRing.residue_eq_zero_iff, Valuation.mem_maximalIdeal_iff]
   have := la.isMaximal
   have := μ.isMaximal
-  letI := Ideal.Quotient.field la.asIdeal
-  letI := Ideal.Quotient.field μ.asIdeal
+  let := Ideal.Quotient.field la.asIdeal
+  let := Ideal.Quotient.field μ.asIdeal
   let τ : 𝓞 L ⧸ μ.asIdeal →+* IsLocalRing.ResidueField v.valuationSubring :=
     Ideal.Quotient.lift _ (ρ.comp ψ) fun a ha => (hρ _).2 ((h2 a).2 ha)
   have : Finite (𝓞 L ⧸ μ.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ μ.ne_bot
@@ -233,9 +233,9 @@ theorem exists_ext {L : Type} [Field L] [Algebra K L] [FiniteDimensional K L] (T
     (io : K →+* T.Fr) : ∃ (T' : CDVR) (i : T.Fr →+* T'.Fr) (e : ℕ) (σ : L →+* T'.Fr), 0 < e ∧
       (∀ a : T.Fr, a ≠ 0 → vV T'.V (i a) = (e : ℤ) * vV T.V a) ∧ T'.FinRes ∧
       ∀ a : K, σ (algebraMap K L a) = i (io a) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (T.Fr ⊗[K] L)
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   obtain ⟨T', κ, e, he, hv, hT'⟩ := GlobalTheory.PlaceExtField.cdvrExtSt T hT ((T.Fr ⊗[K] L) ⧸ m)
     (algebraMap T.Fr _) (RingHom.finite_algebraMap.2 inferInstance)
   refine ⟨T', κ.comp (algebraMap T.Fr _), e, κ.comp ((Ideal.Quotient.mk m).comp
@@ -270,8 +270,8 @@ theorem exists_residue_basis [la'.asIdeal.LiesOver la.asIdeal] : ∃ (d : ℕ) (
     ∀ a : 𝓞 K', ∃ x : Fin d → 𝓞 K, a - ∑ j, x j • b j ∈ la'.asIdeal := by
   have := la.isMaximal
   have := la'.isMaximal
-  letI := Ideal.Quotient.field la.asIdeal
-  letI := Ideal.Quotient.field la'.asIdeal
+  let := Ideal.Quotient.field la.asIdeal
+  let := Ideal.Quotient.field la'.asIdeal
   have : Finite (𝓞 K' ⧸ la'.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ la'.ne_bot
   let B := Module.finBasis (𝓞 K ⧸ la.asIdeal) (𝓞 K' ⧸ la'.asIdeal)
   choose b hb using fun j => Ideal.Quotient.mk_surjective (B j)
@@ -318,7 +318,7 @@ theorem exists_approx (hv : ∀ x : K, vLa la' (algebraMap K K' x) = vLa la x) {
     have hp : la'.valuation K' (algebraMap K K' π ^ n) = WithZero.exp (-n) := by
       rw [map_zpow₀, hπ', ← WithZero.exp_zsmul]; simp
     obtain ⟨x, hx⟩ := base (a / algebraMap K K' π ^ n) (by
-      rw [map_div₀, hp]; exact div_le_one_of_le₀ ha zero_le')
+      rw [map_div₀, hp]; exact div_le_one_of_le₀ ha zero_le)
     refine ⟨fun j => π ^ n * x j, ?_⟩
     have h2 : a - ∑ j, algebraMap K K' (π ^ n * x j) * b j = algebraMap K K' π ^ n *
         (a / algebraMap K K' π ^ n - ∑ j, algebraMap K K' (x j) * b j) := by
@@ -351,7 +351,7 @@ theorem exists_approx (hv : ∀ x : K, vLa la' (algebraMap K K' x) = vLa la x) {
   obtain ⟨x, hx⟩ := all (-WithZero.log (la'.valuation K' (algebraMap K K' κ)))
   rw [neg_neg, WithZero.exp_log hκv] at hx
   refine ⟨x, (a - ∑ j, algebraMap K K' (x j) * b j) / algebraMap K K' κ, ?_, ?_⟩
-  · rw [map_div₀]; exact div_le_one_of_le₀ hx zero_le'
+  · rw [map_div₀]; exact div_le_one_of_le₀ hx zero_le
   · rw [div_mul_cancel₀ _ hκ', add_sub_cancel]
 
 theorem inV_of_forall_emb [la'.asIdeal.LiesOver la.asIdeal] {d : ℕ} {b : Fin d → 𝓞 K'}
@@ -421,8 +421,8 @@ theorem evR_sum {ι : Type} (s : Finset ι) (t : ι → c.F) (f : ι → Rul Xo 
 theorem exists_intFr_ext (hle : c.F ≤ c'.F) {T : CDVR} {io : c.F →+* T.Fr} (σ : c'.F →+* T.Fr)
     (hσ : ∀ a, σ (incF c c' hle a) = io a) (y : IntFr Xo c T io) :
     ∃ y' : IntFr Xo c' T σ, letI := io.toAlgebra; letI := σ.toAlgebra; y'.1.res hle hσ = y.1 := by
-  letI := io.toAlgebra
-  letI := σ.toAlgebra
+  let := io.toAlgebra
+  let := σ.toAlgebra
   refine ⟨⟨y.1.ext hle hσ, GlobalTheory.FlagTan.fromTest_of_isLocalRing _, ?_⟩, rfl⟩
   have e : ∀ (G : SAB H (Sp T.V)) τ v, IsEigV c' σ G τ v ↔ IsEigV c io G τ v := fun G τ v => by
     unfold IsEigV
@@ -437,7 +437,7 @@ theorem supSet_descent : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   intro E _ _ _ H Dw l Xo c r U hU la p hp hpl hgood c' hle la' hv hBC a n hD _ f' hf' hb
   obtain ⟨m, as, fs, hfs, hIs⟩ := hBC a n f' hf'
   choose κ hκ0 hκ using fun i => _root_.GlobalTheory.CuspBound.exists_bddAll_cusp E H Dw l Xo c r U hU la p hp hpl hgood a n (fs i) hD (hfs i)
-  letI : Algebra c.F c'.F := (incF c c' hle).toAlgebra
+  let : Algebra c.F c'.F := (incF c c' hle).toAlgebra
   have := liesOver (K := c.F) (K' := c'.F) hv
   obtain ⟨d, b, hb1, hb2⟩ := exists_residue_basis (la := la) (la' := la')
   choose x ρ hρ hx using fun i => exists_approx (K := c.F) (K' := c'.F) hv hb2 (as i) (hκ0 i)
@@ -486,13 +486,13 @@ theorem supSet_descent : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       rw [map_one, one_mul] at h3
       exact Subring.mul_mem _ ((GoodPtsModel.inV_iff_val T' _).2 ((val_le_one_iff ho' _).2 (hρ k))) h3
     have h4 : ∀ j, i (evI y (F j)) = evI y₁ (F j) := fun j => by
-      letI := io.toAlgebra
-      letI := (i.comp io).toAlgebra
+      let := io.toAlgebra
+      let := (i.comp io).toAlgebra
       exact (DFunLike.congr_fun hφ _).symm.trans
         (GlobalTheory.FlagTan.evR_frMap (cusp_le_sec Xo c U a n (hF j)).1 hmap).symm
     have h5 : evI y₂ f' = ∑ j, σ (b j) * evI y₁ (F j) + ∑ k, σ (ρ k) * evI y₁ (κ k • fs k) := by
-      letI := (i.comp io).toAlgebra
-      letI := σ.toAlgebra
+      let := (i.comp io).toAlgebra
+      let := σ.toAlgebra
       have := key T'.Fr hσ y₂.1
       rw [hy₂] at this
       exact this

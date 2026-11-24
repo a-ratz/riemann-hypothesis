@@ -221,7 +221,7 @@ theorem fstar_dil {R : Type} [CommRing R] {ι : Type} [Fintype ι] [TopologicalS
   let e : (ι → R) ≃ᵐ (ι → R) := (Homeomorph.smul a).toMeasurableEquiv
   have he : μ = ENNReal.ofReal m • μ.map e := by
     ext s hs
-    rw [Measure.smul_apply, e.map_apply, smul_eq_mul, ← hμ _ (e.measurable hs)]
+    rw [smul_apply, e.map_apply, smul_eq_mul, ← hμ _ (e.measurable hs)]
     exact congrArg μ (e.surjective.image_preimage s).symm
   rw [fstar, fstar]
   conv_rhs => rw [he]
@@ -278,8 +278,8 @@ theorem ei_inv : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)
     refine tsum_congr fun b => ?_
     by_cases hb : b = 0
     · simp [hb]
-    · rw [if_neg hb, recip F lf hlf h1 ψ hψ ι M B ρ P hQ φ hφ τ hτ b hb]
-      exact (if_neg (by simpa using hb)).symm
+    · rw [ite_eq_right hb, recip F lf hlf h1 ψ hψ ι M B ρ P hQ φ hφ τ hτ b hb]
+      exact (ite_eq_right (by simpa using hb)).symm
   · simp only [eis, eiTerm, fstar, opU, Pi.smul_apply, smul_eq_mul, mul_left_comm _ c, integral_const_mul, mul_assoc,
       tsum_mul_left, mul_add]
 

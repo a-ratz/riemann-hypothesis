@@ -205,8 +205,8 @@ theorem proj (p : ℕ) [Fact p.Prime] (hv : v.Integers R) (hpv : v (algebraMap R
   obtain ⟨a, b, hab⟩ : ∃ a b, εT i a b ∉ mI hv := by
     by_contra hc
     push_neg at hc
-    exact hi (idem_eq_zero hv (εT i) (by rw [horth, if_pos rfl]) hc)
-  haveI := charP p hv hpv
+    exact hi (idem_eq_zero hv (εT i) (by rw [horth, ite_eq_left rfl]) hc)
+  have := charP p hv hpv
   have hfrob : res hv ((∑ γ, (ψ i γ ^ (Fintype.card G - 1)) ^ p •
       (A γ).map (algebraMap ℤ_[p] R)) a b) =
       res hv ((∑ γ, ψ i γ ^ (Fintype.card G - 1) • (A γ).map (algebraMap ℤ_[p] R)) a b) ^ p := by

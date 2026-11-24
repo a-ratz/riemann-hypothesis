@@ -158,7 +158,7 @@ theorem exists_isIdempotentElem_lift_quotient_of_isIntegral (A B : Type) [CommRi
   obtain ⟨n, r, s, hs⟩ := Submodule.mem_span_set'.1 hb'
   choose a ha hsa using fun i ↦ (s i).2
   set B₀ := Algebra.adjoin A (insert b (Set.range r)) with hB₀
-  haveI : Module.Finite A B₀ := Algebra.finite_adjoin_of_finite_of_isIntegral
+  have : Module.Finite A B₀ := Algebra.finite_adjoin_of_finite_of_isIntegral
     ((Set.finite_range r).insert b) fun x _ ↦ Algebra.IsIntegral.isIntegral x
   let b₀ : B₀ := ⟨b, Algebra.subset_adjoin (Set.mem_insert _ _)⟩
   let r₀ : Fin n → B₀ := fun i ↦ ⟨r i, Algebra.subset_adjoin (Set.mem_insert_of_mem _ ⟨i, rfl⟩)⟩
@@ -243,7 +243,7 @@ theorem bijective_locallyConstant_comap_algebraicClosure_tensor : ∀ (Λ : Type
   · intro y
     obtain ⟨M, hM, hyM⟩ := Ideal.exists_le_maximal y.asIdeal y.isPrime.ne_top
     have hIM : I ≤ M := map_maximalIdeal_le_of_isIntegral A B M
-    haveI := hM.isPrime
+    have := hM.isPrime
     let P : PrimeSpectrum (B ⧸ I) := ⟨M.map (Ideal.Quotient.mk I),
       Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rwa [Ideal.mk_ker])⟩
     have hPM : (PrimeSpectrum.comap (Ideal.Quotient.mk I) P).asIdeal = M := by
@@ -399,7 +399,7 @@ theorem eqv_pullback_integral_affine : ∀ (R : Type) [CommRing R] (F : Shv R) (
     IsIntegralHom h → IsPullback φ h' h (Spec.map (CommRingCat.ofHom (algebraMap A C))) → Eqv R (sch.map φ) F := by
   intro R _ F A C _ _ _ hB Z Z' h h' φ hh hP
   have E := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties R F
-  haveI : IsAffine Z := isAffine_of_isAffineHom h
+  have : IsAffine Z := isAffine_of_isAffineHom h
 
   set f : CommRingCat.of A ⟶ Γ(Z, ⊤) := Spec.preimage (Z.isoSpec.inv ≫ h) with hf
   have hfh : Z.isoSpec.hom ≫ Spec.map f = h := by
@@ -407,8 +407,8 @@ theorem eqv_pullback_integral_affine : ∀ (R : Type) [CommRing R] (F : Shv R) (
   have hint : IsIntegralHom (Spec.map f) := by
     have : Spec.map f = Z.isoSpec.inv ≫ h := by rw [hf, Spec.map_preimage]
     rw [this]; infer_instance
-  letI : Algebra A Γ(Z, ⊤) := f.hom.toAlgebra
-  haveI : Algebra.IsIntegral A Γ(Z, ⊤) := ⟨IsIntegralHom.SpecMap_iff.mp hint⟩
+  let : Algebra A Γ(Z, ⊤) := f.hom.toAlgebra
+  have : Algebra.IsIntegral A Γ(Z, ⊤) := ⟨IsIntegralHom.SpecMap_iff.mp hint⟩
   have hsq := (isPullback_SpecMap_of_isPushout _ _ _ _
     (CommRingCat.isPushout_tensorProduct A C Γ(Z, ⊤))).flip
   have hsq' : IsPullback
@@ -460,15 +460,15 @@ theorem exists_ringHom_algClosure_residueField_of_isIntegral (A B : Type) [CommR
     (hP : P.comap φ = IsLocalRing.maximalIdeal A) :
     ∃ ψ : B →+* AlgebraicClosure (IsLocalRing.ResidueField A),
       ψ.comp φ = algebraMap A (AlgebraicClosure (IsLocalRing.ResidueField A)) := by
-  letI : Algebra A B := φ.toAlgebra
-  haveI : Algebra.IsIntegral A B := ⟨hφ⟩
-  haveI : P.LiesOver (IsLocalRing.maximalIdeal A) := ⟨hP.symm⟩
-  letI : Algebra (IsLocalRing.ResidueField A) (B ⧸ P) :=
+  let : Algebra A B := φ.toAlgebra
+  have : Algebra.IsIntegral A B := ⟨hφ⟩
+  have : P.LiesOver (IsLocalRing.maximalIdeal A) := ⟨hP.symm⟩
+  let : Algebra (IsLocalRing.ResidueField A) (B ⧸ P) :=
     Ideal.Quotient.algebraOfLiesOver P (IsLocalRing.maximalIdeal A)
-  haveI : IsScalarTower A (IsLocalRing.ResidueField A) (B ⧸ P) :=
+  have : IsScalarTower A (IsLocalRing.ResidueField A) (B ⧸ P) :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.IsIntegral A (B ⧸ P) := inferInstance
-  haveI : Algebra.IsIntegral (IsLocalRing.ResidueField A) (B ⧸ P) :=
+  have : Algebra.IsIntegral A (B ⧸ P) := inferInstance
+  have : Algebra.IsIntegral (IsLocalRing.ResidueField A) (B ⧸ P) :=
     Algebra.IsIntegral.tower_top (R := A)
   let l : (B ⧸ P) →ₐ[IsLocalRing.ResidueField A] AlgebraicClosure (IsLocalRing.ResidueField A) :=
     IsAlgClosed.lift
@@ -483,7 +483,7 @@ theorem exists_point_algClosure_residueField_of_isIntegralHom :
     IsIntegralHom g → Surjective g → ∃ s : Spec (CommRingCat.of (AlgebraicClosure (IsLocalRing.ResidueField A))) ⟶ Y,
     s ≫ g = Spec.map (CommRingCat.ofHom (algebraMap A (AlgebraicClosure (IsLocalRing.ResidueField A)))) := by
   intro A _ _ Y g hi hs
-  haveI : IsAffine Y := isAffine_of_isAffineHom g
+  have : IsAffine Y := isAffine_of_isAffineHom g
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (Y.isoSpec.inv ≫ g)
   have h1 : IsIntegralHom (Spec.map φ) := by rw [hφ]; infer_instance
   have h2 : Surjective (Spec.map φ) := by rw [hφ]; infer_instance
@@ -491,7 +491,7 @@ theorem exists_point_algClosure_residueField_of_isIntegralHom :
   obtain ⟨P, hP⟩ := h2.surj (IsLocalRing.closedPoint A)
   have hP' : (PrimeSpectrum.asIdeal P).comap φ.hom = IsLocalRing.maximalIdeal A :=
     congrArg PrimeSpectrum.asIdeal hP
-  haveI := PrimeSpectrum.isPrime P
+  have := PrimeSpectrum.isPrime P
   obtain ⟨ψ, hψ⟩ := exists_ringHom_algClosure_residueField_of_isIntegral A Γ(Y, ⊤) φ.hom h3
     (PrimeSpectrum.asIdeal P) hP'
   refine ⟨Spec.map (CommRingCat.ofHom ψ) ≫ Y.isoSpec.inv, ?_⟩
@@ -514,9 +514,9 @@ namespace GlobalTheory.EtC.IntDescent
 
 theorem isIntegral_algClosure_residue (A : Type) [CommRing A] [IsLocalRing A] :
     Algebra.IsIntegral A (AlgebraicClosure (IsLocalRing.ResidueField A)) := by
-  haveI : Algebra.IsIntegral A (IsLocalRing.ResidueField A) :=
+  have : Algebra.IsIntegral A (IsLocalRing.ResidueField A) :=
     Algebra.IsIntegral.of_surjective (Algebra.ofId A (IsLocalRing.ResidueField A)) IsLocalRing.residue_surjective
-  haveI : Algebra.IsIntegral (IsLocalRing.ResidueField A) (AlgebraicClosure (IsLocalRing.ResidueField A)) :=
+  have : Algebra.IsIntegral (IsLocalRing.ResidueField A) (AlgebraicClosure (IsLocalRing.ResidueField A)) :=
     Algebra.IsAlgebraic.isIntegral
   exact Algebra.IsIntegral.trans (IsLocalRing.ResidueField A)
 
@@ -543,8 +543,8 @@ theorem L1 : ∀ (q : ℕ) (i : ℤ) (A : Type) [CommRing A] [HenselianLocalRing
   obtain ⟨ζ0⟩ := GlobalTheory.T.nonempty_cyclotomicPrimitiveRoots_of_strictlyHenselian q A hSH hq
   let ζ : Prim q Γ(Spec (CommRingCat.of A), ⊤) := ζ0.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom
   have hgen := GlobalTheory.T.tateTwist_isFreeRankOne_on_generatorSection q i (Spec (CommRingCat.of A)) ζ
-  haveI := isIntegral_algClosure_residue A
-  haveI := isIntegral_tensor A (AlgebraicClosure (IsLocalRing.ResidueField A)) B
+  have := isIntegral_algClosure_residue A
+  have := isIntegral_tensor A (AlgebraicClosure (IsLocalRing.ResidueField A)) B
   have hfin := GlobalTheory.T.tateTwist_finitary q i
   have hU := GlobalTheory.T.integral_strictHenselian_acyclic_finitary (ZMod q) (tw q i) hfin A B hSH
   have hU' := GlobalTheory.T.integral_strictHenselian_acyclic_finitary (ZMod q) (tw q i) hfin A (AlgebraicClosure (IsLocalRing.ResidueField A) ⊗[A] B) hSH
@@ -619,7 +619,7 @@ theorem b4 : B4 := by
     (GlobalTheory.T.tateTwist_finitary q i) ?_ ?_ ?_
   · intro k
     obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsIntegralHom Y X f ‹_› k
-    haveI := hπ
+    have := hπ
     refine ⟨Z, π ≫ f, e, inferInstance, inferInstance, ?_⟩
     rw [CategoryTheory.Functor.map_id, Category.comp_id, he]
   · intro k

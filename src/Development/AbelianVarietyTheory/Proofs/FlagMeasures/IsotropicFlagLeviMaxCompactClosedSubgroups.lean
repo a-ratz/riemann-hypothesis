@@ -66,7 +66,7 @@ theorem uMat_inv_mul (g : Formalism.REAL.UJ ε) : uMat g⁻¹ * uMat g = 1 := by
   rw [← uMat_mul, inv_mul_cancel, uMat_one]
 
 theorem continuous_uMat : Continuous (fun g : Formalism.REAL.UJ ε => uMat g) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem inv_keeps {A B : Matrix (Fin n) (Fin n) ℂ} (hBA : B * A = 1) (V : Submodule ℂ (Fin n → ℂ))
     (hA : ∀ y ∈ V, A *ᵥ y ∈ V) : ∀ y ∈ V, B *ᵥ y ∈ V := by
@@ -122,9 +122,9 @@ theorem isClosed_flagM {a : ℕ} (W : Fin (a + 1) → Submodule ℂ (Fin n → �
     rfl
   rw [h]
   refine isClosed_iInter fun i => isClosed_iInter fun y => isClosed_iInter fun _ => ?_
-  exact ((W i).closed_of_finiteDimensional.preimage
+  exact ((W i).isClosed_of_finiteDimensional.preimage
       (continuous_uMat.matrix_mulVec continuous_const)).inter
-    ((W i).closed_of_finiteDimensional.preimage
+    ((W i).isClosed_of_finiteDimensional.preimage
       (continuous_uMat.matrix_conjTranspose.matrix_mulVec continuous_const))
 
 theorem isClosed_maxK : IsClosed (maxK ε) :=

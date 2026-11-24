@@ -60,7 +60,7 @@ private theorem inv_int {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace 
     (hc : c ∈ GlobalTheory.SmGL.IwahoriOnto.lowerInt k n) (i j : n) : valuation k ((c⁻¹).val i j) ≤ 1 := by
   let M : Matrix n n 𝒪[k] := Matrix.of fun i j => ⟨c.val i j, hc.1 i j⟩
   have hdet : c.val.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular c.val fun i j hij => hc.2.1 i j hij]
+    rw [Matrix.det_of_isLowerTriangular c.val fun i j hij => hc.2.1 i j hij]
     simp [hc.2.2]
   have hM : (algebraMap 𝒪[k] k).mapMatrix M = c.val := by ext i j; rfl
   have e : (c⁻¹).val = (algebraMap 𝒪[k] k).mapMatrix M.adjugate := by

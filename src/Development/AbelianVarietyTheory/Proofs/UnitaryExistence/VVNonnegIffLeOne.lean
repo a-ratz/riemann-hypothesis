@@ -115,9 +115,9 @@ theorem finite_of_scale [IsAdicComplete (maximalIdeal V) V] (i : K →+* L) {r :
       map_zero' := hinj (by simp [hg0])
       map_add' := fun a b => hinj (by simp [hg0]) }
   have hg : ∀ a, algebraMap W L (g a) = i (algebraMap V K a) := hg0
-  letI : Algebra V W := g.toAlgebra
-  letI : Algebra K L := i.toAlgebra
-  letI : Algebra V L := ((algebraMap W L).comp g).toAlgebra
+  let : Algebra V W := g.toAlgebra
+  let : Algebra K L := i.toAlgebra
+  let : Algebra V L := ((algebraMap W L).comp g).toAlgebra
   have : IsScalarTower V W L := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have : IsScalarTower V K L := IsScalarTower.of_algebraMap_eq fun a => hg a
   have hgi : Function.Injective (algebraMap V W) := fun a b hab => by

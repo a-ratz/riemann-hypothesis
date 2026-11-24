@@ -82,7 +82,7 @@ theorem delAt_sum_smul {ι : Type} [Fintype ι] {v : V n} {f : ι → V n → �
 
     rw [repr_coefwise, repr_sum_smul,
     del_sum (A := fun i x => f i x * (bas n).repr (e i) S) fun i _ => (hf i).mul (differentiableAt_const _),
-    ContinuousLinearMap.sum_apply, map_sum, Finsupp.finsetSum_apply]
+    sum_apply, map_sum, Finsupp.finsetSum_apply]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [del_mul (b := fun _ => (bas n).repr (e i) S) (hf i) (differentiableAt_const _), del_const]
     simp
@@ -98,7 +98,7 @@ theorem delAt_add {v : V n} {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt 
   rw [← mul_add]
   congr 1
   refine (bas n).ext_elem fun S => ?_
-  rw [map_add (f := _), Finsupp.add_apply, repr_coefwise, repr_coefwise, repr_coefwise, ← ContinuousLinearMap.add_apply,
+  rw [map_add (f := _), Finsupp.add_apply, repr_coefwise, repr_coefwise, repr_coefwise, ← add_apply,
     ← del_add (hF S) (hG S)]
   simp only [map_add (f := _), Finsupp.add_apply]
 

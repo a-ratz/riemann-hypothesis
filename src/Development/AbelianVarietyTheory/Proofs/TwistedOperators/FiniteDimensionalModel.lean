@@ -145,7 +145,7 @@ theorem finiteDimensional_model {V : HSp D} (hs : V.SigOK) (hd : V.IsDefinite) {
       funext b
       rw [sign_eq hs hd M τ a b]
   obtain ⟨c, hc, hJ⟩ := hJ
-  have hU := hirr U U.closed_of_finiteDimensional fun g hg => hst g (by
+  have hU := hirr U U.isClosed_of_finiteDimensional fun g hg => hst g (by
     have hg' : gᴴ * Formalism.REAL.Jm (M.ε τ) * g = Formalism.REAL.Jm (M.ε τ) := hg
     refine ⟨Matrix.mem_unitaryGroup_iff'.2 ?_, by rw [hJ]; simp⟩
     rw [hJ, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul] at hg'
@@ -208,9 +208,9 @@ theorem eventually_cong {F E : Type} [Field F] [NumberField F] [Field E] [Number
     ∀ᶠ m in 𝓝 (1 : Matrix (Fin n) (Fin n) (Af F ⊗[F] E)), ∀ i j, ∃ s ∈ Formalism.L2.Herm.intAf F E,
       ((β⁻¹).1 * m.map (Algebra.TensorProduct.comm F (Af F) E) * β.1) i j -
         (1 : Matrix (Fin n) (Fin n) (E ⊗[F] Af F)) i j = N • s := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   have ho := (GlobalTheory.IdeleParts.isOpen_nsmul_adelicCompletion_integers F E N hN).mem_nhds (x := 0) ⟨0, zero_mem _, (smul_zero _).symm⟩
   refine (eventually_conj (Algebra.TensorProduct.comm F (Af F) E).toRingEquiv _ ho β).mono fun m hm i j => ?_
   obtain ⟨z, ⟨y, hy, rfl⟩, e⟩ := hm i j
@@ -218,7 +218,7 @@ theorem eventually_cong {F E : Type} [Field F] [NumberField F] [Field E] [Number
 
 theorem isOpen_Kg (V : HSp D) (β : GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D)) (T : Finset (Pl D.host.E)) :
     IsOpen (((Kg D.sp.cm V.gram β T).comap (finE V) : Subgroup (GA D V)) : Set (GA D V)) := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   set N : ℕ := ∏ PP ∈ T, Ideal.absNorm PP.asIdeal with hN
   have hN0 : 0 < N := Finset.prod_pos fun PP _ => Nat.pos_of_ne_zero (by
     rw [Ne, Ideal.absNorm_eq_zero_iff]; exact PP.ne_bot)
@@ -304,7 +304,7 @@ variable {c}
 theorem exists_deriv (hθ : IsInfFam θ) (hc : c.Is) {τ : D.what₂.Tau} {X : Matrix (Fin V.rank) (Fin V.rank) ℂ}
     (hX : X ∈ lieAt V τ) : invOp c (oneP θ V τ X 0) = 1 ∧ ∃ A : c.W →L[ℂ] c.W, ∀ t,
       HasDerivAt (fun s : ℝ => invOp c (oneP θ V τ X s)) ((invOp c (oneP θ V τ X t)).comp A) t := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hm := fun t : ℝ => GlobalTheory.SmoothAutCheck.exp_mem_UH (GlobalTheory.SmoothAutCheck.gramAt_unit V τ) hX t
   have h0 : invOp c (oneP θ V τ X 0) = 1 := by
     rw [oneP, zero_smul, NormedSpace.exp_zero, GlobalTheory.PointAtPlaceHom.atTau_one hθ, invOp_one]
@@ -438,7 +438,7 @@ theorem isAutFun_coefFun (hc : c.Is) {β : GL (Fin V.rank) (Formalism.IndefR.Lev
     {L : Formalism.L2.DIV.LevDat D.host.E ℂ V.rank} {f : Bridge.Gf V → c.W}
     (hf : f ∈ Bridge.AdForms (Bridge.ratF V) c.coef.ρ (levEnv V β L).J (levEnv V β L).χ) (ℓ : c.W →L[ℂ] ℂ) :
     IsAutFun V (coefFun c (fun g => f ((finHom V).rangeRestrict g)) ℓ) := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   obtain ⟨U, hU, hJ⟩ := exists_open_level V β L
   have hr : ∀ g, ∀ k ∈ U, f ((finHom V).rangeRestrict (g * k)) = f ((finHom V).rangeRestrict g) := by
     intro g k hk
@@ -485,7 +485,7 @@ theorem isMultMap_toMap (hθ : IsInfFam θ) (hs : V.SigOK) (hd : V.IsDefinite) {
     have := hpr.2 τ g hg (c.ρ (atTau θ V τ g)⁻¹ (c.ρ h⁻¹ (f ((finHom V).rangeRestrict h)))) v w hw
     rw [rho_inv_cancel] at this
     exact this
-  · haveI := finiteDimensional_model hs hd M τ
+  · have := finiteDimensional_model hs hd M τ
     exact exists_sobCont M τ _ v x
 
 end Coef

@@ -72,17 +72,17 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
     (h : ∀ (M : Type) [AddCommGroup M] [Module (ZMod n) M] [TopologicalSpace M] [DiscreteTopology M] [Finite M]
       (ρ : Representation (ZMod n) Γ M), ContAction ρ → Finite (H1 ρ)) : PhiCond Γ n := by
   intro H hH
-  haveI : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology hH
-  haveI : Finite (Γ ⧸ H) := finite_of_compact_of_discrete
-  letI : TopologicalSpace (ZMod n) := ⊥
-  haveI : DiscreteTopology (ZMod n) := ⟨rfl⟩
+  have : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology hH
+  have : Finite (Γ ⧸ H) := finite_of_compact_of_discrete
+  let : TopologicalSpace (ZMod n) := ⊥
+  have : DiscreteTopology (ZMod n) := ⟨rfl⟩
   have hs : ∀ x : Γ ⧸ H, Continuous fun g : Γ => g⁻¹ • x := fun x => continuous_inv.smul continuous_const
   have hc : ContAction (permR (ZMod n) H) := by
     refine continuous_pi fun x => ?_
     have h1 : Continuous fun p : (Γ ⧸ H → ZMod n) × (Γ ⧸ H) => p.1 p.2 := continuous_of_discreteTopology
     exact h1.comp (continuous_snd.prodMk ((hs x).comp continuous_fst))
-  haveI h1 := h _ _ hc
-  haveI : Finite (Z1 (permR (ZMod n) H)) := by
+  have h1 := h _ _ hc
+  have : Finite (Z1 (permR (ZMod n) H)) := by
     have hB : Finite (B1 (permR (ZMod n) H)) := (Set.finite_range _).to_subtype
     have hB' : Finite ((B1 (permR (ZMod n) H)).comap (Z1 (permR (ZMod n) H)).subtype).toAddSubgroup :=
       Finite.of_injective (fun z => (⟨z.1.1, z.2⟩ : B1 (permR (ZMod n) H)))
@@ -124,7 +124,7 @@ private theorem fin_above {n : ℕ} (hn : n ≠ 0) :
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact_mod_cast hn
   refine (Ideal.finite_factors h0).subset fun v hv => ?_
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_span_singleton]; exact hv
 
 end UpperTheory.V.GradeZeroInterpolatingElement
@@ -132,14 +132,14 @@ end UpperTheory.V.GradeZeroInterpolatingElement
 theorem UpperTheory.V.GradeZeroInterpolatingElement.phiGam :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → CohomologyHyp → PhiCond D.Gam l := by
   intro Ω _ _ _ l hl c D hD hP
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   have hfin : D.SP.Finite := by
     refine (D.S.finite_toSet.biUnion fun p hp => fin_above (hD.S_prime p hp).ne_zero).subset ?_
     rintro v ⟨p, hp, hv⟩
     exact Set.mem_biUnion hp hv
   have hS : ContainsAbove hfin.toFinset l := fun v hv => hfin.mem_toFinset.2 ⟨l, hD.l_mem, hv⟩
-  haveI hK : CompactSpace (GS Ω (hfin.toFinset : Set (HeightOneSpectrum (𝓞 ℚ)))) := inferInstance
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have hK : CompactSpace (GS Ω (hfin.toFinset : Set (HeightOneSpectrum (𝓞 ℚ)))) := inferInstance
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   have key : PhiCond (GS Ω (hfin.toFinset : Set (HeightOneSpectrum (𝓞 ℚ)))) (l ^ 1) :=
     phi_condition_of_finite_cohomology (l ^ 1) fun M _ _ _ _ _ ρ hρ => by
       obtain ⟨-, f1, -⟩ := hP.gf ℚ Ω l 1 M hfin.toFinset ρ one_pos hS hρ

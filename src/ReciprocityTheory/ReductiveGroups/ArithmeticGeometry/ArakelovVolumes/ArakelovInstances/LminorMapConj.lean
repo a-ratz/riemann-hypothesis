@@ -78,10 +78,10 @@ theorem sub_LMU {m : ℕ} (hm : m ≤ r) (L M U : Matrix (Fin r) (Fin r) ℂ)
     rw [sum_eq_castLE hm (fun a => L a (Fin.castLE hm i) * M a (Fin.castLE hm b))]
     intro k hk
     have := i.isLt
-    rw [hL k _ (by simp only [Fin.lt_def, Fin.coe_castLE]; omega), zero_mul]
+    rw [hL k _ (by simp only [Fin.lt_def, Fin.val_castLE]; omega), zero_mul]
   · intro k hk
     have := j.isLt
-    rw [hU k _ (by simp only [Fin.lt_def, Fin.coe_castLE]; omega), mul_zero]
+    rw [hU k _ (by simp only [Fin.lt_def, Fin.val_castLE]; omega), mul_zero]
 
 theorem lminor_LMU (L M U : Matrix (Fin r) (Fin r) ℂ)
     (hL : ∀ a c : Fin r, c < a → L a c = 0) (hU : ∀ a c : Fin r, c < a → U a c = 0) (k : Fin (r + 1)) :

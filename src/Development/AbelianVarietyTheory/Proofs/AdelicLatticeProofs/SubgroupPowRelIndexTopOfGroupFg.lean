@@ -62,8 +62,8 @@ private theorem card_quot_range_nsmul_eq_pow_finrank_mul_card_ker (M : Type) [Ad
       (nsmulAddMonoidHom (α := M) p).range.index =
         p ^ Module.finrank ℤ M * Nat.card (nsmulAddMonoidHom (α := M) p).ker := by
   obtain ⟨n, ι, _, q, hq, e, ⟨φ⟩⟩ := AddCommGroup.equiv_free_prod_directSum_zmod M
-  haveI : ∀ i, NeZero (q i ^ e i) := fun i => ⟨pow_ne_zero _ (hq i).ne_zero⟩
-  haveI : Finite (DirectSum ι fun i => ZMod (q i ^ e i)) :=
+  have : ∀ i, NeZero (q i ^ e i) := fun i => ⟨pow_ne_zero _ (hq i).ne_zero⟩
+  have : Finite (DirectSum ι fun i => ZMod (q i ^ e i)) :=
     Finite.of_equiv _ (DirectSum.linearEquivFunOnFintype ℤ ι _).toEquiv.symm
   set D := DirectSum ι fun i => ZMod (q i ^ e i)
   set P := Fin n →₀ ℤ
@@ -107,7 +107,7 @@ private theorem card_quot_range_nsmul_eq_pow_finrank_mul_card_ker (M : Type) [Ad
       rw [map_nsmul, AddEquiv.apply_symm_apply, Prod.smul_mk, ha, hb]
   have hindexD : (nsmulAddMonoidHom (α := D) p).range.index =
       Nat.card (nsmulAddMonoidHom (α := D) p).ker := by
-    haveI : (nsmulAddMonoidHom (α := D) p).ker.FiniteIndex := AddSubgroup.finiteIndex_of_finite
+    have : (nsmulAddMonoidHom (α := D) p).ker.FiniteIndex := AddSubgroup.finiteIndex_of_finite
     exact AddSubgroup.index_range
   have hrank : Module.finrank ℤ M = n := by
     rw [φ.toIntLinearEquiv.finrank_eq]

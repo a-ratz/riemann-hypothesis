@@ -122,5 +122,5 @@ theorem UpperTheory.ddR_le_fil_and_inf_fil_eq_bot_of_hodgeTate_mult :
     exact AlgHom.natCard_of_splits _ _ _ (fun _ => IsAlgClosed.splits _)
   have : Finite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact Module.finrank_pos.ne')
-  letI := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
+  let := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
   exact gen_fil (P.PD K) (by rw [Fintype.card_eq_nat_card, hc]) ρ hfin

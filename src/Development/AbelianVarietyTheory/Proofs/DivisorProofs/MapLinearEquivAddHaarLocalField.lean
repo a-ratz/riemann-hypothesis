@@ -68,15 +68,15 @@ theorem map_linearEquiv_haar : ∀ (F : Type) [Field F] [CharZero F] [ValuativeR
     [TopologicalSpace V] [IsModuleTopology F V] [MeasurableSpace V] [BorelSpace V] (μ : Measure V)
     [μ.IsAddHaarMeasure] (T : V ≃ₗ[F] V), μ.map T = (distribHaarChar F (LinearEquiv.det T))⁻¹ • μ := by
   intro F _ _ _ _ _ V _ _ _ _ _ _ _ μ _ T
-  letI : MeasurableSpace F := borel F
-  haveI : BorelSpace F := ⟨rfl⟩
-  haveI := GlobalTheory.SplitWeil.secondCountable F
-  haveI := GlobalTheory.SplitWeil.t2Space F
+  let : MeasurableSpace F := borel F
+  have : BorelSpace F := ⟨rfl⟩
+  have := GlobalTheory.SplitWeil.secondCountable F
+  have := GlobalTheory.SplitWeil.t2Space F
   set n := Module.finrank F V
   set b := Module.finBasis F V
   set e : V ≃ₗ[F] (Fin n → F) := b.equivFun
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd F V
-  haveI : IsTopologicalAddGroup V := IsModuleTopology.topologicalAddGroup F V
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd F V
+  have : IsTopologicalAddGroup V := IsModuleTopology.isTopologicalAddGroup F V
   have hec : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have hes : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
 
@@ -86,7 +86,7 @@ theorem map_linearEquiv_haar : ∀ (F : Type) [Field F] [CharZero F] [ValuativeR
   have hEms : (Em.symm : (Fin n → F) → V) = e.symm := rfl
   let P : Measure (Fin n → F) := Measure.pi fun _ => (Measure.addHaar : Measure F)
   set X := μ.map Em with hX
-  haveI : X.IsAddHaarMeasure := E.isAddHaarMeasure_map μ
+  have : X.IsAddHaarMeasure := E.isAddHaarMeasure_map μ
   set M := LinearMap.toMatrix b b T.toLinearMap
   have hM : ∀ y, M.mulVec (e y) = e (T y) := fun y => by
     simp [M, e, LinearMap.toMatrix_mulVec_repr]

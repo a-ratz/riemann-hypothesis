@@ -85,7 +85,7 @@ theorem ideleModule_norm (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   rw [GroundTheory.Global.IdeleGroup.ideleModule_eq, GlobalTheory.Doubling.absE_apply, NNReal.coe_mul, NNReal.coe_prod]
   have h := NNReal.toRealHom.toMonoidHom.map_finprod (GlobalTheory.Doubling.finite_mulSupport_absEv t)
   refine congrArg₂ (· * ·) (Finset.prod_congr rfl fun w _ => ?_) (Eq.trans ?_ h.symm)
-  · rw [GlobalTheory.Doubling.absEw_unitInf, NNReal.coe_pow, coe_nnnorm]
+  · rw [GlobalTheory.Doubling.absEw_unitInf, NNReal.coe_pow, coe_nnNorm]
     rfl
   · refine finprod_congr fun v => ?_
     rw [GlobalTheory.Doubling.absEv_unitFin]
@@ -252,14 +252,14 @@ def vecCoord : (Fin n → AE F E) ≃ₗ[AF F] (Fin n × Fin (Module.finrank F E
   map_smul' c u := by funext p; simp
 
 theorem continuous_vecCoord : Continuous (vecCoord F E n) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   have hb : Continuous (tensBasis F E).equivFun :=
     IsModuleTopology.continuous_of_linearMap (tensBasis F E).equivFun.toLinearMap
   exact continuous_pi fun p => (continuous_apply p.2).comp (hb.comp (continuous_apply p.1))
 
 theorem continuous_vecCoord_symm : Continuous (vecCoord F E n).symm := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (AF F ⊗[F] E) := IsModuleTopology.toContinuousAdd (AF F) _
   have hb : Continuous (tensBasis F E).equivFun.symm :=
     IsModuleTopology.continuous_of_linearMap (tensBasis F E).equivFun.symm.toLinearMap
   exact continuous_pi fun i => hb.comp (continuous_pi fun k => continuous_apply (i, k))
@@ -284,21 +284,21 @@ theorem GlobalTheory.SiegelCov.integral_mulVec_inv : ∀ (F E : Type) [Field F] 
         (((adeleClass F).modu (Units.map (Algebra.norm (AF F) : AE F E →* AF F) (Matrix.GeneralLinearGroup.det t)) : ℝ) : ℂ) *
           (letI : MeasurableSpace (Fin n → AE F E) := borel _; ∫ y, f y ∂μ) := by
   intro F E _ _ _ _ _ n μ hμ t f _
-  letI : MeasurableSpace (Fin n → AE F E) := borel _
-  haveI : BorelSpace (Fin n → AE F E) := ⟨rfl⟩
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : IsTopologicalAddGroup (AE F E) := IsModuleTopology.isTopologicalAddGroup (AF F) _
-  haveI : Module.Free (AF F) (AF F ⊗[F] E) := Module.Free.of_basis (GlobalTheory.ModuLR.tensBasis F E)
-  haveI : Module.Finite (AF F) (AF F ⊗[F] E) := Module.Finite.of_basis (GlobalTheory.ModuLR.tensBasis F E)
+  let : MeasurableSpace (Fin n → AE F E) := borel _
+  have : BorelSpace (Fin n → AE F E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalAddGroup (AE F E) := IsModuleTopology.isTopologicalAddGroup (AF F) _
+  have : Module.Free (AF F) (AF F ⊗[F] E) := Module.Free.of_basis (GlobalTheory.ModuLR.tensBasis F E)
+  have : Module.Finite (AF F) (AF F ⊗[F] E) := Module.Finite.of_basis (GlobalTheory.ModuLR.tensBasis F E)
   let Φ := GlobalTheory.SiegelCov.vecCoordCE F E n
-  haveI : LocallyCompactSpace (Fin n → AE F E) := Φ.toHomeomorph.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (Fin n → AE F E) := Φ.toHomeomorph.isInducing.secondCountableTopology
-  haveI : T2Space (Fin n → AE F E) := Φ.toHomeomorph.isEmbedding.t2Space
-  haveI : μ.IsAddHaarMeasure := hμ
-  haveI : TopologicalSpace.PseudoMetrizableSpace (Fin n → AE F E) := inferInstance
-  haveI : SigmaCompactSpace (Fin n → AE F E) := inferInstance
-  haveI : μ.Regular := inferInstance
+  have : LocallyCompactSpace (Fin n → AE F E) := Φ.toHomeomorph.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (Fin n → AE F E) := Φ.toHomeomorph.isInducing.secondCountableTopology
+  have : T2Space (Fin n → AE F E) := Φ.toHomeomorph.isEmbedding.t2Space
+  have : μ.IsAddHaarMeasure := hμ
+  have : TopologicalSpace.PseudoMetrizableSpace (Fin n → AE F E) := inferInstance
+  have : SigmaCompactSpace (Fin n → AE F E) := inferInstance
+  have : μ.Regular := inferInstance
   set T : Matrix (Fin n) (Fin n) (AE F E) := ((t⁻¹ : GL (Fin n) (AE F E)) : Matrix (Fin n) (Fin n) (AE F E)) with hTdef
   have hT : IsUnit T.det := (Matrix.isUnit_iff_isUnit_det T).1 (t⁻¹).isUnit
   set L := GlobalTheory.ModuLR.mulVecCE T hT with hL

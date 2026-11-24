@@ -74,7 +74,7 @@ theorem stab_compact_open (W : HSp D) (β : GL (Fin W.rank) (Lev.EAf D)) :
   obtain ⟨C, hC, hCm⟩ := GlobalTheory.ParahoricCompact.exists_compact W β
   refine ⟨hC.of_isClosed_subset ((GlobalTheory.Ker.CongTop.isClosed_GfC W).inter (Subgroup.isClosed_of_isOpen _ ho))
     fun k hk => hCm k hk.1 hk.2, ?_⟩
-  convert ho.preimage (continuous_subtype_val (p := fun x => x ∈ GfC W)) using 1
+  convert ho.preimage (continuous_subtypeVal (p := fun x => x ∈ GfC W)) using 1
   ext k
   exact ⟨fun hk => hk.2, fun hk => ⟨k.2, hk⟩⟩
 

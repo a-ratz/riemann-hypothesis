@@ -110,9 +110,9 @@ theorem imageCpt_refl_of_genPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GenOpen.gen_open E H D l Xo c O β Y S Ω K J y A hβ
   obtain ⟨x', hx'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GenOpen.gen_open E H D l Xo c O β Y S Ω' K' J' y' A' hβ
   obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GenIso.exists_iso_of_genPt_eq Y.X A.Ω₀ A'.Ω₀ A.ξ₀ A'.ξ₀ A.gen₀ A'.gen₀ hgen
-  haveI : Mono Y.j := by
-    haveI := hβ
-    haveI := Y.jQ_open
+  have : Mono Y.j := by
+    have := hβ
+    have := Y.jQ_open
     unfold Model.j
     infer_instance
   have hxx : spMap ψ.toRingHom ≫ x' = x := by

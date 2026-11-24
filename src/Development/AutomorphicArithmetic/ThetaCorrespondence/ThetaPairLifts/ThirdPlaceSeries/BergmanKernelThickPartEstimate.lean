@@ -199,7 +199,7 @@ theorem le_bergOn : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestricti
     (fun _ _ _ _ _ => rfl)
   rw [Finset.sum_eq_single y.1 (f := fun k => ∫⁻ z in FF k, (if k = y.1 then (1 : ℝ≥0∞) else 0)
       ∂(muF ((U σ).X k) (x0 k))) (fun k _ hk => by simp [hk]) (fun h => absurd (Finset.mem_univ _) h),
-    if_pos rfl, setLIntegral_one] at hM
+    ite_eq_left rfl, setLIntegral_one] at hM
   set Cl := classesOver (D.sp.W j) (dict σ) (framesOn (U σ) Z) with hCl
   have hm : ∫⁻ q : AutQ (D.sp.W j), (if (dict σ q.out).1 = y.1 then (1 : ℝ≥0∞) else 0) ∂(muQ1 (D.sp.W j)) ≤
       muQ1 (D.sp.W j) Cl := by
@@ -227,7 +227,7 @@ theorem le_bergOn : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestricti
     rw [lintegral_smul_measure, smul_eq_mul]
     refine mul_le_mul_right
       (le_trans (lintegral_mono' Measure.restrict_le_self le_rfl) (le_of_eq (lintegral_congr fun q => ?_))) _
-    rw [Real.enorm_eq_ofReal (ptN_nonneg _ _ _), ← ENNReal.ofReal_pow (ptN_nonneg _ _ _)]
+    rw [Real.eNorm_eq_ofReal (ptN_nonneg _ _ _), ← ENNReal.ofReal_pow (ptN_nonneg _ _ _)]
     rfl
   have hpos := pnorm_pos ((U σ).X y.1) (la y.1) y.2.2 hPy
   have hpt : ENNReal.ofReal (ptN la P' ⟨y.1, y.2.1⟩) ^ 2 =
@@ -466,7 +466,7 @@ theorem deep_cong_chart_sep : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     have hfN : 0 < fdeg E := by
       have := QuadraticCoefficientForms.card_Psi_pos (X := X)
       rwa [QuadraticCoefficientForms.card_Psi (X := X)] at this
-    haveI : Nonempty (Fin (2 * fdeg E * r)) := ⟨⟨0, by positivity⟩⟩
+    have : Nonempty (Fin (2 * fdeg E * r)) := ⟨⟨0, by positivity⟩⟩
     let B := basisOfLinearIndependentOfCardEqFinrank hli hcv
     have hlin : (Matrix.mulVecLin (γ : Matrix (Fin r) (Fin r) E)).restrictScalars ℚ =
         LinearMap.id := B.ext fun j => by
@@ -839,7 +839,7 @@ theorem orth_transfer : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   unfold bchar
   refine Finset.prod_ne_zero_iff.2 fun τ _ => Finset.prod_ne_zero_iff.2 fun i _ => zpow_ne_zero _ ?_
   have h := (hb τ).1
-  rw [Matrix.det_of_upperTriangular ((ExtFPf.upper_iff X b τ).mp (hb τ).2)] at h
+  rw [Matrix.det_of_isUpperTriangular ((ExtFPf.upper_iff X b τ).mp (hb τ).2)] at h
   exact Finset.prod_ne_zero_iff.1 h i (Finset.mem_univ i)
 
 theorem nums (a l C0 PP T D b uE : ℝ) (ha : 1 ≤ a) (hl : 10 ≤ l) (hlC : C0 ≤ l) (hPP : (a * l) ^ 12 ≤ PP)

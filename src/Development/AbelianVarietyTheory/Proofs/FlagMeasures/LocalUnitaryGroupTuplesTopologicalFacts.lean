@@ -97,12 +97,12 @@ theorem top_facts : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   refine ⟨hr, e.isClosedEmbedding.locallyCompactSpace, e.isEmbedding.t2Space,
     e.secondCountableTopology, inferInstanceAs (IsTopologicalGroup (HR (Fv F v) σ J)), h1, h3, h2,
     fun a => ⟨?_, ?_⟩⟩
-  · letI : NontriviallyNormedField (Fv F v) :=
+  · let : NontriviallyNormedField (Fv F v) :=
       Valued.toNontriviallyNormedField (Fv F v) (WithZero (Multiplicative ℤ))
     exact isOpen_linearIndependent (K := Fv F v)
       (Algebra.TensorProduct.basis (Fv F v) (Module.finBasis F E))
   · have hm : Continuous fun g : HA (Fv F v) σ J => HA.mat (Fv F v) σ J g :=
-      continuous_subtype_val
+      continuous_subtypeVal
     have hv : Continuous fun g : HA (Fv F v) σ J =>
         ((HA.mat (Fv F v) σ J g : GL (Fin n) (Fv F v ⊗[F] E)) :
           Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) := Units.continuous_val.comp hm

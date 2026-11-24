@@ -145,7 +145,7 @@ private theorem exists_algebraMap_eq_of_frobenius_fixed (d : K) (hd : d ^ Fintyp
 theorem frob_of_ne (σ : K ≃ₐ[k] K) (h2 : finrank k K = 2) (hne : σ ≠ AlgEquiv.refl) :
     ∀ x, σ x = x ^ Fintype.card k := by
   intro x
-  haveI : Module.Finite k K := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite k K := Module.finite_of_finrank_pos (by omega)
   by_cases hx : ∃ a : k, algebraMap k K a = x
   · obtain ⟨a, rfl⟩ := hx
     rw [AlgEquiv.commutes, ← map_pow, FiniteField.pow_card]
@@ -185,7 +185,7 @@ theorem frob_of_ne (σ : K ≃ₐ[k] K) (h2 : finrank k K = 2) (hne : σ ≠ Alg
     rw [show σ x = (σ : K →ₐ[k] K) x from rfl, Polynomial.aeval_algHom_apply, minpoly.aeval,
       map_zero])
   have r3 := hroot (x ^ Fintype.card k) (by
-    rw [← Polynomial.expand_aeval, FiniteField.expand_card, map_pow, minpoly.aeval,
+    rw [← Polynomial.expand_aeval, FiniteField.Polynomial.expand_card, map_pow, minpoly.aeval,
       zero_pow Fintype.card_ne_zero])
   by_contra hne3
   have hcard : ({x, σ x, x ^ Fintype.card k} : Finset K).card = 3 :=

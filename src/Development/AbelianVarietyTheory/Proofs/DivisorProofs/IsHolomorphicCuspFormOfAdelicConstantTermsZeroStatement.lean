@@ -143,7 +143,7 @@ theorem lact_mem (X : Data E r) {a : GL (Fin r) E} (ha : a ∈ X.Γ) {x : Frame 
 theorem bchar_ne (X : Data E r) (la : Wt X.Ψ r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : bchar la b ≠ 0 := by
   refine Finset.prod_ne_zero_iff.2 fun τ _ => Finset.prod_ne_zero_iff.2 fun i _ => zpow_ne_zero _ ?_
   have h := (hb τ).1
-  rw [Matrix.det_of_upperTriangular (M := mat b τ) (fun a c h => (hb τ).2 a c h)] at h
+  rw [det_of_isUpperTriangular (M := mat b τ) (fun a c h => (hb τ).2 a c h)] at h
   exact Finset.prod_ne_zero_iff.1 h i (Finset.mem_univ _)
 
 theorem c_ne (X : Data E r) (τ : X.Ψ) : X.c τ ≠ 0 := by
@@ -189,9 +189,9 @@ theorem isHolCusp_of_zCusp : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.wha
   have hF := GlobalTheory.T.holomorphicAdelicForm_of_boundedSection D θ V S M w r hr Comp X la dict mu c Kf hM hG P hP
   obtain ⟨e, he, -, -⟩ := GlobalTheory.HolDict.FdDom.dom_iff_frDoms D θ V S M w r hr Comp X la dict mu c Kf hM hG k
   subst hr
-  haveI : IsTopologicalGroup (GA D V) := by
-    haveI : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-    haveI : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have : IsTopologicalGroup (GA D V) := by
+    have : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+    have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
     exact inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
   refine ⟨hP k, fun ξ hξ x hx => ?_⟩
   set φ := adel V dict (muPin V dict mu c) P with hφ
@@ -316,13 +316,13 @@ theorem isHolCusp_of_zCusp : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.wha
   obtain ⟨-, hD, -, hDf⟩ := h2.choose_spec
   obtain ⟨hμ0, hμt⟩ := hfin μ 𝓕 hμ h𝓕
   obtain ⟨C, hC⟩ := hF.bdd
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hμt.lt_top⟩
-  haveI : IsFiniteMeasure (volume.restrict h2.choose) := ⟨by rw [Measure.restrict_apply_univ]; exact hDf⟩
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hμt.lt_top⟩
+  have : IsFiniteMeasure (volume.restrict h2.choose) := ⟨by rw [Measure.restrict_apply_univ]; exact hDf⟩
   have h0 : C₀ * ∫ s in h2.choose, f s = 0 := by
     refine const_mean_eq_zero (volume.restrict h2.choose) (μ.restrict 𝓕) (by rwa [Measure.restrict_apply_univ])
       (fun s z => φ ((z : GA D V) * (L (m s) * (γ * g)))) ?_ C (fun _ _ => hC _) (fun s => hZ η hiso μ 𝓕 hμ h𝓕 _) _ ?_
-    · exact hF.aut.cont.comp ((continuous_subtype_val.comp continuous_snd).mul
+    · exact hF.aut.cont.comp ((continuous_subtypeVal.comp continuous_snd).mul
         ((hιc.comp continuous_fst).mul continuous_const))
     · intro z
       obtain ⟨t, ht⟩ := hval z z.2

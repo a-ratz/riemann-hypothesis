@@ -70,7 +70,7 @@ private theorem UpperTheory.ConvolutionTheory.K.hsOfKer_countable {H : Type*} [N
 private theorem UpperTheory.ConvolutionTheory.K.hsOfKer_sq {X : Type*} [MeasurableSpace X] (ν : Measure X)
     {E : Type*} [NormedAddCommGroup E] (f : X → E) (hf : AEStronglyMeasurable f ν) :
     eLpNorm f 2 ν ^ 2 = ∫⁻ x, ‖f x‖ₑ ^ 2 ∂ν := by
-  rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hf]
+  rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num) hf]
   simp only [ENNReal.toReal_ofNat, ENNReal.rpow_ofNat]
   rw [← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
   norm_num
@@ -81,11 +81,11 @@ theorem UpperTheory.ConvolutionTheory.K.hsOfKer :
       (∀ φ, (A φ : X → ℂ) =ᵐ[ν] fun x => ⟪k x, φ⟫_ℂ) → IsHilbertSchmidt A := by
   intro X _ ν _ _ A k hk hA
   let b := stdHilbertBasis ℂ (Lp ℂ 2 ν)
-  haveI := UpperTheory.ConvolutionTheory.K.hsOfKer_countable b.orthonormal
+  have := UpperTheory.ConvolutionTheory.K.hsOfKer_countable b.orthonormal
   rw [isHilbertSchmidt_iff b]
   have h1 : ∀ i, ‖A (b i)‖ₑ ^ 2 = ∫⁻ x, ‖⟪b i, k x⟫_ℂ‖ₑ ^ 2 ∂ν := by
     intro i
-    rw [Lp.enorm_def, eLpNorm_congr_ae (hA (b i)),
+    rw [Lp.eNorm_def, eLpNorm_congr_ae (hA (b i)),
       UpperTheory.ConvolutionTheory.K.hsOfKer_sq _ _ (hk.aestronglyMeasurable.inner aestronglyMeasurable_const)]
     simp only [enorm_inner_comm (k _)]
   simp only [h1]
@@ -94,4 +94,4 @@ theorem UpperTheory.ConvolutionTheory.K.hsOfKer :
     rw [← UpperTheory.ConvolutionTheory.K.hsOfKer_sq ν k hk.aestronglyMeasurable]
     exact ENNReal.pow_lt_top hk
   · intro i
-    exact ((aestronglyMeasurable_const.inner hk.aestronglyMeasurable).enorm).pow_const 2
+    exact ((aestronglyMeasurable_const.inner hk.aestronglyMeasurable).eNorm).pow_const 2

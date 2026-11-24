@@ -251,7 +251,7 @@ theorem exists_common_denom (v : FinitePlace L) {y : Fin n → L} (hy : ∀ i, v
     ∃ (t : 𝓞 L) (z : Fin n → 𝓞 L), t ∉ v.maximalIdeal.asIdeal ∧ ∀ i, (t : L) * y i = z i := by
   choose s r hs hr using fun i => exists_denom v (hy i)
   classical
-  haveI := v.maximalIdeal.isPrime
+  have := v.maximalIdeal.isPrime
   refine ⟨∏ j, s j, fun i => (∏ j ∈ Finset.univ.erase i, s j) * r i, ?_, fun i => ?_⟩
   · intro hmem
     obtain ⟨j, -, hj⟩ := Ideal.IsPrime.prod_mem_iff.mp hmem

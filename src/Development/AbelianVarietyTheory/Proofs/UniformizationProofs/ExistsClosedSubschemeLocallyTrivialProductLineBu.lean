@@ -136,7 +136,7 @@ theorem locTrivOver_of_affine (Y : Scheme.{0}) (x : Y ⟶ T)
   obtain ⟨V, hy, hV⟩ := H y
   obtain ⟨q, rfl⟩ := V.2.range_fromSpec.ge hy
   obtain ⟨U, hU, ht⟩ := hV q
-  haveI : IsOpenImmersion V.2.fromSpec := IsAffineOpen.isOpenImmersion_fromSpec (U := V.1) V.2
+  have : IsOpenImmersion V.2.fromSpec := IsAffineOpen.isOpenImmersion_fromSpec (U := V.1) V.2
   have hr : Set.range (V.2.fromSpec ''ᵁ U).ι ⊆ Set.range (U.ι ≫ V.2.fromSpec) := by
     rw [Scheme.Opens.range_ι]
     rintro _ ⟨z, hz, rfl⟩

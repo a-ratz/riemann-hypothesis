@@ -310,7 +310,7 @@ theorem aB_h_eq (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (hR : AdmBa
       (Over.pullback (thick R (maximalIdeal R) e)).map a := fun e =>
     (hu e).2.unique ⟨inferInstance, (E.q_lin e)⟩ ⟨inferInstance, hE.2.2.1 e⟩
   have := D.toPre.P.isAb.proper
-  haveI : IsNoetherianRing R := hR.1
+  have : IsNoetherianRing R := hR.1
   refine ⟨GlobalTheory.hom_eq_of_thickenings_of_isProper R (maximalIdeal R) (IsLocalRing.maximalIdeal_le_jacobson _)
     D.toPre.P.A D.toPre.P.A _ _ fun e => ?_, ?_⟩
   · have k := congrArg (fun m => m.left ≫ pullback.fst D.toPre.P.A.hom (thick R (maximalIdeal R) e)) (hm e)

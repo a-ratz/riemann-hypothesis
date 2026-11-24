@@ -745,7 +745,7 @@ theorem rLoc_rescale_bound {e : ℕ} (S : Finset (Fin e)) (m : Fin e → ℕ) (z
         rw [← Real.log_mul (by positivity) (by positivity)]
         congr 1
         field_simp
-      rw [if_pos h0, hn, hsplit, mul_add, add_sub_cancel_left, abs_of_nonneg (by positivity)]
+      rw [ite_eq_left h0, hn, hsplit, mul_add, add_sub_cancel_left, abs_of_nonneg (by positivity)]
       exact mul_le_mul_of_nonneg_left hlog1 hm0
     · have hfi := hfar i h0
       have hz1 : ‖z₀ i‖ < 1 := (norm_le_pi_norm z₀ i).trans_lt hz₀
@@ -771,7 +771,7 @@ theorem rLoc_rescale_bound {e : ℕ} (S : Finset (Fin e)) (m : Fin e → ℕ) (z
         apply Real.log_le_log (by positivity)
         apply div_le_div_of_nonneg_left (by norm_num) hρ2
         nlinarith
-      rw [if_neg h0, sub_zero, abs_of_nonneg (by positivity)]
+      rw [ite_eq_right h0, sub_zero, abs_of_nonneg (by positivity)]
       exact mul_le_mul_of_nonneg_left hB hm0
   have hdiff : rLoc S m ((ρ : ℂ) • w + z₀) - rLoc (S.filter (fun i => z₀ i = 0)) m w =
       ∑ i ∈ S, ((m i : ℝ) * Real.log (4 / ‖((ρ : ℂ) • w + z₀) i‖ ^ 2) -
@@ -1327,7 +1327,7 @@ theorem regGlobalStatement_holds : RegGlobalStatement := by
   have hlevi : ∀ j, ReciprocityTheory.AnForm.A.IsLeviPsh (ball (0 : Fin e → ℂ) 2 \ ReciprocityTheory.AnForm.A.coordDiv (S j))
       (fun z => (fun z => th.φ (x j) ((B'.chart j).symm z)) z + (ph ∘ (B'.chart j).symm) z) := by
     intro j
-    refine ⟨(((hq j).mono Set.diff_subset).add (hphj j)).of_le h2le, fun z hz w => ?_⟩
+    refine ⟨(((hq j).mono Set.sdiff_subset).add (hphj j)).of_le h2le, fun z hz w => ?_⟩
     exact _root_.GlobalTheory.CompanionTheory.LeviChart.levi_nonneg_of_compat_fixedBase A B' th ph (bdry s)ᶜ (x j) j hAB hth hcl.isOpen_compl hphs hpsh (hsrc j) z (hball j z hz) w
   have hbnd : ∀ j, ∀ z ∈ ball (0 : Fin e → ℂ) 2 \ ReciprocityTheory.AnForm.A.coordDiv (S j),
       -C₅' * Real.log (rLoc (S j) (mm j) z) ≤ (ph ∘ (B'.chart j).symm) z ∧

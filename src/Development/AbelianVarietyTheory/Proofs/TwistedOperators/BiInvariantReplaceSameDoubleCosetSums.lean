@@ -85,7 +85,7 @@ theorem finite_dosetOf_fibre (hK : IsCommensurated K) (S : Set G) :
     have hs : {x : G ⧸ K | dosetOf K x = dosetOf K x₀} ⊆ {x : G ⧸ K | ∃ a b : K, x.out = (a : G) * x₀.out * b} :=
       fun y hy => exists_of_dosetOf_eq hy
     exact (hf.subset hs).to_subtype
-  · haveI : IsEmpty {x : G ⧸ K // dosetOf K x = S} := ⟨fun y => h ⟨y.1, y.2⟩⟩
+  · have : IsEmpty {x : G ⧸ K // dosetOf K x = S} := ⟨fun y => h ⟨y.1, y.2⟩⟩
     infer_instance
 
 theorem biInv_of_dosetOf_eq {F : G → ℂ} (hF : IsBiInv K F) {x y : G ⧸ K} (h : dosetOf K y = dosetOf K x) :
@@ -114,7 +114,7 @@ end DosetSwapProof
 
 theorem dosetSwap : DosetSwap := by
   intro G _ K hK F w φ Z hF hw hH hZ
-  haveI : ∀ S : Set G, Finite {x : G ⧸ K // dosetOf K x = S} := finite_dosetOf_fibre hK
+  have : ∀ S : Set G, Finite {x : G ⧸ K // dosetOf K x = S} := finite_dosetOf_fibre hK
   let e := Equiv.sigmaFiberEquiv (dosetOf K)
   let f₁ : G ⧸ K → ℂ := fun x => F x.out * φ x.out
   let f₂ : G ⧸ K → ℂ := fun x => F x.out * w x.out
@@ -129,7 +129,7 @@ theorem dosetSwap : DosetSwap := by
         fun y => by simp only [f₁, biInv_of_dosetOf_eq hF y.2]
       rw [tsum_congr e₂, tsum_congr e₁, tsum_mul_left, tsum_mul_left, ← hAct_dosetInd_eq hK,
         ← hAct_dosetInd_eq hK, hH]
-    · haveI : IsEmpty {x : G ⧸ K // dosetOf K x = S} := ⟨fun y => h ⟨y.1, y.2⟩⟩
+    · have : IsEmpty {x : G ⧸ K // dosetOf K x = S} := ⟨fun y => h ⟨y.1, y.2⟩⟩
       simp [tsum_empty]
   have hn : ∀ S : Set G, ∑' y : {x : G ⧸ K // dosetOf K x = S}, ‖f₂ y.1‖ ≤
       ∑' y : {x : G ⧸ K // dosetOf K x = S}, ‖f₁ y.1‖ := by
@@ -146,7 +146,7 @@ theorem dosetSwap : DosetSwap := by
         simp [norm_mul]
       rw [key, hs]
       exact norm_tsum_le_tsum_norm Summable.of_finite
-    · haveI : IsEmpty {x : G ⧸ K // dosetOf K x = S} := ⟨fun y => h ⟨y.1, y.2⟩⟩
+    · have : IsEmpty {x : G ⧸ K // dosetOf K x = S} := ⟨fun y => h ⟨y.1, y.2⟩⟩
       simp [tsum_empty]
   have h₁ : HasSum (f₁ ∘ e) Z := (e.hasSum_iff).2 hZ
   have h₁n : Summable fun p => ‖(f₁ ∘ e) p‖ := summable_norm_iff.2 h₁.summable

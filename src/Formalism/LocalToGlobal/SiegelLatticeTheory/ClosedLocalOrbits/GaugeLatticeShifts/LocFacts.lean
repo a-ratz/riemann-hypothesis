@@ -507,8 +507,8 @@ theorem coeff_mem (h2 : Module.finrank F E = 2) (A : LocAt F E sig p) (a : E)
     (ha : IsIntegral 𝒪[A.Fp] (A.ιE a)) (hnot : a ∉ (algebraMap F E).range) (i : ℕ) :
     A.ιF ((minpoly F a).coeff i) ∈ 𝒪[A.Fp] := by
   classical
-  haveI := ep_nontrivial A
-  haveI := A.free
+  have := ep_nontrivial A
+  have := A.free
   have hli : LinearIndependent F ![(1 : E), a] := by
     rw [LinearIndependent.pair_iff' one_ne_zero]
     intro c hc
@@ -537,7 +537,7 @@ theorem coeff_mem (h2 : Module.finrank F E = 2) (A : LocAt F E sig p) (a : E)
     rw [LinearIndependent.pair_iff' one_ne_zero] at hliP
     apply hliP c
     rw [← hc, Algebra.algebraMap_eq_smul_one]
-  haveI : Module.Finite A.Fp A.Ep := Module.finite_of_finrank_pos (by rw [A.rank]; norm_num)
+  have : Module.Finite A.Fp A.Ep := Module.finite_of_finrank_pos (by rw [A.rank]; norm_num)
   have hintP : IsIntegral A.Fp (A.ιE a) := Algebra.IsIntegral.isIntegral _
   have hdegP : 2 ≤ (minpoly A.Fp (A.ιE a)).natDegree := by
     have h0 := minpoly.natDegree_pos hintP
@@ -767,15 +767,15 @@ theorem lf_psiE_one (z : (D.s.atP p).Ep) (hz : ‖LocCP.trQ p z‖ ≤ 1) : (D.s
     refine (Padic.nonarchimedean _ _).trans (max_le hz ?_)
     rw [norm_neg]; exact hle
   have h1 := LocCP.den_one_of (Loc.resChar p) a n hden ha
-  have ha' : ((a.num : ℚ) : ℂ) = (a : ℂ) := by rw [Rat.coe_int_num_of_den_eq_one h1]
+  have ha' : ((a.num : ℚ) : ℂ) = (a : ℂ) := by rw [Rat.intCast_num_of_den_eq_one h1]
   rw [heq, ← ha', Rat.cast_intCast, mul_comm]
   exact Complex.exp_int_mul_two_pi_mul_I a.num
 
 theorem lf_tr_th : Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep (LocCP.th p) = 0 := by
-  haveI : Module.Free (D.s.atP p).Fp (D.s.atP p).Ep := (D.s.atP p).free
-  haveI : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep :=
+  have : Module.Free (D.s.atP p).Fp (D.s.atP p).Ep := (D.s.atP p).free
+  have : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep :=
     Module.finite_of_finrank_pos (by rw [(D.s.atP p).rank]; norm_num)
-  haveI : CharZero (D.s.atP p).Fp := (D.s.atP p).char0
+  have : CharZero (D.s.atP p).Fp := (D.s.atP p).char0
   have h := Algebra.trace_eq_of_algEquiv (D.s.atP p).cj (LocCP.th p)
   rw [LocCP.cj_th, map_neg] at h
   have h2 : (2 : (D.s.atP p).Fp) * Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep (LocCP.th p) = 0 := by
@@ -785,8 +785,8 @@ theorem lf_tr_th : Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep (LocCP.th p) = 0 
 theorem lf_tr_eq (y : (D.s.atP p).Ep) :
     algebraMap (D.s.atP p).Fp (D.s.atP p).Ep (Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep y) =
       y + (D.s.atP p).cj y := by
-  haveI : Module.Free (D.s.atP p).Fp (D.s.atP p).Ep := (D.s.atP p).free
-  haveI : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep :=
+  have : Module.Free (D.s.atP p).Fp (D.s.atP p).Ep := (D.s.atP p).free
+  have : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep :=
     Module.finite_of_finrank_pos (by rw [(D.s.atP p).rank]; norm_num)
   obtain ⟨a, b, rfl⟩ := LocCP.repr_th p y
   have ht : Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep
@@ -820,14 +820,14 @@ theorem lf_tr_mem (y : (D.s.atP p).Ep) (hy : y ∈ (D.s.atP p).O) :
 theorem lf_trQ_mul (z : (D.s.atP p).Fp) (y : (D.s.atP p).Ep) :
     LocCP.trQ p (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep z * y) =
       Algebra.trace ℚ_[Loc.resChar p] (D.s.atP p).Fp (z * Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep y) := by
-  haveI : Module.Free (D.s.atP p).Fp (D.s.atP p).Ep := (D.s.atP p).free
-  haveI : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep :=
+  have : Module.Free (D.s.atP p).Fp (D.s.atP p).Ep := (D.s.atP p).free
+  have : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep :=
     Module.finite_of_finrank_pos (by rw [(D.s.atP p).rank]; norm_num)
-  haveI : FiniteDimensional ℚ_[Loc.resChar p] (D.s.atP p).Fp := (D.s.atP p).qlFin
+  have : FiniteDimensional ℚ_[Loc.resChar p] (D.s.atP p).Fp := (D.s.atP p).qlFin
   unfold LocCP.trQ
-  letI := ((algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).comp
+  let := ((algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).comp
     (algebraMap ℚ_[Loc.resChar p] (D.s.atP p).Fp)).toAlgebra
-  haveI : IsScalarTower ℚ_[Loc.resChar p] (D.s.atP p).Fp (D.s.atP p).Ep :=
+  have : IsScalarTower ℚ_[Loc.resChar p] (D.s.atP p).Fp (D.s.atP p).Ep :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   rw [← Algebra.trace_trace (S := (D.s.atP p).Fp), ← Algebra.smul_def, map_smul, smul_eq_mul]
 
@@ -923,7 +923,7 @@ theorem lf_ddS_inv : (ddS D)⁻¹ = FractionalIdeal.extendedHom D.host.E (𝓞 D
 
 theorem lf_mem_inv (hDL : DualLoc) (Z : LocDat D) (y : D.host.E) (hy : y ∈ (ddS D)⁻¹) :
     (D.s.atP p).ιE y * cP p Z ∈ (D.s.atP p).O := by
-  rw [lf_ddS_inv, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_extendedHom_eq_span] at hy
+  rw [lf_ddS_inv, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_extendedHom_eq_span] at hy
   induction hy using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨t, ht, rfl⟩ := hx
@@ -933,7 +933,7 @@ theorem lf_mem_inv (hDL : DualLoc) (Z : LocDat D) (y : D.host.E) (hy : y ∈ (dd
       intro a
       obtain ⟨n, hn⟩ := ht (algebraMap _ _ a) ((FractionalIdeal.mem_one_iff _).2 ⟨a, rfl⟩)
       exact ⟨n, by rw [Algebra.traceForm_apply] at hn; rw [← hn]; rfl⟩
-    haveI := (D.s.atP p).lf
+    have := (D.s.atP p).lf
     have hz := hDL D.host.F p (D.s.atP p).Fp (D.s.atP p).qlCont (D.s.atP p).qlFin (D.s.atP p).ιF
       (D.s.atP p).dense (D.s.atP p).val t htr
     have hm := LocFacts.lf_dual_le p Z _ hz

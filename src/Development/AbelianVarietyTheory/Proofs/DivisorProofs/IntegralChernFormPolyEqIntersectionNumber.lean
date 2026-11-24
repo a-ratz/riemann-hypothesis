@@ -281,7 +281,7 @@ theorem dbar_dbar_comm {u : V n → ℂ} {z : V n} (hu : ContDiffAt ℝ 2 u z) (
       funext fun x => dbar_apply u x a
     rw [e0, dbar_const_smul _ ((h1 _).fun_add ((h1 _).fun_const_smul Complex.I)),
       dbar_add (h1 _) ((h1 _).fun_const_smul Complex.I), dbar_const_smul _ (h1 _)]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply, dbar_apply,
+    simp only [smul_apply, add_apply, dbar_apply,
       fderiv_fderiv_apply hu, smul_eq_mul]
     linear_combination (1 / 4 : ℂ) * fderiv ℝ (fderiv ℝ u) z (Complex.I • b) (Complex.I • a) * Complex.I_mul_I
   rw [e, e, hs.eq w v, hs.eq (Complex.I • w) v, hs.eq w (Complex.I • v), hs.eq (Complex.I • w) (Complex.I • v)]
@@ -298,7 +298,7 @@ theorem dbarAt_sum_smul {ι : Type} [Fintype ι] {v : V n} {g : ι → V n → �
 
     simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul]
     rw [dbar_sum (A := fun p x => g p x * (bas n).repr (c p) S) (fun p _ => (hg p).mul (differentiableAt_const _)),
-      ContinuousLinearMap.sum_apply]
+      sum_apply]
     refine Finset.sum_congr rfl fun p _ => ?_
     rw [dbar_mul (hg p) (differentiableAt_const _)]
     simp
@@ -318,7 +318,7 @@ theorem dbarAt_add {v : V n} {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt
   simp only [dbarAt, ← Finset.sum_add_distrib, ← mul_add]
   refine Finset.sum_congr rfl fun a _ => congrArg _ ((bas n).ext_elem fun S => ?_)
   simp only [map_add (f := _), Finsupp.add_apply, FormMul.repr_coefwise]
-  rw [dbar_add (hF S) (hG S), ContinuousLinearMap.add_apply]
+  rw [dbar_add (hF S) (hG S), add_apply]
 
 theorem dbarAt_const (c : Alt n) (v : V n) : dbarAt (fun _ => c) v = 0 := by
   simp [dbarAt, coefwise]
@@ -635,7 +635,7 @@ theorem delAt_sum_smul {ι : Type} [Fintype ι] {v : V n} {u : ι → V n → �
     rw [FormMul.repr_coefwise]
 
     simp only [map_sum, map_smul, Finsupp.finsetSum_apply, Finsupp.smul_apply, smul_eq_mul]
-    rw [del_sum fun i _ => (hu i).mul_const _, ContinuousLinearMap.sum_apply]
+    rw [del_sum fun i _ => (hu i).mul_const _, sum_apply]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [del_mul (hu i) (differentiableAt_const _), del_const]
     simp
@@ -651,7 +651,7 @@ theorem delAt_add {v : V n} {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt 
   congr 1
   refine (bas n).ext_elem fun S => ?_
   simp only [map_add (f := _), Finsupp.add_apply, FormMul.repr_coefwise]
-  rw [del_add (hF S) (hG S), ContinuousLinearMap.add_apply]
+  rw [del_add (hF S) (hG S), add_apply]
 
 theorem delAt_const (α : Alt n) (v : V n) : delAt (fun _ => α) v = 0 := by
   simp [delAt, coefwise]
@@ -1117,9 +1117,9 @@ namespace GlobalTheory.ChernCalc
 
 theorem integral_evalF_c1W_eq_interPoly : GlobalTheory.Published.ChernDegree → ∀ (F : Type) [Field F] (σ : F →+* ℂ) (X : Var F) (κ : Type) [Fintype κ] (Δ : κ → X.Dv) (L : κ → LB X.X) (r : ∀ a, (L a).ι → X.Fnˣ) (ψ : ∀ a, Weight X.str σ (L a)), (∀ a, Presents (Δ a) (L a) (r a) ∧ (ψ a).IsCInf) → ∀ P : MvPolynomial κ ℝ, P.IsHomogeneous X.dim → (atlas X σ).integral (evalF (atlas X σ) (fun a => c1W (ψ a)) P) = X.interPoly Δ P := by
   intro hCD F _ σ X κ _ Δ L r ψ hψ P hP
-  haveI := CxPts.compactSpace σ X.isProjOver
-  haveI := CxPts.t2Space_cxPts_of_isProjOver σ X.isProjOver
-  haveI := CxPts.secondCountableTopology_of_isProjOver σ X.isProjOver
+  have := CxPts.compactSpace σ X.isProjOver
+  have := CxPts.t2Space_cxPts_of_isProjOver σ X.isProjOver
+  have := CxPts.secondCountableTopology_of_isProjOver σ X.isProjOver
   have hform : ∀ G : MvPolynomial κ ℝ, (atlas X σ).IsForm (evalF (atlas X σ) (fun a => c1W (ψ a)) G) :=
     fun G => ((GlobalTheory.formCalculus _ _ (atlas X σ)).2.2.2.1 κ _ G
       (fun a => (_root_.GlobalTheory.ChernCalc.FirstChernW.c1W_isForm_and_dbar_eq_zero F σ X (L a) (ψ a) (hψ a).2).1)).1
@@ -1127,7 +1127,7 @@ theorem integral_evalF_c1W_eq_interPoly : GlobalTheory.Published.ChernDegree →
   have hint : ∀ G : MvPolynomial κ ℝ, ∀ ε : ℤˣ,
       Integrable (fun _ => (1 : ℝ)) ((atlas X σ).part (evalF (atlas X σ) (fun a => c1W (ψ a)) G) ε) :=
     fun G ε => by
-      haveI := Pw.1 _ (hform G) ε
+      have := Pw.1 _ (hform G) ε
       exact integrable_const _
   have eval_add (G₁ G₂ : MvPolynomial κ ℝ) :
       evalF (atlas X σ) (fun a => c1W (ψ a)) (G₁ + G₂) =

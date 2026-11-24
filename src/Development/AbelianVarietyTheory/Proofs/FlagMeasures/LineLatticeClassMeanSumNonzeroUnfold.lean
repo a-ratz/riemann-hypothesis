@@ -120,7 +120,7 @@ open MeasureTheory NumberField Matrix Finset Formalism.MainNotions.S GlobalTheor
 
 theorem _root_.GlobalTheory.T.detNorm_eq_one_of_mem_autGL_var : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComplex E → ∀ (j : ℕ) (Λ : Submodule (𝓞 E) (Fin j → E)), Submodule.IsFullLattice E Λ → ∀ γ ∈ autGL E j Λ, detNorm E j γ = 1 := by
   intro E _ _ hE j Λ hΛ γ hγ
-  letI := hΛ
+  let := hΛ
   exact GlobalTheory.OrbitTerm.detNorm_eq_one_of_mem_autGL E hE j Λ inferInstance γ hγ
 end -- clump:auto
 end -- clump:auto
@@ -901,12 +901,12 @@ theorem exists_domain (hE : IsTotallyComplex E) {k : ℕ} (hk : 1 ≤ k) (Λ : S
       show 0 < detNorm E k (γ * x)
       rw [detNorm_mul]; exact mul_pos (detNorm_pos_of_mem_autGL hγ) hx
   refine ⟨D, hDm, hcov, fun γ hγ hne => ?_, fun F hF => ?_⟩
-  · haveI : BorelSpace (Fin k → ℂ) := inferInstance
-    haveI : BorelSpace (Fin k → Fin k → ℂ) := inferInstance
-    haveI : BorelSpace (InfinitePlace E → Fin k → Fin k → ℂ) := inferInstance
-    haveI : MeasurableSpace.CountablyGenerated (InfinitePlace E → Fin k → Fin k → ℂ) := inferInstance
-    haveI : MeasurableSpace.SeparatesPoints (InfinitePlace E → Fin k → Fin k → ℂ) := inferInstance
-    haveI : MeasurableSpace.CountablySeparated (MatInf E k) :=
+  · have : BorelSpace (Fin k → ℂ) := inferInstance
+    have : BorelSpace (Fin k → Fin k → ℂ) := inferInstance
+    have : BorelSpace (InfinitePlace E → Fin k → Fin k → ℂ) := inferInstance
+    have : MeasurableSpace.CountablyGenerated (InfinitePlace E → Fin k → Fin k → ℂ) := inferInstance
+    have : MeasurableSpace.SeparatesPoints (InfinitePlace E → Fin k → Fin k → ℂ) := inferInstance
+    have : MeasurableSpace.CountablySeparated (MatInf E k) :=
       inferInstanceAs (MeasurableSpace.CountablySeparated (InfinitePlace E → Fin k → Fin k → ℂ))
     refine _root_.GlobalTheory.StrictDomain.measure_inter_translate_eq_zero (MatInf E k) (autGL E k Λ) (haarGL E k) {g | 0 < detNorm E k g} D (countable_autGL Λ)
       (fun γ _ => measurable_mul_left γ) (fun γ hγ => _root_.GlobalTheory.OrbitTerm.map_haarGL_mul_left_eq E k γ (detNorm_pos_of_mem_autGL hγ))
@@ -1243,23 +1243,23 @@ theorem exists_strictDomain : ∀ (E : Type) [Field E] [NumberField E] (j : ℕ)
       (show Continuous fun h : InfinitePlace E → Fin j → Fin j → ℂ => Matrix.of (h w) from
         continuous_apply w) : Continuous fun h : InfinitePlace E → Fin j → Fin j → ℂ =>
           Matrix.of (e γ w) * Matrix.of (h w))
-  haveI : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
-  haveI : Countable (Matrix (Fin j) (Fin j) E) := inferInstanceAs (Countable (Fin j → Fin j → E))
-  haveI : Countable (GL (Fin j) E) := Units.val_injective.countable
+  have : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
+  have : Countable (Matrix (Fin j) (Fin j) E) := inferInstanceAs (Countable (Fin j → Fin j → E))
+  have : Countable (GL (Fin j) E) := Units.val_injective.countable
   let U : Set (InfinitePlace E → Fin j → Fin j → ℂ) := {g | 0 < detNorm E j g}
   have hU : MeasurableSet U := MeanDual.measurableSet_detNorm_pos E j
-  letI : MulAction S U :=
+  let : MulAction S U :=
     { smul := fun γ g => ⟨(e γ * (show MatInf E j from g.1) : MatInf E j), hpos γ g.1 g.2⟩
       one_smul := fun g => Subtype.ext (hone g.1)
       mul_smul := fun γ γ' g => Subtype.ext (hmul γ γ' g.1) }
   have hsm : ∀ (γ : S) (g : U), (γ • g).1 = (e γ * (show MatInf E j from g.1) : MatInf E j) :=
     fun _ _ => rfl
   have hc : ∀ γ : S, Continuous fun g : U => γ • g := fun γ =>
-    ((hcont γ).comp continuous_subtype_val).subtype_mk _
-  haveI : MeasurableConstSMul S U := ⟨fun γ => (hc γ).measurable⟩
+    ((hcont γ).comp continuous_subtypeVal).subtype_mk _
+  have : MeasurableConstSMul S U := ⟨fun γ => (hc γ).measurable⟩
   have hdisc : ∀ x : U, ∃ V ∈ 𝓝 x, ∀ γ : S, γ • x ∈ V → γ = 1 := fun x => by
     have h := eventually_eq_one E j Λ hΛ x.1 ((MeanDual.detNorm_pos_iff E j _).1 x.2)
-    refine ⟨_, continuous_subtype_val.continuousAt.eventually h, fun γ hγ => ?_⟩
+    refine ⟨_, continuous_subtypeVal.continuousAt.eventually h, fun γ hγ => ?_⟩
     refine Subtype.ext (Units.ext (hγ _ (fun y hy => (hS γ γ.2 y).2 hy) fun w => ?_))
     rw [← hof]; rfl
   have hfree : ∀ (γ : S) (x : U), γ • x = x → γ = 1 := fun γ x h => by
@@ -1779,7 +1779,7 @@ theorem lseriesSummable_idealCount (K : Type) [Field K] [NumberField K] {s : ℂ
       show Finset.Icc 1 n = Finset.Ioc 0 n from Finset.Icc_succ_left_eq_Ioc _ _,
       show 1 = Nat.card {I : Ideal (𝓞 K) // Ideal.absNorm I = 0} by simp [Ideal.absNorm_eq_zero_iff],
       Finset.sum_Ioc_add_eq_sum_Icc (n.zero_le),
-      ← Finset.card_preimage_eq_sum_card_image_eq (fun k _ ↦ Ideal.finite_setOfPred_absNorm_eq k)]
+      ← Finset.card_preimage_eq_sum_card_image_eq (fun k _ ↦ Ring.HasFiniteQuotients.finite_absNorm_eq k)]
     simp [Set.coe_eq_subtype]
   simp only [Real.rpow_one]
   exact Asymptotics.isBigO_of_div_tendsto_nhds (by
@@ -1821,9 +1821,9 @@ theorem tsum_absNorm_pow_inv (K : Type) [Field K] [NumberField K] {l : ℕ} (hl 
         (Equiv.sigmaFiberEquiv (fun I : Ideal (𝓞 K) => Ideal.absNorm I) ⟨n, I⟩) : ℝ) ^ l)⁻¹) =
       ENNReal.ofReal (((n : ℝ) ^ l)⁻¹) := by
     rintro ⟨I, rfl⟩; rfl
-  haveI : Finite {I : Ideal (𝓞 K) // Ideal.absNorm I = n} :=
-    (Ideal.finite_setOfPred_absNorm_eq n).to_subtype
-  haveI := Fintype.ofFinite {I : Ideal (𝓞 K) // Ideal.absNorm I = n}
+  have : Finite {I : Ideal (𝓞 K) // Ideal.absNorm I = n} :=
+    (Ring.HasFiniteQuotients.finite_absNorm_eq n).to_subtype
+  have := Fintype.ofFinite {I : Ideal (𝓞 K) // Ideal.absNorm I = n}
   rw [tsum_congr key, tsum_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
     ENNReal.ofReal_mul (Nat.cast_nonneg _), ENNReal.ofReal_natCast, Nat.card_eq_fintype_card]
 

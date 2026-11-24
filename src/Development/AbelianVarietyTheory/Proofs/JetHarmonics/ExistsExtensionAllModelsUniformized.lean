@@ -80,8 +80,8 @@ theorem exists_ext_all_models_uniformised : ∀ (E : Type) [Field E] [NumberFiel
   let ψ : T.Fr →+* T'.Fr := IsFractionRing.lift hg
   have hψ : ∀ a, ψ (algebraMap T.V T.Fr a) = algebraMap T'.V T'.Fr (algebraMap T.V W' a) :=
     fun a => IsFractionRing.lift_algebraMap hg a
-  letI := io.toAlgebra
-  letI := (ψ.comp io).toAlgebra
+  let := io.toAlgebra
+  let := (ψ.comp io).toAlgebra
   let φ : T.Fr →ₐ[c.F] T'.Fr := { ψ with commutes' := fun _ => rfl }
   obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap GlobalTheory.abelianSchemeLaws_all.1 E H Dw l Xo c T.Fr T'.Fr φ y
   have hzT : FromTest (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) z := by

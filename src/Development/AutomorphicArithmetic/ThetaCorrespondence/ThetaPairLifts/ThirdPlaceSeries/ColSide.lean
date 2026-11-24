@@ -129,7 +129,7 @@ namespace GlobalTheory.DiaTheta
 theorem decoratedPoint_move_diamondOperator_eq {X : Fields} {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 X.E))} {y : Ys X n} (p : PtY ST SG Q y) (P : ST)
     (a : (𝓞 X.E ⧸ P.1.asIdeal)ˣ) :
     p.mv (DecoSet.dia1 P a p.1.1.deco) = ⟨(⟨(DecoSet.dia1 P a p.1.1.deco, p.1.1.1.2), p.1.1.2⟩, p.1.2), p.2⟩ :=
-  dif_pos ⟨p.1.1.2, p.2⟩
+  dite_eq_left ⟨p.1.1.2, p.2⟩
 
 theorem xiAt_dia {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m)
     (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) {S : Set ℕ}
@@ -483,7 +483,7 @@ theorem dia_K_eq (I : TC B X) (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) (v 
     (I.fm l u a).dilT (i + 1) v s c' ((I.chain l u a).K i φ ((I.fm l u a).dil (i + 1) v s c')) =
       ∑ L ∈ @Finset.univ _ ((I.chain l u a).clsFin i), (I.chain l u a).wt i L • (I.fm l u a).dilT (i + 1) v s c'
         ((I.chain l u a).Kmap i ((I.fm l u a).dil i v s L) ((I.fm l u a).dil (i + 1) v s c') (φ ((I.fm l u a).dil i v s L))) := by
-  letI := (I.chain l u a).clsFin i
+  let := (I.chain l u a).clsFin i
 
   simp only [ColumnChain.K, Formalism.ThetaLiftIndependence.kerOpM, map_sum, map_smul]
   refine (Equiv.sum_comp (dilEquiv I l u a i v s) _).symm.trans (Finset.sum_congr rfl fun L _ => ?_)
@@ -499,10 +499,10 @@ end Dia
 theorem kernel_keeps_ramT : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)),
     ∀ (u : B.Word) (a : I.ι) (i : ℕ), i < B.R.m → ∀ φ : ColT I l u a i, RamT i φ → RamT (i + 1) ((I.chain l u a).K i φ) := by
   intro B X I hI _ l _ u a i hi φ hR
-  letI := (I.chain l u a).clsFin i
+  let := (I.chain l u a).clsFin i
   refine ⟨K_mem_Fi I l hI u a i hi φ hR.1, fun v c' => ?_⟩
-  letI := (I.atT l u a).FvFin v
-  letI := (I.atT l u a).FvDec v
+  let := (I.atT l u a).FvFin v
+  let := (I.atT l u a).FvDec v
   have hsum : ∑ s : ((I.atT l u a).Fv v)ˣ,
       (fun L => (I.fm l u a).dilT i v s L (φ ((I.fm l u a).dil i v s L))) = 0 := by
     funext L
@@ -1090,7 +1090,7 @@ theorem exists_compactOpen_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toP
       (GlobalTheory.HeckeCharacterRestriction.resEta_even hL t ⟨j, hj⟩ (even_rankX (j + 1) hj))
   classical
   refine ⟨fun t j => if h : j < B.R.m then (key t j h).choose else 1, fun t j hj => ?_⟩
-  simp only [dif_pos hj]
+  simp only [dite_eq_left hj]
   exact (key t j hj).choose_spec
 end GlobalTheory.Fam.KomExist
 end
@@ -1852,7 +1852,7 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
           rw [← h1, ← h2]
           ring
         ram := fun j _ φ => Iff.rfl
-        rdq := fun j hj β φ y => dif_pos hj }
+        rdq := fun j hj β φ y => dite_eq_left hj }
   refine ⟨col, w₀, w, F, ⟨a.c₀, haT.pinX, fun t => ⟨⟨(J t).Ch₀, (J t).A, (J t).ι, hPinCh t⟩, ?_⟩⟩, ?_⟩
   · obtain ⟨UT, hUT1, hUT2⟩ := (hV t (J t) (hJ t)).2
     refine ⟨UT, s t B.R.m (β₀ t) * (J t).wt B.R.m (β₀ t),
@@ -1869,7 +1869,7 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
       ring
   have hdQ : ∀ t j α γ, j < B.R.m → (w t).dQ j α γ = (J t).dQ (s t) j α γ := fun t j α γ hj => by
     show _ • (if j < B.R.m then _ else 0) = _
-    rw [if_pos hj]
+    rw [ite_eq_left hj]
     rfl
   have hpl := fun t => _root_.GlobalTheory.T.true_geometry_twist_local_data_alt W hW u a ha haT t (J t) (hJ t)
   have hQ : ∀ t p, p ∈ (w₀ t).Q ↔ ∃ PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Q t, p = PP.under (𝓞 (I.rec7 l Z).host.F) := fun t p => by
@@ -1891,10 +1891,10 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
       mid := fun j σ h => ⟨(_root_.GlobalTheory.Fam.pk_z W).eta⁻¹, ((hrow t).sBF j (σ + 1) h).2.2.1, ((hrow t).sBF j (σ + 1) h).2.2.2,
         ((hrow t).sFB j σ h).2.2.1, ((hrow t).sFB j σ h).2.2.2⟩
       lastc := fun j h => ((hrow t).sBF j 0 h).2.2.2
-      eQ := fun j hj => if_pos hj
+      eQ := fun j hj => ite_eq_left hj
       eQT := fun j h => rfl
-      dQ := fun j hj α γ => if_pos hj
-      ε := fun j ρ' h α => if_pos (Or.inl ⟨ρ', h⟩)
+      dQ := fun j hj α γ => ite_eq_left hj
+      ε := fun j ρ' h α => ite_eq_left (Or.inl ⟨ρ', h⟩)
       εT := fun n h β => rfl
       FY := fun j _ f hf => hf
       cQ := fun j _ => rfl }
@@ -1933,7 +1933,7 @@ theorem GlobalTheory.Fam.colSide_alt : GlobalTheory.Published.DiscreteSeriesCove
         obtain rfl : σ' = σ := by omega
         rfl
       show (if h' : ∃ σ, j + 2 * (σ + 1) + 2 = B.R.m then _ else _) = _
-      rw [dif_pos hex, hk]
+      rw [dite_eq_left hex, hk]
       rfl
     · have hex : ¬ ∃ σ, j + 2 * (σ + 1) + 2 = B.R.m := fun ⟨σ, h'⟩ => by omega
       show (if h' : ∃ σ, j + 2 * (σ + 1) + 2 = B.R.m then _ else _) = _

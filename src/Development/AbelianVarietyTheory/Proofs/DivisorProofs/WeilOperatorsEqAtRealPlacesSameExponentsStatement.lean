@@ -168,7 +168,7 @@ theorem continuous_cutUG [TopologicalSpace R] [IsTopologicalRing R] {R₀ : Type
       funext fun g => by rw [← map_inv]; rfl
     rw [this]
     exact hcut.comp Units.continuous_coe_inv
-  exact (hGL.comp continuous_subtype_val).subtype_mk _
+  exact (hGL.comp continuous_subtypeVal).subtype_mk _
 
 end Idem
 

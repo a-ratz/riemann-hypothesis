@@ -94,11 +94,11 @@ theorem kFinite_L2_projection {π : CuspSub E a} (hm : ∀ φ ∈ π.V, MemL2Quo
     intro k hk
     refine ⟨(fun s => k⁻¹ * s) ⁻¹' {s | R (latticeGL E a) μ (finGL E a s) F = F}, fun s hs => ?_,
       hK.1.preimage (continuous_const.mul continuous_id), by
-        simp only [Set.mem_preimage, Set.mem_setOf_eq, inv_mul_cancel, map_one, ContinuousLinearMap.one_apply]⟩
+        simp only [Set.mem_preimage, Set.mem_ofPred_eq, inv_mul_cancel, map_one, one_apply_eq_self]⟩
     have hs' : R (latticeGL E a) μ (finGL E a (k⁻¹ * s)) F = F := hs
     have e : s = k * (k⁻¹ * s) := by group
     change R (latticeGL E a) μ (finGL E a s) (H.starProjection F) = H.starProjection F
-    rw [e, map_mul, map_mul, ContinuousLinearMap.mul_apply, ← hc, hs']
+    rw [e, map_mul, map_mul, mul_apply_eq_comp, ← hc, hs']
     exact hk
   · have := hK.2
     have e : (Set.range fun k : Kinf E a => R (latticeGL E a) μ (infGL E a (Unitary.toUnits k)) (H.starProjection F)) =
@@ -275,10 +275,10 @@ theorem band_eq (hQ2 : Q2) (hD0 : D0) (hN3 : N3) (hk : 1 ≤ k) (μ : Measure (G
     {β : GA E k → ℝ≥0∞} (hβ : IsWt (nuB E k k) β) (Φ : GA E k → ℂ) (hm : Measurable Φ)
     (hl : LeftInv (latticeGL E k) Φ) (hi : IntegrableOn Φ (stdDom (latticeGL E k)) μ) :
     ∫ g in band E k, Φ g ∂μ.withDensity β = ∫ g in stdDom (latticeGL E k), Φ g ∂μ := by
-  haveI : T1Space (GA E k) := by
+  have : T1Space (GA E k) := by
     set_option synthInstance.maxHeartbeats 200000 in
       infer_instance
-  haveI : MeasurableSingletonClass (GA E k) := by
+  have : MeasurableSingletonClass (GA E k) := by
     set_option synthInstance.maxHeartbeats 200000 in
       infer_instance
   have hcont : Continuous (Dt : GA E k → ℝ) := (hD0 E k).2.2.1

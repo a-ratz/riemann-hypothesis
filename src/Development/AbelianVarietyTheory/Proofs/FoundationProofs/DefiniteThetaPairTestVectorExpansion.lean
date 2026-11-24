@@ -457,7 +457,7 @@ theorem root_unity {ζ : ℂ} {n : ℕ} (hn : 0 < n) (h : ζ ^ n = 1) :
 theorem wdPh_pow {T : Tor D} {N N' Q : ℕ} (x : VC D N N') (m : ℤ) (h : qH D T (Q • x) = m) :
     wdPh D T x ^ (2 * Q ^ 2) = 1 := by
   rw [qH_nsmul] at h
-  rw [wdPh, ee, ← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+  rw [wdPh, ee, ← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
   refine ⟨m, ?_⟩
   have h' : (Q : ℂ) ^ 2 * (qH D T x : ℂ) = m := by exact_mod_cast h
   rw [← h']

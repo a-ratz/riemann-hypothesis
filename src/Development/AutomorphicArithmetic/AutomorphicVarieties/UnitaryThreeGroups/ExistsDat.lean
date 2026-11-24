@@ -75,9 +75,9 @@ private theorem dx_eta (Ω : Type) [Field Ω] [CharZero Ω] (K : Type) [Field K]
 private theorem dx_unr (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (K : Type) [Field K] [NumberField K]
     [Algebra K Ω] [IsGalois ℚ K] (l : ℕ) [hl : Fact l.Prime] (h : ¬ (l : ℤ) ∣ discr K) (A : ValuationSubring Ω)
     (hA : A.valuation (l : Ω) < 1) : Ine (F := ℚ) A ≤ galOf ℚ K Ω := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) K
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  have : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
   obtain ⟨p1, p2, p3, -⟩ := places K Ω l A
   obtain ⟨w, hw⟩ := p1 fun ht => (p2 ht).2 hA
   have hm : ((l : ℕ) : 𝓞 K) ∈ w.asIdeal := (p3 w hw).1 hA
@@ -109,7 +109,7 @@ private theorem dx_zpow {Γ R : Type} [TopologicalSpace Γ] [CommRing R] (I : Id
     funext g
     have hx : IsUnit (Ideal.Quotient.mk (I ^ N) (Ψ g : R)) := (Ψ g).isUnit.map _
     have e : hx.unit = Units.map (Ideal.Quotient.mk (I ^ N)).toMonoidHom (Ψ g) := Units.ext rfl
-    simp only [Function.comp_apply, dif_pos hx]
+    simp only [Function.comp_apply, dite_eq_left hx]
     rw [e, ← map_zpow]
     rfl
   rw [key]
@@ -170,11 +170,11 @@ theorem UpperTheory.V.U3.exists_dat :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {K : Type} [Field K] [NumberField K] [Algebra K Ω]
       {l : ℕ} [Fact l.Prime] {c : Coef l} {N : ℕ} [NeZero N] {e : ℕ} {ψ : DirichletCharacter c.O N}, GD Ω K l e ψ → Nonempty (Dat Ω K c e ψ) := by
   intro Ω _ _ _ K _ _ _ l hl c N _ e ψ h
-  haveI : Algebra.IsQuadraticExtension ℚ K := ⟨h.quad⟩
-  haveI : IsGalois ℚ K := inferInstance
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) K
-  haveI : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
+  have : Algebra.IsQuadraticExtension ℚ K := ⟨h.quad⟩
+  have : IsGalois ℚ K := inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  have : IsAlgClosure K Ω := ⟨inferInstance, inferInstance⟩
   obtain ⟨η, hη⟩ := dx_eta Ω K h.quad
   obtain ⟨cc, hcc⟩ := dx_cc Ω
   obtain ⟨j⟩ := Loc.exists_emb (Ω := Ω) (v := l)

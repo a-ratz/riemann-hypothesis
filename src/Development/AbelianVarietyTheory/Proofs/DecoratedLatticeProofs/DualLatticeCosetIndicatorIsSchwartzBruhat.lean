@@ -53,7 +53,7 @@ theorem cosetInd_mem_SB : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
     (n : Type) [Fintype n] [DecidableEq n] (q : Unif k) (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k]
     (f : Module.Dual 𝓀[k] (Red L)), cosetInd q L f ∈ SB (n → k) := by
   intro k _ _ _ _ n _ _ q L _ f
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
   by_cases hex : ∃ F : n → k, Lifts L F f
   · obtain ⟨F, hF⟩ := hex
     have e : cosetInd q L f = fun η => dualInd L (η - q.inv • F) := by

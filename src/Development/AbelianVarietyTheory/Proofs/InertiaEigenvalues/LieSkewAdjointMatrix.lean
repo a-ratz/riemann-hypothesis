@@ -83,15 +83,15 @@ theorem inner_R_sub_eq_intervalIntegral :
   have ftc : ∀ x, ∫ s in (0 : ℝ)..t, f' (x * c s) = f (x * c t) - f (x * 1) := fun x => by
     rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun s _ => hd x s)
       ((hcf.comp (continuous_const.mul hc)).intervalIntegrable _ _), h0]
-  haveI : SigmaFinite μ := inferInstance
-  haveI : SigmaFinite (quotMeasure Γ μ) :=
+  have : SigmaFinite μ := inferInstance
+  have : SigmaFinite (quotMeasure Γ μ) :=
     SigmaFinite.of_map _ (measurePreserving_sec (Γ := Γ) (μ := μ)).measurable.aemeasurable
       (by rw [(measurePreserving_sec (Γ := Γ) (μ := μ)).map_eq]; infer_instance)
   simp only [inner_right_translate_integral hf']
   rw [MeasureTheory.intervalIntegral_integral_swap hint, ← inner_sub_right, MeasureTheory.L2.inner_def]
   refine integral_congr_ae ?_
   have e1 := coeFn_right_translate hf 1
-  rw [map_one, ContinuousLinearMap.one_apply] at e1
+  rw [map_one, one_apply_eq_self] at e1
   filter_upwards [coeFn_right_translate hf (c t), e1, Lp.coeFn_sub (R Γ μ (c t) hf.toL2) hf.toL2] with q a b e
   rw [intervalIntegral.integral_const_mul, ftc, e, Pi.sub_apply, a, b]
   simp [mul_comm]
@@ -176,7 +176,7 @@ theorem inner_lie_eq_neg_inner_lie {E : Type} [Field E] [NumberField E] [_root_.
       ⟨(R (latticeGL E N) μ (c t)).toLinearMap, fun v => norm_R _ v⟩
     have hU : ∀ v, U v = R (latticeGL E N) μ (c t) v := fun _ => rfl
     have hΨ : R (latticeGL E N) μ (c t) (R (latticeGL E N) μ (c t)⁻¹ Ψ) = Ψ := by
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]; rfl
+      rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]; rfl
     calc inner ℂ (R (latticeGL E N) μ (c t) F) Ψ
         = inner ℂ (U F) (U (R (latticeGL E N) μ (c t)⁻¹ Ψ)) := by rw [hU, hU, hΨ]
       _ = inner ℂ F (R (latticeGL E N) μ (c t)⁻¹ Ψ) := U.inner_map_map _ _

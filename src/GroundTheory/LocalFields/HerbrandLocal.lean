@@ -520,7 +520,7 @@ theorem isOpen_units (j : ℕ) : IsOpen (D.units j : Set 𝒪[L]ˣ) := by
       (fun u : 𝒪[L]ˣ => unitVal u - 1) ⁻¹' (D.lat (D.k + j) : Set L) := rfl
   rw [h]
   exact (isOpen_normalLattice D.π D.θ D.irreducible D.linearIndependent _).preimage
-    ((continuous_subtype_val.comp Units.continuous_val).sub continuous_const)
+    ((continuous_subtypeVal.comp Units.continuous_val).sub continuous_const)
 
 attribute [local instance] action
 

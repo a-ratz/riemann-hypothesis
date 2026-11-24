@@ -83,7 +83,7 @@ theorem nM_diag (z : V (nd X)) (τ : X.Ψ) (a : Fin r) : nM X z τ a a = 1 := by
   simp [nM, mat, nmat]
 
 theorem det_nM (z : V (nd X)) (τ : X.Ψ) : (nM X z τ).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · simp [nM_diag]
   · unfold Matrix.IsLowerTriangular Matrix.BlockTriangular
     intro i j hij
@@ -101,14 +101,14 @@ def Wm (z : V (nd X)) (τ : X.Ψ) : Matrix (Fin (r - X.p0)) (Fin X.p0) ℂ :=
   (nM X z τ).submatrix (qI X) (Fin.castLE X.p0_le)
 
 theorem det_unipotentFrame_eq_one (z : V (nd X)) (τ : X.Ψ) : (n1 X z τ).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · simp [n1, nM_diag]
   · unfold Matrix.IsLowerTriangular Matrix.BlockTriangular
     intro i j hij
     have hij' : i < j := OrderDual.toDual_lt_toDual.1 hij
     simp only [n1, Matrix.submatrix_apply]
     apply nM_upper X z τ
-    rw [Fin.lt_iff_val_lt_val] at hij' ⊢
+    rw [Fin.lt_def] at hij' ⊢
     simpa using hij'
 
 def Zt (z : V (nd X)) (τ : X.Ψ) : Matrix (Fin X.p0) (Fin (r - X.p0)) ℂ :=

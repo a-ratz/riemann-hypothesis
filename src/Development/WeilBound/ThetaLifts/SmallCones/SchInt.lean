@@ -143,7 +143,7 @@ theorem factor (T : SchwartzMap V ℂ →L[ℂ] ℂ) : ∃ (s : Finset (ℕ × �
   let j : SchwartzMap V ℂ →ₗ[ℂ] ∀ i : s, V →ᵇ (V [×i.1.2]→L[ℝ] ℂ) := LinearMap.pi fun i => (J i.1.1 i.1.2).toLinearMap
   have hb : ∀ f, ‖T f‖ ≤ C * ‖j f‖ := fun f => by
     refine (h f).trans ?_
-    rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, NNReal.smul_def, smul_eq_mul]
     refine mul_le_mul_of_nonneg_left (Seminorm.finset_sup_apply_le (norm_nonneg _) fun i hi => ?_) C.2
     exact (norm_jet i.1 i.2 f).ge.trans (norm_le_pi_norm (j f) ⟨i, hi⟩)
   have hk : LinearMap.ker j ≤ LinearMap.ker T.toLinearMap := fun f hf => by

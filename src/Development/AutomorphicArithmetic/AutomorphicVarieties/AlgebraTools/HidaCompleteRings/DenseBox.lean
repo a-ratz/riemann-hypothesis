@@ -131,7 +131,7 @@ private theorem exPt_ev (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDoma
     [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] {R σ : Type} [CommRing R] [Finite σ] (f : R →+* O)
     (a : σ → O) (ha : ∀ i, ¬ IsUnit (a i)) :
     ∃ G : MvPowerSeries σ R →+* O, (∀ r, G (MvPowerSeries.C r) = f r) ∧ ∀ i, G (MvPowerSeries.X i) = a i := by
-  haveI : IsAdicComplete (maximalIdeal O) O := (UpperTheory.V.abelian₂.dvr_finite l O).1
+  have : IsAdicComplete (maximalIdeal O) O := (UpperTheory.V.abelian₂.dvr_finite l O).1
   obtain ⟨F, ⟨hC, hX⟩, -⟩ := co_ev O O O σ (AlgHom.id _ _) a ha
   refine ⟨(F : MvPowerSeries σ O →+* O).comp (MvPowerSeries.map f), fun r => ?_, fun i => ?_⟩
   · rw [RingHom.comp_apply, MvPowerSeries.map_C, RingHom.coe_coe, hC]
@@ -142,7 +142,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.existsPt :
     ∀ (l : ℕ) [Fact l.Prime] (c : Coef l) (σ : Type) [Finite σ] (z : σ → PadicAlgCl l), (∀ i, ‖z i‖ < 1) → ∃ (c' : Coef l) (y : MvPowerSeries σ c.O →ₐ[c.O] PadicAlgCl l), c.O ≤ c'.O ∧ (∀ f, y f ∈ c'.O) ∧ ∀ i, y (MvPowerSeries.X i) = z i := by
   intro l _ c σ _ z hz
   classical
-  haveI := Fintype.ofFinite σ
+  have := Fintype.ofFinite σ
   obtain ⟨c', hc, hm⟩ := exPt_coef c (Finset.univ.image z) fun x hx => by
     obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hx
     exact (exPt_intIff _).2 (hz i).le
@@ -223,7 +223,7 @@ theorem UpperTheory.V.abelian₂.mu_dvd :
           show addVal O (coeff i f) = mu f
           rw [hu, h])
         omega
-    rw [hord, ENat.toNat_coe]
+    rw [hord, ENat.toNat_natCast]
   · intro m
     have hcoeff : ∀ n, addVal O (coeff n (C ϖ ^ m * f)) = m + addVal O (coeff n f) := by
       intro n
@@ -235,8 +235,8 @@ theorem UpperTheory.V.abelian₂.mu_dvd :
     rw [lam, lam]
     congr 1
     ext n
-    simp only [Set.mem_setOf_eq, hcoeff, hmu]
-    exact ⟨fun h => WithTop.add_left_cancel (ENat.coe_ne_top m) h, fun h => by rw [h]⟩
+    simp only [Set.mem_ofPred_eq, hcoeff, hmu]
+    exact ⟨fun h => WithTop.add_left_cancel (ENat.natCast_ne_top m) h, fun h => by rw [h]⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.LocalRingsCompletion.MuDvd =====
@@ -257,14 +257,14 @@ theorem UpperTheory.V.abelian₂.weier :
   intro O _ _ _ _ ϖ hϖ f hf
   have htop : mu f ≠ ⊤ := fun h => hf (mu_eq_top_iff.mp h)
   have hM := mu_dvd O ϖ hϖ
-  obtain ⟨m, hmf⟩ : ∃ m : ℕ, (m : ℕ∞) = mu f := ⟨(mu f).toNat, ENat.coe_toNat htop⟩
+  obtain ⟨m, hmf⟩ : ∃ m : ℕ, (m : ℕ∞) = mu f := ⟨(mu f).toNat, ENat.natCast_toNat htop⟩
   obtain ⟨g, hgf⟩ := ((hM f).1 m).mp hmf.le
   subst hgf
   obtain ⟨-, hzero, hlam, hshift⟩ := hM g
   obtain ⟨hmu, hl⟩ := hshift m
   have hg0 : mu g = 0 := by
     have h1 : (m : ℕ∞) + mu g = (m : ℕ∞) + 0 := by rw [add_zero, ← hmu, hmf]
-    exact (WithTop.add_left_cancel (ENat.coe_ne_top m) h1)
+    exact (WithTop.add_left_cancel (ENat.natCast_ne_top m) h1)
   have hmap : (map (residue O)) g ≠ 0 := hzero.mp hg0
   obtain ⟨P, U, H⟩ := exists_isWeierstrassFactorization hmap
   refine ⟨m, P, U, hmf.symm, H.isDistinguishedAt, ?_, H.isUnit, ?_⟩
@@ -331,10 +331,10 @@ private theorem exists_injective_mvPowerSeries_last_to_powerSeries (R : Type) [C
       (∀ a : R, S (MvPowerSeries.C a) = PowerSeries.C (MvPowerSeries.C a)) ∧
       S (MvPowerSeries.X (Fin.last D)) = PowerSeries.X ∧
       ∀ i : Fin D, S (MvPowerSeries.X i.castSucc) = PowerSeries.C (MvPowerSeries.X i) := by
-  haveI hA : UpperTheory.V.Alg.IsCO R (MvPowerSeries (Fin D) R) := UpperTheory.V.Alg.co_mvps R R (Fin D)
-  haveI hB : UpperTheory.V.Alg.IsCO R (MvPowerSeries (Fin (D + 1)) R) :=
+  have hA : UpperTheory.V.Alg.IsCO R (MvPowerSeries (Fin D) R) := UpperTheory.V.Alg.co_mvps R R (Fin D)
+  have hB : UpperTheory.V.Alg.IsCO R (MvPowerSeries (Fin (D + 1)) R) :=
     UpperTheory.V.Alg.co_mvps R R (Fin (D + 1))
-  haveI hP : UpperTheory.V.Alg.IsCO R (MvPowerSeries Unit (MvPowerSeries (Fin D) R)) :=
+  have hP : UpperTheory.V.Alg.IsCO R (MvPowerSeries Unit (MvPowerSeries (Fin D) R)) :=
     UpperTheory.V.Alg.co_mvps R (MvPowerSeries (Fin D) R) Unit
   have nX : ∀ (τ : Type) (s : τ), MvPowerSeries.X s ∈
       IsLocalRing.maximalIdeal (MvPowerSeries τ R) := by
@@ -409,8 +409,8 @@ private theorem eq_zero_of_eval_eq_zero_on_infinite_unit_ball (l : ℕ) [Fact l.
     rw [h1, h3, map_zero]
   | succ D ih =>
     intro c Z hZ hn f hf
-    haveI := c.dvr
-    haveI := c.fin
+    have := c.dvr
+    have := c.fin
     obtain ⟨hcpl, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
     obtain ⟨S, hSi, hSC, hSl, hSc⟩ := exists_injective_mvPowerSeries_last_to_powerSeries c.O D
     apply hSi
@@ -419,8 +419,8 @@ private theorem eq_zero_of_eval_eq_zero_on_infinite_unit_ball (l : ℕ) [Fact l.
     rw [map_zero]
     apply ih c (fun i => Z i.castSucc) (fun i => hZ _) (fun i => hn _)
     intro c'' y'' hint hX
-    haveI := c''.dvr
-    haveI := c''.fin
+    have := c''.dvr
+    have := c''.fin
     obtain ⟨hcpl'', -⟩ := UpperTheory.V.abelian₂.dvr_finite l c''.O
     let ycr : MvPowerSeries (Fin D) c.O →+* c''.O := y''.toRingHom.codRestrict c''.O hint
     have hycr : ∀ x, ((ycr x : c''.O) : PadicAlgCl l) = y'' x := fun x => rfl

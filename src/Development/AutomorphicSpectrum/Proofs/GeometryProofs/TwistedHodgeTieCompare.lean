@@ -173,7 +173,7 @@ theorem dual_sub : Subsingleton (PrimeSpectrum (DualNumber K)) :=
 
 theorem dual_epi (f : K →+* L) : Epi (spMap (dualMap f)) := by
   refine ⟨fun {W} u v h => ?_⟩
-  haveI : Subsingleton (Sp (DualNumber K)) := (dual_sub : Subsingleton (PrimeSpectrum (DualNumber K)))
+  have : Subsingleton (Sp (DualNumber K)) := (dual_sub : Subsingleton (PrimeSpectrum (DualNumber K)))
   obtain ⟨y⟩ : Nonempty (PrimeSpectrum (DualNumber L)) := inferInstance
   let y' : Sp (DualNumber L) := y
   let pt : Sp (DualNumber K) := spMap (dualMap f) y'
@@ -189,7 +189,7 @@ theorem dual_epi (f : K →+* L) : Epi (spMap (dualMap f)) := by
     rintro _ ⟨z, rfl⟩
     rw [Subsingleton.elim z pt, ← huv]
     simpa using hmem
-  haveI : IsAffine U.toScheme := hU
+  have : IsAffine U.toScheme := hU
   have hu' := IsOpenImmersion.lift_fac U.ι u hu
   have hv' := IsOpenImmersion.lift_fac U.ι v hv
   rw [← hu', ← hv']
@@ -370,7 +370,7 @@ theorem core (Y : Model Xo c β) (Y' : Model Xo c β') (g : HostAut H) (Φ : Xo.
     rw [Category.assoc, Category.assoc, h1]
   let N2' := castPt hz N2
   let N3 := LieMove.pullModel c3 N2'
-  letI : Module R' L := Module.compHom L ψ.toRingHom
+  let : Module R' L := Module.compHom L ψ.toRingHom
   let N4 := ringModel ψ x₀' (fun _ _ => rfl) N3
   let N5 := LieMove.pushModel hY' N4
   obtain ⟨θ, hθ, hp⟩ := exists_equiv N5 M'
@@ -487,7 +487,7 @@ theorem flag_eig (A : HodgeCpt Y S y) (Fl : A.Flag) (c₀ : c.F →+* A.Ω₀) (
         spMap (dualMap A.fn) ≫ spMap (epsMul (c₀ (labelEmb c s a))) ≫ (Fl.M₀.pt e).left := by
       rw [← Category.assoc, sp_eps_dual A.fn, Category.assoc]
     rw [s1, s2, hq, hσ, e3, Category.assoc]
-    haveI := dual_epi A.fn
+    have := dual_epi A.fn
     exact cancel_epi (spMap (dualMap A.fn))
   constructor
   · intro h a
@@ -1260,9 +1260,9 @@ theorem pair_iso : HodgeComparisonCompatibility → ThetaUnifAV → ∀ (E : Typ
   obtain ⟨θ, hθs, hθt, hθV⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieTw.main E H D l Xo c O O β β Y Y g Φ n S M.Ω M'.Ω M.K M'.K M.ι M'.ι M.y M'.y T.A T'.A
     T.Fl T'.Fl ψ x₀ x₀' hβ hβ hξ hξ' hfst hsnd
 
-  letI a₁ : Algebra T.A.Ω₀ M.Ω := T.A.fn.toAlgebra
-  letI a₂ : Algebra T.A.Ω₀ M'.Ω := (T'.A.fn.comp ψ.symm.toRingHom).toAlgebra
-  letI a₃ : Algebra T'.A.Ω₀ M'.Ω := T'.A.fn.toAlgebra
+  let a₁ : Algebra T.A.Ω₀ M.Ω := T.A.fn.toAlgebra
+  let a₂ : Algebra T.A.Ω₀ M'.Ω := (T'.A.fn.comp ψ.symm.toRingHom).toAlgebra
+  let a₃ : Algebra T'.A.Ω₀ M'.Ω := T'.A.fn.toAlgebra
   have hrl : ∀ s, labelRk D (Sum.map π₀ π₀ s) = labelRk D s := by rintro (τ | τ) <;> rfl
   have g₁ : IsGenericFlag (Ω' := M.Ω) T.Fl.j T.Fl.V₀ T.Fl.b T.Fl.deg := T.Fl.generic
   have g₂ : IsGenericFlag (Ω' := M'.Ω) (T'.Fl.j.comp θ.toAddMonoidHom) T.Fl.V₀
@@ -1277,9 +1277,9 @@ theorem pair_iso : HodgeComparisonCompatibility → ThetaUnifAV → ∀ (E : Typ
     have := Nat.mul_pos hn₁ (IsGenericFlag_deg_pos g₁)
     rw [hn] at this
     exact Nat.pos_of_mul_pos_right this
-  haveI : CharZero M.Ω := charZero_of_injective_ringHom T.A.cst.injective
-  haveI : CharZero M'.Ω := charZero_of_injective_ringHom T'.A.cst.injective
-  haveI : CharZero Ω₃ := charZero_of_injective_ringHom i₁.injective
+  have : CharZero M.Ω := charZero_of_injective_ringHom T.A.cst.injective
+  have : CharZero M'.Ω := charZero_of_injective_ringHom T'.A.cst.injective
+  have : CharZero Ω₃ := charZero_of_injective_ringHom i₁.injective
   have hfd₁ : FiniteDimensional i₁.fieldRange Ω₃ := FiniteDimensional.of_finrank_pos (by omega)
   have hfd₂ : FiniteDimensional i₂.fieldRange Ω₃ := FiniteDimensional.of_finrank_pos (by omega)
   obtain ⟨K, hK, ι, hι, κ₁, v₁, κ₂, v₂, y, Z, ξ, h₁, h₂, hb₁, hb₂, hy₁, hy₂, harith, hbir, hall, htie, hnorm, hd₁, hd₂, hr₁, hr₂⟩ :=

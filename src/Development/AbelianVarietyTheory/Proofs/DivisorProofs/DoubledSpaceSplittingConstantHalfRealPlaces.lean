@@ -271,10 +271,10 @@ theorem cd_eq_half_exp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hχz : ∀ t : ℝ, (χ (z t) : ℂ) = Complex.exp (((m w₀ : ℂ) * Complex.I) * t) := by
     intro t
     rw [hχ (z t) (hzat t), Finset.prod_eq_single w₀]
-    · rw [hzpi, if_pos rfl, Complex.norm_exp_ofReal_mul_I, Complex.ofReal_one, div_one, ← Complex.exp_int_mul]
+    · rw [hzpi, ite_eq_left rfl, Complex.norm_exp_ofReal_mul_I, Complex.ofReal_one, div_one, ← Complex.exp_intCast_mul]
       congr 1; ring
     · intro w _ hw
-      rw [hzpi, if_neg hw]; simp
+      rw [hzpi, ite_eq_right hw]; simp
     · intro h; exact absurd (Finset.mem_univ _) h
   let tt : ℝ → GL β (AE F E) := fun t =>
     Units.map (Matrix.scalar β : AE F E →+* Matrix β β (AE F E)).toMonoidHom (z t)
@@ -300,7 +300,7 @@ theorem cd_eq_half_exp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       ext; simp [_root_.GlobalTheory.NormOne.norm_eq_one F E σ hCM _ (hzz t)]
     rw [hWS.2.2 l hladm hlinv _ (tt t) hp φ hφ, hdet, hmod, map_one, map_pow, hlφ]
     simp only [NNReal.coe_one, Real.one_rpow, Complex.ofReal_one, mul_one]
-    rw [show ((χ (z t) ^ Fintype.card β : Circle) : ℂ) = (χ (z t) : ℂ) ^ Fintype.card β from by simp, hχz, ← Complex.exp_nat_mul, hcard, mul_comm]
+    rw [show ((χ (z t) ^ Fintype.card β : Circle) : ℂ) = (χ (z t) : ℂ) ^ Fintype.card β from by simp, hχz, ← Complex.exp_natCast_mul, hcard, mul_comm]
     congr 1; rw [hc₀]; push_cast; ring_nf
   have hder1 : HasDerivAt (fun t : ℝ => l (omd (γ (Multiplicative.ofAdd t)) φ)) (L * c₀) 0 := by
     have h1 : HasDerivAt (fun y : ℂ => L * Complex.exp (c₀ * y)) (L * (Complex.exp (c₀ * ((0 : ℝ) : ℂ)) * (c₀ * 1)))
@@ -332,11 +332,11 @@ theorem cd_eq_half_exp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       rfl
     · intro w _ hw
       rw [atPl_tprod]
-      simp only [if_neg hw, map_zero, Matrix.trace_zero, mul_zero, zero_smul, add_zero, LinearMap.zero_apply]
+      simp only [ite_eq_right hw, map_zero, Matrix.trace_zero, mul_zero, zero_smul, add_zero, LinearMap.zero_apply]
       exact (PiTensorProduct.tprod ℂ).map_update_zero _ _
     · intro h; exact absurd (Finset.mem_univ _) h
   rw [hT, map_smul, hlint] at huniq
-  simp only [SchwartzMap.smul_apply, smul_eq_mul] at huniq
+  simp only [smul_apply, smul_eq_mul] at huniq
   rw [MeasureTheory.integral_const_mul, ← hL] at huniq
   have hRS : ((R + S : ℕ) : ℂ) ≠ 0 := by exact_mod_cast hpos.ne'
   have hfin : (cd w₀ - (m w₀ : ℂ) / 2) * (2 * Complex.I * ((R + S : ℕ) : ℂ) * L) = 0 := by

@@ -120,7 +120,7 @@ theorem fwdC_of (hrows : IsRowReps D F0 what₂) (h1 : NMove D) (h2 : OmPart Zd 
   refine ⟨Formalism.HermitianLatticesTheory.gmap n.symm γ.lam, ⟨?_, h3 hrows γ Z hC F'₂ φ φ' hS F' hP n hn hm⟩, n, hn, hm,
     fwdCut_image_gmap_symm n γ.lam⟩
   have hlat : Submodule.IsFullLattice D.host.E γ.lam := (hrows.1 γ.lam γ.mem).1.1
-  letI := Formalism.HermitianLatticesTheory.isomAct_lattice n.symm γ.lam hlat.toIsLattice
+  let := Formalism.HermitianLatticesTheory.isomAct_lattice n.symm γ.lam hlat.toIsLattice
   refine ⟨?_⟩
   rw [Formalism.HermitianLatticesTheory.gmap, Submodule.map_coe]
   change Submodule.span D.host.E ((n.symm : (VS D).V →ₗ[D.host.E] (VS D).V) '' (γ.lam : Set _)) = ⊤

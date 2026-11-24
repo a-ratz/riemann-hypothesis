@@ -90,7 +90,7 @@ theorem UpperTheory.Gal.productCup_of_system.yKE_of :
   have hact : (sysY x j2 d).act = Algebra.lsmul ℂ ℂ (DR ℂ K') := rfl
   have hM : (sysY x j2 d).M I J = omB ℂ K' (RY (xv x) j2 I J) d := rfl
   rw [hact, hM]
-  haveI : Algebra.FiniteType ℂ ↥(RY (xv x) j2 I J) := hFT F K K' d x j2 hY I J hI
+  have : Algebra.FiniteType ℂ ↥(RY (xv x) j2 I J) := hFT F K K' d x j2 hY I J hI
   set B := RY (xv x) j2 I J with hB
   have hglob : ∀ (m : ℤ) (c : Finset κ → DR ℂ K'),
       (∀ e : ↥B →ₐ[ℂ] ℂ, c ∈ (kos (Algebra.lsmul ℂ ℂ (DR ℂ K')) (omB ℂ K' (loc B e) d) r).B m) →

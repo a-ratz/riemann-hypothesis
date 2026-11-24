@@ -217,26 +217,26 @@ theorem exists_periodic_vector (hu : GoodU u Hm χ) (hp : Smooth p) (hm : IsPull
 
 private theorem valAt'_sub' {X : Scheme.{0}} (x : Sp ℂ ⟶ X) (U : X.Opens) (hx : ⊤ ≤ x ⁻¹ᵁ U)
     (a b : Γ(X, U)) : valAt' x U (a - b) = valAt' x U a - valAt' x U b := by
-  simp only [valAt', dif_pos hx, valAt, map_sub]
+  simp only [valAt', dite_eq_left hx, valAt, map_sub]
 
 private theorem valAt'_add_of_top_le {X : Scheme.{0}} (x : Sp ℂ ⟶ X) (U : X.Opens) (hx : ⊤ ≤ x ⁻¹ᵁ U)
     (a b : Γ(X, U)) : valAt' x U (a + b) = valAt' x U a + valAt' x U b := by
-  simp only [valAt', dif_pos hx, valAt, map_add (f := _)]
+  simp only [valAt', dite_eq_left hx, valAt, map_add (f := _)]
 
 private theorem valAt'_mul_of_top_le {X : Scheme.{0}} (x : Sp ℂ ⟶ X) (U : X.Opens) (hx : ⊤ ≤ x ⁻¹ᵁ U)
     (a b : Γ(X, U)) : valAt' x U (a * b) = valAt' x U a * valAt' x U b := by
-  simp only [valAt', dif_pos hx, valAt, map_mul]
+  simp only [valAt', dite_eq_left hx, valAt, map_mul]
 
 private theorem valAt'_finset_sum {X : Scheme.{0}} (x : Sp ℂ ⟶ X) (U : X.Opens) (hx : ⊤ ≤ x ⁻¹ᵁ U)
     {κ : Type} (s : Finset κ) (F : κ → Γ(X, U)) : valAt' x U (∑ i ∈ s, F i) = ∑ i ∈ s, valAt' x U (F i) := by
 
-  simp only [valAt', dif_pos hx, valAt, map_sum]
+  simp only [valAt', dite_eq_left hx, valAt, map_sum]
 
 private theorem valAt'_comp' {Y X : Scheme.{0}} (y : Sp ℂ ⟶ Y) (m : Y ⟶ X) (W : X.Opens) (f : Γ(X, W)) :
     valAt' (y ≫ m) W f = valAt' y (m ⁻¹ᵁ W) ((m.app W).hom f) := by
   by_cases hy : ⊤ ≤ (y ≫ m) ⁻¹ᵁ W
   · have hy' : ⊤ ≤ y ⁻¹ᵁ (m ⁻¹ᵁ W) := hy
-    rw [valAt', dif_pos hy, valAt', dif_pos hy', valAt, valAt]
+    rw [valAt', dite_eq_left hy, valAt', dite_eq_left hy', valAt, valAt]
     first
       | (rw [Scheme.comp_appLE]; rfl)
       | simp [Scheme.comp_appLE]
@@ -247,7 +247,7 @@ private theorem valAt'_comp' {Y X : Scheme.{0}} (y : Sp ℂ ⟶ Y) (m : Y ⟶ X)
 private theorem valAt'_resG_of_top_le {X : Scheme.{0}} (x : Sp ℂ ⟶ X) {U V : X.Opens} (h : V ≤ U) (hx : ⊤ ≤ x ⁻¹ᵁ V)
     (a : Γ(X, U)) : valAt' x V (resG X h a) = valAt' x U a := by
   have hx' : ⊤ ≤ x ⁻¹ᵁ U := fun p hp => h (hx hp)
-  rw [valAt', dif_pos hx, valAt', dif_pos hx', valAt, valAt, resG]
+  rw [valAt', dite_eq_left hx, valAt', dite_eq_left hx', valAt, valAt, resG]
   congr 1
   exact congrArg (fun φ => φ.hom a) (x.map_appLE hx (homOfLE h).op)
 
@@ -984,7 +984,7 @@ noncomputable section
 lemma res_res {X : Scheme.{0}} {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (x : Γ(X, U)ˣ) :
     res h' (res h x) = res (h'.trans h) x := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -1121,7 +1121,7 @@ lemma pullLE_eq {X Y : Scheme.{0}} (f : Y ⟶ X) {U : X.Opens} {V : Y.Opens} (h 
 lemma pullLE_res {X Y : Scheme.{0}} (f : Y ⟶ X) {U U' : X.Opens} {V : Y.Opens} (h : V ≤ f ⁻¹ᵁ U')
     (h' : U' ≤ U) (h'' : V ≤ f ⁻¹ᵁ U) (x : Γ(X, U)ˣ) : pullLE f h (res h' x) = pullLE f h'' x := by
   ext
-  simp only [pullLE, res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [pullLE, res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, Scheme.Hom.map_appLE]
 
 lemma pullLE_section {Y Y' : Scheme.{0}} {ρ : Y' ⟶ Y} {j : Y ⟶ Y'} (hj : j ≫ ρ = 𝟙 Y)
@@ -1457,7 +1457,7 @@ theorem trivial_of_symmetric : Out.Laws → ∀ (P₀ : Out.PolAV (Sp ℂ)) (u :
   have hcov : ⨆ i, j ⁻¹ᵁ Q.U i = ⊤ := by rw [← Scheme.Hom.preimage_iSup, hQ.cover]; rfl
   have ho : ∀ i, IsOpen (U i) := fun i => (u.hol _ 0).1
   have hl : ∀ i (l : u.Λ) z, z ∈ U i → z + l ∈ U i := fun i l z hz => by
-    simp only [U, Set.mem_setOf_eq, hper]; exact hz
+    simp only [U, Set.mem_ofPred_eq, hper]; exact hz
   have hcv : ∀ z, ∃ i, z ∈ U i := fun z => by
     have h : (u.ex z).left (default : PrimeSpectrum ℂ) ∈ ⨆ i, j ⁻¹ᵁ Q.U i := by rw [hcov]; trivial
     obtain ⟨i, hi⟩ := TopologicalSpace.Opens.mem_iSup.1 h
@@ -1575,7 +1575,7 @@ namespace GlobalTheory.KS
 
 theorem torsion_section_const : Out.Laws → ∀ (P₀ : Out.PolAV (Sp ℂ)), ∀ (A' : Over (Sp (DualNumber ℂ))) [GrpObj A'] (ρ : A'.left ⟶ P₀.A.left) (j : P₀.A.left ⟶ A'.left), IsConst A' P₀.A ρ j → ∀ (k : ℕ) (y : Out.baseOver (Sp (DualNumber ℂ)) ⟶ A') (y₀ : Out.baseOver (Sp ℂ) ⟶ P₀.A), k ≠ 0 → y ^ k = 1 → y₀ ^ k = 1 → (spMap (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom) ≫ y.left = y₀.left ≫ j → y.left ≫ ρ = (spMap (algebraMap ℂ (DualNumber ℂ))) ≫ y₀.left := by
   intro _ P₀ A' _ ρ j hc k y y₀ hk hy hy₀ hyj
-  letI := P₀.isAb.comm
+  let := P₀.isAb.comm
   have hu : IsUnit ((k : ℕ) : Γ(Sp ℂ, ⊤)) := by
     let e : Γ(Sp ℂ, ⊤) ≃+* ℂ := (Scheme.ΓSpecIso (CommRingCat.of ℂ)).commRingCatIsoToRingEquiv
     refine (MulEquiv.isUnit_map e.toMulEquiv).mp ?_
@@ -1604,7 +1604,7 @@ private theorem k_ne_zero_lemma {o : Type} [CommRing o] {k : ℕ} (b : TBase o k
     k ≠ 0 := by
   rintro rfl
   have h0 : (0 : o) = 1 := isUnit_zero_iff.mp (by simpa using b.unit)
-  haveI : Subsingleton o := subsingleton_of_zero_eq_one h0
+  have : Subsingleton o := subsingleton_of_zero_eq_one h0
   obtain ⟨x⟩ := (inferInstance : Nonempty (PrimeSpectrum ℂ))
   exact (s₀.base x).isPrime.ne_top (Subsingleton.elim _ _)
 

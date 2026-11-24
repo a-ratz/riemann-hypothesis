@@ -297,7 +297,7 @@ theorem existsUnique_glue : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     · rintro ⟨w, hw⟩
       obtain ⟨y, hy, -⟩ := Scheme.exists_preimage_of_isPullback (hp.isPullback rfl) p w hw.symm
       exact ⟨y, hy⟩
-  haveI : ∀ i, IsOpenImmersion (a i) := fun i => hop _ (ha i)
+  have : ∀ i, IsOpenImmersion (a i) := fun i => hop _ (ha i)
   simp only [fun i => secBC_iff (ha i)]
   refine glue_rel a (fun p => ?_) _ _ (fun i => (ha i).1) s fun i j y y' hy => ?_
   · by_contra hp

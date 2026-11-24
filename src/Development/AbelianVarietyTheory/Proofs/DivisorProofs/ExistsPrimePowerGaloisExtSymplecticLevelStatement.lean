@@ -148,8 +148,8 @@ theorem exists_intermediate {F L : Type} [Field F] [Field L] [Algebra F L] [Fini
     ∃ M : IntermediateField F L, IsGalois F M ∧ (∃ d, Module.finrank F M = ℓ ^ d) ∧
       (∀ u : Lˣ, u ^ ℓ ^ e = 1 → (u : L) ∈ M) ∧
       ∀ z : Over.mk s ⟶ X, z ^ ℓ ^ e = 1 → ∃ w : Sp M ⟶ X.left, spMap (algebraMap M L) ≫ w = z.left := by
-  haveI : Fact ℓ.Prime := ⟨hℓ⟩
-  haveI : NeZero ℓ := ⟨hℓ.ne_zero⟩
+  have : Fact ℓ.Prime := ⟨hℓ⟩
+  have : NeZero ℓ := ⟨hℓ.ne_zero⟩
   have hσ : ∀ σ : L ≃ₐ[F] L, spMap σ.toAlgHom.toRingHom ≫ spMap (algebraMap F L) = spMap (algebraMap F L) := by
     intro σ
     rw [← Spec.map_comp]
@@ -184,7 +184,7 @@ theorem exists_intermediate {F L : Type} [Field F] [Field L] [Algebra F L] [Fini
       show σ (x : L) = x
       rw [← hi, ← map_pow, σ.commutes]))
   let H := H₁ ⊓ H₂
-  haveI : H.Normal := inferInstanceAs (H₁ ⊓ H₂).Normal
+  have : H.Normal := inferInstanceAs (H₁ ⊓ H₂).Normal
   have hP : IsPGroup ℓ ((L ≃ₐ[F] L) ⧸ H) := by
     intro g
     obtain ⟨σ, rfl⟩ := QuotientGroup.mk_surjective g
@@ -220,7 +220,7 @@ theorem exists_level_primePower : ∀ {Ω₁ : Type} [Field Ω₁] [CharZero Ω�
         rw [← hy', hs]
         simp only [Category.assoc])⟩)
   rw [← hK] at hroot hpts
-  haveI : CharZero M := (algebraMap F M).charZero_iff (algebraMap F M).injective |>.1 inferInstance
+  have : CharZero M := (algebraMap F M).charZero_iff (algebraMap F M).injective |>.1 inferInstance
   have hB := GlobalTheory.laws_without_cohomology.2.2.1
   let ζ' : M := ⟨ζ₃, hroot ζ₃ hζ₃.pow_eq_one⟩
   have hζ' : IsPrimitiveRoot ζ' K :=

@@ -536,7 +536,7 @@ theorem sum_dual_family {r : ℕ} {a a' : Fin r → D.host.E}
     rw [map_mul]; ring
   simp only [h2] at h1
   simp only [sub_mul, Finset.sum_sub_distrib, Finset.sum_mul, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [Finset.sum_comm, ← h1, sub_self]
 
 theorem mem_ellT_iff {M : IntermediateField ℚ ℂ} [NumberField M] (hM : ∀ τ x, embT D τ x ∈ M)
@@ -552,7 +552,7 @@ theorem mem_ellT_iff {M : IntermediateField ℚ ℂ} [NumberField M] (hM : ∀ �
       induction hv using Submodule.span_induction with
       | mem x hx =>
         obtain ⟨a, ha, rfl⟩ := hx
-        simp only [TaylorLogMetric.liftM, dif_pos (hM _ _), ← map_mul]
+        simp only [TaylorLogMetric.liftM, dite_eq_left (hM _ _), ← map_mul]
         have e2 := GlobalTheory.InducedType.sum_eq_trace D (a * D.host.conj y)
         erw [e2]
         obtain ⟨c, hc⟩ := (factMMUnimodular D.R D.host a).1 ha y hy
@@ -583,7 +583,7 @@ theorem mem_ellT_iff {M : IntermediateField ℚ ℂ} [NumberField M] (hM : ∀ �
     apply Subtype.ext
     have e : ∀ k, (((c k • (fun σ => TaylorLogMetric.liftM M (embT D σ (a k)))) σ : M) : ℂ) =
         (x : ℂ) * (embT D τ (D.host.conj (a' k)) * embT D σ (a k)) := fun k => by
-      simp only [TaylorLogMetric.liftM, dif_pos (hM _ _), Pi.smul_apply]
+      simp only [TaylorLogMetric.liftM, dite_eq_left (hM _ _), Pi.smul_apply]
       rw [← mul_assoc]
       rfl
     rw [Finset.sum_apply, IntermediateField.coe_sum]
@@ -603,7 +603,7 @@ theorem exists_pow_principal_fractionalIdeal (D : D7) : ∃ (h : ℕ) (α : D.ho
     (x := ClassGroup.mk D.host.E (Units.mk0 _ h0))
   rw [← map_pow, ClassGroup.mk_eq_one_iff] at h1
   obtain ⟨α, hα⟩ := h1
-  rw [Units.val_pow_eq_pow_val, Units.val_mk0, FractionalIdeal.coe_pow] at hα
+  rw [Units.val_pow_eq_pow_val, Units.val_mk0, FractionalIdeal.coeToSubmodule_pow] at hα
   refine ⟨_, α, Fintype.card_pos, ?_, hα⟩
   rintro rfl
   have := Submodule.pow_mem_pow _ (GlobalTheory.AdelicApprox.one_mem_inverse_halfDifferent D) (Fintype.card (ClassGroup (𝓞 D.host.E)))
@@ -674,14 +674,14 @@ theorem exists_field_gen {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (h : Crv D cc �
     · refine IsIntegral.of_pow hn ?_
       rw [hγ]
       exact (mem_algebraicClosure_iff.1 (hT τ _)).isIntegral
-  haveI : Finite S := (((Set.finite_range γ).insert _).insert _).to_subtype
-  haveI h1 : FiniteDimensional ℚ (IntermediateField.adjoin ℚ S) :=
+  have : Finite S := (((Set.finite_range γ).insert _).insert _).to_subtype
+  have h1 : FiniteDimensional ℚ (IntermediateField.adjoin ℚ S) :=
     IntermediateField.finiteDimensional_adjoin hS
-  haveI h2 : FiniteDimensional ℚ (⨆ τ, imM (embT D τ) : IntermediateField ℚ ℂ) :=
+  have h2 : FiniteDimensional ℚ (⨆ τ, imM (embT D τ) : IntermediateField ℚ ℂ) :=
     IntermediateField.finiteDimensional_iSup_of_finite
   let M : IntermediateField ℚ ℂ := M₀ ⊔ (IntermediateField.adjoin ℚ S ⊔ ⨆ τ, imM (embT D τ))
-  haveI : FiniteDimensional ℚ M := IntermediateField.finiteDimensional_sup _ _
-  haveI hN : NumberField M := {}
+  have : FiniteDimensional ℚ M := IntermediateField.finiteDimensional_sup _ _
+  have hN : NumberField M := {}
   have hSM : ∀ x ∈ S, x ∈ M := fun x hx =>
     (le_sup_of_le_right le_sup_left : IntermediateField.adjoin ℚ S ≤ M)
       (IntermediateField.subset_adjoin ℚ S hx)

@@ -234,7 +234,7 @@ theorem fin_char_cut : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fin
   set C' := C ∩ {z | Lev d (z - yf)}ᶜ with hC'def
   have hC' : IsCompact C' := hC.inter_right (isOpen_lev d yf).isClosed_compl
   obtain ⟨t, htC, hcov⟩ := hC'.elim_nhds_subcover (fun a => {z | Lev d (z - a)})
-    (fun a _ => (isOpen_lev d a).mem_nhds (by simp only [Set.mem_setOf_eq, sub_self]; exact lev_zero d))
+    (fun a _ => (isOpen_lev d a).mem_nhds (by simp only [Set.mem_ofPred_eq, sub_self]; exact lev_zero d))
   have hsep : ∀ a ∈ C', ∃ q ∈ (Q0 : Set (κ → AF F)), ψ (vecFin (a - yf) ⬝ᵥ q) ≠ 1 ∧
       ∀ u, Lev d u → ψ (vecFin u ⬝ᵥ q) = 1 := fun a ha => exists_sep ψ hψ d (a - yf) ha.2
   choose! q hq0 hq1 hq2 using hsep
@@ -313,16 +313,16 @@ theorem slice {κ : Type} [Fintype κ] (c : κ → Af F) :
   | mem x hx =>
     obtain ⟨f, g, -, rfl⟩ := hx
     refine ⟨g c • f, fun s => ?_⟩
-    simp only [pureA, mk, RingEquiv.apply_symm_apply, SchwartzMap.smul_apply, smul_eq_mul,
+    simp only [pureA, mk, RingEquiv.apply_symm_apply, smul_apply, smul_eq_mul,
       mul_comm]
   | zero => exact ⟨0, fun s => rfl⟩
   | add x y _ _ hx hy =>
     obtain ⟨f1, h1⟩ := hx
     obtain ⟨f2, h2⟩ := hy
-    exact ⟨f1 + f2, fun s => by rw [Pi.add_apply, h1, h2, SchwartzMap.add_apply]⟩
+    exact ⟨f1 + f2, fun s => by rw [Pi.add_apply, h1, h2, add_apply]⟩
   | smul a x _ hx =>
     obtain ⟨f1, h1⟩ := hx
-    exact ⟨a • f1, fun s => by rw [Pi.smul_apply, h1, SchwartzMap.smul_apply]⟩
+    exact ⟨a • f1, fun s => by rw [Pi.smul_apply, h1, smul_apply]⟩
 
 theorem locA : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ], ∀ Φ ∈ GlobalTheory.WeilM.schA F κ,
     ∃ (C K : Set (κ → Af F)), IsCompact C ∧ IsOpen K ∧ (0 : κ → Af F) ∈ K ∧
@@ -508,7 +508,7 @@ theorem arch_pure : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field
       rw [add_zero, RingEquiv.symm_apply_apply]
     · show (y i).2 + ((y0 i).2 - (y i).2) = (y0 i).2
       abel
-  rw [hpure, h1, h2, hyd, hf', SchwartzMap.smul_apply, smul_eq_mul, hc]
+  rw [hpure, h1, h2, hyd, hf', smul_apply, smul_eq_mul, hc]
   field_simp
 
 end GlobalTheory.ArchPure
@@ -696,7 +696,7 @@ theorem finite_bad {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
   refine (((_root_.GlobalTheory.AdelMatLat.almost_all_stable) F E n d X Y hX M).union hr).subset ?_
   intro w hw
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
   exact hw fun γ hγ => hc.2 _ (hc.1 γ hγ)
 end GlobalTheory.UnitaryTriSplit
 
@@ -938,7 +938,7 @@ theorem integral_sq_norm {X : Type} [MeasurableSpace X] {μ : Measure X} {h : X 
     hi.aestronglyMeasurable]
   congr 3
   funext x
-  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
 
 theorem integrable_sq_norm {X : Type} [MeasurableSpace X] {μ : Measure X} {h : X → ℂ} (hh : MemLp h 2 μ) :
     Integrable (fun x => (((‖h x‖ ^ 2 : ℝ)) : ℂ)) μ :=
@@ -1013,9 +1013,9 @@ theorem mul_eq_zero_of_supp (S : Finset (Pl (F := F))) {m n k : ℕ} (A : Matrix
     have hs : ∑ x ∈ S, evFin F w (GlobalTheory.LatVac.liftV x 1) = ∑ x ∈ S, if w = x then (1 : Fv F w) else 0 := by
       refine Finset.sum_congr rfl fun x _ => ?_
       by_cases hx : w = x
-      · subst hx; rw [if_pos rfl, GlobalTheory.LatVac.evFin_liftV]
-      · rw [if_neg hx, evFin_liftV_ne hx]
-    rw [h0, hs, Finset.sum_ite_eq S w (fun _ => (1 : Fv F w)), if_pos hw, zero_add, sub_self]
+      · subst hx; rw [ite_eq_left rfl, GlobalTheory.LatVac.evFin_liftV]
+      · rw [ite_eq_right hx, evFin_liftV_ne hx]
+    rw [h0, hs, Finset.sum_ite_eq S w (fun _ => (1 : Fv F w)), ite_eq_left hw, zero_add, sub_self]
   have hue : u = e • u := by
     have := hu (1 - e) h1 h2
     rwa [sub_smul, one_smul, sub_eq_zero] at this
@@ -1038,7 +1038,7 @@ theorem matrix_coeff : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
           om' (g, h) Φ x * starRingEnd ℂ (G.M'.co.rho B.ψ u (om' (g, h) Φ) x)) =
         @MeasureTheory.integral _ ℂ _ _ (borel _) μ fun x => Φ x * starRingEnd ℂ (G.M'.co.rho B.ψ u Φ x) := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hT S g h hgI hhI hgS hhS Φ hΦ u hu μ hμ
-  letI : MeasurableSpace (Fin a' × Fin (a + a') → AF F) := borel _
+  let : MeasurableSpace (Fin a' × Fin (a + a') → AF F) := borel _
   have hW := IsUWeilPair.isUSplitting hT.weil'
   have hg : mat g * u = u := by
     have := mul_eq_zero_of_supp S (mat g - 1) hgI hgS u hu
@@ -1210,7 +1210,7 @@ theorem avg_eigen : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field
     hinj _ _ (by rw [← hαspec u ⟨1, by rw [one_smul]; exact (hU hu).1⟩, one_smul]; exact (hU hu).1)
   have hfin : Finite (Λ ⧸ U.toAddSubgroup.addSubgroupOf Λ) :=
     GlobalTheory.Published.SvN.finite_quot Λ U.toAddSubgroup U.mem_nhds_zero hΛc subset_rfl
-  letI := Fintype.ofFinite (Λ ⧸ U.toAddSubgroup.addSubgroupOf Λ)
+  let := Fintype.ofFinite (Λ ⧸ U.toAddSubgroup.addSubgroupOf Λ)
   obtain ⟨avg, havg⟩ : ∃ avg : Fin m → (Fin a' × Fin (a + a') → Fv F w) → ℂ, ∀ i,
       avg i = ∑ q : Λ ⧸ U.toAddSubgroup.addSubgroupOf Λ, (α q.out.1)⁻¹ • L q.out.1 (φ i w) := ⟨_, fun _ => rfl⟩
   have heig : ∀ i, ∀ z ∈ Λ, L z (avg i) = α z • avg i := fun i z hz => by
@@ -1351,7 +1351,7 @@ theorem pure_update_smul {F : Type} [Field F] [NumberField F] {κ : Type} [Finty
   funext x
   simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure]
   rw [GlobalTheory.PureFactor.finprod_update φ w (r • h) hφ x, GlobalTheory.PureFactor.finprod_update φ w h hφ x]
-  simp only [SchwartzMap.smul_apply, Pi.smul_apply, smul_eq_mul]
+  simp only [smul_apply, Pi.smul_apply, smul_eq_mul]
   ring
 
 theorem tens_smul {F : Type} [Field F] [NumberField F] {R κ : Type} (ev : AF F → R) (c : ℂ) (g : (κ → R) → ℂ)

@@ -117,7 +117,7 @@ variable (F E : Type) [Field F] [NumberField F] [Field E] [Algebra F E] [Module.
 
 theorem exists_nbhd_tens : ∃ U : Set (AF F ⊗[F] E), IsOpen U ∧ (0 : AF F ⊗[F] E) ∈ U ∧
     ∀ e : E, inclR (F := F) (AF F) e ∈ U → e = 0 := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   let b := Module.finBasis F E
   let B := Algebra.TensorProduct.basis (AF F) b
   refine ⟨⋂ i, (B.coord i) ⁻¹' nbhdA F, ?_, ?_, ?_⟩
@@ -141,17 +141,17 @@ end Tens
 
 theorem discHA_of (hT : TensTop) : DiscHA := by
   intro F E _ _ _ _ _ σ hCM M J _
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   obtain ⟨h1, -, -, -⟩ := hT F E
   constructor
-  · haveI : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
-    haveI : Countable (Matrix (Fin M) (Fin M) E) := inferInstanceAs (Countable (Fin M → Fin M → E))
-    haveI : Countable (GL (Fin M) E) :=
+  · have : Countable E := (Module.finBasis ℚ E).equivFun.toEquiv.injective.countable
+    have : Countable (Matrix (Fin M) (Fin M) E) := inferInstanceAs (Countable (Fin M → Fin M → E))
+    have : Countable (GL (Fin M) E) :=
       (Units.val_injective (α := Matrix (Fin M) (Fin M) E)).countable
     have hS : (HFin (AF F) σ J : Set (GL (Fin M) (AF F ⊗[F] E))).Countable := by
       rw [HFin, Subgroup.coe_map]
       exact (Set.to_countable _).image _
-    haveI : Countable (HFin (AF F) σ J) := hS.to_subtype
+    have : Countable (HFin (AF F) σ J) := hS.to_subtype
     let φ : HFinIn (AF F) σ J → HFin (AF F) σ J := fun x => ⟨x.1.1, Subgroup.mem_subgroupOf.1 x.2⟩
     have hφ : Function.Injective φ := by
       intro x y h
@@ -168,7 +168,7 @@ theorem discHA_of (hT : TensTop) : DiscHA := by
     have hVo : IsOpen V := by
       have hc : Continuous fun g : HR (AF F) σ J =>
           ((g : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) :=
-        Units.continuous_val.comp continuous_subtype_val
+        Units.continuous_val.comp continuous_subtypeVal
       have : V = ⋂ i, ⋂ j, (fun g : HR (AF F) σ J =>
           ((g : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) i j -
             ((x.1 : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) i j) ⁻¹' U := by

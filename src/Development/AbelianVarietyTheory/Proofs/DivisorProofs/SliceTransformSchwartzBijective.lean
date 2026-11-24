@@ -66,8 +66,8 @@ open GlobalTheory.SwapSlice
 
 theorem totDisc_localField (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] : TotallyDisconnectedSpace k := by
-  haveI : T2Space k := inferInstance
-  haveI : NonarchimedeanAddGroup k := ⟨fun V hV => by
+  have : T2Space k := inferInstance
+  have : NonarchimedeanAddGroup k := ⟨fun V hV => by
     obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hV
     exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
       GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
@@ -145,13 +145,13 @@ theorem GlobalTheory.SwapSliceBij.sliceT_bijOn : ∀ {k : Type} [Field k] [Valua
     Set.BijOn (GlobalTheory.SwapSlice.sliceT ι) (SB (κ ⊕ κ → k) : Set ((κ ⊕ κ → k) → ℂ))
       (SB (Matrix (Fin n) (Fin d) k × Matrix (Fin n) (Fin d) k) : Set _) := by
   intro k _ _ _ _ κ _ n d ι hι
-  haveI : T2Space k := inferInstance
-  haveI := totDisc_localField k
-  haveI : LocallyCompactSpace k := inferInstance
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin d) k) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → k))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) k) :=
+  have : T2Space k := inferInstance
+  have := totDisc_localField k
+  have : LocallyCompactSpace k := inferInstance
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin d) k) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → k))
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin d → k))
-  haveI : T2Space (Matrix (Fin n) (Fin d) k) := inferInstanceAs (T2Space (Fin n → Fin d → k))
+  have : T2Space (Matrix (Fin n) (Fin d) k) := inferInstanceAs (T2Space (Fin n → Fin d → k))
   have hbar := barL_bijOn ι hι
 
   have hslice : ∀ x₂ : κ → k, ∀ Φ ∈ SB (κ ⊕ κ → k), (fun x₁ => Φ (Sum.elim x₁ x₂)) ∈ SB (κ → k) := by

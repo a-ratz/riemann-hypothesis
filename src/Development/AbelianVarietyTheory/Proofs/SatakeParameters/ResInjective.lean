@@ -187,8 +187,8 @@ theorem comp_conj (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F 
 
 open GlobalTheory.RealGal.TrInv in
 theorem trace_conj (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (K : Type) [Field K] [NumberField K] [Algebra F K] [Algebra K Ω] [IsScalarTower F K Ω] [IsAlgClosure K Ω] (h2 : Module.finrank F K = 2) (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (a : ℕ) (sat : HeightOneSpectrum (𝓞 F) → Multiset ℂˣ → Prop) (hu : ∀ v B B', sat v B → sat v B' → B = B') (r : G K Ω →* GL (Fin a) (Qbar l)) (hr : Continuous r) (hss : IsSSRep r) (hatt : AttSys sat ι K r) (g : G F Ω) (s s' : G K Ω) (hs : res F Ω K s' = g * res F Ω K s * g⁻¹) : ((r s' : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)).trace = ((r s : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)).trace := by
-  haveI : Algebra.IsQuadraticExtension F K := ⟨h2⟩
-  haveI : Normal F K := Algebra.IsQuadraticExtension.normal F K
+  have : Algebra.IsQuadraticExtension F K := ⟨h2⟩
+  have : Normal F K := Algebra.IsQuadraticExtension.normal F K
   have hsur := conj_surjective (F := F) (Ω := Ω) K g
   have hatt' : AttSys sat ι K (r.comp (conj K g)) :=
     comp_conj F Ω K l ι a sat r g (conj K g) (res_conj K g) hsur hatt
@@ -205,20 +205,20 @@ theorem trace_conj (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F
 open GlobalTheory.RealGalCompat in
 theorem trace_eq (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (Q Q' : QCM F Ω) (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (a : ℕ) (sat : HeightOneSpectrum (𝓞 F) → Multiset ℂˣ → Prop) (hu : ∀ v B B', sat v B → sat v B' → B = B') (r : G ↥Q.K Ω →* GL (Fin a) (Qbar l)) (r' : G ↥Q'.K Ω →* GL (Fin a) (Qbar l)) (hr : Continuous r) (hr' : Continuous r') (hs : IsSSRep r) (hs' : IsSSRep r') (ha : AttSys sat ι ↥Q.K r) (ha' : AttSys sat ι ↥Q'.K r') (s : G ↥Q.K Ω) (s' : G ↥Q'.K Ω) (hss : res F Ω ↥Q.K s = res F Ω ↥Q'.K s') : ((r s : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)).trace = ((r' s' : GL (Fin a) (Qbar l)) : Matrix (Fin a) (Fin a) (Qbar l)).trace := by
   let M : IntermediateField F Ω := Q.K ⊔ Q'.K
-  haveI : FiniteDimensional F Q.K := Module.finite_of_finrank_pos (by rw [Q.two]; norm_num)
-  haveI : FiniteDimensional F Q'.K := Module.finite_of_finrank_pos (by rw [Q'.two]; norm_num)
-  haveI : NumberField M := NumberField.of_module_finite F M
-  haveI : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed F,
+  have : FiniteDimensional F Q.K := Module.finite_of_finrank_pos (by rw [Q.two]; norm_num)
+  have : FiniteDimensional F Q'.K := Module.finite_of_finrank_pos (by rw [Q'.two]; norm_num)
+  have : NumberField M := NumberField.of_module_finite F M
+  have : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed F,
     haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic; Algebra.IsAlgebraic.tower_top (K := F) _⟩
-  haveI : Algebra.IsQuadraticExtension F Q.K := { finrank_eq_two' := Q.two }
-  haveI : Algebra.IsQuadraticExtension F Q'.K := { finrank_eq_two' := Q'.two }
-  haveI : Normal F M := IntermediateField.normal_sup F Ω Q.K Q'.K
-  letI : Algebra Q.K M := (IntermediateField.inclusion (le_sup_left : Q.K ≤ M)).toRingHom.toAlgebra
-  letI : Algebra Q'.K M := (IntermediateField.inclusion (le_sup_right : Q'.K ≤ M)).toRingHom.toAlgebra
-  haveI : IsScalarTower F Q.K M := IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion _).commutes x).symm
-  haveI : IsScalarTower F Q'.K M := IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion _).commutes x).symm
-  haveI : IsScalarTower Q.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
-  haveI : IsScalarTower Q'.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have : Algebra.IsQuadraticExtension F Q.K := { finrank_eq_two' := Q.two }
+  have : Algebra.IsQuadraticExtension F Q'.K := { finrank_eq_two' := Q'.two }
+  have : Normal F M := IntermediateField.normal_sup F Ω Q.K Q'.K
+  let : Algebra Q.K M := (IntermediateField.inclusion (le_sup_left : Q.K ≤ M)).toRingHom.toAlgebra
+  let : Algebra Q'.K M := (IntermediateField.inclusion (le_sup_right : Q'.K ≤ M)).toRingHom.toAlgebra
+  have : IsScalarTower F Q.K M := IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion _).commutes x).symm
+  have : IsScalarTower F Q'.K M := IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion _).commutes x).symm
+  have : IsScalarTower Q.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have : IsScalarTower Q'.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
   have hA := tower F Ω Q.K M l ι a sat r ha
   have hA' := tower F Ω Q'.K M l ι a sat r' ha'
   have hS := UpperTheory.semisimple_restriction_to_normal_subgroup _ _ _ a r (res Q.K Ω M) (range_res_normal (F := F)) hs
@@ -244,8 +244,8 @@ theorem trace_eq (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F �
 
 theorem patch (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (a : ℕ) (sat : HeightOneSpectrum (𝓞 F) → Multiset ℂˣ → Prop) (hu : ∀ v B B', sat v B → sat v B' → B = B') (S : Set (QCM F Ω)) (hS : S.Infinite) (r : ∀ Q : ↥S, G ↥Q.1.K Ω →* GL (Fin a) (Qbar l)) (hr : ∀ Q, Continuous (r Q) ∧ IsSSRep (r Q) ∧ AttSys sat ι ↥Q.1.K (r Q)) : ∃ ρ : G F Ω →* GL (Fin a) (Qbar l), Continuous ρ ∧ IsSSRep ρ ∧ ∀ᶠ Q : ↥S in Filter.cofinite, RepIso (r Q) (ρ.comp (res F Ω ↥Q.1.K)) := by
   classical
-  haveI : Infinite ↥S := hS.to_subtype
-  haveI : Algebra.IsIntegral F Ω := (IsAlgClosure.isAlgebraic (R := F) (K := Ω)).isIntegral
+  have : Infinite ↥S := hS.to_subtype
+  have : Algebra.IsIntegral F Ω := (IsAlgClosure.isAlgebraic (R := F) (K := Ω)).isIntegral
   obtain ⟨η, hηinj, hη⟩ := GlobalTheory.RealGal.SignChar.main F Ω
   let e : ∀ Q : ↥S, G ↥Q.1.K Ω ≃* (η Q.1).ker := fun Q =>
     (MonoidHom.ofInjective (res_injective F Ω ↥Q.1.K)).trans (MulEquiv.subgroupCongr (hη Q.1).1.symm)
@@ -256,7 +256,7 @@ theorem patch (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] 
   have hr' : ∀ Q : ↥S, ∀ (h : (η Q.1).ker), r' Q h = r Q ((e Q).symm h) := fun Q h => rfl
   have hcont : ∀ Q : ↥S, Continuous (r' Q) := by
     intro Q
-    haveI : CompactSpace (G ↥Q.1.K Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[↥Q.1.K] Ω))
+    have : CompactSpace (G ↥Q.1.K Ω) := inferInstanceAs (CompactSpace (Ω ≃ₐ[↥Q.1.K] Ω))
     have hc : Continuous (e Q) := (UpperTheory.V.Af.continuous_restrictScalarsHom F ↥Q.1.K Ω).subtype_mk _
     let hm := hc.homeoOfEquivCompactToT2 (f := (e Q).toEquiv)
     exact (hr Q).1.comp hm.symm.continuous

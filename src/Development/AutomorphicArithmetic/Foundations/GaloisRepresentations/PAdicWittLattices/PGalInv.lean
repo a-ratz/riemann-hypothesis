@@ -62,9 +62,9 @@ theorem UpperTheory.Gal.G3.pGalInv :
     rw [← T.pull_comp (a g) c (ha g) hc hcomp x]
     exact pull_congr T (hac g) hcomp hc x
   · intro hy
-    haveI := hgal.1
-    haveI := hgal.2.1
-    haveI := Fintype.ofFinite G
+    have := hgal.1
+    have := hgal.2.1
+    have := Fintype.ofFinite G
     obtain ⟨tr, htr⟩ := hT.tr p r c hc
     have key := htr W r c hc G a ha hgal.2.2.2.2.2 y
     have hsum : ∑ g, T.pull (a g) (ha g) y = (Fintype.card G : R) • y := by

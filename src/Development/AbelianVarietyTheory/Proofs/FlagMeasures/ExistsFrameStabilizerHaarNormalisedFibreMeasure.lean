@@ -296,14 +296,14 @@ theorem hermitianFormE_frameE_initialVectors (hP : P.IsStd σ J T) (i : Fin r) (
 theorem hermitianFormE_frameZ_initialVectors (hσ : ∀ e, σ (σ e) = e) (hJ : IsHermND σ J) (hP : P.IsStd σ J T) (c : Fin (r + 1)) :
     hE σ J P.z (F0 P c) = if c = Fin.last r then algebraMap F E (-T) else 0 := by
   induction c using Fin.lastCases with
-  | last => rw [frameInitialVectors_last, if_pos rfl]; exact hP.2.2.2.2.2.1
+  | last => rw [frameInitialVectors_last, ite_eq_left rfl]; exact hP.2.2.2.2.2.1
   | cast k =>
-    rw [frameInitialVectors_castSucc, if_neg (Fin.castSucc_ne_last k), ← hE_symm hσ hJ, hP.2.2.2.1 k, map_zero]
+    rw [frameInitialVectors_castSucc, ite_eq_right (Fin.castSucc_ne_last k), ← hE_symm hσ hJ, hP.2.2.2.1 k, map_zero]
 
 theorem hermitian_flag_dual_basis (hσ : ∀ e, σ (σ e) = e) (hJ : IsHermND σ J) (hP : P.IsStd σ J T) (j : Fin r)
     (c : Fin (r + 1)) : hE σ J (P.f j) (F0 P c) = if c = Fin.castSucc j then 1 else 0 := by
   induction c using Fin.lastCases with
-  | last => rw [frameInitialVectors_last, if_neg (Fin.castSucc_ne_last j).symm]; exact hP.2.2.2.2.1 j
+  | last => rw [frameInitialVectors_last, ite_eq_right (Fin.castSucc_ne_last j).symm]; exact hP.2.2.2.2.1 j
   | cast k =>
     rw [frameInitialVectors_castSucc, ← hE_symm hσ hJ, hP.2.2.1 k j]
     by_cases h : k = j
@@ -347,7 +347,7 @@ theorem yv_w (hP : P.IsStd σ J T) (b : Fin (r + 1)) : hA (yv R P x b) (wv R P T
     | last => rw [coef_last, map_zero, zero_mul]
     | cast i =>
       by_cases hij : Fin.castSucc i < Fin.castSucc j
-      · rw [frameInitialVectors_castSucc, h_rat, hP.2.2.1 i j, if_neg (ne_of_lt (Fin.castSucc_lt_castSucc_iff.1 hij)),
+      · rw [frameInitialVectors_castSucc, h_rat, hP.2.2.1 i j, ite_eq_right (ne_of_lt (Fin.castSucc_lt_castSucc_iff.1 hij)),
           map_zero, mul_zero]
       · simp [coef, hij]
 
@@ -377,15 +377,15 @@ theorem unitriangularEichlerSecondVector_initialVectors (hσ : ∀ e, σ (σ e) 
     simp only [wv, Fin.lastCases_last]
     rw [hf_smul_l, h_rat, hermitianFormE_frameZ_initialVectors hσ hJ hP, sigR_inclR, AlgHom.commutes]
     by_cases hc : c = Fin.last r
-    · rw [if_pos hc, if_pos hc, ← map_mul, ← map_mul, mul_neg, inv_mul_cancel₀ hP.2.2.2.2.2.2]
+    · rw [ite_eq_left hc, ite_eq_left hc, ← map_mul, ← map_mul, mul_neg, inv_mul_cancel₀ hP.2.2.2.2.2.2]
       simp
-    · rw [if_neg hc, if_neg hc]; simp
+    · rw [ite_eq_right hc, ite_eq_right hc]; simp
   | cast j =>
     simp only [wv, Fin.lastCases_castSucc]
     rw [hf_smul_l, h_rat, hermitian_flag_dual_basis hσ hJ hP]
     by_cases hc : c = Fin.castSucc j
-    · rw [if_pos hc, if_pos hc]; simp
-    · rw [if_neg hc, if_neg hc]; simp
+    · rw [ite_eq_left hc, ite_eq_left hc]; simp
+    · rw [ite_eq_right hc, ite_eq_right hc]; simp
 
 end Facts
 
@@ -441,19 +441,19 @@ theorem unitriangularEichlerPartialProduct_initialVectors (hσ : ∀ e, σ (σ e
   | succ k ih =>
     rw [Pm_succ, ← Matrix.mulVec_mulVec, ih]
     by_cases hk : k < r + 1
-    · rw [dif_pos hk, Matrix.mulVec_add, unitriangularColumnEichlerMatrix_initialVectors x hσ hJ hP]
+    · rw [dite_eq_left hk, Matrix.mulVec_add, unitriangularColumnEichlerMatrix_initialVectors x hσ hJ hP]
       by_cases hck : c.val < k
       · have hne : c ≠ ⟨k, hk⟩ := fun h => by rw [h] at hck; exact lt_irrefl _ hck
-        rw [if_pos hck, Mb_fix x hσ hJ hP _ _ (by rw [Fin.le_iff_val_le_val]; simp only [Fin.val_mk]; omega),
-          if_pos (by omega : c.val < k + 1), if_neg hne, add_zero]
-      · rw [if_neg hck, Matrix.mulVec_zero, add_zero]
+        rw [ite_eq_left hck, Mb_fix x hσ hJ hP _ _ (by rw [Fin.le_iff_val_le_val]; simp only [Fin.val_mk]; omega),
+          ite_eq_left (by omega : c.val < k + 1), ite_eq_right hne, add_zero]
+      · rw [ite_eq_right hck, Matrix.mulVec_zero, add_zero]
         by_cases hce : c.val = k
         · have hc : c = ⟨k, hk⟩ := Fin.ext hce
-          rw [if_pos hc, if_pos (by omega : c.val < k + 1), hc]
+          rw [ite_eq_left hc, ite_eq_left (by omega : c.val < k + 1), hc]
         · have hne : c ≠ ⟨k, hk⟩ := fun h => hce (by rw [h])
-          rw [if_neg hne, if_neg (by omega : ¬ c.val < k + 1)]
+          rw [ite_eq_right hne, ite_eq_right (by omega : ¬ c.val < k + 1)]
     · have := c.isLt
-      rw [dif_neg hk, Matrix.one_mulVec, if_pos (by omega : c.val < k), if_pos (by omega : c.val < k + 1)]
+      rw [dite_eq_right hk, Matrix.one_mulVec, ite_eq_left (by omega : c.val < k), ite_eq_left (by omega : c.val < k + 1)]
 
 theorem Pm_unitary (hσ : ∀ e, σ (σ e) = e) (hJ : IsHermND σ J) (hP : P.IsStd σ J T) (k : ℕ) :
     Formalism.UG.cT (sigR R σ) (Pm R σ J P T x k) * JR R J * Pm R σ J P T x k = JR R J := by
@@ -540,9 +540,9 @@ theorem unitri_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     have hc : Continuous fun x : {p : Fin (r + 1) × Fin (r + 1) // p.1 < p.2} → Fv F v ⊗[F] E =>
         coef (Fv F v) x b a := by
       by_cases h : a < b
-      · simp only [coef, dif_pos h]
+      · simp only [coef, dite_eq_left h]
         exact continuous_apply _
-      · simp only [coef, dif_neg h]
+      · simp only [coef, dite_eq_right h]
         exact continuous_const
     exact hc.smul continuous_const
   have hMb : ∀ b, Continuous fun x : {p : Fin (r + 1) × Fin (r + 1) // p.1 < p.2} → Fv F v ⊗[F] E =>
@@ -574,9 +574,9 @@ theorem unitri_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     | succ k ih =>
       simp only [Pm_succ]
       by_cases hk : k < r + 1
-      · simp only [dif_pos hk]
+      · simp only [dite_eq_left hk]
         exact (hMb _).matrix_mul ih
-      · simp only [dif_neg hk]
+      · simp only [dite_eq_right hk]
         exact continuous_const.matrix_mul ih
   refine ⟨fun x => mkHA hdet (Pm (Fv F v) σ J P T x (r + 1)) (Pm_unitary x hσ hJ hP (r + 1)), ?_, ?_⟩
   · have hinv : Continuous fun x : {p : Fin (r + 1) × Fin (r + 1) // p.1 < p.2} → Fv F v ⊗[F] E =>
@@ -587,7 +587,7 @@ theorem unitri_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     exact Continuous.subtype_mk (p := fun g => g ∈ HR (Fv F v) σ J)
       (Units.continuous_iff.2 ⟨hPm (r + 1), hinv⟩) _
   · intro x b
-    rw [lin_mkHA, unitriangularEichlerPartialProduct_initialVectors x hσ hJ hP, if_pos b.isLt]
+    rw [lin_mkHA, unitriangularEichlerPartialProduct_initialVectors x hσ hJ hP, ite_eq_left b.isLt]
     have hco : ∀ a : Fin (r + 1), (if a = b then 1 else if h : a < b then x ⟨(a, b), h⟩ else 0 :
         Fv F v ⊗[F] E) = (if a = b then 1 else 0) + coef (Fv F v) x b a := by
       intro a
@@ -595,7 +595,7 @@ theorem unitri_section : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       · subst hab; simp [coef]
       · simp [hab, coef]
     simp only [hco, add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rfl
 
 end GlobalTheory.UnitriSection
@@ -655,10 +655,10 @@ theorem haar_exists {G U : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     ∃ μS : Measure S, μS.IsHaarMeasure ∧ ∀ h : G → ℝ≥0∞, Measurable h → ∀ t : U → G,
       (∀ x, t x * (t0 x)⁻¹ ∈ S0) →
       ∫⁻ s, h s ∂(μS.map Subtype.val) = ∫⁻ x, ∫⁻ s0, h ((s0 : G) * t x) ∂μ0 ∂μU := by
-  haveI : LocallyCompactSpace S0 := hS0cl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology S0 := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaCompactSpace S0 := inferInstance
-  haveI : SigmaFinite μ0 := inferInstance
+  have : LocallyCompactSpace S0 := hS0cl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology S0 := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SigmaCompactSpace S0 := inferInstance
+  have : SigmaFinite μ0 := inferInstance
   set e := prodHomeo hS0S t0 ht0c ht0S ν hνc hνt hsec with he
   have he_m : Measurable e := e.continuous.measurable
   set μS : Measure S := (μ0.prod μU).map e with hμS
@@ -672,8 +672,8 @@ theorem haar_exists {G U : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
   have hkey : ∀ f : G → ℝ≥0∞, Measurable f →
       ∫⁻ s, f s ∂(μS.map Subtype.val) = ∫⁻ x, ∫⁻ s0, f ((s0 : G) * t0 x) ∂μ0 ∂μU := by
     intro f hf
-    have hfv : Measurable (fun k : S => f (k : G)) := hf.comp measurable_subtype_coe
-    rw [lintegral_map hf measurable_subtype_coe, hμS, lintegral_map hfv he_m,
+    have hfv : Measurable (fun k : S => f (k : G)) := hf.comp measurable_subtypeVal
+    rw [lintegral_map hf measurable_subtypeVal, hμS, lintegral_map hfv he_m,
       lintegral_prod_symm (fun p => f (e p : G)) (hfv.comp he_m).aemeasurable]
     rfl
   have hleft : ∀ g ∈ S, ∀ f : G → ℝ≥0∞, Measurable f →
@@ -682,7 +682,7 @@ theorem haar_exists {G U : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     obtain ⟨φ, hφm, hφ, hφS⟩ := hshift g hg
     have hGm : Measurable (fun y => ∫⁻ s0, f ((s0 : G) * t0 y) ∂μ0) := by
       have : Measurable (fun p : S0 × U => f ((p.1 : G) * t0 p.2)) :=
-        hf.comp ((continuous_subtype_val.comp continuous_fst).mul (ht0c.comp continuous_snd)).measurable
+        hf.comp ((continuous_subtypeVal.comp continuous_fst).mul (ht0c.comp continuous_snd)).measurable
       exact this.lintegral_prod_left'
     have hin : ∀ x, ∫⁻ s0, f (g * ((s0 : G) * t0 x)) ∂μ0 = ∫⁻ s0, f ((s0 : G) * t0 (φ x)) ∂μ0 := by
       intro x
@@ -705,9 +705,9 @@ theorem haar_exists {G U : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     have hB' : MeasurableSet ((fun y : G => (k0 : G) * y) ⁻¹' B) := measurable_const_mul _ hB
     have e1 : μS ((fun k => k0 * k) ⁻¹' (Subtype.val ⁻¹' B)) =
         (μS.map Subtype.val) ((fun y : G => (k0 : G) * y) ⁻¹' B) := by
-      rw [Measure.map_apply measurable_subtype_coe hB']; rfl
+      rw [Measure.map_apply measurable_subtypeVal hB']; rfl
     have e2 : μS (Subtype.val ⁻¹' B) = (μS.map Subtype.val) B := by
-      rw [Measure.map_apply measurable_subtype_coe hB]
+      rw [Measure.map_apply measurable_subtypeVal hB]
     rw [e1, e2, ← lintegral_indicator_one hB', ← lintegral_indicator_one hB,
       hkey _ (measurable_one.indicator hB'), hkey _ (measurable_one.indicator hB)]
     have hz : ∀ z, ((fun y : G => (k0 : G) * y) ⁻¹' B).indicator (1 : G → ℝ≥0∞) z =
@@ -718,7 +718,7 @@ theorem haar_exists {G U : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
   have hfin : IsFiniteMeasureOnCompacts μS := Measure.IsFiniteMeasureOnCompacts.map _ e
   have hopen : μS.IsOpenPosMeasure := e.continuous.isOpenPosMeasure_map e.surjective
   have hHaar : μS.IsHaarMeasure := by
-    haveI := hfin; haveI := hinv; haveI := hopen
+    have := hfin; have := hinv; have := hopen
     exact ⟨⟩
   refine ⟨μS, hHaar, ?_⟩
   intro h hh t ht
@@ -814,7 +814,7 @@ theorem mem_Ssub_of_coef {g : HA R σ J} {x : {p : Fin (r + 1) × Fin (r + 1) //
   rw [hb, ← Finset.sum_sub_distrib]
   refine Submodule.sum_mem _ fun a _ => ?_
   rcases lt_trichotomy a b with h | h | h
-  · simp only [umat, Matrix.of_apply, h.ne, if_false, dif_pos h, sub_zero]
+  · simp only [umat, Matrix.of_apply, h.ne, ite_false, dite_eq_left h, sub_zero]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, h, rfl⟩)
   · subst h; simp [umat]
   · simp [umat, h.ne', not_lt.mpr h.le]
@@ -859,9 +859,9 @@ theorem umat_entry_continuous {K : Type} [TopologicalSpace K] [Zero K] [One K] {
 theorem haar_S_local : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (v : HeightOneSpectrum (𝓞 F)), ∀ (r : ℕ) (P : Frame E n r) (T : F), P.IsStd σ J T → ∀ μ0 : Measure (S0 (Fv F v) σ J P), μ0.IsHaarMeasure → (∀ s ∈ Ssub (Fv F v) σ J P, ∀ f : HA (Fv F v) σ J → ℝ≥0∞, Measurable f → ∫⁻ h, f (s * (h : HA (Fv F v) σ J) * s⁻¹) ∂μ0 = ∫⁻ h, f (h : HA (Fv F v) σ J) ∂μ0) → ∀ μU : Measure ({p : Fin (r + 1) × Fin (r + 1) // p.1 < p.2} → Fv F v ⊗[F] E), μU.IsAddHaarMeasure → ∃ μS : Measure (Ssub (Fv F v) σ J P), μS.IsHaarMeasure ∧ ∀ h : HA (Fv F v) σ J → ℝ≥0∞, Measurable h → ∀ t : ({p : Fin (r + 1) × Fin (r + 1) // p.1 < p.2} → Fv F v ⊗[F] E) → HA (Fv F v) σ J, (∀ x b, lin (Fv F v) σ J (t x) (ratV (F := F) (Fv F v) (F0 P b)) = ∑ a : Fin (r + 1), (if a = b then 1 else if h : a < b then x ⟨(a, b), h⟩ else 0 : Fv F v ⊗[F] E) • ratV (F := F) (Fv F v) (F0 P a)) → ∫⁻ s, h s ∂(amb μS) = ∫⁻ x, ∫⁻ s0, h ((s0 : HA (Fv F v) σ J) * t x) ∂μ0 ∂μU := by
   intro F E _ _ _ _ _ σ hCM n J hJ v r P T hP μ0 hμ0 hconj μU hμU
   obtain ⟨i1, i2, i3, i4, i5, i6, i7, i8, -⟩ := GlobalTheory.LocalUnitaryTop.top_facts F E σ hCM n J hJ v
-  haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5; haveI := i6; haveI := i7; haveI := i8
-  haveI : BorelSpace (HA (Fv F v) σ J) := ⟨rfl⟩
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have := i1; have := i2; have := i3; have := i4; have := i5; have := i6; have := i7; have := i8
+  have : BorelSpace (HA (Fv F v) σ J) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   obtain ⟨t0, ht0c, ht0⟩ := _root_.GlobalTheory.UnitriSection.unitri_section F E σ hCM n J hJ v r P T hP
   obtain ⟨ν, hνc, hν⟩ := GlobalTheory.UnitriangularCoeff.exists_coeff F E σ hCM n J hJ v r P T hP
   have ht0coef : ∀ x, Coef P (t0 x) (umat x) := ht0
@@ -1012,7 +1012,7 @@ namespace GlobalTheory.UnitriTuple
 theorem exists_compactOpen (k G : Type*) [NormedField k] [IsUltrametricDist k] [ProperSpace k]
     [AddCommGroup G] [Module k G] [Module.Finite k G] [TopologicalSpace G] [IsModuleTopology k G] :
     ∃ K : AddSubgroup G, IsOpen (K : Set G) ∧ IsCompact (K : Set G) := by
-  have : IsTopologicalAddGroup G := IsModuleTopology.topologicalAddGroup k G
+  have : IsTopologicalAddGroup G := IsModuleTopology.isTopologicalAddGroup k G
   let e₀ : G ≃ₗ[k] (Fin (Module.finrank k G) → k) := (Module.finBasis k G).equivFun
   let e : G ≃ₜ (Fin (Module.finrank k G) → k) :=
     { e₀.toEquiv with
@@ -1094,7 +1094,7 @@ theorem map_add_nilpotent_of_compactOpen {G : Type*} [AddCommGroup G] [Topologic
   have h5 : μ B ≠ 0 := (hBo.measure_pos μ ⟨0, B.zero_mem⟩).ne'
   have h6 : μ B ≠ ⊤ := hBc.measure_lt_top.ne
   have h7 : Measure.addHaarScalarFactor (μ.map L) μ = 1 := by
-    rw [h3, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h4
+    rw [h3, smul_apply, ENNReal.smul_def, smul_eq_mul] at h4
     have := (ENNReal.mul_left_inj h5 h6).1 (h4.trans (one_mul _).symm)
     exact_mod_cast this
   rw [h3, h7, one_smul]
@@ -1157,7 +1157,7 @@ theorem unitri_haar : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       have : (HermR (Fv F v) σ a : Set (Matrix (Fin a) (Fin a) Ev)) =
           ⋂ i, ⋂ j, {S | sigR (Fv F v) σ (S j i) = S i j} := by
         ext S
-        simp only [Set.mem_iInter, Set.mem_setOf_eq]
+        simp only [Set.mem_iInter, Set.mem_ofPred_eq]
         rfl
       rw [this]
       refine isClosed_iInter fun i => isClosed_iInter fun j => isClosed_eq ?_ ?_
@@ -1170,7 +1170,7 @@ theorem unitri_haar : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     obtain ⟨K₀, hK₀o, hK₀c⟩ := exists_compactOpen (Fv F v) (Fin a → Fin a → Ev)
     let K : AddSubgroup (HermR (Fv F v) σ a) :=
       AddSubgroup.comap (HermR (Fv F v) σ a).subtype K₀
-    have hKo : IsOpen (K : Set (HermR (Fv F v) σ a)) := hK₀o.preimage continuous_subtype_val
+    have hKo : IsOpen (K : Set (HermR (Fv F v) σ a)) := hK₀o.preimage continuous_subtypeVal
     have hKc : IsCompact (K : Set (HermR (Fv F v) σ a)) :=
       hc.isClosedEmbedding_subtypeVal.isCompact_preimage hK₀c
     set A : Matrix (Fin a) (Fin a) Ev := (u.map (sigR (Fv F v) σ)).transpose with hA
@@ -1232,8 +1232,8 @@ theorem unitri_haar : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
           change ((N S : HermR (Fv F v) σ a) : Matrix (Fin a) (Fin a) Ev) = _
           rw [hNa]; simp [La, Ru, mul_assoc]
       rw [this]
-      exact ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const).sub
-        continuous_subtype_val
+      exact ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const).sub
+        continuous_subtypeVal
     have h2 := map_add_nilpotent_of_compactOpen ν K hKo hKc N hNc hN
     have hx : φ = fun S => S + N S := funext fun S => by
       change φ S = S + (φ S - S); abel
@@ -1406,7 +1406,7 @@ theorem fibre_unitri_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have : BorelSpace (HermR (Fv F v) σ a) := ⟨rfl⟩
 
   have hdet : u.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (fun i j hij => htri i j hij)]
+    rw [det_of_isUpperTriangular (fun i j hij => htri i j hij)]
     simp [hdiag]
   have hu : IsUnit u.det := by rw [hdet]; exact isUnit_one
   set w := u⁻¹ with hw
@@ -1433,7 +1433,7 @@ theorem fibre_unitri_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have hcontH : ∀ m : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E), Continuous (cgrH (Fv F v) σ hσ m) := by
     intro m
     refine Continuous.subtype_mk ?_ _
-    exact (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+    exact (continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const
   let r : HermR (Fv F v) σ a ≃ₜ HermR (Fv F v) σ a :=
     { toFun := cgrH (Fv F v) σ hσ u
       invFun := cgrH (Fv F v) σ hσ w
@@ -1527,18 +1527,18 @@ theorem conj_map_eq (x0 : X) (hcl : IsClosed (MulAction.stabilizer G x0 : Set G)
     (h1 : ∀ h ∈ MulAction.stabilizer G x0, s⁻¹ * h * s ∈ MulAction.stabilizer G x0)
     (h2 : ∀ h ∈ MulAction.stabilizer G x0, s * h * s⁻¹ ∈ MulAction.stabilizer G x0) :
     μ1.map (conjInv x0 s h1 h2) = μ1 := by
-  haveI : LocallyCompactSpace (MulAction.stabilizer G x0) :=
+  have : LocallyCompactSpace (MulAction.stabilizer G x0) :=
     hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (MulAction.stabilizer G x0) :=
+  have : SecondCountableTopology (MulAction.stabilizer G x0) :=
     TopologicalSpace.Subtype.secondCountableTopology _
   set e := conjInv x0 s h1 h2 with he
   have hec : Continuous e := by
     refine Continuous.subtype_mk ?_ _
-    exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+    exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
   have hes : Continuous e.symm := by
     refine Continuous.subtype_mk ?_ _
-    exact (continuous_const.mul continuous_subtype_val).mul continuous_const
-  haveI : (μ1.map e).IsHaarMeasure := e.isHaarMeasure_map μ1 hec hes
+    exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
+  have : (μ1.map e).IsHaarMeasure := e.isHaarMeasure_map μ1 hec hes
   have hc : μ1.map e = Measure.haarScalarFactor (μ1.map e) μ1 • μ1 :=
     Measure.isMulLeftInvariant_eq_smul _ _
   set c : NNReal := Measure.haarScalarFactor (μ1.map e) μ1 with hcdef
@@ -1547,7 +1547,7 @@ theorem conj_map_eq (x0 : X) (hcl : IsClosed (MulAction.stabilizer G x0 : Set G)
   let sec : X → G := fun y => if h : ∃ g : G, g • x0 = y then h.choose else 1
   have hsec : ∀ y, (∃ g : G, g • x0 = y) → sec y • x0 = y := by
     intro y h
-    simp only [sec, dif_pos h]
+    simp only [sec, dite_eq_left h]
     exact h.choose_spec
   have horb : ∀ y, (∃ g : G, g • x0 = y) → ∃ g : G, g • x0 = R.symm y := by
     rintro y ⟨g, rfl⟩
@@ -1569,7 +1569,7 @@ theorem conj_map_eq (x0 : X) (hcl : IsClosed (MulAction.stabilizer G x0 : Set G)
         c * ∫⁻ h' : MulAction.stabilizer G x0, f (sec y * s * (h' : G)) ∂μ1 := by
       intro y
       have hm : Measurable (fun h' : MulAction.stabilizer G x0 => f (sec y * s * (h' : G))) :=
-        hf.comp ((measurable_const_mul _).comp measurable_subtype_coe)
+        hf.comp ((measurable_const_mul _).comp measurable_subtypeVal)
       have h3 : ∫⁻ h', f (sec y * s * (h' : G)) ∂(μ1.map e) =
           ∫⁻ h' : MulAction.stabilizer G x0, f (sec y * (h' : G) * s) ∂μ1 := by
         rw [lintegral_map hm hec.measurable]
@@ -1615,11 +1615,11 @@ theorem conj_lintegral_eq (x0 : X) (hcl : IsClosed (MulAction.stabilizer G x0 : 
     (f : G → ℝ≥0∞) (hf : Measurable f) :
     ∫⁻ h : MulAction.stabilizer G x0, f (s * (h : G) * s⁻¹) ∂μ0 =
       ∫⁻ h : MulAction.stabilizer G x0, f (h : G) ∂μ0 := by
-  haveI := hμ1
-  haveI := hμ0
-  haveI : LocallyCompactSpace (MulAction.stabilizer G x0) :=
+  have := hμ1
+  have := hμ0
+  have : LocallyCompactSpace (MulAction.stabilizer G x0) :=
     hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (MulAction.stabilizer G x0) :=
+  have : SecondCountableTopology (MulAction.stabilizer G x0) :=
     TopologicalSpace.Subtype.secondCountableTopology _
   have h1 : ∀ h ∈ MulAction.stabilizer G x0, s⁻¹ * h * s ∈ MulAction.stabilizer G x0 := by
     intro h hh
@@ -1633,10 +1633,10 @@ theorem conj_lintegral_eq (x0 : X) (hcl : IsClosed (MulAction.stabilizer G x0 : 
   have hmap := conj_map_eq x0 hcl μG ρ μ1 hw R hR hρ s hs h1 h2
   have hc : μ0 = Measure.haarScalarFactor μ0 μ1 • μ1 := Measure.isMulLeftInvariant_eq_smul _ _
   have hm : Measurable (fun h : MulAction.stabilizer G x0 => f (s * (h : G) * s⁻¹)) :=
-    hf.comp (((measurable_const_mul s).comp measurable_subtype_coe).mul_const _)
+    hf.comp (((measurable_const_mul s).comp measurable_subtypeVal).mul_const _)
   have hec : Continuous (conjInv x0 s h1 h2) := by
     refine Continuous.subtype_mk ?_ _
-    exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+    exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
   have h3 : ∫⁻ h : MulAction.stabilizer G x0, f (s * (h : G) * s⁻¹) ∂μ1 =
       ∫⁻ h : MulAction.stabilizer G x0, f (h : G) ∂μ1 := by
     conv_lhs => rw [← hmap]
@@ -1673,7 +1673,7 @@ theorem continuous_mv [TopologicalSpace A] [IsTopologicalRing A] (u : Matrix (Fi
 
 theorem det_unitriangular (u : Matrix (Fin a) (Fin a) A) (h1 : ∀ i, u i i = 1)
     (h2 : ∀ i j, j < i → u i j = 0) : u.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => h2 i j hij)]
+  rw [Matrix.det_of_isUpperTriangular (fun i j hij => h2 i j hij)]
   simp [h1]
 
 noncomputable def mvHomeo [TopologicalSpace A] [IsTopologicalRing A] (u : Matrix (Fin a) (Fin a) A)
@@ -1736,20 +1736,20 @@ end Gram
 theorem conj_preserves_haar : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (v : HeightOneSpectrum (𝓞 F)), ∀ (r : ℕ) (P : Frame E n r) (T : F), P.IsStd σ J T → ∀ (hT : ∀ i j, σ (gramE σ J (F0 P) j i) = gramE σ J (F0 P) i j), ∀ (μ : Measure (Fin (r + 1) → Fin n → Fv F v ⊗[F] E)) (ν : Measure (HermR (Fv F v) σ (r + 1))), μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → ∀ fib : HermR (Fv F v) σ (r + 1) → Measure (Fin (r + 1) → Fin n → Fv F v ⊗[F] E), IsFibreFamily μ (gramR (Fv F v) σ J) Subtype.val {X | LinearIndependent (Fv F v ⊗[F] E) X} ν Set.univ fib → ∀ μ0 : Measure (S0 (Fv F v) σ J P), μ0.IsHaarMeasure → ∀ s ∈ Ssub (Fv F v) σ J P, ∀ f : HA (Fv F v) σ J → ℝ≥0∞, Measurable f → ∫⁻ h, f (s * (h : HA (Fv F v) σ J) * s⁻¹) ∂μ0 = ∫⁻ h, f (h : HA (Fv F v) σ J) ∂μ0 := by
   intro F E _ _ _ _ _ σ hCM n J hJ v r P T hP hT μ ν hμ hν fib hfib μ0 hμ0 s hs f hf
   obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩ := GlobalTheory.LocalUnitaryTop.top_facts F E σ hCM n J hJ v
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI := h5
-  haveI := h6
-  haveI := h7
-  haveI := h8
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (HA (Fv F v) σ J) := ⟨rfl⟩
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have := h5
+  have := h6
+  have := h7
+  have := h8
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (HA (Fv F v) σ J) := ⟨rfl⟩
   obtain ⟨⟨-, -, -, -, -, ⟨μG, hμG⟩, hright⟩, -⟩ :=
     GlobalTheory.LocalUnitaryUnimod.unimodularOver_adicCompletion F E σ hCM n J hJ v
-  haveI := hμG
-  haveI := hright μG hμG
+  have := hμG
+  have := hright μG hμG
   obtain ⟨μ1, hμ1, -, hw⟩ := _root_.GlobalTheory.LocalStabiliserHaar.exists_haar_stabiliser F E σ hCM n J hJ v r P T hP hT μ ν hμ hν fib hfib μG hμG
   set x0 := ratTup (F := F) (Fv F v) (F0 P) with hx0def
   set S := hermOf (Fv F v) σ (gramE σ J (F0 P)) hT with hS

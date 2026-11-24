@@ -74,8 +74,8 @@ theorem exists_norm_add_le {g : ℕ} (Λ : AddSubgroup (Fin g → ℂ))
     (h : Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤) :
     ∃ R : ℝ, ∀ z : Fin g → ℂ, ∃ l ∈ (Λ : Set (Fin g → ℂ)), ‖z + l‖ ≤ R := by
   obtain ⟨s, hs, hsp, hli⟩ := exists_linearIndependent ℝ (Λ : Set (Fin g → ℂ))
-  haveI : Finite s := hli.finite
-  haveI : Fintype s := Fintype.ofFinite s
+  have : Finite s := hli.finite
+  have : Fintype s := Fintype.ofFinite s
   let b : Module.Basis s ℝ (Fin g → ℂ) := Module.Basis.mk hli (by rw [Subtype.range_coe, hsp, h])
   have hb : Submodule.span ℤ (Set.range b) ≤ Λ.toIntSubmodule := by
     rw [Submodule.span_le]
@@ -161,7 +161,7 @@ theorem exists_unit {g : ℕ} {Y : Scheme.{0}} {L : LB Y} (hL : L.IsLB) (p : (Fi
       (Finset.prod_ne_zero_iff.2 fun I _ => zpow_ne_zero _ (fr_ne _ _ (h1 I)))
   · obtain ⟨j, hj⟩ := hcov z
     have hj' : z' ∈ D j := by
-      simp only [D, Set.mem_setOf_eq, hz]
+      simp only [D, Set.mem_ofPred_eq, hz]
       exact hj
     obtain ⟨h1, h2⟩ := (hD j z).1 hj
     have eT : T j z' = T j z := by simp only [T, hz]

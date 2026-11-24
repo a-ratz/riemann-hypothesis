@@ -78,8 +78,8 @@ theorem exists_cofiltered_limit_affine_etale_of_isStalk : ∀ (S : Scheme.{0}) (
         have := congrArg (fun m => Under.Hom.right m) (ι.naturality f.unop)
         simp only [Functor.const_obj_obj, Functor.const_obj_map, Category.comp_id, Under.comp_right] at this
         exact this.symm }
-  haveI : IsConnected J := IsFiltered.isConnected J
-  haveI : IsConnected Jᵒᵖ := IsCofiltered.isConnected Jᵒᵖ
+  have : IsConnected J := IsFiltered.isConnected J
+  have : IsConnected Jᵒᵖ := IsCofiltered.isConnected Jᵒᵖ
   refine ⟨Jᵒᵖ, inferInstance, inferInstance, G, π, ⟨?_⟩, fun k => ⟨?_, ?_⟩⟩
   · apply isLimitOfReflects (Over.forget S)
     have h1 := isColimitOfPreserves (Under.forget (CommRingCat.of A)) hc

@@ -286,8 +286,8 @@ theorem isAlgClosed_of_denseRange {K L : Type*} [Field K] [NontriviallyNormedFie
   intro f fmon firr
   have fnatdeg0 : f.natDegree ≠ 0 := (Irreducible.natDegree_pos firr).ne'
   let F := f.SplittingField
-  letI : NormedField F := spectralNorm.normedField L F
-  letI : NormedAlgebra L F := spectralNorm.normedAlgebra L F
+  let : NormedField F := spectralNorm.normedField L F
+  let : NormedAlgebra L F := spectralNorm.normedAlgebra L F
   let a := rootOfSplits (SplittingField.splits f)
       (by simpa using degree_ne_of_natDegree_ne fnatdeg0)
   have fa0 : f.aeval a = 0 := by
@@ -334,16 +334,16 @@ theorem exists_complete_isAlgClosed_isometry (K : Type u) [NontriviallyNormedFie
     ∃ (C : Type u) (_ : NontriviallyNormedField C) (_ : IsUltrametricDist C) (_ : CompleteSpace C)
       (_ : IsAlgClosed C) (i : K →+* C), ∀ x, ‖i x‖ = ‖x‖ := by
   let K₁ := UniformSpace.Completion K
-  letI : NontriviallyNormedField K₁ := completionNontriviallyNormedField K
-  haveI : IsUltrametricDist K₁ := IsUltrametricDist.of_normedAlgebra K
+  let : NontriviallyNormedField K₁ := completionNontriviallyNormedField K
+  have : IsUltrametricDist K₁ := IsUltrametricDist.of_normedAlgebra K
   let K₂ := AlgebraicClosure K₁
-  letI : NontriviallyNormedField K₂ := spectralNorm.nontriviallyNormedField K₁ K₂
-  letI : NormedAlgebra K₁ K₂ := spectralNorm.normedAlgebra K₁ K₂
-  haveI : IsUltrametricDist K₂ := IsUltrametricDist.of_normedAlgebra K₁
+  let : NontriviallyNormedField K₂ := spectralNorm.nontriviallyNormedField K₁ K₂
+  let : NormedAlgebra K₁ K₂ := spectralNorm.normedAlgebra K₁ K₂
+  have : IsUltrametricDist K₂ := IsUltrametricDist.of_normedAlgebra K₁
   let C := UniformSpace.Completion K₂
-  letI : NontriviallyNormedField C := completionNontriviallyNormedField K₂
-  haveI : IsUltrametricDist C := IsUltrametricDist.of_normedAlgebra K₂
-  haveI : IsAlgClosed C :=
+  let : NontriviallyNormedField C := completionNontriviallyNormedField K₂
+  have : IsUltrametricDist C := IsUltrametricDist.of_normedAlgebra K₂
+  have : IsAlgClosed C :=
     isAlgClosed_of_denseRange (K := K₂) UniformSpace.Completion.denseRange_coe
   refine ⟨C, inferInstance, inferInstance, inferInstance, inferInstance,
     (algebraMap K₂ C).comp ((algebraMap K₁ K₂).comp (algebraMap K K₁)), fun x => ?_⟩
@@ -395,17 +395,17 @@ theorem exists_complete_isAlgClosed_of_isDiscreteValuationRing (V : Type*) (K : 
       (∀ x : K, ‖algebraMap K C x‖ ≤ 1 ↔ x ∈ (algebraMap V K).range) ∧
         ‖algebraMap K C (algebraMap V K a)‖ = r := by
   obtain ⟨w, hw, hw1, hwa⟩ := exists_absoluteValue_of_isDiscreteValuationRing V K ha0 ha hr0 hr1
-  letI : NontriviallyNormedField (WithAbs w) :=
+  let : NontriviallyNormedField (WithAbs w) :=
     { (inferInstance : NormedField (WithAbs w)) with
       non_trivial := ⟨(WithAbs.toAbs w (algebraMap V K a))⁻¹, by
         rw [norm_inv]
         change 1 < (w (algebraMap V K a))⁻¹
         rw [hwa]
         exact (one_lt_inv₀ hr0).2 hr1⟩ }
-  haveI : IsUltrametricDist (WithAbs w) :=
+  have : IsUltrametricDist (WithAbs w) :=
     IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm fun x y => hw x.ofAbs y.ofAbs
   obtain ⟨C, _, _, _, _, i, hi⟩ := exists_complete_isAlgClosed_isometry (WithAbs w)
-  letI : Algebra K C := (i.comp (WithAbs.equiv w).symm.toRingHom).toAlgebra
+  let : Algebra K C := (i.comp (WithAbs.equiv w).symm.toRingHom).toAlgebra
   have hn : ∀ x : K, ‖algebraMap K C x‖ = w x := fun x => hi _
   exact ⟨C, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     fun x => by rw [hn, hw1], by rw [hn, hwa]⟩
@@ -483,10 +483,10 @@ theorem exists_complete_isAlgClosed_padic_of_isDiscreteValuationRing (V : Type*)
     exists_complete_isAlgClosed_of_isDiscreteValuationRing V K hp0 hV
       (inv_pos.2 (zero_lt_one.trans h1)) (inv_lt_one_of_one_lt₀ h1)
   rw [map_natCast, map_natCast] at hCp
-  haveI : CharZero C := charZero_of_injective_ringHom (algebraMap K C).injective
+  have : CharZero C := charZero_of_injective_ringHom (algebraMap K C).injective
   obtain ⟨j, hj⟩ := exists_padic_isometry p hCp
-  letI : Algebra ℚ_[p] C := j.toAlgebra
-  letI : NormedAlgebra ℚ_[p] C :=
+  let : Algebra ℚ_[p] C := j.toAlgebra
+  let : NormedAlgebra ℚ_[p] C :=
     { (inferInstance : Algebra ℚ_[p] C) with
       norm_smul_le := fun r x => by
         rw [Algebra.smul_def, norm_mul]

@@ -199,7 +199,7 @@ theorem coneSES_shortExact {R : Type} [CommRing R] {C J : Cx R} (u : C ⟶ J) (t
   (coneSESSplitting u t).shortExact
 
 theorem sgl_isKInjective {R : Type} [CommRing R] (I : Shv R) [Injective I] : (sgl I).IsKInjective := by
-  haveI : ∀ n, Injective ((sgl I).X n) := by
+  have : ∀ n, Injective ((sgl I).X n) := by
     intro n
     by_cases h : n = 0
     · subst h
@@ -225,9 +225,9 @@ theorem sgl_cohomologyClass_subsingleton {R : Type} [CommRing R] (G I : Shv R) (
 theorem ext_injective_subsingleton {R : Type} [CommRing R] (G I : Shv R) [Injective I] (i : ℤ) (hi : i ≠ 0) :
     Subsingleton (CohomologyClass (sgl G) (res R I) i) := by
   obtain ⟨hK, -, -, hq, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R I
-  haveI := hK
-  haveI := hq
-  haveI := sgl_isKInjective I
+  have := hK
+  have := hq
+  have := sgl_isKInjective I
   obtain ⟨e, he⟩ := (CochainComplex.IsKInjective.quasiIso_iff (resAug I)).1 hq
   have h63 := GlobalTheory.T.hypercohomologyPullbackPushforward_functorial R
   have hsurj : Function.Surjective (cpush (sgl G) (resAug I) i) := by
@@ -235,7 +235,7 @@ theorem ext_injective_subsingleton {R : Type} [CommRing R] (G I : Shv R) [Inject
     refine ⟨cpush (sgl G) e.inv i y, ?_⟩
     rw [← h63.2.2.1 (sgl G) e.inv (resAug I) i y, ← he,
       (h63.2.2.2.2 _ _ ⟨e.homotopyInvHomId⟩ (sgl G) i).2, (h63.1 (sgl G) _ i y).2]
-  haveI := sgl_cohomologyClass_subsingleton G I i hi
+  have := sgl_cohomologyClass_subsingleton G I i hi
   constructor
   intro x y
   obtain ⟨x', rfl⟩ := hsurj x
@@ -248,9 +248,9 @@ theorem cone_terms_ext_subsingleton : ∀ (R : Type) [CommRing R] (G : Shv R) {C
   intro R _ G C J u hJ hC t i hi
   obtain ⟨z, hz⟩ := GlobalTheory.T.etaleCohomology_coefficient_longExactSequence R (coneSES u t) (coneSES_shortExact u t)
   have hex := (hz (sgl G) i).1
-  haveI := hJ t
-  haveI hsJ : Subsingleton (CohomologyClass (sgl G) (res R (J.X t)) i) := ext_injective_subsingleton G (J.X t) i hi.ne'
-  haveI hsC : Subsingleton (CohomologyClass (sgl G) (res R (C.X (t + 1))) i) := hC (t + 1) i hi
+  have := hJ t
+  have hsJ : Subsingleton (CohomologyClass (sgl G) (res R (J.X t)) i) := ext_injective_subsingleton G (J.X t) i hi.ne'
+  have hsC : Subsingleton (CohomologyClass (sgl G) (res R (C.X (t + 1))) i) := hC (t + 1) i hi
   constructor
   intro x y
   obtain ⟨w, hw⟩ := (hex x).1 (Subsingleton.elim (α := CohomologyClass (sgl G) (res R (C.X (t + 1))) i) _ _)
@@ -321,8 +321,8 @@ theorem cocycle0_v_eq_zero {R : Type} [CommRing R] (G F : Shv R) (a : Cochain (s
 
 theorem ext_subsingleton_of_isZero : ∀ (R : Type) [CommRing R] (G Z : Shv R), IsZero Z → ∀ i : ℤ, Subsingleton (CohomologyClass (sgl G) (res R Z) i) := by
   intro R _ G Z hZ i
-  haveI : (res R Z).IsKInjective := inferInstanceAs ((injectiveResolution Z).cochainComplex.IsKInjective)
-  haveI : QuasiIso (resAug Z) := inferInstanceAs (QuasiIso (injectiveResolution Z).ι')
+  have : (res R Z).IsKInjective := inferInstanceAs ((injectiveResolution Z).cochainComplex.IsKInjective)
+  have : QuasiIso (resAug Z) := inferInstanceAs (QuasiIso (injectiveResolution Z).ι')
   have h0 : (sgl Z).Acyclic :=
     HomologicalComplex.acyclic_of_isZero _ ((CochainComplex.singleFunctor (Shv R) 0).map_isZero hZ)
   have h1 : (res R Z).Acyclic := by

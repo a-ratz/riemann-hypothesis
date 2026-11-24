@@ -174,7 +174,7 @@ theorem _root_.GlobalTheory.QNorm.sUnit_mem_normSub_of_mem_locNorm : ∀ (F : Ty
     simp only [Subgroup.mem_iInf] at hy ⊢
     exact ⟨fun v hv => _root_.GlobalTheory.QNorm.sqSub_le_normSub _ _ (hy.1 v hv),
       fun σ => _root_.GlobalTheory.QNorm.sqSub_le_normSub _ _ (hy.2 σ)⟩
-  haveI : (_root_.GlobalTheory.QNorm.sUnits F (S ∪ T) ⊔ _root_.GlobalTheory.QNorm.locSq F S).FiniteIndex :=
+  have : (_root_.GlobalTheory.QNorm.sUnits F (S ∪ T) ⊔ _root_.GlobalTheory.QNorm.locSq F S).FiniteIndex :=
     ⟨hJ0⟩
   have hK : (_root_.GlobalTheory.QNorm.sUnits F (S ∪ T) ⊔ _root_.GlobalTheory.QNorm.locNorm F δ S).index ≤ 2 :=
     le_trans (Subgroup.index_antitone (sup_le_sup_left hLN _)) hJ
@@ -184,7 +184,7 @@ theorem _root_.GlobalTheory.QNorm.sUnit_mem_normSub_of_mem_locNorm : ∀ (F : Ty
     unfold _root_.GlobalTheory.QNorm.tFin
     congr 1
     ext v
-    simp only [Set.mem_setOf_eq, Finset.mem_union]
+    simp only [Set.mem_ofPred_eq, Finset.mem_union]
     constructor
     · rintro ⟨hv | hv, h⟩
       · exact ⟨hv, h⟩

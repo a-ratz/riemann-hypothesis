@@ -101,7 +101,7 @@ variable [∀ s : S, Smooth (Gs G s).hom]
 
 include G in
 theorem fp_chart {s : S} (C : Chart (Gs G s)) : Algebra.FinitePresentation (Localization.Away s) Γ((Gs G s).left, C.U) := by
-  haveI := chart_smooth (C := C)
+  have := chart_smooth (C := C)
   infer_instance
 
 theorem tanS_away_lift {s : S} (C : Chart (Gs G s)) {A : Type} [CommRing A] [Algebra S A]
@@ -110,8 +110,8 @@ theorem tanS_away_lift {s : S} (C : Chart (Gs G s)) {A : Type} [CommRing A] [Alg
     ∃ N : ℕ, ∃ y : sp (R₀ := S) (DualNumber A) ⟶ G, TanS y ∧
       spMap (dualMapS (IsScalarTower.toAlgHom S A (Localization.Away (algebraMap S A t)))) ≫ y =
         spMap (scaleS (S := S) (algebraMap S (Localization.Away (algebraMap S A t)) t ^ N)) ≫ y' := by
-  haveI := fp_chart C
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid A
+  have := fp_chart C
+  have : IsLocalization (Algebra.algebraMapSubmonoid A
       (Submonoid.powers (algebraMap S (Localization.Away s) t)))
       (Localization.Away (algebraMap S A t)) := by
     have e : Algebra.algebraMapSubmonoid A (Submonoid.powers (algebraMap S (Localization.Away s) t)) =
@@ -131,8 +131,8 @@ theorem tanS_away_uniq {s : S} (C : Chart (Gs G s)) {A : Type} [CommRing A] [Alg
     (he : spMap (dualMapS (IsScalarTower.toAlgHom S A (Localization.Away (algebraMap S A t)))) ≫ y₁ =
       spMap (dualMapS (IsScalarTower.toAlgHom S A (Localization.Away (algebraMap S A t)))) ≫ y₂) :
     ∃ N : ℕ, spMap (scaleS (S := S) (algebraMap S A t ^ N)) ≫ y₁ = spMap (scaleS (algebraMap S A t ^ N)) ≫ y₂ := by
-  haveI := fp_chart C
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid A
+  have := fp_chart C
+  have : IsLocalization (Algebra.algebraMapSubmonoid A
       (Submonoid.powers (algebraMap S (Localization.Away s) t)))
       (Localization.Away (algebraMap S A t)) := by
     have e : Algebra.algebraMapSubmonoid A (Submonoid.powers (algebraMap S (Localization.Away s) t)) =

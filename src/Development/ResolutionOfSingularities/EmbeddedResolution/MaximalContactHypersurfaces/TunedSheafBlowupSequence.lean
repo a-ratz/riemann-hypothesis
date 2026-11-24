@@ -145,9 +145,9 @@ theorem exists_le_tuningWeight_eq_mul (m L r : ℕ) (hL : 0 < L)
       have hule : ∀ i, (if i = j then q else 0) ≤ c i := by
         intro i
         by_cases hij : i = j
-        · rw [if_pos hij, hij]
+        · rw [ite_eq_left hij, hij]
           exact hqc
-        · rw [if_neg hij]
+        · rw [ite_eq_right hij]
           exact Nat.zero_le _
       have hu : tuningWeight m (fun i => if i = j then q else 0) = L := by
         rw [tuningWeight_ite m j q hjmem]
@@ -173,9 +173,9 @@ theorem exists_le_tuningWeight_eq_mul (m L r : ℕ) (hL : 0 < L)
         have h2 : (if i = j then q else 0) ≤ c i := hule i
         show e i + (if i = j then q else 0) ≤ c i
         by_cases hij : i = j
-        · rw [if_pos hij] at h1 h2 ⊢
+        · rw [ite_eq_left hij] at h1 h2 ⊢
           omega
-        · rw [if_neg hij] at h1 h2 ⊢
+        · rw [ite_eq_right hij] at h1 h2 ⊢
           omega
       · have hsplit : tuningWeight m (fun i => e i + (if i = j then q else 0))
             = tuningWeight m e + tuningWeight m (fun i => if i = j then q else 0) :=
@@ -404,7 +404,7 @@ theorem comap_prod_map_range {X Y : Scheme.{u}} (π : Y ⟶ X) (f : ℕ → X.Id
 private theorem prod_map_range_le {X : Scheme.{u}} (f g : ℕ → X.IdealSheafData) :
     ∀ m : ℕ, (∀ j, j < m → f j ≤ g j) →
       ((List.range m).map f).prod ≤ ((List.range m).map g).prod := fun _ h =>
-  List.prod_le_prod' fun j hj => h j (List.mem_range.mp hj)
+  List.prod_le_prod fun j hj => h j (List.mem_range.mp hj)
 
 private theorem prod_map_range_congr {X : Scheme.{u}} (f g : ℕ → X.IdealSheafData) :
     ∀ m : ℕ, (∀ j, j < m → f j = g j) →

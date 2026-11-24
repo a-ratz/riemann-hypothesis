@@ -64,15 +64,15 @@ theorem component_basic : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime
     have hm : (Ideal.comap (algebraMap ℤ_[l] O) ⊥).IsMaximal := hp.isMaximal h
     have h2 : (⊥ : Ideal O).IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := ℤ_[l]) ⊥ hm
     exact IsDiscreteValuationRing.not_a_field O (IsLocalRing.eq_maximalIdeal h2).symm
-  haveI : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
+  have : FaithfulSMul ℤ_[l] O := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
   have hi2 : Function.Injective (algebraMap ℤ_[l] (FractionRing O)) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] O (FractionRing O)]
     exact (IsFractionRing.injective O _).comp hi
-  letI : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
+  let : Algebra ℚ_[l] (FractionRing O) := (IsFractionRing.lift hi2).toAlgebra
+  have : IsScalarTower ℤ_[l] ℚ_[l] (FractionRing O) :=
     IsScalarTower.of_algebraMap_eq fun x => (IsFractionRing.lift_algebraMap hi2 x).symm
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
-  haveI : Module.Finite ℚ_[l] (FractionRing O) :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors ℤ_[l])) (FractionRing O) := inferInstance
+  have : Module.Finite ℚ_[l] (FractionRing O) :=
     Module.Finite.of_isLocalization ℤ_[l] O (nonZeroDivisors ℤ_[l])
   obtain ⟨x, hx, hxu⟩ := univEx D U
   obtain ⟨-, n, P, φ, hφ, hIP, ⟨y, hy, hyP⟩, hPI, h0, hdim⟩ := _root_.GlobalTheory.OrdLoc.saturatedOrdinaryIdeal_smooth_at_residualRep hP D U (FractionRing O) x hx

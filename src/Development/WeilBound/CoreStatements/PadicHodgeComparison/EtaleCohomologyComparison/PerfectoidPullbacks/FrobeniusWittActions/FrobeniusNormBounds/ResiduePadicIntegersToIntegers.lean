@@ -131,11 +131,11 @@ theorem residue_field_card_le_finrank (r : Res l K) [FiniteDimensional ℚ_[l] K
 
 theorem res_frob (r : Res l K) [FiniteDimensional ℚ_[l] K] : ∃ f : ℕ, 0 < f ∧ ∀ z : r.k, z ^ l ^ f = z := by
   let _ := ZMod.algebra r.k l
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   have hr : Module.rank (ZMod l) r.k ≤ Module.finrank ℚ_[l] K := rank_le fun s hs => residue_field_card_le_finrank r s hs
-  haveI : Module.Finite (ZMod l) r.k := Module.rank_lt_aleph0_iff.1 (hr.trans_lt Cardinal.natCast_lt_aleph0)
-  haveI : Finite r.k := Module.finite_of_finite (ZMod l)
-  letI := Fintype.ofFinite r.k
+  have : Module.Finite (ZMod l) r.k := Module.rank_lt_aleph0_iff.1 (hr.trans_lt Cardinal.natCast_lt_aleph0)
+  have : Finite r.k := Module.finite_of_finite (ZMod l)
+  let := Fintype.ofFinite r.k
   obtain ⟨n, -, hn⟩ := FiniteField.card r.k l
   refine ⟨n, n.pos, fun z => ?_⟩
   rw [← hn]

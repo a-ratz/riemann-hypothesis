@@ -257,7 +257,7 @@ theorem prod_finset_fin_two (f : Finset (Fin 2) → ℂ) :
   ring
 
 theorem exp_pi_I_int (n : ℤ) : cexp (π * I * n) = (-1) ^ n := by
-  rw [show (π : ℂ) * I * n = n * (π * I) by ring, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [show (π : ℂ) * I * n = n * (π * I) by ring, exp_intCast_mul, Complex.exp_pi_mul_I]
 
 theorem differentiableOn_prod' {g : ℕ} {α : Type*} {f : α → (Fin g → ℂ) → ℂ} {S : Set (Fin g → ℂ)}
     (s : Finset α) (hf : ∀ i, DifferentiableOn ℂ (f i) S) :
@@ -513,7 +513,7 @@ theorem appellHumbert_data_of_iso_cube :
     ⟨_, rfl⟩
   have ha_mem : ∀ l (hl : l ∈ u.Λ) z,
       a l z = χ ⟨l, hl⟩ * cexp (π * hermForm Hm z l + π / 2 * hermForm Hm l l) := fun l hl z => by
-    simp only [ha_def, dif_pos hl]
+    simp only [ha_def, dite_eq_left hl]
   have ha : ∀ l ∈ u.Λ, ∀ i z, ⊤ ≤ (u.ex z).left ⁻¹ᵁ P.L.U i → u.fr i z = a l z * u.fr i (z + l) :=
     fun l hl i z hz => by rw [ha_mem l hl]; exact hfr' ⟨l, hl⟩ i z hz
   obtain ⟨ψ, hψd, hψ0, hψp⟩ := exists_unit_of_iso hv' P.isLB u ![𝟙 P.A, f] ![LinearMap.id, F]

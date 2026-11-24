@@ -95,19 +95,19 @@ private theorem exists_algChart_mem_source {R K : Type} [CommRing R] [IsDomain R
   have hsp : a ≫ p = Spec.map (CommRingCat.ofHom τ') ≫ spMap (algebraMap R K) := by
     rw [ha]; unfold spMap; rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, hcomp]
   obtain ⟨b, hb⟩ : ∃ b, b ≫ j = a := ⟨h.lift a (Spec.map (CommRingCat.ofHom τ')) hsp, h.lift_fst _ _ _⟩
-  haveI : Flat (spMap (algebraMap R K)) := by
+  have : Flat (spMap (algebraMap R K)) := by
     unfold spMap
     refine (HasRingHomProperty.Spec_iff (P := @Flat)).2 ?_
     rw [CommRingCat.hom_ofHom, RingHom.flat_algebraMap_iff]
     exact IsLocalization.flat K (nonZeroDivisors R)
-  haveI : SurjectiveOnStalks (spMap (algebraMap R K)) := by
+  have : SurjectiveOnStalks (spMap (algebraMap R K)) := by
     unfold spMap
     refine (HasRingHomProperty.Spec_iff (P := @SurjectiveOnStalks)).2 ?_
     rw [CommRingCat.hom_ofHom]
     exact RingHom.surjectiveOnStalks_of_isLocalization (nonZeroDivisors R) K
   obtain ⟨W, hW, hsm⟩ := GlobalTheory.GenSpread.exists_opens_smoothOfRelativeDimension_of_isPullback h D
     (b (IsLocalRing.closedPoint ℂ))
-  haveI := hsm
+  have := hsm
   have hz : a (IsLocalRing.closedPoint ℂ) ∈ W := by
     rw [← hb]
     first | exact hW | simpa using hW

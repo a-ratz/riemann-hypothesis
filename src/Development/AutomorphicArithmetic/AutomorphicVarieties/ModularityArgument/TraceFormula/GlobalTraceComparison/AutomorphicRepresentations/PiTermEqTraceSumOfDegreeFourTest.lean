@@ -398,9 +398,9 @@ private lemma exists_projL {F : Type} [AddCommGroup F] [Module ℂ F] (B : F →
         have h1 := hpos a h0
         have h2 : B a a = 0 := h
         simp [h2] at h1 }
-  letI : NormedAddCommGroup F := core.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ F := InnerProductSpace.ofCore core.toCore
-  haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  let : NormedAddCommGroup F := core.toNormedAddCommGroup
+  let : InnerProductSpace ℂ F := InnerProductSpace.ofCore core.toCore
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   refine ⟨S.starProjection.toLinearMap, fun x => S.starProjection_apply_mem x, fun x a ha => ?_⟩
   have h0 := S.starProjection_inner_eq_zero x a ha
   have h1 : B (x - S.starProjection x) a = 0 := h0
@@ -452,8 +452,8 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.absType_pf :
     have h := hW _ (hx l) g
     convert h using 1
     ext k; simp [map_mul, Module.End.mul_apply]
-  haveI : FiniteDimensional ℂ Y := hY
-  haveI : FiniteDimensional ℂ (V ⊓ T : Submodule ℂ F) :=
+  have : FiniteDimensional ℂ Y := hY
+  have : FiniteDimensional ℂ (V ⊓ T : Submodule ℂ F) :=
     Submodule.finiteDimensional_of_le (S₂ := Y) fun x hx => hYV x hx.1 hx.2
   obtain ⟨P, hPm, hPo⟩ := exists_projL B hsym hpos (V ⊓ T)
   refine ⟨P z, (hPm z).1, hYV _ (hPm z).1 (hPm z).2, ?_⟩
@@ -474,7 +474,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.absType_pf :
     | add a' b _ _ ha' hb => rw [map_add (f := _), ha', hb, add_zero]
     | smul c a' _ ha' => rw [map_smul, ha', smul_zero]
   intro v hv
-  haveI := hVf v hv
+  have := hVf v hv
   obtain ⟨Q, hQm, hQo⟩ := exists_projL B hsym hpos (Submodule.span ℂ (Set.range fun k => R k v))
   have hV0V : Submodule.span ℂ (Set.range fun k => R k v) ≤ V := by
     refine Submodule.span_le.2 ?_
@@ -537,8 +537,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
 private lemma shiftInt (D : Dom E n 0) (a : H E n 0) (F : H E n 0 → ℂ) :
     ∫ y, F (a * y) ∂D.μ = ∫ y, F y ∂D.μ := by
-  haveI : BorelSpace (H E n 0) := ⟨rfl⟩
-  haveI := D.haar.1
+  have : BorelSpace (H E n 0) := ⟨rfl⟩
+  have := D.haar.1
   exact integral_mul_left_eq_self F a
 
 private lemma ldet_shift (a : GA E n) (h : logAbs a.val.det = 0) (y : H E n 0) :
@@ -558,9 +558,9 @@ private lemma cv_shift (D : Dom E n 0) (φ : H E n 0 → ℂ) (u : ℝ → ℂ) 
 private lemma term_integrable (D : Dom E n 0) (φ : H E n 0 → ℂ) (u : ℝ → ℂ) (f : GA E n → ℂ) (g a : GA E n)
     (hφ : IsTestH φ) (hu : Continuous u) (hf : Continuous f) :
     Integrable (fun y : H E n 0 => φ ((a, 1) * y) * u (ldet y) * f (g * y.1)) D.μ := by
-  haveI : BorelSpace (H E n 0) := ⟨rfl⟩
-  haveI := D.haar.2.2.2
-  haveI : IsFiniteMeasureOnCompacts D.μ :=
+  have : BorelSpace (H E n 0) := ⟨rfl⟩
+  have := D.haar.2.2.2
+  have : IsFiniteMeasureOnCompacts D.μ :=
     ⟨fun _ h => h.measure_lt_top_of_nhdsWithin fun x _ => D.μ.finiteAt_nhdsWithin x _⟩
   have c1 : Continuous fun y : H E n 0 => φ ((a, 1) * y) := hφ.1.comp (continuous_const.mul continuous_id)
   have s1 : HasCompactSupport fun y : H E n 0 => φ ((a, 1) * y) :=
@@ -640,7 +640,7 @@ private theorem zero_of_powers_compact {G : Type*} [Monoid G] [TopologicalSpace 
 
 private theorem continuous_kI (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) : Continuous (kI E n) := by
   have hu : Continuous (Unitary.toUnits : Kinf E n → _) :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_star.comp continuous_subtype_val⟩
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, continuous_star.comp continuous_subtypeVal⟩
   exact GlobalTheory.CuspQuot.continuous_infGL.comp hu
 
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.detZero_pf :
@@ -649,7 +649,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.detZero_pf :
   have hc := DiscreteGroups.T1.G.continuous_logAbs_det (E := E) (n := n)
   have hm := DiscreteGroups.T1.G.Dcy.logAbs_det_mul' (E := E) (n := n)
   refine ⟨fun k => ?_, fun K hK k hk => ?_⟩
-  · haveI : CompactSpace (Kinf E n) := GlobalTheory.KinfCompactness.compactSpace_Kinf E n
+  · have : CompactSpace (Kinf E n) := GlobalTheory.KinfCompactness.compactSpace_Kinf E n
     exact zero_of_powers_compact _ hc hm (Set.range (kI E n)) (isCompact_range (continuous_kI E n)) _
       fun m => ⟨k ^ m, map_pow _ _ _⟩
   · exact zero_of_powers_compact _ hc hm (finGL E n '' (K : Set _))
@@ -1077,7 +1077,7 @@ theorem levelTr_pf : UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.admitted → Z
     refine ⟨φ₀, fun w _ N' hN' b => ?_, Finset.prod_ne_zero_iff.2 fun w hw h0 => ?_⟩
     · rw [h2]
       exact ind_hecke w (N w) N' (hG w).1 (hG w).2.1 hN'
-    · haveI : FiniteDimensional ℂ (fixed (τ w).ρ (N w)) := hAdm E n w (τ w) (N w) (hG w).1
+    · have : FiniteDimensional ℂ (fixed (τ w).ρ (N w)) := hAdm E n w (τ w) (N w) (hG w).1
       have e := hc w hw φ₀ φ₀ fun b => by
         rw [h2]
         exact ind_hecke w (N w) (N w) (hG w).1 (hG w).2.1 le_rfl
@@ -1343,7 +1343,7 @@ private theorem level_term (h1 : ThetaFixedGlobalWeights) (h3 : LevTop) (h6 : To
       rw [hKo.interior_eq]
       exact ⟨1, (Lev S N).one_mem⟩⟩
   let μf : Measure (GF E n) := Measure.haarMeasure K₀
-  haveI : μf.IsHaarMeasure := inferInstance
+  have : μf.IsHaarMeasure := inferInstance
   obtain ⟨Y, ρ, A, cK, hYπ, hfd, hne, hYfix, hact, hsimple, hsq, htw, hcK, htr⟩ :=
     h1 E n hn π hreg hd lamE hlam (Lev S N) hKo hKc hKθ hfix μC μf μ
   obtain ⟨y, v, hv, hyv⟩ := hY μf inferInstance Y ρ A hYπ hfd hne hYfix hact hsimple hsq htw
@@ -1596,7 +1596,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.seenTr_pf :
   obtain ⟨-, -, hKo, hKc, -⟩ := UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.unitHecke E n 0 0 w
   have hNc : IsCompact (N : Set (GLw n w)) :=
     hKc.of_isClosed_subset (Subgroup.isClosed_of_isOpen N hNo) hNK
-  haveI : Finite ((KGL w (n := n) : Subgroup (GLw n w)) ⧸ N.subgroupOf (KGL w (n := n))) :=
+  have : Finite ((KGL w (n := n) : Subgroup (GLw n w)) ⧸ N.subgroupOf (KGL w (n := n))) :=
     GlobalTheory.TwTrLevel.finite_quot (KGL w (n := n)) (KGL w (n := n)) N hKc hKo hNo le_rfl
   have hi : N.relIndex (KGL w (n := n)) ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hiC : ((N.relIndex (KGL w (n := n)) : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hi
@@ -1620,7 +1620,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.seenTr_pf :
     Prod.ext rfl (Subsingleton.elim _ _)
   rw [hcv]
   unfold PositivityTheory.Rg.BcB.G8.seen
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
   rw [hint_fst (KGL w (n := n)) N (KGL w (n := 0)) _ hNK ?_ hi]
   · congr 1
     refine finsum_congr fun q => ?_
@@ -1825,8 +1825,8 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.zSimple_pf :
   have scal : ∀ i, Sl S i → i.1 ∉ Z → ∀ f, IsHecke (N i.1) f →
       ∃ c : ℂ, ∀ x ∈ y.Y, Lw N i.1 i.2 f x = c • x := by
     intro i hi hiZ f hf
-    haveI := y.fd
-    haveI : Nontrivial y.Y := Submodule.nontrivial_iff_ne_bot.2 y.ne
+    have := y.fd
+    have : Nontrivial y.Y := Submodule.nontrivial_iff_ne_bot.2 y.ne
     have hNw : N i.1 = KGL i.1 (n := n) := (hN i.1).2.2.2 hiZ
     let T : Module.End ℂ y.Y := (Lw N i.1 i.2 f).restrict
       (fun x hx => hY E n S Z N hSec hZ hN π y i hi f hf x hx)

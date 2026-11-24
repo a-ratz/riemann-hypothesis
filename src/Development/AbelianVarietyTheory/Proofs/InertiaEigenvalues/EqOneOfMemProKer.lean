@@ -79,7 +79,7 @@ theorem exists_gen_read : TameQuotient → ∀ (F Ω : Type) [Field F] [NumberFi
       rw [hI _ g.2] at this
       exact congrArg Multiplicative.ofAdd this
   have ho : IsOpen (θ.ker : Set (Ine (F := F) A)) :=
-    (isOpen_discrete {0}).preimage (z.2.1.comp continuous_subtype_val)
+    (isOpen_discrete {0}).preimage (z.2.1.comp continuous_subtypeVal)
   have hJ : ∀ σ ∈ ineKer F A l, z.1 σ = 0 := fun σ hσ =>
     eq_one_of_mem_proKer hM θ ho (σ := ⟨σ, ineKer_le_Ine A l hσ⟩) (coe_mem_ineKer.1 hσ)
   refine ⟨fun h0 σ hσ => ?_, fun φ hφ => ?_⟩

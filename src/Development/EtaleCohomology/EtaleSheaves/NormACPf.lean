@@ -105,7 +105,7 @@ theorem NormAC_of (hL : Loc) : NormAC := by
   obtain ⟨V, hV, hz, -⟩ := TopologicalSpace.Opens.isBasis_iff_nbhd.mp P.isBasis_affineOpens
     (show v.fromNormalization z ∈ (⊤ : P.Opens) from trivial)
   refine ⟨v.fromNormalization ⁻¹ᵁ V, hV.preimage _, hz, ?_⟩
-  letI := (v.app V).hom.toAlgebra
+  let := (v.app V).hom.toAlgebra
   exact aic_of_ringEquiv (v.normalizationObjIso hV).commRingCatIsoToRingEquiv.symm
     (aic_integralClosure _ _ (aic_spec_field K hA _))
 

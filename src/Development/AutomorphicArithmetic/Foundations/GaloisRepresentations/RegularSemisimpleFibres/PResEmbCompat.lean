@@ -50,9 +50,9 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 private theorem pow_self_of_alg (k : Type) [Field k] [Finite k] (x : AlgebraicClosure k) :
     ∃ c : ℕ, 2 ≤ c ∧ x ^ c = x := by
   have hx : IsIntegral k x := Algebra.IsIntegral.isIntegral x
-  haveI : FiniteDimensional k (IntermediateField.adjoin k {x}) := IntermediateField.adjoin.finiteDimensional hx
-  haveI : Finite (IntermediateField.adjoin k {x}) := Module.finite_of_finite k
-  haveI : Fintype (IntermediateField.adjoin k {x}) := Fintype.ofFinite _
+  have : FiniteDimensional k (IntermediateField.adjoin k {x}) := IntermediateField.adjoin.finiteDimensional hx
+  have : Finite (IntermediateField.adjoin k {x}) := Module.finite_of_finite k
+  have : Fintype (IntermediateField.adjoin k {x}) := Fintype.ofFinite _
   refine ⟨Fintype.card (IntermediateField.adjoin k {x}), Fintype.one_lt_card, ?_⟩
   have h := FiniteField.pow_card (⟨x, IntermediateField.mem_adjoin_simple_self k x⟩ : IntermediateField.adjoin k {x})
   exact congrArg Subtype.val h
@@ -118,7 +118,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.resEmbCompat :
         rw [valued_completionMap]
         exact pow_le_one' ((val_le_one_iff _ eqv _).1 x.2) _)
   have hf : ∀ x, ((f x : 𝒪[w.1.adicCompletion M]) : w.1.adicCompletion M) = completionMap v w.1 x := fun _ => rfl
-  haveI : IsLocalHom f := ⟨fun a ha => by
+  have : IsLocalHom f := ⟨fun a ha => by
     rw [isUnit_iff_val _ eqw, hf, valued_completionMap] at ha
     rw [isUnit_iff_val _ eqv]
     exact (pow_eq_one_iff.1 ha).resolve_right he0⟩

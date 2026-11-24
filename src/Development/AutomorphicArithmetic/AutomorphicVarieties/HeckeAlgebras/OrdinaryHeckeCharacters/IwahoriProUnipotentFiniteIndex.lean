@@ -52,7 +52,7 @@ open IsLocalRing Matrix UpperTheory.V.Hi
 
 private theorem relIndex_ne_zero_of_cover_ordinary_hecke_characters {G : Type} [Group G] (H K L : Subgroup G) (hHK : H ≤ K) (hLK : L ≤ K)
     (hcov : ∀ k ∈ K, ∃ l ∈ L, ∃ h ∈ H, k = l * h) (hfin : H.relIndex L ≠ 0) : H.relIndex K ≠ 0 := by
-  haveI : (H.subgroupOf L).FiniteIndex := ⟨hfin⟩
+  have : (H.subgroupOf L).FiniteIndex := ⟨hfin⟩
   let f : L ⧸ H.subgroupOf L → K ⧸ H.subgroupOf K :=
     Quotient.map' (fun l => (⟨l, hLK l.2⟩ : K)) (by
       intro a b hab
@@ -67,7 +67,7 @@ private theorem relIndex_ne_zero_of_cover_ordinary_hecke_characters {G : Type} [
       show QuotientGroup.mk _ = QuotientGroup.mk k
       rw [QuotientGroup.eq, Subgroup.mem_subgroupOf]
       simpa [e] using hh
-  haveI := Finite.of_surjective f hf
+  have := Finite.of_surjective f hf
   exact Subgroup.index_ne_zero_of_finite
 
 private theorem iwahori_relIndex_ne_zero {G : Type} [Group G] (I : Iwa G) (c : ℕ) : (I.Iw c).relIndex (I.Iw 0) ≠ 0 := by

@@ -173,22 +173,22 @@ theorem local_mass {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     (m (hermScal (Fv F v) σ s) (latV b v)).toReal = D := by
   classical
   have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Fv F v) := hloc.1
-  haveI : LocallyCompactSpace (Fv F v) := hloc.2.1
-  haveI : SecondCountableTopology (Fv F v) := hloc.2.2.1
-  haveI : T2Space (Fv F v) := hloc.2.2.2.1
-  haveI := hlam.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : IsTopologicalRing (Fv F v) := hloc.1
+  have : LocallyCompactSpace (Fv F v) := hloc.2.1
+  have : SecondCountableTopology (Fv F v) := hloc.2.2.1
+  have : T2Space (Fv F v) := hloc.2.2.2.1
+  have := hlam.1
   obtain ⟨-, -, -, hT2K, -, -, -, hBorW, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
-  haveI := hT2K
+  have := hT2K
   obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b lam hlam.1
   obtain ⟨hLc, hLo, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hCM d b 1 M v
   obtain ⟨hSh, hSl, hSm⟩ := GlobalTheory.CompanionTheory.SW.hermScal_main F E σ hCM (Fv F v) d b
   obtain ⟨-, -, -, hHB, hG⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM (Fv F v) 1
   obtain ⟨g, -, hgram⟩ := hG M J hJ
   obtain ⟨hcm, hcmap⟩ := _root_.GlobalTheory.CompanionTheory.SW.coordW_one_map_coords F E σ hCM (Fv F v) d b M lam hlam.1
-  haveI : BorelSpace (Fin 1 → Fin M → Fv F v ⊗[F] E) := hBorW 1 M
-  haveI : BorelSpace (HermR (Fv F v) σ 1) := hHB
+  have : BorelSpace (Fin 1 → Fin M → Fv F v ⊗[F] E) := hBorW 1 M
+  have : BorelSpace (HermR (Fv F v) σ 1) := hHB
   have hLm : MeasurableSet (latV (M := M) (n := 1) b v) := hLo.measurableSet
   obtain ⟨c, hcdef⟩ : ∃ c : (Fin 1 → Fin M → Fv F v ⊗[F] E) → (Fin M × Fin d → Fv F v),
       c = fun X p => (Algebra.TensorProduct.basis (Fv F v) b).repr (X 0 p.1) p.2 := ⟨_, rfl⟩
@@ -295,7 +295,7 @@ theorem local_mass {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     rw [integral_complex_ofReal, Measure.real, hmass, Complex.real_smul, mul_one] at e
     exact (Complex.ofReal_injective e).symm
   have hsmem : s ∈ {z : Fv F v | Valued.v (z - s) < Valued.v s} := by
-    simpa [zero_lt_iff] using hs0
+    simpa [pos_iff_ne_zero] using hs0
   have hfin := GlobalTheory.CompanionTheory.SW.eq_of_setLIntegral_compact_eq (Fv F v) lam _ (isOpen_ball_sub v s)
     (fun z => ENNReal.ofReal (m (hermScal (Fv F v) σ z) (latV b v)).toReal)
     (fun _ => (D : ℝ≥0∞)) (ENNReal.continuous_ofReal.comp_continuousOn hcont) continuousOn_const

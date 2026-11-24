@@ -236,9 +236,9 @@ theorem exists_depth (hc : CMData F E) {n : ℕ} (U : Subgroup (GL (Fin n) 𝒜)
   have hP := hlt P (Ideal.absNorm_mem _)
   have hP' := hlt (conjPrime₂ P) (by rw [mem_conjP, map_natCast]; exact Ideal.absNorm_mem _)
   have hMv : ∀ Q : HeightOneSpectrum (𝓞 E), 0 < Q.valuation E (M : E) := fun Q =>
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (Nat.cast_ne_zero.2 hM))
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (Nat.cast_ne_zero.2 hM))
   have hqv : ∀ (Q : HeightOneSpectrum (𝓞 E)) (k : ℕ), 0 < Q.valuation E (q ^ k) := fun Q k =>
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (pow_ne_zero _ hq0))
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (pow_ne_zero _ hq0))
   obtain ⟨N₁, hN₁⟩ := exists_pow_lt₀ hP (Units.mk0 _ (hMv P).ne')
   obtain ⟨N₂, hN₂⟩ := exists_pow_lt₀ hP' (Units.mk0 _ (hMv (conjPrime₂ P)).ne')
   have hb : P.valuation E (q ^ (N₁ + N₂ + 1)) ≤ P.valuation E (M : E) := by

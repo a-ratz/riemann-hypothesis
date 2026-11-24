@@ -61,8 +61,8 @@ theorem common_denom {A ι : Type} [CommRing A] [Fintype ι] (S : Subring A) (f 
 
 theorem dvd_of_dvd_idx {R X : Type} [CommRing R] [AddCommGroup X] [Module R X] (A B : Submodule R X) (n q : ℕ)
     (hq : q.Prime) (h0 : idx A B ≠ 0) (hn : ∀ x ∈ B, n • x ∈ A) (hd : q ∣ idx A B) : q ∣ n := by
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : Finite (B.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf B.toAddSubgroup) := Nat.finite_of_card_ne_zero h0
+  have : Fact q.Prime := ⟨hq⟩
+  have : Finite (B.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf B.toAddSubgroup) := Nat.finite_of_card_ne_zero h0
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := B.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf B.toAddSubgroup) q hd
   rw [← hx, addOrderOf_dvd_iff_nsmul_eq_zero]
   induction x using QuotientAddGroup.induction_on with

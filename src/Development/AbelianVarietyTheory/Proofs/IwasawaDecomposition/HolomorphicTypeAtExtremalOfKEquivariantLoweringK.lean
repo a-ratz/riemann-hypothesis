@@ -103,15 +103,15 @@ theorem exists_form (h1 : LowSm M) (h2 : GlobalTheory.IndefiniteRowSideFullHecke
     (τ : D.what₂.Tau) (x : GA D V) :
     ∃ ℓ : M.H τ →L[ℂ] ℂ, ∀ u : lowT M τ, ℓ ((u : M.sm τ) : M.H τ) = U (Function.update e τ u) x := by
   let P := lowKSub (M.ε τ) (M.lam τ) (M.σ τ)
-  haveI : FiniteDimensional ℂ P := (h2 τ).1
-  haveI : CompleteSpace P := FiniteDimensional.complete ℂ P
+  have : FiniteDimensional ℂ P := (h2 τ).1
+  have : CompleteSpace P := FiniteDimensional.completeSpace ℂ P
   let ℓ₀ : P →ₗ[ℂ] ℂ :=
     { toFun := fun y => U (Function.update e τ ⟨⟨y, h1 τ y.2⟩, y.2⟩) x
       map_add' := fun y z => congrFun (U.map_update_add e τ ⟨⟨y, h1 τ y.2⟩, y.2⟩ ⟨⟨z, h1 τ z.2⟩, z.2⟩) x
       map_smul' := fun a y => congrFun (U.map_update_smul e τ a ⟨⟨y, h1 τ y.2⟩, y.2⟩) x }
   refine ⟨(LinearMap.toContinuousLinearMap ℓ₀).comp P.orthogonalProjection, fun u => ?_⟩
   have : P.orthogonalProjection ((u : M.sm τ) : M.H τ) = ⟨_, u.2⟩ :=
-    Submodule.orthogonalProjection_mem_subspace_eq_self (K := P) ⟨_, u.2⟩
+    Submodule.orthogonalProjectionOnto_mem_subspace_eq_self (K := P) ⟨_, u.2⟩
   rw [ContinuousLinearMap.comp_apply, this]
   rfl
 
@@ -220,7 +220,7 @@ theorem holAd_of_kEquiv : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what�
       have ha : M.ε τ a' = false := by rw [ha', hsg]; simp only [decide_eq_false_iff_not]; omega
       have hb : M.ε τ c' = true := by rw [hc', hsg]; simp only [decide_eq_true_eq]; omega
       have h0 := congrFun (hp τ _ (GlobalTheory.IndefiniteRowSideFullHecke.HolomorphicParabolicSmoothFunctions.single_mem_pMinus M τ ha hb) e) (g * L u)
-      rw [if_neg hne]
+      rw [ite_eq_right hne]
       unfold derC
       rw [hder _ p1, hder _ p2]
       exact h0

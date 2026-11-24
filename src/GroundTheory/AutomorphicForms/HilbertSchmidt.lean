@@ -190,14 +190,14 @@ theorem hsNormSq_zero : hsNormSq (0 : H →L[𝕜] K) = 0 := by
   simp [hsNormSq]
 
 theorem hsNormSq_smul (c : 𝕜) (T : H →L[𝕜] K) : hsNormSq (c • T) = ‖c‖ₑ ^ 2 * hsNormSq T := by
-  simp only [hsNormSq, smul_apply, enorm_smul, mul_pow, ENNReal.tsum_mul_left]
+  simp only [hsNormSq, smul_apply, eNorm_smul, mul_pow, ENNReal.tsum_mul_left]
 
 theorem hsNormSq_add_le (S T : H →L[𝕜] K) :
     hsNormSq (S + T) ≤ 2 * hsNormSq S + 2 * hsNormSq T := by
   simp only [hsNormSq, ← ENNReal.tsum_mul_left, ← ENNReal.tsum_add]
   refine ENNReal.tsum_le_tsum fun i => ?_
   calc ‖(S + T) _‖ₑ ^ 2 ≤ (‖S _‖ₑ + ‖T _‖ₑ) ^ 2 := by
-        gcongr; exact enorm_add_le _ _
+        gcongr; exact eNorm_add_le _ _
     _ ≤ _ := ennreal_add_sq_le _ _
 
 theorem hsNormSq_comp_left_le (A : K →L[𝕜] L) (T : H →L[𝕜] K) :
@@ -262,7 +262,7 @@ theorem hasSum_inner_comp_comm {ι κ : Type*} (e : HilbertBasis ι 𝕜 H) (f :
       simp only [← enorm_sq_eq_tsum e, ← hsNormSq_eq_tsum f]
       exact ENNReal.add_ne_top.2 ⟨(hB.adjoint).ne, hA.ne⟩
     · refine ENNReal.tsum_le_tsum fun p => ?_
-      simp only [Function.uncurry, F, enorm_mul]
+      simp only [Function.uncurry, F, eNorm_mul]
       rw [enorm_inner_comm ((B†) (f p.2))]
       exact ennreal_mul_le_sq_add_sq _ _
   have hF : Summable (Function.uncurry F) := by

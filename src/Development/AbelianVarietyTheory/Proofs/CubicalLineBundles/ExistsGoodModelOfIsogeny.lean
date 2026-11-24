@@ -85,17 +85,17 @@ theorem _root_.GlobalTheory.IsogenyModel.exists_flat_closure (T K : Type) [CommR
     ∃ (Ga : Over (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp T)) (io : Ga ⟶ X)
       (e : (Over.pullback (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K))).obj Ga ≅ Z), IsClosedImmersion io.left ∧
       Flat Ga.hom ∧ e.hom ≫ i = (Over.pullback (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K))).map io := by
-  haveI := hi
-  haveI : Flat (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K)) := _root_.GlobalTheory.flat_specMap_localization (nonZeroDivisors T) K
-  haveI : Mono (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K)) := _root_.GlobalTheory.mono_specMap_localization (nonZeroDivisors T) K
+  have := hi
+  have : Flat (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K)) := _root_.GlobalTheory.flat_specMap_localization (nonZeroDivisors T) K
+  have : Mono (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K)) := _root_.GlobalTheory.mono_specMap_localization (nonZeroDivisors T) K
   set u := pullback.fst X.hom (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K)) with hu
   set j := i.left ≫ u with hj
   have hjs : Z.hom ≫ (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K)) = j ≫ X.hom := by
     rw [hj, Category.assoc, hu, pullback.condition, ← Category.assoc]
     congr 1
     exact (Over.w i).symm
-  haveI : QuasiCompact (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K)) := by dsimp [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap]; infer_instance
-  haveI : QuasiCompact j := by rw [hj, hu]; infer_instance
+  have : QuasiCompact (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap T K)) := by dsimp [_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap]; infer_instance
+  have : QuasiCompact j := by rw [hj, hu]; infer_instance
   have hflat : Flat (j.imageι ≫ X.hom) :=
     _root_.GlobalTheory.flat_image_of_over_fractionField j X.hom Z.hom hjs
   have hA : IsPullback i.left j.toImage u j.imageι :=
@@ -130,10 +130,10 @@ theorem _root_.GlobalTheory.IsogenyModel.exists_kernel {G B : Over S} [GrpObj G]
       IsFinite Z.hom ∧ IsPullback i (toUnit Z) f η[B] := by
   have hP := IsPullback.of_hasPullback f η[B]
   have hL := IsPullback.map (Over.forget S) hP
-  haveI : IsClosedImmersion η[B].left :=
+  have : IsClosedImmersion η[B].left :=
     _root_.GlobalTheory.Retract.isClosedImmersion_section (f := 𝟙 S) (r := B.hom) (Over.w η[B])
       (Category.comp_id _)
-  haveI : Mono η[B] := ⟨fun a b _ => toUnit_unique a b⟩
+  have : Mono η[B] := ⟨fun a b _ => toUnit_unique a b⟩
   set i := pullback.fst f η[B] with hi
   have key : ∀ {X : Over S} (a : X ⟶ pullback f η[B]), (a ≫ i) ≫ f = 1 := fun a => by
     rw [Category.assoc, hi, pullback.condition, ← Category.assoc,
@@ -174,12 +174,12 @@ theorem _root_.GlobalTheory.IsogenyModel.exists_iso_of_same_kernel {G A B Z : Ov
     intro X x hx
     have hP := IsPullback.of_hasPullback x q
     have hL := IsPullback.map (Over.forget S) hP
-    haveI : Flat (pullback.fst x q).left :=
+    have : Flat (pullback.fst x q).left :=
       MorphismProperty.of_isPullback (P := @Flat) hL.flip (show Flat q.left from inferInstance)
-    haveI : Surjective (pullback.fst x q).left :=
+    have : Surjective (pullback.fst x q).left :=
       MorphismProperty.of_isPullback (P := @Surjective) hL.flip
         (show Surjective q.left from inferInstance)
-    haveI : Epi (pullback.fst x q) := _root_.GlobalTheory.FlatQuotient.epi_of_flat_surjective _
+    have : Epi (pullback.fst x q) := _root_.GlobalTheory.FlatQuotient.epi_of_flat_surjective _
     have hg : pullback.snd x q ≫ f = toUnit _ ≫ η[B] := by
       rw [← hqβ, ← Category.assoc, ← pullback.condition, Category.assoc, hx, Hom.one_def,
         ← Category.assoc, toUnit_unique (pullback.fst x q ≫ toUnit X) (toUnit _)]
@@ -188,19 +188,19 @@ theorem _root_.GlobalTheory.IsogenyModel.exists_iso_of_same_kernel {G A B Z : Ov
         toUnit_unique (hf.lift _ _ hg ≫ toUnit Z) (toUnit _)]
     rw [← cancel_epi (pullback.fst x q), pullback.condition, hgq, Hom.one_def, ← Category.assoc,
       toUnit_unique (pullback.fst x q ≫ toUnit X) (toUnit _)]
-  haveI : Mono β := ⟨fun a b hab => by
+  have : Mono β := ⟨fun a b hab => by
     have h1 : (a * b⁻¹) ≫ β = 1 := by
       rw [mul_comp, GrpObj.inv_comp, hab, _root_.mul_inv_cancel]
     have h2 := htriv _ h1
     exact (mul_inv_eq_one.mp h2)⟩
-  haveI : Surjective (q.left ≫ β.left) := by
+  have : Surjective (q.left ≫ β.left) := by
     rw [← Over.comp_left, hqβ]; infer_instance
-  haveI : Surjective β.left := Surjective.of_comp q.left β.left
-  haveI : IsProper (β.left ≫ B.hom) := by rw [Over.w β]; infer_instance
-  haveI : IsProper β.left := IsProper.of_comp β.left B.hom
-  haveI : IsClosedImmersion β.left :=
+  have : Surjective β.left := Surjective.of_comp q.left β.left
+  have : IsProper (β.left ≫ B.hom) := by rw [Over.w β]; infer_instance
+  have : IsProper β.left := IsProper.of_comp β.left B.hom
+  have : IsClosedImmersion β.left :=
     (IsClosedImmersion.iff_isProper_and_mono (f := β.left)).mpr ⟨inferInstance, inferInstance⟩
-  haveI : IsIso β.left := isIso_of_isClosedImmersion_of_surjective β.left
+  have : IsIso β.left := isIso_of_isClosedImmersion_of_surjective β.left
   refine ⟨Over.isoMk (asIso β.left) (Over.w β), ?_, ?_⟩
   · have : (Over.isoMk (asIso β.left) (Over.w β)).hom = β := by ext1; rfl
     rw [this]; exact hβ

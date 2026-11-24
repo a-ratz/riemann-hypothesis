@@ -457,8 +457,8 @@ theorem isClosed_siegelOf [T2Space A] (h : Continuous mat) : IsClosed (siegelOf 
 theorem continuous_leviOf (h : Continuous mat) : Continuous (leviOf e mat) := by
   have h1 : Continuous fun M : Matrix ι ι A => leviMat e M :=
     continuous_matrix fun i j => (continuous_id.matrix_elem _ _).add (continuous_id.matrix_elem _ _)
-  exact Units.continuous_iff.2 ⟨h1.comp (Units.continuous_val.comp (h.comp continuous_subtype_val)),
-    (h1.comp (Units.continuous_coe_inv.comp (h.comp continuous_subtype_val))).congr fun p => by
+  exact Units.continuous_iff.2 ⟨h1.comp (Units.continuous_val.comp (h.comp continuous_subtypeVal)),
+    (h1.comp (Units.continuous_coe_inv.comp (h.comp continuous_subtypeVal))).congr fun p => by
       rw [← map_inv, val_leviOf, Subgroup.coe_inv, map_inv]; rfl⟩
 
 theorem continuous_aOf (h : Continuous mat) : Continuous (aOf e mat) :=

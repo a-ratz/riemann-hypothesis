@@ -80,7 +80,7 @@ theorem isPrime_map (hJ : J.IsPrime) (hq : q ∈ zeroSet J) :
   IsLocalization.isPrime_of_isPrime_disjoint (RingHom.ker (eval q)).primeCompl _ J hJ (disjoint_primeCompl hq)
 
 theorem isDomain (hJ : J.IsPrime) (hq : q ∈ zeroSet J) : IsDomain (curveLocalRing J q) := by
-  haveI := isPrime_map hJ hq
+  have := isPrime_map hJ hq
   exact Ideal.Quotient.isDomain _
 
 theorem algebraMap_eq_zero_iff (hJ : J.IsPrime) (hq : q ∈ zeroSet J) (f : MvPolynomial (Fin n) ℂ) :
@@ -368,16 +368,16 @@ theorem exists_locToFrac (hJ : J.IsPrime) (hq : q ∈ zeroSet J) (x : FractionRi
     (hx : IsIntegral (curveLocalRing J q) x) : ∃ z, locToFrac M hJ hq z = x := by
   have := isDomain hJ hq
   have := M.isPrime
-  haveI : IsIntegrallyClosed (MvPolynomial (Fin n ⊕ Fin M.m) ℂ ⧸ M.ideal) := M.isIntegrallyClosed
-  letI : Algebra (Localization (normalModelSubmonoid M q)) (FractionRing (curveLocalRing J q)) :=
+  have : IsIntegrallyClosed (MvPolynomial (Fin n ⊕ Fin M.m) ℂ ⧸ M.ideal) := M.isIntegrallyClosed
+  let : Algebra (Localization (normalModelSubmonoid M q)) (FractionRing (curveLocalRing J q)) :=
     (locToFrac M hJ hq).toAlgebra
   have hinj := locToFrac_injective M hJ hq
-  haveI : IsDomain (Localization (normalModelSubmonoid M q)) :=
+  have : IsDomain (Localization (normalModelSubmonoid M q)) :=
     Function.Injective.isDomain (locToFrac M hJ hq) hinj
-  haveI : IsIntegrallyClosed (Localization (normalModelSubmonoid M q)) :=
+  have : IsIntegrallyClosed (Localization (normalModelSubmonoid M q)) :=
     isIntegrallyClosed_of_isLocalization _ (normalModelSubmonoid M q)
       (fun s hs => mem_nonZeroDivisors_of_ne_zero (fun h0 => zero_not_mem_normalModelSubmonoid M q hq (h0 ▸ hs)))
-  haveI : IsFractionRing (Localization (normalModelSubmonoid M q)) (FractionRing (curveLocalRing J q)) := by
+  have : IsFractionRing (Localization (normalModelSubmonoid M q)) (FractionRing (curveLocalRing J q)) := by
     refine (isLocalization_iff _ _).2 ⟨?_, ?_, ?_⟩
     · intro y
       refine isUnit_iff_ne_zero.2 (fun h0 => nonZeroDivisors.coe_ne_zero y ?_)
@@ -422,18 +422,18 @@ theorem NormalisationModelLocalization.proof : NormalisationModelLocalization.St
     apply Subtype.ext
     change toFrac J q f = locToFrac M hJ hq (algebraMap _ _ (Ideal.Quotient.mk M.ideal (rename Sum.inl f)))
     rw [locToFrac_algebraMap, modelToFrac_mk, toFracModel_rename]
-  · haveI := curveLocalRing_subsingleton J q hq
-    haveI : Subsingleton (FractionRing (curveLocalRing J q)) :=
+  · have := curveLocalRing_subsingleton J q hq
+    have : Subsingleton (FractionRing (curveLocalRing J q)) :=
       IsLocalization.subsingleton (M := nonZeroDivisors (curveLocalRing J q))
         (by rw [Subsingleton.elim (0 : curveLocalRing J q) 1]; exact one_mem _)
-    haveI : Subsingleton (curveNormalisation J q) :=
+    have : Subsingleton (curveNormalisation J q) :=
       ⟨fun a b => Subtype.ext (Subsingleton.elim (α := FractionRing (curveLocalRing J q)) _ _)⟩
     have h0 : (0 : MvPolynomial (Fin n ⊕ Fin M.m) ℂ ⧸ M.ideal) ∈ normalModelSubmonoid M q := by
       simp only [zeroSet, Set.mem_ofPred_eq, not_forall] at hq
       obtain ⟨g, hg, hgq⟩ := hq
       have h1 := mk_rename_mem_normalModelSubmonoid M q g hgq
       rwa [Ideal.Quotient.eq_zero_iff_mem.2 ((rename_mem_iff M g).2 hg)] at h1
-    haveI : Subsingleton (Localization (normalModelSubmonoid M q)) := IsLocalization.subsingleton h0
+    have : Subsingleton (Localization (normalModelSubmonoid M q)) := IsLocalization.subsingleton h0
     let e : curveNormalisation J q ≃+* Localization (normalModelSubmonoid M q) :=
       { toFun := fun _ => 0
         invFun := fun _ => 0

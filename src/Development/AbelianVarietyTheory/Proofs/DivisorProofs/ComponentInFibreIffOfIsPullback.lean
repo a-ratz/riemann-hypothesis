@@ -73,7 +73,7 @@ theorem component_in_fibre_iff_of_isPullback :
       (q : Y ⟶ X) (y₀ : Y), IsPullback q g f (S.fromSpecResidueField s) → q y₀ = e s →
       ∀ y : Y, q y ∈ connectedComponentIn (f ⁻¹' {s}) (e s) ↔ y ∈ connectedComponent y₀ := by
   intro X S f e s Y g q y₀ hP h0 y
-  haveI : IsPreimmersion q :=
+  have : IsPreimmersion q :=
     MorphismProperty.of_isPullback (P := @IsPreimmersion) hP.flip inferInstance
   have hq : Topology.IsEmbedding q := q.isEmbedding
   have hr : Set.range q = f ⁻¹' {s} := by

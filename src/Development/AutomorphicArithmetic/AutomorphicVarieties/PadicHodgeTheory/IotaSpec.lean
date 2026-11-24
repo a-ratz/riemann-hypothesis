@@ -70,8 +70,8 @@ def iota (j : Ω →+* Om v) : GQ v →* G ℚ Ω :=
       map_mul' := fun _ _ => rfl }
 
 theorem iota_spec (j : Ω →+* Om v) (σ : GQ v) (y : Ω) : j (iota j σ y) = σ (j y) := by
-  letI : Algebra Ω (Om v) := j.toAlgebra
-  haveI : IsScalarTower ℚ Ω (Om v) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  let : Algebra Ω (Om v) := j.toAlgebra
+  have : IsScalarTower ℚ Ω (Om v) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
   exact AlgEquiv.restrictNormal_commutes (σ.restrictScalars ℚ) Ω y
 
 theorem exists_emb : Nonempty (Ω →+* Om v) := ⟨(IsAlgClosed.lift (R := ℚ) (S := Ω) (M := Om v)).toRingHom⟩

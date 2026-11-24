@@ -103,7 +103,7 @@ private theorem quot_of_sub {T J : Type} [CommGroup T] [AddCommGroup J] [Module 
   let W : Submodule ℂ J := Submodule.span ℂ {z | ∃ t x, z = τ t x - (χ t : ℂ) • x}
   have hW : W ≠ ⊤ := by
     intro hW
-    letI : Module (MonoidAlgebra ℂ T) J := Module.compHom J τ.asAlgebraHom.toRingHom
+    let : Module (MonoidAlgebra ℂ T) J := Module.compHom J τ.asAlgebraHom.toRingHom
     have hsm : ∀ (r : MonoidAlgebra ℂ T) (x : J), r • x = τ.asAlgebraHom r x := fun _ _ => rfl
     have hc : ∀ (c : ℂ) (x : J), c • x = (algebraMap ℂ (MonoidAlgebra ℂ T) c) • x := fun c x => by
       rw [hsm, AlgHom.commutes]; rfl
@@ -382,15 +382,15 @@ section Loc
 variable {F : Type} [Field F] [NumberField F] (w : HeightOneSpectrum (𝓞 F))
 private theorem cent (σ : SmIrr (GL (Fin 2) (w.adicCompletion F))) : ∃ ω : (w.adicCompletion F)ˣ →* ℂˣ,
     ∀ z y, σ.ρ (Matrix.GeneralLinearGroup.scalar (Fin 2) z) y = (ω z : ℂ) • y := by
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   obtain ⟨ω, -, hω⟩ := GlobalTheory.LocGL.exists_smooth_hasCentralChar σ.smooth σ.irred
   exact ⟨ω, hω⟩
 private theorem reps : ∃ S : Finset (w.adicCompletionIntegers F),
     Set.BijOn (IsLocalRing.residue _) (S : Set (w.adicCompletionIntegers F)) Set.univ ∧ S.card = normV w := by
   classical
-  haveI := Formalism.UG.P.glint_finite_residueField w
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField (w.adicCompletionIntegers F))
+  have := Formalism.UG.P.glint_finite_residueField w
+  let := Fintype.ofFinite (IsLocalRing.ResidueField (w.adicCompletionIntegers F))
   choose s hs using (IsLocalRing.residue_surjective (R := w.adicCompletionIntegers F))
   have hsi : Function.Injective s := Function.RightInverse.injective hs
   refine ⟨Finset.univ.image s, ⟨fun _ _ => trivial, ?_, fun r _ => ⟨s r, by simp, hs r⟩⟩, ?_⟩
@@ -434,7 +434,7 @@ private theorem tors (σ : SmIrr (GL (Fin 2) (w.adicCompletion F))) (a : w.adicC
   exact ⟨_ ^ m, pow_ne_zero _ (GlobalTheory.LocalData.resChar_prime w).ne_zero, by rw [Nat.cast_pow]; exact hm⟩
 private theorem fin_orb (σ : SmIrr (GL (Fin 2) (w.adicCompletion F))) (y : σ.V) :
     (Set.range fun x : w.adicCompletionIntegers F => σ.ρ (aff 1 (x : w.adicCompletion F)) y).Finite := by
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F w
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F w
   refine IsLocallyConstant.range_finite ((IsLocallyConstant.iff_eventually_eq _).2 fun x => ?_)
   have h1 : Continuous fun z : w.adicCompletionIntegers F => (z : w.adicCompletion F) - x := by fun_prop
   filter_upwards [((open_stab σ y).preimage h1).mem_nhds (x := x) (by simp [aff_one])] with z hz
@@ -460,7 +460,7 @@ theorem UpperTheory.V.Sd.jacqOfU_alt :
   obtain ⟨ω, hω⟩ := cent w σ
   obtain ⟨S, hS, hcard⟩ := reps w
   have hsum := (uopSum F w σ.V σ.ρ c v hfix).2 _ hS
-  rw [if_neg hc, add_zero, hU] at hsum
+  rw [ite_eq_right hc, add_zero, hU] at hsum
   have hπ : Valued.v ((atFin w (unif w) : (w.adicCompletion F)ˣ) : w.adicCompletion F) = WithZero.exp (-1 : ℤ) :=
     unif_spec w
   rw [← hcard]

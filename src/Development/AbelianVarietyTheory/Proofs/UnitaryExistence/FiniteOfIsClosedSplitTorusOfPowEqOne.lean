@@ -97,7 +97,7 @@ theorem splitTorusPoint_bijective :
     have h1 := congrArg (·.left) h
     simp only [splitTorusPoint_left] at h1
     have h2 := Spec.map_injective ((cancel_mono _).1 h1)
-    exact torusEval_bijective.1 (AlgHom.coe_ringHom_injective (congrArg (·.hom) h2))
+    exact torusEval_bijective.1 (AlgHom.toRingHom_injective (congrArg (·.hom) h2))
   · intro x
     let g : Spec (.of k) ⟶ Spec (.of (AddMonoidAlgebra k X)) := x.left ≫ (torusIso k X).inv
     have hg : CommRingCat.ofHom (algebraMap k (AddMonoidAlgebra k X)) ≫ Spec.preimage g = 𝟙 _ := by
@@ -157,7 +157,7 @@ theorem torusEvalInt_mul (s t : Multiplicative X →* kˣ) :
     WithConv.toConv (torusEvalInt (s * t)) =
       WithConv.toConv (torusEvalInt s) * WithConv.toConv (torusEvalInt t) := by
   apply WithConv.ofConv_injective
-  apply AlgHom.coe_ringHom_injective
+  apply AlgHom.toRingHom_injective
   refine ringHom_ext_ZU fun y => ?_
   simp [torusEvalInt, AlgHom.convMul_def]
 
@@ -194,7 +194,7 @@ theorem finite_of_isClosed_splitTorus_of_pow_eq_one :
         (Z : Set (splitTorus (Sp k) X).left), IsClosed Z → (∀ x, x ∈ C ↔ Set.range x.left ⊆ Z) →
         (∀ x ∈ C, x ^ n = 1 → x = 1) → Finite C := by
   intro k _ _ X _ _ _ n hp hn C Z hZ hC htors
-  haveI : NeZero (n : k) := ⟨hn⟩
+  have : NeZero (n : k) := ⟨hn⟩
   let e := splitTorusPointEquiv (k := k) (X := X)
   have hcl : @IsClosed _ (torusZariski k X)
       (C.comap e.toMonoidHom : Set (Multiplicative X →* kˣ)) := by

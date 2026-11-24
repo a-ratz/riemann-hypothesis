@@ -183,7 +183,7 @@ theorem UpperTheory.Lit.Full.count :
       show GlobalTheory.CompanionTheory.Hypotheses₂.RankOne.msum m = S ↔ msupp (Finsupp.toMultiset m) = S
       rw [count_msupp]
   have hfin := count_mseg_finite S
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   exact ⟨Set.finite_coe_iff.1 (Finite.of_equiv _ (f.trans g).symm), hfin, Set.ncard_congr' (f.trans g)⟩
 end -- clump:auto
 end -- clump:auto
@@ -228,7 +228,7 @@ open Filter Topology GlobalTheory.PRep GlobalTheory.SplitWeil GlobalTheory.SmGL 
 private theorem exists_isAtom {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] [Nontrivial V]
     (π : Representation ℂ G V) (hfl : HasFiniteLength π) : ∃ S : Subrepresentation π, IsAtom S := by
   obtain ⟨hGT, hLT⟩ := (hasFiniteLength_iff_wellFounded _).1 hfl
-  haveI : IsAtomic (Subrepresentation π) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
+  have : IsAtomic (Subrepresentation π) := isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
   have hnt : (⊤ : Subrepresentation π) ≠ ⊥ := fun hb => by
     obtain ⟨u, hu⟩ := exists_ne (0 : V)
     have h1 : u ∈ (⊥ : Subrepresentation π) := hb ▸ trivial
@@ -245,7 +245,7 @@ theorem UpperTheory.Lit.Full.socle :
   have hsρ : IsSmooth (piTensor fun a => (![y, z] a).rep) := isSmooth_piTensor fun a => (![y, z] a).2.rep.smooth
   refine ⟨?_, fun N hd hjm x x' hx hx' => ?_⟩
   · have hd : ∑ a, (![y, z] a).1 = ∑ a, (![y, z] a).1 := rfl
-    haveI := GlobalTheory.CompanionTheory.SocleJm.nontrivial_indSp (stdBlocks (fun a => (![y, z] a).1) hd) hρ hsρ
+    have := GlobalTheory.CompanionTheory.SocleJm.nontrivial_indSp (stdBlocks (fun a => (![y, z] a).1) hd) hρ hsρ
     obtain ⟨S, hS⟩ := exists_isAtom (prodIrr ![y, z] hd)
       ((hBZ k).2.2.1 _ _ _ _ _ _ hsρ (hasFiniteLength_of_isIrreducible hρ))
     let ι : S.toRepresentation.IntertwiningMap (prodIrr ![y, z] hd) := ⟨S.toSubmodule.subtype, fun _ => rfl⟩
@@ -351,7 +351,7 @@ private theorem cell (hG : GlobalTheory.Published.GeometricLemma) (hBZ : GlobalT
   obtain ⟨hd', f', hf'⟩ := h'
   have hτ : (piTensor fun j => (![y', z'] j).rep).IsIrreducible :=
     _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun j => (![y', z'] j).2.rep
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : x.2.rep.V)
   have h1 := GlobalTheory.CompanionTheory.SocleJm.one_le_jhMult_jac (stdBlocks (fun a => (![y', z'] a).1) hd') hτ f'
     ⟨v, fun e => hv (hf' (e.trans (map_zero f').symm))⟩
@@ -418,7 +418,7 @@ private theorem ncard_pairs {A : Type u} {X : Type v} [DecidableEq A] (s : X →
       ⋃ q ∈ ((S.antidiagonal.toFinset.filter (fun q => a ∉ q.1) : Finset _) : Set (Multiset A × Multiset A)),
         {x | s x = q.1} ×ˢ {x | R x ∧ s x = q.2} := by
     ext p
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion, Finset.coe_filter, Multiset.mem_toFinset,
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Finset.coe_filter, Multiset.mem_toFinset,
       Multiset.mem_antidiagonal, Set.mem_prod]
     constructor
     · rintro ⟨h1, h2, h3⟩
@@ -497,14 +497,14 @@ private theorem count_msupp {ρ : IrrGL (k := k)} (hρ : ρ.IsCusp) {Δ : Segmen
     have hp := Δ.len_pos
     by_cases e : Δ = D
     · subst e
-      rw [if_pos (by omega), if_neg (by omega), if_pos rfl]
+      rw [ite_eq_left (by omega), ite_eq_right (by omega), ite_eq_left rfl]
       omega
     · have hl : Δ.len ≠ D.len := fun e' => e (Segment.ext_first (h.trans hD.symm) e')
-      rw [if_neg e]
+      rw [ite_eq_right e]
       by_cases e2 : Δ.len < D.len
-      · rw [if_pos (by omega), if_pos e2]
+      · rw [ite_eq_left (by omega), ite_eq_left e2]
         omega
-      · rw [if_neg (by omega), if_neg e2]
+      · rw [ite_eq_right (by omega), ite_eq_right e2]
         omega
 
 private theorem start_unique {ρ : IrrGL (k := k)} (hρ : ρ.IsCusp) {𝔪 𝔫 : Multiset (Segment k)}
@@ -603,7 +603,7 @@ theorem UpperTheory.Lit.Full.redUnique :
   have h0 : {𝔪 : Multiset (Segment k) | msupp 𝔪 = 0}.ncard = 1 := by
     refine Set.ncard_eq_one.2 ⟨0, ?_⟩
     ext 𝔪
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     refine ⟨fun h => Multiset.eq_zero_of_forall_notMem fun D hD => ?_, fun h => by simp [h, msupp]⟩
     have : D.first ∈ msupp 𝔪 := mem_msupp.2 ⟨D, hD, first_mem D⟩
     simp [h] at this

@@ -136,7 +136,7 @@ theorem idealOf_class (𝔟 : Frac F) (b : NZ (𝔟 : FractionalIdeal (𝓞 F)�
     apply Units.ext
     rw [FractionalIdeal.coe_mk0, Units.val_mul, coe_toPrincipalIdeal, Units.val_mk0, idealOf_coe]
   have hp : ClassGroup.mk F (toPrincipalIdeal (𝓞 F) F (Units.mk0 b.1 hb)) = 1 := by
-    rw [ClassGroup.mk_eq_one_iff, coe_toPrincipalIdeal, FractionalIdeal.coe_spanSingleton]
+    rw [ClassGroup.mk_eq_one_iff, coe_toPrincipalIdeal, FractionalIdeal.coeToSubmodule_spanSingleton]
     exact ⟨⟨_, rfl⟩⟩
   rw [h, map_mul, hp, one_mul]
 
@@ -165,7 +165,7 @@ theorem exists_of_class (𝔟 : Frac F) (J : (Ideal (𝓞 F))⁰) (hJ : ClassGro
       FractionalIdeal.spanSingleton (𝓞 F)⁰ x := by
     apply FractionalIdeal.coeToSubmodule_injective
     beta_reduce
-    rw [FractionalIdeal.coe_spanSingleton]; exact hx
+    rw [FractionalIdeal.coeToSubmodule_spanSingleton]; exact hx
   rw [Units.val_mul, FractionalIdeal.coe_mk0] at hx'
   have hx0 : x ≠ 0 := by
     rintro rfl
@@ -895,8 +895,8 @@ theorem poisson : ∀ (F : Type) [Field F] [NumberField F] [NumberField.IsTotall
   classical
   set A : FractionalIdeal (𝓞 F)⁰ F := (𝔞 : FractionalIdeal (𝓞 F)⁰ F) with hA
   have hA0 : A ≠ 0 := 𝔞.ne_zero
-  haveI : DiscreteTopology (latOf A) := discrete_latOf F A
-  haveI : IsZLattice ℝ (latOf A) := isZLattice_latOf F A hA0
+  have : DiscreteTopology (latOf A) := discrete_latOf F A
+  have : IsZLattice ℝ (latOf A) := isZLattice_latOf F A hA0
   set L := latOf A with hL
   have hdual : Formalism.H.dual L = latOf (latM 𝔞) := by
     rw [hL, dual_latOf_eq_latOf_traceDual F A hA0, latM_eq_dual]
@@ -904,7 +904,7 @@ theorem poisson : ∀ (F : Type) [Field F] [NumberField F] [NumberField.IsTotall
     rw [hL, GlobalTheory.LipschitzCovol.covolume_latOf F A hA0, GlobalTheory.IndefiniteRowSideFullHecke.TraceDualDifferent.covol, omegaFactor, dF, nrm,
       Real.sqrt_eq_rpow]
   obtain ⟨h1, h2⟩ := Formalism.H.dualIsLattice (RSp F) L
-  haveI : DiscreteTopology (Formalism.H.dual L) := h1
+  have : DiscreteTopology (Formalism.H.dual L) := h1
 
   have hyτ : ∀ τ : Emb F, τ b * (z τ).im ≠ 0 := fun τ => mul_ne_zero ((map_ne_zero τ).2 hb) (hz τ).ne'
   set g : Emb F → ℝ → ℂ := fun τ t =>
@@ -934,8 +934,8 @@ theorem poisson : ∀ (F : Type) [Field F] [NumberField F] [NumberField.IsTotall
       obtain ⟨C, hC⟩ := hTrans_decay σ hσ _ (hyτ τ) N
       exact ⟨C, fun t => (hgn τ t).symm ▸ hC t⟩
   obtain ⟨hint, hsumx, hGc, hGper⟩ := Formalism.H.poisson_periodization (RSp F) L Ψ hΨc (N : ℝ) hbN hΨO
-  haveI : Module.Free ℤ L := ZLattice.module_free ℝ L
-  haveI : Module.Finite ℤ L := ZLattice.module_finite ℝ L
+  have : Module.Free ℤ L := ZLattice.module_free ℝ L
+  have : Module.Finite ℤ L := ZLattice.module_finite ℝ L
   have hD := ZLattice.isAddFundamentalDomain (Module.Free.chooseBasis ℤ L) (volume : Measure (RSp F))
   set D := ZSpan.fundamentalDomain ((Module.Free.chooseBasis ℤ L).ofZLatticeBasis ℝ L)
   have hcoef : ∀ μ : Formalism.H.dual L, (∫ y in D, (∑' l : L, Ψ ((l : RSp F) + y)) *
@@ -1200,15 +1200,15 @@ theorem pow_mem_range (u : (𝓞 (Ext F))ˣ) :
   refine ⟨⟨A, B, hAB, by rw [mul_comm]; exact hAB⟩, ?_⟩
   apply Units.ext
   apply RingOfIntegers.ext
-  simp only [RingHom.toMonoidHom_eq_coe, Units.coe_map, MonoidHom.coe_coe, Units.val_pow_eq_pow_val]
+  simp only [RingHom.toMonoidHom_eq_coe, Units.coe_map, MonoidHom.coe_ofClass, Units.val_pow_eq_pow_val]
   rw [show (((u : 𝓞 (Ext F)) ^ m : 𝓞 (Ext F)) : Ext F) = x ^ m by simp [x], ← ha]
   rfl
 
 theorem finite_quot : Finite ((NumberField.RingOfIntegers (GlobalTheory.GaussExt.Ext F))ˣ ⧸
     (Units.map (algebraMap (NumberField.RingOfIntegers F)
       (NumberField.RingOfIntegers (GlobalTheory.GaussExt.Ext F))).toMonoidHom).range) := by
-  haveI : Group.FG (𝓞 (Ext F))ˣ := Group.fg_iff_monoid_fg.2 inferInstance
-  refine CommGroup.finite_of_fg_torsion _ fun q => ?_
+  have : Group.FG (𝓞 (Ext F))ˣ := Group.fg_iff_monoid_fg.2 inferInstance
+  refine CommGroup.finite_of_fg_isMulTorsion _ fun q => ?_
   obtain ⟨u, rfl⟩ := QuotientGroup.mk_surjective q
   obtain ⟨m, hm, hu⟩ := pow_mem_range F u
   refine isOfFinOrder_iff_pow_eq_one.2 ⟨m, hm, ?_⟩
@@ -1358,7 +1358,7 @@ theorem summable_norm_rpow (𝔞 𝔟 : Frac F) {t : ℝ} (ht : 1 < t)
     intro c
     have hex : ∃ x, Ideal.span {y c} = Ideal.span {x} := ⟨y c, rfl⟩
     refine Ideal.span_singleton_eq_span_singleton.1 ?_
-    simp only [rep, dif_pos hex]
+    simp only [rep, dite_eq_left hex]
     exact hex.choose_spec.symm
   choose u hu using hrep
   let Q := (𝓞 (Ext F))ˣ ⧸ (Units.map (algebraMap (𝓞 F) (𝓞 (Ext F))).toMonoidHom).range
@@ -1387,7 +1387,7 @@ theorem summable_norm_rpow (𝔞 𝔟 : Frac F) {t : ℝ} (ht : 1 < t)
       linear_combination h4
     obtain ⟨e1, e2⟩ := eq_zero_of_add_mul_ii h5
     exact (Quotient.out_equiv_out.1 ⟨η, by linear_combination e1, by linear_combination e2⟩)
-  haveI := hQ
+  have := hQ
   have hS : Summable (fun p : Ideal (𝓞 (Ext F)) × Q => ((Ideal.absNorm p.1 : ℕ) : ℝ) ^ (-t) * (fun _ : Q => (1 : ℝ)) p.2) :=
     (ReciprocityTheory.Cheb.summable_absNorm_rpow_ideal (Ext F) ht).mul_of_nonneg (Summable.of_finite)
       (fun J => Real.rpow_nonneg (Nat.cast_nonneg _) _) (fun _ => zero_le_one)
@@ -1619,7 +1619,7 @@ theorem split_zero (I : FractionalIdeal (𝓞 F)⁰ F) (g : F → ℂ) (h : Summ
   rw [← he.tsum_eq]
   · refine tsum_congr fun ν => ?_
     have : e ν ≠ ⟨0, h0⟩ := fun h' => ν.2.2 (congrArg Subtype.val h' : _)
-    simp only [this, if_false, e]
+    simp only [this, ite_false, e]
   · intro x hx
     have hx0 : x ≠ ⟨0, h0⟩ := by
       intro h'; apply hx; simp [h']
@@ -1682,7 +1682,7 @@ theorem gFun_eq_eisSum : ∀ (F : Type) [Field F] [NumberField F] [NumberField.I
     tsum_congr fun c => by simp [eisTerm, latPt]
   rw [hA]
   unfold gFun bZero bOne
-  rw [if_neg hσ0]
+  rw [ite_eq_right hσ0]
   ring
 
 end GlobalTheory.HeckeTwoEq

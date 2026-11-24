@@ -601,7 +601,7 @@ theorem realZeta : GlobalTheory.Published.HarishChandraModules → ∀ D : D7, G
     set Hf : GinfC s.V → ℝ := fun g => ∏ w, GlobalTheory.IndefiniteRowSideFullHecke.SphericalVolumeLift.hgtW s.V a w
       (GlobalTheory.AdelicU.projArch D.sp.cm.sig s.V.gram w (g : GA D s.V)) with hHf
     have hHc : Continuous Hf := continuous_finsetProd _ fun w _ =>
-      (GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).1.comp ((GlobalTheory.AdelicU.continuous_projArch _ _ w).comp continuous_subtype_val)
+      (GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).1.comp ((GlobalTheory.AdelicU.continuous_projArch _ _ w).comp continuous_subtypeVal)
     have hHpos : ∀ g, 0 < Hf g ∧ Hf g ≤ 1 := fun g =>
       ⟨Finset.prod_pos fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).1,
         Finset.prod_le_one₀ (fun w _ => ((GlobalTheory.T.doublingHeightAtRealPlace_continuous_pos_le_one D s.V a ha w).2 _).1.le)
@@ -829,12 +829,12 @@ theorem stepLevLawT (D : D7) (c : Com D) (hc : c.Is) (k : ℕ) (hk : k < D.R.m) 
           fun H' => GlobalTheory.SplitHecke.isHalf_actO _ _ H'⟩
       by_cases hx : IsHalf e x ∧ IsIntM (frMapO s.V s'.V s.β s'.β x)
       · beta_reduce
-        rw [if_pos hx, if_pos ⟨i0.2 hx.1, i1.2 hx.2⟩, funext (i2 hx.2), StepLevLaw.omegaQ_empty, StepLevLaw.omegaQ_empty,
+        rw [ite_eq_left hx, ite_eq_left ⟨i0.2 hx.1, i1.2 hx.2⟩, funext (i2 hx.2), StepLevLaw.omegaQ_empty, StepLevLaw.omegaQ_empty,
           mul_one, mul_one]
         simp only [map_one, redFn_one, Units.val_one, Matrix.mul_one]
         exact hoT (fun PP => redM PP (frMapO s.V s'.V s.β s'.β x))
       · beta_reduce
-        rw [if_neg hx, if_neg fun H' => hx ⟨i0.1 H'.1, i1.1 H'.2⟩, mul_zero])
+        rw [ite_eq_right hx, ite_eq_right fun H' => hx ⟨i0.1 H'.1, i1.1 H'.2⟩, mul_zero])
   rw [h2]
   congr 1
   have hchi : (Lev.datY s'.V.rank D.R.r D.R.t (k + 1) hr' c.Pg ∅ c.P c.chi ξ2 Lev.Frm.B).P.chi ⟨_, hlev.2⟩ =
@@ -973,7 +973,7 @@ theorem ontoAll_of_chainUp : ∀ D : D7, FinDim D → MetEx D → EigSpan D → 
   obtain ⟨hs, hadj⟩ := hUp hGap c hc s₀ hs₀ k hk s Θ hR
   obtain ⟨ipD₀, ip₀, hm₀⟩ := hMet c hc 0 (Nat.zero_le _) s₀ hs₀
   obtain ⟨ipD, ip, hm⟩ := hMet c hc k hk s hs
-  haveI : FiniteDimensional ℂ (s₀.CC c) := hFin c hc 0 (Nat.zero_le _) s₀ hs₀
+  have : FiniteDimensional ℂ (s₀.CC c) := hFin c hc 0 (Nat.zero_le _) s₀ hs₀
   let Sab := GlobalTheory.LFun.above D.host.E (c.S : Set (HeightOneSpectrum (𝓞 D.host.F)))
   let R : GlobalTheory.LFun.Fam D.host.E → GlobalTheory.LFun.Fam D.host.E → Prop := fun B B' => ∀ w ∉ Sab, B w = B' w
   have hRe : Equivalence R :=

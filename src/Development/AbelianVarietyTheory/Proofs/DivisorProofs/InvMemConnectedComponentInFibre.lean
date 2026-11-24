@@ -51,7 +51,7 @@ namespace GlobalTheory
 theorem inv_mem_connectedComponentIn_fibre (S : Scheme.{0}) (G : Over S) [GrpObj G] (y : G.left)
     (hy : y ∈ {x : G.left | x ∈ connectedComponentIn (G.hom ⁻¹' {G.hom x}) ((η[G]).left (G.hom x))}) :
     (ι[G]).left y ∈ {x : G.left | x ∈ connectedComponentIn (G.hom ⁻¹' {G.hom x}) ((η[G]).left (G.hom x))} := by
-  simp only [Set.mem_setOf_eq] at hy ⊢
+  simp only [Set.mem_ofPred_eq] at hy ⊢
   have hw : ∀ z : G.left, G.hom ((ι[G]).left z) = G.hom z := by
     intro z
     have h := Over.w (ι[G])

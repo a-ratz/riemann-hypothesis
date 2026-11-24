@@ -133,8 +133,8 @@ theorem cont_chiRat (c : ℕ) (x : Fin 1 → Br.LL D.nbr i w hw) :
     Continuous fun g => matRep (Br.loc D.nbr i w hw (chiRatO D.nd i c)) g x := by
   simp only [act_chiRat]
   have hs : Continuous fun g : Br.G D.nbr i w hw => decS D.nd w (Br.iota D.nbr i w hw g) :=
-    continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw)
-  have hL : Continuous (D.nbr i w hw).toLL := continuous_subtype_val.comp (D.nbr i w hw).eO_cont
+    continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw)
+  have hL : Continuous (D.nbr i w hw).toLL := continuous_subtypeVal.comp (D.nbr i w hw).eO_cont
   have h1 : Continuous fun g : Br.G D.nbr i w hw => (D.nbr i w hw).toLL
       ((D.nd.chi i c (decS D.nd w (Br.iota D.nbr i w hw g)) : (D.nd.O i)ˣ) : D.nd.O i) *
       (D.nbr i w hw).toLL
@@ -158,7 +158,7 @@ theorem chiRat_eq (n : ℕ) (hn : n = 0 ∨ n + 1 ≤ D.R.t) (g : Formalism.Main
 theorem eps_eq (g : Br.G D.nbr i w hw) :
     (D.nbr i w hw).toLL ((epsU D.nd i (decS D.nd w (Br.iota D.nbr i w hw g)) : (D.nd.O i)ˣ) : D.nd.O i) =
       algebraMap ℚ_[D.nd.l i] (Br.LL D.nbr i w hw) ((Br.PD D.loc D.nbr i w hw).χ g : ℚ_[D.nd.l i]) := by
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
   rw [Br.PD, (D.loc _).PD_χ, ← GlobalTheory.BlockJumps.cycZ_eq_chi (D.nbr i w hw) (D.loc _) g]
   exact congrArg Subtype.val ((D.nbr i w hw).eO_alg _)
 
@@ -259,7 +259,7 @@ theorem jumpDual_main : StepJumpDual := by
         · rw [abs_le] at h; unfold cen at h
           constructor <;> linarith [h.1, h.2]
         · unfold cloud cen at h; rw [hsg] at h
-          simp only [Bool.false_eq_true, if_false] at h; push_cast at h
+          simp only [Bool.false_eq_true, ite_false] at h; push_cast at h
           constructor <;> linarith [h.1, h.2]
       have k1 : b ≤ (eta : ℤ) + D.R.t := by exact_mod_cast key.1
       have k2 : -((s : ℤ) + S) - 1 ≤ b := by exact_mod_cast key.2
@@ -306,7 +306,7 @@ theorem stepJumpDirect_holds : StepJumpDirect := by
           constructor <;> linarith
         · rw [abs_le] at h; unfold cen at h
           constructor <;> linarith [h.1, h.2]
-        · unfold cloud cen at h; rw [hsg] at h; simp only [if_true] at h; push_cast at h
+        · unfold cloud cen at h; rw [hsg] at h; simp only [ite_true] at h; push_cast at h
           constructor <;> linarith [h.1, h.2]
       have k1 : -((eta : ℤ) + D.R.t + 1) - 1 < u := by exact_mod_cast key.1
       have k2 : u ≤ (s : ℤ) + S := by exact_mod_cast key.2
@@ -638,7 +638,7 @@ section Core
 variable {l : ℕ} [Fact l.Prime]
 
 theorem incl_cont {K K' : FinExt l} (h : K.1 ≤ K'.1) : Continuous (Subgroup.inclusion (GK_le h)) :=
-  Continuous.subtype_mk continuous_subtype_val _
+  Continuous.subtype_mk continuous_subtypeVal _
 
 theorem sub_props (P : LocPrime l) (K K' LL : FinExt l) (h : K.1 ≤ K'.1) (hN : (GKin h).Normal)
     (hF : (GKin h).FiniteIndex)
@@ -792,9 +792,9 @@ theorem main : StepLift := by
     omega
   have hcl : ∀ x, Continuous (Br.loc D.nbr i w hw (Ms x)) := by
     intro x
-    have hfc : Continuous (D.nbr i w hw).toLL := continuous_subtype_val.comp (D.nbr i w hw).eO_cont
+    have hfc : Continuous (D.nbr i w hw).toLL := continuous_subtypeVal.comp (D.nbr i w hw).eO_cont
     have h1' : Continuous fun g : Br.G D.nbr i w hw => Ms x ((Br.iota D.nbr i w hw g : Gw D.nd w) : GE D.nd) :=
-      (hc x).comp (continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw))
+      (hc x).comp (continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw))
     exact h1'.matrix_map hfc
   exact liftFam_of_eq (D.loc (D.nd.l i)) (D.nbr i w hw).Kw K' (D.nbr i w hw).LL hK CT
     (fun K' h hN hF hS => hT' (D.nd.l i) K' h hN hF hS (D.nbr i w hw).LL)
@@ -1143,7 +1143,7 @@ open UpperTheory.Lit.Car (IneAb comm_le_ine)
 theorem stepType_alt : _root_.GlobalTheory.Pass.stepType_proof_tyz := by
   intro D P hDZ h0 h1 h2' h5 i k hl r hr x PI hPI v τ hτ hsq hroot
   have h2 := _root_.UpperTheory.GalS.weak' h2'
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hnc := nc_of_label P hDZ h1 i k v PI τ hτ hsq hroot
   obtain ⟨u, hu, hm0, hlab, hconj⟩ := hDZ i k v PI τ hτ hsq hroot
   refine ⟨u, hu, ?_⟩

@@ -156,7 +156,7 @@ theorem linIndep_of_orth {C : Submodule ℂ A} {ip : A → A → ℂ} (hp : Pete
     split_ifs with hij
     · rw [hij]
     · rw [horth j i (Ne.symm hij), mul_zero]
-  rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq' s j, if_pos hj] at h0
+  rw [Finset.sum_congr rfl hterm, Finset.sum_ite_eq' s j, ite_eq_left hj] at h0
   have hne : ip (x j) (x j) ≠ 0 := by
     intro h
     have := hp.pos (x j) (hx j)
@@ -180,7 +180,7 @@ theorem finite_FTR (P : RowPsi Y n) (M : Mult.DSModel Y Sp) (J : Bool → Set (G
   classical
   have hfin : ∀ b, Finite {σ : FTR θ P M J χ e // isotE θ P M (J b) (χ b) (e b) (rowRepR θ σ) ≠ ⊥} := by
     intro b
-    haveI := (hp b).fd
+    have := (hp b).fd
     let x : {σ : FTR θ P M J χ e // isotE θ P M (J b) (χ b) (e b) (rowRepR θ σ) ≠ ⊥} → Mult.goodPart θ M (J b) (χ b) (e b) :=
       fun σ => ⟨(Submodule.exists_mem_ne_zero_of_ne_bot σ.2).choose,
         ((Submodule.exists_mem_ne_zero_of_ne_bot σ.2).choose_spec.1).1⟩
@@ -193,8 +193,8 @@ theorem finite_FTR (P : RowPsi Y n) (M : Mult.DSModel Y Sp) (J : Bool → Set (G
     exact (linIndep_of_orth (hp b) x hx0 horth).finite
   have hcover : ∀ σ : FTR θ P M J χ e, ∃ b, isotE θ P M (J b) (χ b) (e b) (rowRepR θ σ) ≠ ⊥ := fun σ => rowRepR_occ θ σ
   have : Finite ((Σ b : Bool, {σ : FTR θ P M J χ e // isotE θ P M (J b) (χ b) (e b) (rowRepR θ σ) ≠ ⊥})) := by
-    haveI := hfin true
-    haveI := hfin false
+    have := hfin true
+    have := hfin false
     infer_instance
   exact Finite.of_surjective (fun p : (Σ b : Bool, {σ : FTR θ P M J χ e // isotE θ P M (J b) (χ b) (e b) (rowRepR θ σ) ≠ ⊥}) =>
     p.2.1) fun σ => by

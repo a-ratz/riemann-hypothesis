@@ -99,7 +99,7 @@ theorem lattice_series_regroup : ∀ (C : Type) [NontriviallyNormedField C] [IsU
     refine Filter.tendsto_atTop.2 fun N => Filter.eventually_cofinite.2 ?_
     refine ((Set.finite_lt_nat N).biUnion fun i _ => hfin i).subset ?_
     intro α hα
-    simp only [Set.mem_setOf_eq, not_le] at hα
+    simp only [Set.mem_ofPred_eq, not_le] at hα
     exact Set.mem_biUnion (x := n α) hα rfl
   have hpow : Filter.Tendsto (fun α => b * ‖π‖ ^ n α) Filter.cofinite (nhds 0) := by
     simpa using ((tendsto_pow_atTop_nhds_zero_of_lt_one (norm_nonneg π) hπ1).comp hn).const_mul b

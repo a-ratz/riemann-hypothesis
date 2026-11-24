@@ -432,7 +432,7 @@ theorem autLzFin_main (D : D7) : PI.AutLzFinite.AutLzFin D := by
   obtain ⟨-, hfix, -⟩ := hΛ
   obtain ⟨hlat, hunimod, hlift, -⟩ := hfix
   have hstar : ∀ (τ : D.host.E →+* ℂ) (a : D.host.E), τ (star a) = starRingEnd ℂ (τ a) := by
-    haveI := D.host.isCMField_hostE
+    have := D.host.isCMField_hostE
     intro τ a
     exact NumberField.IsCMField.complexEmbedding_complexConj _ τ a
   have hPX : ∀ x ∈ F0.X, ∀ y ∈ perpS (VS D) F0.X, (VS D).hT x y = 0 := fun x hx y hy => hy x hx
@@ -480,7 +480,7 @@ theorem autLzFin_main (D : D7) : PI.AutLzFinite.AutLzFin D := by
   obtain ⟨hiso, hXa, hz⟩ := hγ
   have hiso' : ∀ x y, (VS D).hT (γ x) (γ y) = (VS D).hT x y := hiso
   have hXr : F0.Xa D.R.rS = F0.X := by
-    simp [FlagG.Xa, FlagG.X, Fin.is_lt, Set.setOf_true, Set.image_univ]
+    simp [FlagG.Xa, FlagG.X, Fin.is_lt, Set.ofPred_true, Set.image_univ]
   refine ⟨γ, hiso', hz, ?_, ?_, hφ⟩
   · intro x hx
     have h3 : γ x ∈ Formalism.HermitianLatticesTheory.gmap γ Λ := ⟨x, hx, rfl⟩

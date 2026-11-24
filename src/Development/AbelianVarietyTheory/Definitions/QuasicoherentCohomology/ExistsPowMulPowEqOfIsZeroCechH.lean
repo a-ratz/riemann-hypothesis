@@ -388,7 +388,7 @@ theorem cechTwo_d (x : (cech R F V U).X 0) :
 
 theorem isZero_cechH_one_iff_surjective :
     IsZero (cechH R F V U 1) ↔ Function.Surjective ((cech R F V U).d 0 1).hom := by
-  haveI := Cube.subsingleton_term (cechCube R F V U) (p := 0 + 2 + 1) (by simp)
+  have := Cube.subsingleton_term (cechCube R F V U) (p := 0 + 2 + 1) (by simp)
   rw [cech_d R F V U 0]
   refine (HomologicalComplex.exactAt_iff_isZero_homology _ _).symm.trans
     ((cechComplex_exactAt_succ_iff (cechCube R F V U) 0).trans (forall_congr' fun x => ?_))
@@ -478,7 +478,7 @@ theorem sectionsAwayEquiv_res {a b : A} (hab : a ∣ b) {W W' : (Spec A).Opens}
     (x : sectionsOn (tilde M) W) :
     sectionsAwayEquiv M b h' (sectionsOn.res A (tilde M) hW x) =
       awayTransition M hab (sectionsAwayEquiv M a h x) := by
-  haveI := isLocalizedModule_tildeToSections M a h
+  have := isLocalizedModule_tildeToSections M a h
   have := IsLocalizedModule.ext (.powers a) (tildeToSections M W)
     (isUnit_powers_of_dvd hab (LocalizedModule.mkLinearMap _ M))
     (j := (sectionsAwayEquiv M b h').toLinearMap ∘ₗ sectionsOn.res A (tilde M) hW)

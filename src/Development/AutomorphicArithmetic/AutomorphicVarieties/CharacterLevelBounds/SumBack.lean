@@ -53,15 +53,15 @@ private theorem sumBack_one {ι : Type} (S : Finset ι) (f : ι → ℕ∞) (a :
     rw [Nat.cast_sum]
     refine Finset.sum_congr rfl fun i hi => ?_
     push_cast
-    rw [ENat.coe_toNat (hf i hi)]
+    rw [ENat.natCast_toNat (hf i hi)]
   rw [hsum] at h
   have ha : a ≠ ⊤ := by
     rintro rfl
     rw [ENat.top_mul (by exact_mod_cast hE)] at h
-    exact absurd h (not_le.2 (ENat.coe_lt_top _))
+    exact absurd h (not_le.2 (ENat.natCast_lt_top _))
   refine ⟨ha, ?_⟩
   have h2 : a.toNat * E ≤ ∑ i ∈ S, ((f i).toNat + b * E) := by
-    rw [← ENat.coe_toNat ha] at h
+    rw [← ENat.natCast_toNat ha] at h
     exact_mod_cast h
   have hE' : (0 : ℝ) < E := by exact_mod_cast Nat.pos_of_ne_zero hE
   have h3 : (a.toNat : ℝ) * E ≤ ∑ i ∈ S, (((f i).toNat : ℝ) + b * E) := by exact_mod_cast h2
@@ -79,8 +79,8 @@ theorem UpperTheory.V.Chr.sumBack :
             ∑ e ∈ Finset.Ico 1 t, ((a e).toNat : ℝ) ≤ ∑ e ∈ Finset.Ico 1 t, ∑ i ∈ T e, nrm l O (f i e) + T₀.card * ∑ e ∈ Finset.Ico 1 t, (b e : ℝ) := by
   intro l _ O _ _ _ _ _ ι T T₀ f a b t hT h
   obtain ⟨-, -, -, -, -, hne, hle, -, -⟩ := dvrFacts l O
-  have htop : eO l O ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) hle
-  have hEO : eO l O = (((eO l O).toNat : ℕ) : ℕ∞) := (ENat.coe_toNat htop).symm
+  have htop : eO l O ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) hle
+  have hEO : eO l O = (((eO l O).toNat : ℕ) : ℕ∞) := (ENat.natCast_toNat htop).symm
   have hE : (eO l O).toNat ≠ 0 := by
     intro h0
     apply hne

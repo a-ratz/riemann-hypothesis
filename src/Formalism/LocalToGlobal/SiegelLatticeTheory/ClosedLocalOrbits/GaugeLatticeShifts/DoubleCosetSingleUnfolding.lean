@@ -76,7 +76,7 @@ theorem countable_of_le (Γ S : Subgroup G) [Countable Γ] (h : S ≤ Γ) : Coun
   (Subgroup.inclusion_injective h).countable
 
 theorem countable_of_sub (Γ : Subgroup G) [Countable Γ] (E : Set G) (h : E ⊆ (Γ : Set G)) : Countable E := by
-  haveI : Countable (Γ : Set G) := ‹Countable Γ›
+  have : Countable (Γ : Set G) := ‹Countable Γ›
   exact ((Set.countable_coe_iff.mp this).mono h).to_subtype
 
 theorem dcSingleE (Γ S S' : Subgroup G) [Countable Γ] (hS : S ≤ Γ) (hS' : S' ≤ Γ)
@@ -292,7 +292,7 @@ theorem fd_tiling (Γ : Subgroup G) [Countable Γ] (FS : Set G) (hFS : IsFundame
       ∫⁻ x in FS, g x ∂μ = ∫⁻ x in P, g x ∂μ := fun g hgm hgi hg0 =>
     tiling_lemma μ Γ FS hFS P hP g hgm hgi (fun y hy => hcov y (fun h => hy (hg0 y h))) huniq
   have hP' : IntegrableOn f P μ := by
-    have h1 := key (fun x => ‖f x‖ₑ) hfm.enorm (fun s hs y => by simp only [hfi s hs y])
+    have h1 := key (fun x => ‖f x‖ₑ) hfm.eNorm (fun s hs y => by simp only [hfi s hs y])
       (fun y hy => by simp [hy])
     refine ⟨hfm.aestronglyMeasurable, ?_⟩
     show ∫⁻ x in P, ‖f x‖ₑ ∂μ < ⊤
@@ -435,7 +435,7 @@ theorem ooLint_of (h : OOLintSum X u u' F0 F0' what₂ rows') : OOLint F0 F0' wh
 theorem norm_OOt_le (t : GTerm X u u' F0 F0' what₂ rows') :
     ‖OOt t‖ ≤ (∫⁻ x in FundOf t, ‖X.Wu u x‖ₑ * ‖X.Wu u' (t.pt.1⁻¹ * x)‖ₑ
       ∂(Formalism.L2.SG.ProjRows.muInf X.B.I)).toReal := by
-  have := FiniteDimensional.complete ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
   unfold OOt OO
   refine (norm_integral_le_lintegral_norm _).trans (le_of_eq ?_)
   congr 1
@@ -637,7 +637,7 @@ def TermsLEC : Prop :=
 theorem enorm_ph_right {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting D} {u : D.what₂.Word} (hK : X.LevelSubgroupCharacter)
     (hWD : PhWellDef X u hK) (T : Cu X u hK) (y : X.B.I.GA) (κ : X.B.I.Gf) (hκ : κ ∈ X.K2) :
     ‖Ph X u hK T (y * (1, κ))‖ₑ = ‖Ph X u hK T y‖ₑ := by
-  rw [ph_right_K X u hK hWD T y κ hκ, enorm_mul,
+  rw [ph_right_K X u hK hWD T y κ hκ, eNorm_mul,
     show ‖X.chi2 κ‖ₑ = 1 by rw [← ofReal_norm, hK.2.2.2.2 κ hκ, ENNReal.ofReal_one], one_mul]
 
 end TermsLE
@@ -717,7 +717,7 @@ theorem Slab.ooLintSum_of {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting 
     have hinv : ∀ s ∈ Srat X u, ∀ y, Ph X u Y.hK (T i) (s * y) = Ph X u Y.hK (T i) y := hFD.2.1
     have hinv' : ∀ s ∈ Srat X u', ∀ y, Ph X u' Y.hK (T' j) (s * y) = Ph X u' Y.hK (T' j) y := hFD'.2.1
     have hGm : Measurable G :=
-      hPhm.enorm.mul (Measurable.tsum fun δ => (hPhm'.comp (measurable_const_mul _)).enorm)
+      hPhm.eNorm.mul (Measurable.tsum fun δ => (hPhm'.comp (measurable_const_mul _)).eNorm)
     have hGi : ∀ s ∈ Srat X u, ∀ y, G (s * y) = G y := by
       intro s hs y
       simp only [hG]
@@ -734,7 +734,7 @@ theorem Slab.ooLintSum_of {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting 
     have hGs : ∀ y, G y ≠ 0 → ∃ s ∈ Srat X u, s * y ∈ ⋃ ρ, slab (Y.cs u) ρ (Ωs ρ) := by
       intro y hy
       have hy1 : Ph X u Y.hK (T i) y ≠ 0 := by
-        intro h0; apply hy; simp only [hG, h0, enorm_zero, zero_mul]
+        intro h0; apply hy; simp only [hG, h0, eNorm_zero, zero_mul]
       have hd : ∃ n h k, IsDec X u y.2 n h k := by
         by_contra hn; apply hy1; unfold Ph; rw [dite_eq_right hn]
       obtain ⟨s, hs, ρ, hsy⟩ := hcov y hd
@@ -763,7 +763,7 @@ theorem Slab.ooLintSum_of {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting 
       fun ρ => setLIntegral_slab X.B.I X.B.μf X.K2 hKm (Ωs ρ) _ G hGm (hGK ρ)
     have e4 := dcSingleE (X.B.I.muA X.B.μf) (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I) (Srat X u) (Srat X u')
       inf_le_left inf_le_left (Y.Dt u') (Y.reps u') R hRt Fs (fun r _ => hFs r) FS (hFS _)
-      (fun z => ‖Ph X u Y.hK (T i) z‖ₑ) (fun z => ‖Ph X u' Y.hK (T' j) z‖ₑ) hPhm.enorm hPhm'.enorm
+      (fun z => ‖Ph X u Y.hK (T i) z‖ₑ) (fun z => ‖Ph X u' Y.hK (T' j) z‖ₑ) hPhm.eNorm hPhm'.eNorm
       (fun s hs y => by simp only [hinv s hs y]) (fun s hs y => by simp only [hinv' s hs y])
     have hK0 : X.B.μf X.K2 ≠ 0 := hKL.2.2.1.ne'
     have hsum : X.B.μf X.K2 * ∑ ρ, ∫⁻ y in Ωs ρ, G (y, ((Y.cs u).h ρ : X.B.I.Gf) * X.xu u)
@@ -787,12 +787,12 @@ theorem Slab.ooLintSum_of {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSetting 
     have e : ∀ t : GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u'),
         J t = ∑ Λ ∈ Y.what₂ u, if t.lam = Λ then J t else 0 := by
       intro t
-      rw [Finset.sum_eq_single_of_mem t.lam t.mem (fun b _ hb => if_neg (fun h => hb h.symm)), if_pos rfl]
+      rw [Finset.sum_eq_single_of_mem t.lam t.mem (fun b _ hb => ite_eq_right (fun h => hb h.symm)), ite_eq_left rfl]
     rw [tsum_congr e, Summable.tsum_finsetSum (fun _ _ => ENNReal.summable)]
     refine Finset.sum_congr rfl fun Λ _ => ?_
     have hs := tsum_subtype {t | t.lam = Λ} J
     refine Eq.trans ?_ hs.symm
-    exact tsum_congr fun b => by simp only [Set.indicator_apply, Set.mem_setOf_eq]
+    exact tsum_congr fun b => by simp only [Set.indicator_apply, Set.mem_ofPred_eq]
   have hinj : Set.InjOn (Y.cs u).base (Y.what₂ u : Set (Submodule (𝓞 D.host.E) (VS D).V)) := by
     intro Λ hΛ Λ' hΛ' h
     rw [← (Y.cs u).base_lam Λ hΛ, ← (Y.cs u).base_lam Λ' hΛ', h]
@@ -895,7 +895,7 @@ theorem Slab.isSFund_fundOf {D : D7} {X : Formalism.L2.SG.HidaSetting.HidaSettin
     Formalism.L2.SG.HidaSetting.IsSFund X.B.I (ROinf t) (FundOf t) := by
   have h := fundExistsC_holds D X Y u u' t
   unfold FundOf
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact h.choose_spec
 
 theorem termsLEC_of (hMaj : MajPtC) (hInv : RInvC) (hCnt : CountC) : TermsLEC := by
@@ -939,15 +939,15 @@ theorem termsLEC_of (hMaj : MajPtC) (hInv : RInvC) (hCnt : CountC) : TermsLEC :=
   have hEt : ∀ t, t.lam = Λ → IsRightTransversal (NOlam X u Λ)
       (ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin) (E t) := by
     intro t h
-    simp only [hE, dif_pos h]
+    simp only [hE, dite_eq_left h]
     exact Classical.choose_spec (PI.FoldDCUnfold.W.translation_exists X.B.I.Ginf (NOlam X u Λ)
       (ROsub X (X.Fu u) (X.Fu u') t.lam t.lam' t.lin) (hle t h))
   set a := aB Y u Λ with ha
   set F : Fin n → Fin n' → GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u') → X.B.I.Ginf → ℝ≥0∞ :=
     fun i j t x => ‖Ph X u Y.hK (T i) (x, a)‖ₑ * ‖Ph X u' Y.hK (T' j) (t.pt⁻¹ * (x, a))‖ₑ with hF
   have hFm : ∀ i j t, Measurable (F i j t) := fun i j t =>
-    ((hPm i).comp (measurable_id.prodMk measurable_const)).enorm.mul
-      (((hPm' j).comp ((measurable_const_mul _).comp (measurable_id.prodMk measurable_const))).enorm)
+    ((hPm i).comp (measurable_id.prodMk measurable_const)).eNorm.mul
+      (((hPm' j).comp ((measurable_const_mul _).comp (measurable_id.prodMk measurable_const))).eNorm)
 
   have hij : ∀ i j, ∑' t : {t : GTerm X u u' (X.Fu u) (X.Fu u') (Y.what₂ u) (Y.what₂ u') // t.lam = Λ},
       ∫⁻ x in FundOf t.1, F i j t.1 x ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) ≤

@@ -111,9 +111,9 @@ theorem exists_dualLat_isOpen : ∀ {G : Type} [Group G] [TopologicalSpace G] {Q
   intro G _ _ Qp K₀ K _ _ _ _ _ _ _ B BdR _ _ _ _ _ _ _ _ _ _ _ _ PD LL O _ _ _ _ _ hO hcyc U U' P hP LT
 
   obtain ⟨⟨hdom, hdvr, hfr⟩, hfd, hmt, htr, hopen⟩ := hO
-  haveI := hfr
-  haveI : Module.Finite O LT.T := Module.Finite.iff_fg.mpr LT.fg
-  haveI : Module.Free O LT.T := LT.free
+  have := hfr
+  have : Module.Finite O LT.T := Module.Finite.iff_fg.mpr LT.fg
+  have : Module.Free O LT.T := LT.free
   let b := Module.Free.chooseBasis O LT.T
   let e : Module.Free.ChooseBasisIndex O LT.T → U.V := fun i => (b i : U.V)
   have he_O : LinearIndependent O e := b.linearIndependent.map' LT.T.subtype (Submodule.ker_subtype _)
@@ -253,8 +253,8 @@ theorem exists_left_inv {K : Type} [Field K] {Γ : Type} [Group Γ] {n k : ℕ}
   have hP : ∀ v, ∀ a ∈ LinearMap.range j, ∀ b ∈ W', v = a + b → (P v : Fin n → K) = a := by
     intro v a ha b hb hv
     subst hv
-    have h1 : P a = ⟨a, ha⟩ := Submodule.linearProjOfIsCompl_apply_left hc ⟨a, ha⟩
-    have h2 : P b = 0 := Submodule.linearProjOfIsCompl_apply_right hc ⟨b, hb⟩
+    have h1 : P a = ⟨a, ha⟩ := Submodule.projectionOnto_apply_left hc ⟨a, ha⟩
+    have h2 : P b = 0 := Submodule.projectionOnto_apply_right hc ⟨b, hb⟩
     rw [map_add (f := _), Submodule.coe_add, h1, h2]
     simp
   refine ⟨e.symm.toLinearMap ∘ₗ P, ?_, ?_⟩
@@ -440,7 +440,7 @@ theorem main : ∀ (D : D7), FontaineAtPlacesOverL (D := D) → PotDRL D.loc →
   obtain ⟨a, x, j, hjinj, hjeq, -⟩ := hX
   obtain ⟨h1, h2, h3, h4⟩ := hD
   let incl := Subgroup.inclusion (GK_le h)
-  have hincl : Continuous incl := Continuous.subtype_mk continuous_subtype_val _
+  have hincl : Continuous incl := Continuous.subtype_mk continuous_subtypeVal _
   let W : GRep ↥(GK K') ℚ_[D.nd.l i] (Br.LL D.nbr i w hw) (Br.OLL D.nbr i w hw) :=
     { V := X.V, ρ := X.ρ.comp incl, cont := fun v => (X.cont v).comp hincl }
   let W' : GRep ↥(GK K') ℚ_[D.nd.l i] (Br.LL D.nbr i w hw) (Br.OLL D.nbr i w hw) :=
@@ -538,9 +538,9 @@ theorem main : ∀ (D : D7), FontaineAtPlacesOverL (D := D) → PotDRL D.loc →
     (Br.locLat D.nbr i w hw M)
   refine ⟨hU, X', PX, hSF, ?_⟩
   obtain ⟨⟨hdom, -, hfr⟩, -⟩ := hGood
-  haveI := hdom
-  haveI := hfr
-  haveI : CompactSpace (Br.G D.nbr i w hw) := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK _
+  have := hdom
+  have := hfr
+  have : CompactSpace (Br.G D.nbr i w hw) := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK _
   refine dualLatLe_of _ _ X' _ PX LT' hLT' hopen _ ?_
   have h2 := GlobalTheory.Pass.RankDeRham.finrank_H1f_le (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw (D.nbr i w hw).LL hK
     (hBK (D.nd.l i) (D.nbr i w hw).Kw) X' hX'
@@ -1421,7 +1421,7 @@ theorem sumG_crys (hr : GoodR D.nd i r) (hAdm : FontaineAtPlacesOverL (D := D)) 
       (matRep (Br.loc D.nbr i w hw (rTwO D.nd i r y)))) :
     IsCrys ((D.loc (D.nd.l i)).PD K')
       ((sumG i w hw r Xs hr x).ρ.comp (Subgroup.inclusion (GK_le h))) := by
-  haveI := isTopRingLL i w hw
+  have := isTopRingLL i w hw
   have hc' : ∀ (y : ↥Xs) (v : Fin D.R.nV → Br.LL D.nbr i w hw),
       Continuous fun g => ((Br.loc D.nbr i w hw (rTwO D.nd i r y)).comp (Subgroup.inclusion (GK_le h)) g).mulVec v :=
     fun y v => (contTw i w hw r Xs hr y v).comp (continuous_inclusion (GK_le h))
@@ -1461,7 +1461,7 @@ theorem GlobalTheory.Pass.LocDual.OneX.yfun_Z1fT : ∀ (D : D7), FontaineAtPlace
     latticeFiniteCocycles (Br.PD D.loc D.nbr i w hw) LY := by
   intro D hAdm i r hr Xs w hw n hpf a x Y hst E hE LY hLY
   obtain ⟨K', h, hN, hF, hS, Sig, Fr, -, -, -, -, hall⟩ := hpf
-  haveI := isTopRingLL i w hw
+  have := isTopRingLL i w hw
   have hF' := hAdm (D.nd.l i) K' (D.nbr i w hw).LL
   have hz : (yfun i w hw r Xs x Y E hE : Br.G D.nbr i w hw → (XG i w hw r Xs hr x Y hst).V) ∈
       finiteCocycles (Br.PD D.loc D.nbr i w hw) (XG i w hw r Xs hr x Y hst).ρ :=
@@ -1530,7 +1530,7 @@ theorem latY_fg {a : ℕ} (Y : Submodule (D.nd.O i) (Fin a → Fin D.R.nV → KK
     Subtype.val_injective
   apply Submodule.fg_of_fg_map_injective _ hinj
   rw [latY_map]
-  haveI := eO_surj i w hw
+  have := eO_surj i w hw
   obtain ⟨S, rfl⟩ := hY
   have h : ∀ T : Set (Fin a → Fin D.R.nV → KK D.nd i), vecL i w hw '' T = (vecLS i w hw a) '' T :=
     fun _ => rfl
@@ -1542,7 +1542,7 @@ theorem span_stable_of_gen {R K M : Type} [CommRing R] [Field K] [Algebra R K] [
     [Module R M] (hT : IsScalarTower R K M) (f : M →ₗ[K] M) (s : Set M) (h : ∀ v ∈ s, f v ∈ s) :
     ∀ v ∈ Submodule.span R s, f v ∈ Submodule.span R s := by
   intro v hv
-  haveI := hT
+  have := hT
   have key : Submodule.span R s ≤ (Submodule.span R s).comap (f.restrictScalars R) :=
     Submodule.span_le.2 fun u hu => Submodule.subset_span (h u hu)
   exact key hv
@@ -1577,12 +1577,12 @@ theorem latY_span {a : ℕ} (Y : Submodule (D.nd.O i) (Fin a → Fin D.R.nV → 
 
 theorem latY_free {a : ℕ} (Y : Submodule (D.nd.O i) (Fin a → Fin D.R.nV → KK D.nd i)) (hY : Y.FG) :
     Module.Free (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) := by
-  letI : CommRing (Br.OLL D.nbr i w hw) := inferInstance
-  letI : AddCommGroup ↥(latY i w hw Y) := inferInstance
-  letI : Module (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) := inferInstance
-  haveI : Module.Finite (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) :=
+  let : CommRing (Br.OLL D.nbr i w hw) := inferInstance
+  let : AddCommGroup ↥(latY i w hw Y) := inferInstance
+  let : Module (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) := inferInstance
+  have : Module.Finite (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) :=
     Module.Finite.iff_fg.2 (latY_fg i w hw Y hY)
-  haveI : NoZeroSMulDivisors (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) := by
+  have : NoZeroSMulDivisors (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) := by
     constructor
     intro c u h
     by_cases hc : c = 0
@@ -1595,9 +1595,9 @@ theorem latY_free {a : ℕ} (Y : Submodule (D.nd.O i) (Fin a → Fin D.R.nV → 
       intro h0; apply hc; exact Subtype.val_injective h0
     have := (smul_eq_zero.1 h2).resolve_left hc'
     exact Subtype.ext this
-  haveI : IsPrincipalIdealRing (Br.OLL D.nbr i w hw) := inferInstance
-  haveI : IsDomain (Br.OLL D.nbr i w hw) := inferInstance
-  haveI : IsTorsionFree (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) := inferInstance
+  have : IsPrincipalIdealRing (Br.OLL D.nbr i w hw) := inferInstance
+  have : IsDomain (Br.OLL D.nbr i w hw) := inferInstance
+  have : IsTorsionFree (Br.OLL D.nbr i w hw) ↥(latY i w hw Y) := inferInstance
   exact @Module.free_of_finite_type_torsion_free' (Br.OLL D.nbr i w hw) inferInstance
     ↥(latY i w hw Y) inferInstance inferInstance inferInstance inferInstance inferInstance inferInstance
 

@@ -169,7 +169,7 @@ theorem exists_arcIn_of_unif {V : ValuationSubring c.F} (Y : Model Xo c V.subtyp
       ∃ p : QkPt P.D.toPre (FractionRing T.V) k,
         QkExt (algebraMap (FractionRing T.V) (AlgebraicClosure (FractionRing T.V))) p q) :
     ∃ a : ArcIn Dw l V.subtype T.V b, Y.HasArcData a (IsLocalRing.maximalIdeal T.V) (RingHom.id T.V) ϖ χ := by
-  letI := H.starRing
+  let := H.starRing
   have hL := GlobalTheory.firstFiveLaws
   have hA : AdmBase T.V (IsLocalRing.maximalIdeal T.V) := ⟨inferInstance, inferInstance, inferInstance, T.cpl⟩
   have hT := GlobalTheory.FlatTors.torsionIso_holds E H T.V _ hA t P

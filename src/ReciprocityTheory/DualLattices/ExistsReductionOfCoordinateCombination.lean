@@ -71,7 +71,7 @@ lemma red_mulVec (H : HodgeTateDatum p g v R O σ cp) (a : O) (t : TT p g) :
   exact RingHom.map_mulVec PadicInt.toZMod (H.ρ a) t i
 
 lemma red_surj (y : Nb p g) : ∃ t : TT p g, red p g t = y := by
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   exact ⟨fun i => ((y i).val : ℤ_[p]), funext fun i => by
     show PadicInt.toZMod (((y i).val : ℕ) : ℤ_[p]) = y i
     rw [map_natCast, ZMod.natCast_zmod_val]⟩

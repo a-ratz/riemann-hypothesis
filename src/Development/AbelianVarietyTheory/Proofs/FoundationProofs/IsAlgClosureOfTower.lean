@@ -70,23 +70,23 @@ variable {Ω : Type} [Field Ω]
 
 theorem eOm_spec [IsAlgClosed Ω] (ε : Ω →+* ℂ) (x : ℚ) :
     ε (eOm ε x) = Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) := by
-  haveI : CharZero Ω := ε.charZero
+  have : CharZero Ω := ε.charZero
   obtain ⟨ζ, hζ⟩ := Api.exists_root_of_isAlgClosed ε x.den_pos
   have h : ∃ a, ε a = Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) := by
     refine ⟨ζ ^ x.num, ?_⟩
-    rw [map_zpow₀, hζ, ← Complex.exp_int_mul]
+    rw [map_zpow₀, hζ, ← Complex.exp_intCast_mul]
     congr 1
     conv_rhs => rw [← Rat.num_div_den x]
     push_cast; ring
   exact Function.invFun_eq h
 
 theorem eOm_add [IsAlgClosed Ω] (ε : Ω →+* ℂ) (x y : ℚ) : eOm ε (x + y) = eOm ε x * eOm ε y := by
-  haveI : CharZero Ω := ε.charZero
+  have : CharZero Ω := ε.charZero
   apply Api.eOm_eq_of
   rw [map_mul, eOm_spec, eOm_spec, ← Complex.exp_add]; congr 1; push_cast; ring
 
 theorem eOm_intCast [IsAlgClosed Ω] (ε : Ω →+* ℂ) (m : ℤ) : eOm ε (m : ℚ) = 1 := by
-  haveI : CharZero Ω := ε.charZero
+  have : CharZero Ω := ε.charZero
   apply Api.eOm_eq_of
   rw [map_one]
   have := Complex.exp_int_mul_two_pi_mul_I m
@@ -131,13 +131,13 @@ theorem cm_mul_of_char {R : Type*} [CommRing R] (c : ℚ → R) (hc : ∀ x y, c
   rw [Api.coeff_cm, HahnSeries.coeff_mul (x := φ), Finset.mul_sum, HahnSeries.coeff_mul_right' ψ.isPWO_support h2]
   rw [Finset.sum_subset (Finset.antidiagonal_mono_left (hs := φ.isPWO_support) h1)]
   · refine Finset.sum_congr rfl fun ij hij => ?_
-    have := (Finset.mem_addAntidiagonal.1 hij).2.2
+    have := (Finset.mem_antidiagonal.1 hij).2.2
     rw [Api.coeff_cm, Api.coeff_cm, ← this, hc]; ring
   · intro ij hij hn
-    have hm := Finset.mem_addAntidiagonal.1 hij
+    have hm := Finset.mem_antidiagonal.1 hij
     have : (cm c φ).coeff ij.1 = 0 := by
       by_contra h0
-      exact hn (Finset.mem_addAntidiagonal.2 ⟨h0, hm.2.1, hm.2.2⟩)
+      exact hn (Finset.mem_antidiagonal.2 ⟨h0, hm.2.1, hm.2.2⟩)
     rw [this, zero_mul]
 
 end GlobalTheory.UlCusp
@@ -155,7 +155,7 @@ theorem ent_piece (l j : ℕ) (hl : 0 < l) (i k : Fin 2) :
     exact h
   have hS : (((ofSL (ModularGroup.T ^ j) : GQ) : GL (Fin 2) ℚ) : Matrix (Fin 2) (Fin 2) ℚ) =
       ((ModularGroup.T ^ j : SL(2, ℤ)) : Matrix (Fin 2) (Fin 2) ℤ).map (Int.cast) := rfl
-  simp only [ent, toGQ, dif_pos hdet, Subgroup.coe_mul, Units.val_mul, hS, hT,
+  simp only [ent, toGQ, dite_eq_left hdet, Subgroup.coe_mul, Units.val_mul, hS, hT,
     Matrix.GeneralLinearGroup.mkOfDetNeZero]
   fin_cases i <;> fin_cases k <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
 
@@ -370,7 +370,7 @@ theorem dl_norm_uq : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω
   ∀ (f : X.K) (φ : HahnSeries ℚ Ω), X.sl (ofSL ModularGroup.T) f = f → IsDl X A l (n + 1) 1 f φ →
     IsDl X A l n 1 (nrmT X l (X.sl (toGQ !![1, 0; 0, (l : ℤ)]) f)) (uq l φ) := by
   intro Ω _ _ _ ε X A l _ n hl f φ hT hφ
-  haveI : IsAlgClosure ℚ Ω := isAlgClosure_of_tower X
+  have : IsAlgClosure ℚ Ω := isAlgClosure_of_tower X
   have hl0 : 0 < l := (Fact.out : l.Prime).pos
   have hd : (0 : ℚ) < l := by exact_mod_cast hl0
   have Hj : ∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero) := by

@@ -142,7 +142,7 @@ theorem exists_average {G X U : Type} [Group G] [TopologicalSpace G] [IsTopologi
       have : ι t * w ∉ C := fun h' => hn ⟨_, h', by simp⟩
       simp [a, χ, this]
     have hpos : 0 < ∫ t, a t ∂(μ.prod ρ) := by
-      refine ha.integral_pos_of_hasCompactSupport_nonneg_nonzero hs (x := t₁)
+      refine ha.integral_pos_of_hasCompactSupport_nonneg_ne_zero hs (x := t₁)
         (fun t => mul_nonneg (hδ0 _).le (Set.indicator_nonneg (fun _ _ => zero_le_one) _)) ?_
       have : w ∈ C := ⟨w, hw, 1, one_mem _, mul_one _⟩
       simp [a, χ, h₁, this, (hδ0 _).ne']
@@ -240,8 +240,8 @@ theorem integral_chart_mul_right [Fintype {rs // S rs}] (m : GL ι k)
     (hm' : ∀ e r s, ¬ S (r, s) → (chart hS e * m).val r s = (1 : Matrix ι ι k) r s)
     (φ : GL ι k → ℂ) (hφ : Continuous φ) :
     ∫ e, φ (chart hS e * m) ∂(Measure.pi fun _ => ν) = ∫ e, φ (chart hS e) ∂(Measure.pi fun _ => ν) := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   have hT := GlobalTheory.SgLoc.TriShift.measurePreserving_triangular ν (fun i : {rs // S rs} => b i.1.2)
     (fun i e => (m.val - 1) i.1.1 i.1.2 + ∑ t, ext S e i.1.1 t * (m.val - 1) t i.1.2)
     (fun i => (continuous_const.add (continuous_finsetSum _ fun t _ =>
@@ -276,8 +276,8 @@ theorem measurePreserving_mul {n : Type} [Fintype n] [Fintype {rs // S rs}]
         (chart hS y.2 * E y.1).val i.1.1 i.1.2)
       ((Measure.pi fun _ => ν).prod (Measure.pi fun _ => ν)) (Measure.pi fun _ => ν) := by
   classical
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   let S' : ι × ι → Prop := fun rs => b rs.1 < b rs.2
   let σ : n ⊕ {rs // S rs} ≃ {rs // S' rs} := Equiv.ofBijective
     (Sum.elim (fun x => ⟨j x, hjb x⟩) fun i => ⟨i.1, hS _ i.2⟩) (by
@@ -327,7 +327,7 @@ theorem measurePreserving_mul {n : Type} [Fintype n] [Fintype {rs // S rs}]
       obtain rfl : (j x).1 = r := congrArg Prod.fst hx
       obtain rfl : (j x).2 = s := congrArg Prod.snd hx
       have hne : (j x).1 ≠ (j x).2 := fun h => absurd (hjb x) (by rw [h]; exact lt_irrefl _)
-      rw [if_neg (hjS x), ext_pos (S := S') _ (hjb x), Matrix.sub_apply, Matrix.one_apply_ne hne, sub_zero, hE]
+      rw [ite_eq_right (hjS x), ext_pos (S := S') _ (hjb x), Matrix.sub_apply, Matrix.one_apply_ne hne, sub_zero, hE]
       exact h1 x
     · rw [Matrix.sub_apply, hE' β r s fun x h => hx ⟨x, h⟩, sub_self]
       split_ifs with h
@@ -435,7 +435,7 @@ theorem proper_chart {q : ℕ} {b : n ⊕ Fin c → ℕ} {S : (n ⊕ Fin c) × (
     (hS : ∀ rs, S rs → b rs.1 < b rs.2) (hq : ∀ e, (chart hS e : GL (n ⊕ Fin c) k) ∈ N k n c q)
     (C : Set (GL (n ⊕ Fin c) k)) (hC : IsCompact C) :
     ∃ D, IsCompact D ∧ ∀ t : GL n k × ({rs // S rs} → k), embX c t.1 * chart hS t.2 ∈ C → t ∈ D := by
-  haveI := t2Space k
+  have := t2Space k
   have c1 : Continuous fun g : GL (n ⊕ Fin c) k => g.val.toBlocks₁₁ :=
     continuous_matrix fun r s => Units.continuous_val.matrix_elem _ _
   have hX := (Units.isClosedEmbedding_embedProduct (α := Matrix n n k)).isCompact_preimage
@@ -459,14 +459,14 @@ variable [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasur
 
 theorem integral_volN (q : ℕ) (φ : GL (n ⊕ Fin c) k → ℂ) :
     ∫ u : N k n c q, φ u ∂(volN ν n c q) = ∫ e, φ (chartN q e) ∂(Measure.pi fun _ => ν) := by
-  haveI := secondCountable k
+  have := secondCountable k
   let eqv : N k n c q ≃ᵐ ({rs : (n ⊕ Fin c) × (n ⊕ Fin c) // lev q rs.1 < lev q rs.2} → k) :=
     { toFun := fun g rs => (g : GL (n ⊕ Fin c) k).val rs.1.1 rs.1.2
       invFun := fun e => ⟨chartN q e, chartN_mem q e⟩
       left_inv := fun g => Subtype.ext (chartN_entries g.2)
       right_inv := fun e => funext fun i => chart_pos (b := lev q) (fun _ h => h) e i
       measurable_toFun := (continuous_pi fun i =>
-        (Units.continuous_val.comp continuous_subtype_val).matrix_elem _ _).measurable
+        (Units.continuous_val.comp continuous_subtypeVal).matrix_elem _ _).measurable
       measurable_invFun := ((continuous_chart _).subtype_mk _).measurable }
   have : volN ν n c q = (Measure.pi fun _ => ν).map eqv.symm := by
     rw [MeasurableEquiv.map_symm]
@@ -507,8 +507,8 @@ theorem average_step {p q : ℕ} {E : (n → k) → GL (n ⊕ Fin c) k} (hE : Is
     (h : GL (n ⊕ Fin c) k) :
     ∫ β, ∫ x, ∫ e, F (embX c x * chartB p e * (E β * h)) ∂(Measure.pi fun _ => ν) ∂μX ∂(Measure.pi fun _ => ν) =
       ∫ x, (∫ u : N k n c q, F (embX c x * (u : GL (n ⊕ Fin c) k) * h) ∂(volN ν n c q)) ∂μX := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   obtain ⟨T, hT, hT'⟩ := hE
   let a : GL n k × ({rs : (n ⊕ Fin c) × (n ⊕ Fin c) // lev q rs.1 < lev q rs.2} → k) → ℂ :=
     fun t => F (embX c t.1 * chartN q t.2 * h)
@@ -536,8 +536,8 @@ theorem integral_conj {p : ℕ} (hp1 : 1 ≤ p) (hp : p < c) (x : GL n k) (ψ : 
     ∫ e, ψ (embX c x * chartB p e * (embX c x)⁻¹) ∂(Measure.pi fun _ => ν) =
       ((nabs k (Matrix.GeneralLinearGroup.det x) ^ (-((c : ℝ) - 2 * p)) : ℝ) : ℂ) *
         ∫ e, ψ (chartB p e) ∂(Measure.pi fun _ => ν) := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   obtain ⟨T, hT, hT'⟩ := isSplit_col (n := n) ν hp
   set K : Set (n → k) := Set.pi Set.univ fun _ => (𝒪[k] : Set k) with hK
   have hKo : IsOpen K := isOpen_set_pi Set.finite_univ fun _ _ => Model.isOpen_int
@@ -585,8 +585,8 @@ end Concrete
 
 theorem quotInt_step : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (c p : ℕ) (_ : 1 ≤ p) (_ : p < c) (ν : Measure k) [ν.IsAddHaarMeasure] (μX : Measure (GL n k)) [μX.IsHaarMeasure] (μG : Measure (GL (n ⊕ Fin c) k)) [μG.IsHaarMeasure] (f : GL (n ⊕ Fin c) k → ℂ) (_ : IsLocallyConstant f) (_ : ∃ Ω, IsCompact Ω ∧ ∀ h, f h ≠ 0 → ∃ r ∈ R k n c p ⊓ R k n c (p + 1), ∃ w ∈ Ω, h = r * w) (_ : ∀ (x : GL n k), ∀ u ∈ N k n c p ⊓ N k n c (p + 1), ∀ h, f (embX c x * u * h) = ((nabs k (Matrix.GeneralLinearGroup.det x) ^ ((c : ℝ) - 2 * p) : ℝ) : ℂ) * f h), ∃ z, IsQuotInt ν μX μG p (fun h => ∫ β : n → k, f (colE c (p + 1) β * h) ∂(Measure.pi fun _ => ν)) z ∧ IsQuotInt ν μX μG (p + 1) (fun h => ∫ u : n → k, f (rowE c p u * h) ∂(Measure.pi fun _ => ν)) z := by
   intro k _ _ _ _ _ _ n _ _ c p hp1 hp ν _ μX _ μG _ f hf hΩ hfe
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   obtain ⟨Ω, hΩ, hsupp⟩ := hΩ
   let δ : GL n k → ℝ := fun x => nabs k (Matrix.GeneralLinearGroup.det x) ^ ((c : ℝ) - 2 * p)
   have hδm : ∀ x y, δ (x * y) = δ x * δ y := fun x y => by

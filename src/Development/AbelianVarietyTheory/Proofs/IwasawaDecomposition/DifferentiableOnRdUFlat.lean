@@ -75,11 +75,11 @@ theorem exists_generic_units (hpq : 1 ≤ Dw.p + Dw.q) (h : GenFrEx Xo c) :
     charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
   choose Ψ hΨ using fun Z : Comp Xo c => exists_tied E H Dw l Xo c _ e (Om Z) (genFr h Z) hpq
   refine ⟨fun Z => κ (Om Z) (Ψ Z).key, fun C => ?_⟩
-  letI : Algebra c.F C.R := Subalgebra.algebra C.R
-  haveI := C.sm
-  haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
-  haveI : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
-  haveI : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
+  let : Algebra c.F C.R := Subalgebra.algebra C.R
+  have := C.sm
+  have : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
+  have : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
+  have : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
   obtain ⟨Φ, hΦ⟩ := exists_tied E H Dw l Xo c _ e C.R C.y hpq
   obtain ⟨Φ', hΦ'⟩ := exists_tied E H Dw l Xo c _ e (Om C.Z) C.yg hpq
   obtain ⟨u, hu⟩ := h₃ C.R Φ.key
@@ -100,7 +100,7 @@ theorem exists_key_four (hpq : 1 ≤ Dw.p + Dw.q) (σ : c.F →+* ℂ) :
       rw [hk, ← Units.val_mul, ← hu]
       exact u.1.2
   refine ⟨ρ, hρ, fun y => ?_⟩
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   obtain ⟨C, ψ, z, t, hz, hb⟩ := hA h (CAt σ) y
   obtain ⟨u, hu⟩ := hv C
   obtain ⟨b, hb₁, hb₂⟩ := GlobalTheory.DegCmp.fChart_exists_val C hρ

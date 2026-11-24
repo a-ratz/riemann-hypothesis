@@ -123,14 +123,14 @@ theorem evGen_bij {C R A : Type} [Field C] [IsAlgClosed C] [CharZero C] [CommRin
   constructor
   · rw [injective_iff_map_eq_zero]
     intro b hb
-    haveI : IsReduced (C ⊗[R] A) := GlobalTheory.isReduced_of_hopfAlgebra_of_isAlgClosed C _
-    haveI : IsArtinianRing (C ⊗[R] A) := IsArtinianRing.of_finite C _
+    have : IsReduced (C ⊗[R] A) := GlobalTheory.isReduced_of_hopfAlgebra_of_isAlgClosed C _
+    have : IsArtinianRing (C ⊗[R] A) := IsArtinianRing.of_finite C _
     apply (IsArtinianRing.equivPi (C ⊗[R] A)).injective
     rw [map_zero]
     funext m
     rw [IsArtinianRing.equivPi_apply]
-    haveI := m.isMaximal
-    letI : Field ((C ⊗[R] A) ⧸ m.asIdeal) := Ideal.Quotient.field _
+    have := m.isMaximal
+    let : Field ((C ⊗[R] A) ⧸ m.asIdeal) := Ideal.Quotient.field _
     have bij := IsAlgClosed.algebraMap_bijective_of_isIntegral (k := C) (K := (C ⊗[R] A) ⧸ m.asIdeal)
     let e := AlgEquiv.ofBijective (Algebra.ofId C ((C ⊗[R] A) ⧸ m.asIdeal)) bij
     obtain ⟨x, hx⟩ := key (e.symm.toAlgHom.comp (Ideal.Quotient.mkₐ C m.asIdeal))
@@ -186,9 +186,9 @@ theorem evGen_bij {C R A : Type} [Field C] [IsAlgClosed C] [CharZero C] [CommRin
 theorem hopfalg : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → ∀ (A : Type) [CommRing A] [HopfAlgebra R A] [Coalgebra.IsCocomm R A] [Module.Finite R A] [Module.Free R A], ∀ (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N], ∀ pt : N → (A →ₐ[R] R), Function.Bijective pt → (∀ x y a, pt (x + y) a = Algebra.TensorProduct.lift (pt x) (pt y) (fun _ _ => Commute.all _ _) (Coalgebra.comul (R := R) a)) → (∀ a : A, (∀ x, pt x a = 0) → a = 0) ∧ Fintype.card N = Module.finrank R A ∧ ∃ AA : HopfOrder (C := C) R N, ∀ g, g ∈ AA.carrier ↔ ∃ a : A, g = fun x => algebraMap R C (pt x a) := by
   intro p _ C _ _ _ v R _ _ hv hp A _ _ _ _ _ N _ _ _ pt hbij hadd
   classical
-  haveI : IsDomain R := hv.hom_inj.isDomain
-  haveI : IsFractionRing R C := hv.isFractionRing
-  haveI : ValuationRing R := ValuationRing.of_integers v hv
+  have : IsDomain R := hv.hom_inj.isDomain
+  have : IsFractionRing R C := hv.isFractionRing
+  have : ValuationRing R := ValuationRing.of_integers v hv
   have hB := evGen_bij (C := C) pt hbij
   have hinjA : Function.Injective (fun a : A => (1 : C) ⊗ₜ[R] a) := by
     have h1 := Module.Flat.rTensor_preserves_injective_linearMap (M := A) (Algebra.linearMap R C) hv.hom_inj

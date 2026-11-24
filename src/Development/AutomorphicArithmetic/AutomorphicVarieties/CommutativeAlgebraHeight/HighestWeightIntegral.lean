@@ -90,7 +90,7 @@ private theorem height_ker_add {B C : Type} [CommRing B] [IsDomain B] [CommRing 
     rw [IsScalarTower.algebraMap_eq B C L]
     exact (IsFractionRing.injective C L).comp (FaithfulSMul.algebraMap_injective B C)
   have : FaithfulSMul B L := (faithfulSMul_iff_algebraMap_injective _ _).mpr hBL
-  letI : Algebra K L := FractionRing.liftAlgebra B L
+  let : Algebra K L := FractionRing.liftAlgebra B L
   have : IsScalarTower B K L := FractionRing.isScalarTower_liftAlgebra B L
   let g' : MvPolynomial (Fin N) K →ₐ[K] L :=
     MvPolynomial.aeval fun i => algebraMap C L (g (MvPolynomial.X i))
@@ -218,7 +218,7 @@ private theorem UpperTheory.V.CA.localDimension_eq_height {C : Type} [CommRing C
     · intro hy
       obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective y
       exact ⟨a, fun ha => hy (Ideal.mem_map_of_mem _ ha), rfl⟩
-  haveI : IsLocalization.AtPrime (Localization.AtPrime x ⧸ p.map (algebraMap C (Localization.AtPrime x)))
+  have : IsLocalization.AtPrime (Localization.AtPrime x ⧸ p.map (algebraMap C (Localization.AtPrime x)))
       (x.map (Ideal.Quotient.mk p)) := by
     unfold IsLocalization.AtPrime
     rw [← hsub]
@@ -233,8 +233,8 @@ theorem UpperTheory.V.CA.c3b :
   have hqm : q ≤ maximalIdeal B := by
     rw [← hx]
     exact Ideal.comap_mono hp
-  haveI : IsLocalRing (B ⧸ q) := IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
-  haveI : FaithfulSMul (B ⧸ q) (C ⧸ p) :=
+  have : IsLocalRing (B ⧸ q) := IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
+  have : FaithfulSMul (B ⧸ q) (C ⧸ p) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr Ideal.quotientMap_injective
   have hcm : IsCMQuot (B ⧸ q) :=
     cl_cmquot O (B ⧸ q) (cl_quot O B (B ⧸ q) (Ideal.Quotient.mkₐ O q) Ideal.Quotient.mk_surjective hCL)
@@ -253,7 +253,7 @@ theorem UpperTheory.V.CA.c3b :
       rw [Ideal.mem_quotient_iff_mem hIJ] at h1
       exact hJ.ne_top ((Ideal.eq_top_iff_one J).mpr h1)
     · exact h
-  haveI hmax : (x.map (Ideal.Quotient.mk p)).IsMaximal := mapmax p x ‹x.IsMaximal› hp
+  have hmax : (x.map (Ideal.Quotient.mk p)).IsMaximal := mapmax p x ‹x.IsMaximal› hp
   have hmB : (maximalIdeal B).map (Ideal.Quotient.mk q) = maximalIdeal (B ⧸ q) :=
     IsLocalRing.eq_maximalIdeal (mapmax q _ (IsLocalRing.maximalIdeal.isMaximal B) hqm)
   have hcomap : (x.map (Ideal.Quotient.mk p)).comap (algebraMap (B ⧸ q) (C ⧸ p)) = maximalIdeal (B ⧸ q) := by

@@ -74,7 +74,7 @@ private lemma exists_isometry_extension_of_dense_of_norm_eq {K : Type} [NormedAd
       simp
     rw [DenseRange, hr]
     exact hV
-  have hi : IsUniformInducing V.subtypeL := isUniformEmbedding_subtype_val.isUniformInducing
+  have hi : IsUniformInducing V.subtypeL := isUniformEmbedding_subtypeVal.isUniformInducing
   have heq : ∀ v : V, uc.extend V.subtypeL v = u v := fun v => by
     have := ContinuousLinearMap.extend_eq uc hd hi v
     simpa [uc] using this
@@ -179,8 +179,8 @@ lemma abstract {ι K : Type} [CompleteSpace H] [NormedAddCommGroup K] [InnerProd
     intro γ
     apply hJ
     have := congrArg (fun T' : H →L[ℂ] H => T' (J γ)) hc
-    simp only [T, ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.one_apply] at this
+    simp only [T, ContinuousLinearMap.comp_apply, smul_apply,
+      one_apply_eq_self] at this
     rw [this, map_smul]
   refine ⟨c.re, fun γ => ?_⟩
   have h1 : (⟪γ, γ⟫_ℂ).re = ‖γ‖ ^ 2 := inner_self_eq_norm_sq (𝕜 := ℂ) γ

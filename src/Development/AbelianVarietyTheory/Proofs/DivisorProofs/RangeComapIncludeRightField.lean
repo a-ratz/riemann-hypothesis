@@ -84,11 +84,11 @@ theorem range_comap_includeRight_field :
     let ι₂ : A ⧸ I →+* K := Ideal.Quotient.lift I g hIg
     have inj₁ : Function.Injective ι₁ := RingHom.kerLift_injective f
     have inj₂ : Function.Injective ι₂ := RingHom.lift_injective_of_ker_le_ideal I hIg hg.le
-    letI : Algebra (A ⧸ I) k := ι₁.toAlgebra
-    letI : Algebra (A ⧸ I) K := ι₂.toAlgebra
-    haveI : Nontrivial (k ⊗[A ⧸ I] K) :=
+    let : Algebra (A ⧸ I) k := ι₁.toAlgebra
+    let : Algebra (A ⧸ I) K := ι₂.toAlgebra
+    have : Nontrivial (k ⊗[A ⧸ I] K) :=
       Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain (A ⧸ I) k K inj₁ inj₂
-    haveI : SMulCommClass (A ⧸ I) A k := ⟨fun x a y => by
+    have : SMulCommClass (A ⧸ I) A k := ⟨fun x a y => by
       simp only [Algebra.smul_def]; ring⟩
     let α : k →ₐ[A] k ⊗[A ⧸ I] K := Algebra.TensorProduct.includeLeft
     let β : B →ₐ[A] k ⊗[A ⧸ I] K :=

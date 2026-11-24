@@ -133,7 +133,7 @@ theorem awayToCyc_injective {M : ℕ} (hM : M ≠ 0) : Function.Injective (awayT
     (Int.castRingHom (cycAway M)).injective_int.eq_iff]
 
 theorem finite_awayToCyc {M : ℕ} (hM : M ≠ 0) : (awayToCyc M hM).Finite := by
-  letI := (awayToCyc M hM).toAlgebra
+  let := (awayToCyc M hM).toAlgebra
   have hv : ∀ hx, (⟨(M : ℂ)⁻¹, hx⟩ : cycAway M) =
       algebraMap (Localization.Away (M : ℤ)) (cycAway M) (IsLocalization.Away.invSelf (M : ℤ)) := by
     intro hx
@@ -161,7 +161,7 @@ theorem finite_awayToCyc {M : ℕ} (hM : M ≠ 0) : (awayToCyc M hM).Finite := b
     | add x y _ _ hx hy => exact hx.add hy
     | neg x _ hx => exact hx.neg
     | mul x y _ _ hx hy => exact hx.mul hy
-  haveI : Algebra.FiniteType (Localization.Away (M : ℤ)) (cycAway M) := by
+  have : Algebra.FiniteType (Localization.Away (M : ℤ)) (cycAway M) := by
     refine ⟨⟨{zetaAway M}, eq_top_iff.2 ?_⟩⟩
     rintro ⟨x, hx⟩ -
     induction hx using Subring.closure_induction with
@@ -178,19 +178,19 @@ theorem finite_awayToCyc {M : ℕ} (hM : M ≠ 0) : (awayToCyc M hM).Finite := b
   exact (Algebra.IsIntegral.finite : Module.Finite (Localization.Away (M : ℤ)) (cycAway M))
 
 theorem etale_awayToCyc {M : ℕ} (hM : M ≠ 0) : (awayToCyc M hM).Etale := by
-  letI := (awayToCyc M hM).toAlgebra
+  let := (awayToCyc M hM).toAlgebra
   have hle : Submonoid.powers (M : ℤ) ≤ nonZeroDivisors ℤ :=
     powers_le_nonZeroDivisors_of_noZeroDivisors (by exact_mod_cast hM)
-  haveI : IsDomain (Localization.Away (M : ℤ)) := IsLocalization.isDomain_localization hle
-  haveI : IsDedekindDomain (Localization.Away (M : ℤ)) :=
+  have : IsDomain (Localization.Away (M : ℤ)) := IsLocalization.isDomain_localization hle
+  have : IsDedekindDomain (Localization.Away (M : ℤ)) :=
     IsLocalization.isDedekindDomain ℤ hle (Localization.Away (M : ℤ))
-  haveI : Module.Finite (Localization.Away (M : ℤ)) (cycAway M) := finite_awayToCyc hM
-  haveI : FaithfulSMul (Localization.Away (M : ℤ)) (cycAway M) :=
+  have : Module.Finite (Localization.Away (M : ℤ)) (cycAway M) := finite_awayToCyc hM
+  have : FaithfulSMul (Localization.Away (M : ℤ)) (cycAway M) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (awayToCyc_injective hM)
-  haveI : Module.Flat (Localization.Away (M : ℤ)) (cycAway M) := inferInstance
-  haveI : Algebra.FinitePresentation (Localization.Away (M : ℤ)) (cycAway M) :=
+  have : Module.Flat (Localization.Away (M : ℤ)) (cycAway M) := inferInstance
+  have : Algebra.FinitePresentation (Localization.Away (M : ℤ)) (cycAway M) :=
     Algebra.FinitePresentation.of_finiteType.1 inferInstance
-  haveI := formallyUnramified_cycAway hM (Localization.Away (M : ℤ))
+  have := formallyUnramified_cycAway hM (Localization.Away (M : ℤ))
   exact (Algebra.Etale.of_formallyUnramified_of_flat : Algebra.Etale (Localization.Away (M : ℤ)) (cycAway M))
 
 theorem exists_cycAway_cover : ∀ (M : ℕ) (S : Scheme.{0}), 0 < M → IsUnit (M : Γ(S, ⊤)) → ∃ (S' : Over S) (t₀ : S'.left ⟶ Sp (cycAway M)), IsFinite S'.hom ∧ Etale S'.hom ∧ ∀ (T : Scheme.{0}) (f : T ⟶ S) (t₁ : T ⟶ Sp (cycAway M)), ∃! g : T ⟶ S'.left, g ≫ S'.hom = f ∧ g ≫ t₀ = t₁ := by
@@ -200,13 +200,13 @@ theorem exists_cycAway_cover : ∀ (M : ℕ) (S : Scheme.{0}), 0 < M → IsUnit 
   let φ : S ⟶ Sp (Localization.Away (M : ℤ)) :=
     S.toSpecΓ ≫ spMap (IsLocalization.Away.lift (S := Localization.Away (M : ℤ)) (M : ℤ) hSu)
   let S' : Over S := Over.mk (pullback.fst φ (spMap (awayToCyc M hM0)))
-  haveI : IsFinite (spMap (awayToCyc M hM0)) := (IsFinite.SpecMap_iff _).2 (finite_awayToCyc hM0)
-  haveI : Etale (spMap (awayToCyc M hM0)) := HasRingHomProperty.Spec_iff.2 (etale_awayToCyc hM0)
+  have : IsFinite (spMap (awayToCyc M hM0)) := (IsFinite.SpecMap_iff _).2 (finite_awayToCyc hM0)
+  have : Etale (spMap (awayToCyc M hM0)) := HasRingHomProperty.Spec_iff.2 (etale_awayToCyc hM0)
   refine ⟨S', pullback.snd φ (spMap (awayToCyc M hM0)), ?_, ?_, ?_⟩
   · exact (inferInstance : IsFinite (pullback.fst φ (spMap (awayToCyc M hM0))))
   · exact (inferInstance : Etale (pullback.fst φ (spMap (awayToCyc M hM0))))
   · intro T f t₁
-    haveI : IsOpenImmersion (spMap (algebraMap ℤ (Localization.Away (M : ℤ)))) :=
+    have : IsOpenImmersion (spMap (algebraMap ℤ (Localization.Away (M : ℤ)))) :=
       inferInstanceAs (IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap ℤ (Localization.Away (M : ℤ))))))
     have e : f ≫ φ = t₁ ≫ spMap (awayToCyc M hM0) :=
       (cancel_mono (spMap (algebraMap ℤ (Localization.Away (M : ℤ))))).1 (specZIsTerminal.hom_ext _ _)
@@ -378,7 +378,7 @@ theorem card_tors (M : ℕ) (hM : 0 < M) (e : (κ → ℤ) → Q) (hadd : ∀ a 
     (hpow : ∀ a, e a ^ M = 1) (hker : ∀ a, e a = 1 ↔ ∃ c, a = M • c)
     (hon : ∀ g : Q, g ^ M = 1 → ∃ a, e a = g) : Nat.card {g : Q // g ^ M = 1} = M ^ Fintype.card κ := by
   classical
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   have hb : Function.Bijective (red M e hpow) := by
     refine ⟨red_injective M e hadd hpow hker, fun ⟨g, hg⟩ => ?_⟩
     obtain ⟨a, rfl⟩ := hon g hg
@@ -392,11 +392,11 @@ namespace GlobalTheory.HTSympCover
 
 theorem onto_tors_iff : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N h M : ℕ), 0 < M → M.Coprime p → ∀ (S : Scheme.{0}) (t : S ⟶ Sp R) (o : Obj b N t) (k : Type) [Field k] [IsAlgClosed k] (y : Sp k ⟶ S) (e : (Fin h ⊕ Fin h → ℤ) → (Over.mk y ⟶ o.A)), (∀ a c, e (a + c) = e a * e c) → (∀ a, e a ^ M = 1) → (∀ a, e a = 1 ↔ ∃ c, a = M • c) → ((∀ g : Over.mk y ⟶ o.A, g ^ M = 1 → ∃ a, e a = g) ↔ (M = 1 ∨ 2 * h = Module.finrank ℤ D.La)) := by
   intro p _ D R _ b N h M hM hcop S t o k _ _ y e hadd hpow hker
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨β, hβ⟩ := GlobalTheory.LevCover.exists_spMap (y ≫ t)
   obtain ⟨I, -⟩ := o.geom k y β hβ
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let B := Module.Free.chooseBasis ℤ D.La
   let ev' : (Module.Free.ChooseBasisIndex ℤ D.La → ℤ) → (Over.mk y ⟶ o.A) := fun a => I.ev M (B.equivFun.symm a)
   have hadd' : ∀ a c, ev' (a + c) = ev' a * ev' c := fun a c => by
@@ -428,7 +428,7 @@ theorem onto_tors_iff : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [C
     exact ⟨0, by rw [hg]; exact GlobalTheory.TorsCount.map_zero_of_add e hadd⟩
   · have hMne : M ≠ 1 := by omega
     simp only [hMne, false_or]
-    haveI : Finite {g : Over.mk y ⟶ o.A // g ^ M = 1} :=
+    have : Finite {g : Over.mk y ⟶ o.A // g ^ M = 1} :=
       Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
     constructor
     · intro hon
@@ -598,7 +598,7 @@ theorem weil_locus_clopen : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type
     rw [hz']
     exact H β z hβ hz
   obtain ⟨κ, hκ, q, hq⟩ := exists_finite_mod (Fin h ⊕ Fin h → ℤ) hM
-  haveI := hκ
+  have := hκ
   let r : κ → (Fin h ⊕ Fin h → ℤ) := Function.invFun q
   have localization₂ : HkClopen.Loc (fun (k : Type) [Field k] [IsAlgClosed k] (g : Sp k ⟶ Z.left) => ∀ a a', P2 a a' k g) := by
     refine (HkClopen.Loc.all (I₀ := κ × κ) (P := fun i => P2 (r i.1) (r i.2)) fun i => locPair _ _).congr
@@ -679,14 +679,14 @@ theorem exists_sympLevScheme : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
     rwa [map_natCast] at this
   obtain ⟨Z, et, hfin, het, eadd, epow, huniv⟩ :=
     GlobalTheory.exists_finiteEtale_latticeTorsionHom S o.A M (Fin h ⊕ Fin h → ℤ) o.ab hMS
-  haveI := hfin
-  haveI := het
+  have := hfin
+  have := het
   obtain ⟨S', t₀, hS1, hS2, hSu⟩ := lemCyc M S hM hMS
-  haveI := hS1
-  haveI := hS2
+  have := hS1
+  have := hS2
   obtain ⟨hW1, hW2⟩ := GlobalTheory.LevCover.finiteEtale_tensor Z S'
-  haveI := hW1
-  haveI := hW2
+  have := hW1
+  have := hW2
   let W : Over S := Z ⊗ S'
   let e : (Fin h ⊕ Fin h → ℤ) → (W ⟶ o.A) := fun a => fst Z S' ≫ et a
   let τ : W.left ⟶ Sp (cycAway M) := (snd Z S').left ≫ t₀
@@ -926,7 +926,7 @@ theorem exists_injective_hom {n : ℕ} (hn : n ≠ 0) {V : Type} [CommRing V] [I
   have hp := Nat.pos_of_ne_zero hn
   let L := FractionRing V
   have hinj : Function.Injective (algebraMap V L) := IsFractionRing.injective V L
-  haveI : CharZero L := charZero_of_injective_algebraMap hinj
+  have : CharZero L := charZero_of_injective_algebraMap hinj
   have hz : IsPrimitiveRoot (zetaAway n : ℂ) n := Complex.isPrimitiveRoot_exp n hn
   have hi : IsIntegral ℚ (zetaAway n : ℂ) := (hz.isIntegral hp).tower_top
   let K := IntermediateField.adjoin ℚ {(zetaAway n : ℂ)}
@@ -993,8 +993,8 @@ theorem exists_hom_to_field : ∀ (M : ℕ), M ≠ 0 → ∀ (K : Type) [Field K
   intro M hM K _ y hy hMK
   obtain ⟨p, hcp⟩ := CharP.exists K
   rcases CharP.char_is_prime_or_zero K p with hp | rfl
-  · haveI : Fact p.Prime := ⟨hp⟩
-    haveI : CharZero (WittVector p K) := by
+  · have : Fact p.Prime := ⟨hp⟩
+    have : CharZero (WittVector p K) := by
       obtain ⟨q, hq⟩ := CharP.exists (WittVector p K)
       have h1 : ((q : ℕ) : K) = 0 := by
         have := congrArg (WittVector.constantCoeff : WittVector p K →+* K) (CharP.cast_eq_zero (WittVector p K) q)
@@ -1003,7 +1003,7 @@ theorem exists_hom_to_field : ∀ (M : ℕ), M ≠ 0 → ∀ (K : Type) [Field K
       rcases CharP.char_is_prime_or_zero (WittVector p K) q with h | h
       · have h3 : p = q := (Nat.prime_dvd_prime_iff_eq hp h).1 h2
         subst h3
-        exact absurd (CharP.cast_eq_zero (WittVector p K) p) (WittVector.p_nonzero p K)
+        exact absurd (CharP.cast_eq_zero (WittVector p K) p) (WittVector.p_ne_zero p K)
       · subst h
         exact CharP.charP_to_charZero _
     let π : WittVector p K →+* K := WittVector.constantCoeff
@@ -1018,7 +1018,7 @@ theorem exists_hom_to_field : ∀ (M : ℕ), M ≠ 0 → ∀ (K : Type) [Field K
       exact this
     obtain ⟨f, -, hfζ⟩ := exists_injective_hom hM hu hnV
     exact ⟨π.comp f, by rw [RingHom.comp_apply, hfζ, hcc]⟩
-  · haveI : CharZero K := CharP.charP_to_charZero K
+  · have : CharZero K := CharP.charP_to_charZero K
     obtain ⟨f, -, hfζ⟩ := exists_injective_hom hM hy hMK
     exact ⟨f, hfζ⟩
 
@@ -1064,8 +1064,8 @@ theorem exists_sympCond_geom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : T
   obtain ⟨β, hβ⟩ : ∃ β : R →+* K, x ≫ t = spMap β :=
     ⟨(Spec.preimage (x ≫ t)).hom, (Spec.map_preimage _).symm⟩
   obtain ⟨I, -⟩ := o.geom K x β hβ
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   obtain ⟨L, hLker, hLonto, hLω⟩ := GlobalTheory.T.exists_lattice_map_mod_of_perfect_alternating D.La D.EF D.alt D.nondeg e M hperf hMe
   have hMK : IsUnit (M : K) := by simpa using (b.unit M hMp).map β
   have hprim : IsPrimitiveRoot ((I.ζ M : Kˣ) : K) M :=
@@ -1304,7 +1304,7 @@ theorem sympCond_fibre_existsUnique : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p)
     SympCond o h M (Over.mk x) t₁ lv → SympCond o h M (Over.mk x) t₁' lv' →
     ∃! a : sympSimGrp h M, t₁ ≫ spMap (σ a) = t₁' ∧ ∀ c, sympTwist a lv c = lv' c := by
   intro p _ D R _ b N h M hM hodd hh σ hσ S t o K _ _ x t₁ t₁' lv lv' H H'
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨hadd, -, hgeo⟩ := H
   obtain ⟨hadd', -, hgeo'⟩ := H'
   obtain ⟨β, hβ⟩ := sp_exists_spMap t₁
@@ -1481,7 +1481,7 @@ theorem sympCond_twist : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
     ∀ (a : sympSimGrp h M) (n : ℕ) (σ : cycAway M →+* cycAway M), IsMultOf a n →
       σ (zetaAway M) = zetaAway M ^ n → SympCond o h M T (t₁ ≫ spMap σ) (sympTwist a lv) := by
   intro p _ D R _ b N h M hM S t o T t₁ lv hlv a n σ hn hσ
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   obtain ⟨hadd, htor, hgeo⟩ := hlv
 
   let φ : Multiplicative (Fin h ⊕ Fin h → ℤ) →* (T ⟶ o.A) :=
@@ -1592,7 +1592,7 @@ theorem exists_galoisCover_of_geom {p : ℕ} [Fact p.Prime] {D : Datum p} {R : T
     ∃ (S₁ : Scheme.{0}) (π₁ : S₁ ⟶ S) (ρ₁ : sympSimGrp h M → (S₁ ⟶ S₁)) (y : S₁ ⟶ X) (o' : Obj b N (π₁ ≫ t)),
       GlobalTheory.ZM.IsGaloisCover (sympSimGrp h M) ρ₁ π₁ ∧ (∀ a, ρ₁ a ≫ y = y ≫ ρ a) ∧
       y ≫ s = π₁ ≫ t ∧ Nonempty (ObjMap o' o π₁) ∧ Nonempty (ObjMap o' u y) := by
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   obtain ⟨Y, t₁, lu, hYf, hYe, hY⟩ := GlobalTheory.T.exists_finiteEtale_symplecticLevel_scheme p D R b N h M hM0 hMp S t o
   have hAu : SympCond o h M Y t₁ lu := (hY Y t₁ lu).2 ⟨𝟙 Y, by simp, fun a => Category.id_comp _⟩
   have uniqY : ∀ {T : Over S} (f g : T ⟶ Y), f.left ≫ t₁ = g.left ≫ t₁ → (∀ c, f ≫ lu c = g ≫ lu c) → f = g :=

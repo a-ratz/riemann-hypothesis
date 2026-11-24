@@ -93,14 +93,14 @@ theorem good_add (hs : φ ∈ GlobalTheory.Mem.AutSpace.SmFun θ V) (hs' : ψ �
 
 theorem good_smul (c : ℂ) (h : Good θ V U N φ) : Good θ V U N (c • φ) :=
   ⟨fun k hk hk' g => by simp only [Pi.smul_apply, h.1 k hk hk' g],
-    fun d => by rw [GlobalTheory.Size.growthSob_smul]; exact ENNReal.mul_ne_top enorm_ne_top (h.2 d)⟩
+    fun d => by rw [GlobalTheory.Size.growthSob_smul]; exact ENNReal.mul_ne_top eNorm_ne_top (h.2 d)⟩
 
 theorem good_zero : Good θ V U N 0 := by
   have h := good_smul (θ := θ) (U := U) (N := N) (φ := 0) 0
   rw [zero_smul] at h
   refine h ⟨fun _ _ _ _ => rfl, fun d => ?_⟩
   have e := GlobalTheory.Size.growthSob_smul (θ := θ) (V := V) (φ := 0) 0 d N
-  rw [zero_smul, enorm_zero, zero_mul] at e
+  rw [zero_smul, eNorm_zero, zero_mul] at e
   rw [e]; exact ENNReal.zero_ne_top
 
 theorem good_Rder (hθ : IsInfFam θ) (hs : φ ∈ GlobalTheory.Mem.AutSpace.SmFun θ V) {τ : D.what₂.Tau}
@@ -117,7 +117,7 @@ theorem good_Rder (hθ : IsInfFam θ) (hs : φ ∈ GlobalTheory.Mem.AutSpace.SmF
         (Finset.single_le_sum (f := fun a' => ∑ b', ‖X a' b'‖ₑ) (fun _ _ => zero_le) (Finset.mem_univ a))
     refine ne_top_of_le_ne_top ?_ (GlobalTheory.Size.Translate.growthSob_RderC_le hθ hs τ hB d N)
     refine ENNReal.mul_ne_top (ENNReal.natCast_ne_top _) (ENNReal.mul_ne_top ?_ (h.2 (d + 1)))
-    exact ENNReal.sum_ne_top.2 fun _ _ => ENNReal.sum_ne_top.2 fun _ _ => enorm_ne_top
+    exact ENNReal.sum_ne_top.2 fun _ _ => ENNReal.sum_ne_top.2 fun _ _ => eNorm_ne_top
 
 theorem good_rTr (hθ : IsInfFam θ) (hs : φ ∈ GlobalTheory.Mem.AutSpace.SmFun θ V) {h : GA D V} (hh : h ∈ GinfC V)
     (hg : Good θ V U N φ) : Good θ V U N (rTr V h φ) := by
@@ -147,7 +147,7 @@ theorem conj_mem_lieSet (M : DSModel V S) (τ : D.what₂.Tau) {X : Matrix (Fin 
 theorem dRep_mem_kFin (hHC : GlobalTheory.Published.HarishChandraModules) (M : DSModel V S) (τ : D.what₂.Tau)
     {X : Matrix (Fin V.rank) (Fin V.rank) ℂ} (hX : X ∈ lieAt V τ) {w : M.H τ}
     (hw : w ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ) : dRep (M.rep τ) X w ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ := by
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have hstd := GlobalTheory.TypeSum.std_of_isDS hHC (M.ds τ)
   have hd : dRep (M.rep τ) X w = dRep (M.σ τ) (M.fr τ * X * (M.fr τ)⁻¹) w := by
     unfold dRep

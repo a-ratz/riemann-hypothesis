@@ -130,7 +130,7 @@ private lemma le_iSup_eigPart_inf_of_invariant {I A : Type} [NormedAddCommGroup 
   push_neg at hsc
   obtain ⟨i, hi⟩ := hsc
   have hex : ∃ μ : ℂ, ∃ v : A, v ∈ W ∧ v ≠ 0 ∧ op i v = μ • v := by
-    haveI : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hbot
+    have : Nontrivial W := Submodule.nontrivial_iff_ne_bot.mpr hbot
     have hmaps : ∀ x ∈ W, op i x ∈ W := hW i
     obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue ((op i).restrict hmaps)
     obtain ⟨v, hv⟩ := hμ.exists_hasEigenvector

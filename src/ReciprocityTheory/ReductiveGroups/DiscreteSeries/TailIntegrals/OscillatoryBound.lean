@@ -225,12 +225,12 @@ theorem beta_bound (hL : SLOW) {p m : ℕ} (e : Fin (p + 2) → ℝ) {γ : ℝ} 
     · rw [Fin.succ_zero_eq_one', ← ENNReal.ofReal_mul (Real.rpow_nonneg hd1.le _),
         ← Real.rpow_add hd1, hfac]
       congr 2
-      simp only [ht, Fin.succ_zero_eq_one', if_true]
+      simp only [ht, Fin.succ_zero_eq_one', ite_true]
       ring
     · refine Finset.prod_congr rfl (fun j _ => ?_)
       rw [hfac]
       congr 2
-      simp only [ht, Fin.succ_ne_zero, if_false]
+      simp only [ht, Fin.succ_ne_zero, ite_false]
       ring
   have hR : ∀ β : ℝ,
       ENNReal.ofReal (Lsq (tailPt (a, a'', u, β)) 1 ^ ((-2 + (γ / 2 - e 0)) / 2)) *
@@ -307,7 +307,7 @@ theorem beta_bound (hL : SLOW) {p m : ℕ} (e : Fin (p + 2) → ℝ) {γ : ℝ} 
     have h2 := he1 i.succ
     split_ifs <;> linarith
   have hT : ∑ i, t i ≤ γ / 2 - e 0 + ∑ i : Fin (p + 1), s0N (p + 1) m i.succ := by
-    simp only [ht, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [ht, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     have : ∑ i : Fin (p + 1), (s0N (p + 1) m i.succ - e i.succ) ≤
         ∑ i : Fin (p + 1), s0N (p + 1) m i.succ :=
       Finset.sum_le_sum (fun i _ => by linarith [he i.succ])
@@ -424,7 +424,7 @@ private lemma nnorm_ae (γ : ℝ) (f : ℂ → ℝ≥0∞) :
   congr 1
   rw [← ENNReal.ofReal_rpow_of_pos (norm_pos_iff.mpr hz)]
   congr 1
-  rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
+  rw [← coe_nnNorm, ENNReal.ofReal_coe_nnreal]
 
 private lemma core {e0 γ C : ℝ}
     (hC : ∀ (c : ℂ) (D : ℝ), 0 < D →
@@ -584,7 +584,7 @@ lemma exponentCondition_neg {p : ℕ} (e : Fin (p + 2) → ℝ) {α : ℝ} (he :
   unfold ReciprocityTheory.ChartRestriction.DS.Xi.CHCond
   refine ⟨⟨fun l => ?_, fun l _ => ?_⟩, ?_⟩
   · have h0 : (0 : Fin (p + 1)) ∈ Finset.Iic l := by simp
-    rw [hsum, if_pos h0]
+    rw [hsum, ite_eq_left h0]
     linarith [hS (Finset.Iic l), hN Finset.univ]
   · have h0 : (0 : Fin (p + 1)) ∈ Finset.Iic l := by simp
     have h0' : (0 : Fin (p + 1)) ∉ Finset.Ioi l := by simp [Finset.mem_Ioi]
@@ -594,7 +594,7 @@ lemma exponentCondition_neg {p : ℕ} (e : Fin (p + 2) → ℝ) {α : ℝ} (he :
     have hAB : ∑ j ∈ Finset.Iic l, e j.succ + ∑ j ∈ Finset.Ioi l, e j.succ ≤
         ∑ j : Fin (p + 1), e j.succ := by
       rw [← Finset.sum_union hdis]; exact hS _
-    rw [hsum, hsum, if_pos h0, if_neg h0']
+    rw [hsum, hsum, ite_eq_left h0, ite_eq_right h0']
     linarith [hN (Finset.Iic l), hN (Finset.Ioi l)]
   · show 0 < α + 2 * ∑ i : Fin (p + 1), -e i.succ
     rw [Finset.sum_neg_distrib]
@@ -991,23 +991,23 @@ theorem scl_mp {p m : ℕ} (τ : ℝ) (hτ : τ ≠ 0) :
       inv_pow, mul_inv_cancel₀ (pow_ne_zero 2 hτ)]
   have hf : (scl (p := p) (m := m) τ) = sclL τ p m := funext fun x => (sclL_apply τ p m x).symm
   rw [hf]
-  haveI : BorelSpace ((Fin m → ℂ) × ℝ) := Prod.borelSpace
-  haveI : BorelSpace ((Fin (p + 1) → ℂ) × (Fin m → ℂ) × ℝ) := Prod.borelSpace
-  haveI : BorelSpace (Xp (p + 1) m) := Prod.borelSpace
-  haveI hp1 : (volume : Measure (Fin (p + 1) → ℂ)).IsAddHaarMeasure := by
+  have : BorelSpace ((Fin m → ℂ) × ℝ) := Prod.borelSpace
+  have : BorelSpace ((Fin (p + 1) → ℂ) × (Fin m → ℂ) × ℝ) := Prod.borelSpace
+  have : BorelSpace (Xp (p + 1) m) := Prod.borelSpace
+  have hp1 : (volume : Measure (Fin (p + 1) → ℂ)).IsAddHaarMeasure := by
     show (Measure.pi fun _ => volume).IsAddHaarMeasure
     infer_instance
-  haveI hm1 : (volume : Measure (Fin m → ℂ)).IsAddHaarMeasure := by
+  have hm1 : (volume : Measure (Fin m → ℂ)).IsAddHaarMeasure := by
     show (Measure.pi fun _ => volume).IsAddHaarMeasure
     infer_instance
-  haveI : (volume : Measure ((Fin m → ℂ) × ℝ)).IsAddHaarMeasure := by
+  have : (volume : Measure ((Fin m → ℂ) × ℝ)).IsAddHaarMeasure := by
     show ((volume : Measure (Fin m → ℂ)).prod (volume : Measure ℝ)).IsAddHaarMeasure
     infer_instance
-  haveI : (volume : Measure ((Fin (p + 1) → ℂ) × (Fin m → ℂ) × ℝ)).IsAddHaarMeasure := by
+  have : (volume : Measure ((Fin (p + 1) → ℂ) × (Fin m → ℂ) × ℝ)).IsAddHaarMeasure := by
     show ((volume : Measure (Fin (p + 1) → ℂ)).prod
       (volume : Measure ((Fin m → ℂ) × ℝ))).IsAddHaarMeasure
     exact Measure.prod.instIsAddHaarMeasure _ _
-  haveI : (volume : Measure (Xp (p + 1) m)).IsAddHaarMeasure := by
+  have : (volume : Measure (Xp (p + 1) m)).IsAddHaarMeasure := by
     show ((volume : Measure (Fin (p + 1) → ℂ)).prod
       (volume : Measure ((Fin (p + 1) → ℂ) × (Fin m → ℂ) × ℝ))).IsAddHaarMeasure
     exact Measure.prod.instIsAddHaarMeasure _ _
@@ -1153,7 +1153,7 @@ private lemma linF_scl {p m : ℕ} (τ : ℝ) (hτ : τ ≠ 0) (η η' : Fin (p 
   linear_combination hk
 
 private lemma enn_norm (z : ℂ) : ENNReal.ofReal ‖z‖ = (‖z‖₊ : ℝ≥0∞) := by
-  rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
+  rw [← coe_nnNorm, ENNReal.ofReal_coe_nnreal]
 
 theorem scl_weight (hS : SUB) {δ γ : ℝ} (hδ0 : 0 < δ) (hδ1 : δ ≤ 1 / 2) (hγ0 : 0 < γ) (hγ : γ ≤ δ / 8) :
     ∃ C : ℝ, 0 < C ∧ ∀ {p m : ℕ} (η η' : Fin (p + 1) → ℂ) (ζ : Fin m → ℂ) (x : Xp (p + 1) m),
@@ -1168,13 +1168,13 @@ theorem scl_weight (hS : SUB) {δ γ : ℝ} (hδ0 : 0 < δ) (hδ1 : δ ≤ 1 / 2
   have hng : -γ < 0 := by linarith
   by_cases hη : η' 0 = 0
   · refine le_top.trans (le_of_eq ?_)
-    rw [hη, nnnorm_zero, ENNReal.coe_zero, ENNReal.zero_rpow_of_neg hng, ENNReal.mul_top hCn,
+    rw [hη, nnNorm_zero, ENNReal.coe_zero, ENNReal.zero_rpow_of_neg hng, ENNReal.mul_top hCn,
       ENNReal.top_mul]
     rw [Ne, ENNReal.rpow_eq_zero_iff]
     simp [hγ0.le]
   by_cases ha : x.2.1 0 = 0
   · refine le_top.trans (le_of_eq ?_)
-    rw [ha, nnnorm_zero, ENNReal.coe_zero, ENNReal.zero_rpow_of_neg hng, ENNReal.mul_top]
+    rw [ha, nnNorm_zero, ENNReal.coe_zero, ENNReal.zero_rpow_of_neg hng, ENNReal.mul_top]
     refine mul_ne_zero hCn ?_
     rw [Ne, ENNReal.rpow_eq_zero_iff]
     simp [hγ0.le]
@@ -1268,7 +1268,7 @@ lemma fS_scl {p m : ℕ} (s : Fin (p + 2) → ℝ) (hs0 : ∀ l, 0 ≤ s l) (τ 
   unfold fS
   rw [Real.rpow_sum_of_pos (by norm_num), ENNReal.ofReal_prod_of_nonneg (fun i _ => by positivity),
     ← Finset.prod_mul_distrib]
-  apply Finset.prod_le_prod'
+  apply Finset.prod_le_prod
   intro l _
   rw [← ENNReal.ofReal_mul (by positivity)]
   apply ENNReal.ofReal_le_ofReal
@@ -1324,7 +1324,7 @@ theorem oscillatoryBound' (hT : TailFin) (hC1 : C1) (hS : SUB) (hK : KER) (hL : 
   have hf := meas_fS (p := p) (m := m) s
   have hN : (‖η' 0‖₊ : ℝ≥0∞) ^ (-γ) = ENNReal.ofReal (‖η' 0‖ ^ (-γ)) := by
     have e0 : ENNReal.ofReal ‖η' 0‖ = (‖η' 0‖₊ : ℝ≥0∞) := by
-      rw [← coe_nnnorm, ENNReal.ofReal_coe_nnreal]
+      rw [← coe_nnNorm, ENNReal.ofReal_coe_nnreal]
     rw [← e0, ENNReal.ofReal_rpow_of_pos (norm_pos_iff.mpr hη)]
   have stepA : OSInt p m s δ η η' ζ c₀ ≤
       ENNReal.ofReal (Cr * (1 + |c₀|) ^ (-δ / 4)) * ∫⁻ x, fS s x * w1 x := by

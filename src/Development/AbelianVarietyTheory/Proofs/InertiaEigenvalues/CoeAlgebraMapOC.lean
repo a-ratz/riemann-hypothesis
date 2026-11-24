@@ -136,8 +136,8 @@ theorem finiteOL (LL : FinExt l) : Module.Finite ℤ_[l] ↥(OL LL) :=
   IsIntegralClosure.finite ℤ_[l] ℚ_[l] ↥LL.1 ↥(integralClosure ℤ_[l] ↥LL.1)
 
 theorem inclR_injective (LL : FinExt l) : Function.Injective (inclR LL) := by
-  haveI := freeOL LL
-  letI : Module.Flat ℤ_[l] ↥(OL LL) := Module.Flat.of_free
+  have := freeOL LL
+  let : Module.Flat ℤ_[l] ↥(OL LL) := Module.Flat.of_free
   exact Module.Flat.lTensor_preserves_injective_linearMap (M := ↥(OL LL)) (inclWA l).toLinearMap
     (WittVector.map_injective _ (IsFractionRing.injective (OCb l) (Cb l)))
 
@@ -198,7 +198,7 @@ theorem TWincl_act (f : R →ₐ[O] R') (u : R →ₐ[O] R) (u' : R' →ₐ[O] R
 
 theorem TWincl_injective (f : R →ₐ[O] R') (hf : Function.Injective f) (T : LocLat G Qp LL O) :
     Function.Injective (TWincl f T) := by
-  haveI : Module.Free O ↥T.L.T := T.L.free
+  have : Module.Free O ↥T.L.T := T.L.free
   exact Module.Flat.rTensor_preserves_injective_linearMap (M := ↥T.L.T) f.toLinearMap hf
 
 theorem TWincl_one_tmul (f : R →ₐ[O] R') (T : LocLat G Qp LL O) (t : ↥T.L.T) :

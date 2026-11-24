@@ -84,7 +84,7 @@ private theorem map_X_eq_of_mem_stabF {β : (VS D).V ≃ₗ[D.host.E] (VS D).V} 
     unfold Formalism.MainNotions.S.FlagG.X Formalism.MainNotions.S.FlagG.Xa
     congr 1
     ext v
-    simp only [Set.mem_range, Set.mem_image, Set.mem_setOf_eq]
+    simp only [Set.mem_range, Set.mem_image, Set.mem_ofPred_eq]
     exact ⟨fun ⟨i, hi⟩ => ⟨i, i.2, hi⟩, fun ⟨i, _, hi⟩ => ⟨i, hi⟩⟩
   rw [hX]
   exact hβ.2.1 D.R.rS

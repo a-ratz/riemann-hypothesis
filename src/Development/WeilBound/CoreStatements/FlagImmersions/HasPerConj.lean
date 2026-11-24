@@ -123,8 +123,8 @@ theorem hasPer_conj {n : ℕ} {V : Set (Fin n → ℂ)} {z : (Fin n → ℂ) →
 
 theorem locPer : LocPer := by
   intro hG E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 n V z h1 hV hz hi t₀ ht₀
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   obtain ⟨ε, hε, hB⟩ := Metric.isOpen_iff.1 hV t₀ ht₀
   have hBo : IsOpen (Metric.ball t₀ ε) := Metric.isOpen_ball
   have hz' := vecMono hz hBo hB

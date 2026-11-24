@@ -135,14 +135,14 @@ theorem exists_conjInvariant_bump (n : ℕ) (ε : Fin n → Bool) (U : Set (UJ �
     exact one_ne_zero
   · have hclosed : IsClosed {y : Matrix (Fin n) (Fin n) ℂ | Formalism.REAL.hs (y - 1) ≤ r ^ 2} :=
       isClosed_le hqc continuous_const
-    haveI : ProperSpace (Matrix (Fin n) (Fin n) ℂ) :=
+    have : ProperSpace (Matrix (Fin n) (Fin n) ℂ) :=
       inferInstanceAs (ProperSpace (Fin n → Fin n → ℂ))
     have hK : IsCompact {y : Matrix (Fin n) (Fin n) ℂ | Formalism.REAL.hs (y - 1) ≤ r ^ 2} :=
       (isCompact_closedBall (1 : Matrix (Fin n) (Fin n) ℂ) r).of_isClosed_subset hclosed hcb
     refine HasCompactSupport.intro' (hemb.isCompact_preimage hK)
       (hclosed.preimage hemb.continuous) ?_
     intro g hg
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, not_le] at hg
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, not_le] at hg
     exact Real.smoothTransition.zero_of_nonpos
       (div_nonpos_of_nonpos_of_nonneg (by linarith) hr2.le)
   · intro g hg
@@ -180,7 +180,7 @@ theorem exists_smooth_fix_lowKSub : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : F
     rw [h1, dist_eq_norm] at hg'
     exact hg'
   obtain ⟨a, ha_sm, ha_nn, ha1, ha_cpt, ha_supp, ha_conj⟩ := exists_conjInvariant_bump n ε U hU
-  haveI : (muG ε).IsMulRightInvariant := ⟨fun g => unimodular n ε g⟩
+  have : (muG ε).IsMulRightInvariant := ⟨fun g => unimodular n ε g⟩
   have hAc : Continuous (fun g : UJ ε => (a (umat g) : ℂ)) :=
     Complex.continuous_ofReal.comp (ha_sm.continuous.comp hemb.continuous)
   have hAcpt : HasCompactSupport (fun g : UJ ε => (a (umat g) : ℂ)) :=
@@ -274,13 +274,13 @@ theorem exists_smooth_fix_lowKSub : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : F
       · exact mul_nonneg (ha_nn _) (hre g (ha_supp g hg)).le
     have hφ1 : φ 1 ≠ 0 := by
       show a (umat (1 : UJ ε)) * (⟪s0, σ (umat (1 : UJ ε)) s0⟫_ℂ).re ≠ 0
-      rw [hone, hσ1, ContinuousLinearMap.one_apply]
+      rw [hone, hσ1, one_apply_eq_self]
       have h1 : (⟪s0, s0⟫_ℂ).re = ‖s0‖ ^ 2 := by
         have := inner_self_eq_norm_sq (𝕜 := ℂ) s0
         simpa using this
       rw [h1]
       exact mul_ne_zero ha1 (pow_pos hs0pos 2).ne'
-    have hpos := hφc.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := muG ε) hφcpt hφnn hφ1
+    have hpos := hφc.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := muG ε) hφcpt hφnn hφ1
     have hint : Integrable (fun g : UJ ε => (a (umat g) : ℂ) * ⟪s0, σ (umat g) s0⟫_ℂ) (muG ε) :=
       (hAc.mul (continuous_const.inner (hcontσ s0))).integrable_of_hasCompactSupport
         hAcpt.mul_right

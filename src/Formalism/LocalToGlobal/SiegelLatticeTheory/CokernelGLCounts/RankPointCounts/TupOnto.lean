@@ -121,7 +121,7 @@ theorem pow_upper {N : Matrix (Fin n) (Fin n) E} (hN : ∀ c b, b ≤ c → N c 
     refine Finset.sum_eq_zero fun d _ => ?_
     by_cases hbd : b ≤ d
     · rw [hN d b hbd, mul_zero]
-    · have hdb : (d : ℕ) < b := Fin.lt_iff_val_lt_val.1 (not_le.1 hbd)
+    · have hdb : (d : ℕ) < b := Fin.lt_def.1 (not_le.1 hbd)
       rw [ih c d (by omega), zero_mul]
 
 theorem inv_good {U : Matrix (Fin n) (Fin n) E} (hU0 : ∀ c b, b < c → U c b = 0) (hU1 : ∀ c, U c c = 1)
@@ -231,7 +231,7 @@ theorem eich_exists {T : E} (Λ : Submodule (𝓞 E) S.V) (hUn : Formalism.Hermi
   have hn : ∀ v, n v = v + N v := fun v => rfl
   have hninv : ∀ v, n.symm v = v - N v + N (N v) := fun v => rfl
   refine ⟨n, ?_, hn⟩
-  simp only [NLam, Set.mem_setOf_eq]
+  simp only [NLam, Set.mem_ofPred_eq]
   refine ⟨?_, ?_, ?_⟩
   · rw [isAutLam_iff]
     refine ⟨fun x y => by rw [hn, hn, hiso], fun x => ⟨fun hx => ?_, fun hx => ?_⟩⟩
@@ -374,7 +374,7 @@ theorem levi_keeps (hUn : Formalism.HermitianLatticesTheory.IsUnimodular S.hT Λ
     intro i j h
     exact hU0 i j h
   have hdet1 : U.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hbt]
+    rw [Matrix.det_of_isUpperTriangular hbt]
     simp [hU1]
   have hUi : U * U⁻¹ = 1 := Matrix.mul_nonsing_inv U (by rw [hdet1]; exact isUnit_one)
   have hsymm_e : ∀ j, ν.symm (e j) = ∑ c, U⁻¹ c j • e c := frame_symm ν e U U⁻¹ hUi he
@@ -543,7 +543,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 open Formalism.L2.SG.Saturated
 
 theorem aaF_cs (D : D7) (c : Fin D.R.rS) : Formalism.L2.SG.Pf.FibQ.aaF D c.castSucc = aaS D c := by
-  simp only [Formalism.L2.SG.Pf.FibQ.aaF, aaS, Fin.coe_castSucc]
+  simp only [Formalism.L2.SG.Pf.FibQ.aaF, aaS, Fin.val_castSucc]
 
 theorem aaF_last (D : D7) : Formalism.L2.SG.Pf.FibQ.aaF D (Fin.last D.R.rS) = 1 := by
   simp [Formalism.L2.SG.Pf.FibQ.aaF]
@@ -587,7 +587,7 @@ theorem nLamOnto_holds : TupLift.NLamOnto := by
       induction hx' using Submodule.span_induction with
       | mem y hy =>
         obtain ⟨i, hi', rfl⟩ := hy
-        simp only [Set.mem_setOf_eq] at hi'
+        simp only [Set.mem_ofPred_eq] at hi'
         rw [heX i]
         have e1 : ∑ c, UX c i • G.e c - G.e i = ∑ c, (UX c i - if c = i then 1 else 0) • G.e c := by
           simp [sub_smul, Finset.sum_sub_distrib]
@@ -598,7 +598,7 @@ theorem nLamOnto_holds : TupLift.NLamOnto := by
         · have h0 : UX c i - (if c = i then 1 else 0) = 0 := by
             by_cases hci : c = i
             · subst hci; simp [hUX1]
-            · rw [if_neg hci, hUX0 c i (lt_of_le_of_ne (Fin.le_iff_val_le_val.2 (by omega)) (Ne.symm hci)),
+            · rw [ite_eq_right hci, hUX0 c i (lt_of_le_of_ne (Fin.le_iff_val_le_val.2 (by omega)) (Ne.symm hci)),
                 sub_zero]
           rw [h0, zero_smul]
           exact Submodule.zero_mem _

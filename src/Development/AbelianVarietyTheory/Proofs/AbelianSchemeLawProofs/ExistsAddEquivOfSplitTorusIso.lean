@@ -119,7 +119,7 @@ theorem exists_addEquiv_of_splitTorus_iso :
       ∃ xe : X' ≃+ X, ∀ x : X',
         θ.hom.left.appTop.hom (charUnit S X (xe x)).val = (charUnit S X' x).val := by
   intro S _ X X' _ _ θ hθ
-  letI : IsMonHom θ.hom := hθ
+  let : IsMonHom θ.hom := hθ
   obtain ⟨φ, hφ⟩ := SplitTorusHom.exists_addMonoidHom θ.hom
   obtain ⟨ψ, hψ⟩ := SplitTorusHom.exists_addMonoidHom θ.inv
   have h1 (x : X') : φ (ψ x) = x := SplitTorusHom.charUnit_injective (S := S) (by

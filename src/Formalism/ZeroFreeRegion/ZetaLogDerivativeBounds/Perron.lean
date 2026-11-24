@@ -257,7 +257,7 @@ lemma perron_mellin_Sz {w : ℂ} (hw : 1 < w.re) :
     have : t ≤ 1 := not_lt.1 ht.2
     rw [perron_Sz_eq_zero_of_le_one this]
     simp
-  rw [setIntegral_eq_of_subset_of_forall_diff_eq_zero measurableSet_Ioi (Ioi_subset_Ioi zero_le_one) hzero]
+  rw [setIntegral_eq_of_subset_of_forall_sdiff_eq_zero measurableSet_Ioi (Ioi_subset_Ioi zero_le_one) hzero]
   simp_rw [smul_eq_mul, mul_comm ((_ : ℂ) ^ (-w - 1))]
   rw [h1, ArithmeticFunction.LSeries_vonMangoldt_eq_deriv_riemannZeta_div hw]
   ring

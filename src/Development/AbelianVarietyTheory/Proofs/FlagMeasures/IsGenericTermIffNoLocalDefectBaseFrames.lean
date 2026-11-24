@@ -317,7 +317,7 @@ theorem tri_of_adapt {T : D.host.E} (g : GV D) (F G : LFlag (D.sp.Y 0) D.R.rS T)
   · intro a b hba
     have hne : a ≠ b := fun e => lt_irrefl _ (e ▸ hba)
     beta_reduce
-    rw [if_neg hne, zero_add]
+    rw [ite_eq_right hne, zero_add]
     rcases Fin.eq_castSucc_or_eq_last a with ⟨i, rfl⟩ | rfl
     · rw [Fin.lastCases_castSucc]
       exact (Finsupp.mem_supported' _ _).1 (hl b) i
@@ -325,14 +325,14 @@ theorem tri_of_adapt {T : D.host.E} (g : GV D) (F G : LFlag (D.sp.Y 0) D.R.rS T)
     · rw [Fin.lastCases_last]
   · intro a
     beta_reduce
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     rcases Fin.eq_castSucc_or_eq_last a with ⟨i, rfl⟩ | rfl
     · rw [Fin.lastCases_castSucc, (Finsupp.mem_supported' _ _).1 (hl i.castSucc) i (by simp), add_zero]
     · rw [Fin.lastCases_last, add_zero]
   · intro b
     rw [Formalism.L2.SG.Saturated.frame_mapL]
     simp only [add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     rw [Fin.sum_univ_castSucc]
     simp only [Fin.lastCases_castSucc, Fin.lastCases_last, zero_smul, add_zero, hcs]
     rw [hsum b]

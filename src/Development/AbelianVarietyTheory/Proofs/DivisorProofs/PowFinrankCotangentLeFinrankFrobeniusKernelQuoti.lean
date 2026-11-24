@@ -176,7 +176,7 @@ theorem pow_le_finrank {n d : ℕ} {K A : Type*} [Field K] [CommRing A] [Algebra
 
 theorem pow_finrank_cot_le [Module.Finite k H] :
     p ^ Module.finrank k (Cot k H) ≤ Module.finrank k (H ⧸ frobKerIdeal p k H) := by
-  haveI := isHopfIdeal p k H
+  have := isHopfIdeal p k H
   set J := frobKerIdeal p k H with hJ
   let π := Ideal.Quotient.mkₐ k J
   have hπ : Function.Surjective π := Ideal.Quotient.mkₐ_surjective k J

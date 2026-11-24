@@ -48,7 +48,7 @@ open Neutral.B1 Formalism.L2.Host Formalism.ConjugateSelfDual GlobalTheory.CuspR
 open UpperTheory.ConvolutionTheory.R2 UpperTheory.ConvolutionTheory.R2.Ff UpperTheory.ConvolutionTheory.RankTwoDescent UpperTheory.ConvolutionTheory.RankTwoDescent.Cp UpperTheory.ConvolutionTheory.RankTwoDescent.Cp.Fb
 open scoped Classical ENNReal NNReal
 private theorem continuous_gl' : Continuous (gl : G1 ℚ → GL (Fin 2) (A ℚ)) := by
-  refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+  refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
   have h : (fun g : G1 ℚ => (((gl g)⁻¹ : GL (Fin 2) (A ℚ)) : Matrix (Fin 2) (Fin 2) (A ℚ))) =
       fun g : G1 ℚ => ((g⁻¹ : G1 ℚ) : Matrix (Fin 2) (Fin 2) (A ℚ)) := by
     funext g
@@ -60,7 +60,7 @@ private theorem continuous_gl' : Continuous (gl : G1 ℚ → GL (Fin 2) (A ℚ))
     rw [this]
     rfl
   rw [show (fun x : G1 ℚ => ((((gl x)⁻¹ : GL (Fin 2) (A ℚ))) : Matrix (Fin 2) (Fin 2) (A ℚ))) = _ from h]
-  exact continuous_subtype_val.comp (continuous_inv : Continuous fun g : G1 ℚ => g⁻¹)
+  exact continuous_subtypeVal.comp (continuous_inv : Continuous fun g : G1 ℚ => g⁻¹)
 
 private theorem dM_inv' (t : (A ℚ)ˣ) : (dM t)⁻¹ = dM t⁻¹ := by
   rw [inv_eq_iff_mul_eq_one, ← dM_mul, mul_inv_cancel]
@@ -154,7 +154,7 @@ theorem UpperTheory.isOpenEmbedding_projection :
     rw [he]
     exact hf.comp hu
   have hp : Continuous pm := Continuous.subtype_mk hc.continuous _
-  refine ⟨Topology.IsEmbedding.of_comp hp continuous_subtype_val hc, ?_⟩
+  refine ⟨Topology.IsEmbedding.of_comp hp continuous_subtypeVal hc, ?_⟩
   have hs : Set.range pm = (fun x : GG => GroundTheory.Automorphic.AdelicGLn.det ℚ 2 (x : GL (Fin 2) (A ℚ))) ⁻¹'
       (RationalIdeles.positiveSubgroup : Set (IdeleGroup ℚ)) := by
     rw [range_pm]
@@ -163,4 +163,4 @@ theorem UpperTheory.isOpenEmbedding_projection :
     exact GroundTheory.Automorphic.Reduction.mem_normOneGL.1 x.2
   rw [hs]
   exact RationalIdeles.isOpen_positiveSubgroup.preimage
-    ((GroundTheory.Automorphic.AdelicGLn.continuous_det ℚ 2).comp continuous_subtype_val)
+    ((GroundTheory.Automorphic.AdelicGLn.continuous_det ℚ 2).comp continuous_subtypeVal)

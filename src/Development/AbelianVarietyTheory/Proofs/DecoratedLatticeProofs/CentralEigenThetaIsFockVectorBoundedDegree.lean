@@ -195,7 +195,7 @@ theorem orth_all : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D)
   intro D ψ θ hθ S T x y hx hy vac hvac v f hf hlat hreal u
   have hψ := hvac.1
   have hn : ∀ a, ‖ψ a‖ = 1 := hψ.1.2.1
-  haveI : v.μ.IsAddHaarMeasure := v.covol.1
+  have : v.μ.IsAddHaarMeasure := v.covol.1
   have hF : IsAddFundamentalDomain (ratL T S) v.𝓕 v.μ := v.covol.2.1
   have hvt : IsThetaFunO ψ S T vac := hvac.2.theta
   have hvl := hvac.2.lat
@@ -250,7 +250,7 @@ theorem orth_all : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D)
       rw [map_add (f := _), map_smul, map_zero] at h1
       exact h1
     · show nrm2 p.1 p.2 (heisO ψ S T uf vac) = 1
-      haveI := hp.1
+      have := hp.1
       rw [thetaNormSq_heisenbergOp_invariant hn p.1 hp.2.1 hth uf]
       exact hnorm.2 p hp
   obtain ⟨c, -, hc⟩ := GlobalTheory.VacUnique.vacUniqueO D ψ θ hψ hθ S T x.s y.s hx.sig hy.sig hx.cart hy.cart x.L y.L
@@ -421,8 +421,8 @@ theorem orth_real_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ 
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨U, hU, hl⟩ := hv.level
   obtain ⟨-, i2, i3, i4, i5, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, hm.2.2]; exact ENNReal.one_lt_top⟩
   have e0 : coeL ψ S T (toB hψ vac hv) = vac := coe_toB hψ vac hv
   have e1 : coeL ψ S T (toB hψ f hf) = f := coe_toB hψ f hf
@@ -507,7 +507,7 @@ theorem prod_eq_zero {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar 
     (horth : ∀ u : WO S T, thPair v.μ v.𝓕 f (heisO ψ S T u g) = 0) (u x : WO S T) :
     f x * star (heisO ψ S T u g x) = 0 := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   have hμ : v.μ.IsAddHaarMeasure := v.covol.1
   have h𝓕 : IsAddFundamentalDomain (ratL T S) v.𝓕 v.μ := v.covol.2.1
   obtain ⟨l1, l2, -, l4, -⟩ := GlobalTheory.OrientedFormLaws.symplOH_laws D S T
@@ -677,7 +677,7 @@ theorem lintegral_enorm_sq_eq_one {α : Type} [MeasurableSpace α] {μ : Measure
   rw [h, ENNReal.ofReal_one] at e
   rw [e]
   refine lintegral_congr fun w => ?_
-  rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+  rw [← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
 
 theorem om_vac_eq_smul {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} (hθ : IsInfFam θ) {S T : HSp D} {x : DefSp S}
     {y : DefSp T} (hx : x.Is) (hy : y.Is) {k : KerDat S T} (hk : k.Is ψ θ x y) {z : GA D S} (hz : z ∈ GinfC S) :
@@ -706,9 +706,9 @@ theorem om_vac_eq_smul {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} (hθ : I
   have hu := hom.om_unit p.1 p.2 hH hF (z, 1) k.vac hv.theta
   have hL := lintegral_enorm_sq_eq_one (μ := p.1) (s := p.2) (f := k.vac) n1
   rw [ha] at hu
-  simp only [Pi.smul_apply, smul_eq_mul, enorm_mul, mul_pow] at hu
+  simp only [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow] at hu
   rw [lintegral_const_mul' _ _ (by simp), hL, mul_one] at hu
-  rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _), ENNReal.ofReal_eq_one] at hu
+  rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _), ENNReal.ofReal_eq_one] at hu
   exact (pow_eq_one_iff_of_nonneg (norm_nonneg a) two_ne_zero).1 hu
 
 theorem exists_center_char : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D), IsInfFam θ → ∀ (S T : HSp D) (x : DefSp S) (y : DefSp T), x.Is → y.Is → ∀ k : KerDat S T, k.Is ψ θ x y → ∃ c : GA D S → ℂ, ∀ z ∈ GinfC S, z ∈ Subgroup.center (GA D S) → ‖c z‖ = 1 ∧ k.om (z, 1) k.vac = c z • k.vac := by
@@ -775,7 +775,7 @@ open Classical
 
 private theorem pow_exp_I_injective (a b : ℕ)
     (h : Complex.exp Complex.I ^ a = Complex.exp Complex.I ^ b) : a = b := by
-  rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, Complex.exp_eq_exp_iff_exists_int] at h
+  rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, Complex.exp_eq_exp_iff_exists_int] at h
   obtain ⟨n, hn⟩ := h
   have him := congrArg Complex.im hn
   simp only [Complex.add_im, Complex.mul_im, Complex.I_re, Complex.I_im, Complex.natCast_re,
@@ -888,9 +888,9 @@ theorem central_wt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam 
     obtain ⟨ζ', h1, h2⟩ := GlobalTheory.T.realComponent_central_definiteUnitary_eq_unit_scalar D θ hθ S x hx z hz hzc τ
     by_cases h : 0 < S.rank
     · have e : ζ z τ = ζ' := by
-        simp only [hζdef, dif_pos h, h2, Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one]
+        simp only [hζdef, dite_eq_left h, h2, Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one]
       rw [e]; exact ⟨h1, h2⟩
-    · have e : ζ z τ = 1 := by simp only [hζdef, dif_neg h]
+    · have e : ζ z τ = 1 := by simp only [hζdef, dite_eq_right h]
       refine ⟨by rw [e, norm_one], ?_⟩
       ext i
       exact absurd i.2 (by omega)
@@ -954,9 +954,9 @@ theorem central_wt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam 
         have e2 := mul_left_cancel₀ hc0 e
         have hζρ : ∀ ρ, ρ ≠ τ → ζ z ρ = 1 := by
           intro ρ hρ
-          simp only [hζdef, dif_pos hr.1, h2 ρ hρ, Matrix.one_apply_eq]
+          simp only [hζdef, dite_eq_left hr.1, h2 ρ hρ, Matrix.one_apply_eq]
         have hζτ : ζ z τ = Complex.exp Complex.I := by
-          simp only [hζdef, dif_pos hr.1, h1, Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one]
+          simp only [hζdef, dite_eq_left hr.1, h1, Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one]
         have hμρ : ∀ ρ, ρ ≠ τ → μ z ρ = 1 := by
           intro ρ hρ
           simp only [hμdef, hζρ ρ hρ, inv_one, ite_self]
@@ -1028,13 +1028,13 @@ theorem isLatVac_sub (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) {Λ : AddSub
 theorem comb_single_zero (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ) :
     comb ψ S T (Finsupp.single 0 1) f = f := by
   unfold comb
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
+  rw [Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
   funext w
   simp [heisO, symplOH, symplO, hO]
 
 theorem isFinComb_single_zero (S T : HSp D) : IsFinComb (Finsupp.single (0 : WO S T) (1 : ℂ)) := by
   intro u hu
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hu
+  rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hu
   subst hu
   ext i j; simp
 
@@ -1085,7 +1085,7 @@ theorem exists_orth_coeff {X : Type} [MeasurableSpace X] (ν : Measure X) {ι : 
     simp
   let H : ι → Lp ℂ 2 ν := fun i => (hh i).toLp (h i)
   let K : Submodule ℂ (Lp ℂ 2 ν) := Submodule.span ℂ (Set.range H)
-  haveI : FiniteDimensional ℂ K := FiniteDimensional.span_of_finite ℂ (Set.finite_range H)
+  have : FiniteDimensional ℂ K := FiniteDimensional.span_of_finite ℂ (Set.finite_range H)
   obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun ℂ).1 (K.starProjection_apply_mem (hf.toLp f))
   refine ⟨c, fun j => ?_⟩
   have h0 := (Submodule.mem_orthogonal K _).1 (K.sub_starProjection_mem_orthogonal (hf.toLp f)) (H j)

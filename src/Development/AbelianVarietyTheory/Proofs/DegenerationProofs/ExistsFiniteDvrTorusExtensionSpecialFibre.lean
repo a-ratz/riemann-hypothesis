@@ -61,7 +61,7 @@ theorem nonempty_torusExtension_of_comp_eq {K : Type} [Field K] {S S₁ S₂ : S
     (G : Over S) [GrpObj G] (h : Nonempty (TorusExtension ((Over.pullback b).obj ((Over.pullback a).obj G)))) :
     Nonempty (TorusExtension ((Over.pullback d).obj ((Over.pullback c).obj G))) := by
   obtain ⟨T⟩ := h
-  haveI : IsMonHom (pullCompIso b a G).symm.hom := inferInstanceAs (IsMonHom (pullCompIso b a G).inv)
+  have : IsMonHom (pullCompIso b a G).symm.hom := inferInstanceAs (IsMonHom (pullCompIso b a G).inv)
   have h₁ : Nonempty (TorusExtension ((Over.pullback (b ≫ a)).obj G)) := ⟨torusExtOfIso (pullCompIso b a G).symm T⟩
   rw [e] at h₁
   obtain ⟨T₁⟩ := h₁
@@ -70,15 +70,15 @@ theorem nonempty_torusExtension_of_comp_eq {K : Type} [Field K] {S S₁ S₂ : S
 theorem exists_finite_dvr_torusExtension_specialFibre : ∀ (V' : Type) [CommRing V'] [IsDomain V'] [IsDiscreteValuationRing V'] [IsAdicComplete (IsLocalRing.maximalIdeal V') V'] (G : Over (Spec (CommRingCat.of V'))) [GrpObj G], IsSemiAbelian G → ∃ (V'' : Type) (_ : CommRing V'') (_ : IsDomain V'') (_ : IsDiscreteValuationRing V'') (_ : IsAdicComplete (IsLocalRing.maximalIdeal V'') V'') (_ : Algebra V' V''), Module.Finite V' V'' ∧ Function.Injective (algebraMap V' V'') ∧ IsLocalHom (algebraMap V' V'') ∧ IsSemiAbelian (baseChange V' V'' G) ∧ Nonempty (TorusExtension (specialFibre V'' (baseChange V' V'' G))) := by
   intro V' _ _ _ _ G _ hG
   have h₀ : IsSemiAbelian ((Over.pullback (spMap (residue V'))).obj G) := IsSemiAbelian.pullback _ G hG
-  haveI := h₀.smooth
-  haveI := h₀.quasiCompact
-  haveI := h₀.separated
+  have := h₀.smooth
+  have := h₀.quasiCompact
+  have := h₀.separated
   let k := ResidueField V'
   let Ω := AlgebraicClosure k
   obtain ⟨T⟩ := h₀.fibres Ω (spMap (algebraMap k Ω))
   obtain ⟨s, hs, H⟩ := FieldModel.exists_finite_torusExtension_range (algebraMap k Ω) _ T
-  haveI : Finite s := hs.to_subtype
-  haveI : FiniteDimensional k (IntermediateField.adjoin k s) :=
+  have : Finite s := hs.to_subtype
+  have : FiniteDimensional k (IntermediateField.adjoin k s) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   obtain ⟨V'', i1, i2, i3, i4, i5, hf, hi, hl, e, he⟩ := nb V' (IntermediateField.adjoin k s)
   refine ⟨V'', i1, i2, i3, i4, i5, hf, hi, hl, IsSemiAbelian.pullback _ G hG, ?_⟩

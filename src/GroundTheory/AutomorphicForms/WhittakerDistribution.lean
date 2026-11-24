@@ -208,9 +208,9 @@ theorem continuousSMul_biAction : ContinuousSMul (NN F n) (GL (Fin n) F) := by
       ((p.1.1 : GL (Fin n) F)) * p.2 * ((p.1.2 : GL (Fin n) F))⁻¹ := rfl
   rw [e]
   have h1 : Continuous fun p : NN F n × GL (Fin n) F => ((p.1.1 : GL (Fin n) F)) :=
-    continuous_subtype_val.comp (continuous_fst.comp continuous_fst)
+    continuous_subtypeVal.comp (continuous_fst.comp continuous_fst)
   have h2 : Continuous fun p : NN F n × GL (Fin n) F => ((p.1.2 : GL (Fin n) F)) :=
-    continuous_subtype_val.comp (continuous_snd.comp continuous_fst)
+    continuous_subtypeVal.comp (continuous_snd.comp continuous_fst)
   exact (h1.mul continuous_snd).mul h2.inv
 
 attribute [local instance] continuousSMul_biAction
@@ -368,7 +368,7 @@ theorem sigma_eq_of_not_irrelevant (hψ₁ : ψ₀ ≠ 1) {w : Equiv.Perm (Fin n
     have hc : ((t (w i) : F) / (t (w j) : F)) ≠ 0 := div_ne_zero (Units.ne_zero _) (Units.ne_zero _)
     have := key i j hij hw (b / ((t (w i) : F) / (t (w j) : F)))
     rw [psiN_rootElt ψ₀ (w.injective.ne (ne_of_lt hij)), psiN_rootElt ψ₀ (ne_of_lt hij),
-      if_pos hwv, if_neg hj, mul_div_cancel₀ _ hc] at this
+      ite_eq_left hwv, ite_eq_right hj, mul_div_cancel₀ _ hc] at this
     exact hb this
   have ht : ∀ (i : Fin n) (h : i.val + 1 < n), w i < w ⟨i.val + 1, h⟩ →
       t (w i) = t (w ⟨i.val + 1, h⟩) := by
@@ -380,7 +380,7 @@ theorem sigma_eq_of_not_irrelevant (hψ₁ : ψ₀ ≠ 1) {w : Equiv.Perm (Fin n
       by_contra hne
       have := key i j hij hw b
       rw [psiN_rootElt ψ₀ (w.injective.ne (ne_of_lt hij)), psiN_rootElt ψ₀ (ne_of_lt hij),
-        if_neg hne, if_pos hjv] at this
+        ite_eq_right hne, ite_eq_left hjv] at this
       exact hb this.symm
     set c : F := (t (w i) : F) / (t (w j) : F) with hc
     have hc1 : c = 1 := by
@@ -388,7 +388,7 @@ theorem sigma_eq_of_not_irrelevant (hψ₁ : ψ₀ ≠ 1) {w : Equiv.Perm (Fin n
       have hsub : c - 1 ≠ 0 := sub_ne_zero.2 hc1
       have := key i j hij hw (b / (c - 1))
       rw [psiN_rootElt ψ₀ (w.injective.ne (ne_of_lt hij)), psiN_rootElt ψ₀ (ne_of_lt hij),
-        if_pos hwv, if_pos hjv] at this
+        ite_eq_left hwv, ite_eq_left hjv] at this
       apply hb
       have e : b = c * (b / (c - 1)) - b / (c - 1) := by field_simp
       rw [e, AddChar.map_sub_eq_div, this, div_self (hψ0 _)]

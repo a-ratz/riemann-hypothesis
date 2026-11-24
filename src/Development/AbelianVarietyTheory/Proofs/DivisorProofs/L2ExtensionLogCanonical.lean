@@ -100,7 +100,7 @@ theorem sections_prod_quot_open : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] 
     have hc : Continuous (A.nsq la a) := bsA_nsq_cont A ha
     have : nz A a = A.nsq la a ⁻¹' {0}ᶜ := by
       ext y
-      simp only [nz, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_compl_iff,
+      simp only [nz, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_compl_iff,
         Set.mem_singleton_iff, WeightedAtlas.nsq]
       constructor
       · intro h
@@ -229,14 +229,14 @@ namespace GlobalTheory.OTY
 theorem exists_preconnected_infinite_nhds {n : ℕ} {Y : Type} [TopologicalSpace Y]
     (hn : 1 ≤ n) (e : OpenPartialHomeomorph Y (V n)) (x : Y) (hx : x ∈ e.source) :
     ∃ B : Set Y, B ∈ 𝓝 x ∧ IsPreconnected B ∧ B.Infinite := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   obtain ⟨r, hr, hsub⟩ := Metric.isOpen_iff.1 e.open_target (e x) (e.map_source hx)
   refine ⟨e.symm '' ball (e x) r, ?_, ?_, ?_⟩
   · have h := e.symm.image_mem_nhds (x := e x) (e.map_source hx) (ball_mem_nhds (e x) hr)
     rwa [e.left_inv hx] at h
   · exact (convex_ball (e x) r).isPreconnected.image _ (e.continuousOn_symm.mono hsub)
   · refine Set.Infinite.image (e.symm.injOn.mono hsub) ?_
-    haveI : NeBot (𝓝[≠] (e x)) := Module.punctured_nhds_neBot ℂ (V n) (e x)
+    have : NeBot (𝓝[≠] (e x)) := Module.punctured_nhds_neBot ℂ (V n) (e x)
     exact infinite_of_mem_nhds (e x) (ball_mem_nhds (e x) hr)
 
 theorem exists_finite_disjoint_meets_components :
@@ -246,7 +246,7 @@ theorem exists_finite_disjoint_meets_components :
     intro x
     obtain ⟨B, hB, hc, hi⟩ :=
       exists_preconnected_infinite_nhds hn (A.chart (A.pick x)) x (A.mem_pick x)
-    obtain ⟨P, hP, hPS⟩ := (hi.diff hS).nonempty
+    obtain ⟨P, hP, hPS⟩ := (hi.sdiff hS).nonempty
     exact ⟨B, hB, hc, P, hP, hPS⟩
   choose B hB hc P hP hPS using h1
   obtain ⟨t, -, ht⟩ := isCompact_univ.elim_nhds_subcover B (fun x _ => hB x)
@@ -301,12 +301,12 @@ theorem jacM_trans {n : ℕ} (G : V n → ℂ) (Φ : V n → V n) (h0 : V n → 
     (hG.hasFDerivAt.mul ((hh k).hasFDerivAt.comp v hΦ.hasFDerivAt)).fderiv
   ext ξ k
   rw [jacM_apply, d0, dk]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, jacM_apply,
-    ContinuousLinearMap.add_apply, smul_eq_mul, PiLp.smul_apply]
+  simp only [smul_apply, ContinuousLinearMap.comp_apply, jacM_apply,
+    add_apply, smul_eq_mul, PiLp.smul_apply]
   ring
 
 theorem det_smul_V {n : ℕ} (c : ℂ) (M : V n →L[ℂ] V n) : (c • M).det = c ^ n * M.det := by
-  rw [ContinuousLinearMap.det, ContinuousLinearMap.coe_smul, LinearMap.det_smul,
+  rw [ContinuousLinearMap.det, ContinuousLinearMap.toLinearMap_smul, LinearMap.det_smul,
     finrank_euclideanSpace_fin]
 
 theorem jacM_det_diffAt {n : ℕ} {f0 : V n → ℂ} {f : Fin n → V n → ℂ} {U : Set (V n)}
@@ -344,7 +344,7 @@ theorem zLoc_fderiv {n : ℕ} (f0 : V n → ℂ) (f : Fin n → V n → ℂ) (v 
     (((PiLp.continuousLinearEquiv 2 ℂ (fun _ : Fin n => ℂ)).symm : (Fin n → ℂ) →L[ℂ] V n) ∘
       fun w k => f k w / f0 w) from rfl, hE.fderiv]
   ext ξ k
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, PiLp.smul_apply,
+  simp only [ContinuousLinearMap.comp_apply, smul_apply, PiLp.smul_apply,
     jacM_apply, smul_eq_mul]
   simp
   field_simp

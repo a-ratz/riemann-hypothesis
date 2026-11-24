@@ -93,7 +93,7 @@ theorem not_lt_lt {R : Type*} [CommRing R] [IsNoetherianRing R] {V W W' : Ideal 
     cases a with
     | top => simp at h3
     | coe a => norm_cast at h3 ⊢; omega
-  haveI : IsDomain (R ⧸ V) := Ideal.Quotient.isDomain V
+  have : IsDomain (R ⧸ V) := Ideal.Quotient.isDomain V
   rw [Ideal.height_eq_zero_iff_eq_bot] at h0
   apply hVW'.ne
   apply le_antisymm hVW'.le
@@ -112,7 +112,7 @@ theorem mem_minimalPrimes_of_mem {R : Type*} [CommRing R] [IsNoetherianRing R] {
   have hlt : Q < W := lt_of_le_of_ne hQW fun e => hWQ (le_of_eq e.symm)
   have hbQ : b ∈ Q := hQle (Ideal.mem_sup_right (Ideal.mem_span_singleton_self b))
   have hPQ : P < Q := lt_of_le_of_ne (le_sup_left.trans hQle) fun e => hbP (by rw [e]; exact hbQ)
-  haveI := hQ
+  have := hQ
   exact not_lt_lt hW hPQ hlt
 
 theorem mem_minimalPrimes_sup {R : Type*} [CommRing R] {V W Z : Ideal R} {f t : R}
@@ -143,7 +143,7 @@ theorem mem_minimalPrimes_of_mem_divSupp_divSupp {P W U : Ideal (MRing ι)} [P.I
     (hs : s ∉ P) (hs' : s' ∉ P) (hnc : ∀ W, W ∈ divSupp P s → W ∉ divSupp P s')
     (hW : W ∈ divSupp P s) (hU : U ∈ divSupp W s') :
     U ∈ (P ⊔ Ideal.span {s} ⊔ Ideal.span {s'}).minimalPrimes := by
-  haveI := hW.1.1.1
+  have := hW.1.1.1
   have hWd := dim_of_mem_minimalPrimes (m := m + 1) hP hs hW.1
   have hUd := dim_of_mem_minimalPrimes hWd (not_mem_of_mem_divSupp hs' hnc hW) hU.1
   have hWU : W ≤ U := le_sup_left.trans hU.1.1.2
@@ -156,11 +156,11 @@ theorem mem_minimalPrimes_of_mem_divSupp_divSupp {P W U : Ideal (MRing ι)} [P.I
   have hW'd : W' ∈ divSupp P s := ⟨hW', isRelevant_of_le hU.2 (hW'Q.trans hQU)⟩
   obtain ⟨Q', hQ', hQ'Q⟩ := Ideal.exists_minimalPrimes_le
     (sup_le hW'Q (le_sup_right.trans hQle) : W' ⊔ Ideal.span {s'} ≤ Q)
-  haveI := hW'.1.1
+  have := hW'.1.1
   have h1 := dim_of_mem_minimalPrimes (m := m + 1) hP hs hW'
   have h2 := dim_of_mem_minimalPrimes h1 (not_mem_of_mem_divSupp hs' hnc hW'd) hQ'
-  haveI := hQ'.1.1
-  haveI := hU.1.1.1
+  have := hQ'.1.1
+  have := hU.1.1.1
   exact DivisorCycleSwap.not_lt_of_dim_eq (hQ'Q.trans_lt hlt) h2 hUd
 
 theorem divCycle_of_mem {V W : Ideal (MRing ι)} {f : MRing ι} (hW : W ∈ divSupp V f) :
@@ -181,7 +181,7 @@ theorem mem_divSupp_of_ne_zero {V W : Ideal (MRing ι)} {f : MRing ι} (h : divC
 theorem cast_multAt {J W : Ideal (MRing ι)} [hW : W.IsPrime] (hJ : W ∈ J.minimalPrimes) :
     ((multAt J W : ℕ) : ℕ∞) = lenAt J W := by
   have e : multAt J W = (locLen (MRing ι ⧸ J) ⟨W, hW⟩).toNat := by simp [multAt, hW, locLen]
-  rw [e, ENat.coe_toNat (locLen_ne_top hJ), lenAt_eq]
+  rw [e, ENat.natCast_toNat (locLen_ne_top hJ), lenAt_eq]
   rfl
 
 theorem sum_apply_eq (V Z : Ideal (MRing ι)) (f t : MRing ι) :
@@ -236,14 +236,14 @@ theorem sum_eq_finsum {V Z : Ideal (MRing ι)} [V.IsPrime] [Z.IsPrime] {A : Type
   · intro p hp
     have hm := (h.height_eq_one_iff hVZ hex hfV p.asIdeal).mp hp
     have hle := h.comap_le p.asIdeal
-    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     exact ⟨⟨hm, isRelevant_of_le hZr hle⟩, hle⟩
   · intro p _ p' _ e
     exact PrimeSpectrum.ext (h.eq_of_comap_eq e)
   · intro W hW
-    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hW
+    simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hW
     obtain ⟨p, hp, hpW⟩ := hex W hW.1.1.1.1 (le_sup_left.trans hW.1.1.1.2) hW.2
-    haveI := hp
+    have := hp
     exact ⟨⟨p, hp⟩, (h.height_eq_one_iff hVZ hex hfV p).mpr (hpW ▸ hW.1.1), hpW⟩
   · intro p hp
     have hm := (h.height_eq_one_iff hVZ hex hfV p.asIdeal).mp hp
@@ -263,9 +263,9 @@ theorem coeff_eq (hlen2 : LocalLengthMultiplicativity.{0}) {P U : Ideal (MRing �
   have hnc' : ∀ W, W ∈ divSupp P s' → W ∉ divSupp P s := fun W hW h => hnc W h hW
   by_cases hU : IsRelevant U ∧ U ∈ (P ⊔ Ideal.span {s} ⊔ Ideal.span {s'}).minimalPrimes
   · obtain ⟨hUr, hUm⟩ := hU
-    haveI : U.IsPrime := hUm.1.1
+    have : U.IsPrime := hUm.1.1
     have hPU : P ≤ U := le_sup_left.trans (le_sup_left.trans hUm.1.2)
-    haveI : (U.map (Ideal.Quotient.mk P)).IsPrime :=
+    have : (U.map (Ideal.Quotient.mk P)).IsPrime :=
       Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hPU)
     have hUm' : U ∈ (P ⊔ Ideal.span {s'} ⊔ Ideal.span {s}).minimalPrimes := by
       rwa [sup_right_comm]
@@ -298,7 +298,7 @@ theorem divCycle_eq_zero_of_lt_two {P W : Ideal (MRing ι)} [P.IsPrime] {b b' : 
   rw [Finsupp.coe_zero, Pi.zero_apply]
   by_contra hne
   have hU := mem_divSupp_of_ne_zero hne
-  haveI := hW.1.1.1
+  have := hW.1.1.1
   have hWmh := isMultiHomogIdeal_of_mem_minimalPrimes hPmh hb hW.1
   have hUmh := isMultiHomogIdeal_of_mem_minimalPrimes hWmh hb' hU.1
   have h1 := dim_quot_minimal_add_one P W b hbP hW.1
@@ -320,7 +320,7 @@ open SwapCyclesAlt
 theorem SwapCycles.proof (hlen2 : LocalLengthMultiplicativity.{0}) : SwapCycles.Statement := by
   intro K _ ι _ P d a a' s s' hP ha ha' hs hs' hnc
   obtain ⟨-, ⟨hPp, hPmh, -⟩, -, hPdim⟩ := hP
-  haveI := hPp
+  have := hPp
   rcases Nat.lt_or_ge d 2 with hd | hd
   · have hz : ∀ (b b' : MRing ι) (c c' : K → ℕ), IsMultiHomog b c → IsMultiHomog b' c' → b ∉ P →
         (∀ W ∈ divSupp P b, b' ∉ W) → ((divCycle P b).sum fun W m => m • divCycle W b') = 0 := by

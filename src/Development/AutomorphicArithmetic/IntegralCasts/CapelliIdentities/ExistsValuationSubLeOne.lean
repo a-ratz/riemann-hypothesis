@@ -83,7 +83,7 @@ theorem UpperTheory.Reformulated.B.ExistsValuationSubLeOne.exists_valuation_sub_
     have hmem : d ∉ v.asIdeal := by
       intro h
       apply hv
-      simp only [T, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+      simp only [T, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
       exact Or.inr (Ideal.dvd_span_singleton.2 h)
     have h1 := IsDedekindDomain.HeightOneSpectrum.intValuation_eq_one_iff.2 hmem
     rw [he, ← WithZero.exp_zero, WithZero.exp_inj] at h1
@@ -98,11 +98,11 @@ theorem UpperTheory.Reformulated.B.ExistsValuationSubLeOne.exists_valuation_sub_
     intro v a ha
     rw [map_div₀, IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap,
       IsDedekindDomain.HeightOneSpectrum.valuation_of_algebraMap, he]
-    exact div_le_one_of_le₀ ((v.intValuation_le_pow_iff_mem a (e v)).2 ha) zero_le'
+    exact div_le_one_of_le₀ ((v.intValuation_le_pow_iff_mem a (e v)).2 ha) zero_le
   refine ⟨algebraMap R K y / algebraMap R K d, fun v hv => ?_, fun v hv => ?_⟩
   · have hvT : v ∈ T := Finset.mem_union_left _ hv
     have h1 := hy v hvT
-    simp only [hv, if_true] at h1
+    simp only [hv, ite_true] at h1
     have h2 := key v _ h1
     have h3 : algebraMap R K (y - r v) / algebraMap R K d =
         algebraMap R K y / algebraMap R K d - x v := by

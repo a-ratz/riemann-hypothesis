@@ -66,8 +66,8 @@ theorem countable_pl (E : Type) [Field E] [NumberField E] : Countable (HeightOne
   classical
   have hinj : Function.Injective fun v : HeightOneSpectrum (𝓞 E) => v.asIdeal :=
     fun v v' h => HeightOneSpectrum.ext h
-  haveI : Countable (𝓞 E) := (RingOfIntegers.basis E).equivFun.injective.countable
-  haveI : Countable (Ideal (𝓞 E)) :=
+  have : Countable (𝓞 E) := (RingOfIntegers.basis E).equivFun.injective.countable
+  have : Countable (Ideal (𝓞 E)) :=
     Function.Injective.countable (f := fun I : Ideal (𝓞 E) => (IsNoetherian.noetherian I).choose)
       (fun I J h => by
         rw [← (IsNoetherian.noetherian I).choose_spec, ← (IsNoetherian.noetherian J).choose_spec]

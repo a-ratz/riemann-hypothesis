@@ -578,9 +578,9 @@ theorem caseA_of_unram' {l : ℕ} [Fact l.Prime] (P : LocPrime l) (H : LocHW l P
   exact hl
 
 theorem neZero_finrank_max_unramified {l : ℕ} [Fact l.Prime] (K : FinExt l) : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := by
-  haveI : FiniteDimensional ℚ_[l] K.1 := K.2
+  have : FiniteDimensional ℚ_[l] K.1 := K.2
   have hle : K0 K ≤ K.1 := inf_le_left
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     FiniteDimensional.of_injective (IntermediateField.inclusion hle).toLinearMap
       (IntermediateField.inclusion hle).injective
   exact ⟨Module.finrank_pos.ne'⟩

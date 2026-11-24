@@ -192,7 +192,7 @@ theorem exists_unitary_block {r p : ℕ} (B : Matrix (Fin r) (Fin r) ℂ) (hB : 
     exact zero_ne_one this
   have htd : t.det ≠ 0 := by
     intro h; rw [e, det_mul, h, mul_zero] at hB; exact hB rfl
-  letI := invertibleOfIsUnitDet t htd.isUnit
+  let := invertibleOfIsUnitDet t htd.isUnit
   have hti : (t⁻¹).BlockTriangular id := blockTriangular_inv_of_blockTriangular ht
   have hu' : u = B * t⁻¹ := by rw [e, Matrix.mul_nonsing_inv_cancel_right _ _ htd.isUnit]
   refine ⟨u, t, hu, fun a c hc ha => ?_, htd, fun a c h => ht h, e⟩
@@ -217,7 +217,7 @@ theorem isCompact_unitBlock (X : Data E r) : IsCompact (unitBlock X) := by
   · have : unitBlock X = ⋂ τ, ({u : Frame X.Ψ r | star (mat u τ) * mat u τ = 1} ∩
         ⋂ a : Fin r, ⋂ c : Fin r, {u | (c : ℕ) < X.p0 → ¬ (a : ℕ) < X.p0 → u τ a c = 0}) := by
       ext u
-      simp only [unitBlock, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+      simp only [unitBlock, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
       simp only [Matrix.mem_unitaryGroup_iff']
     rw [this]
     refine isClosed_iInter fun τ => IsClosed.inter ?_ (isClosed_iInter fun a => isClosed_iInter fun c => ?_)
@@ -225,12 +225,12 @@ theorem isCompact_unitBlock (X : Data E r) : IsCompact (unitBlock X) := by
       exact isClosed_eq (hc.star.matrix_mul hc) continuous_const
     · by_cases h : (c : ℕ) < X.p0 ∧ ¬ (a : ℕ) < X.p0
       · have : {u : Frame X.Ψ r | (c : ℕ) < X.p0 → ¬ (a : ℕ) < X.p0 → u τ a c = 0} = {u | u τ a c = 0} := by
-          ext u; simp only [Set.mem_setOf_eq]; exact ⟨fun hu => hu h.1 h.2, fun hu _ _ => hu⟩
+          ext u; simp only [Set.mem_ofPred_eq]; exact ⟨fun hu => hu h.1 h.2, fun hu _ _ => hu⟩
         rw [this]
         exact isClosed_eq ((continuous_apply c).comp ((continuous_apply a).comp (continuous_apply τ)))
           continuous_const
       · have : {u : Frame X.Ψ r | (c : ℕ) < X.p0 → ¬ (a : ℕ) < X.p0 → u τ a c = 0} = Set.univ := by
-          ext u; simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]; intro h1 h2; exact absurd ⟨h1, h2⟩ h
+          ext u; simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]; intro h1 h2; exact absurd ⟨h1, h2⟩ h
         rw [this]; exact isClosed_univ
   · refine (Metric.isBounded_iff_subset_closedBall 0).2 ⟨1, fun u hu => ?_⟩
     rw [Metric.mem_closedBall, dist_zero_right]

@@ -85,7 +85,7 @@ theorem mk_incl (hpd : IsPd k x) : ∃ ε : rA k x {0} →ₐ[k] k,
     have h1 : incl k K x (e (MvPolynomial.X j)) = (⟨_, tco_mem k K x j⟩ : rB k K x {0}) := by
       apply Subtype.ext
       rw [coe_incl, he j, Fin.succAbove_zero]
-    simp only [AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe, Ideal.Quotient.mkₐ_eq_mk]
+    simp only [AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass, Ideal.Quotient.mkₐ_eq_mk]
     change Ideal.Quotient.mk _ (incl k K x (e (MvPolynomial.X j))) =
       Algebra.ofId k _ (MvPolynomial.aeval (0 : Fin d → k) (e.symm (e (MvPolynomial.X j))))
     rw [h1, AlgEquiv.symm_apply_apply, MvPolynomial.aeval_X, Pi.zero_apply, map_zero]
@@ -95,8 +95,8 @@ theorem mk_incl (hpd : IsPd k x) : ∃ ε : rA k x {0} →ₐ[k] k,
   simpa using this
 
 theorem finite_quot (h : IsFinCover k K x) : Module.Finite k (rB k K x {0} ⧸ coordIdeal k K x) := by
-  haveI := h.smooth 0
-  haveI : Algebra.FiniteType k (rB k K x {0} ⧸ coordIdeal k K x) :=
+  have := h.smooth 0
+  have : Algebra.FiniteType k (rB k K x {0} ⧸ coordIdeal k K x) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ k _) (Ideal.Quotient.mkₐ_surjective k _)
   obtain ⟨ε, hε⟩ := mk_incl k K x h.pd
   have hε' : (algebraMap k (rB k K x {0} ⧸ coordIdeal k K x)).comp ε.toRingHom =
@@ -104,7 +104,7 @@ theorem finite_quot (h : IsFinCover k K x) : Module.Finite k (rB k K x {0} ⧸ c
     RingHom.ext fun a => by simpa using (AlgHom.congr_fun hε a).symm
   have hcomp : (rB k K x {0}).val.toRingHom.comp (incl k K x).toRingHom = algebraMap (rA k x {0}) K :=
     RingHom.ext fun a => rfl
-  haveI : Algebra.IsIntegral k (rB k K x {0} ⧸ coordIdeal k K x) := ⟨fun q => by
+  have : Algebra.IsIntegral k (rB k K x {0} ⧸ coordIdeal k K x) := ⟨fun q => by
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective q
     obtain ⟨p, hpm, hp⟩ : IsIntegral (rA k x {0}) (b : K) := b.2
     have hq : Polynomial.eval₂ (incl k K x).toRingHom b p = 0 := by
@@ -119,7 +119,7 @@ theorem finite_quot (h : IsFinCover k K x) : Module.Finite k (rB k K x {0} ⧸ c
 theorem fib_finite_and_sep [IsAlgClosed k] (h : IsFinCover k K x)
     (hred : IsReduced (rB k K x {0} ⧸ coordIdeal k K x)) :
     Finite (fib k K x) ∧ ∀ f : rB k K x {0}, (∀ e : fib k K x, e.1 f = 0) → f ∈ coordIdeal k K x := by
-  haveI := finite_quot k K x h
+  have := finite_quot k K x h
   have hker : ∀ e : fib k K x, coordIdeal k K x ≤ RingHom.ker e.1 := fun e => by
     rw [Ideal.span_le]
     rintro _ ⟨j, rfl⟩
@@ -130,11 +130,11 @@ theorem fib_finite_and_sep [IsAlgClosed k] (h : IsFinCover k K x)
   refine ⟨Finite.of_injective L fun e₁ e₂ he => Subtype.ext (AlgHom.ext fun f => by rw [← hL, ← hL, he]),
     fun f hf => ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem]
-  haveI : IsArtinianRing (rB k K x {0} ⧸ coordIdeal k K x) := IsArtinianRing.of_finite k _
+  have : IsArtinianRing (rB k K x {0} ⧸ coordIdeal k K x) := IsArtinianRing.of_finite k _
   have hmem : Ideal.Quotient.mk (coordIdeal k K x) f ∈ Ideal.jacobson (⊥ : Ideal (rB k K x {0} ⧸ coordIdeal k K x)) := by
     rw [Ideal.jacobson, Ideal.mem_sInf]
     rintro m ⟨-, hm⟩
-    haveI := hm.isPrime
+    have := hm.isPrime
     haveI : Module.Finite k (_ ⧸ m) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ k m).toLinearMap (Ideal.Quotient.mkₐ_surjective k m)
     haveI : Algebra.IsIntegral k (_ ⧸ m) := Algebra.IsIntegral.of_finite k _

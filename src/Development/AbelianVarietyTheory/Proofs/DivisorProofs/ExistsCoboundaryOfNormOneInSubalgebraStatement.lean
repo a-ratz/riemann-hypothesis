@@ -390,8 +390,8 @@ theorem hilbert90_matrix_subalgebra_norm_one : ∀ (F F' : Type) [Field F] [Fiel
     (∀ x ∈ B, x.map s ∈ B) → ∀ ε : GL (Fin n) F', (ε : Matrix (Fin n) (Fin n) F') ∈ B → nrm s ε = 1 →
     ∃ x : GL (Fin n) F', (x : Matrix (Fin n) (Fin n) F') ∈ B ∧ ε = x⁻¹ * galAct F F' n s x := by
   intro F F' _ _ _ _ s hs n B hB ε hεB hnrm
-  haveI hMf : Finite (Matrix (Fin n) (Fin n) F') := inferInstanceAs (Finite (Fin n → Fin n → F'))
-  haveI : Finite (GL (Fin n) F') := Finite.of_injective (fun u : GL (Fin n) F' => (u : Matrix (Fin n) (Fin n) F'))
+  have hMf : Finite (Matrix (Fin n) (Fin n) F') := inferInstanceAs (Finite (Fin n → Fin n → F'))
+  have : Finite (GL (Fin n) F') := Finite.of_injective (fun u : GL (Fin n) F' => (u : Matrix (Fin n) (Fin n) F'))
     (fun u v h => Units.ext h)
   have hinv : ((ε⁻¹ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F') ∈ B := by
     have hpos := (isOfFinOrder_of_finite ε).orderOf_pos

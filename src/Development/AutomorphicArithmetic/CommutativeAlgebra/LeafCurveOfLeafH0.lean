@@ -83,7 +83,7 @@ theorem UpperTheory.Reformulated.B.ExistsLocalGenerator.exists_local_generator :
       exact le_antisymm Ideal.mul_le_left h
     have h2 : p = 1 := mul_left_cancel₀ (show I ≠ 0 from hI) h1
     exact hp.ne_top (by rw [h2, Ideal.one_eq_top])
-  obtain ⟨π, hπ, hπ'⟩ := SetLike.not_le_iff_exists.mp hne
+  obtain ⟨π, hπ, hπ'⟩ := IsConcreteLE.not_le_iff_exists.mp hne
   have hle : Ideal.span {π} ≤ I := (Ideal.span_singleton_le_iff_mem I).mpr hπ
   obtain ⟨J, hJ⟩ := Ideal.dvd_iff_le.mpr hle
   have hJp : ¬ J ≤ p := by
@@ -91,7 +91,7 @@ theorem UpperTheory.Reformulated.B.ExistsLocalGenerator.exists_local_generator :
     apply hπ'
     have : π ∈ I * J := hJ ▸ Ideal.mem_span_singleton_self π
     exact Ideal.mul_mono_right h this
-  obtain ⟨s, hs, hs'⟩ := SetLike.not_le_iff_exists.mp hJp
+  obtain ⟨s, hs, hs'⟩ := IsConcreteLE.not_le_iff_exists.mp hJp
   refine ⟨π, hπ, s, hs', fun x hx => ?_⟩
   rw [hJ, mul_comm s x]
   exact Ideal.mul_mem_mul hx hs
@@ -237,7 +237,7 @@ theorem UpperTheory.Cb.curve_mayer_vietoris_of_degree_zero :
   intro _ _ R _ F X U V hUV n
   obtain ⟨d, hd, -⟩ := mayerVietoris R F
   have hc := LateralTheory.EtaleTrace.LSplitPf.Sch.cover2 R U V hUV
-  haveI : PreservesLimitsOfShape WalkingCospan sch := by
+  have : PreservesLimitsOfShape WalkingCospan sch := by
     unfold sch; infer_instance
   have P := (isPullback_opens_inf U V).map sch
   refine ⟨(d _ _ hc n).comp (pull R P.isoPullback.inv F n), fun x => ?_⟩
@@ -272,14 +272,14 @@ private theorem sp_facts (hH0 : H0TwistOverClosedField) (hH : Hyps) (q : ℕ) [N
   have hsub : ∀ m : ℤ, 2 ≤ m → Subsingleton (Ht q (sp B) m i) := fun m hm => c2 q Ω B hq m i hm
   refine ⟨fun m => ?_, hsub⟩
   rcases lt_trichotomy m 0 with hm | rfl | hm
-  · haveI : Subsingleton (Ht q (sp B) m i) := (a9 (ZMod q) (tw q i)).1 (sp B) m hm
+  · have : Subsingleton (Ht q (sp B) m i) := (a9 (ZMod q) (tw q i)).1 (sp B) m hm
     infer_instance
   · obtain ⟨hfin, hbij⟩ := hH0 hH q Ω hq i
-    haveI := hfin
+    have := hfin
     exact Finite.of_surjective _ (hbij (Spec.map (CommRingCat.ofHom (algebraMap Ω B)))).2
   · rcases (show m = 1 ∨ 2 ≤ m by omega) with rfl | hm2
     · exact hB B
-    · haveI := hsub m hm2
+    · have := hsub m hm2
       infer_instance
 
 private theorem aff_facts (hH0 : H0TwistOverClosedField) (hH : Hyps) (q : ℕ) [NeZero q] (Ω : Type) [Field Ω] [IsAlgClosed Ω]
@@ -292,20 +292,20 @@ private theorem aff_facts (hH0 : H0TwistOverClosedField) (hH : Hyps) (q : ℕ) [
   by_cases hne : (j.opensRange : Set C).Nonempty
   · have hUne : (U : Set C).Nonempty := hne.mono hj
     have hcur := UpperTheory.isDedekindDomain_affine_sections_of_isCurve Ω c hc
-    haveI : IsDedekindDomain (Γ(C, U) : Type) := (hcur.1 U hU hUne).1
+    have : IsDedekindDomain (Γ(C, U) : Type) := (hcur.1 U hU hUne).1
     have hWa : IsAffineOpen j.opensRange := by
       have h1 : IsAffineOpen (hU.fromSpec ⁻¹ᵁ j.opensRange) := UpperTheory.dedekind_spec_open_isAffine (Γ(C, U) : Type) _
       have h2 := h1.image_of_isOpenImmersion hU.fromSpec
       rwa [Scheme.Hom.image_preimage_eq_opensRange_inf, IsAffineOpen.opensRange_fromSpec,
         inf_eq_right.mpr hj] at h2
-    haveI : IsDedekindDomain (Γ(C, j.opensRange) : Type) := (hcur.1 _ hWa hne).1
+    have : IsDedekindDomain (Γ(C, j.opensRange) : Type) := (hcur.1 _ hWa hne).1
     have e : j.opensRange ≤ c ⁻¹ᵁ ⊤ := by simp
-    letI : Algebra Ω (Γ(C, j.opensRange) : Type) :=
+    let : Algebra Ω (Γ(C, j.opensRange) : Type) :=
       ((c.appLE ⊤ j.opensRange e).hom.comp (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv.hom).toAlgebra
-    haveI : LocallyOfFiniteType c := by
-      haveI : IsProper c := hc.2.1
+    have : LocallyOfFiniteType c := by
+      have : IsProper c := hc.2.1
       infer_instance
-    haveI : Algebra.FiniteType Ω (Γ(C, j.opensRange) : Type) := by
+    have : Algebra.FiniteType Ω (Γ(C, j.opensRange) : Type) := by
       have hft := HasRingHomProperty.appLE @LocallyOfFiniteType c inferInstance
         ⟨⊤, isAffineOpen_top _⟩ ⟨j.opensRange, hWa⟩ e
       exact RingHom.FiniteType.comp hft (RingHom.FiniteType.of_surjective _
@@ -313,9 +313,9 @@ private theorem aff_facts (hH0 : H0TwistOverClosedField) (hH : Hyps) (q : ℕ) [
     obtain ⟨h1, h2⟩ := sp_facts hH0 hH q Ω hq i hB (Γ(C, j.opensRange) : Type)
     have iso : Y ≅ Spec (CommRingCat.of (Γ(C, j.opensRange) : Type)) := j.isoOpensRange ≪≫ hWa.isoSpec
     refine ⟨fun m => ?_, fun m hm => ?_⟩
-    · haveI := h1 m
+    · have := h1 m
       exact Finite.of_equiv _ (CurveCut.isoH (ZMod q) (tw q i) iso m)
-    · haveI := h2 m hm
+    · have := h2 m hm
       exact (CurveCut.isoH (ZMod q) (tw q i) iso m).symm.subsingleton
   · have hr : Set.range j.base = ∅ := Set.not_nonempty_iff_eq_empty.mp hne
     have iso : Y ≅ ((⊥ : C.Opens) : Scheme.{0}) := IsOpenImmersion.isoOfRangeEq j (⊥ : C.Opens).ι (by
@@ -325,7 +325,7 @@ private theorem aff_facts (hH0 : H0TwistOverClosedField) (hH : Hyps) (q : ℕ) [
       haveI := LateralTheory.E.E8.leafEmptyVanish (ZMod q) (X := C) (tw q i) m
       (CurveCut.isoH (ZMod q) (tw q i) iso m).symm.subsingleton
     refine ⟨fun m => ?_, fun m _ => hs m⟩
-    haveI := hs m
+    have := hs m
     infer_instance
 
 end UpperTheory.Cb.CurveInd
@@ -335,8 +335,8 @@ theorem UpperTheory.leafCurve_of_leafH0 :
     LateralTheory.E.E4.H0TwistOverClosedField → LateralTheory.E.E4.LeafCurve := by
   intro hH0 hH q _ Ω _ _ hq i hB C c hc
   have hMV := UpperTheory.Cb.curve_mayer_vietoris_of_degree_zero hH0
-  haveI : IsProper c := hc.2.1
-  haveI : CompactSpace C := QuasiCompact.compactSpace_of_compactSpace c
+  have : IsProper c := hc.2.1
+  have : CompactSpace C := QuasiCompact.compactSpace_of_compactSpace c
   have key : ∀ (Y : Scheme.{0}) (j : Y ⟶ C) [IsOpenImmersion j], j.opensRange ≤ ⊤ →
       (∀ m : ℤ, Finite (Ht q (sch.obj Y) m i)) ∧ ∀ m : ℤ, 3 ≤ m → Subsingleton (Ht q (sch.obj Y) m i) := by
     refine compact_open_induction_on (P := fun W : C.Opens => ∀ (Y : Scheme.{0}) (j : Y ⟶ C) [IsOpenImmersion j],

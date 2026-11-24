@@ -99,7 +99,7 @@ theorem lift_unique {I' : Ideal R'} {J : Ideal D} {B : Type} [CommRing B]
       φ.comp (Ideal.quotientMap _ (Algebra.TensorProduct.includeLeftRingHom : R' →+* R' ⊗[R] D)
         Ideal.le_comap_map) = a ∧
       φ.comp (Ideal.quotientMap _ (Algebra.TensorProduct.includeRight : D →ₐ[R] R' ⊗[R] D).toRingHom hle) = b := by
-  letI : Algebra R B := ((a.comp (Ideal.Quotient.mk I')).comp (algebraMap R R')).toAlgebra
+  let : Algebra R B := ((a.comp (Ideal.Quotient.mk I')).comp (algebraMap R R')).toAlgebra
   let f1 : R' →ₐ[R] B := { a.comp (Ideal.Quotient.mk I') with commutes' := fun _ => rfl }
   let f2 : D →ₐ[R] B := { b.comp (Ideal.Quotient.mk J) with commutes' := fun r => (hab r).symm }
   let Φ : R' ⊗[R] D →ₐ[R] B := Algebra.TensorProduct.productMap f1 f2
@@ -149,15 +149,15 @@ theorem chart_bc : ∀ {O R R' : Type} [CommRing O] [CommRing R] [CommRing R'] {
       (FlatT c.D → FlatT c'.D) ∧
       ∃ f : R' ⊗[R] c.D.B ≃+* c'.D.B, (∀ r, f (r ⊗ₜ 1) = c'.D.i r) ∧ ∀ x, f (1 ⊗ₜ x) = e.φ x := by
   intro O R R' _ _ _ I I' γ γ' p X q κ κ' σ m hu hg hnil V d c
-  letI a1 : Algebra R R' := σ.toAlgebra
-  letI a2 : Algebra R c.D.B := c.D.i.toAlgebra
+  let a1 : Algebra R R' := σ.toAlgebra
+  let a2 : Algebra R c.D.B := c.D.i.toAlgebra
   let iL : R' →+* R' ⊗[R] c.D.B := Algebra.TensorProduct.includeLeftRingHom
   let iR : c.D.B →+* R' ⊗[R] c.D.B := (Algebra.TensorProduct.includeRight : c.D.B →ₐ[R] R' ⊗[R] c.D.B).toRingHom
   have hcomm : ∀ r, iR (c.D.i r) = iL (σ r) := fun r => (left_right (R := R) (R' := R') (D := c.D.B) r).symm
   have hEt : (MvPolynomial.eval₂Hom iL (fun i => (1 : R') ⊗ₜ[R] c.t i) :
       MvPolynomial (Fin d) R' →+* R' ⊗[R] c.D.B).Etale :=
     GlobalTheory.CompanionTheory.ChartAlg.etale_tensor (O := R) (R := R') (G := c.D.B) c.t c.etale
-  haveI hF : Module.Flat R' (R' ⊗[R] c.D.B) := GlobalTheory.CompanionTheory.ChartAlg.flat_of_etale _ hEt
+  have hF : Module.Flat R' (R' ⊗[R] c.D.B) := GlobalTheory.CompanionTheory.ChartAlg.flat_of_etale _ hEt
   obtain ⟨δ', hδ'⟩ : ∃ δ' : DividedPowers (I'.map iL), IsDPMorphism γ' δ' iL :=
     GlobalTheory.CompanionTheory.JLiftDP.dpFlat R' (R' ⊗[R] c.D.B) I' γ'
   have hle : c.D.J ≤ (I'.map iL).comap iR := by
@@ -294,7 +294,7 @@ theorem tens_of_ring {R R' : Type} [CommRing R] [CommRing R'] (A₁ A₂ : Algeb
     (hf : ∀ n y, f () n (u y) = v (i n * φ y)) :
     letI := A₂; Tens R (N := fun _ : Unit => R') (M := fun _ => M) (M' := M') f := by
   subst hA
-  letI := A₁
+  let := A₁
   let w : R' ⊗[R] M ≃+ M' :=
     ((TensorProduct.congr (LinearEquiv.refl R R') u.symm).toAddEquiv.trans t.toAddEquiv).trans v
   refine ⟨(LinearEquiv.funUnique Unit R (R' ⊗[R] M)).toAddEquiv.trans w, ?_⟩
@@ -496,7 +496,7 @@ theorem local_bc : ∀ {O R R' : Type} [CommRing O] [CommRing R] [CommRing R'] [
     change (s'.hom.φ (e.φ (c₀.t i)) - s.hom.φ (e.φ (c₀.t i)) : T.obj.B) =
       s'.hom.φ (c'.t i) - s.hom.φ (c'.t i)
     rw [he]
-  letI := c₀.D.i.toAlgebra
+  let := c₀.D.i.toAlgebra
   exact GlobalTheory.CompanionTheory.LocBC.local_base_change (m.smor _ _ h) (polyS hp {V}) (polyS hp {V})
     (c₀.frame g₀ _ hV hD) (c'.frame g' _ hV' hD') (ObjectProperty.homMk e) hFr (fun _ => Function.injective_id) (ι := Unit) (fun _ => R')
     (fun _ => LinearMap.id) (fun _ r => stdI _ (some r) 0) (fun _ _ => stdI _ none 0)

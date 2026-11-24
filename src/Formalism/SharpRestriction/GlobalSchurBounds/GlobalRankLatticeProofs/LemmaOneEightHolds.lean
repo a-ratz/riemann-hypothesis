@@ -151,9 +151,9 @@ theorem ordinary (D : D7) : ∀ p : ℕ, p.Prime →
           (D.host.galE (σ * τ) ∈ D.R.Psi ↔
             D.host.galE σ ∈ D.R.Psi) := by
   intro p hp hK P hP hl σ τ hτ
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI := hP
-  haveI := hl
+  have : Fact p.Prime := ⟨hp⟩
+  have := hP
+  have := hl
   exact (D.host.der.ordinary p P).2 hK σ τ hτ
 
 end CMIdealEquivalence

@@ -72,7 +72,7 @@ theorem prod_pow_sub_pow_eq_mul_prod_Icc (g : ℝ) (k : ℕ) :
 
 theorem natCard_GL_zmod_real (g n : ℕ) (hg : g.Prime) :
     (Nat.card (GL (Fin n) (ZMod g)) : ℝ) = ∏ j ∈ Finset.range n, ((g : ℝ) ^ n - (g : ℝ) ^ j) := by
-  haveI : Fact g.Prime := ⟨hg⟩
+  have : Fact g.Prime := ⟨hg⟩
   rw [Matrix.card_GL_field, ZMod.card, Nat.cast_prod, Finset.prod_range]
   refine Finset.prod_congr rfl fun j _ => ?_
   rw [Nat.cast_sub (Nat.pow_le_pow_right hg.pos j.isLt.le), Nat.cast_pow, Nat.cast_pow]
@@ -203,7 +203,7 @@ private theorem card_not_excluded_pairs_eq (s k : ℕ) :
 theorem idxColLoc_idxRowLoc_exact : ∀ (D : D7) (i : Fin 2), StandardLattice.idxColLoc (D.host.g i) D.R.k = ∏ j ∈ Finset.Icc 1 D.R.k, ((D.host.g i : ℝ) ^ j - 1) ∧ StandardLattice.idxRowLoc (D.host.g i) D.R.k D.R.m = (∏ j ∈ Finset.range D.R.r, ((D.host.g i : ℝ) ^ D.R.r - (D.host.g i : ℝ) ^ j)) / ((D.host.g i : ℝ) ^ (D.R.rS * (2 * D.R.k + 2 * D.R.rS + 1)) * (D.host.g i : ℝ) ^ (D.R.k * (D.R.k - 1) / 2)) := by
   intro D i
   have hg : (D.host.g i).Prime := D.host.g_prime i
-  haveI : Fact (D.host.g i).Prime := ⟨hg⟩
+  have : Fact (D.host.g i).Prime := ⟨hg⟩
   have hpos : (0 : ℝ) < (D.host.g i : ℝ) := by exact_mod_cast hg.pos
   have hr : D.R.r = D.R.k + D.R.m - 1 := rfl
   have hs : D.R.rS = D.R.m / 2 - 1 := rfl

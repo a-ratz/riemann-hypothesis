@@ -68,7 +68,7 @@ theorem ker_includeRight_residueField_le_jacobson (R B : Type*) [CommRing R] [Is
   intro x hx
   apply mem_jacobson_bot_of_forall_isMaximal
   intro n hn
-  haveI := hn
+  have := hn
   have hc := comap_eq_maximalIdeal_of_finite (R := R) n
   let φ : ResidueField R →ₐ[R] B ⧸ n :=
     Ideal.Quotient.liftₐ (maximalIdeal R) (Algebra.ofId R (B ⧸ n)) fun a ha => by
@@ -100,7 +100,7 @@ theorem isUnit_of_isUnit_one_tmul_residueField (R : Type*) {B : Type*} [CommRing
 theorem isLocalRing_of_isLocalRing_residueField_tensor (R B : Type*) [CommRing R]
     [IsLocalRing R] [CommRing B] [Algebra R B] [Module.Finite R B]
     [IsLocalRing (ResidueField R ⊗[R] B)] : IsLocalRing B := by
-  haveI : Nontrivial B := (includeRight_residueField_surjective R B).nontrivial
+  have : Nontrivial B := (includeRight_residueField_surjective R B).nontrivial
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun x => ?_
   rcases IsLocalRing.isUnit_or_isUnit_one_sub_self ((1 : ResidueField R) ⊗ₜ[R] x) with h | h
   · exact Or.inl (isUnit_of_isUnit_one_tmul_residueField R h)
@@ -176,10 +176,10 @@ theorem exists_etale_lift_of_isSeparable.{u} (R : Type u) (L : Type*) [CommRing 
   have hs : Function.Surjective (algebraMap R (ResidueField R)) := IsLocalRing.residue_surjective
   obtain ⟨f, hfmap, hfdeg, hf⟩ := Polynomial.lifts_and_degree_eq_and_monic
     ((Polynomial.mem_lifts _).mpr (Polynomial.map_surjective _ hs _)) hmon
-  haveI hfin : Module.Finite R (AdjoinRoot f) := (AdjoinRoot.powerBasis' hf).finite
-  letI : Algebra R L :=
+  have hfin : Module.Finite R (AdjoinRoot f) := (AdjoinRoot.powerBasis' hf).finite
+  let : Algebra R L :=
     ((algebraMap (ResidueField R) L).comp (algebraMap R (ResidueField R))).toAlgebra
-  haveI : IsScalarTower R (ResidueField R) L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R (ResidueField R) L := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hroot : Polynomial.aeval pb.gen f = 0 := by
     rw [← Polynomial.aeval_map_algebraMap (ResidueField R), hfmap, minpoly.aeval]
   let g : AdjoinRoot f →ₐ[R] L := AdjoinRoot.liftAlgHom f (Algebra.ofId R L) pb.gen hroot
@@ -193,7 +193,7 @@ theorem exists_etale_lift_of_isSeparable.{u} (R : Type u) (L : Type*) [CommRing 
       Set.singleton_subset_iff]
     exact (AlgHom.mem_range ψ).mpr ⟨_, hψroot⟩
   let bT := Algebra.TensorProduct.basis (ResidueField R) (AdjoinRoot.powerBasis' hf).basis
-  haveI : Module.Finite (ResidueField R) (ResidueField R ⊗[R] AdjoinRoot f) :=
+  have : Module.Finite (ResidueField R) (ResidueField R ⊗[R] AdjoinRoot f) :=
     Module.Finite.of_basis bT
   have hdim : Module.finrank (ResidueField R) (ResidueField R ⊗[R] AdjoinRoot f) =
       Module.finrank (ResidueField R) L := by
@@ -203,8 +203,8 @@ theorem exists_etale_lift_of_isSeparable.{u} (R : Type u) (L : Type*) [CommRing 
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hdim (f := ψ.toLinearMap)).mpr
       hsurjψ
   let e := AlgEquiv.ofBijective ψ ⟨hinjψ, hsurjψ⟩
-  haveI : Nontrivial (ResidueField R ⊗[R] AdjoinRoot f) := hsurjψ.nontrivial
-  haveI : IsLocalRing (ResidueField R ⊗[R] AdjoinRoot f) :=
+  have : Nontrivial (ResidueField R ⊗[R] AdjoinRoot f) := hsurjψ.nontrivial
+  have : IsLocalRing (ResidueField R ⊗[R] AdjoinRoot f) :=
     IsLocalRing.of_surjective' e.symm.toRingEquiv.toRingHom e.symm.surjective
   have hloc : IsLocalRing (AdjoinRoot f) := isLocalRing_of_isLocalRing_residueField_tensor R _
   have hder : IsUnit (AdjoinRoot.mk f (derivative f)) := by
@@ -218,7 +218,7 @@ theorem exists_etale_lift_of_isSeparable.{u} (R : Type u) (L : Type*) [CommRing 
       rw [show e _ = ψ _ from rfl, h1, isUnit_iff_ne_zero]
       exact hsep.aeval_derivative_ne_zero (minpoly.aeval _ _)
     simpa using h2.map e.symm
-  haveI := etale_adjoinRoot_of_isUnit_derivative hf hder
+  have := etale_adjoinRoot_of_isUnit_derivative hf hder
   exact ⟨AdjoinRoot f, inferInstance, inferInstance, hfin, inferInstance, hloc, ⟨e⟩⟩
 
 theorem exists_etale_lift_of_etale.{u, v} (R : Type u) (E : Type v) [CommRing R] [IsLocalRing R]
@@ -230,8 +230,8 @@ theorem exists_etale_lift_of_etale.{u, v} (R : Type u) (E : Type v) [CommRing R]
   have H : ∀ i, ∃ (A : Type u) (_ : CommRing A) (_ : Algebra R A), Module.Finite R A ∧
       Algebra.Etale R A ∧ IsLocalRing A ∧
         Nonempty (ResidueField R ⊗[R] A ≃ₐ[ResidueField R] Ai i) := fun i => by
-    haveI := (hAi i).1
-    haveI := (hAi i).2
+    have := (hAi i).1
+    have := (hAi i).2
     exact exists_etale_lift_of_isSeparable R (Ai i)
   choose A hA1 hA2 hfin het _ hiso using H
   have := Fintype.ofFinite I

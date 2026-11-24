@@ -82,8 +82,8 @@ theorem inFrame_inv (b : GL (Fin n ⊕ Fin n) E) (x : G2 σ Y) : inFrame b x⁻�
   (Matrix.inv_eq_left_inv (inFrame_inv_mul b x)).symm
 
 theorem continuous_inFrame (b : GL (Fin n ⊕ Fin n) E) : Continuous (inFrame (σ := σ) (Y := Y) b) := by
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  have hm : Continuous fun g : G2 σ Y => mat2 g := Units.continuous_val.comp continuous_subtype_val
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have hm : Continuous fun g : G2 σ Y => mat2 g := Units.continuous_val.comp continuous_subtypeVal
   exact (continuous_const.matrix_mul hm).matrix_mul continuous_const
 
 

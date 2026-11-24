@@ -57,7 +57,7 @@ theorem continuous_haMap {F E : Type} [Field F] [Field E] [Algebra F E]
     [TopologicalSpace R'] (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) (φ : R →ₐ[F] R')
     (hφ : Continuous (tensMap (E := E) φ)) : Continuous (haMap σ J φ) := by
   have hmat : Continuous (fun g : HA R σ J => (HA.mat R σ J g : GL (Fin n) (R ⊗[F] E))) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   have key : Continuous (fun g : HA R σ J =>
       (Formalism.UG.bc (tensMap (E := E) φ) (HA.mat R σ J g) : GL (Fin n) (R' ⊗[F] E))) := by
     rw [Units.continuous_iff]

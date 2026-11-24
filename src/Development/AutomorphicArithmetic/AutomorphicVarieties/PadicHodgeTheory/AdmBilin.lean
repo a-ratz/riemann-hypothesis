@@ -166,7 +166,7 @@ private theorem finite_le [FiniteDimensional Q V] (ρ : G → V →ₗ[Q] V) :
   have hr : Module.rank F ↥(DD F a ha ρ) ≤ finrank Q V := by
     refine rank_le fun s hs => ?_
     simpa using LinearIndependent.fintype_card_le_finrank (indepB F a ha hf ρ _ hs)
-  haveI : Module.Finite F ↥(DD F a ha ρ) := by
+  have : Module.Finite F ↥(DD F a ha ρ) := by
     rw [← Module.rank_lt_aleph0_iff]
     exact lt_of_le_of_lt hr Cardinal.natCast_lt_aleph0
   exact ⟨inferInstance, finrank_le_of_rank_le hr⟩

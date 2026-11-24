@@ -89,8 +89,8 @@ theorem SHEqv_of_secBij (hSec : SHSection) (hB : SecBij) : SHEqv := by
   obtain ⟨_, _, _, _, _, hA9, _, hB2, _⟩ := hyp
   obtain ⟨hneg, e, he, -⟩ := hA9 (ZMod q) (tw q i)
   rcases lt_trichotomy n 0 with h | h | h
-  · haveI := hneg (sch.obj (Spec A)) n h
-    haveI := hneg (sch.obj (Spec B)) n h
+  · have := hneg (sch.obj (Spec A)) n h
+    have := hneg (sch.obj (Spec B)) n h
     exact bij_of_subsingleton _
   · subst h
     have key : ⇑(pull (ZMod q) (sch.map (Spec.map f)) (tw q i) 0) =
@@ -102,8 +102,8 @@ theorem SHEqv_of_secBij (hSec : SHSection) (hB : SecBij) : SHEqv := by
     show Function.Bijective (pull (ZMod q) (sch.map (Spec.map f)) (tw q i) 0)
     rw [key]
     exact (e _).bijective.comp ((hB hSec q i f hq hA hBs).comp (e _).symm.bijective)
-  · haveI := hB2 (ZMod q) A hA (tw q i) n h
-    haveI := hB2 (ZMod q) B hBs (tw q i) n h
+  · have := hB2 (ZMod q) A hA (tw q i) n h
+    have := hB2 (ZMod q) B hBs (tw q i) n h
     exact bij_of_subsingleton _
 
 end LateralTheory.E.SHEqvPf

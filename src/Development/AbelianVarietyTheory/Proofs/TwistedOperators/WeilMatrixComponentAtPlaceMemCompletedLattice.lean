@@ -116,7 +116,7 @@ theorem wAt_mem_latO : ∀ (D : D7) (S T : HSp D) (ΛS : Submodule (𝓞 D.host.
       intro Q β hβ hQ
       unfold latO
       refine AddSubgroup.subset_closure ?_
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       exact ⟨β, hβ, hQ, a, ha, s, hs, t, ht, by subst hX; rfl⟩
     have hw' : w = Matrix.of fun i j => pairA D.host.F 0 α ⊗ₜ[D.host.F] X i j := by
       subst hX

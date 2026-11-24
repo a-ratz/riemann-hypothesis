@@ -192,14 +192,14 @@ theorem kernel_equality_second_of : D0 → N0 → H0 → ThetaDecaying → RowsI
       · rw [Set.indicator_of_notMem hx, hFzero x hx]; simp
     set θ := ∑' ξ : RowT E k k, (tsupport η).indicator (fun _ => (1 : ℝ≥0∞)) (lastRow (ratGL E k (gam ξ) * g)) with hθ
     have hS : ‖sumF F g‖ₑ ≤ ENNReal.ofReal B * θ :=
-      enorm_tsum_le_tsum_enorm.trans ((ENNReal.tsum_le_tsum fun ξ => hFbd _).trans_eq ENNReal.tsum_mul_left)
+      eNorm_tsum_le_tsum_eNorm.trans ((ENNReal.tsum_le_tsum fun ξ => hFbd _).trans_eq ENNReal.tsum_mul_left)
     have hx : Dt g ^ (-((k * M + k : ℕ) : ℝ) / k) ≤ (Dt g ^ M)⁻¹ := by
       have e : (-((k * M + k : ℕ) : ℝ) / k) = -(((M + 1 : ℕ) : ℝ)) := by push_cast; field_simp
       rw [e, Real.rpow_neg (hDpos g).le, Real.rpow_natCast]
       exact inv_anti₀ (pow_pos (hDpos g) _) (pow_le_pow_right₀ hg (by omega))
     refine fin_bd hB0 (Real.rpow_nonneg (hDpos g).le _) hx ?_
     simp only [hp1, mul_one]
-    rw [enorm_mul, enorm_conj']
+    rw [eNorm_mul, enorm_conj']
     calc ‖sumF F g‖ₑ * ‖φ' g‖ₑ ≤ (ENNReal.ofReal B * θ) * ‖φ' g‖ₑ := by gcongr
       _ = ENNReal.ofReal B * (θ * ‖φ' g‖ₑ) := mul_assoc _ _ _
       _ ≤ _ := by gcongr; exact hC g
@@ -228,12 +228,12 @@ theorem kernel_equality_second_of : D0 → N0 → H0 → ThetaDecaying → RowsI
     have hK : (Dt g : ℂ) * sumF F g = _ := hK12 E k hk ψ hψ S U φ η s hcut hinv g
     rw [hp1, mul_one, ← mul_assoc, hK, add_mul, add_sub_cancel_left]
     refine fin_bd (le_max_right _ _) (hDpos g).le le_rfl ?_
-    rw [enorm_mul, enorm_conj']
+    rw [eNorm_mul, enorm_conj']
     calc _ ≤ (ENNReal.ofReal (max C' 0) * ∑' ξ : {ξ : Fin k → E // ξ ≠ 0}, ENNReal.ofReal (Cf.indicator
           (fun _ => ((1 + ‖fun i => pInf E (((fun i => algebraMap E (Ad E) (ξ.1 i)) ᵥ* (invT g).val) i)‖) ^ M)⁻¹)
           fun i => pFin E (((fun i => algebraMap E (Ad E) (ξ.1 i)) ᵥ* (invT g).val) i))) * ‖φ' g‖ₑ := by
           gcongr
-          exact enorm_tsum_le_tsum_enorm.trans ((ENNReal.tsum_le_tsum fun ξ => hJ _).trans_eq ENNReal.tsum_mul_left)
+          exact eNorm_tsum_le_tsum_eNorm.trans ((ENNReal.tsum_le_tsum fun ξ => hJ _).trans_eq ENNReal.tsum_mul_left)
       _ = ENNReal.ofReal (max C' 0) * (_ * ‖φ' g‖ₑ) := mul_assoc _ _ _
       _ ≤ _ := by gcongr
 

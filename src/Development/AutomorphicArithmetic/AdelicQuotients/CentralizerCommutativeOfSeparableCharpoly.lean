@@ -109,5 +109,5 @@ private theorem comm_alg {F R : Type} [Field F] [CommRing R] [Algebra F R] {n : 
 theorem UpperTheory.centralizer_commutative_of_separable_charpoly :
     CentComm := by
   intro F R _ _ _ f n γ hγ s t hs ht
-  letI : Algebra F R := f.toAlgebra
+  let : Algebra F R := f.toAlgebra
   exact comm_alg γ hγ s t hs ht

@@ -127,7 +127,7 @@ private theorem exists_adapted_basis_of_finrank_jumps {L M : Type} [Field L] [Ad
       Int.exists_greatest_of_bdd ⟨b, fun z hz => (hbd z hz).le⟩ ⟨a0, ha0⟩
     have hBD : A (s + 1) < D :=
       lt_of_le_of_ne (hAD _) (fun h => by have := hsmax _ h; omega)
-    obtain ⟨v, hvD, hvB⟩ := SetLike.exists_of_lt hBD
+    obtain ⟨v, hvD, hvB⟩ := IsConcreteLE.exists_of_lt hBD
     have hv0 : v ≠ 0 := fun h => hvB (by rw [h]; exact Submodule.zero_mem _)
     obtain ⟨C, hC⟩ := Submodule.exists_isCompl (A (s + 1) ⊔ Submodule.span L {v})
     obtain ⟨D', hD'⟩ : ∃ D' : Submodule L M, D' = A (s + 1) ⊔ (C ⊓ D) := ⟨_, rfl⟩

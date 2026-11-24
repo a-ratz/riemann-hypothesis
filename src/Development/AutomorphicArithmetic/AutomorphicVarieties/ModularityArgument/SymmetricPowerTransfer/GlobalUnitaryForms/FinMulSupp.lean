@@ -79,7 +79,7 @@ theorem cm_ne [IsTotallyReal F] {τ : F} (h : IsCM τ) : τ ^ 2 - 4 ≠ 0 := by
   exact lt_irrefl _ this
 
 theorem Dat.Ok.ne0 {D : Dat Δ} (h : D.Ok) : Δ ≠ 0 := by
-  haveI := h.real
+  have := h.real
   obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
   intro e
   have := h.neg (InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w))
@@ -143,7 +143,7 @@ theorem fin_mulSupp {I : Type} {Gv : I → Type} [∀ v, Group (Gv v)] {K : ∀ 
   refine (S.finite_toSet.union hg).subset ?_
   intro w hw
   by_contra hc
-  simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hc
   exact hw (h w hc.1 _ hc.2)
 
 theorem hasTr_conj {K : Type} [Field K] {Δ τ : K} {γ : DX Δ} (h : HasTr γ τ) (y : DX Δ) : HasTr (y⁻¹ * γ * y) τ := by
@@ -171,7 +171,7 @@ theorem gqD (D : Dat Δ) (hD : D.Ok) (ι : DX Δ →* DA Δ) (hι : IsIotaD ι) 
     gqOn (ι.comp j) (scalE τ) D.UZ (fun y => ∏ᶠ v, fv v ((y.out⁻¹ * ι δ * y.out).1 v)) =
       (∏ v ∈ D.Sg, a v) * (ms τ * ∏ᶠ (v) (_ : v ∉ D.Sg), b v) := by
   classical
-  haveI := hD.real
+  have := hD.real
   have hτ4 : τ ^ 2 - 4 ≠ 0 := cm_ne hτ
   have hΔ : Δ ≠ 0 := hD.ne0
   have hex : ∃ φ : (Etau F τ)ˣ →* TA τ, IsDiagT τ φ := (iotaEx F Δ).2.2 τ
@@ -183,7 +183,7 @@ theorem gqD (D : Dat Δ) (hD : D.Ok) (ι : DX Δ →* DA Δ) (hι : IsIotaD ι) 
   have hγv : ∀ v : Pl F, HasTr ((ι γ).1 v) (cv v τ) := fun v => hasTr_map (cv v) (hι γ v) hγ
   have hjex : ∀ v : Pl F, ∃ jv : (Etau (Kv v) (cv v τ))ˣ →* DX (cv v Δ), IsEmb (cv v τ) ((ι γ).1 v) jv := by
     intro v
-    haveI := hchar v
+    have := hchar v
     exact (embAlg (Kv v) (cv v Δ) (cv v τ) (hΔv v) (hτv v) _ (hγv v)).1
   choose jv hjv using hjex
   have hιγ : ∀ᶠ v : Pl F in Filter.cofinite, (ι γ).1 v ∈ KD (cv v Δ) (Ov v) := (ι γ).2
@@ -196,7 +196,7 @@ theorem gqD (D : Dat Δ) (hD : D.Ok) (ι : DX Δ →* DA Δ) (hι : IsIotaD ι) 
   have hnotS : ∀ v ∉ D.Sg ∪ hSbfin.toFinset, v ∉ D.Sg ∧ ((ι γ).1 v ∈ KD (cv v Δ) (Ov v) ∧
       (∃ u : (Ov v)ˣ, algebraMap (Ov v) (Kv v) u = cv v τ ^ 2 - 4) ∧ cv v τ ∈ v.adicCompletionIntegers F) := by
     intro v hv
-    simp only [Finset.mem_union, not_or, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+    simp only [Finset.mem_union, not_or, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
     exact hv
   have hJ : ∀ v ∉ D.Sg, D.J2v v = KD (cv v Δ) (Ov v) := fun v hv => by simp [Dat.J2v, hv]
   have hcomm : ∀ v (s : (Etau (Kv v) (cv v τ))ˣ), (jv v s)⁻¹ * (ι δ).1 v * jv v s = (ι δ).1 v := by
@@ -244,7 +244,7 @@ theorem gqD (D : Dat Δ) (hD : D.Ok) (ι : DX Δ →* DA Δ) (hι : IsIotaD ι) 
     · have hJS : D.J2v v = (D.S v).J2 := by simp [Dat.J2v, hvSg]
       obtain ⟨z, hz⟩ := zEx (hτv v)
       have hdo := SigOk.D_orb (hD.sig v hvSg) (t v) (ht v hvSg) (cv v τ) _ (jv v) (hτv v) (hγv v) (hjv v) z hz
-      haveI := hchar v
+      have := hchar v
       have hsl := (stabLe (Ov v) (Kv v) (cv v Δ) (cv v τ) (hΔv v) (hτv v)).1 _ (jv v) (hγv v) (hjv v)
       show ∀ y : DX (cv v Δ) ⧸ (ZD (cv v Δ) ⊔ D.J2v v), _
       rw [hJS]
@@ -266,7 +266,7 @@ theorem gqD (D : Dat Δ) (hD : D.Ok) (ι : DX Δ →* DA Δ) (hι : IsIotaD ι) 
     have hsc : IsScal (Units.map (cv v : F →* Kv v) c) ((ι (j z)).1 v) := by
       unfold IsScal
       rw [hι, hj, ← hc]
-      simp only [Units.coe_map, MonoidHom.coe_coe, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im,
+      simp only [Units.coe_map, MonoidHom.coe_ofClass, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im,
         zero_smul, add_zero]
       ext i k : 1
       by_cases hik : i = k

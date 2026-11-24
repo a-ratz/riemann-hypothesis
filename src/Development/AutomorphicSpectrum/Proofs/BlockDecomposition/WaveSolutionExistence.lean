@@ -64,7 +64,7 @@ theorem isOpen_GLs : IsOpen (GLs n) := by
   exact isOpen_ne_fun h continuous_const
 
 theorem mul_mem_GLs {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
 theorem unitary_mem_GLs (k : Matrix.unitaryGroup (Fin n) ℂ) : k.1 ∈ GLs n := by
@@ -140,7 +140,7 @@ theorem Epow_smooth (hR : RCalc) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f (G
     intro a b
     by_cases hab : a = b
     · simpa [Epow, hab] using hf
-    · simp only [Epow, if_neg hab]
+    · simp only [Epow, ite_eq_right hab]
       exact contDiffOn_const (c := (0 : V))
   | succ m ih =>
     intro a b

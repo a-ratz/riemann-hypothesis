@@ -111,8 +111,8 @@ theorem exists_genericPoint_hom (C : Type) [Field C] (O : Type) [CommRing O] [Al
     exact e.symm
   refine ⟨MonoidHom.mk' j₀ hmul, fun P Q hPQ => ?_, key⟩
   have hPQ' : j₀ P = j₀ Q := hPQ
-  haveI : IsDomain O := hinj.isDomain _
-  haveI : IsDominant (spMap (algebraMap O C)) := by
+  have : IsDomain O := hinj.isDomain _
+  have : IsDominant (spMap (algebraMap O C)) := by
     refine ⟨?_⟩
     exact (PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical (algebraMap O C)).2
       (by rw [(RingHom.injective_iff_ker_eq_bot _).1 hinj]; exact bot_le)

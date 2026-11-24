@@ -117,7 +117,7 @@ lemma massTelescope_ortho (n : ℕ) :
     exact absurd (Finset.mem_univ i) hi
 
 lemma massTelescope_isLattice (n : ℕ) : Submodule.IsFullLattice K (massTelescope_lat K n) := by
-  letI : Submodule.IsLattice K (massTelescope_lat K n) :=
+  let : Submodule.IsLattice K (massTelescope_lat K n) :=
     Submodule.IsLattice.of_fg K (Submodule.fg_span (Set.finite_range _))
   refine { span_eq_top := ?_ }
   unfold massTelescope_lat
@@ -125,7 +125,7 @@ lemma massTelescope_isLattice (n : ℕ) : Submodule.IsFullLattice K (massTelesco
 
 lemma massTelescope_trace_pos (hCM : IsCMUnram K) (a : K) (ha : a ≠ 0) :
     0 < Algebra.trace ℚ K (star a * a) := by
-  haveI : Nonempty (K →ₐ[ℚ] ℂ) := ⟨IsAlgClosed.lift⟩
+  have : Nonempty (K →ₐ[ℚ] ℂ) := ⟨IsAlgClosed.lift⟩
   have key : ∀ σ : K →ₐ[ℚ] ℂ, σ (star a * a) = ((Complex.normSq (σ a) : ℝ) : ℂ) := by
     intro σ
     have h1 : σ (star a) = starRingEnd ℂ (σ a) := hCM.2.1 (σ : K →+* ℂ) a

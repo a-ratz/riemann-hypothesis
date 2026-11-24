@@ -65,8 +65,8 @@ def IsCuspIndProdChar {E : Type} [Field E] [NumberField E] (Pg : Finset (Pl E)) 
     ∀ g : G0 Pg r, s (χ g) = ∏ PP : ↥Pg, θ PP (g PP)
 
 theorem finite_boundedLevelClassGroupFamily {E : Type} [Field E] [NumberField E] (Pg : Finset (Pl E)) (r : ℕ) : Finite (G0 Pg r) := by
-  haveI : ∀ PP : ↥Pg, Finite (kP PP.1) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot _ PP.1.ne_bot
-  haveI : ∀ PP : ↥Pg, Finite (GL (Fin r) (kP PP.1)) := fun PP => inferInstance
+  have : ∀ PP : ↥Pg, Finite (kP PP.1) := fun PP => Ideal.finiteQuotientOfFreeOfNeBot _ PP.1.ne_bot
+  have : ∀ PP : ↥Pg, Finite (GL (Fin r) (kP PP.1)) := fun PP => inferInstance
   exact Pi.finite
 
 abbrev fintypeH {E : Type} [Field E] [NumberField E] {Pg : Finset (Pl E)} {r : ℕ} {K : Type} [CommRing K]

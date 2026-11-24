@@ -96,7 +96,7 @@ theorem isAdmissibleSub_top (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAd
   have hbi : ∀ i, FiniteDimensional ℂ (Formalism.REAL.kSpan ε (smE ε σ) (b i : smD ε σ)) ∧
       IsKStableSub ε (smE ε σ) (Formalism.REAL.kSpan ε (smE ε σ) (b i : smD ε σ)) := fun i =>
     kSpan_fin_B K_finite_smooth_vectors hσ hirr (hAK (b i).2)
-  haveI : ∀ i, FiniteDimensional ℂ (Formalism.REAL.kSpan ε (smE ε σ) (b i : smD ε σ)) := fun i => (hbi i).1
+  have : ∀ i, FiniteDimensional ℂ (Formalism.REAL.kSpan ε (smE ε σ) (b i : smD ε σ)) := fun i => (hbi i).1
   have hMf : FiniteDimensional ℂ M := Submodule.finiteDimensional_iSup _
   have hMK : IsKStableSub ε (smE ε σ) M := kStableSub_iSup _ fun i => (hbi i).2
   have hAM : Submodule.span ℂ A ≤ M := by

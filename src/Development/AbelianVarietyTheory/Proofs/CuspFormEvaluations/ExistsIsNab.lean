@@ -138,7 +138,7 @@ namespace GlobalTheory.CanonConn
 theorem exists_isNab : Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∃ (_ : StarRing (𝓞 E)) (nab : NabV Xo c), IsNab Xo c nab := by
   intro hL E _ _ _ H Dw l Xo c
   classical
-  letI : StarRing (𝓞 E) := H.starRing
+  let : StarRing (𝓞 E) := H.starRing
   have hs : ∀ a : 𝓞 E, star a = H.bar a := fun _ => rfl
   have hC := GlobalTheory.T.exists_biextension_chart_with_germs_framed_point hL E H Dw l Xo c hs
   choose C _hT hg using hC
@@ -156,7 +156,7 @@ theorem exists_isNab : Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   refine ⟨C S y, fun k F => ⟨_, hg S y k F⟩, ?_⟩
   intro k F f hf α
   have hne : Nonempty (Algebra ℚ S) := ⟨iQ⟩
-  have h1 : nab y k F α = @val S _ _ hne.some y k F α := dif_pos hne
+  have h1 : nab y k F α = @val S _ _ hne.some y k F α := dite_eq_left hne
   have h2 : hne.some = iQ := Subsingleton.elim _ _
   refine h1.trans ?_
   rw [h2, isGermFun_holds E H Dw l Xo c S y _ _ _ _ _ k F f _ hf (hg S y k F)]

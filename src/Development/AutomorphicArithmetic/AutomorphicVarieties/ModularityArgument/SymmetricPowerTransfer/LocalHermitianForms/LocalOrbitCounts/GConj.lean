@@ -97,7 +97,7 @@ theorem UpperTheory.V.Z.Sym.Loc.gConj : UpperTheory.V.Z.Sym.Loc.GConj := by
     rw [hg, e2, ← e1]; simp only [mul_inv_rev, inv_inv, Units.val_mul, mul_assoc]
   have hconj : ∀ z : (Etau K τ)ˣ, jU j' z = g⁻¹ * jU j z * g := by
     intro z; ext1
-    simp only [jU, Units.coe_map, Units.val_mul, MonoidHom.coe_coe]
+    simp only [jU, Units.coe_map, Units.val_mul, MonoidHom.coe_ofClass]
     rw [j_apply j', j_apply j, ← hM]
     simp [mul_add, add_mul, smul_mul_assoc, mul_smul_comm, mul_assoc]
   refine ⟨⟨g, hconj⟩, fun χ hχ z => ?_⟩

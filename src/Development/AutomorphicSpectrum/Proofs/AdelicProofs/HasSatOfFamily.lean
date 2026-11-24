@@ -92,7 +92,7 @@ theorem exists_basis_cols {O : Type} [CommRing O] [IsDomain O] [IsPrincipalIdeal
   obtain ⟨P, hPdef⟩ : ∃ P : Matrix (β ⊕ γ) (β ⊕ γ) O,
       P = (Pi.basisFun O (β ⊕ γ)).toMatrix (S.bM.reindex e.symm) := ⟨_, rfl⟩
   have hPdet : IsUnit P.det := by
-    letI := (Pi.basisFun O (β ⊕ γ)).invertibleToMatrix (S.bM.reindex e.symm)
+    let := (Pi.basisFun O (β ⊕ γ)).invertibleToMatrix (S.bM.reindex e.symm)
     rw [hPdef]
     exact Matrix.isUnit_det_of_invertible _
   have hP1 : ∀ i b, P.toCols₁ i b = S.bM (f' b) i := by

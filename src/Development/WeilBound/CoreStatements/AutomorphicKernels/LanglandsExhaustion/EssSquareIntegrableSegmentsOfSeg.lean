@@ -109,7 +109,7 @@ private theorem nontrivial_irrRep_V {G : Type} [Group G] [TopologicalSpace G] (�
     Nontrivial σ.V := by
   by_contra h
   rw [not_nontrivial_iff_subsingleton] at h
-  haveI : IsSimpleOrder (Subrepresentation σ.ρ) := σ.irr
+  have : IsSimpleOrder (Subrepresentation σ.ρ) := σ.irr
   apply (bot_ne_top : (⊥ : Subrepresentation σ.ρ) ≠ ⊤)
   apply Subrepresentation.ext
   ext v
@@ -121,8 +121,8 @@ private theorem exists_smooth_central_character_of_admissible {k : Type} [Field 
     [IsNonarchimedeanLocalField k] (n : ℕ) (σ : IrrRep (GL (Fin n) k)) (hadm : IsAdmissible σ.ρ) :
     ∃ ω : kˣ →* ℂˣ, IsSmoothChar ω ∧ HasCentralChar σ.ρ ω := by
   classical
-  haveI hnt : Nontrivial σ.V := nontrivial_irrRep_V σ
-  haveI : IsSimpleOrder (Subrepresentation σ.ρ) := σ.irr
+  have hnt : Nontrivial σ.V := nontrivial_irrRep_V σ
+  have : IsSimpleOrder (Subrepresentation σ.ρ) := σ.irr
   obtain ⟨v0, hv0⟩ := exists_ne (0 : σ.V)
   have hinv : ∀ (g : GL (Fin n) k) (v : σ.V), σ.ρ g⁻¹ (σ.ρ g v) = v := by
     intro g v
@@ -131,12 +131,12 @@ private theorem exists_smooth_central_character_of_admissible {k : Type} [Field 
     { carrier := {g | σ.ρ g v0 = v0}
       mul_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hb, ha]
       one_mem' := by simp
       inv_mem' := by
         intro a ha
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         calc σ.ρ a⁻¹ v0 = σ.ρ a⁻¹ (σ.ρ a v0) := by rw [ha]
           _ = v0 := hinv a v0 }
   have hSopen : IsOpen (S : Set (GL (Fin n) k)) := σ.smooth v0
@@ -147,7 +147,7 @@ private theorem exists_smooth_central_character_of_admissible {k : Type} [Field 
   have hKc : IsCompact (K : Set (GL (Fin n) k)) :=
     GlobalTheory.SplitFlip.isCompact_KO.of_isClosed_subset (Subgroup.isClosed_of_isOpen K hKo)
       (fun x hx => (Subgroup.mem_inf.mp hx).1)
-  haveI hfd : FiniteDimensional ℂ (fixed σ.ρ K) := hadm.2 K hKo hKc
+  have hfd : FiniteDimensional ℂ (fixed σ.ρ K) := hadm.2 K hKo hKc
   have hv0K : v0 ∈ fixed σ.ρ K := by
     show ∀ h : K, σ.ρ h v0 = ((1 : K →* ℂˣ) h : ℂ) • v0
     intro h
@@ -157,7 +157,7 @@ private theorem exists_smooth_central_character_of_admissible {k : Type} [Field 
       Matrix.GeneralLinearGroup.scalar (Fin n) t * g = g * Matrix.GeneralLinearGroup.scalar (Fin n) t := by
     intro t g
     ext : 1
-    simp only [Matrix.GeneralLinearGroup.scalar, Units.val_mul, Units.coe_map, MonoidHom.coe_coe]
+    simp only [Matrix.GeneralLinearGroup.scalar, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass]
     exact Matrix.scalar_commute _ (fun _ => Commute.all _ _) _
   have key : ∀ t : kˣ, ∃ c : ℂ, ∀ v, σ.ρ (Matrix.GeneralLinearGroup.scalar (Fin n) t) v = c • v := by
     intro t
@@ -174,7 +174,7 @@ private theorem exists_smooth_central_character_of_admissible {k : Type} [Field 
       rw [MonoidHom.one_apply, Units.val_one, one_smul] at this ⊢
       rw [← hρc, this]
     let f : Module.End ℂ (fixed σ.ρ K) := (σ.ρ s).restrict hW
-    haveI : Nontrivial (fixed σ.ρ K) :=
+    have : Nontrivial (fixed σ.ρ K) :=
       ⟨⟨⟨v0, hv0K⟩, 0, fun h => hv0 (congrArg Subtype.val h)⟩⟩
     obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue f
     obtain ⟨w, hw⟩ := hc.exists_hasEigenvector
@@ -219,9 +219,9 @@ private theorem exists_smooth_central_character_of_admissible {k : Type} [Field 
   have hcont : Continuous (Matrix.GeneralLinearGroup.scalar (Fin n) : kˣ → GL (Fin n) k) := by
     apply Units.continuous_iff.mpr
     constructor
-    · simp only [Matrix.GeneralLinearGroup.scalar, Units.coe_map, MonoidHom.coe_coe]
+    · simp only [Matrix.GeneralLinearGroup.scalar, Units.coe_map, MonoidHom.coe_ofClass]
       exact Continuous.matrix_diagonal (continuous_pi fun _ => Units.continuous_val)
-    · simp only [Matrix.GeneralLinearGroup.scalar, Units.coe_map_inv, MonoidHom.coe_coe, map_inv]
+    · simp only [Matrix.GeneralLinearGroup.scalar, Units.coe_map_inv, MonoidHom.coe_ofClass, map_inv]
       exact Continuous.matrix_diagonal (continuous_pi fun _ => Units.continuous_coe_inv)
   refine ⟨ω, ?_, fun z v => hc z v⟩
   show IsOpen (ω.ker : Set kˣ)
@@ -252,7 +252,7 @@ theorem exists_unitary_central_twist (hA : GlobalTheory.Published.IrreducibleAdm
   have hsc' : ∀ v, (y.nu (s' : ℂ)).rep (Matrix.GeneralLinearGroup.scalar (Fin (y.nu (s' : ℂ)).fst) t) v = c • v :=
     hsc
   have hcc := GlobalTheory.LocGL.UnitaryOrder.hasCentralChar_nu y hω (s' : ℂ)
-  haveI : Nontrivial (y.nu (s' : ℂ)).snd.rep.V := nontrivial_irrRep_V _
+  have : Nontrivial (y.nu (s' : ℂ)).snd.rep.V := nontrivial_irrRep_V _
   obtain ⟨v0, hv0⟩ := exists_ne (0 : (y.nu (s' : ℂ)).snd.rep.V)
   by_cases hn : y.fst = 0
   · have hn' : (y.nu (s' : ℂ)).fst = 0 := hn

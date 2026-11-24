@@ -81,8 +81,8 @@ private theorem evI_diag {g : ℕ} (H Sb : Matrix (Fin g) (Fin g) ℂ) (ev : Fin
 theorem UpperTheory.Gal.W2.evIntegral_of :
     UpperTheory.Gal.W2.EvIntegral := by
   intro F _ _ O _ bar g ρ a D P₀ hP ga H hH Sb ty ev hD i x
-  haveI := D.fin
-  haveI := D.free
+  have := D.fin
+  have := D.free
   let f : D.La →ₗ[ℤ] D.La := ga.toAddMonoidHom.toIntLinearMap
   have hf : ∀ y, P₀ (f y) = H *ᵥ P₀ y := hH
   have hv : ∀ y, aeval H f.charpoly *ᵥ P₀ y = 0 := fun y => by

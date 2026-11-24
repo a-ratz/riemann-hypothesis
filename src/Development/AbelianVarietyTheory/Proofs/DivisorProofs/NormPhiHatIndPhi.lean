@@ -149,7 +149,7 @@ theorem norm_evR_le (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host
   have hci := GlobalTheory.chartIndependence_unconditional
   have hr : r = Dw.p + Dw.q := hU.1
   have hn : Even n := hDom.2
-  letI A₁ : Algebra c.F ℂ := σ.toAlgebra
+  let A₁ : Algebra c.F ℂ := σ.toAlgebra
   have huf : IsUnitFr (U.X k) x.1 := fun τ i => by
     unfold dmin lminor
     rw [hxo τ, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal, norm_prod]
@@ -244,7 +244,7 @@ theorem two_mul_card_psi (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host 
 theorem sum_mult : ∑ τ, Dw.mult τ = Fintype.card (Psi H) * (Dw.p + Dw.q) := by
   rw [sum_emb_eq H, ← Finset.card_univ, ← smul_eq_mul, ← Finset.sum_const]
   refine Finset.sum_congr rfl fun τ _ => ?_
-  rw [Datum.mult, if_pos τ.2, Datum.mult, if_neg (AllWt.conj_not_mem τ)]
+  rw [Datum.mult, ite_eq_left τ.2, Datum.mult, ite_eq_right (AllWt.conj_not_mem τ)]
 
 theorem sizeK_eq (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) :
     sizeK Dw a n = (Formalism.L2.Pj.DF Dw a : ℕ) + ((n / 2 : ℕ) : ℝ) * (Fintype.card (Psi H) * (Dw.p + Dw.q) : ℕ) := by
@@ -258,15 +258,15 @@ theorem sizeK_eq (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) :
     · exact Finset.sum_congr rfl fun τ _ => mul_comm _ _
   rw [h1, sum_emb_eq H, sizeK]
   refine Finset.sum_congr rfl fun τ _ => ?_
-  rw [Datum.mult, if_pos τ.2, Datum.mult, if_neg (AllWt.conj_not_mem τ), Fin.sum_univ_add,
+  rw [Datum.mult, ite_eq_left τ.2, Datum.mult, ite_eq_right (AllWt.conj_not_mem τ), Fin.sum_univ_add,
     ← Finset.sum_range_reflect _ Dw.q, ← Fin.sum_univ_eq_sum_range (fun i => (a (τ.1, i) : ℝ) + ((n / 2 : ℕ) : ℝ)),
     ← Fin.sum_univ_eq_sum_range (fun i => (a (conjEmb τ.1, Dw.q - 1 - i) : ℝ) + ((n / 2 : ℕ) : ℝ))]
   congr 1
   · refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [laOf, AllWt.weightOf, Fin.val_castAdd, i.2, if_true]
+    simp only [laOf, AllWt.weightOf, Fin.val_castAdd, i.2, ite_true]
     rw [Int.cast_add, Int.cast_natCast, Int.cast_natCast, abs_of_nonneg (by positivity)]
   · refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [laOf, AllWt.weightOf, Fin.val_natAdd, Nat.not_lt.2 (Nat.le_add_right _ _), if_false,
+    simp only [laOf, AllWt.weightOf, Fin.val_natAdd, Nat.not_lt.2 (Nat.le_add_right _ _), ite_false,
       Nat.add_sub_cancel_left]
     rw [Int.cast_sub, Int.cast_neg, Int.cast_natCast, Int.cast_natCast, ← neg_add', abs_neg,
       abs_of_nonneg (by positivity)]
@@ -366,9 +366,9 @@ theorem numbers (f r n d N : ℕ) (L κ rd t J p ρ S v : ℝ) (hL : 1 ≤ L) (h
       linarith
     calc (N : ℝ) ≤ ((d : ℝ) + 1) ^ (f * r * n) := by exact_mod_cast hN
       _ ≤ Real.exp (22 * L) ^ (f * r * n) := by gcongr
-      _ = Real.exp (((f : ℝ) * r * n) * (22 * L)) := by rw [← Real.exp_nat_mul]; push_cast; rfl
+      _ = Real.exp (((f : ℝ) * r * n) * (22 * L)) := by rw [← Real.exp_natCast_mul]; push_cast; rfl
       _ ≤ Real.exp (2 * κ * (22 * L)) := by gcongr
-      _ = _ := by rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+      _ = _ := by rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
   have hLsq : L ≤ ((f : ℝ) * r * L) ^ 2 := by
     have a1 : L ≤ f * r * L := le_mul_of_one_le_left (by linarith) hfr1
     nlinarith
@@ -401,7 +401,7 @@ theorem norm_phiHat_indPhi {E : Type} [Field E] [NumberField E] [IsCMField E] {H
     Complex.norm_eq_one_of_pow_eq_one (by rw [← map_pow, hz, map_one]) hM
   unfold phiHat indPhi
   rw [finsum_eq_single _ x0 (fun x hx => by simp [hx])]
-  rw [if_pos rfl, one_mul, map_zpow₀, norm_zpow, zetaM, map_pow, norm_pow, h1, one_pow, one_zpow]
+  rw [ite_eq_left rfl, one_mul, map_zpow₀, norm_zpow, zetaM, map_pow, norm_pow, h1, one_pow, one_zpow]
 
 
 
@@ -465,7 +465,7 @@ theorem homN_raw_le : ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (T : CoreJ D) (j : �
     (hLw.chiTriv σ' hσ a n hDom) hhol hpos
   have he2 : 2 ≤ Real.exp Lb := by have := Real.add_one_le_exp Lb; linarith
   have hpow : ∀ (x : ℝ) (m : ℕ), 0 < x → Real.log x ≤ m * Lb → x ≤ Real.exp Lb ^ m := fun x m h1 h2 => by
-    rw [← Real.exp_nat_mul]; exact (Real.log_le_iff_le_exp h1).1 h2
+    rw [← Real.exp_natCast_mul]; exact (Real.log_le_iff_le_exp h1).1 h2
   have hM0 : (0 : ℝ) < Y.d.l₂.M := by have := Y.d.l₂.three_le; exact_mod_cast (by omega : 0 < Y.d.l₂.M)
   have hdd : (0 : ℝ) < D.host.d := by have := D.host.qd_big.2; exact_mod_cast (by omega : 0 < D.host.d)
   have hrde := hpow (ReciprocityTheory.ChartRestriction.G.FD.rdE D.host.E) 3 (by linarith) (by exact_mod_cast hrdL)
@@ -501,7 +501,7 @@ theorem homN_raw_le : ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (T : CoreJ D) (j : �
     (fun k τ => congrArg (2 * ·) (hLw.xiAbs σ' hσ k τ.1)) a n hDom nab hnab La N _
     (fun q => (norm_phiHat_indPhi Y.d.c₂ hLw.levA x0 σ' q).le) P y.1 hU hT hO hP hsec hy k xf hort _ (by positivity) hlam
   rw [hfd] at hv
-  have hrdv : rdU (Y.U σ') y.1 k xf.1 = Formalism.L2.PjFree.toC (evR Y.d.Xo₂ Y.d.c₂ y.1 ((Y.U σ').un k xf)) := dif_pos xf.2
+  have hrdv : rdU (Y.U σ') y.1 k xf.1 = Formalism.L2.PjFree.toC (evR Y.d.Xo₂ Y.d.c₂ y.1 ((Y.U σ').un k xf)) := dite_eq_left xf.2
   rw [hrdv] at hhalf
   have hlie : AllWt.lieFacZ (T.Q.Dw j) (xiR D) (wtZ a n) =
       Real.exp (-(((Formalism.L2.Pj.DF (T.Q.Dw j) a : ℕ) : ℝ) / 2) * Real.log (Real.pi * (2 * xiR D))) := by

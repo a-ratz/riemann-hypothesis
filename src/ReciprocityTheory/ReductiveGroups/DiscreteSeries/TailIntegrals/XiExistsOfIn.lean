@@ -128,7 +128,7 @@ lemma herm_re (y : Fin (2 * 0 + k + 1) → ℂ) :
     · simp [sg, h, Complex.normSq_apply, Complex.mul_re]
   rw [herm0, tW_sq, Complex.re_sum, Finset.sum_congr rfl fun i _ => hterm i,
     Finset.sum_sub_distrib]
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 lemma phi'_eq (hk : 1 ≤ k) :
@@ -173,12 +173,12 @@ lemma phi'_dot (hk : 1 ≤ k) : star (phiV' k 0 0) ⬝ᵥ phiV' k 0 0 = 1 := by
       (if i = iW k then 1 / 2 else 0) + (if i = iK k then 1 / 2 else 0) := by
     intro i
     rcases eq_or_ne i (iW k) with rfl | h1
-    · rw [phi'_iW hk, normSq_c, if_pos rfl, if_neg hWK, add_zero]
+    · rw [phi'_iW hk, normSq_c, ite_eq_left rfl, ite_eq_right hWK, add_zero]
     · rcases eq_or_ne i (iK k) with rfl | h2
-      · rw [phi'_iK hk, Complex.normSq_neg, normSq_c, if_neg h1, if_pos rfl, zero_add]
-      · rw [phi'_zero hk i h1 h2, map_zero, if_neg h1, if_neg h2, add_zero]
+      · rw [phi'_iK hk, Complex.normSq_neg, normSq_c, ite_eq_right h1, ite_eq_left rfl, zero_add]
+      · rw [phi'_zero hk i h1 h2, map_zero, ite_eq_right h1, ite_eq_right h2, add_zero]
   rw [dot_star_self, Finset.sum_congr rfl fun i _ => hφ i, Finset.sum_add_distrib]
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   norm_num
 
 private lemma sum_phi_lemma (hk : 1 ≤ k) (X : Fin (2 * 0 + k + 1) → ℂ) :
@@ -188,14 +188,14 @@ private lemma sum_phi_lemma (hk : 1 ≤ k) (X : Fin (2 * 0 + k + 1) → ℂ) :
       (if i = iW k then ((Real.sqrt 2)⁻¹ : ℂ) * X (iW k) else 0) + (if i = iK k then ((Real.sqrt 2)⁻¹ : ℂ) * X (iK k) else 0) := by
     intro i
     rcases eq_or_ne i (iW k) with rfl | h1
-    · rw [phi'_iW hk, star_c, if_pos rfl, if_neg hWK, add_zero]
+    · rw [phi'_iW hk, star_c, ite_eq_left rfl, ite_eq_right hWK, add_zero]
       simp [sg, hWK]
     · rcases eq_or_ne i (iK k) with rfl | h2
-      · rw [phi'_iK hk, star_neg, star_c, if_neg h1, if_pos rfl, zero_add]
+      · rw [phi'_iK hk, star_neg, star_c, ite_eq_right h1, ite_eq_left rfl, zero_add]
         simp [sg]
-      · rw [phi'_zero hk i h1 h2, star_zero, zero_mul, if_neg h1, if_neg h2, add_zero]
+      · rw [phi'_zero hk i h1 h2, star_zero, zero_mul, ite_eq_right h1, ite_eq_right h2, add_zero]
   rw [Finset.sum_congr rfl fun i _ => h i, Finset.sum_add_distrib]
-  simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 lemma phi'_iso (hk : 1 ≤ k) : herm (Hpk k 0) (phiV' k 0 0) (phiV' k 0 0) = 0 := by
@@ -428,7 +428,7 @@ private lemma phiA_inv (k : ℕ) (A : ℝ) : ∀ κ ∈ Kset k 0, ∀ g,
     PhiA k A (lmulM κ g) = PhiA k A g ∧ PhiA k A (rmulF κ g) = PhiA k A g := by
   intro κ hκ g
   have hu : κᴴ * κ = 1 := by
-    simp only [Kset, Set.mem_setOf_eq] at hκ
+    simp only [Kset, Set.mem_ofPred_eq] at hκ
     exact hκ.2
   refine ⟨?_, ?_⟩
   · simp only [PhiA, lmulM]
@@ -869,7 +869,7 @@ lemma slowWeight_le {n : ℕ} {t A b : Fin n → ℝ} {R β β' : ℝ} (hR : 0 <
   unfold slowly
   rw [Real.rpow_sum_of_pos (by norm_num : (0 : ℝ) < 3),
     ENNReal.ofReal_prod_of_nonneg (fun i _ => by positivity), ← Finset.prod_mul_distrib]
-  refine Finset.prod_le_prod' fun i _ => ?_
+  refine Finset.prod_le_prod fun i _ => ?_
   rw [← ENNReal.ofReal_mul (by positivity)]
   exact ENNReal.ofReal_le_ofReal (fac_le hR (hA i) (ht i) hβ hβ')
 
@@ -1344,7 +1344,7 @@ theorem fac_le (k r : ℕ) (l : Fin (r + 1)) (s : ℝ) (hs : 0 ≤ s) (h : Mat k
     nlinarith
   have hb : 0 < cl k r l * gN h ^ (l.val + 1) := mul_pos hc (pow_pos hM0 _)
   have h1 : (‖Dl k r l h‖₊ : ℝ≥0∞) ≤ ENNReal.ofReal (cl k r l * gN h ^ (l.val + 1)) := by
-    rw [← ENNReal.ofReal_coe_nnreal, coe_nnnorm]; exact ENNReal.ofReal_le_ofReal hD
+    rw [← ENNReal.ofReal_coe_nnreal, coe_nnNorm]; exact ENNReal.ofReal_le_ofReal hD
   have h2 : ENNReal.ofReal (cl k r l * gN h ^ (l.val + 1)) ^ (-s) ≤ (‖Dl k r l h‖₊ : ℝ≥0∞) ^ (-s) := by
     rw [ENNReal.rpow_neg, ENNReal.rpow_neg]
     exact ENNReal.inv_le_inv.2 (ENNReal.rpow_le_rpow h1 hs)
@@ -1375,7 +1375,7 @@ theorem detH (hB2 : InductiveHeisenbergInputs) : DET := by
         rw [← Finset.sum_neg_distrib, Real.rpow_sum_of_pos hM0,
           ENNReal.ofReal_prod_of_nonneg (fun _ _ => Real.rpow_nonneg hM0.le _)]
     _ ≤ ∏ l : Fin (r + 1), (ENNReal.ofReal (cl k r l ^ s l) * (‖Dl k r l h‖₊ : ℝ≥0∞) ^ (-s l)) :=
-        Finset.prod_le_prod' fun l _ => fac_le k r l (s l) (hs l) h hM
+        Finset.prod_le_prod fun l _ => fac_le k r l (s l) (hs l) h hM
     _ = _ := by
         rw [Finset.prod_mul_distrib, FsE, ENNReal.ofNNReal_finsetProd]; rfl
 
@@ -1405,9 +1405,9 @@ theorem hpk_conjT : (Hpk k r)ᴴ = Hpk k r := by
   ext i j
   simp only [conjTranspose_apply, hpk_apply]
   by_cases h : j = sigI k r i
-  · subst h; rw [if_pos (sig_sig i).symm, if_pos rfl, sgn_sig, star_sgn]
+  · subst h; rw [ite_eq_left (sig_sig i).symm, ite_eq_left rfl, sgn_sig, star_sgn]
   · have h' : ¬ i = sigI k r j := fun h2 => h (by rw [h2, sig_sig])
-    rw [if_neg h', if_neg h, star_zero]
+    rw [ite_eq_right h', ite_eq_right h, star_zero]
 
 theorem hpk_K : Hpk k r ∈ Kset k r := by
   have h2 := HermitianLiftIdentities.hpk_sq (k := k) (r := r)
@@ -1469,7 +1469,7 @@ theorem norm_bd {E : Type*} [NormedAddCommGroup E] (hGN : GNLower) (F : Mat k r 
   have hc0 : 0 ≤ c := le_trans (mul_nonneg hp.le (norm_nonneg _)) (hF h hh)
   have h2 : ‖F h‖ ≤ c * gN h ^ (-A) := by
     rw [Real.rpow_neg (by linarith), ← div_eq_mul_inv, le_div_iff₀ hp, mul_comm]; exact hF h hh
-  rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul hc0]
+  rw [← ofReal_norm, ← ENNReal.ofReal_mul hc0]
   exact ENNReal.ofReal_le_ofReal h2
 
 theorem c_nonneg {E : Type*} [NormedAddCommGroup E] (hGN : GNLower) (F : Mat k r → E) (c A : ℝ)
@@ -1484,7 +1484,7 @@ theorem sum_le (hk : 1 ≤ k) (s : Fin (r + 1) → ℝ) (hs : SAdm k r s) (A : �
     Finset.sum_le_sum fun l _ => mul_le_mul_of_nonneg_left (by linarith [(hs l).1]) (by positivity)
   have h2 : ∑ l : Fin (r + 1), ((l.val : ℝ) + 1) * s0 k r l ≤ 2 * (r : ℝ) * r + ((r : ℝ) + 1) * k := by
     rw [Fin.sum_univ_castSucc]
-    simp only [s0, Fin.coe_castSucc, Fin.is_lt, ite_true, Fin.val_last, lt_self_iff_false, ite_false]
+    simp only [s0, Fin.val_castSucc, Fin.is_lt, ite_true, Fin.val_last, lt_self_iff_false, ite_false]
     have h3 : ∑ i : Fin r, ((i.val : ℝ) + 1) * 2 ≤ ∑ i : Fin r, (r : ℝ) * 2 := Finset.sum_le_sum fun i _ => by
       have h := Nat.succ_le_of_lt i.isLt
       have : (i.val : ℝ) + 1 ≤ r := by exact_mod_cast h

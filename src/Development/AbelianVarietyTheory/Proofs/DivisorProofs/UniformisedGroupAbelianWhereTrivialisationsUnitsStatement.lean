@@ -137,7 +137,7 @@ theorem classes_fixed {W : Type} [CommRing W] [IsDomain W] [IsLocalRing W] (hW :
     (hσ : σ.toRingHom.comp (algebraMap (FractionRing W) F) = algebraMap (FractionRing W) F)
     (hfixH : ∀ x : TF (R := W) F ⟶ H, x ^ k = 1 → spMap σ.toRingHom ≫ x.left = x.left)
     (p q : QkPt D.toPre F k) (hpq : QkExt σ.toRingHom p q) : QkPt.Equiv D.toPre F p q := by
-  haveI : CharZero W := hW.2.2
+  have : CharZero W := hW.2.2
   have hA := GlobalTheory.ArcPointDescent.admissibleBase_maximalIdeal_completeDVR hW
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
   obtain ⟨f, hf, hiff⟩ := GlobalTheory.Mum.Recog.exists_goodLab hA hH U F
@@ -215,11 +215,11 @@ theorem coe_units_zpow {F : Type} [Field F] (T : Subring F) (w : Tˣ) (z : ℤ) 
 
 theorem subsingleton_of_bounded_ramification : ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ (D : DegData W (maximalIdeal W)) (Q : PolAV (Sp (FractionRing W))) (H : Over (Sp W)) [GrpObj H] [IsCommMonObj H], IsSemiAbelian H → ∀ U : Unif (maximalIdeal W) D Q H, GlobalTheory.LN.ToATotal U.toUnifPre → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra (FractionRing W) F] (n N : ℕ), 2 ≤ n → (∀ j : ℕ, ∃ (T : Subring F) (_ : IsDiscreteValuationRing T) (g : W →+* T) (e : ℕ), (∀ w, (g w : F) = algebraMap (FractionRing W) F (algebraMap W _ w)) ∧ 1 ≤ e ∧ e ≤ N ∧ (∀ π, Irreducible π → ∃ ϖ : T, Irreducible ϖ ∧ Associated (g π) (ϖ ^ e)) ∧ ∀ σ : F ≃+* F, (∀ z ∈ T, σ z = z) → ∀ x : TF (R := W) F ⟶ H, x ^ (n ^ j) = 1 → spMap σ.toRingHom ≫ x.left = x.left) → Subsingleton D.toPre.X := by
   intro W _ _ _ hW D Q H _ _ hH U _ F _ _ _ n N hn Hj
-  haveI : IsDiscreteValuationRing W := hW.1
-  haveI : CharZero W := hW.2.2
-  haveI : CharZero (FractionRing W) :=
+  have : IsDiscreteValuationRing W := hW.1
+  have : CharZero W := hW.2.2
+  have : CharZero (FractionRing W) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective W (FractionRing W))
-  haveI : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing W) F).injective
+  have : CharZero F := charZero_of_injective_algebraMap (algebraMap (FractionRing W) F).injective
   have hL : GlobalTheory.UT.LL := GlobalTheory.firstFiveLaws
   choose J₀ h₀ using fun x : D.toPre.P.A.left => exists_chart D.toPre.P.isLB x
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible W
@@ -402,7 +402,7 @@ theorem exists_eighthPower_evenUnimodular_charZero : ∃ d : ℕ, 1 ≤ d ∧ �
       erw [CechPic.pull_lam, CechPic.pull_lam]
       erw [lift_fst, lift_snd]
       dsimp only
-      have hi1 : ∀ u : Fin 8, u ≠ 0 → inc ≫ pr u = 1 := fun u h => (hinc u).trans (if_neg h)
+      have hi1 : ∀ u : Fin 8, u ≠ 0 → inc ≫ pr u = 1 := fun u h => (hinc u).trans (ite_eq_right h)
       by_cases hu0 : u = 0
       · subst hu0
         have hv0 : v ≠ 0 := fun h => huv (by rw [h])
@@ -430,7 +430,7 @@ namespace GlobalTheory.MBLow
 
 theorem exists_eighthPower_semiAbelianScheme : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G], IsSemiAbelian G → ∃ (G₈ : Over (Sp R)) (_ : GrpObj G₈) (prG : Fin 8 → (G₈ ⟶ G)), IsSemiAbelian G₈ ∧ (∀ u, IsMonHom (prG u)) ∧ ∀ (T : Over (Sp R)) (y : Fin 8 → (T ⟶ G)), ∃! x : T ⟶ G₈, ∀ u, x ≫ prG u = y u := by
   intro R _ G _ hG
-  haveI : IsCommMonObj G := hG.comm
+  have : IsCommMonObj G := hG.comm
   refine ⟨powObj G 8, inferInstance, powPr G, ?_, fun u => inferInstance, fun T y => ?_⟩
   · exact GlobalTheory.PowGrp.isSemiAbelian_pow _ (powObj G 8) G 8 (powIsPowGrp G 8) hG
   · refine ⟨(powIsLimit G 8).lift (Fan.mk T y), fun u => (powIsLimit G 8).fac (Fan.mk T y) ⟨u⟩, ?_⟩
@@ -548,7 +548,7 @@ namespace GlobalTheory.DomDVR
 theorem exists_dominating_dvr : ∀ (F : Type) [Field F] [CharZero F] (T' : Subring F), IsDiscreteValuationRing T' → ∀ (s : Finset F), (1 : F) ∈ Submodule.span T' (s : Set F) → (∀ x ∈ s, ∀ y ∈ s, x * y ∈ Submodule.span T' (s : Set F)) → ∃ T'' : Subring F, IsDiscreteValuationRing T'' ∧ T' ≤ T'' ∧ (∀ x ∈ s, x ∈ T'') ∧ (∀ x ∈ T', (∃ y ∈ T'', x * y = 1) → ∃ y ∈ T', x * y = 1) ∧ (∀ y ∈ T'', ∃ d ∈ T', d ≠ 0 ∧ d * y ∈ Submodule.span T' (s : Set F)) := by
   intro F _ _ T' hT s h1 hmul
   classical
-  haveI := hT
+  have := hT
   set A := Submodule.span T' (s : Set F) with hA
   have hAmul : ∀ x y, x ∈ A → y ∈ A → x * y ∈ A := by
     intro x y hx hy
@@ -564,16 +564,16 @@ theorem exists_dominating_dvr : ∀ (F : Type) [Field F] [CharZero F] (T' : Subr
     IsIntegral.of_mem_of_fg Asub (Submodule.fg_span s.finite_toSet) x (Submodule.subset_span hx)
   let K := FractionRing T'
   have hι : Function.Injective (T'.subtype) := Subtype.val_injective
-  letI : Algebra K F := (IsFractionRing.lift (K := K) hι).toAlgebra
-  haveI : IsScalarTower T' K F :=
+  let : Algebra K F := (IsFractionRing.lift (K := K) hι).toAlgebra
+  have : IsScalarTower T' K F :=
     IsScalarTower.of_algebraMap_eq (fun x => (IsFractionRing.lift_algebraMap (K := K) hι x).symm)
   have hintK : ∀ x ∈ (s : Set F), IsIntegral K x := fun x hx => (hint x hx).tower_top
   let L := IntermediateField.adjoin K (s : Set F)
-  haveI : FiniteDimensional K L := IntermediateField.finiteDimensional_adjoin hintK
-  haveI : CharZero K := (algebraMap K F).charZero
-  haveI : Algebra.IsSeparable K L := inferInstance
+  have : FiniteDimensional K L := IntermediateField.finiteDimensional_adjoin hintK
+  have : CharZero K := (algebraMap K F).charZero
+  have : Algebra.IsSeparable K L := inferInstance
   let C := integralClosure T' L
-  haveI : IsDedekindDomain C := IsIntegralClosure.isDedekindDomain T' K L C
+  have : IsDedekindDomain C := IsIntegralClosure.isDedekindDomain T' K L C
 
   have hLF : ∀ a : T', ((algebraMap T' L a : L) : F) = a := by
     intro a
@@ -589,13 +589,13 @@ theorem exists_dominating_dvr : ∀ (F : Type) [Field F] [CharZero F] (T' : Subr
     simpa only [hcoe] using this)
   obtain ⟨P, hPmax, hPm⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := C) (maximalIdeal T')
     (by rw [(RingHom.injective_iff_ker_eq_bot _).1 hinjC]; exact bot_le)
-  haveI : P.IsPrime := hPmax.isPrime
+  have : P.IsPrime := hPmax.isPrime
   have hPbot : P ≠ ⊥ := by
     rintro rfl
     apply IsDiscreteValuationRing.not_a_field T'
     rw [← hPm, (show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ hinjC)]
   let Loc := Localization.AtPrime P
-  haveI : IsDiscreteValuationRing Loc :=
+  have : IsDiscreteValuationRing Loc :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain C hPbot Loc
   have hunit : ∀ y : P.primeCompl, IsUnit (algebraMap C L y) := fun y =>
     isUnit_iff_ne_zero.2 fun h => y.2 (by
@@ -832,10 +832,10 @@ theorem exists_dvr_over_finite_ext : ∀ (V W : Type) [CommRing V] [IsDomain V] 
     (algebraMap (FractionRing W) F).injective.comp (IsFractionRing.injective W _)
   have hφVinj : Function.Injective φV :=
     (algebraMap (FractionRing V) F).injective.comp (IsFractionRing.injective V _)
-  haveI : CharZero F := (RingHom.charZero_iff hφVinj).1 hV0
+  have : CharZero F := (RingHom.charZero_iff hφVinj).1 hV0
   have hc : ∀ v, φW (io v) = φV v := hcomp
-  letI := io.toAlgebra
-  haveI : Module.Finite V W := hio
+  let := io.toAlgebra
+  have : Module.Finite V W := hio
   obtain ⟨n, gens, hspan⟩ := Module.Finite.exists_fin (R := V) (M := W)
   refine ⟨n, ?_⟩
   intro T' hT' f hf hirr
@@ -874,7 +874,7 @@ theorem exists_dvr_over_finite_ext : ∀ (V W : Type) [CommRing V] [IsDomain V] 
   let g : W →+* T'' := φW.codRestrict T'' (fun w => K2 _ (K1 w))
   have hg : ∀ w, (g w : F) = φW w := fun w => rfl
   have hginj : Function.Injective g := fun a b h => hφWinj (by simpa [hg] using congrArg Subtype.val h)
-  haveI := hT''
+  have := hT''
   obtain ⟨πV, hπV⟩ := IsDiscreteValuationRing.exists_irreducible V
   have hfπ := hirr πV hπV
   obtain ⟨ϖ, hϖ, e', he1, he2, hassoc⟩ := _root_.GlobalTheory.ramification_le_card_of_span F T' T'' hT' hT'' hle hdom s hden (f πV) hfπ
@@ -1042,7 +1042,7 @@ theorem closedPoint_mem_abLocus_of_fixedTorsion : ∀ (R : Type) [CommRing R] [I
     GlobalTheory.T.degeneration_extension_local_domain V hV A' _ hG' ψ hψ
   have hem' : ∀ w : W, w ≠ 0 → IsUnit (em w) := fun w hw =>
     IsUnit.mk0 _ ((map_ne_zero_iff em hem).2 hw)
-  letI : Algebra (FractionRing W) (AlgebraicClosure (FractionRing V)) :=
+  let : Algebra (FractionRing W) (AlgebraicClosure (FractionRing V)) :=
     (IsFractionRing.lift (A := W) (K := FractionRing W) (g := em) hem).toAlgebra
   have hlift : ∀ w : W, algebraMap (FractionRing W) (AlgebraicClosure (FractionRing V)) (algebraMap W _ w) = em w :=
     fun w => IsFractionRing.lift_algebraMap _ _
@@ -1066,7 +1066,7 @@ theorem closedPoint_mem_abLocus_of_fixedTorsion : ∀ (R : Type) [CommRing R] [I
     abLocus_of_retract _ H₈ i (r 0) hir _ h₈
   have h₂ := (abLocus_pullback (G' := (Over.pullback (spMap io)).obj ((Over.pullback (spMap φ)).obj G)) abLocusOne hG'
     (IsPullback.of_hasPullback ((Over.pullback (spMap φ)).obj G).hom (spMap io)) (closedPoint W)).2 h₁
-  letI : Algebra V W := io.toAlgebra
+  let : Algebra V W := io.toAlgebra
   have : Algebra.IsIntegral V W := ⟨fun w => hfin.to_isIntegral w⟩
   have hm : (maximalIdeal W).comap io = maximalIdeal V :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (R := V) (algebraMap _ _) hfin.to_isIntegral (maximalIdeal W))

@@ -396,7 +396,7 @@ theorem factorSpace_le (ρ : ι → Module.End ℂ Pr) (σ : ι → Module.End �
     (eval_injective ρ σ hirr hschur v hli hv _ hrel)
   simp only [Finsupp.coe_sub, _root_.Pi.sub_apply, Finsupp.single_eq_same, Finsupp.coe_zero,
     _root_.Pi.zero_apply] at h0
-  rw [Finsupp.mapDomain_notin_range _ _ (by simp), sub_zero] at h0
+  rw [Finsupp.mapDomain_of_notMem_range _ _ (by simp), sub_zero] at h0
   exact hx (by rw [h0, map_zero])
 
 theorem exists_lift (ρ : ι → Module.End ℂ Pr) (σ : ι → Module.End ℂ Pi) (q : Q →ₗ[ℂ] Pr)
@@ -747,10 +747,10 @@ theorem exists_stab_compl_of_iSup {ι κ M : Type} [AddCommGroup M] [Module ℂ 
     (W : κ → Submodule ℂ M) (hW : ∀ k, IsStab σ (W k))
     (hs : ∀ k (V : Submodule ℂ M), IsStab σ V → V ≤ W k → V = ⊥ ∨ V = W k) (htop : ⨆ k, W k = ⊤) :
     ∀ N : Submodule ℂ M, IsStab σ N → ∃ N' : Submodule ℂ M, IsStab σ N' ∧ IsCompl N N' := by
-  letI : Module (FreeAlgebra ℂ ι) M :=
+  let : Module (FreeAlgebra ℂ ι) M :=
     Module.compHom M (FreeAlgebra.lift ℂ σ : FreeAlgebra ℂ ι →ₐ[ℂ] Module.End ℂ M).toRingHom
   have smul_def : ∀ (a : FreeAlgebra ℂ ι) (x : M), a • x = FreeAlgebra.lift ℂ σ a x := fun _ _ => rfl
-  haveI : IsScalarTower ℂ (FreeAlgebra ℂ ι) M := ⟨fun c a x => by
+  have : IsScalarTower ℂ (FreeAlgebra ℂ ι) M := ⟨fun c a x => by
     rw [smul_def, smul_def, map_smul]
     rfl⟩
   have key : ∀ N : Submodule ℂ M, IsStab σ N →
@@ -1033,9 +1033,9 @@ theorem simpleQuot_iso_of_intertwined : ∀ (ι Fm Q Q' Pi : Type) [AddCommGroup
   obtain ⟨N', hN's, hc⟩ := hss U hUs
   let P : Pi →ₗ[ℂ] Pi := U.subtype ∘ₗ Submodule.linearProjOfIsCompl U N' hc
   have hPU : ∀ y ∈ U, P y = y := fun y hy =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨y, hy⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨y, hy⟩)
   have hPN : ∀ y ∈ N', P y = 0 := fun y hy => by
-    exact (congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc ⟨y, hy⟩) :)
+    exact (congrArg Subtype.val (Submodule.projectionOnto_apply_right hc ⟨y, hy⟩) :)
   have hPmem : ∀ y, P y ∈ U := fun y => (Submodule.linearProjOfIsCompl U N' hc y).2
   have hdec : ∀ y : Pi, ∃ u ∈ U, ∃ n ∈ N', y = u + n := by
     intro y
@@ -1289,7 +1289,7 @@ theorem twist_quotient_isReal : GlobalTheory.Published.HoweDualityReal → _root
   · intro N hN
     have hst : IsStab ρA (N.comap R.mkQ) := fun i x hx => by
       have h1 := hN i.1.1 i.1.2 i.2 _ hx
-      simp only [dif_pos i.2] at h1
+      simp only [dite_eq_left i.2] at h1
       exact h1
     have hle : R ≤ N.comap R.mkQ := fun x hx => by
       show R.mkQ x ∈ N
@@ -1307,12 +1307,12 @@ theorem twist_quotient_isReal : GlobalTheory.Published.HoweDualityReal → _root
     refine ⟨fun f hf => ?_, fun f hf => ?_⟩
     · have hk := rad_le_ker _ _ _ ρA CA _ _ (iA' ⟨f, hf⟩) (kA' ⟨f, hf⟩) radA ss'
       refine ⟨R.liftQ (p ∘ₗ fockF ψ θ true A B f) hk, fun τ Y hY => ?_, fun P => rfl⟩
-      simp only [dif_pos hY]
+      simp only [dite_eq_left hY]
       refine Submodule.linearMap_qext _ (LinearMap.ext fun P => ?_)
       exact LinearMap.congr_fun (iA' ⟨f, hf⟩ ⟨(τ, Y), hY⟩) P
     · have hk := rad_le_ker _ _ _ ρB CB _ _ (iB' ⟨f, hf⟩) (kB' ⟨f, hf⟩) radB ss'
       refine ⟨RB.liftQ (p' ∘ₗ fockF ψ θ false A₁ B f) hk ∘ₗ e.toLinearMap, fun τ Y hY => ?_, fun P => ?_⟩
-      · simp only [dif_pos hY]
+      · simp only [dite_eq_left hY]
         refine LinearMap.ext fun x => ?_
         have h1 := LinearMap.congr_fun (he ⟨(τ, Y), hY⟩) x
         simp only [LinearMap.comp_apply] at h1 ⊢

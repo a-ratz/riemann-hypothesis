@@ -236,9 +236,9 @@ theorem cell_convergence : Formalism.MainNotions.S.Pv.AmpDD.CellConv := by
       rw [gProxy_eq L γ b hx, ← ENNReal.ofReal_mul (Real.rpow_nonneg (hgN _) _), ← ENNReal.ofReal_mul hK.le]
       exact ENNReal.ofReal_le_ofReal (hKb x hx hm)
     · simp [hm]
-  haveI := sfin_muN L
-  haveI : SigmaFinite L.μW := L.hμW.1.1
-  haveI : SigmaFinite L.μW' := L.hμW'.1.1
+  have := sfin_muN L
+  have : SigmaFinite L.μW := L.hμW.1.1
+  have : SigmaFinite L.μW' := L.hμW'.1.1
   have hfin : ∀ {z : Fin (2 * r + k + 1) → ℂ} {μW : Measure (Mt k r)}, inWb k r z → 0 < Tz k r z →
       IsHaarOn (UWset k r z) μW → μW Set.univ = 1 → ∫⁻ p, f1 p ∂(μW.prod L.μN) < ∞ := by
     intro z μW h1 h2 h3 h4

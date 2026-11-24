@@ -95,7 +95,7 @@ variable (Ch : Chars X Pr R.m) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOne
 theorem mem_lamYat {j : ℕ} {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∉ Pr.vGs) (y : Sp X.E (R.N j + cOf R j)) :
     y ∈ lamYat (Pr := Pr) (R := R) j P ↔ ∀ l, IntAt P (y l) := by
   unfold lamYat LocE.lamY LocE.sclLat stdAt
-  rw [if_neg hP, Submodule.mem_comap, mem_localization_standardLattice]
+  rw [ite_eq_right hP, Submodule.mem_comap, mem_localization_standardLattice]
   simp [LocE.scE]
 
 theorem nf_one (j : ℕ) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∉ Pr.vGs) : NF (R := R) Pr j P 1 := by
@@ -110,7 +110,7 @@ theorem nf_one (j : ℕ) {P : HeightOneSpectrum (𝓞 X.E)} (hP : P ∉ Pr.vGs) 
       simp [Loc.inX, nfGen, Loc.eN, Finset.sum_apply, this]
     · simp [Loc.inX, nfGen, Loc.eN, Finset.sum_apply, Fin.val_inj]
   ext y
-  simp only [Set.mem_image, SetLike.mem_coe, mem_lamYat hP, nfLat, Set.mem_setOf_eq]
+  simp only [Set.mem_image, SetLike.mem_coe, mem_lamYat hP, nfLat, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨x, hx, rfl⟩
     refine ⟨fun a => x (Fin.castAdd _ a), (mem_localization_standardLattice _ _).2 fun a => hx _, fun b => x (Fin.natAdd _ b),

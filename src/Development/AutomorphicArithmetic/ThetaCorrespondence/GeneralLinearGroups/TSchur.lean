@@ -233,7 +233,7 @@ theorem UpperTheory.Lit.Cas.schur :
           exact (Matrix.scalar_commute (n := Fin x.1) (t : k) (fun r => Commute.all _ _) (g : Matrix _ _ k)).eq
         rw [← Module.End.mul_apply, ← map_mul, hcomm, map_mul, Module.End.mul_apply])
     exact ⟨c, fun w => by rw [hc]; rfl⟩
-  · haveI : IsEmpty (Fin x.1) := by rw [h0]; infer_instance
+  · have : IsEmpty (Fin x.1) := by rw [h0]; infer_instance
     have h1 : Matrix.GeneralLinearGroup.scalar (Fin x.1) t = 1 :=
       Units.ext (Matrix.ext fun i => isEmptyElim i)
     rw [h1, map_one, one_smul]; rfl

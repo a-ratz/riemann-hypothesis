@@ -56,17 +56,17 @@ open scoped IntermediateField nonZeroDivisors
 theorem sz_adjoin_rootOfUnity :
     ∀ n : ℕ, 0 < n → Sz ℚ⟮Complex.exp (2 * Real.pi * Complex.I / n)⟯ (Real.log n) (Real.log n) := by
   intro n hn
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   have hζ := Complex.isPrimitiveRoot_exp n hn.ne'
   set F := ℚ⟮Complex.exp (2 * Real.pi * Complex.I / n)⟯ with hF
-  haveI hc : IsCyclotomicExtension {n} ℚ F := by
+  have hc : IsCyclotomicExtension {n} ℚ F := by
     change IsCyclotomicExtension {n} ℚ F.toSubalgebra
     rw [hF, IntermediateField.adjoin_simple_toSubalgebra_of_isAlgebraic
       ((hζ.isIntegral hn).tower_top (A := ℚ)).isAlgebraic]
     exact hζ.adjoin_isCyclotomicExtension ℚ
   have hfd : FiniteDimensional ℚ F := IsCyclotomicExtension.finiteDimensional {n} ℚ F
   refine ⟨hfd, ?_⟩
-  letI : NumberField F := NumberField.mk
+  let : NumberField F := NumberField.mk
   have hrk : Module.finrank ℚ F = Nat.totient n :=
     IsCyclotomicExtension.finrank F (Polynomial.cyclotomic.irreducible_rat hn)
   have ht : 0 < Nat.totient n := Nat.totient_pos.2 hn

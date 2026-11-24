@@ -154,7 +154,7 @@ theorem exists_finiteDimensional_invariant :
   have hpos : 0 < ∫ k, ‖⟪v, π k v⟫_ℂ‖ ^ 2 ∂μ := by
     have hc : Continuous fun k => ‖⟪v, π k v⟫_ℂ‖ ^ 2 :=
       ((continuous_const.inner hw).norm).pow 2
-    refine hc.integral_pos_of_hasCompactSupport_nonneg_nonzero
+    refine hc.integral_pos_of_hasCompactSupport_nonneg_ne_zero
       (HasCompactSupport.of_compactSpace _) (fun k => by positivity) (x := 1) ?_
     simp [hv]
   have hT0 := integral_rankOne_ne_zero hFi v hpos

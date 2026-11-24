@@ -82,7 +82,7 @@ private lemma cusp_one_ne {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure
   omega
 
 private lemma pairs_self {G : Type} [Group G] [Finite G] (Y : G → ℂ) (h : Y 1 ≠ 0) : Pairs Y Y := by
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Fintype G := Fintype.ofFinite G
   unfold Pairs
   rw [finsum_eq_sum_of_fintype]
   intro h0

@@ -69,7 +69,7 @@ theorem Qm_mulVec_mem_span {p : ℕ} (hp : p ≤ r) (y : Fin (2 * r + k + 1) →
   · have : colQ e f wf z0 i = e ⟨i.val, by omega⟩ := by
       unfold colQ; rw [dite_eq_left (by omega)]
     rw [this]
-    exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨⟨i.val, by omega⟩, by simp only [Set.mem_setOf_eq]; exact hi, rfl⟩)
+    exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨⟨i.val, by omega⟩, by simp only [Set.mem_ofPred_eq]; exact hi, rfl⟩)
   · rw [hy i (by omega), zero_smul]; exact Submodule.zero_mem _
 
 theorem rev_UW (hF : IsFrameJ ε e f wf z0) {zB z : Fin (2 * r + k + 1) → ℂ} (hz : Qm e f wf z0 *ᵥ zB = z)
@@ -201,7 +201,7 @@ theorem HNset_of_inS (hLevi : BesselLevi) (hF : IsFrameJ ε e f wf z0) {T : ℝ}
       refine coord_span_zero i _ ?_ hy
       rintro x ⟨b, hb, rfl⟩
       refine Qi_e_apply hF b i ?_
-      intro h; have := congrArg Fin.val h; rw [eI_val] at this; simp only [Set.mem_setOf_eq] at hb; omega
+      intro h; have := congrArg Fin.val h; rw [eI_val] at this; simp only [Set.mem_ofPred_eq] at hb; omega
     rw [h0, add_zero]
   · have e1 : (Qi ε e f wf z0 * uMat s * Qm e f wf z0) *ᵥ (((Real.sqrt T : ℝ) : ℂ) • bvec (wI k r (Fin.last k))) =
         Qi ε e f wf z0 *ᵥ (uMat s *ᵥ z) := by

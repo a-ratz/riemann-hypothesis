@@ -170,7 +170,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.twTrSum_pf :
   have hL := fun j (hj : j ∈ s) => (h j hj).2
   choose! L e f ht using hL
   have hT := trace_sum s c L f
-  haveI : IsLocallyFiniteMeasure D.μ := D.haar.2.2.2
+  have : IsLocallyFiniteMeasure D.μ := D.haar.2.2.2
   refine ⟨∑ j ∈ s, c j • L j, fun ψ x => ?_, hT.1, ?_⟩
   · have hc : Continuous fun g : GA E n => ψ.1.1 (thetaA E n g) :=
       (DiscreteGroups.T1.G.twtr_cont_of_mem π ψ.2).comp (PositivityTheory.Rg.BcB.E1.thetaBasic_holds E n).1

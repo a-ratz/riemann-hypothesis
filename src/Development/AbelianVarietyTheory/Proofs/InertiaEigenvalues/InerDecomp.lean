@@ -54,7 +54,7 @@ open Pointwise
 
 theorem iner_decomp : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K K' : FinExt l) (h : K.1 ≤ K'.1) (hN : (GKin h).Normal) (hF : (GKin h).FiniteIndex) (hS : ∀ (g : ↥(GK K)) (c : ↥(K0 K')), ∃ c' : ↥(K0 K'), (P.PD K).actB g (algebraMap ↥(K0 K') P.R.B c) = algebraMap ↥(K0 K') P.R.B c') (g : ↥(GK K)), g ∈ (pc P h hN hF hS).Iner → ∃ s : ↥(GK K), s ∈ IK K ∧ s⁻¹ * g ∈ GKin h := by
   intro l _ P K K' h hN hF hS g hg
-  haveI : Nontrivial P.R.B := by
+  have : Nontrivial P.R.B := by
     by_contra hB
     have : Subsingleton P.R.B := not_nontrivial_iff_subsingleton.mp hB
     apply (P.PD K).not_mem_filtration_two
@@ -69,7 +69,7 @@ theorem iner_decomp : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K K' : FinE
     have h2 := P.actQ_Kur ((g : ↥(GK K)) : GQ l) ⟨x, hx.2⟩ ⟨_, GlobalTheory.TameInertiaCyclic.map_mem_Kur _ hx.2⟩ rfl
     have h3 := (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B).injective (h2.symm.trans h1)
     exact congrArg Subtype.val h3
-  haveI := K'.2
+  have := K'.2
 
   let S : Subgroup (GQ l) := (MaximalUnramifiedExtension l).fixingSubgroup ⊔ (K'.1).fixingSubgroup
   have hSo : IsOpen (S : Set (GQ l)) :=
@@ -91,7 +91,7 @@ theorem iner_decomp : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K K' : FinE
       exact hfix x (hfe hx)
     rw [e] at this
     exact this
-  haveI := GlobalTheory.FrobGen.normal_fix (l := l)
+  have := GlobalTheory.FrobGen.normal_fix (l := l)
   have hgS' : (g : GQ l) ∈ ((MaximalUnramifiedExtension l).fixingSubgroup : Set (GQ l)) * ((K'.1).fixingSubgroup : Set (GQ l)) := by
     rw [← Subgroup.normal_mul]; exact hgS
   obtain ⟨b, hb, a, ha, hba⟩ := hgS'

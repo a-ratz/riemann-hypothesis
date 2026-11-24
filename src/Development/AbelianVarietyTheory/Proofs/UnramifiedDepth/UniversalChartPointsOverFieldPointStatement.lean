@@ -239,9 +239,9 @@ namespace GlobalTheory.AlphaPair
 
 theorem jetUniv : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (V : Type) [CommRing V] [IsLocalRing V] (t : SAB H (Sp V)) (d : ℕ) (x : ∀ m, jOG (𝟙 (Sp V)) d m 1 ⟶ t.G), GlobalTheory.PowGerm.IsUnivJ t.G (Fin 1 × Fin d) x → ∀ (Ω : Type) [Field Ω] (β : V →+* Ω) (P : PtFam (spMap β) t.G d), IsJetPt β x P → IsPtUniv (spMap β) t.G P := by
   intro E _ _ _ H V _ _ t d x hx Ω _ β P hP A _ _ π hπ
-  letI : Algebra V Ω := β.toAlgebra
-  letI : Algebra V A := ((algebraMap Ω A).comp β).toAlgebra
-  haveI : IsScalarTower V Ω A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra V Ω := β.toAlgebra
+  let : Algebra V A := ((algebraMap Ω A).comp β).toAlgebra
+  have : IsScalarTower V Ω A := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact JetUniv.universalJetCoordinates_points_over_field hx hP π hπ
 
 end GlobalTheory.AlphaPair

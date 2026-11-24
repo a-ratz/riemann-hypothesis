@@ -105,7 +105,7 @@ def sd (M : Matrix (Fin n) (Fin n) A) : A := ∑ i ∈ Finset.range (n - 1), ent
 theorem entN_mul_super {M N : Matrix (Fin n) (Fin n) A} (hM : IsUniUp M) (hN : IsUniUp N) {i : ℕ} (hi : i + 1 < n) :
     entN (M * N) i (i + 1) = entN M i (i + 1) + entN N i (i + 1) := by
   have h0 : i < n := by omega
-  simp only [entN, dif_pos (And.intro h0 hi)]
+  simp only [entN, dite_eq_left (And.intro h0 hi)]
   rw [Matrix.mul_apply, Fintype.sum_eq_add (⟨i, h0⟩ : Fin n) ⟨i + 1, hi⟩]
   · rw [(hM _ _).2 rfl, (hN _ _).2 rfl, one_mul, mul_one, add_comm]
   · simp [Fin.ext_iff]
@@ -155,7 +155,7 @@ def halfH (k : Fin 2) : Subgroup (G0g D.nd) := Subgroup.pi {kv | kv.1 ≠ k} fun
 theorem isHalf_halfH (k : Fin 2) : IsHalf D k (halfH D k) := by
   intro g
   rw [halfH, Subgroup.mem_pi]
-  simp only [Set.mem_setOf_eq, mem_uniUpGL]
+  simp only [Set.mem_ofPred_eq, mem_uniUpGL]
 
 theorem isWhit_whitP (ψ : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), AddChar (ZMod (D.host.g kv.1)) ℂ) (hψ : ∀ kv, ψ kv ≠ 1) :
     IsWhit D (whitP D) (whitChar D ψ).toHomUnits ψ :=

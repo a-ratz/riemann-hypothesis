@@ -205,7 +205,7 @@ theorem minor_model : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [
   have key : (abLocus Zh.G : Set M.Z) = f ⁻¹' (Xab : Set X.Z) := by
     rw [Zh.ab, hXab]
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, ThetaSys.TT, ThetaSys.HH, hsupI z]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, ThetaSys.TT, ThetaSys.HH, hsupI z]
   refine ⟨X, M, U₀, EE, f, Xab, Zh, ⟨hNm, hP, hNm.isNormalScheme, hO, hE, hH, hXab, hI⟩, ?_, key⟩
   rw [key]
   exact Xab.isOpen.preimage f.continuous
@@ -271,7 +271,7 @@ theorem sFam_charZero_affineOpen : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (
   have : Smooth F.s := by first | exact SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s | exact F.smooth.smooth | infer_instance
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (hW.fromSpec ≫ F.s)
   have h₁ : φ.hom.Flat := by rw [← Flat.SpecMap_iff, hφ]; infer_instance
-  letI : Algebra (cycAway n) Γ(F.X, U) := φ.hom.toAlgebra
+  let : Algebra (cycAway n) Γ(F.X, U) := φ.hom.toAlgebra
   have : Module.Flat (cycAway n) Γ(F.X, U) := h₁
   refine charZero_of_inj_zero fun k hk => by_contra fun h0 => ?_
   have hk' : ((k : cycAway n) : ℂ) ≠ 0 := by simpa using h0
@@ -345,7 +345,7 @@ theorem exists_thMap_of_affine_cover : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj
 theorem exists_thAt : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (P : PolAV F.X) (rig : LB.Gen (P.L.pull (eSec P.A))) (m : ℕ), P.g = 8 * g → GlobalTheory.Poinc.SharpOver F W P (𝟙 F.X) → rig.IsGen → Odd m → 3 ≤ m → IsUnit (m : cycAway n) → ∃ (N : ℕ) (f : F.X ⟶ PSpace (cycAway n) N), ThAt F W P rig m f := by
   intro g n hg hn hno F W hW P rig m hPg hSh hrig hmo hm3 hmu
   obtain ⟨hI, hN, hLN⟩ := GlobalTheory.T.siegelModuli_integral_normal_locallyNoetherian g n hg hn hno F
-  letI := P.isAb.comm
+  let := P.isAb.comm
   have hpos : 0 < m ^ (4 * (8 * g)) := pow_pos (by omega) _
   have hA : ∀ x : F.X, ∃ U : F.X.affineOpens, x ∈ (U : F.X.Opens) ∧ IsDomain Γ(F.X, U) ∧ IsNoetherianRing Γ(F.X, U) ∧
       IsIntegrallyClosed Γ(F.X, U) ∧ CharZero Γ(F.X, U) := fun x => by
@@ -455,10 +455,10 @@ theorem thetaInt : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : S
   have hDe : M.HasDiv e := GlobalTheory.T.model_hasDiv_of_genericPoint_projectiveCoords o Ω (cycAway n) M N h e hCrd'
   obtain ⟨-, -, -, hm, hm3, hmu, hNm, -, -⟩ := hTh
   obtain ⟨-, -, hSg, -, -⟩ := hSys
-  haveI : IsDedekindDomain o := ArithBase.ded Ω
-  haveI : CharZero Ω := ArithBase.char o
-  haveI : NeZero (S.r * S.N) := ⟨by have := S.r_pos; have := S.N_ge; positivity⟩
-  letI := ρ.P.isAb.comm
+  have : IsDedekindDomain o := ArithBase.ded Ω
+  have : CharZero Ω := ArithBase.char o
+  have : NeZero (S.r * S.N) := ⟨by have := S.r_pos; have := S.N_ge; positivity⟩
+  let := ρ.P.isAb.comm
   obtain ⟨j, hj1, hr⟩ := ρ.r_eq
   have hnodd := ρ.n_odd
   have hnp := ρ.n_prime
@@ -474,7 +474,7 @@ theorem thetaInt : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : S
     nlinarith
   refine GlobalTheory.T.hasDivisor_of_forall_complete_dvr_points o Ω M S.Gam (Fin (N + 1)) S.th e (N + 1).factorial (Nat.factorial_pos _) hnorm hDe ?_
   intro V _ _ _ hV ξ emb hξ j₀ hj₀ hint
-  haveI : IsDiscreteValuationRing V := ((GlobalTheory.LN.cDvr_iff V).1 hV).1
+  have : IsDiscreteValuationRing V := ((GlobalTheory.LN.cDvr_iff V).1 hV).1
   let K := AlgebraicClosure (FractionRing V)
   let io : FractionRing V →+* K := algebraMap _ _
   let val : S.R →+* Ω := S.R.val.toRingHom
@@ -496,7 +496,7 @@ theorem thetaInt : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F : S
     exact this.ne_zero
   let y : Sp (FractionRing V) ⟶ Sp S.R := spMap i₀
   obtain ⟨P', φ, gp, hL'⟩ := GlobalTheory.UPoinc.exists_pol_baseChange ρ.P y
-  letI := P'.isAb.comm
+  let := P'.isAb.comm
   have hS' : HypS P'.A P'.L :=
     GlobalTheory.T.lineBundleSymmetry_hypothesis_base_change _ _ ρ.P.A P'.A y φ ρ.P.L P'.L ρ.P.isLB P'.isLB gp hL' ρ.hypS
   have hPF0 : PolFib ρ.P.A ρ.P.L (8 * g) (𝟙 (Sp S.R)) :=
@@ -586,7 +586,7 @@ theorem isIso_stalkMap_of_isHom {o Ω : Type} [CommRing o] [Field Ω] [Algebra o
   have key : ∀ a, M'.stalkHom (genericPoint M'.Z) (f.stalkMap (genericPoint M'.Z) a) =
       M.stalkHom (f (genericPoint M'.Z)) a := by
     intro a
-    obtain ⟨U, hzU, s, rfl⟩ := M.Z.presheaf.germ_exist a
+    obtain ⟨U, hzU, s, rfl⟩ := M.Z.presheaf.exists_germ_eq a
     rw [Scheme.Hom.germ_stalkMap_apply]
     exact (M'.stalkHom_germ (U := f ⁻¹ᵁ U) hzU _).trans ((hf.valF_app ⟨_, hzU⟩ s).trans (M.stalkHom_germ hzU s).symm)
   rw [ConcreteCategory.isIso_iff_bijective]
@@ -632,27 +632,27 @@ theorem level_openImmersion : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n →
     · rw [← Category.assoc, hLev.2.2.2.2]; exact hPe _ rfl
 
   have : LocallyOfFiniteType F.s := by
-    haveI := F.smooth
-    haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+    have := F.smooth
+    have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
     infer_instance
   have : LocallyOfFiniteType (f ≫ PSpace.str (cycAway n) N) := by rw [hfs]; assumption
-  haveI : LocallyOfFiniteType f := locallyOfFiniteType_of_comp f (PSpace.str (cycAway n) N)
-  haveI : LocallyQuasiFinite f :=
+  have : LocallyOfFiniteType f := locallyOfFiniteType_of_comp f (PSpace.str (cycAway n) N)
+  have : LocallyQuasiFinite f :=
     LocallyQuasiFinite.of_finite_preimage_singleton f (GlobalTheory.SiegMin.finite_preimage_singleton_of_qFin f hQ)
-  haveI : IsFinite q := hLev.2.1
-  haveI : LocallyQuasiFinite (d ≫ hX) := by rw [heq]; infer_instance
-  haveI : LocallyQuasiFinite d := LocallyQuasiFinite.of_comp d hX
+  have : IsFinite q := hLev.2.1
+  have : LocallyQuasiFinite (d ≫ hX) := by rw [heq]; infer_instance
+  have : LocallyQuasiFinite d := LocallyQuasiFinite.of_comp d hX
 
-  haveI := Y.sep
-  haveI := Y.qc
-  haveI := Y.lft
-  haveI := X.sep
-  haveI : IsSeparated (d ≫ X.s) := by rw [hd.inducedModelMorphism_comp_structureMap]; infer_instance
-  haveI : QuasiCompact (d ≫ X.s) := by rw [hd.inducedModelMorphism_comp_structureMap]; infer_instance
-  haveI : LocallyOfFiniteType (d ≫ X.s) := by rw [hd.inducedModelMorphism_comp_structureMap]; infer_instance
-  haveI : IsSeparated d := IsSeparated.of_comp d X.s
-  haveI : QuasiCompact d := QuasiCompact.of_comp d X.s
-  haveI : LocallyOfFiniteType d := locallyOfFiniteType_of_comp d X.s
+  have := Y.sep
+  have := Y.qc
+  have := Y.lft
+  have := X.sep
+  have : IsSeparated (d ≫ X.s) := by rw [hd.inducedModelMorphism_comp_structureMap]; infer_instance
+  have : QuasiCompact (d ≫ X.s) := by rw [hd.inducedModelMorphism_comp_structureMap]; infer_instance
+  have : LocallyOfFiniteType (d ≫ X.s) := by rw [hd.inducedModelMorphism_comp_structureMap]; infer_instance
+  have : IsSeparated d := IsSeparated.of_comp d X.s
+  have : QuasiCompact d := QuasiCompact.of_comp d X.s
+  have : LocallyOfFiniteType d := locallyOfFiniteType_of_comp d X.s
   obtain ⟨h1, h2⟩ := isIso_stalkMap_of_isHom hd
 
   exact GlobalTheory.isOpenImmersion_of_quasiFinite_of_isIso_stalkMap d fun z => (hXn z).2
@@ -727,7 +727,7 @@ theorem lift_of_finite : ∀ (R K : CommRingCat) (φ : R ⟶ K),
         CategoryTheory.CategoryStruct.comp (AlgebraicGeometry.Spec.map φ) ξ = y ∧
         CategoryTheory.CategoryStruct.comp ξ p = ξ₀ := by
   intro R K φ hinj hint Z P p ξ₀ y hp hy
-  haveI : IsAffine (pullback p ξ₀) := isAffine_of_isAffineHom (pullback.snd p ξ₀)
+  have : IsAffine (pullback p ξ₀) := isAffine_of_isAffineHom (pullback.snd p ξ₀)
   let l : Spec K ⟶ pullback p ξ₀ := pullback.lift y (Spec.map φ) hy
   let g : R ⟶ Γ(pullback p ξ₀, ⊤) :=
     Spec.preimage ((pullback p ξ₀).isoSpec.inv ≫ pullback.snd p ξ₀)
@@ -958,7 +958,7 @@ theorem secCoord_vals {X : Scheme.{0}} {L : LB X} {I : Type} {σ : I → L.Sec} 
     have e := congrArg (valR (𝟙 (Sp K)) _) e0
     simp only [Units.val_mul] at e
     rw [valR_mul _ _ hWW] at e
-    simp only [res, Units.coe_map, MonoidHom.coe_coe] at e
+    simp only [res, Units.coe_map, MonoidHom.coe_ofClass] at e
     rw [valR_res _ _ hWW, valR_res _ _ hWW] at e
     show _ * valR _ _ _ = valR _ _ _
     rw [e]
@@ -1239,7 +1239,7 @@ theorem ev_resG_top {V : (Sp Ω).Opens} (hV : ⊤ ≤ V) (x : Ω) :
 
 theorem ev_appLE {X : Scheme.{0}} (x : Sp Ω ⟶ X) {U : X.Opens} {V : (Sp Ω).Opens} (hV : ⊤ ≤ V) (h : V ≤ x ⁻¹ᵁ U)
     (f : Γ(X, U)) : ev V hV ((x.appLE U V h).hom f) = valF x U f := by
-  simp only [ev, RingHom.comp_apply, resG_appLE, valF, dif_pos (hV.trans h)]
+  simp only [ev, RingHom.comp_apply, resG_appLE, valF, dite_eq_left (hV.trans h)]
 
 end GlobalTheory.TupleBundle
 
@@ -1402,7 +1402,7 @@ theorem exists_symE_pCrd_of_sharp {g n : ℕ} {F : SFam g n (zetaAway n)} {W : M
     ∃ e : Fin (N + 1) → Ω, SymE ρ m e ∧ ∀ (h : Sp Ω ⟶ PSpace (cycAway n) N),
       h = spMap (algebraMap S.R Ω) ≫ u ≫ f → PCrd h e := by
   obtain ⟨hPg, hPs, hrig, hm, -, hmu, hN, -, hf, -⟩ := hT
-  haveI : CharZero Ω := hA.char
+  have : CharZero Ω := hA.char
   have hSB : SecBaseChangeAnySt := GlobalTheory.abelianSchemeLaws_all.2.secBaseChangeAny
   let v : S.R →+* Ω := S.R.val.toRingHom
   obtain ⟨P₀, φ, hg₀, hφ, hL₀⟩ := exists_isPolFibre polBaseChange_holds v ρ.P
@@ -1447,10 +1447,10 @@ theorem thetaInt_all : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F
     rw [hpt]; exact hCrd _ rfl
   have hDe : M.HasDiv e := GlobalTheory.T.model_hasDiv_of_genericPoint_projectiveCoords o Ω (cycAway n) M N h e hCrd'
   obtain ⟨-, -, -, hm, hm3, hmu, hNm, -, -⟩ := hTh
-  haveI : IsDedekindDomain o := ArithBase.ded Ω
-  haveI : CharZero Ω := ArithBase.char o
-  haveI : NeZero (S.r * S.N) := ⟨by have := S.r_pos; have := S.N_ge; positivity⟩
-  letI := ρ.P.isAb.comm
+  have : IsDedekindDomain o := ArithBase.ded Ω
+  have : CharZero Ω := ArithBase.char o
+  have : NeZero (S.r * S.N) := ⟨by have := S.r_pos; have := S.N_ge; positivity⟩
+  let := ρ.P.isAb.comm
   obtain ⟨j, hj1, hr⟩ := ρ.r_eq
   have hnodd := ρ.n_odd
   have hnp := ρ.n_prime
@@ -1467,7 +1467,7 @@ theorem thetaInt_all : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F
   refine GlobalTheory.T.hasDivisor_of_forall_complete_dvr_points o Ω M S.Gam (Fin (N + 1)) S.th e (N + 1).factorial (Nat.factorial_pos _)
     ((GlobalTheory.isNormalScheme_iff_pred _).1 hnorm) hDe ?_
   intro V _ _ _ hV ξ emb hξ j₀ hj₀ hint
-  haveI : IsDiscreteValuationRing V := ((GlobalTheory.LN.cDvr_iff V).1 hV).1
+  have : IsDiscreteValuationRing V := ((GlobalTheory.LN.cDvr_iff V).1 hV).1
   let K := AlgebraicClosure (FractionRing V)
   let io : FractionRing V →+* K := algebraMap _ _
   let val : S.R →+* Ω := S.R.val.toRingHom
@@ -1489,7 +1489,7 @@ theorem thetaInt_all : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F
     exact this.ne_zero
   let y : Sp (FractionRing V) ⟶ Sp S.R := spMap i₀
   obtain ⟨P', φ, gp, hL'⟩ := GlobalTheory.UPoinc.exists_pol_baseChange ρ.P y
-  letI := P'.isAb.comm
+  let := P'.isAb.comm
   have hS' : HypS P'.A P'.L :=
     GlobalTheory.T.lineBundleSymmetry_hypothesis_base_change _ _ ρ.P.A P'.A y φ ρ.P.L P'.L ρ.P.isLB P'.isLB gp hL' ρ.hypS
   have hPF0 : PolFib ρ.P.A ρ.P.L (8 * g) (𝟙 (Sp S.R)) :=
@@ -1610,9 +1610,9 @@ theorem lemProper : ∀ (R o' : Type) [CommRing R] [IsNoetherianRing R] [CommRin
   intro R o' _ _ _ β S' X Z s' z π i U c hs' hβ hz hc hUπ hi hπz
   have := GlobalTheory.ProperFamily.isProper_of_isProjOver hs'
   have := GlobalTheory.ProperFamily.isProper_of_isProjOver hz
-  haveI : IsFinite (spMap β) := (IsFinite.SpecMap_iff _).2 hβ
-  haveI : IsProper (π ≫ z) := by rw [hπz]; infer_instance
-  haveI : IsProper π := IsProper.of_comp π z
+  have : IsFinite (spMap β) := (IsFinite.SpecMap_iff _).2 hβ
+  have : IsProper (π ≫ z) := by rw [hπz]; infer_instance
+  have : IsProper π := IsProper.of_comp π z
   refine ⟨⟨?_⟩, inferInstance, ?_⟩
   · have hcl : IsClosed (Set.range π) := π.isClosedMap.isClosed_range
     have hsub : Set.range i ⊆ Set.range π := by
@@ -1668,8 +1668,8 @@ theorem minSt5 : GlobalTheory.SiegJoin.MinSt5 := by
     exact (isUnit_of_mul_isUnit_left hu).pow _
   obtain ⟨N, f, hf⟩ := GlobalTheory.T.exists_thetaMap_eighthPower_siegelModuli g n hg hn ho F W hW P rig (ℓ ^ (j₀ + 1)) hPg hPs hrig hmo hm3 hmu
   have hq : QFin f := hj₀ (j₀ + 1) (by omega) n hg hn ho F W hW hℓn P rig N f hf
-  haveI : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway n
-  haveI : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
+  have : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway n
+  have : Algebra.FiniteType ℤ (cycAway n) := finiteType_cycAway n
   have hfs : f ≫ PSpace.str (cycAway n) N = F.s := hf.2.2.2.2.2.2.2.1
   have hlft : LocallyOfFiniteType F.s := GlobalTheory.SiegUnram.locallyOfFiniteType_of_isQProjOver F.qproj
   have hqc : QuasiCompact F.s := GlobalTheory.SiegelFamilyBaseChange.quasiCompact_of_isQProjOver F.qproj
@@ -1697,18 +1697,18 @@ theorem minSt5 : GlobalTheory.SiegJoin.MinSt5 := by
     obtain ⟨j', hj', -⟩ := hscale z' i' hi'
     exact ⟨j', hj'⟩
   obtain ⟨h, hhs, hhc⟩ := GlobalTheory.T.exists_projSpace_map_of_tuple_hasDivisor o Ω (cycAway n) β M N eS hediv
-  haveI : NeZero (S.r * S.N) := ⟨by have := S.r_pos; have := S.N_ge; positivity⟩
+  have : NeZero (S.r * S.N) := ⟨by have := S.r_pos; have := S.N_ge; positivity⟩
   obtain ⟨δ, t, hδ, htop, -, hsec⟩ := GlobalTheory.TupleBundle.exists_lb_of_hasDiv o Ω M S.Gam S.th hover.div
   have hhb := GlobalTheory.T.pull_O1_section_coordinates_power o Ω (cycAway n) M S.Gam S.th δ t N (N + 1).factorial eS h hδ htop hsec hhc hscale
   have hSg : S.g = 8 * g := hsys.2.2.1
   have hkey := GlobalTheory.T.thetaConstantBundle_pow_eight_iso_detHodge_pow_four o Ω S ρ M U₀ EE Zh (by omega) hover hab δ t hδ htop hsec
-  haveI : Nonempty U := ⟨⟨_, hUc.1.some_mem⟩⟩
+  have : Nonempty U := ⟨⟨_, hUc.1.some_mem⟩⟩
   obtain ⟨x, hxU, hxg⟩ := lemGen o Ω M U
   have hUh : U.ι ≫ h = c ≫ f := GlobalTheory.T.eq_of_same_generic_projective_coords (cycAway n) N U.toScheme (c ≫ F.s) (U.ι ≫ h) (c ≫ f) Ω x eS
     (by rw [Category.assoc, hhs, hUc.2.2.2.1]) (by rw [Category.assoc, hfs]) hxg
     (by rw [← Category.assoc, hxU]; exact hhc)
     (by rw [← Category.assoc, hUc.2.2.2.2 x hxU, Category.assoc]; exact hcrd _ rfl)
-  haveI : Surjective c := hUc.2.2.1
+  have : Surjective c := hUc.2.2.1
   have hUd : Dense (U : Set M.Z) := U.isOpen.dense hUc.1
   obtain ⟨π, hπU, hπp⟩ := GlobalTheory.T.normal_scheme_extension_through_finite_cover (cycAway n) N M.Z F.X Z U c i p h inferInstance hMn hZi hUd
     inferInstance hpf hio hid (by rw [hUh, hip])
@@ -1722,10 +1722,10 @@ theorem minSt5 : GlobalTheory.SiegJoin.MinSt5 := by
     exact h0 o' Ω' S' ρ' u' hsh hgen M' (π' ≫ p) hM' (by rw [← Category.assoc, hpt]; simp only [Category.assoc])
   have hiz : i ≫ p ≫ PSpace.str (cycAway n) N = F.s := by rw [← Category.assoc, hip, hfs]
 
-  haveI : IsSeparated G.hom := hGs.separated
-  haveI : IsSeparated Zh.G.hom := Zh.semi.separated
-  haveI := hGsm
-  haveI := Zh.dim
+  have : IsSeparated G.hom := hGs.separated
+  have : IsSeparated Zh.G.hom := Zh.semi.separated
+  have := hGsm
+  have := Zh.dim
   have hH2 : (hodge G g).IsLB := (GlobalTheory.LieVB.isVB_omega G g).isLB_det
   have hH1 : (hodge Zh.G S.g).IsLB := (GlobalTheory.LieVB.isVB_omega Zh.G S.g).isLB_det
   have hO := GlobalTheory.ProjSpace.O1_isLB (cycAway n) N

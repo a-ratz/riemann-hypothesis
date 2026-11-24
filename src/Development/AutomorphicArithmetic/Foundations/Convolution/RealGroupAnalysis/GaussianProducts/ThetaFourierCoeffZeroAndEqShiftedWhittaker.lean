@@ -121,7 +121,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.wxPt :
     rw [hαdef, al, dite_eq_right hz, ideleNorm_diagonal]
   have hco : D.co (α : A E) = ![rt (ξ 0), -rt (ξ 1)] := by rw [hα, D.co_mkE]
   have ht : (t : F) = ξ 0 ^ 2 - D.δ * ξ 1 ^ 2 := by
-    haveI := AdeleBaseChange.nontrivial_adeleRing F
+    have := AdeleBaseChange.nontrivial_adeleRing F
     apply (algebraMap F (A F)).injective
     have h1 := D.coe_ideleNorm α
     rw [hT, IdeleGroup.coe_diagonal, hco] at h1
@@ -177,7 +177,7 @@ open scoped Classical ENNReal nonZeroDivisors
 
 private theorem normOneIntegral_diagonal_invariant {F : Type} [Field F] [NumberField F] (M₀ : Meas F) (t : IdeleGroup F) (ht : ab t = 1)
     (v : G1 F → ℂ) : M₀.I0 (fun g => v (mD t * g)) = M₀.I0 v := by
-  haveI := M₀.prob
+  have := M₀.prob
   let e : (IdeleGroup F × G1 F) ≃ᵐ (IdeleGroup F × G1 F) :=
     (MeasurableEquiv.mulLeft t).prodCongr (MeasurableEquiv.refl _)
   have hp : MeasurePreserving e M₀.ν M₀.ν :=

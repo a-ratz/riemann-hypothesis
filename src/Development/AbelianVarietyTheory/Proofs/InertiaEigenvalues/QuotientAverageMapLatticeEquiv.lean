@@ -56,13 +56,13 @@ namespace GlobalTheory.CuspGeneric
 
 theorem avg_equiv : ∀ (G : Type) [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] (G' : Type) [AddCommGroup G'] [TopologicalSpace G'] [IsTopologicalAddGroup G'] [LocallyCompactSpace G'] [SecondCountableTopology G'] [T2Space G'] (Γ : AddSubgroup G) (Γ' : AddSubgroup G'), IsCoLat Γ → IsCoLat Γ' → ∀ e : G ≃ₜ+ G', (∀ x, e x ∈ Γ' ↔ x ∈ Γ) → ∀ Φ : G' → ℂ, Per Γ' Φ → avg Γ (fun x => Φ (e x)) = avg Γ' Φ := by
   intro G _ _ _ _ _ _ G' _ _ _ _ _ _ Γ Γ' hΓ hΓ' e he Φ hΦ
-  letI mG : MeasurableSpace G := borel G
-  haveI : BorelSpace G := ⟨rfl⟩
-  letI mG' : MeasurableSpace G' := borel G'
-  haveI : BorelSpace G' := ⟨rfl⟩
+  let mG : MeasurableSpace G := borel G
+  have : BorelSpace G := ⟨rfl⟩
+  let mG' : MeasurableSpace G' := borel G'
+  have : BorelSpace G' := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, h𝓕, h1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one G Γ hΓ
   let f : G ≃ᵐ G' := e.toHomeomorph.toMeasurableEquiv
-  haveI := hμ
+  have := hμ
   have hμ' : (μ.map f).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
   let eΓ : Γ' ≃ Γ :=
     { toFun := fun g => ⟨e.symm g, (he _).1 (by simpa using g.2)⟩

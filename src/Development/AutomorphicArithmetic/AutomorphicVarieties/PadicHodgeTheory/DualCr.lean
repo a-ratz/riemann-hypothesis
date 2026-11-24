@@ -90,28 +90,28 @@ theorem UpperTheory.V.Loc.dualCr :
       ∀ γ ∈ Z1 (adRep r), ∀ r' : GQ l →* GG (m := 3) (R := DualNumber E), DualDef r γ r' →
         (D.IsLCr r' ↔ D.IsLCr r ∧ γ ∈ finiteCocycles (MonoidHom.id _) (adRep r)) := by
   intro l _ O _ _ _ _ _ _ _ D E _ _ _ _ _ _ _ _ _ _ r hm hr γ hγ r' hd
-  haveI : IsModuleTopology ℚ_[l] (Matrix (Fin 3) (Fin 3) E) :=
+  have : IsModuleTopology ℚ_[l] (Matrix (Fin 3) (Fin 3) E) :=
     inferInstanceAs (IsModuleTopology ℚ_[l] (Fin 3 → Fin 3 → E))
   have hη : IsOpen (D.η.ker : Set (GQ l)) := by
     have e : D.η.ker = GK D.Kv := Subgroup.ext fun g => D.η_ker g
-    haveI := D.Kv.2
+    have := D.Kv.2
     rw [e]
     exact IntermediateField.fixingSubgroup_isOpen D.Kv.1
   have hH : IsOpen (D.HL : Set (GQ l)) := hη.inter D.τ_open
-  haveI : D.HL.Normal := inferInstanceAs (D.η.ker ⊓ D.τ.ker).Normal
-  haveI : Finite (GQ l ⧸ D.HL) := Subgroup.quotient_finite_of_isOpen _ hH
-  haveI : D.HL.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : D.HL.Normal := inferInstanceAs (D.η.ker ⊓ D.τ.ker).Normal
+  have : Finite (GQ l ⧸ D.HL) := Subgroup.quotient_finite_of_isOpen _ hH
+  have : D.HL.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have h1 : ∀ g ∈ D.HL, (r g).right = 1 := fun g hg => (hm g).trans hg.1
   have h1' : ∀ g ∈ D.HL, (r' g).right = 1 := fun g hg => (hd g).1.trans (h1 g hg)
   have had : ((adRep r).comp D.HL.subtype : Representation E D.HL _) = adGL (glOn D.HL r h1) := by
     refine MonoidHom.ext fun g => LinearMap.ext fun X => ?_
     change (r g).adFun X = _
-    rw [GG.adFun, if_pos (h1 g g.2)]
+    rw [GG.adFun, ite_eq_left (h1 g g.2)]
     rfl
   have hy : (fun h : D.HL => γ h) ∈ Z1 (adGL (glOn D.HL r h1)) := by
     rw [← had]
-    exact ⟨hγ.1.comp continuous_subtype_val, fun g h => hγ.2 g h⟩
+    exact ⟨hγ.1.comp continuous_subtypeVal, fun g h => hγ.2 g h⟩
   have key := deformCr D.HL.subtype hH.isOpenEmbedding_subtypeVal (glOn D.HL r h1)
-    (hr.comp continuous_subtype_val) _ hy (glOn D.HL r' h1') (fun g i j => (hd g).2 i j) ⊤ (by simp)
+    (hr.comp continuous_subtypeVal) _ hy (glOn D.HL r' h1') (fun g i j => (hd g).2 i j) ⊤ (by simp)
   rw [isLCr_iff D r' h1', isLCr_iff D r h1, ← crOn_top, ← crOn_top, key,
     z1fDesc (MonoidHom.id _) (adRep r) D.HL γ hγ, had, MonoidHom.id_comp]

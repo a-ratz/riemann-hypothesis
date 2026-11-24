@@ -84,7 +84,7 @@ theorem UpperTheory.V.Fr.pr_res :
       rw [← L.unr]
       exact Ideal.mem_map_of_mem _ ((IsLocalRing.mem_maximalIdeal a).mpr h)
     exact (IsLocalRing.mem_maximalIdeal _).mp hm ha
-  haveI : IsLocalHom (algebraMap L.O' L.R) := IsCO.isLocalHom
+  have : IsLocalHom (algebraMap L.O' L.R) := IsCO.isLocalHom
   let f0 : ResidueField O →+* ResidueField L.O' := IsLocalRing.ResidueField.map (algebraMap O L.O')
   let jR : ResidueField L.O' →+* ResidueField L.R :=
     IsLocalRing.ResidueField.map (algebraMap L.O' L.R)

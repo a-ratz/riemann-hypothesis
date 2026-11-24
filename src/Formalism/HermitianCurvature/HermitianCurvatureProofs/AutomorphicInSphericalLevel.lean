@@ -585,7 +585,7 @@ theorem nbm_mul (Ba B : Matrix (Fin r) (Fin (k + 1)) ℂ) (Sa S : Matrix (Fin r)
   induction p using cases3 <;> induction q using cases3 <;>
     simp only [nb_ee, nb_we, nb_se, nb_ew, nb_ww, nb_sw, nb_es, nb_ws, nb_ss, zero_mul, mul_zero,
       Finset.sum_const_zero, add_zero, zero_add, ite_mul, mul_ite, one_mul, mul_one, Finset.sum_ite_eq,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, Matrix.add_apply, star_add]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, Matrix.add_apply, star_add]
   all_goals first
     | done
     | (rw [nbm_cm, mul_diagonal_conjTranspose_apply, ← Finset.sum_neg_distrib]; ring)
@@ -625,10 +625,10 @@ lemma uMap_cont (z : Fin (2 * r + k + 1) → ℂ) : Continuous fun s : B.Mat k r
   unfold C2.uMap herm
   refine continuous_pi fun a => continuous_pi fun b => ?_
   by_cases h : a.val < r
-  · simp only [dif_pos h]
+  · simp only [dite_eq_left h]
     exact continuous_const.dotProduct (continuous_const.matrix_mulVec
       (continuous_id.matrix_mulVec continuous_const))
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     exact (continuous_const.dotProduct (continuous_const.matrix_mulVec
       (continuous_id.matrix_mulVec continuous_const))).div_const _
 
@@ -644,7 +644,7 @@ lemma isClosed_N0set (z : Fin (2 * r + k + 1) → ℂ) : IsClosed (C2.N0set k r 
         ⋂ (a : Fin r) (i : Fin (2 * r + k + 1)) (_ : a.val ≤ i.val),
           {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ | g i (eI k r a) = if i = eI k r a then 1 else 0} := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     rw [e]
     exact isClosed_iInter fun a => isClosed_iInter fun i => isClosed_iInter fun _ =>
       isClosed_eq (continuous_id.matrix_elem _ _) continuous_const
@@ -655,7 +655,7 @@ lemma isClosed_N0set (z : Fin (2 * r + k + 1) → ℂ) : IsClosed (C2.N0set k r 
         ⋂ (i : Fin (2 * r + k + 1)) (j : Fin (2 * r + k + 1)) (_ : r ≤ j.val) (_ : j.val ≤ r + k)
           (_ : r ≤ i.val), {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ | g i j = if i = j then 1 else 0} := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     rw [e]
     exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
       isClosed_iInter fun _ => isClosed_iInter fun _ =>
@@ -667,7 +667,7 @@ lemma isClosed_N0set (z : Fin (2 * r + k + 1) → ℂ) : IsClosed (C2.N0set k r 
         g i j = if i = j then 1 else 0}) ∩ {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ | C2.uMap k r z g = 1} := by
     ext g
     unfold C2.N0set Formalism.QuantumDeterminants.Nset
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff]
     tauto
   rw [e]
   exact ((hU.inter hA).inter hB).inter hu
@@ -1030,7 +1030,7 @@ theorem local_smooth (Bs : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1)
     obtain ⟨hgG, -⟩ := hsecΩ' Z hZΩ'
     have hgK : (Matrix.of (sec Z) : B.Mat k r) ∈ Kg := by
       rw [hKgdef]; exact ⟨Z, ball_subset_closedBall hZ, rfl⟩
-    rw [PBI.phi0, if_pos hZpos, PBI.fibInt, convolution_def]
+    rw [PBI.phi0, ite_eq_left hZpos, PBI.fibInt, convolution_def]
     refine integral_congr_ae ?_
     filter_upwards [hae] with p hp
     obtain ⟨h1, h2, h3, h4⟩ := hp

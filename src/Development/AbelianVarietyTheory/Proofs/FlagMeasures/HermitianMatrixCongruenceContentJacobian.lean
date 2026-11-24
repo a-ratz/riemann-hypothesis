@@ -214,10 +214,10 @@ theorem exists_coord (L : LocE F E) {m : ℕ} {ω e : E} (h : (ω - L.cj ω) * e
   have h2 := (isHerm_iff L X).1 hX j i
   rw [coord_symm_apply]
   rcases lt_trichotomy i j with hij | rfl | hij
-  · simp only [hij, if_true, map_sub, map_mul, hce, h1, h2]
+  · simp only [hij, ite_true, map_sub, map_mul, hce, h1, h2]
     linear_combination (X i j - X j i) * h
   · simp [h1]
-  · simp only [hij, hij.not_gt, if_true, if_false, map_sub, map_mul, hce, h1, h2]
+  · simp only [hij, hij.not_gt, ite_true, ite_false, map_sub, map_mul, hce, h1, h2]
     ring
 
 theorem cont_congr : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (ϖ : 𝒪[F]), Irreducible ϖ → ∀ (m : ℕ) (A : Matrix (Fin m) (Fin m) E), IsUnit A.det → (∀ X, X ∈ hermLat L m ↔ IsHerm L X ∧ IsIntM L X) ∧ ∀ B, IsCO (hermLat L m) B → IsCO (hermLat L m) ((fun X => cT L A * X * A) '' B) ∧ cont (hermLat L m) ((fun X => cT L A * X * A) '' B) = (resQ ϖ : ℝ) ^ (-(vE L ϖ (A.det * L.cj A.det) * m)) * cont (hermLat L m) B := by

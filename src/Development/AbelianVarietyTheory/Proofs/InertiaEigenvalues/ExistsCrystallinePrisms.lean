@@ -183,14 +183,14 @@ theorem exists_poly_approx_PPSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZ
     intro x
     by_cases h : (l : Wq l a) ^ r ∣ w x
     · have hx : x ∉ s := fun hx => (mem_s x).1 hx h
-      simp only [w₁, c, hx, if_false, dif_pos h, zero_add]
+      simp only [w₁, c, hx, ite_false, dite_eq_left h, zero_add]
       exact h.choose_spec
     · have hx : x ∈ s := (mem_s x).2 h
       simp [w₁, c, hx, h]
   have hw₁ : LTo0 l w₁ := by
     intro m
     refine Filter.eventually_cofinite.2 (hfin.subset fun x hx => ?_)
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     intro hd
     apply hx
     have : x ∉ s := fun hx' => (mem_s x).1 hx' hd
@@ -200,7 +200,7 @@ theorem exists_poly_approx_PPSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZ
     filter_upwards [hw (m + r)] with x hx
     have h : (l : Wq l a) ^ r ∣ w x := dvd_trans (pow_dvd_pow _ (Nat.le_add_left r m)) hx
     obtain ⟨d, hd⟩ := hx
-    have hcx : c x = h.choose := dif_pos h
+    have hcx : c x = h.choose := dite_eq_left h
     have hspec := h.choose_spec
     refine ⟨d, ?_⟩
     rw [hcx]
@@ -225,7 +225,7 @@ theorem exists_poly_approx_PPSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZ
     rw [Pi.mul_apply, Pi.natCast_apply, coeff_coeff_natCast_mul, coeff_ser, coeff_iotaP, coeff_b]
     split_ifs with hx
     · have hdvd : N (i, n) ∣ nn := Finset.dvd_prod_of_mem N hx
-      simp only [w₁, hx, if_true]
+      simp only [w₁, hx, ite_true]
       rw [map_nsmul, nsmul_eq_mul, Nat.cast_div hdvd (hN0 _)]
       field_simp
     · simp [w₁, hx]
@@ -420,7 +420,7 @@ theorem sh_C [CharZero K] (c : K) : sh (C c) = C (C c) := by
       exact Function.iterate_fixed (map_zero _) i
     rw [h4] at h
     rw [(mul_eq_zero.1 h).resolve_left (natCast_ne_zero_ps (Nat.cast_ne_zero.2 (Nat.factorial_ne_zero _))),
-      coeff_C, if_neg (Nat.succ_ne_zero i)]
+      coeff_C, ite_eq_right (Nat.succ_ne_zero i)]
 
 theorem shP_mem (x : (Wq l a)⟦X⟧) : shP a sh (inclS t K (frobS l a x)) ∈ PPd t K e :=
   Subring.subset_closure (_root_.GlobalTheory.CrysPrism.ShMem.shP_frob_mem l a e O K t sh hsh x).1
@@ -779,7 +779,7 @@ theorem mono_mem (N : ℕ) (c : K) (k : ℕ) (h : ((N / e).factorial : K) * c = 
     refine (Set.finite_singleton N).subset fun m hm => ?_
     by_contra hne
     have hne' : m ≠ N := by simpa using hne
-    exact hm (by simp only [if_neg hne']; exact dvd_zero _)
+    exact hm (by simp only [ite_eq_right hne']; exact dvd_zero _)
   · rw [coeff_monomial]
     split_ifs with hm
     · subst hm; simp [h]
@@ -799,7 +799,7 @@ theorem dpS_frob_good : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZ
     (dpS a e n : ZMod a → K⟦X⟧) ∈ SdSet t K e ∧ ∃ B ∈ SdSet t K e,
       frobTot K a l (dpS a e n) = (dpS a e n : ZMod a → K⟦X⟧) ^ l + (l : ZMod a → K⟦X⟧) * B := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t n
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hl : 1 ≤ l := (Fact.out : l.Prime).one_lt.le
   refine ⟨mono_mem t e n _ 1 ?_, ?_⟩
   · rw [Nat.cast_one]; exact mul_inv_cancel₀ (Nat.cast_ne_zero.2 (Nat.factorial_ne_zero _))
@@ -839,9 +839,9 @@ theorem sdSet_eq_sum_add_mul (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [Ne
     ∀ F ∈ SdSet t K e, ∃ (N : ℕ) (v : ℕ → Wq l a), ∃ y ∈ SdSet t K e,
       F = ∑ n ∈ Finset.range N, cstS t K (v n) * dpS a e n + (l : ZMod a → K⟦X⟧) * y := by
   rintro F ⟨w, hw, hF⟩
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hl0 : (l : Wq l a) ≠ 0 := by
-    have h := WittVector.p_nonzero l (Fq l a)
+    have h := WittVector.p_ne_zero l (Fq l a)
     exact h
   have h1 := hw 1
   rw [Nat.cofinite_eq_atTop, Filter.eventually_atTop] at h1
@@ -871,10 +871,10 @@ theorem sdSet_eq_sum_add_mul (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [Ne
     simp only [Pi.add_apply, Finset.sum_apply, Pi.mul_apply, Pi.natCast_apply, map_add (f := _), map_sum, cstS_apply, dpS,
     hc, coeff_C_mul, coeff_monomial, coeff_mk, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_range]
     by_cases h : m < N
-    · rw [if_pos h, hz0 m h, map_zero, map_zero]
+    · rw [ite_eq_left h, hz0 m h, map_zero, map_zero]
       field_simp [hfac m]
       ring
-    · rw [if_neg h, hz m h, map_mul, map_mul, map_natCast, map_natCast]
+    · rw [ite_eq_right h, hz m h, map_mul, map_mul, map_natCast, map_natCast]
       field_simp [hfac m]
       ring
 
@@ -910,7 +910,7 @@ theorem frobTot_mem_SdSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] 
     rw [Filter.eventually_cofinite] at h ⊢
     refine (h.image fun m => l * m).subset ?_
     intro n hn
-    simp only [Set.mem_setOf_eq] at hn
+    simp only [Set.mem_ofPred_eq] at hn
     split_ifs at hn with hd
     · refine ⟨n / l, ?_, Nat.mul_div_cancel' hd⟩
       intro hr
@@ -922,14 +922,14 @@ theorem frobTot_mem_SdSet : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] 
     show _ = algebraMap O K (emb t τ (if l ∣ n then _ else 0))
     rw [frobTot_apply, coeff_frob]
     by_cases hd : l ∣ n
-    · rw [if_pos hd, if_pos hd]
+    · rw [ite_eq_left hd, ite_eq_left hd]
       obtain ⟨m, rfl⟩ := hd
       rw [Nat.mul_div_cancel_left m hpos]
       have hdiv : (m / e).factorial ∣ (l * m / e).factorial :=
         Nat.factorial_dvd_factorial (Nat.div_le_div_right (Nat.le_mul_of_pos_left m hpos))
       rw [map_mul, map_natCast, emb_sigma, map_mul, map_natCast, ← hF (τ - 1) m, ← mul_assoc, ← Nat.cast_mul,
         Nat.div_mul_cancel hdiv]
-    · rw [if_neg hd, if_neg hd]; simp
+    · rw [ite_eq_right hd, ite_eq_right hd]; simp
 
 end GlobalTheory.CrysPrism
 end -- clump:auto
@@ -1094,9 +1094,9 @@ theorem frobS_eis_mem : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZ
     rw [Filter.eventually_cofinite]
     refine (Set.finite_le_nat (l * e)).subset fun n hn => ?_
     by_contra h
-    simp only [Set.mem_setOf_eq, not_le] at h
+    simp only [Set.mem_ofPred_eq, not_le] at h
     apply hn
-    simp only [show n ≠ 0 by omega, show n ≠ l * e by omega, if_false]
+    simp only [show n ≠ 0 by omega, show n ≠ l * e by omega, ite_false]
     exact dvd_zero _
   · intro τ n
     rw [map_add (f := _), coeff_one, coeff_C_mul, coeff_X_pow]
@@ -1107,7 +1107,7 @@ theorem frobS_eis_mem : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZ
       · subst h1
         have hfac : (l : K)⁻¹ * (l.factorial : K) = ((l - 1).factorial : K) := by
           rw [← Nat.mul_factorial_pred hlp.ne_zero, Nat.cast_mul, ← mul_assoc, inv_mul_cancel₀ hl0, one_mul]
-        simp only [h0, hle, if_false, if_true, zero_add, mul_one, map_natCast]
+        simp only [h0, hle, ite_false, ite_true, zero_add, mul_one, map_natCast]
         rw [Nat.mul_div_cancel _ (Nat.pos_of_ne_zero (NeZero.ne e)), mul_comm, hfac]
       · simp [h0, h1]
   · funext τ
@@ -1327,13 +1327,13 @@ theorem mem_span_pow_smul_top {R : Type} [CommRing R] (c x : R) (k : ℕ) :
 variable {l : ℕ} [hl : Fact l.Prime] {a : ℕ} [NeZero a] {O : Type} [CommRing O] [Algebra ℤ_[l] O]
   [Module.Free ℤ_[l] O] {K : Type} [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K]
 
-theorem natCast_l_ne_zero : (l : Wq l a) ≠ 0 := WittVector.p_nonzero l (Fq l a)
+theorem natCast_l_ne_zero : (l : Wq l a) ≠ 0 := WittVector.p_ne_zero l (Fq l a)
 
 
 variable (K) in
 theorem emb_injective (t : Wq l a →ₐ[ℤ_[l]] O) (τ : ZMod a) :
     Function.Injective fun x : Wq l a => algebraMap O K (emb t τ x) := by
-  haveI : Nontrivial O :=
+  have : Nontrivial O :=
     ⟨⟨0, 1, fun h => one_ne_zero (by simpa using congrArg (algebraMap O K) h.symm : (1 : K) = 0)⟩⟩
   have ht : Function.Injective t := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -1473,7 +1473,7 @@ open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.Weakl
 
 theorem GlobalTheory.CrysPrism.PPd_isAdicComplete : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] (t : Wq l a →ₐ[ℤ_[l]] O), IsAdicComplete (Ideal.span {(l : ↥(PPd t K e))}) ↥(PPd t K e) := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ t
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   exact GlobalTheory.CrysPrism.CompPP.complete_of t e (_root_.GlobalTheory.CrysPrism.PPd_subset_PPSet l a e O K t)
 end -- clump:auto
 end -- clump:auto
@@ -1496,7 +1496,7 @@ namespace GlobalTheory.CrysPrism
 
 theorem exists_crys_prisms : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] [TameDescentExponentData K l e a] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e), l ≠ 2 → ∀ (sh : K⟦X⟧ →+* K⟦X⟧⟦X⟧) (φ₂ : K⟦X⟧⟦X⟧ →+* K⟦X⟧⟦X⟧), (∀ (f : K⟦X⟧) (i : ℕ), (i.factorial : K⟦X⟧) * coeff i (sh f) = (PowerSeries.derivative (R := K))^[i] f) → (∀ f : K⟦X⟧, φ₂ (PowerSeries.C f) = PowerSeries.C (frob K l f)) → (∀ f : K⟦X⟧, φ₂ (sh f) = sh (frob K l f)) → ∃ (PP S₀ : Obj l ↥(OL (ϖ.field a))) (p₀ p₁ : GlobalTheory.Prism.Hom (ϖ.prism a) PP) (δ : GlobalTheory.Prism.Hom PP S₀) (j : ZMod a → PP.A →+* K⟦X⟧⟦X⟧) (j₀ : ZMod a → S₀.A →+* K⟦X⟧), PP.I = Ideal.span {(l : PP.A)} ∧ δ.comp p₀ = δ.comp p₁ ∧ (∀ τ y, j₀ τ (δ.f y) = PowerSeries.constantCoeff (j τ y)) ∧ (∀ τ (x : (Wq l a)⟦X⟧), j τ (p₀.f x) = PowerSeries.C (toAc t K (frobS l a x) τ : K⟦X⟧) ∧ j τ (p₁.f x) = sh (toAc t K (frobS l a x) τ : K⟦X⟧)) ∧ (∀ τ y, j τ (PP.D.φ y) = φ₂ (j (τ - 1) y)) ∧ ∃ hS : ∀ τ y (i : ℕ), (X : K⟦X⟧) ^ i * ((i.factorial : K⟦X⟧) * coeff i (j τ y)) ∈ S O K e, (∀ τ y (i : ℕ), (i.factorial : K⟦X⟧) * coeff i (j τ y) ∈ S O K e) ∧ ∀ (Cr : Obj l ↥(OL (ϖ.field a))) (eC : Cr.A ≃+* Per.Acris l) (h : GlobalTheory.Prism.Hom (ainfObj (ϖ.field a)) Cr), Cr.I = Ideal.span {(l : Cr.A)} → (∀ x, eC (Cr.D.φ x) = frobC l (eC x)) → (∀ x : Ainf l, eC (h.f x) = ainfToAcris l (WittVector.frobenius x)) → ∀ g : ↥(GK (ϖ.field a)), ∃ ev : GlobalTheory.Prism.Hom PP Cr, ev.comp p₀ = h.comp (ϖ.toAinf a) ∧ ev.comp p₁ = (h.comp (ainfHom (ϖ.field a) g)).comp (ϖ.toAinf a) ∧ ∀ (y : PP.A) (r : ℕ), ∃ n₀ : ℕ, ∀ n ≥ n₀, (l : OCr l O) ^ r ∣ (1 : O) ⊗ₜ[ℤ_[l]] eC (ev.f y) - ∑ i ∈ Finset.range n, ϖ.muDiv a O g i * ϖ.iC t K fun τ => ⟨_, hS τ y i⟩ := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ _ sh φ₂ hsh hφC hφsh
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hlp : l.Prime := Fact.out
   have hlK : (l : K) ≠ 0 := Nat.cast_ne_zero.2 hlp.ne_zero
   have hl1 : (l : K⟦X⟧) ≠ 0 := natCast_ne_zero_ps hlK
@@ -1505,8 +1505,8 @@ theorem exists_crys_prisms : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a]
   have tf2 : ∀ x : ZMod a → K⟦X⟧⟦X⟧, (l : ZMod a → K⟦X⟧⟦X⟧) * x = 0 → x = 0 := tf_pi hl2
   have tfS : ∀ x : ↥(Sd t K e), (l : ↥(Sd t K e)) * x = 0 → x = 0 := tf_sub _ tf1
   have tfP : ∀ x : ↥(PPd t K e), (l : ↥(PPd t K e)) * x = 0 → x = 0 := tf_sub _ tf2
-  haveI hcS := _root_.GlobalTheory.CrysPrism.isAdicComplete_Sd l a e O K t
-  haveI hcP := _root_.GlobalTheory.CrysPrism.PPd_isAdicComplete l a e O K t
+  have hcS := _root_.GlobalTheory.CrysPrism.isAdicComplete_Sd l a e O K t
+  have hcP := _root_.GlobalTheory.CrysPrism.PPd_isAdicComplete l a e O K t
   have hSd : ∀ F ∈ Sd t K e, F ∈ SdSet t K e := _root_.GlobalTheory.CrysPrism.sdSet_closed l a e O K t
   have hPd : ∀ F ∈ PPd t K e, F ∈ PPSet t K e := _root_.GlobalTheory.CrysPrism.PPd_subset_PPSet l a e O K t
 

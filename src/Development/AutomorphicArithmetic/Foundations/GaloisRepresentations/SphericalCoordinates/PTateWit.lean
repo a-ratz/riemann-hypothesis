@@ -60,7 +60,7 @@ theorem tateWit_of : TateWit := by
   have hsurj : Function.Surjective e := hexp.2.1
   have hlin : ∀ (c : D.O) u, P (c • u) = ρ c *ᵥ P u := hper.1
   have hinj : Function.Injective P := hper.2.1
-  haveI : Module.Free ℤ D.toG.La := D.freeLa
+  have : Module.Free ℤ D.toG.La := D.freeLa
   have hlift : ∀ n : ℕ, 0 < n → n.Coprime p → ∃ φ : D.La →+ D'.La, ∀ a, I.ev n a = e ((n : ℂ)⁻¹ • P (φ a)) :=
     fun n hn hnp => unifCls_lift e P hadd hsurj hker (I.ev n) (I.add n) hn
       (fun y => (I.onto n hn _).2 ⟨y, rfl⟩)
@@ -71,12 +71,12 @@ theorem tateWit_of : TateWit := by
   let nu : ℕ → ℤ := fun n => if hn : 0 < n ∧ n.Coprime p then Classical.choose (hroot n hn.1 hn.2) else 0
   have hf : ∀ (n : ℕ) (hn : 0 < n) (hnp : n.Coprime p) a, I.ev n a = e ((n : ℂ)⁻¹ • P (f n a)) := by
     intro n hn hnp a
-    simp only [f, dif_pos (And.intro hn hnp)]
+    simp only [f, dite_eq_left (And.intro hn hnp)]
     exact Classical.choose_spec (hlift n hn hnp) a
   have hnu : ∀ (n : ℕ) (hn : 0 < n) (hnp : n.Coprime p), IsCoprime (nu n) n ∧
       ((I.ζ n : ℂˣ) : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * (nu n : ℂ) / n) := by
     intro n hn hnp
-    simp only [nu, dif_pos (And.intro hn hnp)]
+    simp only [nu, dite_eq_left (And.intro hn hnp)]
     exact Classical.choose_spec (hroot n hn hnp)
   have heq : ∀ {n : ℕ}, 0 < n → ∀ v v' : D'.La,
       e ((n : ℂ)⁻¹ • P v) = e ((n : ℂ)⁻¹ • P v') ↔ ∃ w, v = v' + n • w :=
@@ -88,7 +88,7 @@ theorem tateWit_of : TateWit := by
     · have hz := I.ζ_pow n m hn hm
       have hz' := congrArg (fun u : ℂˣ => (u : ℂ)) hz
       simp only [Units.val_pow_eq_pow_val] at hz'
-      rw [(hnu _ (Nat.mul_pos hn hm) hnm).2, (hnu n hn hnp).2, ← Complex.exp_nat_mul] at hz'
+      rw [(hnu _ (Nat.mul_pos hn hm) hnm).2, (hnu n hn hnp).2, ← Complex.exp_natCast_mul] at hz'
       have : (m : ℂ) * (-(2 * Real.pi * Complex.I) * (nu (n * m) : ℂ) / ((n * m : ℕ) : ℂ)) =
           -(2 * Real.pi * Complex.I) * (nu (n * m) : ℂ) / n := by
         have : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
@@ -127,7 +127,7 @@ theorem tateWit_of : TateWit := by
       have hu := _root_.GlobalTheory.WeilComplexUnique.weilIs_unitOn_unique_complex S o.A D.g o.ab hX _ hL x n _ _ _ _ hiso hw
       have hu' := congrArg (fun u : ℂˣ => (u : ℂ)) hu
       simp only [Units.val_zpow_eq_zpow_val, Units.val_mk0] at hu'
-      rw [(hnu n hn hnp).2, ← Complex.exp_int_mul] at hu'
+      rw [(hnu n hn hnp).2, ← Complex.exp_intCast_mul] at hu'
       have : ((2 * D.toG.EF a a' : ℤ) : ℂ) * (-(2 * Real.pi * Complex.I) * (nu n : ℂ) / n) =
           -(2 * Real.pi * Complex.I) * ((nu n * (2 * D.toG.EF a a') : ℤ) : ℂ) / n := by
         push_cast; ring

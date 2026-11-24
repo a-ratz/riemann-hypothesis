@@ -46,8 +46,8 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 private theorem mul_eq_one_of_card_eq_two_of_ne_one {H : Type*} [Group H] (hH : Nat.card H = 2)
     (x y : H) (hx : x ≠ 1) (hy : y ≠ 1) : x * y = 1 := by
   classical
-  haveI : Finite H := Nat.finite_of_card_ne_zero (by omega)
-  haveI := Fintype.ofFinite H
+  have : Finite H := Nat.finite_of_card_ne_zero (by omega)
+  have := Fintype.ofFinite H
   rw [Nat.card_eq_fintype_card] at hH
   by_contra hxy
   have h3 : ({1, x, x * y} : Finset H).card = 3 := by
@@ -88,8 +88,8 @@ theorem UpperTheory.V.Ws.P1.towerGal :
   · intro g₁ g₂ h
     ext z
     exact congrArg (fun k => k z) h
-  · letI : Algebra T.F T.L := (IntermediateField.inclusion T.F_le).toRingHom.toAlgebra
-    haveI : IsScalarTower T.F T.L Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  · let : Algebra T.F T.L := (IntermediateField.inclusion T.F_le).toRingHom.toAlgebra
+    have : IsScalarTower T.F T.L Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     have he : (resLe T.F_le : G T.L Ω → G T.F Ω) = AlgEquiv.restrictScalarsHom T.F := by
       funext g
       ext
@@ -97,9 +97,9 @@ theorem UpperTheory.V.Ws.P1.towerGal :
     rw [he]
     exact UpperTheory.V.Af.continuous_restrictScalarsHom _ _ _
   · unfold UpperTheory.V.Ws.Tower.GalL
-    haveI : Algebra.IsQuadraticExtension ℚ T.K := ⟨T.degK⟩
-    haveI hN : Normal ℚ T.K := Algebra.IsQuadraticExtension.normal ℚ T.K
-    haveI : IsGalois ℚ T.K := {}
+    have : Algebra.IsQuadraticExtension ℚ T.K := ⟨T.degK⟩
+    have hN : Normal ℚ T.K := Algebra.IsQuadraticExtension.normal ℚ T.K
+    have : IsGalois ℚ T.K := {}
     have hcard : Nat.card (T.K ≃ₐ[ℚ] T.K) = 2 := by
       rw [IsGalois.card_aut_eq_finrank, T.degK]
     have hker := @IntermediateField.restrictNormalHom_ker ℚ Ω _ _ _ T.K

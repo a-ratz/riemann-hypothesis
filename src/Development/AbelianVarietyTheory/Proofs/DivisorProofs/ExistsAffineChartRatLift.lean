@@ -61,11 +61,11 @@ theorem spec_ext_of_isFractionRing {A K T : Type} [CommRing A] [IsDomain A] [Fie
 theorem exists_int_dvd {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H}
     {l : Geo.Tor.Level H} {Xo : Moduli Dw l} {cf : Coeff l} (C : UCompact Xo cf) {a : C.o} (ha : a ≠ 0) :
     ∃ n : ℤ, n ≠ 0 ∧ a ∣ (n : C.o) := by
-  haveI := C.ded
+  have := C.ded
   have h1 : IsAlgebraic ℚ (C.b a) := Algebra.IsAlgebraic.isAlgebraic _
   have h2 : IsAlgebraic ℤ (C.b a) := (IsFractionRing.isAlgebraic_iff ℤ ℚ cf.F).2 h1
   have h3 : IsAlgebraic ℤ a := (isAlgebraic_algHom_iff C.b.toIntAlgHom C.inj).1 h2
-  have h4 := Ideal.comap_ne_bot_of_algebraic_mem ha (Ideal.mem_span_singleton_self a) h3
+  have h4 := Ideal.under_ne_bot_of_algebraic_mem ha (Ideal.mem_span_singleton_self a) h3
   obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h4
   refine ⟨n, hn0, ?_⟩
   have := Ideal.mem_span_singleton.1 (Ideal.mem_comap.1 hn)
@@ -77,12 +77,12 @@ namespace GlobalTheory.UPoinc.ChartAt
 
 theorem exists_affine_chart_ratLift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (cf : Coeff l) (C : UCompact Xo cf) (X : USetup C) (w : X.M.Z), X.π w ∈ Set.range C.i → ∃ (U₀ : X.M.Z.Opens) (u₀ : Sp (ratHull (X.M.ringOn U₀)) ⟶ Xo.XF cf), IsAffineOpen U₀ ∧ w ∈ U₀ ∧ spMap (ratHull (X.M.ringOn U₀)).val.toRingHom ≫ u₀ = X.uΩ := by
   intro E _ _ _ H Dw l Xo cf C X w hw
-  haveI := X.ar.char
-  haveI := C.iF_open
-  haveI := C.ded
-  letI := C.b.toAlgebra
-  haveI := C.isFractionRing
-  haveI : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
+  have := X.ar.char
+  have := C.iF_open
+  have := C.ded
+  let := C.b.toAlgebra
+  have := C.isFractionRing
+  have : IsPreimmersion (spMap C.b) := IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
   have hemb := Scheme.Hom.isEmbedding (pullback.fst C.z (spMap C.b))
   obtain ⟨V, hVo, hV⟩ := hemb.isInducing.isOpen_iff.1 C.iF.isOpenEmbedding.isOpen_range
   set V' : X.M.Z.Opens := X.π ⁻¹ᵁ ⟨V, hVo⟩ with hV'def

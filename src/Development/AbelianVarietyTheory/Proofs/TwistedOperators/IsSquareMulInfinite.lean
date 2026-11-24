@@ -78,8 +78,8 @@ namespace GlobalTheory.QNorm
 theorem exists_sub_sq_mem_of_two_mem (F : Type) [Field F] [NumberField F]
     (v : HeightOneSpectrum (𝓞 F)) (h2 : (2 : 𝓞 F) ∈ v.asIdeal) (a : 𝓞 F) :
     ∃ b : 𝓞 F, a - b ^ 2 ∈ v.asIdeal := by
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
-  haveI := v.isPrime
+  have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
+  have := v.isPrime
   have h0 : (2 : 𝓞 F ⧸ v.asIdeal) = 0 := by
     have := Ideal.Quotient.eq_zero_iff_mem.2 h2
     rwa [map_ofNat] at this
@@ -380,7 +380,7 @@ theorem nm_unit_of_two_lt (h2 : (2 : K) ≠ 0) (hsq : ∀ x : K, w (x - 1) < w 4
       Valuation.map_sub_eq_of_lt_left w (by rw [hu]; exact ha), hu]
   rw [map_pow] at ha2
   have ha1 : w a = 1 := (pow_eq_one_iff_of_nonneg zero_le two_ne_zero).1 ha2
-  have hpos : 0 < w (Δ - 1) := zero_lt_iff.2 ((Valuation.ne_zero_iff w).2 (sub_ne_zero.2 h1))
+  have hpos : 0 < w (Δ - 1) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff w).2 (sub_ne_zero.2 h1))
   obtain ⟨c, hc⟩ := isSquare_of_near w hsq (u := a ^ 2 - (Δ - 1) * (u - a ^ 2)) ha1 (by
     rw [sub_sub_cancel_left, Valuation.map_neg, map_mul]
     exact (mul_lt_of_lt_one_right hpos ha).trans_le hΔ)
@@ -420,11 +420,11 @@ theorem isSquare_mul_of_near {x y : v.adicCompletion F} (hx : Valued.v x = 1) (h
     (hx4 : Valued.v (x - 1) ≤ Valued.v (4 : v.adicCompletion F))
     (hy4 : Valued.v (y - 1) ≤ Valued.v (4 : v.adicCompletion F))
     (hx' : ¬ IsSquare x) (hy' : ¬ IsSquare y) : IsSquare (x * y) := by
-  haveI : CharZero (v.adicCompletion F) :=
+  have : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   rcases (map_two_le (Valued.v : Valuation (v.adicCompletion F) ℤᵐ⁰)).eq_or_lt with h2 | h2
   · exact GlobalTheory.QNorm.isSquare_mul_of_nonsquare_units F v h2 x y hx hy hx' hy'
-  haveI := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.finite_residueField_adicCompletionIntegers v
   have hres : ∀ z : v.adicCompletionIntegers F,
       residue (v.adicCompletionIntegers F) z = 0 ↔ Valued.v (z : v.adicCompletion F) < 1 := by
     intro z
@@ -435,7 +435,7 @@ theorem isSquare_mul_of_near {x y : v.adicCompletion F} (hx : Valued.v x = 1) (h
     have := (hres 2).2 h2
     rwa [map_ofNat] at this
   have hpos : 0 < Valued.v (4 : v.adicCompletion F) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (by norm_num))
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (by norm_num))
   have key : ∀ r s : v.adicCompletionIntegers F,
       residue _ s ^ 2 + residue _ s = residue _ r → IsSquare (1 + 4 * (r : v.adicCompletion F)) := by
     intro r s h
@@ -476,7 +476,7 @@ theorem isSquare_mul_of_near {x y : v.adicCompletion F} (hx : Valued.v x = 1) (h
 
 theorem nm_mul_adicCompletion {d x y : v.adicCompletion F} (hd : d ≠ 0) (hx0 : x ≠ 0) (hy0 : y ≠ 0)
     (hx : ¬ Nm d x) (hy : ¬ Nm d y) : Nm d (x * y) := by
-  haveI : CharZero (v.adicCompletion F) :=
+  have : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   obtain ⟨⟨π, -, hπ⟩, -⟩ := GlobalTheory.QNorm.exists_uniformizer_and_residue_representatives F v
   have hres := GlobalTheory.QNorm.exists_sub_sq_lt_one_of_two_lt_one F v
@@ -518,7 +518,7 @@ theorem isSquare_mul_infinite (w : InfinitePlace F) {x y : w.Completion} (hx : �
     rw [map_mul]
     exact mul_nonneg_of_nonpos_of_nonpos (not_le.1 hx).le (not_le.1 hy).le
   · let e := InfinitePlace.Completion.ringEquivComplexOfIsComplex hw
-    have h : IsSquare (e x) := IsAlgClosed.exists_eq_mul_self (e x)
+    have h : IsSquare (e x) := IsAlgClosed.isSquare (e x)
     exact absurd (by simpa using h.map e.symm) hx
 
 end Completion

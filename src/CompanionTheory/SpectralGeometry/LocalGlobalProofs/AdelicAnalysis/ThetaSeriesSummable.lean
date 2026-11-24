@@ -137,7 +137,7 @@ theorem exists_quad_lower {ι : Type} [Fintype ι] [DecidableEq ι] (P g : Matri
   have hs : ‖v‖⁻¹ • v ∈ Metric.sphere (0 : ι → ℝ) 1 := by
     simp [norm_smul, hn]
   have h3 := hmin hs
-  simp only [Set.mem_setOf_eq, Matrix.mulVec_smul, dotProduct_smul, smul_dotProduct, smul_eq_mul] at h3
+  simp only [Set.mem_ofPred_eq, Matrix.mulVec_smul, dotProduct_smul, smul_dotProduct, smul_eq_mul] at h3
   have h4 : ‖v‖ ^ 2 * (‖v‖⁻¹ * (‖v‖⁻¹ * ((g *ᵥ v) ⬝ᵥ (P *ᵥ (g *ᵥ v))))) =
       (g *ᵥ v) ⬝ᵥ (P *ᵥ (g *ᵥ v)) := by
     field_simp
@@ -263,7 +263,7 @@ theorem summable_thTerm {M : ℕ} {B : Matrix ι ι F} {ρ : InfinitePlace F →
   let i : (ι → 𝓞 F) → (ι → F) := fun r j => (r j : F) / N
   have hi : Function.Injective i := fun r s h => funext fun j => by
     have := congrFun h j
-    exact RingOfIntegers.coe_injective ((div_left_inj' hNF).1 this)
+    exact RingOfIntegers.coe_injective ((div_left_inj₀ hNF).1 this)
   have hz : ∀ x, x ∉ Set.range i → ‖thTerm B ρ P gf gi φ τ x‖ = 0 := by
     intro x hx
     by_contra hne
@@ -446,9 +446,9 @@ theorem exists_theta_ne_zero {M : ℕ} {B : Matrix ι ι F} {ρ : InfinitePlace 
           rw [thTerm, e1, indN_zero gf _ h0]
           simp only [e2]
           simp [gauss]
-        simp only [this, if_true]
+        simp only [this, ite_true]
         exact tendsto_const_nhds
-      · rw [if_neg hx]
+      · rw [ite_eq_right hx]
         refine tendsto_const_nhds.congr' ?_
         filter_upwards [indN_eventually_zero hu hx] with n hn
         rw [thTerm, hn, zero_mul]

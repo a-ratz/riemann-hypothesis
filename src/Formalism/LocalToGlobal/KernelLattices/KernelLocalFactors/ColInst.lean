@@ -77,7 +77,7 @@ theorem exists_pow_loc (P : HeightOneSpectrum (𝓞 E)) (k : ℕ) (hk : 0 < k) :
   obtain ⟨e, B, hB, hkB⟩ := WfDvdMonoid.max_power_factor hk0 P.irreducible
   refine ⟨e, fun j hj => ?_⟩
   have hB' : ¬ B ≤ P.asIdeal := fun h => hB (Ideal.dvd_iff_le.2 h)
-  obtain ⟨t, htB, htP⟩ := SetLike.not_le_iff_exists.1 hB'
+  obtain ⟨t, htB, htP⟩ := IsConcreteLE.not_le_iff_exists.1 hB'
   refine ⟨t, htP, ?_⟩
   have h1 : t * j ∈ Ideal.span {(k : 𝓞 E)} := by
     rw [hkB, mul_comm t j]
@@ -672,7 +672,7 @@ theorem exists_unit_pow (hq : ((q : ℕ) : 𝓞 E) ∈ P.asIdeal) (hu : ((q : �
     apply hu
     rw [← Ideal.dvd_span_singleton, hB, hC, sq, ← mul_assoc]
     exact Dvd.intro _ rfl
-  obtain ⟨t, htB, htP⟩ := SetLike.not_le_iff_exists.1 hBP
+  obtain ⟨t, htB, htP⟩ := IsConcreteLE.not_le_iff_exists.1 hBP
   have hr0 : Ideal.span {r} ≠ ⊥ := by rwa [Ne, Ideal.span_singleton_eq_bot]
   obtain ⟨k, C, hC, hrC⟩ := WfDvdMonoid.max_power_factor hr0 P.irreducible
   have hrk : r ∈ P.asIdeal ^ k := by
@@ -773,7 +773,7 @@ theorem nuW_last_nonneg (u : Pr.Word) (i : ℕ) (hi : i < R.m) (τ : X.Tau) : 0 
       (Examples₂.lamOf (W.hc u τ) i).w ⟨R.N i - 1, by omega⟩ + ⌊wG R ((W.hc u τ).e ⟨i, hi⟩) (i + 1)⌋ := by
     show (shiftW (W.lamN u i τ) ⌊wG R ((RowPar.of (W.hc u τ)).eAt i) (i + 1)⌋).detShift = _
     unfold DomWeight.detShift RowPar.eAt
-    rw [dif_pos hNpos, dif_pos hi]
+    rw [dite_eq_left hNpos, dite_eq_left hi]
     rfl
   have a1 : (((Examples₂.lamOf (W.hc u τ) i).w ⟨R.N i - 1, by omega⟩ : ℤ) : ℚ) = Examples₂.wtN (W.hc u τ) (R.N i - 1) := by
     rw [Examples₂.lamOf_eq (W.hc u τ) i hi.le, Examples₂.wtQ_eq_wtN]
@@ -784,7 +784,7 @@ theorem nuW_last_nonneg (u : Pr.Word) (i : ℕ) (hi : i < R.m) (τ : X.Tau) : 0 
     have gen : ∀ (c : ℕ) (hc : c < R.m), c = i → -wG R ((W.hc u τ).e ⟨c, hc⟩) (c + 1) = -wG R ((W.hc u τ).e ⟨i, hi⟩) (i + 1) := by
       rintro c hc rfl; rfl
     unfold Examples₂.wtN
-    rw [dite_eq_right (by unfold Ranks.N; omega), dif_pos (by rw [hb]; exact hi)]
+    rw [dite_eq_right (by unfold Ranks.N; omega), dite_eq_left (by rw [hb]; exact hi)]
     exact gen _ _ hb
   have hlt : R.N i < R.N (i + 1) := by unfold Ranks.N; rw [Nat.succ_mul]; omega
   have hle : R.N (i + 1) ≤ R.N R.m := by
@@ -821,19 +821,19 @@ theorem lamTrue_natW (u : Pr.Word) {i : ℕ} (hi : i < R.m) (τ : X.Tau) (r : Fi
   have hlt : R.N i < R.N (i + 1) := by unfold Ranks.N; rw [Nat.succ_mul]; omega
   have d' : (W.lamTrue u (i + 1) τ).detShift = (W.lamTrue u (i + 1) τ).w ⟨R.N (i + 1) - 1, by omega⟩ := by
     unfold DomWeight.detShift
-    exact dif_pos hN'
+    exact dite_eq_left hN'
   have d0 : (W.lamTrue u i τ).detShift = (W.lamTrue u i τ).w ⟨R.N i - 1, by omega⟩ := by
     unfold DomWeight.detShift
-    exact dif_pos hN
+    exact dite_eq_left hN
   have dn : (W.nuW u (i + 1) τ).detShift = (W.nuW u (i + 1) τ).w (⟨R.N i - 1, by omega⟩ : Fin (R.N i)) := by
     unfold DomWeight.detShift
-    exact dif_pos hN
+    exact dite_eq_left hN
   have e' := W.lamTrue_new u hi τ ⟨R.N (i + 1) - 1, by omega⟩ (by show ¬ R.N (i + 1) - 1 < R.N i; omega)
   have en := W.nuW_eq_true u hi τ ⟨R.N i - 1, by omega⟩
   have hl := nuLast_eq W u i hi τ
   unfold DomWeight.natW extNu
   by_cases h : r.1 < R.N i
-  · rw [dif_pos h]
+  · rw [dite_eq_left h]
     have eo := W.lamTrue_old u hi τ r h
     have hanti : (W.lamTrue u i τ).w ⟨R.N i - 1, by omega⟩ ≤ (W.lamTrue u i τ).w ⟨r.1, h⟩ :=
       (W.lamTrue u i τ).anti (by show r.1 ≤ R.N i - 1; omega)
@@ -1055,7 +1055,7 @@ theorem qe_one : QE sel (1 : Chr X.F X.E X.K) = ∅ := by
     ext v
     simp [Qprime]
   unfold QE
-  rw [dif_pos (by rw [h]; exact Set.finite_empty)]
+  rw [dite_eq_left (by rw [h]; exact Set.finite_empty)]
   simp [h]
 
 variable (cst : LocCst X (rowSG Pr sel (mu0 X.F X.E X.K S)))

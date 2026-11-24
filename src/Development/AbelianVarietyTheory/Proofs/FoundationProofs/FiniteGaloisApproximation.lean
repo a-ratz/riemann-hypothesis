@@ -56,11 +56,11 @@ theorem gal_finite_subcover : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω
   ∀ S : Gal p Ω → Finset Ω, ∃ F : Finset (Gal p Ω), ∀ h : Gal p Ω, ∃ g ∈ F, ∀ x ∈ S g, h x = g x := by
   intro p _ Ω _ _ hΩ S
   classical
-  letI : TopologicalSpace Ω := ⊥
-  haveI : DiscreteTopology Ω := ⟨rfl⟩
-  haveI : IsDomain (O0 p) := hΩ.inj.isDomain (algebraMap (O0 p) Ω)
-  haveI : Module.IsTorsionFree (O0 p) Ω := Module.isTorsionFree_iff_algebraMap_injective.mpr hΩ.inj
-  haveI := hΩ.alg
+  let : TopologicalSpace Ω := ⊥
+  have : DiscreteTopology Ω := ⟨rfl⟩
+  have : IsDomain (O0 p) := hΩ.inj.isDomain (algebraMap (O0 p) Ω)
+  have : Module.IsTorsionFree (O0 p) Ω := Module.isTorsionFree_iff_algebraMap_injective.mpr hΩ.inj
+  have := hΩ.alg
   choose P hP0 hP using fun x : Ω => (Algebra.IsAlgebraic.isAlgebraic (R := O0 p) x)
   have hmap : ∀ x, (P x).map (algebraMap (O0 p) Ω) ≠ 0 := fun x =>
     (Polynomial.map_ne_zero_iff hΩ.inj).mpr (hP0 x)
@@ -91,7 +91,7 @@ theorem gal_finite_subcover : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω
     isOpen_biInter_finset (fun x _ => (isOpen_discrete {g x}).preimage (continuous_apply x))
   have hcov : K ∩ C ⊆ ⋃ g, U g := by
     rintro f ⟨-, ⟨⟨hadd, hmul⟩, h1⟩, halg⟩
-    simp only [Set.mem_iInter, Set.mem_setOf_eq] at hadd hmul h1 halg
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq] at hadd hmul h1 halg
     have h0 : f 0 = 0 := by
       have := hadd 0 0
       simp only [add_zero] at this
@@ -107,10 +107,10 @@ theorem gal_finite_subcover : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω
   have hmem : ∀ h : Gal p Ω, (⇑h : Ω → Ω) ∈ K ∩ C := by
     intro h
     refine ⟨fun x _ => hR (h : Ω →ₐ[O0 p] Ω) x, ⟨⟨?_, ?_⟩, ?_⟩, ?_⟩
-    · simp only [Set.mem_iInter, Set.mem_setOf_eq]; intro a b; exact map_add h a b
-    · simp only [Set.mem_iInter, Set.mem_setOf_eq]; intro a b; exact map_mul h a b
+    · simp only [Set.mem_iInter, Set.mem_ofPred_eq]; intro a b; exact map_add h a b
+    · simp only [Set.mem_iInter, Set.mem_ofPred_eq]; intro a b; exact map_mul h a b
     · exact map_one h
-    · simp only [Set.mem_iInter, Set.mem_setOf_eq]; intro r; exact h.commutes r
+    · simp only [Set.mem_iInter, Set.mem_ofPred_eq]; intro r; exact h.commutes r
   obtain ⟨F, hF⟩ := (hK.inter_right hC).elim_finite_subcover U hU hcov
   refine ⟨F, fun h => ?_⟩
   obtain ⟨g, hg, hgh⟩ := Set.mem_iUnion₂.mp (hF (hmem h))

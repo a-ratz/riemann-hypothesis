@@ -136,7 +136,7 @@ theorem finrank_ker_lsmul_pow_quotient {F : Type} [Field F] (f : F[X]) (hf : f �
       f.natDegree * min j e := by
   have hle : Ideal.span {f ^ e} ≤ Ideal.span {f ^ min j e} :=
     Ideal.span_singleton_le_span_singleton.mpr (pow_dvd_pow f (min_le_right j e))
-  haveI : Module.Finite F (F[X] ⧸ Ideal.span {f ^ e}) :=
+  have : Module.Finite F (F[X] ⧸ Ideal.span {f ^ e}) :=
     (AdjoinRoot.powerBasis (pow_ne_zero e hf)).finite
   let π := (Ideal.Quotient.factorₐ F hle).toLinearMap
   have hπ : LinearMap.range π = ⊤ := by
@@ -243,7 +243,7 @@ theorem primary_structure : ∀ (F : Type) [Field F] (V : Type) [AddCommGroup V]
         rw [Ideal.Quotient.subsingleton_iff, this, pow_zero, Ideal.span_singleton_one]) ≪≫ₗ
       LinearEquiv.piCongrLeft' F[X] (fun i : {i : Fin d // 0 < k i} => F[X] ⧸ Ideal.span {f ^ k i}) σ
   refine ⟨_, fun i => k (σ.symm i), fun i => (σ.symm i).2, ⟨ψ⟩, fun j => ?_⟩
-  haveI : ∀ e : ℕ, Module.Finite F (F[X] ⧸ Ideal.span {f ^ e}) := fun e =>
+  have : ∀ e : ℕ, Module.Finite F (F[X] ⧸ Ideal.span {f ^ e}) := fun e =>
     (AdjoinRoot.powerBasis (pow_ne_zero e hf.ne_zero)).finite
   rw [(kerAevalEquivPi g _ ψ (f ^ j)).finrank_eq, Module.finrank_pi_fintype, Finset.mul_sum]
   exact Finset.sum_congr rfl fun i _ => finrank_ker_lsmul_pow_quotient f hf.ne_zero _ j

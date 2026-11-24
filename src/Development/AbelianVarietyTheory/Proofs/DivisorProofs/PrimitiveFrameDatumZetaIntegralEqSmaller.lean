@@ -143,8 +143,8 @@ theorem bigF_phiA {a : ℕ} {A' C : Type} [Fintype A'] [DecidableEq A'] [Fintype
   obtain ⟨⟨m₀, hm₀⟩, hmem, huniq⟩ := exists_unique_shell hϖ g₀
   set S : Set (GL (Fin a) k) := (fun g => g * g₀⁻¹) ⁻¹' (KO k (Fin a) : Set (GL (Fin a) k)) with hSdef
   have hSm : @MeasurableSet (GL (Fin a) k) Units.instMeasurableSpace S := by
-    letI : MeasurableSpace (GL (Fin a) k) := Units.instMeasurableSpace
-    haveI : BorelSpace (GL (Fin a) k) := borel_GL
+    let : MeasurableSpace (GL (Fin a) k) := Units.instMeasurableSpace
+    have : BorelSpace (GL (Fin a) k) := borel_GL
     exact (isOpen_KO.preimage (continuous_mul_const _)).measurableSet
   have hS1 : (haarVol (KO k (Fin a))).real S = 1 := by
     simp [hSdef, Measure.real, measure_preimage_mul_right, haarVol_self isOpen_KO le_rfl]
@@ -152,9 +152,9 @@ theorem bigF_phiA {a : ℕ} {A' C : Type} [Fintype A'] [DecidableEq A'] [Fintype
       apow (gdet g) ((Fintype.card C : ℂ) / 2) = S.indicator (fun _ => fFun μ σ ν Ψ X) g := by
     intro g
     by_cases hg : g ∈ S
-    · rw [Set.indicator_of_mem hg, phiA, if_pos ((isPrimFrame_mul_iff hg₀ g).2 hg)]
+    · rw [Set.indicator_of_mem hg, phiA, ite_eq_left ((isPrimFrame_mul_iff hg₀ g).2 hg)]
       exact fFun_mul_left μ σ ν Ψ g h
-    · rw [Set.indicator_of_notMem hg, phiA, if_neg (fun h' => hg ((isPrimFrame_mul_iff hg₀ g).1 h')),
+    · rw [Set.indicator_of_notMem hg, phiA, ite_eq_right (fun h' => hg ((isPrimFrame_mul_iff hg₀ g).1 h')),
         zero_mul, zero_mul]
   have hshell : ∀ m : {m : Fin a → ℤ // Antitone m}, shell (haarVol (KO k (Fin a))) ϖ ν
       ((Fintype.card C : ℂ) / 2) (fun M => phiA μ σ ν ϖ n (diagLat c) Ψ (M * X)) m.1 =

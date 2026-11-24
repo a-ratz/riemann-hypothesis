@@ -79,7 +79,7 @@ theorem grcount : ∀ (T S : Type) [Fintype T] [Fintype S] (a b : ℕ), 0 < a �
     exact pow_ne_zero 2 hcN hx.symm
   have hrow : ∀ t, ∏ s, x t s = ∏ s, D t s :=
     PositivityTheory.HtPt.Rh.eq_of_prod_eq (fun t => ∏ s, x t s) (fun t => ∏ s, D t s)
-      (fun t => Finset.prod_le_prod' fun s _ => hxD t s) hX hX0
+      (fun t => Finset.prod_le_prod fun s _ => hxD t s) hX hX0
   have hrow0 : ∀ t, ∏ s, x t s ≠ 0 := fun t =>
     (Finset.prod_ne_zero_iff.mp hX0) t (Finset.mem_univ t)
   have hxD' : ∀ t s, D t s = x t s := fun t s =>

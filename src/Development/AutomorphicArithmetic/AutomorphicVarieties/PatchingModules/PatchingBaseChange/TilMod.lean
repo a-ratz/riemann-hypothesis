@@ -117,7 +117,7 @@ private theorem UpperTheory.V.Pa.BC.ev_surj (M : Type) [AddCommGroup M] [Module 
 
 private theorem UpperTheory.V.Pa.BC.ev_bij [IsNoetherianRing R] (M : Type) [AddCommGroup M] [Module R M] [Module.Finite R M] :
     Function.Bijective (TensorProduct.piRightHom R R M (fun _ : ι => N)) := by
-  haveI := Module.finitePresentation_of_finite R M
+  have := Module.finitePresentation_of_finite R M
   refine ⟨?_, UpperTheory.V.Pa.BC.ev_surj N M⟩
   obtain ⟨n, m, f, g, hf, hfg⟩ := Module.FinitePresentation.exists_fin' R M
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -224,20 +224,20 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.BC.til_mod :
     ∀ (O O' : Type) [CommRing O] [CommRing O'] [Algebra O O'] [Module.Finite O O'] (S R : Type) [CommRing S] [Algebra O S] [IsNoetherianRing S] [CommRing R] [Algebra O R] [IsNoetherianRing R] (f : S →ₐ[O] R) (M : Type) [AddCommGroup M] [Module R M] [Module S M] [Module.Finite S M], (∀ (a : S) (m : M), a • m = f a • m) → ∃ e : Til O O' S ⊗[S] M ≃+ Til O O' R ⊗[R] M, (∀ a m, e (a ⊗ₜ m) = Til.map O' f a ⊗ₜ m) ∧ ∀ a z, e (a • z) = Til.map O' f a • e z := by
   intro O O' _ _ _ _ S R _ _ _ _ _ _ f M _ _ _ _ h
-  letI : Module O M := Module.compHom M (algebraMap O R)
-  haveI : IsScalarTower O R M := ⟨fun o r m => by
+  let : Module O M := Module.compHom M (algebraMap O R)
+  have : IsScalarTower O R M := ⟨fun o r m => by
     show (o • r) • m = (algebraMap O R o) • (r • m)
     rw [Algebra.smul_def, mul_smul]⟩
-  haveI : IsScalarTower O S M := ⟨fun o s m => by
+  have : IsScalarTower O S M := ⟨fun o s m => by
     show (o • s) • m = (algebraMap O R o) • (s • m)
     rw [h (o • s) m, h s m, Algebra.smul_def o s, map_mul, f.commutes, mul_smul]⟩
   have hfin : Module.Finite R M := by
-    letI : Algebra S R := f.toRingHom.toAlgebra
-    haveI : IsScalarTower S R M := ⟨fun s r m => by
+    let : Algebra S R := f.toRingHom.toAlgebra
+    have : IsScalarTower S R M := ⟨fun s r m => by
       show (f s * r) • m = s • (r • m)
       rw [mul_smul, h]⟩
     exact Module.Finite.of_restrictScalars_finite S R M
-  haveI := hfin
+  have := hfin
   obtain ⟨e1, he1⟩ := BC.til_ev O O' S M
   obtain ⟨e2, he2⟩ := BC.til_ev O O' R M
   have hact : ∀ (m : M) (x : O' ⊗[O] S), Til.act O' m (Algebra.TensorProduct.map (AlgHom.id O' O') f x) = Til.act O' m x := by

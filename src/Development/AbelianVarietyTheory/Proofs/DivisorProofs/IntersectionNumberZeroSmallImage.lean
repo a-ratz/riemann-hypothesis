@@ -116,7 +116,7 @@ theorem isProjOver_red {k : Type} [Field k] {X : Scheme.{0}} [Algebra k Γ(X, �
     (hp : IsProjOver (strHom k (X := X))) (Z : Closeds X) :
     letI := algebraΓAlong k (redι Z)
     IsProjOver (strHom k (X := (Scheme.IdealSheafData.vanishingIdeal Z).subscheme)) := by
-  letI := algebraΓAlong k (redι Z)
+  let := algebraΓAlong k (redι Z)
   rw [← comp_strHom (g := redι Z) fun _ => rfl]
   exact ProjSpace.isProjOver_comp_of_isClosedImmersion _ hp
 
@@ -198,7 +198,7 @@ theorem interNum_pull_eq_zero : ∀ (κ : Type) [Field κ] (e r : ℕ) (Z W : Sc
     intro Z W _ _ _ _ g hg
     exfalso
     have h0 : (0 : WithBot ℕ∞) ≤ topologicalKrullDim (closure ({g (genericPoint Z)} : Set W)) := by
-      haveI : Nonempty (IrreducibleCloseds (closure ({g (genericPoint Z)} : Set W))) :=
+      have : Nonempty (IrreducibleCloseds (closure ({g (genericPoint Z)} : Set W))) :=
         ⟨⟨closure {⟨g (genericPoint Z), subset_closure rfl⟩}, isIrreducible_singleton.closure,
           isClosed_closure⟩⟩
       exact Order.krullDim_nonneg
@@ -237,9 +237,9 @@ theorem interNum_pull_eq_zero : ∀ (κ : Type) [Field κ] (e r : ℕ) (Z W : Sc
       exact (unitAt_one w).ord_eq_zero)
     suffices h : interNumRed κ (⟨closure {w}, isClosed_closure⟩ : Closeds Z) Q = 0 by rw [h, mul_zero]
     set C : Closeds Z := ⟨closure {w}, isClosed_closure⟩ with hC
-    haveI : IsIntegral (Scheme.IdealSheafData.vanishingIdeal C).subscheme :=
+    have : IsIntegral (Scheme.IdealSheafData.vanishingIdeal C).subscheme :=
       isIntegral_red isIrreducible_singleton.closure
-    letI := algebraΓAlong κ (redι C)
+    let := algebraΓAlong κ (redι C)
     have hιw : redι C (genericPoint _) = w := redι_genericPoint w
     rw [interNumRed_def, interNumSub_def,
       interNumOn_eq_interNum_pull (k := κ) (f := redι C) (fun _ => rfl) hQ]

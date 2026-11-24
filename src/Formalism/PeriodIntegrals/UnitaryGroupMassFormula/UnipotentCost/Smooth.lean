@@ -177,7 +177,7 @@ lemma permutationMatrix_eq_permMatrix' (σ : Equiv.Perm (Fin p)) : wP σ = σ.pe
 
 private lemma det_one_add_strictLower {q : ℕ} (M : Matrix (Fin q) (Fin q) ℂ) (h : ∀ a b, a ≤ b → M a b = 0) :
     (1 + M).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · simp [h _ _ le_rfl]
   · intro i j hij
     have hij' : i < j := hij
@@ -185,7 +185,7 @@ private lemma det_one_add_strictLower {q : ℕ} (M : Matrix (Fin q) (Fin q) ℂ)
 
 private lemma det_one_add_strictUpper' {q : ℕ} (M : Matrix (Fin q) (Fin q) ℂ) (h : ∀ a b, b ≤ a → M a b = 0) :
     (1 + M).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · simp [h _ _ le_rfl]
   · intro i j hij
     have hij' : j < i := hij

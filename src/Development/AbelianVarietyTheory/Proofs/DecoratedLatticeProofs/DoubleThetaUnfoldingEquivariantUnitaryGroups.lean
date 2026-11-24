@@ -63,7 +63,7 @@ variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ}
 theorem integral_right {V : HSp D} (v : Vol V) {F : GA D V → ℂ} (hF : ∀ γ ∈ GQ V, ∀ g, F (γ * g) = F g) (a : GA D V) :
     ∫ g in v.𝓕, F (g * a) ∂v.μ = ∫ g in v.𝓕, F g ∂v.μ := by
   obtain ⟨-, -, -, _, _, -, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := v.haar
+  have := v.haar
   have := (GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V v.μ v.haar).1
   exact GlobalTheory.Mem.IntByParts.setIntegral_mul_right (GQ V) v.μ v.fund hF a
 

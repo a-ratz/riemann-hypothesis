@@ -256,8 +256,8 @@ theorem theoremS_rec
       (rowVec (Formalism.L2.SG.PairVal.vRdef D u u' (X.Fu u) (Y.what₂ u) Y.δ Y.M) κ (nc * ∏' p, alpD u u' p))
       (Formalism.L2.SG.RealObj.VtPt X u u' 1 i0 i0' (Y.FN u) (Y.FN u') νq) := hKVI
   have hRows := rowsInput_of hC hPSD hSum _ rfl (kv_nonneg hKV' hBI.1) (kv_identity_bound hKV' (pos_facts hBI.1).1.le)
-  have : CompleteSpace (Formalism.L2.SG.PackageTie.HS (X.Vpi u') (X.Vpi u)) := FiniteDimensional.complete ℂ _
-  have : CompleteSpace (Formalism.L2.SG.TermOp.H1 X u u' (Y.what₂ u) (Y.what₂ u')) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (Formalism.L2.SG.PackageTie.HS (X.Vpi u') (X.Vpi u)) := FiniteDimensional.completeSpace ℂ _
+  have : CompleteSpace (Formalism.L2.SG.TermOp.H1 X u u' (Y.what₂ u) (Y.what₂ u')) := FiniteDimensional.completeSpace ℂ _
   have hEL := Formalism.L2.SG.MassDataConc.energyLink_bCF X hb Y.hK (Y.FN u) (Y.FN u') u u' X0 ψ (Y.tO u u')
     (supDens Lsp Y.δ ϖ u u' (X.Fu u) (Y.what₂ u) / ∏' p, alpD u u' p) C Th (Formalism.L2.SG.PairVal.vRdef D u u' (X.Fu u) (Y.what₂ u) Y.δ Y.M) Q Y.M Y.δ
     i0 i0' νq _ rfl

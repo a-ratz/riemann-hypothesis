@@ -124,7 +124,7 @@ theorem exists_cartan_onb {k p q : ℕ} (G : Matrix (Fin k) (Fin k) ℂ) (h : Fo
 theorem exists_rig : ∀ (D : D7) (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)), V.SigOK →
     IsSelfDualC V Λ → ∃ r : Rig V, r.Λ = Λ ∧ r.Is := by
   intro D V Λ hV hΛ
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   have hfull : Submodule.IsFullLattice D.host.E Λ := by
     exact Formalism.IndefR.Datum.IsSelfDualC.isFullLattice V Λ hΛ
   obtain ⟨β, hβ⟩ := GlobalTheory.latticeFrame.exists_frame D.host.F D.host.E V.rank Λ hfull

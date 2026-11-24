@@ -69,7 +69,7 @@ theorem commute_of_commute_separable_of_isAlgClosed {L : Type} [Field L] [IsAlgC
     have hs : ∀ w ∈ Module.End.maxGenEigenspace f μ, ∃ c : L, c • v = w := fun w hw => by
       have h2 : Module.finrank L (Module.End.maxGenEigenspace f μ) = 1 := le_antisymm h1
         (Module.finrank_pos_iff_exists_ne_zero.2 ⟨⟨v, hv⟩, fun h => h0 (congrArg Subtype.val h)⟩)
-      obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨v, hv⟩ : Module.End.maxGenEigenspace f μ)
+      obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨v, hv⟩ : Module.End.maxGenEigenspace f μ)
         fun h => h0 (congrArg Subtype.val h)).1 h2 ⟨w, hw⟩
       exact ⟨c, congrArg Subtype.val hc⟩
     obtain ⟨c, hc⟩ := hs _ (Module.End.mapsTo_maxGenEigenspace_of_comm hfg μ hv)

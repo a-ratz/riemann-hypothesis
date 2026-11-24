@@ -466,7 +466,7 @@ theorem derivative_mem_S {e : ℕ} {f : K⟦X⟧} (hf : f ∈ S O K e) :
     · rw [Nat.factorial_succ]
       refine Nat.mul_dvd_mul_right ?_ _
       have := Nat.succ_div (a := n) (b := e)
-      rw [if_pos h] at this
+      rw [ite_eq_left h] at this
       rw [← this]
       exact Nat.div_dvd_of_dvd h
     · exact Dvd.intro_left _ rfl
@@ -532,7 +532,7 @@ theorem norm_pow_le_norm_factorial (m : ℕ) : ‖(l : K)‖ ^ m ≤ ‖(m.facto
   rw [norm_l, norm_natCast_eq l, Padic.norm_eq_zpow_neg_valuation (by
     exact_mod_cast m.factorial_ne_zero), Padic.valuation_natCast, inv_pow, zpow_neg, zpow_natCast]
   have h1 : (1 : ℝ) ≤ l := by exact_mod_cast (Fact.out : l.Prime).one_le
-  exact inv_anti₀ (by positivity) (pow_le_pow_right₀ h1 (padicValNat_factorial_le l m))
+  exact inv_anti₀ (by positivity) (pow_le_pow_right₀ h1 (multiplicity_factorial_le l m))
 
 theorem norm_factorial_le (m : ℕ) : ‖(m.factorial : K)‖ ≤ ‖(l : K)‖ ^ (m / l) := by
   rw [← norm_pow, ← Nat.cast_pow]

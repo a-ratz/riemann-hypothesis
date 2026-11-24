@@ -76,7 +76,7 @@ theorem exists_generator {LL : Type} [Field LL] {O : Type} [CommRing O] [IsDomai
     rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype, ← Set.range_comp] at h
     exact h.symm
   have hfi : Finite (Module.Free.ChooseBasisIndex O T) := hli'.finite
-  letI := Fintype.ofFinite (Module.Free.ChooseBasisIndex O T)
+  let := Fintype.ofFinite (Module.Free.ChooseBasisIndex O T)
   have hc := hli'.fintype_card_le_finrank
   rw [h1] at hc
   have hsub : Subsingleton (Module.Free.ChooseBasisIndex O T) :=
@@ -105,9 +105,9 @@ theorem lattice_rank_one {G : Type} [Group G] {LL : Type} [Field LL] {O : Type} 
     (∃ e : LL ≃ₗ[LL] V, ∀ x : LL, e x ∈ L.T ↔ x ∈ Set.range (algebraMap O LL)) ∧
     ∀ a : O, a ≠ 0 →
       Nonempty (↥(Submodule.torsionBy O (V ⧸ L.T) a) ≃ₗ[O] (O ⧸ Ideal.span {a})) := by
-  haveI := L.free
+  have := L.free
   obtain ⟨v, hv, hT⟩ := exists_generator L.T L.span h1
-  have hsurj : ∀ w : V, ∃ c : LL, c • v = w := (finrank_eq_one_iff_of_nonzero' v hv).1 h1
+  have hsurj : ∀ w : V, ∃ c : LL, c • v = w := (finrank_eq_one_iff_of_ne_zero' v hv).1 h1
   have hmem : ∀ x : LL, x • v ∈ L.T ↔ x ∈ Set.range (algebraMap O LL) := by
     intro x
     rw [hT, Submodule.mem_span_singleton]

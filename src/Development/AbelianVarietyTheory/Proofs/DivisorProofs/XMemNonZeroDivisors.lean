@@ -97,8 +97,8 @@ theorem monomial_chart : ∀ {o : Type} [CommRing o] {ζ : o} (g n : ℕ) (φ : 
     obtain ⟨k, hk⟩ := C.defin (C.e z) (by simpa using hz)
     exact ⟨k, hk⟩
   · intro k hk
-    letI := C.ψ.toAlgebra
-    haveI : Module.Flat (MvPolynomial (Fin C.m ⊕ Fin C.N) C.W) C.R := C.compl.2.2.1
+    let := C.ψ.toAlgebra
+    have : Module.Flat (MvPolynomial (Fin C.m ⊕ Fin C.N) C.W) C.R := C.compl.2.2.1
     have hreg := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := C.R) (X_mem_nonZeroDivisors C.W (Sum.inl k : Fin C.m ⊕ Fin C.N))
     apply one_ne_zero (α := C.R)
     apply hreg

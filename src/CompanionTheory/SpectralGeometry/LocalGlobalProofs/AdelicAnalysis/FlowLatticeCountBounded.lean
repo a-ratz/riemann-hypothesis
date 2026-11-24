@@ -193,7 +193,7 @@ theorem count_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
           congr 1
           have : (2 * (Module.finrank ℚ F : ℝ) * M * x) =
               ((2 * Module.finrank ℚ F * M : ℕ) : ℝ) * x := by push_cast; ring
-          rw [this, Real.exp_nat_mul, ← mul_pow]
+          rw [this, Real.exp_natCast_mul, ← mul_pow]
           congr 1
           ring
 

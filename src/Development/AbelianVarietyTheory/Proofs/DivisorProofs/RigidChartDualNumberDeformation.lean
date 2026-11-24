@@ -234,12 +234,12 @@ theorem eq_of_resG_eq_of_dense {Y : Scheme.{0}} [IsReduced Y] {U V : Y.Opens} (h
 
 theorem isKS_unique_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (RingHom.id c.F)), 1 ≤ Dw.p + Dw.q → SmoothOfRelativeDimension Dw.dim (genStr Y) → ReciprocityTheory.AnForm.R.FinalTheorems.Snc (genBdIdeal Y) → (∀ x ∈ genBd Y, IsClosed ({x} : Set (gen Y)) → HasRigidChart Y x) → ∀ (U : Y.X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(Y.X, U.1)) ⟶ Y.t.G.left)) (A : 𝓞 E → Matrix (Fin n) (Fin n) Γ(Y.X, U.1)), (∀ i, IsTanAtG Y.t (chart U) (v i)) → (∀ w, IsTanAtG Y.t (chart U) w → ∃! cf : Fin n → Γ(Y.X, U.1), IsCombAtG Y.t (chart U) v cf w) → (∀ a i, IsCombAtG Y.t (chart U) v (A a i) (v i ≫ (Y.t.act.act a).left)) → ∀ (D : logDer Y.s (Scheme.IdealSheafData.vanishingIdeal (interior Y).compl) U) (Θ Θ' : Matrix (Fin n) (Fin n) Γ(Y.X, U.1)), IsKS Y.t (interior Y) U v D.1 Θ → IsKS Y.t (interior Y) U v D.1 Θ' → Θ = Θ' := by
   intro E _ _ _ H Dw l Xo c Y _ _ _ _ U n v A hv hb hA D Θ Θ' hK hK'
-  haveI : IsReduced Y.X := GlobalTheory.Coisotropic.isReduced_of_isNormalScheme Y.normal
+  have : IsReduced Y.X := GlobalTheory.Coisotropic.isReduced_of_isNormalScheme Y.normal
   have key : ∀ {K : Type} [Field K] (x0 : Sp K ⟶ Y.X) (hU : ⊤ ≤ x0 ⁻¹ᵁ U.1), ⊤ ≤ x0 ⁻¹ᵁ interior Y →
       ∀ a b, GlobalTheory.FlagMod.ev x0 U.1 hU (Θ a b) = GlobalTheory.FlagMod.ev x0 U.1 hU (Θ' a b) := by
     intro K _ x0 hU hV a b
     obtain ⟨P₀, θm, hpb, hiso⟩ := exists_polAV_interior Y x0 hV
-    haveI : IsCommMonObj P₀.A := P₀.isAb.comm
+    have : IsCommMonObj P₀.A := P₀.isAb.comm
     have hx : spMap (GlobalTheory.FlagMod.ev x0 U.1 hU) ≫ chart U = x0 := GlobalTheory.FlagMod.spMap_ev x0 U.2 hU
     have hv' := fun i => GlobalTheory.LieMet.isTan_map (GlobalTheory.FlagMod.ev x0 U.1 hU) hx (hv i)
     have hb' := GlobalTheory.GradedPieces.basis_map (GlobalTheory.FlagMod.ev x0 U.1 hU) hx hv hb

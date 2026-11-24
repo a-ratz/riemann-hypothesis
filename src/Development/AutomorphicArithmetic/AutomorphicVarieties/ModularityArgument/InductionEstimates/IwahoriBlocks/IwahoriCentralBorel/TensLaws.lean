@@ -115,9 +115,9 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.tensLaws
     exact congrFun (prodMap_tmul X₁ X₂ φ ψ) x
   · intro F d φ ψ hF h₁ h₂
     let W : Submodule ℂ (B → ℂ) := X₂ ⊓ Submodule.span ℂ (Set.range ψ)
-    haveI : FiniteDimensional ℂ (Submodule.span ℂ (Set.range ψ)) :=
+    have : FiniteDimensional ℂ (Submodule.span ℂ (Set.range ψ)) :=
       FiniteDimensional.span_of_finite ℂ (Set.finite_range ψ)
-    haveI : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le inf_le_right
+    have : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le inf_le_right
     have hW : ∀ a, (fun b => F (a, b)) ∈ W := by
       intro a
       refine ⟨h₂ a, ?_⟩

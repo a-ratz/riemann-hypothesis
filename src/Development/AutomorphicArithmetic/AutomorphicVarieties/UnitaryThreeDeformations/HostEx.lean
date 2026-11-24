@@ -68,7 +68,7 @@ private theorem fin_above {n : ℕ} (hn : n ≠ 0) : {v : Pl | ((n : ℕ) : 𝓞
     exact_mod_cast hn
   refine (Ideal.finite_factors hI).subset ?_
   intro v hv
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]
   exact hv
 
@@ -81,7 +81,7 @@ private theorem cls_exists (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
     apply Subgroup.topologicalClosure_minimal _ _ (Subgroup.isClosed_of_isOpen _ hopen)
     apply Subgroup.normalClosure_le_normal
     intro σ hσ
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff] at hσ
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_compl_iff] at hσ
     obtain ⟨v, hv, A, hA, hσA⟩ := hσ
     have hn : ¬ A.valuation ((M : ℕ) : Ω) < 1 := by
       rw [hpl A v M hA]

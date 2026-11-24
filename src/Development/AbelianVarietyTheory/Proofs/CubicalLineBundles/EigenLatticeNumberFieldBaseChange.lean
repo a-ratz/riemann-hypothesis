@@ -117,8 +117,8 @@ theorem eigenBC_relation {K K' : Type} [Field K] [NumberField K] [Field K'] [Num
 theorem eigenBC_frame (K K' : Type) [Field K] [NumberField K] [Field K'] [NumberField K']
     [Algebra K K'] : ∃ (m : ℕ) (b : Fin m → 𝓞 K') (φ : Fin m → (𝓞 K' →ₗ[𝓞 K] 𝓞 K)),
       ∀ s, s = ∑ k, φ k s • b k := by
-  haveI : Module.FinitePresentation (𝓞 K) (𝓞 K') := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 K) (𝓞 K') := Module.Flat.projective_of_finitePresentation
+  have : Module.FinitePresentation (𝓞 K) (𝓞 K') := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 K) (𝓞 K') := Module.Flat.projective_of_finitePresentation
   obtain ⟨m, f, g, -, -, hfg⟩ := Module.Finite.exists_comp_eq_id_of_projective (𝓞 K) (𝓞 K')
   refine ⟨m, fun k => f (Pi.single k 1), fun k => (LinearMap.proj k).comp g, fun s => ?_⟩
   have := LinearMap.congr_fun hfg s
@@ -151,7 +151,7 @@ theorem eigenLattice_baseChange : ∀ (K K' O : Type) [Field K] [NumberField K] 
     | add x y _ _ hx hy => rw [Matrix.mulVec_add, hx, hy, smul_add]
     | smul s x _ hx => rw [Matrix.mulVec_smul, hx, smul_comm]
   · rintro ⟨h, he⟩
-    letI : Algebra K K' := j.toAlgebra
+    let : Algebra K K' := j.toAlgebra
     obtain ⟨m, s, g, hg⟩ := Submodule.mem_span_set'.1 h
     choose l hl hlg using fun i => (g i).2
     have hc : ∀ t, c' t = ∑ i, (s i : K') * j (l i t) := by

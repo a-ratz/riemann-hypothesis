@@ -188,7 +188,7 @@ theorem IsPrimitive.isPrimitiveRoot {ε : tateModule p R} (hε : IsPrimitive ε)
 
 theorem IsPrimitive.padicPow_iff {ε : tateModule p R} (hε : IsPrimitive ε) (a : ℤ_[p]) :
     IsPrimitive (padicPow ε a) ↔ IsUnit a := by
-  haveI : NeZero (p ^ 1) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  have : NeZero (p ^ 1) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   rw [isPrimitive_iff, seq_padicPow, Ne, (hε.isPrimitiveRoot 1).pow_eq_one_iff_dvd,
     ← ZMod.natCast_eq_zero_iff, cast_val_toZModPow, ← RingHom.mem_ker, PadicInt.ker_toZModPow,
     pow_one, ← PadicInt.maximalIdeal_eq_span_p, IsLocalRing.mem_maximalIdeal, mem_nonunits_iff,
@@ -202,7 +202,7 @@ theorem IsPrimitive.padicPow_surjective {ε : tateModule p R} (hε : IsPrimitive
     Function.Surjective (padicPow ε) := by
   intro η
   have h : ∀ n, ∃ i : ℕ, seq n ε.1 ^ i = seq n η.1 := fun n => by
-    haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+    have : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
     obtain ⟨i, -, hi⟩ := (hε.isPrimitiveRoot n).eq_pow_of_pow_eq_one (seq_pow_eq_one η n)
     exact ⟨i, hi⟩
   choose i hi using h
@@ -264,9 +264,9 @@ variable [CharZero R]
 
 variable (p R) in
 theorem exists_isPrimitive : ∃ ε : tateModule p R, IsPrimitive ε := by
-  haveI : CharZero (FractionRing R) := IsFractionRing.charZero_of_isFractionRing R
-  haveI : NeZero (p : FractionRing R) := ⟨by exact_mod_cast (Fact.out : p.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (FractionRing R) p
+  have : CharZero (FractionRing R) := IsFractionRing.charZero_of_isFractionRing R
+  have : NeZero (p : FractionRing R) := ⟨by exact_mod_cast (Fact.out : p.Prime).ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (FractionRing R) p
   obtain ⟨z, rfl⟩ := IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow (R := R)
     (Fact.out : p.Prime).pos (x := ζ) (by rw [hζ.pow_eq_one]; exact isIntegral_one)
   have hz := hζ.of_map_of_injective (IsFractionRing.injective R (FractionRing R))

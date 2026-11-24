@@ -281,8 +281,8 @@ theorem clm_eq_sum (l : (Fin k → ℝ) →L[ℝ] ℂ) : l = ∑ i, l (Pi.single
     · simp [h]
   conv_lhs => rw [← Finset.univ_sum_single v]
 
-  simp only [map_sum, e, map_smul, ContinuousLinearMap.coe_sum', Finset.sum_apply,
-  ContinuousLinearMap.coe_smul', Pi.smul_apply, coordC, ContinuousLinearMap.coe_comp, Function.comp_apply,
+  simp only [map_sum, e, map_smul, FunLike.coe_sum, Finset.sum_apply,
+  FunLike.coe_smul, Pi.smul_apply, coordC, ContinuousLinearMap.coe_comp, Function.comp_apply,
   ContinuousLinearMap.proj_apply, Complex.ofRealCLM_apply, smul_eq_mul, Complex.real_smul]
   exact Finset.sum_congr rfl fun i _ => mul_comm _ _
 
@@ -437,7 +437,7 @@ open GlobalTheory.WeilVacMove
 theorem res_smooth : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), (∀ (y y' : Mx D W.rank r) (x x' : WO V' W), symplOH V W (isoPart V W C y + midPart V V' W B x) (isoPart V W C y' + midPart V V' W B x') = symplOH V' W x x') → ∀ (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ f, IsThetaFunO ψ V W f → ∀ (k : ℕ) (L : (Fin k → ℝ) →+ WO V' W), Continuous L → (∀ t, (L t).map (finPart D) = 0) → ∀ w, ContDiff ℝ ∞ fun t => res V V' W C B μ 𝓨 f (w + L t) := by
   intro D V V' W r C B hform ψ hψ μ 𝓨 hcov f hf k L hL hL0 w
   have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) :=
+  have : IsFiniteMeasure (μ.restrict 𝓨) :=
     ⟨by rw [Measure.restrict_apply_univ, hcov.2.2]; exact ENNReal.one_lt_top⟩
   let mid : WO V' W →+ WO V W :=
     { toFun := midPart V V' W B

@@ -102,7 +102,7 @@ theorem glueMap_continuous (c : Fin r → ℂ) : Continuous (glueMap (k := k) c)
 
 theorem DomR_eq : DomR k r z z' = P.Qx5.OpR k r z z' ∩ (Prod.snd ⁻¹' Glev k r (Fin.last r)) := by
   ext x
-  simp only [DomR, P.Qx5.OpR, Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_preimage]
+  simp only [DomR, P.Qx5.OpR, Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_preimage]
   tauto
 
 theorem measurableSet_glueMap_DomR (c : Fin r → ℂ) :

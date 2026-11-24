@@ -96,7 +96,7 @@ theorem exists_det_ne_zero (B : Type) [CommRing B] [IsDomain B] [CharZero B] [Al
     | algebraMap n => rw [eq_intCast, map_intCast]; exact intCast_mem D n
     | add x y _ _ hx hy => rw [map_add]; exact add_mem hx hy
     | mul x y _ _ hx hy => rw [map_mul]; exact mul_mem hx hy
-  haveI : Algebra.FiniteType ℚ D := by
+  have : Algebra.FiniteType ℚ D := by
     rw [← Subalgebra.fg_iff_finiteType]
     have := Subalgebra.fg_adjoin_finset (R := ℚ) (s.image (algebraMap B K))
     simpa [D] using this
@@ -108,7 +108,7 @@ theorem exists_det_ne_zero (B : Type) [CommRing B] [IsDomain B] [CharZero B] [Al
     exact hf.map' g.toAddMonoidHom.toIntLinearMap (LinearMap.ker_eq_bot.mpr hg)
   have hT : LinearIndependent ℂ (fun j => (1 : ℂ) ⊗ₜ[ℚ] g (f j)) :=
     Module.Flat.linearIndependent_one_tmul hD
-  haveI : IsReduced (ℂ ⊗[ℚ] D) := isReduced_complex_tensor D
+  have : IsReduced (ℂ ⊗[ℚ] D) := isReduced_complex_tensor D
   let pt : ((ℂ ⊗[ℚ] D) →ₐ[ℂ] ℂ) → (B →+* ℂ) := fun φ =>
     (φ.toRingHom.comp (Algebra.TensorProduct.includeRight (R := ℚ) (A := ℂ) (B := D)).toRingHom).comp g
   let S : Set (Fin r → ℂ) := Set.range fun x : B →+* ℂ => fun j => x (f j)
@@ -146,6 +146,6 @@ theorem exists_det_ne_zero (B : Type) [CommRing B] [IsDomain B] [CharZero B] [Al
     have : (fun i => (Matrix.of fun i j => x i (f j)) i) = (fun v : b => (v : Fin r → ℂ)) ∘ e.symm := by
       funext i; exact hx i
     rw [this]; exact hli.comp _ e.symm.injective
-  exact ((Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_rows_iff_isUnit.mp hrows)).ne_zero
+  exact ((Matrix.isUnit_iff_isUnit_det _).mp (Matrix.linearIndependent_row_iff_isUnit.mp hrows)).ne_zero
 
 end GlobalTheory.CxPointsSep

@@ -81,7 +81,7 @@ theorem wirt_add {f g : (Φ → ℂ) → ℂ} {z : Φ → ℂ} (hf : Differentia
     (hg : DifferentiableAt ℝ g z) (τ : Φ) (b : Bool) :
     wirt τ b (f + g) z = wirt τ b f z + wirt τ b g z := by
   have h : fderiv ℝ (f + g) z = fderiv ℝ f z + fderiv ℝ g z := fderiv_add hf hg
-  simp only [wirt, h, ContinuousLinearMap.add_apply]
+  simp only [wirt, h, add_apply]
   ring
 
 theorem wirtWord_add {U : Set (Φ → ℂ)} (hU : IsOpen U) (w : List (Φ × Bool)) {f g : (Φ → ℂ) → ℂ}

@@ -100,16 +100,16 @@ theorem ratF_injective : Function.Injective (ratF E n) := fun a b h => by
   obtain ⟨w⟩ : Nonempty (HeightOneSpectrum (𝓞 E)) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 E)
     exact ⟨⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)⟩⟩
-  haveI : Nontrivial (Af E) := (pLoc E w).domain_nontrivial
+  have : Nontrivial (Af E) := (pLoc E w).domain_nontrivial
   have h' : (ratF E n a).val = (ratF E n b).val := congrArg Units.val h
   exact (algebraMap E (Af E)).injective (congrFun₂ h' i j)
 
 theorem pU_finPt (γ : UE E n) : pU (finPt γ) = ratF E n γ.1 := by
   have h : tw n (conjFin (cc E)) (ratF E n γ.1) = ratF E n γ.1 := by rw [← ratF_tw, (mem_UE _).1 γ.2]
   have e : finPt γ = sU _ h := by
-    have h1 : toSub (UA E n) (finGL E n (ratF E n γ.1)) = (sU _ h).1 := dif_pos (sU _ h).1.2
+    have h1 : toSub (UA E n) (finGL E n (ratF E n γ.1)) = (sU _ h).1 := dite_eq_left (sU _ h).1.2
     rw [finPt, h1]
-    exact dif_pos (sU _ h).2
+    exact dite_eq_left (sU _ h).2
   rw [e, pU_sU]
 
 theorem mem_ratFinU (k : finU (E := E) (n := n)) : k ∈ ratFinU E n ↔ pU k ∈ (ratF E n).range := by

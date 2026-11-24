@@ -81,10 +81,10 @@ theorem exists_countable_field {X : Scheme.{0}} {K F : Type} [CommRing K] [Count
     rw [← HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType), hφ]
     infer_instance
   have hc : Countable Γ(X, U) := by
-    letI := φ.hom.toAlgebra
-    haveI : Algebra.FiniteType K Γ(X, U) := hft
+    let := φ.hom.toAlgebra
+    have : Algebra.FiniteType K Γ(X, U) := hft
     obtain ⟨n, g, hg⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 this
-    haveI : Countable (MvPolynomial (Fin n) K) := by
+    have : Countable (MvPolynomial (Fin n) K) := by
       rw [← Cardinal.mk_le_aleph0_iff]
       exact MvPolynomial.cardinalMk_le_max.trans (max_le (max_le Cardinal.mk_le_aleph0 Cardinal.mk_le_aleph0) le_rfl)
     exact hg.countable
@@ -129,7 +129,7 @@ theorem frame_up_down {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] 
       IsEigFrame act x' (f.comp σ) v' ∧ ∀ i, (v' i).left = spMap (dualMap f) ≫ (v i).left) ∧
     ∀ v' : Fin n → (epsAt x' ⟶ G), IsEigFrame act x' (f.comp σ) v' →
       ∃ v : Fin n → (epsAt x ⟶ G), IsEigFrame act x σ v := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   subst hx
   obtain ⟨V, _, _, ⟨M⟩⟩ := lieModel_exists S G F x
   obtain ⟨T, _, _, _, _, M', j, hl, hj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagFib.lieModel_liftBaseChange S G F F' x V M
@@ -149,7 +149,7 @@ theorem frame_up_down {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] 
   · choose u' hu' using fun i => M'.onto (v' i) (h.1 i).1
     obtain rfl : (fun k => M'.pt (u' k)) = v' := funext hu'
     obtain ⟨hli', hsp'⟩ := (frame_iff M' act ρ' _ hρ' u').1 h
-    haveI : Module.Finite F V := (LieProj.lie_finite_projective_baseChange S G F x V M).1
+    have : Module.Finite F V := (LieProj.lie_finite_projective_baseChange S G F x V M).1
     let b := Module.finBasis F (eigSp ρ σ)
     have hli : LinearIndependent F fun i => (b i : V) :=
       b.linearIndependent.map' (eigSp ρ σ).subtype (Submodule.ker_subtype _)
@@ -172,11 +172,11 @@ open PositivityTheory.Xgn.FramedPointSpecialization in
 theorem PositivityTheory.Xgn.framed_point_specialization : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (U : Set (Xo.XF c)) (τ : E →+* ℂ) (F : Type) [Field F] (β : c.F →+* F) (y : Sp F ⟶ Xo.XF c) (v : Vecs y D.p) (w : Vecs y D.q), IsFramed U τ β y v w → ∃ (k : Type) (_ : Field k) (β₀ : c.F →+* k) (y₀ : Sp k ⟶ Xo.XF c) (v₀ : Vecs y₀ D.p) (w₀ : Vecs y₀ D.q) (f : k →+* F) (j : k →+* ℂ), IsFramed U τ β₀ y₀ v₀ w₀ ∧ f.comp β₀ = β ∧ j.comp β₀ = algebraMap c.F ℂ ∧ y = spMap f ≫ y₀ ∧ ∀ (F' : Type) [Field F'] (f' : k →+* F'), ∃ (v' : Vecs (spMap f' ≫ y₀) D.p) (w' : Vecs (spMap f' ≫ y₀) D.q), IsFramed U τ (f'.comp β₀) (spMap f' ≫ y₀) v' w' ∧ (∀ a, (v' a).left = spMap (dualMap f') ≫ (v₀ a).left) ∧ ∀ b, (w' b).left = spMap (dualMap f') ≫ (w₀ b).left := by
   intro E _ _ _ H D l Xo c U τ F _ β y v w h
   obtain ⟨hβ, hU, hv, hw⟩ := h
-  haveI := c.fin
-  haveI : Countable c.F := Countable.of_equiv _ (Module.finBasis ℚ c.F).equivFun.toEquiv.symm
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
-  haveI := Xo.univ.t.semi.smooth
+  have := c.fin
+  have : Countable c.F := Countable.of_equiv _ (Module.finBasis ℚ c.F).equivFun.toEquiv.symm
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
+  have := Xo.univ.t.semi.smooth
   obtain ⟨k, _, _, f, y₀, rfl⟩ :=
     exists_countable_field (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) y
   obtain ⟨b₀, hb₀⟩ := Spec.map_surjective (y₀ ≫ pullback.snd _ _)

@@ -60,7 +60,7 @@ namespace GlobalTheory
 theorem ringHom_flat_of_injective_of_isUnit {T A B : Type*} [CommRing T] [IsDomain T] [IsBezout T]
     [CommRing A] [CommRing B] (φ : T →+* A) (ψ : A →+* B) (hψ : Function.Injective ψ)
     (h : ∀ t : T, t ≠ 0 → IsUnit (ψ (φ t))) : φ.Flat := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   change Module.Flat T A
   rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
   rintro a ⟨⟨t, ht⟩, hta⟩

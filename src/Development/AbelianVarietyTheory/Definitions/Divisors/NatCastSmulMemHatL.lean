@@ -83,9 +83,9 @@ theorem eventually_cong_mat {F E : Type} [Field F] [NumberField F] [Field E] [Nu
     {φ : X → GL (Fin n) (Af F ⊗[F] E)} (hf : Continuous φ) (h₀ : φ x₀ = 1) :
     ∀ᶠ κ in 𝓝 x₀, ∃ z : Matrix (Fin n) (Fin n) (E ⊗[F] Af F), (∀ i j, z i j ∈ Formalism.L2.Herm.intAf F E) ∧
       (β⁻¹ * Formalism.UG.bc (GlobalTheory.Mass.swapTens F E (Af F) : _ →+* _) (φ κ) * β).1 - 1 = N • z := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   have ho := (GlobalTheory.Mass.intTens_open_compact F E).1
   set s := GlobalTheory.Mass.swapTens F E (Af F)
   let β' : GL (Fin n) (Af F ⊗[F] E) := Formalism.UG.bc (s.symm : _ →+* _) β
@@ -142,7 +142,7 @@ theorem congLev_open_compact (V : HSp D) {Λ : Submodule (𝓞 D.host.E) (Fin V.
   obtain ⟨β, hβ⟩ := frame_exists_alt D.host.F D.host.E V.rank Λ hΛ
   have ho : IsOpen (((congLev D.sp.cm V.gram Λ 𝔪).comap (finE V) : Subgroup (GA D V)) : Set (GA D V)) := by
     obtain ⟨π, hπ, -⟩ := GlobalTheory.Mass.existsUnique_isFinProj D.sp.cm.sig V.gram
-    have hf : Continuous (finHom V) := (continuous_subtype_val.comp hπ.continuous).congr fun κ => hπ κ
+    have hf : Continuous (finHom V) := (continuous_subtypeVal.comp hπ.continuous).congr fun κ => hπ κ
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_
     filter_upwards [GlobalTheory.ThetaIntegrand.eventually_princ V β ∅,
       eventually_cong_mat β (Ideal.absNorm_eq_zero_iff.not.2 h𝔪) hf (map_one _)] with κ ⟨h1, h2, _⟩ ⟨z, hz, e⟩

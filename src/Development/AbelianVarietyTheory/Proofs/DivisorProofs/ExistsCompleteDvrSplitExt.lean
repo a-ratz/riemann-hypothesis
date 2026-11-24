@@ -58,7 +58,7 @@ theorem exists_complete_dvr_split_ext : ∀ (V : Type) [CommRing V] [IsDomain V]
       ∃ E : SplitExt (Sp (IsLocalRing.ResidueField W)),
         E.IsGt ((Over.pullback (spMap (IsLocalRing.residue W))).obj ((Over.pullback (spMap g)).obj G)) := by
   intro V _ _ _ _ hcV G _ hG
-  haveI := hcV
+  have := hcV
   let F := AlgebraicClosure (FractionRing V)
   have : Algebra.IsAlgebraic V F :=
     (IsFractionRing.comap_isAlgebraic_iff (A := V) (K := FractionRing V) (C := F)).2 inferInstance

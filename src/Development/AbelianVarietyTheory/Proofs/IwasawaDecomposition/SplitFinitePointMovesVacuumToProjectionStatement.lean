@@ -207,7 +207,7 @@ theorem step (C : Ctx S T) {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D
     rw [h0, Nat.cast_zero, zero_mul] at this
     exact zero_ne_one this
   have : ((tens Λ L).addSubgroupOf (tens Λ₁ L)).FiniteIndex := ⟨hidx⟩
-  haveI := Fintype.ofFinite (tens Λ₁ L ⧸ (tens Λ L).addSubgroupOf (tens Λ₁ L))
+  have := Fintype.ofFinite (tens Λ₁ L ⧸ (tens Λ L).addSubgroupOf (tens Λ₁ L))
   obtain ⟨R, hR, hRu⟩ := exists_reps (tens Λ L) (fun z => z ∈ tens Λ₁ L) Finset.univ
     (fun q : tens Λ₁ L ⧸ (tens Λ L).addSubgroupOf (tens Λ₁ L) => (q.out : Matrix (Fin S.rank) (Fin T.rank) D.host.E))
     fun z hz => ⟨QuotientAddGroup.mk ⟨z, hz⟩, Finset.mem_univ _,

@@ -124,7 +124,7 @@ theorem local_descent_holds : LocStep (k := k) := by
   classical
   unfold LocStep Kills
   intro m Z hCR ξ hsupp hinv hfib f hf
-  haveI : NonarchimedeanRing k := by
+  have : NonarchimedeanRing k := by
     convert! (ValuativeRel.nonarchimedeanRing k)
     exact Valuation.toTopologicalSpace_eq _
   have hbasis : TopologicalSpace.IsTopologicalBasis
@@ -145,12 +145,12 @@ theorem local_descent_holds : LocStep (k := k) := by
     have hfJ : f ∈ Submodule.span ℂ A := by
       rcases hfib y with ⟨c, hcZ, hc⟩ | hB
       · refine Submodule.subset_span ?_
-        rw [hA, Set.mem_setOf_eq]
+        rw [hA, mem_ofPred_eq]
         refine Or.inr ⟨hfS, fun p hp => ?_⟩
         by_contra hne
         have hpU := hfsub (Function.mem_support.mpr hne)
         have hZN : p.1 ∈ ZN Z := by
-          simp only [ZN, Set.mem_setOf_eq]
+          simp only [ZN, mem_ofPred_eq]
           exact ⟨c, hcZ, hc p.1 hp.1.1 hp.1.2⟩
         exact (show p.1 ∉ ZN Z from hpU.2) hZN
       · by_contra hnot
@@ -163,10 +163,10 @@ theorem local_descent_holds : LocStep (k := k) := by
         apply hlf
         refine hB l ?_ ?_ f ((mem_iff_lemma _ _).2 ⟨⟨hflc, hfcs⟩, fun p hp => (hfsub hp).1⟩)
         · intro F hF hvan
-          exact hz F (Submodule.subset_span (by rw [hA, Set.mem_setOf_eq]; exact Or.inr ⟨hF, hvan⟩))
+          exact hz F (Submodule.subset_span (by rw [hA, mem_ofPred_eq]; exact Or.inr ⟨hF, hvan⟩))
         · intro g hg F hF
           have h1 := hz _ (Submodule.subset_span
-            (by rw [hA, Set.mem_setOf_eq]; exact Or.inl ⟨g, hg, F, hF, rfl⟩))
+            (by rw [hA, mem_ofPred_eq]; exact Or.inl ⟨g, hg, F, hF, rfl⟩))
           rw [map_sub, sub_eq_zero] at h1
           exact h1.symm
     have hP : ∀ F ∈ Submodule.span ℂ A, ∃ O : Set (Fin (2 * m + 1) × Fin (Module.finrank k Z) → k),
@@ -174,7 +174,7 @@ theorem local_descent_holds : LocStep (k := k) := by
       intro F hF
       induction hF using Submodule.span_induction with
       | mem F hF =>
-        rw [hA, Set.mem_setOf_eq] at hF
+        rw [hA, mem_ofPred_eq] at hF
         rcases hF with ⟨g, hg, h, hh, rfl⟩ | ⟨hrS, hvan⟩
         · refine ⟨univ, isOpen_univ, mem_univ _, fun W hW _ => ?_⟩
           have hqa : ∀ p, q (act g p) = q p := by

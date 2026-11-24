@@ -162,7 +162,7 @@ theorem szRow_band_lambda_primes :
       exact_mod_cast this
     have hk5' : (D.R.k : ℝ) ≤ 2 * L.sc.x ^ (5 : ℕ) := by exact_mod_cast hk5
     have e9 : Real.exp (9 * L.sc.L) = L.sc.b ^ 9 := by
-      unfold Scale.b; rw [← Real.exp_nat_mul]; norm_num
+      unfold Scale.b; rw [← Real.exp_natCast_mul]; norm_num
     calc ((D.host.g j : ℕ) : ℝ) ≤ 2 * ((D.R.k : ℝ) * L.sc.b) ^ 8 := (hg j).2
       _ ≤ 2 * ((2 * L.sc.x ^ (5 : ℕ)) * L.sc.b) ^ 8 := by gcongr
       _ = 512 * L.sc.x ^ 40 * L.sc.b ^ 8 := by ring
@@ -200,7 +200,7 @@ private theorem exists_mul_pow_le_exp_half_rpow (eps K : ℝ) (N : ℕ) (heps : 
   simp only [zero_mul, add_zero] at hlog
   calc K * x ^ N ≤ x * x ^ N := mul_le_mul_of_nonneg_right hxK (by positivity)
     _ = Real.exp (((N : ℝ) + 1) * Real.log x) := by
-        rw [show ((N : ℝ) + 1) = ((N + 1 : ℕ) : ℝ) by push_cast; ring, Real.exp_nat_mul, Real.exp_log hxpos]
+        rw [show ((N : ℝ) + 1) = ((N + 1 : ℕ) : ℝ) by push_cast; ring, Real.exp_natCast_mul, Real.exp_log hxpos]
         ring
     _ ≤ Real.exp (x ^ eps / 2) := by
         apply Real.exp_le_exp.mpr

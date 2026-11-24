@@ -156,7 +156,7 @@ theorem int_chart_loc (ψ : α → ℂ) (hψ : ∀ ξ, ‖ψ ξ‖ ≤ 1) (hψm 
       have h1 := (hasFDeriv_chart hg0 (hckw ξ w 1 (by omega)) (hΩ hY')).const_smul (ψ ξ)
       refine h1.congr_fderiv ?_
       ext1 W
-      simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.coe_sum', Finset.sum_apply,
+      simp only [smul_apply, FunLike.coe_sum, Finset.sum_apply,
         ContinuousLinearMap.smulRight_apply, Finset.smul_sum]
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [smul_comm]

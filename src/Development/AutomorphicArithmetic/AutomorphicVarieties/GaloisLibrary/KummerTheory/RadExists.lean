@@ -91,9 +91,9 @@ theorem UpperTheory.Reformulated.B.HilbertNinetyCapelliIdentities.h90 :
     have : f h = 1 := hLU hh
     rw [hc, this, map_one, mul_one]
   have hopen : IsOpen (L.fixingSubgroup : Set Gal(Ω/K)) := L.fixingSubgroup_isOpen
-  haveI : Finite (Gal(Ω/K) ⧸ L.fixingSubgroup) :=
+  have : Finite (Gal(Ω/K) ⧸ L.fixingSubgroup) :=
     Subgroup.quotient_finite_of_isOpen _ hopen
-  letI : Fintype (Gal(Ω/K) ⧸ L.fixingSubgroup) := Fintype.ofFinite _
+  let : Fintype (Gal(Ω/K) ⧸ L.fixingSubgroup) := Fintype.ofFinite _
   let χ : (Gal(Ω/K) ⧸ L.fixingSubgroup) → (L →* Ω) := fun q =>
     ((q.out : Gal(Ω/K)) : Ω →* Ω).comp (L.val : L →* Ω)
   have hχ : ∀ q (x : L), χ q x = (q.out : Gal(Ω/K)) (x : Ω) := fun q x => rfl
@@ -160,7 +160,7 @@ theorem UpperTheory.V.Kum.radExists :
     (hz.comp fun x : ZMod n => ζ ^ x.val) (fun g => pow_ne_zero _ hζ0) (fun g h => by
       show ζ ^ (z (g * h)).val = ζ ^ (z g).val * g (ζ ^ (z h).val)
       rw [hc, ZMod.val_add, hmod, pow_add, ZMod.val_mul, hmod, map_pow, hη, ← pow_mul])
-  haveI : IsGalois K Ω := {}
+  have : IsGalois K Ω := {}
   have hfix : ∀ g : Ω ≃ₐ[K] Ω, g (β ^ n) = β ^ n := fun g => by
     rw [map_pow, hβ g, mul_pow, ← pow_mul, mul_comm _ n, pow_mul, hζ.pow_eq_one, one_pow, one_mul]
   obtain ⟨a, ha⟩ := (InfiniteGalois.mem_range_algebraMap_iff_fixed (β ^ n)).2 hfix

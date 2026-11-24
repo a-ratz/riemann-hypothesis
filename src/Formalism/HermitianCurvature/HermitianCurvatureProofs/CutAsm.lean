@@ -165,9 +165,9 @@ theorem actA_one (P : M.Par) (x : M.Ty P → MA.SmQ P.r P.TT) : MA.actA P 1 x = 
   classical
   funext π
   simp only [Formalism.FourierDecayAlt.MA.actA, Matrix.one_apply]
-  erw [Finset.sum_eq_single π (fun b _ hb => by simp only [if_neg (Ne.symm hb)]; rfl)
+  erw [Finset.sum_eq_single π (fun b _ hb => by simp only [ite_eq_right (Ne.symm hb)]; rfl)
     (fun h => absurd (Finset.mem_univ π) h)]
-  simp only [if_pos rfl]
+  simp only [ite_eq_left rfl]
   rfl
 
 theorem initial_coefficient_of_start_matrix (P : M.Par) (l : ℕ) (Y : ℂ) :

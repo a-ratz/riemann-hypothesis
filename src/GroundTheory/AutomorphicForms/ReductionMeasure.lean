@@ -150,7 +150,7 @@ theorem measure_lt_top_of_forall_mem {n : ℕ} (μ : Measure (AdelicGLn.AdelicGL
     _ = Measure.map e μ T := hmap
     _ = (c • ρ) T := by rw [← heq]
     _ < ⊤ := by
-      rw [Measure.smul_apply, hρT, ENNReal.smul_def, smul_eq_mul]
+      rw [smul_apply, hρT, ENNReal.smul_def, smul_eq_mul]
       exact ENNReal.mul_lt_top ENNReal.coe_lt_top (ENNReal.mul_lt_top
         (ENNReal.prod_lt_top fun w _ => hS w) hF.measure_lt_top)
 

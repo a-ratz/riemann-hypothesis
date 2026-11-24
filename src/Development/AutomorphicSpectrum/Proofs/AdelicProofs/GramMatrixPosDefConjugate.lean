@@ -83,7 +83,7 @@ private theorem flat_complex_at {L : Type} [Field L] [NumberField L] (σ : L →
 private theorem linear_independent_one_tmul {L : Type} [Field L] [NumberField L] (B : HermitianBundle.{0} L)
     (σ : L →+* ℂ) {i : ℕ} (f : Fin i → B.carrier) (hf : LinearIndependent (𝓞 L) f) :
     LinearIndependent ℂ (fun a => ((1 : ComplexAt σ) ⊗ₜ[𝓞 L] f a : Fibre σ B.carrier)) := by
-  haveI := flat_complex_at σ
+  have := flat_complex_at σ
   have hinj := Module.Flat.lTensor_preserves_injective_linearMap (M := ComplexAt σ)
     (Finsupp.linearCombination (𝓞 L) f) hf
   rw [Fintype.linearIndependent_iff]
@@ -106,7 +106,7 @@ private theorem linear_independent_one_tmul {L : Type} [Field L] [NumberField L]
 
   simp only [hT, map_sum, LinearMap.lTensor_tmul, Finsupp.lapply_apply, TensorProduct.rid_tmul,
   Finsupp.single_apply, map_zero, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-  Finset.sum_ite_eq, Finset.mem_univ, if_true] at h3
+  Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h3
   exact (ComplexAt.ofComplex σ).injective (h3.trans (map_zero _).symm)
 
 theorem gramMat_posDef_and_conj : ∀ (L : Type) [Field L] [NumberField L] (B : HermitianBundle.{0} L)

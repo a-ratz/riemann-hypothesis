@@ -49,7 +49,7 @@ theorem UpperTheory.V.Sd.Wc.hkReps :
     UpperTheory.V.Sd.UopSum → UpperTheory.V.Sd.Wc.HkReps := by
   intro hU F _ _ w c
   classical
-  haveI : Fintype (ResidueField (HeightOneSpectrum.adicCompletionIntegers F w)) := Fintype.ofFinite _
+  have : Fintype (ResidueField (HeightOneSpectrum.adicCompletionIntegers F w)) := Fintype.ofFinite _
   let sec := Function.surjInv (residue_surjective (R := HeightOneSpectrum.adicCompletionIntegers F w))
   have hsec : ∀ r, residue _ (sec r) = r :=
     Function.surjInv_eq (residue_surjective (R := HeightOneSpectrum.adicCompletionIntegers F w))
@@ -78,10 +78,10 @@ theorem UpperTheory.V.Sd.Wc.hkReps :
     intro V _ _ ρ x hx
     obtain ⟨h1, h2⟩ := hU F w V ρ c x hx
     refine ⟨h1, ?_⟩
-    rw [h2 S hS, if_pos hc, Fin.sum_univ_succ, hsum, Fin.cons_zero, add_comm]
+    rw [h2 S hS, ite_eq_left hc, Fin.sum_univ_succ, hsum, Fin.cons_zero, add_comm]
     simp only [Fin.cons_succ]
   · refine ⟨S.card, b, fun _ i => ⟨(e i : HeightOneSpectrum.adicCompletionIntegers F w), rfl⟩, ?_⟩
     intro V _ _ ρ x hx
     obtain ⟨h1, h2⟩ := hU F w V ρ c x hx
     refine ⟨h1, ?_⟩
-    rw [h2 S hS, if_neg hc, add_zero, hsum]
+    rw [h2 S hS, ite_eq_right hc, add_zero, hsum]

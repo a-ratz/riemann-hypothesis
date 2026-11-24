@@ -134,7 +134,7 @@ namespace GlobalTheory.BSP.GaussMul
 theorem norm_mul_disc (l : ℕ) [hl : Fact l.Prime] (K : FinExt l) (bk : BK K) (ρ : ℝ≥0) (hρ0 : 0 < ρ)
     (hρ1 : ρ < 1) (x y : bk.DS ρ) : ‖x * y‖ = ‖x‖ * ‖y‖ := by
   obtain ⟨a, ha1, ha2, ha3, ha4⟩ := _root_.GlobalTheory.BSP.DiscSer.exists_coeff_disc l K bk ρ hρ0 hρ1
-  haveI : IsUltrametricDist (Disc l (0 : Wq l bk.a) 1) := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l (Wq l bk.a) 0 1).1
+  have : IsUltrametricDist (Disc l (0 : Wq l bk.a) 1) := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l (Wq l bk.a) 0 1).1
   have hm0 := (_root_.GlobalTheory.BSP.disc_zero_one l K bk).1
   have hρ : (0 : ℝ) < ρ := NNReal.coe_pos.2 hρ0
 
@@ -186,7 +186,7 @@ theorem norm_mul_disc (l : ℕ) [hl : Fact l.Prime] (K : FinExt l) (bk : BK K) (
       rw [← hs, ← ht, pow_add]; ring
     have h1 := hlpow (n + m) (ofPre l (X : bk.S) ρ p * ofPre l (X : bk.S) ρ q)
     rw [e, step1, ← hs, ← ht, hlpow, hlpow, pow_add, div_mul_div_comm] at h1
-    exact ((div_left_inj' (by positivity)).1 h1).symm
+    exact ((div_left_inj₀ (by positivity)).1 h1).symm
   exact (denseRange_ofPre l (X : bk.S) ρ).induction_on₂ (p := fun x y : bk.DS ρ => ‖x * y‖ = ‖x‖ * ‖y‖)
     (isClosed_eq (continuous_norm.comp (continuous_fst.mul continuous_snd))
       ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd))) step2 x y

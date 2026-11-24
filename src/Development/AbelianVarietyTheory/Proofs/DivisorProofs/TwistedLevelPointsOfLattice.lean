@@ -180,7 +180,7 @@ def tF (a b : D.toPre.X) : (FractionRing T.V)ˣ := GlobalTheory.ArcBuild.piK hϖ
 
 include oD in
 theorem isScalarForm_tF : letI := H.starRing; IsScalarForm (𝓞 E) (tF D hϖ) := by
-  letI := H.starRing
+  let := H.starRing
   refine ⟨fun a b b' => ?_, fun a b => ?_, fun x a b => ?_⟩
   · simp only [tF, map_add (f := _), neg_add, zpow_add]
   · rw [tF, tF, beF_symm]
@@ -203,7 +203,7 @@ def rF (k : ℕ) (a b : D.toPre.X) : (FractionRing T.V)ˣ := GlobalTheory.ArcBui
 include oD in
 theorem isRootForm_rF {k : ℕ} (hk : ∀ a b, (k : ℤ) ∣ beF D hϖ a b) :
     letI := H.starRing; IsRootForm (𝓞 E) k (tF D hϖ) (rF D hϖ k) := by
-  letI := H.starRing
+  let := H.starRing
   refine ⟨⟨fun a b b' => ?_, fun a b => ?_, fun x a b => ?_⟩, fun a b => ?_⟩
   · simp only [rF, map_add (f := _)]
     rw [Int.add_ediv_of_dvd_left (hk a b), neg_add, zpow_add]

@@ -172,7 +172,7 @@ theorem card_norm (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : �
         have : Unique {x : V // h x x = 0} :=
           ⟨⟨⟨0, h00⟩⟩, fun y => Subtype.ext (Subsingleton.elim _ _)⟩
         exact Nat.card_unique
-      rw [hcard, if_pos rfl, Nat.cast_one]
+      rw [hcard, ite_eq_left rfl, Nat.cast_one]
       have hqq : (q : ℝ) * (q : ℝ)⁻¹ = 1 := mul_inv_cancel₀ hQ
       linear_combination -hqq
     · have hcard : Nat.card {x : V // h x x = c} = 0 := by
@@ -182,12 +182,12 @@ theorem card_norm (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : �
             rw [Subsingleton.elim y.1 0, h00] at hy
             exact hy.symm)⟩
         exact Nat.card_of_isEmpty
-      rw [hcard, if_neg hc0, Nat.cast_zero]
+      rw [hcard, ite_eq_right hc0, Nat.cast_zero]
       ring
   | succ m ih =>
     intro V i1 i2 i3 h hh hm c hc
     have hs := hh.toIsSq
-    haveI : Nontrivial V := Module.nontrivial_of_finrank_pos (R := K) (by omega)
+    have : Nontrivial V := Module.nontrivial_of_finrank_pos (R := K) (by omega)
     obtain ⟨x, hx⟩ := exists_ne (0 : V)
     obtain ⟨e, he⟩ := exists_aniso h2 hh x hx
     have hW := perp_isHS hh e he
@@ -257,7 +257,7 @@ theorem card_diag (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : �
     intro m ham V i1 i2 i3 h hh hm d hd hd0
     have hs := hh.toIsSq
     have : Finite V := Module.finite_of_finite K
-    letI : Fintype V := Fintype.ofFinite V
+    let : Fintype V := Fintype.ofFinite V
     have hfibEq : ∀ y : V, Nat.card {Z : Fin a → V // (∀ i, h y (Z i) = 0) ∧
           ∀ i j, h (Z i) (Z j) = if i = j then d i.succ else 0} =
         Nat.card {W : Fin a → perp hs y //
@@ -285,8 +285,8 @@ theorem card_diag (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : �
     let E : {Y : Fin (a + 1) → V // ∀ i j, h (Y i) (Y j) = if i = j then d i else 0} ≃
         Σ y : {y : V // h y y = d 0}, {Z : Fin a → V // (∀ i, h y.1 (Z i) = 0) ∧
           ∀ i j, h (Z i) (Z j) = if i = j then d i.succ else 0} :=
-      { toFun := fun Y => ⟨⟨Y.1 0, (Y.2 0 0).trans (if_pos rfl)⟩,
-          ⟨fun i => Y.1 i.succ, fun i => (Y.2 0 i.succ).trans (if_neg (Fin.succ_ne_zero i).symm),
+      { toFun := fun Y => ⟨⟨Y.1 0, (Y.2 0 0).trans (ite_eq_left rfl)⟩,
+          ⟨fun i => Y.1 i.succ, fun i => (Y.2 0 i.succ).trans (ite_eq_right (Fin.succ_ne_zero i).symm),
             fun i j => (Y.2 i.succ j.succ).trans (by simp only [Fin.succ_inj])⟩⟩
         invFun := fun p => ⟨(Fin.cons p.1.1 p.2.1 : Fin (a + 1) → V), by
           intro i j
@@ -299,7 +299,7 @@ theorem card_diag (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : �
             induction j using Fin.cases with
             | zero =>
               simp only [Fin.cons_zero, Fin.cons_succ]
-              rw [if_neg (Fin.succ_ne_zero i), hs.herm, p.2.2.1 i, map_zero]
+              rw [ite_eq_right (Fin.succ_ne_zero i), hs.herm, p.2.2.1 i, map_zero]
             | succ j => simpa [Fin.succ_inj] using p.2.2.2 i j⟩
         left_inv := fun Y => Subtype.ext (Fin.cons_self_tail Y.1)
         right_inv := by
@@ -309,7 +309,7 @@ theorem card_diag (q : ℕ) (hq0 : 0 < q) (hK : Fintype.card K = q ^ 2) (hσ : �
           simp }
     have hN0 : (Nat.card {y : V // h y y = d 0} : ℝ) =
         (q : ℝ) ^ (2 * m - 1) - (-1) ^ m * (q : ℝ) ^ (m - 1) := by
-      rw [card_norm q hq0 hK hσ h2 hN m V h hh hm (d 0) (hd 0), if_neg (hd0 0),
+      rw [card_norm q hq0 hK hσ h2 hN m V h hh hm (d 0) (hd 0), ite_eq_right (hd0 0),
         show (2 * (m : ℤ) - 1) = ((2 * m - 1 : ℕ) : ℤ) by omega,
         show ((m : ℤ) - 1) = ((m - 1 : ℕ) : ℤ) by omega, zpow_natCast, zpow_natCast]
       ring
@@ -434,8 +434,8 @@ private theorem add_pow_card_eq_add_pow_card (a b : K) :
     (a + b) ^ Fintype.card k = a ^ Fintype.card k + b ^ Fintype.card k := by
   obtain ⟨p, hp⟩ := CharP.exists k
   obtain ⟨n, hprime, hn⟩ := FiniteField.card k p
-  haveI : Fact p.Prime := ⟨hprime⟩
-  haveI : CharP K p := charP_of_injective_algebraMap (algebraMap k K).injective p
+  have : Fact p.Prime := ⟨hprime⟩
+  have : CharP K p := charP_of_injective_algebraMap (algebraMap k K).injective p
   rw [hn]
   exact add_pow_char_pow a b p (n : ℕ)
 
@@ -476,10 +476,10 @@ end field
 theorem fFInert_holds : FFInert := by
   intro k K _ _ _ _ σ hσ hrank hne h2k M a haM J hJ hJdet T hT hTdet
   classical
-  haveI : Module.Finite k K := Module.finite_of_finrank_eq_succ hrank
-  haveI : Finite K := Module.finite_of_finite k
-  letI : Fintype k := Fintype.ofFinite k
-  letI : Fintype K := Fintype.ofFinite K
+  have : Module.Finite k K := Module.finite_of_finrank_eq_succ hrank
+  have : Finite K := Module.finite_of_finite k
+  let : Fintype k := Fintype.ofFinite k
+  let : Fintype K := Fintype.ofFinite K
   have hfrob := frob_of_ne σ hrank hne
   have hσr : ∀ x, (σ : K →+* K) ((σ : K →+* K) x) = x := fun x => hσ x
   have h2K : (2 : K) ≠ 0 := by
@@ -976,7 +976,7 @@ theorem fFCount_of (hS : FFSplit) (hI : FFInert) : FFCount := by
   have hq0 : (Nat.card k : ℝ) ≠ 0 := by linarith
   have haM : a ≤ M := by omega
   rcases hσ.2 with ⟨hF, hrank, hne⟩ | ⟨e, he⟩
-  · letI : Field K := hF.toField
+  · let : Field K := hF.toField
     have hc := hI k K σ hσ.1 hrank hne h2 M a haM J hJ hJd T hT hTd
     rw [hc, FiniteFieldCounting.inert_ratio M a haM _ hq0]
     exact FiniteFieldCounting.ratio_bound M a haM _ hq1 _ (fun j => FiniteFieldCounting.inert_delta M a ha _ hq1 j)

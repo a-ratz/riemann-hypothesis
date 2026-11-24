@@ -56,7 +56,7 @@ theorem continuous_sLoc_spl (v : Pl E) : Continuous (sLoc E v) := by
   let f : v.adicCompletion E → RestrictedProduct (fun u : Pl E => u.adicCompletion E)
       (fun u => (u.adicCompletionIntegers E : Set (u.adicCompletion E))) (Filter.principal {v}ᶜ) :=
     fun a => ⟨Pi.single v a, fun u hu => by
-      rw [Set.mem_setOf_eq, Pi.single_eq_of_ne hu]; exact zero_mem _⟩
+      rw [Set.mem_ofPred_eq, Pi.single_eq_of_ne hu]; exact zero_mem _⟩
   have hf : Continuous f := RestrictedProduct.continuous_rng_of_principal.2 (continuous_single v)
   exact (RestrictedProduct.continuous_inclusion hS).comp hf
 

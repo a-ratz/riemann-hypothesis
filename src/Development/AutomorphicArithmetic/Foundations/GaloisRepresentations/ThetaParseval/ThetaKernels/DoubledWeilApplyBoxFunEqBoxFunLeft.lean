@@ -212,7 +212,7 @@ theorem exists_isThetaFunOF_ne_zero_k : ∀ (F E : Type) [Field F] [NumberField 
     apply ((B.emb w).1 : E →+* ℂ).injective
     rw [hB.cm.2.2.2, hB.cm.2.2.2, star_star]
   have h2 : Module.finrank F E = 2 := hB.cm.2.2.1
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [h2]; norm_num)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [h2]; norm_num)
   let JA : Matrix (Fin nT) (Fin nT) E := JTᵀ
   let JB : Matrix (Fin nS) (Fin nS) E := -(ξ₀ • JS⁻¹)
   have hSinv := herm_inv_entry σ JS hS.1 (Ne.isUnit hS.2)
@@ -381,7 +381,7 @@ theorem exists_vac_split_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     refine y.2.2 _ (nsmul_mem (hGX' g hg) N) ?_
     rw [hm, mul_nsmul]
     exact heisOF_nsmul_fix he' (nsmul_mem (hGX' g hg) _) (hNg g hg) m
-  haveI : Finite (YK ⧸ Q) := by
+  have : Finite (YK ⧸ Q) := by
     let S := (Polynomial.nthRoots N (1 : ℂ)).toFinset
     refine Finite.of_injective (β := G → S) (fun a g => ⟨commF σ JS JT ξ₀ B.ψ g (Quotient.out a : YK), ?_⟩) ?_
     · rw [Multiset.mem_toFinset, Polynomial.mem_nthRoots hN0]

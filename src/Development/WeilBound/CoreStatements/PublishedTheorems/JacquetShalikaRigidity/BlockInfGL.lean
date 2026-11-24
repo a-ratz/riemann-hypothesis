@@ -126,8 +126,8 @@ theorem infinite_place_step_of : jumpWindows.S7 → jumpWindows.MirabolicColumnB
         have hy' := (key y).1 hy
         have hc : ∀ φ : XB E k, Rt E k (fl k w u) (Rt E k (infGL E k g) φ) =
             Rt E k (infGL E k g) (Rt E k (fl k w u) φ) := fun φ => by
-          rw [← ContinuousLinearMap.mul_apply, ← map_mul, hcomm _ (hcIf w u), map_mul,
-            ContinuousLinearMap.mul_apply]
+          rw [← mul_apply_eq_comp, ← map_mul, hcomm _ (hcIf w u), map_mul,
+            mul_apply_eq_comp]
         show Rt E k (fl k w u) (J (ρ (infGL E k g) y)) = J (ρ (infGL E k g) y)
         rw [hW.inter, hc, hy'])
       (LinearMap.mem_ker.2 ((key x).2 hu'))).1

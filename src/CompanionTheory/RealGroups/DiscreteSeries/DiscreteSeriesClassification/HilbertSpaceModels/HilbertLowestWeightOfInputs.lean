@@ -143,8 +143,8 @@ theorem hilbert_lowest_weight_of_inputs : StepStable → StepMoll → StepWtSpan
       rcases hVK.2.2.1 S hle hSK.2.1 with h' | h'
       · exact hS0 h'
       · exact hne h'
-  haveI : FiniteDimensional ℂ S := hSK.1
-  haveI : FiniteDimensional ℂ (V1 ε Ψ) := hVK.1
+  have : FiniteDimensional ℂ S := hSK.1
+  have : FiniteDimensional ℂ (V1 ε Ψ) := hVK.1
   have hW0fin : FiniteDimensional ℂ (S ⊔ V1 ε Ψ : Submodule ℂ (L2 ε)) := inferInstance
   have hW0K : Formalism.MainNotions.S.IsKStableOn ε (rreg ε) (S ⊔ V1 ε Ψ) := by
     intro g hg v hv
@@ -240,7 +240,7 @@ theorem hilbert_lowest_weight_of_inputs : StepStable → StepMoll → StepWtSpan
     rw [h] at hm
     exact hy0 (Submodule.coe_eq_zero.1 ((Submodule.mem_bot ℂ).1 hm))
   have hLLfin : FiniteDimensional ℂ (L.map (smD ε (rreg ε)).subtype) := by
-    haveI := hL.1
+    have := hL.1
     exact Module.Finite.map L _
   obtain ⟨x₀, hx₀L, hx₀⟩ := h1 _ hLLle hLLK hLL0
   have he' : e.comp (Submodule.inclusion hLLle) ≠ 0 := by

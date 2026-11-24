@@ -67,7 +67,7 @@ private theorem eig_cont {Γ R K : Type} [TopologicalSpace Γ] [CommRing R] [Nor
 
 private theorem eig_chi_map {n : ℕ} {A B G : Type} [CommRing A] [CommRing B] [Group G] (D : W.GDet n A G) (f : A →+* B)
     (g : G) : (D.map f).chi (MonoidAlgebra.single g 1) = (D.chi (MonoidAlgebra.single g 1)).map f := by
-  letI : Algebra A (Polynomial B) := ((algebraMap B (Polynomial B)).comp f).toAlgebra
+  let : Algebra A (Polynomial B) := ((algebraMap B (Polynomial B)).comp f).toAlgebra
   let φ : Polynomial A →ₐ[A] Polynomial B :=
     { Polynomial.mapRingHom f with commutes' := fun a => Polynomial.map_C f }
   have h := D.nat (Polynomial A) (Polynomial B) φ
@@ -112,15 +112,15 @@ section Pow
 variable {F : Type} [Field F] [NumberField F] {l : ℕ} [Fact l.Prime] (w : HeightOneSpectrum (𝓞 F))
 
 private theorem eig_ne (hh : (F →+* Qbar l) → ℤ) (x : (w.adicCompletion F)ˣ) : algPow w hh (x : w.adicCompletion F) ≠ 0 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
   unfold algPow
   rw [finprod_eq_prod_of_fintype]
   exact Finset.prod_ne_zero_iff.2 fun j _ => zpow_ne_zero _ ((map_ne_zero j.1).2 x.ne_zero)
 
 private theorem eig_mul (hh : (F →+* Qbar l) → ℤ) (x y : w.adicCompletion F) :
     algPow w hh (x * y) = algPow w hh x * algPow w hh y := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
   unfold algPow
   rw [← finprod_mul_distrib (Set.toFinite _) (Set.toFinite _)]
   exact finprod_congr fun j => by rw [map_mul, mul_zpow]
@@ -128,8 +128,8 @@ private theorem eig_mul (hh : (F →+* Qbar l) → ℤ) (x y : w.adicCompletion 
 private theorem eig_ht {n : ℕ} (lam : Wt F l n) (i : Fin n) (x : (w.adicCompletion F)ˣ) :
     algPow w (-htW lam i) (x : w.adicCompletion F) * algPow w (lowW lam i) (x : w.adicCompletion F) *
       algPow w (fun _ => 1) (x : w.adicCompletion F) ^ (i : ℕ) = 1 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite {j : w.adicCompletion F →+* Qbar l // Continuous j}
   unfold algPow
   simp only [finprod_eq_prod_of_fintype]
   rw [← Finset.prod_pow, ← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]

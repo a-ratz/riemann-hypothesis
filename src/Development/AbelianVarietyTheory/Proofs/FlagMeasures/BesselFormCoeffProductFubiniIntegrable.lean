@@ -90,8 +90,8 @@ theorem fubini_bound : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerP
   have hIS := _root_.GlobalTheory.SgGrowth.normInt_lt_top k r (Sset k r z) μS (a / 2) hSc hHS hA
   obtain ⟨C, hC⟩ := hdec u hu v hv
   obtain ⟨C₁, hC₁⟩ := hdec u₁ hu₁ v₁ hv₁
-  haveI := hHG.1
-  haveI := hHS.1
+  have := hHG.1
+  have := hHS.1
   have ha0 : 0 ≤ a := le_trans (by positivity) ha
   set T : Set (Mt k r × Mt k r) := {p | Matrix.of p.1 ∈ GG k r ∧ Matrix.of p.2 ∈ Sset k r z} with hTdef
   have hTm : MeasurableSet T := by
@@ -105,7 +105,7 @@ theorem fubini_bound : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerP
     refine measure_mono_null (t := ({x : Mt k r | Matrix.of x ∉ GG k r} ×ˢ Set.univ) ∪
       (Set.univ ×ˢ {x : Mt k r | Matrix.of x ∉ Sset k r z})) ?_ ?_
     · intro p hp
-      simp only [Set.mem_setOf_eq, hTdef, not_and_or] at hp
+      simp only [Set.mem_ofPred_eq, hTdef, not_and_or] at hp
       rcases hp with hp | hp
       · exact Or.inl ⟨hp, trivial⟩
       · exact Or.inr ⟨trivial, hp⟩

@@ -174,9 +174,9 @@ private theorem exists_basis (A : Submodule (P.adicCompletionIntegers E) V) (hfg
     (hsp : Submodule.span (P.adicCompletion E) (A : Set V) = ⊤) :
     ∃ (m : ℕ) (c : Module.Basis (Fin m) (P.adicCompletion E) V),
       Submodule.span (P.adicCompletionIntegers E) (Set.range c) = A := by
-  haveI : Module.Finite (P.adicCompletionIntegers E) A := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.IsTorsionFree (P.adicCompletionIntegers E) A := LocalLatticeIndex.isTorsionFree A
-  haveI : Module.Free (P.adicCompletionIntegers E) A := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite (P.adicCompletionIntegers E) A := Module.Finite.iff_fg.mpr hfg
+  have : Module.IsTorsionFree (P.adicCompletionIntegers E) A := LocalLatticeIndex.isTorsionFree A
+  have : Module.Free (P.adicCompletionIntegers E) A := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis (P.adicCompletionIntegers E) A
   have hli : LinearIndependent (P.adicCompletionIntegers E) (A.subtype ∘ b) :=
     b.linearIndependent.map' A.subtype (Submodule.ker_subtype A)
@@ -264,7 +264,7 @@ private theorem main (L : Submodule (P.adicCompletionIntegers E) V)
         Ideal.absNorm P.asIdeal ^ j ∧
       Valued.v (LinearMap.det T) = WithZero.exp ((i : ℤ) - j) := by
   obtain ⟨m, a, ha⟩ := exists_basis L hfg hsp
-  haveI : FiniteDimensional (P.adicCompletion E) V := Module.Finite.of_basis a
+  have : FiniteDimensional (P.adicCompletion E) V := Module.Finite.of_basis a
   let Te : V ≃ₗ[(P.adicCompletion E)] V := LinearEquiv.ofInjectiveEndo T hinj
   have hTe : (Te : V →ₗ[(P.adicCompletion E)] V) = T := LinearMap.ext fun x => rfl
   let t := a.map Te
@@ -283,7 +283,7 @@ private theorem main (L : Submodule (P.adicCompletionIntegers E) V)
   have hMle1 : M ≤ L := inf_le_left
   have hMle2 : M ≤ TL := inf_le_right
   have hMfg : M.FG := by
-    haveI : IsNoetherian (P.adicCompletionIntegers E) L := isNoetherian_of_fg_of_noetherian L hfg
+    have : IsNoetherian (P.adicCompletionIntegers E) L := isNoetherian_of_fg_of_noetherian L hfg
     have hM : M = (TL.comap L.subtype).map L.subtype := by
       rw [Submodule.map_comap_subtype]
     rw [hM]
@@ -658,15 +658,15 @@ private theorem false_of_three_distinct_primes_over_of_finrank_eq_two {F E : Typ
     (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 F)) (P Q R : HeightOneSpectrum (𝓞 E))
     (hP : HeightOneSpectrum.under (𝓞 F) P = v) (hQ : HeightOneSpectrum.under (𝓞 F) Q = v)
     (hR : HeightOneSpectrum.under (𝓞 F) R = v) (hPQ : P ≠ Q) (hPR : P ≠ R) (hQR : Q ≠ R) : False := by
-  haveI : FaithfulSMul (𝓞 F) (𝓞 E) := FaithfulSMul.of_field_isFractionRing (𝓞 F) (𝓞 E) F E
-  haveI : NoZeroSMulDivisors (𝓞 F) (𝓞 E) := ⟨fun {c x} h => by
+  have : FaithfulSMul (𝓞 F) (𝓞 E) := FaithfulSMul.of_field_isFractionRing (𝓞 F) (𝓞 E) F E
+  have : NoZeroSMulDivisors (𝓞 F) (𝓞 E) := ⟨fun {c x} h => by
     rw [Algebra.smul_def] at h
     rcases mul_eq_zero.mp h with h | h
     · left
       exact (FaithfulSMul.algebraMap_injective (𝓞 F) (𝓞 E)) (by simpa using h)
     · exact Or.inr h⟩
   have hv : v.asIdeal ≠ ⊥ := v.ne_bot
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
+  have : v.asIdeal.IsMaximal := v.isMaximal
   have hc := Ideal.card_primesOverFinset_le_finrank (𝓞 E) F E hv
   rw [h2] at hc
   have mem : ∀ W : HeightOneSpectrum (𝓞 E), HeightOneSpectrum.under (𝓞 F) W = v →

@@ -183,7 +183,7 @@ theorem Reading.toC_injective (ρ : Reading X i b) : Function.Injective ρ.toC :
   ρ.ι.injective.comp (GlobalTheory.GalChar.toQ_injective ρ.κ)
 
 theorem Reading.nonempty (i : X.Tw) (b : Bool) : Nonempty (Reading X i b) := by
-  haveI : CharZero (FractionRing (X.O0 i)) := (X.emb0 i).charZero_iff (X.emb0 i).injective |>.1 inferInstance
+  have : CharZero (FractionRing (X.O0 i)) := (X.emb0 i).charZero_iff (X.emb0 i).injective |>.1 inferInstance
   let f : ℤ_[X.l i] →+* FractionRing (X.O0 i) :=
     (algebraMap (X.O0 i) (FractionRing (X.O0 i))).comp (algebraMap ℤ_[X.l i] (X.O0 i))
   have hf : Function.Injective f := by
@@ -195,8 +195,8 @@ theorem Reading.nonempty (i : X.Tw) (b : Bool) : Nonempty (Reading X i b) := by
     · exact ((PadicInt.unitCoeff h0).isUnit.map f).ne_zero h
     · exact (pow_ne_zero _ (Nat.cast_ne_zero.2 (X.lPrime i).out.ne_zero)) h
   have hf0 : Function.Injective (algebraMap ℤ_[X.l i] (X.O0 i)) := Function.Injective.of_comp (f := algebraMap (X.O0 i) (FractionRing (X.O0 i))) hf
-  haveI : Module.IsTorsionFree ℤ_[X.l i] (X.O0 i) := Module.isTorsionFree_iff_algebraMap_injective.2 hf0
-  haveI : Module.IsTorsionFree ℤ_[X.l i] (Qbar (X.l i)) := Module.isTorsionFree_iff_algebraMap_injective.2
+  have : Module.IsTorsionFree ℤ_[X.l i] (X.O0 i) := Module.isTorsionFree_iff_algebraMap_injective.2 hf0
+  have : Module.IsTorsionFree ℤ_[X.l i] (Qbar (X.l i)) := Module.isTorsionFree_iff_algebraMap_injective.2
     (by rw [IsScalarTower.algebraMap_eq ℤ_[X.l i] ℚ_[X.l i] (Qbar (X.l i))]
         exact (algebraMap ℚ_[X.l i] (Qbar (X.l i))).injective.comp Subtype.val_injective)
   let g : X.O0 i →ₐ[ℤ_[X.l i]] Qbar (X.l i) := (by
@@ -205,12 +205,12 @@ theorem Reading.nonempty (i : X.Tw) (b : Bool) : Nonempty (Reading X i b) := by
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hg : Function.Injective g := by
-    refine (RingHom.injective_iff_ker_eq_bot g.toRingHom).2 (Ideal.eq_bot_of_comap_eq_bot (R := ℤ_[X.l i]) ?_)
+    refine (RingHom.injective_iff_ker_eq_bot g.toRingHom).2 (Ideal.eq_bot_of_under_eq_bot (R := ℤ_[X.l i]) ?_)
     rw [eq_bot_iff]
     intro z hz
     have h1 : algebraMap ℤ_[X.l i] (Qbar (X.l i)) z = 0 := (g.commutes z).symm.trans hz
     exact (map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective _ _)).1 h1
-  haveI : Countable ↥D.LL0 := (Module.finBasis ℚ ↥D.LL0).equivFun.injective.countable
+  have : Countable ↥D.LL0 := (Module.finBasis ℚ ↥D.LL0).equivFun.injective.countable
   let κ : FractionRing (X.O0 i) →+* Qbar (X.l i) := IsFractionRing.lift (g := g.toRingHom) hg
   obtain ⟨ι, hι⟩ := GlobalTheory.exists_padicAlgCl_ringEquiv_complex_comp_eq_of_countable (X.l i) ↥D.LL0
     (κ.comp (embSide X i b)) (embLL0 D)

@@ -178,7 +178,7 @@ theorem ev_scale {p : ℝ → ℝ → Prop} (h : ∀ eps : ℝ, 0 < eps → ∃ 
 theorem serClause_of_typesTrue (hG : GlobalTheory.Published.GreenCuspidal) (D : D7) {P : Formalism.L2.Host.PiBar D.host} {W : Formalism.L2.Host.Omg D.host}
     (hT : TypesTrue D.ntypes P W) : SerClause D := by
   intro k
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hζ : Formalism.L2.NT.IsGenSys (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen := by
     intro d hd
     refine ⟨(GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen_order d hd, fun d' hdd hd' => ?_⟩
@@ -510,22 +510,22 @@ theorem dimParts_of_schur {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : 
   have hEle : ∀ c c', lab c = lab c' → EEc R.toRealDat R.SF c ≤ EEc R.toRealDat R.SF c' := by
     intro c c' hcc x hx
     refine hEchar c' x fun P d hP hd => ?_
-    rw [hEev c P hP _ x hx, evC_single, if_pos hd]
+    rw [hEev c P hP _ x hx, evC_single, ite_eq_left hd]
     have hl : IsLab (Wc D j) P (dualLab d) := (hlab P (dualLab d) hP).2 (by rwa [dualLab_dualLab'])
     exact congrArg (· • x) (congrFun hcc ⟨(P, dualLab d), hP, hl⟩)
   have hWcle : ∀ c c', lab c = lab c' → Wcc R.toRealDat R.SF j c ≤ Wcc R.toRealDat R.SF j c' := by
     intro c c' hcc x hx
     refine hWchar c' x (hWfix c x hx) fun P d hP hd => ?_
-    rw [hWev c P hP _ x hx, evC_single, if_pos hd]
+    rw [hWev c P hP _ x hx, evC_single, ite_eq_left hd]
     exact congrArg (· • x) (congrFun hcc ⟨(P, d), hP, hd⟩)
   symm
   refine GlobalTheory.finrank_iSup_joint_eigen_eq (I := I)
     (fun i => hE i.1.1 (Finsupp.single (dualLab i.1.2) 1)) (fun i => hWo i.1.1 (Finsupp.single i.1.2 1))
     (fun c => EEc R.toRealDat R.SF c ⊓ LevE) (fun c => Wcc R.toRealDat R.SF j c ⊓ LevW) lab ?_ ?_ ?_ ?_ (R.Carries p)
   · rintro c x hx ⟨⟨P, d⟩, hP, hd⟩
-    rw [hEev c P hP _ x hx.1, evC_single, if_pos ((hlab P d hP).1 hd), dualLab_dualLab']
+    rw [hEev c P hP _ x hx.1, evC_single, ite_eq_left ((hlab P d hP).1 hd), dualLab_dualLab']
   · rintro c x hx ⟨⟨P, d⟩, hP, hd⟩
-    rw [hWev c P hP _ x hx.1, evC_single, if_pos hd]
+    rw [hWev c P hP _ x hx.1, evC_single, ite_eq_left hd]
   · intro c c' hcc
     rw [le_antisymm (hEle c c' hcc) (hEle c' c hcc.symm), le_antisymm (hWcle c c' hcc) (hWcle c' c hcc.symm)]
     exact ⟨rfl, rfl⟩

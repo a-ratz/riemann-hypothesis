@@ -356,8 +356,8 @@ theorem exists_genFibre {y : (Σ b, ι b) → Ω₁} (y' : (Σ b, ι' b) → Ω)
   have hg : Function.Injective (ν.comp (MvPolynomial.map (algebraMap Ω₁ B))) :=
     hν.comp (MvPolynomial.map_injective _ (algebraMap Ω₁ B).injective)
   let L : Φ →+* Φ' := IsFractionRing.lift hg
-  letI alg : Algebra Φ Φ' := L.toAlgebra
-  haveI : ∀ b, Fintype (Sum.elim ι ι' b) := fun b => by
+  let alg : Algebra Φ Φ' := L.toAlgebra
+  have : ∀ b, Fintype (Sum.elim ι ι' b) := fun b => by
     cases b <;> dsimp <;> infer_instance
   have he : ∀ (c : Ω) (q : Σ b, Sum.elim ι ι' b), e (C c * X q.1) =
       match q with
@@ -543,8 +543,8 @@ theorem geoPF : PtDim → GeoPF := by
     have hg : Function.Injective (ν.comp (MvPolynomial.map (algebraMap Ω₁ B))) :=
       hν.comp (MvPolynomial.map_injective _ (algebraMap Ω₁ B).injective)
     let L : Φ →+* Φ' := IsFractionRing.lift hg
-    letI alg : Algebra Φ Φ' := L.toAlgebra
-    haveI : ∀ b, Fintype (Sum.elim ι ι' b) := fun b => by
+    let alg : Algebra Φ Φ' := L.toAlgebra
+    have : ∀ b, Fintype (Sum.elim ι ι' b) := fun b => by
       cases b <;> dsimp <;> infer_instance
     have he : ∀ (c : Ω) (q : Σ b, Sum.elim ι ι' b), e (C c * X q.1) =
         match q with

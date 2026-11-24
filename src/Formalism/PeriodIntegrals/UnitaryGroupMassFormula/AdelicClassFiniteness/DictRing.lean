@@ -93,7 +93,7 @@ theorem val_int (v : HeightOneSpectrum (𝓞 F)) (r : 𝓞 F) :
 
 theorem cancel {Γ : Type*} [LinearOrderedCommGroupWithZero Γ] {ν x : Γ} (hν : ν ≠ 0) (h : ν * x ≤ ν) : x ≤ 1 := by
   have h1 : ν * x ≤ ν * 1 := by rwa [mul_one]
-  exact le_of_mul_le_mul_left h1 (zero_lt_iff.mpr hν)
+  exact le_of_mul_le_mul_left h1 (pos_iff_ne_zero.mpr hν)
 
 theorem af_denom (a : Af F) : ∃ m : ℕ, 0 < m ∧ (m : Af F) * a ∈ Formalism.UG.intAd F := by
   classical

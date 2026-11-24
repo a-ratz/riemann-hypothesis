@@ -334,7 +334,7 @@ theorem mirC_conj : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
     unfold mirC
     rw [h2]
     refine ite_congr_of_iff (and_congr (h1 g) ?_)
-    rw [if_neg Bool.false_ne_true, if_neg Bool.false_ne_true]
+    rw [ite_eq_right Bool.false_ne_true, ite_eq_right Bool.false_ne_true]
     exact h3
   · refine ⟨_, gl_inv_mulVec_ne_zero (R.eG x PP) ha, fun g => ?_⟩
     have h3 := conj_triv_mod_line_iff (R.eG x PP) (R.eG g PP) a
@@ -342,7 +342,7 @@ theorem mirC_conj : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type)
     unfold mirC
     rw [h2]
     refine ite_congr_of_iff (and_congr (h1 g) ?_)
-    rw [if_pos rfl, if_pos rfl]
+    rw [ite_eq_left rfl, ite_eq_left rfl]
     exact h3
 
 end GlobalTheory.DownLift.GenFinite
@@ -630,7 +630,7 @@ theorem typeSpan : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) 
   intro D G _ _ Pl0 T A Ks _ _ _ R F _ hP i t f hf
   classical
   have hW := (hP i t).datum
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig (Vc D i).gram
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig (Vc D i).gram
   obtain ⟨U, U', hUo, -, hfix⟩ := GlobalTheory.Mem.ThetaLevel.exists_level D R.ψ hW.std (Vc D i) (Wc D i) (R.ωP i t)
     (GlobalTheory.Ker.isWeak_of_datum hW) hW.om_cont f hf
   set J := levG (Vc D i) (R.βV i) (R.datVt i t) with hJ
@@ -676,11 +676,11 @@ theorem typeSpan : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) 
     refine Subgroup.isOpen_of_mem_nhds N (g := 1) ?_
     have h1 : {x : GA D (Vc D i) | x ∈ U ∧ lam x = 1} ∈ nhds (1 : GA D (Vc D i)) :=
       Filter.inter_mem (hUo.mem_nhds U.one_mem) (eventually_levChi_one _ _)
-    have h2 := (continuous_subtype_val (p := fun x => x ∈ J)).continuousAt (x := (1 : J)).preimage_mem_nhds h1
+    have h2 := (continuous_subtypeVal (p := fun x => x ∈ J)).continuousAt (x := (1 : J)).preimage_mem_nhds h1
     exact Filter.mem_of_superset h2 fun κ hκ => ⟨hfix _ hκ.1 κ.2.1 1 U'.one_mem (one_mem _), hκ.2⟩
-  haveI : CompactSpace J := isCompact_iff_compactSpace.mp (GlobalTheory.ParahoricCompact.isCompact_levG _ _ _)
-  haveI : Finite (J ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNo
-  letI : Fintype (J ⧸ N) := Fintype.ofFinite _
+  have : CompactSpace J := isCompact_iff_compactSpace.mp (GlobalTheory.ParahoricCompact.isCompact_levG _ _ _)
+  have : Finite (J ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNo
+  let : Fintype (J ⧸ N) := Fintype.ofFinite _
 
   let Fv : J → (WO (Vc D i) (Wc D i) → ℂ) := fun κ => lam κ • om ((κ : GA D (Vc D i)), 1) f
   have hFvN : ∀ (a n : J), n ∈ N → Fv (a * n) = Fv a := by

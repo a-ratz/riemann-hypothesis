@@ -63,8 +63,8 @@ theorem avg_eq_setIntegral {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsT
     (hΦ : ∀ γ ∈ Γ, ∀ x, Φ (γ + x) = Φ x) :
     avg Γ Φ = ∫ x in D, Φ x ∂μ := by
   obtain ⟨rfl⟩ := hB
-  letI : MeasurableSpace G := borel G
-  haveI : BorelSpace G := ⟨rfl⟩
+  let : MeasurableSpace G := borel G
+  have : BorelSpace G := ⟨rfl⟩
   have hex : ∃ p : Measure G × Set G, p.1.IsAddHaarMeasure ∧ IsAddFundamentalDomain Γ p.2 p.1 ∧ p.1 p.2 = 1 :=
     ⟨(μ, D), inferInstance, hD, h1⟩
   unfold avg
@@ -86,7 +86,7 @@ theorem avg_eq_setIntegral {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsT
   have hμD' : μ D' = 1 := by rw [hDμ.measure_eq hD, h1]
   have hc1 : Measure.addHaarScalarFactor ν μ = 1 := by
     have := h1'
-    rw [hν, Measure.smul_apply, hμD', ENNReal.smul_def, smul_eq_mul, mul_one] at this
+    rw [hν, smul_apply, hμD', ENNReal.smul_def, smul_eq_mul, mul_one] at this
     exact_mod_cast this
   have hνμ : ν = μ := by rw [hν, hc1, one_smul]
   rw [hνμ]
@@ -116,7 +116,7 @@ theorem blkU_eq_colGL {R : Type} [CommRing R] {a k : ℕ} (hk : k < a) (x : Unip
   · have hne : i ≠ j := fun h => by rw [h] at hij; omega
     have hlt : i < j := by rw [Fin.lt_def]; omega
     rw [Finset.sum_eq_single (⟨(i, j), hij.1, hij.2.ge, hij.2.le⟩ : UnipotentBlockColumnIndex a k k)]
-    · rw [if_neg hne, if_neg hne, dite_eq_left hlt, colX_apply, dite_eq_left hij.2, Matrix.single_apply_same, zero_add]
+    · rw [ite_eq_right hne, ite_eq_right hne, dite_eq_left hlt, colX_apply, dite_eq_left hij.2, Matrix.single_apply_same, zero_add]
       congr 1
       apply Subtype.ext
       apply Prod.ext
@@ -179,7 +179,7 @@ theorem colT_eq_stepCoeff {k : ℕ} (hk : k < a) (f : GA E a → ℂ)
     simp only [Φ]
     rw [hU, hD, neg_add, AddChar.map_add_eq_mul, hψ (-(algebraMap E (Ad E) _)), ← map_neg,
       GroundTheory.Global.adelicChar_algebraMap, Circle.coe_one, one_mul]
-  haveI : Countable (ratV E (UnipotentBlockColumnIndex a k k)) := countable_vecLattice
+  have : Countable (ratV E (UnipotentBlockColumnIndex a k k)) := countable_vecLattice
   have hA : avg (ratV E (UnipotentBlockColumnIndex a k k)) Φ = ∫ x in vecDomain E (UnipotentBlockColumnIndex a k k), Φ x ∂vecMeasure E (UnipotentBlockColumnIndex a k k) :=
     avg_eq_setIntegral (ratV E (UnipotentBlockColumnIndex a k k)) (vecMeasure E (UnipotentBlockColumnIndex a k k)) (vecDomain E (UnipotentBlockColumnIndex a k k))
       isAddFundamentalDomain_vecDomain vecMeasure_vecDomain Φ hΦ

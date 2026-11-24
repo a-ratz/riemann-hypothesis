@@ -82,8 +82,8 @@ private theorem norm_Kx {E : Type} [Field E] [NumberField E] (x : E) (φ : E →
     [DecidablePred fun φ' : E →+* ℂ => φ' x = φ x] :
     φ (algebraMap (Kx x) E (Algebra.norm (Kx x) k)) =
       ∏ φ' ∈ Finset.univ.filter (fun φ' : E →+* ℂ => φ' x = φ x), φ' k := by
-  letI : Algebra (Kx x) ℂ := (φ.comp (algebraMap (Kx x) E)).toAlgebra
-  haveI : FiniteDimensional (Kx x) E := FiniteDimensional.right ℚ (Kx x) E
+  let : Algebra (Kx x) ℂ := (φ.comp (algebraMap (Kx x) E)).toAlgebra
+  have : FiniteDimensional (Kx x) E := FiniteDimensional.right ℚ (Kx x) E
   have hc : ∀ r : Kx x, algebraMap (Kx x) ℂ r = φ (algebraMap (Kx x) E r) := fun _ => rfl
   have h := Algebra.norm_eq_prod_embeddings (Kx x) ℂ k
   rw [hc] at h
@@ -96,7 +96,7 @@ private theorem norm_Kx {E : Type} [Field E] [NumberField E] (x : E) (φ : E →
     rw [hc] at this
     exact this
   · intro σ _ τ _ hst
-    exact AlgHom.coe_ringHom_injective hst
+    exact AlgHom.toRingHom_injective hst
   · intro φ' hφ'
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hφ'
     refine ⟨{ φ' with commutes' := fun r => ?_ }, Finset.mem_univ _, ?_⟩
@@ -170,7 +170,7 @@ theorem UpperTheory.Gal.CertificateRingHomMap.ZetaNonvanishing₂.normEmb :
       · exact h3
   refine ⟨hcj, hQ, ?_, ?_⟩
   · have ht : φ₀ (algebraMap (Kx x) E (Algebra.norm (Kx x) (k : E))) ≠ 0 := by
-      haveI : FiniteDimensional (Kx x) E := FiniteDimensional.right ℚ (Kx x) E
+      have : FiniteDimensional (Kx x) E := FiniteDimensional.right ℚ (Kx x) E
       rw [Ne, map_eq_zero, map_eq_zero, Algebra.norm_eq_zero_iff]
       exact k.ne_zero
     rw [emb_conj, Complex.mul_conj] at hmul

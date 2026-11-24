@@ -301,8 +301,8 @@ theorem growth_core {G LL O V : Type} [Group G] [Field LL] [CommRing O] [IsDomai
       Nat.card {x : ↥LA.T ⧸ (Ideal.span {a ^ r} • ⊤ : Submodule O ↥LA.T) //
           ∀ g, actQ LA _ hI g x = x} ≤
         C * Nat.card (O ⧸ Ideal.span {a}) ^ (r * finrank LL ↥(H0V ρ)) := by
-  haveI : Module.Free O LA.T := LA.free
-  haveI : Module.Finite O LA.T := Module.Finite.iff_fg.2 LA.fg
+  have : Module.Free O LA.T := LA.free
+  have : Module.Finite O LA.T := Module.Finite.iff_fg.2 LA.fg
   set T₀ : Submodule O LA.T := ((H0V ρ).restrictScalars O).comap LA.T.subtype with hT₀
   have hb := exists_basis_comap LA.T LA.span (H0V ρ)
   rcases hb with ⟨b0⟩
@@ -317,7 +317,7 @@ theorem growth_core {G LL O V : Type} [Group G] [Field LL] [CommRing O] [IsDomai
     rw [← algebraMap_smul LL] at hv
     exact (Submodule.smul_mem_iff _ hne).1 hv
   have hposO : ∀ n, 0 < Nat.card (O ⧸ Ideal.span {a ^ n}) := fun n => by
-    haveI := hfinq n; exact Nat.card_pos
+    have := hfinq n; exact Nat.card_pos
   have hqpos : 0 < Nat.card (O ⧸ Ideal.span {a}) := by have := hposO 1; rwa [pow_one] at this
   have hcardT : ∀ n, Nat.card (LA.T ⧸ (Ideal.span {a ^ n} • ⊤ : Submodule O LA.T)) =
       Nat.card (O ⧸ Ideal.span {a ^ n}) ^ Fintype.card (Module.Free.ChooseBasisIndex O LA.T) :=
@@ -341,11 +341,11 @@ theorem growth_core {G LL O V : Type} [Group G] [Field LL] [CommRing O] [IsDomai
   let Φ : LA.T →ₗ[O] (Fin k → LA.T) := LinearMap.pi fun i => actT LA (gs i) - LinearMap.id
   have hc0 := exists_artinRees_pow (O := O) (M := LA.T) (P := Fin k → LA.T) Φ a
   rcases hc0 with ⟨c, hc⟩
-  haveI := hfinT c
+  have := hfinT c
   refine ⟨Nat.card (LA.T ⧸ (Ideal.span {a ^ c} • ⊤ : Submodule O LA.T)), Nat.card_pos, ?_⟩
   intro r hI
-  haveI := hfinT r
-  haveI := hfin0 r
+  have := hfinT r
+  have := hfin0 r
   let Ir : Submodule O LA.T := Ideal.span {a ^ r} • ⊤
   let I0 : Submodule O T₀ := Ideal.span {a ^ r} • ⊤
   let Jc : Submodule O LA.T := Ideal.span {a ^ c} • ⊤
@@ -448,7 +448,7 @@ theorem growth_galois_invariants_mod_prime_power_lattice_alt : ∀ (l : ℕ) [Fa
   intro l _ K LL _ _ _ O _ _ hG A LA
   obtain ⟨-, -, hfinq, -⟩ := GlobalTheory.GoodCoeff.good_coeff_integers l LL O hG
   obtain ⟨⟨hD, hDVR, hFr⟩, -, -, -, -⟩ := hG
-  haveI := hD; haveI := hDVR; haveI := hFr
+  have := hD; have := hDVR; have := hFr
   have ha0 : ((l : ℕ) : O) ≠ 0 := by
     intro h
     have h1 : algebraMap O LL ((l : ℕ) : O) = ((l : ℕ) : LL) := map_natCast _ _

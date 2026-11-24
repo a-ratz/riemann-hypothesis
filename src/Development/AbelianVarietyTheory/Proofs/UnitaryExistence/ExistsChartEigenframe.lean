@@ -187,7 +187,7 @@ theorem exists_chart_eigenframe : Out.SecBaseChangeSt → ∀ (E : Type) [Field 
     exact ⟨w, hw⟩
   obtain ⟨th, hth⟩ := exists_sec_of_secOn m.cart.1 Xo.univ.t.PP.isLB o.t.PP.isLB hL (V := V)
     (fun y => hsub ⟨spMap f y, rfl⟩) hθ hne
-  letI : Algebra c.F R := (f.comp j).toAlgebra
+  let : Algebra c.F R := (f.comp j).toAlgebra
   refine ⟨R, inferInstance, inferInstance, jR, o, v, th, ?_, ?_, hjR, ⟨q, ?_⟩, hs, ?_, hv, hev, hth,
     SectionBaseChange.generates hS (Obj.toPolAV Xo.univ) m.cart.1 o.t.PP.isLB hL th hth⟩
   · have h : LocallyOfFiniteType (spMap (f.comp j)) := by rw [← hs]; infer_instance

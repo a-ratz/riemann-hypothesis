@@ -336,8 +336,8 @@ theorem adj_act : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (D : De
   let B := D.toPre.P.A
   let f := o.onB.act a
   let g := o.onB.act (star a)
-  haveI hf : IsMonHom f := o.onB.hom a
-  haveI hg : IsMonHom g := o.onB.hom (star a)
+  have hf : IsMonHom f := o.onB.hom a
+  have hg : IsMonHom g := o.onB.hom (star a)
   let φ₀ : ULift.{0} (Finset (Fin 2)) → ((B ⊗ B).left ⟶ B.left) :=
     fun I => (psum B ![fst B B ≫ f, snd B B] I.down).left
   let φ₁ : ULift.{0} (Finset (Fin 2)) → ((B ⊗ B).left ⟶ B.left) :=
@@ -479,8 +479,8 @@ namespace GlobalTheory.MumFam.FactorAdj
 
 theorem factor_adj : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (D D' : DegData R I) (F : Factor D.toPre D'.toPre), Adj (pol D') (pol D) F.pr (F.inc ≫ F.o.onB.act (Star.star F.e * F.f)) F.xp ((DistribSMul.toAddMonoidHom D'.toPre.X (Star.star F.e * F.f)).comp F.xi) := by
   intro R _ _ I D D' F
-  haveI := F.inc_hom
-  haveI := F.o.onB.hom F.f
+  have := F.inc_hom
+  have := F.o.onB.hom F.f
   have hm : IsMonHom (F.inc ≫ F.o.onB.act F.f) := inferInstance
   have H := GlobalTheory.T.of_twisted_adjoint_comp R (pol D') (pol D) F.pr (F.o.onB.act F.e) (F.o.onB.act (Star.star F.e))
     (F.inc ≫ F.o.onB.act F.f) F.xp
@@ -790,8 +790,8 @@ theorem endData_of_adj : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
   have hF : FormEq (Sum.elim (Sum.elim φ₁ φ₀) (fun k => ℓ ≫ Sum.elim φ₁ φ₀ k))
       (Sum.elim (fun k => - Sum.elim e₂ (fun k => - e₂ k) k) (Sum.elim e₂ (fun k => - e₂ k))) (rosatiφ B a a') rosatiε := by
     intro U _ k
-    haveI : IsMonHom a := ha
-    haveI : IsMonHom a' := ha'
+    have : IsMonHom a := ha
+    have : IsMonHom a' := ha'
     have p := prod_ros a a' (fst B B) (snd B B) k
     rw [lift_fst_snd] at p
     rw [(Finset.prod_congr rfl fun i _ => by erw [Over.id_left, Category.id_comp]).trans p]
@@ -821,8 +821,8 @@ theorem endData_of_adj : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
   · obtain ⟨u, hu, -⟩ := exists_gen hL hF v hv
     exact fun _ => ⟨⊤, trivial, LB.pullGen _ _ _ u _, DVR.pullGen_isGen _ _ _ _ hu _⟩
   · intro u hu h₀ y y'
-    haveI : IsMonHom a := ha
-    haveI : IsMonHom a' := ha'
+    have : IsMonHom a := ha
+    have : IsMonHom a' := ha'
     have o : ∀ {T : Over (Spec (CommRingCat.of R))} (x x' : T ⟶ B), (lift x x').left ≫ ℓ = (lift (1 : T ⟶ B) 1).left :=
       fun x x' => by rw [← Over.comp_left, comp_lift, MonObj.comp_one]
     have hvv : ∀ (Z : Scheme.{0}) (r : Z ⟶ (B ⊗ B).left) (z : Z) (J), Good D.toPre.P.L z J →
@@ -1603,7 +1603,7 @@ theorem prod_main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Ba
   obtain ⟨D, p₁, p₂, q₁, q₂, pD⟩ := GlobalTheory.T.exists_product_degenerationData_sum R (maximalIdeal R) D₁ D₂
   obtain ⟨A, a₁, a₂, pA, -⟩ := GlobalTheory.T.exists_product_principallyPolarised_abelianScheme _ A₁ A₂
   obtain ⟨U, hg₁, hg₂, H⟩ := GlobalTheory.T.product_uniformised_groups_uniformised_by_sum R hR D₁ A₁ G₁ U₁ D₂ A₂ G₂ U₂ D A p₁ p₂ q₁ q₂ a₁ a₂ pD pA
-  haveI := pD.lim
+  have := pD.lim
   let e := AddEquiv.ofBijective (q₁.prod q₂) pD.xsum
   let i₁ : D₁.toPre.P.A ⟶ D.toPre.P.A := lift (𝟙 _) (toUnit _ ≫ η[D₂.toPre.P.A]) ≫ inv (lift p₁ p₂)
   let i₂ : D₂.toPre.P.A ⟶ D.toPre.P.A := lift (toUnit _ ≫ η[D₁.toPre.P.A]) (𝟙 _) ≫ inv (lift p₁ p₂)

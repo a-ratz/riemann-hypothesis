@@ -135,7 +135,7 @@ theorem GlobalTheory.unitary_transitive_of_norm : ∀ (F E : Type) [Nontrivially
     [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (u v : Fin r → E), star u ⬝ᵥ u = star v ⬝ᵥ v →
     star u ⬝ᵥ u ≠ 0 → ∃ g : Matrix.unitaryGroup (Fin r) E, g.1 *ᵥ u = v := by
   intro F E _ _ _ _ hU r u v hc h0
-  haveI : CharZero F := hU.charZero
+  have : CharZero F := hU.charZero
   have h2 : (2 : E) ≠ 0 := by
     intro h
     apply (two_ne_zero : (2 : F) ≠ 0)

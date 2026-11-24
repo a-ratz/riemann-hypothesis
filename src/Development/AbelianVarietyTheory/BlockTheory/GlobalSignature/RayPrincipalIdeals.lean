@@ -100,12 +100,12 @@ theorem count_span_eq_zero {𝔪 : Ideal (𝓞 K)} {a : 𝓞 K} (ha : a ≠ 0) (
   have h0 : Ideal.span {a} ≠ (0 : Ideal (𝓞 K)) := by simpa using ha
   have : FractionalIdeal.spanSingleton (𝓞 K)⁰ (a : K) = ((Ideal.span {a} : Ideal (𝓞 K)) : FractionalIdeal (𝓞 K)⁰ K) :=
     (FractionalIdeal.coeIdeal_span_singleton a).symm
-  rw [this, FractionalIdeal.count_coe K 𝔭 h0]
+  rw [this, FractionalIdeal.count_coeIdeal K 𝔭 h0]
   norm_cast
   by_contra hne
   have hd : 𝔭.asIdeal ∣ Ideal.span {a} :=
     (Associates.count_ne_zero_iff_dvd h0 𝔭.irreducible).1 hne
-  exact 𝔭.prime.not_unit (h.isUnit_of_dvd' hd hp)
+  exact 𝔭.prime.not_isUnit (h.isUnit_of_dvd' hd hp)
 
 abbrev RayClassGroup (𝔪 : Ideal (𝓞 K)) : Type :=
   idealsPrimeTo 𝔪 ⧸ (rayPrincipal 𝔪).subgroupOf (idealsPrimeTo 𝔪)

@@ -49,7 +49,7 @@ namespace GlobalTheory.IdealGenerator
 theorem coe_ideal_mul {R K : Type} [CommRing R] [IsDomain R] [Field K] [Algebra R K] [IsFractionRing R K]
     (P : Ideal R) (I : FractionalIdeal R⁰ K) :
     (((P : FractionalIdeal R⁰ K) * I : FractionalIdeal R⁰ K) : Submodule R K) = P • (I : Submodule R K) := by
-  rw [FractionalIdeal.coe_mul, FractionalIdeal.coe_coeIdeal]
+  rw [FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_coeIdeal]
   apply le_antisymm
   · rw [Submodule.mul_le]
     intro m hm n hn
@@ -72,7 +72,7 @@ theorem exists_gen {R K : Type} [CommRing R] [IsDedekindDomain R] [Field K] [Alg
     intro h
     have h1 : (P : FractionalIdeal R⁰ K) = 1 := mul_right_cancel₀ hI (by rw [h, one_mul])
     exact hP.ne_top (by simpa using (FractionalIdeal.coeIdeal_eq_one.1 h1))
-  obtain ⟨t₀, ht₀, ht₀'⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hle hne)
+  obtain ⟨t₀, ht₀, ht₀'⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hle hne)
   refine ⟨t₀, ht₀, ?_⟩
   set S : FractionalIdeal R⁰ K := FractionalIdeal.spanSingleton R⁰ t₀ + (P : FractionalIdeal R⁰ K) * I with hS
   have hSle : S ≤ I := by
@@ -101,7 +101,7 @@ theorem exists_gen {R K : Type} [CommRing R] [IsDedekindDomain R] [Field K] [Alg
   have hSI : S = I := by rw [hSJ, hJt, FractionalIdeal.coeIdeal_top, one_mul]
   intro t ht
   have ht' : t ∈ (S : Submodule R K) := by rw [hSI]; exact ht
-  rw [hS, FractionalIdeal.coe_add, coe_ideal_mul, FractionalIdeal.coe_spanSingleton, Submodule.add_eq_sup,
+  rw [hS, FractionalIdeal.coeToSubmodule_add, coe_ideal_mul, FractionalIdeal.coeToSubmodule_spanSingleton, Submodule.add_eq_sup,
     Submodule.mem_sup] at ht'
   obtain ⟨y, hy, z, hz, rfl⟩ := ht'
   obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.1 hy

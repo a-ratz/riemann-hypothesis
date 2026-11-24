@@ -98,7 +98,7 @@ theorem sum_reorder {A : Type} [CommRing A] {m n : ℕ} (c : A → A) (P : Fin m
 
 theorem snd_symplOHF (x y : WOF F E nS nT) (h : y.map (finPartF F E) = 0) :
     sndA F (symplOHF σ JS JT ξ x y) = 0 := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have h1 : sndA F (symplOF σ JS JT ξ x y) = 0 := by
     unfold symplOF hOF
     rw [sum_reorder (cAF σ) (fun k i => incAF F E (JS⁻¹ k i)) (fun j l => incAF F E (JT j l)) x y]
@@ -150,9 +150,9 @@ theorem contDiff_deriv_heisOF_line : ∀ (F E : Type) [Field F] [NumberField F] 
         show L' (Fin.init (u + v)) + L (u (Fin.last k) + v (Fin.last k)) = _
         rw [show Fin.init (u + v) = Fin.init u + Fin.init v from rfl, map_add (f := _), map_add (f := _)]
         abel }
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : ContinuousAdd (WOF F E nS nT) := inferInstanceAs (ContinuousAdd (Fin nT → Fin nS → AF F ⊗[F] E))
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : ContinuousAdd (WOF F E nS nT) := inferInstanceAs (ContinuousAdd (Fin nT → Fin nS → AF F ⊗[F] E))
   have hM : Continuous M := (hL'.comp hi).add (hL.comp (continuous_apply _))
   have hM0 : ∀ v, (M v).map (finPartF F E) = 0 := fun v => by
     show (L' (Fin.init v) + L (v (Fin.last k))).map (finPartF F E) = 0

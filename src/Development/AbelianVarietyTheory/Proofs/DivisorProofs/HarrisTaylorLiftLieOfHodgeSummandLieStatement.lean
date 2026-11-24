@@ -186,8 +186,8 @@ theorem lieAt_id_of_liftFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPe
       (haveI := o₀.act.hom c; crysToDR (divided₂ hsq) h (push (divided₂ hsq) (spMap π) (o₀.act.act c) d)) =
       (haveI := act.hom c; push (dp0 C) (𝟙 _) (act.act c) (crysToDR (divided₂ hsq) h d)) := by
     intro c d
-    haveI := o₀.act.hom c
-    haveI := act.hom c
+    have := o₀.act.hom c
+    have := act.hom c
     exact crysToDR_push (divided₂ hsq) h h (o₀.act.act c) (act.act c) (hact c).symm d
   have hq := epsPt_hq C
   have one_left := one_left_eq A (spMap (RingHom.id C)) (Spec.map_id _)
@@ -202,7 +202,7 @@ theorem lieAt_id_of_liftFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPe
   have hmem : (haveI := o₀.act.hom (algebraMap (𝓞 D.F) D.O D.ω);
       push (divided₂ hsq) (spMap π) (o₀.act.act (algebraMap (𝓞 D.F) D.O D.ω)) d) - tR b.ρ • d ∈
       liftFil (divided₂ hsq) h := by
-    haveI := act.hom (algebraMap (𝓞 D.F) D.O D.ω)
+    have := act.hom (algebraMap (𝓞 D.F) D.O D.ω)
     rw [liftFil, Submodule.mem_comap, map_sub, map_smul, eqv]
     have h1 := hH0.push (act.act (algebraMap (𝓞 D.F) D.O D.ω))
     rw [scal] at h1
@@ -214,7 +214,7 @@ theorem lieAt_id_of_liftFil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPe
   have hu_scal : ∀ j (c : 𝓞 D.F), u j ≫ act.act (algebraMap (𝓞 D.F) D.O c) =
       GlobalTheory.GrpTangent.epsScale (tR (b.t j c)) ≫ u j := by
     intro j c
-    haveI := act.hom (algebraMap (𝓞 D.F) D.O c)
+    have := act.hom (algebraMap (𝓞 D.F) D.O c)
     have m := hw j c
     rw [liftFil, Submodule.mem_comap, map_sub, map_smul, eqv] at m
     have k2 := ((hu j).smul (tR (b.t j c))).add (isLieImage_one_iff.2 m)
@@ -313,7 +313,7 @@ theorem eigen_decomp_base_change :
       Finset.sum_ite_eq]
     have hg := congrArg g huinv
     simp only [map_mul, map_sub, map_intCast, map_one, map_ofNat] at hg ⊢
-    simp only [Finset.mem_univ, if_true]
+    simp only [Finset.mem_univ, ite_true]
     linear_combination (-(v k)) * hg
   refine ⟨fun i => ∑ j, v j • (g ∘ W j i), ?_, ?_⟩
   · intro i c

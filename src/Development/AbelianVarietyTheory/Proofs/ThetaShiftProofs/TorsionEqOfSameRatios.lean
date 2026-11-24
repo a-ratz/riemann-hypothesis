@@ -113,8 +113,8 @@ theorem core (hL : Laws) {F : Type} [Field F] [IsAlgClosed F] [CharZero F] (P : 
       secVal (Z := Sp F) t₁ (ptSecT P.A (x v * p)).left z J₀ * secVal (Z := Sp F) t₂ (ptSecT P.A (x v * p')).left z J₀ =
       secVal (Z := Sp F) t₂ (ptSecT P.A (x v * p)).left z J₀ * secVal (Z := Sp F) t₁ (ptSecT P.A (x v * p')).left z J₀) :
     p = p' := by
-  haveI := P.isAb.comm
-  haveI : IsIntegral (baseOver (Spec (CommRingCat.of F)) ⊗ P.A).left := isIntegral_fibre P (𝟙 _)
+  have := P.isAb.comm
+  have : IsIntegral (baseOver (Spec (CommRingCat.of F)) ⊗ P.A).left := isIntegral_fibre P (𝟙 _)
   have hk0 : (k : F) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
   have hd : (p / p') ^ k = 1 := by rw [div_pow, hp, hp', div_one]
   obtain ⟨θ, hθ⟩ := exists_theta hL.weil P k (p / p') hd

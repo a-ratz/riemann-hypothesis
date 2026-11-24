@@ -659,19 +659,19 @@ namespace GlobalTheory.ArchUnitaryTop
 
 theorem top_facts : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n a : ℕ) (J : Matrix (Fin n) (Fin n) E), ContinuousSMul (HA (Ainf F) σ J) (Fin a → Fin n → Ainf F ⊗[F] E) ∧ BorelSpace (Fin a → Fin n → Ainf F ⊗[F] E) ∧ SecondCountableTopology (Fin a → Fin n → Ainf F ⊗[F] E) ∧ T2Space (Fin a → Fin n → Ainf F ⊗[F] E) ∧ IsTopologicalGroup (HA (Ainf F) σ J) ∧ LocallyCompactSpace (HA (Ainf F) σ J) ∧ SecondCountableTopology (HA (Ainf F) σ J) ∧ T2Space (HA (Ainf F) σ J) := by
   intro F E _ _ _ _ _ σ n a J
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_infiniteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field F
-  haveI : IsModuleTopology (Ainf F) (Ainf F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Ainf F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Ainf F) _
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_infiniteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field F
+  have : IsModuleTopology (Ainf F) (Ainf F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Ainf F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Ainf F) _
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (Ainf F)
-  haveI : SecondCountableTopology (Ainf F ⊗[F] E) := e.secondCountableTopology
-  haveI : T2Space (Ainf F ⊗[F] E) := e.isEmbedding.t2Space
-  haveI : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
+  have : SecondCountableTopology (Ainf F ⊗[F] E) := e.secondCountableTopology
+  have : T2Space (Ainf F ⊗[F] E) := e.isEmbedding.t2Space
+  have : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
   obtain ⟨h1, h2, h3⟩ := GlobalTheory.AdelicUnitaryTop.lcsc_HA (Ainf F) σ n J
   refine ⟨⟨?_⟩, inferInstance, inferInstance, inferInstance,
     inferInstanceAs (IsTopologicalGroup (HR (Ainf F) σ J)), h1, h2, h3⟩
   have hm : Continuous fun g : HA (Ainf F) σ J => HA.mat (Ainf F) σ J g :=
-    continuous_subtype_val
+    continuous_subtypeVal
   have hv : Continuous fun g : HA (Ainf F) σ J =>
       ((HA.mat (Ainf F) σ J g : GL (Fin n) (Ainf F ⊗[F] E)) :
         Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) := Units.continuous_val.comp hm
@@ -742,7 +742,7 @@ theorem bijective_place {F E : Type} [Field F] [NumberField F] [Field E] [Number
     (hτ : Function.Bijective fun ρ => InfinitePlace.mk (τ ρ)) :
     Function.Bijective fun ρ => InfinitePlace.mk ((τ ρ).comp (algebraMap F E)) := by
   obtain ⟨hF, hE, h2, hσ⟩ := h
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   let c : E ≃ₐ[F] E := AlgEquiv.ofBijective σ (Algebra.IsAlgebraic.algHom_bijective σ)
   have hc' : ∀ (τ : E →+* ℂ) x, τ (c x) = starRingEnd ℂ (τ x) := hσ
   have hnr : ∀ φ : E →+* ℂ, ComplexEmbedding.conjugate φ ≠ φ := fun φ hφ =>
@@ -769,7 +769,7 @@ theorem bijective_place {F E : Type} [Field F] [NumberField F] [Field E] [Number
 
 theorem exists_realCoord : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (T : Type) [Fintype T] (τ : T → (E →+* ℂ)) (θ : T → (Ainf F ⊗[F] E →+* ℂ)), (Function.Bijective fun ρ => InfinitePlace.mk (τ ρ)) → (∀ ρ, IsInfEmb (τ ρ) (θ ρ)) → ∃ r : Ainf F ≃+* (T → ℝ), Continuous r ∧ Continuous r.symm ∧ (∀ a ρ, ((r a ρ : ℝ) : ℂ) = θ ρ (a ⊗ₜ[F] (1 : E))) ∧ (∀ a, LocalAdditiveCharacterDual.stdInf F a = Complex.exp (2 * Real.pi * Complex.I * (((-1 : ℝ) * ∑ ρ, r a ρ : ℝ) : ℂ))) ∧ ∀ a, (∀ w, a w ≠ 0) ↔ ∀ ρ, r a ρ ≠ 0 := by
   intro F E _ _ _ _ _ σ h T _ τ θ hτ hθ
-  haveI hF := h.1
+  have hF := h.1
   let u : T ≃ InfinitePlace F := Equiv.ofBijective _ (bijective_place σ h τ hτ)
   let s : ∀ w : InfinitePlace F, w.Completion ≃+* ℝ := fun w =>
     InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w)
@@ -940,8 +940,8 @@ theorem exists_cutoff : ∀ (c : CDHaar) (P Q P' Q' : ℕ) (x₀ : ActionCoordin
   intro c P Q P' Q' x₀ h0 j ι hι hr
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P Q
   obtain ⟨k1, k2, k3, k4, k5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P' Q'
-  haveI := c.haar P' Q'
-  haveI := GlobalTheory.UpqUnimodular.isMulRightInvariant_of_isHaarMeasure P' Q' _ (c.haar P' Q')
+  have := c.haar P' Q'
+  have := GlobalTheory.UpqUnimodular.isMulRightInvariant_of_isHaarMeasure P' Q' _ (c.haar P' Q')
   obtain ⟨s, hsm, hs⟩ := GlobalTheory.QuadricSection.exists_isSection P Q _ x₀ (qf_eq x₀ ▸ h0) rfl
   obtain ⟨L, hL⟩ := j.exists_leftInverse_of_injective (LinearMap.ker_eq_bot'.2 fun v hv =>
     eq_zero_of_herm fun w => by rw [← hι.1, hv]; simp [ActionCoordinates.herm])
@@ -1063,7 +1063,7 @@ theorem lintegral_preimage {V X : Type} [TopologicalSpace V] [MeasurableSpace V]
 theorem lintegral_fibre_prod : ∀ (T V : Type) [Fintype T] [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] (μ₀ : Measure V) [SigmaFinite μ₀] (q : V → ℝ), Continuous q → ∀ U : Set V, IsOpen U → ∀ fib : ℝ → Measure V, IsFibreFamily μ₀ q id U (volume : Measure ℝ) Set.univ fib → ∀ B : Set (T → ℝ), IsOpen B → ∀ Fib : (T → ℝ) → Measure (T → V), IsFibreFamily (Measure.pi fun _ : T => μ₀) (fun x ρ => q (x ρ)) id Set.univ (volume : Measure (T → ℝ)) B Fib → ∀ b ∈ B, ∀ φ : T → V → ℝ, (∀ ρ, Continuous (φ ρ) ∧ HasCompactSupport (φ ρ) ∧ tsupport (φ ρ) ⊆ U ∧ ∀ y, 0 ≤ φ ρ y) → ∫⁻ x, ∏ ρ, ENNReal.ofReal (φ ρ (x ρ)) ∂(Fib b) = ∏ ρ, ∫⁻ y, ENNReal.ofReal (φ ρ y) ∂(fib (b ρ)) := by
   intro T V _ _ _ _ _ _ μ₀ _ q hq U hU fib hfib B hB Fib hFib b hb φ hφ
   classical
-  haveI : ProperSpace V := FiniteDimensional.proper_real V
+  have : ProperSpace V := FiniteDimensional.proper_real V
   have hΦc : Continuous fun x : T → V => ∏ ρ, φ ρ (x ρ) :=
     continuous_finsetProd _ fun ρ _ => (hφ ρ).1.comp (continuous_apply ρ)
   have hΦs : HasCompactSupport fun x : T → V => ∏ ρ, φ ρ (x ρ) := by
@@ -1187,7 +1187,7 @@ theorem fibre_lintegral_ne_zero : ActionCoordinates.QuotientMeasure → CDHaar �
   let s : ActionCoordinates.Wsp P Q → UpqT P Q := fun y => if h : ActionCoordinates.qf y = β then s0 y h else 1
   have hs : ∀ y, ActionCoordinates.qf y = β → ActionCoordinates.act (s y)⁻¹ x₀ = y := by
     intro y hy
-    simp only [s, dif_pos hy]
+    simp only [s, dite_eq_left hy]
     exact hs0 y hy
   have hc : Continuous fun g : UpqT P Q => ActionCoordinates.act g⁻¹ x₀ :=
     (hcl.continuous.comp continuous_inv).matrix_mulVec continuous_const
@@ -1352,12 +1352,12 @@ theorem integral_prod_exp {T V : Type} [Fintype T] [MeasurableSpace V] (ε : ℝ
 
 theorem map_eq_pi : ∀ (T V W : Type) [Fintype T] [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] [AddCommGroup W] [TopologicalSpace W] [MeasurableSpace W] [BorelSpace W] (e : W ≃ₜ+ (T → V)) (ε : ℝ) (β : V → V → ℝ) (μ₀ : Measure V), μ₀.IsAddHaarMeasure → ActionCoordinates.IsSelfDualFor ε β μ₀ → ∀ (μ : Measure W) (χ : W → W → ℂ), (∀ x y, χ x y = Complex.exp (2 * Real.pi * Complex.I * ((ε * ∑ ρ, β (e x ρ) (e y ρ) : ℝ) : ℂ))) → SelfDual μ χ → μ.map e = Measure.pi fun _ : T => μ₀ := by
   intro T V W _ _ _ _ _ _ _ _ _ _ e ε β μ₀ hμ₀ hsd μ χ hχ hμ
-  haveI : IsTopologicalAddGroup W :=
-    Topology.IsInducing.topologicalAddGroup (e : W →+ (T → V)) e.toHomeomorph.isInducing
-  haveI := hμ.1
-  haveI : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
+  have : IsTopologicalAddGroup W :=
+    Topology.IsInducing.isTopologicalAddGroup (e : W →+ (T → V)) e.toHomeomorph.isInducing
+  have := hμ.1
+  have : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
   set ν : Measure (T → V) := Measure.pi fun _ : T => μ₀ with hν
-  haveI : ν.IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : ν.IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have h0 : μ.map e = Measure.addHaarScalarFactor (μ.map e) ν • ν :=
     Measure.isAddLeftInvariant_eq_smul _ _
   set c : NNReal := Measure.addHaarScalarFactor (μ.map e) ν
@@ -1437,7 +1437,7 @@ theorem measurable_act_inv (x : ActionCoordinates.Wsp P Q) :
 
 theorem sigmaFinite_cd (c : CDHaar) (P Q : ℕ) : SigmaFinite (c.cd P Q) := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P Q
-  haveI : (c.cd P Q).IsHaarMeasure := c.haar P Q
+  have : (c.cd P Q).IsHaarMeasure := c.haar P Q
   infer_instance
 
 theorem one_place (H : ActionCoordinates.QuotientMeasure) (c : CDHaar) {β : ℝ} (hβ : β = 1 ∨ β = -1)
@@ -1468,8 +1468,8 @@ theorem one_place (H : ActionCoordinates.QuotientMeasure) (c : CDHaar) {β : ℝ
 
 theorem quot_integral_prod : ActionCoordinates.QuotientMeasure → ∀ (c : CDHaar) (T : Type) [Fintype T] (P Q P' Q' : ℕ) (β : ℝ), (β = 1 ∨ β = -1) → ∀ x : T → ActionCoordinates.Wsp P Q, (∀ ρ, ActionCoordinates.qf (x ρ) = β) → ∀ (k : T → (ActionCoordinates.Wsp P' Q' →ₗ[ℂ] ActionCoordinates.Wsp P Q)) (ι : T → UpqT P' Q' → UpqT P Q), (∀ ρ, ActionCoordinates.IsPerpFrame (x ρ) (k ρ) (ι ρ)) → ∀ u : T → UpqT P Q → ℝ≥0∞, (∀ ρ, Measurable (u ρ) ∧ ∀ g, Measurable (fun h => u ρ (ι ρ h * g)) ∧ ∫⁻ h, u ρ (ι ρ h * g) ∂(c.cd P' Q') = 1) → ∀ j : (T → UpqT P' Q') →* (T → UpqT P Q), (∀ b ρ, j b ρ = ι ρ (b ρ)) → ∀ ν : Measure (LatticeTensorUnfolding.RCosets j), LatticeTensorUnfolding.IsQuotMeasure j (Measure.pi fun _ => c.cd P Q) (Measure.pi fun _ => c.cd P' Q') ν → ∀ fib : ℝ → Measure (ActionCoordinates.Wsp P Q), ActionCoordinates.IsDxDq β fib → ∀ φ : T → ActionCoordinates.Wsp P Q → ℝ≥0∞, (∀ ρ, Measurable (φ ρ)) → ∫⁻ s : LatticeTensorUnfolding.RCosets j, ∏ ρ, φ ρ (ActionCoordinates.act (s.out ρ)⁻¹ (x ρ)) ∂ν = ∏ ρ, (ActionCoordinates.cM (P + Q))⁻¹ * ∫⁻ y, φ ρ y ∂(fib β) := by
   intro H c T _ P Q P' Q' β hβ x hx k ι hk u hu j hj ν hν fib hfib φ hφ
-  haveI := sigmaFinite_cd c P Q
-  haveI := sigmaFinite_cd c P' Q'
+  have := sigmaFinite_cd c P Q
+  have := sigmaFinite_cd c P' Q'
   let f : T → UpqT P Q → ℝ≥0∞ := fun ρ g => φ ρ (ActionCoordinates.act g⁻¹ (x ρ)) * u ρ g
   have hf : ∀ ρ, Measurable (f ρ) := fun ρ =>
     ((hφ ρ).comp (measurable_act_inv (x ρ))).mul (hu ρ).1
@@ -1554,8 +1554,8 @@ theorem arch (hR3 : ActionCoordinates.RealPlaceMeasures) (c : CDHaar) (hσ : IsC
   obtain ⟨hSD, -, hQ⟩ := hR3
   obtain ⟨r, hr1, hr2, hrθ, hrs, hrn⟩ := _root_.GlobalTheory.RealAdeleCoord.exists_realCoord F E σ hσ T τ θ hτ hθ
   obtain ⟨e, he, heh⟩ := _root_.GlobalTheory.RealSpaceCoord.exists_coord F E σ hσ T τ θ hτ hθ M P Q hM J hJ A hA
-  haveI : BorelSpace (Fin 1 → Fin M → Ainf F ⊗[F] E) := (GlobalTheory.ArchUnitaryTop.top_facts F E σ M 1 J).2.1
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Fin 1 → Fin M → Ainf F ⊗[F] E) := (GlobalTheory.ArchUnitaryTop.top_facts F E σ M 1 J).2.1
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨fib, hfib⟩ := GlobalTheory.RealPlaceCompare.exists_isDxDq P Q
 
   obtain ⟨b, hb1, hb⟩ : ∃ b : ℝ, (b = 1 ∨ b = -1) ∧ r (algebraMap F (Ainf F) β) = fun _ => b := by
@@ -1650,7 +1650,7 @@ theorem arch (hR3 : ActionCoordinates.RealPlaceMeasures) (c : CDHaar) (hσ : IsC
         rw [r.apply_symm_apply]; exact ht
     rw [hB] at h3
     have hBo : IsOpen {t : T → ℝ | ∀ ρ, t ρ ≠ 0} := by
-      rw [Set.setOf_forall]
+      rw [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun ρ => isOpen_ne.preimage (continuous_apply ρ)
     have hfib' : IsFibreFamily (ActionCoordinates.dx P Q) ActionCoordinates.qf id {x | x ≠ 0} (volume : Measure ℝ) Set.univ fib := by
       rw [GlobalTheory.RealPlaceCompare.qf_eq]; exact hfib
@@ -1812,7 +1812,7 @@ theorem ratio_of_setting (hL5 : PlaceSplittingTypes.SelfDualLatticeDensity) (hR3
   have hlat := GlobalTheory.AdelicU.SelfDual.isLattice_frameLat W
   have hsd := (GlobalTheory.AdelicU.SelfDual.forall_isSelfDualAt_iff hJ.2 hlat).1
     (GlobalTheory.AdelicU.SelfDual.isSelfDualAt_frameLat_of_cm D.sp.cm W)
-  haveI : FiniteDimensional D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; omega)
+  have : FiniteDimensional D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; omega)
   let b := Module.finBasis D.host.F D.host.E
   let Φv : ∀ v : HeightOneSpectrum (𝓞 D.host.F), (Fin 1 → Fin W.rank → Fv D.host.F v ⊗[D.host.F] D.host.E) → ℂ :=
     fun v => {X | X 0 ∈ GlobalTheory.AdelicU.latLoc D.host.F (GlobalTheory.AdelicU.frameLat W) v}.indicator 1
@@ -1836,8 +1836,8 @@ theorem ratio_of_setting (hL5 : PlaceSplittingTypes.SelfDualLatticeDensity) (hR3
     obtain ⟨Lv, hLv, hmem⟩ := _root_.GlobalTheory.CompletedSelfDual.exists_isSelfDualLattice _ _ _ _ _ _ hJ hlat.toIsLattice hsd v
     have hop := (GlobalTheory.LocalDensityCompare.lattice_compact_open v D.sp.cm.sig hσ Lv hLv.1 hLv.2.1).2
     have hlc := GlobalTheory.LocalDensityCompare.lcs (F := D.host.F) (E := D.host.E) v
-    haveI := hlc.2.1
-    haveI : BorelSpace (Fv D.host.F v ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+    have := hlc.2.1
+    have : BorelSpace (Fv D.host.F v ⊗[D.host.F] D.host.E) := ⟨rfl⟩
     have hms : MeasurableSet {X : Fin 1 → Fin W.rank → Fv D.host.F v ⊗[D.host.F] D.host.E | X 0 ∈ Lv} :=
       hop.measurableSet
     rw [← local_value hL5 hσ (by omega) hJ v

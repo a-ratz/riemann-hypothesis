@@ -136,7 +136,7 @@ theorem SplitSk_finFactor (Λ : Set (Fin n → E)) (μ : Measure (Hsub (Af F) σ
   classical
   have := hμ
   have hmeas : Measurable (fun h : ↥(Hsub (Af F) σ J P) => c2 * (h : HA (Af F) σ J)) :=
-    (hmulF c2).comp measurable_subtype_coe
+    (hmulF c2).comp measurable_subtypeVal
   have hS : MeasurableSet {h : ↥(Hsub (Af F) σ J P) | c2 * (h : HA (Af F) σ J) ∈ Kf σ J Λ} := hmeas hK
   have e1 : (fun h : ↥(Hsub (Af F) σ J P) =>
       (Kf σ J Λ : Set (HA (Af F) σ J)).indicator (1 : HA (Af F) σ J → ENNReal) (c2 * (h : HA (Af F) σ J))) =
@@ -158,11 +158,11 @@ theorem SplitSk_finFactor (Λ : Set (Fin n → E)) (μ : Measure (Hsub (Af F) σ
       rw [mul_assoc, (Kf σ J Λ).mul_mem_cancel_left ((Kf σ J Λ).inv_mem hk)]
     have hm1 : Measurable (fun h : ↥(Hsub (Af F) σ J P) => h1 * h) := by
       refine Measurable.subtype_mk (f := fun h : ↥(Hsub (Af F) σ J P) => (h1 : HA (Af F) σ J) * (h : HA (Af F) σ J)) ?_
-      exact (hmulF _).comp measurable_subtype_coe
-    rw [e2, ← Measure.map_apply hm1 (measurable_subtype_coe hK), map_mul_left_eq_self]
+      exact (hmulF _).comp measurable_subtypeVal
+    rw [e2, ← Measure.map_apply hm1 (measurable_subtypeVal hK), map_mul_left_eq_self]
   · have e0 : {X : Fin (r + 1 + r) → Fin n → Af F ⊗[F] E | ∃ k ∈ Kf σ J Λ, X = k • ratTup (Af F) (tupH P)}.indicator
         (1 : (Fin (r + 1 + r) → Fin n → Af F ⊗[F] E) → ENNReal) x = 0 := by
-      simp only [Set.indicator, hxK, if_false]
+      simp only [Set.indicator, hxK, ite_false]
     rw [e0, mul_zero]
     have e3 : {h : ↥(Hsub (Af F) σ J P) | c2 * (h : HA (Af F) σ J) ∈ Kf σ J Λ} = ∅ := by
       ext h
@@ -213,7 +213,7 @@ theorem SplitSk_ident (MG : MeasG σ J r) (MW : MeasW σ J P) (νH : Measure (Fi
   have hsf : ∀ x, (∃ k : HA (Af F) σ J, k • ratTup (F := F) (Af F) (tupH P) = x) →
       sf x • ratTup (F := F) (Af F) (tupH P) = x := by
     intro x hx
-    simp only [sf, dif_pos hx]
+    simp only [sf, dite_eq_left hx]
     exact hx.choose_spec
   let sA : (Fin (r + 1 + r) → Fin n → AF F ⊗[F] E) → HA (AF F) σ J := fun y =>
     (hsurj (s (projInf y)) (sf (projFin y))).choose
@@ -277,7 +277,7 @@ theorem SplitSk_ident (MG : MeasG σ J r) (MW : MeasW σ J P) (νH : Measure (Fi
           lintegral_congr fun h' => e _
       _ = ∫⁻ g, f (s (projInf y) * (splitA σ J g).1) *
           (Kf σ J Λ : Set (HA (Af F) σ J)).indicator 1 (sf (projFin y) * (splitA σ J g).2) ∂(amb MW.μH) :=
-          (lintegral_map (hψ.comp hsplit) measurable_subtype_coe).symm
+          (lintegral_map (hψ.comp hsplit) measurable_subtypeVal).symm
       _ = ∫⁻ p, f (s (projInf y) * p.1) *
           (Kf σ J Λ : Set (HA (Af F) σ J)).indicator 1 (sf (projFin y) * p.2) ∂((amb MW.μH).map (splitA σ J)) :=
           (lintegral_map hψ hsplit).symm
@@ -291,8 +291,8 @@ theorem SplitSk_ident (MG : MeasG σ J r) (MW : MeasW σ J P) (νH : Measure (Fi
           ∫⁻ h', (Kf σ J Λ : Set (HA (Af F) σ J)).indicator 1 (sf (projFin y) * (h' : HA (Af F) σ J)) ∂MW.μHf := by
           rw [amb, amb]
           congr 1
-          · exact lintegral_map (hf.comp (hmulI _)) measurable_subtype_coe
-          · exact lintegral_map (hind.comp (hmulF _)) measurable_subtype_coe
+          · exact lintegral_map (hf.comp (hmulI _)) measurable_subtypeVal
+          · exact lintegral_map (hind.comp (hmulF _)) measurable_subtypeVal
       _ = _ := by
           rw [SplitSk_finFactor Λ MW.μHf hHf hmulF hK _ _ (hsf _ hF)]
   have hae : ∀ᵐ y ∂νH, ∃ g : HA (AF F) σ J, g • ratTup (F := F) (AF F) (tupH P) = y := ae_iff.2 hC.1
@@ -340,7 +340,7 @@ theorem splitOm_of (h0 : AdTup) (h1 : OmDecomp) (h2 : OmFinVol) : Formalism.L2.S
   have hs0 : ∀ y, (∃ g : HA (Ainf F) σ J, g • ratTup (F := F) (Ainf F) (tupH P) = y) →
       s0 y • ratTup (F := F) (Ainf F) (tupH P) = y := by
     intro y hy
-    simp only [s0, dif_pos hy]
+    simp only [s0, dite_eq_left hy]
     exact hy.choose_spec
   have hpos1 : (∫⁻ _ : HA (Ainf F) σ J, (1 : ENNReal) ∂MG.μGinf) * MG.μGf (Kf σ J Λ) ≠ 0 := by
     have := hG.2.1

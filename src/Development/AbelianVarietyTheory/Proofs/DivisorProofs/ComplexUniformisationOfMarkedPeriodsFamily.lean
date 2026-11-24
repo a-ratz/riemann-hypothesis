@@ -194,7 +194,7 @@ theorem le_of_injOn_differentiableOn :
   have hfa : DifferentiableAt ℂ f a := hf.differentiableAt (hU.mem_nhds ha)
   have hder : fderiv ℂ (fun x => L (f x)) a = L.comp (fderiv ℂ f a) :=
     (L.hasFDerivAt.comp a hfa.hasFDerivAt).fderiv
-  rw [hder, ContinuousLinearMap.coe_comp'] at hb
+  rw [hder, ContinuousLinearMap.coe_comp] at hb
   have hsurj : Function.Surjective (padZero d' d) := Function.Surjective.of_comp hb.2
   have hr := LinearMap.finrank_range_le (padZero d' d)
   rw [LinearMap.range_eq_top.mpr hsurj, finrank_top, Module.finrank_fin_fun,
@@ -251,7 +251,7 @@ theorem comm_of_rel {ρ : O →+* Matrix (Fin g) (Fin g) ℂ} {D D'' : PLat O ba
 theorem countable_equiv (D D'' : PLat O bar) : Countable (D.La ≃ₗ[O] D''.La) := by
   let b := Module.Free.chooseBasis ℤ D.La
   let b'' := Module.Free.chooseBasis ℤ D''.La
-  haveI : Countable D''.La := Function.Injective.countable b''.equivFun.injective
+  have : Countable D''.La := Function.Injective.countable b''.equivFun.injective
   apply Function.Injective.countable (f := fun w : D.La ≃ₗ[O] D''.La => fun i => w (b i))
   intro w₁ w₂ hw
   have : (w₁.toLinearMap.toAddMonoidHom.toIntLinearMap) = (w₂.toLinearMap.toAddMonoidHom.toIntLinearMap) :=
@@ -338,7 +338,7 @@ theorem isOpen_near {D : PLat O bar} {m : ℕ} (B : Set (Fin m → ℂ)) (hB : I
   have : {b | b ∈ B ∧ ∀ x ∈ s, ‖f b x - P₀ x‖ < ε} =
       B ∩ ⋂ x ∈ s, (B ∩ (fun b => f b x) ⁻¹' Metric.ball (P₀ x) ε) := by
     ext b
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Metric.mem_ball, dist_eq_norm]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, Metric.mem_ball, dist_eq_norm]
     constructor
     · rintro ⟨hb, h⟩
       exact ⟨hb, fun x hx => ⟨hb, h x hx⟩⟩
@@ -355,8 +355,8 @@ theorem dim_eq : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
   intro O _ bar g ρ Λ F N C d d' D' t hN heta hd hqc hF hC hPex hPC
   obtain ⟨P₀, hP₀⟩ := hPex
   have hlft : LocallyOfFiniteType F.s := by
-    haveI := hd
-    haveI : Smooth F.s := SmoothOfRelativeDimension.smooth d F.s
+    have := hd
+    have : Smooth F.s := SmoothOfRelativeDimension.smooth d F.s
     infer_instance
   let Qc : Set (Fin d → ℂ) → ((Fin d → ℂ) → (Sp ℂ ⟶ F.X)) → Prop := fun B y =>
     ∃ (D'' : PLat O bar) (t'' : Λ → D''.La) (P : (Fin d → ℂ) → (D''.La →+ (Fin g → ℂ)))
@@ -392,12 +392,12 @@ theorem dim_eq : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
         rw [LinearEquiv.refl_apply, hh2 x, ← heq', LinearEquiv.trans_apply, hh1 x, LinearEquiv.symm_apply_apply])
     exact (hch i).2.2.2.1 (hsub hb.1) (hsub hb'.1) hyy
   ·
-    haveI : SecondCountableTopology (Matrix (Fin g) (Fin g) ℂ) :=
+    have : SecondCountableTopology (Matrix (Fin g) (Fin g) ℂ) :=
       inferInstanceAs (SecondCountableTopology (Fin g → Fin g → ℂ))
     let T : Set (Matrix (Fin g) (Fin g) ℂ) := {M | IsUnit M.det ∧ ∀ a, M * ρ a = ρ a * M}
     obtain ⟨S, hSc, hSd⟩ := TopologicalSpace.exists_countable_dense T
-    haveI : Countable S := hSc.to_subtype
-    haveI : ∀ i, Countable {w : D'.La ≃ₗ[O] (Dl i).La // IsIsom D' (Dl i) w} := fun i =>
+    have : Countable S := hSc.to_subtype
+    have : ∀ i, Countable {w : D'.La ≃ₗ[O] (Dl i).La // IsIsom D' (Dl i) w} := fun i =>
       haveI := countable_equiv D' (Dl i); inferInstance
     let J := Σ i : K, {w : D'.La ≃ₗ[O] (Dl i).La // IsIsom D' (Dl i) w} × S
     let per : J → (Fin d → ℂ) → (D'.La →+ (Fin g → ℂ)) := fun j c => trP (j.2.2 : T).1 (Pl j.1 c) j.2.1.1
@@ -447,7 +447,7 @@ theorem dim_eq : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
         ext M; simp [V]
       rw [this]
       exact isOpen_biInter_finset fun x _ => isOpen_lt
-        ((Continuous.matrix_mulVec continuous_subtype_val continuous_const).sub continuous_const).norm continuous_const
+        ((Continuous.matrix_mulVec continuous_subtypeVal continuous_const).sub continuous_const).norm continuous_const
     have hM₀V : (⟨M₀, hM₀T⟩ : T) ∈ V := fun x hx => by
       show ‖M₀ *ᵥ Pl i c (w x) - P₀ x‖ < ε
       rw [hM₀v, hwP, LinearEquiv.symm_apply_apply]
@@ -456,7 +456,7 @@ theorem dim_eq : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
     let j : J := ⟨i, ⟨w, hw.1⟩, ⟨M, hMS⟩⟩
     refine Set.mem_iUnion.2 ⟨j, c, ⟨hc, hMV⟩, ?_⟩
     have hperj : IsPeriod D' ρ (per j c) := (hperU j).1 c ⟨hc, hMV⟩
-    haveI : Invertible (M : Matrix (Fin g) (Fin g) ℂ) := Matrix.invertibleOfIsUnitDet _ M.2.1
+    have : Invertible (M : Matrix (Fin g) (Fin g) ℂ) := Matrix.invertibleOfIsUnitDet _ M.2.1
     let hM : (Fin g → ℂ) ≃ₗ[ℂ] (Fin g → ℂ) := Matrix.toLinearEquiv' (M : Matrix (Fin g) (Fin g) ℂ) inferInstance
     have hZ : Z (per j c) = Z (Q b) := hinv (Q b) (per j c) hQb hperj hb.2 hMV (h.trans hM) (fun x => by
       show (M : Matrix (Fin g) (Fin g) ℂ) *ᵥ Pl i c (w x) = _
@@ -526,7 +526,7 @@ theorem isHolTo_point_and_exp : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ
       GlobalTheory.SubfieldChart.exists_holomorphic_chart ℂ (RingHom.id ℂ) F.X F.s d (y b₀) hsm (hU b₀ hb₀).1
     obtain ⟨e₀, he₀⟩ : ∃ e₀, UnifAt F (RingHom.id ℂ) ρ N D' t (P b₀) (y₁ 0) e₀ := by
       rw [hy0]; exact ⟨_, hU b₀ hb₀⟩
-    haveI : Smooth F.s := SmoothOfRelativeDimension.smooth d _
+    have : Smooth F.s := SmoothOfRelativeDimension.smooth d _
     obtain ⟨C₁, P₁, e₁, hC₁, h01, hsub, hP0, hP₁, he₁, hU₁⟩ :=
       GlobalTheory.T.holomorphicMap_lifts_locally_to_periodFamilies O bar g ρ Λ F N D' t d C₀ y₁ 0 (P b₀) e₀ hN0 heta inferInstance hC₀ h0 hover hhol he₀
     obtain ⟨Bq, Q, Z, s, ε, hBq, hε, hQ, hZ0, hQZ, hZQ, hnear, hinv, hZ⟩ := hd' (P b₀) (hP.1 b₀ hb₀)
@@ -664,7 +664,7 @@ theorem exists_finite_representatives : ∀ (O : Type) [Ring O] (bar : O → O) 
   have hfin := GlobalTheory.FiniteClasses.finite_image_of_locally_constant_on_holomorphic_families
     GlobalTheory.SubfieldChart.exists_holomorphic_chart ℂ (RingHom.id ℂ) F.X F.s d _ (unifClass F ρ N C) hsm hqc hloc
   set T := unifClass F ρ N C '' {x | x ≫ F.s = spMap (RingHom.id ℂ)} with hT
-  haveI := hfin.fintype
+  have := hfin.fintype
   let E := (Fintype.equivFin T).symm
   have hch : ∀ c : T, ∃ (p : (D' : PLat O bar) × (Λ → D'.La)) (y : Sp ℂ ⟶ F.X), unifClass F ρ N C y = c.1 ∧ p ∈ unifClass F ρ N C y := by
     rintro ⟨c, y, hy, rfl⟩
@@ -745,8 +745,8 @@ theorem unif_of_fineAt : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ :
   intro O _ bar g ρ Λ F N C d hN heta hsm hqc hfull hF
   have hN0 : 0 < N := by omega
   have hlft : LocallyOfFiniteType F.s := by
-    haveI := hsm
-    haveI : Smooth F.s := SmoothOfRelativeDimension.smooth d F.s
+    have := hsm
+    have : Smooth F.s := SmoothOfRelativeDimension.smooth d F.s
     infer_instance
   obtain ⟨n, Di, t, hmem, hall, hdist⟩ := _root_.GlobalTheory.PELU.exists_finite_representatives O bar g ρ Λ F N C d hN0 heta hsm hqc hF
   have hQ : ∀ i (P : (Di i).La →+ (Fin g → ℂ)), ∃ Q, IsPeriod (Di i) ρ Q ∧ (IsPeriod (Di i) ρ P → Q = P) := by

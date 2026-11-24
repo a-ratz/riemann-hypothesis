@@ -117,7 +117,7 @@ theorem isSymmetric_of_symmetry_generator {S : Scheme.{0}} {G : Over S} [GrpObj 
 
 theorem exists_pelUnif_pow : GlobalFnsSt → ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (H : Geo.Tor.Host E) (t : Geo.Tor.SAB H (Spec (CommRingCat.of R))) (P : Geo.Tor.PELUnif I t) (j : ℕ), UnifPowSt3 (I := I) → (∃ D' : DegData R I, Nonempty (IsPowDeg D'.toPre P.D.toPre j)) → (∃ A' : PolAV (Spec (CommRingCat.of (FractionRing R))), Nonempty (IsPowPolAV A' P.A j)) → ∃ (t' : Geo.Tor.SAB H (Spec (CommRingCat.of R))) (P' : Geo.Tor.PELUnif I t') (pG : IsPowGrp t'.G t.G j) (pD : IsPowDeg P'.D.toPre P.D.toPre j) (pA : IsPowPolAV P'.A P.A j), Nonempty (UnifPowOf3 pD pA pG P'.U P.U) ∧ (∀ a i, t'.act.act a ≫ pG.pr i = pG.pr i ≫ t.act.act a) ∧ ∀ (a : NumberField.RingOfIntegers E) (x : P'.D.toPre.X), pD.xe (a • x) = a • pD.xe x := by
   intro hG R _ _ I E _ _ _ H t P j hU ⟨D', ⟨pD⟩⟩ ⟨A', ⟨pA⟩⟩
-  letI := H.starRing
+  let := H.starRing
   let pG : IsPowGrp (powObj t.G j) t.G j := powIsPowGrp t.G j
   obtain ⟨U', ⟨Q⟩⟩ := hU P.D P.A t.G P.U j D' A' (powObj t.G j) pD pA pG
   obtain ⟨act', hact⟩ := (GlobalTheory.exists_powAct _ _ _ j pG).2 _ t.act
@@ -132,7 +132,7 @@ theorem exists_pelUnif_pow : GlobalFnsSt → ∀ (R : Type) [CommRing R] [IsDoma
       sym := isSymmetric_of_symmetry_generator U'.LG U'.symG U'.symG_gen U'.symG_rig
       adj := fun a => GlobalTheory.PowAdj.lbIso_cube_pow _ _ _ j pG _ _ t.PP.isLB U'.LG.isLB iso _ _ _ _ (hact a) (hact (H.bar a)) (t.adj a)
       prim := GlobalTheory.PowPrimitive.lbIso_cube_pow _ _ _ j pG _ _ t.PP.isLB U'.LG.isLB iso _ _ (hact H.w0) t.prim }
-  letI md : Module (NumberField.RingOfIntegers E) D'.toPre.X := pD.xe.module _
+  let md : Module (NumberField.RingOfIntegers E) D'.toPre.X := pD.xe.module _
   have hx : ∀ (a : NumberField.RingOfIntegers E) (x : D'.toPre.X), pD.xe (a • x) = a • pD.xe x := fun a x =>
     pD.xe.apply_symm_apply _
   obtain ⟨oD', hoD⟩ := GlobalTheory.powDeg_diagonal_action hG R j _ _ pD _ hx P.oD

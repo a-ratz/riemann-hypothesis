@@ -209,8 +209,8 @@ theorem isKFinite_derivOp {v : E} (hv : h.IsSmoothVector π v) (hK : π.IsKFinit
   have hSmap : S.map M.subtype = π.kSpan K v := by
     rw [Submodule.map_span, BanachRep.kSpan, ← range_comp]
     rfl
-  haveI : FiniteDimensional ℂ (S.map M.subtype) := by rw [hSmap]; exact hK
-  haveI : FiniteDimensional ℂ S :=
+  have : FiniteDimensional ℂ (S.map M.subtype) := by rw [hSmap]; exact hK
+  have : FiniteDimensional ℂ S :=
     (Submodule.equivMapOfInjective M.subtype M.injective_subtype S).symm.finiteDimensional
   let b := Module.finBasis ℝ 𝔤
   set S' : Submodule ℂ M := ⨆ i, S.map (h.derivEnd π (b i))
@@ -272,7 +272,7 @@ theorem exists_strongDual_eq [CompleteSpace E] (φ : Module.Dual ℂ (h.gkVector
     ∃ Φ : E →L[ℂ] ℂ, ∀ (w : E) (hw : w ∈ π.kSpan K v),
       Φ w = φ ⟨w, h.kSpan_le_gkVectors π K v.2 hw⟩ := by
   set W := π.kSpan K (v : E)
-  haveI : FiniteDimensional ℂ W := v.2.2
+  have : FiniteDimensional ℂ W := v.2.2
   let ψ : W →ₗ[ℂ] ℂ := φ ∘ₗ Submodule.inclusion (h.kSpan_le_gkVectors π K v.2)
   let ψc : StrongDual ℂ W := ⟨ψ, ψ.continuous_of_finiteDimensional⟩
   obtain ⟨Φ, hΦ, -⟩ := exists_extension_norm_eq W ψc
@@ -281,8 +281,8 @@ theorem exists_strongDual_eq [CompleteSpace E] (φ : Module.Dual ℂ (h.gkVector
 theorem derivOp_mem_kSpan [CompleteSpace E] {v : E} (hv : h.IsSmoothVector π v)
     (hK : π.IsKFinite K v) (X : 𝔤) (hX : ∀ t : ℝ, h.expG (t • X) ∈ K) :
     h.derivOp π X v ∈ π.kSpan K v := by
-  haveI : FiniteDimensional ℂ (π.kSpan K v) := hK
-  have hcl : IsClosed (π.kSpan K v : Set E) := Submodule.closed_of_finiteDimensional _
+  have : FiniteDimensional ℂ (π.kSpan K v) := hK
+  have hcl : IsClosed (π.kSpan K v : Set E) := Submodule.isClosed_of_finiteDimensional _
   have hlim := hasDerivAt_iff_tendsto_slope.1 (h.hasDerivAt_derivOp π hv X)
   refine hcl.mem_of_tendsto hlim (Eventually.of_forall fun t => ?_)
   rw [slope_def_module]

@@ -213,7 +213,7 @@ theorem tensorMap_left {R : Type} [CommRing R] [IsDomain R] {D D' : DegPre R} {r
 
 theorem isMonHom_tensorMap {R : Type} [CommRing R] [IsDomain R] {D D' : DegPre R} {r : ℕ} {W : Matrix (Fin r) (Fin r) ℤ}
     (T : Tens D D' W) (k : (Fin r × Fin r) × Fin 4) : IsMonHom (tensP T k) := by
-  letI := D.P.isAb.comm
+  let := D.P.isAb.comm
   have := T.pr_hom k.1.1
   have := T.pr_hom k.1.2
   obtain ⟨⟨i, j⟩, m⟩ := k
@@ -229,7 +229,7 @@ theorem cubV_tens : GlobalFnsSt → ∀ (R : Type) [CommRing R] [IsDomain R] (D 
   let ρ : (Fin r × Fin r) × Fin 4 → ((G3 D'.P.A).left ⟶ (G3 D.P.A).left) := fun k => (P k ⊗ₘ P k ⊗ₘ P k).left
   have hψ : ∀ k a, thφ D'.P.A (x3 D'.P.A) a ≫ tensφ T.pr k = ρ k ≫ thφ D.P.A (x3 D.P.A) a := fun k a => by
     rw [← tensorMap_left T k]
-    letI := isMonHom_tensorMap T k
+    let := isMonHom_tensorMap T k
     exact (CubeMap.ofHom (P k)).psum_comm a.down
   have hρ : ∀ {T : Over (Spec (CommRingCat.of R))} (a b c : T ⟶ D'.P.A) k, (lift a (lift b c)).left ≫ ρ k =
       (lift (a ≫ P k) (lift (b ≫ P k) (c ≫ P k))).left := fun a b c k => by

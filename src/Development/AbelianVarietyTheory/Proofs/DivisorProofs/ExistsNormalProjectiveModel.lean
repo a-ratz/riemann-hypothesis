@@ -59,7 +59,7 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry TopologicalSpace in
 theorem _root_.GlobalTheory.CommonModel.isProper_of_isProjOver {R : Type} [CommRing R] {X : Scheme.{0}} {s : X ⟶ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp R}
     (hs : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsProjOver s) : IsProper s := by
   obtain ⟨N, i, hi, rfl⟩ := hs
-  haveI := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N
+  have := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N
   infer_instance
 
 

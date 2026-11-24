@@ -81,7 +81,7 @@ private theorem isPrecomplete_pi {R : Type} [CommRing R] (I : Ideal R) [IsPrecom
 private theorem isPrecomplete_finite {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Finite R M] (I : Ideal R) [IsPrecomplete I R] : IsPrecomplete I M := by
   obtain ⟨r, π, hπ⟩ := Module.Finite.exists_fin' R M
-  haveI := isPrecomplete_pi I r
+  have := isPrecomplete_pi I r
   have hmap : ∀ n, Submodule.map π (I ^ n • ⊤) = I ^ n • (⊤ : Submodule R M) := by
     intro n
     rw [Submodule.map_smul'', Submodule.map_top, LinearMap.range_eq_top.2 hπ]

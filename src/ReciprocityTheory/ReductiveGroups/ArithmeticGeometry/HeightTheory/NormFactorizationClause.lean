@@ -80,9 +80,9 @@ theorem finsum_liesOver_eq_finsum_good (c : ι) (p : Ideal (KTp K d.D d.N)) (g :
   refine finsum_congr fun w => ?_
   by_cases hG : w ∈ d.GoodP c p
   · have hO : w ∈ d.OverP c p := hG.1
-    simp only [finsum_eq_if, if_pos hO, if_pos hG]
+    simp only [finsum_eq_if, ite_eq_left hO, ite_eq_left hG]
     rfl
-  · simp only [finsum_eq_if, if_neg hG]
+  · simp only [finsum_eq_if, ite_eq_right hG]
     split_ifs with hO
     · have h0 : d.Wres c w g = 0 := by
         by_contra hne
@@ -195,7 +195,7 @@ private theorem key_lemma_3 (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (r : Ω c) (hr
     exact hr ((map_eq_zero_iff _ (algebraMap (Ω c) (OmS (Ω c) d.D d.N)).injective).mp h0)
   have hX : (letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
       Algebra.norm (KTf K d.D d.N) (algebraMap (Ω c) (OmS (Ω c) d.D d.N) r)) ≠ 0 := by
-    letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+    let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
     by_cases hfd : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N)
     · exact Algebra.norm_ne_zero_iff.mpr hne
     · rw [Algebra.norm_eq_one_of_not_exists_basis]
@@ -355,7 +355,7 @@ theorem arithDegree_additive (hd : d.AxH 𝒜) (h : d.S1) :
       intro h0
       apply (hta c).2
       simpa using congrArg Subtype.val h0
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hv).mp (hd.finrank_one c G)
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hv).mp (hd.finrank_one c G)
       ⟨ta' c, (hta' c).1⟩
     have ha' : a • ta c = ta' c := congrArg Subtype.val ha
     have ha0 : a ≠ 0 := by

@@ -173,7 +173,7 @@ theorem T2_card (L : SizeData₂ D) (j : Fin D.R.m) : (wts L j).T2.card ≤ D.ho
   calc (wts L j).T2.card ≤ D.host.thickPlaces.card := by
         refine Finset.card_le_card_of_injOn (fun τ => (D.eTau τ : D.R.GG)) ?_ ?_
         · intro τ hτ
-          simp only [wts, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hτ
+          simp only [wts, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hτ
           exact hτ
         · intro a _ b _ h
           exact D.eTau.injective (Subtype.ext h)

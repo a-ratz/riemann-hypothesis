@@ -89,7 +89,7 @@ theorem exists_sec_le {K : Type} [Field K] {X : Scheme.{0}} [IsIntegral X] (p : 
   choose ρ hρc hρ using hρ
   obtain ⟨i, hi⟩ : ∃ i, genericPoint X ∈ nonzeroLocus (s i) :=
     TopologicalSpace.Opens.mem_iSup.1 (by rw [hcov]; trivial)
-  letI : Algebra K Γ(X, nonzeroLocus (s i)) := (constHom p _).toAlgebra
+  let : Algebra K Γ(X, nonzeroLocus (s i)) := (constHom p _).toAlgebra
   obtain ⟨h1, h2, -⟩ := chart_facts p Φ ρ hL hρc hρ s i hi (fun _ => rfl) (r i) (hr i) (fun f => by
     obtain ⟨F, hF⟩ := hgen i f
     exact ⟨F, hF.symm⟩)

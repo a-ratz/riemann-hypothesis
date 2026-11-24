@@ -126,9 +126,9 @@ private theorem val_lt_one_iff (i : k ≃+* k') (hi : Continuous i) (x : k) :
   · simp
   have h := GlobalTheory.LocalFieldIso.valuation_map_le_one_iff i hi x⁻¹
   have p1 : 0 < valuation k x := by
-    rw [zero_lt_iff]; simpa using hx
+    rw [pos_iff_ne_zero]; simpa using hx
   have p2 : 0 < valuation k' (i x) := by
-    rw [zero_lt_iff]; simpa using hx
+    rw [pos_iff_ne_zero]; simpa using hx
   rw [map_inv₀, map_inv₀, map_inv₀, inv_le_one₀ p1, inv_le_one₀ p2] at h
   rw [← not_le, ← not_le, h]
 private theorem val_eq_one_iff (i : k ≃+* k') (hi : Continuous i) (x : k) :
@@ -150,16 +150,16 @@ private theorem unram_unif (i : k ≃+* k') (hi : Continuous i) (μ : kˣ →* �
   have le1 := S.2 _ ha1
   have le2 := S'.2 _ hb1
   have pa : 0 < valuation k (a : k) := by
-    rw [zero_lt_iff]; simp
+    rw [pos_iff_ne_zero]; simp
   have pb : 0 < valuation k (ImaginaryQuadraticEtaCharacter.unif k : k) := by
-    rw [zero_lt_iff]; simp
+    rw [pos_iff_ne_zero]; simp
   have pu : 0 < valuation k' (ImaginaryQuadraticEtaCharacter.unif k' : k') := by
-    rw [zero_lt_iff]; simp
+    rw [pos_iff_ne_zero]; simp
   have le3 : valuation k (ImaginaryQuadraticEtaCharacter.unif k : k) ≤ valuation k (a : k) := by
     have h1 : valuation k' (i ((ImaginaryQuadraticEtaCharacter.unif k : k) * (a : k)⁻¹)) ≤ 1 := by
       have : i (a : k) = (ImaginaryQuadraticEtaCharacter.unif k' : k') := by rw [hav]; exact i.apply_symm_apply _
       rw [map_mul, map_inv₀, this, map_mul, map_inv₀]
-      exact mul_inv_le_one_of_le₀ le2 zero_le'
+      exact mul_inv_le_one_of_le₀ le2 zero_le
     have h2 := (GlobalTheory.LocalFieldIso.valuation_map_le_one_iff i hi _).1 h1
     rw [map_mul, map_inv₀] at h2
     simpa using (mul_inv_le_iff₀ pa).1 h2

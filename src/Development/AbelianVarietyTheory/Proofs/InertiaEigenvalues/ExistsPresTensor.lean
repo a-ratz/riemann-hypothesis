@@ -432,7 +432,7 @@ theorem card_and_dense {P : LocPrime l} (AI : LocAinf l P) {K LL : FinExt l} {s 
       rw [← pow_mul, mul_comm, pow_mul, ← Units.val_pow_eq_pow_val, hk', Units.val_one, one_pow]
     have h1Δ : (1 : W.Gam) ∈ W.DelF := (mem_DelF_iff W _).2 (one_mem _)
     intro hdv
-    haveI : Finite ↥(CommGroup.torsion W.Gam) := Nat.finite_of_card_ne_zero (by
+    have : Finite ↥(CommGroup.torsion W.Gam) := Nat.finite_of_card_ne_zero (by
       rw [card_torsion]; exact Finset.card_ne_zero.2 ⟨1, h1Δ⟩)
     rw [← card_torsion] at hdv
     obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' l hdv
@@ -488,7 +488,7 @@ theorem fixed_of_fixed_lifts : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI
   have hl : l.Prime := Fact.out
   obtain ⟨h1, h2⟩ := card_and_dense AI S.hyp.1.2.1.2.1 S.hyp.1.2.1.2.2.2.2.1 (S.W H)
   refine ⟨fun h => h1 ((CharP.cast_eq_zero_iff k l _).1 h), fun γ hγ T A q hq t ht => ?_⟩
-  haveI : IsTopologicalRing ↥S.LL.1 :=
+  have : IsTopologicalRing ↥S.LL.1 :=
     inferInstanceAs (IsTopologicalRing ↥S.LL.1.toSubalgebra.toSubring)
   obtain ⟨U, hU, hm⟩ := exists_closed_stab (c := (l : S.O)) (GlobalTheory.LocalIntegers.isOpen_integers l S.LL)
     (by rw [map_natCast]; exact Nat.cast_ne_zero.2 hl.ne_zero)
@@ -1016,7 +1016,7 @@ theorem ringHom_eq_of_agree {O k : Type} [CommRing O] [CommRing k] (f g : O⟦X�
 
   have htail : PowerSeries.X ^ (n + 1) ∣ a - (PowerSeries.trunc (n + 1) a : O⟦X⟧) := by
     refine PowerSeries.X_pow_dvd_iff.mpr fun m hm => ?_
-    rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos hm, sub_self]
+    rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, ite_eq_left hm, sub_self]
   obtain ⟨b, hb⟩ := htail
   have ha : a = (PowerSeries.trunc (n + 1) a : O⟦X⟧) + PowerSeries.X ^ (n + 1) * b := by
     rw [← hb]; ring
@@ -1534,7 +1534,7 @@ theorem exists_pres [IsDomain O] [IsPrincipalIdealRing O] [NeZero n] (hO : Funct
   have hlam : algebraMap O k lam = 0 := (h.res_ker lam).2 dvd_rfl
   obtain ⟨g₀, hg₀⟩ := W.resΓ_onto γ
   choose β₀ hβ₀ using exists_frames h hd hm
-  haveI : Nontrivial Rk := nontrivial_of_ne _ _ (h.eps_ne 0)
+  have : Nontrivial Rk := nontrivial_of_ne _ _ (h.eps_ne 0)
   obtain ⟨c1, c2, c3, c4⟩ := _root_.GlobalTheory.RedFun.LatQuot.lattice_quotients (G := G) (Qp := Qp) lam h.lam_ne hlam h.res_surj
     (fun x => (h.res_ker x).1)
   obtain ⟨u, u₀, u1, u2, u3, u4, u5⟩ := exists_unit (E := E) hO
@@ -1749,8 +1749,8 @@ theorem exists_pres_tensor (E : EtTie W RA RW inclR φR gR πA) [IsDomain O] [Is
       ∀ t : Fin A.m → k, (∀ g, (W.resΓ g ∈ W.DelF ∨ W.resΓ g = γ) → A.ρ g t = t) → ∀ g, A.ρ g t = t)
     {n' : ℕ} [NeZero n'] (τ : ZMod n' → ZMod n) (hτ : Function.Bijective τ) (hτ1 : ∀ i, τ (i - 1) = τ i - 1) :
     ∃ F : DFun R n' G, Nonempty (Pres W F ι τ γ) := by
-  haveI := PD.finK₀
-  haveI : NeZero n := ⟨by rw [W.n_eq]; exact Module.finrank_pos.ne'⟩
+  have := PD.finK₀
+  have : NeZero n := ⟨by rw [W.n_eq]; exact Module.finrank_pos.ne'⟩
   let ρ : RW →ₐ[O] k ⊗[O] RW := Algebra.TensorProduct.includeRight
   obtain ⟨κ, hκ⟩ := exists_isRed E ρ (k := k) lam h1 h2
     (fun h => h3 (hO (h.trans (map_zero _).symm)))

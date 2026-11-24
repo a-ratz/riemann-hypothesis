@@ -123,7 +123,7 @@ def toUXHom : GA D X →* GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjuga
     simp [Formalism.L2.Theta.mt, Matrix.submatrix_mul_equiv]
 
 theorem continuous_toUX : Continuous (GlobalTheory.TripleRead.toUX X e hJ) := by
-  have hm : Continuous fun g : GA D X => (matHom X g) := continuous_subtype_val
+  have hm : Continuous fun g : GA D X => (matHom X g) := continuous_subtypeVal
   refine continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)
   · have hv : Continuous fun g : GA D X =>
         (matHom X g).1 := Units.continuous_val.comp hm
@@ -197,9 +197,9 @@ theorem toUX_mem_UAt (Z : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorMode
 
 theorem continuous_exp_smul {n : ℕ} (Y : Matrix (Fin n) (Fin n) ℂ) :
     Continuous fun t : ℝ => NormedSpace.exp (t • Y) := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   exact NormedSpace.exp_continuous.comp (continuous_id.smul continuous_const)
 
 end GlobalTheory.TransportedLine
@@ -347,7 +347,7 @@ theorem exists_pure_tensor_lieDeriv_left_factor : GlobalTheory.Published.HoweDua
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [hpure i]
     funext x
-    simp only [Pi.smul_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, f, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc]
+    simp only [Pi.smul_apply, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, f, smul_apply, smul_eq_mul, mul_assoc]
   subst hΨeq
   have hfP : ∀ i, f i ∈ Γ.M.Pol Bs.ψ Bs.emb := fun i => Submodule.smul_mem _ _ (hf0 i)
   obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.DerPol.polarization_pair_derivation hP Γ.M Bs.ψ Bs.emb Xc.β (Xc.β / Xc.α) om hm.triple.base.cm hm.triple.base.std

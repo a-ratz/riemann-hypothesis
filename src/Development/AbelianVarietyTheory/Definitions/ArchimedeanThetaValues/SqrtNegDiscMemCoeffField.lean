@@ -66,7 +66,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : _root_.Reciproc
 lemma _root_.GlobalTheory.HostModel.zeta_mul_pow {n m : ℕ} (hn : 0 < n) (hm : 0 < m) :
     _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta (n * m) ^ m = _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta n := by
   unfold _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.zeta
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   have hn' : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
   have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
@@ -116,12 +116,12 @@ theorem _root_.GlobalTheory.HostModel.exists_roots (L : IntermediateField ℚ �
     rintro x (hx | ⟨n, rfl⟩)
     · exact (IsIntegral.of_finite ℚ (⟨x, hx⟩ : L)).map L.val
     · exact _root_.GlobalTheory.LevelExist.isIntegral_zeta (Nat.succ_pos n)
-  haveI : Algebra.IsAlgebraic ℚ Kinf := IntermediateField.isAlgebraic_adjoin hint
-  letI : Algebra L Kinf := (IntermediateField.inclusion hL).toRingHom.toAlgebra
-  letI : Algebra L F := f.toAlgebra
-  haveI : IsScalarTower ℚ L Kinf :=
+  have : Algebra.IsAlgebraic ℚ Kinf := IntermediateField.isAlgebraic_adjoin hint
+  let : Algebra L Kinf := (IntermediateField.inclusion hL).toRingHom.toAlgebra
+  let : Algebra L F := f.toAlgebra
+  have : IsScalarTower ℚ L Kinf :=
     IsScalarTower.of_algebraMap_eq fun q => ((IntermediateField.inclusion hL).commutes q).symm
-  haveI : Algebra.IsAlgebraic L Kinf := Algebra.IsAlgebraic.tower_top (K := ℚ) L
+  have : Algebra.IsAlgebraic L Kinf := Algebra.IsAlgebraic.tower_top (K := ℚ) L
   let g : Kinf →ₐ[L] F := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

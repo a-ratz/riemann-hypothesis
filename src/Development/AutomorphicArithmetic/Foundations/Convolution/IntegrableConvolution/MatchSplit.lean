@@ -219,7 +219,7 @@ theorem UpperTheory.ConvolutionTheory.L1.quotFin :
   have hNfin : ν N ≠ ⊤ := hNc.measure_lt_top.ne
   have hinK : ∀ t ∈ N, ∀ c ∈ C, i t * c ∈ K := fun t ht c hc =>
     interior_subset (hUV (Set.mk_mem_prod (hNU ht) (hCV hc)))
-  haveI : ν.IsMulRightInvariant := by
+  have : ν.IsMulRightInvariant := by
     have h := (inferInstance : ν.inv.IsMulRightInvariant)
     rwa [Measure.inv_eq_self] at h
   set ind : X → ℝ≥0∞ := K.indicator 1 with hind
@@ -337,11 +337,11 @@ private lemma closed_centr [T2Space G] (γ : G) : IsClosed ((Subgroup.centralize
 private lemma inv_inv_meas [LocallyCompactSpace G] [T2Space G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]
     (Z : Subgroup G) (hc : IsClosed (Z : Set G)) (hcomm : ∀ a ∈ Z, ∀ b ∈ Z, a * b = b * a)
     (ν : Measure Z) [ν.IsHaarMeasure] : ν.IsInvInvariant := by
-  haveI : LocallyCompactSpace Z := hc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology Z := Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI : TopologicalSpace.MetrizableSpace Z := TopologicalSpace.metrizableSpace_of_t3_secondCountable Z
-  haveI : ν.Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure ν
-  letI : CommGroup Z := { (inferInstance : Group Z) with
+  have : LocallyCompactSpace Z := hc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology Z := Topology.IsEmbedding.subtypeVal.secondCountableTopology
+  have : TopologicalSpace.MetrizableSpace Z := TopologicalSpace.metrizableSpace_of_t3_secondCountable Z
+  have : ν.Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure ν
+  let : CommGroup Z := { (inferInstance : Group Z) with
     mul_comm := fun a b => Subtype.ext (hcomm a a.2 b b.2) }
   exact Measure.IsHaarMeasure.isInvInvariant_of_regular ν
 
@@ -403,17 +403,17 @@ end
 theorem geoAbs : GeoAbs := by
   intro G _ _ _ _ _ _ _ _ μ _ m γ hcl hcomm ν _ δ hδ hprod Φ hΦ hΦc
   have hZc := closed_centr γ
-  haveI : LocallyCompactSpace (Subgroup.centralizer {γ} : Subgroup G) :=
+  have : LocallyCompactSpace (Subgroup.centralizer {γ} : Subgroup G) :=
     hZc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (Subgroup.centralizer {γ} : Subgroup G) :=
+  have : SecondCountableTopology (Subgroup.centralizer {γ} : Subgroup G) :=
     Topology.IsEmbedding.subtypeVal.secondCountableTopology
-  haveI := inv_inv_meas _ hZc hcomm ν
+  have := inv_inv_meas _ hZc hcomm ν
   have CV := changeVar G μ m δ
   obtain ⟨pc, -, pne, -, -, -⟩ := pushTest G μ m Φ hΦ hΦc
   have CP := closedProper G γ hcl
   let dg : (Subgroup.centralizer {γ} : Subgroup G) →* (Fin (m + 1) → G) :=
     { toFun := fun t _ => (t : G), map_one' := rfl, map_mul' := fun _ _ => rfl }
-  have hdg : Continuous dg := continuous_pi fun _ => continuous_subtype_val
+  have hdg : Continuous dg := continuous_pi fun _ => continuous_subtypeVal
   let F : (Fin (m + 1) → G) → ℂ := fun x => Φ fun i => (x i)⁻¹ * δ i * x (i + 1)
   have hFc : Continuous F := hΦ.comp (continuous_pi fun i =>
     ((continuous_apply i).inv.mul continuous_const).mul (continuous_apply (i + 1)))
@@ -448,7 +448,7 @@ theorem geoAbs : GeoAbs := by
         obtain ⟨t, y, hy, e⟩ := hCx x (subset_tsupport _ (Function.mem_support.2 hx))
         exact ⟨t, y, hy, e⟩⟩ hρ
   have fin2 : ∀ ρ, IsNormAlong id (Subgroup.centralizer {γ} : Subgroup G).subtype ν ρ → ∫⁻ x, ‖f x‖ₑ * ρ x ∂μ < ⊤ := fun ρ hρ =>
-    quotFin G _ μ ν (Subgroup.centralizer {γ} : Subgroup G).subtype continuous_subtype_val f ρ hfc hfinv
+    quotFin G _ μ ν (Subgroup.centralizer {γ} : Subgroup G).subtype continuous_subtypeVal f ρ hfc hfinv
       ⟨C', hC', fun x hx => by
         obtain ⟨g, hg, e⟩ := pne _ hx
         obtain ⟨t, ht, y, hy, e'⟩ := hCx' x ⟨g, subset_tsupport _ (Function.mem_support.2 hg), e⟩
@@ -463,7 +463,7 @@ theorem geoAbs : GeoAbs := by
       quotAny (Fin (m + 1) → G) _ (Measure.pi fun _ => μ) ν dg hdg.measurable F _ hFc.measurable hFinv hρ (fin1 _ hρ)
     have R : quotInt μ id (fun t : (Subgroup.centralizer {γ} : Subgroup G) => (t : G)) ν f =
         ∫ x, f x * ((ρ' x).toReal : ℂ) ∂μ :=
-      quotAny G _ μ ν (Subgroup.centralizer {γ} : Subgroup G).subtype continuous_subtype_val.measurable f _ hfc.measurable hfinv hρ' (fin2 _ hρ')
+      quotAny G _ μ ν (Subgroup.centralizer {γ} : Subgroup G).subtype continuous_subtypeVal.measurable f _ hfc.measurable hfinv hρ' (fin2 _ hρ')
     refine L.trans (Eq.trans ?_ R.symm)
     let H : G × (Fin m → G) → ℂ := fun p => Φ (fib p.2 (p.1⁻¹ * γ * p.1)) * ((ρ' p.1).toReal : ℂ)
     have hHm : Measurable H := by
@@ -480,9 +480,9 @@ theorem geoAbs : GeoAbs := by
     have hint : Integrable (fun x => F x * ((ρ' (x 0)).toReal : ℂ)) (Measure.pi fun _ => μ) := by
       refine ⟨(hFc.measurable.mul (Complex.measurable_ofReal.comp hρ.1.ennreal_toReal)).aestronglyMeasurable, ?_⟩
       refine lt_of_le_of_lt (lintegral_mono fun x => ?_) (fin1 _ hρ)
-      rw [enorm_mul]
+      rw [eNorm_mul]
       gcongr
-      rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_of_nonneg ENNReal.toReal_nonneg]
+      rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg ENNReal.toReal_nonneg]
       exact ENNReal.ofReal_toReal_le
     have hHint : Integrable H (μ.prod (Measure.pi fun _ => μ)) := by
       refine (CV.1.integrable_comp hHm.aestronglyMeasurable).1 ?_
@@ -562,20 +562,20 @@ private theorem transport (X Y T : Type) [Group X] [TopologicalSpace X] [IsTopol
 private theorem invInv {T : Type} [Group T] [TopologicalSpace T] [IsTopologicalGroup T] [LocallyCompactSpace T]
     [SecondCountableTopology T] [MeasurableSpace T] [BorelSpace T] (h : ∀ a b : T, a * b = b * a) (ν : Measure T)
     [ν.IsHaarMeasure] : ν.IsInvInvariant := by
-  letI : CommGroup T := { (inferInstance : Group T) with mul_comm := h }
+  let : CommGroup T := { (inferInstance : Group T) with mul_comm := h }
   exact Measure.IsHaarMeasure.isInvInvariant_of_regular ν
 
 theorem matchSplit :
     UpperTheory.ConvolutionTheory.L1.MatchSplit := by
   intro R S _ _ _ _ _ _ _ _ _ ι s m D n _ _ _ _ μS μR hS hR hreg
   obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8⟩ := glueBasic R S ι s m D n
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) R) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → R))
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → R))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) R)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : LocallyCompactSpace (GL (Fin n) R) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology (GL (Fin n) R) := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : LocallyCompactSpace (GL (Fin n) R) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology (GL (Fin n) R) := Units.isEmbedding_embedProduct.secondCountableTopology
   let e : (Fin (m + 1) → GL (Fin n) R) ≃ₜ GL (Fin n) S :=
     { toFun := D.glue n
       invFun := fun x i => D.comp n i x
@@ -584,8 +584,8 @@ theorem matchSplit :
       continuous_toFun := h4
       continuous_invFun := continuous_pi h5 }
   let e' : (Fin (m + 1) → GL (Fin n) R) ≃* GL (Fin n) S := { e.toEquiv with map_mul' := h3 }
-  haveI : LocallyCompactSpace (GL (Fin n) S) := e.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (GL (Fin n) S) := e.symm.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace (GL (Fin n) S) := e.symm.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (GL (Fin n) S) := e.symm.isEmbedding.secondCountableTopology
   haveI hH : (Measure.map (D.glue n) (Measure.pi fun _ : Fin (m + 1) => μR)).IsHaarMeasure :=
     MulEquiv.isHaarMeasure_map (Measure.pi fun _ : Fin (m + 1) => μR) e' h4 (continuous_pi h5)
   set c := Measure.haarScalarFactor μS (Measure.map (D.glue n) (Measure.pi fun _ : Fin (m + 1) => μR)) with hc
@@ -607,13 +607,13 @@ theorem matchSplit :
         simp [Subgroup.mem_centralizer_iff]
       rw [this]
       exact isClosed_eq (by fun_prop) (by fun_prop)
-    haveI : LocallyCompactSpace (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) R)) := hcl.locallyCompactSpace
-    haveI : SecondCountableTopology (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) R)) :=
+    have : LocallyCompactSpace (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) R)) := hcl.locallyCompactSpace
+    have : SecondCountableTopology (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) R)) :=
       TopologicalSpace.Subtype.secondCountableTopology _
-    haveI : ν.IsInvInvariant := invInv (fun a b => Subtype.ext (r2 _ a.2 _ b.2)) ν
+    have : ν.IsInvInvariant := invInv (fun a b => Subtype.ext (r2 _ a.2 _ b.2)) ν
     let i : (Subgroup.centralizer {γ} : Subgroup (GL (Fin n) R)) →* (Fin (m + 1) → GL (Fin n) R) :=
       MonoidHom.pi fun _ => Subgroup.subtype _
-    have hi : Continuous i := continuous_pi fun _ => continuous_subtype_val
+    have hi : Continuous i := continuous_pi fun _ => continuous_subtypeVal
     have key : ∀ x, (e x)⁻¹ * δ * mapGL n s (e x) = D.glue n fun k => (x k)⁻¹ * D.comp n k δ * x (k + 1) := by
       intro x
       rw [← h2 ((e x)⁻¹ * δ * mapGL n s (e x))]

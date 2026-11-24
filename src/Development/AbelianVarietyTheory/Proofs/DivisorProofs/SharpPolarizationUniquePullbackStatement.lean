@@ -116,8 +116,8 @@ theorem sharpOver_unique : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matr
     have wz : ((x * y).left ≫ α) ≫ P'.A.hom = (Over.mk (T₀.hom ≫ h)).hom := by
       rw [Category.assoc, hαw, ← Category.assoc, Over.w (x * y)]; rfl
     have := ext' (x₁ * y₁) (Over.homMk ((x * y).left ≫ α) wz) fun a => by
-      haveI := hpr a
-      haveI := hpr' a
+      have := hpr a
+      have := hpr' a
       rw [MonObj.mul_comp]
       have e := hκ.2 T₀ (x ≫ pr a) (y ≫ pr a) (x₁ ≫ pr' a) (y₁ ≫ pr' a)
         (by show x₁.left ≫ (pr' a).left = x.left ≫ (pr a).left ≫ κ; rw [hx, Category.assoc, hα])

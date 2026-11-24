@@ -116,10 +116,10 @@ theorem coord_restrict_bijective : ∀ (A B : Type) [CommRing A] [CommRing B] [A
         Scheme.IdealSheafData.comapIso_inv_subschemeι])
       (by rw [Iso.refl_hom, Category.comp_id, Iso.symm_hom]; dsimp only [φ]; rw [Iso.inv_hom_id_assoc])
       (by simp) (by simp)
-  haveI : IsOpenImmersion f :=
+  have : IsOpenImmersion f :=
     MorphismProperty.of_isPullback (P := @IsOpenImmersion) (isPullback_bc A B y.1 a).flip
       (inferInstanceAs (IsOpenImmersion U.ι))
-  haveI : IsOpenImmersion φ := by dsimp only [φ]; infer_instance
+  have : IsOpenImmersion φ := by dsimp only [φ]; infer_instance
   set X0 := a ''ᵁ W with hX0
   have hX : φ ''ᵁ ((subStr A B y') ⁻¹ᵁ W) = (subStr A B y) ⁻¹ᵁ X0 :=
     IsOpenImmersion.image_preimage_eq_preimage_image_of_isPullback hpb W
@@ -200,7 +200,7 @@ theorem span_gen_eq_top (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (N 
     Submodule.span Γ(Z, W) (Set.range fun j => gen A B y W (e j)) = ⊤ := by
   have sq : IsPullback (pullback.fst (str A B) y.1) (pullback.snd (str A B) y.1) (str A B) y.1 :=
     IsPullback.of_hasPullback _ _
-  haveI : IsAffineHom (pullback.snd (str A B) y.1) :=
+  have : IsAffineHom (pullback.snd (str A B) y.1) :=
     isAffineHom_isStableUnderBaseChange.of_isPullback sq inferInstance
   have hpo := ReciprocityTheory.ChartRestriction.G.Out.GtBCPf.isPushout_appLE sq inferInstance (isAffineOpen_top _) W.2
     (by simp) (by simp)
@@ -210,18 +210,18 @@ theorem span_gen_eq_top (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (N 
   let S := Γ(Spec (CommRingCat.of B), ⊤)
   let T := Γ(Z, (W : Z.Opens))
   let Q := Γ(pullback (str A B) y.1, pullback.snd (str A B) y.1 ⁻¹ᵁ (W : Z.Opens))
-  letI : Algebra R S := (show R ⟶ S from (str A B).app ⊤).hom.toAlgebra
-  letI : Algebra R T := (y.1.appLE ⊤ W (by simp)).hom.toAlgebra
-  letI : Algebra T Q := ((pullback.snd (str A B) y.1).app W).hom.toAlgebra
-  letI : Algebra S Q :=
+  let : Algebra R S := (show R ⟶ S from (str A B).app ⊤).hom.toAlgebra
+  let : Algebra R T := (y.1.appLE ⊤ W (by simp)).hom.toAlgebra
+  let : Algebra T Q := ((pullback.snd (str A B) y.1).app W).hom.toAlgebra
+  let : Algebra S Q :=
     (show S ⟶ Q from (pullback.fst (str A B) y.1).appLE (str A B ⁻¹ᵁ ⊤) _ (by simp)).hom.toAlgebra
-  letI : Algebra R Q :=
+  let : Algebra R Q :=
     ((y.1.appLE ⊤ W (by simp)) ≫ (pullback.snd (str A B) y.1).app W).hom.toAlgebra
-  haveI : IsScalarTower R T Q := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower R S Q := IsScalarTower.of_algebraMap_eq (fun x => by
+  have : IsScalarTower R T Q := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower R S Q := IsScalarTower.of_algebraMap_eq (fun x => by
     have h := congr($(hpo.w).hom x)
     exact h.symm)
-  haveI : Algebra.IsPushout R T S Q := (CommRingCat.isPushout_iff_isPushout).mp hpo.flip
+  have : Algebra.IsPushout R T S Q := (CommRingCat.isPushout_iff_isPushout).mp hpo.flip
   have hbc := Algebra.IsPushout.out (R := R) (S := T) (R' := S) (S' := Q)
 
   have key : ∀ s : S, (y.2.1.subschemeι.app (pullback.snd (str A B) y.1 ⁻¹ᵁ (W : Z.Opens))).hom
@@ -310,8 +310,8 @@ theorem sec_finite_flat (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (r 
     (Z : Scheme.{0}) (y : (GlobalTheory.HilbAff.functor A B r).obj (op Z)) (W : Z.affineOpens) :
     Module.Finite Γ(Z, W) (GlobalTheory.HilbAff.Sec A B y W) ∧ Module.Flat Γ(Z, W) (GlobalTheory.HilbAff.Sec A B y W) := by
   obtain ⟨h1, h2, -⟩ := y.2.2
-  haveI : IsFinite (subStr A B y) := h1
-  haveI : Flat (subStr A B y) := h2
+  have : IsFinite (subStr A B y) := h1
+  have : Flat (subStr A B y) := h2
   constructor
   · exact IsFinite.finite_app (subStr A B y) W W.2
   · have hV : IsAffineOpen (subStr A B y ⁻¹ᵁ (W : Z.Opens)) := W.2.preimage (subStr A B y)
@@ -360,10 +360,10 @@ theorem rankAtStalk_sec (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (r 
   obtain ⟨_hfin, _hflat, h3⟩ := y.2.2
   have hW : IsAffineOpen (W : Z.Opens) := W.2
   have hV : IsAffineOpen (subStr A B y ⁻¹ᵁ (W : Z.Opens)) := hW.preimage _
-  haveI : Module.Finite Γ(Z, W) (Sec A B y W) := by
+  have : Module.Finite Γ(Z, W) (Sec A B y W) := by
     have := IsFinite.finite_app (subStr A B y) (W : Z.Opens) hW
     exact this
-  haveI : Module.Flat Γ(Z, W) (Sec A B y W) := by
+  have : Module.Flat Γ(Z, W) (Sec A B y W) := by
     have := Scheme.Hom.flat_appLE (subStr A B y) hW hV le_rfl
     rw [Scheme.Hom.appLE_eq_app] at this
     exact this
@@ -406,11 +406,11 @@ theorem localizedModule_map_injective_of_surjective_of_rankAtStalk
     (r : ℕ) (P : PrimeSpectrum R) (hP : Module.rankAtStalk Q P = r) (φ : (Fin r → R) →ₗ[R] Q)
     (hs : Function.Surjective (LocalizedModule.map P.asIdeal.primeCompl φ)) :
     Function.Injective (LocalizedModule.map P.asIdeal.primeCompl φ) := by
-  haveI : Nontrivial R := nontrivial_of_ne (0 : R) 1 fun h =>
+  have : Nontrivial R := nontrivial_of_ne (0 : R) 1 fun h =>
     P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 (h ▸ P.asIdeal.zero_mem))
-  haveI : Module.Free (Localization.AtPrime P.asIdeal)
+  have : Module.Free (Localization.AtPrime P.asIdeal)
       (LocalizedModule P.asIdeal.primeCompl Q) := Module.free_of_flat_of_isLocalRing
-  haveI : Module.Free (Localization.AtPrime P.asIdeal)
+  have : Module.Free (Localization.AtPrime P.asIdeal)
       (LocalizedModule P.asIdeal.primeCompl (Fin r → R)) := Module.free_of_flat_of_isLocalRing
   have h1 : Module.finrank (Localization.AtPrime P.asIdeal)
       (LocalizedModule P.asIdeal.primeCompl (Fin r → R)) = r := by
@@ -503,9 +503,9 @@ theorem exists_embedding_bijective_localizedModule_map_of_rankAtStalk :
           (Fintype.linearCombination R (b ∘ σ))) := by
   intro R Q _ _ _ _ _ N r b hspan hrank P₀
   let p := P₀.asIdeal
-  haveI : Module.Free (Localization.AtPrime p) (LocalizedModule p.primeCompl Q) :=
+  have : Module.Free (Localization.AtPrime p) (LocalizedModule p.primeCompl Q) :=
     Module.free_of_flat_of_isLocalRing
-  haveI : Module.FinitePresentation (Localization.AtPrime p) (LocalizedModule p.primeCompl Q) :=
+  have : Module.FinitePresentation (Localization.AtPrime p) (LocalizedModule p.primeCompl Q) :=
     Module.finitePresentation_of_projective _ _
   let v : Fin N → LocalizedModule p.primeCompl Q := fun i => LocalizedModule.mk (b i) 1
   have hv : Submodule.span (Localization.AtPrime p) (Set.range v) = ⊤ := by
@@ -527,8 +527,8 @@ theorem exists_embedding_bijective_localizedModule_map_of_rankAtStalk :
       rw [this]
       exact Submodule.smul_mem _ _ hq
   obtain ⟨κ, a, bs, hb⟩ := Module.exists_basis_of_span_of_flat v hv
-  haveI : Finite κ := Module.Finite.finite_basis bs
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Module.Finite.finite_basis bs
+  have : Fintype κ := Fintype.ofFinite κ
   have hcard : Fintype.card κ = r := by
     rw [← hrank P₀, Module.rankAtStalk, Module.finrank_eq_card_basis bs]
   have ha : Function.Injective a := fun i j hij => bs.injective (by rw [hb, hb, hij])

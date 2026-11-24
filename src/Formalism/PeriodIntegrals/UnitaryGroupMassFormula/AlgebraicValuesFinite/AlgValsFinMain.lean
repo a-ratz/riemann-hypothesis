@@ -182,27 +182,27 @@ theorem assemble : Assemble L := by
   obtain ⟨N, hN0, hN⟩ := hTors χ
   obtain ⟨h, hh0, hk⟩ := hPow
   obtain ⟨ι, hι, c, hc⟩ := hSame
-  haveI := hι
+  have := hι
   have hz : ∀ r ∈ UFin L, ((χ.1 r : ℂˣ) : ℂ) ^ N = 1 := by
     intro r hr
     rw [← Units.val_pow_eq_pow_val, hN r hr, Units.val_one]
   let U := {i : ι // ∃ v, c v = i ∧ χ.UnrAt v}
   let f : U → ℂ := fun i => χ.valTw s i.2.choose
   let S : Set ℂ := ((Polynomial.nthRoots N (1 : ℂ)).toFinset : Set ℂ) ∪ Set.range f
-  haveI : Finite S := ((Set.toFinite _).union (Set.finite_range f)).to_subtype
+  have : Finite S := ((Set.toFinite _).union (Set.finite_range f)).to_subtype
   have hA : ∀ v, χ.UnrAt v → ∃ P ∈ compo L, ∃ z : ℂ, z ^ N = 1 ∧ χ.valTw s v ^ h * (P * z) = 1 := by
     intro v hv
     obtain ⟨kv, hkv⟩ := hk v
     have h1 : ∀ u, u ∉ ({v} : Finset (HeightOneSpectrum (𝓞 L))) → ordF u kv = 0 := by
       intro u hu
-      rw [hkv u, if_neg (fun h' => hu (Finset.mem_singleton.mpr h'))]
+      rw [hkv u, ite_eq_right (fun h' => hu (Finset.mem_singleton.mpr h'))]
     have h2 : ∀ u ∈ ({v} : Finset (HeightOneSpectrum (𝓞 L))), χ.UnrAt u := by
       intro u hu
       rw [Finset.mem_singleton.mp hu]
       exact hv
     obtain ⟨r, hr, e⟩ := hKey χ s m hm kv {v} h1 h2
     refine ⟨_, prod_mem_compo m (kv : L), _, hz r hr, ?_⟩
-    rw [Finset.prod_singleton, hkv v, if_pos rfl, zpow_natCast] at e
+    rw [Finset.prod_singleton, hkv v, ite_eq_left rfl, zpow_natCast] at e
     rw [← mul_assoc]
     exact e
   let C : IntermediateField ℚ ℂ := compo L ⊔ IntermediateField.adjoin ℚ S
@@ -224,7 +224,7 @@ theorem assemble : Assemble L := by
       have h1 : ∀ u, u ∉ ({v, hex.choose} : Finset (HeightOneSpectrum (𝓞 L))) → ordF u k = 0 := by
         intro u hu
         simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hu
-        rw [hkk u, if_neg hu.1, if_neg hu.2, sub_zero]
+        rw [hkk u, ite_eq_right hu.1, ite_eq_right hu.2, sub_zero]
       have h2 : ∀ u ∈ ({v, hex.choose} : Finset (HeightOneSpectrum (𝓞 L))), χ.UnrAt u := by
         intro u hu
         simp only [Finset.mem_insert, Finset.mem_singleton] at hu
@@ -248,9 +248,9 @@ theorem assemble : Assemble L := by
         rw [pow_mul, e1, inv_pow, mul_pow, hzN, mul_one]
         exact inv_mem (pow_mem hP N)
       exact IsIntegral.of_pow (Nat.mul_pos hh0 hN0) (isIntegral_of_mem_compo hpow)
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ S) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ S) :=
     IntermediateField.finiteDimensional_adjoin hint
-  haveI hC : FiniteDimensional ℚ C := IntermediateField.finiteDimensional_sup _ _
+  have hC : FiniteDimensional ℚ C := IntermediateField.finiteDimensional_sup _ _
   refine ⟨C.toSubfield, ?_, fun v hv => ⟨⟨χ.valTw s v, hval v hv⟩, rfl⟩⟩
   let e : C ≃ₗ[ℚ] C.toSubfield :=
     { toFun := fun x => ⟨x.1, x.2⟩
@@ -328,7 +328,7 @@ theorem val_pow_sub_le {x b : v.adicCompletion L} (hx : Valued.v x ≤ 1) (hb : 
     apply Valuation.map_sum_le
     intro i _
     rw [map_mul, map_pow, map_pow]
-    exact mul_le_one' (pow_le_one₀ zero_le' hx) (pow_le_one₀ zero_le' hb)
+    exact mul_le_one' (pow_le_one₀ zero_le hx) (pow_le_one₀ zero_le hb)
   exact mul_le_of_le_one_left' hs
 
 theorem pow_card_sub_one_mem (n : ℕ) (b : 𝓞 L) (hb : b ∉ v.asIdeal) :
@@ -352,7 +352,7 @@ theorem pow_card_sub_one_mem (n : ℕ) (b : 𝓞 L) (hb : b ∉ v.asIdeal) :
   exact sub_eq_zero.mpr h2
 
 theorem card_units_pos (n : ℕ) : 0 < Nat.card ((𝓞 L ⧸ v.asIdeal ^ n)ˣ) := by
-  haveI : Finite (𝓞 L ⧸ v.asIdeal ^ n) := Ideal.finiteQuotientOfFreeOfNeBot _ (pow_ne_zero n v.ne_bot)
+  have : Finite (𝓞 L ⧸ v.asIdeal ^ n) := Ideal.finiteQuotientOfFreeOfNeBot _ (pow_ne_zero n v.ne_bot)
   exact Nat.card_pos
 
 theorem exists_pow_close (n : ℕ) : ∃ N : ℕ, 0 < N ∧ ∀ x : v.adicCompletion L, Valued.v x = 1 →
@@ -384,11 +384,11 @@ theorem exists_pow_close (n : ℕ) : ∃ N : ℕ, 0 < N ∧ ∀ x : v.adicComple
     have hnhds : {z : v.adicCompletion L | Valued.v (z - x) < exp (-((n : ℤ) + 1))} ∈ nhds x := by
       refine Valued.mem_nhds.2 ⟨Units.mk0 (Valued.v.restrict w) ((Valuation.ne_zero_iff _).2 hw0),
         fun z hz => ?_⟩
-      simp only [Set.mem_setOf_eq, Units.val_mk0] at hz ⊢
+      simp only [Set.mem_ofPred_eq, Units.val_mk0] at hz ⊢
       rw [← hw]
       exact (Valuation.restrict_lt_iff _).1 hz
     exact (denseRange_algebraMap L v).mem_nhds hnhds
-  simp only [Set.mem_setOf_eq] at hy
+  simp only [Set.mem_ofPred_eq] at hy
   have hy1 : v.valuation L y ≤ 1 := by
     rw [← val_alg]
     calc Valued.v (algebraMap L (v.adicCompletion L) y)
@@ -404,7 +404,7 @@ theorem exists_pow_close (n : ℕ) : ∃ N : ℕ, 0 < N ∧ ∀ x : v.adicComple
     exact (Valuation.ne_zero_iff _).2 hs0
   have has : v.intValuation a ≤ v.intValuation s := by
     rw [map_div₀, valuation_of_algebraMap, valuation_of_algebraMap,
-      div_le_one₀ (zero_lt_iff.2 hsv)] at hy1
+      div_le_one₀ (pos_iff_ne_zero.2 hsv)] at hy1
     exact hy1
   obtain ⟨g, hg⟩ := WithZero.ne_zero_iff_exists.1 hsv
   obtain ⟨t, ht⟩ := v.exists_intValuation_mul_sub_lt has (Multiplicative.ofAdd (-((n : ℤ) + 1)) * g)
@@ -415,7 +415,7 @@ theorem exists_pow_close (n : ℕ) : ∃ N : ℕ, 0 < N ∧ ∀ x : v.adicComple
         algebraMap (𝓞 L) L (a - t * s) / algebraMap (𝓞 L) L s := by
       rw [map_sub, map_mul, sub_div, mul_div_assoc, div_self hs0, mul_one]
     rw [e, map_div₀, valuation_of_algebraMap, valuation_of_algebraMap,
-      div_lt_iff₀ (zero_lt_iff.2 hsv), ← hg]
+      div_lt_iff₀ (pos_iff_ne_zero.2 hsv), ← hg]
     calc v.intValuation (a - t * s) < ((Multiplicative.ofAdd (-((n : ℤ) + 1)) * g : Multiplicative ℤ) : ℤᵐ⁰) := ht
       _ = exp (-((n : ℤ) + 1)) * (g : ℤᵐ⁰) := by rw [WithZero.coe_mul]; rfl
   set B := algebraMap L (v.adicCompletion L) (algebraMap (𝓞 L) L t) with hB

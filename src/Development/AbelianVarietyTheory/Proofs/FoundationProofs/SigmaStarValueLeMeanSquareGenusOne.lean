@@ -157,7 +157,7 @@ theorem sup_le_mean (Λ : AddSubgroup ℂ) (a v : ℝ) (F : Set ℂ) (g : ℂ �
       show φ (φ.symm y + x) = (y : ℂ) + φ x
       simp
   have hvol' : volume (φ ⁻¹' F) = 1 := by
-    rw [hmp.measure_preimage_emb hemb, Measure.smul_apply, hvol, smul_eq_mul,
+    rw [hmp.measure_preimage_emb hemb, smul_apply, hvol, smul_eq_mul,
       ← ENNReal.ofReal_mul (inv_pos.2 ha).le, inv_mul_cancel₀ ha.ne', ENNReal.ofReal_one]
   have hd : Differentiable ℂ (fun x : EuclideanSpace ℂ Unit => g (φ x)) := by
     have : Differentiable ℂ (fun x : EuclideanSpace ℂ Unit => (s : ℂ) * x ()) := by fun_prop
@@ -185,7 +185,7 @@ theorem thetaTranslation_weighted_normSq (Λ : AddSubgroup ℂ) (t z : ℂ) (g :
     ‖U1 Λ t g z‖ ^ 2 * Real.exp (-Real.pi * ‖z‖ ^ 2 / area Λ) =
       ‖g (z + t)‖ ^ 2 * Real.exp (-Real.pi * ‖z + t‖ ^ 2 / area Λ) := by
   unfold U1
-  rw [norm_mul, mul_pow, Complex.norm_exp, mul_assoc, ← Real.exp_nat_mul, ← Real.exp_add]
+  rw [norm_mul, mul_pow, Complex.norm_exp, mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 2
   have e : (2 * (area Λ : ℂ)) = ((2 * area Λ : ℝ) : ℂ) := by push_cast; ring
   rw [e, Complex.sub_re, Complex.div_ofReal_re, Complex.div_ofReal_re, ← Complex.normSq_eq_norm_sq,

@@ -250,7 +250,7 @@ theorem lenT_spec (c : ZMod n) (hc : ¬ th (c + 1)) :
       ∀ d : ℕ, 1 ≤ d → d < lenT th c → th (c - (d : ZMod n) + 1) := by
   have hn : (n : ZMod n) = 0 := by simp
   have hmem : n ∈ {d : ℕ | 1 ≤ d ∧ ¬ th (c - (d : ZMod n) + 1)} := by
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     refine ⟨Nat.one_le_iff_ne_zero.mpr (NeZero.ne n), ?_⟩
     rw [hn, sub_zero]; exact hc
   have hs : 1 ≤ lenT th c ∧ ¬ th (c - (lenT th c : ZMod n) + 1) :=
@@ -259,7 +259,7 @@ theorem lenT_spec (c : ZMod n) (hc : ¬ th (c + 1)) :
   intro d hd hdl
   by_contra hcon
   have hd' : d ∈ {d : ℕ | 1 ≤ d ∧ ¬ th (c - (d : ZMod n) + 1)} := by
-    simp only [Set.mem_setOf_eq]; exact ⟨hd, hcon⟩
+    simp only [Set.mem_ofPred_eq]; exact ⟨hd, hcon⟩
   exact absurd (Nat.sInf_le hd') (not_le.mpr hdl)
 
 theorem sum_lenT (hne : ∃ i, ¬ th i) :
@@ -500,7 +500,7 @@ theorem arcBasic_core [NeZero n] [Fintype (K →ₐ[Qp] LL)]
       by_cases hT : Formalism.MainNotions.TruncatedSeriesCountingBounds.Thick b η size i
       · have hex' : ∃ i, Formalism.MainNotions.TruncatedSeriesCountingBounds.Thick b η size i := ⟨i, hT⟩
         unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB
-        rw [if_pos hex']
+        rw [ite_eq_left hex']
         have := hT.2
         omega
       · have := hthin i hT
@@ -578,7 +578,7 @@ theorem arcSetup_of [NeZero n] [Fintype (K →ₐ[Qp] LL)] [FiniteDimensional Qp
     by_cases hT : Formalism.MainNotions.TruncatedSeriesCountingBounds.Thick b η size i
     · have hex' : ∃ i, Formalism.MainNotions.TruncatedSeriesCountingBounds.Thick b η size i := ⟨i, hT⟩
       unfold Formalism.MainNotions.TruncatedSeriesCountingBounds.hB
-      rw [if_pos hex']
+      rw [ite_eq_left hex']
       have := hT.2
       omega
     · have := hthin i hT
@@ -609,11 +609,11 @@ theorem arcSetup_of [NeZero n] [Fintype (K →ₐ[Qp] LL)] [FiniteDimensional Qp
     have hsi := hηs i
     rw [Set.mem_Icc, hMi' i, hhi' i]
     by_cases hu : up i = true
-    · rw [if_pos hu] at hm
-      rw [if_pos hu, if_pos hu]
+    · rw [ite_eq_left hu] at hm
+      rw [ite_eq_left hu, ite_eq_left hu]
       rcases hm with hm | hm <;> rw [Set.mem_Icc] at hm <;> constructor <;> omega
-    · rw [if_neg hu] at hm
-      rw [if_neg hu, if_neg hu]
+    · rw [ite_eq_right hu] at hm
+      rw [ite_eq_right hu, ite_eq_right hu]
       rcases hm with hm | hm <;> rw [Set.mem_Icc] at hm <;> constructor <;> omega
   have hW1 : Win W A T₁ := by
     unfold Formalism.MainNotions.ArcLiftingSetup.Win

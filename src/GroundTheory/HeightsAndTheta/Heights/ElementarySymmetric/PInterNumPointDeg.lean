@@ -172,7 +172,7 @@ theorem finrank_funField_pt (hrel : ∃ i, (X i : Poly k N) ∉ pp) :
       refine ⟨_, ⟨NumbersDVR.blockWeight (fun _ : Unit => Fin (N + 1)) ⟨(), l⟩, X ⟨(), l⟩, X ⟨(), j⟩,
         isWeightedHomogeneous_X k _ _,
         isWeightedHomogeneous_X k _ _, hjP, rfl⟩, ?_⟩
-      simp only [AlgEquiv.coe_toAlgHom, AlgHom.coe_coe, map_div₀, hΦ, aeval_pt_oneBlock]
+      simp only [AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass, map_div₀, hΦ, aeval_pt_oneBlock]
       rfl
   unfold FieldNumbers.resDeg
   rw [dite_eq_left (inferInstance : P.IsPrime), ← hmap]
@@ -182,8 +182,8 @@ end InterNumPointDeg
 
 theorem InterNumPointDeg.proof (hIR : InterNumRestrict.Statement.{u, w}) : InterNumPointDeg.Statement.{u, w} := by
   intro k _ Ω _ _ N x pp h
-  haveI : Small.{w} k := small_of_injective (algebraMap k Ω).injective
-  haveI := h.isPrime
+  have : Small.{w} k := small_of_injective (algebraMap k Ω).injective
+  have := h.isPrime
   have hpt := InterNumPointDeg.primeOf_pt.{u, w} pp h.homog
   have hsub : IsSubvar (InterNumPointDeg.pt.{u, w} pp) pp 0 := ⟨h.isPrime, h.homog, hpt.le, h.relevant, h.dim⟩
   have hxy : ∀ i, InterNumPointDeg.pt.{u, w} pp i ≠ 0 → x i ≠ 0 := by

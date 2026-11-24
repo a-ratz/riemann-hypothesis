@@ -76,7 +76,7 @@ open AlgebraicGeometry CategoryTheory NumberField ReciprocityTheory.ChartRestric
 theorem isNab_twist : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (ta : c.F ≃+* c.F) (h : Fixes c ta), ∀ [StarRing (𝓞 E)] (nab : NabV Xo c), IsNab Xo c nab → IsNab Xo c (fun {S} _ _ y k F α => (nab (twPt h y) k F α).val) := by
   intro E _ _ _ H Dw l Xo c ta h _ nab hn
   refine ⟨hn.1, fun S _ _ iQ y => ?_⟩
-  letI : Algebra ℚ (Tw ta S) := iQ
+  let : Algebra ℚ (Tw ta S) := iQ
   obtain ⟨C, h1, h2⟩ := hn.2 (Tw ta S) (twPt h y)
   exact ⟨⟨C.d, C.B, C.uvec, C.x, C.e, C.wP, C.h,
     ⟨C.chart.1, C.chart.2, C.chart.3, C.chart.4, C.chart.5, C.chart.6⟩,
@@ -165,7 +165,7 @@ theorem isHarmonic_iff_cmType {n : ℕ} (P : MvPolynomial (LtN Dw n) c.F) :
           (MvPolynomial.pderiv (⟨ComplexEmbedding.conjugate τ, i', b⟩ : LtN Dw n) P) = 0 := by
     simp only [harmK, Submodule.mem_iInf, LinearMap.mem_ker, lap,
       LinearMap.sum_apply, LinearMap.smul_apply, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rfl
   rw [e]
   refine ⟨fun h τ _ => h τ, fun h τ => ?_⟩
@@ -248,7 +248,7 @@ theorem thExprUniqSt_iff_harmA : Formalism.MainNotions.ModuliIntegralCharts.H1.T
       (Xo : Moduli Dw l) (c : Coeff l), UniqueOn Xo c fun n P => ∃ a, P ∈ harmA c a n := by
   constructor
   · rintro h E _ _ _ H Dw l Xo c _ nab nab' h1 h2 S _ _ y k n F P ⟨a, ha⟩
-    letI : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
+    let : Algebra ℚ S := ((algebraMap c.F S).comp (algebraMap ℚ c.F)).toAlgebra
     exact h E H Dw l Xo c nab nab' h1 h2 S y k n F a P ha
   · intro h E _ _ _ H Dw l Xo c _ nab nab' h1 h2 S _ _ _ y k n F a P ha
     exact h E H Dw l Xo c nab nab' h1 h2 S y k n F P ⟨a, ha⟩
@@ -407,7 +407,7 @@ theorem isThClsD_galRul : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartInd
   have hv₂ := ((_root_.GlobalTheory.GalTw.galRul_sec_val_semilinear E H Dw d.l₂ d.Xo₂ d.c₂ (covAut d ta) h₂).1 0 0 d.cδ hδ).2
   refine ⟨Submodule.smul_mem _ _ hs, ?_⟩
   intro k _ _ A A₂ hk y y₂ hy
-  letI A₂' : Algebra d.c₂.F k := A₂
+  let A₂' : Algebra d.c₂.F k := A₂
   have hk' : ∀ a : c.F, algebraMap d.c₂.F k (d.eF a) = algebraMap c.F k a := hk
   obtain ⟨vc, hvc, he⟩ := @hT k _ _ (inferInstance : Algebra c.F (Tw ta k))
     (inferInstance : Algebra d.c₂.F (Tw (covAut d ta) k))

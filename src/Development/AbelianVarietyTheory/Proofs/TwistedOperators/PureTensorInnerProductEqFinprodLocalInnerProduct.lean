@@ -91,7 +91,7 @@ theorem finite_mulSupport_ip (hb : IsBase ψ θ S T sS sT ΛS ΛT f₀) (hμ : I
   refine (h₁.2.union h₂.2).subset fun p hp => ?_
   rw [Function.mem_mulSupport] at hp
   by_contra hout
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hout
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hout
   exact hp (by rw [hout.1, hout.2]; exact ip_base hb hμ)
 
 private theorem heisO_zero_twisted_operators (f : WO S T → ℂ) : heisO ψ S T 0 f = f := by

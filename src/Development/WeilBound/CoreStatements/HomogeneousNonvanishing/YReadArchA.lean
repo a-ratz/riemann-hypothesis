@@ -212,7 +212,7 @@ theorem pt_frame (Fr : Small.GenFrame Or) (F : Type) [Field F] [Algebra c.F F] (
     (hψ : FrMap ψ yq y) (hr : ∀ r, ValAt Or.𝔐.ξ zC (φ r) (ψ r)) :
     zC ≫ Or.𝔐.f = Small.ptY Y y ∧ ∀ s i, ∃ v : epsAt zC ⟶ Or.𝔐.t.G, Or.𝔐.M.ValAt zC (Or.Fl.b s i) v ∧
       v.left ≫ Or.𝔐.m.φ = Small.tanY Y y (Small.labelC s) (Small.labelFin Dw s i) := by
-  letI := Small.cstAlg Or
+  let := Small.cstAlg Or
   have hgen : GlobalTheory.CompanionTheory.Ar.genPt Or.𝔐.ξ ⤳ GlobalTheory.CompanionTheory.Ar.centre zC := Or.𝔐.all _
   let P : Cpt Or.𝔐.ξ := ⟨GlobalTheory.CompanionTheory.Ar.centre zC, hgen⟩
   have hinj : Function.Injective (genMap Or.𝔐.ξ P) := Or.𝔐.tie.gen.inj P

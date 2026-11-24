@@ -239,7 +239,7 @@ theorem _root_.GlobalTheory.SnMass.VolN.IntG.antidiag_mem_skewLat (F E : Type) [
   intro hV γ hγ a hre
   unfold _root_.GlobalTheory.SnMass.VolN.IsVolData at hV
   obtain ⟨hT, -, hJ, hΛ, -, -, hspan, hA, hs, hAd⟩ := hV
-  simp only [_root_.GlobalTheory.SnMass.VolN.GN, Set.mem_setOf_eq, _root_.GlobalTheory.SgGlob.latMap] at hγ
+  simp only [_root_.GlobalTheory.SnMass.VolN.GN, Set.mem_ofPred_eq, _root_.GlobalTheory.SgGlob.latMap] at hγ
   obtain ⟨-, hγΛ⟩ := hγ
   have hconj : ∀ (w : InfinitePlace E) (x : E), w.embedding (σ x) = star (w.embedding x) :=
     fun w x => hT.2.2.2 _ x

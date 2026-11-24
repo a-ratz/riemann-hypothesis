@@ -109,9 +109,9 @@ theorem exists_eq_smul : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A : AddSubgroup 
     Matrix.PosDef.one.smul (inv_pos.2 ha)
   let Λ : AddSubgroup (Fin g → ℂ) := A.comap L.toLinearEquiv.toAddEquiv.toAddMonoidHom
   have hΛ : ∀ a, a ∈ Λ ↔ L a ∈ A := fun a => Iff.rfl
-  haveI : DiscreteTopology Λ :=
+  have : DiscreteTopology Λ :=
     DiscreteTopology.of_continuous_injective (f := fun a : Λ => (⟨L a, a.2⟩ : A))
-      (Continuous.subtype_mk (L.continuous.comp continuous_subtype_val) _)
+      (Continuous.subtype_mk (L.continuous.comp continuous_subtypeVal) _)
       (fun a b h => Subtype.ext (L.injective (congrArg Subtype.val h)))
   have hsw : ∀ v a, (star v ⬝ᵥ ((area T.abelian₂)⁻¹ • (1 : Matrix (Fin g) (Fin g) ℂ)).mulVec a).im =
       -(Hf D T (L v) (L a)).im := fun v a => by

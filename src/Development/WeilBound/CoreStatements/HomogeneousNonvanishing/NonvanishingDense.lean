@@ -72,10 +72,10 @@ private theorem rootsLiftToZeros_statement : GroundTheory.Heights₂.Heights.Hil
   let ψ : Polynomial (MvPolynomial (Fin e) ℚ) →+* MvPolynomial σ ℚ ⧸ P :=
     (Ideal.Quotient.mk P).comp (Polynomial.eval₂RingHom (aeval ℓ).toRingHom u)
   let φ : Polynomial (MvPolynomial (Fin e) ℚ) →+* ℂ := Polynomial.eval₂RingHom (aeval y).toRingHom t
-  letI : Algebra (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P) := ψ.toAlgebra
+  let : Algebra (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P) := ψ.toAlgebra
   have hψ : ∀ a, algebraMap (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P) a =
       Ideal.Quotient.mk P (Polynomial.eval₂ (aeval ℓ).toRingHom u a) := fun a => rfl
-  haveI : Algebra.IsIntegral (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P) := by
+  have : Algebra.IsIntegral (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P) := by
     constructor
     intro s
     obtain ⟨g, rfl⟩ := Ideal.Quotient.mk_surjective s
@@ -89,7 +89,7 @@ private theorem rootsLiftToZeros_statement : GroundTheory.Heights₂.Heights.Hil
       rfl
     rw [hc, ← Polynomial.hom_eval₂]
     exact Ideal.Quotient.eq_zero_iff_mem.2 hp
-  haveI : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   obtain ⟨Q, -, hQ, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (RingHom.ker φ) (⊥ : Ideal (MvPolynomial σ ℚ ⧸ P)) (by
     intro a ha
     rw [Ideal.mem_comap, Ideal.mem_bot, hψ] at ha
@@ -97,17 +97,17 @@ private theorem rootsLiftToZeros_statement : GroundTheory.Heights₂.Heights.Hil
     simp only [RingHom.mem_ker, φ, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_mul, mul_eq_zero]
     left
     exact hG)
-  letI : Algebra (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
+  let : Algebra (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
       Q.comap (algebraMap (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P))) ℂ :=
     (Ideal.Quotient.lift _ φ (fun a ha => by
       change a ∈ Ideal.under _ Q at ha
       rw [hQc] at ha
       exact ha)).toAlgebra
-  haveI : IsDomain ((MvPolynomial σ ℚ ⧸ P) ⧸ Q) := Ideal.Quotient.isDomain Q
-  haveI : Module.IsTorsionFree (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
+  have : IsDomain ((MvPolynomial σ ℚ ⧸ P) ⧸ Q) := Ideal.Quotient.isDomain Q
+  have : Module.IsTorsionFree (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
       Q.comap (algebraMap (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P))) ((MvPolynomial σ ℚ ⧸ P) ⧸ Q) :=
     Module.isTorsionFree_iff_algebraMap_injective.2 Ideal.algebraMap_quotient_injective
-  haveI : Module.IsTorsionFree (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
+  have : Module.IsTorsionFree (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
       Q.comap (algebraMap (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P))) ℂ := by
     rw [Module.isTorsionFree_iff_algebraMap_injective, RingHom.injective_iff_ker_eq_bot, eq_bot_iff]
     intro x hx
@@ -117,10 +117,10 @@ private theorem rootsLiftToZeros_statement : GroundTheory.Heights₂.Heights.Hil
     change a ∈ Ideal.under _ Q
     rw [hQc]
     exact hx
-  haveI : Algebra.IsIntegral (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
+  have : Algebra.IsIntegral (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
       Q.comap (algebraMap (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P))) ((MvPolynomial σ ℚ ⧸ P) ⧸ Q) :=
     ⟨RingHom.IsIntegral.quotient _ Algebra.IsIntegral.isIntegral⟩
-  haveI : Algebra.IsAlgebraic (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
+  have : Algebra.IsAlgebraic (Polynomial (MvPolynomial (Fin e) ℚ) ⧸
       Q.comap (algebraMap (Polynomial (MvPolynomial (Fin e) ℚ)) (MvPolynomial σ ℚ ⧸ P))) ((MvPolynomial σ ℚ ⧸ P) ⧸ Q) :=
     Algebra.IsIntegral.isAlgebraic
   let χ0 := IsAlgClosed.lift (M := ℂ) (R := Polynomial (MvPolynomial (Fin e) ℚ) ⧸
@@ -159,7 +159,7 @@ theorem nonvanishing_dense : NonvanishingDense.Statement := by
   classical
   have hprime : P.IsPrime := hP.2.1.1
   have hhor : IsHorizontal P := hP.2.2.1
-  letI : Algebra (MvPolynomial (Σ k, ι k) ℤ) (MvPolynomial (Σ k, ι k) ℚ) :=
+  let : Algebra (MvPolynomial (Σ k, ι k) ℤ) (MvPolynomial (Σ k, ι k) ℚ) :=
     MvPolynomial.algebraMvPolynomial
   have halg : algebraMap (MvPolynomial (Σ k, ι k) ℤ) (MvPolynomial (Σ k, ι k) ℚ) =
       MvPolynomial.map (Int.castRingHom ℚ) := by
@@ -196,7 +196,7 @@ theorem nonvanishing_dense : NonvanishingDense.Statement := by
         exact h a ha
       exact hle hg
   have hO : IsOpen {w : (Σ k, ι k) → ℂ | ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0} := by
-    simp only [Set.setOf_forall, Set.setOf_exists]
+    simp only [Set.ofPred_forall, Set.ofPred_exists]
     exact isOpen_iInter_of_finite fun k => isOpen_iUnion fun i =>
       isOpen_ne_fun (continuous_apply _) continuous_const
   intro z hz

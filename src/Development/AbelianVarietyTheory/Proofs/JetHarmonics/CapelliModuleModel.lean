@@ -89,7 +89,7 @@ theorem entire_eq_of_eq_on_reals {E : Type} [NormedAddCommGroup E] [NormedSpace 
 theorem capelli_eigen_real_to_complex :
     ∀ (k r : ℕ) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (lam : Fin (2 * r + k + 1) → ℝ) (f : B.Mat k r → (Wq →L[ℂ] Wp)), B.CkOn ⊤ (B.GV k r) f → (∀ Y : ℝ, ∀ g ∈ B.GV k r, Q.CV k r (Y : ℂ) (f) g = ((∏ s, (Y + lam s) : ℝ) : ℂ) • (f) g) → ∀ Y : ℂ, ∀ g ∈ B.GV k r, Q.CV k r Y f g = (∏ s, (Y + (lam s : ℂ))) • f g := by
   intro k r Wp Wq _ _ _ _ _ _ lam f hf hR Y g hg
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   have hs : Q.SmoothLev k r 0 Set.univ f := by
     intro g₀ hg₀
     obtain ⟨U, f', hU, hgU, hf', hff⟩ := hf g₀ hg₀.1.1
@@ -313,7 +313,7 @@ theorem capelli_module_model : ∀ (k r : ℕ) (Wp Wq : Type) [NormedAddCommGrou
     congr 1
     exact Finset.prod_congr rfl fun s _ => by ring
   · intro c hc
-    simp only [mulOp, dif_pos hc]
+    simp only [mulOp, dite_eq_left hc]
     refine ⟨fun v g hg => ev_M isOpen_univ (smooth_iff.2 hc) v (mem_lev.2 hg), fun a b v g hg => ?_⟩
     have := ev_EM (i := 0) isOpen_univ (c0 a) (c0 b) (smooth_iff.2 hc) v (mem_lev.2 hg)
     rw [position_level_zero_coord, position_level_zero_coord, ← ev_Eu a b v g hg] at this

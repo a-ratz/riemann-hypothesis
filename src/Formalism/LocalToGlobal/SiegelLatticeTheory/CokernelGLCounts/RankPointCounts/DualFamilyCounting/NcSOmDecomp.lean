@@ -122,16 +122,16 @@ theorem finCpt_of_int (σ : E →ₐ[F] E) {M a : ℕ} (J : Matrix (Fin M) (Fin 
     fun v => if Kv v ⊆ latV b v then latV b v else C v
   have hCvo : ∀ v, IsClopen (Cv v) := fun v => by
     by_cases h : Kv v ⊆ latV b v
-    · rw [show Cv v = latV b v from if_pos h]; exact isClopen_latV b v a M
-    · rw [show Cv v = C v from if_neg h]; exact hCo v
+    · rw [show Cv v = latV b v from ite_eq_left h]; exact isClopen_latV b v a M
+    · rw [show Cv v = C v from ite_eq_right h]; exact hCo v
   have hCvc : ∀ v, IsCompact (Cv v) := fun v => by
     by_cases h : Kv v ⊆ latV b v
-    · rw [show Cv v = latV b v from if_pos h]; exact isCompact_latV b v a M
-    · rw [show Cv v = C v from if_neg h]; exact hCc v
+    · rw [show Cv v = latV b v from ite_eq_left h]; exact isCompact_latV b v a M
+    · rw [show Cv v = C v from ite_eq_right h]; exact hCc v
   have hKCv : ∀ v, Kv v ⊆ Cv v := fun v => by
     by_cases h : Kv v ⊆ latV b v
-    · rw [show Cv v = latV b v from if_pos h]; exact h
-    · rw [show Cv v = C v from if_neg h]; exact hKC v
+    · rw [show Cv v = latV b v from ite_eq_left h]; exact h
+    · rw [show Cv v = C v from ite_eq_right h]; exact hKC v
   let Φv : ∀ v : HeightOneSpectrum (𝓞 F), (Fin a → Fin M → Fv F v ⊗[F] E) → ℂ :=
     fun v => (Cv v).indicator 1
   let Φf : (Fin a → Fin M → Af F ⊗[F] E) → ℂ := fun Y => ∏ᶠ v, Φv v (projV v Y)
@@ -142,7 +142,7 @@ theorem finCpt_of_int (σ : E →ₐ[F] E) {M a : ℕ} (J : Matrix (Fin M) (Fin 
   have hpure : IsPureFin b Φf Φv := by
     refine ⟨hSB, ?_, fun _ => rfl⟩
     filter_upwards [hev] with v hv
-    simp only [Φv, Cv, hv, if_true]
+    simp only [Φv, Cv, hv, ite_true]
   have hint := key _ b Φ Φinf Φf Φv hΦic hΦis hpure (fun _ => rfl)
   have hone : ∀ X ∈ K, Φ X = 1 := by
     intro X hX
@@ -155,7 +155,7 @@ theorem finCpt_of_int (σ : E →ₐ[F] E) {M a : ℕ} (J : Matrix (Fin M) (Fin 
   calc ν K ≤ ν {X | 1 ≤ ‖Φ X‖ₑ} := measure_mono fun X hX => by
         simp [hone X hX]
     _ ≤ ∫⁻ X, ‖Φ X‖ₑ ∂ν := by
-        have := mul_meas_ge_le_lintegral₀ hint.aestronglyMeasurable.enorm 1
+        have := mul_meas_ge_le_lintegral₀ hint.aestronglyMeasurable.eNorm 1
         simpa using this
     _ < ⊤ := hint.2
 
@@ -295,11 +295,11 @@ theorem omega_decomposition_holds : OmDecomp := by
               · refine Filter.Eventually.of_forall fun x => ?_
                 have := hhle (Γ (x, y))
                 simp only [hIdef, (hxy x).1, (hxy x).2, Set.indicator_of_notMem hyS, mul_zero] at this
-                exact le_antisymm this (zero_le')
+                exact le_antisymm this (zero_le)
         _ = c * ρ (G ⁻¹' S) := lintegral_indicator_const (hGm hS) c
         _ = ρ (G ⁻¹' S) * c := mul_comm _ _
     · by_cases hc0 : c = 0
-      · rw [hc0, mul_zero]; exact zero_le'
+      · rw [hc0, mul_zero]; exact zero_le
       obtain ⟨A', hA'm, hA'le, hA'eq⟩ := exists_measurable_le_lintegral_eq (fibInf TI) A
       have hIm : Measurable (fun y : Fin a → Fin n → AF F ⊗[F] E =>
           A' (projInf y) * S.indicator 1 (projFin y)) :=

@@ -174,16 +174,16 @@ private theorem isCompact_bdd {n : ℕ} (ε : Fin n → Bool) (r : ℝ) :
   have he := Units.isClosedEmbedding_embedProduct.comp (isClosed_UJ ε).isClosedEmbedding_subtypeVal
   refine (he.isCompact_preimage (hC.prod (hC.image MulOpposite.continuous_op))).of_isClosed_subset
     ?_ fun g hg => ⟨fun i j => ?_, (g.val⁻¹).val, fun i j => ?_, rfl⟩
-  · simp only [Set.setOf_forall]
+  · simp only [Set.ofPred_forall]
     exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_le
-      ((Units.continuous_val.comp continuous_subtype_val).matrix_elem i j).norm continuous_const
+      ((Units.continuous_val.comp continuous_subtypeVal).matrix_elem i j).norm continuous_const
   · exact mem_closedBall_zero_iff.2 (hg i j)
   · exact mem_closedBall_zero_iff.2 ((norm_inv_entry g.2 i j).trans_le (hg j i))
 
 theorem laurent_T_neg_one_mul_T_one : ∀ (n : ℕ) (ε : Fin n → Bool),
   LocallyCompactSpace ↥(UJ ε) := by
   intro n ε
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
   exact (isClosed_UJ ε).locallyCompactSpace
 
@@ -318,21 +318,21 @@ end Helpers
 
 theorem volume_growth : VolGrowth := by
   intro n ε
-  haveI := aux8 ε
-  haveI := aux9 n ε
-  haveI := laurent_T_neg_one_mul_T_one n ε
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have := aux8 ε
+  have := aux9 n ε
+  have := laurent_T_neg_one_mul_T_one n ε
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ˣ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ˣ :=
     Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI hμ : (muG ε).IsHaarMeasure := by
+  have hμ : (muG ε).IsHaarMeasure := by
     unfold muG
     infer_instance
-  haveI : SecondCountableTopology (UJ ε) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaCompactSpace (UJ ε) := inferInstance
-  haveI : MeasureTheory.SigmaFinite (muG ε) := inferInstance
+  have : SecondCountableTopology (UJ ε) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SigmaCompactSpace (UJ ε) := inferInstance
+  have : MeasureTheory.SigmaFinite (muG ε) := inferInstance
   let ν : MeasureTheory.Measure (Fin n → Fin n → ℂ) := MeasureTheory.Measure.addHaar
   let V : Set (Fin n → Fin n → ℂ) :=
     Metric.ball (fun j : Fin n => (Pi.single j 1 : Fin n → ℂ)) (1 / (2 * n + 2))
@@ -346,7 +346,7 @@ theorem volume_growth : VolGrowth := by
   refine ⟨(muG ε K * ν (Metric.ball 0 1) / ν V).toReal * (2 * n) ^ (2 * n ^ 2), fun R hR => ?_⟩
   have hR0 : 0 ≤ R := zero_le_one.trans hR
   have hval : Continuous fun g : UJ ε => g.val.val :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hB : IsClosed {g : UJ ε | hsG g ≤ R ^ 2} := by
     simpa only [hsG, hs] using isClosed_le (f := fun g : UJ ε => ∑ i, ∑ j, ‖g.val.val i j‖ ^ 2)
       (continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ =>

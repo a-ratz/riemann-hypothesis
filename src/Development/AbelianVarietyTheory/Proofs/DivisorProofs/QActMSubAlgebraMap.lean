@@ -67,7 +67,7 @@ def homO {X Y : Type*} [AddCommGroup X] [Module k X] [AddCommGroup Y] [Module k 
 theorem mem_homO {X Y : Type*} [AddCommGroup X] [Module k X] [AddCommGroup Y] [Module k Y]
     (σX : O →+* Module.End k X) (σY : O →+* Module.End k Y) (T : X →ₗ[k] Y) :
     T ∈ homO σX σY ↔ ∀ a x, T (σX a x) = σY a (T x) := by
-  simp only [homO, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq,
+  simp only [homO, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq,
     LinearMap.ext_iff, LinearMap.comp_apply]
 
 def rAct (σ : O →+* Module.End k H) (X : Submodule k H) (h : ∀ a, ∀ x ∈ X, σ a x ∈ X) :

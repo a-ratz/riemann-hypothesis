@@ -53,7 +53,7 @@ private theorem count_norm_int (l : ℕ) [hl : Fact l.Prime] (n : ℤ) (hn : n �
   have hx : ‖(n : PadicAlgCl l)‖ = (l : ℝ) ^ (-(padicValInt l n : ℤ)) := by
     have hc : (((n : ℚ) : ℚ_[l]) : PadicAlgCl l) = (n : PadicAlgCl l) := by simp
     rw [← hc, PadicAlgCl.norm_extends, Padic.eq_padicNorm]
-    have h := padicNorm.eq_zpow_of_nonzero (p := l) hq
+    have h := padicNorm.eq_zpow_of_ne_zero (p := l) hq
     rw [padicValRat.of_int] at h
     rw [h]
     push_cast

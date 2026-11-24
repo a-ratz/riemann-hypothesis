@@ -111,8 +111,8 @@ theorem fdeg_gap : ∀ (cd : CDHaar) (sc : ∀ n : ℕ, (Fin n → Bool) → NNR
         (σ : Matrix (Fin N) (Fin N) ℂ → (H →L[ℂ] H)), IsDS ε lam σ →
         IsFdeg ((sc N ε : ENNReal) • Formalism.REAL.muG ε) σ (Formalism.QuantumDeterminants.fdegHC lam) := by
   intro cd sc hc N ε lam h hlam hp hq hgap hh H _ _ σ hσ
-  haveI : CompleteSpace H := hσ.1
-  haveI : Nontrivial H := hσ.2.1
+  have : CompleteSpace H := hσ.1
+  have : Nontrivial H := hσ.2.1
   have hCD := muCD_eq_scaled cd sc hc ε
   have hp1 := one_le_p hp
   have hq1 := one_le_q hq
@@ -139,7 +139,7 @@ theorem fdeg_gap : ∀ (cd : CDHaar) (sc : ∀ n : ℕ, (Fin n → Bool) → NNR
     rcases (sc N ε).coe_nonneg.lt_or_eq with hlt | heq
     · exact hlt
     · exfalso
-      haveI := ReciprocityTheory.ChartRestriction.DS.muCD_isHaar ε
+      have := ReciprocityTheory.ChartRestriction.DS.muCD_isHaar ε
       have hz : sc N ε = 0 := by exact_mod_cast heq.symm
       have hne := (isOpen_univ (X := Formalism.REAL.UJ ε)).measure_ne_zero (ReciprocityTheory.ChartRestriction.DS.muCD ε) Set.univ_nonempty
       rw [hCD, hz] at hne

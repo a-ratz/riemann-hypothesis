@@ -77,7 +77,7 @@ theorem aeval_monomial_mul (hz : ∀ k, z ⟨k, j k⟩ ≠ 0) (m : (Σ k, ι k) 
   induction m using Finsupp.induction_linear with
   | zero => simp
   | add m m' hm hm' =>
-    rw [← mul_one (1 : Φ), ← monomial_mul, map_mul, map_mul, map_add (f := _), ← hm, ← hm']
+    rw [← mul_one (1 : Φ), ← monomial_mul_monomial, map_mul, map_mul, map_add (f := _), ← hm, ← hm']
     simp only [Pi.add_apply, pow_add, Finset.prod_mul_distrib]
     ring
   | single p n =>

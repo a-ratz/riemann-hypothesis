@@ -666,7 +666,7 @@ theorem UpperTheory.V.Pa.b_desc :
     refine ⟨C, fun m => (hC m).mono fun N hN z hz => ?_⟩
     obtain ⟨c, hc, Ψ, hΨ, e⟩ := hN (fun i j a => z i j ((Q.gN N).p₀ a)) fun i j =>
       (selP_iff (Q.gN N) (T.h N) Q.g0 (Q.h' N) (Q.comm₀ N) ρ' hρ (x.Am m) _).2 (hz i j)
-    haveI : T.H.toSubgroup.Normal := T.H.isNormal'
+    have : T.H.toSubgroup.Normal := T.H.isNormal'
     obtain ⟨Ψ', rfl⟩ := (sel_desc l L (T.GN N) (Q.GN' N) G0 (Q.gN N) (T.h N) n x k T.H.toSubgroup m T.H.isOpen'
       (fun a ha => T.H_η a ha) hu (Q.kerN N)).2 Ψ (Or.inr hΨ)
     refine ⟨c, hc, Ψ', (mem_selmer_second_iff_pullback (Q.gN N) (T.h N) Q.g0 (Q.h' N) (Q.comm₀ N) k ρ' hρ κ' hκ (x.Am m) _).1 hΨ,
@@ -759,7 +759,7 @@ open IsLocalRing Matrix Filter UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.A
 
 private theorem cast_zero (l : ℕ) [Fact l.Prime] (K : Type) [Field K] [Finite K] [Algebra ℤ_[l] K] : (l : K) = 0 := by
   have hni : ¬ Function.Injective (algebraMap ℤ_[l] K) := by
-    haveI : Infinite ℤ_[l] := Infinite.of_injective (Nat.cast : ℕ → ℤ_[l]) Nat.cast_injective
+    have : Infinite ℤ_[l] := Infinite.of_injective (Nat.cast : ℕ → ℤ_[l]) Nat.cast_injective
     exact not_injective_infinite_finite _
   have hker : RingHom.ker (algebraMap ℤ_[l] K) ≠ ⊥ := by
     intro h
@@ -778,9 +778,9 @@ private theorem key (l : ℕ) [Fact l.Prime] (K : Type) [Field K] (hl : (l : K) 
   classical
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · exact ⟨0, fun i => i.elim0⟩
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
-  haveI : CharP K l := (CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)).2 hl
-  haveI : CharP (PowerSeries K) l :=
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : CharP K l := (CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)).2 hl
+  have : CharP (PowerSeries K) l :=
     charP_of_injective_algebraMap (algebraMap K (PowerSeries K)).injective l
   set I : Ideal (PowerSeries K) := Ideal.span {PowerSeries.X} with hI
   have hmul : ∀ (A B : Matrix (Fin n) (Fin n) (PowerSeries K)) (J J' : Ideal (PowerSeries K)),
@@ -859,7 +859,7 @@ private theorem chi_ofRep_single {n : ℕ} {A G : Type} [CommRing A] [Group G] (
 private theorem kills_max {B K : Type} [CommRing B] [IsLocalRing B] [Field K] [Finite K] (g : B →+* K) (b : B)
     (hb : b ∈ maximalIdeal B) : g b = 0 := by
   by_contra h
-  haveI := Fintype.ofFinite K
+  have := Fintype.ofFinite K
   have h1 := FiniteField.pow_card_sub_one_eq_one (g b) h
   have h2 : Fintype.card K - 1 ≠ 0 := by have := Fintype.one_lt_card (α := K); omega
   have h3 : IsUnit (1 - b ^ (Fintype.card K - 1)) :=
@@ -916,7 +916,7 @@ theorem UpperTheory.V.Pa.pt_desc :
     (T.H.toOpenSubgroup : Subgroup G0.Γ) T.H.toOpenSubgroup.isOpen'
     (fun g hg => MonoidHom.mem_ker.2 (T.H_η g hg)) hU Q.ker0
   have hb := UpperTheory.V.Pa.b_desc l L G0 T Q n P.x P.k ρ' hρ κ' hκ D0 hU
-  letI := P.alg
+  let := P.alg
   have hmat : (mat ρ').comp Q.g0.p₀ = mat P.x.ρ := by
     ext a i j
     simp [mat, hρ]
@@ -1061,13 +1061,13 @@ theorem UpperTheory.V.Pa.quot_ex :
       change h ^ l ^ 0 ∈ H
       simpa using hh
     exact (iInf_le _ U).trans (iInf_le _ hcond)
-  haveI := hN
+  have := hN
   let π : G.Γ →* G.Γ ⧸ PL l H := QuotientGroup.mk' (PL l H)
   have hπc : Continuous π := QuotientGroup.continuous_mk
   have hπs : Function.Surjective π := QuotientGroup.mk'_surjective _
   have hπo : IsOpenMap π := QuotientGroup.isOpenMap_coe
   have hπq : Topology.IsQuotientMap π := hπo.isQuotientMap hπc hπs
-  haveI : TotallyDisconnectedSpace (G.Γ ⧸ PL l H) := (totallyDisconnected_quot G.Γ _ hC).1
+  have : TotallyDisconnectedSpace (G.Γ ⧸ PL l H) := (totallyDisconnected_quot G.Γ _ hC).1
   let η' : G.Γ ⧸ PL l H →* ℤˣ := QuotientGroup.lift (PL l H) G.η (hKH.trans hη)
   let ε' : G.Γ ⧸ PL l H →* ℤ_[l]ˣ :=
     QuotientGroup.lift (PL l H) G.ε (pl_le_ker H G.ε G.ε_cont hε1)
@@ -1091,7 +1091,7 @@ theorem UpperTheory.V.Pa.quot_ex :
     (π.comp G.η.ker.subtype).codRestrict η'.ker (fun x => by
       show η' (π x) = 1
       exact x.2)
-  have hrc : Continuous r := continuous_induced_rng.2 (hπc.comp continuous_subtype_val)
+  have hrc : Continuous r := continuous_induced_rng.2 (hπc.comp continuous_subtypeVal)
   let G' : Glob l L :=
     { Γ := G.Γ ⧸ PL l H
       η := η'
@@ -1131,7 +1131,7 @@ private theorem exists_desc {l : ℕ} [Fact l.Prime] {L : Loc} {G G' : Glob l L}
 theorem UpperTheory.V.Pa.twquot_ex :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0), Nonempty (TWQuot T) := by
   intro l _ L G0 T
-  haveI hn : T.H.toSubgroup.Normal := T.H.isNormal'
+  have hn : T.H.toSubgroup.Normal := T.H.isNormal'
   have ho : IsOpen (T.H.toSubgroup : Set G0.Γ) := T.H.toOpenSubgroup.isOpen
   have hoN : ∀ N, IsOpen (T.H.toSubgroup.comap (T.h N).p : Set (T.GN N).Γ) := fun N => ho.preimage (T.h N).cont
   obtain ⟨G0', g0, ker0⟩ := quot_ex l L G0 T.H.toSubgroup ho (fun a ha => T.H_η a ha) (fun a ha => T.H_ε a ha)
@@ -1149,7 +1149,7 @@ theorem UpperTheory.V.Pa.twquot_ex :
       exact this
   choose h' comm using hd
   obtain ⟨H', hH'⟩ := exists_desc g0 T.H (ker0 ▸ (pl_props l G0.Γ T.H.toSubgroup ho).2.2.1)
-  haveI hn' : H'.toSubgroup.Normal := H'.isNormal'
+  have hn' : H'.toSubgroup.Normal := H'.isNormal'
   have ho' : IsOpen (H'.toSubgroup : Set G0'.Γ) := H'.toOpenSubgroup.isOpen
   have hiff : ∀ a, g0.p a ∈ H' ↔ a ∈ T.H := fun a => by
     show a ∈ H'.toSubgroup.comap g0.p ↔ a ∈ T.H.toSubgroup

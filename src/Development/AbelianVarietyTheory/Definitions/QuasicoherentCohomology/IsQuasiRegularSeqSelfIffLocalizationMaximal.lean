@@ -333,7 +333,7 @@ theorem isQuasiRegularSeq_self_iff (f : ι → R) :
     · exact Finset.sum_congr rfl fun α _ => mul_comm _ _
     · intro d hd
       have := hp (MvPolynomial.mem_support_iff.mp hd)
-      rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+      rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
       rwa [Finsupp.degree_eq_weight_one]
     · intro d _ hd
       simp [MvPolynomial.notMem_support_iff.mp hd]
@@ -541,7 +541,7 @@ theorem isQuasiRegularSeq_X (ι : Type*) [Finite ι] :
     obtain rfl : x = 0 := (Finsupp.degree_eq_zero_iff x).mp (by omega)
     simpa [MvPolynomial.coeff_monomial_mul'] using h1
   · intro β _ hβ
-    rw [MvPolynomial.coeff_monomial_mul', if_neg]
+    rw [MvPolynomial.coeff_monomial_mul', ite_eq_right]
     intro hle
     obtain ⟨γ, hγ⟩ := exists_add_of_le hle
     have hd := congrArg Finsupp.degree hγ

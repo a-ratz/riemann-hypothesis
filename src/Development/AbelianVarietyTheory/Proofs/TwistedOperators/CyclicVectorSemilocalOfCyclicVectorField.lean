@@ -65,8 +65,8 @@ theorem _root_.GlobalTheory.RegSS.Semilocal.cyclicSemilocal_of_cyclicField :
   have hw : ∀ p : MaximalSpectrum A, ∃ w : n → A ⧸ p.asIdeal,
       IsUnit (_root_.GlobalTheory.RegSS.krylov (M.map (Ideal.Quotient.mk p.asIdeal)) w).det := by
     intro p
-    haveI := p.isMaximal
-    letI := Ideal.Quotient.field p.asIdeal
+    have := p.isMaximal
+    let := Ideal.Quotient.field p.asIdeal
     exact hF _ n _ (by rw [Matrix.charpoly_map]; exact hM.map)
   choose w hw using hw
   have hcop : Pairwise (Function.onFun IsCoprime fun p : MaximalSpectrum A => p.asIdeal) :=
@@ -87,7 +87,7 @@ theorem _root_.GlobalTheory.RegSS.Semilocal.cyclicSemilocal_of_cyclicField :
   have hzero : Ideal.Quotient.mk p.asIdeal (_root_.GlobalTheory.RegSS.krylov M v).det = 0 :=
     Ideal.Quotient.eq_zero_iff_mem.mpr hmem
   rw [RingHom.map_det, RingHom.mapMatrix_apply, _root_.GlobalTheory.RegSS.Semilocal.krylov_map_ringHom, hvp] at hzero
-  haveI := p.isMaximal
+  have := p.isMaximal
   exact (hw p).ne_zero hzero
 
 end GlobalTheory.RegSS.Semilocal

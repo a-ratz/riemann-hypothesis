@@ -260,7 +260,7 @@ theorem eq_of_frob [IsAlgClosure E Ω] {art : Ideles E →* Gab E Ω} (ha : IsGl
       IsFrob (F := E) A (normV v) σ → r σ = r' σ) : r = r' := by
   have := GlobalTheory.FrobDense.eq_one_of_frob E Ω art ha B (r * r'⁻¹) (hr.mul hr'.inv) (Filter.eventually_cofinite.1 h).toFinset
     fun v hv A hA σ hσ => by
-      rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+      rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
       rw [MonoidHom.mul_apply, MonoidHom.inv_apply, hv A hA σ hσ, mul_inv_cancel]
   exact mul_inv_eq_one.1 this
 
@@ -330,7 +330,7 @@ theorem IsGal.side (h : IsGal art κ ι χ 0 r) {m : ℕ} (hm0 : 0 < m) (hm : χ
       rw [← Units.val_pow_eq_pow_val]
       exact congrArg (fun ξ : HChar E => ((ξ.loc v x : ℂˣ) : ℂ)) hm
     have h2 := Complex.norm_eq_one_of_pow_eq_one h1 hm0.ne'
-    rw [sideIso_false, if_neg (by simp), map_units_inv, map_inv₀, e, map_inv₀, ← Complex.inv_eq_conj h2, inv_inv]
+    rw [sideIso_false, ite_eq_right (by simp), map_units_inv, map_inv₀, e, map_inv₀, ← Complex.inv_eq_conj h2, inv_inv]
   · exact e
 
 section Coef
@@ -364,7 +364,7 @@ theorem continuous_cyc : Continuous fun g : G E Ω =>
       ((((Units.map (algebraMap ℤ_[l] O).toMonoidHom).comp (cycZ (F := E) (Ω := Ω) l)) g : Oˣ) : O)) =
       fun g => algebraMap ℚ_[l] (Qbar l) (((cycZ E Ω l g : ℤ_[l]ˣ) : ℤ_[l]) : ℚ_[l]) := funext fun g => hκ _
   rw [e]
-  exact (continuous_algebraMap _ _).comp ((continuous_subtype_val : Continuous fun z : ℤ_[l] => (z : ℚ_[l])).comp
+  exact (continuous_algebraMap _ _).comp ((continuous_subtypeVal : Continuous fun z : ℤ_[l] => (z : ℚ_[l])).comp
     ((Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ E Ω l)))
 
 theorem exists_isGal [IsAlgClosure E Ω] (ha : IsGlobalArtin art) (hn : IsAlgPos χ n) {K : Type} [Field K] {ε : K →+* ℂ}
@@ -375,7 +375,7 @@ theorem exists_isGal [IsAlgClosure E Ω] (ha : IsGlobalArtin art) (hn : IsAlgPos
   have hK0 : ∀ u : (Qbar l)ˣ, u ∈ K0 ↔ (u : Qbar l) ∈ Set.range κ := fun u =>
     ⟨fun ⟨y, hy⟩ => ⟨y, congrArg Units.val hy⟩, fun ⟨y, hy⟩ =>
       ⟨Units.mk0 y (by rintro rfl; exact u.ne_zero (by rw [← hy, map_zero])), Units.ext hy⟩⟩
-  haveI : IsClosed (K0 : Set (Qbar l)ˣ) := by
+  have : IsClosed (K0 : Set (Qbar l)ˣ) := by
     have : (K0 : Set (Qbar l)ˣ) = Units.val ⁻¹' Set.range κ := Set.ext hK0
     rw [this]
     exact hcl.preimage Units.continuous_val
@@ -384,7 +384,7 @@ theorem exists_isGal [IsAlgClosure E Ω] (ha : IsGlobalArtin art) (hn : IsAlgPos
     filter_upwards [hχ, unr_ae χ, away_ae (E := E) l (Fact.out : l.Prime).ne_zero] with v ⟨y, hy⟩ hu hv A hA σ hσ
     refine (QuotientGroup.eq_one_iff _).2 ((hK0 _).2 ⟨(f y)⁻¹, ?_⟩)
     rw [hL.frob_unr ha (Or.inl hv) hu hA hσ, map_inv₀, ← hy, ← hf, ι.symm_apply_apply]
-  haveI : IsGalois E Ω := IsAlgClosure.isGalois E Ω
+  have : IsGalois E Ω := IsAlgClosure.isGalois E Ω
   have h2 : ∀ g, ∃ y : O, toQ κ y = (r g : (Qbar l)ˣ) := fun g => by
     obtain ⟨x, hx⟩ := (hK0 _).1 ((QuotientGroup.eq_one_iff _).1 (DFunLike.congr_fun h1 g))
     obtain ⟨y, rfl⟩ := hint x (hx ▸ norm_le_one_of_compact r hr g)
@@ -556,9 +556,9 @@ theorem absNorm_eq_pow {E : Type} [Field E] [NumberField E] {p : ℕ} (hp : p.Pr
 
 theorem card_eq_of_pow_iff {O : Type} [CommRing O] [IsDomain O] (T : Subgroup Oˣ) {m : ℕ} (hm : m ≠ 0)
     (h : ∀ n : ℕ, (∀ t ∈ T, t ^ n = 1) ↔ m ∣ n) : Nat.card T = m := by
-  haveI : NeZero m := ⟨hm⟩
+  have : NeZero m := ⟨hm⟩
   have hle : T ≤ rootsOfUnity m O := fun t ht => (h m).2 dvd_rfl t ht
-  haveI : Finite T := Finite.of_injective _ (Subgroup.inclusion_injective hle)
+  have : Finite T := Finite.of_injective _ (Subgroup.inclusion_injective hle)
   rw [← IsCyclic.exponent_eq_card]
   have key : ∀ n : ℕ, Monoid.exponent T ∣ n ↔ m ∣ n := fun n => by
     rw [Monoid.exponent_dvd_iff_forall_pow_eq_one, ← h]
@@ -575,7 +575,7 @@ theorem sideIso_read {l : ℕ} [Fact l.Prime] {L K : Type} [Field L] [Field K] {
     {ε : K →+* ℂ} {f f' : K →+* L} (hf : ∀ x, ι (κ (f x)) = ε x) (hf' : ∀ x, ι (κ (f' x)) = starRingEnd ℂ (ε x))
     (b : Bool) (x : K) : sideIso ι b (κ ((if b then f else f') x)) = ε x := by
   cases b
-  · rw [sideIso_false, if_neg (by simp), hf', Complex.conj_conj]
+  · rw [sideIso_false, ite_eq_right (by simp), hf', Complex.conj_conj]
   · exact hf x
 
 variable {R : Ranks} {H : Formalism.BasicNotions.Host R} {Ω : Type} [Field Ω] [Algebra H.E Ω] {cc : Ω ≃+* Ω}
@@ -779,7 +779,7 @@ theorem hostFrame_localisationTwistCharacterCompat (ha : IsGlobalArtin art) : Lo
     rw [map_natCast, map_zero] at this
     exact hl.ne_zero (by exact_mod_cast this)
   have htc := continuous_ringHom hO₀ hO hl0 (GlobalTheory.CoefEmbed.embedding_closed_integral l O hO κ hκ).2.2.2 t
-  haveI : T2Space O := (isEmbedding_toQ hO hκ).t2Space
+  have : T2Space O := (isEmbedding_toQ hO hκ).t2Space
   have hb : block (C.mu0 j * (delAt H C l * ψ)) C.eta R.r = block (C.mu0 j * delAt H C l₀) C.eta R.r * ψ := by
     rw [hll, block, block, ← mul_assoc (C.mu0 j), mul_right_comm]
   rw [hb] at h2
@@ -798,7 +798,7 @@ theorem hostFrame_localisationTwistCharacterCompat (ha : IsGlobalArtin art) : Lo
 
 theorem range_eq_rootsOfUnity {Γ : Type} [CommGroup Γ] [Finite Γ] (χ : Γ →* ℂˣ) (hχ : Function.Injective χ) :
     χ.range = rootsOfUnity (Nat.card Γ) ℂ := by
-  haveI : NeZero (Nat.card Γ) := ⟨Nat.card_pos.ne'⟩
+  have : NeZero (Nat.card Γ) := ⟨Nat.card_pos.ne'⟩
   apply Subgroup.eq_of_le_of_card_ge
   · rintro _ ⟨y, rfl⟩
     rw [mem_rootsOfUnity, ← map_pow, pow_card_eq_one', map_one]
@@ -823,7 +823,7 @@ theorem hostHeckeFrame_tame_galois_characters (ha : IsGlobalArtin art) (he : ∀
   have loc_mul (a b : HChar H.E) (v : HeightOneSpectrum (𝓞 H.E)) (x : (v.adicCompletion H.E)ˣ) :
       (a * b).loc v x = a.loc v x * b.loc v x := rfl
   intro k w hw A hA tg htg teich hinj
-  haveI : Fact (H.g k).Prime := ⟨H.g_prime k⟩
+  have : Fact (H.g k).Prime := ⟨H.g_prime k⟩
   have hwg := C.P.overP hw
   have hN := (GlobalTheory.Mem.Chr.splitsC_main R H _ (H.g_prime k) (hg k) w hwg).1
   obtain ⟨x, hx, ex⟩ := exists_unit ha hA htg.1
@@ -831,7 +831,7 @@ theorem hostHeckeFrame_tame_galois_characters (ha : IsGlobalArtin art) (he : ∀
 
   have hsq : ∀ b : (ZMod (H.g k))ˣ, b ^ 2 ∈ Subgroup.zpowers (a ^ 2) := by
     intro b
-    haveI : Fact H.pde.Prime := ⟨H.pde_prime⟩
+    have : Fact H.pde.Prime := ⟨H.pde_prime⟩
     obtain ⟨ι⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex H.pde
     have hm := R.two_le_m
     let j0 : Fin R.m := ⟨0, by omega⟩

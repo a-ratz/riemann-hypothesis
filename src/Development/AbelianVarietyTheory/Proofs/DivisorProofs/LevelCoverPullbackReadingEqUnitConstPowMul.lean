@@ -89,7 +89,7 @@ theorem eq_const_mul_of_norm_one {V : Type} [NormedAddCommGroup V] [NormedSpace 
     simp only [q]
     rw [hg i₀ y (hball y hy).1, mul_assoc, mul_inv_cancel₀ (hball y hy).2, mul_one]
   have hmax : IsMaxOn (norm ∘ q) (Metric.ball x₀ ε) x₀ := fun y hy => by
-    simp only [Set.mem_setOf_eq, Function.comp_apply]
+    simp only [Set.mem_ofPred_eq, Function.comp_apply]
     rw [hqg y hy, hqg x₀ hx₀b, hg1 _ (hball y hy).1, hg1 _ (hball x₀ hx₀b).1]
   have heq := Complex.eqOn_of_isPreconnected_of_isMaxOn_norm (convex_ball x₀ ε).isPreconnected
     Metric.isOpen_ball hqd hx₀b hmax
@@ -218,7 +218,7 @@ theorem exists_pow_of_pointwise (X₂ X : Data E r) (δ : GL (Fin r) E) (hΨ : �
       unfold bchar
       refine Finset.prod_ne_zero_iff.2 fun τ _ => Finset.prod_ne_zero_iff.2 fun a _ => zpow_ne_zero _ ?_
       have hdet : (mat b τ).det ≠ 0 := (hb τ).1
-      rw [Matrix.det_of_upperTriangular (M := mat b τ) (fun a c h => (hb τ).2 a c h)] at hdet
+      rw [Matrix.det_of_isUpperTriangular (M := mat b τ) (fun a c h => (hb τ).2 a c h)] at hdet
       simpa [mat] using Finset.prod_ne_zero_iff.1 hdet a (Finset.mem_univ _)
     apply mul_left_cancel₀ e6
     rw [← e2, e1, e3, e4, ← e5]
@@ -226,9 +226,9 @@ theorem exists_pow_of_pointwise (X₂ X : Data E r) (δ : GL (Fin r) E) (hΨ : �
   classical
   let g : Frame X₂.Ψ r → ℂ := fun x => if h : x ∈ X₂.dom then (hg x h).choose else 1
   have hg1 : ∀ x ∈ X₂.dom, ‖g x‖ = 1 := fun x h => by
-    simp only [g, dif_pos h]; exact (hg x h).choose_spec.1
+    simp only [g, dite_eq_left h]; exact (hg x h).choose_spec.1
   have hgr : ∀ i : ι, ∀ x ∈ X₂.dom, Q₂ i x = g x ^ m i * Q i (G x) := fun i x h => by
-    simp only [g, dif_pos h]; exact (hg x h).choose_spec.2 i
+    simp only [g, dite_eq_left h]; exact (hg x h).choose_spec.2 i
   obtain ⟨u, hu1, hu⟩ := eq_pow_mul_of_norm_one X₂.dom (ReciprocityTheory.ChartRestriction.G.FD.FourierCoefficientDomain.isOpen_dom _)
     (ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.flag_domain_frames_connected r X₂).isPreconnected m Q₂ (fun i x => Q i (G x)) g
     (fun i => (hQ₂ i).1) hPd hg1 hgr
@@ -281,11 +281,11 @@ theorem read_pointwise (d : DeltaDat Xo c 0) (σ₂ : d.c₂.F →+* ℂ) (U : U
       ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), ∀ f ∈ sec Xo c a n, ∀ g : Rul d.Xo₂ d.c₂, Pull d f g →
         rdU U₂ g k₂ x = t ^ n * rdU U f k x' := by
   obtain ⟨hx', t, hmod, hy⟩ := hOver x hx x' hm
-  letI a₁ : Algebra c.F (CAt σ₂) := (σ₂.comp (d.eF : c.F →+* d.c₂.F)).toAlgebra
+  let a₁ : Algebra c.F (CAt σ₂) := (σ₂.comp (d.eF : c.F →+* d.c₂.F)).toAlgebra
   obtain ⟨y, hb, hov⟩ := hy
   refine ⟨t, hmod, fun a n f hf g hP => ?_⟩
-  have r2 : rdU U₂ g k₂ x = toC (evR d.Xo₂ d.c₂ g (U₂.un k₂ ⟨x, hx⟩)) := dif_pos hx
-  have r1 : rdU U f k x' = toC (evR Xo c f (U.un k ⟨x', hx'⟩)) := dif_pos hx'
+  have r2 : rdU U₂ g k₂ x = toC (evR d.Xo₂ d.c₂ g (U₂.un k₂ ⟨x, hx⟩)) := dite_eq_left hx
+  have r1 : rdU U f k x' = toC (evR Xo c f (U.un k ⟨x', hx'⟩)) := dite_eq_left hx'
   rw [r2, r1]
   exact @evR_pull_genScal E _ _ _ H Dw l Xo c ℂ _ _ a₁ d (inferInstanceAs (Algebra d.c₂.F (CAt σ₂))) (fun _ => rfl)
     a n f hf g hP t _ _ _ hb hov

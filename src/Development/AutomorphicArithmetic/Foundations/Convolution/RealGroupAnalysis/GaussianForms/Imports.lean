@@ -77,7 +77,7 @@ private theorem cont_pair (y : FiniteAdeleRing (𝓞 F) F) :
   Continuous.prodMk_left (X := InfiniteAdeleRing F) (Y := FiniteAdeleRing (𝓞 F) F) y
 
 private theorem cont_entry (i j : Fin 2) : Continuous (fun h : G1 F => h i j) :=
-  (continuous_apply j).comp ((continuous_apply i).comp continuous_subtype_val)
+  (continuous_apply j).comp ((continuous_apply i).comp continuous_subtypeVal)
 
 private theorem d_one : ((1 : G1 F) 1 1).1 = 1 := by
   simp
@@ -133,12 +133,12 @@ private theorem pU_coe (b : A F) (a : (A F)ˣ) (c : A F) :
   fin_cases i <;> fin_cases j <;> simp <;> ring
 
 private theorem fstR_a {h : G1 F} (hu : ∀ v, (h 1 1).1 v ≠ 0) : fstR (aU h : A F) = eI h := by
-  simp only [aU, dif_pos hu]
+  simp only [aU, dite_eq_left hu]
   rfl
 
 private theorem fstR_ai {h : G1 F} (hu : ∀ v, (h 1 1).1 v ≠ 0) :
     fstR (((aU h)⁻¹ : (A F)ˣ) : A F) = (h 1 1).1 := by
-  simp only [aU, dif_pos hu]
+  simp only [aU, dite_eq_left hu]
   rfl
 
 private theorem fstR_b (h : G1 F) : fstR (bU h) = (h 0 1).1 * eI h := rfl
@@ -213,7 +213,7 @@ private theorem aU_cont : ContinuousAt (aU : G1 F → (A F)ˣ) 1 := by
     exact (MulOpposite.continuous_op.comp ((cont_pair 1).comp (cont_fst.comp (cont_entry 1 1)))).continuousAt
   refine hf.congr ?_
   filter_upwards [ev_ne] with h hu
-  simp only [Function.comp, aU, dif_pos hu]
+  simp only [Function.comp, aU, dite_eq_left hu]
   rfl
 
 private theorem bU_one : bU (1 : G1 F) = 0 := by
@@ -228,7 +228,7 @@ private theorem cU_one : cU (1 : G1 F) = 0 := by
 
 private theorem aU_one : aU (1 : G1 F) = 1 := by
   refine Units.ext ?_
-  simp only [aU, dif_pos (ne_one (F := F))]
+  simp only [aU, dite_eq_left (ne_one (F := F))]
   exact Prod.ext eI_one rfl
 
 private theorem pU_one : pU (bU (1 : G1 F)) (aU 1) (cU 1) = 1 := by
@@ -296,7 +296,7 @@ private lemma cont_param {X Y : Type*} [TopologicalSpace X] [FirstCountableTopol
 section
 variable {F : Type} [Field F] [NumberField F]
 
-private theorem cψ : Continuous (ψ : A F → ℂ) := continuous_subtype_val.comp continuous_adelicChar
+private theorem cψ : Continuous (ψ : A F → ℂ) := continuous_subtypeVal.comp continuous_adelicChar
 private theorem nψ (x : A F) : ‖ψ x‖ = 1 := Circle.norm_coe _
 private theorem cq (δ : F) : Continuous (q4 δ : V4 F → A F) := by
   unfold q4

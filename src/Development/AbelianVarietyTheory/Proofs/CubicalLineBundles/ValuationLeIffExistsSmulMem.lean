@@ -77,7 +77,7 @@ theorem valuation_le_iff_exists_smul_mem (p : HeightOneSpectrum (𝓞 K)) {I : F
     have hvy : p.valuation K y ≠ 0 := by rw [hv]; exact exp_ne_zero
     have hy0 : y ≠ 0 := by rintro rfl; simp at hvy
     have h1 : p.valuation K (c / y) ≤ 1 := by
-      rw [map_div₀, div_le_one₀ (zero_lt_iff.2 hvy), hv]; exact h
+      rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.2 hvy), hv]; exact h
     obtain ⟨a, s, hs⟩ := HeightOneSpectrum.exists_primeCompl_mul_eq_of_integer p (c / y) h1
     refine ⟨s.1, s.2, ?_⟩
     have : (s.1 : 𝓞 K) • c = a • y := by

@@ -268,7 +268,7 @@ theorem UpperTheory.crystalline_period_matrix_relation :
       exact DFunLike.congr_fun h1 i
     have h3 := congrArg M'.mulVec h2
     rw [Matrix.mulVec_mulVec, hMM', Matrix.one_mulVec, Matrix.mulVec_zero] at h3
-    haveI : Nontrivial (Bcr l) := ⟨⟨1, 0, fun h => ((PP l).PD K).not_mem_filtration_two (by
+    have : Nontrivial (Bcr l) := ⟨⟨1, 0, fun h => ((PP l).PD K).not_mem_filtration_two (by
       rw [← mul_one ((PP l).PD K).t, h, mul_zero, map_zero]; exact Submodule.zero_mem _)⟩⟩
     funext k
     exact j.injective ((congrFun h3 k).trans (map_zero j).symm)

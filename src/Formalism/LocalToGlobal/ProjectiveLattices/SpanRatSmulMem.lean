@@ -236,11 +236,11 @@ theorem exists_basis (𝔄 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) (h�
       Submodule.span ℤ (Set.range b) = (crdI 𝔄 cu).restrictScalars ℤ := by
   classical
   set X0 := (crdI 𝔄 cu).restrictScalars ℤ
-  letI : Submodule.IsFullLattice ℚ X0 := {
+  let : Submodule.IsFullLattice ℚ X0 := {
     toIsLattice := crdI_lat 𝔄 h𝔄 cu
     span_eq_top := by rw [Submodule.coe_restrictScalars]; exact crdI_span 𝔄 h𝔄 cu }
-  letI : Module.Finite ℤ X0 := Submodule.IsLattice.finite ℚ X0
-  letI : Module.Free ℤ X0 := Submodule.IsLattice.free ℚ X0
+  let : Module.Finite ℤ X0 := Submodule.IsLattice.finite ℚ X0
+  let : Module.Free ℤ X0 := Submodule.IsLattice.free ℚ X0
   let b := Module.Free.chooseBasis ℤ X0
   refine ⟨_, inferInstance, b.extendOfIsFullLattice ℚ, ?_⟩
   have hr : Set.range (b.extendOfIsFullLattice ℚ) = X0.subtype '' Set.range b := by

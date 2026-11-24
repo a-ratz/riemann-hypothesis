@@ -357,11 +357,11 @@ theorem interNum_eq_sum {X : Scheme.{0}} [Algebra κ Γ(X, ⊤)] (hp : IsProjOve
     rw [interNum_pushforward_of_isClosedImmersion hi G hL]
     refine ⟨fun z h => ?_, ?_⟩
     · by_cases e : z = ξ
-      · subst e; rw [hlen]; exact ENat.coe_ne_top _
+      · subst e; rw [hlen]; exact ENat.natCast_ne_top _
       · rw [hz _ z (hoff z h e)]; simp
     · by_cases h : ξ ∈ T
       · rw [Finset.sum_eq_single ξ (fun z hzT e => by rw [hz _ z (hoff z hzT e)]; simp) (fun h' => absurd h h'),
-          hlen, interNum_of_genRank_eq hpZ (hdZ.le.trans hle) hPZ _ G rfl, hdeg _ (redι Z) hi h, ENat.toNat_coe]
+          hlen, interNum_of_genRank_eq hpZ (hdZ.le.trans hle) hPZ _ G rfl, hdeg _ (redι Z) hi h, ENat.toNat_natCast]
       · rw [Finset.sum_eq_zero fun z hzT => by rw [hz _ z (hoff z hzT fun e => h (e ▸ hzT))]; simp]
         refine interNum_eq_zero_of_isProjOver (algebraMap_eq_strHom κ _) G hpZ ?_ hPZ
         rw [Fintype.card_fin]
@@ -541,7 +541,7 @@ theorem field_case (h1 : StPts) (h2 : StPull) (h3 : StDiv) (hS : ChowDegreeSecti
       have hval (z : Z) (hz : z ∈ T) : ((divCycle (P (genericPoint Z)) u (P z) : ℕ) : ℤ) =
           (divOfSec hE.isLB (s k) hk).mult z := by
         rw [d₂ z ((hT z).1 hz), divCycle, GroundTheory.Heights₂.Heights.fundCycle, Finsupp.onFinset_apply,
-          if_pos ((d₁ z).1 ((hT z).1 hz))]
+          ite_eq_left ((d₁ z).1 ((hT z).1 hz))]
       refine Finset.sum_bij (fun z _ => P z) (fun z hz => ?_) (fun _ _ _ _ h => inj h) (fun W hW => ?_)
         fun z hz => ?_
       · rw [Finsupp.mem_support_iff, ← Nat.cast_ne_zero (R := ℤ), hval z hz]
@@ -549,7 +549,7 @@ theorem field_case (h1 : StPts) (h2 : StPull) (h3 : StDiv) (hS : ChowDegreeSecti
       · obtain ⟨z, hz, rfl⟩ := hex W (by
           by_contra h
           rw [Finsupp.mem_support_iff, divCycle, GroundTheory.Heights₂.Heights.fundCycle, Finsupp.onFinset_apply,
-            if_neg h] at hW
+            ite_eq_right h] at hW
           exact hW rfl)
         exact ⟨z, hz, rfl⟩
       · rw [length_cut hE.isLB (s k) hk ((hT z).1 hz), Nat.cast_mul, hval z hz]
@@ -759,7 +759,7 @@ theorem stVert (h1 : StPts) (h2 : StPull) (h3 : StDiv) : StVert := by
         exfalso
         have h' : ((⊤ : ℕ∞) : WithBot ℕ∞) ≤ ((m : ℕ∞) : WithBot ℕ∞) := hdimle
         rw [WithBot.coe_le_coe, top_le_iff] at h'
-        exact ENat.coe_ne_top m h'
+        exact ENat.natCast_ne_top m h'
       | coe n => exact ⟨n, rfl⟩
   have hnd : d + 1 ≤ n := by
     rw [hn] at hdimge

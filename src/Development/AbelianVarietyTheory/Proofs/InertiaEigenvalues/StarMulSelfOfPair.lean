@@ -76,7 +76,7 @@ theorem schur_scalar : ∀ (D : D7) (V : HSp D) (θ : InfFam D) (c : CoefA V) (l
     obtain ⟨v, rfl⟩ := E.surjective w
     change E' (E.symm (c.ρ u (E v))) = c.ρ u (E' (E.symm (E v)))
     rw [hEρ u hu, E.symm_apply_apply, E.symm_apply_apply, hEρ' u hu]
-  haveI := hc.2.2.2.1
+  have := hc.2.2.2.1
   obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue ψ
   have hU := GlobalTheory.GenRealSchur.irr_real c hc (Module.End.eigenspace ψ μ) fun u hu => by
     rintro _ ⟨w, hw, rfl⟩
@@ -111,18 +111,18 @@ theorem scalar_of_basis : ∀ {K V W ι : Type} [Field K] [AddCommGroup V] [Modu
     exact sub_eq_zero.1 (Fintype.linearIndependent_iff.1 hli _ h1 k)
   obtain ⟨i0⟩ := ‹Nonempty ι›
   set a := b.repr (φ (b i0)) i0 with ha
-  have hd : ∀ i, b.repr (φ (b i)) i = a := fun i => σ.injective (by rw [key, key, if_pos rfl, if_pos rfl])
-  have ho : ∀ i k, k ≠ i → b.repr (φ (b i)) k = 0 := fun i k hk => σ.injective (by rw [key, if_neg hk, map_zero])
+  have hd : ∀ i, b.repr (φ (b i)) i = a := fun i => σ.injective (by rw [key, key, ite_eq_left rfl, ite_eq_left rfl])
+  have ho : ∀ i k, k ≠ i → b.repr (φ (b i)) k = 0 := fun i k hk => σ.injective (by rw [key, ite_eq_right hk, map_zero])
   have hb : ∀ i, φ (b i) = a • b i := by
     intro i
     refine b.repr.injective (Finsupp.ext fun k => ?_)
     rw [map_smul, Finsupp.smul_apply, b.repr_self, Finsupp.single_apply, smul_eq_mul]
     by_cases hk : i = k
     · subst hk
-      rw [if_pos rfl, mul_one, hd]
-    · rw [if_neg hk, mul_zero, ho i k (Ne.symm hk)]
+      rw [ite_eq_left rfl, mul_one, hd]
+    · rw [ite_eq_right hk, mul_zero, ho i k (Ne.symm hk)]
   have hφa : φ = a • LinearMap.id := b.ext fun i => by rw [hb i]; rfl
-  refine ⟨a, (key i0 i0).trans (if_pos rfl), fun v => ?_⟩
+  refine ⟨a, (key i0 i0).trans (ite_eq_left rfl), fun v => ?_⟩
   rw [hφa]
   rfl
 
@@ -174,7 +174,7 @@ theorem isFullLattice_hLat {D : D7} (V : HSp D) (g : Bridge.Gf V) :
   obtain ⟨Λ, hΛ, h1, h2, -⟩ := GlobalTheory.AdLat.exists_lattice_latOf
     D.host.F D.host.E V.rank (GlobalTheory.Member.latC V) g.1 hfg hsp
   rw [SetLike.coe_injective ((GlobalTheory.RepsCompare.coe_hLat V g).trans hΛ.symm)]
-  letI : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
+  let : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
   exact ⟨h2⟩
 
 theorem exists_root_of_unity : ∀ (D : D7) (X : RealSide D) (c c₂ : ∀ j : Fin D.R.m, VV D.what₂.LL (FWT.lamV D j) →ₛₗ[D.what₂.embLL] (X.R.cV j).W), IsCoef X c → IsCoef X c₂ → ∀ j, ∃ (ζ : ℂ) (n : ℕ), n ≠ 0 ∧ ζ ^ n = 1 ∧ ∀ F, c₂ j F = ζ • c j F := by
@@ -196,7 +196,7 @@ theorem exists_root_of_unity : ∀ (D : D7) (X : RealSide D) (c c₂ : ∀ j : F
     (e₂.symm.trans e).toLinearMap ζ hφ
   have hea : ∀ x, e x = a • e₂ x := fun x =>
     (congrArg e (e₂.symm_apply_apply x)).symm.trans (ha (e₂ x))
-  haveI := e.toEquiv.nontrivial
+  have := e.toEquiv.nontrivial
   obtain ⟨i0⟩ := (X.A3.A.MtCSD j X.A3.A.μ0).bV.index_nonempty
   have hx0 := (X.A3.A.MtCSD j X.A3.A.μ0).bV.ne_zero i0
   have hy0 : e₂ ((X.A3.A.MtCSD j X.A3.A.μ0).bV i0) ≠ 0 := fun h0 => hx0 (e₂.injective (h0.trans (map_zero e₂).symm))

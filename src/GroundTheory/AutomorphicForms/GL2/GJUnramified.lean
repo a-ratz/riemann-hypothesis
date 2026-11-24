@@ -341,7 +341,7 @@ theorem exists_reduce_row (l : Fin n → ℕ) {h : GL (Fin n) F} (hB : h ∈ Iwa
     · simp
   have hEd : ∀ a, E a a = 1 := fun a => by
     simp only [hE, hA, Matrix.add_apply, Matrix.of_apply, Matrix.one_apply_eq]
-    rw [if_neg (fun h => by obtain ⟨rfl, h2⟩ := h; exact lt_irrefl _ h2), add_zero]
+    rw [ite_eq_right (fun h => by obtain ⟨rfl, h2⟩ := h; exact lt_irrefl _ h2), add_zero]
   have hEO : ∀ a b, E a b ∈ 𝒪[F] := fun a b => by
     simp only [hE, hA, Matrix.add_apply, Matrix.of_apply]
     refine Subring.add_mem _ ?_ ?_
@@ -369,12 +369,12 @@ theorem exists_reduce_row (l : Fin n → ℕ) {h : GL (Fin n) F} (hB : h ∈ Iwa
     rw [Units.val_mul, hEg, hE, Matrix.mul_add, Matrix.mul_one, Matrix.add_apply, Matrix.mul_apply]
     congr 1
     by_cases hib : i < b
-    · rw [if_pos hib, Finset.sum_eq_single i]
+    · rw [ite_eq_left hib, Finset.sum_eq_single i]
       · simp [hA, hib]
       · intro m _ hm
         simp [hA, hm]
       · simp
-    · rw [if_neg hib]
+    · rw [ite_eq_right hib]
       exact Finset.sum_eq_zero fun m _ => by simp [hA, hib]
   refine ⟨Eg, hEgK, (Iwasawa.borel F n).mul_mem hB (unipotent_le_borel F n hEgN), fun a => ?_,
     fun a b => ?_, fun a b hia => ?_, fun j hij => ⟨e j, ?_⟩⟩
@@ -385,7 +385,7 @@ theorem exists_reduce_row (l : Fin n → ℕ) {h : GL (Fin n) F} (hB : h ∈ Iwa
     · exact Subring.mul_mem _ (hO a i) (Subring.neg_mem _ (hyO b))
     · exact (𝒪[F]).zero_mem
   · rw [hmul, hBU hia, zero_mul, ite_self, add_zero]
-  · rw [hmul, if_pos hij, hd]
+  · rw [hmul, ite_eq_left hij, hd]
     linear_combination hxy j
 
 theorem exists_normalGL {g : GL (Fin n) F} (hg : ∀ i j, g i j ∈ 𝒪[F]) :
@@ -590,7 +590,7 @@ theorem satake_integralHecke (k : ℕ) :
       ∑ l ∈ Finset.Nat.antidiagonalTuple n k,
         ((Nat.card (NormalData F l) : ℂ) • monomial (fun i => (l i : ℤ))) := by
   classical
-  haveI : Fintype 𝓀[F] := Fintype.ofFinite _
+  have : Fintype 𝓀[F] := Fintype.ofFinite _
   set Cs : Finset (GL (Fin n) F ⧸ integralGL F n) := (Finset.Nat.antidiagonalTuple n k).biUnion
     fun l => Finset.univ.image fun c : NormalData F l => (QuotientGroup.mk (normalGL F l c) : _)
   rw [satake_eq_sum _ Cs]
@@ -779,7 +779,7 @@ theorem exists_inducedZeta_natDegree (hσ : IsSmooth σ) [σ.IsIrreducible] (hc 
       hK' k (hr₂ (congruenceSubgroup_antitone F n (le_max_right _ _) hk)) g]
   have : Finite (integralGL F n ⧸ (congruenceSubgroup F n (max r₁ r₂)).subgroupOf (integralGL F n)) :=
     Subgroup.quotient_finite_of_isOpen _
-      ((isOpen_congruenceSubgroup F n _).preimage continuous_subtype_val)
+      ((isOpen_congruenceSubgroup F n _).preimage continuous_subtypeVal)
   let _ := Fintype.ofFinite
     (integralGL F n ⧸ (congruenceSubgroup F n (max r₁ r₂)).subgroupOf (integralGL F n))
 
@@ -803,7 +803,7 @@ theorem exists_inducedZeta_natDegree (hσ : IsSmooth σ) [σ.IsIrreducible] (hc 
         (haarParabolic (parabolicMeasure β μ𝔪 μ𝔫)) := by
     intro s hs z hz
     have hΨz := isLeviSchwartz_integral μ𝔫 (hΦ.comp_mulRight z).norm
-    refine ⟨((hcont s).comp (continuous_subtype_val.mul continuous_const)).aestronglyMeasurable, ?_⟩
+    refine ⟨((hcont s).comp (continuous_subtypeVal.mul continuous_const)).aestronglyMeasurable, ?_⟩
     show ∫⁻ p, ‖inducedIntegrand Φ φ ℓ s ((p : GL (Fin n) F) * z)‖ₑ
       ∂(haarParabolic (parabolicMeasure β μ𝔪 μ𝔫)) < ⊤
     rw [lintegral_inducedIntegrand_mul μ𝔪 μ𝔫 hΦ hφ ℓ s hz]
@@ -811,7 +811,7 @@ theorem exists_inducedZeta_natDegree (hσ : IsSmooth σ) [σ.IsIrreducible] (hc 
 
   have hP0 : haarParabolic (parabolicMeasure β μ𝔪 μ𝔫)
       (Subtype.val ⁻¹' (integralGL F n : Set (GL (Fin n) F))) ≠ 0 :=
-    ((isOpen_integralGL F n).preimage continuous_subtype_val).measure_ne_zero _
+    ((isOpen_integralGL F n).preimage continuous_subtypeVal).measure_ne_zero _
       ⟨1, by simp [one_mem]⟩
   have hK0 : μK Set.univ ≠ 0 := isOpen_univ.measure_ne_zero μK Set.univ_nonempty
 
@@ -819,7 +819,7 @@ theorem exists_inducedZeta_natDegree (hσ : IsSmooth σ) [σ.IsIrreducible] (hc 
     intro s hs
     refine ⟨(hcont s).aestronglyMeasurable, ?_⟩
     have hC := lintegral_eq_sum_parabolic (β := β) μG (haarParabolic (parabolicMeasure β μ𝔪 μ𝔫))
-      μK (hcont s).enorm.measurable (fun g k hk => by rw [hinv s g k hk])
+      μK (hcont s).eNorm.measurable (fun g k hk => by rw [hinv s g k hk])
     have hlt : μG (integralGL F n) * (μK ((congruenceSubgroup F n (max r₁ r₂)).subgroupOf
         (integralGL F n)) * ∑ q : Q, ∫⁻ p, ‖inducedIntegrand Φ φ ℓ s
           ((p : GL (Fin n) F) * y q)‖ₑ ∂(haarParabolic (parabolicMeasure β μ𝔪 μ𝔫))) < ⊤ :=

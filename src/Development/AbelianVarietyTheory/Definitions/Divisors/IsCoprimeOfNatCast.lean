@@ -181,7 +181,7 @@ theorem halfPrime_isPrime (l : Level H) {v : Ideal (𝓞 (maximalRealSubfield E)
     simpa using hvQ (Ideal.mem_map_of_mem _ hM)
   rcases hQ.isPrime.mul_le.1 hMQ with h | h
   · rw [halfPrime_eq l hv hQ.isPrime (sup_le h hvQ)]; exact hQ.isPrime
-  · haveI := hQ.isPrime
+  · have := hQ.isPrime
     have hP : (Q.comap (H.bar : 𝓞 E →+* 𝓞 E)).IsPrime := inferInstance
     rw [halfPrime_eq l hv hP (sup_le (Ideal.map_le_iff_le_comap.1 h) (Ideal.map_le_iff_le_comap.2 fun a ha => ?_))]
     · exact hP
@@ -341,8 +341,8 @@ theorem IsTypeLevel.smul_eq_zsmul (hl : IsTypeLevel l) (v : Sq D.host) (a : 𝓞
     ∃ n : ℤ, ∀ x : QMod Dw.La (typePrime l v), a • x = n • x := by
   have hc : Nat.card (𝓞 D.host.E ⧸ typePrime l v) = D.host.g v.1 := by
     rw [← (hl.typePrime_spec v).2, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 D.host.E ⧸ typePrime l v) := Nat.finite_of_card_ne_zero (hc ▸ (D.host.g_prime _).ne_zero)
-  haveI := Fintype.ofFinite (𝓞 D.host.E ⧸ typePrime l v)
+  have : Finite (𝓞 D.host.E ⧸ typePrime l v) := Nat.finite_of_card_ne_zero (hc ▸ (D.host.g_prime _).ne_zero)
+  have := Fintype.ofFinite (𝓞 D.host.E ⧸ typePrime l v)
   obtain ⟨z, hz⟩ := (ZMod.ringEquivOfPrime (𝓞 D.host.E ⧸ typePrime l v) (D.host.g_prime v.1)
     (by rw [← Nat.card_eq_fintype_card, hc])).surjective (Ideal.Quotient.mk _ a)
   obtain ⟨n, rfl⟩ := ZMod.intCast_surjective z
@@ -355,23 +355,23 @@ theorem IsTypeLevel.smul_eq_zsmul (hl : IsTypeLevel l) (v : Sq D.host) (a : 𝓞
 
 theorem nonempty_addEquiv_pi {M : Type} [AddCommGroup M] {p r : ℕ} [hp : Fact p.Prime] (h : ∀ x : M, p • x = 0)
     (hN : Nat.card M = p ^ r) : Nonempty (M ≃+ (Fin r → ZMod p)) := by
-  haveI : Finite M := Nat.finite_of_card_ne_zero (hN ▸ pow_ne_zero _ hp.out.ne_zero)
+  have : Finite M := Nat.finite_of_card_ne_zero (hN ▸ pow_ne_zero _ hp.out.ne_zero)
   obtain ⟨inst⟩ : Nonempty (Module (ZMod p) M) := ⟨AddCommGroup.zmodModule h⟩
   have hf : Module.finrank (ZMod p) M = Module.finrank (ZMod p) (Fin r → ZMod p) := by
     have := Module.natCard_eq_pow_finrank (K := ZMod p) (V := M)
     rw [hN, Nat.card_zmod] at this
     rw [Module.finrank_fin_fun]
     exact (Nat.pow_right_injective hp.out.two_le this).symm
-  haveI : FiniteDimensional (ZMod p) M := Module.Finite.of_finite
+  have : FiniteDimensional (ZMod p) M := Module.Finite.of_finite
   exact ⟨(LinearEquiv.ofFinrankEq (R := ZMod p) M (Fin r → ZMod p) hf).toAddEquiv⟩
 
 theorem IsTypeLevel.nonempty_typeFrame (hl : IsTypeLevel l) (hr : Dw.p + Dw.q = D.R.r) : Nonempty (TypeFrame Dw l) := by
   refine ⟨fun v => Classical.choice ?_⟩
   have hc : Nat.card (𝓞 D.host.E ⧸ typePrime l v) = D.host.g v.1 := by
     rw [← (hl.typePrime_spec v).2, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 D.host.E ⧸ typePrime l v) := Nat.finite_of_card_ne_zero (hc ▸ (D.host.g_prime _).ne_zero)
-  haveI := Dw.fin
-  haveI := Dw.proj
+  have : Finite (𝓞 D.host.E ⧸ typePrime l v) := Nat.finite_of_card_ne_zero (hc ▸ (D.host.g_prime _).ne_zero)
+  have := Dw.fin
+  have := Dw.proj
   have hN : Nat.card (QMod Dw.La (typePrime l v)) = D.host.g v.1 ^ D.R.r := by
     rw [natCard_quot_smul_top_of_projective, hc, Dw.rank, hr]
   refine nonempty_addEquiv_pi (fun x => ?_) hN

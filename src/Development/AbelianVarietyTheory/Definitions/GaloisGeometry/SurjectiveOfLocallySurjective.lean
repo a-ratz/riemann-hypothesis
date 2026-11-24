@@ -268,14 +268,14 @@ theorem formRes_basicOpen {U : X.Opens} (hU : IsAffineOpen U) (g : Sec s U) :
     (∀ y : OmU s (X.basicOpen g) j, ∃ (n : ℕ) (x : OmU s U j),
       Sec.res s (X.basicOpen_le g) g ^ n • y = formRes s (X.basicOpen_le g) j x) ∧
     ∀ x : OmU s U j, formRes s (X.basicOpen_le g) j x = 0 → ∃ n : ℕ, g ^ n • x = 0 := by
-  letI : Algebra (Sec s U) (Sec s (X.basicOpen g)) :=
+  let : Algebra (Sec s U) (Sec s (X.basicOpen g)) :=
     (Sec.res s (X.basicOpen_le g) : Sec s U →+* Sec s (X.basicOpen g)).toAlgebra
-  haveI : IsScalarTower k (Sec s U) (Sec s (X.basicOpen g)) :=
+  have : IsScalarTower k (Sec s U) (Sec s (X.basicOpen g)) :=
     .of_algebraMap_eq fun r ↦ ((Sec.res s (X.basicOpen_le g)).commutes r).symm
-  haveI : IsLocalization.Away g (Sec s (X.basicOpen g)) := hU.isLocalization_basicOpen g
-  haveI : Algebra.FormallyEtale (Sec s U) (Sec s (X.basicOpen g)) :=
+  have : IsLocalization.Away g (Sec s (X.basicOpen g)) := hU.isLocalization_basicOpen g
+  have : Algebra.FormallyEtale (Sec s U) (Sec s (X.basicOpen g)) :=
     .of_isLocalization (Submonoid.powers g)
-  haveI := (isLocalizedModule_iff_isBaseChange (Submonoid.powers g) _ _).2
+  have := (isLocalizedModule_iff_isBaseChange (Submonoid.powers g) _ _).2
     (isBaseChange_formLin k (Sec s U) (Sec s (X.basicOpen g)) j)
   refine ⟨fun y ↦ ?_, fun x hx ↦ ?_⟩
   · obtain ⟨⟨x, _, n, rfl⟩, hx⟩ := IsLocalizedModule.surj (Submonoid.powers g)

@@ -192,7 +192,7 @@ theorem exists_fn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     exact (pullback.lift_fst _ _ _).symm
   obtain ⟨f, hf⟩ := exists_glue A j (fun x => ⟨x, hp x⟩) (fun p => evR Xo c s (u p)) (by
     intro K _ _ p p' χ χ' hχ
-    letI : Algebra c.F K := (χ.comp (algebraMap c.F (A p))).toAlgebra
+    let : Algebra c.F K := (χ.comp (algebraMap c.F (A p))).toAlgebra
     have hsn' : (spMap χ ≫ j p) ≫ pullback.snd _ _ = spMap (algebraMap c.F K) := by
       rw [Category.assoc, hsn, GlobalTheory.LocalFrame.spMap_spMap]
     have hx : ((spMap χ ≫ j p) ≫ pullback.fst _ _) ≫ Xo.s = sOf c K := by

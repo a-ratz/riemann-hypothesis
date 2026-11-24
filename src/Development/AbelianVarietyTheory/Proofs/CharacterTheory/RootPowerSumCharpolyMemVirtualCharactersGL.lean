@@ -125,7 +125,7 @@ theorem exists_monomial_basis_of_imprimitive (k : Type) [Field k] (G : Type) [Gr
   have hB : ∀ (q : G ⧸ T) (i : Fin n), B ⟨q, i⟩ = ρ q.out (b i : V) := by
     intro q i
     simp [B, bq]
-  haveI : Fintype (G ⧸ T) := Fintype.ofFinite _
+  have : Fintype (G ⧸ T) := Fintype.ofFinite _
   let e := Fintype.equivFin (Σ _ : G ⧸ T, Fin n)
   refine ⟨_, B.reindex e, fun g i => ?_⟩
   obtain ⟨⟨q, i⟩, rfl⟩ := e.surjective i
@@ -161,7 +161,7 @@ theorem invariant_eq_top_of_irreducible {k : Type} [Field k] {G : Type} [Group G
 
 theorem finrank_eq_one_or_imprimitive : ∀ (k : Type) [Field k] (G : Type) [Group G] [Finite G] (V : Type) [AddCommGroup V] [Module k V] [FiniteDimensional k V] (ρ : Representation k G V) [IsAlgClosed k], AbByP G → ρ.IsIrreducible → Module.finrank k V = 1 ∨ ∃ (T : Subgroup G) (W : Submodule k V), T ≠ ⊤ ∧ (∀ t ∈ T, ∀ w ∈ W, ρ t w ∈ W) ∧ iSupIndep (fun q : G ⧸ T => W.map (ρ q.out)) ∧ ⨆ q : G ⧸ T, W.map (ρ q.out) = ⊤ := by
   intro k _ G _ _ V _ _ _ ρ _ hG hirr
-  haveI : Nontrivial V := by
+  have : Nontrivial V := by
     have h1 : (⊥ : Subrepresentation ρ) ≠ ⊤ := bot_ne_top
     have h2 : (⊥ : Submodule k V) ≠ ⊤ := fun H => h1 (Subrepresentation.ext H)
     exact (Submodule.nontrivial_iff k).1 ⟨_, _, h2⟩
@@ -332,9 +332,9 @@ theorem exists_monomial_basis_of_abByP : ∀ (k : Type) [Field k] (G : Type) [Gr
         refine ⟨n, b, fun t ht i => ?_⟩
         obtain ⟨j, c, hj⟩ := hb ⟨t, ht⟩ i
         exact ⟨j, c, congrArg Subtype.val hj⟩
-    · haveI : NeZero (Nat.card G : k) := ⟨hcard⟩
-      haveI : Nontrivial V := Module.nontrivial_of_finrank_pos (Nat.pos_of_ne_zero h0)
-      haveI : Nontrivial (Subrepresentation ρ) :=
+    · have : NeZero (Nat.card G : k) := ⟨hcard⟩
+      have : Nontrivial V := Module.nontrivial_of_finrank_pos (Nat.pos_of_ne_zero h0)
+      have : Nontrivial (Subrepresentation ρ) :=
         ⟨⊥, ⊤, fun H => (bot_ne_top : (⊥ : Submodule k V) ≠ ⊤)
           (congrArg Subrepresentation.toSubmodule H)⟩
       have hex : ∃ U : Subrepresentation ρ, U ≠ ⊥ ∧ U ≠ ⊤ := by
@@ -440,7 +440,7 @@ lemma exists_vec {s : Fin n} (hs : GoodRep σ a s) :
   have hv : ∀ m : ℕ, v ((σ ^ m) s) = orbProd σ a m s := by
     intro m
     have h : ∃ m' : ℕ, (σ ^ m') s = (σ ^ m) s := ⟨m, rfl⟩
-    simp only [v, dif_pos h]
+    simp only [v, dite_eq_left h]
     exact orbProd_eq σ a hs.2 _ _ h.choose_spec
   refine ⟨v, fun j => ?_, by simpa [orbProd] using hv 0, fun t ht hts => ?_⟩
   · by_cases h : ∃ m : ℕ, (σ ^ m) s = j
@@ -452,14 +452,14 @@ lemma exists_vec {s : Fin n} (hs : GoodRep σ a s) :
         refine h ⟨m' + m, ?_⟩
         rw [pow_add, Equiv.Perm.mul_apply, hm]
         simpa using hm'
-      simp only [v, dif_neg h, dif_neg h', mul_zero]
+      simp only [v, dite_eq_right h, dite_eq_right h', mul_zero]
   · have h' : ¬ ∃ m : ℕ, (σ ^ m) s = t := by
       rintro ⟨m, rfl⟩
       obtain ⟨m', hm'⟩ := exists_back σ m s
       have h1 := ht.1 m'
       rw [hm'] at h1
       exact hts (le_antisymm h1 (hs.1 m))
-    simp only [v, dif_neg h']
+    simp only [v, dite_eq_right h']
 
 theorem finrank_eq_card (E : Submodule K (Fin n → K))
     (hE : ∀ v, v ∈ E ↔ ∀ j, v (σ j) = a j * v j) :
@@ -508,7 +508,7 @@ lemma mem_eigenspace_iff (c : Fin n → K) (μ : K) (hμ : μ ≠ 0) (v : Fin n 
   refine forall_congr' fun j => ?_
   simp only [Matrix.toLin'_apply, Matrix.mulVec, dotProduct, Matrix.of_apply,
     EmbeddingLike.apply_eq_iff_eq, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, Pi.smul_apply, smul_eq_mul]
+    ite_true, Pi.smul_apply, smul_eq_mul]
   constructor
   · intro h
     field_simp
@@ -611,10 +611,10 @@ namespace GlobalTheory.MonoTrace
 
 theorem ncard_pow_eq_one (k : Type) [Field k] [IsAlgClosed k] (N : ℕ) (hN : (N : k) ≠ 0) :
     {μ : k | μ ^ N = 1}.Finite ∧ {μ : k | μ ^ N = 1}.ncard = N := by
-  haveI : NeZero (N : k) := ⟨hN⟩
+  have : NeZero (N : k) := ⟨hN⟩
   have hN0 : N ≠ 0 := by rintro rfl; simp at hN
-  haveI : NeZero N := ⟨hN0⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot k N
+  have : NeZero N := ⟨hN0⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot k N
   have hs : {μ : k | μ ^ N = 1} = (nthRootsFinset N (1 : k) : Set k) := by
     ext x
     simp [mem_nthRootsFinset (Nat.pos_of_ne_zero hN0)]
@@ -630,7 +630,7 @@ theorem bijOn_pow_eq_one (k : Type) [Field k] [IsAlgClosed k] (θ : k →* ℂ)
     simp [hN0] at h
   have hmaps : Set.MapsTo θ {μ : k | μ ^ N = 1} {μ : ℂ | μ ^ N = 1} := by
     intro μ h
-    simp only [Set.mem_setOf_eq] at h ⊢
+    simp only [Set.mem_ofPred_eq] at h ⊢
     rw [← map_pow, h, map_one]
   have hinj : Set.InjOn θ {μ : k | μ ^ N = 1} :=
     fun x hx y hy h => hθ x y (hne x hx) (hne y hy) h
@@ -788,7 +788,7 @@ private theorem exists_p_regular_split_of_normal_sylow_commute (E : Type) [Group
   obtain ⟨H, hPH⟩ := Subgroup.exists_right_complement'_of_coprime P.card_coprime_index
   have hHP := hPH.symm
   refine ⟨H, hHP.QuotientMulEquiv.toMonoidHom.comp (QuotientGroup.mk' (P : Subgroup E)), ?_, ?_⟩
-  · have h1 := hPH.card_mul
+  · have h1 := hPH.card_mul_card
     have h2 := (P : Subgroup E).card_mul_index
     have h3 : Nat.card H = (P : Subgroup E).index := by
       have hpos : 0 < Nat.card (P : Subgroup E) := Nat.card_pos
@@ -811,7 +811,7 @@ private theorem exists_p_regular_split_of_normal_sylow_commute (E : Type) [Group
       have hd : orderOf (h : E) ∣ Nat.card H := by
         rw [Subgroup.orderOf_coe]
         exact orderOf_dvd_natCard h
-      have h1 := hPH.card_mul
+      have h1 := hPH.card_mul_card
       have h2 := (P : Subgroup E).card_mul_index
       have h3 : Nat.card H = (P : Subgroup E).index :=
         Nat.eq_of_mul_eq_mul_left Nat.card_pos (h1.trans h2.symm)
@@ -834,7 +834,7 @@ private theorem exists_p_regular_split_of_pow_mem_center (E : Type) [Group E] [F
     exact Subgroup.pow_mem _ hj m
   by_cases hlp : l = p
   · subst hlp
-    haveI := sylow_normal_of_prime_pow_mem_center E l P hy
+    have := sylow_normal_of_prime_pow_mem_center E l P hy
     apply exists_p_regular_split_of_normal_sylow_commute E l P
     intro x y _ hyo
     have := hcen y ((Nat.Prime.coprime_iff_not_dvd hl).2 hyo)
@@ -846,7 +846,7 @@ private theorem exists_p_regular_split_of_pow_mem_center (E : Type) [Group E] [F
       apply hcen
       exact Nat.Coprime.coprime_dvd_right (orderOf_dvd_of_pow_eq_one ha')
         (Nat.Coprime.pow_right a ((Nat.coprime_primes hl hp.out).2 hlp))
-    haveI : (P : Subgroup E).Normal := ⟨fun n hn g => by
+    have : (P : Subgroup E).Normal := ⟨fun n hn g => by
       rw [Subgroup.mem_center_iff.1 (hPc n hn) g, mul_inv_cancel_right]; exact hn⟩
     apply exists_p_regular_split_of_normal_sylow_commute E p P
     intro x y hx _
@@ -937,9 +937,9 @@ private theorem rootSum_charpoly_mem_virt_of_pow_mem_center (F : Type) [Field F]
     (fun x : E => _root_.GlobalTheory.CuspGL.rootSum θ k (Matrix.charpoly ((x : GL (Fin n) F) : Matrix (Fin n) (Fin n) F)))
       ∈ _root_.GlobalTheory.BI.Virt ℂ ℂ E := by
   obtain ⟨p, hchar⟩ := CharP.exists F
-  haveI := hchar
-  haveI : Fact p.Prime := ⟨CharP.char_is_prime F p⟩
-  haveI : CharP (AlgebraicClosure F) p :=
+  have := hchar
+  have : Fact p.Prime := ⟨CharP.char_is_prime F p⟩
+  have : CharP (AlgebraicClosure F) p :=
     charP_of_injective_algebraMap (algebraMap F (AlgebraicClosure F)).injective p
   have hab : _root_.GlobalTheory.BI.AbByP E := by
     obtain ⟨l, hl, hy⟩ := hE

@@ -113,7 +113,7 @@ theorem integral_gaussian_unitary : ∀ (V : Type) [NormedAddCommGroup V] [Norme
   let T : V ≃L[ℂ] (Fin n → ℂ) := e.equivFun.toContinuousLinearEquiv
   let Tm : V ≃ᵐ (Fin n → ℂ) := T.toHomeomorph.toMeasurableEquiv
   have hT : ∀ z i, Tm z i = e.repr z i := fun z i => rfl
-  haveI : (μ.map Tm).IsAddHaarMeasure := T.isAddHaarMeasure_map μ
+  have : (μ.map Tm).IsAddHaarMeasure := T.isAddHaarMeasure_map μ
   have hν := Measure.isAddLeftInvariant_eq_smul (μ.map Tm) (volume : Measure (Fin n → ℂ))
   have hpos := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure (μ.map Tm) (volume : Measure (Fin n → ℂ))
   set c := Measure.addHaarScalarFactor (μ.map Tm) (volume : Measure (Fin n → ℂ)) with hc

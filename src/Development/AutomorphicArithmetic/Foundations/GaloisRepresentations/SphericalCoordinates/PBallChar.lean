@@ -182,7 +182,7 @@ theorem UpperTheory.Gal.W2.ballChar_of :
     have n1 : ComplexEmbedding.conjugate (ty i) ≠ t₀ := fun h => h2 (by rw [← h, hcc])
     have n2 : ComplexEmbedding.conjugate (ty i) ≠ ComplexEmbedding.conjugate t₀ := fun h =>
       h1 (by have := congrArg ComplexEmbedding.conjugate h; rwa [hcc, hcc] at this)
-    simp only [typeMult, h1, h2, n1, n2, if_false] at c1 c2
+    simp only [typeMult, h1, h2, n1, n2, ite_false] at c1 c2
     have a1 : ε (ty i) ≠ 0 := by
       intro h
       rw [h, mul_zero] at c1
@@ -247,7 +247,7 @@ theorem UpperTheory.Gal.W2.ballChar_of :
       ext i j
       simp [hPdef, Matrix.conjTranspose_apply]
     rw [hP', ← Matrix.conjTranspose_mul, hρ c, Matrix.conjTranspose_mul]
-  haveI : Invertible P := P.invertibleOfIsUnitDet hPu
+  have : Invertible P := P.invertibleOfIsUnitDet hPu
   have hcan : ∀ X Y : Matrix (Fin g) (Fin g) ℂ, Pᵀ * X * P = Pᵀ * Y * P → X = Y := by
     intro X Y h
     exact Matrix.mul_right_injective_of_invertible Pᵀ (Matrix.mul_left_injective_of_invertible P h)
@@ -340,8 +340,8 @@ theorem UpperTheory.Gal.W2.ballChar_of :
     apply hH
     rw [h2]
     exact Finset.prod_eq_zero (Finset.mem_univ j) hj
-  haveI : Invertible Sb := Sb.invertibleOfIsUnitDet hSbu
-  haveI : Invertible M₀ := M₀.invertibleOfIsUnitDet (isUnit_iff_ne_zero.2 hM0)
+  have : Invertible Sb := Sb.invertibleOfIsUnitDet hSbu
+  have : Invertible M₀ := M₀.invertibleOfIsUnitDet (isUnit_iff_ne_zero.2 hM0)
   have hCsp : ∀ b, (co b)ᵀ * M₀ ∈ PerCoordU.Tsp bar ρ := by
     intro b
     have : co b ∈ Csp bar ρ M₀ := hco.2 ▸ LinearMap.mem_range_self co b
@@ -366,7 +366,7 @@ theorem UpperTheory.Gal.W2.ballChar_of :
   have hEbu : IsUnit Eb.det := by
     rw [hEbdef, Matrix.det_diagonal]
     exact isUnit_iff_ne_zero.2 (Finset.prod_ne_zero_iff.2 fun j _ => hEb j)
-  haveI : Invertible Eb := Eb.invertibleOfIsUnitDet hEbu
+  have : Invertible Eb := Eb.invertibleOfIsUnitDet hEbu
   have hEinv : Eb⁻¹ = Matrix.diagonal fun j => (starRingEnd ℂ (ev j))⁻¹ := by
     apply Matrix.inv_eq_left_inv
     rw [hEbdef, Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
@@ -379,7 +379,7 @@ theorem UpperTheory.Gal.W2.ballChar_of :
       rfl
     rw [this]
     exact isUnit_iff_ne_zero.2 (by simpa using hH)
-  haveI : Invertible (H.map star) := (H.map star).invertibleOfIsUnitDet hHbu
+  have : Invertible (H.map star) := (H.map star).invertibleOfIsUnitDet hHbu
   have h1 : Sb⁻¹ * H = Matrix.diagonal ev * Sb⁻¹ := by
     calc Sb⁻¹ * H = Sb⁻¹ * (H * Sb) * Sb⁻¹ := by simp [Matrix.mul_assoc]
       _ = Matrix.diagonal ev * Sb⁻¹ := by rw [hHS]; simp [Matrix.mul_assoc]

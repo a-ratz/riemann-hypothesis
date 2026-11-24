@@ -48,12 +48,12 @@ open UpperTheory.ConvolutionTheory.R2 UpperTheory.ConvolutionTheory.R2.H
 open scoped Classical
 
 private lemma countable_gam (K : Type) [Field K] [NumberField K] : Countable (Gam K) := by
-  haveI : Countable K := by
+  have : Countable K := by
     have : Module.Finite ℚ K := inferInstance
     obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' ℚ K
     exact hf.countable
-  haveI : Countable (Matrix (Fin 2) (Fin 2) K) := inferInstanceAs (Countable (Fin 2 → Fin 2 → K))
-  haveI : Countable (Matrix.SpecialLinearGroup (Fin 2) K) :=
+  have : Countable (Matrix (Fin 2) (Fin 2) K) := inferInstanceAs (Countable (Fin 2 → Fin 2 → K))
+  have : Countable (Matrix.SpecialLinearGroup (Fin 2) K) :=
     Function.Injective.countable (f := fun g => (g.1 : Matrix (Fin 2) (Fin 2) K)) Subtype.val_injective
   unfold Gam
   exact (Set.countable_range (ratS K)).to_subtype
@@ -62,9 +62,9 @@ theorem UpperTheory.ConvolutionTheory.R2.H.rightInv :
     ∀ (K : Type) [Field K] [NumberField K] (M : Meas K) (u : G1 K → ℂ), (∀ γ g, u (ratS K γ * g) = u g) → IntegrableOn u M.D M.μ →
       ∀ k, IntegrableOn (fun g => u (g * k)) M.D M.μ ∧ ∫ g in M.D, u (g * k) ∂M.μ = ∫ g in M.D, u g ∂M.μ := by
   intro K _ _ M u hu hint k
-  haveI := M.haar
-  haveI := M.right
-  haveI := countable_gam K
+  have := M.haar
+  have := M.right
+  have := countable_gam K
   have hmp : MeasurePreserving (· * k) M.μ M.μ := measurePreserving_mul_right M.μ k
   have hemb : MeasurableEmbedding (· * k : G1 K → G1 K) := (MeasurableEquiv.mulRight k).measurableEmbedding
   have hfd : IsFundamentalDomain (Gam K) ((Equiv.mulRight k) '' M.D) M.μ := by

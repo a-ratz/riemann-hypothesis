@@ -117,8 +117,8 @@ theorem hasInt_of_chart : ∀ {n : ℕ} {Y κ : Type} [TopologicalSpace Y] [Meas
       (fun i y hi hy => by rw [h0 i y hy.1 hy.2 hi]; simp)
     have hz' : glueMeas e (fun i y => ENNReal.ofReal (ε * d i y)) (S \ W) = 0 := by
       have := congrArg (fun μ : Measure Y => μ (S \ W)) hz
-      simpa only [Measure.restrict_apply_self, zero_smul, Measure.coe_zero, Pi.zero_apply] using this
-    rw [← measure_inter_add_diff S hW.measurableSet, hz', add_zero,
+      simpa only [Measure.restrict_apply_self, zero_smul, FunLike.coe_zero, Pi.zero_apply] using this
+    rw [← measure_inter_add_sdiff S hW.measurableSet, hz', add_zero,
       glueMeas_eq_chartMeas_of_compat_on e hd hcov hSW e' (fun y => ENNReal.ofReal (ε * g (e' y))) hsub hd'
         (fun i j y hy hi hj => by
           rw [hT.trans i j y hy.1 hi hj, ← ENNReal.ofReal_mul (sq_nonneg _), mul_left_comm])

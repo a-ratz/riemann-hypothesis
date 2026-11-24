@@ -140,7 +140,7 @@ theorem USetup.isOpen_regSet (X₁ : USetup C) : IsOpen X₁.regSet := by
   obtain ⟨s, hs⟩ := X₁.S.fg
   have e : X₁.regSet = ⋂ a ∈ s, {z | a ∈ X₁.M.O z} := by
     ext z
-    simp only [USetup.regSet, Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [USetup.regSet, Set.mem_ofPred_eq, Set.mem_iInter]
     rw [← hs, Algebra.adjoin_le_iff]
     exact ⟨fun h a ha => h ha, fun h a ha => h a ha⟩
   rw [e]
@@ -150,7 +150,7 @@ def USetup.cov (X₁ : USetup C) : Set (Xo.XF c) := {x | ∃ w ∈ X₁.regSet, 
 
 theorem USetup.exists_open_cov {X₁ : USetup C} {ξ : Xo.XF c} {w : X₁.M.Z} (hw : X₁.π w = C.i ξ)
     (hR : X₁.S.R ≤ X₁.M.O w) : ∃ W : Set (Xo.XF c), IsOpen W ∧ ξ ∈ W ∧ closure {ξ} ∩ W ⊆ X₁.cov := by
-  haveI := X₁.fin
+  have := X₁.fin
   have hcl : IsClosedMap X₁.π := X₁.π.isClosedMap
   have hF : IsClosed (X₁.π '' (closure {w} \ X₁.regSet)) := hcl _ (isClosed_closure.sdiff X₁.isOpen_regSet)
   refine ⟨C.i ⁻¹' (X₁.π '' (closure {w} \ X₁.regSet))ᶜ, hF.isOpen_compl.preimage C.i.continuous, ?_, ?_⟩
@@ -170,7 +170,7 @@ theorem USetup.exists_open_cov {X₁ : USetup C} {ξ : Xo.XF c} {w : X₁.M.Z} (
 theorem USetup.exists_finite_cover
     (h : ∀ x : Xo.XF c, ∃ (X' : USetup C) (w : X'.M.Z), X'.π w = C.i x ∧ X'.S.R ≤ X'.M.O w) :
     ∃ s : Set (USetup C), s.Finite ∧ ∀ x : Xo.XF c, ∃ X' ∈ s, x ∈ X'.cov := by
-  haveI := Formalism.L2.Pj.CompFin.isNoetherian_XF Xo c
+  have := Formalism.L2.Pj.CompFin.isNoetherian_XF Xo c
   suffices key : ∀ T : TopologicalSpace.Closeds (Xo.XF c),
       ∃ s : Set (USetup C), s.Finite ∧ ∀ x ∈ T, ∃ X' ∈ s, x ∈ X'.cov by
     obtain ⟨s, hs, hT⟩ := key ⊤
@@ -216,7 +216,7 @@ theorem USetup.exists_finite_cover
 theorem exists_fin_uSetup_regular_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c), (∀ x : Xo.XF c, ∃ (X' : USetup C) (w : X'.M.Z), X'.π w = C.i x ∧ X'.S.R ≤ X'.M.O w) → ∃ (m : ℕ) (X' : Fin m → USetup C) (U : ∀ k, (X' k).M.Z.Opens), (∀ k, (X' k).S.R ≤ (X' k).M.ringOn (U k)) ∧ ∀ x : Xo.XF c, ∃ k, ∃ w ∈ U k, (X' k).π w = C.i x := by
   intro E _ _ _ H Dw l Xo c C h
   obtain ⟨s, hs, hcov⟩ := USetup.exists_finite_cover h
-  haveI := hs.to_subtype
+  have := hs.to_subtype
   obtain ⟨m, ⟨e⟩⟩ := Finite.exists_equiv_fin s
   refine ⟨m, fun k => (e.symm k).1, fun k => ⟨(e.symm k).1.regSet, (e.symm k).1.isOpen_regSet⟩,
     fun k => fun a ha => RatModel.mem_ringOn.2 fun z hz => hz ha, fun x => ?_⟩
@@ -258,10 +258,10 @@ theorem exists_lift_finite_through_point : ∀ (X Z : Scheme.{0}) (f : X ⟶ Z),
     exact (Scheme.Hom.comp_apply _ _ _).trans (Scheme.fromSpecResidueField_apply z _)
   subst hz
   have hfin := GlobalTheory.residueFieldMap_finite_of_locallyQuasiFinite f w
-  letI := (f.residueFieldMap w).hom.toAlgebra
-  letI := φ.hom.toAlgebra
-  haveI : Module.Finite (Z.residueField (f w)) (X.residueField w) := hfin
-  haveI : Algebra.IsAlgebraic (Z.residueField (f w)) (X.residueField w) := inferInstance
+  let := (f.residueFieldMap w).hom.toAlgebra
+  let := φ.hom.toAlgebra
+  have : Module.Finite (Z.residueField (f w)) (X.residueField w) := hfin
+  have : Algebra.IsAlgebraic (Z.residueField (f w)) (X.residueField w) := inferInstance
   let ψ : X.residueField w →ₐ[Z.residueField (f w)] PadicAlgCl p := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -276,7 +276,7 @@ theorem exists_lift_finite_through_point : ∀ (X Z : Scheme.{0}) (f : X ⟶ Z),
   have hy0w : y0 (IsLocalRing.closedPoint (PadicAlgCl p)) = w :=
     (Scheme.Hom.comp_apply _ _ _).trans (Scheme.fromSpecResidueField_apply w _)
 
-  haveI : IsProper f := inferInstance
+  have : IsProper f := inferInstance
   have hE : ValuativeCriterion.Existence f :=
     (UniversallyClosed.eq_valuativeCriterion ▸ (inferInstance : UniversallyClosed f) :
       (ValuativeCriterion.Existence ⊓ @QuasiCompact) f).1
@@ -371,7 +371,7 @@ theorem exists_pow_norm_val_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have := X'.M.lft
     have : IsLocallyNoetherian X'.M.Z := LocallyOfFiniteType.isLocallyNoetherian X'.M.s
     infer_instance
-  haveI := X'.fin
+  have := X'.fin
   have hfin := X'.π.finite_preimage_singleton (X₁.π z₁)
   choose e he using fun z' : X'.M.Z => haveI := hnoeth z'; exists_maximalIdeal_pow_le_map_stalkMap X'.M.Z C.Z X'.π z'
   refine ⟨hfin.toFinset.sup e + 1, by omega, ?_⟩
@@ -393,7 +393,7 @@ theorem exists_pow_norm_val_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     induction hx using Submodule.span_induction with
     | mem x hx =>
       obtain ⟨g, hg, rfl⟩ := hx
-      obtain ⟨U, hU, s, rfl⟩ := C.Z.presheaf.germ_exist g
+      obtain ⟨U, hU, s, rfl⟩ := C.Z.presheaf.exists_germ_eq g
       have hU₁ : X₁.π z₁ ∈ U := hz' ▸ hU
       refine ⟨X₁.M.Z.presheaf.germ (X₁.π ⁻¹ᵁ U) z₁ hU₁ (X₁.π.app U s), ?_, ?_⟩
       · rw [mem_maximalIdeal, mem_nonunits_iff]
@@ -608,7 +608,7 @@ theorem pos_of_tendsto {X : Type} [AddCommGroup X] [Module.Free ℤ X] (q : Quad
   have h : q a ≤ 0 := not_lt.1 h
   have hfin : {x | ¬ (0 : ℝ) < q x}.Finite := Filter.eventually_cofinite.1 (hq.eventually_gt_atTop 0)
   refine Set.infinite_of_injective_forall_mem (f := fun n : ℤ => n • a) (smul_left_injective ℤ ha) (fun n => ?_) hfin
-  simp only [Set.mem_setOf_eq, not_lt, QuadraticMap.map_smul, zsmul_eq_mul]
+  simp only [Set.mem_ofPred_eq, not_lt, QuadraticMap.map_smul, zsmul_eq_mul]
   push_cast
   exact mul_nonpos_of_nonneg_of_nonpos (mul_self_nonneg _) h
 
@@ -639,9 +639,9 @@ theorem sc_pos {C : UCompact Xo c} {X₁ : USetup C} {p : ℕ} [Fact p.Prime] {z
   linarith
 
 theorem one_le_of_ne_zero (T : UTrait Xo c) {x : T.P.D.toPre.X} (hx : x ≠ 0) : 1 ≤ Dw.p + Dw.q := by
-  haveI : Module.Projective (𝓞 E) T.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) _
-  haveI : Module.Finite (𝓞 E) T.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
-  haveI : Nontrivial T.P.D.toPre.X := ⟨x, 0, hx⟩
+  have : Module.Projective (𝓞 E) T.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) _
+  have : Module.Finite (𝓞 E) T.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : Nontrivial T.P.D.toPre.X := ⟨x, 0, hx⟩
   have h1 : 0 < Module.finrank (𝓞 E) T.P.D.toPre.X := Module.finrank_pos
   have h2 := UTrait.finrank_le_min E H Dw l Xo c T
   omega
@@ -751,7 +751,7 @@ theorem eq_zero_of_sum_eq_zero (hpq : ¬ 1 ≤ Dw.p + Dw.q) (T : UTrait Xo c) (x
   have h0 : Module.finrank (𝓞 E) T.P.D.toPre.X = 0 := by omega
   have : Module.Finite (𝓞 E) T.P.D.toPre.X := Module.Finite.of_restrictScalars_finite ℤ _ _
   obtain ⟨a, ha, hax⟩ := Module.finrank_eq_zero_iff.1 h0 x
-  obtain ⟨n, hn, b, hb⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) a).exists_nonzero_dvd
+  obtain ⟨n, hn, b, hb⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) a).exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero ha)
   have h : n • x = 0 := by
     rw [← algebraMap_smul (𝓞 E) n x, hb, mul_comm, mul_smul, hax, smul_zero]
@@ -771,7 +771,7 @@ theorem GlobalTheory.UPoinc.lam_of_closed : ∀ (E : Type) [Field E] [NumberFiel
   choose e he1 he using fun k => _root_.GlobalTheory.UPoinc.ValBound.exists_pow_norm_val_le E H Dw l Xo c C X₁ (X' k) z₁
   refine ⟨∑ k, (e k : ℝ) * |K k|, fun t x hx => ?_⟩
   have hzc : IsClosed ({X₁.π z₁} : Set C.Z) := by
-    haveI := X₁.fin
+    have := X₁.fin
     have := X₁.π.isClosedMap _ hz
     rwa [Set.image_singleton] at this
   obtain ⟨k, w, hwU, hw⟩ := hcov ((spMap t.ι ≫ t.T.y) (IsLocalRing.closedPoint (PadicAlgCl p)))
@@ -799,7 +799,7 @@ theorem GlobalTheory.UPoinc.lam_of_closed : ∀ (E : Type) [Field E] [NumberFiel
   have hKk : (e k : ℝ) * K k ≤ (e k : ℝ) * |K k| := mul_le_mul_of_nonneg_left (le_abs_self _) (by positivity)
   calc Real.exp (-((∑ k, (e k : ℝ) * |K k|) * (t.sc * t.T.be x x)))
       ≤ Real.exp (-(K k * (t.sc * t.T.be x x))) ^ e k := by
-        rw [← Real.exp_nat_mul]
+        rw [← Real.exp_natCast_mul]
         apply Real.exp_le_exp.2
         nlinarith
     _ ≤ ‖t'.val h'‖ ^ e k := pow_le_pow_left₀ (Real.exp_pos _).le hh' _
@@ -843,7 +843,7 @@ theorem projective_X (T : UTrait Xo c) : Module.Projective (𝓞 E) T.P.D.toPre.
     rw [IsDedekindDomain.flat_iff_torsion_eq_bot, eq_bot_iff]
     rintro x ⟨a, hx⟩
     by_contra hx0
-    obtain ⟨n, hn, b, hb⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) (a : 𝓞 E)).exists_nonzero_dvd
+    obtain ⟨n, hn, b, hb⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) (a : 𝓞 E)).exists_ne_zero_dvd
       (mem_nonZeroDivisors_of_ne_zero (nonZeroDivisors.coe_ne_zero a))
     have h : n • x = 0 := by
       have hx' : (a : 𝓞 E) • x = 0 := hx
@@ -1062,7 +1062,7 @@ theorem exists_norm_eq {E : Type} [Field E] [NumberField E] [IsCMField E] {H : H
   refine ⟨a ^ (t.T.be x x).toNat, ?_⟩
   have e1 : ((t.T.be x x : ℤ) : ℝ) = (((t.T.be x x).toNat : ℕ) : ℝ) := by
     rw [← Int.cast_natCast, Int.toNat_of_nonneg hnn]
-  rw [norm_pow, e1, UCTrait.sc, ← ha, neg_mul, neg_neg, mul_comm, Real.exp_nat_mul, Real.exp_log hpos]
+  rw [norm_pow, e1, UCTrait.sc, ← ha, neg_mul, neg_neg, mul_comm, Real.exp_natCast_mul, Real.exp_log hpos]
 
 end GlobalTheory.UPoinc.ClassCore
 
@@ -1124,7 +1124,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   intro E _ _ _ H Dw hpq l Xo c C X₁ p _ z₁ Φ hΦ y₀ N₀
   obtain ⟨N, hN₀, hdvd, Ω₂, i1, i2, i3, i4, hc⟩ := hcore E H Dw hpq l Xo c C X₁ p z₁ Φ hΦ y₀ N₀
   refine ⟨N, hN₀, hdvd, Ω₂, i1, i2, i3, i4, ?_⟩
-  letI : Algebra (X₁.M.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap X₁.Ω₁ Ω₂).comp (X₁.M.stalkHom z₁)).toAlgebra
+  let : Algebra (X₁.M.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap X₁.Ω₁ Ω₂).comp (X₁.M.stalkHom z₁)).toAlgebra
   intro 𝔷 h𝔷 ev' h1 h2 h3
   obtain ⟨k, Q, F, hk0, hcls, hle, heq, hgal⟩ := hc 𝔷 h𝔷 ev' h1 h2 h3
   classical
@@ -1149,7 +1149,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   let wit : ∀ y, (Fin 1 → Φ.X y) → (Fin 1 → Φ.X y) := fun y μ => if h : NS y μ then h.choose else μ
   have hwit : ∀ y μ, NS y μ → Cg y (wit y μ) μ ∧ wit y μ ≠ μ ∧ qv y (wit y μ) ≤ qv y μ := by
     intro y μ h
-    simp only [wit, dif_pos h]
+    simp only [wit, dite_eq_left h]
     exact h.choose_spec
   have hel : ∀ y μ, ∃ e : PadicAlgCl p, ‖e‖ = Real.exp (-(Φ.sc y * qv y μ)) := by
     intro y μ
@@ -1187,7 +1187,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
           exact this)
       rw [norm_pow]
       calc ‖ev' y (F _ κ)‖ ^ 2 ≤ Real.exp (-(Φ.sc y * qv y μ) / 2) ^ 2 := pow_le_pow_left₀ (norm_nonneg _) h 2
-        _ = _ := by rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+        _ = _ := by rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
     have hg : ∀ y (μ ν : Fin 1 → Φ.X y), ‖g y μ ν‖ ≤ Real.exp (-(Φ.sc y * qv y ν)) := by
       intro y μ ν
       simp only [g]
@@ -1210,7 +1210,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         · rw [norm_zero]; exact (Real.exp_pos _).le
     · by_cases hns : NS y μ
       · refine ⟨Sum.inr ⟨y, μ⟩, ?_⟩
-        simp only [t, Sum.elim_inr, dif_pos rfl, g, if_pos hns, if_pos rfl]
+        simp only [t, Sum.elim_inr, dite_eq_left rfl, g, ite_eq_left hns, ite_eq_left rfl]
         exact hel y μ
       · have hstrict : ∀ μ' : Fin 1 → Φ.X y, (∀ u, CongMod N (μ' u) (μ u)) → μ' ≠ μ →
             qW !![(1 : ℤ)] (Φ.β y) μ < qW !![(1 : ℤ)] (Φ.β y) μ' := by
@@ -1227,8 +1227,8 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
           have := cm_map (k y).symm.toLinearMap.toAddMonoidHom (hcc u)
           simpa using this
         refine ⟨Sum.inl κ, ?_⟩
-        simp only [t, Sum.elim_inl, hsel', if_pos rfl]
-        rw [if_pos trivial, hF, norm_pow, hnorm, ← Real.exp_nat_mul]; congr 1; push_cast; ring
+        simp only [t, Sum.elim_inl, hsel', ite_eq_left rfl]
+        rw [ite_eq_left trivial, hF, norm_pow, hnorm, ← Real.exp_natCast_mul]; congr 1; push_cast; ring
   · rintro cc cc' (κ | s) h
     · simp only [f, Sum.elim_inl, hcls cc cc' κ h]
     · rfl
@@ -1242,7 +1242,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       have hsum : ∑ μ ∈ S, t y μ (Sum.inl κ) = t y s (Sum.inl κ) := by
         refine Finset.sum_eq_single_of_mem s hmem (fun μ hμ hne => ?_)
         simp only [t, Sum.elim_inl]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         exact hne (h.trans (hselc y μ _ (hS' μ hμ)))
       have hF : F (fun u => (k y).symm (s u)) κ = F cc κ := by
@@ -1251,17 +1251,17 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         simpa using this
       rw [hsum]
       simp only [t, Sum.elim_inl, hss]
-      rw [if_pos trivial, hF]
+      rw [ite_eq_left trivial, hF]
       simp [f, hε.le]
     · by_cases hy : y = y'
       · subst hy
         refine ⟨{μ, wit y μ}, fun S hS hS₀ => ?_⟩
         have hS' : ∀ ν ∈ S, Cg y ν (fun u => k y (cc u)) := fun ν hν u => by simpa using hS ν hν u
         have hsum : ∑ ν ∈ S, t y ν (Sum.inr ⟨y, μ⟩) = 0 := by
-          simp only [t, Sum.elim_inr, dif_pos rfl, dite_true]
+          simp only [t, Sum.elim_inr, dite_eq_left rfl, dite_true]
           by_cases hns : NS y μ
           · obtain ⟨hw1, hw2, -⟩ := hwit y μ hns
-            simp only [g, if_pos hns]
+            simp only [g, ite_eq_left hns]
             by_cases hc : Cg y μ (fun u => k y (cc u))
             · have hμS : μ ∈ S := hS₀ μ (by simp) (fun u => by simpa using hc u)
               have hwS : wit y μ ∈ S := hS₀ _ (by simp) (fun u => by simpa using cm_trans (hw1 u) (hc u))
@@ -1272,7 +1272,7 @@ theorem main_of_core (hcore : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
                 · subst h1; simp [hw2.symm]
                 · simp [h1]
               rw [Finset.sum_congr rfl (fun ν _ => e ν), Finset.sum_add_distrib, Finset.sum_ite_eq' S μ,
-                Finset.sum_ite_eq' S (wit y μ), if_pos hμS, if_pos hwS, add_neg_cancel]
+                Finset.sum_ite_eq' S (wit y μ), ite_eq_left hμS, ite_eq_left hwS, add_neg_cancel]
             · refine Finset.sum_eq_zero (fun ν hν => ?_)
               have h1 : ν ≠ μ := fun h => hc (h ▸ hS' ν hν)
               have h2 : ν ≠ wit y μ := fun h => hc (fun u => cm_trans (cm_symm (hw1 u)) (h ▸ hS' ν hν u))
@@ -1321,7 +1321,7 @@ namespace GlobalTheory.UPoinc
 
 theorem ustalk_isNoetherian_normal_fractionRing : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (X₁ : USetup C) (z₁ : X₁.M.Z), letI : Algebra (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ := (X₁.M.stalkHom z₁).toAlgebra; IsDomain (X₁.M.Z.presheaf.stalk z₁) ∧ IsFractionRing (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ ∧ IsIntegrallyClosed (X₁.M.Z.presheaf.stalk z₁) ∧ IsNoetherianRing (X₁.M.Z.presheaf.stalk z₁) := by
   intro E _ _ _ H Dw l Xo c C X₁ z₁
-  letI : Algebra (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ := (X₁.M.stalkHom z₁).toAlgebra
+  let : Algebra (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ := (X₁.M.stalkHom z₁).toAlgebra
   have hN := X₁.normal
   refine ⟨GlobalTheory.IsNormalScheme.isDomain_stalk z₁, ?_, GlobalTheory.IsNormalScheme.isIntegrallyClosed_stalk z₁, ?_⟩
   · have : FaithfulSMul (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ :=
@@ -1344,10 +1344,10 @@ theorem ustalk_isNoetherian_normal_fractionRing : ∀ (E : Type) [Field E] [Numb
 theorem uclassSums_deeper : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (X₁ : USetup C) (p : ℕ) [Fact p.Prime] (z₁ : X₁.M.Z) (Φ : FPre (H.bar : 𝓞 E → 𝓞 E) (min Dw.p Dw.q) p (X₁.M.Z.presheaf.stalk z₁)), (∀ y, ∃ t : UCTrait X₁ p z₁, (∀ a, Φ.ev y a = t.val a) ∧ ∃ e : Φ.X y ≃ₗ[𝓞 E] t.T.P.D.toPre.X, ∀ a b, Φ.sc y * Φ.β y a b = t.sc * t.T.be (e a) (e b)) → ∀ (y₀ : Φ.Y) (N₀ : ℕ), ∃ N, N₀ ≤ N ∧ (X₁.S.r * X₁.S.N) ∣ N ∧ ∃ (k : ∀ y, Φ.X y₀ →ₗ[ℤ] Φ.X y) (Q : Type) (t : ∀ y, (Fin 1 → Φ.X y) → Q → PadicAlgCl p) (B : Type) (_ : CommRing B) (_ : IsDomain B) (_ : Algebra (X₁.M.Z.presheaf.stalk z₁) B) (_ : Module.Finite (X₁.M.Z.presheaf.stalk z₁) B) (_ : Finite (B ≃ₐ[X₁.M.Z.presheaf.stalk z₁] B)) (𝔷 : Ideal B), Function.Injective (algebraMap (X₁.M.Z.presheaf.stalk z₁) B) ∧ (∀ b : B, (∀ σ : B ≃ₐ[X₁.M.Z.presheaf.stalk z₁] B, σ b = b) → b ∈ Set.range (algebraMap (X₁.M.Z.presheaf.stalk z₁) B)) ∧ 𝔷.IsMaximal ∧ k y₀ = LinearMap.id ∧ (∀ y, IsUnimodMod (𝓞 E) N (k y)) ∧ Φ.IsTerms !![(1 : ℤ)] t ∧ Φ.ClassSums (X₁.S.r * X₁.S.N) N y₀ k t B 𝔷 := by
   intro E _ _ _ H Dw hpq l Xo c C X₁ p _ z₁ Φ hΦ y₀ N₀
   obtain ⟨N, hN₀, hdvd, Ω₂, _, _, _, _, hcore⟩ := _root_.GlobalTheory.UPoinc.ClassCore.classSums_core E H Dw hpq l Xo c C X₁ p z₁ Φ hΦ y₀ N₀
-  letI : Algebra (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ := (X₁.M.stalkHom z₁).toAlgebra
+  let : Algebra (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ := (X₁.M.stalkHom z₁).toAlgebra
   obtain ⟨hdom, hfr, hic, hno⟩ := ustalk_isNoetherian_normal_fractionRing E H Dw l Xo c C X₁ z₁
   obtain ⟨hfin, hfinA, hinj, hfix⟩ := _root_.GlobalTheory.Poinc.integralClosure_galois_finite_invariants (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ Ω₂
-  letI : Algebra (X₁.M.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap X₁.Ω₁ Ω₂).comp (X₁.M.stalkHom z₁)).toAlgebra
+  let : Algebra (X₁.M.Z.presheaf.stalk z₁) Ω₂ := ((algebraMap X₁.Ω₁ Ω₂).comp (X₁.M.stalkHom z₁)).toAlgebra
   obtain ⟨𝔷, hmax⟩ := Ideal.exists_maximal (integralClosure (X₁.M.Z.presheaf.stalk z₁) Ω₂)
   have hext := fun y => _root_.GlobalTheory.NormExtensionBound.main p (X₁.M.Z.presheaf.stalk z₁) (integralClosure (X₁.M.Z.presheaf.stalk z₁) Ω₂) 𝔷 hinj hfix hmax (Φ.ev y) (Φ.ev_le y) (Φ.ev_lt y)
   choose ev' h1 h2 h3 using hext
@@ -1512,9 +1512,9 @@ theorem GlobalTheory.UPoinc.exists_uApproxAt : ∀ (E : Type) [Field E] [NumberF
   have hcl : IsClosed ({z₁} : Set X₁.M.Z) := t₀.cen ▸ isClosed_singleton_cPt t₀.y
   obtain ⟨Φ, hM, hL, hR⟩ := _root_.GlobalTheory.UPoinc.PreSys.main E H Dw hpq l Xo c C X₁ p z₁ hcl
   have hF := _root_.GlobalTheory.UPoinc.four_of_classical E H Dw hpq l Xo c C X₁ p z₁ Φ hR
-  haveI : IsDedekindDomain X₁.o₁ := X₁.ar.ded
-  haveI := X₁.M.lft
-  haveI : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
+  have : IsDedekindDomain X₁.o₁ := X₁.ar.ded
+  have := X₁.M.lft
+  have : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
   have hA := approx_of_fpre (𝓞 E) H.bar (bddAct_int_and_cm.2 E H) (min Dw.p Dw.q) φ hpol d₀ hsup 0
     !![(1 : ℤ)] posW_one (X₁.S.r * X₁.S.N) p hN _ Φ hL hF
   set d := ((!![(1 : ℤ)] : Matrix (Fin 1) (Fin 1) ℤ) 0 0).toNat * d₀ with hd
@@ -1595,7 +1595,7 @@ theorem uApproxAt_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     exact norm_pow _ _
   have hexp : ∀ t : UCTrait X₁ p z₁, Real.exp (-(t.sc * (((d * m : ℕ) : ℝ) * φ.evalZ t.T.be))) =
       Real.exp (-(t.sc * (d * φ.evalZ t.T.be))) ^ m := fun t => by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -1669,7 +1669,7 @@ theorem exists_uCTrait_norm_eqAt (X₁ : USetup C) (Y : RatModel X₁.o₁ X₁.
       rw [map_ne_zero, Ne, IsFractionRing.to_map_eq_zero_iff]
       exact T.irr.ne_zero
     show _ = Real.exp (-(-Real.log ‖ι' (algebraMap T.V (FractionRing T.V) T.ϖ)‖ * (ι * φ.evalZ T.be)))
-    rw [key, ← ha, neg_mul, neg_neg, mul_comm, Real.exp_nat_mul, Real.exp_log hpos]
+    rw [key, ← ha, neg_mul, neg_neg, mul_comm, Real.exp_natCast_mul, Real.exp_log hpos]
 
 theorem val_comp_of_centre (X₁ : USetup C) (Y : RatModel X₁.o₁ X₁.Ω₁) (πY : Y.Z ⟶ X₁.M.Z)
     (hHom : X₁.M.IsHom Y (AlgHom.id X₁.o₁ X₁.Ω₁) πY) {q : ℕ} [Fact q.Prime] (y : Sp (OO q) ⟶ Y.Z) {z : X₁.M.Z}

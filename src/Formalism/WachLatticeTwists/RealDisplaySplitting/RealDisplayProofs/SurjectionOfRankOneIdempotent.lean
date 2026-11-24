@@ -117,7 +117,7 @@ theorem rank_one_factor (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
     have hrk' : Module.finrank (FractionRing O)
         (LinearMap.range (e.map (algebraMap O (FractionRing O))).mulVecLin) = 1 :=
       (Matrix.finrank_range_mulVecLin _).trans hrk
-    have hall := (finrank_eq_one_iff_of_nonzero' _ hnz).1 hrk'
+    have hall := (finrank_eq_one_iff_of_ne_zero' _ hnz).1 hrk'
     intro i j
     obtain ⟨t, ht⟩ := hall ⟨_, hcol j⟩
     have hti : ∀ i', t * algebraMap O (FractionRing O) (e i' j0) = algebraMap O (FractionRing O) (e i' j) :=

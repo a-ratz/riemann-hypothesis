@@ -198,7 +198,7 @@ theorem isSelfDualC_of_sd {V : HSp D} (hV : V.gram = 1) {L : Submodule (𝓞 D.h
 
 theorem mem_stdL {N : ℕ} (x : Fin N → D.host.E) :
     x ∈ stdL D N ↔ ∀ i, x i ∈ (1 : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) := by
-  simp only [stdL, Submodule.mem_pi, Set.mem_univ, true_implies, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_one]
+  simp only [stdL, Submodule.mem_pi, Set.mem_univ, true_implies, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_one]
 
 theorem mem_latRat_iff (hc : D.host.ccK = ⊤) (hS : S.gram = 1) {I : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E}
     {LT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)} (hLT : ∀ x, x ∈ LT ↔ ∀ i, x i ∈ I)

@@ -63,7 +63,7 @@ theorem extend_section {V : Type} [CommRing V] [IsDomain V] [IsIntegrallyClosed 
     (hg : g ≫ p = Spec.map (CommRingCat.ofHom (algebraMap V (FractionRing V)))) :
     ∃ s : Spec (CommRingCat.of V) ⟶ X, s ≫ p = 𝟙 _ ∧
       Spec.map (CommRingCat.ofHom (algebraMap V (FractionRing V))) ≫ s = g := by
-  haveI : IsAffine X := isAffine_of_isAffineHom p
+  have : IsAffine X := isAffine_of_isAffineHom p
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (g ≫ X.isoSpec.hom)
   obtain ⟨π, hπ⟩ := Spec.map_surjective (X.isoSpec.inv ≫ p)
   have hfin : π.hom.Finite := by
@@ -103,9 +103,9 @@ theorem extend_section {V : Type} [CommRing V] [IsDomain V] [IsIntegrallyClosed 
 
 theorem exists_section_of_galoisFixed : ∀ (V : Type) [inst : CommRing V] [inst_1 : IsDomain V] [CharZero V], IsIntegrallyClosed V → ∀ (N : CategoryTheory.Over (ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp V)), AlgebraicGeometry.IsFinite (CategoryTheory.Over.hom N) → ∀ (nb : ReciprocityTheory.ChartRestriction.G.Out.TF (AlgebraicClosure (FractionRing V)) ⟶ N), (∀ (σ : Gal(AlgebraicClosure (FractionRing V)/FractionRing V)), CategoryTheory.CategoryStruct.comp (ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (AlgHom.toRingHom (↑σ : AlgebraicClosure (FractionRing V) →ₐ[FractionRing V] AlgebraicClosure (FractionRing V)))) (CategoryTheory.Over.Hom.left nb) = CategoryTheory.Over.Hom.left nb) → ∃ (s : CategoryTheory.MonoidalCategoryStruct.tensorUnit (CategoryTheory.Over (ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp V)) ⟶ N), nb = CategoryTheory.CategoryStruct.comp (CategoryTheory.SemiCartesianMonoidalCategory.toUnit (ReciprocityTheory.ChartRestriction.G.Out.TF (AlgebraicClosure (FractionRing V)))) s := by
   intro V _ _ _ hV N hN nb hfix
-  haveI := hV
-  haveI := hN
-  haveI : IsAffine N.left := isAffine_of_isAffineHom N.hom
+  have := hV
+  have := hN
+  have : IsAffine N.left := isAffine_of_isAffineHom N.hom
   obtain ⟨g, hg⟩ := GlobalTheory.TorsDescent.descend_point (K := FractionRing V) N.left nb.left hfix
   have hg' : Spec.map (CommRingCat.ofHom (algebraMap (FractionRing V) (AlgebraicClosure (FractionRing V)))) ≫ g =
       nb.left := hg

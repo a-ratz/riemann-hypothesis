@@ -96,8 +96,8 @@ namespace GlobalTheory.Member
 
 theorem continuous_det_matHom (D : D7) (V : HSp D) :
     Continuous fun g : GA D V => Matrix.GeneralLinearGroup.det (matHom V g) := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
-  have hm : Continuous fun g : GA D V => matHom V g := continuous_subtype_val
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
+  have hm : Continuous fun g : GA D V => matHom V g := continuous_subtypeVal
   exact Matrix.GeneralLinearGroup.continuous_det.comp hm
 
 theorem exists_muVal : ∀ (D : D7) (V : HSp D), ∀ χ : (AE D)ˣ →* Circle, IsHeckeChar D χ → (∀ a, χ (idF D a) = 1) → ∃ mu : GA D V → ℂ, MuVal V χ mu ∧ (∀ g g', mu (g * g') = mu g * mu g') ∧ (∀ g, ‖mu g‖ = 1) ∧ (∀ γ ∈ GQ V, mu γ = 1) ∧ Continuous mu := by
@@ -113,7 +113,7 @@ theorem exists_muVal : ∀ (D : D7) (V : HSp D), ∀ χ : (AE D)ˣ →* Circle, 
     rw [hval _ _ (hmul _ _ _ _ (hr g) (hr g')), map_mul]
   let m : GA D V →* Circle := MonoidHom.mk' (fun g => χ (r g)) hm
   have hcont : Continuous m := by
-    haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+    have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
     refine continuous_of_continuousAt_one m ?_
     intro U hU
     rw [map_one] at hU
@@ -138,7 +138,7 @@ theorem exists_muVal : ∀ (D : D7) (V : HSp D), ∀ χ : (AE D)ˣ →* Circle, 
     obtain ⟨x, hx⟩ := hrat γ hγ
     have : m γ = 1 := (hval γ _ hx).trans (hχ.2 x)
     simp only [this, Circle.coe_one]
-  · exact continuous_subtype_val.comp hcont
+  · exact continuous_subtypeVal.comp hcont
 
 end GlobalTheory.Member
 end -- clump:auto

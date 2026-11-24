@@ -681,9 +681,9 @@ theorem anVec_bijective : Out.GlobalFnsSt → ∀ (E : Type) [Field E] [NumberFi
   have hy : Out.jFK (R := ℂ) ℂ ≫ Out.jK ℂ = 𝟙 (Sp ℂ) := by
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, ← IsScalarTower.algebraMap_eq]
     exact Spec.map_id _
-  have hO : Countable (𝓞 E) := Finsupp.Countable.of_moduleFinite (R := ℤ)
+  have hO : Countable (𝓞 E) := Countable.of_moduleFinite (R := ℤ)
   have := (Fu.Di Ha.i).fin
-  have hL : Countable (Fu.Di Ha.i).La := Finsupp.Countable.of_moduleFinite (R := 𝓞 E)
+  have hL : Countable (Fu.Di Ha.i).La := Countable.of_moduleFinite (R := 𝓞 E)
   exact core hG hy (fun z => toPt (Ha.ex₀ z)) Ha.add
     (fun p => let ⟨z, hz⟩ := Ha.onto ⟨p.b, p.s, p.isGen, p.s_zero, p.mult⟩; ⟨z, congrArg toPt hz⟩) Ha.hol_b Ha.hol_chi
     ((Set.countable_range Ha.P₀).mono fun z hz => ((Ha.ker z).1 hz).elim fun v h => Set.mem_range.2 ⟨v, h.2.symm⟩)

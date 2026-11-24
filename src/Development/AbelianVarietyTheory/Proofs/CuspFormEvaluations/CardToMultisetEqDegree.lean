@@ -86,7 +86,7 @@ theorem polyDeriv_add_fun [FiniteDimensional ℂ W] (P : MvPolynomial σ ℂ) (u
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [iteratedFDeriv_add_apply (contDiff_of_differentiable_fd hF _).contDiffAt
     (contDiff_of_differentiable_fd hG _).contDiffAt]
-  simp only [ContinuousMultilinearMap.add_apply]
+  simp only [add_apply]
   ring
 
 theorem polyDeriv_smul_fun [FiniteDimensional ℂ W] (P : MvPolynomial σ ℂ) (u : σ → W)
@@ -96,7 +96,7 @@ theorem polyDeriv_smul_fun [FiniteDimensional ℂ W] (P : MvPolynomial σ ℂ) (
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [iteratedFDeriv_const_smul_apply (contDiff_of_differentiable_fd hF _).contDiffAt]
-  simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 theorem polyDeriv_sum_fun [FiniteDimensional ℂ W] {κ : Type*} (P : MvPolynomial σ ℂ) (u : σ → W)
@@ -178,7 +178,7 @@ theorem norm_translate (q : ℕ) (y : EuclideanSpace ℂ ι) (F : EuclideanSpace
     rw [norm_sub_rev, @norm_sub_sq ℂ]
     rfl
   rw [norm_mul, Complex.norm_exp, hre, hn, mul_pow, mul_comm _ (‖F (v - y)‖ ^ 2), mul_assoc,
-    ← Real.exp_nat_mul, ← Real.exp_add]
+    ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 2
   push_cast
   ring

@@ -119,7 +119,7 @@ theorem exists_lineLat : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Top
     rw [Fintype.card_sum, hcA, Fintype.card_unit] at hc
     omega
   have hsub : ∀ i j : Fin B.rank, i = j := fun i j => Fin.ext (by omega)
-  haveI : Subsingleton (Fin B.rank) := ⟨hsub⟩
+  have : Subsingleton (Fin B.rank) := ⟨hsub⟩
   let i₀ : Fin B.rank := ⟨0, by omega⟩
 
   have hcol : ∀ c : Y ⊕ Unit → k, FS.β *ᵥ c =

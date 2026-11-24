@@ -149,7 +149,7 @@ end GlobalTheory.LiftSys.Sys
 open GlobalTheory.LiftSys.Sys in
 theorem GlobalTheory.LiftSys.presents_isLift : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ideal R) (hI : I ^ 2 = 0) (π : R →+* R₀) (hπ : Function.Surjective π) (hk : RingHom.ker π = I) (X₀ : Scheme.{0}) (s₀ : X₀ ⟶ Sp R₀), ∀ (S : Sys I π s₀) (X : Scheme.{0}) (s : X ⟶ Sp R) (i : X₀ ⟶ X), IsClosedImmersion i → Surjective i → S.Presents s i → IsPullback i s₀ s (spMap π) ∧ Smooth s := by
   intro R R₀ _ _ I hI π hπ hk X₀ s₀ S X s i hc hsurj P
-  haveI : ∀ U, IsOpenImmersion (P.y U) := P.isOpen
+  have : ∀ U, IsOpenImmersion (P.y U) := P.isOpen
   have hv : ∀ y : X, ∃ (U : AffOp X₀) (z : Sp (S.F.obj U)), P.y U z = y := by
     intro y
     obtain ⟨x, rfl⟩ := i.surjective y
@@ -172,5 +172,5 @@ theorem GlobalTheory.LiftSys.presents_isLift : ∀ (R R₀ : Type) [CommRing R] 
     refine IsZariskiLocalAtSource.of_openCover (P := @Smooth) (Scheme.Cover.mkOfCovers (AffOp X₀) _ P.y hv) fun (U : AffOp X₀) ↦ ?_
     change Smooth (P.y U ≫ s)
     rw [P.base, HasRingHomProperty.Spec_iff (P := @Smooth)]
-    haveI := S.smooth U
+    have := S.smooth U
     exact RingHom.smooth_algebraMap.2 inferInstance

@@ -102,7 +102,7 @@ private theorem isLocallyConstant_psi_restrict_of_isOpen_ker {l : ℕ} [Fact l.P
   rw [IsLocallyConstant.iff_isOpen_fiber_apply]
   intro g
   have hK : IsOpen ((fun h : F.G0 => ((g⁻¹ * h : F.G0) : F.Γ)) ⁻¹' (F.Ψ.ker : Set F.Γ)) :=
-    hΨ.preimage (continuous_subtype_val.comp (continuous_const.mul continuous_id))
+    hΨ.preimage (continuous_subtypeVal.comp (continuous_const.mul continuous_id))
   convert hK using 1
   ext h
   simp only [Set.mem_preimage, Set.mem_singleton_iff, SetLike.mem_coe, MonoidHom.mem_ker,
@@ -195,7 +195,7 @@ include hF
 
 private theorem pt_ex (Q : Type) [CommRing Q] [Nontrivial Q] [Algebra (ResidueField O) Q] {a : F.G0 → Q}
     (h : a ∈ F.strS Q) : ∃ ξ : S.A →+* Q, S.FPt ξ ∧ S.u.triM ≤ RingHom.ker ξ ∧ ∀ g, ξ (S.u.r g 1 0) = a g := by
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have : CharP (ResidueField O) l := IsCoef.char
   obtain ⟨ρ, hbar, htri, hlc, h10⟩ := rep_ex hF Q h
   obtain ⟨ξ, hξ, hmap⟩ := UpperTheory.smoothHom_weight_sum_neg hF (Or.inl rfl) S Q ρ hbar htri hlc
   refine ⟨ξ, hξ, ?_, fun g => ?_⟩
@@ -230,7 +230,7 @@ private theorem pt_uniq {Q : Type} [CommRing Q] [Algebra (ResidueField O) Q] {ξ
 private theorem pt_mem {Q : Type} [CommRing Q] [Algebra (ResidueField O) Q] {ξ : S.A →+* Q}
     (h : S.FPt ξ) (t : S.u.triM ≤ RingHom.ker ξ) : (fun g => ξ (S.u.r g 1 0)) ∈ F.strS Q := by
   have H := UpperTheory.smoothCharacter_extends_to_open_subgroup hF (Or.inl rfl) S Q ξ h
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have : CharP (ResidueField O) l := IsCoef.char
   have htri : (NRep.map ξ S.u).triM = ⊥ := by
     apply Ideal.span_eq_bot.mpr
     rintro _ ⟨g, i, j, hij, rfl⟩
@@ -264,7 +264,7 @@ theorem UpperTheory.V.Fr.preconnected_rank_two :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ}, F.Ok C₀ → ∀ S : Space O F 2, IsPreconnected S.BB := by
   intro l _ O _ _ _ _ F C₀ hF S
   classical
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have : CharP (ResidueField O) l := IsCoef.char
   obtain ⟨b, hb, hb0⟩ := UpperTheory.exists_mem_strS_ne_zero_of_frameOk hF
   obtain ⟨ξb, hbF, hbt, hbv⟩ := pt_ex hF S (ResidueField O) hb
   let qb : PrimeSpectrum S.A := ⟨RingHom.ker ξb, RingHom.ker_isPrime ξb⟩

@@ -50,7 +50,7 @@ namespace UpperTheory.Gal.W2.Seed
 variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 private theorem exists_over (v : Plc ℚ) : ∃ w : Plc E, below ℚ w = v := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQm, hQo⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 E) v.asIdeal
   exact ⟨⟨Q, hQm.isPrime, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot Q⟩, HeightOneSpectrum.ext hQo.over.symm⟩
 

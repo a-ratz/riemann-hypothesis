@@ -102,8 +102,8 @@ private theorem cf_toZModPow (v l : ℕ) [Fact v.Prime] [Fact l.Prime] (g : GQ v
     (h : ∀ ζ : Om v, IsPrimitiveRoot ζ (l ^ m) → g ζ = ζ ^ a) :
     PadicInt.toZModPow m ((cyc v l g : ℤ_[l]ˣ) : ℤ_[l]) = (a : ZMod (l ^ m)) := by
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om v) (l ^ m)
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om v) (l ^ m)
   have hs := cyclotomicCharacter.spec l (n := m)
     (MulSemiringAction.toRingAut (GQ v) (Om v) g) ζ hζ.pow_eq_one
   set c : ℤ_[l] := ((cyc v l g : ℤ_[l]ˣ) : ℤ_[l]) with hc
@@ -120,8 +120,8 @@ private theorem cf_chi (l : ℕ) [Fact l.Prime] (P : LocPrime l) (g : GQ l) :
   have key : ∀ m : ℕ, ‖((P.χQ g : ℚ_[l]ˣ) : ℚ_[l]) -
       (((cyc l l g : ℤ_[l]ˣ) : ℤ_[l]) : ℚ_[l])‖ ≤ (l : ℝ) ^ (-(m : ℤ)) := by
     intro m
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ m)
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ m)
     obtain ⟨a, ha, hga⟩ := P.χQ_cyc g m ζ hζ.pow_eq_one
     have h4 := cf_toZModPow l l g m a (fun ξ hξ => by
       obtain ⟨i, -, rfl⟩ := hζ.eq_pow_of_pow_eq_one hξ.pow_eq_one

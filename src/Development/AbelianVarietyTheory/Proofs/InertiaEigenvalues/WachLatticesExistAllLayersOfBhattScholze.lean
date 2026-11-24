@@ -200,7 +200,7 @@ theorem exists_cancel_tensor {R O A T : Type} [CommRing R] [CommRing O] [CommRin
     [Algebra R A] [AddCommGroup T] [Module O T] [Module R T] [IsScalarTower R O T] :
     ∃ κ : (A ⊗[R] T) ≃+ ((O ⊗[R] A) ⊗[O] T), ∀ (w : A) (t : T),
       κ (w ⊗ₜ[R] t) = ((1 : O) ⊗ₜ[R] w) ⊗ₜ[O] t := by
-  haveI : SMulCommClass R O T := IsScalarTower.to_smulCommClass
+  have : SMulCommClass R O T := IsScalarTower.to_smulCommClass
   refine ⟨(TensorProduct.comm R A T).toAddEquiv.trans
     (((TensorProduct.AlgebraTensorModule.cancelBaseChange R O O T A).symm.toAddEquiv).trans
       (TensorProduct.comm O T (O ⊗[R] A)).toAddEquiv), fun w t => ?_⟩
@@ -211,8 +211,8 @@ theorem exists_cancel_tensor_compHom (R O A T : Type) [CommRing R] [CommRing O] 
     letI : Module R T := Module.compHom T (algebraMap R O)
     ∃ κ : (A ⊗[R] T) ≃+ ((O ⊗[R] A) ⊗[O] T), ∀ (w : A) (t : T),
       κ (w ⊗ₜ[R] t) = ((1 : O) ⊗ₜ[R] w) ⊗ₜ[O] t := by
-  letI : Module R T := Module.compHom T (algebraMap R O)
-  haveI : IsScalarTower R O T := IsScalarTower.of_compHom R O T
+  let : Module R T := Module.compHom T (algebraMap R O)
+  have : IsScalarTower R O T := IsScalarTower.of_compHom R O T
   exact exists_cancel_tensor
 
 theorem exists_kappa : ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)), letI := Formalism.MainNotions.LocalSituation.zlMod LL T; ∃ κ : (WCb l ⊗[ℤ_[l]] ↥T.L.T) ≃+ TW (RW LL) T, ∀ (w : WCb l) (t : ↥T.L.T), κ (w ⊗ₜ[ℤ_[l]] t) = TensorProduct.tmul ↥(OL LL) ((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] w : RW LL) t := by
@@ -511,7 +511,7 @@ namespace GlobalTheory
 theorem projective_compHom_of_free_of_finite_free :
     ∀ (Z S A D : Type) [CommRing Z] [CommRing S] [CommRing A] [AddCommGroup D] [Module A D] (z : Z →+* S) (a : S →+* A) (N : Submodule A D) (q : ℕ) (x : Fin q → D), (∀ y, y ∈ N ↔ ∃ s : Fin q → S, y = ∑ i, a (s i) • x i) → (∀ s : Fin q → S, ∑ i, a (s i) • x i = 0 → s = 0) → (∃ (d : ℕ) (w : Fin d → S), ∀ y : S, ∃! c : Fin d → Z, y = ∑ i, z (c i) * w i) → @Module.Projective Z _ ↥N _ (Module.compHom _ (a.comp z)) := by
   intro Z S A D _ _ _ _ _ z a N q x hN hli ⟨d, w, hw⟩
-  letI : Module Z N := Module.compHom _ (a.comp z)
+  let : Module Z N := Module.compHom _ (a.comp z)
   have hsm : ∀ (r : Z) (n : N), ((r • n : N) : D) = a (z r) • (n : D) := fun _ _ => rfl
   let f : (Fin q → Fin d → Z) →ₗ[Z] N :=
     { toFun := fun c => ⟨∑ i, a (∑ m, z (c i m) * w m) • x i, (hN _).2 ⟨_, rfl⟩⟩
@@ -655,8 +655,8 @@ theorem build (E : WEt I) [Nontrivial R.EE] {Zl S W : Type} [CommRing Zl] [CommR
         exact hO T hT _ _ (hS T hT _ _ hy) }
   let N : ∀ T, Submodule (LetA O n) (E.DD T) := fun T => if hT : IsCrys PD T.ρ then N₀ T hT else ⊥
   have hN : ∀ T, IsCrys PD T.ρ → ∀ y, y ∈ N T ↔ E.jD T y ∈ L T := fun T hT y => by
-    simp only [N, dif_pos hT]; rfl
-  have hN0 : ∀ T, ¬ IsCrys PD T.ρ → N T = ⊥ := fun T hT => dif_neg hT
+    simp only [N, dite_eq_left hT]; rfl
+  have hN0 : ∀ T, ¬ IsCrys PD T.ρ → N T = ⊥ := fun T hT => dite_eq_right hT
   have hNx : ∀ T hT (y : E.DD T), y ∈ N T ↔ ∃ t : Fin (q T hT) → S, y = ∑ i, a (t i) • x T hT i :=
     fun T hT y => (hN T hT y).trans (hD T hT y)
   have hQk : ∀ T (k : ℕ) (y : E.DD T), E.jD T (R.Q ^ k • y) = c (ψ Q) ^ k • E.jD T y := fun T k y => by
@@ -1136,18 +1136,18 @@ theorem mem_range (E : WEt I) (T : LocLat G Qp LL O) (H : G → Prop) (hH : ∀ 
     ∀ i, x i ∈ Set.range (E.jD T) := by
   intro i₀
   rcases subsingleton_or_nontrivial RW with hS | hS
-  · haveI : Subsingleton (TW RW T) := Module.subsingleton RW _
+  · have : Subsingleton (TW RW T) := Module.subsingleton RW _
     exact ⟨0, Subsingleton.elim _ _⟩
-  haveI : Nontrivial O := (algebraMap O RW).domain_nontrivial
-  haveI : Nontrivial R.EE := I.ioE.toRingHom.domain_nontrivial
-  haveI : Module.Free O ↥T.L.T := T.L.free
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
-  haveI : Module.Free R.EE (E.DD T) := (E.DD_free T).1
+  have : Nontrivial O := (algebraMap O RW).domain_nontrivial
+  have : Nontrivial R.EE := I.ioE.toRingHom.domain_nontrivial
+  have : Module.Free O ↥T.L.T := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.2 T.L.fg
+  have : Module.Free R.EE (E.DD T) := (E.DD_free T).1
   have hrk : Module.finrank RW (TW RW T) = Module.finrank O ↥T.L.T := Module.finrank_baseChange
   rcases Nat.eq_zero_or_pos (Module.finrank O ↥T.L.T) with h0 | h0
-  · haveI : Subsingleton (TW RW T) := (Module.finrank_eq_zero_iff_of_free RW _).1 (hrk.trans h0)
+  · have : Subsingleton (TW RW T) := (Module.finrank_eq_zero_iff_of_free RW _).1 (hrk.trans h0)
     exact ⟨0, Subsingleton.elim _ _⟩
-  haveI : Module.Finite R.EE (E.DD T) := Module.finite_of_finrank_pos ((E.DD_free T).2 ▸ h0)
+  have : Module.Finite R.EE (E.DD T) := Module.finite_of_finrank_pos ((E.DD_free T).2 ▸ h0)
   let b := Module.finBasisOfFinrankEq R.EE (E.DD T) (E.DD_free T).2
   obtain ⟨e, he⟩ := exists_basis I.ioE (E.jD T).toAddMonoidHom (E.jD_smul T) (E.jD_span T) b hrk
   have he' : ∀ i, e i = E.jD T (b i) := he

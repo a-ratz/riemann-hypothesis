@@ -112,7 +112,7 @@ theorem pt_ext {T : Over (Spec (CommRingCat.of R))} {a b : T ⟶ D'.P.A}
 theorem gtφ_pr (b' : TF (R := R) F ⟶ D'.P.A) (b : Fin j → (TF (R := R) F ⟶ D.P.A))
     (hb : ∀ i, b' ≫ pD.pw.pr i = b i) (χ : D'.X) (i : Fin j) (a : Fin 4) :
     DegPre.gtφ D' F b' χ a ≫ (pD.pw.pr i).left = 𝟙 _ ≫ DegPre.gtφ D F (b i) (pD.xe χ i) a := by
-  haveI := pD.pw.hom i
+  have := pD.pw.hom i
   rw [Category.id_comp]
   fin_cases a
   · refine congrArg (fun q : TF (R := R) F ⟶ D.P.A => q.left)
@@ -265,7 +265,7 @@ theorem exists_boxGt (hG : GlobalFnsSt) (g : Fin j → GtPtF D F) : ∃ g' : GtP
 theorem box_isZero {g' : GtPtF D' F} {g : Fin j → GtPtF D F} (h : IsBoxGtF pD F g' g) (hz : ∀ i, (g i).IsZero) :
     g'.IsZero := by
   have hb : g'.b = 1 := pt_ext pD fun i => by
-    haveI := pD.pw.hom i
+    have := pD.pw.hom i
     rw [h.1, ((isZero_iff _).1 (hz i)).1, MonObj.one_comp]
   refine (isZero_iff _).2 ⟨hb, fun χ y J' hJ' => ?_⟩
   obtain ⟨J, hJ⟩ := exists_good_at D.P.isLB y
@@ -278,7 +278,7 @@ theorem box_isAdd (hG : GlobalFnsSt) {g₁' g₂' g₃' : GtPtF D' F} {g₁ g₂
     (h₁ : IsBoxGtF pD F g₁' g₁) (h₂ : IsBoxGtF pD F g₂' g₂) (h₃ : IsBoxGtF pD F g₃' g₃)
     (ha : ∀ i, (g₁ i).IsAdd (g₂ i) (g₃ i)) : g₁'.IsAdd g₂' g₃' := by
   have hb : g₃'.b = g₁'.b * g₂'.b := pt_ext pD fun i => by
-    haveI := pD.pw.hom i
+    have := pD.pw.hom i
     rw [h₃.1, ((isAdd_iff _ _ _).1 (ha i)).1, MonObj.mul_comp, h₁.1, h₂.1]
   refine (isAdd_iff _ _ _).2 ⟨hb, fun χ y J' hJ' => ?_⟩
   obtain ⟨J, hJ⟩ := exists_good_at D.P.isLB y

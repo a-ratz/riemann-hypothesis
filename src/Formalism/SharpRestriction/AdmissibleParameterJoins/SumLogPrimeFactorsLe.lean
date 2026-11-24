@@ -65,7 +65,7 @@ variable {K V ι : Type} [Field K] [NumberField K] [StarRing K] [IsTotallyComple
   [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] [Fintype ι] [DecidableEq ι]
 
 theorem rkK_pos (b : Basis ι K V) (M : Submodule (𝓞 K) V) (hM0 : M ≠ ⊥) : 0 < rkK M := by
-  haveI : FiniteDimensional K V := Module.Finite.of_basis b
+  have : FiniteDimensional K V := Module.Finite.of_basis b
   unfold Formalism.HN.rkK
   rw [Nat.pos_iff_ne_zero, Ne, Submodule.finrank_eq_zero]
   intro h
@@ -226,12 +226,12 @@ section places
 variable {K : Type} [Field K] [NumberField K]
 
 theorem span_prime_isMaximal (p : ℕ) (hp : p.Prime) : (Ideal.span {(p : ℤ)}).IsMaximal := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   exact Int.ideal_span_isMaximal_of_prime p
 
 theorem liesOver_of_mem (p : ℕ) (hp : p.Prime) (w : HeightOneSpectrum (𝓞 K))
     (hmem : (p : 𝓞 K) ∈ w.asIdeal) : w.asIdeal.LiesOver (Ideal.span {(p : ℤ)}) := by
-  haveI := w.isPrime
+  have := w.isPrime
   have hne : Ideal.comap (algebraMap ℤ (𝓞 K)) w.asIdeal ≠ ⊤ :=
     (inferInstance : (Ideal.comap (algebraMap ℤ (𝓞 K)) w.asIdeal).IsPrime).ne_top
   have hle : Ideal.span {((p : ℕ) : ℤ)} ≤ Ideal.comap (algebraMap ℤ (𝓞 K)) w.asIdeal := by
@@ -290,7 +290,7 @@ theorem finite_places_over (p : ℕ) (hp : p.Prime) :
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact_mod_cast hp.ne_zero
   refine ⟨(Ideal.finite_factors hI).toFinset, fun w => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
 
 theorem lw_nonneg (w : HeightOneSpectrum (𝓞 K)) : 0 ≤ lw K w := by
   unfold lw

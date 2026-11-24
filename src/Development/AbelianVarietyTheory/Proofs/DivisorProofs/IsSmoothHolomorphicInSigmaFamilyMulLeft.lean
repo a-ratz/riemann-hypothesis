@@ -55,7 +55,7 @@ theorem wirt_const_mul {Φ : Type} [Fintype Φ] (τ : Φ) (bar : Bool) (c : ℂ)
   have h : fderiv ℝ (fun z => c * g z) z = c • fderiv ℝ g z := by
     have := congrFun (fderiv_const_smul_field (𝕜 := ℝ) (f := g) c) z
     simpa [Pi.smul_def, smul_eq_mul] using this
-  simp only [wirt, h, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [wirt, h, smul_apply, smul_eq_mul]
   ring
 
 theorem wirtWord_const_mul {Φ : Type} [Fintype Φ] (ws : List (Φ × Bool)) (c : ℂ) (g : (Φ → ℂ) → ℂ) :

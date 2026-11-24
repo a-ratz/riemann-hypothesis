@@ -110,14 +110,14 @@ theorem units_eq (u : (LaurentPolynomial K)ˣ) :
     _ = LaurentPolynomial.C c * T ((i : ℤ) - n) := by rw [h1, mul_assoc, ← T_add, sub_eq_add_neg]
 
 theorem pic_subsingleton : Subsingleton (CommRing.Pic (LaurentPolynomial K)) := by
-  haveI := isDomain K
-  haveI := isPrincipalIdealRing K
-  haveI := UniqueFactorizationMonoid.toGCDMonoid (LaurentPolynomial K)
+  have := isDomain K
+  have := isPrincipalIdealRing K
+  have := UniqueFactorizationMonoid.toGCDMonoid (LaurentPolynomial K)
   infer_instance
 
 theorem isDedekindDomain : IsDedekindDomain (LaurentPolynomial K) := by
-  haveI := isDomain K
-  haveI := isPrincipalIdealRing K
+  have := isDomain K
+  have := isPrincipalIdealRing K
   infer_instance
 
 theorem laurent_monomial_exponent_eq {a b : ℤ} {c : K} (h : (T a : LaurentPolynomial K) = LaurentPolynomial.C c * T b) : a = b := by
@@ -255,7 +255,7 @@ theorem GlobalTheory.EtC.gm_algClosed_cohomology : ∀ (q : ℕ) [NeZero q] (K :
     ∀ n i : ℤ, (2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial K)) n i)) ∧
       Nonempty (Ht q (sp (LaurentPolynomial K)) 1 i ≃+ ZMod q) := by
   intro q _ K _ _ hq n i
-  haveI := GlobalTheory.LaurentUnits.isDedekindDomain K
+  have := GlobalTheory.LaurentUnits.isDedekindDomain K
   refine ⟨fun hn => GlobalTheory.T.smooth_affine_curve_etale_cohomologicalDimension_le_one q K (LaurentPolynomial K) hq n i hn, ?_⟩
   have hqL := GlobalTheory.GmAlgClosed.isUnit_q_L q K hq
   obtain ⟨e1⟩ := GlobalTheory.T.tateTwistCohomology_spec_twist_independent q (LaurentPolynomial K) hqL (GlobalTheory.GmAlgClosed.exists_root_L q K hq) 1 i 1
@@ -325,13 +325,13 @@ theorem main : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [Is
     ∀ n i : ℤ, (2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial T)) n i)) ∧
       Nonempty (Ht q (sp (LaurentPolynomial T)) 1 i ≃+ ZMod q) := by
   intro q _ T _ _ _ hA hq n i
-  haveI : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
+  have : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
   have hqK : IsUnit (q : FractionRing T) := by
     simpa using hq.map (algebraMap T (FractionRing T))
   obtain ⟨h2, _⟩ := GlobalTheory.T.tateTwistCohomology_laurentPolynomial_of_isAlgClosed q (FractionRing T) hqK n i
   obtain ⟨_, ⟨e1⟩⟩ := GlobalTheory.T.tateTwistCohomology_laurentPolynomial_of_isAlgClosed q (FractionRing T) hqK 1 i
   refine ⟨fun hn => ?_, ⟨(laurentEquiv GlobalTheory.T.etale_cohomology_ind_etale_base_change q T hA hq 1 i).trans e1⟩⟩
-  haveI := h2 hn
+  have := h2 hn
   exact (laurentEquiv GlobalTheory.T.etale_cohomology_ind_etale_base_change q T hA hq n i).injective.subsingleton
 
 end GlobalTheory.EtC.GmAic

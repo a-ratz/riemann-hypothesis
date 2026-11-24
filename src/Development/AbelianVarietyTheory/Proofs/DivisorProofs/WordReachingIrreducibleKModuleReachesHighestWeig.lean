@@ -211,7 +211,7 @@ theorem proj_comm {n : ℕ} {ε : Fin n → Bool} {V : Type} [NormedAddCommGroup
 
 theorem main : ∀ (n : ℕ) (ε : Fin n → Bool) (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] (E : Fin n → Fin n → Module.End ℂ V), GlRel E → KUnit ε E → ∀ L : Submodule ℂ V, FiniteDimensional ℂ L → KStab ε E L → ∀ Λ : Fin n → ℝ, (∀ ν : Fin n → ℝ, ∀ x ∈ L, x ≠ 0 → KHighest ε E ν x → ν = Λ) → ∀ (μ : Fin n → ℝ) (w : V), KHighest ε E μ w → ∀ (s t : Bool) (l : List (Fin n × Fin n)), (∀ p ∈ l, ε p.1 = s ∧ ε p.2 = t) → ∀ x ∈ L, ⟪x, (l.map fun p : Fin n × Fin n => E p.1 p.2).prod w⟫_ℂ ≠ 0 → ∃ l' : List (Fin n × Fin n), l'.length = l.length ∧ (∀ p ∈ l', ε p.1 = s ∧ ε p.2 = t) ∧ μ + (l'.map fun p : Fin n × Fin n => root p.1 p.2).sum = Λ := by
   intro n ε V _ _ E hG hU L hfd hL Λ hΛ μ w hw s t l hl x hx hxl
-  haveI : FiniteDimensional ℂ L := hfd
+  have : FiniteDimensional ℂ L := hfd
   let word : List (Fin n × Fin n) → V := fun l => (l.map fun p : Fin n × Fin n => E p.1 p.2).prod w
   let ht : List (Fin n × Fin n) → ℤ := fun l => (l.map fun p : Fin n × Fin n => ((p.2 : ℕ) : ℤ) - ((p.1 : ℕ) : ℤ)).sum
   let S : Set (List (Fin n × Fin n)) :=

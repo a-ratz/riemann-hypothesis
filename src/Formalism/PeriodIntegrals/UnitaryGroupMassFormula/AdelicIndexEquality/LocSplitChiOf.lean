@@ -91,7 +91,7 @@ theorem spl_det_v (I : AutInst) (v : HeightOneSpectrum (𝓞 I.F)) : IsUnit (I.J
 
 theorem locSplitChi_of (hG : GLChi) : LocSplitChi := by
   intro I v hnf χ hpos hcent _ g
-  haveI : CharZero (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv I.F v) :=
+  have : CharZero (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv I.F v) :=
     charZero_of_injective_algebraMap (algebraMap I.F _).injective
   obtain ⟨π, hπ⟩ := SplitIso.exists_split (K := Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv I.F v) I.cm.sig
     (spl_sig_sig I) (spl_sig_fix I) I.cm.deg2 two_ne_zero hnf
@@ -111,7 +111,7 @@ theorem locSplitChi_of (hG : GLChi) : LocSplitChi := by
     apply e.injective
     rw [map_mul, map_mul, MulEquiv.apply_symm_apply]
     apply Units.ext
-    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+    simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
     exact Algebra.commutes _ _
 
 end PI.UnitaryGroupMassFormula.AdIndexEq

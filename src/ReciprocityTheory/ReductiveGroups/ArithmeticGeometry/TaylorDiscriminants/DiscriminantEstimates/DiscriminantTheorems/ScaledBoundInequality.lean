@@ -69,7 +69,7 @@ theorem eBasis : ReciprocityTheory.ChartRestriction.G.TB.EBasisSt := by
   unfold ReciprocityTheory.ChartRestriction.G.TB.EBasisSt
   intro E _ _ W _ _ _ _ _ ι _ v hv hcard
   classical
-  haveI : FiniteDimensional ℚ W := Module.Finite.trans E W
+  have : FiniteDimensional ℚ W := Module.Finite.trans E W
   have hinj : Function.Injective v := hv.injective
   have hspanQ : Submodule.span ℚ (Set.range v) = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq

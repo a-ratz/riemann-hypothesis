@@ -144,7 +144,7 @@ theorem gM_mem_Nset (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
       have hv : (eI k r a).val = a.val := rfl
       show Hpk k r (eI k r a) j = 0
       unfold Hpk
-      rw [if_neg (by rw [hv]; omega), if_neg (by omega), if_neg (fun h => absurd h.1 (by rw [hv]; omega))]
+      rw [ite_eq_right (by rw [hv]; omega), ite_eq_right (by omega), ite_eq_right (fun h => absurd h.1 (by rw [hv]; omega))]
     set K := cT (σ : E →+* E) (eOf P) * J with hKdef
     have hKf : K * f = 1 := by
       ext a b

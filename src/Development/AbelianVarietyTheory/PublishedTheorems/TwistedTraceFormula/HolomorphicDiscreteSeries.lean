@@ -98,7 +98,7 @@ variable {n : ℕ}
 theorem single_mem_pPlus {ε : Fin n → Bool} {a b : Fin n} (ha : ε a = true) (hb : ε b = false) (z : ℂ) :
     Matrix.single a b z ∈ pPlus ε := by
   intro c d h
-  rw [Matrix.single_apply, if_neg]
+  rw [Matrix.single_apply, ite_eq_right]
   rintro ⟨rfl, rfl⟩
   exact h ⟨ha, hb⟩
 
@@ -149,7 +149,7 @@ theorem enum_holPar (h : HolOK p q κ) {lam : Fin n → ℝ} {ε : Fin n → Boo
       ∃ a, (r a, ε a) = z := fun z => by
     simpa [holPar] using Finset.ext_iff.1 hS z
   have hrr : (fun c : Fin (p + q) => holEnt p q κ (finSumFinEquiv.symm c)) = r := by
-    rw [← hs.range_inj hra]
+    rw [← hs.range_inj_of_wellFoundedGT hra]
     ext z
     constructor
     · rintro ⟨c, rfl⟩

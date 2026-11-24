@@ -194,7 +194,7 @@ lemma length_quot_smulRange_pi (n : ℕ) (l : O) :
 lemma length_quot_smulRange_free (Q : Type*) [AddCommGroup Q] [Module O Q] [Module.Finite O Q]
     [IsTorsionFree O Q] (l : O) :
     Module.length O (Q ⧸ smulRange Q l) = finrank O Q * addVal O l := by
-  haveI : NoZeroSMulDivisors O Q := by
+  have : NoZeroSMulDivisors O Q := by
     refine ⟨fun {c x} h => ?_⟩
     by_cases hc : c = 0
     · exact Or.inl hc
@@ -203,7 +203,7 @@ lemma length_quot_smulRange_free (Q : Type*) [AddCommGroup Q] [Module O Q] [Modu
       apply (‹IsTorsionFree O Q›).1 hreg
       show c • x = c • 0
       rw [h, smul_zero]
-  haveI : Module.Free O Q := by
+  have : Module.Free O Q := by
     first
       | exact Module.free_of_finite_type_torsion_free'
       | infer_instance
@@ -243,12 +243,12 @@ lemma step1 (N : Submodule O V) (hN : N.FG) (W U : Submodule (FractionRing O) V)
       LinearMap.ker ((U.mkQ.restrictScalars O) ∘ₗ N.subtype))) ≤
       (finrank (FractionRing O) W : ℕ∞) * addVal O l := by
   set g : N →ₗ[O] V ⧸ U := (U.mkQ.restrictScalars O) ∘ₗ N.subtype with hg
-  haveI : Module.Finite O N := Module.Finite.iff_fg.mpr hN
-  haveI : Module.Finite O (LinearMap.range g) := by
+  have : Module.Finite O N := Module.Finite.iff_fg.mpr hN
+  have : Module.Finite O (LinearMap.range g) := by
     first
       | exact Module.Finite.range g
       | infer_instance
-  haveI hQtf : IsTorsionFree O (LinearMap.range g) :=
+  have hQtf : IsTorsionFree O (LinearMap.range g) :=
     ⟨fun r hr x y hxy => Subtype.ext ((isTorsionFree_quot U).1 hr (congrArg Subtype.val hxy))⟩
   have hlenQ := length_quot_smulRange_free (LinearMap.range g) l
   have hle : smulRange N l ⊔ LinearMap.ker g ≤
@@ -287,7 +287,7 @@ lemma step1 (N : Submodule O V) (hN : N.FG) (W U : Submodule (FractionRing O) V)
     exact hker hz
   have hd := Module.length_le_of_injective _ hψ
   have he : finrank O (LinearMap.range g) ≤ finrank (FractionRing O) W := by
-    haveI : NoZeroSMulDivisors O (LinearMap.range g) := by
+    have : NoZeroSMulDivisors O (LinearMap.range g) := by
       refine ⟨fun {c x} h => ?_⟩
       by_cases hc : c = 0
       · exact Or.inl hc
@@ -296,7 +296,7 @@ lemma step1 (N : Submodule O V) (hN : N.FG) (W U : Submodule (FractionRing O) V)
         apply hQtf.1 hreg
         show c • x = c • 0
         rw [h, smul_zero]
-    haveI : Module.Free O (LinearMap.range g) := by
+    have : Module.Free O (LinearMap.range g) := by
       first
         | exact Module.free_of_finite_type_torsion_free'
         | infer_instance
@@ -441,7 +441,7 @@ theorem core {X : Type*} (E : Set (Module.End (FractionRing O) V))
     have hN'ge : N ⊓ U₁.restrictScalars O ≤ N' := hN'.ge
     have hN'U : N' ≤ U₁.restrictScalars O := by rw [hN']; exact inf_le_right
     have hN'fg : N'.FG := by
-      haveI : IsNoetherian O N := isNoetherian_of_fg_of_noetherian N hN
+      have : IsNoetherian O N := isNoetherian_of_fg_of_noetherian N hN
       have hfg : (N'.comap N.subtype).FG := IsNoetherian.noetherian _
       have hmap := hfg.map N.subtype
       rwa [Submodule.map_comap_subtype, inf_eq_right.mpr hN'N] at hmap

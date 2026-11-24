@@ -83,9 +83,9 @@ theorem _root_.GlobalTheory.EtC.twPair_spec (q : ℕ) (i j : ℤ) :
   · subst hq
     unfold _root_.GlobalTheory.EtC.IsTwPair
     intro U ζ
-    haveI := isEmpty_of_prim_zero U ζ
+    have := isEmpty_of_prim_zero U ζ
     exact sec_eq_of_isEmpty' _ _ _ _
-  · haveI : NeZero q := ⟨hq⟩
+  · have : NeZero q := ⟨hq⟩
     exact (_root_.GlobalTheory.EtC.TwPairUniq.main q i j).1
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex in
@@ -94,12 +94,12 @@ theorem _root_.GlobalTheory.EtC.kumT_spec (q : ℕ) : _root_.GlobalTheory.EtC.Is
   · subst hq
     unfold _root_.GlobalTheory.EtC.IsKum
     refine ⟨fun V U g v h => ?_, fun U ζ v w _ => ?_⟩
-    · haveI := isEmpty_of_isUnit_zero U (by simpa using h)
-      haveI : IsEmpty V := ⟨fun x => IsEmpty.false (g.base x)⟩
+    · have := isEmpty_of_isUnit_zero U (by simpa using h)
+      have : IsEmpty V := ⟨fun x => IsEmpty.false (g.base x)⟩
       exact sec_eq_of_isEmpty' _ _ _ _
-    · haveI := isEmpty_of_prim_zero U ζ
+    · have := isEmpty_of_prim_zero U ζ
       exact sec_eq_of_isEmpty' _ _ _ _
-  · haveI : NeZero q := ⟨hq⟩
+  · have : NeZero q := ⟨hq⟩
     exact _root_.GlobalTheory.EtC.KummerSplit.isKum_kumT q
 
 open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComplex.HomComplex in

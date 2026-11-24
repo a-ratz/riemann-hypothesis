@@ -222,7 +222,7 @@ theorem nondegenerate_lattice : LocMassOrdW.NonDegLat := by
   have hKo := isOpen_Kv σ J v Λ hSD hL.1
   have hKc := isCompact_Kv σ J v Λ hSD hL.1
   have hc : Continuous (fun s : S0 (Fv F v) σ J P => y * (s : HA (Fv F v) σ J) * y⁻¹) :=
-    (continuous_const.mul continuous_subtype_val).mul continuous_const
+    (continuous_const.mul continuous_subtypeVal).mul continuous_const
   have hO : IsOpen (LocMassOrdW.stabilizerConjugateCompact σ J v P Λ y) := hKo.preimage hc
   have hne : (LocMassOrdW.stabilizerConjugateCompact σ J v P Λ y).Nonempty := by
     refine ⟨1, ?_⟩

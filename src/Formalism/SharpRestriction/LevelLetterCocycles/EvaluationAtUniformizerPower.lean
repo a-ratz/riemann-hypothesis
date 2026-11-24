@@ -703,8 +703,8 @@ theorem flag_basis [FiniteDimensional K V] (F : ℤ → Submodule K V) (hF : Ant
     have : y ∈ F (top - N) := by rw [hN, hlo]; trivial
     exact (S N).spn this
   let B0 : Module.Basis (S N).s K V := Module.Basis.mk hind hsp
-  haveI : Finite (S N).s := Module.Finite.finite_basis B0
-  haveI : Fintype (S N).s := Fintype.ofFinite _
+  have : Finite (S N).s := Module.Finite.finite_basis B0
+  have : Fintype (S N).s := Fintype.ofFinite _
   have hcard : Fintype.card (S N).s = Module.finrank K V := (Module.finrank_eq_card_basis B0).symm
   let eqv : (S N).s ≃ Fin (Module.finrank K V) := Fintype.equivFinOfCardEq hcard
   let b : Module.Basis (Fin (Module.finrank K V)) K V := B0.reindex eqv
@@ -750,7 +750,7 @@ theorem flag_basis [FiniteDimensional K V] (F : ℤ → Submodule K V) (hF : Ant
       | mem g hg =>
         have hgN : g ∈ (S N).s := hmono j N (by omega) hg
         have : g = B0 ⟨g, hgN⟩ := by simp [B0, Module.Basis.mk_apply]
-        rw [this, Module.Basis.repr_self, Finsupp.single_apply, if_neg]
+        rw [this, Module.Basis.repr_self, Finsupp.single_apply, ite_eq_right]
         intro heq
         apply hkj
         rw [← hmem_iff, ← heq]
@@ -782,8 +782,8 @@ theorem flag_basis [FiniteDimensional K V] (F : ℤ → Submodule K V) (hF : Ant
             intro y hy
             have := (S j).sub hy
             rwa [hja] at this
-        haveI : Finite (S j).s := Set.Finite.subset (Set.toFinite _) (hmono j N hjN)
-        haveI : Fintype (S j).s := Fintype.ofFinite _
+        have : Finite (S j).s := Set.Finite.subset (Set.toFinite _) (hmono j N hjN)
+        have : Fintype (S j).s := Fintype.ofFinite _
         rw [hspan, finrank_span_set_eq_card (S j).ind]
         have hfilt : (Finset.univ.filter fun k => a ≤ top - (lev k : ℤ)) =
             Finset.univ.filter fun k => ((eqv.symm k : (S N).s) : V) ∈ (S j).s := by
@@ -1219,7 +1219,7 @@ theorem cv_mem (S : Submodule L M) (g : PowerSeries L) (y : ℤ → M) (m : ℤ)
   exact Submodule.sum_mem _ fun j _ => S.smul_mem _ (hS _)
 
 theorem coeff_X_pow_mul_lt (e j : ℕ) (hj : j < e) (f : PowerSeries L) : coeff j (X ^ e * f) = 0 := by
-  rw [PowerSeries.coeff_X_pow_mul', if_neg (by omega)]
+  rw [PowerSeries.coeff_X_pow_mul', ite_eq_right (by omega)]
 
 end CV
 
@@ -1332,7 +1332,7 @@ theorem lead_F_span (hR : BT.Ring9 W) (hA : Formalism.MainNotions.LiftingTheory.
   rw [cv_lead _ _ (k' : ℤ) (fun j hj => (hv j).2 hj) M (fun j hj => by
     rw [map_pow, hlqp, mul_pow, mul_comm]; exact coeff_X_pow_mul_lt M j hj _)] at c4
   have hcoef : coeff M (W.lev i ζ (Formalism.MainNotions.LiftingTheory.qp W ^ M)) = constantCoeff uq ^ M := by
-    rw [map_pow, hlqp, mul_pow, mul_comm, PowerSeries.coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self,
+    rw [map_pow, hlqp, mul_pow, mul_comm, PowerSeries.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self,
       PowerSeries.coeff_zero_eq_constantCoeff_apply, map_pow]
   rw [hcoef] at c4
   beta_reduce at c4
@@ -1619,7 +1619,7 @@ theorem exponent (hR : BT.Ring9 W) (hA : Formalism.MainNotions.LiftingTheory.Cas
           Matrix.one_apply]
         by_cases hll : ℓ = ℓ'
         · subst hll; simp
-        · rw [if_neg hll, if_neg]
+        · rw [ite_eq_right hll, ite_eq_right]
           intro hq
           exact hll (congrArg Subtype.val hq).symm
       have hdetM : M'.det = 1 := by
@@ -1714,7 +1714,7 @@ theorem detTool_of [NeZero n] [IsDomain O] [IsFractionRing O LL] [IsLocalRing O]
   obtain ⟨⟨hA1, hA2⟩, h3, h4'⟩ := (h4 T hT).2 i ζ τ hPtτ
   obtain ⟨-, hτQ⟩ := hQ hA.1 T.V T.ρ hT
   obtain ⟨hfd, hdim, -⟩ := hτQ τ
-  haveI := hfd
+  have := hfd
   have hιD := Formalism.MainNotions.RamifiedCoefficientChains.S9.NinQ.ιDi_eq W hA.1 hQ T hT i τ hτ
   obtain ⟨lo, hlo⟩ := Formalism.MainNotions.N.Pv.LocalLengthBound.rk_fildR_lo PD T.ρ τ
   obtain ⟨Ht, hHt⟩ := Formalism.MainNotions.N.Pv.LocalLengthBound.rk_fildR_hi PD T.ρ τ

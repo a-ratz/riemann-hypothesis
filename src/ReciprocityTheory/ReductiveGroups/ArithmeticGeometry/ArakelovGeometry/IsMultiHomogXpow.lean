@@ -136,7 +136,7 @@ theorem mem_of_mem_dehomI {W : Ideal (MRing ι)} (hWp : W.IsPrime) (hWm : IsMult
     {i : ∀ k, ι k} (hi : ∀ k, (X ⟨k, i k⟩ : MRing ι) ∉ W) {a : K → ℕ} {s : MRing ι}
     (hs : IsMultiHomog s a) (hsI : s ∈ dehomI W i) : s ∈ W := by
   classical
-  haveI : W.IsPrime := hWp
+  have : W.IsPrime := hWp
   obtain ⟨F, _, q, hq⟩ : ∃ (F : Type) (_ : Field F) (q : MRing ι →+* F), ∀ f, q f = 0 ↔ f ∈ W :=
     ⟨FractionRing (MRing ι ⧸ W), inferInstance, (algebraMap (MRing ι ⧸ W) _).comp (Ideal.Quotient.mk W),
       fun f => by

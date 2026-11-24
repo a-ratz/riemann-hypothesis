@@ -396,23 +396,23 @@ theorem card_latCount : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
     Nat.card (GlobalTheory.HeckeCount.LatCount Dw p J (Ideal.absNorm J ^ k)) =
       GlobalTheory.IndefiniteRowSideFullHecke.GaussianBinomialFormula.gaussBinom (Ideal.absNorm J) (Module.finrank (𝓞 E) Dw.La) k := by
   intro E _ _ _ H Dw p J hp hJ hpJ k
-  haveI := Dw.fin
-  haveI := Dw.proj
-  letI := Ideal.Quotient.field J
+  have := Dw.fin
+  have := Dw.proj
+  let := Ideal.Quotient.field J
   set R := 𝓞 E
   set L := Dw.La
   have hp0 : (p : R) ≠ 0 := Nat.cast_ne_zero.2 hp.ne'
   have hspan0 : Ideal.span {(p : R)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]; exact hp0
   have hJ0 : J ≠ ⊥ := fun h => hp0 (by rw [h] at hpJ; exact (Submodule.mem_bot R).1 hpJ)
-  haveI hfinJ : Finite (R ⧸ J) := (Ideal.absNorm_ne_zero_iff J).1 (fun h => hJ0 (Ideal.absNorm_eq_zero_iff.1 h))
-  haveI : Finite (R ⧸ Ideal.span {(p : R)}) :=
+  have hfinJ : Finite (R ⧸ J) := (Ideal.absNorm_ne_zero_iff J).1 (fun h => hJ0 (Ideal.absNorm_eq_zero_iff.1 h))
+  have : Finite (R ⧸ Ideal.span {(p : R)}) :=
     (Ideal.absNorm_ne_zero_iff _).1 (fun h => hspan0 (Ideal.absNorm_eq_zero_iff.1 h))
   have hq : Nat.card (R ⧸ J) = Ideal.absNorm J := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
 
-  haveI hA : Finite (L ⧸ pSub Dw p) := by
-    haveI : Finite ((R ⧸ Ideal.span {(p : R)}) ⊗[R] L) := Module.finite_of_finite (R ⧸ Ideal.span {(p : R)})
+  have hA : Finite (L ⧸ pSub Dw p) := by
+    have : Finite ((R ⧸ Ideal.span {(p : R)}) ⊗[R] L) := Module.finite_of_finite (R ⧸ Ideal.span {(p : R)})
     exact Finite.of_equiv _ (TensorProduct.quotTensorEquivQuotSMul L (Ideal.span {(p : R)})).toEquiv
   set V := Submodule.torsionBySet R (L ⧸ pSub Dw p) (J : Set R)
 
@@ -432,11 +432,11 @@ theorem card_latCount : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
       Nat.card_congr (Submodule.quotientQuotientEquivQuotient _ _ hle).toEquiv,
       ← Nat.card_congr (TensorProduct.quotTensorEquivQuotSMul L J).toEquiv,
       Module.natCard_eq_pow_finrank (K := R ⧸ J), GlobalTheory.SW.Hyper.finrank_fibre R L (R ⧸ J), hq]
-  haveI : Finite V := inferInstance
-  haveI : Module.Finite (R ⧸ J) V := Module.Finite.of_finite
+  have : Finite V := inferInstance
+  have : Module.Finite (R ⧸ J) V := Module.Finite.of_finite
   have hq2 : 2 ≤ Ideal.absNorm J := by
     rw [← hq]
-    haveI : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hJ.ne_top
+    have : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hJ.ne_top
     exact Finite.one_lt_card
   have hinj := Nat.pow_right_injective hq2
   have hdim : Module.finrank (R ⧸ J) V = Module.finrank R L := by
@@ -623,7 +623,7 @@ theorem card_cosets : ∀ (D : D7) {G : Type} [Group G] [Fintype G] {Pl0 T0 : Ty
         exact fun h => hx (Subtype.ext h)
       rw [he.2 x hx, map_mul, c4]
       show ¬ Valued.v (φ (x : D.host.E)⁻¹) ≤ 1 ↔ _
-      rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)]
+      rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 hx0)]
   have hq : Fintype.card (IsLocalRing.ResidueField (Formalism.UG.Ov D.host.F v)) = Ideal.absNorm P.asIdeal := by
     rw [← Nat.card_eq_fintype_card]
     exact GlobalTheory.SplitUnif.card_residueField v φ P c5 hP
@@ -690,7 +690,7 @@ theorem card_eq_latCount : ∀ (D : D7), GlobalTheory.IndefiniteRowSideFullHecke
   set J := GlobalTheory.IndefiniteRowSideFullHecke.HeckeIsogenyKernels.conjIdeal T.Q.H P.asIdeal with hJdef
   have hJm : J.IsMaximal := by
     rw [hJdef, GlobalTheory.IndefiniteRowSideFullHecke.HeckeIsogenyKernels.conjIdeal]
-    haveI : P.asIdeal.IsMaximal := P.isMaximal
+    have : P.asIdeal.IsMaximal := P.isMaximal
     exact Ideal.map_isMaximal_of_equiv T.Q.H.bar
   have hpJ : ((p : ℕ) : 𝓞 D.host.E) ∈ J := by
     rw [hJdef, GlobalTheory.IndefiniteRowSideFullHecke.HeckeIsogenyKernels.conjIdeal]
@@ -923,7 +923,7 @@ theorem eq_of_hkRelFr_frBor : ∀ {E : Type} [Field E] [NumberField E] [NumberFi
       ext <;> simp [epsMul]
     rw [e0]
     first | rfl | exact Spec.map_id _ | simp [spMap] | (rw [CommRingCat.ofHom_id]; exact Spec.map_id _)
-  letI : Field (Formalism.L2.Pj.CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (Formalism.L2.Pj.CAt σ) := inferInstanceAs (Field ℂ)
   have col : ∀ (zz : Formalism.L2.Pj.FrPt Xo c (Formalism.L2.Pj.CAt σ)) (tt : Formalism.L2.Pj.Ix Dw → (Formalism.L2.Pj.CAt σ)ˣ)
       (ψ0 : pullback Xo.univ.t.G.hom (U.un k x).x ⟶ pullback Xo.univ.t.G.hom zz.x)
       (h0 : (Fin g → ℂ) ≃ₗ[ℂ] (Fin g → ℂ)),
@@ -1083,8 +1083,8 @@ theorem heckeKernelCoset : ∀ (D : D7), GlobalTheory.IndefiniteRowSideFullHecke
           ∃ (hx' : (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * (e C : GA D (Wc D i)))).2 ∈ ((T.U ((i : ℕ) + 1) σ).X (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * (e C : GA D (Wc D i)))).1).dom) (t : Ix (T.Q.Dw ((i : ℕ) + 1)) → (CAt σ)ˣ),
             (∀ j, j ≠ none → t j = 1) ∧ FrBor t ((T.U ((i : ℕ) + 1) σ).un (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * (e C : GA D (Wc D i)))).1 ⟨(GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * (e C : GA D (Wc D i)))).2, hx'⟩) z := by
   intro D hHk hSL hVF G _ _ Pl0 T0 A T _ R F κ v₀ hLev hGrp hFam hMod hThP hTie i σ hσ hV hFP P p k α Rc hS h hx
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   have hP := GlobalTheory.HeckeTermIdent.isHeckePrime_of_setting hS
   have hE := GlobalTheory.T.exists_heckeKernel_coset_framedPoint D hHk hSL hVF G Pl0 T0 A T R F κ v₀ hLev hGrp hFam hMod hThP hTie i σ hσ hV hFP P p k α Rc hS h hx
   choose f hfR hfZ using hE
@@ -1210,8 +1210,8 @@ theorem heckeTerm : ∀ (D : D7), GlobalTheory.IndefiniteRowSideFullHecke.HeckeP
               σ (hkScal T.Q.c 1 P.asIdeal k D.R.nV) * toC (evR (T.Q.Xo ((i : ℕ) + 1)) T.Q.c f z) =
             (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.muAt T R i P)⁻¹ ^ k * GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.phiW T i σ hV (wtA (κ i)) f (h * (e C : GA D (Wc D i))) := by
   intro D hP hS hVF G _ _ Pl0 T0 A T _ R F κ v₀ hlev hgrp hfam hmod hthp ht i σ hσ hV hpin P p k α Rc hs h hx
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   obtain ⟨e, he⟩ := GlobalTheory.T.heckeKernel_complex_point_matches_cosets D hP hS hVF G Pl0 T0 A T R F κ v₀ hlev hgrp hfam hmod hthp ht i σ hσ hV hpin P p k α Rc hs h hx
   refine ⟨e, fun C => ⟨?_, fun z hz f hf => ?_⟩⟩
   · have hsp := splitSup T.Q.H hs.1.1
@@ -1232,7 +1232,7 @@ theorem heckeTerm : ∀ (D : D7), GlobalTheory.IndefiniteRowSideFullHecke.HeckeP
     rw [phiW_unfold]
     have hr : rdU (T.U ((i : ℕ) + 1) σ) f (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * (e C : GA D (Wc D i)))).1
         (GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.dictW T i σ hV (h * (e C : GA D (Wc D i)))).2 =
-        toC (evR (T.Q.Xo ((i : ℕ) + 1)) T.Q.c f ((T.U ((i : ℕ) + 1) σ).un _ ⟨_, hx'⟩)) := dif_pos hx'
+        toC (evR (T.Q.Xo ((i : ℕ) + 1)) T.Q.c f ((T.U ((i : ℕ) + 1) σ).un _ ⟨_, hx'⟩)) := dite_eq_left hx'
     rw [hr, hw]
     have hz' : toC ((t none : CAt σ) ^ (κ i).n * evR (T.Q.Xo ((i : ℕ) + 1)) T.Q.c f ((T.U ((i : ℕ) + 1) σ).un _ ⟨_, hx'⟩)) =
         toC (t none : CAt σ) ^ (κ i).n * toC (evR (T.Q.Xo ((i : ℕ) + 1)) T.Q.c f ((T.U ((i : ℕ) + 1) σ).un _ ⟨_, hx'⟩)) := rfl
@@ -1319,8 +1319,8 @@ theorem heckeReadTie (hSL : ∀ D, GlobalTheory.IndefiniteRowSideFullHecke.Split
     GlobalTheory.HeckeSupSt.HeckeReadTie := by
   intro D G _ _ Pl0 T0 A T _ R F κ v₀ hlev hgrp hfam hmod hthP ht i σ hσ hV hpin
   intro P p k α Rc hs cq f g hf hg hr h
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   have hgood : GoodEmb T.Q.c σ := hσ ▸ T.toCore.good_σ₀
   obtain ⟨hx, -, -⟩ := exists_witness T i σ hV ht.laws.toLawsM hgood h
   obtain ⟨e, he⟩ := GlobalTheory.T.heckeReading_kernels_match_cosets_through_frame D GlobalTheory.HeckePointLaw.heckePointLaws (hSL D) (hVF D) G Pl0 T0 A T R F κ v₀ hlev hgrp hfam

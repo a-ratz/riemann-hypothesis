@@ -141,13 +141,13 @@ theorem dim_le_of_birational {N M : Scheme.{0}} [IsIntegral N] [IsIntegral M] [I
   have : Nonempty U := ⟨⟨_, hxU⟩⟩
   have : Nonempty V := ⟨⟨_, hxV⟩⟩
   have : IsNoetherianRing Γ(M, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  letI := (π.appLE U V hVU).hom.toAlgebra
+  let := (π.appLE U V hVU).hom.toAlgebra
   have : Algebra.FiniteType Γ(M, U) Γ(N, V) := π.finiteType_appLE hU hV hVU
   have hη := apply_genericPoint_of_isDominant π
   have hηV : genericPoint N ∈ V :=
     ((genericPoint_spec N).mem_open_set_iff V.isOpen).mpr ⟨x, trivial, hxV⟩
   have hyU : π (genericPoint N) ∈ U := hVU hηV
-  letI := M.presheaf.algebra_section_stalk (U := U) ⟨_, hyU⟩
+  let := M.presheaf.algebra_section_stalk (U := U) ⟨_, hyU⟩
   have hfr := isFractionRing_stalk_of_eq_genericPoint hU _ hyU hη
   have hgerm (a : Γ(M, U)) : π.stalkMap (genericPoint N) (M.presheaf.germ U _ hyU a) =
       N.presheaf.germ V (genericPoint N) hηV (π.appLE U V hVU a) := by

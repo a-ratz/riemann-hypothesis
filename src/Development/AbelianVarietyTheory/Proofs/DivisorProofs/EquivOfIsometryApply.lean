@@ -99,7 +99,7 @@ theorem bijective_of_isometry (g : D.La →ₗ[𝓞 E] D.La) (hg : ∀ a b, D.EF
   obtain ⟨w, hw⟩ := exists_adjoint D g
   have hwg : ∀ a, w (g a) = a := fun a => D.unimod.1 (LinearMap.ext fun b => by rw [hw, hg])
   have hws : Function.Surjective w := fun a => ⟨g a, hwg a⟩
-  haveI := D.fin
+  have := D.fin
   have hwi : Function.Injective w := OrzechProperty.injective_of_surjective_endomorphism w hws
   refine ⟨fun a b hab => by rw [← hwg a, ← hwg b, hab], fun a => ⟨w a, hwi (by rw [hwg])⟩⟩
 

@@ -99,7 +99,7 @@ theorem exists_haar_image {G : Type} [Group G] [TopologicalSpace G] [IsTopologic
     intro h0
     have h1 := hρ Set.univ MeasurableSet.univ
     rw [h0] at h1
-    simp only [Measure.coe_zero, Pi.zero_apply, Set.preimage_univ, Set.univ_inter] at h1
+    simp only [FunLike.coe_zero, Pi.zero_apply, Set.preimage_univ, Set.univ_inter] at h1
     exact (hH.measure_pos μ₀ ⟨1, H.one_mem⟩).ne' h1.symm
   have hc := Measure.isMulLeftInvariant_eq_smul ρ ν
   set c := Measure.haarScalarFactor ρ ν
@@ -111,7 +111,7 @@ theorem exists_haar_image {G : Type} [Group G] [TopologicalSpace G] [IsTopologic
   refine ⟨c⁻¹ • μ₀, inferInstance, fun s hsm => ?_⟩
   have h1 := hρ s hsm
   rw [hc] at h1
-  rw [Measure.smul_apply, ← h1, Measure.smul_apply, smul_smul, inv_mul_cancel₀ hc0, one_smul]
+  rw [smul_apply, ← h1, smul_apply, smul_smul, inv_mul_cancel₀ hc0, one_smul]
 
 variable {P Q : ℕ}
 
@@ -148,7 +148,7 @@ theorem mat_unitary (b : UpqT P Q) : (UpqT.mat b)ᴴ * Formalism.UG.Jpq P Q * Up
   exact hb
 
 theorem continuous_mat : Continuous (UpqT.mat (P := P) (Q := Q)) := by
-  exact Units.continuous_val.comp continuous_subtype_val
+  exact Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_mkU {X : Type} [TopologicalSpace X] (f : X → Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)
     (hf : Continuous f) (h : ∀ x, (f x)ᴴ * Formalism.UG.Jpq P Q * f x = Formalism.UG.Jpq P Q) :

@@ -166,7 +166,7 @@ theorem linearLift_bijective_of_discrete_kernels : ∀ (M : Type) [Group M] (g g
         rw [sub_eq_sub_iff_add_eq_add] at h1 ⊢
         rw [h1, add_comm]
       rw [map_smul, ← h2, smul_smul, inv_mul_cancel₀ hc, one_smul]
-    haveI : Countable {y | ex y = 1} := hK.to_subtype
+    have : Countable {y | ex y = 1} := hK.to_subtype
     have hC : Countable ℂ := hinj.countable
     have hle := Cardinal.mk_le_aleph0_iff.mpr hC
     rw [Cardinal.mk_complex] at hle
@@ -629,8 +629,8 @@ theorem isRiem_of_period {Xo : Moduli D l} {σ : KA l →+* ℂ} {n a : ℕ} (C 
   have hD : ∀ c, IsDerivAt0 (fun x => (r x).left) (x c) (v c).left := fun c => by
     rw [hd, hx, hv c]
     exact isDerivAt0_frame e hz (u c)
-  haveI := C.j_open
-  haveI : IsOpenImmersion C.m₁.φ := MorphismProperty.of_isPullback C.m₁.cart.1.flip ‹IsOpenImmersion C.j›
+  have := C.j_open
+  have : IsOpenImmersion C.m₁.φ := MorphismProperty.of_isPullback C.m₁.cart.1.flip ‹IsOpenImmersion C.j›
   have hD' : ∀ c, ∃ v' : Sp (DualNumber ℂ) ⟶ C.tV.G.left, v' ≫ C.m₁.φ = (v c).left ∧ IsDerivAt0 Wz (x c) v' :=
     fun c => deriv_of_open C.m₁.φ Wz (x c) _ (by
       have : (fun x => Wz x ≫ C.m₁.φ) = fun x => (r x).left := funext fun x => (hW x).2

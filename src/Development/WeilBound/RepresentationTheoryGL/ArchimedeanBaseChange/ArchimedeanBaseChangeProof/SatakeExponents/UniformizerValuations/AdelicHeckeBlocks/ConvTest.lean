@@ -94,7 +94,7 @@ theorem testSmul {ι : Type} {Φ : Matrix ι ι (H E a b → ℂ)} (c : ℂ) (h�
 theorem ropZero (D : Dom E a b) {ι : Type} [Fintype ι] : IsROp D (0 : Matrix ι ι (H E a b → ℂ)) 0 := by
   intro f i
   have e1 : (((0 : Hs (ι := ι) D →L[ℂ] Hs (ι := ι) D) f i : Lp ℂ 2 D.ν) : H E a b → ℂ) =ᵐ[D.ν] 0 := by
-    rw [ContinuousLinearMap.zero_apply, PiLp.zero_apply]
+    rw [zero_apply, PiLp.zero_apply]
     exact Lp.coeFn_zero _ _ _
   filter_upwards [e1] with x h1
   rw [h1]
@@ -106,7 +106,7 @@ theorem ropAdd (D : Dom E a b) {ι : Type} [Fintype ι] {Φ Ψ : Matrix ι ι (H
   intro f i
   have e1 : (((T + S) f i : Lp ℂ 2 D.ν) : H E a b → ℂ) =ᵐ[D.ν]
       ((T f i : Lp ℂ 2 D.ν) : H E a b → ℂ) + ((S f i : Lp ℂ 2 D.ν) : H E a b → ℂ) := by
-    rw [ContinuousLinearMap.add_apply, PiLp.add_apply]
+    rw [add_apply, PiLp.add_apply]
     exact Lp.coeFn_add _ _
   filter_upwards [e1, hT f i, hS f i] with x h1 h2 h3
   rw [h1, Pi.add_apply, h2, h3, ← Finset.sum_add_distrib]
@@ -121,7 +121,7 @@ theorem ropSmul (D : Dom E a b) {ι : Type} [Fintype ι] {Φ : Matrix ι ι (H E
     IsROp D (c • Φ) (c • T) := by
   intro f i
   have e1 : (((c • T) f i : Lp ℂ 2 D.ν) : H E a b → ℂ) =ᵐ[D.ν] c • ((T f i : Lp ℂ 2 D.ν) : H E a b → ℂ) := by
-    rw [ContinuousLinearMap.smul_apply, PiLp.smul_apply]
+    rw [smul_apply, PiLp.smul_apply]
     exact Lp.coeFn_smul _ _
   filter_upwards [e1, hT f i] with x h1 h2
   rw [h1, Pi.smul_apply, h2, smul_eq_mul, Finset.mul_sum]
@@ -261,8 +261,8 @@ end Sum
 
 theorem blkLevel : BlockProductLevels := by
   intro E _ _ _ B ψ ψ' ψ'' h1 h2 h3
-  haveI := B.hν
-  haveI : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
+  have := B.hν
+  have : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
   obtain ⟨_, _, _⟩ := Sum.hfTop E B.a B.b
   exact ⟨fun u hu x y g => Sum.levLeft B.ν ψ' hu x y g, fun u hu x y g => Sum.levRight B.ν ψ hu x y g,
     Sum.assoc B.ν h1 h2 h3, Sum.adjMul B.ν ψ ψ'⟩

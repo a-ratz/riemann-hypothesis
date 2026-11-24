@@ -123,7 +123,7 @@ theorem main : GlobalTheory.Published.BhattScholzeCrystallineLattices → ∀ (l
     (unitMod l a e ↥(OL LL) ↥LL.1 Unit) Pk.D.toPhiMod
   have h2 := h1 (resF (unitLat (Gl l) : QLat LL) (ϖ.field a)) (resF (unitLat (Gl l) : QLat LL) (ϖ.field a))
     (unitIdent (thetaW a LL) ϖ _ b)
-  have h3 := h2 (Pk.R.I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _))
+  have h3 := h2 (Pk.R.I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _))
   have h4 := h3 hBK
   have h5 := h4 hBK' (latId _)
   obtain ⟨F, hF⟩ := h5
@@ -510,7 +510,7 @@ theorem jumps_of_ses {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l P
   have := LL.2
   have hfin : ∀ b, FiniteDimensional ↥LL.1 ↥(FildR (P.PD K) T₁.ρ τ b) := by
     intro b
-    haveI := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI Tt K LL T₁.V T₁.ρ).1
+    have := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI Tt K LL T₁.V T₁.ρ).1
     exact Submodule.finiteDimensional_of_le (inf_le_left.trans inf_le_left)
   have key : ∀ b : ℤ, finrank ↥LL.1 ↥(FildR (P.PD K) T₁.ρ τ b) =
       finrank ↥LL.1 ↥(FildR (P.PD K) T.ρ τ b) + if b ≤ 0 then 1 else 0 := by
@@ -519,7 +519,7 @@ theorem jumps_of_ses {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l P
     have hs2 := hs T T₁ T₂ f g hses hdr0 hdr1 hdr2 τ b
     unfold SubSES at hs2
     obtain ⟨k₀, k₁, k₂⟩ := hs2
-    haveI := hfin b
+    have := hfin b
     have h := GlobalTheory.CrysExt.finrank_add_of_exact (LL := ↥LL.1) (mapdR P f) (mapdR P g) (FildR (P.PD K) T.ρ τ b)
       (FildR (P.PD K) T₁.ρ τ b) (FildR (P.PD K) T₂.ρ τ b) k₀ (Submodule.ext k₁) (Submodule.ext k₂)
     have h3 := h2 b
@@ -531,7 +531,7 @@ theorem jumps_of_ses {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l P
     exact hbU (hJ b h)
   have hb0 : b ≠ 0 := by rintro rfl; exact hbU hU
   apply hb
-  haveI := hfin b
+  have := hfin b
   have hle : FildR (P.PD K) T₁.ρ τ (b + 1) ≤ FildR (P.PD K) T₁.ρ τ b :=
     GlobalTheory.DRFil.FildR_antitone (P.PD K) T₁.ρ τ (Int.le_add_one le_rfl)
   have e3 : finrank ↥LL.1 ↥(FildR (P.PD K) T.ρ τ (b + 1)) = finrank ↥LL.1 ↥(FildR (P.PD K) T.ρ τ b) :=
@@ -587,7 +587,7 @@ theorem isCrys_comp_extRep {l : ℕ} [Fact l.Prime] {LL : Type} [Field LL] [Alge
   let ρ' : Representation LL ↥(GK K) V := ρ.comp (inclG K)
   have hρ' : ∀ g, ρ' g = ρ (inclG K g) := fun _ => rfl
   have hc : (fun g => (z : Gl l → V) (inclG K g)) ∈ continuousCocycles ρ' :=
-    ⟨z.2.1.comp (continuous_subtype_val.subtype_mk _), fun g k => by
+    ⟨z.2.1.comp (continuous_subtypeVal.subtype_mk _), fun g k => by
       have := z.2.2 (inclG K g) (inclG K k)
       rw [← map_mul] at this
       exact this⟩
@@ -617,7 +617,7 @@ theorem isCrys_comp_extRep_lat {l : ℕ} [Fact l.Prime] {LL O : Type} [Field LL]
 
 theorem isCrys_resF_extLat : ∀ {l : ℕ} [Fact l.Prime] {a e : ℕ} [NeZero a] [NeZero e] (ϖ : PiSys l e) {LL : FinExt l} [HasUnr a LL] [TameDescentExponentData ↥LL.1 l e a] (Pl : LocPrime l) (T : QLat LL), IsCrys (Pl.PD (ϖ.field a)) (resF T (ϖ.field a)).ρ → ∀ z : ↥(latticeCocycles T.L), (z : Gl l → T.V) ∈ finiteCocycles (Pl.PD (Formalism.MainNotions.ElementDenominator.qlExt l)) T.ρ → IsCrys (Pl.PD (ϖ.field a)) (resF (GlobalTheory.FiniteAdm.extLat (O := ↥(OL LL)) Subtype.val_injective T z) (ϖ.field a)).ρ := by
   intro l _ a e _ _ ϖ LL _ _ Pl T hT z hz
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   exact isCrys_comp_extRep_lat (ϖ.field a) Pl T hT ⟨z, z.2.1⟩ hz
 
 end GlobalTheory.ExtLatCrys

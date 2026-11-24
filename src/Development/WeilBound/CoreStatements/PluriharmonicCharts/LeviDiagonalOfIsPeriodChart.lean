@@ -159,9 +159,9 @@ private theorem submatrix_mulVec_eq_mulVec_extend (G : Matrix (Fin N) (Fin N) �
   simp only [Matrix.mulVec, dotProduct, Matrix.submatrix_apply]
   rw [← Fintype.sum_subtype_add_sum_subtype (fun b : Fin N => (b : ℕ) < k)]
   have h1 : ∀ b : {b : Fin N // ¬ (b : ℕ) < k},
-      (if h : ((b : Fin N) : ℕ) < k then v ⟨b, h⟩ else 0) = 0 := fun b => dif_neg b.2
+      (if h : ((b : Fin N) : ℕ) < k then v ⟨b, h⟩ else 0) = 0 := fun b => dite_eq_right b.2
   have h2 : ∀ b : {b : Fin N // (b : ℕ) < k},
-      (if h : ((b : Fin N) : ℕ) < k then v ⟨b, h⟩ else 0) = v b := fun b => dif_pos b.2
+      (if h : ((b : Fin N) : ℕ) < k then v ⟨b, h⟩ else 0) = v b := fun b => dite_eq_left b.2
   simp only [h1, h2, mul_zero, Finset.sum_const_zero, add_zero]
 
 private theorem submatrix_quadForm_eq_quadForm_extend (G : Matrix (Fin N) (Fin N) ℂ) (k : ℕ)
@@ -173,10 +173,10 @@ private theorem submatrix_quadForm_eq_quadForm_extend (G : Matrix (Fin N) (Fin N
   rw [← Fintype.sum_subtype_add_sum_subtype (fun b : Fin N => (b : ℕ) < k)]
   have h1 : ∀ b : {b : Fin N // ¬ (b : ℕ) < k},
       (star fun b : Fin N => if h : (b : ℕ) < k then v ⟨b, h⟩ else 0) b = 0 := fun b => by
-    simp [dif_neg b.2]
+    simp [dite_eq_right b.2]
   have h2 : ∀ b : {b : Fin N // (b : ℕ) < k},
       (star fun b : Fin N => if h : (b : ℕ) < k then v ⟨b, h⟩ else 0) b = star v b := fun b => by
-    simp [dif_pos b.2]
+    simp [dite_eq_left b.2]
   simp only [h1, h2, zero_mul, Finset.sum_const_zero, add_zero]
 
 private theorem dotProduct_eq_zero_of_disjoint_support (f g : Fin N → ℂ) (h : ∀ a, f a = 0 ∨ g a = 0) : f ⬝ᵥ g = 0 := by
@@ -337,7 +337,7 @@ private theorem gramHead_det_ne_zero_of_inFlagDomain {j : ℕ} {c : Matrix (Fin 
     · simpa using h1
     · intro b _ hb
       have h2 : (s : ℕ) ≠ b := fun h => hb (Fin.ext h.symm)
-      simp [Fin.coe_castLE, h2]
+      simp [Fin.val_castLE, h2]
     · simp
   apply hz0
   funext o
@@ -629,26 +629,26 @@ private theorem exists_triangular_gram_orthonormal_of_inFlagDomain {j : ℕ} {g 
       · subst ha1
         by_cases hb1 : b = kk
         · subst hb1
-          simp only [hv', if_pos rfl, Matrix.mulVec_smul, dotProduct_smul, star_smul,
+          simp only [hv', ite_eq_left rfl, Matrix.mulVec_smul, dotProduct_smul, star_smul,
             smul_dotProduct, smul_eq_mul, hstar]
           rw [← hh, hreal, hsg]
           have : (t : ℂ) * (t * ((sigForm N j kk * r : ℝ) : ℂ)) = ((t * t * r * sigForm N j kk : ℝ) : ℂ) := by
             push_cast
             ring
-          rw [this, htt, one_mul, if_pos trivial]
+          rw [this, htt, one_mul, ite_eq_left trivial]
         · have hkb : kk ≠ b := fun e => hb1 e.symm
           by_cases hb2 : kk < b
-          · simp only [hv', if_pos rfl, if_neg hb1, if_pos hb2, if_neg hkb, Matrix.mulVec_smul,
+          · simp only [hv', ite_eq_left rfl, ite_eq_right hb1, ite_eq_left hb2, ite_eq_right hkb, Matrix.mulVec_smul,
               Matrix.mulVec_sub, dotProduct_smul, dotProduct_sub, star_smul, smul_dotProduct,
               smul_eq_mul, hstar]
             rw [← hh]
             field_simp
             ring
           · have hb : (b : ℕ) < k := hlow b hb1 hb2
-            simp only [hv', if_pos rfl, if_neg hb1, if_neg hb2, if_neg hkb, Matrix.mulVec_smul,
+            simp only [hv', ite_eq_left rfl, ite_eq_right hb1, ite_eq_right hb2, ite_eq_right hkb, Matrix.mulVec_smul,
               dotProduct_smul, star_smul, smul_dotProduct, smul_eq_mul, hstar]
             have h1 := hor b kk (Or.inl hb)
-            rw [if_neg hb1] at h1
+            rw [ite_eq_right hb1] at h1
             rw [← star_quadForm_gramOf_swap, h1]
             simp
       · have ha2 : ¬ kk < a := by
@@ -659,16 +659,16 @@ private theorem exists_triangular_gram_orthonormal_of_inFlagDomain {j : ℕ} {g 
         have hak : (a : ℕ) < k := hlow a ha1 ha2
         by_cases hb1 : b = kk
         · subst hb1
-          simp only [hv', if_neg ha1, if_neg ha2, if_pos rfl, if_neg ha1, Matrix.mulVec_smul,
+          simp only [hv', ite_eq_right ha1, ite_eq_right ha2, ite_eq_left rfl, ite_eq_right ha1, Matrix.mulVec_smul,
             dotProduct_smul, smul_eq_mul]
-          rw [hor a kk (Or.inl hak), if_neg ha1]
+          rw [hor a kk (Or.inl hak), ite_eq_right ha1]
           simp
         · by_cases hb2 : kk < b
-          · simp only [hv', if_neg ha1, if_neg ha2, if_neg hb1, if_pos hb2, Matrix.mulVec_smul,
+          · simp only [hv', ite_eq_right ha1, ite_eq_right ha2, ite_eq_right hb1, ite_eq_left hb2, Matrix.mulVec_smul,
               Matrix.mulVec_sub, dotProduct_smul, dotProduct_sub, smul_eq_mul]
-            rw [hor a b (Or.inl hak), hor a kk (Or.inl hak), if_neg ha1]
+            rw [hor a b (Or.inl hak), hor a kk (Or.inl hak), ite_eq_right ha1]
             simp
-          · simp only [hv', if_neg ha1, if_neg ha2, if_neg hb1, if_neg hb2]
+          · simp only [hv', ite_eq_right ha1, ite_eq_right ha2, ite_eq_right hb1, ite_eq_right hb2]
             exact hor a b (Or.inl hak)
     refine ⟨v', fun a m ham => ?_, fun a => ?_, fun a b hab => ?_⟩
     · by_cases h1 : a = kk
@@ -679,7 +679,7 @@ private theorem exists_triangular_gram_orthonormal_of_inFlagDomain {j : ℕ} {g 
         · simp [hv', h1, h2, hsup a m ham]
     · by_cases h1 : a = kk
       · subst h1
-        simp only [hv', if_pos rfl, Pi.smul_apply, smul_eq_mul]
+        simp only [hv', ite_eq_left rfl, Pi.smul_apply, smul_eq_mul]
         exact mul_ne_zero ht0 (hdg _)
       · by_cases h2 : kk < a
         · simp [hv', h1, h2, hsup kk a h2, hdg a]
@@ -701,7 +701,7 @@ private theorem exists_unitary_mul_blockTriangular_of_inFlagDomain {j : ℕ} (hj
   set c : Matrix (Fin N) (Fin N) ℂ := Matrix.of fun m a => v a m with hc
   have hct : c.BlockTriangular id := fun i j hji => hsup j i hji
   have hcU : IsUnit c.det := by
-    rw [Matrix.det_of_upperTriangular hct]
+    rw [det_of_isUpperTriangular hct]
     exact isUnit_iff_ne_zero.2 (Finset.prod_ne_zero_iff.2 fun a _ => hdg a)
   have hent : ∀ a b, (cᴴ * gramOf (sigForm N j) g * c) a b =
       star (v a) ⬝ᵥ (gramOf (sigForm N j) g *ᵥ v b) := by
@@ -710,7 +710,7 @@ private theorem exists_unitary_mul_blockTriangular_of_inFlagDomain {j : ℕ} (hj
       Matrix.mulVec, Pi.star_apply, Finset.sum_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun n _ => Finset.sum_congr rfl fun m _ => by ring
-  haveI := Matrix.invertibleOfIsUnitDet c hcU
+  have := Matrix.invertibleOfIsUnitDet c hcU
   refine ⟨g * c, c⁻¹, ?_, ?_, Matrix.blockTriangular_inv_of_blockTriangular hct,
     Matrix.isUnit_nonsing_inv_det c hcU, ?_⟩
   · ext a b
@@ -752,7 +752,7 @@ private theorem inFlagDomain_inv_mul_mul {j : ℕ} {u g c : Matrix (Fin N) (Fin 
     have hcd : ∀ a, c a a ≠ 0 := by
       intro a
       have h := hcU.ne_zero
-      rw [Matrix.det_of_upperTriangular hc] at h
+      rw [det_of_isUpperTriangular hc] at h
       exact Finset.prod_ne_zero_iff.1 h a (Finset.mem_univ a)
     show (-(gramOf (sigForm N j) (u⁻¹ * g * c)).submatrix Subtype.val Subtype.val).PosDef
     rw [hG, hsub]
@@ -765,7 +765,7 @@ private theorem inFlagDomain_inv_mul_mul {j : ℕ} {u g c : Matrix (Fin N) (Fin 
     rw [Matrix.mulVec_injective_iff_isUnit, Matrix.isUnit_iff_isUnit_det]
     have hCt : (c.submatrix (Subtype.val : {a : Fin N // (a : ℕ) < N - j} → Fin N)
         Subtype.val).BlockTriangular id := hc.submatrix
-    rw [Matrix.det_of_upperTriangular hCt]
+    rw [det_of_isUpperTriangular hCt]
     exact isUnit_iff_ne_zero.2 (Finset.prod_ne_zero_iff.2 fun a _ => hcd a)
 
 theorem exists_cell_coords {j : ℕ} (hj : j ≤ N) (gc : (Fin e → ℂ) → Matrix (Fin N) (Fin N) ℂ)
@@ -810,7 +810,7 @@ theorem exists_cell_coords {j : ℕ} (hj : j ≤ N) (gc : (Fin e → ℂ) → Ma
   have hdiag : ∀ a, b0 a a ≠ 0 := by
     intro a
     have h := hb0U.ne_zero
-    rw [Matrix.det_of_upperTriangular hb0] at h
+    rw [det_of_isUpperTriangular hb0] at h
     exact Finset.prod_ne_zero_iff.1 h a (Finset.mem_univ a)
   have hB0 : Matrix.of (PositivityTheory.Xgp.per_cell.up (P z0)) = b0 := by
     rw [hP0, PositivityTheory.Xgp.per_cell.up_of_tri hb0]
@@ -850,7 +850,7 @@ theorem exists_cell_coords {j : ℕ} (hj : j ≤ N) (gc : (Fin e → ℂ) → Ma
       hBan hB0ne j i) ?_
     filter_upwards [hfac, hdetB, hdom] with w hw hdw hdom'
     have hcell : InFlagDomain N j (cellMat N (PositivityTheory.Xgp.per_cell.low (P w))) := by
-      haveI := Matrix.invertibleOfIsUnitDet _ hdw
+      have := Matrix.invertibleOfIsUnitDet _ hdw
       have := inFlagDomain_inv_mul_mul hu huU hdom' (c := (Matrix.of (PositivityTheory.Xgp.per_cell.up (P w)))⁻¹)
         (Matrix.blockTriangular_inv_of_blockTriangular (PositivityTheory.Xgp.per_cell.up_tri _))
         (Matrix.isUnit_nonsing_inv_det _ hdw)

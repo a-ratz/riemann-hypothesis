@@ -268,7 +268,7 @@ theorem addChar_sum {G κ : Type*} [AddCommMonoid G] (χ : AddChar G Circle) (s 
 
 theorem continuous_finiteAdelicChar_sum_mul (y : ι → 𝔸ᶠ[K]) :
     Continuous fun x : ι → 𝔸ᶠ[K] ↦ (finiteAdelicChar K (∑ i, x i * y i) : ℂ) :=
-  continuous_subtype_val.comp (continuous_finiteAdelicChar.comp
+  continuous_subtypeVal.comp (continuous_finiteAdelicChar.comp
     (continuous_finsetSum _ fun i _ ↦ (continuous_apply i).mul continuous_const))
 
 theorem integrable_mul_finiteAdelicChar_sum {f : (ι → 𝔸ᶠ[K]) → ℂ}

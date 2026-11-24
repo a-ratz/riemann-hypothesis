@@ -87,7 +87,7 @@ private theorem range_eq {l d N : ℕ} (e : (Σ _ : Fin l, Fin d) ≃ Fin N) {V 
     {T : Representation ℂ (Levi k fun _ : Fin l => Fin d) X} (hs : IsSmooth T) (hi : T.IsIrreducible)
     (θ : (jac e π).Equiv T) (f g : π.IntertwiningMap (parInd e T)) (hf : f ≠ 0) :
     ∃ c : ℂ, g = c • f := by
-  haveI := hi
+  have := hi
   have hs' : GroundTheory.Automorphic.IsSmooth T := hs
   have hb := (GroundTheory.Automorphic.algebraMap_intertwiningMap_bijective_of_isSmooth hs').2
   have key : ∀ f : π.IntertwiningMap (parInd e T), ∃ c : ℂ, ∀ x, Model.evalOne e f x = c • θ x := by
@@ -128,7 +128,7 @@ private theorem isSocle_of {l d N : ℕ} (e : (Σ _ : Fin l, Fin d) ≃ Fin N) {
     H ⟨_, S.toRepresentation, hsm, hirr⟩ ι Subtype.val_injective
   have hf0 : f ≠ 0 := by
     rintro rfl
-    haveI := Model.nontrivial_of_isIrreducible π.irr
+    have := Model.nontrivial_of_isIrreducible π.irr
     obtain ⟨v, w, h⟩ := exists_pair_ne π.V
     exact h (hf rfl)
   obtain ⟨c, hc⟩ := range_eq e π.smooth hs hi θ f (ι.comp ψ.symm.toIntertwiningMap) hf0
@@ -202,7 +202,7 @@ private theorem word (hG : GlobalTheory.Published.GeometricLemma) (hBZ : GlobalT
   obtain ⟨θ⟩ := (hZ Δ Δ.start.rep Δ.start.cl_rep e π).2.1 (h.cl_eq hZ)
   have hT : (piTensor fun a => (c a).rep.ρ).IsIrreducible :=
     _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k (Fin Δ.len) (fun _ => Fin Δ.d) fun a => (c a).rep
-  haveI := Model.nontrivial_of_isIrreducible π.irr
+  have := Model.nontrivial_of_isIrreducible π.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : π.V)
   have h4 := GlobalTheory.CompanionTheory.SocleJm.one_le_jhMult_jac e hT φ ⟨v, fun h0 => hv (hφ (h0.trans (map_zero φ).symm))⟩
   have h5 : IsSubquotient (piTensor fun a => (c a).rep.ρ) (piTensor (segTerm Δ.start.rep.ρ Δ.len)) :=

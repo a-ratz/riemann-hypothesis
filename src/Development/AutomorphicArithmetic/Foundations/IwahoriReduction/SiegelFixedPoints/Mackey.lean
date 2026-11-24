@@ -112,13 +112,13 @@ private theorem eps_eOm_eq_cexp {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
     ε (eOm ε x) = Complex.exp (2 * ↑Real.pi * Complex.I * ↑x) := by
   unfold eOm
   apply Function.invFun_eq
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero ((x.den : ℕ) : Ω) := ⟨by exact_mod_cast x.den_nz⟩
-  haveI : NeZero x.den := ⟨x.den_nz⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω x.den
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero ((x.den : ℕ) : Ω) := ⟨by exact_mod_cast x.den_nz⟩
+  have : NeZero x.den := ⟨x.den_nz⟩
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω x.den
   have h2 := hξ.map_of_injective ε.injective
   have h1 : Complex.exp (2 * ↑Real.pi * Complex.I * ↑x) ^ x.den = 1 := by
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨x.num, ?_⟩
     have hx : (x : ℂ) * (x.den : ℂ) = (x.num : ℂ) := by exact_mod_cast Rat.mul_den_eq_num x
     linear_combination (2 * ↑Real.pi * Complex.I) * hx
@@ -128,7 +128,7 @@ private theorem eps_eOm_eq_cexp {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
 private theorem eOm_inv_mul_pow_eq_eOm_inv {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] [CharZero Ω] (ε : Ω →+* ℂ) (D M : ℕ) (hD : 0 < D) :
     eOm ε (1 / ((D * M : ℕ) : ℚ)) ^ D = eOm ε (1 / (M : ℚ)) := by
   apply ε.injective
-  rw [map_pow, eps_eOm_eq_cexp, eps_eOm_eq_cexp, ← Complex.exp_nat_mul]
+  rw [map_pow, eps_eOm_eq_cexp, eps_eOm_eq_cexp, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   have : (D:ℂ) ≠ 0 := by exact_mod_cast hD.ne'
@@ -151,25 +151,25 @@ private theorem eisF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (D M : ℕ) (ζ'
     push_cast
     exact ⟨Int.ModEq.mul_left_cancel' hD', fun h => Int.ModEq.mul_left' h⟩
   rcases Nat.eq_zero_or_pos n with rfl | hn
-  · simp only [eisF, const0, if_true, dvd_zero, Nat.zero_div]
+  · simp only [eisF, const0, ite_true, dvd_zero, Nat.zero_div]
     have h1 : ¬ ((D * M : ℕ) : ℤ) ∣ (D:ℤ) * A := by
       push_cast
       rwa [mul_dvd_mul_iff_left hD']
-    rw [if_neg h1, if_neg hA]
+    rw [ite_eq_right h1, ite_eq_right hA]
     unfold frc
     push_cast
     rw [Int.mul_emod_mul_of_pos _ _ (by exact_mod_cast hD)]
     push_cast
     have : (D:ℚ) ≠ 0 := by exact_mod_cast hD.ne'
     field_simp
-  · simp only [eisF, coefPos, hn.ne', if_false, Nat.sub_self, pow_zero, one_mul]
+  · simp only [eisF, coefPos, hn.ne', ite_false, Nat.sub_self, pow_zero, one_mul]
     by_cases hDn : D ∣ n
-    · rw [if_pos hDn]
+    · rw [ite_eq_left hDn]
       obtain ⟨k, rfl⟩ := hDn
       have hk : k ≠ 0 := by
         rintro rfl
         simp at hn
-      rw [Nat.mul_div_cancel_left k hD, if_neg hk]
+      rw [Nat.mul_div_cancel_left k hD, ite_eq_right hk]
       have hsub : k.divisors ⊆ (D * k).divisors :=
         Nat.divisors_subset_of_dvd (Nat.mul_ne_zero hD.ne' hk) (dvd_mul_left k D)
       have hpow : ∀ t : ℤ, ζ' ^ ((D:ℤ) * t) = ζ ^ t := by
@@ -194,12 +194,12 @@ private theorem eisF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (D M : ℕ) (ζ'
       · intro x hx hxn
         have hx' : x ∣ D * k := Nat.dvd_of_mem_divisors hx
         have hnot : ¬ x ∣ k := fun h => hxn (Nat.mem_divisors.mpr ⟨h, hk⟩)
-        rw [if_neg, if_neg, sub_zero]
+        rw [ite_eq_right, ite_eq_right, sub_zero]
         · intro h
           exact hnot (hout x hx' (by simpa using key _ h))
         · intro h
           exact hnot (hout x hx' (key _ h))
-    · rw [if_neg hDn]
+    · rw [ite_eq_right hDn]
       apply Finset.sum_eq_zero
       intro x hx
       have hx' : x ∣ n := Nat.dvd_of_mem_divisors hx
@@ -207,7 +207,7 @@ private theorem eisF_mul_scale_eq_ite_dvd {K : Type*} [Field K] (D M : ℕ) (ζ'
         intro hdx
         rw [Int.natCast_dvd_natCast] at hdx
         exact hDn (hdx.trans (Nat.div_dvd_of_dvd hx'))
-      rw [if_neg, if_neg, sub_zero]
+      rw [ite_eq_right, ite_eq_right, sub_zero]
       · intro h
         exact hout (by simpa using key _ h)
       · intro h
@@ -223,7 +223,7 @@ private theorem cmul_dilate_eq_ite_dvd {K : Type*} [Field K] (D : ℕ) (hD : 0 <
     cmul f' g' N = if D ∣ N then cmul f g (N / D) else 0 := by
   unfold cmul
   by_cases hN : D ∣ N
-  · rw [if_pos hN]
+  · rw [ite_eq_left hN]
     obtain ⟨K0, rfl⟩ := hN
     rw [Nat.mul_div_cancel_left K0 hD]
     have hsub : (Finset.range (K0 + 1)).image (fun k => D * k) ⊆ Finset.range (D * K0 + 1) := by
@@ -236,7 +236,7 @@ private theorem cmul_dilate_eq_ite_dvd {K : Type*} [Field K] (D : ℕ) (hD : 0 <
     · apply Finset.sum_congr rfl
       intro k hk
       have e : D * K0 - D * k = D * (K0 - k) := (Nat.mul_sub D K0 k).symm
-      rw [hf, hg, if_pos (dvd_mul_right D k), e, if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD, Nat.mul_div_cancel_left _ hD]
+      rw [hf, hg, ite_eq_left (dvd_mul_right D k), e, ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD, Nat.mul_div_cancel_left _ hD]
     · intro x _ y _ hxy
       exact Nat.eq_of_mul_eq_mul_left hD hxy
     · intro i hi hni
@@ -251,7 +251,7 @@ private theorem cmul_dilate_eq_ite_dvd {K : Type*} [Field K] (D : ℕ) (hD : 0 <
         have := Nat.le_of_mul_le_mul_left h1 hD
         omega
       · simp
-  · rw [if_neg hN]
+  · rw [ite_eq_right hN]
     apply Finset.sum_eq_zero
     intro i hi
     have hi' : i ≤ N := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
@@ -274,16 +274,16 @@ private theorem coefQ_eq_of_mul_eq_nat {Ω : Type} [Field Ω] (L : ℕ) (hL : 0 
       rw [h]
       exact Nat.cast_nonneg _
     exact (mul_nonneg_iff_of_pos_right hL').mp h0
-  rw [if_pos ⟨hr, by rw [h]; simp⟩, h]
+  rw [ite_eq_left ⟨hr, by rw [h]; simp⟩, h]
   simp
 
 private theorem coefQ_eq_zero_of_not_nat {Ω : Type} [Field Ω] (L : ℕ) (F : ℕ → Ω) (r : ℚ) (h : ¬ ∃ N : ℕ, r * L = N) :
     coefQ L F r = 0 := by
   unfold coefQ
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨hr, hd⟩
   apply h
-  have h1 : ((r * L).num : ℚ) = r * L := Rat.coe_int_num_of_den_eq_one hd
+  have h1 : ((r * L).num : ℚ) = r * L := Rat.intCast_num_of_den_eq_one hd
   have h2 : 0 ≤ (r * L).num := Rat.num_nonneg.mpr (mul_nonneg hr (Nat.cast_nonneg _))
   obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le h2
   refine ⟨m, ?_⟩
@@ -302,13 +302,13 @@ theorem UpperTheory.Kd.L.resc :
     rw [coefQ_eq_of_mul_eq_nat L hL _ r N hN, hc]
     by_cases hDN : D ∣ N
     · obtain ⟨K0, rfl⟩ := hDN
-      rw [if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD]
+      rw [ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hD]
       refine (coefQ_eq_of_mul_eq_nat L hL _ _ K0 ?_).symm
       have hD' : (D:ℚ) ≠ 0 := by exact_mod_cast hD.ne'
       rw [div_mul_eq_mul_div, hN]
       push_cast
       field_simp
-    · rw [if_neg hDN, coefQ_eq_zero_of_not_nat]
+    · rw [ite_eq_right hDN, coefQ_eq_zero_of_not_nat]
       rintro ⟨m, hm⟩
       apply hDN
       refine ⟨m, ?_⟩
@@ -487,7 +487,7 @@ theorem UpperTheory.Kd.L.one :
   obtain ⟨cc, hcc⟩ := _root_.GlobalTheory.pair_edge_dlog l h2
   refine ⟨cc, ?_⟩
   intro Ω _ _ _ _ ε X N _ c d gm hP A hA x m n hm hn g hg hg0 hg1
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hlp : l.Prime := Fact.out
   have hl0 : l ≠ 0 := hlp.ne_zero
   have hN0 : 0 < N := Nat.pos_of_ne_zero (NeZero.ne N)
@@ -532,7 +532,7 @@ theorem UpperTheory.Kd.L.one :
   have hj : ∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero) := by
     obtain ⟨φ, h1, h2⟩ := X.j_hol
     exact ⟨φ, h2, h1⟩
-  haveI hnorm : Normal (topF X (topMu l n m N)) (topL X (topMu l n m N)) := UpperTheory.normal_modularTowerTop_algebraModel X _ hMM
+  have hnorm : Normal (topF X (topMu l n m N)) (topL X (topMu l n m N)) := UpperTheory.normal_modularTowerTop_algebraModel X _ hMM
   let e : topL X (topMu l n m N) →+* X.K :=
     ((X.sl (toGQ !![((N * N : ℕ) : ℤ), 0; 0, 1]) : X.K →+* X.K).comp (X.sl (ofSL g) : X.K →+* X.K)).comp
       (topL X (topMu l n m N)).subtype
@@ -595,7 +595,7 @@ theorem UpperTheory.Kd.L.one :
     rw [← this, ← hf', ← AlgEquiv.mul_apply, inv_mul_cancel, AlgEquiv.one_apply]
   have htv : ∃ v : ℕ, t.val + (-t).val = l ^ n * v := by
     have h0 : ((t.val + (-t).val : ℕ) : ZMod (l ^ n)) = 0 := by
-      haveI : NeZero (l ^ n) := ⟨pow_ne_zero n hl0⟩
+      have : NeZero (l ^ n) := ⟨pow_ne_zero n hl0⟩
       push_cast
       rw [ZMod.natCast_zmod_val, ZMod.natCast_zmod_val, add_neg_cancel]
     exact (ZMod.natCast_eq_zero_iff _ _).1 h0
@@ -977,7 +977,7 @@ namespace UpperTheory.Kd.L.Mk
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ}
 
 private lemma zt_prim (ε : Ω →+* ℂ) (l : ℕ) [Fact l.Prime] (L : ℕ) : IsPrimitiveRoot (zt ε l L) (l ^ L) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have h := isPrimitiveRoot_eOm ε (m := l ^ L) (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)
   unfold zt
   rwa [Nat.cast_pow] at h
@@ -1111,7 +1111,7 @@ private lemma conj_apply_zt_eq_of_apply_zt_eq (τ s : Ω ≃ₐ[ℚ] Ω) (l L n 
 
 private lemma cycM_eq_one (ε : Ω →+* ℂ) {M : ℕ} [NeZero M] (hM : 1 < M) {s : Ω ≃ₐ[ℚ] Ω} (hs : s ∈ fixMu Ω M) :
     cycM M s = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hfix := (mem_fixMu_iff s).1 hs
   have hv1 : (1 : ZMod M).val = 1 := by rw [ZMod.val_one_eq_one_mod, Nat.mod_eq_of_lt hM]
   have hspec := cycM_spec M s ⟨1, fun z hz => by rw [hfix z hz, Units.val_one, hv1, pow_one]⟩
@@ -1282,7 +1282,7 @@ theorem UpperTheory.Kd.L.mackey :
   have hmemB : ∑ y ∈ S, X.galB l (ρ y) (bB (σ y)) ∈ X.B N l w := sum_mem fun y _ =>
     _root_.GlobalTheory.KZ.StabGal.galB_mem_B ε X ε.injective hj N l w hp.odd hp.five
       ((Nat.Prime.coprime_iff_not_dvd hlp).2 hp.cop).symm hw (ρ y) _ (hB _ (hσ y)).1
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hun := GlobalTheory.T.cuspFunctionalValueModPrimePow_unique_oddWeight Ω ε X A N l X.j_hol hp.odd hp.cop hp.five hl n w hw _ hmemB φ _ hφ hTh r
   have hun2 := GlobalTheory.Glue.NrmT.cgA_mul A l n (pow_mem (natCast_mem A l) cc) hun
   refine cgA_trans hun2 ?_
@@ -1294,7 +1294,7 @@ theorem UpperTheory.Kd.L.mackey :
     rfl
   rw [hΦ]
   by_cases hr : r.den = 1
-  · simp only [hr, if_true]
+  · simp only [hr, ite_true]
     have hab : ∀ i ∈ I, CgA A l n ((l : Ω) ^ cc * ρ i.1 ((ψ i.1 i.2.1 i.2.2).coeff r))
         (s (ρ i.1 (ξ i.1 i.2.1 i.2.2 r)) - ρ i.1 (ξ i.1 i.2.1 i.2.2 r) +
           (l : Ω) ^ cc * ((N : Ω) ^ 3 * ρ i.1 (EE ε l (m + n) N x c d (gm i.2.1 * liftSL _ i.2.2) r) * (t.val : Ω))) := by
@@ -1323,7 +1323,7 @@ theorem UpperTheory.Kd.L.mackey :
     rw [map_mul, map_natCast, hmx]
     push_cast
     ring
-  · simp only [hr, if_false, map_zero, mul_zero, Finset.sum_const_zero, sub_zero, add_zero, zero_mul]
+  · simp only [hr, ite_false, map_zero, mul_zero, Finset.sum_const_zero, sub_zero, add_zero, zero_mul]
     exact ⟨0, zero_mem A, by ring⟩
 end -- clump:auto
 end -- clump:auto

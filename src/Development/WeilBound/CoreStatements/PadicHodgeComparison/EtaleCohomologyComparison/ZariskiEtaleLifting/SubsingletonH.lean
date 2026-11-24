@@ -1506,7 +1506,7 @@ include hθ in
 theorem desc_of_des (s : R) (h : CrystallineSemistableComparison.D.DesJ W.ι Ff s) : Desc s Gf (jG W P) := by
   intro T
   let m := mor W P Ff Gf θ hθ T
-  haveI : m.G.IsLeftAdjoint := inferInstanceAs (toPts W P T).IsLeftAdjoint
+  have : m.G.IsLeftAdjoint := inferInstanceAs (toPts W P T).IsLeftAdjoint
   have hup : ∀ n, UpTo (1 : R) (m.hom.mapH n) := fun n =>
     ((CrystallineSemistableComparison.P.upTo_alg (m.hom.mapH n) LinearMap.id 1 1).2.2.2.2).2
       (CrystallineSemistableComparison.P.adj_mor m (fun x => (θ ((jG W P).obj x.right)).bijective) n)

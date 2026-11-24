@@ -228,12 +228,12 @@ theorem asmH_of (hF : FarId) (hS : SmoothX) (hT : TopHol) (hR : RcCongr) (hE : E
   intro hLT hSec hCR
   intro m n e hm hmn G _ _ _ _ _ _ Pp Γ ι s₀ Ht f hι hsplit U d Ê t hU hRU hs0 hhol hcont hfar j hlow hsing g
   have hD : HD m n e G Pp Γ ι s₀ Ht f U d Ê t := ⟨hι, hsplit, hU, hRU, hs0, hhol, hcont, hfar⟩
-  haveI : CompactSpace (KR n) := kRCpt n
-  letI : MeasurableSpace (KR n) := borel _
-  haveI : BorelSpace (KR n) := ⟨rfl⟩
+  have : CompactSpace (KR n) := kRCpt n
+  let : MeasurableSpace (KR n) := borel _
+  have : BorelSpace (KR n) := ⟨rfl⟩
   let μ : Measure (KR n) := Measure.haarMeasure ⊤
-  haveI : μ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
-  haveI : IsProbabilityMeasure μ := ⟨by simpa [μ] using Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (KR n)))⟩
+  have : μ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
+  have : IsProbabilityMeasure μ := ⟨by simpa [μ] using Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (KR n)))⟩
 
   obtain ⟨Φs, Ω, c, hΩo, hΩG, hcd, hc0, hΦG, -, hΦj, hΦd, hΦrC⟩ := hS m n e hm hmn G Pp Γ ι s₀ Ht f U d Ê t hD g
   set φ : GR n → ℂ := fun y => iteratedDeriv j (Ê · (g * ι y)) s₀ with hφ
@@ -258,7 +258,7 @@ theorem asmH_of (hF : FarId) (hS : SmoothX) (hT : TopHol) (hR : RcCongr) (hE : E
 
   have hιKc : Continuous (ιK n) := by
     unfold ιK
-    exact Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    exact Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hιKiff : ∀ x, InK x ↔ ∃ k, ιK n k = x := by
     intro x
     constructor
@@ -658,13 +658,13 @@ private theorem isCompact_KR' (n : ℕ) : IsCompact ((KR n : Set (GR n))) := by
     have hu : x ∈ Matrix.unitaryGroup (Fin n ⊕ Fin n) ℂ := Matrix.mem_unitaryGroup_iff'.mpr hx.2
     simpa using entry_norm_bound_of_unitary hu i j
   have hS : IsCompact S := hBox.of_isClosed_subset hSc hSsub
-  haveI : CompactSpace S := isCompact_iff_compactSpace.mp hS
+  have : CompactSpace S := isCompact_iff_compactSpace.mp hS
   let φ : S → GR n := fun x =>
     ⟨⟨x.1, x.1ᴴ, mul_eq_one_comm.mp x.2.2, x.2.2⟩, x.2.1⟩
   have hφ : Continuous φ := by
     refine Continuous.subtype_mk ?_ _
-    refine Units.continuous_iff.mpr ⟨continuous_subtype_val, ?_⟩
-    exact continuous_subtype_val.matrix_conjTranspose
+    refine Units.continuous_iff.mpr ⟨continuous_subtypeVal, ?_⟩
+    exact continuous_subtypeVal.matrix_conjTranspose
   have hR : (KR n : Set (GR n)) = Set.range φ := by
     ext Y
     constructor
@@ -687,7 +687,7 @@ theorem topSeries (hS : SecFz) (h : HD m n e G Pp Γ ι s₀ Ht f U d Ê t) [Mea
     tOp μ (ιK n) ρ ψ a b (resG ι (Ê z) g) (mR y) =
       d.eval z * ∑' q, C q * tOp μ (ιK n) ρ ψ a b (fz m e (z - s₀)) (mR (y₀ q * y)) := by
   classical
-  haveI : CompactSpace (KR n) := isCompact_iff_compactSpace.mp (isCompact_KR' n)
+  have : CompactSpace (KR n) := isCompact_iff_compactSpace.mp (isCompact_KR' n)
   set A : GR n := grOf a ha with hA
   set B : GR n := grOf b hb with hB
   have hmul : ∀ Y₁ Y₂ : GR n, mR (Y₁ * Y₂) = mR Y₁ * mR Y₂ := fun _ _ => by simp [mR]
@@ -698,7 +698,7 @@ theorem topSeries (hS : SecFz) (h : HD m n e G Pp Γ ι s₀ Ht f U d Ê t) [Mea
   obtain ⟨hbd, hE⟩ := h.far z hz
   let P : KR n × (Fin n → Fin n → ℝ) → G := fun p => g * ι (y * ((p.1 : GR n) * A * nG p.2 * B))
   have hWc : Continuous fun p : KR n × (Fin n → Fin n → ℝ) => (p.1 : GR n) * A * nG p.2 * B :=
-    (((continuous_subtype_val.comp continuous_fst).mul continuous_const).mul
+    (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).mul
       (continuous_nG.comp continuous_snd)).mul continuous_const
   have hP : Continuous P := continuous_const.mul (h.ιc.comp (continuous_const.mul hWc))
   have hKc : IsCompact (P '' (Set.univ ×ˢ tsupport ψ)) := (isCompact_univ.prod hψc).image hP
@@ -839,7 +839,7 @@ theorem farId_of (hC : CurveGR) (hF : FzDer) : FarId := by
       deriv (fun (s : ℝ) => F (x * NormedSpace.exp ((s : ℂ) • if true = true then dir1 (lowQ Q) else dir2 (lowQ Q)))) 0 +
         Complex.I * deriv (fun (s : ℝ) => F (x * NormedSpace.exp ((s : ℂ) • if false = true then dir1 (lowQ Q) else dir2 (lowQ Q)))) 0 := by
     intro F x
-    simp only [rC, dir1, dir2, if_true]
+    simp only [rC, dir1, dir2, ite_true]
     rfl
   choose y₀ C hyC using fun q : GlobalTheory.Eis.Cosets Pp Γ => FarP.termSplit hS hD z (↑(Quotient.out q) * g)
   have d1 := FarP.dirSeries hC hF hD hz (lowQ Q) true g y y₀ C hyC
@@ -1033,11 +1033,11 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 theorem fzDer : FzDer := by
   intro n m e w Z b
   have hX : IsLie (if b = true then dir1 Z else dir2 Z) := lie_dir Z b
-  haveI := kRCpt n
+  have := kRCpt n
   have hc1 : Continuous fun k : KR n => rD (if b = true then dir1 Z else dir2 Z) (mR (k : GR n)) :=
-    (continuous_rD _).comp continuous_subtype_val
+    (continuous_rD _).comp continuous_subtypeVal
   have hc2 : Continuous fun k : KR n => rA (if b = true then dir1 Z else dir2 Z) (mR (k : GR n)) :=
-    (continuous_rA _).comp continuous_subtype_val
+    (continuous_rA _).comp continuous_subtypeVal
   obtain ⟨C1, hC1⟩ := (isCompact_range hc1).isBounded.exists_norm_le
   obtain ⟨C2, hC2⟩ := (isCompact_range hc2).isBounded.exists_norm_le
   refine ⟨|(e : ℝ)| * max C1 0 + ((m : ℝ) + 2 * ‖w‖) * max C2 0, by positivity, fun y => ?_⟩
@@ -1144,7 +1144,7 @@ theorem hol_int {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
         ψ t) ∂μ := by
   set C := tsupport ψ
   have hC : IsCompact C := hψs
-  haveI : IsFiniteMeasure (volume.restrict C) := ⟨by rw [Measure.restrict_apply_univ]; exact hC.measure_lt_top⟩
+  have : IsFiniteMeasure (volume.restrict C) := ⟨by rw [Measure.restrict_apply_univ]; exact hC.measure_lt_top⟩
   have hCc : (volume.restrict C) Cᶜ = 0 := by
     rw [Measure.restrict_apply (isClosed_tsupport ψ).isOpen_compl.measurableSet, Set.compl_inter_self, measure_empty]
   have hnb := LocOpA.continuous_nbEl (n := n)
@@ -1166,14 +1166,14 @@ theorem hol_int {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     fun k x _ => (hEh _).mul_const _
   have hin : ∀ k : KR n, DifferentiableOn ℂ (fun z => ∫ x in C, E z (g * ι ((k : GR n) * a * LocOpA.nbEl x * b)) * ψ x) U :=
     fun k => (holParam (Fin n → Fin n → ℝ) (volume.restrict C) C hC hCc U _ hU (hinner k) (hind k)).1
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   have hcont : Continuous (fun y : KR n × U => ∫ x in C, E (y.2 : ℂ) (g * ι ((y.1 : GR n) * a * LocOpA.nbEl x * b)) * ψ x) := by
     refine continuous_parametric_integral_of_continuous
       (f := fun (y : KR n × U) x => E (y.2 : ℂ) (g * ι ((y.1 : GR n) * a * LocOpA.nbEl x * b)) * ψ x) ?_ hC
     have : Continuous (fun w : (KR n × U) × (Fin n → Fin n → ℝ) =>
         (((w.1.1, w.2), (w.1.2 : ℂ)) : (KR n × (Fin n → Fin n → ℝ)) × ℂ)) :=
       ((continuous_fst.comp continuous_fst).prodMk continuous_snd).prodMk
-        (continuous_subtype_val.comp (continuous_snd.comp continuous_fst))
+        (continuous_subtypeVal.comp (continuous_snd.comp continuous_fst))
     exact hj.comp_continuous this fun w => ⟨trivial, w.1.2.2⟩
   have hcon : ContinuousOn (fun y : KR n × ℂ => ρ y.1 *
       ∫ x in C, E y.2 (g * ι ((y.1 : GR n) * a * LocOpA.nbEl x * b)) * ψ x) (univ ×ˢ U) := by
@@ -1184,8 +1184,8 @@ theorem hol_int {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
           (fun w : (univ ×ˢ U : Set (KR n × ℂ)) => ((w.1.1, ⟨w.1.2, w.2.2⟩) : KR n × U)) := by
       funext w; rfl
     rw [this]
-    exact hcont.comp ((continuous_fst.comp continuous_subtype_val).prodMk
-      ((continuous_snd.comp continuous_subtype_val).subtype_mk _))
+    exact hcont.comp ((continuous_fst.comp continuous_subtypeVal).prodMk
+      ((continuous_snd.comp continuous_subtypeVal).subtype_mk _))
   have hP := holParam (KR n) μ univ isCompact_univ (by simp) U
     (fun k z => ρ k * ∫ x in C, E z (g * ι ((k : GR n) * a * LocOpA.nbEl x * b)) * ψ x) hU hcon
     (fun k _ => (hin k).const_mul _)
@@ -1208,7 +1208,7 @@ theorem hol_int {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 
 theorem topHol : TopHol := by
   intro m n e _ _ G _ _ _ _ _ _ Pp Γ ι s₀ Ht f U d Ê t hD _ _ μ _ _ ρ ψ a b hρ hψc hψs ha hb g y
-  haveI : CompactSpace (KR n) := kRCpt n
+  have : CompactSpace (KR n) := kRCpt n
   have hfun : ∀ F : ℂ → G → ℂ, (fun z => tOp μ (ιK n) ρ ψ a b (resG ι (F z) g) (mR y)) = fun z =>
       ∫ k, ρ k * (∫ t : Fin n → Fin n → ℝ, F z ((g * ι y) * ι ((k : GR n) * LocOpA.mkG a ha * LocOpA.nbEl t *
         LocOpA.mkG b hb)) * ψ t) ∂μ := fun F => funext fun z => tOp_resG ι μ ρ ψ ha hb (F z) g y

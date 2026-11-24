@@ -196,7 +196,7 @@ theorem frames_inner : ∀ {D : D7} (Y W : HSp D) {n : ℕ} (hF : D.host.F = max
   let t := GlobalTheory.StdFrame.tensCastR hF
   rcases subsingleton_or_nontrivial (ReciprocityTheory.Aut.AL D.host.E) with hs | hs
   · exact ⟨1, fun κ => Subtype.ext (Units.ext (Subsingleton.elim _ _))⟩
-  haveI := t.toEquiv.nontrivial
+  have := t.toEquiv.nontrivial
   have hn : Odd n := by
     have := Matrix.square_of_invertible bY bY' hY1 hY2
     rw [Fintype.card_fin, Fintype.card_fin] at this
@@ -357,7 +357,7 @@ theorem exists_good_base_vec : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl
     { toFun := fun g => (Formalism.L2.NG.rt D.host.E n (k g)).restrict (fun w hw => hstab g w hw)
       map_one' := LinearMap.ext fun w => Subtype.ext (hfix w w.2 _ hk1)
       map_mul' := fun g h => LinearMap.ext fun w => Subtype.ext (hprod g h w w.2).symm }
-  haveI : FiniteDimensional ℂ Ws := FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
+  have : FiniteDimensional ℂ Ws := FiniteDimensional.span_of_finite ℂ (Set.finite_range _)
   have hX : ∀ χ ∈ A.X, IsAbsIrrChar χ := hOk.irr
   have hcen : ∀ g h : G, RealDat.eC (A := A) D.what₂.embLL (g * h * g⁻¹) = RealDat.eC (A := A) D.what₂.embLL h := fun g h => by
     unfold RealDat.eC
@@ -452,7 +452,7 @@ theorem injective_of (hirr : ∀ U : Submodule ℂ S, (∀ g, ∀ x ∈ U, σ g 
 
 theorem isIrreducible_of [Nontrivial S] (hirr : ∀ U : Submodule ℂ S, (∀ g, ∀ x ∈ U, σ g x ∈ U) → U = ⊥ ∨ U = ⊤) :
     σ.IsIrreducible := by
-  haveI : Nontrivial (Subrepresentation σ) := ⟨⟨⊥, ⊤, fun h => by
+  have : Nontrivial (Subrepresentation σ) := ⟨⟨⊥, ⊤, fun h => by
     have := congrArg Subrepresentation.toSubmodule h
     exact bot_ne_top (α := Submodule ℂ S) this⟩⟩
   refine ⟨fun U => ?_⟩
@@ -481,7 +481,7 @@ theorem isAdmissible_of [TopologicalSpace H] [IsTopologicalGroup H]
   · rcases hirr (GlobalTheory.PRep.smoothPart σ) (GlobalTheory.PRep.smoothPart_stable σ) with h | h
     · exact absurd ((Submodule.eq_bot_iff _).1 h y ho) hy
     · exact (h.ge Submodule.mem_top : v ∈ GlobalTheory.PRep.smoothPart σ)
-  · haveI := hfin K hK
+  · have := hfin K hK
     refine FiniteDimensional.of_injective (f.restrict (p := GlobalTheory.PRep.fixed σ K) (q := C ⊓ GlobalTheory.PRep.fixed ρ K)
       fun v hv => ⟨hf.1 v, GlobalTheory.CuspDec.mem_fixed.2 fun k hk => ?_⟩) fun a b h => ?_
     · rw [← hf.2, GlobalTheory.CuspDec.mem_fixed.1 hv k hk]
@@ -527,7 +527,7 @@ theorem exists_mem_isotL (hP : GlobalTheory.Published.HarishChandraFinite) {D : 
   have hirr : ∀ U : Submodule ℂ π.S, (∀ g, ∀ x ∈ U, σ g x ∈ U) → U = ⊥ ∨ U = ⊤ := fun U hU =>
     GlobalTheory.OccRowVec.finRep_irr π U fun g x hx => by rw [← hσ]; exact hU _ x hx
   have hy0' : (⟨y, hyS⟩ : π.S) ≠ 0 := fun h0 => hy0 (congrArg Subtype.val h0)
-  haveI : Nontrivial π.S := ⟨⟨_, _, hy0'⟩⟩
+  have : Nontrivial π.S := ⟨⟨_, _, hy0'⟩⟩
   have hkill : (⟨y, hyS⟩ : π.S) ∈ killed σ (eqSet (Yc D 0) (R.βY 0) (R.dat0 R.triv) R.eG (RealDat.eC (A := A) D.what₂.embLL) P
       (∅ : Set Empty) Empty.elim Empty.elim Empty.elim) := by
     rw [mem_killed]
@@ -552,7 +552,7 @@ theorem exists_mem_isotL (hP : GlobalTheory.Published.HarishChandraFinite) {D : 
     obtain ⟨κ, rfl⟩ := e.surjective g
     rw [hσ]
     exact hfe κ x
-  haveI := GlobalTheory.PartDims.isTopologicalGroup_GA (Yc D 0)
+  have := GlobalTheory.PartDims.isTopologicalGroup_GA (Yc D 0)
   have hadm : GlobalTheory.PRep.IsAdmissible σ :=
     isAdmissible_of hirr hy0' (GlobalTheory.PartDims.isOpen_stab rfl rfl hkill) hfm hf0
       (fun K hK => GlobalTheory.CuspDec.finiteDimensional_fixed hP hC.models.inf K hK)

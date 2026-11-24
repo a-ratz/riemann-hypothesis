@@ -64,12 +64,12 @@ variable {k A : Type} [Field k] [IsAlgClosed k] [CommRing A] [IsDedekindDomain A
 
 theorem algebraMap_quot_bijective (P : Ideal A) [P.IsMaximal] :
     Function.Bijective (algebraMap k (A ⧸ P)) := by
-  letI : Field (A ⧸ P) := Ideal.Quotient.field P
-  haveI : Algebra.FiniteType k (A ⧸ P) :=
+  let : Field (A ⧸ P) := Ideal.Quotient.field P
+  have : Algebra.FiniteType k (A ⧸ P) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ k P)
       (Ideal.Quotient.mkₐ_surjective k P)
-  haveI : Module.Finite k (A ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ P)
-  haveI : Algebra.IsIntegral k (A ⧸ P) := Algebra.IsIntegral.of_finite k (A ⧸ P)
+  have : Module.Finite k (A ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ P)
+  have : Algebra.IsIntegral k (A ⧸ P) := Algebra.IsIntegral.of_finite k (A ⧸ P)
   exact IsAlgClosed.algebraMap_bijective_of_isIntegral
 
 theorem maximal_part (P : Ideal A) (hP : P.IsMaximal) :
@@ -106,7 +106,7 @@ theorem span_sup_mul_eq (I P : Ideal A) (hI : I ≠ ⊥) (hP : P.IsMaximal) (x :
 
 theorem rank_quot_mul_maximal (I P : Ideal A) (hI : I ≠ ⊥) (hP : P.IsMaximal) :
     Module.rank k (A ⧸ (I * P)) = Module.rank k (A ⧸ I) + 1 := by
-  haveI := hP
+  have := hP
   have hne : I * P ≠ I := by
     intro h
     have h2 : I * P = I * ⊤ := by rw [h, Ideal.mul_top]
@@ -164,7 +164,7 @@ variable {k A : Type} [Field k] [IsAlgClosed k] [CommRing A] [IsDedekindDomain A
   [Algebra.FiniteType k A]
 
 theorem rank_quot_top : Module.rank k (A ⧸ (⊤ : Ideal A)) = 0 := by
-  haveI : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.2 rfl
+  have : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.2 rfl
   exact rank_subsingleton' k _
 
 theorem maximal_of_prime {p : Ideal A} (hp : Prime p) : p ≠ ⊥ ∧ p.IsMaximal := by
@@ -200,9 +200,9 @@ theorem finite_quot (I : Ideal A) (hI : I ≠ ⊥) : Module.Finite k (A ⧸ I) :
 
 theorem finrank_quot_mul (I J : Ideal A) (hI : I ≠ ⊥) (hJ : J ≠ ⊥) :
     Module.finrank k (A ⧸ (I * J)) = Module.finrank k (A ⧸ I) + Module.finrank k (A ⧸ J) := by
-  haveI := finite_quot (k := k) I hI
-  haveI := finite_quot (k := k) J hJ
-  haveI := finite_quot (k := k) (I * J) (mul_ne_zero (show I ≠ 0 from hI) (show J ≠ 0 from hJ))
+  have := finite_quot (k := k) I hI
+  have := finite_quot (k := k) J hJ
+  have := finite_quot (k := k) (I * J) (mul_ne_zero (show I ≠ 0 from hI) (show J ≠ 0 from hJ))
   have h := rank_quot_mul (k := k) J hJ I hI
   rw [← Module.finrank_eq_rank, ← Module.finrank_eq_rank, ← Module.finrank_eq_rank] at h
   exact_mod_cast h
@@ -214,7 +214,7 @@ theorem eq_of_le_of_finrank_le (I J : Ideal A) (hI : I ≠ ⊥) (hIJ : I ≤ J)
   have hL : L ≠ ⊥ := fun h => hI (by rw [h]; exact (mul_zero J : J * (0 : Ideal A) = 0))
   rw [finrank_quot_mul J L hJ hL] at hr
   have h0 : Module.finrank k (A ⧸ L) = 0 := by omega
-  haveI := finite_quot (k := k) L hL
+  have := finite_quot (k := k) L hL
   have hs : Subsingleton (A ⧸ L) := Module.finrank_zero_iff.1 h0
   rw [Ideal.Quotient.subsingleton_iff.1 hs, Ideal.mul_top]
 

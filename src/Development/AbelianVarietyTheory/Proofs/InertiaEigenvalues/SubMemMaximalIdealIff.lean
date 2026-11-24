@@ -119,7 +119,7 @@ theorem part_spec {G : Type} [Monoid G] {l : ℕ} (hl : l.Prime) {x : G} (hx : I
   have hmul : l ^ a * M = orderOf x := Nat.ordProj_mul_ordCompl_eq_self _ _
   have hcop : M.Coprime l := (Nat.coprime_ordCompl hl hn).symm
   have hM0 : M ≠ 0 := (Nat.ordCompl_pos l hn).ne'
-  haveI : NeZero M := ⟨hM0⟩
+  have : NeZero M := ⟨hM0⟩
   set u := (((l ^ a : ℕ) : ZMod M)⁻¹).val with hu
   have hz : Formalism.CyclotomicNorms.primeToPart l x = x ^ (l ^ a * u) := rfl
   have hone : (x ^ (l ^ a)) ^ M = 1 := by rw [← pow_mul, hmul, pow_orderOf_eq_one]

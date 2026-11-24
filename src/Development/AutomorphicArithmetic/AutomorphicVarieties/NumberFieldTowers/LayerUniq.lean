@@ -54,7 +54,7 @@ private theorem lu_key (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algeb
     [Fact l.Prime] (hmu : HasMuQ l L) (n : ℕ) (L₁ : Type) [Field L₁] [NumberField L₁] [Algebra L L₁] [Algebra L₁ Ω]
     [IsScalarTower L L₁ Ω] [IsCyclotomicExtension {l ^ n} L L₁] :
     galOf L L₁ Ω = layU l L Ω (n - cZero l L) ∧ Module.finrank L L₁ = l ^ (n - cZero l L) := by
-  haveI : IsAlgClosure L₁ Ω := ⟨IsAlgClosure.isAlgClosed L, Algebra.IsAlgebraic.tower_top (K := L) L₁⟩
+  have : IsAlgClosure L₁ Ω := ⟨IsAlgClosure.isAlgClosed L, Algebra.IsAlgebraic.tower_top (K := L) L₁⟩
   have h1 : galOf L L₁ Ω = Un L Ω l n := by
     rw [galOfCyc L Ω l n L L₁, galOf_self]
   have h2 : Un L Ω l n = layU l L Ω (n - cZero l L) := by
@@ -70,20 +70,20 @@ theorem UpperTheory.V.Tower.layerUniq :
         ∀ (n : ℕ) (L₁ : Type) [Field L₁] [NumberField L₁] [Algebra L L₁], IsCyclotomicExtension {l ^ n} L L₁ → IsLayer l (n - cZero l L) L L₁ := by
   intro L Ω _ _ _ _ _ l hl hmu
   refine ⟨fun m => ?_, fun m L₁ _ _ _ _ _ h => ?_, fun n L₁ _ _ _ h => ?_⟩
-  · haveI h := (fnCyc L Ω l (cZero l L + m)).1
+  · have h := (fnCyc L Ω l (cZero l L + m)).1
     refine ⟨⟨_, h⟩, ?_⟩
     have := (lu_key L Ω l hmu (cZero l L + m) (layF l L Ω m)).2
     rwa [Nat.add_sub_cancel_left] at this
   · obtain ⟨⟨k, hk⟩, hf⟩ := h
     obtain ⟨h1, h2⟩ := lu_key L Ω l hmu k L₁
     rw [h1, Nat.pow_right_injective hl.out.two_le (h2.symm.trans hf)]
-  · haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L
-    haveI : FiniteDimensional L L₁ := Module.Finite.of_restrictScalars_finite ℚ L L₁
+  · have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L
+    have : FiniteDimensional L L₁ := Module.Finite.of_restrictScalars_finite ℚ L L₁
     let f : L₁ →ₐ[L] Ω := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
         @_root_.DivisionSemiring.to_moduleIsTorsionFree,
         @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-    letI : Algebra L₁ Ω := f.toRingHom.toAlgebra
-    haveI : IsScalarTower L L₁ Ω := IsScalarTower.of_algebraMap_eq fun x => (f.commutes x).symm
+    let : Algebra L₁ Ω := f.toRingHom.toAlgebra
+    have : IsScalarTower L L₁ Ω := IsScalarTower.of_algebraMap_eq fun x => (f.commutes x).symm
     exact ⟨⟨n, h⟩, (lu_key L Ω l hmu n L₁).2⟩

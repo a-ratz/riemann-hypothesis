@@ -79,7 +79,7 @@ theorem minkowski_det_bound_gram_of_det_ne_zero (m : ℕ) (hm : 0 < m) (B : Matr
     a ^ m ≤ (m : ℝ) ^ m * (B * Bᵀ).det := by
   classical
   have hu : IsUnit B := (Matrix.isUnit_iff_isUnit_det B).2 (Ne.isUnit hB)
-  have hli : LinearIndependent ℝ B.row := Matrix.linearIndependent_rows_iff_isUnit.2 hu
+  have hli : LinearIndependent ℝ B.row := linearIndependent_row_iff_isUnit.2 hu
   let b : Module.Basis (Fin m) ℝ (Fin m → ℝ) := basisOfPiSpaceOfLinearIndependent hli
   have hb : (b : Fin m → Fin m → ℝ) = B.row := coe_basisOfPiSpaceOfLinearIndependent hli
   have hpos : 0 < |B.det| := abs_pos.2 hB

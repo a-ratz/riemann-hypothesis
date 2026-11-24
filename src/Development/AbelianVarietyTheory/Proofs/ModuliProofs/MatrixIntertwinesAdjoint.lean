@@ -86,14 +86,14 @@ variable {X Y Z T : Scheme.{0}}
 theorem pbT_pbT (t : T ⟶ Z) (f : Z ⟶ Y) {O₀ : Y.Opens} {O₁ : Z.Opens} {O₂ : T.Opens} (h₁ : O₁ ≤ f ⁻¹ᵁ O₀)
     (h₂ : O₂ ≤ t ⁻¹ᵁ O₁) (s : Γ(Y, O₀)) : pbT t (pbT f s O₁) O₂ = pbT (t ≫ f) s O₂ := by
   have h₃ : O₂ ≤ (t ≫ f) ⁻¹ᵁ O₀ := h₂.trans (t.preimage_mono h₁)
-  simp only [pbT, dif_pos h₁, dif_pos h₂, dif_pos h₃]
+  simp only [pbT, dite_eq_left h₁, dite_eq_left h₂, dite_eq_left h₃]
   rw [← CommRingCat.comp_apply, Scheme.Hom.appLE_comp_appLE]
 
 theorem app_eq (f : Z ⟶ Y) {O : Y.Opens} (s : Γ(Y, O)) : (f.app O).hom s = pbT f s (f ⁻¹ᵁ O) := by
-  simp only [pbT, dif_pos (le_refl (f ⁻¹ᵁ O)), Scheme.Hom.appLE_eq_app]
+  simp only [pbT, dite_eq_left (le_refl (f ⁻¹ᵁ O)), Scheme.Hom.appLE_eq_app]
 
 theorem resG_eq {O₀ O : Y.Opens} (h : O ≤ O₀) (s : Γ(Y, O₀)) : resG Y h s = rsT s O := by
-  simp only [rsT, dif_pos h]
+  simp only [rsT, dite_eq_left h]
 
 theorem pbT_ι_bijective (O : Y.Opens) {O' : Y.Opens} (h : O' ≤ O) {V : O.toScheme.Opens} (hV : V = O.ι ⁻¹ᵁ O') :
     Function.Bijective (fun s : Γ(Y, O') => pbT O.ι s V) := by
@@ -105,7 +105,7 @@ theorem pbT_ι_bijective (O : Y.Opens) {O' : Y.Opens} (h : O' ≤ O) {V : O.toSc
       exact ⟨⟨x, h hx⟩, hx, rfl⟩
   have key : (fun s : Γ(Y, O') => pbT O.ι s (O.ι ⁻¹ᵁ O')) = (O.ι.appLE O' _ le_rfl).hom := by
     funext s
-    simp only [pbT, dif_pos (le_refl (O.ι ⁻¹ᵁ O'))]
+    simp only [pbT, dite_eq_left (le_refl (O.ι ⁻¹ᵁ O'))]
   rw [key, Scheme.Opens.ι_appLE]
   rw [show homOfLE (x := O.ι ''ᵁ O.ι ⁻¹ᵁ O') (Set.image_subset_iff.mpr le_rfl) = eqToHom e from Subsingleton.elim _ _]
   rw [eqToHom_op, eqToHom_map]
@@ -127,32 +127,32 @@ private lemma rsT_eq_pbT_id {Y : Scheme.{0}} {O₀ : Y.Opens} (s : Γ(Y, O₀)) 
     rsT s O = pbT (𝟙 Y) s O := by
   by_cases h : O ≤ O₀
   · have h' : O ≤ (𝟙 Y) ⁻¹ᵁ O₀ := h
-    simp only [rsT, pbT, dif_pos h, dif_pos h', Scheme.Hom.appLE, resG]
+    simp only [rsT, pbT, dite_eq_left h, dite_eq_left h', Scheme.Hom.appLE, resG]
     rfl
   · have h' : ¬ O ≤ (𝟙 Y) ⁻¹ᵁ O₀ := h
-    simp only [rsT, pbT, dif_neg h, dif_neg h']
+    simp only [rsT, pbT, dite_eq_right h, dite_eq_right h']
 
 private lemma pbT_eq_appLE_hom {Y Z : Scheme.{0}} (f : Z ⟶ Y) {O₀ : Y.Opens} {V : Z.Opens} (h : V ≤ f ⁻¹ᵁ O₀)
     (s : Γ(Y, O₀)) : pbT f s V = (f.appLE O₀ V h).hom s := by
-  simp only [pbT, dif_pos h]
+  simp only [pbT, dite_eq_left h]
 
 private lemma rsT_sub_moduli' {Y : Scheme.{0}} {O₀ : Y.Opens} (a b : Γ(Y, O₀)) (O : Y.Opens) :
     rsT (a - b) O = rsT a O - rsT b O := by
   by_cases h : O ≤ O₀
-  · simp only [rsT, dif_pos h, map_sub]
-  · simp only [rsT, dif_neg h, sub_zero]
+  · simp only [rsT, dite_eq_left h, map_sub]
+  · simp only [rsT, dite_eq_right h, sub_zero]
 
 private lemma pbT_zero_eq_zero {Y Z : Scheme.{0}} (f : Z ⟶ Y) {O₀ : Y.Opens} (V : Z.Opens) :
     pbT f (0 : Γ(Y, O₀)) V = 0 := by
   by_cases h : V ≤ f ⁻¹ᵁ O₀
-  · simp only [pbT, dif_pos h, map_zero]
-  · simp only [pbT, dif_neg h]
+  · simp only [pbT, dite_eq_left h, map_zero]
+  · simp only [pbT, dite_eq_right h]
 
 private lemma rsT_zero_eq_zero {Y : Scheme.{0}} {O₀ : Y.Opens} (O : Y.Opens) :
     rsT (0 : Γ(Y, O₀)) O = 0 := by
   by_cases h : O ≤ O₀
-  · simp only [rsT, dif_pos h, map_zero]
-  · simp only [rsT, dif_neg h]
+  · simp only [rsT, dite_eq_left h, map_zero]
+  · simp only [rsT, dite_eq_right h]
 
 private lemma locDerK_zero' {Y X : Scheme.{0}} {K R : Type} [Field K] [CommRing R] (q : Y ⟶ Sp K)
     (p : X ⟶ Sp R) (m : Y ⟶ X) (W₀ : X.Opens) :
@@ -238,12 +238,12 @@ theorem comb_exists {q : Y ⟶ Sp K} {p : X ⟶ Sp R} {m : Y ⟶ X} {dd : Fin g 
 private lemma pbT_add_of_open {Y Z : Scheme.{0}} (f : Z ⟶ Y) {O₀ : Y.Opens} (a b : Γ(Y, O₀)) (V : Z.Opens) :
     pbT f (a + b) V = pbT f a V + pbT f b V := by
   by_cases h : V ≤ f ⁻¹ᵁ O₀
-  · simp only [pbT, dif_pos h, map_add (f := _)]
-  · simp only [pbT, dif_neg h, add_zero]
+  · simp only [pbT, dite_eq_left h, map_add (f := _)]
+  · simp only [pbT, dite_eq_right h, add_zero]
 
 private lemma pbT_mul_of_le_preimage {Y Z : Scheme.{0}} (f : Z ⟶ Y) {O₀ : Y.Opens} (a b : Γ(Y, O₀)) {V : Z.Opens}
     (h : V ≤ f ⁻¹ᵁ O₀) : pbT f (a * b) V = pbT f a V * pbT f b V := by
-  simp only [pbT, dif_pos h, map_mul]
+  simp only [pbT, dite_eq_left h, map_mul]
 
 private lemma pbT_congr {Y Z : Scheme.{0}} {f f' : Z ⟶ Y} (e : f = f') {O₀ : Y.Opens} (s : Γ(Y, O₀))
     (V : Z.Opens) : pbT f s V = pbT f' s V := by
@@ -308,8 +308,8 @@ theorem locDer_diff {q : Y ⟶ Sp K} {p : X ⟶ Sp R} {m : Y ⟶ X} {D : R → K
 private lemma pbT_sub' {Y Z : Scheme.{0}} (f : Z ⟶ Y) {O₀ : Y.Opens} (a b : Γ(Y, O₀)) (V : Z.Opens) :
     pbT f (a - b) V = pbT f a V - pbT f b V := by
   by_cases h : V ≤ f ⁻¹ᵁ O₀
-  · simp only [pbT, dif_pos h, map_sub]
-  · simp only [pbT, dif_neg h, sub_zero]
+  · simp only [pbT, dite_eq_left h, map_sub]
+  · simp only [pbT, dite_eq_right h, sub_zero]
 
 private lemma pbT_rsT_of_le_of_le_preimage {Y Z : Scheme.{0}} (f : Z ⟶ Y) {O₀ O : Y.Opens} {L : Z.Opens} (s : Γ(Y, O₀))
     (hV : L ≤ f ⁻¹ᵁ O) (hO : O ≤ O₀) : pbT f (rsT s O) L = pbT f s L := by

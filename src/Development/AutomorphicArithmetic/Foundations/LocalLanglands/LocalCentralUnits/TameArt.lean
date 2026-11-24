@@ -139,12 +139,12 @@ theorem _root_.UpperTheory.Zero.LLC.tameArt :
     have hv1 : Valued.v (u : w.adicCompletion E) = 1 := by
       have := Valuation.map_one_add_of_lt Valued.v hu'
       rwa [add_sub_cancel] at this
-    letI : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
-    haveI : Finite (𝓞 E ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
-    letI := Fintype.ofFinite (𝓞 E ⧸ w.asIdeal)
+    let : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
+    have : Finite (𝓞 E ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
+    let := Fintype.ofFinite (𝓞 E ⧸ w.asIdeal)
     obtain ⟨p, hpc⟩ := CharP.exists (𝓞 E ⧸ w.asIdeal)
     obtain ⟨n, hp, hcard⟩ := FiniteField.card (𝓞 E ⧸ w.asIdeal) p
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     have hN : normV w = p ^ (n : ℕ) := by
       rw [← hcard, ← Nat.card_eq_fintype_card]; rfl
     have hpow : ∀ t : Ine (F := E) A, (χ.comp a) (ineIncl h t) ^ (p ^ (n : ℕ) - 1) = 1 := fun t => by

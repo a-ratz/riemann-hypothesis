@@ -124,7 +124,7 @@ theorem continuousOn_mkX_of_isUnit_det (F E : Type) [NontriviallyNormedField F] 
     [StarRing E] [Unram F E] (r : ℕ) (Ω : Set (Inv r F)) (h : Inv r F → Matrix (Fin r) (Fin r) E)
     (hc : ContinuousOn h Ω) (hd : ∀ a ∈ Ω, IsUnit (h a).det) :
     ContinuousOn (fun a => GlobalTheory.JR.ImgSec.mkX a (h a)) Ω := by
-  haveI := GlobalTheory.JR.ImgSec.continuousStar (E := E) F
+  have := GlobalTheory.JR.ImgSec.continuousStar (E := E) F
   have hinv : ContinuousOn (fun a => (h a)⁻¹) Ω := by
     intro a ha
     exact (continuousAt_matrix_inv (h a)
@@ -161,12 +161,12 @@ theorem symm_congr_local_continuous : ∀ (F E : Type) [NontriviallyNormedField 
     ∃ (Ω : Set (Matrix (Fin r) (Fin r) F)) (k : Matrix (Fin r) (Fin r) F → Matrix (Fin r) (Fin r) F),
       IsOpen Ω ∧ H₀ ∈ Ω ∧ ContinuousOn k Ω ∧ k H₀ = 1 ∧ ∀ H ∈ Ω, H.IsSymm → (k H)ᵀ * H₀ * k H = H := by
   intro F E _ _ _ _ hU r H₀ hsym hdet
-  haveI : CharZero F := hU.charZero
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  letI : NormedRing (Matrix (Fin r) (Fin r) F) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra F (Matrix (Fin r) (Fin r) F) := Matrix.linftyOpNormedAlgebra
-  haveI : @CompleteSpace (Matrix (Fin r) (Fin r) F) PseudoMetricSpace.toUniformSpace := FiniteDimensional.complete F _
+  have : CharZero F := hU.charZero
+  have : LocallyCompactSpace F := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  let : NormedRing (Matrix (Fin r) (Fin r) F) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra F (Matrix (Fin r) (Fin r) F) := Matrix.linftyOpNormedAlgebra
+  have : @CompleteSpace (Matrix (Fin r) (Fin r) F) PseudoMetricSpace.toUniformSpace := FiniteDimensional.completeSpace F _
   have h2 : (2 : F) ≠ 0 := two_ne_zero
   let L : Matrix (Fin r) (Fin r) F ≃L[F] Matrix (Fin r) (Fin r) F :=
     ContinuousLinearEquiv.equivOfInverse ((2 : F) • ContinuousLinearMap.id F _)
@@ -252,9 +252,9 @@ theorem inv_exists_compact_open (F E : Type) [NontriviallyNormedField F] [Nontri
     (hU : IsOpen U) (ha : a₀ ∈ U) :
     ∃ Ω : Set (Inv r F), IsCompact Ω ∧ IsOpen Ω ∧ a₀ ∈ Ω ∧ Ω ⊆ U := by
   have hUn : Unram F E := inferInstance
-  haveI : LocallyCompactSpace F := hUn.lcF
-  haveI : IsUltrametricDist F := hUn.ultraF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : LocallyCompactSpace F := hUn.lcF
+  have : IsUltrametricDist F := hUn.ultraF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hU a₀ ha
   have hε2 : 0 < ε / 2 := half_pos hε
   refine ⟨Metric.closedBall a₀ (ε / 2), isCompact_closedBall _ _, ?_,
@@ -292,15 +292,15 @@ theorem continuous_bm : Continuous (fun X : Hn r F E => Bm X.toGl) := by
   refine continuous_matrix fun i j => ?_
   simp only [Bm, Hn.toGl, Matrix.of_apply]
   exact (continuous_apply i).comp
-    ((((continuous_subtype_val.comp continuous_fst).pow (j : ℕ))).matrix_mulVec (continuous_fst.comp continuous_snd))
+    ((((continuous_subtypeVal.comp continuous_fst).pow (j : ℕ))).matrix_mulVec (continuous_fst.comp continuous_snd))
 
 theorem continuous_actU :
     Continuous (fun q : Matrix.unitaryGroup (Fin r) E × Hn r F E => actU q.1 q.2) := by
-  haveI := ImgSec.continuousStar (E := E) F
+  have := ImgSec.continuousStar (E := E) F
   have hg : Continuous (fun q : Matrix.unitaryGroup (Fin r) E × Hn r F E => (q.1 : Matrix (Fin r) (Fin r) E)) :=
-    continuous_subtype_val.comp continuous_fst
+    continuous_subtypeVal.comp continuous_fst
   have hA : Continuous (fun q : Matrix.unitaryGroup (Fin r) E × Hn r F E => (q.2.1 : Matrix (Fin r) (Fin r) E)) :=
-    continuous_subtype_val.comp (continuous_fst.comp continuous_snd)
+    continuous_subtypeVal.comp (continuous_fst.comp continuous_snd)
   refine Continuous.prodMk ?_ (Continuous.prodMk ?_ ?_)
   · exact ((hg.mul hA).mul hg.star).subtype_mk _
   · exact hg.matrix_mulVec (continuous_fst.comp (continuous_snd.comp continuous_snd))
@@ -319,7 +319,7 @@ theorem isCompact_orbit (r : ℕ) (Ω : Set (Inv r F)) (s : Inv r F → Hn r F E
     (h : Inv r F → Matrix (Fin r) (Fin r) E) (hΩ : IsCompact Ω) (hs : ContinuousOn s Ω) (hhc : ContinuousOn h Ω)
     (hb : ∀ a ∈ Ω, IsUnit (h a).det ∧ Bm (s a).toGl = h a) (C : Set (Hn r F E)) (hC : IsCompact C) :
     IsCompact {p : Matrix.unitaryGroup (Fin r) E × Inv r F | p.2 ∈ Ω ∧ actU p.1 (s p.2) ∈ C} := by
-  haveI := ImgSec.continuousStar (E := E) F
+  have := ImgSec.continuousStar (E := E) F
   set Φ : Hn r F E × Inv r F → Matrix (Fin r) (Fin r) E := fun q => Bm q.1.toGl * (h q.2)⁻¹ with hΦ
   have hΦc : ContinuousOn Φ (C ×ˢ Ω) := by
     refine (continuous_bm.comp continuous_fst).continuousOn.mul ?_
@@ -341,7 +341,7 @@ theorem isCompact_orbit (r : ℕ) (Ω : Set (Inv r F)) (s : Inv r F → Hn r F E
     have h3 := hf.preimage_isClosed_of_isClosed hO2 hC2
     have heq : {p : Matrix.unitaryGroup (Fin r) E × Inv r F | p.2 ∈ Ω ∧ actU p.1 (s p.2) ∈ C} =
         (Set.univ ×ˢ Ω) ∩ (fun p : Matrix.unitaryGroup (Fin r) E × Inv r F => actU p.1 (s p.2)) ⁻¹' C := by
-      ext p; simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_prod, Set.mem_univ, true_and, Set.mem_preimage]
+      ext p; simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_prod, Set.mem_univ, true_and, Set.mem_preimage]
     rw [heq]; exact h3
   refine (hK.prod hΩ).of_isClosed_subset hcl ?_
   rintro ⟨g, a⟩ ⟨ha, hC'⟩
@@ -398,7 +398,7 @@ end GlobalTheory.JR.ImgSec
 open GlobalTheory.JR.ImgSec in
 theorem GlobalTheory.JR.image_openClosed_section : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (a₀ : Inv r F), Delta a₀ ≠ 0 → ((¬ ∃ X : Hn r F E, HasInv X a₀) → ∀ᶠ a in 𝓝 a₀, ¬ ∃ X : Hn r F E, HasInv X a) ∧ ((∃ X : Hn r F E, HasInv X a₀) → ∃ (Ω : Set (Inv r F)) (s : Inv r F → Hn r F E), IsCompact Ω ∧ IsOpen Ω ∧ a₀ ∈ Ω ∧ ContinuousOn s Ω ∧ (∀ a ∈ Ω, Delta a ≠ 0 ∧ HasInv (s a) a) ∧ ∀ C : Set (Hn r F E), IsCompact C → IsCompact {p : Matrix.unitaryGroup (Fin r) E × Inv r F | p.2 ∈ Ω ∧ actU p.1 (s p.2) ∈ C}) := by
   intro F E _ _ _ _ _ r a₀ hΔ
-  haveI := continuousStar (E := E) F
+  have := continuousStar (E := E) F
   obtain ⟨-, -, -, hcrit⟩ := _root_.GlobalTheory.JR.HermInv.herm_invariants F E r
   obtain ⟨Ω₁, κ, hΩ₁, hH₀, hκ, -, hκeq⟩ := _root_.GlobalTheory.symm_congr_local_continuous F E r (hankel a₀) (hankel_isSymm a₀) hΔ
   set φ := algebraMap F E with hφ

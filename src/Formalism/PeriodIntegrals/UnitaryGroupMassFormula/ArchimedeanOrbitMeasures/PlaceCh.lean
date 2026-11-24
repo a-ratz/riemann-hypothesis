@@ -266,8 +266,8 @@ theorem placeCharts_of (h : PlaceChartV) : PlaceCharts := by
   have hgd : ∀ v, Formalism.MainNotions.S.Gauge.GaugeDens (X.B.I.ε v) := hP.2.2.2.1
   choose α β hα hβ L0 P0 L1 P1 r Dv h1 h2 h3 h4 h5 h6 h7 h8 hr hDc hD0 hDm hDnn hΦc hΦi hdens using
     fun v => h X.B.I.n (X.B.I.ε v) (S v) (hSε v) (hgd v)
-  letI : ∀ v, Fintype (α v) := hα
-  letI : ∀ v, Fintype (β v) := hβ
+  let : ∀ v, Fintype (α v) := hα
+  let : ∀ v, Fintype (β v) := hβ
   obtain ⟨hTxb, hTxn⟩ := coord_facts L (fun v M => InCompl (X.B.I.ε v) (S v) M) L0 P0 h1 h2 h3 h4
     (fun x v => hL.1 x v) (fun x => hL.2.1 x) (fun M hM => hL.2.2 M hM)
   obtain ⟨hTyb, hTyn⟩ := coord_facts L₁ (fun v M => InBlock (X.B.I.ε v) (S v) M) L1 P1 h5 h6 h7 h8

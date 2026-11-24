@@ -99,7 +99,7 @@ theorem rep_mul (hσ : IsURepOn (UJset ε) σ) {g h : Matrix (Fin n) (Fin n) ℂ
   rw [hσ.1.2 g hg h hh, ContinuousLinearMap.comp_apply]
 
 theorem rep_one (hσ : IsURepOn (UJset ε) σ) (v : H) : σ 1 v = v := by
-  rw [hσ.1.1, ContinuousLinearMap.one_apply]
+  rw [hσ.1.1, one_apply_eq_self]
 
 theorem der_right (hσ : IsURepOn (UJset ε) σ) (hD : IsDer ε σ V E) {X g : Matrix (Fin n) (Fin n) ℂ} (hX : inG ε X)
     (hg : inUJ ε g) (v : V) :
@@ -230,8 +230,8 @@ theorem flow_stable (hσ : IsURepOn (UJset ε) σ) (hD : IsDer ε σ V E) {X : M
     ∀ v ∈ W.map V.subtype, σ (NormedSpace.exp X) v ∈ W.map V.subtype := by
   intro v hv
   obtain ⟨w0, hw0, rfl⟩ := Submodule.mem_map.mp hv
-  haveI : FiniteDimensional ℝ W := FiniteDimensional.complexToReal W
-  haveI : CompleteSpace W := FiniteDimensional.complete ℝ W
+  have : FiniteDimensional ℝ W := FiniteDimensional.complexToReal W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℝ W
   let B : W →L[ℝ] W := LinearMap.toContinuousLinearMap (((act E X).restrict hW).restrictScalars ℝ)
   have hB : ∀ x : W, ((B x : W) : V) = act E X (x : V) := fun x => rfl
   let u : ℝ → W := fun t => NormedSpace.exp (((1 : ℝ) - t) • B) ⟨w0, hw0⟩
@@ -244,7 +244,7 @@ theorem flow_stable (hσ : IsURepOn (UJset ε) σ) (hD : IsDer ε σ V E) {X : M
     have h4 := (ContinuousLinearMap.apply ℝ W (⟨w0, hw0⟩ : W)).hasFDerivAt.comp_hasDerivAt t h3
     have h5 : HasDerivAt (fun s : ℝ => NormedSpace.exp (((1 : ℝ) - s) • B) (⟨w0, hw0⟩ : W))
         (-(B (NormedSpace.exp (((1 : ℝ) - t) • B) (⟨w0, hw0⟩ : W)))) t := by
-      simpa [ContinuousLinearMap.mul_apply, Function.comp_def] using h4
+      simpa [mul_apply_eq_comp, Function.comp_def] using h4
     exact h5
   let b := Module.finBasis ℂ W
   have e1 : ∀ (g : Matrix (Fin n) (Fin n) ℂ) (y : W),
@@ -287,7 +287,7 @@ theorem act_stable (hD : IsDer ε σ V E) {X : Matrix (Fin n) (Fin n) ℂ} (hX :
   have hXg : Formalism.REAL.inG ε X := (show Formalism.REAL.inG ε X ∧ X * Formalism.REAL.Jm ε = Formalism.REAL.Jm ε * X from hX).1
   have hd := hD.2.2.1 X hXg w
   have hcl : IsClosed ((W.map V.subtype : Submodule ℂ H) : Set H) :=
-    Submodule.closed_of_finiteDimensional _
+    Submodule.isClosed_of_finiteDimensional _
   have hmem : ∀ t : ℝ, σ (NormedSpace.exp ((t : ℂ) • X)) (w : H) ∈ W.map V.subtype := fun t =>
     hW _ ((Formalism.REAL.kFacts n ε).2.2.2.1 _ (inK_smul hX t)) _ (Submodule.mem_map_of_mem hw)
   have hin : ((∑ a, ∑ b, X a b • E a b w : V) : H) ∈ W.map V.subtype := by

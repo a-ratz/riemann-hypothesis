@@ -183,24 +183,24 @@ theorem UpperTheory.Reformulated.B.IntegralExtensionAlgClosed.exists_ringHom_ext
     Function.Injective (⇑(Algebra.algebraMap R S) : R → S) →
       ∀ (b : R →+* K), ∃ (Φ : S →+* K), Φ.comp (Algebra.algebraMap R S) = b := by
   intro R S K _ _ _ _ _ _ hinj b
-  haveI hp : (RingHom.ker b).IsPrime := RingHom.ker_isPrime b
+  have hp : (RingHom.ker b).IsPrime := RingHom.ker_isPrime b
   obtain ⟨Q, -, hQ, hQp⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := S)
     (RingHom.ker b) ⊥ (by
       intro x hx
       have hx0 : algebraMap R S x = 0 := by simpa using hx
       have : x = 0 := hinj (by simpa using hx0)
       simp [this])
-  haveI : Q.LiesOver (RingHom.ker b) := ⟨hQp.symm⟩
-  letI : Algebra (R ⧸ RingHom.ker b) K := (RingHom.kerLift b).toAlgebra
-  haveI : FaithfulSMul (R ⧸ RingHom.ker b) K :=
+  have : Q.LiesOver (RingHom.ker b) := ⟨hQp.symm⟩
+  let : Algebra (R ⧸ RingHom.ker b) K := (RingHom.kerLift b).toAlgebra
+  have : FaithfulSMul (R ⧸ RingHom.ker b) K :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.kerLift_injective b)
-  haveI : Algebra.IsIntegral (R ⧸ RingHom.ker b) (S ⧸ Q) := inferInstance
-  haveI : FaithfulSMul (R ⧸ RingHom.ker b) (S ⧸ Q) := inferInstance
-  haveI : Module.IsTorsionFree (R ⧸ RingHom.ker b) (S ⧸ Q) :=
+  have : Algebra.IsIntegral (R ⧸ RingHom.ker b) (S ⧸ Q) := inferInstance
+  have : FaithfulSMul (R ⧸ RingHom.ker b) (S ⧸ Q) := inferInstance
+  have : Module.IsTorsionFree (R ⧸ RingHom.ker b) (S ⧸ Q) :=
     Module.isTorsionFree_iff_faithfulSMul.2 inferInstance
-  haveI : Module.IsTorsionFree (R ⧸ RingHom.ker b) K :=
+  have : Module.IsTorsionFree (R ⧸ RingHom.ker b) K :=
     Module.isTorsionFree_iff_faithfulSMul.2 inferInstance
-  haveI : Algebra.IsAlgebraic (R ⧸ RingHom.ker b) (S ⧸ Q) := Algebra.IsIntegral.isAlgebraic
+  have : Algebra.IsAlgebraic (R ⧸ RingHom.ker b) (S ⧸ Q) := Algebra.IsIntegral.isAlgebraic
   let ψ : (S ⧸ Q) →ₐ[R ⧸ RingHom.ker b] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -249,8 +249,8 @@ section -- clump:auto
 private theorem UpperTheory.algebraic_over_finite_field_integral (k L : Type) [Field k] [Finite k] [Field L] [Algebra k L]
     (y : L) (h : IsAlgebraic k y) : IsIntegral ℤ y := by
   have hi : IsIntegral k y := h.isIntegral
-  haveI : FiniteDimensional k (IntermediateField.adjoin k {y}) := IntermediateField.adjoin.finiteDimensional hi
-  haveI : Finite (IntermediateField.adjoin k {y}) := Module.finite_of_finite k
+  have : FiniteDimensional k (IntermediateField.adjoin k {y}) := IntermediateField.adjoin.finiteDimensional hi
+  have : Finite (IntermediateField.adjoin k {y}) := Module.finite_of_finite k
   let g : ℕ → IntermediateField.adjoin k {y} := fun n =>
     ⟨y ^ (n + 1), pow_mem (IntermediateField.mem_adjoin_simple_self k y) _⟩
   obtain ⟨m, n, hmn, hg⟩ := Finite.exists_ne_map_eq_of_infinite g
@@ -271,8 +271,8 @@ theorem UpperTheory.residue_isIntegral_of_algebraic_over_dvr :
   intro A K _ _ _ _ _ V f hf _ x hx
   classical
   obtain ⟨p, hp0, hpx⟩ := hx
-  letI : NormalizationMonoid A := UniqueFactorizationMonoid.normalizationMonoid.toNormalizationMonoid
-  letI : NormalizedGCDMonoid A := UniqueFactorizationMonoid.toNormalizedGCDMonoid A
+  let : NormalizationMonoid A := UniqueFactorizationMonoid.normalizationMonoid.toNormalizationMonoid
+  let : NormalizedGCDMonoid A := UniqueFactorizationMonoid.toNormalizedGCDMonoid A
   have hV : Polynomial.eval₂ f x p = 0 := by
     apply Subtype.val_injective
     rw [ZeroMemClass.coe_zero]
@@ -298,7 +298,7 @@ theorem UpperTheory.residue_isIntegral_of_algebraic_over_dvr :
       rw [IsLocalRing.residue_eq_zero_iff, hπ.maximalIdeal_eq, Ideal.mem_span_singleton] at hi
       exact hi
     exact hπ.not_isUnit (Polynomial.isPrimitive_primPart p π hdvd)
-  letI : Algebra (IsLocalRing.ResidueField A) (IsLocalRing.ResidueField V) :=
+  let : Algebra (IsLocalRing.ResidueField A) (IsLocalRing.ResidueField V) :=
     (IsLocalRing.ResidueField.map f).toAlgebra
   have halg : IsAlgebraic (IsLocalRing.ResidueField A) (IsLocalRing.residue V x) := by
     refine ⟨q.map (IsLocalRing.residue A), hqbar, ?_⟩
@@ -338,8 +338,8 @@ theorem UpperTheory.V.Ws.ambL :
     ∀ {l : ℕ} [Fact l.Prime] (c : Coef l) (A : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [IsAdicComplete (maximalIdeal A) A]
       [Finite (ResidueField A)] [CharP A l] (a : c.O →+* A), ∃ (𝔞 : Amb l) (f : A →+* 𝔞.V), CharP 𝔞.K l ∧ 𝔞.IsDvr f ∧ f.comp a = 𝔞.a c := by
   intro l _ c A _ _ _ _ _ _ a
-  haveI := c.dvr
-  haveI := c.fin
+  have := c.dvr
+  have := c.fin
   let K := AlgebraicClosure (FractionRing A)
   let g0 : A →+* K := (algebraMap (FractionRing A) K).comp (algebraMap A (FractionRing A))
   have hg0 : Function.Injective g0 :=
@@ -348,8 +348,8 @@ theorem UpperTheory.V.Ws.ambL :
   let f : A →+* V := g0.codRestrict V hV
   have hfinj : Function.Injective f := fun x y h => hg0 (congrArg Subtype.val h)
   have hfloc : IsLocalHom f := hloc
-  haveI hK : CharP K l := charP_of_injective_ringHom hg0 l
-  haveI : CharP V l := charP_of_injective_ringHom hfinj l
+  have hK : CharP K l := charP_of_injective_ringHom hg0 l
+  have : CharP V l := charP_of_injective_ringHom hfinj l
   have heq : V.subtype.comp f = g0 := RingHom.ext fun _ => rfl
   have halg : ∀ z : K, ∃ p : A[X], p ≠ 0 ∧ eval₂ (V.subtype.comp f) z p = 0 := by
     intro z
@@ -411,7 +411,7 @@ theorem UpperTheory.V.Ws.Po.dimOne :
       ∃ (P : Ideal B) (t : B) (n : ℕ), P.IsPrime ∧ (maximalIdeal O).map (algebraMap O B) ≤ P ∧ t ∈ maximalIdeal B ∧ t ∉ P ∧
         maximalIdeal B ^ n ≤ P ⊔ Ideal.span {t} := by
   intro O _ _ _ B _ _ _ hnf
-  haveI : IsLocalHom (algebraMap O B) := IsCO.isLocalHom
+  have : IsLocalHom (algebraMap O B) := IsCO.isLocalHom
   have hIm : (maximalIdeal O).map (algebraMap O B) ≤ maximalIdeal B := by
     rw [Ideal.map_le_iff_le_comap]
     intro x hx
@@ -426,7 +426,7 @@ theorem UpperTheory.V.Ws.Po.dimOne :
     set_has_maximal_iff_noetherian.mpr (inferInstance : IsNoetherian B B)
       {Q : Ideal B | Q.IsPrime ∧ (maximalIdeal O).map (algebraMap O B) ≤ Q ∧ Q ≠ maximalIdeal B} hex
   have hPle : P ≤ maximalIdeal B := IsLocalRing.le_maximalIdeal hP.ne_top
-  obtain ⟨t, htm, htP⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hPle hPm)
+  obtain ⟨t, htm, htP⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hPle hPm)
   obtain ⟨n, hn⟩ := pow_le_of_primes (P ⊔ Ideal.span {t}) (by
     intro Q hQ hPQ
     by_contra hQm
@@ -452,15 +452,15 @@ theorem UpperTheory.V.Ws.Po.finExt :
       ∃ (y : B →+* V) (s : Finset K), y.comp φ = f ∧ ∀ b, (y b : K) ∈ Subfield.closure (Set.range (V.subtype.comp f) ∪ s) := by
   intro K _ _ V A B _ _ _ _ φ f hφ hfin hf
   classical
-  letI : Algebra A B := φ.toAlgebra
-  letI : Algebra A K := (V.subtype.comp f).toAlgebra
-  letI : Algebra A V := f.toAlgebra
-  haveI : Module.Finite A B := hfin
+  let : Algebra A B := φ.toAlgebra
+  let : Algebra A K := (V.subtype.comp f).toAlgebra
+  let : Algebra A V := f.toAlgebra
+  have : Module.Finite A B := hfin
   have hfK : Function.Injective (V.subtype.comp f) := Subtype.val_injective.comp hf
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).mpr hφ
-  haveI : FaithfulSMul A K := (faithfulSMul_iff_algebraMap_injective A K).mpr hfK
-  haveI : IsScalarTower A V K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.IsAlgebraic A B := inferInstance
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).mpr hφ
+  have : FaithfulSMul A K := (faithfulSMul_iff_algebraMap_injective A K).mpr hfK
+  have : IsScalarTower A V K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.IsAlgebraic A B := inferInstance
   let y₀ : B →ₐ[A] K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -519,12 +519,12 @@ theorem UpperTheory.V.Ws.Po.psFin :
   intro O _ _ B _ _ _ _ h0 t ht ht0 n hn
   classical
   let ι : ResidueField O →+* B := Ideal.Quotient.lift (maximalIdeal O) (algebraMap O B) h0
-  letI : UniformSpace (ResidueField O) := ⊥
-  letI : WithIdeal B := ⟨maximalIdeal B⟩
+  let : UniformSpace (ResidueField O) := ⊥
+  let : WithIdeal B := ⟨maximalIdeal B⟩
   have hadic : IsAdic (maximalIdeal B) := rfl
   have hc : CompleteSpace B ∧ T2Space B := hadic.isAdicComplete_iff.mp (IsCO.complete (O := O))
-  haveI := hc.1
-  haveI := hc.2
+  have := hc.1
+  have := hc.2
   have hcont : Continuous ι := continuous_of_discreteTopology
   have hte : PowerSeries.HasEval t := by
     show Filter.Tendsto (fun m => t ^ m) Filter.atTop (nhds 0)
@@ -547,8 +547,8 @@ theorem UpperTheory.V.Ws.Po.psFin :
     have h1 := congrArg φ (PowerSeries.X_pow_order_mul_divXPowOrder (f := f))
     rw [map_mul, map_pow, hφX, hf] at h1
     exact mul_ne_zero (pow_ne_zero _ ht0) (hu.map φ).ne_zero h1
-  · letI : Algebra (PowerSeries (ResidueField O)) B := φ.toAlgebra
-    haveI : IsAdicComplete (maximalIdeal (PowerSeries (ResidueField O))) (PowerSeries (ResidueField O)) := by
+  · let : Algebra (PowerSeries (ResidueField O)) B := φ.toAlgebra
+    have : IsAdicComplete (maximalIdeal (PowerSeries (ResidueField O))) (PowerSeries (ResidueField O)) := by
       rw [PowerSeries.maximalIdeal_eq_span_X]
       infer_instance
     have hmap : Ideal.map (algebraMap (PowerSeries (ResidueField O)) B)
@@ -582,10 +582,10 @@ theorem UpperTheory.V.Ws.Po.ambPt :
         (∃ b ∈ maximalIdeal B, y b ≠ 0) ∧ (∀ a ∈ maximalIdeal c.O, 𝔞.a c a = 0) ∧
         ∀ b, (y b : 𝔞.K) ∈ Subfield.closure (Set.range (𝔞.toK.comp f) ∪ s) := by
   intro l _ c B _ _ _ hB
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (dvrFacts l c.O).2.2.2.1
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (dvrFacts l c.O).2.2.2.1
   obtain ⟨P, t, n, hP, hmP, ht, htP, hn⟩ := Po.dimOne c.O B hB
-  haveI : IsDomain (B ⧸ P) := Ideal.Quotient.isDomain P
-  haveI : IsCO c.O (B ⧸ P) := co_quot c.O B _ (Ideal.Quotient.mkₐ c.O P) (Ideal.Quotient.mkₐ_surjective c.O P)
+  have : IsDomain (B ⧸ P) := Ideal.Quotient.isDomain P
+  have : IsCO c.O (B ⧸ P) := co_quot c.O B _ (Ideal.Quotient.mkₐ c.O P) (Ideal.Quotient.mkₐ_surjective c.O P)
   have hq : Function.Surjective (Ideal.Quotient.mk P) := Ideal.Quotient.mk_surjective
   have hm : (maximalIdeal B).map (Ideal.Quotient.mk P) = maximalIdeal (B ⧸ P) :=
     IsLocalRing.map_maximalIdeal_of_surjective _ hq
@@ -598,12 +598,12 @@ theorem UpperTheory.V.Ws.Po.ambPt :
   obtain ⟨φ, hφi, hφf, hφX, hφC⟩ := Po.psFin c.O (B ⧸ P) h0 (Ideal.Quotient.mk P t)
     (hm ▸ Ideal.mem_map_of_mem _ ht) (fun h => htP (Ideal.Quotient.eq_zero_iff_mem.1 h)) n hn'
   obtain ⟨hfin, hch⟩ := Po.fin_res c
-  haveI : IsAdicComplete (maximalIdeal (PowerSeries (ResidueField c.O))) (PowerSeries (ResidueField c.O)) := by
+  have : IsAdicComplete (maximalIdeal (PowerSeries (ResidueField c.O))) (PowerSeries (ResidueField c.O)) := by
     rw [PowerSeries.maximalIdeal_eq_span_X]
     infer_instance
-  haveI : Finite (ResidueField (PowerSeries (ResidueField c.O))) :=
+  have : Finite (ResidueField (PowerSeries (ResidueField c.O))) :=
     Finite.of_equiv _ (PowerSeries.residueFieldOfPowerSeries (k := ResidueField c.O)).symm.toEquiv
-  haveI : CharP (PowerSeries (ResidueField c.O)) l :=
+  have : CharP (PowerSeries (ResidueField c.O)) l :=
     charP_of_injective_ringHom (PowerSeries.C_injective (R := ResidueField c.O)) l
   obtain ⟨𝔞, f, hK, hf, hfa⟩ := ambL c (PowerSeries (ResidueField c.O)) (PowerSeries.C.comp (residue c.O))
   obtain ⟨y, s, hy, hs⟩ := Po.finExt 𝔞.K 𝔞.V _ _ φ f hφi hφf hf.inj
@@ -612,7 +612,7 @@ theorem UpperTheory.V.Ws.Po.ambPt :
     rw [← hφC, hyφ, ← hfa]
     rfl
   have hX : f PowerSeries.X ∈ maximalIdeal 𝔞.V := by
-    haveI := hf.loc
+    have := hf.loc
     refine map_nonunit f _ ?_
     rw [PowerSeries.maximalIdeal_eq_span_X]
     exact Ideal.mem_span_singleton_self _
@@ -705,8 +705,8 @@ theorem UpperTheory.V.Ws.Po.ambAbs :
     ∀ {l : ℕ} [Fact l.Prime] (𝔞 : Amb l) (A : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] (f : A →+* 𝔞.V), 𝔞.IsDvr f →
       ∃ w : AbsoluteValue 𝔞.K ℝ, (∀ x, w x < 1 ↔ 𝔞.V.valuation x < 1) ∧ ∃ p, p ≠ 0 ∧ w p ≠ 1 := by
   intro l _ 𝔞 A _ _ _ f hf
-  haveI := arch 𝔞 A f hf
-  haveI : MulArchimedean (𝔞.V.ValueGroup)ˣ := ⟨fun x y hy => by
+  have := arch 𝔞 A f hf
+  have : MulArchimedean (𝔞.V.ValueGroup)ˣ := ⟨fun x y hy => by
     obtain ⟨n, hn⟩ := MulArchimedean.arch (x : 𝔞.V.ValueGroup) (y := (y : 𝔞.V.ValueGroup)) hy
     refine ⟨n, ?_⟩
     show (x : 𝔞.V.ValueGroup) ≤ ((y ^ n : (𝔞.V.ValueGroup)ˣ) : 𝔞.V.ValueGroup)
@@ -718,21 +718,21 @@ theorem UpperTheory.V.Ws.Po.ambAbs :
     if h : γ = 0 then 0 else Real.exp (φ (Additive.ofMul (Units.mk0 γ h)))
   have g0 : gg 0 = 0 := by simp [gg]
   have gpos : ∀ γ, γ ≠ 0 → 0 < gg γ := fun γ h => by
-    simp only [gg, dif_neg h]
+    simp only [gg, dite_eq_right h]
     exact Real.exp_pos _
   have gmono : StrictMono gg := by
     intro γ δ h
-    have hδ : δ ≠ 0 := ne_of_gt (lt_of_le_of_lt zero_le' h)
+    have hδ : δ ≠ 0 := ne_of_gt (lt_of_le_of_lt zero_le h)
     by_cases hγ : γ = 0
     · rw [hγ, g0]
       exact gpos δ hδ
-    · simp only [gg, dif_neg hγ, dif_neg hδ]
+    · simp only [gg, dite_eq_right hγ, dite_eq_right hδ]
       apply Real.exp_lt_exp.2
       apply hφm
       exact (show Units.mk0 γ hγ < Units.mk0 δ hδ from h)
   have gnn : ∀ γ, 0 ≤ gg γ := fun γ => by
     rw [← g0]
-    exact gmono.monotone zero_le'
+    exact gmono.monotone zero_le
   have gmul : ∀ γ δ, gg (γ * δ) = gg γ * gg δ := by
     intro γ δ
     by_cases hγ : γ = 0
@@ -740,12 +740,12 @@ theorem UpperTheory.V.Ws.Po.ambAbs :
     by_cases hδ : δ = 0
     · simp [hδ, g0]
     have hγδ : γ * δ ≠ 0 := mul_ne_zero hγ hδ
-    simp only [gg, dif_neg hγ, dif_neg hδ, dif_neg hγδ, ← Real.exp_add, ← map_add (f := _)]
+    simp only [gg, dite_eq_right hγ, dite_eq_right hδ, dite_eq_right hγδ, ← Real.exp_add, ← map_add (f := _)]
     congr 2
     rw [← ofMul_mul, Units.mk0_mul]
   have g1 : gg 1 = 1 := by
     have h1 : (1 : 𝔞.V.ValueGroup) ≠ 0 := one_ne_zero
-    simp only [gg, dif_neg h1, Units.mk0_one, ofMul_one, map_zero, Real.exp_zero]
+    simp only [gg, dite_eq_right h1, Units.mk0_one, ofMul_one, map_zero, Real.exp_zero]
   let w : AbsoluteValue 𝔞.K ℝ :=
     { toFun := fun x => gg (𝔞.V.valuation x)
       map_mul' := fun x y => by
@@ -798,7 +798,7 @@ private theorem carver_abs (K : Type) [Field K] [IsAlgClosed K] (w : AbsoluteVal
     (σ : Type) [Finite σ] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (wt : σ → X) (z : σ → K)
     (hz : ∀ n : σ →₀ ℕ, n ≠ 0 → Finsupp.weight wt n = 0 → w (n.prod fun s k => z s ^ k) < 1) :
     ∃ t : Multiplicative X →* Kˣ, ∀ s, w ((t (Multiplicative.ofAdd (wt s)) : K) * z s) < 1 := by
-  letI : NormedField K := w.toNormedField
+  let : NormedField K := w.toNormedField
   exact carver σ X wt K z hp hz
 
 theorem UpperTheory.V.Ws.Po.ambScale :
@@ -824,13 +824,13 @@ open IsLocalRing UpperTheory.V.Alg UpperTheory.V.GradeZeroInterpolatingElement
 private theorem pt_of_ft {K C : Type} [Field K] [IsAlgClosed K] [CommRing C] [Algebra K C] [Nontrivial C]
     [Algebra.FiniteType K C] : Nonempty (C →ₐ[K] K) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal C
-  letI := Ideal.Quotient.field m
-  haveI : Module.Finite K (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (C ⧸ m)
+  let := Ideal.Quotient.field m
+  have : Module.Finite K (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing K (C ⧸ m)
   exact ⟨(IsAlgClosed.lift : (C ⧸ m) →ₐ[K] K).comp (Ideal.Quotient.mkₐ K m)⟩
 
 private theorem pt_of_lin {A B K : Type} [CommRing A] [CommRing B] [Field K] [IsAlgClosed K] [Algebra A B]
     [Algebra A K] [Algebra.FiniteType A B] (ρ : B →ₗ[A] K) (h : ρ 1 = 1) : Nonempty (B →ₐ[A] K) := by
-  haveI : Nontrivial (TensorProduct A K B) := by
+  have : Nontrivial (TensorProduct A K B) := by
     refine ⟨1, 0, fun e => ?_⟩
     have := congrArg (TensorProduct.lift ((LinearMap.mul A K).compl₂ ρ)) e
     rw [Algebra.TensorProduct.one_def, TensorProduct.lift.tmul, map_zero] at this
@@ -842,7 +842,7 @@ private theorem ext_graded {O A X K : Type} [CommRing O] [CommRing A] [Algebra O
     [DecidableEq X] (𝒜 : X → Submodule O A) [GradedAlgebra 𝒜] [Algebra.FiniteType (𝒜 0) A]
     [Field K] [IsAlgClosed K] [Algebra O K] (y : 𝒜 0 →ₐ[O] K) :
     ∃ ξ : A →ₐ[O] K, ∀ b : 𝒜 0, ξ b = y b := by
-  letI : Algebra (𝒜 0) K := (y : 𝒜 0 →+* K).toAlgebra
+  let : Algebra (𝒜 0) K := (y : 𝒜 0 →+* K).toAlgebra
   have key : ∀ (r : 𝒜 0) (a : A),
       DirectSum.decompose 𝒜 ((r : A) * a) 0 = r * DirectSum.decompose 𝒜 a 0 := by
     intro r a
@@ -868,7 +868,7 @@ theorem UpperTheory.V.Ws.Po.extA :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] [DecidableEq X] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (W : WPres O X R), (∀ s, W.z s ∈ maximalIdeal R) → ∀ (K : Type) [Field K] [IsAlgClosed K] [Algebra O K] (y : W.gr 0 →ₐ[O] K),
       ∃ ξ : W.A →ₐ[O] K, ∀ b : W.gr 0, ξ b = y b := by
   intro O _ _ _ _ X _ _ _ _ R _ _ _ W hz K _ _ _ y
-  haveI := (gr_noeth O X R W hz).2.1
+  have := (gr_noeth O X R W hz).2.1
   exact ext_graded W.gr y
 end -- clump:auto
 end -- clump:auto
@@ -888,10 +888,10 @@ open MvPowerSeries
 private theorem xr_ev {O S σ : Type} [CommRing O] [CommRing S] [Algebra O S] [Finite σ] (m : Ideal S)
     [IsAdicComplete m S] (a : σ → S) (ha : ∀ s, a s ∈ m) :
     ∃ F : MvPowerSeries σ O →ₐ[O] S, ∀ s, F (X s) = a s := by
-  letI : UniformSpace O := ⊥
-  haveI : DiscreteTopology O := ⟨rfl⟩
-  letI : WithIdeal S := ⟨m⟩
-  haveI : ContinuousSMul O S := continuousSMul_of_algebraMap O S continuous_of_discreteTopology
+  let : UniformSpace O := ⊥
+  have : DiscreteTopology O := ⟨rfl⟩
+  let : WithIdeal S := ⟨m⟩
+  have : ContinuousSMul O S := continuousSMul_of_algebraMap O S continuous_of_discreteTopology
   have hadic : IsAdic m := rfl
   obtain ⟨_, _⟩ := (IsAdic.isAdicComplete_iff hadic).1 inferInstance
   have hE : MvPowerSeries.HasEval a := by
@@ -1025,7 +1025,7 @@ private theorem xr_const {O S σ : Type} [CommRing O] [CommRing S] [Algebra O S]
       have hdvd : X s ∣ g - r := by
         rw [MvPowerSeries.X_dvd_iff]
         intro n hn
-        rw [map_sub, hr, if_pos hn, sub_self]
+        rw [map_sub, hr, ite_eq_left hn, sub_self]
       obtain ⟨q, hq⟩ := hdvd
       have hrI : F r ∈ I := by
         apply ih
@@ -1119,7 +1119,7 @@ theorem UpperTheory.V.Ws.Po.extR :
         W.π.commutes _⟩
       show ∀ k : W.σ →₀ ℕ, Finsupp.weight W.wt k ≠ 0 → MvPowerSeries.coeff k _ = 0
       intro k hk
-      rw [← MvPowerSeries.c_eq_algebraMap, MvPowerSeries.coeff_C, if_neg]
+      rw [← MvPowerSeries.c_eq_algebraMap, MvPowerSeries.coeff_C, ite_eq_right]
       rintro rfl
       exact hk (map_zero _)
     have h3 := hη0 _ hb (by
@@ -1174,7 +1174,7 @@ theorem UpperTheory.V.Ws.Po.ptA :
         𝔞.IsDvr f' ∧ (∀ x ∈ maximalIdeal R, Ξ x ∈ maximalIdeal A') ∧ ∀ b : W.gr 0, f' (Ξ ((b : W.A) : R)) = y b := by
   intro l _ 𝔞 A _ _ _ f hf s O _ _ _ _ X _ _ _ _ R _ _ _ W hz y hy hcl
   classical
-  letI : Algebra O 𝔞.K := ((𝔞.toK.comp y).comp (algebraMap O (W.gr 0))).toAlgebra
+  let : Algebra O 𝔞.K := ((𝔞.toK.comp y).comp (algebraMap O (W.gr 0))).toAlgebra
   let y' : W.gr 0 →ₐ[O] 𝔞.K := { 𝔞.toK.comp y with commutes' := fun _ => rfl }
   obtain ⟨ξ, hξ⟩ := Po.extA O X R W hz 𝔞.K y'
   have hξ' : ∀ b : W.gr 0, ξ b = (y b : 𝔞.K) := hξ
@@ -1214,8 +1214,8 @@ theorem UpperTheory.V.Ws.Po.ptA :
   have hmax : ∀ x, 𝔞.V.valuation (ζ x) < 1 → η x ∈ maximalIdeal A' := fun x hx hu => by
     rw [← hη', ← 𝔞.V.valuation_lt_one_iff] at hx
     exact hx (hu.map f')
-  letI : Algebra O A' := (η.comp (algebraMap O W.A)).toAlgebra
-  haveI := hf'.complete
+  let : Algebra O A' := (η.comp (algebraMap O W.A)).toAlgebra
+  have := hf'.complete
   obtain ⟨Ξ, hΞ, hΞm⟩ := Po.extR O X R W hz A' { η with commutes' := fun _ => rfl } (fun i => hmax _ (hζz i))
     fun b hb hm => hmax b (by
       rw [hζ0 ⟨b, hb⟩]
@@ -1270,8 +1270,8 @@ theorem UpperTheory.V.Ws.Po.nonAlg :
       have hg : ∀ a ∈ maximalIdeal O, g a = 0 := hy
       let f : ResidueField O →+* V := Ideal.Quotient.lift (maximalIdeal O) g hg
       have hf : Function.Injective f := f.injective
-      haveI : CharP (ResidueField O) l := f.charP hf l
-      letI : Fintype (ResidueField O) := Fintype.ofFinite _
+      have : CharP (ResidueField O) l := f.charP hf l
+      let : Fintype (ResidueField O) := Fintype.ofFinite _
       obtain ⟨m, -, hm⟩ := FiniteField.card (ResidueField O) l
       refine ⟨m, m.pos, ?_⟩
       have h1 : y (algebraMap O R r) = f (IsLocalRing.residue O r) :=
@@ -1357,8 +1357,8 @@ theorem UpperTheory.V.Ws.Po.onCompClosed :
       have h1 := h 1 Submodule.mem_top
       rw [map_one] at h1
       exact one_ne_zero h1
-  · haveI : Nontrivial (R ⧸ I0) := Ideal.Quotient.nontrivial_iff.2 htop
-    haveI : IsCO O (R ⧸ I0) :=
+  · have : Nontrivial (R ⧸ I0) := Ideal.Quotient.nontrivial_iff.2 htop
+    have : IsCO O (R ⧸ I0) :=
       co_quot O R (R ⧸ I0) (Ideal.Quotient.mkₐ O I0) (Ideal.Quotient.mkₐ_surjective O I0)
     have hPπ : P (R ⧸ I0) (Lift.map (Ideal.Quotient.mkₐ O I0) r) :=
       (hI0 _ (Ideal.Quotient.mkₐ O I0)).2 fun x hx => by
@@ -1518,8 +1518,8 @@ theorem UpperTheory.V.Ws.Po.onCompTorus :
       ∀ (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (r r' : Lift O rbar R) (s : Rˣ × Rˣ), res O R s.1 = 1 → res O R s.2 = 1 →
         (∀ g, r'.hom g = tconj s (r.hom g)) → OnComp P ρ₀ r → OnComp P ρ₀ r' := by
   intro O _ _ _ _ Γ _ _ rbar P ρ₀ hmap htor R _ _ _ r r' s h1 h2 hr ⟨B, _, _, _, _, ρ, hP, ⟨x, hx⟩, y, hy⟩
-  haveI : IsCO O (MvPowerSeries (Fin 2) B) := co_mvps O B (Fin 2)
-  haveI : IsDomain (MvPowerSeries (Fin 2) B) := NoZeroDivisors.to_isDomain _
+  have : IsCO O (MvPowerSeries (Fin 2) B) := co_mvps O B (Fin 2)
+  have : IsDomain (MvPowerSeries (Fin 2) B) := NoZeroDivisors.to_isDomain _
   let c : B →ₐ[O] MvPowerSeries (Fin 2) B := IsScalarTower.toAlgHom O B _
   have hu : ∀ i : Fin 2, IsUnit (1 + MvPowerSeries.X i : MvPowerSeries (Fin 2) B) := fun i => by
     rw [MvPowerSeries.isUnit_iff_constantCoeff]
@@ -1643,11 +1643,11 @@ theorem UpperTheory.V.Ws.Po.univOf :
   obtain ⟨rb, r0, hb, -, -, -, H⟩ := descend D hD
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, hk, -⟩ := facts D hD
   obtain ⟨_, _⟩ := UpperTheory.V.Ws.Po.fin_res c
-  haveI : IsGalois ℚ Ω := {}
-  haveI hcl := isClosed_NS Ω D.SP
-  haveI : CompactSpace D.Gam := inferInstance
-  haveI : T2Space D.Gam := inferInstance
-  haveI : TotallyDisconnectedSpace D.Gam := totDisc_quot _ hcl
+  have : IsGalois ℚ Ω := {}
+  have hcl := isClosed_NS Ω D.SP
+  have : CompactSpace D.Gam := inferInstance
+  have : T2Space D.Gam := inferInstance
+  have : TotallyDisconnectedSpace D.Gam := totDisc_quot _ hcl
   have hq : Topology.IsQuotientMap (toGS Ω D.SP) := QuotientGroup.isQuotientMap_mk _
   have hlc : IsLocallyConstant D.rbar := by
     refine (IsLocallyConstant.iff_exists_open _).2 fun g =>
@@ -1785,7 +1785,7 @@ theorem UpperTheory.V.Ws.ptOver :
     CohomologyHyp → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ¬ D.Fin0 → ∃ (𝔞 : Amb l) (r : G ℚ Ω →* M4 𝔞.V), CharP 𝔞.K l ∧ VPt D 𝔞 r ∧ ∃ x ∈ mono r 0, ∀ n : ℕ, 0 < n → x ^ l ^ n ≠ x := by
   intro hC Ω _ _ _ l _ c D hD hF
   obtain ⟨U, _, _, _, ρ, W, hpt, hz, hform, hnf⟩ := Po.univGr hC D hD hF
-  haveI : IsCO c.O (W.gr 0) := wPres_gr_zero_isCO_of_mem_maximalIdeal c.O _ U W hz
+  have : IsCO c.O (W.gr 0) := wPres_gr_zero_isCO_of_mem_maximalIdeal c.O _ U W hz
   obtain ⟨hmax, u, hu, hspan⟩ := wPres_maximalIdeal_gr_zero_eq_sup_span_monomials c.O _ U W hz
   obtain ⟨𝔞, A, _, _, _, f, s, y, hch, hf, hy, hloc, ⟨b, hb, hb0⟩, hO, hcl⟩ := Po.ambPt c (W.gr 0) hnf
   obtain ⟨A', _, _, _, f', Ξ, hf', hΞ, hext⟩ :=
@@ -1798,7 +1798,7 @@ theorem UpperTheory.V.Ws.ptOver :
     rw [← hya, ← hext, e]
     rfl
   have hYm : ∀ x ∈ maximalIdeal U, Y x ∈ maximalIdeal 𝔞.V := fun x hx => by
-    haveI := hf'.loc
+    have := hf'.loc
     exact map_nonunit f' _ (hΞ x hx)
   refine ⟨𝔞, mapRep Y ρ.hom, hch, ⟨⟨A', inferInstance, inferInstance, inferInstance, f', ⟨mapRep Ξ ρ.hom, fun _ => 1⟩, hf',
     fun i j => cont_map Ξ hΞ (ρ.cont i j), PD.ext rfl (funext fun _ => Matrix.map_one _ (map_zero _) (map_one _))⟩,
@@ -1813,8 +1813,8 @@ theorem UpperTheory.V.Ws.ptOver :
     rw [hya, hO a ha]
   obtain ⟨v, hv, hv0⟩ := hex
   obtain ⟨n, -, hn, hvn⟩ := hu v hv
-  haveI := (Po.fin_res c).1
-  haveI : CharP 𝔞.V l := haveI := hch; 𝔞.V.subtype.charP Subtype.val_injective l
+  have := (Po.fin_res c).1
+  have : CharP 𝔞.V l := haveI := hch; 𝔞.V.subtype.charP Subtype.val_injective l
   have hvm : v ∈ maximalIdeal (W.gr 0) := hspan ▸ Ideal.mem_sup_right (Ideal.subset_span hv)
   refine Po.nonAlg l c.O _ U ρ.hom 𝔞.V Y (fun a ha => by rw [hYa, hO a ha]) ((v : W.A) : U) ?_ (hYm _ ((hmax v).1 hvm)) ?_
   · rw [hvn]

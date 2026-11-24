@@ -138,7 +138,7 @@ theorem Gpos (n : ℕ) (hn : 0 < n) : (Gm ℝ n).PosDef := by
   have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr hn.ne'
   have hC : IsUnit (Cm ℝ n).det := (Matrix.isUnit_iff_isUnit_det _).mp (Cpos n).isUnit
   have hD : ((n : ℝ) • Cm ℝ n).PosDef := (Cpos n).smul (by positivity)
-  haveI : Invertible ((n : ℝ) • Cm ℝ n) := hD.isUnit.invertible
+  have : Invertible ((n : ℝ) • Cm ℝ n) := hD.isUnit.invertible
   have hG : Gm ℝ n = Matrix.fromBlocks (Am ℝ n) ((n : ℝ) • (1 : Matrix (Fin n) (Fin n) ℝ))
       ((n : ℝ) • (1 : Matrix (Fin n) (Fin n) ℝ))ᴴ ((n : ℝ) • Cm ℝ n) := by
     rw [Gm, Matrix.conjTranspose_smul, Matrix.conjTranspose_one, star_trivial]
@@ -191,7 +191,7 @@ private theorem exists_ne_zero_smul_mem_of_mem_span' (n k : ℕ) :
       simp [Fin.val_add, Nat.add_mod, add_comm]
     rw [Matrix.of_apply, hs, Matrix.mul_apply]
     simp only [Matrix.of_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true, add_assoc]
+      ite_true, add_assoc]
 
 private theorem main_lemma_2 (n : ℕ) :
     ∑ k ∈ Finset.range (n + 1),
@@ -208,7 +208,7 @@ private theorem main_lemma_2 (n : ℕ) :
   simp only [hv]
   have hiff : ∀ i : Fin (n + 1), (a = b + i) ↔ (i = a - b) := fun i => by
     constructor <;> intro h <;> subst h <;> simp
-  simp only [hiff, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [hiff, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 private theorem main_lemma_3 (n : ℕ) : ∃ U : Matrix (Fin n) (Fin n) ℤ,
     Uᵀ * Cm ℤ n * U = Cm ℤ n ∧ ∑ k ∈ Finset.range (n + 1), U ^ k = 0 := by
@@ -635,8 +635,8 @@ theorem gauss_reps {V : Type} [AddCommGroup V] {A B C : AddSubgroup V} {T : Fins
     (∑ x ∈ T, f x) ^ 8 = ((T.card : ℂ) * (A.relIndex C : ℂ)) ^ 4 := by
   classical
   have hbij := reps_bij h
-  haveI : Finite (B ⧸ A.addSubgroupOf B) := Finite.of_surjective _ hbij.2
-  letI : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
+  have : Finite (B ⧸ A.addSubgroupOf B) := Finite.of_surjective _ hbij.2
+  let : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
   have hf0 : f 0 = 1 := by simpa using h4 0 0
   have hfne : ∀ x ∈ B, f x ≠ 0 := by
     intro x hx h0
@@ -892,7 +892,7 @@ theorem gauss_reps {V : Type} [AddCommGroup V] {A B C : AddSubgroup V} {T : Fins
 theorem et_zsmul {F : Type} [Field F] [NumberField F] (n : ℤ) (x : F) : et ((n : F) * x) = et x ^ n := by
   unfold et
   rw [← zsmul_eq_mul, map_zsmul, zsmul_eq_mul, Rat.cast_mul, Rat.cast_intCast,
-    ← Complex.exp_int_mul]
+    ← Complex.exp_intCast_mul]
   congr 1
   ring
 
@@ -1007,8 +1007,8 @@ theorem gaussSum_pow_eight : ∀ (F : Type) [Field F] [NumberField F] (κ : Type
     rw [smul_smul, div_mul_cancel₀ a hc0]
     exact hLd (hsmulL a ha l hl)
   have hbij := GaussPow.reps_bij hT
-  haveI : Finite (aL κ (1 : F) ⧸ (aL κ c).addSubgroupOf (aL κ (1 : F))) := Finite.of_surjective _ hbij.2
-  letI : Fintype (aL κ (1 : F) ⧸ (aL κ c).addSubgroupOf (aL κ (1 : F))) := Fintype.ofFinite _
+  have : Finite (aL κ (1 : F) ⧸ (aL κ c).addSubgroupOf (aL κ (1 : F))) := Finite.of_surjective _ hbij.2
+  let : Fintype (aL κ (1 : F) ⧸ (aL κ c).addSubgroupOf (aL κ (1 : F))) := Fintype.ofFinite _
   have hcardT : Fintype.card (aL κ (1 : F) ⧸ (aL κ c).addSubgroupOf (aL κ (1 : F))) = T.card := by
     rw [GaussPow.reps_card hT, AddSubgroup.relIndex, AddSubgroup.index, Nat.card_eq_fintype_card]
   have hnA : ∀ x ∈ aL κ (1 : F), (T.card : ℤ) • x ∈ aL κ c := by
@@ -1179,7 +1179,7 @@ private theorem sl0_mul_of_pos (k : ℕ) (g h : GL (Fin 2) (InfinitePlace F → 
       rw [e]
       exact hh v
     rw [map_mul, UpperHalfPlane.denom_cocycle_σ]
-    simp only [UpperHalfPlane.σ, if_pos hpos, ContinuousAlgEquiv.refl_apply]
+    simp only [UpperHalfPlane.σ, ite_eq_left hpos, ContinuousAlgEquiv.refl_apply]
     rfl
   rw [hact, Finset.prod_congr rfl (fun v _ => hden v), Finset.prod_mul_distrib, mul_inv, mul_pow]
   ring
@@ -1221,7 +1221,7 @@ theorem main_abcd {κ : Type} [Fintype κ] [DecidableEq κ] (G : Matrix κ κ �
       exact hcI.mul ((hLL m).1 hm i)
     by_cases hx : x ∈ LL F κ
     · have hxl : x + c • m ∈ LL F κ := add_mem hx hcm
-      simp only [oneL, if_pos hx, if_pos hxl, one_mul]
+      simp only [oneL, ite_eq_left hx, ite_eq_left hxl, one_mul]
       rw [(hsymm x (c • m)).2, (hsymm x (c • m)).1, (hsc c m x).1, (hsc c m x).2.1]
       have e : a / c * (QF G x + c * BF G m x + c ^ 2 * QF G m) =
           a / c * QF G x + (a * BF G m x + a * c * QF G m) := by

@@ -80,7 +80,7 @@ theorem isMeasLevW_unique {V : HSp D} {K : Subgroup (GL (Fin V.rank) (Lev.EAf D)
 
   obtain ⟨c, hs⟩ : ∃ c : NNReal, μ' = c • μ := ⟨_, MeasureTheory.Measure.isMulLeftInvariant_eq_smul μ' μ⟩
   have e3 : ∀ s, μ' s = c * μ s := fun s => by
-    simp only [hs, MeasureTheory.Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    simp only [hs, smul_apply, ENNReal.smul_def, smul_eq_mul]
   rw [e3, e1] at e2
   have hc1 : c = 1 := by exact_mod_cast (ENNReal.mul_eq_right hP0 hPtop).1 e2
   rw [hs, hc1, one_smul]

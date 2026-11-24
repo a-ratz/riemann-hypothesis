@@ -146,7 +146,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.ordKSE_of :
   · have hsm : Smooth E.univ.A.hom := @IsAbelianScheme.smooth _ _ _ E.univ.ab
     obtain ⟨hfl', hinj⟩ := hPE E.X E.univ.A k
     have hflat : Flat ((GlobalTheory.KS.pow E.univ.A k).hom ≫ π) := by
-      haveI := hfl' hsm
+      have := hfl' hsm
       infer_instance
     have hM : ((GlobalTheory.KS.pow E.univ.A k).hom ≫ π) ≫ M.s = (GlobalTheory.KS.pow E.univ.A k).hom ≫ E.s := by
       rw [Category.assoc, hπ]

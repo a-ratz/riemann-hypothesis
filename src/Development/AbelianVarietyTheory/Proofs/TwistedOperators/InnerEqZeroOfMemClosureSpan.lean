@@ -95,7 +95,7 @@ theorem continuousMultilinearMap_ext_hilbertBasis (ι : Type) [Fintype ι] [Deci
       have hL : Set.EqOn (L : Hs a → F) (0 : Hs a →L[ℂ] F) (Set.range (e a)) := by
         intro z hz
         simp only [L, ContinuousMultilinearMap.toContinuousLinearMap_apply,
-          ContinuousMultilinearMap.sub_apply, ContinuousLinearMap.zero_apply, sub_eq_zero]
+          sub_apply, zero_apply, sub_eq_zero]
         apply ih
         intro i hi
         by_cases hia : i = a
@@ -108,7 +108,7 @@ theorem continuousMultilinearMap_ext_hilbertBasis (ι : Type) [Fintype ι] [Deci
       have hL0 : L = 0 := ContinuousLinearMap.ext_on hdense hL
       have hya := congrArg (fun M : Hs a →L[ℂ] F => M (y a)) hL0
       simp only [L, ContinuousMultilinearMap.toContinuousLinearMap_apply,
-        ContinuousMultilinearMap.sub_apply, ContinuousLinearMap.zero_apply, sub_eq_zero,
+        sub_apply, zero_apply, sub_eq_zero,
         Function.update_eq_self] at hya
       exact hya
   ext y
@@ -178,8 +178,8 @@ theorem exists_isHilbertSchmidt_orthonormal_apply : ∀ (H K : Type) [NormedAddC
   have hG : ∀ v, G v = ∑' j, ⟪u j, v⟫_ℂ • w j := fun v => rfl
   have hval : ∀ j, G (u j) = w j := by
     intro j
-    rw [hG, tsum_eq_single j (fun k hk => by rw [orthonormal_iff_ite.1 hu k j, if_neg hk, zero_smul]),
-      orthonormal_iff_ite.1 hu j j, if_pos rfl, one_smul]
+    rw [hG, tsum_eq_single j (fun k hk => by rw [orthonormal_iff_ite.1 hu k j, ite_eq_right hk, zero_smul]),
+      orthonormal_iff_ite.1 hu j j, ite_eq_left rfl, one_smul]
   have hvan : ∀ v, (∀ j, inner ℂ (u j) v = 0) → G v = 0 := by
     intro v h
     rw [hG]
@@ -252,23 +252,23 @@ theorem tensorTrace_hasTrace : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Hs
       (orthonormal_iff_ite.1 (e i).orthonormal) _ _
     simp only [this]
     by_cases h : ∀ x, j' x = j x
-    · rw [if_pos (funext h)]
-      exact Finset.prod_eq_one fun i _ => if_pos (h i)
-    · rw [if_neg fun h' => h (congrFun h')]
+    · rw [ite_eq_left (funext h)]
+      exact Finset.prod_eq_one fun i _ => ite_eq_left (h i)
+    · rw [ite_eq_right fun h' => h (congrFun h')]
       push_neg at h
       obtain ⟨i, hi⟩ := h
-      exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg hi)
+      exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right hi)
 
   have hperp : ∀ x : H, (∀ j, ⟪u j, x⟫_ℂ = 0) → ∀ y, ⟪Φ y, x⟫_ℂ = 0 := by
     intro x hx y
     have hL := _root_.GlobalTheory.continuousMultilinearMap_ext_hilbertBasis ι Hs J e ℂ
       ((innerSL ℂ x).compContinuousMultilinearMap Φ) 0 fun j => by
         simp only [compContinuousMultilinearMap_coe, Function.comp_apply, innerSL_apply_apply,
-          ContinuousMultilinearMap.zero_apply]
+          zero_apply]
         rw [← inner_conj_symm]; simp [u] at hx; simp [hx]
     have := congrArg (fun L : ContinuousMultilinearMap ℂ Hs ℂ => L y) hL
     simp only [compContinuousMultilinearMap_coe, Function.comp_apply, innerSL_apply_apply,
-      ContinuousMultilinearMap.zero_apply] at this
+      zero_apply] at this
     rw [← inner_conj_symm, this, map_zero]
 
   have hinj : Function.Injective u := hu.linearIndependent.injective
@@ -307,7 +307,7 @@ theorem tensorTrace_hasTrace : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Hs
     by_cases hxu : x ∈ Set.range u
     · obtain ⟨j, rfl⟩ := hxu
       change X (Φ _) = _
-      rw [hX, ContinuousLinearMap.sum_apply]
+      rw [hX, sum_apply]
       simp only [comp_apply]
       rw [show (fun i => B i (e i (j i))) = fun i => ∑ m, C i m (D i m (e i (j i))) from
         funext fun i => by rw [hBeq i]; simp]
@@ -317,7 +317,7 @@ theorem tensorTrace_hasTrace : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Hs
       change _ = GC k (GD k (Φ fun i => e i (j i)))
       rw [hGD1, hGC1]
     · have h0 := hoff x hx hxu
-      rw [hX0 x h0, ContinuousLinearMap.sum_apply]
+      rw [hX0 x h0, sum_apply]
       simp [hGD2 _ x h0]
   have hTC : IsTraceClass X := by
     rw [hXeq]; exact isTraceClass_sum _ fun k _ => (hGC3 k).isTraceClass_comp (hGD3 k)
@@ -413,7 +413,7 @@ theorem exists_orthonormal (L : W →ₗ[ℂ] H) (hL : Function.Injective L) (Z 
   let LZ := L ∘ₗ Z.subtype
   have hLZ : Function.Injective LZ := hL.comp Subtype.val_injective
   let e := LinearEquiv.ofInjective LZ hLZ
-  haveI : FiniteDimensional ℂ (LinearMap.range LZ) := LinearEquiv.finiteDimensional e
+  have : FiniteDimensional ℂ (LinearMap.range LZ) := LinearEquiv.finiteDimensional e
   let b := stdOrthonormalBasis ℂ (LinearMap.range LZ)
   have he : ∀ x : Z, ((e x : LinearMap.range LZ) : H) = L x := fun x => rfl
   have hb : ∀ j, L ((e.symm (b j) : Z) : W) = (b j : H) := fun j => by
@@ -506,7 +506,7 @@ theorem hasTrace_finiteRank_tensor : ∀ (ι : Type) [Fintype ι] [DecidableEq �
       exists_orthonormal (evalAt T u) (evalAt_injective hβ hu hT) Z
     have hzz : ∀ j, β (z j) (z j) = 1 := fun j => by
       have := orthonormal_iff_ite.1 hon j j
-      simp only [if_pos rfl] at this
+      simp only [ite_eq_left rfl] at this
       rw [beta_eq hβ hu]
       exact this
     have hAw : ∀ w, A w = ∑ j, β w (z j) • A (z j) := by
@@ -530,11 +530,11 @@ theorem hasTrace_finiteRank_tensor : ∀ (ι : Type) [Fintype ι] [DecidableEq �
     have hXsum : X = ∑ j, X ∘L P j := by
       refine ContinuousLinearMap.ext_on (Submodule.dense_iff_topologicalClosure_eq_top.2 hdense) ?_
       rintro _ ⟨w, y, rfl⟩
-      rw [ContinuousLinearMap.sum_apply]
+      rw [sum_apply]
       simp only [ContinuousLinearMap.comp_apply, P, starProjection_tensor hβ (hzz _), map_smul, hX]
 
-      rw [hAw w, map_sum, ContinuousMultilinearMap.sum_apply]
-      simp only [map_smul, ContinuousMultilinearMap.smul_apply]
+      rw [hAw w, map_sum, sum_apply]
+      simp only [map_smul, smul_apply]
     have hj : ∀ j, GlobalTheory.OpTrace.HasTrace (X ∘L P j) (β (A (z j)) (z j) * ∏ i, b i) := fun j =>
       GlobalTheory.T.hilbertTensor_traceClass_hasTrace_prod ι Hs H (T (z j)) (T (A (z j))) (β (A (z j)) (z j)) (β (A (z j)) (A (z j)))
         (fun y y' => by rw [hβ, hzz, one_mul]) (fun y y' => hβ _ _ _ _) (fun y y' => hβ _ _ _ _) B b hB

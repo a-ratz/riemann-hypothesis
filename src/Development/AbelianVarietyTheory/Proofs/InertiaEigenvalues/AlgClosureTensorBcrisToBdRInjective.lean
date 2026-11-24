@@ -77,7 +77,7 @@ theorem indep_of_fractions (l : ℕ) [Fact l.Prime] {A B D : Type} [CommRing A] 
     (hv : ∀ (a b : A) (x : Om l), b ≠ 0 → x ≠ 0 → g a = o x * g b → ∃ k : ℤ, ‖x‖ = (l : ℝ) ^ k)
     (m : ℕ) (x : Fin m → Om l) (hx : LinearIndependent ↥(MaximalUnramifiedExtension l) x) (b : Fin m → B)
     (hb : ∑ i, o (x i) * ι (b i) = 0) (i : Fin m) : b i = 0 := by
-  letI : Field D := hD.toField
+  let : Field D := hD.toField
   let F : Subfield D := Subfield.closure (Set.range g)
   have hg : ∀ a, g a ∈ F := fun a => Subfield.subset_closure ⟨a, rfl⟩
   have hιF : ∀ b, ι b ∈ F := fun b => by
@@ -98,8 +98,8 @@ theorem indep_of_fractions (l : ℕ) [Fact l.Prime] {A B D : Type} [CommRing A] 
       (IntermediateField.mem_adjoin_simple_self ℚ_[l] y)
     obtain ⟨a, a', h1, e⟩ := exists_div_of_mem_closure g (y := o z) (hle hz) ((map_ne_zero o).2 h0)
     exact hv a a' z h1 h0 e
-  haveI : IsGalois ℚ_[l] (Om l) := {}
-  haveI : IsGalois ↥(MaximalUnramifiedExtension l) (Om l) := IsGalois.tower_top_of_isGalois ℚ_[l] _ _
+  have : IsGalois ℚ_[l] (Om l) := {}
+  have : IsGalois ↥(MaximalUnramifiedExtension l) (Om l) := IsGalois.tower_top_of_isGalois ℚ_[l] _ _
   have := _root_.GlobalTheory.GalDisj.galois_linearDisjoint ↥(MaximalUnramifiedExtension l) (Om l) D o F
     (fun y => ⟨fun h => ⟨⟨y, hE y h⟩, rfl⟩, fun ⟨c, h⟩ => h ▸ hK c⟩) m x hx (fun i => ι (b i))
     (fun i => hιF _) hb i
@@ -111,7 +111,7 @@ attribute [local irreducible] Per.Acris Per.Bcris
 theorem tensorInj (l : ℕ) [Fact l.Prime] (c : Core l) : c.TensorInj := by
   obtain ⟨-, hinj, hD, -⟩ := BdRField.bdR_isField l
   have hι : Function.Injective c.ι := (ULaws.u_laws l c).2.2.2.1
-  haveI : Nontrivial (Per.BdR l) := ⟨hD.exists_pair_ne⟩
+  have : Nontrivial (Per.BdR l) := ⟨hD.exists_pair_ne⟩
   refine indep_of_fractions l hD ((algebraMap (Per.BdRp l) (Per.BdR l)).comp c.j) c.ι hι c.oD
     (fun b => ?_) (fun x => ⟨c.u x, c.ι_u x⟩) (fun a b x hb hx e => ?_)
   · obtain ⟨r, a, e⟩ := bcris_eq_acris_localization_periodT_alt l c b

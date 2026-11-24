@@ -241,7 +241,7 @@ theorem dual_of_basis (σ : E ≃ₐ[k] E) (b : Module.Basis (Fin (Module.finran
     · obtain ⟨x, hx⟩ := hlt i j h
       exact ⟨x, by simpa using hx.neg⟩
     · exact hlt j i h
-  haveI : Nonempty (Fin (Module.finrank k E)) := ⟨⟨0, hpos⟩⟩
+  have : Nonempty (Fin (Module.finrank k E)) := ⟨⟨0, hpos⟩⟩
   constructor
   · obtain ⟨x0, hx0⟩ := exists_isUnit_sum e hd
     set c : E := ∑ j ∈ Finset.range (Module.finrank k E), (σ ^ j) (x0 : E) with hc

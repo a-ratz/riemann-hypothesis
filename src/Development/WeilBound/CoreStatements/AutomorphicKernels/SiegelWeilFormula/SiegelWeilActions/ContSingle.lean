@@ -265,7 +265,7 @@ theorem cLawEx : CLawEx := by
       · funext j; exact smul_one_mul _ _
       · funext j; rw [map_smul, smul_one_mul]
       · rw [mul_assoc, smul_one_mul, smul_one_mul, smul_assoc, mul_smul]
-    · rw [hsc2, hrm, ← Real.exp_neg, neg_neg, ← Real.exp_nat_mul, ← Atop.LD.n_succ L]
+    · rw [hsc2, hrm, ← Real.exp_neg, neg_neg, ← Real.exp_natCast_mul, ← Atop.LD.n_succ L]
       congr 2
       push_cast; ring
   · simp [map_intCast]

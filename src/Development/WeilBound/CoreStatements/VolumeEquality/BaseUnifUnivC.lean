@@ -1093,8 +1093,8 @@ theorem exists_realExt {E : Type} [Field E] [NumberField E] [IsCMField E] {g : �
       (∀ z w, (L z ⬝ᵥ R'.Hm *ᵥ star (L w)).im = (z ⬝ᵥ R.Hm *ᵥ star w).im) ∧
       ∀ a z, L (R.B a z) = R'.B a (L z) := by
   classical
-  haveI := R.free
-  haveI := R.fin
+  have := R.free
+  have := R.fin
   have hspan : Submodule.span ℝ (Set.range R.P) = ⊤ := (SheetDecomposition.riemBasic E g Λ Unit R).2.1
   let b : Module.Basis (Fin (2 * g)) ℤ Λ := Module.finBasisOfFinrankEq ℤ Λ R.rank
   let v : Fin (2 * g) → Fin g → ℂ := fun k => R.P (b k)
@@ -1227,8 +1227,8 @@ theorem exists_orthoBasis (R : RiemLat E g Λ) (S : Submodule ℂ (Fin g → ℂ
     (h : Module.finrank ℂ S = m) :
     ∃ e : Fin m → Fin g → ℂ, (∀ c, e c ∈ S) ∧ (∀ a b, R.ip (e a) (e b) = if a = b then 1 else 0) ∧
       S ≤ Submodule.span ℂ (Set.range e) := by
-  letI : NormedAddCommGroup (Tan R) := (core R).toNormedAddCommGroup
-  letI : InnerProductSpace ℂ (Tan R) := InnerProductSpace.ofCore (core R).toCore
+  let : NormedAddCommGroup (Tan R) := (core R).toNormedAddCommGroup
+  let : InnerProductSpace ℂ (Tan R) := InnerProductSpace.ofCore (core R).toCore
   let S' : Submodule ℂ (Tan R) := S
   have h' : Module.finrank ℂ S' = m := h
   let b := (stdOrthonormalBasis ℂ S').reindex (finCongr h')
@@ -1243,8 +1243,8 @@ theorem exists_orthoBasis (R : RiemLat E g Λ) (S : Submodule ℂ (Fin g → ℂ
 
 theorem linearIndependent_of_ortho (R : RiemLat E g Λ) {I : Type} [DecidableEq I] (c : I → Fin g → ℂ)
     (h : ∀ i i', R.ip (c i) (c i') = if i = i' then 1 else 0) : LinearIndependent ℂ c := by
-  letI : NormedAddCommGroup (Tan R) := (core R).toNormedAddCommGroup
-  letI : InnerProductSpace ℂ (Tan R) := InnerProductSpace.ofCore (core R).toCore
+  let : NormedAddCommGroup (Tan R) := (core R).toNormedAddCommGroup
+  let : InnerProductSpace ℂ (Tan R) := InnerProductSpace.ofCore (core R).toCore
   let c' : I → Tan R := c
   have ho : Orthonormal ℂ c' := orthonormal_iff_ite.2 h
   exact ho.linearIndependent

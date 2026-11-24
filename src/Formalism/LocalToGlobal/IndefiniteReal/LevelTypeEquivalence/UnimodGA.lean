@@ -117,9 +117,9 @@ variable {D : D7} {V : HSp D} (fr : UI.Frames D V)
 def jf (x : (UI.instV fr).Gf) : GA D V := UI.brg fr (1, x)
 
 theorem jf_isClosedEmbedding : Topology.IsClosedEmbedding (jf fr) := by
-  haveI : T2Space (Matrix (Fin (UI.instV fr).n) (Fin (UI.instV fr).n) ℂ)ˣ :=
+  have : T2Space (Matrix (Fin (UI.instV fr).n) (Fin (UI.instV fr).n) ℂ)ˣ :=
     Units.isEmbedding_embedProduct.t2Space
-  haveI : T2Space (UI.instV fr).Ginf := inferInstance
+  have : T2Space (UI.instV fr).Ginf := inferInstance
   have hemb : Topology.IsEmbedding (fun x : (UI.instV fr).Gf => ((1 : (UI.instV fr).Ginf), x)) :=
     Function.LeftInverse.isEmbedding (f := Prod.snd) (fun _ => rfl) continuous_snd
       (continuous_const.prodMk continuous_id)

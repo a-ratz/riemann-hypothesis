@@ -98,11 +98,11 @@ theorem isLoUni_sgnT {U : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ} (h : IsUpUni U
     simp
 
 theorem det_lo {K : Type*} [Field K] {L : Matrix (Fin (r + 1)) (Fin (r + 1)) K} (h : IsLoUni L) : L.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular L (fun i j hij => (h i j).1 (OrderDual.toDual_lt_toDual.1 hij))]
+  rw [det_of_isLowerTriangular L (fun i j hij => (h i j).1 (OrderDual.toDual_lt_toDual.1 hij))]
   exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
 
 theorem det_up {K : Type*} [Field K] {U : Matrix (Fin (r + 1)) (Fin (r + 1)) K} (h : IsUpUni U) : U.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => (h i j).1 hij)]
+  rw [det_of_isUpperTriangular (fun i j hij => (h i j).1 hij)]
   exact Finset.prod_eq_one fun i _ => (h i i).2 rfl
 
 theorem isUpUni_map {K : Type*} [Field K] (ψ : K →+* ℂ) {U : Matrix (Fin (r + 1)) (Fin (r + 1)) K}
@@ -135,7 +135,7 @@ theorem sgUp_eq {K : Type} [Field K] (U : Matrix (Fin (r + 1)) (Fin (r + 1)) K) 
 
 theorem sgn_adj (a : Fin r) : (-1 : ℂ) ^ (r - a.castSucc.1) * (-1 : ℂ) ^ (r - a.succ.1) = -1 := by
   have h : r - a.castSucc.1 = (r - a.succ.1) + 1 := by
-    simp only [Fin.coe_castSucc, Fin.val_succ]; omega
+    simp only [Fin.val_castSucc, Fin.val_succ]; omega
   rw [h, ← pow_add]
   exact Odd.neg_one_pow ⟨r - a.succ.1, by ring⟩
 

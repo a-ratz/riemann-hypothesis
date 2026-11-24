@@ -98,7 +98,7 @@ theorem UpperTheory.Gal.Gen.frameW_pf :
     have hC₃o : IsOpen (C₃ : Set (finU (E := E) (n := a))) := by
       obtain ⟨N, hNo, hN1, hNC⟩ := hC.isOpen
       refine Subgroup.isOpen_of_mem_nhds _ (g := 1)
-        (Filter.mem_of_superset ((hNo.preimage continuous_subtype_val).mem_nhds hN1) ?_)
+        (Filter.mem_of_superset ((hNo.preimage continuous_subtypeVal).mem_nhds hN1) ?_)
       intro x hx
       exact Subgroup.mem_subgroupOf.2 (hNC ⟨hx, x.2⟩)
     obtain ⟨S, hS⟩ := GlobalTheory.DefU.ClassFin.classSet_finite E a C₃ hC₃o

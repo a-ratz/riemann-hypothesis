@@ -56,9 +56,9 @@ open TensorProduct
 theorem exists_ext_map {K' : Type} [Field K'] (σ' : K' →+* ℂ) {X : Type} (V : Submodule K' (MvPolynomial X K'))
     (V' : Submodule ℂ (MvPolynomial X ℂ)) {W : Type*} [AddCommGroup W] [Module ℂ W] (c0 : V →ₛₗ[σ'] W) :
     ∃ c : V' →ₗ[ℂ] W, ∀ (v : V) (v' : V'), (v' : MvPolynomial X ℂ) = MvPolynomial.map σ' (v : MvPolynomial X K') → c v' = c0 v := by
-  letI : Algebra K' ℂ := σ'.toAlgebra
-  letI : Module K' W := Module.compHom W σ'
-  haveI : IsScalarTower K' ℂ W := ⟨fun k a w => by
+  let : Algebra K' ℂ := σ'.toAlgebra
+  let : Module K' W := Module.compHom W σ'
+  have : IsScalarTower K' ℂ W := ⟨fun k a w => by
     show (σ' k * a) • w = σ' k • a • w
     rw [mul_smul]⟩
   let c0l : V →ₗ[K'] W := { toFun := c0, map_add' := c0.map_add, map_smul' := fun k v => c0.map_smulₛₗ k v }

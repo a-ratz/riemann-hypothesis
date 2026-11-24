@@ -165,7 +165,7 @@ theorem coord_int {b : Module.Basis (Fin (Module.finrank D.host.E (VS D).V)) D.h
 
 theorem baseChangeAt_mem_localLattice_iff {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submodule.IsFullLattice D.host.E Λ) (x : (VS D).V) :
     baseChange₂ D p x ∈ lattice₂ D Zd.M p Λ ↔ x ∈ Formalism.HermitianLattices.Ext.L3.locF p.asIdeal Λ := by
-  haveI := p.isPrime
+  have := p.isPrime
   constructor
   · intro hx
     obtain ⟨b, hbΛ, hbloc⟩ := Formalism.HermitianLattices.Ext.L3.LocalSpans.exists_basis_locF hΛ p.isMaximal

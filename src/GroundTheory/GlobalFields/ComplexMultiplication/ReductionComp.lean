@@ -68,7 +68,7 @@ theorem reduceFF_some (V : WeierstrassCurve 𝒪) [V.IsElliptic] {x y : gaussRin
       (algebraMap (gaussRing W) _ x) (algebraMap (gaussRing W) _ y)) :
     ∃ h', reduceFF K W V (Point.some _ _ h) =
       Point.some (gaussResidue W (residue _ x)) (gaussResidue W (residue _ y)) h' := by
-  haveI : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
+  have : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
   have h₁ : (curveK (W.baseChange K).toAffine.FunctionField (gaussCurve W V)).Nonsingular
       (algebraMap (gaussRing W) _ x) (algebraMap (gaussRing W) _ y) := by
     show ((gaussCurve W V).map (algebraMap _ _)).toAffine.Nonsingular _ _
@@ -88,7 +88,7 @@ theorem reduceFF_some (V : WeierstrassCurve 𝒪) [V.IsElliptic] {x y : gaussRin
 theorem reduceFF_genericPoint :
     reduceFF K W W (GroundTheory.Arith.Abelian.genericPoint (W.baseChange K)) =
       GroundTheory.Arith.Abelian.genericPoint (W.map (residue 𝒪)) := by
-  haveI : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
+  have : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
   have hx := algebraMap_gaussX W K
   have hy := algebraMap_gaussY W K
   obtain ⟨h₁, e₁⟩ : ∃ h₁ : (curveK (W.baseChange K).toAffine.FunctionField
@@ -199,7 +199,7 @@ theorem reduceFF_map_genEval
     (Q : ((W''.baseChange K).baseChange (W'.baseChange K).toAffine.FunctionField).toAffine.Point) :
     reduceFF K W W'' (Point.map (genEval (W'.baseChange K) R hR) Q) =
       Point.map (genEval (W'.map (residue 𝒪)) _ hR') (reduceFF K W' W'' Q) := by
-  haveI : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
+  have : DecidableEq (ResidueField (gaussRing W)) := Classical.decEq _
   have e := gaussCurve_map_functionField K W W'
   have hne : reducePoint (W.baseChange K).toAffine.FunctionField (gaussCurve W W')
       (pointCongr e.symm R) ≠ 0 := by

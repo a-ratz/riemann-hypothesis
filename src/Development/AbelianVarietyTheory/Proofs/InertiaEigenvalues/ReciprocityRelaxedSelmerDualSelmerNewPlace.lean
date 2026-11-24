@@ -134,7 +134,7 @@ theorem isProGen_of_char_eq_one (hQ : TameQuotient) {F Ω : Type} [Field F] [Num
     rw [mem_proKer] at hτ
     have : NeZero (l ^ M) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
     have key := hτ ((d.comp (Ine (F := F) A).subtype).ker) inferInstance
-      (continuous_subtype_val.isOpen_preimage _ hd) (by
+      (continuous_subtypeVal.isOpen_preimage _ hd) (by
         rw [Subgroup.index_ker]
         have hdvd : Nat.card (d.comp (Ine (F := F) A).subtype).range ∣ l ^ M := by
           have h1 := Subgroup.card_subgroup_dvd_card (d.comp (Ine (F := F) A).subtype).range
@@ -178,7 +178,7 @@ theorem isProGen_of_char_eq_one (hQ : TameQuotient) {F Ω : Type} [Field F] [Num
   have : CompactSpace (Ine (F := F) A) :=
     isCompact_iff_compactSpace.1 (isClosed_Ine (F := F) A).isCompact
   set K : Set (Ine (F := F) A) := Subtype.val ⁻¹' (C : Set (G F Ω)) with hK
-  have hKc : IsCompact K := (hCc.preimage continuous_subtype_val).isCompact
+  have hKc : IsCompact K := (hCc.preimage continuous_subtypeVal).isCompact
   have hKimg : IsClosed (s '' K) := (hKc.image hscont).isClosed
   have hdense : DenseRange (fun m : ℤ => (m : ℤ_[l]) * s γ') := by
     have hsurj : Function.Surjective (fun a : ℤ_[l] => a * s γ') := fun a =>
@@ -234,7 +234,7 @@ theorem tame_pairing_hom : TameLocal → ∀ (F Ω : Type) [Field F] [NumberFiel
   have hχ : ∀ g : Dec (F := F) A, cycMod F Ω l n (g : G F Ω) = 1 := by
     have hcont : Continuous fun g : Dec (F := F) A =>
         ((cycMod F Ω l n (g : G F Ω) : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) :=
-      (GlobalTheory.TameQuot.continuous_cycMod (F := F) (Ω := Ω) l n).comp continuous_subtype_val
+      (GlobalTheory.TameQuot.continuous_cycMod (F := F) (Ω := Ω) l n).comp continuous_subtypeVal
     let S : Subgroup (Dec (F := F) A) := ((cycMod F Ω l n).comp (Dec (F := F) A).subtype).ker
     have hSc : IsClosed (S : Set (Dec (F := F) A)) := by
       have : (S : Set (Dec (F := F) A)) = (fun g : Dec (F := F) A =>
@@ -249,14 +249,14 @@ theorem tame_pairing_hom : TameLocal → ∀ (F Ω : Type) [Field F] [NumberFiel
       have := cycZ_toZModPow_eq hv hA hσ n
       ext
       simp only [cycMod, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map,
-        RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_one]
+        RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Units.val_one]
       rw [this, Nat.cast_one, map_one]
     have hSt := hall S hSc (by
         show cycMod F Ω l n (φ : G F Ω) = 1
         have h1 := cycZ_of_isFrob hv hA hφ
         ext
         simp only [cycMod, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map,
-          RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_one]
+          RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Units.val_one]
         rw [h1, map_natCast, ← Nat.cast_one, ZMod.natCast_eq_natCast_iff]
         exact hq)
       (fun σ hσ => by
@@ -301,7 +301,7 @@ theorem tame_pairing_hom : TameLocal → ∀ (F Ω : Type) [Field F] [NumberFiel
   have hCZ : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have hAC : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have hNZ : NeZero ((l ^ n : ℕ) : Ω) := ⟨by exact_mod_cast pow_ne_zero n hl.out.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   obtain ⟨u₀, hu₀⟩ := TameSymbol.of_equiv hS hA hv hq hζ (LinearEquiv.ofBijective e he)
   obtain ⟨x₀, hx₀⟩ := exists_isUnifRoot (F := F) (Ω := Ω) v (N := l ^ n) (pow_pos hl.out.pos n)
   obtain ⟨c, hc⟩ := exists_apply_eq_pow_mul hζ hx₀ (γ : G F Ω)
@@ -360,7 +360,7 @@ theorem tame_pairing_hom : TameLocal → ∀ (F Ω : Type) [Field F] [NumberFiel
     delta ReciprocityTheory.Gal.resH1
     rw [Submodule.mapQ_apply]
     have : ReciprocityTheory.Gal.restrictCocycles1 (muDec F A l n) ((Ine (F := F) A).subgroupOf (Dec (F := F) A)).subtype
-        continuous_subtype_val kZ = 0 := by
+        continuous_subtypeVal kZ = 0 := by
       apply Subtype.ext
       funext h
       show k (h : Dec (F := F) A) = 0
@@ -427,7 +427,7 @@ omit [NumberField F] in
 theorem conj_root {c : Ω ≃+* Ω} (hc : IsCMConjOm F Ω c) {ζ : Ω} (hζ : IsPrimitiveRoot ζ (l ^ n)) :
     c ζ = ζ ^ (-1 : ZMod (l ^ n)).val := by
   have hl : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
-  haveI : NeZero (l ^ n) := ⟨hl⟩
+  have : NeZero (l ^ n) := ⟨hl⟩
   obtain ⟨j, hj⟩ := hc.1
   have h1 : c ζ * ζ = 1 := by
     apply j.injective
@@ -469,7 +469,7 @@ theorem loc_eq_zero (hc : ContAction ρ')
   rw [Submodule.Quotient.mk_eq_zero]
   refine (separated_dvr_second_cohomology_mem _ _).2 ⟨fun g => -P (x.1 g) (ρ' g m), ?_, ?_⟩
   · exact ((continuous_of_discreteTopology (f := fun q : M × M' => -P q.1 q.2)).comp
-      (x.2.1.prodMk (hc.comp (continuous_id.prodMk (continuous_const (y := m)))))).comp continuous_subtype_val
+      (x.2.1.prodMk (hc.comp (continuous_id.prodMk (continuous_const (y := m)))))).comp continuous_subtypeVal
   · funext ⟨g, h⟩
     change ((cycMod F Ω l n g : (ZMod (l ^ n))ˣ) : ZMod (l ^ n)) * (-P (x.1 h) (ρ' h m)) -
       (-P (x.1 (g * h)) (ρ' (g * h) m)) + -P (x.1 g) (ρ' g m) = P (x.1 g) (ρ' g (y.1 h))
@@ -537,13 +537,13 @@ theorem local_pair (hT : TameLocal) {n : ℕ} (hn : 0 < n) {R W W' : Type} [Comm
     rw [(hP g g.2).2.2, Units.val_one, one_mul]
   have key := hu W W' B
   constructor
-  · exact key (fun g => x.1 g) (fun g => y.1 g) hW (x.2.1.comp continuous_subtype_val) (y.2.1.comp continuous_subtype_val)
+  · exact key (fun g => x.1 g) (fun g => y.1 g) hW (x.2.1.comp continuous_subtypeVal) (y.2.1.comp continuous_subtypeVal)
       (fun g h => by rw [Subgroup.coe_mul, x.2.2, (hP g g.2).1])
       (fun g h => by rw [Subgroup.coe_mul, y.2.2, (hP g g.2).2.1])
       (fun g hg => hy g hg) _ (fun g h => by
         change B (x.1 g) (ρ' g (y.1 h)) = B (x.1 g) (y.1 h)
         rw [(hP g g.2).2.1])
-  · have hcc : Continuous ((cConj X).comp (DecV N P).subtype) := continuous_cConj.comp continuous_subtype_val
+  · have hcc : Continuous ((cConj X).comp (DecV N P).subtype) := continuous_cConj.comp continuous_subtypeVal
     let w : Z2 (muLoc D.host.E (X.l i) n (N.plOm.1 P)) :=
       compatiblePairCocycles2 (muRep D.host.E N.Om (X.l i) n) _ ((cConj X).comp (DecV N P).subtype) hcc LinearMap.id continuous_id
         (fun g m => by
@@ -577,13 +577,13 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
   obtain ⟨x, rfl, hx⟩ := hf
   obtain ⟨hp0, hsplit, hnorm, hDL, hd, hσ, hγ, hdγ⟩ := hp
   have hl : (X.l i).Prime := Fact.out
-  haveI : NeZero (X.l i ^ (nu X i + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
-  haveI : IsAlgClosed N.Om := IsAlgClosure.isAlgClosed D.host.E
-  haveI : CharZero N.Om := charZero_of_injective_algebraMap (algebraMap D.host.E N.Om).injective
-  haveI : NeZero ((X.l i : ℕ) : N.Om) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
-  haveI : NeZero ((X.l i ^ (nu X i + 1) : ℕ) : N.Om) := ⟨Nat.cast_ne_zero.mpr (pow_ne_zero _ hl.ne_zero)⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot N.Om (X.l i ^ (nu X i + 1))
+  have : NeZero (X.l i ^ (nu X i + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsAlgClosed N.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : CharZero N.Om := charZero_of_injective_algebraMap (algebraMap D.host.E N.Om).injective
+  have : NeZero ((X.l i : ℕ) : N.Om) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
+  have : NeZero ((X.l i ^ (nu X i + 1) : ℕ) : N.Om) := ⟨Nat.cast_ne_zero.mpr (pow_ne_zero _ hl.ne_zero)⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot N.Om (X.l i ^ (nu X i + 1))
   obtain ⟨inv, hinv, hsum⟩ := _root_.GlobalTheory.sum_inv_eq_zero_of_unramified_cocycle_pow hPT D.host.E N.Om (X.l i) (nu X i + 1) ζ (show 0 < nu X i + 1 by omega) hζ
   obtain ⟨hc, hc', hB, hunr⟩ := _root_.GlobalTheory.NewPrime.PairEquiv.pairing_equivariant D N X bkP i s A κ Q ρ hset hK hρ Y Y' β hβ
   have hS0 : ∀ v, Over p v → v ∉ placesOver D.host.E (X.l i) ∧ v ∉ Spl (X := X) i := fun v hv =>
@@ -654,8 +654,8 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
     refine ⟨?_, fun m => by rw [ht, Module.End.one_apply]⟩
     have h := hxloc v
     unfold Formalism.GaloisCohomology.bkCond at h
-    rw [if_neg (show ¬ ((X.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal from (hout v hv).1),
-      if_neg (fun e => e.elim (hout v hv).2.1 (hout v hv).2.2)] at h
+    rw [ite_eq_right (show ¬ ((X.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal from (hout v hv).1),
+      ite_eq_right (fun e => e.elim (hout v hv).2.1 (hout v hv).2.2)] at h
     obtain ⟨m, hm⟩ := (mem_coboundaries1 _ _).1 ((Submodule.Quotient.mk_eq_zero _).1 h)
     have h3 : x.1 τ = repOn (Tgl i s) κ Y τ m - m := hm ⟨⟨τ, Ine_le_Dec _ hτ⟩, hτ⟩
     rw [h3, ht, Module.End.one_apply, sub_self]
@@ -678,8 +678,8 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
       by_cases e : v ∈ placesOver D.host.E (X.l i)
       · have h := hxloc v
         unfold Formalism.GaloisCohomology.bkCond at h
-        rw [if_pos (show ((X.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal from e)] at h
-        obtain ⟨c, hc1, hc2⟩ := hy.2.2 v e (restrictCocycles1 _ _ continuous_subtype_val x) h
+        rw [ite_eq_left (show ((X.l i : ℕ) : 𝓞 D.host.E) ∈ v.asIdeal from e)] at h
+        obtain ⟨c, hc1, hc2⟩ := hy.2.2 v e (restrictCocycles1 _ _ continuous_subtypeVal x) h
         rw [Submodule.Quotient.mk_eq_zero]
         refine (separated_dvr_second_cohomology_mem _ _).2 ⟨c, hc1.continuous, ?_⟩
         funext ⟨g, h⟩

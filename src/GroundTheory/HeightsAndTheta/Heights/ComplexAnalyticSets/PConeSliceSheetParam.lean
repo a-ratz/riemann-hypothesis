@@ -408,7 +408,7 @@ theorem ConeSliceSheetParam.proof (hCov : DiscriminantSheetCover.Statement) :
         ≤ (‖L‖₊ : ENNReal) ^ (((2 * (e + 1) : ℕ) : ℝ)) *
             Measure.hausdorffMeasure ((2 * (e + 1) : ℕ) : ℝ)
               (zeroSetEuc (J ⊔ Ideal.span {linForm ℓ}) ∪ zeroSetEuc (J ⊔ Ideal.span {G})) :=
-          L.lipschitz.hausdorffMeasure_image_le (Nat.cast_nonneg _) _
+          L.lipschitzWith.hausdorffMeasure_image_le (Nat.cast_nonneg _) _
       _ = 0 := by rw [measure_union_null hZ1 hZ2, mul_zero]
 
 end

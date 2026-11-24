@@ -155,7 +155,7 @@ theorem siegelSetsSL2Adelic_holds : Formalism.D.siegelSetsSL2Adelic := by
   have hd : d ≠ 0 := Module.finrank_pos.ne'
   let fdet : AdelicGLn.AdelicGL F 2 → ℝ := fun h => (ideleModule F (AdelicGLn.det F 2 h) : ℝ)
   have hfdet : Continuous fdet :=
-    continuous_subtype_val.comp ((continuous_ideleModule (K := F)).comp (AdelicGLn.continuous_det F 2))
+    continuous_subtypeVal.comp ((continuous_ideleModule (K := F)).comp (AdelicGLn.continuous_det F 2))
   have hfpos : ∀ h, 0 < fdet h := fun h => (ideleModule F (AdelicGLn.det F 2 h)).2
   obtain ⟨lb, ub, hlb, hub, hbnd⟩ := exists_pos_bounds_of_isCompact hω hfdet hfpos
   obtain ⟨lk, uk, hlk, huk, hknd⟩ :=

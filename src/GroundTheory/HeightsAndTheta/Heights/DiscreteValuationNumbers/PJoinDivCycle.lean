@@ -183,7 +183,7 @@ theorem multAt_map_rename (P Q : Ideal (MRing ι R)) [Q.IsPrime] (hPQ : P ≤ Q)
   have hQp : ((Q.map (Polynomial.C : MRing ι R →+* _)).map ((ψ).symm : Polynomial (MRing ι R) →+* MvPolynomial (Σ k : K ⊕ Unit, Sum.elim ι ptIdx k) R)).IsPrime := by
     rw [← hm]
     exact isPrime_map_rename Q
-  haveI := hQp
+  have := hQp
   have key := GroundTheory.Heights₂.Heights.Targets.ExistsUniqueRelabel.length_map (ψ).symm
     (P.map (Polynomial.C : MRing ι R →+* _)) (Q.map (Polynomial.C : MRing ι R →+* _)) (Ideal.map_mono hPQ)
     (Polynomial.C f)
@@ -228,13 +228,13 @@ theorem JoinDivCycle.proof : JoinDivCycle.Statement := by
     rw [Finsupp.mapDomain_apply_of_injective hinj]
     simp only [ReciprocityTheory.ChartRestriction.G.Geo.divCycle, Finsupp.ofSupportFinite_coe]
     by_cases hQ : Q ∈ ReciprocityTheory.ChartRestriction.G.Geo.divSupp P f
-    · haveI : Q.IsPrime := hQ.1.1.1
-      rw [if_pos ((hsupp Q).2 hQ), if_pos hQ,
+    · have : Q.IsPrime := hQ.1.1.1
+      rw [ite_eq_left ((hsupp Q).2 hQ), ite_eq_left hQ,
         multAt_map_rename P Q (le_sup_left.trans hQ.1.1.2) f]
-    · rw [if_neg (fun h => hQ ((hsupp Q).1 h)), if_neg hQ]
+    · rw [ite_eq_right (fun h => hQ ((hsupp Q).1 h)), ite_eq_right hQ]
   · rw [Finsupp.mapDomain_of_notMem_range _ _ (by rintro ⟨Q, hQ⟩; exact hW ⟨Q, hQ⟩)]
     simp only [ReciprocityTheory.ChartRestriction.G.Geo.divCycle, Finsupp.ofSupportFinite_coe]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨hmin, -⟩
     rw [hsup, mem_minimalPrimes_map_rename_iff] at hmin
     obtain ⟨Q, -, hQ⟩ := hmin

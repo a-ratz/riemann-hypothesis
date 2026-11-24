@@ -55,7 +55,7 @@ theorem UpperTheory.V.Z.Kato.Sym.PT.chB : UpperTheory.V.Z.Kato.Sym.PT.ChB := by
   intro Ω _ _ _ ε X l n M hl hM hdvd u hu0 huF e he
   have hAC : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hN : l ^ n ≠ 0 := pow_ne_zero _ hl.ne_zero
-  haveI : NeZero (l ^ n) := ⟨hN⟩
+  have : NeZero (l ^ n) := ⟨hN⟩
   have huL : u ∈ topL X M := mdl_le_lev X _ _ huF
   have hpow := topRoot_pow X M hN huL
   have h1 : e (topRoot X M (l ^ n) u) ^ l ^ n = io X u := by
@@ -92,5 +92,5 @@ theorem UpperTheory.V.Z.Kato.Sym.PT.chB : UpperTheory.V.Z.Kato.Sym.PT.ChB := by
   show lg X (l ^ n) (σ (e (topRoot X M (l ^ n) u))) (e (topRoot X M (l ^ n) u)) = _
   rw [← hc1 σ hσ]
   apply hlg l n hl.ne_zero σ hσ _ _ hθ0
-  simp only [GlobalTheory.NeedB.kum, dif_pos hex]
+  simp only [GlobalTheory.NeedB.kum, dite_eq_left hex]
   exact hex.choose_spec

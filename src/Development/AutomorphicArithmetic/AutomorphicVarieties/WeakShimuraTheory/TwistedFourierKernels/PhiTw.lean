@@ -48,7 +48,7 @@ theorem UpperTheory.V.Ws.H5.phiTw :
   have hβ₀ : ∀ x, β₀ (K.V.pr x) = K.β x := fun x => DFunLike.congr_fun hb x
   rcases subsingleton_or_nontrivial X.B with hs | hs
   · exact ⟨fun _ _ _ => Subsingleton.elim _ _, fun _ _ _ => Subsingleton.elim _ _⟩
-  haveI : Nontrivial X.A := ⟨⟨0, 1, fun h0 => zero_ne_one (X.inj (by simpa using h0))⟩⟩
+  have : Nontrivial X.A := ⟨⟨0, 1, fun h0 => zero_ne_one (X.inj (by simpa using h0))⟩⟩
   have hd : ∀ y, (X.cp y).natDegree = 4 := fun y => by
     rw [← natDegree_map_eq_of_injective X.inj, X.cp_map, Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin]
   have hsurj : Function.Surjective K.V.pr := (prFacts K.V).1.surjective

@@ -172,7 +172,7 @@ namespace PositivityTheory.Tls2.Ming3
 
 theorem cov : CovSt := by
   intro k _ _ _ _ _ _ ν hν n r h g Φ
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   rw [GlobalTheory.SplitWeil.integral_comp_mul_mul_volM ν g h Φ]
   simp only [Fintype.card_fin, Complex.real_smul]
 
@@ -317,13 +317,13 @@ theorem _root_.GlobalTheory.GodementJacquet.parab_mul_eMat
     rfl
   ext i j
   simp only [Matrix.mul_apply, hE, hL, mul_ite, ite_mul, mul_one, one_mul, mul_zero, zero_mul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   refine Fin.addCases (fun i => ?_) (fun i => ?_) i
   · simp [eq_comm]
   · rw [hlow]
     refine (Finset.sum_eq_zero fun x _ => ?_).symm
-    rw [if_neg]
-    simp only [Fin.ext_iff, Fin.coe_natAdd, Fin.coe_castAdd]
+    rw [ite_eq_right]
+    simp only [Fin.ext_iff, Fin.val_natAdd, Fin.val_castAdd]
     omega
 
 end Mat
@@ -575,22 +575,22 @@ theorem E_mul {R : Type*} [Semiring R] {a b c j : ℕ} (hb : j ≤ b) :
   ext i l
   simp only [Matrix.mul_apply, E_apply]
   by_cases h : (i : ℕ) = l ∧ (l : ℕ) < j
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     obtain ⟨h1, h2⟩ := h
     have hi : (i : ℕ) < j := h1 ▸ h2
     rw [Finset.sum_eq_single (⟨i, by omega⟩ : Fin b)]
     · simp [hi, h1, h2]
     · intro m _ hm
       have hne : ¬ ((i : ℕ) = m ∧ (m : ℕ) < j) := fun e => hm (Fin.ext e.1.symm)
-      rw [if_neg hne, zero_mul]
+      rw [ite_eq_right hne, zero_mul]
     · intro h'
       exact absurd (Finset.mem_univ _) h'
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     refine Finset.sum_eq_zero fun m _ => ?_
     by_cases h1 : (i : ℕ) = m ∧ (m : ℕ) < j
     · have h2 : ¬ ((m : ℕ) = l ∧ (l : ℕ) < j) := fun h2 => h ⟨h1.1.trans h2.1, h2.2⟩
-      rw [if_neg h2, mul_zero]
-    · rw [if_neg h1, zero_mul]
+      rw [ite_eq_right h2, mul_zero]
+    · rw [ite_eq_right h1, zero_mul]
 
 theorem E_diag {R : Type*} [Semiring R] {a j : ℕ} :
     E R a a j = diagonal fun i : Fin a => if (i : ℕ) < j then 1 else 0 := by
@@ -663,7 +663,7 @@ theorem ext_basis {k : Type*} [Field k] {a j : ℕ} (hj : j ≤ a) (v : Fin j �
     ext m i
     simp [hM, Matrix.col]
   have hMu : IsUnit M := by
-    rw [← linearIndependent_cols_iff_isUnit, hcolM]
+    rw [← linearIndependent_col_iff_isUnit, hcolM]
     exact hf
   refine ⟨hMu.unit, fun i l => ?_⟩
   have hel : e (Fin.castLE hj l) = Sum.inl l := by
@@ -684,12 +684,12 @@ private theorem E_mul_apply_eq_dite_lt {R : Type*} [Semiring R] {a b c j : ℕ} 
     · simp [h]
     · intro t _ ht
       have hne : ¬ ((i : ℕ) = t ∧ (t : ℕ) < j) := fun e => ht (Fin.ext e.1.symm)
-      rw [if_neg hne, zero_mul]
+      rw [ite_eq_right hne, zero_mul]
     · intro h'
       exact absurd (Finset.mem_univ _) h'
   · refine Finset.sum_eq_zero fun t _ => ?_
     have hne : ¬ ((i : ℕ) = t ∧ (t : ℕ) < j) := fun e => h (by rw [e.1]; exact e.2)
-    rw [if_neg hne, zero_mul]
+    rw [ite_eq_right hne, zero_mul]
 
 
 theorem nf1 {k : Type*} [Field k] {n r j : ℕ} (x : Matrix (Fin n) (Fin r) k) (hx : x.rank = j) :
@@ -708,7 +708,7 @@ theorem nf1 {k : Type*} [Field k] {n r j : ℕ} (x : Matrix (Fin n) (Fin r) k) (
     · have hc : (H.val * E k n n j).col m = (bb ⟨m, hm⟩ : Fin n → k) := by
         ext i
         show (H.val * E k n n j) i m = _
-        simp only [E_diag, mul_diagonal, hm, if_true, mul_one]
+        simp only [E_diag, mul_diagonal, hm, ite_true, mul_one]
         exact hH i ⟨m, hm⟩
       rw [hc]
       exact (bb ⟨m, hm⟩).2
@@ -930,8 +930,8 @@ theorem valSet_eq (a : k) (c : kˣ) :
     {y : k | valuation k (y - a) ≤ valuation k (c : k)} = (fun y => -a + y) ⁻¹' (c • (𝒪[k] : Set k)) := by
   ext y
   have hc : 0 < valuation k (c : k) := by
-    rw [zero_lt_iff]; simp
-  simp only [Set.mem_setOf_eq, Set.mem_preimage]
+    rw [pos_iff_ne_zero]; simp
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage]
   rw [Set.mem_smul_set_iff_inv_smul_mem, SetLike.mem_coe, Valuation.mem_integer_iff, Units.smul_def,
     Units.val_inv_eq_inv_val, smul_eq_mul, map_mul, map_inv₀, neg_add_eq_sub, inv_mul_le_one₀ hc]
 
@@ -942,8 +942,8 @@ theorem isOpen_valSet (a : k) (c : kˣ) : IsOpen {y : k | valuation k (y - a) �
 theorem vol_valSet [MeasurableSpace k] [BorelSpace k] (ν : Measure k) (hν : IsUnitVol ν) (a : k) (c : kˣ) :
     ν {y : k | valuation k (y - a) ≤ valuation k (c : k)} = ENNReal.ofReal (nabs k c) := by
   obtain ⟨hH, h1⟩ := hν
-  haveI := hH
-  haveI : SecondCountableTopology k := by exact secondCountable k
+  have := hH
+  have : SecondCountableTopology k := by exact secondCountable k
   rw [valSet_eq, measure_preimage_add, ← distribHaarChar_mul, h1, mul_one, nabs, ENNReal.ofReal_coe_nnreal]
 
 variable {n r : ℕ}
@@ -953,7 +953,7 @@ theorem ballM_eq_pi (c : kˣ) (x₀ : Matrix (Fin n) (Fin r) k) :
       (Set.univ.pi fun i => Set.univ.pi fun l => {y : k | valuation k (y - x₀ i l) ≤ valuation k (c : k)} :
         Set (Fin n → Fin r → k)) := by
   ext x
-  simp only [ballM, Set.mem_setOf_eq]
+  simp only [ballM, Set.mem_ofPred_eq]
   constructor
   · intro h i _ l _
     exact h i l
@@ -969,8 +969,8 @@ theorem volM_ballM [MeasurableSpace k] [BorelSpace k] (ν : Measure k) (hν : Is
     (x₀ : Matrix (Fin n) (Fin r) k) :
     volM ν (Fin n) (Fin r) (ballM c x₀) = ∏ _i : Fin n, ∏ _l : Fin r, ENNReal.ofReal (nabs k c) := by
   obtain ⟨hH, h1⟩ := hν
-  haveI := hH
-  haveI : SecondCountableTopology k := by exact secondCountable k
+  have := hH
+  have : SecondCountableTopology k := by exact secondCountable k
   rw [volM, ballM_eq_pi]
   erw [Measure.pi_pi]
   refine Finset.prod_congr rfl fun i _ => ?_
@@ -1253,7 +1253,7 @@ theorem prod_le {ι : Type*} (s : Finset ι) (f : ι → kˣ) (hf : ∀ j, valua
     (hi : i ∈ s) : valuation k ((∏ j ∈ s, f j : kˣ) : k) ≤ valuation k (f i : k) := by
   classical
   rw [Units.coe_prod, map_prod, ← Finset.mul_prod_erase s _ hi]
-  exact mul_le_of_le_one_right' (Finset.prod_le_one' fun j _ => hf j)
+  exact mul_le_of_le_one_right' (Finset.prod_le_one fun j _ => hf j)
 
 theorem nhds_entry (x₀ : Matrix (Fin n) (Fin r) k) {U : Set (Matrix (Fin n) (Fin r) k)} (hU : U ∈ nhds x₀) :
     ∃ t : Fin n → Fin r → Set k, (∀ i l, t i l ∈ nhds (x₀ i l)) ∧
@@ -1281,7 +1281,7 @@ theorem nhds_ball (x₀ : Matrix (Fin n) (Fin r) k) {U : Set (Matrix (Fin n) (Fi
     (show valuation k (x i l - x₀ i l) ≤ valuation k (cc (i, l) : k) from ?_)⟩
   · rw [Units.val_mul, map_mul]
     exact (mul_le_of_le_one_right' (by
-      rw [Units.coe_prod, map_prod]; exact Finset.prod_le_one' fun j _ => (hcc1 j).le)).trans_lt hc₁
+      rw [Units.coe_prod, map_prod]; exact Finset.prod_le_one fun j _ => (hcc1 j).le)).trans_lt hc₁
   · refine (hx i l).trans ?_
     rw [Units.val_mul, map_mul]
     exact (mul_le_of_le_one_left' hc₁.le).trans (prod_le _ _ (fun j => (hcc1 j).le) (Finset.mem_univ _))
@@ -1648,7 +1648,7 @@ theorem step : BallSt → LocSt → NfSt → RkSt → CoreSt → StepSt := by
     · have e1 : (h⁻¹ : GL (Fin n) k).val * x * (g⁻¹ : GL (Fin r) k).val = idem k r n m := by
         rw [hxe]
         exact conj_cancel h g _
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [e1]
       exact mem_ballM_self c _
     · intro Ψ hΨ
@@ -1659,7 +1659,7 @@ theorem step : BallSt → LocSt → NfSt → RkSt → CoreSt → StepSt := by
         have hsupp : ∀ y, Ψ'.1 y ≠ 0 → y ∈ ballM c (idem k r n j) := by
           intro y hy
           have hmem := (hΨ _ hy).1
-          simp only [Set.mem_setOf_eq] at hmem
+          simp only [Set.mem_ofPred_eq] at hmem
           rw [conj_cancel] at hmem
           exact hmem
         have hvan : ∀ y : Matrix (Fin n) (Fin r) k, y.rank < j → Ψ'.1 y = 0 := by
@@ -1678,7 +1678,7 @@ theorem step : BallSt → LocSt → NfSt → RkSt → CoreSt → StepSt := by
         intro y hy
         by_contra hne
         have hmem := (hΨ y hne).1
-        simp only [Set.mem_setOf_eq] at hmem
+        simp only [Set.mem_ofPred_eq] at hmem
         have h5 := hRk k n r m hmn hmr c hc _ hmem
         rw [rank_conj] at h5
         omega
@@ -1795,8 +1795,8 @@ theorem lift_of_irr (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [
   have hnz := nz ball (loc ball) nf
   have hlaw := law ball cov
   obtain ⟨B, hB0, hE⟩ := hθ
-  letI : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
+  let : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
   obtain ⟨ν, hν⟩ := GlobalTheory.SplitWeil.Model.exists_isUnitVol (k := k)
   have down : ∀ j, j ≤ r → VanRk B j → VanRk B 0 := fun j => by
     induction j with
@@ -1806,8 +1806,8 @@ theorem lift_of_irr (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [
   have hev0 : ev ≠ 0 := fun e => hB0 (LinearMap.ext fun Φ => down r le_rfl
     (hnz k ν hν r t μ V W σ π B hE fun w => (hev w 0).2 (by rw [e]; rfl)) Φ fun _ h => absurd h (Nat.not_lt_zero _))
   obtain ⟨f, hf⟩ := frob k r t μ V W σ π ev hπs hev0 (hlaw k ν hν r t μ V W σ π B hE ev hev)
-  haveI := hπi
-  haveI := hIi
+  have := hπi
+  have := hIi
   rcases Representation.IsIrreducible.bijective_or_eq_zero f with h | h
   · exact ⟨.mk (LinearEquiv.ofBijective f.toLinearMap h) f.isIntertwining'⟩
   · exact absurd (by rw [h]; rfl) hf

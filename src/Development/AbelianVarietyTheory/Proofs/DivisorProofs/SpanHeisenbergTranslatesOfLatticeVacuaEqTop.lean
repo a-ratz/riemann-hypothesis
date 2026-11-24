@@ -129,10 +129,10 @@ theorem _root_.GlobalTheory.FinWeil.span_translates_vacua : ∀ {R X M : Type} [
       rw [hS a ha]
       exact ⟨fun h t ht => hW.swap_eq_one (h t ht),
         fun h t ht => hW.swap_eq_one (h t ht)⟩) hK
-  haveI : (S.addSubgroupOf A.toAddSubgroup).FiniteIndex := ⟨hK⟩
-  haveI : (T₀.addSubgroupOf T.toAddSubgroup).FiniteIndex := ⟨hidx⟩
-  letI := Fintype.ofFinite (↥A.toAddSubgroup ⧸ S.addSubgroupOf A.toAddSubgroup)
-  letI := Fintype.ofFinite (↥T.toAddSubgroup ⧸ T₀.addSubgroupOf T.toAddSubgroup)
+  have : (S.addSubgroupOf A.toAddSubgroup).FiniteIndex := ⟨hK⟩
+  have : (T₀.addSubgroupOf T.toAddSubgroup).FiniteIndex := ⟨hidx⟩
+  let := Fintype.ofFinite (↥A.toAddSubgroup ⧸ S.addSubgroupOf A.toAddSubgroup)
+  let := Fintype.ofFinite (↥T.toAddSubgroup ⧸ T₀.addSubgroupOf T.toAddSubgroup)
   have hz : ∀ t ∈ T, (∑ q : ↥A.toAddSubgroup ⧸ S.addSubgroupOf A.toAddSubgroup,
       γ ((Quotient.out q : ↥A.toAddSubgroup) : X) t • W ((Quotient.out q : ↥A.toAddSubgroup) : X) v)
       ∈ Submodule.span ℂ {m : M | ∃ x e, _root_.GlobalTheory.FinWeil.Fixes W A e ∧ m = W x e} := by
@@ -179,12 +179,12 @@ theorem _root_.GlobalTheory.FinWeil.span_translates_vacua : ∀ {R X M : Type} [
           ↥A.toAddSubgroup) : X) ∈ S :=
         AddSubgroup.mem_addSubgroupOf.mp
           ((QuotientAddGroup.eq_zero_iff _).mp (QuotientAddGroup.out_eq' 0))
-      rw [if_pos h0, hfix _ h0.1 h0.2]
+      rw [ite_eq_left h0, hfix _ h0.1 h0.2]
     · intro q _ hq
       have hqS : ¬ (((Quotient.out q : ↥A.toAddSubgroup) : X) ∈ S) := fun h => hq (by
         rw [← QuotientAddGroup.out_eq' q, QuotientAddGroup.eq_zero_iff]
         exact AddSubgroup.mem_addSubgroupOf.mpr h)
-      rw [if_neg hqS, zero_smul]
+      rw [ite_eq_right hqS, zero_smul]
     · intro h
       exact absurd (Finset.mem_univ _) h
   have hNne : ((T₀.relIndex T.toAddSubgroup : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hidx

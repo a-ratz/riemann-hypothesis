@@ -178,10 +178,10 @@ private lemma finite_of_isFiniteLength {S : Type} [CommRing S] [IsLocalRing S]
     obtain ⟨I, hI, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.mp hs
     have hIm : I = maximalIdeal S := IsLocalRing.eq_maximalIdeal hI
     subst hIm
-    haveI : Finite (S ⧸ maximalIdeal S) := ‹Finite (ResidueField S)›
-    haveI : Finite (M ⧸ N) := Finite.of_equiv _ e.symm.toEquiv
-    haveI : Finite (M ⧸ N.toAddSubgroup) := ‹Finite (M ⧸ N)›
-    haveI : Finite N.toAddSubgroup := ih
+    have : Finite (S ⧸ maximalIdeal S) := ‹Finite (ResidueField S)›
+    have : Finite (M ⧸ N) := Finite.of_equiv _ e.symm.toEquiv
+    have : Finite (M ⧸ N.toAddSubgroup) := ‹Finite (M ⧸ N)›
+    have : Finite N.toAddSubgroup := ih
     exact Finite.of_addSubgroup_quotient N.toAddSubgroup
 
 open IsLocalRing in
@@ -201,12 +201,12 @@ theorem UpperTheory.monic_ideal_completion :
     hIdef ▸ (le_sup_right : _ ≤ J ⊔ Ideal.span {algebraMap O R ϖ}) (Ideal.subset_span rfl)
   by_cases hI : I = ⊤
   · subst hI
-    haveI : Subsingleton (R ⧸ (⊤ : Ideal R)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+    have : Subsingleton (R ⧸ (⊤ : Ideal R)) := Ideal.Quotient.subsingleton_iff.mpr rfl
     exact Finite.of_subsingleton
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
-  haveI : IsLocalRing (R ⧸ I) :=
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI
+  have : IsLocalRing (R ⧸ I) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
-  haveI : Algebra.IsIntegral O (R ⧸ I) := ⟨fun y => by
+  have : Algebra.IsIntegral O (R ⧸ I) := ⟨fun y => by
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
     obtain ⟨P, hP, hx⟩ := hJ x
     refine ⟨P, hP, ?_⟩
@@ -216,7 +216,7 @@ theorem UpperTheory.monic_ideal_completion :
     rw [h]
     exact Ideal.Quotient.eq_zero_iff_mem.mpr (hJI hx)⟩
   have hm : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-  haveI : Ring.KrullDimLE 0 (R ⧸ I) := Ring.krullDimLE_zero_iff.mpr fun Q hQ =>
+  have : Ring.KrullDimLE 0 (R ⧸ I) := Ring.krullDimLE_zero_iff.mpr fun Q hQ =>
     Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := O) Q (by
       have hle : Ideal.span {ϖ} ≤ Q.comap (algebraMap O (R ⧸ I)) := by
         rw [Ideal.span_singleton_le_iff_mem, Ideal.mem_comap]
@@ -227,7 +227,7 @@ theorem UpperTheory.monic_ideal_completion :
       change (Q.comap (algebraMap O (R ⧸ I))).IsMaximal
       rw [← hm.eq_of_le hne hle]
       exact hm)
-  haveI : IsArtinianRing (R ⧸ I) :=
+  have : IsArtinianRing (R ⧸ I) :=
     isArtinianRing_iff_isNoetherianRing_krullDimLE_zero.mpr ⟨inferInstance, inferInstance⟩
   have hImax : I ≤ maximalIdeal R := IsLocalRing.le_maximalIdeal hI
   have hmk : ∀ x ∈ maximalIdeal R, Ideal.Quotient.mk I x ∈ maximalIdeal (R ⧸ I) := by
@@ -259,8 +259,8 @@ theorem UpperTheory.monic_ideal_completion :
       rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff] at ha ⊢
       exact fun hu => ha (isUnit_of_map_unit (algebraMap O R) a hu)
     exact (IsLocalRing.residue_eq_zero_iff _).mpr (hmk _ h1)
-  haveI : Finite (O ⧸ maximalIdeal O) := ‹Finite (ResidueField O)›
-  haveI : Finite (ResidueField (R ⧸ I)) :=
+  have : Finite (O ⧸ maximalIdeal O) := ‹Finite (ResidueField O)›
+  have : Finite (ResidueField (R ⧸ I)) :=
     Finite.of_surjective (Ideal.Quotient.lift (maximalIdeal O) φ hφk)
       (Ideal.Quotient.lift_surjective_of_surjective _ _ hφs)
   exact finite_of_isFiniteLength (S := R ⧸ I) (isFiniteLength_iff_isNoetherian_isArtinian.mpr ⟨inferInstance, inferInstance⟩)
@@ -304,7 +304,7 @@ private lemma isUnit_of_inv_integral {R K : Type*} [CommRing R] [Field K] [Algeb
     (hinj : Function.Injective (algebraMap R K)) (a : R) (ha : algebraMap R K a ≠ 0)
     (h : IsIntegral R (algebraMap R K a)⁻¹) : IsUnit a := by
   obtain ⟨p, hp, he⟩ := h
-  letI := invertibleOfNonzero (inv_ne_zero ha)
+  let := invertibleOfNonzero (inv_ne_zero ha)
   have h1 := eval₂_reverse_mul_pow (algebraMap R K) ((algebraMap R K a)⁻¹) p
   rw [he, invOf_eq_inv, inv_inv] at h1
   have h2 : eval₂ (algebraMap R K) (algebraMap R K a) p.reverse = 0 := by
@@ -325,7 +325,7 @@ theorem UpperTheory.integral_dvr_norm :
         (∀ x : PadicAlgCl l, ‖x‖ ≤ 1 → IsIntegral O x) ∧ (∀ a : O, ‖(a : PadicAlgCl l)‖ ≤ 1) ∧
           ∀ a : O, ¬ IsUnit a → ‖(a : PadicAlgCl l)‖ < 1 := by
   intro l _ O _ _
-  haveI hIntO : Algebra.IsIntegral ℤ_[l] O := Algebra.IsIntegral.of_finite ℤ_[l] O
+  have hIntO : Algebra.IsIntegral ℤ_[l] O := Algebra.IsIntegral.of_finite ℤ_[l] O
   have hfin : ∀ a : O, IsIntegral ℤ_[l] (a : PadicAlgCl l) := fun a =>
     (Algebra.IsIntegral.isIntegral (R := ℤ_[l]) a).map O.val
   refine ⟨fun x hx => (integral_of_norm x hx).tower_top, fun a => norm_of_integral _ (hfin a),
@@ -366,7 +366,7 @@ theorem UpperTheory.residue_hom_norm :
       exact inv_le_one_of_one_le₀ hge'
     obtain ⟨p, hp, hev⟩ := hint _ hu
     have hrev : Polynomial.eval₂ (algebraMap O Ω) (y m) p.reverse = 0 := by
-      haveI : Invertible (y m)⁻¹ := invertibleOfNonzero (inv_ne_zero hne)
+      have : Invertible (y m)⁻¹ := invertibleOfNonzero (inv_ne_zero hne)
       have h := Polynomial.eval₂_reverse_mul_pow (algebraMap O Ω) (y m)⁻¹ p
       rw [invOf_eq_inv, inv_inv, hev] at h
       exact (mul_eq_zero.mp h).resolve_right (pow_ne_zero _ (inv_ne_zero hne))
@@ -435,12 +435,12 @@ theorem UpperTheory.Reformulated.B.CoPoint.coPt :
     have h1 : Polynomial.aeval (y x) P = 0 := h0
     rw [Polynomial.aeval_algHom_apply] at h1
     exact h1
-  haveI hlocR : IsLocalHom (algebraMap c.O R) := UpperTheory.V.Alg.IsCO.isLocalHom
+  have hlocR : IsLocalHom (algebraMap c.O R) := UpperTheory.V.Alg.IsCO.isLocalHom
   have hfin := UpperTheory.monic_ideal_completion hres (RingHom.ker y) hJ ϖ hϖ
   have hlt : ‖algebraMap c.O (Formalism.ConjugateSelfDual.Qbar l) ϖ‖ < 1 :=
     hm ϖ hϖ.not_isUnit
   classical
-  letI := Fintype.ofFinite (R ⧸ (RingHom.ker y ⊔ Ideal.span {algebraMap c.O R ϖ}))
+  let := Fintype.ofFinite (R ⧸ (RingHom.ker y ⊔ Ideal.span {algebraMap c.O R ϖ}))
   have key := UpperTheory.digit_expansion_lattice hO' ϖ hϖ hlt (Subalgebra.toSubmodule y.range)
     (fun s hs => by
       obtain ⟨r, rfl⟩ := hs

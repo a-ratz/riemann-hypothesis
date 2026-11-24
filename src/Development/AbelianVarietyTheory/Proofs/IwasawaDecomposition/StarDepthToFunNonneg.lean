@@ -95,7 +95,7 @@ theorem depthSet_comp {n m : ℕ} {r : (Fin n → O) →ₗ[O] (Fin m → O)} (h
 
 theorem depthSet_zero (B : (Fin 0 → O) → (Fin 0 → O) → ℝ) : depthSet bar ψ w 0 B = ∅ := by
   refine Set.eq_empty_of_forall_notMem fun t ⟨X₁, i1, i2, i3, ρ, B₁, hρ, _, _, _, _, _, v, _, _, _, hv, _⟩ => ?_
-  haveI : Subsingleton X₁ := ⟨fun x y => by
+  have : Subsingleton X₁ := ⟨fun x y => by
     obtain ⟨a, rfl⟩ := hρ x
     obtain ⟨b, rfl⟩ := hρ y
     rw [Subsingleton.elim a b]⟩

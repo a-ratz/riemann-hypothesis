@@ -137,7 +137,7 @@ theorem split_ext {M : Type} [CommGroup M] (k a d : ℕ) [NeZero k] (hM : ∀ x 
     (i : Multiplicative (Fin d → ZMod k) →* M) (π : M →* Multiplicative (Fin a → ZMod k))
     (hi : Function.Injective i) (hπ : Function.Surjective π) (hex : ∀ x, π x = 1 ↔ ∃ y, i y = x) :
     Nonempty (M ≃* Multiplicative (Fin (a + d) → ZMod k)) := by
-  letI : Module (ZMod k) (Additive M) := AddCommGroup.zmodModule (n := k) (G := Additive M) fun x => hM x.toMul
+  let : Module (ZMod k) (Additive M) := AddCommGroup.zmodModule (n := k) (G := Additive M) fun x => hM x.toMul
   let i' : (Fin d → ZMod k) →ₗ[ZMod k] Additive M := (MonoidHom.toAdditiveRight i).toZModLinearMap k
   let π' : Additive M →ₗ[ZMod k] (Fin a → ZMod k) := (MonoidHom.toAdditiveLeft π).toZModLinearMap k
   obtain ⟨s, hs⟩ := π'.exists_rightInverse_of_surjective (LinearMap.range_eq_top.2 hπ)
@@ -151,9 +151,9 @@ theorem split_ext {M : Type} [CommGroup M] (k a d : ℕ) [NeZero k] (hM : ∀ x 
 theorem exists_roots (C : Type) [Field C] [IsAlgClosed C] (k : ℕ) (hk : (k : C) ≠ 0) :
     ∃ ζ : Cˣ, IsPrimitiveRoot ζ k ∧ ∃ e : Multiplicative (ZMod k) →* Cˣ, Function.Injective e ∧
       ∀ u : Cˣ, u ^ k = 1 → ∃ z, e z = u := by
-  haveI : NeZero (k : C) := ⟨hk⟩
-  haveI : NeZero k := ⟨by rintro rfl; simp at hk⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C k
+  have : NeZero (k : C) := ⟨hk⟩
+  have : NeZero k := ⟨by rintro rfl; simp at hk⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C k
   have h := hz.isUnit_unit (NeZero.ne k)
   refine ⟨_, h, (Subgroup.subtype _).comp (AddEquiv.toMultiplicativeLeft h.zmodEquivZPowers).toMonoidHom, ?_, ?_⟩
   · exact Subtype.val_injective.comp (AddEquiv.toMultiplicativeLeft h.zmodEquivZPowers).injective
@@ -191,7 +191,7 @@ theorem root_over (hk : k ≠ 0) (γ : N.Gt) (b : N.A) (hb : b ^ k = γ.b) : ∃
 theorem ker_struct (hk : (k : C) ≠ 0) (a : ℕ)
     (e : (powMonoidHom k : N.A →* N.A).ker ≃* Multiplicative (Fin a → ZMod k)) :
     Nonempty ((powMonoidHom k : N.Gt →* N.Gt).ker ≃* Multiplicative (Fin (a + Module.finrank ℤ N.X) → ZMod k)) := by
-  haveI : NeZero k := ⟨by rintro rfl; simp at hk⟩
+  have : NeZero k := ⟨by rintro rfl; simp at hk⟩
   obtain ⟨-, -, ε, hε, hε'⟩ := exists_roots C k hk
   let v := Module.finBasis ℤ N.X
   let j : Multiplicative (Fin (Module.finrank ℤ N.X) → ZMod k) →* (Fin (Module.finrank ℤ N.X) → Cˣ) :=

@@ -67,7 +67,7 @@ theorem absNorm_map (h2 : Module.finrank F E = 2) (I : Ideal (𝓞 F)) :
     Ideal.absNorm (Ideal.map (algebraMap (𝓞 F) (𝓞 E)) I) = Ideal.absNorm I ^ 2 := by
   rw [Ideal.absNorm_algebraMap, ← h2]
   congr 1
-  exact (Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E).symm
+  exact (IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E).symm
 
 theorem absNorm_under_dvd (P : HeightOneSpectrum (𝓞 E)) :
     Ideal.absNorm (P.under (𝓞 F)).asIdeal ∣ Ideal.absNorm P.asIdeal := by

@@ -66,7 +66,7 @@ theorem blochKatoDim_of_bkADim_of_fontCore (l : ℕ) [Fact l.Prime] (P : LocPrim
   let A : GRep ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL) :=
     { V := V, ρ := ρ, cont := hc, modO := Module.compHom V (algebraMap ↥(OL LL) ↥LL.1),
       towO := by
-        letI : Module ↥(OL LL) V := Module.compHom V (algebraMap ↥(OL LL) ↥LL.1)
+        let : Module ↥(OL LL) V := Module.compHom V (algebraMap ↥(OL LL) ↥LL.1)
         exact ⟨fun a b x => by rw [Algebra.smul_def, mul_smul]; rfl⟩ }
   have hF := h2 ↥LL.1 ↥(OL LL) hO A
   have hE := h1 ↥LL.1 ↥(OL LL) hO A (hF.2.2 hcrys)

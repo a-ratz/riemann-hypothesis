@@ -55,8 +55,8 @@ variable {p : ℕ} [Fact p.Prime] {D : Datum p} {G : HTGroup p}
 
 private theorem exists_bound (k : Module.End (AfP p) (AfP p ⊗[ℚ] VQ D)) :
     ∃ c : ℕ, 0 < c ∧ ∀ z ∈ LaHat D, c • k z ∈ LaHat D := by
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let b := Module.Free.chooseBasis ℤ D.La
   let S : Set (AfP p) := Set.range (fun ij : Module.Free.ChooseBasisIndex ℤ D.La × Module.Free.ChooseBasisIndex ℤ D.La =>
     (KNLevel.bA b).repr (k (KNLevel.bA b ij.2)) ij.1)
@@ -167,7 +167,7 @@ theorem UpperTheory.Gal.W2.isogCoord_of :
       have h1 : j (lift a) = j (lift b) := by rw [← hj''d, ← hj''d, hab]
       have h2 := hpl.1 h1
       have h3 : d • a = d • b := by rw [← hlift, ← hlift, h2]
-      haveI := D''.free
+      have := D''.free
       have h4 : (d : ℤ) • a = (d : ℤ) • b := by rw [natCast_zsmul, natCast_zsmul]; exact h3
       exact smul_right_injective D''.La (by exact_mod_cast hd0 : (d : ℤ) ≠ 0) h4
     · intro c u

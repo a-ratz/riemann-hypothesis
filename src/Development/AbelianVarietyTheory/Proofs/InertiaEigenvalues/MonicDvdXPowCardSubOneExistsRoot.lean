@@ -62,7 +62,7 @@ theorem monic_dvd_X_pow_card_sub_one_exists_root :
         ∃ y : S, f.eval y = 0 := by
   intro S _ _ _ f hmon hdeg hdvd
   classical
-  letI : Fintype (ResidueField S) := Fintype.ofFinite _
+  let : Fintype (ResidueField S) := Fintype.ofFinite _
   have hQ : Nat.card (ResidueField S) = Fintype.card (ResidueField S) := Nat.card_eq_fintype_card
   set Q := Fintype.card (ResidueField S) with hQdef
   set g : (ResidueField S)[X] := f.map (residue S) with hgdef

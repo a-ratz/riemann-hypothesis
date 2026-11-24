@@ -114,7 +114,7 @@ theorem absIso : AbsIso := by
   classical
   let ρH : Representation ℂ H V := ρ.comp H.subtype
   let R := MonoidAlgebra ℂ H
-  haveI : IsSimpleModule R τ.asModule := (Representation.irreducible_iff_isSimpleModule_asModule τ).1 hτ
+  have : IsSimpleModule R τ.asModule := (Representation.irreducible_iff_isSimpleModule_asModule τ).1 hτ
   let Z : Set G := {z | ∀ h' ∈ H, Commute z h'}
   let S : Set V := {v | ∃ z ∈ Z, ∃ x, v = ρ z (f x)}
   have hmul : ∀ (a b : G) v, ρ (a * b) v = ρ a (ρ b v) := fun a b v => by rw [map_mul]; rfl
@@ -233,7 +233,7 @@ theorem UpperTheory.TP.absNe :
       have h2 := h1.const_mul κ⁻¹
       simpa [← mul_assoc, inv_mul_cancel₀ hκ] using h2
     have h0 := ae_iff.mp hnot
-    simp only [not_not, Set.setOf_mem_eq] at h0
+    simp only [not_not, Set.ofPred_mem_eq] at h0
     exact hH0 h0
   have hI : ∫ y, f y ∂μA.prod (μB.prod μC) =
       (∫ b, H.indicator (fun _ => (1 : ℂ)) b ∂μB) * (κ * ∫ c, s c * c₀ c ∂μC) := by
@@ -250,19 +250,19 @@ theorem UpperTheory.TP.absNe :
     have hKint : ∫ c in K, s c * c₀ c ∂μC = ∫ c in K, (r : ℂ) ∂μC :=
       setIntegral_congr_fun hK fun c hc => by simp [(hK1 c hc).1, (hK1 c hc).2]
     have eq : ‖∫ c in K, s c * c₀ c ∂μC‖ₑ = ‖∫ c in Kᶜ, s c * c₀ c ∂μC‖ₑ := by
-      rw [eq_neg_of_add_eq_zero_left hsplit, enorm_neg]
+      rw [eq_neg_of_add_eq_zero_left hsplit, eNorm_neg]
     have lower : ‖∫ c in K, s c * c₀ c ∂μC‖ₑ = μC K * ENNReal.ofReal r := by
-      rw [hKint, setIntegral_const, ← ofReal_norm_eq_enorm]
+      rw [hKint, setIntegral_const, ← ofReal_norm]
       rw [norm_smul, Complex.norm_real, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos hr]
       rw [Measure.real, abs_of_nonneg ENNReal.toReal_nonneg, ENNReal.ofReal_mul ENNReal.toReal_nonneg,
         ENNReal.ofReal_toReal hKtop]
     have upper : ‖∫ c in Kᶜ, s c * c₀ c ∂μC‖ₑ ≤ (∫⁻ c in Kᶜ, w c ∂μC) * ENNReal.ofReal r := by
-      refine (enorm_integral_le_lintegral_enorm _).trans ?_
+      refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
       rw [← lintegral_mul_const' _ _ ENNReal.ofReal_ne_top]
       refine lintegral_mono fun c => ?_
-      rw [enorm_mul]
+      rw [eNorm_mul]
       refine mul_le_mul' (hbd c).2 ?_
-      rw [← ofReal_norm_eq_enorm]
+      rw [← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hbd c).1
     have strict := ENNReal.mul_lt_mul_left (ENNReal.ofReal_pos.mpr hr).ne' ENNReal.ofReal_ne_top hlt
     rw [eq] at lower
@@ -298,8 +298,8 @@ private theorem cmE : IsCMExt (maximalRealSubfield E) E (cj E) := isCMExt_of_isC
 private theorem conjAd_adeleMap (a : AF (maximalRealSubfield E)) :
     GlobalTheory.UnitaryBC.conjAd E (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.adeleMap (maximalRealSubfield E) E a) =
       GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.adeleMap (maximalRealSubfield E) E a := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_infiniteAdeleRing_of_numberField_field E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField E
   have key : ∀ k : maximalRealSubfield E,
       GlobalTheory.UnitaryBC.conjAd E (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.adeleMap (maximalRealSubfield E) E (algebraMap _ _ k)) =
         GlobalTheory.IndefiniteRowSideFullHecke.UnitaryHeckeCharacterIdele.adeleMap (maximalRealSubfield E) E (algebraMap _ _ k) := fun k => by
@@ -767,7 +767,7 @@ private theorem proj_of_sum {G V : Type} [Group G] [AddCommGroup V] [Module ℂ 
       exact sup_le (sup_le (le_sup_left.trans le_sup_right) le_sup_left) (le_sup_right.trans le_sup_right)
   let pr : V →ₗ[ℂ] V := U.subtype ∘ₗ Submodule.linearProjOfIsCompl U (C ⊔ D) hc
   have hprU : ∀ u ∈ U, pr u = u := fun u hu =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨u, hu⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨u, hu⟩)
   have hprC : ∀ c ∈ C, pr c = 0 := fun c hc' => by
     have h0 : Submodule.linearProjOfIsCompl U (C ⊔ D) hc c = 0 :=
       Submodule.projectionOnto_apply_of_mem_right hc (Submodule.mem_sup_left hc')
@@ -951,14 +951,14 @@ theorem UpperTheory.TP.hgtFst_k :
     _root_.UpperTheory.TP.Tools_k → _root_.UpperTheory.TP.HgtFst_k := by
   intro T F E _ _ _ _ _ σ B n X hB hX K a e hK ha he
   have cX := T.cpt F E σ B n X n 0 hB (.inl hX) (by simp)
-  haveI := cX.lc
-  haveI := cX.sc
+  have := cX.lc
+  have := cX.sc
   obtain ⟨μ₀, D, hμ₀, -⟩ := cX.ex
   obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.ThK.Dbl.hgtInt_of_k T.stab2 F E σ B n X n 0 hB (.inl hX) K a e hK ha he μ₀ hμ₀
   refine ⟨t₀, fun μ hμ t ht => ?_⟩
-  haveI := hμ
-  haveI := hμ₀
-  haveI := cX.right μ hμ
+  have := hμ
+  have := hμ₀
+  have := cX.right μ hμ
   have hJ : X.J.det ≠ 0 := GlobalTheory.ThK.Dbl.Hgt.det_ne (.inl hX)
   have h1 : Integrable (fun g => a (e (1, g)) ^ t) μ := by
     rw [Measure.isMulLeftInvariant_eq_smul μ μ₀]
@@ -1084,10 +1084,10 @@ theorem _root_.UpperTheory.TP.rallis_k : _root_.UpperTheory.TP.Tools_k → _root
   subst ea
   have ee : e₁ = e := MonoidHom.ext fun x => Subtype.ext (Units.ext ((he₁ x.1 x.2).trans (he x.1 x.2).symm))
   subst ee
-  haveI := cX.sc; haveI := cW.sc; haveI := cX.lc; haveI := cW.lc; haveI := cX.cnt; haveI := hP.good.haar; haveI := cX.right M.μ hP.good.haar
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : IsFiniteMeasure (μ.restrict D) := ⟨by rw [Measure.restrict_apply_univ]; exact cW.fin _ _ hμ hD⟩
-  haveI : IsFiniteMeasure (M.μ.restrict M.dom) := ⟨by rw [Measure.restrict_apply_univ]; exact cX.fin _ _ hP.good.haar hP.good.dom⟩
+  have := cX.sc; have := cW.sc; have := cX.lc; have := cW.lc; have := cX.cnt; have := hP.good.haar; have := cX.right M.μ hP.good.haar
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have : IsFiniteMeasure (μ.restrict D) := ⟨by rw [Measure.restrict_apply_univ]; exact cW.fin _ _ hμ hD⟩
+  have : IsFiniteMeasure (M.μ.restrict M.dom) := ⟨by rw [Measure.restrict_apply_univ]; exact cX.fin _ _ hP.good.haar hP.good.dom⟩
   obtain ⟨c, c1, hc1⟩ := inv_scale M.μ
   have s1 := T.polSch F E σ B _ _ _ _ _ _ _ _ _ _ _ _ hP Φ hΦ
   have bT := (T.basic F E σ B _ _ _ _ _ _ _ _ _ _ _ _ hP).1 Φ s1
@@ -1519,7 +1519,7 @@ private theorem abs_tail_pk {G D C : Type} [Group G] [TopologicalSpace G] [IsTop
     rw [me.map_apply, ← Measure.prod_prod]
     exact measure_mono fun y hy => hc y.1 y.2 hy
   have a4 : ∫⁻ g in W, f g ∂(P.map j) < (P.map j) U := by
-    rw [hν, Measure.restrict_smul, lintegral_smul_measure, Measure.smul_apply]
+    rw [hν, Measure.restrict_smul, lintegral_smul_measure, smul_apply]
     have hk : ((Measure.haarScalarFactor (P.map j) μ : ℝ≥0) : ENNReal) ≠ 0 := by exact_mod_cast k0
     simp only [ENNReal.smul_def, smul_eq_mul]
     exact (ENNReal.mul_lt_mul_iff_right hk ENNReal.coe_ne_top).2 hlt
@@ -1589,7 +1589,7 @@ theorem UpperTheory.TP.tail_k :
   let A : Finset (Pl F) → Set (UA σ X.J) := fun S => {g | ∀ v ∈ S, IntAt v g} \ U
   have mA : ∀ S, MeasurableSet (A S) := fun S => by
     refine MeasurableSet.diff ?_ oU.measurableSet
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact (isClosed_iInter fun u => isClosed_iInter fun _ => Euler.isClosed_int hL.toIsLattice u).measurableSet
   have anti : Antitone A := fun S S' hS g hg => ⟨fun v hv => hg.1 v (hS hv), hg.2⟩
   have emp : ⋂ S, A S = ∅ := by
@@ -1623,7 +1623,7 @@ theorem UpperTheory.TP.tail_k :
     rw [this, hj']
     simp
   have res := abs_tail_pk j' μ μC (U := U) (W := A S) (K := {c | IntAll c.1}) oU cU U1
-    (oU.preimage continuous_subtype_val).measurableSet f (fun c => f c.1) (cf.measurable.comp measurable_subtype_coe)
+    (oU.preimage continuous_subtypeVal).measurableSet f (fun c => f c.1) (cf.measurable.comp measurable_subtypeVal)
     (fun d c hg => by
       have hx : IntAll d.1.1 := iI _ d.1.2
       have hg' : IntAll (d.1.1 * d.2.1 * c.1) := hj' d c ▸ hg

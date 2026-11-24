@@ -75,9 +75,9 @@ theorem eq_zero_of_pts {M : Type} [Field M] [IsAlgClosed M] [Algebra K M] (p : T
     (h : ∀ ψ : p.R →ₐ[K] M, ψ a = 0) : a = 0 := by
   classical
   have hRdef : p.R = (MvPolynomial (Fin p.n) K ⧸ p.I) := rfl
-  haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
-  haveI : IsJacobsonRing p.R := inferInstanceAs (IsJacobsonRing (MvPolynomial (Fin p.n) K ⧸ p.I))
-  haveI hFT : Algebra.FiniteType K p.R :=
+  have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  have : IsJacobsonRing p.R := inferInstanceAs (IsJacobsonRing (MvPolynomial (Fin p.n) K ⧸ p.I))
+  have hFT : Algebra.FiniteType K p.R :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ K p.I) (Ideal.Quotient.mkₐ_surjective K p.I)
   have hrad : (⊥ : Ideal p.R).IsRadical := fun x ⟨k, hk⟩ =>
     (Submodule.mem_bot _).2 (IsNilpotent.eq_zero ⟨k, (Submodule.mem_bot _).1 hk⟩)
@@ -89,12 +89,12 @@ theorem eq_zero_of_pts {M : Type} [Field M] [IsAlgClosed M] [Algebra K M] (p : T
 
     refine Ideal.mem_sInf.2 fun J hJ => ?_
     have hJm : J.IsMaximal := hJ.2
-    letI := Ideal.Quotient.field J
-    haveI : Algebra.FiniteType K (p.R ⧸ J) :=
+    let := Ideal.Quotient.field J
+    have : Algebra.FiniteType K (p.R ⧸ J) :=
       Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ K J) (Ideal.Quotient.mkₐ_surjective K J)
-    haveI : Module.Finite K (p.R ⧸ J) := finite_of_finite_type_of_isJacobsonRing K (p.R ⧸ J)
-    haveI : Algebra.IsIntegral K (p.R ⧸ J) := Algebra.IsIntegral.of_finite K _
-    haveI : Algebra.IsAlgebraic K (p.R ⧸ J) := Algebra.IsIntegral.isAlgebraic
+    have : Module.Finite K (p.R ⧸ J) := finite_of_finite_type_of_isJacobsonRing K (p.R ⧸ J)
+    have : Algebra.IsIntegral K (p.R ⧸ J) := Algebra.IsIntegral.of_finite K _
+    have : Algebra.IsAlgebraic K (p.R ⧸ J) := Algebra.IsIntegral.isAlgebraic
     let ι : (p.R ⧸ J) →ₐ[K] M := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -109,8 +109,8 @@ theorem eq_zero_of_pts {M : Type} [Field M] [IsAlgClosed M] [Algebra K M] (p : T
   exact (Submodule.mem_bot _).1 ha
 
 theorem eq_zero_of_cpts (σ : K →+* ℂ) (p : TRing K) (a : p.R) (h : ∀ ψ : p.R →ₐ[K] CAt σ, ψ a = 0) : a = 0 := by
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   exact eq_zero_of_pts (M := CAt σ) p a h
 
 def cvalR (σ : K →+* ℂ) : CAt σ →+* ℂ := RingHom.id ℂ
@@ -124,7 +124,7 @@ theorem linIndep_alg_pts [CharZero K] {Kb : Type} [Field Kb] [IsAlgClosed Kb] [A
     (h : ∀ φ : p.R →ₐ[K] Kb, ∑ i, v i * φ (a i) = 0) : v = 0 := by
   classical
   let L : IntermediateField K Kb := IntermediateField.adjoin K (Set.range v)
-  haveI : FiniteDimensional K L :=
+  have : FiniteDimensional K L :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   let u : Fin m → L := fun i => ⟨v i, IntermediateField.subset_adjoin K _ ⟨i, rfl⟩⟩
   have hu : ∀ i, algebraMap L Kb (u i) = v i := fun i => rfl
@@ -176,14 +176,14 @@ theorem linIndep_cpts [CharZero K] (σ : K →+* ℂ) (p : TRing K) {m : ℕ} (a
     (ha : LinearIndependent K a) (w : Fin m → ℂ)
     (h : ∀ ψ : p.R →ₐ[K] CAt σ, ∑ i, w i * cvalR σ (ψ (a i)) = 0) : w = 0 := by
   classical
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   let ι : AlgebraicClosure K →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   let Kb := AlgebraicClosure K
-  letI : Module Kb ℂ := Module.compHom ℂ (ι.toRingHom : Kb →+* ℂ)
+  let : Module Kb ℂ := Module.compHom ℂ (ι.toRingHom : Kb →+* ℂ)
   have hsm : ∀ (c : Kb) (z : ℂ), c • z = ι c * z := fun _ _ => rfl
   by_contra hw
   obtain ⟨j, hj⟩ : ∃ j, w j ≠ 0 := by
@@ -210,7 +210,7 @@ theorem descend_cpts [CharZero K] (σ : K →+* ℂ) (p : TRing K) {r : ℕ} (a 
     ∑ j, θ (toCAt σ (w j)) • a j = 0 := by
   classical
   let S : Submodule K p.R := Submodule.span K (Set.range a)
-  haveI : FiniteDimensional K S := FiniteDimensional.span_of_finite K (Set.finite_range a)
+  have : FiniteDimensional K S := FiniteDimensional.span_of_finite K (Set.finite_range a)
   let e := Module.finBasis K S
   let t : Fin r → Fin (Module.finrank K S) → K := fun j l => e.repr ⟨a j, Submodule.subset_span ⟨j, rfl⟩⟩ l
   have hat : ∀ j, a j = ∑ l, t j l • (e l : p.R) := by

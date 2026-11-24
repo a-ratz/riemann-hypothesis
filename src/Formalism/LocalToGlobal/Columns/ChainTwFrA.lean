@@ -262,7 +262,7 @@ theorem tfaD_symm_apply {n : ℕ} (z : E) (hz : z ≠ 0) (x : Sp E (n + 1)) (i :
     by_cases h : j = Fin.last n
     · subst h
       simp [hz]
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
   conv_lhs => rw [← key]
   rw [LinearEquiv.symm_apply_apply]
 
@@ -279,14 +279,14 @@ theorem tfaZ_spec {SG : Finset (HeightOneSpectrum (𝓞 E))} {ST : Finset (Heigh
   have hl := Deco.liftFr_spec (d.2.hasLift w)
   show extE (d.1.liftFr w) (tfaD (algebraMap (𝓞 E) E pi) hz x) ∈ localization₂ w.1.asIdeal (DecoSet.til (ST := ST) pi d).1.N ↔ _
   unfold DecoSet.til
-  rw [dif_pos hOk]
+  rw [dite_eq_left hOk]
   show extE (d.1.liftFr w) (tfaD (algebraMap (𝓞 E) E pi) hz x) ∈ localization₂ w.1.asIdeal (tilN d.1.N) ↔ _
   have hinit : initL E n (tfaD (algebraMap (𝓞 E) E pi) hz x) = initL E n x := by
     funext i
     show tfaD _ hz x (Fin.castSucc i) = x (Fin.castSucc i)
-    rw [tfaD_apply, if_neg (Fin.castSucc_ne_last i)]
+    rw [tfaD_apply, ite_eq_right (Fin.castSucc_ne_last i)]
   have hlast : tfaD (algebraMap (𝓞 E) E pi) hz x (Fin.last n) = algebraMap (𝓞 E) E pi * x (Fin.last n) := by
-    rw [tfaD_apply, if_pos rfl]
+    rw [tfaD_apply, ite_eq_left rfl]
   rw [mem_localization_tilN, initL_extE, extE_last, hinit, hlast, tfa_std_iff]
   refine and_congr (hl.1 _) ⟨fun h => ?_, fun h => (IntAt.coe w.1 pi).mul h⟩
   have h2 := (xtIntAt_piInv hw).mul h

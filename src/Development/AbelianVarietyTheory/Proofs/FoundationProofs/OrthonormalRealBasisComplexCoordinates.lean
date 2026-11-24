@@ -65,7 +65,7 @@ theorem embT_injective : Function.Injective (embT D) := fun _ _ h =>
 theorem embT_indep (c : D.what₂.Tau → ℂ) (h : ∀ x, ∑ τ, c τ * embT D τ x = 0) (τ : D.what₂.Tau) : c τ = 0 := by
   have h1 := (linearIndependent_monoidHom D.host.E ℂ).comp
     (fun τ : D.what₂.Tau => ((embT D τ : D.host.E →+* ℂ) : D.host.E →* ℂ))
-    (fun a b hab => embT_injective (RingHom.coe_monoidHom_injective hab))
+    (fun a b hab => embT_injective (RingHom.toMonoidHom_injective hab))
   rw [Fintype.linearIndependent_iff] at h1
   refine h1 c ?_ τ
   funext x

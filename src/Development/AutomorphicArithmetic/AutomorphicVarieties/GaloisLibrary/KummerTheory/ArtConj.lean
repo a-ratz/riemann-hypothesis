@@ -56,7 +56,7 @@ private theorem valuation_lt_one_iff_eq_zero_or_inv_notMem {L : Type} [Field L] 
   by_cases hx : x = 0
   · simp [hx]
   · have h0 : B.valuation x ≠ 0 := by simpa using hx
-    rw [← B.valuation_le_one_iff, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.mpr h0)]
+    rw [← B.valuation_le_one_iff, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.mpr h0)]
     simp [hx]
 
 private theorem conjGal_mem_decompositionSubgroup_comap {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] {τ : K ≃+* K}
@@ -122,7 +122,7 @@ theorem UpperTheory.V.Kum.artConj :
       obtain ⟨j, hj⟩ := hc
       have hc' : IsConjOm (conjGal h c).toRingEquiv := by
         refine ⟨j.comp (σ : Ω →+* Ω), fun x => ?_⟩
-        simp only [RingHom.comp_apply, RingEquiv.coe_toRingHom, AlgEquiv.coe_ringEquiv,
+        simp only [RingHom.comp_apply, RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv,
           conjGal_apply, RingEquiv.apply_symm_apply]
         exact hj (σ x)
       rw [(artIne K Ω).2 _ hc', map_one]

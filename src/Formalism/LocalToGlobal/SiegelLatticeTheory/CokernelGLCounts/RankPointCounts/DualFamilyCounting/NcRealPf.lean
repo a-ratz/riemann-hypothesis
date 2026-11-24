@@ -225,8 +225,8 @@ theorem realBracket_of (hP : ProdExact) (hA : AprimeInf) (hS : PlaceSplit)
     positivity
   have hDis := hP X u u' μN μN' μH μH' Cv hsN hsN' hsH hsH' hCv hN hN' hH hH' hloc
   have hCoo := cooOf_eq X u u' 1 (∏ v, Cv v) (Finset.prod_pos fun v _ => hCv v) hDis
-  haveI := hsH
-  haveI := hsH'
+  have := hsH
+  have := hsH'
   have hAu : (X.muH u Set.univ).toReal = ∏ v, a v := by
     rw [hH, Measure.pi_univ, ENNReal.toReal_prod]
     exact Finset.prod_congr rfl fun v _ => by rw [haH v, ENNReal.toReal_ofReal (hpos v).1.le]

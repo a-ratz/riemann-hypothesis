@@ -60,7 +60,7 @@ private theorem lc_of_open {R Γ M : Type} [CommRing R] [Group Γ] [TopologicalS
   rw [IsLocallyConstant.iff_eventually_eq]
   intro x
   have hU : IsOpen ((Subtype.val : H → Γ) '' {z : H | ρ z m = m}) :=
-    hH.isOpenMap_subtype_val _ ((h m).isOpen_fiber m)
+    hH.isOpenMap_subtypeVal _ ((h m).isOpen_fiber m)
   have h1 : (1 : Γ) ∈ (Subtype.val : H → Γ) '' {z : H | ρ z m = m} := ⟨1, by simp, rfl⟩
   have ht : Filter.Tendsto (fun y => x⁻¹ * y) (nhds x) (nhds 1) := by
     have h0 := (continuous_const_mul x⁻¹).tendsto x
@@ -129,7 +129,7 @@ theorem UpperTheory.V.Pa.lc1 :
   intro l _ L G G0 h n x k m
   obtain ⟨-, -, -, -, hlD, htA, htD, -, -⟩ := finAm l G0.frame n x m k.g
   have hM : IsLocalRing.maximalIdeal (PowerSeries x.K) = Ideal.span {x.t} := maximalIdeal_powerSeries_eq_span_X x.K
-  have hp0 : Continuous h.p₀ := continuous_induced_rng.2 (h.cont.comp continuous_subtype_val)
+  have hp0 : Continuous h.p₀ := continuous_induced_rng.2 (h.cont.comp continuous_subtypeVal)
   have hE : IsLocallyConstant fun g : G0.G₀ =>
       DD.epM (fun j => (k.κ j g).map (algebraMap x.A (x.Am m))) := by
     apply lc_mat
@@ -157,7 +157,7 @@ theorem UpperTheory.V.Pa.lc1 :
     intro Z
     have hinv : IsLocallyConstant fun g : G.G₀ => k.ρ1 (x.Am m) (h.p₀ g⁻¹) :=
       hρ'.comp_continuous continuous_inv
-    have hχ' : IsLocallyConstant fun g : G.G₀ => χ g := hχ.comp_continuous continuous_subtype_val
+    have hχ' : IsLocallyConstant fun g : G.G₀ => χ g := hχ.comp_continuous continuous_subtypeVal
     have key : IsLocallyConstant fun g : G.G₀ => ((rep g Z : V) : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) := by
       have e : (fun g : G.G₀ => ((rep g Z : V) : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g))) =
           fun g : G.G₀ => χ g • (k.ρ1 (x.Am m) (h.p₀ g) * (Z : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) *

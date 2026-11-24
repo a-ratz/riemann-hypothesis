@@ -85,14 +85,14 @@ theorem tpFactor_eq (τ : ℍ) (z : ℂ) (k : ℕ) :
       ((1 + cexp (2 * π * I * z) * cexp (π * I * (τ : ℂ)) ^ (2 * k + 1)) *
         (1 + (cexp (2 * π * I * z))⁻¹ * cexp (π * I * (τ : ℂ)) ^ (2 * k + 1))) := by
   unfold GlobalTheory.ThetaWeberRoad.tpFactor
-  rw [← pow_mul, ← exp_nat_mul, ← exp_nat_mul, ← exp_neg, ← exp_add, ← exp_add]
+  rw [← pow_mul, ← exp_natCast_mul, ← exp_natCast_mul, ← exp_neg, ← exp_add, ← exp_add]
   rw [mul_assoc]
   congr 3 <;> push_cast <;> ring_nf
 
 theorem jacobiTheta₂_term_eq_zpow (τ z : ℂ) (j : ℤ) :
     jacobiTheta₂_term j z τ = cexp (2 * π * I * z) ^ j * cexp (π * I * τ) ^ (j ^ 2) := by
   unfold jacobiTheta₂_term
-  rw [← exp_int_mul, ← exp_int_mul, ← exp_add]
+  rw [← exp_intCast_mul, ← exp_intCast_mul, ← exp_add]
   congr 1
   push_cast
   ring

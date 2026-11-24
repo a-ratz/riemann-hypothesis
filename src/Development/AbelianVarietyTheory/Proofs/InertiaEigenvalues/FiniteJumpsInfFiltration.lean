@@ -62,7 +62,7 @@ theorem finite_jumps_inf_filtration (E W : Type) [Field E] [AddCommGroup W] [Mod
   have key : ∀ a b : ℤ, D ⊓ F (a + 1) ≠ D ⊓ F a → a < b →
       Module.finrank E ↥(D ⊓ F b) < Module.finrank E ↥(D ⊓ F a) := by
     intro a b ha hab
-    haveI := hfin a
+    have := hfin a
     apply Submodule.finrank_lt_finrank_of_lt
     have h1 : D ⊓ F b ≤ D ⊓ F (a + 1) := inf_le_inf_left _ (hanti (by omega))
     have h2 : D ⊓ F (a + 1) < D ⊓ F a := lt_of_le_of_ne (inf_le_inf_left _ (hF a)) ha

@@ -103,7 +103,7 @@ theorem extFun_mul {σ : Representation ℂ P W} {J : Subgroup G} {φ : G → W}
 
 omit [TopologicalSpace G] [IsTopologicalGroup G] in
 theorem extFun_zero (σ : Representation ℂ P W) {J : Subgroup G} (φ : G → W) {g : G}
-    (h : g ∉ cell P J) : extFun σ J φ g = 0 := dif_neg h
+    (h : g ∉ cell P J) : extFun σ J φ g = 0 := dite_eq_right h
 
 omit [TopologicalSpace G] [IsTopologicalGroup G] in
 theorem extFun_right {σ : Representation ℂ P W} {J : Subgroup G} {φ : G → W}
@@ -190,9 +190,9 @@ theorem mem_span_bump (σ : Representation ℂ P W) {J K : Subgroup G} (hJ : IsO
       inv_mem' := by
         rintro x ⟨p, hp⟩
         exact ⟨p⁻¹, by simpa [mul_assoc] using hn _ (hK' p x hp) _ (inv_mem hp)⟩ }
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : Finite (K ⧸ H) := H.quotient_finite_of_isOpen ((isOpen_cell hJ).preimage continuous_subtype_val)
-  haveI := Fintype.ofFinite (K ⧸ H)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : Finite (K ⧸ H) := H.quotient_finite_of_isOpen ((isOpen_cell hJ).preimage continuous_subtypeVal)
+  have := Fintype.ofFinite (K ⧸ H)
   have hw : ∀ z : K, f.1.1 (z : G)⁻¹ ∈ fixed σ (J.subgroupOf P) := fun z => mem_fixed_iff.2 fun h hh => by
     rw [← f.1.2 h, ← hf' _ (hn z z.2 h hh) (z : G)⁻¹]
     simp [mul_assoc]
@@ -316,7 +316,7 @@ theorem pair_bijective (hKo : IsOpen (K : Set G)) (hP : IsClosed (P : Set G))
       obtain ⟨l₀, hl₀⟩ := LinearMap.exists_extend (c⁻¹ • (l ∘ₗ smInd P σ z⁻¹ ∘ₗ bump σ hJ))
       obtain ⟨l₁, h1, h2⟩ := GlobalTheory.SmGL.DualAverage.exists_invariant_form P W σ hσ _ hHc l₀
       obtain ⟨w', rfl⟩ := hBs l₁ (Filter.mem_of_superset
-        ((hJ.preimage continuous_subtype_val).mem_nhds (one_mem J)) h1)
+        ((hJ.preimage continuous_subtypeVal).mem_nhds (one_mem J)) h1)
       exact ⟨w', h1, fun w => (h2 _ (mem_fixed_iff.1 w.2)).trans (LinearMap.congr_fun hl₀ w)⟩
     choose φ hφ1 hφ2 using hex
     have hφr : ∀ i ∈ J, ∀ j ∈ K, φ (j * i) = φ j := fun i hi j _ =>

@@ -67,9 +67,9 @@ theorem diff_nmat (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
     Differentiable ℂ fun z : V (nd X) => nmat X z τ a b := by
   unfold nmat
   by_cases h : b < a
-  · simp only [h, dif_pos]
+  · simp only [h, dite_eq_left]
     exact diff_coord _
-  · simp only [h, dif_neg, not_false_eq_true]
+  · simp only [h, dite_eq_right, not_false_eq_true]
     exact differentiable_const _
 
 theorem diff_cpt (X : Data E r) (x0 : Frame X.Ψ r) : Differentiable ℂ (cpt X x0) := by
@@ -108,9 +108,9 @@ theorem nmat_zero (X : Data E r) (τ : X.Ψ) : mat (nmat X 0) τ = 1 := by
   ext a b
   simp only [mat, nmat, Matrix.of_apply, Matrix.one_apply]
   by_cases h : b < a
-  · rw [dif_pos h, if_neg (ne_of_gt h)]
+  · rw [dite_eq_left h, ite_eq_right (ne_of_gt h)]
     rfl
-  · rw [dif_neg h]
+  · rw [dite_eq_right h]
 
 theorem cpt_zero (X : Data E r) (x : Frame X.Ψ r) : cpt X x 0 = x := by
   funext τ
@@ -133,7 +133,7 @@ theorem abs_sgn (p0 a : ℕ) : |sgn p0 a| = 1 := by
 theorem lminor_Jd (X : Data E r) (i : Fin (r + 1)) : lminor (Jd X) i = ((psgn X.p0 i : ℝ) : ℂ) := by
   unfold lminor Jd psgn
   rw [Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal]
-  simp only [Function.comp_apply, Fin.coe_castLE]
+  simp only [Function.comp_apply, Fin.val_castLE]
   push_cast
   exact Fin.prod_univ_eq_prod_range (fun a => ((sgn X.p0 a : ℝ) : ℂ)) i
 

@@ -172,14 +172,14 @@ theorem SpecAIC_of : LateralTheory.E.FibreEqvPf.SpecAIC := by
   intro B hB hA
   refine ⟨inferInstance, ?_⟩
   intro U hU hne
-  haveI : Nonempty U := hne.to_subtype
+  have : Nonempty U := hne.to_subtype
   apply aic_of_local
   intro v
   let y : PrimeSpectrum Γ(Spec B, U) := ⟨v.asIdeal, v.isMaximal.isPrime⟩
   have hy : hU.fromSpec y ∈ U := by
     show hU.fromSpec y ∈ (U : Set (Spec B))
     rw [← hU.range_fromSpec]; exact ⟨y, rfl⟩
-  letI := TopCat.Presheaf.algebra_section_stalk (Spec B).presheaf ⟨hU.fromSpec y, hy⟩
+  let := TopCat.Presheaf.algebra_section_stalk (Spec B).presheaf ⟨hU.fromSpec y, hy⟩
   have hloc : IsLocalization.AtPrime ((Spec B).presheaf.stalk (hU.fromSpec y)) y.asIdeal := hU.isLocalization_stalk' y hy
   have hst := stalk_aic B hA (hU.fromSpec y)
   exact aic_equiv (IsLocalization.algEquiv y.asIdeal.primeCompl ((Spec B).presheaf.stalk (hU.fromSpec y))

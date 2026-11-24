@@ -74,7 +74,7 @@ theorem UpperTheory.V.Ws.Rq.muPs :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ T : Tower D, T.Ok →
       ∀ H : Subgroup (G T.F Ω), ∀ s ∈ muOf l H, ∀ i, D.ps i (resQ T.F s) = 1 := by
   intro Ω _ _ _ l _ c D hD T hT H s hs i
-  haveI : IsAlgClosure T.F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) T.F⟩
+  have : IsAlgClosure T.F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) T.F⟩
   have hcont : Continuous (resQ T.F) := (galEmbTop ℚ T.F Ω).1.continuous
   have hlp : l.Prime := Fact.out
   have gen : ∀ (χ : G ℚ Ω →* (c.O)ˣ) (m : ℕ), l.Coprime m →
@@ -96,7 +96,7 @@ theorem UpperTheory.V.Ws.Rq.muPs :
       (GroundTheory.Global.Cyclotomic.mem_torsion_iff l _).1
         ((CommGroup.mem_torsion _).2 (isOfFinOrder_iff_pow_eq_one.2 ⟨l ^ a, pow_pos hlp.pos a, ha⟩))
     have hcop : l.Coprime (GroundTheory.Global.Cyclotomic.torsionExponent l) := by
-      simp only [GroundTheory.Global.Cyclotomic.torsionExponent, hD.l_odd, if_false]
+      simp only [GroundTheory.Global.Cyclotomic.torsionExponent, hD.l_odd, ite_false]
       exact Nat.coprime_of_lt_prime (Nat.sub_pos_of_lt hlp.one_lt).ne' (Nat.sub_lt hlp.pos one_pos) hlp
     exact one_of hcop ha htor
   have hchi : chiO ℚ Ω l c.O (resQ T.F s) = 1 := by

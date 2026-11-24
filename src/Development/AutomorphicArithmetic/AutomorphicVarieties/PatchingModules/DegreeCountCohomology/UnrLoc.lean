@@ -102,7 +102,7 @@ theorem UpperTheory.Reformulated.B.CoboundaryCriterion.isCoboundary_of_coprime :
     have h1 : z (i (v⁻¹ * u)) = 0 := hker _ (by simp [huv])
     have h2 : i u = i v * i (v⁻¹ * u) := by simp
     rw [h2, hz, h1, map_zero, add_zero]
-  haveI : Fintype f.range := Fintype.ofFinite _
+  have : Fintype f.range := Fintype.ofFinite _
   obtain ⟨s, hs⟩ : ∃ s : f.range → H, ∀ q, f (s q) = (q : C) :=
     ⟨fun q => q.2.choose, fun q => q.2.choose_spec⟩
   have hcop' : (Nat.card f.range).Coprime l :=
@@ -327,12 +327,12 @@ private theorem eq_zero_of_dense (I : Subgroup D) (φ : D)
     { carrier := {g | z g = 0}
       mul_mem' := fun {a b} ha hb ↦ by
         have := hz.1.2 a b
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [this, ha, hb, map_zero, add_zero]
       one_mem' := hz.2 1 (one_mem _)
       inv_mem' := fun {a} ha ↦ by
         have := hz.1.2 a⁻¹ a
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [inv_mul_cancel, hz.2 1 (one_mem _), ha, map_zero, add_zero] at this
         exact this.symm }
   have hU : U = ⊤ := ha U (hz.1.1.isOpen_fiber 0) (fun g hg ↦ hz.2 g hg) h0
@@ -789,16 +789,16 @@ private theorem dense (h : IsPlaceOver A v) (φ : Dec (F := F) A)
   have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (dec_closed A).isCompact
   obtain ⟨σ, hσU, hσ⟩ := (U.isClosed_of_isOpen hU).isCompact.inter_iInter_nonempty
     (fun b : 𝓞 Ω ↦ {σ : Dec (F := F) A | A.valuation (σ.1 b - g.1 b) < 1})
-    (fun b ↦ ⟨(lc_apply (F := F) (b : Ω)).comp_continuous continuous_subtype_val
+    (fun b ↦ ⟨(lc_apply (F := F) (b : Ω)).comp_continuous continuous_subtypeVal
       {y | A.valuation (y - g.1 b) < 1}ᶜ⟩)
     (fun S ↦ by
       obtain ⟨j, hj⟩ := exists_pow h g.2 S
       refine ⟨φ ^ j, pow_mem hφU j, ?_⟩
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       intro b hb
       have := Valuation.map_sub_lt _ (frob_pow hφ j b) (hj b hb)
       rwa [sub_sub_sub_cancel_right] at this)
-  simp only [Set.mem_iInter, Set.mem_setOf_eq] at hσ
+  simp only [Set.mem_iInter, Set.mem_ofPred_eq] at hσ
   have h1 : g⁻¹ * σ ∈ U := hI (mem_ine A (one_lt_q v).ne_bot (val_q h) (g⁻¹ * σ).2 fun b ↦ by
     rw [← dec_lt A g.2, map_sub]
     have : g.1 ((g⁻¹ * σ).1 b) = σ.1 b := g.1.apply_symm_apply _
@@ -824,7 +824,7 @@ private theorem levels (h : IsPlaceOver A v) (φ : Dec (F := F) A)
   have : NeZero (q ^ n - 1) := ⟨hN0⟩
   have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (q ^ n - 1)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (q ^ n - 1)
   have hroot : ∀ (σ : G F Ω) (x : Ω), x ^ (q ^ n - 1) = 1 → (σ x) ^ (q ^ n - 1) = 1 :=
     fun σ x hx ↦ by rw [← map_pow, hx, map_one]
   let V : Subgroup (Dec (F := F) A) :=
@@ -848,7 +848,7 @@ private theorem levels (h : IsPlaceOver A v) (φ : Dec (F := F) A)
       obtain ⟨i, -, rfl⟩ := hζ.eq_pow_of_pow_eq_one hx
       rw [map_pow, show σ.1 ζ = ζ from hσ]
     rw [this]
-    exact (isOpen_fix ζ).preimage continuous_subtype_val
+    exact (isOpen_fix ζ).preimage continuous_subtypeVal
   · exact root_eq A hN (hroot _ x hx) hx (hσ.2 x (int_le A ⟨x, hint x hx⟩))
   · have h1 := frob_pow hφ j ⟨ζ, hint ζ hζ.1⟩
     have h2 : (φ.1 ^ j) ζ = ζ := hj ζ hζ.1
@@ -941,7 +941,7 @@ open Matrix Filter NumberField IsDedekindDomain Formalism.ConjugateSelfDual Reci
 private theorem ul_cop (l : ℕ) [Fact l.Prime] (k : Type) [Field k] [Finite k] [CharP k l] (n : ℕ) :
     (Nat.card (Fin n → kˣ)).Coprime l := by
   classical
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   have hl : l.Prime := Fact.out
   obtain ⟨m, -, hm⟩ := FiniteField.card k l
   rw [Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin, Fintype.card_units, hm]
@@ -962,8 +962,8 @@ private theorem ul_ker {G C : Type} [Group G] [Group C] {n : ℕ} (f : Fin n →
 theorem UpperTheory.V.Pa.unrLoc :
     ∀ (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (V0 : s.Lev) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (n : ℕ) (r : Resid V0.frame O n), ∀ u, UnrCount l ((locOf r).Gu u) ((locOf r).Ju u) := by
   intro l _ L Ω _ _ _ _ _ _ s V0 O _ _ _ _ _ n r u
-  haveI : CharP (IsLocalRing.ResidueField O) l := IsCoef.char
-  haveI : Finite (IsLocalRing.ResidueField O) := IsCoef.finite
+  have : CharP (IsLocalRing.ResidueField O) l := IsCoef.char
+  have : Finite (IsLocalRing.ResidueField O) := IsCoef.finite
   unfold locOf
   dsimp only
   have key : ∀ (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 L)), IsPlaceOver A v →
@@ -975,7 +975,7 @@ theorem UpperTheory.V.Pa.unrLoc :
     have hopen : IsOpen (χ.ker : Set (Dec (F := L) A)) := by
       rw [hker, Subgroup.coe_iInf]
       refine isOpen_iInter_of_finite fun i => ?_
-      exact (r.chib_open i).preimage ((V0.pr_cont continuous_resP).comp continuous_subtype_val)
+      exact (r.chib_open i).preimage ((V0.pr_cont continuous_resP).comp continuous_subtypeVal)
     have h := unrBare l L Ω A v _ χ hv hopen (ul_cop l _ n)
     rwa [hker] at h
   exact key _ _ (s.hw _)

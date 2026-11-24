@@ -79,8 +79,8 @@ open IsLocalRing Matrix Filter UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.A
 open scoped TensorProduct
 
 private theorem gDet_chi_map_C_mapRingHom_gen {n : ℕ} {B B' G : Type} [CommRing B] [CommRing B'] [Group G] (g : B →+* B') (D : GDet n B G) (m : ℕ) (y : Fin m → MonoidAlgebra B G) : ((D.map g).map MvPolynomial.C).chi (MonoidAlgebra.mapRingHom G (MvPolynomial.map g) (GDet.gen y)) = Polynomial.map (MvPolynomial.map g) ((D.map MvPolynomial.C).chi (GDet.gen y)) := by
-  letI i0 : Algebra B (Polynomial (MvPolynomial (Fin m) B)) := RingHom.toAlgebra ((algebraMap (MvPolynomial (Fin m) B) (Polynomial (MvPolynomial (Fin m) B))).comp MvPolynomial.C)
-  letI i1 : Algebra B (Polynomial (MvPolynomial (Fin m) B')) := RingHom.toAlgebra (((algebraMap (MvPolynomial (Fin m) B') (Polynomial (MvPolynomial (Fin m) B'))).comp MvPolynomial.C).comp g)
+  let i0 : Algebra B (Polynomial (MvPolynomial (Fin m) B)) := RingHom.toAlgebra ((algebraMap (MvPolynomial (Fin m) B) (Polynomial (MvPolynomial (Fin m) B))).comp MvPolynomial.C)
+  let i1 : Algebra B (Polynomial (MvPolynomial (Fin m) B')) := RingHom.toAlgebra (((algebraMap (MvPolynomial (Fin m) B') (Polynomial (MvPolynomial (Fin m) B'))).comp MvPolynomial.C).comp g)
   let φ : Polynomial (MvPolynomial (Fin m) B) →ₐ[B] Polynomial (MvPolynomial (Fin m) B') :=
     { Polynomial.mapRingHom (MvPolynomial.map g) with
       commutes' := fun b => by simp [RingHom.algebraMap_toAlgebra] }
@@ -264,9 +264,9 @@ private theorem le_chBar {n : ℕ} {A G : Type} [CommRing A] [Group G] [IsLocalR
 theorem UpperTheory.V.Pa.Core.gensImg :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (A : TWAut u J Unit D T) (W : RRObj Λ A) (m : RMaps W) [IsCO O (W.R ⧸ ii W)] (o : OoPair W) (πb : (W.R ⧸ ii W) →ₐ[O] Spo A), (∀ a, πb (Ideal.Quotient.mk (ii W) a) = m.π a) → T.ProL → Adapted T (r := r) → 1 ≤ n → ∀ z ∈ pairGens o.p ∪ qGens (O := O) (F := Λ.G.frame) Λ.ph Λ.ta (fun j i => Ideal.Quotient.mk (ii W) (W.t.U j i)) (fun j i => Ideal.Quotient.mk (ii W) (W.t.y j i)), MonoidAlgebra.mapDomainRingHom (Spo A) Λ.h.p₀ (MonoidAlgebra.mapRingHom Λ.G.G₀ πb.toRingHom z) ∈ TwoSidedIdeal.span (MonoidAlgebra.mapRingHom G0.G₀ (algebraMap B (Spo A)) '' augmentationIdealKernel u) := by
   intro l _ L G0 T Λ n O _ _ _ _ _ r B _ _ _ u J D A W m _ o πb hπb hPL hAd hn z hz
-  haveI := IsCoef.complete (l := l) (O := O)
-  haveI := IsCoef.finite (l := l) (O := O)
-  haveI := IsCoef.char (l := l) (O := O)
+  have := IsCoef.complete (l := l) (O := O)
+  have := IsCoef.finite (l := l) (O := O)
+  have := IsCoef.char (l := l) (O := O)
   obtain ⟨-, -, hstarCH, -, -⟩ := UpperTheory.V.CA.pair_kills r u (BC.phi0 l L G0 T hPL) hn
   have hmaps := ooMaps l L G0 T Λ n O r B u J D A W m o πb hπb
   obtain ⟨-, -, -, hU, hy⟩ := m.π_maps
@@ -342,7 +342,7 @@ theorem UpperTheory.V.Pa.Core.gensImg :
     unfold GFrame.star
     simp
   unfold pairGens qGens at hz
-  simp only [Set.mem_union, Set.mem_setOf_eq] at hz
+  simp only [Set.mem_union, Set.mem_ofPred_eq] at hz
   rcases hz with ((⟨v, g, rfl | rfl⟩ | ⟨w, g, hg, rfl | rfl⟩) | (⟨j, rfl | rfl⟩ | ⟨j, i, rfl | rfl⟩))
   · have eo : MonoidAlgebra.mapDomainRingHom (Spo A) Λ.h.p₀
         (MonoidAlgebra.mapRingHom Λ.G.G₀ πb.toRingHom (Λ.G.frame.oEl v (o.p.ψ v) g)) =
@@ -449,9 +449,9 @@ private theorem fg_image {A B : Type} [Group A] [TopologicalSpace A] [IsTopologi
 
 private theorem co_local {O R R' : Type} [CommRing O] [IsLocalRing O] [CommRing R] [Algebra O R] [IsCO O R]
     [CommRing R'] [Algebra O R'] [IsCO O R'] (f : R →ₐ[O] R') : IsLocalHom f.toRingHom := by
-  haveI := IsCO.toIsLocalRing O (R := R)
-  haveI := IsCO.toIsLocalRing O (R := R')
-  haveI : IsLocalHom (algebraMap O R') := IsCO.isLocalHom
+  have := IsCO.toIsLocalRing O (R := R)
+  have := IsCO.toIsLocalRing O (R := R')
+  have : IsLocalHom (algebraMap O R') := IsCO.isLocalHom
   constructor
   intro x hx
   by_contra hnx
@@ -484,14 +484,14 @@ private theorem co_local {O R R' : Type} [CommRing O] [IsLocalRing O] [CommRing 
 theorem UpperTheory.V.Pa.Core.nonssT :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (A : TWAut u J Unit D T) (W : RRObj Λ A) (m : RMaps W) [IsCO O (W.R ⧸ ii W)] (o : OoPair W) (πb : (W.R ⧸ ii W) →ₐ[O] Spo A), (∀ a, πb (Ideal.Quotient.mk (ii W) a) = m.π a) → T.ProL → Adapted T (r := r) → 1 ≤ n → ∀ (Bh : Type) [CommRing Bh] (φ : (W.R ⧸ ii W) →+* Bh) (Q : Ideal Bh) (P : Ideal (Spo A)), Q.IsPrime → P.IsPrime → Q.comap φ = P.comap πb → NonSS (augmentationIdealKernel u) (RingHom.id B) (P.comap (algebraMap B (Spo A))) → NonSS (ooKer o) φ Q := by
   intro l _ L G0 T Λ n O _ _ _ hO _ r B _ _ _ u J D A W m _ o πb hπ hT hA hn Bh _ φ Q P hQ hP hQP hN
-  haveI : Finite (ResidueField O) := hO.finite
-  haveI : CharP (ResidueField O) l := hO.char
+  have : Finite (ResidueField O) := hO.finite
+  have : CharP (ResidueField O) l := hO.char
   obtain ⟨⟨hco, hfr, hfin, -⟩, -⟩ := spoCo l L G0 T Λ n O r B u J D A hA
-  haveI : IsLocalRing (Spo A) := hco.toIsLocalRing
-  haveI : IsNoetherianRing (Spo A) := hco.toIsNoetherian
-  haveI : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)
-  haveI : IsLocalHom (algebraMap B (Spo A)) := Algebra.IsIntegral.isLocalHom B (Spo A)
-  haveI : IsLocalHom πb.toRingHom := co_local πb
+  have : IsLocalRing (Spo A) := hco.toIsLocalRing
+  have : IsNoetherianRing (Spo A) := hco.toIsNoetherian
+  have : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)
+  have : IsLocalHom (algebraMap B (Spo A)) := Algebra.IsIntegral.isLocalHom B (Spo A)
+  have : IsLocalHom πb.toRingHom := co_local πb
   obtain ⟨hfB, ⟨χ, h, hχ, hm⟩, hsp⟩ := BC.pair_mf l G0.frame O n r B u (BC.phi0 l L G0 T hT)
   obtain ⟨-, -, hsp'⟩ := BC.pair_mf l Λ.G.frame O n o.r' (W.R ⧸ ii W) o.p
     (phi_fg Λ.G.frame (fg_image Λ.πo Λ.πo_cont Λ.πo_surj Λ.fg))

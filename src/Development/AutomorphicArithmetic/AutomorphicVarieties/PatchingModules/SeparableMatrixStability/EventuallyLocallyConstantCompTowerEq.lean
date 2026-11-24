@@ -55,15 +55,15 @@ theorem UpperTheory.V.Pa.eventually_locallyConstant_comp_tower_eq :
   intro l _ L G0 T Λ Z ρ hρ
   have hKo : IsOpen ((G0.η.ker : Subgroup G0.Γ) : Set G0.Γ) := G0.η_open
   have hKc : IsClosed ((G0.η.ker : Subgroup G0.Γ) : Set G0.Γ) := Subgroup.isClosed_of_isOpen _ hKo
-  haveI : CompactSpace G0.G₀ := isCompact_iff_compactSpace.mp hKc.isCompact
+  have : CompactSpace G0.G₀ := isCompact_iff_compactSpace.mp hKc.isCompact
   have hfin : (Set.range ρ).Finite := hρ.range_finite
   have hS : ∀ z, ∃ V ∈ nhds (1 : G0.Γ), ∀ v ∈ V, ∀ x ∈ (Subtype.val '' (ρ ⁻¹' {z}) : Set G0.Γ),
       v * x ∈ (Subtype.val '' (ρ ⁻¹' {z}) : Set G0.Γ) := by
     intro z
     have hc : IsCompact (Subtype.val '' (ρ ⁻¹' {z}) : Set G0.Γ) :=
-      (hρ.isClosed_fiber z).isCompact.image continuous_subtype_val
+      (hρ.isClosed_fiber z).isCompact.image continuous_subtypeVal
     have ho : IsOpen (Subtype.val '' (ρ ⁻¹' {z}) : Set G0.Γ) :=
-      hKo.isOpenMap_subtype_val _ (hρ.isOpen_fiber z)
+      hKo.isOpenMap_subtypeVal _ (hρ.isOpen_fiber z)
     open scoped Pointwise in
     obtain ⟨V, hV, hVS⟩ := compact_open_separated_mul_left hc ho subset_rfl
     open scoped Pointwise in

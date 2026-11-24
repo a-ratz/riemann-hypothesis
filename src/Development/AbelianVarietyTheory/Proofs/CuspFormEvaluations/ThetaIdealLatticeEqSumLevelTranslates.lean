@@ -78,8 +78,8 @@ theorem mem_of_eigen_mem {A W : Type} [AddCommGroup A] [AddCommGroup W] [Module 
     (H : AddSubgroup (AddChar (A ⧸ N) ℂ)) (hH : ∀ q ≠ 0, ∃ ψ ∈ H, ψ q ≠ 1)
     (f : W) (hf : ∀ u ∈ N, S u f = f) (U V : Submodule ℂ W) (hU : ∀ u, S u f ∈ U)
     (hV : ∀ ψ ∈ H, ∀ h ∈ U, (∀ u : A, S u h = ψ (u : A ⧸ N) • h) → h ∈ V) : f ∈ V := by
-  haveI := Fintype.ofFinite (A ⧸ N)
-  haveI := Fintype.ofFinite H
+  have := Fintype.ofFinite (A ⧸ N)
+  have := Fintype.ofFinite H
   let T : A ⧸ N → W := fun q => S q.out f
   have hT : ∀ u : A, T (u : A ⧸ N) = S u f := by
     intro u
@@ -121,7 +121,7 @@ theorem mem_of_eigen_mem {A W : Type} [AddCommGroup A] [AddCommGroup W] [Module 
 theorem mem_span_prod {Z J : Type} (φ : J → Z → ℂ) (Y : Set J) (hY : Y.Finite) : ∀ (n : ℕ)
     (F : (Fin n → Z) → ℂ), (∀ b z, (fun t => F (Function.update z b t)) ∈ Submodule.span ℂ (φ '' Y)) →
     F ∈ Submodule.span ℂ ((fun (y : Fin n → J) (z : Fin n → Z) => ∏ b, φ (y b) (z b)) '' {y | ∀ b, y b ∈ Y}) := by
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ (φ '' Y)) := FiniteDimensional.span_of_finite ℂ (hY.image φ)
+  have : FiniteDimensional ℂ (Submodule.span ℂ (φ '' Y)) := FiniteDimensional.span_of_finite ℂ (hY.image φ)
   intro n
   induction n with
   | zero =>
@@ -258,10 +258,10 @@ theorem exists_span_one (hs : IsSympl X bas) (hd : x ∈ X.dom) {w : E} (hw : Is
         f ∈ Submodule.span ℂ ((fun y => fock X bas idx x 1 (pv X idx x y) θ) '' Y) := by
   let N : AddSubgroup L := (𝔐 • L).toAddSubgroup.comap L.subtype.toAddMonoidHom
   have hN : ∀ u : L, u ∈ N ↔ (u : Fin r → E) ∈ 𝔐 • L := fun _ => Iff.rfl
-  haveI : Finite (L ⧸ N) := by
-    haveI : Module.Finite (𝓞 E) L := .of_fg hL.1
-    haveI : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
-    haveI : AddGroup.FG L := Module.Finite.iff_addGroup_fg.1 inferInstance
+  have : Finite (L ⧸ N) := by
+    have : Module.Finite (𝓞 E) L := .of_fg hL.1
+    have : Module.Finite ℤ L := Module.Finite.trans (𝓞 E) L
+    have : AddGroup.FG L := Module.Finite.iff_addGroup_fg.1 inferInstance
     refine AddCommGroup.finite_of_fg_isAddTorsion _ fun q => ?_
     obtain ⟨u, rfl⟩ := QuotientAddGroup.mk_surjective q
     refine isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨M, Nat.pos_of_ne_zero hM, ?_⟩

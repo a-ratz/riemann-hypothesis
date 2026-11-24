@@ -63,7 +63,7 @@ theorem UpperTheory.Reformulated.B.DYlb5.main :
     ∀ {k : Type} [inst : Field k] [inst_1 : ValuativeRel k] [inst_2 : TopologicalSpace k] [IsNonarchimedeanLocalField k]
       {n : ℕ} (f : Module.Dual k (Matrix (Fin n) (Fin n) k)), Continuous (⇑f : Matrix (Fin n) (Fin n) k → k) := by
   intro k _ _ _ _ n f
-  haveI : IsTopologicalRing k := inferInstance
+  have : IsTopologicalRing k := inferInstance
   have key : ∀ M : Matrix (Fin n) (Fin n) k,
       f M = ∑ i, ∑ j, M i j * f (Matrix.single i j 1) := by
     intro M
@@ -213,7 +213,7 @@ theorem isClosed_subalgebra (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) :
 
 theorem eq_zero_of_mem_of_isNilpotent {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} (hZ : CR Z)
     {c : Matrix (Fin n) (Fin n) k} (hc : c ∈ Z) (h : IsNilpotent c) : c = 0 := by
-  haveI := hZ.2
+  have := hZ.2
   obtain ⟨m, hm⟩ := h
   have h' : IsNilpotent (⟨c, hc⟩ : Z) := ⟨m, Subtype.ext (by simpa using hm)⟩
   simpa using congrArg Subtype.val h'.eq_zero

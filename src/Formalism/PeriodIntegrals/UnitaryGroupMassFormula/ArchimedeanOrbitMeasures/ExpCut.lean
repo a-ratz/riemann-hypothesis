@@ -84,7 +84,7 @@ def CayLiftU : Prop := ∀ (n : ℕ) (ε : Fin n → Bool) (m h : Submodule ℝ 
 
 theorem expProdU_of (hC : CayProdU) (hL : CayLiftU) : ExpProdU := by
   intro n ε m h hmh horth ι η _ _ L₀ L₁ hG
-  haveI hHaar : (volume : Measure (EuclideanSpace ℝ ι × EuclideanSpace ℝ η)).IsAddHaarMeasure := by
+  have hHaar : (volume : Measure (EuclideanSpace ℝ ι × EuclideanSpace ℝ η)).IsAddHaarMeasure := by
     rw [Measure.volume_eq_prod]; infer_instance
   obtain ⟨r₀, hr₀, f, hfc, hf0, hfm, hf⟩ := hC n ε m h hmh horth ι η L₀ L₁ hG
   obtain ⟨U, hU, ψ, ψ', hψ, hinj, hψ0, hψc, hψm, hψ'm, hdc, hd0, heq⟩ := hL n ε m h hmh horth ι η L₀ L₁

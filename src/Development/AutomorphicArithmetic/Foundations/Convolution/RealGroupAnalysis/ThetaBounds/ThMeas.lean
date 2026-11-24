@@ -50,12 +50,12 @@ private theorem measurable_tsum_complex {ι X : Type} [Countable ι] [Measurable
     (hf : ∀ i, Measurable (f i)) : Measurable fun x => ∑' i, f i x := by
   have hS : MeasurableSet {x | Summable fun i => f i x} := by
     have hm : Measurable fun x => ∑' i, (‖f i x‖₊ : ENNReal) :=
-      Measurable.tsum fun i => (hf i).nnnorm.coe_nnreal_ennreal
+      Measurable.tsum fun i => (hf i).nnNorm.coe_nnreal_ennreal
     have : {x | Summable fun i => f i x} = (fun x => ∑' i, (‖f i x‖₊ : ENNReal)) ⁻¹' Set.Iio ⊤ := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_Iio, lt_top_iff_ne_top]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_Iio, lt_top_iff_ne_top]
       rw [ENNReal.tsum_coe_ne_top_iff_summable, ← NNReal.summable_coe]
-      simp only [coe_nnnorm]
+      simp only [coe_nnNorm]
       exact summable_norm_iff.symm
     rw [this]
     exact hm measurableSet_Iio
@@ -73,10 +73,10 @@ private theorem measurable_tsum_complex {ι X : Type} [Countable ι] [Measurable
 theorem UpperTheory.ConvolutionTheory.R2.Ff.thMeas :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] (D : Dat F E) (W : Weil D), ThMeas W := by
   intro F E _ _ _ _ _ _ _ D W φ
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable F := Countable.of_moduleFinite (R := ℚ)
   have hpt : ∀ v, Measurable fun g => (W.Om g φ).1 v := fun v =>
     ((W.cont φ).comp (continuous_id.prodMk continuous_const)).measurable
-  have hψ : Continuous (ψ : A F → ℂ) := continuous_subtype_val.comp (continuous_adelicChar (K := F))
+  have hψ : Continuous (ψ : A F → ℂ) := continuous_subtypeVal.comp (continuous_adelicChar (K := F))
   have hhat : ∀ v, Measurable fun g => hat (W.Om g φ).1 v := by
     intro v
     have hc : Continuous fun p : G1 F × A F =>

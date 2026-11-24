@@ -416,14 +416,14 @@ theorem integrable_and_projS_mem {θ : InfFam D} (hθ : IsInfFam θ) {T : HSp D}
     exact Submodule.smul_mem _ c h1.2
   | mem Φ hΦ =>
     obtain ⟨f, g, hg, rfl⟩ := hΦ
-    haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-    haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-    haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
-    haveI : OpensMeasurableSpace K := inferInstance
+    have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+    have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+    have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
+    have : OpensMeasurableSpace K := inferInstance
     have c1 : Continuous fun k : K => Formalism.L2.Theta.mt T (k : GA D T) :=
-      (GlobalTheory.RealWeil.continuous_mt T).1.comp continuous_subtype_val
+      (GlobalTheory.RealWeil.continuous_mt T).1.comp continuous_subtypeVal
     have c2 : Continuous fun k : K => Formalism.L2.Theta.mt T (k : GA D T)⁻¹ :=
-      (GlobalTheory.RealWeil.continuous_mt T).2.comp continuous_subtype_val
+      (GlobalTheory.RealWeil.continuous_mt T).2.comp continuous_subtypeVal
     obtain ⟨hint, t, F, ht, hF⟩ := integral_tensor_matrix (n := n) ν
       (fun (k : K) τ => compAt θ τ (Formalism.L2.Theta.mt T (k : GA D T)⁻¹))
       (fun (k : K) τ => compAt θ τ (Formalism.L2.Theta.mt T (k : GA D T)))

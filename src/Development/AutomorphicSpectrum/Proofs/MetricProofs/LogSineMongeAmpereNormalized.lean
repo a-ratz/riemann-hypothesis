@@ -458,7 +458,7 @@ theorem exists_functional : ∀ (d : ℕ) (T : Fin 3 → Matrix (Fin d) (Fin d) 
       (d.factorial : ℂ) * Λ (fun t => M (h.choose t)) else 0, fun τ => ?_⟩
     have h : ∃ τ' : Fin d → Option (Fin 3),
         ∑ t, Finsupp.single (τ' t) (1 : ℕ) = ∑ t, Finsupp.single (τ t) (1 : ℕ) := ⟨τ, rfl⟩
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     obtain ⟨π, hπ⟩ := exists_perm_of_sum_single h.choose_spec
     have e : (fun t => M (h.choose t)) = (fun t => M (τ t)) ∘ π :=
       funext fun t => by simp only [Function.comp_apply, hπ]
@@ -700,10 +700,10 @@ theorem prod_fin_ite_lt {R : Type*} [CommMonoid R] (a b : R) (m N : ℕ) (h : m 
   rw [Fin.prod_univ_eq_prod_range (fun i => if i < m then a else b) (m + j),
     Finset.prod_range_add]
   have h1 : (∏ x ∈ Finset.range m, (if x < m then a else b)) = a ^ m := by
-    rw [Finset.prod_congr rfl (fun x hx => if_pos (Finset.mem_range.mp hx))]
+    rw [Finset.prod_congr rfl (fun x hx => ite_eq_left (Finset.mem_range.mp hx))]
     simp
   have h2 : (∏ x ∈ Finset.range j, (if m + x < m then a else b)) = b ^ j := by
-    rw [Finset.prod_congr rfl (fun x _ => if_neg (by omega))]
+    rw [Finset.prod_congr rfl (fun x _ => ite_eq_right (by omega))]
     simp
   rw [h1, h2, Nat.add_sub_cancel_left]
 
@@ -878,7 +878,7 @@ def dens (a : ℂ) : ℝ := Real.pi⁻¹ / (1 + ‖a‖ ^ 2) ^ 2
 def stereoMeasure : Measure ℂ := volume.withDensity fun a => ENNReal.ofReal (dens a)
 
 theorem continuous_crd : Continuous crd :=
-  continuous_pi fun i => (EuclideanSpace.proj i).continuous.comp continuous_subtype_val
+  continuous_pi fun i => (EuclideanSpace.proj i).continuous.comp continuous_subtypeVal
 
 theorem measurable_dens : Measurable dens := by
   have : Continuous dens := by
@@ -1486,7 +1486,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.xi_potential_hessian_decomposi
   refine ⟨hc, ?_⟩
   ext p q
   refine Fin.cases ?_ (fun p' => ?_) p <;> refine Fin.cases ?_ (fun q' => ?_) q
-  all_goals simp only [hessC, Matrix.of_apply, Fin.cases_zero, Fin.cases_succ, hH, PositivityTheory.Xgp.fib_hess.tl_zero, PositivityTheory.Xgp.fib_hess.tl_zero', PositivityTheory.Xgp.fib_hess.tl_succ, PositivityTheory.Xgp.fib_hess.tl_succ', map_zero, ContinuousLinearMap.zero_apply]
+  all_goals simp only [hessC, Matrix.of_apply, Fin.cases_zero, Fin.cases_succ, hH, PositivityTheory.Xgp.fib_hess.tl_zero, PositivityTheory.Xgp.fib_hess.tl_zero', PositivityTheory.Xgp.fib_hess.tl_succ, PositivityTheory.Xgp.fib_hess.tl_succ', map_zero, zero_apply]
   all_goals simp only [Pi.smul_apply, smul_eq_mul, Pi.single_eq_same, ne_eq, Fin.succ_ne_zero, not_false_eq_true, Pi.single_eq_of_ne, mul_zero, mul_one, Complex.zero_re, Complex.zero_im, Complex.one_re, Complex.one_im, Complex.I_re, Complex.I_im]
   all_goals clear hH hc h0 h1 hC
   all_goals have hr : ‖a‖ ^ 2 = a.re ^ 2 + a.im ^ 2 := by rw [Complex.sq_norm, Complex.normSq_apply]; ring
@@ -1498,7 +1498,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.xi_potential_hessian_decomposi
     field_simp
     ring
   all_goals have hz : ∀ j : Fin d, (Pi.single j.succ (1:ℂ) : Fin (d+1) → ℂ) 0 = 0 := fun j => by simp [Pi.single_apply, (Fin.succ_ne_zero j).symm]
-  all_goals simp only [hz, mul_zero, Complex.zero_re, Complex.zero_im, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons, PositivityTheory.Xgp.fib_hess.hm, ContinuousLinearMap.add_apply, ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, smul_eq_mul, ContinuousLinearMap.neg_apply]
+  all_goals simp only [hz, mul_zero, Complex.zero_re, Complex.zero_im, Fin.sum_univ_three, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.head_cons, Matrix.tail_cons, PositivityTheory.Xgp.fib_hess.hm, add_apply, sub_apply, smul_apply, FunLike.coe_smul, Pi.smul_apply, smul_eq_mul, neg_apply]
   all_goals try rw [hr]
   case refine_2.refine_2 =>
     apply Complex.ext
@@ -1650,7 +1650,7 @@ theorem fibre_integral_normal : GroundTheory.Heights₂.Heights.Inter.FibreLocal
           simp only [DiagonalFibreFubini.wordCoef]
           split_ifs <;> rfl
         by_cases hr : (r : ℕ) < 2 * k
-        · simp only [hr, if_true, hcoef, hf, Fin.tail, Fin.cons_zero, Fin.cons_succ]
+        · simp only [hr, ite_true, hcoef, hf, Fin.tail, Fin.cons_zero, Fin.cons_succ]
           simp
         · simp [hr]
     simp_rw [hpt]

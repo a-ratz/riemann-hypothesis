@@ -251,7 +251,7 @@ theorem exists_pairing_single_ne (hU : IsUnramInv ϖ σ q) (h2 : Valued.v (2 : L
       rw [mem_intL, not_le, ← WithZero.exp_log hv0, ← WithZero.exp_zero, WithZero.exp_lt_exp] at hx
       rw [← WithZero.exp_log hv0, WithZero.exp_le_exp]; omega
     rw [hU.2.1, map_div₀, map_mul, map_mul, map_mul, h2, hδ, one_mul, one_mul, map_inv₀, hϖ, ← WithZero.exp_neg, neg_neg,
-      div_le_one₀ (zero_lt_iff.2 hv0)]
+      div_le_one₀ (pos_iff_ne_zero.2 hv0)]
     exact (mul_le_of_le_one_right' ha).trans h1
   · have : δ * (x i j * (ϖ⁻¹ * a / (2 * δ * x i j))) = ϖ⁻¹ * a / 2 := by field_simp
     rw [pairing_single, hU.1, this, map_div₀, map_mul, map_inv₀, hU.2.2.1, ha', map_ofNat, show ϖ⁻¹ * a / 2 + ϖ⁻¹ * a / 2 = ϖ⁻¹ * a by field_simp; norm_num]

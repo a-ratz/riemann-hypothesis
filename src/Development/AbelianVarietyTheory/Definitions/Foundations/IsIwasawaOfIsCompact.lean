@@ -135,7 +135,7 @@ theorem isIwasawa_of_isCompact (hP : IsClosed (P : Set G)) (hδ : Continuous δ)
 theorem continuous_of_prod (hP : IsClosed (P : Set G)) (hK : IsCompact (K : Set G))
     (h : ∀ g : G, ∃ p : P, ∃ k ∈ K, g = p * k) {X : Type} [TopologicalSpace X] {f : G → X}
     (hf : Continuous fun x : P × K => f (x.1 * x.2)) : Continuous f := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   let e : G × K ≃ₜ G × K :=
     { toFun := fun x => (x.1 * x.2, x.2), invFun := fun x => (x.1 * (x.2 : G)⁻¹, x.2)
       left_inv := fun x => by simp, right_inv := fun x => by simp

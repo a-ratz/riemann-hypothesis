@@ -72,7 +72,7 @@ theorem smoothOnG_exists_contDiff_compactSupport_extension :
 
   have hp : Continuous (fun g : UJ ε => (fun i j => umat g i j : Fin n → Fin n → ℂ)) := by
     have hu : Continuous (fun g : UJ ε => umat g) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     exact continuous_pi fun i => continuous_pi fun j => hu.matrix_elem i j
 
   have hK : IsCompact ((fun g : UJ ε => (fun i j => umat g i j : Fin n → Fin n → ℂ)) ''
@@ -150,7 +150,7 @@ theorem exists_smooth_average_eq_of_mem_lowKSub : ∀ (n : ℕ) (ε : Fin n → 
   intro n ε H _ _ _ σ lam w hrep hK hw hw0 u hu
   have hmem : ∀ g : Formalism.REAL.UJ ε, umat g ∈ UJset ε := fun g => g.2
   have humat : Continuous fun g : Formalism.REAL.UJ ε => umat g :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hcont : Continuous fun g : Formalism.REAL.UJ ε => σ (umat g) w :=
     (hrep.2.2 w).comp_continuous humat hmem
   have he : Continuous fun g : Formalism.REAL.UJ ε => (fun i j => umat g i j : Fin n → Fin n → ℂ) := humat

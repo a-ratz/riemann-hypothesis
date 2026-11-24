@@ -97,7 +97,7 @@ theorem eq_ratio_base_smul (hd : d.AxH 𝒜) (c : ι) {f : A c} (hf : f ∈ 𝒜
     f = ratio (Ω := Ω c) f (d.w (d.jc c) c) • d.w (d.jc c) c := by
   have hw := hd.w_mem (d.jc c) c
   have hw0 := hd.w_base c
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨_, hw⟩ : 𝒜 c d.wL)
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨_, hw⟩ : 𝒜 c d.wL)
     (by simpa using hw0)).1 (hd.finrank_one c d.wL) ⟨f, hf⟩
   have hfa : f = a • d.w (d.jc c) c := by
     have h1 := congrArg Subtype.val ha
@@ -113,7 +113,7 @@ theorem ratio_base_ne_zero (hd : d.AxH 𝒜) (c : ι) {f : A c} (hf : f ∈ 𝒜
   rw [d.eq_ratio_base_smul hd c hf, h0, zero_smul]
 
 theorem linearCombination_mem_section (hd : d.AxH 𝒜) (x : Fin (d.N + 1) → K) (c : ι) : d.wx x c ∈ 𝒜 c d.wL := by
-  haveI := hd.tower c
+  have := hd.tower c
   unfold wx
   rw [Finset.sum_apply]
   refine Submodule.sum_mem _ fun j _ => ?_
@@ -131,7 +131,7 @@ theorem ord_eq_valuation_ratio_base_add (hd : d.AxH 𝒜) (c : ι) (v : AddValua
 
 theorem eq_ratio_smul_of_mem (hd : d.AxH 𝒜) (c : ι) {f g : A c} (hf : f ∈ 𝒜 c d.wL) (hg : g ∈ 𝒜 c d.wL)
     (hg0 : g ≠ 0) : f = ratio (Ω := Ω c) f g • g := by
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨_, hg⟩ : 𝒜 c d.wL)
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨_, hg⟩ : 𝒜 c d.wL)
     (by simpa using hg0)).1 (hd.finrank_one c d.wL) ⟨f, hf⟩
   have hfa : f = a • g := by
     have h1 := congrArg Subtype.val ha
@@ -185,7 +185,7 @@ theorem ordMinMax_eq_ratio_untop_sub (hd : d.AxH 𝒜) (c : ι) (v : AddValuatio
   have hinf : (⨅ j : {j // d.w j c ≠ 0}, d.ord c v d.wL (d.w j c)) = d.ord c v d.wL (d.w j0 c) := by
     apply le_antisymm
     · exact ciInf_le (Set.finite_range _).bddBelow (⟨j0, hj0⟩ : {j // d.w j c ≠ 0})
-    · haveI : Nonempty {j // d.w j c ≠ 0} := ⟨⟨j0, hj0⟩⟩
+    · have : Nonempty {j // d.w j c ≠ 0} := ⟨⟨j0, hj0⟩⟩
       refine le_ciInf fun j => ?_
       have h := d.ord_eq_valuation_ratio_add hd c v hv (hd.w_mem j.1 c) (hd.w_mem j0 c) hj0 j.2
       have hnn := hint j.1

@@ -73,8 +73,8 @@ private theorem avg (ρ : Representation ℂ G W) (A B : Subgroup G) (hfin : B.r
     ∃ w' ∈ P, (∀ a ∈ A, ρ a w' = χ a • w') ∧ l w' = (B.relIndex A : ℂ) * l w := by
   classical
   let C : Subgroup A := B.subgroupOf A
-  haveI hfi : C.FiniteIndex := ⟨hfin⟩
-  haveI : Fintype (A ⧸ C) := Fintype.ofFinite _
+  have hfi : C.FiniteIndex := ⟨hfin⟩
+  have : Fintype (A ⧸ C) := Fintype.ofFinite _
   let F : A → W := fun a => (χ a)⁻¹ • ρ a w
   have hF : ∀ x c : A, (c : G) ∈ B → F (x * c) = F x := by
     intro x c hc
@@ -200,7 +200,7 @@ private theorem el_bd {a b : Fin n} (h : a ≠ b) {y : k} (hy : valuation k y �
   split_ifs
   · exact hy
   · rw [map_zero]
-    exact zero_le'
+    exact zero_le
 
 private theorem el_Kc {a b : Fin n} (h : a ≠ b) {y : k} (hy : valuation k y ≤ uniformizer k ^ ((1 : ℕ) : ℤ)) :
     el a b h y ∈ Kc k n 1 := by
@@ -220,7 +220,7 @@ private theorem chr_el {a b : Fin n} (hab : (b : ℕ) = a + 1) (h : a ≠ b) (ψ
     simp only [Finset.mem_filter] at hpq
     have hpq' : p ≠ q := fun e => by subst e; omega
     have hn : ¬ (a = p ∧ b = q) := fun ⟨e1, e2⟩ => hne (by rw [e1, e2])
-    rw [conj_apply, el_apply, Matrix.one_apply_ne hpq', Matrix.single_apply, if_neg hn]
+    rw [conj_apply, el_apply, Matrix.one_apply_ne hpq', Matrix.single_apply, ite_eq_right hn]
     simp
   · intro hab'
     exact absurd (Finset.mem_filter.2 ⟨Finset.mem_univ (a, b), hab⟩) hab'

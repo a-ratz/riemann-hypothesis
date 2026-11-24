@@ -393,8 +393,8 @@ namespace GlobalTheory.Mum.CoverPull
 
 theorem pt_mem_abLocus : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [GlobalTheory.ZH.ArithBase o Ω] (S : GlobalTheory.ZH.ThetaSys o Ω) (ρS : S.Real) (M : GlobalTheory.ZH.RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J), S.Over₀ M U₀ → ∀ (Z : GlobalTheory.ZH.ZHOut ρS M U₀ EE) (w : Sp Ω), M.pt w ∈ abLocus Z.G := by
   intro o Ω _ _ _ _ S ρS M U₀ EE hO Z w
-  haveI : IsProper ρS.P.A.hom := ρS.P.isAb.proper
-  haveI : IsProper ((Over.pullback Z.u₀).obj ρS.P.A).hom := by
+  have : IsProper ρS.P.A.hom := ρS.P.isAb.proper
+  have : IsProper ((Over.pullback Z.u₀).obj ρS.P.A).hom := by
     show IsProper (pullback.snd ρS.P.A.hom Z.u₀)
     infer_instance
   refine GlobalTheory.range_subset_abLocus_of_isProper (G' := (Over.pullback Z.u₀).obj ρS.P.A) (f := U₀.ι) (φ := Z.φ) Z.semi Z.cart.1 ?_
@@ -419,7 +419,7 @@ theorem exists_unif_pullback : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebr
         gm_pull_g L F (𝟙 Y) y J K hy.1.2 hy.2, gm_pull_g L F (𝟙 Y) y I K hy.1.1 hy.2]
       exact gm_cocycle hL _ y (mem_pull.1 hy.1.1) (mem_pull.1 hy.1.2) (mem_pull.1 hy.2)
   obtain ⟨hdvr, hc, hch⟩ := (GlobalTheory.LN.cDvr_iff W).1 hW
-  haveI := hch
+  have := hch
   obtain ⟨D, A, U, hl, -⟩ := Z.unif W inferInstance inferInstance hc (ξ ≫ h) hab
   have hpt : (pullback.snd Z.G.hom (ξ ≫ h) ≫ ξ) ≫ h = pullback.snd Z.G.hom (ξ ≫ h) ≫ ξ ≫ h := Category.assoc _ _ _
   let β : pullback Z.G.hom (ξ ≫ h) ⟶ pullback Z.G.hom h :=
@@ -484,13 +484,13 @@ theorem exists_uCover_of_zhOut : ∀ (R₁ : Type) [CommRing R₁] [IsDomain R�
                   (Functor.mapMonNatIso (Over.pullbackComp q h) ≪≫ Functor.mapMonCompIso).app (Mon.mk Z.G)
                 let e : (Over.pullback (q ≫ h)).obj Z.G ≅ (Over.pullback q).obj ((Over.pullback h).obj Z.G) :=
                   (Mon.forget _).mapIso em
-                haveI : IsMonHom e.hom := by
+                have : IsMonHom e.hom := by
                   show IsMonHom em.hom.hom
                   infer_instance
-                haveI := E.grpB
-                haveI := E.q_hom
-                haveI := E.i_hom
-                haveI : IsIso e.inv.left := Functor.map_isIso (Over.forget _) e.inv
+                have := E.grpB
+                have := E.q_hom
+                have := E.i_hom
+                have : IsIso e.inv.left := Functor.map_isIso (Over.forget _) e.inv
                 refine ⟨{ X := E.X
                           addCommGroup := E.addCommGroup
                           free := E.free

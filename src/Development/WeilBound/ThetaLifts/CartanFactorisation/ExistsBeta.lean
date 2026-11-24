@@ -163,8 +163,8 @@ theorem I_left (hU : Unimod) (hT : ThetaBasic) (hp : IsPair B M χX χW om r s r
     (g₀ : UA σ X.J) : M.I om (om (g₀, 1) Φ) = M.I om Φ := by
   funext h
   obtain ⟨h1, h2⟩ := uniX hU hp
-  haveI := hp.good.haar
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  have := hp.good.haar
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
   have e : ∀ g, theta om (om (g₀, 1) Φ) g h = theta om Φ (g * g₀) h := fun g => by
     simp only [theta, ← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one]
   simp only [Model.I, e]

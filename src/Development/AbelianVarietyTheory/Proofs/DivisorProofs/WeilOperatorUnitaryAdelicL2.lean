@@ -60,8 +60,8 @@ theorem lintegral_eq_of_fibres {Z X Y : Type} [AddGroup Z] [TopologicalSpace Z] 
     (h : ∀ y, ∫⁻ x, G (x, y) ∂ν = ∫⁻ x, G' (x, y) ∂ν) : ∫⁻ z, G (e z) ∂μ = ∫⁻ z, G' (e z) ∂μ := by
   have he : Measurable e := e.continuous.measurable
   let ρ : Measure Y := Measure.addHaar
-  haveI : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
-  haveI : (ν.prod ρ).IsAddHaarMeasure := inferInstance
+  have : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
+  have : (ν.prod ρ).IsAddHaarMeasure := inferInstance
   rw [← lintegral_map hG he, ← lintegral_map hG' he, Measure.isAddLeftInvariant_eq_smul (μ.map e) (ν.prod ρ),
     lintegral_smul_measure, lintegral_smul_measure, lintegral_prod_symm _ hG.aemeasurable,
     lintegral_prod_symm _ hG'.aemeasurable]
@@ -121,12 +121,12 @@ theorem lintegral_arch_eq : ∀ (F : Type) [Field F] [NumberField F] (κ : Type)
       ∀ φ ∈ schA F κ, ∫⁻ x, ‖Ω φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ := by
   intro F _ _ κ _ L Ω hΩ hL μ hμ φ hφ
   classical
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI : MeasurableSpace (κ → Af F) := borel _
-  haveI : BorelSpace (κ → Af F) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Af F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → Af F) := borel _
+  have : BorelSpace (κ → Af F) := ⟨rfl⟩
+  have : LocallyCompactSpace (Af F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
   obtain ⟨n, c, g, rfl⟩ := Submodule.mem_span_set'.1 hφ
   choose f h hh hg using fun i => (g i).2
   let ν : Measure (κ → mixedEmbedding.mixedSpace F) := Measure.addHaar
@@ -134,12 +134,12 @@ theorem lintegral_arch_eq : ∀ (F : Type) [Field F] [NumberField F] (κ : Type)
   have hν : ν.IsAddHaarMeasure := inferInstance
   have hsq : ∀ u : SInf F κ, ∫⁻ x, ‖u x‖ₑ ^ 2 ∂ν = ENNReal.ofReal (∫ x, star (u x) * u x ∂ν).re := fun u =>
     @lintegral_sq_eq (κ → mixedEmbedding.mixedSpace F) _ _ _ _ hB ν hν u
-  haveI : OpensMeasurableSpace ((κ → mixedEmbedding.mixedSpace F) × (κ → FiniteAdeleRing (𝓞 F) F)) :=
+  have : OpensMeasurableSpace ((κ → mixedEmbedding.mixedSpace F) × (κ → FiniteAdeleRing (𝓞 F) F)) :=
     (Prod.borelSpace (α := κ → mixedEmbedding.mixedSpace F) (β := κ → Af F)).opensMeasurable
   have hm : ∀ u : Fin n → SInf F κ, Measurable fun p : (κ → mixedEmbedding.mixedSpace F) × (κ → Af F) =>
       ‖∑ i, c i * (u i p.1 * h i p.2)‖ₑ ^ 2 := fun u =>
     (continuous_finsetSum _ fun i _ => continuous_const.mul
-      (((u i).continuous.comp continuous_fst).mul ((hh i).1.continuous.comp continuous_snd))).measurable.enorm.pow_const 2
+      (((u i).continuous.comp continuous_fst).mul ((hh i).1.continuous.comp continuous_snd))).measurable.eNorm.pow_const 2
   have hs : ∀ (u : Fin n → SInf F κ) (y : κ → Af F) (x : κ → mixedEmbedding.mixedSpace F),
       ∑ i, c i * (u i x * h i y) = (∑ i, (c i * h i y) • u i) x := fun u y x => by
     rw [sum_apply]

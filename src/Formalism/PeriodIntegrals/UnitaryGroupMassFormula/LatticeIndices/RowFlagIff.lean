@@ -73,7 +73,7 @@ theorem rowFlag_iff' (m : Matrix (Idx r k) (Idx r k) K) :
   rw [himg, mem_span_single]
   refine forall_congr' fun i => ?_
   have h1 : i ∉ pf '' {a | a < b} ↔ ∀ a, a < b → i ≠ pf a := by
-    simp only [Set.mem_image, Set.mem_setOf_eq, not_exists, not_and]
+    simp only [Set.mem_image, Set.mem_ofPred_eq, not_exists, not_and]
     exact forall_congr' fun a => imp_congr_right fun _ => ne_comm
   rw [h1]
   refine imp_congr_right fun _ => ?_
@@ -163,7 +163,7 @@ theorem rowFlag_iff (m : Matrix (Idx r k) (Idx r k) K) : RowFlag m ↔ RowC m :=
       · simpa [b32] using congrFun (congrFun h32 (Fin.rev j)) x
       · rcases lt_trichotomy j' (Fin.rev j) with h | h | h
         · have h0 : m (Sum.inr (Sum.inr (Fin.rev j))) (Sum.inr (Sum.inr j')) = 0 := hup h
-          rw [h0, if_neg]
+          rw [h0, ite_eq_right]
           simp [h.ne]
         · subst h
           simpa [b33] using hdiag (Fin.rev j)

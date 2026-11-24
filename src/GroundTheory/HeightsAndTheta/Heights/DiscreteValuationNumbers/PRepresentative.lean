@@ -101,9 +101,9 @@ theorem exists_form_pair {P H : Ideal (MRing ι R)} [hP : P.IsPrime] [hH : H.IsP
   set u' := weightedHomogeneousComponent (blockWeight ι) e u with hu'
   have hc := hPm _ h (e + bf)
   rw [map_sub, weightedHomogeneousComponent_mul_form hf, weightedHomogeneousComponent_mul_form hg,
-    if_pos le_add_self, add_tsub_cancel_right, ← hu'] at hc
+    ite_eq_left le_add_self, add_tsub_cancel_right, ← hu'] at hc
   by_cases hle : bg ≤ e + bf
-  · rw [if_pos hle] at hc
+  · rw [ite_eq_left hle] at hc
     set v' := weightedHomogeneousComponent (blockWeight ι) (e + bf - bg) v
     refine ⟨u', v', e, e + bf - bg, weightedHomogeneousComponent_isWeightedHomogeneous _ _,
       weightedHomogeneousComponent_isWeightedHomogeneous _ _, tsub_add_cancel_of_le hle, he, ?_, hc⟩
@@ -117,7 +117,7 @@ theorem exists_form_pair {P H : Ideal (MRing ι R)} [hP : P.IsPrime] [hH : H.IsP
       have h5 := H.sub_mem (H.mul_mem_left u hv') h3
       rwa [sub_sub_cancel] at h5
     exact (hH.mem_or_mem h4).elim he hv
-  · rw [if_neg hle, sub_zero] at hc
+  · rw [ite_eq_right hle, sub_zero] at hc
     exact ((hP.mem_or_mem hc).elim (fun h' => he (hPH h')) hfP).elim
 
 theorem exists_form_mem_not_mem {H H' : Ideal (MRing ι R)} (hH' : IsMultiHomogIdeal H')
@@ -216,7 +216,7 @@ section Main
 theorem Representative.proof (h1 : DivCycleMul.Statement.{u}) : Representative.Statement.{u} := by
   intro O _ _ _ ϖ _ K _ _ ι _ P b f g hP hV T hT
   classical
-  haveI := hP.isPrime
+  have := hP.isPrime
   obtain ⟨bf, bg, hbf, hbg, hb⟩ := hV.degrees
   have claim : ∃ f₁ g₁ : MRing ι O, (∃ F E : K → ℕ, IsMultiHomog f₁ F ∧ IsMultiHomog g₁ E ∧
       (fun k => (F k : ℤ) - E k) = b) ∧ f₁ ∉ P ∧ g₁ ∉ P ∧ f₁ * g - g₁ * f ∈ P ∧
@@ -240,7 +240,7 @@ theorem Representative.proof (h1 : DivCycleMul.Statement.{u}) : Representative.S
       by_cases hH : H ∈ T'
       · have hHT := (Finset.mem_filter.mp hH).1
         obtain ⟨hH1, hPH, hϖH, -⟩ := hT H hHT
-        haveI := hH1.isPrime
+        have := hH1.isPrime
         obtain ⟨u0, v0, hu0, hv0, h0⟩ :=
           hV.unit_off_special H hH1.isPrime hPH hH1.relevant hϖH
         obtain ⟨u, v, e, d, hu, hv, hde, huH, hvH, huv⟩ := exists_form_pair hP.multiHomog hPH hbf hbg
@@ -258,7 +258,7 @@ theorem Representative.proof (h1 : DivCycleMul.Statement.{u}) : Representative.S
       intro H
       by_cases hH : H ∈ T'
       · obtain ⟨hH1, -⟩ := hT H (Finset.mem_filter.mp hH).1
-        haveI := hH1.isPrime
+        have := hH1.isPrime
         obtain ⟨m, hm⟩ := exists_form_not_mem_of_isRelevant hH1.relevant (E - (A H + e H))
         exact ⟨m, fun _ => hm⟩
       · exact ⟨0, fun h => absurd h hH⟩

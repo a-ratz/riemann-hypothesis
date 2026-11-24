@@ -169,14 +169,14 @@ theorem cpow_mul_approx_pow_of_isSep :
     exact mul_le_one' (pow_le_one' (hs.b_le i) p) hx1
   choose w hwmem hwle using fun i => hroot (T i) ((memTop _).2 (hT i).1)
   have hwθ : ∀ i, v (T i - w i ^ p) ≤ θ := fun i =>
-    le_trans (hwle i) (mul_le_of_le_one_right zero_le' (hT i).2)
+    le_trans (hwle i) (mul_le_of_le_one_right zero_le (hT i).2)
   have hw1 : ∀ i, v (w i) ≤ 1 := fun i => by
     have : v (w i ^ p) ≤ 1 := by
       have e : w i ^ p = T i - (T i - w i ^ p) := by ring
       rw [e]
       exact Valuation.map_sub_le v (hT i).2 (le_trans (hwθ i) hθ)
     rw [map_pow] at this
-    exact (pow_le_one_iff_of_nonneg zero_le' hp.ne_zero).1 this
+    exact (pow_le_one_iff_of_nonneg zero_le hp.ne_zero).1 this
   set W : L := ∑ i, a i * w i with hWdef
   have hWmem : W ∈ Fix L N := by
     refine Subfield.sum_mem _ fun i _ => Subfield.mul_mem _ (hs.a_mem i) ?_
@@ -246,8 +246,8 @@ theorem approxRoot_fix_of_almostSep : ∀ (L : Type) [Field L] (v : Valuation L 
     (∀ (g : G) (x : L), v (g • x) = v x) → ∀ N : Subgroup G, N.FiniteIndex → AlmostSep v N →
     ApproxRoot p v (Fix L (⊤ : Subgroup G)) → ApproxRoot p v (Fix L N) := by
   intro L _ v p hp hp0 hp1 G _ _ hinv N hN hsep hroot
-  haveI : Finite (G ⧸ N) := Subgroup.finite_quotient_of_finiteIndex
-  haveI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  have : Finite (G ⧸ N) := Subgroup.finite_quotient_of_finiteIndex
+  have : Fintype (G ⧸ N) := Fintype.ofFinite _
   obtain ⟨θ, hθ1, hθ⟩ := hroot
   set θ₀ : ℝ≥0 := max θ (v (p : L)) with hθ₀
   have hθ₀1 : θ₀ < 1 := max_lt hθ1 hp1
@@ -319,7 +319,7 @@ theorem exists_surj_hom_zmod_of_isPGroup :
     have := K.card_mul_index
     rw [hK, hc, pow_succ] at this
     exact Nat.eq_of_mul_eq_mul_left (pow_pos hp.out.pos m) this
-  haveI : K.Normal := Subgroup.normal_of_index_eq_minFac_card (by
+  have : K.Normal := Subgroup.normal_of_index_eq_minFac_card (by
     rw [hi, hc, hp.out.pow_minFac (Nat.succ_ne_zero m)])
   let e : (G ⧸ K) ≃* Multiplicative (ZMod p) :=
     mulEquivOfPrimeCardEq (p := p) (by rw [← hi]; rfl) (by simp)
@@ -346,10 +346,10 @@ theorem exists_lagrange_resolvent : ∀ (L : Type) [Field L] (p : ℕ), p.Prime 
     ∀ ζ : L, IsPrimitiveRoot ζ p → (∀ g : G, g • ζ = ζ) →
     ∃ (σ : G) (α : L), α ≠ 0 ∧ σ • α = ζ * α ∧ ∀ g : G, g • α ^ p = α ^ p := by
   intro L _ p hp G _ _ _ _ _ hG ζ hζ hfix
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Fact (1 < p) := ⟨hp.one_lt⟩
+  have : Fact p.Prime := ⟨hp⟩
+  have : Fact (1 < p) := ⟨hp.one_lt⟩
   classical
-  letI : Fintype G := Fintype.ofFinite G
+  let : Fintype G := Fintype.ofFinite G
   obtain ⟨χ, hχ⟩ := _root_.GlobalTheory.AlmostEt.exists_surj_hom_zmod_of_isPGroup p G hG
   set ψ : G → L := fun g => ζ ^ (Multiplicative.toAdd (χ g)).val with hψdef
   have hζp : ζ ^ p = 1 := hζ.pow_eq_one
@@ -484,7 +484,7 @@ theorem exists_normal_not_moves_uniform :
     · obtain ⟨r, hr, h1⟩ := (not_moves_top_iff v τ).1 h
       exact ⟨r, hr, fun _ => h1⟩
   choose f hf1 hf2 using hc
-  letI := Fintype.ofFinite G
+  let := Fintype.ofFinite G
   refine ⟨Finset.univ.sup f, ?_, ?_⟩
   · rw [Finset.sup_lt_iff zero_lt_one]
     exact fun τ _ => hf1 τ
@@ -731,7 +731,7 @@ theorem kummer_moves : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (p : �
     ∀ ζ α : L, IsPrimitiveRoot ζ p → α ≠ 0 → α ^ p ∈ F → σ • α = ζ * α → Moves v ⊤ σ := by
   intro L _ v p hp F hF hp0 hp1 G _ _ σ hσ ζ α hζ hα hαp hσα r hr
   obtain ⟨t, hrt, ht1⟩ := exists_between hr
-  have ht0 : 0 < t := lt_of_le_of_lt (zero_le') hrt
+  have ht0 : 0 < t := lt_of_le_of_lt (zero_le) hrt
   set s : ℝ≥0 := t⁻¹ with hs_def
   have hs1 : 1 < s := by rw [hs_def]; exact one_lt_inv₀ ht0 |>.mpr ht1
   have hs0 : 0 < s := lt_trans zero_lt_one hs1
@@ -758,7 +758,7 @@ theorem kummer_moves : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (p : �
           gcongr
           exact le_self_pow₀ hs1.le hpn
         _ = s ^ (p - 1) * (v (p : L) * v α ^ (p - 1)) := by ring
-    exact le_of_pow_le_pow_left₀ hpn (zero_le') h1
+    exact le_of_pow_le_pow_left₀ hpn (zero_le) h1
   obtain ⟨d, hdF, hd0, hdlo, hdhi⟩ := _root_.GlobalTheory.AlmostEt.klc_scale L v p hp F hF hp0 hp1 (r * s) hrs β hβ0
   refine ⟨β * d ^ p, Subfield.mem_top _, hdhi, ?_⟩
   have hσx : σ • (β * d ^ p) - β * d ^ p = d ^ p * (σ • β - β) := by
@@ -770,7 +770,7 @@ theorem kummer_moves : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (p : �
       _ = s * (v (d ^ p) * v (σ • β - β)) := by ring
   have : r * s < s * v (d ^ p * (σ • β - β)) := lt_of_lt_of_le hdlo hvx
   rw [mul_comm] at this
-  exact lt_of_mul_lt_mul_left this (zero_le')
+  exact lt_of_mul_lt_mul_left this (zero_le)
 
 end GlobalTheory.AlmostEt
 end -- clump:auto
@@ -797,7 +797,7 @@ theorem moves_fix_of_moves : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) 
   classical
   by_contra hcon
   push_neg at hcon
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   set n := Fintype.card N with hn_def
   have hn : n ≠ 0 := Fintype.card_ne_zero
   set t : ℝ≥0 := max i (r ^ ((n : ℝ)⁻¹)) with ht_def
@@ -1006,8 +1006,8 @@ theorem moves_of_ne_one : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (p 
       push_neg at h
       exact hne' (eq_of_smul_eq_smul (α := L) (fun y => by rw [h y, one_smul]))
     exact (hNmem _).1 hτ' (_root_.GlobalTheory.AlmostEt.moves_top_of_coprime_order L v p hp (Fix L N) hF hp0 hp1 G hinv _ (hfixN _ hτ') _ hcop hl ⟨y, hy⟩)
-  haveI : Nontrivial N := ⟨⟨⟨σ, hσN⟩, 1, fun h => hσ (congrArg Subtype.val h)⟩⟩
-  haveI : FaithfulSMul N L := ⟨fun {a b} h => Subtype.ext (eq_of_smul_eq_smul (α := L) h)⟩
+  have : Nontrivial N := ⟨⟨⟨σ, hσN⟩, 1, fun h => hσ (congrArg Subtype.val h)⟩⟩
+  have : FaithfulSMul N L := ⟨fun {a b} h => Subtype.ext (eq_of_smul_eq_smul (α := L) h)⟩
   obtain ⟨σ₀, α, hα0, hσα, hαp⟩ := _root_.GlobalTheory.AlmostEt.exists_lagrange_resolvent L p hp N hpg ζ hζ (fun g => hζfix g)
   have hαF : α ^ p ∈ Fix L N := fun g => hαp g
   exact (hNmem _).1 σ₀.2 (_root_.GlobalTheory.AlmostEt.kummer_moves L v p hp (Fix L N) hF hp0 hp1 G (σ₀ : G) (hfixN _ σ₀.2) ζ α hζ hα0 hαF hσα)
@@ -1055,8 +1055,8 @@ theorem almostSep_of_normal_finiteIndex : ∀ (L : Type) [Field L] (v : Valuatio
   let L' := ↥(Fix L U)
   let v' : Valuation L' ℝ≥0 := v.comap (Fix L U).subtype
   have hv'x : ∀ x : L', v' x = v (x : L) := fun x => rfl
-  haveI : Finite (G ⧸ U) := Subgroup.finite_quotient_of_finiteIndex
-  haveI : FaithfulSMul (G ⧸ U) L' := by
+  have : Finite (G ⧸ U) := Subgroup.finite_quotient_of_finiteIndex
+  have : FaithfulSMul (G ⧸ U) L' := by
     refine ⟨fun {q₁ q₂} h => ?_⟩
     induction q₁ using QuotientGroup.induction_on with | H g₁ => ?_
     induction q₂ using QuotientGroup.induction_on with | H g₂ => ?_

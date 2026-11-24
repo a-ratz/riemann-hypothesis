@@ -91,14 +91,14 @@ variable {K K' : Type} [Field K] [Field K'] [Algebra ℂ K] [Algebra ℂ K']
 
 private theorem pullback_kahler_smul (j2 : K →ₐ[ℂ] K') (c : K) (w : DR ℂ K) :
     pr2L j2 (c • w) = j2 c • pr2L j2 w := by
-  letI : Algebra K K' := j2.toRingHom.toAlgebra
-  haveI : IsScalarTower ℂ K K' := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
+  let : Algebra K K' := j2.toRingHom.toAlgebra
+  have : IsScalarTower ℂ K K' := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
   exact mapDR_smul' c w
 
 private theorem pullback_kahler_degree (j2 : K →ₐ[ℂ] K') {q : ℕ} {w : DR ℂ K} (hw : w ∈ ⋀[K]^q Ω[K⁄ℂ]) :
     pr2L j2 w ∈ ⋀[K']^q Ω[K'⁄ℂ] := by
-  letI : Algebra K K' := j2.toRingHom.toAlgebra
-  haveI : IsScalarTower ℂ K K' := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
+  let : Algebra K K' := j2.toRingHom.toAlgebra
+  have : IsScalarTower ℂ K K' := IsScalarTower.of_algebraMap_eq fun c => (j2.commutes c).symm
   exact mapDR_deg hw
 
 end Pr2
@@ -250,7 +250,7 @@ theorem UpperTheory.Gal.productCup_of_system.valG_of :
       have h2 := (hz _ _ (hval k S (hP hS)).1).1
       have hcard : S.card = T.card := (hP hS).trans (hP hT).symm
       have h3 : Val (rB ℂ K' (xv x) {0}) e.1 (c T S) (μ T S) := by
-        simp only [μ, dif_pos hcard]
+        simp only [μ, dite_eq_left hcard]
         exact hv T S hcard
       exact (hr _ _ _ _ (hr _ _ _ _ h1 h3).2 h2).2)
   rw [sum_delta _ n α β μ fun S hS T hT => hδ S T (hP hS) (hP hT)] at hV

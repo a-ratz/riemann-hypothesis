@@ -64,7 +64,7 @@ theorem IsIdealClassPoint.exists_lattice_eq {K : Type} [Field K] [NumberField K]
         FractionalIdeal.spanSingleton (𝓞 K)⁰ x₀ := by
       apply FractionalIdeal.coeToSubmodule_injective
       dsimp only
-      rw [FractionalIdeal.coe_spanSingleton]
+      rw [FractionalIdeal.coeToSubmodule_spanSingleton]
       exact hx₀
     have h2 : J = 𝔞 * (𝔞⁻¹ * J) := (mul_inv_cancel_left 𝔞 J).symm
     conv_lhs => rw [h2]

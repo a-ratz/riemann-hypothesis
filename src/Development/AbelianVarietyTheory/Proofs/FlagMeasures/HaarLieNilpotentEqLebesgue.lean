@@ -618,9 +618,9 @@ theorem closed_N : IsClosed (Nset k r) := by
     isClosed_eq (continuous_id.matrix_elem i j) continuous_const
   refine IsClosed.and (isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul
     continuous_id) continuous_const) (IsClosed.and ?_ ?_)
-  · simp only [Set.setOf_forall]
+  · simp only [Set.ofPred_forall]
     exact isClosed_iInter fun _ => isClosed_iInter fun _ => isClosed_iInter fun _ => he _ _ _
-  · simp only [Set.setOf_forall]
+  · simp only [Set.ofPred_forall]
     exact isClosed_iInter fun _ => isClosed_iInter fun _ => isClosed_iInter fun _ => isClosed_iInter fun _ =>
       isClosed_iInter fun _ => he _ _ _
 
@@ -662,9 +662,9 @@ theorem haarLie_eq_lebN : ∀ k r : ℕ,
       fun v => by rw [LL_val, unrealify_rl]; rfl⟩
   have hi : Function.Injective fun q : EE k r => (Matrix.of.symm (Phi q) : Mt k r) := fun q q' h =>
     (coord_homeo k r).1.injOn trivial trivial h
-  haveI : PolishSpace (EE k r) := by
-    haveI : SecondCountableTopology (EE k r) := inferInstance
-    haveI : TopologicalSpace.IsCompletelyMetrizableSpace (EE k r) := MetricSpace.toIsCompletelyMetrizableSpace
+  have : PolishSpace (EE k r) := by
+    have : SecondCountableTopology (EE k r) := inferInstance
+    have : TopologicalSpace.IsCompletelyMetrizableSpace (EE k r) := MetricSpace.toIsCompletelyMetrizableSpace
     exact {}
   have hm : MeasurableEmbedding fun q : EE k r => (Matrix.of.symm (Phi q) : Mt k r) :=
     Continuous.measurableEmbedding (f := fun q : EE k r => (Matrix.of.symm (Phi q) : Mt k r))
@@ -678,7 +678,7 @@ theorem haarLie_eq_lebN : ∀ k r : ℕ,
     have : lebN k r ((fun q : EE k r => Matrix.of.symm (Phi q)) '' Metric.ball 0 ρ) =
         volume (Metric.ball (0 : EE k r) ρ) :=
       (hm.map_apply _ _).trans (congrArg _ (Set.preimage_image_eq _ hi))
-    rw [vol_LL, hc, Measure.smul_apply, this, smul_eq_mul,
+    rw [vol_LL, hc, smul_apply, this, smul_eq_mul,
       ENNReal.mul_div_mul_right _ _ (Metric.measure_ball_pos _ _ hρ).ne' measure_ball_lt_top.ne]
   rw [hc, (ENNReal.div_eq_one_iff hN0 hN1).1 h1]
 

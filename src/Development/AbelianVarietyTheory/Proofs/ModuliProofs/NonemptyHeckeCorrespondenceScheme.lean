@@ -658,8 +658,8 @@ theorem exists_kerScheme : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have cm := m.cart.1
   have cm₁ := m₁.cart.1
   have cn' := n'.cart.1
-  haveI : IsReduced S' := GlobalTheory.isReduced_of_smooth_of_isReduced π
-  haveI : IsReduced (pullback π π : Scheme.{0}) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.fst π π)
+  have : IsReduced S' := GlobalTheory.isReduced_of_smooth_of_isReduced π
+  have : IsReduced (pullback π π : Scheme.{0}) := GlobalTheory.isReduced_of_smooth_of_isReduced (pullback.fst π π)
   have hd : pullback.fst π π ≫ h' = pullback.snd π π ≫ h' := by
     have h0 : (pullback.fst π π ≫ h') ≫ π₁ = (pullback.snd π π ≫ h') ≫ π₁ := by
       rw [Category.assoc, Category.assoc, hh', pullback.condition_assoc]

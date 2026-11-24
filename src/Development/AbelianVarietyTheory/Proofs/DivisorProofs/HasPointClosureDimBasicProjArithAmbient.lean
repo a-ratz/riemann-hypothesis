@@ -101,7 +101,7 @@ theorem ringKrullDim_le_one (k : Type) [CommRing k] [Module.Finite ℤ k] : ring
   have : Algebra.IsIntegral ℤ k := inferInstance
   calc ringKrullDim k ≤ ringKrullDim ℤ :=
         Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap ℤ k))
-          fun I J h => Ideal.IsIntegral.comap_lt_comap (I := I.asIdeal) (J := J.asIdeal) h
+          fun I J h => Ideal.IsIntegral.under_lt_under (I := I.asIdeal) (J := J.asIdeal) h
     _ = 1 := IsPrincipalIdealRing.ringKrullDim_eq_one ℤ Int.not_isField
 
 theorem dim_pspace_le (k : Type) [CommRing k] [Module.Finite ℤ k] (N : ℕ) :
@@ -187,7 +187,7 @@ theorem hasDim_basic : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ S
     | bot => exact absurd h₂ (by simp)
     | coe a =>
       induction a with
-      | top => exact absurd h₁ (by rw [not_le]; exact WithBot.coe_lt_coe.2 (ENat.coe_lt_top _))
+      | top => exact absurd h₁ (by rw [not_le]; exact WithBot.coe_lt_coe.2 (ENat.natCast_lt_top _))
       | coe a => exact ⟨a, by exact_mod_cast h₁, rfl⟩
   · unfold HasDim at hd hd'
     exact_mod_cast hd.symm.trans hd'

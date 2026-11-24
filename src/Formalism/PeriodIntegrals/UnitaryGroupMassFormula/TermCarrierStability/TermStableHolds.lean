@@ -126,7 +126,7 @@ theorem coef {T : E} (Λ : Submodule (𝓞 E) S.V) (g : ℕ) (F : LFlag S r T) (
   have hint : ∀ P : HeightOneSpectrum (𝓞 E), ((g : 𝓞 E) ∈ P.asIdeal) →
       ∀ b k, (haveI := P.isPrime; c b k ∈ locInt P.asIdeal) := by
     intro P hP b k
-    haveI := P.isPrime
+    have := P.isPrime
     have hf := frame_mem_locP Λ g F hz hc P hP b
     obtain ⟨s, hs, hsf⟩ := mem_locP.mp hf
     have hX : n (frame F b) - frame F b ∈ Xsp F := by
@@ -159,9 +159,9 @@ theorem coef {T : E} (Λ : Submodule (𝓞 E) S.V) (g : ℕ) (F : LFlag S r T) (
   · rw [Matrix.add_apply, Matrix.one_apply_ne (ne_of_lt hba).symm, hν0 a b hba.le, add_zero]
   · rw [Matrix.add_apply, Matrix.one_apply_eq, hν0 a a le_rfl, add_zero]
   · simp only [frE, Matrix.add_apply, add_smul, Finset.sum_add_distrib, hνsum b, Matrix.one_apply,
-      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     abel
-  · haveI := P.isPrime
+  · have := P.isPrime
     refine Subring.add_mem _ ?_ ?_
     · rw [Matrix.one_apply]
       split_ifs
@@ -190,7 +190,7 @@ theorem admissible_stable_under_frame_change {T T' : E} (Λ : Submodule (𝓞 E)
   have hMi : ∀ P : HeightOneSpectrum (𝓞 E), (g : 𝓞 E) ∈ P.asIdeal →
       ∀ a b, (haveI := P.isPrime; M a b ∈ locInt P.asIdeal) := by
     intro P hP
-    haveI := P.isPrime
+    have := P.isPrime
     exact mul_mem_locInt (hBi P hP) (mul_mem_locInt (fun a b => coe_mem_locInt _ (ξ a b)) (hAi P hP))
   have happ : ∀ a b, ∃ c : 𝓞 E, ∀ P : HeightOneSpectrum (𝓞 E), (g : 𝓞 E) ∈ P.asIdeal →
       ∃ s : 𝓞 E, s ∉ P.asIdeal ∧ ∃ w : 𝓞 E, (s : E) * ((c : E) - M a b) = ((g : 𝓞 E) : E) * w :=
@@ -199,7 +199,7 @@ theorem admissible_stable_under_frame_change {T T' : E} (Λ : Submodule (𝓞 E)
   let ξ' : Matrix (Fin (r + 1)) (Fin (r + 1)) (𝓞 E) :=
     fun a b => if b < a then 0 else if a = b then 1 else c a b
   refine ⟨ξ', fun a b h => by simp [ξ', h], fun a => by simp [ξ'], fun b P hP => ?_⟩
-  haveI := P.isPrime
+  have := P.isPrime
   let ε : Fin (r + 1) → S.V := fun a => frame x a - frE (frame F) Ξ a
   have hε : ∀ a, ε a ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (Ideal.span {(g : 𝓞 E)} • Λ) := fun a => hξm a P hP
   have hxε : frame x = fun a => frE (frame F) Ξ a + ε a := by
@@ -264,7 +264,7 @@ theorem tr_XS (D : D7) {T' : D.host.E} {γ : (VS D).V ≃ₗ[D.host.E] (VS D).V}
     rw [Submodule.map_span]
     congr 1
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · rintro ⟨a, c, hc, rfl⟩
       exact ⟨c • x.fl.e a, ⟨a, c, hc, rfl⟩, by simp [he]⟩

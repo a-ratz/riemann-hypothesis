@@ -234,8 +234,8 @@ private theorem mem_fixL_iff (J : Subgroup (GL (Fin n) (w.adicCompletion K))) (v
 private theorem comm_same (x y : GL (Fin n) (w.adicCompletion K)) :
     Commute (Hop μ w (GLnLocal.integralGL (w.adicCompletion K) n) x)
       (Hop μ w (GLnLocal.integralGL (w.adicCompletion K) n) y) := by
-  letI : MeasurableSpace (GL (Fin n) (w.adicCompletion K)) := borel _
-  haveI : BorelSpace (GL (Fin n) (w.adicCompletion K)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (w.adicCompletion K)) := borel _
+  have : BorelSpace (GL (Fin n) (w.adicCompletion K)) := ⟨rfl⟩
   have hJc := GLnLocal.isCompact_integralGL (w.adicCompletion K) n
   have hJo := GLnLocal.isOpen_integralGL (w.adicCompletion K) n
   obtain ⟨fx, mx, px, sx, -, -⟩ := UpperTheory.ConvolutionTheory.Tf.hopBasic K n μ w _ x hJo hJc

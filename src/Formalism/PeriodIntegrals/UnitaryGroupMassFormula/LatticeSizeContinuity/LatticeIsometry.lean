@@ -71,7 +71,7 @@ theorem latSet_eq (I : Formalism.MainNotions.S.AutInst) (x : I.GA) :
     Size.latSet I x = (Formalism.UG.CS.globLat (F := I.F)
       (x.2 : GL (Fin I.n) (I.E ⊗[I.F] Formalism.MainNotions.S.Af I.F)) I.L : Set (Fin I.n → I.E)) := by
   ext u
-  simp only [Size.latSet, Set.mem_setOf_eq, SetLike.mem_coe]
+  simp only [Size.latSet, Set.mem_ofPred_eq, SetLike.mem_coe]
   rw [lamAf_eq]
   rfl
 

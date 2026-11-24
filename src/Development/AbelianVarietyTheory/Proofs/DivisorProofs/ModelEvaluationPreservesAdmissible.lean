@@ -315,7 +315,7 @@ theorem charMul_family : ∀ (E P : Type) [NormedAddCommGroup E] [NormedSpace �
     have hLε : ‖L‖ < ε / (K + 1) := lt_of_lt_of_le hLm (min_le_right _ _)
     have hpt : ∀ x, (Φ η - Φ ζ) x = (Complex.exp (I * (L x : ℂ)) - 1) * Φ ζ x := fun x => by
       have hs : A η x = L x + A ζ x := by simp [hLdef, map_sub]
-      rw [SchwartzMap.sub_apply, hΦ, hΦ, hs]
+      rw [sub_apply, hΦ, hΦ, hs]
       push_cast
       rw [mul_add, Complex.exp_add]
       ring
@@ -413,9 +413,9 @@ theorem schwartz_pairing_conj_clm : ∀ (V : Type) [NormedAddCommGroup V] [Norme
     ∀ (w : SchwartzMap V ℂ), ∃ Λ : SchwartzMap V ℂ →L[ℂ] ℂ, ∀ u : SchwartzMap V ℂ,
       Λ u = @MeasureTheory.integral V ℂ _ _ (borel V) μ (fun x => u x * starRingEnd ℂ (w x)) := by
   intro V _ _ _ μ hμ w
-  letI : MeasurableSpace V := borel V
-  haveI : BorelSpace V := ⟨rfl⟩
-  haveI : μ.IsAddHaarMeasure := hμ
+  let : MeasurableSpace V := borel V
+  have : BorelSpace V := ⟨rfl⟩
+  have : μ.IsAddHaarMeasure := hμ
   have hg : Function.HasTemperateGrowth (fun x => starRingEnd ℂ (w x)) :=
     (Complex.conjCLE.toContinuousLinearMap : ℂ →L[ℝ] ℂ).hasTemperateGrowth.comp w.hasTemperateGrowth
   refine ⟨(SchwartzMap.integralCLM ℂ μ).comp (SchwartzMap.smulLeftCLM ℂ (fun x => starRingEnd ℂ (w x))), ?_⟩
@@ -560,7 +560,7 @@ theorem iteratedFDeriv_integral (hΦ : Continuous Φ) (hc : AEStronglyMeasurable
           (norm_nonneg _)
       · have h1 : DifferentiableAt ℝ (iteratedFDeriv ℝ n (Φ ξ)) y :=
           ((Φ ξ).smooth ⊤).differentiable_iteratedFDeriv
-            (by exact_mod_cast ENat.coe_lt_top n) y
+            (by exact_mod_cast ENat.natCast_lt_top n) y
         have h2 := h1.hasFDerivAt.const_smul (c ξ)
         rw [fderiv_iteratedFDeriv] at h2
         exact h2
@@ -589,7 +589,7 @@ theorem wt_integral (hΦ : Continuous Φ) (hc : AEStronglyMeasurable c ν)
   rw [← this, wt_apply, iteratedFDeriv_integral hΦ hc hi u hu n x, ← integral_smul]
   congr 1
   funext ξ
-  rw [BoundedContinuousFunction.smul_apply, wt_apply, smul_comm]
+  rw [smul_apply, wt_apply, smul_comm]
 
 end SchwartzIntegralExchange
 
@@ -649,8 +649,8 @@ theorem multiplier_symm : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ
       @MeasureTheory.integral V ℂ _ _ (borel V) μ (fun x => T f' x * starRingEnd ℂ (T g x)) =
         @MeasureTheory.integral V ℂ _ _ (borel V) μ (fun x => T f x * starRingEnd ℂ (T g' x)) := by
   intro V _ _ _ μ hμ T hT m f f' g g' hf' hg'
-  letI : MeasurableSpace V := borel V
-  haveI : BorelSpace V := ⟨rfl⟩
+  let : MeasurableSpace V := borel V
+  have : BorelSpace V := ⟨rfl⟩
   obtain ⟨d, A, h, hm⟩ := _root_.GlobalTheory.schwartz_eq_fourier_synthesis V m
   obtain ⟨Φf, hΦf, cΦf, bΦf⟩ := _root_.GlobalTheory.CharFamily.charMul_family V _ A f
   obtain ⟨Φg, hΦg, cΦg, bΦg⟩ := _root_.GlobalTheory.CharFamily.charMul_family V _ (-A) g
@@ -680,7 +680,7 @@ theorem multiplier_symm : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ
     rw [hΛ1]
     refine hT (A ξ) f (Φf ξ) (Φg ξ) g (hΦf ξ) (fun x => ?_)
     rw [hΦg, ← mul_assoc, ← Complex.exp_add]
-    simp [ContinuousLinearMap.neg_apply]
+    simp [neg_apply]
   have lhs : ∫ x, T f' x * starRingEnd ℂ (T g x) ∂μ = ∫ ξ, h ξ * ∫ x, T f x * starRingEnd ℂ (T (Φg ξ) x) ∂μ := by
     rw [← hΛ1]
     have := _root_.GlobalTheory.schwartz_clm_integral_comm V (EuclideanSpace ℝ (Fin d)) volume Φf cΦf h h.continuous.aestronglyMeasurable
@@ -697,7 +697,7 @@ theorem multiplier_symm : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ
       (hint Φg cΦg bΦg _ (fun _ => Complex.norm_conj _)) g' (fun x => by
         rw [hg', hm, ← integral_conj, ← integral_mul_const]
         congr 1; funext ξ; rw [hΦg]
-        simp only [map_mul, ContinuousLinearMap.neg_apply, ← Complex.exp_conj]
+        simp only [map_mul, neg_apply, ← Complex.exp_conj]
         simp [Complex.ofReal_neg]; ring) (Λ2.comp T)
     simp only [ContinuousLinearMap.comp_apply] at this
     rw [e1, this, ← integral_conj]
@@ -852,7 +852,7 @@ theorem finite_of_summable {ι : Type} (a : ι → ℝ) (ha : ∀ j, 0 ≤ a j) 
   have h3 := ht (Iio_mem_nhds hε)
   rw [Filter.mem_map, Filter.mem_cofinite] at h3
   refine h3.subset fun j hj => ?_
-  simp only [Set.mem_setOf_eq] at hj
+  simp only [Set.mem_ofPred_eq] at hj
   simp only [Set.mem_compl_iff, Set.mem_preimage, Set.mem_Iio, not_lt]
   have hj' : a j ≤ max R 0 := le_trans hj (le_max_left _ _)
   have h0 := ha j
@@ -1076,7 +1076,7 @@ theorem dim_le_one : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [
       show Φ f = Φ ((Φ f / Φ f₀) • f₀)
       rw [hΦs, div_mul_cancel₀ _ hΦ0]), map_smul, smul_eq_mul]
   refine ⟨μ' f₀ / μ f₀, ContinuousLinearMap.ext fun f => ?_⟩
-  rw [ContinuousLinearMap.smul_apply, hrep μ' hμ' f, hrep μ hμ f, smul_eq_mul]
+  rw [smul_apply, hrep μ' hμ' f, hrep μ hμ f, smul_eq_mul]
   field_simp
 
 end GlobalTheory.TransInvSchwartz
@@ -1199,7 +1199,7 @@ theorem decay : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [Finit
   have hTk : ∀ x, ‖T k' x‖ ≤ (C0 : ℝ) * (Cs * ((1 + ‖v‖) ^ M)⁻¹) := by
     intro x
     have h2 := hC0 k'
-    rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul] at h2
+    rw [smul_apply, NNReal.smul_def, smul_eq_mul] at h2
     calc ‖T k' x‖ ≤ SchwartzMap.seminorm ℂ 0 0 (T k') := SchwartzMap.norm_le_seminorm ℂ _ x
       _ ≤ (C0 : ℝ) * (s.sup (schwartzSeminormFamily ℂ V ℂ)) k' := h2
       _ ≤ _ := by gcongr
@@ -1319,7 +1319,7 @@ theorem exists_lambda [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace 
     obtain ⟨C, hC⟩ := hterm h
     refine Summable.of_norm_bounded (hsumm.mul_left C) (fun j => ?_)
     rw [hLB]; exact hC j
-  haveI : BarrelledSpace ℂ 𝓢(V, ℂ) := GlobalTheory.schwartzMap_barrelledSpace V
+  have : BarrelledSpace ℂ 𝓢(V, ℂ) := GlobalTheory.schwartzMap_barrelledSpace V
   obtain ⟨en, hen⟩ := exists_surjective_nat (Fin (Module.finrank ℝ V) → ℤ)
   let S : ℕ → Finset (Fin (Module.finrank ℝ V) → ℤ) := fun N => (Finset.range N).image en
   have hS : Tendsto S atTop atTop := by
@@ -1331,7 +1331,7 @@ theorem exists_lambda [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace 
       (𝓝 fun h : 𝓢(V, ℂ) => ∑' j, L (tr (v j) ψ) h) := by
     rw [tendsto_pi_nhds]
     intro h
-    simp only [ContinuousLinearMap.sum_apply]
+    simp only [_root_.sum_apply]
     exact (hsummable h).hasSum.comp hS
   refine ⟨continuousLinearMapOfTendsto (fun N => ∑ j ∈ S N, L (tr (v j) ψ)) hlim, fun f g h hf hh => ?_⟩
   show _ = linearMapOfTendsto _ _ hlim h
@@ -1347,7 +1347,7 @@ theorem exists_lambda [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace 
     have hx : ‖x‖ ≤ R := by simpa using hR (subset_tsupport _ h2)
     have hy : ‖x - v j‖ ≤ r := by simpa using hr (subset_tsupport _ h1)
     apply hj
-    rw [hJ, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    rw [hJ, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     calc ‖v j‖ = ‖x - (x - v j)‖ := by rw [sub_sub_cancel]
       _ ≤ ‖x‖ + ‖x - v j‖ := norm_sub_le _ _
       _ ≤ R + r := add_le_add hx hy
@@ -1451,7 +1451,7 @@ theorem main_of [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] (μ
     have h1 : HasCompactSupport (fun x => ((b x : ℝ) : ℂ)) :=
       b.hasCompactSupport.comp_left (g := fun r : ℝ => (r : ℂ)) (by simp)
     have := congrArg (fun F : 𝓢(V, ℂ) →L[ℂ] ℂ => F (h1.toSchwartzMap (Complex.ofRealCLM.contDiff.comp b.contDiff))) h0
-    simp only [ContinuousLinearMap.zero_apply, hIa] at this
+    simp only [zero_apply, hIa] at this
     change ∫ x, ((b x : ℝ) : ℂ) ∂μ = 0 at this
     rw [integral_complex_ofReal, Complex.ofReal_eq_zero] at this
     exact (ne_of_gt (b.integral_pos (μ := μ))) this
@@ -1460,12 +1460,12 @@ theorem main_of [FiniteDimensional ℝ V] [MeasurableSpace V] [BorelSpace V] (μ
   obtain ⟨P, hP⟩ := _root_.GlobalTheory.schwartz_pairing_conj_clm_of_borelSpace V μ g
   have hcl : IsClosed {f : 𝓢(V, ℂ) | B f g = c * ∫ x, f x * starRingEnd ℂ (g x) ∂μ} := by
     have e : {f : 𝓢(V, ℂ) | B f g = c * ∫ x, f x * starRingEnd ℂ (g x) ∂μ} = {f | L g f = c * P f} := by
-      ext f; simp only [Set.mem_setOf_eq, hLB, hP]
+      ext f; simp only [Set.mem_ofPred_eq, hLB, hP]
     rw [e]; exact isClosed_eq (L g).continuous (continuous_const.mul P.continuous)
   refine closure_minimal (fun f hf => ?_) hcl (_root_.GlobalTheory.schwartz_mem_closure_hasCompactSupport V f)
   have := hΛ f g (mulS f (conjS g)) hf (fun x => by rw [mulS_apply, conjS_apply])
   show B f g = _
-  rw [show B f g = Λ (mulS f (conjS g)) from this, hc, ContinuousLinearMap.smul_apply, smul_eq_mul, hIa]
+  rw [show B f g = Λ (mulS f (conjS g)) from this, hc, smul_apply, smul_eq_mul, hIa]
   congr 1
   refine integral_congr_ae (Filter.Eventually.of_forall fun x => ?_)
   simp only [mulS_apply, conjS_apply]
@@ -1485,8 +1485,8 @@ theorem GlobalTheory.TransConstForm.eq_const_mul_l2_of_translation_invariant : �
       @MeasureTheory.integral V ℂ _ _ (borel V) μ (fun x => T f x * starRingEnd ℂ (T g x)) =
         c * @MeasureTheory.integral V ℂ _ _ (borel V) μ (fun x => f x * starRingEnd ℂ (g x)) := by
   intro V _ _ _ μ hμ T htr hmul
-  letI : MeasurableSpace V := borel V
-  haveI : BorelSpace V := ⟨rfl⟩
+  let : MeasurableSpace V := borel V
+  have : BorelSpace V := ⟨rfl⟩
   exact GlobalTheory.TransConstForm.main_of μ T htr hmul
 end -- clump:auto
 end -- clump:auto
@@ -1531,8 +1531,8 @@ theorem int_phase_shift {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [F
     (u v p : V → ℂ) (hp : ∀ x, ‖p x‖ = 1) (a : V) :
     @integral V ℂ _ _ (borel V) μ (fun x => (p x * u (x + a)) * starRingEnd ℂ (p x * v (x + a))) =
       @integral V ℂ _ _ (borel V) μ (fun x => u x * starRingEnd ℂ (v x)) := by
-  letI : MeasurableSpace V := borel V
-  haveI : BorelSpace V := ⟨rfl⟩
+  let : MeasurableSpace V := borel V
+  have : BorelSpace V := ⟨rfl⟩
   have e : (fun x => (p x * u (x + a)) * starRingEnd ℂ (p x * v (x + a))) = fun x => u (x + a) * starRingEnd ℂ (v (x + a)) := by
     funext x
     have h1 : p x * starRingEnd ℂ (p x) = 1 := by
@@ -1591,7 +1591,7 @@ theorem const_of_intertwines : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F : Typ
       funext x
       rw [hu x]
       simp only [GlobalTheory.ArchUniq.schrF]
-      rw [add_zero, hP.zero_left, zero_div, add_zero, hb, ContinuousLinearMap.smul_apply, smul_eq_mul]
+      rw [add_zero, hP.zero_left, zero_div, add_zero, hb, smul_apply, smul_eq_mul]
       congr 2
       push_cast
       field_simp
@@ -1607,8 +1607,8 @@ theorem const_of_intertwines : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F : Typ
       funext x
       simp [GlobalTheory.ArchUniq.schrF, hu, hP.zero_right]
     exact hK μ hμ (a, 0) f f' g g' (hw f f' hf) (hw g g' hg)
-  letI mV : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
+  let mV : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
   set μ₀ : Measure (κ → mixedEmbedding.mixedSpace F) := Measure.addHaar with hμ₀
   have hμ₀H : μ₀.IsAddHaarMeasure := by rw [hμ₀]; infer_instance
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.TransConstForm.eq_const_mul_l2_of_translation_invariant _ μ₀ hμ₀H T (htr μ₀ hμ₀H) (_root_.GlobalTheory.CharMult.multiplier_symm _ μ₀ hμ₀H T (hmod μ₀ hμ₀H))
@@ -1631,7 +1631,7 @@ theorem const_of_intertwines : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F : Typ
     push_cast
     rw [eq_div_iff hn', hcΦ]
   refine ⟨(∫ x, ‖T Φ x‖ ^ 2 ∂μ₀) / (∫ x, ‖Φ x‖ ^ 2 ∂μ₀), div_nonneg hm hn.le, fun μ hμ f f' => ?_⟩
-  haveI : μ.IsAddHaarMeasure := hμ
+  have : μ.IsAddHaarMeasure := hμ
   have hs : μ = Measure.addHaarScalarFactor μ μ₀ • μ₀ := Measure.isAddLeftInvariant_eq_smul μ μ₀
   have hcf := hc f f'
   change ∫ x, T f x * starRingEnd ℂ (T f' x) ∂μ₀ = c * ∫ x, f x * starRingEnd ℂ (f' x) ∂μ₀ at hcf
@@ -1676,15 +1676,15 @@ theorem exists_const : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Fi
       apply two_ne_zero (α := F)
       apply (algebraMap F (Fv F v)).injective
       rw [map_ofNat, h, map_zero]
-    letI : Invertible (2 : Fv F v) := invertibleOfNonzero h2
+    let : Invertible (2 : Fv F v) := invertibleOfNonzero h2
     obtain ⟨ψv, hc, hne, A, hA⟩ := _root_.GlobalTheory.ThK.ModelLocInt.exists_loc_schr F E σ B n d X W M χX χW om r s r' s' hPair M₁ hM₁ e hE ei ev hei hev hpure v
     exact _root_.GlobalTheory.CompactOpenLattice.inner_eq_const_mul F v (Fin n × Fin d) ψv hc hne (ev v) A (hSB v) hA
   have hinf : ∃ c : ℝ, 0 ≤ c ∧ ∀ μ : @Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F) (borel _),
       @Measure.IsAddHaarMeasure _ _ _ (borel _) μ → ∀ f f' : SInf F (Fin n × Fin d),
         @integral _ ℂ _ _ (borel _) μ (fun x => ei f x * starRingEnd ℂ (ei f' x)) =
           (c : ℂ) * @integral _ ℂ _ _ (borel _) μ (fun x => f x * starRingEnd ℂ (f' x)) := by
-    letI : Invertible (2 : ℝ) := invertibleOfNonzero two_ne_zero
-    letI : Invertible (2 : mixedEmbedding.mixedSpace F) :=
+    let : Invertible (2 : ℝ) := invertibleOfNonzero two_ne_zero
+    let : Invertible (2 : mixedEmbedding.mixedSpace F) :=
       (Invertible.map (algebraMap ℝ (mixedEmbedding.mixedSpace F)) 2).copy 2 (map_ofNat _ 2).symm
     obtain ⟨ψ, hψ, A, hA⟩ := _root_.GlobalTheory.ArchIntertw.ei_schr F E σ B n d X W M χX χW om r s r' s' hPair M₁ hM₁ e hE ei ev hei hev hpure
     exact _root_.GlobalTheory.ArchInvForm.const_of_intertwines hP F (Fin n × Fin d) ψ hψ ei A hA

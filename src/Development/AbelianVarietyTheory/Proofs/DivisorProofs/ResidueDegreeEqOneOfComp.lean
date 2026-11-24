@@ -78,7 +78,7 @@ theorem residueDegree_eq_one_of_comp {A B C : Scheme.{0}} (g : A ⟶ B) (c : B �
     obtain ⟨x, hx⟩ := h.2 ((g.residueFieldMap a).hom y)
     exact ⟨x, (g.residueFieldMap a).hom.injective hx⟩
   have hb : Function.Bijective (c.residueFieldMap (g a)).hom := ⟨RingHom.injective _, hs⟩
-  letI := (c.residueFieldMap (g a)).hom.toAlgebra
+  let := (c.residueFieldMap (g a)).hom.toAlgebra
   unfold Scheme.Hom.residueDegree
   exact (LinearEquiv.finrank_eq (AlgEquiv.ofBijective (Algebra.ofId _ _) hb).toLinearEquiv).symm.trans
     (Module.finrank_self _)

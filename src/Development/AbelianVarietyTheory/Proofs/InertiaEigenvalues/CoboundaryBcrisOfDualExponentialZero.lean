@@ -506,7 +506,7 @@ theorem cocycles_dependent (hT : Formalism.GaloisCohomology.LocalTateDualityK) (
   have hψc : Continuous fun g => (ψ g : ℤ_[l]) := by
     rw [continuous_iff_coe]
     simp only [hψ, Units.val_zpow_eq_zpow_val]
-    exact (hχ.continuous.comp (continuous_subtype_val.comp hΦ1)).zpow₀ _
+    exact (hχ.continuous.comp (continuous_subtypeVal.comp hΦ1)).zpow₀ _
       fun g => Or.inl (Units.ne_zero _)
   obtain ⟨g₀, hg₀, hg₁⟩ := (gen_dense l _ χ (GlobalTheory.InertiaEigenvalues.isActC_galActC l) hχ K s hs).1
   change g₀ ∈ L.fixingSubgroup at hg₀
@@ -530,13 +530,13 @@ theorem cocycles_dependent (hT : Formalism.GaloisCohomology.LocalTateDualityK) (
     (fun r hr => by
       have hcont : ReciprocityTheory.Gal.ContAction (ReciprocityTheory.Gal.charRep (redChar ψ r)) :=
         contAction_charRep _ ((continuous_toZModPow _).comp hψc)
-      haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+      have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
       have hdual := hT l L (finite_Ks K s) r (ZMod (l ^ r))
         (ReciprocityTheory.Gal.charRep (redChar ψ r)) hr hcont
       exact GlobalTheory.Cyc.CocycleCount.card_cocycles_charRep_modPow_le_of_duality l _ χZ ψ hψc N r _ _ hg hdual.1 hdual.2.2.2.2.1
         (hE l L (finite_Ks K s) r (ZMod (l ^ r)) (ReciprocityTheory.Gal.charRep (redChar ψ r)) hr hcont))
     (fun i g => z (ε.symm i) (Φ.symm g : GQ l))
-    (fun i => (hz _).1.comp_continuous (continuous_subtype_val.comp hΦ1) fun g => (Φ.symm g).2)
+    (fun i => (hz _).1.comp_continuous (continuous_subtypeVal.comp hΦ1) fun g => (Φ.symm g).2)
     (fun i g h => by
       rw [hψ, map_mul]
       exact (hz _).2.2 _ (Φ.symm g).2 _ (Φ.symm h).2)
@@ -601,7 +601,7 @@ theorem kernel_line (D : Formalism.BasicNotions.D7) (h2 : adm2 D) (h4 : Archimed
     (hz₀ : ExpStar D.loc (Gj K s) e z₀ 0) (hne : ∃ σ ∈ Gj K s, z₀ σ ≠ 0) :
     ∃ a : ℚ_[l], ∀ σ ∈ Gj K s, z σ = a * z₀ σ := by
   classical
-  haveI := finite_Ks K s
+  have := finite_Ks K s
   let v := Module.finBasis ℚ_[l] (Ks K s)
   have hl0 : (l : Om l) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
   have hex : ∀ i, ∃ (a : ℚ_[l]) (w : GQ l → ℚ_[l]), a ≠ 0 ∧
@@ -663,10 +663,10 @@ theorem exists_unramified_hom (F : FinExt l) : ∃ z : GQ l → ℤ_[l], Continu
   obtain ⟨z, h1, h2, h3⟩ := GlobalTheory.UnramifiedDegree.exists_degree l (GlobalTheory.InertiaEigenvalues.FrobPow.exists_gal_eq_pow l) hord
   refine ⟨z, h1, h2, fun σ hσ => ?_, ?_⟩
   · simpa using h3 σ 0 fun n hn x hx => by simpa using GlobalTheory.InertFix.inertia_fix l n hn σ hσ x hx
-  · haveI := F.2
-    haveI : Finite (GQ l ⧸ GK F) :=
+  · have := F.2
+    have : Finite (GQ l ⧸ GK F) :=
       Subgroup.quotient_finite_of_isOpen _ (IntermediateField.fixingSubgroup_isOpen F.1)
-    haveI : (GK F).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : (GK F).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     obtain ⟨n, hn, -, hmem⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
       (Subgroup.FiniteIndex.index_ne_zero (H := GK F)) φ
     refine ⟨φ ^ n, hmem, ?_⟩
@@ -681,13 +681,13 @@ theorem expStar_unramified (D : Formalism.BasicNotions.D7) (F : FinExt l) (z : G
     (h2 : ∀ σ τ, z (σ * τ) = z σ + z τ)
     (h3 : ∀ σ : GQ l, (∀ x : Om l, ‖x‖ ≤ 1 → ‖σ x - x‖ < 1) → z σ = 0) :
     ExpStar D.loc (GK F) 0 (fun σ => (z σ : ℚ_[l])) 0 := by
-  haveI := GlobalTheory.UnramifiedCrys.compactSpace_GK F
+  have := GlobalTheory.UnramifiedCrys.compactSpace_GK F
   set AI := D.locA l
   obtain ⟨b, hb⟩ := GlobalTheory.UnramifiedCrys.exists_witt_coboundary (p := l)
     (AI.actT.comp (GK F).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK F))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK F))).eventually
       (GlobalTheory.UnramifiedCrys.eventually_actT_eq AI y m hm hy)) (fun g => z g)
-    (h1.comp continuous_subtype_val) (fun g h => h2 g h)
+    (h1.comp continuous_subtypeVal) (fun g h => h2 g h)
     (fun g hg => h3 g fun x hx =>
       GlobalTheory.UnramifiedCrys.norm_sub_lt_one_of_fix AI g (fun m hm y hy => hg m hm y hy) x hx)
   refine ⟨⟨((continuous_iff_coe _).1 h1).continuousOn, fun _ _ => trivial,
@@ -744,8 +744,8 @@ namespace GlobalTheory.KerExpCrys
 
 theorem finite_Ks {l : ℕ} [Fact l.Prime] (K : FinExt l) (j : ℕ) :
     FiniteDimensional ℚ_[l] (Ks K j) := by
-  haveI := K.2
-  haveI : FiniteDimensional ℚ_[l] (K0 K) :=
+  have := K.2
+  have : FiniteDimensional ℚ_[l] (K0 K) :=
     Module.Finite.of_injective
       (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective (inf_le_left : K0 K ≤ K.1))
@@ -753,8 +753,8 @@ theorem finite_Ks {l : ℕ} [Fact l.Prime] (K : FinExt l) (j : ℕ) :
     refine (Polynomial.nthRootsFinset (l ^ j) (1 : Om l)).finite_toSet.subset fun x hx => ?_
     exact Finset.mem_coe.2 ((Polynomial.mem_nthRootsFinset
       (pow_pos (Fact.out : l.Prime).pos _) _).2 hx)
-  haveI := hf.to_subtype
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ j) = 1}) :=
+  have := hf.to_subtype
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ j) = 1}) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   exact IntermediateField.finiteDimensional_sup _ _
 
@@ -774,7 +774,7 @@ theorem cob_cris_of_expStar_zero : ∀ (D : Formalism.BasicNotions.D7), adm2 D �
       have := hadd' 1 1
       simpa using this
     obtain ⟨b, hb⟩ := GlobalTheory.UnramifiedCrys.exists_rat (D.locA l) (D.locT l)
-      (⟨Ks K s, finite_Ks K s⟩ : FinExt l) (fun g => z g) hc.restrict hadd' (by
+      (⟨Ks K s, finite_Ks K s⟩ : FinExt l) (fun g => z g) hc.domRestrict hadd' (by
         intro g hg
         induction hg using Subgroup.closure_induction with
         | mem x hx => exact hI x x.2 hx

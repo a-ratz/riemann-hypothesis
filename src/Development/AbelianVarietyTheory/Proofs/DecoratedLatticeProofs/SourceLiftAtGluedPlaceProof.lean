@@ -106,7 +106,7 @@ def toCA {A : HSp D} (φ : Form k n' (GA D A → ℂ)) (h : ∀ P, IsContAut A (
 
 theorem toCA_ram {A : HSp D} {α : Frame p A n'} {φ : Form k n' (GA D A → ℂ)} (hφ : IsRam α φ) :
     toCA φ hφ.2.2 ∈ Mram k n' (CA A) ∧ toCA φ hφ.2.2 ∈ EqForm (caRep α) := by
-  letI := Fintype.ofFinite 𝓀[k]ˣ
+  let := Fintype.ofFinite 𝓀[k]ˣ
   refine ⟨(mem_Mram _).2 fun P => Subtype.ext ?_, fun g P => Subtype.ext (hφ.1 g P)⟩
   simpa [toCA] using (mem_Mram φ).1 hφ.2.1 P
 
@@ -200,7 +200,7 @@ theorem GlobalTheory.FinPl.sourceGlued : ∀ D : D7, GlobalTheory.FinPl.SourceGl
         Over ψ α₀ β LS LT f₀ (tensCol (latInd L₁ Λ) a) Ξ := by
       rcases hor with h | h
       exacts [⟨_, Or.inl rfl, h⟩, ⟨_, Or.inr rfl, h⟩]
-    haveI : L₁.IsFullLattice k := by rcases hL₁ with rfl | rfl <;> infer_instance
+    have : L₁.IsFullLattice k := by rcases hL₁ with rfl | rfl <;> infer_instance
     obtain ⟨θ, hθv, hθe⟩ := hθ LS LT f₀ hO.1 hO.2.1 hO.2.2.1
     obtain ⟨hram, heq⟩ := toCA_ram hφ
     set φc := toCA φ hφ.2.2 with hφc

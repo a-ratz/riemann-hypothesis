@@ -61,11 +61,11 @@ theorem rStab_index_ne_zero_of_compact : ∀ {G : Type} [Group G] [TopologicalSp
   have hWo : IsOpen (W : Set G) := by
     rw [hW, Subgroup.coe_inf]
     exact ho.inter (ho.preimage hθ)
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   have hWo' : IsOpen ((W.subgroupOf K : Subgroup K) : Set K) :=
-    hWo.preimage continuous_subtype_val
-  haveI := Subgroup.quotient_finite_of_isOpen _ hWo'
-  haveI : (W.subgroupOf K).FiniteIndex := ⟨Subgroup.index_ne_zero_of_finite⟩
+    hWo.preimage continuous_subtypeVal
+  have := Subgroup.quotient_finite_of_isOpen _ hWo'
+  have : (W.subgroupOf K).FiniteIndex := ⟨Subgroup.index_ne_zero_of_finite⟩
   have hle : W.subgroupOf K ≤ rStab fun k : K => f ((y * k)⁻¹ * d * θ (y * k)) := by
     intro k' hk' k
     have hk'W : (k' : G) ∈ W := Subgroup.mem_subgroupOf.mp hk'

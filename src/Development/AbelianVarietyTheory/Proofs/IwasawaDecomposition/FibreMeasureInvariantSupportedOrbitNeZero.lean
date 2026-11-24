@@ -116,7 +116,7 @@ theorem q_scale (r : R) (z : Fin M → R ⊗[F] E) :
 theorem q_rat [CharZero F] (h2 : Module.finrank F E = 2) (x : Fin M → E) (β : F)
     (hx : hE σ J x x = algebraMap F E β) :
     qR R σ J (fun i => inclR R (x i)) = algebraMap F R β := by
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
   have e : hR R σ J (fun i => inclR R (x i)) (fun i => inclR R (x i)) = inclR R (hE σ J x x) := by
 
     simp only [hR, hE, Formalism.UG.hform, JR, Matrix.map_apply, sig_incl, map_sum, map_mul]
@@ -205,7 +205,7 @@ theorem fibre_invariant_orbit_ne_zero : ∀ (F E : Type) [Field F] [NumberField 
         rw [← this]; exact hy
     simp only [Measure.restrict_univ, lintegral_indicator_one hOo.measurableSet, hz',
       lintegral_zero] at key
-    haveI : (tupMeas lam 1 M).IsOpenPosMeasure := by
+    have : (tupMeas lam 1 M).IsOpenPosMeasure := by
       unfold tupMeas
       haveI : (Measure.pi fun _ : Fin M => lam).IsOpenPosMeasure :=
         Measure.pi.isOpenPosMeasure (fun _ : Fin M => lam)

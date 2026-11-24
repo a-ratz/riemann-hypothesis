@@ -61,9 +61,9 @@ theorem val_le_one_of_isIntegral {Ω : Type} [Field Ω] (B : ValuationSubring Ω
 
 theorem exists_int_mul (F : Type) {Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] (y : Ω) : ∃ c : ℤ, c ≠ 0 ∧ IsIntegral ℤ ((c : Ω) * y) := by
-  haveI : Algebra.IsAlgebraic ℤ F :=
+  have : Algebra.IsAlgebraic ℤ F :=
     (IsFractionRing.comap_isAlgebraic_iff (A := ℤ) (K := ℚ) (C := F)).mpr inferInstance
-  haveI : Algebra.IsAlgebraic ℤ Ω := Algebra.IsAlgebraic.trans ℤ F Ω
+  have : Algebra.IsAlgebraic ℤ Ω := Algebra.IsAlgebraic.trans ℤ F Ω
   obtain ⟨c, hc, h⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) y).exists_integral_multiple
   exact ⟨c, hc, by simpa [zsmul_eq_mul] using h⟩
 
@@ -79,7 +79,7 @@ theorem finite_moves (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra
     {v : HeightOneSpectrum (𝓞 F) | ∃ B : ValuationSubring Ω, IsPlaceOver B v ∧
       ∃ τ ∈ Ine (F := F) B, τ x ≠ x}.Finite := by
   classical
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   obtain ⟨c₀, hc₀, hx⟩ := exists_int_mul F x
   set a : Ω := (c₀ : Ω) * x with ha
   choose c hc hci using fun β : Ω => exists_int_mul F (β - a)⁻¹
@@ -91,7 +91,7 @@ theorem finite_moves (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra
     rw [ha, map_mul, map_intCast, ← mul_sub]
     exact mul_ne_zero (by exact_mod_cast hc₀) (sub_ne_zero.mpr hne)
   have hint : IsIntegral F a := Algebra.IsIntegral.isIntegral a
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
   refine ⟨τ a, ?_, ?_⟩
   · rw [Polynomial.mem_rootSet]
     refine ⟨minpoly.ne_zero hint, ?_⟩

@@ -92,8 +92,8 @@ theorem exp_mul_injOn {ι V : Type} [Fintype ι] [Fintype V] {n : ℕ}
     ContinuousLinearMap.pi fun v => (R v).comp ((ContinuousLinearMap.proj v).comp Lc)
   have hf' : ∀ x v, f' x v = L x v * P v := fun x v => rfl
   have hd : HasStrictFDerivAt (fun x => fun v => NormedSpace.exp (L x v) * P v) f' 0 := by
-    letI : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAddCommGroup
-    letI : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedSpace
+    let : NormedAddCommGroup (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAddCommGroup
+    let : NormedSpace ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedSpace
     rw [hasStrictFDerivAt_pi]
     intro v
     have h0 : HasStrictFDerivAt (fun x : EuclideanSpace ℝ ι => L x v)

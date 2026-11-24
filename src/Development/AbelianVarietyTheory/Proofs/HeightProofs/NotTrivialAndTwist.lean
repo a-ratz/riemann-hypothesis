@@ -203,9 +203,9 @@ theorem central_scalar (R : DSRep T) {z : T.G} (hz : ∀ x, z * x = x * z) {c : 
     (h : R.U.π z v = c • v) (w : R.U.H) : R.U.π z w = c • w := by
   have := R.irred (LinearMap.ker ((R.U.π z - c • 1 : R.U.H →L[ℂ] R.U.H) : R.U.H →ₗ[ℂ] R.U.H))
     (ContinuousLinearMap.isClosed_ker _) fun g x hx => by
-      simp only [LinearMap.mem_ker, ContinuousLinearMap.coe_coe, ContinuousLinearMap.sub_apply,
-        ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, sub_eq_zero] at hx ⊢
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, hz, map_mul, ContinuousLinearMap.mul_apply, hx, map_smul]
+      simp only [LinearMap.mem_ker, ContinuousLinearMap.coe_coe, sub_apply,
+        smul_apply, one_apply_eq_self, sub_eq_zero] at hx ⊢
+      rw [← mul_apply_eq_comp, ← map_mul, hz, map_mul, mul_apply_eq_comp, hx, map_smul]
   rcases this with e | e
   · exact absurd ((Submodule.eq_bot_iff _).1 e v (by simp [h])) hv
   · simpa [sub_eq_zero] using Submodule.eq_top_iff'.1 e w
@@ -232,7 +232,7 @@ theorem trivial_or_twist (R : DSRep T) :
     rw [ext_of (hy.trans hx.symm) (e'.trans e.symm)]
     ext w
     have := central_scalar R hc (c := 1) (v := R.U.π x v + v) (fun h0 => hv (eq_neg_of_add_eq_zero_left h0))
-      (by rw [map_add (f := _), ← ContinuousLinearMap.mul_apply, ← map_mul, h2, map_one]; simp [add_comm]) w
+      (by rw [map_add (f := _), ← mul_apply_eq_comp, ← map_mul, h2, map_one]; simp [add_comm]) w
     simpa using this
   change ((T.sq x : ℂˣ) : ℂ)⁻¹ • R.U.π x = 1
   ext v

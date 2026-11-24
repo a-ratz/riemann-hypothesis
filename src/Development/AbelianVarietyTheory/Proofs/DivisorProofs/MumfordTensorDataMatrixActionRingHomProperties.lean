@@ -77,7 +77,7 @@ theorem comp_act_pr (T : Tens D D' W) {X} (f : X ⟶ D'.P.A) (a : Matrix (Fin r)
   rw [Tens.act_pr, comp_prod_zpow]
 
 theorem act_isMonHom (T : Tens D D' W) (a : Matrix (Fin r) (Fin r) ℤ) : IsMonHom (T.act a) := by
-  haveI := T.pr_hom
+  have := T.pr_hom
   have h1 : ∀ {X} , (1 : X ⟶ D'.P.A) ≫ T.act a = 1 := by
     intro X
     refine hom_ext T fun i => ?_
@@ -122,7 +122,7 @@ theorem act_mul (T : Tens D D' W) (a b : Matrix (Fin r) (Fin r) ℤ) : T.act (a 
 
 theorem act_add (T : Tens D D' W) (a b : Matrix (Fin r) (Fin r) ℤ) :
     T.act (a + b) = padd D'.P.A (T.act a) (T.act b) := by
-  haveI := T.pr_hom
+  have := T.pr_hom
   show _ = T.act a * T.act b
   refine hom_ext T fun i => ?_
   rw [MonObj.mul_comp]

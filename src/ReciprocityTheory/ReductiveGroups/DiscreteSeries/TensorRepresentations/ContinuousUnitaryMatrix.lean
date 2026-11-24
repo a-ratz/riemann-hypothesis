@@ -187,7 +187,7 @@ theorem tensor_coef_smooth (dual : Bool) (η f : Fin n → H) (hf : ∀ d, IsSmo
     smoothOnG_finset_sum univ (fun d g => oa1Phi dual g c d * inner ℂ (η c) (σ g (f d))) fun d _ =>
       smoothOnG_mul (smoothOnG_tensor_phi dual c d) (smoothOnG_inner_rep (η c) (hf d))
 
-theorem continuous_umat' : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) := Units.continuous_val.comp continuous_subtype_val
+theorem continuous_umat' : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) := Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_rep_orbit (hσ : IsURepOn (UJset ε) σ) (v : H) :
     Continuous (fun g : Formalism.REAL.UJ ε => σ (Formalism.MainNotions.S.umat g) v) := (hσ.2.2 v).comp_continuous continuous_umat' fun g => g.2

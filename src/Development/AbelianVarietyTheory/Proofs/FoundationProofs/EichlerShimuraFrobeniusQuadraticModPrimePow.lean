@@ -206,11 +206,11 @@ theorem gamma_le_ker (T : Tower Ω ε) (M : ℕ) : CongruenceSubgroup.Gamma M �
   exact x.2 _ (inv_mem hγ)
 
 theorem finite_range (T : Tower Ω ε) (M : ℕ) (hM : 0 < M) : Finite (rho T M).range := by
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : (CongruenceSubgroup.Gamma M).FiniteIndex := by
+  have : NeZero M := ⟨hM.ne'⟩
+  have : (CongruenceSubgroup.Gamma M).FiniteIndex := by
     show (Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M))).ker.FiniteIndex
     exact Subgroup.finiteIndex_ker _
-  haveI : (rho T M).ker.FiniteIndex := Subgroup.finiteIndex_of_le (gamma_le_ker T M)
+  have : (rho T M).ker.FiniteIndex := Subgroup.finiteIndex_of_le (gamma_le_ker T M)
   exact Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange (rho T M)).toEquiv
 
 end GlobalTheory.FN.LevelGal
@@ -235,9 +235,9 @@ theorem finiteDimensional_adjoin_restrict {F K : Type} [Field F] [Field K] [Alge
     (L : IntermediateField (IntermediateField.adjoin F {α}) K)
     (hL : FiniteDimensional (IntermediateField.adjoin F {α}) L) (hα : α ∈ L.restrictScalars F) :
     FiniteDimensional (IntermediateField.adjoin F {(⟨α, hα⟩ : L.restrictScalars F)}) (L.restrictScalars F) := by
-  letI : Algebra (IntermediateField.adjoin F {α}) (L.restrictScalars F) :=
+  let : Algebra (IntermediateField.adjoin F {α}) (L.restrictScalars F) :=
     inferInstanceAs (Algebra (IntermediateField.adjoin F {α}) L)
-  haveI : Module.Finite (IntermediateField.adjoin F {α}) (L.restrictScalars F) := hL
+  have : Module.Finite (IntermediateField.adjoin F {α}) (L.restrictScalars F) := hL
   have hmap : (IntermediateField.adjoin F {(⟨α, hα⟩ : L.restrictScalars F)}).map (L.restrictScalars F).val =
       IntermediateField.adjoin F {α} := by
     rw [IntermediateField.adjoin_map, Set.image_singleton]
@@ -252,10 +252,10 @@ theorem finiteDimensional_adjoin_restrict {F K : Type} [Field F] [Field K] [Alge
     have e : algebraMap (IntermediateField.adjoin F {α}) (L.restrictScalars F) c = y := Subtype.ext hyc.symm
     rw [e]
     exact hy
-  letI : Algebra (IntermediateField.adjoin F {α}) (IntermediateField.adjoin F {(⟨α, hα⟩ : L.restrictScalars F)}) :=
+  let : Algebra (IntermediateField.adjoin F {α}) (IntermediateField.adjoin F {(⟨α, hα⟩ : L.restrictScalars F)}) :=
     ((algebraMap (IntermediateField.adjoin F {α}) (L.restrictScalars F)).codRestrict
       (IntermediateField.adjoin F {(⟨α, hα⟩ : L.restrictScalars F)}) hmem).toAlgebra
-  haveI : IsScalarTower (IntermediateField.adjoin F {α})
+  have : IsScalarTower (IntermediateField.adjoin F {α})
       (IntermediateField.adjoin F {(⟨α, hα⟩ : L.restrictScalars F)}) (L.restrictScalars F) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Module.Finite.of_restrictScalars_finite (IntermediateField.adjoin F {α}) _ _
@@ -266,7 +266,7 @@ theorem finiteDimensional_lvl {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClos
     (hj : ∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) (M : ℕ) (hM : 0 < M) :
     FiniteDimensional (IntermediateField.adjoin Ω {X.jK}) (lvl X M) := by
   let H := (rho X M).range
-  haveI : Finite H := finite_range X M hM
+  have : Finite H := finite_range X M hM
   have hbot : IntermediateField.fixedField H = ⊥ := by
     rw [eq_bot_iff]
     intro x hx
@@ -278,7 +278,7 @@ theorem finiteDimensional_lvl {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClos
       exact h1
     rw [IntermediateField.mem_bot]
     exact ⟨⟨x, hxF⟩, Subtype.ext rfl⟩
-  haveI hfd0 : FiniteDimensional (IntermediateField.fixedField H) (lvl X M) :=
+  have hfd0 : FiniteDimensional (IntermediateField.fixedField H) (lvl X M) :=
     (inferInstance : FiniteDimensional (FixedPoints.subfield H (lvl X M)) (lvl X M))
   have : FiniteDimensional (⊥ : IntermediateField (IntermediateField.adjoin Ω {X.jK}) (lvl X M)) (lvl X M) :=
     hbot ▸ hfd0
@@ -380,7 +380,7 @@ theorem exists_coset (M q : ℕ) (hM : 0 < M) (hq : q.Prime) (hqM : Nat.Coprime 
     (h10 : (m 1 0 : ZMod M) = 0) (h11 : (m 1 1 : ZMod M) = q) :
     (∃ j < q, ∃ γ ∈ CongruenceSubgroup.Gamma M, m = (γ : Matrix (Fin 2) (Fin 2) ℤ) * !![1, (j * M : ℤ); 0, (q : ℤ)]) ∨
       ∃ γ ∈ CongruenceSubgroup.Gamma M, m = (γ : Matrix (Fin 2) (Fin 2) ℤ) * ((σ : Matrix (Fin 2) (Fin 2) ℤ) * !![(q : ℤ), 0; 0, 1]) := by
-  haveI := Fact.mk hq
+  have := Fact.mk hq
   have hq0 : (q : ℤ) ≠ 0 := by exact_mod_cast hq.ne_zero
   rw [Matrix.det_fin_two] at hdet
   by_cases hdiv : (q : ℤ) ∣ m 0 0 ∧ (q : ℤ) ∣ m 1 0
@@ -462,7 +462,7 @@ theorem reps_distinct (M q : ℕ) (hq : q.Prime) (hqM : Nat.Coprime q M) (σ : S
   have e11 := E 1 1
   unfold reps at e00 e01 e10 e11
   by_cases hi : (i : ℕ) < q <;> by_cases hk : (k : ℕ) < q <;>
-    simp only [hi, hk, if_true, if_false] at e00 e01 e10 e11 <;>
+    simp only [hi, hk, ite_true, ite_false] at e00 e01 e10 e11 <;>
     simp [Matrix.mul_apply, Fin.sum_univ_two] at e00 e01 e10 e11
   ·
     have hdv : (q : ℤ) ∣ ((i : ℕ) - (k : ℕ) : ℤ) * M := ⟨(g : Matrix (Fin 2) (Fin 2) ℤ) 0 1, by
@@ -666,7 +666,7 @@ theorem exists_comap_eq {K L : Type} [Field K] [Field L] (f : K →+* L) (U : Va
     rw [ValuationSubring.mem_nonunits_iff, map_inv₀, map_inv₀] at h2
     have h3 : W.valuation (f x) ≤ 1 := (W.valuation_le_one_iff _).2 hx
     have h4 : 0 < W.valuation (f x) := by
-      rw [zero_lt_iff, Valuation.ne_zero_iff]; exact (map_ne_zero f).2 h0
+      rw [pos_iff_ne_zero, Valuation.ne_zero_iff]; exact (map_ne_zero f).2 h0
     exact absurd ((inv_lt_one₀ h4).1 h2) (not_lt.2 h3)
   · intro x hx
     exact hW ⟨x, hx⟩
@@ -693,7 +693,7 @@ theorem val_eq_one_of_pow {L : Type} [Field L] (A : ValuationSubring L) {x : L} 
     (h : A.valuation (x ^ n) = 1) : A.valuation x = 1 := by
   rw [map_pow] at h
   rcases lt_trichotomy (A.valuation x) 1 with h1 | h1 | h1
-  · exact absurd h (ne_of_lt (pow_lt_one₀ zero_le' h1 hn))
+  · exact absurd h (ne_of_lt (pow_lt_one₀ zero_le h1 hn))
   · exact h1
   · exact absurd h (ne_of_gt (one_lt_pow₀ h1 hn))
 
@@ -756,9 +756,9 @@ theorem finiteDimensional_adjoin_map {F K L : Type} [Field F] [Field K] [Field L
       map_mul' := by intros; ext; simp
       map_zero' := by ext; simp
       map_add' := by intros; ext; simp }
-  letI : Algebra E E' := g.toAlgebra
-  haveI : IsScalarTower E E' L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Module.Finite E L := Module.Finite.trans K L
+  let : Algebra E E' := g.toAlgebra
+  have : IsScalarTower E E' L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Module.Finite E L := Module.Finite.trans K L
   exact Module.Finite.of_restrictScalars_finite E E' L
 
 def GaussOver {F L : Type} [Field F] [Field L] [Algebra F L] (V : ValuationSubring F) (t : L)
@@ -834,7 +834,7 @@ theorem core {F K L : Type} [Field F] [IsAlgClosed F] [Field K] [Field L] [Algeb
     by_contra hne
     push_neg at hne
     have : 1 ≤ W'.valuation (y ^ l - 1) := by
-      rw [hprod, map_prod]; exact Finset.one_le_prod' hne
+      rw [hprod, map_prod]; exact Finset.one_le_prod hne
     exact absurd hy1 (not_lt.2 this)
   have hζpow : ζ ^ l = 1 := (mem_nthRootsFinset hl.pos _).1 hζm
   have hτy : τ y = algebraMap F L ζ₀ * y := by
@@ -875,11 +875,11 @@ theorem not_valuation_lt_one : ∀ {F : Type} [Field F] [CharZero F] [IsAlgClose
     W.valuation (Polynomial.aeval t P) = 1)) → ∀ (h : K) (c : F), h ≠ 0 → c ≠ 0 → c ∈ V → c⁻¹ ∈ V →
     ¬ W.valuation (s * h ^ l - algebraMap F K c) < 1 := by
   intro F _ _ _ _ K _ _ t ht hfin l hl s hs
-  haveI : Fact (Irreducible (X ^ l - C s)) := ⟨X_pow_sub_C_irreducible_of_prime hl hs⟩
+  have : Fact (Irreducible (X ^ l - C s)) := ⟨irreducible_X_pow_sub_C_of_prime hl hs⟩
   have hf0 : (X ^ l - C s : K[X]) ≠ 0 := X_pow_sub_C_ne_zero hl.pos s
   have hKL : FiniteDimensional K (AdjoinRoot (X ^ l - C s)) := (AdjoinRoot.powerBasis hf0).finite
-  haveI : NeZero (l : F) := ⟨Nat.cast_ne_zero.2 hl.ne_zero⟩
-  obtain ⟨ζ₀, hζ₀⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F l
+  have : NeZero (l : F) := ⟨Nat.cast_ne_zero.2 hl.ne_zero⟩
+  obtain ⟨ζ₀, hζ₀⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F l
   have htL : Transcendental F (algebraMap K (AdjoinRoot (X ^ l - C s)) t) :=
     (transcendental_algebraMap_iff (algebraMap K _).injective).2 ht
   have hfinL := finiteDimensional_adjoin_map (F := F) hKL t hfin
@@ -918,10 +918,10 @@ namespace GlobalTheory
 theorem Tower.gal_level {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε) (M : ℕ)
     (s : Ω ≃ₐ[ℚ] Ω) (f : X.K) (hM : 0 < M) (hf : ∀ γ ∈ CongruenceSubgroup.Gamma M, X.sl (ofSL γ) f = f) :
     ∀ γ ∈ CongruenceSubgroup.Gamma M, X.sl (ofSL γ) (X.gal s f) = X.gal s f := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : NeZero (M : Ω) := ⟨by exact_mod_cast hM.ne'⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero M := ⟨hM.ne'⟩
+  have : NeZero (M : Ω) := ⟨by exact_mod_cast hM.ne'⟩
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic M Ω) (Polynomial.degree_cyclotomic_pos M Ω hM).ne'
   rw [Polynomial.isRoot_cyclotomic_iff] at hζ
   have hsζ : IsPrimitiveRoot (s ζ) M := hζ.map_of_injective s.injective
@@ -1117,14 +1117,14 @@ open GlobalTheory.KroneckerCongruence GlobalTheory.KronRatio in
 theorem kronecker_ratio_reduces_to_const : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (M : ℕ) (f : X.Kˣ), 0 < M → (∀ γ ∈ CongruenceSubgroup.Gamma M, X.sl (ofSL γ) (f : X.K) = f) → ∃ S : Finset ℕ, ∀ q : ℕ, q.Prime → q ∉ S → ∀ (V : ValuationSubring Ω) (s : Ω ≃ₐ[ℚ] Ω), ((q : ℕ) : Ω) ∈ V.nonunits → (∀ x ∈ V, s x ∈ V ∧ s.symm x ∈ V ∧ V.valuation (s x - x ^ q) < 1) → ∀ σ : SL(2, ℤ), ((en σ 0 1 : ZMod M) = 0 ∧ (en σ 1 0 : ZMod M) = 0 ∧ (en σ 1 1 : ZMod M) = q) → ∀ W : ValuationSubring X.K, (∀ a : Ω, algebraMap Ω X.K a ∈ W ↔ a ∈ V) → (∀ g : X.K, (∀ r, (X.exp g).coeff r ∈ V) → (∀ r, r ≠ 0 → (X.exp g).coeff r ∈ V.nonunits) → W.valuation (g - algebraMap Ω X.K ((X.exp g).coeff 0)) < 1) → ∃ κ : Ω, κ ≠ 0 ∧ W.valuation (algebraMap Ω X.K κ * ((∏ j ∈ Finset.range q, X.sl (toGQ !![1, (j * M : ℤ); 0, (q : ℤ)]) (f : X.K)) * X.sl (toGQ ((σ : Matrix (Fin 2) (Fin 2) ℤ) * !![(q : ℤ), 0; 0, 1])) (f : X.K)) / (X.gal s (f : X.K) * (X.gal s.symm (X.sl (ofSL σ) (f : X.K))) ^ q) - 1) < 1 := by
   intro Ω _ _ _ ε X hε hj M f hM hf
   classical
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   let red : SL(2, ℤ) →* SL(2, ZMod M) := Matrix.SpecialLinearGroup.map (Int.castRingHom (ZMod M))
   let F : SL(2, ZMod M) → X.K := fun τ =>
     if h : ∃ σ, red σ = τ then X.sl (ofSL h.choose) (f : X.K) else (f : X.K)
   have hF : ∀ σ : SL(2, ℤ), X.sl (ofSL σ) (f : X.K) = F (red σ) := by
     intro σ
     have h : ∃ σ', red σ' = red σ := ⟨σ, rfl⟩
-    have e : F (red σ) = X.sl (ofSL h.choose) (f : X.K) := dif_pos h
+    have e : F (red σ) = X.sl (ofSL h.choose) (f : X.K) := dite_eq_left h
     have hσ' : red h.choose = red σ := h.choose_spec
     have hγ : σ * h.choose⁻¹ ∈ CongruenceSubgroup.Gamma M := by
       have : σ * h.choose⁻¹ ∈ red.ker := by
@@ -1213,7 +1213,7 @@ theorem val_lt_one_iff {F : Type} [Field F] (A : ValuationSubring F) (x : F) :
   by_cases hx : x = 0
   · simp [hx]
   · have h0 : 0 < A.valuation x := by
-      rw [zero_lt_iff]; simpa using hx
+      rw [pos_iff_ne_zero]; simpa using hx
     rw [map_inv₀, inv_le_one₀ h0]; simp [hx]
 
 theorem val_eq_one_iff {F : Type} [Field F] (A : ValuationSubring F) (x : F) :
@@ -1221,7 +1221,7 @@ theorem val_eq_one_iff {F : Type} [Field F] (A : ValuationSubring F) (x : F) :
   by_cases hx : x = 0
   · simp [hx]
   · have h0 : 0 < A.valuation x := by
-      rw [zero_lt_iff]; simpa using hx
+      rw [pos_iff_ne_zero]; simpa using hx
     rw [map_inv₀, inv_le_one₀ h0]; simp only [ne_eq, hx, not_false_eq_true, true_and]
     exact le_antisymm_iff
 
@@ -1244,19 +1244,19 @@ theorem frob_symm {Ω : Type} [Field Ω] [Algebra ℚ Ω] (q : ℕ) (hq : 0 < q)
   by_contra hy
   have hy0 : s.symm x ≠ 0 := by intro h; apply hy; rw [h]; exact V.zero_mem
   have h1 : ¬ V.valuation (s.symm x) ≤ 1 := by rwa [V.valuation_le_one_iff]
-  have hpos : 0 < V.valuation (s.symm x) := by rw [zero_lt_iff]; simpa using hy0
+  have hpos : 0 < V.valuation (s.symm x) := by rw [pos_iff_ne_zero]; simpa using hy0
   have hyinv : V.valuation (s.symm x)⁻¹ < 1 := by
     rw [map_inv₀, inv_lt_one₀ hpos]; exact not_le.1 h1
   have hyV : (s.symm x)⁻¹ ∈ V := (V.valuation_le_one_iff _).1 hyinv.le
   obtain ⟨_, h2⟩ := hs _ hyV
   have h3 : V.valuation ((s.symm x)⁻¹ ^ q) < 1 := by
-    rw [map_pow]; exact pow_lt_one₀ zero_le' hyinv hq.ne'
+    rw [map_pow]; exact pow_lt_one₀ zero_le hyinv hq.ne'
   have h4 : V.valuation (s (s.symm x)⁻¹) < 1 := by
     have e : s (s.symm x)⁻¹ = (s (s.symm x)⁻¹ - (s.symm x)⁻¹ ^ q) + (s.symm x)⁻¹ ^ q := by ring
     rw [e]; exact Valuation.map_add_lt _ h2 h3
   rw [map_inv₀, AlgEquiv.apply_symm_apply, map_inv₀] at h4
   have hx0 : x ≠ 0 := by intro h; apply hy0; simp [h]
-  have hxpos : 0 < V.valuation x := by rw [zero_lt_iff]; simpa using hx0
+  have hxpos : 0 < V.valuation x := by rw [pos_iff_ne_zero]; simpa using hx0
   rw [inv_lt_one₀ hxpos] at h4
   exact absurd ((V.valuation_le_one_iff _).2 hx) (not_le.2 h4)
 
@@ -1294,8 +1294,8 @@ theorem prod_mem_Un {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} 
 theorem eichler_shimura_kummer : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (l : ℕ) [Fact l.Prime] (M n : ℕ) (f : X.Kˣ), 0 < M → l ∣ M → f ∈ X.Un (l ^ n) → (∀ γ ∈ CongruenceSubgroup.Gamma M, X.sl (ofSL γ) (f : X.K) = f) → ∃ S : Finset ℕ, ∀ q : ℕ, q.Prime → q ∉ S → ∀ s : Ω ≃ₐ[ℚ] Ω, FrobAt q s → ∀ σ : SL(2, ℤ), ((en σ 0 1 : ZMod M) = 0 ∧ (en σ 1 0 : ZMod M) = 0 ∧ (en σ 1 1 : ZMod M) = q) → ∃ g : X.Kˣ, (∏ j ∈ Finset.range q, X.sl (toGQ !![1, (j * M : ℤ); 0, (q : ℤ)]) (f : X.K)) * X.sl (toGQ ((σ : Matrix (Fin 2) (Fin 2) ℤ) * !![(q : ℤ), 0; 0, 1])) (f : X.K) = X.gal s (f : X.K) * (X.gal s.symm (X.sl (ofSL σ) (f : X.K))) ^ q * (g : X.K) ^ (l ^ n) := by
   intro Ω _ _ _ ε X hε hj l hl M n f hM hlM hfU hfM
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
   haveI : @Algebra.IsAlgebraic ℚ Ω _ _ DivisionRing.toRatAlgebra := by
     convert (IsAlgClosure.isAlgebraic : Algebra.IsAlgebraic ℚ Ω)
     exact Subsingleton.elim _ _
@@ -1567,7 +1567,7 @@ theorem exists_frobV {q : ℕ} (hq : 0 < q) {s : Ω ≃ₐ[ℚ] Ω} (h : FrobAt 
   have h2 : V.valuation ((s.symm x)⁻¹) < 1 := by
     rw [map_inv₀]; exact inv_lt_one_of_one_lt₀ h1
   have h3 : V.valuation (((s.symm x)⁻¹) ^ q) < 1 := by
-    rw [map_pow]; exact pow_lt_one₀ zero_le' h2 hq.ne'
+    rw [map_pow]; exact pow_lt_one₀ zero_le h2 hq.ne'
   have h4 := (hs _ hi).2
   have h5 : V.valuation (s ((s.symm x)⁻¹)) < 1 := by
     have := Valuation.map_add_lt V.valuation h4 h3

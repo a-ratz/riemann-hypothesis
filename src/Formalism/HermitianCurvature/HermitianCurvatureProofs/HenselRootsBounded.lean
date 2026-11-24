@@ -519,22 +519,22 @@ theorem TT_congr {R : Subring K} {s : ℕ} {Cut : Set K} {τ : Kˣ} {F : Kˣ →
   unfold TT
   by_cases hc : (c : K) ∈ Cut
   · obtain ⟨hc', ω, hcω, hF⟩ := hω c c' hcc hc
-    rw [if_pos hc, if_pos hc', ← finsum_comp_equiv (Equiv.mulRight ω)]
+    rw [ite_eq_left hc, ite_eq_left hc', ← finsum_comp_equiv (Equiv.mulRight ω)]
     refine finsum_congr fun z => ?_
     have hiff : (z * ω) ^ s = τ * c' ↔ z ^ s = τ * c := by
       rw [hcω, mul_pow, ← mul_assoc]
       exact mul_left_inj _
     show (if (z * ω) ^ s = τ * c' then F (z * ω) else 0) = _
     by_cases hz : z ^ s = τ * c
-    · rw [if_pos hz, if_pos (hiff.2 hz), hF z hz]
-    · rw [if_neg hz, if_neg (fun hh => hz (hiff.1 hh))]
+    · rw [ite_eq_left hz, ite_eq_left (hiff.2 hz), hF z hz]
+    · rw [ite_eq_right hz, ite_eq_right (fun hh => hz (hiff.1 hh))]
   · have hc' : (c' : K) ∉ Cut := by
       intro hc'
       have : (c : K) - c' ∈ R := by
         have := R.neg_mem hcc
         simpa using this
       exact hc (hω c' c this hc').1
-    rw [if_neg hc, if_neg hc']
+    rw [ite_eq_right hc, ite_eq_right hc']
 
 theorem TT_scale {s : ℕ} {Cut : Set K} {τ : Kˣ} {F G : Kˣ → ℂ} (υ : Kˣ)
     (hcut : ∀ c : Kˣ, (c : K) ∈ Cut ↔ ((υ ^ s * c : Kˣ) : K) ∈ Cut)
@@ -543,16 +543,16 @@ theorem TT_scale {s : ℕ} {Cut : Set K} {τ : Kˣ} {F G : Kˣ → ℂ} (υ : K�
   classical
   unfold TT
   by_cases hc : (c : K) ∈ Cut
-  · rw [if_pos hc, if_pos ((hcut c).1 hc), ← finsum_comp_equiv (Equiv.mulRight υ)]
+  · rw [ite_eq_left hc, ite_eq_left ((hcut c).1 hc), ← finsum_comp_equiv (Equiv.mulRight υ)]
     refine finsum_congr fun z => ?_
     have hiff : (z * υ) ^ s = τ * (υ ^ s * c) ↔ z ^ s = τ * c := by
       rw [mul_pow, mul_left_comm τ, mul_comm (z ^ s)]
       exact mul_right_inj _
     show (if (z * υ) ^ s = τ * (υ ^ s * c) then F (z * υ) else 0) = _
     by_cases hz : z ^ s = τ * c
-    · rw [if_pos hz, if_pos (hiff.2 hz), hG c z hc hz]
-    · rw [if_neg hz, if_neg (fun hh => hz (hiff.1 hh))]
-  · rw [if_neg hc, if_neg (fun hh => hc ((hcut c).2 hh))]
+    · rw [ite_eq_left hz, ite_eq_left (hiff.2 hz), hG c z hc hz]
+    · rw [ite_eq_right hz, ite_eq_right (fun hh => hz (hiff.1 hh))]
+  · rw [ite_eq_right hc, ite_eq_right (fun hh => hc ((hcut c).2 hh))]
 
 theorem core {R : Subring K} {s : ℕ} {Cut : Set K} {τ : Kˣ} {F : Kˣ → ℂ}
     {cr : K ⧸ R.toAddSubgroup → Kˣ} (hcr : IsCr R cr)
@@ -587,24 +587,24 @@ theorem core {R : Subring K} {s : ℕ} {Cut : Set K} {τ : Kˣ} {F : Kˣ → ℂ
       refine finsum_congr fun x => ?_
       unfold TT
       by_cases hc : (cr x : K) ∈ Cut
-      · simp only [if_pos hc]
+      · simp only [ite_eq_left hc]
         rw [← finsum_sum_comm]
         · rw [← finsum_zero (α := Kˣ)]
           refine finsum_congr fun z => ?_
           by_cases hz : z ^ s = τ * cr x
-          · simp only [if_pos hz]; exact hC _ hc z hz
-          · simp only [if_neg hz]; simp
+          · simp only [ite_eq_left hz]; exact hC _ hc z hz
+          · simp only [ite_eq_right hz]; simp
         · intro ε _
           refine (hfin2 (τ * cr x)).subset ?_
           intro z hz
           by_contra hne
-          exact hz (if_neg hne)
-      · simp only [if_neg hc]; simp
+          exact hz (ite_eq_right hne)
+      · simp only [ite_eq_right hc]; simp
     · intro ε _
       refine hfin1.subset ?_
       intro x hx
       by_contra hne
-      exact hx (if_neg hne)
+      exact hx (ite_eq_right hne)
   rcases mul_eq_zero.1 hsum with h0 | h0
   · exact absurd (by exact_mod_cast h0) hcard
   · exact h0
@@ -646,7 +646,7 @@ theorem unit_of (h : Ctx K R ϖ) {k : ℤ} (hk : 1 ≤ k) {w : K} (hw : w ∈ Pk
 theorem quot_finite (h : Ctx K R ϖ) (k l : ℤ) :
     Finite (Pk R ϖ k ⧸ (Pk R ϖ l).addSubgroupOf (Pk R ϖ k)) := by
   have : CompactSpace (Pk R ϖ k) := isCompact_iff_compactSpace.mp (Pk_isCompact h k)
-  exact AddSubgroup.quotient_finite_of_isOpen _ ((Pk_isOpen h l).preimage continuous_subtype_val)
+  exact AddSubgroup.quotient_finite_of_isOpen _ ((Pk_isOpen h l).preimage continuous_subtypeVal)
 
 theorem crossVanish : Formalism.FourierDecayAlt.A6.CrossVanish := by
   intro K _ _ _ R ψ hD hnat m hm Om Λ Sg ζ hOm hΛ hstab hζ hζ1
@@ -937,14 +937,14 @@ theorem crossVanish : Formalism.FourierDecayAlt.A6.CrossVanish := by
   refine Eq.trans (finsum_congr fun x => ?_) hmain
   unfold TT
   by_cases hc : (cr x : K) ∈ cutSet m Om t
-  · rw [if_pos hc, if_pos hc]
+  · rw [ite_eq_left hc, ite_eq_left hc]
     refine finsum_congr fun z => ?_
     by_cases hz : z ^ (m + 1) = (-t₁) ^ m * cr x
-    · rw [if_pos hz, if_pos hz, hF, hA]
+    · rw [ite_eq_left hz, ite_eq_left hz, hF, hA]
       show _ = g (z : K) * ψ _
       congr 2; ring
-    · rw [if_neg hz, if_neg hz]
-  · rw [if_neg hc, if_neg hc]
+    · rw [ite_eq_right hz, ite_eq_right hz]
+  · rw [ite_eq_right hc, ite_eq_right hc]
 
 end Main
 

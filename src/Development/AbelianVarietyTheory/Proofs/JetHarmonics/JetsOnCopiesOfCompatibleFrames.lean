@@ -108,7 +108,7 @@ theorem exists_basis_bounds {X X' : Type} [AddCommGroup X] [AddCommGroup X'] {n 
 theorem jets_on_copies : Laws → Laws2 → Laws4 → TwistBaseChangeStatement → JetsOnCopiesCompatibleFrames := by
   intro L1 L2 L4 TB E _ _ _ H Dw l Xo c inst hstar
   obtain rfl : inst = H.starRing := starSt E H inst hstar
-  letI := H.starRing
+  let := H.starRing
   intro T io y _ C htr P ϖ hϖ Q hQ Φ M0 r b hΦ0 hΦ hM n _ D' A' G' _ _ pD pA pG U' PU F _ _ _ _ _ v hv q D hq hD f hf
   choose f₀ hf₀ using hf
   obtain ⟨τ, hτ, htrunc, hgerm⟩ := frameNSt_holds E H T.V C.I.G P (chD C.ch) C.FT C.actT C.ph1T C.ph2T C.syT C.adT C.tgT

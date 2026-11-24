@@ -155,7 +155,7 @@ theorem GlobalTheory.FibreCorr.locbound : ∀ (o Ω : Type) [CommRing o] [Field 
   obtain ⟨i, hi, rfl⟩ := hf
   have hne : valF M.pt (D.U i) (D.f i) ≠ 0 := by
     intro h0
-    haveI : Nontrivial Γ(M.Z, D.U i) := RingHom.domain_nontrivial (M.Z.presheaf.germ (D.U i) x' hi).hom
+    have : Nontrivial Γ(M.Z, D.U i) := RingHom.domain_nontrivial (M.Z.presheaf.germ (D.U i) x' hi).hom
     have hreg := D.regular i (D.U i) le_rfl
     have h00 : D.f i = 0 := by
       apply RatModel.valF_injective M ⟨x', hi⟩
@@ -314,8 +314,8 @@ theorem mem_map_of_approx_closed {Z S : Scheme.{0}} (π : S ⟶ Z) [IsProper π]
   generalize hξ : Spec.map (CommRingCat.ofHom i) ≫ Z.fromSpecStalk z = ξ at hcl
   have hfl : Flat ξ := by
     rw [← hξ]
-    haveI := GlobalTheory.LocalRingGeneralisation.flat_fromSpecStalk Z z
-    haveI : Flat (Spec.map (CommRingCat.ofHom i)) := (HasRingHomProperty.Spec_iff (P := @Flat)).2 hi
+    have := GlobalTheory.LocalRingGeneralisation.flat_fromSpecStalk Z z
+    have : Flat (Spec.map (CommRingCat.ofHom i)) := (HasRingHomProperty.Spec_iff (P := @Flat)).2 hi
     infer_instance
   have hξc : ξ (closedPoint R) = z := by
     rw [← hξ]
@@ -325,10 +325,10 @@ theorem mem_map_of_approx_closed {Z S : Scheme.{0}} (π : S ⟶ Z) [IsProper π]
   refine GlobalTheory.FlatPush.mem_idlAlong_map_of_flat π I ξ ?_ F ?_
   · rw [Scheme.stalkClosedPointTo, CommRingCat.hom_comp]
     exact RingHom.Flat.comp (Flat.stalkMap ξ _) (RingHom.Flat.of_bijective (ConcreteCategory.bijective_of_isIso _))
-  haveI : CompactSpace ↥(Limits.pullback ξ π : Scheme.{0}) := QuasiCompact.compactSpace_of_compactSpace (Limits.pullback.fst ξ π)
+  have : CompactSpace ↥(Limits.pullback ξ π : Scheme.{0}) := QuasiCompact.compactSpace_of_compactSpace (Limits.pullback.fst ξ π)
   refine mem_stalkId_of_closedPoints _ _ _ fun v hvc => ?_
   obtain ⟨hv, hqc⟩ := hcl v hvc
-  haveI : IsLocallyNoetherian (Limits.pullback ξ π) := LocallyOfFiniteType.isLocallyNoetherian (Limits.pullback.fst ξ π)
+  have : IsLocallyNoetherian (Limits.pullback ξ π) := LocallyOfFiniteType.isLocallyNoetherian (Limits.pullback.fst ξ π)
   set p := Limits.pullback.fst ξ π with hp
   set q := Limits.pullback.snd ξ π with hq
   have hpq : p ≫ ξ = q ≫ π := Limits.pullback.condition
@@ -339,12 +339,12 @@ theorem mem_map_of_approx_closed {Z S : Scheme.{0}} (π : S ⟶ Z) [IsProper π]
     ((Scheme.ΓSpecIso (CommRingCat.of R)).inv ≫ (Sp R).presheaf.germ ⊤ (p v) trivial) ≫ p.stalkMap v
   have hα : Spec.map α = (Limits.pullback ξ π).fromSpecStalk v ≫ p := by
     rw [Spec.map_comp, ← Spec.fromSpecStalk_eq, Scheme.SpecMap_stalkMap_fromSpecStalk]
-  haveI : IsLocalHom α.hom := by
+  have : IsLocalHom α.hom := by
     refine (IsLocalRing.isLocalHom_iff_comap_closedPoint _).2 ?_
     change Spec.map α (closedPoint _) = _
     rw [hα]
     exact (Scheme.Hom.comp_apply _ _ _).trans ((congrArg p Scheme.fromSpecStalk_closedPoint).trans hv)
-  haveI : IsLocalHom (q.stalkMap v).hom := q.toLRSHom.prop v
+  have : IsLocalHom (q.stalkMap v).hom := q.toLRSHom.prop v
   have hc : CommRingCat.ofHom i ≫ α = CommRingCat.ofHom ψ ≫ q.stalkMap v := by
     refine Spec.map_injective ((cancel_mono (Z.fromSpecStalk z)).1 ?_)
     rw [Spec.map_comp _ α, Spec.map_comp _ (q.stalkMap v), Category.assoc, Category.assoc, hξ, hα, Category.assoc, hpq]
@@ -373,7 +373,7 @@ variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
 
 theorem stalkHom_stalkMap {M₁ M : RatModel o Ω} {π : M.Z ⟶ M₁.Z} (hπ : M₁.IsHom M (AlgHom.id o Ω) π) (x : M.Z)
     (t : M₁.Z.presheaf.stalk (π x)) : M.stalkHom x ((π.stalkMap x).hom t) = M₁.stalkHom (π x) t := by
-  obtain ⟨U, hU, f, rfl⟩ := M₁.Z.presheaf.germ_exist t
+  obtain ⟨U, hU, f, rfl⟩ := M₁.Z.presheaf.exists_germ_eq t
   rw [Scheme.Hom.germ_stalkMap_apply, RatModel.stalkHom_germ]
   exact (RatModel.stalkHom_germ (M := M) (show x ∈ π ⁻¹ᵁ U from hU) _).trans (by rw [hπ.valF_app ⟨_, hU⟩]; rfl)
 
@@ -402,14 +402,14 @@ end GlobalTheory.FormalCorr
 
 theorem GlobalTheory.FormalCorr.mem_map_fibreIdeal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M₁ M : RatModel o Ω) (π : M.Z ⟶ M₁.Z) (hπ : M₁.IsHom M (AlgHom.id o Ω) π), IsProper π → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M₁.Z → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (D : EffCartierData M.Z) (z : M₁.Z), IsClosed ({z} : Set M₁.Z) → ∀ (F : AdicCompletion (maximalIdeal (M₁.O z)) (M₁.O z)) (a : ℕ → M₁.O z), (∀ n, F - algebraMap (M₁.O z) (AdicCompletion (maximalIdeal (M₁.O z)) (M₁.O z)) (a n) ∈ (maximalIdeal (M₁.O z)).map (algebraMap (M₁.O z) (AdicCompletion (maximalIdeal (M₁.O z)) (M₁.O z))) ^ n) → (∀ x' : M.Z, π x' = z → IsClosed ({x'} : Set M.Z) → ∀ f', EqAt M D x' f' → ∀ e : ℕ, ∃ N : ℕ, ∀ n, N ≤ n → ∃ c d : M.O x', (a n : Ω) = c * f' + d ∧ d ∈ maximalIdeal (M.O x') ^ e) → F ∈ (GlobalTheory.FibreCorr.fibreIdeal hπ D z).map (algebraMap (M₁.O z) (AdicCompletion (maximalIdeal (M₁.O z)) (M₁.O z))) := by
   intro o Ω _ _ _ _ M₁ M π hπ hprop hn₁ hn D z hz F a ha H
-  haveI := hprop
-  haveI := GlobalTheory.FibreCorr.isNoetherianRing_O M₁ z
-  haveI := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ (maximalIdeal (M₁.O z))
+  have := hprop
+  have := GlobalTheory.FibreCorr.isNoetherianRing_O M₁ z
+  have := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ (maximalIdeal (M₁.O z))
   let e := M₁.stalkEquiv z
   let i : M₁.Z.presheaf.stalk z →+* AdicCompletion (maximalIdeal (M₁.O z)) (M₁.O z) :=
     (algebraMap (M₁.O z) (AdicCompletion (maximalIdeal (M₁.O z)) (M₁.O z))).comp e.toRingHom
-  haveI : IsLocalHom e.toRingHom := ⟨fun a ha => by simpa using ha.map e.symm⟩
-  haveI : IsLocalHom i := inferInstance
+  have : IsLocalHom e.toRingHom := ⟨fun a ha => by simpa using ha.map e.symm⟩
+  have : IsLocalHom i := inferInstance
   have hfl : i.Flat := RingHom.Flat.comp (RingHom.Flat.of_bijective e.bijective)
     (RingHom.flat_algebraMap_iff.2 inferInstance)
   have hres : Function.Surjective (ResidueField.map i) := by
@@ -439,7 +439,7 @@ theorem GlobalTheory.FormalCorr.mem_map_fibreIdeal : ∀ (o Ω : Type) [CommRing
     refine ⟨N, fun n hn => ?_⟩
     obtain ⟨c, d, hcd, hd⟩ := hN n hn
     let E := M.stalkEquiv x
-    haveI : IsLocalHom E.symm.toRingHom := ⟨fun a ha => by simpa using ha.map E⟩
+    have : IsLocalHom E.symm.toRingHom := ⟨fun a ha => by simpa using ha.map E⟩
     have hw : (π.stalkMap x).hom (e.symm (a n)) =
         E.symm c * (M.Z.presheaf.germ _ x hj).hom (D.f j) + E.symm d := by
       apply E.injective
@@ -467,7 +467,7 @@ open GlobalTheory.SiegelTor
 
 theorem GlobalTheory.FibreCorr.exists_correction : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M₁ M : RatModel o Ω) (π : M.Z ⟶ M₁.Z), M₁.IsHom M (AlgHom.id o Ω) π → IsProper π → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M₁.Z → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (U : M.Z.Opens) (D : EffCartierData M.Z), (U : Set M.Z).Nonempty → (∀ x ∈ D.idealSheaf.support, x ∉ U) → ∀ (z : M₁.Z), IsClosed ({z} : Set M₁.Z) → ∀ k : ℕ, ∃ e : ℕ, ∀ F : M₁.O z, (∀ (q : ℕ) [Fact q.Prime] (y : Sp (OO q) ⟶ M.Z), π (y (cPt q)) = z → Set.range (gPt q ≫ y) ⊆ U → ∀ f, EqAt M D (y (cPt q)) f → ‖M.val (gPt q ≫ y) F‖ ≤ ‖M.val (gPt q ≫ y) f‖ ∨ ∃ h, NonUnitAt M₁ z h ∧ ‖M.val (gPt q ≫ y) F‖ ≤ ‖M.val (gPt q ≫ y) h‖ ^ e) → ∃ G b : M₁.O z, (F : Ω) = G + b ∧ (∀ x' : M.Z, π x' = z → ∀ f', EqAt M D x' f' → (G : Ω) / f' ∈ M.O x') ∧ b ∈ Ideal.span {c : M₁.O z | ¬ IsUnit c} ^ k := by
   intro o Ω _ _ _ _ M₁ M π hπ hprop hn₁ hn U D hU _ z hz k
-  haveI := GlobalTheory.FibreCorr.isNoetherianRing_O M₁ z
+  have := GlobalTheory.FibreCorr.isNoetherianRing_O M₁ z
   have key : ∀ k, ∃ e, GlobalTheory.FibreCorr.approxIdeal hπ U D z e ≤
       GlobalTheory.FibreCorr.fibreIdeal hπ D z ⊔ maximalIdeal (M₁.O z) ^ k := by
     refine _root_.GlobalTheory.Chevalley.exists_le_sup_maximalIdeal_pow_of_antitone (M₁.O z) (GlobalTheory.FibreCorr.approxIdeal hπ U D z) (GlobalTheory.FibreCorr.fibreIdeal hπ D z)
@@ -518,9 +518,9 @@ theorem nnnorm_le_of_mem_span {R K : Type} [CommRing R] [NormedField K] [IsUltra
   | zero => simp
   | add x y _ _ hx hy =>
     rw [map_add (f := _)]
-    exact (IsUltrametricDist.nnnorm_add_le_max _ _).trans (max_le hx hy)
+    exact (IsUltrametricDist.nnNorm_add_le_max _ _).trans (max_le hx hy)
   | smul a x _ hx =>
-    rw [smul_eq_mul, map_mul, nnnorm_mul]
+    rw [smul_eq_mul, map_mul, nnNorm_mul]
     exact (mul_le_mul' (hv a) hx).trans (by rw [one_mul])
 
 theorem nnnorm_le_pow_of_mem_pow {R K : Type} [CommRing R] [NormedField K] [IsUltrametricDist K] (v : R →+* K)
@@ -534,11 +534,11 @@ theorem nnnorm_le_pow_of_mem_pow {R K : Type} [CommRing R] [NormedField K] [IsUl
     rw [pow_succ] at hb
     refine Submodule.mul_induction_on hb ?_ ?_
     · intro a ha c hc
-      rw [map_mul, nnnorm_mul, pow_succ]
+      rw [map_mul, nnNorm_mul, pow_succ]
       exact mul_le_mul' (ih a ha) (hI c hc)
     · intro a c ha hc
       rw [map_add (f := _)]
-      exact (IsUltrametricDist.nnnorm_add_le_max _ _).trans (max_le ha hc)
+      exact (IsUltrametricDist.nnNorm_add_le_max _ _).trans (max_le ha hc)
 
 end GlobalTheory.Poinc
 
@@ -560,14 +560,14 @@ theorem generates_of_close : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra 
   have hF0 : M.val y F ≠ 0 :=
     (RatModel.val_ne_zero_iff (RatModel.range_eq_singleton y (IsLocalRing.closedPoint (PadicAlgCl p)))
       ⟨_, RatModel.valF_mem_O hwi _⟩).2 ((RatModel.isUnit_valF_iff hwi (D.f i)).2 hwb)
-  have hFpos : 0 < ‖M.val y F‖₊ := nnnorm_pos.2 hF0
+  have hFpos : 0 < ‖M.val y F‖₊ := nnNorm_pos.2 hF0
 
   have hle : M₁.O (π x) ≤ M.O x := fun c hc => hπ.map_mem_O hc
   let v : M₁.O (π x) →+* PadicAlgCl p :=
     (RatModel.valHomOf y x (RatModel.gPt_specializes hy.1)).comp (Subalgebra.inclusion hle).toRingHom
   have hv_apply : ∀ c : M₁.O (π x), v c = M.val y c := fun c => rfl
   have hv1 : ∀ c, ‖v c‖₊ ≤ 1 := fun c => by
-    rw [← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one, hv_apply]
+    rw [← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one, hv_apply]
     exact RatModel.norm_val_le_one hy.1 (hle c.2)
   have hvlt : ∀ c : M₁.O (π x), ¬ IsUnit c → ‖v c‖₊ < 1 := by
     intro c hc
@@ -577,13 +577,13 @@ theorem generates_of_close : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra 
     have hc0 : (y₀ ≫ π) (cPt p) = π x := by rw [Scheme.Hom.comp_apply, hy.1]
     have h1 := (RatModel.norm_val_lt_one_iff hc0 c.2).2 hc
     rw [← Category.assoc, ← hydef, e] at h1
-    rw [← NNReal.coe_lt_coe, coe_nnnorm, NNReal.coe_one, hv_apply]
+    rw [← NNReal.coe_lt_coe, coe_nnNorm, NNReal.coe_one, hv_apply]
     exact h1
 
-  haveI : IsDedekindDomain o := ArithBase.ded (Ω := Ω)
-  haveI := M₁.lft
-  haveI : IsLocallyNoetherian M₁.Z := LocallyOfFiniteType.isLocallyNoetherian M₁.s
-  haveI : IsNoetherianRing (M₁.O (π x)) := isNoetherianRing_of_ringEquiv _ (M₁.stalkEquiv (π x))
+  have : IsDedekindDomain o := ArithBase.ded (Ω := Ω)
+  have := M₁.lft
+  have : IsLocallyNoetherian M₁.Z := LocallyOfFiniteType.isLocallyNoetherian M₁.s
+  have : IsNoetherianRing (M₁.O (π x)) := isNoetherianRing_of_ringEquiv _ (M₁.stalkEquiv (π x))
   obtain ⟨s, hs⟩ := IsNoetherian.noetherian (maximalIdeal (M₁.O (π x)))
   set ρ : NNReal := s.sup fun c => ‖v c‖₊
   have hρ : ρ < 1 := by
@@ -612,20 +612,20 @@ theorem generates_of_close : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra 
     refine le_antisymm ?_ ?_
     · have e : M.val y G = (M.val y G + M.val y b) + -M.val y b := by ring
       rw [e]
-      refine (IsUltrametricDist.nnnorm_add_le_max _ _).trans (max_le hGb'.le ?_)
-      rw [nnnorm_neg]
+      refine (IsUltrametricDist.nnNorm_add_le_max _ _).trans (max_le hGb'.le ?_)
+      rw [nnNorm_neg]
       exact hbk.le
     · rw [← hGb']
-      refine (IsUltrametricDist.nnnorm_add_le_max _ _).trans (max_le le_rfl ?_)
+      refine (IsUltrametricDist.nnNorm_add_le_max _ _).trans (max_le le_rfl ?_)
       by_contra h
       push_neg at h
-      have := (IsUltrametricDist.nnnorm_add_le_max (M.val y G) (M.val y b)).trans
+      have := (IsUltrametricDist.nnNorm_add_le_max (M.val y G) (M.val y b)).trans
         (max_le h.le le_rfl)
       rw [hGb'] at this
       exact absurd hbk (not_lt.2 this)
   have hG0 : (G : Ω) ≠ 0 := by
     intro h
-    rw [h, RatModel.val_zero, nnnorm_zero] at hG
+    rw [h, RatModel.val_zero, nnNorm_zero] at hG
     exact hFpos.ne hG
   have hFne : F ≠ 0 := by
     intro h
@@ -637,10 +637,10 @@ theorem generates_of_close : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra 
   rw [div_mul_cancel₀ _ hFne] at hmul
   have hq : ‖M.val y ((G : Ω) / F)‖₊ = 1 := by
     have h2 : ‖M.val y ((G : Ω) / F)‖₊ * ‖M.val y F‖₊ = 1 * ‖M.val y F‖₊ := by
-      rw [one_mul, ← nnnorm_mul, ← hmul, hG]
+      rw [one_mul, ← nnNorm_mul, ← hmul, hG]
     exact mul_right_cancel₀ hFpos.ne' h2
   have hq' : ‖M.val (gPt p ≫ y₀) ((G : Ω) / F)‖ = 1 := by
-    rw [← coe_nnnorm]
+    rw [← coe_nnNorm]
     exact congrArg NNReal.toReal hq
   have hu := (RatModel.isUnit_O_iff _).1 ((RatModel.norm_val_eq_one_iff hy.1 hGf).1 hq')
   simpa [inv_div] using hu.2
@@ -832,7 +832,7 @@ namespace GlobalTheory.Poinc
 theorem mem_map_idealSheaf_of_forall_div :
     ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (M₁ M : RatModel o Ω) (π : M.Z ⟶ M₁.Z), M₁.IsHom M (AlgHom.id o Ω) π → IsProper π → ∀ (D : EffCartierData M.Z) (V : M₁.Z.affineOpens) (g : Γ(M₁.Z, V.1)), (∀ x' : M.Z, π x' ∈ V.1 → ∀ f', EqAt M D x' f' → valF M₁.pt V.1 g / f' ∈ M.O x') → g ∈ (D.idealSheaf.map π).ideal V := by
   intro o Ω _ _ _ M₁ M π hπ hprop D V g hg
-  haveI : QuasiCompact π := inferInstance
+  have : QuasiCompact π := inferInstance
   rw [Scheme.IdealSheafData.map, Scheme.Hom.ker_apply, RingHom.mem_ker]
   change (D.idealSheaf.subschemeι.app (π ⁻¹ᵁ V.1)).hom ((π.app V.1).hom g) = 0
   rw [GlobalTheory.Cartier.app_subschemeι_eq_zero_iff]
@@ -942,8 +942,8 @@ namespace GlobalTheory.Poinc
 theorem exists_idealSheaf_comap_eq_of_approx : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M₁ M : RatModel o Ω) (π : M.Z ⟶ M₁.Z), M₁.IsHom M (AlgHom.id o Ω) π → IsProper π → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M₁.Z → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (U : M.Z.Opens) (D : EffCartierData M.Z), (U : Set M.Z).Nonempty → (∀ x ∈ D.idealSheaf.support, x ∉ U) → (∀ (z : M₁.Z), IsClosed ({z} : Set M₁.Z) → ∀ x : M.Z, π x = z → IsClosed ({x} : Set M.Z) → ∃ (p : ℕ) (_ : Fact p.Prime) (y₀ : Sp (OO p) ⟶ M.Z), M.Cen U x y₀ ∧ ∀ e : ℕ, ∃ F ∈ M₁.O z, (∀ f, EqAt M D x f → ‖M.val (gPt p ≫ y₀) F‖ = ‖M.val (gPt p ≫ y₀) f‖) ∧ ∀ (q : ℕ) [Fact q.Prime] (y : Sp (OO q) ⟶ M.Z), π (y (cPt q)) = z → Set.range (gPt q ≫ y) ⊆ U → ∀ f, EqAt M D (y (cPt q)) f → ‖M.val (gPt q ≫ y) F‖ ≤ ‖M.val (gPt q ≫ y) f‖ ∨ ∃ h, NonUnitAt M₁ z h ∧ ‖M.val (gPt q ≫ y) F‖ ≤ ‖M.val (gPt q ≫ y) h‖ ^ e) → ∃ J : M₁.Z.IdealSheafData, J.comap π = D.idealSheaf := by
   intro o Ω _ _ _ _ M₁ M π hπ hprop hn₁ hn U D hU hUD hyp
   refine ⟨D.idealSheaf.map π, le_antisymm (Scheme.IdealSheafData.comap_map_le _ _) ?_⟩
-  haveI : QuasiCompact M.s := M.qc
-  haveI : CompactSpace M.Z := QuasiCompact.compactSpace_of_compactSpace M.s
+  have : QuasiCompact M.s := M.qc
+  have : CompactSpace M.Z := QuasiCompact.compactSpace_of_compactSpace M.s
   refine GlobalTheory.T.effectiveCartier_idealSheaf_le_of_closedPoints M.Z D _ ?_
   intro x hx
   have hz : IsClosed ({π x} : Set M₁.Z) := by

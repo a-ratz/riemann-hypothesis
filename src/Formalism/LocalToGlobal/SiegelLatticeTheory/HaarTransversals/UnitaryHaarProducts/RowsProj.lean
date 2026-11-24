@@ -83,7 +83,7 @@ theorem phLoc_conv {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hU : I
     have key : ∀ x, σ (umat g) (σ (umat g⁻¹) x) = x := by
       intro x
       rw [← ContinuousLinearMap.comp_apply, ← hU.1.2 _ g.2 _ (g⁻¹).2, hmul, hU.1.1,
-        ContinuousLinearMap.one_apply]
+        one_apply_eq_self]
     let L : H →ₗᵢ[ℂ] H := ⟨(σ (umat g)).toLinearMap, hU.2.1 _ g.2⟩
     have hin : ⟪w, σ (umat (g⁻¹ * y)) w⟫_ℂ = ⟪σ (umat g) w, σ (umat y) w⟫_ℂ := by
       rw [hsplit]

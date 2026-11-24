@@ -138,8 +138,8 @@ theorem depleted_newform_prim : ∀ (k r : ℕ) (g : Newform k), 1 ≤ k → 2 �
       (fun n => if n.Coprime (g.M * r) then g.a n else 0) := by
     funext n
     by_cases h : n.Coprime (g.M * r)
-    · rw [if_pos h, MulChar.one_apply ((ZMod.isUnit_iff_coprime n _).2 h), one_mul]; rfl
-    · rw [if_neg h, MulChar.map_nonunit _ (fun hu => h ((ZMod.isUnit_iff_coprime n _).1 hu)), zero_mul]
+    · rw [ite_eq_left h, MulChar.one_apply ((ZMod.isUnit_iff_coprime n _).2 h), one_mul]; rfl
+    · rw [ite_eq_right h, MulChar.map_nonunit _ (fun hu => h ((ZMod.isUnit_iff_coprime n _).1 hu)), zero_mul]
   rw [hseq] at htw
   have hlin := (_root_.GlobalTheory.EisM.mf_linear k (g.M * (g.M * r) ^ 2) (fun d => ch g.χ d * ch (1 : DirichletCharacter ℂ (g.M * r)) d ^ 2)).2.2.2.1
     (ch χ) _ ?_ htw.1
@@ -151,11 +151,11 @@ theorem depleted_newform_prim : ∀ (k r : ℕ) (g : Newform k), 1 ≤ k → 2 �
     rw [← ZMod.coe_unitOfIsCoprime d hdL, MulChar.one_apply_coe, one_pow, mul_one]
   refine ⟨⟨hlin, htw.2⟩, ?_, ?_, ?_⟩
   · have h1 : (1 : ℕ).Coprime (g.M * r) := Nat.coprime_one_left _
-    simp only [if_pos h1]
+    simp only [ite_eq_left h1]
     exact g.one
   · intro n hn
     have : ¬ n.Coprime (g.M * r) := fun h => hn ((hcop n).2 h)
-    simp only [if_neg this]
+    simp only [ite_eq_right this]
   · intro q hq hqN
     have hqL : q.Coprime (g.M * r) := (Nat.Prime.coprime_iff_not_dvd hq).2 (fun h => hqN (h.trans hLN))
     have hqM : ¬ q ∣ g.M := fun h => hqN (h.trans hdvd)
@@ -163,33 +163,33 @@ theorem depleted_newform_prim : ∀ (k r : ℕ) (g : Newform k), 1 ≤ k → 2 �
       rw [hχZ (q : ℤ) (Nat.isCoprime_iff_coprime.2 ((hcop q).2 hqL))]; simp
     have heig := g.eig q hq hqM
     funext n
-    simp only [To, Vo, hchq, if_pos hqL]
+    simp only [To, Vo, hchq, ite_eq_left hqL]
     by_cases hn : n.Coprime (g.M * r)
     · have hn1 : 1 ≤ n := by
         rcases Nat.eq_zero_or_pos n with h0 | h0
         · subst h0; rw [Nat.coprime_zero_left] at hn; nlinarith
         · exact h0
       have hqn : (q * n).Coprime (g.M * r) := Nat.Coprime.mul_left hqL hn
-      rw [if_pos hqn, if_pos hn]
+      rw [ite_eq_left hqn, ite_eq_left hn]
       have e := heig n hn1
       by_cases hd : q ∣ n
       · have hnq : (n / q).Coprime (g.M * r) := hn.coprime_dvd_left (Nat.div_dvd_of_dvd hd)
-        rw [if_pos hd, if_pos hnq]
-        rw [if_pos hd] at e
+        rw [ite_eq_left hd, ite_eq_left hnq]
+        rw [ite_eq_left hd] at e
         exact e
-      · rw [if_neg hd]
-        rw [if_neg hd] at e
+      · rw [ite_eq_right hd]
+        rw [ite_eq_right hd] at e
         exact e
     · have hqn : ¬ (q * n).Coprime (g.M * r) := fun h => hn (Nat.Coprime.coprime_mul_left h)
-      rw [if_neg hqn, if_neg hn, mul_zero]
+      rw [ite_eq_right hqn, ite_eq_right hn, mul_zero]
       by_cases hd : q ∣ n
       · have hnq : ¬ (n / q).Coprime (g.M * r) := by
           intro h
           apply hn
           rw [← Nat.mul_div_cancel' hd]
           exact Nat.Coprime.mul_left hqL h
-        rw [if_pos hd, if_neg hnq]; simp
-      · rw [if_neg hd]; simp
+        rw [ite_eq_left hd, ite_eq_right hnq]; simp
+      · rw [ite_eq_right hd]; simp
 
 end GlobalTheory.EisM
 
@@ -713,7 +713,7 @@ theorem GlobalTheory.EisM.atkinLehner_MF : ∀ (k N l : ℕ) (χ : DirichletChar
     have hdet : δ.det = N := by rw [hδdef, Matrix.det_fin_two_of]; linear_combination (N : ℤ) * h
     have hδ : 0 < δ.det := by rw [hdet]; exact_mod_cast hN
     have hL : 0 < N * l := Nat.mul_pos hN hl
-    haveI : NeZero (N * l) := ⟨hL.ne'⟩
+    have : NeZero (N * l) := ⟨hL.ne'⟩
     obtain ⟨f, hf⟩ := GlobalTheory.EisM.modularForm_gammaOne_of_MF k (N * l) N χ a hL (dvd_mul_right N l) ha
     have hF : slz k δ (qs a) = ⇑f ∣[(k : ℤ)] GlobalTheory.HeckeFamilyMatrices.toGL δ := by rw [hf]; exact slz_eq_slash k hk δ hδ _
     let F : ModularForm (Gamma1 (N * l)) (k : ℤ) :=
@@ -767,7 +767,7 @@ theorem qs_finset_sum {ι : Type*} (s : Finset ι) (a : ι → ℕ → ℂ) (ha 
 
 theorem exists_gamma (L N : ℕ) (hL : 0 < L) (hNL : N ∣ L) (u : (ZMod N)ˣ) :
     ∃ γ : SL(2, ℤ), γ 1 0 = (L : ℤ) ∧ ((γ 1 1 : ℤ) : ZMod N) = u := by
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   obtain ⟨v, hv⟩ := ZMod.unitsMap_surjective hNL u
   have hc : Nat.Coprime (v : ZMod L).val L := ZMod.val_coe_unit_coprime v
   have hc' : IsCoprime (((v : ZMod L).val : ℕ) : ℤ) (L : ℤ) := Nat.isCoprime_iff_coprime.mpr hc
@@ -783,7 +783,7 @@ theorem forms_of_characters_independent : ∀ (k L N : ℕ) (a : DirichletCharac
     (∀ ε, MF k L (ch ε) (a ε)) → (∑ ε, a ε) = 0 → ∀ ε, a ε = 0 := by
   intro k L N a hL hNL hmf hsum ε₀
   have hN : N ≠ 0 := by rintro rfl; exact hL.ne' (Nat.eq_zero_of_zero_dvd hNL)
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   set f : DirichletCharacter ℂ N → ℍ → ℂ := fun ε => qs (a ε) with hf
   have hfs : ∑ ε, f ε = 0 := by
     rw [hf, ← qs_finset_sum _ _ (fun ε => (hmf ε).1), hsum]; exact GlobalTheory.EisM.Lin.qs_zero
@@ -860,7 +860,7 @@ theorem sturm_sum_coef_zero : ∀ (k L N : ℕ), 0 < L → N ∣ L → ∃ B : �
   intro k L N hL hN
   have hΓ : (1 : ℝ) ∈ (Gamma1 L : Subgroup (GL (Fin 2) ℝ)).strictPeriods := by
     simp [strictPeriods_Gamma1]
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   obtain ⟨m, hm⟩ := exists_sturmBound_modularForm_arithmetic hΓ (k : ℤ)
   refine ⟨m, fun a ha hz => ?_⟩
   choose f hf using fun ε => modularForm_gammaOne_of_MF k L N ε (a ε) hL hN (ha ε)
@@ -873,16 +873,16 @@ theorem sturm_sum_coef_zero : ∀ (k L N : ℕ), 0 < L → N ∣ L → ∃ B : �
       (qExpansion 1 ⇑(∑ ε ∈ s, f ε)).coeff n = ∑ ε ∈ s, a ε n := by
     intro s n
     induction s using Finset.induction_on with
-    | empty => rw [Finset.sum_empty, Finset.sum_empty, ModularForm.coe_zero, qExpansion_zero, map_zero]
+    | empty => rw [Finset.sum_empty, Finset.sum_empty, FunLike.coe_zero, qExpansion_zero, map_zero]
     | insert e s he ih =>
-      rw [Finset.sum_insert he, ModularForm.coe_add, ModularForm.qExpansion_add one_pos hΓ, map_add (f := _), ih, hc, Finset.sum_insert he]
+      rw [Finset.sum_insert he, FunLike.coe_add, ModularForm.qExpansion_add one_pos hΓ, map_add (f := _), ih, hc, Finset.sum_insert he]
   have h0 : ∑ ε, f ε = 0 := hm _ fun n hn => by
     rw [hsum]
     simpa [Finset.sum_apply] using hz n hn
   funext n
   have := hsum Finset.univ n
   rw [h0] at this
-  rw [ModularForm.coe_zero, qExpansion_zero, map_zero] at this
+  rw [FunLike.coe_zero, qExpansion_zero, map_zero] at this
   rw [Finset.sum_apply, ← this]
   rfl
 
@@ -925,7 +925,7 @@ theorem lam_extend_by_zero : ∀ (k L N : ℕ) (χ₀ : DirichletCharacter ℂ N
   have rep_spec : ∀ a, Fam a → rep (∑ ε, a ε) = a := by
     intro a ha
     have hs : (∑ ε, a ε) ∈ S := ⟨a, ha, rfl⟩
-    simp only [rep, dif_pos hs]
+    simp only [rep, dite_eq_left hs]
     have h := Classical.choose_spec hs
     exact uniq _ _ h.1 ha h.2.symm
   let φ : (ℕ → ℂ) → ℂ := fun s => lam B c (rep s χ₀)
@@ -964,8 +964,8 @@ theorem lam_extend_by_zero : ∀ (k L N : ℕ) (χ₀ : DirichletCharacter ℂ N
     have hfa : Fam fa := by
       intro ε
       by_cases h : ε = ε₀
-      · subst h; simp only [fa, if_pos rfl]; exact ha
-      · simp only [fa, if_neg h]; exact (lin (ch ε)).1
+      · subst h; simp only [fa, ite_eq_left rfl]; exact ha
+      · simp only [fa, ite_eq_right h]; exact (lin (ch ε)).1
     have hs : ∑ ε, fa ε = a := by simp [fa]
     have h := hc' _ ⟨fa, hfa, rfl⟩
     simp only [φ] at h
@@ -975,7 +975,7 @@ theorem lam_extend_by_zero : ∀ (k L N : ℕ) (χ₀ : DirichletCharacter ℂ N
     · subst h'; simp [fa]
     · simp [fa, h', Ne.symm h']
   refine ⟨B₀, c', fun a ha => by simpa using single χ₀ a ha, fun ε a hε ha => ?_⟩
-  rw [single ε a ha, if_neg hε]
+  rw [single ε a ha, ite_eq_right hε]
   simp [lam]
 
 end GlobalTheory
@@ -1026,7 +1026,7 @@ theorem eigAll_of_atkinLehner : ∀ (k N l : ℕ) (χ : DirichletCharacter ℂ N
   have hφ : ∀ a a', MF k (N * l) (ch χ⁻¹) a' → qs a' = slz k δ (qs a) → φ a = lam B c a' := by
     intro a a' h1 h2
     have h : ∃ a', MF k (N * l) (ch χ⁻¹) a' ∧ qs a' = slz k δ (qs a) := ⟨a', h1, h2⟩
-    simp only [φ, dif_pos h]
+    simp only [φ, dite_eq_left h]
     rw [uniq _ _ h.choose_spec.1 h1 (h.choose_spec.2.trans h2.symm)]
   have hex : ∀ a, MF k (N * l) (ch χ) a → ∃ a', MF k (N * l) (ch χ⁻¹) a' ∧ qs a' = slz k δ (qs a) :=
     fun a ha => _root_.GlobalTheory.EisM.atkinLehner_MF k N l χ a a₀ b₀ c₀ d₀ hdet hk hN ha
@@ -1100,11 +1100,11 @@ namespace GlobalTheory
 
 theorem exists_char_parity_mul_ne_one_mul_inv_ne_one : ∀ (N r : ℕ) (χ : DirichletCharacter ℂ N) (sg : ℂ), 0 < N → r.Prime → 7 ≤ r → r ∣ N → (sg = 1 ∨ sg = -1) → ∃ θ : DirichletCharacter ℂ N, θ (-1) = sg ∧ θ * χ ≠ 1 ∧ θ * χ⁻¹ ≠ 1 := by
   intro N r χ sg hN hr hr7 hrN hsg
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero r := ⟨hr.ne_zero⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero r := ⟨hr.ne_zero⟩
   have hrle : r ≤ N := Nat.le_of_dvd hN hrN
 
-  haveI : Fact (2 < N) := ⟨by omega⟩
+  have : Fact (2 < N) := ⟨by omega⟩
   have hm1 : (-1 : ZMod N) ≠ 1 := ZMod.neg_one_ne_one
   obtain ⟨θ₁, hθ₁⟩ := DirichletCharacter.exists_apply_ne_one_of_hasEnoughRootsOfUnity ℂ hm1
   have hsq : ∀ ψ : DirichletCharacter ℂ N, ψ (-1) * ψ (-1) = 1 := by
@@ -1242,9 +1242,9 @@ theorem smoothing_integers_two_characters : ∀ (N l e : ℕ) (θ₁ θ₂ : Dir
         (d : ℂ) ^ 2 ≠ (d : ℂ) ^ (e + 1) * (θ₁ d ^ n₁ * ψ d ^ n₂) ∧
         (d : ℂ) ^ 2 ≠ (d : ℂ) ^ (e + 1) * (θ₂ d ^ n₁ * ψ d ^ n₂) := by
   intro N l e θ₁ θ₂ ψ hN hl hlN he h₁ h₂
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero l := ⟨hl.ne_zero⟩
-  haveI : NeZero (N * l) := ⟨Nat.mul_ne_zero hN.ne' hl.ne_zero⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
+  have : NeZero (N * l) := ⟨Nat.mul_ne_zero hN.ne' hl.ne_zero⟩
   have hcop : N.Coprime l := ((Nat.Prime.coprime_iff_not_dvd hl).2 hlN).symm
   have hM : 0 < 6 * N * l := Nat.mul_pos (Nat.mul_pos (by norm_num) hN) hl.pos
   obtain ⟨u, hu₁, hu₂⟩ := exists_unit_dirichletCharacter_ne_one_ne_one θ₁ θ₂ h₁ h₂
@@ -1383,7 +1383,7 @@ theorem chapterM_of_level (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ)
         (d₁ : ℂ) ^ 2 ≠ (d₁ : ℂ) ^ (e + 1) * ((θ * χ) d₁ ^ n₁ * ψ d₁ ^ n₂) ∧
         (d₁ : ℂ) ^ 2 ≠ (d₁ : ℂ) ^ (e + 1) * ((θ * χ⁻¹) d₁ ^ n₁ * ψ d₁ ^ n₂) := by
   have hlp : l.Prime := Fact.out
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hcop : l.Coprime N := (Nat.Prime.coprime_iff_not_dvd hlp).2 hlN
   have hgl : g' l = g.a l := hg' l hcop
 
@@ -1467,7 +1467,7 @@ theorem chapterM_holds : CuspidalUnitaryTwistsClaim := by
   have hg' : ∀ n : ℕ, n.Coprime (g.M * (g.M * (N₀ * r)) ^ 2) →
       (fun n => if n.Coprime (g.M * (N₀ * r)) then g.a n else 0) n = g.a n := by
     intro n hn
-    simp only [if_pos (hn.coprime_dvd_right hL)]
+    simp only [ite_eq_left (hn.coprime_dvd_right hL)]
   obtain ⟨θ, α, v, B, c, c₁, d₁, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13, h14⟩ :=
     chapterM_of_level l ι e he g hal ψ _ r hN hr (by omega) hrN hlN χ _ hprim hg'
   exact ⟨_, χ, θ, α, v, B, c, c₁, d₁, h1, hMN, hN₀N, hlN, hχ, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13, h14⟩

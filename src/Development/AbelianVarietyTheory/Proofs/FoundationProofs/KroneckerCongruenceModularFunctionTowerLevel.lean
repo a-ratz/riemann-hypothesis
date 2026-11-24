@@ -147,24 +147,24 @@ theorem exists_poly (X : Tower Ω ε) (f : X.K) : ∃ (C : Set Ω) (P : Polynomi
 theorem coeff_numberField {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) (f : X.K) :
     ∃ F : IntermediateField ℚ Ω, FiniteDimensional ℚ F ∧ ∀ r : ℚ, (X.exp f).coeff r ∈ F := by
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨C, P, hC, hP, hroot⟩ := exists_poly X f
-  haveI := hC.to_subtype
+  have := hC.to_subtype
   let F₀ : IntermediateField ℚ Ω := IntermediateField.adjoin ℚ C
-  haveI : FiniteDimensional ℚ F₀ :=
+  have : FiniteDimensional ℚ F₀ :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
-  haveI : @IsScalarTower ℚ F₀ Ω Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
+  have : @IsScalarTower ℚ F₀ Ω Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
     IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : Normal F₀ Ω := IntermediateField.normal ℚ Ω F₀
+  have : Normal F₀ Ω := IntermediateField.normal ℚ Ω F₀
   let L : Finset ℚ → IntermediateField F₀ Ω := fun T =>
     IntermediateField.adjoin F₀ ((T.image fun r => (X.exp f).coeff r : Finset Ω) : Set Ω)
   have hfin : ∀ T, FiniteDimensional F₀ (L T) := fun T =>
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   have hb : ∀ T, Module.finrank F₀ (L T) ≤ P.natDegree := by
     intro T
-    haveI := hfin T
-    haveI : Algebra.IsSeparable F₀ (L T) := by
-      haveI : CharZero F₀ := algebraRat.charZero F₀
+    have := hfin T
+    have : Algebra.IsSeparable F₀ (L T) := by
+      have : CharZero F₀ := algebraRat.charZero F₀
       infer_instance
     rw [← AlgHom.card F₀ (L T) Ω]
     let e : (L T →ₐ[F₀] Ω) → (Ω ≃ₐ[ℚ] Ω) := fun σ =>
@@ -188,9 +188,9 @@ theorem coeff_numberField {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure 
       _ ≤ _ := (Multiset.toFinset_card_le _).trans (Polynomial.card_roots' P)
   have hB : BddAbove (Set.range fun T => Module.finrank F₀ (L T)) := ⟨P.natDegree, by rintro _ ⟨T, rfl⟩; exact hb T⟩
   obtain ⟨T, hT⟩ := Nat.sSup_mem (Set.range_nonempty fun T => Module.finrank F₀ (L T)) hB
-  haveI := hfin T
+  have := hfin T
   refine ⟨(L T).restrictScalars ℚ, FiniteDimensional.trans ℚ F₀ (L T), fun r => ?_⟩
-  haveI := hfin (insert r T)
+  have := hfin (insert r T)
   have h : L T = L (insert r T) := by
     refine IntermediateField.eq_of_le_of_finrank_le (IntermediateField.adjoin.mono _ _ _ ?_) ?_
     · exact Finset.coe_subset.2 (Finset.image_subset_image (Finset.subset_insert _ _))
@@ -281,7 +281,7 @@ theorem mem_closure_of_fixed (K G : Type) [Field K] [Group G] (ρ : G →* RingA
     f ∈ Subfield.closure ({x | ∀ g : G, ρ g x = x} ∪ Y) := by
   let L := fixSub ρ Δ
   let act : G ⧸ Δ →* RingAut L := QuotientGroup.lift Δ (restr ρ Δ) (le_ker_restr ρ Δ)
-  letI : MulSemiringAction (G ⧸ Δ) L := MulSemiringAction.compHom L act
+  let : MulSemiringAction (G ⧸ Δ) L := MulSemiringAction.compHom L act
   have hsmul : ∀ (g : G) (x : L), (((QuotientGroup.mk g : G ⧸ Δ) • x : L) : K) = ρ g x :=
     fun g x => rfl
   let F := FixedPoints.subfield (G ⧸ Δ) L
@@ -367,7 +367,7 @@ variable [Algebra ℚ Ω]
 
 theorem val_q_ne_zero (V : ValuationSubring Ω) {q : ℕ} (hq : q.Prime) :
     V.valuation (q : Ω) ≠ 0 := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   rw [Valuation.ne_zero_iff]
   exact Nat.cast_ne_zero.2 hq.ne_zero
 
@@ -423,7 +423,7 @@ theorem val_pow_eq_zpow (V : ValuationSubring Ω) {q : ℕ} (hq : q.Prime)
     have h2 : f p.natDegree = x ^ p.natDegree := by
       have : p.coeff p.natDegree = 1 := (minpoly.monic hi).coeff_natDegree
       simp only [hf, this, one_smul]
-    rw [h, h2, le_zero_iff, Valuation.zero_iff] at h1
+    rw [h, h2, nonpos_iff_eq_zero, Valuation.zero_iff] at h1
     exact pow_ne_zero _ hx h1
   have hex : ∃ i ∈ Finset.range (p.natDegree + 1) \ {j}, ¬ V.valuation (f i) < V.valuation (f j) := by
     by_contra hcon
@@ -471,7 +471,7 @@ theorem exists_max_valuation : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [Alge
   intro Ω _ _ _ F hF q hq V hV ι a c hc haF hca hex
   rw [ValuationSubring.mem_nonunits_iff] at hV
   have h0 := val_q_ne_zero V hq
-  have hpos : 0 < V.valuation (q : Ω) := zero_lt_iff.2 h0
+  have hpos : 0 < V.valuation (q : Ω) := pos_iff_ne_zero.2 h0
   have hint : ∀ x : Ω, IsIntegral ℚ x := fun x =>
     (Algebra.IsAlgebraic.isAlgebraic (R := ℚ) x).isIntegral
   set n := Module.finrank ℚ F + (minpoly ℚ c).natDegree with hn
@@ -497,13 +497,13 @@ theorem exists_max_valuation : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [Alge
   refine ⟨i, hi, fun i' => ?_⟩
   by_cases hi' : a i' = 0
   · rw [hi', map_zero]
-    exact zero_le'
+    exact zero_le
   obtain ⟨e', he'⟩ := hall i' hi'
   have h1 : V.valuation (a i') ^ n.factorial ≤ V.valuation (a i) ^ n.factorial := by
     rw [he, he', zpow_le_zpow_iff_right_of_lt_one₀ hpos hV]
     exact hmin e' ⟨i', hi', he'⟩
   by_contra hcon
-  exact absurd h1 (not_le.2 (pow_lt_pow_left₀ (not_le.1 hcon) zero_le' n.factorial_ne_zero))
+  exact absurd h1 (not_le.2 (pow_lt_pow_left₀ (not_le.1 hcon) zero_le n.factorial_ne_zero))
 
 end GlobalTheory.ValMax
 end -- clump:auto
@@ -668,13 +668,13 @@ open Matrix in
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} in
 private lemma eOm_mem_valuationSubring (ε : Ω →+* ℂ) (V : ValuationSubring Ω) (s : ℚ) :
     _root_.GlobalTheory.KZ.eOm ε s ∈ V := by
-  haveI := IsAlgClosure.isAlgClosed ℚ (K := Ω)
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have := IsAlgClosure.isAlgClosed ℚ (K := Ω)
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   set n := s.den with hn
-  haveI : NeZero n := ⟨s.den_nz⟩
+  have : NeZero n := ⟨s.den_nz⟩
   set w : ℂ := Complex.exp (2 * Real.pi * Complex.I * s) with hw
   have hwn : w ^ n = 1 := by
-    rw [hw, ← Complex.exp_nat_mul]
+    rw [hw, ← Complex.exp_natCast_mul]
     have e : (n : ℂ) * (2 * Real.pi * Complex.I * s) = (s.num : ℂ) * (2 * Real.pi * Complex.I) := by
       have hs : (s : ℂ) * n = s.num := by exact_mod_cast Rat.mul_den_eq_num s
       rw [← hs]
@@ -682,7 +682,7 @@ private lemma eOm_mem_valuationSubring (ε : Ω →+* ℂ) (V : ValuationSubring
     rw [e, Complex.exp_int_mul_two_pi_mul_I]
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic n Ω)
     (Polynomial.degree_cyclotomic_pos n Ω (NeZero.pos n)).ne'
-  haveI : NeZero (n : Ω) := ⟨Nat.cast_ne_zero.2 (NeZero.ne n)⟩
+  have : NeZero (n : Ω) := ⟨Nat.cast_ne_zero.2 (NeZero.ne n)⟩
   have hζ' : IsPrimitiveRoot ζ n := Polynomial.isRoot_cyclotomic_iff.1 hζ
   obtain ⟨i, -, hi⟩ := (hζ'.map_of_injective ε.injective).eq_pow_of_pow_eq_one hwn
   have hrange : ∃ z, ε z = w := ⟨ζ ^ i, by rw [map_pow, hi]⟩
@@ -850,7 +850,7 @@ private lemma exists_finset_lev_mem_closure_bddRing (X : _root_.GlobalTheory.KZ.
     | smul r y _ hy =>
       show (r : X.K) * y ∈ Subfield.closure (B : Set X.K)
       exact mul_mem (hjL r.2) hy
-  haveI : NeZero m := ⟨hm0.ne'⟩
+  have : NeZero m := ⟨hm0.ne'⟩
   have hart := _root_.GlobalTheory.ArtinFix.mem_closure_of_fixed X.K (CongruenceSubgroup.Gamma ((2 * M₀ * l) ^ 2))
     (_root_.GlobalTheory.KZ.ES.Quot.rho X _) ((CongruenceSubgroup.Gamma m).subgroupOf _)
     ((CongruenceSubgroup.Gamma_normal m).subgroupOf _) inferInstance
@@ -886,7 +886,7 @@ private lemma exists_prim_mul_of_mem_bddRing {X : _root_.GlobalTheory.KZ.Tower �
     ∃ (α : Ω) (a : X.K), α ≠ 0 ∧ _root_.GlobalTheory.KZ.ES.Lev X M a ∧
       _root_.GlobalTheory.KZ.ES.Prim X V a ∧ x = algebraMap Ω X.K α * a := by
   obtain ⟨hlev, c, hc, hcx⟩ := hx
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   obtain ⟨F, hF, hcoef⟩ := _root_.GlobalTheory.KZ.ES.NF.coeff_numberField ε X x
   have hne : ∃ r, (X.exp x).coeff r ≠ 0 := by
     by_contra h
@@ -899,7 +899,7 @@ private lemma exists_prim_mul_of_mem_bddRing {X : _root_.GlobalTheory.KZ.Tower �
     (fun r => (X.exp x).coeff r) c hc hcoef
     (fun r => by simpa [map_mul, AlgHom.commutes, hahnSeries_coeff_algebraMap_mul] using hcx r) hne
   have hval : 0 < V.valuation ((X.exp x).coeff r) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hr0)
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hr0)
   refine ⟨(X.exp x).coeff r, algebraMap Ω X.K ((X.exp x).coeff r)⁻¹ * x, hr0,
     fun γ hγ => by rw [map_mul, AlgEquiv.commutes, hlev γ hγ], ⟨fun r' => ?_, r, ?_⟩, ?_⟩
   · rw [map_mul, AlgHom.commutes, hahnSeries_coeff_algebraMap_mul,
@@ -1043,13 +1043,13 @@ theorem kron_frob_diag : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosu
     SmallC X V (X.sl (toGQ !![(q : ℤ), 0; 0, 1]) a - (X.gal s.symm a) ^ q) := by
   intro Ω _ _ _ ε X q hq V s hs a ha r
   classical
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hε : Function.Injective ε := ε.injective
   have hq0 : (q : ℚ) ≠ 0 := by exact_mod_cast hq.ne_zero
   set ρ := IsLocalRing.residue V with hρ_def
   have hρ0 : ∀ x : V, ρ x = 0 ↔ V.valuation (x : Ω) < 1 := fun x => by
     rw [hρ_def, IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff]
-  haveI : CharP (IsLocalRing.ResidueField V) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
+  have : CharP (IsLocalRing.ResidueField V) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
     have : ρ (q : V) = 0 := (hρ0 _).2 (by simpa [ValuationSubring.mem_nonunits_iff] using hs.1)
     simpa using this)
   have hfrob : ∀ x : V, ρ ⟨s x, (hs.2 x x.2).1⟩ = ρ x ^ q := by
@@ -1111,12 +1111,12 @@ theorem nq_sub_gal_small : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
   obtain ⟨hqV, hs⟩ := hFr
   have hε : Function.Injective ε := ε.injective
   classical
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hq0 : (q : ℚ) ≠ 0 := by exact_mod_cast hq.ne_zero
   set ρ := IsLocalRing.residue V with hρ_def
   have hρ0 : ∀ x : V, ρ x = 0 ↔ V.valuation (x : Ω) < 1 := fun x => by
     rw [hρ_def, IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff]
-  haveI : CharP (IsLocalRing.ResidueField V) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
+  have : CharP (IsLocalRing.ResidueField V) q := (CharP.charP_iff_prime_eq_zero hq).2 (by
     have : ρ (q : V) = 0 := (hρ0 _).2 (by simpa [ValuationSubring.mem_nonunits_iff] using hqV)
     simpa using this)
   have hfrob : ∀ x : V, ρ ⟨s x, (hs x x.2).1⟩ = ρ x ^ q := by
@@ -1207,7 +1207,7 @@ theorem kc_val_one_of_inv {V : ValuationSubring Ω} {x : Ω} (hx : x ∈ V) (hi 
   have h2 := (V.valuation_le_one_iff x⁻¹).2 hi
   rw [map_inv₀] at h2
   have hne : V.valuation x ≠ 0 := by simpa using h0
-  exact le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 hne)).1 h2)
+  exact le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 hne)).1 h2)
 
 theorem kc_inv_of_val_one {V : ValuationSubring Ω} {x : Ω} (h : V.valuation x = 1) :
     x ∈ V ∧ x⁻¹ ∈ V ∧ x ≠ 0 := by

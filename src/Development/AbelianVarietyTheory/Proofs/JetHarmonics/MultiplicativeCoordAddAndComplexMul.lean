@@ -86,7 +86,7 @@ theorem sub_mem_of_uw (M : Mdl q) (hM : M.Ok) (s t : ℂ) (ht : t ∉ M.L.lattic
   have hxx : M.x s = M.x t := by
     have h1 : M.u s = -M.x s / M.y s := by simp [Mdl.u, hs]
     have h2 : M.u t = -M.x t / M.y t := by simp [Mdl.u, ht]
-    rw [h1, h2, hyy, div_left_inj' hy] at hu
+    rw [h1, h2, hyy, div_left_inj₀ hy] at hu
     exact neg_injective hu
   obtain ⟨φ, -, hk, hφ⟩ := Mdl.exists_pointHom q M hM
   obtain ⟨h1, e1⟩ := hφ s hs

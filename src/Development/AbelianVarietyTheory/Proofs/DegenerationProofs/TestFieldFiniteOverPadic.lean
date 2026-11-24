@@ -136,7 +136,7 @@ theorem _root_.GlobalTheory.ZH.FieldOfTest.isComplete_range_fractionRing (V F : 
   apply Metric.complete_of_cauchySeq_tendsto
   intro u hu
   set v : ℕ → F := fun n => (u n : F) with hv
-  have hvc : CauchySeq v := uniformContinuous_subtype_val.comp_cauchySeq hu
+  have hvc : CauchySeq v := uniformContinuous_subtypeVal.comp_cauchySeq hu
   obtain ⟨B, hB⟩ := isBounded_iff_forall_norm_le.1 hvc.isBounded_range
   obtain ⟨k, hk⟩ := exists_pow_lt_of_lt_one (show 0 < 1 / (|B| + 1) by positivity) hc1
   have hw : ∀ n, ∃ x : V, φ (ιV x) = φ (ιV ϖ) ^ k * v n := by
@@ -262,9 +262,9 @@ theorem _root_.GlobalTheory.ZH.FieldOfTest.exists_finiteDimensional_of_isComplet
         simpa using SubfieldClass.ratCast_mem L q)
     rwa [hcl.closure_eq] at hmem
   let K : IntermediateField ℚ_[p] (PadicAlgCl p) := { L with algebraMap_mem' := hQ }
-  haveI : CompleteSpace L := hL.completeSpace_coe
+  have : CompleteSpace L := hL.completeSpace_coe
   have hc : Continuous (fun z : ℤ_[p] => algebraMap ℚ_[p] (PadicAlgCl p) (z : ℚ_[p])) :=
-    (continuous_algebraMap ℚ_[p] (PadicAlgCl p)).comp continuous_subtype_val
+    (continuous_algebraMap ℚ_[p] (PadicAlgCl p)).comp continuous_subtypeVal
   let A : ℕ → Set L := fun n => {x | ∃ c : Fin (n + 1) → ℤ_[p], (∃ i, ‖c i‖ = 1) ∧
     ∑ i, algebraMap ℚ_[p] (PadicAlgCl p) (c i : ℚ_[p]) * (x : PadicAlgCl p) ^ (i : ℕ) = 0}
   have hAclosed : ∀ n, IsClosed (A n) := by
@@ -293,7 +293,7 @@ theorem _root_.GlobalTheory.ZH.FieldOfTest.exists_finiteDimensional_of_isComplet
       exact hcl
     · exact isClosed_eq (continuous_finsetSum _ fun i _ =>
         (hc.comp ((continuous_apply i).comp continuous_fst)).mul
-          ((continuous_subtype_val.comp continuous_snd).pow _)) continuous_const
+          ((continuous_subtypeVal.comp continuous_snd).pow _)) continuous_const
   have hcover : ⋃ n, A n = Set.univ := by
     ext x
     simp only [Set.mem_iUnion, Set.mem_univ, iff_true]
@@ -371,8 +371,8 @@ theorem _root_.GlobalTheory.ZH.FieldOfTest.exists_finiteDimensional_of_isComplet
         rw [div_mul_eq_mul_div, div_lt_iff₀ (by positivity)]
         nlinarith [norm_nonneg x]
   have ha' : a ∈ A n := interior_subset ha
-  haveI := IntermediateField.adjoin.finiteDimensional (hint (a : PadicAlgCl p))
-  haveI := IntermediateField.adjoin.finiteDimensional (hint (b : PadicAlgCl p))
+  have := IntermediateField.adjoin.finiteDimensional (hint (a : PadicAlgCl p))
+  have := IntermediateField.adjoin.finiteDimensional (hint (b : PadicAlgCl p))
   have hxmem : x ∈ ℚ_[p]⟮(a : PadicAlgCl p)⟯ ⊔ ℚ_[p]⟮(b : PadicAlgCl p)⟯ := by
     have hpj : ((p : PadicAlgCl p) ^ j) ≠ 0 := pow_ne_zero _ (by
       have := (Fact.out : p.Prime).ne_zero
@@ -441,7 +441,7 @@ theorem _root_.GlobalTheory.ZH.FieldOfTest.fractionRing_finite_over_padic : ∀ 
     apply IsFractionRing.injective u.V F
     rw [map_mul, map_one, hz]
     exact mul_inv_cancel₀ hy0
-  · haveI := u.complete
+  · have := u.complete
     obtain ⟨K, hK, hKL⟩ := _root_.GlobalTheory.ZH.FieldOfTest.exists_finiteDimensional_of_isComplete p
       (algebraMap (FractionRing u.V) (PadicAlgCl p)).fieldRange
       (by

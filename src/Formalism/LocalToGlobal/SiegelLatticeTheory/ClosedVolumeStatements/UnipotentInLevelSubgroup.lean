@@ -139,7 +139,7 @@ theorem isId_of_lin {t : GTerm X u u F0 F0 what₂ what₂} (h : t.lin ∈ NLam 
   refine ⟨t.frame, ⟨t.rep.2.2.2.2, rfl⟩, ?_⟩
   unfold Formalism.L2.SG.FourParts.IsIdF
   have hi : t.lin ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT := t.rep.2.2.1
-  have hf : mapLF t.lin (lf D F0) = _ := dif_pos hi
+  have hf : mapLF t.lin (lf D F0) = _ := dite_eq_left hi
   rw [show t.frame = mapLF t.lin (lf D F0) from rfl, hf]
   refine ⟨t.lin, h, fun a => rfl, ?_⟩
   have hz : (mapFlag t.lin hi (lf D F0).fl).z = t.lin (lf D F0).fl.z := rfl
@@ -513,7 +513,7 @@ theorem indexVolC_holds : IndexVolC := by
   set H : Subgroup Γ := Γ'.subgroupOf Γ with hH
   have : H.FiniteIndex := ⟨hk⟩
   have : Finite (Γ ⧸ H) := Subgroup.finite_quotient_of_finiteIndex
-  haveI : Fintype (Γ ⧸ H) := Fintype.ofFinite _
+  have : Fintype (Γ ⧸ H) := Fintype.ofFinite _
   let r : Γ ⧸ H → Γ := fun q => Quotient.out q
   have hr : ∀ q, ((r q : Γ) : Γ ⧸ H) = q := fun q => Quotient.out_eq q
   let A : Γ ⧸ H → Set X.B.I.Ginf := fun q => {y | ((r q : Γ) : X.B.I.Ginf) * y ∈ Ω}
@@ -775,7 +775,7 @@ theorem hinfConjC_holds : HinfConjC := by
       intro hz
       apply h0
       have := congrArg (fun m : Measure X.B.I.Ginf => m Set.univ) hz
-      simp only [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, Measure.coe_zero, Pi.zero_apply] at this
+      simp only [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, FunLike.coe_zero, Pi.zero_apply] at this
       exact Measure.measure_univ_eq_zero.1 this
     have hνc : (X.muN u).map (fun s => g * s * g⁻¹) (N : Set X.B.I.Ginf)ᶜ = 0 := by
       rw [Measure.map_apply hm hNc.measurableSet.compl]
@@ -798,7 +798,7 @@ theorem hinfConjC_holds : HinfConjC := by
       ((X.muN u).map (fun s => g * s * g⁻¹)) h0 hc hl hfin hνc hνi hνf
     have hK' : (X.muN u).map (fun s => g * s * g⁻¹) K = X.muN u K := by
       rw [Measure.map_apply hm hKc.isClosed.measurableSet, hKinv g hg]
-    rw [hceq, Measure.smul_apply, smul_eq_mul] at hK'
+    rw [hceq, smul_apply, smul_eq_mul] at hK'
     have hc1 : c = 1 := (ENNReal.mul_left_inj hKpos.ne' hKfin).1 (hK'.trans (one_mul _).symm)
     rw [hceq, hc1, one_smul]
   have hinv' : h⁻¹ ∈ Hinf X u := (Hinf X u).inv_mem hh
@@ -928,7 +928,7 @@ theorem relIndex_uc_ne_zero (hK : X.LevelSubgroupCharacter) (c c' : X.B.I.Gf) :
   have hCC : C'.relIndex C ≠ 0 := by
     have : CompactSpace C := isCompact_iff_compactSpace.mp (isCompact_conj_level_subgroup X hK c)
     have ho : IsOpen ((C'.subgroupOf C : Subgroup C) : Set C) :=
-      (isOpen_conj_level_subgroup X hK c').preimage continuous_subtype_val
+      (isOpen_conj_level_subgroup X hK c').preimage continuous_subtypeVal
     have := Subgroup.quotient_finite_of_isOpen (C'.subgroupOf C) ho
     exact Subgroup.index_ne_zero_of_finite
   have e1 : (N ⊓ C').relIndex (N ⊓ C) = C'.relIndex (N ⊓ C) := by

@@ -94,10 +94,10 @@ theorem algChart [IsLocalRing R] (B : Type) [CommRing B] [Algebra R B] [Algebra.
         ∀ φ : B →ₐ[R] A, aug.comp φ = eps →
           ∃! ψ : JetR R (Fin n) m →ₐ[R] A, aug.comp ψ = jetAug R (Fin n) m ∧ ψ.comp (π m) = φ := by
   let q : Ideal B := (IsLocalRing.maximalIdeal R).comap eps
-  haveI : q.IsPrime := Ideal.comap_isPrime _ _
+  have : q.IsPrime := Ideal.comap_isPrime _ _
   obtain ⟨f, hfq, n, _, hST, hSE⟩ := Algebra.IsSmoothAt.exists_isStandardEtale_mvPolynomial (R := R) (p := q)
-  haveI := hST
-  haveI : Algebra.FormallyEtale (MvPolynomial (Fin n) R) (Localization.Away f) := inferInstance
+  have := hST
+  have : Algebra.FormallyEtale (MvPolynomial (Fin n) R) (Localization.Away f) := inferInstance
   have hf : IsUnit (eps f) := by
     by_contra h
     exact hfq ((IsLocalRing.mem_maximalIdeal _).mpr h)

@@ -84,7 +84,7 @@ theorem lintegral_prodMul_eq (M : Set G) (μM μN : Measure G) [SFinite μM] [SF
   have he : ∀ m ∈ M, δ' m = δ m := by
     intro m hm
     simp only [hδ']
-    rw [← Measure.map_apply (cm m) hCm, hmod m hm, Measure.smul_apply, smul_eq_mul, mul_div_assoc,
+    rw [← Measure.map_apply (cm m) hCm, hmod m hm, smul_apply, smul_eq_mul, mul_div_assoc,
       ENNReal.div_self hC0 hC1, mul_one]
   have hFm : Measurable fun z : G × G => δ' z.1 * F (z.2 * z.1) :=
     (hm'.comp measurable_fst).mul (hF.comp (measurable_snd.mul measurable_fst))
@@ -112,9 +112,9 @@ theorem muPar_facts (A : Matrix (Fin n) (Fin n) ℂ) (ν : Measure (PSub ε A)) 
     SigmaFinite (muPar ε A ν) ∧ muPar ε A ν (PSub ε A : Set (S7.UJ ε))ᶜ = 0 ∧
       (∀ s ∈ PSub ε A, (muPar ε A ν).map (fun g => s * g) = muPar ε A ν) ∧ muPar ε A ν ≠ 0 := by
   have hcl := GlobalTheory.CompanionTheory.ParabolicHaar.isClosed_pSub ε A
-  have hv : Measurable (Subtype.val : PSub ε A → S7.UJ ε) := measurable_subtype_coe
+  have hv : Measurable (Subtype.val : PSub ε A → S7.UJ ε) := measurable_subtypeVal
   have hσ : SigmaFinite (muPar ε A ν) :=
-    (MeasurableEmbedding.subtype_coe hcl.measurableSet).sigmaFinite_map (μ := ν)
+    (MeasurableEmbedding.subtypeVal hcl.measurableSet).sigmaFinite_map (μ := ν)
   refine ⟨hσ, ?_, ?_, ?_⟩
   · rw [muPar, Measure.map_apply hv hcl.measurableSet.compl]
     have : (Subtype.val : PSub ε A → S7.UJ ε) ⁻¹' (PSub ε A : Set (S7.UJ ε))ᶜ = ∅ := by
@@ -165,8 +165,8 @@ theorem fub2 : Fub2 := by
     have hM' : IsGaugeSub (M : Set (Formalism.REAL.UJ ε)) _ μM := eM ▸ hM
     obtain ⟨hN0, iN⟩ := GlobalTheory.IwasawaShape.gauge_ne_zero_finite N _ μN cN' hN'
     obtain ⟨hM0, iM⟩ := GlobalTheory.IwasawaShape.gauge_ne_zero_finite M _ μM cM' hM'
-    haveI := iN
-    haveI := iM
+    have := iN
+    have := iM
     let P : Subgroup (Formalism.REAL.UJ ε) := PSub ε A
     have hcl : IsClosed (P : Set (Formalism.REAL.UJ ε)) := GlobalTheory.CompanionTheory.ParabolicHaar.isClosed_pSub ε A
     have hPeq : ∀ g : Formalism.REAL.UJ ε, g ∈ P ↔ ∃ u ∈ flagN ε (W A), ∃ m ∈ flagM ε (W A), g = u * m :=
@@ -186,7 +186,7 @@ theorem fub2 : Fub2 := by
       exact ⟨m, (mM m).2 hm, m⁻¹ * u * m, hnorm' m ((mM m).2 hm) u ((mN u).2 hu), by group⟩
     obtain ⟨hP0, sf, T, hTm, hT0, hT1⟩ := GlobalTheory.ParabModulus.prodMul_facts M N P cM' cN' hcl.measurableSet hMN hMP hdec
       μM μN hM0 hN0 hM'.1 hN'.1
-    haveI := sf
+    have := sf
     have lP : ∀ s ∈ P, (GlobalTheory.ParabModulus.prodMul μM μN).map (fun g => s * g) = GlobalTheory.ParabModulus.prodMul μM μN := by
       intro s hs
       obtain ⟨l, hl, v, hv, rfl⟩ := hdec s hs
@@ -200,7 +200,7 @@ theorem fub2 : Fub2 := by
           ∀ F : Formalism.REAL.UJ ε → ℝ≥0∞, Measurable F →
             ∫⁻ x, F x ∂ρ = c * ∫⁻ u, ∫⁻ m, modA A m * F (u * m) ∂μM ∂μN := by
       intro ρ sρ hρ0 hρi hρne
-      haveI := sρ
+      have := sρ
       obtain ⟨c, hc⟩ := GlobalTheory.ParabModulus.eq_smul_of_left_inv P hcl.measurableSet (ρ)
         (GlobalTheory.ParabModulus.prodMul μM μN) hρ0 hP0 hρi lP T hTm hT0 hT1
       have c0 : c ≠ 0 := by
@@ -214,7 +214,7 @@ theorem fub2 : Fub2 := by
           by_contra h
           have h1 : ρ (T ∩ spanningSets (ρ) i) = ⊤ := by
             generalize T ∩ spanningSets ρ i = X at h ⊢
-            rw [hc, Measure.smul_apply, smul_eq_mul, ENNReal.top_mul h]
+            rw [hc, smul_apply, smul_eq_mul, ENNReal.top_mul h]
           have h2 : ρ (T ∩ spanningSets ρ i) < ⊤ := lt_of_le_of_lt (measure_mono Set.inter_subset_right)
             (measure_spanningSets_lt_top (ρ) i)
           rw [h1] at h2

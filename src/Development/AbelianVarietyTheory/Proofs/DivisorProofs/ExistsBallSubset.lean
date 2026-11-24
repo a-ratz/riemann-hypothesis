@@ -77,8 +77,8 @@ theorem v_cj (w : Pl E) (x : w.adicCompletion E) : Valued.v (cj w x) = Valued.v 
   rcases eq_or_ne x 0 with rfl | hx
   · simp
   have hsx : cj w x ≠ 0 := fun h => hx (by rw [← cj_cj w x, h, map_zero])
-  have p1 : 0 < Valued.v x := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hx)
-  have p2 : 0 < Valued.v (cj w x) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hsx)
+  have p1 : 0 < Valued.v x := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hx)
+  have p2 : 0 < Valued.v (cj w x) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hsx)
   rcases lt_trichotomy (Valued.v (cj w x)) (Valued.v x) with hlt | heq | hgt
   · exfalso
     have h1 : Valued.v (cj w x / x) < 1 := by rw [map_div₀, div_lt_one₀ p1]; exact hlt
@@ -156,7 +156,7 @@ theorem cj_mem_Ov (w : Pl E) (x : w.adicCompletion E) (hx : x ∈ Ov E w) : cj w
 theorem thL_mem_congSub (w : Pl E) (hw : ¬ IsSplitAt w) (n k : ℕ) (g : GLw n w) (hg : g ∈ congSub w n k) :
     thL n w g ∈ congSub w n k := by
   obtain ⟨h, hh, rfl⟩ := hg
-  have ht : thL n w = thetaGL n (cj w) := by unfold thL; rw [if_neg hw]
+  have ht : thL n w = thetaGL n (cj w) := by unfold thL; rw [ite_eq_right hw]
   rw [ht]
   let c' : Ov E w →+* Ov E w := (cj w).restrict (Ov E w) (Ov E w) (cj_mem_Ov w)
   have hI : congIdeal w k ≤ (congIdeal w k).comap c' := by
@@ -197,7 +197,7 @@ theorem isOpen_congSub (w : Pl E) (n k : ℕ) : IsOpen (congSub w n k : Set (GLw
       ⋂ i, ⋂ j, {g : GLw n w | Valued.v (g.val i j - (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j) ≤
         WithZero.exp (-(k : ℤ))} := by
     ext g
-    simp only [SetLike.mem_coe, mem_congSub_iff, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_congSub_iff, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
   rw [hs]
   refine (GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w n).1.inter
     (isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_)

@@ -91,22 +91,22 @@ private theorem mt_not_both (L : Type) [Field L] [NumberField L] [IsTotallyReal 
 
 private theorem mt_cm {Ω : Type} [Field Ω] [CharZero Ω] (K F : IntermediateField ℚ Ω) [NumberField K] [NumberField F]
     [NumberField ↥(F ⊔ K)] [IsCMField K] [IsTotallyReal F] (hK : Module.finrank ℚ K = 2) : IsCMField ↥(F ⊔ K) := by
-  letI : Algebra K ↥(F ⊔ K) := (IntermediateField.inclusion (le_sup_right : K ≤ F ⊔ K)).toRingHom.toAlgebra
-  haveI : IsTotallyComplex ↥(F ⊔ K) := NumberField.isTotallyComplex_of_algebra K _
-  letI : Algebra F ↥(F ⊔ K) := (IntermediateField.inclusion (le_sup_left : F ≤ F ⊔ K)).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ F ↥(F ⊔ K) := IsScalarTower.of_algebraMap_eq (fun x => rfl)
-  haveI : Module.Free F ↥(F ⊔ K) := Module.Free.of_divisionRing F _
-  haveI : Module.Finite F ↥(F ⊔ K) := Module.Finite.of_restrictScalars_finite ℚ F _
+  let : Algebra K ↥(F ⊔ K) := (IntermediateField.inclusion (le_sup_right : K ≤ F ⊔ K)).toRingHom.toAlgebra
+  have : IsTotallyComplex ↥(F ⊔ K) := NumberField.isTotallyComplex_of_algebra K _
+  let : Algebra F ↥(F ⊔ K) := (IntermediateField.inclusion (le_sup_left : F ≤ F ⊔ K)).toRingHom.toAlgebra
+  have : IsScalarTower ℚ F ↥(F ⊔ K) := IsScalarTower.of_algebraMap_eq (fun x => rfl)
+  have : Module.Free F ↥(F ⊔ K) := Module.Free.of_divisionRing F _
+  have : Module.Finite F ↥(F ⊔ K) := Module.Finite.of_restrictScalars_finite ℚ F _
   have hle := IntermediateField.finrank_sup_le F K
   have hmul := Module.finrank_mul_finrank ℚ F ↥(F ⊔ K)
   have hpos : 0 < Module.finrank ℚ F := Module.finrank_pos
   have hne : Module.finrank F ↥(F ⊔ K) ≠ 1 := by
     intro h1
     have hb := Algebra.finrank_eq_one_iff_bijective_algebraMap.mp h1
-    haveI : IsTotallyReal ↥(F ⊔ K) := IsTotallyReal.ofRingEquiv (RingEquiv.ofBijective (algebraMap F ↥(F ⊔ K)) hb)
+    have : IsTotallyReal ↥(F ⊔ K) := IsTotallyReal.ofRingEquiv (RingEquiv.ofBijective (algebraMap F ↥(F ⊔ K)) hb)
     exact mt_not_both ↥(F ⊔ K)
   have hpos' : 0 < Module.finrank F ↥(F ⊔ K) := Module.finrank_pos
-  haveI : Algebra.IsQuadraticExtension F ↥(F ⊔ K) := ⟨by
+  have : Algebra.IsQuadraticExtension F ↥(F ⊔ K) := ⟨by
     rw [hK] at hle
     have : Module.finrank F ↥(F ⊔ K) ≤ 2 := by
       by_contra hc
@@ -124,20 +124,20 @@ private theorem mt_out {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω
   have hKF : K ≤ F := by
     have h := IntermediateField.fixedField_le hle
     rwa [InfiniteGalois.fixedField_fixingSubgroup, InfiniteGalois.fixedField_fixingSubgroup] at h
-  letI : Algebra K F := (IntermediateField.inclusion hKF).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ K F := IsScalarTower.of_algebraMap_eq (fun x => rfl)
-  haveI : Algebra.IsAlgebraic K F := Algebra.IsAlgebraic.tower_top (K := ℚ) K
-  haveI : IsTotallyReal K := IsTotallyReal.of_algebra K F
+  let : Algebra K F := (IntermediateField.inclusion hKF).toRingHom.toAlgebra
+  have : IsScalarTower ℚ K F := IsScalarTower.of_algebraMap_eq (fun x => rfl)
+  have : Algebra.IsAlgebraic K F := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  have : IsTotallyReal K := IsTotallyReal.of_algebra K F
   exact mt_not_both K
 
 private theorem mem_or_mul_mem_fixing_of_quadratic {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (K : IntermediateField ℚ Ω)
     [NumberField K] (hK : Module.finrank ℚ K = 2) (h τ : G ℚ Ω) (hh : h ∉ K.fixingSubgroup) :
     τ ∈ K.fixingSubgroup ∨ h * τ ∈ K.fixingSubgroup := by
   have hN : Normal ℚ K := by
-    haveI : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
+    have : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
     exact inferInstance
   have hG : IsGalois ℚ K := by
-    haveI : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
+    have : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
     exact inferInstance
   have hk := @IntermediateField.restrictNormalHom_ker ℚ Ω _ _ _ K hN
   rw [← hk] at hh ⊢
@@ -147,7 +147,7 @@ private theorem mem_or_mul_mem_fixing_of_quadratic {Ω : Type} [Field Ω] [CharZ
   · exact Or.inl ht
   · right
     have hc0 : Nat.card (K ≃ₐ[ℚ] K) = 2 := by
-      haveI : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
+      have : Algebra.IsQuadraticExtension ℚ K := ⟨hK⟩
       rw [IsGalois.card_aut_eq_finrank ℚ K, hK]
     have hc : Nat.card (@AlgEquiv ℚ K K _ _ _ K.algebra' K.algebra') = 2 := by
       rw [← hc0]
@@ -212,8 +212,8 @@ theorem UpperTheory.V.Ws.mkTower :
       Module.finrank ℚ K = 2 → (∀ A : ValuationSubring Ω, A.valuation (l : Ω) < 1 → Dec (F := ℚ) A ≤ K.fixingSubgroup) → ∀ g0 : G F Ω,
       ∃ T : Tower D, T.pr = pr ∧ T.K = K ∧ T.F = F ∧ resQ T.F T.g0 = resQ F g0 := by
   intro Ω _ _ _ l _ c D hD pr K F _ _ _ _ _ hK hdec g0
-  haveI : NumberField ↥(F ⊔ K) := NumberField.mk
-  haveI : IsCMField ↥(F ⊔ K) := mt_cm K F hK
+  have : NumberField ↥(F ⊔ K) := NumberField.mk
+  have : IsCMField ↥(F ⊔ K) := mt_cm K F hK
   obtain ⟨h, hhF, hhK⟩ := mt_out K F
   have hP : (D.pl l).valuation (l : Ω) < 1 := hD.pl_over l Fact.out
   let s : Setoid {B : ValuationSubring Ω // B.valuation (l : Ω) < 1 ∧ ∀ x ∈ K, x ∈ B ↔ x ∈ D.pl l} :=
@@ -232,7 +232,7 @@ theorem UpperTheory.V.Ws.mkTower :
     intro A q q' g g' hg hg'
     apply Quotient.out_equiv_out.mp
     exact exists_conj_between_valuationSubrings_of_common F q.out.1 A q'.out.1 g⁻¹ g'⁻¹ (inv_apply_mem_iff_of_apply_mem_iff F A _ g hg) (inv_apply_mem_iff_of_apply_mem_iff F A _ g' hg')
-  haveI : Finite (Quotient s) := by
+  have : Finite (Quotient s) := by
     have hsurj := AlgEquiv.restrictNormalHom_surjective (F := ℚ) (K₁ := ↥F) Ω
     have hA : ∀ τ : G ℚ Ω, ((D.pl l).comap (τ : Ω →+* Ω)).valuation (l : Ω) < 1 := by
       intro τ

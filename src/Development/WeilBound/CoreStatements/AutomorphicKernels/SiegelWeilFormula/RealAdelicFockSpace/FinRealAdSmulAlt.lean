@@ -74,22 +74,22 @@ variable {d : SD σ}
 theorem map_isHaar (R : RD d) (νf : Measure (Yf d)) [νf.IsAddHaarMeasure] :
     (Measure.map (fun p : Vw d × Yf d => jn R p.1 p.2) ((volume : Measure (Vw d)).prod νf)).IsAddHaarMeasure := by
   obtain ⟨i1, i2, i3, i4⟩ := (PositivityTheory.ThKCT.ideleTop F E).1
-  haveI : BorelSpace (AE F E) := ⟨rfl⟩
-  haveI : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
-  haveI : IsTopologicalAddGroup (Mx F E d.m d.n) :=
+  have : BorelSpace (AE F E) := ⟨rfl⟩
+  have : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
+  have : IsTopologicalAddGroup (Mx F E d.m d.n) :=
     inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : BorelSpace (Yf d) := Pi.borelSpace
-  haveI : MeasurableAdd (Yf d) := inferInstance
-  haveI : SigmaFinite νf := inferInstance
-  haveI : ((volume : Measure (Vw d)).prod νf).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : BorelSpace (Yf d) := Pi.borelSpace
+  have : MeasurableAdd (Yf d) := inferInstance
+  have : SigmaFinite νf := inferInstance
+  have : ((volume : Measure (Vw d)).prod νf).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   exact ContinuousAddEquiv.isAddHaarMeasure_map ((volume : Measure (Vw d)).prod νf) (jnpE R)
 
 theorem exists_nuf' (R : RD d) : ∃ νf : Measure (Yf d), νf.IsAddHaarMeasure ∧
     (Measure.map (fun p : Vw d × Yf d => jn R p.1 p.2) ((volume : Measure (Vw d)).prod νf)).IsAddHaarMeasure := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
   exact ⟨Measure.addHaar, inferInstance, map_isHaar R _⟩
 
 theorem integral_jnp' (R : RD d) {νf : Measure (Yf d)} (hνf : νf.IsAddHaarMeasure) {f : Mx F E d.m d.n → ℂ}
@@ -98,14 +98,14 @@ theorem integral_jnp' (R : RD d) {νf : Measure (Yf d)} (hνf : νf.IsAddHaarMea
         ∂(Measure.map (fun p : Vw d × Yf d => jn R p.1 p.2) ((volume : Measure (Vw d)).prod νf)) =
       ∫ u, star (b u) * hg R νf f g u := by
   obtain ⟨i1, i2, i3, i4⟩ := (PositivityTheory.ThKCT.ideleTop F E).1
-  haveI : BorelSpace (AE F E) := ⟨rfl⟩
-  haveI : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
-  haveI : IsTopologicalAddGroup (Mx F E d.m d.n) :=
+  have : BorelSpace (AE F E) := ⟨rfl⟩
+  have : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
+  have : IsTopologicalAddGroup (Mx F E d.m d.n) :=
     inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : BorelSpace (Yf d) := Pi.borelSpace
-  haveI : SigmaFinite νf := inferInstance
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : BorelSpace (Yf d) := Pi.borelSpace
+  have : SigmaFinite νf := inferInstance
   set μ := (volume : Measure (Vw d)).prod νf with hμ
   let e : Vw d × Yf d ≃ᵐ Mx F E d.m d.n := (jnpE R).toHomeomorph.toMeasurableEquiv
   have hmap : Measure.map (fun p : Vw d × Yf d => jn R p.1 p.2) μ = Measure.map e μ := rfl
@@ -226,7 +226,7 @@ theorem gau_eq' (R : RD d) (X : Mx F E d.m d.n) : gau R X = (Real.exp (-(2 * Rea
     rw [EuclideanSpace.norm_eq, Real.sq_sqrt (Finset.sum_nonneg fun _ _ => sq_nonneg _)]
     simp only [Fintype.sum_prod_type, Fintype.sum_bool, arc, Real.norm_eq_abs, sq_abs]
     refine Finset.sum_congr rfl fun w _ => Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun i _ => ?_
-    simp only [EuclideanSpace.equiv, if_true, if_false]
+    simp only [EuclideanSpace.equiv, ite_true, ite_false]
     rw [Complex.sq_norm, Complex.normSq_apply]
     simp [sq]
   simp only [gau, fP, evX, map_one, one_mul, gs]

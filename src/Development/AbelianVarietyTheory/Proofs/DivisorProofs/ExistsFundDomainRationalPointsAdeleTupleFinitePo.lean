@@ -73,7 +73,7 @@ theorem discrete_ratVec (F : Type) [Field F] [NumberField F] (κ : Type) [Fintyp
   rw [isOpen_singleton_iff_nhds_eq_pure]
   refine le_antisymm (Filter.le_pure_iff.2 ?_) (pure_le_nhds _)
   have hc : ContinuousAt (fun x : GlobalTheory.ThetaParseval.ratVec F κ => (x : κ → AdeleRing (𝓞 F) F)) 0 :=
-    continuous_subtype_val.continuousAt
+    continuous_subtypeVal.continuousAt
   refine Filter.mem_of_superset (hc.preimage_mem_nhds hN) ?_
   rintro ⟨y, hy⟩ hyU
   obtain ⟨ξ, rfl⟩ := (GlobalTheory.ThetaParseval.mem_ratVec_iff y).1 hy
@@ -97,13 +97,13 @@ theorem exists_compact_cover_ratVec (F : Type) [Field F] [NumberField F] (κ : T
 theorem exists_fundamentalDomain : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] (μ : @Measure (κ → AF F) (borel _)), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
     ∃ 𝓕₁ : Set (κ → AF F), @IsAddFundamentalDomain (GlobalTheory.ThetaParseval.ratVec F κ) _ _ _ (borel _) 𝓕₁ μ ∧ μ 𝓕₁ ≠ 0 ∧ μ 𝓕₁ ≠ ⊤ := by
   intro F _ _ κ _ μ hμ
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  letI : MeasurableSpace (κ → AdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (κ → AdeleRing (𝓞 F) F) := ⟨rfl⟩
-  haveI := discrete_ratVec F κ
-  haveI : Countable (GlobalTheory.ThetaParseval.ratVec F κ) :=
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  let : MeasurableSpace (κ → AdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (κ → AdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have := discrete_ratVec F κ
+  have : Countable (GlobalTheory.ThetaParseval.ratVec F κ) :=
     GlobalTheory.countable_of_discrete_addSubgroup _
   obtain ⟨K, hK, hcov⟩ := exists_compact_cover_ratVec F κ
   obtain ⟨D, -, -, hD⟩ := GlobalTheory.exists_isAddFundamentalDomain_addSubgroup

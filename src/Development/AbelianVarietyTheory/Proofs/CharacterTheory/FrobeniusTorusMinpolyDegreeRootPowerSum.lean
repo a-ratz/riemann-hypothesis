@@ -133,7 +133,7 @@ theorem _root_.GlobalTheory.CuspGL.torus_minpoly : ∀ (F : Type) [Field F] [Fin
             (minpoly F α ^ (n / (minpoly F α).natDegree)) =
           ∑ i ∈ Finset.range n, θ (α ^ Nat.card F ^ i) ^ k := by
   intro F _ _ θ n hn α hα
-  rw [Set.mem_setOf_eq] at hα
+  rw [Set.mem_ofPred_eq] at hα
   have hq : 1 < Nat.card F := Finite.one_lt_card
   have hqn : 1 < Nat.card F ^ n := Nat.one_lt_pow (by omega) hq
   have hfix : α ^ Nat.card F ^ n = α := by

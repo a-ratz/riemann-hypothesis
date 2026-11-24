@@ -91,10 +91,10 @@ theorem mulV_padic_smul (P : LocPrime l) (LL : Type) [Field LL] [Algebra ℚ_[l]
 
 theorem mem_closure_mulV_of_finrank_eq : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K LL : FinExt l) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V), IsPst P ρ → ∀ S : Submodule ↥LL.1 (V ⊗[ℚ_[l]] Bst P), S ≤ Dst P ρ → (∀ c : ↥(MaximalUnramifiedExtension l), (c : Om l) ∈ K.1 → ∀ x ∈ S, mulV P ↥LL.1 V c x ∈ S) → finrank ↥LL.1 ↥S = finrank ℚ_[l] ↥(K0 K) * finrank ↥LL.1 V → ∀ x ∈ Dpst P ρ, x ∈ AddSubgroup.closure {y | ∃ (c : ↥(MaximalUnramifiedExtension l)) (s : V ⊗[ℚ_[l]] Bst P), s ∈ S ∧ y = mulV P ↥LL.1 V c s} := by
   intro l _ P K LL V _ _ _ _ _ ρ hV S hS _ hrk x hx
-  haveI := LL.2
-  haveI := K.2
-  haveI : FiniteDimensional ℚ_[l] V := Module.Finite.trans ↥LL.1 V
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
+  have := LL.2
+  have := K.2
+  have : FiniteDimensional ℚ_[l] V := Module.Finite.trans ↥LL.1 V
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     FiniteDimensional.of_injective (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective inf_le_left)
   obtain ⟨hfin, hd⟩ := (isPst_iff P ρ).mp hV
@@ -102,8 +102,8 @@ theorem mem_closure_mulV_of_finrank_eq : ∀ (l : ℕ) [Fact l.Prime] (P : LocPr
     (Dpst P ρ).subtype.toAddMonoidHom.comp (toUr P ρ).symm.toAddMonoidHom
   have hSD : S ≤ Dpst P ρ := fun s hs => (mem_Dpst P ρ).mpr ⟨K, fun g _ => (mem_Dst P ρ).mp (hS hs) g⟩
   obtain ⟨b, hbS, hsp, hli⟩ := exists_linearIndependent ↥(MaximalUnramifiedExtension l) {y : DpstUr P ρ | val y ∈ S}
-  haveI : Finite ↥b := hli.finite
-  letI : Fintype ↥b := Fintype.ofFinite _
+  have : Finite ↥b := hli.finite
+  let : Fintype ↥b := Fintype.ofFinite _
   have hspan : ∀ y : DpstUr P ρ, y ∈ Submodule.span ↥(MaximalUnramifiedExtension l) b → ∃ c : ↥b → ↥(MaximalUnramifiedExtension l),
       ∑ i, c i • (i : DpstUr P ρ) = y := fun y hy => by
     rw [← Submodule.mem_span_range_iff_exists_fun, Subtype.range_coe]; exact hy

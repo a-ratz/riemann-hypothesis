@@ -117,7 +117,7 @@ lemma modularCharacter_eq_one_on_compact {n : ℕ} (ε : Fin n → Bool) (g : UJ
   have h1 := map_mul_right_haar_modular_alt ε g
   have h2 : (Measure.map (fun x => x * g) (muG ε)) B = muG ε B := by
     rw [Measure.map_apply (measurable_mul_const g) hBm, hpre]
-  rw [h1, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+  rw [h1, smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
   have h3 : ((modularCharacterAlt ε g : ℝ≥0∞)) * muG ε B = 1 * muG ε B := by rw [h2, one_mul]
   rw [ENNReal.mul_left_inj hpos.ne' hfin.ne] at h3
   exact_mod_cast h3

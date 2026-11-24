@@ -470,7 +470,7 @@ theorem csdInf {R : Ranks} (H : Formalism.BasicNotions.Host R) (χ : HChar H.E) 
 
 theorem isCsd_ofChar_iff {R : Ranks} (H : Formalism.BasicNotions.Host R) (χ : HChar H.E) :
     haveI := host_isCMField H; (CG.ofChar χ).IsCsd ↔ IsCSD H χ := by
-  haveI := host_isCMField H
+  have := host_isCMField H
   rw [CG.isCsd_ofChar, CG.thetaInv_one_iff, csdFin H χ, csdInf H χ]
   rfl
 
@@ -478,7 +478,7 @@ theorem infChar_ofChar_of_hasInfQ {R : Ranks} (H : Formalism.BasicNotions.Host R
     (h : χ.HasInfQ (embPsi H) a) (g : R.Psi) : haveI := host_isCMField H;
     (CG.ofChar χ).infChar (embPsi H g) = {(a g : ℂ)} ∧
       (CG.ofChar χ).infChar ((starRingEnd ℂ).comp (embPsi H g)) = {-(a g : ℂ)} := by
-  haveI := host_isCMField H
+  have := host_isCMField H
   obtain ⟨n, hn, hi⟩ := h
   have hI : Function.Injective fun i => InfinitePlace.mk (embPsi H i) := fun i j e => by
     rcases InfinitePlace.mk_eq_iff.1 e with e | e

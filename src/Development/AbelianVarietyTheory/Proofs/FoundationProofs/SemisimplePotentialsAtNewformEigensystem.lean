@@ -122,8 +122,8 @@ theorem sgD_fams : ∀ (N l : ℕ), 0 < N → l.Prime → ¬ l ∣ N → (∀ d 
   intro N l hN hl hlN
   refine ⟨fun d hd => isDiamondMatrixAtLevel_of_gamma1Gamma0 hl hlN (Betti.isDiam_sgD hN.ne' hl.ne_zero hd), fun q => ?_, ?_, fun d => ?_⟩
   · rw [Fin.sum_univ_castSucc]
-    simp only [opL, Finset.sum_range, GlobalTheory.HeckeFamilyMatrices.tqFam, Fin.coe_castSucc, Fin.is_lt, if_true, Fin.val_last,
-      lt_irrefl, if_false, GlobalTheory.HeckeFamilyMatrices.dg, GlobalTheory.HeckeFamilyMatrices.mat]
+    simp only [opL, Finset.sum_range, GlobalTheory.HeckeFamilyMatrices.tqFam, Fin.val_castSucc, Fin.is_lt, ite_true, Fin.val_last,
+      lt_irrefl, ite_false, GlobalTheory.HeckeFamilyMatrices.dg, GlobalTheory.HeckeFamilyMatrices.mat]
   · simp only [opL, Finset.sum_range, GlobalTheory.HeckeFamilyMatrices.ulFam]
   · simp [opL, GlobalTheory.HeckeFamilyMatrices.mat]
 
@@ -190,8 +190,8 @@ theorem eichlerShimuraCocycle_eq_zero_of_closure (Γ : Subgroup SL(2, ℤ)) (w :
 theorem eichlerShimuraCocycles_finiteDimensional_of_fg (Γ : Subgroup SL(2, ℤ)) [Group.FG Γ] (w : ℕ) :
     FiniteDimensional ℂ (GlobalTheory.HeckeFamilyMatrices.Z1 Γ w) := by
   obtain ⟨S, hS, hSfinite⟩ := (Group.fg_iff).1 (inferInstance : Group.FG Γ)
-  letI := hSfinite.fintype
-  haveI : Module.Finite ℂ (Polynomial.degreeLT ℂ (w + 1)) :=
+  let := hSfinite.fintype
+  have : Module.Finite ℂ (Polynomial.degreeLT ℂ (w + 1)) :=
     Module.Finite.equiv (Polynomial.degreeLTEquiv ℂ (w + 1)).symm
   let g : GlobalTheory.HeckeFamilyMatrices.Z1 Γ w →ₗ[ℂ] (S → Polynomial.degreeLT ℂ (w + 1)) :=
     LinearMap.pi fun s => LinearMap.codRestrict (Polynomial.degreeLT ℂ (w + 1))
@@ -207,13 +207,13 @@ theorem eichlerShimuraCocycles_finiteDimensional_of_fg (Γ : Subgroup SL(2, ℤ)
 
 theorem lev_fd : ∀ (N l w : ℕ), 0 < N → 0 < l → FiniteDimensional ℂ (GlobalTheory.HeckeFamilyMatrices.Z1 (GlobalTheory.HeckeFamilyMatrices.Lev N l) w) := by
   intro N l w hN hl
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero l := ⟨hl.ne'⟩
-  haveI : Group.FG SL(2, ℤ) := by
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero l := ⟨hl.ne'⟩
+  have : Group.FG SL(2, ℤ) := by
     rw [Group.fg_iff]
     exact ⟨{ModularGroup.S, ModularGroup.T}, SpecialLinearGroup.SL2Z_generators, Set.toFinite _⟩
-  haveI : (GlobalTheory.HeckeFamilyMatrices.Lev N l).FiniteIndex := by unfold GlobalTheory.HeckeFamilyMatrices.Lev; infer_instance
-  haveI : Group.FG (GlobalTheory.HeckeFamilyMatrices.Lev N l) := Subgroup.fg_of_index_ne_zero _
+  have : (GlobalTheory.HeckeFamilyMatrices.Lev N l).FiniteIndex := by unfold GlobalTheory.HeckeFamilyMatrices.Lev; infer_instance
+  have : Group.FG (GlobalTheory.HeckeFamilyMatrices.Lev N l) := Subgroup.fg_of_index_ne_zero _
   exact eichlerShimuraCocycles_finiteDimensional_of_fg _ w
 
 end GlobalTheory.KZ.H3
@@ -457,7 +457,7 @@ theorem hasSum_uOp (q : ℕ) (f : ℍ → ℂ) (a : ℕ → ℂ) (hq0 : 0 < q)
   set Q := Function.Periodic.qParam 1 τ with hQ
   set x := Complex.exp (2 * π * Complex.I * τ / q) with hx
   have hxq : x ^ q = Q := by
-    rw [hx, ← Complex.exp_nat_mul, hQ, Function.Periodic.qParam]; congr 1; push_cast; field_simp
+    rw [hx, ← Complex.exp_natCast_mul, hQ, Function.Periodic.qParam]; congr 1; push_cast; field_simp
   have hB : ∀ b : ℕ, HasSum (fun m => a m * x ^ m * (Complex.exp (2 * π * Complex.I / q) ^ b) ^ m)
       (f (ofComplex (((τ : ℂ) + b) / q))) := fun b => by
     have h := hf (ofComplex (((τ : ℂ) + b) / q))
@@ -465,7 +465,7 @@ theorem hasSum_uOp (q : ℕ) (f : ℍ → ℂ) (a : ℕ → ℂ) (hq0 : 0 < q)
     convert h using 2 with m
     have e : Function.Periodic.qParam 1 (((τ : ℂ) + b) / q) =
         x * Complex.exp (2 * π * Complex.I / q) ^ b := by
-      rw [hx, Function.Periodic.qParam, ← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [hx, Function.Periodic.qParam, ← Complex.exp_natCast_mul, ← Complex.exp_add]
       congr 1; push_cast; ring
     simp [e, mul_pow, mul_assoc]
   have hC := hasSum_sum (s := Finset.range q) fun b _ => hB b
@@ -473,7 +473,7 @@ theorem hasSum_uOp (q : ℕ) (f : ℍ → ℂ) (a : ℕ → ℂ) (hq0 : 0 < q)
   rw [← hinj.hasSum_iff fun n hn => by simp [hrange n hn]] at hC
   have hD := hC.mul_left (q : ℂ)⁻¹
   refine cast (congrArg (HasSum · (uOp q f τ)) (funext fun n => ?_)) hD
-  simp only [Function.comp, dvd_mul_right, if_true, pow_mul, hxq, smul_eq_mul]
+  simp only [Function.comp, dvd_mul_right, ite_true, pow_mul, hxq, smul_eq_mul]
   field_simp
 
 end GlobalTheory.Hk
@@ -503,7 +503,7 @@ theorem vOp_hasSum (q : ℕ) (f : ℍ → ℂ) (a : ℕ → ℂ) (hq : 0 < q)
   have hc : (τ' : ℂ) = (q : ℂ) * τ := by
     rw [hτ', ofComplex_apply_of_im_pos him]
   have hqp : Function.Periodic.qParam 1 (τ' : ℂ) = Function.Periodic.qParam 1 (τ : ℂ) ^ q := by
-    simp only [Function.Periodic.qParam, hc, ← Complex.exp_nat_mul]
+    simp only [Function.Periodic.qParam, hc, ← Complex.exp_natCast_mul]
     congr 1; push_cast; ring
   have h1 := hf τ'
   unfold vOp
@@ -516,7 +516,7 @@ theorem vOp_hasSum (q : ℕ) (f : ℍ → ℂ) (a : ℕ → ℂ) (hq : 0 < q)
     simp [this]
   · convert h1 using 1
     funext m
-    simp only [Function.comp, dvd_mul_right, if_true, Nat.mul_div_cancel_left _ hq, hqp, ← pow_mul]
+    simp only [Function.comp, dvd_mul_right, ite_true, Nat.mul_div_cancel_left _ hq, hqp, ← pow_mul]
 
 end GlobalTheory.Hk
 end -- clump:auto
@@ -539,7 +539,7 @@ theorem hasSum_cuspFunction_of_hasSum {f : ℍ → ℂ} {a : ℕ → ℂ}
     HasSum (fun m => a m • q ^ m) (cuspFunction 1 f q) := by
   have h1 := Function.Periodic.im_invQParam_pos_of_norm_lt_one one_pos hq1 hq0
   let τ : ℍ := ⟨Function.Periodic.invQParam 1 q, h1⟩
-  have h2 := Function.Periodic.cuspFunction_eq_of_nonzero 1 (f ∘ ofComplex) hq0
+  have h2 := Function.Periodic.cuspFunction_eq_of_ne_zero 1 (f ∘ ofComplex) hq0
   have h3 : cuspFunction 1 f q = f τ := by
     simpa [cuspFunction, UpperHalfPlane.ofComplex_apply_of_im_pos h1] using h2
   have h4 : Function.Periodic.qParam 1 (τ : ℂ) = q :=
@@ -702,21 +702,21 @@ lemma heckeT_coeff_formula_comm_distinct_primes {q r : ℕ} (hq : q.Prime) (hr :
     have d2 : r * n / q = r * (n / q) := Nat.mul_div_assoc r hqn
     have d3 : n / r / q = n / q / r := by
       rw [Nat.div_div_eq_div_mul, Nat.div_div_eq_div_mul, mul_comm]
-    simp only [hqn, hrn, i3, i4, if_true, d1, d2, d3]
+    simp only [hqn, hrn, i3, i4, ite_true, d1, d2, d3]
     ring
   · have i3 : ¬ r ∣ n / q := by
       intro h
       exact hrn (h.trans (Nat.div_dvd_of_dvd hqn))
     have d2 : r * n / q = r * (n / q) := Nat.mul_div_assoc r hqn
-    simp only [hqn, hrn, i3, if_true, if_false, d2]
+    simp only [hqn, hrn, i3, ite_true, ite_false, d2]
     ring
   · have i4 : ¬ q ∣ n / r := by
       intro h
       exact hqn (h.trans (Nat.div_dvd_of_dvd hrn))
     have d1 : q * n / r = q * (n / r) := Nat.mul_div_assoc q hrn
-    simp only [hqn, hrn, i4, if_true, if_false, d1]
+    simp only [hqn, hrn, i4, ite_true, ite_false, d1]
     ring
-  · simp only [hqn, hrn, if_false]
+  · simp only [hqn, hrn, ite_false]
     ring
 
 theorem heckeT_comm : ∀ (N l q r : ℕ) (k : ℤ) (σ τ : SL(2, ℤ)), 0 < N → q.Prime → r.Prime →
@@ -1243,7 +1243,7 @@ theorem dict_hk : ∀ (N l w : ℕ) (α : Matrix (Fin 2) (Fin 2) ℤ) (ι : Type
     exact ⟨_, fun z hz => incr hdet hF ⟨γ, hγ⟩ π g hg z hz⟩
   · funext γ
     have hex := exists_perm hδ γ
-    simp only [GlobalTheory.HeckeFamilyMatrices.hk, LinearMap.pi_apply, dif_pos hex, LinearMap.sum_apply, Finset.sum_apply,
+    simp only [GlobalTheory.HeckeFamilyMatrices.hk, LinearMap.pi_apply, dite_eq_left hex, LinearMap.sum_apply, Finset.sum_apply,
       LinearMap.comp_apply, LinearMap.proj_apply]
 
     rw [cocP, incr hdet hF γ hex.choose (fun i => (hex.choose_spec i).choose)
@@ -1436,7 +1436,7 @@ theorem ssPotB_at_newform : ∀ (k : ℕ) (g : UpperTheory.V.Af.Newform k) (N l 
   intro k g N l hN hN5 hl hlN hk hk3 α hα h1 h2 lam hlT hlU hlD
   have hN0 : 0 < N := by omega
   have hl0 : 0 < l := hl.pos
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   obtain ⟨hsg, -, -, -⟩ := _root_.GlobalTheory.KZ.DiamondOperatorFamilies.sgD_fams N l hN0 hl hlN
   obtain ⟨rT, rU, rD⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.CosetReps.dcReps_level N l hN5 hl hlN
   have hcopq : ∀ q, q.Prime → ¬ q ∣ N * l → Nat.Coprime q N := fun q hq hqN =>
@@ -1531,7 +1531,7 @@ theorem ssPotB_at_newform : ∀ (k : ℕ) (g : UpperTheory.V.Af.Newform k) (N l 
     | D d =>
       have hd : Nat.Coprime d N := ht
       refine (key (fun u => if (u : ZMod N) = (d : ZMod N) then d else (u : ZMod N).val) ?_ ?_ z hz n hgen).2.2
-        (ZMod.unitOfCoprime d hd) d (if_pos (ZMod.coe_unitOfCoprime d hd))
+        (ZMod.unitOfCoprime d hd) d (ite_eq_left (ZMod.coe_unitOfCoprime d hd))
       · intro u; split_ifs
         · exact hd
         · exact hval1 u

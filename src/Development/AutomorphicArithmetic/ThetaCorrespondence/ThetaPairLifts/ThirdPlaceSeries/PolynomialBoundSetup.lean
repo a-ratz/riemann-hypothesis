@@ -214,8 +214,8 @@ theorem main : Formalism.GaloisCohomology.LocalTateDualityK → Formalism.Galois
   fun _ _ D i _ w hw C =>
     by
       classical
-      haveI := (D.nbr i w hw).Kw.2
-      haveI := C.LL.2
+      have := (D.nbr i w hw).Kw.2
+      have := C.LL.2
       exact @GlobalTheory.BlochKatoTied.blochKatoDim_of_tied (D.nd.l i) _ (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) (D.locT (D.nd.l i)) (D.nbr i w hw).Kw C.LL _
 
 end GlobalTheory.InertiaEigenvalues.DimAtQD
@@ -293,7 +293,7 @@ namespace GlobalTheory
 
 theorem elementDenominator_adm7 : ∀ D : D7, Formalism.MainNotions.ElementDenominator.adm7 D := by
   intro D l _ _ K LL _ T _
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   exact @_root_.GlobalTheory.H1fGeneration.h1fGen_tied l _ (D.loc l) (D.locA l) (D.locT l) K LL (Fintype.ofFinite _) T _
 
 end GlobalTheory
@@ -407,11 +407,11 @@ theorem tb_of_localW : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW
     have hWY := hWs Y M0 h0 hcjY.1 hJY.1
     have hJYt := hJC C hs Yt hcrys hjmp
     have hCt := (hWs Yt M0 h0 hcrys hJYt.1).1
-    haveI : IsTopologicalRing (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).LL :=
+    have : IsTopologicalRing (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).LL :=
       inferInstanceAs (IsTopologicalRing ↥C.LL.1)
-    haveI : IsDomain (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).O :=
+    have : IsDomain (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).O :=
       inferInstanceAs (IsDomain ↥(OL C.LL))
-    haveI : IsPrincipalIdealRing (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).O :=
+    have : IsPrincipalIdealRing (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).O :=
       inferInstanceAs (IsPrincipalIdealRing ↥(OL C.LL))
     exact GlobalTheory.TBLocal.tb_part1 (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs)
       Yt p e₀ hpe hp hint he₀ Subtype.val_injective _ hTB e M0 h0 cB VeL hE.1 hE.2 hCt hWY (hJY.2 e he) φ hφ
@@ -462,9 +462,9 @@ theorem jointCond_at_qd (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (HW (D.nd.l i)).W_s _ 1 _ hs
   have hell : LocalSituation.ell (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs) = D.nd.l i :=
     (D.loc (D.nd.l i)).PD_p _
-  haveI : CharZero (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).Qp :=
+  have : CharZero (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).Qp :=
     inferInstanceAs (CharZero ℚ_[D.nd.l i])
-  haveI : FiniteDimensional (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).Qp
+  have : FiniteDimensional (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).Qp
       (LocalSituation.sit D.loc HW (D.nd.l i) (D.locA (D.nd.l i)) (D.nbr i w hw).Kw 1 C.LL hs).K := (D.nbr i w hw).Kw.2
   have hcard : Nat.card (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥C.LL.1) =
       Module.finrank ℚ_[D.nd.l i] ↥(D.nbr i w hw).Kw.1 :=
@@ -759,8 +759,8 @@ theorem sub_one_le_two_mul_finrank (E : Type) [Field E] [NumberField E] (l : ℕ
     (hram : ∀ v ∈ placesOver E l, v.asIdeal.ramificationIdx ℤ = 2) :
     l - 1 ≤ 2 * Module.finrank E (CyclotomicField l E) := by
   classical
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have : Fact l.Prime := ⟨hl⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
   set L := CyclotomicField l E
   set k := Module.finrank E L with hk
   have hkpos : 0 < k := Module.finrank_pos
@@ -820,7 +820,7 @@ theorem sub_one_le_two_mul_finrank (E : Type) [Field E] [NumberField E] (l : ℕ
       rw [hQ]; exact Ideal.mem_span_singleton_self _
     rwa [Ideal.mem_comap, map_natCast] at h1
   have hram2 : Q.ramificationIdx ℤ = 2 := hram v hv
-  haveI : Q.LiesOver (Ideal.span {(l : ℤ)}) := ⟨hQ.symm⟩
+  have : Q.LiesOver (Ideal.span {(l : ℤ)}) := ⟨hQ.symm⟩
   have hmap : Ideal.map (algebraMap ℤ (𝓞 E)) (Ideal.span {(l : ℤ)}) = Ideal.span {(l : 𝓞 E)} := by
     rw [Ideal.map_span, Set.image_singleton, map_natCast]
   have hne : Ideal.span {(l : 𝓞 E)} ≠ ⊥ := by
@@ -921,7 +921,7 @@ theorem jump_windows (η Sc b : ℝ) (t : ℕ) (hη : 0 < η) (hS : 0 < Sc) (ht 
       refine ⟨p, key _ _ hS.le ?_⟩
       push_cast at q ⊢; linarith
     refine ⟨false, (s + 1).toNat, by omega, fun a ha => ?_, fun a ha hj => ?_⟩
-    · simp only [ElementDenominator.deep, Bool.false_eq_true, if_false, Set.mem_union, Set.mem_Icc]
+    · simp only [ElementDenominator.deep, Bool.false_eq_true, ite_false, Set.mem_union, Set.mem_Icc]
       rcases ha with ha | ha | ha
       · have := hc' a ha
         omega
@@ -937,7 +937,7 @@ theorem jump_windows (η Sc b : ℝ) (t : ℕ) (hη : 0 < η) (hS : 0 < Sc) (ht 
       refine ⟨q, key _ _ hS.le ?_⟩
       push_cast at p ⊢; linarith
     refine ⟨true, (s - 1).toNat, by omega, fun a ha => ?_, fun a ha hj => ?_⟩
-    · simp only [ElementDenominator.deep, if_true, Set.mem_union, Set.mem_Icc]
+    · simp only [ElementDenominator.deep, ite_true, Set.mem_union, Set.mem_Icc]
       rcases ha with ha | ha | ha
       · have := hc' a ha
         omega
@@ -1481,10 +1481,10 @@ theorem mem_JJ (up : Bool) (j : ℕ) (ρ : D.what₂.Tau) (a : ℤ) : (a : ℚ) 
     (a : ℚ) ∈ cloudT D up j ρ ∨ (a : ℚ) ∈ lowT D up j ρ ∨ (0 ≤ a ∧ a < D.R.t) := by
   cases up
   · rw [← mem_reflS_blockJ]
-    simp only [JJ, cloudT, lowT, Bool.false_eq_true, if_false, Jm, Jp, reflS, Set.mem_setOf_eq, Set.mem_union]
+    simp only [JJ, cloudT, lowT, Bool.false_eq_true, ite_false, Jm, Jp, reflS, Set.mem_ofPred_eq, Set.mem_union]
     tauto
   · rw [← mem_blockJ]
-    simp only [JJ, cloudT, lowT, if_true, Jp, Set.mem_union]
+    simp only [JJ, cloudT, lowT, ite_true, Jp, Set.mem_union]
     tauto
 
 theorem sz_bounds (L : SizeData₂ D) (P : ParameterChoice' D L) (hP : AdmPar L) (j : ℕ) (hj1 : 1 ≤ j) (hj2 : j ≤ D.R.m)
@@ -1561,7 +1561,7 @@ theorem typeU_of_emb (i : D.nd.Loc) {w : HeightOneSpectrum (𝓞 D.host.E)}
   have hgg : g = g' := (factEmb D.R D.host).1.1 (RingHom.ext hemb)
   subst hgg
   cases e
-  · simp only [EmbeddingTypeJumps.EmbTypeUe, Bool.false_eq_true, if_false] at h0
+  · simp only [EmbeddingTypeJumps.EmbTypeUe, Bool.false_eq_true, ite_false] at h0
     obtain ⟨-, φ, hφ, hφr⟩ := h0
     show (g ∈ D.R.Psi ↔ false = true)
     simp only [Bool.false_eq_true, iff_false]
@@ -1576,12 +1576,12 @@ theorem typeU_of_emb (i : D.nd.Loc) {w : HeightOneSpectrum (𝓞 D.host.E)}
     have hd : (0 : ℝ) < Real.sqrt (D.host.d : ℝ) := by
       have := D.host.qd_big.2
       exact Real.sqrt_pos.2 (by exact_mod_cast (by omega : 0 < D.host.d))
-    simp only [Formalism.HC.HostRaw.cmType, Set.mem_ofPred_eq, Set.mem_setOf_eq] at hm hφ
+    simp only [Formalism.HC.HostRaw.cmType, Set.mem_ofPred_eq, Set.mem_ofPred_eq] at hm hφ
     rw [hm, hφ] at hv
     have him := congrArg Complex.im hv
     simp at him
     linarith
-  · simp only [EmbeddingTypeJumps.EmbTypeUe, if_true] at h0
+  · simp only [EmbeddingTypeJumps.EmbTypeUe, ite_true] at h0
     show (g ∈ D.R.Psi ↔ true = true)
     simp only [iff_true]
     exact hU.1 h0

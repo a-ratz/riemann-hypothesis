@@ -1023,7 +1023,7 @@ theorem pure_smul (f : SInf F κ) {φ : ∀ v : Pl F, (κ → Fv F v) → ℂ} (
   funext x
   have hm : (Function.mulSupport m).Finite := eventually_cofinite.1 h1
   have hm' : (Function.mulSupport fun v => (m v)⁻¹).Finite := hm.subset fun v hv h => hv (by simp only [h, inv_one])
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_eq_mul, SchwartzMap.smul_apply]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_eq_mul, smul_apply]
   rw [finprod_mul_distrib hm' (hφ.finite x)]
   have : (∏ᶠ v, m v) * ∏ᶠ v, (m v)⁻¹ = 1 := by
     rw [← finprod_mul_distrib hm hm']
@@ -1112,7 +1112,7 @@ theorem vac_line (B : Base F E) {r s r' s' : ℕ} (hB : B.IsGood σ) (hX : X.IsH
     intro f hf hA l hl ξ
     have h : ∃ γ ∈ latAtV X W v, GlobalTheory.LatVac.locCo M.co v γ = l := AddSubgroup.mem_map.mp hl
     have key := congrFun (schr_of_acts M B.ψ h.choose_spec.1 hf (hA _ h.choose_spec.1)) ξ
-    simp only [χ, dif_pos h]
+    simp only [χ, dite_eq_left h]
     rw [h.choose_spec.2, schr, invOf_eq_inv] at key
     exact key
   obtain ⟨c, hc0, hcb⟩ := GlobalTheory.LatBound.locCo_latAtV_bounded X W v M.co hX.lat.toIsLattice hW.lat.toIsLattice

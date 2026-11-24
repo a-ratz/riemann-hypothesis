@@ -96,7 +96,7 @@ theorem rieszOnRange (E H : Type*) [AddCommGroup E] [Module ℂ E]
     have := hf ⟨θ e, LinearMap.mem_range_self θ e⟩
     simpa [φc, hφ e] using this
   set K := R.topologicalClosure with hK
-  haveI : CompleteSpace K := R.isClosed_topologicalClosure.completeSpace_coe
+  have : CompleteSpace K := R.isClosed_topologicalClosure.completeSpace_coe
   refine ⟨K.starProjection v, K.starProjection_apply_mem v, ?_, ?_⟩
   · have h3 : ‖K.starProjection v‖ ≤ Real.sqrt A := (K.norm_starProjection_apply_le v).trans hvnorm
     calc ‖K.starProjection v‖ ^ 2 ≤ Real.sqrt A ^ 2 := by gcongr

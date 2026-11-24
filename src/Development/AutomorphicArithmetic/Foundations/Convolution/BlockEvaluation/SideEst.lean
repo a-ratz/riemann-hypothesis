@@ -161,19 +161,19 @@ theorem UpperTheory.ConvolutionTheory.Ci.sideEst :
   rw [es]
   refine key.trans ?_
   have hw : ‖𝔰.Uq 0‖ ^ (j + m') ≤ Real.exp (lu * ((j + m' : ℕ) : ℝ)) := by
-    rw [mul_comm, Real.exp_nat_mul]
+    rw [mul_comm, Real.exp_natCast_mul]
     exact pow_le_pow_left₀ (norm_nonneg _) hlu _
   have hdf : (0 : ℝ) < d.factorial := by exact_mod_cast d.factorial_pos
   have a1 : ‖𝔰.Uq 0‖ ^ (j + m') * Real.exp (C * ((j + m' : ℕ) : ℝ)) ^ N ≤
       Real.exp ((N * C + lu) * j) * Real.exp ((N * C + lu) * s₀) := by
     refine (mul_le_mul_of_nonneg_right hw (by positivity)).trans ?_
-    rw [← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]
     refine Real.exp_le_exp.2 ?_
     have := mul_le_mul_of_nonneg_left hJ2 hc₁
     linarith
   have a2 : ‖𝔰.Uq 0‖ ^ (j + m') * (Real.exp (C * ((j + m' : ℕ) : ℝ)) ^ N')⁻¹ ≤ Real.exp (-N₁ * j) := by
     refine (mul_le_mul_of_nonneg_right hw (by positivity)).trans ?_
-    rw [← Real.exp_nat_mul, ← Real.exp_neg, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_neg, ← Real.exp_add]
     refine Real.exp_le_exp.2 ?_
     have b1 : (N' : ℝ) * ((j + m' : ℕ) : ℝ) ≤ N' * (C * ((j + m' : ℕ) : ℝ)) :=
       mul_le_mul_of_nonneg_left (le_mul_of_one_le_left hJ0 hC1) (Nat.cast_nonneg _)

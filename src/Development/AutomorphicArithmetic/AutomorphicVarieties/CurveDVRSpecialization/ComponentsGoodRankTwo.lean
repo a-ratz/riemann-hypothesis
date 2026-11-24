@@ -156,8 +156,8 @@ private theorem at_pt (hF : F.Ok C₀) (hB : F.Big C₀) {S : Space O F 2} {M : 
       ((∃ I ∈ (ld M L).Good, I ∈ (ld M L).TI ∧ ((ld M L).D1 : WithBot ℕ∞) ≤ qdim I.asIdeal) →
         ∃ Y, (gd S M).CompI Y ∧ Y ⊆ (gd S M).Good) := by
   obtain ⟨hc, ht⟩ := sharp2 hF S x.asIdeal L hB hx
-  letI : Algebra S.A L.R := (L.ι : S.A →+* L.R).toAlgebra
-  haveI : Module.Flat S.A L.R := (loc_flat hF (Or.inl rfl) S x.asIdeal L).1
+  let : Algebra S.A L.R := (L.ι : S.A →+* L.R).toAlgebra
+  have : Module.Flat S.A L.R := (loc_flat hF (Or.inl rfl) S x.asIdeal L).1
   have ch := chartOfFlat (PrimeSpectrum S.A) S.A id Topology.IsOpenEmbedding.id L.R
   have hpt : id (PrimeSpectrum.comap (algebraMap S.A L.R) (closedPoint L.R)) = x := PrimeSpectrum.ext L.lies
   rw [hpt] at ch
@@ -174,7 +174,7 @@ end
 theorem UpperTheory.V.Pr.components_good_rank_two :
     UpperTheory.V.Pr.PropagationTheoremGL2 := by
   intro l _ O _ _ _ _ F C₀ hF hB S M hM h1 hS
-  haveI : IsNoetherianRing S.A := (gr_A hF (Or.inl rfl) S).2.2.2.2.2.1
+  have : IsNoetherianRing S.A := (gr_A hF (Or.inl rfl) S).2.2.2.2.2.1
   have hok : (gd S M).Ok := by
     refine ⟨fun p hp => hp.1, preconnected_rank_two hF S, ?_, ?_, ?_, ?_, ?_, ?_⟩
     · rintro C hC ⟨p, hp, hp'⟩

@@ -116,7 +116,7 @@ theorem hasDerivAt_aevalTower_line {R ι : Type*} [CommRing R] [Algebra 𝕜 R] 
       by_cases hij : i = j
       · subst hij; simp; ring
       · simp [hij, Pi.single_eq_of_ne hij]; ring
-    simp only [h1, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+    simp only [h1, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
       ← Finset.sum_mul]
     simp
 
@@ -128,8 +128,8 @@ theorem exists_openPartialHomeomorph_analytic {E F : Type*} [NormedAddCommGroup 
     (hΨ : AnalyticAt 𝕜 Ψ x) (hinj : Function.Injective (fderiv 𝕜 Ψ x)) :
     ∃ Φ : OpenPartialHomeomorph E F, (Φ : E → F) = Ψ ∧ x ∈ Φ.source ∧
       AnalyticOnNhd 𝕜 Φ.symm Φ.target := by
-  haveI : CompleteSpace E := FiniteDimensional.complete 𝕜 E
-  haveI : CompleteSpace F := FiniteDimensional.complete 𝕜 F
+  have : CompleteSpace E := FiniteDimensional.completeSpace 𝕜 E
+  have : CompleteSpace F := FiniteDimensional.completeSpace 𝕜 F
   have hsurj : Function.Surjective (fderiv 𝕜 Ψ x) :=
     (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hdim
       (f := (fderiv 𝕜 Ψ x : E →ₗ[𝕜] F))).mp hinj
@@ -151,14 +151,14 @@ theorem exists_chart_of_etale (g : MvPolynomial (Fin d) 𝕜 →ₐ[𝕜] A) (hg
       (e : (A →ₐ[𝕜] 𝕜) → Fin d → 𝕜) = coords g ∧
       ∀ a, AnalyticOnNhd 𝕜 (fun z => e.symm z a) e.target := by
   classical
-  letI : Algebra (MvPolynomial (Fin d) 𝕜) A := g.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin d) 𝕜) A := hg
-  haveI : IsScalarTower 𝕜 (MvPolynomial (Fin d) 𝕜) A :=
+  let : Algebra (MvPolynomial (Fin d) 𝕜) A := g.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin d) 𝕜) A := hg
+  have : IsScalarTower 𝕜 (MvPolynomial (Fin d) 𝕜) A :=
     IsScalarTower.of_algebraMap_eq fun x => (g.commutes x).symm
   obtain ⟨ι, σ, _, _, P, hP⟩ := (Algebra.Etale.iff_isStandardSmoothOfRelativeDimension_zero.1
     ‹Algebra.Etale (MvPolynomial (Fin d) 𝕜) A›).out
-  letI := Fintype.ofFinite ι
-  letI := Fintype.ofFinite σ
+  let := Fintype.ofFinite ι
+  let := Fintype.ofFinite σ
   have hcard : Fintype.card σ = Fintype.card ι := by
     have := P.card_relations_le_card_vars_of_isFinite
     simp only [Algebra.Presentation.dimension, Nat.card_eq_fintype_card] at this hP

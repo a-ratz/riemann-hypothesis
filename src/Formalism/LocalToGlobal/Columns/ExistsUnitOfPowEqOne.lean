@@ -68,7 +68,7 @@ theorem residueField_equiv_zmod {X : Fields} (w : IsDedekindDomain.HeightOneSpec
     rw [← hw, Ideal.absNorm_apply, Submodule.cardQuot_apply]
   have : Finite (𝓞 X.E ⧸ w.asIdeal) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact (Fact.out : g.Prime).ne_zero)
-  letI : Fintype (𝓞 X.E ⧸ w.asIdeal) := Fintype.ofFinite _
+  let : Fintype (𝓞 X.E ⧸ w.asIdeal) := Fintype.ofFinite _
   have hc' : Fintype.card (𝓞 X.E ⧸ w.asIdeal) = g := by rw [← Nat.card_eq_fintype_card, hc]
   have : CharP (𝓞 X.E ⧸ w.asIdeal) g := charP_of_card_eq_prime hc'
   exact ⟨(ZMod.ringEquiv _ hc').symm⟩

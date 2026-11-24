@@ -92,8 +92,8 @@ theorem weilIs_powPull : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommMon
     unfold DiagPairing.pc
     rw [← sub_eq_zero, ← e]
     abel
-  haveI := isMonHom_id_pow A a
-  haveI := isMonHom_id_pow A b
+  have := isMonHom_id_pow A a
+  have := isMonHom_id_pow A b
   let ψ : G2 A ⟶ G2 A := lift (fst A A ≫ (𝟙 A) ^ a) (snd A A ≫ (𝟙 A) ^ b)
   have e : ∀ {T : Over S} (u v : T ⟶ A), lift u v ≫ ψ = lift (u ^ a) (v ^ b) := fun u v => by
     simp only [ψ, comp_lift, ← Category.assoc, MonObj.comp_pow, Category.comp_id, lift_fst, lift_snd]

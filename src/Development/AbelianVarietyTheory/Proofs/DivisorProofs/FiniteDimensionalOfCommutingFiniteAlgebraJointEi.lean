@@ -69,11 +69,11 @@ theorem fd_inf_ker_mul (N : Submodule ℂ M) (f g : Module.End ℂ M) (hf : ∀ 
   · have hle : (N ⊓ LinearMap.ker (g * f)).map f ≤ N ⊓ LinearMap.ker g := by
       rintro _ ⟨v, ⟨hvN, hv⟩, rfl⟩
       exact ⟨hf v hvN, by simpa [LinearMap.mem_ker] using hv⟩
-    haveI := Submodule.finiteDimensional_of_le hle
+    have := Submodule.finiteDimensional_of_le hle
     exact (Submodule.fg_iff_finiteDimensional _).2 inferInstance
   · have hle : N ⊓ LinearMap.ker (g * f) ⊓ LinearMap.ker f ≤ N ⊓ LinearMap.ker f :=
       fun v hv => ⟨hv.1.1, hv.2⟩
-    haveI := Submodule.finiteDimensional_of_le hle
+    have := Submodule.finiteDimensional_of_le hle
     exact (Submodule.fg_iff_finiteDimensional _).2 inferInstance
 
 theorem adjoin_preserves (N : Submodule ℂ M) (s : Set (Module.End ℂ M)) (hs : ∀ u ∈ s, ∀ v ∈ N, u v ∈ N)
@@ -127,7 +127,7 @@ theorem fd_of_finset (T : Finset (Module.End ℂ M)) (hc : ∀ u ∈ T, ∀ w �
   induction T using Finset.induction_on with
   | empty =>
     intro N _ h
-    haveI := h 0
+    have := h 0
     refine Submodule.finiteDimensional_of_le (S₂ := N ⊓ ⨅ u ∈ (∅ : Finset (Module.End ℂ M)),
       LinearMap.ker (u - algebraMap ℂ (Module.End ℂ M) ((0 : Module.End ℂ M → ℂ) u))) ?_
     intro v hv
@@ -152,7 +152,7 @@ theorem fd_of_finset (T : Finset (Module.End ℂ M)) (hc : ∀ u ∈ T, ∀ w �
         rw [LinearMap.sub_apply, Module.algebraMap_end_apply] at h2 ⊢
         rw [← Module.End.mul_apply, hcom, Module.End.mul_apply, ← map_smul, ← map_sub, h2, map_zero]
       · intro c
-        haveI := h (Function.update c t μ)
+        have := h (Function.update c t μ)
         refine Submodule.finiteDimensional_of_le (S₂ := N ⊓ ⨅ u ∈ insert t T,
           LinearMap.ker (u - algebraMap ℂ (Module.End ℂ M) (Function.update c t μ u))) ?_
         intro v hv
@@ -178,7 +178,7 @@ theorem finiteDimensional_of_commuting_finite_eigen :
       FiniteDimensional ℂ M := by
   intro M _ _ S hS hB hE
   classical
-  letI : IsMulCommutative (Algebra.adjoin ℂ S) :=
+  let : IsMulCommutative (Algebra.adjoin ℂ S) :=
     Algebra.isMulCommutative_adjoin ℂ (fun x hx y hy _ => hS x hx y hy)
   have hcomm : ∀ x ∈ Algebra.adjoin ℂ S, ∀ y ∈ Algebra.adjoin ℂ S, x * y = y * x := by
     intro x hx y hy
@@ -212,7 +212,7 @@ theorem finiteDimensional_of_commuting_finite_eigen :
       exact ⟨μ₁ * μ₂, fun v hv => by
         rw [Module.End.mul_apply, h₂ v hv, map_smul, h₁ v hv, smul_smul, mul_comm]⟩
   let c' : Module.End ℂ M → ℂ := fun s => if h : s ∈ Algebra.adjoin ℂ S then Classical.choose (scal s h) else 0
-  haveI := hE c'
+  have := hE c'
   refine Submodule.finiteDimensional_of_le
     (S₂ := ⨅ s ∈ S, LinearMap.ker (s - algebraMap ℂ (Module.End ℂ M) (c' s))) ?_
   intro v hv
@@ -220,7 +220,7 @@ theorem finiteDimensional_of_commuting_finite_eigen :
   simp only [Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, Module.algebraMap_end_apply, sub_eq_zero]
   intro s hs
   have hsA : s ∈ Algebra.adjoin ℂ S := Algebra.subset_adjoin hs
-  simp only [c', dif_pos hsA]
+  simp only [c', dite_eq_left hsA]
   exact Classical.choose_spec (scal s hsA) v hv
 
 end GlobalTheory.AutGrowth

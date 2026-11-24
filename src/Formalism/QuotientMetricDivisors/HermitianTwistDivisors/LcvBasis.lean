@@ -209,7 +209,7 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
   have hM0S : M0 ∈ S := hM0.1
   have hmin : ∀ M, N < M → M ≤ M0 → M = M0 := fun M h1 h2 =>
     le_antisymm h2 (hM0.2 ⟨h1, h2.trans hM0S.2⟩ h2)
-  obtain ⟨a, haM0, haN⟩ := SetLike.exists_of_lt hM0S.1
+  obtain ⟨a, haM0, haN⟩ := IsConcreteLE.exists_of_lt hM0S.1
   have hstep : ∀ b ∈ M0, b ∉ N → N ⊔ Submodule.span (𝓞 K) {b} = M0 := by
     intro b hb hbN
     apply hmin
@@ -285,10 +285,10 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
     rw [hM0eq]
     by_cases hw : w = w0
     · have hwp : w.asIdeal = p := by rw [hw]
-      rw [if_pos hw]
+      rw [ite_eq_left hw]
       have := len_on (N := N) (a := a) w.asIdeal (hwp ▸ hpmax) (fun r => by rw [hwp]; exact hp r)
       rw [this]; rfl
-    · rw [if_neg hw]
+    · rw [ite_eq_right hw]
       have hwp : w.asIdeal ≠ p := fun h => hw (HeightOneSpectrum.ext h)
       have := len_off (N := N) (a := a) hpmax hp w.asIdeal w.isMaximal.ne_top hwp
       rw [this]; rfl
@@ -313,7 +313,7 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
     by_cases h : w = w0
     · exact Or.inr h
     · left
-      rw [if_neg h, zero_add] at hw
+      rw [ite_eq_right h, zero_add] at hw
       exact hw
   · have hsum : (fun w : HeightOneSpectrum (𝓞 K) =>
         Real.log (Ideal.absNorm w.asIdeal : ℝ) * (locLen w.asIdeal A N : ℝ)) =
@@ -322,7 +322,7 @@ theorem key (A : Submodule (𝓞 K) V) : ∀ (n : ℕ) (N : Submodule (𝓞 K) V
       funext w
       rw [hlen w]; push_cast; ring
     rw [hsum, finsum_add_distrib, ← ihlog, finsum_eq_single _ w0]
-    · rw [if_pos rfl, ← hprod]
+    · rw [ite_eq_left rfl, ← hprod]
       push_cast
       rw [Real.log_mul (by exact_mod_cast hN0) (by exact_mod_cast hm0)]
       simp [w0]
@@ -350,7 +350,7 @@ theorem exists_int_mul {d : ℕ} (L : Submodule (𝓞 K) (Fin d → K))
   classical
   obtain ⟨s, hsL, hspan, hli⟩ := exists_linearIndependent K (L : Set (Fin d → K))
   have hfin : s.Finite := hli.setFinite
-  haveI : Fintype s := hfin.fintype
+  have : Fintype s := hfin.fintype
   let f : Basis s K (Fin d → K) := Basis.mk hli (by rw [Subtype.range_coe, hspan, hsp])
   have hf : ∀ j, f j ∈ L := fun j => by rw [Basis.mk_apply]; exact hsL j.2
   obtain ⟨y, hy, hint⟩ := exists_integral_multiples ℤ ℚ

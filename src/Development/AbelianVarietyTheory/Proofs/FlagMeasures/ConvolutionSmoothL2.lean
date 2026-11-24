@@ -182,7 +182,7 @@ theorem local_mass_le : ∀ (B : RowsAut) (U : Set B.I.GA), 1 ≤ B.I.n → IsCo
     intro y
     have h := hfund.2.1 y
     have e : B.I.rep B.fund y = h.choose * y := by
-      unfold AutInst.rep; exact dif_pos h
+      unfold AutInst.rep; exact dite_eq_left h
     have hm : h.choose ∈ (Γ : Set B.I.GA) := by
       have k := h.choose_spec.1
       generalize h.choose = z at k ⊢
@@ -218,7 +218,7 @@ theorem local_mass_le : ∀ (B : RowsAut) (U : Set B.I.GA), 1 ≤ B.I.n → IsCo
   simp only [mul_inv_cancel_left] at h1
   rw [← h1]
   have h2 := setLIntegral_le_mul hD (f := fun g => (‖B.I.ext y g‖₊ : ℝ≥0∞) ^ 2)
-    (hmeas.enorm.pow_const 2)
+    (hmeas.eNorm.pow_const 2)
     (hinv.mono fun z hz γ => by rw [hz γ (hΓ ▸ γ.2)]) hSm (ENNReal.ofReal N) ENNReal.ofReal_ne_top
     (fun z => by
       have := encard_le Γ U {γ ∈ B.I.GFset | (x⁻¹ * γ * x).2 ∈ B.I.Kset ∧
@@ -240,8 +240,8 @@ theorem local_mass_le : ∀ (B : RowsAut) (U : Set B.I.GA), 1 ≤ B.I.n → IsCo
     refine lintegral_congr_ae ((GlobalTheory.RightRegFund.ae_rep_eq_self hD hfund.1 hr).mono fun z hz => ?_)
     simp only [AutInst.ext, hz]
     rw [ENNReal.rpow_two]; rfl
-  rw [h3, ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm, Lp.enorm_def,
-    eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num), ← ENNReal.rpow_natCast,
+  rw [h3, ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm, Lp.eNorm_def,
+    eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num), ← ENNReal.rpow_natCast,
     ← ENNReal.rpow_mul]
   norm_num
   exact Lp.aestronglyMeasurable y
@@ -472,7 +472,7 @@ theorem exists_retraction {n : ℕ} {ε : Fin n → Bool} (x : UJ ε) :
     if h : (1 + skew ε (cay (t Y))).det ≠ 0 then (hex Y h).choose else 1
   have hr : ∀ Y, (1 + skew ε (cay (t Y))).det ≠ 0 → uMat (r Y) = cay (skew ε (cay (t Y))) := by
     intro Y hY
-    simp only [r, dif_pos hY]
+    simp only [r, dite_eq_left hY]
     exact (hex Y hY).choose_spec
   refine ⟨fun Y => x * r Y, ?_⟩
   filter_upwards [hev.eventually_nhds] with Y hY
@@ -599,7 +599,7 @@ theorem integrableOn_of_sq {X : Type} [MeasurableSpace X] (μ : Measure X) (U : 
     (hb : ∫⁻ g in U, (‖h g‖₊ : ENNReal) ^ 2 ∂μ ≤ ENNReal.ofReal (c ^ 2)) :
     IntegrableOn h U μ ∧ ∫ g in U, ‖h g‖ ∂μ ≤ c * Real.sqrt (μ U).toReal := by
   have h2 : eLpNorm h 2 (μ.restrict U) ≤ ENNReal.ofReal c := by
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num)]
+    rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num)]
     have e : ENNReal.ofReal c = (ENNReal.ofReal (c ^ 2)) ^ (1 / (2 : ENNReal).toReal) := by
       rw [ENNReal.ofReal_pow hc, ← ENNReal.rpow_natCast, ← ENNReal.rpow_mul]
       norm_num
@@ -619,10 +619,10 @@ theorem integrableOn_of_sq {X : Type} [MeasurableSpace X] (μ : Measure X) (U : 
     rw [Real.sqrt_eq_rpow, ← ENNReal.ofReal_rpow_of_nonneg ENNReal.toReal_nonneg (by norm_num),
       ENNReal.ofReal_toReal hU]
     norm_num
-  rw [eLpNorm_one_eq_lintegral_enorm] at e3
+  rw [eLpNorm_one_eq_lintegral_eNorm] at e3
   have hi : IntegrableOn h U μ := ⟨hm.restrict, lt_of_le_of_lt e3 ENNReal.ofReal_lt_top⟩
   refine ⟨hi, ?_⟩
-  rw [integral_norm_eq_lintegral_enorm hm.restrict]
+  rw [integral_norm_eq_lintegral_eNorm hm.restrict]
   · exact ENNReal.toReal_le_of_le_ofReal (by positivity) e3
   · exact hm.restrict
 
@@ -645,7 +645,7 @@ theorem continuous_of_smoothInf (I : AutInst) (a : I.Ginf → ℂ) (ha : SmoothI
   have hc : Continuous fun g : I.Ginf => (fun v i j => uMat (g v) i j :
       InfinitePlace I.F → Fin I.n → Fin I.n → ℂ) := by
     refine continuous_pi fun v => continuous_pi fun i => continuous_pi fun j => ?_
-    have h1 : Continuous fun g : UJ (I.ε v) => uMat g := Units.continuous_val.comp continuous_subtype_val
+    have h1 : Continuous fun g : UJ (I.ε v) => uMat g := Units.continuous_val.comp continuous_subtypeVal
     exact (h1.comp (continuous_apply v)).matrix_elem i j
   exact (hF.continuousAt.comp (f := fun g : I.Ginf => (fun v i j => uMat (g v) i j :
       InfinitePlace I.F → Fin I.n → Fin I.n → ℂ)) hc.continuousAt).congr (he.mono fun _ h => h.symm)
@@ -727,7 +727,7 @@ theorem inv_tau_le (I : AutInst) (hn : 1 ≤ I.n) (h1 : (1 : I.Gf) ∈ I.Kset) (
   have h := (abs_le.1 (hl (1, b) (z, 1) h1)).1
   simp only [Prod.mk_mul_mk, one_mul, mul_one] at h
   have e : (m / I.f : ℝ) * dSum I z = m * (dSum I z / I.f) := by ring
-  rw [e, Real.exp_nat_mul, ← mul_pow]
+  rw [e, Real.exp_natCast_mul, ← mul_pow]
   refine pow_le_pow_left₀ (inv_nonneg.2 (hp _).le) ?_ m
   rw [← Real.exp_log (hp (z, b)), ← Real.exp_log (hp (1, b)), ← Real.exp_neg, ← Real.exp_neg, ← Real.exp_add]
   exact Real.exp_le_exp.2 (by linarith)
@@ -737,12 +737,12 @@ theorem convolutionSmoothL2 : ConvolutionSmoothL2 := by
   obtain ⟨hT2, hL, hS, hKc, -, ⟨K₀, hK₀⟩, hlev⟩ := GlobalTheory.CongTop.adelic_topology B.I
   obtain ⟨hKo, ⟨K, hK⟩, -⟩ := hlev g hg
   obtain ⟨hR1, hmul, hnorm, hcont, hext⟩ := GlobalTheory.RightRegFund.rightReg_unitary_continuous B
-  haveI : (muInf B.I).IsHaarMeasure := by unfold muInf; infer_instance
-  haveI : SigmaFinite (muInf B.I) := by unfold muInf; infer_instance
-  haveI : BorelSpace B.I.GA := inferInstance
+  have : (muInf B.I).IsHaarMeasure := by unfold muInf; infer_instance
+  have : SigmaFinite (muInf B.I) := by unfold muInf; infer_instance
+  have : BorelSpace B.I.GA := inferInstance
   have hμ : B.I.muA B.μf = (muInf B.I).prod B.μf := rfl
-  haveI : (B.I.muA B.μf).IsMulLeftInvariant := by rw [hμ]; infer_instance
-  haveI : IsFiniteMeasureOnCompacts (B.I.muA B.μf) := by rw [hμ]; infer_instance
+  have : (B.I.muA B.μf).IsMulLeftInvariant := by rw [hμ]; infer_instance
+  have : IsFiniteMeasureOnCompacts (B.I.muA B.μf) := by rw [hμ]; infer_instance
   have hsub : B.I.Kg g ⊆ B.I.Kset := fun _ h => h.1
   have hKcl : IsClosed (B.I.Kg g) := by
     rw [← hK] at hKo ⊢; exact K.isClosed_of_isOpen hKo
@@ -838,7 +838,7 @@ theorem convolutionSmoothL2 : ConvolutionSmoothL2 := by
         (fun z k hk => ?_) u).symm
       have hk' : k ∈ B.I.Kg g := by by_contra h; exact hk (he0 k h)
       have : ((z, k) : B.I.GA) = (z, 1) * (1, k) := by simp
-      rw [this, hmul, ContinuousLinearMap.mul_apply, hy k hk']
+      rw [this, hmul, mul_apply_eq_comp, hy k hk']
     rw [hTT]
     exact (_root_.GlobalTheory.ConvKernel.rconv_eq_integral B _ T' hT' y).2
 

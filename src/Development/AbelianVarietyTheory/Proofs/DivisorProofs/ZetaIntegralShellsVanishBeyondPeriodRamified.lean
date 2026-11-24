@@ -75,7 +75,7 @@ theorem piece_eq_of_mem {G : Type*} [Group G] (K : Subgroup G) {c c' g : G}
     (h1 : c⁻¹ * g ∈ K) (h2 : c'⁻¹ * g ∈ K) :
     {h : G | c⁻¹ * h ∈ K} = {h : G | c'⁻¹ * h ∈ K} := by
   ext h
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · intro hh
     have := K.mul_mem (K.mul_mem h2 (K.inv_mem h1)) hh
@@ -310,7 +310,7 @@ theorem GlobalTheory.ShellPiece.setIntegral_coset_eq_zero : ∀ (k : Type) [Fiel
       _ = D * ((x * d)⁻¹ * g) := by group
   have hpre : (fun g => k0 * g) ⁻¹' S = S := by
     ext g
-    simp only [Set.mem_preimage, hS, Set.mem_setOf_eq, key]
+    simp only [Set.mem_preimage, hS, Set.mem_ofPred_eq, key]
     exact Subgroup.mul_mem_cancel_left _ hDK
   have hdetD : gdet D = u := by
     rw [hD, gdet, det_diagGL]
@@ -446,7 +446,7 @@ theorem shell_eq_zero_of_support : ∀ (k : Type) [Field k] [ValuativeRel k] [To
   have h1 := bound i i
   simp only [diagGL_val, diagonal_apply_eq] at h1
   rw [valuation_unif_zpow hϖ, valuation_unif_zpow hϖ] at h1
-  have hu0 : (0 : ValueGroupWithZero k) < uniformizer k := zero_lt_iff.2 uniformizer_ne_zero
+  have hu0 : (0 : ValueGroupWithZero k) < uniformizer k := pos_iff_ne_zero.2 uniformizer_ne_zero
   have h2 := (zpow_le_zpow_iff_right_of_lt_one₀ hu0 uniformizer_lt_one).1 h1
   omega
 

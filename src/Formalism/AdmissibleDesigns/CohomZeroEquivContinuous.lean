@@ -375,14 +375,14 @@ theorem low_of_fin (τ : K →ₐ[Qp] LL) (hfin : FiniteDimensional LL ↥(DdRE 
 theorem filLow_of_dR [FiniteDimensional LL V] (hV : 0 < finrank LL V)
     (hDR : finrank LL ↥(DdR PD ρ) = finrank Qp K * finrank LL V) : FilLow PD ρ := by
   intro τ
-  haveI := PD.finK
+  have := PD.finK
   have hK : 0 < Module.finrank Qp K := Module.finrank_pos
   have hpos : 0 < finrank LL ↥(DdR PD ρ) := by
     rw [hDR]
     exact Nat.mul_pos hK hV
-  haveI : FiniteDimensional LL ↥(DdR PD ρ) := Module.finite_of_finrank_pos hpos
+  have : FiniteDimensional LL ↥(DdR PD ρ) := Module.finite_of_finrank_pos hpos
   have hle : DdRE PD ρ τ ≤ DdR PD ρ := inf_le_left
-  haveI hfin : FiniteDimensional LL ↥(DdRE PD ρ τ) := Submodule.finiteDimensional_of_le hle
+  have hfin : FiniteDimensional LL ↥(DdRE PD ρ τ) := Submodule.finiteDimensional_of_le hle
   exact ⟨hfin, low_of_fin PD ρ τ hfin⟩
 
 end Low
@@ -514,14 +514,14 @@ theorem dimLx_of (rX : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))) (
     (hlow : FilLowX i dc r χ x' l) (hfin : FinX i dc r χ x' l) (hW : GoodW i dc ρ π l) :
     DimLx i dc r χ (jK i dc ρ π) x' l := by
   have hw := col_over i dc l
-  letI := evalModO i (R' := R') x'
-  haveI := evalTower i (R' := R') x'
+  let := evalModO i (R' := R') x'
+  have := evalTower i (R' := R') x'
   have hι := iota_bijective_col i dc l
   unfold DimLx
   rw [lx_col_eq i dc r χ x' l, colD_eq i dc r χ x' (K.colIdx i dc l), jK_colIdx_eq_finrank_cohomology i dc ρ π l,
     rank_finQuot (eK (D.nbr i _ hw)) (Br.PD D.loc D.nbr i _ hw) (repE i dc r χ x' (K.colIdx i dc l)) hι,
     finrank_invariants_eq (eK (D.nbr i _ hw)) (repE i dc r χ x' (K.colIdx i dc l)) hι]
-  haveI := finDim_TrV (V := EvalSp (D.nd.O i) d R' x') (eK (D.nbr i _ hw))
+  have := finDim_TrV (V := EvalSp (D.nd.O i) d R' x') (eK (D.nbr i _ hw))
   have hBK' : BlochKatoDim (Br.PD D.loc D.nbr i _ hw) (Br.LL D.nbr i _ hw) := (hBK (K.plOf i dc (K.colIdx i dc l)) hw (TruncatedSeriesCountingIdentities.CoefExt.self (D := D) (i := i) (hw := hw))).2.1
   have hS : Splits (Br.LL D.nbr i _ hw) (K := Br.Kw D.nbr i _ hw) (Qp := ℚ_[D.nd.l i]) :=
     LargeLevelLemmas.splits_coef (TruncatedSeriesCountingIdentities.CoefExt.self (D := D) (i := i) (hw := hw))
@@ -580,9 +580,9 @@ theorem filLowX_of (hFont : TruncatedSeriesCountingIdentities.FontaineAtPlacesOv
   have hw := col_over i dc l
   have hF := (hFont (K.plOf i dc (K.colIdx i dc l)) hw (TruncatedSeriesCountingIdentities.CoefExt.self (D := D) (i := i) (hw := hw))).2.2.2
   have hDR := hF (grepX i dc r χ x' l hc) hcr
-  letI := evalModO i (R' := R') x'
-  haveI := evalTower i (R' := R') x'
-  haveI := finDim_TrV (V := EvalSp (D.nd.O i) d R' x') (eK (D.nbr i _ hw))
+  let := evalModO i (R' := R') x'
+  have := evalTower i (R' := R') x'
+  have := finDim_TrV (V := EvalSp (D.nd.O i) d R' x') (eK (D.nbr i _ hw))
   exact filLow_of_dR (Br.PD D.loc D.nbr i _ hw) (repX i dc r χ x' (K.colIdx i dc l) hw)
     (by rw [finrank_TrV]; exact hd) hDR
 

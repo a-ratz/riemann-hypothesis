@@ -69,7 +69,7 @@ theorem mean_image {ι κ : Type} [Fintype ι] [Fintype κ] (L : (ι → ℝ) �
     Measure.isAddLeftInvariant_eq_smul _ _
   have hpre : L ⁻¹' (L '' s) = s := Set.preimage_image_eq s L.injective
   have h1 : (volume (L '' s)).toReal = c := by
-    rw [hvol, Measure.smul_apply, hL.map_apply, hpre, hs]
+    rw [hvol, smul_apply, hL.map_apply, hpre, hs]
     simp
   have h2 : ∫ z in L '' s, f z = c * ∫ p in s, f (L p) := by
     rw [hvol, Measure.restrict_smul, integral_smul_nnreal_measure, hL.restrict_map, hpre,

@@ -84,8 +84,8 @@ theorem multV_zero_of_subsingleton {V : Type} [AddCommGroup V] [Module LL V] [Mo
   have hs : ∀ b, Subsingleton ↥(FildR PD ρ τ b) := fun b =>
     ⟨fun x y => Subtype.ext ((tens_subsingleton (x : V ⊗[Qp] BdR)).trans (tens_subsingleton (y : V ⊗[Qp] BdR)).symm)⟩
   unfold multV
-  haveI := hs a
-  haveI := hs (a + 1)
+  have := hs a
+  have := hs (a + 1)
   rw [Module.finrank_zero_of_subsingleton, Module.finrank_zero_of_subsingleton]
   rfl
 
@@ -100,7 +100,7 @@ theorem mult_sum_neg : ∀ (m : ℕ) (xs : Fin m → ι), IsCrys PD (sumRep Ms x
   induction m with
   | zero =>
     intro xs _ _ τ a _
-    haveI : Subsingleton (Fin 0 → Fin k → LL) := inferInstance
+    have : Subsingleton (Fin 0 → Fin k → LL) := inferInstance
     exact multV_zero_of_subsingleton PD _ τ a
   | succ m ih =>
     intro xs hc hJ τ a ha
@@ -434,7 +434,7 @@ theorem locC_cont' {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i)
     {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E (D.nd.l i)) (C : TruncatedSeriesCountingIdentities.CoefExt D i w hw) :
     Continuous ⇑(TruncatedSeriesCountingIdentities.locC C M) := by
   have hinc : Continuous (TruncatedSeriesCountingIdentities.CoefExt.inc C) :=
-    continuous_induced_rng.2 (by exact continuous_subtype_val)
+    continuous_induced_rng.2 (by exact continuous_subtypeVal)
   exact (KOrb.loc_cont i hw M hM).matrix_map hinc
 
 abbrev MsC {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver D.host.E (D.nd.l i)) (j : Fin D.R.t) :

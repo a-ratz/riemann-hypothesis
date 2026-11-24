@@ -139,8 +139,8 @@ theorem lintegral_enorm_translate_eq (hφ₁ : Continuous φ₁) (hφ₁l : Auto
   have hm : Measurable fun y : normOneGL (K := K) (n := n) =>
       ‖Ξ (centralSection K n s * x * (y : AdelicGLn.AdelicGL K n))‖ₑ *
         ‖φ₁ (y : AdelicGLn.AdelicGL K n)‖ₑ :=
-    (hΞ.comp (continuous_const.mul continuous_subtype_val)).enorm.measurable.mul
-      (hφ₁.comp continuous_subtype_val).enorm.measurable
+    (hΞ.comp (continuous_const.mul continuous_subtypeVal)).eNorm.measurable.mul
+      (hφ₁.comp continuous_subtypeVal).eNorm.measurable
   rw [lintegral_eq_setLIntegral_tsum μ hm]
   refine lintegral_congr fun y => ?_
   rw [← ENNReal.tsum_mul_left]
@@ -162,7 +162,7 @@ theorem enorm_mul_lintegral_le (hφ₁ : Continuous φ₁) (hφ₁l : Automorphi
         ∫⁻ y, ‖Ξ (centralSection K n s * (x : AdelicGLn.AdelicGL K n)⁻¹ *
           (y : AdelicGLn.AdelicGL K n))‖ₑ * ‖φ₁ (y : AdelicGLn.AdelicGL K n)‖ₑ ∂μ ≤
       ENNReal.ofReal (B s) * μ (fundamentalDomain (rationalGLOne (K := K) (n := n))) := by
-  rw [lintegral_enorm_translate_eq μ hφ₁ hφ₁l hΞ, ← lintegral_const_mul' _ _ enorm_ne_top,
+  rw [lintegral_enorm_translate_eq μ hφ₁ hφ₁l hΞ, ← lintegral_const_mul' _ _ eNorm_ne_top,
     ← setLIntegral_const]
   refine lintegral_mono fun y => ?_
   obtain ⟨hs, hle⟩ := hB s x y x.2 y.2
@@ -217,7 +217,7 @@ theorem lintegral_lintegral_enorm_le (hφ₁ : Continuous φ₁) (hφ₁l : Auto
             ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ * (‖Ξ (centralSection K n s *
               (x : AdelicGLn.AdelicGL K n)⁻¹ * (y : AdelicGLn.AdelicGL K n))‖ₑ *
                 ‖φ₁ (y : AdelicGLn.AdelicGL K n)‖ₑ)) x
-      _ = _ := lintegral_const_mul' _ _ enorm_ne_top
+      _ = _ := lintegral_const_mul' _ _ eNorm_ne_top
   rw [h1]
   exact enorm_mul_lintegral_le μ hφ₁ hφ₁l hΞ hB s x
 
@@ -246,20 +246,20 @@ theorem integral_mul_matrixCoeff_eq_thetaPairing (hφ₁ : Continuous φ₁) (h�
         (φ₁ ((x : AdelicGLn.AdelicGL K n) * (y : AdelicGLn.AdelicGL K n)) *
           conj (φ₂ (x : AdelicGLn.AdelicGL K n))) with hfdef
     have hcont : Continuous (Function.uncurry f) :=
-      (hΞ.comp (continuous_const.mul (continuous_subtype_val.comp continuous_fst))).mul
-        ((hφ₁.comp ((continuous_subtype_val.comp continuous_snd).mul
-          (continuous_subtype_val.comp continuous_fst))).mul
-          (Complex.continuous_conj.comp (hφ₂.comp (continuous_subtype_val.comp continuous_snd))))
+      (hΞ.comp (continuous_const.mul (continuous_subtypeVal.comp continuous_fst))).mul
+        ((hφ₁.comp ((continuous_subtypeVal.comp continuous_snd).mul
+          (continuous_subtypeVal.comp continuous_fst))).mul
+          (Complex.continuous_conj.comp (hφ₂.comp (continuous_subtypeVal.comp continuous_snd))))
     have hint : Integrable (Function.uncurry f) (μ.prod (μ.restrict F)) := by
       refine ⟨hcont.aestronglyMeasurable, ?_⟩
-      rw [HasFiniteIntegral, lintegral_prod _ hcont.enorm.measurable.aemeasurable]
-      rw [lintegral_lintegral_swap (hcont.enorm.measurable.aemeasurable)]
+      rw [HasFiniteIntegral, lintegral_prod _ hcont.eNorm.measurable.aemeasurable]
+      rw [lintegral_lintegral_swap (hcont.eNorm.measurable.aemeasurable)]
       have h1 : ∀ x y : normOneGL (K := K) (n := n), ‖Function.uncurry f (y, x)‖ₑ =
           ‖Ξ (centralSection K n s * (y : AdelicGLn.AdelicGL K n))‖ₑ *
             ‖φ₁ ((x : AdelicGLn.AdelicGL K n) * (y : AdelicGLn.AdelicGL K n))‖ₑ *
             ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ := by
         intro x y
-        simp only [Function.uncurry_apply_pair, hfdef, enorm_mul, RCLike.enorm_conj, mul_assoc]
+        simp only [Function.uncurry_apply_pair, hfdef, eNorm_mul, RCLike.eNorm_conj, mul_assoc]
       simp_rw [h1]
       refine lt_of_le_of_lt (lintegral_lintegral_enorm_le μ hφ₁ hφ₁l hΞ hB s) ?_
       exact ENNReal.mul_lt_top (ENNReal.mul_lt_top ENNReal.ofReal_lt_top hFfin) hFfin
@@ -281,18 +281,18 @@ theorem integral_mul_matrixCoeff_eq_thetaPairing (hφ₁ : Continuous φ₁) (h�
       by_cases hx : φ₂ (x : AdelicGLn.AdelicGL K n) = 0
       · simp [hx]
       have hhi : Integrable h μ := by
-        have hhc : Continuous h := (hΞ.comp (continuous_const.mul continuous_subtype_val)).mul
-          (hφ₁.comp continuous_subtype_val)
+        have hhc : Continuous h := (hΞ.comp (continuous_const.mul continuous_subtypeVal)).mul
+          (hφ₁.comp continuous_subtypeVal)
         refine ⟨hhc.aestronglyMeasurable, ?_⟩
         have hb := enorm_mul_lintegral_le μ hφ₁ hφ₁l hΞ hB s x
-        have hne : ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ ≠ 0 := enorm_ne_zero.2 hx
+        have hne : ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ ≠ 0 := eNorm_ne_zero.2 hx
         rw [HasFiniteIntegral]
-        simp only [hhdef, enorm_mul]
+        simp only [hhdef, eNorm_mul]
         have hb' : (∫⁻ y, ‖Ξ (centralSection K n s * (x : AdelicGLn.AdelicGL K n)⁻¹ *
             (y : AdelicGLn.AdelicGL K n))‖ₑ * ‖φ₁ (y : AdelicGLn.AdelicGL K n)‖ₑ ∂μ) *
               ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ ≤ ENNReal.ofReal (B s) * μ F := by
           rw [mul_comm]; exact hb
-        have hI := (ENNReal.le_div_iff_mul_le (Or.inl hne) (Or.inl enorm_ne_top)).2 hb'
+        have hI := (ENNReal.le_div_iff_mul_le (Or.inl hne) (Or.inl eNorm_ne_top)).2 hb'
         exact lt_of_le_of_lt hI (ENNReal.div_lt_top
           (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hFfin.ne) hne)
       rw [integral_eq_setIntegral_tsum μ hhi, ← integral_const_mul]
@@ -350,8 +350,8 @@ theorem stronglyMeasurable_matrixCoeff (hφ₁ : Continuous φ₁) (hφ₂ : Con
   set_option synthInstance.maxHeartbeats 400000 in
     have hc : Continuous (Function.uncurry fun (g : AdelicGLn.AdelicGL K n) (x : normOneGL (K := K) (n := n)) =>
         φ₁ ((x : AdelicGLn.AdelicGL K n) * g) * conj (φ₂ (x : AdelicGLn.AdelicGL K n))) :=
-      (hφ₁.comp ((continuous_subtype_val.comp continuous_snd).mul continuous_fst)).mul
-        (Complex.continuous_conj.comp (hφ₂.comp (continuous_subtype_val.comp continuous_snd)))
+      (hφ₁.comp ((continuous_subtypeVal.comp continuous_snd).mul continuous_fst)).mul
+        (Complex.continuous_conj.comp (hφ₂.comp (continuous_subtypeVal.comp continuous_snd)))
     exact hc.stronglyMeasurable.integral_prod_right
 
 theorem exists_integral_eq_mellin_thetaPairing (hn : 0 < n) (ν : Measure (AdelicGLn.AdelicGL K n))
@@ -383,14 +383,14 @@ theorem exists_integral_eq_mellin_thetaPairing (hn : 0 < n) (ν : Measure (Adeli
       intro s y
       simp only [hH, matrixCoeff_centralSection_mul μ hφ₁z, detPow_centralSection_mul hn]
     have hdet : Measurable fun g : AdelicGLn.AdelicGL K n => detPow g w :=
-      (Complex.measurable_ofReal.comp (measurable_subtype_coe.comp
+      (Complex.measurable_ofReal.comp (measurable_subtypeVal.comp
         continuous_detModule.measurable)).pow_const w
     have hHm : StronglyMeasurable H :=
       (hΞ.stronglyMeasurable.mul (stronglyMeasurable_matrixCoeff μ hφ₁ hφ₂)).mul
         hdet.stronglyMeasurable
     have hcz : Continuous fun p : normOneGL (K := K) (n := n) × {r : ℝ // 0 < r} =>
         centralSection K n p.2 * (p.1 : AdelicGLn.AdelicGL K n) :=
-      (continuous_centralSection.comp continuous_snd).mul (continuous_subtype_val.comp continuous_fst)
+      (continuous_centralSection.comp continuous_snd).mul (continuous_subtypeVal.comp continuous_fst)
 
     have hfin : ∀ s : {r : ℝ // 0 < r},
         ∫⁻ y, ‖H (centralSection K n s * (y : AdelicGLn.AdelicGL K n))‖ₑ ∂μ ≤
@@ -401,25 +401,25 @@ theorem exists_integral_eq_mellin_thetaPairing (hn : 0 < n) (ν : Measure (Adeli
           ‖Ξ (centralSection K n s * (y : AdelicGLn.AdelicGL K n))‖ₑ *
             ‖φ₁ ((x : AdelicGLn.AdelicGL K n) * (y : AdelicGLn.AdelicGL K n))‖ₑ *
             ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ) :=
-        (((hΞ.comp (continuous_const.mul (continuous_subtype_val.comp continuous_fst))).enorm.measurable).mul
-          (hφ₁.comp ((continuous_subtype_val.comp continuous_snd).mul
-            (continuous_subtype_val.comp continuous_fst))).enorm.measurable).mul
-          (hφ₂.comp (continuous_subtype_val.comp continuous_snd)).enorm.measurable
+        (((hΞ.comp (continuous_const.mul (continuous_subtypeVal.comp continuous_fst))).eNorm.measurable).mul
+          (hφ₁.comp ((continuous_subtypeVal.comp continuous_snd).mul
+            (continuous_subtypeVal.comp continuous_fst))).eNorm.measurable).mul
+          (hφ₂.comp (continuous_subtypeVal.comp continuous_snd)).eNorm.measurable
       calc ∫⁻ y, ‖H (centralSection K n s * (y : AdelicGLn.AdelicGL K n))‖ₑ ∂μ
           ≤ ∫⁻ y, ENNReal.ofReal ((s : ℝ) ^ w.re) * ∫⁻ x in F,
               ‖Ξ (centralSection K n s * (y : AdelicGLn.AdelicGL K n))‖ₑ *
                 ‖φ₁ ((x : AdelicGLn.AdelicGL K n) * (y : AdelicGLn.AdelicGL K n))‖ₑ *
                 ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ ∂μ ∂μ := by
             refine lintegral_mono fun y => ?_
-            rw [hHz, enorm_mul, enorm_mul]
+            rw [hHz, eNorm_mul, eNorm_mul]
             have e1 : ‖((s : ℝ) : ℂ) ^ w‖ₑ = ENNReal.ofReal ((s : ℝ) ^ w.re) := by
               rw [← ofReal_norm, Complex.norm_cpow_eq_rpow_re_of_pos hs0]
             have e2 : ‖matrixCoeff μ φ₁ φ₂ (y : AdelicGLn.AdelicGL K n)‖ₑ ≤ ∫⁻ x in F,
                 ‖φ₁ ((x : AdelicGLn.AdelicGL K n) * (y : AdelicGLn.AdelicGL K n))‖ₑ *
                   ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ ∂μ := by
-              refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+              refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
               refine lintegral_congr fun x => ?_
-              rw [enorm_mul, RCLike.enorm_conj]
+              rw [eNorm_mul, RCLike.eNorm_conj]
             rw [e1]
             calc ‖Ξ (centralSection K n s * (y : AdelicGLn.AdelicGL K n))‖ₑ *
                   ‖matrixCoeff μ φ₁ φ₂ (y : AdelicGLn.AdelicGL K n)‖ₑ * ENNReal.ofReal ((s : ℝ) ^ w.re)
@@ -431,7 +431,7 @@ theorem exists_integral_eq_mellin_thetaPairing (hn : 0 < n) (ν : Measure (Adeli
                   ‖Ξ (centralSection K n s * (y : AdelicGLn.AdelicGL K n))‖ₑ *
                     ‖φ₁ ((x : AdelicGLn.AdelicGL K n) * (y : AdelicGLn.AdelicGL K n))‖ₑ *
                     ‖φ₂ (x : AdelicGLn.AdelicGL K n)‖ₑ ∂μ := by
-                  rw [mul_comm _ (ENNReal.ofReal _), ← lintegral_const_mul' _ _ enorm_ne_top]
+                  rw [mul_comm _ (ENNReal.ofReal _), ← lintegral_const_mul' _ _ eNorm_ne_top]
                   congr 1
                   refine lintegral_congr fun x => ?_
                   ring
@@ -453,7 +453,7 @@ theorem exists_integral_eq_mellin_thetaPairing (hn : 0 < n) (ν : Measure (Adeli
       refine ⟨(hHm.comp_measurable hcz.measurable).aestronglyMeasurable, ?_⟩
       rw [HasFiniteIntegral, lintegral_prod_symm (fun p : normOneGL (K := K) (n := n) × {r : ℝ // 0 < r} =>
         ‖H (centralSection K n p.2 * (p.1 : AdelicGLn.AdelicGL K n))‖ₑ)
-        (hHm.comp_measurable hcz.measurable).enorm.aemeasurable]
+        (hHm.comp_measurable hcz.measurable).eNorm.aemeasurable]
       refine lt_of_le_of_lt (lintegral_mono fun s => hfin s) ?_
       rw [lintegral_mul_const' _ _ (ENNReal.mul_ne_top hFfin.ne hFfin.ne)]
       refine ENNReal.mul_lt_top ?_ (ENNReal.mul_lt_top hFfin hFfin)
@@ -466,7 +466,7 @@ theorem exists_integral_eq_mellin_thetaPairing (hn : 0 < n) (ν : Measure (Adeli
         field_simp
       rw [e3]
       refine lt_of_le_of_lt (lintegral_mono fun t => ?_) hBint.2
-      rw [Real.enorm_eq_ofReal_abs]
+      rw [Real.eNorm_eq_ofReal_abs]
       exact ENNReal.ofReal_le_ofReal (le_abs_self _)
     refine ⟨hint, ?_⟩
     rw [integral_eq_centralHaarConst_smul hn μ ν hint]
@@ -482,11 +482,11 @@ theorem exists_integral_eq_mellin_thetaPairing (hn : 0 < n) (ν : Measure (Adeli
     have e4 : (fun s : {r : ℝ // 0 < r} => thetaPairing μ φ₁ φ₂ Ξ s * ((s : ℝ) : ℂ) ^ w) =
         fun s : {r : ℝ // 0 < r} => J' (s : ℝ) := by
       funext s
-      simp only [hJ', dif_pos s.2, Subtype.coe_eta]
+      simp only [hJ', dite_eq_left s.2, Subtype.coe_eta]
     rw [e4, integral_posRealMeasure, Complex.real_smul, mellin]
     congr 1
     refine setIntegral_congr_fun measurableSet_Ioi fun t (ht : 0 < t) => ?_
-    simp only [hJ', dif_pos ht]
+    simp only [hJ', dite_eq_left ht]
     rw [Complex.real_smul, smul_eq_mul, Complex.cpow_sub _ _ (Complex.ofReal_ne_zero.2 ht.ne'),
       Complex.cpow_one, Complex.ofReal_inv]
     have : (t : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 ht.ne'

@@ -147,7 +147,7 @@ theorem exists_locIt (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPar) (M :
     · rw [hA, U'.apply_symm_apply, κ.apply_symm_apply]
       intro h0
       exact hP (U.symm.injective (by rw [h0, map_zero]))
-  · haveI : CompleteSpace (M'.H τ) := U'.toIsometryEquiv.completeSpace
+  · have : CompleteSpace (M'.H τ) := U'.toIsometryEquiv.completeSpace
     obtain ⟨c, hc⟩ := hB.bdd (κ P)
     let L : M'.H τ →L[ℂ] M.H τ := (A P).mkContinuous c fun y => by
       rw [hA, U.symm.norm_map, ← U'.norm_map y]; exact hc _

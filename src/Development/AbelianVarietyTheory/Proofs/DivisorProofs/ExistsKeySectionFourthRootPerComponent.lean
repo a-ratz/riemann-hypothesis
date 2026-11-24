@@ -226,10 +226,10 @@ theorem exists_keySec_pow_four : ∀ (κ : GlobalTheory.KeyCl.Rule), GlobalTheor
   have hv : ∀ C : FChart h, ∃ (Φ : FibKey Xo C.R C.y.x) (u : (C.R)ˣ), Tied e₀ C.y.s C.y.u Φ ∧
       GlobalTheory.KeyCl.IsValue κ Φ.key (u : C.R) ∧ ((u : C.R) : Om C.Z) = ((kch C.t ^ 4 * v C.Z : (Om C.Z)ˣ) : Om C.Z) := by
     intro C
-    haveI := C.sm
-    haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
-    haveI : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
-    haveI : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
+    have := C.sm
+    have : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
+    have : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
+    have : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
     obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g₀ e₀ C.R C.y hpq
     obtain ⟨Φ', hΦ'⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g₀ e₀ (Om C.Z) C.yg hpq
     obtain ⟨u, hu⟩ := k₄ C.R Φ.key
@@ -240,9 +240,9 @@ theorem exists_keySec_pow_four : ∀ (κ : GlobalTheory.KeyCl.Rule), GlobalTheor
       ((kch C.t ^ 4 * v C.Z : (Om C.Z)ˣ) : Om C.Z) = a • (b : Om C.Z) ^ 4 := by
     intro C
     obtain ⟨Φ, u, hΦ, hu, huv⟩ := hv C
-    letI : Algebra c.F ℂ := σ.toAlgebra
-    haveI := C.sm
-    haveI := GlobalTheory.GeomConn.isDomain_tensor C.R.val Subtype.val_injective (hF C.Z) ℂ
+    let : Algebra c.F ℂ := σ.toAlgebra
+    have := C.sm
+    have := GlobalTheory.GeomConn.isDomain_tensor C.R.val Subtype.val_injective (hF C.Z) ℂ
     choose z hz using fun ψ : C.R →ₐ[c.F] CAt σ => hL.bc _ _ ψ C.y
     have hex : ∀ ψ, ∃ w, RootVal (unfOf e₀ F M un) (z ψ) w := fun ψ => by
       obtain ⟨k, x, t, ht⟩ := hU₀.2.2.1 (z ψ)
@@ -273,9 +273,9 @@ theorem exists_keySec_pow_four : ∀ (κ : GlobalTheory.KeyCl.Rule), GlobalTheor
       (((kch C.t : (Om C.Z)ˣ) : Om C.Z) * b C.Z)⁻¹ ∈ C.R := by
     intro C
     obtain ⟨-, u, -, -, huv⟩ := hv C
-    haveI := C.sm
-    haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
-    haveI := GlobalTheory.SupGeneric.isFractionRing_chart C
+    have := C.sm
+    have : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
+    have := GlobalTheory.SupGeneric.isFractionRing_chart C
     have hint : ∀ (x : Om C.Z) (y : C.R), x ^ 4 = y → x ∈ C.R := fun x y hxy => by
       have hi : IsIntegral C.R (x ^ 4) := hxy ▸ isIntegral_algebraMap (R := C.R) (x := y)
       obtain ⟨w, hw⟩ := IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow (by norm_num : 0 < 4) hi

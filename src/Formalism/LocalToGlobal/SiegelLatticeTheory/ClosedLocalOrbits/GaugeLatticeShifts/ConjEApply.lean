@@ -156,7 +156,7 @@ theorem haarN_tor {μ : ℂ} (hμ : μ ≠ 0) {μN : Measure (Mt k r)} (hN : For
   · intro h0
     apply hne
     have h1 := congrArg (fun ν : Measure (Mt k r) => ν Set.univ) h0
-    simp only [Measure.coe_zero, Pi.zero_apply] at h1
+    simp only [FunLike.coe_zero, Pi.zero_apply] at h1
     rw [MeasurableEquiv.map_apply, Set.preimage_univ] at h1
     exact Measure.measure_univ_eq_zero.mp h1
   · rw [MeasurableEquiv.map_apply]

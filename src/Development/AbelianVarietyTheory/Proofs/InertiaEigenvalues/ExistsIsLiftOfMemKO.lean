@@ -288,8 +288,8 @@ theorem CharLift.det (hp : resCard F = p) {θ : (ZMod p)ˣ →* ℂˣ} {χ : Fˣ
 private theorem image_compact_orbit_finite_of_open_stabilizer {G W : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ G W) (s : W) (hs : IsOpen {g | ρ g s = s})
     {K : Set G} (hK : IsCompact K) : ((fun g => ρ g s) '' K).Finite := by
-  letI : TopologicalSpace W := ⊥
-  haveI : DiscreteTopology W := ⟨rfl⟩
+  let : TopologicalSpace W := ⊥
+  have : DiscreteTopology W := ⟨rfl⟩
   apply IsCompact.finite_of_discrete
   apply hK.image
   rw [continuous_discrete_rng]
@@ -310,17 +310,17 @@ private theorem isOpen_valuation_sub_lt_one (c : F) : IsOpen {x : F | valuation 
   intro x hx
   rw [IsValuativeTopology.mem_nhds_iff']
   refine ⟨1, fun z hz => ?_⟩
-  simp only [Set.mem_setOf_eq, Units.val_one] at hz hx ⊢
+  simp only [Set.mem_ofPred_eq, Units.val_one] at hz hx ⊢
   have := (valuation F).map_add (z - x) (x - c)
   rw [sub_add_sub_cancel] at this
   exact this.trans_lt (max_lt hz hx)
 
 private theorem isCompact_KOne' (p : ℕ) [Fact p.Prime] :
     IsCompact (KOne F n : Set (GL n F)) := by
-  haveI : CompactSpace (Matrix n n 𝒪[F]) := inferInstanceAs (CompactSpace (n → n → 𝒪[F]))
-  haveI : T1Space (Matrix n n 𝒪[F]) := inferInstanceAs (T1Space (n → n → 𝒪[F]))
+  have : CompactSpace (Matrix n n 𝒪[F]) := inferInstanceAs (CompactSpace (n → n → 𝒪[F]))
+  have : T1Space (Matrix n n 𝒪[F]) := inferInstanceAs (T1Space (n → n → 𝒪[F]))
   have hcm : Continuous (GeneralLinearGroup.map (n := n) (algebraMap 𝒪[F] F)) := by
-    have hcs : Continuous (algebraMap 𝒪[F] F) := continuous_subtype_val
+    have hcs : Continuous (algebraMap 𝒪[F] F) := continuous_subtypeVal
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
     · change Continuous fun κ : GL n 𝒪[F] => (κ.val).map (algebraMap 𝒪[F] F)
       exact Continuous.matrix_map Units.continuous_val hcs
@@ -334,7 +334,7 @@ private theorem isCompact_KOne' (p : ℕ) [Fact p.Prime] :
     exact (isLift_one_iff h).symm
   have hopen : IsOpen (KOne F n : Set (GL n F)) := by
     rw [hset]
-    simp only [IsLift, Set.setOf_forall]
+    simp only [IsLift, Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun a => isOpen_iInter_of_finite fun b => ?_
     exact (isOpen_valuation_sub_lt_one _).preimage (Units.continuous_val.matrix_elem a b)
   have hsub : (KOne F n : Set (GL n F)) ⊆ KO F n := by
@@ -352,7 +352,7 @@ theorem TypeVec.up {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
   have hopen : IsOpen {g : GL n F | ρS g s = s} := by
     convert hπ (s : V) using 1
     ext g
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · intro h1
       exact congrArg Subtype.val h1
@@ -526,7 +526,7 @@ theorem exists_eigen_of_map {G V Y : Type} [Group G] [Finite G] [AddCommGroup V]
     (ρ : Representation ℂ G V) (H : Subgroup G) (ψ : G →* ℂˣ) (Λ : V →ₗ[ℂ] Y) (h0 : Λ ≠ 0)
     (h : ∀ x ∈ H, ∀ w, Λ (ρ x w) = (ψ x : ℂ) • Λ w) : ∃ v, v ≠ 0 ∧ ∀ x ∈ H, ρ x v = (ψ x : ℂ) • v := by
   classical
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Fintype G := Fintype.ofFinite G
   obtain ⟨w, hw⟩ : ∃ w, Λ w ≠ 0 := by
     by_contra hcon
     push_neg at hcon

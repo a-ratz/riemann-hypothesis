@@ -101,7 +101,7 @@ theorem sliceIns_mem {ε : Fin n → Bool} {E : Fin n → Fin n → Module.End �
           have hk := hα k
           rw [← ht] at hk
           simpa [Fin.tail] using hk
-      rw [if_pos hall]
+      rw [ite_eq_left hall]
       exact admissibleArrays_apply_mem hm _
     · rw [admissibleArrays_apply_eq_zero hm _ (fun h => h0 (h 0))]
       split_ifs <;> exact Submodule.zero_mem _
@@ -210,9 +210,9 @@ theorem jet_map_eq_zero : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpa
         have hsum : ∑ β' : Fin j → Fin n × Fin n,
             ⟪sliceLin V n β' (sliceIns α' m), sliceLin V n β' f⟫_ℂ = ⟪m, sliceLin V n α' f⟫_ℂ := by
           rw [Finset.sum_eq_single α']
-          · rw [slice_sliceIns, if_pos rfl]
+          · rw [slice_sliceIns, ite_eq_left rfl]
           · intro b _ hb
-            rw [slice_sliceIns, if_neg hb, inner_zero_left]
+            rw [slice_sliceIns, ite_eq_right hb, inner_zero_left]
           · intro h
             exact absurd (Finset.mem_univ _) h
         rw [inner_eq_sum_firstPositionSlice, hsum, ← hpm, inner_add_right] at hin
@@ -265,8 +265,8 @@ theorem jet_map_eq_zero : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpa
     have h5 : ‖f‖ ^ 2 = 0 := le_antisymm (by nlinarith) (by positivity)
     simpa using h5
 
-  haveI : FiniteDimensional ℂ (arrV0 ε E u (j + 1)) := finiteDimensional_arrV0_of_finiteDimensional_kSpan ε E u hfd
-  haveI : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ (arrV0 ε E u (j + 1)) := finiteDimensional_arrV0_of_finiteDimensional_kSpan ε E u hfd
+  have : FiniteDimensional ℂ K := Submodule.finiteDimensional_of_le inf_le_left
   intro F hF
   obtain ⟨y, hy, z, hz, hyz⟩ := Submodule.exists_add_mem_mem_orthogonal (K := K) F
   have hzW : z ∈ arrV0 ε E u (j + 1) := by

@@ -203,7 +203,7 @@ theorem eq_of_vh {x y : Sp A ⟶ X} {U : X.Opens} (hU : IsAffineOpen U) (h : ⊤
   have a1 := IsAffineOpen.SpecMap_appLE_fromSpec x hU hT h
   have a2 := IsAffineOpen.SpecMap_appLE_fromSpec y hU hT h'
   rw [e', a2] at a1
-  haveI : IsIso hT.fromSpec := by rw [IsAffineOpen.fromSpec_top]; infer_instance
+  have : IsIso hT.fromSpec := by rw [IsAffineOpen.fromSpec_top]; infer_instance
   exact ((cancel_epi _).1 a1).symm
 
 theorem vh_ne_zero [Nontrivial A] (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) (f : Γ(X, U))
@@ -278,7 +278,7 @@ section Sec
 
 theorem vh_sec_ne_zero {K : Type} [Field K] {X : Scheme.{0}} {H : LB X} (s : H.Sec) (x : Sp K ⟶ X) (l : H.ι)
     (hl : ⊤ ≤ x ⁻¹ᵁ H.U l) (hs : ⊤ ≤ x ⁻¹ᵁ Out.nonzeroLocus s) : vh x (H.U l) hl (s.f l) ≠ 0 := by
-  haveI : Unique (Sp K) := inferInstanceAs (Unique (PrimeSpectrum K))
+  have : Unique (Sp K) := inferInstanceAs (Unique (PrimeSpectrum K))
   have h1 : x default ∈ Out.nonzeroLocus s := hs (show (default : Sp K) ∈ (⊤ : (Sp K).Opens) from trivial)
   rw [Out.nonzeroLocus, TopologicalSpace.Opens.mem_iSup] at h1
   obtain ⟨k, hk⟩ := h1
@@ -301,7 +301,7 @@ theorem exists_sep {H : LB G.left} {J : Type} (s : J → H.Sec) (hs : GlobalTheo
     {y : epsR K ⟶ G} (hy : IsTangent y) (hy1 : y ≠ 1) (l : H.ι) (hl : ⊤ ≤ orig G ⁻¹ᵁ H.U l) :
     ∃ s₀ s₁ : H.Sec, vh (orig G) _ hl (s₀.f l) ≠ 0 ∧ vh (orig G) _ hl (s₁.f l) = 0 ∧
       (vh (A := DualNumber K) y.left _ (top_le_tangent hy hl) (s₁.f l)).snd ≠ 0 := by
-  haveI : Unique (Sp K) := inferInstanceAs (Unique (PrimeSpectrum K))
+  have : Unique (Sp K) := inferInstanceAs (Unique (PrimeSpectrum K))
   obtain ⟨hc, hs⟩ := hs
   have h1 : orig G default ∈ ⨆ i ∈ (Set.univ : Set J), Out.nonzeroLocus (s i) := by rw [hc]; trivial
   simp only [TopologicalSpace.Opens.mem_iSup] at h1

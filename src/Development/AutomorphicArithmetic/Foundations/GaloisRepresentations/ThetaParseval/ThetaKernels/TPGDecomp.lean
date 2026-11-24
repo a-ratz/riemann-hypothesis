@@ -354,9 +354,9 @@ private theorem prod_equiv_pk {P Q R : Subgroup (UA σ X.J)} {a b c : AF F} (ha 
       map_mul' := fun g h => Prod.ext (Subtype.ext (map_mul _ _ _)) (Prod.ext (Subtype.ext (map_mul _ _ _))
         (Subtype.ext (map_mul _ _ _)))
       continuous_toFun := ((cont_pr_pk ha).subtype_mk _).prodMk (((cont_pr_pk hb).subtype_mk _).prodMk ((cont_pr_pk hc).subtype_mk _))
-      continuous_invFun := ((continuous_subtype_val.comp continuous_fst).mul
-        (continuous_subtype_val.comp (continuous_fst.comp continuous_snd))).mul
-        (continuous_subtype_val.comp (continuous_snd.comp continuous_snd)) }
+      continuous_invFun := ((continuous_subtypeVal.comp continuous_fst).mul
+        (continuous_subtypeVal.comp (continuous_fst.comp continuous_snd))).mul
+        (continuous_subtypeVal.comp (continuous_snd.comp continuous_snd)) }
   exact ⟨φ.symm, fun x => rfl⟩
 end UpperTheory.TP
 theorem UpperTheory.TP.decomp_k :

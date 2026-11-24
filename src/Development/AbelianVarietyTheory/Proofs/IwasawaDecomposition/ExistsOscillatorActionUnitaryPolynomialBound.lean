@@ -114,7 +114,7 @@ theorem norm_sub_le (hJ : ∀ x, J (J x) = -x) (h : IsHeis (omJ J) ρ) {f : B} (
     (C := ‖dH ρ z f‖ + π * (‖u‖ * ‖z‖) * ‖f‖) (fun s _ => (hd s).hasDerivWithinAt) (fun s _ => ?_)
   · simpa using this
   · have e : omJ J (u + s • z) z = omJ J u z := by
-      rw [← omL_apply, map_add (f := _), map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+      rw [← omL_apply, map_add (f := _), map_smul, add_apply, smul_apply,
         omL_self hJ, smul_zero, add_zero, omL_apply]
     rw [(calc' hJ h hf).2.2.1, e]
     refine (_root_.norm_sub_le _ _).trans ?_
@@ -208,7 +208,7 @@ theorem moved_vacuum_deriv : ∀ (V : Type) [NormedAddCommGroup V] [InnerProduct
     intro t ht x u
     have hz : ‖a t u - u‖ ≤ K * |t| * ‖u‖ := by
       have := (a t - 1).le_opNorm u
-      simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.one_apply] at this
+      simp only [sub_apply, one_apply_eq_self] at this
       exact this.trans (by gcongr)
     have h1 := norm_sub_le hJ h (sP x) u (a t u - u)
     rw [add_sub_cancel] at h1
@@ -255,7 +255,7 @@ theorem moved_vacuum_deriv : ∀ (V : Type) [NormedAddCommGroup V] [InnerProduct
       (fun t _ => ((h.twist (a t) (hom t)).integrable _).aestronglyMeasurable)
       ((h.twist (a 0) (hom 0)).integrable _) i4.aestronglyMeasurable
       (Filter.Eventually.of_forall fun u t ht => by
-        simpa only [a0, ContinuousLinearMap.one_apply, sub_zero, Real.norm_eq_abs] using key t ht x u)
+        simpa only [a0, one_apply_eq_self, sub_zero, Real.norm_eq_abs] using key t ht x u)
       (bi.mul_const _) (Filter.Eventually.of_forall fun u => ?_)).2.hasDerivAt
     · rw [ContinuousLinearMap.integral_apply i4] at this
       simpa only [ContinuousLinearMap.toSpanSingleton_apply, one_smul] using this
@@ -591,7 +591,7 @@ theorem _root_.GlobalTheory.Mem.Lift.OscDeriv.hasDerivAt_osc : ∀ (V : Type) [N
     refine this.congr (ae_of_all _ fun w => ?_)
     simp only [ContinuousLinearMap.comp_apply, _root_.GlobalTheory.RealWeil.proj_apply hh, hMd, hy]
   have hF0 : ∀ w, ρ (a 0 w) (M 0 (y w)) = ρ w (y w) := by
-    intro w; rw [hM0, hyP, ha0, ContinuousLinearMap.one_apply]
+    intro w; rw [hM0, hyP, ha0, one_apply_eq_self]
   have hslope : ∀ t : ℝ, t⁻¹ • ((∫ w, ρ (a t w) (M t (y w))) - ∫ w, ρ (a 0 w) (M 0 (y w))) =
       ∫ w, t⁻¹ • (ρ (a t w) (M t (y w)) - ρ w (y w)) := by
     intro t; rw [← integral_sub (hMint t) (hMint 0), ← integral_smul]; simp_rw [hF0]

@@ -157,7 +157,7 @@ theorem cusp_one {F : Type} [Field F] (θ : AlgebraicClosure F →* ℂ) (k : �
     refine finsum_eq_zero_of_forall_eq_zero fun W => ?_
     have h1 := Submodule.finrank_lt W.2.1
     rw [Module.finrank_fin_fun] at h1
-    haveI : Subsingleton W.1 := (Module.finrank_zero_iff (R := F)).mp (by omega)
+    have : Subsingleton W.1 := (Module.finrank_zero_iff (R := F)).mp (by omega)
     exact PsiPrimitive.psi_trivial _ hs _ _
   rw [hz, sub_zero, Matrix.charpoly_toLin', charpoly_one, rootSum_X_sub_C]
   simp
@@ -170,7 +170,7 @@ theorem hfree_one {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F →* 
       (x : Matrix (Fin 1) (Fin 1) F) i j = (1 : Matrix (Fin 1) (Fin 1) F) i j} = Set.univ :=
     Set.eq_univ_of_forall fun x i j h => absurd h (by omega)
   rw [hset, finsum_mem_univ]
-  letI := Fintype.ofFinite (GL (Fin 1) F)
+  let := Fintype.ofFinite (GL (Fin 1) F)
   rw [finsum_eq_sum_of_fintype]
   let f : GL (Fin 1) F →* ℂ := (powMonoidHom k).comp (θ.comp
     ((algebraMap F (AlgebraicClosure F) : F →* AlgebraicClosure F).comp
@@ -245,8 +245,8 @@ theorem of_mem_nilRad {m : ℕ} (l : Fin m) (h : Module.End F (Fin m → F)) (hh
 theorem det_of_cols {m : ℕ} (l : Fin m) (hl : (l : ℕ) + 1 = m) (M : Matrix (Fin m) (Fin m) F)
     (h : ∀ i j, j ≠ l → M i j = (1 : Matrix (Fin m) (Fin m) F) i j) : M.det = M l l := by
   have hlt : ∀ j : Fin m, j ≠ l → j < l := fun j hj => by
-    rw [Fin.lt_iff_val_lt_val]; have := j.2; have : (j : ℕ) ≠ l := fun e => hj (Fin.ext e); omega
-  rw [Matrix.det_of_upperTriangular]
+    rw [Fin.lt_def]; have := j.2; have : (j : ℕ) ≠ l := fun e => hj (Fin.ext e); omega
+  rw [Matrix.det_of_isUpperTriangular]
   · refine Finset.prod_eq_single l (fun i _ hi => ?_) (fun h' => absurd (Finset.mem_univ l) h')
     rw [h i i hi, Matrix.one_apply_eq]
   · intro i j hij
@@ -260,7 +260,7 @@ namespace GlobalTheory.Shin.FreeCusp
 theorem hfree_two_le {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F →* ℂ) (k m : ℕ) (hm : 2 ≤ m) :
     HFree (cusp θ m k) := by
   intro _
-  letI := Fintype.ofFinite F
+  let := Fintype.ofFinite F
   let l : Fin m := ⟨m - 1, by omega⟩
   have hl1 : (l : ℕ) + 1 = m := by simp only [l]; omega
   have hjl : ∀ j : Fin m, (j : ℕ) + 1 < m ↔ j ≠ l := fun j => by
@@ -268,7 +268,7 @@ theorem hfree_two_le {F : Type} [Field F] [Finite F] (θ : AlgebraicClosure F �
     · intro h e; rw [e] at h; omega
     · intro h; have := j.2; have : (j : ℕ) ≠ m - 1 := fun e => h (Fin.ext e); omega
   have hs : IsAdditive (rootSum θ k) := (rootSum_isAdditive_and_pow_X_sub_one F θ k).1
-  haveI : Finite (Module.End F (Fin m → F)) := Finite.of_injective _ DFunLike.coe_injective
+  have : Finite (Module.End F (Fin m → F)) := Finite.of_injective _ DFunLike.coe_injective
   have hN : (nilRad (hyp l) : Set (Module.End F (Fin m → F))).Finite := Set.toFinite _
   have hSf : {x : GL (Fin m) F | ∀ i j : Fin m, (j : ℕ) + 1 < m →
       (x : Matrix (Fin m) (Fin m) F) i j = (1 : Matrix (Fin m) (Fin m) F) i j}.Finite := Set.toFinite _
@@ -513,7 +513,7 @@ theorem avg {G H : Type} [Group G] [Fintype G] [Fintype H] (S : Subgroup G) (T :
     calc _ = ∑ u, ∑ g, (if u ∈ T then (if g ∈ S then φ (g * ψ u) else 0) else 0) := by
             refine Finset.sum_congr rfl fun u _ => ?_
             by_cases hu : u ∈ T
-            · simp only [hu, if_true]; exact (h1 u hu).symm
+            · simp only [hu, ite_true]; exact (h1 u hu).symm
             · simp [hu]
       _ = ∑ g, ∑ u, (if u ∈ T then (if g ∈ S then φ (g * ψ u) else 0) else 0) := Finset.sum_comm
       _ = 0 := by
@@ -746,7 +746,7 @@ theorem core [Finite F] (a b : ℕ) [Fintype (GL (Fin (a + b)) F)] (A : GL (Fin 
       · exact congrFun h0 i
       · exact congrFun h2 j
     obtain ⟨ψ, hψ⟩ := sec2 a b f h0 hf2
-    haveI : Fintype (GL (Fin b) F) := Fintype.ofFinite _
+    have : Fintype (GL (Fin b) F) := Fintype.ofFinite _
     refine avg (fixSub f) (fixSet fun j => f (Fin.natAdd a j)) ⟨1, (fixSub _).one_mem⟩ ψ
       (fun u hu => (hψ u hu).1) _ fun g hg => ?_
     by_cases hpg : InPar a g
@@ -765,7 +765,7 @@ theorem core [Finite F] (a b : ℕ) [Fintype (GL (Fin (a + b)) F)] (A : GL (Fin 
       · simp [hu, hnot g (ψ u) hpg (hψ u hu).2.1]
       · simp [hu]
   · obtain ⟨ψ, hψ⟩ := sec1 a b f h0
-    haveI : Fintype (GL (Fin a) F) := Fintype.ofFinite _
+    have : Fintype (GL (Fin a) F) := Fintype.ofFinite _
     refine avg (fixSub f) (fixSet fun i => f (Fin.castAdd b i)) ⟨1, (fixSub _).one_mem⟩ ψ
       (fun u hu => (hψ u hu).1) _ fun g hg => ?_
     by_cases hpg : InPar a g
@@ -789,7 +789,7 @@ theorem hfree_hc : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a
   intro F _ _ a b n hn A B hA hB hfA hfB
   subst hn
   intro hpos
-  haveI : Fintype (GL (Fin (a + b)) F) := Fintype.ofFinite _
+  have : Fintype (GL (Fin (a + b)) F) := Fintype.ofFinite _
   rw [hyp_eq hpos, finsum_mem_eq]
   have hgal : ∀ y : GL (Fin (a + b)) F, gal (RingHom.id F) (a + b) y = y := fun y => by
     ext; simp [gal]
@@ -864,7 +864,7 @@ theorem mass : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : ℕ), n = a + b
   intro F _ _ a b n hn α β S
   obtain ⟨H, π, hH, hsurj, hπ, -, hchar⟩ := GlobalTheory.T.exists_blockParabolic_subgroup_levi_projection F a b n hn
   have hcl : IsCl (chG S n) := ((GlobalTheory.T.twistedHarishChandraInductionGL_isTwistedClassFunction F (RingHom.id F) a b n α β).2.2 S).2
-  haveI : Fintype F := Fintype.ofFinite F
+  have : Fintype F := Fintype.ofFinite F
   set g : GL (Fin a) F × GL (Fin b) F → ℂ := fun z => α z.1 * β z.2 *
     star (S (Matrix.charpoly (z.1 : Matrix (Fin a) (Fin a) F) * Matrix.charpoly (z.2 : Matrix (Fin b) (Fin b) F)))
     with hg
@@ -986,11 +986,11 @@ theorem sum_powerset_single (i : ℕ) (S T : Finset ℕ) (hiS : i ∉ S) (hT : T
       have hU1 : U.card = 1 := by omega
       obtain ⟨j, rfl⟩ := Finset.card_eq_one.1 hU1
       have hjT : j ∈ T := hsub (Finset.mem_singleton_self j)
-      rw [hf1 j hjT, if_neg (fun h => hUi (by rw [h])), zero_mul]
+      rw [hf1 j hjT, ite_eq_right (fun h => hUi (by rw [h])), zero_mul]
     · rw [mul_zero]
   by_cases hiT : i ∈ T
   · have hmem : {i} ∈ T.powerset := Finset.mem_powerset.2 (Finset.singleton_subset_iff.2 hiT)
-    rw [Finset.sum_eq_single_of_mem {i} hmem hz, hf1 i hiT, if_pos rfl,
+    rw [Finset.sum_eq_single_of_mem {i} hmem hz, hf1 i hiT, ite_eq_left rfl,
       hg {i} hmem (Finset.singleton_ne_empty i)]
     have hiff : (T \ {i} = S) ↔ T = insert i S := by
       constructor
@@ -999,11 +999,11 @@ theorem sum_powerset_single (i : ℕ) (S T : Finset ℕ) (hiS : i ∉ S) (hT : T
       · intro h
         rw [h, Finset.sdiff_singleton_eq_erase, Finset.erase_insert hiS]
     by_cases hc : T = insert i S
-    · rw [if_pos (hiff.2 hc), if_pos hc]
-    · rw [if_neg (fun h => hc (hiff.1 h)), if_neg hc, mul_zero]
+    · rw [ite_eq_left (hiff.2 hc), ite_eq_left hc]
+    · rw [ite_eq_right (fun h => hc (hiff.1 h)), ite_eq_right hc, mul_zero]
   · rw [Finset.sum_eq_zero fun U hU => hz U hU (fun h => hiT (by
       rw [h] at hU; exact Finset.singleton_subset_iff.1 (Finset.mem_powerset.1 hU)))]
-    rw [if_neg (fun h => hiT (by rw [h]; exact Finset.mem_insert_self i S))]
+    rw [ite_eq_right (fun h => hiT (by rw [h]; exact Finset.mem_insert_self i S))]
 
 theorem pair_J_prod_rootSum : ∀ (F : Type) [Field F] [Finite F], ∀ (θ : AlgebraicClosure F →* ℂ) (m : ℕ) (e : ℕ → ℕ) (ε : ℤ), (∀ i, ∑ᶠ x, cusp θ m (e i) x = 0) → ∀ N : ℕ, (∀ i j, i < N → j < N → ∑ᶠ x, cusp θ m (e i) x * star (chG (rootSum θ (e j)) m x) = if i = j then (ε : ℂ) * (Nat.card (GL (Fin m) F) : ℂ) else 0) → ∀ (L : List ℕ) (T : Finset ℕ), L.Nodup → (∀ i ∈ L, i < N) → (∀ j ∈ T, j < N) → T.card ≤ L.length → ∀ n, n = m * L.length → ∑ᶠ x, J θ (L.map fun i => (m, e i)) n x * star (chG (fun P => ∏ j ∈ T, rootSum θ (e j) P) n x) = if T = L.toFinset then (ε : ℂ) ^ L.length * (Nat.card (GL (Fin n) F) : ℂ) else 0 := by
   intro F _ _ θ m e ε h1 N h2 L
@@ -1014,12 +1014,12 @@ theorem pair_J_prod_rootSum : ∀ (F : Type) [Field F] [Finite F], ∀ (θ : Alg
     subst hT0
     simp only [List.length_nil, mul_zero] at hn
     subst hn
-    haveI : Subsingleton (GL (Fin 0) F) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
-    haveI : Unique (GL (Fin 0) F) := ⟨⟨1⟩, fun a => Subsingleton.elim _ _⟩
+    have : Subsingleton (GL (Fin 0) F) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
+    have : Unique (GL (Fin 0) F) := ⟨⟨1⟩, fun a => Subsingleton.elim _ _⟩
     simp [J_nil, chG, finsum_unique]
   | cons i L ih =>
     intro T hnd hLN hTN hT n hn
-    haveI : Fintype F := Fintype.ofFinite F
+    have : Fintype F := Fintype.ofFinite F
     have hiS : i ∉ L.toFinset := by simpa using (List.nodup_cons.1 hnd).1
     have hnd' : L.Nodup := (List.nodup_cons.1 hnd).2
     have hb := deg_map_const_fst m e L
@@ -1093,7 +1093,7 @@ theorem hc_one_orth_hfree : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : �
     ∀ (α : GL (Fin a) F → ℂ) (Y : GL (Fin n) F → ℂ), IsChar ℂ ℂ Y → HFree Y →
     ∑ᶠ x, hc a b α (fun _ => 1) n x * star (Y x) = 0 := by
   intro F _ _ a b n hn hb α Y hY hF
-  haveI : Fintype (GL (Fin n) F) := Fintype.ofFinite _
+  have : Fintype (GL (Fin n) F) := Fintype.ofFinite _
   have hn0 : 0 < n := by omega
   have hcl : ∀ g x : GL (Fin n) F, Y (x⁻¹ * g * x) = Y g :=
     (virt_mul_comap_conj_ind_linear (GL (Fin n) F)).2.2.1 Y (isChar_mem_virt_complex hY)
@@ -1122,7 +1122,7 @@ theorem hc_one_orth_hfree : ∀ (F : Type) [Field F] [Finite F], ∀ (a b n : �
     rw [← finsum_set_coe_eq_finsum_mem] at this
     exact this
   have hcos := char_coset_sum_eq_zero (GL (Fin n) F) Y hY H hH
-  haveI : Fintype H := Fintype.ofFinite _
+  have : Fintype H := Fintype.ofFinite _
   let f : GL (Fin n) F → ℂ := fun x => if InPar a x then α (tlG a x) else 0
   have hent : ∀ x : GL (Fin n) F, ∀ h ∈ H, ∀ i j : Fin n, (j : ℕ) < a →
       ((x * h : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) i j = (x : Matrix (Fin n) (Fin n) F) i j := by
@@ -1265,8 +1265,8 @@ theorem rootSum_zero {K : Type} [Field K] (θ : AlgebraicClosure K →* ℂ) (P 
 
 theorem natCard_ext (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Finite F'] :
     Nat.card F' = Nat.card F ^ Module.finrank F F' := by
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  haveI := Fintype.ofFinite F; haveI := Fintype.ofFinite F'
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have := Fintype.ofFinite F; have := Fintype.ofFinite F'
   rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card, Module.card_eq_pow_finrank (K := F) (V := F')]
 
 theorem sum_cusp_eq_zero {K : Type} [Field K] [Finite K] (θ : AlgebraicClosure K →* ℂ)
@@ -1301,10 +1301,10 @@ theorem gram_lift {K : Type} [Field K] [Finite K] (θ : AlgebraicClosure K →* 
       simp
     · intro h
       by_cases hij : i = j
-      · rw [if_pos hij, Finset.mem_singleton] at h
+      · rw [ite_eq_left hij, Finset.mem_singleton] at h
         subst h; subst hij
         exact ⟨hm, (h3 0 hi hi hm).2 ⟨rfl, rfl⟩⟩
-      · rw [if_neg hij] at h
+      · rw [ite_eq_right hij] at h
         simp at h
   rw [hf]
   by_cases hij : i = j
@@ -1338,7 +1338,7 @@ theorem pairing_pm_one : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [
     ∑ᶠ x, psiG (fun P => ∏ t : F' ≃ₐ[F] F', rootSum θ k (P.map (t : F' →+* F'))) n x *
       star (J θ (liftL (Nat.card F) (Module.finrank F F') [(n, k)]) n x) = z * (Nat.card (GL (Fin n) F') : ℂ) := by
   intro F F' _ _ _ _ s hl _ ι θ hθ m k n hm hn hreg
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
   have hK : Nat.card F' = Nat.card F ^ Module.finrank F F' := natCard_ext F F'
   set l := Module.finrank F F' with hl_def
   set q := Nat.card F with hq_def
@@ -1388,7 +1388,7 @@ theorem pairing_pm_one : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [
       l (gram_lift θ hθ q l m k hq hl0 hm hK hreg') (List.range l) (Finset.range l) List.nodup_range
       (fun i hi => List.mem_range.1 hi) (fun j hj => Finset.mem_range.1 hj) (by simp) n
       (by rw [hn, List.length_range, mul_comm])
-    rw [List.toFinset_range, if_pos rfl, List.length_range, ← hLL] at hZ
+    rw [List.toFinset_range, ite_eq_left rfl, List.length_range, ← hLL] at hZ
     have hst : ∀ (a b : GL (Fin n) F' → ℂ), ∑ᶠ x, a x * star (b x) = star (∑ᶠ x, b x * star (a x)) := by
       intro a b
       rw [show star (∑ᶠ x, b x * star (a x)) = starAddEquiv (∑ᶠ x, b x * star (a x)) from rfl,
@@ -1526,9 +1526,9 @@ theorem cusp_mul_card_pow (F F' : Type) [Field F] [Field F'] [Algebra F F'] [Fin
     (θ : AlgebraicClosure F' →* ℂ) (m K : ℕ) :
     cusp θ m (K * Nat.card F ^ Module.finrank F F') = cusp θ m K := by
   have : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  letI := Fintype.ofFinite F
-  letI := Fintype.ofFinite F'
-  haveI : CharP F (ringChar F) := ringChar.charP F
+  let := Fintype.ofFinite F
+  let := Fintype.ofFinite F'
+  have : CharP F (ringChar F) := ringChar.charP F
   obtain ⟨r, hp, hcard⟩ := FiniteField.card F (ringChar F)
   have hchar : ringChar F' = ringChar F := (Algebra.ringChar_eq F F').symm
   have hq : Nat.card F = ringChar F' ^ (r : ℕ) := by rw [Nat.card_eq_fintype_card, hcard, hchar]
@@ -1549,7 +1549,7 @@ theorem J_liftL_galAct_frob (F F' : Type) [Field F] [Field F'] [Algebra F F'] [F
     J θ (liftL (Nat.card F) (Module.finrank F F') L) n
       (galAct F F' n (FiniteField.frobeniusAlgEquivOfAlgebraic F F') x) =
       J θ (liftL (Nat.card F) (Module.finrank F F') L) n x := by
-  haveI : CharP F (ringChar F) := ringChar.charP F
+  have : CharP F (ringChar F) := ringChar.charP F
   obtain ⟨r, hp, hcard⟩ := FiniteField.card F (ringChar F)
   have hchar : ringChar F' = ringChar F := (Algebra.ringChar_eq F F').symm
   have hq : Nat.card F = ringChar F' ^ (r : ℕ) := by rw [Nat.card_eq_fintype_card, hcard, hchar]
@@ -1607,7 +1607,7 @@ theorem J_liftL_galAct : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F F'] [
       J θ (liftL (Nat.card F) (Module.finrank F F') L) n x := by
   intro F F' _ _ _ _ θ t L n hn
   have : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  letI := Fintype.ofFinite F
+  let := Fintype.ofFinite F
   obtain ⟨i, rfl⟩ := (FiniteField.bijective_frobeniusAlgEquivOfAlgebraic_pow F F').2 t
   suffices h : ∀ k : ℕ, ∀ x : GL (Fin n) F',
       J θ (liftL (Nat.card F) (Module.finrank F F') L) n
@@ -1662,13 +1662,13 @@ theorem shLift_cusp_kills_J : ∀ (F F' : Type) [Field F] [Field F'] [Algebra F 
     ∀ n k : ℕ, 0 < n → Module.finrank F F' ∣ n → Reg (Nat.card F) n k →
     Kills (shLift s (cusp (pullθ ι θ) n k)) (J θ (liftL (Nat.card F) (Module.finrank F F') [(n, k)]) n) := by
   intro F F' _ _ _ _ s hl hs ι θ hθ n k hn hln hreg
-  haveI : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
-  haveI : Module.Finite F F' := Module.Finite.of_finite
-  haveI : IsGalois F F' := inferInstance
+  have : Finite F := Finite.of_injective (algebraMap F F') (algebraMap F F').injective
+  have : Module.Finite F F' := Module.Finite.of_finite
+  have : IsGalois F F' := inferInstance
   have hΓ : Nat.card (F' ≃ₐ[F] F') = Module.finrank F F' := IsGalois.card_aut_eq_finrank F F'
-  haveI : Finite (F' ≃ₐ[F] F') := Nat.finite_of_card_ne_zero (by rw [hΓ]; exact hl.ne_zero)
-  letI : Fintype (F' ≃ₐ[F] F') := Fintype.ofFinite _
-  haveI : Fact (Nat.card (F' ≃ₐ[F] F')).Prime := ⟨hΓ ▸ hl⟩
+  have : Finite (F' ≃ₐ[F] F') := Nat.finite_of_card_ne_zero (by rw [hΓ]; exact hl.ne_zero)
+  let : Fintype (F' ≃ₐ[F] F') := Fintype.ofFinite _
+  have : Fact (Nat.card (F' ≃ₐ[F] F')).Prime := ⟨hΓ ▸ hl⟩
   have hgen : ∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s := by
     intro t
     rcases Subgroup.eq_bot_or_eq_top_of_prime_card (Subgroup.zpowers s) with h | h

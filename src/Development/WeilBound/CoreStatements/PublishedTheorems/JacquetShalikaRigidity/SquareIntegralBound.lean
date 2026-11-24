@@ -74,11 +74,11 @@ theorem intMul {X : Type} [MeasurableSpace X] {ν : Measure X} {F G : X → ℂ}
   unfold HasFiniteIntegral
   calc ∫⁻ x, ‖F x * conj (G x)‖ₑ ∂ν ≤ ∫⁻ x, (‖F x‖ₑ ^ 2 + ‖G x‖ₑ ^ 2) ∂ν := by
         refine lintegral_mono fun x => ?_
-        rw [enorm_mul]
+        rw [eNorm_mul]
         have : ‖conj (G x)‖ₑ = ‖G x‖ₑ := by
           rw [← ofReal_norm, ← ofReal_norm, Complex.norm_conj]
         rw [this]; exact sqle _ _
-    _ = ∫⁻ x, ‖F x‖ₑ ^ 2 ∂ν + ∫⁻ x, ‖G x‖ₑ ^ 2 ∂ν := lintegral_add_left' (hF.enorm.pow_const 2) _
+    _ = ∫⁻ x, ‖F x‖ₑ ^ 2 ∂ν + ∫⁻ x, ‖G x‖ₑ ^ 2 ∂ν := lintegral_add_left' (hF.eNorm.pow_const 2) _
     _ < ∞ := ENNReal.add_lt_top.2 ⟨hF2, hG2⟩
 
 theorem bnd (D B C1 C2 s : ℝ) (N : ℕ) (hD : 0 < D) (hB : 0 ≤ B) (hs : 2 ≤ s) (hN : s + 1 ≤ N) (T : ℝ≥0∞)
@@ -182,11 +182,11 @@ theorem moderate_growth_of : D0 → N0 → P2 → U0 → U2 → V1 → ThetaDeca
     · simp [h0]
     · rw [← hK g (hfC g h0), map_mul]; ring
   have hL2f : ∫⁻ g, ‖χ₁ g * f g‖ₑ ^ 2 ∂μ.withDensity β₁ < ∞ := by
-    rw [hU0a (fun g => ‖χ₁ g * f g‖ₑ ^ 2) (hpre1.cont.measurable.enorm.pow_const 2)
+    rw [hU0a (fun g => ‖χ₁ g * f g‖ₑ ^ 2) (hpre1.cont.measurable.eNorm.pow_const 2)
       (fun γ hγ g => congrArg (fun w : ℂ => ‖w‖ₑ ^ 2) (hpre1.left γ hγ g))]
     refine lt_of_le_of_lt (lintegral_mono fun g => ?_) (((hV1c ε hε).const_mul Cf).lintegral_lt_top)
     have hterm : ∀ x, ‖χ₁ x * f x‖ₑ ^ 2 = ENNReal.ofReal (Dt x ^ a) * ‖f x‖ₑ ^ 2 := fun x => by
-      rw [enorm_mul, mul_pow]
+      rw [eNorm_mul, mul_pow]
       congr 1
       rw [hχ₁]
       simp only
@@ -215,7 +215,7 @@ theorem moderate_growth_of : D0 → N0 → P2 → U0 → U2 → V1 → ThetaDeca
     have e1 : -((k : ℕ) : ℝ) / k = -1 := by field_simp
     have e2 : -(((k * N : ℕ)) : ℝ) / k = -(N : ℝ) := by push_cast; field_simp
     rw [e1] at hC1; rw [e2] at hC2
-    rw [hU0a (fun g => ‖χ₂ g * φ g‖ₑ ^ 2) (hpre2.cont.measurable.enorm.pow_const 2)
+    rw [hU0a (fun g => ‖χ₂ g * φ g‖ₑ ^ 2) (hpre2.cont.measurable.eNorm.pow_const 2)
       (fun γ hγ g => congrArg (fun w : ℂ => ‖w‖ₑ ^ 2) (hpre2.left γ hγ g))]
     refine lt_of_le_of_lt (lintegral_mono fun g => ?_)
       (((hV1c 1 one_pos).const_mul (Bφ * max (max C1 C2) 0)).lintegral_lt_top)

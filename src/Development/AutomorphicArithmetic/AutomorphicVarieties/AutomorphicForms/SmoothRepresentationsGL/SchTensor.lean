@@ -81,7 +81,7 @@ theorem UpperTheory.V.Af.Smo.schTensor :
           (β.differentiableAt).hasFDerivAt.comp p hasFDerivAt_snd
         rw [show (fun p : V × M => f p.1 * β p.2) = (fun p => f p.1) * (fun p => β p.2) from rfl,
           (h1.mul h2).fderiv, SchwartzMap.lineDerivOp_apply_eq_fderiv]
-        simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+        simp only [add_apply, smul_apply,
           ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd',
           smul_eq_mul]
         ring

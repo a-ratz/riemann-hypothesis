@@ -82,7 +82,7 @@ theorem sum_absNorm_inv_sq_le (K : Type) [Field K] [NumberField K]
   have hp : ∀ w : HeightOneSpectrum (𝓞 K), ∃ p : ℕ, p.Prime ∧ (p : 𝓞 K) ∈ w.asIdeal ∧
       p ≤ Ideal.absNorm w.asIdeal := by
     intro w
-    haveI := w.isMaximal
+    have := w.isMaximal
     obtain ⟨q, n, hn, hqP, hq, H⟩ := Ideal.exists_prime_and_absNorm_eq_pow w.asIdeal
     exact ⟨q, hq, hqP, H ▸ Nat.le_self_pow hn.ne' q⟩
   choose p hp hpm hple using hp
@@ -91,7 +91,7 @@ theorem sum_absNorm_inv_sq_le (K : Type) [Field K] [NumberField K]
         refine Finset.sum_le_sum fun i _ => ?_
         have hinj : Set.InjOn p (s.filter fun w => c w.asIdeal = i) := by
           intro v hv w hw h
-          simp only [Finset.coe_filter, Set.mem_setOf_eq] at hv hw
+          simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hv hw
           exact HeightOneSpectrum.ext (hc (p v) (hp v) _ _ v.isMaximal w.isMaximal (hpm v)
             (h ▸ hpm w) (hv.2.trans hw.2.symm))
         calc _ ≤ ∑ w ∈ s.filter (fun w => c w.asIdeal = i), ((p w : ℝ) ^ 2)⁻¹ := by

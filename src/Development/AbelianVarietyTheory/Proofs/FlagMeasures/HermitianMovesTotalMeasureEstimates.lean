@@ -298,7 +298,7 @@ theorem _root_.GlobalTheory.TopLevelShare.main : ∀ {F : Type} [Field F] [Valua
     rw [← hbe, hbe', AddSubgroup.relIndex, AddSubgroup.relIndex, ← hker, AddSubgroup.index_ker, AddMonoidHom.range_eq_top.2 hsurj, AddSubgroup.card_top]
     rfl
   have hidx0 : B.relIndex A ≠ 0 := by rw [hidx]; exact hβ0
-  haveI : Finite (A ⧸ B.addSubgroupOf A) := Nat.finite_of_card_ne_zero hidx0
+  have : Finite (A ⧸ B.addSubgroupOf A) := Nat.finite_of_card_ne_zero hidx0
   set φ := _root_.GlobalTheory.IdxInt.ind (fun b : S.V × S.V => b ∈ A ∧ S.lev (S.fr d Λ) (S.fr' d Λ) (b.1 + b.2) = ↑j + 1) with hφdef
   have hφval : ∀ w, φ w = if w ∈ A ∧ S.lev (S.fr d Λ) (S.fr' d Λ) (w.1 + w.2) = ↑j + 1 then 1 else 0 := by
     intro w
@@ -318,7 +318,7 @@ theorem _root_.GlobalTheory.TopLevelShare.main : ∀ {F : Type} [Field F] [Valua
   have hsupp : Function.support φ ⊆ A := by
     intro w hw
     by_contra h
-    exact hw (by rw [hφval, if_neg (fun hc => h hc.1)])
+    exact hw (by rw [hφval, ite_eq_right (fun hc => h hc.1)])
   have hfin : ((fun w : S.V × S.V => (w : (S.V × S.V) ⧸ B)) '' Function.support φ).Finite := by
     let h : A ⧸ B.addSubgroupOf A →+ (S.V × S.V) ⧸ B := QuotientAddGroup.map (B.addSubgroupOf A) B A.subtype (fun x hx => hx)
     refine (Set.finite_range h).subset ?_
@@ -335,7 +335,7 @@ theorem _root_.GlobalTheory.TopLevelShare.main : ∀ {F : Type} [Field F] [Valua
     calc ∑ᶠ c : (S.V × S.V) ⧸ B, φ (Quotient.out c) = ∑ᶠ c ∈ T, (1 : ℂ) := by
           rw [finsum_mem_def]
           refine finsum_congr fun c => ?_
-          simp only [hφval, Set.indicator, hTdef, Set.mem_setOf_eq]
+          simp only [hφval, Set.indicator, hTdef, Set.mem_ofPred_eq]
       _ = T.ncard := by
           rw [finsum_mem_eq_finite_toFinset_sum _ hTfin, Finset.sum_const, nsmul_eq_mul, mul_one, Set.ncard_eq_toFinset_card T hTfin]
   have hout : ∀ b : S.V × S.V, Quotient.out (b : (S.V × S.V) ⧸ B) - b ∈ B := by
@@ -362,7 +362,7 @@ theorem _root_.GlobalTheory.TopLevelShare.main : ∀ {F : Type} [Field F] [Valua
         rw [add_sub_cancel] at this
         rw [hlevπ, ← this, hyl]
       · ext x
-        simp only [hfCdef, Set.mem_setOf_eq]
+        simp only [hfCdef, Set.mem_ofPred_eq]
         constructor
         · intro hx
           have := sub_mem hx hyo
@@ -510,7 +510,7 @@ lemma fine_refine {A B C : AddSubgroup W} {φ : W → ℂ} (h : Fine A φ B) (hC
     (hi : C.relIndex A ≠ 0) : Fine A φ C := by
   have m1 := AddSubgroup.relIndex_mul_relIndex C B A hC h.1
   have i1 : C.relIndex B ≠ 0 := fun z => hi (by rw [← m1, z, zero_mul])
-  haveI : Finite (B ⧸ C.addSubgroupOf B) := Nat.finite_of_card_ne_zero i1
+  have : Finite (B ⧸ C.addSubgroupOf B) := Nat.finite_of_card_ne_zero i1
   refine ⟨hC.trans h.1, hi, fun w b hb => h.2.2.1 w b (hC hb), ?_⟩
   let e := AddSubgroup.quotientEquivProdOfLE hC
   refine ((h.2.2.2.prod (Set.finite_univ (α := B ⧸ C.addSubgroupOf B))).preimage
@@ -901,7 +901,7 @@ theorem exists_reps_refU [CharZero F] {Λ : Submodule L.O S.V} (hΛ : IsSD L S.H
   obtain ⟨-, -, -, -, -, h6, h7, -⟩ := GlobalTheory.UnramOrder.order_facts L S.ϖ S.ϖ_irr
   have hset : {y : L.O | (y : E) = algebraMap F E ((S.ϖ : F) ^ N)} = {⟨_, hp⟩} := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, Subtype.ext_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, Subtype.ext_iff]
   have h8 := h6 N
   rw [hset] at h8
   have : Finite (L.O ⧸ Ideal.span {(⟨_, hp⟩ : L.O)}) :=
@@ -1147,7 +1147,7 @@ theorem exists_coords (g : Fin (r + 1) → S.V) (gs : Fin r → S.V)
     simpa using this
   · have h0 : hf L S.Hm (n (n.symm x) - n.symm x) (gs j) = 0 :=
       hf_spanTo S g hd fun i hi => by
-        rw [dual, if_neg]
+        rw [dual, ite_eq_right]
         rintro rfl
         simp at hi
     rw [hf_sub_l, LinearEquiv.apply_symm_apply, sub_eq_zero] at h0
@@ -1214,8 +1214,8 @@ theorem total_moves : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpac
     ⟨B, fine_mul hB (fun w => ind (fun u => ¬ S.NoLeak Λ u) w.2.1) fun w hw b hb => by
       have := (hinv w hw b hb).2.2
       by_cases h : S.NoLeak Λ w.2.1
-      · simp only [ind, h, this.2 h, not_true, if_false]
-      · simp only [ind, h, mt this.1 h, not_false_iff, if_true]⟩
+      · simp only [ind, h, this.2 h, not_true, ite_false]
+      · simp only [ind, h, mt this.1 h, not_false_iff, ite_true]⟩
   have n3 : Nice (S.refA (j + 1) Λ) fun w => ind (S.Mv (j + 1) d Λ) w * S.chiM j d Λ w.1 w.2.1 :=
     ⟨B, fine_mul hB (fun w => S.chiM j d Λ w.1 w.2.1) fun w hw b hb => (hinv w hw b hb).2.1⟩
   refine ⟨⟨B, hB⟩, e2 ▸ n2, n3, ?_, ?_, ?_⟩

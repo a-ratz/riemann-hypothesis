@@ -117,7 +117,7 @@ private lemma GL_blockTriangular_diag_ne_zero (g : GL (Fin n) L)
     have h1 := congrArg Matrix.det (Units.mul_inv g)
     rw [Matrix.det_mul, h0, zero_mul, Matrix.det_one] at h1
     exact zero_ne_one h1
-  rw [Matrix.det_of_upperTriangular hg] at hdet
+  rw [det_of_isUpperTriangular hg] at hdet
   exact Finset.prod_ne_zero_iff.mp hdet i (Finset.mem_univ _)
 
 theorem fIwasawa_chi_mul (hα : ∀ i, α i ≠ 0) (hq : (q : ℂ) ≠ 0) (b c : GU σ n)

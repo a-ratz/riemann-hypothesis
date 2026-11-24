@@ -184,14 +184,14 @@ theorem UpperTheory.V.Pr.niceIrrE :
     simp [Frame.d] at this
   obtain ⟨v⟩ := hV
   have hfi : U.FiniteIndex := by
-    haveI : CompactSpace T.G.G₀ :=
+    have : CompactSpace T.G.G₀ :=
       isCompact_iff_compactSpace.1 (T.G.η.ker.isClosed_of_isOpen T.G.η_open).isCompact
-    haveI := U.quotient_finite_of_isOpen hU
+    have := U.quotient_finite_of_isOpen hU
     exact Subgroup.finiteIndex_of_finite_quotient
   have hU' : IsOpen (U.normalCore : Set T.G.G₀) :=
     Subgroup.isOpen_of_isClosed_of_finiteIndex _ (U.normalCore_isClosed (U.isClosed_of_isOpen hU))
   obtain ⟨g₁, hg₁, hfree⟩ := niceSep l O F 3 T x L y j hj hN hρ hψ _ hU' v
-  haveI : T.G.G'.Normal := MonoidHom.normal_ker _
+  have : T.G.G'.Normal := MonoidHom.normal_ker _
   let lam : T.G.Gv v →* F.Gv (T.K.e v) := (T.K.lam v).toMulEquiv.toMonoidHom
   have hlam : ∀ s, T.K.π (T.G.φ v s) = F.loc0 _ (lam s) := fun s => (T.K.lam_loc v s).symm
   let k' : ResidueField O →+* ResidueField y.A :=

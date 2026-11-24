@@ -68,11 +68,11 @@ theorem UpperTheory.Reformulated.B.Qh66.ring_sec :
     ∀ (Ω C : Type) [inst : Field Ω] [IsAlgClosed Ω]
     [inst_2 : CommRing C] [Nontrivial C] (φ : Ω →+* C), φ.FiniteType → ∃ (ρ : C →+* Ω), ρ.comp φ = RingHom.id Ω := by
   intro Ω C _ _ _ _ φ hφ
-  letI : Algebra Ω C := φ.toAlgebra
-  haveI : Algebra.FiniteType Ω C := hφ
+  let : Algebra Ω C := φ.toAlgebra
+  have : Algebra.FiniteType Ω C := hφ
   obtain ⟨m, hm⟩ := Ideal.exists_maximal C
-  letI : Field (C ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite Ω (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing Ω (C ⧸ m)
+  let : Field (C ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite Ω (C ⧸ m) := finite_of_finite_type_of_isJacobsonRing Ω (C ⧸ m)
   let f : (C ⧸ m) →ₐ[Ω] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -101,8 +101,8 @@ private theorem etale_sec (Ω : Type) [Field Ω] [IsAlgClosed Ω] {V : Scheme.{0
   have hl : LocallyOfFiniteType g := inferInstance
   have hft : g.appTop.hom.FiniteType := (HasRingHomProperty.iff_of_isAffine (P := @LocallyOfFiniteType)).mp hl
   let e := Scheme.ΓSpecIso (CommRingCat.of Ω)
-  haveI : Nontrivial Γ(V, ⊤) := by
-    haveI : Nonempty (⊤ : V.Opens) := ⟨⟨Classical.arbitrary V, trivial⟩⟩
+  have : Nontrivial Γ(V, ⊤) := by
+    have : Nonempty (⊤ : V.Opens) := ⟨⟨Classical.arbitrary V, trivial⟩⟩
     exact Scheme.component_nontrivial V ⊤
   have hft' : (e.inv ≫ g.appTop).hom.FiniteType := by
     rw [CommRingCat.hom_comp]
@@ -124,7 +124,7 @@ private theorem etale_sec (Ω : Type) [Field Ω] [IsAlgClosed Ω] {V : Scheme.{0
 private theorem loc_gp (Ω : Type) [Field Ω] [IsAlgClosed Ω] (P : ∀ V : Scheme.{0}, (V ⟶ gp Ω) → Prop)
     (hP : ∀ (V W : Scheme.{0}) (g : V ⟶ gp Ω) (k : W ⟶ V), P V g → P W (k ≫ g)) (h : Loc (gp Ω) P) : P (gp Ω) (𝟙 _) := by
   obtain ⟨V, g, hV, hg, ⟨v, -⟩, hPg⟩ := (GlobalTheory.T.etaleLocally_iff_affine_etale_point_cover (gp Ω) P hP).1 h (IsLocalRing.closedPoint Ω)
-  haveI : Nonempty V := ⟨v⟩
+  have : Nonempty V := ⟨v⟩
   obtain ⟨σ, hσ⟩ := etale_sec Ω g
   simpa [hσ] using hP _ _ g σ hPg
 

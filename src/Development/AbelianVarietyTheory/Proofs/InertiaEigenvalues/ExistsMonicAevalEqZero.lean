@@ -63,7 +63,7 @@ theorem exists_monic_aeval_eq_zero {R E : Type*} [CommRing R] [Field E] [Algebra
     (hspan : Submodule.span E (L : Set (Fin n → E)) = ⊤)
     (M : Matrix (Fin n) (Fin n) E) (hM : ∀ x ∈ L, M.mulVec x ∈ L) :
     ∃ p : R[X], p.Monic ∧ aeval M (p.map (algebraMap R E)) = 0 := by
-  haveI : Module.Finite R L := Module.Finite.iff_fg.mpr hL
+  have : Module.Finite R L := Module.Finite.iff_fg.mpr hL
   let g : Module.End R (Fin n → E) := (Matrix.toLin' M).restrictScalars R
   have hg : ∀ x ∈ L, g x ∈ L := fun x hx => by simpa [g] using hM x hx
   obtain ⟨p, hp, hp0⟩ := LinearMap.exists_monic_and_aeval_eq_zero R (g.restrict hg)

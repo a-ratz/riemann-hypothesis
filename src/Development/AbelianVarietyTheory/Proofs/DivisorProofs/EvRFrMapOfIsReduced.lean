@@ -57,7 +57,7 @@ theorem eq_of_field_maps {S : Type} [CommRing S] [_root_.IsReduced S] {a b : S}
   refine IsNilpotent.eq_zero (mem_nilradical.1 ?_)
   rw [nilradical_eq_sInf, Ideal.mem_sInf]
   intro p hp
-  haveI : p.IsPrime := hp
+  have : p.IsPrime := hp
   rw [← Ideal.algebraMap_residueField_eq_zero, map_sub, h _ (algebraMap S p.ResidueField), sub_self]
 
 theorem eq_of_field_algHoms {K S : Type} [CommRing K] [CommRing S] [Algebra K S] [_root_.IsReduced S] {a b : S}
@@ -112,10 +112,10 @@ namespace FlagCover
 
 theorem isReduced_Yo (hi : Function.Injective β) (hs : ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a)
     (X : FlagCover Y) : IsReduced X.Yo := by
-  letI := β.toAlgebra
-  haveI : IsDomain O := hi.isDomain β
-  haveI : FaithfulSMul O c.F := (faithfulSMul_iff_algebraMap_injective O c.F).2 hi
-  haveI : IsFractionRing O c.F := IsFractionRing.of_field O c.F fun x => by
+  let := β.toAlgebra
+  have : IsDomain O := hi.isDomain β
+  have : FaithfulSMul O c.F := (faithfulSMul_iff_algebraMap_injective O c.F).2 hi
+  have : IsFractionRing O c.F := IsFractionRing.of_field O c.F fun x => by
     obtain ⟨a, b, hb, h⟩ := hs x
     exact ⟨a, b, (eq_div_iff hb).2 h⟩
   have h1 : IsPreimmersion (spMap β) := IsPreimmersion.of_isLocalization (R := O) (S := c.F) (nonZeroDivisors O)
@@ -211,7 +211,7 @@ theorem exists_toRule_eq [IsReduced X.Yo] {f : Rul Xo c} (hf : f ∈ GlobalTheor
       rw [← Finset.prod_mul_distrib]; simp
     rw [this, Units.val_one, one_mul]⟩
   refine ⟨s, funext fun p => funext fun P => ?_⟩
-  haveI : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
+  have : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
   refine eq_of_field_algHoms (K := c.F) fun L _ _ ψ => ?_
   obtain ⟨P', hP⟩ := exists_frMap ψ P
   obtain ⟨k, hz⟩ := exists_chart_of_isLocalRing X.F.cover (X.pt P' ≫ X.inc)

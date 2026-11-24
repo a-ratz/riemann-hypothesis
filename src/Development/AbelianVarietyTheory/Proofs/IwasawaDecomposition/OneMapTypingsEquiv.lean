@@ -105,7 +105,7 @@ theorem const_of_const_on_dictLat : ∀ (D : D7) (H : ReciprocityTheory.ChartRes
     simp only [Matrix.mul_assoc]
   obtain ⟨h, hh⟩ := GlobalTheory.TwistTie.exists_dict_over V U dict io e F ik φ th x₀ hσ hA hpq hU hW hD hι hth hx₀ hdom y
   rw [GlobalTheory.WeightZeroValue.evR_eq_of_same_point hf hh, ← hc h]
-  exact (dif_pos (hdom h) : rdU U f (dict h).1 (dict h).2 = _).symm
+  exact (dite_eq_left (hdom h) : rdU U f (dict h).1 (dict h).2 = _).symm
 
 end GlobalTheory.Member
 end -- clump:auto
@@ -202,13 +202,13 @@ theorem eq_const_of_complex (σ : c.F →+* ℂ) {f : Rul Xo c} (hf : f ∈ sec 
     (h : ∀ y : FrPt Xo c (CAt σ), toC (evR Xo c f y) = c0) (y : FrPt Xo c (CAt σ)) :
     ∃ u : c.F, σ u = c0 ∧ f = u • 1 := by
   have hB := GlobalTheory.firstFiveLaws.1.secBaseChange
-  haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
-  haveI : Nontrivial (CAt σ) := inferInstanceAs (Nontrivial ℂ)
+  have : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
+  have : Nontrivial (CAt σ) := inferInstanceAs (Nontrivial ℂ)
   obtain ⟨p, φ, y₀, -⟩ := GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c _ y
   obtain ⟨m, hm, -⟩ := Ideal.exists_le_maximal (RingHom.ker φ.toRingHom) (RingHom.ker_ne_top _)
-  letI : Algebra c.F ℂ := σ.toAlgebra
-  letI := Ideal.Quotient.field m
-  haveI : Module.Finite c.F (p.R ⧸ m) := finite_of_finite_type_of_isJacobsonRing c.F _
+  let : Algebra c.F ℂ := σ.toAlgebra
+  let := Ideal.Quotient.field m
+  have : Module.Finite c.F (p.R ⧸ m) := finite_of_finite_type_of_isJacobsonRing c.F _
   obtain ⟨u, hu⟩ := trace_value (K := c.F) (Ideal.Quotient.mk m (f p y₀)) c0 fun j => by
     let ψ : p.R →ₐ[c.F] CAt σ := (j.comp (Ideal.Quotient.mkₐ c.F m) : p.R →ₐ[c.F] ℂ)
     obtain ⟨z, hz⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c _ _ ψ y₀
@@ -258,7 +258,7 @@ theorem cover_const (hT : LawsJ T) (hL : R.toLevCh.Is A.μ0)
   have hs := (hP.cov ()).1.2.2.2.2.2.2.2.1
   have hd : (O.dict₂ () 1).2 ∈ ((O.U₂ ()).X (O.dict₂ () 1).1).dom := by
     by_contra hd
-    have h0 : c0 = 0 := (hv 1).symm.trans (dif_neg hd)
+    have h0 : c0 = 0 := (hv 1).symm.trans (dite_eq_right hd)
     rw [h0, zero_pow hm.ne'] at hc
     exact zero_ne_one hc
   obtain ⟨u, hu, hf⟩ := eq_const_of_complex _ hs c0 (GlobalTheory.Member.const_of_const_on_dictLat D _ _ _ _ _ _ _ _ _ (O.U₂ ()) (O.dict₂ ()) _ g e F ik φ th _

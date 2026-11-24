@@ -91,7 +91,7 @@ private theorem X_sub_ne {R : Type} [CommRing R] [IsDomain R] {n : ℕ} (q : R) 
     (X i - C q * X j : MvPolynomial (Fin n) R) ≠ 0 := by
   intro h0
   have := congrArg (AddMonoidAlgebra.coeff · (Finsupp.single i 1)) h0
-  simp [MvPolynomial.coeff_X', MvPolynomial.coeff_C_mul, Finsupp.single_left_inj, h, Ne.symm h] at this
+  simp [coeff_X, MvPolynomial.coeff_C_mul, Finsupp.single_left_inj, h, Ne.symm h] at this
 
 theorem UpperTheory.V.AlgebraTools.hkFaith :
     ∀ (R : Type) [CommRing R] [IsDomain R] (n : ℕ) (q : R) (H : Type) [Ring H] [Algebra R H] (b : Bern n q H), b.Faithful → ∀ c : Perm (Fin n) → MvPolynomial (Fin n) R,
@@ -338,7 +338,7 @@ open Classical in
 private theorem satInd_trc {I K : Subgroup G} (h : I ≤ K) (hf : FinOrb K I 1) (g y : G) :
     (permRep A I g (trc (permRep A I) K I (permRepBaseCosetVector A I) : MonoidAlgebra A (G ⧸ I))).coeff (y : G ⧸ I) =
       if g⁻¹ * y ∈ K then 1 else 0 := by
-  haveI : Fintype (MulAction.orbit K ((1 : G) : G ⧸ I)) := hf.fintype
+  have : Fintype (MulAction.orbit K ((1 : G) : G ⧸ I)) := hf.fintype
   have hv : ((trc (permRep A I) K I (permRepBaseCosetVector A I) : fixd (permRep A I) K) : MonoidAlgebra A (G ⧸ I)) =
       ∑ q : MulAction.orbit K ((1 : G) : G ⧸ I), MonoidAlgebra.single (q : G ⧸ I) (1 : A) := by
     rw [trc, double_coset_operator_sum_orbit _ K I 1 hf]
@@ -362,7 +362,7 @@ private theorem satInd_trc {I K : Subgroup G} (h : I ≤ K) (hf : FinOrb K I 1) 
     rfl
   simp only [key]
   by_cases hy : g⁻¹ * y ∈ K
-  · rw [if_pos hy]
+  · rw [ite_eq_left hy]
     have hmem : ((g⁻¹ * y : G) : G ⧸ I) ∈ MulAction.orbit K ((1 : G) : G ⧸ I) :=
       MulAction.mem_orbit_iff.2 ⟨⟨g⁻¹ * y, hy⟩, by
         show (((g⁻¹ * y : G) * 1 : G) : G ⧸ I) = _
@@ -373,9 +373,9 @@ private theorem satInd_trc {I K : Subgroup G} (h : I ≤ K) (hf : FinOrb K I 1) 
     simp only [e2]
     rw [Finset.sum_ite_eq']
     simp
-  · rw [if_neg hy]
+  · rw [ite_eq_right hy]
     refine Finset.sum_eq_zero fun q _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     intro hq
     obtain ⟨k, hk⟩ := MulAction.mem_orbit_iff.1 q.2
     have h1 : (((k : G) * 1 : G) : G ⧸ I) = ((g⁻¹ * y : G) : G ⧸ I) := hk.trans hq
@@ -392,7 +392,7 @@ private theorem satInd_abs {I K : Subgroup G} (h : I ≤ K) (hI : HeckePair I) (
   have key : ∀ a b, (((hT A I (t a) * e).1 (permRepBaseCosetVector A I) : fixd (permRep A I) I) :
       MonoidAlgebra A (G ⧸ I)).coeff ((t b : G) : G ⧸ I) = if a = b then 1 else 0 := by
     intro a b
-    haveI : Fintype (MulAction.orbit I ((t a : G) : G ⧸ I)) := (hI (t a)).fintype
+    have : Fintype (MulAction.orbit I ((t a : G) : G ⧸ I)) := (hI (t a)).fintype
     have h1 : (((hT A I (t a) * e).1 (permRepBaseCosetVector A I) : fixd (permRep A I) I) : MonoidAlgebra A (G ⧸ I)) =
         ∑ q : MulAction.orbit I ((t a : G) : G ⧸ I), permRep A I (q : G ⧸ I).out
           ((trc (permRep A I) K I (permRepBaseCosetVector A I) : fixd (permRep A I) K) : MonoidAlgebra A (G ⧸ I)) := by
@@ -474,8 +474,8 @@ private theorem satInd_diag {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
     simp
   have hv := congrArg (valuation k) hone
   rw [map_one, map_mul, map_pow] at hv
-  have hlt1 : valuation k (x : k) ^ d < 1 := pow_lt_one₀ zero_le' hx1 hd0
-  have := mul_le_of_le_one_left (zero_le' : (0 : ValueGroupWithZero k) ≤ valuation k (x : k) ^ d) hint
+  have hlt1 : valuation k (x : k) ^ d < 1 := pow_lt_one₀ zero_le hx1 hd0
+  have := mul_le_of_le_one_left (zero_le : (0 : ValueGroupWithZero k) ≤ valuation k (x : k) ^ d) hint
   rw [hv] at this
   exact absurd (this.trans_lt hlt1) (lt_irrefl 1)
 
@@ -489,7 +489,7 @@ private theorem satInd_sep {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     rw [← hpx]
     exact (Valuation.Integer.not_isUnit_iff_valuation_lt_one).1 hp.not_isUnit
   have hx0 : (0 : ValueGroupWithZero k) < valuation k (x : k) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
   obtain ⟨F, hU, hM, hL, hUI, hLI, hF⟩ := factTorus k n ⊤
   have dom : ∀ c : {a : Fin n → ℤ // Antitone a}, Dom (fun j => x ^ c.1 j) := by
     intro c i j hij
@@ -625,7 +625,7 @@ private theorem abs_mono {n : ℕ} {A H : Type} [CommRing A] [Ring H] [Algebra A
     obtain ⟨m', hm'⟩ := hb _ (gap_add a hc)
     refine ⟨m + m', ?_⟩
     have e : (MvPolynomial.monomial (a + b) (1 : A)) = MvPolynomial.monomial a 1 * MvPolynomial.monomial b 1 := by
-      rw [MvPolynomial.monomial_mul, one_mul]
+      rw [MvPolynomial.monomial_mul_monomial, one_mul]
     rw [e, map_mul, ← mul_assoc, hm, smul_mul_assoc, hm', smul_smul, pow_add]
     congr 2
     ext i
@@ -708,7 +708,7 @@ private theorem dom_pw {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k
   obtain ⟨p, -, hp⟩ := hx
   intro i j hij
   have h1 : valuation k (x : k) ≤ 1 := by rw [← hp]; exact p.2
-  have h0 : 0 < valuation k (x : k) := by simp [zero_lt_iff]
+  have h0 : 0 < valuation k (x : k) := by simp [pos_iff_ne_zero]
   simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
   exact zpow_le_zpow_right_of_le_one₀ h0 h1 (hc hij)
 
@@ -952,7 +952,7 @@ private theorem locA (O A M V : Type) [CommRing O] [IsDomain O] [CommRing A] [Al
       (∀ (J : Type) [Fintype J] (a b : J → MvPolynomial (Fin n) O), Hk.IsDual a b →
         ∑ i, φ (a i) * e * φ (b i) = φ (Hk.NN n (resCard k : O))) ∧
       ∀ y v, ι v ∈ fixd ρ (KO k (Fin n)) → e (φ y v) = φ (Hk.dd (Hk.NN n (resCard k : O) * y)) v := by
-  letI : Module O M := Module.compHom M (algebraMap O A)
+  let : Module O M := Module.compHom M (algebraMap O A)
   have hs : ∀ (o : O) (m : M), o • m = algebraMap O A o • m := fun _ _ => rfl
   let ρO : Representation O (GL (Fin n) k) M :=
     { toFun := fun g => { toFun := ρ g, map_add' := map_add _, map_smul' := fun o m => map_smul (ρ g) (algebraMap O A o) m }

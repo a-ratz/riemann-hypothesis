@@ -300,7 +300,7 @@ theorem exists_frPt_mul (hv : IsEigBasis TF U e v) {S : Type} [CommRing S] (x : 
   have hr : Set.range x ⊆ Set.range TF.Y.j := by
     rintro _ ⟨s, rfl⟩; exact hI (Set.mem_univ s)
   obtain ⟨y, hy⟩ : ∃ y, y ≫ TF.Y.j = x := ⟨_, IsOpenImmersion.lift_fac TF.Y.j x hr⟩
-  letI : Algebra c.F S := ((ev (y ≫ pullback.snd _ _) ⊤ le_top).comp (toΓ c.F)).toAlgebra
+  let : Algebra c.F S := ((ev (y ≫ pullback.snd _ _) ⊤ le_top).comp (toΓ c.F)).toAlgebra
   have hy2 : y ≫ pullback.snd _ _ = spMap (algebraMap c.F S) := (spMap_ev_top _).symm
   have hs : x ≫ TF.Y.s = spMap (algebraMap c.F S) := by
     rw [← hy, Category.assoc, Model.j, Category.assoc, pullback.condition, ← Category.assoc TF.Y.jQ, TF.Y.jQ_over,
@@ -338,7 +338,7 @@ theorem Carries.map {S S' : Type} [CommRing S] [CommRing S'] {z : Sp S ⟶ Y₀ 
     (hU' : ⊤ ≤ x' ⁻¹ᵁ U.1) : Carries TF Z hv (spMap ψ ≫ z) x' hU' fun σ => (T σ).map ψ := by
   obtain ⟨inst, P, hP, hz, hvec⟩ := h
   obtain ⟨inst', χ, rfl⟩ : ∃ (_ : Algebra c.F S') (χ : S →ₐ[c.F] S'), χ.toRingHom = ψ := by
-    letI : Algebra c.F S' := (ψ.comp (algebraMap c.F S)).toAlgebra
+    let : Algebra c.F S' := (ψ.comp (algebraMap c.F S)).toAlgebra
     exact ⟨inferInstance, { ψ with commutes' := fun _ => rfl }, rfl⟩
   obtain ⟨P', hPP⟩ := exists_frMap χ P
   have hP' : frX P' ≫ TF.Y.j = x' := by
@@ -393,10 +393,10 @@ def univN (Dw : Datum H) (A : Type) [CommRing A] (σ : E →+* ℂ) :
 
 theorem isUnit_det_univN {A B : Type} [CommRing A] [CommRing B] (f : MvPolynomial (VIx Dw) A →+* B) (σ : E →+* ℂ) :
     IsUnit ((univN Dw A σ).map f).det := by
-  rw [Matrix.det_of_upperTriangular (M := (univN Dw A σ).map f) (fun i j (h : j < i) => by
-    rw [Matrix.map_apply, univN, dite_eq_right (not_lt.2 h.le), if_neg h.ne', map_zero])]
+  rw [Matrix.det_of_isUpperTriangular (M := (univN Dw A σ).map f) (fun i j (h : j < i) => by
+    rw [Matrix.map_apply, univN, dite_eq_right (not_lt.2 h.le), ite_eq_right h.ne', map_zero])]
   refine IsUnit.prod_univ_iff.2 fun i => ?_
-  rw [Matrix.map_apply, univN, dite_eq_right (lt_irrefl i), if_pos rfl, map_one]
+  rw [Matrix.map_apply, univN, dite_eq_right (lt_irrefl i), ite_eq_left rfl, map_one]
   exact isUnit_one
 
 theorem eval₂Hom_univN {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : C →+* B)
@@ -406,8 +406,8 @@ theorem eval₂Hom_univN {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (
   rw [univN]
   rcases lt_trichotomy i j with h | rfl | h
   · rw [dite_eq_left h]; exact MvPolynomial.eval₂Hom_X' _ _ _
-  · rw [dite_eq_right (lt_irrefl i), if_pos rfl, h1, map_one, map_one]
-  · rw [dite_eq_right (not_lt.2 h.le), if_neg h.ne', h0 σ i j h, map_zero, map_zero]
+  · rw [dite_eq_right (lt_irrefl i), ite_eq_left rfl, h1, map_one, map_one]
+  · rw [dite_eq_right (not_lt.2 h.le), ite_eq_right h.ne', h0 σ i j h, map_zero, map_zero]
 
 theorem Carries.nonempty (hC : IsCell TF Z U e v W k L N) (a : Γ(TF.Y.X, U.1)) {S : Type} [CommRing S]
     [Algebra (MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1)) S]
@@ -546,11 +546,11 @@ theorem eq_of_eq_lower_mul_upper {S : Type} [CommRing S] {m : ℕ} {M B L N : Ma
   have hMC : M = C * N := by rw [h, hC, Matrix.mul_assoc]
   have hNt : N.BlockTriangular id := fun i j hij => hN i j hij
   have hdet : IsUnit N.det := by
-    rw [Matrix.det_of_upperTriangular hNt]
+    rw [Matrix.det_of_isUpperTriangular hNt]
     simp [hN1]
   have hCM : C = M * N⁻¹ := by
     rw [hMC, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hdet, Matrix.mul_one]
-  letI := N.invertibleOfIsUnitDet hdet
+  let := N.invertibleOfIsUnitDet hdet
   have hMt : M.BlockTriangular id := fun i j hij => hM i j hij
   have hCup : C.BlockTriangular id := hCM ▸ hMt.mul (Matrix.blockTriangular_inv_of_blockTriangular hNt)
   have hC1 : C = 1 := by
@@ -689,7 +689,7 @@ theorem map_entry_eq_of_lower_mul {R A S : Type} [CommRing R] [CommRing A] [Comm
       rw [Matrix.of_apply, hbe i j, ← Matrix.map_mul, Matrix.mul_apply]
       rfl)
   have e := congrFun (congrFun key i) j
-  simp only [Matrix.of_apply, Matrix.map_apply, dif_pos hij] at e
+  simp only [Matrix.of_apply, Matrix.map_apply, dite_eq_left hij] at e
   exact e.symm
 
 theorem exists_cell_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → ∀ (U : TF.Y.X.affineOpens) (n : ℕ) (e : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) ≃ Fin n) (v : Fin n → (Sp (DualNumber Γ(TF.Y.X, U.1)) ⟶ TF.Y.t.G.left)), IsEigBasis TF U e v → ∀ (W : (Y₀ TF.X Z).Opens) (k : TF.X.F.J) (L N : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) Γ(Y₀ TF.X Z, W)) (h : IsCell TF Z U e v W k L N), Nonempty W → ∃ g : MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1), ¬ IsNilpotent (MvPolynomial.eval₂Hom ((toBase TF Z).appLE U.1 W h.2.1).hom (cellCoord N) g) ∧ (∀ (S : Type) [CommRing S] (z₀ : Sp S ⟶ Y₀ TF.X Z) (hz₀ : ⊤ ≤ z₀ ⁻¹ᵁ W), IsUnit (ev z₀ W hz₀ (MvPolynomial.eval₂Hom ((toBase TF Z).appLE U.1 W h.2.1).hom (cellCoord N) g)) → ⊤ ≤ z₀ ⁻¹ᵁ U₀ TF.X Z) ∧ ∃ (z : Sp (Localization.Away g) ⟶ Y₀ TF.X Z) (hz : ⊤ ≤ z ⁻¹ᵁ W), ⊤ ≤ z ⁻¹ᵁ U₀ TF.X Z ∧ (∀ r, ev z W hz (((toBase TF Z).appLE U.1 W h.2.1).hom r) = algebraMap (MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1)) (Localization.Away g) (MvPolynomial.C r)) ∧ ∀ i, ev z W hz (cellCoord N i) = algebraMap (MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1)) (Localization.Away g) (MvPolynomial.X i) := by
@@ -798,8 +798,8 @@ theorem exists_isOpenImmersion : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       ((congrArg (ψ'.comp ·) hθc).trans ((congrArg (·.comp φ) hψ'c).trans hψφ))
   have h2 : θ.comp ψ' = RingHom.id _ :=
     IsLocalization.ringHom_ext (Submonoid.powers (φ g)) ((congrArg (θ.comp ·) hψ'c).trans hθψ)
-  haveI : Nontrivial (Localization.Away (φ g)) := OreLocalization.nontrivial_iff.mpr hnil
-  haveI : IsOpenImmersion (spMap (algebraMap Γ(Y₀ TF.X Z, W) (Localization.Away (φ g)))) :=
+  have : Nontrivial (Localization.Away (φ g)) := OreLocalization.nontrivial_iff.mpr hnil
+  have : IsOpenImmersion (spMap (algebraMap Γ(Y₀ TF.X Z, W) (Localization.Away (φ g)))) :=
     inferInstanceAs (IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap Γ(Y₀ TF.X Z, W) (Localization.Away (φ g))))))
   refine ⟨(spMap (algebraMap Γ(Y₀ TF.X Z, W) (Localization.Away (φ g)))).opensRange, ?_, ?_⟩
   · have x : Sp (Localization.Away (φ g)) :=
@@ -812,8 +812,8 @@ theorem exists_isOpenImmersion : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have hfac : spMap (algebraMap Γ(Y₀ TF.X Z, W) (Localization.Away (φ g))) ≫ spMap φ =
         spMap θ ≫ spMap (algebraMap _ (Localization.Away g)) :=
       (spMap_comp_ringHom φ _).trans ((congrArg spMap hθc.symm).trans (spMap_comp_ringHom _ θ).symm)
-    haveI : IsIso (spMap θ) := isIso_spMap_of_inverse θ ψ' h2 h1
-    haveI := isOpenImmersion_spMap_away g
+    have : IsIso (spMap θ) := isIso_spMap_of_inverse θ ψ' h2 h1
+    have := isOpenImmersion_spMap_away g
     have hoi : IsOpenImmersion ((spMap (algebraMap Γ(Y₀ TF.X Z, W) (Localization.Away (φ g)))).isoOpensRange.inv ≫
         spMap θ ≫ spMap (algebraMap (MvPolynomial (VIx Dw) Γ(TF.Y.X, U.1)) (Localization.Away g))) := inferInstance
     rw [← hfac, ← Category.assoc, ← key] at hoi
@@ -838,7 +838,7 @@ theorem eq_of_minimalPrimes_le_of_isDomain_localization {A : Type} [CommRing A]
     (hA : ∀ (P : Ideal A) [P.IsPrime], IsDomain (Localization.AtPrime P))
     {P p q : Ideal A} [P.IsPrime] (hp : p ∈ minimalPrimes A) (hq : q ∈ minimalPrimes A)
     (hpP : p ≤ P) (hqP : q ≤ P) : p = q := by
-  haveI := hA P
+  have := hA P
   let K := RingHom.ker (algebraMap A (Localization.AtPrime P))
   have hK : K.IsPrime := RingHom.ker_isPrime _
   have hle : ∀ Q : Ideal A, Q.IsPrime → Q ≤ P → K ≤ Q := by
@@ -856,12 +856,12 @@ theorem eq_of_minimalPrimes_le_of_isDomain_localization {A : Type} [CommRing A]
 theorem isOpen_zeroLocus_of_mem_minimalPrimes {A : Type} [CommRing A] [IsNoetherianRing A]
     (hA : ∀ (P : Ideal A) [P.IsPrime], IsDomain (Localization.AtPrime P))
     {p : Ideal A} (hp : p ∈ minimalPrimes A) : IsOpen (PrimeSpectrum.zeroLocus (p : Set A)) := by
-  have hfin := (minimalPrimes.finite_of_isNoetherianRing A).subset (Set.diff_subset (t := {p}))
+  have hfin := (minimalPrimes.finite_of_isNoetherianRing A).subset (Set.sdiff_subset (t := {p}))
   have heq : (PrimeSpectrum.zeroLocus (p : Set A))ᶜ =
       ⋃ q ∈ minimalPrimes A \ {p}, PrimeSpectrum.zeroLocus (q : Set A) := by
     ext x
     simp only [Set.mem_compl_iff, PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe,
-      Set.mem_iUnion, Set.mem_diff, Set.mem_singleton_iff, exists_prop]
+      Set.mem_iUnion, Set.mem_sdiff, Set.mem_singleton_iff, exists_prop]
     constructor
     · intro hx
       obtain ⟨q, hq, hqx⟩ := Ideal.exists_minimalPrimes_le (I := ⊥) (J := x.asIdeal) bot_le
@@ -920,12 +920,12 @@ theorem isOpenImmersion_spec_of_quasiFinite_of_normal {A B : Type} [CommRing A] 
   let g : Spec (CommRingCat.of B) ⟶ Z.toScheme := IsOpenImmersion.lift Z.ι f hrange
   have hgf : g ≫ Z.ι = f := IsOpenImmersion.lift_fac _ _ _
 
-  haveI : _root_.IsReduced A := isReduced_ofLocalizationMaximal A fun P _ ↦ by
-    haveI := hAd P; infer_instance
-  haveI : Nonempty Z.toScheme := ⟨⟨y₀, subset_closure rfl⟩⟩
-  haveI : IrreducibleSpace Z.toScheme :=
+  have : _root_.IsReduced A := isReduced_ofLocalizationMaximal A fun P _ ↦ by
+    have := hAd P; infer_instance
+  have : Nonempty Z.toScheme := ⟨⟨y₀, subset_closure rfl⟩⟩
+  have : IrreducibleSpace Z.toScheme :=
     Subtype.irreducibleSpace (isIrreducible_singleton (x := y₀)).closure
-  haveI : IsIntegral Z.toScheme := isIntegral_of_irreducibleSpace_of_isReduced _
+  have : IsIntegral Z.toScheme := isIntegral_of_irreducibleSpace_of_isReduced _
   have hZ : ∀ z : Z.toScheme, IsIntegrallyClosed (Z.toScheme.presheaf.stalk z) := by
     intro z
     have e₁ := asIso (Z.ι.stalkMap z)
@@ -934,20 +934,20 @@ theorem isOpenImmersion_spec_of_quasiFinite_of_normal {A B : Type} [CommRing A] 
       StructureSheaf.IsLocalization.to_stalk A x
     have e₂ := IsLocalization.algEquiv x.asIdeal.primeCompl
       ((Spec.structureSheaf A).presheaf.stalk x) (Localization.AtPrime x.asIdeal)
-    haveI := (hA x.asIdeal).2
+    have := (hA x.asIdeal).2
     have hic : IsIntegrallyClosed ((Spec.structureSheaf A).presheaf.stalk x) :=
       IsIntegrallyClosed.of_equiv e₂.symm.toRingEquiv
-    haveI : IsIntegrallyClosed ((Spec (CommRingCat.of A)).presheaf.stalk (Z.ι z)) := hic
+    have : IsIntegrallyClosed ((Spec (CommRingCat.of A)).presheaf.stalk (Z.ι z)) := hic
     exact IsIntegrallyClosed.of_equiv (e₁.commRingCatIsoToRingEquiv)
 
-  haveI : IsSeparated g := IsSeparated.of_comp g Z.ι
-  haveI : QuasiCompact g := QuasiCompact.of_comp g Z.ι
-  haveI : LocallyOfFiniteType (g ≫ Z.ι) := by rw [hgf]; exact hft
-  haveI : LocallyOfFiniteType g := locallyOfFiniteType_of_comp g Z.ι
-  haveI : LocallyQuasiFinite (g ≫ Z.ι) := by rw [hgf]; exact hqf
-  haveI : LocallyQuasiFinite g := LocallyQuasiFinite.of_comp g Z.ι
-  haveI : IsOpenImmersion ((V.ι ≫ g) ≫ Z.ι) := by rw [Category.assoc, hgf]; exact hVo
-  haveI : IsOpenImmersion (V.ι ≫ g) := IsOpenImmersion.of_comp _ Z.ι
+  have : IsSeparated g := IsSeparated.of_comp g Z.ι
+  have : QuasiCompact g := QuasiCompact.of_comp g Z.ι
+  have : LocallyOfFiniteType (g ≫ Z.ι) := by rw [hgf]; exact hft
+  have : LocallyOfFiniteType g := locallyOfFiniteType_of_comp g Z.ι
+  have : LocallyQuasiFinite (g ≫ Z.ι) := by rw [hgf]; exact hqf
+  have : LocallyQuasiFinite g := LocallyQuasiFinite.of_comp g Z.ι
+  have : IsOpenImmersion ((V.ι ≫ g) ≫ Z.ι) := by rw [Category.assoc, hgf]; exact hVo
+  have : IsOpenImmersion (V.ι ≫ g) := IsOpenImmersion.of_comp _ Z.ι
   have := isOpenImmersion_of_quasiFinite_of_isOpenImmersion_restrict g hZ V hVne
   rw [← hgf]
   infer_instance
@@ -993,9 +993,9 @@ theorem initSpan_eq_of_lower {v v' : Fin m → M} (L : Matrix (Fin m) (Fin m) R)
     (h : ∀ i, v' i = ∑ j, L i j • v j) (i : ℕ) : initSpan R v' i = initSpan R v i := by
   have ht : L.IsLowerTriangular := fun a b hab => hL a b hab
   have hdet : IsUnit L.det := by
-    rw [Matrix.det_of_lowerTriangular L ht]
+    rw [Matrix.det_of_isLowerTriangular L ht]
     exact Finset.prod_induction _ IsUnit (fun a b ha hb => ha.mul hb) isUnit_one (fun a _ => hd a)
-  haveI : Invertible L := Matrix.invertibleOfIsUnitDet L hdet
+  have : Invertible L := Matrix.invertibleOfIsUnitDet L hdet
   have hti : L⁻¹.BlockTriangular OrderDual.toDual := Matrix.blockTriangular_inv_of_blockTriangular ht
   have hinv : ∀ a, v a = ∑ j, L⁻¹ a j • v' j := fun a => by
     simp only [h, Finset.smul_sum, smul_smul]
@@ -1083,7 +1083,7 @@ end GlobalTheory.LogPole.CellQF
 open GlobalTheory.LogPole.CellQF in
 theorem GlobalTheory.LogPole.locallyQuasiFinite_cellMap : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → ∀ (U : TF.Y.X.affineOpens) (n : ℕ) (e : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) ≃ Fin n) (v : Fin n → (Sp (DualNumber Γ(TF.Y.X, U.1)) ⟶ TF.Y.t.G.left)), IsEigBasis TF U e v → ∀ (W : (Y₀ TF.X Z).Opens) (k : TF.X.F.J) (L N : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) Γ(Y₀ TF.X Z, W)) (h : IsCell TF Z U e v W k L N), LocallyQuasiFinite (Spec.map (CommRingCat.ofHom (MvPolynomial.eval₂Hom ((toBase TF Z).appLE U.1 W h.2.1).hom (cellCoord N)))) := by
   intro E _ _ _ H Dw l Xo c TF Z _ U n e v hv W k L N h
-  haveI := locallyOfFiniteType_cell TF Z U e v W k L N h
+  have := locallyOfFiniteType_cell TF Z U e v W k L N h
   refine GlobalTheory.locallyQuasiFinite_of_finite_geometric_points _ fun Ω _ _ y => ?_
   have hfs : IsOpenImmersion h.1.fromSpec := IsAffineOpen.isOpenImmersion_fromSpec h.1
   have hzW : ∀ x : Spec (CommRingCat.of Ω) ⟶ Spec Γ(Y₀ TF.X Z, W), ⊤ ≤ (x ≫ h.1.fromSpec) ⁻¹ᵁ W :=
@@ -1196,7 +1196,7 @@ theorem etale_of_isOpenImmersion_spec {A B : Type} [CommRing A] [CommRing B] (φ
 
 theorem etale_of_subsingleton {A B : Type} [CommRing A] [CommRing B] [Subsingleton B] (φ : A →+* B) :
     φ.Etale := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have : IsLocalization.Away (0 : A) B := by
     refine ⟨fun ⟨y, _⟩ => isUnit_of_subsingleton _, fun z => ⟨⟨0, 1⟩, Subsingleton.elim _ _⟩,
       fun {x y} _ => ⟨⟨0, 1, pow_one 0⟩, by simp⟩⟩
@@ -1242,15 +1242,15 @@ theorem finiteType_cell : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
 theorem etale_cellCoord : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (Z : Comp Xo c), FnAlgClosed (Xo := Xo) (c := c) → ∀ (U : TF.Y.X.affineOpens) (n : ℕ) (e : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) ≃ Fin n) (v : Fin n → (Sp (DualNumber Γ(TF.Y.X, U.1)) ⟶ TF.Y.t.G.left)), IsEigBasis TF U e v → ∀ (W : (Y₀ TF.X Z).Opens) (k : TF.X.F.J) (L N : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) Γ(Y₀ TF.X Z, W)) (h : IsCell TF Z U e v W k L N), (MvPolynomial.eval₂Hom ((toBase TF Z).appLE U.1 W h.2.1).hom (cellCoord N)).Etale := by
   intro E _ _ _ H Dw l Xo c TF Z hF U n e v hv W k L N h
   by_cases hW : Nonempty W
-  · haveI := isDomain_sections E H Dw l Xo c TF Z hF W h.1 hW
-    haveI := TF.smooth
+  · have := isDomain_sections E H Dw l Xo c TF Z hF W h.1 hW
+    have := TF.smooth
     have : Smooth TF.Y.s := SmoothOfRelativeDimension.smooth (n := Dw.dim) TF.Y.s
     obtain ⟨hN, hA⟩ := normal_mvPolynomial TF.Y.X c.F TF.Y.s U (VIx Dw)
     exact etale_of_isOpenImmersion_spec _ (_root_.GlobalTheory.isOpenImmersion_spec_of_quasiFinite_of_normal _ hA
       (finiteType_cell E H Dw l Xo c TF Z hF U n e v hv W k L N h)
       (_root_.GlobalTheory.LogPole.locallyQuasiFinite_cellMap E H Dw l Xo c TF Z hF U n e v hv W k L N h)
       (_root_.GlobalTheory.LogPole.CellBir.exists_isOpenImmersion E H Dw l Xo c TF Z hF U n e v hv W k L N h hW))
-  · haveI : Subsingleton Γ(Y₀ TF.X Z, W) := by
+  · have : Subsingleton Γ(Y₀ TF.X Z, W) := by
       have hE : IsEmpty W := not_nonempty_iff.1 hW
       have : IsEmpty (Spec Γ(Y₀ TF.X Z, W)) := (Scheme.Hom.homeomorph h.1.isoSpec.hom).isEmpty_congr.1 hE
       by_contra hs

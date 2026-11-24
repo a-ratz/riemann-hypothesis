@@ -62,7 +62,7 @@ variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSp
 
 private theorem prj_fd (Z : Submodule ℂ H) [FiniteDimensional ℂ Z] : prj Z = Z.starProjection := by
   have h : Z.topologicalClosure = Z :=
-    (Submodule.closed_of_finiteDimensional Z).submodule_topologicalClosure_eq
+    (Submodule.isClosed_of_finiteDimensional Z).submodule_topologicalClosure_eq
   have key : ∀ (K : Submodule ℂ H) [K.HasOrthogonalProjection], K = Z →
       K.starProjection = Z.starProjection := by
     intro K _ hK
@@ -204,7 +204,7 @@ private theorem inner_pow_nonneg (a : H →L[ℂ] H) (hs : ∀ x y, ⟪a x, y⟫
   induction k using Nat.twoStepInduction with
   | zero =>
     intro v
-    simp only [pow_zero, ContinuousLinearMap.one_apply]
+    simp only [pow_zero, one_apply_eq_self]
     rw [inner_self_eq_norm_sq]
     positivity
   | one => intro v; simpa using hp v
@@ -229,23 +229,23 @@ private theorem pow_root (a : H →L[ℂ] H) (hs : ∀ x y, ⟪a x, y⟫_ℂ = �
   have h0 : (∑ i ∈ Finset.range (n + 1), a ^ i * c ^ (n + 1 - 1 - i)) w = 0 := by
     rw [← hwe]
     have := congrArg (fun X : H →L[ℂ] H => X v) hg
-    simp only [ContinuousLinearMap.mul_apply] at this
-    rw [this, ContinuousLinearMap.sub_apply, h, hcp]
+    simp only [mul_apply_eq_comp] at this
+    rw [this, sub_apply, h, hcp]
     simp
   have h1 : ∑ i ∈ Finset.range (n + 1), y ^ (n - i) * RCLike.re ⟪w, (a ^ i) w⟫_ℂ = 0 := by
     have h2 := congrArg (fun u => RCLike.re ⟪w, u⟫_ℂ) h0
 
-    simp only [ContinuousLinearMap.sum_apply, inner_sum, map_sum, inner_zero_right, map_zero] at h2
+    simp only [sum_apply, inner_sum, map_sum, inner_zero_right, map_zero] at h2
     rw [← h2]
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [Nat.add_sub_cancel, hcp, ContinuousLinearMap.mul_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.one_apply, map_smul, inner_smul_right]
+    simp only [Nat.add_sub_cancel, hcp, mul_apply_eq_comp, smul_apply,
+      one_apply_eq_self, map_smul, inner_smul_right]
     rw [← Complex.ofReal_pow, RCLike.re_eq_complex_re, Complex.re_ofReal_mul]
   have hnn : ∀ i ∈ Finset.range (n + 1), 0 ≤ y ^ (n - i) * RCLike.re ⟪w, (a ^ i) w⟫_ℂ :=
     fun i _ => mul_nonneg (by positivity) (inner_pow_nonneg a hs hp i w)
   have h3 := (Finset.sum_eq_zero_iff_of_nonneg hnn).1 h1 0 (by simp)
   have h4 : ‖w‖ ^ 2 = 0 := by
-    simp only [Nat.sub_zero, pow_zero, ContinuousLinearMap.one_apply] at h3
+    simp only [Nat.sub_zero, pow_zero, one_apply_eq_self] at h3
     rw [inner_self_eq_norm_sq] at h3
     rcases mul_eq_zero.1 h3 with h5 | h5
     · exact absurd h5 (by positivity)
@@ -264,7 +264,7 @@ private theorem list_prod_apply (a : H →L[ℂ] H) (v : H) (L : List (H →L[�
     calc (l :: L).prod v = l (L.prod v) := by simp
       _ = (l * a ^ L.length) v := by rw [h2]; rfl
       _ = (a ^ L.length * l) v := by rw [h3.eq]
-      _ = (a ^ L.length) (a v) := by rw [ContinuousLinearMap.mul_apply, h1.2]
+      _ = (a ^ L.length) (a v) := by rw [mul_apply_eq_comp, h1.2]
       _ = (a ^ (l :: L).length) v := by
         rw [List.length_cons, pow_succ]
         rfl
@@ -339,7 +339,7 @@ theorem UpperTheory.ConvolutionTheory.L1.diagOnly :
   refine ⟨hJZ, fun i₀ S hSA => ?_⟩
   generalize hZ : prodEig V E A (y ^ (m + 1)) = Z at memZ hJZ hfd ⊢
   generalize hJ : jointEig V E A y = J at memJ hJZ ⊢
-  haveI : FiniteDimensional ℂ J := Submodule.finiteDimensional_of_le hJZ
+  have : FiniteDimensional ℂ J := Submodule.finiteDimensional_of_le hJZ
   have hZinv : ∀ j, ∀ v ∈ Z, A j v ∈ Z := by
     intro j v hv
     obtain ⟨⟨h1, h2⟩, h3⟩ := (memZ v).1 hv

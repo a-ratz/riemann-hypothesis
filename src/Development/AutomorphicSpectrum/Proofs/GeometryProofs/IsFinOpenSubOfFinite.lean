@@ -80,8 +80,8 @@ theorem mem_of_finite_of_closedFibre {R : Type} [CommRing R] [IsLocalRing R]
     (hW : ∀ x : X.left, X.hom x = IsLocalRing.closedPoint R → x ∈ W)
     (Y : Over (Spec (CommRingCat.of R))) (hY : IsFinite Y.hom) (h : Y ⟶ X) (z : Y.left) :
     h.left z ∈ W := by
-  haveI := hY
-  haveI : IsIso (⊤ : Y.left.Opens).ι := by rw [← Scheme.topIso_hom]; infer_instance
+  have := hY
+  have : IsIso (⊤ : Y.left.Opens).ι := by rw [← Scheme.topIso_hom]; infer_instance
   have hfin : IsFinite ((⊤ : Y.left.Opens).ι ≫ Y.hom) := inferInstance
   have hle := _root_.GlobalTheory.CompanionTheory.Ar.BT.isFinite_open_le_of_closedFibre_le R Y.left Y.hom ⊤ (h.left ⁻¹ᵁ W) hfin (fun x hx => by
     apply hW
@@ -115,9 +115,9 @@ theorem QFGroup.isFinOpenSub_of_closedFibre :
       (U : Γ.G.left.Opens), IsFinite (U.ι ≫ Γ.G.hom) →
       (∀ x : Γ.G.left, Γ.G.hom x = IsLocalRing.closedPoint R → x ∈ U) → Γ.IsFinOpenSub U := by
   intro R _ _ _ T _ Γ U hfin hU
-  haveI := hfin
+  have := hfin
   have hV : IsFinite (openOver Γ.G U).hom := hfin
-  haveI := hV
+  have := hV
   refine ⟨hfin, ?_, ?_, ?_⟩
   · intro x
     refine mem_of_finite_of_closedFibre U hU (𝟙_ _) ?_ η[Γ.G] x

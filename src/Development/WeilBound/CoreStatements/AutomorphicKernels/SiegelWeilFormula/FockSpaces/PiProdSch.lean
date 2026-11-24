@@ -108,7 +108,7 @@ theorem piProdSch' (W : Type) [Fintype W] (S : W → 𝓢(V, ℂ)) :
   refine Fintype.induction_empty_option (P := fun α (_ : Fintype α) => PositivityTheory.SiegelWeilFormula.KFock.PS V α)
     ?_ ?_ ?_ W
   · intro α β _ e hα S
-    letI : Fintype α := Fintype.ofEquiv β e.symm
+    let : Fintype α := Fintype.ofEquiv β e.symm
     obtain ⟨T, hT⟩ := hα (fun a => S (e a))
     refine ⟨SchwartzMap.compCLMOfContinuousLinearEquiv ℂ (PositivityTheory.SiegelWeilFormula.KFock.reidxCLE e) T,
       fun y => ?_⟩

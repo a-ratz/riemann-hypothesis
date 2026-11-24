@@ -140,7 +140,7 @@ theorem exists_pins_normal : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
   have hvP : R.thP_vP := hC.thP.vP
   obtain ⟨hpb, hV, hlev⟩ := GlobalTheory.T.baseTuple_pins_orientation_standardFrame_levelMap D G Pl0 T0 A T R κ v₀ O hL hT i hO
   obtain ⟨gramR, c0R, c0L, htie, hc0O⟩ := hO.2.lift.c0
-  haveI : Nonempty T0 := ⟨A.μ0⟩
+  have : Nonempty T0 := ⟨A.μ0⟩
   let rep : T0 → T0 := fun t => Function.invFun R.Q (R.Q t)
   have hrepQ : ∀ t, R.Q (rep t) = R.Q t := fun t => Function.invFun_eq (f := R.Q) ⟨t, rfl⟩
   have hrepE : ∀ t t' : T0, R.Q t' = R.Q t → rep t' = rep t := fun t t' e => congrArg (Function.invFun R.Q) e

@@ -85,14 +85,14 @@ theorem exists_nonzero_isotropic :
         ∑ i : Fin (3 : ℕ), ∑ j : Fin (3 : ℕ), a i j * x i * x j = (0 : k) := by
   intro k _ _ a
   classical
-  haveI : Fintype k := Fintype.ofFinite k
+  have : Fintype k := Fintype.ofFinite k
   obtain ⟨p, hp⟩ := CharP.exists k
-  haveI := hp
+  have := hp
   have hpp : p.Prime := by
     rcases CharP.char_is_prime_or_zero k p with h | h
     · exact h
     · subst h
-      haveI : CharZero k := CharP.charP_to_charZero k
+      have : CharZero k := CharP.charP_to_charZero k
       exact absurd (Finite.of_injective (Nat.cast : ℕ → k) Nat.cast_injective) (by
         intro h; exact not_finite ℕ)
   set f : MvPolynomial (Fin 3) k := ∑ i : Fin 3, ∑ j : Fin 3, C (a i j) * X i * X j with hf
@@ -162,9 +162,9 @@ theorem exists_unit_valued_ternary_lt_one (F : Type) [Field F] [NumberField F]
     refine (hr i j).trans_lt ?_
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp]
     norm_num
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   obtain ⟨x, hx0, hx⟩ := TernaryResidue.exists_ne_zero_sum_eq_zero
     (k := 𝓞 F ⧸ v.asIdeal) fun i j => Ideal.Quotient.mk v.asIdeal (r i j)
   choose y hy using fun i => Ideal.Quotient.mk_surjective (x i)

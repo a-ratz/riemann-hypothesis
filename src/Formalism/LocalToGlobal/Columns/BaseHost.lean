@@ -149,7 +149,7 @@ theorem ram_conj_mem {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
   rw [Ideal.inertiaDeg_eq_of_isMaximal p P.asIdeal] at hf1
   let : Field (𝓞 F ⧸ p) := Ideal.Quotient.field p
   let : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
-  obtain ⟨a', ha'⟩ := (finrank_eq_one_iff_of_nonzero' (1 : 𝓞 E ⧸ P.asIdeal) one_ne_zero).1 hf1 (Ideal.Quotient.mk P.asIdeal x)
+  obtain ⟨a', ha'⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : 𝓞 E ⧸ P.asIdeal) one_ne_zero).1 hf1 (Ideal.Quotient.mk P.asIdeal x)
   obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective a'
   have hxa : x - algebraMap (𝓞 F) (𝓞 E) a ∈ P.asIdeal := by
     rw [← Ideal.Quotient.eq, ← ha', Algebra.smul_def, mul_one]

@@ -70,11 +70,11 @@ private theorem im_model {l : ℕ} [hl : Fact l.Prime] {G : Type} [Group G] [Top
     ∃ (Q : GL (Fin n) (PadicAlgCl l)) (r₀ : G →* GL (Fin n) c.O),
       ∀ g, r g * Q = Q * W.pushRep (algebraMap c.O (PadicAlgCl l)) r₀ g := by
   have hl0 : (l : PadicAlgCl l) ≠ 0 := Nat.cast_ne_zero.2 hl.out.ne_zero
-  letI : Algebra c.O E := (c.O.val.toRingHom.codRestrict E fun x => ((hc _).1 x.2).1).toAlgebra
+  let : Algebra c.O E := (c.O.val.toRingHom.codRestrict E fun x => ((hc _).1 x.2).1).toAlgebra
   have ha : ∀ x : c.O, ((algebraMap c.O E x : E) : PadicAlgCl l) = x := fun _ => rfl
-  haveI : FaithfulSMul c.O E := (faithfulSMul_iff_algebraMap_injective _ _).2 fun a b h =>
+  have : FaithfulSMul c.O E := (faithfulSMul_iff_algebraMap_injective _ _).2 fun a b h =>
     Subtype.ext (congrArg (fun z : E => (z : PadicAlgCl l)) h)
-  haveI : IsFractionRing c.O E := by
+  have : IsFractionRing c.O E := by
     refine IsFractionRing.of_field _ _ fun z => ?_
     obtain ⟨N, hN⟩ := im_small (l := l) ‖(z : PadicAlgCl l)‖
     refine ⟨⟨(l : PadicAlgCl l) ^ N * z, (hc _).2 ⟨mul_mem (pow_mem (natCast_mem _ _) _) z.2, by rwa [norm_mul]⟩⟩,

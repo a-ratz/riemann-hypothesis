@@ -66,7 +66,7 @@ theorem UpperTheory.V.Cj.S.hkLocal :
     have key : ∀ z : WithZero (Multiplicative ℤ), z < 1 → z ≤ ((Multiplicative.ofAdd (-1 : ℤ) : Multiplicative ℤ) : WithZero (Multiplicative ℤ)) := by
       intro z hz
       induction z using WithZero.recZeroCoe with
-      | zero => exact zero_le'
+      | zero => exact zero_le
       | coe a =>
         rw [← WithZero.coe_one, WithZero.coe_lt_coe] at hz
         rw [WithZero.coe_le_coe]

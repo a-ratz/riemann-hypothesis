@@ -172,13 +172,13 @@ theorem plPt_row (u : ∀ s, Matrix (Fin (r s)) (Fin (r s)) Ω) (h1 : ∀ s m, u
   unfold plPt
   rw [Matrix.det_of_isLowerTriangular]
   · rw [Fin.prod_univ_castSucc, Finset.prod_eq_one, one_mul]
-    · simp only [Matrix.of_apply, rowIx, if_true]
+    · simp only [Matrix.of_apply, rowIx, ite_true]
       rfl
     · intro a _
-      simp only [Matrix.of_apply, rowIx, if_neg (Fin.castSucc_lt_last a).ne, h1]
+      simp only [Matrix.of_apply, rowIx, ite_eq_right (Fin.castSucc_lt_last a).ne, h1]
   · intro a b hab
     have hab' : a < b := hab
-    simp only [Matrix.of_apply, rowIx, if_neg (hab'.trans_le (Fin.le_last b)).ne]
+    simp only [Matrix.of_apply, rowIx, ite_eq_right (hab'.trans_le (Fin.le_last b)).ne]
     exact h0 _ _ _ hab'
 
 theorem plPt_ne (u : ∀ s, Matrix (Fin (r s)) (Fin (r s)) Ω) (h1 : ∀ s m, u s m m = 1)
@@ -315,7 +315,7 @@ theorem dif_sum {n : ℕ} (g : Fin n → K → ℤ) (m : Fin n) : dif (fun m => 
   split_ifs with h
   · have e : Finset.Iio m = Finset.Iic (⟨(m : ℕ) - 1, by omega⟩ : Fin n) := by
       ext x
-      simp only [Finset.mem_Iio, Finset.mem_Iic, Fin.lt_iff_val_lt_val, Fin.le_iff_val_le_val]
+      simp only [Finset.mem_Iio, Finset.mem_Iic, Fin.lt_def, Fin.le_iff_val_le_val]
       omega
     rw [e]
     abel
@@ -365,7 +365,7 @@ private theorem sup_valuation_ne_zero_of_exists_ne_zero {L : Type} [Field L] {J 
   have hle : O.valuation (z ⟨b, i⟩) ≤ Finset.univ.sup fun i : κ b => O.valuation (z ⟨b, i⟩) :=
     Finset.le_sup (f := fun i : κ b => O.valuation (z ⟨b, i⟩)) (Finset.mem_univ i)
   rw [h0] at hle
-  exact hv (le_antisymm hle zero_le')
+  exact hv (le_antisymm hle zero_le)
 
 private theorem vdeg_sub' {L : Type} [Field L] {J : Type} [Fintype J] {κ : J → Type} [∀ b, Fintype (κ b)]
     (O : ValuationSubring L) (z : (Σ b, κ b) → L) (hz : ∀ b, ∃ i, z ⟨b, i⟩ ≠ 0) (a c : J → ℤ) :

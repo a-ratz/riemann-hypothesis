@@ -85,14 +85,14 @@ theorem coindTrace_coindTracePreimage (a : A) : (coindTrace U A).hom (coindTrace
   rw [coindTrace_hom_apply, Finset.sum_eq_single ((1 : G) : G ⧸ U)]
   · rw [coindTraceTerm_apply, inv_one]
     change A.ρ 1 (if (1 : G) ∈ U then A.ρ 1 a else 0) = a
-    rw [if_pos U.one_mem, map_one, Module.End.one_apply, Module.End.one_apply]
+    rw [ite_eq_left U.one_mem, map_one, Module.End.one_apply, Module.End.one_apply]
   · intro c _ hc
     induction c using QuotientGroup.induction_on with
     | H x =>
       rw [coindTraceTerm_apply]
       have hx : x⁻¹ ∉ U := fun h => hc (QuotientGroup.eq.2 (by simpa using h))
       change A.ρ x (if x⁻¹ ∈ U then A.ρ x⁻¹ a else 0) = 0
-      rw [if_neg hx, map_zero]
+      rw [ite_eq_right hx, map_zero]
   · intro h
     exact absurd (Finset.mem_univ _) h
 

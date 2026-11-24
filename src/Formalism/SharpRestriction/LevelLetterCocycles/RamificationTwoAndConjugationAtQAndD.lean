@@ -217,7 +217,7 @@ theorem Formalism.RepresentationBoundsCohomology.rowColength : Formalism.Represe
   intro O _ _ _ M _ _ _ I ℓ e hI
   classical
   set T := Submodule.torsion O M with hT
-  haveI : Module.Free O (M ⧸ T) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free O (M ⧸ T) := Module.free_of_finite_type_torsion_free'
   let bQ := Module.Free.chooseBasis O (M ⧸ T)
   choose m hm using fun i => T.mkQ_surjective (bQ i)
   have hli : LinearIndependent O m := by
@@ -596,8 +596,8 @@ variable {V V' W W' : Type} [AddCommGroup V] [Module LL V] [Module O V] [IsScala
 
 theorem lat_free (T : Submodule O V) (hfg : T.FG) (hsp : Submodule.span LL (T : Set V) = ⊤) :
     Module.Free O T := by
-  haveI : Module.Finite O T := Module.Finite.iff_fg.mpr hfg
-  haveI : NoZeroSMulDivisors O T := by
+  have : Module.Finite O T := Module.Finite.iff_fg.mpr hfg
+  have : NoZeroSMulDivisors O T := by
     refine ⟨fun {c x} h => ?_⟩
     have h' : c • (x : V) = 0 := by simpa using congrArg Subtype.val h
     rw [← algebraMap_smul LL c (x : V)] at h'
@@ -723,9 +723,9 @@ theorem basis_repr_left_eq_pairing {ι : Type} [Fintype ι] [DecidableEq ι] (P 
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [map_smul, LinearMap.smul_apply, smul_eq_mul]
   rw [h, Finset.sum_eq_single i]
-  · rw [hδ, if_pos rfl, mul_one]
+  · rw [hδ, ite_eq_left rfl, mul_one]
   · intro j _ hj
-    rw [hδ, if_neg hj, mul_zero]
+    rw [hδ, ite_eq_right hj, mul_zero]
   · intro hi
     exact absurd (Finset.mem_univ i) hi
 
@@ -739,9 +739,9 @@ theorem basis_repr_right_eq_pairing {ι : Type} [Fintype ι] [DecidableEq ι] (P
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [map_smul, smul_eq_mul]
   rw [h, Finset.sum_eq_single j]
-  · rw [hδ, if_pos rfl, mul_one]
+  · rw [hδ, ite_eq_left rfl, mul_one]
   · intro k _ hk
-    rw [hδ, if_neg (Ne.symm hk), mul_zero]
+    rw [hδ, ite_eq_right (Ne.symm hk), mul_zero]
   · intro hj
     exact absurd (Finset.mem_univ j) hj
 
@@ -879,7 +879,7 @@ variable {O LL : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Fi
 
 theorem lat_open (hopen : IsOpen (Set.range (algebraMap O LL))) (T : Submodule O V) (hfg : T.FG)
     (hsp : Submodule.span LL (T : Set V) = ⊤) : IsOpen (T : Set V) := by
-  have : IsTopologicalAddGroup V := IsModuleTopology.topologicalAddGroup LL V
+  have : IsTopologicalAddGroup V := IsModuleTopology.isTopologicalAddGroup LL V
   have : Submodule.IsFullLattice LL T := { toIsLattice := Submodule.IsLattice.of_fg LL hfg, span_eq_top := hsp }
   have := Submodule.IsLattice.finite LL T
   have := Submodule.IsLattice.free LL T
@@ -1058,7 +1058,7 @@ theorem red_cob (hopen : IsOpen (Set.range (algebraMap O LL)))
 theorem push_mem_Z1D (hopen : IsOpen (Set.range (algebraMap O LL))) {X U : GRep G Qp LL O}
     (LY : Lattice (O := O) X.ρ) (LT : Lattice (O := O) U.ρ) (φ : ↥LY.T →ₗ[O] (U.V ⧸ LT.T))
     (hφ : IsGMapD LY LT φ) (y : ↥(latticeCocycles LY)) : pushD LY LT φ y ∈ divisibleCocycles LT := by
-  have : IsTopologicalAddGroup U.V := IsModuleTopology.topologicalAddGroup LL U.V
+  have : IsTopologicalAddGroup U.V := IsModuleTopology.isTopologicalAddGroup LL U.V
   obtain ⟨ψ, hψ⟩ := exists_lin_lift LY.T LY.fg LY.span LT.T φ
   refine ⟨?_, fun g h => ?_⟩
   · have hc : Continuous fun g => ψ ((y : G → X.V) g) :=
@@ -1830,7 +1830,7 @@ theorem mem_of_pow_bdd (a : O) (ha : a ≠ 0) (u : LL)
     rw [hu, smul_smul]
     exact Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self _)
   have hfg : (Subalgebra.toSubmodule S).FG := by
-    haveI : IsNoetherian O (Submodule.span O {(algebraMap O LL a)⁻¹}) :=
+    have : IsNoetherian O (Submodule.span O {(algebraMap O LL a)⁻¹}) :=
       isNoetherian_of_fg_of_noetherian _ (Submodule.fg_span_singleton _)
     exact isNoetherian_submodule.mp inferInstance _ hle
   have hint : IsIntegral O u := IsIntegral.of_mem_of_fg S hfg u (Algebra.self_mem_adjoin_singleton O u)

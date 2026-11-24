@@ -61,7 +61,7 @@ theorem projective_quot_orad (E : Type) [Field E] [NumberField E] (X : Type) [Ad
   have hO : ∀ a : 𝓞 E, a ≠ 0 → ∀ y : X, a • y ∈ (orad β : Submodule (𝓞 E) X) → y ∈ (orad β : Submodule (𝓞 E) X) := by
     intro a ha y hy
     have hne : (Ideal.span {a}).comap (algebraMap ℤ (𝓞 E)) ≠ ⊥ :=
-      Ideal.comap_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
+      Ideal.under_ne_bot_of_integral_mem ha (Ideal.mem_span_singleton_self a) (Algebra.IsIntegral.isIntegral a)
     obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
     obtain ⟨a', ha'⟩ := Ideal.mem_span_singleton'.1 (Ideal.mem_comap.1 hn)
     refine hZ n hn0 y fun b z => ?_

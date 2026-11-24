@@ -918,7 +918,7 @@ theorem LeafUnitRoot_of : LateralTheory.E.H2CurveOrder.LeafKumSecSurjPf.LeafUnit
   congr 1
   apply Additive.toMul.injective
   ext
-  simp only [toMul_nsmul, toMul_ofMul, Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_coe,
+  simp only [toMul_nsmul, toMul_ofMul, Units.val_pow_eq_pow_val, Units.coe_map, MonoidHom.coe_ofClass,
     IsUnit.unit_spec]
   rw [← map_pow, hroot, ← kφ_kψ]
   rfl
@@ -955,7 +955,7 @@ theorem TwLocGen_of : LateralTheory.E.H2CurveOrder.LeafKumMuInjPf.TwLocGen := by
     right
     exact ⟨ζ.map h.appTop.hom, c, by rw [res_comp]; exact hc⟩
   · have hx0 : x = 0 := by
-      haveI : IsEmpty (Prim q Γ(V, ⊤)) := not_nonempty_iff.mp hP
+      have : IsEmpty (Prim q Γ(V, ⊤)) := not_nonempty_iff.mp hP
       obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
       have : z = 0 := Subsingleton.elim _ _
       rw [this]; rfl

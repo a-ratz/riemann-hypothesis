@@ -111,8 +111,8 @@ theorem AdelicCovolumeFinite.proof (h : HermitianForm F E W) (v : Basis ι E W)
     fun γ => hψ γ
   have hΦ₂ : ∀ γ : h.unitaryGroup, (Φ (hermitianDiagonal h v γ)).2 =
       (adeleSplit h v (hermitianDiagonal h v γ)).2 := fun γ => rfl
-  haveI := countable_unitaryGroup h v
-  haveI : Countable (hermitianDiagonal h v).range := by
+  have := countable_unitaryGroup h v
+  have : Countable (hermitianDiagonal h v).range := by
     refine Function.Surjective.countable (f := fun γ : h.unitaryGroup =>
       (⟨hermitianDiagonal h v γ, γ, rfl⟩ : (hermitianDiagonal h v).range)) ?_
     rintro ⟨_, γ, rfl⟩
@@ -122,7 +122,7 @@ theorem AdelicCovolumeFinite.proof (h : HermitianForm F E W) (v : Basis ι E W)
   let r : AddSubgroup W → unitaryPoints F E (gram h.toSesq v) (FiniteAdeleRing (𝓞 F) F) := fun L₀ => if hL : ∃ y, L y = L₀ then hL.choose else 1
   have hr : ∀ y, L (r (L y)) = L y := fun y => by
     have hL : ∃ y', L y' = L y := ⟨y, rfl⟩
-    simp only [r, dif_pos hL]
+    simp only [r, dite_eq_left hL]
     exact hL.choose_spec
 
   have hstab : ∀ (γ : h.unitaryGroup) (s : unitaryPoints F E (gram h.toSesq v) (FiniteAdeleRing (𝓞 F) F)),

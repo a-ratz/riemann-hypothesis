@@ -125,7 +125,7 @@ theorem lie_mem_Zalg (x : Cinf E) : lie E a (scL a x) ∈ Zalg E a := by
   have e : x = ∑ w : InfinitePlace E, atEmb w.embedding (x w) := by
     have : ∀ w : InfinitePlace E, atEmb w.embedding (x w) = Pi.single w (x w) := fun w => by
       unfold atEmb
-      simp only [InfinitePlace.mk_embedding, if_true]
+      simp only [InfinitePlace.mk_embedding, ite_true]
     simp [this, Finset.univ_sum_single]
   have e2 : lie E a (scL a x) = ∑ i, lieS E a i i x := by
 
@@ -288,7 +288,7 @@ theorem finId_mem_of_int (π : CuspSub E a) (k : GL (Fin 1) (Af E))
   set K : Subgroup (GL (Fin 1) (Af E)) := GlobalTheory.GLIntegral.glSub (GlobalTheory.GLIntegral.intSubring E)
   have : CompactSpace K := isCompact_iff_compactSpace.1
     (GlobalTheory.GLIntegral.isCompact_glSub _ (GlobalTheory.AdeleCocompact.isCompact_integral E))
-  have : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtype_val)
+  have : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ (hU.preimage continuous_subtypeVal)
   have hi := (Subgroup.finiteIndex_of_finite_quotient (H := U.subgroupOf K)).index_ne_zero
   obtain ⟨n, hn, -, h1⟩ := Subgroup.exists_pow_mem_of_index_ne_zero hi ⟨k, hk⟩
   refine finId_mem_of_pow π _ hn ⟨1, fun ψ hψ => ?_⟩

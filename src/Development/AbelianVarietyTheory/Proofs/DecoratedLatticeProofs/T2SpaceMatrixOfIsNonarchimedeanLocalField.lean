@@ -88,7 +88,7 @@ theorem ite_mem_SB {P : X → Prop} (hK : IsCompact {x | P x}) (ho : IsOpen {x |
     (fun x => if P x then (1 : ℂ) else 0) ∈ SB X := by
   have hc : IsClosed {x | P x} := hK.isClosed
   change IsLocallyConstant _ ∧ HasCompactSupport _
-  refine ⟨fun t => ?_, HasCompactSupport.intro hK fun x hx => if_neg hx⟩
+  refine ⟨fun t => ?_, HasCompactSupport.intro hK fun x hx => ite_eq_right hx⟩
   have ht : (fun x => if P x then (1 : ℂ) else 0) ⁻¹' t =
       ({x | P x} ∩ {_x | (1 : ℂ) ∈ t}) ∪ ({x | P x}ᶜ ∩ {_x | (0 : ℂ) ∈ t}) := by
     ext x
@@ -108,13 +108,13 @@ variable {n n' : Type} [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n']
 
 omit [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] in
 theorem t2Space_matrix_of_isNonarchimedeanLocalField : T2Space (Matrix n n' k) := by
-  haveI := t2Space_of_isNonarchimedeanLocalField_decorated_lattice k
+  have := t2Space_of_isNonarchimedeanLocalField_decorated_lattice k
   infer_instance
 
 omit [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] in
 theorem tensCol_mem {Ψ : Matrix n n' k → ℂ} {a : (n → k) → ℂ} (hΨ : Ψ ∈ SB (Matrix n n' k)) (ha : a ∈ SB (n → k)) :
     tensCol Ψ a ∈ SB (Matrix n (n' ⊕ Fin 1) k) := by
-  haveI : T2Space (Matrix n (n' ⊕ Fin 1) k) := t2Space_matrix_of_isNonarchimedeanLocalField
+  have : T2Space (Matrix n (n' ⊕ Fin 1) k) := t2Space_matrix_of_isNonarchimedeanLocalField
   refine prod_mem_SB hΨ ha (p := fun x : Matrix n (n' ⊕ Fin 1) k => x.submatrix id Sum.inl)
     (r := fun (x : Matrix n (n' ⊕ Fin 1) k) i => x i (Sum.inr 0))
     (s := fun z => (Matrix.of fun i j => Sum.elim (z.1 i) (fun _ => z.2 i) j : Matrix n (n' ⊕ Fin 1) k))
@@ -133,7 +133,7 @@ theorem tensCol_mem {Ψ : Matrix n n' k → ℂ} {a : (n → k) → ℂ} (hΨ : 
 omit [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] in
 theorem tensRow_mem {Ψ : Matrix n n' k → ℂ} {b : (n' → k) → ℂ} (hΨ : Ψ ∈ SB (Matrix n n' k)) (hb : b ∈ SB (n' → k)) :
     tensRow Ψ b ∈ SB (Matrix (n ⊕ Fin 1) n' k) := by
-  haveI : T2Space (Matrix (n ⊕ Fin 1) n' k) := t2Space_matrix_of_isNonarchimedeanLocalField
+  have : T2Space (Matrix (n ⊕ Fin 1) n' k) := t2Space_matrix_of_isNonarchimedeanLocalField
   refine prod_mem_SB hΨ hb (p := fun x : Matrix (n ⊕ Fin 1) n' k => x.submatrix Sum.inl id)
     (r := fun x : Matrix (n ⊕ Fin 1) n' k => x (Sum.inr 0))
     (s := fun z => (Matrix.of fun i j => Sum.elim (fun i => z.1 i j) (fun _ => z.2 j) i : Matrix (n ⊕ Fin 1) n' k))
@@ -157,7 +157,7 @@ theorem isCompact_lat (L : Submodule 𝒪[k] (n → k)) [L.IsLattice k] : IsComp
   rw [hset]
   refine isCompact_range (continuous_finsetSum _ fun i _ => continuous_pi fun j => ?_)
   change Continuous fun c : Fin m → 𝒪[k] => (c i : k) * v i j
-  exact (continuous_subtype_val.comp (continuous_apply i)).mul continuous_const
+  exact (continuous_subtypeVal.comp (continuous_apply i)).mul continuous_const
 
 theorem dual_compact_open (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] :
     IsCompact {η | InDual L η} ∧ IsOpen {η | InDual L η} := by
@@ -183,7 +183,7 @@ theorem dual_compact_open (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] 
   have hC : IsClosed (𝒪[k] : Set k) := Valuation.isClosed_integer
   have hset : {η | InDual L η} = ⋂ i, (fun η : n → k => η ⬝ᵥ v i) ⁻¹' (𝒪[k] : Set k) := by
     ext η
-    simp only [Set.mem_setOf_eq, hiff, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, hiff, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
   have hopen : IsOpen {η | InDual L η} := by
     rw [hset]
     exact isOpen_iInter_of_finite fun i => hO.preimage (hcont i)
@@ -206,14 +206,14 @@ theorem dual_compact_open (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] 
     simpa using this
   refine IsCompact.of_isClosed_subset (isCompact_univ_pi fun j => isCompact_range ?_) hclosed hsub
   exact continuous_finsetSum _ fun i _ =>
-    continuous_const.mul (continuous_subtype_val.comp (continuous_apply i))
+    continuous_const.mul (continuous_subtypeVal.comp (continuous_apply i))
 
 theorem vecInd_mem (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] : vecInd L ∈ SB (n → k) := by
-  haveI := t2Space_of_isNonarchimedeanLocalField_decorated_lattice k
+  have := t2Space_of_isNonarchimedeanLocalField_decorated_lattice k
   exact ite_mem_SB (P := fun y => y ∈ L) (isCompact_lat L) (isOpen_lat L)
 
 theorem dualInd_mem (L : Submodule 𝒪[k] (n → k)) [L.IsFullLattice k] : dualInd L ∈ SB (n → k) := by
-  haveI := t2Space_of_isNonarchimedeanLocalField_decorated_lattice k
+  have := t2Space_of_isNonarchimedeanLocalField_decorated_lattice k
   exact ite_mem_SB (P := fun η => InDual L η) (dual_compact_open L).1 (dual_compact_open L).2
 
 variable [MeasurableSpace k] [BorelSpace k]
@@ -247,7 +247,7 @@ private theorem measurableSet_of_isCompact_of_mem_nhds_of_add_mem (G : Set (n �
   have hcov : G ⊆ ⋃ g ∈ G, Set.univ.pi fun i => {x : k | valuation k (x - g i) < γ} := by
     intro g hg
     refine Set.mem_biUnion hg (Set.mem_univ_pi.mpr fun i => ?_)
-    simpa [zero_lt_iff] using hγ
+    simpa [pos_iff_ne_zero] using hγ
   obtain ⟨b, hbG, hbfin, hbcov⟩ := hK.elim_finite_subcover_image (fun g _ => hcopen g) hcov
   have heq : G = ⋃ g ∈ b, Set.univ.pi fun i => {x : k | valuation k (x - g i) < γ} := by
     refine Set.Subset.antisymm hbcov ?_
@@ -267,7 +267,7 @@ theorem fpair_ne_zero (χ : AddChar k Circle) (hχ : Continuous χ) (ε : k) (h�
   obtain ⟨s, hs⟩ := exists_cball_addChar_eq_one χ hχ
   have hcb : ∀ y : k, valuation k y ≤ valuation k (s : k) → y ∈ cball s := by
     intro y hy
-    simp only [cball, Set.mem_setOf_eq]
+    simp only [cball, Set.mem_ofPred_eq]
     exact hy
   have hv1 : ∀ x : k, valuation k (ε * x) = valuation k x := by
     intro x
@@ -279,7 +279,7 @@ theorem fpair_ne_zero (χ : AddChar k Circle) (hχ : Continuous χ) (ε : k) (h�
   have hTc : IsClosed T := by
     have : T = ⋂ y ∈ (L : Set (n → k)), {η | χ (ε * (η ⬝ᵥ y)) = 1} := by
       ext η
-      simp only [hmT, Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe]
+      simp only [hmT, Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
     rw [this]
     exact isClosed_biInter fun y _ =>
       isClosed_eq (hχ.comp (continuous_const.mul (continuous_id.dotProduct continuous_const))) continuous_const
@@ -315,7 +315,7 @@ theorem fpair_ne_zero (χ : AddChar k Circle) (hχ : Continuous χ) (ε : k) (h�
       T.indicator (fun _ => ((μ.real (L : Set (n → k)) : ℝ) : ℂ)) η := by
     intro η
     by_cases hη : η ∈ T
-    · rw [Set.indicator_apply, if_pos hη]
+    · rw [Set.indicator_apply, ite_eq_left hη]
       have hη' := (hmT η).mp hη
       have : (fun y => vecInd L y * (χ (ε * (η ⬝ᵥ y)) : ℂ)) = (L : Set (n → k)).indicator fun _ => (1 : ℂ) := by
         funext y
@@ -324,7 +324,7 @@ theorem fpair_ne_zero (χ : AddChar k Circle) (hχ : Continuous χ) (ε : k) (h�
         · simp [vecInd, hy]
       rw [this, integral_indicator_const _ hLm]
       simp
-    · rw [Set.indicator_apply, if_neg hη]
+    · rw [Set.indicator_apply, ite_eq_right hη]
       have hex : ∃ y ∈ L, χ (ε * (η ⬝ᵥ y)) ≠ 1 := by
         by_contra hcon
         push_neg at hcon

@@ -275,7 +275,7 @@ theorem multiHom_of_dvd [CharZero K] {g : MvPolynomial (Fin (D + 1) × Fin (N + 
   · subst hb
     show bdeg 0 s = 0
     by_contra hne
-    haveI : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
+    have : Infinite K := Infinite.of_injective (Nat.cast : ℕ → K) Nat.cast_injective
     have hg : g = 0 := eq_zero_of_transl htr fun r hr => by
       rw [hc1 0 r hr]
       exact Nat.pos_of_ne_zero hne

@@ -78,7 +78,7 @@ def untwHom {S T : Type} [CommRing S] [Algebra c.F S] [CommRing T] [Algebra c.F 
 
 theorem fromT_tw_test (h : Fixes c ta) (hA : AllTest Xo c) (p : TRing c.F) (y : FrPt Xo c p.R) :
     FromT (twPt h y) := by
-  haveI : IsReduced (Tw ta p.R) := ((GlobalTheory.reduced_finiteType_iff_testRing c.F).2 p).2
+  have : IsReduced (Tw ta p.R) := ((GlobalTheory.reduced_finiteType_iff_testRing c.F).2 p).2
   exact hA _ _
 
 theorem fromT_of_map {S T : Type} [CommRing S] [Algebra c.F S] [CommRing T] [Algebra c.F T] {φ : S →ₐ[c.F] T}
@@ -137,7 +137,7 @@ theorem galRul_sec_val_semilinear : ∀ (E : Type) [Field E] [NumberField E] [Is
     rw [Algebra.smul_def]
     rfl
   · intro c₀ hle hfix a n m as fs f hf hbc S _ A _ ho y
-    letI : Algebra c₀.F (Tw ta S) := A
+    let : Algebra c₀.F (Tw ta S) := A
     have ho' : AlgOver c₀ c hle (Tw ta S) := fun x =>
       (congrArg (algebraMap c.F S) (hfix x)).trans (ho x)
     rw [Rule.evR_galRul h hWD hA hf.1 y]

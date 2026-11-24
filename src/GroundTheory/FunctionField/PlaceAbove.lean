@@ -124,7 +124,7 @@ theorem LiesOver.isLocalHom {w : Place k K'} {v : Place k K} (h : w.LiesOver v) 
   have hinv : (a : K)⁻¹ ∈ v.ring := by
     rw [← h.mem_iff, ← w.ring.valuation_le_one_iff, map_inv₀, map_inv₀, hw, inv_one]
   have h1 := (v.ring.valuation_le_one_iff _).2 hinv
-  rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ha0))] at h1
+  rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ha0))] at h1
   exact le_antisymm (v.ring.valuation_le_one a) h1
 
 theorem LiesOver.isScalarTower {w : Place k K'} {v : Place k K} (h : w.LiesOver v) :

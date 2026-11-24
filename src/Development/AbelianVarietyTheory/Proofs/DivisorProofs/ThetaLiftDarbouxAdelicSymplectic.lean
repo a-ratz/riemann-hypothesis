@@ -175,8 +175,8 @@ theorem eq_zero_or_eq_zero_of_inner_rho (f g : L2 l) (h : ∀ w, ⟪f, rho w g�
     · rw [map_eq_zero] at h0
       simp [h0]
     · simp [h0]
-  have hfm : Measurable fun x => ‖(f : _ → ℂ) x‖ₑ ^ 2 := (Lp.stronglyMeasurable f).measurable.enorm.pow_const 2
-  have hgm : Measurable fun x => ‖(g : _ → ℂ) x‖ₑ ^ 2 := (Lp.stronglyMeasurable g).measurable.enorm.pow_const 2
+  have hfm : Measurable fun x => ‖(f : _ → ℂ) x‖ₑ ^ 2 := (Lp.stronglyMeasurable f).measurable.eNorm.pow_const 2
+  have hgm : Measurable fun x => ‖(g : _ → ℂ) x‖ₑ ^ 2 := (Lp.stronglyMeasurable g).measurable.eNorm.pow_const 2
   have hprod : (∫⁻ x, ‖(f : _ → ℂ) x‖ₑ ^ 2) * (∫⁻ x, ‖(g : _ → ℂ) x‖ₑ ^ 2) = 0 := by
     calc (∫⁻ x, ‖(f : _ → ℂ) x‖ₑ ^ 2) * (∫⁻ x, ‖(g : _ → ℂ) x‖ₑ ^ 2)
         = ∫⁻ x, ‖(f : _ → ℂ) x‖ₑ ^ 2 * ∫⁻ p, ‖(g : _ → ℂ) (x + p)‖ₑ ^ 2 := by
@@ -194,7 +194,7 @@ theorem eq_zero_or_eq_zero_of_inner_rho (f g : L2 l) (h : ∀ w, ⟪f, rho w g�
           exact lintegral_congr fun p => lintegral_eq_zero_of_ae_eq_zero (hz p) |>.trans rfl
   have key : ∀ u : L2 l, (∫⁻ x, ‖(u : _ → ℂ) x‖ₑ ^ 2) = 0 → u = 0 := by
     intro u hu
-    have hum : Measurable fun x => ‖(u : _ → ℂ) x‖ₑ ^ 2 := (Lp.stronglyMeasurable u).measurable.enorm.pow_const 2
+    have hum : Measurable fun x => ‖(u : _ → ℂ) x‖ₑ ^ 2 := (Lp.stronglyMeasurable u).measurable.eNorm.pow_const 2
     rw [lintegral_eq_zero_iff hum] at hu
     rw [Lp.eq_zero_iff_ae_eq_zero]
     filter_upwards [hu] with x hx
@@ -217,7 +217,7 @@ theorem star_mem_opSet : ∀ A ∈ opSet l, star A ∈ opSet l := by
   rw [star_smul, ContinuousLinearMap.star_eq_adjoint]
   ext v
   have e := congrArg (fun T : L2 l →L[ℂ] L2 l => T v) (LinearIsometryEquiv.adjoint_eq_symm (rho w))
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearEquiv.coe_coe,
+  simp only [smul_apply, ContinuousLinearEquiv.coe_coe,
     LinearIsometryEquiv.coe_toContinuousLinearEquiv] at e ⊢
   rw [e, rho_symm_apply, smul_smul]
   rfl
@@ -228,7 +228,7 @@ theorem irreducible_opSet (S : Submodule ℂ (L2 l)) (hS : IsClosed (S : Set (L2
   · exact Or.inl h0
   right
   obtain ⟨g, hg, hg0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h0
-  haveI : CompleteSpace S := hS.completeSpace_coe
+  have : CompleteSpace S := hS.completeSpace_coe
   rw [← Submodule.orthogonal_eq_bot_iff, Submodule.eq_bot_iff]
   intro f hf
   have hw : ∀ w, ⟪f, rho w g⟫_ℂ = 0 := by
@@ -382,24 +382,24 @@ theorem continuous_sch {G : Type} [Group G] [TopologicalSpace G] {pr : G →* Ma
       om g (rho w f) = rho ((pr g : Matrix (l ⊕ l) (l ⊕ l) ℝ) *ᵥ w) (om g f))
     (h4 : ∀ (g : G) (f : Sch l), om g (f.toLp 2 volume) = (omS g f).toLp 2 volume) (hpr : Continuous pr)
     (h2 : ∀ v, Continuous fun g => om g v) (lam : Sch l →L[ℂ] ℂ) (f : Sch l) : Continuous fun g => lam (omS g f) := by
-  have hm : Continuous fun g => (pr g : Matrix (l ⊕ l) (l ⊕ l) ℝ) := continuous_subtype_val.comp hpr
+  have hm : Continuous fun g => (pr g : Matrix (l ⊕ l) (l ⊕ l) ℝ) := continuous_subtypeVal.comp hpr
   have key : ∀ A ∈ weylAlg l, ∀ f, Continuous fun g => schwartzToL2 l (A (omS g f)) := fun A hA => by
     refine weylAlg_induction (P := fun A => ∀ f, Continuous fun g => schwartzToL2 l (A (omS g f))) ?_ ?_ ?_ ?_ ?_ hA
     · intro f
-      simpa only [h4, ContinuousLinearMap.one_apply, schwartzToL2_apply] using h2 (f.toLp 2 volume)
+      simpa only [h4, one_apply_eq_self, schwartzToL2_apply] using h2 (f.toLp 2 volume)
     · intro A w ih f
       simp only [toLp_dRho_omS h3 h4]
       refine continuous_finsetSum _ fun a _ => Continuous.smul (Complex.continuous_ofReal.comp ?_) (ih _)
       exact (continuous_apply a).comp
         (((continuous_const.matrix_mul hm.matrix_transpose).matrix_mul continuous_const).neg.matrix_mulVec continuous_const)
     · intro f
-      simp only [ContinuousLinearMap.zero_apply]
+      simp only [zero_apply]
       exact continuous_const
     · intro A B hA hB f
-      simp only [ContinuousLinearMap.add_apply, map_add (f := _)]
+      simp only [add_apply, map_add (f := _)]
       exact (hA f).add (hB f)
     · intro c A hA f
-      simp only [ContinuousLinearMap.smul_apply, map_smul]
+      simp only [smul_apply, map_smul]
       exact (hA f).const_smul c
   obtain ⟨ι, _, A, Λ, hA, h⟩ := exists_factor lam
   simp only [h]
@@ -435,7 +435,7 @@ theorem realRep (hMp : GlobalTheory.Published.RealMetaplecticRepresentation) {G 
     have : f₀ = 0 := hinj (h.trans (schwartzToL2 l).map_zero.symm)
     rw [this] at hf₀
     exact zero_ne_one hf₀
-  haveI : Nontrivial (L2 l) := nontrivial_of_ne _ _ hv₀
+  have : Nontrivial (L2 l) := nontrivial_of_ne _ _ hv₀
   have hχ : ∀ g g', pr g' = s g → ∃ a : ℂ, ∀ v, ω g v = a • om g' v := fun g g' h => by
     obtain ⟨a, ha⟩ := _root_.GlobalTheory.RealWeil.schur_rho_l2 l (ω g * om g'⁻¹) fun w v => by
       rw [LinearIsometryEquiv.coe_mul, Function.comp_apply, Function.comp_apply, h3, hi, mulVec_mulVec, ← h,
@@ -448,7 +448,7 @@ theorem realRep (hMp : GlobalTheory.Published.RealMetaplecticRepresentation) {G 
   choose lf hlf using fun g => hsurj (s g)
   choose a ha using fun g => hχ g (lf g) (hlf g)
   have hl0 : ∀ g (f : Sch l), ω g (f.toLp 2 volume) = ((a g • omS (lf g)) f).toLp 2 volume := fun g f => by
-    rw [ha, h4, ContinuousLinearMap.smul_apply, hsm]
+    rw [ha, h4, smul_apply, hsm]
   let ρ : G →* (Sch l →L[ℂ] Sch l) :=
     { toFun := fun g => a g • omS (lf g)
       map_one' := ContinuousLinearMap.ext fun f => hinj (by
@@ -457,7 +457,7 @@ theorem realRep (hMp : GlobalTheory.Published.RealMetaplecticRepresentation) {G 
         rfl)
       map_mul' := fun g h => ContinuousLinearMap.ext fun f => hinj (by
         beta_reduce
-        rw [ContinuousLinearMap.mul_apply, ← hl0, ← hl0, ← hl0, map_mul]
+        rw [mul_apply_eq_comp, ← hl0, ← hl0, ← hl0, map_mul]
         rfl) }
   have hl1 : ∀ g (f : Sch l), ω g (f.toLp 2 volume) = (ρ g f).toLp 2 volume := hl0
   clear_value ρ
@@ -490,7 +490,7 @@ theorem realRep (hMp : GlobalTheory.Published.RealMetaplecticRepresentation) {G 
     have hd2 := (metaplectic_schwartz_smooth h3 h4 h5).2.2 L X hX δ hδ0 hδX hδd f
     simp only [e1, map_smul, smul_eq_mul]
     refine (hd.mul hd2).congr_deriv ?_
-    rw [hχ0, hδ0, map_one, ContinuousLinearMap.one_apply]
+    rw [hχ0, hδ0, map_one, one_apply_eq_self]
     ring
 
 end Real
@@ -504,7 +504,7 @@ theorem haar_coords {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] {n : �
     ∃ k : ℝ, ∀ F : V → ℂ, ∫ y, F y ∂μ = k • ∫ x, F (C.symm x) := by
   let e : V ≃ᵐ EuclideanSpace ℝ (Fin n) := C.toHomeomorph.toMeasurableEquiv
   have he : ∀ y, e y = C y := fun y => rfl
-  haveI : (μ.map e).IsAddHaarMeasure := C.isAddHaarMeasure_map μ
+  have : (μ.map e).IsAddHaarMeasure := C.isAddHaarMeasure_map μ
   have hk := Measure.isAddLeftInvariant_eq_smul (μ.map e) (volume : Measure (EuclideanSpace ℝ (Fin n)))
   refine ⟨(Measure.addHaarScalarFactor (μ.map e) volume : ℝ), fun F => ?_⟩
   have h1 : ∫ y, F y ∂μ = ∫ x, F (C.symm x) ∂(μ.map e) := by
@@ -551,7 +551,7 @@ theorem archRep : GlobalTheory.FunPr.Hypotheses₂ → DerEx → VacLine →
   intro hP hDer _ F E _ _ _ _ _ σ α β κ _ _ _ _ _ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
   obtain ⟨n, θ, φ, φ₀, hp, hq, hφ, hφu⟩ := _root_.GlobalTheory.ArchCoords.exists_coords F E σ α β κ P Q R S τ JA JB d a b A C hCM hFr
   obtain ⟨k, hkc, hkC, hkJ, hcan⟩ := _root_.GlobalTheory.RealLiftComp.exists_comp F E σ β R S τ JB b C hCM hFr.2.2
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨ω, hωc, hωi⟩ := _root_.GlobalTheory.SchrodOsc.exists_osc _ _ P Q R S φ hφ (_root_.GlobalTheory.RealWeil.continuous_rho _) (UG (cA σ) JB) k hkc hkJ
   obtain ⟨s, hsc, hsφ⟩ := _root_.GlobalTheory.ColAction.exists_symplectic_hom_of_unitary _ _ P Q R S φ hφ (UG (cA σ) JB) k hkc hkJ
   obtain ⟨ρ, η, hη1, hη2, hη3, hρi, hρu, hρc, hρd⟩ := realRep hP.realMetaplecticRepresentation s hsc ω hωc fun g w v => by
@@ -608,10 +608,10 @@ theorem archRep : GlobalTheory.FunPr.Hypotheses₂ → DerEx → VacLine →
     have e3 := hρi g _ _ _ e2
     rw [hsφ, hφu _ _ hu' hc'] at e3
     rw [_root_.GlobalTheory.ArchRhoPure.rho_pureA_schrF F E σ α β κ ψ JA JB d hψ _ hu', hρ', hρ', htoV, htoV, hS, e3]
-  · haveI : BorelSpace ({w : InfinitePlace F // w.IsReal} → ℝ) := Pi.borelSpace
-    haveI : BorelSpace ({w : InfinitePlace F // w.IsComplex} → ℂ) := Pi.borelSpace
-    haveI : BorelSpace (mixedEmbedding.mixedSpace F) := Prod.borelSpace
-    haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  · have : BorelSpace ({w : InfinitePlace F // w.IsReal} → ℝ) := Pi.borelSpace
+    have : BorelSpace ({w : InfinitePlace F // w.IsComplex} → ℂ) := Pi.borelSpace
+    have : BorelSpace (mixedEmbedding.mixedSpace F) := Prod.borelSpace
+    have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
     obtain ⟨r, hr⟩ := haar_coords ν θ
     rw [hr, hr]
     congr 1

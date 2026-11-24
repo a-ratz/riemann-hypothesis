@@ -301,7 +301,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.Twist.isCStable_inv_different_and_norm_ideal : ∀ D : D7, GlobalTheory.IndefiniteRowSideFullHecke.FlatSpaceComponents.IsCStable (D := D) ((D.host.ddE : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E))⁻¹ ∧ GlobalTheory.IndefiniteRowSideFullHecke.FlatSpaceComponents.IsCStable (D := D) (FractionalIdeal.spanSingleton (𝓞 D.host.E)⁰ (((D.host.g 0 * D.host.g 1 : ℕ) : D.host.E))⁻¹ * D.host.AA * D.host.AAbar) := by
   intro D
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hs : ∀ x : D.host.E, star x = ReciprocityTheory.ChartRestriction.G.FD.cc x := fun _ => rfl
   have hcc : ∀ a : D.host.E, ReciprocityTheory.ChartRestriction.G.FD.cc a = D.host.conj a := fun a => bridge_star_holds D.R D.host a
   have key : ∀ nn : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E, nn ≠ 0 → GlobalTheory.conjFrac nn = nn →
@@ -775,7 +775,7 @@ theorem exists_congr (hc : Formalism.HermitianLatticesTheory.IsCMUnram E) {r : �
     (hsd' : ∀ x, x ∈ L' ↔ ∀ y ∈ L', IsIntegral ℤ (herm J'ᵀ x y))
     (hs : ∀ τ : E →+* ℂ, ∃ p q, Formalism.UG.HasSignature (J.map τ) p q ∧ Formalism.UG.HasSignature (J'.map τ) p q) :
     ∃ P : Matrix (Fin r) (Fin r) E, P.det ≠ 0 ∧ ∀ x y, herm Jᵀ (P *ᵥ x) (P *ᵥ y) = herm J'ᵀ x y := by
-  haveI := GlobalTheory.DefiniteMass.unramified_of_isCMUnram hc
+  have := GlobalTheory.DefiniteMass.unramified_of_isCMUnram hc
   have hone : ∀ z : E, z ∈ (1 : FractionalIdeal (𝓞 E)⁰ E) ↔ IsIntegral ℤ z := fun z =>
     (FractionalIdeal.mem_one_iff _).trans ⟨fun ⟨a, ha⟩ => ha ▸ a.2, fun hz => ⟨⟨z, hz⟩, rfl⟩⟩
   obtain ⟨P, hP0, hP⟩ := congr_of_modular (G := Jᵀ) (G' := J'ᵀ) (L := L) (L' := L') (𝔟 := 1)
@@ -884,7 +884,7 @@ theorem form_sumMap {Y X : HSp D} {ι : X.V →ₗ[D.host.E] Y.V} {a ρ : ℕ} {
     exact ⟨fun i j => Fin.ext (by omega)⟩
   have zz : ∀ i j, Y.hT (z i) (z j) = if i = j then c else 0 := fun i j => by
     obtain rfl := Subsingleton.elim i j
-    rw [if_pos rfl]; exact h.z_norm i
+    rw [ite_eq_left rfl]; exact h.z_norm i
   have zx : ∀ i x, Y.hT (z i) (ι x) = 0 := fun i x => h.z_X i x
   have xz : ∀ i x, Y.hT (ι x) (z i) = 0 := fun i x => by rw [hT_swap, zx, star_zero]
   have ex : ∀ i x, Y.hT (e i) (ι x) = 0 := fun i x => (h.hyp_X i x).1
@@ -906,7 +906,7 @@ theorem form_sumMap {Y X : HSp D} {ι : X.V →ₗ[D.host.E] Y.V} {a ρ : ℕ} {
   simp only [map_add (f := _), map_sum, LinearMap.map_smulₛₗ, LinearMap.add_apply, LinearMap.sum_apply,
   LinearMap.smul_apply, zz, zx, xz, ex, xe, fx, xf, ez, ze, fz, zf, ee, ff, fe, ef, xx, smul_eq_mul, mul_zero,
   Finset.sum_const_zero, add_zero, zero_add, mul_ite, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ,
-  if_true, mul_one, RingHom.id_apply, starRingEnd_apply]
+  ite_true, mul_one, RingHom.id_apply, starRingEnd_apply]
   rw [add_comm (∑ i, star (p.2.2.1 i) * q.2.2.2 i)]
   congr 1
   congr 1
@@ -1181,7 +1181,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem _root_.GlobalTheory.T.isAdelicGlueVector_of_selfDual_primitive : ∀ (D : D7) (u : D.what₂.Word) (Y X : HSp D) (ι : X.V →ₗ[D.host.E] Y.V) (z : Y.V), IsLine Y X ι z u → ∀ (L₀ : Lat X) (x₀ : X.V), Submodule.IsFullLattice D.host.E L₀ → IsSDIn Y (flatSp Y X ι z) (glueLat Y X ι z u L₀ x₀) → IsPrim Y z (glueLat Y X ι z u L₀ x₀) → IsGlueVec X u L₀ (vA X x₀) := by
   intro D u Y X ι z h L₀ x₀ hlat hSD hP
-  letI := hlat
+  let := hlat
   exact GlobalTheory.AdIsom.SelfDualGlue.isGlueVec_of_isSDIn D u Y X ι z h L₀ x₀
     (by first | exact hlat | infer_instance) hSD hP
 end -- clump:auto

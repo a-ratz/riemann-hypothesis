@@ -65,9 +65,9 @@ def EtClosed {A : CommRingCat.{0}} (P : ∀ C : CommRingCat.{0}, (A ⟶ C) → P
 theorem relZ_neg (hH : Hyp) (q : ℕ) (i n : ℤ) {A B : CommRingCat.{0}} (f : A ⟶ B) (hn : n < 0) : RelZ q i n f := by
   have hA9 := (hH.2.2.2.2.2.1 (ZMod q) (tw q i)).1
   refine ⟨fun m hm y => ?_, fun x y _ => ?_⟩
-  · haveI := hA9 (sch.obj (Spec B)) m (by omega)
+  · have := hA9 (sch.obj (Spec B)) m (by omega)
     exact ⟨0, Subsingleton.elim _ _⟩
-  · haveI := hA9 (sch.obj (Spec A)) n hn
+  · have := hA9 (sch.obj (Spec A)) n hn
     exact Subsingleton.elim _ _
 
 theorem re_of_relZ {q : ℕ} {i : ℤ} {A B : CommRingCat.{0}} {f : A ⟶ B} (h : ∀ n, RelZ q i n f) : RE q i f :=

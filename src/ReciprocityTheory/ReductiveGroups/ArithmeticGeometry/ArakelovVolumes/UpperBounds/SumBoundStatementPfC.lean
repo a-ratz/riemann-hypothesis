@@ -223,7 +223,7 @@ theorem sumBd_sum {f : ℕ} {s c : ℝ} (hs : 2 * (f : ℝ) * ((p + q : ℕ) : �
         _ ≤ B ^ s := Real.one_le_rpow hB1 hs0
     · obtain ⟨m, hm⟩ : ∃ m, m0 = m + 1 := ⟨m0 - 1, by omega⟩
       have hnot : a ∉ Bs m := Nat.find_min (hex a) (by omega)
-      simp only [hBs, Set.mem_setOf_eq, not_forall, not_le] at hnot
+      simp only [hBs, Set.mem_ofPred_eq, not_forall, not_le] at hnot
       obtain ⟨k, i, j, hkij⟩ := hnot
       have hbig := sumBd_w_le_big (hU a k) hs0 (by positivity : (0 : ℝ) < 2 ^ m) hkij
       have hfac : (P + 1) / ((2 : ℝ) ^ m) ^ 2 = B / 4 ^ m0 := by

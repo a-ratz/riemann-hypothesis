@@ -71,9 +71,9 @@ theorem length_ge_finrank_of_semilinear_surj (p : ℕ) [Fact p.Prime] (k : Type)
     obtain ⟨a, ha⟩ : ∃ a : WittVector p k, WittVector.constantCoeff a = x :=
       ⟨WittVector.teichmuller p x, by simp⟩
     exact ⟨e a, by simp [σ, ha]⟩
-  letI : Algebra (WittVector p k) k := σ.toAlgebra
-  letI : Module (WittVector p k) U := Module.compHom U σ
-  haveI : IsScalarTower (WittVector p k) k U :=
+  let : Algebra (WittVector p k) k := σ.toAlgebra
+  let : Module (WittVector p k) U := Module.compHom U σ
+  have : IsScalarTower (WittVector p k) k U :=
     ⟨fun a b u => by
       show (σ a * b) • u = σ a • (b • u)
       exact mul_smul _ _ _⟩

@@ -353,7 +353,7 @@ private lemma finite_zeros_lemma_9 {V : Type} [Fintype V] [DecidableEq V] (r : V
         refine M.sum_mem (fun γ hγ => ?_)
         have e1 : monomial β (1 : ℂ) * monomial γ (AddMonoidAlgebra.coeff (H v) γ) =
             AddMonoidAlgebra.coeff (H v) γ • monomial (β + γ) (1 : ℂ) := by
-          rw [monomial_mul, one_mul, smul_monomial, smul_eq_mul, mul_one]
+          rw [monomial_mul_monomial, one_mul, smul_monomial, smul_eq_mul, mul_one]
         rw [e1, map_smul]
         refine M.smul_mem _ (ih _ ?_ _ rfl)
         have h1 := le_totalDegree hγ
@@ -371,9 +371,9 @@ private lemma finite_zeros_lemma_9 {V : Type} [Fintype V] [DecidableEq V] (r : V
       rw [smul_monomial, smul_eq_mul, mul_one]
     rw [e1, map_smul]
     exact M.smul_mem _ (hstep _ α rfl)
-  haveI : Module.Finite ℂ (MvPolynomial V ℂ ⧸ I) :=
+  have : Module.Finite ℂ (MvPolynomial V ℂ ⧸ I) :=
     Module.Finite.of_fg_top ⟨T.image fun α => Ideal.Quotient.mkₐ ℂ I (monomial α 1), htop⟩
-  haveI := Algebra.IsIntegral.of_finite ℂ (MvPolynomial V ℂ ⧸ I)
+  have := Algebra.IsIntegral.of_finite ℂ (MvPolynomial V ℂ ⧸ I)
   have hint : ∀ v, ∃ q : Polynomial ℂ, q.Monic ∧
       Polynomial.eval₂ (algebraMap ℂ (MvPolynomial V ℂ ⧸ I)) (Ideal.Quotient.mkₐ ℂ I (X v)) q = 0 :=
     fun v => Algebra.IsIntegral.isIntegral _

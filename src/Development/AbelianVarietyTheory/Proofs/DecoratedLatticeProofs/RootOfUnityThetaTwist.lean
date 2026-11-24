@@ -103,7 +103,7 @@ theorem finite_pow_eq_one (n : ℕ) (hn : 0 < n) : {z : Circle | z ^ n = 1}.Fini
 
 theorem isOpen_ker_of_pow {X : Type} [TopologicalSpace X] [Group X] (c : X →* Circle) (hc : Continuous c) (n : ℕ) (hn : 0 < n)
     (hp : ∀ x, c x ^ n = 1) : IsOpen (c.ker : Set X) := by
-  have hF : ({z : Circle | z ^ n = 1} \ {1}).Finite := (finite_pow_eq_one n hn).diff
+  have hF : ({z : Circle | z ^ n = 1} \ {1}).Finite := (finite_pow_eq_one n hn).sdiff
   have ho := hF.isClosed.isOpen_compl.preimage hc
   convert ho using 1
   ext x

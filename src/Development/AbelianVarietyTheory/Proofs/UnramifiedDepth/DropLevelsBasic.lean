@@ -159,7 +159,7 @@ lemma low_optimum (l d : ℕ) [NeZero d] (hl : 2 ≤ l) (W : ZMod d → ℝ) (hW
   let S : Set (ZMod d → ℕ → ℝ) :=
     {x | IsFlow l d W x ∧ ∀ a i, (i0 ≤ i ∨ i ∉ oddLevels d) → x a i = 0}
   have hclosed : IsClosed S := by
-    simp only [S, IsFlow, Set.setOf_and, Set.setOf_forall]
+    simp only [S, IsFlow, Set.ofPred_and, Set.ofPred_forall]
     refine IsClosed.inter (IsClosed.inter ?_ ?_) ?_
     · exact isClosed_iInter fun a => isClosed_iInter fun i =>
         isClosed_le continuous_const (by fun_prop)
@@ -195,7 +195,7 @@ lemma truncate (l d : ℕ) [NeZero d] (hl : 2 ≤ l) (W : ZMod d → ℝ) (i0 : 
     · exact h0 a i
     · exact le_rfl
   refine ⟨y, ⟨fun a i => ?_, fun a => le_trans (add_le_add ?_ ?_) (h2 a)⟩,
-    fun a i h => if_pos h, ?_⟩
+    fun a i h => ite_eq_left h, ?_⟩
   · simp only [y]; split_ifs
     · exact le_rfl
     · exact h0 a i
@@ -212,10 +212,10 @@ lemma truncate (l d : ℕ) [NeZero d] (hl : 2 ≤ l) (W : ZMod d → ℝ) (i0 : 
       rw [← Finset.sum_sub_distrib, Finset.sum_mul]
       refine Finset.sum_le_sum fun i hi => ?_
       by_cases h : i0 ≤ i
-      · have : y a i = 0 := if_pos (Or.inl h)
+      · have : y a i = 0 := ite_eq_left (Or.inl h)
         rw [this, sub_zero, mul_comm]
         exact mul_le_mul_of_nonneg_right (pow_le_pow_right₀ hl1 h) (h0 a i)
-      · have : y a i = x a i := if_neg (by simp [h, hi])
+      · have : y a i = x a i := ite_eq_right (by simp [h, hi])
         rw [this, sub_self, zero_mul]
         exact mul_nonneg (by positivity) (h0 a i)
     have := h2 a

@@ -127,7 +127,7 @@ private theorem homog_eq {ι : Type} (d : ℕ) (p : MvPolynomial ι ℂ) :
       monomial (Finsupp.single none (d - α.degree) + α.mapDomain some) (p.coeff α) := by
   unfold homog
   refine Finset.sum_congr rfl fun α _ => ?_
-  rw [rename_monomial, X_pow_eq_monomial, monomial_mul, one_mul]
+  rw [rename_monomial, X_pow_eq_monomial, monomial_mul_monomial, one_mul]
 
 private theorem deg_le {ι : Type} {d : ℕ} {p : MvPolynomial ι ℂ} (h : p.totalDegree ≤ d) {α : ι →₀ ℕ}
     (hα : α ∈ p.support) : α.degree ≤ d := by
@@ -176,7 +176,7 @@ private theorem mon_norm {σ : Type} [Fintype σ] {H : Type} [NormedAddCommGroup
   | zero => simpa using h1
   | add a b ha hb =>
     have : (monomial (a + b) 1 : MvPolynomial σ ℂ) = monomial a 1 * monomial b 1 := by
-      rw [monomial_mul, one_mul]
+      rw [monomial_mul_monomial, one_mul]
     rw [this, map_mul, map_add (f := _), pow_add]
     exact (norm_mul_le _ _).trans (mul_le_mul ha hb (norm_nonneg _) (by positivity))
   | single i e =>
@@ -267,7 +267,7 @@ theorem UpperTheory.ConvolutionTheory.Ci.truncSpec :
       congr 1
       have := congrArg (AddMonoidAlgebra.coeff · β) (hG k)
       rw [coeff_map, pieceK, coeff_sum] at this
-      simp only [coeff_monomial, Finset.sum_ite_eq', if_pos hβ] at this
+      simp only [coeff_monomial, Finset.sum_ite_eq', ite_eq_left hβ] at this
       exact this
     refine ⟨fun d => ∑ β ∈ Φ.support, (∑ k ∈ Finset.range (d + 1), eval L (piece k (Φ.coeff β))) *
       β.prod fun i e => hval t i ^ e, ?_, fun x d => ?_⟩

@@ -69,7 +69,7 @@ variable {R₀ : Type u} [CommRing R₀]
 
 theorem isLocalRing_dualNumber (A : Type u) [CommRing A] [IsLocalRing A] :
     IsLocalRing (DualNumber A) := by
-  haveI : Nontrivial (DualNumber A) := inferInstanceAs (Nontrivial (A × A))
+  have : Nontrivial (DualNumber A) := inferInstanceAs (Nontrivial (A × A))
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
   rw [TrivSqZeroExt.isUnit_iff_isUnit_fst, TrivSqZeroExt.isUnit_iff_isUnit_fst]
   simpa using IsLocalRing.isUnit_or_isUnit_one_sub_self a.fst

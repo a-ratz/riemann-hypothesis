@@ -991,7 +991,7 @@ theorem map_equiv_smul {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] 
     [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F] [MeasurableSpace F] [BorelSpace F]
     (μ : Measure E) [μ.IsAddHaarMeasure] (ν : Measure F) [ν.IsAddHaarMeasure] (e : E ≃ₗ[ℝ] F) :
     ∃ c : ℝ≥0, 0 < c ∧ μ.map e = c • ν := by
-  haveI : (μ.map e).IsAddHaarMeasure := by
+  have : (μ.map e).IsAddHaarMeasure := by
     exact e.toContinuousLinearEquiv.isAddHaarMeasure_map μ
   exact ⟨_, Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _, Measure.isAddLeftInvariant_eq_smul _ _⟩
 
@@ -1009,8 +1009,8 @@ attribute [local instance] isAddHaarMeasure_matrix_volume
 
 theorem haar_prod2 {A B C D : Type} [Fintype A] [Fintype B] [Fintype C] [Fintype D] :
     ((volume : Measure (A → B → ℂ)).prod (volume : Measure (C → D → ℂ))).IsAddHaarMeasure := by
-  haveI := (isAddHaarMeasure_matrix_volume : (volume : Measure (A → B → ℂ)).IsAddHaarMeasure)
-  haveI := (isAddHaarMeasure_matrix_volume : (volume : Measure (C → D → ℂ)).IsAddHaarMeasure)
+  have := (isAddHaarMeasure_matrix_volume : (volume : Measure (A → B → ℂ)).IsAddHaarMeasure)
+  have := (isAddHaarMeasure_matrix_volume : (volume : Measure (C → D → ℂ)).IsAddHaarMeasure)
   first
   | infer_instance
   | exact MeasureTheory.Measure.prod.instIsAddHaarMeasure _ _
@@ -1098,7 +1098,7 @@ def Kset (P Q : Type) [Fintype P] [Fintype Q] [DecidableEq Q] (ρ : ℝ) : Set (
   {p | (Matrix.of p.1).PosDef ∧ (Matrix.trace (Matrix.of p.1)).re ≤ 1 ∧ qf (Matrix.of p.1) (cm p.2) ≤ ρ ^ 2}
 
 theorem Kset_meas (ρ : ℝ) : MeasurableSet (Kset P Q ρ) := by
-  simp only [Kset, Set.setOf_and]
+  simp only [Kset, Set.ofPred_and]
   have htr : Measurable (fun p : (Q → Q → ℂ) × (Q → P → ℂ) => (Matrix.trace (Matrix.of p.1)).re) :=
     (Complex.continuous_re.comp ((of_cont.comp continuous_fst).matrix_trace)).measurable
   exact (measurable_fst measurableSet_posDef).inter
@@ -1402,9 +1402,9 @@ theorem Sl_meas (T : Q → Q → ℂ) (σ : ℝ) : MeasurableSet (Sl P T σ) := 
 theorem Sl_scale {T : Q → Q → ℂ} (hT : (Matrix.of T).PosDef) {ρ : ℝ} (hρ : 0 ≤ ρ) : Sl P T ρ = ρ • Sl P T 1 := by
   ext B
   rcases hρ.eq_or_lt with h0 | hpos
-  · have hne : (Sl P T 1).Nonempty := ⟨0, by simp only [Sl, Set.mem_setOf_eq, qf_zero]; norm_num⟩
+  · have hne : (Sl P T 1).Nonempty := ⟨0, by simp only [Sl, Set.mem_ofPred_eq, qf_zero]; norm_num⟩
     rw [← h0, Set.zero_smul_set hne, Set.mem_zero]
-    simp only [Sl, Set.mem_setOf_eq]
+    simp only [Sl, Set.mem_ofPred_eq]
     constructor
     · intro h
       have hc : cm B = 0 := qf_definite hT (cm B) (by simpa using h)
@@ -1413,7 +1413,7 @@ theorem Sl_scale {T : Q → Q → ℂ} (hT : (Matrix.of T).PosDef) {ρ : ℝ} (h
     · rintro rfl
       simp [qf_zero]
   · rw [Set.mem_smul_set_iff_inv_smul_mem₀ hpos.ne']
-    simp only [Sl, Set.mem_setOf_eq, qf_smul]
+    simp only [Sl, Set.mem_ofPred_eq, qf_smul]
     rw [inv_pow, one_pow, inv_mul_le_iff₀ (by positivity), mul_one]
 
 theorem finrank_QP : Module.finrank ℝ (Q → P → ℂ) = 2 * Fintype.card P * Fintype.card Q := by
@@ -1426,16 +1426,16 @@ theorem Kf_slice {T : Q → Q → ℂ} (hT : (Matrix.of T).PosDef ∧ (Matrix.tr
   funext B
   by_cases hB : qf (Matrix.of T) (cm B) ≤ σ ^ 2
   · have h1 : (T, B) ∈ Kset P Q σ := by
-      simp only [Kset, Set.mem_setOf_eq]; exact ⟨hT.1, hT.2, hB⟩
+      simp only [Kset, Set.mem_ofPred_eq]; exact ⟨hT.1, hT.2, hB⟩
     have h2 : B ∈ Sl P T σ := by
-      simp only [Sl, Set.mem_setOf_eq]; exact hB
+      simp only [Sl, Set.mem_ofPred_eq]; exact hB
     unfold Kf
     rw [Set.indicator_of_mem h1, Set.indicator_of_mem h2]
     all_goals rfl
   · have h1 : (T, B) ∉ Kset P Q σ := by
-      simp only [Kset, Set.mem_setOf_eq]; exact fun h => hB h.2.2
+      simp only [Kset, Set.mem_ofPred_eq]; exact fun h => hB h.2.2
     have h2 : B ∉ Sl P T σ := by
-      simp only [Sl, Set.mem_setOf_eq]; exact hB
+      simp only [Sl, Set.mem_ofPred_eq]; exact hB
     unfold Kf
     first
     | rw [Set.indicator_of_notMem h1, Set.indicator_of_notMem h2]

@@ -58,9 +58,9 @@ theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.closedSub :
   intro O T _ _ _ _ _ _ I _ S t ht
   let q : T →ₐ[O] T ⧸ I := Ideal.Quotient.mkₐ O I
   have hq : Function.Surjective q := Ideal.Quotient.mkₐ_surjective O I
-  haveI : IsNoetherian O (T ⧸ I) := inferInstance
-  haveI : IsNoetherianRing (T ⧸ I) := isNoetherian_of_tower O inferInstance
-  haveI : Algebra.IsIntegral O (T ⧸ I) := inferInstance
+  have : IsNoetherian O (T ⧸ I) := inferInstance
+  have : IsNoetherianRing (T ⧸ I) := isNoetherian_of_tower O inferInstance
+  have : Algebra.IsIntegral O (T ⧸ I) := inferInstance
   set K : Ideal (T ⧸ I) := (maximalIdeal T).map q with hK
   set J : Ideal (T ⧸ I) := (maximalIdeal O).map (algebraMap O (T ⧸ I)) with hJ
   have hKJ : K ≤ J.radical := by
@@ -72,7 +72,7 @@ theorem UpperTheory.V.Th.AnnihilatorQuotientFinite.closedSub :
       have h2 : (P.comap (algebraMap O (T ⧸ I))).IsPrime := Ideal.comap_isPrime _ _
       rw [← (maximalIdeal.isMaximal O).eq_of_le h2.ne_top h1]
       exact maximalIdeal.isMaximal O
-    haveI := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := O) P hc
+    have := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := O) P hc
     have h3 : (P.comap q).IsMaximal := Ideal.comap_isMaximal_of_surjective q hq
     have h4 : P.comap q = maximalIdeal T := IsLocalRing.eq_maximalIdeal h3
     rw [hK, Ideal.map_le_iff_le_comap, h4]

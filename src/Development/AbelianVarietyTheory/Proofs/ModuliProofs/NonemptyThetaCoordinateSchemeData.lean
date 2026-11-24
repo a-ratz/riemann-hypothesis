@@ -231,18 +231,18 @@ theorem reduced_flat_of_charts {Z S : Scheme.{0}} (s : Z ⟶ S) (U : Z.Opens) {�
         exact ⟨y, hy⟩
       exact ⟨i, this⟩) (fun i => inferInstance)
   constructor
-  · haveI : ∀ i, IsReduced (𝒰.X i) := fun i =>
+  · have : ∀ i, IsReduced (𝒰.X i) := fun i =>
       by
       change IsReduced (pullback U.ι (x i) :)
-      haveI := hr i
+      have := hr i
       exact isReduced_of_isOpenImmersion (pullback.snd U.ι (x i))
     exact IsReduced.of_openCover _ 𝒰
-  · haveI : IsZariskiLocalAtSource @Flat := HasRingHomProperty.instIsZariskiLocalAtSource (P := @Flat)
+  · have : IsZariskiLocalAtSource @Flat := HasRingHomProperty.instIsZariskiLocalAtSource (P := @Flat)
     refine IsZariskiLocalAtSource.of_openCover (P := @Flat) 𝒰 (fun i => ?_)
     change Flat (pullback.fst U.ι (x i) ≫ U.ι ≫ s)
     rw [← Category.assoc, pullback.condition, Category.assoc]
-    haveI := hf i
-    haveI := hx i
+    have := hf i
+    have := hx i
     exact MorphismProperty.comp_mem @Flat _ _ inferInstance (hf i)
 
 theorem flat_spMap_of_torsionFree {o σ : Type} [CommRing o] [IsDedekindDomain o] (J : Ideal (MvPolynomial σ o))
@@ -265,11 +265,11 @@ theorem flat_spMap_of_torsionFree {o σ : Type} [CommRing o] [IsDedekindDomain o
 
 theorem nonempty_MMPre : ∀ (o : Type) [CommRing o] [IsDedekindDomain o] (g n N' : ℕ) (I : Ideal (MvPolynomial (Ix g (N' ^ 2)) o)), 0 < N' → I.IsRadical → (∀ F ∈ I, ∀ e, MvPolynomial.homogeneousComponent e F ∈ I) → (∀ (c : o) F, c ≠ 0 → MvPolynomial.C c * F ∈ I → F ∈ I) → Nonempty (MMPre n N' I) := by
   intro o _ _ g n N' I hN hrad hhom htf
-  haveI : NeZero (N' ^ 2) := ⟨by positivity⟩
+  have : NeZero (N' ^ 2) := ⟨by positivity⟩
   obtain ⟨Z, s, M, th, hproj, hrep, hfp, -⟩ := _root_.GlobalTheory.ProjFlat.exists_projRep_flat o (Ix g (N' ^ 2)) I 0 hhom
   obtain ⟨N, j, hj, hjs⟩ := hproj ⟨0⟩
-  haveI := hfp (IsNoetherian.noetherian I)
-  haveI : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian s
+  have := hfp (IsNoetherian.noetherian I)
+  have : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian s
   let U : Z.Opens := ⟨⋂ a, ⋃ c, (Out.nonzeroLocus (th (a + (N' / n) • c)) : Set Z),
     isOpen_iInter_of_finite fun a => isOpen_iUnion fun c => (Out.nonzeroLocus _).2⟩
   have hU : ∀ z : Z, z ∈ U ↔ ∀ a, ∃ c, z ∈ Out.nonzeroLocus (th (a + (N' / n) • c)) := fun z => by
@@ -278,7 +278,7 @@ theorem nonempty_MMPre : ∀ (o : Type) [CommRing o] [IsDedekindDomain o] (g n N
   choose x hxo hxr hxs _ using fun i => _root_.GlobalTheory.ZM.CoordChart.exists_chart o _ I Z s M th i hrep
   obtain ⟨hred, hflat⟩ := reduced_flat_of_charts s U _ x hxo
     (fun i => by
-      haveI : _root_.IsReduced (MvPolynomial (Ix g (N' ^ 2)) o ⧸ (I ⊔ Ideal.span {MvPolynomial.X i - 1})) :=
+      have : _root_.IsReduced (MvPolynomial (Ix g (N' ^ 2)) o ⧸ (I ⊔ Ideal.span {MvPolynomial.X i - 1})) :=
         (Ideal.isRadical_iff_quotient_reduced _).1 ((_root_.GlobalTheory.dehomogenisation_isRadical_and_torsionFree o _ I i hhom).1 hrad)
       infer_instance)
     (fun i => by

@@ -97,7 +97,7 @@ theorem map_mul_unit (μ : Measure A) [μ.IsAddHaarMeasure] [μ.Regular] (u : A�
     μ.map (fun x => (u : A) * x) = (distribHaarChar A u)⁻¹ • μ := by
   have hm : Measurable fun x : A => (u : A) * x := (continuous_const.mul continuous_id).measurable
   ext B hB
-  rw [Measure.map_apply hm hB, Measure.smul_apply]
+  rw [Measure.map_apply hm hB, smul_apply]
   have e : (fun x : A => (u : A) * x) ⁻¹' B = u⁻¹ • B := by
     ext y
     rw [Set.mem_smul_set_iff_inv_smul_mem]
@@ -114,7 +114,7 @@ theorem exists_pos_finite (μ : Measure A) [μ.IsAddHaarMeasure] :
 theorem smul_inj (μ : Measure A) [μ.IsAddHaarMeasure] {a b : ℝ≥0} (h : a • μ = b • μ) : a = b := by
   obtain ⟨K, h0, h1⟩ := exists_pos_finite μ
   have e := congrArg (fun m : Measure A => m K) h
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e
   exact ENNReal.coe_injective ((ENNReal.mul_left_inj h0 h1).1 e)
 
 theorem char_map (s : A ≃+* A) (hs : Continuous s) (hs' : Continuous s.symm) (u : Aˣ) :
@@ -156,18 +156,18 @@ namespace GlobalTheory.CompanionTheory.WeilSiegel.HypMass.ContentScale
 
 theorem coordK_map_mul : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → ∀ (c : Fv F v ⊗[F] E) (t : Fv F v) (w : ℕ), IsUnit c → algebraMap (Fv F v) (Fv F v ⊗[F] E) t = sigR (Fv F v) σ c * c → ‖t‖ = ((qv v : ℝ) ^ w)⁻¹ → (coordK (Fv F v) b lam).map (fun x => c * x) = (qv v ^ w) • coordK (Fv F v) b lam := by
   intro F E _ _ _ _ _ σ hσ d b v lam hlam c t w hc ht hnorm
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : lam.IsAddHaarMeasure := hlam.1
+  have : lam.IsAddHaarMeasure := hlam.1
   obtain ⟨j1, j2, j3, j4, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hK, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Fv F v) d b lam ‹_›
-  haveI := hK
+  have := hK
   have hd : d = 2 := by
     rw [← hσ.2.2.1, Module.finrank_eq_card_basis b, Fintype.card_fin]
   subst hd
   set μ := coordK (Fv F v) b lam with hμ
-  haveI : μ.Regular := inferInstance
+  have : μ.Regular := inferInstance
   have hss : ∀ x, sigR (Fv F v) σ (sigR (Fv F v) σ x) = x := by
     intro x
     induction x using TensorProduct.induction_on with
@@ -199,7 +199,7 @@ theorem coordK_map_mul : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   rw [hval, h2, map_mul, hchar] at h3
   have h4 := smul_inj μ h3
   have h5 : (distribHaarChar (Fv F v ⊗[F] E) u)⁻¹ = qv v ^ w := by
-    refine (pow_left_inj₀ zero_le' zero_le' two_ne_zero).1 ?_
+    refine (pow_left_inj₀ zero_le zero_le two_ne_zero).1 ?_
     rw [inv_pow, pow_two]
     exact h4.symm
   rw [← h5, ← map_mul_unit μ u, hu]
@@ -543,7 +543,7 @@ theorem norm_val (hD : w D = 1) (hsq : ∀ e : K, w e ≤ 1 → ¬ w (e ^ 2 - D)
     have hA : w (p ^ 2) = 1 := by rw [map_pow, hp1, one_pow]
     have hB : w (D * q ^ 2) < 1 := by
       rw [map_mul, map_pow, hD, one_mul]
-      exact pow_lt_one₀ zero_le' hq1 two_ne_zero
+      exact pow_lt_one₀ zero_le hq1 two_ne_zero
     rw [sub_eq_add_neg, Valuation.map_add_eq_of_lt_left w (by rwa [Valuation.map_neg, hA]), hA]
   · have hq0 : q ≠ 0 := by
       intro h0
@@ -555,7 +555,7 @@ theorem norm_val (hD : w D = 1) (hsq : ∀ e : K, w e ≤ 1 → ¬ w (e ^ 2 - D)
     have hle : w ((p / q) ^ 2 - D) ≤ 1 := by
       refine le_trans (Valuation.map_sub w _ _) (max_le ?_ (le_of_eq hD))
       rw [map_pow]
-      exact pow_le_one₀ zero_le' he
+      exact pow_le_one₀ zero_le he
     have hge : ¬ w ((p / q) ^ 2 - D) < 1 := hsq _ he
     rw [hsplit, map_mul, map_pow, hq1, one_pow, one_mul]
     exact le_antisymm hle (not_lt.1 hge)
@@ -642,10 +642,10 @@ theorem exists_factor (hϖ : w ϖ = WithZero.exp (-1 : ℤ)) (hB0 : B 0 = 1)
       (w p = WithZero.exp (-(m : ℤ)) ∨ w q = WithZero.exp (-(m : ℤ))) := by
     by_cases hp0 : p = 0
     · obtain ⟨b, hb⟩ := exists_exp w (hpq.resolve_left (not_not.2 hp0)) hq
-      exact ⟨b, (by rw [hp0, map_zero]; exact zero_le'), le_of_eq hb, Or.inr hb⟩
+      exact ⟨b, (by rw [hp0, map_zero]; exact zero_le), le_of_eq hb, Or.inr hb⟩
     by_cases hq0 : q = 0
     · obtain ⟨a, ha⟩ := exists_exp w hp0 hp
-      exact ⟨a, le_of_eq ha, (by rw [hq0, map_zero]; exact zero_le'), Or.inl ha⟩
+      exact ⟨a, le_of_eq ha, (by rw [hq0, map_zero]; exact zero_le), Or.inl ha⟩
     obtain ⟨a, ha⟩ := exists_exp w hp0 hp
     obtain ⟨b, hb⟩ := exists_exp w hq0 hq
     rcases le_total a b with hab | hab
@@ -772,7 +772,7 @@ theorem inert_content : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have hfield : IsField (Fv F v ⊗[F] E) :=
     isField (Algebra.TensorProduct.basis (Fv F v) b₂) hB0 hBD
       (fun p q h => norm_ne_zero Valued.v hD hsq h)
-  haveI := hfield.nontrivial
+  have := hfield.nontrivial
   obtain ⟨ϖ, hϖ, hnorm⟩ := exists_unif v
   have hϖ0 : ϖ ≠ 0 := by
     intro h0
@@ -793,14 +793,14 @@ theorem inert_content : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have T1 : ∀ y : Fv F v ⊗[F] E,
       (∀ j, (Algebra.TensorProduct.basis (Fv F v) b₂).repr y j ∈ v.adicCompletionIntegers F) → y ∈ intK b v := by
     intro y hy
-    simp only [intK, Set.mem_setOf_eq]
+    simp only [intK, Set.mem_ofPred_eq]
     intro k
     exact basis_repr_mem_subring_of_change_of_basis (v.adicCompletionIntegers F).toSubring (Algebra.TensorProduct.basis (Fv F v) b₂)
       (Algebra.TensorProduct.basis (Fv F v) b) (fun j k => by rw [hincl2]; exact H2 j k) y hy k
   have T2 : ∀ y ∈ intK b v, ∀ j,
       (Algebra.TensorProduct.basis (Fv F v) b₂).repr y j ∈ v.adicCompletionIntegers F := by
     intro y hy j
-    simp only [intK, Set.mem_setOf_eq] at hy
+    simp only [intK, Set.mem_ofPred_eq] at hy
     exact basis_repr_mem_subring_of_change_of_basis (v.adicCompletionIntegers F).toSubring (Algebra.TensorProduct.basis (Fv F v) b)
       (Algebra.TensorProduct.basis (Fv F v) b₂) (fun k j => by rw [hincl]; exact H1 k j) y hy j
   have hsig : sigR (Fv F v) σ (algebraMap (Fv F v) (Fv F v ⊗[F] E) ϖ) =
@@ -927,7 +927,7 @@ theorem content : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
       obtain ⟨t, ht, hn⟩ := c3 i
       exact _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypMass.ContentScale.coordK_map_mul F E σ h d b v lam hlam (c i) t _ (c1 i).1 ht hn
     · intro s hs
-      rw [zetaV, if_neg hnf]
+      rw [zetaV, ite_eq_right hnf]
       exact hasSum_split _ hq s hs
   · obtain ⟨hf, c, c1, c3, c4, c5⟩ := _root_.GlobalTheory.CompanionTheory.SW.QuadField.inert_content F E σ h d b b₂ D hb0 hσ1 hD v hD1 h21 hBC hCB hres
     refine ⟨ℕ, inferInstance, c, fun i => 2 * i, ⟨c1, ?_, c3, c4, c5⟩, ?_⟩
@@ -935,7 +935,7 @@ theorem content : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
       obtain ⟨t, ht, hn⟩ := c3 i
       exact _root_.GlobalTheory.CompanionTheory.WeilSiegel.HypMass.ContentScale.coordK_map_mul F E σ h d b v lam hlam (c i) t _ (c1 i).1 ht hn
     · intro s hs
-      rw [zetaV, if_pos hf]
+      rw [zetaV, ite_eq_left hf]
       exact hasSum_field _ hq s hs
 
 end GlobalTheory.CompanionTheory.WeilSiegel.HypMass.Content

@@ -113,7 +113,7 @@ theorem exists_nat_mul_mem_of_mem_nhds {F : Type} [Field F] [NumberField F] {t :
     (ht : t ∈ nhds (0 : Af F)) :
     ∃ M₀ : ℕ, 0 < M₀ ∧ ∀ b ∈ GlobalTheory.HolDict.ShortVec.intRing F, (M₀ : Af F) * b ∈ t := by
   obtain ⟨r, hr, h⟩ := exists_small_of_mem_nhds (R := 𝓞 F) (K := F) ht
-  have hc := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) (I := Ideal.span {r}) hr
+  have hc := Ideal.under_ne_bot_of_integral_mem (R := ℤ) (I := Ideal.span {r}) hr
     (Ideal.mem_span_singleton_self r) (Algebra.IsIntegral.isIntegral r)
   obtain ⟨m, hm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hc
   rw [Ideal.mem_comap, Ideal.mem_span_singleton] at hm

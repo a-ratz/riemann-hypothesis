@@ -328,7 +328,7 @@ theorem exists_measure_le_prod (μ : Measure (AdelicGLn.AdelicGL K n)) [μ.IsHaa
   calc μ E ≤ μ (e ⁻¹' ((Set.univ.pi S) ×ˢ F)) := measure_mono hET
     _ = Measure.map e μ ((Set.univ.pi S) ×ˢ F) := (e.toHomeomorph.toMeasurableEquiv.map_apply _).symm
     _ = (s • ρ) ((Set.univ.pi S) ×ˢ F) := by rw [← heq]
-    _ = _ := by rw [Measure.smul_apply, hρT, ENNReal.smul_def, smul_eq_mul]
+    _ = _ := by rw [smul_apply, hρT, ENNReal.smul_def, smul_eq_mul]
 
 end PositivityTheory.Rg.Rs.boxvol
 

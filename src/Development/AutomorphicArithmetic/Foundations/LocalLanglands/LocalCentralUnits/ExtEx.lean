@@ -54,12 +54,12 @@ theorem UpperTheory.Zero.LLC.extEx :
   obtain ⟨E', fE, nE, _, aE, aΩ, tE, cE, w', h', hg, unr, card, _, _⟩ :=
     _root_.GlobalTheory.UnrCycExt.exists_unramified_ext E Ω g A w h i hi n hn
   obtain ⟨a', ha', _⟩ := UpperTheory.Zero.LLC.artEx E' Ω A w' h'
-  haveI : w'.asIdeal.IsMaximal := w'.isMaximal
-  letI : Field (𝓞 E' ⧸ w'.asIdeal) := Ideal.Quotient.field _
-  haveI : CharP (𝓞 E' ⧸ w'.asIdeal) g := by
+  have : w'.asIdeal.IsMaximal := w'.isMaximal
+  let : Field (𝓞 E' ⧸ w'.asIdeal) := Ideal.Quotient.field _
+  have : CharP (𝓞 E' ⧸ w'.asIdeal) g := by
     rw [CharP.charP_iff_prime_eq_zero (Fact.out : Nat.Prime g)]
     rw [← map_natCast (Ideal.Quotient.mk w'.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     exact hg
-  letI : Algebra (ZMod g) (𝓞 E' ⧸ w'.asIdeal) := ZMod.algebra _ g
+  let : Algebra (ZMod g) (𝓞 E' ⧸ w'.asIdeal) := ZMod.algebra _ g
   exact ⟨UpperTheory.Zero.LLC.Ext.mk E' w' h' unr card a' ha' (𝓞 E' ⧸ w'.asIdeal)
     (Ideal.Quotient.mk w'.asIdeal) Ideal.Quotient.mk_surjective (Ideal.mk_ker)⟩

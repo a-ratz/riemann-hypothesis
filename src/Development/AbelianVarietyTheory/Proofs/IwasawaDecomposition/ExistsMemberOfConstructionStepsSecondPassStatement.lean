@@ -137,14 +137,14 @@ theorem planeVec_planeVec (N n h p : ℕ) (hN : n + 2 * h ≤ N) (hp : p = n + h
   simp only [planeVec, map_add (f := _), LinearMap.add_apply, diag_single_single, c1, c2]
   have e1 : ¬ (n + (i : ℕ) = n + h + j) := by omega
   have e2 : ¬ (n + h + (i : ℕ) = n + j) := by omega
-  rw [if_neg e1, if_neg e2]
+  rw [ite_eq_right e1, ite_eq_right e2]
   by_cases hij : i = j
   · subst hij
     simp [sgn, sub_eq_add_neg]
   · have h' : (i : ℕ) ≠ j := fun e => hij (Fin.ext e)
     have e3 : ¬ (n + (i : ℕ) = n + j) := by omega
     have e4 : ¬ (n + h + (i : ℕ) = n + h + j) := by omega
-    rw [if_neg e3, if_neg e4, if_neg hij]
+    rw [ite_eq_right e3, ite_eq_right e4, ite_eq_right hij]
     simp
 
 theorem ext_planeVec (N n h : ℕ) (hN : n + 2 * h ≤ N) (neg : Fin N → Bool) (x : Fin n → E) (a b : E)
@@ -157,7 +157,7 @@ theorem single_planeVec (N n h : ℕ) (hN : n + 2 * h ≤ N) (neg : Fin N → Bo
     (hl : n + 2 * h ≤ l) (c a b : E) (i : Fin h) :
     diagForm N neg (Pi.single l c) (planeVec N n h hN a b i) = 0 := by
   have hi := i.isLt
-  rw [planeVec, map_add (f := _), diag_single_single, diag_single_single, if_neg, if_neg, add_zero]
+  rw [planeVec, map_add (f := _), diag_single_single, diag_single_single, ite_eq_right, ite_eq_right, add_zero]
   · simp only; omega
   · simp only; omega
 
@@ -185,7 +185,7 @@ theorem top_line_norm :
       (Pi.single (⟨R.rankY R.m, by rw [N_top]; omega⟩ : Fin (R.N R.m)) pz)
       (Pi.single (⟨R.rankY R.m, by rw [N_top]; omega⟩ : Fin (R.N R.m)) pz) = (T : E) := by
   refine (diag_single_single _ (fun _ => false) _ _ pz pz).trans ?_
-  rw [if_pos rfl, ← hpz]
+  rw [ite_eq_left rfl, ← hpz]
   simp [sgn]
 
 def spacesNorm : Spaces R F E :=
@@ -222,7 +222,7 @@ theorem spacesNorm_hasFrame (j : ℕ) (hj : j < R.m) : HasHyperbolicAuxiliaryFra
     refine (diag_single_single _ (cut _ (pY R j)) _ _ pz pz).trans ?_
     have c : cut (R.rankY j) (pY R j) ⟨_, hl⟩ = true := by
       simp only [cut, decide_eq_true_eq]; omega
-    rw [if_pos rfl, c]
+    rw [ite_eq_left rfl, c]
     change _ = -(T : E)
     rw [← hpz]
     simp [sgn]
@@ -904,9 +904,9 @@ namespace GlobalTheory.Mem.Top.Bl.OnePrimeEach
 
 theorem exists_ratPrime_mem {L : Type} [Field L] [NumberField L] (w : HeightOneSpectrum (𝓞 L)) :
     ∃ p : ℕ, p.Prime ∧ (p : 𝓞 L) ∈ w.asIdeal := by
-  haveI := w.isMaximal
-  haveI : Finite (𝓞 L ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
-  letI := Ideal.Quotient.field w.asIdeal
+  have := w.isMaximal
+  have : Finite (𝓞 L ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
+  let := Ideal.Quotient.field w.asIdeal
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 L ⧸ w.asIdeal)
   refine ⟨p, CharP.char_is_prime (𝓞 L ⧸ w.asIdeal) p, ?_⟩
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
@@ -914,7 +914,7 @@ theorem exists_ratPrime_mem {L : Type} [Field L] [NumberField L] (w : HeightOneS
 
 theorem exists_mem_of_prime (L : Type) [Field L] [NumberField L] {p : ℕ} (hp : p.Prime) :
     ∃ P : HeightOneSpectrum (𝓞 L), ((p : ℕ) : 𝓞 L) ∈ P.asIdeal := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hmax : (Ideal.span {(p : ℤ)}).IsMaximal := Int.ideal_span_isMaximal_of_prime p
   obtain ⟨Q, hQ, hQ'⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 L) (Ideal.span {(p : ℤ)})
     (by rw [(RingHom.injective_iff_ker_eq_bot _).1 (algebraMap ℤ (𝓞 L)).injective_int]; exact bot_le)

@@ -86,10 +86,10 @@ theorem _root_.GlobalTheory.WeilIntegral.isAlgebraic_of_etale (S B : Type) [Comm
     [Algebra.Etale S B] (f : B) : IsAlgebraic S f := by
   classical
   let K := FractionRing S
-  haveI : Algebra.Etale K (TensorProduct S K B) := Algebra.Etale.baseChange S B K
-  haveI : Module.Finite K (TensorProduct S K B) :=
+  have : Algebra.Etale K (TensorProduct S K B) := Algebra.Etale.baseChange S B K
+  have : Module.Finite K (TensorProduct S K B) :=
     Algebra.FormallyUnramified.finite_of_free K (TensorProduct S K B)
-  haveI hal : Algebra.IsAlgebraic K (TensorProduct S K B) := Algebra.IsAlgebraic.of_finite K _
+  have hal : Algebra.IsAlgebraic K (TensorProduct S K B) := Algebra.IsAlgebraic.of_finite K _
   obtain ⟨p, hp0, hp⟩ := hal.isAlgebraic ((1 : K) ⊗ₜ[S] f)
   set q := IsLocalization.integerNormalization (nonZeroDivisors S) p
   have hq0 : q ≠ 0 := fun h0 =>
@@ -99,7 +99,7 @@ theorem _root_.GlobalTheory.WeilIntegral.isAlgebraic_of_etale (S B : Type) [Comm
   have hmap : (1 : K) ⊗ₜ[S] Polynomial.aeval f q = 0 := by
     rw [← hq, ← Algebra.TensorProduct.includeRight_apply, ← Polynomial.aeval_algHom_apply]
     rfl
-  haveI : IsLocalizedModule (nonZeroDivisors S) (TensorProduct.mk S K B 1) :=
+  have : IsLocalizedModule (nonZeroDivisors S) (TensorProduct.mk S K B 1) :=
     (isLocalizedModule_iff_isBaseChange (nonZeroDivisors S) K _).2 (TensorProduct.isBaseChange S B K)
   obtain ⟨s, hs⟩ := (IsLocalizedModule.eq_zero_iff (nonZeroDivisors S) (TensorProduct.mk S K B 1)).1 hmap
   refine ⟨Polynomial.C (s : S) * q, ?_, ?_⟩
@@ -133,9 +133,9 @@ open ReciprocityTheory.ChartRestriction.G.DVR.FlatBC (algX)
 theorem exists_poly_dvd {k R : Type} [CommRing k] [IsDomain k] [CommRing R] [IsDomain R] {D : ℕ}
     (f : MvPolynomial (Fin D) k →+* R) (hf : f.Etale) (g : R) (hg : g ≠ 0) :
     ∃ Q : MvPolynomial (Fin D) k, Q ≠ 0 ∧ ∃ r : R, f Q = g * r := by
-  letI := f.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin D) k) R := hf
-  obtain ⟨Q, hQ, r, hr⟩ := (WeilIntegral.isAlgebraic_of_etale (MvPolynomial (Fin D) k) R g).exists_nonzero_dvd
+  let := f.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin D) k) R := hf
+  obtain ⟨Q, hQ, r, hr⟩ := (WeilIntegral.isAlgebraic_of_etale (MvPolynomial (Fin D) k) R g).exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero hg)
   exact ⟨Q, hQ, r, hr⟩
 
@@ -175,7 +175,7 @@ theorem injective_of_arithVar {k : Type} [CommRing k] {X : Scheme.{0}} {p : X �
     (h : IsArithVar p D) (σ : k →+* ℂ) : Function.Injective σ := by
   have := h.isDomain
   have := h.finite
-  have hk : RingHom.ker σ = ⊥ := Ideal.eq_bot_of_comap_eq_bot (R := ℤ) (by
+  have hk : RingHom.ker σ = ⊥ := Ideal.eq_bot_of_under_eq_bot (R := ℤ) (by
     ext n
     simp [Ideal.mem_comap, RingHom.mem_ker])
   refine (injective_iff_map_eq_zero σ).2 fun a ha => ?_
@@ -200,7 +200,7 @@ theorem chart_null {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X] {p : 
   rcases c.e.source.eq_empty_or_nonempty with hs | ⟨y0, hy0⟩
   · simp [hs]
   have hne : (c.U : Set X).Nonempty := ⟨_, mem_ptsIn.1 (c.source_subset hy0)⟩
-  haveI : Nonempty c.U := ⟨⟨_, mem_ptsIn.1 (c.source_subset hy0)⟩⟩
+  have : Nonempty c.U := ⟨⟨_, mem_ptsIn.1 (c.source_subset hy0)⟩⟩
   have := h.isDomain
   obtain ⟨g, hg0, hgZ⟩ := exists_sec_vanish c.affine hne hZ hgen
   obtain ⟨Q, hQ, r, hQr⟩ := exists_poly_dvd _ c.etale g hg0

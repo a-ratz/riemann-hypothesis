@@ -196,7 +196,7 @@ noncomputable def compr (W W' : Submodule ℂ V) (hc : IsCompl W W') :
 lemma compr_of_inv (W W' : Submodule ℂ V) (hc : IsCompl W W') (b : End ℂ V)
     (hb : ∀ w ∈ W, b w ∈ W) (w : W) : compr W W' hc b w = ⟨b w, hb w w.2⟩ := by
   show W.linearProjOfIsCompl W' hc (b w) = _
-  exact Submodule.linearProjOfIsCompl_apply_left hc ⟨b w, hb w w.2⟩
+  exact Submodule.projectionOnto_apply_left hc ⟨b w, hb w w.2⟩
 
 lemma compr_eq_restrict (W W' : Submodule ℂ V) (hc : IsCompl W W') (b : End ℂ V)
     (hb : ∀ w ∈ W, b w ∈ W) : compr W W' hc b = b.restrict hb := by

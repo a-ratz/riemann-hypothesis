@@ -114,7 +114,7 @@ theorem pair_X_mul (j : σ) (P Q : MvPolynomial σ C) :
 
   rw [pair_eq P, Finset.sum_mul, map_sum, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun A _ => ?_
-  rw [show (X j : MvPolynomial σ C) = monomial (Finsupp.single j 1) 1 from rfl, monomial_mul, mul_one,
+  rw [show (X j : MvPolynomial σ C) = monomial (Finsupp.single j 1) 1 from rfl, monomial_mul_monomial, mul_one,
     pair_monomial, coeff_pderiv', wt_add_single]
   ring
 

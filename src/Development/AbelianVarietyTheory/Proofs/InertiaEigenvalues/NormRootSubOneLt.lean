@@ -154,7 +154,7 @@ namespace GlobalTheory.Cyc.TraceTilt
 theorem exists_reps {G : Type*} [Group G] (H U : Subgroup G) [U.FiniteIndex] :
     ∃ S : Finset G, (∀ s ∈ S, s ∈ H) ∧ ∀ h ∈ H, ∃! s, s ∈ S ∧ s⁻¹ * h ∈ U := by
   classical
-  letI : Fintype (H ⧸ U.subgroupOf H) := Fintype.ofFinite _
+  let : Fintype (H ⧸ U.subgroupOf H) := Fintype.ofFinite _
   refine ⟨Finset.univ.image (fun q : H ⧸ U.subgroupOf H => (q.out : G)), ?_, ?_⟩
   · intro s hs
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hs
@@ -207,16 +207,16 @@ theorem rel_trace (hn : ∀ (g : GQ l) (x : Om l), ‖g x‖ = ‖x‖) (K : Fin
       ‖a‖ ≤ ‖∑ t ∈ T, t e‖ := by
   classical
   have hNH : L.fixingSubgroup ≤ Hinf K := fun g hg x => hg ⟨x.1, hKL x.2⟩
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] {β}) :=
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] {β}) :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral β)
   let E : IntermediateField ℚ_[l] (Om l) :=
     IntermediateField.normalClosure ℚ_[l] (IntermediateField.adjoin ℚ_[l] {β}) (Om l)
   have hβE : β ∈ E := IntermediateField.le_normalClosure _
     (IntermediateField.mem_adjoin_simple_self _ β)
-  haveI : FiniteDimensional ℚ_[l] E := inferInstance
-  haveI : Normal ℚ_[l] E := inferInstance
-  haveI : E.fixingSubgroup.FiniteIndex := by
-    haveI := Subgroup.quotient_finite_of_isOpen E.fixingSubgroup E.fixingSubgroup_isOpen
+  have : FiniteDimensional ℚ_[l] E := inferInstance
+  have : Normal ℚ_[l] E := inferInstance
+  have : E.fixingSubgroup.FiniteIndex := by
+    have := Subgroup.quotient_finite_of_isOpen E.fixingSubgroup E.fixingSubgroup_isOpen
     exact Subgroup.finiteIndex_of_finite_quotient
   have hsup : (L ⊔ E).fixingSubgroup = L.fixingSubgroup ⊓ E.fixingSubgroup :=
     IntermediateField.fixingSubgroup_sup
@@ -318,8 +318,8 @@ theorem exists_near_one (K : FinExt l) (r : ℝ) (hr0 : 0 ≤ r) (hr : r < 1) :
   have hp : l.Prime := Fact.out
   have hl : (1 : ℝ) < l := by exact_mod_cast hp.one_lt
   obtain ⟨k, hk⟩ := exists_pow_lt_of_lt_one (x := (l : ℝ)⁻¹) (by positivity) hr
-  haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ (k + 1))
+  have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ (k + 1))
   refine ⟨ζ - 1, (Kinf K).sub_mem ?_ (Kinf K).one_mem, ?_, norm_root_sub_one_lt k ζ hζ⟩
   · exact (le_sup_right : _ ≤ Kinf K)
       (IntermediateField.subset_adjoin _ _ ⟨k + 1, hζ.pow_eq_one⟩)
@@ -337,8 +337,8 @@ theorem approx_root (hn : ∀ (g : GQ l) (x : Om l), ‖g x‖ = ‖x‖) (K : F
     ∃ r : ℝ, 0 ≤ r ∧ r < 1 ∧ ∀ b : Om l, ‖b‖ ≤ 1 → (∀ n ∈ L.fixingSubgroup, n b = b) →
       ∃ c : Om l, (‖c‖ ≤ 1 ∧ ∀ n ∈ L.fixingSubgroup, n c = c) ∧ ‖c ^ l - b‖ ≤ r := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hp.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) l
+  have : NeZero l := ⟨hp.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) l
   have hρ := norm_root_sub_one_lt 0 ζ (by simpa using hζ)
   obtain ⟨a, ha, hρa, ha1⟩ := exists_near_one K _ (norm_nonneg _) hρ
   have ha0 : 0 < ‖a‖ := (norm_nonneg _).trans_lt hρa

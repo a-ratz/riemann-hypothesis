@@ -651,7 +651,7 @@ theorem red_at {PP : Formalism.L2.DIV.Pl D.host.E} (G : GLoc v) {j n : ℕ} (hr 
     (hy : ∀ a b, ¬ FreeIx G.S.ρ a b → valuation G.k (π (Y.val (e a) (e b)) - (1 : Matrix _ _ G.k) a b) < 1) :
     Formalism.UG.bc (resS D.host.F PP) Y ∈ blockTri (blkOf D.R.r D.R.t) ∧
       ∃ x, GlobalTheory.LevZero.Red G PP x (upperLeftBlock hr (Formalism.UG.bc (resS D.host.F PP) Y)) := by
-  haveI : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
+  have : Nontrivial (kP PP) := Ideal.Quotient.nontrivial_iff.2 PP.isPrime.ne_top
   have hs := G.hs
   obtain ⟨c1, x, c2⟩ := red_of_pattern G.S (by unfold Ranks.r; omega) hr he (resS D.host.F PP)
     (π.comp (Formalism.L2.Herm.intAf D.host.F D.host.E).subtype) h3 h4 Y hy
@@ -718,8 +718,8 @@ theorem lev_back {cm : GlobalTheory.ChainOnto.Com D} {st : StAt (c.V 0)} {b : GA
       have e2 : π' ((1 : Matrix _ _ (Lev.EAf D)) (e' a₁) (e' b₁)) = (1 : Matrix _ _ (G PP').k) a₁ b₁ := by
         change π' (if e' a₁ = e' b₁ then 1 else 0) = (if a₁ = b₁ then 1 else 0)
         by_cases h : a₁ = b₁
-        · simp only [h, if_true, map_one]
-        · simp only [h, e'.injective.ne h, if_false, map_zero]
+        · simp only [h, ite_true, map_one]
+        · simp only [h, e'.injective.ne h, ite_false, map_zero]
       rw [← e2, ← e1, Valuation.map_zero]
       exact zero_lt_one
   change _ ∈ Lev.levG _ _ st.L
@@ -911,7 +911,7 @@ theorem rho_lt (G : GLoc v) (hid : Formalism.L2.NTheta.IsIdemAt G.q.e PP) {z : �
   rw [← G.q.sec_pr, ← G.q.int_iff] at h1
   change (G.q.pr.comp (incA D)) _ ∉ _ at h1
   rw [map_inv₀, Valuation.mem_integer_iff, map_inv₀, not_le] at h1
-  exact (one_lt_inv₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0'))).1 h1
+  exact (one_lt_inv₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0'))).1 h1
 
 theorem mem_of_rho_lt (G : GLoc v) (hid : Formalism.L2.NTheta.IsIdemAt G.q.e PP) {z : 𝓞 D.host.E}
     (hz : valuation G.k (rho G z) < 1) : z ∈ PP.asIdeal := by
@@ -922,7 +922,7 @@ theorem mem_of_rho_lt (G : GLoc v) (hid : Formalism.L2.NTheta.IsIdemAt G.q.e PP)
   rw [← G.q.sec_pr, ← G.q.int_iff]
   change (G.q.pr.comp (incA D)) _ ∉ _
   rw [map_inv₀, Valuation.mem_integer_iff, map_inv₀, not_le]
-  exact (one_lt_inv₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0'))).2 hz
+  exact (one_lt_inv₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0'))).2 hz
 
 def out (y : Formalism.L2.DIV.kP PP) : 𝓞 D.host.E := Function.surjInv (Ideal.Quotient.mk_surjective (I := PP.asIdeal)) y
 

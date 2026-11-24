@@ -99,10 +99,10 @@ theorem measurePreserving_mul_mul : ∀ (j : ℕ) (a b : Matrix (Fin j) (Fin j) 
   have hρ : Measurable fun x : Fin j → Fin j → ℂ => ENNReal.ofReal ((‖(Matrix.of x).det‖ ^ 2)⁻¹ ^ j) :=
     ENNReal.measurable_ofReal.comp (((hcont.measurable.norm.pow_const 2).inv).pow_const j)
 
-  haveI : (volume : Measure ℂ).IsAddHaarMeasure := inferInstance
-  haveI : (volume : Measure (Fin j → ℂ)).IsAddHaarMeasure :=
+  have : (volume : Measure ℂ).IsAddHaarMeasure := inferInstance
+  have : (volume : Measure (Fin j → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure (fun _ : Fin j => (volume : Measure ℂ))
-  haveI : (volume : Measure (Fin j → Fin j → ℂ)).IsAddHaarMeasure :=
+  have : (volume : Measure (Fin j → Fin j → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure (fun _ : Fin j => (volume : Measure (Fin j → ℂ)))
   have hμ : (volume : Measure (Fin j → Fin j → ℂ)).map L =
       ENNReal.ofReal |(LinearMap.det L)⁻¹| • volume :=

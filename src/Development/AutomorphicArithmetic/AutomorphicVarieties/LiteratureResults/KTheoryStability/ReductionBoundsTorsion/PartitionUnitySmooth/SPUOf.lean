@@ -165,7 +165,7 @@ theorem pf_Basic : Basic := by
       by_cases hle : q h v ≤ q h v0
       · exact hvm v ⟨hv, hle⟩
       · exact (hvm v0 ⟨hv0, le_rfl⟩).trans (not_le.1 hle).le
-    haveI : Nonempty {y : Lat L N // y ≠ 0} := ⟨⟨v0, hv0⟩⟩
+    have : Nonempty {y : Lat L N // y ≠ 0} := ⟨⟨v0, hv0⟩⟩
     have hlam : lam h = q h vm := by
       unfold lam
       refine le_antisymm (ciInf_le ⟨q h vm, ?_⟩ (⟨vm, hvm0⟩ : {y : Lat L N // y ≠ 0}))
@@ -375,7 +375,7 @@ private theorem addHaar_qR_lt_pos_and_lt_top_of_mem_Pos {L : Type} [Field L] [Nu
     simpa using this
   constructor
   · exact (isOpen_lt (continuous_qR_place_vec h) continuous_const).measure_pos _
-      ⟨0, by simp only [Set.mem_setOf_eq, h0, hr]⟩
+      ⟨0, by simp only [Set.mem_ofPred_eq, h0, hr]⟩
   · obtain ⟨m, hm, hb⟩ := exists_pos_mul_norm_sq_le_qR_of_mem_Pos hh
     have sub : {x : InfinitePlace L → Fin N → ℂ | qR h x < r} ⊆ Metric.closedBall 0 (√(r / m)) := by
       intro x hx
@@ -400,7 +400,7 @@ private theorem addHaar_qR_lt_sq_mul_eq_pow_mul {L : Type} [Field L] [NumberFiel
       (fun x : InfinitePlace L → Fin N → ℂ => c⁻¹ • x) ⁻¹'
         {x : InfinitePlace L → Fin N → ℂ | qR h x < r} := by
     ext x
-    rw [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_setOf_eq, qR_smul_place_vec]
+    rw [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_ofPred_eq, qR_smul_place_vec]
     have hc2 : 0 < c ^ 2 := by positivity
     rw [inv_pow, inv_mul_lt_iff₀ hc2]
   rw [e, MeasureTheory.Measure.addHaar_preimage_smul _ (inv_ne_zero hc.ne'), inv_pow, inv_inv,
@@ -452,22 +452,22 @@ private theorem ncard_q_le_mul_le_sqrt_pow_mul_ncard {L : Type} [Field L] [Numbe
       (hT.toFinset.card : ENNReal) *
         {y : InfinitePlace L → Fin N → ℂ | qR h y < √(8 * ρ + 2) ^ 2 * (s / 4)}.indicator 1 x := by
     intro x
-    simp only [Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply]
+    simp only [Set.indicator_apply, Set.mem_ofPred_eq, Pi.one_apply]
     rw [Finset.sum_boole]
     by_cases hne : (hS.toFinset.filter fun v => qR h (x - toR v) < s / 4).Nonempty
     · obtain ⟨v₀, hv₀⟩ := hne
-      rw [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hv₀
+      rw [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hv₀
       have hx : qR h x < √(8 * ρ + 2) ^ 2 * (s / 4) := by
         have := qR_le_two_mul_qR_sub_add_two_mul_of_mem_Pos hh x (toR v₀)
         rw [hc2]
         rw [hq] at hv₀
         nlinarith [hv₀.1, hv₀.2]
-      rw [if_pos hx, mul_one, Nat.cast_le]
+      rw [ite_eq_left hx, mul_one, Nat.cast_le]
       refine Finset.card_le_card_of_injOn (fun v => v - v₀) ?_ ?_
       · intro v hv
         rw [Finset.coe_filter] at hv
         obtain ⟨-, hv⟩ := hv
-        rw [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_setOf_eq, hq, htoR]
+        rw [Finset.mem_coe, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, hq, htoR]
         have e : toR v - toR v₀ = (x - toR v₀) - (x - toR v) := by abel
         have h1 := qR_le_two_mul_qR_sub_add_two_mul_of_mem_Pos hh (toR v - toR v₀) (x - toR v₀)
         have e2 : toR v - toR v₀ - (x - toR v₀) = -(x - toR v) := by abel
@@ -599,7 +599,7 @@ private theorem continuous_qR_comp {L : Type} [Field L] [NumberField L] {N : ℕ
   refine continuous_finsetSum _ fun w _ => Complex.continuous_re.comp ?_
   have h1 : Continuous fun x => g x w := (continuous_apply w).comp hg
   have h2 : Continuous fun x => mat (f x) w :=
-    (continuous_apply w).comp (continuous_subtype_val.comp hf)
+    (continuous_apply w).comp (continuous_subtypeVal.comp hf)
   exact h1.star.dotProduct (h2.matrix_mulVec h1)
 
 private theorem qR_zero_right {L : Type} [Field L] [NumberField L] {N : ℕ} (h : HS L N) :
@@ -1084,7 +1084,7 @@ private theorem num {D S g l p : ℝ} (hD : D ≠ 0) (hl : l ≤ S) (hp : D * p 
 theorem pf_GTrans : GTrans := by
   classical
   intro hB hZ L _ _ hC N hN
-  haveI := hC
+  have := hC
   obtain ⟨C, hC0, hT⟩ := hZ (Fintype.card (Fin N × BI L))
   have hD : (discr L : ℝ) ≠ 0 := Int.cast_ne_zero.2 (discr_ne_zero L)
   have hD2 : (0 : ℝ) < 4 / (discr L : ℝ) ^ 2 := by positivity
@@ -1537,7 +1537,7 @@ theorem pf_GFin : GFin := by
       exact hFP y (hVP hy)
     have hfin := (hPr L N).2 _ (hW.union hK'c) (Set.union_subset hWP hK'P)
     refine ⟨Subtype.val ⁻¹' interior V,
-      continuous_subtype_val.continuousAt.preimage_mem_nhds (isOpen_interior.mem_nhds hV0), ?_⟩
+      continuous_subtypeVal.continuousAt.preimage_mem_nhds (isOpen_interior.mem_nhds hV0), ?_⟩
     refine (hfin.preimage inv_injective.injOn).subset ?_
     rintro γ ⟨h, hS, hU⟩
     have hk := hψsupp _ hS
@@ -1555,12 +1555,12 @@ theorem pf_GFin : GFin := by
       apply closure_minimal
       · intro k hk
         exact hψsupp _ hk
-      · exact hK'c.isClosed.preimage hFc.restrict
+      · exact hK'c.isClosed.preimage hFc.domRestrict
     refine (((hPr L N).2 K' hK'c hK'P).preimage inv_injective.injOn).subset ?_
     rintro γ ⟨h, hh, hg⟩
     have a := hcl hh
     have b := hcl hg
-    simp only [Set.mem_setOf_eq] at a b
+    simp only [Set.mem_ofPred_eq] at a b
     change ret μ (nf (actL ((emb L N) γ)⁻¹ ↑h)) ∈ K' at b
     rw [hinv, hFeq _ _ h.2] at b
     exact ⟨_, a, b⟩
@@ -1691,13 +1691,13 @@ private theorem term_low {C : ℝ} (hC : 0 < C) {h : HS L N} (hh : h ∈ Pos L N
     1 / (1024 * (Fintype.card (InfinitePlace L) : ℝ) * C) ≤ qR (term s h) (toR u) := by
   classical
   have hz : ∀ v, v ∉ (hfin (16 * (s / 4))).toFinset → rho (q h v / s) = 0 := fun v hv => by
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_le] at hv
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_le] at hv
     exact rho_zero (by rw [le_div_iff₀ hs]; linarith)
   have hone : ∀ v, q h v ≤ s → v ∈ (hfin (16 * (s / 4))).toFinset ∧ rho (q h v / s) = 1 := fun v hv =>
-    ⟨by rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq]; linarith, rho_one ((div_le_one hs).2 hv)⟩
+    ⟨by rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]; linarith, rho_one ((div_le_one hs).2 hv)⟩
   rw [Set.ncard_eq_toFinset_card _ (hfin _), Set.ncard_eq_toFinset_card _ (hfin _)] at hcnt
   have hS : ∀ v ∈ (hfin (s / 4)).toFinset, q h v ≤ s / 4 := fun v hv => by
-    rwa [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hv
+    rwa [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hv
   generalize (hfin (16 * (s / 4))).toFinset = T at hz hone hcnt
   generalize (hfin (s / 4)).toFinset = S at hS hcnt
   have eZ : zed s h = ∑ v ∈ T, rho (q h v / s) :=

@@ -70,7 +70,7 @@ theorem fixed_mem_range {g : ℕ} [hg : Fact (Nat.Prime g)] {d : ℕ} (hd : 0 < 
       ((IsAlgClosed.lift : GaloisField g d →ₐ[ZMod g] AlgebraicClosure (ZMod g)) : GaloisField g d → AlgebraicClosure (ZMod g)) k = w := by
   classical
   set ι : GaloisField g d →ₐ[ZMod g] AlgebraicClosure (ZMod g) := IsAlgClosed.lift with hι
-  letI : Fintype (GaloisField g d) := Fintype.ofFinite _
+  let : Fintype (GaloisField g d) := Fintype.ofFinite _
   have hcard : Fintype.card (GaloisField g d) = g ^ d := by rw [Fintype.card_eq_nat_card]; exact GaloisField.card g d hd.ne'
   have hq : 1 < g ^ d := Nat.one_lt_pow hd.ne' hg.out.one_lt
   set P : (AlgebraicClosure (ZMod g))[X] := X ^ (g ^ d) - X with hP
@@ -165,7 +165,7 @@ theorem exists_unit_gen (L : LabelDatum g) {d : ℕ} (hd : 0 < d) :
     rw [map_zero] at hk0
     exact ne_zero_of hd hp.pow_eq_one hk0.symm
   refine ⟨Units.mk0 k0 hk0', hk0, fun k => ?_⟩
-  haveI : NeZero (g ^ d - 1) := ⟨(N_pos' hd).ne'⟩
+  have : NeZero (g ^ d - 1) := ⟨(N_pos' hd).ne'⟩
   have h1 : (emb g d k) ^ (g ^ d - 1) = 1 := by
     rw [← map_pow, ← card_KK hd, FiniteField.pow_card_sub_one_eq_one _ k.ne_zero, map_one]
   obtain ⟨n, -, hn⟩ := hp.eq_pow_of_pow_eq_one h1
@@ -254,7 +254,7 @@ theorem th_inj (L : LabelDatum g) {d : ℕ} (hd : 0 < d) {x y : Fbar g} (hx : x 
 theorem th_surj (L : LabelDatum g) {d : ℕ} (hd : 0 < d) (θ : (KK g d)ˣ →* ℂˣ) :
     ∃ x : Fbar g, x ^ (g ^ d - 1) = 1 ∧ θ = th L hd x := by
   have hp := gen_prim L hd
-  haveI : NeZero (g ^ d - 1) := ⟨(N_pos' hd).ne'⟩
+  have : NeZero (g ^ d - 1) := ⟨(N_pos' hd).ne'⟩
   have hq : IsPrimitiveRoot (L.teich (L.gen d)) (g ^ d - 1) := by
     refine ⟨by rw [← map_pow, hp.pow_eq_one, map_one], fun l hl => hp.dvd_of_pow_eq_one l ?_⟩
     rw [← map_pow, ← map_one L.teich] at hl
@@ -323,7 +323,7 @@ theorem sum_range_eq_roots {f : (ZMod g)[X]} (hf : Irreducible f) {z : Fbar g} (
 
 theorem thetaOf_pow (L : LabelDatum g) {d : ℕ} (hd : 0 < d) {x w : Fbar g} (hx : x ^ (g ^ d - 1) = 1)
     (hw : w ^ (g ^ d - 1) = 1) (m : ℕ) : thetaOf L d (x ^ m) w = thetaOf L d x (w ^ m) := by
-  haveI : NeZero (g ^ d - 1) := ⟨(N_pos' hd).ne'⟩
+  have : NeZero (g ^ d - 1) := ⟨(N_pos' hd).ne'⟩
   obtain ⟨n, -, rfl⟩ := (gen_prim L hd).eq_pow_of_pow_eq_one hw
   rw [Model.thetaOf_gen_pow L hd (unit_pow hx m) n, ← pow_mul, Model.thetaOf_gen_pow L hd hx (n * m), map_pow,
     ← pow_mul, mul_comm m n]

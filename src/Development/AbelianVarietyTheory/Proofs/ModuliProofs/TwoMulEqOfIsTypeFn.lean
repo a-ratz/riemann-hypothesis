@@ -71,13 +71,13 @@ lemma lattice_equiv {La : Type} [AddCommGroup La] {g : ℕ} (P : La →+ (Fin g 
     Module.Finite ℤ La ∧ Module.finrank ℤ La = 2 * g ∧
       ∃ e : ℝ ⊗[ℤ] La ≃ₗ[ℝ] (Fin g → ℂ), ∀ x, e (1 ⊗ₜ x) = P x := by
   let L : Submodule ℤ (Fin g → ℂ) := LinearMap.range P.toIntLinearMap
-  haveI : DiscreteTopology L := hdisc
-  haveI : IsZLattice ℝ L := ⟨hspan⟩
+  have : DiscreteTopology L := hdisc
+  have : IsZLattice ℝ L := ⟨hspan⟩
   let f : La ≃ₗ[ℤ] L := LinearEquiv.ofInjective P.toIntLinearMap hinj
-  haveI : Module.Finite ℤ L := ZLattice.module_finite ℝ L
-  haveI : Module.Free ℤ L := ZLattice.module_free ℝ L
-  haveI : Module.Finite ℤ La := Module.Finite.equiv f.symm
-  haveI : Module.Free ℤ La := Module.Free.of_equiv f.symm
+  have : Module.Finite ℤ L := ZLattice.module_finite ℝ L
+  have : Module.Free ℤ L := ZLattice.module_free ℝ L
+  have : Module.Finite ℤ La := Module.Finite.equiv f.symm
+  have : Module.Free ℤ La := Module.Free.of_equiv f.symm
   have hr : Module.finrank ℤ La = Module.finrank ℝ (Fin g → ℂ) := by
     rw [f.finrank_eq, ZLattice.rank ℝ L]
   have hg : Module.finrank ℝ (Fin g → ℂ) = 2 * g := by
@@ -143,7 +143,7 @@ theorem exists_datum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   intro E _ _ _ H La _ _ EF p q g ty P Hm hty hbij hadj hlin hinj hdisc hspan hH hpos him
   classical
   obtain ⟨hfin, hrk, e, he⟩ := lattice_equiv P hinj hdisc hspan
-  haveI : Module.Finite (𝓞 E) La := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) La
+  have : Module.Finite (𝓞 E) La := Module.Finite.of_restrictScalars_finite ℤ (𝓞 E) La
   have htor : Submodule.torsion (𝓞 E) La = ⊥ := by
     rw [eq_bot_iff]
     rintro x ⟨⟨a, ha⟩, hx⟩
@@ -157,8 +157,8 @@ theorem exists_datum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     rw [h2, map_zero] at h1
     rw [map_zero]
     exact (mul_eq_zero.1 h1.symm).resolve_left ((map_ne_zero (ty i)).2 ha0)
-  haveI : Module.Flat (𝓞 E) La := IsDedekindDomain.flat_iff_torsion_eq_bot.2 htor
-  haveI : Module.FinitePresentation (𝓞 E) La := Module.finitePresentation_of_finite _ _
+  have : Module.Flat (𝓞 E) La := IsDedekindDomain.flat_iff_torsion_eq_bot.2 htor
+  have : Module.FinitePresentation (𝓞 E) La := Module.finitePresentation_of_finite _ _
   have hproj : Module.Projective (𝓞 E) La := Module.Flat.projective_of_finitePresentation
   have hrank : Module.finrank (𝓞 E) La = p + q := by
     have h1 := finrank_int_eq_mul_of_finite (O := 𝓞 E) (M := La)

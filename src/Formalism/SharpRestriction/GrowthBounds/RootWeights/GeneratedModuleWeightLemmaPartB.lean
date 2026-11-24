@@ -166,7 +166,7 @@ private theorem map_C_genericMatrixBis_and_inverse_eq_gL_gLinv (R : Type) [Field
 private theorem support_laurent_C_mul_T_of_ne_zero {B : Type*} [CommRing B] (h : B) (hh : h ≠ 0) (w : ℤ) :
     (LaurentPolynomial.C h * LaurentPolynomial.T w).coeff.support = {w} := by
   rw [← LaurentPolynomial.single_eq_C_mul_T, AddMonoidAlgebra.coeff_single]
-  exact Finsupp.support_single_ne_zero _ hh
+  exact Finsupp.support_single _ hh
 
 private theorem laurent_C_mul_T_eq_zero_iff {B : Type*} [CommRing B] (h : B) (w : ℤ) :
     LaurentPolynomial.C h * LaurentPolynomial.T w = 0 ↔ h = 0 := by
@@ -205,7 +205,7 @@ theorem twist_exponents_are_weight_entries : TwistExponentsAreWeightEntries := b
       LaurentPolynomial.T (w j) := by
     intro w
     rw [Finset.prod_eq_single j (fun a _ ha => by simp [D, ha]) (fun h => absurd (Finset.mem_univ j) h)]
-    simp only [D, if_pos rfl]
+    simp only [D, ite_eq_left rfl]
     rcases w j with k | k
     · rw [Int.ofNat_eq_coe, zpow_natCast, Units.val_pow_eq_pow_val]
       simp only [u, LaurentPolynomial.T_pow, mul_one]

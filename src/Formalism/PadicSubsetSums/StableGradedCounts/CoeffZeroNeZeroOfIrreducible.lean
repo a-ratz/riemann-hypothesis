@@ -81,7 +81,7 @@ theorem frobenius_orbit_irreducible : FrobOrbitIrred := by
     exact ⟨fun h => h.2, fun h => ⟨hf0, h⟩⟩
   have hfrob : ∀ z : L, aeval (z ^ Fintype.card K) f = (aeval z f) ^ Fintype.card K := by
     intro z
-    rw [← expand_aeval, FiniteField.expand_card, map_pow]
+    rw [← expand_aeval, FiniteField.Polynomial.expand_card, map_pow]
   refine ⟨⟨?_, ?_⟩, ?_⟩
   · intro x hx
     rw [hmem] at hx ⊢
@@ -92,12 +92,12 @@ theorem frobenius_orbit_irreducible : FrobOrbitIrred := by
     let E : IntermediateField K L := IntermediateField.adjoin K (f.rootSet L)
     have hxE : x ∈ E := IntermediateField.subset_adjoin K _ ((mem_rootSet_of_ne hf0).2 hx)
     have hyE : y ∈ E := IntermediateField.subset_adjoin K _ ((mem_rootSet_of_ne hf0).2 hy)
-    haveI hSF : IsSplittingField K E f :=
+    have hSF : IsSplittingField K E f :=
       IntermediateField.adjoin_rootSet_isSplittingField (IsAlgClosed.splits _)
-    haveI : Normal K E := Normal.of_isSplittingField f
-    haveI : FiniteDimensional K E := IsSplittingField.finiteDimensional E f
-    haveI : Finite E := Module.finite_of_finite K
-    haveI : Algebra.IsAlgebraic K E := Algebra.IsAlgebraic.of_finite K E
+    have : Normal K E := Normal.of_isSplittingField f
+    have : FiniteDimensional K E := IsSplittingField.finiteDimensional E f
+    have : Finite E := Module.finite_of_finite K
+    have : Algebra.IsAlgebraic K E := Algebra.IsAlgebraic.of_finite K E
     have hmx : minpoly K x = f := (minpoly.eq_of_irreducible_of_monic hirr hx hm).symm
     have hmy : minpoly K y = f := (minpoly.eq_of_irreducible_of_monic hirr hy hm).symm
     have hxy : minpoly K (⟨y, hyE⟩ : E) = minpoly K (⟨x, hxE⟩ : E) := by
@@ -154,7 +154,7 @@ theorem root_frob {f : K[X]} (n : ℕ) {x : L} (hx : aeval x f = 0) :
     aeval (x ^ Fintype.card K ^ n) f = 0 := by
   have key : ∀ y : L, aeval y f = 0 → aeval (y ^ Fintype.card K) f = 0 := by
     intro y hy
-    rw [← Polynomial.expand_aeval, FiniteField.expand_card, map_pow, hy, zero_pow Fintype.card_ne_zero]
+    rw [← Polynomial.expand_aeval, FiniteField.Polynomial.expand_card, map_pow, hy, zero_pow Fintype.card_ne_zero]
   induction n with
   | zero => simpa using hx
   | succ n ih =>
@@ -180,9 +180,9 @@ theorem root_pow_card {f : K[X]} (hi : Irreducible f) {x : L} (hx : aeval x f = 
   have hass := (minpoly.irreducible hxi).associated_of_dvd hi (minpoly.dvd K x hx)
   have hdeg : (minpoly K x).natDegree = f.natDegree :=
     Polynomial.natDegree_eq_of_degree_eq (Polynomial.degree_eq_degree_of_associated hass)
-  haveI : FiniteDimensional K (IntermediateField.adjoin K {x}) := IntermediateField.adjoin.finiteDimensional hxi
-  haveI : Finite (IntermediateField.adjoin K {x}) := Module.finite_of_finite K
-  letI : Fintype (IntermediateField.adjoin K {x}) := Fintype.ofFinite _
+  have : FiniteDimensional K (IntermediateField.adjoin K {x}) := IntermediateField.adjoin.finiteDimensional hxi
+  have : Finite (IntermediateField.adjoin K {x}) := Module.finite_of_finite K
+  let : Fintype (IntermediateField.adjoin K {x}) := Fintype.ofFinite _
   have hcard : Fintype.card (IntermediateField.adjoin K {x}) = Fintype.card K ^ f.natDegree := by
     rw [Module.card_eq_pow_finrank (K := K) (V := IntermediateField.adjoin K {x}),
       IntermediateField.adjoin.finrank hxi, hdeg]

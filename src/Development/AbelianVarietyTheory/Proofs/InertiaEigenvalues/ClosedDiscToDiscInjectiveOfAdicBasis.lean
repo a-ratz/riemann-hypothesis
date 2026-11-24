@@ -122,7 +122,7 @@ theorem toDisc_injective_of_topBasis : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt 
   intro l _ K bk A _ s ι TB ρ hρ hρ1
   have hH : IsHausdorff bk.J bk.S := bk.complete.toIsHausdorff
   obtain ⟨-, -, -, -, h5⟩ := _root_.GlobalTheory.BSP.TopBasis.basic_facts bk.S A s bk.J ι TB hH
-  have hlW : (l : Wq l bk.a) ≠ 0 := WittVector.p_nonzero l (Fq l bk.a)
+  have hlW : (l : Wq l bk.a) ≠ 0 := WittVector.p_ne_zero l (Fq l bk.a)
   have hCl : (C (l : Wq l bk.a) : bk.S) = (l : bk.S) := map_natCast _ l
   have hlS0 : (l : bk.S) ≠ 0 := by
     rw [← hCl]; exact fun h => hlW (C_injective (h.trans (map_zero _).symm))

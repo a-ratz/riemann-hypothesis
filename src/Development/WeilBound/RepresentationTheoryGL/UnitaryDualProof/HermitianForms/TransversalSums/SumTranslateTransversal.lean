@@ -123,7 +123,7 @@ theorem avgData_exists (hψ : Continuous ψ) (hπ : IsSmooth π) (ξ : Fin (m + 
     exact ⟨ha1, ha2, hball _ ha3⟩
   have : CompactSpace A := isCompact_iff_compactSpace.mp hA.1
   set M' := M.addSubgroupOf A
-  have hM'o : IsOpen (M' : Set A) := hMo.preimage continuous_subtype_val
+  have hM'o : IsOpen (M' : Set A) := hMo.preimage continuous_subtypeVal
   have : Finite (A ⧸ M') := AddSubgroup.quotient_finite_of_isOpen M' hM'o
   have := Fintype.ofFinite (A ⧸ M')
   refine ⟨⟨M, Finset.univ.image (fun q : A ⧸ M' => ((Quotient.out q : A) : Fin (m + 1) → k))⟩,

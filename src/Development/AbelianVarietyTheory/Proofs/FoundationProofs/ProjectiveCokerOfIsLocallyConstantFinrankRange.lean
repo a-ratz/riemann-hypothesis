@@ -141,7 +141,7 @@ theorem projective_of_finite_of_isLocallyConstant_finrank_fiber [IsReduced R] [M
 theorem finrank_tensorProduct_eq_finrank_fiber (k : Type*) [Field k] [Algebra R k]
     (p : PrimeSpectrum R) (hp : p.asIdeal = RingHom.ker (algebraMap R k)) :
     finrank k (k ⊗[R] M) = finrank p.asIdeal.ResidueField (p.asIdeal.ResidueField ⊗[R] M) := by
-  letI : Algebra p.asIdeal.ResidueField k :=
+  let : Algebra p.asIdeal.ResidueField k :=
     (Ideal.ResidueField.lift p.asIdeal (algebraMap R k) hp.le (fun x hx => by
       refine IsUnit.mk0 _ fun h0 => hx ?_
       rw [hp]

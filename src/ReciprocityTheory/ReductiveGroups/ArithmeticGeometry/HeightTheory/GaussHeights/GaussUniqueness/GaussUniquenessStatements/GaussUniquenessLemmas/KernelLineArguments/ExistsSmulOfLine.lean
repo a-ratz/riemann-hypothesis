@@ -83,7 +83,7 @@ theorem ratio_eq_of {Ω V : Type*} [Field Ω] [AddCommGroup V] [Module Ω V] {f 
 theorem exists_smul_of_line {Ω V : Type*} [Field Ω] [AddCommGroup V] [Module Ω V]
     {l : Submodule Ω V} (h1 : Module.finrank Ω l = 1) {f g : V} (hf : f ∈ l) (hg : g ∈ l)
     (hg0 : g ≠ 0) : ∃ a : Ω, f = a • g := by
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨g, hg⟩ : l) (by simpa using hg0)).mp h1 ⟨f, hf⟩
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨g, hg⟩ : l) (by simpa using hg0)).mp h1 ⟨f, hf⟩
   refine ⟨c, ?_⟩
   have h2 := congrArg Subtype.val hc
   simpa using h2.symm

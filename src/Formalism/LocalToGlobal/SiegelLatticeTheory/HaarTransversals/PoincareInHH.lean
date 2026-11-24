@@ -119,7 +119,7 @@ def iotaF : Gam X u →* Hfin X u :=
 
 theorem hinf_le_sinf (s : X.B.I.Ginf) (hs : s ∈ Hinf X u) : s ∈ X.SinfU u := by
   have hs' : ∀ v, ∀ x ∈ fixSet X u, uMat (s v) *ᵥ rv X.B.I v x = rv X.B.I v x := hs
-  simp only [HidaSetting.SinfU, Sinf, Set.mem_setOf_eq]
+  simp only [HidaSetting.SinfU, Sinf, Set.mem_ofPred_eq]
   intro v
   constructor
   · intro a
@@ -262,7 +262,7 @@ def Pu (hK : X.LevelSubgroupCharacter) (Dt : Set X.B.I.GA) (hD : IsReps X u Dt) 
 
 theorem one_mem_level_subgroup : (1 : X.B.I.Gf) ∈ X.K2 := by
   have h1 : X.B.I.fmat 1 = 1 := by simp [AutInst.fmat]
-  simp only [HidaSetting.K2, K2set, K2cong, InMod, Set.mem_setOf_eq, h1, sub_self, Matrix.zero_mulVec,
+  simp only [HidaSetting.K2, K2set, K2cong, InMod, Set.mem_ofPred_eq, h1, sub_self, Matrix.zero_mulVec,
     Submodule.zero_mem, implies_true, and_true]
   first
   | simp [AutInst.Kset]

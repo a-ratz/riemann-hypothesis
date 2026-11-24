@@ -67,9 +67,9 @@ section SlopeTestRemainingChoices
 variable {K : Type} [Field K] [NumberField K] [StarRing K]
 
 theorem plc_prime (w : HeightOneSpectrum (𝓞 K)) : (plc w).Prime := by
-  haveI := w.isMaximal
-  letI : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
+  have := w.isMaximal
+  let : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
   unfold plc
   exact (CharP.char_is_prime_or_zero (𝓞 K ⧸ w.asIdeal) (ringChar (𝓞 K ⧸ w.asIdeal))).resolve_right
     (CharP.char_ne_zero_of_finite (𝓞 K ⧸ w.asIdeal) _)
@@ -85,7 +85,7 @@ private theorem vw_coe_eq_count_factors_span_of_ne_zero (w : HeightOneSpectrum (
   have hspan : (Ideal.span {x} : Ideal (𝓞 K)) ≠ 0 := by
     rwa [ne_eq, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
   unfold vw
-  rw [← FractionalIdeal.count_coe K w hspan, FractionalIdeal.coeIdeal_span_singleton]
+  rw [← FractionalIdeal.count_coeIdeal K w hspan, FractionalIdeal.coeIdeal_span_singleton]
 
 theorem intValuation_eq_exp' (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) (hx : x ≠ 0) :
     w.intValuation x = WithZero.exp (-(vw w (x : K))) := by
@@ -103,8 +103,8 @@ theorem one_le_ramw (w : HeightOneSpectrum (𝓞 K)) : 1 ≤ ramw w := by
 theorem plc_conjPl (w : HeightOneSpectrum (𝓞 K)) : plc (conjPl w) = plc w := by
   unfold plc
   let e := Ideal.quotientEquiv w.asIdeal (conjPl w).asIdeal (cO K) rfl
-  haveI := ringChar.charP (𝓞 K ⧸ w.asIdeal)
-  haveI : CharP (𝓞 K ⧸ (conjPl w).asIdeal) (ringChar (𝓞 K ⧸ w.asIdeal)) :=
+  have := ringChar.charP (𝓞 K ⧸ w.asIdeal)
+  have : CharP (𝓞 K ⧸ (conjPl w).asIdeal) (ringChar (𝓞 K ⧸ w.asIdeal)) :=
     charP_of_injective_ringHom (f := (e : 𝓞 K ⧸ w.asIdeal →+* 𝓞 K ⧸ (conjPl w).asIdeal))
       e.injective _
   exact ringChar.eq _ _

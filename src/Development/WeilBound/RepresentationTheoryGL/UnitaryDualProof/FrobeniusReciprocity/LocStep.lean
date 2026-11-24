@@ -102,12 +102,12 @@ theorem dc {k : Type} [Field k] {n : ℕ} (Z : Subalgebra k (Matrix (Fin n) (Fin
     (hc : ∀ a ∈ Z, ∀ b ∈ Z, a * b = b * a) (hr : IsReduced Z) (x : Matrix (Fin n) (Fin n) k)
     (hx : ∀ y ∈ Subalgebra.centralizer k (Z : Set (Matrix (Fin n) (Fin n) k)), x * y = y * x) : x ∈ Z := by
   classical
-  haveI : IsReduced Z := hr
-  letI : CommRing Z := { (inferInstance : Ring Z) with
+  have : IsReduced Z := hr
+  let : CommRing Z := { (inferInstance : Ring Z) with
     mul_comm := fun a b => Subtype.ext (hc a.1 a.2 b.1 b.2) }
-  haveI : IsArtinianRing Z := IsArtinianRing.of_finite k Z
-  haveI : IsSemisimpleRing Z := IsArtinianRing.isSemisimpleRing_of_isReduced Z
-  haveI : IsSemisimpleModule Z (Fin n → k) := inferInstance
+  have : IsArtinianRing Z := IsArtinianRing.of_finite k Z
+  have : IsSemisimpleRing Z := IsArtinianRing.isSemisimpleRing_of_isReduced Z
+  have : IsSemisimpleModule Z (Fin n → k) := inferInstance
   have key : ∀ g : Module.End Z (Fin n → k), ∀ v : Fin n → k,
       Matrix.mulVec x (g v) = g (Matrix.mulVec x v) := by
     intro g v
@@ -408,7 +408,7 @@ theorem conj_of (hiso : IsoOfTrace k) : Conj k := by
     Algebra.commute_of_mem_adjoin_of_forall_mem_commute hy fun b hb =>
       (Algebra.commute_of_mem_adjoin_of_forall_mem_commute hx fun a ha => hcomm b hb a ha).symm
 
-  letI : CommRing R := { (inferInstance : Ring R) with
+  let : CommRing R := { (inferInstance : Ring R) with
     mul_comm := fun x y => Subtype.ext (hRc x x.2 y y.2).eq }
 
   have hRss : ∀ x ∈ R, SS x.1 ∧ SS x.2 := by
@@ -454,7 +454,7 @@ theorem conj_of (hiso : IsoOfTrace k) : Conj k := by
     rw [eval₂_eq_sum, eval₂_eq_sum, Polynomial.sum_def, Polynomial.sum_def, trace_sum, trace_sum]
     exact Finset.sum_congr rfl fun e _ => htr _ (P.coeff e).2 e
 
-  haveI : IsReduced R := ⟨fun x hx => by
+  have : IsReduced R := ⟨fun x hx => by
     have h1 : IsNilpotent (x : Matrix (Fin n) (Fin n) k × Matrix (Fin n) (Fin n) k) := hx.map R.val
     have hs1 := hRss x x.2
     have e1 : (x : Matrix (Fin n) (Fin n) k × Matrix (Fin n) (Fin n) k).1 = 0 := by
@@ -603,18 +603,18 @@ theorem iso_of_field {K W W' : Type} [Field K] [Algebra k K] [FiniteDimensional 
     (σ : K →ₐ[k] Module.End k W) (σ' : K →ₐ[k] Module.End k W') (h : finrank k W = finrank k W') :
     ∃ φ : W ≃ₗ[k] W', ∀ c w, φ (σ c w) = σ' c (φ w) := by
   classical
-  letI : Module K W := Module.compHom W σ.toRingHom
-  letI : Module K W' := Module.compHom W' σ'.toRingHom
-  haveI : IsScalarTower k K W := ⟨fun a c w => by
+  let : Module K W := Module.compHom W σ.toRingHom
+  let : Module K W' := Module.compHom W' σ'.toRingHom
+  have : IsScalarTower k K W := ⟨fun a c w => by
     show σ (a • c) w = a • σ c w
     rw [map_smul]
     rfl⟩
-  haveI : IsScalarTower k K W' := ⟨fun a c w => by
+  have : IsScalarTower k K W' := ⟨fun a c w => by
     show σ' (a • c) w = a • σ' c w
     rw [map_smul]
     rfl⟩
-  haveI : FiniteDimensional K W := Module.Finite.of_restrictScalars_finite k K W
-  haveI : FiniteDimensional K W' := Module.Finite.of_restrictScalars_finite k K W'
+  have : FiniteDimensional K W := Module.Finite.of_restrictScalars_finite k K W
+  have : FiniteDimensional K W' := Module.Finite.of_restrictScalars_finite k K W'
   have hK : 0 < finrank k K := Module.finrank_pos
   have h2 : finrank K W = finrank K W' := by
     apply Nat.eq_of_mul_eq_mul_left hK
@@ -664,8 +664,8 @@ private theorem comp_lemma {n : ℕ} {R : Type} [CommRing R] [Algebra k R] [Fini
     (htr : LinearMap.trace k (Fin n → k) (ρ e) = LinearMap.trace k (Fin n → k) (ρ' e)) :
     ∃ φ : LinearMap.range (ρ e) ≃ₗ[k] LinearMap.range (ρ' e),
       ∀ r x, φ (resHom ρ e r x) = resHom ρ' e r (φ x) := by
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
-  haveI : FiniteDimensional k (R ⧸ m) :=
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
+  have : FiniteDimensional k (R ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ k m).toLinearMap (Ideal.Quotient.mkₐ_surjective k m)
   have h0 : ∀ (σ : R →ₐ[k] Module.End k (Fin n → k)), ∀ a ∈ m, resHom σ e a = 0 := by
     intro σ a ha
@@ -703,14 +703,14 @@ private theorem mul_eq_mul_of_ratio_eq_one {n : ℕ} {R : Type} [CommRing R] [Al
         apply Subtype.ext
         have := proj_of_mem ρ' e he i i _ (φ i ((ρ (e i)).rangeRestrict v)).2
         simpa using this
-      rw [h1, LinearEquiv.symm_apply_apply, if_pos rfl]
+      rw [h1, LinearEquiv.symm_apply_apply, ite_eq_left rfl]
       rfl
     · have h1 : (ρ' (e j)).rangeRestrict ((φ i ((ρ (e i)).rangeRestrict v) : LinearMap.range (ρ' (e i))) : Fin n → k)
           = 0 := by
         apply Subtype.ext
         have := proj_of_mem ρ' e he i j _ (φ i ((ρ (e i)).rangeRestrict v)).2
         simpa [h] using this
-      rw [h1, (φ j).symm.map_zero, if_neg h]
+      rw [h1, (φ j).symm.map_zero, ite_eq_right h]
       rfl
 
   simp only [LinearMap.sum_apply, LinearMap.comp_apply, map_sum, Submodule.coe_subtype,
@@ -725,8 +725,8 @@ theorem isoOfTrace : IsoOfTrace k := by
   unfold IsoOfTrace
   intro n R _ _ _ _ ρ ρ' htr
   classical
-  haveI : IsArtinianRing R := IsArtinianRing.of_finite k R
-  haveI : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
+  have : IsArtinianRing R := IsArtinianRing.of_finite k R
+  have : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
   let E := IsArtinianRing.equivPi R
   let e : MaximalSpectrum R → R := fun m => E.symm (Pi.single m 1)
   have hE : ∀ m, E (e m) = Pi.single m 1 := fun m => E.apply_symm_apply _
@@ -736,8 +736,8 @@ theorem isoOfTrace : IsoOfTrace k := by
     rw [map_mul, hE, hE]
     by_cases h : I = J
     · subst h
-      rw [if_pos rfl, hE, ← Pi.single_mul, mul_one]
-    · rw [if_neg h, map_zero]
+      rw [ite_eq_left rfl, hE, ← Pi.single_mul, mul_one]
+    · rw [ite_eq_right h, map_zero]
       funext x
       rw [Pi.mul_apply, Pi.zero_apply]
       by_cases hx : x = I
@@ -763,7 +763,7 @@ theorem isoOfTrace : IsoOfTrace k := by
     · rw [Pi.single_eq_of_ne h, mul_zero]
   have hc : ∀ m : MaximalSpectrum R, ∃ φ : LinearMap.range (ρ (e m)) ≃ₗ[k] LinearMap.range (ρ' (e m)),
       ∀ r x, φ (resHom ρ (e m) r x) = resHom ρ' (e m) r (φ x) := fun m => by
-    haveI := m.isMaximal
+    have := m.isMaximal
     exact comp_lemma ρ ρ' (e m) (by simpa using he m m) m.asIdeal (hm m) (htr _)
   choose φ hφ using hc
   let Φ : (Fin n → k) →ₗ[k] (Fin n → k) :=
@@ -1152,9 +1152,9 @@ theorem exists_conj_eq_semisimple {x} (hx : x ∈ Tset F P) : ∃ g ∈ Gz Z, cj
 
 theorem continuousSMul_actT : @ContinuousSMul (GzS Z) (Tset F P) (actT hFinv).toSMul _ _ := by
   refine @ContinuousSMul.mk _ _ (actT hFinv).toSMul _ _ ?_
-  exact (((Units.continuous_val.comp (continuous_subtype_val.comp continuous_fst)).matrix_mul
-    (continuous_subtype_val.comp continuous_snd)).matrix_mul
-    (Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_fst))).subtype_mk _
+  exact (((Units.continuous_val.comp (continuous_subtypeVal.comp continuous_fst)).matrix_mul
+    (continuous_subtypeVal.comp continuous_snd)).matrix_mul
+    (Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_fst))).subtype_mk _
 
 include hP in
 theorem isPretransitive_actT (hsT : s ∈ Tset F P) : @MulAction.IsPretransitive (GzS Z) (Tset F P) (actT hFinv).toSMul := by
@@ -1197,7 +1197,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem isSemisimple_of_mem (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) {a : Matrix (Fin n) (Fin n) k}
     (ha : a ∈ Z) : Module.End.IsSemisimple (Matrix.toLin' a) := by
-  haveI : IsReduced Z := hZ.2
+  have : IsReduced Z := hZ.2
   let a' : Z := ⟨a, ha⟩
   have hint : IsIntegral k a' := .of_finite k a'
   refine Module.End.isSemisimple_of_squarefree_aeval_eq_zero
@@ -1290,10 +1290,10 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem sliceVan_of_frob' [CharZero k] (hFr : FrobeniusReciprocity) (hU : Unimod (k := k)) : SliceVan (k := k) := by
   intro n Z hZ s hs hss hV F P hFc hFB hFinv hP ξ hsupp hinv f hf
   have hCR : CR (adj Z s) := CRAdj.cr_adj Z hZ s hs hss
-  haveI : T2Space k := t2k
-  haveI : TotallyDisconnectedSpace k := tdk
-  haveI : SecondCountableTopology k := sck
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) := inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin n → k))
+  have : T2Space k := t2k
+  have : TotallyDisconnectedSpace k := tdk
+  have : SecondCountableTopology k := sck
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) := inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin n → k))
   rcases F.eq_empty_or_nonempty with hF0 | ⟨x0, hx0⟩
   · exact hsupp f ⟨hf.1, Set.subset_univ _⟩ (fun p hp => by simp [hF0] at hp)
   have hsT : s ∈ Tset F P := by
@@ -1301,10 +1301,10 @@ theorem sliceVan_of_frob' [CharZero k] (hFr : FrobeniusReciprocity) (hU : Unimod
     rw [← e]
     exact cj_mem_Tset hFinv hg (P_mem_Tset hP hx0)
 
-  letI A := actT (P := P) hFinv
-  haveI := continuousSMul_actT (P := P) hFinv
-  haveI := isPretransitive_actT hFinv hP hsT
-  haveI : LocallyCompactSpace (Tset F P) := (isClosed_Tset hFc P).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  let A := actT (P := P) hFinv
+  have := continuousSMul_actT (P := P) hFinv
+  have := isPretransitive_actT hFinv hP hsT
+  have : LocallyCompactSpace (Tset F P) := (isClosed_Tset hFc P).isClosedEmbedding_subtypeVal.locallyCompactSpace
   let t : Tset F P := ⟨s, hsT⟩
   obtain ⟨e, he⟩ := exists_quotient_homeo (G := GzS Z) t
   let H := MulAction.stabilizer (GzS Z) t
@@ -1312,7 +1312,7 @@ theorem sliceVan_of_frob' [CharZero k] (hFr : FrobeniusReciprocity) (hU : Unimod
     have : (H : Set (GzS Z)) = (fun g : GzS Z => g • t) ⁻¹' {t} := by ext g; rfl
     rw [this]
     exact isClosed_singleton.preimage (continuous_id.smul continuous_const)
-  haveI : LocallyCompactSpace H := hHc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace H := hHc.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have memH : ∀ g : GzS Z, g ∈ H ↔ s * g.1.val = g.1.val * s := by
     intro g
     have h1 : g.1⁻¹.val * g.1.val = 1 := by rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
@@ -1334,17 +1334,17 @@ theorem sliceVan_of_frob' [CharZero k] (hFr : FrobeniusReciprocity) (hU : Unimod
       left_inv := fun h => rfl
       right_inv := fun g => rfl
       map_mul' := fun a b => rfl
-      continuous_toFun := Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
-      continuous_invFun := Continuous.subtype_mk (Continuous.subtype_mk continuous_subtype_val _) _ }
+      continuous_toFun := Continuous.subtype_mk (continuous_subtypeVal.comp continuous_subtypeVal) _
+      continuous_invFun := Continuous.subtype_mk (Continuous.subtype_mk continuous_subtypeVal _) _ }
   have uH : IsUnimod H := isUnimod_of_equiv φ (hU n (adj Z s) hCR)
 
-  letI B := actX (F := F) hFinv
-  haveI := continuousSMul_actX (F := F) hFinv
+  let B := actX (F := F) hFinv
+  have := continuousSMul_actX (F := F) hFinv
   have hXc : IsClosed (Xs F) := hFc.prod isClosed_univ
-  haveI : LocallyCompactSpace (Xs F) := hXc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (Xs F) := hXc.isClosedEmbedding_subtypeVal.locallyCompactSpace
   let σX : Xs F → Tset F P := fun q => ⟨aeval q.1.1 P, P_mem_Tset hP q.2.1⟩
   have hσc : Continuous σX :=
-    Continuous.subtype_mk ((continuous_aevalM P).comp (continuous_fst.comp continuous_subtype_val)) _
+    Continuous.subtype_mk ((continuous_aevalM P).comp (continuous_fst.comp continuous_subtypeVal)) _
   have hσeq : ∀ (g : GzS Z) (q : Xs F), σX (g • q) = g • σX q := fun g q =>
     Subtype.ext (Asm.aeval_conj g.1 q.1.1 P)
   have he_eq : ∀ (g : GzS Z) (c : GzS Z ⧸ H), e (g • c) = g • e c := by
@@ -1369,8 +1369,8 @@ theorem sliceVan_of_frob' [CharZero k] (hFr : FrobeniusReciprocity) (hU : Unimod
       simp only [p, Homeomorph.apply_symm_apply, he, one_smul]
       exact Subtype.ext h
 
-  letI : MeasurableSpace (GzS Z) := borel _
-  haveI : BorelSpace (GzS Z) := ⟨rfl⟩
+  let : MeasurableSpace (GzS Z) := borel _
+  have : BorelSpace (GzS Z) := ⟨rfl⟩
   obtain ⟨Fr, hFr1, -⟩ := hFr (GzS Z) H hHc uG uH (Xs F) p hpc hp (1 : GzS Z →* ℂˣ)
     (by simpa using continuous_const) Measure.haar Measure.haar
 
@@ -1390,7 +1390,7 @@ theorem sliceVan_of_frob' [CharZero k] (hFr : FrobeniusReciprocity) (hU : Unimod
     simp only [MonoidHom.one_apply, Units.val_one, one_mul]
     exact ((hD f1).symm.trans (hinv g⁻¹.1 (g⁻¹).2 f0 ⟨f0.2, Set.subset_univ _⟩)).trans (hD f0)
   let C : Set (Xs F) := {q | q.1.2 = 0}
-  have hCc : IsClosed C := isClosed_eq (continuous_snd.comp continuous_subtype_val) continuous_const
+  have hCc : IsClosed C := isClosed_eq (continuous_snd.comp continuous_subtypeVal) continuous_const
   have hCinv : ∀ (g : GzS Z), ∀ x ∈ C, g • x ∈ C := by
     intro g x hx
     change g.1.val *ᵥ x.1.2 = 0
@@ -1408,8 +1408,8 @@ theorem sliceVan_of_frob' [CharZero k] (hFr : FrobeniusReciprocity) (hU : Unimod
         invFun := fun y => ⟨⟨y.1, y.2.1, trivial⟩, (hfib _).2 y.2.2⟩
         left_inv := fun z => rfl
         right_inv := fun y => rfl
-        continuous_toFun := Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
-        continuous_invFun := Continuous.subtype_mk (Continuous.subtype_mk continuous_subtype_val _) _ }
+        continuous_toFun := Continuous.subtype_mk (continuous_subtypeVal.comp continuous_subtypeVal) _
+        continuous_invFun := Continuous.subtype_mk (Continuous.subtype_mk continuous_subtypeVal _) _ }
     let E' : PositivityTheory.PfBern.Loc.Distr Ys := E.comp (pullL hY)
     obtain ⟨η, hη⟩ := exists_functional hYc E'
     have hcommY : ∀ y ∈ Ys, s * y.1 = y.1 * s := by
@@ -1442,7 +1442,7 @@ theorem sliceVan_of_frob' [CharZero k] (hFr : FrobeniusReciprocity) (hU : Unimod
     obtain ⟨f0, hf0⟩ := restr_surjective hYc φ'
     have hsupp' : Function.support (φ' : Ys → ℂ) ⊆ {y | y.1.2 ≠ 0} := fun y hy => hφ0 hy
     have hK : IsCompact (Subtype.val '' Function.support (φ' : Ys → ℂ)) :=
-      (isCompact_support φ'.2).image continuous_subtype_val
+      (isCompact_support φ'.2).image continuous_subtypeVal
     have hKsub : Subtype.val '' Function.support (φ' : Ys → ℂ) ⊆ {q : Sp k n | q.2 ≠ 0} := by
       rintro _ ⟨y, hy, rfl⟩
       exact hsupp' hy

@@ -207,7 +207,7 @@ theorem exists_isInduced : ∀ (l : ℕ) [Fact l.Prime] (E Ω : Type) [Field E] 
       exact mul_mem (Bw.Kw.1.algebraMap_mem a) (Bw.j_E y)
     | add t₁ t₂ h₁ h₂ => rw [map_add]; exact add_mem h₁ h₂
   have hfin : FiniteDimensional ℚ_[l] (Subalgebra.toSubmodule (tensLift jE).range) := by
-    haveI : FiniteDimensional ℚ_[l] (Subalgebra.toSubmodule Bw.Kw.1.toSubalgebra) := Bw.Kw.2
+    have : FiniteDimensional ℚ_[l] (Subalgebra.toSubmodule Bw.Kw.1.toSubalgebra) := Bw.Kw.2
     exact Submodule.finiteDimensional_of_le (Subalgebra.toSubmodule.monotone hrange)
   have hclosed : IsClosed ((tensLift jE).range : Set (Om l)) :=
     Submodule.isClosed_of_finiteDimensional (Subalgebra.toSubmodule (tensLift jE).range)

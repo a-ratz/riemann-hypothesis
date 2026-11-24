@@ -157,14 +157,14 @@ theorem blkM_isInt (R : Subring K) : IsInt R (blkM hN A B C D) ↔
     rcases p with p | p <;> rcases q with q | q <;> simp [blkM, h1, h2, h3, h4]
 
 theorem eN_ll_lt (i j : Fin a) : eN hN (Sum.inl i) < eN hN (Sum.inl j) ↔ i < j := by
-  rw [Fin.lt_iff_val_lt_val, Fin.lt_iff_val_lt_val, eN_inl, eN_inl]
+  rw [Fin.lt_def, Fin.lt_def, eN_inl, eN_inl]
 
 theorem eN_rr_lt (i j : Fin s) : eN hN (Sum.inr i) < eN hN (Sum.inr j) ↔ i < j := by
-  rw [Fin.lt_iff_val_lt_val, Fin.lt_iff_val_lt_val, eN_inr, eN_inr]
+  rw [Fin.lt_def, Fin.lt_def, eN_inr, eN_inr]
   omega
 
 theorem eN_lr_lt (i : Fin a) (j : Fin s) : eN hN (Sum.inl i) < eN hN (Sum.inr j) := by
-  rw [Fin.lt_iff_val_lt_val, eN_inl, eN_inr]
+  rw [Fin.lt_def, eN_inl, eN_inr]
   have := i.isLt
   omega
 
@@ -278,14 +278,14 @@ private lemma sLow_lemma {n : ℕ} (x : Matrix (Fin n) (Fin n) K) :
   · rw [Finset.sum_eq_single ⟨j + 1, h⟩]
     · simp
     · intro i _ hi
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       exact hi (Fin.ext e)
     · simp
   · symm
     apply Finset.sum_eq_zero
     intro i _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro e
     have := i.2
     omega
@@ -299,7 +299,7 @@ theorem sLow_blkM (hN : N = a + s) (A : Matrix (Fin a) (Fin a) K) (B : Matrix (F
   have hB : ∀ (j : Fin s) (i : Fin a), (if (i : ℕ) = a + j + 1 then B i j else 0) = 0 := by
     intro j i
     have := i.2
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   have hC : ∀ (j : Fin a) (i : Fin s),
       (if a + (i : ℕ) = j + 1 then C i j else 0) = (if (i : ℕ) = 0 ∧ (j : ℕ) + 1 = a then C i j else 0) := by
     intro j i
@@ -321,14 +321,14 @@ private lemma sUp_lemma {n : ℕ} (x : Matrix (Fin n) (Fin n) K) :
   · rw [Finset.sum_eq_single ⟨j + 1, h⟩]
     · simp
     · intro i _ hi
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       exact hi (Fin.ext e)
     · simp
   · symm
     apply Finset.sum_eq_zero
     intro i _
-    rw [if_neg]
+    rw [ite_eq_right]
     intro e
     have := i.2
     omega
@@ -342,7 +342,7 @@ theorem sUp_blkM (hN : N = a + s) (A : Matrix (Fin a) (Fin a) K) (B : Matrix (Fi
   have hC : ∀ (j : Fin s) (i : Fin a), (if (i : ℕ) = a + j + 1 then C j i else 0) = 0 := by
     intro j i
     have := i.2
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   have hB : ∀ (j : Fin a) (i : Fin s),
       (if a + (i : ℕ) = j + 1 then B j i else 0) = (if (i : ℕ) = 0 ∧ (j : ℕ) + 1 = a then B j i else 0) := by
     intro j i
@@ -361,34 +361,34 @@ theorem cornL_mul_low {v : Matrix (Fin a) (Fin a) K} (hv : IsLowUni v)
   unfold cornL
   refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun i _ => ?_
   by_cases hc : (i : ℕ) = 0 ∧ (j : ℕ) + 1 = a
-  · rw [if_pos hc, if_pos hc, Matrix.mul_apply, Finset.sum_eq_single j]
+  · rw [ite_eq_left hc, ite_eq_left hc, Matrix.mul_apply, Finset.sum_eq_single j]
     · rw [hv.2 j, mul_one]
     · intro k _ hk
       have hk' : (k : ℕ) ≠ j := fun e => hk (Fin.ext e)
       have hkj : k < j := by
-        rw [Fin.lt_iff_val_lt_val]
+        rw [Fin.lt_def]
         have := k.2
         omega
       rw [hv.1 hkj, mul_zero]
     · simp
-  · rw [if_neg hc, if_neg hc]
+  · rw [ite_eq_right hc, ite_eq_right hc]
 
 theorem cornU_mul_up {u : Matrix (Fin a) (Fin a) K} (hu : IsUpUni u)
     (Y : Matrix (Fin a) (Fin s) K) : cornU (u * Y) = cornU Y := by
   unfold cornU
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   by_cases hc : (j : ℕ) = 0 ∧ (i : ℕ) + 1 = a
-  · rw [if_pos hc, if_pos hc, Matrix.mul_apply, Finset.sum_eq_single i]
+  · rw [ite_eq_left hc, ite_eq_left hc, Matrix.mul_apply, Finset.sum_eq_single i]
     · rw [hu.2 i, one_mul]
     · intro k _ hk
       have hk' : (k : ℕ) ≠ i := fun e => hk (Fin.ext e)
       have hki : k < i := by
-        rw [Fin.lt_iff_val_lt_val]
+        rw [Fin.lt_def]
         have := k.2
         omega
       rw [hu.1 hki, zero_mul]
     · simp
-  · rw [if_neg hc, if_neg hc]
+  · rw [ite_eq_right hc, ite_eq_right hc]
 
 end Simple
 
@@ -441,9 +441,9 @@ private lemma blk_lt_lemma : ∀ (l : List ℕ) (j : ℕ), j < l.sum → blk l j
     rw [List.sum_cons] at hj
     simp only [blk, List.length_cons]
     by_cases h : j < x
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       omega
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       have := ih (j - x) (by omega)
       omega
 
@@ -458,9 +458,9 @@ private lemma revIn_lt_lemma_2 : ∀ (l : List ℕ) (j : ℕ), j < l.sum → rev
     rw [List.sum_cons] at hj ⊢
     simp only [revIn]
     by_cases h : j < x
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       omega
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       have := ih (j - x) (by omega)
       omega
 
@@ -476,20 +476,20 @@ private lemma revIn_invol_lemma_3 : ∀ (l : List ℕ) (j : ℕ), j < l.sum → 
     by_cases h : j < x
     · have e1 : revIn (x :: l) j = x - 1 - j := by
         simp only [revIn]
-        rw [if_pos h]
+        rw [ite_eq_left h]
       have h' : x - 1 - j < x := by omega
       have e2 : revIn (x :: l) (x - 1 - j) = x - 1 - (x - 1 - j) := by
         simp only [revIn]
-        rw [if_pos h']
+        rw [ite_eq_left h']
       rw [e1, e2]
       omega
     · have e1 : revIn (x :: l) j = x + revIn l (j - x) := by
         simp only [revIn]
-        rw [if_neg h]
+        rw [ite_eq_right h]
       have h' : ¬ (x + revIn l (j - x) < x) := by omega
       have e2 : revIn (x :: l) (x + revIn l (j - x)) = x + revIn l (x + revIn l (j - x) - x) := by
         simp only [revIn]
-        rw [if_neg h']
+        rw [ite_eq_right h']
       rw [e1, e2, show x + revIn l (j - x) - x = revIn l (j - x) by omega, ih (j - x) (by omega)]
       omega
 
@@ -505,25 +505,25 @@ private lemma blk_revIn_lemma_4 : ∀ (l : List ℕ) (j : ℕ), j < l.sum → bl
     by_cases h : j < x
     · have e1 : revIn (x :: l) j = x - 1 - j := by
         simp only [revIn]
-        rw [if_pos h]
+        rw [ite_eq_left h]
       have h' : x - 1 - j < x := by omega
       have e2 : blk (x :: l) (x - 1 - j) = 0 := by
         simp only [blk]
-        rw [if_pos h']
+        rw [ite_eq_left h']
       have e3 : blk (x :: l) j = 0 := by
         simp only [blk]
-        rw [if_pos h]
+        rw [ite_eq_left h]
       rw [e1, e2, e3]
     · have e1 : revIn (x :: l) j = x + revIn l (j - x) := by
         simp only [revIn]
-        rw [if_neg h]
+        rw [ite_eq_right h]
       have h' : ¬ (x + revIn l (j - x) < x) := by omega
       have e2 : blk (x :: l) (x + revIn l (j - x)) = 1 + blk l (x + revIn l (j - x) - x) := by
         simp only [blk]
-        rw [if_neg h']
+        rw [ite_eq_right h']
       have e3 : blk (x :: l) j = 1 + blk l (j - x) := by
         simp only [blk]
-        rw [if_neg h]
+        rw [ite_eq_right h]
       rw [e1, e2, e3, show x + revIn l (j - x) - x = revIn l (j - x) by omega, ih (j - x) (by omega)]
 
 private lemma pt_unit_lemma_5 (s : List ℕ) (t : ℕ → Kˣ) : IsUnit (pt s t).det := by
@@ -1015,8 +1015,8 @@ theorem Fz_uni {n n' : ℕ} (Z' : Matrix (Fin n') (Fin n') K) (a0 b0 Z : Matrix 
   unfold Fz
   rw [← Formalism.FourierDecayAlt.P.A5x4.card_isoZZ_congr R hφ (Formalism.FourierDecayAlt.P.A5x4.isoZZ_refl R Z')]
   by_cases hc : IsInt R Z
-  · rw [if_pos hc, if_pos (hint.2 hc)]
-  · rw [if_neg hc, if_neg (fun h => hc (hint.1 h))]
+  · rw [ite_eq_left hc, ite_eq_left (hint.2 hc)]
+  · rw [ite_eq_right hc, ite_eq_right (fun h => hc (hint.1 h))]
 
 theorem clsM_outM {ι κ : Type} (x : Matrix ι κ (KR R)) : clsM R (outM R x) = x := by
   ext i j
@@ -1084,32 +1084,32 @@ theorem cornL_low_mul {v : Matrix (Fin s) (Fin s) K} (hv : IsLowUni v) (X : Matr
   unfold cornL
   refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun i _ => ?_
   by_cases hc : (i : ℕ) = 0 ∧ (j : ℕ) + 1 = a
-  · rw [if_pos hc, if_pos hc, Matrix.mul_apply, Finset.sum_eq_single i]
+  · rw [ite_eq_left hc, ite_eq_left hc, Matrix.mul_apply, Finset.sum_eq_single i]
     · rw [hv.2 i, one_mul]
     · intro k _ hk
       have hk' : (k : ℕ) ≠ i := fun e => hk (Fin.ext e)
       have hik : i < k := by
-        rw [Fin.lt_iff_val_lt_val]
+        rw [Fin.lt_def]
         omega
       rw [hv.1 hik, zero_mul]
     · simp
-  · rw [if_neg hc, if_neg hc]
+  · rw [ite_eq_right hc, ite_eq_right hc]
 
 theorem cornU_mul_up' {u : Matrix (Fin s) (Fin s) K} (hu : IsUpUni u) (Y : Matrix (Fin a) (Fin s) K) :
     cornU (Y * u) = cornU Y := by
   unfold cornU
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
   by_cases hc : (j : ℕ) = 0 ∧ (i : ℕ) + 1 = a
-  · rw [if_pos hc, if_pos hc, Matrix.mul_apply, Finset.sum_eq_single j]
+  · rw [ite_eq_left hc, ite_eq_left hc, Matrix.mul_apply, Finset.sum_eq_single j]
     · rw [hu.2 j, mul_one]
     · intro k _ hk
       have hk' : (k : ℕ) ≠ j := fun e => hk (Fin.ext e)
       have hjk : j < k := by
-        rw [Fin.lt_iff_val_lt_val]
+        rw [Fin.lt_def]
         omega
       rw [hu.1 hjk, mul_zero]
     · simp
-  · rw [if_neg hc, if_neg hc]
+  · rw [ite_eq_right hc, ite_eq_right hc]
 
 variable {N : ℕ}
 
@@ -1245,7 +1245,7 @@ theorem PhiH_supp (ψ : AddChar K ℂ) (h : Point K) {n' : ℕ}
   suffices hF : Fz R Z' (bigZ rfl (orbZ h (rep R τ.1)) (outM R τ.2.1) (outM R τ.2.2) Z) = 0 by
     rw [hF, zero_mul]
   unfold Fz
-  rw [if_neg]
+  rw [ite_eq_right]
   intro hI
   obtain ⟨hT, hTY, hXT, hD⟩ := (blkM_isInt rfl _ _ _ _ R).1 hI
   set T := orbZ h (rep R τ.1) with hTdef
@@ -1359,7 +1359,7 @@ theorem pert_card {N n' : ℕ} (Z' : Matrix (Fin n') (Fin n') K) (Z Z₁ : Matri
   let e : (coker R Z₁ ≃ₗ[R] coker R Z') ≃ (coker R Z ≃ₗ[R] coker R Z') :=
     ⟨fun φ => ψ.trans φ, fun φ => ψ.symm.trans φ, fun φ => by ext x; simp, fun φ => by ext x; simp⟩
   refine Nat.card_congr (e.subtypeEquiv fun φ => ?_)
-  simp only [isoZZ, Set.mem_setOf_eq]
+  simp only [isoZZ, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨h1', h2'⟩
     refine ⟨?_, fun v v' hv => ?_⟩
@@ -1386,14 +1386,14 @@ theorem Fz_perturb (ϖ : K) (hϖ : ϖ ∈ R) (hu : ∀ r ∈ R, ∃ y ∈ R, (1 
   unfold Fz
   by_cases hZ : IsInt R Z
   swap
-  · rw [if_neg hZ, if_neg]
+  · rw [ite_eq_right hZ, ite_eq_right]
     intro h
     apply hZ
     intro i j
     have := R.sub_mem (h i j) (hPi i j)
     simpa using this
   have hZP : IsInt R (Z + P) := fun i j => R.add_mem (hZ i j) (hPi i j)
-  rw [if_pos hZ, if_pos hZP]
+  rw [ite_eq_left hZ, ite_eq_left hZP]
   congr 1
 
   choose p hpR hp using hP
@@ -1539,7 +1539,7 @@ private lemma sLow_mul_lemma {n : ℕ} {a b : Matrix (Fin n) (Fin n) K} (ha : Is
       by_cases hcj : c < j
       · rw [hb.1 hcj, mul_zero]
       · have hlt : (⟨j + 1, hj⟩ : Fin n) < c := by
-          rw [Fin.lt_iff_val_lt_val]
+          rw [Fin.lt_def]
           have h1 : (c : ℕ) ≠ j := fun e => hc.1 (Fin.ext e)
           have h2 : (c : ℕ) ≠ j + 1 := fun e => hc.2 (Fin.ext e)
           show (j : ℕ) + 1 < c
@@ -1564,7 +1564,7 @@ private lemma sUp_mul_lemma {n : ℕ} {a b : Matrix (Fin n) (Fin n) K} (ha : IsU
       by_cases hcj : c < j
       · rw [ha.1 hcj, zero_mul]
       · have hlt : (⟨j + 1, hj⟩ : Fin n) < c := by
-          rw [Fin.lt_iff_val_lt_val]
+          rw [Fin.lt_def]
           have h1 : (c : ℕ) ≠ j := fun e => hc.1 (Fin.ext e)
           have h2 : (c : ℕ) ≠ j + 1 := fun e => hc.2 (Fin.ext e)
           show (j : ℕ) + 1 < c
@@ -1636,7 +1636,7 @@ theorem sum_identity [TopologicalSpace K] [IsTopologicalRing K] (ψ : AddChar K 
     by_contra hc
     apply hq
     have hc' : ¬ IsInt R (orbZ w (rep R q)) := hc
-    simp only [hT, Fz, if_neg hc', zero_mul]
+    simp only [hT, Fz, ite_eq_right hc', zero_mul]
   let β : Par R h g → Cos R w := fun t => toCos R (sigma R hN hW t)
   have hβ : Function.Bijective β := sigma_bij R hN hW
   let e : Cos R g × (Cos R h × Matrix (Fin g.1.sum) (Fin h.1.sum) (KR R) ×

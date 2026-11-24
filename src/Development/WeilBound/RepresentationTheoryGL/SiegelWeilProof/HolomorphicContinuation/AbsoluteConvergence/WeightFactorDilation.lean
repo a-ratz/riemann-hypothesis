@@ -156,8 +156,8 @@ theorem weight_factor_dilation {X : Fin n → ℝ} {a : ℝ → GR n} (ha : ∀ 
   unfold IsDil at hm
   simp only [F0, f0, u1, u2, hm, toBlocks_fromBlocks₂₁, toBlocks_fromBlocks₂₂, smul_zero, neg_zero, zero_add,
     det_fromBlocks_zero₂₁, det_diagonal, Complex.ofReal_exp]
-  rw [← Complex.exp_sum, ← Complex.exp_sum, ← Complex.exp_add, ← Complex.exp_int_mul, ← Complex.exp_int_mul,
-    ← Complex.exp_int_mul, ← Complex.exp_add, ← Complex.exp_add]
+  rw [← Complex.exp_sum, ← Complex.exp_sum, ← Complex.exp_add, ← Complex.exp_intCast_mul, ← Complex.exp_intCast_mul,
+    ← Complex.exp_intCast_mul, ← Complex.exp_add, ← Complex.exp_add]
   congr 1
   push_cast
   simp only [Finset.sum_neg_distrib, ← Finset.mul_sum, Finset.sum_add_distrib]

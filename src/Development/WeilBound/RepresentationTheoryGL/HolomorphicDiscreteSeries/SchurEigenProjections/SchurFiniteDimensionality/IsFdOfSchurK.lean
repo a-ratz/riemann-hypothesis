@@ -83,7 +83,7 @@ theorem num_C {n : ℕ} {x : ℝ} (hn : 1 ≤ n) (hx : 3 ≤ x) (hnx : (n : ℝ)
   have he : Real.exp 1 ≤ x := (Real.exp_one_lt_d9.le.trans (by norm_num)).trans hx
   have e1 : Real.exp (6 * ((n + 1 : ℕ) : ℝ) ^ 2 * Real.log n + 12 * ((n + 1 : ℕ) : ℝ) ^ 2) =
       (n : ℝ) ^ (6 * (n + 1) ^ 2) * Real.exp 1 ^ (12 * (n + 1) ^ 2) := by
-    rw [Real.exp_add, ← Real.exp_nat_mul, ← Real.exp_log (pow_pos h0 (6 * (n + 1) ^ 2)), Real.log_pow]
+    rw [Real.exp_add, ← Real.exp_natCast_mul, ← Real.exp_log (pow_pos h0 (6 * (n + 1) ^ 2)), Real.log_pow]
     push_cast
     rw [mul_one]
   rw [e1, show 30 * (n + 1) ^ 2 = 6 * (n + 1) ^ 2 + 12 * (n + 1) ^ 2 + 12 * (n + 1) ^ 2 by ring, pow_add x, pow_add x]
@@ -439,7 +439,7 @@ theorem conv_of {Γ : Type} [Group Γ] [TopologicalSpace Γ] [MeasurableSpace Γ
     have h1 : σ (g⁻¹ * x) w = σ g⁻¹ (σ x w) := by
       rw [hσ.mul]; rfl
     have h2 : σ g (σ g⁻¹ (σ x w)) = σ x w := by
-      rw [← ContinuousLinearMap.mul_apply, ← hσ.mul, mul_inv_cancel, hσ.one]; rfl
+      rw [← mul_apply_eq_comp, ← hσ.mul, mul_inv_cancel, hσ.one]; rfl
     rw [h1, ← hip g, h2, ← starRingEnd_apply, inner_conj_symm]
   have hint := (hd.2 w (σ x w) w w).2
   have hww : ⟪w, w⟫_ℂ = 1 := by
@@ -492,7 +492,7 @@ theorem bigProjP_of (hg0 : PositivityTheory.UnitaryDecomposition.X4.IntegralGerm
   have hx0 : 0 < x := by linarith
   have hUπ : IsU (onU ε π) := hE3 ε π hDSπ.2.2.1
   have hUσ : IsU (onU ε' σ) := hE3 ε' σ hDSσ.2.2.1
-  haveI hμ : (muG ε).IsHaarMeasure := by unfold muG; infer_instance
+  have hμ : (muG ε).IsHaarMeasure := by unfold muG; infer_instance
   obtain ⟨-, ⟨dπ, hFdeg, hFd⟩, -⟩ := hE4 ε lam π (muG ε) hμ hP.hc hDSπ
   have hFdσ : IsFd ν (onU ε' σ) κ⁻¹ := isFd_of_schurK hK
   have hIso : IsIsoMap (onU ε' σ) (res ι π) i := by
@@ -537,7 +537,7 @@ theorem bigProjP_of (hg0 : PositivityTheory.UnitaryDecomposition.X4.IntegralGerm
     simp only [hs, Matrix.one_apply]
     have h2 : ∀ i j : Fin n, ‖(if i = j then (1 : ℂ) else 0)‖ ^ 2 = if i = j then (1 : ℝ) else 0 := by
       intro i j; split_ifs <;> simp
-    simp only [h2, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const, Finset.card_univ,
+    simp only [h2, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_const, Finset.card_univ,
       Fintype.card_fin, nsmul_eq_mul, mul_one]
     exact le_rfl
   have hgap' : GapAtLeast ε' mu (200 * ((n + 1 : ℕ) : ℝ) ^ 3) := by
@@ -547,7 +547,7 @@ theorem bigProjP_of (hg0 : PositivityTheory.UnitaryDecomposition.X4.IntegralGerm
     intro g
     have := hDec n (n + 1) ε' mu H' σ (by omega) (by omega) hP.hc' hDSσ hgap' w hw hw1 1 n hhs1 g
     rw [hone] at this
-    simpa only [ContinuousLinearMap.one_apply] using this
+    simpa only [one_apply_eq_self] using this
   have hC := UnitaryDecomposition.X4.num_C (n := n) (x := x) (by omega) (by linarith) (by linarith)
   have hsnn : ∀ g : UJ ε', 0 ≤ hs (um g) := fun g =>
     Finset.sum_nonneg (fun _ _ => Finset.sum_nonneg (fun _ _ => by positivity))
@@ -612,7 +612,7 @@ theorem bigProjP_of (hg0 : PositivityTheory.UnitaryDecomposition.X4.IntegralGerm
     have hsub : {g : UJ ε | hs (umat g) ≤ 64 * ((n + 1 : ℕ) : ℝ)
         * (((n + 1 : ℕ) : ℝ) + 2 * x ^ (8 * (n + 1))) ^ 2} ⊆ {g : UJ ε | hs (um g) ≤ (x ^ (10 * (n + 1))) ^ 2} := by
       intro g hg
-      simp only [Set.mem_setOf_eq] at hg ⊢
+      simp only [Set.mem_ofPred_eq] at hg ⊢
       rw [← pow_mul]
       have e : 10 * (n + 1) * 2 = 20 * (n + 1) := by ring
       rw [e]

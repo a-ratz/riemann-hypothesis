@@ -79,7 +79,7 @@ theorem valuation_lt_one_iff' (A : ValuationSubring (Ω)) (y : Ω) :
     · intro h
       refine ⟨h.le, fun h' => ?_⟩
       have : (1 : A.ValueGroup) ≤ A.valuation y := by
-        simpa using (inv_le_one₀ (zero_lt_iff.mpr h0)).mp h'
+        simpa using (inv_le_one₀ (pos_iff_ne_zero.mpr h0)).mp h'
       exact absurd h (not_lt.mpr this)
     · rintro ⟨h1, h2⟩
       refine lt_of_le_of_ne h1 fun he => h2 ?_

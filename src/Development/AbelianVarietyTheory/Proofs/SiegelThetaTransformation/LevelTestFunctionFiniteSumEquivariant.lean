@@ -435,7 +435,7 @@ theorem exists_reps (idx : Fin g ≃ X.Ψ × Fin r) (hs : IsSympl X bas) (he : E
     exact hlam _
 
 theorem finite_J (D : Level X) : Finite D.J := by
-  haveI : Finite (𝓞 E ⧸ D.𝔪) := Ideal.finiteQuotientOfFreeOfNeBot _ D.ne_bot
+  have : Finite (𝓞 E ⧸ D.𝔪) := Ideal.finiteQuotientOfFreeOfNeBot _ D.ne_bot
   infer_instance
 
 theorem unitv_proj (idx : Fin g ≃ X.Ψ × Fin r) (hs : IsSympl X bas) (he : Even n)
@@ -480,8 +480,8 @@ end Main
 theorem phi_sum_equivariant : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (g : ℕ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (n : ℕ), IsSympl X bas → Even n → ∀ (D : Level X) (hn : r ≤ n) (M : ℕ), 0 < M → (M : 𝓞 E) ∈ D.𝔪 → ∀ v₀ : Lt E r → TF n g, (∀ L ∈ D.lats, IsVac X bas D.w (tens (stdL E n) (D.sh L)) (v₀ L)) → ∀ L ∈ D.lats, ∀ Λ ∈ Vset E n M, IsSB (D.phi bas hn v₀ L Λ) ∧ IsVac X bas D.w (tens Λ (D.sh L)) (unitv (projA X bas D.w (tens Λ (D.sh L)) (v₀ L))) ∧ (∀ L' ∈ D.lats, ∃ s : Finset (Matrix (Fin n) (Fin r) E), s.card = Nat.card D.J ∧ (∀ y ∈ s, y ∈ tens Λ ((Ideal.span {2} * conjI D.𝔪) • (L ⊓ L')) ∧ ‖D.dat hn y‖ = 1 ∧ ∀ y' ∈ s, (∀ k, Cong X D.𝔪 (y k) (y' k)) → y = y') ∧ D.phi bas hn v₀ L Λ = ∑ y ∈ s, D.dat hn y • heisG X bas y (unitv (projA X bas D.w (tens Λ (D.sh L)) (v₀ L))) ∧ D.phi bas hn v₀ L' Λ = ∑ y ∈ s, D.dat hn y • heisG X bas y (unitv (projA X bas D.w (tens Λ (D.sh L')) (v₀ L')))) ∧ ∀ γ ∈ D.grp, ∀ k : D.J, D.Red (fun i => (γ : Matrix (Fin r) (Fin r) E) *ᵥ D.β i) k → ∀ t : ℂ, ‖t‖ = 1 → wG X bas idx γ (v₀ L) = t • v₀ (mapL γ L) → wG X bas idx γ (D.phi bas hn v₀ L Λ) = (t * ((D.lam k : ℂˣ) : ℂ)⁻¹) • D.phi bas hn v₀ (mapL γ L) Λ := by
   intro E _ _ _ r X g bas idx n hs he D hn M _ hM v₀ h0 L hL Λ hΛ
   obtain ⟨hX, -, hg, hl, -, -, hd⟩ := _root_.GlobalTheory.SW.level_laws E r X g bas idx n hs he D hn
-  haveI := finite_J D
-  haveI : Fintype D.J := Fintype.ofFinite _
+  have := finite_J D
+  have : Fintype D.J := Fintype.ofFinite _
   have hv := fun L hL => isVac_unitv idx hs he hΛ (hl L hL).1 (h0 L hL)
   have hsb : ∀ (c : ℂ) (y : Matrix (Fin n) (Fin r) E) (v : TF n g), IsSB v →
       IsSB (c • heisG X bas y v) := fun c y v h =>

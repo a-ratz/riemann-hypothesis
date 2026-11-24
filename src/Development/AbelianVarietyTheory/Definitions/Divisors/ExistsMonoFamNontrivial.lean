@@ -173,13 +173,13 @@ def UPre (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)) {S : Scheme.{0}
 
 theorem Fam.rank_le [IsNoetherianRing R] (C : Fam Xo c R) :
     Module.finrank (𝓞 E) C.P.D.toPre.X ≤ min Dw.p Dw.q := by
-  haveI : CharZero R := C.b.charZero_iff C.b.injective |>.1 inferInstance
+  have : CharZero R := C.b.charZero_iff C.b.injective |>.1 inferInstance
   obtain ⟨tK, ⟨m₁⟩, ⟨m₂⟩⟩ := C.gen
   let K := AlgebraicClosure (FractionRing R)
   let f : R →+* K := (algebraMap (FractionRing R) K).comp (algebraMap R (FractionRing R))
   have hf : Function.Injective f :=
     (algebraMap (FractionRing R) K).injective.comp (IsFractionRing.injective R (FractionRing R))
-  haveI : CharZero K := ⟨fun a b h => Nat.cast_injective (R := R) (hf (by simpa using h))⟩
+  have : CharZero K := ⟨fun a b h => Nat.cast_injective (R := R) (hf (by simpa using h))⟩
   let u : Sp K ⟶ Sp (FractionRing R) := spMap (algebraMap (FractionRing R) K)
   have hu : u ≫ jK R = spMap f := (Spec.map_comp _ _).symm
   obtain ⟨β₀, hβ₀⟩ := Spec.map_surjective ((u ≫ C.y ≫ pullback.fst _ _) ≫ Xo.s)
@@ -222,7 +222,7 @@ theorem MonoFam.s_ne_zero (C : MonoFam Xo c φ R) (i : Fin C.m) : C.s i ≠ 0 :=
 theorem Fam.exists_monoFam [IsNoetherianRing R] (C : Fam Xo c R) (hφ : IsPolFan H.bar (min Dw.p Dw.q) φ) {u : R}
     (hu : u ∈ maximalIdeal R) {β : LinearMap.BilinForm ℤ C.P.D.toPre.X} (hβ : β ∈ balForms H.bar C.P.D.toPre.X)
     (h : IsMonomial C.P.D.toPre ![u] ![(l.M' : ℤ) • β]) : ∃ C' : MonoFam Xo c φ R, C'.toFam = C := by
-  haveI : Module.Projective (𝓞 E) C.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) _
+  have : Module.Projective (𝓞 E) C.P.D.toPre.X := GlobalTheory.Forms.projective_of_int (𝓞 E) _
   have hM : (0 : ℤ) < l.M' := by exact_mod_cast level_pos l
   have h0 : ∀ y, 0 ≤ β y y := fun y => nonneg_of_mul_nonneg_right (h.nonneg 0 y) hM
   obtain ⟨m, δ, cf, hδ, hcf, hsum⟩ := GlobalTheory.ConeInterior.exists_pos_comb (hφ _ C.rank_le) hβ

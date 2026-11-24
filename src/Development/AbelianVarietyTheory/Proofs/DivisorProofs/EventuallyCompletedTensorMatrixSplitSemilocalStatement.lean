@@ -98,7 +98,7 @@ theorem charpoly_eq_of_monic_aeval_linearIndependent :
   have hPdeg : P.degree = n := by
     rw [Polynomial.degree_eq_natDegree hP.ne_zero, hdeg]
   have hDdeg : (X.charpoly - P).degree < n := by
-    have h := Polynomial.degree_sub_lt (p := X.charpoly) (q := P)
+    have h := Polynomial.degree_sub_lt_left (p := X.charpoly) (q := P)
       (by rw [hcdeg, hPdeg]) hc.ne_zero (by rw [hc.leadingCoeff, hP.leadingCoeff])
     rwa [hcdeg] at h
   have hDaeval : Polynomial.aeval X (X.charpoly - P) = 0 := by
@@ -191,7 +191,7 @@ theorem exists_order (C : Type) [Ring C] [Algebra ℚ C] [FiniteDimensional ℚ 
   have key : ∀ x : C, ∃ m : ℕ, 0 < m ∧ m • x ∈ Submodule.span ℤ (S : Set C) := fun x =>
     exists_nsmul_mem_span _ x (by rw [hS]; exact Submodule.mem_top)
   set L : Submodule ℤ C := Submodule.span ℤ (S : Set C) with hL
-  haveI : Module.Finite ℤ L := Module.Finite.iff_fg.mpr ⟨S, rfl⟩
+  have : Module.Finite ℤ L := Module.Finite.iff_fg.mpr ⟨S, rfl⟩
   refine ⟨multipliers L, ?_, ?_⟩
   · obtain ⟨m, hm, h1⟩ := key 1
     let f : multipliers L →+ L :=
@@ -334,7 +334,7 @@ theorem matrixUnits_eventually : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p),
   obtain ⟨N, hN, hmat⟩ := GlobalTheory.T.adjoinLocalOrderTensorPadic_matrix_almost_all G.F G.C G.n G.rankC OB hfin hspan
   filter_upwards [finite_dvd p N hN, isIntV_order_eventually p G OB hfin, intV_order_eventually p G]
     with v hv hO hord
-  haveI : Fact (primesEquiv v.1 : ℕ).Prime := ⟨(primesEquiv v.1).2⟩
+  have : Fact (primesEquiv v.1 : ℕ).Prime := ⟨(primesEquiv v.1).2⟩
   obtain ⟨ψ, -⟩ := hmat (primesEquiv v.1 : ℕ) hv
   let E : Fin G.n → Fin G.n → Qv v ⊗[ℚ] G.C := fun i j =>
     theta p G v ((ψ.symm (Matrix.single i j 1) : locOrder (primesEquiv v.1 : ℕ) OB) :
@@ -446,8 +446,8 @@ theorem intF_finite_maximal : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : 
     (hm : ∀ y z : Qv v ⊗[ℚ] G.C, IsIntV G v y → IsIntV G v z → IsIntV G v (y * z)),
     Set.Finite {I : Ideal (intF G v h1 hm) | I.IsMaximal} := by
   intro p _ G v h1 hm
-  letI := (intFAlgMap G v h1 hm).toAlgebra
-  haveI := intF_finite G v h1 hm
+  let := (intFAlgMap G v h1 hm).toAlgebra
+  have := intF_finite G v h1 hm
   exact ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.finite_maximal_ideals_of_finite (R := v.1.adicCompletionIntegers ℚ) (intF G v h1 hm)
 
 end GlobalTheory.OrbFinAf
@@ -482,9 +482,9 @@ namespace GlobalTheory.OrbFinAf
 
 theorem iotaF_props : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p), Function.Injective (iotaF G v) ∧ (∀ z x, Commute (iotaF G v z) x) ∧ Module.finrank (Qv v) (Qv v ⊗[ℚ] G.C) = G.n ^ 2 * Module.finrank (Qv v) (Qv v ⊗[ℚ] G.F) := by
   intro p _ G v
-  haveI : IsSimpleRing G.C := G.simpleC
-  haveI : Nontrivial G.C := inferInstance
-  haveI : Module.Finite ℚ G.C := Module.Finite.trans G.F G.C
+  have : IsSimpleRing G.C := G.simpleC
+  have : Nontrivial G.C := inferInstance
+  have : Module.Finite ℚ G.C := Module.Finite.trans G.F G.C
   refine ⟨?_, ?_, ?_⟩
   · have hf : Function.Injective ((IsScalarTower.toAlgHom ℚ G.F G.C).toLinearMap) :=
       (algebraMap G.F G.C).injective
@@ -557,8 +557,8 @@ theorem core {n : ℕ} (ι : K →ₐ[k] B) (E : Fin n → Fin n → B)
     rw [← mul_assoc, ← (hc (M a' b') (E c a)).eq]
     simp only [mul_assoc, hE, mul_ite, mul_zero]
     split_ifs with h1 h2
-    · subst h1 h2; rw [mul_assoc, hE, if_pos rfl]
-    · rw [mul_assoc, hE, if_neg h2, mul_zero]
+    · subst h1 h2; rw [mul_assoc, hE, ite_eq_left rfl]
+    · rw [mul_assoc, hE, ite_eq_right h2, mul_zero]
     · rw [zero_mul]
   simp only [phiL_apply, Finset.mul_sum, Finset.sum_mul, h]
   simp [Finset.sum_ite_eq, Finset.sum_ite_eq']
@@ -598,7 +598,7 @@ theorem phiL_mul {n : ℕ} (ι : K →ₐ[k] B) (E : Fin n → Fin n → B)
     · rw [mul_zero]
 
   simp only [phiL_apply, Finset.sum_mul, Finset.mul_sum, h, Matrix.mul_apply, map_sum]
-  simp only [Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   conv_lhs => rw [Finset.sum_comm]
   conv_rhs => rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun d _ => ?_
@@ -606,7 +606,7 @@ theorem phiL_mul {n : ℕ} (ι : K →ₐ[k] B) (E : Fin n → Fin n → B)
 
 theorem matrixRingEquiv_of_matrixUnits : ∀ (k K B : Type) [Field k] [CommRing K] [Ring B] [Algebra k K] [Algebra k B] [FiniteDimensional k B] (n : ℕ) (ι : K →ₐ[k] B), Function.Injective ι → (∀ z x, Commute (ι z) x) → Module.finrank k B = n ^ 2 * Module.finrank k K → ∀ E : Fin n → Fin n → B, (∀ a b c d, E a b * E c d = if b = c then E a d else 0) → ∑ a, E a a = 1 → ∃ Φ : Matrix (Fin n) (Fin n) K ≃+* B, (∀ M, Φ M = ∑ a, ∑ b, ι (M a b) * E a b) ∧ ∀ x a b, ι (Φ.symm x a b) = ∑ c, E c a * x * E b c := by
   intro k K B _ _ _ _ _ _ n ι hi hc hdim E hE h1
-  haveI : FiniteDimensional k K := FiniteDimensional.of_injective (ι : K →ₐ[k] B).toLinearMap hi
+  have : FiniteDimensional k K := FiniteDimensional.of_injective (ι : K →ₐ[k] B).toLinearMap hi
   have hinj := phiL_injective ι E hi hc hE h1
   have hrank : Module.finrank k (Matrix (Fin n) (Fin n) K) = Module.finrank k B := by
     rw [Module.finrank_matrix, hdim]; simp [Fintype.card_fin, sq]

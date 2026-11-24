@@ -136,7 +136,7 @@ theorem isAdicColimit_of_isFinite {R : Type} [CommRing R] [IsLocalRing R] (hc : 
   have hl : Flat (Spec.map φ) := by rw [hφ]; infer_instance
   rw [IsFinite.SpecMap_iff] at hf
   rw [HasRingHomProperty.Spec_iff (P := @Flat)] at hl
-  letI : Algebra R Γ(N.left, ⊤) := φ.hom.toAlgebra
+  let : Algebra R Γ(N.left, ⊤) := φ.hom.toAlgebra
   have : Module.Finite R Γ(N.left, ⊤) := hf
   have : Module.Flat R Γ(N.left, ⊤) := hl
   have H := isAdicColimit_of_finite_flat (maximalIdeal R) (RingHom.id R) (by rwa [Ideal.map_id])

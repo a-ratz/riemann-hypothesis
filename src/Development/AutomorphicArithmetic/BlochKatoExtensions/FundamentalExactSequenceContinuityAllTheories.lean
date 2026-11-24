@@ -59,7 +59,7 @@ private theorem val_int_le (A : LocAt F E sig p) (c : 𝓞 F) : valuation A.Fp (
 
 private theorem exists_small (A : LocAt F E sig p) {W : Set A.Fp} (hW : W ∈ nhds (0 : A.Fp)) :
     ∃ c : 𝓞 F, c ≠ 0 ∧ ∀ y, valuation A.Fp y ≤ valuation A.Fp (A.ιF (algebraMap (𝓞 F) F c)) → y ∈ W := by
-  haveI := A.lf
+  have := A.lf
   obtain ⟨γ, hγ⟩ := (IsValuativeTopology.mem_nhds_zero_iff W).1 hW
   obtain ⟨π, hπ, hπ0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot p.ne_bot
   have hlt : valuation A.Fp (A.ιF (algebraMap (𝓞 F) F π)) < 1 := by
@@ -86,7 +86,7 @@ theorem approx (A : ∀ p : HeightOneSpectrum (𝓞 F), LocAt F E sig p) (U : �
     (hU : ∀ p, IsOpen (U p : Set (A p).Ep)) (hf : {p | (U p : Set (A p).Ep) ≠ ((A p).O : Set (A p).Ep)}.Finite)
     (x : ∀ p, (A p).Ep) (hx : {p | x p ∉ (A p).O}.Finite) : ∃ t : E, ∀ p, (A p).ιE t - x p ∈ U p := by
   classical
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨s, β, hβ⟩ := FiniteDimensional.exists_is_basis_integral (𝓞 F) F E
   have hsum : ∀ p (f : s → F), (A p).ιE (∑ i, f i • β i) = ∑ i, (A p).ιF (f i) • (A p).ιE (β i) := fun p f => by
 
@@ -103,9 +103,9 @@ theorem approx (A : ∀ p : HeightOneSpectrum (𝓞 F), LocAt F E sig p) (U : �
   choose b hb using hb
   have hc : ∀ p i, ∃ c : 𝓞 F, c ≠ 0 ∧ ∀ y, valuation (A p).Fp y ≤ valuation (A p).Fp ((A p).ιF (algebraMap (𝓞 F) F c)) →
       y • (A p).ιE (β i) ∈ U p := fun p i => by
-    haveI := (A p).lf
-    haveI := (A p).top
-    haveI : ContinuousSMul (A p).Fp (A p).Ep := IsModuleTopology.toContinuousSMul _ _
+    have := (A p).lf
+    have := (A p).top
+    have : ContinuousSMul (A p).Fp (A p).Ep := IsModuleTopology.toContinuousSMul _ _
     have hcont : Continuous fun y : (A p).Fp => y • (A p).ιE (β i) := continuous_id.smul continuous_const
     exact exists_small (A p) (W := (fun y : (A p).Fp => y • (A p).ιE (β i)) ⁻¹' (U p))
       (((hU p).preimage hcont).mem_nhds (by simp))

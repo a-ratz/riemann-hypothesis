@@ -427,7 +427,7 @@ theorem resG_last_eq {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] (J :
   congr 1
   rw [Complex.ofReal_prod]
   refine Finset.prod_congr rfl (fun a _ => ?_)
-  rw [if_pos (show (a : ℕ) < (Fin.last r : ℕ) from a.isLt)]
+  rw [ite_eq_left (show (a : ℕ) < (Fin.last r : ℕ) from a.isLt)]
 
 end Gauge
 
@@ -1355,7 +1355,7 @@ theorem spectral_xi_test : RDSXiTest := by
         (((M.sgn P l0 • (X.fn 5 * X.t Y 1 1)) Φ : RadSp P.k P.r z z' π π') : Fn P.k P.r (Wq →L[ℂ] Wp)) c g v =
           (Φ : Fn P.k P.r (Wq →L[ℂ] Wp)) c g (C v) := by
       intro Φ v
-      rw [LinearMap.smul_apply, Submodule.coe_smul, Pi.smul_apply, Pi.smul_apply, ContinuousLinearMap.smul_apply,
+      rw [LinearMap.smul_apply, Submodule.coe_smul, Pi.smul_apply, Pi.smul_apply, smul_apply,
         diagonal_transfer_action X hz hz' hπ'.2.1 hπ'.2.2.1 hxD Bs hB1 Y Φ v, hCdef, LinearMap.smul_apply, map_smul]
     have h0 : (Ψ : Fn P.k P.r (Wq →L[ℂ] Wp)) c g = 0 := hK0 (c, g) hxK
     ext v

@@ -149,13 +149,13 @@ theorem piTensor_drop_equiv : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolog
     by_contra h
     exact c.2 (hy c h)
   have hφ : ∀ c : Off o, Nonempty ((y c).2.rep.V ≃ₗ[ℂ] ℂ) := fun c => by
-    haveI := subsingleton_GL (k := k) (hz c)
+    have := subsingleton_GL (k := k) (hz c)
     exact exists_line (y c).2.rep.irr
   let φ : ∀ c : Off o, (y c).2.rep.V ≃ₗ[ℂ] ℂ := fun c => (hφ c).some
   refine ⟨Representation.Equiv.mk (dropEquiv o ho.injective φ) fun g => ?_⟩
   refine PiTensorProduct.ext (MultilinearMap.ext fun x => ?_)
   have hc : ∀ c : Off o, (y c).rep (g c) (x c) = x c := fun c => by
-    haveI := subsingleton_GL (k := k) (hz c)
+    have := subsingleton_GL (k := k) (hz c)
     rw [Subsingleton.elim (g c) 1, map_one]
     rfl
   simp only [LinearMap.compMultilinearMap_apply, LinearMap.comp_apply, LinearEquiv.coe_coe,

@@ -63,7 +63,7 @@ private theorem cmp_cont (l : ℕ) [Fact l.Prime] {L : Type} [Field L] [NumberFi
     Continuous fun k : finU (E := L) (n := n) => cmp n w ((away l L n).rangeRestrict (k : UA L n)) := by
   by_cases h : ((l : ℕ) : 𝓞 L) ∉ w.asIdeal
   · simp only [cmp_of h]
-    exact ((UpperTheory.unitaryAdelic_localComponents_continuous_levels_open L n).1 w).comp continuous_subtype_val
+    exact ((UpperTheory.unitaryAdelic_localComponents_continuous_levels_open L n).1 w).comp continuous_subtypeVal
   · simp only [cmp_not h]
     exact continuous_const
 
@@ -110,9 +110,9 @@ theorem UpperTheory.eventually_mem_heckeLevel_and_iwahoriCongruence :
     Filter.eventually_all.2 fun q => cmp_ev l n (Q.wq q) (K.1 q) (K.2 q).1
   have h4 : ∀ᶠ k : finU (E := L) (n := n) in nhds 1, ∀ v : V.frame.Vl,
       cLoc (s.w v.1) (k : UA L n) ∈ Kc ((s.w v.1).adicCompletion L) n (b + 1) := by
-    haveI : Finite V.frame.Vl := (hset Q τ₀).finV.finite
+    have : Finite V.frame.Vl := (hset Q τ₀).finV.finite
     refine Filter.eventually_all.2 fun v => ?_
-    refine ((hK (s.w v.1) (b + 1)).preimage ((hc (s.w v.1)).comp continuous_subtype_val)).mem_nhds ?_
+    refine ((hK (s.w v.1) (b + 1)).preimage ((hc (s.w v.1)).comp continuous_subtypeVal)).mem_nhds ?_
     change cLoc (s.w v.1) ((1 : finU (E := L) (n := n)) : UA L n) ∈ Kc ((s.w v.1).adicCompletion L) n (b + 1)
     rw [OneMemClass.coe_one, map_one]
     exact one_mem _

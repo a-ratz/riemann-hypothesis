@@ -146,7 +146,7 @@ theorem norm_pow_nat (j : ℕ) (hj : Lev l j) (u : ℚ_[l])
   have hm0 : m ≠ 0 := by rintro rfl; simp at hm
   rw [Nat.padicValNat_def, Nat.multiplicity_mul (pow_ne_zero _ hl.out.ne_zero) hm0,
     Nat.multiplicity_prime_pow,
-    padicValNat.eq_zero_of_not_dvd hm, pow_mul,
+    multiplicity_eq_zero_of_not_dvd hm, pow_mul,
     norm_pow_coprime (j + a) (by have := hj.1; omega) _ (norm_pow_prime_pow a j hj u hu) m hm]
   push_cast
   simp

@@ -63,7 +63,7 @@ theorem continuous_infPart (D : D7) : Continuous (infPart D) := by
 
 theorem continuous_finHom_val (D : D7) (V : HSp D) : Continuous (fun k : GA D V => (finHom V k).1) := by
   have h : Continuous (fun k : GA D V => (matHom V k).1) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   exact h.matrix_map (continuous_finPart D)
 
 theorem latHat_open_and_continuous : ∀ (D : D7) (V : HSp D), (∀ N : ℕ, 0 < N → IsOpen {z : Fin V.rank → Af D.host.F ⊗[D.host.F] D.host.E | ∃ y ∈ latHat V, z = N • y}) ∧ Continuous (fun k : GA D V => (finHom V k).1) ∧ Continuous (finPart D) ∧ Continuous (infPart D) := by

@@ -58,8 +58,8 @@ theorem mem_maximal_iff_not_inv_mem {K : Type} [Field K] (R : Subring K) [IsLoca
   let f : R →+* (integralClosure R K).toSubring :=
     (algebraMap R K).codRestrict (integralClosure R K).toSubring
       (fun r => (integralClosure R K).algebraMap_mem r)
-  letI : Algebra R (integralClosure R K).toSubring := f.toAlgebra
-  haveI : Algebra.IsIntegral R (integralClosure R K).toSubring := by
+  let : Algebra R (integralClosure R K).toSubring := f.toAlgebra
+  have : Algebra.IsIntegral R (integralClosure R K).toSubring := by
     refine ⟨fun x => ?_⟩
     obtain ⟨p, hp, h⟩ : IsIntegral R (x : K) := x.2
     refine ⟨p, hp, ?_⟩

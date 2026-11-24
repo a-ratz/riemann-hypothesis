@@ -184,7 +184,7 @@ lemma ht_εT (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O
 
 lemma sum_r (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O σ cp)
     (U : UnramData p g v R O σ cp H) : ∑ i, U.r i = g := by
-  haveI : Nontrivial R := (algebraMap R C).domain_nontrivial
+  have : Nontrivial R := (algebraMap R C).domain_nontrivial
   have hproj : ∀ i j (w : Fin g → R), w ∈ LinearMap.range (Matrix.mulVecLin (U.εL j)) →
       Matrix.mulVecLin (U.εL i) w = if i = j then w else 0 := by
     rintro i j w ⟨z, rfl⟩
@@ -205,9 +205,9 @@ lemma sum_r (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O 
     change Matrix.mulVecLin (U.εL i) (G y) = (y i : Fin g → R)
 
     rw [hG, map_sum, Finset.sum_eq_single i]
-    · rw [hproj i i _ (y i).2, if_pos rfl]
+    · rw [hproj i i _ (y i).2, ite_eq_left rfl]
     · intro b _ hb
-      rw [hproj i b _ (y b).2, if_neg (Ne.symm hb)]
+      rw [hproj i b _ (y b).2, ite_eq_right (Ne.symm hb)]
     · intro h; exact absurd (Finset.mem_univ _) h
   have hGF : G ∘ₗ F = LinearMap.id := by
     refine LinearMap.ext fun x => ?_
@@ -219,9 +219,9 @@ lemma sum_r (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O 
     exact Matrix.one_mulVec x
   let e : (Fin g → R) ≃ₗ[R] ((i : Fin U.m) → LinearMap.range (Matrix.mulVecLin (U.εL i))) :=
     LinearEquiv.ofLinear F G hFG hGF
-  haveI : ∀ i, Module.Free R (LinearMap.range (Matrix.mulVecLin (U.εL i))) :=
+  have : ∀ i, Module.Free R (LinearMap.range (Matrix.mulVecLin (U.εL i))) :=
     fun i => Module.Free.of_equiv (U.rank i).some.symm
-  haveI : ∀ i, Module.Finite R (LinearMap.range (Matrix.mulVecLin (U.εL i))) :=
+  have : ∀ i, Module.Finite R (LinearMap.range (Matrix.mulVecLin (U.εL i))) :=
     fun i => Module.Finite.equiv (U.rank i).some.symm
   have h1 := e.finrank_eq
   rw [Module.finrank_fin_fun, Module.finrank_pi_fintype] at h1

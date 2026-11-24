@@ -246,7 +246,7 @@ theorem toProj_gens : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X
     have hnu : ∀ l, P.nu e 0 σ y (x l) ^ 2 =
         ‖ratVal (P.loc e 0 (x l) (i PUnit.unit) (pick (P.A.φ σ).isLB y)) y‖ ^ 2 *
           Real.exp (-((e : ℝ) * (P.L.φ σ).φ (i PUnit.unit) y)) := fun l => by
-      rw [nu_eq k X p P e 0 (x l) (hx.mem l) σ y _ _ hy' hj, mul_pow, ← Real.exp_nat_mul]
+      rw [nu_eq k X p P e 0 (x l) (hx.mem l) σ y _ _ hy' hj, mul_pow, ← Real.exp_natCast_mul]
       congr 2
       push_cast
       ring
@@ -266,7 +266,7 @@ theorem toProj_gens : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X
     change (((P.L.φ σ).addFn (u.u σ)).zpow (e : ℤ)).φ i y = _
     refine (Weight.zpow_φ _ _ _ _).trans ?_
     simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     change ((e : ℤ) : ℝ) * ((P.L.φ σ).φ (i PUnit.unit) y + u.u σ y) =
       Real.log (∑ l, ‖valR y.1 ((P.L.pow e).B.U i) ((s l).f i)‖ ^ 2)
     simp only [hA, ← hS]
@@ -296,12 +296,12 @@ theorem finrank_ratF_eq_mul_rank (k K : Type) [CommRing k] [IsDomain k] [Module.
     Module.finrank (ratF x) K = Module.finrank (Subfield.closure (Set.range ι ∪ Set.range fun j : Fin D => x j.succ / x 0)) K * Module.finrank ℤ k ∧ Function.Injective (MvPolynomial.eval₂Hom ι fun j : Fin D => x j.succ / x 0) := by
   classical
   set y : Fin D → K := fun j => x j.succ / x 0 with hydef
-  letI : Algebra k K := ι.toAlgebra
+  let : Algebra k K := ι.toAlgebra
   have hyk : AlgebraicIndependent k y := hy.extendScalars_of_isIntegral k
   have hinj : Function.Injective (MvPolynomial.eval₂Hom ι y) := hyk
   refine ⟨?_, hinj⟩
-  haveI : CharZero k := ι.charZero
-  haveI : Module.Free ℤ k := Module.free_of_finite_type_torsion_free'
+  have : CharZero k := ι.charZero
+  have : Module.Free ℤ k := Module.free_of_finite_type_torsion_free'
   set F : Subfield K := ratF x with hF
   have hyF : ∀ j, y j ∈ F := fun j => Subfield.subset_closure ⟨j, rfl⟩
   set n := Module.finrank ℤ k with hn
@@ -506,7 +506,7 @@ theorem isArithVar_charZero_functionField_and_injective :
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro a ha
   have hker : RingHom.ker (GlobalTheory.toFunctionField p) = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     rw [eq_bot_iff]
     intro n hn
     rw [Ideal.mem_comap, RingHom.mem_ker, algebraMap_int_eq, eq_intCast, map_intCast, Int.cast_eq_zero] at hn
@@ -562,7 +562,7 @@ theorem residueDegree_eq_finrank_closure {X Y : Scheme.{0}} [IsIntegral X] (π :
     refine le_antisymm ?_ (Subfield.closure_le.2 ?_)
     · rintro _ ⟨b, rfl⟩
       obtain ⟨a, rfl⟩ := Y.residue_surjective _ b
-      letI := Y.presheaf.algebra_section_stalk (⟨π (genericPoint X), h⟩ : U)
+      let := Y.presheaf.algebra_section_stalk (⟨π (genericPoint X), h⟩ : U)
       have hl := hU.isLocalization_stalk ⟨π (genericPoint X), h⟩
       obtain ⟨⟨s, t⟩, hst⟩ := IsLocalization.surj (hU.primeIdealOf ⟨π (genericPoint X), h⟩).asIdeal.primeCompl a
       have hu := IsLocalization.map_units (Y.presheaf.stalk (π (genericPoint X))) t
@@ -578,7 +578,7 @@ theorem residueDegree_eq_finrank_closure {X Y : Scheme.{0}} [IsIntegral X] (π :
       exact ⟨_, hg s⟩
   clear hE
   subst hr
-  letI := (π.residueFieldMap (genericPoint X)).hom.toAlgebra
+  let := (π.residueFieldMap (genericPoint X)).hom.toAlgebra
   unfold Scheme.Hom.residueDegree
   refine Algebra.finrank_eq_of_equiv_equiv ψ.rangeRestrictFieldEquiv e.symm ?_
   ext a
@@ -648,13 +648,13 @@ theorem toProj_gens : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X
   intro k _ X _ p D hX P hA e x hg
   obtain ⟨hx, hind, hfin⟩ := _root_.GlobalTheory.HSAmp.gens_quot_trBasis k X p D hX P hA e x hg
   obtain ⟨hK, hι⟩ := _root_.GlobalTheory.isArithVar_charZero_functionField_and_injective k X p D hX
-  haveI := hX.isDomain
-  haveI := hX.finite
-  haveI : CharZero k := ⟨fun a b h => Nat.cast_injective (R := X.functionField) (by
+  have := hX.isDomain
+  have := hX.finite
+  have : CharZero k := ⟨fun a b h => Nat.cast_injective (R := X.functionField) (by
     have := congrArg (GlobalTheory.toFunctionField p) h
     simpa only [map_natCast] using this)⟩
   obtain ⟨hP, -, -⟩ := _root_.GlobalTheory.PSpaceDeg.main k D
-  haveI : IsIntegral (PSpace k D) := hP.isIntegral
+  have : IsIntegral (PSpace k D) := hP.isIntegral
   obtain ⟨hdeg, hev⟩ := _root_.GlobalTheory.HSAmp.finrank_ratF_eq_mul_rank k X.functionField (GlobalTheory.toFunctionField p) D x hι hind
   obtain ⟨π, hπ, hc, hiso⟩ := _root_.GlobalTheory.HSAmp.GenMap.toProj_gens k X p D hX P e x hg (hx 0)
   have hgen := _root_.GlobalTheory.GenericImage.map_genericPoint_eq k X p D π hπ x (hx 0) hc hev
@@ -662,7 +662,7 @@ theorem toProj_gens : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X
   refine ⟨inferInstance, π, hπ, hgen, ?_, ?_, hiso⟩
   · rw [hr]
     intro h0
-    haveI := hfin
+    have := hfin
     have : 0 < Module.finrank (ratF x) X.functionField := Module.finrank_pos
     rw [hdeg, h0, zero_mul] at this
     exact lt_irrefl _ this

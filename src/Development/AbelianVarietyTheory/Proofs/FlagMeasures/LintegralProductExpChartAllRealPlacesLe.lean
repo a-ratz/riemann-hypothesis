@@ -88,7 +88,7 @@ theorem le_smul_pi {ι : Type} [Fintype ι] {α : ι → Type} [∀ i, Measurabl
         gcongr
         exact hA'
     _ ≤ (K • Measure.pi μ) A := by
-        rw [Measure.smul_apply, smul_eq_mul]
+        rw [smul_apply, smul_eq_mul]
         gcongr
 
 theorem exp_sub_one_le {x : ℝ} (h0 : 0 ≤ x) (h1 : x ≤ 1) : Real.exp x - 1 ≤ 2 * x := by
@@ -116,7 +116,7 @@ theorem dOp_chart_le {n : ℕ} {ε : Fin n → Bool} {s : ℝ} {E : Fin (n ^ 2) 
     intro i
     have hF : ‖E i‖ = 1 := by
       have h2 : ‖E i‖ ^ 2 = 1 := by
-        rw [← GlobalTheory.ProductChart.ip_self, GlobalTheory.ProductChart.ip_apply, hE i i, if_pos rfl]
+        rw [← GlobalTheory.ProductChart.ip_self, GlobalTheory.ProductChart.ip_apply, hE i i, ite_eq_left rfl]
       nlinarith [norm_nonneg (E i)]
     refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun v => ?_
     have hv : T (E i) v = WithLp.toLp 2 (E i *ᵥ WithLp.ofLp v) := rfl
@@ -136,7 +136,7 @@ theorem dOp_chart_le {n : ℕ} {ε : Fin n → Bool} {s : ℝ} {E : Fin (n ^ 2) 
     calc T (NormedSpace.exp ((x i : ℂ) • E i)) = NormedSpace.exp (T ((x i : ℂ) • E i)) :=
           NormedSpace.map_exp T hTc _
       _ = NormedSpace.exp (x i • T (E i)) := by rw [map_smul, Complex.coe_smul]
-  haveI : CompleteSpace (EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) := by
+  have : CompleteSpace (EuclideanSpace ℂ (Fin n) →L[ℂ] EuclideanSpace ℂ (Fin n)) := by
     set_option synthInstance.maxHeartbeats 100000 in
       infer_instance
   obtain ⟨-, B, hB, hBn, -, -, -⟩ := GlobalTheory.ProductChart.exists_deriv_prod hs t' (n ^ 2) (fun i => T (E i))
@@ -250,7 +250,7 @@ theorem lintegral_chart_all_le : ∀ (I : AutInst) (c : InfinitePlace I.F → �
         ∫⁻ t in C, Ψ (Θv v t) ≤ ENNReal.ofReal (Kc * c v) * ∫⁻ y in Sv v, Ψ y ∂(muG (I.ε v)) :=
       fun v => GlobalTheory.ProductChart.lintegral_chart_le I.n (I.ε v) (c v) s (E v) (Θv v) (hc v) (hG v) (hE v)
         hs hchart (hΘv v)
-    haveI : IsFiniteMeasure ((volume : Measure (Fin (I.n ^ 2) → ℝ)).restrict C) :=
+    have : IsFiniteMeasure ((volume : Measure (Fin (I.n ^ 2) → ℝ)).restrict C) :=
       isFiniteMeasure_restrict.2 hCc.measure_lt_top.ne
     let ν : ∀ v, Measure (UJ (I.ε v)) := fun v => ((volume : Measure (Fin (I.n ^ 2) → ℝ)).restrict C).map (Θv v)
     let μS : ∀ v, Measure (UJ (I.ε v)) := fun v => (muG (I.ε v)).restrict (Sv v)
@@ -266,7 +266,7 @@ theorem lintegral_chart_all_le : ∀ (I : AutInst) (c : InfinitePlace I.F → �
         Measure.pi ν (Set.pi Set.univ A) ≤ K * ∏ v, μS v (A v) := by
       intro A hA
       rw [Measure.pi_pi, hK, ← Finset.prod_mul_distrib]
-      exact Finset.prod_le_prod' fun v _ => hfac v (A v) (hA v)
+      exact prod_le_prod fun v _ => hfac v (A v) (hA v)
     have hle : Measure.pi ν ≤ K • Measure.pi μS := by
       by_cases hK0 : K = 0
       · have h0 : Measure.pi ν = 0 := by
@@ -293,7 +293,7 @@ theorem lintegral_chart_all_le : ∀ (I : AutInst) (c : InfinitePlace I.F → �
           omega
         calc Kc ^ Fintype.card (InfinitePlace I.F) ≤ Real.exp 1 ^ Fintype.card (InfinitePlace I.F) :=
               pow_le_pow_left₀ hKc0 hK1 _
-          _ = Real.exp (Fintype.card (InfinitePlace I.F) * 1) := (Real.exp_nat_mul _ _).symm
+          _ = Real.exp (Fintype.card (InfinitePlace I.F) * 1) := (Real.exp_natCast_mul _ _).symm
           _ ≤ Real.exp I.f := by
               apply Real.exp_le_exp.2
               rw [mul_one]

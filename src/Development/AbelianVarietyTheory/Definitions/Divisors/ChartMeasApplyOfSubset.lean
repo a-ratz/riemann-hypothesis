@@ -122,7 +122,7 @@ theorem chartMeas_apply_of_subset (e : OpenPartialHomeomorph X (V n)) (ρ : X �
 theorem measurableSet_image (e : OpenPartialHomeomorph X (V n)) {A : Set X}
     (hA : MeasurableSet A) (h : A ⊆ e.source) : MeasurableSet (e '' A) := by
   have hm : Measurable (e.target.restrict e.symm) :=
-    (continuousOn_iff_continuous_restrict.1 e.continuousOn_symm).measurable
+    (continuousOn_iff_continuous_domRestrict.1 e.continuousOn_symm).measurable
   have := e.open_target.measurableSet.subtype_image (hm hA)
   rw [← inter_eq_right.2 h, e.image_source_inter_eq']
   convert this using 1

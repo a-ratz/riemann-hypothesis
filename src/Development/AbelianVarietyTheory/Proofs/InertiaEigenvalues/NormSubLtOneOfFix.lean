@@ -128,8 +128,8 @@ theorem exists_coboundary
   have heN : ∀ g ∈ N, e g = 0 := fun g hg => hUe (by
     by_contra hc
     exact Set.disjoint_left.1 hmU hc hg)
-  haveI : Finite (G ⧸ N) := Subgroup.quotient_finite_of_isOpen N (isOpen_fixer ρ hopen hm)
-  letI : Fintype (G ⧸ N) := Fintype.ofFinite _
+  have : Finite (G ⧸ N) := Subgroup.quotient_finite_of_isOpen N (isOpen_fixer ρ hopen hm)
+  let : Fintype (G ⧸ N) := Fintype.ofFinite _
   let χ : G ⧸ N → (fixedPow p R m →* R) := fun x =>
     (ρ x.out).toMonoidHom.comp (fixedPow p R m).subtype
   have hχ : Function.Injective χ := by
@@ -219,7 +219,7 @@ theorem approx_step
       ∀ g, (p : WittVector p R) ^ (n + 1) ∣
         WittVector.map (ρ g).toRingHom b' - b' - zlW p R (c g) := by
   choose d hd using hd
-  have hp0 : (p : WittVector p R) ^ n ≠ 0 := pow_ne_zero _ (WittVector.p_nonzero p R)
+  have hp0 : (p : WittVector p R) ^ n ≠ 0 := pow_ne_zero _ (WittVector.p_ne_zero p R)
   have hdc : ∀ g h, d (g * h) = d g + WittVector.map (ρ g).toRingHom (d h) := by
     intro g h
     apply mul_left_cancel₀ hp0
@@ -450,15 +450,15 @@ theorem ιA_zlW (T : LocTied l P AI) (z : ℤ_[l]) :
   exact GlobalTheory.RingIface.aB_algebraMap_padicInt l z
 
 theorem compactSpace_GK (K : FinExt l) : CompactSpace ↥(GK K) := by
-  haveI := K.2
+  have := K.2
   exact isCompact_iff_compactSpace.1 (IntermediateField.fixingSubgroup_isClosed K.1).isCompact
 
 theorem exists_int (T : LocTied l P AI) (K : FinExt l) (c : ↥(GK K) → ℤ_[l]) (hc : Continuous c)
     (hadd : ∀ g h, c (g * h) = c g + c h) (hI : ∀ g ∈ IK K, c g = 0) :
     ∃ b : P.R.B, ∀ g : ↥(GK K), P.actQ g b - b = algebraMap ℚ_[l] P.R.B (c g : ℚ_[l]) := by
-  haveI := compactSpace_GK K
+  have := compactSpace_GK K
   obtain ⟨b, hb⟩ := exists_witt_coboundary (p := l) (AI.actT.comp (GK K).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (eventually_actT_eq AI y m hm hy)) c hc hadd
     (fun g hg => hI g (Subgroup.subset_closure fun x hx =>
       norm_sub_lt_one_of_fix AI g (fun m hm y hy => hg m hm y hy) x hx))
@@ -469,7 +469,7 @@ theorem exists_int (T : LocTied l P AI) (K : FinExt l) (c : ↥(GK K) → ℤ_[l
 theorem exists_rat (T : LocTied l P AI) (K : FinExt l) (c : ↥(GK K) → ℚ_[l]) (hc : Continuous c)
     (hadd : ∀ g h, c (g * h) = c g + c h) (hI : ∀ g ∈ IK K, c g = 0) :
     ∃ b : P.R.B, ∀ g : ↥(GK K), P.actQ g b - b = algebraMap ℚ_[l] P.R.B (c g) := by
-  haveI := compactSpace_GK K
+  have := compactSpace_GK K
   obtain ⟨C, hC⟩ := (isCompact_range hc).isBounded.exists_norm_le
   obtain ⟨a, ha0, ha⟩ := NormedField.exists_norm_lt ℚ_[l] (r := (max C 1)⁻¹) (by positivity)
   have ha1 : ∀ g, ‖a * c g‖ ≤ 1 := fun g => by
@@ -500,7 +500,7 @@ theorem unramified_mem_Z1f : ∀ (D : Formalism.BasicNotions.D7) (l : ℕ) [Fact
   obtain ⟨hZ, x, hx⟩ := hc
   refine ⟨hZ, ?_⟩
   obtain ⟨hcont, hadd⟩ := hZ
-  haveI := LL.2
+  have := LL.2
   let v := Module.finBasis ℚ_[l] ↥LL.1
   have hI : ∀ g ∈ IK K, c g = 0 := fun g hg => by simpa using hx g hg
   have hex : ∀ i, ∃ b : (D.loc l).R.B, ∀ g : ↥(GK K),

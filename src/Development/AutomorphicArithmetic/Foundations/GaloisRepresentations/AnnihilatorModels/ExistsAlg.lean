@@ -69,7 +69,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.infE_of :
     SplitAlg → InfE := by
   intro hS κ _ A _ P d hRep hcard Λ _ _ _ ε g hP hInf
   obtain ⟨B, _, _, hfin, hfree, hrank, i, hmono, hiff⟩ := hRep
-  haveI : Mono i := hmono
+  have : Mono i := hmono
   have key : ∀ (Λ' : Type) [CommRing Λ'] [Algebra κ Λ'] (ν : B →ₐ[κ] Λ'),
       spMap ν.toRingHom ≫ spMap (algebraMap κ B) = spMap (algebraMap κ Λ') := by
     intro Λ' _ _ ν

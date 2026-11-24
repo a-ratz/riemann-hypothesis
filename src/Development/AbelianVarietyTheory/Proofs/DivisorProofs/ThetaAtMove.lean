@@ -222,7 +222,7 @@ theorem exists_gen (B : Ideal (𝓞 D.host.E)) (hB : B ≠ ⊥) : ∃ a a' : EAf
       obtain ⟨o, ho⟩ := key β hβB
       exact int_of_eq Q (o := o) ((mul_comm _ _).trans ho)
     · rw [c0 _ Q hQ, mul_one]
-      obtain ⟨b, hb, hbQ⟩ := SetLike.not_le_iff_exists.1 hQ
+      obtain ⟨b, hb, hbQ⟩ := IsConcreteLE.not_le_iff_exists.1 hQ
       obtain ⟨o, ho⟩ := key b hb
       exact int_of_mul Q hbQ ho
 
@@ -1046,7 +1046,7 @@ theorem unitChar_eq_prod (ν : (AE D)ˣ →* Circle) {e : AE D} {S : Finset (Pl 
   have hx := isUnitDet_prod he N u hu hv
   have hex : ∃ x, IsUnitDet e N x := ⟨_, hx⟩
   unfold unitChar
-  rw [dif_pos hex, isUnitDet_unique hex.choose_spec hx]
+  rw [dite_eq_left hex, isUnitDet_unique hex.choose_spec hx]
   exact char_prod_inv ν _
 
 theorem v_det_of_isUnitDet {e : AE D} {S : Finset (Pl D.host.E)} (he : IsIdemSum e S) {k : ℕ}
@@ -1093,7 +1093,7 @@ theorem std_eq_prod (ν : (AE D)ˣ →* Circle) {e : AE D} {S : Finset (Pl D.hos
     (c : Pl D.host.E → ℕ) {a a' : ℕ} (Y : Matrix (Fin a') (Fin (a + a')) (EAf D)) (hY : ∀ i j, toEAf D e * Y i j = Y i j) :
     (if IsIntM Y ∧ ∀ i j, j.1 < a → InId (∏ w ∈ S, w.asIdeal ^ c w) (Y i j) then unitChar ν e (rightBlock a Y) else 0) =
       ∏ w ∈ S, stdB (locChar ν w) (unifAt (D := D) w) (c w) a a' (Y.map (cpt (D := D) w)) := by
-  have hb : ∀ i j, rightBlock a Y i j = Y i (Fin.natAdd a j) := fun i j => dif_pos (Fin.natAdd a j).2
+  have hb : ∀ i j, rightBlock a Y i j = Y i (Fin.natAdd a j) := fun i j => dite_eq_left (Fin.natAdd a j).2
   have hdet : ∀ w, (blk₂ (Y.map (cpt (D := D) w))).det = cpt (D := D) w (rightBlock a Y).det := fun w => by
     rw [RingHom.map_det]
     congr 1
@@ -1112,20 +1112,20 @@ theorem std_eq_prod (ν : (AE D)ˣ →* Circle) {e : AE D} {S : Finset (Pl D.hos
         · exact (mem_integer_iff Q _).1 ((H Q hQ).2.1.1 i j)
       · rw [← hY, RingHom.map_mul, (cpt_idemSum he Q).2 hQ, zero_mul, Valuation.map_zero]
         exact zero_le_one
-    rw [if_pos ⟨hint, fun i j hj => (inId_prod_iff S c (hint i j)).2 fun w hw =>
+    rw [ite_eq_left ⟨hint, fun i j hj => (inId_prod_iff S c (hint i j)).2 fun w hw =>
       (mem_cball_pow w _ _).1 ((H w hw).2.2 i ⟨j.1, hj⟩)⟩,
       unitChar_eq_prod ν he _ (fun w => Units.mk0 _ (H w.1 w.2).1) (fun w => hdet w.1)
         (fun w => (vEq w.1).eq_one_iff_eq_one.1 (H w.1 w.2).2.1.2), ← Finset.prod_coe_sort S]
     refine Finset.prod_congr rfl fun w _ => ?_
     unfold stdB
-    rw [dif_pos (H w.1 w.2)]
+    rw [dite_eq_left (H w.1 w.2)]
   · obtain ⟨w, hw⟩ := not_forall.1 H
     obtain ⟨hw, hn⟩ := Classical.not_imp.1 hw
     rw [Finset.prod_eq_zero (f := fun w => stdB (locChar ν w) (unifAt (D := D) w) (c w) a a' (Y.map (cpt (D := D) w))) hw
-      (by unfold stdB; exact dif_neg hn)]
+      (by unfold stdB; exact dite_eq_right hn)]
     split_ifs with hc
     · unfold unitChar
-      refine dif_neg fun ⟨x, hx⟩ => hn ?_
+      refine dite_eq_right fun ⟨x, hx⟩ => hn ?_
       have hi : ∀ i j, blk₂ (Y.map (cpt (D := D) w)) i j ∈ (ValuativeRel.valuation (Kw (D := D) w)).integer := fun i j =>
         (mem_integer_iff w _).2 ((mem_OA_iff _).1 (hc.1 i _) w)
       have hd : (blk₂ (Y.map (cpt (D := D) w))).det ∈ (ValuativeRel.valuation (Kw (D := D) w)).integer := by
@@ -1196,7 +1196,7 @@ theorem locChar_nu {μ₀ : T} (hL : L.Is μ₀) (t : T) (i j : Fin D.R.m) (w : 
   rw [e1, GlobalTheory.LFun.locChar_eq_of_chrEq (SqNum.chrEq_nu G t i j hL)]
   have hj : (j : ℕ) < D.R.m := j.2
   ext x
-  simp only [SqNum.nuH, Grid.nu, locGrid, muBase, dif_pos hj, MonoidHom.div_apply, div_eq_mul_inv]
+  simp only [SqNum.nuH, Grid.nu, locGrid, muBase, dite_eq_left hj, MonoidHom.div_apply, div_eq_mul_inv]
   rfl
 
 theorem val_colX_ordX (t : T) (i j : Fin D.R.m) (w : Pl D.host.E)
@@ -1218,7 +1218,7 @@ theorem stdSnd_eq_prodB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTh
   funext y
   unfold stdSnd prodB
   by_cases hy : IsHalf (cA D ε) y
-  · rw [if_pos hy]
+  · rw [ite_eq_left hy]
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 D.host.E)
     have w₀ : Pl D.host.E := ⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField _)⟩
     have hd : (spX G i j).rank = (spW G i j).rank + (spW₁ G i j).rank := by
@@ -1241,7 +1241,7 @@ theorem stdSnd_eq_prodB : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : GlobalTh
     · exact @if_congr _ _ _ (_) (_) _ _ _ _ (and_iff_right hy) rfl rfl
     · rw [locChar_nu hL]
       rfl
-  · rw [if_neg hy, if_neg fun h => hy h.1]
+  · rw [ite_eq_right hy, ite_eq_right fun h => hy h.1]
 
 end GlobalTheory.TopFlip.StdSnd
 
@@ -1299,7 +1299,7 @@ variable {D : D7}
 private theorem selfDual_isFullLattice {D : D7} : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
     IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
   intro V Λ hΛ
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr
@@ -1420,7 +1420,7 @@ theorem eq_smul_of_vac {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     intro g hg hl v hv z
     have hv' : finRat S T (-v) ∈ Λ := (Λ.comap (finRat S T)).neg_mem hv
     rw [apply_add_infRat h hψ hg v (hε2 _ hv' g hl) z, ← j2]
-    simp only [c, dif_pos hv']
+    simp only [c, dite_eq_left hv']
   have hli := _root_.GlobalTheory.VacuumLine.not_linearIndependent (RW T S) (jO S T sS sT) (omO S T) j1 j2 j3 j4 (Matrix (Fin T.rank) (Fin S.rank) D.host.E)
     (infRat S T) (infRat_injective S T) hsp (Λ.comap (finRat S T))
     (fun x => by
@@ -1776,8 +1776,8 @@ theorem thetaAt_move {ψ : AddChar (AF D.host.F) ℂ} {S X : HSp D} {χ χ' : (A
     (e : ω (1, h) b = c • b')
     (hf : IsThetaAt ψ (symplO S X) (heisO ψ S X) a (latO S X ΛS ΛX fun _ => True) 1 b Φ f) :
     IsThetaAt ψ (symplO S X) (heisO ψ S X) a (latO S X ΛS ΛX fun _ => True) 1 b' Φ (c⁻¹ • ω (1, h) f) := by
-  letI := hS
-  letI := hX
+  let := hS
+  let := hX
   have := GlobalTheory.ThetaBaseMove.isThetaAt_move hω
     (fun f₀ h₀ Tm hTm Ψ hΨ => GlobalTheory.DiagLiftFix.isTheta_placeModel hω.std inferInstance inferInstance ha hc hinf h₀ Tm hTm Ψ hΨ) hb 1 h
     (inv_ne_zero hc0) hfx hf

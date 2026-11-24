@@ -314,8 +314,8 @@ theorem exists_rows_det_ne_zero {K m : Type} [Field K] [Fintype m] {g : ℕ} (M 
     (h : ∀ c, M.mulVec c = 0 → c = 0) : ∃ a : Fin g → m, (M.submatrix a id).det ≠ 0 := by
   classical
   obtain ⟨κ, a, ha, hsp, hli⟩ := exists_linearIndependent' K M.row
-  haveI : Finite κ := Finite.of_injective a ha
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  let : Fintype κ := Fintype.ofFinite κ
   have hr : M.rank = g := by
     have h1 := LinearMap.finrank_range_add_finrank_ker M.mulVecLin
     rw [LinearMap.ker_eq_bot'.2 h, finrank_bot, add_zero, Module.finrank_fin_fun] at h1
@@ -324,7 +324,7 @@ theorem exists_rows_det_ne_zero {K m : Type} [Field K] [Fintype m] {g : ℕ} (M 
     rw [← finrank_span_eq_card hli, hsp, ← Matrix.rank_eq_finrank_span_row, hr]
   let e : Fin g ≃ κ := (Fintype.equivFinOfCardEq hκ).symm
   have h1 : LinearIndependent K (M.submatrix (a ∘ e) id).row := hli.comp e e.injective
-  exact ⟨a ∘ e, ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_rows_iff_isUnit.1 h1)).ne_zero⟩
+  exact ⟨a ∘ e, ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_row_iff_isUnit.1 h1)).ne_zero⟩
 
 variable {T K : Type} [CommRing T] [Field K] {X : Scheme.{0}}
 

@@ -102,7 +102,7 @@ theorem isOpenImmersion_of_surj {O K A R : Type} [CommRing O] [IsDomain O] [IsDi
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have := away_irreducible (K := K) hϖ
   have hfo : ∀ o, f (α o) = algebraMap K R (algebraMap O K o) := fun o => RingHom.congr_fun hf o
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have : IsLocalization.Away (α ϖ * x) R := by
     refine IsLocalization.Away.mk _ ?_ (fun r => ?_) (fun a b h => ⟨0, by rw [hi h]⟩)
     · show IsUnit (f _)
@@ -142,11 +142,11 @@ theorem chart_opens {O K A : Type} [CommRing O] [IsDomain O] [IsDiscreteValuatio
     show Flat (spMap α)
     rw [← hα]; infer_instance)
   have hinj : Function.Injective α := by
-    letI := α.toAlgebra
+    let := α.toAlgebra
     have : Module.Flat O A := hflat
     exact FaithfulSMul.algebraMap_injective O A
   have hN : IsNoetherianRing A := by
-    letI := α.toAlgebra
+    let := α.toAlgebra
     have : Algebra.FiniteType O A := hft
     exact Algebra.FiniteType.isNoetherianRing O A
   let j := jQ ≫ pullback.fst s (spMap (algebraMap O K))

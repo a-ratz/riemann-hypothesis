@@ -83,7 +83,7 @@ theorem GA_ext_inf_fin {D : D7} (V : HSp D) (x y : GA D V)
     have e1 := congrArg (fun g => g.1 i j) h1
     have e2 := congrArg (fun g => g.1 i j) h2
     simp only [infHom, finHom, MonoidHom.comp_apply, Formalism.UG.bc, Units.coe_map,
-      MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, RingHom.mapMatrix_apply, Matrix.map_apply] at e1 e2
+      MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, RingHom.mapMatrix_apply, Matrix.map_apply] at e1 e2
     exact tensor_prod_ext _ _ e1 e2
   exact Subtype.ext (Units.ext hm)
 

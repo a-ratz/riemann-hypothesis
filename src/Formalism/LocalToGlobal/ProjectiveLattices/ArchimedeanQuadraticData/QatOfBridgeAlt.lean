@@ -195,9 +195,9 @@ theorem isTorsionFree_sub (X : Submodule R U) : Module.IsTorsionFree R X := by
 
 theorem Phi_injective (X : Submodule R U) (hX : X.FG) : Function.Injective (Phi T hRT X) := by
   classical
-  haveI : Module.Finite R X := Module.Finite.iff_fg.2 hX
-  haveI : Module.IsTorsionFree R X := isTorsionFree_sub (K := K) X
-  haveI : Module.Free R X := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite R X := Module.Finite.iff_fg.2 hX
+  have : Module.IsTorsionFree R X := isTorsionFree_sub (K := K) X
+  have : Module.Free R X := Module.free_of_finite_type_torsion_free'
   let b := Module.Free.chooseBasis R X
   let v : Module.Free.ChooseBasisIndex R X → K₁ ⊗[K] U := fun i => tm K K₁ ((b i : X) : U)
   have hR : LinearIndependent R (fun i => ((b i : X) : U)) :=
@@ -233,12 +233,12 @@ theorem length_quot_eq (X Y : Submodule R U) (hX : X.FG) (hYX : Y ≤ X) :
   classical
   let Y' := Y.comap X.subtype
   let Ψ : T ⊗[R] X →ₗ[T] T ⊗[R] (X ⧸ Y') := Y'.mkQ.baseChange T
-  have h1 : (Ψ : T ⊗[R] X → T ⊗[R] (X ⧸ Y')) = Y'.mkQ.lTensor T := LinearMap.baseChange_eq_ltensor _
+  have h1 : (Ψ : T ⊗[R] X → T ⊗[R] (X ⧸ Y')) = Y'.mkQ.lTensor T := LinearMap.baseChange_eq_lTensor _
   have hΨ : Function.Surjective Ψ := by
     rw [h1]
     exact LinearMap.lTensor_surjective T (Submodule.mkQ_surjective Y')
   let ι' : T ⊗[R] Y' →ₗ[T] T ⊗[R] X := Y'.subtype.baseChange T
-  have h2 : (ι' : T ⊗[R] Y' → T ⊗[R] X) = Y'.subtype.lTensor T := LinearMap.baseChange_eq_ltensor _
+  have h2 : (ι' : T ⊗[R] Y' → T ⊗[R] X) = Y'.subtype.lTensor T := LinearMap.baseChange_eq_lTensor _
   have hker : LinearMap.ker Ψ = LinearMap.range ι' := by
     ext z
     have hex := lTensor_exact T (LinearMap.exact_subtype_mkQ Y') (Submodule.mkQ_surjective Y') z
@@ -336,7 +336,7 @@ theorem span_inf_eq (X : Submodule R U) (hX : X.FG) (W : Submodule K U) :
     have hex : Function.Exact (LinearMap.ker g).subtype g :=
       LinearMap.exact_iff.2 (Submodule.range_subtype _).symm
     have hw0' : g.lTensor T w = 0 := by
-      rw [← congrFun (LinearMap.baseChange_eq_ltensor (A := T) g) w]
+      rw [← congrFun (LinearMap.baseChange_eq_lTensor (A := T) g) w]
       exact hw0
     obtain ⟨v, rfl⟩ := (lTensor_exact T hex hg w).1 hw0'
     clear hzW hzX hz0 hw0 hw0'
@@ -399,7 +399,7 @@ theorem length_tensor_eq_top {R T : Type*} [CommRing R] [IsDomain R] [IsDiscrete
       rw [Nat.cast_sum]
       exact Finset.sum_congr rfl fun i _ => length_quot_span_pow (hp i) (e i)
     rw [h2] at h1
-    exact ENat.coe_ne_top _ h1.symm
+    exact ENat.natCast_ne_top _ h1.symm
   · let g : N →ₗ[R] R := (Finsupp.lapply ⟨0, hn⟩) ∘ₗ (LinearMap.fst R _ _) ∘ₗ f.toLinearMap
     have hg : Function.Surjective g := by
       intro r
@@ -408,7 +408,7 @@ theorem length_tensor_eq_top {R T : Type*} [CommRing R] [IsDomain R] [IsDiscrete
     let φ : T ⊗[R] N →ₗ[T] T := (TensorProduct.AlgebraTensorModule.rid R T T).toLinearMap ∘ₗ g.baseChange T
     have hφ : Function.Surjective φ := by
       have hb : Function.Surjective (g.baseChange T) := by
-        rw [LinearMap.baseChange_eq_ltensor]
+        rw [LinearMap.baseChange_eq_lTensor]
         exact LinearMap.lTensor_surjective T hg
       exact (TensorProduct.AlgebraTensorModule.rid R T T).surjective.comp hb
     have hle := Module.length_le_of_surjective φ hφ
@@ -531,7 +531,7 @@ theorem ramificationIdx_ne_zero' (la : HeightOneSpectrum (𝓞 K)) (w : HeightOn
     (hw : LiesOver w la) : w.asIdeal.ramificationIdx (𝓞 K) ≠ 0 := by
   unfold LiesOver at hw
   have hlo : w.asIdeal.LiesOver la.asIdeal := ⟨hw.symm⟩
-  rw [← Ideal.ramificationIdx_eq_ramificationIdx' la.asIdeal w.asIdeal la.ne_bot]
+  rw [← Ideal.ramificationIdx'_eq_ramificationIdx la.asIdeal w.asIdeal la.ne_bot]
   apply Ideal.IsDedekindDomain.ramificationIdx'_ne_zero <;>
     first
           | exact la.ne_bot
@@ -848,7 +848,7 @@ theorem quotLocal_of_quotientLength (h : Formalism.LatticeBaseChangeAlt.Quotient
     simp at hle
     exact_mod_cast hle
   calc Module.length O (Q ⧸ Submodule.span O (Set.range th)) = (m : ℕ∞) := e.length_eq.trans hm
-    _ ≤ _ := (Nat.cast_le.mpr hm').trans (ENat.coe_toNat_le_self _)
+    _ ≤ _ := (Nat.cast_le.mpr hm').trans (ENat.natCast_toNat_le_self _)
 
 theorem quotLocal_holds : ReciprocityTheory.ChartRestriction.G.FreeQuotientRank.QuotLocalStatement := by
   exact quotLocal_of_quotientLength Formalism.LatticeBaseChangeAlt.quotientLength

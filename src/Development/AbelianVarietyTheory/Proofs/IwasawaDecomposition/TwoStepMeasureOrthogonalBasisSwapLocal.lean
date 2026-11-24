@@ -736,9 +736,9 @@ theorem gram_density : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   obtain ⟨hgc, n, hnc, hn0, hn⟩ := GramPair.gram_pair F E σ hσ R M J x a B J' hst
   have horb := (_root_.GlobalTheory.GaugeEx.FibProp.fibre_invariant_orbit_ne_zero F E σ hσ R hR _ J x a lam ν m hst.1 hst.2.1 hst.2.2.1 hl hν hm).2.1
   have hinv' := (_root_.GlobalTheory.GaugeEx.FibProp.fibre_invariant_orbit_ne_zero F E σ hσ R hR _ J' y₀ c lam ν m' hst.2.2.2.2.2 hc hy₀ hl hν hm').1
-  haveI hfm := (FibBasic.fibAt_basic F E σ R hR _ J _ ν _ m hν hα hm).2.1
-  haveI hfm' := (FibBasic.fibAt_basic F E σ R hR _ J' _ ν _ m' hν hγ hm').2.1
-  haveI hfN := twoStep_finite_on_compacts F E σ hσ R hR M J x a B J' m m' N hst horb hfm hfm' hinv' hN
+  have hfm := (FibBasic.fibAt_basic F E σ R hR _ J _ ν _ m hν hα hm).2.1
+  have hfm' := (FibBasic.fibAt_basic F E σ R hR _ J' _ ν _ m' hν hγ hm').2.1
+  have hfN := twoStep_finite_on_compacts F E σ hσ R hR M J x a B J' m m' N hst horb hfm hfm' hinv' hN
   have hdet := (GlobalTheory.FrameStep.frameStep F E σ hσ R M J x a B J' hst).1
   have hι := continuous_alg (F := F) (E := E) R
   have hri := continuousOn_ringInverse hR.2.2.1
@@ -808,7 +808,7 @@ theorem gram_density : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       · exact continuous_snd
     obtain ⟨s, hs⟩ : ∃ s, IsSec R σ J x s :=
       ⟨fun y => if h : ∃ g : HA R σ J, g • ratTup (F := F) R x = y then h.choose else 1,
-        fun y h => by simp only [dif_pos h]; exact h.choose_spec⟩
+        fun y h => by simp only [dite_eq_left h]; exact h.choose_spec⟩
     rw [← lintegral_indicator (hgc.measurable hS), lintegral_tup_two lam _ _ hFi,
       Polar.polar F E σ R hR _ J lam ν α m hl hν hα hm W₁ ρ₁ hW₁.measurableSet hρ₁
         (fun y => ∫⁻ z, (gram3 R σ J ⁻¹' S).indicator (fun X => ENNReal.ofReal (φ X)) ![y 0, z]

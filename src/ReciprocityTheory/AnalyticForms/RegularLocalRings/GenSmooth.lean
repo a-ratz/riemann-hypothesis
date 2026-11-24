@@ -85,8 +85,8 @@ theorem gs_exists_rows_det_ne_zero {K : Type*} [Field K] {t r : ℕ} (M : Matrix
 
   obtain ⟨κ, a, ha, hsp, hli⟩ := exists_linearIndependent' K (fun i => M i)
   have hsp' : Submodule.span K (Set.range ((fun i => M i) ∘ a)) = ⊤ := hsp.trans hspan
-  haveI : Finite κ := Finite.of_injective a ha
-  haveI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective a ha
+  have : Fintype κ := Fintype.ofFinite κ
   let B := Module.Basis.mk hli hsp'.ge
   have hcard : Fintype.card κ = r := by
     have h := Module.finrank_eq_card_basis B
@@ -95,7 +95,7 @@ theorem gs_exists_rows_det_ne_zero {K : Type*} [Field K] {t r : ℕ} (M : Matrix
   refine ⟨a ∘ e, ?_⟩
   have hli2 : LinearIndependent K (Matrix.row (M.submatrix (a ∘ e) id)) :=
     hli.comp e e.injective
-  rw [Matrix.linearIndependent_rows_iff_isUnit, Matrix.isUnit_iff_isUnit_det,
+  rw [Matrix.linearIndependent_row_iff_isUnit, Matrix.isUnit_iff_isUnit_det,
     isUnit_iff_ne_zero] at hli2
   exact hli2
 

@@ -123,7 +123,7 @@ theorem LeafSpreadQF_of (hSep : LateralTheory.E.LeafSpreadProperPf.LeafSpreadSep
     hB k Ω R T hRT c0 γ1 γ2 q d1 d2 v0 v1 v2 hpre
   have hf' : (r0 ≫ f) ≫ p = q' ≫ Spec.map (CommRingCat.ofHom (algebraMap k T)) := by
     rw [Category.assoc, hf, ← Category.assoc, Q0.w, Category.assoc, incl_toK]
-  haveI := f0.2.1; haveI := f1.2.1; haveI := f2.2.1
+  have := f0.2.1; have := f1.2.1; have := f2.2.1
   refine ⟨T, gT, E0, E1, E2, q', e1, e2, r0 ≫ f, w0, w1, w2, hf', ?_⟩
   exact ⟨H0 T lS0 hRT E0 q' r0 Q0, MorphismProperty.of_isPullback (P := @QuasiCompact) Q0 inferInstance,
     K0 T lT0 hRT E0 q' r0 Q0,

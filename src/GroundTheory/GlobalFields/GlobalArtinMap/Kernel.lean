@@ -107,7 +107,7 @@ theorem IdeleGroup.exists_continuous_ideleModule_eq_exp (w : InfinitePlace K) :
       have hw' : ¬ w.IsReal := InfinitePlace.not_isReal_iff_isComplex.2 hw
       rw [hval, hn, RingEquiv.apply_symm_apply, Complex.norm_real,
         Real.norm_of_nonneg (Real.exp_pos _).le]
-      simp only [InfinitePlace.mult, hw', if_false]
+      simp only [InfinitePlace.mult, hw', ite_false]
       rw [sq, ← Real.exp_add, add_halves]
 
 theorem IdeleClassGroup.exists_mem_normOneSubgroup_mul_eq (c : IdeleClassGroup K) :
@@ -157,7 +157,7 @@ theorem artinMap_surjective : Function.Surjective (artinMap K Ω) := by
   let N := IdeleClassGroup.normOneSubgroup K
   let f : N → (maximalAbelianExtension K Ω ≃ₐ[K] maximalAbelianExtension K Ω) :=
     fun d ↦ artinMap K Ω d
-  have hf : Continuous f := continuous_artinMap.comp continuous_subtype_val
+  have hf : Continuous f := continuous_artinMap.comp continuous_subtypeVal
   let t : finiteAbelianExtensions K Ω → Set N := fun L ↦
     have := L.2.1
     have := L.2.2

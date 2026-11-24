@@ -178,35 +178,35 @@ theorem lminor_mul_upper {n : ℕ} (A N : Matrix (Fin n) (Fin n) ℂ) (hN : N.Bl
     apply mul_eq_zero_of_right
     apply hN
     show e c < k
-    rw [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE]
+    rw [Fin.lt_def, he, Fin.val_castLE]
     omega
   have hT : (N.submatrix e e).BlockTriangular id := by
     intro a c hac
     apply hN
     show e c < e a
-    rw [Fin.lt_iff_val_lt_val, he, Fin.coe_castLE, Fin.coe_castLE]
+    rw [Fin.lt_def, he, Fin.val_castLE, Fin.val_castLE]
     exact hac
-  rw [hsub, Matrix.det_mul, Matrix.det_of_upperTriangular hT]
+  rw [hsub, Matrix.det_mul, Matrix.det_of_isUpperTriangular hT]
   rfl
 
 theorem lminor_nmat (X : Data E r) (z : V (nd X)) (τ : X.Ψ) (i : Fin (r + 1)) :
     lminor (mat (nmat X z) τ) i = 1 := by
   unfold lminor
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · refine Finset.prod_eq_one fun a _ => ?_
     simp [mat, nmat]
   · intro a c hac
     have hlt : a < c := OrderDual.toDual_lt_toDual.1 hac
     have hlt' : (a : ℕ) < c := hlt
     have h1 : ¬ (Fin.castLE (Nat.le_of_lt_succ i.isLt) c < Fin.castLE (Nat.le_of_lt_succ i.isLt) a) := by
-      rw [Fin.lt_iff_val_lt_val, Fin.coe_castLE, Fin.coe_castLE]
+      rw [Fin.lt_def, Fin.val_castLE, Fin.val_castLE]
       omega
     have h2 : Fin.castLE (Nat.le_of_lt_succ i.isLt) a ≠ Fin.castLE (Nat.le_of_lt_succ i.isLt) c := by
       intro h
       have h3 := congrArg Fin.val h
-      rw [Fin.coe_castLE, Fin.coe_castLE] at h3
+      rw [Fin.val_castLE, Fin.val_castLE] at h3
       omega
-    simp only [Matrix.submatrix_apply, mat, Matrix.of_apply, nmat, dif_neg h1, if_neg h2]
+    simp only [Matrix.submatrix_apply, mat, Matrix.of_apply, nmat, dite_eq_right h1, ite_eq_right h2]
 
 end
 
@@ -312,7 +312,7 @@ theorem prod_bdiag_ne (X : Data E r) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) 
       (Fin.castLE (Nat.le_of_lt_succ i.isLt) j)) ≠ 0 := by
   have hT : (mat b τ).BlockTriangular id := fun a c h => (hb τ).2 a c h
   have hd := (hb τ).1
-  rw [Matrix.det_of_upperTriangular hT] at hd
+  rw [Matrix.det_of_isUpperTriangular hT] at hd
   rw [Finset.prod_ne_zero_iff]
   intro j _
   exact (Finset.prod_ne_zero_iff.mp hd) _ (Finset.mem_univ _)
@@ -403,9 +403,9 @@ theorem kaY_orth (X : Data E r) {x0 x : Frame X.Ψ r} (hx0 : IsOrth X x0) (hx : 
     rw [hx σ, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal]
     refine Finset.prod_eq_one fun a _ => ?_
     have ha : ((Fin.castLE (Nat.le_of_lt_succ (i0 X).isLt) a : Fin r) : ℕ) < X.p0 := by
-      rw [Fin.coe_castLE]
+      rw [Fin.val_castLE]
       exact a.2
-    simp only [Function.comp_apply, sgn, if_pos ha]
+    simp only [Function.comp_apply, sgn, ite_eq_left ha]
     norm_num
   have hpos : ∀ σ : X.Ψ, 0 < ‖lminor (gM X x0 x σ) (i0 X)‖ :=
     fun σ => norm_pos_iff.2 (lminor_orth_ne X hx0 hx σ)
@@ -493,7 +493,7 @@ theorem sep (X : Data E r) {x0 : Frame X.Ψ r} (hx0 : IsOrth X x0) (hPD : PropDi
         (gM X x0 (lact δ x0) τ k b - (1 : Matrix (Fin r) (Fin r) ℂ) k b) := by
       rw [show lact δ x0 τ a b = mat (lact δ x0) τ a b from rfl, ← hm, Matrix.mul_apply]
       simp only [mul_sub, Finset.sum_sub_distrib, Matrix.one_apply, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       rfl
     rw [he]
     calc ‖∑ k, x0 τ a k * (gM X x0 (lact δ x0) τ k b - (1 : Matrix (Fin r) (Fin r) ℂ) k b)‖

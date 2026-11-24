@@ -262,7 +262,7 @@ theorem isPushout_sections (U : X.Opens) (hU : IsAffineOpen U) :
       (φ.appLE U (φ ⁻¹ᵁ U ⊓ p' ⁻¹ᵁ ⊤) inf_le_left) (CommRingCat.ofHom (algX p' (φ ⁻¹ᵁ U ⊓ p' ⁻¹ᵁ ⊤))) := by
   have hST : (⊤ : (Spec (CommRingCat.of S)).Opens) ≤ Spec.map (CommRingCat.ofHom (algebraMap R S)) ⁻¹ᵁ ⊤ := le_top
   have hSX : U ≤ p ⁻¹ᵁ ⊤ := le_top
-  haveI := isIso_pushoutSection_of_isAffineOpen H hST hSX rfl (isAffineOpen_top _) (isAffineOpen_top _) hU
+  have := isIso_pushoutSection_of_isAffineOpen H hST hSX rfl (isAffineOpen_top _) (isAffineOpen_top _) hU
   have hP := (isIso_pushoutSection_iff H hST hSX rfl).1 inferInstance
   refine hP.of_iso (Scheme.ΓSpecIso (CommRingCat.of R)) (Iso.refl _) (Scheme.ΓSpecIso (CommRingCat.of S)) (Iso.refl _)
     ?_ ?_ ?_ ?_
@@ -295,7 +295,7 @@ def eTens (U : X.Opens) (hU : IsAffineOpen U) :
 lemma eTens_tmul (U : X.Opens) (hU : IsAffineOpen U) (a : Γ(X, U)) (s : S) :
     letI := (algX p U).toAlgebra
     eTens p p' φ H U hU (a ⊗ₜ[R] s) = (φ.appLE U _ inf_le_left).hom a * algX p' _ s := by
-  letI := (algX p U).toAlgebra
+  let := (algX p U).toAlgebra
   have h1 := congrArg (fun q => q.hom a)
     (IsPushout.inl_isoIsPushout_hom _ _ (CommRingCat.isPushout_tensorProduct R Γ(X, U) S)
       (isPushout_sections p p' φ H U hU))
@@ -337,7 +337,7 @@ lemma eTens_rs (U U' : X.Opens) (hU : IsAffineOpen U) (hU' : IsAffineOpen U') (h
     letI := (algX p U).toAlgebra; letI := (algX p U').toAlgebra
     eTens p p' φ H U' hU' ((rsL p U U' h).rTensor S x) =
       ReciprocityTheory.ChartRestriction.G.DVR.rs (inf_le_inf (Scheme.Hom.preimage_mono φ h) le_rfl) (eTens p p' φ H U hU x) := by
-  letI := (algX p U).toAlgebra; letI := (algX p U').toAlgebra
+  let := (algX p U).toAlgebra; let := (algX p U').toAlgebra
   induction x using TensorProduct.induction_on with
   | zero =>
     rw [map_zero, (eTens p p' φ H U' hU').map_zero, (eTens p p' φ H U hU).map_zero]
@@ -354,7 +354,7 @@ lemma eTens_mul (U : X.Opens) (hU : IsAffineOpen U) (u : Γ(X, U))
     (x : letI := (algX p U).toAlgebra; Γ(X, U) ⊗[R] S) :
     letI := (algX p U).toAlgebra
     eTens p p' φ H U hU ((mulL p U u).rTensor S x) = (φ.appLE U _ inf_le_left).hom u * eTens p p' φ H U hU x := by
-  letI := (algX p U).toAlgebra
+  let := (algX p U).toAlgebra
   induction x using TensorProduct.induction_on with
   | zero => rw [map_zero, (eTens p p' φ H U hU).map_zero, mul_zero]
   | tmul a s =>
@@ -401,8 +401,8 @@ theorem flatBC_gen [Module.Flat R S] [CompactSpace X]
     ∀ σ' : LB.Sec (L.pull φ), ∃! a : S, ∀ i, σ'.f i = algX p' ((L.pull φ).U i) a * θ'.f i := by
   classical
   obtain ⟨n, V, c, hVa, hVc, hcov⟩ := exists_affine_chart_cover L hL
-  letI instV : ∀ k, Algebra R Γ(X, V k) := fun k => (algX p (V k)).toAlgebra
-  letI instW : ∀ kl : Fin n × Fin n, Algebra R Γ(X, V kl.1 ⊓ V kl.2) := fun kl => (algX p _).toAlgebra
+  let instV : ∀ k, Algebra R Γ(X, V k) := fun k => (algX p (V k)).toAlgebra
+  let instW : ∀ kl : Fin n × Fin n, Algebra R Γ(X, V kl.1 ⊓ V kl.2) := fun kl => (algX p _).toAlgebra
   let δ : (∀ k, Γ(X, V k)) →ₗ[R] (∀ kl : Fin n × Fin n, Γ(X, V kl.1 ⊓ V kl.2)) :=
     { toFun := fun f kl => dfun L V c hVc f kl.1 kl.2
       map_add' := fun f g => by

@@ -74,7 +74,7 @@ theorem UpperTheory.isoSum_restriction_of_local_component_unitary :
       LinearMap.range i.toLinearMap).map π.subtype := by
     rw [htop]; exact ⟨⟨φ, hφ⟩, Submodule.mem_top, rfl⟩
   rw [Submodule.map_iSup] at hmem
-  refine SetLike.le_def.1 (iSup_le fun i => ?_) hmem
+  refine IsConcreteLE.le_iff.1 (iSup_le fun i => ?_) hmem
   refine le_iSup_of_le ⟨π.subtype ∘ₗ i.toLinearMap, fun g v =>
     congrArg Subtype.val (Representation.IntertwiningMap.isIntertwining _ _ i g v), ?_⟩ ?_
   · rintro _ ⟨v, rfl⟩

@@ -75,7 +75,7 @@ private theorem fixBd_abs {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValuat
   set W := ⨅ s, Submodule.comap (f s) p with hW
   have hle := he m
   have hne : Module.length A (Submodule.map p.mkQ W) ≠ ⊤ :=
-    ne_top_of_le_ne_top (ENat.coe_ne_top _) hle
+    ne_top_of_le_ne_top (ENat.natCast_ne_top _) hle
   obtain ⟨hfin_iff, hcard⟩ := UpperTheory.V.AlgebraTools.card_eq_pow_length (A := A) (X := Submodule.map p.mkQ W)
   have hfin : Finite (Submodule.map p.mkQ W) := hfin_iff.2 hne
   have hfs : (Submodule.map p.mkQ W : Set (E ⧸ p)).Finite := Set.finite_coe_iff.1 hfin
@@ -95,7 +95,7 @@ private theorem fixBd_abs {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValuat
       m * Module.finrank A (⨅ s, LinearMap.ker (f s) : Submodule A E) + e := by
     have h1 : (((Module.length A (Submodule.map p.mkQ W)).toNat : ℕ) : ℕ∞) ≤
         ((Module.finrank A (⨅ s, LinearMap.ker (f s) : Submodule A E) * m + e : ℕ) : ℕ∞) := by
-      rw [ENat.coe_toNat hne]
+      rw [ENat.natCast_toNat hne]
       exact hle
     rw [mul_comm]
     exact Nat.cast_le.1 h1
@@ -177,10 +177,10 @@ private theorem fixBd_p_zero {A X : Type} [CommRing A] [CommRing X] [Algebra A X
     rw [key] at h0
     constructor
     · intro hc
-      rw [if_pos hc] at h0
+      rw [ite_eq_left hc] at h0
       exact (fixBd_q_zero _ _ _ _ _).1 h0
     · intro hc
-      rw [if_neg hc] at h0
+      rw [ite_eq_right hc] at h0
       exact (fixBd_q_zero _ _ _ _ _).1 h0
   · intro hZ
     refine Matrix.ext fun i j => ?_
@@ -237,10 +237,10 @@ private theorem fixBd_ker {A : Type} [CommRing A] (c : A) (g : ℕ) (y : DD A g)
 theorem UpperTheory.V.Pa.fixBd :
     ∀ (l : ℕ) [Fact l.Prime] (F : GFrame l) (n : ℕ) (x : NP F n) (k : Kap x) (V : Submodule x.A (Matrix (Fin n) (Fin n) (DD x.A k.g))) (b₁ b₂ b₃ b₄ c₁ c₂ c₃ c₄ : Bool) (S : Type) (e : S → x.A) (P Q : S → Matrix (Fin n) (Fin n) (DD x.A k.g)) (tr : Bool), V = blkMat n x.a (ddPart x.A x.A k.g b₁ b₂ b₃ b₄) (ddPart x.A x.A k.g c₁ c₂ c₃ c₄) → ∃ C : ℕ, ∀ m, {Y : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g) | Y ∈ blkMat n x.a (ddPart x.A (x.Am m) k.g b₁ b₂ b₃ b₄) (ddPart x.A (x.Am m) k.g c₁ c₂ c₃ c₄) ∧ (tr = true → Yᵀ = -Y) ∧ ∀ s, e s • ((P s).map (fun y => ⟨algebraMap x.A (x.Am m) y.a, fun j => algebraMap x.A (x.Am m) (y.ep j), fun j => algebraMap x.A (x.Am m) (y.ep' j), algebraMap x.A (x.Am m) y.eta⟩) * Y * (Q s).map (fun y => ⟨algebraMap x.A (x.Am m) y.a, fun j => algebraMap x.A (x.Am m) (y.ep j), fun j => algebraMap x.A (x.Am m) (y.ep' j), algebraMap x.A (x.Am m) y.eta⟩)) = Y}.ncard ≤ Nat.card x.K ^ (m * Module.finrank x.A (V ⊓ (if tr then LinearMap.ker ((Matrix.transposeLinearEquiv (Fin n) (Fin n) x.A (DD x.A k.g)).toLinearMap + LinearMap.id) else ⊤) ⊓ ⨅ s, LinearMap.ker (e s • ((LinearMap.mulLeft x.A (P s)).comp (LinearMap.mulRight x.A (Q s))) - LinearMap.id) : Submodule x.A (Matrix (Fin n) (Fin n) (DD x.A k.g))) + C) := by
   intro l _ F n x k V b₁ b₂ b₃ b₄ c₁ c₂ c₃ c₄ S e P Q tr hV
-  haveI : Module.Finite x.A (DD x.A k.g) := fixBd_fin x.A k.g
-  haveI : Module.Finite x.A (Matrix (Fin n) (Fin n) (DD x.A k.g)) :=
+  have : Module.Finite x.A (DD x.A k.g) := fixBd_fin x.A k.g
+  have : Module.Finite x.A (Matrix (Fin n) (Fin n) (DD x.A k.g)) :=
     (inferInstance : Module.Finite x.A (Fin n → Fin n → DD x.A k.g))
-  haveI : Finite (IsLocalRing.ResidueField x.A) :=
+  have : Finite (IsLocalRing.ResidueField x.A) :=
     Finite.of_equiv x.K (PowerSeries.residueFieldOfPowerSeries).toEquiv.symm
   have hRes : Nat.card (IsLocalRing.ResidueField x.A) = Nat.card x.K :=
     Nat.card_congr (PowerSeries.residueFieldOfPowerSeries).toEquiv

@@ -73,7 +73,7 @@ theorem exists_half (bar : ι → ι) (h1 : ∀ τ, bar (bar τ) = τ) (h2 : ∀
   classical
   let e := Fintype.equivFin ι
   refine ⟨{τ | e τ < e (bar τ)}, fun τ => ?_⟩
-  simp only [Set.mem_setOf_eq, h1, not_lt]
+  simp only [Set.mem_ofPred_eq, h1, not_lt]
   have hne : e τ ≠ e (bar τ) := fun h => h2 τ (e.injective h).symm
   constructor
   · intro h

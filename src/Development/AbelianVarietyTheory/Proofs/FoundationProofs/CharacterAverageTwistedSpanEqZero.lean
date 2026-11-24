@@ -129,17 +129,17 @@ theorem aug_avg_zero : ∀ (G V : Type) [Group G] [TopologicalSpace G] [IsTopolo
     obtain ⟨U, hU, hUθ⟩ := hD.near
     have hS : (U ∩ ⋂ i, {g : G | π g (w i) = w i}) ∈ nhds (1 : G) :=
       Filter.inter_mem hU (Filter.iInter_mem.mpr fun i => (hsm (w i)).mem_nhds (by simp))
-    have hS' := continuous_subtype_val.continuousAt.preimage_mem_nhds (x := (1 : K)) hS
+    have hS' := continuous_subtypeVal.continuousAt.preimage_mem_nhds (x := (1 : K)) hS
     refine Filter.mem_of_superset hS' ?_
     intro x hx
-    simp only [Set.mem_preimage, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq] at hx
+    simp only [Set.mem_preimage, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq] at hx
     exact ⟨hUθ x hx.1 x.2, hx.2⟩
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp (show IsCompact (K : Set G) from hD.compact)
-  haveI : Finite (K ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNopen
-  haveI : N.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : CompactSpace K := isCompact_iff_compactSpace.mp (show IsCompact (K : Set G) from hD.compact)
+  have : Finite (K ⧸ N) := Subgroup.quotient_finite_of_isOpen N hNopen
+  have : N.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   let M : Subgroup K := N.normalCore
-  haveI : Finite (K ⧸ M) := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (K ⧸ M) := Fintype.ofFinite _
+  have : Finite (K ⧸ M) := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (K ⧸ M) := Fintype.ofFinite _
   classical
   let s : K ⧸ M → K := fun q => if q = 1 then 1 else q.out
   have hs : ∀ q, (QuotientGroup.mk (s q) : K ⧸ M) = q := by

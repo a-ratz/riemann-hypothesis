@@ -98,7 +98,7 @@ theorem UpperTheory.Reformulated.B.Qe13.det_emb_unitri_A :
   intro n g hlow hdiag
   have htri : (↑g : Matrix (Fin n) (Fin n) ℂ).BlockTriangular id := fun i j hij => hlow i j hij
   have hg : (↑g : Matrix (Fin n) (Fin n) ℂ).det = 1 := by
-    rw [Matrix.det_of_upperTriangular htri]
+    rw [Matrix.det_of_isUpperTriangular htri]
     exact Finset.prod_eq_one fun i _ => hdiag i
   apply Units.ext
   change Matrix.det (Matrix.reindex (finSumFinEquiv.trans (finCongr rfl)) (finSumFinEquiv.trans (finCongr rfl))

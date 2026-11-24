@@ -114,7 +114,7 @@ theorem frobenius_uniformizer_pow_dvd [IsDomain O] (hR : Formalism.MainNotions.U
     funext i
     by_cases hi : i = c
     · subst hi
-      simp only [Pi.mul_apply, hgdef, if_pos rfl]
+      simp only [Pi.mul_apply, hgdef, ite_eq_left rfl]
       rw [hf i, hg', subst_mul (hsub i), subst_X (hsub i)]
       simp
     · have : a i = ((letE c : LetA O n) * a) i := by rw [hc]

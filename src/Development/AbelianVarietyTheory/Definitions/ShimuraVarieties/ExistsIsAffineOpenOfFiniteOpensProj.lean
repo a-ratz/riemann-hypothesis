@@ -224,7 +224,7 @@ private theorem invariantSections_of_stable_open (U : X.Opens) (hU : ∀ g, U �
     SMulCommClass G (invariantSections ρ U hU) Γ(X, U) ∧
       FaithfulSMul (invariantSections ρ U hU) Γ(X, U) ∧
       Algebra.IsInvariant (invariantSections ρ U hU) Γ(X, U) G := by
-  letI := sectionsAction ρ U hU
+  let := sectionsAction ρ U hU
   refine ⟨⟨fun g s b ↦ ?_⟩, ⟨fun {b₁ b₂} h ↦ Subtype.ext (by simpa [Subring.smul_def] using h 1)⟩,
     ⟨fun b hb ↦ ⟨⟨b, hb⟩, rfl⟩⟩⟩
   show g • ((s : Γ(X, U)) * b) = (s : Γ(X, U)) * (g • b)
@@ -235,7 +235,7 @@ theorem isLocalization_invariantSections [Finite G] {U V : X.Opens}
     (hV' : IsAffineOpen V) (r : invariantSections ρ V hV) (hr : X.basicOpen (r : Γ(X, V)) = U) :
     letI := (invariantSectionsRes ρ hU hV e).toAlgebra
     IsLocalization.Away r (invariantSections ρ U hU) := by
-  letI := (invariantSectionsRes ρ hU hV e).toAlgebra
+  let := (invariantSectionsRes ρ hU hV e).toAlgebra
   let _ := sectionsAction ρ V hV
   let _ := sectionsAction ρ U hU
   let _ : Algebra Γ(X, V) Γ(X, U) := (X.presheaf.map (homOfLE e).op).hom.toAlgebra
@@ -321,7 +321,7 @@ variable [Finite G]
 theorem isAffineQuotient_toChart (U : StableAffineOpens ρ) :
     letI := sectionsAction ρ U.toOpens U.stable
     IsAffineQuotient (specAction G Γ(X, U.toOpens)) U.toChart := by
-  letI := sectionsAction ρ U.toOpens U.stable
+  let := sectionsAction ρ U.toOpens U.stable
   have : SMulCommClass G (invariantSections ρ U.toOpens U.stable) Γ(X, U.toOpens) :=
     ⟨fun g s b ↦ by
       show g • ((s : Γ(X, U.toOpens)) * b) = (s : Γ(X, U.toOpens)) * (g • b)
@@ -351,7 +351,7 @@ theorem range_map {U V : StableAffineOpens ρ} (f : U ⟶ V) (r : invariantSecti
     (hr : X.basicOpen (r : Γ(X, V.toOpens)) = U.toOpens) :
     Set.range ((quotientDiagram ρ).map f) =
       (PrimeSpectrum.basicOpen r : Set (PrimeSpectrum (invariantSections ρ V.toOpens V.stable))) := by
-  letI := (invariantSectionsRes ρ U.stable V.stable (toOpens_le f)).toAlgebra
+  let := (invariantSectionsRes ρ U.stable V.stable (toOpens_le f)).toAlgebra
   have := isLocalization_invariantSections ρ U.stable V.stable (toOpens_le f) V.isAffineOpen r hr
   exact PrimeSpectrum.localization_away_comap_range (invariantSections ρ U.toOpens U.stable) r
 
@@ -509,14 +509,14 @@ theorem π_preimage_opensRange_chart (U : StableAffineOpens ρ) :
 theorem comp_π (g : G) : (ρ g).asIso.hom ≫ π ρ = π ρ := by
   refine (stableAffineCover ρ).hom_ext _ _ fun U ↦ ?_
   change U.isAffineOpen.fromSpec ≫ (ρ g).asIso.hom ≫ π ρ = U.isAffineOpen.fromSpec ≫ π ρ
-  letI := sectionsAction ρ U.toOpens U.stable
+  let := sectionsAction ρ U.toOpens U.stable
   rw [← Category.assoc, ← specAction_fromSpec ρ U.isAffineOpen U.stable g, Category.assoc,
     fromSpec_π, ← Category.assoc, (U.isAffineQuotient_toChart).comp_eq g]
 
 theorem isAffineQuotient : IsAffineQuotient ρ (π ρ) := by
   refine IsAffineQuotient.of_forall_exists_isOpenImmersion (comp_π ρ) fun y ↦ ?_
   obtain ⟨U, hy⟩ := exists_mem_opensRange_chart ρ y
-  letI := sectionsAction ρ U.toOpens U.stable
+  let := sectionsAction ρ U.toOpens U.stable
   refine ⟨Spec Γ(X, U.toOpens), (quotientDiagram ρ).obj U, specAction G Γ(X, U.toOpens), U.toChart,
     U.isAffineOpen.fromSpec, chart ρ U, inferInstance, inferInstance, hy, fromSpec_π ρ U, ?_,
     specAction_fromSpec ρ U.isAffineOpen U.stable, U.isAffineQuotient_toChart⟩

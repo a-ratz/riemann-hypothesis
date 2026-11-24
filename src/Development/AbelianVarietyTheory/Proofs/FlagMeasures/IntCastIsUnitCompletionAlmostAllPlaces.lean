@@ -61,7 +61,7 @@ theorem intCast_isUnit_almost_all : ∀ {F E : Type} [Field F] [NumberField F] [
   apply hp
   have hs' : p.valuation F ((D : F)⁻¹) ≤ 1 := by
     have := hs
-    simp only [HeightOneSpectrum.Support, Set.mem_setOf_eq, not_lt] at this
+    simp only [HeightOneSpectrum.Support, Set.mem_ofPred_eq, not_lt] at this
     exact this
   have h1 : p.valuation F (D : F) ≤ 1 := by
     have := p.valuation_le_one (K := F) (D : 𝓞 F)

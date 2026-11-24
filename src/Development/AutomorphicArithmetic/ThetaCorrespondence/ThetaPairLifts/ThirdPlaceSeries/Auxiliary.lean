@@ -174,7 +174,7 @@ theorem exists_not_isSplitAt (B : Set (Pl E)) (hB : B.Finite) : ∃ w : Pl E, w 
   have h2 : Module.finrank F E = 2 := Algebra.IsQuadraticExtension.finrank_eq_two F E
   obtain ⟨v, -, hvB, hv⟩ := GlobalTheory.CompanionTheory.Density.exists_degreeOnePrime_not_splitsCompletely F F E
     (by omega) ((fun w : Pl E => w.under (𝓞 F)) '' B) (hB.image _)
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨⟨P, hP⟩⟩ := v.asIdeal.nonempty_primesOver (S := 𝓞 E)
   have hP0 : P ≠ ⊥ := Ideal.ne_bot_of_mem_primesOver v.ne_bot hP
   let w : Pl E := ⟨P, hP.1, hP0⟩
@@ -183,7 +183,7 @@ theorem exists_not_isSplitAt (B : Set (Pl E)) (hB : B.Finite) : ∃ w : Pl E, w 
   rintro ⟨u, hu, hue⟩
   apply hv
   rw [GroundTheory.Global.splitsCompletely_iff_ncard_primesOver, h2]
-  haveI : NoZeroSMulDivisors (𝓞 F) (𝓞 E) := ⟨fun {c x} e => by
+  have : NoZeroSMulDivisors (𝓞 F) (𝓞 E) := ⟨fun {c x} e => by
     rw [Algebra.smul_def, mul_eq_zero, map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective (𝓞 F) (𝓞 E))] at e
     exact e⟩
   have hle : (v.asIdeal.primesOver (𝓞 E)).ncard ≤ 2 := by
@@ -496,10 +496,10 @@ theorem rec_spehQuot_alt : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω
       rc (cls (ParLaws.toRep σ')) =
         sumList ((List.range d).map fun k : ℕ => (rc (cls (ParLaws.toRep σ))).lpTw (((d : ℝ) - 1) / 2 - k)) := by
   intro E Ω _ _ _ _ _ A w
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   intro h rc hrc hTZ hLM a d n hd σ σ' hu hg hq
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨m, δ, Δ, s, hΔ, hδu, hs, hd0, hφ⟩ := hTZ.exists_prod σ.smooth σ.irred hu hg
   have hA := _root_.GlobalTheory.isL_of_irreducible_prod_unitarisable_nu _ (_root_.GlobalTheory.LocGL.UnitaryOrder.add_one_le_of_precedes _) a _ σ.ρ σ.irred m δ Δ s hΔ hδu hs hd0 hφ
   have hB := _root_.GlobalTheory.speh_quotient_isL _ hLM (_root_.GlobalTheory.LocGL.UnitaryOrder.add_one_le_of_precedes _) (GlobalTheory.T.parabolicInduction_in_stages_product_of_products _) a _ σ.ρ m δ Δ s hΔ hδu hs hd0 hφ d n hd _ σ'.ρ σ'.irred hq

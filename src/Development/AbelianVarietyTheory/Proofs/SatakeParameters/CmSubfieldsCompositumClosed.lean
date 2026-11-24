@@ -163,15 +163,15 @@ variable {Ω : Type} [Field Ω] {E : Type} [Field E] [NumberField E] [Algebra E 
 theorem nonempty_ringHom_complex (E Ω : Type) [Field Ω] [Field E] [NumberField E] [Algebra E Ω]
     [IsAlgClosure E Ω] : Nonempty (Ω →+* ℂ) := by
   let ψ : E →+* ℂ := Classical.choice (inferInstance : Nonempty _)
-  letI : Algebra E ℂ := ψ.toAlgebra
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  let : Algebra E ℂ := ψ.toAlgebra
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
   exact ⟨(IsAlgClosed.lift : Ω →ₐ[E] ℂ).toRingHom⟩
 
 theorem exists_extend (M : IntermediateField E Ω) (ψ : M →+* ℂ) :
     ∃ φ : Ω →+* ℂ, ∀ x : M, φ x = ψ x := by
-  letI : Algebra M ℂ := ψ.toAlgebra
-  haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic M Ω := Algebra.IsAlgebraic.tower_top (K := E) M
+  let : Algebra M ℂ := ψ.toAlgebra
+  have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic M Ω := Algebra.IsAlgebraic.tower_top (K := E) M
   let f : Ω →ₐ[M] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -181,7 +181,7 @@ theorem exists_extend (M : IntermediateField E Ω) (ψ : M →+* ℂ) :
 
 theorem mem_of_conj {L : IntermediateField E Ω} {x y : Ω} (hx : x ∈ L)
     (hy : ∀ φ : Ω →+* ℂ, φ y = starRingEnd ℂ (φ x)) : y ∈ L := by
-  haveI : IsGalois E Ω := IsAlgClosure.isGalois E Ω
+  have : IsGalois E Ω := IsAlgClosure.isGalois E Ω
   obtain ⟨φ₀⟩ := nonempty_ringHom_complex E Ω
   rw [← InfiniteGalois.fixedField_fixingSubgroup L, IntermediateField.mem_fixedField_iff]
   intro τ hτ
@@ -205,7 +205,7 @@ theorem le_conjField [IsCMField E] (M : IntermediateField E Ω) [NumberField M] 
 
 theorem isCMField_of_le [IsCMField E] (M : IntermediateField E Ω) [NumberField M]
     (h : M ≤ conjField E Ω) : IsCMField M := by
-  haveI : IsTotallyComplex M := isTotallyComplex_of_algebra E M
+  have : IsTotallyComplex M := isTotallyComplex_of_algebra E M
   have hc : ∀ x : M, ∃ y : M, ∀ φ : Ω →+* ℂ, φ y = starRingEnd ℂ (φ x) := fun x => by
     obtain ⟨y, hy⟩ := h x.2
     exact ⟨⟨y, mem_of_conj x.2 hy⟩, hy⟩

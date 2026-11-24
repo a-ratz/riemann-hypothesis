@@ -159,7 +159,7 @@ theorem finite_fiber {Y : Type} [AddCommGroup Y] [Module O Y]
   rcases Set.eq_empty_or_nonempty {z : Y | ϖ • z = y} with h | ⟨z, hz⟩
   · rw [h]; exact Set.finite_empty
   · refine (hf.image (fun t => z + t)).subset fun x hx => ⟨x - z, ?_, by simp⟩
-    simp only [Set.mem_setOf_eq] at hz hx ⊢
+    simp only [Set.mem_ofPred_eq] at hz hx ⊢
     rw [smul_sub, hz, hx, sub_self]
 
 omit [IsDomain O] [IsDiscreteValuationRing O] in
@@ -169,7 +169,7 @@ theorem finite_pow {Y : Type} [AddCommGroup Y] [Module O Y]
   | zero => exact (Set.finite_singleton 0).subset fun x hx => by simpa using hx
   | succ n ih =>
     refine (ih.biUnion fun y _ => finite_fiber hf y).subset fun x hx => ?_
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at hx ⊢
     exact ⟨ϖ • x, by rw [← mul_smul, ← pow_succ, hx], rfl⟩
 
 def pw (ϖ : O) (Y : Type) [AddCommGroup Y] [Module O Y] (n : ℕ) : Submodule O Y :=

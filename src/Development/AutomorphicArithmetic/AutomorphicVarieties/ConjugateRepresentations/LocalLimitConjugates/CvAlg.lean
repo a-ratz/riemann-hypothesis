@@ -100,7 +100,7 @@ theorem UpperTheory.V.Cj.H.cvAlg :
     refine ⟨B * (N : ℝ), fun F x hx ↦ ?_⟩
     refine hbd x N (fun g ↦ le_trans (Set.encard_le_encard ?_) (hN g)) F
     intro γ hγ
-    simp only [Set.mem_setOf_eq] at hγ ⊢
+    simp only [Set.mem_ofPred_eq] at hγ ⊢
     have hmem : ((γ : G) * g)⁻¹ * x ∈ tsupport ψ := subset_tsupport _ (Function.mem_support.2 hγ)
     have heq : (γ : G) * g = x * (((γ : G) * g)⁻¹ * x)⁻¹ := by group
     rw [heq]

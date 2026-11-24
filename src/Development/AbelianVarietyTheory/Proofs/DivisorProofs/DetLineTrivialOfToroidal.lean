@@ -140,7 +140,7 @@ theorem exists_ev_eq [UniversallyClosed p] [GeometricallyIntegral p] (a : Γ(X, 
   let sn := pullback.snd p (spMap σ)
   let e : ℂ →+* Γ(pullback p (spMap σ), ⊤) :=
     sn.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of ℂ)).inv.hom
-  letI : Algebra ℂ Γ(pullback p (spMap σ), ⊤) := e.toAlgebra
+  let : Algebra ℂ Γ(pullback p (spMap σ), ⊤) := e.toAlgebra
   have hcomp : (algebraMap ℂ Γ(pullback p (spMap σ), ⊤)).comp
       ((Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom.comp (spMap σ).appTop.hom) =
       fs.appTop.hom.comp p.appTop.hom := by
@@ -369,7 +369,7 @@ theorem isAlgebraic_of_one_value {F A C : Type} [Field F] [CommRing A] [Nontrivi
   have key : ∀ m : Ideal A, m.IsMaximal →
       ∃ φ : A →ₐ[F] C, (∀ a, φ a = 0 → a ∈ m) ∧ IsAlgebraic F (φ s) := by
     intro m hm
-    letI := Ideal.Quotient.field m
+    let := Ideal.Quotient.field m
     have : Module.Finite F (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing F (A ⧸ m)
     let σ : (A ⧸ m) →ₐ[F] C := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -427,9 +427,9 @@ theorem exists_eq_algX {F : Type} [Field F] {Y : Scheme.{0}} (p : Y ⟶ Sp F) [G
       HasRingHomProperty.appLE @LocallyOfFiniteType p inferInstance ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ _
     exact h1.comp (RingHom.FiniteType.of_surjective _
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of F)).inv).2)
-  letI : Algebra F Γ(Y, U) := (algX p U).toAlgebra
+  let : Algebra F Γ(Y, U) := (algX p U).toAlgebra
   have : Algebra.FiniteType F Γ(Y, U) := hc
-  letI : Algebra F ℂ := e.toAlgebra
+  let : Algebra F ℂ := e.toAlgebra
   have hg : hU.fromSpec ≫ p = Spec.map (CommRingCat.ofHom (algebraMap F Γ(Y, U))) := by
     have h := IsAffineOpen.SpecMap_appLE_fromSpec p (isAffineOpen_top _) hU
       (show U ≤ p ⁻¹ᵁ ⊤ from le_top)
@@ -516,7 +516,7 @@ theorem exists_eq_algX {F : Type} [Field F] {X Z : Scheme.{0}} (p : X ⟶ Sp F) 
   have hcomp : g.appTop.hom.comp (algX p ⊤) = algX (g ≫ p) ⊤ := by
     rw [hal, hal, Scheme.Hom.comp_appTop]
     rfl
-  letI := (isField_of_universallyClosed F p).toField
+  let := (isField_of_universallyClosed F p).toField
   let φ : Γ(X, ⊤) →+* Z.functionField := (GlobalTheory.Cartier.fnOf ⊤ trivial).comp g.appTop.hom
   have hφ : φ.comp (algX p ⊤) = GlobalTheory.Cartier.constFn (g ≫ p) := by
     rw [RingHom.comp_assoc, hcomp]
@@ -834,7 +834,7 @@ theorem exists_ext (Z : Model Xo c β) (U : Set (Xo.XF c)) (j : c.F →+* R) (x 
     (h1 : x ≫ toF Xo c = spMap ((algebraMap R K).comp j)) (hU : Set.range x ⊆ U) :
     ∃ χ : Sp R ⟶ gen Z, χ ≫ genStr Z = spMap j ∧ x ≫ Z.jQ = spMap (algebraMap R K) ≫ χ ∧
       Set.range χ ⊆ compactOf Z U := by
-  haveI := isProper_genStr Z
+  have := isProper_genStr Z
   obtain ⟨χ, h2, h3⟩ := GlobalTheory.exists_valuativeExtension (genStr Z) (spMap j) (x ≫ Z.jQ) (by
     rw [Category.assoc, Z.jQ_over, ← Geo.Tor.spMap_comp]
     exact h1)
@@ -1195,8 +1195,8 @@ theorem eq_zero_of_half_mem {g : ℕ} (Λ : Submodule ℤ (Fin g → ℂ)) [hd :
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E}
 
 theorem subsingleton_lattice (D : Datum H) (hD : D.p + D.q = 0) : Subsingleton D.La := by
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   by_contra hne
   have hnt : Nontrivial D.La := not_subsingleton_iff_nontrivial.1 hne
   have := (Module.finrank_pos_iff (R := 𝓞 E) (M := D.La)).2 hnt
@@ -1206,7 +1206,7 @@ theorem subsingleton_lattice (D : Datum H) (hD : D.p + D.q = 0) : Subsingleton D
 theorem subsingleton_unif {D : Datum H} {l : Level H} {B : Type} [CommRing B] {b : Base l B} {s : Sp ℂ ⟶ Sp B}
     (hD : D.p + D.q = 0) (o : Obj D l b s) {g : ℕ} (u : HolUnif o.t.G o.t.PP.L g) :
     Subsingleton (Fin g → ℂ) := by
-  haveI := subsingleton_lattice D hD
+  have := subsingleton_lattice D hD
   obtain ⟨-, I, -⟩ := o.geom ℂ (𝟙 _) (Spec.preimage s).hom (by simp [spMap])
   have h1 : I.ev 2 0 = 1 := (I.ker 2 two_pos 0).2 ⟨0, Subsingleton.elim _ _⟩
   have htor : ∀ x : 𝟙_ (Over (Sp ℂ)) ⟶ o.t.G, x * x = 1 → x = 1 := by
@@ -1214,7 +1214,7 @@ theorem subsingleton_unif {D : Datum H} {l : Level H} {B : Type} [CommRing B] {b
     obtain ⟨a, ha⟩ := (I.onto 2 two_pos x).1 (by rw [pow_two]; exact hx)
     rw [Subsingleton.elim a 0, h1] at ha
     exact ha.symm
-  haveI := u.discrete
+  have := u.discrete
   have hΛ : ∀ z ∈ u.Λ, z = 0 := by
     refine eq_zero_of_half_mem u.Λ (fun z hz => (u.ker _).1 (htor _ ?_))
     rw [← u.ex_add, ← add_smul, u.ker]
@@ -1229,8 +1229,8 @@ theorem hasTransport_of_rank_zero (E : Type) [Field E] [NumberField E] [IsCMFiel
     (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l)
     (U : Set (Xo.XF c)) (e : c.F →+* ℂ) (hD : D.p + D.q = 0) : HasTransport Xo c U e := by
   intro y y' _ _ _ _ o o' _ _ g g' u u' Hm Hm' κ κ' _ _
-  haveI := subsingleton_unif hD o u
-  haveI := subsingleton_unif hD o' u'
+  have := subsingleton_unif hD o u
+  have := subsingleton_unif hD o' u'
   haveI : Subsingleton (𝟙_ (Over (Sp ℂ)) ⟶ o'.t.G) := u'.ex_onto.subsingleton
   refine ⟨LinearEquiv.ofSubsingleton _ _, fun z => ?_, fun _ _ _ _ => Subsingleton.elim _ _, fun z w => ?_,
     fun _ _ _ => Subsingleton.elim _ _, fun _ _ _ => Subsingleton.elim _ _⟩
@@ -1447,13 +1447,13 @@ private theorem mult_conjEmb_eq_ite {H : Host E} (D : Datum H) (τ : E →+* ℂ
   · have h2 : ¬ conjEmb τ (H.rt : E) = H.rt0 := by
       rw [hc, h, rt0_conj_neg_ne_zero]
       exact fun e => hne e.symm
-    rw [if_pos h, if_neg h2]
+    rw [ite_eq_left h, ite_eq_right h2]
   · have h2 : conjEmb τ (H.rt : E) = H.rt0 := by
       rw [hc, h, map_neg, rt0_conj_neg_ne_zero, neg_neg]
     have h3 : ¬ τ (H.rt : E) = H.rt0 := by
       rw [h]
       exact fun e => hne e.symm
-    rw [if_pos h2, if_neg h3]
+    rw [ite_eq_left h2, ite_eq_right h3]
 
 end GlobalTheory.ConjugateMultiplicity
 

@@ -59,7 +59,7 @@ set_option autoImplicit false
 private lemma int_range {L A : Type} [Field L] [Algebra ℂ L] [CommRing A] [Algebra ℂ A] [Algebra A L]
     [IsScalarTower ℂ A L] (hA : ∀ a : A, a ∈ (algebraMap ℂ A).range) {y : L} (h : IsIntegral A y) :
     y ∈ (algebraMap ℂ L).range := by
-  haveI : Algebra.IsIntegral ℂ A := ⟨fun a => by
+  have : Algebra.IsIntegral ℂ A := ⟨fun a => by
     obtain ⟨c, rfl⟩ := hA a
     exact isIntegral_algebraMap⟩
   have hy : IsIntegral ℂ y := isIntegral_trans y h

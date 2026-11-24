@@ -61,12 +61,12 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem frob_pow_fin (k L : Type) [Field k] [Finite k] [Field L] [Algebra k L] [Algebra.IsAlgebraic k L]
     (τ : L →ₐ[k] L) (S : Finset L) : ∃ i : ℕ, ∀ x ∈ S, τ x = x ^ Nat.card k ^ i := by
   classical
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   let E := IntermediateField.adjoin k (S : Set L)
-  haveI : FiniteDimensional k E :=
+  have : FiniteDimensional k E :=
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
-  haveI : Finite E := Module.finite_of_finite k
-  haveI : Normal k E := inferInstance
+  have : Finite E := Module.finite_of_finite k
+  have : Normal k E := inferInstance
   let τE : E →ₐ[k] E := τ.restrictNormal E
   have hbij : Function.Bijective τE := Finite.injective_iff_bijective.1 τE.toRingHom.injective
   let e : E ≃ₐ[k] E := AlgEquiv.ofBijective τE hbij
@@ -116,7 +116,7 @@ private theorem alg_residue {Ω : Type} [Field Ω] [CharZero Ω] (A : ValuationS
       rw [Int.isUnit_iff] at hu
       have := hr.two_le
       omega
-    · haveI : CharZero k := (CharP.ringChar_zero_iff_CharZero k).1 hr
+    · have : CharZero k := (CharP.ringChar_zero_iff_CharZero k).1 hr
       have : p.primPart = 0 := by
         apply Polynomial.map_injective (algebraMap ℤ k) (RingHom.injective_int (algebraMap ℤ k))
         rw [h, Polynomial.map_zero]
@@ -169,10 +169,10 @@ private theorem dec_pow_fin {K Ω : Type} [Field K] [NumberField K] [Field Ω] [
     (hg : g ∈ Dec (F := K) A) (S : Finset A) :
     ∃ i : ℕ, ∀ x ∈ S, A.valuation (g x - (x : Ω) ^ normV v ^ i) < 1 := by
   classical
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 K ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 K ⧸ v.asIdeal) := Ideal.Quotient.field _
   have hint : ∀ a : 𝓞 K, ((algebraMap K Ω).comp (algebraMap (𝓞 K) K)) a ∈ A := fun a =>
     mem_of_isIntegral_int A ((NumberField.RingOfIntegers.isIntegral_coe a).algebraMap (B := Ω))
   let f0 : 𝓞 K →+* A := ((algebraMap K Ω).comp (algebraMap (𝓞 K) K)).codRestrict A hint
@@ -182,10 +182,10 @@ private theorem dec_pow_fin {K Ω : Type} [Field K] [NumberField K] [Field Ω] [
     show IsLocalRing.residue A (f0 a) = 0
     rw [IsLocalRing.residue_eq_zero_iff, ValuationSubring.valuation_lt_one_iff]
     exact (hA a).2 ha
-  letI : Algebra (𝓞 K ⧸ v.asIdeal) (IsLocalRing.ResidueField A) :=
+  let : Algebra (𝓞 K ⧸ v.asIdeal) (IsLocalRing.ResidueField A) :=
     (Ideal.Quotient.lift v.asIdeal f1 hker).toAlgebra
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ K Ω
-  haveI : Algebra.IsAlgebraic (𝓞 K ⧸ v.asIdeal) (IsLocalRing.ResidueField A) := ⟨fun y => by
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ K Ω
+  have : Algebra.IsAlgebraic (𝓞 K ⧸ v.asIdeal) (IsLocalRing.ResidueField A) := ⟨fun y => by
     obtain ⟨x, rfl⟩ := IsLocalRing.residue_surjective y
     exact alg_residue A _ x ((IsFractionRing.isAlgebraic_iff ℤ ℚ Ω).2 (Algebra.IsAlgebraic.isAlgebraic (x : Ω)))⟩
   let gD : ValuationSubring.decompositionSubgroup K A := ⟨g, hg⟩
@@ -217,7 +217,7 @@ private theorem closed_ev {K Ω : Type} [Field K] [Field Ω] [Algebra K Ω] [Alg
     (P : Ω → Prop) : IsClosed {h : G K Ω | P (h x)} := by
   rw [← isOpen_compl_iff, isOpen_iff_forall_mem_open]
   intro h hh
-  haveI : FiniteDimensional K (IntermediateField.adjoin K {x}) :=
+  have : FiniteDimensional K (IntermediateField.adjoin K {x}) :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
   refine ⟨(fun k => h * k) '' (((IntermediateField.adjoin K {x}).fixingSubgroup : Subgroup (G K Ω)) : Set (G K Ω)),
     ?_, ?_, ⟨1, one_mem _, mul_one h⟩⟩
@@ -234,13 +234,13 @@ theorem UpperTheory.V.Kum.decGen :
     IsPlaceOver A v → IsFrob (F := K) A (normV v) σ → IsOpen (H : Set (G K Ω)) → Ine (F := K) A ≤ H → σ ∈ H → Dec (F := K) A ≤ H := by
   classical
   intro K Ω _ _ _ _ _ A v σ H hA hσ hHo hI hσH g hg
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
   have hHc : IsClosed (H : Set (G K Ω)) := Subgroup.isClosed_of_isOpen H hHo
   have hσD : σ ∈ Dec (F := K) A := hσ.1
   have hDc : IsClosed (Dec (F := K) A : Set (G K Ω)) := by
     have e : (Dec (F := K) A : Set (G K Ω)) = ⋂ x : Ω, {h : G K Ω | (h x ∈ A ↔ x ∈ A)} := by
       ext h
-      simp only [Set.mem_iInter, Set.mem_setOf_eq, SetLike.mem_coe]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq, SetLike.mem_coe]
       constructor
       · intro hh x
         exact apply_mem_iff_of_mem_Dec hh x

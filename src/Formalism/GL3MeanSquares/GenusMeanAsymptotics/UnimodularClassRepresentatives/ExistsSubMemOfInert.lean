@@ -87,8 +87,8 @@ private theorem card_quotient_comap_sq_eq_card_quotient_of_involution (hσ : ∀
     {P : Ideal B} (hP : P.IsMaximal) (hc : P.comap σ = P) {θ : B} (hθ : θ - σ θ ∉ P) :
     Nat.card (A ⧸ P.comap ι) ^ 2 = Nat.card (B ⧸ P) := by
   classical
-  haveI := hP
-  letI : Field (B ⧸ P) := Ideal.Quotient.field P
+  have := hP
+  let : Field (B ⧸ P) := Ideal.Quotient.field P
   have hle : P ≤ P.comap σ := le_of_eq hc.symm
   set sb : B ⧸ P →+* B ⧸ P := Ideal.quotientMap P σ hle with hsb
   set φ : A ⧸ P.comap ι →+* B ⧸ P := Ideal.quotientMap P ι le_rfl with hφ

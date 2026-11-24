@@ -344,9 +344,9 @@ theorem dl_eq (k : Fin d) (e : E n d) : (dl e : Ω[Lr K n d⁄K]) = lam K (wv k 
     rfl
   · by_cases h : j = k
     · subst h
-      simp only [wv, eps, if_true, add_zero]
+      simp only [wv, eps, ite_true, add_zero]
       rfl
-    · simp only [wv, eps, if_neg h, if_true]
+    · simp only [wv, eps, ite_eq_right h, ite_true]
       rw [← lam_add]
       have h2 : ratE k j + oneE (Sum.inr k) = (oneE (Sum.inr j) : Gam n d) := by simp [ratE]
       rw [h2]

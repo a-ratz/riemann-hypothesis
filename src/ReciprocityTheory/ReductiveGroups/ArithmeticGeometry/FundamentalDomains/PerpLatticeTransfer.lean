@@ -234,7 +234,7 @@ lemma Sform_h (c c' : Fin n → E) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun k _ => Finset.sum_congr rfl fun l _ => ?_
   try simp only [cc, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv,
-    AlgEquiv.coe_ringEquiv]
+    AlgEquiv.coe_toRingEquiv]
   ring
 
 lemma herm_perp (hβξ : ∀ k, herm X.Gm (β k) ξ = 0) (c : Fin n → E) :

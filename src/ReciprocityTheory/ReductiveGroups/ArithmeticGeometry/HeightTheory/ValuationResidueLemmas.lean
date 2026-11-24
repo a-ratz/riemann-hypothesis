@@ -102,7 +102,7 @@ theorem admissible_over_prime (hd : d.AxH 𝒜) (h : d.S1) (la : IsDedekindDomai
   have hex : ∀ j, ∃ a : Ω c, d.w j c = a • d.w (d.jc c) c := by
     intro j
     have hb := hd.w_base c
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨d.w (d.jc c) c, hd.w_mem _ c⟩ : 𝒜 c d.wL)
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨d.w (d.jc c) c, hd.w_mem _ c⟩ : 𝒜 c d.wL)
       (fun h0 => hb (congrArg Subtype.val h0))).mp (hd.finrank_one c d.wL) ⟨d.w j c, hd.w_mem j c⟩
     exact ⟨a, (congrArg Subtype.val ha).symm⟩
   let a : Fin (d.N + 1) → Ω c := fun j => ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c)
@@ -182,9 +182,9 @@ theorem admissible_over_prime (hd : d.AxH 𝒜) (h : d.S1) (la : IsDedekindDomai
       · rw [hrel0 i hi]; simp [t, q0]; rfl
     · rw [hpk]; simp [t, q0]
 
-  letI _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) f
-  letI _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra ((vRing w).comap f) (algebraMap K (Ω c))
-  letI : Algebra (ResidueField (((vRing w).comap f).comap (algebraMap K (Ω c))))
+  let _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) f
+  let _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra ((vRing w).comap f) (algebraMap K (Ω c))
+  let : Algebra (ResidueField (((vRing w).comap f).comap (algebraMap K (Ω c))))
       (ResidueField (vRing w)) :=
     ((algebraMap _ (ResidueField (vRing w))).comp
       (algebraMap _ (ResidueField ((vRing w).comap f)))).toAlgebra
@@ -255,10 +255,10 @@ theorem admissible_over_prime (hd : d.AxH 𝒜) (h : d.S1) (la : IsDedekindDomai
       (ResidueField (((vRing w).comap f).comap (algebraMap K (Ω c))))
       (fun j => residue (vRing w) (u j)) := by
     classical
-    letI _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) f
-    letI _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra ((vRing w).comap f)
+    let _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) f
+    let _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra ((vRing w).comap f)
       (algebraMap K (Ω c))
-    letI : Algebra (ResidueField (((vRing w).comap f).comap (algebraMap K (Ω c))))
+    let : Algebra (ResidueField (((vRing w).comap f).comap (algebraMap K (Ω c))))
         (ResidueField (vRing w)) :=
       ((algebraMap _ (ResidueField (vRing w))).comp
         (algebraMap _ (ResidueField ((vRing w).comap f)))).toAlgebra
@@ -394,9 +394,9 @@ theorem admissible_over_prime (hd : d.AxH 𝒜) (h : d.S1) (la : IsDedekindDomai
     w t ht hG _ (fun β => hcoefW _ hL β) (Finsupp.single (Sum.inl ()) 1) ?_
   rw [MvPolynomial.coeff_sum, Fin.sum_univ_succAbove _ j0]
   simp only [hpj0, hpk, ↓reduceIte, hr0, map_one, mul_one]
-  rw [MvPolynomial.coeff_X', if_pos rfl, Finset.sum_eq_zero, add_zero]
+  rw [MvPolynomial.coeff_X, ite_eq_left rfl, Finset.sum_eq_zero, add_zero]
   intro x _
-  rw [mul_comm, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X', if_neg, mul_zero]
+  rw [mul_comm, MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X, ite_eq_right, mul_zero]
   rw [Finsupp.single_left_inj one_ne_zero]
   simp
 

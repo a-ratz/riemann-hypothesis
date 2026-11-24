@@ -386,7 +386,7 @@ theorem UpperTheory.span_ordinaryPart_eq_sup_unit_generalized_eigenspaces :
     ∀ (O Ω ι : Type) [CommRing O] [IsCNL O] [Field Ω] [IsAlgClosed Ω] [Algebra O Ω] [Fintype ι] (T₀ : Module.End O (ι → O)) (T : Module.End Ω (ι → Ω)), (∀ v, T (fun i => algebraMap O Ω (v i)) = fun i => algebraMap O Ω (T₀ v i)) → ⨆ μ : {μ : Ω // IsIntUnit O μ}, T.maxGenEigenspace μ.1 = Submodule.span Ω ((fun (v : ι → O) i => algebraMap O Ω (v i)) '' (ordPart T₀ : Set (ι → O))) := by
   intro O Ω ι _ hO _ _ _ _ T₀ T hT
   classical
-  haveI : IsAdicComplete (maximalIdeal O) O := hO.complete
+  have : IsAdicComplete (maximalIdeal O) O := hO.complete
   have hadm := (UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordAdm_maximalIdeal_and_finite_quotients (R := O) (M := ι → O)).1
   have hex := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordExists hadm T₀
   have key := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.eigOrdInt (K := Ω) hex.1
@@ -434,8 +434,8 @@ open IsLocalRing UpperTheory.V.Hi UpperTheory.V.AlgebraTools.AnnihilatorQuotient
 theorem UpperTheory.exists_free_lattice_spanning_ordinary_part :
     ∀ (O Ω V ι : Type) [CommRing O] [IsCNL O] [Field Ω] [IsAlgClosed Ω] [Algebra O Ω] [AddCommGroup V] [Module Ω V] [Module O V] [IsScalarTower O Ω V] [Fintype ι] (C : Submodule Ω V) (T : Module.End Ω V) (ev : V →ₗ[Ω] (ι → Ω)), Function.Injective (algebraMap O Ω) → Set.BijOn ev C Set.univ → (∀ F ∈ C, T F ∈ C) → (∀ F ∈ C, (∀ i, ev F i ∈ mIm O Ω 0) → ∀ i, ev (T F) i ∈ mIm O Ω 0) → ∃ S : Submodule O V, Module.Free O S ∧ (⨆ μ : {μ : Ω // IsIntUnit O μ}, C ⊓ T.maxGenEigenspace μ.1) = Submodule.span Ω (S : Set V) ∧ (∀ F ∈ S, F ∈ C ∧ (∀ i, ev F i ∈ mIm O Ω 0) ∧ ∀ k : ℕ, ∃ n : ℕ, ∀ i, ev ((T ^ (n + 1)) F - F) i ∈ mIm O Ω k) ∧ ∀ F ∈ C, (∀ i, ev F i ∈ mIm O Ω 0) → ∃ F' ∈ S, ∀ k : ℕ, ∃ J : ℕ, ∀ j, J ≤ j → ∀ i, ev ((T ^ j.factorial) F - F') i ∈ mIm O Ω k := by
   intro O Ω V ι _ _ _ _ _ _ _ _ _ _ C T ev hinj hbij hTC hint
-  haveI : IsAdicComplete (maximalIdeal O) O := IsCNL.complete
-  haveI : Finite (ResidueField O) := IsCNL.finite
+  have : IsAdicComplete (maximalIdeal O) O := IsCNL.complete
+  have : Finite (ResidueField O) := IsCNL.finite
   obtain ⟨hadm, hfin⟩ := ordAdm_maximalIdeal_and_finite_quotients (R := O) (M := ι → O)
   have hfin' := hfin ‹_›
   set A := algebraMap O Ω with hA
@@ -484,9 +484,9 @@ theorem UpperTheory.exists_free_lattice_spanning_ordinary_part :
     have := map_mem_smul_top (LinearMap.proj (R := O) (φ := fun _ : ι => O) i) _ hx
     simpa using this
   refine ⟨(ordPart T₀).map L, ?_, ?_, ?_, ?_⟩
-  · haveI := (ordProjective hadm T₀).1 inferInstance
-    haveI := (ordProjective hadm T₀).2 inferInstance
-    haveI : Module.Free O (ordPart T₀) := Module.free_of_flat_of_isLocalRing
+  · have := (ordProjective hadm T₀).1 inferInstance
+    have := (ordProjective hadm T₀).2 inferInstance
+    have : Module.Free O (ordPart T₀) := Module.free_of_flat_of_isLocalRing
     exact Module.Free.of_equiv (Submodule.equivMapOfInjective L hLinj _)
   · have key' : (⨆ μ : {μ : Ω // IsIntUnit O μ}, T'.maxGenEigenspace μ.1) =
         Submodule.span Ω (jL '' (ordPart T₀ : Set (ι → O))) := key
@@ -551,7 +551,7 @@ theorem UpperTheory.injective_on_span_of_integral_free_submodule :
     ∀ (O Ω V α : Type) [CommRing O] [IsDomain O] [Field Ω] [Algebra O Ω] [AddCommGroup V] [Module Ω V] [Module O V] [IsScalarTower O Ω V] (m : ℕ) (ψ : V →ₗ[Ω] (α → Fin m → Ω)) (S : Submodule O V), Function.Injective (algebraMap O Ω) → Module.Free O S → (∀ F ∈ S, ∀ g i, ψ F g i ∈ (algebraMap O Ω).range) → (∀ F ∈ S, ψ F = 0 → F = 0) → ∀ F ∈ Submodule.span Ω (S : Set V), ψ F = 0 → F = 0 := by
   intro O Ω V α _ _ _ _ _ _ _ _ m ψ S hinj hfree hrange hker F hF hψF
   classical
-  haveI := hfree
+  have := hfree
   let b := Module.Free.chooseBasis O S
   have hex : ∀ i g j, ∃ r : O, algebraMap O Ω r = ψ (b i : V) g j := fun i g j =>
     RingHom.mem_range.1 (hrange _ (b i).2 g j)

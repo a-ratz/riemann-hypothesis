@@ -80,8 +80,8 @@ theorem exists_unit (hG : GenSt) (hL : Laws U x) (s : ArchSec U x Z (flatWt Dw �
     rw [show algebraMap R (Localization.Away q) q = 0 from (congrArg _ h0).trans (map_zero _), map_zero] at this
     exact absurd this not_isUnit_zero
   have hle' : Submonoid.powers q ≤ nonZeroDivisors R := powers_le_nonZeroDivisors_of_noZeroDivisors h0
-  haveI : IsDomain (Localization.Away q) := IsLocalization.isDomain_localization hle'
-  haveI : IsIntegrallyClosed (Localization.Away q) := isIntegrallyClosed_of_isLocalization _ _ hle'
+  have : IsDomain (Localization.Away q) := IsLocalization.isDomain_localization hle'
+  have : IsIntegrallyClosed (Localization.Away q) := isIntegrallyClosed_of_isLocalization _ _ hle'
   have hinj : Function.Injective (algebraMap R (Localization.Away q)) := IsLocalization.injective _ hle'
   let ρ := algebraMap R (Localization.Away q)
   have hu' : IsUnit ((p : Localization.Away q) * (ρ (pairDet a₁ (U₁ ∘ K₁)) * ρ (pairDet a₂ (U₂ ∘ K₂)))) := by
@@ -95,7 +95,7 @@ theorem exists_unit (hG : GenSt) (hL : Laws U x) (s : ArchSec U x Z (flatWt Dw �
       ext i j
 
       simp [map_sum]
-  haveI : IsOpenImmersion (spMap ρ) := IsOpenImmersion.of_isLocalization q
+  have : IsOpenImmersion (spMap ρ) := IsOpenImmersion.of_isLocalization q
   obtain ⟨f, hf⟩ := hG E H Dw l l' Xo Xo' c c' W Y r ν hle r₀ U x hL Z τ s la p Xw Fact.out hc (Localization.Away q)
     (spMap ρ ≫ ξ) (ρ.comp β) inferInstance (by rw [Category.assoc, hβ, spMap_spMap]) (isUnit_of_mul_isUnit_left hu')
     (by rw [bot_map hinj]; exact hξ) g (bcV Y.t ρ e) (fun i b => ρ (U₁ (K₁ i) b)) (fun i b => ρ (a₁ i b))

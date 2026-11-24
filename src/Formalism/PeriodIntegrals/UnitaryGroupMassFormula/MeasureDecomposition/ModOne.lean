@@ -70,20 +70,20 @@ def conjSub (N : Subgroup G) (g : G) (h1 : ∀ x ∈ N, g * x * g⁻¹ ∈ N) (h
 theorem continuous_conjSub (N : Subgroup G) (g : G) (h1 : ∀ x ∈ N, g * x * g⁻¹ ∈ N)
     (h2 : ∀ x ∈ N, g⁻¹ * x * g ∈ N) : Continuous (conjSub N g h1 h2) := by
   show Continuous fun x : N => (⟨g * x * g⁻¹, h1 x x.2⟩ : N)
-  exact Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+  exact Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
 
 theorem continuous_conjSub_symm (N : Subgroup G) (g : G) (h1 : ∀ x ∈ N, g * x * g⁻¹ ∈ N)
     (h2 : ∀ x ∈ N, g⁻¹ * x * g ∈ N) : Continuous (conjSub N g h1 h2).symm := by
   show Continuous fun x : N => (⟨g⁻¹ * x * g, h2 x x.2⟩ : N)
-  exact Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+  exact Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
 
 variable [LocallyCompactSpace G] [T2Space G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]
 
 theorem conj_eq_smul (N : Subgroup G) (hN : IsClosed (N : Set G)) (g : G) (h1 : ∀ x ∈ N, g * x * g⁻¹ ∈ N)
     (h2 : ∀ x ∈ N, g⁻¹ * x * g ∈ N) :
     ∃ c : ℝ≥0, (haarSub N hN).map (fun x => g * x * g⁻¹) = c • haarSub N hN := by
-  haveI : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology N := by
+  have : LocallyCompactSpace N := hN.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology N := by
     first
       | exact TopologicalSpace.Subtype.secondCountableTopology (N : Set G)
       | exact Topology.IsInducing.subtypeVal.secondCountableTopology
@@ -91,18 +91,18 @@ theorem conj_eq_smul (N : Subgroup G) (hN : IsClosed (N : Set G)) (g : G) (h1 : 
       | infer_instance
   have hφc := continuous_conjSub N g h1 h2
   have hφs := continuous_conjSub_symm N g h1 h2
-  haveI := MulEquiv.isHaarMeasure_map (Measure.haar : Measure N) (conjSub N g h1 h2) hφc hφs
+  have := MulEquiv.isHaarMeasure_map (Measure.haar : Measure N) (conjSub N g h1 h2) hφc hφs
   refine ⟨Measure.haarScalarFactor ((Measure.haar : Measure N).map (conjSub N g h1 h2)) Measure.haar, ?_⟩
   have hc : Measurable (fun x : G => g * x * g⁻¹) :=
     ((continuous_const.mul continuous_id).mul continuous_const).measurable
   have hcomp : (fun x : G => g * x * g⁻¹) ∘ (Subtype.val : N → G) = Subtype.val ∘ (conjSub N g h1 h2) :=
     rfl
   unfold haarSub
-  rw [Measure.map_map hc measurable_subtype_coe, hcomp,
-    ← Measure.map_map measurable_subtype_coe hφc.measurable]
+  rw [Measure.map_map hc measurable_subtypeVal, hcomp,
+    ← Measure.map_map measurable_subtypeVal hφc.measurable]
   conv_lhs => rw [Measure.isMulLeftInvariant_eq_smul ((Measure.haar : Measure N).map (conjSub N g h1 h2))
     Measure.haar]
-  rw [Measure.map_smul _ measurable_subtype_coe.aemeasurable]
+  rw [Measure.map_smul _ measurable_subtypeVal.aemeasurable]
 
 end Conj
 
@@ -137,7 +137,7 @@ theorem genModOne_of (hHaar : GenHaarSub) : GenModOne := by
       | (rw [mul_comm a, mul_comm b] at hab; exact (ENNReal.mul_eq_mul_left hCpos.ne' hCfin.ne).mp hab)
   have cancel : ∀ c d : ℝ≥0, c • haarSub N hN = d • haarSub N hN → c = d := fun c d hcd => by
     have e := congrArg (fun μ : Measure G => μ C) hcd
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e
     exact_mod_cast key _ _ e
   have hk1 : (haarSub N hN).map (fun x => k * x * k⁻¹) = haarSub N hN := by
     obtain ⟨ck, hck⟩ := hsc k hk
@@ -146,7 +146,7 @@ theorem genModOne_of (hHaar : GenHaarSub) : GenModOne := by
       rw [Measure.map_apply (hm k) hC.measurableSet, hpre]
     rw [hck] at e1
     have e3 : (ck : ℝ≥0∞) * haarSub N hN C = 1 * haarSub N hN C := by
-      simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e1
+      simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e1
       rw [one_mul]
       exact e1
     have hck1 : ck = 1 := by exact_mod_cast key _ _ e3

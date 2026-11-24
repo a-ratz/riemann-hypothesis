@@ -164,7 +164,7 @@ private theorem neg_log_int_lemma_3 (w : HeightOneSpectrum R) {r : R} (hr : r �
   rw [w.valuation_of_algebraMap, w.intValuation_if_neg hr, WithZero.log_exp,
     ← FractionalIdeal.coeIdeal_span_singleton]
   have hJ : Ideal.span {r} ≠ 0 := by simpa using hr
-  rw [FractionalIdeal.count_coe K w hJ]
+  rw [FractionalIdeal.count_coeIdeal K w hJ]
   simp
 
 theorem neg_log_valuation (w : HeightOneSpectrum R) {x : K} (hx : x ≠ 0) :
@@ -1261,7 +1261,7 @@ theorem l2 (Q : Run D B P) (H1 : ∀ la : HeightOneSpectrum (𝓞 B.KO), LengthL
         ∀ e0 : ℤ, (Q.T : ℝ) * Q.nus la ≤ (e0 : ℝ) → ∀ W0 : Submodule B.KO (B.Cusp Q.jn Q.ka),
           (lidx la.asIdeal (Q.M0 ⊓ W0.restrictScalars (𝓞 B.KO)) (Q.M0 ⊓ Q.Th0 ⊓ W0.restrictScalars (𝓞 B.KO)) : ℝ) ≤
             (e0 : ℝ) * (finrank B.KO W0 : ℝ) + r la := by
-  letI := hM
+  let := hM
   obtain ⟨r, h0, h1, h2, h3⟩ := h
   refine ⟨r, h0, h1, h2, fun la => ?_⟩
   set φ : B.Cusp Q.jn Q.ka →ₗ[B.KO] Q.X.Forms := Q.X.inc Q.ka with hφ

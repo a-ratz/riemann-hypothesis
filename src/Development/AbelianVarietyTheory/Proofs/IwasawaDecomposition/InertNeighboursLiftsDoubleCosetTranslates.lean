@@ -445,7 +445,7 @@ theorem card_killedBy_congr {M N : Type} [AddCommGroup M] [Module (𝓞 E) M] [A
     (e : M ≃ₗ[𝓞 E] N) (I : Ideal (𝓞 E)) :
     Nat.card (killedBy I : Set M) = Nat.card (killedBy I : Set N) :=
   Nat.card_congr (e.toEquiv.subtypeEquiv fun x => by
-    simp only [killedBy, Set.mem_setOf_eq]
+    simp only [killedBy, Set.mem_ofPred_eq]
     refine forall₂_congr fun r _ => ?_
     rw [LinearEquiv.coe_toEquiv, ← map_smul, LinearEquiv.map_eq_zero_iff])
 
@@ -454,7 +454,7 @@ theorem card_killedBy_inType (Q : Ideal (𝓞 E)) (s : List ℕ) (I : Ideal (�
       ∏ i : Fin s.length, Nat.card (killedBy I : Set (𝓞 E ⧸ Q ^ s.get i)) := by
   rw [← Nat.card_pi]
   refine Nat.card_congr ((Equiv.subtypeEquivRight fun x => ?_).trans Equiv.subtypePiEquivPi)
-  simp only [killedBy, Set.mem_setOf_eq]
+  simp only [killedBy, Set.mem_ofPred_eq]
   constructor
   · intro h i r hr; exact congrFun (h r hr) i
   · intro h r hr; funext i; exact h i r hr
@@ -488,7 +488,7 @@ theorem card_killedBy_quot (Q : Ideal (𝓞 E)) (hQ0 : Q ≠ ⊥) (a k : ℕ) :
       (((Q ^ (a - k)).map (Ideal.Quotient.mk (Q ^ a)) : Ideal (𝓞 E ⧸ Q ^ a)) : Set (𝓞 E ⧸ Q ^ a)) := by
     ext y
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
-    simp only [killedBy, Set.mem_setOf_eq, SetLike.mem_coe, Ideal.mem_quotient_iff_mem hle]
+    simp only [killedBy, Set.mem_ofPred_eq, SetLike.mem_coe, Ideal.mem_quotient_iff_mem hle]
     rw [← mem_killedBy_iff Q hQ0 a k x]
     refine forall₂_congr fun r _ => ?_
     rw [Algebra.smul_def, Ideal.Quotient.algebraMap_eq, ← map_mul, Ideal.Quotient.eq_zero_iff_mem]
@@ -564,7 +564,7 @@ theorem exists_den_idem {Q w : Pl E} {ε : E ⊗[F] Formalism.L2.Herm.Af F} (h :
     rw [map_mul, map_inv₀, show (t : E) = algebraMap (𝓞 E) E t from rfl,
       show ((N : 𝓞 E) : E) = algebraMap (𝓞 E) E (N : 𝓞 E) from rfl,
       HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap, hvk,
-      mul_inv_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), one_mul]
+      mul_inv_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), one_mul]
     exact (Q.intValuation_le_pow_iff_mem t k).2 htk
   have hNc : ((N : ℕ) : E ⊗[F] Formalism.L2.Herm.Af F) = iA F E ((N : 𝓞 E) : E) := by simp
   have hinv : iA F E ((N : 𝓞 E) : E) * iA F E (((N : 𝓞 E) : E))⁻¹ = 1 := by
@@ -669,15 +669,15 @@ theorem decoRaw_mul_idem [StarRing E] {n : ℕ} [NeZero n] (ST SG : Finset (Pl E
   · have hP : P.1 ≠ Q := fun e => hQT (e ▸ P.2)
     simp only [decoRaw]
     by_cases hv : v ∈ Formalism.HermitianLatticesTheory.localization₂ P.1.asIdeal (Formalism.UG.CS.globLat y (stdLat E n))
-    · rw [if_pos ((hiff P.1 hP v).2 hv), if_pos hv, hred P.1 hP v hv]
-    · rw [if_neg (fun h' => hv ((hiff P.1 hP v).1 h')), if_neg hv]
+    · rw [ite_eq_left ((hiff P.1 hP v).2 hv), ite_eq_left hv, hred P.1 hP v hv]
+    · rw [ite_eq_right (fun h' => hv ((hiff P.1 hP v).1 h')), ite_eq_right hv]
   · have hP : w.1 ≠ Q := fun e => hQG (e ▸ w.2)
     simp only [decoRaw]
     by_cases hv : v ∈ Formalism.HermitianLatticesTheory.localization₂ w.1.asIdeal (Formalism.UG.CS.globLat y (stdLat E n))
-    · rw [if_pos ((hiff w.1 hP v).2 hv), if_pos hv]
+    · rw [ite_eq_left ((hiff w.1 hP v).2 hv), ite_eq_left hv]
       funext i
       exact hred w.1 hP v hv i
-    · rw [if_neg (fun h' => hv ((hiff w.1 hP v).1 h')), if_neg hv]
+    · rw [ite_eq_right (fun h' => hv ((hiff w.1 hP v).1 h')), ite_eq_right hv]
 
 end GlobalTheory.InertNbr
 end -- clump:auto

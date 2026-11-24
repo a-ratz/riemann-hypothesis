@@ -254,7 +254,7 @@ theorem Lat.IsCohOn.of_isVBOn {L : Lat ξ E} {T : Set (Cpt ξ)} {r : ℕ} {V : S
 theorem Lat.not_inFibre_of_coprime (p : Cpt ξ) {q q' : ℕ} (h : q.Coprime q') (h1 : InFibre ξ q p) :
     ¬ InFibre ξ q' p := by
   intro h2
-  haveI := NormAt.isLocalRing_regAt p
+  have := NormAt.isLocalRing_regAt p
   have key : ∀ n : ℕ, IsUnit (n : regAt ξ p) → unitAt ξ p (n : Ω) := by
     intro n hn
     obtain ⟨v, hv⟩ := hn.exists_right_inv

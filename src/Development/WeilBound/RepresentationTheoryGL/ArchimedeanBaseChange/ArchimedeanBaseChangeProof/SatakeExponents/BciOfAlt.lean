@@ -819,9 +819,9 @@ theorem finDisc : FinDisc := by
       · have e : ∀ x, ‖(((c : ℂ) • φ : Sm E N)).1 x‖ₑ ^ 2 = ENNReal.ofReal (c ^ 2) * ‖φ.1 x‖ₑ ^ 2 := by
           intro x
           have h2 : ((((c : ℂ) • φ : Sm E N)).1 x) = (c : ℂ) * φ.1 x := rfl
-          rw [h2, enorm_mul, mul_pow]
+          rw [h2, eNorm_mul, mul_pow]
           congr 1
-          rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hc0,
+          rw [← ofReal_norm, Complex.norm_real, Real.norm_eq_abs, abs_of_pos hc0,
             ENNReal.ofReal_pow hc0.le]
         simp only [e]
         rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, ← hL]
@@ -1633,12 +1633,12 @@ theorem limVec : LimVec := by
     hK₁.inter (GroundTheory.Automorphic.AdelicGLn.isOpen_integralFiniteGL E a)
   have hK₂' : IsOpen (K₂' : Set (GL (Fin b) (Af E))) :=
     hK₂.inter (GroundTheory.Automorphic.AdelicGLn.isOpen_integralFiniteGL E b)
-  haveI := hW₁
-  haveI := hW₂
-  haveI : FiniteDimensional ℂ (TypSp K₁' W₁ s₁.space) := fd_typSp hA s₁ hd₁ K₁' hK₁' W₁
-  haveI : FiniteDimensional ℂ (TypSp K₂' W₂ s₂.space) := fd_typSp hA s₂ hd₂ K₂' hK₂' W₂
+  have := hW₁
+  have := hW₂
+  have : FiniteDimensional ℂ (TypSp K₁' W₁ s₁.space) := fd_typSp hA s₁ hd₁ K₁' hK₁' W₁
+  have : FiniteDimensional ℂ (TypSp K₂' W₂ s₂.space) := fd_typSp hA s₂ hd₂ K₂' hK₂' W₂
   let X₀ : Submodule ℂ (H E a b → ℂ) := pairSpace (TypSp K₁' W₁ s₁.space) (TypSp K₂' W₂ s₂.space)
-  haveI : FiniteDimensional ℂ X₀ := fd_tens2 _ _
+  have : FiniteDimensional ℂ X₀ := fd_tens2 _ _
 
   have hmul₁ : ∀ k, ∀ φ ∈ (t₁ k).space, ∃ ψ ∈ s₁.space, ψ.1 = fun x => mult s₁.strip (γ₁ k) x * φ.1 x := by
     intro k φ hφ
@@ -1727,8 +1727,8 @@ theorem limVec : LimVec := by
     rw [(hfT (φ k) i).1 u₁ hu₁ u₂ hu₂ x]
   · let Z : Submodule ℂ (Kinf E a × Kinf E b → ℂ) :=
       Submodule.span ℂ {f | ∃ w₁ ∈ W₁, ∃ w₂ ∈ W₂, f = fun k => w₁ k.1 * w₂ k.2}
-    haveI : FiniteDimensional ℂ Z := fd_prodSpan W₁ W₂
-    refine (Submodule.closed_of_finiteDimensional Z).mem_of_tendsto
+    have : FiniteDimensional ℂ Z := fd_prodSpan W₁ W₂
+    refine (Submodule.isClosed_of_finiteDimensional Z).mem_of_tendsto
       (tendsto_pi_nhds.2 fun kk => hconv i (x * (infGL E a (Unitary.toUnits kk.1), infGL E b (Unitary.toUnits kk.2))))
       (Eventually.of_forall fun k => ?_)
     exact Z.smul_mem (c (φ k)) ((hfT (φ k) i).2 x)

@@ -103,7 +103,7 @@ theorem exists_isLagr_of_local (F : Type) [Field F] [NumberField F] (v : HeightO
     (hd : J.det ≠ 0) (hx : ∃ x, J.det = x * c x) :
     ∃ Cy : Matrix (Fin (m + m)) (Fin m) L, GlobalTheory.WeilM.IsLagr c J Cy := by
   classical
-  haveI : CharZero (v.adicCompletion F) :=
+  have : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   obtain ⟨x, hx⟩ := hx
   let σ : L ≃ₐ[v.adicCompletion F] L := AlgEquiv.ofAlgHom c c (AlgHom.ext hc) (AlgHom.ext hc)
@@ -178,8 +178,8 @@ theorem exists_isLagr_tensor : ∀ (F E : Type) [Field F] [NumberField F] [Field
   intro F E _ _ _ _ _ σ hcm v hF n J hn hJ hd hx
   obtain ⟨m, rfl⟩ := hn
   rw [show (m + m) / 2 = m by omega]
-  letI : Field (Fv F v ⊗[F] E) := hF.toField
-  haveI : Algebra.IsQuadraticExtension (Fv F v) (Fv F v ⊗[F] E) :=
+  let : Field (Fv F v ⊗[F] E) := hF.toField
+  have : Algebra.IsQuadraticExtension (Fv F v) (Fv F v ⊗[F] E) :=
     { finrank_eq_two' := by rw [Module.finrank_baseChange]; exact hcm.2.2.1 }
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
   have hσσ : ∀ y, σ (σ y) = y := fun y => τ.injective (by rw [hcm.2.2.2, hcm.2.2.2, star_star])
@@ -252,7 +252,7 @@ theorem exists_common_denom_conj_coords : ∀ (F E : Type) [Field F] [NumberFiel
     rw [hσ]
     exact hX g (hS ▸ Submodule.subset_span hg) i
   choose! d hd r hr using key
-  haveI := w.isPrime
+  have := w.isPrime
   refine ⟨∏ g ∈ S, ∏ i, d g i, ?_, ?_⟩
   · intro hmem
     obtain ⟨g, hg, hmem⟩ := (Ideal.IsPrime.prod_mem_iff).1 hmem
@@ -426,7 +426,7 @@ theorem valuation_det_le_pow_of_entry_le {E : Type} [Field E] [NumberField E]
     rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h <;> simp [h]
   refine (mul_le_of_le_one_left' h1).trans ?_
   calc ∏ i, w.valuation E (X (σ i) i) ≤ ∏ _i : Fin n, C :=
-        Finset.prod_le_prod' fun i _ => h _ _
+        Finset.prod_le_prod fun i _ => h _ _
     _ = C ^ n := by simp
 
 theorem exists_det_ne_zero_col_mem_of_span_eq_top {E : Type} [Field E] {n : ℕ}
@@ -444,7 +444,7 @@ theorem exists_det_ne_zero_col_mem_of_span_eq_top {E : Type} [Field E] {n : ℕ}
   let b' := b.reindex e
   refine ⟨Matrix.of fun i j => b' j i, ?_, fun j => ?_⟩
   · have hli' : LinearIndependent E (Matrix.of fun i j => b' j i).col := b'.linearIndependent
-    have := Matrix.linearIndependent_cols_iff_isUnit.1 hli'
+    have := Matrix.linearIndependent_col_iff_isUnit.1 hli'
     exact ((Matrix.isUnit_iff_isUnit_det _).1 this).ne_zero
   · have : (fun i => (Matrix.of fun i j => b' j i) i j) = (e.symm j : Fin n → E) := by
       funext i; simp [b', b]
@@ -469,7 +469,7 @@ theorem exists_local_basis_of_isLattice (E : Type) [Field E] [NumberField E]
       rintro _ ⟨X, hX, hXL, rfl⟩
       have h0 : w.valuation E X.det ≠ 0 := by simpa using hX
       have h1 := hbd X hXL
-      have h2 : C ^ n ≠ 0 := fun h => h0 (le_antisymm (h ▸ h1) zero_le')
+      have h2 : C ^ n ≠ 0 := fun h => h0 (le_antisymm (h ▸ h1) zero_le)
       exact (WithZero.log_le_log h0 h2).2 h1⟩
     ⟨_, X₀, hX₀, hX₀L, rfl⟩
   have h0 : w.valuation E X.det ≠ 0 := by simpa using hX
@@ -487,7 +487,7 @@ theorem exists_local_basis_of_isLattice (E : Type) [Field E] [NumberField E]
         simpa using hx
       · simpa [Matrix.updateCol_ne hj] using hXL j
   rw [← hcr, map_mul] at hle
-  have hpos : 0 < w.valuation E X.det := zero_lt_iff.2 h0
+  have hpos : 0 < w.valuation E X.det := pos_iff_ne_zero.2 h0
   exact (mul_le_iff_le_one_right hpos).1 hle
 
 end GlobalTheory
@@ -624,7 +624,7 @@ theorem intVal_phi_le (φ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (w :
   exact Ideal.mem_map_of_mem _ hm
 
 theorem bij (σ : E →ₐ[F] E) : Function.Bijective σ := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   exact σ.bijective
 
 theorem intVal_phi (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectrum (𝓞 E))
@@ -718,7 +718,7 @@ theorem val_det_le (w : HeightOneSpectrum (𝓞 E)) {n : ℕ} (M : Matrix (Fin n
   refine Valuation.map_sum_le _ fun p _ => ?_
   have hp : w.valuation E (∏ i, M (p i) i) ≤ c ^ n := by
     rw [map_prod]
-    calc ∏ i, w.valuation E (M (p i) i) ≤ ∏ _i : Fin n, c := Finset.prod_le_prod' fun i _ => h _ _
+    calc ∏ i, w.valuation E (M (p i) i) ≤ ∏ _i : Fin n, c := Finset.prod_le_prod fun i _ => h _ _
       _ = c ^ n := by simp
   rcases Int.units_eq_one_or (Equiv.Perm.sign p) with h1 | h1 <;> rw [h1]
   · rwa [one_smul]
@@ -769,7 +769,7 @@ theorem parity_at (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (w : Hei
   have hlow' : w.valuation E e ^ n ≤ w.valuation E (Xᵀ * J * X.map σ).det := by
     first
       | rwa [mul_inv_le_iff₀ hvG0, one_mul] at hlow
-      | rwa [mul_inv_le_iff₀ (zero_lt_iff.2 hvG0), one_mul] at hlow
+      | rwa [mul_inv_le_iff₀ (pos_iff_ne_zero.2 hvG0), one_mul] at hlow
   have hEq : w.valuation E (Xᵀ * J * X.map σ).det = w.valuation E e ^ n := le_antisymm hup hlow'
   rw [hdetG, map_mul, map_mul, val_sigma σ v w hin] at hEq
   obtain ⟨m, rfl⟩ := hn

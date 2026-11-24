@@ -129,8 +129,8 @@ theorem _root_.GlobalTheory.Published.ComplexMultiplicationJSt.finrank_eq
     Module.finrank K H = classNumber K := by
   obtain ⟨H₀, art, hH₀, -, -, -⟩ := h K h2
   obtain rfl : H = H₀ := le_antisymm (hH₀.2 H hH.1) (hH.2 H₀ hH₀.1)
-  haveI := hH.1.1
-  haveI := hH.1.2.1
+  have := hH.1.1
+  have := hH.1.2.1
   rw [← IsGalois.card_aut_eq_finrank, ← Nat.card_congr art.toEquiv, classNumber,
     Nat.card_eq_fintype_card]
 

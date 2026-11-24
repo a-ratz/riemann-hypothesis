@@ -62,7 +62,7 @@ theorem quadChar_unrAt_of_isUnramifiedAt (E : Type) [Field E] [NumberField E] [I
     · exact GlobalTheory.LFun.isUnram_of_isSplit h2 hs
     · refine GlobalTheory.LFun.isUnram_iff.2 fun u hu => ?_
       obtain rfl := GlobalTheory.LFun.eq_of_not_isSplit hs hu rfl
-      haveI := u.isPrime
+      have := u.isPrime
       exact Algebra.isUnramifiedAt_iff_of_isDedekindDomain.1 hw
   intro x hx
   have hn := GlobalTheory.LFun.mem_normGroup_of_isUnram h2 hu hx

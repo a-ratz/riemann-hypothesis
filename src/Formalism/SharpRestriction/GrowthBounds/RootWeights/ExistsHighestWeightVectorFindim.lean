@@ -245,7 +245,7 @@ private theorem restrictStableOperators_locallyFinite {n : ℕ} {K V : Type*} [F
       ∀ a b, ∀ y ∈ U, restrictStableOperators E W h a b y ∈ U := by
   intro x
   obtain ⟨U, hU, hxU, hUs⟩ := hE.2.1 x
-  haveI := hU
+  have := hU
   refine ⟨U.comap W.subtype, ?_, hxU, fun a b y hy => hUs a b _ hy⟩
   let j : U.comap W.subtype →ₗ[K] U :=
     { toFun := fun y => ⟨((y : W) : V), y.2⟩
@@ -331,7 +331,7 @@ theorem complete_reducibility_of_semisimple (D : Formalism.BasicNotions.D7) (h2 
   rw [eq_top_iff]
   intro x _
   obtain ⟨U, hU, hxU, hUs⟩ := hE.2.1 x
-  haveI := hU
+  have := hU
   have hrep := isGLRep_restrictStableOperators E hE U hUs
   have hcr := complete_reducibility_findim D h2 K U n (restrictStableOperators E U hUs) hrep
   have hx' : (⟨x, hxU⟩ : U) ∈ ⨆ mu : Fin n → ℤ, isoSub (restrictStableOperators E U hUs) mu := by rw [hcr]; trivial

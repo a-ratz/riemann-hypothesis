@@ -740,7 +740,7 @@ theorem dt_zero {E : KMod n} {u : ℝ → Mat n → E.V} (hu : IsWave E u) {y : 
 
 theorem wave_pairing_second_time_derivative (hL : LgFacts) (hR : RCalc) {E : KMod n} {u v : ℝ → Mat n → E.V} (hu : IsWave E u) (hv : IsWave E v)
     (su : Sp u) (sv : Sp v) (t s : ℝ) : Pr μ (dt (dt u)) v t s = Pr μ u (dt (dt v)) t s := by
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨Ru, hRu⟩ := su |t|
   obtain ⟨Rv, hRv⟩ := sv |s|
   have h := Om_symm μ hL hR (sm_at (a := u) hu.1 t) (sm_at (a := v) hv.1 s) ⟨Ru, hRu t le_rfl⟩ ⟨Rv, hRv s le_rfl⟩
@@ -903,7 +903,7 @@ theorem pair_avg {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [Co
     ∫ y : G n, ⟪a y.val, ∫ t, (g t : ℂ) • W t y.val⟫_ℂ ∂μ
       = ∫ t, (g t : ℂ) * ∫ y : G n, ⟪a y.val, W t y.val⟫_ℂ ∂μ := by
   have hc : ∀ R, IsCompact {y : G n | lg y.val ≤ R} := (hL n).2.2.2.2.1
-  haveI : SigmaFinite μ := ⟨⟨⟨fun m : ℕ => {y : G n | lg y.val ≤ m}, fun _ => trivial,
+  have : SigmaFinite μ := ⟨⟨⟨fun m : ℕ => {y : G n | lg y.val ≤ m}, fun _ => trivial,
     fun m => (hc m).measure_lt_top,
     Set.eq_univ_of_forall fun y => Set.mem_iUnion.2 (exists_nat_ge (lg y.val))⟩⟩⟩
   obtain ⟨R, hR⟩ := ca
@@ -956,7 +956,7 @@ theorem term_eq (hL : LgFacts) (hR : RCalc) (hS : WaveSpeed) {E : KMod n}
     (hv0 : ∀ y ∈ GLs n, v 0 y = h y) (cf : Cpt f) (ch : Cpt h) :
     ∫ y : G n, ⟪zOp w' f y.val, ∫ t, (g t : ℂ) • v t y.val⟫_ℂ ∂μ
       = ∫ y : G n, ⟪act μ E K' f y.val, h y.val⟫_ℂ ∂μ := by
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   have hui : IsWave E (fun t => zOp w' (u t)) := GlobalTheory.T.center_operator_preserves_wave hR n E u w' hu
   have cu0 : Cpt (u 0) := by
     obtain ⟨R, hR'⟩ := cf
@@ -1016,7 +1016,7 @@ theorem chain (hL : LgFacts) (hU : Unimod) (hR : RCalc) (hS : WaveSpeed) (hE : W
     (haveI := FiniteDimensional.complete ℂ E.V
      ∫ y : G n, ⟪act μ E (fun y => ContinuousLinearMap.adjoint (k y⁻¹)) f y.val, h y.val⟫_ℂ ∂μ
       = ∑ i, conj (c i) * ∫ y : G n, ⟪act μ E (K i) f y.val, h y.val⟫_ℂ ∂μ) := by
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨u, hu, hu0⟩ := hE n E f hf
   obtain ⟨v, hv, hv0⟩ := hE n E h hh
   have hHs : ContDiffOn ℝ ∞ (fun x => ∫ t, (g t : ℂ) • v t x) (GLs n) := by
@@ -1064,7 +1064,7 @@ end Chain
 
 theorem kernel_adjoint : LgFacts → Unimod → RCalc → WaveSpeed → WaveEx → KerUniq → KerOne → ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure] (E : KMod n) (w : List (Bool × ℕ)) (g : ℝ → ℝ) (T : ℝ) (k : Mat n → (E.V →L[ℂ] E.V)), IsBump g T → IsKer μ E w g k → ∃ (N : ℕ) (c : Fin N → ℂ) (w₁ : Fin N → List (Bool × ℕ)) (K : Fin N → Mat n → (E.V →L[ℂ] E.V)), (∀ i, IsKer μ E (w₁ i) g (K i)) ∧ (haveI := FiniteDimensional.complete ℂ E.V; ∀ y ∈ GLs n, ContinuousLinearMap.adjoint (k y⁻¹) = ∑ i, c i • K i y) ∧ ∀ χ : Inf n, IsHerm χ → conj (zVal w χ) = ∑ i, c i * zVal (w₁ i) χ := by
   intro hL hU hR hS hE hQ hO n _ _ μ _ E w g T k hb hk
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨N, c, w₁, hval, hop⟩ := GlobalTheory.T.gelfand_operator_pairing_adjoint n w
   choose K hK using fun i => hO n μ E (w₁ i) g T hb
   refine ⟨N, c, w₁, K, hK, ?_, hval⟩

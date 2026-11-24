@@ -167,7 +167,7 @@ theorem repG_holds : RepG u u' F0 what₂ := by
   obtain ⟨y, hy⟩ := hN γ w hat (eligRel_holds γ w ⟨⟨hgen, hG⟩, hat⟩) hgen
   have hex : ∃ x : Point D.host.E (D.R.rS + 1) × LFlag (VS D) D.R.rS ((Tu D u' : ℕ) : D.host.E) × PairVal.MatR D ×
       PairVal.MatR D, PairVal.NormRep γ x.1 x.2.1 x.2.2.1 x.2.2.2 := ⟨(w, y), hy⟩
-  have hn : nrep γ = some hex.choose := dif_pos hex
+  have hn : nrep γ = some hex.choose := dite_eq_left hex
   have hrep : repF γ = hex.choose.2.1 := by unfold repF; rw [hn]
   obtain ⟨⟨hPD, hmk⟩, -⟩ := hex.choose_spec
   refine ⟨⟨hex.choose.2.1, hPD⟩, hrep.symm, hmk, ?_⟩
@@ -1091,7 +1091,7 @@ variable {D : D7} (Zd : LocDat D)
 theorem localLattice_preserves_cofinite (g : (VS D).V ≃ₗ[D.host.E] (VS D).V) {Λ : Submodule (𝓞 D.host.E) (VS D).V}
     (hΛ : Submodule.IsFullLattice D.host.E Λ) :
     {p : PlF D | ¬ ∀ x ∈ lattice₂ D Zd.M p Λ, betaP p g x ∈ lattice₂ D Zd.M p Λ}.Finite := by
-  letI := hΛ
+  let := hΛ
   obtain ⟨s, hs⟩ := hΛ.toIsLattice.fg
   refine (s.finite_toSet.biUnion fun v _ => CohIntPf.bcP_mem_cof Zd hΛ (g v)).subset ?_
   intro p hp
@@ -1124,7 +1124,7 @@ theorem localLattice_preserves_cofinite (g : (VS D).V ≃ₗ[D.host.E] (VS D).V)
 theorem localLattice_preserves_cofinite_symm (g : (VS D).V ≃ₗ[D.host.E] (VS D).V) {Λ : Submodule (𝓞 D.host.E) (VS D).V}
     (hΛ : Submodule.IsFullLattice D.host.E Λ) :
     {p : PlF D | ¬ ∀ x ∈ lattice₂ D Zd.M p Λ, (betaP p g).symm x ∈ lattice₂ D Zd.M p Λ}.Finite := by
-  letI := hΛ
+  let := hΛ
   obtain ⟨s, hs⟩ := hΛ.toIsLattice.fg
   refine (s.finite_toSet.biUnion fun v _ => CohIntPf.bcP_mem_cof Zd hΛ (g.symm v)).subset ?_
   intro p hp
@@ -1441,7 +1441,7 @@ theorem sign_norm {l : ℕ} (hl : l ≤ D.R.rS + 1) :
   have hdet : Formalism.MainNotions.S.leadMinorE (ZhatOM (1 : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) D.host.E)) l =
       (-1 : D.host.E) ^ (∑ i : Fin l, (D.R.rS - (Fin.castLE hl i).val)) := by
     unfold Formalism.MainNotions.S.leadMinorE
-    rw [dif_pos hl, hsub, Matrix.det_diagonal, Finset.prod_pow_eq_pow_sum]
+    rw [dite_eq_left hl, hsub, Matrix.det_diagonal, Finset.prod_pow_eq_pow_sum]
   rw [hdet, star_pow, star_neg, star_one, ← pow_add]
   exact Even.neg_one_pow ⟨_, rfl⟩
 
@@ -1484,7 +1484,7 @@ private lemma det_submatrix_castLE_of_isLoUni {K : Type*} [Field K] {n l : ℕ} 
     have hij' : i < j := by simpa using hij
     show L (Fin.castLE hl i) (Fin.castLE hl j) = 0
     exact (hL _ _).1 (by rw [Fin.lt_def, Fin.val_castLE, Fin.val_castLE]; exact hij')
-  rw [Matrix.det_of_lowerTriangular _ hb]
+  rw [Matrix.det_of_isLowerTriangular _ hb]
   exact Finset.prod_eq_one (fun i _ => (hL _ _).2 rfl)
 
 private lemma det_submatrix_castLE_of_isUpUni {K : Type*} [Field K] {n l : ℕ} (hl : l ≤ n) (U : Matrix (Fin n) (Fin n) K)
@@ -1494,7 +1494,7 @@ private lemma det_submatrix_castLE_of_isUpUni {K : Type*} [Field K] {n l : ℕ} 
     have hij' : j < i := by simpa using hij
     show U (Fin.castLE hl i) (Fin.castLE hl j) = 0
     exact (hU _ _).1 (by rw [Fin.lt_def, Fin.val_castLE, Fin.val_castLE]; exact hij')
-  rw [Matrix.det_of_upperTriangular hb]
+  rw [Matrix.det_of_isUpperTriangular hb]
   exact Finset.prod_eq_one (fun i _ => (hU _ _).2 rfl)
 
 private lemma det_submatrix_castLE_LPU_eq {K : Type*} [Field K] {n l : ℕ} (hl : l ≤ n) (L P U : Matrix (Fin n) (Fin n) K)
@@ -1525,7 +1525,7 @@ theorem gflag_ne (γ : TermDef.Term D u u' F0 what₂) (Z : PairVal.MatR D)
     have h1 : Dmin w' l = Formalism.MainNotions.S.leadMinorE Z l *
         Formalism.MainNotions.S.leadMinorE (ZhatOM (1 : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) D.host.E)) l := by
       unfold Dmin Formalism.MainNotions.S.leadMinorE
-      simp only [dif_pos hl]
+      simp only [dite_eq_left hl]
       rw [← Matrix.det_mul, ← submatrix_castLE_mul_of_upper hl _ _ hS, ← zhatOM_eq_mul_zhatOM_one, hM, det_submatrix_castLE_LPU_eq hl _ _ _ hL hU]
     rw [h1, conjF_star, star_mul']
     linear_combination (-(Formalism.MainNotions.S.leadMinorE Z l * star (Formalism.MainNotions.S.leadMinorE Z l))) * sign_norm hl

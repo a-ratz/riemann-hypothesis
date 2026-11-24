@@ -128,7 +128,7 @@ theorem apply_ds_conj (hG : IsMatGroup G) (h : RepOn G σ) {k X : Mat n} (hk : k
 theorem GoodSub.step (hG : IsMatGroup G) (h : RepOn G σ) (hK : K ⊆ G) {T : Submodule ℂ H}
     (hT : GoodSub G K σ T) : ∃ (T' : Submodule ℂ H) (C : ℝ), GoodSub G K σ T' ∧ T ≤ T' ∧ 0 ≤ C ∧
       ∀ X, (∀ t, ex X t ∈ G) → ‖X‖ ≤ 1 → ∀ v ∈ T, ds σ X v ∈ T' ∧ ‖ds σ X v‖ ≤ C * ‖v‖ := by
-  haveI := hT.fin
+  have := hT.fin
   let b := stdOrthonormalBasis ℂ T
   have hb : ∀ i, IsSm G σ (b i : H) := fun i => hT.sm _ (b i).2
   choose D hD using fun i => (hb i).exists_clm h
@@ -148,7 +148,7 @@ theorem GoodSub.step (hG : IsMatGroup G) (h : RepOn G σ) (hK : K ⊆ G) {T : Su
   let A : Set H := {y | ∃ X, (∀ t, ex X t ∈ G) ∧ ∃ v ∈ T, y = ds σ X v}
   let e := Module.finBasis ℝ (Mat n)
   let B : Submodule ℂ H := Submodule.span ℂ (range fun p : _ × _ => D p.1 (e p.2))
-  haveI : FiniteDimensional ℂ B := FiniteDimensional.span_of_finite ℂ (finite_range _)
+  have : FiniteDimensional ℂ B := FiniteDimensional.span_of_finite ℂ (finite_range _)
   have hAB : Submodule.span ℂ A ≤ B := Submodule.span_le.2 <| by
     rintro _ ⟨X, hX, v, hv, rfl⟩
     rw [show ds σ X v = _ from hexp X hX ⟨v, hv⟩]
@@ -158,7 +158,7 @@ theorem GoodSub.step (hG : IsMatGroup G) (h : RepOn G σ) (hK : K ⊆ G) {T : Su
     refine B.sum_mem fun j _ => ?_
     rw [map_smul]
     exact B.smul_of_tower_mem _ (Submodule.subset_span ⟨(i, j), rfl⟩)
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ A) := Submodule.finiteDimensional_of_le hAB
+  have : FiniteDimensional ℂ (Submodule.span ℂ A) := Submodule.finiteDimensional_of_le hAB
   refine ⟨T ⊔ Submodule.span ℂ A, ∑ i, cD i, ⟨inferInstance, ?_, fun k hk => ?_⟩, le_sup_left,
     Finset.sum_nonneg fun i _ => hcD0 i, fun X hX hX1 v hv => ⟨?_, ?_⟩⟩
   · change T ⊔ Submodule.span ℂ A ≤ smSub G σ

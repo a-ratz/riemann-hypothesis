@@ -104,7 +104,7 @@ theorem exists_ext (E : Type) [Field E] [NumberField E] (φ : 𝓞 E →+* ℂ) 
     ∃ τ : E →+* ℂ, τ.comp (algebraMap (𝓞 E) E) = φ := by
   have hinj : Function.Injective φ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [eq_bot_iff]
     intro n hn
     have h0 : φ (algebraMap ℤ (𝓞 E) n) = 0 := hn
@@ -301,7 +301,7 @@ theorem valAt_act (M : LieModel G ξ Li) {O : Type} [CommRing O] (act : OAct O G
     (hρ : M.IsActOf act.act ρ) (z : Sp ℂ ⟶ X) (r : O) {e : Li} {w : epsAt z ⟶ G} (h : M.ValAt z e w) :
     M.ValAt z (ρ r e) (w ≫ act.act r) := by
   obtain ⟨hs, v, ⟨ht, hv⟩, hw⟩ := h
-  haveI := act.hom r
+  have := act.hom r
   refine ⟨hs, v ≫ act.act r, ⟨ht.comp_monHom _, ?_⟩, ?_⟩
   · rw [hρ r e, Over.comp_left, hv, Over.comp_left]
     exact Category.assoc _ _ _
@@ -407,7 +407,7 @@ end Geo
 
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y), ∃ h : LieMetric 𝔐.M y, h.Orth 𝔐.t.act := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐
-  haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   have hch : CharZero Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
   obtain ⟨h₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.MetricAny.exists_lieMetric 𝔐.X Ω K J y 𝔐.ξ hch 𝔐.all 𝔐.tie 𝔐.t.G 𝔐.Li 𝔐.M
   exact exists_orth E 𝔐.M 𝔐.t.act 𝔐.ρ 𝔐.act h₀
@@ -479,7 +479,7 @@ theorem dualMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f :
 theorem exists_fibreLift {L : Type} [Field L] {E : Type} [AddCommGroup E] [Module (𝓞 L) E] (σ : L →+* ℂ)
     {Q : Type} [AddCommGroup Q] [Module ℂ Q] (j : E →ₛₗ[σ.comp (algebraMap (𝓞 L) L)] Q) :
     ∃ f : Fibre σ E →ₗ[ℂ] Q, ∀ e, f ((1 : ComplexAt σ) ⊗ₜ[𝓞 L] e) = j e := by
-  letI : Module (𝓞 L) Q := Module.compHom Q (σ.comp (algebraMap (𝓞 L) L))
+  let : Module (𝓞 L) Q := Module.compHom Q (σ.comp (algebraMap (𝓞 L) L))
   let B : ComplexAt σ →ₗ[𝓞 L] E →ₗ[𝓞 L] Q := LinearMap.mk₂ (𝓞 L)
     (fun a e => ((ComplexAt.ofComplex σ).symm a : ℂ) • j e)
     (fun a b e => by rw [map_add (f := _), add_smul])
@@ -531,13 +531,13 @@ theorem lie_universal [IsCommMonObj G] [Smooth G.hom] {R C : Type} [CommRing R] 
     (hj : ∀ e, ((Mz.pt (j e)).left ≫ (𝟙 G.left) = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap c) ≫ (MB.pt e).left))
     {Q : Type} [AddCommGroup Q] [Module C Q] (g : E →ₛₗ[c] Q) :
     ∃ g' : V →ₗ[C] Q, (∀ e, g' (j e) = g e) ∧ ∀ g₂ : V →ₗ[C] Q, (∀ e, g₂ (j e) = g e) → g₂ = g' := by
-  letI : Algebra R C := c.toAlgebra
-  letI : Module R V := Module.compHom V c
-  letI : Module R Q := Module.compHom Q c
-  haveI : IsScalarTower R C V := ⟨fun a b v => by
+  let : Algebra R C := c.toAlgebra
+  let : Module R V := Module.compHom V c
+  let : Module R Q := Module.compHom Q c
+  have : IsScalarTower R C V := ⟨fun a b v => by
     change (c a * b) • v = c a • (b • v)
     exact mul_smul _ _ _⟩
-  haveI : IsScalarTower R C Q := ⟨fun a b v => by
+  have : IsScalarTower R C Q := ⟨fun a b v => by
     change (c a * b) • v = c a • (b • v)
     exact mul_smul _ _ _⟩
   let j' : E →ₗ[R] V :=
@@ -813,8 +813,8 @@ open HodgeCpt in
 theorem exists_frames : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) [Fintype (CMType H)] (Fl : 𝔐.Flag) (p : Cpt 𝔐.ξ), (∀ n : ℕ, n ≠ 0 → IsUnit ((n : 𝔐.X.presheaf.stalk p.1))) → ∃ b : ∀ s, Fin (labelRk D s) → 𝔐.Li, (∀ s (i : ℕ), flagStep Ω (b s) i = flagStep Ω (Fl.b s) i) ∧ (∀ s (i : ℕ), ∀ e ∈ flagStep Ω (b s) i, e ∈ 𝔐.M.lat p → e ∈ Submodule.span (regAt 𝔐.ξ p) (b s '' {k | (k : ℕ) < i})) ∧ LinearIndependent Ω (fun q : Σ s, Fin (labelRk D s) => b q.1 q.2) ∧ Submodule.span Ω (Set.range fun q : Σ s, Fin (labelRk D s) => b q.1 q.2) = ⊤ ∧ 𝔐.M.lat p = Submodule.span (regAt 𝔐.ξ p) (Set.range fun q : Σ s, Fin (labelRk D s) => b q.1 q.2) ∧ ∀ s, Submodule.span Ω (Set.range (b s)) = 𝔐.Vgen s := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J y 𝔐 _ Fl p hu
   classical
-  haveI : CharZero c.F := charZero_of_injective_algebraMap (algebraMap ℚ c.F).injective
-  haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
+  have : CharZero c.F := charZero_of_injective_algebraMap (algebraMap ℚ c.F).injective
+  have : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
 
   have hVd : ∀ s, 𝔐.V s p = 𝔐.dR s p := fun s =>
     Lat.patch_of_not S _ _ fun n hn => not_inFibre 𝔐.ξ p hu n (𝔐.S_prime n hn).ne_zero
@@ -954,7 +954,7 @@ theorem finrank_lieModel_of_algebra (X : Scheme.{0}) (G : Over X) [GrpObj G] [Sm
     rfl
   have hbc : IsBaseChange K j := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange X G A K x E₀ V M₀ MV j hl
   obtain ⟨hfin, hproj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective X G A x E₀ M₀
-  haveI : Module.Free A E₀ := Module.free_of_flat_of_isLocalRing
+  have : Module.Free A E₀ := Module.free_of_flat_of_isLocalRing
   rw [← LinearEquiv.finrank_eq hbc.equiv, Module.finrank_baseChange]
 
 theorem finrank_lieModel_eq (X : Scheme.{0}) (G : Over X) [GrpObj G] [Smooth G.hom] (A : Type) [CommRing A]
@@ -962,9 +962,9 @@ theorem finrank_lieModel_eq (X : Scheme.{0}) (G : Over X) [GrpObj G] [Smooth G.h
     [Field K] (c : A →+* K) (y : Sp K ⟶ X) (hy : Spec.map (CommRingCat.ofHom c) ≫ x = y) (V : Type) [AddCommGroup V]
     [Module K V] (MV : LieModel G y V) : Module.finrank K V = Module.finrank A E₀ := by
   subst hy
-  letI : Algebra A K := c.toAlgebra
-  letI mR : Module A V := Module.compHom V c
-  haveI tower : IsScalarTower A K V := ⟨fun a b t => by
+  let : Algebra A K := c.toAlgebra
+  let mR : Module A V := Module.compHom V c
+  have tower : IsScalarTower A K V := ⟨fun a b t => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
   exact finrank_lieModel_of_algebra X G A x E₀ M₀ K V MV
@@ -1107,7 +1107,7 @@ theorem isLocalized_resMap [Module.IsTorsionFree A V] (j : V →ₗ[A] T)
 theorem finrank_comap_eq [Module.IsTorsionFree A V] (j : V →ₗ[A] T)
     [IsLocalizedModule (nonZeroDivisors A) j] (W : Submodule K T) :
     Module.finrank A ((W.restrictScalars A).comap j) = Module.finrank K W := by
-  haveI := isLocalized_resMap j W
+  have := isLocalized_resMap j W
   exact finrank_eq_of_isLocalized K (resMap j W)
 
 theorem exists_smul_mem (j : V →ₗ[A] T) (S : Submodule A V) (B : Set T)
@@ -1186,7 +1186,7 @@ end Geo
 
 theorem finrank_subFib : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (Li : Type) [AddCommGroup Li] [Module Ω Li] (M : LieModel G ξ Li) (L : Type) [Field L] [NumberField L] (z : Sp (𝓞 L) ⟶ X) (V : Type) [AddCommGroup V] [Module (𝓞 L) V] [Module.Finite (𝓞 L) V] [Module.Projective (𝓞 L) V] (MB : LieModel G z V) (T : Type) [AddCommGroup T] [Module L T] [Module (𝓞 L) T] [IsScalarTower (𝓞 L) L T] (TL : LieModel G (spMap (algebraMap (𝓞 L) L) ≫ z) T) (j : V →ₗ[𝓞 L] T) (U : Submodule Ω Li), IsCptGen ξ → (∀ x, ((TL.pt (j x)).left ≫ (𝟙 G.left) = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap (𝓞 L) L)) ≫ (MB.pt x).left)) → IsBaseChange L j → Module.finrank (𝓞 L) V = Module.finrank L T ∧ Module.finrank (𝓞 L) (FlagFib.subFib M U z MB) = Module.finrank L (Submodule.span L {w | ∃ e ∈ U, M.ValAt (spMap (algebraMap (𝓞 L) L) ≫ z) e (TL.pt w)}) := by
   intro X G _ Ω _ ξ Li _ _ M L _ _ z V _ _ _ _ MB T _ _ _ _ TL j U _ hl hj
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 L)) j :=
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 L)) j :=
     (isLocalizedModule_iff_isBaseChange (nonZeroDivisors (𝓞 L)) L j).2 hj
   refine ⟨finrank_eq_of_isLocalized L j, ?_⟩
   set B : Set T := {w | ∃ e ∈ U, M.ValAt (spMap (algebraMap (𝓞 L) L) ≫ z) e (TL.pt w)} with hBdef
@@ -1262,7 +1262,7 @@ theorem valAt_eigen : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     rw [LieModel.extends_iff]
     refine ⟨?_, ?_⟩
     · rw [isTanAt_iff, ← Category.assoc, (isTanAt_iff _).1 hext'.1]
-      haveI := 𝔐.t.act.hom a
+      have := 𝔐.t.act.hom a
       exact one_comp _
     · rw [← hρ, 𝔐.act a e, hext'.2, Category.assoc]
   have h2 := hext.smul (g₀ (labelEmb c s a))
@@ -1461,7 +1461,7 @@ theorem rank_fib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J y 𝔐 _ Fl L _ _ z B MB
   classical
   have hgen : IsCptGen 𝔐.ξ := 𝔐.tie.gen
-  haveI hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   have hs : genPt 𝔐.ξ ⤳ centre (spMap (algebraMap (𝓞 L) L) ≫ z) := 𝔐.all _
   have hu := fun n hn => isUnit_natCast_stalk 𝔐.X L (spMap (algebraMap (𝓞 L) L) ≫ z) n hn
   obtain ⟨b, hb1, hb2, hb3, hb4, hb5, hb6⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagFrames.exists_frames E H D l Xo c Y S Ω K J y 𝔐 Fl ⟨_, hs⟩ hu

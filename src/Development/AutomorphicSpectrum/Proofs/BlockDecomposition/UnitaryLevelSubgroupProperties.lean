@@ -78,7 +78,7 @@ theorem isOpen_KL (n : ℕ) (w : Pl E) : IsOpen (KL n w : Set (UL n w)) := by
   have h : IsOpen (GlobalTheory.LFun.KGL w (n := n) : Set (GLw n w)) := by
     rw [KGL_eq_KO]
     exact GlobalTheory.SplitFlip.isOpen_KO
-  exact h.preimage (continuous_subtype_val (p := (· ∈ UL n w)))
+  exact h.preimage (continuous_subtypeVal (p := (· ∈ UL n w)))
 
 theorem isCompact_KL {w : Pl E} (hw : ¬ IsSplitAt w) (n : ℕ) (hc : Continuous (cj w)) :
     IsCompact (KL n w : Set (UL n w)) :=
@@ -88,7 +88,7 @@ theorem isOpen_iwU (n : ℕ) (w : Pl E) (b : GLw n w) : IsOpen (iwU n w b : Set 
   have ho : IsOpen (iwGL n w : Set (GLw n w)) :=
     GlobalTheory.SmGL.IwahoriOnto.isOpen_iwahori (w.adicCompletion E) (Fin n)
   have hcont : Continuous fun γ : UL n w => b⁻¹ * γ.1 * b :=
-    (continuous_const.mul continuous_subtype_val).mul continuous_const
+    (continuous_const.mul continuous_subtypeVal).mul continuous_const
   have e : (iwU n w b : Set (UL n w)) = (fun γ : UL n w => b⁻¹ * γ.1 * b) ⁻¹' (iwGL n w : Set (GLw n w)) := by
     ext γ
     exact GlobalTheory.CompanionTheory.UnitaryWitt.mem_iwU_iff n w b γ
@@ -105,9 +105,9 @@ theorem iwU_le_KL (n : ℕ) (w : Pl E) (b : GLw n w) (hb : b ∈ GlobalTheory.LF
 
 theorem relIndex_ne_zero {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {H K : Subgroup G}
     (hH : IsOpen (H : Set G)) (hK : IsCompact (K : Set G)) : H.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  let U : OpenSubgroup K := ⟨H.subgroupOf K, hH.preimage continuous_subtype_val⟩
-  haveI : Finite (K ⧸ (U : Subgroup K)) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  let U : OpenSubgroup K := ⟨H.subgroupOf K, hH.preimage continuous_subtypeVal⟩
+  have : Finite (K ⧸ (U : Subgroup K)) := Subgroup.quotient_finite_of_isOpen _ U.isOpen
   exact Subgroup.index_ne_zero_of_finite
 
 theorem isCompact_support_fU {w : Pl E} (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw n w)
@@ -118,21 +118,21 @@ theorem isCompact_support_fU {w : Pl E} (hw : ¬ IsSplitAt w) (n : ℕ) (b : GLw
     GlobalTheory.CompanionTheory.UnitaryWitt.isCompact_iwU hw n b hc
   have hS : IsCompact ((fun p : UL n w × UL n w => p.1.1 * t * p.2.1) ''
       ((iwU n w b : Set (UL n w)) ×ˢ (iwU n w b : Set (UL n w)))) :=
-    (hI.prod hI).image (((continuous_subtype_val.comp continuous_fst).mul continuous_const).mul
-      (continuous_subtype_val.comp continuous_snd))
+    (hI.prod hI).image (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).mul
+      (continuous_subtypeVal.comp continuous_snd))
   have e : {g : UL n w | fU n w b ϖ l g ≠ 0} = Subtype.val ⁻¹'
       ((fun p : UL n w × UL n w => p.1.1 * t * p.2.1) ''
         ((iwU n w b : Set (UL n w)) ×ˢ (iwU n w b : Set (UL n w)))) := by
     ext γ
-    simp only [Set.mem_setOf_eq, fU, Set.mem_preimage, Set.mem_image, Set.mem_prod, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, fU, Set.mem_preimage, Set.mem_image, Set.mem_prod, SetLike.mem_coe]
     constructor
     · intro h
       by_contra hn
-      refine h (if_neg ?_)
+      refine h (ite_eq_right ?_)
       rintro ⟨x, hx, z, hz, e⟩
       exact hn ⟨(x, z), ⟨hx, hz⟩, e.symm⟩
     · rintro ⟨⟨x, z⟩, ⟨hx, hz⟩, e⟩
-      rw [if_pos ⟨x, hx, z, hz, e.symm⟩]
+      rw [ite_eq_left ⟨x, hx, z, hz, e.symm⟩]
       exact one_ne_zero
   rw [e]
   exact (isClosed_UL hw n hc).isClosedEmbedding_subtypeVal.isCompact_preimage hS

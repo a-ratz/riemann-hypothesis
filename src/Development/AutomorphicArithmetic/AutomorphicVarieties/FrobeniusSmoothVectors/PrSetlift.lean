@@ -93,7 +93,7 @@ theorem UpperTheory.V.Fr.pr_sec :
     intro n c hc
     rw [← hmap, ← Ideal.map_pow] at hc
     exact (Ideal.mem_map_iff_of_surjective p hp).1 hc
-  haveI : IsNoetherianRing C' := IsCO.toIsNoetherian O
+  have : IsNoetherianRing C' := IsCO.toIsNoetherian O
   obtain ⟨N₀, hN₀⟩ := inf_pow_bot C' (RingHom.ker p) hker
   have hq : Function.Surjective (fun z : C' => Ideal.Quotient.mk (maximalIdeal C ^ N₀) (p z)) :=
     Ideal.Quotient.mk_surjective.comp hp
@@ -194,20 +194,20 @@ private theorem gl_lift {n : ℕ} (O : Type) [CommRing O] [IsLocalRing O] (C' : 
   have hYc : ∀ i j, AdicCont (maximalIdeal C') (Y i j) := by
     intro i j
     by_cases h : ∀ s, x s i j = 0
-    · simp only [Y, if_pos h]
+    · simp only [Y, ite_eq_left h]
       exact fun _ => IsLocallyConstant.const _
-    · simp only [Y, if_neg h]
+    · simp only [Y, ite_eq_right h]
       exact (Classical.choose_spec (pr_sec O C' C p hp hk Γ (fun s => x s i j) (hx i j))).1
   have hYp : ∀ i j s, p (Y i j s) = x s i j := by
     intro i j s
     by_cases h : ∀ s, x s i j = 0
-    · simp only [Y, if_pos h, map_zero]
+    · simp only [Y, ite_eq_left h, map_zero]
       exact (h s).symm
-    · simp only [Y, if_neg h]
+    · simp only [Y, ite_eq_right h]
       exact (Classical.choose_spec (pr_sec O C' C p hp hk Γ (fun s => x s i j) (hx i j))).2 s
   have hY0 : ∀ i j, (∀ s, x s i j = 0) → ∀ s, Y i j s = 0 := by
     intro i j h s
-    simp only [Y, if_pos h]
+    simp only [Y, ite_eq_left h]
   let M : Γ → Matrix (Fin n) (Fin n) C' := fun s => Matrix.of fun i j => Y i j s
   have hMp : ∀ s, (M s).map p = (x s : Matrix (Fin n) (Fin n) C) := by
     intro s
@@ -237,7 +237,7 @@ theorem UpperTheory.V.Fr.pr_setlift :
       ∀ s, UpT (y s : Matrix (Fin n) (Fin n) C') := by
     intro v
     have hM : ∀ a b, AdicCont (maximalIdeal C) fun s : F.Gv v => (B.r (F.loc v s)).mat a b :=
-      fun a b N => (hcont a b N).comp_continuous (continuous_subtype_val.comp (hF.loc_cont v))
+      fun a b N => (hcont a b N).comp_continuous (continuous_subtypeVal.comp (hF.loc_cont v))
     have hx : ∀ i j, AdicCont (maximalIdeal C) fun s : F.Gv v => ((B.g v * (B.r (F.loc v s)).left * (B.g v)⁻¹ : GL (Fin n) C) : Matrix (Fin n) (Fin n) C) i j := by
       intro i j
       simp only [Units.val_mul, Matrix.mul_apply]

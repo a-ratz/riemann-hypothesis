@@ -135,7 +135,7 @@ theorem chart_cont_bound {r : ℕ} {φ : Sm E a} (hφ : IsAutForm φ) (g : GA E 
 
 theorem isCuspidal_lie (X : Lie E a) (φ : Sm E a) (hφ : IsCuspForm φ) : IsCuspidal (lie E a X φ).1 := by
   intro r h0 h1 _ _ μ 𝓕 hμ hF g
-  haveI := hμ
+  have := hμ
   obtain ⟨hc1, hc2, hb⟩ := chart_cont_bound (r := r) hφ.1 g X
   let ℓ : ℝ → Lie E a := fun t => oneL E a + t • X
   have hℓc : Continuous ℓ := continuous_const.add (continuous_id.smul continuous_const)
@@ -150,7 +150,7 @@ theorem isCuspidal_lie (X : Lie E a) (φ : Sm E a) (hφ : IsCuspForm φ) : IsCus
     rintro _ ⟨t, ht, rfl⟩; exact hball (closedBall_subset_ball (by linarith) ht)
   obtain ⟨C, hC⟩ := hb _ hS hSinv
   have hfin := covol_lt_top μ 𝓕 hF
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
   have hballT : ∀ t ∈ ball (0:ℝ) (δ / 2), ℓ t ∈ invSet E a := fun t ht => hball (ball_subset_ball (by linarith) ht)
   have key := hasDerivAt_integral_of_dominated_loc_of_deriv_le (μ := μ.restrict 𝓕)
     (F := fun t x => chart φ.1 (unip x * g) (ℓ t))

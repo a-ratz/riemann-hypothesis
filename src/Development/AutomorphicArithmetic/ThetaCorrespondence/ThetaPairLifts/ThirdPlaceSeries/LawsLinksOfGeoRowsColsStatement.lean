@@ -797,8 +797,8 @@ theorem kBack_of_classData : ∀ (D : D7) (c : Comm D) (t : Tup c) (ρ : RealD c
   have hj1 : j + 1 ≤ D.R.m := hj
   have hab : ρ.N j ≤ ρ.N (j + 1) := (hρ.rk j hj).2
   obtain ⟨hB, ν, hν, -, hL⟩ := GlobalTheory.T.thetaLifts_all_charts_eq_classSum D c ρ hc hρ j hj1 hab
-  haveI := hB
-  haveI := hν
+  have := hB
+  have := hν
   set z : D.what₂.Tau → Matrix (Fin (ρ.N (j + 1))) (Fin (ρ.N (j + 1))) ℂ :=
     fun τ => (ρ.sc j τ)⁻¹ • (ρ.fr (j + 1) w).1 τ with hz
   obtain ⟨m, ys, Ps, hinv, havg⟩ := GlobalTheory.KJInf.subY_eq_sum_averages D.what₂.Tau (ρ.N j) (ρ.N (j + 1)) hab (ρ.lam j)
@@ -995,7 +995,7 @@ theorem liftExact : ∀ D : D7, GlobalTheory.FinPl.LiftExact D := by
   obtain ⟨φ, ⟨hφE, hφM, hφC⟩, rfl⟩ := hφ₀
   let φ' : EqForm (repAut α) := ⟨toAut hφC, fun g P₁ => Subtype.ext (hφE g P₁)⟩
   have hφ'M : φ'.1 ∈ Mram k n' (contAutSub S) := by
-    letI := Fintype.ofFinite 𝓀[k]ˣ
+    let := Fintype.ofFinite 𝓀[k]ˣ
     refine (mem_Mram _).2 fun P₁ => Subtype.ext ?_
     have := (mem_Mram _).1 hφM P₁
     simpa [φ', toAut, Submodule.coe_sum] using this
@@ -1730,7 +1730,7 @@ open scoped TensorProduct Classical
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem GlobalTheory.Fam.lawsLinks_of_geo_rows_cols_alt : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.StrongApproxSU → ∀ {B : GlobalTheory.Mem.Base} {X : GlobalTheory.Mem.PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : Formalism.MainNotions.G.Inst (I.rec7 l Z) L} {Gl : Formalism.MainNotions.G.LatInst (I.rec7 l Z)} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.AllFamilyConditions W → ∀ (u : B.Word) (a : _root_.GlobalTheory.Fam.GeometricFamily W u), a.Is → a.True → ∀ row, (∀ t, (row t).Is) → (∀ t t', (row t).Same (row t')) → (∀ k : _root_.GlobalTheory.Fam.FamilyConstants a, ∃ col w₀ w F, _root_.GlobalTheory.AdForm.FamilyColumnCondition (a.fam row col) ∧ _root_.GlobalTheory.Fam.ColumnOutputCondition (row := row) (col := col) k w₀ w F) → ∃ col, (a.fam row col).RowOK ∧ LawsX (a.fam row col).t ∧ _root_.GlobalTheory.MiTop.ChartAtZeroCondition (a.fam row col) ∧ _root_.GlobalTheory.MiTop.LinkTailCondition (a.fam row col) ∧ _root_.GlobalTheory.MiTop.LinkCommutes (a.fam row col) ∧ _root_.GlobalTheory.MiTop.FamilyRatioCondition (a.fam row col) := by
   intro hDS hHC hSA B X I l Z L hT Gi Gl Kc Yd cX ex W hW u a ha haT row hrow hsame hcol
-  letI := a.fld; letI := a.val; letI := a.top; haveI := a.loc
+  let := a.fld; let := a.val; let := a.top; have := a.loc
   have hRow : ∀ col, (a.fam row col).RowOK := fun col => ⟨ha.meas, ha.last, ha.x, hrow, hsame⟩
   obtain ⟨col₀, -, -, -, -, -⟩ := hcol ⟨fun _ _ => 1, fun _ => ⟨0, Fin.elim0, Fin.elim0⟩, 0, 0, 0, 0⟩
   have hcIs : (commOf (_root_.GlobalTheory.Fam.pk_z W) u a.g).Is := (_root_.GlobalTheory.T.famCh_is_and_tuples_is_of_colOK hDS hHC W u hW.pk (a.fam row col₀) (hRow col₀)).1

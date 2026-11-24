@@ -161,7 +161,7 @@ lemma onb {z z' : Fin (2 * r + k + 1) → ℂ} (hstd : C2.Std k r z z') {γ : B.
     ∃ Bm : Matrix (Fin (2 * r + k + 1)) (Fin (k - 1) ⊕ Fin 0) ℂ,
       (gnB k r z z' γ)ᴴ * Hpk k r * Bm = 0 ∧ Bmᴴ * Hpk k r * Bm = 1 := by
   classical
-  letI : PartialOrder ℂ := Complex.partialOrder
+  let : PartialOrder ℂ := Complex.partialOrder
   obtain ⟨-, -, hposU, hfin⟩ := gram_independent_signature' k r z z' γ hstd hpos
   have hH : (Hpk k r)ᴴ = Hpk k r := Formalism.QuantumDeterminants.GBasic.Hpk_herm k r
   let b := Module.finBasisOfFinrankEq ℂ (C2.Uperp k r z z' γ) hfin

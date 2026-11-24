@@ -113,9 +113,9 @@ theorem fixed_KL_ne_bot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     have : (GlobalTheory.LocVec.stabSub ρK (u i) : Set (KL n w)) =
         (fun g : KL n w => (g : UL n w)) ⁻¹' {x | σ.ρ x (u i) = u i} := rfl
     rw [this]
-    exact (σ.smooth (u i)).preimage continuous_subtype_val
+    exact (σ.smooth (u i)).preimage continuous_subtypeVal
   have hKc := (GlobalTheory.BCT.LocCompU.isOpen_isCompact_KL hU n w).2
-  haveI : H.FiniteIndex := GlobalTheory.LocVec.finiteIndex_of_isOpen (KL n w) hKc (fun _ hg => hg) H hHo
+  have : H.FiniteIndex := GlobalTheory.LocVec.finiteIndex_of_isOpen (KL n w) hKc (fun _ hg => hg) H hHo
   obtain ⟨v, hv0, hv⟩ := GlobalTheory.LocVec.exists_eigen_of_sum ρK (1 : KL n w →* ℂˣ) H (fun h _ => MonoidHom.mem_ker.2 rfl)
     c.support u (fun i hi h hh => (Subgroup.mem_iInf.1 (Subgroup.mem_iInf.1 hh i) hi))
     (fun i => (i.toLinearMap : σ.V →ₗ[ℂ] π)) ⟨φ, hφπ⟩ (fun h => hφ0 (congrArg Subtype.val h)) hsumF

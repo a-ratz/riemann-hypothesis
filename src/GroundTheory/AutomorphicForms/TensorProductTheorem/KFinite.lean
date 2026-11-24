@@ -88,7 +88,7 @@ theorem exists_isCompl_stable (hσ : Representation.HasContinuousCoeff σ) (U : 
   have hμ1 : μ univ = 1 := by
     have := Measure.haarMeasure_self (K₀ := K₀)
     simpa [K₀] using this
-  haveI : IsProbabilityMeasure μ := ⟨hμ1⟩
+  have : IsProbabilityMeasure μ := ⟨hμ1⟩
   set d := finrank ℂ W
   let b := Module.finBasis ℂ W
   let e : W ≃ₗ[ℂ] (Fin d → ℂ) := b.equivFun

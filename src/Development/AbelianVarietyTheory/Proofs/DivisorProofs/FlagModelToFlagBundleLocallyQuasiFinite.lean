@@ -71,9 +71,9 @@ theorem finite_preimage_of_finite_points {X Y : Scheme.{0}} (f : X ⟶ Y) [Local
     obtain ⟨φ, hφ⟩ := Spec.map_surjective ((f.fiber y).fromSpecResidueField w ≫ f.fiberToSpecResidueField y)
     have h4 : φ.hom.Finite := by
       rw [← IsFinite.SpecMap_iff, hφ]; exact h3
-    letI : Algebra k ((f.fiber y).residueField w) := φ.hom.toAlgebra
-    haveI : Module.Finite k ((f.fiber y).residueField w) := h4
-    haveI : Algebra.IsAlgebraic k ((f.fiber y).residueField w) := Algebra.IsIntegral.isAlgebraic
+    let : Algebra k ((f.fiber y).residueField w) := φ.hom.toAlgebra
+    have : Module.Finite k ((f.fiber y).residueField w) := h4
+    have : Algebra.IsAlgebraic k ((f.fiber y).residueField w) := Algebra.IsIntegral.isAlgebraic
     let ι : (f.fiber y).residueField w →ₐ[k] K := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -95,7 +95,7 @@ theorem finite_preimage_of_finite_points {X Y : Scheme.{0}} (f : X ⟶ Y) [Local
       rw [← Set.biUnion_of_singleton (closedPoints (f.fiber y))]
       exact hfin.isClosed_biUnion fun x hx => hx
     rw [← JacobsonSpace.closure_inter_closedPoints isClosed_univ, Set.univ_inter, hc.closure_eq]
-  haveI : Finite (f.fiber y) := Set.finite_univ_iff.1 (huniv ▸ hfin)
+  have : Finite (f.fiber y) := Set.finite_univ_iff.1 (huniv ▸ hfin)
   rw [← Scheme.Hom.range_fiberι]
   exact Set.finite_range _
 

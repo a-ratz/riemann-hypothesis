@@ -109,7 +109,7 @@ theorem schur_match {Q Q' P P₂ ι : Type} [AddCommGroup Q] [Module ℂ Q] [Add
 theorem countable_compactOpen (Y : Type) [TopologicalSpace Y] [SecondCountableTopology Y] :
     {K : Set Y | IsCompact K ∧ IsOpen K}.Countable := by
   have hb := TopologicalSpace.isBasis_countableBasis Y
-  refine ((Set.countable_setOf_finite_subset (TopologicalSpace.countable_countableBasis Y)).image fun s => ⋃₀ s).mono ?_
+  refine ((Set.countable_ofPred_finite_subset (TopologicalSpace.countable_countableBasis Y)).image fun s => ⋃₀ s).mono ?_
   rintro K ⟨h1, h2⟩
   obtain ⟨S, hS, rfl⟩ := hb.open_eq_sUnion h2
   obtain ⟨t, ht, hf, hc⟩ := h1.elim_finite_subcover_image (b := S) (c := id) (fun u hu => hb.isOpen (hS hu))

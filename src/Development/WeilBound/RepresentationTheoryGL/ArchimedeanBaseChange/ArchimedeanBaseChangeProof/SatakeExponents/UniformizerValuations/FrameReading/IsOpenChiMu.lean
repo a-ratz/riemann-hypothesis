@@ -340,7 +340,7 @@ theorem sub_of_pow {n : ℕ} (D : Pre E n) (w : Pl E) (K' : Subgroup (GLw n w)) 
     PositivityTheory.Rg.BcN.F2.Final.prodFinLen (w.adicCompletion E) (Fin n) (Fin D.c) (fun i => Fin (D.N i))
       (GlobalTheory.SmGL.stdBlocks D.N D.h) (fun i => (D.σ i w).V) (fun i => (D.σ i w).ρ) (fun i => (D.σ i w).smooth)
       (fun i => (D.σ i w).irred)
-  haveI : FiniteDimensional ℂ (fixed (prodAt D w) K') :=
+  have : FiniteDimensional ℂ (fixed (prodAt D w) K') :=
     GlobalTheory.LeviFactor.finiteDimensional_fixed_of_hasFiniteLength
       (fun Y _ _ π hs hi => GlobalTheory.CompanionTheory.SmGLBridge.irreducibleAdmissible (w.adicCompletion E) (Fin n) Y π hs hi)
       hsm hfl K' he.1 he.2.1
@@ -375,8 +375,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem relIndex_ne_zero_open {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {K U : Subgroup G}
     (hK : IsCompact (K : Set G)) (hU : IsOpen (U : Set G)) : U.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI := Subgroup.quotient_finite_of_isOpen (U.subgroupOf K) (hU.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have := Subgroup.quotient_finite_of_isOpen (U.subgroupOf K) (hU.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 section Key
@@ -569,7 +569,7 @@ theorem key_ind {n a b : ℕ} (h : a + b = n) (w : Pl E) (K' : Subgroup (GLw n w
       rw [← GlobalTheory.LeviFubini.sM_mul_uN, hX₀, mul_inv_cancel_left]
     show F (p * g) = σ p (F g)
     rw [hp, hF, fv_law h w U ρ e he.2.2.1 X v hUK hUo hne hinv hvU m₀ _ g]
-    simp only [σ, MonoidHom.comp_apply, GlobalTheory.SmGL.twist_apply, MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [σ, MonoidHom.comp_apply, GlobalTheory.SmGL.twist_apply, MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     rw [GlobalTheory.AbsHalfLevi.absHalf_det_div_eq_deltaHalf E a b w m₀]
     rfl
   have hsm : (⟨F, hlaw⟩ : GlobalTheory.PRep.indSpace H σ) ∈ GlobalTheory.PRep.smoothPart (GlobalTheory.PRep.ind H σ) := by
@@ -911,7 +911,7 @@ theorem core {n a b : ℕ} (h : a + b = n) (w : Pl E) (μ : (w.adicCompletion E)
     intro y hy
     refine mem_fixed_iff'.2 fun g hg => ?_
     have hGy : G ⟨y, hy⟩ ∈ fixed (pairRt a b w) L := (hG ⟨y, hy⟩).2
-    simp only [v, dif_pos hy]
+    simp only [v, dite_eq_left hy]
     rw [hρτ, ← heq j g _ (hG ⟨y, hy⟩).1 ⟨L, hLo, hGy⟩, mem_fixed_iff'.1 hGy g (Subgroup.mem_inf.1 hg).1,
       MonoidHom.mem_ker.1 (Subgroup.mem_inf.1 hg).2, Units.val_one, one_smul]
   obtain ⟨u₁, hu₁, hu₁x⟩ := key_ind h w K' hK'o hK'le hnorm X hXK hX ρ e hHk (L ⊓ χμ.ker) (hLo.inter hχμo) v hv
@@ -934,7 +934,7 @@ theorem core {n a b : ℕ} (h : a + b = n) (w : Pl E) (μ : (w.adicCompletion E)
         Function.iterate_zero_apply, hu₁x x x.2 lw, ← Finset.sum_coe_sort X]
       congr 1
       refine Finset.sum_congr rfl fun y _ => ?_
-      simp only [v, dif_pos y.2]
+      simp only [v, dite_eq_left y.2]
     | succ i ih =>
       intro x
       refine eq_of_dual fun lw => ?_

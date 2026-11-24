@@ -282,7 +282,7 @@ private lemma quadC_ne (d : ℕ) [Fact d.Prime] (h : d ≠ 2) : quadC d ≠ 1 :=
 
 theorem exists_isImagQuad {d : ℕ} (hd : d.Prime) (h4 : d % 4 = 3) (hN : d ∣ N) :
     ∃ ψ : DirichletCharacter ℂ N, IsImagQuad ψ d := by
-  haveI : Fact d.Prime := ⟨hd⟩
+  have : Fact d.Prime := ⟨hd⟩
   have hd2 : d ≠ 2 := by
     rintro rfl
     norm_num at h4

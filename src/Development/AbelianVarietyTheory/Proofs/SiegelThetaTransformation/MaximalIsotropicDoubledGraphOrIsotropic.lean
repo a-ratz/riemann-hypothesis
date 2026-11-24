@@ -77,11 +77,11 @@ theorem finrank_add_finrank_orthogonal [FiniteDimensional E W] {h : W →ₗ[E] 
     (hσ : Function.Involutive σ) (hh : ∀ x y, σ (h x y) = h y x)
     (hn : ∀ x, (∀ y, h x y = 0) → x = 0) (S : Submodule E W) :
     finrank E S + finrank E (S.orthogonalBilin h) = finrank E W := by
-  haveI : RingHomSurjective σ := ⟨hσ.surjective⟩
+  have : RingHomSurjective σ := ⟨hσ.surjective⟩
   have hrefl : ∀ x y, h x y = 0 → h y x = 0 := fun x y e => by rw [← hh, e, map_zero]
   have e1 : S.orthogonalBilin h = (S.map h.flip).dualCoannihilator := by
     ext m
-    rw [Submodule.mem_dualCoannihilator, Submodule.mem_orthogonalBilin_iff]
+    rw [Submodule.mem_dualCoannihilator, Submodule.mem_orthogonalBilin]
     constructor
     · rintro H _ ⟨s, hs, rfl⟩
       exact hrefl _ _ (H s hs)
@@ -546,7 +546,7 @@ theorem transvMat_mulVec_eq (G : Matrix (Fin N) (Fin N) E) (ξ : Fin N → E) (�
   funext a
   simp only [transvMat, herm, Matrix.mulVec, dotProduct, of_apply, add_mul,
     Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum, Finset.sum_mul]
+    ite_true, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum, Finset.sum_mul]
   congr 1
   refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun k _ => by ring
 
@@ -670,7 +670,7 @@ theorem iso_of_mem {g : M2 E r} (hg : g ∈ UU E r) {u v : Fin r ⊕ Fin r → E
 
 theorem finrank_botSpan {g : M2 E r} (hg : g ∈ UU E r) : Module.finrank E (botSpan g) = r := by
   have h : IsUnit g := (Matrix.isUnit_iff_isUnit_det g).2 (HAct.group_part hg).1
-  have hl := (Matrix.linearIndependent_rows_iff_isUnit.2 h).comp _
+  have hl := (linearIndependent_row_iff_isUnit.2 h).comp _
     (Sum.inr_injective (α := Fin r) (β := Fin r))
   have := finrank_span_eq_card hl
   rw [Fintype.card_fin] at this

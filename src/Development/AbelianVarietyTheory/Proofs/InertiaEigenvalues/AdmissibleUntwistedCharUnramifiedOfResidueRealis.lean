@@ -598,7 +598,7 @@ end Main
 theorem continuous_padicInt {l : ℕ} [Fact l.Prime] (LL : FinExt l) :
     Continuous fun x : ℤ_[l] => algebraMap ↥(OL LL) ↥LL.1 (algebraMap ℤ_[l] ↥(OL LL) x) := by
   have h1 : Continuous fun x : ℤ_[l] => algebraMap ℚ_[l] (PadicAlgCl l) (x : ℚ_[l]) :=
-    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtype_val
+    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtypeVal
   exact continuous_induced_rng.mpr h1
 
 theorem unramified_admissible : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (S : TopSit P),

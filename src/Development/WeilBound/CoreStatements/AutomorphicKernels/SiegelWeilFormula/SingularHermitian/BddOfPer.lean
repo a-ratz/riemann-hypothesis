@@ -118,7 +118,7 @@ theorem fc_avg (d : SD σ) (R : RD d) (w : InfinitePlace F) (hG : IsTopologicalG
     simp only [hUdef, hχ]
     rw [chi_add d T β₀ l, chi_per d T hl, mul_one, add_comm, nb_add d hCD.1, mul_assoc, hinv _ (nb_rat d hCD.1 hl)]
   obtain ⟨M, hM⟩ := bdd_of_per d hUc hUper ((hψs.isCompact).image hιr)
-  haveI : IsFiniteMeasure (lam.restrict 𝓖) :=
+  have : IsFiniteMeasure (lam.restrict 𝓖) :=
     ⟨by rw [Measure.restrict_apply_univ, hCD.2.2.2]; exact ENNReal.one_lt_top⟩
   have e1 : ∀ β₀ x, f (R.ι w (nr x) * (nb β₀ * z)) * ψ₀ x * χ β₀ = U (β₀, R.ι w (nr x) * z) * ψ₀ x := by
     intro β₀ x

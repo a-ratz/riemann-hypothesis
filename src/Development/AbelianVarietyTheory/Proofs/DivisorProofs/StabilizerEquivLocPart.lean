@@ -82,7 +82,7 @@ theorem finite_support_conj : ∀ (G : Type) [Group G] (Γ K : Subgroup G) (f : 
     simp only [Function.mem_support, π, hk, hR _ k.2] at hγ ⊢
     exact hγ
   refine Set.Finite.of_finite_fibers π (hs.subset (Set.image_subset_iff.2 hmaps)) ?_
-  haveI := hx
+  have := hx
   intro q _
   by_cases hne : (π ⁻¹' {q}).Nonempty
   · obtain ⟨γ₀, hγ₀⟩ := hne

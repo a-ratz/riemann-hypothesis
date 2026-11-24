@@ -128,7 +128,7 @@ theorem cpt_Om [Fintype ι] (M : ℝ) : IsCompact (OmG (ι := ι) (N := N) M) :=
 theorem cont_dg : Continuous fun s : {s : Fin N → ℝ // ∑ i, s i = 0} => (dg s.1 s.2 : G ι N) := by
   refine continuous_pi fun w => Matrix.SpecialLinearGroup.isClosedEmbedding_val.isInducing.continuous_iff.2 ?_
   exact Continuous.matrix_diagonal (continuous_pi fun i =>
-    Complex.continuous_ofReal.comp (Real.continuous_exp.comp ((continuous_apply i).comp continuous_subtype_val)))
+    Complex.continuous_ofReal.comp (Real.continuous_exp.comp ((continuous_apply i).comp continuous_subtypeVal)))
 
 theorem cpt_S (T : ℝ) (m : Fin N → ℤ) : IsCompact
     {s : {s : Fin N → ℝ // ∑ i, s i = 0} | Cone T s.1 ∧ ∀ i, (m i : ℝ) ≤ s.1 i ∧ s.1 i ≤ m i + 1} := by

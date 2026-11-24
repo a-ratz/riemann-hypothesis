@@ -165,10 +165,10 @@ theorem Spreads.of_frOver {n : ℕ} (d : DeltaDat Xo c n) {R : Type} [Field R] [
     {y₂ : FrPt d.Xo₂ d.c₂ R} (h : Spreads y) (ho : FrOver d y₂ y) : Spreads y₂ := by
   obtain ⟨S, hS, H₀⟩ := h
   refine ⟨S, hS, fun T io₂ => ?_⟩
-  letI := io₂.toAlgebra
+  let := io₂.toAlgebra
   intro ψ₂ hψ z₂ hz₂
   let io : c.F →+* T.Fr := io₂.comp d.eF.toRingEquiv.toRingHom
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let ψ : R →ₐ[c.F] T.Fr :=
     { ψ₂.toRingHom with commutes' := fun a => (congrArg ψ₂ (hc a).symm).trans (ψ₂.commutes _) }
   obtain ⟨z, hz⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
@@ -204,8 +204,8 @@ theorem spreads (hq : Dw.q = 0) (hp : 1 ≤ Dw.p) (hg : ∀ p : ℕ, p.Prime →
   let d : DeltaDat Xo₁ c₁ 0 :=
     { pd := 1, I := ⊤, l₂ := l, Xo₂ := Xo, c₂ := c, hF := hF, r := r, m := m,
       nab₂ := fun _ _ _ _ => 0, cδ := 0, φδ := 0 }
-  letI : Algebra d.c₂.F R := ‹Algebra c.F R›
-  letI : Algebra c₁.F R := ((algebraMap c.F R).comp d.eF.toRingEquiv.toRingHom).toAlgebra
+  let : Algebra d.c₂.F R := ‹Algebra c.F R›
+  let : Algebra c₁.F R := ((algebraMap c.F R).comp d.eF.toRingEquiv.toRingHom).toAlgebra
   obtain ⟨y₁, hy₁⟩ := exists_frPt_local (Xo := Xo₁) (c := c₁) (L := R) GlobalTheory.abelianSchemeLaws_all.2.secTwist
     (y.x ≫ r) (by
       rw [Category.assoc, hrs, ← Category.assoc, y.x_over, sOf, sOf, Formalism.L2.PjFree.spMap_comp']

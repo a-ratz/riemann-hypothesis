@@ -106,7 +106,7 @@ theorem casimir_central : ∀ {O : Type} [Ring O] {r : ℕ} (x : Module.Basis (F
     have h := (posDef_gram x b hb (fun w hw => hpos w hw)).det_pos
     rw [← Int.cast_det] at h
     exact_mod_cast h.ne'
-  haveI : Module.Free ℤ O := Module.Free.of_basis x
+  have : Module.Free ℤ O := Module.Free.of_basis x
   have htf : Function.Injective (fun v : O => G.det • v) := smul_right_injective O hδ
   have hbid : ∀ u v, b u (v * s a) = b v (u * a) := by
     intro u v
@@ -275,7 +275,7 @@ theorem trace_comp_pos_of_adjoint {V : Type} [AddCommGroup V] [Module ℝ V] [Fi
     (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (hs : ∀ u v, g u v = g v u) (hp : ∀ u, u ≠ 0 → 0 < g u u)
     (T T' : V →ₗ[ℝ] V) (hadj : ∀ u v, g (T u) v = g u (T' v)) (hT' : T' ≠ 0) :
     0 < LinearMap.trace ℝ V (T ∘ₗ T') := by
-  letI core : InnerProductSpace.Core ℝ V :=
+  let core : InnerProductSpace.Core ℝ V :=
     { inner := fun x y => g x y
       conj_inner_symm := fun x y => by simpa using hs y x
       re_inner_nonneg := fun x => by
@@ -287,8 +287,8 @@ theorem trace_comp_pos_of_adjoint {V : Type} [AddCommGroup V] [Module ℝ V] [Fi
       definite := fun x hx => by
         by_contra h
         exact (hp x h).ne' hx }
-  letI : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℝ)
-  letI : InnerProductSpace ℝ V := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℝ)
+  let : InnerProductSpace ℝ V := InnerProductSpace.ofCore core.toCore
   let b := stdOrthonormalBasis ℝ V
   rw [LinearMap.trace_eq_sum_inner _ b]
   have key : ∀ i, ⟪b i, (T ∘ₗ T') (b i)⟫_ℝ = g (T' (b i)) (T' (b i)) := by
@@ -310,8 +310,8 @@ theorem trace_comp_pos_of_adjoint {V : Type} [AddCommGroup V] [Module ℝ V] [Fi
 theorem trace_mul_star_pos : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (x : D.O), x ≠ 0 →
     0 < LinearMap.trace ℤ D.La (DistribSMul.toLinearMap ℤ D.La (x * (D.star x).unop)) := by
   intro p _ D x hx
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   obtain ⟨J, hJJ, hJinv, hpos, hcomm, -⟩ := D.dom
   let A : D.O → (ℝ ⊗[ℤ] D.La →ₗ[ℝ] ℝ ⊗[ℤ] D.La) := fun b =>
     (DistribSMul.toLinearMap ℤ D.La b).baseChange ℝ
@@ -556,7 +556,7 @@ noncomputable def htTrace (D : Datum p) : D.O →+ ℤ where
     rw [this, map_add (f := _)]
 
 theorem htTrace_mul_comm (D : Datum p) (a b : D.O) : htTrace D (a * b) = htTrace D (b * a) := by
-  haveI := D.freeLa; haveI := D.finLa
+  have := D.freeLa; have := D.finLa
   have hm : ∀ a b : D.O, DistribSMul.toLinearMap ℤ D.La (a * b) =
       DistribSMul.toLinearMap ℤ D.La a * DistribSMul.toLinearMap ℤ D.La b := by
     intro a b; ext y; exact mul_smul _ _ _
@@ -576,7 +576,7 @@ open scoped TensorProduct in
 theorem exists_W_datum (D : Datum p) : ∃ (r : ℕ) (x : Module.Basis (Fin r) ℤ D.O) (W : Matrix (Fin r) (Fin r) ℤ)
     (d : ℕ), ((W + W.transpose).map (Int.cast : ℤ → ℝ)).PosDef ∧ 0 < d ∧
       ∑ i, ∑ j, W i j • (htStar D (x i) * x j) = (d : D.O) := by
-  haveI := D.freeO; haveI := D.finO
+  have := D.freeO; have := D.finO
   have hs := htStar_mul D
   have hss := htStar_star D
   have hφs : ∀ a, htForm D (htStar D a) = htForm D a := by
@@ -873,8 +873,8 @@ namespace GlobalTheory.UPel.HT.LevPull
 theorem exists_pull_level : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (N : ℕ) (H : Scheme.{0}) (AH : Over H) [GrpObj AH] [IsCommMonObj AH] (actH : OActN D.O AH) (Y : Over H) (u : D.La → (Y ⟶ AH)), (∀ x y, u (x + y) = u x * u y) → (∀ (c : D.O) x, u (c • x) = u x ≫ actH.act c) → (∀ x, u (N • x) = 1) → ∃ (AE : Over Y.left) (_ : GrpObj AE) (_ : IsCommMonObj AE) (φE : AE.left ⟶ AH.left) (actE : OActN D.O AE) (ηE : D.La → (𝟙_ (Over Y.left) ⟶ AE)), IsGrpPullback AE AH Y.hom φE ∧ (∀ a : D.O, (actE.act a).left ≫ φE = φE ≫ (actH.act a).left) ∧ EtaOK D N actE ηE ∧ ∀ y, (ηE y).left ≫ φE = (u y).left := by
   intro p _ D N H AH _ _ actH Y u hadd hlin htor
   let AE : Over Y.left := (Over.pullback Y.hom).obj AH
-  letI iG : GrpObj AE := Functor.grpObjObj
-  letI iC : IsCommMonObj AE := Functor.isCommMonObj_obj
+  let iG : GrpObj AE := Functor.grpObjObj
+  let iC : IsCommMonObj AE := Functor.isCommMonObj_obj
   let φE : AE.left ⟶ AH.left := pullback.fst AH.hom Y.hom
   have hg : IsGrpPullback AE AH Y.hom φE := isGrpPullback_pullback AH Y.hom
   have inj : ∀ {T : Over Y.left} {x y : T ⟶ AE}, x.left ≫ φE = y.left ≫ φE → x = y := fun {T x y} h =>
@@ -1069,10 +1069,10 @@ theorem basisLin_oLinear : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (H : Schem
   let G : D.La →+ Additive (Y ⟶ AH) :=
     { toFun := fun x => Additive.ofMul (u x ≫ actH.act c)
       map_zero' := by
-        haveI := actH.hom c
+        have := actH.hom c
         simp [u0, MonObj.one_comp]
       map_add' := fun x y => by
-        haveI := actH.hom c
+        have := actH.hom c
         simp [hu, MonObj.mul_comp] }
   have hFG : F.toIntLinearMap = G.toIntLinearMap := bL.ext fun i => by
     simp [F, G, U, step1]
@@ -1113,11 +1113,11 @@ namespace GlobalTheory.UPel.HT
 
 theorem exists_finite_rep_linLevel : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (N : ℕ) (H : Scheme.{0}) (AH : Over H) [GrpObj AH] [IsCommMonObj AH], IsAbelianScheme AH → IsUnit ((N : ℕ) : Γ(H, ⊤)) → ∀ (actH : OActN D.O AH), ∃ (E : Scheme.{0}) (πE : E ⟶ H) (AE : Over E) (_ : GrpObj AE) (_ : IsCommMonObj AE) (φE : AE.left ⟶ AH.left) (actE : OActN D.O AE) (ηE : D.La → (𝟙_ (Over E) ⟶ AE)), IsFinite πE ∧ IsGrpPullback AE AH πE φE ∧ (∀ a : D.O, (actE.act a).left ≫ φE = φE ≫ (actH.act a).left) ∧ EtaOK D N actE ηE ∧ ∀ (T : Scheme.{0}) (g : T ⟶ H) (AT : Over T) [GrpObj AT] (φ : AT.left ⟶ AH.left) (act : OActN D.O AT) (eta : D.La → (𝟙_ (Over T) ⟶ AT)), IsGrpPullback AT AH g φ → (∀ a : D.O, (act.act a).left ≫ φ = φ ≫ (actH.act a).left) → EtaOK D N act eta → ∃! z : T ⟶ E, z ≫ πE = g ∧ ∃ ψ : AT.left ⟶ AE.left, IsGrpPullback AT AE z ψ ∧ ψ ≫ φE = φ ∧ ∀ y, (eta y).left ≫ ψ = z ≫ (ηE y).left := by
   intro p _ D N H AH _ _ hab hN actH
-  haveI := D.freeLa
-  haveI := D.finLa
-  haveI := D.freeO
-  haveI := D.finO
-  haveI : IsSeparated AH.hom := by haveI := hab.proper; infer_instance
+  have := D.freeLa
+  have := D.finLa
+  have := D.freeO
+  have := D.finO
+  have : IsSeparated AH.hom := by have := hab.proper; infer_instance
   obtain ⟨Z, et, hZf, -, eadd, epow, huniv⟩ := GlobalTheory.exists_finiteEtale_latticeTorsionHom H AH N D.La hab hN
   let bO := Module.Free.chooseBasis ℤ D.O
   let bL := Module.Free.chooseBasis ℤ D.La
@@ -1283,8 +1283,8 @@ theorem exists_finite_rep_rosati_level : ∀ (p : ℕ) [Fact p.Prime] (D : Datum
       rw [← Over.comp_left, lift_fst]; rfl
     · show (lift x₁ x₂).left ≫ (snd AH AH).left = _
       rw [← Over.comp_left, lift_snd]; rfl
-  haveI : IsLocallyNoetherian H := LocallyOfFiniteType.isLocallyNoetherian πH
-  haveI : IsLocallyNoetherian E := LocallyOfFiniteType.isLocallyNoetherian πE
+  have : IsLocallyNoetherian H := LocallyOfFiniteType.isLocallyNoetherian πH
+  have : IsLocallyNoetherian E := LocallyOfFiniteType.isLocallyNoetherian πE
   refine ⟨E, πE ≫ πH, AE, inferInstance, inferInstance, φE ≫ φH, φ₂ ≫ φ₂H, actE, ηE, inferInstance,
     inferInstance, pbE.comp pbH, ?_, GlobalTheory.T.rosatiCondition_of_grpPullback_square p D S H E c.A c.P c.isLB AH AE πE φE φ₂ φ₂H actH actE pbE sq actEc rosH,
     etaE, ?_⟩

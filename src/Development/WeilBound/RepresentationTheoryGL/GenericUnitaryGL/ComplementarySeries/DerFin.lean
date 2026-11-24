@@ -234,7 +234,7 @@ theorem base (hc : Continuous ψ) (h1 : ψ ≠ 1) (Y : Representation ℂ (GL (F
       obtain ⟨z, hz⟩ := hs (Ψ v)
       have := hrange (Ψ v) ⟨z, hz⟩
       rwa [LinearEquiv.symm_apply_apply] at this
-    haveI : Subsingleton (TwJacquet Y (rightUnip k n t) (rightWhit k ψ n t)) :=
+    have : Subsingleton (TwJacquet Y (rightUnip k n t) (rightWhit k ψ n t)) :=
       ⟨fun x y => by
         induction x using Submodule.Quotient.induction_on with
         | H a =>
@@ -246,12 +246,12 @@ theorem base (hc : Continuous ψ) (h1 : ψ ≠ 1) (Y : Representation ℂ (GL (F
     have hnt : Nontrivial (B ⧸ K) := Submodule.Quotient.nontrivial_iff.2 htop
     have hfr : Module.finrank ℂ (B ⧸ K) = 1 := by
       have hfin : Module.rank ℂ (B ⧸ K) < Cardinal.aleph0 := lt_of_le_of_lt hrk Cardinal.one_lt_aleph0
-      haveI : Module.Finite ℂ (B ⧸ K) := Module.rank_lt_aleph0_iff.1 hfin
+      have : Module.Finite ℂ (B ⧸ K) := Module.rank_lt_aleph0_iff.1 hfin
       have h2 : (Module.finrank ℂ (B ⧸ K) : Cardinal) ≤ 1 := by rw [Module.finrank_eq_rank]; exact hrk
       have h3 : 0 < Module.finrank ℂ (B ⧸ K) := Module.finrank_pos
       have h4 : Module.finrank ℂ (B ⧸ K) ≤ 1 := by exact_mod_cast h2
       omega
-    haveI : Module.Finite ℂ (B ⧸ K) := Module.finite_of_finrank_eq_succ hfr
+    have : Module.Finite ℂ (B ⧸ K) := Module.finite_of_finrank_eq_succ hfr
     let q : (B ⧸ K) ≃ₗ[ℂ] ℂ := LinearEquiv.ofFinrankEq _ _ (by simp [hfr])
     let ℓ : B →ₗ[ℂ] ℂ := q.toLinearMap ∘ₗ K.mkQ
     have hℓs : Function.Surjective ℓ := q.surjective.comp (Submodule.mkQ_surjective K)
@@ -338,8 +338,8 @@ theorem finLen (hc : Continuous ψ) (h1 : ψ ≠ 1) (Mr : Representation ℂ (GL
     intro T ihT hTS
     rcases eq_or_lt_of_le hTS with hEq | hlt'
     · subst hEq
-      haveI := GlobalTheory.ParIndExact.subsingleton_subQuot_self T
-      haveI := subsingleton_tw (ρ := subQuot T T) (rightUnip k n t) (rightWhit k ψ n t)
+      have := GlobalTheory.ParIndExact.subsingleton_subQuot_self T
+      have := subsingleton_tw (ρ := subQuot T T) (rightUnip k n t) (rightWhit k ψ n t)
       exact GlobalTheory.ProdLength.hasFiniteLength_of_subsingleton _
     by_cases hcov : T ⋖ S
     · exact base ψ hc h1 _ ((GlobalTheory.ParIndExact.isSubquotient_subQuot S T).isSmooth hMs)

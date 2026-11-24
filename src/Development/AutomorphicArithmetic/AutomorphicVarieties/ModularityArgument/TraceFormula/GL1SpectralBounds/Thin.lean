@@ -109,7 +109,7 @@ lemma exists_prime_mem (P : HeightOneSpectrum (𝓞 K)) : ∃ p : ℕ, p.Prime �
   exact ⟨q, Nat.prime_of_mem_primeFactorsList hq, hxP⟩
 
 lemma span_max {p : ℕ} (hp : p.Prime) : (Ideal.span {(p : ℤ)}).IsMaximal := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   exact Int.ideal_span_isMaximal_of_prime p
 
 lemma span_eq (P : HeightOneSpectrum (𝓞 K)) {p : ℕ} (hp : p.Prime) (hm : (p : 𝓞 K) ∈ P.asIdeal) :
@@ -124,7 +124,7 @@ lemma liesOver_of_mem (P : HeightOneSpectrum (𝓞 K)) {p : ℕ} (hp : p.Prime) 
 
 lemma absNorm_pow (P : HeightOneSpectrum (𝓞 K)) {p : ℕ} (hp : p.Prime) (hm : (p : 𝓞 K) ∈ P.asIdeal) :
     ∃ f, 1 ≤ f ∧ Ideal.absNorm P.asIdeal = p ^ f := by
-  haveI := liesOver_of_mem P hp hm
+  have := liesOver_of_mem P hp hm
   have h1 := Ideal.absNorm_eq_pow_inertiaDeg' P.asIdeal hp
   refine ⟨_, ?_, h1⟩
   rw [Nat.one_le_iff_ne_zero]
@@ -136,8 +136,8 @@ open scoped Classical in
 lemma card_le {p : ℕ} (hp : p.Prime) (s : Finset (HeightOneSpectrum (𝓞 K))) :
     (s.filter fun P => (p : 𝓞 K) ∈ P.asIdeal).card ≤ Module.finrank ℚ K := by
   set pZ : Ideal ℤ := Ideal.span {(p : ℤ)} with hpZ
-  haveI : pZ.IsMaximal := span_max hp
-  haveI : Fintype (pZ.primesOver (𝓞 K)) :=
+  have : pZ.IsMaximal := span_max hp
+  have : Fintype (pZ.primesOver (𝓞 K)) :=
     (Algebra.QuasiFinite.finite_primesOver (S := 𝓞 K) pZ).fintype
   have hsum := Ideal.sum_ramification_inertia_eq_finrank pZ (𝓞 K)
   have hsub : (s.filter fun P => (p : 𝓞 K) ∈ P.asIdeal).image (fun P => P.asIdeal) ⊆
@@ -158,7 +158,7 @@ lemma card_le {p : ℕ} (hp : p.Prime) (s : Finset (HeightOneSpectrum (𝓞 K)))
     _ ≤ ∑ q : pZ.primesOver (𝓞 K), q.1.ramificationIdx ℤ * q.1.inertiaDeg ℤ := by
         apply Finset.sum_le_sum
         intro q _
-        haveI := q.2.1
+        have := q.2.1
         exact Nat.mul_pos (Ideal.ramificationIdx_pos (R := ℤ) q.1) (Ideal.inertiaDeg_pos q.1 ℤ)
     _ = Module.finrank ℤ (𝓞 K) := hsum
     _ = Module.finrank ℚ K := RingOfIntegers.rank K
@@ -174,7 +174,7 @@ lemma key (w : HeightOneSpectrum (𝓞 E)) (hns : ¬ IsSplitAt w)
     (hm : (p : 𝓞 E) ∈ w.asIdeal) : p ^ 2 ≤ Ideal.absNorm w.asIdeal := by
   set F := maximalRealSubfield E
   set v : HeightOneSpectrum (𝓞 F) := w.under (𝓞 F) with hvdef
-  haveI hvw : w.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
+  have hvw : w.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
   have hpv : (p : 𝓞 F) ∈ v.asIdeal := by
     rw [Ideal.over_def w.asIdeal v.asIdeal, Ideal.under, Ideal.mem_comap, map_natCast]
     exact hm
@@ -185,8 +185,8 @@ lemma key (w : HeightOneSpectrum (𝓞 E)) (hns : ¬ IsSplitAt w)
     calc p ^ 2 ≤ p ^ (f0 * 2) := Nat.pow_le_pow_right hp.pos (by omega)
       _ ≤ p ^ (f0 * w.asIdeal.inertiaDeg (𝓞 F)) :=
         Nat.pow_le_pow_right hp.pos (Nat.mul_le_mul_left _ hf)
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  haveI : Fintype (v.asIdeal.primesOver (𝓞 E)) :=
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  have : Fintype (v.asIdeal.primesOver (𝓞 E)) :=
     (Algebra.QuasiFinite.finite_primesOver (S := 𝓞 E) v.asIdeal).fintype
   have hsum := Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 E)
   have hrank : Module.finrank (𝓞 F) (𝓞 E) = 2 := by

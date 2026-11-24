@@ -370,7 +370,7 @@ theorem iterD_eq_jet_of_count : EisExp → ∀ (F : Type) [Field F] [NumberField
     exact_mod_cast mul_ne_zero (Real.rpow_pos_of_pos hd _).ne' hn
   have hc : ((2 * Real.pi * Complex.I) ^ Module.finrank ℚ F * (omegaFactor 𝔞 : ℂ)) ^ (2 * s) ≠ 0 :=
     pow_ne_zero _ (mul_ne_zero (pow_ne_zero _ Complex.two_pi_I_ne_zero) hω)
-  exact (div_left_inj' hc).1 h3
+  exact (div_left_inj₀ hc).1 h3
 
 end GlobalTheory.HilbFam
 end -- clump:auto

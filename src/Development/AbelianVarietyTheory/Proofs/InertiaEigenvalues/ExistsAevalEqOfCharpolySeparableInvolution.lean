@@ -79,7 +79,7 @@ theorem exists_aeval_eq_of_charpoly_separable {E A : Type} [Field E] [CommRing A
   have hli := linearIndependent_pow (K := E) g
   have h4 := hli.fintype_card_le_finrank
   rw [Fintype.card_fin] at h4
-  haveI : Nonempty (Fin (minpoly E g).natDegree) := ⟨⟨0, by omega⟩⟩
+  have : Nonempty (Fin (minpoly E g).natDegree) := ⟨⟨0, by omega⟩⟩
   have htop := hli.span_eq_top_of_card_eq_finrank (by rw [Fintype.card_fin]; omega)
   have hle : Submodule.span E (Set.range fun i : Fin (minpoly E g).natDegree => g ^ (i : ℕ)) ≤
       Subalgebra.toSubmodule (Algebra.adjoin E {g}) := by

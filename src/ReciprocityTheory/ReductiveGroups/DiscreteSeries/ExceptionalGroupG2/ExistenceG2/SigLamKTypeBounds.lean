@@ -152,7 +152,7 @@ theorem Hlam_nontrivial (hgap : StdGap ε lam) (hP : IsPsiFor ε lam T Ψ) (hv�
   rw [not_nontrivial_iff_subsingleton] at h
   apply ReciprocityTheory.ChartRestriction.DS.datumV_ne_bot hP hv₀
   have h1 : (lowKSubLam ε Ψ v₀).map (Hlam ε Ψ v₀).subtype = ⊥ := by
-    haveI := h
+    have := h
     rw [show lowKSubLam ε Ψ v₀ = ⊥ from Submodule.eq_bot_of_subsingleton, Submodule.map_bot]
   rw [ReciprocityTheory.ChartRestriction.DS.map_lowKSubLam] at h1
   exact Submodule.map_injective_of_injective Subtype.coe_injective (h1.trans (Submodule.map_bot _).symm)

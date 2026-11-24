@@ -245,7 +245,7 @@ theorem exists_sliceAtlas {e : ℕ} (A : FinHolAtlas (e + 1) X) (S : Set X) [Com
     (fun w _ => mem_iUnion.2 ⟨w, hp w⟩)
   let f : Fin t.card → S := fun j => (t.equivFin.symm j).1
   refine ⟨⟨t.card, fun j => sliceChart (ψ (f j)) (i (f j)) S (hS (f j)) (f j), ?_, ?_⟩,
-    ⟨continuous_subtype_val, fun j k' => slice_holo A S (hS (f j)) (f j) (hc (f j)) k'⟩,
+    ⟨continuous_subtypeVal, fun j k' => slice_holo A S (hS (f j)) (f j) (hc (f j)) k'⟩,
     fun j => ⟨ψ (f j), i (f j), hS (f j), f j, hc (f j), rfl⟩⟩
   · intro w
     obtain ⟨p, hpt, hw⟩ := mem_iUnion₂.1 (ht (mem_univ w))
@@ -290,7 +290,7 @@ theorem slice_posPot {e : ℕ} (A : FinHolAtlas (e + 1) X) (S : Set X) (B : FinH
   obtain ⟨k, hk⟩ := A.cover ((B.chart j).symm y).1
   have hτ : AnalyticAt ℂ (A.chart k ∘ Subtype.val ∘ (B.chart j).symm) y := hB.2 j k y ⟨hyt, hk⟩
   have hcont : ContinuousAt (Subtype.val ∘ (B.chart j).symm) y :=
-    continuous_subtype_val.continuousAt.comp ((B.chart j).continuousAt_symm hyt)
+    continuous_subtypeVal.continuousAt.comp ((B.chart j).continuousAt_symm hyt)
   have hnear : ∀ᶠ z in 𝓝 y, ((B.chart j).symm z).1 ∈ (A.chart k).source :=
     hcont.preimage_mem_nhds ((A.chart k).open_source.mem_nhds hk)
   have hτmem : (A.chart k ∘ Subtype.val ∘ (B.chart j).symm) y ∈
@@ -518,7 +518,7 @@ open GlobalTheory.CompanionTheory.Ar.Giv.Restrict ReciprocityTheory.AnForm.M.Sim
 theorem unifRestrict : UnifRestrictStatement := by
   intro e X _ _ _ A Θ L s n m W hΘ hpos hL hs L' v Dg hL' hv hsv hsnc
   have hcl : IsClosed Dg := isClosed_divisorComponent A L' v ![1] ![Dg] hsv 0
-  haveI : CompactSpace Dg := isCompact_iff_compactSpace.mp hcl.isCompact
+  have : CompactSpace Dg := isCompact_iff_compactSpace.mp hcl.isCompact
   obtain ⟨B, hB, hch⟩ := exists_sliceAtlas A Dg (fun p => by
     obtain ⟨ψ, hc, hp, -, σ, -, hW, -⟩ := hsv p.1
     obtain ⟨i, -, hi⟩ := coord_of_mem hW 0 (x := p.1) p.2 hp
@@ -698,9 +698,9 @@ theorem tail_mixed (hTB : TailBoundStatement) {n : ℕ} {Y : Type} [TopologicalS
       exact ⟨this, le_rfl⟩
   · intro i x y
     by_cases hi : (i : ℕ) < b
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       exact h1 i hi x y
-    · simp only [hi, if_false, add_zero]
+    · simp only [hi, ite_false, add_zero]
       exact h2 i hi x y
 
 end Tail
@@ -788,7 +788,7 @@ theorem green_small_core (hUI : GroundTheory.Heights₂.Heights.AnalyticLimit.Un
   classical
   obtain ⟨B, hB, n', m', W', hΘB, hposB, hsncB⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.Giv.unifRestrict A Θ L s m W hΘ hpos hL hs L' v Dg hL' hv hsncv hsncsv
-  haveI : CompactSpace Dg := isCompact_iff_compactSpace.mp
+  have : CompactSpace Dg := isCompact_iff_compactSpace.mp
     (show IsClosed Dg from SimpleNormalCrossingSliceCharts.isClosed_divisorComponent A L' v ![1] ![Dg] hsncv 0).isCompact
   have hLB : IsPotential B (L.pullback Subtype.val hB.1) := isPotentialPullback A B _ hB L hL
   have hsB : IsSection B (L.pullback Subtype.val hB.1) (fun x y => s x.1 y.1) :=
@@ -896,11 +896,11 @@ theorem green_small_core (hUI : GroundTheory.Heights₂.Heights.AnalyticLimit.Un
             (fun i => (hfam i t ht htt).2.1)
             (fun i y hy => ⟨(hfam i t ht htt).2.2.2 y hy, (hfam i t ht htt).2.2.1 y⟩) ?_ ?_)
         · intro i hi x y
-          have : mixedForms Om.pot (curForms thS uS t) b i = curForms thS uS t i := if_pos hi
+          have : mixedForms Om.pot (curForms thS uS t) b i = curForms thS uS t i := ite_eq_left hi
           rw [this]
           rfl
         · intro i hi x y
-          have : mixedForms Om.pot (curForms thS uS t) b i = Om.pot := if_neg hi
+          have : mixedForms Om.pot (curForms thS uS t) b i = Om.pot := ite_eq_right hi
           rw [this]
       tailComp := fun k b hb t ht hl => by
         have htt := le_of_ell_le ht₁ ht hl
@@ -916,12 +916,12 @@ theorem green_small_core (hUI : GroundTheory.Heights₂.Heights.AnalyticLimit.Un
               (isPotential_ofFun A _ (hfam _ t ht htt).1)) (hfam _ t ht htt).2.1)
         · intro i hi x y
           have : restForms Om.pot (curForms thS uS t) b i = curForms thS uS t i.castSucc :=
-            if_pos hi
+            ite_eq_left hi
           show (restForms Om.pot (curForms thS uS t) b i).φ x.1 y.1 = _
           rw [this]
           rfl
         · intro i hi x y
-          have : restForms Om.pot (curForms thS uS t) b i = Om.pot := if_neg hi
+          have : restForms Om.pot (curForms thS uS t) b i = Om.pot := ite_eq_right hi
           show (restForms Om.pot (curForms thS uS t) b i).φ x.1 y.1 = _
           rw [this]
           rfl }
@@ -1247,7 +1247,7 @@ theorem maMeasure_bdry_null_any {e : ℕ} {X : Type} [TopologicalSpace X] [Measu
   have hInt : interior (bdry s) = ∅ := LeviFormBoundaryTopology.interior_bdry_eq_empty hS hSNC
   unfold maMeasure
   split_ifs with h
-  · simp only [Measure.coe_finsetSum, Finset.sum_apply]
+  · simp only [FunLike.coe_sum, Finset.sum_apply]
     refine Finset.sum_eq_zero fun j _ => ?_
     have hT := (A.chart j).open_target.measurableSet
     rw [Measure.map_apply_of_aemeasurable (((A.chart j).continuousOn_symm.aemeasurable hT).mono_ac

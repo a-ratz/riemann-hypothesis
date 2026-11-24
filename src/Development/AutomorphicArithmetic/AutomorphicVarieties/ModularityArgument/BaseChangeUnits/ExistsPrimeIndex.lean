@@ -55,7 +55,7 @@ private theorem exists_prime_index (Γ : Type) [Group Γ] [Finite Γ] [Nontrivia
     simpa using M.mul_mem h1 hn⟩
   refine ⟨M, hn, ?_⟩
   obtain ⟨p, hp, hd⟩ := Nat.exists_prime_and_dvd (n := Nat.card (Γ ⧸ M)) (mt Subgroup.index_eq_one.1 hM.1)
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨g, hg⟩ := exists_prime_orderOf_dvd_card' p hd
   have h1 : (Subgroup.zpowers g).comap (QuotientGroup.mk' M) = ⊤ := by
     refine hM.2 _ (lt_of_le_of_ne (fun x hx => ?_) fun e => ?_)

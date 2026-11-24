@@ -65,7 +65,7 @@ open NumberField in
 variable {E : Type} [Field E] [NumberField E] in
 theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.finite_boundedLevelClassGroupFamily (Pg : Finset (_root_.Formalism.L2.DIV.Pl E)) (r : ℕ) :
     Finite (_root_.Formalism.L2.DIV.G0 Pg r) := by
-  haveI : ∀ PP : ↥Pg, Finite (_root_.Formalism.L2.DIV.kP PP.1) := fun PP =>
+  have : ∀ PP : ↥Pg, Finite (_root_.Formalism.L2.DIV.kP PP.1) := fun PP =>
     _root_.GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.finite_kP PP.1
   unfold _root_.Formalism.L2.DIV.G0
   infer_instance
@@ -104,8 +104,8 @@ theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplici
     0 < _root_.GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.nbar Pg k := by
   unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.nbar
   refine Finset.prod_pos fun PP _ => pow_pos ?_ k
-  haveI := _root_.GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.finite_kP PP
-  haveI : Nonempty (_root_.Formalism.L2.DIV.kP PP) := ⟨0⟩
+  have := _root_.GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.finite_kP PP
+  have : Nonempty (_root_.Formalism.L2.DIV.kP PP) := ⟨0⟩
   exact Nat.card_pos
 
 end GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity

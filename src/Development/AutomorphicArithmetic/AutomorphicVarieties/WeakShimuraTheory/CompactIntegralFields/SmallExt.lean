@@ -52,7 +52,7 @@ private theorem fin_quot (A B : Type) [CommRing A] [IsDomain A] [IsDiscreteValua
     [Algebra A B] [FaithfulSMul A B] (n : ℕ) (h : Module.rank A B ≤ n) :
     Module.Finite A (B ⧸ (maximalIdeal A • ⊤ : Submodule A B)) := by
   classical
-  letI : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field (maximalIdeal A)
+  let : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field (maximalIdeal A)
   have hinj : Function.Injective (algebraMap A B) := FaithfulSMul.algebraMap_injective A B
   have hnzd : ∀ (c : A) (x : B), c ≠ 0 → c • x = 0 → x = 0 := by
     intro c x hc hx
@@ -108,7 +108,7 @@ private theorem fin_quot (A B : Type) [CommRing A] [IsDomain A] [IsDiscreteValua
     exact_mod_cast h4.trans h
   have hrank : Module.rank (A ⧸ maximalIdeal A) (B ⧸ (maximalIdeal A • ⊤ : Submodule A B)) ≤ n :=
     rank_le hbound
-  haveI : Module.Finite (A ⧸ maximalIdeal A) (B ⧸ (maximalIdeal A • ⊤ : Submodule A B)) :=
+  have : Module.Finite (A ⧸ maximalIdeal A) (B ⧸ (maximalIdeal A • ⊤ : Submodule A B)) :=
     Module.rank_lt_aleph0_iff.mp (hrank.trans_lt (Cardinal.natCast_lt_aleph0))
   exact Module.Finite.trans (A ⧸ maximalIdeal A) _
 
@@ -126,7 +126,7 @@ private theorem haus (A B : Type) [CommRing A] [IsDomain A] [IsDiscreteValuation
       Submodule.mem_smul_pointwise_iff_exists] at h1
     obtain ⟨b, _, hb⟩ := h1
     exact ⟨b, by rw [← hb, Algebra.smul_def]⟩
-  have hne := Ideal.comap_ne_bot_of_algebraic_mem hx0 (Ideal.mem_span_singleton_self x)
+  have hne := Ideal.under_ne_bot_of_algebraic_mem hx0 (Ideal.mem_span_singleton_self x)
     (Algebra.IsAlgebraic.isAlgebraic (R := A) x)
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at ha
@@ -150,10 +150,10 @@ private theorem key (A B : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationR
     [Algebra A B] [FaithfulSMul A B] [IsLocalHom (algebraMap A B)] [Algebra.IsAlgebraic A B]
     (n : ℕ) (h : Module.rank A B ≤ n) (hf : Finite (ResidueField A)) :
     ∃ _ : IsDiscreteValuationRing B, IsAdicComplete (maximalIdeal B) B ∧ Finite (ResidueField B) := by
-  haveI : IsHausdorff (maximalIdeal A) B := haus A B
-  haveI : Module.Finite A (B ⧸ (maximalIdeal A • ⊤ : Submodule A B)) := fin_quot A B n h
-  haveI : Module.Finite A B := GlobalTheory.finite_of_isHausdorff_of_finite_quotient (maximalIdeal A) B
-  haveI : IsNoetherianRing B := isNoetherian_of_tower A inferInstance
+  have : IsHausdorff (maximalIdeal A) B := haus A B
+  have : Module.Finite A (B ⧸ (maximalIdeal A • ⊤ : Submodule A B)) := fin_quot A B n h
+  have : Module.Finite A B := GlobalTheory.finite_of_isHausdorff_of_finite_quotient (maximalIdeal A) B
+  have : IsNoetherianRing B := isNoetherian_of_tower A inferInstance
   have hnf : ¬ IsField B := by
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible A
     intro hF
@@ -163,7 +163,7 @@ private theorem key (A B : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationR
     obtain ⟨y, hy⟩ := hF.mul_inv_cancel h0
     have hu : IsUnit (algebraMap A B ϖ) := ⟨⟨_, y, hy, by rw [mul_comm]; exact hy⟩, rfl⟩
     exact hϖ.not_isUnit ((isUnit_map_iff (algebraMap A B) ϖ).mp hu)
-  haveI hd : IsDiscreteValuationRing B :=
+  have hd : IsDiscreteValuationRing B :=
     ((IsDiscreteValuationRing.TFAE B hnf).out 2 1).mp (inferInstance : ValuationRing B)
   exact ⟨hd, GlobalTheory.FormalIsogeny.isAdicComplete_maximalIdeal_of_finite A B,
     IsLocalRing.ResidueField.finite_of_finite hf⟩
@@ -177,9 +177,9 @@ theorem UpperTheory.V.Ws.smallExt :
   have hinjK : Function.Injective (𝔞.toK.comp f) := fun a b h => hf.inj (Subtype.val_injective h)
   let E := FractionRing A
   let φ : E →+* 𝔞.K := IsFractionRing.lift hinjK
-  letI : Algebra E 𝔞.K := φ.toAlgebra
-  letI : Algebra A 𝔞.K := (𝔞.toK.comp f).toAlgebra
-  haveI : IsScalarTower A E 𝔞.K :=
+  let : Algebra E 𝔞.K := φ.toAlgebra
+  let : Algebra A 𝔞.K := (𝔞.toK.comp f).toAlgebra
+  have : IsScalarTower A E 𝔞.K :=
     IsScalarTower.of_algebraMap_eq (fun a => (IsFractionRing.lift_algebraMap hinjK a).symm)
   have hint : ∀ x ∈ (s : Set 𝔞.K), IsIntegral E x := by
     intro x _
@@ -189,7 +189,7 @@ theorem UpperTheory.V.Ws.smallExt :
     · rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← IsScalarTower.algebraMap_eq]
       exact hp
   let L' : IntermediateField E 𝔞.K := IntermediateField.adjoin E (s : Set 𝔞.K)
-  haveI : FiniteDimensional E L' := IntermediateField.finiteDimensional_adjoin hint
+  have : FiniteDimensional E L' := IntermediateField.finiteDimensional_adjoin hint
   have hcl : ∀ y ∈ Subfield.closure (Set.range (𝔞.toK.comp f) ∪ ↑s), y ∈ L' := by
     intro y hy
     have hle : Subfield.closure (Set.range (𝔞.toK.comp f) ∪ ↑s) ≤ L'.toSubfield := by
@@ -210,10 +210,10 @@ theorem UpperTheory.V.Ws.smallExt :
     have := hcl ((𝔞.toK.comp f) a) (Subfield.subset_closure (Or.inl ⟨a, rfl⟩))
     exact this)
   have hgi : Function.Injective g := fun a b h => hf.inj (congrArg Subtype.val h)
-  letI : Algebra A B := g.toAlgebra
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).mpr hgi
-  haveI : IsLocalHom (algebraMap A B) := ⟨fun a ha => by
-    haveI := hf.loc
+  let : Algebra A B := g.toAlgebra
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).mpr hgi
+  have : IsLocalHom (algebraMap A B) := ⟨fun a ha => by
+    have := hf.loc
     exact (isUnit_map_iff f a).mp (ha.map B.subtype)⟩
   have hdvd : ∀ a b : B, a ∣ b ∨ b ∣ a := by
     intro a b
@@ -233,15 +233,15 @@ theorem UpperTheory.V.Ws.smallExt :
       refine ⟨⟨⟨_, hv⟩, L'.inv_mem hq⟩, hBext _ _ ?_⟩
       show ((a : 𝔞.V) : 𝔞.K) = ((b : 𝔞.V) : 𝔞.K) * (((b : 𝔞.V) : 𝔞.K) / ((a : 𝔞.V) : 𝔞.K))⁻¹
       field_simp
-  haveI : ValuationRing B := ValuationRing.iff_dvd_total.mpr ⟨hdvd⟩
-  haveI : Algebra.IsAlgebraic A B := ⟨fun x => by
+  have : ValuationRing B := ValuationRing.iff_dvd_total.mpr ⟨hdvd⟩
+  have : Algebra.IsAlgebraic A B := ⟨fun x => by
     obtain ⟨p, hp0, hp⟩ := hf.alg ((x : 𝔞.V) : 𝔞.K)
     refine ⟨p, hp0, ?_⟩
     have e : (𝔞.toK.comp B.subtype) (Polynomial.aeval x p) = 0 := by
       rw [Polynomial.aeval_def, Polynomial.hom_eval₂]
       exact hp
     exact hBext _ _ e⟩
-  haveI : IsAdicComplete (maximalIdeal A) A := hf.complete
+  have : IsAdicComplete (maximalIdeal A) A := hf.complete
   let ψ : B →ₗ[A] L' :=
     { toFun := fun x => ⟨((x : 𝔞.V) : 𝔞.K), hBmem x⟩
       map_add' := fun x y => rfl

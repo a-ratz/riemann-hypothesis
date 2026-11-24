@@ -169,7 +169,7 @@ theorem UpperTheory.V.Pa.Det.detPush :
   obtain ⟨m, b, p, -, hb, hp, -, -, r, u, -, hu⟩ := UpperTheory.V.Pa.Det.extFree j hinj hloc hfin
   obtain ⟨J, P, JC, Jep, hP, hB, Peta, PW, JW⟩ := exJP (n := n) (a := x.a) e j b p hb hp
   have hl : (l : x'.A) = 0 := by
-    haveI := (UpperTheory.V.Pa.Det.zlUniq l).1 (algebraMap ℤ_[l] x'.K)
+    have := (UpperTheory.V.Pa.Det.zlUniq l).1 (algebraMap ℤ_[l] x'.K)
     have := congrArg (algebraMap x'.K x'.A) (CharP.cast_eq_zero x'.K l)
     rwa [map_natCast, map_zero] at this
   have he : ∀ g, epsD k' x'.A g = J (epsD k x.A g) := by
@@ -299,7 +299,7 @@ theorem UpperTheory.V.AlgebraTools.powerSeries_equiv_of_complete_dvr :
         ∀ c, residue A (e (PowerSeries.C c)) = c := by
   intro A _ _ _ _ p _ _ _ t ht
   classical
-  haveI : Fintype (ResidueField A) := Fintype.ofFinite _
+  have : Fintype (ResidueField A) := Fintype.ofFinite _
   have hH : ∀ x y : A, (∀ n : ℕ, x - y ∈ maximalIdeal A ^ n) → x = y := by
     intro x y h
     rw [IsHausdorff.eq_iff_smodEq (I := maximalIdeal A)]
@@ -401,7 +401,7 @@ theorem UpperTheory.V.AlgebraTools.powerSeries_equiv_of_complete_dvr :
         rw [← map_mul, ← Polynomial.eval₂_mul]
         apply key
         intro i hi
-        rw [← PowerSeries.trunc_trunc_mul_trunc, PowerSeries.coeff_trunc, if_pos hi,
+        rw [← PowerSeries.trunc_trunc_mul_trunc, PowerSeries.coeff_trunc, ite_eq_left hi,
           ← Polynomial.coe_mul, Polynomial.coeff_coe]
       map_zero' := by simp [hev]
       map_add' := fun f g' => by simp [hev, add_mul, Finset.sum_add_distrib] }
@@ -521,7 +521,7 @@ private theorem span_push {K K' : Type} [Field K] [Field K'] {n a : ℕ} (j : Po
       have : (c • M).map j = j c • M.map j := by ext1 p q; simp
       rw [this]; exact Submodule.smul_mem _ _ h1
   have hX : j PowerSeries.X ≠ 0 := fun e => PowerSeries.X_ne_zero (hj (e.trans (map_zero j).symm))
-  obtain ⟨m, hm⟩ := IsDiscreteValuationRing.associated_pow_irreducible hX (PowerSeries.X_irreducible (R := K'))
+  obtain ⟨m, hm⟩ := IsDiscreteValuationRing.associated_pow_irreducible hX (PowerSeries.irreducible_X (R := K'))
   obtain ⟨u, hu⟩ := hm.dvd
   intro Z hZ
   have key : ∀ p q : Fin n, ∃ s : ℕ, (PowerSeries.X : PowerSeries K') ^ s • Matrix.single p q (Z p q) ∈
@@ -531,7 +531,7 @@ private theorem span_push {K K' : Type} [Field K] [Field K'] {n a : ℕ} (j : Po
     · have hE : Matrix.single p q (1 : PowerSeries K) ∈ Ev (PowerSeries K) (PowerSeries K) n a := by
         intro p' q'
         refine ⟨fun _ => trivial, fun e => ?_⟩
-        rw [Submodule.mem_bot, Matrix.single_apply, if_neg]
+        rw [Submodule.mem_bot, Matrix.single_apply, ite_eq_right]
         rintro ⟨rfl, rfl⟩
         exact e hpq
       obtain ⟨s, hs⟩ := h _ hE
@@ -627,15 +627,15 @@ private noncomputable def pushNP {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : �
 theorem UpperTheory.V.Pa.Det.extEx :
     ∀ {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} (x : NP F n) (A' : Type) [CommRing A'] [IsDomain A'] [IsDiscreteValuationRing A'] [IsEqDVR l A'] (j₀ : x.A →+* A'), Function.Injective j₀ → IsLocalHom j₀ → j₀.Finite → ∃ (x' : NP F n) (j : x.A →+* x'.A) (e : x'.A ≃+* A'), x.Ext2 x' j ∧ (∀ a, e (j a) = j₀ a) ∧ Nat.card x'.K = Nat.card (ResidueField A') := by
   intro l _ F n x A' _ _ _ hA j₀ hinj hloc hfin
-  haveI := hA.complete
-  haveI := hA.finite
-  haveI := hA.char
+  have := hA.complete
+  have := hA.finite
+  have := hA.char
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible A'
   obtain ⟨e, -, -⟩ := UpperTheory.V.AlgebraTools.powerSeries_equiv_of_complete_dvr A' l t ht
-  letI : Algebra ℤ_[l] (ResidueField A') := ((residue A').comp (j₀.comp (algebraMap ℤ_[l] x.A))).toAlgebra
+  let : Algebra ℤ_[l] (ResidueField A') := ((residue A').comp (j₀.comp (algebraMap ℤ_[l] x.A))).toAlgebra
   let j : x.A →+* PowerSeries (ResidueField A') := (e.symm : A' →+* _).comp j₀
   have hj : Function.Injective j := e.symm.injective.comp hinj
-  haveI hl : IsLocalHom j := ⟨fun a ha => hloc.1 a (by simpa using ha.map e)⟩
+  have hl : IsLocalHom j := ⟨fun a ha => hloc.1 a (by simpa using ha.map e)⟩
   have hjf : j.Finite := RingHom.Finite.comp (RingHom.Finite.of_surjective _ e.symm.surjective) hfin
   have h0 : (l : PowerSeries (ResidueField A')) = 0 := e.injective (by simp)
   have he : pushCh j (F.eps ℤ_[l] x.A) = F.eps ℤ_[l] (PowerSeries (ResidueField A')) := by
@@ -660,9 +660,9 @@ open Matrix IsLocalRing UpperTheory.V.Alg UpperTheory.V.W UpperTheory.V.Pa
 private theorem map_finite {K L : Type} [Field K] [Field L] [Finite L] (f : K →+* L) :
     (PowerSeries.map f).Finite := by
   classical
-  letI := f.toAlgebra
-  letI := (PowerSeries.map f).toAlgebra
-  haveI : Module.Finite K L := Module.Finite.of_finite
+  let := f.toAlgebra
+  let := (PowerSeries.map f).toAlgebra
+  have : Module.Finite K L := Module.Finite.of_finite
   let b := Module.finBasis K L
   show Module.Finite (PowerSeries K) (PowerSeries L)
   refine ⟨⟨Finset.univ.image (fun i => PowerSeries.C (b i)), ?_⟩⟩
@@ -695,7 +695,7 @@ theorem UpperTheory.V.Pa.Det.resExt :
   have hd : d ≠ 0 := by
     rintro rfl
     exact hD (zero_dvd_iff.mp hdD)
-  letI : Algebra (ZMod l) K := ZMod.algebra K l
+  let : Algebra (ZMod l) K := ZMod.algebra K l
   let e := GaloisField.algEquivGaloisField l d hK
   obtain ⟨g⟩ := FiniteField.nonempty_algHom_of_finrank_dvd (F := ZMod l)
     (K := GaloisField l d) (L := GaloisField l D)
@@ -706,9 +706,9 @@ theorem UpperTheory.V.Pa.Det.resExt :
     intro ψ
     rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply, PowerSeries.coeff_map,
       PowerSeries.coeff_zero_eq_constantCoeff_apply]
-  haveI : CharP (PowerSeries (GaloisField l D)) l :=
+  have : CharP (PowerSeries (GaloisField l D)) l :=
     charP_of_injective_ringHom (PowerSeries.C (R := GaloisField l D)).injective l
-  haveI : UpperTheory.V.Pa.IsEqDVR l (PowerSeries (GaloisField l D)) :=
+  have : UpperTheory.V.Pa.IsEqDVR l (PowerSeries (GaloisField l D)) :=
     ⟨by rw [PowerSeries.maximalIdeal_eq_span_X]; infer_instance,
       Finite.of_surjective _ (bijective_residue_comp_powerSeries_C (GaloisField l D)).2, inferInstance⟩
   refine ⟨PowerSeries (GaloisField l D), inferInstance, inferInstance, inferInstance, inferInstance,
@@ -721,7 +721,7 @@ theorem UpperTheory.V.Pa.Det.resExt :
   · rw [← Nat.card_congr (Equiv.ofBijective _ (bijective_residue_comp_powerSeries_C (GaloisField l D))),
       GaloisField.card l D hD]
   · rw [PowerSeries.map_X]
-    exact PowerSeries.X_irreducible
+    exact PowerSeries.irreducible_X
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.PatchingModules.DeterminantPadicFree.ResExt =====
@@ -748,15 +748,15 @@ theorem UpperTheory.V.AlgebraTools.integralClosure_complete_dvr :
   have hinj : Function.Injective (algebraMap A B) := by
     rw [IsScalarTower.algebraMap_eq A B K, RingHom.coe_comp] at hinjK
     exact hinjK.of_comp
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinj
-  haveI hfin : Module.Finite A B := IsIntegralClosure.finite A F K B
-  haveI hfree : Module.Free A B := Module.free_of_finite_type_torsion_free'
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinj
+  have hfin : Module.Finite A B := IsIntegralClosure.finite A F K B
+  have hfree : Module.Free A B := Module.free_of_finite_type_torsion_free'
   have hfr : IsFractionRing B K := IsIntegralClosure.isFractionRing_of_finite_extension A F K B
-  haveI := GlobalTheory.FormalIsogeny.isDiscreteValuationRing_integralClosure A F K
-  haveI hdvr : IsDiscreteValuationRing B :=
+  have := GlobalTheory.FormalIsogeny.isDiscreteValuationRing_integralClosure A F K
+  have hdvr : IsDiscreteValuationRing B :=
     IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing
       (IsIntegralClosure.equiv A (integralClosure A K) K B)
-  haveI hloc : IsLocalHom (algebraMap A B) := inferInstance
+  have hloc : IsLocalHom (algebraMap A B) := inferInstance
   refine ⟨hfin, hfree, hfr, hdvr, GlobalTheory.FormalIsogeny.isAdicComplete_maximalIdeal_of_finite A B,
     hloc, fun h => ?_⟩
   exact IsLocalRing.ResidueField.finite_of_finite h
@@ -819,7 +819,7 @@ theorem UpperTheory.V.Pa.Det.splitEx :
   classical
   have hQ0 : (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))) ≠ 0 :=
     Finset.prod_ne_zero_iff.mpr fun a _ => ((hP a).1.map _).ne_zero
-  haveI hsepE : Algebra.IsSeparable (FractionRing (PowerSeries K)) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K))))) := by
+  have hsepE : Algebra.IsSeparable (FractionRing (PowerSeries K)) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K))))) := by
     rw [← IntermediateField.isSeparable_top,
       ← (isSplittingField_iff_intermediateField.mp
         (inferInstance : Polynomial.IsSplittingField (FractionRing (PowerSeries K)) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K))))) (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))))).2,
@@ -829,7 +829,7 @@ theorem UpperTheory.V.Pa.Det.splitEx :
     rw [map_prod, Finset.prod_eq_zero_iff] at h0
     obtain ⟨a, _, ha⟩ := h0
     exact (hP a).2.2.of_dvd (minpoly.dvd (FractionRing (PowerSeries K)) x ha)
-  haveI hcA : IsAdicComplete (IsLocalRing.maximalIdeal (PowerSeries K)) (PowerSeries K) := by
+  have hcA : IsAdicComplete (IsLocalRing.maximalIdeal (PowerSeries K)) (PowerSeries K) := by
     rw [PowerSeries.maximalIdeal_eq_span_X]
     infer_instance
   have hfinA : Finite (IsLocalRing.ResidueField (PowerSeries K)) :=
@@ -844,8 +844,8 @@ theorem UpperTheory.V.Pa.Det.splitEx :
     intro x y h
     apply hinjAE
     exact congrArg Subtype.val h
-  haveI hcharA : CharP (PowerSeries K) l := charP_of_injective_ringHom (PowerSeries.C (R := K)).injective l
-  haveI hcharB : CharP ↥(integralClosure (PowerSeries K) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))))) l := charP_of_injective_ringHom hj l
+  have hcharA : CharP (PowerSeries K) l := charP_of_injective_ringHom (PowerSeries.C (R := K)).injective l
+  have hcharB : CharP ↥(integralClosure (PowerSeries K) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))))) l := charP_of_injective_ringHom hj l
   have hal : ∀ a, ∃ al : Fin n → ↥(integralClosure (PowerSeries K) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K)))))), Function.Injective al ∧
       (P a).map (algebraMap (PowerSeries K) ↥(integralClosure (PowerSeries K) (Polynomial.SplittingField (∏ a, (P a).map (algebraMap (PowerSeries K) (FractionRing (PowerSeries K))))))) = ∏ b, (Polynomial.X - Polynomial.C (al b)) := by
     intro a
@@ -896,7 +896,7 @@ private theorem charP_of_padic {l : ℕ} [Fact l.Prime] {K : Type} [Field K] [Fi
 theorem UpperTheory.V.Pa.Det.onePt :
     ∀ {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} {x : NP F n} (k : Kap x) {q : ℕ} (sg : Fin q → F.G₀), (∀ a, ((mat x.ρ (sg a)).charpoly.map (algebraMap x.A (FractionRing x.A))).Separable) → Detects k (Set.range sg) → ∃ d : ℕ, d ≠ 0 ∧ ∀ D, d ∣ D → D ≠ 0 → ∃ (x' : NP F n) (j : x.A →+* x'.A) (k' : Kap x') (al : Fin q → Fin n → x'.A), x.Ext x' j ∧ Nat.card x'.K = l ^ D ∧ Detects k' (Set.range sg) ∧ ∀ a, Function.Injective (al a) ∧ (mat x'.ρ (sg a)).charpoly = ∏ b, (Polynomial.X - Polynomial.C (al a b)) := by
   intro l _ F n x k q sg hsep hdet
-  haveI : CharP x.K l := charP_of_padic (algebraMap ℤ_[l] x.K)
+  have : CharP x.K l := charP_of_padic (algebraMap ℤ_[l] x.K)
   have hmat : ∀ (y y' : NP F n) (j : y.A →+* y'.A), y.Ext y' j → ∀ g, mat y'.ρ g = (mat y.ρ g).map j := by
     intro y y' j h g
     rw [h.2.2.2.1]
@@ -905,8 +905,8 @@ theorem UpperTheory.V.Pa.Det.onePt :
     Det.splitEx l (n := n) (fun a => (mat x.ρ (sg a)).charpoly)
       (fun a => ⟨Matrix.charpoly_monic _, by simp [Matrix.charpoly_natDegree_eq_dim], hsep a⟩)
   obtain ⟨x1, J1, e1, hE1, he1, -⟩ := Det.extEx x A1 j1 hj1i hj1l hj1f
-  haveI : CharP x1.K l := charP_of_padic (algebraMap ℤ_[l] x1.K)
-  haveI := Fintype.ofFinite x1.K
+  have : CharP x1.K l := charP_of_padic (algebraMap ℤ_[l] x1.K)
+  have := Fintype.ofFinite x1.K
   obtain ⟨d, -, hcard⟩ := FiniteField.card x1.K l
   refine ⟨(d : ℕ), d.ne_zero, ?_⟩
   intro D hdD hD0

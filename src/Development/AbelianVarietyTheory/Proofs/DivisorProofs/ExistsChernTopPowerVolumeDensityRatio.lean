@@ -62,7 +62,7 @@ theorem exists_isRatio_chernInt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
     ∃ ρ : CxPts p σ → ℝ, ω.IsRatio (L.φ σ) ρ ∧ (∀ y, 0 ≤ ρ y) ∧ ∀ f : CxPts p σ → ℝ, Continuous f →
       (L.φ σ).chernInt D Set.univ f = ∫ y, f y * ρ y ∂ω.meas := by
   intro k _ X _ p D hX hG L hL σ ω
-  haveI : SecondCountableTopology (CxPts p σ) := CxPts.secondCountableTopology_of_isProjOver σ hX.isProjOver
+  have : SecondCountableTopology (CxPts p σ) := CxPts.secondCountableTopology_of_isProjOver σ hX.isProjOver
   obtain ⟨R⟩ := hG σ
   have hcov : ∀ y, ∃ c : AlgChart p σ D, y ∈ c.e.source := fun y =>
     have ⟨i, hi⟩ := R.cover y

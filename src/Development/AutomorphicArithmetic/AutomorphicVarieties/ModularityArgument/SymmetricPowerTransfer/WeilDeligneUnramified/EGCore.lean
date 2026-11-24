@@ -233,9 +233,9 @@ theorem ordExT (P : HypothesesH) (ι : Qbar l ≃+* ℂ) {k N : ℕ} [NeZero N] 
       simp [mul_comm]
     have h4 := hg _ (normV_prime w)
     rw [map_sub, map_add (f := _), map_one, ← h1, ← h2] at h4
-    exact ⟨h4, by rw [Set.mem_setOf_eq, h3, h1, (hval w hqN).2]⟩
-  have hlev : ∀ w : Pl ℚ, ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal → levL l c w = c w := fun w hw => if_neg hw
-  have hlev1 : ∀ w : Pl ℚ, ((l : ℕ) : 𝓞 ℚ) ∈ w.asIdeal → levL l c w = 1 := fun w hw => if_pos hw
+    exact ⟨h4, by rw [Set.mem_ofPred_eq, h3, h1, (hval w hqN).2]⟩
+  have hlev : ∀ w : Pl ℚ, ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal → levL l c w = c w := fun w hw => ite_eq_right hw
+  have hlev1 : ∀ w : Pl ℚ, ((l : ℕ) : 𝓞 ℚ) ∈ w.asIdeal → levL l c w = 1 := fun w hw => ite_eq_left hw
   have hker : ψ⁻¹.ker = ψ.ker := by ext s; simp
   refine ⟨levL l c, π, r, ⟨hreg, ⟨χ', hpol⟩, hG.cont, hatt, MonoidHom.ext fun s => ?_, ?_, ?_, fun w A hA => ?_, fun w hw => ?_,
     fun w hw hwl => ?_, fun w hw => ?_⟩, fun s => (hall s).1, hU, fun w hw => (hval w hw).2 ▸ hsat w ((hc0 w).2 hw)⟩
@@ -249,7 +249,7 @@ theorem ordExT (P : HypothesesH) (ι : Qbar l ≃+* ℂ) {k N : ℕ} [NeZero N] 
   · refine (fin_dvd hlN).subset fun w hw => ?_
     by_cases h : ((l : ℕ) : 𝓞 ℚ) ∈ w.asIdeal
     · exact ((mem_iff w l).1 h).mul_right _
-    · rw [Set.mem_setOf_eq, hlev w h, Ne, hc0, not_not] at hw
+    · rw [Set.mem_ofPred_eq, hlev w h, Ne, hc0, not_not] at hw
       exact hw.mul_left _
   · rw [hker, ← hm]
     by_cases h : normV w ∣ N
@@ -319,7 +319,7 @@ private theorem mod_retr {R S M : Type} [Ring R] [AddCommGroup S] [Module R S] [
     rcases f.injective_or_eq_zero with hi | rfl
     · exact le_sSup ⟨(LinearEquiv.ofInjective _ hi).symm⟩
     · simp)
-  haveI : IsSemisimpleModule R M :=
+  have : IsSemisimpleModule R M :=
     IsSemisimpleModule.congr (M := isotypicComponent R M S) (LinearEquiv.ofTop _ htop).symm
   have hiso := IsIsotypicOfType.of_isotypicComponent_eq_top htop
   obtain ⟨m, hm, hxm⟩ : ∃ m : Submodule R M, IsCoatom m ∧ x ∉ m := by
@@ -329,7 +329,7 @@ private theorem mod_retr {R S M : Type} [Ring R] [AddCommGroup S] [Module R S] [
     rw [← IsSemisimpleModule.jacobson_eq_bot R M]
     exact Submodule.mem_sInf.2 hn
   obtain ⟨W, hc⟩ := exists_isCompl m
-  haveI : IsSimpleModule R W := isSimpleModule_iff_isAtom.2 (hc.isCoatom_iff_isAtom.1 hm)
+  have : IsSimpleModule R W := isSimpleModule_iff_isAtom.2 (hc.isCoatom_iff_isAtom.1 hm)
   obtain ⟨e⟩ := hiso W
   refine ⟨e.toLinearMap ∘ₗ W.projectionOnto m hc.symm, fun h0 => hxm ?_⟩
   simpa using h0
@@ -365,7 +365,7 @@ private theorem map_dc (σ : Representation ℂ Γ X) (τ : Representation ℂ �
     T (Hi.dc τ K K a x) = Hi.dc σ K K a (T x) := by
   have hx0 : x ≠ 0 := fun e => hx (by rw [e, map_zero])
   rcases finite_or_infinite (MulAction.orbit K (a : Γ ⧸ K)) with hf | hf
-  · haveI := Fintype.ofFinite (MulAction.orbit K (a : Γ ⧸ K))
+  · have := Fintype.ofFinite (MulAction.orbit K (a : Γ ⧸ K))
 
     simp only [Hi.dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply, map_sum, hT]
   · rw [Hi.dc, Hi.dc, finsum_of_infinite_support, finsum_of_infinite_support]
@@ -611,7 +611,7 @@ private theorem inv_charpoly_root {K : Type} [Field K] {n : ℕ} (g : GL (Fin n)
 
 private theorem norm_xi {l : ℕ} [Fact l.Prime] {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (ι : Qbar l ≃+* ℂ)
     (ξ : G ℚ Ω →* (Qbar l)ˣ) (h : IsOpen (ξ.ker : Set (G ℚ Ω))) (s : G ℚ Ω) : ‖ι (ξ s : Qbar l)‖ = 1 := by
-  haveI : Finite (G ℚ Ω ⧸ ξ.ker) := Subgroup.quotient_finite_of_isOpen _ h
+  have : Finite (G ℚ Ω ⧸ ξ.ker) := Subgroup.quotient_finite_of_isOpen _ h
   have h0 : ξ.ker.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have h1 : ξ s ^ ξ.ker.index = 1 := by
     rw [← map_pow]
@@ -1029,7 +1029,7 @@ theorem UpperTheory.GalN.V.L.monosep :
       have hne : Module.End.eigenspace (a.ρ g) β ≠ ⊥ := fun hb => hv0 (by simpa [hb] using hv)
       have h1 : Module.finrank ℂ (Module.End.eigenspace (a.ρ g) β) = 1 :=
         le_antisymm hle (Submodule.one_le_finrank_iff.2 hne)
-      obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨v, hv⟩ : Module.End.eigenspace (a.ρ g) β)
+      obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨v, hv⟩ : Module.End.eigenspace (a.ρ g) β)
         (fun hz => hv0 (congrArg Subtype.val hz))).1 h1 ⟨a.N v, hNv⟩
       have hc' : a.N v = c • v := (congrArg Subtype.val hc).symm
       obtain ⟨k, hk⟩ := a.nilpotent
@@ -1247,7 +1247,7 @@ variable {l : ℕ} [hl : Fact l.Prime] {Ω : Type} [Field Ω] [CharZero Ω] [IsA
 private theorem dec_le {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 ℚ)} (hv : IsPlaceOver A v) {γ : G ℚ Ω}
     (hγ : IsFrob A (normV v) γ) (K : Subgroup (G ℚ Ω)) (hI : Ine (F := ℚ) A ≤ K) (hK : γ ∈ K) :
     Dec (F := ℚ) A ≤ K.topologicalClosure := by
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   have key := ProfiniteGrp.closedSubgroup_eq_sInf_open (G := G ℚ Ω) ⟨K.topologicalClosure, Subgroup.isClosed_topologicalClosure _⟩
   refine le_trans (le_sInf ?_) key.ge
   rintro N ⟨hNo, hN⟩

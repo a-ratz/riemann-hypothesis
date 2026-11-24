@@ -159,13 +159,13 @@ theorem thLaValAt_of_isShortRule [StarRing (𝓞 E)] (nab : NabV Xo c) (hnab : I
     (hf : f ∈ sec Xo c a n) (h : IsShortRule Xo c (idCover nab n) Λ N x0 P f) (p : TRing c.F) (y : FrPt Xo c p.R) :
     thLaValAt Xo c nab (x0Dat c x0) Λ N P y ((betaH (Dw := Dw) c Λ • f) p y) := by
   have hL : Laws := GlobalTheory.firstFiveLaws.1
-  haveI : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  have : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
   obtain ⟨hval, hnat⟩ := GlobalTheory.shortThetaValue_existsUnique_natural hL GlobalTheory.chartIndependence_unconditional E H Dw l Xo c
     nab hnab n Λ N hU hT hO a P hP.1 (x0Dat c x0) (betaH (Dw := Dw) c Λ)
   obtain ⟨v, hv, -⟩ := hval p.R y
   have e : f p y = v := by
     refine GlobalTheory.CoverDescent.eq_of_geometric_points _ _ fun k _ _ χ => ?_
-    letI i1 : Algebra c.F k := (χ.comp (algebraMap c.F p.R)).toAlgebra
+    let i1 : Algebra c.F k := (χ.comp (algebraMap c.F p.R)).toAlgebra
     let χa : p.R →ₐ[c.F] k := { χ with commutes' := fun _ => rfl }
     obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw l Xo c p.R k χa y
     obtain ⟨u, hu, eu⟩ := @h k _ _ i1 i1 (fun _ => rfl) z z (frOver_self nab n z)

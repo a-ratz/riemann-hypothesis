@@ -186,13 +186,13 @@ theorem omV_of (hStd : OmVStd X ψ) (hLat : OmVLat X) (hSD : OmVSD X) (hUn : OmV
   by_cases hT : ((Tw u' : ℕ) : 𝓞 X.B.I.F) ∈ v.asIdeal
   · rw [hBad hψ hψ' v hT (hSD v) (hUn v) (hPrim v), ENNReal.toReal_ofReal (val_nonneg X v _ _), exp_eq X, prod_eq X v]
     unfold aP
-    rw [if_pos hT, n_sub_a X]
+    rw [ite_eq_left hT, n_sub_a X]
   · have h := hLocU v _ (yTup X u' v) (hStd hψ hψ') hLat (hSD v) (hUn v) (a_le_n X) (hPrim v)
       (by rw [hGram v]; exact hDet v hT)
     rw [hGram v] at h
     rw [h, ENNReal.toReal_ofReal (val_nonneg X v _ _), exp_eq X, prod_eq X v]
     unfold aP
-    rw [if_neg hT, n_sub_a X]
+    rw [ite_eq_right hT, n_sub_a X]
 
 end Formalism.L2.SG.Pf.NcX.OmVSt
 end -- clump:auto
@@ -521,8 +521,8 @@ theorem fixed_mem_range {k K : Type} [Field k] [Fintype k] [Field K] [Fintype K]
     (σ : K ≃ₐ[k] K) (h2 : Module.finrank k K = 2) (hne : σ ≠ AlgEquiv.refl) (t : K) (ht : σ t = t) :
     ∃ c : k, t = algebraMap k K c := by
   classical
-  haveI : FiniteDimensional k K := inferInstance
-  haveI : IsGalois k K := inferInstance
+  have : FiniteDimensional k K := inferInstance
+  have : IsGalois k K := inferInstance
   have hcard : Fintype.card (K ≃ₐ[k] K) = 2 := by
     rw [← Nat.card_eq_fintype_card, IsGalois.card_aut_eq_finrank, h2]
   have hall : ∀ τ : K ≃ₐ[k] K, τ = AlgEquiv.refl ∨ τ = σ := by
@@ -986,7 +986,7 @@ theorem fFSplitB_holds : PI.OmVd.FFSplitB := by
     simp only [one_pow, one_mul]
     rw [← Finset.insert_Icc_add_one_left_eq_Icc (by omega : r ≤ a' + 1 + r), Finset.prod_insert (by simp), ← Finset.insert_Icc_add_one_left_eq_Icc (by omega : r + 1 ≤ a' + 1 + r), Finset.prod_insert (by simp)]
     rw [Fin.prod_univ_castSucc] at hkR
-    simp only [Fin.coe_castSucc, Fin.val_last] at hkR
+    simp only [Fin.val_castSucc, Fin.val_last] at hkR
     rw [hP] at hkR
     have hK := PI.OmVe.keySplit q hq0 r
     have e : q ^ (2 * r + 1) * (1 - q ^ (-((r + 1 : ℕ) : ℤ))) = (q ^ (r + 1) - 1) * q ^ r := by
@@ -1098,7 +1098,7 @@ theorem omVDdLoc_of (hT : OmVDdTr X) : OmVDdLoc X := by
   intro v a
   have hlt : ((a.castSucc : Fin (D.R.rS + 1)) : ℕ) < D.R.rS := by simp
   have halp : alp v D.R.rS a.castSucc = (dV v)⁻¹ ^ (D.R.rS - (a : ℕ)) := by
-    unfold alp; rw [if_pos hlt]; simp
+    unfold alp; rw [ite_eq_left hlt]; simp
   have hk : ((D.R.rS : ℤ) - ((a : ℕ) : ℤ)) = ((D.R.rS - (a : ℕ) : ℕ) : ℤ) := by
     rw [Nat.cast_sub a.isLt.le]
   have haa : aaD D a = (ddS D ^ (D.R.rS - (a : ℕ)))⁻¹ := by
@@ -1347,7 +1347,7 @@ theorem fib_image_mulTup (hG : GramMulTup) (hU : IsOpen {r : R | IsUnit r}) (hL 
   have e3 : ((tupEquiv (M := M) D).toHomeomorph.toMeasurableEquiv : _ → _) =
       mulTup (D : Matrix (Fin n) (Fin n) (R ⊗[F] E)) := rfl
   have e4 : ((tupEquiv (M := M) D) : _ → _) = mulTup (D : Matrix (Fin n) (Fin n) (R ⊗[F] E)) := rfl
-  rw [e3, e4, hmap, Measure.smul_apply, smul_eq_mul] at e1
+  rw [e3, e4, hmap, smul_apply, smul_eq_mul] at e1
   exact e1
 
 end Cov

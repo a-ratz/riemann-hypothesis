@@ -139,7 +139,7 @@ theorem GlobalTheory.sub_mem_smul_top_of_neat_level : ∀ (E : Type) [Field E] [
     obtain ⟨b', hb'⟩ := (hψ _).1 hd
     have : ((G - 1) ^ m) l = z + n • b' := by rw [← hb']; abel
     rw [this]; exact Submodule.add_mem _ hz (hnW I hJI b')
-  haveI := hfin; haveI := htf
+  have := hfin; have := htf
   let Gr : Module.End (𝓞 E) W := G.restrict hGW
   have hGr : ∀ y : W, ((Gr y : W) : Λ) = G y := fun y => rfl
   have hGr1 : ∀ y : W, (((Gr - 1) y : W) : Λ) = (G - 1) y := fun y => rfl

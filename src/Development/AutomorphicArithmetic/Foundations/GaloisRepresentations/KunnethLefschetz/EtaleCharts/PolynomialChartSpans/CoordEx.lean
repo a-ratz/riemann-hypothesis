@@ -72,7 +72,7 @@ theorem coordEx : CoordEx := by
           ((algebraMap _ (Localization.Away t)).comp (Z.hom.appLE ⊤ V hVle).hom) := by
       ext x
       simp only [RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
-        RingEquiv.coe_toRingHom, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes]
+        RingEquiv.coe_toRingHom, AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes]
       rw [RingHom.algebraMap_toAlgebra]
       show _ = (Z.hom.appLE ⊤ V hVle ≫
         Z.left.presheaf.map (homOfLE (Z.left.basicOpen_le t)).op).hom x

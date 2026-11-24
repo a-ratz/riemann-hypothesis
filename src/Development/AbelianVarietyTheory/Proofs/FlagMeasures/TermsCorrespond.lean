@@ -140,8 +140,8 @@ lemma ME_le (S : Frames M.L r k) (A : Submodule E S.V) :
 
 theorem terms_correspond : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r k : ℕ) (P : LocNG.FPair H r), ∀ (S : Frames M.L r k) (c : Coord P S), (∀ (d : LocNG.Datum P) (t : Term V M r), LocNG.IsTermOver P d t → S.IsTerm (c.dat d) (c.lat t.abelian₂) ∧ LocNG.om P t = S.om (c.dat d) (c.lat t.abelian₂) ∧ (LocNG.BBne (H := H) t ↔ ¬ S.BBzero (c.dat d) (c.lat t.abelian₂))) ∧ (∀ (d : LocNG.Datum P) Λ, S.IsTerm (c.dat d) Λ → ∃ t, LocNG.IsTermOver P d t ∧ c.lat t.abelian₂ = Λ) ∧ ∀ δ Λ, S.IsTerm δ Λ → ∃ d : LocNG.Datum P, δ = c.dat d := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P S c
-  letI := hM.loc
-  haveI := hM.char0
+  let := hM.loc
+  have := hM.char0
   obtain ⟨hth, hN, hN', -, hpsi, -⟩ := GlobalTheory.HL.CoordUnip.transport M hM H r k P S c
   obtain ⟨-, iA, oA, sA⟩ := _root_.GlobalTheory.HL.CoordInnerFst.transport M hM H r k P S c
   obtain ⟨-, iB, oB, sB⟩ := _root_.GlobalTheory.HL.CoordInnerSnd.transport M hM H r k P S c

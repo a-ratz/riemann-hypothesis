@@ -161,8 +161,8 @@ theorem pairs_glue : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ideal
     have ha' : a ∈ I := hk ▸ RingHom.mem_ker.2 ha
     have : a * a ∈ I ^ 2 := by rw [pow_two]; exact Ideal.mul_mem_mul ha' ha'
     rwa [hI, Ideal.zero_eq_bot, Ideal.mem_bot] at this
-  haveI : IsClosedImmersion (spMap π) := IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom π) hπ
-  haveI hkc : IsClosedImmersion k := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hkk.flip inferInstance
+  have : IsClosedImmersion (spMap π) := IsClosedImmersion.spec_of_surjective (CommRingCat.ofHom π) hπ
+  have hkc : IsClosedImmersion k := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hkk.flip inferInstance
   have hinj : Function.Injective k := k.isClosedEmbedding.injective
   have hksurj : Function.Surjective k :=
     (MorphismProperty.of_isPullback (P := @AlgebraicGeometry.Surjective) hkk.flip ⟨hπs⟩).surj
@@ -213,7 +213,7 @@ theorem pairs_glue : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ideal
     refine ⟨T₃, ?_, ?_, c, hc'.trans ha.symm⟩
     · exact Subtype.coe_le_coe.1 (Prod.le_def.2 ⟨(le_inf_iff.1 hT₃le).1, (le_inf_iff.1 hU₃le).1⟩)
     · exact Subtype.coe_le_coe.1 (Prod.le_def.2 ⟨(le_inf_iff.1 hT₃le).2, (le_inf_iff.1 hU₃le).2⟩)
-  letI := dir P' f₀ hc hd
+  let := dir P' f₀ hc hd
   let 𝒰 := cov P' f₀ hc
   let lr : ∀ T : Pair f₀, S.F.obj (op T.1.2) →+* S'.F.obj (op T.1.1) := fun T ↦ (l (op T)).toRingHom
   let g : ∀ T : 𝒰.I₀, 𝒰.X T ⟶ X := fun T ↦ spMap (lr T) ≫ P.y (op T.1.2)
@@ -341,7 +341,7 @@ theorem exists_isOb1 : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Ide
       (fun y ↦ L'.nat b y) (σ T') (σ T'') (hσ T') (hσ T'')
     change z T T'' (a ≫ b) = extHom R₁ (mp F' b) (z T T' a) + z T' T'' b
     rw [← sub_eq_zero]
-    haveI := L'.smooth T''
+    have := L'.smooth T''
     refine GlobalTheory.T.augmentation_sigma_map_injective_of_flat R R₀ I hI π hπ hk R₁ α (L'.B T'') (F'.obj T'') (L'.p T'') (L'.semi T'') (L'.surj T'')
       (L'.ker T'') (σ T'') (hσ T'') _ ?_ ?_
     · have h1 := hzq T T'' (a ≫ b)
@@ -714,7 +714,7 @@ theorem obstructionPullback_eq_zero_of_naturalLift : ∀ (R R₀ : Type) [CommRi
   have su := GlobalTheory.T.augmentation_sigma_map_natural R R₀ I hI π hπ hk R₁ α (L'.B (m.G.obj T')) (F'.obj (m.G.obj T')) (L'.p _) (L'.semi _)
     (L'.surj _) (L'.ker _) (L''.B T') (F''.obj T') (L''.p T') (L''.semi T') (L''.surj T') (L''.ker T') (u T')
     (coefHom m T') (fun b ↦ hu T' b) (σ' _) (σ'' T') (hσ' _) (hσ'' T')
-  haveI : Algebra.Smooth R (L''.B T') := L''.smooth T'
+  have : Algebra.Smooth R (L''.B T') := L''.smooth T'
   change g T' - extHom R₁ (mp F'' a) (g T) = extHom R₁ (coefHom m T') (z.1 _ _ (m.G.map a))
   refine sub_eq_zero.1 (GlobalTheory.T.augmentation_sigma_map_injective_of_flat R R₀ I hI π hπ hk R₁ α (L''.B T') (F''.obj T') (L''.p T') (L''.semi T')
     (L''.surj T') (L''.ker T') (σ'' T') (hσ'' T') _ ?_ ?_)
@@ -884,8 +884,8 @@ theorem isPullback_tensor {A' B' : Over S'} {A B : Over S} {b : S' ⟶ S} {f : A
   rwa [Over.w, Over.w] at r
 
 theorem smooth_tensor {X Y : Over S} (hX : Smooth X.hom) (hY : Smooth Y.hom) : Smooth (X ⊗ Y).hom := by
-  haveI := hX
-  haveI := hY
+  have := hX
+  have := hY
   rw [Over.tensorObj_hom, Limits.pullback.condition]
   infer_instance
 
@@ -938,7 +938,7 @@ theorem mul_lifts : FormSt → AxesVanishingExtendedDegOne → ∀ (R R₀ : Typ
   have hlift : ∀ T : (Pair (μ[A₀]).left)ᵒᵖ,
       ∃ ρ : (ofSys S).B ((pairPull hh).G.obj T) →ₐ[R] (pairPre S' (μ[A₀]).left).B T,
         ∀ b, (pairPre S' (μ[A₀]).left).p T (ρ b) = (pairPull hh).α T ((ofSys S).p _ b) := fun T ↦ by
-    haveI := (ofSys S).smooth ((pairPull hh).G.obj T)
+    have := (ofSys S).smooth ((pairPull hh).G.obj T)
     exact GlobalTheory.T.exists_lift_hom_of_reduction_squareZero_smooth R R₀ I hI π hπ hk _ _ ((ofSys S).p _) ((ofSys S).semi _) ((ofSys S).surj _)
       ((ofSys S).ker _) _ _ ((pairPre S' (μ[A₀]).left).p T) ((pairPre S' (μ[A₀]).left).semi T)
       ((pairPre S' (μ[A₀]).left).surj T) ((pairPre S' (μ[A₀]).left).ker T) (coefHom (pairPull hh) T)

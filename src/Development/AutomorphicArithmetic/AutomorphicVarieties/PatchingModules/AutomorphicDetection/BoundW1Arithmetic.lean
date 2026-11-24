@@ -327,11 +327,11 @@ private theorem card_dual (p : ℕ) [Fact p.Prime] (M : Type) [AddCommGroup M] [
 private theorem ex_dual (p : ℕ) (hp : p.Prime) (M M' : Type) [AddCommGroup M] [Module (ZMod p) M] [Finite M]
     [AddCommGroup M'] [Finite M'] (b : M →+ M' →+ ZMod p) (hl : ∀ x, (∀ y, b x y = 0) → x = 0)
     (hr : ∀ y, (∀ x, b x y = 0) → y = 0) : ∃ β : M' ≃+ TDual (ZMod p) M, ∀ y x, β y x = b x y := by
-  haveI := Fact.mk hp
-  letI : Module (ZMod p) M' := AddCommGroup.zmodModule fun y => hr _ fun x => by
+  have := Fact.mk hp
+  let : Module (ZMod p) M' := AddCommGroup.zmodModule fun y => hr _ fun x => by
     rw [map_nsmul, nsmul_eq_mul, ZMod.natCast_self, zero_mul]
-  haveI : Finite (TDual (ZMod p) M) := GlobalTheory.DualSide.finite_TDual
-  haveI : Finite (TDual (ZMod p) M') := GlobalTheory.DualSide.finite_TDual
+  have : Finite (TDual (ZMod p) M) := GlobalTheory.DualSide.finite_TDual
+  have : Finite (TDual (ZMod p) M') := GlobalTheory.DualSide.finite_TDual
   let f : M' →+ TDual (ZMod p) M :=
     { toFun := fun y => TDual.mk ((b.flip y).toZModLinearMap p)
       map_zero' := DFunLike.ext _ _ fun x => map_zero (b x)
@@ -373,13 +373,13 @@ theorem UpperTheory.V.Pa.gwBare :
     ⟨(Set.finite_coe_iff.1 (Finite.of_equiv W pl)).toFinset, Set.Finite.coe_toFinset _⟩
   intro R M M' _ _ _ _ _ _ _ ρ ρ' b hLC hb
   have hp : l.Prime := Fact.out
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hp.ne_zero⟩
   let j : ZMod l ≃+* ZMod (l ^ 1) := ZMod.ringEquivCongr (pow_one l).symm
   have hk : ∀ x : M, l ^ 1 • x = 0 := fun x => hb.left _ fun y => by
     rw [map_nsmul, AddMonoidHom.nsmul_apply, nsmul_eq_mul, pow_one, ZMod.natCast_self, zero_mul]
   obtain ⟨_⟩ : Nonempty (Module (ZMod (l ^ 1)) M) := ⟨AddCommGroup.zmodModule hk⟩
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
   let ρS : Representation (ZMod (l ^ 1)) (GS Ω (T : Set (HeightOneSpectrum (𝓞 F)))) M :=
     zrep (l ^ 1) ρ e.toMulEquiv.toMonoidHom
   have hρS : ∀ g m, ρS g m = ρ (e g) m := fun _ _ => rfl
@@ -408,9 +408,9 @@ theorem UpperTheory.V.Pa.gwBare :
   have hAv : ∀ v, IsPlaceOver (Av v) v.1 := fun v => by
     have := hA (σ v)
     rwa [show pl (σ v) = v from pl.apply_symm_apply v] at this
-  haveI : Finite (TDual (ZMod (l ^ 1)) M) := GlobalTheory.DualSide.finite_TDual
-  haveI := (hGF F Ω l 1 M T ρS one_pos hT' hcont).2.1
-  haveI := (hGF F Ω l 1 _ T (twDual μ ρS) one_pos hT' hcont').2.1
+  have : Finite (TDual (ZMod (l ^ 1)) M) := GlobalTheory.DualSide.finite_TDual
+  have := (hGF F Ω l 1 M T ρS one_pos hT' hcont).2.1
+  have := (hGF F Ω l 1 _ T (twDual μ ρS) one_pos hT' hcont').2.1
   have key : ∀ v : T, Function.Injective (cupH1H1TwistedDual μ ρS (locFam T Av v) (hcont.comp' (continuous_locFam T Av v))) := fun v =>
     cup_inj μ ρS _ _ _ (by rw [← hμ]; rfl) (hT F Ω l 1 M (Av v) (ρS.comp (locFam T Av v)) v.1 one_pos (hAv v)
       (hcont.comp' (continuous_locFam T Av v))).2.2.1.1
@@ -470,7 +470,7 @@ private theorem cardZ {k D M : Type} [CommRing k] [Group D] [TopologicalSpace D]
   have hZ : Nat.card (Z1 σ) =
       Nat.card (Submodule.comap (Z1 σ).subtype (B1 σ)) * Nat.card (H1 σ) :=
     Submodule.card_eq_card_quotient_mul_card _
-  haveI hBfin : Finite (B1 σ) := Finite.of_surjective _ (d0 σ).surjective_rangeRestrict
+  have hBfin : Finite (B1 σ) := Finite.of_surjective _ (d0 σ).surjective_rangeRestrict
   have hpos1 : 0 < Nat.card (B1 σ) := Nat.card_pos
   have hpos2 : 0 < Nat.card (H1 σ) := Nat.card_pos
   refine ⟨Nat.finite_of_card_ne_zero ?_, ?_⟩
@@ -481,7 +481,7 @@ private theorem cardZ {k D M : Type} [CommRing k] [Group D] [TopologicalSpace D]
 
 private theorem cardDual (k V : Type) [Field k] [AddCommGroup V] [Module k V] [Finite V] :
     Nat.card (Module.Dual k V) = Nat.card V := by
-  haveI : Module.Finite k V := Module.Finite.of_finite
+  have : Module.Finite k V := Module.Finite.of_finite
   exact Nat.card_congr (Module.Free.chooseBasis k V).toDualEquiv.symm.toEquiv
 
 private theorem cardInv {n : ℕ} [Fact n.Prime] {D M M' : Type} [Group D] [AddCommGroup M] [Module (ZMod n) M]
@@ -507,9 +507,9 @@ private theorem cardInv {n : ℕ} [Fact n.Prime] {D M M' : Type} [Group D] [AddC
     exact sub_eq_zero.mp this
   have c1 := cardDual (ZMod n) M
   have c2 := cardDual (ZMod n) M'
-  haveI : Finite (Module.Dual (ZMod n) M) :=
+  have : Finite (Module.Dual (ZMod n) M) :=
     Nat.finite_of_card_ne_zero (by rw [c1]; exact Nat.card_pos.ne')
-  haveI : Finite (Module.Dual (ZMod n) M') :=
+  have : Finite (Module.Dual (ZMod n) M') :=
     Nat.finite_of_card_ne_zero (by rw [c2]; exact Nat.card_pos.ne')
   have le1 : Nat.card M ≤ Nat.card M' := c2 ▸ Nat.card_le_card_of_injective _ hΨi
   have hΦb : Function.Bijective Φ := hΦi.bijective_of_nat_card_le (by rw [c1]; exact le1)
@@ -562,7 +562,7 @@ private def zRep (n : ℕ) {R D M : Type} [CommRing R] [Group D] [AddCommGroup M
 private theorem cast_toZMod {l : ℕ} [Fact l.Prime] (h : l ^ 1 ∣ l) (x : ℤ_[l]) :
     ZMod.castHom h (ZMod (l ^ 1)) (PadicInt.toZMod x) = PadicInt.toZModPow 1 x := by
   have hinj : Function.Injective (ZMod.castHom h (ZMod (l ^ 1))) := by
-    haveI : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact (Fact.out : l.Prime).one_lt⟩
+    have : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact (Fact.out : l.Prime).one_lt⟩
     exact (ZMod.castHom h (ZMod (l ^ 1))).injective
   have hspan : Ideal.span {((l : ℤ_[l])) ^ 1} = RingHom.ker (PadicInt.toZMod : ℤ_[l] →+* ZMod l) := by
     rw [pow_one, PadicInt.ker_toZMod, PadicInt.maximalIdeal_eq_span_p]
@@ -582,7 +582,7 @@ private theorem cast_toZMod {l : ℕ} [Fact l.Prime] (h : l ^ 1 ∣ l) (x : ℤ_
 theorem UpperTheory.V.Pa.locBare :
     LocalFiniteness → LocalTateDuality → LocalEulerChar → ∀ (l : ℕ) [Fact l.Prime] (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 F)), IsPlaceOver A v → (((l : ℕ) : 𝓞 F) ∈ v.asIdeal → LocCount (Dec (F := F) A) ((cycZ F Ω l).comp (Dec (F := F) A).subtype) (locDeg v)) ∧ (((l : ℕ) : 𝓞 F) ∉ v.asIdeal → LocCount (Dec (F := F) A) ((cycZ F Ω l).comp (Dec (F := F) A).subtype) 0) := by
   intro hF hT hE l _ F Ω _ _ _ _ _ A v hv
-  haveI hl1 : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
+  have hl1 : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact Fact.out⟩
   have hdvd : l ^ 1 ∣ l := by rw [pow_one]
   have tate : ∀ (M : Type) [AddCommGroup M] [Module (ZMod (l ^ 1)) M] [Finite M]
       [TopologicalSpace M] [DiscreteTopology M]
@@ -592,7 +592,7 @@ theorem UpperTheory.V.Pa.locBare :
       Nat.card (H2 σ) = Nat.card ↥(H0 ((twDual ((cycMod F Ω l 1).comp (Dec (F := F) A).subtype) σ).comp
         (MonoidHom.id (Dec (F := F) A)))) := by
     intro M _ _ _ _ _ σ hσ hne
-    haveI := Nat.finite_of_card_ne_zero hne
+    have := Nat.finite_of_card_ne_zero hne
     obtain ⟨⟨eχ⟩, -, -, -, h20⟩ := hT F Ω l 1 M A σ v one_pos hv hσ
     have hχiso : Nonempty (H2 ((charRep ((cycMod F Ω l 1).comp (Dec (F := F) A).subtype)).comp
         (MonoidHom.id (Dec (F := F) A))) ≃ₗ[ZMod (l ^ 1)] ZMod (l ^ 1)) := by
@@ -619,10 +619,10 @@ theorem UpperTheory.V.Pa.locBare :
       apply hD.right
       intro x
       simp [map_nsmul, nsmul_eq_mul]
-    letI : Module (ZMod (l ^ 1)) M := AddCommGroup.zmodModule hkill
-    letI : Module (ZMod (l ^ 1)) M' := AddCommGroup.zmodModule hkill'
-    letI : TopologicalSpace M := ⊥
-    haveI : DiscreteTopology M := ⟨rfl⟩
+    let : Module (ZMod (l ^ 1)) M := AddCommGroup.zmodModule hkill
+    let : Module (ZMod (l ^ 1)) M' := AddCommGroup.zmodModule hkill'
+    let : TopologicalSpace M := ⊥
+    have : DiscreteTopology M := ⟨rfl⟩
     let σ : Representation (ZMod (l ^ 1)) (Dec (F := F) A) M := zRep (l ^ 1) ρ
     have hσ : ReciprocityTheory.Gal.ContAction σ := by
       show Continuous fun p : (Dec (F := F) A) × M => ρ p.1 p.2
@@ -630,9 +630,9 @@ theorem UpperTheory.V.Pa.locBare :
       intro m
       exact (hLC m).continuous
     obtain ⟨hf0, hf1, hf2, -⟩ := hF F Ω l 1 M A σ v one_pos hv hσ
-    haveI := hf0
-    haveI := hf1
-    haveI := hf2
+    have := hf0
+    have := hf1
+    have := hf2
     have hE1 := hEd M σ hσ
     obtain ⟨hZfin, hZc⟩ := cardZ σ hσ
     let τ : Dec (F := F) A → M' → M' := fun g y => ρ' g y
@@ -661,7 +661,7 @@ theorem UpperTheory.V.Pa.locBare :
       congr 1
       exact cast_toZMod hdvd _
     have hinvc := cardInv ((cycMod F Ω l 1).comp (Dec (F := F) A).subtype) σ τ b' hl' hr' he'
-    haveI : Nonempty {y : M' // ∀ g, τ g y = y} := ⟨⟨0, fun g => map_zero (ρ' g)⟩⟩
+    have : Nonempty {y : M' // ∀ g, τ g y = y} := ⟨⟨0, fun g => map_zero (ρ' g)⟩⟩
     have hpos : Nat.card {y : M' // ∀ g, τ g y = y} ≠ 0 := Nat.card_pos.ne'
     rw [← hinvc] at hpos
     have hinv2 : Nat.card ↥ρ'.invariants = Nat.card {y : M' // ∀ g, τ g y = y} :=

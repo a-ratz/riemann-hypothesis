@@ -126,12 +126,12 @@ theorem scale_conditions_iff (hW : IsShortForm W) (w : F) :
       rcases hW.a₄_ne_zero_or_a₆_ne_zero with h | h
       · exact h
       · exact absurd h6 h
-    simp only [h6, mul_zero, and_true, if_true]
+    simp only [h6, mul_zero, and_true, ite_true]
     exact key 4 _ h4
   by_cases h4 : W.a₄ = 0
-  · simp only [h4, h6, mul_zero, true_and, if_false, if_true]
+  · simp only [h4, h6, mul_zero, true_and, ite_false, ite_true]
     exact key 6 _ h6
-  · simp only [h4, h6, if_false, key 4 _ h4, key 6 _ h6]
+  · simp only [h4, h6, ite_false, key 4 _ h4, key 6 _ h6]
     constructor
     · rintro ⟨a, b⟩
       have : w ^ 6 = w ^ 4 * w ^ 2 := by ring
@@ -175,7 +175,7 @@ theorem exists_scale_of_weberValue_eq [IsAlgClosed F] (hW : IsShortForm W) {x₁
     have hsq : x₁ ^ 2 = x₂ ^ 2 := mul_left_cancel₀ hc hx
     rcases sq_eq_sq_iff_eq_or_eq_neg.mp hsq with h | h
     · exact ⟨1, one_ne_zero, by simp, by simp, by simp [h]⟩
-    · obtain ⟨i, hi⟩ := IsAlgClosed.exists_eq_mul_self (-1 : F)
+    · obtain ⟨i, hi⟩ := IsAlgClosed.isSquare (-1 : F)
       have hi4 : i ^ 4 = 1 := by linear_combination (1 - i * i) * hi
       refine ⟨i, ?_, by rw [hi4, one_mul], by rw [h6, mul_zero], ?_⟩
       · rintro rfl

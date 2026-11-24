@@ -90,7 +90,7 @@ theorem exists_split {D : D7} {θ : InfFam D} (hθ : IsInfFam θ) (m n : ℕ) :
       (GlobalTheory.FockCompare.continuous_comp hθ τ).comp (continuous_id.matrix_elem i j)).prodMk
       (continuous_pi fun i => continuous_pi fun j =>
         (GlobalTheory.Member.continuous_finPart D).comp (continuous_id.matrix_elem i j))
-  · haveI := (lattice_Mx D m n).1
+  · have := (lattice_Mx D m n).1
     refine Continuous.add ?_ ((continuous_chartM hσ.cont m n).comp continuous_fst)
     exact continuous_pi fun i => continuous_pi fun j =>
       hsc.comp ((continuous_apply j).comp ((continuous_apply i).comp continuous_snd))
@@ -141,20 +141,20 @@ theorem pure {θ : InfFam D} (hθ : IsInfFam θ) (μ : Measure (Mx D t n)) [μ.I
     (hg : g ∈ WeilM.SB (Fin T.rank → Fin n → AEf D)) (Φ : Mx D T.rank n → ℂ)
     (hΦ : Φ = fun x => f (fun τ i j => compAt θ τ x i j) * g (fun i j => finPart D (x i j))) :
     (∀ a : Mx D T'.rank n, Integrable (fun x : Mx D t n => Φ (d.jX ⬝ x + d.j0 ⬝ a)) μ) ∧ ikS d μ Φ ∈ schwartzA θ T'.rank n := by
-  haveI : IsModuleTopology (Af D.host.F) (AEf D) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (AEf D) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField D.host.F
+  have : IsModuleTopology (Af D.host.F) (AEf D) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (AEf D) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField D.host.F
   obtain ⟨e0⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (Af D.host.F)
-  haveI : LocallyCompactSpace (AEf D) := e0.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AEf D) := e0.secondCountableTopology
-  haveI : T2Space (AEf D) := e0.isEmbedding.t2Space
-  letI : MeasurableSpace (Fin t → Fin n → AEf D) := borel _
-  haveI : BorelSpace (Fin t → Fin n → AEf D) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D t n) := ⟨rfl⟩
-  haveI := (lattice_Mx D t n).1
+  have : LocallyCompactSpace (AEf D) := e0.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AEf D) := e0.secondCountableTopology
+  have : T2Space (AEf D) := e0.isEmbedding.t2Space
+  let : MeasurableSpace (Fin t → Fin n → AEf D) := borel _
+  have : BorelSpace (Fin t → Fin n → AEf D) := ⟨rfl⟩
+  have : BorelSpace (Mx D t n) := ⟨rfl⟩
+  have := (lattice_Mx D t n).1
   obtain ⟨e, he⟩ := exists_split hθ t n
   let μr : Measure (D.what₂.Tau → Fin t → Fin n → ℂ) := Measure.addHaar
   let ν : Measure (Fin t → Fin n → AEf D) := Measure.addHaar
@@ -196,7 +196,7 @@ theorem pure {θ : InfFam D} (hθ : IsInfFam θ) (μ : Measure (Mx D t n)) [μ.I
 
 theorem ikS_mem_schwartzA : ∀ (D : D7), ∀ θ : InfFam D, IsInfFam θ → ∀ (T T' : HSp D) (t n : ℕ) (d : HypDec T T' t) (μ : Measure (Mx D t n)) (𝓕 : Set (Mx D t n)), IsCovolOne (ratMx D t n) μ 𝓕 → ∀ Φ ∈ schwartzA θ T.rank n, ikS d μ Φ ∈ schwartzA θ T'.rank n := by
   intro D θ hθ T T' t n d μ 𝓕 hμ Φ hΦ
-  haveI := hμ.1
+  have := hμ.1
   suffices h : (∀ a : Mx D T'.rank n, Integrable (fun x : Mx D t n => Φ (d.jX ⬝ x + d.j0 ⬝ a)) μ) ∧ ikS d μ Φ ∈ schwartzA θ T'.rank n from h.2
   induction hΦ using Submodule.span_induction with
   | mem Φ h =>

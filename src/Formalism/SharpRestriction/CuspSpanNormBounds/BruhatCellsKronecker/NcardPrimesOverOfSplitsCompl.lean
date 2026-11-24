@@ -87,7 +87,7 @@ theorem splitsCompl_down (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
       Ideal.quotientMap_injective' hPQ.ge
     have hcQ : Nat.card (𝓞 E ⧸ Q) = g := by
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, hN]
-    haveI : Finite (𝓞 E ⧸ Q) := Nat.finite_of_card_ne_zero (by rw [hcQ]; exact hg.ne_zero)
+    have : Finite (𝓞 E ⧸ Q) := Nat.finite_of_card_ne_zero (by rw [hcQ]; exact hg.ne_zero)
     have hle := Nat.card_le_card_of_injective _ hinj
     rw [hcQ, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, hm] at hle
     have hm1 : m ≤ 1 := by
@@ -115,13 +115,13 @@ theorem span_ne_bot {g : ℕ} (hg : g.Prime) : Ideal.span {(g : ℤ)} ≠ ⊥ :=
   exact_mod_cast hg.ne_zero
 
 theorem span_isMaximal {g : ℕ} (hg : g.Prime) : (Ideal.span {(g : ℤ)}).IsMaximal := by
-  haveI := Fact.mk hg
+  have := Fact.mk hg
   exact Int.ideal_span_isMaximal_of_prime g
 
 theorem card_primesOver {g : ℕ} (hg : g.Prime) (h : SplitsCompl K g) :
     (IsDedekindDomain.primesOverFinset (Ideal.span {(g : ℤ)}) (𝓞 K)).card = Module.finrank ℚ K := by
   classical
-  haveI := span_isMaximal hg
+  have := span_isMaximal hg
   rw [← Ideal.sum_ramification_inertia (𝓞 K) ℚ K (span_ne_bot hg), Finset.card_eq_sum_ones]
   refine Finset.sum_congr rfl fun P hP => ?_
   have hP' : P ∈ (Ideal.span {(g : ℤ)}).primesOver (𝓞 K) := by
@@ -154,7 +154,7 @@ theorem card_primesOver {g : ℕ} (hg : g.Prime) (h : SplitsCompl K g) :
 
 theorem image_plOver {g : ℕ} (hg : g.Prime) :
     HeightOneSpectrum.asIdeal '' plOver K g = (IsDedekindDomain.primesOverFinset (Ideal.span {(g : ℤ)}) (𝓞 K) : Set (Ideal (𝓞 K))) := by
-  haveI := span_isMaximal hg
+  have := span_isMaximal hg
   ext P
   rw [IsDedekindDomain.coe_primesOverFinset (span_ne_bot hg)]
   constructor

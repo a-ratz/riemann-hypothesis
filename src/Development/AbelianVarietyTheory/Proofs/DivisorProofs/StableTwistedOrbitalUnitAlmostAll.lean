@@ -73,7 +73,7 @@ variable {O : Type} [CommRing O] {n : ℕ}
 open GlobalTheory.ClassParam in
 theorem exists_cyclic [IsLocalRing O] (M : Matrix (Fin n) (Fin n) O) (hs : M.charpoly.Separable) :
     ∃ v, IsUnit (krylov M v) := by
-  haveI : Subsingleton (MaximalSpectrum O) := ⟨fun a b =>
+  have : Subsingleton (MaximalSpectrum O) := ⟨fun a b =>
     MaximalSpectrum.ext ((IsLocalRing.eq_maximalIdeal a.isMaximal).trans
       (IsLocalRing.eq_maximalIdeal b.isMaximal).symm)⟩
   obtain ⟨w, hw⟩ := GlobalTheory.RegSS.Semilocal.cyclicSemilocal_of_cyclicField GlobalTheory.RegSS.cyclicField _ (Fin n) M hs
@@ -164,7 +164,7 @@ theorem twConj_of_norm_eq [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (
   let S := Subalgebra.centralizer O {N.val}
   have hS : ∀ b, b ∈ S ↔ Commute N.val b := fun b => by
     simp [S, Subalgebra.mem_centralizer_iff, Commute, SemiconjBy]
-  letI : CommRing S := { (inferInstance : Ring S) with
+  let : CommRing S := { (inferInstance : Ring S) with
     mul_comm := fun s t => Subtype.ext (commute_of_commute N.val s.1 t.1 hs ((hS _).1 s.2) ((hS _).1 t.2)).eq }
   let st : Matrix (Fin n) (Fin n) O → Matrix (Fin n) (Fin n) O := fun b => y.val * adjt c b * (y⁻¹).val
   have st_mul : ∀ a b, st (a * b) = st b * st a := fun a b => by
@@ -195,9 +195,9 @@ theorem twConj_of_norm_eq [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (
   have hσ : ∀ r : O, σ (algebraMap O S r) = algebraMap O S (c r) := fun r => Subtype.ext (by
     change st (algebraMap O _ r) = algebraMap O _ (c r)
     simp [st, Algebra.algebraMap_eq_smul_one, adjt_smul, adjt_one])
-  haveI : Module.Finite O S := Module.Finite.of_injective S.val.toLinearMap Subtype.val_injective
-  haveI := GlobalTheory.InertNorm.isAdicComplete_map_of_finite (IsLocalRing.maximalIdeal O) S
-  haveI := GlobalTheory.InertNorm.finite_quotient_map_of_finite (IsLocalRing.maximalIdeal O) S
+  have : Module.Finite O S := Module.Finite.of_injective S.val.toLinearMap Subtype.val_injective
+  have := GlobalTheory.InertNorm.isAdicComplete_map_of_finite (IsLocalRing.maximalIdeal O) S
+  have := GlobalTheory.InertNorm.finite_quotient_map_of_finite (IsLocalRing.maximalIdeal O) S
   have ha : Commute N (z * y⁻¹) := by
     show N * (z * y⁻¹) = z * y⁻¹ * N
     calc N * (z * y⁻¹) = z * (θ z * z) * y⁻¹ := by rw [← h]; group
@@ -307,22 +307,22 @@ theorem twConj_of_mem (hU : Unr E) (n : ℕ) (w : Pl E) (Q : (w.adicCompletion E
     conj_of_charpoly a b (hQ _ ((hch a).trans ha))
       (Polynomial.map_injective ι hι (by rw [hch, hch, ha, hb]))
   by_cases hw : IsSplitAt w
-  · simp only [nrmL, if_pos hw] at hy hz
+  · simp only [nrmL, ite_eq_left hw] at hy hz
     obtain ⟨g, rfl⟩ := hconj _ _ hy hz
-    exact ⟨GeneralLinearGroup.map ι g, by rw [thL, if_pos hw, map_mul, map_mul, map_inv]; rfl⟩
+    exact ⟨GeneralLinearGroup.map ι g, by rw [thL, ite_eq_left hw, map_mul, map_mul, map_inv]; rfl⟩
   · obtain ⟨-, hcc, hv, h4, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
     obtain ⟨ϖ, q, ⟨-, -, -, -, ⟨x₀, hx₀, hx₁⟩, hq2, hcard⟩, -⟩ := (h4 hw).2.1
     have hcard' : Nat.card (w.adicCompletionIntegers E ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers E))
       = q ^ 2 := hcard
-    haveI := GlobalTheory.HenselSquare.isAdicComplete_integers E w
-    haveI : Finite (w.adicCompletionIntegers E ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers E)) :=
+    have := GlobalTheory.HenselSquare.isAdicComplete_integers E w
+    have : Finite (w.adicCompletionIntegers E ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers E)) :=
       Nat.finite_of_card_ne_zero (by rw [hcard']; positivity)
     let c : w.adicCompletionIntegers E →+* w.adicCompletionIntegers E :=
       (cj w).restrict _ _ (ThBasic.cj_mem_integers hU w)
     have hc : ∀ x, c (c x) = x := fun x => Subtype.ext (hcc _)
     have hmap : ∀ a, GeneralLinearGroup.map ι (thetaGL n c a) = thetaGL n (cj w) (GeneralLinearGroup.map ι a) :=
       GlobalTheory.ThetaPull.map_thetaGL ι c (cj w) (fun _ => rfl)
-    simp only [nrmL, if_neg hw, ← hmap, ← map_mul] at hy hz
+    simp only [nrmL, ite_eq_right hw, ← hmap, ← map_mul] at hy hz
     obtain ⟨g, hg⟩ := hconj _ _ hy hz
     obtain ⟨k, hk⟩ := twConj_of_norm_eq c hc
       (fun x hx => by
@@ -341,6 +341,6 @@ theorem twConj_of_mem (hU : Unr E) (n : ℕ) (w : Pl E) (Q : (w.adicCompletion E
       calc z' = g⁻¹ * (g * z' * thetaGL n c g⁻¹) * thetaGL n c g := by rw [map_inv]; group
         _ = _ := by rw [hk, map_mul]; group
     refine ⟨GeneralLinearGroup.map ι (k * g), ?_⟩
-    rw [thL, if_neg hw, ← hmap, ← map_inv, ← map_mul, ← map_mul, ← hz']
+    rw [thL, ite_eq_right hw, ← hmap, ← map_inv, ← map_mul, ← map_mul, ← hz']
 
 end GlobalTheory.BCT.UnitStable

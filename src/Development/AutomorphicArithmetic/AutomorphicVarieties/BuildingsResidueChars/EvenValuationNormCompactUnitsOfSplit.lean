@@ -159,7 +159,7 @@ end SlopeTestRemainingChoices
 theorem UpperTheory.evenValuation_norm_compactUnits_of_split :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → IsSquare (τ ^ 2 - 4) → (∀ c ∈ Cint O τ, EvenVal O (QuadraticAlgebra.norm ((c : (Etau K τ)ˣ) : Etau K τ))) ∧ ∀ y : (Etau K τ)ˣ, EvenVal O (QuadraticAlgebra.norm (y : Etau K τ)) → ∃ z : (Etau K τ)ˣ, ∃ c ∈ Cint O τ, y = c * z ^ 2 := by
   intro O K _ _ _ _ _ Δ τ hL hτ hsq
-  haveI := hL.frac
+  have := hL.frac
   have h2 : (2 : K) ≠ 0 := by
     have e := (hL.two).map (algebraMap O K)
     rw [map_ofNat] at e

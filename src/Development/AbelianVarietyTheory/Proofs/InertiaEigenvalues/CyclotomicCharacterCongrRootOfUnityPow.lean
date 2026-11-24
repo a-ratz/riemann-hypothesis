@@ -63,11 +63,11 @@ theorem exists_root_pow_cyclotomicCharacter_congr {p : ℕ} [Fact p.Prime]
       PadicInt.toZModPow k ((cyclotomicCharacter (PadicAlgCl p) p
         (MulSemiringAction.toRingAut (Formalism.GaloisCohomology.GK p K) (PadicAlgCl p) g) : ℤ_[p]ˣ) : ℤ_[p]) := by
   classical
-  haveI : ∀ i : ℕ, HasEnoughRootsOfUnity (PadicAlgCl p) (p ^ i) := fun i => by
-    haveI : NeZero ((p ^ i : ℕ) : PadicAlgCl p) :=
+  have : ∀ i : ℕ, HasEnoughRootsOfUnity (PadicAlgCl p) (p ^ i) := fun i => by
+    have : NeZero ((p ^ i : ℕ) : PadicAlgCl p) :=
       ⟨by exact_mod_cast pow_ne_zero i (Fact.out : p.Prime).ne_zero⟩
     infer_instance
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (PadicAlgCl p) (p ^ k)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicAlgCl p) (p ^ k)
   refine ⟨ζ, hζ.pow_eq_one, fun a ha => ?_⟩
   set c : ZMod (p ^ k) := PadicInt.toZModPow k ((cyclotomicCharacter (PadicAlgCl p) p
     (MulSemiringAction.toRingAut (Formalism.GaloisCohomology.GK p K) (PadicAlgCl p) g) : ℤ_[p]ˣ) : ℤ_[p]) with hc

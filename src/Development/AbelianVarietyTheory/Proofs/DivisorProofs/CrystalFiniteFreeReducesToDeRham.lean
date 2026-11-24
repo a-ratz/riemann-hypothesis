@@ -62,12 +62,12 @@ namespace GlobalTheory.CrysFree
 theorem isLocalRing_of_sq {Λ k : Type} [CommRing Λ] [Field k] (π : Λ →+* k) (hπ : Function.Surjective π)
     (hI : RingHom.ker π ^ 2 = 0) : IsLocalRing Λ := by
   have hmax : (RingHom.ker π).IsMaximal := RingHom.ker_isMaximal_of_surjective π hπ
-  haveI := hmax.isPrime
+  have := hmax.isPrime
   have hle : RingHom.ker π ≤ nilradical Λ := fun x hx ↦ ⟨2, by
     have : x * x ∈ RingHom.ker π ^ 2 := by rw [pow_two]; exact Ideal.mul_mem_mul hx hx
     rw [hI] at this; simpa [pow_two] using this⟩
   have heq : nilradical Λ = RingHom.ker π := le_antisymm (nilradical_le_prime _) hle
-  haveI : (nilradical Λ).IsMaximal := heq ▸ hmax
+  have : (nilradical Λ).IsMaximal := heq ▸ hmax
   exact IsLocalRing.of_isMaximal_nilradical Λ
 
 theorem isDPMorphism_red {Λ k : Type} [CommRing Λ] [Field k] (π : Λ →+* k)
@@ -95,8 +95,8 @@ namespace GlobalTheory.CrysFree
 
 theorem crys_free_and_red : ∀ (F : Type) [Field F] [NumberField F] (Λ : Type) [CommRing Λ] (k : Type) [Field k] (π : Λ →+* k) (hπ : Function.Surjective π) (hI : RingHom.ker π ^ 2 = 0) (A₀ : Over (Sp k)) [GrpObj A₀] [IsCommMonObj A₀], IsAbelianScheme A₀ → ∀ a : OAct (𝓞 F) A₀, letI := tensorModule (divided₂ hI) (spMap π) a; letI := tensorModule (dp0 k) (𝟙 _) a; Module.Finite Λ (Crys (divided₂ hI) (spMap π) A₀) ∧ Module.Free Λ (Crys (divided₂ hI) (spMap π) A₀) ∧ ∃ f : Crys (divided₂ hI) (spMap π) A₀ →ₛₗ[(Algebra.TensorProduct.map π.toIntAlgHom (AlgHom.id ℤ (𝓞 F))).toRingHom] HdR A₀, Function.Surjective f ∧ ∀ m, f m = 0 → m ∈ (RingHom.ker π) • (⊤ : Submodule Λ (Crys (divided₂ hI) (spMap π) A₀)) := by
   intro F _ _ Λ _ k _ π hπ hI A₀ _ _ hA₀ a
-  haveI := isLocalRing_of_sq π hπ hI
-  letI : Algebra Λ k := π.toAlgebra
+  have := isLocalRing_of_sq π hπ hI
+  let : Algebra Λ k := π.toAlgebra
   obtain ⟨A, _, i, h, hA⟩ := GlobalTheory.T.abelianScheme_unobstructed_squareZero_affine Λ (RingHom.ker π) hI k π hπ rfl A₀ hA₀
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim Λ A hA
   obtain ⟨HFree, -, HBC, HRigid, -⟩ := _root_.GlobalTheory.abelianDeRham
@@ -104,10 +104,10 @@ theorem crys_free_and_red : ∀ (F : Type) [Field F] [NumberField F] (Λ : Type)
   let e : primDR A ≃ₗ[Λ] prim (divided₂ hI) (spMap π) A₀ :=
     LinearEquiv.ofBijective (liftMor (divided₂ hI) h).pull hrig
   obtain ⟨hfin, hproj, -⟩ := HFree.prim hA hg
-  haveI : Module.Finite Λ (prim (divided₂ hI) (spMap π) A₀) := Module.Finite.equiv e
-  haveI : Module.Projective Λ (prim (divided₂ hI) (spMap π) A₀) := Module.Projective.of_equiv e
-  haveI := Module.finitePresentation_of_projective Λ (prim (divided₂ hI) (spMap π) A₀)
-  haveI : Module.Free Λ (prim (divided₂ hI) (spMap π) A₀) := Module.free_of_flat_of_isLocalRing
+  have : Module.Finite Λ (prim (divided₂ hI) (spMap π) A₀) := Module.Finite.equiv e
+  have : Module.Projective Λ (prim (divided₂ hI) (spMap π) A₀) := Module.Projective.of_equiv e
+  have := Module.finitePresentation_of_projective Λ (prim (divided₂ hI) (spMap π) A₀)
+  have : Module.Free Λ (prim (divided₂ hI) (spMap π) A₀) := Module.free_of_flat_of_isLocalRing
   have m : GrpMor (divided₂ hI) (spMap π) A₀ (dp0 k) (𝟙 _) A₀ (algebraMap Λ k) (𝟙 _) (Over.Hom.left (𝟙 A₀)) :=
     ⟨isDPMorphism_red π hI, by simp, by simp, by
       intro T x y x₀ y₀ hx hy
@@ -144,11 +144,11 @@ theorem crys_free_and_red : ∀ (F : Type) [Field F] [NumberField F] (Λ : Type)
   have hact : ∀ (o : 𝓞 F) (x : Crys (divided₂ hI) (spMap π) A₀),
       hm.bcMap (act (divided₂ hI) (spMap π) a o x) = act (dp0 k) (𝟙 _) a o (hm.bcMap x) := by
     intro o x
-    haveI := a.hom o
+    have := a.hom o
     rw [act_apply, act_apply]
     exact hm.corr_iff.1 (GrpMor.Corr.push (m := m) m (a.act o) (a.act o) (by simp) (hm.corr_iff.2 rfl))
-  letI := tensorModule (divided₂ hI) (spMap π) a
-  letI := tensorModule (dp0 k) (𝟙 _) a
+  let := tensorModule (divided₂ hI) (spMap π) a
+  let := tensorModule (dp0 k) (𝟙 _) a
   refine ⟨{ toFun := hm.bcMap, map_add' := hm.bcMap.map_add, map_smul' := ?_ }, ?_, ?_⟩
   · intro r x
     induction r using TensorProduct.induction_on with

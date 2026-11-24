@@ -240,7 +240,7 @@ theorem v_det {i : C.I} {n : ℕ}
     rw [Module.Basis.det_apply, Matrix.det_apply']
     refine (C.v i).map_sum_le fun σ _ => ?_
     rw [map_mul, map_prod]
-    refine mul_le_one' ?_ (Finset.prod_le_one' fun q _ => (h _).1 ((h' _).2 fun r => ?_) _)
+    refine mul_le_one' ?_ (Finset.prod_le_one fun q _ => (h _).1 ((h' _).2 fun r => ?_) _)
     · rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with e | e <;> simp [e]
     · by_cases e : q = r <;> simp [e, Finsupp.single_apply]
   have h1 : C.v i (b.det b') * C.v i (b'.det b) = 1 := by

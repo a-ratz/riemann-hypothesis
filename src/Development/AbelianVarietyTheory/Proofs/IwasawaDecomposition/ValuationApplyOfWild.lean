@@ -198,7 +198,7 @@ theorem _root_.GlobalTheory.TameCharUnique.exists_eq_mul : ∀ (E Ω : Type) [Fi
     let S : Subgroup (_root_.ReciprocityTheory.Gal.Ine (F := E) A) :=
       { carrier := {σ | ‖(t' σ).toAdd‖ ≤ (l : ℝ) ^ (-1 : ℤ)}
         mul_mem' := fun {a b} ha hb => by
-          simp only [Set.mem_setOf_eq, map_mul, toAdd_mul] at *
+          simp only [Set.mem_ofPred_eq, map_mul, toAdd_mul] at *
           exact (PadicInt.nonarchimedean _ _).trans (max_le ha hb)
         one_mem' := by simp
         inv_mem' := fun {a} ha => by simpa using ha }

@@ -140,7 +140,7 @@ theorem mul_mat {A : Matrix n n R} (hA : A.BlockTriangular (blk e)) (x : Idx e �
   ext i j
   by_cases h : blk e i < blk e j
   · simp [mat, h, ent]
-  · simp only [mat, of_apply, h, dif_neg, not_false_eq_true, Matrix.mul_apply]
+  · simp only [mat, of_apply, h, dite_eq_right, not_false_eq_true, Matrix.mul_apply]
     refine Finset.sum_eq_zero fun l _ => ?_
     by_cases h' : blk e l < blk e j
     · rw [hA (h'.trans_le (not_lt.1 h)), zero_mul]
@@ -300,8 +300,8 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem isHaarMeasure_map :
     (Measure.map (unipHomeo e).symm (Measure.pi fun _ : Idx e => ν)).IsHaarMeasure := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   have hΦ : Measurable (unipHomeo (R := k) e).symm := (unipHomeo e).symm.measurable
   haveI : IsFiniteMeasureOnCompacts (Measure.map (unipHomeo (R := k) e).symm (Measure.pi fun _ : Idx e => ν)) :=
     Measure.IsFiniteMeasureOnCompacts.map _ _
@@ -324,8 +324,8 @@ theorem isHaarMeasure_map :
 theorem map_preimage_conj (g : Levi k m) {T : Set (unipRad k e)} (hT : MeasurableSet T) :
     Measure.map (unipHomeo e).symm (Measure.pi fun _ : Idx e => ν) T = ENNReal.ofReal (modulus k m g) *
       Measure.map (unipHomeo e).symm (Measure.pi fun _ : Idx e => ν) (conj e g ⁻¹' T) := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   have hΦ : Measurable (unipHomeo (R := k) e).symm := (unipHomeo e).symm.measurable
   have hm : Measurable (cmat e g).mulVec := (continuous_const.matrix_mulVec continuous_id).measurable
   have h1 := WeilM.smul_map_mulVec_pi ν _ _ (det_cmat e g)
@@ -343,11 +343,11 @@ end Measure
 theorem haar_conj_eq_modulus_mul : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (α n : Type) (m : α → Type) [Fintype α] [LinearOrder α] [∀ a, Fintype (m a)] [∀ a, DecidableEq (m a)] [Fintype n] [DecidableEq n] (e : (Σ a, m a) ≃ n) [MeasurableSpace (unipRad k e)] [BorelSpace (unipRad k e)] (μ : Measure (unipRad k e)) [μ.IsHaarMeasure] (g : Levi k m) (S : Set (unipRad k e)), MeasurableSet S → μ {u | ∃ s ∈ S, (u : GL n k) = leviEmb k e g * (s : GL n k) * (leviEmb k e g)⁻¹} = ENNReal.ofReal (modulus k m g) * μ S := by
   intro k _ _ _ _ α n m _ _ _ _ _ _ e _ _ μ _ g S hS
   borelize k
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI : LocallyCompactSpace (unipRad k e) := (unipHomeo e).isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (unipRad k e) := (unipHomeo e).secondCountableTopology
-  haveI := isHaarMeasure_map e (Measure.addHaar : Measure k)
+  have := secondCountable k
+  have := t2Space k
+  have : LocallyCompactSpace (unipRad k e) := (unipHomeo e).isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (unipRad k e) := (unipHomeo e).secondCountableTopology
+  have := isHaarMeasure_map e (Measure.addHaar : Measure k)
   have h1 : {u : unipRad k e | ∃ s ∈ S, (u : GL n k) = leviEmb k e g * (s : GL n k) * (leviEmb k e g)⁻¹} =
       conj e g⁻¹ ⁻¹' S := by
     ext u
@@ -364,6 +364,6 @@ theorem haar_conj_eq_modulus_mul : ∀ (k : Type) [Field k] [ValuativeRel k] [To
   rw [h2] at h3
   rw [h1, Measure.isMulLeftInvariant_eq_smul μ
     (Measure.map (unipHomeo e).symm (Measure.pi fun _ : Idx e => (Measure.addHaar : Measure k))),
-    Measure.smul_apply, Measure.smul_apply, h3, mul_smul_comm]
+    smul_apply, smul_apply, h3, mul_smul_comm]
 
 end GlobalTheory.SmGL.UnipHaar

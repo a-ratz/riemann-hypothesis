@@ -56,7 +56,7 @@ variable {n : ℕ} {ε : Fin n → Bool} {H : Type*} [NormedAddCommGroup H] [Inn
 theorem continuous_coefOn_of {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hU : IsURepOn (UJset ε) σ)
     (v w : H) : Continuous (coefOn (ε := ε) σ v w) := by
   have h1 : Continuous fun g : Formalism.REAL.UJ ε => σ (umat g) v :=
-    (hU.2.2 v).comp_continuous (Units.continuous_val.comp continuous_subtype_val) (fun g => g.2)
+    (hU.2.2 v).comp_continuous (Units.continuous_val.comp continuous_subtypeVal) (fun g => g.2)
   exact continuous_const.inner h1
 
 theorem integral_coefOn_sq_pos {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hU : IsURepOn (UJset ε) σ)
@@ -68,7 +68,7 @@ theorem integral_coefOn_sq_pos {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ]
   have h1 : coefOn (ε := ε) σ w w 1 = ⟪w, w⟫_ℂ := by
     show ⟪w, σ (umat (1 : Formalism.REAL.UJ ε)) w⟫_ℂ = ⟪w, w⟫_ℂ
     have hu : umat (1 : Formalism.REAL.UJ ε) = 1 := rfl
-    rw [hu, hU.1.1, ContinuousLinearMap.one_apply]
+    rw [hu, hU.1.1, one_apply_eq_self]
   have hne : (1 : Formalism.REAL.UJ ε) ∈ Function.support fun g => ‖coefOn (ε := ε) σ w w g‖ ^ 2 := by
     rw [Function.mem_support]
     show ‖coefOn (ε := ε) σ w w 1‖ ^ 2 ≠ 0

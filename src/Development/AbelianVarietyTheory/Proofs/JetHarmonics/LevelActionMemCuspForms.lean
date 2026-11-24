@@ -156,7 +156,7 @@ theorem cabs_gen_eq_one_of_move : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       fr' q.1 (h *ᵥ z) = valAt' (F.ex i P z).left (O q.1 q.2) (ω q.1 q.2) * fr q.2 z :=
     frames_eq P.range hspan (fun q : Xo.univ.t.PP.L.ι × Xo.univ.t.PP.L.ι => {z | ⊤ ≤ (F.ex i P z).left ⁻¹ᵁ O q.1 q.2})
       (fun j => GlobalTheory.FamilyUnif_isOpen_ex F i P hp _) hcov2
-      (fun j a ha z hz => by rw [Set.mem_setOf_eq, hexp a ha]; exact hz)
+      (fun j a ha z hz => by rw [Set.mem_ofPred_eq, hexp a ha]; exact hz)
       (fun q z => valAt' (F.ex i P z).left (O q.1 q.2) (ω q.1 q.2) * fr q.2 z) (fun q z => fr' q.1 (h *ᵥ z))
       (fun q q' z => valAt' ((F.ex i P z).left ≫ ν.φ) (Xo.univ.t.PP.L.U q.1 ⊓ Xo.univ.t.PP.L.U q'.1)
         (Xo.univ.t.PP.L.g q.1 q'.1).val)
@@ -219,8 +219,8 @@ theorem cabs_gen_eq_one_of_move : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     have v1 := hv j z _ e1 e2 hj
     have v2 := hv j (z + a) _ (by rw [hexp a ha]; exact e1) e2 hj'
     exact normSq_periodic hH _ _ _ _ z a (hn j _ hj') (v2.symm.trans v1) (hm j a ha z hj)
-  haveI : Countable P.range := by
-    haveI := hp.2.2.1
+  have : Countable P.range := by
+    have := hp.2.2.1
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   have hinj : Function.Injective (fun z : Fin g → ℂ => h *ᵥ z) :=
     Matrix.mulVec_injective_iff_isUnit.2 ((Matrix.isUnit_iff_isUnit_det h).2 hdet)
@@ -285,11 +285,11 @@ theorem exists_match (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2
   have he : ∀ τ, Formalism.L2.PjFree.relab c σ (e.symm τ) = τ := e.apply_symm_apply
   have m1 : ∀ τ ∈ (U.X k).Ψ, Dw.mult (e.symm τ) = r - (U.X k).p0 := fun τ hτ => by
     unfold Datum.mult
-    rw [if_pos ((hrt _).1 (by rw [he]; exact ((hty k).2 τ).1 hτ)), (hty k).1]
+    rw [ite_eq_left ((hrt _).1 (by rw [he]; exact ((hty k).2 τ).1 hτ)), (hty k).1]
     omega
   have m2 : ∀ τ ∉ (U.X k).Ψ, Dw.mult (e.symm τ) = (U.X k).p0 := fun τ hτ => by
     unfold Datum.mult
-    rw [if_neg (fun h => hτ (((hty k).2 τ).2 (by rw [← he τ]; exact (hrt _).2 h))), (hty k).1]
+    rw [ite_eq_right (fun h => hτ (((hty k).2 τ).2 (by rw [← he τ]; exact (hrt _).2 h))), (hty k).1]
   have hrel : ∀ τ, ∀ i < Dw.mult (e.symm τ), ∀ v ∈ (U.X k).Λ,
       Formalism.L2.PjFree.perFr (U.X k') x'.1 ((a : Matrix (Fin r) (Fin r) E) *ᵥ v) τ i =
         ∑ j ∈ Finset.range (Dw.mult (e.symm τ)), A (e.symm τ) i j * Formalism.L2.PjFree.perFr (U.X k) x.1 v τ j :=
@@ -339,8 +339,8 @@ theorem rdU_mem_SS (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2.P
       obtain ⟨a, h, b, hbB, hxb, hb1, ht⟩ := exists_match hσ hU hr hxi hm hb hx₀ hx'
       refine ⟨⟨k', a, h⟩, ?_⟩
       have hQ := (hfc k').1.1
-      have v1 : Formalism.L2.PjFree.rdU U g k x₀.1 = Formalism.L2.PjFree.toC (evR Xo c g (U.un k x₀)) := dif_pos x₀.2
-      have v2 : Formalism.L2.PjFree.rdU U f k' x'.1 = Formalism.L2.PjFree.toC (evR Xo c f (U.un k' x')) := dif_pos x'.2
+      have v1 : Formalism.L2.PjFree.rdU U g k x₀.1 = Formalism.L2.PjFree.toC (evR Xo c g (U.un k x₀)) := dite_eq_left x₀.2
+      have v2 : Formalism.L2.PjFree.rdU U f k' x'.1 = Formalism.L2.PjFree.toC (evR Xo c f (U.un k' x')) := dite_eq_left x'.2
       have v3 := (GlobalTheory.Frames.algebraic_laws GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c).2.2.2.2.2.2 (CAt σ)
         (inferInstanceAs (IsReduced ℂ)) w n f hf t _ y' hb
       have v4 : ‖Formalism.L2.PjFree.toC (wchar (ex Dw w n) t : CAt σ)‖ = 1 := by

@@ -83,7 +83,7 @@ theorem Ks_mono (K : FinExt l) {s s' : ℕ} (h : s ≤ s') : Ks K s ≤ Ks K s' 
   rw [IntermediateField.adjoin_le_iff]
   intro x hx
   apply IntermediateField.subset_adjoin
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   obtain ⟨c, hc⟩ := pow_dvd_pow l h
   rw [hc, pow_mul, hx, one_pow]
 

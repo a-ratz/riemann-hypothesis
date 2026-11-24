@@ -70,7 +70,7 @@ private theorem valAt'_comp_lemma {Y Y' : Scheme.{0}} (x : Sp ℂ ⟶ Y) (φ : Y
   unfold valAt'
   by_cases h : ⊤ ≤ (x ≫ φ) ⁻¹ᵁ U
   · have h' : ⊤ ≤ x ⁻¹ᵁ (φ ⁻¹ᵁ U) := h
-    rw [dif_pos h', dif_pos h]
+    rw [dite_eq_left h', dite_eq_left h]
     unfold valAt
     first
       | (rw [Scheme.comp_appLE]) <;> rfl
@@ -97,7 +97,7 @@ private theorem valAt'_top_mul_lemma_2 {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (f g 
     first
       | exact le_top
   first
-    | simp only [valAt', dif_pos h, valAt, map_mul]
+    | simp only [valAt', dite_eq_left h, valAt, map_mul]
 
 private theorem valAt'_top_add_lemma_3 {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (f g : Γ(Y, ⊤)) :
     valAt' x ⊤ (f + g) = valAt' x ⊤ f + valAt' x ⊤ g := by
@@ -105,7 +105,7 @@ private theorem valAt'_top_add_lemma_3 {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (f g 
     first
       | exact le_top
   first
-    | simp only [valAt', dif_pos h, valAt, map_add (f := _)]
+    | simp only [valAt', dite_eq_left h, valAt, map_add (f := _)]
 
 theorem isHolTo_pullbackSpec {R S T : Type} [CommRing R] [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
     {B : Set V} (hB : IsOpen B)
@@ -116,7 +116,7 @@ theorem isHolTo_pullbackSpec {R S T : Type} [CommRing R] [CommRing S] [CommRing 
     (h2 : ∀ c : T, DifferentiableOn ℂ
       (fun b => valAt' (w b ≫ pullback.snd _ _) ⊤ ((Scheme.ΓSpecIso (CommRingCat.of T)).inv c)) B) :
     IsHolTo B w := by
-  haveI : IsAffine (pullback (Spec.map (CommRingCat.ofHom (algebraMap R S)))
+  have : IsAffine (pullback (Spec.map (CommRingCat.ofHom (algebraMap R S)))
       (Spec.map (CommRingCat.ofHom (algebraMap R T)))) := by
     first
       | infer_instance
@@ -254,8 +254,8 @@ theorem holPair (X Y₁ Y₂ : Scheme.{0}) (p₁ : Y₁ ⟶ X) (p₂ : Y₂ ⟶ 
   let l₂ : ∀ b ∈ N, Sp ℂ ⟶ Spec Γ(Y₂, W₂) := fun b hb => IsOpenImmersion.lift hW₂'.fromSpec (e₂ b) (hr₂ b hb)
   have hl₁ : ∀ b (hb : b ∈ N), l₁ b hb ≫ hW₁'.fromSpec = e₁ b := fun b hb => IsOpenImmersion.lift_fac _ _ _
   have hl₂ : ∀ b (hb : b ∈ N), l₂ b hb ≫ hW₂'.fromSpec = e₂ b := fun b hb => IsOpenImmersion.lift_fac _ _ _
-  letI : Algebra Γ(X, W) Γ(Y₁, W₁) := (p₁.appLE W W₁ hW₁le).hom.toAlgebra
-  letI : Algebra Γ(X, W) Γ(Y₂, W₂) := (p₂.appLE W W₂ hW₂le).hom.toAlgebra
+  let : Algebra Γ(X, W) Γ(Y₁, W₁) := (p₁.appLE W W₁ hW₁le).hom.toAlgebra
+  let : Algebra Γ(X, W) Γ(Y₂, W₂) := (p₂.appLE W W₂ hW₂le).hom.toAlgebra
   have c₁ : Spec.map (CommRingCat.ofHom (algebraMap Γ(X, W) Γ(Y₁, W₁))) ≫ hW'.fromSpec = hW₁'.fromSpec ≫ p₁ :=
     IsAffineOpen.SpecMap_appLE_fromSpec p₁ hW' hW₁' hW₁le
   have c₂ : Spec.map (CommRingCat.ofHom (algebraMap Γ(X, W) Γ(Y₂, W₂))) ≫ hW'.fromSpec = hW₂'.fromSpec ≫ p₂ :=
@@ -269,7 +269,7 @@ theorem holPair (X Y₁ Y₂ : Scheme.{0}) (p₁ : Y₁ ⟶ X) (p₂ : Y₂ ⟶ 
       (Spec.map (CommRingCat.ofHom (algebraMap Γ(X, W) Γ(Y₂, W₂)))) :=
     fun b hb => pullback.lift (l₁ b hb) (l₂ b hb) (hc b hb)
   let w := fun b => if hb : b ∈ N then wN b hb else wN b₀ hb₀N
-  have hw : ∀ b (hb : b ∈ N), w b = wN b hb := fun b hb => dif_pos hb
+  have hw : ∀ b (hb : b ∈ N), w b = wN b hb := fun b hb => dite_eq_left hb
   have hwφ : ∀ b ∈ N, w b ≫ φ = pullback.lift (e₁ b) (e₂ b) (he b) := by
     intro b hb
     rw [hw b hb]

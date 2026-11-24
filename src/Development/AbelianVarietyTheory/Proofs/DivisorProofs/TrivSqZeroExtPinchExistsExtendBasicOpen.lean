@@ -342,30 +342,30 @@ theorem exists_extend_basicOpen : ∀ (R : Type) [CommRing R] (B M : Type) [Comm
         · simpa using h
         · simp
       simp [e]
-  letI : Algebra Γ(Sp R, ⊤) Γ(Sp R, spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ
+  let : Algebra Γ(Sp R, ⊤) Γ(Sp R, spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ
       (Sp (TrivSqZeroExt R M)).basicOpen s) :=
     ((Sp R).presheaf.map (homOfLE le_top : spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ
       (Sp (TrivSqZeroExt R M)).basicOpen s ⟶ ⊤).op).hom.toAlgebra
-  letI : Algebra Γ(Sp (TrivSqZeroExt B M), ⊤) Γ(Sp (TrivSqZeroExt B M), spMap β ⁻¹ᵁ
+  let : Algebra Γ(Sp (TrivSqZeroExt B M), ⊤) Γ(Sp (TrivSqZeroExt B M), spMap β ⁻¹ᵁ
       (Sp (TrivSqZeroExt R M)).basicOpen s) :=
     ((Sp (TrivSqZeroExt B M)).presheaf.map (homOfLE le_top : spMap β ⁻¹ᵁ
       (Sp (TrivSqZeroExt R M)).basicOpen s ⟶ ⊤).op).hom.toAlgebra
-  letI : Algebra Γ(Sp B, ⊤) Γ(Sp B, spMap (algebraMap R B) ⁻¹ᵁ (spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ
+  let : Algebra Γ(Sp B, ⊤) Γ(Sp B, spMap (algebraMap R B) ⁻¹ᵁ (spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ
       (Sp (TrivSqZeroExt R M)).basicOpen s)) :=
     ((Sp B).presheaf.map (homOfLE le_top : spMap (algebraMap R B) ⁻¹ᵁ (spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ
       (Sp (TrivSqZeroExt R M)).basicOpen s) ⟶ ⊤).op).hom.toAlgebra
-  haveI : IsLocalization.Away ((spMap (TrivSqZeroExt.fstHom R R M).toRingHom).appTop.hom s)
+  have : IsLocalization.Away ((spMap (TrivSqZeroExt.fstHom R R M).toRingHom).appTop.hom s)
       Γ(Sp R, spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ (Sp (TrivSqZeroExt R M)).basicOpen s) :=
     isLocalization_away_of_eq _ _ (Scheme.preimage_basicOpen _ s)
-  haveI : IsLocalization.Away ((spMap β).appTop.hom s)
+  have : IsLocalization.Away ((spMap β).appTop.hom s)
       Γ(Sp (TrivSqZeroExt B M), spMap β ⁻¹ᵁ (Sp (TrivSqZeroExt R M)).basicOpen s) :=
     isLocalization_away_of_eq _ _ (Scheme.preimage_basicOpen _ s)
-  haveI : IsLocalization.Away ((spMap (algebraMap R B)).appTop.hom
+  have : IsLocalization.Away ((spMap (algebraMap R B)).appTop.hom
       ((spMap (TrivSqZeroExt.fstHom R R M).toRingHom).appTop.hom s))
       Γ(Sp B, spMap (algebraMap R B) ⁻¹ᵁ (spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ
       (Sp (TrivSqZeroExt R M)).basicOpen s)) :=
     isLocalization_away_of_eq _ _ (by rw [Scheme.preimage_basicOpen _ s, Scheme.preimage_basicOpen]; rfl)
-  haveI : IsLocalization.Away s Γ(Sp (TrivSqZeroExt R M), (Sp (TrivSqZeroExt R M)).basicOpen s) :=
+  have : IsLocalization.Away s Γ(Sp (TrivSqZeroExt R M), (Sp (TrivSqZeroExt R M)).basicOpen s) :=
     (isAffineOpen_top _).isLocalization_basicOpen s
   have key := _root_.GlobalTheory.locPullback _ _ _ _ hcomm hinj0 hsurj0 s
     Γ(Sp (TrivSqZeroExt R M), (Sp (TrivSqZeroExt R M)).basicOpen s)

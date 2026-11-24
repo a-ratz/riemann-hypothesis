@@ -538,7 +538,7 @@ theorem exists_resFlag (hPQ : redIdeal O (mcIdeal O x) ≤ Q) (hrel : IsRelevant
       (Submodule.smul_mem _ _ (fl.mono hle (fl.gen_mem q)))
   let bas : Module.Basis (Fin N) Ω V := Module.Basis.mk hb₀ (by rw [hsp₀])
   have hbas : ⇑bas = b₀ := funext fun q => Module.Basis.mk_apply _ _ q
-  haveI : FiniteDimensional Ω V := Module.Finite.of_basis bas
+  have : FiniteDimensional Ω V := Module.Finite.of_basis bas
   have hVs : ∀ j, fl.Vs j = Submodule.span Ω (b₀ '' lowSet j) := by
     intro j
     symm

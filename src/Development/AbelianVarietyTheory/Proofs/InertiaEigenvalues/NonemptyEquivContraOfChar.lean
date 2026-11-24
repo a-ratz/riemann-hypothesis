@@ -82,7 +82,7 @@ theorem Stable.scale_mem {S : Submodule ℂ (OnePoint k → ℂ)} (hS : Stable S
     (α β γ : ℂ) (a r b s : k)
     (h : α • (fun _ => (1 : ℂ)) + β • ballFn a r + γ • ballFn b s ∈ S) :
     α • (fun _ => (1 : ℂ)) + β • ballFn (c * a) (c * r) + γ • ballFn (c * b) (c * s) ∈ S := by
-  have hv : 0 < valuation k c := zero_lt_iff.2 (by simpa using hc)
+  have hv : 0 < valuation k c := pos_iff_ne_zero.2 (by simpa using hc)
   have key : ∀ a r x : k, ballFn (c * a) (c * r) x = ballFn a r ((c⁻¹ * x + 0 : k) : OnePoint k) := by
     intro a r x
     have h1 : x - c * a = c * (c⁻¹ * x + 0 - a) := by field_simp; ring
@@ -134,9 +134,9 @@ theorem Stable.ballFn_mem_and_one_mem_of_sub_mem (k : Type) [Field k] [Valuative
   simp only [map_one] at hT1 hT2 hT3
   set q : ℂ := (T.card : ℂ) with hqdef
   have hsum : ballFn (0 : k) 1 = ∑ a ∈ T, ballFn a ϖ := by
-    rw [hT3 (ballFn 0 1) rfl (fun x hx => by rw [ballFn_coe, if_neg (by simpa using hx)]) (fun x b hb => ?_)]
+    rw [hT3 (ballFn 0 1) rfl (fun x hx => by rw [ballFn_coe, ite_eq_right (by simpa using hx)]) (fun x b hb => ?_)]
     · refine Finset.sum_congr rfl fun a ha => ?_
-      rw [ballFn_coe, if_pos (by simpa using hT1 a ha), one_smul]
+      rw [ballFn_coe, ite_eq_left (by simpa using hT1 a ha), one_smul]
     · have hb1 : valuation k b ≤ 1 := hb.trans hlt.le
       rw [ballFn_coe, ballFn_coe, sub_zero, sub_zero, map_one]
       congr 1
@@ -154,7 +154,7 @@ theorem Stable.ballFn_mem_and_one_mem_of_sub_mem (k : Type) [Field k] [Valuative
     refine hS.2 _ R1 _ ?_ ?_ fun x hx => ?_
     · simp [ballFn_coe, ballFn, he]; ring
     · simp [ballFn_coe, ballFn, he]
-    · have hx0 : 0 < valuation k x := zero_lt_iff.2 (by simpa using hx)
+    · have hx0 : 0 < valuation k x := pos_iff_ne_zero.2 (by simpa using hx)
       simp only [Pi.add_apply, Pi.smul_apply, ballFn_coe, sub_zero, map_one, hϖ, le_uniformizer_iff, map_inv₀, he, smul_eq_mul,
         inv_le_one₀ hx0, inv_lt_one₀ hx0]
       rcases lt_trichotomy (valuation k x) 1 with h1 | h1 | h1
@@ -201,9 +201,9 @@ theorem exists_jump_point {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
     ∃ b : k, f b ≠ f 0 ∧ ∀ x, valuation k x < valuation k b → f x = f 0 := by
   classical
   have hπ : (0 : ValueGroupWithZero k) < uniformizer k := uniformizer_pos
-  have hr' : 0 < valuation k r := zero_lt_iff.2 (by simpa using hr)
+  have hr' : 0 < valuation k r := pos_iff_ne_zero.2 (by simpa using hr)
   have hex : ∃ n : ℕ, ∃ x, valuation k x * uniformizer k ^ n ≤ valuation k r ∧ f x ≠ f 0 := by
-    have hy0 : 0 < valuation k y := zero_lt_iff.2 (by rintro h0; rw [map_eq_zero] at h0; exact hy (by rw [h0]))
+    have hy0 : 0 < valuation k y := pos_iff_ne_zero.2 (by rintro h0; rw [map_eq_zero] at h0; exact hy (by rw [h0]))
     obtain ⟨n, hn⟩ := exists_pow_lt₀ (uniformizer_lt_one (R := k))
       (Units.mk0 (valuation k r / valuation k y) (div_pos hr' hy0).ne')
     refine ⟨n, y, ?_, hy⟩
@@ -217,7 +217,7 @@ theorem exists_jump_point {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
     exact hb' (h b hb)
   · refine Nat.find_min hex (m := m) (by omega) ⟨x, ?_, hne⟩
     rw [hm] at hb
-    have hb0 : 0 < valuation k b := zero_le'.trans_lt hx
+    have hb0 : 0 < valuation k b := zero_le.trans_lt hx
     have h1 : valuation k x / valuation k b ≤ uniformizer k := le_uniformizer_iff.2 ((div_lt_one₀ hb0).2 hx)
     rw [div_le_iff₀ hb0] at h1
     calc valuation k x * uniformizer k ^ m ≤ uniformizer k * valuation k b * uniformizer k ^ m := by gcongr
@@ -238,7 +238,7 @@ theorem ballFn_sub_mem_of_radial (k : Type) [Field k] [ValuativeRel k] [Topologi
   have hy : ∃ y : k, valuation k R < valuation k y := by
     by_cases hR : R = 0
     · exact ⟨1, by simp [hR]⟩
-    · have hR' : 0 < valuation k R := zero_lt_iff.2 (by simpa using hR)
+    · have hR' : 0 < valuation k R := pos_iff_ne_zero.2 (by simpa using hR)
       refine ⟨R / ϖ, ?_⟩
       rw [map_div₀, hϖ, lt_div_iff₀ hπ]
       exact mul_lt_of_lt_one_right hR' uniformizer_lt_one
@@ -247,7 +247,7 @@ theorem ballFn_sub_mem_of_radial (k : Type) [Field k] [ValuativeRel k] [Topologi
     show F y ≠ F (0 : k)
     rw [hi y hy]; exact hne.symm)
   have hb0 : b ≠ 0 := by rintro rfl; exact hb rfl
-  have hvb : 0 < valuation k b := zero_lt_iff.2 (by simpa using hb0)
+  have hvb : 0 < valuation k b := pos_iff_ne_zero.2 (by simpa using hb0)
   let g : k → ℂ := fun x => F ((b * x : k) : OnePoint k)
   have g1 : ∀ x, valuation k x < 1 → g x = F (0 : k) := fun x hx => hb' _ (by
     rw [map_mul]; exact mul_lt_of_lt_one_right hvb hx)
@@ -278,19 +278,19 @@ theorem ballFn_sub_mem_of_radial (k : Type) [Field k] [ValuativeRel k] [Topologi
     by_cases h1 : valuation k x < 1
     · have h2 : valuation k (x - 1) = 1 := by
         rw [Valuation.map_sub_swap]; exact (valuation k).map_one_sub_of_lt h1
-      rw [if_pos h1, if_neg (by rw [h2]; exact lt_irrefl _), g1 x h1, g2 _ h2]; ring
+      rw [ite_eq_left h1, ite_eq_right (by rw [h2]; exact lt_irrefl _), g1 x h1, g2 _ h2]; ring
     · by_cases h2 : valuation k (x - 1) < 1
       · have h3 : valuation k x = 1 := by
           have := (valuation k).map_one_add_of_lt h2
           rwa [add_sub_cancel] at this
-        rw [if_neg h1, if_pos h2, g1 _ h2, g2 _ h3]; ring
+        rw [ite_eq_right h1, ite_eq_left h2, g1 _ h2, g2 _ h3]; ring
       · have hx0 : x ≠ 0 := by rintro rfl; exact h1 (by simp)
         have h3 : valuation k (x - 1) = valuation k x := by
           rcases (not_lt.1 h1).eq_or_lt with h4 | h4
           · refine le_antisymm ?_ (h4 ▸ not_lt.1 h2)
             exact (valuation k).map_sub_le le_rfl (by rw [map_one]; exact h4.le)
           · exact (valuation k).map_sub_eq_of_lt_left (by rwa [map_one])
-        rw [if_neg h1, if_neg h2, g3 x _ hx0 h3]; ring
+        rw [ite_eq_right h1, ite_eq_right h2, g3 x _ hx0 h3]; ring
 
 end GlobalTheory.LocGL.ProjLine
 end -- clump:auto
@@ -464,7 +464,7 @@ theorem exists_radii {F : OnePoint k → ℂ} (hF : F ∈ smoothPart (funRep k))
   · have hx0 : x ≠ 0 := by rintro rfl; simp at hx
     have h3 : valuation k x⁻¹ ≤ valuation k s := by
       rw [map_inv₀] at hx ⊢
-      exact inv_le_of_inv_le₀ (zero_lt_iff.2 (by simpa using hs)) hx.le
+      exact inv_le_of_inv_le₀ (pos_iff_ne_zero.2 (by simpa using hs)) hx.le
     simpa [l, OnePoint.smul_infty_eq_ite, hx0] using h2 _ h3 ∞
 
 def funs (S : Subrepresentation (smoothRep (funRep k))) : Submodule ℂ (OnePoint k → ℂ) :=
@@ -551,8 +551,8 @@ theorem ballFn_mem_smoothPart (a : k) {r : k} (hr : r ≠ 0) : ballFn a r ∈ sm
     fun g hg => funext fun x => if_congr (Set.mem_smul_set_iff_inv_smul_mem.symm.trans
       (Set.ext_iff.1 (MulAction.smul_orbit (⟨g, hg⟩ : J) (∞ : OnePoint k)) x)) rfl rfl)
   have h0 : F (0 : k) ≠ F ∞ := by
-    simp only [F, MulAction.mem_orbit_self, if_true]
-    rw [if_neg]
+    simp only [F, MulAction.mem_orbit_self, ite_true]
+    rw [ite_eq_right]
     · exact zero_ne_one
     · rintro ⟨g, hg⟩
       have h1 : g.1.val 0 0 ≠ 0 := hU g.2

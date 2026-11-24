@@ -193,7 +193,7 @@ theorem card_le_of_primary {A : Type*} [AddCommGroup A] (n : ℕ) (hn : 0 < n) (
   refine ⟨Finite.of_injective F hinj, (Nat.card_le_card_of_injective F hinj).trans ?_⟩
   rw [Nat.card_pi]
   calc ∏ l : n.primeFactors, Nat.card (T l) ≤ ∏ l : n.primeFactors, l.1 ^ n.factorization l.1 :=
-        Finset.prod_le_prod' fun l _ => (h l.1 (Nat.prime_of_mem_primeFactors l.2)).2
+        Finset.prod_le_prod fun l _ => (h l.1 (Nat.prime_of_mem_primeFactors l.2)).2
     _ = n := by
         rw [Finset.prod_coe_sort n.primeFactors (fun l => l ^ n.factorization l)]
         exact Nat.prod_factorization_pow_eq_self hn.ne'

@@ -327,8 +327,8 @@ def hcup (β : V →ₗ[R] W →ₗ[R] Z) (p q : ℕ) (F : (Fin (p + 1) → X) �
 theorem val_succAbove {n : ℕ} (i : Fin (n + 1)) (k : Fin n) :
     (i.succAbove k : ℕ) = if (k : ℕ) < i then (k : ℕ) else k + 1 := by
   by_cases h : (k : ℕ) < i
-  · rw [if_pos h, Fin.succAbove_of_castSucc_lt _ _ (Fin.lt_def.mpr h), Fin.coe_castSucc]
-  · rw [if_neg h, Fin.succAbove_of_le_castSucc _ _ (Fin.le_def.mpr (Nat.le_of_not_lt h)),
+  · rw [ite_eq_left h, Fin.succAbove_of_castSucc_lt _ _ (Fin.lt_def.mpr h), Fin.val_castSucc]
+  · rw [ite_eq_right h, Fin.succAbove_of_le_castSucc _ _ (Fin.le_def.mpr (Nat.le_of_not_lt h)),
       Fin.val_succ]
 
 theorem x_congr {n : ℕ} (x : Fin n → X) (a b : Fin n) (h : (a : ℕ) = b) : x a = x b := congrArg x (Fin.ext h)
@@ -439,9 +439,9 @@ theorem cor_cup_eq (b : Pairing M N P) (bU : Pairing (M.resSub U) (N.resSub U) (
     corFun P U (p + q) (cupFun bU p q f (fun h => f' fun i => (h i : G))) g =
       normF P U (p + q) (hcup b.β p q (fun x => homz (M.resSub U).rho p f (fun i => retr U (x i)))
         (fun x => homz N.rho q f' (fun i => (retr U (x i) : G)))) (Fin.partialProd g) := by
-  haveI : Finite (Quotient (QuotientGroup.rightRel U)) :=
+  have : Finite (Quotient (QuotientGroup.rightRel U)) :=
     Finite.of_equiv _ (QuotientGroup.quotientRightRelEquivQuotientLeftRel U).symm
-  haveI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel U))
+  have := Fintype.ofFinite (Quotient (QuotientGroup.rightRel U))
   have hr1 : ∀ c : Quotient (QuotientGroup.rightRel U), retr U c.out = 1 := by
     intro c
     apply Subtype.ext
@@ -451,7 +451,7 @@ theorem cor_cup_eq (b : Pairing M N P) (bU : Pairing (M.resSub U) (N.resSub U) (
   unfold cupFun corFun normF
   simp only [finsum_eq_sum_of_fintype]
   refine Finset.sum_congr rfl fun c _ => ?_
-  simp only [hcup, homz, Fin.coe_castSucc, Fin.val_succ, Fin.val_zero, add_zero, hb]
+  simp only [hcup, homz, Fin.val_castSucc, Fin.val_succ, Fin.val_zero, add_zero, hb]
   have hprod : (List.ofFn fun i : Fin p =>
       (retr U (c.out * Fin.partialProd g (Fin.castAdd q i).castSucc))⁻¹ *
         retr U (c.out * Fin.partialProd g (Fin.castAdd q i).succ)).prod =
@@ -473,9 +473,9 @@ theorem cup_cor_eq (b : Pairing M N P) (p q : ℕ) (f : (Fin p → U) → M.V) (
     cupFun b p q (corFun M U p f) f' g =
       normF P U (p + q) (hcup b.β p q (fun x => homz (M.resSub U).rho p f (fun i => retr U (x i)))
         (homz N.rho q f')) (Fin.partialProd g) := by
-  haveI : Finite (Quotient (QuotientGroup.rightRel U)) :=
+  have : Finite (Quotient (QuotientGroup.rightRel U)) :=
     Finite.of_equiv _ (QuotientGroup.quotientRightRelEquivQuotientLeftRel U).symm
-  haveI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel U))
+  have := Fintype.ofFinite (Quotient (QuotientGroup.rightRel U))
   have hr1 : ∀ c : Quotient (QuotientGroup.rightRel U), retr U c.out = 1 := by
     intro c
     apply Subtype.ext
@@ -488,8 +488,8 @@ theorem cup_cor_eq (b : Pairing M N P) (p q : ℕ) (f : (Fin p → U) → M.V) (
 
   simp only [finsum_eq_sum_of_fintype, map_sum, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun c _ => ?_
-  simp only [hcup, homz, Fin.coe_castSucc, Fin.val_succ, Fin.val_zero, add_zero]
-  simp only [pp_trunc, Fin.coe_castSucc, Fin.val_succ]
+  simp only [hcup, homz, Fin.val_castSucc, Fin.val_succ, Fin.val_zero, add_zero]
+  simp only [pp_trunc, Fin.val_castSucc, Fin.val_succ]
   rw [h0, mul_one, hr1]
   erw [resSub_rho_one]
   rw [prod_castAdd]
@@ -590,17 +590,17 @@ variable [U.FiniteIndex]
 
 theorem normF_sub {M : TRep R G} (n : ℕ) (F F' : (Fin (n + 1) → G) → M.V) :
     normF M U n (F - F') = normF M U n F - normF M U n F' := by
-  haveI : Finite (Quotient (QuotientGroup.rightRel U)) :=
+  have : Finite (Quotient (QuotientGroup.rightRel U)) :=
     Finite.of_equiv _ (QuotientGroup.quotientRightRelEquivQuotientLeftRel U).symm
-  haveI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel U))
+  have := Fintype.ofFinite (Quotient (QuotientGroup.rightRel U))
   funext x
   simp only [normF, Pi.sub_apply, map_sub, finsum_eq_sum_of_fintype, Finset.sum_sub_distrib]
 
 theorem normF_zsmul {M : TRep R G} (n : ℕ) (c : ℤ) (F : (Fin (n + 1) → G) → M.V) :
     normF M U n (c • F) = c • normF M U n F := by
-  haveI : Finite (Quotient (QuotientGroup.rightRel U)) :=
+  have : Finite (Quotient (QuotientGroup.rightRel U)) :=
     Finite.of_equiv _ (QuotientGroup.quotientRightRelEquivQuotientLeftRel U).symm
-  haveI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel U))
+  have := Fintype.ofFinite (Quotient (QuotientGroup.rightRel U))
   funext x
   simp only [normF, Pi.smul_apply, map_zsmul, finsum_eq_sum_of_fintype, Finset.smul_sum]
 
@@ -666,7 +666,7 @@ theorem cupCor_holds : CupCorStatement.{u} := by
       rfl⟩
 
   have hcont : Continuous (fun g : G => ((retr U g : U) : G)) :=
-    continuous_subtype_val.comp (CCA.continuous_retr (U := U) hU)
+    continuous_subtypeVal.comp (CCA.continuous_retr (U := U) hU)
   have hequiv : ∀ (v : U) (g : G), ((retr U (v • g) : U) : G) = v • ((retr U g : U) : G) := by
     intro v g
     show ((retr U ((v : G) * g) : U) : G) = (v : G) * ((retr U g : U) : G)
@@ -693,8 +693,8 @@ theorem cupCor_holds : CupCorStatement.{u} := by
     funext z
     exact (hφ q FcA z).trans (congrFun hFcA _)
 
-  have hrc : (N.resSub U).coch.d q ((Pair.res N U.subtype continuous_subtype_val).hom.f q c) = 0 := by
-    rw [← (Pair.res N U.subtype continuous_subtype_val).hom.comm, hc', map_zero]
+  have hrc : (N.resSub U).coch.d q ((Pair.res N U.subtype continuous_subtypeVal).hom.f q c) = 0 := by
+    rw [← (Pair.res N U.subtype continuous_subtypeVal).hom.comm, hc', map_zero]
   obtain ⟨z1, hz1, hz1e, hz1c⟩ := hcupU p q a _ ha' hrc
   have hca : M.coch.d p (corM.f p a) = 0 := by rw [← corM.comm, ha', map_zero]
   obtain ⟨z2, hz2, hz2e, hz2c⟩ := hcup p q (corM.f p a) c hca hc'
@@ -782,7 +782,7 @@ theorem cupCor_holds : CupCorStatement.{u} := by
               (φ.f (q' + 1) FcA).1 (CCA.homz N.rho (q' + 1) c.1))).trans
             (CCA.normF_sub (M := P) (U := U) (n := p + q' + 1) _ _)
   have L : cupU p q ((M.resSub U).coch.cls p a ha')
-      ((Pair.res N U.subtype continuous_subtype_val).hom.H q (N.coch.cls q c hc')) =
+      ((Pair.res N U.subtype continuous_subtypeVal).hom.H q (N.coch.cls q c hc')) =
       (P.resSub U).coch.cls (p + q) z1 hz1 := hz1c
   have Rr : cup p q (corM.H p ((M.resSub U).coch.cls p a ha')) (N.coch.cls q c hc') =
       P.coch.cls (p + q) z2 hz2 := hz2c
@@ -856,7 +856,7 @@ theorem cor_smul_cocycle (M : TRep ℤ G) [DiscreteTopology M.V] (U : Subgroup G
     show M.rho (g 0).1 x - x = 0
     rw [hx _ (g 0).2, sub_self]
   have hry : ((trivRep G ℤ).resSub U).coch.d 2
-      ((Pair.res (trivRep G ℤ) U.subtype continuous_subtype_val).hom.f 2 y) = 0 := Cx.Hom.d_f_eq_zero _ hy
+      ((Pair.res (trivRep G ℤ) U.subtype continuous_subtypeVal).hom.f 2 y) = 0 := Cx.Hom.d_f_eq_zero _ hy
   have hcx : M.coch.d 0 (cor.f 0 x0) = 0 := Cx.Hom.d_f_eq_zero _ hx0
   have key : cor.H (0 + 2) (cupCoh bU 0 2 ((M.resSub U).coch.cls 0 x0 hx0)
       (((trivRep G ℤ).resSub U).coch.cls 2 _ hry)) =
@@ -994,7 +994,7 @@ theorem exists_cor_pairBr (hK : FiniteDimensional ℚ_[p] K) (hL : FiniteDimensi
   refine ⟨(corP.H 2).toAddMonoidHom.comp (PLU.hom.H 2).toAddMonoidHom, fun x => ?_, fun b a ha χ => ?_⟩
   · show corP.H 2 (PLU.hom.H 2 ((resPair h).hom.H 2 x)) = _
     have h1 : PLU.hom.H 2 ((resPair h).hom.H 2 x) =
-        (Pair.res (kbarT p K) (subG p K L).subtype continuous_subtype_val).hom.H 2 x := by
+        (Pair.res (kbarT p K) (subG p K L).subtype continuous_subtypeVal).hom.H 2 x := by
       induction x using Cx.H_ind with
       | h x hx =>
         refine Cx.cls_congr _ _ (Subtype.ext (funext fun g => ?_))

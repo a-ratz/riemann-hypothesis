@@ -134,7 +134,7 @@ theorem isIso_of_finite : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrally
   have htop : ∀ t, ⊤ ≤ (Γ.pt t).left ⁻¹ᵁ (⊤ : Γ.G.left.Opens) := fun t => by simp
   have hHt : ∀ t, t ∈ H := fun t => (hH t).2 (htop t)
   have inj : Function.Injective (algebraMap R (FractionRing R)) := IsFractionRing.injective R _
-  letI : Algebra R Γ(Γ.G.left, ⊤) := (secRho Γ hU).toAlgebra
+  let : Algebra R Γ(Γ.G.left, ⊤) := (secRho Γ hU).toAlgebra
   have hρ : hU.fromSpec ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R Γ(Γ.G.left, ⊤))) :=
     fromSpec_hom Γ hU
   have hfinite := sec_finite hρ hF

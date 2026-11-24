@@ -130,7 +130,7 @@ theorem wh_der_nat (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ) (N i : �
 
 theorem wh_der_zero (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ) (N : ℕ) (χ : Gn g N → ℂ) :
     wh ψ (der ψ 0 χ) = wh ψ χ := by
-  haveI : Subsingleton (Gn g 0) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
+  have : Subsingleton (Gn g 0) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
   have h1 : (eU g 0 ψ).coeff 1 = 1 := by
     rw [(_root_.GlobalTheory.Adopt.whittakerJacquetIdempotents_properties_primeField g 0 0 0 ψ).2.1]; simp
   have hres : res 0 (N - 0) χ 1 = χ := by
@@ -143,9 +143,9 @@ theorem wh_der_zero (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) ℂ) (N : �
         refine ⟨fun i j hj _ => absurd hj (Nat.not_lt_zero _), Subsingleton.elim _ _, ?_⟩
         funext i j
         simp [br, entN]
-      rw [if_pos this]
+      rw [ite_eq_left this]
     · intro x _ hx
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨_, _, hb⟩
       apply hx
       apply Units.ext

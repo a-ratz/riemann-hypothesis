@@ -240,9 +240,9 @@ theorem finrank_FildR_add (e : V ≃ₗ[LL] V₁ × V₂)
     [FiniteDimensional LL (DdR PD ρ₁)] [FiniteDimensional LL (DdR PD ρ₂)] (τ : K →ₐ[Qp] LL) (a : ℤ) :
     finrank LL (FildR PD ρ τ a) = finrank LL (FildR PD ρ₁ τ a) + finrank LL (FildR PD ρ₂ τ a) := by
   obtain ⟨h1, h2, h3, h4⟩ := equivariant e he
-  haveI : FiniteDimensional LL (FildR PD ρ₁ τ a) :=
+  have : FiniteDimensional LL (FildR PD ρ₁ τ a) :=
     Submodule.finiteDimensional_of_le (S₂ := DdR PD ρ₁) (fun x hx => hx.1.1)
-  haveI : FiniteDimensional LL (FildR PD ρ₂ τ a) :=
+  have : FiniteDimensional LL (FildR PD ρ₂ τ a) :=
     Submodule.finiteDimensional_of_le (S₂ := DdR PD ρ₂) (fun x hx => hx.1.1)
   exact finrank_split_tensor BdR e _ _ _ (ext_FildR PD _ h1 τ a) (ext_FildR PD _ h2 τ a)
     (ext_FildR PD _ h3 τ a) (ext_FildR PD _ h4 τ a)

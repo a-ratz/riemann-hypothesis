@@ -280,13 +280,13 @@ end UpperTheory.ConvolutionTheory.R2.I.CentralConjugation
 theorem UpperTheory.ConvolutionTheory.R2.I.invI :
     ∀ (F : Type) [Field F] [NumberField F] (v : P F), ∃ I : SB (SL v) →ₗ[ℂ] ℂ, InvI I := by
   intro F _ _ v
-  letI : MeasurableSpace (SL v) := borel _
-  haveI : BorelSpace (SL v) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (M2 v) := inferInstanceAs (LocallyCompactSpace (Fin 2 → Fin 2 → Kv v))
-  haveI : LocallyCompactSpace (SL v) :=
+  let : MeasurableSpace (SL v) := borel _
+  have : BorelSpace (SL v) := ⟨rfl⟩
+  have : LocallyCompactSpace (M2 v) := inferInstanceAs (LocallyCompactSpace (Fin 2 → Fin 2 → Kv v))
+  have : LocallyCompactSpace (SL v) :=
     (Matrix.SpecialLinearGroup.isClosedEmbedding_val (n := Fin 2) (R := Kv v)).locallyCompactSpace
   have h2 : (2 : Kv v) ≠ 0 := by
-    haveI : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap F (Kv v)).injective
+    have : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap F (Kv v)).injective
     exact two_ne_zero
   obtain ⟨I, h₁, h₂, h₃⟩ := UpperTheory.ConvolutionTheory.R2.I.CentralConjugation.exists_I (K := Kv v) h2
   exact ⟨I, ⟨h₁, h₂, h₃⟩⟩
@@ -970,7 +970,7 @@ theorem UpperTheory.ConvolutionTheory.R2.I.ptL :
   have hne : ((ab (idl v t) : ℝ) : ℂ) ≠ 0 := by
     rw [← hmod]
     exact_mod_cast (distribHaarChar_pos (A := Kv v) (g := t)).ne'
-  haveI : (μ2 v).IsAddHaarMeasure := by
+  have : (μ2 v).IsAddHaarMeasure := by
     unfold μ2
     infer_instance
   have key := GlobalTheory.DetScale.integral_comp_linearEquiv (k := Kv v) (μ2 v) L

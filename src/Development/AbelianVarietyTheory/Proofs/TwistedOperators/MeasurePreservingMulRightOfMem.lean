@@ -70,7 +70,7 @@ theorem measurePreserving_mul_right_of_mem {G : Type} [Group G] [TopologicalSpac
     exact J.mul_mem_cancel_right hg
   have h1 : Measure.map (· * g) μ J = μ J := by
     rw [Measure.map_apply (measurable_mul_const g) hJ.measurableSet, hpre]
-  rw [e, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h1
+  rw [e, smul_apply, ENNReal.smul_def, smul_eq_mul] at h1
   have hc : ((c : ENNReal)) = 1 := by
     have h2 : (c : ENNReal) * μ J / μ J = (c : ENNReal) := ENNReal.mul_div_cancel_right h0 htop
     rw [h1, ENNReal.div_self h0 htop] at h2
@@ -144,7 +144,7 @@ theorem integral_eq_sum_avg (G : Type) [Group G] [TopologicalSpace G] [IsTopolog
     exact integral_mul_left_eq_self (fun v => f (x * j v)) w
   obtain ⟨hfin𝓕, -, hFeq⟩ := GlobalTheory.Ker.integral_fundamentalDomain_eq_sum_doubleCoset G μ Γ K 𝓕 h𝓕 hK
     hKfin ι h huniq hfin (fun x => ∫ v, f (x * j v) ∂ν) hFl hFr
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 hfin𝓕
+  have : IsFiniteMeasure (μ.restrict 𝓕) := isFiniteMeasure_restrict.2 hfin𝓕
   have hint : IntegrableOn f 𝓕 μ :=
     Integrable.of_bound hf.aestronglyMeasurable C (Filter.Eventually.of_forall hC)
   refine ⟨hint, ?_⟩

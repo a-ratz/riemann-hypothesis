@@ -67,7 +67,7 @@ theorem finite_mem {K : Type} [Field K] [NumberField K] {a : 𝓞 K} (ha : a ≠
 theorem finite_norm_mem {K : Type} [Field K] [NumberField K] (S : Finset ℕ) :
     {𝔭 : HeightOneSpectrum (𝓞 K) | Ideal.absNorm 𝔭.asIdeal ∈ S}.Finite := by
   have h : {I : Ideal (𝓞 K) | Ideal.absNorm I ≠ 0 ∧ Ideal.absNorm I ∈ S}.Finite := by
-    refine (Ideal.finite_setOf_absNorm_le (S := 𝓞 K) (S.sup id)).subset ?_
+    refine (Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 K) (S.sup id)).subset ?_
     intro I hI
     exact Finset.le_sup (f := id) hI.2
   refine (h.preimage (f := fun 𝔭 : HeightOneSpectrum (𝓞 K) => 𝔭.asIdeal)
@@ -95,16 +95,16 @@ theorem numberField_adjoin (K L : IntermediateField ℚ ℂ) [NumberField L] (S 
 theorem weberSet_subset : ∀ (K L : IntermediateField ℚ ℂ) [NumberField K] [NumberField L] [_root_.NumberField.IsTotallyComplex K] (h : K ≤ L), Module.finrank ℚ K = 2 → discr K < -4 → ∀ P : PeriodPair, (∀ z, z ∈ P.lattice ↔ ∃ a : 𝓞 K, ((a : K) : ℂ) = z) → ∀ n : ℕ, 3 ≤ n → GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.ContainsRayField (IntermediateField.inclusion h).toRingHom n → weberSet P n ⊆ L := by
   intro K L _ _ _ h h2 hd P hP n hn hR
   obtain ⟨inst, S, hS⟩ := _root_.GlobalTheory.WeberSplitAny.splits_completely_of_three_le K h2 hd P hP n hn
-  haveI := numberField_adjoin K L (weberSet P n)
+  have := numberField_adjoin K L (weberSet P n)
   have hn0 : (n : 𝓞 L) ≠ 0 := by
     exact_mod_cast (show n ≠ 0 by omega)
-  haveI : NumberField (⊥ : IntermediateField L ℂ) := NumberField.of_module_finite L _
+  have : NumberField (⊥ : IntermediateField L ℂ) := NumberField.of_module_finite L _
   have hle : IntermediateField.adjoin L (weberSet P n) ≤ ⊥ := by
     refine GlobalTheory.Bauer.le_of_finite_split_not_split L ℂ ⊥ (IntermediateField.adjoin L (weberSet P n)) ?_
     refine ((finite_mem hn0).union (finite_norm_mem S)).subset ?_
     rintro 𝔓 ⟨hp, -, hnot⟩
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or] at hc
     obtain ⟨f, α, hN, hα, h1⟩ := hR 𝔓 hc.1
     have hf : f = 1 := by
       have hp' := hp
@@ -116,7 +116,7 @@ theorem weberSet_subset : ∀ (K L : IntermediateField ℚ ℂ) [NumberField K] 
       intro h0
       rw [h0, Ideal.absNorm_bot] at hN
       exact hp.ne_zero hN
-    haveI := 𝔓.isPrime
+    have := 𝔓.isPrime
     let 𝔭 : HeightOneSpectrum (𝓞 K) :=
       ⟨𝔓.asIdeal.comap (RingOfIntegers.mapRingHom (IntermediateField.inclusion h).toRingHom),
         Ideal.comap_isPrime _ _, hne⟩

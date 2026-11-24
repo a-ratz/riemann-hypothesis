@@ -52,7 +52,7 @@ open PositivityTheory.Rg.Sw PositivityTheory.Rg.Sw.AbsSt
 variable {n : ℕ}
 
 theorem continuous_mR : Continuous (mR : GR n → M2 n) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 instance m2LC (n : ℕ) : LocallyCompactSpace (M2 n) :=
   inferInstanceAs (LocallyCompactSpace (Fin n ⊕ Fin n → Fin n ⊕ Fin n → ℂ))

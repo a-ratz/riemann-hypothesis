@@ -119,7 +119,7 @@ theorem locF_inf_of_ne {𝔭 𝔮 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (h�
   apply le_antisymm (LocF.locF_mono 𝔮 inf_le_left)
   have hnle : ¬ 𝔭 ^ r ≤ 𝔮 := fun hle =>
     hne (h𝔭.eq_of_le h𝔮.ne_top (h𝔮.isPrime.le_of_pow_le hle)).symm
-  obtain ⟨a, ha, ha𝔮⟩ := SetLike.not_le_iff_exists.mp hnle
+  obtain ⟨a, ha, ha𝔮⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
   have hM : M ≤ locF 𝔮 (M ⊓ locF 𝔭 N) := by
     intro y hy
     exact (LocF.mem_locF_iff h𝔮.isPrime _ y).2

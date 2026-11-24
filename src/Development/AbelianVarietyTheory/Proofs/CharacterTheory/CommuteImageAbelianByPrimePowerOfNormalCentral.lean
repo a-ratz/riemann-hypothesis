@@ -85,9 +85,9 @@ theorem _root_.GlobalTheory.BI.commute_all : ∀ (G : Type) [Group G] [Finite G]
     | H g =>
       obtain ⟨k, hk⟩ := hpow g
       exact ⟨k, by rw [← QuotientGroup.mk_pow, QuotientGroup.eq_one_iff]; exact hAZ hk⟩
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Nontrivial (G ⧸ Z) := QuotientGroup.nontrivial_iff.mpr hne
-  haveI := hP.center_nontrivial
+  have : Fact p.Prime := ⟨hp⟩
+  have : Nontrivial (G ⧸ Z) := QuotientGroup.nontrivial_iff.mpr hne
+  have := hP.center_nontrivial
   obtain ⟨z, hz1⟩ := exists_ne (1 : Subgroup.center (G ⧸ Z))
   obtain ⟨g, hg⟩ := QuotientGroup.mk_surjective (z : G ⧸ Z)
   have hzc : ∀ q : G ⧸ Z, ∀ i : ℤ, q * (z : G ⧸ Z) ^ i = (z : G ⧸ Z) ^ i * q := fun q i =>

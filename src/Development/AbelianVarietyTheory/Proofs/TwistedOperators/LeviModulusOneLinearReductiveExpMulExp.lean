@@ -306,10 +306,10 @@ theorem exp_conj_J (A : Matrix (Fin n) (Fin n) ℂ) :
 
 theorem isClosed_keepAlg (V : Submodule ℂ (Fin n → ℂ)) : IsClosed (keepAlg V : Set (Matrix (Fin n) (Fin n) ℂ)) := by
   have : (keepAlg V : Set (Matrix (Fin n) (Fin n) ℂ)) = ⋂ z ∈ V, {M | M *ᵥ z ∈ V} := by
-    ext M; simp only [Set.mem_iInter, Set.mem_setOf_eq]; rfl
+    ext M; simp only [Set.mem_iInter, Set.mem_ofPred_eq]; rfl
   rw [this]
   exact isClosed_biInter fun z _ =>
-    V.closed_of_finiteDimensional.preimage (continuous_id.matrix_mulVec continuous_const)
+    V.isClosed_of_finiteDimensional.preimage (continuous_id.matrix_mulVec continuous_const)
 
 theorem tsum_mem_keepAlg {V : Submodule ℂ (Fin n → ℂ)} (f : ℕ → Matrix (Fin n) (Fin n) ℂ)
     (hf : ∀ k, f k ∈ keepAlg V) : ∑' k, f k ∈ keepAlg V := by
@@ -344,7 +344,7 @@ theorem neg_keeps {A : Matrix (Fin n) (Fin n) ℂ} {V : Submodule ℂ (Fin n →
 
 open scoped Matrix.Norms.L2Operator in
 theorem continuous_exp_smul (X : Matrix (Fin n) (Fin n) ℂ) : Continuous (fun s : ℝ => NormedSpace.exp (s • X)) := by
-  letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
+  let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
   exact NormedSpace.exp_continuous.comp (continuous_id.smul continuous_const)
 
 theorem exists_pos_part {W : Flag n a} {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ mats (leviOne ε W)) :

@@ -172,11 +172,11 @@ private theorem locDiffY_dvd_of_intTrace_mem {A B : Type*} [CommRing A] [CommRin
   rw [Ideal.dvd_iff_le, differentialIdeal_le_iff (K := K) (L := L) hPbot, hP,
     Submodule.map_le_iff_le_comap]
   intro x hx
-  rw [Submodule.restrictScalars_mem, FractionalIdeal.mem_coe,
+  rw [Submodule.restrictScalars_mem, FractionalIdeal.mem_coeToSubmodule,
     FractionalIdeal.mem_div_iff_of_ne_zero (by simpa using hp')] at hx
-  rw [Submodule.mem_comap, LinearMap.coe_restrictScalars, ← FractionalIdeal.coe_one,
+  rw [Submodule.mem_comap, LinearMap.coe_restrictScalars, ← FractionalIdeal.coeToSubmodule_one,
     ← div_self (G₀ := FractionalIdeal A⁰ K) (a := p) (by simpa using hp),
-    FractionalIdeal.mem_coe, FractionalIdeal.mem_div_iff_of_ne_zero (by simpa using hp)]
+    FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_div_iff_of_ne_zero (by simpa using hp)]
   simp only [FractionalIdeal.mem_coeIdeal, forall_exists_index, and_imp,
     forall_apply_eq_imp_iff₂] at hx
   intro y hy'
@@ -202,7 +202,7 @@ private theorem locDiffY_iff {A B : Type*} [CommRing A] [CommRing B] [Algebra A 
   have := locDiffY_sep (A := A) (B := B)
   refine ⟨fun h x hx => ?_, locDiffY_dvd_of_intTrace_mem hp P a ha.symm⟩
   by_contra hc
-  exact not_dvd_differentIdeal_of_intTrace_not_mem A P a ha x hx hc h
+  exact not_dvd_differentIdeal_of_intTrace_notMem A P a ha x hx hc h
 
 private theorem locDiffY_trace_mk {A B : Type*} [CommRing A] [CommRing B] [Algebra A B]
     [Module.Free A B] [Module.Finite A B] (I : Ideal A) (x : B) :
@@ -512,7 +512,7 @@ private theorem cy_pow_map {B R : Type*} [CommRing B] [IsDedekindDomain B] [Char
   have hprime : Prime P := Ideal.prime_of_isPrime hP hPp
   have hl0 : Ideal.span {(l : B)} ≠ ⊥ := by simp [hl]
   have hfin : FiniteMultiplicity P (Ideal.span {(l : B)}) :=
-    FiniteMultiplicity.of_not_isUnit hprime.not_unit hl0
+    FiniteMultiplicity.of_not_isUnit hprime.not_isUnit hl0
   obtain ⟨J, hJ⟩ := pow_multiplicity_dvd P (Ideal.span {(l : B)})
   set e := multiplicity P (Ideal.span {(l : B)}) with he
   have hJP : ¬ J ≤ P := by
@@ -583,7 +583,7 @@ private theorem cy_fin [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
   have hIc : IsPrecomplete (Ideal.span {(l : ℤ_[l])}) ℤ_[l] := by
     rw [← PadicInt.maximalIdeal_eq_span_p]
     infer_instance
-  haveI := cy_precomplete_pi (ι := Module.Free.ChooseBasisIndex ℤ (𝓞 E)) (l : ℤ_[l])
+  have := cy_precomplete_pi (ι := Module.Free.ChooseBasisIndex ℤ (𝓞 E)) (l : ℤ_[l])
   have halg : algebraMap ℤ_[l] (w.adicCompletionIntegers E) (l : ℤ_[l]) =
       (l : w.adicCompletionIntegers E) := map_natCast _ _
   have he : 1 ≤ multiplicity w.asIdeal (Ideal.span {(l : 𝓞 E)}) := by
@@ -593,7 +593,7 @@ private theorem cy_fin [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
       pow_one, eq_comm, Ideal.one_eq_top, Ideal.span_singleton_eq_top] at h1
     exact (maximalIdeal.isMaximal _).ne_top
       ((Ideal.eq_top_of_isUnit_mem _ (cy_l_mem w l) h1))
-  haveI : IsHausdorff (Ideal.span {(l : ℤ_[l])}) (w.adicCompletionIntegers E) := by
+  have : IsHausdorff (Ideal.span {(l : ℤ_[l])}) (w.adicCompletionIntegers E) := by
     refine ⟨fun x hx => ?_⟩
     have hmem : ∀ n, x ∈ maximalIdeal (w.adicCompletionIntegers E) ^
         (multiplicity w.asIdeal (Ideal.span {(l : 𝓞 E)}) * n) := by
@@ -648,11 +648,11 @@ private theorem cy_efd [Algebra ℤ_[l] (w.adicCompletionIntegers E)]
       multiplicity w.asIdeal (differentIdeal ℤ (𝓞 E)) =
         multiplicity (maximalIdeal (w.adicCompletionIntegers E))
           (differentIdeal ℤ_[l] (w.adicCompletionIntegers E)) := by
-  haveI := cy_fin w l
-  haveI := cy_lies w l
+  have := cy_fin w l
+  have := cy_lies w l
   have hl : Prime (l : ℤ) := Nat.prime_iff_prime_int.mp (Fact.out)
   have hf : algebraMap ℤ ℤ_[l] (l : ℤ) = (l : ℤ_[l]) := by simp
-  haveI : (maximalIdeal (w.adicCompletionIntegers E)).LiesOver
+  have : (maximalIdeal (w.adicCompletionIntegers E)).LiesOver
       (Ideal.span {algebraMap ℤ ℤ_[l] (l : ℤ)}) := by rw [hf]; infer_instance
   refine multiplicity_differentIdeal_eq_of_quotient (algebraMap ℤ ℤ_[l])
     (algebraMap (𝓞 E) (w.adicCompletionIntegers E)) (RingHom.ext_int _ _) hl
@@ -678,20 +678,20 @@ theorem finrank_complIntegers [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
       Module.Free ℤ_[l] (w.adicCompletionIntegers E) ∧
       Module.finrank ℤ_[l] (w.adicCompletionIntegers E) =
         w.asIdeal.ramificationIdx ℤ * w.asIdeal.inertiaDeg ℤ := by
-  haveI := cy_tf w l
-  haveI := cy_fin w l
-  haveI : Module.Free ℤ_[l] (w.adicCompletionIntegers E) := Module.free_of_finite_type_torsion_free'
+  have := cy_tf w l
+  have := cy_fin w l
+  have : Module.Free ℤ_[l] (w.adicCompletionIntegers E) := Module.free_of_finite_type_torsion_free'
   refine ⟨‹_›, ‹_›, ‹_›, ?_⟩
   obtain ⟨he, hf, -⟩ := cy_efd w l
   rw [he, hf]
-  haveI := cy_lies w l
-  haveI hmax : (Ideal.span {(l : ℤ_[l])}).IsMaximal := by
+  have := cy_lies w l
+  have hmax : (Ideal.span {(l : ℤ_[l])}).IsMaximal := by
     rw [← PadicInt.maximalIdeal_eq_span_p]
     infer_instance
   have hmem : maximalIdeal (w.adicCompletionIntegers E) ∈
       (Ideal.span {(l : ℤ_[l])}).primesOver (w.adicCompletionIntegers E) :=
     ⟨inferInstance, inferInstance⟩
-  haveI : Unique ((Ideal.span {(l : ℤ_[l])}).primesOver (w.adicCompletionIntegers E)) :=
+  have : Unique ((Ideal.span {(l : ℤ_[l])}).primesOver (w.adicCompletionIntegers E)) :=
     { default := ⟨_, hmem⟩
       uniq := by
         rintro ⟨q, hq1, hq2⟩
@@ -701,7 +701,7 @@ theorem finrank_complIntegers [Algebra ℤ_[l] (w.adicCompletionIntegers E)] :
           rw [← hq2.over]
           exact hmax
         exact IsLocalRing.eq_maximalIdeal this }
-  haveI : Fintype ((Ideal.span {(l : ℤ_[l])}).primesOver (w.adicCompletionIntegers E)) :=
+  have : Fintype ((Ideal.span {(l : ℤ_[l])}).primesOver (w.adicCompletionIntegers E)) :=
     Fintype.ofFinite _
   have h := Ideal.sum_ramification_inertia_eq_finrank (Ideal.span {(l : ℤ_[l])})
     (w.adicCompletionIntegers E)
@@ -717,9 +717,9 @@ private theorem ramificationIdx_mul_inertiaDeg_eq_one_of_splitsIn (hs : SplitsIn
     w.asIdeal.ramificationIdx ℤ * w.asIdeal.inertiaDeg ℤ = 1 := by
   classical
   have hl : (l : ℕ).Prime := Fact.out
-  haveI hp : (Ideal.span {(l : ℤ)}).IsPrime :=
+  have hp : (Ideal.span {(l : ℤ)}).IsPrime :=
     (Ideal.span_singleton_prime (by exact_mod_cast hl.ne_zero)).2 (Nat.prime_iff_prime_int.1 hl)
-  haveI : Fintype ((Ideal.span {(l : ℤ)}).primesOver (𝓞 E)) := Fintype.ofFinite _
+  have : Fintype ((Ideal.span {(l : ℤ)}).primesOver (𝓞 E)) := Fintype.ofFinite _
   have hsum := Ideal.sum_ramification_inertia_eq_finrank (Ideal.span {(l : ℤ)}) (𝓞 E)
   rw [NumberField.RingOfIntegers.rank] at hsum
   have hcard : Fintype.card ((Ideal.span {(l : ℤ)}).primesOver (𝓞 E)) = Module.finrank ℚ E := by
@@ -728,7 +728,7 @@ private theorem ramificationIdx_mul_inertiaDeg_eq_one_of_splitsIn (hs : SplitsIn
   have hge : ∀ q : (Ideal.span {(l : ℤ)}).primesOver (𝓞 E),
       1 ≤ q.1.ramificationIdx ℤ * q.1.inertiaDeg ℤ := by
     intro q
-    haveI : q.1.IsPrime := q.2.1
+    have : q.1.IsPrime := q.2.1
     exact Nat.one_le_iff_ne_zero.2
       (Nat.mul_ne_zero (Ideal.ramificationIdx_pos (R := ℤ) q.1).ne' (Ideal.inertiaDeg_pos q.1 ℤ).ne')
   let q0 : (Ideal.span {(l : ℤ)}).primesOver (𝓞 E) := ⟨w.asIdeal, w.isPrime, inferInstance⟩
@@ -748,11 +748,11 @@ theorem finrank_compl [Algebra ℚ_[l] (w.adicCompletion E)]
   obtain ⟨f, F, -, -, hFf, -, huF⟩ := existsUnique_padic_hom w l
   have hF : algebraMap ℚ_[l] (w.adicCompletion E) = F :=
     huF _ (continuous_algebraMap ℚ_[l] (w.adicCompletion E))
-  letI : Algebra ℤ_[l] (w.adicCompletionIntegers E) := f.toAlgebra
-  letI : Algebra ℤ_[l] (w.adicCompletion E) :=
+  let : Algebra ℤ_[l] (w.adicCompletionIntegers E) := f.toAlgebra
+  let : Algebra ℤ_[l] (w.adicCompletion E) :=
     ((algebraMap ℚ_[l] (w.adicCompletion E)).comp (algebraMap ℤ_[l] ℚ_[l])).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] (w.adicCompletion E) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower ℤ_[l] (w.adicCompletionIntegers E) (w.adicCompletion E) :=
+  have : IsScalarTower ℤ_[l] ℚ_[l] (w.adicCompletion E) := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower ℤ_[l] (w.adicCompletionIntegers E) (w.adicCompletion E) :=
     IsScalarTower.of_algebraMap_eq fun x => by
       show algebraMap ℚ_[l] (w.adicCompletion E) (x : ℚ_[l]) =
         ((f x : w.adicCompletionIntegers E) : w.adicCompletion E)
@@ -764,7 +764,7 @@ theorem finrank_compl [Algebra ℚ_[l] (w.adicCompletion E)]
   have hpos : 0 < Module.finrank ℚ_[l] (w.adicCompletion E) := by
     rw [hK, hrank]
     exact Nat.mul_pos (Ideal.ramificationIdx_pos (R := ℤ) w.asIdeal) (Ideal.inertiaDeg_pos w.asIdeal ℤ)
-  haveI : Module.Finite ℚ_[l] (w.adicCompletion E) := Module.finite_of_finrank_pos hpos
+  have : Module.Finite ℚ_[l] (w.adicCompletion E) := Module.finite_of_finrank_pos hpos
   refine ⟨inferInstance, hK.trans hrank, fun hs => ?_⟩
   have h1 : Module.finrank ℚ_[l] (w.adicCompletion E) = 1 := by
     rw [hK, hrank, ramificationIdx_mul_inertiaDeg_eq_one_of_splitsIn w l hs]
@@ -931,7 +931,7 @@ theorem emb_val_eq (j : Emb l w) {y : w.adicCompletion F} (hy : ‖j.1 y‖ = 1)
     exact absurd h2 (lt_irrefl _)
 
 theorem liesOver (hl : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal) : w.asIdeal.LiesOver (Ideal.span {(l : ℤ)}) := by
-  haveI := w.isMaximal
+  have := w.isMaximal
   have hp : (Ideal.span {(l : ℤ)}).IsMaximal := by
     refine PrincipalIdealRing.isMaximal_of_irreducible ?_
     exact (Nat.prime_iff_prime_int.1 (Fact.out : l.Prime)).irreducible
@@ -943,12 +943,12 @@ theorem norm_data (hl : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal) :
     ∃ φ : ℚ_[l] →+* w.adicCompletion F, (∀ (τ : Emb l w) (c : ℚ_[l]), τ.1 (φ c) = algebraMap ℚ_[l] (Qbar l) c) ∧
       Nonempty (Emb l w) ∧ Finite (Emb l w) ∧
       ∀ z : w.adicCompletion F, ∃ c : ℚ_[l], ∏ᶠ τ : Emb l w, τ.1 z = algebraMap ℚ_[l] (Qbar l) c := by
-  haveI := liesOver hl
+  have := liesOver hl
   obtain ⟨-, φ, -, hφ, -⟩ := KStar.Ram.existsUnique_padic_hom w l
-  letI : Algebra ℚ_[l] (w.adicCompletion F) := φ.toAlgebra
-  haveI : ContinuousSMul ℚ_[l] (w.adicCompletion F) := continuousSMul_of_algebraMap _ _ hφ
-  haveI : FiniteDimensional ℚ_[l] (w.adicCompletion F) := (KStar.Ram.finrank_compl w l).1
-  haveI : CharZero (w.adicCompletion F) := φ.charZero_iff φ.injective |>.1 inferInstance
+  let : Algebra ℚ_[l] (w.adicCompletion F) := φ.toAlgebra
+  have : ContinuousSMul ℚ_[l] (w.adicCompletion F) := continuousSMul_of_algebraMap _ _ hφ
+  have : FiniteDimensional ℚ_[l] (w.adicCompletion F) := (KStar.Ram.finrank_compl w l).1
+  have : CharZero (w.adicCompletion F) := φ.charZero_iff φ.injective |>.1 inferInstance
   have hcomp : ∀ (τ : Emb l w) (c : ℚ_[l]), τ.1 (φ c) = algebraMap ℚ_[l] (Qbar l) c := fun τ c => by
     have := (Padic.denseRange_ratCast l).equalizer (g := fun x => τ.1 (φ x)) (h := algebraMap ℚ_[l] (Qbar l))
       (τ.2.comp hφ) (continuous_algebraMap _ _) (by
@@ -992,8 +992,8 @@ theorem exists_unit (hl : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal) (x : 𝓞 F) (τ�
       ∏ᶠ τ : Emb l w, τ.1 (y : w.adicCompletion F) = 1 ∧
       ∀ (τ : Emb l w) (m : ℕ), 0 < m → τ.1 (y : w.adicCompletion F) ^ m ≠ 1 := by
   obtain ⟨φ, hφ, ⟨τ₀⟩, hfin, hN⟩ := norm_data hl
-  haveI := hfin
-  letI := Fintype.ofFinite (Emb l w)
+  have := hfin
+  let := Fintype.ofFinite (Emb l w)
   obtain ⟨z, hze⟩ : ∃ z : w.adicCompletion F, z = 1 + (l : w.adicCompletion F) ^ 2 * algebraMap F _ (x : F) := ⟨_, rfl⟩
   have hlnorm : ‖((l : ℕ) : Qbar l)‖ = (l : ℝ)⁻¹ := by
     have e : ((l : ℕ) : Qbar l) = algebraMap ℚ_[l] (Qbar l) ((l : ℕ) : ℚ_[l]) := by simp
@@ -1148,21 +1148,21 @@ private theorem prod_wt {l : ℕ} [Fact l.Prime] {F : Type} [Field F] [NumberFie
     (h0 : hh τ₀ = 2 * j) (h1 : ∀ τ, τ ≠ τ₀ → hh τ = j) :
     ∏ᶠ τ : Emb l w, τ.1 (y : w.adicCompletion F) ^ (-hh τ) = τ₀.1 (y : w.adicCompletion F) ^ (-j) := by
   classical
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  letI := Fintype.ofFinite (Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  let := Fintype.ofFinite (Emb l w)
   have hy : ∀ τ : Emb l w, τ.1 (y : w.adicCompletion F) ≠ 0 := fun τ =>
     (map_ne_zero τ.1).2 y.ne_zero
   have e : ∀ τ : Emb l w, τ.1 (y : w.adicCompletion F) ^ (-hh τ) = τ.1 (y : w.adicCompletion F) ^ (-j) *
       (if τ = τ₀ then τ₀.1 (y : w.adicCompletion F) ^ (-j) else 1) := fun τ => by
     by_cases hτ : τ = τ₀
     · subst hτ
-      rw [if_pos rfl, h0, ← zpow_add₀ (hy τ)]
+      rw [ite_eq_left rfl, h0, ← zpow_add₀ (hy τ)]
       congr 1
       ring
-    · rw [if_neg hτ, h1 τ hτ, mul_one]
+    · rw [ite_eq_right hτ, h1 τ hτ, mul_one]
   rw [finprod_eq_prod_of_fintype] at hP ⊢
   simp only [e]
-  rw [Finset.prod_mul_distrib, Finset.prod_zpow, hP, one_zpow, one_mul, Finset.prod_ite_eq', if_pos (Finset.mem_univ _)]
+  rw [Finset.prod_mul_distrib, Finset.prod_zpow, hP, one_zpow, one_mul, Finset.prod_ite_eq', ite_eq_left (Finset.mem_univ _)]
 
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField in
 private theorem art_elt (hG : GlobalTheory.Published.GlobalArtinReciprocity) {L Ω : Type} [Field L] [NumberField L] [Field Ω]
@@ -1194,7 +1194,7 @@ private theorem place_free (hG : GlobalTheory.Published.GlobalArtinReciprocity) 
   obtain ⟨σ, a, ha, hσ, hcyc⟩ := art_elt hG h hl y hyv hyP
   refine ⟨Subgroup.inclusion (GlobalTheory.WeilDeligne.Weil_le_Dec h) (GlobalTheory.WeilDeligne.ineIncl h σ), hcyc, ?_⟩
   have hz : τ₀.1 (y : w.adicCompletion L) ≠ 0 := (map_ne_zero τ₀.1).2 y.ne_zero
-  haveI : CompactSpace (Ine (F := L) A) :=
+  have : CompactSpace (Ine (F := L) A) :=
     isCompact_iff_compactSpace.1 (ReciprocityTheory.Gal.isClosed_Ine A).isCompact
   apply free_of (fun i => ψ i (Subgroup.inclusion (GlobalTheory.WeilDeligne.Weil_le_Dec h) (GlobalTheory.WeilDeligne.ineIncl h σ)))
     (fun i => ph i σ) (Units.mk0 _ hz)
@@ -1203,7 +1203,7 @@ private theorem place_free (hG : GlobalTheory.Published.GlobalArtinReciprocity) 
     have h2 := congrArg Units.val h1
     simpa using h2
   · intro i
-    haveI := Subgroup.quotient_finite_of_isOpen _ (hp i).1
+    have := Subgroup.quotient_finite_of_isOpen _ (hp i).1
     refine ⟨(ph i).ker.index, Nat.pos_of_ne_zero Subgroup.index_ne_zero_of_finite, ?_⟩
     rw [← map_pow]
     exact (ph i).mem_ker.1 (Subgroup.pow_index_mem _ σ)
@@ -1245,7 +1245,7 @@ theorem UpperTheory.V.J.wtEx :
   · intro x hx v
     change UpperTheory.V.W.Vl l L at v
     obtain ⟨ph, hp, -⟩ := hx.2 v
-    haveI := k.ab
+    have := k.ab
     have hlw : ((l : ℕ) : 𝓞 L) ∈ (R.s.w v.1).asIdeal := by
       apply (R.s.hw v.1 _).1
       have hA := (R.s.hA v.1 _).2 v.2
@@ -1267,7 +1267,7 @@ theorem UpperTheory.V.J.wtEx :
     obtain ⟨b, τ₁, τ₂, hne⟩ := UpperTheory.V.J.Wu.exists_sep (R.s.hw v.1) hlw g hgD' y hgy
     obtain ⟨g', hc, hfree⟩ := place_free hG (R.s.hw v.1) hlw (Classical.choice ⟨τ₁⟩) b τ₁ τ₂ hne (x.psi v) ph
       (fun j τ => if τ = Classical.choice ⟨τ⟩ then 2 * ((j : ℕ) : ℤ) else ((j : ℕ) : ℤ))
-      (fun j => if_pos rfl) (fun j τ hτ => if_neg hτ) hp
+      (fun j => ite_eq_left rfl) (fun j τ hτ => ite_eq_right hτ) hp
     exact ⟨g', mem_G' R.V v g' hc, hfree⟩
 end -- clump:auto
 end -- clump:auto

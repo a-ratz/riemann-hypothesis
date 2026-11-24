@@ -241,8 +241,8 @@ end
 theorem comparison_cocycles : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i), ∀ (A : Type) [CommRing A] [Algebra (X.O0 i) A] (κ : GE N →* Aˣ) (Q Q' : Finset (PlE D.host)) (a a' : ℕ) (Φ : Matrix (Fin a) (Fin a) A) (Φ' : Matrix (Fin a') (Fin a') A) Z Z' (γ σ : Bool → GE N), Univ bkP i s κ Q Φ Z → Univ bkP i s κ Q' Φ' Z' → (∀ (Y : Type) [AddCommGroup Y] [Module A Y] [TopologicalSpace Y] [DiscreteTopology Y] (f : GE N → Fin D.R.r → Y), SelC bkP i s κ Y Q' f → (∀ b, f (γ b) = 0) → SelC bkP i s κ Y Q f) → (∀ (Y : Type) [AddCommGroup Y] [Module A Y] b m, repOn (Tgl i s) κ Y (σ b) m = m) → ∃ E : Matrix (Fin a) (Fin a') A, what₂ E ⊔ (what₂ Φ' ⊔ what₂ (fun j : Bool × Fin D.R.r => Z' (γ j.1) j.2)) = ⊤ ∧ (∀ b, (Φ * E) b ∈ what₂ Φ' ⊔ what₂ (fun j : Bool × Fin D.R.r => Z' (γ j.1) j.2)) ∧ ∀ j : Bool × Fin D.R.r, Z' (σ j.1) j.2 - Matrix.vecMul (Z (σ j.1) j.2) E ∈ what₂ Φ' ⊔ what₂ (fun j : Bool × Fin D.R.r => Z' (γ j.1) j.2) := by
   intro D N X bkP i s A _ _ κ Q Q' a a' Φ Φ' Z Z' γ σ hU hU' hSel hσ
   set W : Submodule A (Fin a' → A) := what₂ Φ' ⊔ what₂ (fun j : Bool × Fin D.R.r => Z' (γ j.1) j.2) with hW
-  letI tY : TopologicalSpace ((Fin a' → A) ⧸ W) := ⊥
-  haveI : DiscreteTopology ((Fin a' → A) ⧸ W) := ⟨rfl⟩
+  let tY : TopologicalSpace ((Fin a' → A) ⧸ W) := ⊥
+  have : DiscreteTopology ((Fin a' → A) ⧸ W) := ⟨rfl⟩
   let gens : Fin a' → (Fin a' → A) ⧸ W := fun j => W.mkQ (Pi.single j 1)
   have hsum : ∀ v : Fin a' → A, ∑ j, v j • gens j = W.mkQ v := by
     intro v
@@ -276,8 +276,8 @@ theorem comparison_cocycles : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R
     exact Finset.sum_congr rfl fun k _ => by rw [map_smul, hE]
   refine ⟨E, ?_, ?_, ?_⟩
   · let S : Submodule A ((Fin a' → A) ⧸ W) := Submodule.span A (Set.range x)
-    letI tS : TopologicalSpace (((Fin a' → A) ⧸ W) ⧸ S) := ⊥
-    haveI : DiscreteTopology (((Fin a' → A) ⧸ W) ⧸ S) := ⟨rfl⟩
+    let tS : TopologicalSpace (((Fin a' → A) ⧸ W) ⧸ S) := ⊥
+    have : DiscreteTopology (((Fin a' → A) ⧸ W) ⧸ S) := ⟨rfl⟩
     have hpx : S.mkQ ∘ x = 0 := by
       funext b
       exact (Submodule.Quotient.mk_eq_zero S).2 (Submodule.subset_span ⟨b, rfl⟩)
@@ -428,7 +428,7 @@ def chr {B ι : Type} [CommRing B] [Fintype ι] {n : ℕ} [NeZero n] (u : ι →
 
 theorem chr_single {B ι : Type} [CommRing B] [Fintype ι] [DecidableEq ι] {n : ℕ} [NeZero n] (hn : 1 < n) (u : ι → B)
     (hu : ∀ q, u q ^ n = 1) (q : ι) : chr u hu (Multiplicative.ofAdd (Pi.single q 1)) = u q := by
-  haveI : Fact (1 < n) := ⟨hn⟩
+  have : Fact (1 < n) := ⟨hn⟩
   change ∏ p, u p ^ ((Pi.single q (1 : ZMod n) : ι → ZMod n) p).val = u q
   rw [Finset.prod_eq_single q]
   · simp [ZMod.val_one]
@@ -448,7 +448,7 @@ theorem exists_lamHom : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.hos
     rw [pow_succ]
     exact h
   have hn : 1 < X.l i ^ M := Nat.one_lt_pow (by omega) hp.one_lt
-  haveI : NeZero (X.l i ^ M) := ⟨by omega⟩
+  have : NeZero (X.l i ^ M) := ⟨by omega⟩
   have hu : ∀ q, (1 + ξ q) ^ (X.l i ^ M) = 1 := fun q =>
     KStar.Tree.one_add_pow_prime_pow_eq_one hp h4 hM (hξ q)
   let φ : abelian₂ X i M ι →ₐ[X.O0 i] B := MonoidAlgebra.lift (X.O0 i) B (Del X i M ι) (chr (fun q => 1 + ξ q) hu)
@@ -515,7 +515,7 @@ theorem exists_newPlace : Cheb → ∀ (D : Formalism.BasicNotions.D7) (N : NDat
     rw [map_mul]
     rcases lt_or_ge b.val n with hb | hb
     · have h1 : d (P (.inl b)) γ₀ = 1 := Subgroup.mem_iInf.1 hγ₀.2 ⟨b, hb⟩
-      rw [h1, hh1 b hb, if_neg (by omega), mul_one]
+      rw [h1, hh1 b hb, ite_eq_right (by omega), mul_one]
       rfl
     · rw [hγd ⟨b, hb⟩, inv_mul_cancel_right]
   let V : Subgroup (GE N) := U ⊓ ⨅ b, (d (P (.inl b))).ker
@@ -685,8 +685,8 @@ theorem exists_open_normal : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R 
       Units.val_one, one_smul]
   obtain ⟨⟨hO, hN, hc, -⟩, -⟩ := hS
   have hc' : ∀ g ∈ L, cConj X g ∈ L := fun g hg => (hc g _ (cConj_apply X g)).1 hg
-  haveI := zeros_normal x hN h1
-  haveI := zeros_normal y hN h2
+  have := zeros_normal x hN h1
+  have := zeros_normal y hN h2
   refine ⟨(zeros x L ⊓ (zeros x L).comap (cConj X)) ⊓ (zeros y L ⊓ (zeros y L).comap (cConj X)),
     ((isOpen_zeros x hO).inter (isOpen_comap_cConj X (isOpen_zeros x hO))).inter
       ((isOpen_zeros y hO).inter (isOpen_comap_cConj X (isOpen_zeros y hO))), inferInstance,
@@ -777,7 +777,7 @@ theorem exists_ring (O A : Type) [CommRing O] [CommRing A] [Algebra O A] (m : �
       rw [map_mul, map_pow, AdjoinRoot.mk_X]
     rw [← hp, e, AdjoinRoot.mk_eq_zero, Polynomial.X_pow_dvd_iff] at h1
     have h2 := h1 (m - 1) (Nat.sub_lt hm Nat.one_pos)
-    rw [Polynomial.coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self] at h2
+    rw [Polynomial.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self] at h2
     rw [← hp, hg]
     exact h2
 
@@ -839,9 +839,9 @@ theorem tors {D : Formalism.BasicNotions.D7} {N : NData D.R D.host D.what₂} {X
 theorem main : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i), ∀ (M : ℕ) (ι : Type) (d : ι → (GE N →* Multiplicative (ZMod (X.l i ^ M)))) (Q : Finset (PlE D.host)) (a : ℕ) (Φ : Matrix (Fin a) (Fin a) (abelian₂ X i M ι)), Computes bkP i s M d Q Φ → ∀ (B : Type) [CommRing B] [Algebra (X.O0 i) B] (φ : abelian₂ X i M ι →ₐ[X.O0 i] B) (κ : GE N →* Bˣ), (∀ g, ((κ g : Bˣ) : B) = φ (delInv i M d g : (abelian₂ X i M ι)ˣ)) → Kills i B → ∃ Z, Univ bkP i s κ Q (Φ.map φ) Z := by
   intro D N X bkP i s M ι d Q a Φ hC B _ _ φ κ hκ hK
   obtain ⟨e, he⟩ := hC
-  letI : TopologicalSpace ((Fin a → B) ⧸ what₂ (Φ.map φ)) := ⊥
-  haveI : DiscreteTopology ((Fin a → B) ⧸ what₂ (Φ.map φ)) := ⟨rfl⟩
-  letI : Module (abelian₂ X i M ι) ((Fin a → B) ⧸ what₂ (Φ.map φ)) := Module.compHom _ (φ : abelian₂ X i M ι →+* B)
+  let : TopologicalSpace ((Fin a → B) ⧸ what₂ (Φ.map φ)) := ⊥
+  have : DiscreteTopology ((Fin a → B) ⧸ what₂ (Φ.map φ)) := ⟨rfl⟩
+  let : Module (abelian₂ X i M ι) ((Fin a → B) ⧸ what₂ (Φ.map φ)) := Module.compHom _ (φ : abelian₂ X i M ι →+* B)
   have hW : ∀ (c : abelian₂ X i M ι) (y : (Fin a → B) ⧸ what₂ (Φ.map φ)), c • y = φ c • y := fun _ _ => rfl
   let xu : LinearMap.ker (matAct (M := (Fin a → B) ⧸ what₂ (Φ.map φ)) Φ) :=
     ⟨fun j => Submodule.Quotient.mk (Pi.single j 1), by
@@ -850,7 +850,7 @@ theorem main : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what�
   choose Z hZ using fun g c => Submodule.Quotient.mk_surjective (what₂ (Φ.map φ)) (z.1 g c)
   refine ⟨fun g => Matrix.of (Z g), ?_⟩
   intro Y _ _ _ _
-  letI : Module (abelian₂ X i M ι) Y := Module.compHom _ (φ : abelian₂ X i M ι →+* B)
+  let : Module (abelian₂ X i M ι) Y := Module.compHom _ (φ : abelian₂ X i M ι →+* B)
   have hY : ∀ (c : abelian₂ X i M ι) (y : Y), c • y = φ c • y := fun _ _ => rfl
   obtain ⟨hrep, hsel⟩ := _root_.GlobalTheory.NewPrime.ScalarChange.selC_transfer D N X bkP i s _ B φ (delInv i M d) κ hκ Y hY
   have key : ∀ x : LinearMap.ker (matAct (M := Y) Φ), ∃ z' : Z1 (repOn (Tgl i s) (delInv i M d) Y),
@@ -1116,7 +1116,7 @@ theorem local_invariants_killed : TameLocal → ∀ (D : Formalism.BasicNotions.
   · obtain ⟨γ, hγ, hd⟩ := (hSt.1.2.2 (.inr q)).2.2.2.2 v hq _ (N.plOm.2 v) (Multiplicative.ofAdd 1)
     have hρ1 := dual_eq_one bkP i s hG.1 hρ v (hQl v hvQ) hS γ hγ
     have hk := hch γ
-    haveI : Fact (1 < X.l i ^ M) := ⟨Nat.one_lt_pow (by omega) (Fact.out : (X.l i).Prime).one_lt⟩
+    have : Fact (1 < X.l i ^ M) := ⟨Nat.one_lt_pow (by omega) (Fact.out : (X.l i).Prime).one_lt⟩
     rw [Finset.prod_eq_single (Sum.inr q)] at hk
     · have hd' : d (P (.inr q)) γ = Multiplicative.ofAdd 1 := hd
       simp only [hd', toAdd_ofAdd, ZMod.val_one, pow_one] at hk
@@ -1189,8 +1189,8 @@ namespace GlobalTheory.NewPrime.CharDual
 
 theorem exists_char_ne_zero (n : ℕ) (hn : n ≠ 0) {G : Type} [AddCommGroup G]
     (hG : ∀ g : G, n • g = 0) {g : G} (hg : g ≠ 0) : ∃ φ : G →+ ZMod n, φ g ≠ 0 := by
-  haveI : NeZero n := ⟨hn⟩
-  letI : Module (ZMod n) G := AddCommGroup.zmodModule hG
+  have : NeZero n := ⟨hn⟩
+  let : Module (ZMod n) G := AddCommGroup.zmodModule hG
   obtain ⟨f, hf⟩ := GlobalTheory.ZModPerp.exists_dual_ne_zero (n := n) hg
   exact ⟨f.toAddMonoidHom, hf⟩
 
@@ -1228,9 +1228,9 @@ theorem charDual_cogenerator : ∀ (A : Type) [CommRing A] [Finite A] (n : ℕ),
       Perf A β ∧ ∀ (a : ℕ) (Φ : Matrix (Fin a) (Fin a) A) (v : Fin a → A),
         (∀ x : Fin a → Y, matAct Φ x = 0 → ∑ j, v j • x j = 0) → v ∈ what₂ Φ := by
   intro A _ _ n hn hnA
-  haveI : NeZero n := ⟨hn⟩
-  letI : Module A (A →+ ZMod n) := charModule A n
-  haveI : Finite (A →+ ZMod n) :=
+  have : NeZero n := ⟨hn⟩
+  let : Module A (A →+ ZMod n) := charModule A n
+  have : Finite (A →+ ZMod n) :=
     Finite.of_injective (fun φ : A →+ ZMod n => (φ : A → ZMod n)) DFunLike.coe_injective
   refine ⟨A →+ ZMod n, inferInstance, inferInstance, inferInstance, AddMonoidHom.id _, ⟨?_, ?_, ?_⟩, ?_⟩
   · intro a y y'
@@ -1440,8 +1440,8 @@ theorem rel : TameLocal → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D
   intro hT D N X bkP i s hl M L z₀ p d σ γ hM hL hp B _ _ κ x y hK hκ hx hI hσ Q a Φ Z hU j
 
   let Y := (Fin a → B) ⧸ what₂ Φ
-  letI : TopologicalSpace Y := ⊥
-  haveI : DiscreteTopology Y := ⟨rfl⟩
+  let : TopologicalSpace Y := ⊥
+  have : DiscreteTopology Y := ⟨rfl⟩
   let mk : (Fin a → B) →ₗ[B] Y := (what₂ Φ).mkQ
   have hmk : ∀ v ∈ what₂ Φ, mk v = 0 := fun v hv => (Submodule.Quotient.mk_eq_zero _).2 hv
 
@@ -1554,7 +1554,7 @@ namespace GlobalTheory.NewPrime
 
 theorem univ_map : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i), ∀ (B : Type) [CommRing B] [Algebra (X.O0 i) B] (A : Type) [CommRing A] [Algebra (X.O0 i) A] (π : B →ₐ[X.O0 i] A) (κ : GE N →* Bˣ) (κ' : GE N →* Aˣ), (∀ g, ((κ' g : Aˣ) : A) = π (κ g : Bˣ)) → ∀ (Q : Finset (PlE D.host)) (a : ℕ) (Φ : Matrix (Fin a) (Fin a) B) Z, Univ bkP i s κ Q Φ Z → Univ bkP i s κ' Q (Φ.map π) (fun g => (Z g).map π) := by
   intro D N X bkP i s B _ _ A _ _ π κ κ' hκ Q a Φ Z hU Y _ _ _ _
-  letI : Module B Y := Module.compHom Y π.toRingHom
+  let : Module B Y := Module.compHom Y π.toRingHom
   have hsm : ∀ (b : B) (y : Y), b • y = π b • y := fun _ _ => rfl
   obtain ⟨hrep, hsel⟩ := _root_.GlobalTheory.NewPrime.ScalarChange.selC_transfer D N X bkP i s B A π κ κ' hκ Y hsm
   obtain ⟨h1, h2, h3⟩ := hU Y
@@ -1738,8 +1738,8 @@ theorem step : Cheb → PoitouTateTotallyComplex → CohDimTwo → TameLocal →
     obtain ⟨m, h1, h2, h3⟩ := hb F₁ hF₁
     exact ⟨m, h1, by rintro q ⟨j, hj, rfl⟩; exact h2 j hj, h3⟩)
   change Kills i A at hK
-  letI : TopologicalSpace A := ⊥
-  haveI : DiscreteTopology A := ⟨rfl⟩
+  let : TopologicalSpace A := ⊥
+  have : DiscreteTopology A := ⟨rfl⟩
   have ht0 : t ^ X.l i ^ (M - nu X i - 1) = 0 := pow_eq_zero_of_le (by omega) htK
   obtain ⟨φ, hφ, hκ⟩ := _root_.GlobalTheory.NewPrime.LamHom.exists_lamHom D N X i M _ A (fun q => a₀ q * t) hl hMν hK (fun q => by rw [mul_pow, ht0, mul_zero])
   obtain ⟨κ, hκφ, hκ⟩ := hκ (fun q => d (P q))
@@ -1765,8 +1765,8 @@ theorem step : Cheb → PoitouTateTotallyComplex → CohDimTwo → TameLocal →
     have e1 := hK _ (Ideal.mul_mem_mul (Ideal.mem_span_singleton_self _) (GlobalTheory.ResSel.SmallSub.l_mem X i))
     rw [map_mul, map_pow, map_natCast] at e1
     rw [Nat.cast_pow, pow_succ, e1])
-  letI : TopologicalSpace Y := ⊥
-  haveI : DiscreteTopology Y := ⟨rfl⟩
+  let : TopologicalSpace Y := ⊥
+  have : DiscreteTopology Y := ⟨rfl⟩
   have hNI := _root_.GlobalTheory.NewPrime.noInvDual_of_setup D N X bkP i s A κ Q ρ z hSet hρ hz
   obtain ⟨y, hy, hyc⟩ := GlobalTheory.T.exists_dual_selmer_class_not_killed D N X bkP i s A κ Q ρ hSet hK hρ hNI
     (_root_.GlobalTheory.SelOrder.orderFormula hPT hLF hLD hLE hGF hGE h4 D N X bkP i s A κ Q ρ hSet hK hρ hNI) Y β hβ a Ψ Z hZ ((X.l i : A) ^ nu X i * t ^ ((e + 1) * w)) t
@@ -1900,7 +1900,7 @@ theorem step : Cheb → PoitouTateTotallyComplex → CohDimTwo → TameLocal →
         · exact Or.inr (by rw [hP']; exact ((hmem σ).1 hσL).2 q hq)
     have e2 : d (P' (em q₁)) σ = Multiplicative.ofAdd 1 := by
       have := (hSt'.2.2 (Fin.last n)).2 ⟨n, hn⟩ σ hNew.2.2.2.2.2.1
-      rwa [if_pos (by simp)] at this
+      rwa [ite_eq_left (by simp)] at this
     have : Fact (1 < X.l i ^ M) := ⟨Nat.one_lt_pow (by omega) hp.one_lt⟩
     rwa [hξ1, e2, toAdd_ofAdd, ZMod.val_one, pow_one] at e1
   · have e1 := (φ' : _ →+* B).map_det Φ'

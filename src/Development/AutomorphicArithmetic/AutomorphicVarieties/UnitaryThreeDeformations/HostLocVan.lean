@@ -112,9 +112,9 @@ private theorem vanish_k (hTD : LocalTateDuality) (hEC : LocalEulerChar) (F Ω :
     (hγ : Function.Bijective fun m : M => rho γ m - m) :
     Subsingleton (H2 rho) ∧ (((l : ℕ) : 𝓞 F) ∉ v.asIdeal → Subsingleton (H1 rho)) := by
   subst hD
-  haveI : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
-  letI : Module (ZMod (l ^ 1)) M := Module.compHom _ (ZMod.castHom (dvd_refl _) k)
-  haveI : ContinuousConstSMul (ZMod (l ^ 1)) M := ⟨fun _ => continuous_of_discreteTopology⟩
+  have : CharP k (l ^ 1) := by rw [pow_one]; infer_instance
+  let : Module (ZMod (l ^ 1)) M := Module.compHom _ (ZMod.castHom (dvd_refl _) k)
+  have : ContinuousConstSMul (ZMod (l ^ 1)) M := ⟨fun _ => continuous_of_discreteTopology⟩
   let rho' : Representation (ZMod (l ^ 1)) (Dec (F := F) A) M :=
     { toFun := fun g =>
         { toFun := rho g
@@ -151,7 +151,7 @@ private theorem gb_finite (k : Type) [CommRing k] [Finite k] (j : ℤ) : Finite 
 private theorem gRep_bij {k D : Type} [Field k] [Finite k] [Group D] (η : D →* ℤˣ) (Ψ : D →* kˣ) {j : ℤ}
     (hj : j ≠ 0) (x : D) (hη : η x = 1) (hΨ : Ψ x ^ 2 ≠ 1) :
     Function.Bijective fun m : Gb (k := k) j => gRep η Ψ j x m - m := by
-  haveI := gb_finite k j
+  have := gb_finite k j
   rw [← Finite.injective_iff_bijective]
   have h1 : Ψ x ≠ 1 := fun h => hΨ (by rw [h, one_pow])
   have hker : ∀ m : Gb (k := k) j, gRep η Ψ j x m = m → m = 0 := by
@@ -161,7 +161,7 @@ private theorem gRep_bij {k D : Type} [Field k] [Finite k] [Group D] (η : D →
     show m.val a b = 0
     by_cases hab : wt a b = j
     · have e := congrArg (fun X : Gb (k := k) j => X.val a b) hm
-      simp only [gRep_val, adRep_baseLift_apply, hη, if_true] at e
+      simp only [gRep_val, adRep_baseLift_apply, hη, ite_true] at e
       have hne : (Ψ x ^ wt a b : kˣ) ≠ 1 := by
         have h0 : wt a b ≠ 0 := hab ▸ hj
         have hw : wt a b = 1 ∨ wt a b = 2 ∨ wt a b = -1 ∨ wt a b = -2 := by
@@ -208,14 +208,14 @@ theorem UpperTheory.V.UnitaryThreeInertia.hostFrame_locVan :
   intro _ hTD hEC Ω _ _ _ l hl c N _ e ψ o₁ hd S A F hF
   have hok := hostFrame_ok Ω c e ψ o₁ hd S A F hF
   have hx := exists_sigma Ω c e ψ o₁ hd S A F hF
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
-  haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : CharP (ResidueField c.O) l := by
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+  have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
     intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
   have hΨ : IsLocallyConstant F.Ψbar := by
     have h1 := (hok.Ψ_cont 1)
     rw [IsLocallyConstant.iff_eventually_eq] at h1 ⊢
@@ -229,8 +229,8 @@ theorem UpperTheory.V.UnitaryThreeInertia.hostFrame_locVan :
       (((l : ℕ) : NumberField.RingOfIntegers ℚ) ∉ v.1.asIdeal → Subsingleton (H1 (F.gloc j v))) := by
     intro v hv j hj
     obtain ⟨x, hη, hu, hc⟩ := hx v hv
-    haveI := gb_finite (ResidueField c.O) j
-    have hloc : Continuous (F.loc v) := hok.π_cont.comp continuous_subtype_val
+    have := gb_finite (ResidueField c.O) j
+    have hloc : Continuous (F.loc v) := hok.π_cont.comp continuous_subtypeVal
     have hcont : ContAction (F.gloc j v) :=
       gRep_cont F.η F.Ψbar j hok.η_cont hΨ (F.loc v) hloc
     refine vanish_k hTD hEC ℚ Ω l (ResidueField c.O) _ (A v) v.1 (F.D v) (hF.D v) (F.gloc j v) (hF.isOver v)

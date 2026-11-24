@@ -169,7 +169,7 @@ theorem det_of_smul_rows {n : ℕ} (s : Fin n → 𝓞 K) (x : Fin n → Fin n �
 omit [NumberField K] in
 theorem prod_notMem_asIdeal {n : ℕ} (p : HeightOneSpectrum (𝓞 K)) (s : Fin n → 𝓞 K)
     (hs : ∀ i, s i ∉ p.asIdeal) : ∏ i, s i ∉ p.asIdeal := by
-  haveI := p.isPrime
+  have := p.isPrime
   exact prod_mem (S := p.asIdeal.primeCompl) fun i _ => hs i
 
 theorem valuation_smul_of_notMem (p : HeightOneSpectrum (𝓞 K)) {s : 𝓞 K} (hs : s ∉ p.asIdeal) (c : K) :
@@ -491,13 +491,13 @@ theorem exists_isThetaDeg : Out.SecTwistSt → ThetaUnifAV → ∀ (K : Type) [F
     fun 𝔭 => ?_, fun σ => ?_, (hfin.union (KeyPow.sum_log_norm_eq_finsum ha _ hv).1).subset fun 𝔭 h => ?_, rfl⟩
   · by_cases h : ∃ M, KeyPow.IsLocalModel x 𝔭 a M
     · obtain ⟨M, hM⟩ := id h
-      exact ⟨a, M, hM, by beta_reduce; rw [if_pos h]; exact hv 𝔭⟩
+      exact ⟨a, M, hM, by beta_reduce; rw [ite_eq_left h]; exact hv 𝔭⟩
     · obtain ⟨a', M, hM, h₁, -⟩ := hloc 𝔭
-      exact ⟨a', M, hM, by beta_reduce; rw [if_neg h]; exact h₁⟩
+      exact ⟨a', M, hM, by beta_reduce; rw [ite_eq_right h]; exact h₁⟩
   · obtain ⟨x', h₁, h₂⟩ := hn σ
     exact ⟨x', _, h₁, h₂⟩
   · by_cases h' : ∃ M, KeyPow.IsLocalModel x 𝔭 a M
-    · exact Or.inr (by simpa only [Function.mem_support, if_pos h'] using h)
+    · exact Or.inr (by simpa only [Function.mem_support, ite_eq_left h'] using h)
     · exact Or.inl h'
 
 end GlobalTheory.ThetaDegree
@@ -543,7 +543,7 @@ theorem mem_range_iff_valuation_le_one {R K Γ : Type*} [CommRing R] [IsDomain R
       rw [← hr, map_mul, map_mul, hu, map_pow, map_pow, h, one_pow, _root_.mul_one] at hπ
       exact lt_irrefl _ hπ
     · have := hR r
-      rw [hr, map_inv₀, inv_le_one₀ (zero_lt_iff.2 hπ0)] at this
+      rw [hr, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 hπ0)] at this
       exact absurd hπ (not_lt.2 this)
   rcases ValuationRing.isInteger_or_isInteger R y with h | ⟨r, hr⟩
   · exact h
@@ -562,7 +562,7 @@ theorem mem_range_iff_valuation_le_one {R K Γ : Type*} [CommRing R] [IsDomain R
         rw [← hr, map_mul, map_mul]
         calc _ ≤ v (algebraMap R K ϖ) * 1 := mul_le_mul_right (hR _) _
           _ < 1 := by rwa [_root_.mul_one]
-      rw [map_inv₀, inv_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff v).2 hy0))] at h1
+      rw [map_inv₀, inv_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff v).2 hy0))] at h1
       exact absurd hy (not_le.2 h1)
 
 theorem keyLocAt_of_isLocalModel : ∀ (K : Type) [Field K] [NumberField K] (x : KeyIn K) (T abelian₂ : MLine K) (p : HeightOneSpectrum (𝓞 K)) (a : K) (M : Matrix (Fin x.P.g) (Fin x.P.g) K), KeyPow.IsLocalModel x p a M → IsLocGen p a T.I → IsLocGen p M.det abelian₂.I → KeyLocAt x T abelian₂ p := by
@@ -707,7 +707,7 @@ theorem exists_eigenbasis_fibre : Out.SecTwistSt → Out.Laws → ∀ (E : Type)
     apply Submodule.exists_mem_ne_zero_of_ne_bot
     intro h
     have := hrk (res t)
-    rw [latRank, h, if_pos (hrt t), finrank_bot] at this
+    rw [latRank, h, ite_eq_left (hrt t), finrank_bot] at this
     exact zero_ne_one this
   choose b hb hb0 using hb
   have hli : LinearIndependent K b := (hind.comp hinj).linearIndependent _ hb hb0
@@ -715,7 +715,7 @@ theorem exists_eigenbasis_fibre : Out.SecTwistSt → Out.Laws → ∀ (E : Type)
   let e : Fin y.P.g ≃ S := (Finite.equivFinOfCardEq (hcS.trans hyg'.symm)).symm
   let M : Matrix (Fin y.P.g) (Fin y.P.g) K := fun i => b (e i)
   have hM : IsUnit M.det := (Matrix.isUnit_iff_isUnit_det _).1
-    (Matrix.linearIndependent_rows_iff_isUnit.1 (hli.comp e e.injective))
+    (Matrix.linearIndependent_row_iff_isUnit.1 (hli.comp e e.injective))
   have := y.P.isAb.comm
   obtain ⟨hex, htan, hcomp, -, hbas⟩ := LieComb.lieComb_algebra K y.P.A _ y.v y.basis.1
   choose v' hv' _ using fun i => hex (M i)
@@ -756,7 +756,7 @@ theorem exists_fractionalIdeal_single_mem {K : Type} [Field K] [NumberField K] {
   let J : Submodule (𝓞 K) K := Λ.comap (LinearMap.single (𝓞 K) (fun _ : Fin n => K) i)
   have hle : J ≤ Λ.map (LinearMap.proj i) := fun c hc => ⟨_, hc, by simp⟩
   have hJ : J.FG := by
-    haveI := isNoetherian_of_fg_of_noetherian _ (hfg.map (LinearMap.proj (R := 𝓞 K) (φ := fun _ : Fin n => K) i))
+    have := isNoetherian_of_fg_of_noetherian _ (hfg.map (LinearMap.proj (R := 𝓞 K) (φ := fun _ : Fin n => K) i))
     exact isNoetherian_submodule.1 this _ hle
   refine ⟨⟨J, FractionalIdeal.isFractional_of_fg hJ⟩, fun h0 => ?_, fun c => Iff.rfl⟩
   have h1 : (Pi.single i 1 : Fin n → K) ∈ Submodule.span K (Λ : Set (Fin n → K)) := hsp ▸ trivial
@@ -766,7 +766,7 @@ theorem exists_fractionalIdeal_single_mem {K : Type} [Field K] [NumberField K] {
     change Pi.single i _ ∈ Λ
     rw [Algebra.algebraMap_eq_smul_one, Pi.single_smul]
     exact ht
-  have h3 : J = ⊥ := (congrArg FractionalIdeal.coeToSubmodule h0).trans FractionalIdeal.coe_zero
+  have h3 : J = ⊥ := (congrArg FractionalIdeal.coeToSubmodule h0).trans FractionalIdeal.coeToSubmodule_zero
   rw [h3, Submodule.mem_bot] at h2
   exact nonZeroDivisors.coe_ne_zero t (FaithfulSMul.algebraMap_injective _ K (h2.trans (map_zero _).symm))
 

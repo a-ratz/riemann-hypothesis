@@ -83,7 +83,7 @@ private theorem pow_apply_eq_pow_smul_of_apply_eq_smul {V : Type*} [NormedAddCom
   induction k with
   | zero => simp
   | succ k ih =>
-    rw [pow_succ, ContinuousLinearMap.mul_apply, h, map_smul, ih, smul_smul, ← pow_succ']
+    rw [pow_succ, mul_apply_eq_comp, h, map_smul, ih, smul_smul, ← pow_succ']
 
 theorem exp_apply_of_eigen {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V] [CompleteSpace V]
     (A : V →L[ℂ] V) (c : ℂ) (w : V) (h : A w = c • w) :
@@ -95,7 +95,7 @@ theorem exp_apply_of_eigen {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V
       (Complex.exp c • w) := by
     convert h2 using 1
     funext k
-    rw [ContinuousLinearMap.apply_apply, ContinuousLinearMap.smul_apply,
+    rw [ContinuousLinearMap.apply_apply, smul_apply,
       pow_apply_eq_pow_smul_of_apply_eq_smul A c w h k, smul_smul, smul_eq_mul]
   have e := h1.unique h3
   rwa [ContinuousLinearMap.apply_apply] at e
@@ -110,11 +110,11 @@ private theorem diagonal_mul_I_eq_sum_single (θ : Fin n → ℝ) :
   by_cases hij : i = j
   · subst hij
     simp
-  · rw [if_neg hij]
+  · rw [ite_eq_right hij]
     symm
     apply Finset.sum_eq_zero
     intro c _
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨rfl, rfl⟩
     exact hij rfl
 
@@ -122,8 +122,8 @@ theorem dtau_diag_w {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
     T.dτ (Matrix.diagonal fun a => (θ a : ℂ) * Complex.I) T.w =
       (((∑ a, Λ a * θ a : ℝ) : ℂ) * Complex.I) • T.w := by
 
-  rw [diagonal_mul_I_eq_sum_single, map_sum, ContinuousLinearMap.sum_apply]
-  simp_rw [map_smul, ContinuousLinearMap.smul_apply, T.13, smul_smul]
+  rw [diagonal_mul_I_eq_sum_single, map_sum, sum_apply]
+  simp_rw [map_smul, smul_apply, T.13, smul_smul]
   rw [← Finset.sum_smul]
   congr 1
   push_cast
@@ -138,6 +138,6 @@ theorem torW : TorW := by
   have h1 : γ 1 = k := onep_KG_ext (by rw [hγ 1, hk, tor_eq_exp])
   rw [← h1, KType.op_curve T hX γ hγ 1]
   apply exp_apply_of_eigen
-  rw [ContinuousLinearMap.smul_apply, dtau_diag_w, smul_smul, Complex.ofReal_one, one_mul]
+  rw [smul_apply, dtau_diag_w, smul_smul, Complex.ofReal_one, one_mul]
 
 end GlobalTheory.CompanionTheory.RgDsTor

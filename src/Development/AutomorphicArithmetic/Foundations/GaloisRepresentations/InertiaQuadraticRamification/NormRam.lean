@@ -59,15 +59,15 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.normRam :
   intro K M Ω _ _ _ _ _ _ _ _ _ _ _ hp η hη A v hA hτ hunr
   obtain ⟨τ, hτI, hτM⟩ := hτ
   obtain ⟨hη1, hηp, hηev⟩ := hη
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨ι⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex 2
   obtain ⟨art, hart⟩ := _root_.CompanionTheory.FamInh.globalArtin K Ω
   have halg : IsAlgPos η 0 := isAlgPos_zero_of_orderDvd hp.pos hηp
   obtain ⟨r, hrc, hr⟩ := hart.exists_isLAdicOf (ι : Qbar 2 ≃+* ℂ) halg
   have hrI : ∀ s ∈ Ine A, r s = 1 := (hr.unr_iff hart (Or.inr rfl) hA).2 hunr
   have hres : ∀ g : G M Ω, r (UpperTheory.V.Af.Bc.res K Ω M g) = 1 := by
-    haveI : IsAlgClosure M Ω := by
-      haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+    have : IsAlgClosure M Ω := by
+      have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
       exact ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) M⟩
     obtain ⟨artM, hartM⟩ := _root_.CompanionTheory.FamInh.globalArtin M Ω
     have hφc : Continuous (r.comp (UpperTheory.V.Af.Bc.res K Ω M)) :=
@@ -85,7 +85,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.normRam :
       exact DFunLike.congr_fun hone g
     · intro w hw A' hA' σ hσ
       rw [Set.Finite.mem_toFinset] at hw
-      simp only [Set.mem_setOf_eq, not_not] at hw
+      simp only [Set.mem_ofPred_eq, not_not] at hw
       obtain ⟨hwu, hwn⟩ := hw
       have hce : CharEig ι r (HeightOneSpectrum.under (𝓞 K) w)
           (η.val (HeightOneSpectrum.under (𝓞 K) w)) := by
@@ -110,7 +110,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.normRam :
       rw [map_inv, inv_eq_one] at h10
       exact h10
   have hr1 : ∀ g : G K Ω, r g = 1 := by
-    haveI : Fact (Nat.Prime (Module.finrank K M)) := ⟨hp⟩
+    have : Fact (Nat.Prime (Module.finrank K M)) := ⟨hp⟩
     let ρ : G K Ω →* (M ≃ₐ[K] M) := AlgEquiv.restrictNormalHom M
     have hfix : ∀ g : G K Ω, ρ g = 1 → r g = 1 := by
       intro g hg

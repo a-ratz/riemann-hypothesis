@@ -158,7 +158,7 @@ theorem continuous_orbit (σ : E →ₐ[F] E) (J : Matrix (Fin M) (Fin M) E) {a 
     Continuous (fun g : HA R σ J => g • ratTup (F := F) R X0) := by
   have hmat : Continuous (fun g : HA R σ J =>
       ((HA.mat R σ J g : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E))) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   show Continuous (fun g : HA R σ J => actTup R (HA.mat R σ J g) (ratTup (F := F) R X0))
   unfold actTup
   exact continuous_pi fun i => hmat.matrix_mulVec continuous_const

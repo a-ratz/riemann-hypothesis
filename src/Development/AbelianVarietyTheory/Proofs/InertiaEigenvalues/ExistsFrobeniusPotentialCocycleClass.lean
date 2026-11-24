@@ -155,7 +155,7 @@ open Polynomial
 
 theorem ringHom_eq_pow_frob (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [Finite F] [CharP F p]
     (φ : F →+* F) : ∃ m : ℕ, ∀ x : F, φ x = x ^ p ^ m := by
-  letI : Algebra (ZMod p) F := ZMod.algebra F p
+  let : Algebra (ZMod p) F := ZMod.algebra F p
   let ψ : F →ₐ[ZMod p] F :=
     { φ with
       commutes' := fun r =>
@@ -172,7 +172,7 @@ theorem finite_Fq (l : ℕ) [hl : Fact (Nat.Prime l)] (a : ℕ) [NeZero a] : Fin
   have hp : (X ^ (l ^ a) - X : (Formalism.BasicNotions.Loc.OCb l)[X]) ≠ 0 := by
     intro h
     have h2 := congrArg (fun f => _root_.AddMonoidAlgebra.coeff (M := ℕ) f (l ^ a)) h
-    simp only [coeff_sub, coeff_X_pow, coeff_X, if_true, coeff_zero, if_neg hq.ne] at h2
+    simp only [coeff_sub, coeff_X_pow, coeff_X, ite_true, coeff_zero, ite_eq_right hq.ne] at h2
     simp at h2
   have hsub : ((GlobalTheory.BKReal.resSub l a : Subring (Formalism.BasicNotions.Loc.OCb l)) : Set (Formalism.BasicNotions.Loc.OCb l)) ⊆
       {x | (X ^ (l ^ a) - X : (Formalism.BasicNotions.Loc.OCb l)[X]).IsRoot x} := by
@@ -181,18 +181,18 @@ theorem finite_Fq (l : ℕ) [hl : Fact (Nat.Prime l)] (a : ℕ) [NeZero a] : Fin
     rw [iterateFrobenius_def] at hx'
     show Polynomial.eval x (X ^ (l ^ a) - X) = 0
     rw [eval_sub, eval_pow, eval_X, hx', sub_self]
-  have h : Finite ↥(GlobalTheory.BKReal.resSub l a) := ((Polynomial.finite_setOf_isRoot hp).subset hsub).to_subtype
+  have h : Finite ↥(GlobalTheory.BKReal.resSub l a) := ((finite_setOfPred_isRoot hp).subset hsub).to_subtype
   exact h
 
 theorem main : ∀ (l : ℕ) [hl : Fact (Nat.Prime l)] (a : ℕ) [inst : NeZero a]
     (φ : GlobalTheory.BKReal.Fq l a →+* GlobalTheory.BKReal.Fq l a), ∃ (m : ℕ), ∀ (x : GlobalTheory.BKReal.Fq l a),
       (φ : GlobalTheory.BKReal.Fq l a → GlobalTheory.BKReal.Fq l a) x = x ^ l ^ m := by
   intro l hl a _ φ
-  haveI := finite_Fq l a
-  haveI : IsDomain (GlobalTheory.BKReal.Fq l a) := inferInstanceAs (IsDomain ↥(GlobalTheory.BKReal.resSub l a))
-  haveI : CharP (GlobalTheory.BKReal.Fq l a) l :=
+  have := finite_Fq l a
+  have : IsDomain (GlobalTheory.BKReal.Fq l a) := inferInstanceAs (IsDomain ↥(GlobalTheory.BKReal.resSub l a))
+  have : CharP (GlobalTheory.BKReal.Fq l a) l :=
     inferInstanceAs (CharP ↥(GlobalTheory.BKReal.resSub l a) l)
-  letI : Field (GlobalTheory.BKReal.Fq l a) := (Finite.isDomain_to_isField _).toField
+  let : Field (GlobalTheory.BKReal.Fq l a) := (Finite.isDomain_to_isField _).toField
   exact ringHom_eq_pow_frob l (GlobalTheory.BKReal.Fq l a) φ
 
 end GlobalTheory.FrobeniusPower
@@ -450,7 +450,7 @@ theorem tensor_one_injective : ∀ (l : ℕ) [Fact l.Prime] (O K : Type) [CommRi
     [NormedAlgebra ℚ_[l] K] (G : Type) [Group G] [TopologicalSpace G] (T : LocLat G ℚ_[l] K O),
     Function.Injective fun x : ↥T.L.T => (1 : OB l O) ⊗ₜ[O] x := by
   intro l _ O K _ _ _ _ _ _ _ _ G _ _ T
-  haveI : Module.Free O ↥T.L.T := T.L.free
+  have : Module.Free O ↥T.L.T := T.L.free
   have h := Module.Flat.rTensor_preserves_injective_linearMap (M := ↥T.L.T)
     (Algebra.linearMap O (OB l O)) (algebraMap_OB_injective l O)
   have e : (fun x : ↥T.L.T => (1 : OB l O) ⊗ₜ[O] x) =
@@ -655,8 +655,8 @@ end Ql
 
 theorem potential_class : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] [TameDescentExponentData K l e a] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (ι : Type) [Fintype ι] [DecidableEq ι] (η H : ℕ) (D : BKDat O K l e a ι η H) (T : LocLat (Gl l) ℚ_[l] K O) (R : GalDat t ϖ (sQ l) D T), (∀ y ∈ D.Y, ∃ b, R.IsPotential y b) ∧ (∀ y c c', R.ClassOf y c → R.ClassOf y c' → c - c' ∈ latticeCoboundaries T.L) ∧ (∀ y c (k : ℕ), R.ClassOf y c → R.ClassOf ((l : K) ^ k • y) ((l : K) ^ k • c)) ∧ ∀ y c, ∀ m ∈ D.Minv, R.ClassOf y c → R.ClassOf (y + (D.phi m - m)) c := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ ι _ _ η H D T R
-  haveI : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (K := K) (l := l) (e := e) (a := a)
-  haveI : CompleteSpace K := FiniteDimensional.complete ℚ_[l] K
+  have : FiniteDimensional ℚ_[l] K := TameDescentExponentData.finite (K := K) (l := l) (e := e) (a := a)
+  have : CompleteSpace K := FiniteDimensional.completeSpace ℚ_[l] K
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro y hyY
     have hy : y ∈ ME D.toPhiMod := BKDat.mem_invE_of_mem_Y hyY

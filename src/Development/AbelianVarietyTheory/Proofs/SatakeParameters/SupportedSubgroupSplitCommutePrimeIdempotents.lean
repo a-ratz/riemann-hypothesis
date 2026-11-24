@@ -322,7 +322,7 @@ theorem inv_mem_iff (Q : HeightOneSpectrum (𝓞 D.host.E)) {x : 𝓞 D.host.E} 
       x ∉ Q.asIdeal := by
   rw [HeightOneSpectrum.mem_adicCompletionIntegers, Formalism.UG.P.levelaf_valued_algebraMap, map_inv₀,
     ← HeightOneSpectrum.valuation_lt_one_iff_mem (K := D.host.E), not_lt]
-  refine inv_le_one₀ (zero_lt_iff.2 ?_)
+  refine inv_le_one₀ (pos_iff_ne_zero.2 ?_)
   rw [Ne, Valuation.zero_iff]
   exact_mod_cast hx
 

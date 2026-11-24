@@ -131,7 +131,7 @@ theorem _root_.GlobalTheory.heisenberg_family_irreducible : ∀ (K G V : Type) [
   classical
   rcases subsingleton_or_nontrivial V with hV | hV
   · exact Or.inl (Submodule.eq_bot_of_subsingleton)
-  haveI : Fintype G := Fintype.ofFinite G
+  have : Fintype G := Fintype.ofFinite G
   have hind : LinearIndependent K (fun x => (U x : V →ₗ[K] V)) := by
     refine _root_.GlobalTheory.linearIndependent_of_comm_smul (fun x => (U x : V →ₗ[K] V))
       (fun x y => (e x y : K)) (fun x => (U x).injective) (fun x y v => hU x y v) ?_

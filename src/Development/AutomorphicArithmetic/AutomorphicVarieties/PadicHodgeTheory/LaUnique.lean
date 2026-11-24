@@ -103,7 +103,7 @@ private theorem lin_term {ι L : Type} [Fintype ι] [Field L] [CharZero L] (c : 
     apply Polynomial.eq_of_infinite_eval_eq
     apply Set.Infinite.mono (s := Set.range (fun n : ℕ => (n : L)))
     · rintro _ ⟨n, rfl⟩
-      simp only [Set.mem_setOf_eq, eval_prod, eval_pow, eval_add, eval_one, eval_mul, eval_C, eval_X]
+      simp only [Set.mem_ofPred_eq, eval_prod, eval_pow, eval_add, eval_one, eval_mul, eval_C, eval_X]
       exact H n
     · exact Set.infinite_range_of_injective Nat.cast_injective
   have h1 := congrArg (fun P : L[X] => P.coeff 1) heq
@@ -206,14 +206,14 @@ theorem UpperTheory.V.Loc.laUnique :
   obtain ⟨a, ha⟩ := ha0
   obtain ⟨ph, hph⟩ := hw
   obtain ⟨ph', hph'⟩ := hw'
-  haveI : Finite (Emb l w) := finite_emb l w
-  letI : Fintype (Emb l w) := Fintype.ofFinite _
+  have : Finite (Emb l w) := finite_emb l w
+  let : Fintype (Emb l w) := Fintype.ofFinite _
   let K : Subgroup ↥(Ine (F := F) A) := ph.ker ⊓ ph'.ker
-  haveI : CompactSpace ↥(Ine (F := F) A) :=
+  have : CompactSpace ↥(Ine (F := F) A) :=
     isCompact_iff_compactSpace.mp (isClosed_Ine (F := F) A).isCompact
   have hKo : IsOpen (K : Set ↥(Ine (F := F) A)) := hph.1.inter hph'.1
-  haveI : Finite (↥(Ine (F := F) A) ⧸ K) := Subgroup.quotient_finite_of_isOpen K hKo
-  haveI : K.Normal := Subgroup.normal_inf_normal _ _
+  have : Finite (↥(Ine (F := F) A) ⧸ K) := Subgroup.quotient_finite_of_isOpen K hKo
+  have : K.Normal := Subgroup.normal_inf_normal _ _
   have hm0 : K.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hrel : ∀ σ : ↥(Ine (F := F) A), ∏ τ : Emb l w,
       (τ.1 (a (ineIncl h σ) : HeightOneSpectrum.adicCompletion F w)) ^ ((K.index : ℤ) * (wt' τ - wt τ)) = 1 := by

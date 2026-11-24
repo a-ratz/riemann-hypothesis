@@ -248,7 +248,7 @@ theorem frozenCD_of (h : RecS.JointCD L HW) (h1 : InertUnr D (D.nd.l i))
   refine Or.inr ⟨⟨RecS.exists_primitiveRoot_of_good hG, fun T hT a τ hτ => ?_⟩, d, hA.1, fun a => ?_, hall,
     fun a => ?_, hS.2.2.2.2.2.2.2.2.2⟩
   · have := (D.nbr i w hw).Kw.2
-    letI ft : Fintype (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥Cx.LL.1) := Fintype.ofFinite _
+    let ft : Fintype (↥(D.nbr i w hw).Kw.1 →ₐ[ℚ_[D.nd.l i]] ↥Cx.LL.1) := Fintype.ofFinite _
     have h := (hB.t2 T (recS_isTwistedDual_of_isTwistedDual i ρ π hT)).2 ft a
     unfold TruncatedSeriesCountingBounds.lowCount at h
     have hfil : (Finset.univ.filter (fun τ' => Formalism.MainNotions.LiftingTheory.Over (RecS.WW HW i w hw Cx hG) τ' a)) = {τ} := by
@@ -386,7 +386,7 @@ theorem jA_eq_depth : ∀ {D : D7} (L : SizeData₂ D) (l : ℕ), 11 ≤ l → (
   have hc : 1 ≤ ⌈Real.logb ((l : ℝ) - 1) (LevelStarExponents.lA L)⌉₊ := by
     rw [Nat.one_le_ceil_iff]; linarith
   have hset : {j : ℕ | LevelStarExponents.lA L ≤ ((l : ℝ) - 1) ^ j} = Set.Ici ⌈Real.logb ((l : ℝ) - 1) (LevelStarExponents.lA L)⌉₊ := by
-    ext j; simp only [Set.mem_setOf_eq, Set.mem_Ici]; exact key j
+    ext j; simp only [Set.mem_ofPred_eq, Set.mem_Ici]; exact key j
   unfold jA depth
   rw [hset, csInf_Ici, max_eq_right hc]
 
@@ -663,9 +663,9 @@ theorem abs_szT_sub_floor_le {R : Ranks} (P : HCParam R) (j : Fin R.m) (s : Bool
   unfold szT
   generalize ((R.t : ℤ) + 1) / 2 = q at h0' h1'
   cases s
-  · simp only [Bool.false_eq_true, if_false, Int.cast_sub]
+  · simp only [Bool.false_eq_true, ite_false, Int.cast_sub]
     rw [abs_le]; constructor <;> linarith
-  · simp only [if_true, Int.cast_add]
+  · simp only [ite_true, Int.cast_add]
     rw [abs_le]; constructor <;> linarith
 
 theorem pageWord_not_thick_size : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.R.m) (ε : ℤˣ) (τ φ : D.R.GG), Roomy L C → ∀ i, ¬ (pageWord L j ε τ φ).thick i → ∃ s : ℝ, L.sc.w'' D.R.n ≤ s ∧ s ≤ (wMax D : ℝ) ∧ s ≤ 8 / 5 * L.sc.b' ∧ |(((pageWord L j ε τ φ).sz i : ℤ) : ℝ) - s| ≤ ((D.R.t : ℝ) + 1) / 2 := by
@@ -936,7 +936,7 @@ theorem alternatingWord_numerical_bounds :
   have hlog100 : Real.log 100 < 5 := by
     rw [Real.log_lt_iff_lt_exp (by norm_num)]
     have h := Real.exp_one_gt_d9
-    have he : Real.exp 5 = Real.exp 1 ^ 5 := by rw [← Real.exp_nat_mul]; norm_num
+    have he : Real.exp 5 = Real.exp 1 ^ 5 := by rw [← Real.exp_natCast_mul]; norm_num
     rw [he]
     calc (100:ℝ) < 2.7182818283 ^ 5 := by norm_num
       _ ≤ Real.exp 1 ^ 5 := pow_le_pow_left₀ (by norm_num) h.le 5
@@ -1111,7 +1111,7 @@ theorem recWord_dichotomy : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin 
     refine ⟨hSmall, halt, ⟨a, fun h => ha ((hT a).2.2.2.1 h)⟩, fun i h => hthree i ?_⟩
     exact ⟨(hT _).2.2.2.1 h.1, (hT _).2.2.2.1 h.2.1, (hT _).2.2.2.1 h.2.2⟩
   · right
-    haveI : NeZero (orderOf ψ) := ⟨(orderOf_pos ψ).ne'⟩
+    have : NeZero (orderOf ψ) := ⟨(orderOf_pos ψ).ne'⟩
     obtain ⟨d, hd⟩ := alternates_parity (up := (recWord L j ε (letter τ ψ)).up) halt
     refine ⟨d, hev, hd, hSmall, fun a => ?_, fun M hM a => ?_⟩
     · have hmax : max (etaHat L) ((recWord L j ε (letter τ ψ)).sz a + sHat L) =

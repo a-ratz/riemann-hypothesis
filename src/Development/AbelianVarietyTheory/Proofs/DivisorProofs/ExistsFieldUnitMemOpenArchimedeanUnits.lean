@@ -84,7 +84,7 @@ theorem exists_unit_mem_open :
   have hx : x ≠ 0 := by
     rintro rfl
     simp only [map_zero] at hxu
-    haveI : Nonempty (InfinitePlace E) := inferInstance
+    have : Nonempty (InfinitePlace E) := inferInstance
     exact u.ne_zero hxu
   refine ⟨Units.mk0 x hx, ?_⟩
   convert hu using 1

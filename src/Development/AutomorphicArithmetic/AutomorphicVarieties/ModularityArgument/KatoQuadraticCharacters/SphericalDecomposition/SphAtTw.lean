@@ -115,7 +115,7 @@ theorem pow_fixes {Ω : Type} [Field Ω] [Algebra ℚ Ω] (l : ℕ) [hl : Fact l
   have hord : orderOf ζ = l := orderOf_eq_prime hζ h1
   have hprim : IsPrimitiveRoot ζ l := hord ▸ IsPrimitiveRoot.orderOf ζ
   have hsζ : (s ζ) ^ l = 1 := by rw [← map_pow, hζ, map_one]
-  haveI : NeZero l := ⟨hl.out.ne_zero⟩
+  have : NeZero l := ⟨hl.out.ne_zero⟩
   obtain ⟨k, hk, hk'⟩ := hprim.eq_pow_of_pow_eq_one hsζ
   have hkl : ¬ l ∣ k := by
     rintro ⟨j, rfl⟩
@@ -215,7 +215,7 @@ theorem exists_conj_of_bounded {F : Type} [NormedField F] [IsUltrametricDist F] 
     simpa using h2 1 i
   have hLc : IsCompact L := by
     refine (isCompact_pi_infinite (fun _ => hK)).inter_right ?_
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_iInter fun g => isClosed_iInter fun i => ?_
     refine isClosed_le ?_ continuous_const
     simp only [Matrix.mulVec, dotProduct]
@@ -312,9 +312,9 @@ theorem exists_upperTriangular_conj_integral :
   intro l _ Γ _ _ _ E r hfin hcont hE
   have hK : IsCompact {x : Qbar l | x ∈ E.toSubfield ∧ ‖x‖ ≤ 1} := by
     let V : Submodule ℚ_[l] (Qbar l) := E.toSubalgebra.toSubmodule
-    haveI : FiniteDimensional ℚ_[l] V := hfin
-    haveI : ProperSpace V := FiniteDimensional.proper ℚ_[l] V
-    have h := (isCompact_closedBall (0 : V) 1).image continuous_subtype_val
+    have : FiniteDimensional ℚ_[l] V := hfin
+    have : ProperSpace V := FiniteDimensional.proper ℚ_[l] V
+    have h := (isCompact_closedBall (0 : V) 1).image continuous_subtypeVal
     convert h using 1
     ext x
     constructor
@@ -506,7 +506,7 @@ theorem unramified_of_levelAway : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Fiel
   have hfin := Ideal.finite_factors hne
   have hmem : ∀ v : Pl, v ∈ hfin.toFinset ↔ ((l * M : ℕ) : 𝓞 ℚ) ∈ v.asIdeal := by
     intro v
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
   refine ⟨hfin.toFinset, ?_, ?_⟩
   · intro v hv
     rw [hmem, Nat.cast_mul]
@@ -781,7 +781,7 @@ theorem UpperTheory.V.Z.Kato.WeilSphericalRecords.twoS :
     exact hV l u.l_odd Ω ι e u.e_pos W ha (hSrc l Ω ι e W u.l_odd u.e_pos ha hS)
   · rw [← hdt]
     obtain ⟨M, hM, hMk⟩ := UpperTheory.V.CF.kwAbs Ω (dt W).ker (TwDet.ker_open ha.cont ha.det2)
-      (Abelianization.commutator_subset_ker (dt W))
+      (Group.Abelianization.commutator_le_ker (dt W))
     have ha' := admissible_twist_by_det l Ω ι e W ha
     exact hV l u.l_odd Ω ι e u.e_pos _ ha'
       (hSrc l Ω ι e _ u.l_odd u.e_pos ha' (sphAt_tw hS hM fun s hs => hMk s hs))

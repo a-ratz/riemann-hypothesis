@@ -210,14 +210,14 @@ theorem exists_unit (x y z : ℕ) (hx : Nat.Coprime x (2 ^ (e + 2))) (hy : Nat.C
 
 theorem artinMap_first_eq_jacobiSym_of_modEq (u : (ZMod (2 ^ (e + 2) * q * d))ˣ) {y : ℕ} (hu : (u : ZMod (2 ^ (e + 2) * q * d)).val ≡ y [MOD q]) :
     (((art0 e hH u).1.1 : ℤˣ) : ℤ) = jacobiSym (y : ℤ) q := by
-  haveI := neZeroN e hH
+  have := neZeroN e hH
   have h : (art0 e hH u).1.1 = sgnN hH.1 (q_dvd e q d) u := rfl
   rw [h, sgnN_val]
   exact jac_congr hu
 
 theorem artinMap_second_eq_jacobiSym_of_modEq (u : (ZMod (2 ^ (e + 2) * q * d))ˣ) {y : ℕ} (hu : (u : ZMod (2 ^ (e + 2) * q * d)).val ≡ y [MOD d]) :
     (((art0 e hH u).1.2 : ℤˣ) : ℤ) = jacobiSym (y : ℤ) d := by
-  haveI := neZeroN e hH
+  have := neZeroN e hH
   have h : (art0 e hH u).1.2 = sgnN hH.2.1 (d_dvd e q d) u := rfl
   rw [h, sgnN_val]
   exact jac_congr hu
@@ -225,7 +225,7 @@ theorem artinMap_second_eq_jacobiSym_of_modEq (u : (ZMod (2 ^ (e + 2) * q * d))�
 theorem artinMap_dyadic_eq_of_modEq (u : (ZMod (2 ^ (e + 2) * q * d))ˣ) {y : ℕ}
     (hu : (u : ZMod (2 ^ (e + 2) * q * d)).val ≡ y [MOD 2 ^ (e + 2)]) (v : (ZMod (2 ^ (e + 2)))ˣ)
     (hv : (v : ZMod (2 ^ (e + 2))) = (y : ZMod (2 ^ (e + 2)))) : (art0 e hH u).2 = hcl e v := by
-  haveI := neZeroN e hH
+  have := neZeroN e hH
   have h1 : ZMod.unitsMap (two_dvd e q d) u = v := by
     apply Units.ext
     rw [hv]
@@ -246,7 +246,7 @@ theorem exists_art (g : FrobeniusOrbits.GG e) (x y z : ℕ) (v : (ZMod (2 ^ (e +
     rw [← ZMod.isUnit_iff_coprime, ← hv]
     exact v.isUnit
   have hy' : Nat.Coprime y q := by
-    haveI : NeZero q := ⟨hH.1.ne_zero⟩
+    have : NeZero q := ⟨hH.1.ne_zero⟩
     have h0 : jacobiSym (y : ℤ) q ≠ 0 := by
       rw [← hy]
       exact Units.ne_zero _
@@ -254,7 +254,7 @@ theorem exists_art (g : FrobeniusOrbits.GG e) (x y z : ℕ) (v : (ZMod (2 ^ (e +
     push_neg at h1
     rwa [Int.gcd_natCast_natCast] at h1
   have hz' : Nat.Coprime z d := by
-    haveI : NeZero d := ⟨hH.2.1.ne_zero⟩
+    have : NeZero d := ⟨hH.2.1.ne_zero⟩
     have h0 : jacobiSym (z : ℤ) d ≠ 0 := by
       rw [← hz]
       exact Units.ne_zero _
@@ -270,7 +270,7 @@ theorem exists_art (g : FrobeniusOrbits.GG e) (x y z : ℕ) (v : (ZMod (2 ^ (e +
 omit hH in
 theorem exists_rep (t : HGrp e) : ∃ (x : ℕ) (v : (ZMod (2 ^ (e + 2)))ˣ),
     (v : ZMod (2 ^ (e + 2))) = (x : ZMod (2 ^ (e + 2))) ∧ t = hcl e v := by
-  haveI : NeZero (2 ^ (e + 2)) := ⟨by positivity⟩
+  have : NeZero (2 ^ (e + 2)) := ⟨by positivity⟩
   obtain ⟨v, rfl⟩ := QuotientGroup.mk_surjective t
   exact ⟨(v : ZMod (2 ^ (e + 2))).val, v, (ZMod.natCast_zmod_val _).symm, rfl⟩
 

@@ -48,7 +48,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.trLevel :
     UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.TrLevel := by
   intro G _ _ _ K _ hK V _ _ ρ f K₁ K₂ h₂ hle h₁K hf hfd
   have h₁ : IsOpen (K₁ : Set G) := Subgroup.isOpen_mono hle h₂
-  haveI : Finite (K₁ ⧸ K₂.subgroupOf K₁) := GlobalTheory.TwTrLevel.finite_quot K K₁ K₂ hK h₁ h₂ h₁K
+  have : Finite (K₁ ⧸ K₂.subgroupOf K₁) := GlobalTheory.TwTrLevel.finite_quot K K₁ K₂ hK h₁ h₂ h₁K
   have hf₂ : IsHecke K₂ f := ⟨hf.1, fun k hk x => hf.2 k (hle hk) x⟩
   have stable : ∀ (H : Subgroup G), IsOpen (H : Set G) → IsHecke H f →
       ∀ v ∈ fixed ρ H, levOp ρ K H f LinearMap.id v ∈ fixed ρ H := fun H hH hfH v hv =>
@@ -59,8 +59,8 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.trLevel :
   have hW : fixed ρ K₁ ≤ fixed ρ K₂ := fun v hv => by
     rw [GlobalTheory.TwTrLevel.mem_fixed_iff] at hv ⊢
     exact fun k hk => hv k (hle hk)
-  haveI : FiniteDimensional ℂ (fixed ρ K₂) := hfd
-  haveI : FiniteDimensional ℂ (fixed ρ K₁) := Submodule.finiteDimensional_of_le hW
+  have : FiniteDimensional ℂ (fixed ρ K₂) := hfd
+  have : FiniteDimensional ℂ (fixed ρ K₁) := Submodule.finiteDimensional_of_le hW
   let incl : fixed ρ K₁ →ₗ[ℂ] fixed ρ K₂ := Submodule.inclusion hW
   let T : fixed ρ K₂ →ₗ[ℂ] fixed ρ K₁ :=
     ((levOp ρ K K₁ f LinearMap.id).restrict c₁) ∘ₗ

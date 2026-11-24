@@ -62,7 +62,7 @@ namespace GlobalTheory
 
 theorem _root_.GlobalTheory.ainf_isDomain_and_mu_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O], v.Integers O → ∀ (ε : PreTilt O p), IsPrimitiveRoot (_root_.GlobalTheory.Sandwich.root ε).untilt p → IsDomain (_root_.GlobalTheory.Sandwich.Ainf p O) ∧ _root_.GlobalTheory.Sandwich.mu ε ≠ 0 := by
   intro p _ C _ _ _ v O _ _ _ _ hv ε hprim
-  haveI : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
+  have : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
   refine ⟨by unfold _root_.GlobalTheory.Sandwich.Ainf; infer_instance, ?_⟩
   intro h
   unfold _root_.GlobalTheory.Sandwich.mu at h
@@ -135,7 +135,7 @@ theorem latt_mu_equiv : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlg
   have hμ : ∀ n, ghost p O n (Sandwich.mu ε) = 0 :=
     (_root_.GlobalTheory.PDivLat.ghost_values p C v O hv ε hε).2.2.1
   have hdom := GlobalTheory.ainf_isDomain_and_mu_ne_zero p C v O hv ε (by simpa [zeta] using hε 1)
-  haveI := hdom.1
+  have := hdom.1
   have hbij : Function.Bijective (toLatt hε hμ) := by
     constructor
     · intro a b hab

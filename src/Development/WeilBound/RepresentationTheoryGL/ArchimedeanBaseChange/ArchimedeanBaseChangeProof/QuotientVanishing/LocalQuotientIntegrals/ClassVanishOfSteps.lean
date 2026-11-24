@@ -105,7 +105,7 @@ theorem cV_embInf (v w : InfinitePlace E) (y : GL (Fin n) ℂ) :
 theorem cV_embInf_self (v : InfinitePlace E) (y : GL (Fin n) ℂ) :
     GeneralLinearGroup.map (cV v) (embInf n v y) = y := by
   classical
-  rw [cV_embInf, if_pos rfl]
+  rw [cV_embInf, ite_eq_left rfl]
 
 theorem pFin_embInf (v : InfinitePlace E) (y : GL (Fin n) ℂ) :
     GeneralLinearGroup.map (pFin E) (embInf n v y) = 1 := by
@@ -226,13 +226,13 @@ theorem deg_embInf (v : InfinitePlace E) (W : Submodule E (Fin n → E)) (g : GL
         ploc ((basisMat W).map v.embedding) (GeneralLinearGroup.map (cV v) x) else 0 := fun w => by
     by_cases h : w = v
     · subst h
-      rw [if_pos rfl, lognInf_eq, lognInf_eq, map_mul, cV_embInf_self]
+      rw [ite_eq_left rfl, lognInf_eq, lognInf_eq, map_mul, cV_embInf_self]
       ring
-    · rw [if_neg h, add_zero]
+    · rw [ite_eq_right h, add_zero]
       unfold lognInf
-      rw [frame_map_eq (cV w) _ x (by rw [map_mul, cV_embInf, if_neg h, one_mul])]
+      rw [frame_map_eq (cV w) _ x (by rw [map_mul, cV_embInf, ite_eq_right h, one_mul])]
   simp only [deg, degM, hfin, hinf, Finset.sum_add_distrib, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   ring
 
 end PositivityTheory.Rg.BcB.CV.LocalPlacePositivity
@@ -246,7 +246,7 @@ theorem PositivityTheory.Rg.BcB.CV.pf_Ploc : PositivityTheory.Rg.BcB.CV.Ploc := 
   · subst hW
     exact ⟨fun x => LocalPlacePositivity.ploc_empty _ (by simp) x, fun x => LocalPlacePositivity.degM_empty x _ (by simp)⟩
   · classical
-    rw [LocalPlacePositivity.cV_embInf, if_neg hv']
+    rw [LocalPlacePositivity.cV_embInf, ite_eq_right hv']
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.QuotientVanishing.LocalQuotientIntegrals.CVEmbInfSelf =====
@@ -274,7 +274,7 @@ theorem integrable_mul {G : Type*} [MeasurableSpace G] {μ : Measure G} {F : G �
     Integrable (fun g => F g * ((ρ g).toReal : ℂ)) μ := by
   refine ⟨(hF.mul (Complex.measurable_ofReal.comp hρ.ennreal_toReal)).aestronglyMeasurable, ?_⟩
   refine lt_of_le_of_lt (lintegral_mono fun g => ?_) h.lt_top
-  rw [enorm_mul]
+  rw [eNorm_mul]
   gcongr
   exact enorm_ofReal_toReal_le' _
 
@@ -364,8 +364,8 @@ theorem exists_measure {G H : Type} [Group G] [TopologicalSpace G] [IsTopologica
       left_inv := fun t => Subtype.ext (e.symm_apply_apply t)
       right_inv := fun s => Subtype.ext (e.apply_symm_apply s)
       map_mul' := fun a b => Subtype.ext (map_mul e (a : G) (b : G))
-      continuous_toFun := (e.continuous.comp continuous_subtype_val).subtype_mk _
-      continuous_invFun := (e.symm.continuous.comp continuous_subtype_val).subtype_mk _ }
+      continuous_toFun := (e.continuous.comp continuous_subtypeVal).subtype_mk _
+      continuous_invFun := (e.symm.continuous.comp continuous_subtypeVal).subtype_mk _ }
   refine ⟨ν.map f, inferInstance, ⟨?_⟩⟩
   have hf : Measurable f := f.continuous.measurable
   have hinv : Measurable (fun t : T => t⁻¹) := continuous_inv.measurable
@@ -501,7 +501,7 @@ theorem lintegral_indicator_ne_top (μ : Measure G) [μ.IsHaarMeasure]
   have : SecondCountableTopology T := TopologicalSpace.Subtype.secondCountableTopology (T : Set G)
   have : SigmaCompactSpace T := inferInstance
   have : SFinite ν := inferInstance
-  have hmcoe : Measurable (fun h : T => (h : G)) := measurable_subtype_coe
+  have hmcoe : Measurable (fun h : T => (h : G)) := measurable_subtypeVal
   have : ν.IsMulRightInvariant := by
     have : ν.inv.IsMulRightInvariant := inferInstance
     rwa [Measure.inv_eq_self] at this
@@ -537,7 +537,7 @@ theorem lintegral_indicator_ne_top (μ : Measure G) [μ.IsHaarMeasure]
   set V : Set T := (fun h : T => (h : G)) ⁻¹' interior U with hVdef
   have hVm : MeasurableSet V := hmcoe measurableSet_interior
   have hVpos : ν V ≠ 0 := by
-    have hVo : IsOpen V := isOpen_interior.preimage continuous_subtype_val
+    have hVo : IsOpen V := isOpen_interior.preimage continuous_subtypeVal
     have h1 : (1 : T) ∈ V := by
       show ((1 : T) : G) ∈ interior U
       simpa using mem_interior_iff_mem_nhds.mpr hU1
@@ -632,11 +632,11 @@ theorem main (μ : Measure G) [μ.IsHaarMeasure] (T : Subgroup G) (ν : Measure 
     refine ⟨by rw [quotLIntegral, dite_eq_left hex]; exact hfin, ?_⟩
     rw [quotIntegral, dite_eq_left hex]
     calc ‖∫ g, F g * ((hex.choose g).toReal : ℂ) ∂μ‖
-        = ‖∫ g, F g * ((hex.choose g).toReal : ℂ) ∂μ‖ₑ.toReal := (toReal_enorm _).symm
+        = ‖∫ g, F g * ((hex.choose g).toReal : ℂ) ∂μ‖ₑ.toReal := (toReal_eNorm _).symm
       _ ≤ (∫⁻ g, ‖F g‖ₑ * hex.choose g ∂μ).toReal := by
-          refine ENNReal.toReal_mono hfin ((enorm_integral_le_lintegral_enorm _).trans
+          refine ENNReal.toReal_mono hfin ((eNorm_integral_le_lintegral_eNorm _).trans
             (lintegral_mono fun g => ?_))
-          rw [enorm_mul]
+          rw [eNorm_mul]
           gcongr
           exact enorm_ofReal_toReal_le _
       _ ≤ (ENNReal.ofReal B * ∫⁻ g, S.indicator 1 g * hex.choose g ∂μ).toReal :=
@@ -691,15 +691,15 @@ end PositivityTheory.Rg.BcB.CV.AdelicTopology
 
 theorem PositivityTheory.Rg.BcB.CV.pf_AdTop : PositivityTheory.Rg.BcB.DegBdd → PositivityTheory.Rg.BcB.D4.RatDisc → PositivityTheory.Rg.BcB.CV.AdTop := by
   intro hD _ E _ _ _ n
-  haveI : T2Space (GA E n) := GlobalTheory.CompanionTheory.UnfoldCut.t2Space_adelicGL_cmField (E := E) (n := n)
-  haveI : T1Space (GA E n) := T2Space.t1Space
+  have : T2Space (GA E n) := GlobalTheory.CompanionTheory.UnfoldCut.t2Space_adelicGL_cmField (E := E) (n := n)
+  have : T1Space (GA E n) := T2Space.t1Space
   refine ⟨GlobalTheory.CompanionTheory.UnfoldCut.locallyCompact_GA, inferInstance, GlobalTheory.CompanionTheory.UnfoldCut.secondCountable_GA,
     GlobalTheory.CompanionTheory.KerTwFin.continuous_thetaA, fun W => ?_, fun d => ?_⟩
   · let _ : MeasurableSpace (GA E n) := borel _
     have : BorelSpace (GA E n) := ⟨rfl⟩
     exact ((hD E n).2 W).measurable
   · have := PositivityTheory.Rg.BcB.CV.AdelicTopology.discrete_ratCent d
-    exact ⟨Subgroup.isClosed_of_discrete, inferInstance, PositivityTheory.Rg.BcB.CV.AdelicTopology.countable_ratCent d⟩
+    exact ⟨Subgroup.isClosed_of_discreteTopology, inferInstance, PositivityTheory.Rg.BcB.CV.AdelicTopology.countable_ratCent d⟩
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.QuotientVanishing.LocalQuotientIntegrals.PAdTop =====
@@ -720,7 +720,7 @@ open PositivityTheory.Rg.BcB PositivityTheory.Rg.BcB.D4
 theorem exists_haar_inv {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [MeasurableSpace G]
     [BorelSpace G] [LocallyCompactSpace G] (hc : ∀ a b : G, a * b = b * a) :
     ∃ ν : Measure G, ν.IsHaarMeasure ∧ ν.IsInvInvariant := by
-  letI : CommGroup G := { (inferInstance : Group G) with mul_comm := hc }
+  let : CommGroup G := { (inferInstance : Group G) with mul_comm := hc }
   exact ⟨Measure.haar, inferInstance, Measure.IsHaarMeasure.isInvInvariant_of_regular _⟩
 
 theorem gamma_fin_zero (y : (Fin 0 → SignType) → ℝ) (a : Fin 0 → ℝ) : gam y a = 1 := by
@@ -756,19 +756,19 @@ theorem PositivityTheory.Rg.BcB.CV.pf_ClassVanish : PositivityTheory.Rg.BcB.D4.P
   refine ⟨max 0 C₀, ?_⟩
   intro _ _ μ _ τ r φ d hφ hsz hvc hτ hreg hne
   obtain ⟨hLC, hT2, hSC, -, -, -⟩ := hAT E n
-  haveI := hLC
-  haveI := hT2
-  haveI := hSC
+  have := hLC
+  have := hT2
+  have := hSC
   obtain ⟨m, Wof, hiso, huniq, hzero, hmeet, hmono, hperp⟩ := hPP E n d hreg
   obtain ⟨hcomm, a, hdegT, hadd, hrat0, hcont, hcpt⟩ := hTC E n d m Wof hiso huniq hzero hmeet hmono hreg
   obtain ⟨hle, hdisc, hclosed⟩ := hRD.1 E n d
-  haveI : LocallyCompactSpace (adCent d) := hclosed.locallyCompactSpace
-  haveI : BorelSpace (adCent d) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (adCent d) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : LocallyCompactSpace (adCent d) := hclosed.locallyCompactSpace
+  have : BorelSpace (adCent d) := Subtype.borelSpace _
+  have : SecondCountableTopology (adCent d) := TopologicalSpace.Subtype.secondCountableTopology _
   have hcommT : ∀ s t : adCent d, s * t = t * s := fun s t => Subtype.ext (hcomm s s.2 t t.2)
   obtain ⟨ν, hνH, hνI⟩ := ClassVanishing.exists_haar_inv hcommT
-  haveI := hνH
-  haveI := hνI
+  have := hνH
+  have := hνI
   have hmap : (ratIn d).map (adCent d).subtype = ratCent d := by
     rw [ratIn, Subgroup.subgroupOf_map_subtype, inf_of_le_left hle]
   set F : GA E n → ℂ := fun x => chiT τ x * φ (twConj (thetaA E n) x (ratGL E n d)) with hF
@@ -927,7 +927,7 @@ theorem PositivityTheory.Rg.BcB.CV.pf_CutInt : PositivityTheory.Rg.BcB.D4.KerFin
       refine ⟨c, hcC, ?_⟩
       rwa [twConj_mul_eq, twConj_ratGL] at hφx
     have hex : ∃ g', twConj (thetaE E n) g' d = twConj (thetaE E n) g d := ⟨g, rfl⟩
-    have hpick : pick (twConj (thetaE E n) g d) = hex.choose := dif_pos hex
+    have hpick : pick (twConj (thetaE E n) g d) = hex.choose := dite_eq_left hex
     set g₀ := hex.choose with hg₀
     have hg₀d : twConj (thetaE E n) g₀ d = twConj (thetaE E n) g d := hex.choose_spec
     have hcent : g * g₀⁻¹ ∈ twCent (thetaE E n) d := by
@@ -1620,7 +1620,7 @@ theorem PositivityTheory.Rg.BcB.CV.pf_QMap : PositivityTheory.Rg.BcB.D4.NormEq �
   have hρ' : IsQuotNormaliser (T.map e.toMonoidHom) ν' ρ' := by
     refine ⟨measurable_const.mul (hρ.1.comp e.symm.continuous.measurable), fun x => ?_⟩
     have hk : Measurable fun t : T => ρ ((t : G) * e.symm x) :=
-      hρ.1.comp (measurable_subtype_coe.mul_const _)
+      hρ.1.comp (measurable_subtypeVal.mul_const _)
     have h1 : ∫⁻ h : T.map e.toMonoidHom, ρ' ((h : G') * x) ∂ν' =
         (c : ℝ≥0∞)⁻¹ * ∫⁻ t, ρ ((t : G) * e.symm x) ∂(Measure.map φ.symm ν') := by
       rw [lintegral_map hk (show Measurable (⇑φ.symm) from φ.symm.continuous.measurable),
@@ -1721,7 +1721,7 @@ theorem quotIntegral_mul_right (hNE : NormEq) {T : Type} [Group T] [TopologicalS
     (s : T) : quotIntegral ν Γ μΓ (fun t => F (t * s)) = quotIntegral ν Γ μΓ F := by
   unfold quotIntegral
   by_cases hρ : ∃ ρ, IsQuotNormaliser Γ μΓ ρ
-  · rw [dif_pos hρ, dif_pos hρ]
+  · rw [dite_eq_left hρ, dite_eq_left hρ]
     have hρn := hρ.choose_spec
     have : ν.IsMulRightInvariant := ⟨fun g => by
       have h : (fun x => x * g) = (fun x => g * x) := funext fun x => hcomm x g
@@ -1735,7 +1735,7 @@ theorem quotIntegral_mul_right (hNE : NormEq) {T : Type} [Group T] [TopologicalS
     simp only [mul_inv_cancel_right] at h1
     rw [h1]
     exact hNE T ν Γ μΓ F _ _ hF hinv hρ' hρn
-  · rw [dif_neg hρ, dif_neg hρ]
+  · rw [dite_eq_right hρ, dite_eq_right hρ]
 
 end PositivityTheory.Rg.BcB.CV.VolumeFunction
 
@@ -1748,7 +1748,7 @@ theorem pf_Vfun : PositivityTheory.Rg.BcB.ChainSum → PositivityTheory.Rg.BcB.D
   intro hCS hRD hNE hQI hQA T _ _ _ _ _ _ _ _ ν _ Γ m a hcomm hdisc hac hadd hΓ hprop
   have := hdisc
   have : Countable Γ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  have hcl : IsClosed (Γ : Set T) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed (Γ : Set T) := Subgroup.isClosed_of_discreteTopology
   have : (Measure.count : Measure Γ).IsHaarMeasure := count_isHaar
   have : (Measure.count : Measure Γ).IsInvInvariant := count_isInv
   have hmeasF : ∀ y : (Fin m → SignType) → ℝ, Measurable fun t => (gam y (a t) : ℂ) := fun y =>
@@ -1780,7 +1780,7 @@ theorem pf_Vfun : PositivityTheory.Rg.BcB.ChainSum → PositivityTheory.Rg.BcB.D
       (Finset.mem_univ e)).1
   refine ⟨⟨?_, ?_, ?_⟩, ?_⟩
   · by_cases hρ : ∃ ρ, IsQuotNormaliser Γ (Measure.count : Measure Γ) ρ
-    · simp only [quotIntegral, dif_pos hρ]
+    · simp only [quotIntegral, dite_eq_left hρ]
       have h2 : Measurable fun p : ((Fin m → SignType) → ℝ) × T => (p.1, a p.2) :=
         measurable_fst.prodMk (hac.measurable.comp measurable_snd)
       have hj : Measurable fun p : ((Fin m → SignType) → ℝ) × T =>
@@ -1788,7 +1788,7 @@ theorem pf_Vfun : PositivityTheory.Rg.BcB.ChainSum → PositivityTheory.Rg.BcB.D
         (Complex.measurable_ofReal.comp ((hRD.2 m).comp h2)).mul
           (Complex.measurable_ofReal.comp ((hρ.choose_spec.1.ennreal_toReal).comp measurable_snd))
       exact (hj.stronglyMeasurable.integral_prod_right' (ν := ν)).measurable
-    · simp only [quotIntegral, dif_neg hρ]
+    · simp only [quotIntegral, dite_eq_right hρ]
       exact measurable_const
   · intro M
     obtain ⟨B, hB⟩ := key M

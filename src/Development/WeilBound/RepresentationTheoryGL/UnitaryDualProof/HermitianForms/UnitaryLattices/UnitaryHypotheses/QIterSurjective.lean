@@ -175,26 +175,26 @@ theorem emb_levi (n j : ℕ) (g : GL (Fin n) k) :
       Matrix (Fin (n + 1)) (Fin (n + 1)) k) a' b' = glEmbMat k n (g : Matrix (Fin n) (Fin n) k) a' b' := fun _ _ => rfl
   by_cases ha : (a : ℕ) < n
   · have ha' : (a : ℕ) < n + 1 := by omega
-    rw [dif_pos ha', dif_pos ha]
+    rw [dite_eq_left ha', dite_eq_left ha]
     by_cases hb : (b : ℕ) < n
     · have hb' : (b : ℕ) < n + 1 := by omega
-      rw [dif_pos hb', dif_pos hb, hl, glEmbMat_apply']
-      simp only [ha, hb, dif_pos]
-    · rw [dif_neg hb]
+      rw [dite_eq_left hb', dite_eq_left hb, hl, glEmbMat_apply']
+      simp only [ha, hb, dite_eq_left]
+    · rw [dite_eq_right hb]
       by_cases hb' : (b : ℕ) < n + 1
-      · rw [dif_pos hb', hl, glEmbMat_apply']
-        simp only [ha, hb, dif_pos, dif_neg, not_false_eq_true]
-      · rw [dif_neg hb']
-  · rw [dif_neg ha]
+      · rw [dite_eq_left hb', hl, glEmbMat_apply']
+        simp only [ha, hb, dite_eq_left, dite_eq_right, not_false_eq_true]
+      · rw [dite_eq_right hb']
+  · rw [dite_eq_right ha]
     by_cases ha' : (a : ℕ) < n + 1
-    · rw [dif_pos ha']
+    · rw [dite_eq_left ha']
       by_cases hb' : (b : ℕ) < n + 1
-      · rw [dif_pos hb', hl, glEmbMat_apply']
-        simp only [ha, dif_neg, not_false_eq_true]
+      · rw [dite_eq_left hb', hl, glEmbMat_apply']
+        simp only [ha, dite_eq_right, not_false_eq_true]
         simp only [Fin.ext_iff]
-      · rw [dif_neg hb']
+      · rw [dite_eq_right hb']
         split_ifs with h <;> first | rfl | (simp only [Fin.ext_iff] at h; omega)
-    · rw [dif_neg ha']
+    · rw [dite_eq_right ha']
 
 theorem derDict (ψ : AddChar k Circle) (n j : ℕ) {V : Type} [AddCommGroup V] [Module ℂ V]
     (π : Representation ℂ (GL (Fin (n + j + 1)) k) V) :

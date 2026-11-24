@@ -151,7 +151,7 @@ private theorem exists_mul_eq_one_of_dedekind_ideal_ne_bot {Ω : Type} [Field Ω
 theorem _root_.GlobalTheory.CompanionTheory.Relay.ideal_saturated_vector_bundle : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (Li : Type) [AddCommGroup Li] [Module Ω Li] (O : Type) [CommRing O] [IsDedekindDomain O] (σ : O →+* Ω) (𝔡 : Ideal O) (L : Lat ξ Li) (T : Set (Cpt ξ)) (r : ℕ) (V : Submodule Ω Li), Function.Injective σ → 𝔡 ≠ ⊥ → (∀ q ∈ T, ∀ a, σ a ∈ regAt ξ q) → L.IsVBOn T r V → Lat.IsVBOn (fun q => Submodule.span (regAt ξ q) {e | e ∈ V ∧ ∀ d ∈ 𝔡, σ d • e ∈ L q} : Lat ξ Li) T r V := by
   intro X Ω _ ξ Li _ _ O _ _ σ 𝔡 L T r V hinj h𝔡 hσ hL p hp
   obtain ⟨U₀, hpU₀, b, hbV, hb⟩ := hL p hp
-  haveI : IsLocalRing (regAt ξ p) :=
+  have : IsLocalRing (regAt ξ p) :=
     IsLocalRing.of_surjective' (genMap ξ p).rangeRestrict (genMap ξ p).rangeRestrict_surjective
   obtain ⟨d, hd, u, hu, v, hv, hdu⟩ := exists_mul_eq_one_of_dedekind_ideal_ne_bot O σ 𝔡 (regAt ξ p) (hσ p hp) hinj h𝔡
   obtain ⟨W₂, hpW₂, hW₂⟩ := exists_open_forall_mem_regAt' ξ p v hv
@@ -240,7 +240,7 @@ theorem sum_apply_smul_preDualBasis {Ω : Type} [Field Ω] {V : Type} [AddCommGr
     by_cases h : i = j
     · subst h
       simp
-    · rw [if_neg h, if_neg (Ne.symm h)]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
   conv_rhs => rw [← (preDualBasis B).sum_repr v]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   rw [← Module.Basis.coord_apply, hc]
@@ -269,9 +269,9 @@ theorem Lat.predualIn_isFrameAt {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp
       rw [LinearMap.sum_apply]
       simp only [LinearMap.smul_apply, apply_preDualBasis]
       rw [Finset.sum_eq_single j]
-      · rw [if_pos rfl, Subring.smul_def, smul_eq_mul, _root_.mul_one]
+      · rw [ite_eq_left rfl, Subring.smul_def, smul_eq_mul, _root_.mul_one]
       · intro b _ hb
-        rw [if_neg hb, smul_zero]
+        rw [ite_eq_right hb, smul_zero]
       · intro hj0
         exact absurd (Finset.mem_univ j) hj0
     rw [← hj, hj']
@@ -432,19 +432,19 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
   obtain ⟨hLat, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_isVB_of_smooth X Ω ξ t.G Li M hgen hsm
   obtain ⟨hfd, hrk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.EigRank.eig_finrank_label E H D l Xo c Y X Ω ξ f y₀ t m Li M ρ cst hj hs hact
   obtain ⟨hinj, hcard⟩ := _root_.GlobalTheory.CompanionTheory.Ar.labels_all_once E H l c
-  haveI := hfd
+  have := hfd
   let σ : CMType H ⊕ CMType H → (𝓞 E →+* Ω) := fun s' => cst.comp (labelEmb c s')
   have hσinj : Function.Injective σ := fun a b hab => hinj (RingHom.ext fun x => cst.injective (RingHom.congr_fun hab x))
   have hreg : ∀ (τ : 𝓞 E →+* Ω) (q : Cpt ξ) (a : 𝓞 E), τ a ∈ regAt ξ q :=
     fun τ q a => HcVb.integers_regular hN τ q a
-  letI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
+  let : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
 
   have hA : (M.eigLat ρ (σ s)).IsVBOn {q | ∀ l ∈ S, ¬ InFibre ξ l q} (labelRk D s) (eigSp ρ (σ s)) := by
     have h := (_root_.GlobalTheory.CompanionTheory.Ar.EigSplit.isVBOn_eigSp X Ω ξ Li E ρ M.lat {q | ∀ l ∈ S, ¬ InFibre ξ l q} (Module.finrank Ω Li)
       (CMType H ⊕ CMType H) σ hgen hσinj (by rw [← Nat.card_eq_fintype_card]; exact hcard)
       (HcVb.isVBOn_of_isVB hLat _)
       (fun p _ a e he => by
-        haveI := t.act.hom a
+        have := t.act.hom a
         exact HcVb.lat_stable M (t.act.act a) (ρ a) (hact a) p e he)
       (fun p _ s' a => hreg _ p a)
       (fun p hp => HcVb.unitAt_discr fun r hr hd => not_not.1 (hp r (hdisc r hr hd)))).1 s

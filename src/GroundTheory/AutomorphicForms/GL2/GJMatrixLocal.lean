@@ -99,7 +99,7 @@ theorem cosetInd_valBall_mem (N : ℤ) (a : F) : cosetInd (valBall F N) a ∈ sc
       AddSubgroup.add_mem_cancel_right _ hh]
   · refine HasCompactSupport.intro ((isCompact_valBall N).image (continuous_const_add a))
       fun x hx ↦ ?_
-    rw [cosetInd_apply, if_neg]
+    rw [cosetInd_apply, ite_eq_right]
     intro hxa
     exact hx ⟨x - a, hxa, add_sub_cancel a x⟩
 
@@ -171,7 +171,7 @@ include hψ
 omit [MeasurableSpace F] [BorelSpace F] in
 theorem continuous_char_sum_mul (y : ι → F) :
     Continuous fun x : ι → F ↦ (ψ (∑ i, x i * y i) : ℂ) :=
-  continuous_subtype_val.comp (hψ.comp
+  continuous_subtypeVal.comp (hψ.comp
     (continuous_finsetSum _ fun i _ ↦ (continuous_apply i).mul continuous_const))
 
 theorem integrable_mul_char_sum {f : (ι → F) → ℂ} (hf : Integrable f (localMeasurePi ψ))

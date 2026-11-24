@@ -90,10 +90,10 @@ theorem exists_isAvg_apply_eq : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [
     obtain ⟨m, b, c, -, -, -, hbc⟩ := _root_.GlobalTheory.TypeSum.kAvg_finite_rank n ε H σ h e he
     obtain ⟨Q, hQ⟩ := c3 e hc
     let F : Submodule ℂ H := Submodule.span ℂ (Set.range b)
-    haveI : FiniteDimensional ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range b)
-    haveI : FiniteDimensional ℂ (A ⊓ F : Submodule ℂ H) := Submodule.finiteDimensional_inf_right A F
+    have : FiniteDimensional ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range b)
+    have : FiniteDimensional ℂ (A ⊓ F : Submodule ℂ H) := Submodule.finiteDimensional_inf_right A F
     have hcl : IsClosed (Q ⁻¹' ((A ⊓ F : Submodule ℂ H) : Set H)) :=
-      (Submodule.closed_of_finiteDimensional _).preimage Q.continuous
+      (Submodule.isClosed_of_finiteDimensional _).preimage Q.continuous
     have hsub : (A : Set H) ⊆ Q ⁻¹' ((A ⊓ F : Submodule ℂ H) : Set H) := by
       intro x hx
       refine Submodule.mem_inf.2 ⟨?_, ?_⟩
@@ -104,7 +104,7 @@ theorem exists_isAvg_apply_eq : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [
     rw [← hQ]
     exact (Submodule.mem_inf.1 this).1
   obtain ⟨S, hS, hvS, hK⟩ := hv
-  haveI : FiniteDimensional ℂ (S ⊓ A : Submodule ℂ H) := Submodule.finiteDimensional_inf_left S A
+  have : FiniteDimensional ℂ (S ⊓ A : Submodule ℂ H) := Submodule.finiteDimensional_inf_left S A
   obtain ⟨w, hw, y, hy, hvwy⟩ := (S ⊓ A).exists_add_mem_mem_orthogonal v
   have hyS : y ∈ S := by
     have := S.sub_mem hvS (Submodule.mem_inf.1 hw).1

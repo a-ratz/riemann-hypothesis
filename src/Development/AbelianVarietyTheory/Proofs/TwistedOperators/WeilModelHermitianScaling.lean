@@ -82,7 +82,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 theorem exists_gen {n : ℕ} (G : Matrix (Fin n) (Fin n) ℂ) (m : ℝ → Matrix (Fin n) (Fin n) ℂ) (hc : Continuous m)
     (h0 : m 0 = 1) (hadd : ∀ s t, m (s + t) = m s * m t) (hG : ∀ t, (m t)ᴴ * G * m t = G) :
     ∃ Z : Matrix (Fin n) (Fin n) ℂ, Zᴴ * G + G * Z = 0 ∧ ∀ t : ℝ, m t = NormedSpace.exp (t • Z) := by
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have h := ((GlobalTheory.contDiff_of_continuous_oneParameter _ m hc h0 hadd).differentiable (by simp) 0).hasDerivAt
   set Z := deriv m 0
   refine ⟨Z, ?_, fun t => ?_⟩
@@ -129,7 +129,7 @@ theorem exists_expInf {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (g : ℝ �
   have key : ∀ τ, ∃ Z : Matrix (Fin V.rank) (Fin V.rank) ℂ, Zᴴ * gramAt D V τ + gramAt D V τ * Z = 0 ∧
       ∀ t : ℝ, infMat D.sp.cm.sig V.gram (θ τ) (g t) = NormedSpace.exp (t • Z) := fun τ =>
     exists_gen _ _ ((GlobalTheory.RealWeil.continuous_compAt hθ τ _ _).comp
-        ((Units.continuous_val.comp continuous_subtype_val).comp hc))
+        ((Units.continuous_val.comp continuous_subtypeVal).comp hc))
       (by rw [h0]; exact R.2.2.2.2.1 1 (one_mem _) τ) (fun s t => by rw [hadd, R.2.2.2.1])
       fun t => (GlobalTheory.T.adelicUnitary_action_at_real_place D θ hθ).1 V (g t) τ
   choose Z hZ hg using key
@@ -222,7 +222,7 @@ theorem exists_line (M : HSp D) {c : D.host.E} (hc : c ≠ 0) (Xs : GlobalTheory
   choose g h1 h2 using fun t : ℝ => exists_conjU M hc hJ (γ (Multiplicative.ofAdd t))
   refine ⟨g, h1, ?_, fun s t => ?_, fun t => ?_⟩
   · have h3 : Continuous fun t : ℝ => (γ (Multiplicative.ofAdd t)).1 :=
-      continuous_subtype_val.comp (hγ.1.comp continuous_ofAdd)
+      continuous_subtypeVal.comp (hγ.1.comp continuous_ofAdd)
     have h4 : Continuous fun t => Formalism.L2.Theta.matHom M (g t) := by
       simp only [h2]
       refine Units.continuous_iff.2 ⟨?_, ?_⟩

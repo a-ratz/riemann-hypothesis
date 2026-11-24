@@ -169,7 +169,7 @@ theorem dS_sum_pureA : ∀ (F : Type) [Field F] [NumberField F] [Invertible (2 :
   unfold dS
   rw [key]
   refine (HasDerivAt.deriv hT).trans ?_
-  simp only [Finset.sum_apply, GlobalTheory.WeilM.pureA, SchwartzMap.add_apply, SchwartzMap.smulLeftCLM_apply_apply hg,
+  simp only [Finset.sum_apply, GlobalTheory.WeilM.pureA, add_apply, SchwartzMap.smulLeftCLM_apply_apply hg,
     SchwartzMap.lineDerivOp_apply_eq_fderiv, smul_eq_mul]
   simp only [hL, ← hA]
   simp only [← hX, ← hY, ← hA, id, zero_smul, add_zero, one_smul, mul_zero, zero_mul, Complex.ofReal_zero, Complex.exp_zero,

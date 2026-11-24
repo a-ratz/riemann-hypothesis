@@ -198,12 +198,12 @@ lemma lintegral_coneFun (G : ℝ → ℝ≥0∞) (hG : Measurable G) :
     rw [hs, Real.sqrt_sq hr.le, mul_div_cancel_left₀ _ hr.ne']
     by_cases h1 : r < 1
     · have h2 : r ^ 2 < 1 := by nlinarith
-      rw [if_pos ⟨by positivity, h2⟩, indicator_of_mem (show r ∈ Iio (1 : ℝ) from h1)]
+      rw [ite_eq_left ⟨by positivity, h2⟩, indicator_of_mem (show r ∈ Iio (1 : ℝ) from h1)]
       rw [← mul_assoc, e1]
       simp only [Pi.one_apply, mul_one]
       ring
     · have h2 : ¬ r ^ 2 < 1 := by nlinarith
-      rw [if_neg (fun h => h2 h.2), indicator_of_notMem (show r ∉ Iio (1 : ℝ) from h1)]
+      rw [ite_eq_right (fun h => h2 h.2), indicator_of_notMem (show r ∉ Iio (1 : ℝ) from h1)]
       simp
 
 noncomputable def coneConst : ℝ≥0∞ :=
@@ -236,7 +236,7 @@ lemma volume_cone0 {s : Set ℝ} (hs : MeasurableSet s) :
     have hS0 : 0 ≤ S := by positivity
     unfold coneFun
     by_cases hc : 0 < S ∧ S < 1
-    · rw [if_pos hc]
+    · rw [ite_eq_left hc]
       have h0 : 0 < ‖y‖ := by rw [hn]; exact Real.sqrt_pos.2 hc.1
       have h1 : ‖y‖ < 1 := by
         rw [hn, ← Real.sqrt_one]; exact Real.sqrt_lt_sqrt hS0 hc.2
@@ -247,7 +247,7 @@ lemma volume_cone0 {s : Set ℝ} (hs : MeasurableSet s) :
       · have hy' : y ∉ {y : E3 | 0 < ‖y‖ ∧ ‖y‖ < 1 ∧ y 0 / ‖y‖ ∈ s} :=
           fun h => hy h.2.2
         rw [indicator_of_notMem hy', ← hn, indicator_of_notMem hy]
-    · rw [if_neg hc, indicator_of_notMem]
+    · rw [ite_eq_right hc, indicator_of_notMem]
       rintro ⟨h0, h1, -⟩
       apply hc
       rw [hn] at h0 h1
@@ -311,7 +311,7 @@ lemma map_inner_sphereMeasure {u : E3} (hu : ‖u‖ = 1) :
       sphereMeasure.map (fun n : S2 => inner ℝ (n : E3) u) s =
         K * volume.restrict (Ioo (-1 : ℝ) 1) s := by
     intro s hs
-    rw [Measure.map_apply hφ hs, sphereMeasure, Measure.smul_apply, smul_eq_mul,
+    rw [Measure.map_apply hφ hs, sphereMeasure, smul_apply, smul_eq_mul,
       Measure.toSphere_apply' _ (hφ hs)]
     rw [show (fun n : S2 => inner ℝ (n : E3) u) ⁻¹' s = {n : S2 | inner ℝ (n : E3) u ∈ s} from rfl,
       cone_eq, volume_cone hu hs, Measure.restrict_apply hs]
@@ -321,12 +321,12 @@ lemma map_inner_sphereMeasure {u : E3} (hu : ‖u‖ = 1) :
     apply ENNReal.eq_inv_of_mul_eq_one_left
     have h1 := key univ MeasurableSet.univ
     rw [Measure.map_apply hφ MeasurableSet.univ, preimage_univ, sphereMeasure,
-      Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel toSphere_univ_ne_zero
+      smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel toSphere_univ_ne_zero
       toSphere_univ_ne_top, Measure.restrict_apply_univ, Real.volume_Ioo] at h1
     rw [h1]
     norm_num
   ext s hs
-  rw [key s hs, hK, Measure.smul_apply, smul_eq_mul]
+  rw [key s hs, hK, smul_apply, smul_eq_mul]
 
 end ReciprocityTheory.ChartRestriction.G.AI.ArchimedeanConeVolume
 
@@ -377,7 +377,7 @@ theorem integral_sphere_isometry (L : E3 ≃ₗᵢ[ℝ] E3) (F : E3 → ℝ)
 theorem integrable_mul_inner {F : S2 → ℝ} (hF : Integrable F sphereMeasure) (v : E3) :
     Integrable (fun n : S2 => F n * inner ℝ (n : E3) v) sphereMeasure := by
   have hc : Continuous (fun n : S2 => inner ℝ (n : E3) v) :=
-    continuous_subtype_val.inner continuous_const
+    continuous_subtypeVal.inner continuous_const
   refine Integrable.mono' (hF.norm.mul_const ‖v‖)
     (hF.aestronglyMeasurable.mul hc.aestronglyMeasurable) (ae_of_all _ fun n => ?_)
   have hn : ‖(n : E3)‖ = 1 := norm_eq_of_mem_sphere n

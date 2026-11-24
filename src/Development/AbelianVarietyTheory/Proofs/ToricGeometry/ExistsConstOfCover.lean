@@ -133,10 +133,10 @@ theorem valAt'_gen_linComb (hv : ValLaws) {X Y : Scheme.{0}} (L : LB X) {K : Typ
   unfold LB.LinComb at hcj
   dsimp only at hcj
   simp only [map_mul, map_prod, map_zpow, Units.val_mul, Units.coe_prod,
-    Units.val_zpow_eq_zpow_val, Units.coe_map, MonoidHom.coe_coe] at hcj
+    Units.val_zpow_eq_zpow_val, Units.coe_map, MonoidHom.coe_ofClass] at hcj
   simp only [← he] at hcj
   unfold res pullU at hcj
-  simp only [Units.coe_map, MonoidHom.coe_coe] at hcj
+  simp only [Units.coe_map, MonoidHom.coe_ofClass] at hcj
   simp only [h3 _ _ _ _ hV] at hcj
   rw [hcj]
   congr 1
@@ -306,7 +306,7 @@ theorem thetaGrp_in_frame :
         cexp ((Real.pi : ℂ) * (z ⬝ᵥ Hm.mulVec (star l)) +
           (Real.pi : ℂ) / 2 * (l ⬝ᵥ Hm.mulVec (star l))) ^ k *
           cexp ((Real.pi : ℂ) * ((a : Fin P.g → ℂ) ⬝ᵥ Hm.mulVec (star l))) := by
-      rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+      rw [← exp_natCast_mul, ← exp_natCast_mul, ← Complex.exp_add]
       congr 1
       rw [add_dotProduct, smul_dotProduct, smul_eq_mul]
       have hkk : (k : ℂ) * (k : ℂ)⁻¹ = 1 := mul_inv_cancel₀ hk0

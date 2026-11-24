@@ -147,7 +147,7 @@ theorem gC_sum_conj {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Base D
   have h' := h
   simp only [LinearEquiv.coe_coe] at h'
   rw [matH_hOne, matH_hOne] at h'
-  exact (div_left_inj' hA).1 h'
+  exact (div_left_inj₀ hA).1 h'
 
 theorem phi_isom : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Base D cc δ) (n n' : ℕ)
     (z z' : TaylorLogMetric.VC D (n * 2) (n' * 2)),
@@ -216,13 +216,13 @@ theorem phi_embV_bas {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Base 
   funext p
   rw [phi_apply, bas, blk_embV_putB]
   by_cases h : p.1 = (ixE D n n' j).1
-  · rw [if_pos h, gC_xv]
+  · rw [ite_eq_left h, gC_xv]
     by_cases h2 : p.2 = (ixE D n n' j).2
     · have : p = ixE D n n' j := Prod.ext h h2
       subst this; simp
     · have : p ≠ ixE D n n' j := fun e => h2 (by rw [e])
       simp [h2, this]
-  · rw [if_neg h, B.gC.map_zero]
+  · rw [ite_eq_right h, B.gC.map_zero]
     have : p ≠ ixE D n n' j := fun e => h (by rw [e])
     simp [this]
 
@@ -629,7 +629,7 @@ theorem trace_xv (B : Base D cc δ) (w w' : Fin 4 × D.what₂.Tau) :
   by_cases hw : w = w'
   · subst hw
     simp
-  · rw [if_neg hw, map_zero]
+  · rw [ite_eq_right hw, map_zero]
     apply Finset.sum_eq_zero
     intro u _
     by_cases hu : u = w
@@ -642,7 +642,7 @@ theorem orthonormal_bas (B : Base D cc δ) (n n' : ℕ) : TaylorLogMetric.Orthon
   unfold bas
   rw [hYY_putB]
   by_cases hk : (ixE D n n' i).1 = (ixE D n n' j).1
-  · rw [if_pos hk, trace_xv]
+  · rw [ite_eq_left hk, trace_xv]
     congr 1
     apply propext
     constructor
@@ -650,7 +650,7 @@ theorem orthonormal_bas (B : Base D cc δ) (n n' : ℕ) : TaylorLogMetric.Orthon
       exact (ixE D n n').injective (Prod.ext hk h)
     · intro h
       rw [h]
-  · rw [if_neg hk, if_neg]
+  · rw [ite_eq_right hk, ite_eq_right]
     intro h
     exact hk (by rw [h])
 
@@ -676,7 +676,7 @@ theorem matrix_eq_sum_putB (B : Base D cc δ) (n n' : ℕ) (M : Matrix (Fin (n' 
   subst hi hj
   simp only [Matrix.sum_apply, Matrix.smul_apply, putB_posE, smul_ite, smul_zero]
   rw [Fintype.sum_eq_single p.1]
-  · simp only [if_true]
+  · simp only [ite_true]
     have := congrFun (sum_g_smul_xv B (fun a => M (posE n n' (p.1, a)).1 (posE n n' (p.1, a)).2)) p.2
     rw [Finset.sum_apply] at this
     simp only [Pi.smul_apply] at this
@@ -684,7 +684,7 @@ theorem matrix_eq_sum_putB (B : Base D cc δ) (n n' : ℕ) (M : Matrix (Fin (n' 
   · intro k hk
     apply Finset.sum_eq_zero
     intro w _
-    rw [if_neg (Ne.symm hk)]
+    rw [ite_eq_right (Ne.symm hk)]
 
 theorem onB_bas : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Base D cc δ) (n n' : ℕ),
     StandardLatticesGL3.OnB D (bas B n n') := by
@@ -751,7 +751,7 @@ theorem blockVacuum_coordinate_eq_coordinateEquiv_numbering (D : D7) (cc : Ideal
   have hI := B.isomOK (blk D k z) (emb4 D (xv B w))
   rw [blockFourfold_hOne_eq_hOne] at hI
   change (matH (hOne B.L (Fin 4 × D.what₂.Tau))) (B.gC (blk D k z)) (B.gC (emb4 D (xv B w))) = _ at hI
-  rw [matH_hOne, matH_hOne, div_left_inj' hA, hg] at hI
+  rw [matH_hOne, matH_hOne, div_left_inj₀ hA, hg] at hI
   rw [h1, ← hI, phi_apply]
   simp [Pi.single_apply]
   rfl
@@ -980,14 +980,14 @@ theorem exists_pow_card_eq_span (𝔞 𝔟 : Submodule (𝓞 E) E) (h : 𝔞 * �
   have hIJ : I * J = 1 := by
     apply FractionalIdeal.coeToSubmodule_injective
     show ((I * J : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) = ((1 : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E)
-    rw [FractionalIdeal.coe_mul, FractionalIdeal.coe_one]
+    rw [FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_one]
     exact h
   let U : (FractionalIdeal (𝓞 E)⁰ E)ˣ := Units.mkOfMulEqOne I J hIJ
   have h1 := pow_card_eq_one (x := ClassGroup.mk E U)
   rw [← map_pow, ClassGroup.mk_eq_one_iff] at h1
   obtain ⟨a, ha⟩ := h1.principal
   refine ⟨a, ?_⟩
-  rw [← ha, Units.val_pow_eq_pow_val, FractionalIdeal.coe_pow]
+  rw [← ha, Units.val_pow_eq_pow_val, FractionalIdeal.coeToSubmodule_pow]
   rfl
 
 end General
@@ -1000,7 +1000,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem star_eq_conj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
   apply D.host.φ₀.injective
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   show D.host.φ₀ (IsCMField.complexConj D.host.E x) = _
   rw [NumberField.IsCMField.complexEmbedding_complexConj, Formalism.HC.HostAx.conjE_apply]
 
@@ -1110,9 +1110,9 @@ namespace GlobalTheory.SelfDualDetNorm
 
 theorem star_eq_conj (D : D7) (x : D.host.E) :
     (letI := D.host.cmStar; star x) = D.host.conj x := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   apply D.host.φ₀.injective
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   show D.host.φ₀ (IsCMField.complexConj D.host.E x) = _
   rw [NumberField.IsCMField.complexEmbedding_complexConj, Formalism.HC.HostAx.conjE_apply]
 
@@ -1129,7 +1129,7 @@ theorem isSdLat_of_isSDLat {E : Type} [Field E] [NumberField E] [StarRing E] {n 
 theorem detId_normOne : ∀ (D : D7) (N : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)),
     StandardLatticesGL3.SD D L → TaylorLogMetric.N1 D (TaylorLogMetric.detId D (StandardLatticesGL3.stdL D N) L) := by
   intro D N L hL
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨J, hJ, hIJ⟩ := GlobalTheory.CharValCompare.normOne_detI (isSdLat_of_isSDLat L hL)
   refine ⟨J, fun x => by rw [hJ, star_eq_conj]; exact Iff.rfl, ?_⟩
   exact hIJ

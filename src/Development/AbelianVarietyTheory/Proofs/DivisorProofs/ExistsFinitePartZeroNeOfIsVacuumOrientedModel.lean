@@ -61,8 +61,8 @@ variable {D : D7}
 
 theorem continuous_finTmul (e : D.host.E) :
     Continuous fun x : Af D.host.F => (pairA D.host.F 0 x ⊗ₜ[D.host.F] e : AE D) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul _ _
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : ContinuousSMul (AF D.host.F) (AE D) := IsModuleTopology.toContinuousSMul _ _
   have h1 : Continuous fun x : Af D.host.F => pairA D.host.F 0 x :=
     continuous_const.prodMk continuous_id
   have h2 : Continuous fun x : Af D.host.F => pairA D.host.F 0 x • ((1 : AF D.host.F) ⊗ₜ[D.host.F] e : AE D) :=
@@ -132,10 +132,10 @@ theorem continuous_single {m n : ℕ} (i : Fin m) (j : Fin n) :
   refine continuous_pi fun a => continuous_pi fun b => ?_
   by_cases h : i = a ∧ j = b
   · obtain ⟨rfl, rfl⟩ := h
-    simp only [Matrix.single_apply, and_self, if_true]
+    simp only [Matrix.single_apply, and_self, ite_true]
     exact continuous_id
   · have : ∀ v : AE D, (Matrix.single i j v : Matrix (Fin m) (Fin n) (AE D)) a b = 0 := fun v => by
-      rw [Matrix.single_apply, if_neg h]
+      rw [Matrix.single_apply, ite_eq_right h]
     simpa only [this] using continuous_const
 
 def singleHom {m n : ℕ} (i : Fin m) (j : Fin n) : AE D →+ Matrix (Fin m) (Fin n) (AE D) where

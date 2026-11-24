@@ -158,7 +158,7 @@ private theorem dec_unr {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
       ((Ine (F := ℚ) A).subgroupOf (Dec (F := ℚ) A) ⊔ Subgroup.zpowers fr).topologicalClosure = ⊤) ∧
     ∀ m : ℕ, m ≠ 0 → ∃ U : Subgroup (Dec (F := ℚ) A), IsOpen (U : Set (Dec (F := ℚ) A)) ∧
       (Ine (F := ℚ) A).subgroupOf (Dec (F := ℚ) A) ≤ U ∧ U.index = m := by
-  haveI : Fact v.Prime := ⟨hv⟩
+  have : Fact v.Prime := ⟨hv⟩
   obtain ⟨w, hw, hAw⟩ := GlobalTheory.DecLocal.exists_place_below (p := v) (F := ℚ) A hA
   obtain ⟨j, rfl⟩ := (Loc.decEmb (F := ℚ) (Ω := Ω) (v := v)).1 A w hAw hw
   obtain ⟨h1, h2, h3, -, -, -, -⟩ := Loc.iotaFacts (Ω := Ω) j
@@ -186,9 +186,9 @@ private theorem dec_unr {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
     refine sup_le_sup_right ?_ _
     rintro _ ⟨s, hs', rfl⟩
     exact (hI s).2 hs'
-  · haveI : NeZero m := ⟨hm⟩
-    letI : TopologicalSpace (Multiplicative (ZMod m)) := ⊥
-    haveI : DiscreteTopology (Multiplicative (ZMod m)) := ⟨rfl⟩
+  · have : NeZero m := ⟨hm⟩
+    let : TopologicalSpace (Multiplicative (ZMod m)) := ⊥
+    have : DiscreteTopology (Multiplicative (ZMod m)) := ⟨rfl⟩
     obtain ⟨u, u1, u2, u3⟩ := Loc.frobFree σ hσ (Multiplicative (ZMod m)) (Multiplicative.ofAdd 1)
     have hu : Function.Surjective (u.comp e.symm.toMonoidHom) := fun y => by
       refine ⟨e (σ ^ (Multiplicative.toAdd y).val), ?_⟩
@@ -259,7 +259,7 @@ private theorem loc_diag (l : ℕ) [hl : Fact l.Prime] (O : Type) [CommRing O] [
   have h4 := hd.trans (Subgroup.card_subgroup_dvd_card (I.map t))
   rw [Nat.card_fun, Nat.card_units] at h4
   have h5 := hl.out.dvd_of_dvd_pow h4
-  haveI := Fintype.ofFinite (ResidueField O)
+  have := Fintype.ofFinite (ResidueField O)
   obtain ⟨n, -, hn⟩ := FiniteField.card (ResidueField O) l
   have h6 : l ∣ Nat.card (ResidueField O) := by
     rw [Nat.card_eq_fintype_card, hn]
@@ -275,13 +275,13 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.locCondQ :
   have hA := hD.pl_over q hqp
   obtain ⟨f1, -, f3, -, -, f6, -, -, -, -, -, f12, -⟩ := facts D hD
   obtain ⟨-, hfin, hlm, -⟩ := abelian₂.dvr_finite l c.O
-  haveI : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
+  have : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]; exact hlm)
   have h2 : IsUnit (2 : c.O) := by
     obtain ⟨-, -, -, -, -, -, -, -, h⟩ := dvrFacts l c.O
     exact_mod_cast h 2 fun hd => hD.l_odd ((Nat.prime_dvd_prime_iff_eq hl.out Nat.prime_two).1 hd)
-  haveI : IsGalois ℚ Ω := {}
-  haveI : CompactSpace (D.Gp q) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
+  have : IsGalois ℚ Ω := {}
+  have : CompactSpace (D.Gp q) := isCompact_iff_compactSpace.1 (isClosed_Dec _).isCompact
   obtain ⟨hfr, hU⟩ := dec_unr hqp (D.pl q) hA
   have e1 : rb.comp (locHom D.SP (D.pl q)) = D.rbar.comp (D.Gp q).subtype := by rw [← hrb]; rfl
   have e2 : r0.hom.comp (locHom D.SP (D.pl q)) = D.r0.comp (D.Gp q).subtype := by rw [← hr0]; rfl
@@ -310,8 +310,8 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.locCondQ :
       have := (f6 0).trans (f6 1).symm
       exact congrArg (fun φ => MonoidHom.comp φ (D.Gp q).subtype) this)
     (rb.comp (locHom D.SP (D.pl q))) (r0.comap _ (continuous_locHom D.SP (D.pl q))) e2
-    (by rw [e1]; exact f12.preimage continuous_subtype_val) ((D.Ip q).subgroupOf (D.Gp q))
-    ((isClosed_Ine _).preimage continuous_subtype_val) hfr (fun n => hU _ (pow_ne_zero n hl.out.ne_zero))
+    (by rw [e1]; exact f12.preimage continuous_subtypeVal) ((D.Ip q).subgroupOf (D.Gp q))
+    ((isClosed_Ine _).preimage continuous_subtypeVal) hfr (fun n => hU _ (pow_ne_zero n hl.out.ne_zero))
     (by
       rw [← e3]
       intro n hn
@@ -448,16 +448,16 @@ theorem UpperTheory.nonempty_local_frames_of_good_data :
   obtain ⟨rb, r0, hb, h0, nb, n0, H⟩ := descend D hD
   obtain ⟨-, -, f3, -, -, hrev, -⟩ := facts D hD
   obtain ⟨-, hfin, hlm, -⟩ := abelian₂.dvr_finite l c.O
-  haveI : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
+  have : CharP (ResidueField c.O) l := (CharP.charP_iff_prime_eq_zero hl.out).2 (by
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]; exact hlm)
   have h2 : IsUnit (2 : c.O) := by
     obtain ⟨-, -, -, -, -, -, -, -, h⟩ := dvrFacts l c.O
     exact_mod_cast h 2 fun hd => hD.l_odd ((Nat.prime_dvd_prime_iff_eq hl.out Nat.prime_two).1 hd)
-  haveI : IsGalois ℚ Ω := {}
-  haveI hcl := isClosed_NS Ω D.SP
-  haveI : CompactSpace D.Gam := inferInstance
-  haveI : T2Space D.Gam := inferInstance
-  haveI : TotallyDisconnectedSpace D.Gam := totDisc_quot _ hcl
+  have : IsGalois ℚ Ω := {}
+  have hcl := isClosed_NS Ω D.SP
+  have : CompactSpace D.Gam := inferInstance
+  have : T2Space D.Gam := inferInstance
+  have : TotallyDisconnectedSpace D.Gam := totDisc_quot _ hcl
   have hs : Function.Surjective (toGS Ω D.SP) := QuotientGroup.mk_surjective
   have hb' : ∀ g, rb (toGS Ω D.SP g) = D.rbar g := fun g => DFunLike.congr_fun hb g
   have h0' : ∀ g, r0.hom (toGS Ω D.SP g) = D.r0 g := fun g => DFunLike.congr_fun h0 g

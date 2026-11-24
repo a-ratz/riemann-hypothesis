@@ -287,7 +287,7 @@ theorem piW_inner {z : Fin (2 * r + k + 1) → ℂ} {u : Fin k → ℝ} {π : Fo
   rw [hhi, h1] at hm
   have hs : ∀ x, π h (π h⁻¹ x) = x := fun x => by
     have h3 := congrArg (fun T : Wp →L[ℂ] Wp => T x) hm
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at h3
+    simp only [ContinuousLinearMap.comp_apply, one_apply_eq_self] at h3
     exact h3.symm
   let L : Wp →ₗᵢ[ℂ] Wp := { toLinearMap := (π h : Wp →ₗ[ℂ] Wp), norm_map' := hnorm h hh }
   calc ⟪η, π h w⟫_ℂ = ⟪L (π h⁻¹ η), L w⟫_ℂ := by
@@ -360,7 +360,7 @@ theorem sigma_inner {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 
 
   have hsg : ∀ w, σ g (σ g⁻¹ w) = w := fun w => by
     have := congrArg (fun T : H →L[ℂ] H => T w) hm
-    simp only [ContinuousLinearMap.comp_apply, h1, ContinuousLinearMap.one_apply] at this
+    simp only [ContinuousLinearMap.comp_apply, h1, one_apply_eq_self] at this
     exact this.symm
   have hn : ∀ w, ‖σ g w‖ = ‖w‖ := fun w => by
     have := hnorm _ hm1 w

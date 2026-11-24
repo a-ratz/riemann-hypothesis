@@ -95,7 +95,7 @@ theorem exists_summable_decay {κ : Type} [Fintype κ] {R : (κ → FiniteAdeleR
         ‖R (fun i => algebraMap F (FiniteAdeleRing (𝓞 F) F) (ξ i))‖ / (1 + ‖(fun i => mixedEmbedding F (ξ i)) + a‖) ^ m := by
   obtain ⟨B, hB⟩ := hR.1.continuous.bounded_above_of_compact_support hR.2
   obtain ⟨N, hN, hK⟩ := exists_nat_mul_integral_of_isCompact F hR.2.isCompact
-  haveI := discreteTopology_denomLattice F κ hN
+  have := discreteTopology_denomLattice F κ hN
   set L := denomLattice F κ N
   refine ⟨Module.finrank ℤ L + 1, fun a => ?_⟩
   set m := Module.finrank ℤ L + 1

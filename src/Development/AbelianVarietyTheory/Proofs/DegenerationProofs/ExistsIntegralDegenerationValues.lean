@@ -142,7 +142,7 @@ variable (F : Type) [Field F] [Algebra (FractionRing R) F]
 
 theorem exists_ext (S : ValuationSubring F) (hS : ∀ r : R, algebraMap (FractionRing R) F (algebraMap R _ r) ∈ S)
     (x : TF (R := R) F ⟶ D.P.A) : ∃ x₀ : Sp S ⟶ D.P.A.left, spMap S.subtype ≫ x₀ = x.left := by
-  haveI := D.P.isAb.proper
+  have := D.P.isAb.proper
   have hE : ValuativeCriterion.Existence D.P.A.hom := by
     have h : UniversallyClosed D.P.A.hom := inferInstance
     rw [UniversallyClosed.eq_valuativeCriterion] at h

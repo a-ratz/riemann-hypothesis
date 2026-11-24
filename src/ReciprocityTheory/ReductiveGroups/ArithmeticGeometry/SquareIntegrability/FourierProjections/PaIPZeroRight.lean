@@ -71,7 +71,7 @@ theorem paD_smul (α : ι →₀ ℕ) (a : ℂ) {H : EuclideanSpace ℂ ι → �
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [iteratedFDeriv_const_smul_apply (h.contDiffAt.of_le (by exact_mod_cast le_top))]
-  simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 theorem paD_zero (α : ι →₀ ℕ) : paD α (0 : EuclideanSpace ℂ ι → ℂ) = 0 := by

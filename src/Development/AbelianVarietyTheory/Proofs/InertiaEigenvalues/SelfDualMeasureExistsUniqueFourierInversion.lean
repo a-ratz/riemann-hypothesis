@@ -140,8 +140,8 @@ theorem isTest_fourB {F : Type} [NontriviallyNormedField F] [IsUltrametricDist F
 
 theorem selfDual_exists_unique_isTest : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (V : Type) [AddCommGroup V] [Module F V] [Module.Finite F V] [TopologicalSpace V] [IsModuleTopology F V] [MeasurableSpace V] [BorelSpace V] (β : LinearMap.BilinForm F V), β.IsSymm → β.Nondegenerate → (∃! μ : Measure V, SelfDual μ (fun x y => ψ (β x y))) ∧ ∀ μ : Measure V, μ.IsAddHaarMeasure → ∀ f, IsTest f → IsTest (fourB μ (fun x y => ψ (β x y)) f) := by
   intro F E _ _ _ _ hU ψ hψ V _ _ _ _ _ _ _ β hs hn
-  haveI := hU.ultraF
-  haveI := hU.lcF
+  have := hU.ultraF
+  have := hU.lcF
   obtain ⟨_, _, _, _, -⟩ := EtMeas.top_facts F V
   obtain ⟨-, hl⟩ := GlobalTheory.JR.exists_small_dual_lattices F ψ hψ V β hs hn
   obtain ⟨M, N, -, hMo, hMc, -, -, -, -⟩ := hl Set.univ Filter.univ_mem

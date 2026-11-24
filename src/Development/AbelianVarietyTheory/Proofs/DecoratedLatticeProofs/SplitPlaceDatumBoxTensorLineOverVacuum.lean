@@ -112,7 +112,7 @@ theorem exists_nsmul_rat_mul (S : HSp D) {T T' : HSp D} (M : Matrix (Fin T'.rank
 
 theorem isLattice_span {L : HSp D} {ζ : Fin L.rank → D.host.E} (h : IsLineVec L ζ) :
     Submodule.IsFullLattice D.host.E (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) := by
-  haveI : Submodule.IsLattice D.host.E (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) :=
+  have : Submodule.IsLattice D.host.E (Submodule.span (NumberField.RingOfIntegers D.host.E) {ζ} : Lat L) :=
     Submodule.IsLattice.of_fg D.host.E (Submodule.fg_span_singleton ζ)
   refine ⟨?_⟩
   rw [Submodule.span_span_of_tower]

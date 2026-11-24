@@ -106,7 +106,7 @@ theorem fractionalIdeal_exists_int_not_mem_of_count_eq_zero
     rw [← Associates.mk_le_mk_iff_dvd, Associates.mk_pow,
       Associates.prime_pow_dvd_iff_le hJne hv] at h2
     omega
-  rw [Ideal.dvd_iff_le, SetLike.not_le_iff_exists] at hnot
+  rw [Ideal.dvd_iff_le, IsConcreteLE.not_le_iff_exists] at hnot
   obtain ⟨s, hsJ1, hsv⟩ := hnot
   refine ⟨s, hsv, ?_⟩
   have hsa : s * a ∈ J := by
@@ -161,7 +161,7 @@ theorem hatSelfDual {V : HSp D} {Λ : Submodule (𝓞 D.host.E) (Fin V.rank → 
       IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
     intro V Λ hΛ
     exact Formalism.IndefR.Datum.IsSelfDualC.isFullLattice V Λ hΛ
-  letI : Submodule.IsFullLattice D.host.E Λ := hfull V Λ hΛ
+  let : Submodule.IsFullLattice D.host.E Λ := hfull V Λ hΛ
   refine GlobalTheory.ParahoricLift.hatL_selfDual_gen (GlobalTheory.Member.cF D) D.sp.cm.sig h3 V.gram Λ hΛ.1.fg Submodule.IsFullLattice.span_eq_top hcc hG hdet
     (fun v => ?_) h1 h2
   rw [hΛ.2 v]

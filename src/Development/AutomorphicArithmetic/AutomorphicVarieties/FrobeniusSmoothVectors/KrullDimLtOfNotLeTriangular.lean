@@ -144,7 +144,7 @@ private theorem psi_pow (S : Space O F n) (v : F.V) (i : Fin n) (g : F.Gv v) (q 
     (h : F.Ψ (F.loc v g) ^ q = 1) : S.ψB v i g ^ q - 1 ∈ S.mB := by
   obtain ⟨-, hbar, -⟩ := S.lift
   have h2 := hbar.2 v i g
-  simp only [NRep.map, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_coe,
+  simp only [NRep.map, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map, MonoidHom.coe_ofClass,
     RingHom.id_apply] at h2
   show ((S.ψB v i g ^ q - 1 : S.B) : S.R) ∈ maximalIdeal S.R
   rw [← res_eq_zero_iff O S.R]
@@ -166,7 +166,7 @@ private theorem space_psiB_apply_mul (S : Space O F n) (v : F.V) (i : Fin n) (g 
 private theorem natCard_units_residueField_coprime : (Nat.card (ResidueField O)ˣ).Coprime l := by
   classical
   have hl : l.Prime := Fact.out
-  letI : Fintype (ResidueField O) := Fintype.ofFinite _
+  let : Fintype (ResidueField O) := Fintype.ofFinite _
   obtain ⟨m, -, hm⟩ := FiniteField.card (ResidueField O) l
   rw [Nat.card_eq_fintype_card, Fintype.card_units, hm]
   apply Nat.Coprime.symm
@@ -185,17 +185,17 @@ private theorem lam_le (hF : F.Ok C₀) (hn : n = 2 ∨ n = 3) (S : Space O F n)
     (hu : ∀ v i a, S.ψB v i (u v a) - 1 ∈ Q) : S.lamId ≤ Q := by
   classical
   obtain ⟨hco, hmax⟩ := co_B hF hn S
-  haveI := hco
-  haveI : Q.IsPrime := hQ
-  haveI : Nontrivial (S.B ⧸ Q) := Ideal.Quotient.nontrivial_iff.mpr hQ.ne_top
-  haveI : IsLocalRing (S.B ⧸ Q) := IsLocalRing.of_surjective' (Ideal.Quotient.mk Q) Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom (Ideal.Quotient.mk Q) :=
+  have := hco
+  have : Q.IsPrime := hQ
+  have : Nontrivial (S.B ⧸ Q) := Ideal.Quotient.nontrivial_iff.mpr hQ.ne_top
+  have : IsLocalRing (S.B ⧸ Q) := IsLocalRing.of_surjective' (Ideal.Quotient.mk Q) Ideal.Quotient.mk_surjective
+  have : IsLocalHom (Ideal.Quotient.mk Q) :=
     Function.Surjective.isLocalHom (Ideal.Quotient.mk Q) Ideal.Quotient.mk_surjective
   let f0 : ResidueField O →+* S.B ⧸ Q :=
     Ideal.Quotient.lift (maximalIdeal O) ((Ideal.Quotient.mk Q).comp (algebraMap O S.B)) (fun a ha => by
       rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem]
       exact hO (Ideal.mem_map_of_mem _ ha))
-  haveI : CharP (S.B ⧸ Q) l := charP_of_injective_ringHom f0.injective l
+  have : CharP (S.B ⧸ Q) l := charP_of_injective_ringHom f0.injective l
   have hmapm : ∀ x ∈ S.mB, Ideal.Quotient.mk Q x ∈ maximalIdeal (S.B ⧸ Q) := by
     intro x hx
     rw [← hmax] at hx
@@ -244,7 +244,7 @@ private theorem dim_B (hF : F.Ok C₀) (hn : n = 2 ∨ n = 3) (S : Space O F n) 
     ∃ m : ℕ, ringKrullDim (S.B ⧸ p) ≤ m ∧ m + F.dv v ≤ n * F.d + 2 := by
   classical
   obtain ⟨hco, hmax⟩ := co_B hF hn S
-  haveI := hco
+  have := hco
   choose u a₀ hu1 hu2 hgen using hF.gen
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   let ι := Unit ⊕ Unit ⊕ {x : Σ w, Fin n × Fin (F.dv w) // ¬(x.1 = v ∧ x.2.1 = j)}
@@ -315,7 +315,7 @@ end
 theorem UpperTheory.V.Fr.l52 :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (x : Ideal S.A) (L : S.Loc x), ∀ I : Ideal S.B, S.FinLam I → ∀ v i j, i ≠ j → ∀ P : Ideal L.R, P.IsPrime → L.ρ.OffTri P → I ≤ L.π P → L.ρ.Coin P v i j → ringKrullDim (L.R ⧸ P) + F.dv v ≤ (n * F.d + 6 : ℕ) ∧ ((maximalIdeal O).map (algebraMap O L.R) ≤ P → ringKrullDim (L.R ⧸ P) + F.dv v ≤ (n * F.d + 5 : ℕ)) := by
   intro l _ O _ _ _ _ F C₀ n hF hn S x L I hI v i j hij P hP hoff hIP hcoin
-  haveI := hP
+  have := hP
   have hrho := loc_rho hF hn S x L
   have hiff := hrho.2.2.1 P
   have hη : (L.im P).IsPrime := Ideal.comap_isPrime _ P

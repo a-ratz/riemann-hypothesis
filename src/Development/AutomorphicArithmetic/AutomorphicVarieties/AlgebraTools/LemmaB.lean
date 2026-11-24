@@ -163,14 +163,14 @@ private theorem UpperTheory.V.AlgebraTools.len_fg_quot_tors {A : Type} [CommRing
     simp
   have h3 := Module.length_le_of_surjective _ hsurj
   rw [hker, add_zero, h2] at h1
-  exact ne_top_of_le_ne_top (ENat.coe_ne_top _) (h3.trans h1)
+  exact ne_top_of_le_ne_top (ENat.natCast_ne_top _) (h3.trans h1)
 
 theorem UpperTheory.V.AlgebraTools.len_fg_quot :
     ∀ {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] (H : Type) [AddCommGroup H] [Module A H] [Module.Finite A H], ∃ c : ℕ, Module.length A (Submodule.torsion A H) = c ∧ ∀ j : ℕ, ((Module.finrank A H * j : ℕ) : ℕ∞) ≤ Module.length A (H ⧸ maximalIdeal A ^ j • (⊤ : Submodule A H)) ∧ Module.length A (H ⧸ maximalIdeal A ^ j • (⊤ : Submodule A H)) ≤ ((Module.finrank A H * j + c : ℕ) : ℕ∞) := by
   intro A _ _ _ H _ _ _
   classical
   let Tor := Submodule.torsion A H
-  haveI : Module.Free A (H ⧸ Tor) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free A (H ⧸ Tor) := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis A (H ⧸ Tor)
   have hm : Module.finrank A (H ⧸ Tor) = Module.finrank A H :=
     finrank_quotient_eq_of_le_torsion le_rfl
@@ -321,7 +321,7 @@ theorem UpperTheory.V.AlgebraTools.lemma_B :
       have hfin : Module.length A (LinearMap.ker g) ≠ ⊤ := by
         intro htop
         rw [htop, top_add, top_le_iff] at h3
-        exact ENat.coe_ne_top _ h3
+        exact ENat.natCast_ne_top _ h3
       obtain ⟨a, ha⟩ := ENat.ne_top_iff_exists.mp hfin
       rw [← ha] at h3 ⊢
       norm_cast at h3 ⊢

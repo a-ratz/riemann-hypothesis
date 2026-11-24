@@ -75,7 +75,7 @@ theorem _root_.GlobalTheory.QNorm.exists_approx_mod_squares :
     · exact isOpen_lt continuous_const (((continuous_apply σ).comp continuous_snd).mul continuous_const)
   have hne : U.Nonempty := by
     refine ⟨(fun v => (y v)⁻¹, z), ?_⟩
-    simp only [hUdef, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [hUdef, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     refine ⟨fun v => ?_, fun σ => mul_self_pos.2 (hz σ)⟩
     rw [inv_mul_cancel₀ (hy v), sub_self, norm_zero, lt_min_iff]
     have h4 := (map_ne_zero (algebraMap F ((v : HeightOneSpectrum (𝓞 F)).adicCompletion F))).2
@@ -83,7 +83,7 @@ theorem _root_.GlobalTheory.QNorm.exists_approx_mod_squares :
     rw [map_ofNat] at h4
     exact ⟨norm_pos_iff.2 h4, one_pos⟩
   obtain ⟨x, hx⟩ := (_root_.GlobalTheory.LocalQuad.denseRange_finite_real F S).exists_mem_open hU hne
-  simp only [hUdef, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq] at hx
+  simp only [hUdef, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq] at hx
   obtain ⟨hxS, hxR⟩ := hx
   by_cases hx0 : x = 0
   · subst hx0

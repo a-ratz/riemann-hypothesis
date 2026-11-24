@@ -213,7 +213,7 @@ omit [NumberField E] [IsCMField E] in
 theorem det_of_ne_zero {v : Fin r → Fin r → E} (hv : LinearIndependent E v) :
     (Matrix.of v).det ≠ 0 :=
   ((Matrix.isUnit_iff_isUnit_det _).1
-    ((Matrix.linearIndependent_rows_iff_isUnit (A := Matrix.of v)).1 hv)).ne_zero
+    ((linearIndependent_row_iff_isUnit (A := Matrix.of v)).1 hv)).ne_zero
 
 theorem det_gramOf_ne_zero {G : Matrix (Fin r) (Fin r) E} (hG : G.det ≠ 0)
     {v : Fin r → Fin r → E} (hv : LinearIndependent E v) : (gramOf G v).det ≠ 0 := by

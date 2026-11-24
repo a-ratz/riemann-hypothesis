@@ -232,15 +232,15 @@ theorem etale_prime_le_map_of_unique (B A : Type) [CommRing B] [CommRing A] [Alg
       rintro J ⟨hJ1, hJ2⟩
       exact (hQ J hJ2 hJ1).ge
 
-  haveI := hP
-  letI : Field (B ⧸ P) := Ideal.Quotient.field P
-  haveI : Algebra.FormallyUnramified B (A ⧸ I) :=
+  have := hP
+  let : Field (B ⧸ P) := Ideal.Quotient.field P
+  have : Algebra.FormallyUnramified B (A ⧸ I) :=
     Algebra.FormallyUnramified.comp B A (A ⧸ I)
-  haveI : Algebra.FormallyUnramified (B ⧸ P) (A ⧸ I) :=
+  have : Algebra.FormallyUnramified (B ⧸ P) (A ⧸ I) :=
     Algebra.FormallyUnramified.of_restrictScalars B (B ⧸ P) (A ⧸ I)
-  haveI : Algebra.EssFiniteType B (A ⧸ I) := Algebra.EssFiniteType.comp B A (A ⧸ I)
-  haveI : Algebra.EssFiniteType (B ⧸ P) (A ⧸ I) := Algebra.EssFiniteType.of_comp B (B ⧸ P) (A ⧸ I)
-  haveI : IsReduced (A ⧸ I) := Algebra.FormallyUnramified.isReduced_of_field (B ⧸ P) (A ⧸ I)
+  have : Algebra.EssFiniteType B (A ⧸ I) := Algebra.EssFiniteType.comp B A (A ⧸ I)
+  have : Algebra.EssFiniteType (B ⧸ P) (A ⧸ I) := Algebra.EssFiniteType.of_comp B (B ⧸ P) (A ⧸ I)
+  have : IsReduced (A ⧸ I) := Algebra.FormallyUnramified.isReduced_of_field (B ⧸ P) (A ⧸ I)
   intro x hx
   rw [← hrad] at hx
   obtain ⟨n, hn⟩ := hx
@@ -279,15 +279,15 @@ theorem localFlat_dvd_descends : ∀ (B D : Type) [CommRing B] [CommRing D] [Alg
   set P : Ideal B := Q.comap (algebraMap B D) with hP
   let φ : Localization.AtPrime P →+* Localization.AtPrime Q :=
     Localization.localRingHom P Q (algebraMap B D) rfl
-  letI : Algebra (Localization.AtPrime P) (Localization.AtPrime Q) := φ.toAlgebra
+  let : Algebra (Localization.AtPrime P) (Localization.AtPrime Q) := φ.toAlgebra
   have hφ : ∀ x : B, φ (algebraMap B (Localization.AtPrime P) x) = algebraMap B (Localization.AtPrime Q) x := by
     intro x
     simp [φ, Localization.localRingHom_to_map, IsScalarTower.algebraMap_apply B D (Localization.AtPrime Q)]
   have hfl : φ.Flat := RingHom.Flat.localRingHom (RingHom.flat_algebraMap_iff.mpr inferInstance) Q P rfl
-  haveI : Module.Flat (Localization.AtPrime P) (Localization.AtPrime Q) := hfl
-  haveI : IsLocalHom (algebraMap (Localization.AtPrime P) (Localization.AtPrime Q)) :=
+  have : Module.Flat (Localization.AtPrime P) (Localization.AtPrime Q) := hfl
+  have : IsLocalHom (algebraMap (Localization.AtPrime P) (Localization.AtPrime Q)) :=
     (inferInstance : IsLocalHom φ)
-  haveI : Module.FaithfullyFlat (Localization.AtPrime P) (Localization.AtPrime Q) :=
+  have : Module.FaithfullyFlat (Localization.AtPrime P) (Localization.AtPrime Q) :=
     Module.FaithfullyFlat.of_flat_of_isLocalHom
   have key : algebraMap B (Localization.AtPrime P) b ∈
       (Ideal.span {f}).map (algebraMap B (Localization.AtPrime P)) := by
@@ -338,7 +338,7 @@ theorem primes_above_finite {A : Type*} [CommRing A] (I : Ideal A) [IsArtinianRi
   refine ⟨((IsArtinianRing.setOfPred_isPrime_finite (A ⧸ I)).image
     (Ideal.comap (Ideal.Quotient.mk I))).subset fun Q hQ => ?_, fun Q hQ hIQ => ?_⟩
   · exact ⟨_, (key Q hQ.1 hQ.2).1, (key Q hQ.1 hQ.2).2⟩
-  · haveI := (key Q hQ hIQ).1
+  · have := (key Q hQ hIQ).1
     have hm := IsArtinianRing.isMaximal_of_isPrime (Q.map (Ideal.Quotient.mk I))
     rw [← (key Q hQ hIQ).2]
     exact Ideal.comap_isMaximal_of_surjective _ Ideal.Quotient.mk_surjective
@@ -346,7 +346,7 @@ theorem primes_above_finite {A : Type*} [CommRing A] (I : Ideal A) [IsArtinianRi
 theorem isArtinianRing_quot_span (B : Type*) [CommRing B] [IsDedekindDomain B] (f : B)
     (hf : f ≠ 0) : IsArtinianRing (B ⧸ Ideal.span {f}) := by
   have hr0 : f ∈ nonZeroDivisors B := mem_nonZeroDivisors_of_ne_zero hf
-  haveI : IsArtinian B (B ⧸ Ideal.span {f}) :=
+  have : IsArtinian B (B ⧸ Ideal.span {f}) :=
     (isFiniteLength_iff_isNoetherian_isArtinian.mp
       (isFiniteLength_quotient_span_singleton B hr0)).2
   exact isArtinian_of_tower B inferInstance
@@ -354,10 +354,10 @@ theorem isArtinianRing_quot_span (B : Type*) [CommRing B] [IsDedekindDomain B] (
 theorem isArtinianRing_fibre (B D : Type*) [CommRing B] [CommRing D] [Algebra B D]
     [Algebra.Etale B D] (P : Ideal B) [P.IsMaximal] :
     IsArtinianRing (D ⧸ P.map (algebraMap B D)) := by
-  letI : Field (B ⧸ P) := Ideal.Quotient.field P
-  haveI : Algebra.Etale (B ⧸ P) (D ⧸ P.map (algebraMap B D)) :=
+  let : Field (B ⧸ P) := Ideal.Quotient.field P
+  have : Algebra.Etale (B ⧸ P) (D ⧸ P.map (algebraMap B D)) :=
     Algebra.Etale.of_equiv (Algebra.TensorProduct.quotIdealMapEquivQuotTensor D P).symm
-  haveI : Module.Finite (B ⧸ P) (D ⧸ P.map (algebraMap B D)) :=
+  have : Module.Finite (B ⧸ P) (D ⧸ P.map (algebraMap B D)) :=
     Algebra.FormallyUnramified.finite_of_free _ _
   exact IsArtinianRing.of_finite (B ⧸ P) _
 
@@ -365,7 +365,7 @@ theorem exists_isolating (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRin
     [Algebra B D] [Algebra.Etale B D] (f : B) (hf : f ≠ 0) (Q : Ideal D) (hQ : Q.IsMaximal) :
     ∃ g : D, g ∉ Q ∧ ∀ Q' : Ideal D, Q'.IsPrime → algebraMap B D f ∈ Q' → g ∉ Q' → Q' = Q := by
   classical
-  haveI := isArtinianRing_quot_span B f hf
+  have := isArtinianRing_quot_span B f hf
   obtain ⟨hBfin, hBmax⟩ := primes_above_finite (Ideal.span {f})
   set S : Set (Ideal D) := {Q' | Q'.IsPrime ∧ algebraMap B D f ∈ Q'} with hS
   set T : Set (Ideal B) := {P | P.IsPrime ∧ Ideal.span {f} ≤ P} with hT
@@ -378,8 +378,8 @@ theorem exists_isolating (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRin
   have hfib : ∀ P ∈ T, {Q' : Ideal D | Q'.IsPrime ∧ P.map (algebraMap B D) ≤ Q'}.Finite ∧
       ∀ Q' : Ideal D, Q'.IsPrime → P.map (algebraMap B D) ≤ Q' → Q'.IsMaximal := by
     rintro P ⟨hP, hfP⟩
-    haveI := hBmax P hP hfP
-    haveI := isArtinianRing_fibre B D P
+    have := hBmax P hP hfP
+    have := isArtinianRing_fibre B D P
     exact primes_above_finite _
   have hSfin : S.Finite := (hBfin.biUnion fun P hP => (hfib P hP).1).subset hsub
   have hSmax : ∀ Q' ∈ S, Q'.IsMaximal := fun Q' hQ' => by
@@ -392,7 +392,7 @@ theorem exists_isolating (B D : Type) [CommRing B] [IsDedekindDomain B] [CommRin
   choose! x hxmem hxnot using hch
   refine ⟨∏ Q' ∈ hSfin.toFinset.filter (· ≠ Q), x Q', ?_, ?_⟩
   · intro h
-    haveI := hQ.isPrime
+    have := hQ.isPrime
     obtain ⟨Q', hQ', hmem⟩ := Ideal.IsPrime.prod_mem_iff.mp h
     rw [Finset.mem_filter, Set.Finite.mem_toFinset] at hQ'
     exact hxnot Q' hQ'.1 hQ'.2 hmem
@@ -686,8 +686,8 @@ theorem etale_away_quotient_eq_localization :
       exact J.sub_mem h3 (hQJ h2)
   obtain ⟨g, hgQ, hQ'⟩ := GlobalTheory.T.isolate_maximal_among_primes_containing_etale B D f hf Q hQmax
   refine ⟨g, ?_⟩
-  haveI : Algebra.Etale D (Localization.Away g) := Algebra.Etale.of_isLocalizationAway g
-  haveI : Algebra.Etale B (Localization.Away g) := Algebra.Etale.comp B D (Localization.Away g)
+  have : Algebra.Etale D (Localization.Away g) := Algebra.Etale.of_isLocalizationAway g
+  have : Algebra.Etale B (Localization.Away g) := Algebra.Etale.comp B D (Localization.Away g)
   have hφ : ∀ b : B, algebraMap B (Localization.Away g) b =
       algebraMap D (Localization.Away g) (algebraMap B D b) := fun b =>
     IsScalarTower.algebraMap_apply B D (Localization.Away g) b
@@ -791,7 +791,7 @@ theorem isIndEtale_of_model (X E Y G F : Type) [CommRing X] [CommRing E] [CommRi
     GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale ((algebraMap Y F).comp (algebraMap X Y)) := by
   have h1 := GlobalTheory.IndEtaleCancel.isIndEtale_of_etale_of_isIndEtale X E Y h
   have h2 := GlobalTheory.isIndEtale_tensorProduct_left E Y G h1
-  letI : Algebra G F :=
+  let : Algebra G F :=
     ((e : Y ⊗[E] G →+* F).comp (Algebra.TensorProduct.includeRight : G →ₐ[E] Y ⊗[E] G).toRingHom).toAlgebra
   let e' : G ⊗[E] Y ≃ₐ[G] F :=
     AlgEquiv.ofRingEquiv (f := (Algebra.TensorProduct.comm E G Y).toRingEquiv.trans e.toRingEquiv)
@@ -816,15 +816,15 @@ theorem isIndEtale_etale_comp {X Y F : Type} [CommRing X] [CommRing Y] [CommRing
     GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (g.comp f) := by
   have hf' := hf
   obtain ⟨J, _, _, D, s, t, hs, hj⟩ := hf'
-  letI : Algebra Y F := g.toAlgebra
-  haveI : Algebra.Etale Y F := hg
+  let : Algebra Y F := g.toAlgebra
+  have : Algebra.Etale Y F := hg
   obtain ⟨i, G, _, _, hG, ⟨e⟩⟩ :=
     GlobalTheory.EtaleDescent.exists_etale_model_of_isColimit J D (Cocone.mk (CommRingCat.of Y) t) hs F
-  letI : Algebra (D.obj i) Y := (t.app i).hom.toAlgebra
-  letI : Algebra X (D.obj i) := (s.app i).hom.toAlgebra
-  letI : Algebra X Y := f.toAlgebra
-  haveI : Algebra.Etale X (D.obj i) := (hj i).1
-  haveI : IsScalarTower X (D.obj i) Y := IsScalarTower.of_algebraMap_eq (fun x =>
+  let : Algebra (D.obj i) Y := (t.app i).hom.toAlgebra
+  let : Algebra X (D.obj i) := (s.app i).hom.toAlgebra
+  let : Algebra X Y := f.toAlgebra
+  have : Algebra.Etale X (D.obj i) := (hj i).1
+  have : IsScalarTower X (D.obj i) Y := IsScalarTower.of_algebraMap_eq (fun x =>
     (congrArg (fun φ : CommRingCat.of X ⟶ CommRingCat.of Y => φ.hom x) (hj i).2).symm)
   exact isIndEtale_of_model X (D.obj i) Y G F e hf
 
@@ -834,8 +834,8 @@ theorem isIndEtale_comp : ∀ (X Y Z : Type) [CommRing X] [CommRing Y] [CommRing
       MorphismProperty.isFinitelyPresentable.{0} CommRingCat.{0} := by
     intro X Y f hf
     refine CommRingCat.isFinitelyPresentable_hom f ?_
-    letI := f.hom.toAlgebra
-    haveI : Algebra.Etale X Y := hf
+    let := f.hom.toAlgebra
+    have : Algebra.Etale X Y := hf
     exact RingHom.finitePresentation_algebraMap.2 inferInstance
   obtain ⟨J, _, _, D, s, t, hs, hj⟩ := hg
   unfold GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale
@@ -906,8 +906,8 @@ theorem GlobalTheory.HensMax.exists_strictHens_of_maximal : ∀ (B : Type) [Comm
   intro B _ P _ hsep
   obtain ⟨S, _, _, hH, hloc, -, -, hbij, ι, _, _, _, Si, hmono, hcov, hSi⟩ :=
     GlobalTheory.Henselisation.exists_henselisation (Localization.AtPrime P)
-  letI : Algebra B S := ((algebraMap (Localization.AtPrime P) S).comp (algebraMap B (Localization.AtPrime P))).toAlgebra
-  haveI : IsScalarTower B (Localization.AtPrime P) S := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra B S := ((algebraMap (Localization.AtPrime P) S).comp (algebraMap B (Localization.AtPrime P))).toAlgebra
+  have : IsScalarTower B (Localization.AtPrime P) S := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   refine ⟨S, inferInstance, inferInstance, ⟨hH, ?_⟩, ?_, ?_⟩
   · exact GlobalTheory.HensMax.isSepClosed_of_ringEquiv (RingEquiv.ofBijective _ hbij)
   · have hRS : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale (algebraMap (Localization.AtPrime P) S) := by
@@ -987,7 +987,7 @@ theorem exists_etale_kill_of_indEt : ∀ (q : ℕ) (B O : Type) [CommRing B] [Co
   obtain ⟨k, f, hk⟩ := (GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity q (D ⋙ Under.forget _) _ hc' n i).2 j _ hqj hyj
   erw [← pull_comp] at hk
   have hwk : (D.obj j).hom ≫ (D.map f).right = (D.obj k).hom := by simpa using Under.w (D.map f)
-  letI : Algebra B (D.obj k).right := (D.obj k).hom.hom.toAlgebra
+  let : Algebra B (D.obj k).right := (D.obj k).hom.hom.toAlgebra
   refine ⟨(D.obj k).right, inferInstance, this, het k, ⟨(ι.app k).right.hom, fun b => ?_⟩, ?_⟩
   · have hw : (D.obj k).hom ≫ (ι.app k).right = CommRingCat.ofHom (algebraMap B O) := by
       simpa using Under.w (ι.app k)
@@ -1036,7 +1036,7 @@ theorem dies_on_etale_with_point (q : ℕ) [NeZero q] (B : Type) [CommRing B] (h
   have h0 : pull _ (spMap (algebraMap B O)) _ _ y = 0 := Subsingleton.elim _ _
   obtain ⟨D, _, _, _, φ, hD⟩ := GlobalTheory.T.vanishes_on_etale_neighbourhood q B O hq hInd m i y h0
   obtain ⟨hH, -⟩ := hSH
-  haveI : IsLocalRing O := hH.toIsLocalRing
+  have : IsLocalRing O := hH.toIsLocalRing
   obtain ⟨hP, hres⟩ := hO (IsLocalRing.maximalIdeal O) inferInstance
   refine ⟨D, inferInstance, inferInstance, inferInstance, (IsLocalRing.maximalIdeal O).comap φ, ?_, ?_, ?_, hD⟩
   · exact Ideal.comap_isPrime _ _
@@ -1096,7 +1096,7 @@ end GlobalTheory.EtaleProd
 open GlobalTheory.EtaleProd in
 theorem GlobalTheory.etale_prod : ∀ (B A₁ A₂ : Type) [CommRing B] [CommRing A₁] [CommRing A₂] [Algebra B A₁] [Algebra B A₂], Algebra.Etale B A₁ → Algebra.Etale B A₂ → Algebra.Etale B (A₁ × A₂) := by
   intro B A₁ A₂ _ _ _ _ _ h₁ h₂
-  haveI := etale_fam B A₁ A₂ h₁ h₂
+  have := etale_fam B A₁ A₂ h₁ h₂
   exact Algebra.Etale.of_equiv
     (AlgEquiv.ofRingEquiv (R := B) (f := RingEquiv.piFinTwo (fam A₁ A₂)) fun _ => rfl)
 end -- clump:auto
@@ -1170,15 +1170,15 @@ theorem residueField_localization_atPrime_isSepClosed_of_finiteType :
       (P : Ideal B) [P.IsMaximal],
       IsSepClosed (IsLocalRing.ResidueField (Localization.AtPrime P)) := by
   intro k B _ _ _ _ _ P _
-  letI : Field (B ⧸ P) := Ideal.Quotient.field P
-  haveI : Module.Finite k (B ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ P)
-  haveI : Algebra.IsIntegral k (B ⧸ P) := inferInstance
+  let : Field (B ⧸ P) := Ideal.Quotient.field P
+  have : Module.Finite k (B ⧸ P) := finite_of_finite_type_of_isJacobsonRing k (B ⧸ P)
+  have : Algebra.IsIntegral k (B ⧸ P) := inferInstance
   let f : k ≃+* (B ⧸ P) := RingEquiv.ofBijective (algebraMap k (B ⧸ P))
     IsAlgClosed.algebraMap_bijective_of_isIntegral
-  haveI : IsAlgClosed (B ⧸ P) := IsAlgClosed.of_ringEquiv k (B ⧸ P) f
+  have : IsAlgClosed (B ⧸ P) := IsAlgClosed.of_ringEquiv k (B ⧸ P) f
   let e : (B ⧸ P) ≃+* IsLocalRing.ResidueField (Localization.AtPrime P) :=
     (IsLocalization.AtPrime.equivQuotMaximalIdeal P (Localization.AtPrime P)).toRingEquiv
-  haveI : IsAlgClosed (IsLocalRing.ResidueField (Localization.AtPrime P)) :=
+  have : IsAlgClosed (IsLocalRing.ResidueField (Localization.AtPrime P)) :=
     IsAlgClosed.of_ringEquiv _ _ e
   infer_instance
 
@@ -1261,8 +1261,8 @@ theorem onePoint (hq : IsUnit (q : k)) (f : B) (hf : f ≠ 0) (m i : ℤ) (hm : 
 theorem exists_nbhd_pull_eq_zero : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ¬ IsUnit f → ∀ (m i : ℤ), 1 ≤ m → ∀ y : Ht q (sp B) m i, ∃ (A' : Type) (_ : CommRing A') (_ : Algebra B A') (_ : Algebra.Etale B A'), IsNbhd B A' f ∧ pull _ (spMap (algebraMap B A')) _ _ y = 0 := by
   intro q _ k B _ _ _ _ _ _ hq f hf hfu m i hm y
   let Pt := {P : Ideal B // P.IsMaximal ∧ f ∈ P}
-  haveI : Finite Pt := (GlobalTheory.T.finite_maximal_containing B f hf).to_subtype
-  letI : Fintype Pt := Fintype.ofFinite Pt
+  have : Finite Pt := (GlobalTheory.T.finite_maximal_containing B f hf).to_subtype
+  let : Fintype Pt := Fintype.ofFinite Pt
   let K : Pt → Ideal B := fun x => locKer f x.1 x.2.1.isPrime
   have key : ∀ T : Finset Pt, T.Nonempty → ∃ (A : Type) (_ : CommRing A) (_ : Algebra B A) (_ : Algebra.Etale B A),
       (∀ a : A, ∃ b : B, a - algebraMap B A b ∈ Ideal.span {algebraMap B A f}) ∧

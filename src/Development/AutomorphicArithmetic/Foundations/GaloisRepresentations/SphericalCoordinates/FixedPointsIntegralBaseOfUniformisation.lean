@@ -128,7 +128,7 @@ theorem UpperTheory.Gal.W2.fixedPoints_integral_base_of_uniformisation :
   have hAt : ∀ x : CxPts (sZ X' k) (RingHom.id ℂ), ∀ hx : x.1 ≫ c₁.pw k = x.1 ≫ c₂.tw α,
       W1.IsTan (D.n - 1 + k * D.g) (c₁.pw k) (c₂.tw α) h₁ h₂ x (At x) := by
     intro x hx
-    simp only [At, dif_pos hx]
+    simp only [At, dite_eq_left hx]
     exact (hTan x hx).choose_spec
   let PD : (B : LKCx.Form G) → PDic L B.β := fun B => (hPDE p D G L ha hm B).some
   let RD : (B : LKCx.Form G) → RDic L v B.β ρ t₀ := fun B => (hRDE p D G L ha hm v hs t₀ ht ρ hsig B).some
@@ -219,7 +219,7 @@ theorem UpperTheory.Gal.W2.fixedPoints_integral_base_of_uniformisation :
     obtain ⟨Fl, hFl, -, hAll⟩ := hLoc q a i P j hper hco y hy
     have hEq : hfin.toFinset.filter (fun x => π x = x') = Fl := by
       ext x
-      simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq, hFl x]
+      simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, hFl x]
       constructor
       · rintro ⟨hx, he⟩
         refine ⟨?_, hx⟩

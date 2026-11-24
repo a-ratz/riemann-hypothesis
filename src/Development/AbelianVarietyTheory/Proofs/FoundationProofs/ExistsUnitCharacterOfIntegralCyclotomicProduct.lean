@@ -79,5 +79,5 @@ theorem GlobalTheory.LocChar.unit_of_integral :
     rw [Subgroup.coe_mul]
     exact hmul g g.2 h h.2
   · have hc : Continuous ((Dec (F := ℚ) A : Set (G ℚ Ω)).restrict k) :=
-      continuousOn_iff_continuous_restrict.mp hcont
+      continuousOn_iff_continuous_domRestrict.mp hcont
     exact hc.subtype_mk (fun g => (hint g g.2).1)

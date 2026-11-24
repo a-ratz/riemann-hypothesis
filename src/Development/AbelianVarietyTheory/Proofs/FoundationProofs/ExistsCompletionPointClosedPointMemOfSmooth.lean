@@ -109,10 +109,10 @@ theorem _root_.GlobalTheory.exists_lift_of_smooth_of_isAffineOpen [Smooth f] {U 
     apply Spec.map_injective
     rw [← cancel_mono hU.fromSpec, Spec.map_comp, Spec.map_comp, Category.assoc, Category.assoc,
       IsAffineOpen.SpecMap_appLE_fromSpec f hU hV hVU, hb, reassoc_of% ha, h]
-  letI : Algebra Γ(S, U) Γ(X, V) := (f.appLE U V hVU).hom.toAlgebra
-  letI : Algebra Γ(S, U) B := b.hom.toAlgebra
-  letI : Algebra Γ(S, U) C := (b ≫ π).hom.toAlgebra
-  haveI : Algebra.Smooth Γ(S, U) Γ(X, V) := hsm
+  let : Algebra Γ(S, U) Γ(X, V) := (f.appLE U V hVU).hom.toAlgebra
+  let : Algebra Γ(S, U) B := b.hom.toAlgebra
+  let : Algebra Γ(S, U) C := (b ≫ π).hom.toAlgebra
+  have : Algebra.Smooth Γ(S, U) Γ(X, V) := hsm
   let π' : B →ₐ[Γ(S, U)] C := { π.hom with commutes' := fun _ => rfl }
   let φ : Γ(X, V) →ₐ[Γ(S, U)] C :=
     { a.hom with commutes' := fun r => congrArg (fun k => k.hom r) hab }
@@ -144,7 +144,7 @@ theorem _root_.GlobalTheory.lift_ext_of_unramified [FormallyUnramified f] [Local
     rintro _ ⟨y, rfl⟩
     obtain ⟨m, hm, hym⟩ := Ideal.exists_le_maximal y.asIdeal y.isPrime.ne_top
     have hkm : RingHom.ker π.hom ≤ m := hj.trans (sInf_le ⟨bot_le, hm⟩)
-    haveI := hm.isPrime
+    have := hm.isPrime
     let z : PrimeSpectrum C := ⟨m.map π.hom, Ideal.map_isPrime_of_surjective hπ hkm⟩
     have hz : PrimeSpectrum.comap π.hom z = ⟨m, hm.isPrime⟩ := by
       ext1
@@ -184,9 +184,9 @@ theorem _root_.GlobalTheory.reducePoint_quotient_surjective [Smooth f] :
   rintro ⟨x₀, hx₀⟩
   have hker : ∀ b : B, b ∈ I ↔ Ideal.Quotient.mk I b = 0 := fun b =>
     Ideal.Quotient.eq_zero_iff_mem.symm
-  haveI : IsLocalRing (B ⧸ I) := _root_.GlobalTheory.isLocalRing_of_surjective_of_henselian I
+  have : IsLocalRing (B ⧸ I) := _root_.GlobalTheory.isLocalRing_of_surjective_of_henselian I
     (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective hker
-  haveI : IsLocalRing (CommRingCat.of (B ⧸ I)) := ‹IsLocalRing (B ⧸ I)›
+  have : IsLocalRing (CommRingCat.of (B ⧸ I)) := ‹IsLocalRing (B ⧸ I)›
   have hclosed : (Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk I))).base
       (closedPoint (CommRingCat.of (B ⧸ I))) = closedPoint B := by
     apply PrimeSpectrum.ext
@@ -260,12 +260,12 @@ theorem _root_.GlobalTheory.exists_etale_point_of_smooth (B : Type u) [CommRing 
       change f.base (hV.fromSpec.base P) = _
       rw [hP, hfx]
     exact congrArg PrimeSpectrum.asIdeal (hU.fromSpec.isOpenEmbedding.injective e)
-  letI : Algebra Γ(S, U) Γ(X, V) := (f.appLE U V hVU).hom.toAlgebra
-  letI : Algebra Γ(S, U) B := b.hom.toAlgebra
-  letI : Algebra Γ(S, U) K := ((algebraMap B K).comp b.hom).toAlgebra
-  haveI : IsScalarTower Γ(S, U) B K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.Smooth Γ(S, U) Γ(X, V) := hsm
-  haveI := P.isPrime
+  let : Algebra Γ(S, U) Γ(X, V) := (f.appLE U V hVU).hom.toAlgebra
+  let : Algebra Γ(S, U) B := b.hom.toAlgebra
+  let : Algebra Γ(S, U) K := ((algebraMap B K).comp b.hom).toAlgebra
+  have : IsScalarTower Γ(S, U) B K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.Smooth Γ(S, U) Γ(X, V) := hsm
+  have := P.isPrime
   obtain ⟨φ⟩ := _root_.GlobalTheory.nonempty_algHom_of_smooth_of_isSepClosed (K := K) P.asIdeal (by
     change Ideal.comap (f.appLE U V hVU).hom P.asIdeal = _
     rw [hPm]
@@ -297,7 +297,7 @@ theorem _root_.GlobalTheory.range_fst_residue {B : Type u} [CommRing B] [IsLocal
     intro z
     apply PrimeSpectrum.ext
     show Ideal.comap (residue B) z.asIdeal = maximalIdeal B
-    haveI := z.isPrime
+    have := z.isPrime
     rw [Ideal.eq_bot_of_prime z.asIdeal, ← RingHom.ker_eq_comap_bot, ker_residue]
   ext y
   constructor
@@ -329,11 +329,11 @@ theorem _root_.GlobalTheory.isDiscreteValuationRing_of_etale_of_isLocalHom (V V'
   obtain ⟨hD, hR⟩ := _root_.GlobalTheory.exists_isDiscreteValuationRing_of_unramified V V'
   have hF : Module.FaithfullyFlat V V' := Module.FaithfullyFlat.of_flat_of_isLocalHom
   have hinj : Function.Injective (algebraMap V V') := FaithfulSMul.algebraMap_injective V V'
-  haveI : FaithfulSMul V (FractionRing V') := by
+  have : FaithfulSMul V (FractionRing V') := by
     rw [faithfulSMul_iff_algebraMap_injective, IsScalarTower.algebraMap_eq V V' (FractionRing V')]
     exact (IsFractionRing.injective V' (FractionRing V')).comp hinj
-  letI := FractionRing.liftAlgebra V (FractionRing V')
-  haveI := FractionRing.isScalarTower_liftAlgebra V (FractionRing V')
+  let := FractionRing.liftAlgebra V (FractionRing V')
+  have := FractionRing.isScalarTower_liftAlgebra V (FractionRing V')
   obtain ⟨hfin, hsep⟩ :=
     _root_.GlobalTheory.finite_and_isSeparable_fractionRing_of_unramified V V' (FractionRing V) (FractionRing V')
   exact ⟨hD, hR, Algebra.FormallyUnramified.map_maximalIdeal, hF, inferInstance, inferInstance,

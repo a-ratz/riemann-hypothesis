@@ -142,8 +142,8 @@ private theorem prM_apply (U : Subgroup (FA K n)) (p : AutomorphicForm.archCompa
     prM U p = arc1 p.1 * fin1 (p.2 : FA K n) := rfl
 
 private theorem cont_prM (U : Subgroup (FA K n)) : Continuous (prM U) :=
-  (continuous_archP.comp (continuous_subtype_val.comp continuous_fst)).mul
-    (MultiplicityOne.continuous_finProj.comp (continuous_subtype_val.comp continuous_snd))
+  (continuous_archP.comp (continuous_subtypeVal.comp continuous_fst)).mul
+    (MultiplicityOne.continuous_finProj.comp (continuous_subtypeVal.comp continuous_snd))
 
 private theorem inf_prM {U : Subgroup (FA K n)} (hU : U ≤ AdelicGLn.integralFiniteGL K n)
     (p : AutomorphicForm.archCompact K n × U) : infPart K n (prM U p : AdelicGLn.AdelicGL K n) = p.1 := by
@@ -192,8 +192,8 @@ end SlopeTestRemainingChoices
 theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.typeOf :
     TypeOf := by
   intro K _ _ n κ e he U hU hUo
-  haveI := he.haar.prob
-  haveI : CompactSpace U := isCompact_iff_compactSpace.1
+  have := he.haar.prob
+  have : CompactSpace U := isCompact_iff_compactSpace.1
     ((AdelicGLn.isCompact_integralFiniteGL K n).of_isClosed_subset (U.isClosed_of_isOpen hUo) hU)
   obtain ⟨l, hl1, hl⟩ := haarP U
   obtain ⟨ν, hν, hs, hinv, hint⟩ := pushT (prM U) (cont_prM U) κ he.haar.left l hl
@@ -202,7 +202,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.typeOf :
   obtain ⟨E, hE⟩ := ContinuousMap.exists_restrict_eq hcl (⟨e, he.cont⟩ : C(AutomorphicForm.archCompact K n, ℂ))
   have hEe : ∀ k : AutomorphicForm.archCompact K n, E (k : archGroup K n) = e k := fun k => DFunLike.congr_fun hE k
   obtain ⟨ε, hε, hεd⟩ : ∃ ε : G1 K n → ℂ, Continuous ε ∧ ∀ g, ε g = E (infPart K n (g : AdelicGLn.AdelicGL K n)) :=
-    ⟨_, E.continuous.comp (continuous_infPart.comp continuous_subtype_val), fun _ => rfl⟩
+    ⟨_, E.continuous.comp (continuous_infPart.comp continuous_subtypeVal), fun _ => rfl⟩
   have hεm : ∀ p, ε (prM U p) = e p.1 := fun p => by rw [hεd, inf_prM hU, hEe]
   have hfin : ∀ u : U, fin1 (u : FA K n) = prM U (1, u) := fun k => by simp [prM_apply, arc1]
   let D : TypeDat K n :=
@@ -290,7 +290,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.typeOf :
         rw [(hφ _ (U.inv_mem p.2.2) _).1]
         ring
       rw [e1, integral_mul_const, kbar_swap κ e he.cont (fun k => (k : archGroup K n)⁻¹ * infPart K n (g : AdelicGLn.AdelicGL K n))
-        (continuous_subtype_val.inv.mul continuous_const), ht]
+        (continuous_subtypeVal.inv.mul continuous_const), ht]
       simp only [h3]
       rfl
     · change ∫ k, tens β φ (g * k⁻¹) * ε k ∂ν = _
@@ -303,7 +303,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.typeOf :
         rw [(hφ _ (U.inv_mem p.2.2) _).2]
         ring
       rw [e1, integral_mul_const, kbar_swap κ e he.cont (fun k => infPart K n (g : AdelicGLn.AdelicGL K n) * (k : archGroup K n)⁻¹)
-        (continuous_const.mul continuous_subtype_val.inv), ht]
+        (continuous_const.mul continuous_subtypeVal.inv), ht]
       simp only [h4]
       rfl
   · have key : ∀ p, ∃ q, θ.e (prM U p) = prM U q ∧ e q.1 = e p.1 := fun p => by

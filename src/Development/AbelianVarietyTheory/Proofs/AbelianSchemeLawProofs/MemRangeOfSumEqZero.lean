@@ -87,7 +87,7 @@ theorem exists_factor {X W Y S : Scheme.{0}} [IsIntegral X] [Y.IsSeparated] [IsA
   let κ := (g.appLE ⊤ V le_top).hom
   let φ := (f.appLE D V hVD').hom
   have hκ : Function.Injective κ := by
-    letI := hS.toField
+    let := hS.toField
     exact κ.injective
   have hr : ∀ a, φ a ∈ κ.range := fun a => by
     obtain ⟨c, hc⟩ := h a
@@ -145,7 +145,7 @@ theorem mem_range_of_sum_eq_zero {K R : Type} [Field K] [IsAlgClosed K] [CommRin
   have hp : p ≠ 0 := fun h0 => hc (funext fun k => by
     have := congrArg (fun q : Polynomial K => q.coeff k) h0
     simp only [p, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial, Finsupp.single_apply, Fin.val_inj,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, Polynomial.coeff_zero] at this
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, Polynomial.coeff_zero] at this
     exact this)
   refine (IsAlgClosed.splits p).mem_range_of_isRoot hp ?_
   rw [Polynomial.IsRoot, Polynomial.eval_map, Polynomial.eval₂_finsetSum]

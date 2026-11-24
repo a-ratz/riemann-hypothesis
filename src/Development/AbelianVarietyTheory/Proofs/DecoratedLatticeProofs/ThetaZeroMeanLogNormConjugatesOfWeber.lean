@@ -623,7 +623,7 @@ theorem mean_log_area (hC : ClassMeanPeriods.ClassMean) (hG : EquidistributedCon
 
 theorem sum_log_nonneg (M : IntermediateField ℚ ℂ) [FiniteDimensional ℚ M] (X : M) (hX : X ≠ 0)
     (hXi : IsIntegral ℤ (X : ℂ)) : 0 ≤ ∑ ρ : M →ₐ[ℚ] ℂ, Real.log ‖ρ X‖ := by
-  haveI : NumberField M := ⟨⟩
+  have : NumberField M := ⟨⟩
   have hXi' : IsIntegral ℤ X := by
     have : IsIntegral ℤ ((M.val : M →ₐ[ℚ] ℂ) X) := hXi
     exact (isIntegral_algHom_iff ((M.val : M →ₐ[ℚ] ℂ).restrictScalars ℤ) M.val.injective).1 this

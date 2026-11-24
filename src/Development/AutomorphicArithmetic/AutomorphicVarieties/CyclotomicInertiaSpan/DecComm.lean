@@ -57,10 +57,10 @@ private theorem ringEquiv_eq_frobenius_pow_of_algebraic_over_zmod {k : Type} [Fi
     [Algebra.IsAlgebraic (ZMod p) k] (ψ : k ≃+* k) (y : k) : ∃ n : ℕ, ψ y = y ^ (p ^ n) := by
   have hy : IsIntegral (ZMod p) y := (Algebra.IsAlgebraic.isAlgebraic y).isIntegral
   let L := IntermediateField.adjoin (ZMod p) ({y} : Set k)
-  haveI : FiniteDimensional (ZMod p) L := IntermediateField.adjoin.finiteDimensional hy
-  haveI : Finite L := Module.finite_of_finite (ZMod p)
-  letI : Fintype L := Fintype.ofFinite L
-  haveI : Normal (ZMod p) L := inferInstance
+  have : FiniteDimensional (ZMod p) L := IntermediateField.adjoin.finiteDimensional hy
+  have : Finite L := Module.finite_of_finite (ZMod p)
+  let : Fintype L := Fintype.ofFinite L
+  have : Normal (ZMod p) L := inferInstance
   let ψ' : k ≃ₐ[ZMod p] k := AlgEquiv.ofRingEquiv (f := ψ) (fun x => by
     have h := congrArg (fun g : ZMod p →+* k => g x)
       (Subsingleton.elim (ψ.toRingHom.comp (algebraMap (ZMod p) k)) (algebraMap (ZMod p) k))
@@ -94,12 +94,12 @@ theorem UpperTheory.V.B1.decComm :
       rw [ValuationSubring.valuation_lt_one_iff, this]; exact hp
     have := (IsLocalRing.residue_eq_zero_iff (p : B)).2 hm
     simpa using this
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 hpk
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
-  haveI : Algebra.IsAlgebraic (ZMod p) k := by
-    haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-    haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-    haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 hpk
+  let : Algebra (ZMod p) k := ZMod.algebra k p
+  have : Algebra.IsAlgebraic (ZMod p) k := by
+    have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+    have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+    have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
     refine ⟨fun y => ?_⟩
     obtain ⟨xb, rfl⟩ := IsLocalRing.residue_surjective y
     have hZ : IsAlgebraic ℤ (xb : Ω) :=

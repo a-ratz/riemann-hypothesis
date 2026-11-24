@@ -104,7 +104,7 @@ theorem IntermediateField.isClosed_of_isNonarchimedeanLocalField : IsClosed (E :
   have := t2Space_of_isNonarchimedeanLocalField L
   have : FiniteDimensional K (Subalgebra.toSubmodule E.toSubalgebra) :=
     (inferInstance : FiniteDimensional K E)
-  exact (Subalgebra.toSubmodule E.toSubalgebra).closed_of_finiteDimensional
+  exact (Subalgebra.toSubmodule E.toSubalgebra).isClosed_of_finiteDimensional
 
 instance intermediateField_isNonarchimedeanLocalField : IsNonarchimedeanLocalField E := by
 

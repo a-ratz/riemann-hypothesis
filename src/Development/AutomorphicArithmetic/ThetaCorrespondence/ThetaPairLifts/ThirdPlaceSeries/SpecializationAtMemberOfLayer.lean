@@ -110,7 +110,7 @@ theorem exists_greenLab : GlobalTheory.Published.GreenCuspidal → ∀ (D : D7) 
             (O.lab d τ)) ∧
         ∀ f, D.ntypes.eSer k f = eSerO O D.R.r f := by
     intro k
-    haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+    have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
     obtain ⟨O, h1, h2, hO⟩ := GlobalTheory.CuspTwist.exists_labelMap_twist_cuspLabel (ZMod (D.host.g k)) _
       (_root_.GlobalTheory.GreenParam.cuspParam_of_green hG (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k) (Γ.ζ k) (Γ.ζ_gen k))
     exact ⟨O, h1, h2, hO, fun f => (hT.ser k f).trans

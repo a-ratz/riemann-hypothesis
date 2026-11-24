@@ -238,8 +238,8 @@ theorem UpperTheory.V.Ws.Pp.nearPoly :
     ∀ {O B : Type} [CommRing O] [IsDomain O] [CommRing B] [IsDomain B] [HenselianLocalRing B] [Algebra O B] (x : B →ₐ[O] O) (d : O) (t : B) (v : FractionRing B), d ≠ 0 → x t = 0 → IsIntegral B v → algebraMap B (FractionRing B) (algebraMap O B d) * v = algebraMap B (FractionRing B) t → ∃ p : B[X], Dist (maximalIdeal B) p ∧ aeval v p = 0 := by
   intro O B _ _ _ _ _ _ x d t v hd ht hv h
   let S := Algebra.adjoin B ({v} : Set (FractionRing B))
-  haveI : Module.Finite B S := Module.Finite.iff_fg.2 hv.fg_adjoin_singleton
-  haveI : IsLocalRing S := nearPoly_local B S
+  have : Module.Finite B S := Module.Finite.iff_fg.2 hv.fg_adjoin_singleton
+  have : IsLocalRing S := nearPoly_local B S
   let w : S := ⟨v, Algebra.self_mem_adjoin_singleton B v⟩
   have hw : w ∈ maximalIdeal S := by
     intro hu
@@ -247,7 +247,7 @@ theorem UpperTheory.V.Ws.Pp.nearPoly :
     have h1 : algebraMap B S (algebraMap O B d) * w = algebraMap B S t := Subtype.ext h
     have h2 : algebraMap B S (algebraMap O B d) = algebraMap B S t * u := by
       rw [← h1, mul_assoc, hu, mul_one]
-    haveI : (RingHom.ker x).IsPrime := RingHom.ker_isPrime x
+    have : (RingHom.ker x).IsPrime := RingHom.ker_isPrime x
     have hinj : Function.Injective (algebraMap B S) := fun a b e =>
       IsFractionRing.injective B (FractionRing B) (congrArg Subtype.val e)
     obtain ⟨Q, _, hQ⟩ := Ideal.exists_ideal_over_prime_of_isIntegral_of_isDomain (S := S) (RingHom.ker x)
@@ -350,7 +350,7 @@ private theorem gt_int {B K : Type} [CommRing B] [Field K] [Algebra B K] (Y : M4
   have e : (a * (algebraMap B K).mapMatrix Y * b).charpoly = ((algebraMap B K).mapMatrix Y).charpoly := by
     rw [Matrix.charpoly_mul_comm, ← Matrix.mul_assoc, mul_eq_one_comm.1 hab, Matrix.one_mul]
   rw [eval₂_eq_eval_map, ← Matrix.charpoly_map, ← RingHom.mapMatrix_apply, ← e,
-    Matrix.charpoly_of_upperTriangular _ (fun i j h => hM i j h), eval_prod]
+    Matrix.charpoly_of_isUpperTriangular _ (fun i j h => hM i j h), eval_prod]
   exact Finset.prod_eq_zero (Finset.mem_univ i) (by simp)
 
 theorem UpperTheory.V.Ws.Pp.genTri :
@@ -472,9 +472,9 @@ open TensorProduct in
 theorem UpperTheory.V.Ws.Pp.extFg :
     ∀ {B C K : Type} [CommRing B] [CommRing C] [Field K] [IsAlgClosed K] [Algebra B C] [Algebra.FiniteType B C] (q : Ideal C) [q.IsPrime] (f : B →+* K), RingHom.ker f = q.comap (algebraMap B C) → ∃ φ : C →+* K, φ.comp (algebraMap B C) = f := by
   intro B C K _ _ _ _ _ _ q _ f hf
-  letI : Algebra B K := f.toAlgebra
+  let : Algebra B K := f.toAlgebra
   let p : Ideal B := q.comap (algebraMap B C)
-  haveI : p.IsPrime := Ideal.comap_isPrime _ _
+  have : p.IsPrime := Ideal.comap_isPrime _ _
   have hunit : ∀ {L : Type} [Field L] (g : B →+* L), RingHom.ker g = p →
       ∃ g' : p.ResidueField →+* L, g'.comp (algebraMap B p.ResidueField) = g := by
     intro L _ g hg
@@ -487,12 +487,12 @@ theorem UpperTheory.V.Ws.Pp.extFg :
   obtain ⟨a, ha⟩ := hunit f hf
   obtain ⟨b, hb⟩ := hunit ((algebraMap C q.ResidueField).comp (algebraMap B C)) (by
     rw [← RingHom.comap_ker, Ideal.ker_algebraMap_residueField])
-  haveI hnt : Nontrivial (K ⊗[B] C) := by
-    letI : Algebra p.ResidueField K := a.toAlgebra
-    letI : Algebra p.ResidueField q.ResidueField := b.toAlgebra
-    haveI : IsScalarTower B p.ResidueField K := IsScalarTower.of_algebraMap_eq' ha.symm
+  have hnt : Nontrivial (K ⊗[B] C) := by
+    let : Algebra p.ResidueField K := a.toAlgebra
+    let : Algebra p.ResidueField q.ResidueField := b.toAlgebra
+    have : IsScalarTower B p.ResidueField K := IsScalarTower.of_algebraMap_eq' ha.symm
     let T := K ⊗[p.ResidueField] q.ResidueField
-    haveI : Nontrivial T := inferInstance
+    have : Nontrivial T := inferInstance
     let u : K →ₐ[B] T := (Algebra.TensorProduct.includeLeft : K →ₐ[B] T)
     let v : C →ₐ[B] T :=
       { toRingHom := ((Algebra.TensorProduct.includeRight : q.ResidueField →ₐ[p.ResidueField] T) : q.ResidueField →+* T).comp (algebraMap C q.ResidueField)
@@ -504,8 +504,8 @@ theorem UpperTheory.V.Ws.Pp.extFg :
           rw [h1, AlgHom.commutes, ← IsScalarTower.algebraMap_apply] }
     exact (Algebra.TensorProduct.lift u v (fun _ _ => Commute.all _ _)).toRingHom.domain_nontrivial
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (K ⊗[B] C)
-  letI : Field ((K ⊗[B] C) ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite K ((K ⊗[B] C) ⧸ m) := finite_of_finite_type_of_isJacobsonRing _ _
+  let : Field ((K ⊗[B] C) ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite K ((K ⊗[B] C) ⧸ m) := finite_of_finite_type_of_isJacobsonRing _ _
   have hbij : Function.Bijective (algebraMap K ((K ⊗[B] C) ⧸ m)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let ψ : ((K ⊗[B] C) ⧸ m) →ₐ[K] K := (AlgEquiv.ofBijective (Algebra.ofId K _) hbij).symm.toAlgHom
@@ -530,12 +530,12 @@ theorem UpperTheory.V.Ws.Pp.triSpec :
     ∀ {ι A F K : Type} [CommRing A] [Field F] [Field K] [IsAlgClosed K] (M : ι → M4 A) (P : ι → Fin 4 → A[X]) (φ : A →+* F) (f : A →+* K) (h : M4 F), RingHom.ker φ ≤ RingHom.ker f → SpTri M P φ h → ∃ h' : M4 K, SpTri M P f h' := by
   intro ι A F K _ _ _ _ M P φ f h hf H
   classical
-  haveI := RingHom.ker_isPrime f
+  have := RingHom.ker_isPrime f
   have hu : ∀ y : (RingHom.ker f).primeCompl, IsUnit (φ y) := fun y => Ne.isUnit fun e => y.2 (hf e)
   obtain ⟨V, hV, hl⟩ := IsLocalRing.exists_factor_valuationRing
     (IsLocalization.lift (S := Localization.AtPrime (RingHom.ker f)) hu)
   let g₀ : Localization.AtPrime (RingHom.ker f) →+* V := (IsLocalization.lift hu).codRestrict V.toSubring hV
-  haveI : IsLocalHom g₀ := hl
+  have : IsLocalHom g₀ := hl
   let g : A →+* V := g₀.comp (algebraMap _ _)
   have hg : V.subtype.comp g = φ := RingHom.ext fun a => IsLocalization.lift_eq hu a
   have hk : RingHom.ker f = (maximalIdeal V).comap g := by
@@ -545,15 +545,15 @@ theorem UpperTheory.V.Ws.Pp.triSpec :
       mem_maximalIdeal, mem_maximalIdeal, mem_nonunits_iff, mem_nonunits_iff]
     exact (isUnit_map_iff g₀ _).not.symm
   obtain ⟨k, hk'⟩ := triIwa V M P g h (by rw [hg]; exact H)
-  letI : Algebra A V := g.toAlgebra
+  let : Algebra A V := g.toAlgebra
   let s : Set V := Set.range (fun p : Fin 4 × Fin 4 => k p.1 p.2)
   have hs : s.Finite := Set.finite_range _
   let C := Algebra.adjoin A s
-  haveI : Algebra.FiniteType A C := (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_def.2 ⟨s, hs, rfl⟩)
+  have : Algebra.FiniteType A C := (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_def.2 ⟨s, hs, rfl⟩)
   let Y : M4 C := fun a b => ⟨k a b, Algebra.subset_adjoin ⟨(a, b), rfl⟩⟩
   have H0 : SpTri M P (algebraMap A C) Y := SpTri.of_map C.val.toRingHom Subtype.val_injective hk'
   let q : Ideal C := (maximalIdeal V).comap C.val.toRingHom
-  haveI : q.IsPrime := Ideal.comap_isPrime _ _
+  have : q.IsPrime := Ideal.comap_isPrime _ _
   obtain ⟨ψ, hψ⟩ := extFg q f (by rw [hk]; rfl)
   exact ⟨Y.map ψ, hψ ▸ H0.map ψ⟩
 end -- clump:auto
@@ -584,7 +584,7 @@ theorem UpperTheory.V.Ws.ptPair :
   have hy' : ∀ a, y (algebraMap c.O R a) = 𝔞.a c a := fun a => DFunLike.congr_fun hy a
   obtain ⟨B, _, _, _, _, τ, hτ, ⟨x, hx⟩, z, hz⟩ := hρ.atL
   obtain ⟨-, -, -, -, -, hrev, hinj, -⟩ := facts D hD
-  haveI : HenselianLocalRing B := GlobalTheory.henselianLocalRing_of_henselianRing B
+  have : HenselianLocalRing B := GlobalTheory.henselianLocalRing_of_henselianRing B
   obtain ⟨h, P, H, hP, hI⟩ := Pp.genTri ((D.Ip l).subgroupOf (D.Gp l)) (fun i (g : D.Gp l) => (D.ps i g : c.O)) D.s0
     (D.th D.s0 : c.O) τ.hom x hD.decompSigma_mem.1.1 hinj (fun i => by rw [← hrev i]; rfl) (Units.ne_zero _) (hτ.1 _) hτ.2 hx
   let f : B →+* 𝔞.V := y.comp (z : B →+* R)

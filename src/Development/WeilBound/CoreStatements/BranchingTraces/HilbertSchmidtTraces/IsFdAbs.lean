@@ -186,7 +186,7 @@ theorem continuous_hs {X : Type} [TopologicalSpace X] {m : ℕ} {f : X → Matri
 theorem isU_adj {Γ : Type} [Group Γ] [TopologicalSpace Γ] {A : Type} [NormedAddCommGroup A] [InnerProductSpace ℂ A]
     {ρ : Γ → (A →L[ℂ] A)} (h : IsU ρ) (g : Γ) (x y : A) : ⟪x, ρ g y⟫_ℂ = ⟪ρ g⁻¹ x, y⟫_ℂ := by
   have hx : x = ρ g (ρ g⁻¹ x) := by
-    rw [← ContinuousLinearMap.mul_apply, ← h.mul, mul_inv_cancel, h.one]; rfl
+    rw [← mul_apply_eq_comp, ← h.mul, mul_inv_cancel, h.one]; rfl
   conv_lhs => rw [hx]
   exact (LinearIsometry.mk (ρ g : A →ₗ[ℂ] A) (h.norm g)).inner_map_map _ y
 

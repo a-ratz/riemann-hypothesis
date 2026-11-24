@@ -72,15 +72,15 @@ theorem kFin_rank_zero {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M : DS
   have hrep : ∀ g, M.rep τ g = 1 := fun g => hσ _
   refine ⟨fun x _ => Submodule.subset_span ?_, fun _ => 0, ⟨fun X _ v => ?_, fun X _ v w => by simp⟩, ?_⟩
   · intro k Xs _
-    simp only [hrep, ContinuousLinearMap.one_apply]
+    simp only [hrep, one_apply_eq_self]
     exact contDiff_const
-  · simp only [hrep, ContinuousLinearMap.one_apply, LinearMap.zero_apply, Submodule.coe_zero]
+  · simp only [hrep, one_apply_eq_self, LinearMap.zero_apply, Submodule.coe_zero]
     exact hasDerivAt_const _ _
-  · haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  · have : CompleteSpace (M.H τ) := (M.ds τ).1
 
     have hline : ∀ x y : M.H τ, x ≠ 0 → ∃ c : ℂ, c • x = y := fun x y hx => by
-      have hcl : IsClosed ((ℂ ∙ x : Submodule ℂ (M.H τ)) : Set (M.H τ)) := Submodule.closed_of_finiteDimensional _
-      rcases (M.ds τ).2.2.2.1 _ hcl (fun g _ v hv => by rwa [hσ, ContinuousLinearMap.one_apply]) with hb | ht
+      have hcl : IsClosed ((ℂ ∙ x : Submodule ℂ (M.H τ)) : Set (M.H τ)) := Submodule.isClosed_of_finiteDimensional _
+      rcases (M.ds τ).2.2.2.1 _ hcl (fun g _ v hv => by rwa [hσ, one_apply_eq_self]) with hb | ht
       · exact absurd ((Submodule.span_singleton_eq_bot).1 hb) hx
       · exact Submodule.mem_span_singleton.1 (ht ▸ Submodule.mem_top)
     have hK : ∀ x y : kFin M τ, x ≠ 0 → ∃ c : ℂ, c • x = y := fun x y hx => by

@@ -80,7 +80,7 @@ omit [StarRing E] in
 theorem val_eq_one_iff {P : HeightOneSpectrum (𝓞 E)} {a : E} (h0 : a ≠ 0) :
     P.valuation E a = 1 ↔ IntAt P a ∧ IntAt P a⁻¹ := by
   rw [intAt_iff, intAt_iff, map_inv₀]
-  have h1 : 0 < P.valuation E a := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h0)
+  have h1 : 0 < P.valuation E a := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h0)
   rw [inv_le_one₀ h1]
   exact ⟨fun h => ⟨h.le, h.ge⟩, fun h => le_antisymm h.1 h.2⟩
 

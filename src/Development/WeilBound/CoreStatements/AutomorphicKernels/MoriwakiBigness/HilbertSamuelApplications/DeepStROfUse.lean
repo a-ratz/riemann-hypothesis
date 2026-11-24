@@ -182,8 +182,8 @@ theorem exists_finite_ext_all_models_uniformised {E : Type} [Field E] [NumberFie
   obtain ⟨φ, hφ⟩ : ∃ φ : T.Fr →+* T'.Fr, ∀ v, φ (algebraMap T.V T.Fr v) = algebraMap T'.V T'.Fr (algebraMap T.V W v) :=
     ⟨IsFractionRing.lift hj, IsFractionRing.lift_algebraMap hj⟩
   obtain ⟨r, hr0, hv⟩ := exists_index (V' := T'.V) (algebraMap T.V W) φ hφ
-  letI := io.toAlgebra
-  letI := (φ.comp io).toAlgebra
+  let := io.toAlgebra
+  let := (φ.comp io).toAlgebra
   let ψ : T.Fr →ₐ[c.F] T'.Fr := { φ with commutes' := fun _ => rfl }
   obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap GlobalTheory.firstFiveLaws.1 E H Dw l Xo c _ _ ψ y.1
   obtain ⟨p, χ, y₀, hy₀⟩ := y.2.1
@@ -402,8 +402,8 @@ theorem costTwo_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Re
     intro p _
     rw [exTwo, GlobalTheory.CovHt.htEx, ← hd, ← hn]
     by_cases h2 : p = 2
-    · subst h2; simp only [if_true]; ring_nf
-    · simp only [h2, if_false]; ring
+    · subst h2; simp only [ite_true]; ring_nf
+    · simp only [h2, ite_false]; ring
   have ha0 : ∀ p : ℕ, p.Prime → 0 ≤ Real.log p / ((p : ℝ) - 1) := fun p hp => by
     have : (2 : ℝ) ≤ p := by exact_mod_cast hp.two_le
     exact div_nonneg (Real.log_natCast_nonneg p) (by linarith)
@@ -575,7 +575,7 @@ theorem mem_of_dense_of_isOpen {X : Type*} [TopologicalSpace X] [TopologicalSpac
     rw [← e]
     exact hg.def.symm
   let T : Set X := ⋃ C ∈ irreducibleComponents X \ {closure {x}}, C
-  have hT : IsClosed T := Set.Finite.isClosed_biUnion (hfin.subset Set.diff_subset)
+  have hT : IsClosed T := Set.Finite.isClosed_biUnion (hfin.subset Set.sdiff_subset)
     fun C hC => isClosed_of_mem_irreducibleComponents C hC.1
   have hxT : x ∈ Tᶜ := by
     intro h
@@ -946,8 +946,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Rec
 
 theorem field_of_datum_abelian : ∀ D : D7, IsAbelianGalois ℚ D.host.E := by
   intro D
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
-  haveI : IsMulCommutative (D.host.E ≃ₐ[ℚ] D.host.E) :=
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsMulCommutative (D.host.E ≃ₐ[ℚ] D.host.E) :=
     ⟨⟨fun s t => GlobalTheory.Mem.FieldsLaws.gal_comm D.host s t⟩⟩
   exact {}
 
@@ -1120,7 +1120,7 @@ theorem deepStR_of_volume : GlobalTheory.CompanionTheory.Ar.Pub.NefRR → Top.Gi
   refine ⟨C, hC0, ?_⟩
   intro D T hT hmk j hj1 hjm Y e o hY hcard
   obtain ⟨⟨h, e', hCL⟩, hgood, hq, hpq, hf, hrd, hL⟩ := GlobalTheory.T.good_datum_parameters hG D T hT j hj1 hjm Y e o hY
-  haveI := GlobalTheory.CompanionTheory.Ar.Rec.field_of_datum_abelian D
+  have := GlobalTheory.CompanionTheory.Ar.Rec.field_of_datum_abelian D
   have hm2 := D.R.two_le_m
   have h2m : 2 * D.R.m ≤ D.R.m ^ 2 := by nlinarith
   have hr : D.R.r = D.R.k + D.R.m - 1 := rfl

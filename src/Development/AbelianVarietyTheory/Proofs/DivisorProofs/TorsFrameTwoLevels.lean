@@ -102,10 +102,10 @@ theorem same_ratio {o Ω o' Ω' : Type} [CommRing o] [Field Ω] [Algebra o Ω] [
     have e : (w x ≫ P₀.A.hom) ≫ spMap S'.R.val.toRingHom = 𝟙 _ ≫ spMap S'.R.val.toRingHom := by
       rw [Category.assoc, ← gp'.1.w, ← Category.assoc, hw', Category.assoc, Over.w, Category.id_comp]
       exact Category.comp_id _
-    haveI : IsFractionRing S'.R Ω' := IsFractionRing.of_field _ _ fun x => by
+    have : IsFractionRing S'.R Ω' := IsFractionRing.of_field _ _ fun x => by
       obtain ⟨a, ha, b, hb, e⟩ := S'.frac x
       exact ⟨⟨a, ha⟩, ⟨b, hb⟩, e⟩
-    haveI : IsPreimmersion (spMap S'.R.val.toRingHom) :=
+    have : IsPreimmersion (spMap S'.R.val.toRingHom) :=
       IsPreimmersion.of_isLocalization (R := S'.R) (S := Ω') (nonZeroDivisors S'.R)
     exact (cancel_mono _).1 e
   let x : S.Gam → (baseOver (Sp Ω') ⟶ P₀.A) := fun a => Over.homMk (w a) (hs a)

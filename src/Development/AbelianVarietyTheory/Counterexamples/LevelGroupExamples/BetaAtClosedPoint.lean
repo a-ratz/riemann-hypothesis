@@ -74,7 +74,7 @@ theorem psiIn_iff {D : DegPre R} {χ : D.X} {r : R} (hr : PsiCoord D χ r) (J : 
     refine ⟨(u : _) * DegPre.toOpen V r, Ideal.mul_mem_left _ _ (Ideal.mem_map_of_mem _ hJ), ?_⟩
     have hres := congrArg Units.val hu
     simp only [ReciprocityTheory.ChartRestriction.G.Semi.res, ReciprocityTheory.ChartRestriction.G.Semi.pullU, Units.val_mul, Units.coe_map,
-      MonoidHom.coe_coe] at hres
+      MonoidHom.coe_ofClass] at hres
     rw [map_mul]
     refine Eq.trans ?_ hres.symm
     congr 1

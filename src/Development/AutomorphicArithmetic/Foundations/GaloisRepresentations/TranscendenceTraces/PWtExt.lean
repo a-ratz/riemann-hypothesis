@@ -66,17 +66,17 @@ private theorem fsum_single {α : Type*} (s : Set α) (f : α → ℤ) (a : α) 
 private theorem discrete_of_chart (hChart : Chart) {V : Scheme.{0}} (Ω : Type) [Field Ω] (r : V ⟶ gp Ω) [IsFinite r] :
     DiscreteTopology V := by
   obtain ⟨B, _, _, v, hfin, hpb⟩ := hChart r Ω (𝟙 _)
-  haveI : IsIso v := hpb.isIso_fst_of_isIso
-  haveI : IsArtinianRing B := IsArtinianRing.of_finite Ω B
-  haveI : DiscreteTopology (Spec (CommRingCat.of B)) := inferInstanceAs (DiscreteTopology (PrimeSpectrum B))
+  have : IsIso v := hpb.isIso_fst_of_isIso
+  have : IsArtinianRing B := IsArtinianRing.of_finite Ω B
+  have : DiscreteTopology (Spec (CommRingCat.of B)) := inferInstanceAs (DiscreteTopology (PrimeSpectrum B))
   exact (Scheme.homeoOfIso (asIso v)).symm.isEmbedding.discreteTopology
 
 theorem UpperTheory.Gal.TranscendenceTraces.wtExt_of :
     PtOne → Chart → WtExt := by
   intro hOne hChart Z S p _ w hw Ω L _ _ _ _ z a
   classical
-  haveI hr : IsFinite (pullback.snd p (z ≫ p)) := Sq.finite (Sq.of p (z ≫ p))
-  haveI := discrete_of_chart hChart Ω (pullback.snd p (z ≫ p))
+  have hr : IsFinite (pullback.snd p (z ≫ p)) := Sq.finite (Sq.of p (z ≫ p))
+  have := discrete_of_chart hChart Ω (pullback.snd p (z ≫ p))
   let z0 : gp Ω ⟶ pullback p (z ≫ p) := pullback.lift z (𝟙 _) (by simp)
   have hf : z0 ≫ pullback.fst p (z ≫ p) = z := pullback.lift_fst _ _ _
   have hs : z0 ≫ pullback.snd p (z ≫ p) = 𝟙 _ := pullback.lift_snd _ _ _
@@ -87,11 +87,11 @@ theorem UpperTheory.Gal.TranscendenceTraces.wtExt_of :
   have h2 : ψ (pt a) = ∑ᶠ y ∈ fib (pullback.snd p (z ≫ p)) a,
       w L (y ≫ pullback.fst p (z ≫ p)) * φ (pt y) := hψ L a
   have hpt : pt (a ≫ z0) = pt z0 := by rw [pt_comp, pt_eq]
-  have hφ : φ (pt z0) = 1 := if_pos rfl
+  have hφ : φ (pt z0) = 1 := ite_eq_left rfl
   have hne : ∀ y : (pullback p (z ≫ p) : Scheme.{0}), φ y ≠ 0 → y = pt z0 := by
     intro y hy
     by_contra h
-    exact hy (if_neg h)
+    exact hy (ite_eq_right h)
   have e1 : ∑ᶠ y ∈ fib (pullback.snd p (z ≫ p)) (𝟙 (gp Ω)),
       w Ω (y ≫ pullback.fst p (z ≫ p)) * φ (pt y) = w Ω z := by
     rw [fsum_single _ _ z0 hs, hf, hφ, mul_one]

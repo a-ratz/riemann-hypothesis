@@ -89,7 +89,7 @@ theorem IsPullQk.ext {hD : IsPullDeg φ D D'} {k : ℕ} {p : QkPt D (FractionRin
 
 theorem exists_isPullQk (hG : GlobalFnsSt) (hφ : Function.Injective φ) (hD : IsPullDeg φ D D') (hB : D.TauBimult)
     {k : ℕ} (p : QkPt D (FractionRing R) k) : ∃ p', IsPullQk hD p p' := by
-  letI : Algebra (FractionRing R) (FractionRing R') := (fracMap hφ).toAlgebra
+  let : Algebra (FractionRing R) (FractionRing R') := (fracMap hφ).toAlgebra
   have hK : Compat φ (FractionRing R') := fracMap_algebraMap hφ
   have hB' := TauPull.tauBimult_pull hG hD hB
   obtain ⟨q, hq, -⟩ := existsUnique_qkExt (F' := FractionRing R') hB (algebraMap (FractionRing R) (FractionRing R'))

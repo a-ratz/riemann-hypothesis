@@ -198,12 +198,12 @@ theorem UpperTheory.Cb.descent_map_factors_through_stage :
     LateralTheory.E.LeafPairRelPf.LeafFactorStage := by
   intro k _ Ω _ _ R hR C E Y c p w hp hs f hf a ha
   obtain ⟨h1, h2, h3⟩ := hp
-  haveI : Nonempty (LateralTheory.E.LeafDescendMapPf.J R) := ⟨⟨R, le_rfl, hR⟩⟩
-  haveI : ∀ S : (LateralTheory.E.LeafDescendMapPf.J R)ᵒᵖ, CompactSpace ((LateralTheory.E.LeafDescendMapPf.D R p).obj S) := by
+  have : Nonempty (LateralTheory.E.LeafDescendMapPf.J R) := ⟨⟨R, le_rfl, hR⟩⟩
+  have : ∀ S : (LateralTheory.E.LeafDescendMapPf.J R)ᵒᵖ, CompactSpace ((LateralTheory.E.LeafDescendMapPf.D R p).obj S) := by
     intro S
     dsimp only [LateralTheory.E.LeafDescendMapPf.D]
     exact QuasiCompact.compactSpace_of_compactSpace (pullback.snd p _)
-  haveI : ∀ S : (LateralTheory.E.LeafDescendMapPf.J R)ᵒᵖ, QuasiSeparatedSpace ((LateralTheory.E.LeafDescendMapPf.D R p).obj S) := by
+  have : ∀ S : (LateralTheory.E.LeafDescendMapPf.J R)ᵒᵖ, QuasiSeparatedSpace ((LateralTheory.E.LeafDescendMapPf.D R p).obj S) := by
     intro S
     dsimp only [LateralTheory.E.LeafDescendMapPf.D]
     exact quasiSeparatedSpace_of_quasiSeparated (pullback.snd p _)
@@ -938,7 +938,7 @@ theorem LeafObjAff_of : LeafObjAff := by
   obtain ⟨h1, h2, h3⟩ := hf
   let g : Spec Γ(X, ⊤) ⟶ Spec (CommRingCat.of Ω) := X.isoSpec.inv ≫ f
   let φ := Spec.preimage g
-  letI : Algebra Ω Γ(X, ⊤) := φ.hom.toAlgebra
+  let : Algebra Ω Γ(X, ⊤) := φ.hom.toAlgebra
   have hg : LocallyOfFinitePresentation g := inferInstance
   have hφ : Spec.map (CommRingCat.ofHom (algebraMap Ω Γ(X, ⊤))) = g := Spec.map_preimage g
   have hfp : Algebra.FinitePresentation Ω Γ(X, ⊤) := by
@@ -986,18 +986,18 @@ theorem subsingleton_of_dim {X : Scheme.{0}} [IsIntegral X] (hd : topologicalKru
 
 theorem leafPtIso (k : Type) [Field k] [IsAlgClosed k] {X : Scheme.{0}} [IsIntegral X] (p : X ⟶ Sp k) [IsProper p]
     (hd : topologicalKrullDim X ≤ 0) : IsIso p := by
-  haveI := subsingleton_of_dim hd
-  haveI : IsAffine X := inferInstance
+  have := subsingleton_of_dim hd
+  have : IsAffine X := inferInstance
   let F : CommRingCat.of k ⟶ Γ(X, ⊤) := (Scheme.ΓSpecIso _).inv ≫ p.appTop
   have hfin : p.appTop.hom.Finite := finite_appTop_of_universallyClosed k p
   have hFfin : F.hom.Finite := by
     simp only [F, CommRingCat.hom_comp]
     exact RingHom.Finite.comp hfin (RingHom.Finite.of_surjective _ (Scheme.ΓSpecIso _).commRingCatIsoToRingEquiv.symm.surjective)
-  letI : Algebra k Γ(X, ⊤) := F.hom.toAlgebra
-  haveI : Algebra.IsIntegral k Γ(X, ⊤) := ⟨fun a => hFfin.to_isIntegral a⟩
+  let : Algebra k Γ(X, ⊤) := F.hom.toAlgebra
+  have : Algebra.IsIntegral k Γ(X, ⊤) := ⟨fun a => hFfin.to_isIntegral a⟩
   have hb : Function.Bijective F.hom := IsAlgClosed.algebraMap_bijective_of_isIntegral (k := k) (K := Γ(X, ⊤))
-  haveI : IsIso F := (ConcreteCategory.isIso_iff_bijective F).2 hb
-  haveI : IsIso p.appTop := by
+  have : IsIso F := (ConcreteCategory.isIso_iff_bijective F).2 hb
+  have : IsIso p.appTop := by
     have : p.appTop = (Scheme.ΓSpecIso _).hom ≫ F := by simp [F]
     rw [this]; infer_instance
   have e : p = X.isoSpec.hom ≫ Spec.map p.appTop ≫ (Sp k).isoSpec.inv := by
@@ -1008,22 +1008,22 @@ theorem sh_of_isAlgClosed (k : Type) [Field k] [IsAlgClosed k] : SH k := by
   refine ⟨inferInstance, ?_⟩
   have hb : Function.Bijective (IsLocalRing.residue k) := by
     exact ⟨(IsLocalRing.residue k).injective, IsLocalRing.residue_surjective⟩
-  haveI : IsAlgClosed (IsLocalRing.ResidueField k) := IsAlgClosed.of_ringEquiv k _ (RingEquiv.ofBijective _ hb)
+  have : IsAlgClosed (IsLocalRing.ResidueField k) := IsAlgClosed.of_ringEquiv k _ (RingEquiv.ofBijective _ hb)
   infer_instance
 
 theorem finite_sp (hH : Hyps) (h0 : H0TwistOverClosedField) (q : ℕ) [NeZero q] (k : Type) [Field k] [IsAlgClosed k] (hq : IsUnit (q : k))
     (n i : ℤ) : Finite (Ht q (sch.obj (Sp k)) n i) := by
   rcases lt_trichotomy n 0 with hn | rfl | hn
-  · haveI := (hH.2.2.2.2.2.2.2.1 (ZMod q) (tw q i)).1 (sch.obj (Sp k)) n hn
+  · have := (hH.2.2.2.2.2.2.2.1 (ZMod q) (tw q i)).1 (sch.obj (Sp k)) n hn
     exact Finite.of_subsingleton
   · exact (h0 hH q k hq i).1
-  · haveI := hH.2.2.2.2.2.2.2.2.2.2.2.1 (ZMod q) k (sh_of_isAlgClosed k) (tw q i) n hn
+  · have := hH.2.2.2.2.2.2.2.2.2.2.2.1 (ZMod q) k (sh_of_isAlgClosed k) (tw q i) n hn
     exact Finite.of_subsingleton
 
 theorem LeafPt_of (h0 : H0TwistOverClosedField) : LeafPt := by
   intro hH q _ k _ _ hq X _ p _ hd n i
   have := leafPtIso k p hd
-  haveI := finite_sp hH h0 q k hq n i
+  have := finite_sp hH h0 q k hq n i
   refine Finite.of_injective (pull (ZMod q) (sch.map (inv p)) (tw q i) n) ?_
   intro x y hxy
   have key : ∀ z : Ht q (sch.obj X) n i,
@@ -1279,10 +1279,10 @@ namespace LateralTheory.E.StalkOfAlgebra
 theorem stalk_of_smoothAt {R A : CommRingCat.{0}} (φ : R ⟶ A) (p : PrimeSpectrum A)
     (h : letI := φ.hom.toAlgebra; Algebra.IsSmoothAt R p.asIdeal) :
     ((Spec.map φ).stalkMap p).hom.FormallySmooth := by
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   let P := (p.comap φ.hom).asIdeal
-  haveI : p.asIdeal.LiesOver P := ⟨rfl⟩
-  letI := Localization.AtPrime.algebraOfLiesOver P p.asIdeal
+  have : p.asIdeal.LiesOver P := ⟨rfl⟩
+  let := Localization.AtPrime.algebraOfLiesOver P p.asIdeal
   rw [RingHom.FormallySmooth.respectsIso.arrow_mk_iso_iff (Scheme.arrowStalkMapSpecIso φ p)]
   have : Algebra.FormallySmooth (Localization.AtPrime P) (Localization.AtPrime p.asIdeal) :=
     (Algebra.FormallySmooth.iff_restrictScalars (R := R) (A := Localization.AtPrime P)).mp h
@@ -1292,7 +1292,7 @@ theorem core (hA : LateralTheory.E.SpreadingOutSmoothness.LeafAlgDescend) (k : T
     [Algebra k Ω] (R : Subalgebra k Ω) {C : Scheme.{0}} {A : CommRingCat.{0}} (φ : CommRingCat.of R ⟶ A)
     (c : C ⟶ Sp Ω) (v : C ⟶ Spec A) [LocallyOfFinitePresentation (Spec.map φ)] (hs : Smooth c)
     (hv : IsPullback v c (Spec.map φ) (toR R)) (y : C) : v y ∈ (Spec.map φ).smoothLocus := by
-  letI : Algebra R A := φ.hom.toAlgebra
+  let : Algebra R A := φ.hom.toAlgebra
   have hfp0 : φ.hom.FinitePresentation :=
     (HasRingHomProperty.Spec_iff (P := @LocallyOfFinitePresentation) (φ := φ)).mp inferInstance
   have hfp : Algebra.FinitePresentation R A := hfp0
@@ -1305,7 +1305,7 @@ theorem core (hA : LateralTheory.E.SpreadingOutSmoothness.LeafAlgDescend) (k : T
     hv.isoIsPullback_hom_fst _ _ hstd
   have h2 : e.hom ≫ Spec.map (CommRingCat.ofHom (S := Ω ⊗[R] A) Algebra.TensorProduct.includeLeftRingHom) = c :=
     hv.isoIsPullback_hom_snd _ _ hstd
-  haveI := hs
+  have := hs
   have hsm : Smooth (Spec.map (CommRingCat.ofHom (S := Ω ⊗[R] A) Algebra.TensorProduct.includeLeftRingHom)) := by
     have : Spec.map (CommRingCat.ofHom (S := Ω ⊗[R] A) Algebra.TensorProduct.includeLeftRingHom) = e.inv ≫ c := by
       rw [← h2, Iso.inv_hom_id_assoc]
@@ -1324,7 +1324,7 @@ theorem LeafStalkOfAlg_of : LateralTheory.E.SpreadingOutSmoothness.LeafStalkOfAl
   let e := D.isoSpec
   let φ := Spec.preimage (e.inv ≫ q)
   have hq : Spec.map φ = e.inv ≫ q := Spec.map_preimage _
-  haveI : LocallyOfFinitePresentation (Spec.map φ) := by rw [hq]; infer_instance
+  have : LocallyOfFinitePresentation (Spec.map φ) := by rw [hq]; infer_instance
   have hv' : IsPullback (v ≫ e.hom) c (Spec.map φ) (toR R) := by
     rw [hq]
     exact hv.of_iso (Iso.refl _) e (Iso.refl _) (Iso.refl _) (by simp) (by simp) (by simp) (by simp)
@@ -1421,7 +1421,7 @@ namespace GlobalTheory
 theorem isIntegrallyClosed_stalk_spec_field (K : Type) [Field K] (x : Spec (.of K)) :
     IsIntegrallyClosed ((Spec (.of K)).presheaf.stalk x) := by
   have hU := isAffineOpen_top (Spec (.of K))
-  letI := (Spec (.of K)).presheaf.algebra_section_stalk (⟨x, trivial⟩ : (⊤ : (Spec (.of K)).Opens))
+  let := (Spec (.of K)).presheaf.algebra_section_stalk (⟨x, trivial⟩ : (⊤ : (Spec (.of K)).Opens))
   have h1 := hU.isLocalization_stalk ⟨x, trivial⟩
   have : IsIntegrallyClosed Γ(Spec (.of K), ⊤) :=
     IsIntegrallyClosed.of_equiv (Scheme.ΓSpecIso (CommRingCat.of K)).symm.commRingCatIsoToRingEquiv

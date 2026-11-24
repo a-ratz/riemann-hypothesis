@@ -106,11 +106,11 @@ theorem exists_dominating_of_residue_map {R S : Type} [CommRing R] [IsLocalRing 
   have hsurj : Function.Surjective φ := fun y => by
     obtain ⟨r, rfl⟩ := residue_surjective y
     exact ⟨j r, hφ r⟩
-  haveI hmax : (RingHom.ker φ).IsMaximal := RingHom.ker_isMaximal_of_surjective φ hsurj
+  have hmax : (RingHom.ker φ).IsMaximal := RingHom.ker_isMaximal_of_surjective φ hsurj
   let B := Localization.AtPrime (RingHom.ker φ)
   have hmem : ∀ s : S, algebraMap S B s ∈ maximalIdeal B ↔ φ s = 0 := fun s => by
     rw [IsLocalization.AtPrime.to_map_mem_maximal_iff B (RingHom.ker φ), RingHom.mem_ker]
-  haveI : IsNoetherianRing B :=
+  have : IsNoetherianRing B :=
     IsLocalization.isNoetherianRing (RingHom.ker φ).primeCompl B inferInstance
   refine ⟨B, inferInstance, inferInstance, inferInstance, inferInstance,
     (algebraMap S B).comp j, ?_, ⟨fun r hr => ?_⟩, fun b => ?_, algebraMap S B u,
@@ -148,7 +148,7 @@ theorem coeff_zero_mem_maximalIdeal_of_aeval_div {R : Type} [CommRing R] [IsDoma
   have hf' : algebraMap R (FractionRing R) f ≠ 0 := (map_ne_zero_iff _ hinj).2 hf
   set u := algebraMap R (FractionRing R) f / algebraMap R (FractionRing R) G with hu
   have hu0 : u ≠ 0 := div_ne_zero hf' hG'
-  letI := invertibleOfNonzero hu0
+  let := invertibleOfNonzero hu0
   have hrev : aeval (⅟u) P.reverse = 0 := by
     rw [aeval_def, eval₂_reverse_eq_zero_iff]; exact hP
   have hint := isIntegral_leadingCoeff_smul P.reverse (⅟u) hrev
@@ -173,7 +173,7 @@ theorem exists_dominating_eq_mul_of_not_mem_span :
   let u := algebraMap R (FractionRing R) f / algebraMap R (FractionRing R) G
   let e : R[X] →+* FractionRing R := (aeval u : R[X] →ₐ[R] FractionRing R)
   have he : ∀ P, e P = aeval u P := fun _ => rfl
-  haveI : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
+  have : (RingHom.ker e).IsPrime := RingHom.ker_isPrime e
   let φ : (R[X] ⧸ RingHom.ker e) →+* ResidueField R :=
     Ideal.Quotient.lift _ ((residue R).comp constantCoeff) fun P hP => by
       rw [RingHom.comp_apply, residue_eq_zero_iff]
@@ -214,7 +214,7 @@ theorem exists_point_of_isLocalHom {o Ω : Type} [CommRing o] [Field Ω] [Algebr
       RatModel.val M (gPt p ≫ y) (a : Ω) = ((χ a : OO p) : PadicAlgCl p) := by
   let χ' : M.Z.presheaf.stalk x ⟶ CommRingCat.of (OO p) :=
     CommRingCat.ofHom (χ.comp (M.stalkEquiv x).toRingHom)
-  haveI : IsLocalHom χ'.hom := by
+  have : IsLocalHom χ'.hom := by
     refine ⟨fun a ha => ?_⟩
     have h1 : IsUnit (M.stalkEquiv x a) := isUnit_of_map_unit χ _ ha
     exact (MulEquiv.isUnit_map (M.stalkEquiv x).toMulEquiv).1 h1
@@ -422,14 +422,14 @@ theorem finite_quot_span [IsNoetherianRing C] [Finite (ResidueField C)] (hp0 : (
       Ideal.span {(p : AdicCompletion (maximalIdeal C) C)}) := by
   set A := AdicCompletion (maximalIdeal C) C
   have fg : (maximalIdeal C).FG := IsNoetherian.noetherian _
-  haveI : Finite (C ⧸ maximalIdeal C) := ‹Finite (ResidueField C)›
-  haveI : Finite (A ⧸ (maximalIdeal C).map (algebraMap C A)) := by
+  have : Finite (C ⧸ maximalIdeal C) := ‹Finite (ResidueField C)›
+  have : Finite (A ⧸ (maximalIdeal C).map (algebraMap C A)) := by
     have h := Finite.of_injective _
       (RingHom.kerLift_injective (AdicCompletion.evalOneₐ (maximalIdeal C)).toRingHom)
     rw [AdicCompletion.ker_evalOneₐ_eq_map _ fg] at h
     exact h
   obtain ⟨N, hN⟩ := exists_pow_le_span p C hp0 hprime
-  haveI : Finite (A ⧸ ((maximalIdeal C).map (algebraMap C A)) ^ N) :=
+  have : Finite (A ⧸ ((maximalIdeal C).map (algebraMap C A)) ^ N) :=
     Ideal.finite_quotient_pow (fg.map _) N
   have hle : ((maximalIdeal C).map (algebraMap C A)) ^ N ≤ Ideal.span {(p : A)} := by
     rw [← Ideal.map_pow]
@@ -449,11 +449,11 @@ theorem GlobalTheory.CompletionEmbed.exists_finite_padicInt_domain :
         Module.Finite ℤ_[p] D ∧ ∃ ι : C →+* D, Function.Injective ι := by
   intro p _ C _ _ _ _ hfin hp0 hpm hprime
   set A := AdicCompletion (maximalIdeal C) C
-  haveI : IsNoetherianRing A := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion C _
-  letI : Algebra ℤ_[p] A := (toCompletion p C hpm).toAlgebra
+  have : IsNoetherianRing A := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion C _
+  let : Algebra ℤ_[p] A := (toCompletion p C hpm).toAlgebra
   have hJ : (maximalIdeal ℤ_[p]).map (algebraMap ℤ_[p] A) = Ideal.span {(p : A)} := by
     rw [PadicInt.maximalIdeal_eq_span_p, Ideal.map_span, Set.image_singleton, map_natCast]
-  haveI : Finite (A ⧸ Ideal.span {(p : A)}) := finite_quot_span p C hp0 hprime
+  have : Finite (A ⧸ Ideal.span {(p : A)}) := finite_quot_span p C hp0 hprime
   have hne : Ideal.span {(p : A)} ≠ ⊤ := by
     intro h
     have hu : IsUnit (p : A) := Ideal.span_singleton_eq_top.mp h
@@ -461,7 +461,7 @@ theorem GlobalTheory.CompletionEmbed.exists_finite_padicInt_domain :
     rw [map_natCast, ← map_natCast (Ideal.Quotient.mk (maximalIdeal C)),
       Ideal.Quotient.eq_zero_iff_mem.mpr hpm] at hu'
     exact not_isUnit_zero hu'
-  haveI : Module.Finite ℤ_[p] A := by
+  have : Module.Finite ℤ_[p] A := by
     refine GlobalTheory.finite_of_finite_quot_map_of_isPrecomplete ℤ_[p] A (maximalIdeal ℤ_[p]) ?_ ?_
     · rw [hJ]; exact hne
     · rw [hJ]; exact Module.Finite.of_finite
@@ -474,7 +474,7 @@ theorem GlobalTheory.CompletionEmbed.exists_finite_padicInt_domain :
     by_contra h
     push_neg at h
     exact hnil (nilpotent_iff_mem_prime.mpr h)
-  haveI := hQ
+  have := hQ
   refine ⟨A ⧸ Q, inferInstance, inferInstance, inferInstance, ?_,
     (Ideal.Quotient.mk Q).comp (algebraMap C A), ?_⟩
   · exact Module.Finite.of_surjective (Ideal.Quotient.mkₐ ℤ_[p] Q).toLinearMap
@@ -537,8 +537,8 @@ theorem exists_injective_norm_le_one (p : ℕ) [Fact (Nat.Prime p)] (D : Type) [
   have hM : Function.Injective (algebraMap ℤ_[p] (PadicAlgCl p)) := by
     apply algebraMap_injective_of_ne
     exact_mod_cast (Fact.out : p.Prime).ne_zero
-  haveI := isTorsionFree_of_injective (algebraMap_injective_of_ne p D hp)
-  haveI := isTorsionFree_of_injective hM
+  have := isTorsionFree_of_injective (algebraMap_injective_of_ne p D hp)
+  have := isTorsionFree_of_injective hM
   let φ : D →ₐ[ℤ_[p]] PadicAlgCl p := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -546,7 +546,7 @@ theorem exists_injective_norm_le_one (p : ℕ) [Fact (Nat.Prime p)] (D : Type) [
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   refine ⟨φ.toRingHom, ?_, fun d => ?_⟩
   · rw [RingHom.injective_iff_ker_eq_bot]
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ_[p])
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ_[p])
     rw [eq_bot_iff]
     intro a ha
     rw [Ideal.mem_comap, RingHom.mem_ker] at ha
@@ -575,7 +575,7 @@ theorem exists_prime_not_mem_forall_gt_eq_maximalIdeal (C : Type) [CommRing C] [
   classical
 
   have hnil : ¬ IsNilpotent x := fun h => hx (IsNilpotent.eq_zero h)
-  haveI : Nontrivial (Localization.Away x) :=
+  have : Nontrivial (Localization.Away x) :=
     (IsLocalization.injective (Localization.Away x)
       (powers_le_nonZeroDivisors_of_noZeroDivisors hx)).nontrivial
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (Localization.Away x)
@@ -609,7 +609,7 @@ theorem exists_prime_not_mem_forall_gt_eq_maximalIdeal (C : Type) [CommRing C] [
   set f := Ideal.Quotient.mk q with hfdef
   have hsurj : Function.Surjective f := Ideal.Quotient.mk_surjective
   have hker : RingHom.ker f = q := Ideal.mk_ker
-  haveI : IsDomain (C ⧸ q) := Ideal.Quotient.isDomain q
+  have : IsDomain (C ⧸ q) := Ideal.Quotient.isDomain q
   set m' : Ideal (C ⧸ q) := (maximalIdeal C).map f with hm'
   have hqm : q ≤ maximalIdeal C := le_maximalIdeal hqp.ne_top
   have hm'p : m'.IsPrime := Ideal.map_isPrime_of_surjective hsurj (hker.symm ▸ hqm)
@@ -667,11 +667,11 @@ theorem exists_ringHom_padicAlgCl_ne_zero : ∀ (B : Type) [CommRing B] [IsDomai
   set p := ringChar (ResidueField B) with hpdef
   have hp0 : p ≠ 0 := by
     intro h0
-    haveI : CharP (ResidueField B) 0 := by rw [← h0]; exact ringChar.charP _
-    haveI : CharZero (ResidueField B) := CharP.charP_to_charZero _
+    have : CharP (ResidueField B) 0 := by rw [← h0]; exact ringChar.charP _
+    have : CharZero (ResidueField B) := CharP.charP_to_charZero _
     exact not_finite (ResidueField B)
   have hp : p.Prime := (CharP.char_is_prime_or_zero (ResidueField B) p).resolve_right hp0
-  haveI hF : Fact p.Prime := ⟨hp⟩
+  have hF : Fact p.Prime := ⟨hp⟩
   have hpm : (p : B) ∈ maximalIdeal B := by
     rw [← residue_eq_zero_iff, map_natCast]
     exact ringChar.Nat.cast_ringChar
@@ -682,8 +682,8 @@ theorem exists_ringHom_padicAlgCl_ne_zero : ∀ (B : Type) [CommRing B] [IsDomai
   have hpq : (p : B) ∉ q := fun hq' => hxq (Ideal.mul_mem_left _ _ hq')
   have hqm : q ≤ maximalIdeal B := le_maximalIdeal hq.ne_top
   set C := B ⧸ q
-  haveI : Nontrivial C := Ideal.Quotient.nontrivial_iff.2 hq.ne_top
-  haveI : IsLocalRing C := IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
+  have : Nontrivial C := Ideal.Quotient.nontrivial_iff.2 hq.ne_top
+  have : IsLocalRing C := IsLocalRing.of_surjective' (Ideal.Quotient.mk q) Ideal.Quotient.mk_surjective
   let π : B →+* C := Ideal.Quotient.mk q
   have hπm : ∀ b ∈ maximalIdeal B, π b ∈ maximalIdeal C := by
     intro b hb hu
@@ -772,16 +772,16 @@ namespace GlobalTheory.Izumi
 theorem essFiniteType_int_O : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω)
     (x : M.Z), Algebra.EssFiniteType ℤ (M.O x) := by
   intro o Ω _ _ _ hA M x
-  haveI : LocallyOfFiniteType M.s := M.lft
+  have : LocallyOfFiniteType M.s := M.lft
   let y : PrimeSpectrum o := M.s x
-  letI A : Algebra o ((Sp o).presheaf.stalk (M.s x)) := StructureSheaf.stalkAlgebra _ y
+  let A : Algebra o ((Sp o).presheaf.stalk (M.s x)) := StructureSheaf.stalkAlgebra _ y
   haveI : @IsLocalization.AtPrime o _ ((Sp o).presheaf.stalk (M.s x)) _ A y.asIdeal _ :=
     StructureSheaf.IsLocalization.to_stalk _ y
   let φ := @algebraMap o ((Sp o).presheaf.stalk (M.s x)) _ _ A
   have h₁ : (M.s.stalkMap x).hom.EssFiniteType := LocallyOfFiniteType.stalkMap M.s x
   have h₂ : φ.EssFiniteType :=
     RingHom.essFiniteType_algebraMap.2 (Algebra.EssFiniteType.of_isLocalization _ y.asIdeal.primeCompl)
-  haveI : Algebra.FiniteType ℤ o := hA.ft
+  have : Algebra.FiniteType ℤ o := hA.ft
   have h₀ : (algebraMap ℤ o).EssFiniteType := RingHom.essFiniteType_algebraMap.2 inferInstance
   have h₃ : (M.stalkEquiv x).toRingHom.EssFiniteType :=
     (RingHom.FiniteType.of_surjective _ (M.stalkEquiv x).surjective).essFiniteType
@@ -809,12 +809,12 @@ namespace GlobalTheory.ResFin
 theorem finite_residueField_O : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω)
     (x : M.Z), IsClosed ({x} : Set M.Z) → Finite (ResidueField (M.O x)) := by
   intro o Ω _ _ _ hA M x hx
-  haveI : Algebra.FiniteType ℤ o := hA.ft
-  haveI : LocallyOfFiniteType (spMap (algebraMap ℤ o)) :=
+  have : Algebra.FiniteType ℤ o := hA.ft
+  have : LocallyOfFiniteType (spMap (algebraMap ℤ o)) :=
     (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).2 (RingHom.finiteType_algebraMap.2 inferInstance)
-  haveI : LocallyOfFiniteType M.s := M.lft
+  have : LocallyOfFiniteType M.s := M.lft
   have h := finite_residueField_of_isClosed_of_locallyOfFiniteType_int (M.s ≫ spMap (algebraMap ℤ o)) x hx
-  haveI : Finite (ResidueField (M.Z.presheaf.stalk x)) := h
+  have : Finite (ResidueField (M.Z.presheaf.stalk x)) := h
   exact Finite.of_equiv _ (ResidueField.mapEquiv (M.stalkEquiv x)).toEquiv
 
 end GlobalTheory.ResFin
@@ -854,15 +854,15 @@ theorem exists_sub_algebraMap_mem_maximalIdeal_completion : ∀ (A : Type) [Comm
     rw [map_sub, hψ, ha, sub_self]
   have h1 := hu.map ψ
   rw [h0] at h1
-  haveI : Nontrivial (A ⧸ maximalIdeal A ^ 1) := by
+  have : Nontrivial (A ⧸ maximalIdeal A ^ 1) := by
     rw [pow_one]
     exact Ideal.Quotient.nontrivial_iff.2 (maximalIdeal.isMaximal A).ne_top
   exact not_isUnit_zero h1
 
 theorem norm_le_of_mem_iInf_map_smallIdeal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω) (U : M.Z.Opens) (x : M.Z) (f : Ω) (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ M.Z), M.Cen U x y → ∀ ψ : AdicCompletion (maximalIdeal (M.O x)) (M.O x) →+* PadicAlgCl p, (∀ g, ‖ψ g‖ ≤ 1) → (∀ a : M.O x, ψ (algebraMap (M.O x) (AdicCompletion (maximalIdeal (M.O x)) (M.O x)) a) = M.val (gPt p ≫ y) a) → ∀ G ∈ ⨅ N, (smallIdeal M U x f N).map (algebraMap (M.O x) (AdicCompletion (maximalIdeal (M.O x)) (M.O x))), ‖ψ G‖ ≤ ‖M.val (gPt p ≫ y) f‖ := by
   intro o Ω _ _ _ _ M U x f p _ y hy ψ hψ1 hψv G hG
-  haveI := ArithBase.ded (o := o) (Ω := Ω)
-  haveI : IsNoetherianRing (M.O x) := RatModel.isNoetherianRing_O M x
+  have := ArithBase.ded (o := o) (Ω := Ω)
+  have : IsNoetherianRing (M.O x) := RatModel.isNoetherianRing_O M x
   have hadd : ∀ a b : M.O x, ‖M.val (gPt p ≫ y) ((a + b : M.O x) : Ω)‖ ≤
       max ‖M.val (gPt p ≫ y) (a : Ω)‖ ‖M.val (gPt p ≫ y) (b : Ω)‖ := norm_val_add_le M hy
   have hmul : ∀ c a : M.O x, ‖M.val (gPt p ≫ y) ((c * a : M.O x) : Ω)‖ ≤ ‖M.val (gPt p ≫ y) (a : Ω)‖ :=
@@ -875,14 +875,14 @@ theorem norm_le_of_mem_iInf_map_smallIdeal : ∀ (o Ω : Type) [CommRing o] [Fie
     intro g hg
     have hgm : g ∈ maximalIdeal (M.O x) := hS ▸ Submodule.subset_span hg
     have h1 := (hy.norm_val_lt_one_iff g.2).2 (by simpa using hgm)
-    rw [← NNReal.coe_lt_coe, coe_nnnorm]
+    rw [← NNReal.coe_lt_coe, coe_nnNorm]
     simpa using h1
   have hρ : ∀ h ∈ maximalIdeal (M.O x), ‖M.val (gPt p ≫ y) (h : Ω)‖ ≤ ρ := by
     intro h hh
     rw [← hS] at hh
     induction hh using Submodule.span_induction with
     | mem g hg =>
-      rw [hρdef, ← coe_nnnorm, NNReal.coe_le_coe]
+      rw [hρdef, ← coe_nnNorm, NNReal.coe_le_coe]
       exact Finset.le_sup (f := fun g : M.O x => ‖M.val (gPt p ≫ y) (g : Ω)‖₊) hg
     | zero =>
       have h0 : ((0 : M.O x) : Ω) = 0 := rfl
@@ -936,20 +936,20 @@ theorem norm_le_of_mem_iInf_map_smallIdeal : ∀ (o Ω : Type) [CommRing o] [Fie
 
 theorem iInf_map_smallIdeal_le_span : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (U : M.Z.Opens), (U : Set M.Z).Nonempty → ∀ (x : M.Z), IsClosed ({x} : Set M.Z) → ∀ (f : Ω) (hf : f ∈ M.O x), f ≠ 0 → ⨅ N, (smallIdeal M U x f N).map (algebraMap (M.O x) (AdicCompletion (maximalIdeal (M.O x)) (M.O x))) ≤ Ideal.span {algebraMap (M.O x) (AdicCompletion (maximalIdeal (M.O x)) (M.O x)) ⟨f, hf⟩} := by
   intro o Ω _ _ _ _ M hN U hU x hx f hf hf0
-  haveI := ArithBase.ded (o := o) (Ω := Ω)
-  haveI := ArithBase.char (o := o) (Ω := Ω)
-  haveI : IsNoetherianRing (M.O x) := RatModel.isNoetherianRing_O M x
-  haveI : IsIntegrallyClosed (M.O x) := RatModel.isIntegrallyClosed_O hN x
-  haveI : CharZero (M.O x) := ⟨fun a b h => by
+  have := ArithBase.ded (o := o) (Ω := Ω)
+  have := ArithBase.char (o := o) (Ω := Ω)
+  have : IsNoetherianRing (M.O x) := RatModel.isNoetherianRing_O M x
+  have : IsIntegrallyClosed (M.O x) := RatModel.isIntegrallyClosed_O hN x
+  have : CharZero (M.O x) := ⟨fun a b h => by
     have := congrArg Subtype.val h
     simpa using this⟩
-  haveI : Algebra.EssFiniteType ℤ (M.O x) := _root_.GlobalTheory.Izumi.essFiniteType_int_O o Ω M x
-  haveI : Finite (ResidueField (M.O x)) := _root_.GlobalTheory.ResFin.finite_residueField_O o Ω M x hx
+  have : Algebra.EssFiniteType ℤ (M.O x) := _root_.GlobalTheory.Izumi.essFiniteType_int_O o Ω M x
+  have : Finite (ResidueField (M.O x)) := _root_.GlobalTheory.ResFin.finite_residueField_O o Ω M x hx
   set A := M.O x with hA
   set R := AdicCompletion (maximalIdeal A) A with hR
   set φ := algebraMap A R with hφ
   obtain ⟨hdom, hic⟩ := GlobalTheory.AnalyticNormality.completion_isDomain_and_isIntegrallyClosed A
-  haveI : IsNoetherianRing R := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion A _
+  have : IsNoetherianRing R := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion A _
   have hinj : Function.Injective φ := algebraMap_completion_injective A
   intro G hG
   by_contra hGf
@@ -958,11 +958,11 @@ theorem iInf_map_smallIdeal_le_span : ∀ (o Ω : Type) [CommRing o] [Field Ω] 
   have hG0 : G ≠ 0 := by
     rintro rfl
     exact hGf (Submodule.zero_mem _)
-  haveI : CharZero B := ⟨fun a b h => by
+  have : CharZero B := ⟨fun a b h => by
     have h1 : ι (φ (a : A)) = ι (φ (b : A)) := by simpa using h
     have h2 := hinj (hιinj h1)
     exact_mod_cast h2⟩
-  haveI : Finite (ResidueField B) := by
+  have : Finite (ResidueField B) := by
     let g : A → ResidueField B := fun a => residue B (ι (φ a))
     have hg : Function.Surjective g := by
       intro c
@@ -1045,8 +1045,8 @@ namespace GlobalTheory.Izumi
 
 theorem small_mod_principal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (M : RatModel o Ω), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme M.Z → ∀ (U : M.Z.Opens), (U : Set M.Z).Nonempty → ∀ (x : M.Z), IsClosed ({x} : Set M.Z) → ∀ f ∈ M.O x, f ≠ 0 → ∃ C : ℕ → ℕ, ∀ (e : ℕ) (F : M.O x), (∀ (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ M.Z), M.Cen U x y → ‖M.val (gPt p ≫ y) F‖ ≤ ‖M.val (gPt p ≫ y) f‖ ∨ ∃ h, NonUnitAt M x h ∧ ‖M.val (gPt p ≫ y) F‖ ≤ ‖M.val (gPt p ≫ y) h‖ ^ C e) → ∃ a b : M.O x, (F : Ω) = a * f + b ∧ b ∈ Ideal.span {c : M.O x | ¬ IsUnit c} ^ e := by
   intro o Ω _ _ _ _ M hn U hU x hx f hf hf0
-  haveI : IsDedekindDomain o := ArithBase.ded Ω
-  haveI : IsNoetherianRing (M.O x) := M.isNoetherianRing_O x
+  have : IsDedekindDomain o := ArithBase.ded Ω
+  have : IsNoetherianRing (M.O x) := M.isNoetherianRing_O x
   have hB := _root_.GlobalTheory.Izumi.iInf_map_smallIdeal_le_span o Ω M hn U hU x hx f hf hf0
   choose C hC using exists_le_span_sup_pow (M.O x) (smallIdeal M U x f) ⟨f, hf⟩
     (smallIdeal_antitone U x f) (self_mem_smallIdeal U hf) hB

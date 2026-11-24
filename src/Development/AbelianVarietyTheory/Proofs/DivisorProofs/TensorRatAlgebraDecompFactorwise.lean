@@ -70,17 +70,17 @@ theorem tensor_decomp_factorwise : ∀ (S F B : Type) [Field S] [CharZero S] [Fi
       (∀ z : S ⊗[ℚ] F, Φ (Algebra.TensorProduct.map (AlgHom.id S S) (IsScalarTower.toAlgHom ℚ F B) z) =
         fun i => algebraMap (L i) (L i ⊗[F] B) (ψ z i)) := by
   intro S F B _ _ _ _ _ _ _ _ _
-  haveI hEt : Algebra.Etale ℚ F := by
-    haveI : Algebra.IsSeparable ℚ F := inferInstance
-    haveI : Algebra.FormallyEtale ℚ F := Algebra.FormallyEtale.of_isSeparable ℚ F
-    haveI : Algebra.FinitePresentation ℚ F := Algebra.FinitePresentation.of_finiteType.mp inferInstance
+  have hEt : Algebra.Etale ℚ F := by
+    have : Algebra.IsSeparable ℚ F := inferInstance
+    have : Algebra.FormallyEtale ℚ F := Algebra.FormallyEtale.of_isSeparable ℚ F
+    have : Algebra.FinitePresentation ℚ F := Algebra.FinitePresentation.of_finiteType.mp inferInstance
     constructor <;> infer_instance
-  haveI : Algebra.Etale S (S ⊗[ℚ] F) := Algebra.Etale.baseChange ℚ F S
+  have : Algebra.Etale S (S ⊗[ℚ] F) := Algebra.Etale.baseChange ℚ F S
   obtain ⟨I, hI, L, hL, hAL, e, -⟩ := (Algebra.Etale.iff_exists_algEquiv_prod S (S ⊗[ℚ] F)).mp this
-  letI : Fintype I := Fintype.ofFinite I
+  let : Fintype I := Fintype.ofFinite I
   classical
   let ψ : S ⊗[ℚ] F ≃+* ((i : I) → L i) := e.toRingEquiv
-  letI instF : ∀ i, Algebra F (L i) := fun i =>
+  let instF : ∀ i, Algebra F (L i) := fun i =>
     ((Pi.evalRingHom L i).comp (ψ.toRingHom.comp
       (Algebra.TensorProduct.includeRight : F →ₐ[ℚ] S ⊗[ℚ] F).toRingHom)).toAlgebra
   have hchar : ∀ i, CharZero (L i) := fun i =>

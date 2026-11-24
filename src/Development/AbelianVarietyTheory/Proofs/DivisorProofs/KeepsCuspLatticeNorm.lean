@@ -633,7 +633,7 @@ theorem exists_strict_domain [MeasurableMul G] [Countable Γ] (μ : Measure G) [
   obtain ⟨E, hsub, hE, hae⟩ := hF.fundamentalInterior.nullMeasurableSet.exists_measurable_subset_ae_eq
   have h2 : fundamentalInterior Γ F =ᵐ[μ] F := by
     rw [← sdiff_fundamentalFrontier]
-    exact diff_ae_eq_self.2 (measure_mono_null Set.inter_subset_right hF.measure_fundamentalFrontier)
+    exact sdiff_ae_eq_self.2 (measure_mono_null Set.inter_subset_right hF.measure_fundamentalFrontier)
   have h3 := hae.trans h2
   refine ⟨E, hE, h3, ?_, ?_⟩
   · intro γ x hx hγ
@@ -655,7 +655,7 @@ end Alg
 theorem invariant_prob_eq : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] [MeasurableSpace G] [BorelSpace G] (Γ : Subgroup G) [Countable Γ] (μ : Measure G) [μ.IsHaarMeasure] (𝓕 : Set G), IsFundamentalDomain Γ 𝓕 μ → μ 𝓕 ≠ ⊤ → ∀ (ν : Measure (Quotient (QuotientGroup.rightRel Γ))) [IsProbabilityMeasure ν], (∀ (h : G) (ρ : Quotient (QuotientGroup.rightRel Γ) → Quotient (QuotientGroup.rightRel Γ)), (∀ g : G, ρ (Quotient.mk _ g) = Quotient.mk _ (g * h)) → ∀ s, MeasurableSet s → ν (ρ ⁻¹' s) = ν s) → ν = (μ 𝓕)⁻¹ • (μ.restrict 𝓕).map (fun g : G => (Quotient.mk _ g : Quotient (QuotientGroup.rightRel Γ))) := by
   intro G _ _ _ _ _ _ _ _ Γ _ μ _ F hF hfin ν _ hinv
   have h0 : μ F ≠ 0 := hF.measure_ne_zero (NeZero.ne μ)
-  haveI : μ.IsMulRightInvariant := ⟨rightInvariant_of_covolume Γ μ hF h0 hfin⟩
+  have : μ.IsMulRightInvariant := ⟨rightInvariant_of_covolume Γ μ hF h0 hfin⟩
   obtain ⟨E, hE, hEF, hEs, hEn⟩ := exists_strict_domain Γ μ hF
   have hκ := measurable_fibreMeasure Γ
   set L : Measure G := ν.bind (fibreMeasure Γ) with hL
@@ -667,7 +667,7 @@ theorem invariant_prob_eq : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTop
     rw [hLa A hA]
     simp_rw [fibreMeasure_of_injOn Γ hA h]
     exact lintegral_indicator_one (measurableSet_image_cls Γ hA)
-  haveI : L.IsMulRightInvariant := by
+  have : L.IsMulRightInvariant := by
     refine ⟨fun h => ?_⟩
     let ρ : Quotient (QuotientGroup.rightRel Γ) → Quotient (QuotientGroup.rightRel Γ) :=
       Quotient.lift (fun g => cls Γ (g * h)) (by
@@ -691,7 +691,7 @@ theorem invariant_prob_eq : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTop
       refine tsum_congr fun γ => ?_
       rw [← mul_assoc]
       rfl
-  haveI : IsLocallyFiniteMeasure L := by
+  have : IsLocallyFiniteMeasure L := by
     have hpos : 0 < μ E := by rw [measure_congr hEF]; exact pos_iff_ne_zero.2 h0
     have hn := Measure.div_mem_nhds_one_of_haar_pos μ E hE hpos
     refine ⟨fun g => ?_⟩
@@ -710,7 +710,7 @@ theorem invariant_prob_eq : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTop
         simp only [mul_div_cancel_right] at hab
         rw [← hab]; simp
       rwa [← this]
-  haveI : μ.inv.IsHaarMeasure := {}
+  have : μ.inv.IsHaarMeasure := {}
   have e := Measure.isMulLeftInvariant_eq_smul L.inv μ.inv
   set c := Measure.haarScalarFactor L.inv μ.inv
   have e2 : L = (c : ℝ≥0∞) • μ := by
@@ -726,17 +726,17 @@ theorem invariant_prob_eq : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTop
     calc ν (cls Γ '' E)ᶜ = ∫⁻ q, (cls Γ '' E)ᶜ.indicator 1 q ∂ν := (lintegral_indicator_one hT.compl).symm
       _ ≤ _ := lintegral_mono fun q => indicator_le_fibreMeasure Γ hT.compl q
       _ = L _ := (hLa _ (measurable_cls Γ hT.compl)).symm
-      _ = 0 := by rw [e2, Measure.smul_apply, hEn, smul_zero]
+      _ = 0 := by rw [e2, smul_apply, hEn, smul_zero]
   have key : ν = (c : ℝ≥0∞) • (μ.restrict F).map (cls Γ) := by
     ext s hs
-    rw [Measure.smul_apply, Measure.map_apply (measurable_cls Γ) hs, ← Measure.restrict_congr_set hEF,
-      Measure.restrict_apply (measurable_cls Γ hs), ← Measure.smul_apply, ← e2,
+    rw [smul_apply, Measure.map_apply (measurable_cls Γ) hs, ← Measure.restrict_congr_set hEF,
+      Measure.restrict_apply (measurable_cls Γ hs), ← smul_apply, ← e2,
       hLi _ ((measurable_cls Γ hs).inter hE) (fun γ x hx hγ => hEs γ x hx.2 hγ.2),
       Set.image_preimage_inter]
     exact (measure_inter_conull hnull).symm
   have h1 : (c : ℝ≥0∞) * μ F = 1 := by
     have := congrArg (fun m => m Set.univ) key
-    simp only [measure_univ, Measure.smul_apply, smul_eq_mul] at this
+    simp only [measure_univ, smul_apply, smul_eq_mul] at this
     rw [Measure.map_apply (measurable_cls Γ) MeasurableSet.univ] at this
     simpa using this.symm
   rw [← ENNReal.eq_inv_of_mul_eq_one_left h1]
@@ -783,7 +783,7 @@ theorem invProb_iff (V : HSp D) (hP : VolPairEx V) (hV : FinVol V) (ν : Measure
   have hV' := hV
   rw [FinVol, muQ_univ] at hV'
   have hq : muQ1 V = ((volPair V).1 (volPair V).2)⁻¹ • ((volPair V).1.restrict (volPair V).2).map (autMk V) := by
-    rw [muQ1, if_pos (show _ ∧ _ from hV), muQ_univ]; rfl
+    rw [muQ1, ite_eq_left (show _ ∧ _ from hV), muQ_univ]; rfl
   constructor
   · rintro ⟨h1, h2⟩
     rw [hq]
@@ -803,7 +803,7 @@ theorem invProb_iff (V : HSp D) (hP : VolPairEx V) (hV : FinVol V) (ν : Measure
         Function.bijective_id (fun γ x => by simp [Subgroup.smul_def, mul_assoc])
     have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableConstSMul_subgroup (GQ V)
     have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.smulInvariant_subgroup (GQ V) (volPair V).1
-    rw [hq, Measure.smul_apply, Measure.smul_apply]
+    rw [hq, smul_apply, smul_apply]
     congr 1
     rw [show ((volPair V).1.restrict (volPair V).2).map (autMk V) s = _ from
       congrArg (fun m : Measure (AutQ V) => m s) (GlobalTheory.AutQuotCheck.map_restrict_eq (GQ V) _ hp.2 hF),
@@ -872,7 +872,7 @@ theorem norm_rdU_transl (hσ : GoodEmb c σ) (hU : IsUnf U) (hpq : 1 ≤ Dw.p + 
     (h : Carries φ (levFull Dw l γ).1 k k' δ) {w : Ix Dw → ℤ} (hw : Even (w none)) {f : Rul Xo c}
     (hf : f ∈ secZ Xo c w) {x : Frame (U.X k).Ψ r} (hx : x ∈ (U.X k).dom) :
     ‖rdU U (transl Xo c γ f) k x‖ = ‖rdU U f k' (lact δ (castFr h.mt.psi x))‖ := by
-  haveI : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
+  have : IsLocalRing (CAt σ) := inferInstanceAs (IsLocalRing ℂ)
   have hA' : l.A.Coprime l.M := by rw [hA]; exact Nat.coprime_one_left _
   obtain ⟨z, hz1, hz⟩ := exists_const_of_carries (w := 0) (n := 2) (s' := (levFull Dw l γ).2) hσ hU hpq hA hP hxi
     ⟨fun _ => antitone_const, even_two⟩ (transl Xo c γ)
@@ -886,9 +886,9 @@ theorem norm_rdU_transl (hσ : GoodEmb c σ) (hU : IsUnf U) (hpq : 1 ≤ Dw.p + 
   obtain ⟨t₀, ht⟩ := GlobalTheory.GeoLevel.exists_frBor_gen _ _ a₁ b₁
   have key : ∀ (w : Ix Dw → ℤ), ∀ f ∈ secZ Xo c w, rdU U (transl Xo c γ f) k x =
       toC (t₀ : CAt σ) ^ w none * rdU U f k' (lact δ (castFr h.mt.psi x)) := fun w f hf => by
-    have v1 : rdU U (transl Xo c γ f) k x = toC (evR Xo c (transl Xo c γ f) (U.un k ⟨x, hx⟩)) := dif_pos hx
+    have v1 : rdU U (transl Xo c γ f) k x = toC (evR Xo c (transl Xo c γ f) (U.un k ⟨x, hx⟩)) := dite_eq_left hx
     have v2 : rdU U f k' (lact δ (castFr h.mt.psi x)) = toC (evR Xo c f (U.un k' ⟨_, h.mt.mem_dom hx⟩)) :=
-      dif_pos (h.mt.mem_dom hx)
+      dite_eq_left (h.mt.mem_dom hx)
     rw [v1, v2, evR_transl hpq hA' γ hf, GlobalTheory.FlagTan.evR_frBor hf ht, Fintype.prod_option]
     simp only [Option.elim, one_zpow, Finset.prod_const_one, mul_one]
     exact congrArg (· * toC (evR Xo c f (U.un k' ⟨_, h.mt.mem_dom hx⟩))) (Units.val_zpow_eq_zpow_val (α := ℂ) t₀ _)

@@ -115,10 +115,10 @@ theorem algHom_eq_val {R K : Type} [CommRing R] [IsDomain R] [Field K] [Algebra 
 theorem mono_fst_localization {R : Type} [CommRing R] (M : Submonoid R) (A : Type) [CommRing A] [Algebra R A]
     [IsLocalization M A] {B : Scheme.{0}} (pB : B ⟶ Sp R) :
     Mono (pullback.fst pB (spMap (algebraMap R A))) := by
-  haveI hepi : Epi (CommRingCat.ofHom (algebraMap R A)) :=
+  have hepi : Epi (CommRingCat.ofHom (algebraMap R A)) :=
     ⟨fun g h e => CommRingCat.hom_ext (IsLocalization.ringHom_ext M (by
       simpa using congrArg CommRingCat.Hom.hom e))⟩
-  haveI hsp : Mono (spMap (algebraMap R A)) :=
+  have hsp : Mono (spMap (algebraMap R A)) :=
     (inferInstance : Mono (Scheme.Spec.map (CommRingCat.ofHom (algebraMap R A)).op))
   infer_instance
 
@@ -127,8 +127,8 @@ end GenericLB
 theorem lb_generic_spreads_out : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Field K] [Algebra R K] [IsFractionRing R K] (B : Scheme.{0}) (pB : B ⟶ Sp R) (M : LB (pullback pB (spMap (algebraMap R K)))), QuasiCompact pB → QuasiSeparated pB → M.IsLB → ∃ (f : R) (_ : f ≠ 0) (M' : LB (pullback pB (spMap (algebraMap R (Localization.Away f))))), M'.IsLB ∧ ∀ j : pullback pB (spMap (algebraMap R K)) ⟶ pullback pB (spMap (algebraMap R (Localization.Away f))), j ≫ pullback.fst _ _ = pullback.fst _ _ → LBIso M (M'.pull j) := by
   intro R K _ _ _ _ _ _ B pB M hqc hqs hM
   classical
-  haveI := hqc
-  haveI := hqs
+  have := hqc
+  have := hqs
   obtain ⟨s, M₀, hM₀, -, hfac⟩ := LBLimit.exists_lb_of_isLimit (Spread.bcDiagram pB K)
     (fun i => (Spread.bcCone pB K).π.app i) (fun g => (Spread.bcCone pB K).w g)
     (Spread.isLimitBcCone pB K) M hM
@@ -144,7 +144,7 @@ theorem lb_generic_spreads_out : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsN
   let χ : Localization.Away f →ₐ[R] K :=
     { IsLocalization.Away.lift f hfK with
       commutes' := fun r => IsLocalization.lift_eq _ r }
-  haveI := GenericLB.mono_fst_localization (Submonoid.powers f) (Localization.Away f) pB
+  have := GenericLB.mono_fst_localization (Submonoid.powers f) (Localization.Away f) pB
   have hj : jm = Spread.bcMap pB χ := by
     rw [← cancel_mono (pullback.fst pB (spMap (algebraMap R (Localization.Away f)))), hjm,
       Spread.bcMap_fst]
@@ -207,10 +207,10 @@ theorem Spreads.step [IsNoetherianRing R] {T T' : ∀ (R' : Type) [CommRing R'],
   have hp : Submonoid.powers f ≤ nonZeroDivisors R := powers_le_nonZeroDivisors_of_noZeroDivisors hf
   let ψ₀ : Localization.Away f →+* K := IsLocalization.Away.lift f (isUnit_algebraMap hf)
   have h₀ : ψ₀.comp (algebraMap R _) = algebraMap R K := IsLocalization.Away.lift_comp f _
-  letI : Algebra (Localization.Away f) K := ψ₀.toAlgebra
-  haveI : IsScalarTower R (Localization.Away f) K := IsScalarTower.of_algebraMap_eq' h₀.symm
-  haveI : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hp
-  haveI : IsFractionRing (Localization.Away f) K :=
+  let : Algebra (Localization.Away f) K := ψ₀.toAlgebra
+  have : IsScalarTower R (Localization.Away f) K := IsScalarTower.of_algebraMap_eq' h₀.symm
+  have : IsDomain (Localization.Away f) := IsLocalization.isDomain_localization hp
+  have : IsFractionRing (Localization.Away f) K :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (Submonoid.powers f) _ K
   obtain ⟨f', hf', h'⟩ := H (Localization.Away f)
     (h _ (algebraMap R _) ψ₀ (IsLocalization.Away.algebraMap_isUnit f) h₀)
@@ -500,8 +500,8 @@ theorem isFractionRing_away {f : R} (hf : f ≠ 0) (ψ : Localization.Away f →
     (e : ψ.comp (algebraMap R _) = algebraMap R K) :
     letI := ψ.toAlgebra
     IsFractionRing (Localization.Away f) K := by
-  letI := ψ.toAlgebra
-  haveI : IsScalarTower R (Localization.Away f) K := IsScalarTower.of_algebraMap_eq' e.symm
+  let := ψ.toAlgebra
+  have : IsScalarTower R (Localization.Away f) K := IsScalarTower.of_algebraMap_eq' e.symm
   exact IsFractionRing.isFractionRing_of_isLocalization (Submonoid.powers f) _ K
     (powers_le_nonZeroDivisors_of_noZeroDivisors hf)
 
@@ -510,9 +510,9 @@ end Algebra
 theorem exists_spread : Out.Laws → Out.Laws2 → ∀ (o : Type) [CommRing o] (g N' : ℕ) (J : Type) (b : TBase o (N' ^ 2)) Mat κ (w w' : J) [Finite J] (R K : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Field K] [Algebra R K] [IsFractionRing R K] (β : o →+* R) (v : Ix g (N' ^ 2) → R) (t : TObj g (N' ^ 2) J b (spMap (algebraMap R K) ≫ spMap β)), t.HasTh (𝟙 _) (fun a => algebraMap R K (v a)) → t.Shape Mat κ → t.Prim w w' → ∃ (f : R) (_ : f ≠ 0) (t' : TObj g (N' ^ 2) J b (spMap (algebraMap R (Localization.Away f)) ≫ spMap β)) (ψ : Localization.Away f →+* K), ψ.comp (algebraMap R _) = algebraMap R K ∧ TMap t t' (spMap ψ) ∧ t'.HasTh (𝟙 _) (fun a => algebraMap R _ (v a)) ∧ t'.Shape Mat κ ∧ t'.Prim w w' := by
   intro l1 l2 o _ g N' J b Mat κ w w' _ R K _ _ _ _ _ _ β v t hth hsh hpr
   obtain ⟨f, hf, ψ₁, P', φ, e₁, hg, hpb, hL⟩ := _root_.GlobalTheory.polAV_spread R K t.pol
-  haveI := isDomain_away hf
-  letI := ψ₁.toAlgebra
-  haveI := isFractionRing_away hf ψ₁ e₁
+  have := isDomain_away hf
+  let := ψ₁.toAlgebra
+  have := isFractionRing_away hf ψ₁ e₁
   have key : ∀ (s : Sp K ⟶ Sp o) (t : TObj g (N' ^ 2) J b s) (φ : t.A.left ⟶ P'.A.left),
       s = spMap (algebraMap (Localization.Away f) K) ≫ spMap ((algebraMap R (Localization.Away f)).comp β) →
       IsGrpPullback t.A P'.A (spMap ψ₁) φ → LBIso t.L (P'.L.pull φ) →
@@ -527,9 +527,9 @@ theorem exists_spread : Out.Laws → Out.Laws2 → ∀ (o : Type) [CommRing o] (
   obtain ⟨f₁, hf₁, s₂, t₂, ψ₂, hs₂, e₂, hm⟩ := key _ t φ (by
     rw [spMap_comp_eq _ _ _ rfl, spMap_comp_eq _ _ _ rfl, ← RingHom.comp_assoc]
     exact congrArg (fun r => spMap (RingHom.comp r β)) e₁.symm) hpb hL
-  haveI := isDomain_away hf₁
-  letI := ψ₂.toAlgebra
-  haveI := isFractionRing_away (K := K) hf₁ ψ₂ e₂
+  have := isDomain_away hf₁
+  let := ψ₂.toAlgebra
+  have := isFractionRing_away (K := K) hf₁ ψ₂ e₂
   let io : R →+* Localization.Away f₁ := (algebraMap (Localization.Away f) _).comp (algebraMap R _)
   have hio : ψ₂.comp io = algebraMap R K := by rw [← RingHom.comp_assoc, e₂, e₁]
   have hv : (fun a => algebraMap (Localization.Away f₁) K (io (v a))) = fun a => algebraMap R K (v a) :=
@@ -594,7 +594,7 @@ theorem exists_complete_dvr_point (R : Type) [CommRing R] [IsDomain R] [CharZero
       (_ : Field F) (_ : CharZero F) (_ : Algebra V F) (_ : IsFractionRing V F) (y : R →+* V),
       (IsLocalRing.maximalIdeal V).comap y = 𝔪 ∧ y f ≠ 0 := by
   obtain ⟨p, hp, hpm⟩ := GlobalTheory.exists_prime_natCast_mem_of_finiteType_int 𝔪
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨L, hL, y, hy, hyf⟩ := GlobalTheory.exists_padic_point 𝔪 hpm hf
   exact ⟨integralClosure ℤ_[p] L, L, inferInstance, inferInstance, inferInstance,
     GlobalTheory.DiscEval.isAdicComplete_integralClosure L, GlobalTheory.DiscEval.finite_residueField_integralClosure L,
@@ -603,7 +603,7 @@ theorem exists_complete_dvr_point (R : Type) [CommRing R] [IsDomain R] [CharZero
 
 theorem exists_obj_over_complete_dvr : Out.Laws → Out.Laws2 → ∀ (o : Type) [CommRing o] (g N' : ℕ) (J : Type) (b : TBase o (N' ^ 2)) Mat κ (w w' : J) [Finite J] (R K : Type) [CommRing R] [IsDomain R] [CharZero R] [Algebra.FiniteType ℤ R] [Field K] [Algebra R K] [IsFractionRing R K] (β : o →+* R) (v : Ix g (N' ^ 2) → R) (t : TObj g (N' ^ 2) J b (spMap (algebraMap R K) ≫ spMap β)) (𝔪 : Ideal R), 𝔪.IsMaximal → t.HasTh (𝟙 _) (fun a => algebraMap R K (v a)) → t.Shape Mat κ → t.Prim w w' → ∃ (V F : Type) (_ : CommRing V) (_ : IsDomain V) (_ : IsDiscreteValuationRing V) (_ : IsAdicComplete (IsLocalRing.maximalIdeal V) V) (_ : Finite (IsLocalRing.ResidueField V)) (_ : Field F) (_ : CharZero F) (_ : Algebra V F) (_ : IsFractionRing V F) (y : R →+* V) (tF : TObj g (N' ^ 2) J b (spMap (algebraMap V F) ≫ spMap (y.comp β))), (IsLocalRing.maximalIdeal V).comap y = 𝔪 ∧ tF.Shape Mat κ ∧ tF.Prim w w' ∧ tF.HasTh (𝟙 _) (fun a => algebraMap V F (y (v a))) := by
   intro L1 L2 o _ g N' J b Mat κ w w' _ R K _ _ _ _ _ _ _ β v t 𝔪 h𝔪 hth hsh hpr
-  haveI : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
+  have : IsNoetherianRing R := Algebra.FiniteType.isNoetherianRing ℤ R
   obtain ⟨f, hf, t', ψ, -, -, hth', hsh', hpr'⟩ :=
     GlobalTheory.T.exists_spread_theta_level_abelian_scheme_away L1 L2 o g N' J b Mat κ w w' R K β v t hth hsh hpr
   obtain ⟨V, F, i1, i2, i3, i4, i5, i6, i7, i8, i9, y, hy, hyf⟩ :=

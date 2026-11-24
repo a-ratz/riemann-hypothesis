@@ -67,7 +67,7 @@ theorem integrableOn_of_chart {M : Type} [TopologicalSpace M] [MeasurableSpace M
     refine Measure.le_iff.2 fun B hB => ?_
     have hBA := hB.inter hA
     have hm' := measurableSet_image e hBA (inter_subset_right.trans hAs)
-    rw [Measure.restrict_apply hB, hμ _ hBA (inter_subset_right.trans hAs), Measure.smul_apply,
+    rw [Measure.restrict_apply hB, hμ _ hBA (inter_subset_right.trans hAs), smul_apply,
       Measure.map_apply_of_aemeasurable hs hB, Measure.restrict_apply' hm, smul_eq_mul]
     refine (setLIntegral_mono' hm' fun v hv => hρ v (image_mono inter_subset_right hv)).trans ?_
     rw [setLIntegral_const]

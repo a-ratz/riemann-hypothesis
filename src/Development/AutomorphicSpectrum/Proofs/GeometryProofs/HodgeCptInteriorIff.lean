@@ -297,7 +297,7 @@ theorem unit_of_local_hom_charZero_nf : ∀ (O F L K : Type) [CommRing O] [Field
   have halg : IsAlgebraic ℤ (β b) :=
     (IsFractionRing.isAlgebraic_iff ℤ ℚ F).mpr (Algebra.IsAlgebraic.isAlgebraic (β b))
   obtain ⟨q, hq0, hq⟩ :=
-    halg.exists_nonzero_coeff_and_aeval_eq_zero (mem_nonZeroDivisors_of_ne_zero hb)
+    halg.exists_coeff_ne_zero_and_aeval_eq_zero (mem_nonZeroDivisors_of_ne_zero hb)
   have h1 : β (Polynomial.aeval b q) = 0 := by rw [map_aeval_int', hq]
   have h2 : ρ (θ (Polynomial.aeval b q)) = 0 := by rw [hker _ h1, map_zero]
   rw [map_aeval_int', map_aeval_int'] at h2
@@ -349,9 +349,9 @@ theorem interior_iff_factor : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   constructor
   · intro hx
     have hx' : A.f (centre z) ∈ abLocus Y.t.G := (hab _).2 hx
-    haveI : FiniteDimensional ℚ c.F := c.fin
-    haveI : NumberField c.F := {}
-    haveI : IsReduced A.X := by
+    have : FiniteDimensional ℚ c.F := c.fin
+    have : NumberField c.F := {}
+    have : IsReduced A.X := by
       have : ∀ x : A.X, _root_.IsReduced (A.X.presheaf.stalk x) := fun x => by
         have := (A.normal x).1
         infer_instance
@@ -368,7 +368,7 @@ theorem interior_iff_factor : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       change g = _
       rw [← Spec.map_preimage g]
       rfl
-    haveI : IsOpenImmersion Y.jQ := Y.jQ_open
+    have : IsOpenImmersion Y.jQ := Y.jQ_open
     obtain ⟨u, hu⟩ := lift_local Y.jQ (pullback.lift _ _ w) (by
       rw [← Y.ab_gen]
       show (pullback.lift _ _ w ≫ pullback.fst _ _) _ ∈ abLocus _

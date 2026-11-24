@@ -62,7 +62,7 @@ private theorem upT_gl {C : Type} [CommRing C] {n : ℕ} (a b c : GL (Fin n) C)
   have ha' : (a : Matrix (Fin n) (Fin n) C).BlockTriangular id := fun i j h => ha i j h
   have hb' : (b : Matrix (Fin n) (Fin n) C).BlockTriangular id := fun i j h => hb i j h
   have hc' : (c : Matrix (Fin n) (Fin n) C).BlockTriangular id := fun i j h => hc i j h
-  letI : Invertible (c : Matrix (Fin n) (Fin n) C) := c.invertible
+  let : Invertible (c : Matrix (Fin n) (Fin n) C) := c.invertible
   have hi := Matrix.blockTriangular_inv_of_blockTriangular hc'
   rw [← Matrix.coe_units_inv] at hi
   intro i j h
@@ -148,7 +148,7 @@ theorem UpperTheory.V.Fr.pr_cocv :
         ((B.bar O).r (F.loc v s)).adFun ((D.a v t).map (evK (RingHom.ker p) u)) := rfl
     have e' : ((B.bar O).r (F.loc v s)).right = 1 := hright s
     simp only [dOne]
-    rw [e, GG.adFun, if_pos e', add_sub_assoc, add_comm]
+    rw [e, GG.adFun, ite_eq_left e', add_sub_assoc, add_comm]
     rfl
   rw [k3]
   intro i j h

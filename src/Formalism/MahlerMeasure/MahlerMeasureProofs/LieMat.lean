@@ -79,7 +79,7 @@ theorem nnnorm_sum_mul_le {ι : Type*} (s : Finset ι) (f : ι → K) (r b : NNR
   | insert a s ha ih =>
     rw [Finset.sum_insert ha]
     calc ‖f a + ∑ i ∈ s, f i‖₊ * r ≤ max ‖f a‖₊ ‖∑ i ∈ s, f i‖₊ * r := by
-          gcongr; exact IsUltrametricDist.nnnorm_add_le_max _ _
+          gcongr; exact IsUltrametricDist.nnNorm_add_le_max _ _
       _ = max (‖f a‖₊ * r) (‖∑ i ∈ s, f i‖₊ * r) := max_mul_of_nonneg _ _ r.2
       _ ≤ b := max_le (h a (mem_insert_self a s)) (ih fun i hi => h i (mem_insert_of_mem hi))
 
@@ -106,7 +106,7 @@ theorem gaussR_mul_le (ρ : NNReal) (P Q : K[X]) : gaussR ρ (P * Q) ≤ gaussR 
   apply nnnorm_sum_mul_le
   intro x hx
   rw [HasAntidiagonal.mem_antidiagonal] at hx
-  rw [nnnorm_mul, ← hx, pow_add]
+  rw [nnNorm_mul, ← hx, pow_add]
   calc ‖P.coeff x.1‖₊ * ‖Q.coeff x.2‖₊ * (ρ ^ x.1 * ρ ^ x.2)
       = (‖P.coeff x.1‖₊ * ρ ^ x.1) * (‖Q.coeff x.2‖₊ * ρ ^ x.2) := by ring
     _ ≤ _ := mul_le_mul' (coeff_le_gaussR _ _ _) (coeff_le_gaussR _ _ _)
@@ -131,7 +131,7 @@ theorem gaussR_det_le (ρ : NNReal) {n : ℕ} (M : Matrix (Fin n) (Fin n) K[X]) 
     · rw [h, Units.neg_smul, one_smul, gaussR_neg]
   rw [hsign]
   calc gaussR ρ (∏ i, M (σ i) i) ≤ ∏ i, gaussR ρ (M (σ i) i) := gaussR_prod_le _ _ _
-    _ ≤ ∏ i, b (σ i) := Finset.prod_le_prod' fun i _ => hb _ _
+    _ ≤ ∏ i, b (σ i) := prod_le_prod fun i _ => hb _ _
     _ = ∏ i, b i := Equiv.prod_comp σ b
 
 theorem gaussR_le_max_coeff_zero {ρ : NNReal} (hρ : ρ ≤ 1) (P : K[X]) (hP : gaussR 1 P ≤ 1) :
@@ -199,7 +199,7 @@ theorem lieMat_of (hM : MahlerK) : LieMat := by
     rw [one_pow, mul_one, ← NNReal.coe_le_coe]
     have hk' : k ≤ p ^ h := by
       have := Finset.mem_range.mp hk; omega
-    rw [coe_nnnorm, NNReal.coe_one]
+    rw [coe_nnNorm, NNReal.coe_one]
     exact hM p K h k t₀ hk' m
   have hB0 : B.map (Polynomial.eval 0) = U * Matrix.diagonal d * V := by
     rw [← hA]; ext i j; simp [hB, Matrix.map_apply, Polynomial.eval_comp, hL]

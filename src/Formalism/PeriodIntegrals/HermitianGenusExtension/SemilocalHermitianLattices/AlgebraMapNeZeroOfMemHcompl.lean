@@ -142,7 +142,7 @@ theorem mem_conjIdeal_iff (p : Ideal (𝓞 K)) (r : 𝓞 K) :
 
 theorem conjIdeal_isPrime {p : Ideal (𝓞 K)} (hp : p.IsPrime) :
     (Formalism.HermitianLatticesTheory.conjIdeal (K := K) p).IsPrime := by
-  haveI := hp
+  have := hp
   rw [ReciprocityTheory.ChartRestriction.L3.conjIdeal_eq_comap]
   infer_instance
 
@@ -151,7 +151,7 @@ theorem hcompl_eq_closure (p : Ideal (𝓞 K)) :
   unfold Formalism.HermitianLatticesTheory.hcompl
   congr 1
   ext s
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine and_congr_right fun _ => ⟨fun h => h _ (algebraMap_conjO s), fun h t ht => ?_⟩
   have e : t = conjO K s := IsFractionRing.injective (𝓞 K) K (ht.trans (algebraMap_conjO s).symm)
   rw [e]

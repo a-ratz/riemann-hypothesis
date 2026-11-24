@@ -104,11 +104,11 @@ theorem perFr_move (X X' : Data E r) (hΨ : ∀ τ, τ ∈ X'.Ψ ↔ τ ∈ X.Ψ
   unfold perFr
   rw [hp, hG]
   by_cases h₁ : τ ∈ X.Ψ
-  · rw [dif_pos h₁, dif_pos ((hΨ τ).2 h₁), hx τ h₁, GlobalTheory.PerMove.emb_mulVec, Matrix.mul_inv_rev, Matrix.mulVec_mulVec,
+  · rw [dite_eq_left h₁, dite_eq_left ((hΨ τ).2 h₁), hx τ h₁, GlobalTheory.PerMove.emb_mulVec, Matrix.mul_inv_rev, Matrix.mulVec_mulVec,
       Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (hu _), Matrix.mul_one]
   · rw [dite_eq_right h₁, dite_eq_right (mt (hΨ τ).1 h₁)]
     by_cases h₂ : conjEmb τ ∈ X.Ψ
-    · rw [dif_pos h₂, dif_pos ((hΨ _).2 h₂), hx _ h₂]
+    · rw [dite_eq_left h₂, dite_eq_left ((hΨ _).2 h₂), hx _ h₂]
       simp only [GlobalTheory.PerMove.emb_mulVec, GlobalTheory.PerMove.col_mul, GlobalTheory.PerMove.hermC_unitary _ _ _ hγ]
     · rw [dite_eq_right h₂, dite_eq_right (mt (hΨ _).1 h₂)]
 
@@ -219,9 +219,9 @@ theorem read_of_over {D : D7} {T : CoreJ D} {j : ℕ} {σ : T.Q.c.F →+* ℂ} (
     (hx : y₂.x ≫ C.d.r = y.x) (hu : ∀ τ i, y₂.u τ i ≫ C.d.m.φ = y.u τ i) :
     ∃ t : ℂ, t ≠ 0 ∧ ∀ (n : ℕ) (a : (D.host.E →+* ℂ) × ℕ → ℕ) (f : T.R j), ∀ f₂ ∈ sec C.d.Xo₂ C.d.c₂ a n,
       C.IsPull f f₂ → toC (evR C.d.Xo₂ C.d.c₂ f₂ y₂) = t ^ n * toC (evR (T.Q.Xo j) T.Q.c f y) := by
-  letI : Field (CAt C.σ₂) := inferInstanceAs (Field ℂ)
-  letI : Algebra T.Q.c.F (CAt C.σ₂) := (show T.Q.c.F →+* CAt C.σ₂ from σ).toAlgebra
-  letI : Algebra C.c'.F (CAt C.σ₂) :=
+  let : Field (CAt C.σ₂) := inferInstanceAs (Field ℂ)
+  let : Algebra T.Q.c.F (CAt C.σ₂) := (show T.Q.c.F →+* CAt C.σ₂ from σ).toAlgebra
+  let : Algebra C.c'.F (CAt C.σ₂) :=
     (show C.c'.F →+* CAt C.σ₂ from C.σ₂.comp (C.d.eF : C.c'.F →+* C.d.c₂.F)).toAlgebra
   have hA : AlgOver T.Q.c C.c' C.hle (CAt C.σ₂) := fun a => RingHom.congr_fun hσ a
   have hc : ∀ x : C.c'.F, algebraMap C.d.c₂.F (CAt C.σ₂) (C.d.eF x) = algebraMap C.c'.F (CAt C.σ₂) x := fun _ => rfl
@@ -303,8 +303,8 @@ theorem rdU_cover_eq : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism.
   obtain ⟨t, ht, H⟩ := read_of_over C hσ₂ ((T.U j σ).un _ ⟨x', hx'⟩) (C.U₂.un _ ⟨x, hx⟩)
     (by rw [hu₁, hu₂]; exact k₁) fun τ i => k₂ ⟨τ, i⟩ _ _ (hv₁ τ i) (hv₂ τ i)
   refine ⟨t, ht, fun n a _ f _ f₂ hf₂ hp => ?_⟩
-  have b₁ : rdU (T.U j σ) f (T.dict j σ h).1 x' = toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un _ ⟨x', hx'⟩)) := dif_pos hx'
-  have b₂ : rdU C.U₂ f₂ (C.dict₂ h).1 x = toC (evR C.d.Xo₂ C.d.c₂ f₂ (C.U₂.un _ ⟨x, hx⟩)) := dif_pos hx
+  have b₁ : rdU (T.U j σ) f (T.dict j σ h).1 x' = toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un _ ⟨x', hx'⟩)) := dite_eq_left hx'
+  have b₂ : rdU C.U₂ f₂ (C.dict₂ h).1 x = toC (evR C.d.Xo₂ C.d.c₂ f₂ (C.U₂.un _ ⟨x, hx⟩)) := dite_eq_left hx
   rw [b₁, b₂]
   exact H n a f f₂ hf₂ hp
 

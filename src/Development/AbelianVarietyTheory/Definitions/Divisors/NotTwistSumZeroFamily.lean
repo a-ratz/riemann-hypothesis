@@ -66,7 +66,7 @@ variable {V : Type} [CommRing V] [IsDomain V] [IsLocalRing V] {ev : X₁.M.Z.pre
   {X : Type} [AddCommGroup X] {t : X → V} {δ : I → X → X} (𝔪 : GMem X₁ z₁ act V ev X t δ)
 
 theorem exists_yy (mu : X) : ∃ a : X₁.S.Gam, 𝔪.YY a mu := by
-  haveI : CharZero V := 𝔪.cn.2.2.2
+  have : CharZero V := 𝔪.cn.2.2.2
   have hA : AdmBase V (maximalIdeal V) := ⟨𝔪.cn.1, inferInstance, 𝔪.cn.2.1, 𝔪.cn.2.2.1⟩
   have hk : 1 ≤ X₁.S.r * X₁.S.N := by
     obtain ⟨j, -, hj⟩ := X₁.ρ.r_eq

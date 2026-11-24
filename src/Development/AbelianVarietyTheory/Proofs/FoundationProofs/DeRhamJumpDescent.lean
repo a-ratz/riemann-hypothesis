@@ -67,7 +67,7 @@ theorem descent {G M Ω : Type} [Group G] [AddCommGroup M] [Field Ω] (H : Subgr
     (hfix : ∀ y ∈ F, (∀ g, A g y = y) → y ∈ F')
     (x : M) (hx : x ∈ F) (hxH : ∀ h ∈ H, A h x = x) : x ∈ F' := by
   classical
-  haveI := Fintype.ofFinite (G ⧸ H)
+  have := Fintype.ofFinite (G ⧸ H)
   have hm0 : ∀ x, m 0 x = 0 := fun x => by
     have := hma 0 0 x
     rw [add_zero] at this
@@ -75,14 +75,14 @@ theorem descent {G M Ω : Type} [Group G] [AddCommGroup M] [Field Ω] (H : Subgr
   let T : Submodule Ω (G ⧸ H → Ω) :=
     { carrier := {v | ∑ q, m (v q) (A q.out x) ∈ F'}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, Pi.add_apply, hma, Finset.sum_add_distrib] at *
+        simp only [Set.mem_ofPred_eq, Pi.add_apply, hma, Finset.sum_add_distrib] at *
         exact F'.add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, Pi.zero_apply, hm0, Finset.sum_const_zero]
+        simp only [Set.mem_ofPred_eq, Pi.zero_apply, hm0, Finset.sum_const_zero]
         exact F'.zero_mem
       smul_mem' := fun c a ha => by
 
-        simp only [Set.mem_setOf_eq, Pi.smul_apply, smul_eq_mul, hmm, ← map_sum] at *
+        simp only [Set.mem_ofPred_eq, Pi.smul_apply, smul_eq_mul, hmm, ← map_sum] at *
         exact hF'm _ _ ha }
   let φ : G ⧸ H → (S →* Ω) := fun q => (ε q.out).comp S.subtype
   have hφ : Function.Injective φ := by
@@ -199,10 +199,10 @@ theorem mem_succ_of_fixed {K K' : FinExt l} (h : K.1 ≤ K'.1) (ρ : Representat
     (x : V ⊗[ℚ_[l]] P.R.BdR) (hx : x ∈ FilV (P.PD K) (LL := LL) (V := V) u)
     (hxH : x ∈ DdR (P.PD K') (ρ.comp (Subgroup.inclusion (GK_le h)))) :
     x ∈ FilV (P.PD K) (LL := LL) (V := V) (u + 1) := by
-  haveI : FiniteDimensional ℚ_[l] ↥K'.1 := K'.2
-  haveI : Finite (GQ l ⧸ GK K') :=
+  have : FiniteDimensional ℚ_[l] ↥K'.1 := K'.2
+  have : Finite (GQ l ⧸ GK K') :=
     Subgroup.quotient_finite_of_isOpen _ (IntermediateField.fixingSubgroup_isOpen K'.1)
-  haveI : (GK K').FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : (GK K').FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hA : ∀ (a : ℤ) (g : ↥(GK K)), ∀ x ∈ FilV (P.PD K) (LL := LL) (V := V) a,
       actVdR (P.PD K) ρ g x ∈ FilV (P.PD K) (LL := LL) (V := V) a := fun a g x hx =>
     map_mem_FilV P K K a _ _ (fun b hb => (P.PD K).Fil_G g a b hb) x hx

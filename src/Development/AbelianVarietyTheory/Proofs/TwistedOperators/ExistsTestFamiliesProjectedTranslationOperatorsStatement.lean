@@ -110,11 +110,11 @@ theorem fixed_of_forall_finLoc_mem : ∀ (D : D7) (V : HSp D) (W : Type) [AddCom
   let St : Subgroup (GfC V) :=
     { carrier := {k | σ k x = x}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       one_mem' := by simp
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [mem_ofPred_eq] at ha ⊢
         have e : σ a⁻¹ (σ a x) = x := by
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
         rwa [ha] at e }
@@ -286,7 +286,7 @@ namespace GlobalTheory.TrIdem
 
 theorem integralOp_normInd_fix : ∀ (D : D7) (V : HSp D) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)), (∀ v, (μf v).IsHaarMeasure) → (∀ᶠ v in cofinite, μf v (Kv V v) = 1) → ∀ ν, IsFinMeas V μf ν → ∀ (K' : ∀ v, Subgroup (GLoc D.sp.cm.sig V.gram v)), (∀ v, IsOpen (K' v : Set (GLoc D.sp.cm.sig V.gram v))) → (∀ v, K' v ≤ Kv V v) → (∀ᶠ v in cofinite, K' v = Kv V v) → ∀ (W : Type) [AddCommGroup W] [Module ℂ W] (σ : Representation ℂ (GfC V) W) (x : W), (∀ g : GfC V, (∀ v, finLoc V v g ∈ K' v) → σ g x = x) → ∀ P, GlobalTheory.IndefiniteRowSideFullHecke.IwahoriDoubleCosets.IsIntegralOp ν σ (finFn V (fun v => normInd (μf v) (K' v : Set (GLoc D.sp.cm.sig V.gram v)))) P → P x = x := by
   intro D V μf hH h1 ν hν K' hO hle hcof W _ _ σ x hx P hP
-  letI : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
+  let : Submodule.IsFullLattice D.host.E (frameLat V) := SelfDual.isLattice_frameLat V
   set c : ∀ v, GLoc D.sp.cm.sig V.gram v → ℂ :=
     fun v => normInd (μf v) (K' v : Set (GLoc D.sp.cm.sig V.gram v)) with hc
   have hcpt : ∀ v, IsCompact (K' v : Set (GLoc D.sp.cm.sig V.gram v)) := fun v =>
@@ -389,7 +389,7 @@ theorem levelFam_open_compact (T : TypeDataG V) (U : AuxiliaryPlaceHermitianSpac
     rw [e]
     have ho : IsOpen (kerSub T ⟨v, hv⟩ : Set (GLoc D.sp.cm.sig V.gram v)) := by
       rw [kerSub, Subgroup.coe_map]
-      exact (isOpen_stabLoc D.sp.cm.sig V.gram (frameLat V) v).isOpenMap_subtype_val _
+      exact (isOpen_stabLoc D.sp.cm.sig V.gram (frameLat V) v).isOpenMap_subtypeVal _
         (T.frame ⟨v, hv⟩).isOpen_ker_red
     refine ⟨ho, (isCompact_stabLoc D.sp.cm.sig V.gram (frameLat V) v).of_isClosed_subset
       (Subgroup.isClosed_of_isOpen _ ho) ?_⟩
@@ -545,7 +545,7 @@ theorem idemOp_fix_span : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (μf : ∀ 
     rw [show ((T.frame v).red.ker : Set (Kv V v)) =
         (↑) ⁻¹' (stabLocOne D.sp.cm.sig V.gram (T.frame v).emb (frameLat V) : Set (GLoc D.sp.cm.sig V.gram v)) from
       Set.ext (T.frame v).red_eq_one_iff]
-    exact (isOpen_stabLocOne _ (T.frame v).emb _ (T.frame v).cm).preimage continuous_subtype_val
+    exact (isOpen_stabLocOne _ (T.frame v).emb _ (T.frame v).cm).preimage continuous_subtypeVal
   obtain ⟨-, h2, h3, -⟩ := (typeIdem_projector (μf v) (isOpen_stabLoc _ _ _ v.1) (isCompact_stabLoc _ _ _ v.1)
     (T.frame v).red_surjective hk (T.irred v)).2.1 _ _ hs
   change smoothOp (σ.comp (locFin V v)) (μf v) (typeIdem (μf v) (T.frame v).red (T.τ v)) x = x
@@ -614,7 +614,7 @@ theorem levelFam_open_le : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : Auxil
     rw [h, kerSub]
     refine ⟨?_, Subgroup.map_subtype_le _⟩
     rw [Subgroup.coe_map]
-    exact (isOpen_stabLoc _ _ _ v).isOpenMap_subtype_val _ (T.frame ⟨v, hv⟩).isOpen_ker_red
+    exact (isOpen_stabLoc _ _ _ v).isOpenMap_subtypeVal _ (T.frame ⟨v, hv⟩).isOpen_ker_red
   · rw [levelFam_of_notMem T U hv hvu]
     exact ⟨isOpen_stabLoc _ _ _ v, le_refl _⟩
 
@@ -691,7 +691,7 @@ theorem exists_idemFam : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : Auxilia
       have hk : IsOpen (s.red.ker : Set (stabLoc D.sp.cm.sig V.gram (frameLat V) v)) := by
         rw [show (s.red.ker : Set (stabLoc D.sp.cm.sig V.gram (frameLat V) v)) = (↑) ⁻¹' (stabLocOne D.sp.cm.sig V.gram s.emb (frameLat V) : Set (GLoc D.sp.cm.sig V.gram v)) from
           Set.ext s.red_eq_one_iff]
-        exact (isOpen_stabLocOne V.gram s.emb (frameLat V) s.cm).preimage continuous_subtype_val
+        exact (isOpen_stabLocOne V.gram s.emb (frameLat V) s.cm).preimage continuous_subtypeVal
       exact conv_typeIdem (μf v) (isOpen_stabLoc _ _ _ v) (isCompact_stabLoc _ _ _ v) s.red_surjective hk _ (T.irred _)
     · rw [fam_of_not T U μf T.S (fun h => hv h.1)]
       obtain ⟨ho, hle⟩ := GlobalTheory.T.unitaryTypeLevelFamily_isOpen_le_latticeStabilizer D V T U hu v
@@ -899,12 +899,12 @@ theorem test_families : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : Auxiliar
     exact hee v
   refine ⟨e, heF, ?_, ?_⟩
   · intro W _ _ σ hσ P hP
-    haveI := hν.1
+    have := hν.1
     have h := (GlobalTheory.T.heckeOperator_convolution_and_leftTranslate (GfC V) ν W σ hσ (finFn V e) hSB (finFn V e) hSB P P hP hP).1
     rw [hfe] at h
     exact ⟨h.unique hP, fun ht => heNZ W σ hσ ht P hP⟩
   · intro g
-    haveI := hν.1
+    have := hν.1
     set c : ∀ v, GLoc D.sp.cm.sig V.gram v := fun v => (proj D.sp.cm.sig V.gram v (g : GA D V))⁻¹ with hc
     set b : ∀ v, GLoc D.sp.cm.sig V.gram v → ℂ := fun v x => e v (c v * x) with hb
     have hbF : IsFinFamily D.sp.cm.sig V.gram (frameLat V) b := by
@@ -919,19 +919,19 @@ theorem test_families : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : Auxiliar
     obtain ⟨hffF, hffeq, -⟩ := GlobalTheory.T.convolution_finiteAdelicPureTensor_eq_localConvolutions D V μf hμf h1 ν hν e b heF hbF
     obtain ⟨-, -, hbSB⟩ := GlobalTheory.T.convolution_finiteAdelicPureTensor_eq_localConvolutions D V μf hμf h1 ν hν b b hbF hbF
     have hcb : ∀ v, GlobalTheory.AutomorphicL2Unitary.conv (μf v) (b v) (e v) = b v := fun v => by
-      haveI := hμf v
+      have := hμf v
       funext y
       rw [hb]
       simp only
       rw [conv_translate_left, hee v]
     refine ⟨fun v => GlobalTheory.AutomorphicL2Unitary.conv (μf v) (e v) (b v), hffF, ?_, ?_, ?_⟩
     · intro k hk x
-      haveI := hμf U.u
+      have := hμf U.u
       exact conv_mul_left (heI k hk) x
     · intro t ht
       have hne : ∀ v ∈ T.S, v ≠ U.u := fun v hv h => hu (h ▸ hv)
       refine ⟨⟨hu, fun v => ⟨b v, hbF.1 v, ?_⟩, ⟨t, ht, Function.update_self ..⟩, fun v _ hv' => ?_, ?_⟩, ?_⟩
-      · haveI := hμf v
+      · have := hμf v
         have hcont : ∀ f ∈ GlobalTheory.SplitWeil.SB (GLoc D.sp.cm.sig V.gram v), Continuous f ∧ HasCompactSupport f :=
           fun f hf => ⟨hf.1.continuous, hf.2⟩
         rw [Function.update_of_ne (hne v v.2), ← heS v,
@@ -943,7 +943,7 @@ theorem test_families : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (U : Auxiliar
         rw [Function.update_of_ne hv']
         exact hv
       · intro v hv hvu k hk k' hk' x
-        haveI := hμf v
+        have := hμf v
         simp only [Function.update_of_ne hvu]
         rw [conv_mul_right, conv_mul_left]
         · intro y

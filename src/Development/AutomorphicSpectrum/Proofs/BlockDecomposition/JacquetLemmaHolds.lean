@@ -107,7 +107,7 @@ theorem exists_avg (K : Subgroup G) (hK : IsCompact (K : Set G)) (π : Represent
     (u : V) (A : Subgroup G) (hA : A ≤ K) (hc : ∀ y ∈ K, ∃ a ∈ A, π (a⁻¹ * y) u = u) :
     ∃ (r : ℕ) (x : Fin r → G), 0 < r ∧ (∀ i, x i ∈ A) ∧
       E u = ((r : ℂ)⁻¹) • ∑ i, π (x i) u := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   let H' : Subgroup K :=
     { carrier := {g | π (g : G) u = u}
       mul_mem' := by
@@ -124,7 +124,7 @@ theorem exists_avg (K : Subgroup G) (hK : IsCompact (K : Set G)) (π : Represent
         conv_lhs => rw [← ha']
         rw [pi_mul]
         simp }
-  have hH' : IsOpen (H' : Set K) := (hπ u).preimage continuous_subtype_val
+  have hH' : IsOpen (H' : Set K) := (hπ u).preimage continuous_subtypeVal
   have hcomp : IsCompact (((⊤ : Subgroup K)) : Set K) := by
     simpa using (isCompact_univ : IsCompact (Set.univ : Set K))
   obtain ⟨r, hr, x, hxA, hx⟩ := _root_.GlobalTheory.CompanionTheory.CosetReps.exists_fin_coset_reps K ⊤ H' (A.subgroupOf K) hcomp hH' le_top le_top (by
@@ -271,11 +271,11 @@ theorem jacquet_projection_surjective : ∀ (G : Type) [Group G] [TopologicalSpa
   intro G _ _ _ D V _ _ π hadm t ht U hU w hw
   have hA2 := _root_.GlobalTheory.CompanionTheory.Cass.jacquet_projection_hecke_intertwines G D V π hadm.1 t ht.1 U hU
   obtain ⟨j, v₀, hv₀⟩ := _root_.GlobalTheory.CompanionTheory.CassPush.exists_fixed_proj_eq_piN_pow G D V π hadm.1 t ht w hw
-  haveI : FiniteDimensional ℂ (fixed π D.J) := hadm.2 D.J D.isOpen_J D.isCompact_J
+  have : FiniteDimensional ℂ (fixed π D.J) := hadm.2 D.J D.isOpen_J D.isCompact_J
   let L : fixed π D.J →ₗ[ℂ] Jacquet π D.N := (Submodule.mkQ _).comp (Submodule.subtype _)
   have hL : ∀ v : fixed π D.J, L v = D.proj π (v : V) := fun _ => rfl
   let I : Submodule ℂ (Jacquet π D.N) := LinearMap.range L
-  haveI : FiniteDimensional ℂ I := LinearMap.finiteDimensional_range L
+  have : FiniteDimensional ℂ I := LinearMap.finiteDimensional_range L
   let A : Module.End ℂ (Jacquet π D.N) := D.piN π t
   have hinj : Function.Injective A := by
     intro x y hxy

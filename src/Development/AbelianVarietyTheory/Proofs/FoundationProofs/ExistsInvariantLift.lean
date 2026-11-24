@@ -74,8 +74,8 @@ theorem hilbert_ninety : ∀ (Ω K Γ : Type) [Field Ω] [Field K] [Algebra Ω K
         conv_lhs => rw [← ha x hx]
         rw [← AlgEquiv.mul_apply, ← map_mul, inv_mul_cancel, map_one, AlgEquiv.one_apply] }
   have hΔD : Δ ≤ D := fun δ hδ x hx => hx δ hδ
-  haveI : D.FiniteIndex := Subgroup.finiteIndex_of_le hΔD
-  haveI : Fintype (Γ ⧸ D) := Fintype.ofFinite _
+  have : D.FiniteIndex := Subgroup.finiteIndex_of_le hΔD
+  have : Fintype (Γ ⧸ D) := Fintype.ofFinite _
   let χ : Γ → (L →* K) := fun γ => ((ρ γ : K ≃ₐ[Ω] K) : K →* K).comp L.subtype
   have hinj : Function.Injective (fun q : Γ ⧸ D => χ q.out) := by
     intro q q' h
@@ -255,7 +255,7 @@ theorem exists_uniform_level : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε :
   intro Ω _ _ ε X H m D hD f hH
   classical
   obtain ⟨M₀, hM₀, hf⟩ := X.level f
-  haveI : NeZero M₀ := ⟨hM₀.ne'⟩
+  have : NeZero M₀ := ⟨hM₀.ne'⟩
   have hfin : (Set.range fun γ : SL(2, ℤ) => X.sl (ofSL γ) f).Finite := by
     refine (Set.finite_range fun q : SL(2, ℤ) ⧸ CongruenceSubgroup.Gamma M₀ => X.sl (ofSL q.out⁻¹) f).subset ?_
     rintro _ ⟨γ, rfl⟩
@@ -417,7 +417,7 @@ theorem exists_invariant_lift : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsA
     intro γ hγ
     have e : z * γ * z⁻¹ = (z * γ * z⁻¹ * γ⁻¹) * γ := by group
     rw [e]; exact Γ'.mul_mem (hΓM (hzc γ)) hγ
-  haveI : NeZero M := ⟨hM0.ne'⟩
+  have : NeZero M := ⟨hM0.ne'⟩
 
   have hfix : ∀ x : X.K, (∀ δ ∈ (CongruenceSubgroup.Gamma M).subgroupOf Γ', rhoH X Γ' δ x = x) →
       ∀ ρ' ∈ CongruenceSubgroup.Gamma M, X.sl (ofSL ρ') x = x := by
@@ -426,7 +426,7 @@ theorem exists_invariant_lift : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsA
     simpa [rhoH_apply] using this
   obtain ⟨k₀, hk₀⟩ := hkz f₀ hf₀.symm
   obtain ⟨M₂, hM₂, hk₂⟩ := X.level k₀
-  haveI : NeZero M₂ := ⟨hM₂.ne'⟩
+  have : NeZero M₂ := ⟨hM₂.ne'⟩
   obtain ⟨u, hu0, hu⟩ := exists_invariant_rep Ω X.K Γ' (rhoH X Γ') ((CongruenceSubgroup.Gamma M).subgroupOf Γ') (X.sl (ofSL z)) m hmodd
     (f₀ : X.K) f₀.ne_zero
     (fun δ hδ => by rw [rhoH_apply]; exact hfM _ (inv_mem (Subgroup.mem_subgroupOf.1 hδ)))

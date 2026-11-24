@@ -82,7 +82,7 @@ theorem zhat_lift :
       ∃ w : D →* E, IsLocallyConstant w ∧ (∀ s ∈ I, w s = 1) ∧ q.comp w = w' ∧ w φ = e ∧ ∀ g, w g ∈ Subgroup.zpowers e := by
   intro D E E' _ _ _ _ _ _ I φ hcl hd q w' e hw' hI hq
   have hn : 0 < orderOf e := orderOf_pos e
-  haveI : NeZero (orderOf e) := ⟨hn.ne'⟩
+  have : NeZero (orderOf e) := ⟨hn.ne'⟩
   obtain ⟨d, hdl, hdI, hdφ⟩ := hd (orderOf e) hn
   let f : Multiplicative (ZMod (orderOf e)) →* E :=
     MonoidHom.mk' (fun x => e ^ (Multiplicative.toAdd x).val) (by
@@ -218,7 +218,7 @@ theorem card_vanI (ρ : Representation R D M) (I : Subgroup D) [hI : I.Normal] (
   let a : D →* Equiv.Perm N := a0.toHomPerm
   have ha : ∀ g m, (a g m : M) = ρ g m := fun _ _ => rfl
   have hal : IsLocallyConstant a := by
-    haveI : Finite N := inferInstance
+    have : Finite N := inferInstance
     refine IsLocallyConstant.desc a (fun (p : Equiv.Perm N) (m : N) => (p m : M)) ?_ ?_
     · rw [IsLocallyConstant.iff_continuous]
       exact continuous_pi fun m => hρ.comp (continuous_id.prodMk continuous_const)
@@ -276,11 +276,11 @@ theorem card_H1ur (ρ : Representation R D M) (I : Subgroup D) [hI : I.Normal] (
   set Q := (B1 ρ).comap (Z1 ρ).subtype with hQ
   have hmem : ∀ y : vanI ρ I, Q.mkQ (Submodule.inclusion hVZ y) ∈ H1ur ρ I := by
     intro y
-    show resH1 ρ I.subtype continuous_subtype_val (Q.mkQ (Submodule.inclusion hVZ y)) = 0
+    show resH1 ρ I.subtype continuous_subtypeVal (Q.mkQ (Submodule.inclusion hVZ y)) = 0
     rw [Submodule.mkQ_apply]
-    change Submodule.mapQ _ _ (restrictCocycles1 ρ I.subtype continuous_subtype_val) _ _ = 0
+    change Submodule.mapQ _ _ (restrictCocycles1 ρ I.subtype continuous_subtypeVal) _ _ = 0
     rw [Submodule.mapQ_apply]
-    have : restrictCocycles1 ρ I.subtype continuous_subtype_val (Submodule.inclusion hVZ y) = 0 :=
+    have : restrictCocycles1 ρ I.subtype continuous_subtypeVal (Submodule.inclusion hVZ y) = 0 :=
       Subtype.ext (funext fun s => y.2.2 s s.2)
     rw [this]
     rfl
@@ -290,8 +290,8 @@ theorem card_H1ur (ρ : Representation R D M) (I : Subgroup D) [hI : I.Normal] (
   have hfs : Function.Surjective f := by
     rintro ⟨x, hx⟩
     obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ x
-    have hx' : resH1 ρ I.subtype continuous_subtype_val (Submodule.Quotient.mk z) = 0 := hx
-    change Submodule.mapQ _ _ (restrictCocycles1 ρ I.subtype continuous_subtype_val) _ _ = 0 at hx'
+    have hx' : resH1 ρ I.subtype continuous_subtypeVal (Submodule.Quotient.mk z) = 0 := hx
+    change Submodule.mapQ _ _ (restrictCocycles1 ρ I.subtype continuous_subtypeVal) _ _ = 0 at hx'
     rw [Submodule.mapQ_apply, Submodule.Quotient.mk_eq_zero] at hx'
     obtain ⟨m, hm⟩ := (mem_coboundaries1 _ _).1 hx'
     have hy : z.1 - d0 ρ m ∈ vanI ρ I := by

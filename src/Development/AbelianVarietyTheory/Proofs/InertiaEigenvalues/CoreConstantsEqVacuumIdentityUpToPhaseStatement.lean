@@ -113,7 +113,7 @@ theorem actO_mem_of_rat (V W : HSp D) (hV : V.gram = 1) (LV : Set (Fin V.rank �
     refine AddSubgroup.subset_closure ⟨α, hα, h0, a, ha, d *ᵥ s, hd s hs, t, ht, ?_⟩
     ext i j
     simp only [hV, Matrix.mul_apply, Matrix.of_apply, Matrix.map_apply, Matrix.conjTranspose_apply, Matrix.one_apply, mul_ite,
-      mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, Matrix.mulVec, dotProduct, star_sum, star_mul',
+      mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Matrix.mulVec, dotProduct, star_sum, star_mul',
       Finset.mul_sum, TensorProduct.tmul_sum]
     refine Finset.sum_congr rfl fun l _ => ?_
     change _ * ((1 : AF D.host.F) ⊗ₜ[D.host.F] _) = _
@@ -214,7 +214,7 @@ theorem exists_theta_ne_zero {E : Type} [Field E] [NumberField E] [IsCMField E] 
     {x : (U.X k).dom} (hσ : GoodEmb c σ) (hU : IsUnf U) (h1 : 1 ≤ r) (Wt : PullbackSections.UnfAt U k x) (Y : PullbackSections.UnitAt Wt)
     {bas : (Fin Wt.g ⊕ Fin Wt.g → ℤ) ≃ₗ[ℤ] (U.X k).Λ} {idx : Fin Wt.g ≃ (U.X k).Ψ × Fin r} (hb : IsSympl (U.X k) bas)
     (hg : GenReads U k bas idx Wt.e x Y.θ) : ∃ v : Fin r → E, Y.θ (pv (U.X k) idx x.1 v) ≠ 0 := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have hU' : Formalism.L2.PjFree.IsUnf (Formalism.L2.PjFree.Unf.ofPj U) := hU
   obtain ⟨W0⟩ := nonempty_uw hU'
   have hsd : SelfD (U.X k) (U.X k).Λ := (uw_lattice _ H Dw l Xo c σ _ _ hσ hU' h1 W0 k).2.1
@@ -298,7 +298,7 @@ theorem baseCc_of_framePin : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 
     have h := hb.1 a a'
     rw [hS.1] at h
     simp only [Matrix.one_apply, mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-      if_true] at h
+      ite_true] at h
     rw [Matrix.one_apply, ← h, Matrix.mul_apply]
     rfl
   obtain ⟨k1, k2⟩ := mulVec_mem_of_basis (R.ΛV i) b hbb (SetLike.coe_injective h5) (SetLike.coe_injective (h1.trans hb.2))

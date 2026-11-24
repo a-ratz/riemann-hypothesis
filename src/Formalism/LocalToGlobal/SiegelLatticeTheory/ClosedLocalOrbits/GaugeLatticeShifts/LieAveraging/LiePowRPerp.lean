@@ -213,7 +213,7 @@ theorem nexp_adj (hY : Y ∈ F.LieN) (hs : star s = s) (x y : S.V) :
   ring
 
 theorem nexp_mul_neg (hY : Y ∈ F.LieN) : nexp Y s * nexp Y (-s) = 1 := by
-  letI : Algebra ℚ (Module.End E S.V) := Algebra.compHom (Module.End E S.V) (algebraMap ℚ E)
+  let : Algebra ℚ (Module.End E S.V) := Algebra.compHom (Module.End E S.V) (algebraMap ℚ E)
   have hc : Commute (s • Y) ((-s) • Y) := ((Commute.refl Y).smul_left s).smul_right (-s)
   have key := IsNilpotent.exp_add_of_commute hc (sY_isNilp s hY) (sY_isNilp (-s) hY)
   have h0 : s • Y + (-s) • Y = 0 := by rw [neg_smul, add_neg_cancel]
@@ -279,7 +279,7 @@ theorem nexp_root (hY : Y ∈ F.LieN) (f : S.V) (a : Fin r)
       refine ⟨?_, ?_⟩
       · have h1 := lie_Xa hY (j := a.1 + 1 + 1) h (e_mem_Xa F ⟨a.1 + 1, h⟩)
         simpa using h1
-      · rw [hf, if_neg]
+      · rw [hf, ite_eq_right]
         intro hb
         have := congrArg Fin.val hb
         simp at this
@@ -301,7 +301,7 @@ theorem nexp_root (hY : Y ∈ F.LieN) (f : S.V) (a : Fin r)
     · rw [pow_succ, Module.End.mul_apply]
       have hi : 1 ≤ i := by omega
       exact hT_Xa_zero F f a.1
-        (fun b hb => by rw [hf b, if_neg (fun h => by subst h; exact lt_irrefl _ hb)])
+        (fun b hb => by rw [hf b, ite_eq_right (fun h => by subst h; exact lt_irrefl _ hb)])
         (Xa_mono F (by omega) (lie_pow_Xa hY i ha hw))
   · intro h
     exact absurd (Finset.mem_range.2 (by omega)) h

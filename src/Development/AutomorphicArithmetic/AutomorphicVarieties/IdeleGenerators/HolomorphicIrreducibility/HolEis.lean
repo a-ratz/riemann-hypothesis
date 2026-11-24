@@ -96,7 +96,7 @@ theorem UpperTheory.eisenstein_norm_eq_abs_pow :
       rw [e0, dist_zero_right, dist_zero_right, Real.norm_of_nonneg (hy w).le] at this
       exact this
     rw [logNorm, h1, logFin_one, sub_zero, logInf, h2]
-    simp only [h3, InfinitePlace.mult, IsTotallyReal.isReal, if_true, Nat.cast_one, one_mul]
+    simp only [h3, InfinitePlace.mult, IsTotallyReal.isReal, ite_true, Nat.cast_one, one_mul]
     rw [← Real.log_prod (fun w _ => (hy w).ne'), Real.rpow_def_of_pos (Finset.prod_pos fun w _ => hy w),
       Complex.ofReal_exp, Complex.ofReal_mul, mul_comm]
   · refine (H.2.1 w).trans ?_
@@ -147,7 +147,7 @@ theorem UpperTheory.exists_character_separation :
     intro V w hw t
     obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul V t
     rw [hh, hw _ _ h.2]
-  haveI : Fintype (T ⧸ U₀) := Fintype.ofFinite _
+  have : Fintype (T ⧸ U₀) := Fintype.ofFinite _
   let F : Additive (T ⧸ U₀) → ℂ := fun a => f₀ (Additive.toMul a).out
   have hF : F ≠ 0 := by
     obtain ⟨t, ht⟩ := Function.ne_iff.mp hf₀
@@ -176,8 +176,8 @@ theorem UpperTheory.exists_character_separation :
   have aV_lin : ∀ V : Subgroup T, V.FiniteIndex → ∀ (c : ℂ) (p p' : T → ℂ),
       aV V (c • p + p') = c * aV V p + aV V p' := by
     intro V hV c p p'
-    haveI := hV
-    haveI : Fintype (T ⧸ V) := Fintype.ofFinite _
+    have := hV
+    have : Fintype (T ⧸ V) := Fintype.ofFinite _
     simp only [aV, finsum_eq_sum_of_fintype, Pi.add_apply, Pi.smul_apply, smul_eq_mul, add_mul,
       Finset.sum_add_distrib, Finset.mul_sum, mul_assoc]
   have aV_zero : ∀ V : Subgroup T, aV V 0 = 0 := by
@@ -185,8 +185,8 @@ theorem UpperTheory.exists_character_separation :
   have kill : ∀ V : Subgroup T, V.FiniteIndex → V ≤ U₀ → ∀ g : T → ℂ,
       (∀ t u, u ∈ V → g (t * u) = g t) → ∀ s, aV V (fun t => g (t * s)) = (χ s : ℂ) * aV V g := by
     intro V hV hVU g hg s
-    haveI := hV
-    haveI : Fintype (T ⧸ V) := Fintype.ofFinite _
+    have := hV
+    have : Fintype (T ⧸ V) := Fintype.ofFinite _
     let φ : T → ℂ := fun t => g t * (((χ t)⁻¹ : ℂˣ) : ℂ)
     have hφ : ∀ t u, u ∈ V → φ (t * u) = φ t := by
       intro t u hu
@@ -212,8 +212,8 @@ theorem UpperTheory.exists_character_separation :
     linear_combination (-(g (q.out * s) * (((χ q.out)⁻¹ : ℂˣ) : ℂ))) * hs1
   have fiber : ∀ V : Subgroup T, V ≤ U₀ → V.FiniteIndex → aV V f₀ ≠ 0 := by
     intro V hVU hV
-    haveI := hV
-    haveI : Fintype (T ⧸ V) := Fintype.ofFinite _
+    have := hV
+    have : Fintype (T ⧸ V) := Fintype.ofFinite _
     let π : T ⧸ V →* T ⧸ U₀ := QuotientGroup.map V U₀ (MonoidHom.id T) (fun x hx => hVU hx)
     let φ0 : T → ℂ := fun t => f₀ t * (((χ t)⁻¹ : ℂˣ) : ℂ)
     have hφ0 : ∀ t u, u ∈ U₀ → φ0 (t * u) = φ0 t := by
@@ -255,8 +255,8 @@ theorem UpperTheory.exists_character_separation :
     induction hmem using Submodule.span_induction with
     | mem p hp =>
       obtain ⟨U, g, s, hU, hg, rfl⟩ := hp
-      haveI := hU
-      haveI := hU₀
+      have := hU
+      have := hU₀
       refine ⟨U ⊓ U₀, inf_le_right, inferInstance, fun V' hV' hV'f => ?_⟩
       have hg' : ∀ t u, u ∈ V' → g (t * u) = g t :=
         fun t u hu => hg t u (Subgroup.mem_inf.mp (hV' hu)).1
@@ -268,8 +268,8 @@ theorem UpperTheory.exists_character_separation :
     | add x y _ _ hx hy =>
       obtain ⟨V1, hV1U, hV1f, hV1⟩ := hx
       obtain ⟨V2, hV2U, hV2f, hV2⟩ := hy
-      haveI := hV1f
-      haveI := hV2f
+      have := hV1f
+      have := hV2f
       refine ⟨V1 ⊓ V2, inf_le_left.trans hV1U, inferInstance, fun V' hV' hV'f => ?_⟩
       have := aV_lin V' hV'f 1 x y
       rw [one_smul, one_mul] at this
@@ -447,10 +447,10 @@ private theorem core {K : Type} [Field K] (A : ValuationSubring K) (p : Kˣ) (π
       rw [Units.val_mul, aff_val, aff_val]
       ext i j
       fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_succ]
-    rw [if_pos hc, sum1, e, hD, ← add_smul] at this
+    rw [ite_eq_left hc, sum1, e, hD, ← add_smul] at this
     exact (canc h1 this).symm
   · intro hc
-    simp only [if_neg hc, add_zero] at hU
+    simp only [ite_eq_right hc, add_zero] at hU
     by_cases hl : lam = 0
     · exact Or.inl hl
     right

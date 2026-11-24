@@ -69,14 +69,14 @@ theorem exists_integral_functional {O K V : Type} [CommRing O] [IsDomain O] [IsP
     ∃ r : V →ₗ[K] K, r v = 1 ∧ ∀ n ∈ N, ∃ o : O, algebraMap O K o = r n := by
   let q : V →ₗ[K] V ⧸ (K ∙ v) := (K ∙ v).mkQ
   let N' : Submodule O (V ⧸ (K ∙ v)) := N.map (q.restrictScalars O)
-  haveI : Module.Finite O N' := Module.Finite.iff_fg.mpr (hN.map _)
-  haveI : Module.IsTorsionFree O (V ⧸ (K ∙ v)) := by
+  have : Module.Finite O N' := Module.Finite.iff_fg.mpr (hN.map _)
+  have : Module.IsTorsionFree O (V ⧸ (K ∙ v)) := by
     refine ⟨fun r hr x y hxy => ?_⟩
     have hk : algebraMap O K r ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective O K)).mpr hr.ne_zero
     have h : r • x = r • y := hxy
     rw [← algebraMap_smul K r, ← algebraMap_smul K r] at h
     exact smul_right_injective _ hk h
-  haveI : Module.Free O N' := Module.free_of_finite_type_torsion_free'
+  have : Module.Free O N' := Module.free_of_finite_type_torsion_free'
   let e := Module.finBasis O N'
   have hli : LinearIndependent K (fun i => ((e i : N') : V ⧸ (K ∙ v))) :=
     (LinearIndependent.iff_fractionRing O K).mp (e.linearIndependent.map' N'.subtype (Submodule.ker_subtype _))
@@ -124,8 +124,8 @@ theorem exists_integral_reading {LL : Type} [Field LL] [NumberField LL] (L0 : In
     [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] [Field K] [Algebra O K] [IsFractionRing O K] (rd : L0 →+* K) :
     ∃ lam : LL →+ K, lam 1 = 1 ∧ (∀ (c : L0) (y : LL), lam ((c : LL) * y) = rd c * lam y) ∧
       ∀ a : 𝓞 LL, ∃ o : O, algebraMap O K o = lam a := by
-  letI : Algebra L0 (AlgebraicClosure K) := ((algebraMap K (AlgebraicClosure K)).comp rd).toAlgebra
-  haveI : Module.IsTorsionFree L0 (AlgebraicClosure K) := DivisionSemiring.to_moduleIsTorsionFree
+  let : Algebra L0 (AlgebraicClosure K) := ((algebraMap K (AlgebraicClosure K)).comp rd).toAlgebra
+  have : Module.IsTorsionFree L0 (AlgebraicClosure K) := DivisionSemiring.to_moduleIsTorsionFree
   let ι : LL →ₐ[L0] AlgebraicClosure K := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -308,16 +308,16 @@ theorem exists_integral_descent {LL : Type} [Field LL] [NumberField LL] (L0 : In
       map_mul' := fun x y => hinj (by rw [map_mul, hs0, hs0, hs0]; simp)
       map_zero' := hinj (by rw [hs0]; simp)
       map_add' := fun x y => hinj (by rw [map_add (f := _), hs0, hs0, hs0]; simp) }
-  letI : Algebra (𝓞 L0) O := s.toAlgebra
+  let : Algebra (𝓞 L0) O := s.toAlgebra
   have hs : ∀ c : 𝓞 L0, algebraMap O K (algebraMap (𝓞 L0) O c) = rd c := hs0
   have hsinj : Function.Injective (algebraMap (𝓞 L0) O) := by
     intro x y hxy
     have := congrArg (algebraMap O K) hxy
     rw [hs, hs] at this
     exact RingOfIntegers.ext (rd.injective this)
-  haveI : FaithfulSMul (𝓞 L0) O := (faithfulSMul_iff_algebraMap_injective _ _).mpr hsinj
-  haveI : Module.IsTorsionFree (𝓞 L0) O := FaithfulSMul.to_isTorsionFree _ _
-  haveI : Module.Flat (𝓞 L0) O := inferInstance
+  have : FaithfulSMul (𝓞 L0) O := (faithfulSMul_iff_algebraMap_injective _ _).mpr hsinj
+  have : Module.IsTorsionFree (𝓞 L0) O := FaithfulSMul.to_isTorsionFree _ _
+  have : Module.Flat (𝓞 L0) O := inferInstance
   obtain ⟨d, hd⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors (𝓞 L0)) α
   choose A hA using hd
   have hA' : ∀ p, (A p : L0) = ((d : 𝓞 L0) : L0) * α p := fun p => (hA p).trans (Algebra.smul_def _ _)
@@ -353,12 +353,12 @@ theorem normV_isUnit (D : D7) (T : TwR D.LL0 D.nd) (i : T.Tw) (w : PlE D.host) (
   have hl : (T.l i).Prime := (T.lPrime i).out
   have hN : ¬ (T.l i) ∣ normV w := by
     intro hdvd
-    letI := Ideal.Quotient.field w.asIdeal
-    haveI : Finite (𝓞 D.host.E ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
-    letI := Fintype.ofFinite (𝓞 D.host.E ⧸ w.asIdeal)
+    let := Ideal.Quotient.field w.asIdeal
+    have : Finite (𝓞 D.host.E ⧸ w.asIdeal) := w.asIdeal.finiteQuotientOfFreeOfNeBot w.ne_bot
+    let := Fintype.ofFinite (𝓞 D.host.E ⧸ w.asIdeal)
     obtain ⟨p, hchar⟩ := CharP.exists (𝓞 D.host.E ⧸ w.asIdeal)
     have hp : p.Prime := CharP.char_is_prime (𝓞 D.host.E ⧸ w.asIdeal) p
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     obtain ⟨n, -, hn⟩ := FiniteField.card (𝓞 D.host.E ⧸ w.asIdeal) p
     have hcard : normV w = p ^ (n : ℕ) := by rw [normV, Nat.card_eq_fintype_card, hn]
     rw [hcard] at hdvd
@@ -413,7 +413,7 @@ theorem eqL_rational (D : D7) (S : RatDat D.ntw) (In : RatIn D S) (j : ℕ) (h1 
     exact hc _ _ (hW ⟨_, stabR D S In.rho j _ _ w.2⟩)
   cases a with
   | none =>
-    haveI : Fintype (G0g D.nd) := Fintype.ofFinite _
+    have : Fintype (G0g D.nd) := Fintype.ofFinite _
     simp only [eqL, finsum_eq_sum_of_fintype, LinearMap.sub_apply, LinearMap.sum_apply, LinearMap.smul_apply,
       Module.End.one_apply]
     exact sub_mem (sum_mem fun g _ => hc _ _ (hact g)) (hW w)
@@ -539,7 +539,7 @@ theorem GlobalTheory.HeightCounting.FormsStep.hkStab_of_ringSpec_of_subset : ∀
   choose w hwM hwg using fun t => (g t).2
   have hg : ∀ t, (g t : FmT D T S i j b) = Φ (w t) := fun t => (hwg t).trans (hw _).symm
   simp only [hg] at hx0 ⊢
-  haveI : Fintype ↥(Formalism.IndefR.NX.U D.nd) := Fintype.ofFinite _
+  have : Fintype ↥(Formalism.IndefR.NX.U D.nd) := Fintype.ofFinite _
   have hsol := hrel (fun t a => eqL D S In.θ j a (w t)) (fun t a => eqL_rational D S In j h1 h2 W0 hW0 hW0c a (w t)) o (by
     intro a
 

@@ -109,7 +109,7 @@ theorem typeFunction_constantTerm_eq_zero :
     exact this
   have hNo : IsOpen ((χ.ker.map J.subtype : Subgroup (GL ι K)) : Set (GL ι K)) := by
     rw [Subgroup.coe_map]
-    exact hJo.isOpenMap_subtype_val _ hχ
+    exact hJo.isOpenMap_subtypeVal _ hχ
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [IsLocallyConstant.iff_exists_open]
     intro g

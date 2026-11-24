@@ -123,10 +123,10 @@ theorem UpperTheory.ray_class_group_finite :
       rw [mul_inv, mul_inv, inv_inv, mul_assoc, mul_right_comm, inv_mul_cancel, one_mul, mul_comm]
     rw [e]
     exact H.mul_mem hzH (H.inv_mem (hK c))
-  haveI : DiscreteTopology (Ideles F ⧸ H) := QuotientGroup.discreteTopology hopen
+  have : DiscreteTopology (Ideles F ⧸ H) := QuotientGroup.discreteTopology hopen
   have hfin : ((QuotientGroup.mk : Ideles F → Ideles F ⧸ H) '' S).Finite :=
     (hS.image QuotientGroup.continuous_mk).finite_of_discrete
-  haveI : Finite (Ideles F ⧸ H) := by
+  have : Finite (Ideles F ⧸ H) := by
     refine Set.finite_univ_iff.1 (hfin.subset fun q _ => ?_)
     obtain ⟨t, rfl⟩ := QuotientGroup.mk_surjective q
     obtain ⟨s, hs, hst⟩ := hcov t

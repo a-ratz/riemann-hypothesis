@@ -175,9 +175,9 @@ theorem coord (D : D7) (m n N : ℕ) (e : Matrix (Fin m) (Fin n) (AE D) ≃ₗ[A
     Continuous e ∧ Continuous e.symm ∧
       (∀ x, x.map (finPart D) = 0 ↔ GlobalTheory.SWQ.fin (e x).1 = 0 ∧ GlobalTheory.SWQ.fin (e x).2 = 0) ∧
       (∀ x, x.map (infPart D) = 0 ↔ GlobalTheory.SWQ.inf (e x).1 = 0 ∧ GlobalTheory.SWQ.inf (e x).2 = 0) := by
-  haveI h0 : IsModuleTopology (AF D.host.F) (AE D) := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.modTop
-  haveI h1 : IsModuleTopology (AF D.host.F) (Fin n → AE D) := IsModuleTopology.instPi
-  haveI h2 : IsModuleTopology (AF D.host.F) (Matrix (Fin m) (Fin n) (AE D)) := IsModuleTopology.instPi
+  have h0 : IsModuleTopology (AF D.host.F) (AE D) := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.modTop
+  have h1 : IsModuleTopology (AF D.host.F) (Fin n → AE D) := IsModuleTopology.instPi
+  have h2 : IsModuleTopology (AF D.host.F) (Matrix (Fin m) (Fin n) (AE D)) := IsModuleTopology.instPi
   refine ⟨IsModuleTopology.continuous_of_linearMap e.toLinearMap,
     IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap, fun x => ?_, fun x => ?_⟩
   · have key : x.map (finPart D) = 0 ↔ pairA D.host.F 0 1 • x = 0 := by

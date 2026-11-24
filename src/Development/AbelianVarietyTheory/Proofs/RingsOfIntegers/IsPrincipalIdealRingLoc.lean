@@ -80,7 +80,7 @@ theorem exists_basis_up_to {O A E : Type} [CommRing O] [CommRing A] [IsDomain A]
       span_eq_top := by rw [hM, Submodule.span_span_of_tower, hsp] }
   have hrk : Module.finrank A M = n := by
     simpa using ((Submodule.IsFullLattice.finrank_eq E M).trans (Module.finrank_fintype_fun_eq_card E))
-  haveI : Module.Finite A M := Submodule.IsLattice.finite E M
+  have : Module.Finite A M := Submodule.IsLattice.finite E M
   let c : Basis (Fin n) A M := Module.finBasisOfFinrankEq A M hrk
   have hc : ∀ i, ∃ t : S, (t : O) • (c i : Fin n → E) ∈ L := fun i => by
     obtain ⟨t, ht⟩ := multiple_mem_span_of_mem_localization_span S A (L : Set (Fin n → E)) _ (c i).2
@@ -171,7 +171,7 @@ theorem isPrincipalIdealRing_loc (E : Type) [Field E] [NumberField E] (m : ℕ) 
     simp only [map_natCast] at hu
     exact hP'.ne_top (Ideal.eq_top_of_isUnit_mem _ hpP hu)
   obtain ⟨c, rfl⟩ := hpm
-  simp only [Set.mem_setOf_eq, Ideal.dvd_span_singleton, Nat.cast_mul]
+  simp only [Set.mem_ofPred_eq, Ideal.dvd_span_singleton, Nat.cast_mul]
   exact Ideal.mul_mem_right _ _ hpP
 
 end GlobalTheory.PlaceInt.LocBasis
@@ -226,7 +226,7 @@ theorem exists_matrix_primeTo : ∀ (E : Type) [Field E] [NumberField E] (n : �
       funext j i
       rw [hu j]; rfl
     have hunit : IsUnit (g.map (algebraMap (𝓞 E) E)) :=
-      Matrix.linearIndependent_cols_iff_isUnit.1 (hcol ▸ hli)
+      Matrix.linearIndependent_col_iff_isUnit.1 (hcol ▸ hli)
     intro h0
     have := ((Matrix.isUnit_iff_isUnit_det _).1 hunit).ne_zero
     apply this

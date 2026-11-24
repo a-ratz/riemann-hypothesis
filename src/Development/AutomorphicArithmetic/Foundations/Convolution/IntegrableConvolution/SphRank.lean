@@ -51,8 +51,8 @@ open MeasureTheory GroundTheory.Automorphic UpperTheory.ConvolutionTheory.C
 theorem UpperTheory.ConvolutionTheory.L1.sphRank :
     UpperTheory.ConvolutionTheory.L1.SphRank := by
   intro K _ _ n μ _ V hV w
-  letI : MeasurableSpace (Gw n w) := borel _
-  haveI : BorelSpace (Gw n w) := ⟨rfl⟩
+  let : MeasurableSpace (Gw n w) := borel _
+  have : BorelSpace (Gw n w) := ⟨rfl⟩
   obtain ⟨⟨σ, hσ⟩, -, -⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds K n μ V w Measure.haar hV
   have hmem : ∀ x : σ.V, (∀ g ∈ GLnLocal.integralGL (w.adicCompletion K) n,
       σ.ρ g x = (1 : Gw n w → ℂ) g • x) → x ∈ fixedVectors σ.ρ (GLnLocal.integralGL (w.adicCompletion K) n) := by
@@ -66,7 +66,7 @@ theorem UpperTheory.ConvolutionTheory.L1.sphRank :
     have hx' := hmem x hx
     rw [h] at hx'
     simpa using hx'
-  · haveI := σ.irred
+  · have := σ.irred
     obtain ⟨e, -, hall⟩ := finrank_eq_one_iff'.1 (Spherical.finrank_fixedVectors_eq_one σ.smooth h)
     refine ⟨e, fun x hx => ?_⟩
     obtain ⟨c, hc⟩ := hall ⟨x, hmem x hx⟩

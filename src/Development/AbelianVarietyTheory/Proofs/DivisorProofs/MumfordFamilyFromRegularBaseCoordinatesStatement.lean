@@ -157,14 +157,14 @@ theorem evenOn_of_prim : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R
   obtain ⟨P₀, v, hv⟩ := GlobalTheory.UU.exists_isLevelCP (maximalIdeal R) 0 P
   have hm : (maximalIdeal R ^ (0 + 1)).IsMaximal := by
     rw [zero_add, pow_one]; infer_instance
-  letI : Field (R ⧸ maximalIdeal R ^ (0 + 1)) := Ideal.Quotient.field _
+  let : Field (R ⧸ maximalIdeal R ^ (0 + 1)) := Ideal.Quotient.field _
   have hS0 := IsSemiAbelian.pullback (thick R (maximalIdeal R) 0) G hS
   have := hS0.smooth
   have := hS0.geomConnected
   have := Q₀.i_hom
-  letI := D.toPre.addX
-  haveI := D.toPre.freeX
-  haveI := D.toPre.finX
+  let := D.toPre.addX
+  have := D.toPre.freeX
+  have := D.toPre.finX
   obtain ⟨s⟩ := GlobalTheory.BiextTriv.main (R ⧸ maximalIdeal R ^ (0 + 1)) D.toPre.X (thickObj R (maximalIdeal R) 0 G) P₀.L P₀.c Q₀.i
     Q₀.i_hom
   obtain ⟨σ, hσ⟩ := GlobalTheory.EvenTriv.exists_even_of_surjective (GlobalTheory.EvenTriv.surjective_cube_of_generic G hS hp) P a hw P₀
@@ -257,7 +257,7 @@ theorem exists_polAV_generic : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
     { A := A.A, isAb := A.isAb, g := A.g, smoothDim := A.smoothDim, L := L', isLB := h1, rigid := h2, sym := h3,
       ample := h4, ktriv := h5 }
   refine ⟨A', U.gen, U.gen_hom, ?_⟩
-  haveI := U.gen_hom
+  have := U.gen_hom
   have hLG := U.LG.isLB
   have hAL := A.isLB
   let φ := pullback.fst G.hom (jK R)
@@ -818,7 +818,7 @@ theorem isPullDeg_of_primitive : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
       P₁.val_gen _ _ _ hJ, P₂.val_gen _ _ _ hJ, P₂.val_gen _ _ _ hJ, P₁.val_gen _ _ _ hJ, val_inv, val_inv,
       val_pull (P₂.good hJ), val_pull (P₂.good hJ), val_pull (P₁.good hJ)]
     rfl
-  haveI := hΦ
+  have := hΦ
   have c0' : D'.toPre.c 0 = 1 := by
     have h := D'.toPre.c_add 0 0
     rw [add_zero] at h
@@ -827,7 +827,7 @@ theorem isPullDeg_of_primitive : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
       s ≫ η[D'.toPre.P.A] ≫ lift (𝟙 D'.toPre.P.A) (o'.onB.act w) = lift (1 : T ⟶ D'.toPre.P.A) 1 := by
     intro T s
     have e1 : (η[D'.toPre.P.A] : 𝟙_ _ ⟶ D'.toPre.P.A) ≫ o'.onB.act w = η := by
-      haveI := o'.onB.hom w; exact IsMonHom.one_hom _
+      have := o'.onB.hom w; exact IsMonHom.one_hom _
     rw [comp_lift, comp_lift, Category.comp_id, e1, Hom.one_def, toUnit_unique s (toUnit T)]
   have hjK : (toUnit (TK R)).left = jK R := by simpa using Over.w (toUnit (TK R))
   have Z0 : ∀ (Z : Scheme.{0}) (r : Z ⟶ Spec (CommRingCat.of R)) (z : Z)
@@ -1061,7 +1061,7 @@ theorem GlobalTheory.Mum.Two.isPullUnif_id_over₀_onTorus : ∀ (R : Type) [Com
     obtain ⟨h₀, hT⟩ := GlobalTheory.Mum.Two.unifPre_hom_character_const R (maximalIdeal R) hR D' D A' A G G U'.toUnifPre
       U.toUnifPre ψ hψ
     have key : (h₀ : D.toPre.X → D'.toPre.X) = hD.xe.symm := by
-      haveI := hC
+      have := hC
       obtain ⟨t, ht, hi⟩ := hT 0
       refine acts_unique (U'.gt 0) (U.gt 0) (acts_of_torusHomOf _ _ _ ht hi) ?_
       obtain ⟨h, rfl, -, h3⟩ := lev 0
@@ -1214,7 +1214,7 @@ namespace GlobalTheory.Mum
 
 theorem mumfordBundle_primitive_of_evenNorm_data : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ U : Unif (maximalIdeal R) D A G, ∀ (O : Type) [CommRing O] [StarRing O] [Module O D.toPre.X] (o : D.toPre.OAct O) (oA : A.OAct O) (oG : RingAct G O), U.toUnifPre.OLinear O o oA oG → ∀ (w : O) (ν : ℕ), w + star w = 1 → w * star w = (ν : O) → 1 ≤ ν → Even ν → TraceFormTwistIso D.toPre o w → LBIso U.LG.L (cubeLB G ![𝟙 G, oG.act w] U.LG.L) := by
   intro R _ _ _ hR D A G _ _ hG U O _ _ _ o oA oG hlin w ν hw hν hν1 hev hpsi
-  haveI : CharZero R := hR.2
+  have : CharZero R := hR.2
   obtain ⟨P, hP, hE⟩ := GlobalTheory.Mum.PrimCube.exists_cp_evenOn R hR D A G hG U O o oA oG hlin w hw hpsi
   obtain ⟨A', gen', hgen, hgL⟩ := GlobalTheory.Mum.GenPol.exists_polAV_generic R hR D A G hG U O o oA oG hlin w hw hpsi P hP
   obtain ⟨D', U', hLG, -⟩ := GlobalTheory.Mum.exists_unif_even R hR G P hG hE A' gen' hgen hgL
@@ -1223,7 +1223,7 @@ theorem mumfordBundle_primitive_of_evenNorm_data : ∀ (R : Type) [CommRing R] [
   obtain ⟨hbal1, hbal2⟩ := GlobalTheory.UT.allU_balanced R (maximalIdeal R) hR.1 D' A' G hG U'
   obtain ⟨oA', hoA'⟩ := GlobalTheory.PELOfUnif.exists_oAct_unif U'.toUnifPre oG hadj
   obtain ⟨md, o', hlin'⟩ := hbal1 O oA' oG hoA' hadj
-  letI := md
+  let := md
   have hpsi' : TraceFormTwistIso D'.toPre o' w := hbal2 O o' oA' oG hlin' hadj w ν hw hν hν1 hev hprim
   obtain ⟨Φ, xe, hΦ, hov, hto, hcB, hxs, hxc, hwΛ⟩ :=
     GlobalTheory.T.polarisedDegenerationData_iso_of_mumfordBundle_iso R hR D A G hG U O o oA oG hlin D' A' U' o' oA' hlin' hlam
@@ -1294,7 +1294,7 @@ theorem exists_sab_pelUnif_of_norm {E : Type} [Field E] [NumberField E] [IsCMFie
     [inst : Module (𝓞 E) D.toPre.X] (oD : letI := H.starRing; D.toPre.OAct (𝓞 E))
     (hw : letI := H.starRing; TraceFormTwistIso D.toPre oD H.w0) :
     ∃ (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t), P.D = D ∧ HEq P.mod inst ∧ HEq P.oD oD := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨G, iG, cG, A, hG, ⟨U⟩⟩ := GlobalTheory.T.hasSemiAbelianUniformisation_complete_normal_base R hR D
   obtain ⟨oA, oG, hl⟩ := GlobalTheory.T.exists_ringAction_extension_to_uniformised_semiAbelian R hR D A G hG U (𝓞 E) oD
   have hd := H.d_mod
@@ -1374,10 +1374,10 @@ namespace GlobalTheory.UCanon.FamFrom
 
 theorem main : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D' : Datum H} {l : Geo.Tor.Level H} {c : Coeff l} (L : LowBase D' c) (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → ∀ (iw : L.W →+* R), Function.Injective iw → ∀ (m N : ℕ) (s : Fin m ⊕ Fin N → R) (ε : Fin m ⊕ Fin N → LinearMap.BilinForm ℤ L.D.X), (∀ k, ε k ∈ balForms H.bar L.D.X) → (∀ i, s (.inl i) ∈ maximalIdeal R ∧ s (.inl i) ≠ 0) → (∀ j, IsUnit (s (.inr j))) → (∀ i y, 0 ≤ ε (.inl i) y y) → (∀ y, y ≠ 0 → 0 < ∑ i, ε (.inl i) y y) → Nontrivial L.D.X → ∃ (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t) (e : P.D.toPre.X ≃ₗ[𝓞 E] L.D.X), DivFrom L P.D.toPre P.oD iw s ε e ∧ IsMonomial P.D.toPre (fun i => s (.inl i)) (fun i => (l.M' : ℤ) • pull e.toLinearMap (ε (.inl i))) := by
   intro E _ _ _ H Dl l c L R _ _ _ hB iw hiw m N s ε hε hs hu hpos hdef hnt
-  letI := H.starRing
+  let := H.starRing
   have hw : H.w0 + star H.w0 = 1 := GlobalTheory.TauTwist.halfUnit_add_star H
   have hM : 0 < l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
-  letI iD : Module (𝓞 E) (mulDeg L.D l.M').X := L.mod
+  let iD : Module (𝓞 E) (mulDeg L.D l.M').X := L.mod
   obtain ⟨he0, hb0, hU0, oa0, hoa0, hW0⟩ := GlobalTheory.T.degenerationDataNsmulRescale_keeps_laws L.W L.D (𝓞 E) L.oa H.w0 l.M' L.even L.bimult L.w0 L.gen
   have hne : ∃ i, ε (.inl i) ≠ 0 := by
     obtain ⟨y, hy⟩ := exists_ne (0 : L.D.X)
@@ -1402,7 +1402,7 @@ theorem main : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
     subst im
     have h2' := eq_of_heq h2
     subst od
-    letI : Module (𝓞 E) D1.toPre.X := iM
+    let : Module (𝓞 E) D1.toPre.X := iM
     let e₁ : D1.toPre.X ≃ₗ[𝓞 E] L.D.X := e
     refine ⟨e₁, ?_, hmono⟩
     obtain ⟨h2p, hx2, he2⟩ := isPullDeg_rescale_inv iw (mulDeg L.D l.M') D''

@@ -104,7 +104,7 @@ private theorem haar_subgroup_eq_index_mul_of_open_le {G : Type} [Group G] [Topo
     (K K' : Subgroup G) (hle : K' ≤ K) (hK' : IsOpen (K' : Set G)) [Finite (K ⧸ K'.subgroupOf K)] :
     μ K = (Nat.card (K ⧸ K'.subgroupOf K) : ENNReal) * μ K' := by
   classical
-  haveI := Fintype.ofFinite (K ⧸ K'.subgroupOf K)
+  have := Fintype.ofFinite (K ⧸ K'.subgroupOf K)
   set S : K ⧸ K'.subgroupOf K → Set G := fun q => (fun h => ((q.out : K) : G)⁻¹ * h) ⁻¹' (K' : Set G) with hS
   have hunion : (K : Set G) = ⋃ q, S q := by
     ext x
@@ -138,9 +138,9 @@ private theorem haar_subgroup_eq_index_mul_of_open_le {G : Type} [Group G] [Topo
 
 theorem haar_ratio_eq_relIndex : HaarRatio := by
   intro G _ _ _ _ _ μ _ K K' hle hK' hK
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  haveI : Finite (K ⧸ K'.subgroupOf K) :=
-    Subgroup.quotient_finite_of_isOpen (K'.subgroupOf K) (hK'.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : Finite (K ⧸ K'.subgroupOf K) :=
+    Subgroup.quotient_finite_of_isOpen (K'.subgroupOf K) (hK'.preimage continuous_subtypeVal)
   rw [haar_subgroup_eq_index_mul_of_open_le μ K K' hle hK']
   have hpos : μ K' ≠ 0 := (hK'.measure_pos μ ⟨1, K'.one_mem⟩).ne'
   have hfin : μ K' ≠ ⊤ :=

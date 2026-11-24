@@ -197,7 +197,7 @@ theorem isHolTo_slice_at {V V' : Type} [NormedAddCommGroup V] [NormedSpace ℂ V
   have hj : Differentiable ℂ (fun z : V' => (b, z)) := (differentiable_const _).prodMk differentiable_id
   refine ⟨?_, ?_⟩
   · have h3 := h1.preimage hj.continuous
-    simpa only [Set.preimage_setOf_eq, Set.mem_prod, Set.mem_univ, and_true, hb, true_and] using h3
+    simpa only [Set.preimage_ofPred_eq, Set.mem_prod, Set.mem_univ, and_true, hb, true_and] using h3
   · exact h2.comp hj.differentiableOn fun z hz => ⟨⟨hb, trivial⟩, hz.2⟩
 
 theorem isHolTo_ex_slice {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] {g n : ℕ}
@@ -214,7 +214,7 @@ theorem isHolTo_snd {V V' : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] [No
   obtain ⟨h1, h2⟩ := h U f
   refine ⟨?_, ?_⟩
   · have h3 := h1.preimage (continuous_snd (X := V) (Y := V'))
-    simpa only [Set.preimage_setOf_eq, Set.mem_prod, Set.mem_univ, and_self, true_and] using h3
+    simpa only [Set.preimage_ofPred_eq, Set.mem_prod, Set.mem_univ, and_self, true_and] using h3
   · exact h2.comp differentiable_snd.differentiableOn fun z hz => ⟨trivial, hz.2⟩
 
 def famExpAtPoint {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] {g n : ℕ}
@@ -405,8 +405,8 @@ theorem span_per_eq_top : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj 
   have hsurj := _root_.GlobalTheory.CompanionTheory.Ar.Flat.famExp_ex_surjective R G g n M B ψ e hG b hb
   have hq := T.q_hom
   have hi := T.i_hom
-  letI := T.addCommGroup
-  letI := T.grpB
+  let := T.addCommGroup
+  let := T.grpB
   have := T.free
   have := T.finite
   have := hG.smooth

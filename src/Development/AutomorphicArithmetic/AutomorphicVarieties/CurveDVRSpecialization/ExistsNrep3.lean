@@ -111,7 +111,7 @@ private theorem closed_one {H A : Type} [Group H] [TopologicalSpace H] [CommRing
   have e : {s | (r s).mat = 1} = ⋂ n : ℕ, {s | (r s).mat.map (Ideal.Quotient.mk (maximalIdeal A ^ n)) =
       (1 : Matrix (Fin 3) (Fin 3) A).map (Ideal.Quotient.mk (maximalIdeal A ^ n))} := by
     ext s
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     constructor
     · intro h n
       rw [h]
@@ -147,7 +147,7 @@ private theorem upl_compact (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure �
   have stab : ∀ z : Ω, IsClosed {s : G ℚ Ω | s z = z} := by
     intro z
     have hz : IsIntegral ℚ z := (Algebra.IsAlgebraic.isAlgebraic (R := ℚ) z).isIntegral
-    haveI := IntermediateField.adjoin.finiteDimensional hz
+    have := IntermediateField.adjoin.finiteDimensional hz
     have hle : (IntermediateField.adjoin ℚ {z}).fixingSubgroup ≤ MulAction.stabilizer (G ℚ Ω) z := by
       intro s hs
       rw [MulAction.mem_stabilizer_iff, AlgEquiv.smul_def]
@@ -324,10 +324,10 @@ theorem UpperTheory.V.Pr.exists_nrep3 :
       ∃ ρ : Fr.NRep Φ 3 A, IsLiftA O ρ ∧ (∀ s : G L Ω, ρ.r (k.p0 s) = (r (Base.galEmb ℚ L Ω s)).mat) ∧
       ∀ v i, ∀ g ∈ Φ.Iv v, (ρ.ψ v i g : A) = algebraMap O A (UnitaryThreeInertia.psi Ψ i (k.j v g)) := by
   intro Ω _ _ _ l _ O _ _ η Ψ σ g₁ B M L _ _ _ Φ k _ C₀ hOk hlM hσ A _ _ _ _ _ _ r hr
-  haveI := upl_compact Ω L
+  have := upl_compact Ω L
   let ru : ↥(upl Ω L) →* GG (m := 3) (R := A) := r.comp (upl Ω L).subtype
   have ru_cont : UnitaryThreeInertia.AdicCont (maximalIdeal A) ru := fun n =>
-    (hr.cont n).comp_continuous continuous_subtype_val
+    (hr.cont n).comp_continuous continuous_subtypeVal
   have hk : k.p.ker ≤ ru.ker := by
     intro s hs
     have hs1 : k.p s = 1 := hs
@@ -431,7 +431,7 @@ theorem UpperTheory.V.Pr.exists_nrep3 :
       rw [← k.del, ← k.j_loc]
       exact (Φ.loc0 v g).2
     obtain ⟨ψ, h1', h2', h3', h4'⟩ := local_chars η Ψ (Dec B) (Ine B) r hr.red hr.cont hr.ord
-      ((upl Ω L).subtype.comp (k.j v)) (continuous_subtype_val.comp (k.j_cont v)) γ hγ h1 hD
+      ((upl Ω L).subtype.comp (k.j v)) (continuous_subtypeVal.comp (k.j_cont v)) γ hγ h1 hD
     refine ⟨ψ, h1', h2', h3', fun i g hg => h4' i g ?_⟩
     show γ⁻¹ * ((k.j v g : G ℚ Ω)) * γ ∈ Ine B
     rw [hconj]
@@ -464,7 +464,7 @@ theorem UpperTheory.V.Pr.exists_nrep3 :
     rw [e]
     exact hψ1 v g
   · intro i j N
-    have h := (hc' N).comp_continuous (continuous_subtype_val : Continuous (fun g : Φ.G0 => (g : Φ.Γ)))
+    have h := (hc' N).comp_continuous (continuous_subtypeVal : Continuous (fun g : Φ.G0 => (g : Φ.Γ)))
     exact h.comp (fun X => X i j)
   · intro v i
     exact hψ2 v i

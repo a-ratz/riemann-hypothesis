@@ -68,7 +68,7 @@ private theorem chi_split {χ : HChar E} {s : ℝ} (h : χ.IsAbsPow s) :
     rw [map_pow, norm_pow, GlobalTheory.CuspRep.InfType.coord_expU, c1, Complex.norm_exp, Complex.one_re, Real.exp_one_pow]
   simp only [d, c]
   rw [← Complex.ofReal_cpow (Real.exp_pos _).le, ← Real.exp_mul, Finset.prod_const, Finset.card_univ,
-    ← Complex.ofReal_pow, ← Real.exp_nat_mul, mul_comm]
+    ← Complex.ofReal_pow, ← Real.exp_natCast_mul, mul_comm]
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 private theorem absPow_uniq {χ χ' : HChar E} {s : ℝ} (h : χ.IsAbsPow s) (h' : χ'.IsAbsPow s) : χ = χ' := by

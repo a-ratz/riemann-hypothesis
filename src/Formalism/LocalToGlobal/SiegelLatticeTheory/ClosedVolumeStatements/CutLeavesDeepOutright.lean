@@ -583,7 +583,7 @@ theorem frame_mem_UUE {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : Submodule
     exact Submodule.mem_sup_right (Submodule.subset_span rfl)
   | cast i =>
     rw [frame_csG]
-    haveI := hΛ
+    have := hΛ
     obtain ⟨s, hs, hsv⟩ := Formalism.L2.SG.Pf.exists_smul_mem Λ (G.fl.e i)
     have hX : s • G.fl.e i ∈ UU Λ F (liftF G) := by
       refine Submodule.mem_sup_left (Submodule.mem_sup_right ⟨hsv, ?_⟩)
@@ -734,10 +734,10 @@ theorem om_X' {y : (VS D).V} (hy : y ∈ F'.X) : (VS D).hT (Gom F.fvec F'.fvec) 
 
   rw [map_sum]
   refine Finset.sum_eq_zero fun i _ => ?_
-  rw [map_smul, ← fvec_cs F' i, om_pair, if_neg (Fin.castSucc_ne_last i), smul_zero]
+  rw [map_smul, ← fvec_cs F' i, om_pair, ite_eq_right (Fin.castSucc_ne_last i), smul_zero]
 
 theorem omega_hermitian_z : (VS D).hT (Gom F.fvec F'.fvec) F'.z = GDl F.fvec F'.fvec (D.R.rS + 1) := by
-  rw [← fvec_last F', om_pair, if_pos rfl]
+  rw [← fvec_last F', om_pair, ite_eq_left rfl]
 
 theorem f_om (a : Fin (D.R.rS + 1)) :
     (VS D).hT (F.fvec a) (Gom F.fvec F'.fvec) =
@@ -748,10 +748,10 @@ theorem f_om (a : Fin (D.R.rS + 1)) :
   simp only [map_smul, smul_eq_mul, hff]
   rw [Finset.sum_eq_single (Fin.last D.R.rS)]
   · by_cases ha : a = Fin.last D.R.rS
-    · rw [if_pos ⟨ha, rfl⟩, if_pos ha]
-    · rw [if_neg (fun h => ha h.1), if_neg ha, mul_zero]
+    · rw [ite_eq_left ⟨ha, rfl⟩, ite_eq_left ha]
+    · rw [ite_eq_right (fun h => ha h.1), ite_eq_right ha, mul_zero]
   · intro b _ hb
-    rw [if_neg (fun h => hb h.2), mul_zero]
+    rw [ite_eq_right (fun h => hb h.2), mul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem om_om : (VS D).hT (Gom F.fvec F'.fvec) (Gom F.fvec F'.fvec) =
@@ -763,10 +763,10 @@ theorem om_om : (VS D).hT (Gom F.fvec F'.fvec) (Gom F.fvec F'.fvec) =
     rw [map_sum, LinearMap.sum_apply]
     simp only [LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, star_star]
   rw [e, Finset.sum_eq_single (Fin.last D.R.rS)]
-  · rw [f_om, if_pos rfl, PI.UnitaryGroupMassFormula.BetaLUniq.GN.adj_last, ← GDl_r']
+  · rw [f_om, ite_eq_left rfl, PI.UnitaryGroupMassFormula.BetaLUniq.GN.adj_last, ← GDl_r']
     ring
   · intro b _ hb
-    rw [f_om, if_neg hb, mul_zero]
+    rw [f_om, ite_eq_right hb, mul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
 theorem om_uniq (hdet : GDl F.fvec F'.fvec (D.R.rS + 1) ≠ 0) {x : (VS D).V}
@@ -778,9 +778,9 @@ theorem om_uniq (hdet : GDl F.fvec F'.fvec (D.R.rS + 1) ≠ 0) {x : (VS D).V}
   rw [map_sub, LinearMap.sub_apply, LinearMap.map_smulₛₗ, LinearMap.smul_apply, smul_eq_mul, starRingEnd_apply, om_pair]
   induction b using Fin.lastCases with
   | last =>
-    rw [if_pos rfl, fvec_last, hc, star_star, div_mul_cancel₀ _ hdet, sub_self]
+    rw [ite_eq_left rfl, fvec_last, hc, star_star, div_mul_cancel₀ _ hdet, sub_self]
   | cast i =>
-    rw [if_neg (Fin.castSucc_ne_last i), mul_zero, sub_zero, fvec_cs, hsw',
+    rw [ite_eq_right (Fin.castSucc_ne_last i), mul_zero, sub_zero, fvec_cs, hsw',
       hxX _ (Submodule.subset_span ⟨i, rfl⟩), star_zero]
 
 end Formalism.L2.SG.Pf.FrameGlobalPatching.FStar.SpanOmPf
@@ -919,18 +919,18 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchim
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E]
 
 theorem topE (M : Loc.Model F E) : IsTopologicalRing E := by
-  haveI := M.L.top
-  haveI := M.L.free
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
+  have := M.L.top
+  have := M.L.free
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
   first
     | exact IsModuleTopology.isTopologicalRing F E
     | exact IsModuleTopology.topologicalRing F E
 
 theorem t2E (M : Loc.Model F E) : T2Space E := by
-  haveI := M.L.top
-  haveI := M.L.free
-  haveI : T2Space F := MainNotions.LocalModelPeriodLattices.nonarchimedean_local_field_t2 inferInstance
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
+  have := M.L.top
+  have := M.L.free
+  have : T2Space F := MainNotions.LocalModelPeriodLattices.nonarchimedean_local_field_t2 inferInstance
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
   let b := Module.Free.chooseBasis F E
   have hc : Continuous (b.equivFun : E → (Module.Free.ChooseBasisIndex F E → F)) :=
     IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap
@@ -996,20 +996,20 @@ private theorem mem_O_of_mem_R (M : Loc.Model F E) {z : E} (hz : z ∈ M.R) : z 
     rwa [e] at h2
 
 theorem R_compact [CharZero F] (M : Loc.Model F E) : IsCompact (M.R : Set E) := by
-  haveI := topE M
+  have := topE M
   have hO := (MainNotions.LocalModelPeriodLattices.O_top M.L).2.1
   have hRo : IsOpen (M.R : Set E) := PI.ProdFormulaE.ROpen.isOpen_R M
   have hRc : IsClosed (M.R : Set E) := M.R.toAddSubgroup.isClosed_of_isOpen hRo
   exact hO.of_isClosed_subset hRc (fun z hz => mem_O_of_mem_R M hz)
 
 theorem R_denom (M : Loc.Model F E) (y : E) : ∃ a : 𝒪[F], a ≠ 0 ∧ algebraMap F E (a : F) * y ∈ M.R := by
-  haveI := M.L.free
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
-  haveI : Nontrivial E := by
+  have := M.L.free
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
+  have : Nontrivial E := by
     first
       | exact Module.nontrivial_of_finrank_pos (R := F) (by rw [M.L.rank]; norm_num)
       | exact Module.nontrivial_of_finrank_eq_succ M.L.rank
-  haveI : IsFractionRing 𝒪[F] F := ValuationRing.instIsFractionRingInteger (ValuativeRel.valuation F)
+  have : IsFractionRing 𝒪[F] F := ValuationRing.instIsFractionRingInteger (ValuativeRel.valuation F)
   have hinj : ∀ x : 𝒪[F], algebraMap 𝒪[F] E x = 0 → x = 0 := by
     intro x hx
     rw [← alg_int] at hx
@@ -1146,7 +1146,7 @@ variable {a : (D.s.atP p).Fp}
 
 theorem intLow_scale (ha : a ≠ 0) (haO : a ∈ 𝒪[(D.s.atP p).Fp]) {l : MP p} (hl : TieN.IntLow (M p) l) :
     TieN.IntLow (M p) (dg (algebraMap _ _ a) * l * dg (algebraMap _ _ a⁻¹)) := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   refine ⟨fun i => ?_, fun i j hij => ?_, fun i j => ?_⟩
   · rw [dg_entry, hl.1 i, mul_one, mul_comm, pow_inv_pow ha]
   · rw [dg_entry, hl.2.1 i j hij, mul_zero, zero_mul]
@@ -1159,7 +1159,7 @@ theorem intLow_scale (ha : a ≠ 0) (haO : a ∈ 𝒪[(D.s.atP p).Fp]) {l : MP p
 
 theorem intUp_scale (ha : a ≠ 0) (haO : a ∈ 𝒪[(D.s.atP p).Fp]) {ρ : MP p} (hρ : TieN.IntUp (M p) ρ) :
     TieN.IntUp (M p) (dg (algebraMap _ _ a⁻¹) * ρ * dg (algebraMap _ _ a)) := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   refine ⟨fun i => ?_, fun i j hij => ?_, fun i j => ?_⟩
   · rw [dg_entry, hρ.1 i, mul_one, pow_inv_pow ha]
   · rw [dg_entry, hρ.2.1 i j hij, mul_zero, zero_mul]
@@ -1173,7 +1173,7 @@ theorem intUp_scale (ha : a ≠ 0) (haO : a ∈ 𝒪[(D.s.atP p).Fp]) {ρ : MP p
 theorem intLow_scale_of (ha : a ≠ 0) (haO : a ∈ 𝒪[(D.s.atP p).Fp]) {l : MP p} (hl : IsLoUni l)
     (hR : ∀ i j, algebraMap _ (D.s.atP p).Ep a * l i j ∈ (M p).R) :
     TieN.IntLow (M p) (dg (algebraMap _ _ a) * l * dg (algebraMap _ _ a⁻¹)) := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   refine ⟨fun i => ?_, fun i j hij => ?_, fun i j => ?_⟩
   · rw [dg_entry, (hl i i).2 rfl, mul_one, mul_comm, pow_inv_pow ha]
   · rw [dg_entry, (hl i j).1 hij, mul_zero, zero_mul]
@@ -1193,7 +1193,7 @@ theorem intLow_scale_of (ha : a ≠ 0) (haO : a ∈ 𝒪[(D.s.atP p).Fp]) {l : M
 theorem intUp_scale_of (ha : a ≠ 0) (haO : a ∈ 𝒪[(D.s.atP p).Fp]) {ρ : MP p} (hρ : IsUpUni ρ)
     (hR : ∀ i j, algebraMap _ (D.s.atP p).Ep a * ρ i j ∈ (M p).R) :
     TieN.IntUp (M p) (dg (algebraMap _ _ a⁻¹) * ρ * dg (algebraMap _ _ a)) := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   refine ⟨fun i => ?_, fun i j hij => ?_, fun i j => ?_⟩
   · rw [dg_entry, (hρ i i).2 rfl, mul_one, pow_inv_pow ha]
   · rw [dg_entry, (hρ i j).1 hij, mul_zero, zero_mul]
@@ -1255,12 +1255,12 @@ theorem isClosed_imp {X : Type*} [TopologicalSpace X] (P : Prop) {s : Set X} (hs
 
 include M in
 theorem isClosed_loUni (p : PlF D) : IsClosed {m : MP p | IsLoUni m} := by
-  haveI := (D.s.atP p).lf
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := t2E (M p)
   have e : {m : MP p | IsLoUni m} = ⋂ i, ⋂ j, ({m : MP p | i < j → m ∈ {m : MP p | m i j = 0}} ∩
       {m : MP p | i = j → m ∈ {m : MP p | m i j = 1}}) := by
     ext m
-    simp only [IsLoUni, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+    simp only [IsLoUni, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
   rw [e]
   exact isClosed_iInter fun i => isClosed_iInter fun j =>
     (isClosed_imp _ (isClosed_eq (continuous_id.matrix_elem i j) continuous_const)).inter
@@ -1268,12 +1268,12 @@ theorem isClosed_loUni (p : PlF D) : IsClosed {m : MP p | IsLoUni m} := by
 
 include M in
 theorem isClosed_upUni (p : PlF D) : IsClosed {m : MP p | IsUpUni m} := by
-  haveI := (D.s.atP p).lf
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := t2E (M p)
   have e : {m : MP p | IsUpUni m} = ⋂ i, ⋂ j, ({m : MP p | j < i → m ∈ {m : MP p | m i j = 0}} ∩
       {m : MP p | i = j → m ∈ {m : MP p | m i j = 1}}) := by
     ext m
-    simp only [IsUpUni, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff]
+    simp only [IsUpUni, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff]
   rw [e]
   exact isClosed_iInter fun i => isClosed_iInter fun j =>
     (isClosed_imp _ (isClosed_eq (continuous_id.matrix_elem i j) continuous_const)).inter
@@ -1281,12 +1281,12 @@ theorem isClosed_upUni (p : PlF D) : IsClosed {m : MP p | IsUpUni m} := by
 
 theorem isClosed_intLowSet (hRcl : IsClosed ((M p).R : Set (D.s.atP p).Ep)) :
     IsClosed {l : MP p | TieN.IntLow (M p) l} := by
-  haveI := (D.s.atP p).lf
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := t2E (M p)
   have e : {l : MP p | TieN.IntLow (M p) l} = (⋂ i, {l : MP p | l i i = 1}) ∩
       (⋂ i, ⋂ j, {l : MP p | i < j → l ∈ {l : MP p | l i j = 0}}) ∩ ⋂ i, ⋂ j, {l : MP p | l i j ∈ (M p).R} := by
     ext l
-    simp only [TieN.IntLow, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff, and_assoc]
+    simp only [TieN.IntLow, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff, and_assoc]
   rw [e]
   exact ((isClosed_iInter fun i => isClosed_eq (continuous_id.matrix_elem i i) continuous_const).inter
     (isClosed_iInter fun i => isClosed_iInter fun j =>
@@ -1295,12 +1295,12 @@ theorem isClosed_intLowSet (hRcl : IsClosed ((M p).R : Set (D.s.atP p).Ep)) :
 
 theorem isClosed_intUpSet (hRcl : IsClosed ((M p).R : Set (D.s.atP p).Ep)) :
     IsClosed {l : MP p | TieN.IntUp (M p) l} := by
-  haveI := (D.s.atP p).lf
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := t2E (M p)
   have e : {l : MP p | TieN.IntUp (M p) l} = (⋂ i, {l : MP p | l i i = 1}) ∩
       (⋂ i, ⋂ j, {l : MP p | j < i → l ∈ {l : MP p | l i j = 0}}) ∩ ⋂ i, ⋂ j, {l : MP p | l i j ∈ (M p).R} := by
     ext l
-    simp only [TieN.IntUp, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff, and_assoc]
+    simp only [TieN.IntUp, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff, and_assoc]
   rw [e]
   exact ((isClosed_iInter fun i => isClosed_eq (continuous_id.matrix_elem i i) continuous_const).inter
     (isClosed_iInter fun i => isClosed_iInter fun j =>
@@ -1309,8 +1309,8 @@ theorem isClosed_intUpSet (hRcl : IsClosed ((M p).R : Set (D.s.atP p).Ep)) :
 
 theorem isCompact_intLowSet (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) :
     IsCompact {l : MP p | TieN.IntLow (M p) l} := by
-  haveI := (D.s.atP p).lf
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := t2E (M p)
   have hK : IsCompact (Set.univ.pi fun _ : Fin (D.R.rS + 1) => Set.univ.pi fun _ : Fin (D.R.rS + 1) =>
       ((M p).R : Set (D.s.atP p).Ep)) :=
     isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => hRc
@@ -1320,8 +1320,8 @@ theorem isCompact_intLowSet (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) :
 
 theorem isCompact_intUpSet (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) :
     IsCompact {l : MP p | TieN.IntUp (M p) l} := by
-  haveI := (D.s.atP p).lf
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := t2E (M p)
   have hK : IsCompact (Set.univ.pi fun _ : Fin (D.R.rS + 1) => Set.univ.pi fun _ : Fin (D.R.rS + 1) =>
       ((M p).R : Set (D.s.atP p).Ep)) :=
     isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => hRc
@@ -1330,9 +1330,9 @@ theorem isCompact_intUpSet (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) :
   exact Set.mem_univ_pi.2 fun i => Set.mem_univ_pi.2 fun j => hl.2.2 i j
 
 theorem isCompact_KP (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) : IsCompact (KP M p : Set (GG p)) := by
-  haveI := (D.s.atP p).lf
-  haveI := topE (M p)
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := topE (M p)
+  have := t2E (M p)
   let ι : GG p → (MP p × (MP p)ᵐᵒᵖ) × (MP p × (MP p)ᵐᵒᵖ) :=
     fun x => (Units.embedProduct _ x.1, Units.embedProduct _ x.2.unop)
   have hι : Topology.IsClosedEmbedding ι :=
@@ -1359,8 +1359,8 @@ theorem isCompact_KP (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) : IsCompac
 
 theorem isCompact_KD (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) {a : (D.s.atP p).Fp} (ha : a ≠ 0) :
     IsCompact (KD M a ha : Set (GG p)) := by
-  haveI := (D.s.atP p).lf
-  haveI := topE (M p)
+  have := (D.s.atP p).lf
+  have := topE (M p)
   rw [KD, cj, Subgroup.coe_map]
   refine (isCompact_KP M hRc).image ?_
   have e : ((MulAut.conj (tG a ha)⁻¹).toMonoidHom : GG p → GG p) =
@@ -1373,11 +1373,11 @@ theorem isCompact_KD (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) {a : (D.s.
 theorem relIndex_ne_zero (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) {a : (D.s.atP p).Fp} (ha : a ≠ 0)
     (S' : Subgroup (GG p)) (hS : IsClosed (S' : Set (GG p))) :
     (KP M p ⊓ S').relIndex (KD M a ha ⊓ S') ≠ 0 := by
-  haveI := (D.s.atP p).lf
-  haveI := topE (M p)
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := topE (M p)
+  have := t2E (M p)
   have hBc : IsCompact ((KD M a ha ⊓ S' : Subgroup (GG p)) : Set (GG p)) := (isCompact_KD M hRc ha).inter_right hS
-  haveI : CompactSpace (KD M a ha ⊓ S' : Subgroup (GG p)) := isCompact_iff_compactSpace.1 hBc
+  have : CompactSpace (KD M a ha ⊓ S' : Subgroup (GG p)) := isCompact_iff_compactSpace.1 hBc
   have hR : IsOpen ((M p).R : Set (D.s.atP p).Ep) := PI.ProdFormulaE.ROpen.isOpen_R (M p)
   have h1 : Continuous fun x : GG p => ((x.1 : GLp p) : MP p) := Units.continuous_val.comp continuous_fst
   have h2 : Continuous fun x : GG p => ((x.2.unop : GLp p) : MP p) :=
@@ -1402,7 +1402,7 @@ theorem relIndex_ne_zero (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) {a : (
       · rintro ⟨hl, hu⟩
         exact ⟨⟨intLow_of_scaled M ha hK.1 hl, intUp_of_scaled M ha hK.2 hu⟩, hS'⟩
     rw [e]
-    exact hE.preimage continuous_subtype_val
+    exact hE.preimage continuous_subtypeVal
   have := Subgroup.quotient_finite_of_isOpen _ hopen
   show ((KP M p ⊓ S').subgroupOf (KD M a ha ⊓ S')).index ≠ 0
   exact Subgroup.index_ne_zero_of_finite
@@ -1411,7 +1411,7 @@ theorem idxRatio_norm (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) (S' : Sub
     (hS : IsClosed (S' : Set (GG p))) (c : GG p) (hc1 : IsLoUni ((c.1 : GLp p) : MP p))
     (hc2 : IsUpUni ((c.2.unop : GLp p) : MP p)) (hcS : cj c S' = S') :
     IdxRatio (KP M p ⊓ S') (cj c (KP M p ⊓ S')) = 1 := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   obtain ⟨a, ha0, haR⟩ := common_denom (M p)
     (fun k : (Fin (D.R.rS + 1) × Fin (D.R.rS + 1)) ⊕ (Fin (D.R.rS + 1) × Fin (D.R.rS + 1)) =>
       Sum.elim (fun ij => ((c.1 : GLp p) : MP p) ij.1 ij.2) (fun ij => ((c.2.unop : GLp p) : MP p) ij.1 ij.2) k)
@@ -1426,9 +1426,9 @@ theorem idxRatio_norm (hRc : IsCompact ((M p).R : Set (D.s.atP p).Ep)) (S' : Sub
 
 theorem isClosed_StP (w : Point D.host.E (D.R.rS + 1)) :
     IsClosed ((StP M δ u u' w p : Subgroup (GG p)) : Set (GG p)) := by
-  haveI := (D.s.atP p).lf
-  haveI := topE (M p)
-  haveI := t2E (M p)
+  have := (D.s.atP p).lf
+  have := topE (M p)
+  have := t2E (M p)
   have h1 : Continuous fun x : GG p => ((x.1 : GLp p) : MP p) := Units.continuous_val.comp continuous_fst
   have h2 : Continuous fun x : GG p => ((x.2.unop : GLp p) : MP p) :=
     Units.continuous_val.comp (MulOpposite.continuous_unop.comp continuous_snd)
@@ -1436,8 +1436,8 @@ theorem isClosed_StP (w : Point D.host.E (D.R.rS + 1)) :
     (isClosed_eq ((h1.mul continuous_const).mul h2) continuous_const))
 
 theorem unimodAt_holds (w : Point D.host.E (D.R.rS + 1)) : UnimodAt M δ u u' (p := p) w := by
-  haveI := (D.s.atP p).lf
-  haveI := (D.s.atP p).char0
+  have := (D.s.atP p).lf
+  have := (D.s.atP p).char0
   have hRc := R_compact (M p)
   intro s hs
   have hAg : Ag M δ u u' (p := p) w = KP M p ⊓ StP M δ u u' w p := by
@@ -1869,9 +1869,9 @@ theorem stabApprox (Zd : LocDat D) (u u' : D.what₂.Word) : Formalism.L2.SG.Pf.
     sa_lat D.s.atP hfin.toFinset (fun p => T p ij.1 ij.2) c (fun p _ => hc0 p)
   let X' : PairVal.MatR D := Matrix.of fun i j => if Free (fσ w) i j then t (i, j) else (1 : PairVal.MatR D) i j
   have hX'1 : ∀ i j, ¬ Free (fσ w) i j → X' i j = (1 : PairVal.MatR D) i j := fun i j h => by
-    simp only [X', Matrix.of_apply, if_neg h]
+    simp only [X', Matrix.of_apply, ite_eq_right h]
   have hX'2 : ∀ i j, Free (fσ w) i j → X' i j = t (i, j) := fun i j h => by
-    simp only [X', Matrix.of_apply, if_pos h]
+    simp only [X', Matrix.of_apply, ite_eq_left h]
   have hX' : IsLo X' :=
     ⟨fun a => by rw [hX'1 a a (fun h => lt_irrefl a h.1), Matrix.one_apply_eq],
       fun a b hab => by rw [hX'1 a b (fun h => absurd h.1 (not_lt.2 hab.le)), Matrix.one_apply_ne hab.ne]⟩

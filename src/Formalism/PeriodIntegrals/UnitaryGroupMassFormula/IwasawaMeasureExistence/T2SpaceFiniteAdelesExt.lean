@@ -406,8 +406,8 @@ theorem eq_zero_of_forall_bsub (t : AEf I) (h : ∀ N : ℕ, 1 ≤ N → t ∈ b
   simp [hc]
 
 theorem t2Space_finite_adeles_ext : @T2Space (AEf I) (tAf I) := by
-  letI := tAf I
-  haveI := isTopologicalRing_tAf I
+  let := tAf I
+  have := isTopologicalRing_tAf I
   apply IsTopologicalAddGroup.t2Space_of_zero_sep
   intro x hx
   by_contra hcon

@@ -85,7 +85,7 @@ lemma rmul_mem_dom {z b : Frame X.Ψ r} (hz : z ∈ X.dom) (hb : b ∈ Bor X.Ψ 
     simp only [Matrix.mul_assoc]
   have htri : ∀ (n : ℕ) (M : Matrix (Fin n) (Fin n) ℂ), (∀ a c : Fin n, c < a → M a c = 0) →
       M.det = ∏ a, M a a :=
-    fun n M h => Matrix.det_of_upperTriangular (fun a c hca => h a c hca)
+    fun n M h => det_of_isUpperTriangular (fun a c hca => h a c hca)
   have hdiag : ∀ a, mat b τ a a ≠ 0 := by
     have h0 := hb1
     rw [htri r (mat b τ) hb2] at h0
@@ -103,18 +103,18 @@ lemma rmul_mem_dom {z b : Frame X.Ψ r} (hz : z ∈ X.dom) (hb : b ∈ Bor X.Ψ 
     · intro l hl
       have hc := c.isLt
       have h0 : mat b τ l (Fin.castLE hk c) = 0 :=
-        hb2 l (Fin.castLE hk c) (by rw [Fin.lt_iff_val_lt_val, Fin.coe_castLE]; omega)
+        hb2 l (Fin.castLE hk c) (by rw [Fin.lt_def, Fin.val_castLE]; omega)
       exact mul_eq_zero_of_right _ ((map_eq_zero _).mpr h0)
     · refine congrArg (fun s => s * _) (sum_castLE_lemma hk _ ?_)
       intro j hj
       have ha := a.isLt
       have h0 : mat b τ j (Fin.castLE hk a) = 0 :=
-        hb2 j (Fin.castLE hk a) (by rw [Fin.lt_iff_val_lt_val, Fin.coe_castLE]; omega)
+        hb2 j (Fin.castLE hk a) (by rw [Fin.lt_def, Fin.val_castLE]; omega)
       exact mul_eq_zero_of_left h0 _
   set d := ((mat b τ).submatrix (Fin.castLE hk) (Fin.castLE hk)).det with hd
   have hdne : d ≠ 0 := by
     rw [hd, htri (i : ℕ) ((mat b τ).submatrix (Fin.castLE hk) (Fin.castLE hk))
-      (fun a c h => hb2 _ _ (by rw [Fin.lt_iff_val_lt_val, Fin.coe_castLE, Fin.coe_castLE]; exact h))]
+      (fun a c h => hb2 _ _ (by rw [Fin.lt_def, Fin.val_castLE, Fin.val_castLE]; exact h))]
     exact Finset.prod_ne_zero_iff.mpr fun a _ => hdiag (Fin.castLE hk a)
   have hdetmap : (((mat b τ).submatrix (Fin.castLE hk) (Fin.castLE hk)).map (starRingEnd ℂ)).det =
       starRingEnd ℂ d := by
@@ -148,7 +148,7 @@ lemma opN_smul_le {m n : ℕ} (t : ℂ) (A : Matrix (Fin m) (Fin n) ℂ) :
       ‖t‖ • {s | ∃ v : Fin n → ℂ, v ≠ 0 ∧
         s = Real.sqrt (∑ i, ‖Matrix.mulVec A v i‖ ^ 2) / Real.sqrt (∑ j, ‖v j‖ ^ 2)} := by
     ext s
-    simp only [Set.mem_smul_set, Set.mem_setOf_eq]
+    simp only [Set.mem_smul_set, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨v, hv, rfl⟩
       refine ⟨_, ⟨v, hv, rfl⟩, ?_⟩
@@ -205,7 +205,7 @@ lemma exp_small : Real.exp (1 / 25) < 3 / 2 := by
   by_contra hcon
   push_neg at hcon
   have h25 : Real.exp 1 = Real.exp (1 / 25) ^ 25 := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     norm_num
   have hpow : (3 / 2 : ℝ) ^ 25 ≤ Real.exp (1 / 25) ^ 25 := pow_le_pow_left₀ (by norm_num) hcon 25
   have he := Real.exp_one_lt_d9

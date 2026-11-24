@@ -73,7 +73,7 @@ theorem z_uc (hI : IsSplit P I) (k : Fin (dK (IR I))) (v : Vsp X.dim) :
     z (IR I) k (uc (IR I) v) = ((z (IR I) k v).im : ℂ) := by
   have hK := hK_of hI
   rw [uc, z_sum]
-  simp only [z_rsmul, z_e hK, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [z_rsmul, z_e hK, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem norm_uc_sq (hI : IsSplit P I) (v : Vsp X.dim) :
     ‖uc (IR I) v‖ ^ 2 = ∑ k, (z (IR I) k v).im ^ 2 := by
@@ -90,7 +90,7 @@ theorem thetaSectionPointwiseNormSq_eq (hI : IsSplit P I) (s : (Fin 1 → Vsp X.
       Real.exp (-(2 * Real.pi) * ‖uc (IR I) v‖ ^ 2 - Real.pi * ‖p2 (IR I) v‖ ^ 2) := by
   have hK := hK_of hI
   rw [PT.ptN2, HC_one, Hf_self_re, zmG, norm_mul, Complex.norm_exp, mul_pow, mul_assoc,
-    ← Real.exp_nat_mul, ← Real.exp_add]
+    ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 2
   have hA := norm_sq_decomp hK v
   simp only [norm_sq_alt, Finset.sum_add_distrib] at hA
@@ -144,7 +144,7 @@ theorem mode_norm (hI : IsSplit P I) (hP : Ext.PackingCount) {s : (Fin 1 → Vsp
     congr 1
     rw [show Real.exp (-(((1 : ℕ) : ℝ) * Real.pi) * ‖p2 (IR I) (v + γ)‖ ^ 2) =
         Real.exp (-(Real.pi / 2) * ‖p2 (IR I) (v + γ)‖ ^ 2) ^ 2 by
-      rw [← Real.exp_nat_mul]; congr 1; push_cast; ring]
+      rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring]
     exact Real.sqrt_sq (Real.exp_pos _).le
   rw [hpt, hn]
   have hu : ‖uc (IR I) v + uc (IR I) γ‖ ^ 2 =
@@ -169,9 +169,9 @@ theorem mode_norm (hI : IsSplit P I) (hP : Ext.PackingCount) {s : (Fin 1 → Vsp
 
 theorem dual_lift (hI : IsSplit P I) (m : Fin (Module.finrank ℝ (IR I)) → ℤ) :
     ∃ γ ∈ X.L, ∀ i, (Hf γ ((Ib hI i : IR I) : Vsp X.dim)).im = m i := by
-  haveI := IK_discrete hI
-  haveI : IsZLattice ℝ (IK I) := ⟨IK_span⟩
-  haveI := ZLattice.module_free ℝ (IK I)
+  have := IK_discrete hI
+  have : IsZLattice ℝ (IK I) := ⟨IK_span⟩
+  have := ZLattice.module_free ℝ (IK I)
   set e := Fintype.equivFinOfCardEq (α := Module.Free.ChooseBasisIndex ℤ (IK I))
     (n := Module.finrank ℝ (IR I)) (by rw [← Module.finrank_eq_card_chooseBasisIndex, ZLattice.rank ℝ])
   set bZ := (Module.Free.chooseBasis ℤ (IK I)).reindex e with hbZ

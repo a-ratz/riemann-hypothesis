@@ -78,9 +78,9 @@ theorem exists_mem_SB_eq_one_on_compact (k : Type) [Field k] [ValuativeRel k] [T
     [IsNonarchimedeanLocalField k] (n : Type) [Fintype n] (C : Set (n → k)) (hC : IsCompact C) :
     ∃ χ ∈ SB (n → k), ∀ u ∈ C, χ u = 1 := by
   classical
-  haveI : T2Space k := by
-    letI := IsTopologicalAddGroup.rightUniformSpace k
-    haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  have : T2Space k := by
+    let := IsTopologicalAddGroup.rightUniformSpace k
+    have := isUniformAddGroup_of_addCommGroup (G := k)
     infer_instance
   have ho : IsOpen (𝒪[k] : Set k) := Valuation.isOpen_integer
   have hc : IsCompact (𝒪[k] : Set k) := IsNonarchimedeanLocalField.isCompact_closedBall k 1
@@ -272,7 +272,7 @@ theorem GlobalTheory.PosOneIntegral.positionOne_invariantIntegral_exchange_step 
       (∀ Φ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), IsQuotInt ν μX μG (q + 1) (tInt ψ ν μ (q + 1) σ B F Φ.1) (Rr Φ)) →
       ∀ Φ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k),
         IsQuotInt ν μX μG 1 (tIntOne ψ ν μ (q + 1) σ B F Φ.1) (toOne ν ρ' (q + 1) Rr Φ) := by
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   intro q
   induction q with
   | zero =>

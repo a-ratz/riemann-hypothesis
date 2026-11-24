@@ -148,7 +148,7 @@ theorem intersected_integral : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   rw [hyv] at hle
   simp only [← hp, mul_pow, Finset.prod_mul_distrib, ← _root_.mul_assoc] at hle
   have hpos : 0 < ∏ τ : E →+* ℂ, (w.comap (embF c τ) A.ga.det)⁻¹ ^ Dw.mult τ :=
-    zero_lt_iff.2 (Finset.prod_ne_zero_iff.2 fun τ _ => pow_ne_zero _ (inv_ne_zero (h0 τ)))
+    pos_iff_ne_zero.2 (Finset.prod_ne_zero_iff.2 fun τ _ => pow_ne_zero _ (inv_ne_zero (h0 τ)))
   have hw1 : w (s * ∏ τ : E →+* ℂ, embK c τ A.p.det ^ Dw.mult τ) ≤ 1 := by
     rw [map_mul, map_prod]
     simp only [map_pow]
@@ -227,7 +227,7 @@ theorem isotropicLPart_shortSeries_bound_mul (Xo : Moduli Dw l) (c : Coeff l) [S
     letI := io.toAlgebra
     ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (s * (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹)) *
       ∑ i, hv Xo c nab y.1 (N ^ 2) (F i) P) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨A, hsim⟩ := GlobalTheory.T.exists_adapted_similitude_data_at_prime E H n Λ N M ℓ hU hL hp
   have hN : Odd N := hL.1
   have hkN : Odd (A.k * N) := A.odd.mul hN
@@ -308,7 +308,7 @@ theorem isotropicLPart_shortSeries_bound_mul (Xo : Moduli Dw l) (c : Coeff l) [S
 theorem bound_of_coprime_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), Good3 C → ∀ nab : NabV Xo c, IsNab Xo c nab → ∀ (e : ℕ) (ρ : ℝ) (w : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), 0 < e → ChBound C e ρ w n → ∀ (ℓ : ℕ), ℓ.Prime → ¬ IsUnit (ℓ : T.V) → ∀ (Λ : GenLat E n) (N M : ℕ), Λ.Unimod → Λ.LevOK N M → ∀ P : MvPolynomial (LtN Dw n) c.F, P ∈ harmL c Λ w → ∀ (z : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (tp : Fin n → (ptO Xo (xOf y) ⟶ Xo.univ.t.G)) (F : Fin (Λ.zCard N (Dw.p + Dw.q)) → Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((N : ℤ) ^ 2) (ptO Xo (xOf y)))), (∀ i, InZh Xo Λ N (z i)) → GeoInj Xo (xOf y) z → (∀ b, tp b ^ (N ^ 2) = 1) → (∀ i b, IsUUOver Xo.univ.t.G Xo.univ.t.PP N (sOf1 y) (z i b) (tp b) (F i b)) → AllRat Xo (xOf y) (N ^ 2) → (∃ m : ℕ, Nat.Coprime m ℓ ∧ ∀ b, tp b ^ m = 1) → ∀ s : c.F, (∀ A : GlobalTheory.PlaceInt.Adapt Λ N ℓ, 0 ≤ nval T.V e (io (s * ∏ τ : E →+* ℂ, embK c τ A.p.det ^ Dw.mult τ))) → letI := io.toAlgebra; ((-ρ : ℝ) : EReal) ≤ nval T.V e (io (s * (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹)) * ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P) := by
   intro E _ _ _ H Dw l Xo c _ hst T io y C hC nab hnab e ρ w n he hB ℓ hp hl Λ N M hU hL P hP z tp F hz hg
     htp hF hR ⟨m', hm', htm⟩ s hs
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨J, J', _, _, a, a', σ, hinj, ha, ⟨m, hm, ham⟩, hσ, -⟩ :=
     GlobalTheory.T.isotropic_group_primary_decomposition E H Dw l Xo T.Fr (xOf y) n Λ N M ℓ hU hL hp z hz hg
   rw [← Equiv.sum_comp σ, Fintype.sum_prod_type_right, Finset.mul_sum]
@@ -409,7 +409,7 @@ theorem smul_intZ_nonneg_coprime : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum 
   obtain ⟨T', iT, r, io₂, y₂, C, ζ, z, tp, F, hr, hiT, hfr, hio, hC, hrat, hζ, hz, hgi, htp, hF, hval⟩ :=
     GlobalTheory.PlaceInt.short_value_on_cover _ _ _ _ Xo c n d hlev hnab 1 hroot1 Λ N hU hTM hN w P hP x0 g hsec hR
       Tc io yI hy
-  haveI : CharZero T'.Fr := algebraRat.charZero _
+  have : CharZero T'.Fr := algebraRat.charZero _
   have ho' := ho.bc iT hr hiT
   have he' : 0 < r * e := ho'.1
   have heR : (0 : ℝ) < ((r * e : ℕ) : ℝ) := by exact_mod_cast he'
@@ -436,7 +436,7 @@ theorem smul_intZ_nonneg_coprime : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum 
   have ha0 : α ≠ 0 := by rw [hα1]; exact one_ne_zero
   have ha0' : α' ≠ 0 := right_ne_zero_of_mul (hα' ▸ hM0)
   have hch := GlobalTheory.PlaceInt.HostChart.chBound_host D _ Dw _ d.Xo₂ d.c₂ hnab.1 T' io₂ y₂ C (r * e) he' w n _ le_rfl
-  haveI := Nat.finite_of_card_ne_zero hc0
+  have := Nat.finite_of_card_ne_zero hc0
   have hu0 : io₂ (nrm Dw d.c₂ w (α : 𝓞 D.host.E)) ≠ 0 :=
     (map_ne_zero io₂).2 (nrm_ne_zero _ _ (Nat.cast_ne_zero.2 ha0))
   have hsA : ∀ A : GlobalTheory.PlaceInt.Adapt Λ N ℓ, 0 ≤ nval T'.V (r * e)
@@ -671,7 +671,7 @@ theorem isShortRule_of_raw : ∀ {E : Type} [Field E] [NumberField E] [IsCMField
   have e : i1 = i2 := (Algebra.algebra_ext _ _ fun a => hk a).symm
   subst e
   have hL : ReciprocityTheory.ChartRestriction.G.Out.Laws := GlobalTheory.firstFiveLaws.1
-  letI : Algebra (idCover nab n).c₂.F k := i1
+  let : Algebra (idCover nab n).c₂.F k := i1
   have hyy : (y₂ : FrPt Xo c k) = y :=
     GlobalTheory.CoverSec.frOver_unique (idCover nab n) hL.globalFns (frOver_self nab n y₂) hov
   subst hyy
@@ -735,7 +735,7 @@ theorem sum_abs_laOf (Dw : Datum H) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ)
     intro i
     have hi : ((Fin.castAdd Dw.q i : Fin (Dw.p + Dw.q)) : ℕ) < Dw.p := by simp
     unfold laOf GlobalTheory.AllWt.weightOf
-    rw [if_pos hi, Fin.val_castAdd]
+    rw [ite_eq_left hi, Fin.val_castAdd]
     simp only [Int.cast_add, Int.cast_natCast]
     exact abs_of_nonneg (by positivity)
   have h2 : ∀ i : Fin Dw.q, |((laOf Dw a n τ (Fin.natAdd Dw.p i) : ℤ) : ℝ)| =
@@ -745,7 +745,7 @@ theorem sum_abs_laOf (Dw : Datum H) (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ)
     have hidx : Dw.q - 1 - (((Fin.natAdd Dw.p i : Fin (Dw.p + Dw.q)) : ℕ) - Dw.p) = (Fin.rev i : ℕ) := by
       simp only [Fin.val_natAdd, Fin.val_rev]; omega
     unfold laOf GlobalTheory.AllWt.weightOf
-    rw [if_neg hi, hidx]
+    rw [ite_eq_right hi, hidx]
     simp only [Int.cast_sub, Int.cast_neg, Int.cast_natCast]
     have h3 : (0 : ℝ) ≤ (a (conjEmb τ.1, (Fin.rev i : ℕ)) : ℝ) := Nat.cast_nonneg _
     have h4 : (0 : ℝ) ≤ ((n / 2 : ℕ) : ℝ) := Nat.cast_nonneg _
@@ -768,7 +768,7 @@ theorem DF_eq_sum (Dw : Datum H) (a : (E →+* ℂ) × ℕ → ℕ) :
       ∑ τ : {τ // P τ}, ∑ i : Fin Dw.p, (a (τ.1, i) : ℝ) := by
     refine Finset.sum_congr rfl fun τ _ => ?_
     rw [Fin.sum_univ_eq_sum_range (fun i => (a (τ.1, i) : ℝ)), Fin.sum_univ_eq_sum_range (fun i => (a (τ.1, i) : ℝ)),
-      Datum.mult, if_pos τ.2]
+      Datum.mult, ite_eq_left τ.2]
   let e : {τ : E →+* ℂ // ¬ P τ} ≃ {τ // P τ} :=
     { toFun := fun τ => ⟨conjEmb τ.1, GlobalTheory.AllWt.conj_mem τ.2⟩
       invFun := fun σ => ⟨conjEmb σ.1, GlobalTheory.AllWt.conj_not_mem (H := H) σ⟩
@@ -779,7 +779,7 @@ theorem DF_eq_sum (Dw : Datum H) (a : (E →+* ℂ) × ℕ → ℕ) :
     refine Fintype.sum_equiv e _ _ fun τ => ?_
     show _ = ∑ i : Fin Dw.q, (a (conjEmb (conjEmb τ.1), i) : ℝ)
     rw [GlobalTheory.AllWt.conjEmb_conjEmb, Fin.sum_univ_eq_sum_range (fun i => (a (τ.1, i) : ℝ)),
-      Fin.sum_univ_eq_sum_range (fun i => (a (τ.1, i) : ℝ)), Datum.mult, if_neg τ.2]
+      Fin.sum_univ_eq_sum_range (fun i => (a (τ.1, i) : ℝ)), Datum.mult, ite_eq_right τ.2]
   unfold DF
   push_cast
   calc (∑ τ : E →+* ℂ, ∑ i : Fin (Dw.mult τ), (a (τ, i) : ℝ)) = _ := h.symm
@@ -943,7 +943,7 @@ theorem smul_intZ_nonneg_away : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum H) 
   obtain ⟨T', iT, r, io₂, y₂, C, ζ, z, tp, F, hr, hiT, hfr, hio, hC, hrat, hζ, hz, hgi, htp, hF, hval⟩ :=
     GlobalTheory.PlaceInt.short_value_on_cover _ _ _ _ Xo c n d hlev hnab 1 hroot1 Λ N hU hTM hN w P hP x0 g hsec hR
       Tc io yI hy
-  haveI : CharZero T'.Fr := algebraRat.charZero _
+  have : CharZero T'.Fr := algebraRat.charZero _
   have ho' := ho.bc iT hr hiT
   have he' : 0 < r * e := ho'.1
   have heR : (0 : ℝ) < ((r * e : ℕ) : ℝ) := by exact_mod_cast he'
@@ -975,7 +975,7 @@ theorem smul_intZ_nonneg_away : ∀ (D : D7) (H : Host D.host.E) (Dw : Datum H) 
   have ha0 : α ≠ 0 := left_ne_zero_of_mul (hα' ▸ hM0)
   have ha0' : α' ≠ 0 := right_ne_zero_of_mul (hα' ▸ hM0)
   have hch := GlobalTheory.PlaceInt.HostChart.chBound_host D _ Dw _ d.Xo₂ d.c₂ hnab.1 T' io₂ y₂ C (r * e) he' w n _ le_rfl
-  haveI := Nat.finite_of_card_ne_zero hc0
+  have := Nat.finite_of_card_ne_zero hc0
   have hu0 : io₂ (nrm Dw d.c₂ w (α : 𝓞 D.host.E)) ≠ 0 :=
     (map_ne_zero io₂).2 (nrm_ne_zero _ _ (Nat.cast_ne_zero.2 ha0))
   have key := le_nval_avg (V := T'.V) (r * e) (fun q => io₂ (d.w x0 q)) _ ζ _
@@ -1114,7 +1114,7 @@ theorem class_bound_of_trivAt_pow (Xo : Moduli Dw l) (c : Coeff l) [StarRing (�
     ((-ρ : ℝ) : EReal) ≤ nval T.V e (((l.M ^ Formalism.L2.Pj.DF Dw w : ℕ) : T.Fr) *
       (io (((Λ.mIdx N (Dw.p + Dw.q) : c.F))⁻¹ * ((N : c.F) ^ P.totalDegree)⁻¹) *
         ∑ i, hv Xo c nab y.1 (N ^ 2) (fun b => sqN Xo N (F i b)) P)) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hk : ∀ b, KilledBy Xo l.Mb (tp b ^ N) := fun b => by rw [htp b]; exact GlobalTheory.ShortBound.levPt_killed Xo _ _
   obtain ⟨k, n', Bn, j, β₀, hkM, h1, h2, h3, h4, h5⟩ := factor_pow Xo N ℓ hL.1 hL.2.1 hℓ
   have hA : ((ℓ ^ k : ℕ) : 𝓞 E) * H.bar ((ℓ ^ k : ℕ) : 𝓞 E) = ((ℓ ^ (2 * k) : ℕ) : 𝓞 E) := by
@@ -1166,7 +1166,7 @@ theorem smul_nonneg_of_shortRule (D : D7) (H : ReciprocityTheory.ChartRestrictio
     · exact one_ne_zero
   have hc0 : Nat.card (Fin n → LevQ Dw d.l₂) ≠ 0 := by
     rw [GlobalTheory.PlaceInt.card_fun_levQ]; exact pow_ne_zero _ hM0
-  haveI := Nat.finite_of_card_ne_zero hc0
+  have := Nat.finite_of_card_ne_zero hc0
   obtain ⟨Q, hQ⟩ : ∃ Q : ℕ, Q = (NumberField.discr D.host.E).natAbs ^ Formalism.L2.Pj.DF Dw w := ⟨_, rfl⟩
   have hZ : GlobalTheory.CovInt.intZ D Dw d.l₂ n w = Nat.card (Fin n → LevQ Dw d.l₂) * (Q * d.l₂.M ^ Formalism.L2.Pj.DF Dw w) := by
     rw [GlobalTheory.CovInt.intZ, hQ, _root_.mul_assoc]
@@ -1176,7 +1176,7 @@ theorem smul_nonneg_of_shortRule (D : D7) (H : ReciprocityTheory.ChartRestrictio
   obtain ⟨-, ef2, -⟩ := GlobalTheory.PlaceInt.eF_transfer _ _ _ _ Xo c n d Λ
   obtain ⟨T', iT, r, io₂, y₂, C, ζ, z, tp, F, hr, hiT, hfr, hio, hC, hrat, hζ, hz, hgi, htp, hF, hval⟩ :=
     GlobalTheory.PlaceInt.short_value_on_cover _ _ _ _ Xo c n d hlev hnab 1 hroot Λ N hU hTM hN w P hP x0 g hsec hR Tc io yI hy
-  haveI : CharZero T'.Fr := algebraRat.charZero _
+  have : CharZero T'.Fr := algebraRat.charZero _
   have ho' := ho.bc iT hr hiT
   have he' : 0 < r * e := ho'.1
   have hu : ¬ IsUnit (ℓ : T'.V) := fun hu => by
@@ -1195,7 +1195,7 @@ theorem smul_nonneg_of_shortRule (D : D7) (H : ReciprocityTheory.ChartRestrictio
   rw [finsum_eq_sum_of_fintype, Finset.mul_sum, Finset.mul_sum]
   refine le_nval_sum T' _ _ _ _ fun q _ => ?_
   have hq := key q
-  letI := io₂.toAlgebra
+  let := io₂.toAlgebra
   generalize (∑ i, hv d.Xo₂ d.c₂ d.nab₂ y₂.1 (N ^ 2) (fun b => sqN d.Xo₂ N (F q i b))
     (MvPolynomial.map (d.eF : c.F →+* d.c₂.F) P)) = Sm at hq ⊢
   have hb0 : io₂ (d.eF (betaH (Dw := Dw) c Λ)) ≠ 0 := (map_ne_zero io₂).2 ((map_ne_zero d.eF).2 hβ)

@@ -145,7 +145,7 @@ theorem dot_hessC_star {e : ℕ} (f : (Fin e → ℂ) → ℝ) (z : Fin e → �
         c.im * d.re * H (Complex.I • u) v + c.im * d.im * H (Complex.I • u) (Complex.I • v) := by
     intro c d u v
     rw [hsmul c u, hsmul d v]
-    simp only [map_add (f := _), map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_smul',
+    simp only [map_add (f := _), map_smul, add_apply, FunLike.coe_smul,
       Pi.smul_apply, smul_eq_mul]
     ring
   set E := fun i : Fin e => (Pi.single i (1 : ℂ) : Fin e → ℂ) with hE
@@ -157,7 +157,7 @@ theorem dot_hessC_star {e : ℕ} (f : (Fin e → ℂ) → ℝ) (z : Fin e → �
     intro x y
     conv_lhs => rw [hw x, hw y]
 
-    simp only [map_sum, ContinuousLinearMap.sum_apply]
+    simp only [map_sum, sum_apply]
     exact Finset.sum_comm
   have hpair : ∀ i j, w i * (hessC f z i j * star (w j)) =
       (((H (w i • E i) (w j • E j) + H ((Complex.I * w i) • E i) ((Complex.I * w j) • E j)) / 4 : ℝ) : ℂ) +
@@ -456,7 +456,7 @@ theorem PositivityTheory.Xgp.t_per_int : ∀ (e : ℕ) (X : Type) [TopologicalSp
   have hne : Nonempty (ChartPartition A) := existsPartition A
   have hprop : ∀ c, mInt A (fun _ => sumPot c pot) (fun _ => 1) =
       mInt A (fun _ => sumPot (fun _ => 1) pot) (fun _ => 1) / (Pc fun _ => 1) * Pc c := fun c => by
-    simp only [mInt, dif_pos hne, integralWith]
+    simp only [mInt, dite_eq_left hne, integralWith]
     rw [Finset.sum_div, Finset.sum_mul]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [← integral_div, ← integral_mul_const]
@@ -466,7 +466,7 @@ theorem PositivityTheory.Xgp.t_per_int : ∀ (e : ℕ) (X : Type) [TopologicalSp
     rw [h, h]
     field_simp
   have hpos : 0 < mInt A (fun _ => sumPot (fun _ => 1) pot) (fun _ => 1) := by
-    simp only [mInt, dif_pos hne, integralWith]
+    simp only [mInt, dite_eq_left hne, integralWith]
     have hnn : ∀ k, 0 ≤ᵐ[volume.restrict (A.chart k).target] fun y => hne.some.χ k ((A.chart k).symm y) * 1 *
         locDens A (fun _ => sumPot (fun _ => 1) pot) k y := fun k => by
       filter_upwards [ae_restrict_of_ae (hpt k), ae_restrict_mem (A.chart k).open_target.measurableSet] with y hy hyt

@@ -91,10 +91,10 @@ theorem tensor_action_factors (k : Type) [Field k] (C O B : Type) [CommRing C] [
     [Module k X] (σX : O →+* Module.End k X)
     (hσ : ∀ c, σX (algebraMap C O c) = algebraMap C k c • 1) :
     ∃ ρX : B →ₐ[k] Module.End k X, ∀ o, ρX (e (1 ⊗ₜ[C] o)) = σX o := by
-  letI : Algebra C (Module.End k X) :=
+  let : Algebra C (Module.End k X) :=
     ((algebraMap k (Module.End k X)).comp (algebraMap C k)).toAlgebra'
       (fun c f => Algebra.commutes (algebraMap C k c) f)
-  haveI : IsScalarTower C k (Module.End k X) := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower C k (Module.End k X) := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let g : O →ₐ[C] Module.End k X :=
     { σX with
       commutes' := fun c => by
@@ -242,7 +242,7 @@ namespace GlobalTheory.UPel.HT
 variable {p : ℕ} [Fact p.Prime] (D : Datum p)
 
 theorem Datum.tmul_one_injective : Function.Injective (fun x : D.La => (1 : ℚ) ⊗ₜ[ℤ] x) := by
-  haveI := D.freeLa
+  have := D.freeLa
   have hinj : Function.Injective (LinearMap.rTensor D.La (Algebra.linearMap ℤ ℚ)) :=
     Module.Flat.rTensor_preserves_injective_linearMap _ (fun a b h => by
       simp only [Algebra.linearMap_apply, algebraMap_int_eq, eq_intCast] at h; exact_mod_cast h)
@@ -307,7 +307,7 @@ end GlobalTheory.UPel.HT
 namespace GlobalTheory.UPel.HT
 variable {p : ℕ} [Fact p.Prime]
 theorem Datum.finrank_algO (D : Datum p) : Module.finrank ℚ D.algO = D.m ^ 2 * Module.finrank ℚ D.F := by
-  haveI := D.freeO; haveI := D.finO
+  have := D.freeO; have := D.finO
   let b := Module.Free.chooseBasis ℤ D.O
   let v : Module.Free.ChooseBasisIndex ℤ D.O → Module.End ℚ D.VQ := fun i => D.actQ (b i)
   let f : D.O →ₗ[ℤ] Module.End ℚ D.VQ := D.actQ.toAddMonoidHom.toIntLinearMap
@@ -351,7 +351,7 @@ theorem Datum.toReal_smul (D : Datum p) (q : ℚ) (t : D.VQ) : D.toReal (q • t
       Rat.cast_mul]
 
 theorem Datum.toReal_injective (D : Datum p) : Function.Injective D.toReal := by
-  haveI := D.freeLa
+  have := D.freeLa
   exact Module.Flat.rTensor_preserves_injective_linearMap _ (fun a b h => by
     simpa using h)
 
@@ -444,7 +444,7 @@ theorem Datum.isSemisimpleRing_algO_of_form (D : Datum p) (φ : D.VQ → D.VQ �
       refine hsq _ (Subalgebra.pow_mem _ hy _) (hpow _) ?_
       rw [← pow_add, ← two_mul, ← pow_succ']
       exact hj
-  haveI : IsArtinianRing D.algO := IsArtinianRing.of_finite ℚ D.algO
+  have : IsArtinianRing D.algO := IsArtinianRing.of_finite ℚ D.algO
   rw [IsArtinianRing.isSemisimpleRing_iff_jacobson, eq_bot_iff]
   intro g hg
   obtain ⟨n, hn⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := D.algO)
@@ -516,14 +516,14 @@ theorem isSimpleRing_of_isSemisimpleRing {R : Type} [Ring R] [Nontrivial R] [IsS
       simp [e, Pi.single_apply, h01.symm] at this
 
 theorem Datum.actF_injective (D : Datum p) : Function.Injective D.actF := by
-  haveI : Nontrivial D.endO := by
+  have : Nontrivial D.endO := by
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
     have := congrArg Subtype.val h
     exact zero_ne_one this
   exact D.actF.toRingHom.injective
 
 theorem Datum.algO_simple (D : Datum p) : IsSimpleRing D.algO := by
-  haveI := D.isSemisimpleRing_algO
+  have := D.isSemisimpleRing_algO
   apply isSimpleRing_of_isSemisimpleRing
   intro e he hid
   obtain ⟨c, hc⟩ := D.center_algO e e.2 fun h hh => (congrArg Subtype.val (he ⟨h, hh⟩)).symm
@@ -603,7 +603,7 @@ theorem algebraMap_injective_of_charZero (K : Type) [Field K] [NumberField K] (k
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro c hc
   by_contra h0
-  have hne := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) (I := RingHom.ker (algebraMap (𝓞 K) k)) h0
+  have hne := Ideal.under_ne_bot_of_integral_mem (R := ℤ) (I := RingHom.ker (algebraMap (𝓞 K) k)) h0
     (RingHom.mem_ker.2 hc) (Algebra.IsIntegral.isIntegral c)
   apply hne
   rw [Ideal.under_def, RingHom.comap_ker]
@@ -664,10 +664,10 @@ theorem tensor_order_algEquiv_matrix : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalT
     Nonempty ((k ⊗[𝓞 D.F] D.O) ≃ₐ[k] Matrix (Fin D.m) (Fin D.m) k) := by
   intro p _ D k _ _ _ _
   have hinj := algebraMap_injective_of_charZero D.F k
-  letI : Algebra D.F k := (IsFractionRing.lift hinj).toAlgebra
-  haveI : IsScalarTower (𝓞 D.F) D.F k :=
+  let : Algebra D.F k := (IsFractionRing.lift hinj).toAlgebra
+  have : IsScalarTower (𝓞 D.F) D.F k :=
     IsScalarTower.of_algebraMap_eq fun c => (IsFractionRing.lift_algebraMap hinj c).symm
-  haveI : SMulCommClass D.F (𝓞 D.F) k := ⟨fun a b x => by simp only [Algebra.smul_def]; ring⟩
+  have : SMulCommClass D.F (𝓞 D.F) k := ⟨fun a b x => by simp only [Algebra.smul_def]; ring⟩
   have hF : IsBaseChange D.F (ordToAlgO D).toLinearMap :=
     IsLocalizedModule.isBaseChange (nonZeroDivisors (𝓞 D.F)) D.F _
   have hk : IsBaseChange k (TensorProduct.mk D.F k D.algO 1) := TensorProduct.isBaseChange D.F D.algO k
@@ -678,7 +678,7 @@ theorem tensor_order_algEquiv_matrix : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalT
       simp [Algebra.TensorProduct.one_def])
       (LinearMap.map_mul_of_map_mul_tmul fun a₁ a₂ b₁ b₂ => by
         simp [IsBaseChange.equiv_tmul, Algebra.TensorProduct.tmul_mul_tmul, TensorProduct.smul_tmul'])
-  haveI : IsSimpleRing D.algO := D.algO_simple
+  have : IsSimpleRing D.algO := D.algO_simple
   obtain ⟨n, _, ⟨e⟩⟩ := IsSimpleRing.exists_algEquiv_matrix_of_isAlgClosed k (k ⊗[D.F] D.algO)
   have hn : n = D.m := by
     have h1 := GroundTheory.Brauer.finrank_baseChange_eq D.F k D.algO
@@ -765,7 +765,7 @@ theorem unit_mul (i j l p : Fin (n+1)) (x : X) :
   · rw [single_mul_single_of_ne (h := h), map_zero, LinearMap.zero_apply]
 
 theorem recon (x : X) : ∑ i, ρ (single i 0 1) (ρ (single 0 i 1) x) = x := by
-  simp only [unit_mul, if_true]
+  simp only [unit_mul, ite_true]
 
   rw [← LinearMap.sum_apply, ← map_sum, sum_single_one, map_one, Module.End.one_apply]
 
@@ -850,8 +850,8 @@ theorem ext_unit (S : corner ρX →ₗ[k] corner ρY) (l p : Fin (n+1)) (x : X)
   rw [ext_apply, ext_apply, map_sum]
   simp only [cut_unit, unit_mul]
   rw [Finset.sum_ite_eq]
-  simp only [Finset.mem_univ, if_true]
-  rw [Finset.sum_eq_single l (fun b _ hb => by rw [if_neg hb, map_zero, Submodule.coe_zero, map_zero])
+  simp only [Finset.mem_univ, ite_true]
+  rw [Finset.sum_eq_single l (fun b _ hb => by rw [ite_eq_right hb, map_zero, Submodule.coe_zero, map_zero])
     (by simp)]
   simp
 
@@ -885,7 +885,7 @@ theorem restr_bij : Function.Bijective (restr ρX ρY) := by
     change ext ρX ρY S v = _
     rw [ext_apply]
     simp only [cut_corner]
-    rw [Finset.sum_eq_single 0 (fun b _ hb => by rw [if_neg hb, map_zero, Submodule.coe_zero, map_zero])
+    rw [Finset.sum_eq_single 0 (fun b _ hb => by rw [ite_eq_right hb, map_zero, Submodule.coe_zero, map_zero])
       (by simp)]
     simp [unit_corner]
 
@@ -960,7 +960,7 @@ theorem span_one_tmul (k : Type) [Field k] (C O : Type) [CommRing C] [Ring O] [A
 
 theorem finrank_homO_morita : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (k : Type) [Field k] [IsAlgClosed k], (∀ n : ℕ, n.Coprime p → (n : k) ≠ 0) → ∀ (χ : 𝓞 D.F →+* k) (X Y : Type) [AddCommGroup X] [Module k X] [FiniteDimensional k X] [AddCommGroup Y] [Module k Y] [FiniteDimensional k Y] (σX : D.O →+* Module.End k X) (σY : D.O →+* Module.End k Y), (∀ c, σX (algebraMap (𝓞 D.F) D.O c) = χ c • 1) → (∀ c, σY (algebraMap (𝓞 D.F) D.O c) = χ c • 1) → D.m ^ 2 * Module.finrank k (GlobalTheory.HTRho.homO σX σY) = Module.finrank k X * Module.finrank k Y := by
   intro p _ D k _ _ hk χ X Y _ _ _ _ _ _ σX σY hX hY
-  letI : Algebra (𝓞 D.F) k := χ.toAlgebra
+  let : Algebra (𝓞 D.F) k := χ.toAlgebra
   have hiso : Nonempty ((k ⊗[𝓞 D.F] D.O) ≃ₐ[k] Matrix (Fin D.m) (Fin D.m) k) := by
     obtain ⟨q, hq⟩ := CharP.exists k
     rcases CharP.char_is_prime_or_zero k q with hq' | rfl
@@ -968,7 +968,7 @@ theorem finrank_homO_morita : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPe
       · subst hqp; exact GlobalTheory.T.harrisTaylor_tensor_order_algEquiv_matrix_charP q D k
       · exfalso
         exact hk q ((Nat.coprime_primes hq' (Fact.out)).2 hqp) (CharP.cast_eq_zero k q)
-    · haveI : CharZero k := CharP.charP_to_charZero k
+    · have : CharZero k := CharP.charP_to_charZero k
       exact GlobalTheory.T.harrisTaylor_tensor_order_algEquiv_matrix_charZero p D k
   obtain ⟨e⟩ := hiso
   obtain ⟨ρX, hρX⟩ := GlobalTheory.T.exists_action_factor_through_tensor_character k (𝓞 D.F) D.O _ e X σX hX

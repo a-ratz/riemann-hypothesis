@@ -70,8 +70,8 @@ theorem range_projective (e : Module.End O V) (he : IsIdempotentElem e) :
   exact LinearMap.congr_fun he y
 
 theorem range_free (e : Module.End O V) (he : IsIdempotentElem e) : Module.Free O (LinearMap.range e) := by
-  haveI := range_projective e he
-  haveI : Module.FinitePresentation O (LinearMap.range e) := Module.finitePresentation_of_projective _ _
+  have := range_projective e he
+  have : Module.FinitePresentation O (LinearMap.range e) := Module.finitePresentation_of_projective _ _
   exact Module.free_of_flat_of_isLocalRing
 
 section Split

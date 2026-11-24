@@ -77,7 +77,7 @@ theorem continuous_det' : Continuous (GeneralLinearGroup.det : GA E k → (Ad E)
     exact (Units.continuous_val.comp continuous_inv).matrix_det
 
 theorem dt_cont : Continuous (Dt : GA E k → ℝ) :=
-  continuous_subtype_val.comp (GroundTheory.Global.IdeleGroup.continuous_ideleModule.comp continuous_det')
+  continuous_subtypeVal.comp (GroundTheory.Global.IdeleGroup.continuous_ideleModule.comp continuous_det')
 
 theorem dt_rat (γ : GL (Fin k) E) : Dt (ratGL E k γ) = 1 := by
   have h : GeneralLinearGroup.det (ratGL E k γ) = GroundTheory.Global.IdeleGroup.diagonal E (GeneralLinearGroup.det γ) :=
@@ -161,7 +161,7 @@ theorem dt_split (h1 : ∀ y, jumpWindows.cInf (infGL E k y) = y) (h2 : ∀ (w :
     change ‖(Matrix.scalar (Fin k) ((expU fun _ : InfinitePlace E => (t : ℂ) : (Cinf E)ˣ) : Cinf E)).det w‖ = _
     simp [expU, Complex.norm_exp]
   simp only [e]
-  rw [Finset.prod_pow_eq_pow_sum, InfinitePlace.sum_mult_eq, ← pow_mul, ← Real.exp_nat_mul]
+  rw [Finset.prod_pow_eq_pow_sum, InfinitePlace.sum_mult_eq, ← pow_mul, ← Real.exp_natCast_mul]
   congr 1
   push_cast
   ring

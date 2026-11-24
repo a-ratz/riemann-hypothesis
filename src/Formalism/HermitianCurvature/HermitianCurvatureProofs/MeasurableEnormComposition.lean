@@ -80,7 +80,7 @@ private theorem lintegral_comp_eq_of_map_eq {α : Type*} [MeasurableSpace α] [M
     rw [lintegral_map' hG.aemeasurable hf]
   · by_cases h0 : μ = 0
     · simp [h0]
-    · haveI : Nonempty α := Measure.nonempty_of_not_aemeasurable hf
+    · have : Nonempty α := Measure.nonempty_of_not_aemeasurable hf
       have hd : μ = Measure.dirac (Classical.ofNonempty : α) :=
         hμ.symm.trans (Measure.map_of_not_aemeasurable_of_ne_zero hf h0)
       rw [hd] at hf
@@ -287,7 +287,7 @@ theorem meas_inv {α : Type*} [MeasurableSpace α] {f : α → Formalism.Quantum
 
 theorem measurable_enorm_composition {e0 : Mx k r → ℂ} (he0 : Continuous e0) {α : Type*} [MeasurableSpace α]
     {f : α → Formalism.QuantumDeterminants.Mt k r} (hf : Measurable f) : Measurable (fun t => ‖e0 (Matrix.of (f t))‖ₑ) :=
-  ((he0.comp mt_cont).measurable.comp hf).enorm
+  ((he0.comp mt_cont).measurable.comp hf).eNorm
 
 theorem meas_hn {α : Type*} [MeasurableSpace α] {f : α → Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r}
     (hf : Measurable f) :

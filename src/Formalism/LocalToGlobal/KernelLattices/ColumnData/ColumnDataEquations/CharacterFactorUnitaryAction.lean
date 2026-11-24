@@ -90,7 +90,7 @@ theorem character_factor_change_left (χ : TaylorLogMetric.IdE D → ℂ) (hχ :
 
 theorem emb_star_unit (τ : D.what₂.Tau) (x : D.host.E) (hx : letI := D.host.cmStar; x * star x = 1) :
     (letI := D.host.cmStar; TaylorLogMetric.embT D τ (star x)) = (TaylorLogMetric.embT D τ x)⁻¹ := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h := congrArg (TaylorLogMetric.embT D τ) hx
   rw [map_mul, map_one] at h
   exact eq_inv_of_mul_eq_one_right h
@@ -112,7 +112,7 @@ theorem character_factor_unitary_action (χ : TaylorLogMetric.IdE D → ℂ) (h�
         ((∏ τ : D.what₂.Tau, TaylorLogMetric.embT D τ (star (γ : Matrix (Fin N) (Fin N) D.host.E).det)) ^ (N' / 2) *
           (∏ τ : D.what₂.Tau, TaylorLogMetric.embT D τ (γ' : Matrix (Fin N') (Fin N') D.host.E).det) ^ (N / 2)) := by
   intro L L' γ γ' hL hL'
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hd : (γ : Matrix (Fin N) (Fin N) D.host.E).det ∈ unitary D.host.E :=
     Matrix.det_of_mem_unitary γ.2
   have hd' : (γ' : Matrix (Fin N') (Fin N') D.host.E).det ∈ unitary D.host.E :=

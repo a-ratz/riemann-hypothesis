@@ -82,7 +82,7 @@ theorem aesm_weight_smul (D : B.RealPlaceData k r Wp Wq) {E : Type*} [NormedAddC
   have hw : ContinuousOn (fun q => bcWeight k r (Tz k r D.z) (Tz k r D.z') q) s := by
     refine contW.continuousOn.congr fun q hq => ?_
     unfold bcWeight
-    rw [if_pos hq.2.le]
+    rw [ite_eq_left hq.2.le]
   have h1 : AEStronglyMeasurable (fun q => bcWeight k r (Tz k r D.z) (Tz k r D.z') q • g q)
       (volume.restrict s) := (hw.smul hc).aestronglyMeasurable hs
   have h2 := (aestronglyMeasurable_indicator_iff hs).mpr h1
@@ -95,7 +95,7 @@ theorem aesm_weight_smul (D : B.RealPlaceData k r Wp Wq) {E : Type*} [NormedAddC
       first
         | exact MeasureTheory.Measure.pi_eval_preimage_null _ (measure_singleton 0)
         | exact MeasureTheory.Measure.pi_eval_preimage_null (measure_singleton 0)
-    exact MeasureTheory.Measure.QuasiMeasurePreserving.preimage_null
+    exact QuasiMeasurePreserving.preimage_null
       MeasureTheory.Measure.quasiMeasurePreserving_fst h0
   have hN2 : volume {q : (Fin r → ℂ) × ℂ | Complex.normSq q.2 = Tz k r D.z * Tz k r D.z'} = 0 := by
     have hsph : volume (Metric.sphere (0 : ℂ) (Real.sqrt (Tz k r D.z * Tz k r D.z'))) = 0 := by
@@ -104,9 +104,9 @@ theorem aesm_weight_smul (D : B.RealPlaceData k r Wp Wq) {E : Type*} [NormedAddC
         | exact MeasureTheory.Measure.addHaar_sphere (0 : ℂ) _
     have h0 : volume {z : ℂ | Complex.normSq z = Tz k r D.z * Tz k r D.z'} = 0 := by
       refine measure_mono_null (fun z hz => ?_) hsph
-      simp only [Set.mem_setOf_eq] at hz
+      simp only [Set.mem_ofPred_eq] at hz
       rw [mem_sphere_zero_iff_norm, ← hz, Complex.normSq_eq_norm_sq, Real.sqrt_sq (norm_nonneg _)]
-    exact MeasureTheory.Measure.QuasiMeasurePreserving.preimage_null
+    exact QuasiMeasurePreserving.preimage_null
       MeasureTheory.Measure.quasiMeasurePreserving_snd h0
   have hA : ∀ᵐ q ∂(volume : Measure ((Fin r → ℂ) × ℂ)), ∀ a : Fin r, q.1 a ≠ 0 :=
     ae_all_iff.mpr fun a => ae_iff.mpr (by simpa using hN1 a)
@@ -116,13 +116,13 @@ theorem aesm_weight_smul (D : B.RealPlaceData k r Wp Wq) {E : Type*} [NormedAddC
   classical
   by_cases hq : q ∈ s
   · simp [Set.indicator_apply, hq]
-  · simp only [Set.indicator_apply, hq, if_false]
+  · simp only [Set.indicator_apply, hq, ite_false]
     have hlt : Complex.normSq q.2 < Tz k r D.z * Tz k r D.z' := by
       have hn : ¬ (Tz k r D.z * Tz k r D.z' < Complex.normSq q.2) := fun h => hq ⟨hqa, h⟩
       exact lt_of_le_of_ne (not_lt.mp hn) hqb
     have hz : bcWeight k r (Tz k r D.z) (Tz k r D.z') q = 0 := by
       unfold bcWeight
-      rw [if_neg (not_le.mpr hlt)]
+      rw [ite_eq_right (not_le.mpr hlt)]
     rw [hz, zero_smul]
 
 end general

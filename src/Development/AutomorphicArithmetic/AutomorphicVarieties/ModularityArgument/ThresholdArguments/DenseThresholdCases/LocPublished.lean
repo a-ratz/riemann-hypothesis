@@ -64,7 +64,7 @@ theorem UpperTheory.V.W.modU_of_printsH :
     Pa.CohP → LocCFTAll → Pa.PfromAut → _root_.UpperTheory.V.W.HidaUAlt → _root_.UpperTheory.V.W.ModUAlt := by
   intro hcoh hloc hP hH l _ L Ω _ _ _ _ _ _ s V hS hμ c hc n hn r B Λ ι
   obtain ⟨J, hJ, hA⟩ := hH l L Ω s V hS hμ c hc n hn r B Λ ι
-  haveI := coef_isCoef l c
+  have := coef_isCoef l c
   obtain ⟨h1, h3⟩ := hP hcoh l L Ω s V c.O n r B J hn hS (hloc l L Ω s) ((muL l L Ω s V).1 hμ) hA
   exact ⟨J, hJ, h1, h3⟩
 end

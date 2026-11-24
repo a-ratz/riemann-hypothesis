@@ -84,8 +84,8 @@ theorem UpperTheory.exists_haar_restrict_range_eq_smul_map_of_invariant :
       inv_mem' := fun ha => hinv _ ha }
   have hHo : IsOpen (H : Set G) := he.isOpen_range
   have hemb : IsOpenEmbedding (H.subtype) := hHo.isOpenEmbedding_subtypeVal
-  haveI : LocallyCompactSpace H := hemb.locallyCompactSpace
-  haveI hHaar : (μ.comap H.subtype).IsHaarMeasure :=
+  have : LocallyCompactSpace H := hemb.locallyCompactSpace
+  have hHaar : (μ.comap H.subtype).IsHaarMeasure :=
     Measure.IsHaarMeasure.comap (mH := inferInstance) μ hemb
   have hme : MeasurableEmbedding (H.subtype) := hemb.measurableEmbedding
   let e' : X → H := fun x => ⟨e x, x, rfl⟩
@@ -104,10 +104,10 @@ theorem UpperTheory.exists_haar_restrict_range_eq_smul_map_of_invariant :
     rw [← Measure.measure_univ_eq_zero]
     have := congrArg (fun m : Measure H => m Set.univ) h0
     simpa [Measure.map_apply he'c.measurable MeasurableSet.univ] using this
-  haveI : IsFiniteMeasureOnCompacts (ν.map e') := ⟨fun K hK => by
+  have : IsFiniteMeasureOnCompacts (ν.map e') := ⟨fun K hK => by
     rw [Measure.map_apply he'c.measurable hK.measurableSet]
     exact (he'i.isCompact_preimage (by simp [he'sur.range_eq]) hK).measure_lt_top⟩
-  haveI : (ν.map e').IsMulLeftInvariant := ⟨fun h => by
+  have : (ν.map e').IsMulLeftInvariant := ⟨fun h => by
     obtain ⟨_, x, rfl⟩ := h
     obtain ⟨T, hTm, hTe⟩ := hT x
     rw [Measure.map_map (measurable_const_mul _) he'c.measurable]
@@ -147,11 +147,11 @@ open scoped Classical ENNReal NNReal
 theorem UpperTheory.exists_haar_restrict_range_sl2IdeleMap_eq_smul_prod :
     ∀ (M : Meas ℚ) (U : UMeas) (μ : Measure GG) [μ.IsHaarMeasure], ∃ c : ℝ≥0, μ.restrict (Set.range pm) = c • (M.μ.prod (us U)).map pm := by
   intro M U μ _
-  haveI := M.haar
-  haveI : SecondCountableTopology (G1 ℚ × US) := UpperTheory.isOpenEmbedding_projection.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (G1 ℚ) := inferInstance
-  haveI : BorelSpace (G1 ℚ × US) := inferInstance
-  haveI : IsFiniteMeasureOnCompacts (M.μ.prod (us U)) := inferInstance
+  have := M.haar
+  have : SecondCountableTopology (G1 ℚ × US) := UpperTheory.isOpenEmbedding_projection.isEmbedding.secondCountableTopology
+  have : SecondCountableTopology (G1 ℚ) := inferInstance
+  have : BorelSpace (G1 ℚ × US) := inferInstance
+  have : IsFiniteMeasureOnCompacts (M.μ.prod (us U)) := inferInstance
   refine UpperTheory.exists_haar_restrict_range_eq_smul_map_of_invariant GG (G1 ℚ × US) μ pm (M.μ.prod (us U)) UpperTheory.isOpenEmbedding_projection ?_ ?_ ?_ ?_ ?_
   · rw [range_pm]
     change GroundTheory.Automorphic.AdelicGLn.det ℚ 2 1 ∈ US
@@ -166,7 +166,7 @@ theorem UpperTheory.exists_haar_restrict_range_sl2IdeleMap_eq_smul_prod :
     exact US.inv_mem ha
   · intro h0
     have h1 := congrArg (fun m : Measure (G1 ℚ × US) => m (Set.univ ×ˢ Set.univ)) h0
-    simp only [Measure.prod_prod, measure_univ, mul_one, Measure.coe_zero, Pi.zero_apply] at h1
+    simp only [Measure.prod_prod, measure_univ, mul_one, FunLike.coe_zero, Pi.zero_apply] at h1
     exact (isOpen_univ.measure_ne_zero M.μ Set.univ_nonempty) h1
   · intro x
     refine ⟨Prod.map ((fun g => x.1 * g) ∘ cD (x.2 : (A ℚ)ˣ)) (fun t => x.2 * t), ?_, fun y => pm_mul x y⟩

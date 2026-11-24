@@ -164,7 +164,7 @@ theorem adjoin_residue_gen [Finite (ResidueField B)] :
 
 theorem exists_adjoin_eq_top [Module.Finite A B] [Finite (ResidueField A)]
     (hinj : Function.Injective (algebraMap A B)) : ∃ α : B, Algebra.adjoin A {α} = ⊤ := by
-  haveI : Finite (ResidueField B) := IsLocalRing.ResidueField.finite_of_finite (R := A) ‹_›
+  have : Finite (ResidueField B) := IsLocalRing.ResidueField.finite_of_finite (R := A) ‹_›
   obtain ⟨γ, hγ⟩ := adjoin_residue_gen (A := A) (B := B)
   obtain ⟨α0, rfl⟩ := IsLocalRing.residue_surjective γ
   have hint : IsIntegral (ResidueField A) (residue B α0) := IsIntegral.of_finite _ _

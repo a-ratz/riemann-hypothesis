@@ -192,7 +192,7 @@ theorem isIdemAt_idem (τ : D.host.E →ₐ[D.host.F] Fv D.host.F v) : IsIdemAt 
     change splitProj τ (evFin D.host.F v 1 ⊗ₜ _) = _
     rw [splitProj_tmul, map_one, one_mul]; rfl
   rw [finPart_idem_mul_mem_iff, h1, mem_splitPrime, HeightOneSpectrum.mem_adicCompletionIntegers,
-    map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 h0)]
+    map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 h0)]
 
 theorem exists_isIdemAt_chart : ∀ {D : D7} {v : HeightOneSpectrum (𝓞 D.host.F)} (τ : D.host.E →ₐ[D.host.F] Fv D.host.F v), ∃ e : AE D, IsIdemAt e (GlobalTheory.AdelicU.splitPrime τ) ∧ Chart e v ((GlobalTheory.AdelicU.splitProj τ : Fv D.host.F v ⊗[D.host.F] D.host.E →+* Fv D.host.F v).comp (GlobalTheory.AdelicU.compFin D.host.F D.host.E v)) :=
   fun τ => ⟨idem τ, isIdemAt_idem τ, chart_idem τ⟩

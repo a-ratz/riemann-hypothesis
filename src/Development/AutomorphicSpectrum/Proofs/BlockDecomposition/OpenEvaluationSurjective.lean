@@ -138,10 +138,10 @@ theorem bump_mem_of_bump {G W : Type} [Group G] [TopologicalSpace G] [IsTopologi
     (hS : ∀ g, ∀ b ∈ S, cInd H ρ g b ∈ S) (b : cIndSpace H ρ) (hb : IsBump H ρ K₂ 1 v b) (hbS : b ∈ S)
     (B : cIndSpace H ρ) (hB : IsBump H ρ K₁ 1 v B) : B ∈ S := by
   classical
-  haveI : CompactSpace K₁ := isCompact_iff_compactSpace.1 hK₁c
-  haveI : Finite (K₁ ⧸ K₂.subgroupOf K₁) :=
-    Subgroup.quotient_finite_of_isOpen _ (hK₂o.preimage continuous_subtype_val)
-  letI : Fintype (K₁ ⧸ K₂.subgroupOf K₁) := Fintype.ofFinite _
+  have : CompactSpace K₁ := isCompact_iff_compactSpace.1 hK₁c
+  have : Finite (K₁ ⧸ K₂.subgroupOf K₁) :=
+    Subgroup.quotient_finite_of_isOpen _ (hK₂o.preimage continuous_subtypeVal)
+  let : Fintype (K₁ ⧸ K₂.subgroupOf K₁) := Fintype.ofFinite _
   set T : cIndSpace H ρ := ∑ x : K₁ ⧸ K₂.subgroupOf K₁, cInd H ρ ((x.out : K₁) : G) b with hT
   have hTS : T ∈ S := S.sum_mem fun x _ => hS _ _ hbS
   have hTv : ∀ g, T.1.1.1 g = ∑ x : K₁ ⧸ K₂.subgroupOf K₁, b.1.1.1 (g * ((x.out : K₁) : G)) := by
@@ -162,14 +162,14 @@ theorem bump_mem_of_bump {G W : Type} [Group G] [TopologicalSpace G] [IsTopologi
   have hval : ∀ x, b.1.1.1 ((x.out : K₁) : G) = if P x then v else 0 := by
     intro x
     by_cases hx : P x
-    · rw [if_pos hx]
+    · rw [ite_eq_left hx]
       obtain ⟨a, z, hz, e⟩ := hx
       have ha : (a : G) ∈ K₁ := by
         have : (a : G) = ((x.out : K₁) : G) * z⁻¹ := by rw [e]; group
         rw [this]
         exact mul_mem (x.out).2 (inv_mem (h₂₁ hz))
       rw [e, hb.1 a z hz, hv a ha]
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       exact hb.2 _ hx
   set N : ℕ := (Finset.univ.filter P).card with hN
   have hT1 : T.1.1.1 1 = (N : ℂ) • v := by
@@ -261,7 +261,7 @@ theorem GlobalTheory.CompanionTheory.BZPhiPG.OntoO.Cl_mul_sO (k : Type) [Field k
         Matrix (Fin (i + 1 + t + 1 + 1)) (Fin (i + 1 + t + 1 + 1)) k) (Fin.castSucc (Fin.last (i + 1 + t))) j :=
     fun j => GlobalTheory.CompanionTheory.BZPhiPG.OntoO.sEmb_mul_row (i + 1 + t)
       (GlobalTheory.CompanionTheory.BZPhiPG.castM k (by omega) m⁻¹) p⁻¹ j
-  simp only [GlobalTheory.CompanionTheory.BZPhiPG.Cl, Set.mem_setOf_eq] at hp ⊢
+  simp only [GlobalTheory.CompanionTheory.BZPhiPG.Cl, Set.mem_ofPred_eq] at hp ⊢
   intro c
   rw [_root_.mul_inv_rev, ← map_inv (GlobalTheory.CompanionTheory.BZPhiPG.OntoO.sO k i t) m]
   exact (key _).trans (hp c)
@@ -434,12 +434,12 @@ theorem exists_compactOpen_between_mul_small
       ∀ x ∈ K, ∃ n ∈ N, ∃ c ∈ C, x = n * c := by
   obtain ⟨K₆, hK₆o, -, hK₆s⟩ := hbase ((K₀ : Set G) ∩ N)
     (Filter.inter_mem (hK₀o.mem_nhds K₀.one_mem) hN)
-  haveI : CompactSpace K₀ := isCompact_iff_compactSpace.mp hK₀c
+  have : CompactSpace K₀ := isCompact_iff_compactSpace.mp hK₀c
 
   set H : Subgroup K₀ := K₆.subgroupOf K₀ with hH
-  have hHo : IsOpen (H : Set K₀) := hK₆o.preimage continuous_subtype_val
-  haveI : Finite (K₀ ⧸ H) := H.quotient_finite_of_isOpen hHo
-  haveI : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have hHo : IsOpen (H : Set K₀) := hK₆o.preimage continuous_subtypeVal
+  have : Finite (K₀ ⧸ H) := H.quotient_finite_of_isOpen hHo
+  have : H.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   set M : Subgroup K₀ := H.normalCore with hM
   have hMH : M ≤ H := Subgroup.normalCore_le H
   have hHc : IsClosed (H : Set K₀) := OpenSubgroup.isClosed ⟨H, hHo⟩
@@ -450,7 +450,7 @@ theorem exists_compactOpen_between_mul_small
       exact Iff.rfl
     rw [this]
     exact isClosed_iInter fun b => hHc.preimage (by fun_prop)
-  haveI : M.FiniteIndex := Subgroup.finiteIndex_normalCore H
+  have : M.FiniteIndex := Subgroup.finiteIndex_normalCore H
   have hMo : IsOpen (M : Set K₀) := Subgroup.isOpen_of_isClosed_of_finiteIndex M hMc
 
   set D : Subgroup K₀ := C.subgroupOf K₀ with hD
@@ -461,9 +461,9 @@ theorem exists_compactOpen_between_mul_small
     ext x; simp [Subgroup.mem_map]
   refine ⟨L.map K₀.subtype, ?_, ?_, ?_, ?_, ?_⟩
   · rw [himg]
-    exact hK₀o.isOpenMap_subtype_val _ hLo
+    exact hK₀o.isOpenMap_subtypeVal _ hLo
   · rw [himg]
-    exact hLc.isCompact.image continuous_subtype_val
+    exact hLc.isCompact.image continuous_subtypeVal
   · intro c hc
     refine ⟨⟨c, hC hc⟩, ?_, rfl⟩
     exact (le_sup_right : D ≤ L) (by simpa [hD, Subgroup.mem_subgroupOf] using hc)
@@ -546,8 +546,8 @@ theorem lastRowMat_mul_rowInv {r : Fin (n + 1) → k} (hr : r (Fin.last n) ≠ 0
     · subst hj
       first
       | simp [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, hr]
-    · rw [Matrix.one_apply_ne (Ne.symm hj), if_neg hj]
-      simp only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, if_neg hj]
+    · rw [Matrix.one_apply_ne (Ne.symm hj), ite_eq_right hj]
+      simp only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, ite_eq_right hj]
       linear_combination (-r j) * mul_inv_cancel₀ hr
   · first
     | (rw [Matrix.mul_apply]
@@ -600,9 +600,9 @@ theorem continuousAt_rowInv : ContinuousAt (fun x : GL (Fin (n + 1)) k => rowInv
         rw [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.invRow_one]; exact one_ne_zero)
   refine continuousAt_pi.2 fun j => ?_
   by_cases hj : j = Fin.last n
-  · simp only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, if_pos hj]
+  · simp only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, ite_eq_left hj]
     exact hl
-  · simp only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, if_neg hj]
+  · simp only [GlobalTheory.CompanionTheory.BZPhiPG.OntoO.RowRep.rowInv, ite_eq_right hj]
     exact (((continuous_apply j).comp hv).continuousAt.neg).mul hl
 
 theorem exists_nhd {V : Set (GL (Fin (n + 1)) k)} (hV : V ∈ 𝓝 (1 : GL (Fin (n + 1)) k)) :
@@ -844,7 +844,7 @@ theorem dEmb_zero (i t : ℕ) : dEmb k i t 0 = 1 := by
 
 theorem wEl_notMem_Cl (i t : ℕ) : wEl k i t ∉ Cl k i t := by
   intro hmem
-  simp only [GlobalTheory.CompanionTheory.BZPhiPG.Cl, Set.mem_setOf_eq] at hmem
+  simp only [GlobalTheory.CompanionTheory.BZPhiPG.Cl, Set.mem_ofPred_eq] at hmem
   have h := hmem (Fin.last i)
   have hc : (Fin.castLE (by omega) (Fin.last i) : Fin ((i + 1) + t + 1 + 1)) =
       Fin.castSucc (⟨i, by omega⟩ : Fin ((i + 1) + t + 1)) := Fin.ext rfl
@@ -1273,7 +1273,7 @@ theorem onto (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonar
   have h0 : v₀ ≠ 0 := fun h => hv (hv₀.symm.trans ((congrArg (qO τ σ ψ) h).trans (map_zero _)))
   have grp := _root_.GlobalTheory.CompanionTheory.BZPhiPG.Grp.main k ψ hψ i t
   have hker : IsOpen ((dpowM (k := k) (i + (t + 1)) (-1 / 2)).ker : Set (Mir k (i + (t + 1)))) :=
-    (GlobalTheory.CompanionTheory.LeibPhi.isOpen_ker_dpow (k := k) (i + (t + 1) + 1) (-1 / 2)).preimage continuous_subtype_val
+    (GlobalTheory.CompanionTheory.LeibPhi.isOpen_ker_dpow (k := k) (i + (t + 1) + 1) (-1 / 2)).preimage continuous_subtypeVal
   let _ : MeasurableSpace (Fin (t + 1) → k) := borel _
   exact bump_abs (muD k (t + 1)) (HPG k (i + 1) (t + 1)) (sigX τ σ) (HPG k i (t + 1)) (sigO τ σ ψ)
     (GlobalTheory.CompanionTheory.BZMirOnto.exists_compactOpen k _) (GlobalTheory.CompanionTheory.BZMirOnto.exists_compactOpen k _) (sO k i t) (_root_.GlobalTheory.CompanionTheory.BZPhiPG.OntoO.continuous_sO k i t)

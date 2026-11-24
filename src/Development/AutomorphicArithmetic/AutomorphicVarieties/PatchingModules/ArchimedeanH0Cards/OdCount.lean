@@ -195,14 +195,14 @@ end UpperTheory.V.Pa.B2
 theorem UpperTheory.V.Pa.B2.count :
     ∀ (A Γ : Type) [CommRing A] [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] (P : Pl Γ) (D : Dat A P) (s : ℕ) (dw e : P.ι → ℕ), 0 < s → Finite (H1 D.M.ρ) → Finite (H2 D.M.ρ) → (∀ w, Finite (H1 (D.Q w).ρ) ∧ Finite (H2 (D.Q w).ρ)) → Nat.card (H2 D.M.ρ) * s ^ (∑ w, dw w) ≤ Nat.card (H1 D.M.ρ) → (∀ w, Nat.card (H1 (D.Q w).ρ) ≤ Nat.card (H1ur (D.Q w).ρ (P.J w)) * Nat.card (H2 (D.Q w).ρ) * e w * s ^ dw w) → Finite D.H2LocalConditions ∧ Nat.card D.H2LocalConditions ≤ Nat.card D.Sel * (∏ w, e w) * Nat.card D.Ck2 := by
   intro A Γ _ _ _ _ P D s dw e hs hH1 hH2 hQ hM hW
-  haveI : ∀ w, Finite (H1 (D.Q w).ρ) := fun w => (hQ w).1
-  haveI : ∀ w, Finite (H2 (D.Q w).ρ) := fun w => (hQ w).2
-  haveI : ∀ w, Finite (H1 (D.Q w).ρ ⧸ H1ur (D.Q w).ρ (P.J w)) := fun w =>
+  have : ∀ w, Finite (H1 (D.Q w).ρ) := fun w => (hQ w).1
+  have : ∀ w, Finite (H2 (D.Q w).ρ) := fun w => (hQ w).2
+  have : ∀ w, Finite (H1 (D.Q w).ρ ⧸ H1ur (D.Q w).ρ (P.J w)) := fun w =>
     Finite.of_surjective _ (Submodule.mkQ_surjective _)
-  haveI : Finite (Tq D) := Pi.finite
-  haveI : Finite (Tq D ⧸ LinearMap.range (aMap D)) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
+  have : Finite (Tq D) := Pi.finite
+  have : Finite (Tq D ⧸ LinearMap.range (aMap D)) := Finite.of_surjective _ (Submodule.mkQ_surjective _)
   obtain ⟨ψ, hψ⟩ := inj_of (qMap D) (bMap D) (LinearMap.ker (cMap D)) (ker_qMap D) (ker_cMap D)
-  haveI : Finite (LinearMap.ker (cMap D)) := Finite.of_injective ψ hψ
+  have : Finite (LinearMap.ker (cMap D)) := Finite.of_injective ψ hψ
   have hK : Nat.card (LinearMap.ker (cMap D)) ≤ Nat.card (Tq D ⧸ LinearMap.range (aMap D)) :=
     Nat.card_le_card_of_injective ψ hψ
   have hR : Nat.card (LinearMap.range (cMap D)) ≤ Nat.card (LinearMap.ker D.loc2) :=
@@ -218,7 +218,7 @@ theorem UpperTheory.V.Pa.B2.count :
     show Nat.card (∀ w, H1 (D.Q w).ρ ⧸ H1ur (D.Q w).ρ (P.J w)) ≤ _
     rw [Nat.card_pi, Nat.card_pi, ← Finset.prod_pow_eq_pow_sum, ← Finset.prod_mul_distrib,
       ← Finset.prod_mul_distrib]
-    apply Finset.prod_le_prod'
+    apply Finset.prod_le_prod
     intro w _
     have h1 := Submodule.card_eq_card_quotient_mul_card (H1ur (D.Q w).ρ (P.J w))
     have hpos : 0 < Nat.card (H1ur (D.Q w).ρ (P.J w)) := Nat.card_pos
@@ -606,7 +606,7 @@ theorem UpperTheory.V.Pa.B2.odCount :
     | inl v =>
       have E := hC.leV v x.A (D.Q (inV G v)) (ktQ _)
       rw [hQv v] at E
-      haveI := (fQ (inV G v)).1
+      have := (fQ (inV G v)).1
       have hur : 0 < Nat.card (H1ur (D.Q (inV G v)).ρ ((plOf G).J (inV G v))) := Nat.card_pos
       have key : Nat.card (H0 (D.Q (inV G v)).ρ) * Nat.card (H2 (D.Q (inV G v)).ρ) * N ^ dv v
           ≤ Nat.card (H1ur (D.Q (inV G v)).ρ ((plOf G).J (inV G v))) *
@@ -627,8 +627,8 @@ theorem UpperTheory.V.Pa.B2.odCount :
       exact E.le.trans key
   obtain ⟨hfin, hle⟩ := count x.A G.Γ (plOf G) D N dw e hNpos fM.1 fM.2 fQ hglob hloc
   have hfin2 : Finite D.Ck2 := by
-    haveI : Fintype (plOf G).ι := (plOf G).fin
-    haveI : ∀ w, Finite (H2 (D.Q w).ρ) := fun w => (fQ w).2
+    have : Fintype (plOf G).ι := (plOf G).fin
+    have : ∀ w, Finite (H2 (D.Q w).ρ) := fun w => (fQ w).2
     exact Finite.of_surjective _ (Submodule.mkQ_surjective _)
   refine ⟨hfin, hfin2, ?_⟩
   have hck := hC.ck x.A D ktM

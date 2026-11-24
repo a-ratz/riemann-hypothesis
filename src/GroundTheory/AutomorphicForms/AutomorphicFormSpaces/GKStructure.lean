@@ -271,7 +271,7 @@ theorem hasContinuousCoeff_archCompactRepKZ :
     funext fun k => hψ _ (Submodule.subset_span ⟨k, rfl⟩)
   rw [e]
   refine (LinearMap.continuous_of_finiteDimensional ψ).comp (continuous_pi fun x => ?_)
-  exact (continuous_archSlice v.2.isSmooth.1 x).comp continuous_subtype_val
+  exact (continuous_archSlice v.2.isSmooth.1 x).comp continuous_subtypeVal
 
 theorem hasDerivAt_uActionKZ_ι (X : archLie K n) (v : smoothKZ K n) (x : AdelicGLn.AdelicGL K n) :
     HasDerivAt (fun t : ℝ => (v : AdelicGLn.AdelicGL K n → ℂ)

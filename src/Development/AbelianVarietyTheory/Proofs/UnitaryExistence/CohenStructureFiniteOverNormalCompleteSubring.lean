@@ -261,7 +261,7 @@ theorem exists_sub_mul_mem (hp : p.Prime) (h0 : (p : S) ∈ maximalIdeal S)
     if h : b ∈ residue S '' L then π ⟨h.choose, mem_level_of_mem h.choose_spec.1⟩ else 0
   have hg : ∀ x (hx : x ∈ L), g (residue S x) = π ⟨x, mem_level_of_mem hx⟩ := fun x hx => by
     have h : residue S x ∈ residue S '' L := ⟨x, hx, rfl⟩
-    simp only [g, dif_pos h, hL h.choose_spec.1 hx h.choose_spec.2]
+    simp only [g, dite_eq_left h, hL h.choose_spec.1 hx h.choose_spec.2]
   obtain ⟨σ, h1, h2⟩ := exists_ringHom_pow hB n _ f g (by
     rintro _ ⟨x, hx, rfl⟩
     rw [hg x hx, ← hf]
@@ -389,8 +389,8 @@ lemma map_graphRing (p : ℕ) {Q : Type} [CommRing Q] (f : k →+* Q) (g : k →
   simp
 
 lemma indep_empty {p : ℕ} (hp : p.Prime) (h0 : (p : k) = 0) : Indep p (∅ : Set k) := by
-  haveI := Fact.mk hp
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero hp).2 h0
+  have := Fact.mk hp
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero hp).2 h0
   intro Q _ f g _ z hz h1
   have : graphRing p f g ∅ ≤ ((frobenius k p).prod f).range := by
     unfold graphRing
@@ -406,7 +406,7 @@ lemma indep_empty {p : ℕ} (hp : p.Prime) (h0 : (p : k) = 0) : Indep p (∅ : S
 lemma indep_sUnion (p : ℕ) (c : Set (Set k)) (hc : IsChain (· ⊆ ·) c) (hne : c.Nonempty)
     (h : ∀ B ∈ c, Indep p B) : Indep p (⋃₀ c) := by
   intro Q _ f g hg z hz h1
-  haveI : Nonempty c := hne.to_subtype
+  have : Nonempty c := hne.to_subtype
   have hdir : Directed (· ≤ ·) (fun B : c => graphRing p f g B.1) := by
     intro B C
     rcases hc.total B.2 C.2 with h | h
@@ -439,8 +439,8 @@ def powField {p : ℕ} (hp : p ≠ 0) (B : Set k) : Subfield k where
 
 lemma indep_insert {p : ℕ} (hp : p.Prime) (h0 : (p : k) = 0) {B : Set k} (hB : Indep p B) {a : k}
     (ha : a ∉ Subring.closure (Set.range (fun x : k => x ^ p) ∪ B)) : Indep p (insert a B) := by
-  haveI := Fact.mk hp
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero hp).2 h0
+  have := Fact.mk hp
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero hp).2 h0
   intro Q _ f g hg z hz h1
   have hga : g a ^ p = f a := hg a (Set.mem_insert _ _)
   have hI := hB Q f g (fun b hb => hg b (Set.mem_insert_of_mem _ hb))
@@ -473,7 +473,7 @@ lemma indep_insert {p : ℕ} (hp : p.Prime) (h0 : (p : k) = 0) {B : Set k} (hB :
     conv_rhs => rw [← modByMonic_add_div P (X ^ p - C c)]
     rw [map_add (f := _), map_mul, hevq, zero_mul, add_zero]
   have hirr : Irreducible (X ^ p - C (ψ c) : K[X]) := by
-    apply X_pow_sub_C_irreducible_of_prime hp
+    apply irreducible_X_pow_sub_C_of_prime hp
     intro b hb
     have h2 : (b : k) ^ p = a ^ p := congrArg Subtype.val hb
     have h3 : (b : k) = a := frobenius_inj k p h2
@@ -491,7 +491,7 @@ lemma indep_insert {p : ℕ} (hp : p.Prime) (h0 : (p : k) = 0) {B : Set k} (hB :
   have hdvd : (X ^ p - C c : S[X]).map ψ ∣ (P %ₘ (X ^ p - C c)).map ψ := by
     rw [hmapq, hmin]
     exact minpoly.dvd K a (by rw [haev, hR, h1])
-  haveI : Nontrivial S := ψ.domain_nontrivial
+  have : Nontrivial S := ψ.domain_nontrivial
   have hz0 : (P %ₘ (X ^ p - C c)).map ψ = 0 := by
     apply eq_zero_of_dvd_of_degree_lt hdvd
     rw [degree_map_eq_of_injective hψ, degree_map_eq_of_injective hψ]
@@ -823,7 +823,7 @@ theorem exists_finite_injective_of_isAdicComplete :
   obtain ⟨n, x, hx, hd, N, hN⟩ := GlobalTheory.exists_systemOfParameters_insert S p hp0 h0
   let A := MvPowerSeries (Fin n) Λ
   let φ : A →ₐ[Λ] S := mvEvalAdic Λ (maximalIdeal S) x hx
-  letI : Algebra A S := φ.toRingHom.toAlgebra
+  let : Algebra A S := φ.toRingHom.toAlgebra
   have : IsDomain A := isDomain_mvPowerSeries Λ n
   have hA := isAdicComplete_mvPowerSeries Λ n
   have hle : (maximalIdeal A).map (algebraMap A S) ≤ maximalIdeal S := by

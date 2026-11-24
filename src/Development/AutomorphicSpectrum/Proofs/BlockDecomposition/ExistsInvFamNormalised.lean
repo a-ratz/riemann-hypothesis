@@ -137,7 +137,7 @@ theorem exists_frob_pow_mul_pow_mul_inertia : ∀ (F Ω : Type) [Field F] [Numbe
   have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
   have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   set I : Subgroup (Dec (F := F) A) := (Ine (F := F) A).subgroupOf (Dec (F := F) A) with hI
-  have hIc : IsClosed (I : Set (Dec (F := F) A)) := (isClosed_Ine A).preimage continuous_subtype_val
+  have hIc : IsClosed (I : Set (Dec (F := F) A)) := (isClosed_Ine A).preimage continuous_subtypeVal
   let P : Set (Dec (F := F) A) :=
     (fun x : Dec (F := F) A × Dec (F := F) A => x.1 ^ N * x.2) '' (Set.univ ×ˢ (I : Set _))
   have hP : IsCompact P := (isCompact_univ.prod hIc.isCompact).image (by fun_prop)
@@ -238,7 +238,7 @@ theorem eq_zero_of_fixes_primitiveRoot : ∀ (F Ω : Type) [Field F] [NumberFiel
       rw [pow_one, Nat.cast_one] at this
       exact Units.ext_iff.trans this
     rw [e]
-    exact (isOpen_setOf_apply (F := F) ξ (fun t => t = ξ)).preimage continuous_subtype_val
+    exact (isOpen_setOf_apply (F := F) ξ (fun t => t = ξ)).preimage continuous_subtypeVal
   have h3 : θ φ ^ N = 1 := Units.ext (by
     rw [Units.val_pow_eq_pow_val, hF, ← Nat.cast_pow, hn]; simp)
   have hr : ∀ g, θ g ∈ Subgroup.zpowers (θ φ) := by
@@ -453,7 +453,7 @@ theorem exists_cochain_of_lift [IsGalois K Ω] [IsSepClosed Ω] (N : ℕ) [NeZer
   have hF : ∀ g, ζ ^ (F (d g)).val = (d g : Ω) := by
     intro g
     have hs' := Classical.choose_spec (hex g)
-    simp only [F, dif_pos (hex g)]
+    simp only [F, dite_eq_left (hex g)]
     rw [ZMod.val_cast_of_lt hs'.1]
     exact hs'.2
   refine ⟨fun g => F (d g), hdlc.comp F, fun g h => ?_⟩
@@ -812,7 +812,7 @@ theorem exists_cochain_cup (l : ℕ) [Fact l.Prime] (r : ℕ) (hr : 0 < r) {ζ :
     omega
   have : NeZero n := ⟨hn0⟩
   have : NeZero (n : Ω) := ⟨Nat.cast_ne_zero.2 hn0⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω n
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω n
   rw [hn] at hξ
   have hξv : IsPrimitiveRoot (ι ξ) (Nat.card 𝓀[v.adicCompletion F] ^ l ^ r - 1) := by
     rw [_root_.GlobalTheory.CompanionTheory.LocRes.natCard_residueField_eq_normV F v]
@@ -1326,10 +1326,10 @@ theorem core_dec (K Ω : Type) [Field K] [ValuativeRel K] [TopologicalSpace K] [
     (hF : ∀ g, unramifiedDegree K Ω g = Multiplicative.ofAdd 1 → χ (ε g) = 1)
     (z : Z2 (charRep c)) (hz : ∀ g h, z.1 (g, h) = κ g * χ h) :
     Submodule.span (ZMod n) {(Submodule.Quotient.mk z : H2 (charRep c))} = ⊤ := by
-  letI := algebraicValuativeRel K Ω
-  letI := algebraicTopology K Ω
-  haveI := algebraicValuativeRel_valuativeExtension K Ω
-  haveI := algebraicTopology_isValuativeTopology K Ω
+  let := algebraicValuativeRel K Ω
+  let := algebraicTopology K Ω
+  have := algebraicValuativeRel_valuativeExtension K Ω
+  have := algebraicTopology_isValuativeTopology K Ω
   let c' : Gal(Ω/K) →* (ZMod n)ˣ := c.comp (ε : Gal(Ω/K) →* D)
   let T := ReciprocityTheory.Neutral.Bridge.equivH2OfIso ε (charRep c) (charRep c') (fun _ _ => rfl)
   let z' : Z2 (charRep c') := ReciprocityTheory.Gal.compatiblePairCocycles2 (charRep c) (charRep c')
@@ -1351,21 +1351,21 @@ theorem core_dec (K Ω : Type) [Field K] [ValuativeRel K] [TopologicalSpace K] [
 theorem cyc_apply (F Ω : Type) [Field F] [Field Ω] [Algebra F Ω] [IsAlgClosed Ω] [CharZero Ω] (l : ℕ)
     [Fact l.Prime] (r : ℕ) (ζ : Ω) (hζ : ζ ^ (l ^ r) = 1) (σ : G F Ω) :
     σ ζ = ζ ^ ((cycMod F Ω l r σ : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)).val := by
-  haveI : ∀ i, NeZero (l ^ i) := fun i => ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : ∀ i, NeZero (l ^ i) := fun i => ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   exact cyclotomicCharacter.spec (L := Ω) l (σ : Ω ≃+* Ω) ζ hζ
 
 theorem span_class_eq_top : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r → ∀ ζ : Ω, IsPrimitiveRoot ζ (l ^ r) → ∀ (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 F)), IsPlaceOver A v → ∀ (ϖ : 𝓞 F) (y : Ω) (κ χ : Dec (F := F) A → ZMod (l ^ r)) (z : Z2 (muLoc F l r A)), ϖ ∈ v.asIdeal → ϖ ∉ v.asIdeal ^ 2 → y ^ (l ^ r) = algebraMap F Ω (ϖ : F) → (∀ g : Dec (F := F) A, (g : G F Ω) y = ζ ^ (κ g).val * y) → (∀ g h, χ (g * h) = χ g + χ h) → (∀ g : Dec (F := F) A, (g : G F Ω) ∈ Ine (F := F) A → χ g = 0) → (∀ g : Dec (F := F) A, IsFrob (F := F) A (normV v) (g : G F Ω) → χ g = 1) → (∀ g h, z.1 (g, h) = κ g * χ h) → Submodule.span (ZMod (l ^ r)) {(Submodule.Quotient.mk z : H2 (muLoc F l r A))} = ⊤ := by
   intro F Ω _ _ _ _ _ l _ r hr ζ hζ A v hA ϖ y κ χ z h1 h2 h3 h4 h5 h6 h7 h8
   have hl0 : l ^ r ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
-  haveI : NeZero (l ^ r) := ⟨hl0⟩
+  have : NeZero (l ^ r) := ⟨hl0⟩
   obtain ⟨ι, e, hec, hes, hl⟩ := GlobalTheory.CompanionTheory.DecGal.exists_algHom_mulEquiv_dec F Ω A v hA
-  haveI : CharZero (v.adicCompletion F) :=
+  have : CharZero (v.adicCompletion F) :=
     charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
-  haveI : IsSepClosure (v.adicCompletion F) (AlgebraicClosure (v.adicCompletion F)) :=
+  have : IsSepClosure (v.adicCompletion F) (AlgebraicClosure (v.adicCompletion F)) :=
     ⟨inferInstance, inferInstance⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
   have hϖ0 : (ϖ : F) ≠ 0 := by
     intro h
     have : ϖ = 0 := by exact_mod_cast h
@@ -1480,7 +1480,7 @@ theorem exists_invFam_normalised : ∀ (F Ω : Type) [Field F] [NumberField F] [
   have h : ∃ v : HeightOneSpectrum (𝓞 F), IsPlaceOver A v := ⟨v, hv⟩
   have e : h.choose = v := eq_of_isPlaceOver h.choose_spec hv
   have spec := Classical.choose_spec (key A h.choose h.choose_spec)
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   generalize Classical.choose (key A h.choose h.choose_spec) = f at spec ⊢
   rw [e] at spec
   exact spec

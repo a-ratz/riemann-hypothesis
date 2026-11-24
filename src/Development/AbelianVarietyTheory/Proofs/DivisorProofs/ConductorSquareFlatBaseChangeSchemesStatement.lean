@@ -72,16 +72,16 @@ theorem inj_of_isPushout {A B F G : Type} [CommRing A] [CommRing B] [CommRing F]
     (f : A →+* F) (g : A →+* B) (h : F →+* G) (k : B →+* G)
     (sq : IsPushout (CommRingCat.ofHom f) (CommRingCat.ofHom g) (CommRingCat.ofHom h) (CommRingCat.ofHom k))
     (hf : f.Flat) (hg : Function.Injective g) : Function.Injective h := by
-  letI := f.toAlgebra
-  letI := g.toAlgebra
-  letI := h.toAlgebra
-  letI := k.toAlgebra
-  letI : Algebra A G := (h.comp f).toAlgebra
-  haveI : IsScalarTower A F G := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower A B G := IsScalarTower.of_algebraMap_eq (fun a => by
+  let := f.toAlgebra
+  let := g.toAlgebra
+  let := h.toAlgebra
+  let := k.toAlgebra
+  let : Algebra A G := (h.comp f).toAlgebra
+  have : IsScalarTower A F G := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower A B G := IsScalarTower.of_algebraMap_eq (fun a => by
     have := congrArg (fun φ => (CommRingCat.Hom.hom φ) a) sq.w
     simpa [RingHom.algebraMap_toAlgebra] using this)
-  haveI : Module.Flat A F := hf
+  have : Module.Flat A F := hf
   have hP : Algebra.IsPushout A F B G := (CommRingCat.isPushout_iff_isPushout).1 sq
   have hP' : Algebra.IsPushout A B F G := hP.symm
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -130,13 +130,13 @@ theorem ideal_mul_of_isPushout {A B F G : Type} [CommRing A] [CommRing B] [CommR
       obtain ⟨y1, hy1, e1⟩ := hz b
       refine ⟨m * y1, Ideal.mul_mem_left _ m hy1, ?_⟩
       rw [smul_eq_mul, map_mul, e1, map_mul]; ring
-  letI := f.toAlgebra
-  letI := g.toAlgebra
-  letI := h.toAlgebra
-  letI := k.toAlgebra
-  letI : Algebra A G := (h.comp f).toAlgebra
-  haveI : IsScalarTower A F G := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower A B G := IsScalarTower.of_algebraMap_eq (fun a => (hw a).symm)
+  let := f.toAlgebra
+  let := g.toAlgebra
+  let := h.toAlgebra
+  let := k.toAlgebra
+  let : Algebra A G := (h.comp f).toAlgebra
+  have : IsScalarTower A F G := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower A B G := IsScalarTower.of_algebraMap_eq (fun a => (hw a).symm)
   have hP : Algebra.IsPushout A F B G := (CommRingCat.isPushout_iff_isPushout).1 sq
   have hP' : Algebra.IsPushout A B F G := hP.symm
   intro x hx r
@@ -158,13 +158,13 @@ theorem ker_le_of_isPushout {A Q F G : Type} [CommRing A] [CommRing Q] [CommRing
     (f : A →+* F) (q : A →+* Q) (h : F →+* G) (k : Q →+* G)
     (sq : IsPushout (CommRingCat.ofHom f) (CommRingCat.ofHom q) (CommRingCat.ofHom h) (CommRingCat.ofHom k))
     (hq : Function.Surjective q) (x : F) (hx : h x = 0) : x ∈ (RingHom.ker q).map f := by
-  letI := f.toAlgebra
-  letI := q.toAlgebra
-  letI := h.toAlgebra
-  letI := k.toAlgebra
-  letI : Algebra A G := (h.comp f).toAlgebra
-  haveI : IsScalarTower A F G := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower A Q G := IsScalarTower.of_algebraMap_eq (fun a => by
+  let := f.toAlgebra
+  let := q.toAlgebra
+  let := h.toAlgebra
+  let := k.toAlgebra
+  let : Algebra A G := (h.comp f).toAlgebra
+  have : IsScalarTower A F G := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower A Q G := IsScalarTower.of_algebraMap_eq (fun a => by
     have := congrArg (fun φ => (CommRingCat.Hom.hom φ) a) sq.w
     simpa [RingHom.algebraMap_toAlgebra] using this)
   have hP : Algebra.IsPushout A F Q G := (CommRingCat.isPushout_iff_isPushout).1 sq
@@ -175,7 +175,7 @@ theorem ker_le_of_isPushout {A Q F G : Type} [CommRing A] [CommRing Q] [CommRing
   let e3 := Algebra.IsPushout.equiv A F Q G
   have key : e3 (e2 (e1 (Ideal.Quotient.mk _ x))) = 0 := by
     rw [Algebra.TensorProduct.quotIdealMapEquivTensorQuot_mk]
-    simp only [e2, Algebra.TensorProduct.congr_apply, Algebra.TensorProduct.map_tmul, AlgEquiv.coe_algHom, map_one]
+    simp only [e2, Algebra.TensorProduct.congr_apply, Algebra.TensorProduct.map_tmul, AlgEquiv.coe_toAlgHom, map_one]
     rw [Algebra.IsPushout.equiv_tmul]
     simpa [RingHom.algebraMap_toAlgebra] using hx
   have : Ideal.Quotient.mk (Ideal.map (algebraMap A F) (RingHom.ker (Algebra.ofId A Q))) x = 0 := by

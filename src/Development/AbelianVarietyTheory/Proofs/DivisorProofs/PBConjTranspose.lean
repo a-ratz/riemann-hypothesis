@@ -102,8 +102,8 @@ theorem stEB : StEB := by
     change Continuous fun B => toM (eB ε B)
     simp_rw [toM_eB]
     have hc : Continuous (NormedSpace.exp : Mat n → Mat n) := by
-      letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-      letI := Matrix.linftyOpNormedAlgebra (n := Fin n) (R := ℚ) (α := ℂ)
+      let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+      let := Matrix.linftyOpNormedAlgebra (n := Fin n) (R := ℚ) (α := ℂ)
       exact @NormedSpace.exp_continuous (Matrix (Fin n) (Fin n) ℂ) _ _
         (inferInstanceAs (CompleteSpace (Fin n → Fin n → ℂ)))
     exact hc.comp (continuous_pB ε)

@@ -317,8 +317,8 @@ theorem single_conjT (a b : Fin n) (c : ℂ) :
   ext i j
   simp only [conjTranspose_apply, Matrix.single_apply]
   by_cases h : a = j ∧ b = i
-  · rw [if_pos h, if_pos ⟨h.2, h.1⟩]
-  · rw [if_neg h, if_neg (fun hh => h ⟨hh.2, hh.1⟩)]
+  · rw [ite_eq_left h, ite_eq_left ⟨h.2, h.1⟩]
+  · rw [ite_eq_right h, ite_eq_right (fun hh => h ⟨hh.2, hh.1⟩)]
     simp
 
 theorem single_neg' (a b : Fin n) (c : ℂ) :
@@ -451,7 +451,7 @@ theorem dual_sum_mem (hG : IsDualFam E G) (R : Submodule ℂ (E.V →L[ℂ] ℂ)
     (hR : ∀ k, ∀ ξ ∈ R, ξ ∘L E.ρ k⁻¹ ∈ R) (X : Matrix (Fin n) (Fin n) ℂ) (hX : Xᴴ = -X)
     {ξ : E.V →L[ℂ] ℂ} (hξ : ξ ∈ R) : ∑ a, ∑ b, X a b • G a b ξ ∈ R := by
   have hd := hG.2 X (expU X hX) hX (fun _ => rfl) ξ
-  have hcl : IsClosed (R : Set (E.V →L[ℂ] ℂ)) := Submodule.closed_of_finiteDimensional R
+  have hcl : IsClosed (R : Set (E.V →L[ℂ] ℂ)) := Submodule.isClosed_of_finiteDimensional R
   have ht := hasDerivAt_iff_tendsto_slope_zero.1 hd
   refine hcl.mem_of_tendsto ht (Filter.Eventually.of_forall fun s => ?_)
   have : s⁻¹ • (ξ ∘L E.ρ (expU X hX (0 + s))⁻¹ - ξ ∘L E.ρ (expU X hX 0)⁻¹) ∈ R.restrictScalars ℝ :=
@@ -463,11 +463,11 @@ theorem sum_single_dual (w : E.V →L[ℂ] ℂ) (a b : Fin n) (c : ℂ) :
   rw [Finset.sum_eq_single a, Finset.sum_eq_single b]
   · simp
   · intro y _ hy
-    rw [Matrix.single_apply, if_neg (fun hh => hy hh.2.symm), zero_smul]
+    rw [Matrix.single_apply, ite_eq_right (fun hh => hy hh.2.symm), zero_smul]
   · simp
   · intro x _ hx
     refine Finset.sum_eq_zero fun y _ => ?_
-    rw [Matrix.single_apply, if_neg (fun hh => hx hh.1.symm), zero_smul]
+    rw [Matrix.single_apply, ite_eq_right (fun hh => hx hh.1.symm), zero_smul]
   · simp
 
 theorem dual_entry_mem (hG : IsDualFam E G) (R : Submodule ℂ (E.V →L[ℂ] ℂ))
@@ -515,7 +515,7 @@ theorem dual_weight (hG : IsDualFam E G) (μ : Fin n → ℤ) {v : E.V →L[ℂ]
           simp
         · simp [Matrix.single_apply, hc, Ne.symm hc]
       · rw [Matrix.diagonal_apply_ne _ hij, Matrix.smul_apply, Matrix.single_apply,
-          if_neg (fun hh => hij (hh.1.symm.trans hh.2)), smul_zero]
+          ite_eq_right (fun hh => hij (hh.1.symm.trans hh.2)), smul_zero]
     show NormedSpace.exp _ = _
     rw [e, Matrix.exp_diagonal]
     congr 1
@@ -525,8 +525,8 @@ theorem dual_weight (hG : IsDualFam E G) (μ : Fin n → ℤ) {v : E.V →L[ℂ]
       fun s : ℝ => Complex.exp ((s : ℂ) * (Complex.I * ((μ a : ℝ) : ℂ))) • v := by
     funext s
     rw [hv _ _ (hk s), Finset.prod_eq_single a]
-    · simp only [if_true]
-      rw [← Complex.exp_int_mul]
+    · simp only [ite_true]
+      rw [← Complex.exp_intCast_mul]
       congr 2
       push_cast
       ring
@@ -559,7 +559,7 @@ theorem exists_stable_compl (E : KMod n) (K : Submodule ℂ (E.V →L[ℂ] ℂ))
     have hξ' : e ξ ∈ Keᗮ := hξ
     have h1 : e (ξ ∘L E.ρ k⁻¹) = ρ' k (e ξ) := he k ξ
     have h2 : e η = ρ' k (e (η ∘L E.ρ k⁻¹⁻¹)) := by
-      rw [he k⁻¹ η, ← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]
+      rw [he k⁻¹ η, ← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]
       rfl
     show ⟪e η, e (ξ ∘L E.ρ k⁻¹)⟫_ℂ = 0
     rw [h1, h2, hin]
@@ -756,9 +756,9 @@ theorem pair_sum (v : Fin n → ℤ) (T : Finset (Fin n × Fin n)) (hT : T ⊆ p
       = ∑ p ∈ prs n \ T, (if p ∈ T then v p.1 else v p.2)
         + ∑ p ∈ T, (if p ∈ T then v p.1 else v p.2) := (Finset.sum_sdiff hT).symm
   have h3 : ∑ p ∈ prs n \ T, (if p ∈ T then v p.1 else v p.2) = ∑ p ∈ prs n \ T, v p.2 :=
-    Finset.sum_congr rfl fun p hp => if_neg (Finset.mem_sdiff.1 hp).2
+    Finset.sum_congr rfl fun p hp => ite_eq_right (Finset.mem_sdiff.1 hp).2
   have h4 : ∑ p ∈ T, (if p ∈ T then v p.1 else v p.2) = ∑ p ∈ T, v p.1 :=
-    Finset.sum_congr rfl fun p hp => if_pos hp
+    Finset.sum_congr rfl fun p hp => ite_eq_left hp
   rw [h1, h2, h3, h4, add_comm]
 
 theorem pair_le (v : Fin n → ℤ) (T : Finset (Fin n × Fin n)) (hT : T ⊆ prs n) :
@@ -778,10 +778,10 @@ theorem tZero_term (lev : Fin n → ℕ) (hlev : Monotone lev) (v : Fin n → �
   have hlt : p.1 < p.2 := (Finset.mem_filter.1 hp).2
   by_cases h : lev p.1 < lev p.2
   · have hm : p ∈ tZero lev := Finset.mem_filter.2 ⟨hp, h⟩
-    rw [if_pos hm, max_eq_left (h1 _ _ h)]
+    rw [ite_eq_left hm, max_eq_left (h1 _ _ h)]
   · have he : lev p.1 = lev p.2 := le_antisymm (hlev hlt.le) (not_lt.1 h)
     have hm : p ∉ tZero lev := fun hm => h (Finset.mem_filter.1 hm).2
-    rw [if_neg hm, max_eq_right (h2 _ _ hlt he)]
+    rw [ite_eq_right hm, max_eq_right (h2 _ _ hlt he)]
 
 theorem tZero_eq (lev : Fin n → ℕ) (hlev : Monotone lev) (v : Fin n → ℤ)
     (h1 : ∀ a b, lev a < lev b → v b ≤ v a) (h2 : ∀ a b, a < b → lev a = lev b → v a ≤ v b) :
@@ -1022,7 +1022,7 @@ theorem tournament_unique : ∀ {n : ℕ} (lev : Fin n → ℕ), Monotone lev �
     have hpp := hT hp
     have hlt : p.1 < p.2 := (Finset.mem_filter.1 hpp).2
     have h := hterm p hpp
-    rw [if_pos hp] at h
+    rw [ite_eq_left hp] at h
     refine Finset.mem_filter.2 ⟨hpp, ?_⟩
     by_contra hc
     have he : lev p.1 = lev p.2 := le_antisymm (hlev hlt.le) (not_lt.1 hc)
@@ -1033,7 +1033,7 @@ theorem tournament_unique : ∀ {n : ℕ} (lev : Fin n → ℕ), Monotone lev �
     obtain ⟨hpp, hlt⟩ := Finset.mem_filter.1 hp
     by_contra hc
     have h := hterm p hpp
-    rw [if_neg hc] at h
+    rw [ite_eq_right hc] at h
     have h1 := rk_lt_of_lev hlt
     have h2 := le_max_left (rk lev p.1) (rk lev p.2)
     omega
@@ -1500,10 +1500,10 @@ theorem main_coef {n : ℕ} (lam : Fin n → ℤ) (hl : Antitone lam) (F : Finse
     split_ifs with h <;> simp [h]
   rw [hLf, hRf] at key
   by_cases hmem : μ ∈ F
-  · rw [if_pos hmem, Finset.sum_singleton, Finset.sum_singleton] at key
+  · rw [ite_eq_left hmem, Finset.sum_singleton, Finset.sum_singleton] at key
     simp only [Equiv.Perm.sign_one, Units.val_one, Int.cast_one, mul_one] at key
     exact ⟨hmem, key⟩
-  · rw [if_neg hmem, Finset.sum_empty, Finset.sum_singleton] at key
+  · rw [ite_eq_right hmem, Finset.sum_empty, Finset.sum_singleton] at key
     exact absurd key.symm (by simpa using pow_ne_zero n (two_ne_zero (α := ℂ)))
 
 end GlobalTheory.CompanionTheory.CoefId
@@ -1626,11 +1626,11 @@ theorem trace_pi_blocks {ι : Type} [Fintype ι] [DecidableEq ι] (P : ι → Ty
 
 theorem trace_of_block_sandwich : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (I : Type) (W H : ι → Type) [AddCommGroup I] [Module ℂ I] [∀ i, AddCommGroup (W i)] [∀ i, Module ℂ (W i)] [∀ i, AddCommGroup (H i)] [∀ i, Module ℂ (H i)] [FiniteDimensional ℂ I] [∀ i, FiniteDimensional ℂ (W i)] [∀ i, Nontrivial (W i)] (R : I ≃ₗ[ℂ] ∀ i, W i →ₗ[ℂ] H i) (F : I →ₗ[ℂ] I) (a : ∀ i, H i →ₗ[ℂ] H i) (b : ∀ i, W i →ₗ[ℂ] W i), (∀ x i, R (F x) i = a i ∘ₗ R x i ∘ₗ b i) → (∀ i, FiniteDimensional ℂ (H i)) ∧ LinearMap.trace ℂ I F = ∑ i, LinearMap.trace ℂ (W i) (b i) * LinearMap.trace ℂ (H i) (a i) := by
   intro ι _ _ I W H _ _ _ _ _ _ _ _ _ R F a b hF
-  haveI hP : FiniteDimensional ℂ (∀ i, W i →ₗ[ℂ] H i) := LinearEquiv.finiteDimensional R
-  haveI hHom : ∀ i, FiniteDimensional ℂ (W i →ₗ[ℂ] H i) := fun i =>
+  have hP : FiniteDimensional ℂ (∀ i, W i →ₗ[ℂ] H i) := LinearEquiv.finiteDimensional R
+  have hHom : ∀ i, FiniteDimensional ℂ (W i →ₗ[ℂ] H i) := fun i =>
     Module.Finite.of_surjective (LinearMap.proj (R := ℂ) (φ := fun i => W i →ₗ[ℂ] H i) i)
       (fun y => ⟨Pi.single i y, by simp⟩)
-  haveI hH : ∀ i, FiniteDimensional ℂ (H i) := fun i => finiteDimensional_of_hom (W i) (H i)
+  have hH : ∀ i, FiniteDimensional ℂ (H i) := fun i => finiteDimensional_of_hom (W i) (H i)
   refine ⟨hH, ?_⟩
   have hconj : R.conj F =
       LinearMap.pi fun i => sandwich (a i) (b i) ∘ₗ LinearMap.proj i := by
@@ -1861,7 +1861,7 @@ theorem countG : CountG := by
     have := htr i.1 i.2
     unfold trOn at this
     rwa [dite_eq_left (hB _)] at this
-  haveI hWnt : ∀ i, Nontrivial (W i) := by
+  have hWnt : ∀ i, Nontrivial (W i) := by
     intro i
     by_contra hnt
     rw [not_nontrivial_iff_subsingleton] at hnt
@@ -1897,7 +1897,7 @@ theorem countG : CountG := by
     intro x i
     ext ξ
     rfl
-  haveI : FiniteDimensional ℂ (invA σ E) := hfin
+  have : FiniteDimensional ℂ (invA σ E) := hfin
   obtain ⟨hfd, htrace⟩ := _root_.GlobalTheory.CompanionTheory.HomTrace.trace_of_block_sandwich ι (invA σ E) W H R Fl a b hcomp
   have hse : harmSet lam = (harmZ lam).image wtR := harmSet_eq lam
   refine ⟨fun μ hμ => ?_, fun hne => ?_, ?_⟩

@@ -198,7 +198,7 @@ theorem exists_bounded_gens : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   choose b hb using key
   refine ⟨Finset.univ.sup b, fun X _ _ _ _ hX β hβ hp => ?_⟩
   obtain ⟨k, ⟨f⟩⟩ := hiso X hX
-  haveI := (hR k).1
+  have := (hR k).1
   obtain ⟨m, u, h1, h2, h3, h4, h5, h6, h7⟩ := hb k (pull f.symm.toLinearMap β) (pull_mem _ hβ) fun y => hp _
   have hk : (b k : ℝ) ≤ (Finset.univ.sup b : ℕ) := by exact_mod_cast Finset.le_sup (f := b) (Finset.mem_univ k)
   exact transport f.symm ⟨m, u, h1, h2, h3, h4, fun i => (h5 i).trans hk, h6, h7⟩

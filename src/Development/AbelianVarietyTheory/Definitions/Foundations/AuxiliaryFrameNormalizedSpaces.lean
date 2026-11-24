@@ -102,8 +102,8 @@ theorem spacesNorm_z_norm : ((spacesNorm R cm T hT pz hpz).X R.m).hT (spacesNorm
     (spacesNorm R cm T hT pz hpz).z = (T : E) := by
   refine (diag_single_single (R.N R.m) (fun _ => false)
     (⟨R.rankY R.m, by rw [N_top]; omega⟩ : Fin (R.N R.m)) _ pz pz).trans ?_
-  rw [if_pos rfl]
-  simp only [sgn, Bool.false_eq_true, if_false, mul_one, hpz]
+  rw [ite_eq_left rfl]
+  simp only [sgn, Bool.false_eq_true, ite_false, mul_one, hpz]
 
 end Spaces
 

@@ -130,7 +130,7 @@ theorem splitEx_of (hstar : ∀ x : D.host.E, D.host.conj x = IsCMField.complexC
       isPrime := Ideal.comap_isPrime _ _
       ne_bot := by
         obtain ⟨y, hy, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot v.ne_bot
-        exact Ideal.comap_ne_bot_of_integral_mem hy0 hy (Algebra.IsIntegral.isIntegral y) }
+        exact Ideal.under_ne_bot_of_integral_mem hy0 hy (Algebra.IsIntegral.isIntegral y) }
   have hover' : (conjPlE v).asIdeal.comap (algebraMap (𝓞 (maximalRealSubfield D.host.E)) (𝓞 D.host.E)) =
       v₀.asIdeal := by
     ext a
@@ -193,7 +193,7 @@ theorem exists_splitPlace (v : PlE D.host) (x0 : 𝓞 D.host.E) (hx0 : x0 ∈ v.
     rw [ha] at h'
     exact hc0 (by simpa using v.asIdeal.sub_mem h' hx0)
 
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal (v₀.adicCompletionIntegers Fp)) (v₀.adicCompletionIntegers Fp) := by
+  have : IsAdicComplete (IsLocalRing.maximalIdeal (v₀.adicCompletionIntegers Fp)) (v₀.adicCompletionIntegers Fp) := by
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (v₀.adicCompletionIntegers Fp)
     have : IsPrecomplete (IsLocalRing.maximalIdeal (v₀.adicCompletionIntegers Fp)) (v₀.adicCompletionIntegers Fp) :=
       Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.completion_integers_precomplete v₀ hϖ

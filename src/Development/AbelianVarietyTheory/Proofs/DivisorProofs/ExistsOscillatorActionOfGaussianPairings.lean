@@ -394,7 +394,7 @@ theorem osc_proj (g : G) {f : B} (hf : Sm ρ f) : osc h hk c g (proj h f) = c g 
 
 theorem osc_one (hc : c 1 = 1) {f : B} (hf : Sm ρ f) : osc h hk c 1 f = f := by
   refine Eq.trans ?_ ((good_of_sm hJ h hf).inversion hJ)
-  simp only [osc, intw, vacOp_apply, pr_one, proj_proj hJ, hc, one_smul, map_one, ContinuousLinearMap.one_apply]
+  simp only [osc, intw, vacOp_apply, pr_one, proj_proj hJ, hc, one_smul, map_one, one_apply_eq_self]
 
 theorem scalar_mul (hl : ∀ g, star (c g) * c g * lam (k g) = 1)
     (hm : ∀ g g', c g * c g' * mu J (k (g * g')) (k g) = c (g * g') * lam (k (g * g'))) (g g' : G) (x : B) :

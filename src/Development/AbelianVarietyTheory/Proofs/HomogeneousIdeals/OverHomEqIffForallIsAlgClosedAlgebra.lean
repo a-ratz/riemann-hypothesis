@@ -89,7 +89,7 @@ theorem over_hom_eq_iff_forall_isAlgClosed_algebra {T Y : Over (Spec (.of R))} [
   refine (hom_eq_iff_forall_isAlgClosed Y.hom ((Over.w f).trans (Over.w g).symm)).mpr
     fun k _ _ x => ?_
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (x ≫ T.hom)
-  letI : Algebra R k := φ.hom.toAlgebra
+  let : Algebra R k := φ.hom.toAlgebra
   exact congrArg (·.left) (H k (Over.homMk x hφ.symm))
 
 theorem over_hom_eq_iff_forall_field_algebra {T Y : Over (Spec (.of R))} [IsReduced T.left]

@@ -78,7 +78,7 @@ theorem sq_sub_le (a b : ℂ) : ‖b‖ ^ 2 ≤ 2 * ‖a‖ ^ 2 + 2 * ‖a - b�
 theorem ball_diff_eq {g1 : V (nd X) → ℂ} {z : V (nd X)} {ρ : ℝ} (hB : ball z ρ ⊆ OmF X x0) :
     ball z ρ \ {y | g1 y = 0} = ball z ρ ∩ Om1 X x0 g1 := by
   ext y
-  simp only [Set.mem_diff, Set.mem_inter_iff, Set.mem_setOf_eq, Om1]
+  simp only [Set.mem_sdiff, Set.mem_inter_iff, mem_ofPred_eq, Om1]
   constructor
   · rintro ⟨h1, h2⟩
     exact ⟨h1, hB h1, h2⟩
@@ -239,7 +239,7 @@ private theorem continuous_dmin_apply (τ : X.Ψ) (i : Fin (r + 1)) :
 private theorem isOpen_data_dom : IsOpen X.dom := by
   show IsOpen {x : Frame X.Ψ r | ∀ τ : X.Ψ, (ReciprocityTheory.ChartRestriction.G.FD.mat x τ).det ≠ 0 ∧
     ∀ i : Fin (r + 1), 0 < ReciprocityTheory.ChartRestriction.G.FD.psgn X.p0 i * (ReciprocityTheory.ChartRestriction.G.FD.dmin X.Gm x τ i).re}
-  simp only [Set.setOf_forall, Set.setOf_and]
+  simp only [ofPred_forall, ofPred_and]
   refine isOpen_iInter_of_finite fun τ => ?_
   refine IsOpen.inter ?_ (isOpen_iInter_of_finite fun i => ?_)
   · refine isOpen_ne_fun (Continuous.matrix_det ?_) continuous_const

@@ -127,7 +127,7 @@ namespace GlobalTheory.Ex.ThetaDescent
 
 theorem exists_full_of_theta_in_subfield : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN.HomExtSt → ThetaPtDeterminesSt → EndDeterminedOnTorsionSt → ThetaUnifAV → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (W₀ : ValuationSubring ℂ) (Y : Model Xo c (c.V W₀).subtype), ∀ (K κ : Type) [Field K] [IsAlgClosed K] [CharZero K] [Field κ] [IsAlgClosed κ] (i : K →+* κ) (m : ℕ) (ρ z : K) (v : D.La → K) (o' : Full D κ), Odd m → Compat H (m ^ 2) z ρ → o'.ρ = i ρ → (o'.I.ζ (m ^ 2) : κ) = i z → o'.Theta m (fun x => i (v x)) → ∃ o : Full D K, o.ρ = ρ ∧ (o.I.ζ (m ^ 2) : K) = z ∧ o.Theta m v := by
   intro hv h6 hU hX hT hE hA E _ _ _ H D l Xo c W₀ Y K κ _ _ _ _ _ i m ρ z v o' hm _ hρ hz hth
-  haveI := c.fin
+  have := c.fin
   have hr : H.rt0 ∈ c.F := c.le (baseKA l).ρ.2
   have hζ : zeta l.A ∈ c.F := c.le (baseKA l).ζ.2
   obtain ⟨b, hb⟩ := exists_embedding H c.F hr ρ (i.injective (by rw [map_pow, ← hρ, o'.ρ_sq, map_neg, map_natCast]))
@@ -142,8 +142,8 @@ theorem exists_full_of_theta_in_subfield : HV → Laws6 → GlobalTheory.LN.UDvr
       exact hρ.trans (congrArg i hb.symm)) (fun r h => by
       obtain rfl : r = ⟨_, hζ⟩ := Subtype.ext h
       exact hI)
-  haveI := Xo.smooth
-  haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
+  have := Xo.smooth
+  have : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
   obtain ⟨o, h₄, h₅⟩ := exists_full hv.1.1 hv.1.2.1.secBaseChangeAny (pullback.snd _ _)
     (IntermediateField.inclusion c.le).toRingHom pullback.condition Y.oF b i y hy o' φ h₁ h₂ h₃ m hm z v hz hth
   exact ⟨o, h₄.trans hb, h₅⟩
@@ -238,12 +238,12 @@ theorem cone_closure_arc_of_integral_image_reduction :
   obtain ⟨F, _, _, φ', hF, hlift⟩ := H2 R φ hφ
   obtain ⟨ψ', hψ'⟩ := hlift K ψ hψ
   choose χ' hχ' using fun i => hlift (A i) (χ i) (hχ i)
-  letI : Algebra F K := ψ'.toAlgebra
-  letI : ∀ i, Algebra F (A i) := fun i => (χ' i).toAlgebra
+  let : Algebra F K := ψ'.toAlgebra
+  let : ∀ i, Algebra F (A i) := fun i => (χ' i).toAlgebra
   have hA' : ∀ i, Algebra.FiniteType F (A i) := fun i => by
-    haveI : IsScalarTower ℚ F (A i) :=
+    have : IsScalarTower ℚ F (A i) :=
       IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-    haveI := hA i
+    have := hA i
     exact Algebra.FiniteType.of_restrictScalars_finiteType ℚ F (A i)
   obtain ⟨i, W, _, _, _, _, f, s, w', h1, h2, h3, h4⟩ := H1 F K J ι A hA' w v hv (by
     intro G d hd h0
@@ -413,7 +413,7 @@ theorem exists_affine_theta (hG : GlobalFnsSt) (hB : SecBaseChangeAnySt) (P : Po
   refine ⟨Γ(T.left, W), inferInstance, x₀, t ≫ (overRes (T := baseOver S) V₀).hom, ex.symm,
     inferInstanceAs (IsOpenImmersion hW'.fromSpec), by rw [hx₀]; exact hpW, ?_⟩
   obtain ⟨-, hsp⟩ := hb _ t (fun i => VVRank.pullS P.A _ (homAt t) (b i)) fun i => VVRank.isPullSec_pullS _ _ _ _
-  haveI : Subsingleton (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
+  have : Subsingleton (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
   obtain ⟨th, hth⟩ := ThetaLocal.exists_generator _ hsp
   refine ThetaLocal.exists_isThetaPt P k hk α₀ hα₀ (T := baseAt t) ?_ _ th hth fun i => ?_
   · simpa using hu.map x₀.appTop.hom
@@ -470,8 +470,8 @@ theorem theta_of_chart (hB : SecBaseChangeAnySt) (o₀ : Obj D l b s₀) {m : �
     (hz : ∀ a, spMap f ≫ (z a).left = (o.I.ev (m ^ 2) a).left ≫ φ) :
     o.Theta m fun a => f ((Scheme.ΓSpecIso (CommRingCat.of R)).hom.hom (v a)) := by
   let j : Over.mk ((baseOver (Sp K)).hom ≫ y) ⟶ Over.mk x' := Over.homMk (spMap f) (hf.trans (Category.id_comp _).symm)
-  haveI : IsAffine (Over.mk ((baseOver (Sp K)).hom ≫ y)).left := inferInstanceAs (IsAffine (Sp K))
-  haveI : IsAffine (Over.mk x').left := inferInstanceAs (IsAffine (Sp R))
+  have : IsAffine (Over.mk ((baseOver (Sp K)).hom ≫ y)).left := inferInstanceAs (IsAffine (Sp K))
+  have : IsAffine (Over.mk x').left := inferInstanceAs (IsAffine (Sp R))
   have Q := GlobalTheory.ThetaBaseChange.isThetaPt_pull (objPolAV o₀) hB j hv
   have Q' := (GlobalTheory.ThetaPtUp.isThetaPt_iff (P₀ := objPolAV o₀) (P := o.P) (T := baseOver (Sp K)) h.1 h.2.1
     (x := o.I.ev (m ^ 2)) (fun a => hz a) (fun a => (o.I.onto _ (pow_pos hm.pos 2) _).2 ⟨a, rfl⟩) _).2 Q
@@ -491,7 +491,7 @@ theorem exists_charts (hL : Laws) (hL2 : Laws2) (o₀ : Obj D l b s₀) {F L : T
       ∀ (i : Ix) (K : Type) [Field K] (f : A i →+* K) (o : Full D K) (φ : o.P.A.left ⟶ o₀.t.G.left),
         IsFibre o₀.t (spMap f ≫ x i) o φ → ∃ I', (I'.ζ (m ^ 2) : K) = f (gam i ξ) ∧
           Full.Theta { o with I := I' } m fun a => f (w i (q a)) := by
-  letI := H.starRing
+  let := H.starRing
   have hN : 0 < m ^ 2 := pow_pos hm.pos 2
   obtain ⟨hfree, hfin⟩ := datum_free D
   have hunit : ∀ (T : Scheme.{0}) (g : T ⟶ Sp F) (n : ℕ), 0 < n → IsUnit (n : Γ(T, ⊤)) := fun T g n hn => by
@@ -514,7 +514,7 @@ theorem exists_charts (hL : Laws) (hL2 : Laws2) (o₀ : Obj D l b s₀) {F L : T
       (fun a => (Over.homMk (x p) (e p) : Over.mk (x' p) ⟶ W) ≫ α a) (fun a => v p (q a)) := fun p => by
     have := isThetaPt_comp (hv p) q
     simpa only [hr] using this
-  haveI : CompactSpace W.left := by
+  have : CompactSpace W.left := by
     have : QuasiCompact (W.hom ≫ s) := inferInstance
     exact QuasiCompact.compactSpace_of_compactSpace (W.hom ≫ s)
   obtain ⟨Ix, hJ₀⟩ := isCompact_univ.elim_finite_subcover (fun p : W.left => Set.range (x p))
@@ -549,7 +549,7 @@ theorem exists_charts (hL : Laws) (hL2 : Laws2) (o₀ : Obj D l b s₀) {F L : T
         rw [← hζ']; exact (hwe K y o φ h _ _ _ _).1 (o.I.isom _ hN a c)⟩
     let pt : Sp K := (⊥ : PrimeSpectrum K)
     obtain ⟨i, hi, hp⟩ := Set.mem_iUnion₂.1 (hJ₀ (Set.mem_univ (w.left pt)))
-    haveI := hx i
+    have := hx i
     have hsub : Set.range w.left ⊆ Set.range (x i) := by
       rintro _ ⟨z, rfl⟩
       rwa [Subsingleton.elim (α := PrimeSpectrum K) z pt]
@@ -669,7 +669,7 @@ theorem exists_complete_discreteValuationRing_of_mem_closure_cone :
   let W := AdicCompletion (maximalIdeal V) V
   let κ : K →+* V := (algebraMap K L).codRestrict V hKV
   let ι : V →+* W := algebraMap V W
-  letI : Algebra K W := (ι.comp κ).toAlgebra
+  let : Algebra K W := (ι.comp κ).toAlgebra
   have hι : Function.Injective ((algebraMap W (FractionRing W)).comp ι) :=
     (IsFractionRing.injective W _).comp (algebraMap_adicCompletion_injective_of_dvr V)
   let g : L →+* FractionRing W := IsFractionRing.lift hι
@@ -797,7 +797,7 @@ theorem exists_complete_discreteValuationRing_of_mem_closure_cones :
     choose G d hG hG0 hGv using hex
     have : ∀ i, Finite (minimalPrimes (K ⊗[F] A i)) := fun i =>
       (minimalPrimes.finite_of_isNoetherianRing _).to_subtype
-    letI : Fintype (Σ i, minimalPrimes (K ⊗[F] A i)) := Fintype.ofFinite _
+    let : Fintype (Σ i, minimalPrimes (K ⊗[F] A i)) := Fintype.ofFinite _
     let H : MvPolynomial J K := ∏ x : Σ i, minimalPrimes (K ⊗[F] A i), G x.1 x.2.1 x.2.2
     have hH : H.IsHomogeneous (∑ x : Σ i, minimalPrimes (K ⊗[F] A i), d x.1 x.2.1 x.2.2) :=
       MvPolynomial.IsHomogeneous.prod _ _ _ fun x _ => hG _ _ _
@@ -816,7 +816,7 @@ theorem exists_complete_discreteValuationRing_of_mem_closure_cones :
       rw [← Ideal.Quotient.eq_zero_iff_mem, ← hG0 i P hP]
       exact MvPolynomial.comp_aeval_apply _ (Ideal.Quotient.mkₐ K P) _
     choose n hn using hnil
-    letI : Fintype ι := Fintype.ofFinite ι
+    let : Fintype ι := Fintype.ofFinite ι
     refine pow_ne_zero (∑ i, n i) hHv ?_
     rw [← map_pow]
     refine eval_eq_zero_of_aeval_tmul_eq_zero A w v h _ _ (hH.pow _) fun i => ?_
@@ -842,7 +842,7 @@ theorem exists_mul_eq_natCast_of_isIntegral_int {S : Type*} [CommRing S] [IsDoma
     {y : S} (hy : IsIntegral ℤ y) (hy0 : y ≠ 0) :
     ∃ (t : S) (n : ℕ), 0 < n ∧ y * t = n := by
   obtain ⟨m, hm, t, ht⟩ :=
-    hy.isAlgebraic.exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero hy0)
+    hy.isAlgebraic.exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero hy0)
   have ht' : (m : S) = y * t := by simpa using ht
   refine ⟨(m.sign : S) * t, m.natAbs, Int.natAbs_pos.mpr hm, ?_⟩
   have h1 : ((m.natAbs : ℤ) : S) = ((m.sign * m : ℤ) : S) := by
@@ -856,14 +856,14 @@ theorem exists_field_of_isIntegral_image :
   intro R _ φ hφ
   let S := R ⧸ RingHom.ker φ
   have hinj : Function.Injective (RingHom.kerLift φ) := RingHom.kerLift_injective φ
-  haveI : IsDomain S := hinj.isDomain (RingHom.kerLift φ)
-  haveI : CharZero S := (RingHom.kerLift φ).charZero
+  have : IsDomain S := hinj.isDomain (RingHom.kerLift φ)
+  have : CharZero S := (RingHom.kerLift φ).charZero
   have hint : ∀ y : S, @IsIntegral ℤ S _ _ (Ring.toIntAlgebra S) y := by
     intro y
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective y
     rw [← isIntegral_algHom_iff (RingHom.kerLift φ).toIntAlgHom hinj]
     exact hφ r
-  haveI : CharZero (FractionRing S) :=
+  have : CharZero (FractionRing S) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective S (FractionRing S))
   refine ⟨FractionRing S, inferInstance, inferInstance,
     (algebraMap S (FractionRing S)).comp (Ideal.Quotient.mk _), ?_, ?_⟩
@@ -964,8 +964,8 @@ theorem exists_lift_of_finite {F W : Type} [Field F] [Algebra ℚ F] [FiniteDime
 theorem theta_iff (hL : Laws) {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {K : Type}
     [Field K] (o : Full D K) {m : ℕ} (hm : Odd m) {v v' : D.La → K} (hv : o.Theta m v) :
     o.Theta m v' ↔ ∃ c : Kˣ, v' = (c : K) • v := by
-  haveI := o.closed
-  haveI := o.charZero
+  have := o.closed
+  have := o.charZero
   obtain ⟨-, h2, h3, -⟩ := GlobalTheory.T.thetaCoordinates_exist_unique_separate_points hL K (Sp K) o.P (𝟙 _) m hm (Nat.cast_ne_zero.2 hm.pos.ne') D.La
     (o.I.ev (m ^ 2)) (fun a => (o.I.onto _ (pow_pos hm.pos 2) _).2 ⟨a, rfl⟩)
   exact (h3 v').trans (h2 1 v v' ((h3 v).1 hv))
@@ -978,13 +978,13 @@ theorem finiteType_of_qproj {R : Type} [CommRing R] {X : Scheme.{0}} {f : X ⟶ 
 
 theorem exists_trait : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.LN.HomExtSt → ThetaPtDeterminesSt → EndDeterminedOnTorsionSt → ThetaUnifAV → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (W₀ : ValuationSubring ℂ) (Y : Model Xo c (c.V W₀).subtype), ∀ (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (m : ℕ) (ρ z : K) (v : D.La → K), Odd m → Compat H (m ^ 2) z ρ → v ≠ 0 → (∀ G, VanishC D m G → MvPolynomial.eval₂ (cf z ρ) v G = 0) → ∃ (C : Type) (_ : NontriviallyNormedField C) (_ : IsUltrametricDist C) (_ : CompleteSpace C) (_ : IsAlgClosed C) (_ : CharZero C) (S : ValuationSubring C) (κ : Type) (_ : Field κ) (_ : IsAlgClosed κ) (res : S →+* κ) (i : K →+* κ) (o : Full D C) (_ : Mdl o) (v' : D.La → S) (r' z' : S), (∀ n : ℕ, 0 < n → ‖(n : C)‖ = 1) ∧ (∀ x, x ∈ S ↔ ‖x‖ ≤ 1) ∧ (∀ x : S, ‖(x : C)‖ < 1 → res x = 0) ∧ o.Theta m (fun x => v' x) ∧ (∀ x, res (v' x) = i (v x)) ∧ (r' : C) = o.ρ ∧ res r' = i ρ ∧ (z' : C) = o.I.ζ (m ^ 2) ∧ res z' = i z := by
   intro hV h6 hU hX hT hE hA E _ _ _ H D l Xo c W₀ Y K _ _ _ m ρ z v hm hc hv hvan
-  letI := H.starRing
+  let := H.starRing
   have hL : Laws := hV.1.1
   have hN : 0 < m ^ 2 := pow_pos hm.pos 2
-  haveI := c.fin
+  have := c.fin
   have hζ : IsPrimitiveRoot (zeta (m ^ 2)) (m ^ 2) := Complex.isPrimitiveRoot_exp _ hN.ne'
   let L : IntermediateField c.F ℂ := IntermediateField.adjoin c.F {zeta (m ^ 2)}
-  haveI : FiniteDimensional c.F L := IntermediateField.adjoin.finiteDimensional (hζ.isIntegral hN).tower_top
+  have : FiniteDimensional c.F L := IntermediateField.adjoin.finiteDimensional (hζ.isIntegral hN).tower_top
   let ξ₀ : L := ⟨zeta (m ^ 2), IntermediateField.mem_adjoin_simple_self _ _⟩
   have hξ₀ : IsPrimitiveRoot ξ₀ (m ^ 2) := IsPrimitiveRoot.of_map_of_injective (f := L.val.toRingHom) hζ
     Subtype.val_injective
@@ -1020,8 +1020,8 @@ theorem exists_trait : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
     have := key (MvPolynomial.X (r (q a)) - MvPolynomial.X a) 1
       ((MvPolynomial.isHomogeneous_X _ _).sub (MvPolynomial.isHomogeneous_X _ _)) fun i => by simp [hr]
     simpa [sub_eq_zero] using this
-  letI : ∀ i, Algebra ℚ (A i) := fun i => (((gam i).comp (algebraMap c.F L)).comp (algebraMap ℚ c.F)).toAlgebra
-  haveI := Fintype.ofFinite J
+  let : ∀ i, Algebra ℚ (A i) := fun i => (((gam i).comp (algebraMap c.F L)).comp (algebraMap ℚ c.F)).toAlgebra
+  have := Fintype.ofFinite J
   obtain ⟨i, W, _, _, _, _, f, s, w', hW, hs0, hf, hw⟩ := _root_.GlobalTheory.cone_closure_arc_of_integral_image_reduction _root_.GlobalTheory.exists_complete_discreteValuationRing_of_mem_closure_cones _root_.GlobalTheory.exists_field_of_isIntegral_image _
     (cf (zeta (m ^ 2)) H.rt0) (fun p => by
       have h1 : IsIntegral ℤ H.rt0 := IsIntegral.of_pow two_pos (by
@@ -1046,13 +1046,13 @@ theorem exists_trait : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
         rw [MvPolynomial.eval₂_rename]
         simpa only [Function.comp_def, hr] using h0 i
       rwa [MvPolynomial.eval₂_rename] at this)
-  haveI : CharZero W := charZero_of_injective_algebraMap (algebraMap K W).injective
+  have : CharZero W := charZero_of_injective_algebraMap (algebraMap K W).injective
   have hcdv : CDV W := ⟨inferInstance, hW, inferInstance⟩
   obtain ⟨C, _, _, _, _, _, g, hg, hext⟩ := GlobalTheory.Ex.exists_complete_isAlgClosed_cExt W (FractionRing W)
   have hg' : ∀ t, g t = algebraMap (FractionRing W) C t := hg
-  haveI : CharZero C := charZero_of_injective_algebraMap (algebraMap (FractionRing W) C).injective
+  have : CharZero C := charZero_of_injective_algebraMap (algebraMap (FractionRing W) C).injective
   obtain ⟨S, κ, _, _, res, j, hS, hres, hj⟩ := exists_residue hext
-  letI : Algebra ℚ W := ((algebraMap K W).comp (algebraMap ℚ K)).toAlgebra
+  let : Algebra ℚ W := ((algebraMap K W).comp (algebraMap ℚ K)).toAlgebra
   obtain ⟨b, hb⟩ := exists_lift_of_finite (f.comp ((gam i).comp (algebraMap c.F L)))
   let bF : c.F →+* C := (g.comp f).comp ((gam i).comp (algebraMap c.F L))
   obtain ⟨o₁, ho₁⟩ := (GlobalTheory.T.fullTorsionObject_existsUnique_moduliPoint hV h6 hU hX hT hE hA E H D l Xo c W₀ Y C bF).2.1 (spMap g ≫ spMap f ≫ x i)

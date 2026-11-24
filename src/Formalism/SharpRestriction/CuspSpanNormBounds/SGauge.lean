@@ -248,7 +248,7 @@ theorem continuous_expG (ε : Fin n → Bool) : Continuous (expG ε) := by
       fun x : gLie ε => NormedSpace.exp (unrealify (x : EuclideanSpace ℝ (Fin n × Fin n × Bool))) := by
     funext x; exact uMat_expG ε x
   rw [this]
-  exact continuous_expM.comp (continuous_unrealify.comp continuous_subtype_val)
+  exact continuous_expM.comp (continuous_unrealify.comp continuous_subtypeVal)
 
 abbrev MP (n : ℕ) := Fin n → Fin n → ℂ
 

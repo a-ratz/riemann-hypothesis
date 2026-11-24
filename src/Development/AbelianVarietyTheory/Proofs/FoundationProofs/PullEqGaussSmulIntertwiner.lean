@@ -111,7 +111,7 @@ theorem integral_gaussian_unitary_pos : ∀ (V : Type) [NormedAddCommGroup V] [N
   let T : V ≃L[ℂ] (Fin n → ℂ) := e.equivFun.toContinuousLinearEquiv
   let Tm : V ≃ᵐ (Fin n → ℂ) := T.toHomeomorph.toMeasurableEquiv
   have hT : ∀ z i, Tm z i = e.repr z i := fun z i => rfl
-  haveI : (μ.map Tm).IsAddHaarMeasure := T.isAddHaarMeasure_map μ
+  have : (μ.map Tm).IsAddHaarMeasure := T.isAddHaarMeasure_map μ
   have hν := Measure.isAddLeftInvariant_eq_smul (μ.map Tm) (volume : Measure (Fin n → ℂ))
   have hpos := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure (μ.map Tm) (volume : Measure (Fin n → ℂ))
   set c := Measure.addHaarScalarFactor (μ.map Tm) (volume : Measure (Fin n → ℂ)) with hc
@@ -161,9 +161,9 @@ namespace GlobalTheory.UnitaryTheta.Graph
 
 theorem integral_kerSum_graph_eq : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℂ V] [FiniteDimensional ℂ V] [MeasurableSpace V] [BorelSpace V] (μ : Measure V) [μ.IsAddHaarMeasure] (H : Sesq V), IsPosHerm H → ∀ a : V ≃ₗ[ℂ] V, (∀ z w, H (a z) (a w) = H z w) → LinearMap.det (1 - (a : V →ₗ[ℂ] V)) ≠ 0 → ∀ (B : V →ₗ[ℂ] V), (∀ x, B x - a (B x) = x) → ∀ (Λ Λ' : AddSubgroup V) [DiscreteTopology Λ], Λ' ≤ Λ → (∀ y ∈ Λ', a y ∈ Λ) → ∀ α : V → ℂ, IsSemichar H Λ α → (∀ y ∈ Λ', α (a y) = α y) → ∀ Fd : Set V, IsAddFundamentalDomain Λ' Fd μ → ∀ (M : Type) [Fintype M] (s : M → V), (∀ m, s m ∈ Λ) → (∀ x ∈ Λ, ∃! p : M × Λ', x = s p.1 - ((p.2 : V) - a p.2)) → ∃ κ : ℝ, 0 < κ ∧ ∫ z in Fd, kerSum H Λ α z (a z) * cexp (-(π : ℂ) * H z z) ∂μ = κ / LinearMap.det (1 - (a : V →ₗ[ℂ] V)) * ∑ m, α (s m) * cexp (-((π : ℂ) * I) * ((H (B (s m)) (s m)).im : ℂ)) := by
   intro V _ _ _ _ _ μ _ H hH a ha hdet B hB1 Λ Λ' _ hle haΛ α hα hαa Fd hFd M _ s hs huniq
-  haveI : ProperSpace V := FiniteDimensional.proper ℂ V
-  haveI : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : Countable Λ' := (AddSubgroup.inclusion_injective hle).countable
+  have : ProperSpace V := FiniteDimensional.proper ℂ V
+  have : Countable Λ := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable Λ' := (AddSubgroup.inclusion_injective hle).countable
   obtain ⟨κ, hκ, hg⟩ := integral_gaussian_unitary_pos V μ H hH a ha hdet
   refine ⟨κ, hκ, ?_⟩
   have hint : ∀ x, Integrable (term H a α x) μ := fun x => by
@@ -243,7 +243,7 @@ theorem mean_transport {A A₁ : AddSubgroup W} (hA : DiscreteTopology A)
     ext x
     change _ ↔ e x ∈ ZSpan.fundamentalDomain (b.map e)
     simp [ZSpan.mem_fundamentalDomain]
-  haveI : (μ.map em).IsAddHaarMeasure := ec.isAddHaarMeasure_map μ
+  have : (μ.map em).IsAddHaarMeasure := ec.isAddHaarMeasure_map μ
   have hs := Measure.isAddLeftInvariant_eq_smul (μ.map em) μ
   have hc0 : Measure.addHaarScalarFactor (μ.map em) μ ≠ 0 :=
     (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne'
@@ -413,10 +413,10 @@ theorem const_eq (μ : Measure V) [μ.IsAddHaarMeasure] (H : Sesq V) (hH : IsPos
   have hfin : μ (ZSpan.fundamentalDomain b) ≠ ⊤ := (ZSpan.fundamentalDomain_isBounded b).measure_lt_top.ne
   have hpos : 0 < μ.real (ZSpan.fundamentalDomain b) :=
     ENNReal.toReal_pos (ZSpan.measure_fundamentalDomain_ne_zero b) hfin
-  haveI : Finite (A ⧸ (subLa m A).addSubgroupOf A) :=
+  have : Finite (A ⧸ (subLa m A).addSubgroupOf A) :=
     GlobalTheory.ThetaInter.finite_quot hfg fun x hx => ⟨m, hm, x, hx, rfl⟩
-  letI := Fintype.ofFinite (A ⧸ (subLa m A).addSubgroupOf A)
-  letI := Fintype.ofFinite (A₁ ⧸ A.addSubgroupOf A₁)
+  let := Fintype.ofFinite (A ⧸ (subLa m A).addSubgroupOf A)
+  let := Fintype.ofFinite (A₁ ⧸ A.addSubgroupOf A₁)
   obtain ⟨κ, hκ, hL⟩ := Graph.integral_kerSum_graph_eq V μ H hH a ha hdet B hB2 A Λ hle (fun y hy => (hΛ' y hy).2) α hα
     (fun y _ => hαa y) _ hFd (A ⧸ (subLa m A).addSubgroupOf A) (fun q => ((q.out : A) : V)) (fun q => (q.out : A).2) (by
       intro x hx
@@ -456,10 +456,10 @@ theorem const_eq (μ : Measure V) [μ.IsAddHaarMeasure] (H : Sesq V) (hH : IsPos
     congr 1
     rw [Finset.sum_eq_single 0]
     · have h0 := (GlobalTheory.ThetaInter.out_mem_iff (A₁ := A) (A₂ := A₁) 0).2 rfl
-      rw [integral_const_mul, (hR 0).2, if_pos h0, hαn, ← mul_assoc]
+      rw [integral_const_mul, (hR 0).2, ite_eq_left h0, hαn, ← mul_assoc]
       rcases hα.1 _ h0 with h | h <;> simp [h]
     · intro q _ hq
-      rw [integral_const_mul, (hR q).2, if_neg (fun h => hq ((GlobalTheory.ThetaInter.out_mem_iff q).1 h)), mul_zero]
+      rw [integral_const_mul, (hR q).2, ite_eq_right (fun h => hq ((GlobalTheory.ThetaInter.out_mem_iff q).1 h)), mul_zero]
     · simp
   refine ⟨κ / (n * μ.real (ZSpan.fundamentalDomain b)), by positivity, ?_⟩
   rw [finsum_eq_sum_of_fintype]
@@ -504,7 +504,7 @@ theorem pull_eq_gauss_smul_intertwiner : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K
   have hsm : ∀ (B B' : AddSubgroup (VC D N N')) [Finite (B' ⧸ B.addSubgroupOf B')] (t : ℂ) (G : VC D N N' → ℂ),
       Iop D (tor0 D cc δ) B B' (t • G) = t • Iop D (tor0 D cc δ) B B' G := by
     intro B B' _ t G
-    letI := Fintype.ofFinite (B' ⧸ B.addSubgroupOf B')
+    let := Fintype.ofFinite (B' ⧸ B.addSubgroupOf B')
     funext z
     simp only [Iop, U, finsum_eq_sum_of_fintype, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
     exact Finset.sum_congr rfl fun q _ => by ring

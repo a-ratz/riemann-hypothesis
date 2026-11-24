@@ -195,7 +195,7 @@ theorem isUnit_detSpan (Λ : Lat E n) : IsUnit (detSpan Λ.L) := by
   obtain ⟨J, -, h0, -, hJ, -⟩ := GlobalTheory.TensorLat.exists_coe_eq_span_det (le_refl Λ.L) Λ.fg Λ.span_top
   rw [detSpan, detSet_eq, ← hJ]
   refine IsUnit.of_mul_eq_one ((J⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) ?_
-  rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ h0, FractionalIdeal.coe_one]
+  rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ h0, FractionalIdeal.coeToSubmodule_one]
 
 end Index
 
@@ -822,7 +822,7 @@ theorem congAt_of_cols {E : Type} [Field E] [NumberField E] {n : ℕ} (gm : Matr
 
 theorem plc_prime {K : Type} [Field K] [NumberField K] (lam : HeightOneSpectrum (𝓞 K)) : (Formalism.EigenvalueLevelCeiling.plc lam).Prime := by
   unfold Formalism.EigenvalueLevelCeiling.plc
-  haveI : lam.asIdeal.IsPrime := lam.isPrime
+  have : lam.asIdeal.IsPrime := lam.isPrime
   have hne : Ideal.absNorm lam.asIdeal ≠ 0 := fun h => lam.ne_bot (Ideal.absNorm_eq_zero_iff.1 h)
   have hz : ((Ideal.absNorm lam.asIdeal : ℕ) : 𝓞 K ⧸ lam.asIdeal) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk lam.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
@@ -1191,7 +1191,7 @@ theorem rowInv_map [Infinite k] {K : Type} [Field K] (φ : k →+* K) {P : MvPol
   intro σ i i' hi t
   have := GlobalTheory.RowTriangular.eval₂_shift ((C : K →+* MvPolynomial (Letter T r n) K).comp φ) hP σ i i' hi (C t) X
     (fun ℓ => rowShift r n K σ i i' t (X ℓ)) (fun b => by simp [rowShift]) (fun ℓ hℓ => by
-      rw [rowShift, aeval_X, if_neg hℓ])
+      rw [rowShift, aeval_X, ite_eq_right hℓ])
   have e : ∀ Q : MvPolynomial (Letter T r n) k, rowShift r n K σ i i' t (map φ Q) =
       eval₂Hom ((C : K →+* MvPolynomial (Letter T r n) K).comp φ) (fun ℓ => rowShift r n K σ i i' t (X ℓ)) Q := by
     intro Q
@@ -1307,9 +1307,9 @@ theorem exists_nat_smul_mem_nabAtr {E K : Type} [Field E] [NumberField E] [Field
       (not_isBasisAt_dualFr_tauLat emb τ hspan' w (B τ) (hB τ)).elim
     exact (GlobalTheory.TransLoc.mem_transLat lam _ (fun τ => dualFr (tauLat emb τ L)) _).1 hx w B hB₀
   have hp : (ringChar (𝓞 K ⧸ w₀.asIdeal)).Prime := by
-    haveI := w₀.isMaximal
-    haveI : Finite (𝓞 K ⧸ w₀.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w₀.ne_bot
-    letI := Ideal.Quotient.field w₀.asIdeal
+    have := w₀.isMaximal
+    have : Finite (𝓞 K ⧸ w₀.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w₀.ne_bot
+    let := Ideal.Quotient.field w₀.asIdeal
     exact CharP.prime_ringChar _
   set p := ringChar (𝓞 K ⧸ w₀.asIdeal) with hpdef
   have hpw : ((p : ℕ) : 𝓞 K) ∈ w₀.asIdeal := by
@@ -1351,8 +1351,8 @@ theorem exists_nat_smul_mem_nabAtr {E K : Type} [Field E] [NumberField E] [Field
       refine (ringChar.spec (𝓞 K ⧸ w₀.asIdeal) _).1 ?_
       rw [← map_natCast (Ideal.Quotient.mk w₀.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
       exact hmem
-    haveI : Fact p.Prime := ⟨hp⟩
-    haveI : Finite (𝓞 K ⧸ J) := Ideal.finiteQuotientOfFreeOfNeBot J hJ0
+    have : Fact p.Prime := ⟨hp⟩
+    have : Finite (𝓞 K ⧸ J) := Ideal.finiteQuotientOfFreeOfNeBot J hJ0
     obtain ⟨z, hz⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 K ⧸ J) p
       (by rwa [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply])
     have h1mem : (1 : 𝓞 K) ∈ J ⊔ Ideal.span {((p : ℕ) : 𝓞 K)} := hJp ▸ Submodule.mem_top
@@ -1493,9 +1493,9 @@ theorem harm_mem_coefLat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
   have hsub := hIo.2.2.2.2.2.2.2
 
   have hp : (Formalism.EigenvalueLevelCeiling.plc lam).Prime := by
-    haveI := lam.isMaximal
-    haveI : Finite (𝓞 D.what₂.LL ⧸ lam.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ lam.ne_bot
-    letI := Ideal.Quotient.field lam.asIdeal
+    have := lam.isMaximal
+    have : Finite (𝓞 D.what₂.LL ⧸ lam.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ lam.ne_bot
+    let := Ideal.Quotient.field lam.asIdeal
     exact CharP.prime_ringChar _
   have hplam : ((Formalism.EigenvalueLevelCeiling.plc lam : ℕ) : 𝓞 D.what₂.LL) ∈ lam.asIdeal := by
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
@@ -1742,7 +1742,7 @@ theorem localization_le_of_le_localization' {Rr W : Type} [CommRing Rr] [AddComm
 theorem natCast_not_mem {K : Type} [Field K] [NumberField K] (lam : HeightOneSpectrum (𝓞 K)) {p : ℕ} (hp : p.Prime)
     (hne : Formalism.EigenvalueLevelCeiling.plc lam ≠ p) : ((p : 𝓞 K)) ∉ lam.asIdeal := by
   intro hm
-  haveI : lam.asIdeal.IsPrime := lam.isPrime
+  have : lam.asIdeal.IsPrime := lam.isPrime
   have h0 : ((p : ℕ) : 𝓞 K ⧸ lam.asIdeal) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk lam.asIdeal), Ideal.Quotient.eq_zero_iff_mem]
     exact hm
@@ -1839,7 +1839,7 @@ theorem compareOffOwn_run : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
     have hmem : e ∈ thetaBase R i U ψ 1 v (ownAt D v) := by
       refine Submodule.subset_span ⟨ω, φ, hKer.isKernel, h * k, mul_mem hSplit.1 hk,
         ((ownAt D v : ℂ)) ^ m • ((s' : ℂ) • (O i).c0' y), hLatk h hSplit.1 _ hyLat, fun w => ?_⟩
-      rw [he, adForm_smul, MultilinearMap.smul_apply, hSer φ' hVec w, hφ', singleSeries_transl R i hKer hk,
+      rw [he, adForm_smul, smul_apply, hSer φ' hVec w, hφ', singleSeries_transl R i hKer hk,
         singleSeries_smul, singleSeries_smul, map_smul, map_smul, map_smul, one_smul, smul_smul, smul_smul, smul_smul]
       congr 1
       simp only [map_mul, map_inv₀, map_pow, map_natCast]
@@ -1933,7 +1933,7 @@ theorem compareOffOwn_atRuns_alt : (_root_.GlobalTheory.BigOn.ForallTwoRuns fun 
     intro y
     obtain ⟨z, hz⟩ := (Formalism.L2.Pj.FO_le _ (hcore.delAt_mem (Formalism.EigenvalueLevelCeiling.plc v) y))
     exact ⟨z, hz⟩
-  letI : Algebra (r.used v).full.J.Q.c.F (Fm.D x i).what₂.LL := p.alg
+  let : Algebra (r.used v).full.J.Q.c.F (Fm.D x i).what₂.LL := p.alg
   exact GlobalTheory.T.traceLattice_le_span_thetaSeries_awayFromOwnPrime _ _ _ _ _ (r.used v).full (R2 p) (F2 p) p.κ p.v₀ (fw2 p) (om2 p) (h.laws v) hC j (hpins j) (p.betaStd.1 j) hLU hio
     (hone j) (hph j) hspan v hv hch.tup.mu_on p.qGuard (hcore.fieldAt v) hrec.small.val hdel h.half (h.run v hv j) (r.lev j)
     (h.level v j) (h.action v j) (F2 p).P0

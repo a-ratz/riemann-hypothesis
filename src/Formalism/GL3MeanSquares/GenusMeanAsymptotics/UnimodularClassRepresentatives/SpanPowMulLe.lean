@@ -175,7 +175,7 @@ theorem exists_unif0 {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
     RingOfIntegers.not_isField F (Ring.isField_iff_maximal_bot.mpr (h0 ▸ h𝔭))
   obtain ⟨π₀, hπ1, hπ2⟩ : ∃ x ∈ 𝔭 ^ 1, x ∉ 𝔭 ^ (1 + 1) := by
     have hlt : 𝔭 ^ (1 + 1) < 𝔭 ^ 1 := Ideal.pow_succ_lt_pow hne 1
-    obtain ⟨x, hx1, hx2⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨x, hx1, hx2⟩ := IsConcreteLE.exists_of_lt hlt
     exact ⟨x, hx1, hx2⟩
   rw [pow_one] at hπ1
   have hπ2' : π₀ ∉ 𝔭 ^ 2 := hπ2
@@ -188,7 +188,7 @@ theorem exists_unif0 {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) :
       rw [hJ, pow_two]
       exact Ideal.mul_mono_right hle
     exact h3 (Ideal.subset_span rfl)
-  obtain ⟨s₀, hsJ, hs𝔭⟩ := SetLike.not_le_iff_exists.mp hJ𝔭
+  obtain ⟨s₀, hsJ, hs𝔭⟩ := IsConcreteLE.not_le_iff_exists.mp hJ𝔭
   refine ⟨π₀, hπ1, hπ2', s₀, hs𝔭, ?_⟩
   rw [hJ, mul_comm 𝔭 J]
   exact Ideal.mul_mono_left ((Ideal.span_singleton_le_iff_mem _).mpr hsJ)

@@ -118,7 +118,7 @@ theorem abelianScheme_constLift : ∀ (R R₀ : Type) [CommRing R] [CommRing R�
   have hBA := isGrpPullback_pullback ((Over.pullback (spMap s)).obj A₀) (spMap π)
   have hB0 := (hBA.comp hAs).congr hid rfl
   obtain ⟨e, he, -⟩ := grpPullback_iso hB0 (GlobalTheory.CrysConn.isGrpPullback_refl A₀)
-  haveI : IsMonHom e.symm.hom := inferInstanceAs (IsMonHom e.inv)
+  have : IsMonHom e.symm.hom := inferInstanceAs (IsMonHom e.inv)
   have h0B := isGrpPullback_of_iso e.symm
   refine ⟨(Over.pullback (spMap s)).obj A₀, inferInstance, _, (h0B.comp hBA).congr (Category.id_comp _) rfl,
     isAbelianScheme_pullback_obj (spMap s) A₀ hA, ?_⟩
@@ -553,7 +553,7 @@ theorem smul_mem_rhoPart (δ : k) (x : HdR o₀.A) :
 
 theorem lieZ_le_fil (hs : t = spMap β) : lieZ o₀ β ≤ Fil o₀.A := by
   have hF : ∀ (x : D.O) (v : HdR o₀.A), v ∈ Fil o₀.A → crysAct o₀ x v ∈ Fil o₀.A := fun x v hv => by
-    haveI := o₀.act.hom x
+    have := o₀.act.hom x
     rw [crysAct_apply]
     exact push_mem_Fil _ hv
   refine Submodule.span_le.2 ?_
@@ -622,7 +622,7 @@ theorem glueFil_lie : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Dat
       crd o₀.A π ((haveI := o₀.act.hom x; push (divided₂ (GlobalTheory.FODef.sqZero k (Fin d → k)))
         (spMap (TrivSqZeroExt.fstHom k k (Fin d → k)).toRingHom) (o₀.act.act x)) u) =
         crysAct o₀ x (crd o₀.A π u) := fun x π u => by
-    haveI := o₀.act.hom x
+    have := o₀.act.hom x
     exact crd_push o₀.A π _ u
   have hZ := lieZ_le_fil o₀ β hs
   have hfZ : ∀ j, ∀ x ∈ lieZ o₀ β, f j x ∈ Fil o₀.A := fun j => (hf j).2.1
@@ -700,7 +700,7 @@ theorem exists_sqZero_lift_of_fil : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheo
   subst ht
   intro o₀ E hEc hEf hEs hEi hEl
   obtain ⟨A, _, i, h, act, hA, hE, hact⟩ := _root_.GlobalTheory.HTDeform.exists_lift_oAct p D R b N C C₀ π hπ hsq tR o₀ E hEc hEf hEs
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   subst hE
   obtain ⟨P, φ₂, hP, r1, r2, hsym, hamp, hker, hros, hsq2, hpol⟩ :=
     _root_.GlobalTheory.UPel.HT.PolLift.exists_pol_lift p D R b N C C₀ π hπ hsq tR o₀ A i h hA act hact hEi
@@ -765,7 +765,7 @@ open GlobalTheory.UPel.Sm GlobalTheory.Cris GlobalTheory.DeRham
 
 theorem GlobalTheory.UPel.HT.exists_sqZero_lift_realising_ks : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : GlobalTheory.UPel.HT.Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (k : Type) [Field k] [IsAlgClosed k] (t : Sp k ⟶ Sp R) (o₀ : GlobalTheory.UPel.HT.Obj b N t) (β : R →+* k), t = spMap β → ∀ φ : LinearMap.BilinForm k (HdR o₀.A), GlobalTheory.AbDual.IsCorrForm (dp0 k) (𝟙 _) o₀.A o₀.A o₀.P φ → ∀ (d : ℕ) (f : Fin d → (HdR o₀.A →ₗ[k] HdR o₀.A)), (∀ j, IsKS (GlobalTheory.HTCount.crysAct o₀) φ (Fil o₀.A) (GlobalTheory.HTCount.lieZ o₀ β) (f j)) → ∃ (o : GlobalTheory.UPel.HT.Obj b N (spMap (algebraMap k (TrivSqZeroExt k (Fin d → k))) ≫ t)) (m : GlobalTheory.UPel.HT.ObjMap o₀ o (spMap (TrivSqZeroExt.fstHom k k (Fin d → k)).toRingHom)), ∀ x ∈ Fil o₀.A, GlobalTheory.FODef.IsFilLiftV m.cart x (LinearMap.pi fun j => f j x) := by
   intro p _ D R _ b N hN hNp k _ _ t o₀ β ht φ hφ d f hf
-  haveI := GlobalTheory.HTGlue.isArtinianRing_tsze k d
+  have := GlobalTheory.HTGlue.isArtinianRing_tsze k d
   have hsurj : Function.Surjective (TrivSqZeroExt.fstHom k k (Fin d → k)).toRingHom :=
     fun a => ⟨TrivSqZeroExt.inl a, by simp⟩
   have htR : spMap (algebraMap k (TrivSqZeroExt k (Fin d → k))) ≫ t =

@@ -129,7 +129,7 @@ theorem _root_.GlobalTheory.FlagBase.poisson_gaussV (E : Type) [Field E] [Number
           ∑' y : _root_.GlobalTheory.FlagBase.dualAt E j L, _root_.GlobalTheory.FlagBase.gaussV E j y ∧
       ∫ x, _root_.GlobalTheory.FlagBase.gaussV E j x = 1 := by
   classical
-  haveI := hL
+  have := hL
   let e := _root_.GlobalTheory.FlagBase.PoissonV.coords (InfinitePlace E) (Fin j)
   let L' := ZLattice.comap ℝ L
     (e : EuclideanSpace ℂ (InfinitePlace E × Fin j) →ₗ[ℝ] _root_.GlobalTheory.FlagBase.VecInf E j)
@@ -214,7 +214,7 @@ theorem _root_.GlobalTheory.FlagBase.poisson_gaussV (E : Type) [Field E] [Number
           ∑' y : _root_.GlobalTheory.FlagBase.dualAt E j L, f (dL y) :=
           tsum_congr fun y => by rw [hψ]; rfl
       _ = ∑' z : _root_.GlobalTheory.dualLattice L', f z := dL.tsum_eq (fun z : _root_.GlobalTheory.dualLattice L' => f z)
-  haveI : (volume : Measure (_root_.GlobalTheory.FlagBase.VecInf E j)).IsAddHaarMeasure := by
+  have : (volume : Measure (_root_.GlobalTheory.FlagBase.VecInf E j)).IsAddHaarMeasure := by
     rw [← (_root_.GlobalTheory.FlagBase.PoissonV.measurePreserving_coords (InfinitePlace E) (Fin j)).map_eq]
     exact e.isAddHaarMeasure_map volume
   have hcov : _root_.GlobalTheory.FlagBase.covAt E j L = ZLattice.covolume L' volume := by

@@ -329,7 +329,7 @@ theorem hess_sum {ι E : Type} [Fintype ι] [NormedAddCommGroup E] [NormedSpace 
   have h4 : HasFDerivAt (fun x => c • ∑ i, fderiv ℝ (f i) x) (c • ∑ i, fderiv ℝ (fderiv ℝ (f i)) t) t :=
     (HasFDerivAt.fun_sum fun i _ => (h2 i).hasFDerivAt).const_smul c
   rw [h4.fderiv]
-  simp [ContinuousLinearMap.sum_apply]
+  simp [sum_apply]
 
 theorem det_pos_of_posDef {m : Type} [Fintype m] [DecidableEq m] {A : Matrix m m ℂ} (h : A.PosDef) :
     0 < A.det.re ∧ A.det = (A.det.re : ℂ) := by
@@ -343,11 +343,11 @@ theorem ballMat_single (q : Ψ × Fin j × Fin j' ≃ Fin n) [DecidableEq Ψ] (x
   have e : q (τ, a, b) = x ↔ (τ, a, b) = q.symm x := by
     rw [Equiv.eq_symm_apply]
   by_cases h : (q.symm x).1 = τ
-  · simp only [h, if_true, ballMat, Matrix.of_apply, Pi.single_apply, e]
+  · simp only [h, ite_true, ballMat, Matrix.of_apply, Pi.single_apply, e]
     simp only [Matrix.single_apply, Prod.ext_iff, h, true_and]
     by_cases h1 : a = (q.symm x).2.1 <;> by_cases h2 : b = (q.symm x).2.2 <;> simp [h1, h2, eq_comm]
-  · simp only [h, if_false, ballMat, Matrix.of_apply, Pi.single_apply, e, Matrix.zero_apply]
-    rw [if_neg]
+  · simp only [h, ite_false, ballMat, Matrix.of_apply, Pi.single_apply, e, Matrix.zero_apply]
+    rw [ite_eq_right]
     intro h'
     exact h (by rw [← h'])
 
@@ -397,12 +397,12 @@ theorem cxHessian_ball [DecidableEq Ψ] (q : Ψ × Fin j × Fin j' ≃ Fin n) (t
       ((1 - ballMat q t (q.symm x).1 * (ballMat q t (q.symm x).1)ᴴ)⁻¹ : Matrix (Fin j) (Fin j) ℂ) (q.symm y).2.1 (q.symm x).2.1 *
        ((1 - (ballMat q t (q.symm x).1)ᴴ * ballMat q t (q.symm x).1)⁻¹ : Matrix (Fin j') (Fin j') ℂ) (q.symm x).2.2 (q.symm y).2.2 else 0 := by
     rw [Finset.sum_eq_single (q.symm x).1]
-    · rw [ballMat_single q x, if_pos rfl, ballMat_single q y]
+    · rw [ballMat_single q x, ite_eq_left rfl, ballMat_single q y]
       by_cases h : (q.symm x).1 = (q.symm y).1
-      · rw [if_pos h.symm, if_pos h, trace_single, mul_comm]
-      · rw [if_neg (Ne.symm h), if_neg h]; simp
+      · rw [ite_eq_left h.symm, ite_eq_left h, trace_single, mul_comm]
+      · rw [ite_eq_right (Ne.symm h), ite_eq_right h]; simp
     · intro τ _ hτ
-      rw [ballMat_single q x, if_neg (Ne.symm hτ)]; simp
+      rw [ballMat_single q x, ite_eq_right (Ne.symm hτ)]; simp
     · simp
   rw [← e2, ← Finset.sum_congr rfl fun τ _ => key τ]
   exact comb_sum _ _ _ _

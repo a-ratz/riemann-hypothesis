@@ -100,8 +100,8 @@ private theorem dimLem {k W T H A : Type} [Field k] [AddCommGroup W] [Module k W
     (q : T →ₗ[k] H) (hq : Function.Surjective q) (f : W →ₗ[k] T) (hf : ∀ X, q (f X) = 0)
     (h0 : LinearMap.ker f ≤ H0) :
     Module.finrank k H + Module.finrank k t ≤ Module.finrank k A + Module.finrank k H0 := by
-  haveI hK : Module.Finite k (LinearMap.ker e) := Module.Finite.of_injective j hj
-  haveI hT : Module.Finite k T := by
+  have hK : Module.Finite k (LinearMap.ker e) := Module.Finite.of_injective j hj
+  have hT : Module.Finite k T := by
     rw [← Module.rank_lt_aleph0_iff, ← LinearMap.rank_range_add_rank_ker e]
     exact Cardinal.add_lt_aleph0 (Module.rank_lt_aleph0 k _) (Module.rank_lt_aleph0 k _)
   have r1 := LinearMap.finrank_range_add_finrank_ker e
@@ -211,7 +211,7 @@ theorem UpperTheory.V.Ws.X1.coneTan :
     intro z z' h
     have := congrArg Subtype.val h
     exact Subtype.ext (Subtype.ext this)
-  haveI : Module.Finite k (TanC loc ρ b n g0 t) := hfin
+  have : Module.Finite k (TanC loc ρ b n g0 t) := hfin
   exact dimLem t (Fr.coneH0 ρ b) e j hj q hq f hf h0
 end -- clump:auto
 end -- clump:auto
@@ -804,7 +804,7 @@ private theorem lc_mat {Γ k : Type} [TopologicalSpace Γ] {f : Γ → M4 k} (h 
 theorem UpperTheory.V.Ws.X1.tanInj :
     ∀ {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [TotallyDisconnectedSpace Γ] (Φ : Fr O Γ) (l : ℕ) [Fact l.Prime] {Λ : Type} [CommRing Λ] [IsDomain Λ] [IsDiscreteValuationRing Λ] [IsAdicComplete (maximalIdeal Λ) Λ] [Finite (ResidueField Λ)] (a : O →+* Λ), Φ.Std l a → (∀ v, Φ.Mu v = ∅) → ∀ {Γb : Type} [Group Γb] [TopologicalSpace Γb] [IsTopologicalGroup Γb] [T2Space Γb] (π : Γ →* Γb), Φ.Quo π → ∀ c : PD Φ.ι Γ (ResidueField Λ), Φ.IsRes ((residue Λ).comp a) c → ∀ (R : Type) [CommRing R] [Algebra Λ R] [IsCO Λ R] (P : PD Φ.ι Γ R), Φ.IsDef a c P → ∀ (rb : Γb →* M4 (ResidueField Λ)) (hb : ∀ g, ∃ x, IsGSp x (rb g)), rb.comp π = c.r → ∃ f : TanC (Φ.loc π) (adSp rb hb) (fun v => bor (c.n v)) (fun v => nil (c.n v)) (π Φ.g0) (tor (ResidueField Λ)) → (R →ₐ[Λ] DualNumber (ResidueField Λ)), Function.Injective f := by
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a hstd hmu Γb _ _ _ _ π hquo c hc R _ _ _ P hdef rb hb hrb
-  haveI : IsCO Λ (DualNumber (ResidueField Λ)) := (co_res Λ).2
+  have : IsCO Λ (DualNumber (ResidueField Λ)) := (co_res Λ).2
   have hrbg : ∀ g, rb (π g) = c.r g := fun g => by rw [← hrb]; rfl
   set T := TanC (Φ.loc π) (adSp rb hb) (fun v => bor (c.n v)) (fun v => nil (c.n v)) (π Φ.g0)
     (tor (ResidueField Λ)) with hT
@@ -953,7 +953,7 @@ theorem UpperTheory.V.Ws.X1.absPres :
   have hν' : ∀ g, (ν (π g) : Λ) = a (Φ.ν g) := fun g => congrArg Units.val (DFunLike.congr_fun hνe g)
   have hr' : ∀ g, r (π g) = P.r g := fun g => DFunLike.congr_fun hr g
   have hrb' : ∀ g, rb (π g) = c.r g := fun g => DFunLike.congr_fun hrb g
-  haveI := ap_haus (ResidueField Λ)
+  have := ap_haus (ResidueField Λ)
   obtain ⟨rb', hrb2, hrbc⟩ := (X1.descend Φ π hQ (⊥ : Ideal (ResidueField Λ))).1 c.r hc.pair.kill hc.cont
   have hrr : rb' = rb := MonoidHom.ext fun g => by
     obtain ⟨g, rfl⟩ := hQ.onto g
@@ -968,7 +968,7 @@ theorem UpperTheory.V.Ws.X1.absPres :
     · show IsUp (adj (P.n v) * r (π s) * P.n v)
       rw [hr']
       exact hP.1.pair.flag v s s.2
-  have hob := X1.obWeak h2 (Φ.loc π) (fun v => hQ.cont.comp continuous_subtype_val) ν r P.n hνc' hWP hrc
+  have hob := X1.obWeak h2 (Φ.loc π) (fun v => hQ.cont.comp continuous_subtypeVal) ν r P.n hνc' hWP hrc
     rb' c.n hb (fun g => by
       obtain ⟨g, rfl⟩ := hQ.onto g
       rw [hr', hrb', ← hP.1.red]
@@ -982,9 +982,9 @@ theorem UpperTheory.V.Ws.X1.absPres :
   refine ⟨m, ⟨π₀, f, hπ₀, hker⟩, ?_⟩
   obtain ⟨t, ht⟩ := X1.tanInj Φ l a hS hMu π hQ c hc R P hP rb' hb hrb
   have hq : 1 < Nat.card (ResidueField Λ) := Finite.one_lt_card
-  haveI : Finite (R →ₐ[Λ] DualNumber (ResidueField Λ)) :=
+  have : Finite (R →ₐ[Λ] DualNumber (ResidueField Λ)) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
-  haveI hT := Finite.of_injective t ht
+  have hT := Finite.of_injective t ht
   have hle := Nat.card_le_card_of_injective t ht
   have hMF : Module.Finite (ResidueField Λ) (TanC (Φ.loc π) (adSp rb' hb) (fun v => bor (c.n v))
     (fun v => nil (c.n v)) (π Φ.g0) (tor (ResidueField Λ))) := Module.Finite.of_finite

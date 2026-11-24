@@ -199,9 +199,9 @@ theorem UpperTheory.deRham_rational_of_extension_by_character :
   · obtain ⟨L, r₁, hm, hV⟩ := hB.isPstAt T Bw r (Units.continuous_val.comp hc) d₁
     obtain ⟨r₀, r₂, f, p, m₀, m₂, hf, hp, fi, ps, ex⟩ := blocks Bw r r' ψ h0 h1 h2 L r₁ hm
     obtain ⟨V₀, V₂, wi, ws, wex⟩ := UpperTheory.weil_deligne_functor_exactness l ι Bw.Kw L _ _ _ _ _ _ f p hf hp fi ps ex hV
-    haveI := hV.finite
-    haveI := V₀.finite
-    haveI := V₂.finite
+    have := hV.finite
+    have := V₀.finite
+    have := V₂.finite
     have a₀ := p₀ s
     have a₁ := p₁ s
     beta_reduce at a₀ a₁

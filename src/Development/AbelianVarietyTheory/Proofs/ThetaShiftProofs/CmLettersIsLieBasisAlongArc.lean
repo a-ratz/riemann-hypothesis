@@ -166,7 +166,7 @@ theorem tr_comp {R R₀ : Type} [CommRing R] [IsDomain R] [CommRing R₀] [IsDom
 
 theorem main : Out.GlobalFnsSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] (b : O →+* A) (a : ArcIn Dw l β A b) (χ : Sp (PowerSeries A) ⟶ Y.X) (W : Wit Y a χ) (φ : a.D₀.X →+ A) (ρ : 𝓞 E →+* A) (ν : Out.GtPt a.D₀ (epsR A)) (v : epsR (PowerSeries A) ⟶ W.t.G), (∀ (x : 𝓞 E) y, φ (H.bar x • y) = ρ x * φ y) → GtTanR ν → ν.b = Out.DegPre.zeroT a.D₀ (epsR A) → (∀ (x : a.D₀.X) j, ⊤ ≤ LB.wchart a.D₀.P.L (Out.DegPre.gtφT a.D₀ (epsR A) ν.b x) j → TrivSqZeroExt.snd (valR (A := DualNumber A) (𝟙 _) _ ((ν.s x).s j).val) = TrivSqZeroExt.fst (valR (A := DualNumber A) (𝟙 _) _ ((ν.s x).s j).val) * φ x) → LieImg W ν v → ∀ x : 𝓞 E, (v ≫ W.t.act.act x).left = spMap (epsScaleR (PowerSeries.C (R := A) (ρ x))) ≫ v.left := by
   intro hG E _ _ _ H Dw l Xo c O _ β Y A _ _ _ _ b a χ W φ ρ ν v hρ ht hb hφ hv x
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨g, hg, hp⟩ := ConstLie.exists_tr W hG hv
   obtain ⟨ν', hν'⟩ := TorusModel.exists_isSmulPt hG a.oa x ν
   obtain ⟨g', hg'⟩ := ConstLie.exists_tr_down hG W.spec.1 W.spec.2.1 W.e.toAddEquiv W.spec.2.2.2.2.1 (ConstLie.cstE A)
@@ -324,7 +324,7 @@ theorem eig_of_isPull {ν : Out.GtPt a.D₀ (epsR A)} {v : epsR (PowerSeries A) 
     (r : A) (p : letI := H.starRing;
       Out.GtPt.IsPull (GrpTangent.epsScale r).left ν (TorusModel.smulPt hG a.oa x ν)) :
     (v ≫ W.t.act.act x).left = spMap (epsScaleR (PowerSeries.C (R := A) r)) ≫ v.left := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨g, hg, hp⟩ := ConstLie.exists_tr W hG hv
   have hν' := TorusModel.isSmulPt_smulPt hG a.oa x ν
   generalize TorusModel.smulPt hG a.oa x ν = ν' at p hν'
@@ -471,7 +471,7 @@ theorem letter_eq {E : Type} [Field E] [NumberField E] [IsCMField E] [StarRing (
 
 theorem main : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K₁ : Type) [Field K₁] [NumberField K₁] [Algebra c.F K₁] (a : ArcIn Dw l (RingHom.id c.F) K₁ (algebraMap c.F K₁)) (e : ∀ τ : E →+* ℂ, Fin (Dw.mult τ) → Out.GtPt a.D₀ (epsR K₁)) (th : a.D₀.P.L.Sec) (jj : ℤ) (n' : ℕ) (La c₁ : ℝ) (s : CMIn a e th jj n' La c₁) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (χ : Sp (PowerSeries K₁) ⟶ Y.X) (W : Wit Y (a.restrict β) χ), ArcLieBasis W e := by
   intro hK E _ _ _ H Dw l Xo c K₁ _ _ _ a e th jj n' La c₁ s O _ β Y χ W
-  letI := H.starRing
+  let := H.starRing
   have hG := hK.laws.globalFns
   obtain ⟨pl, pa, pt, -, -⟩ := pairE_properties E a.D₀.X s.ξ
   have hn : (n' : K₁) ≠ 0 := Nat.cast_ne_zero.2 s.n_pos.ne'

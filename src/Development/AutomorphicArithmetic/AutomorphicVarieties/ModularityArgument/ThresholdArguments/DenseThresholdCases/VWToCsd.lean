@@ -198,9 +198,9 @@ theorem UpperTheory.GalN.V.aut_csd_zero_of_complex_conj_pair_automorphic :
     (ι : Qbar l ≃+* ℂ) (n : ℕ), 1 ≤ n → ∀ (r : G L Ω →* GL (Fin n) (Qbar l)) (c : G ℚ Ω), Sd.IsCC c →
     (∃ P, Sd.IsPair c r (cycBar L Ω l ^ (1 - (n : ℤ))) P) → Sd.IsAutC ι r → AutCsd0 ι r := by
   intro hP F Ω _ _ _ _ _ _ _ l _ ι n hn r c hc ⟨P, hpair⟩ ⟨π, hreg, hatt⟩
-  haveI : IsScalarTower ℚ F Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) F⟩
-  haveI : IsAlgClosure (maximalRealSubfield F) Ω :=
+  have : IsScalarTower ℚ F Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) F⟩
+  have : IsAlgClosure (maximalRealSubfield F) Ω :=
     ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans (maximalRealSubfield F) F Ω⟩
   obtain ⟨art, hart⟩ : ∃ art : Neutral.B1.Ideles (maximalRealSubfield F) →* Gab (maximalRealSubfield F) Ω,
       IsGlobalArtin art := hP.litN.aut.art _ Ω

@@ -63,8 +63,8 @@ private theorem factor_later {B : Scheme.{0}} (U : B.Etale) (x : U.left) (Ω : T
       l k ≫ Spec.map (CommRingCat.ofHom φ) = Spec.map (CommRingCat.ofHom ψ) := by
   obtain ⟨-, he, hl, hcomp, -, hlc, hcof, heq⟩ := hP
   let π : Sp E ⟶ Sp (D.obj j) := Spec.map (CommRingCat.ofHom (algebraMap (D.obj j) E))
-  haveI hπ : Etale π := HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr ‹_›)
-  haveI : IsIso (e j) := he j
+  have hπ : Etale π := HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr ‹_›)
+  have : IsIso (e j) := he j
   let q : Sp E ⟶ (V j).left := π ≫ e j
   let W : B.Etale := Scheme.Etale.mk (q ≫ (V j).hom)
   let bj : W ⟶ V j := MorphismProperty.Over.homMk q rfl
@@ -79,7 +79,7 @@ private theorem factor_later {B : Scheme.{0}} (U : B.Etale) (x : U.left) (Ω : T
   let m := IsFiltered.max j k
   let u : j ⟶ m := IsFiltered.leftToMax j k
   let v : k ⟶ m := IsFiltered.rightToMax j k
-  haveI : IsIso (e m) := he m
+  have : IsIso (e m) := he m
   let g1 : (V m).left ⟶ (V j).left :=
     inv (e m) ≫ Spec.map (CommRingCat.ofHom (D.map u).hom) ≫ e j
   let g2 : (V m).left ⟶ (V j).left :=

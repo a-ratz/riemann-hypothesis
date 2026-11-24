@@ -108,8 +108,8 @@ theorem darboux_real_coordsF {F E : Type} [Field F] [NumberField F] [Field E] [N
     have h2 := congrArg Prod.snd (congrFun (congrArg Prod.snd h) i)
     exact ⟨(GlobalTheory.RealDirCoord.eps_mul_snd _).symm.trans h1, (GlobalTheory.RealDirCoord.eps_mul_snd _).symm.trans h2⟩
   have he : Continuous e := by
-    haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-    haveI : IsModuleTopology (AF F) (WOF F E nS nT) :=
+    have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+    have : IsModuleTopology (AF F) (WOF F E nS nT) :=
       inferInstanceAs (IsModuleTopology (AF F) (Fin _ → Fin _ → AF F ⊗[F] E))
     exact IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have hc : ∀ (p : ((κ → AF F) × (κ → AF F)) → (κ → AF F)), Continuous p →

@@ -137,7 +137,7 @@ theorem _root_.GlobalTheory.DefiniteFrames.isCompact_ortho (X : _root_.Reciproci
       Set.univ.pi fun _ => Metric.closedBall (0 : ℂ) (∑ k, ‖x₀ τ i k‖))
     (isCompact_univ_pi fun τ => isCompact_univ_pi fun i => isCompact_univ_pi fun _ =>
       isCompact_closedBall _ _) ?_ ?_
-  · simp only [_root_.ReciprocityTheory.ChartRestriction.G.FD.Data.IsOrtho, Set.setOf_forall]
+  · simp only [_root_.ReciprocityTheory.ChartRestriction.G.FD.Data.IsOrtho, Set.ofPred_forall]
     refine isClosed_iInter fun τ => isClosed_eq ?_ continuous_const
     simp only [_root_.PIW.FdPA.gram_eq]
     exact ((hU τ).matrix_transpose.matrix_mul continuous_const).matrix_mul

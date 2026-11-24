@@ -439,7 +439,7 @@ theorem ord_split : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClos
     rw [h1, one_pow] at hcN
     exact absurd hcN.symm (pow_lt_one₀ zero_le hp hpp).ne
   obtain ⟨k, hkK, hk0⟩ := hKne
-  letI : Module (ZMod p) N := AddCommGroup.zmodModule hN
+  let : Module (ZMod p) N := AddCommGroup.zmodModule hN
   have hsm : ∀ (a : ZMod p) (x : N), x ∈ K → a • x ∈ K := by
     intro a x hx
     have h1 : a • x = a.val • x := by
@@ -595,7 +595,7 @@ theorem exists_polAV_of_root (p : ℕ) {R C : Type} [CommRing R] [IsDomain R] [F
     ∃ (P : Out.PolAV (Spec (CommRingCat.of R))) (z : sp (R₀ := R) R ⟶ P.A), P.g = 1 ∧ z ^ p = 1 ∧
       ∀ (k : Type) [Field k] [Algebra R k], spMap (Algebra.ofId R k) ≫ z ≠ 1 := by
   classical
-  haveI : W.IsElliptic := ⟨hΔ⟩
+  have : W.IsElliptic := ⟨hΔ⟩
   obtain ⟨hA, hs, hL, hr, hsy, ha, hk⟩ := polarised_of_grpObj R W hΔ (isCommMonObj W) (one_left W)
   have hE' : (W.baseChange R).toAffine.Equation x y := by
     have : W.baseChange R = W := by simp [WeierstrassCurve.baseChange]
@@ -815,7 +815,7 @@ theorem ΨSq_fam_zero (p : ℕ) [Fact p.Prime] [CharP k p] [IsAlgClosed k] :
   have key : ∀ x : k, x ≠ 0 → 4 * x + 1 ≠ 0 →
       ((fam (0 : k)).ΨSq p).eval x = (X ^ (p ^ 2 - p) : k[X]).eval x := by
     intro x hx h4
-    obtain ⟨w, hw⟩ := IsAlgClosed.exists_eq_mul_self (x⁻¹)
+    obtain ⟨w, hw⟩ := IsAlgClosed.isSquare (x⁻¹)
     have hw0 : w ≠ 0 := by
       rintro rfl
       exact inv_ne_zero hx (by simpa using hw)
@@ -1027,16 +1027,16 @@ open GlobalTheory.CompanionTheory.Ar.GR.OrdPt in
 theorem GlobalTheory.CompanionTheory.Ar.GR.exists_ord_point : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → IsAdicComplete (Ideal.span {(p : R)}) R → ∃ (P : Out.PolAV (Spec (CommRingCat.of R))) (z : sp (R₀ := R) R ⟶ P.A), P.g = 1 ∧ z ^ p = 1 ∧ ∀ (k : Type) [Field k] [Algebra R k], spMap (Algebra.ofId R k) ≫ z ≠ 1 := by
   intro p _ C _ _ _ v R _ _ hv hp _
   have hinj := hv.hom_inj
-  haveI : IsDomain R := hinj.isDomain (algebraMap R C)
+  have : IsDomain R := hinj.isDomain (algebraMap R C)
   have hnon : ∀ a : R, a ∈ nonunits R ↔ v (algebraMap R C a) < 1 := fun a => by
     rw [mem_nonunits_iff, hv.isUnit_iff_valuation_eq_one]
     exact ⟨fun h => lt_of_le_of_ne (hv.map_le_one a) h, fun h => h.ne⟩
-  haveI : IsLocalRing R := IsLocalRing.of_nonunits_add fun a b ha hb => by
+  have : IsLocalRing R := IsLocalRing.of_nonunits_add fun a b ha hb => by
     rw [hnon] at ha hb ⊢
     rw [map_add (f := _)]
     exact (Valuation.map_add v _ _).trans_lt (max_lt ha hb)
-  haveI : IsAlgClosed (IsLocalRing.ResidueField R) := isAlgClosed_residueField v hv
-  haveI : CharP (IsLocalRing.ResidueField R) p := by
+  have : IsAlgClosed (IsLocalRing.ResidueField R) := isAlgClosed_residueField v hv
+  have : CharP (IsLocalRing.ResidueField R) p := by
     have h0 : ((p : ℕ) : IsLocalRing.ResidueField R) = 0 := by
       rw [← map_natCast (IsLocalRing.residue R), IsLocalRing.residue_eq_zero_iff]
       refine (hnon _).mpr ?_
@@ -1109,7 +1109,7 @@ namespace GlobalTheory.CompanionTheory.Ar.GR.OrdCurve
 
 theorem nonempty_padicInt_hom (p : ℕ) [Fact p.Prime] (R : Type) [CommRing R]
     (hc : IsAdicComplete (Ideal.span {(p : R)}) R) : Nonempty (ℤ_[p] →+* R) := by
-  haveI := hc
+  have := hc
   have hd : ∀ n : ℕ, ringChar (R ⧸ (Ideal.span {(p : R)}) ^ n) ∣ p ^ n := fun n => by
     apply ringChar.dvd
     rw [← map_natCast (Ideal.Quotient.mk ((Ideal.span {(p : R)}) ^ n)),
@@ -1162,7 +1162,7 @@ theorem exists_far {p : ℕ} {C : Type} [Field C] [Algebra R C] {v : Valuation C
     {z : sp (R₀ := R) R ⟶ G} (hz : z ^ p = 1)
     (hk : ∀ (k : Type) [Field k] [Algebra R k], spMap (Algebra.ofId R k) ≫ z ≠ 1) :
     ∃ t : N, ∃ g ∈ torsFun C T pt, v (g t - g 0) = 1 := by
-  haveI : IsLocalRing R := isLocal_of_integers hv
+  have : IsLocalRing R := isLocal_of_integers hv
   obtain ⟨t, rfl⟩ := (hpt.range z).1 hz
   have hex : ∀ x, ∃! φ : T.A →ₐ[R] R, spMap φ ≫ T.y = pt x := fun x =>
     T.univ R (pt x) ((hpt.range _).2 ⟨x, rfl⟩)
@@ -1241,7 +1241,7 @@ namespace GlobalTheory.CompanionTheory.Ar.GR
 theorem ordinaryCurve_of_hodgeTate : HodgeTateDatumStatement → OrdinaryCurveStatement := by
   intro hht p _ C _ _ _ v R _ _ hv hlt hc
   obtain ⟨f⟩ := OrdCurve.nonempty_padicInt_hom p R hc
-  letI : Algebra ℤ_[p] R := f.toAlgebra
+  let : Algebra ℤ_[p] R := f.toAlgebra
   obtain ⟨P, z, hg, hz, hk⟩ := GlobalTheory.T.polarised_abelian_variety_p_torsion p C v R hv hlt hc
   obtain ⟨⟨T⟩, cp, hs, H, pt, hpt, hH⟩ := hht p C v R hv hlt hc P
   obtain ⟨pt', h1, h2⟩ := OrdCurve.reindex _root_.GlobalTheory.CompanionTheory.Ar.GR.polarisedAF hlt hs T P.g hg H pt hpt (hH T) hz hk

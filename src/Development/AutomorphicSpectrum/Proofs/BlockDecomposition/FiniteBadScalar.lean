@@ -72,15 +72,15 @@ theorem finite_bad {Ω : Type} [Field Ω] (A B : Matrix n n Ω) {s : Ω} (hs : (
     intro h
     apply hs
     rw [← eval_det_line, h, Polynomial.eval_zero]
-  refine (Polynomial.finite_setOf_isRoot hP).subset fun x hx => ?_
-  simp only [Set.mem_setOf_eq, Polynomial.IsRoot.def, eval_det_line]
+  refine (finite_setOfPred_isRoot hP).subset fun x hx => ?_
+  simp only [Set.mem_ofPred_eq, Polynomial.IsRoot.def, eval_det_line]
   exact hx
 
 theorem finite_bad_scalar {Ω : Type} [Field Ω] (a : Matrix n n Ω) :
     {x : Ω | (a + x • (1 : Matrix n n Ω)).det = 0}.Finite := by
   have hP : (-a).charpoly ≠ 0 := (Matrix.charpoly_monic _).ne_zero
-  refine (Polynomial.finite_setOf_isRoot hP).subset fun x hx => ?_
-  simp only [Set.mem_setOf_eq, Polynomial.IsRoot.def, Matrix.eval_charpoly] at hx ⊢
+  refine (finite_setOfPred_isRoot hP).subset fun x hx => ?_
+  simp only [Set.mem_ofPred_eq, Polynomial.IsRoot.def, Matrix.eval_charpoly] at hx ⊢
   rw [← hx]
   congr 1
   ext i j
@@ -92,7 +92,7 @@ theorem exists_Y {Ω : Type} [Field Ω] (τ : ℚ → Ω) (hτ : Function.Inject
     finite_bad 1 c (s := 0) (by simp)
   have hfin := ((finite_bad_scalar a).union h2).preimage (f := τ) hτ.injOn
   obtain ⟨t, ht⟩ := hfin.exists_notMem
-  simp only [Set.mem_preimage, Set.mem_union, Set.mem_setOf_eq, not_or] at ht
+  simp only [Set.mem_preimage, Set.mem_union, Set.mem_ofPred_eq, not_or] at ht
   obtain ⟨h1, h3⟩ := ht
   set u : Matrix n n Ω := a + τ t • (1 : Matrix n n Ω) with hu
   have hdet : IsUnit u.det := isUnit_iff_ne_zero.2 h1
@@ -187,8 +187,8 @@ theorem line_bad {Ω : Type} [Field Ω] (ι : E →+* Ω) (c d : Matrix n n Ω) 
     abel
   have hfin := finite_bad (c - d * y.map ι) (-(d * w.map ι)) (s := z) (by rw [e]; exact hz)
   refine (hfin.preimage (f := fun t : ℚ => ι (t : E)) (rat_inj ι).injOn).subset fun t ht => ?_
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, e]
-  simpa only [Set.mem_setOf_eq, map_line] using ht
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, e]
+  simpa only [Set.mem_ofPred_eq, map_line] using ht
 
 theorem step {Ω : Type} [Field Ω] (σ : E →+* E) (ι : E →+* Ω) (c d Y : Matrix n n Ω)
     (hY : ∀ y, IsH σ y → (c - d * (Y + y.map ι)).det = 0) {h : Matrix n n E} (hh : IsH σ h) (z : Ω) :
@@ -204,7 +204,7 @@ theorem step {Ω : Type} [Field Ω] (σ : E →+* E) (ι : E →+* Ω) (c d Y : 
   apply Set.infinite_univ (α := ℚ)
   refine hfin.subset fun t _ => ?_
   have := hY _ (hy.line hh t)
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   rw [← this, Matrix.mul_add]
   congr 1
   abel
@@ -258,12 +258,12 @@ theorem vanish_all {Ω : Type} [Field Ω] (σ : E →+* E) (ι : E →+* Ω) {δ
         by_cases p : a = i ∧ b = j
         · by_cases q : b = i ∧ a = j
           · exact absurd (p.1.trans q.1.symm) hab
-          · simp only [if_pos p, if_neg q]
+          · simp only [ite_eq_left p, ite_eq_right q]
             linear_combination (-1) * hz - hw
         · by_cases q : b = i ∧ a = j
-          · simp only [if_neg p, if_pos q]
+          · simp only [ite_eq_right p, ite_eq_left q]
             linear_combination hw
-          · simp only [if_neg p, if_neg q]
+          · simp only [ite_eq_right p, ite_eq_right q]
             ring
       rw [e, ← add_assoc]
       exact hstep _ (hstep Y hY hH1 _) hH2 _
@@ -298,7 +298,7 @@ theorem exists_common {m : ℕ} (Ω : Fin m → Type) [∀ i, Field (Ω i)] (σ 
         simpa using g₁ i hi
     have hU := (Finset.finite_toSet (insert a s)).biUnion hfin
     obtain ⟨t, ht⟩ := hU.exists_notMem
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Finset.mem_coe, not_exists] at ht
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Finset.mem_coe, not_exists] at ht
     exact ⟨_, h₁.line (h₂.sub h₁) t, fun i hi h0 => ht i hi h0⟩
 
 end Herm

@@ -120,7 +120,7 @@ theorem exists_eq_smul_map_mulMap_of_right {G : Type} [Group G] [TopologicalSpac
     have hφKc : Continuous φK := by
       have := continuous_parametric_integral_of_continuous (μ := μK)
         (f := fun (g : G) (k : K) => φ (g * k))
-        (φ.continuous.comp (continuous_fst.mul (continuous_subtype_val.comp continuous_snd)))
+        (φ.continuous.comp (continuous_fst.mul (continuous_subtypeVal.comp continuous_snd)))
         isCompact_univ
       simpa using this
     have hφKinv : ∀ g (k : K), φK (g * k) = φK g := by
@@ -139,7 +139,7 @@ theorem exists_eq_smul_map_mulMap_of_right {G : Type} [Group G] [TopologicalSpac
 
     have hint : ∫ g, φK g ∂μ = (μK univ).toReal * ∫ g, φ g ∂μ := by
       have hF : Integrable (fun q : G × K => φ (q.1 * q.2)) (μ.prod μK) := by
-        refine (φ.continuous.comp (continuous_fst.mul (continuous_subtype_val.comp
+        refine (φ.continuous.comp (continuous_fst.mul (continuous_subtypeVal.comp
           continuous_snd))).integrable_of_hasCompactSupport ?_
         refine HasCompactSupport.intro (((IsCompact.prod φ.hasCompactSupport hK).image
           (f := fun q : G × G => q.1 * q.2⁻¹) (by fun_prop)).prod (isCompact_univ (X := K))) ?_
@@ -158,7 +158,7 @@ theorem exists_eq_smul_map_mulMap_of_right {G : Type} [Group G] [TopologicalSpac
       simpa using hφKinv (s : G) ⟨(m : G), (GroundTheory.Automorphic.HaarSK.mem_inter_iff).1 hm⟩
     set uCc : CompactlySupportedContinuousMap S ℝ :=
       { toFun := fun s => φK s
-        continuous_toFun := hφKc.comp continuous_subtype_val
+        continuous_toFun := hφKc.comp continuous_subtypeVal
         hasCompactSupport' := hφKcs.comp_isClosedEmbedding hS.isClosedEmbedding_subtypeVal }
     have hflat : flat mL uCc = fun s : S => φK (s : G) := flat_eq_self (u := fun s : S => φK (s : G)) hu
     have hlift : lift hSK (flat mL uCc) = φK := by
@@ -240,7 +240,7 @@ theorem lintegral_eq_nak : ∀ (G Λ : Type) [Group G] [TopologicalSpace G] [IsT
   have he : ∀ q : Set.range f, f (e.symm q) = q := fun q => congrArg Subtype.val (e.apply_symm_apply q)
   let β : P → Λ := fun p => (e.symm ⟨p.1, (hmemP p.1).1 p.2⟩).2
   have hβc : Continuous β :=
-    continuous_snd.comp (e.symm.continuous.comp (continuous_subtype_val.subtype_mk _))
+    continuous_snd.comp (e.symm.continuous.comp (continuous_subtypeVal.subtype_mk _))
   have hβ : ∀ p : P, (p : G) * (j (β p))⁻¹ ∈ N := by
     intro p
     have h1 : f (e.symm ⟨p.1, (hmemP p.1).1 p.2⟩) = p := he _
@@ -267,10 +267,10 @@ theorem lintegral_eq_nak : ∀ (G Λ : Type) [Group G] [TopologicalSpace G] [IsT
       ∫⁻ x, g (j t * x * (j t)⁻¹) ∂μN = δF t * ∫⁻ x, g x ∂μN := fun t g hg => by
     rw [hmod t g hg, hδF']
 
-  haveI : LocallyCompactSpace P := hPc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : LocallyCompactSpace N := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology P := inferInstanceAs (SecondCountableTopology (P : Set G))
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc
+  have : LocallyCompactSpace P := hPc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace N := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology P := inferInstanceAs (SecondCountableTopology (P : Set G))
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hKc
   let μP : Measure P := Measure.haar
   obtain ⟨c1, hc1, hP⟩ := GroundTheory.Heights₂.Heights.FiniteCovolume.SemidirectHaar.proof G Λ P N hPc hNc hNP j β δF
     hj hβc hδFc hjP hconj hτH hβ μP μN μΛ hmodF
@@ -291,7 +291,7 @@ theorem lintegral_eq_nak : ∀ (G Λ : Type) [Group G] [TopologicalSpace G] [IsT
     ENNReal.mul_ne_top ENNReal.coe_ne_top ENNReal.coe_ne_top, ?_⟩
   intro φ hφ
   have hm : Measurable (mulMap P K) :=
-    (measurable_subtype_coe.comp measurable_fst).mul (measurable_subtype_coe.comp measurable_snd)
+    (measurable_subtypeVal.comp measurable_fst).mul (measurable_subtypeVal.comp measurable_snd)
   rw [hc2, lintegral_smul_measure, lintegral_map hφ hm, lintegral_prod_symm (fun q => φ (mulMap P K q)) (hφ.comp hm).aemeasurable,
     ENNReal.smul_def, smul_eq_mul, mul_assoc]
   congr 1

@@ -120,17 +120,17 @@ theorem ut_of_mem {A : Matrix (Fin r) (Fin r) ℂ} (hA : A ∈ C2.UTset r) : G.u
   ext i j
   simp only [G.upper, G.strictUpper, StabilizerDisintegration.utc, Matrix.add_apply, Matrix.of_apply, Matrix.one_apply]
   rcases lt_trichotomy i j with h | h | h
-  · rw [if_neg (ne_of_lt h), dite_eq_left h, zero_add]
+  · rw [ite_eq_right (ne_of_lt h), dite_eq_left h, zero_add]
   · subst h
-    rw [if_pos rfl, dite_eq_right (lt_irrefl _), add_zero, hA.2 i]
-  · rw [if_neg (ne_of_gt h), dite_eq_right (not_lt.2 h.le), add_zero, hA.1 i j h]
+    rw [ite_eq_left rfl, dite_eq_right (lt_irrefl _), add_zero, hA.2 i]
+  · rw [ite_eq_right (ne_of_gt h), dite_eq_right (not_lt.2 h.le), add_zero, hA.1 i j h]
 
 theorem ut_inv_mem {A : Matrix (Fin r) (Fin r) ℂ} (hA : A ∈ C2.UTset r) : A⁻¹ ∈ C2.UTset r := by
   have hT : Matrix.BlockTriangular A id := fun i j hij => hA.1 i j hij
   have hu : IsUnit A.det := by
-    rw [Matrix.det_of_upperTriangular hT]
+    rw [det_of_isUpperTriangular hT]
     simp [hA.2]
-  haveI := Matrix.invertibleOfIsUnitDet A hu
+  have := Matrix.invertibleOfIsUnitDet A hu
   have hTi : Matrix.BlockTriangular A⁻¹ id := Matrix.blockTriangular_inv_of_blockTriangular hT
   refine ⟨fun i j hij => hTi hij, fun i => ?_⟩
   have h1 : (A * A⁻¹) i i = 1 := by rw [Matrix.mul_nonsing_inv _ hu, Matrix.one_apply_eq]
@@ -143,7 +143,7 @@ theorem ut_inv_mem {A : Matrix (Fin r) (Fin r) ℂ} (hA : A ∈ C2.UTset r) : A�
   · simp
 
 theorem ut_det {A : Matrix (Fin r) (Fin r) ℂ} (hA : A ∈ C2.UTset r) : IsUnit A.det := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => hA.1 i j hij)]
+  rw [det_of_isUpperTriangular (fun i j hij => hA.1 i j hij)]
   simp [hA.2]
 
 def uTransE (A : X → Matrix (Fin r) (Fin r) ℂ) (hA : ∀ x, A x ∈ C2.UTset r) (hAc : ∀ i j, Measurable fun x => A x i j)
@@ -366,9 +366,9 @@ theorem phiC_emb (hy1 : IsUnit y1.det) (hy1' : IsUnit y1'.det) : MeasurableEmbed
   have hup : ∀ m j : Fin r, Measurable fun v : G.UT r → ℂ => G.upper v m j := by
     intro m j
     by_cases h : m < j
-    · simp only [G.upper, G.strictUpper, Matrix.add_apply, Matrix.of_apply, dif_pos h]
+    · simp only [G.upper, G.strictUpper, Matrix.add_apply, Matrix.of_apply, dite_eq_left h]
       exact measurable_const.add (measurable_pi_apply _)
-    · simp only [G.upper, G.strictUpper, Matrix.add_apply, Matrix.of_apply, dif_neg h, add_zero]
+    · simp only [G.upper, G.strictUpper, Matrix.add_apply, Matrix.of_apply, dite_eq_right h, add_zero]
       exact measurable_const
   have hmφ : Measurable (phiC σ y1 y1' A) := by
     have h1 : Measurable fun p : (C2.Lstidx σ.symm → ℂ) × U.Xi k r 0 0 σ => rnAct y1 p.2.1.1 :=
@@ -779,7 +779,7 @@ theorem inner_int (S : B.RealPlaceData k r Wp Wq) (z0 z0' : Fin (2 * 0 + k + 1) 
       ∫ q, ‖theta0 S.z σ.symm (TN k r ((h, q.1), (h', q.2))) •
           D.orbIntegrand S (U.mMap k r 0 (U.hMat σ d) γ0) F (TN k r ((h, q.1), (h', q.2)))‖
         ∂((QN k r).prod (QN k r)) ≤ M * (U.muXi k r 0 0 σ Bs).toReal := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
   set y1 := midB r 0 (Matrix.of h) with hy1
   set y1' := midB r 0 (Matrix.of h') with hy1'
   have hhL : Matrix.of h ∈ UWset k (r + 0) (liftVec k r 0 z0) := by rw [← hz]; exact hh

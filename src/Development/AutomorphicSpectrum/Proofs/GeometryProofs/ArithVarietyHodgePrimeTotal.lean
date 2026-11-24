@@ -137,7 +137,7 @@ theorem p_ne_zero {E : Type} [Field E] [NumberField E] {p : ℕ} {F : Type} [Fie
     (h : IsSec pq sc) : p ≠ 0 := by
   intro hp
   have hbot : Ideal.span {(p : 𝓞 E)} = ⊥ := by simp [hp]
-  haveI : (Ideal.span {(p : 𝓞 E)}).IsPrime := by rw [hbot]; exact Ideal.isPrime_bot
+  have : (Ideal.span {(p : 𝓞 E)}).IsPrime := by rw [hbot]; exact Ideal.isPrime_bot
   have hinj : Function.Injective pq := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro u hu
@@ -153,7 +153,7 @@ theorem p_ne_zero {E : Type} [Field E] [NumberField E] {p : ℕ} {F : Type} [Fie
   exact Ring.ne_bot_of_isMaximal_of_not_isField hm (RingOfIntegers.not_isField E) rfl
 
 theorem finite_tors {E : Type} [Field E] [NumberField E] (N : ℕ) {p : ℕ} (hp : p ≠ 0) : Finite (TorsT E N p) := by
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) :=
+  have : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hp)
   infer_instance
 
@@ -166,7 +166,7 @@ theorem frac_epi {Ω : Type} [Field Ω] {O : Type} [CommRing O] [Algebra O Ω] (
     have hl : ∀ r : R, fracToField R (algebraMap R (FractionRing R) r) = algebraMap R Ω r := fun r =>
       IsFractionRing.lift_algebraMap (g := algebraMap R Ω) Subtype.val_injective r
     rw [map_div₀, hl, hl]
-  haveI : IsIso (CommRingCat.ofHom (fracToField R)) :=
+  have : IsIso (CommRingCat.ofHom (fracToField R)) :=
     (RingEquiv.ofBijective _ hb).toCommRingCatIso.isIso_hom
   exact inferInstanceAs (IsIso (Spec.map (CommRingCat.ofHom (fracToField R))))
 
@@ -191,7 +191,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Num.FamEx
 open Idemp in
 theorem btOrder_stable_of_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (p : ℕ) (G : GenTors 𝔐 p) (O : Type) [CommRing O] [Algebra O Ω] (c' : ∀ k, J k) [IsNoetherianRing (CR O y c')] [IsIntegrallyClosed (CR O y c')] [IsFractionRing (CR O y c') Ω] (P : ChartPack G O c') (F : Type) [Field F] (pq : (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) →+* F) (sc : F →+ (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)})), Function.Surjective pq → IsSec pq sc → ∀ a ∈ P.Γ₁.btOrder ⊤, (fun t => a (toN sc (fromN pq t))) ∈ P.Γ₁.btOrder ⊤ := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ J _ y 𝔐 p G O _ _ c' _ _ _ P F _ pq sc _ hsec f hf
-  haveI := finite_tors (E := E) (D.p + D.q) (p_ne_zero pq sc hsec)
+  have := finite_tors (E := E) (D.p + D.q) (p_ne_zero pq sc hsec)
   obtain ⟨e, he⟩ := Ideal.Quotient.mk_surjective (sc 1)
   have hα : ∀ t : TorsT E (D.p + D.q) p, toN sc (fromN pq t) = mulT _ p e t := by
     intro t
@@ -199,8 +199,8 @@ theorem btOrder_stable_of_section : ∀ (E : Type) [Field E] [NumberField E] [Is
     change sc (pq (Multiplicative.toAdd t i)) = Ideal.Quotient.mk _ e * Multiplicative.toAdd t i
     rw [he]
     exact sec_eq pq sc hsec.1 hsec.2 _
-  haveI := 𝔐.t.act.hom e
-  haveI := frac_epi (CR O y c')
+  have := 𝔐.t.act.hom e
+  have := frac_epi (CR O y c')
   have h4 := (_root_.GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds (CR O y c') (TorsT E (D.p + D.q) p) P.Γ₁ _ 𝔐.t.G P.x p P.i₁ P.tors₁
     𝔐.t.semi.smooth).2.2.2.1 (𝔐.t.act.act e) (mulT _ p e) (by
       intro t
@@ -257,8 +257,8 @@ theorem tensor_sep {K B₁ B₂ I J : Type} [Field K] [Algebra R K] [IsFractionR
   classical
   have := Fintype.ofFinite I
   have := Fintype.ofFinite J
-  haveI : Module.Flat R K := IsLocalization.flat K (nonZeroDivisors R)
-  haveI : Module.Flat R (J → K) := Module.Flat.trans R K (J → K)
+  have : Module.Flat R K := IsLocalization.flat K (nonZeroDivisors R)
+  have : Module.Flat R (J → K) := Module.Flat.trans R K (J → K)
   let E : B₁ →ₗ[R] (I → K) := LinearMap.pi fun i => (e i).toLinearMap
   let F : B₂ →ₗ[R] (J → K) := LinearMap.pi fun j => (f j).toLinearMap
   have hE : Function.Injective E :=
@@ -418,14 +418,14 @@ theorem chart_pair [Finite T] (Γ : QFGroup R T) (A₁ A₂ : Type) [CommRing A�
     (hu : ∀ (a b : T) (w : Spec (CommRingCat.of (FractionRing R)) ⟶ pullback (c₁ ≫ Γ.G.hom) (c₂ ≫ Γ.G.hom)),
       w ≫ pullback.fst _ _ ≫ c₁ = (Γ.pt a).left → w ≫ pullback.snd _ _ ≫ c₂ = (Γ.pt b).left → w.appTop u = 0) :
     u = 0 := by
-  letI : Algebra R A₁ := (Spec.preimage (c₁ ≫ Γ.G.hom)).hom.toAlgebra
-  letI : Algebra R A₂ := (Spec.preimage (c₂ ≫ Γ.G.hom)).hom.toAlgebra
+  let : Algebra R A₁ := (Spec.preimage (c₁ ≫ Γ.G.hom)).hom.toAlgebra
+  let : Algebra R A₂ := (Spec.preimage (c₂ ≫ Γ.G.hom)).hom.toAlgebra
   have h₁ : c₁ ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R A₁)) :=
     (Spec.map_preimage (c₁ ≫ Γ.G.hom)).symm
   have h₂ : c₂ ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R A₂)) :=
     (Spec.map_preimage (c₂ ≫ Γ.G.hom)).symm
-  haveI : Flat Γ.G.hom := Γ.flat
-  haveI : Module.Flat R A₁ := by
+  have : Flat Γ.G.hom := Γ.flat
+  have : Module.Flat R A₁ := by
     have : Flat (Spec.map (CommRingCat.ofHom (algebraMap R A₁))) := h₁ ▸ inferInstance
     rw [Flat.SpecMap_iff] at this
     exact (RingHom.flat_algebraMap_iff).1 this
@@ -562,8 +562,8 @@ theorem sec_zero [Finite T] (Γ : QFGroup R T) (s : Γ(Γ.G.left, ⊤))
   refine Scheme.OpenCover.ext_elem s 0 𝒰.openCover fun k => ?_
   rw [map_zero]
   let c : Spec (CommRingCat.of (𝒰.X k)) ⟶ Γ.G.left := 𝒰.f k
-  haveI : IsOpenImmersion c := 𝒰.openCover.map_prop k
-  letI : Algebra R (𝒰.X k) := (Spec.preimage (c ≫ Γ.G.hom)).hom.toAlgebra
+  have : IsOpenImmersion c := 𝒰.openCover.map_prop k
+  let : Algebra R (𝒰.X k) := (Spec.preimage (c ≫ Γ.G.hom)).hom.toAlgebra
   obtain ⟨I, _, τ, e, he, hi⟩ := chart_sep Γ (𝒰.X k) c (Spec.map_preimage (c ≫ Γ.G.hom)).symm
   have h0 := hi ((Scheme.ΓSpecIso (CommRingCat.of (𝒰.X k))).hom (c.appTop s)) fun i => by
     have h1 := hs (τ i)
@@ -614,9 +614,9 @@ namespace GlobalTheory.CompanionTheory.Ar.LieSpan
 
 theorem span_range_pullback : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [Smooth G.hom] (R R' : Type) [CommRing R] [CommRing R'] (c : R →+* R') (x : Spec (CommRingCat.of R) ⟶ S) (E E' : Type) [AddCommGroup E] [Module R E] [AddCommGroup E'] [Module R' E'] (M : LieModel G x E) (M' : LieModel G (Spec.map (CommRingCat.ofHom c) ≫ x) E') (j : E → E'), (∀ e, (M'.pt (j e)).left = Spec.map (CommRingCat.ofHom (dualMap c)) ≫ (M.pt e).left) → Submodule.span R' (Set.range j) = ⊤ := by
   intro S G _ _ R R' _ _ c x E E' _ _ _ _ M M' j hj
-  letI : Algebra R R' := c.toAlgebra
-  letI : Module R E' := Module.compHom E' c
-  haveI : IsScalarTower R R' E' :=
+  let : Algebra R R' := c.toAlgebra
+  let : Module R E' := Module.compHom E' c
+  have : IsScalarTower R R' E' :=
     ⟨fun r r' e => by
       show (c r * r') • e = c r • (r' • e)
       exact mul_smul _ _ _⟩
@@ -685,7 +685,7 @@ theorem epi_spec {K k : Type} [Field K] [Field k] (i : K →+* k) :
     Epi (Spec.map (CommRingCat.ofHom i)) := by
   have h1 : Flat (Spec.map (CommRingCat.ofHom i)) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := i.toAlgebra
+    let := i.toAlgebra
     exact (inferInstance : Module.Flat K k)
   have h2 : Surjective (Spec.map (CommRingCat.ofHom i)) :=
     ⟨fun y => ⟨IsLocalRing.closedPoint k, Subsingleton.elim (α := PrimeSpectrum K) _ _⟩⟩
@@ -1228,7 +1228,7 @@ theorem away_of_le (C B : Subalgebra O Ω) (hCB : C ≤ B) (h : Ω) (hC : h ∈ 
     (hs : B ≤ powSat C h hC) :
     letI := (Subalgebra.inclusion hCB).toRingHom.toAlgebra
     IsLocalization.Away (⟨h, hC⟩ : C) B := by
-  letI := (Subalgebra.inclusion hCB).toRingHom.toAlgebra
+  let := (Subalgebra.inclusion hCB).toRingHom.toAlgebra
   refine ⟨?_, ?_, ?_⟩
   · rintro ⟨_, m, rfl⟩
     refine isUnit_iff_exists_inv.2 ⟨⟨h⁻¹ ^ m, B.pow_mem hi m⟩, Subtype.ext ?_⟩
@@ -1304,11 +1304,11 @@ theorem inj_right : Function.Injective (algebraMap (CR O y t) (ovl O y s t)) :=
 theorem ovl_facts (hs : mseg y s ≠ 0) (ht : mseg y t ≠ 0) [IsNoetherianRing (CR O y t)]
     [IsIntegrallyClosed (CR O y t)] [IsFractionRing (CR O y t) Ω] :
     IsNoetherianRing (ovl O y s t) ∧ IsIntegrallyClosed (ovl O y s t) ∧ IsFractionRing (ovl O y s t) Ω := by
-  haveI := away_right (O := O) hs ht
+  have := away_right (O := O) hs ht
   set h : CR O y t := ⟨mseg y s / mseg y t, ratio_mem s t⟩
   have hle : Submonoid.powers h ≤ nonZeroDivisors (CR O y t) :=
     powers_le_nonZeroDivisors_of_noZeroDivisors (fun e => div_ne_zero hs ht (congrArg Subtype.val e))
-  haveI : IsScalarTower (CR O y t) (ovl O y s t) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (CR O y t) (ovl O y s t) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact ⟨IsLocalization.isNoetherianRing (Submonoid.powers h) _ inferInstance,
     isIntegrallyClosed_of_isLocalization _ (Submonoid.powers h) hle,
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (Submonoid.powers h) _ _⟩
@@ -1354,7 +1354,7 @@ theorem cancel_frac {A A' C : Type} [CommRing A] [CommRing A'] [CommRing C] (f :
     (v : Spec (CommRingCat.of A') ⟶ X)
     (h : Spec.map (CommRingCat.ofHom f₁) ≫ u = Spec.map (CommRingCat.ofHom f) ≫ v) :
     Spec.map (CommRingCat.ofHom a) ≫ u = v := by
-  haveI : IsIso (CommRingCat.ofHom f) := (RingEquiv.ofBijective f hf).toCommRingCatIso.isIso_hom
+  have : IsIso (CommRingCat.ofHom f) := (RingEquiv.ofBijective f hf).toCommRingCatIso.isIso_hom
   rw [← cancel_epi (Spec.map (CommRingCat.ofHom f)), ← h, ← Category.assoc, ← Spec.map_comp, ← CommRingCat.ofHom_comp, ha]
 
 end Frac
@@ -1420,7 +1420,7 @@ theorem overlap_group (hp : p.Prime) (hpS : p ∈ S) (hs : mseg y s ≠ 0) [Char
       spMap (algebraMap (CR O y t) (ovl O y s t)) ≫ P₂.x = spMap (algebraMap (CR O y s) (ovl O y s t)) ≫ P₁.x := by
   have h1 := point_comp P₁ (ovl O y s t) algL_coe
   have h2 := point_comp P₂ (ovl O y s t) algR_coe
-  haveI : CharZero (ovl O y s t) := ovl_charZero
+  have : CharZero (ovl O y s t) := ovl_charZero
   obtain ⟨Γ', i', hi', ha⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.exists_qfGroup_of_generic_fullTorsion (ovl O y s t) Ω (TorsT E (D.p + D.q) p) 𝔐.X 𝔐.t.G 𝔐.t.semi _ 𝔐.ξ h1 p
     hp.one_le G.t₁.pt G.t₁.inj G.t₁.onto (fullTorsion_prime hpS)
   have hz := tied_overlap hs P₁ P₂ h1 h2
@@ -1436,7 +1436,7 @@ theorem funLat_overlap {F : Type} [Field F] (hp : p.Prime) (hpS : p ∈ S) (hs :
     (sc : F →+ (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)})) (v : (Fin (D.p + D.q) → F) → Ω) (hv : v ∈ funLat P₁ sc) :
     ∃ m : ℕ, (mseg y s / mseg y t) ^ m • v ∈ funLat P₂ sc := by
   obtain ⟨Γ', F₁, F₂, b₁, b₂, -, -, -⟩ := overlap_group hp hpS hs P₁ P₂
-  haveI := away_right (O := O) hs ht
+  have := away_right (O := O) hs ht
   obtain ⟨f, hf, rfl⟩ := hv
   obtain ⟨m, b, hb, e⟩ := order_overlap P₁.Γ₁ P₂.Γ₁ Γ' b₁ b₂ (flat_left hs ht) (flat_right hs ht)
     (⟨mseg y s / mseg y t, ratio_mem s t⟩ : CR O y t) hf
@@ -1518,12 +1518,12 @@ theorem form_overlap (hp : p.Prime) (hpS : p ∈ S) (hs : mseg y s ≠ 0) (ht : 
       (∀ a, (f₂ a : Ω) = (mseg y s / mseg y t) ^ m * f a) ∧ P₂.Γ₁.IsDerAtOne P₂.i₁ P₂.M p f₂ u₂ ∧
       P₂.j u₂ = (mseg y s / mseg y t) ^ m • P₁.j u := by
   obtain ⟨hN, hI, hFr⟩ := ovl_facts (O := O) hs ht
-  haveI := hN
-  haveI := hI
-  haveI := hFr
+  have := hN
+  have := hI
+  have := hFr
   obtain ⟨Γ', F₁, F₂, b₁, b₂, hi', hFi, hz⟩ := overlap_group hp hpS hs P₁ P₂
-  haveI := away_right (O := O) hs ht
-  haveI hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have := away_right (O := O) hs ht
+  have hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   have hx : spMap (algebraMap (ovl O y s t) Ω) ≫ spMap (algebraMap (CR O y s) (ovl O y s t)) ≫ P₁.x = 𝔐.ξ :=
     point_comp P₁ (ovl O y s t) algL_coe
   obtain ⟨L', _, _, ⟨M'⟩⟩ := lieModel_exists 𝔐.X 𝔐.t.G (ovl O y s t)
@@ -1607,8 +1607,8 @@ theorem thLat_overlap (hp : p.Prime) (hpS : p ∈ S) (hs : mseg y s ≠ 0) (ht :
     {z : ((Fin (D.p + D.q) → F) → Ω) × (Fin r → Ω)} (hz : z ∈ thLat P₁ pq sc v) :
     ∃ m : ℕ, (mseg y s / mseg y t) ^ m • z ∈ thLat P₂ pq sc v := by
   obtain ⟨hN, hI, hFr⟩ := ovl_facts (O := O) (s := s) (t := t) hs ht
-  haveI := hN
-  haveI := hFr
+  have := hN
+  have := hFr
   have hr := ratio_mem (O := O) (y := y) s t
   induction hz using AddSubgroup.closure_induction with
   | mem z hz =>
@@ -1671,9 +1671,9 @@ theorem funfam_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   have hp : p.Prime := Fact.out
   have inst := fun (c' : ∀ k, J k) (h : mseg y c' ≠ 0) =>
     _root_.GlobalTheory.CompanionTheory.Relay.arith_variety_prime_relay E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar p hpS A m hpm O c' h
-  haveI : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) :=
+  have : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hp.ne_zero)
-  haveI : Finite (TorsT E (D.p + D.q) p) := inferInstanceAs (Finite (Multiplicative (Fin (D.p + D.q) → _)))
+  have : Finite (TorsT E (D.p + D.q) p) := inferInstanceAs (Finite (Multiplicative (Fin (D.p + D.q) → _)))
   have hsurj : Function.Surjective pq := horb.2.2.2.1
   refine ⟨⟨fun s hs a ha v hv => ?_, fun s t hs ht v hv => ?_⟩, fun τ => ⟨fun s hs a ha v hv => ?_, fun s t hs ht v hv => ?_⟩⟩
   · beta_reduce at hv ⊢
@@ -1681,13 +1681,13 @@ theorem funfam_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     exact funLat_smul (P s hs) sc ha hv
   · obtain ⟨hc, -, -, -⟩ := inst s hs
     obtain ⟨-, h2, h3, h4⟩ := inst t ht
-    haveI := hc
-    haveI := h2
-    haveI := h3
-    haveI := h4
+    have := hc
+    have := h2
+    have := h3
+    have := h4
     obtain ⟨h5, -, h6⟩ := ovl_facts (O := O) (s := s) (t := t) hs ht
-    haveI := h5
-    haveI := h6
+    have := h5
+    have := h6
     beta_reduce at hv ⊢
     rw [famD_pos e b pq sc w P i s hs] at hv
     rw [famD_pos e b pq sc w P i t ht]
@@ -1697,13 +1697,13 @@ theorem funfam_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     exact thLat_smul (P s hs) pq sc _ ha hv
   · obtain ⟨hc, g2, g3, g4⟩ := inst s hs
     obtain ⟨-, h2, h3, h4⟩ := inst t ht
-    haveI := hc
-    haveI := g2
-    haveI := g3
-    haveI := g4
-    haveI := h2
-    haveI := h3
-    haveI := h4
+    have := hc
+    have := g2
+    have := g3
+    have := g4
+    have := h2
+    have := h3
+    have := h4
     beta_reduce at hv ⊢
     rw [famD_pos e b pq sc w P i s hs] at hv
     rw [famD_pos e b pq sc w P i t ht]

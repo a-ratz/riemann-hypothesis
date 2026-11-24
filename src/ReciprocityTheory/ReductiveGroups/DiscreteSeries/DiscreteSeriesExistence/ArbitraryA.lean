@@ -216,7 +216,7 @@ theorem opConv_comm_K (hσ : IsURepOn (UJset ε) σ) {α : Matrix (Fin n) (Fin n
       rfl
     calc Formalism.MainNotions.S.umat κ⁻¹ = Formalism.MainNotions.S.umat κ⁻¹ * (k * kᴴ) := by rw [hku', Matrix.mul_one]
       _ = kᴴ := by rw [← Matrix.mul_assoc, h3, Matrix.one_mul]
-  haveI : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
+  have : (Formalism.REAL.muG ε).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular n ε g⟩
   have hF : ∀ y : Formalism.REAL.UJ ε,
       σ k (α (Formalism.MainNotions.S.umat y) • σ (Formalism.MainNotions.S.umat y) v) =
         (fun z : Formalism.REAL.UJ ε => α (Formalism.MainNotions.S.umat z) • σ (Formalism.MainNotions.S.umat z) (σ k v)) (κ * (y * κ⁻¹)) := by

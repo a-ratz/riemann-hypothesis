@@ -144,7 +144,7 @@ theorem resCard_padic (g : ℕ) [Fact g.Prime] : GlobalTheory.SplitWeil.resCard 
 theorem padic_v_map_le_one_iff {E : Type} [Field E] [NumberField E] {g : ℕ} [Fact g.Prime]
     {w : HeightOneSpectrum (𝓞 E)} (i : ℚ_[g] ≃+* w.adicCompletion E) (hi : Continuous i) (y : ℚ_[g]) :
     Valued.v (i y) ≤ 1 ↔ ‖y‖ ≤ 1 := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   rw [← (ValuativeRel.isEquiv (ValuativeRel.valuation _) Valued.v).le_one_iff_le_one,
     valuation_map_le_one_iff i hi y]
@@ -187,7 +187,7 @@ theorem GlobalTheory.LocalFieldIso.padic_iso_place : ∀ (E : Type) [Field E] [N
     have hy : Valued.v (i ((g : ℚ_[g]) * x⁻¹ ^ 2)) ≤ 1 := by
       rw [map_mul, hgc, map_pow, map_inv₀, hix, Valuation.map_mul, hv, HeightOneSpectrum.valuation_of_algebraMap,
         Valuation.map_pow, map_inv₀, hPv]
-      refine le_trans (mul_le_mul_of_nonneg_right h2 zero_le') (le_of_eq ?_)
+      refine le_trans (mul_le_mul_of_nonneg_right h2 zero_le) (le_of_eq ?_)
       rw [← WithZero.exp_neg, ← WithZero.exp_nsmul, ← WithZero.exp_add]
       norm_num
     have hn := (padic_v_map_le_one_iff i hi _).1 hy
@@ -307,7 +307,7 @@ theorem fix_adjoin {E : Type} [Field E] [Algebra E Ω] (β : Ω) (hβ : IsIntegr
 theorem aeval_apply_eq_zero {E : Type} [Field E] [Algebra E Ω] (τ : Ω ≃ₐ[E] Ω) (f : ℤ[X]) {β : Ω}
     (h : aeval β f = 0) : aeval (τ β) f = 0 := by
   have := Polynomial.aeval_algHom_apply ((τ : Ω →ₐ[E] Ω).restrictScalars ℤ) β f
-  simp only [AlgHom.coe_restrictScalars', AlgHom.coe_coe] at this
+  simp only [AlgHom.coe_restrictScalars', AlgHom.coe_ofClass] at this
   exact this.trans (by rw [h, map_zero])
 
 theorem adjoin_gen_eq_top (E : Type) [Field E] [Algebra E Ω] (β : Ω) (hβ : IsIntegral E β) :
@@ -343,8 +343,8 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
   let E' := IntermediateField.adjoin E ({β} : Set Ω)
   have hfd : FiniteDimensional E E' := IntermediateField.adjoin.finiteDimensional hβE
   have : FiniteDimensional ℚ E' := Module.Finite.trans E E'
-  haveI hNF : NumberField E' := ⟨⟩
-  haveI hAC' : IsAlgClosure E' Ω := ⟨hAC, Algebra.IsAlgebraic.tower_top (K := E) E'⟩
+  have hNF : NumberField E' := ⟨⟩
+  have hAC' : IsAlgClosure E' Ω := ⟨hAC, Algebra.IsAlgebraic.tower_top (K := E) E'⟩
 
   have hroot : ∀ τ : Ω ≃ₐ[E] Ω, τ ∈ ReciprocityTheory.Gal.Dec (F := E) A → A.valuation (τ β - β) < 1 → τ β = β := by
     intro τ hτ hlt
@@ -435,7 +435,7 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
       exact lt_irrefl 1
     have hζint : IsIntegral ℤ ζE := hζE.isIntegral (by omega)
     let ζ' : 𝓞 E' := ⟨ζE, hζint⟩
-    haveI : w'.asIdeal.IsMaximal := w'.isMaximal
+    have : w'.asIdeal.IsMaximal := w'.isMaximal
     refine _root_.GlobalTheory.card_quotient_eq_of_pow_sub_self_mem w'.asIdeal (g ^ n) ζ' hq2 ?_ ?_ ?_
     · apply RingOfIntegers.coe_injective
       rw [map_pow, map_one]
@@ -476,8 +476,8 @@ theorem exists_unramified_ext : ∀ (E Ω : Type) [Field E] [NumberField E] [Fie
     have hN' : A.valuation (((g ^ n - 1 : ℕ)) : Ω) = 1 := by
       rw [Nat.cast_sub (by omega), Nat.cast_one, ← neg_sub, Valuation.map_neg,
         Valuation.map_one_sub_of_lt _ hqΩ]
-    haveI : NeZero (((g ^ n - 1 : ℕ)) : Ω) := ⟨by exact_mod_cast (show g ^ n - 1 ≠ 0 by omega)⟩
-    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (g ^ n - 1)
+    have : NeZero (((g ^ n - 1 : ℕ)) : Ω) := ⟨by exact_mod_cast (show g ^ n - 1 ≠ 0 by omega)⟩
+    obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (g ^ n - 1)
     have hζ1 : A.valuation ζ = 1 := ReciprocityTheory.Gal.valuation_eq_one_of_pow_eq_one A (by omega) hζ.pow_eq_one
     refine GlobalTheory.UnrCycExt.core h hg1 hg2 hN n hn ζ (X ^ (g ^ n - 1) - C 1) (monic_X_pow_sub_C 1 (by omega)) ?_ ?_ ?_
       ζ hζ (IntermediateField.mem_adjoin_simple_self E ζ) (Or.inl (by omega))

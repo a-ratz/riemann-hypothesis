@@ -67,7 +67,7 @@ open scoped CategoryTheory.Obj TensorProduct ContDiff in
 private lemma exists_complex_section_through_closed_point (X : Scheme) (p : X ⟶ Spec (CommRingCat.of ℂ))
     [LocallyOfFiniteType p] (x : X) (hx : IsClosed ({x} : Set X)) :
     ∃ q : Spec (CommRingCat.of ℂ) ⟶ X, q ≫ p = 𝟙 _ ∧ ∀ s, q.base s = x := by
-  haveI : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace p
+  have : JacobsonSpace X := LocallyOfFiniteType.jacobsonSpace p
   have h1 : LocallyOfFiniteType (X.fromSpecResidueField x) :=
     isClosed_singleton_iff_locallyOfFiniteType.mp hx
   have h2 : LocallyOfFiniteType (X.fromSpecResidueField x ≫ p) := inferInstance
@@ -75,9 +75,9 @@ private lemma exists_complex_section_through_closed_point (X : Scheme) (p : X �
     ⟨Spec.preimage _, Spec.map_preimage _⟩
   rw [← hφ] at h2
   have hft : φ.hom.FiniteType := (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).mp h2
-  letI := φ.hom.toAlgebra
-  haveI : Algebra.FiniteType ℂ (X.residueField x) := hft
-  haveI : Module.Finite ℂ (X.residueField x) := finite_of_finite_type_of_isJacobsonRing ℂ _
+  let := φ.hom.toAlgebra
+  have : Algebra.FiniteType ℂ (X.residueField x) := hft
+  have : Module.Finite ℂ (X.residueField x) := finite_of_finite_type_of_isJacobsonRing ℂ _
   have hsurj : Function.Surjective (algebraMap ℂ (X.residueField x)) := by
     apply IsSepClosed.algebraMap_surjective
   let e := RingEquiv.ofBijective (algebraMap ℂ (X.residueField x))
@@ -140,11 +140,11 @@ open scoped CategoryTheory.Obj TensorProduct ContDiff in
 theorem _root_.GlobalTheory.existsUnique_section_of_locally_regular :
     ∀ (P₀ : _root_.ReciprocityTheory.ChartRestriction.G.Out.PolAV (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp ℂ)) (u : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.HolUnif P₀.A P₀.L P₀.g) (Hm : Matrix (Fin P₀.g) (Fin P₀.g) ℂ) (χ : u.Λ → ℂ), _root_.GlobalTheory.KS.GoodU u Hm χ → ∀ (O : P₀.A.left.Opens) (h : (Fin P₀.g → ℂ) → ℂ), (∀ z, ⊤ ≤ (u.ex z).left ⁻¹ᵁ O → ∃ (O' : P₀.A.left.Opens) (a : Γ(P₀.A.left, O')), O' ≤ O ∧ ⊤ ≤ (u.ex z).left ⁻¹ᵁ O' ∧ ∀ z', ⊤ ≤ (u.ex z').left ⁻¹ᵁ O' → _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.valAt' (u.ex z').left O' a = h z') → ∃! a : Γ(P₀.A.left, O), ∀ z, ⊤ ≤ (u.ex z).left ⁻¹ᵁ O → _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.valAt' (u.ex z).left O a = h z := by
   intro P₀ u Hm χ _ O h H
-  haveI := P₀.smoothDim
+  have := P₀.smoothDim
   have hsm : Smooth P₀.A.hom := SmoothOfRelativeDimension.smooth P₀.g P₀.A.hom
-  haveI := hsm
-  haveI : IsReduced P₀.A.left := _root_.GlobalTheory.isReduced_of_smooth_complex _ _ hsm
-  haveI : JacobsonSpace P₀.A.left := LocallyOfFiniteType.jacobsonSpace P₀.A.hom
+  have := hsm
+  have : IsReduced P₀.A.left := _root_.GlobalTheory.isReduced_of_smooth_complex _ _ hsm
+  have : JacobsonSpace P₀.A.left := LocallyOfFiniteType.jacobsonSpace P₀.A.hom
   have hpt : ∀ y : P₀.A.left, IsClosed ({y} : Set P₀.A.left) →
       ∃ z, ∀ s, (u.ex z).left.base s = y := by
     intro y hy
@@ -175,7 +175,7 @@ theorem _root_.GlobalTheory.existsUnique_section_of_locally_regular :
   have hcover : O ≤ iSup W := by
     by_contra hle
     have hZ : ((O : Set P₀.A.left) ∩ ((iSup W : P₀.A.left.Opens) : Set P₀.A.left)ᶜ).Nonempty := by
-      rw [← Set.diff_eq, Set.diff_nonempty]
+      rw [← Set.sdiff_eq, Set.sdiff_nonempty]
       exact hle
     have hZlc : IsLocallyClosed ((O : Set P₀.A.left) ∩ ((iSup W : P₀.A.left.Opens) : Set P₀.A.left)ᶜ) :=
       ⟨O, ((iSup W : P₀.A.left.Opens) : Set P₀.A.left)ᶜ, O.isOpen, (iSup W).isOpen.isClosed_compl, rfl⟩

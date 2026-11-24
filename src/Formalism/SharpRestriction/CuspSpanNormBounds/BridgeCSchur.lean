@@ -70,7 +70,7 @@ theorem schur_selfAdjoint (𝒰 : Set (H →L[ℂ] H))
   · exact ⟨0, by
       ext x
       exact Subsingleton.elim _ _⟩
-  haveI : Nontrivial (H →L[ℂ] H) := by
+  have : Nontrivial (H →L[ℂ] H) := by
     obtain ⟨e, he⟩ := exists_ne (0 : H)
     exact ⟨⟨0, 1, fun h0 => he (by simpa using (congrArg (fun T : H →L[ℂ] H => T e) h0).symm)⟩⟩
   have hcom : ∀ (φ : ℝ → ℝ), ∀ U ∈ 𝒰, Commute (cfc φ A) U := by
@@ -108,7 +108,7 @@ theorem schur_selfAdjoint (𝒰 : Set (H →L[ℂ] H))
         apply LinearMap.mem_ker.2
         show cfc f A (U v) = 0
         have hc := congrArg (fun T : H →L[ℂ] H => T v) (hcom f U hU).eq
-        simp only [ContinuousLinearMap.mul_apply] at hc
+        simp only [mul_apply_eq_comp] at hc
         rw [hc, hv', map_zero]
       rcases hirr K hKc hKi with hbot | htop
       · apply hG0
@@ -116,15 +116,15 @@ theorem schur_selfAdjoint (𝒰 : Set (H →L[ℂ] H))
         have hy : cfc g A y ∈ K := by
           apply LinearMap.mem_ker.2
           show cfc f A (cfc g A y) = 0
-          rw [← ContinuousLinearMap.mul_apply, hFG, ContinuousLinearMap.zero_apply]
+          rw [← mul_apply_eq_comp, hFG, zero_apply]
         rw [hbot, Submodule.mem_bot] at hy
-        rw [hy, ContinuousLinearMap.zero_apply]
+        rw [hy, zero_apply]
       · apply hF0
         ext y
         have hy : y ∈ K := by
           rw [htop]
           exact Submodule.mem_top
-        rw [ContinuousLinearMap.zero_apply]
+        rw [zero_apply]
         exact LinearMap.mem_ker.1 hy
     have hfc : Continuous fun x : ℝ => max 0 (|s - t| / 2 - |x - s|) := by
       first
@@ -328,7 +328,7 @@ theorem Aop_comm [μ.IsMulLeftInvariant] (h : SqRep μ ρ) (v v' : H) (a : G) : 
   ext w'
   apply ext_inner_left ℂ
   intro w
-  rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply]
+  rw [mul_apply_eq_comp, mul_apply_eq_comp]
   exact key w w'
 
 theorem star_rho (h : SqRep μ ρ) (a : G) : star (ρ a) = ρ a⁻¹ := by
@@ -353,8 +353,8 @@ theorem schur_orth [μ.IsMulLeftInvariant] [μ.IsInvInvariant] [μ.IsOpenPosMeas
   choose c hc using hscal
   have hI : ∀ v w v' w' : H, Iint μ ρ v w v' w' = c v v' * ⟪w, w'⟫_ℂ := by
     intro v w v' w'
-    rw [← Aop_inner h v v' w w', hc v v', ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.one_apply, inner_smul_right]
+    rw [← Aop_inner h v v' w w', hc v v', smul_apply,
+      one_apply_eq_self, inner_smul_right]
   obtain ⟨e, he⟩ := exists_ne (0 : H)
   have hn : (0 : ℝ) < ‖e‖ := norm_pos_iff.2 he
   have hc0 : Continuous fun g => ρ g e := h.cont e
@@ -369,7 +369,7 @@ theorem schur_orth [μ.IsMulLeftInvariant] [μ.IsInvInvariant] [μ.IsOpenPosMeas
   have hpos : 0 < ∫ g, ‖⟪e, ρ g e⟫_ℂ‖ ^ 2 ∂μ := by
     rw [integral_pos_iff_support_of_nonneg (fun g => sq_nonneg _) hfi]
     refine hfc.isOpen_support.measure_pos μ ⟨1, ?_⟩
-    simp only [Function.mem_support, h.one, ContinuousLinearMap.one_apply]
+    simp only [Function.mem_support, h.one, one_apply_eq_self]
     first
     | exact pow_ne_zero 2 (norm_ne_zero_iff.2 (inner_self_ne_zero.2 he))
   have hIe : Iint μ ρ e e e e = ((∫ g, ‖⟪e, ρ g e⟫_ℂ‖ ^ 2 ∂μ : ℝ) : ℂ) := by
@@ -475,12 +475,12 @@ theorem equiv_of_intertwiner (h : SqRep μ ρ) (h' : SqRep μ ρ')
       rintro _ ⟨a, rfl⟩
       show (ContinuousLinearMap.adjoint B).comp B * ρ' a = ρ' a * (ContinuousLinearMap.adjoint B).comp B
       ext w
-      simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply, htw, hadj])
+      simp only [mul_apply_eq_comp, ContinuousLinearMap.comp_apply, htw, hadj])
   have hnorm : ∀ w : H', ((‖B w‖ ^ 2 : ℝ) : ℂ) = c * ((‖w‖ ^ 2 : ℝ) : ℂ) := by
     intro w
     have e1 : ⟪w, ((ContinuousLinearMap.adjoint B).comp B) w⟫_ℂ = ⟪B w, B w⟫_ℂ := by
       rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.adjoint_inner_right]
-    rw [hc, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, inner_smul_right,
+    rw [hc, smul_apply, one_apply_eq_self, inner_smul_right,
       inner_self_eq_norm_sq_to_K, inner_self_eq_norm_sq_to_K] at e1
     push_cast
     exact e1.symm
@@ -508,16 +508,16 @@ theorem equiv_of_intertwiner (h : SqRep μ ρ) (h' : SqRep μ ρ')
     { toLinearMap := ((((r⁻¹ : ℝ) : ℂ) • B : H' →L[ℂ] H) : H' →ₗ[ℂ] H)
       norm_map' := fun w => by
         show ‖(((r⁻¹ : ℝ) : ℂ) • B) w‖ = ‖w‖
-        rw [ContinuousLinearMap.smul_apply, norm_smul, hBr w, Complex.norm_real, Real.norm_eq_abs,
+        rw [smul_apply, norm_smul, hBr w, Complex.norm_real, Real.norm_eq_abs,
           abs_inv, abs_of_pos hr, ← mul_assoc, inv_mul_cancel₀ hr.ne', one_mul] }
   have hVtw : ∀ a w, V (ρ' a w) = ρ a (V w) := by
     intro a w
     show (((r⁻¹ : ℝ) : ℂ) • B) (ρ' a w) = ρ a ((((r⁻¹ : ℝ) : ℂ) • B) w)
-    rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, htw, map_smul]
+    rw [smul_apply, smul_apply, htw, map_smul]
   have hsurj : Function.Surjective V := by
     have hcl : IsClosed (Set.range V) := by
       first
-      | exact V.isometry.antilipschitz.isClosed_range V.isometry.uniformContinuous
+      | exact V.isometry.antilipschitzWith.isClosed_range V.isometry.uniformContinuous
     let S : Submodule ℂ H := LinearMap.range V.toLinearMap
     have hS : (S : Set H) = Set.range V := by
       first
@@ -556,7 +556,7 @@ theorem schur_orth_ineq [μ.IsMulLeftInvariant] (h : SqRep μ ρ) (h' : SqRep μ
   have hB : Bop h h' v v' = 0 := by
     by_contra hB
     exact hne (equiv_of_intertwiner h h' hirr hirr' _ (fun a w' => Bop_tw h h' v v' a w') hB)
-  rw [← Bop_inner h h' v w v' w', hB, ContinuousLinearMap.zero_apply, inner_zero_right]
+  rw [← Bop_inner h h' v w v' w', hB, zero_apply, inner_zero_right]
 
 end Orth2
 
@@ -569,7 +569,7 @@ instance instInvInvMuG : (Formalism.REAL.muG ε).IsInvInvariant :=
 
 theorem continuous_umat : Continuous (fun g : Formalism.REAL.UJ ε => umat g) := by
   first
-  | exact Units.continuous_val.comp continuous_subtype_val
+  | exact Units.continuous_val.comp continuous_subtypeVal
   | fun_prop
   | continuity
 
@@ -629,12 +629,12 @@ theorem irr_of {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hI : IsIrr
 theorem schur_UJ [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (hN : Nontrivial H)
     (hU : IsURepOn (UJset ε) σ) (hI : IsIrredOn (UJset ε) σ) (hS : IsSqIntOn ε σ) :
     ∃ d : ℝ, IsFdeg (Formalism.REAL.muG ε) σ d := by
-  haveI := hN
-  haveI : (Formalism.REAL.muG ε).IsMulLeftInvariant := by
+  have := hN
+  have : (Formalism.REAL.muG ε).IsMulLeftInvariant := by
     first
     | infer_instance
     | (unfold Formalism.REAL.muG; infer_instance)
-  haveI : (Formalism.REAL.muG ε).IsOpenPosMeasure := by
+  have : (Formalism.REAL.muG ε).IsOpenPosMeasure := by
     first
     | infer_instance
     | (unfold Formalism.REAL.muG; infer_instance)

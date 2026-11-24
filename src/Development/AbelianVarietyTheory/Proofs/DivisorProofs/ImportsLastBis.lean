@@ -50,7 +50,7 @@ namespace GlobalTheory.UPoinc
 
 theorem USetup.range_π_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (X₁ : USetup C) (η : Xo.XF c) (A : Set C.Z), (∀ w, X₁.uΩ w = η) → closure {C.i η} = A → Set.range X₁.π = A := by
   intro E _ _ _ H Dw _ l Xo c C X₁ η A hη hA
-  haveI := X₁.fin
+  have := X₁.fin
   have hc : IsClosedMap X₁.π.base := X₁.π.isClosedMap
   let w₀ : Sp X₁.Ω₁ := IsLocalRing.closedPoint X₁.Ω₁
   have hgen : X₁.M.pt w₀ = genericPoint X₁.M.Z := X₁.M.pt_apply w₀

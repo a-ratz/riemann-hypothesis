@@ -141,7 +141,7 @@ variable {T T' : Over (Spec (CommRingCat.of R))} (p : T ⟶ D.P.A) (p' : T' ⟶ 
 include hp in
 theorem Oφ_proj (x : D'.X) (i : Fin j) (κ : Fin 4) :
     D'.Oφ p' x κ ≫ (pD.pw.pr i).left = (ρ i).left ≫ D.Oφ p (pD.xe x i) κ := by
-  haveI := pD.pw.hom i
+  have := pD.pw.hom i
   refine Eq.trans ?_ (WeightPf.Oφ_comp (ρ i) p (pD.xe x i) κ).symm
   rw [← hp]
   fin_cases κ

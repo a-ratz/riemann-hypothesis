@@ -74,7 +74,7 @@ theorem finite_classSet_U (L : ColLevel R F E sp gp C A clsLat) :
     Finite (ClassSet ((ratPts sp.cm.sig sp.gram0 (FiniteAdeleRing (𝓞 F) F)).subgroupOf
         (UPts sp.cm.sig sp.gram0 (FiniteAdeleRing (𝓞 F) F)))
       (L.U.subgroupOf (UPts sp.cm.sig sp.gram0 (FiniteAdeleRing (𝓞 F) F)))) := by
-  haveI := C.clsFin 0
+  have := C.clsFin 0
   exact Finite.of_surjective _ L.y_bij.2
 
 instance finite_compL (L : ColLevel R F E sp gp C A clsLat) (p : ℕ) : Finite (compL L p) := by

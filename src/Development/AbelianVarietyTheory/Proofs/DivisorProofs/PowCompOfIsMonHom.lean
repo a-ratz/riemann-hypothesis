@@ -248,9 +248,9 @@ private theorem exists_comp_lemma_5 (A : Type) [CommRing A] [IsLocalRing A] (K L
     ∃ (M : Type) (_ : Field M) (p : K →+* M) (q : L →+* M), p.comp f = q.comp g := by
   let f' : ResidueField A →+* K := Ideal.Quotient.lift (maximalIdeal A) f hf
   let g' : ResidueField A →+* L := Ideal.Quotient.lift (maximalIdeal A) g hg
-  letI := f'.toAlgebra
-  letI := g'.toAlgebra
-  haveI : Nontrivial (K ⊗[ResidueField A] L) :=
+  let := f'.toAlgebra
+  let := g'.toAlgebra
+  have : Nontrivial (K ⊗[ResidueField A] L) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain _ K L f'.injective g'.injective
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (K ⊗[ResidueField A] L)
   have key : ∀ x, f x ⊗ₜ[ResidueField A] (1 : L) = (1 : K) ⊗ₜ[ResidueField A] g x := by
@@ -303,7 +303,7 @@ theorem torMatch_of_spread : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   obtain ⟨τW, hτW, eW⟩ := unitsLift_lemma_3 Ω' O₁ D'.toPre.X k hk1 τ'Ω hτ'Ω
   have hτWR := powComp_lemma τW ρm k hτW
   obtain ⟨z, hz⟩ := GlobalTheory.ToricOverField.exists_point (A := V₁) u τW
-  haveI := hj
+  have := hj
   have hkW : IsUnit (k : O₁) := by simpa using hk.map (u.comp ψ)
   have hkO : IsUnit (k : O) := by simpa using hk.map (φ.comp g)
   have hloc := section_over_local R G hG D A U k s hpow hnat htor D'.toPre.X ρ V₁ ψ G₁ φ₁ hφ₁ j G₀ m₀ hm₀ h₀

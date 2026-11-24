@@ -733,7 +733,7 @@ private theorem Lead.mul {E : Type} [Field E] {wt : τ → ℤ} {g h : MvPowerSe
 private theorem Lead.one {E : Type} [Field E] (wt : τ → ℤ) : Lead wt (1 : MvPowerSeries τ E) 0 := by
   classical
   refine ⟨fun ν hν => by simp at hν, by simp, fun ν' _ h => ?_⟩
-  rw [MvPowerSeries.coeff_one, if_neg h]
+  rw [MvPowerSeries.coeff_one, ite_eq_right h]
 
 end Comb
 
@@ -1062,8 +1062,8 @@ private theorem length_localization_bound {O B L P I : Type} [CommRing O] [IsDom
       show (Ideal.span {ϖ}).mkQ (e (lc.rangeRestrict f) i) = 0
       rw [h2, map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
       exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self ϖ)
-  letI : Module O P := Module.compHom P (algebraMap O B)
-  haveI : IsScalarTower O B P := ⟨fun a b p => by
+  let : Module O P := Module.compHom P (algebraMap O B)
+  have : IsScalarTower O B P := ⟨fun a b p => by
     show _ = algebraMap O B a • b • p
     rw [Algebra.smul_def, mul_smul]⟩
   have hact : ∀ (b : B) (p : P), b • p = x b • p := by
@@ -1073,8 +1073,8 @@ private theorem length_localization_bound {O B L P I : Type} [CommRing O] [IsDom
     rw [← sub_eq_zero, ← map_smul, ← map_smul, ← map_sub, hk]
     exact ⟨0, by rw [map_sub, hlc, hlc, AlgHom.commutes, map_zero, smul_zero]; exact sub_self _⟩
   have h1 : Module.length B P = Module.length O P := by
-    letI : Algebra B O := x.toRingHom.toAlgebra
-    haveI : IsScalarTower B O P := ⟨fun b a p => by
+    let : Algebra B O := x.toRingHom.toAlgebra
+    have : IsScalarTower B O P := ⟨fun b a p => by
       rw [hact]
       exact mul_smul (x b) a p⟩
     exact Module.length_eq_of_surjective fun a => ⟨algebraMap O B a, x.commutes a⟩
@@ -1084,8 +1084,8 @@ private theorem length_localization_bound {O B L P I : Type} [CommRing O] [IsDom
   have e2 : P ≃ₗ[O] (I → O ⧸ Ideal.span {ϖ}) :=
     (((π.restrictScalars O).quotKerEquivOfSurjective hπ).symm.trans (Submodule.quotEquivOfEq _ _ hker)).trans
       (ρ.quotKerEquivOfSurjective hρ)
-  haveI : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-  haveI : IsSimpleModule O (O ⧸ Ideal.span {ϖ}) := isSimpleModule_iff_isCoatom.2 (Ideal.isMaximal_def.1 inferInstance)
+  have : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+  have : IsSimpleModule O (O ⧸ Ideal.span {ϖ}) := isSimpleModule_iff_isCoatom.2 (Ideal.isMaximal_def.1 inferInstance)
   rw [h1, e2.length_eq, Module.length_pi_of_fintype]
   simp [Module.length_eq_one]
 
@@ -1169,7 +1169,7 @@ private theorem rees_graded_piece_surjection {B A : Type} [CommRing B] [CommRing
   · rintro ⟨p, hp⟩
     refine ⟨⟨_, p.2 μ⟩, ?_⟩
     have h1 : AddMonoidAlgebra.coeff (MvPolynomial.monomial μ f.1 - β • p.1) μ ∈ T μ := (hq _).1 hp μ
-    rwa [MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, if_pos rfl, MvPolynomial.coeff_smul] at h1
+    rwa [MvPolynomial.coeff_sub, MvPolynomial.coeff_monomial, ite_eq_left rfl, MvPolynomial.coeff_smul] at h1
   · rintro ⟨g, hg⟩
     refine ⟨monoL N μ g, ?_⟩
     rw [← map_smul, ← map_sub, hq]
@@ -1197,7 +1197,7 @@ theorem UpperTheory.V.Alg.M.hf_holds :
     (fun ν => ((fil (FractionRing O) wt (2 * ν 0 + 4 * ν 2 + 1)).toAddSubgroup).comap φ.toRingHom.toAddMonoidHom)
     (fun p => by rw [← SetLike.mem_coe, h𝔮]; rfl)
   let I := {ν : τ →₀ ℕ // Finsupp.weight (negW wt) ν = 2 * μ 0 + 4 * μ 2 ∧ Finsupp.weight (posW wt) ν = 2 * μ 1 + 2 * μ 2}
-  haveI : Finite I := pullback_fin_relation wt (fun i => by have := hφ.wts i; omega) _ _
+  have : Finite I := pullback_fin_relation wt (fun i => by have := hφ.wts i; omega) _ _
   let lc : lat (mN 𝒜 F) μ →ₗ[O] (I → FractionRing O) :=
     { toFun := fun f ν => MvPowerSeries.coeff ν.1 (φ f.1)
       map_add' := fun f g => funext fun ν => by simp
@@ -1222,12 +1222,12 @@ theorem UpperTheory.V.Alg.M.hf_holds :
     · exact h _
     · exact (Submodule.fg_span_singleton _).sup (((h _).mul (h _)).mul (h _))
   have hl : lat (mN 𝒜 F) μ = mN 𝒜 F 0 ^ μ 0 * mN 𝒜 F 1 ^ μ 1 * mN 𝒜 F 2 ^ μ 2 := Fin.prod_univ_three _
-  haveI : Module.Finite (𝒜 0) (lat (mN 𝒜 F) μ) := by
+  have : Module.Finite (𝒜 0) (lat (mN 𝒜 F) μ) := by
     rw [Module.Finite.iff_fg, hl]
     exact (((hfg _).pow _).mul ((hfg _).pow _)).mul ((hfg _).pow _)
   have key := length_localization_bound (res0 𝒜 x) lc (fun b f => ?_) (fun i => ?_) ϖ hϖ π hπ (fun f => ?_)
   · show ((Module.length _ _).toNat : ℤ) = (Nat.card _ : ℕ)
-    rw [key, ENat.toNat_coe]
+    rw [key, ENat.toNat_natCast]
     congr 1
     refine Nat.card_congr (Equiv.subtypeEquivRight fun ν => ?_)
     simp only [toDeg]

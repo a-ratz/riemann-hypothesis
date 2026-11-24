@@ -338,7 +338,7 @@ private theorem algHom_finite_domain_injective {O : Type} [CommRing O] [IsDomain
     exact ⟨fun h => (map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective O K)).1 h,
       fun h => by simp [h]⟩
   have hmem : x ∈ RingHom.ker σ := hx
-  rw [Ideal.eq_bot_of_comap_eq_bot hker] at hmem
+  rw [Ideal.eq_bot_of_under_eq_bot hker] at hmem
   exact hmem
 
 attribute [local instance] FractionRing.liftAlgebra in
@@ -358,8 +358,8 @@ private theorem algebra_norm_eq_prod_embeddings {O : Type} [CommRing O] [IsDomai
   have hF : IsField L := by
     have : Module.Finite (FractionRing O) L := Module.Finite.of_isLocalization O D O⁰
     exact isField_of_isIntegral_of_isField' (Field.toIsField (FractionRing O))
-  letI : Field L := hF.toField
-  letI : Algebra (FractionRing O) L := localizationAlgebra O⁰ D
+  let : Field L := hF.toField
+  let : Algebra (FractionRing O) L := localizationAlgebra O⁰ D
   have : Module.Finite (FractionRing O) L := Module.Finite.of_isLocalization O D O⁰
   have hN : Algebra.norm (FractionRing O) (algebraMap D L a) =
       algebraMap O (FractionRing O) (Algebra.norm O a) :=
@@ -369,7 +369,7 @@ private theorem algebra_norm_eq_prod_embeddings {O : Type} [CommRing O] [IsDomai
     (τ.restrictScalars O).comp (IsScalarTower.toAlgHom O D L)
   have hinj : Function.Injective r := by
     intro τ₁ τ₂ h
-    apply AlgHom.coe_ringHom_injective
+    apply AlgHom.toRingHom_injective
     apply IsLocalization.ringHom_ext M
     ext d
     exact DFunLike.congr_fun h d
@@ -391,7 +391,7 @@ private theorem algebra_norm_eq_prod_embeddings {O : Type} [CommRing O] [IsDomai
     refine ⟨{ τ₀ with commutes' := fun x => DFunLike.congr_fun hc x }, ?_⟩
     ext d
     simp [r, τ₀, IsLocalization.lift_eq]
-  letI inst : Fintype (D →ₐ[O] K) := Fintype.ofSurjective r hsurj
+  let inst : Fintype (D →ₐ[O] K) := Fintype.ofSurjective r hsurj
   refine ⟨inst, ?_⟩
   rw [IsScalarTower.algebraMap_apply O (FractionRing O) K, ← hN, hE]
   exact Fintype.prod_bijective r ⟨hinj, hsurj⟩ _ _ (fun τ => rfl)
@@ -653,7 +653,7 @@ private theorem loc_self {S : Type} [CommRing S] (P Q : Ideal S) [hP : P.IsPrime
 private theorem loc_not_le {S : Type} [CommRing S] (P Q : Ideal S) [hP : P.IsPrime] (h : ¬ Q ≤ P) :
     Module.length (Localization.AtPrime P) (LocalizedModule P.primeCompl (S ⧸ Q)) = 0 := by
   rw [Module.length_eq_zero_iff, LocalizedModule.subsingleton_iff]
-  obtain ⟨s, hs, hs'⟩ := SetLike.not_le_iff_exists.mp h
+  obtain ⟨s, hs, hs'⟩ := IsConcreteLE.not_le_iff_exists.mp h
   intro x
   obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective Q x
   refine ⟨s, hs', ?_⟩
@@ -682,7 +682,7 @@ private theorem prime_case (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValua
     haveI : (RingHom.ker σ).IsPrime := RingHom.ker_isPrime σ
     loc_not_le _ P h
   by_cases hinj : P.comap (algebraMap O B) = ⊥
-  · haveI : FaithfulSMul O (B ⧸ P) := by
+  · have : FaithfulSMul O (B ⧸ P) := by
       rw [faithfulSMul_iff_algebraMap_injective, injective_iff_map_eq_zero]
       intro c hc
       have : c ∈ P.comap (algebraMap O B) := by
@@ -691,14 +691,14 @@ private theorem prime_case (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValua
       rwa [hinj] at this
     have hτ : ∀ τ : (B ⧸ P) →ₐ[O] K, Function.Injective τ := fun τ => by
       rw [RingHom.injective_iff_ker_eq_bot]
-      refine Ideal.eq_bot_of_comap_eq_bot (R := O) ?_
+      refine Ideal.eq_bot_of_under_eq_bot (R := O) ?_
       rw [eq_bot_iff]
       intro c hc
       have : τ (algebraMap O _ c) = 0 := hc
       rw [AlgHom.commutes] at this
       exact (FaithfulSMul.algebraMap_injective O K) (this.trans (map_zero _).symm)
     have h1 : ∀ τ : (B ⧸ P) →ₐ[O] K, locLen (τ.comp (Ideal.Quotient.mkₐ O P)) (B ⧸ P) = 1 := fun τ => by
-      haveI : (RingHom.ker (τ.comp (Ideal.Quotient.mkₐ O P))).IsPrime := RingHom.ker_isPrime _
+      have : (RingHom.ker (τ.comp (Ideal.Quotient.mkₐ O P))).IsPrime := RingHom.ker_isPrime _
       refine loc_self _ P ?_
       ext x
       rw [RingHom.mem_ker, ← Ideal.Quotient.eq_zero_iff_mem, AlgHom.comp_apply, map_eq_zero_iff _ (hτ τ)]
@@ -731,7 +731,7 @@ private theorem prime_case (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValua
           exact ⟨b, trivial, mul_comm (Ideal.Quotient.mk P a) b⟩
       exact ((Submodule.quotEquivOfEq _ _ this).trans (Submodule.Quotient.restrictScalarsEquiv B _)).length_eq
     refine ⟨by simp [hi], hc ▸ hne, ?_⟩
-    haveI := Fintype.ofFinite ((B ⧸ P) →ₐ[O] K)
+    have := Fintype.ofFinite ((B ⧸ P) →ₐ[O] K)
     rw [hi, hc, heq, finsum_eq_sum_of_fintype]
     simp only [ENat.toNat_zero, Nat.cast_zero, sub_zero]
     refine Finset.sum_of_injOn (fun τ => τ.comp (Ideal.Quotient.mkₐ O P)) ?_ (fun τ _ => hmem τ) ?_ ?_
@@ -744,16 +744,16 @@ private theorem prime_case (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValua
       rw [h1]
       simp
   · have hmax : P.IsMaximal := by
-      haveI : (P.comap (algebraMap O B)).IsMaximal :=
+      have : (P.comap (algebraMap O B)).IsMaximal :=
         Ring.DimensionLEOne.maximalOfPrime hinj (Ideal.comap_isPrime _ _)
-      haveI : (Ideal.comap (algebraMap O (B ⧸ P)) ⊥).IsMaximal := by
+      have : (Ideal.comap (algebraMap O (B ⧸ P)) ⊥).IsMaximal := by
         convert this using 1
         ext x
         rw [Ideal.mem_comap, Ideal.mem_comap, Ideal.mem_bot, ← Ideal.Quotient.eq_zero_iff_mem]
         rfl
       have := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := O) (⊥ : Ideal (B ⧸ P)) this
       exact Ideal.Quotient.maximal_of_isField _ (Ring.isField_iff_maximal_bot.2 this)
-    haveI : IsSimpleModule B (B ⧸ P) := isSimpleModule_iff_quot_maximal.mpr ⟨P, hmax, ⟨LinearEquiv.refl _ _⟩⟩
+    have : IsSimpleModule B (B ⧸ P) := isSimpleModule_iff_quot_maximal.mpr ⟨P, hmax, ⟨LinearEquiv.refl _ _⟩⟩
     obtain ⟨h1, h2, h3⟩ := herbrand_finLen a (B ⧸ P) (by rw [Module.length_eq_one]; simp)
     refine ⟨h1, h2, ?_⟩
     rw [h3, sub_self]
@@ -798,7 +798,7 @@ theorem UpperTheory.V.Alg.M.th_holds :
       have hle' : I ≤ p.1 := by
         rw [e.annihilator_eq, Ideal.annihilator_quotient] at hle
         exact hle
-      haveI : Module.Finite O (B ⧸ p.1) :=
+      have : Module.Finite O (B ⧸ p.1) :=
         Module.Finite.of_surjective (Ideal.Quotient.factorₐ O hle').toLinearMap (Ideal.Quotient.factor_surjective hle')
       rw [(herbrand_equiv a e).1, (herbrand_equiv a e).2]
       simp only [hl] at h0 ⊢
@@ -831,12 +831,12 @@ theorem UpperTheory.V.Alg.M.th_holds :
         ring
       linarith
   obtain ⟨-, -, h⟩ := key _ hfin M le_rfl
-    (fun σ h => ne_top_of_le_ne_top (ENat.coe_ne_top c) (hS σ h).2.2) hS'
+    (fun σ h => ne_top_of_le_ne_top (ENat.natCast_ne_top c) (hS σ h).2.2) hS'
   rw [theta_eq]
   push_cast
   rw [h, Finset.mul_sum]
   refine Finset.sum_le_sum fun σ h => mul_le_mul_of_nonneg_right ?_ (hS σ h).2.1
-  exact_mod_cast ENat.toNat_le_of_le_coe (hS σ h).2.2
+  exact_mod_cast ENat.toNat_le_of_le_natCast (hS σ h).2.2
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.GradedModulesLength.HerbrandFinLen =====
@@ -852,7 +852,7 @@ private theorem locLen_le_of_exact {O B K : Type} [CommRing O] [CommRing B] [Alg
     (σ : B →ₐ[O] K) {M N P : Type} [AddCommGroup M] [Module B M] [AddCommGroup N] [Module B N]
     [AddCommGroup P] [Module B P] (f : M →ₗ[B] N) (g : N →ₗ[B] P) (h : Function.Exact f g) :
     locLen σ N ≤ locLen σ M + locLen σ P := by
-  haveI : (RingHom.ker σ).IsPrime := RingHom.ker_isPrime σ
+  have : (RingHom.ker σ).IsPrime := RingHom.ker_isPrime σ
   exact Formalism.MainNotions.V.Pf.V2.length_le_of_exact (LocalizedModule.map (RingHom.ker σ).primeCompl f)
     (LocalizedModule.map (RingHom.ker σ).primeCompl g) (LocalizedModule.map_exact _ f g h)
 
@@ -1264,7 +1264,7 @@ theorem UpperTheory.V.Alg.M.locLen_quotientWeightPiece_le_one :
       show h0 * h0 * e * h - h * h0 * e * h0 ∈ I
       rw [this]; exact I.zero_mem
   obtain ⟨h0, hh0, hcyc⟩ := cyc
-  haveI : (RingHom.ker σ).IsPrime := RingHom.ker_isPrime σ
+  have : (RingHom.ker σ).IsPrime := RingHom.ker_isPrime σ
   refine localized_length_le_one (RingHom.ker σ) ?_ (⟨Ideal.Quotient.mk I h0, h0, hh0, rfl⟩ : aPiece 𝒜 I w) ?_
   · rintro p hp ⟨_, h, hh, rfl⟩
     obtain ⟨b, hb, n, hn⟩ := nilpotent_modulo_kernel 𝒜 I h2 σ p hp
@@ -1294,7 +1294,7 @@ private theorem localized_length_le_of_surjective {O B K : Type} [CommRing O] [C
     (σ : B →ₐ[O] K) {L M N : Type} [AddCommGroup L] [Module B L] [AddCommGroup M] [Module B M]
     [AddCommGroup N] [Module B N] (φ : L →ₗ[B] M) (ψ : L →ₗ[B] N) (hφ : Function.Surjective φ)
     (h : ∀ x, ψ x = 0 → ∃ t : B, σ t ≠ 0 ∧ t • φ x = 0) : locLen σ M ≤ locLen σ N := by
-  haveI : (RingHom.ker σ).IsPrime := RingHom.ker_isPrime σ
+  have : (RingHom.ker σ).IsPrime := RingHom.ker_isPrime σ
   unfold locLen
   set S := (RingHom.ker σ).primeCompl
   have hs : Function.Surjective (LocalizedModule.map S φ) := LocalizedModule.map_surjective S φ hφ
@@ -1404,7 +1404,7 @@ private theorem generated_component_mem (hp : ∀ n : ℕ, oz 𝒜 (-(2 * n)) = 
   obtain ⟨n, hn⟩ := power_mul_mem_lattice 𝒜 hp F hf hg ν' (DirectSum.decompose 𝒜 c (u4w ν')).2
   refine ⟨n, mono _ ν' _ hn * q, J.mul_mem_left _ hq, ?_⟩
   show MvPolynomial.monomial ν' _ * q.1 = _
-  rw [e, MvPolynomial.monomial_mul, add_comm, hb, mul_assoc]
+  rw [e, MvPolynomial.monomial_mul_monomial, add_comm, hb, mul_assoc]
 
 end
 
@@ -1619,7 +1619,7 @@ theorem UpperTheory.V.Alg.M.valuation_nonneg_apply_degreeZero_of_onS :
   have hMfg : M.FG := by
     rw [hMdef, hcomp, Submodule.map_comp]
     exact Submodule.FG.map _ hI
-  haveI : IsNoetherian O M := isNoetherian_of_fg_of_noetherian M hMfg
+  have : IsNoetherian O M := isNoetherian_of_fg_of_noetherian M hMfg
   have hle : Subalgebra.toSubmodule (Algebra.adjoin O {ξ b}) ≤ M := by
     intro z hz
     have hz' : z ∈ Algebra.adjoin O {ξ b} := hz
@@ -1641,7 +1641,7 @@ theorem UpperTheory.V.Alg.M.valuation_nonneg_apply_degreeZero_of_onS :
       have hm : c₁ * c₂ ∈ 𝒜 (0 + 0) := SetLike.mul_mem_graded hc₁ hc₂
       rw [add_zero] at hm
       exact ⟨c₁ * c₂, hm, by simp [← e₁, ← e₂]⟩
-  haveI : IsNoetherian O (Subalgebra.toSubmodule (Algebra.adjoin O {ξ b})) := isNoetherian_of_le hle
+  have : IsNoetherian O (Subalgebra.toSubmodule (Algebra.adjoin O {ξ b})) := isNoetherian_of_le hle
   have hint : IsIntegral O (ξ b) :=
     isIntegral_of_submodule_noetherian (Algebra.adjoin O {ξ b}) inferInstance (ξ b)
       (Algebra.subset_adjoin (Set.mem_singleton _))
@@ -1711,7 +1711,7 @@ theorem UpperTheory.V.Alg.M.up_holds :
       obtain ⟨ξ, hξ, rfl⟩ := Finset.mem_image.1 hσ
       exact (hpos ξ hξ).2
   filter_upwards [eventually_mQ_gr_finite_annihilator O K A 𝒜 x hW r s r' s' m Q hF hG h2 h3 J hJ hsec hZ, eventually_ge_atTop 1] with d hd hd1
-  haveI := hfin d
+  have := hfin d
   have key := th_holds O K v hv (𝒜 0) ((mQ Q J).gr d) hd.1 a (T.image (res0 𝒜)) (2 ^ (r + 1 + r')) ?_ ?_
   · rw [chi_single0 _ hGr.internal]
     refine key.trans ?_

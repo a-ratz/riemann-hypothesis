@@ -76,11 +76,11 @@ theorem normalOrderTwoCentral : NormalOrderTwoCentral := by
 lemma v24 : padicValInt 2 ((5 : ℤ) ^ 2 - 1) = 3 := by
   have : ((5 : ℤ) ^ 2 - 1) = ((2 ^ 3 * 3 : ℕ) : ℤ) := by norm_num
   rw [this, padicValInt.of_nat, Nat.multiplicity_mul (by norm_num) (by norm_num),
-    padicValNat.prime_pow, padicValNat.eq_zero_of_not_dvd (by norm_num)]
+    Nat.multiplicity_prime_pow, multiplicity_eq_zero_of_not_dvd (by norm_num)]
 
 lemma v4 : padicValInt 2 ((5 : ℤ) - 1) = 2 := by
   have : ((5 : ℤ) - 1) = ((2 ^ 2 : ℕ) : ℤ) := by norm_num
-  rw [this, padicValInt.of_nat, padicValNat.prime_pow]
+  rw [this, padicValInt.of_nat, Nat.multiplicity_prime_pow]
 
 theorem twistVal : TwistVal := by
   intro s e he

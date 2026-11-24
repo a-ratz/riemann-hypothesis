@@ -120,9 +120,9 @@ private theorem modulus_leviEmb_eq_smGL_modulus (k : Type) [Field k] [ValuativeR
   simp only at hx
   subst hx
   subst hU
-  letI : MeasurableSpace (_root_.GlobalTheory.SmGL.unipRad k e) := borel _
-  haveI : BorelSpace (_root_.GlobalTheory.SmGL.unipRad k e) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (_root_.GlobalTheory.SmGL.unipRad k e) :=
+  let : MeasurableSpace (_root_.GlobalTheory.SmGL.unipRad k e) := borel _
+  have : BorelSpace (_root_.GlobalTheory.SmGL.unipRad k e) := ⟨rfl⟩
+  have : LocallyCompactSpace (_root_.GlobalTheory.SmGL.unipRad k e) :=
     hc.isClosedEmbedding_subtypeVal.locallyCompactSpace
   let μ : Measure (_root_.GlobalTheory.SmGL.unipRad k e) := Measure.haar
   obtain ⟨K⟩ : Nonempty (TopologicalSpace.PositiveCompacts (_root_.GlobalTheory.SmGL.unipRad k e)) :=

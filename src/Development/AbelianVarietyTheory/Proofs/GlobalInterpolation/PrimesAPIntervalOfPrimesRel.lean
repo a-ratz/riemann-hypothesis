@@ -64,7 +64,7 @@ theorem _root_.GlobalTheory.Lin.primesAPInterval_of_primesRel (h : _root_.Global
   have hdata : _root_.Formalism.HermitianLattices.GlobalBoundRefinements.PrimeCountAsymptoticInProgressions c₂ CA cr cS := by
     unfold _root_.Formalism.HermitianLattices.GlobalBoundRefinements.PrimeCountAsymptoticInProgressions
     intro m a hm ha
-    haveI : NeZero m := ⟨by omega⟩
+    have : NeZero m := ⟨by omega⟩
     obtain ⟨huniq, hgap, hcount⟩ := hmain m hm
     have hm1 : (1 : ℝ) < m := by exact_mod_cast (by omega : 1 < m)
     have hlogm : 0 < Real.log m := Real.log_pos hm1

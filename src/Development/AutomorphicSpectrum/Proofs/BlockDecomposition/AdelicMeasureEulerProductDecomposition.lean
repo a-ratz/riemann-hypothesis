@@ -122,14 +122,14 @@ theorem coordMapN (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Type) [CommRi
     IsHomeomorph (cvN R b : (Fin n → Fin M → R ⊗[F] E) → _) ∧
       (coordW R b lam n M).map (cvN R b) = Measure.pi fun _ : Fin n × (Fin M × Fin d) => lam := by
   obtain ⟨-, -, -, -, -, -, hh, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI := hlam
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have := hlam
   have hSF : SigmaFinite lam := inferInstance
   let e : R ⊗[F] E ≃ₜ (Fin d → R) := (hh d b).homeomorph _
   let em : R ⊗[F] E ≃ᵐ (Fin d → R) := e.toMeasurableEquiv
   have hem : ∀ y k, em y k = (Algebra.TensorProduct.basis R b).repr y k := fun _ _ => rfl
   have hK : coordK R b lam = (Measure.pi fun _ => lam).map em.symm := coordK_eq_map b lam em hem
-  haveI : SigmaFinite (coordK R b lam) := by
+  have : SigmaFinite (coordK R b lam) := by
     rw [hK]; exact em.symm.measurableEmbedding.sigmaFinite_map
   have hmp : MeasurePreserving em (coordK R b lam) (Measure.pi fun _ : Fin d => lam) :=
     ⟨em.measurable, by rw [hK]; exact MeasurableEquiv.map_map_symm em⟩
@@ -196,7 +196,7 @@ theorem psi_BRN (σ : E →ₐ[F] E) {M d n : ℕ} (J : Matrix (Fin M) (Fin M) E
     (hξ : ∀ x : AF F, ψ x = ((adelicChar F (algebraMap F (AF F) ξ * x) : Circle) : ℂ))
     (X Y : Fin n → Fin M → AF F ⊗[F] E) :
     ψ (BR (AF F) σ J X Y) = chiG (ξ • gramN σ J b n) (cvN (AF F) b X) (cvN (AF F) b Y) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have h1 : BR (AF F) σ J X Y = cvN (AF F) b X ⬝ᵥ
       (gramN σ J b n).map (algebraMap F (AF F)) *ᵥ cvN (AF F) b Y := by
     rw [gramN, dot_kronecker (algebraMap F (AF F))]
@@ -214,7 +214,7 @@ theorem dx_coordN (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M d n : ℕ} (J :
     (e : (Fin n → Fin M → AF F ⊗[F] E) ≃ₜ (Fin n × (Fin M × Fin d) → AF F))
     (he : ∀ X, e X = cvN (AF F) b X) (hB : BorelSpace (Fin n → Fin M → AF F ⊗[F] E)) :
     dx.map e = adeleMeasurePi F := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have hσ : ∀ x, σ (σ x) = x := GlobalTheory.CompanionTheory.SW.BB.RatCoord.sigma_sigma hCM
   have hT := traceGram_isSymm σ hσ J hJ.1 b
   have hs0 : (gramN σ J b n).IsSymm := by
@@ -226,7 +226,7 @@ theorem dx_coordN (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M d n : ℕ} (J :
     rw [Matrix.det_smul, gramN, Matrix.det_kronecker, Matrix.det_one, one_pow, one_mul]
     exact mul_ne_zero (pow_ne_zero _ hξ0) (pow_ne_zero _ (traceGram_det_ne_zero σ hσ J hJ.2 b))
   obtain ⟨t1, -, -, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI : IsTopologicalAddGroup (Fin n → Fin M → AF F ⊗[F] E) := inferInstance
+  have : IsTopologicalAddGroup (Fin n → Fin M → AF F ⊗[F] E) := inferInstance
   refine selfDual_eq _ hs hdet _ (selfDual_transport e ?_ _ _ ?_ dx hdx)
   · intro x y
     rw [he, he, he]
@@ -255,7 +255,7 @@ theorem dx_splitN' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Ma
     MeasurePreserving (fun X : Fin n → Fin M → AF F ⊗[F] E => (projInf X, projFin X)) dx
       ((coordW (Ainf F) b l n M).prod (coordW (Af F) b lf n M)) := by
   obtain ⟨-, hAfLC, hAfSC, hAfT2⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
+  have : BorelSpace (Af F) := ⟨rfl⟩
   obtain ⟨ξ, hξ⟩ := GlobalTheory.CompanionTheory.AdeleDual.exists_eq_adelicChar_mul ψ hψ.1 hψ.2.2.1
   have hξ0 : ξ ≠ 0 := by
     rintro rfl
@@ -268,11 +268,11 @@ theorem dx_splitN' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Ma
   have hEq := adele_eq l hH D hD hD1 lf hlf h1
   obtain ⟨i1, i3⟩ := coordMapN σ hCM (Ainf F) b l hH n M
   obtain ⟨f1, f3⟩ := coordMapN σ hCM (Af F) b lf hlf n M
-  haveI hBi := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.2.1 n M
-  haveI hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
-  haveI : SigmaFinite l := by
+  have hBi := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.2.1 n M
+  have hBf := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.2.1 n M
+  have : SigmaFinite l := by
     exact Measure.IsAddHaarMeasure.sigmaFinite l
-  haveI : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
+  have : SigmaFinite lf := Measure.IsAddHaarMeasure.sigmaFinite lf
   let eI := (i1.homeomorph).toMeasurableEquiv
   let eF := (f1.homeomorph).toMeasurableEquiv
   let eA := e.toMeasurableEquiv
@@ -288,11 +288,11 @@ theorem dx_splitN' (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : ℕ) (J : Ma
       rw [GroundTheory.Automorphic.GJMatrix.adeleMeasurePi, hEq]
     exact ⟨eA.measurable, hdxc.trans e1⟩
   let eP := eI.prodCongr eF
-  haveI : SFinite (coordW (Af F) b lf n M) := sfinite_coordW σ hCM b lf hlf n M
-  haveI : SFinite (coordW (Ainf F) b l n M) := by
+  have : SFinite (coordW (Af F) b lf n M) := sfinite_coordW σ hCM b lf hlf n M
+  have : SFinite (coordW (Ainf F) b l n M) := by
     have hK : IsHomeomorph (GlobalTheory.CompanionTheory.SW.WBox.cK (F := F) (E := E) (Ainf F) b) :=
       (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.1 d b
-    haveI := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK (Ainf F) hK l
+    have := GlobalTheory.CompanionTheory.SW.WBox.sigmaFinite_coordK (Ainf F) hK l
     unfold coordW
     infer_instance
   have hP : MeasurePreserving eP ((coordW (Ainf F) b l n M).prod (coordW (Af F) b lf n M))
@@ -347,7 +347,7 @@ theorem euler_product_of_standard_local_measures (σ : E →ₐ[F] E) (hCM : IsC
   · simp only [hmass]; simp [summable_zero]
   · have hT := dx_splitN σ hCM M J hJ ψ hψ n dx hdx b laminf hinf lf hlf h1
     obtain ⟨hg, hI⟩ := lint_fin σ hCM b lam hlam lf hlf h1 n M S φ hφ
-    haveI := sfinite_coordW σ hCM b lf hlf n M
+    have := sfinite_coordW σ hCM b lf hlf n M
     set g := ({Y | ∀ v, v ∉ S → projV v Y ∈ latV b v} : Set (Fin n → Fin M → Af F ⊗[F] E)).indicator
       fun Y => ∏ v ∈ S, φ v (projV v Y) with hgdef
     have e : ∀ X, pureL b S φinf φ X =

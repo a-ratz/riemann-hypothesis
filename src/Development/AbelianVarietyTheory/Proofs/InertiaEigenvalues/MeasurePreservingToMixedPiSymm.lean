@@ -205,7 +205,7 @@ theorem measurePreserving_toMixedPi_symm :
       ((2 ^ Fintype.card (InfinitePlace E) : ℝ≥0∞) • volume) := by
     rw [selfDualMeasure, hc]
     exact (measurePreserving_toMixed_symm E).smul_measure _
-  haveI : SigmaFinite ((2 ^ Fintype.card (InfinitePlace E) : ℝ≥0∞) • (volume : Measure (Cinf E))) := by
+  have : SigmaFinite ((2 ^ Fintype.card (InfinitePlace E) : ℝ≥0∞) • (volume : Measure (Cinf E))) := by
     have : (2 ^ Fintype.card (InfinitePlace E) : ℝ≥0∞) = ((2 ^ Fintype.card (InfinitePlace E) : NNReal) : ℝ≥0∞) := by
       simp
     rw [this]
@@ -214,7 +214,7 @@ theorem measurePreserving_toMixedPi_symm :
   have h3 : (Measure.pi fun _ : Fin n => (2 ^ Fintype.card (InfinitePlace E) : ℝ≥0∞) • (volume : Measure (Cinf E))) =
       infMeasure E n := by
     refine Measure.pi_eq fun s _ => ?_
-    simp only [infMeasure, Measure.smul_apply, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const,
+    simp only [infMeasure, smul_apply, smul_eq_mul, Finset.prod_mul_distrib, Finset.prod_const,
       Finset.card_univ, Fintype.card_fin, pow_mul, volume_pi_pi]
   rw [h3] at h2
   exact h2
@@ -294,7 +294,7 @@ theorem adelicFourierPi_thetaFn (f : 𝓢(Fin n → Cinf E, ℂ)) (J : (Fraction
     ← toMixedPi_pInf, mixedFourierPi_toMixedSch, finiteFourierPi_finiteTensor, finiteMeasurePi_latt, addChar_sum]
   simp only [finiteTensor, finiteFourier_cosetIndicator, Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ,
     Fintype.card_fin, Set.indicator_apply, Finset.prod_boole, Finset.mem_univ, true_implies, latt, Pi.one_apply,
-    SetLike.mem_coe, Set.mem_setOf_eq, Complex.ofReal_pow]
+    SetLike.mem_coe, Set.mem_ofPred_eq, Complex.ofReal_pow]
   change _ * (_ * ((∏ i, (finiteAdelicChar E (η i * pFin E (y i)) : ℂ)) *
     if ∀ i, pFin E (y i) ∈ idealFiniteAdeles (traceDualIdeal E J) then 1 else 0)) = _
   ring

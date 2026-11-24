@@ -97,7 +97,7 @@ theorem _root_.GlobalTheory.ZH.exists_basis_adapted_to_idempotents :
   have hEsum : ∑ c, E c = 1 := by simp only [E, ← map_sum, hsum, map_one]
   let w : C → J → (J → IsLocalRing.ResidueField O) := fun c s j => E c j s
   choose T a ha hsp hli using fun c => exists_linearIndependent' (IsLocalRing.ResidueField O) (w c)
-  haveI : ∀ c, Fintype (T c) := fun c => Fintype.ofInjective (a c) (ha c)
+  have : ∀ c, Fintype (T c) := fun c => Fintype.ofInjective (a c) (ha c)
   let W : (Σ c, T c) → (J → IsLocalRing.ResidueField O) := fun p => w p.1 (a p.1 p.2)
   have hWli : LinearIndependent (IsLocalRing.ResidueField O) W := by
     rw [Fintype.linearIndependent_iff]
@@ -108,7 +108,7 @@ theorem _root_.GlobalTheory.ZH.exists_basis_adapted_to_idempotents :
     simp only [map_sum, map_smul, map_zero, Matrix.mulVecLin_apply, W, w,
     mulVec_column_of_orthogonal_idempotents E hE, Fintype.sum_sigma, smul_ite, smul_zero] at h1
     rw [Finset.sum_eq_single d (fun c _ hc => by simp [Ne.symm hc]) (by simp)] at h1
-    simp only [if_pos rfl] at h1
+    simp only [ite_eq_left rfl] at h1
     exact Fintype.linearIndependent_iff.mp (hli d) (fun t => g ⟨d, t⟩) h1 t
   have hWsp : ⊤ ≤ Submodule.span (IsLocalRing.ResidueField O) (Set.range W) := by
     rw [← (Pi.basisFun (IsLocalRing.ResidueField O) J).span_eq, Submodule.span_le]
@@ -133,7 +133,7 @@ theorem _root_.GlobalTheory.ZH.exists_basis_adapted_to_idempotents :
   let M : Matrix J J O := Matrix.of fun i j => e (σ i).1 j (a (σ i).1 (σ i).2)
   have hdet : IsUnit M.det := by
     rw [← isUnit_map_iff (IsLocalRing.residue O), RingHom.map_det,
-      ← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_rows_iff_isUnit]
+      ← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_row_iff_isUnit]
     exact hWli.comp σ σ.injective
   refine ⟨fun i => (σ i).1, fun i => a (σ i).1 (σ i).2, hdet, fun c => le_antisymm ?_ ?_⟩
   · rw [Submodule.span_le]

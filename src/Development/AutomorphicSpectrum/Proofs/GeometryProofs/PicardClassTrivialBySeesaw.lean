@@ -220,8 +220,8 @@ end Main
 theorem pic_inj : ∀ (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (T : TorusExtension G) (Y : Over (Sp k)), Smooth Y.hom → GeometricallyConnected Y.hom → ∀ (y₀ : 𝟙_ (Over (Sp k)) ⟶ Y) (c : Pic (T.B ⊗ Y).left), pull (lift (fst G Y ≫ T.q) (snd G Y)).left c = 0 → pull (lift (𝟙 T.B) (toUnit T.B ≫ y₀)).left c = 0 → c = 0 := by
   intro k _ _ G _ _ hG T Y hYs hYc y₀ c h₁ h₂
   obtain ⟨N, hN, rfl⟩ := cls_surj c
-  letI := T.addCommGroup
-  letI := T.grpB
+  let := T.addCommGroup
+  let := T.grpB
   have := T.free
   have := T.q_hom
   have := T.i_hom

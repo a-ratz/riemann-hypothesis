@@ -79,7 +79,7 @@ private lemma key {n : ℕ} (t : ℝ) (ht0 : 0 ≤ t) (ht1 : t < 1) (hM : MeanVa
     (l : Fin n → ℤ) (c : ℤ) (m : ℕ) (hcm : ∑ i : Fin n, l i * (c - ((i : ℕ) : ℤ)) = m) :
     ∫ θ : Fin n → UnitAddCircle, monomialChar l (pt θ) * half (t : ℂ) (pt θ) =
       ∫ θ : Fin n → UnitAddCircle, monomialChar l (pt θ) * (if m = 0 then 1 else 0) := by
-  haveI : IsProbabilityMeasure (volume : Measure UnitAddCircle) := ⟨UnitAddCircle.measure_univ⟩
+  have : IsProbabilityMeasure (volume : Measure UnitAddCircle) := ⟨UnitAddCircle.measure_univ⟩
   obtain ⟨hhalf, -, hev, hnorm⟩ := hD n t ht0 ht1
   have hmono : Continuous fun θ : Fin n → UnitAddCircle => monomialChar l (pt θ) := by
     have h := hev (AddMonoidAlgebra.single l 1)
@@ -118,7 +118,7 @@ private lemma key {n : ℕ} (t : ℝ) (ht0 : 0 ≤ t) (ht1 : t < 1) (hM : MeanVa
 theorem UpperTheory.Gal.Gen.halfInt_pf :
     UpperTheory.Gal.Gen.WtPos → UpperTheory.Gal.Gen.MeanVal → UpperTheory.Gal.Gen.DensCont → UpperTheory.Gal.Gen.HalfInt := by
   intro hW hM hD n t ht0 ht1 l hl
-  haveI : IsProbabilityMeasure (volume : Measure UnitAddCircle) := ⟨UnitAddCircle.measure_univ⟩
+  have : IsProbabilityMeasure (volume : Measure UnitAddCircle) := ⟨UnitAddCircle.measure_univ⟩
   by_cases h0 : l = 0
   · subst h0
     rw [key t ht0 ht1 hM hD (0 : Fin n → ℤ) 0 0 (by simp)]

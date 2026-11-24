@@ -61,9 +61,9 @@ theorem GrSum.apply_eq_eval₂Hom_mul {ι R B : Type*} [CommRing R] [CommRing B]
     (F : MvPolynomial ι R) {t t' : ℤ} {a : A t} {a' : A t'}
     (h : F • GrSum.of hx t a = GrSum.of hx t' a') :
     φ t' a' = MvPolynomial.eval₂Hom c b F * φ t a := by
-  letI : Algebra R B := c.toAlgebra
-  letI : Algebra (MvPolynomial ι R) B := (MvPolynomial.eval₂Hom c b).toAlgebra
-  haveI : IsScalarTower R (MvPolynomial ι R) B :=
+  let : Algebra R B := c.toAlgebra
+  let : Algebra (MvPolynomial ι R) B := (MvPolynomial.eval₂Hom c b).toAlgebra
+  have : IsScalarTower R (MvPolynomial ι R) B :=
     IsScalarTower.of_algebraMap_eq fun r => (MvPolynomial.eval₂Hom_C c b r).symm
   let ψ : ∀ n, A n →ₗ[R] B := fun n => ⟨⟨φ n, hadd n⟩, hsmul n⟩
   have hψ : ∀ i n a, ψ (n + 1) (x i n a) = (MvPolynomial.X i : MvPolynomial ι R) • ψ n a :=

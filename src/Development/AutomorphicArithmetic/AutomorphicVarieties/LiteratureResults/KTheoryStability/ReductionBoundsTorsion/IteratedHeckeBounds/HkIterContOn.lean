@@ -136,7 +136,7 @@ def mn (S : Subgroup G) {E : Type} [AddCommGroup E] [Module ℝ E]
   ((S.index : ℝ))⁻¹ • ∑ᶠ c, e c
 
 theorem fin_of_ne {S : Subgroup G} (h : S.index ≠ 0) : Finite (Quotient (QuotientGroup.rightRel S)) := by
-  haveI : Finite (G ⧸ S) := Subgroup.index_ne_zero_iff_finite.mp h
+  have : Finite (G ⧸ S) := Subgroup.index_ne_zero_iff_finite.mp h
   exact Finite.of_equiv _ (QuotientGroup.quotientRightRelEquivQuotientLeftRel S).symm
 
 theorem mn_zero {S : Subgroup G} (h : S.index = 0) {E : Type} [AddCommGroup E] [Module ℝ E]
@@ -152,8 +152,8 @@ theorem mn_map (S : Subgroup G) {E E' : Type} [AddCommGroup E] [Module ℝ E] [A
     (e : Quotient (QuotientGroup.rightRel S) → E) : ℓ (mn S e) = mn S fun c => ℓ (e c) := by
   by_cases h : S.index = 0
   · rw [mn_zero h, mn_zero h, map_zero]
-  · haveI := fin_of_ne h
-    letI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
+  · have := fin_of_ne h
+    let := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
 
     rw [mn_fin, mn_fin, map_smul, map_sum]
 
@@ -162,8 +162,8 @@ theorem mn_integral (S : Subgroup G) {X E : Type} [MeasurableSpace X] {μ : Meas
     ∫ x, mn S (fun c => e c x) ∂μ = mn S fun c => ∫ x, e c x ∂μ := by
   by_cases h : S.index = 0
   · simp only [mn_zero h, integral_zero]
-  · haveI := fin_of_ne h
-    letI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
+  · have := fin_of_ne h
+    let := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
     simp only [mn_fin]
     rw [integral_smul, integral_finsetSum _ fun c _ => he c]
 
@@ -173,8 +173,8 @@ theorem mn_contOn (S : Subgroup G) {X E : Type} [TopologicalSpace X] [NormedAddC
   by_cases h : S.index = 0
   · simp only [mn_zero h]
     exact continuousOn_const
-  · haveI := fin_of_ne h
-    letI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
+  · have := fin_of_ne h
+    let := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
     simp only [mn_fin]
     exact (continuousOn_finsetSum _ fun c _ => he c).const_smul _
 
@@ -183,8 +183,8 @@ theorem dC_mn (S : Subgroup G) {Y : Type} {m : ℕ} (F : Quotient (QuotientGroup
   funext y
   by_cases h : S.index = 0
   · simp [dC, mn_zero h]
-  · haveI := fin_of_ne h
-    letI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
+  · have := fin_of_ne h
+    let := Fintype.ofFinite (Quotient (QuotientGroup.rightRel S))
     simp only [dC, mn_fin, smul_eq_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun i _ => ?_
@@ -241,7 +241,7 @@ theorem intP_pb {q : ℕ} (g : Gp L N) (ω : Form (HS L N) q) (y : Fin (q + 1) �
 private theorem isClosed_sx (q : ℕ) : IsClosed (sx q) := by
   show IsClosed ({t : Fin q → ℝ | ∀ j, 0 ≤ t j} ∩ {t | ∑ j, t j ≤ 1})
   refine IsClosed.inter ?_ ?_
-  · simp only [Set.setOf_forall]
+  · simp only [Set.ofPred_forall]
     exact isClosed_iInter fun j => isClosed_le continuous_const (continuous_apply j)
   · exact isClosed_le (continuous_finsetSum _ fun j _ => continuous_apply j) continuous_const
 

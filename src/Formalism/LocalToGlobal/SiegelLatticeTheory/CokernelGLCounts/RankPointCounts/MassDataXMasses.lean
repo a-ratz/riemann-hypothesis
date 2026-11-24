@@ -162,7 +162,7 @@ theorem nfinU_of_tf {D : D7} (X : HidaSetting D) (hb : AdBridgeIso X.B.I) (u : D
     rw [ratV_swV, hR_swV]
     exact (congrArg (swapE X.B.I) (hw a)).trans (map_zero _)
   unfold Formalism.L2.SG.HidaSetting.HidaSetting.NfinU Formalism.L2.SG.HidaSetting.Nfin
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨fun a => ?_, ?_, fun w hw => ?_⟩
   · rw [← hspan, hsub]
     have h1 := hU a
@@ -371,7 +371,7 @@ theorem fundamental_domain_of_compact_open (hKo : KCompactOpen) (hRB : NRatBridg
       exact ⟨s, hs, h1.symm, h2⟩
   have hmeas : MeasurableSet (FdA X hb u FdN) := by
     rw [hFd]
-    exact measurable_subtype_coe (hm hRm)
+    exact measurable_subtypeVal (hm hRm)
 
   have cover : ∀ n : ↥(Nsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)),
       ∃ g : ratOf (K := Nsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)), g • n ∈ FdA X hb u FdN := by

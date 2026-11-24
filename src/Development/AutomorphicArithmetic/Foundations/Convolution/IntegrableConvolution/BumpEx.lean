@@ -176,7 +176,7 @@ private def Good (P : archGroup K n → ℂ) : Prop :=
     ∀ k : archCompact K n, (fun g => P ((k : archGroup K n) * g)) ∈ W
 
 private theorem Good.cont {P : archGroup K n → ℂ} (h : Good P) : Continuous P := by
-  letI := (isExpLieAlgebra K n).chartedSpace
+  let := (isExpLieAlgebra K n).chartedSpace
   exact ContMDiff.continuous h.1
 
 private theorem Good.add {P Q : archGroup K n → ℂ} (hP : Good P) (hQ : Good Q) :
@@ -261,7 +261,7 @@ private def polS (C : Set (archGroup K n)) : StarSubalgebra ℂ C(C, ℂ) where
 private theorem exists_good_near {C : Set (archGroup K n)} (hC : IsCompact C) (f : archGroup K n → ℂ)
     (hf : Continuous f) {ε : ℝ} (hε : 0 < ε) :
     ∃ P : archGroup K n → ℂ, Good P ∧ ∀ x ∈ C, ‖P x - f x‖ < ε := by
-  haveI : CompactSpace C := isCompact_iff_compactSpace.1 hC
+  have : CompactSpace C := isCompact_iff_compactSpace.1 hC
   set b := Module.finBasis ℝ (ArchMatrix K n)
   have hsep : (polS C).SeparatesPoints := by
     intro x y hxy
@@ -272,10 +272,10 @@ private theorem exists_good_near {C : Set (archGroup K n)} (hC : IsCompact C) (f
       exact hall i
     have hG := good_coord b i
     refine ⟨_, ⟨⟨fun x : C => ((b.coord i (archVal (x : archGroup K n)) : ℝ) : ℂ),
-      hG.cont.comp continuous_subtype_val⟩, ⟨_, hG, fun x => rfl⟩, rfl⟩, ?_⟩
+      hG.cont.comp continuous_subtypeVal⟩, ⟨_, hG, fun x => rfl⟩, rfl⟩, ?_⟩
     simpa using hi
   have htop := ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints (polS C) hsep
-  set f' : C(C, ℂ) := ⟨fun x => f x, hf.comp continuous_subtype_val⟩
+  set f' : C(C, ℂ) := ⟨fun x => f x, hf.comp continuous_subtypeVal⟩
   have hmem : f' ∈ ((polS C).topologicalClosure : Set C(C, ℂ)) := by rw [htop]; trivial
   rw [StarSubalgebra.topologicalClosure_coe, Metric.mem_closure_iff] at hmem
   obtain ⟨s, ⟨P, hP, hs⟩, hd⟩ := hmem ε hε
@@ -311,7 +311,7 @@ theorem UpperTheory.ConvolutionTheory.L1.bumpEx :
   set w : archGroup K n → ℝ := fun g => c g * ‖F g‖ ^ 2 with hwdef
   have hwc : Continuous w := hcc.mul (hF.norm.pow 2)
   have hws : HasCompactSupport w := hcs.mul_right
-  have hJ : 0 < ∫ g, w g ∂ν := hwc.integral_pos_of_hasCompactSupport_nonneg_nonzero hws
+  have hJ : 0 < ∫ g, w g ∂ν := hwc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hws
     (fun g => mul_nonneg (hc0 g) (by positivity)) (x := 1)
     (mul_ne_zero hc1 (pow_ne_zero 2 (norm_ne_zero_iff.2 hF1)))
   set J := ∫ g, w g ∂ν
@@ -371,7 +371,7 @@ theorem UpperTheory.ConvolutionTheory.L1.bumpEx :
   have hb : ∀ g, b g = (t : ℂ) * (P g * (c g : ℂ)) := fun g => rfl
   refine ⟨b, hQ.1, ?_, ?_, fun h0 => ?_⟩
   · obtain ⟨W, hW, hk⟩ := hQ.2
-    haveI : FiniteDimensional ℂ W := Module.Finite.iff_fg.2 hW
+    have : FiniteDimensional ℂ W := Module.Finite.iff_fg.2 hW
     refine Submodule.finiteDimensional_of_le (S₂ := W) (Submodule.span_le.2 ?_)
     rintro _ ⟨k, rfl⟩
     exact hk k

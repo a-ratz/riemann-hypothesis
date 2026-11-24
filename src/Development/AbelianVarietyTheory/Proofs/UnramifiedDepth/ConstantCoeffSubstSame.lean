@@ -141,7 +141,7 @@ theorem pderiv_aeval {σ τ : Type} [Fintype σ] (a : σ → MvPowerSeries τ k)
       map_mul, MvPolynomial.aeval_X, Pi.single_apply]
     simp only [Finset.mul_sum]
     simp only [apply_ite (MvPolynomial.aeval a), map_one, map_zero, mul_ite, ite_mul, mul_one, mul_zero, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     ring_nf
 
 theorem pderiv_subst {σ τ : Type} [Fintype σ] {a : σ → MvPowerSeries τ k} (ha : ∀ s, constantCoeff (a s) = 0)
@@ -192,7 +192,7 @@ theorem killCompl_eq_subst {σ τ : Type} [Finite τ] (e : σ ↪ τ) (f : MvPow
   · intro d hd
     have : d.prod (fun s n => (killCompl e (X s) : MvPowerSeries σ k) ^ n) = killCompl e (monomial d 1) := by
       rw [monomial_one_eq, map_finsuppProd]; simp only [map_pow]
-    rw [this, coeff_killCompl, coeff_monomial, if_neg (Ne.symm hd), smul_zero]
+    rw [this, coeff_killCompl, coeff_monomial, ite_eq_right (Ne.symm hd), smul_zero]
 
 theorem killCompl_subst {σ τ υ : Type} [Finite τ] [Finite υ] (e : σ ↪ τ) {a : υ → MvPowerSeries τ k}
     (ha : ∀ s, constantCoeff (a s) = 0) (f : MvPowerSeries υ k) :
@@ -233,7 +233,7 @@ theorem jetAt0_monomial {σ : Type} (m : σ →₀ ℕ) (c : K) (G : MvPowerSeri
     jetAt0 (MvPolynomial.monomial m c) G = c * (mfact m : K) * coeff m G := by
   classical
   rw [jetAt0_eq_sum _ G {m} MvPolynomial.support_monomial_subset, Finset.sum_singleton,
-    MvPolynomial.coeff_monomial, if_pos rfl]
+    MvPolynomial.coeff_monomial, ite_eq_left rfl]
 
 theorem jetAt0_zero_left {σ : Type} (G : MvPowerSeries σ K) : jetAt0 0 G = 0 := by
   simp [jetAt0]
@@ -268,7 +268,7 @@ theorem jetAt0_mul_X {σ : Type} (P : MvPolynomial σ K) (s : σ) (G : MvPowerSe
     jetAt0 (P * MvPolynomial.X s) G = jetAt0 P (pderiv s G) := by
   induction P using MvPolynomial.induction_on' with
   | monomial m c =>
-    rw [MvPolynomial.X, MvPolynomial.monomial_mul, jetAt0_monomial, jetAt0_monomial, coeff_pderiv,
+    rw [MvPolynomial.X, MvPolynomial.monomial_mul_monomial, jetAt0_monomial, jetAt0_monomial, coeff_pderiv,
       mfact_add_single]
     push_cast; ring
   | add p q hp hq => rw [add_mul, jetAt0_add_left, jetAt0_add_left, hp, hq]
@@ -337,7 +337,7 @@ theorem complete_step (V : VF K) {n j : ℕ} (hj : j < n) (A : Fin j → Fin n �
     have := LinearMap.ker_ne_bot_of_finrank_lt (f := (Matrix.of A).mulVecLin) (by simpa using hj)
     obtain ⟨u, hu, hu0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot this
     exact ⟨u, hu, hu0⟩
-  haveI : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, by omega⟩⟩
   obtain ⟨p, hp⟩ := Finite.exists_min (fun x => V.v (u x))
   have hup : u p ≠ 0 := by
     intro h

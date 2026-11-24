@@ -122,7 +122,7 @@ theorem form_heckeVec_dosetInd {G V : Type} [Group G] [AddCommGroup V] [Module �
     refine (Formalism.UG.P.finite_support_cosets hK hm.2).subset ?_
     intro c hc
     have h' : c.out ∈ D := hc
-    simp only [Set.mem_setOf_eq, dosetInd]
+    simp only [Set.mem_ofPred_eq, dosetInd]
     rw [Set.indicator_of_mem h']
     simp
   have hterm : ∀ γ ∈ D, l (ρ γ x) = l (ρ g x) := by
@@ -305,7 +305,7 @@ private lemma entry_bound {L : Type} [Field L] [Valued L (WithZero (Multiplicati
     · exact hi
     · exact hi.le
   · intro hlt
-    rw [if_neg (by omega)] at hi
+    rw [ite_eq_right (by omega)] at hi
     exact hi
 
 end UpperTheory.Reformulated.B.IwahoriEntryBound.Helpers
@@ -422,7 +422,7 @@ theorem prod_lt_one {ι : Type} (s : Finset ι) (c : ι → WithZero (Multiplica
     {x : ι} (hx : x ∈ s) (hlt : c x < 1) : ∏ y ∈ s, c y < 1 := by
   classical
   rw [← Finset.mul_prod_erase s c hx]
-  exact (mul_le_of_le_one_right' (Finset.prod_le_one' fun y hy => h y (Finset.mem_of_mem_erase hy))).trans_lt hlt
+  exact (mul_le_of_le_one_right' (Finset.prod_le_one fun y hy => h y (Finset.mem_of_mem_erase hy))).trans_lt hlt
 
 theorem v_sign_smul {ι : Type} [DecidableEq ι] [Fintype ι] (s : Equiv.Perm ι) (x : L) :
     Valued.v (Equiv.Perm.sign s • x) = Valued.v x := by
@@ -460,7 +460,7 @@ theorem iwEnt_of_mem {g : GL (Fin n) L} (hg : g ∈ IwGL L n) : IwEnt (g : Matri
   have hm := Set.smul_mem_smul_set (a := Matrix.GeneralLinearGroup.toLin g) he
   rw [hs] at hm
   have hi := hm i
-  rw [if_neg (lt_irrefl _)] at hi
+  rw [ite_eq_right (lt_irrefl _)] at hi
   have e : ((Matrix.GeneralLinearGroup.toLin g) • (Pi.single j (1 : L) : Fin n → L)) i =
       (g : Matrix (Fin n) (Fin n) L) i j := by
     show (Matrix.mulVec (g : Matrix (Fin n) (Fin n) L) (Pi.single j (1 : L) : Fin n → L)) i = _
@@ -476,7 +476,7 @@ variable {ι : Type} [Fintype ι] [DecidableEq ι]
 theorem term_le {M : Matrix (Fin n) (Fin n) L} (hM : IwEnt M) (f h : ι → Fin n) (s : Equiv.Perm ι) :
     Valued.v (Equiv.Perm.sign s • ∏ x, M (f (s x)) (h x)) ≤ 1 := by
   rw [v_sign_smul, map_prod]
-  exact Finset.prod_le_one' fun x _ => hM.1 _ _
+  exact Finset.prod_le_one fun x _ => hM.1 _ _
 
 theorem term_lt {M : Matrix (Fin n) (Fin n) L} (hM : IwEnt M) (f h : ι → Fin n) (s : Equiv.Perm ι)
     {x : ι} (hx : h x < f (s x)) : Valued.v (Equiv.Perm.sign s • ∏ x, M (f (s x)) (h x)) < 1 := by
@@ -551,7 +551,7 @@ theorem up_det {R I B T : Matrix (Fin n) (Fin n) L} {π π' : Equiv.Perm (Fin n)
       rw [hB a.1 x hxa, zero_mul]
   have hdet := congrArg Matrix.det hm
   rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_diagonal,
-    Matrix.det_of_upperTriangular (M := B.submatrix (fun a : Up n m => a.1) (fun a : Up n m => a.1))
+    Matrix.det_of_isUpperTriangular (M := B.submatrix (fun a : Up n m => a.1) (fun a : Up n m => a.1))
       (fun i j hij => hB _ _ hij)] at hdet
   simpa using hdet
 
@@ -674,7 +674,7 @@ theorem upper_diag_ne {g : GL (Fin n) L} (h : ∀ i j, j < i → (g : Matrix (Fi
     (g : Matrix (Fin n) (Fin n) L) a a ≠ 0 := by
   have hdet : (g : Matrix (Fin n) (Fin n) L).det ≠ 0 :=
     ((Matrix.isUnit_iff_isUnit_det _).1 g.isUnit).ne_zero
-  rw [Matrix.det_of_upperTriangular (fun i j hij => h i j hij)] at hdet
+  rw [Matrix.det_of_isUpperTriangular (fun i j hij => h i j hij)] at hdet
   exact Finset.prod_ne_zero_iff.1 hdet a (Finset.mem_univ a)
 
 theorem mat_triang {R I B T : Matrix (Fin n) (Fin n) L} {π π' : Equiv.Perm (Fin n)}
@@ -881,7 +881,7 @@ theorem conj_entries_le_one {t A : GL (Fin n) L} (ht : IsDiagM t) (hd : IsStrict
     calc Valued.v (d i) ^ k * Valued.v ((A : Matrix (Fin n) (Fin n) L) i j) * (Valued.v (d j) ^ k)⁻¹
         ≤ Valued.v (d i) ^ k * 1 * (Valued.v (d j) ^ k)⁻¹ := by gcongr; exact h1 i j
       _ = Valued.v (d i) ^ k / Valued.v (d j) ^ k := by rw [mul_one, div_eq_mul_inv]
-      _ ≤ 1 := (div_le_one₀ (zero_lt_iff.2 hb)).2 (pow_le_pow_left' hle k)
+      _ ≤ 1 := (div_le_one₀ (pos_iff_ne_zero.2 hb)).2 (pow_le_pow_left' hle k)
   · subst hij
     rw [h3, mul_one, mul_inv_cancel₀ (pow_ne_zero _ (hd0 i)), map_one]
   · rw [h2 i j hij]; simp
@@ -1220,7 +1220,7 @@ theorem multiset_sum_eq_hAct (K : Subgroup G) (s : G) (M : Multiset G) (hM0 : M 
 theorem heckeTrace : ∀ (G : Type) [Group G] (K I : Subgroup G), I ≤ K → Finite (K ⧸ I.subgroupOf K) → ∀ (t : G) (R : Finset G), (1 : G) ∈ R → (∀ r ∈ R, r ∈ I) → (∀ r ∈ R, ∀ k : ℕ, t ^ k * r * (t ^ k)⁻¹ ∈ K) → (∀ i ∈ I, ∃! r, r ∈ R ∧ t⁻¹ * (r⁻¹ * i) * t ∈ I) → ∀ j : ℕ, ∃ m : ℕ, 0 < m ∧ ∀ ψ : G → ℂ, (∀ g, ∀ k ∈ K, ψ (g * k) = ψ g) → ∑ᶠ c : K ⧸ I.subgroupOf K, ((aOp R t)^[j] ψ) ((c.out : K) : G) = (m : ℂ) * hAct K (dosetInd ℂ K (t ^ j)) ψ 1 := by
   intro G _ K I hIK hfin t R h1 hR hc hu j
   classical
-  haveI := Fintype.ofFinite (K ⧸ I.subgroupOf K)
+  have := Fintype.ofFinite (K ⧸ I.subgroupOf K)
   obtain ⟨W, hW0, hWK, hWf⟩ := exists_words K t R h1 hc j
   set M : Multiset G := (Finset.univ : Finset (K ⧸ I.subgroupOf K)).val.bind
     fun c => W.map fun w => ((c.out : K) : G) * w with hMdef
@@ -1286,7 +1286,7 @@ theorem isOpen_iwU {σ : L →+* L} {n : ℕ} (hσv : ∀ x, Valued.v (σ x) = V
     IsOpen (IwU σ n : Set (GU σ n)) := by
   have hc : ∀ i j : Fin n, Continuous fun g : GU σ n =>
       ((g : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i j := fun i j =>
-    (Units.continuous_val.comp continuous_subtype_val).matrix_elem i j
+    (Units.continuous_val.comp continuous_subtypeVal).matrix_elem i j
   have hle : IsOpen {x : L | Valued.v x ≤ 1} := by
     convert Valued.isOpen_integer (Γ₀ := WithZero (Multiplicative ℤ)) L using 1
     ext x
@@ -1299,7 +1299,7 @@ theorem isOpen_iwU {σ : L →+* L} {n : ℕ} (hσv : ∀ x, Valued.v (σ x) = V
         ({g : GU σ n | Valued.v (((g : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i j) ≤ 1} ∩
          {g : GU σ n | j < i → Valued.v (((g : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) i j) < 1}) := by
     ext g
-    simp only [SetLike.mem_coe, mem_iwU_iff hσv g, Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_iwU_iff hσv g, Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨h1, h2⟩ i j
       exact ⟨h1 i j, h2 i j⟩
@@ -1343,11 +1343,11 @@ theorem finite_index_iwU : ∀ (L : Type) [Field L] [Valued L (WithZero (Multipl
   intro L _ _ _ ϖ σ q n h
   obtain ⟨-, hKc, hle, -⟩ := GlobalTheory.CompanionTheory.KUFactsU.kuFacts L ϖ σ q n h
   have hIo : IsOpen (IwU σ n : Set (GU σ n)) := isOpen_iwU h.2.1
-  haveI : CompactSpace (KU σ n) := isCompact_iff_compactSpace.mp hKc
+  have : CompactSpace (KU σ n) := isCompact_iff_compactSpace.mp hKc
   refine ⟨Subgroup.quotient_finite_of_isOpen _ (Subgroup.subgroupOf_isOpen _ _ hIo), fun t => ?_⟩
   have hIc : IsCompact (IwU σ n : Set (GU σ n)) :=
     hKc.of_isClosed_subset (Subgroup.isClosed_of_isOpen _ hIo) fun x hx => hle hx
-  haveI : CompactSpace (IwU σ n) := isCompact_iff_compactSpace.mp hIc
+  have : CompactSpace (IwU σ n) := isCompact_iff_compactSpace.mp hIc
   have hOpen : IsOpen ((IwU σ n ⊓ (IwU σ n).map (MulAut.conj t).toMonoidHom : Subgroup (GU σ n)) :
       Set (GU σ n)) := by
     rw [Subgroup.coe_inf]
@@ -1411,7 +1411,7 @@ theorem abs_main {G : Type} [Group G] (K I : Subgroup G) (hIK : I ≤ K) (hfin :
   classical
   by_contra hcon
   push_neg at hcon
-  haveI := Fintype.ofFinite (K ⧸ I.subgroupOf K)
+  have := Fintype.ofFinite (K ⧸ I.subgroupOf K)
   let A : Wsp →ₗ[ℂ] Wsp :=
     { toFun := fun φ => ⟨aOp R t φ, hWA φ φ.2⟩
       map_add' := fun a b => Subtype.ext (by
@@ -1549,7 +1549,7 @@ theorem finiteDimensional_iwFix (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ x, Valu
   let wOf : Equiv.Perm (Fin n) → GU σ n := fun π => if h : ∃ w : GU σ n, IsPermW w π then h.choose else 1
   have hwOf : ∀ (w : GU σ n) π, IsPermW w π → wOf π = w := fun w π hw => by
     have h : ∃ w : GU σ n, IsPermW w π := ⟨w, hw⟩
-    simp only [wOf, dif_pos h]
+    simp only [wOf, dite_eq_left h]
     exact isPermW_unique h.choose_spec hw
   let F : iwFix σ n q α →ₗ[ℂ] (Equiv.Perm (Fin n) → ℂ) :=
     { toFun := fun φ π => (φ : GU σ n → ℂ) (wOf π)
@@ -1591,7 +1591,7 @@ theorem satPowNonvan : PositivityTheory.SphericalProduct.SatPowNonvan := by
     simpa [chiDeltaU_one] using hsph 1 g k isBorelU_one hk
   have hφ₀ : φ₀ ∈ iwFix σ n q α :=
     ⟨fun b g hb => by simpa using hsph b g 1 hb (one_mem _), fun g i hi => hK g i (hIK hi)⟩
-  haveI := finiteDimensional_iwFix hσ hσv q α
+  have := finiteDimensional_iwFix hσ hσv q α
   exact abs_main (KU σ n) (IwU σ n) hIK hKI t R h1R hRI hRt hR (iwFix σ n q α)
     (fun φ hφ => ⟨fun b g hb => by
         show aOp R t φ (b * g) = _ * aOp R t φ g
@@ -1629,10 +1629,10 @@ variable {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
 theorem stab_finiteIndex_of_smooth [TopologicalSpace G] [IsTopologicalGroup G] (K : Subgroup G)
     (hc : IsCompact (K : Set G)) (ρ : Representation ℂ G V) (hs : IsSmooth ρ) (x : V) :
     (stab ρ K x).FiniteIndex := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hc
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hc
   have ho : IsOpen (stab ρ K x : Set K) :=
-    (hs x).preimage continuous_subtype_val
-  haveI : Finite (K ⧸ stab ρ K x) := Subgroup.quotient_finite_of_isOpen _ ho
+    (hs x).preimage continuous_subtypeVal
+  have : Finite (K ⧸ stab ρ K x) := Subgroup.quotient_finite_of_isOpen _ ho
   exact Subgroup.finiteIndex_of_finite_quotient
 
 private theorem normalCore_stab_le_stab_apply (ρ : Representation ℂ G V) (K : Subgroup G) (x : V) (k : K) :
@@ -1654,7 +1654,7 @@ private theorem normalCore_stab_le_stab_apply (ρ : Representation ℂ G V) (K :
 
 theorem avg_translate (ρ : Representation ℂ G V) (K : Subgroup G) {x : V}
     (hx : (stab ρ K x).FiniteIndex) (k : K) : avg ρ K (ρ (k : G) x) = avg ρ K x := by
-  haveI := hx
+  have := hx
   have hN1 : (stab ρ K x).normalCore ≤ stab ρ K x := Subgroup.normalCore_le _
   have hN2 : (stab ρ K x).normalCore ≤ stab ρ K (ρ (k : G) x) := normalCore_stab_le_stab_apply ρ K x k
   rw [avg_eq ρ K hN2, avg_eq ρ K hN1]

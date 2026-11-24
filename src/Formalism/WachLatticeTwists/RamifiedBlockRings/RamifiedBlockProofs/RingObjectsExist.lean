@@ -506,9 +506,9 @@ theorem splitPts : StatSplitPts := by
   have hle : PT.natDegree ≤ t := by
     rw [Polynomial.natDegree_le_iff_coeff_eq_zero]
     intro N hN
-    rw [hcoef, if_neg (by omega)]
+    rw [hcoef, ite_eq_right (by omega)]
   have hone : PT.coeff t = 1 := by
-    rw [hcoef, if_pos le_rfl]
+    rw [hcoef, ite_eq_left le_rfl]
     refine Subtype.ext (funext fun x => ?_)
     have := (hmonP x).coeff_natDegree
     rw [hdegP] at this
@@ -522,7 +522,7 @@ theorem splitPts : StatSplitPts := by
   have hψ : ∀ y : SplitPts t P, ∃ ψ : T' →+* O, ψ.comp (algebraMap T T') = evT y.1.1 ∧
       ∀ i, ψ (rr i) = y.1.2 i := by
     intro y
-    letI : Algebra T O := (evT y.1.1).toAlgebra
+    let : Algebra T O := (evT y.1.1).toAlgebra
     obtain ⟨φ, hφ, -⟩ := huniv O y.1.2 (by
       show PT.map (evT y.1.1) = _
       rw [hmap]; exact y.2)
@@ -603,7 +603,7 @@ theorem splitPts : StatSplitPts := by
         exact Finset.prod_congr rfl fun i _ => by rw [hσ]
       let y : SplitPts t P := ⟨(x, fun i => α (σ i)), hy⟩
       have hφy : ∀ z, φ z = ι (ψ y z) := by
-        letI : Algebra T K := (ι.comp (evT x)).toAlgebra
+        let : Algebra T K := (ι.comp (evT x)).toAlgebra
         let φ1 : T' →ₐ[T] K := { φ with commutes' := fun τ => RingHom.congr_fun hφ τ }
         let φ2 : T' →ₐ[T] K :=
           { (ι.comp (ψ y)) with

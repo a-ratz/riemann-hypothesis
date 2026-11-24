@@ -61,7 +61,7 @@ namespace GlobalTheory.CardGLQuot
 
 theorem card_GL_field_real (κ : Type) [Field κ] [Finite κ] (n : ℕ) :
     (Nat.card (GL (Fin n) κ) : ℝ) = (Nat.card κ : ℝ) ^ (n ^ 2) * glVol (Nat.card κ) n := by
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   have hq1 : 1 ≤ Nat.card κ := Nat.one_le_iff_ne_zero.mpr (Nat.card_pos).ne'
   have hq0 : (Nat.card κ : ℝ) ≠ 0 := by positivity
   have hIcc : Finset.Icc 1 n = Finset.Ioc 0 n := by
@@ -104,9 +104,9 @@ theorem card_GL_of_residue {R k : Type} [CommRing R] [Finite R] [Field k] (π : 
     (hπ : Function.Surjective π) (hu : ∀ x, IsUnit x ↔ π x ≠ 0) (n : ℕ) :
     (Nat.card (GL (Fin n) R) : ℝ) = (Nat.card R : ℝ) ^ (n ^ 2) * glVol (Nat.card k) n := by
   classical
-  haveI := Fintype.ofFinite R
-  haveI : Finite k := Finite.of_surjective π hπ
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite R
+  have : Finite k := Finite.of_surjective π hπ
+  have := Fintype.ofFinite k
   let φ : Matrix (Fin n) (Fin n) R →+ Matrix (Fin n) (Fin n) k := (π.mapMatrix).toAddMonoidHom
   have hφ : ∀ A, φ A = A.map π := fun A => rfl
   have hsurj : Function.Surjective φ := by
@@ -163,7 +163,7 @@ theorem isUnit_quot_pow_iff {A : Type} [CommRing A] {w : Ideal A} (hw : w.IsMaxi
   · intro h ha
     have hU := h.map (Ideal.Quotient.factor (Ideal.pow_le_self hc))
     rw [Ideal.Quotient.factor_mk, (Ideal.Quotient.eq_zero_iff_mem).2 ha] at hU
-    haveI := hw.isPrime
+    have := hw.isPrime
     exact not_isUnit_zero hU
   · intro ha
     obtain ⟨y, i, hi, hyx⟩ := hw.exists_inv ha
@@ -199,8 +199,8 @@ theorem card_GL_quot (E : Type) [Field E] [NumberField E] (𝔪 : Ideal (𝓞 E)
   have hmax : (P : Ideal (𝓞 E)).IsMaximal :=
     ((Ideal.isPrime_of_prime hprime)).isMaximal hbot
   have hc : (factors 𝔪).count (P : Ideal (𝓞 E)) ≠ 0 := (Multiset.count_pos.2 hmem).ne'
-  letI : Field (𝓞 E ⧸ (P : Ideal (𝓞 E))) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 E ⧸ (P : Ideal (𝓞 E)) ^ (factors 𝔪).count ↑P) := by
+  let : Field (𝓞 E ⧸ (P : Ideal (𝓞 E))) := Ideal.Quotient.field _
+  have : Finite (𝓞 E ⧸ (P : Ideal (𝓞 E)) ^ (factors 𝔪).count ↑P) := by
     apply Nat.finite_of_card_ne_zero
     rw [natCard_quot, Ne, Ideal.absNorm_eq_zero_iff]
     exact pow_ne_zero _ hbot

@@ -273,10 +273,10 @@ theorem coord (n : ℤ) (s : ℂ) (v : ℂ) (y : ℝ) :
     GlobalTheory.HeckeTheta.hmon n v * fac (s + ((|n| : ℤ) : ℂ) / 2) (‖v‖ ^ 2) y := by
   rw [hmon_real_mul, fac]
   have h1 : ((Real.exp (y / 2) : ℝ) : ℂ) ^ n.natAbs = Complex.exp ((n.natAbs : ℂ) * (y / 2)) := by
-    rw [Complex.ofReal_exp, ← Complex.exp_nat_mul]; push_cast; rfl
+    rw [Complex.ofReal_exp, ← Complex.exp_natCast_mul]; push_cast; rfl
   have h2 : ‖(Real.exp (y / 2) : ℂ) * v‖ ^ 2 = Real.exp y * ‖v‖ ^ 2 := by
     rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _), mul_pow,
-      ← Real.exp_nat_mul]; congr 2; push_cast; ring
+      ← Real.exp_natCast_mul]; congr 2; push_cast; ring
   have h3 : ((|n| : ℤ) : ℂ) = (n.natAbs : ℂ) := by
     rw [← Int.natCast_natAbs, Int.cast_natCast]
   rw [h1, h2, h3]
@@ -621,7 +621,7 @@ theorem sum_over_principal_ideals_units (K : Type) [Field K] [NumberField K] (E 
   classical
   let gen : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal} → 𝓞 K := fun J => haveI := J.2.2; Submodule.IsPrincipal.generator J.1
   have hspan : ∀ J : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal}, Ideal.span {gen J} = J.1 := fun J => by
-    haveI := J.2.2
+    have := J.2.2
     exact Submodule.IsPrincipal.span_singleton_generator J.1
   have hgen0 : ∀ J : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal}, gen J ≠ 0 := fun J => by
     intro h
@@ -683,8 +683,8 @@ namespace GlobalTheory.HeckeMellin
 
 theorem archFactor_mul_pSeries_eq_integral : ∀ (K : Type) [Field K] [NumberField K] [NumberField.IsTotallyComplex K] (I : Type) [Fintype I] (φ : I → K →+* ℂ), GlobalTheory.CMVal.IsCMType φ → ∀ (n : I → ℤ), (∃ i, n i ≠ 0) → ∀ (F : NumberField.RingOfIntegers K → ℂ) (C : ℝ), (∀ α, ‖F α‖ ≤ C) → (∀ (u : (NumberField.RingOfIntegers K)ˣ) (α : NumberField.RingOfIntegers K), F ((u : NumberField.RingOfIntegers K) * α) * GlobalTheory.HeckeStrip.wt φ n (((u : NumberField.RingOfIntegers K) * α : NumberField.RingOfIntegers K) : K) = F α * GlobalTheory.HeckeStrip.wt φ n (α : K)) → ∀ p : (I → ℝ) → ℝ, Measurable p → (∀ y, 0 ≤ p y) → (∀ y, HasSum (fun u : (NumberField.RingOfIntegers K)ˣ => p (y + GlobalTheory.HeckeTheta.ulog φ u)) 1) → ∀ s : ℂ, 1 < s.re → GlobalTheory.IndefiniteRowSideFullHecke.CompletedLStripBounds.archFactor n s * GlobalTheory.HeckeStrip.pSeries F φ n s = 2 ^ Fintype.card I * ∫ y, (p y : ℂ) * GlobalTheory.HeckeTheta.theta (fun α : NumberField.RingOfIntegers K => GlobalTheory.HeckeTheta.emb φ (α : K)) F n y * Complex.exp (s * ((∑ i, y i : ℝ) : ℂ)) := by
   intro K _ _ _ I _ φ hφ n hn F C hF hinv p hp hp0 hsum s hs
-  haveI : Countable (𝓞 K) := (RingOfIntegers.basis K).equivFun.injective.countable
-  haveI : Countable (𝓞 K)ˣ := (Units.val_injective (α := 𝓞 K)).countable
+  have : Countable (𝓞 K) := (RingOfIntegers.basis K).equivFun.injective.countable
+  have : Countable (𝓞 K)ˣ := (Units.val_injective (α := 𝓞 K)).countable
   have hs0 : 0 < s.re := by linarith
   set tm : 𝓞 K → (I → ℝ) → ℂ := fun α => GlobalTheory.HeckeMellin.term n s (GlobalTheory.HeckeTheta.emb φ (α : K)) with htm
   have hulog_inv : ∀ u : (𝓞 K)ˣ, GlobalTheory.HeckeTheta.ulog φ u⁻¹ = - GlobalTheory.HeckeTheta.ulog φ u := by
@@ -722,10 +722,10 @@ theorem archFactor_mul_pSeries_eq_integral : ∀ (K : Type) [Field K] [NumberFie
       exact_mod_cast this)
   have hgen : ∀ J : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal}, (haveI := J.2.2; Submodule.IsPrincipal.generator J.1) ≠ 0 := by
     intro J h
-    haveI := J.2.2
+    have := J.2.2
     exact J.2.1 ((Submodule.IsPrincipal.eq_bot_iff_generator_eq_zero J.1).2 h)
   have hspan : ∀ J : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal}, Ideal.span {(haveI := J.2.2; Submodule.IsPrincipal.generator J.1)} = J.1 := by
-    intro J; haveI := J.2.2; exact Ideal.span_singleton_generator J.1
+    intro J; have := J.2.2; exact Ideal.span_singleton_generator J.1
 
   have horb : ∀ g : 𝓞 K, g ≠ 0 → HasSum (fun u : (𝓞 K)ˣ => ∫ y, p y * ‖tm ((u : 𝓞 K) * g) y‖) (∫ y, ‖tm g y‖) ∧
       HasSum (fun u : (𝓞 K)ˣ => F ((u : 𝓞 K) * g) * ∫ y, (p y : ℂ) * tm ((u : 𝓞 K) * g) y) (F g * ∫ y, tm g y) := by
@@ -1071,11 +1071,11 @@ theorem mellinSplit_neg (I : Type) [Fintype I] [Nonempty I] (p : (I → ℝ) →
   have hPS : P =ᵐ[volume] S := by
     rw [ae_eq_set]
     constructor
-    · have : P \ S = ∅ := Set.diff_eq_empty.mpr (fun y (hy : 0 < ∑ i, y i) => (le_of_lt hy : 0 ≤ ∑ i, y i))
+    · have : P \ S = ∅ := Set.sdiff_eq_empty.mpr (fun y (hy : 0 < ∑ i, y i) => (le_of_lt hy : 0 ≤ ∑ i, y i))
       rw [this, measure_empty]
     · apply measure_mono_null _ (mellinSplit_hyperplane_null I)
       intro y hy
-      simp only [hP, hS, Set.mem_diff, Set.mem_setOf_eq, not_lt] at hy
+      simp only [hP, hS, Set.mem_sdiff, Set.mem_ofPred_eq, not_lt] at hy
       exact le_antisymm hy.2 hy.1
   have hgP : IntegrableOn g P volume :=
     IntegrableOn.congr_set_ae (show IntegrableOn g S volume from h2) hPS
@@ -1188,7 +1188,7 @@ theorem discrete_embLat {φ : I → K →+* ℂ} (hφ : GlobalTheory.CMVal.IsCMT
 
 theorem summable_exp_emb {φ : I → K →+* ℂ} (hφ : GlobalTheory.CMVal.IsCMType φ) {ε : ℝ} (hε : 0 < ε) :
     Summable fun α : 𝓞 K => Real.exp (-ε * ‖GlobalTheory.HeckeTheta.emb φ (α : K)‖ ^ 2) := by
-  haveI := discrete_embLat hφ
+  have := discrete_embLat hφ
   have hs : Summable fun x : embLat φ ↦ Real.exp (-ε * ‖(x : I → ℂ)‖ ^ 2) :=
     summable_exp_neg_mul_norm_sq (embLat φ) hε
   have hmem : ∀ α : 𝓞 K, embHom φ α ∈ embLat φ := fun α => LinearMap.mem_range_self _ α
@@ -1201,8 +1201,8 @@ theorem summable_exp_emb {φ : I → K →+* ℂ} (hφ : GlobalTheory.CMVal.IsCM
 
 theorem bounded_of_periodic {M : Ideal (𝓞 K)} (F : 𝓞 K → ℂ) (hM : M ≠ ⊥)
     (hF : ∀ α μ : 𝓞 K, μ ∈ M → F (α + μ) = F α) : ∃ C : ℝ, ∀ α, ‖F α‖ ≤ C := by
-  haveI := Ideal.finiteQuotientOfFreeOfNeBot M hM
-  haveI := Fintype.ofFinite (𝓞 K ⧸ M)
+  have := Ideal.finiteQuotientOfFreeOfNeBot M hM
+  have := Fintype.ofFinite (𝓞 K ⧸ M)
   refine ⟨∑ q : 𝓞 K ⧸ M, ‖F (Quotient.out q)‖, fun α => ?_⟩
   have hmem : α - Quotient.out (Ideal.Quotient.mk M α) ∈ M := by
     rw [← Ideal.Quotient.eq, Ideal.Quotient.mk_out]
@@ -1244,7 +1244,7 @@ namespace GlobalTheory.HeckeStrip
 
 theorem completed_pSeries_entire_bounded : ∀ (K : Type) [Field K] [NumberField K] [NumberField.IsTotallyComplex K] (I : Type) [Fintype I] (φ : I → K →+* ℂ), GlobalTheory.CMVal.IsCMType φ → ∀ (n : I → ℤ), (∃ i, n i ≠ 0) → ∀ (M : Ideal (𝓞 K)) (F : 𝓞 K → ℂ), M ≠ ⊥ → (∀ α μ : 𝓞 K, μ ∈ M → F (α + μ) = F α) → (∀ (u : (𝓞 K)ˣ) (α : 𝓞 K), F ((u : 𝓞 K) * α) * GlobalTheory.HeckeStrip.wt φ n (((u : 𝓞 K) * α : 𝓞 K) : K) = F α * GlobalTheory.HeckeStrip.wt φ n (α : K)) → ∃ Λ : ℂ → ℂ, Differentiable ℂ Λ ∧ GlobalTheory.IndefiniteRowSideFullHecke.CompletedLStripBounds.BoundedInStrips Λ ∧ ∀ s : ℂ, 1 < s.re → Λ s = GlobalTheory.IndefiniteRowSideFullHecke.CompletedLStripBounds.archFactor n s * GlobalTheory.HeckeStrip.pSeries F φ n s := by
   intro K _ _ _ I _ φ hφ n hn M F hM hper hinv
-  haveI : Nonempty I := ⟨hn.choose⟩
+  have : Nonempty I := ⟨hn.choose⟩
   obtain ⟨p, hpm, hp0, hpsum, R, hpR⟩ := _root_.GlobalTheory.exists_measurable_nonneg_hasSum_ulog_translates K I φ hφ
   obtain ⟨⟨C, hC⟩, hsumm, hge⟩ := _root_.GlobalTheory.HeckeLat.periodic_bound_summable_norm K I φ hφ M F hM hper
   obtain ⟨a, κ, hasumm, ⟨δ, hδ, hδa⟩, hfe⟩ := _root_.GlobalTheory.HeckePoisson.theta_poisson K I φ hφ n M F hM hper
@@ -1369,11 +1369,11 @@ theorem classPartFun_mul_wt
     classPartFun φ n m X b α * wt φ n (α : K) = open Classical in if α ∈ b then X (Ideal.span {α}) else 0 := by
   unfold classPartFun classUnitPart
   by_cases hb : α ∈ b
-  · rw [if_pos hb, if_pos hb]
+  · rw [ite_eq_left hb, ite_eq_left hb]
     by_cases hm : m = ⊤
-    · rw [if_pos hm, one_mul, hβ α hα (hm ▸ Submodule.mem_top)]
-    · rw [if_neg hm, mul_assoc, inv_mul_cancel₀ (wt_ne_zero_of_ne_zero φ n hα), mul_one]
-  · rw [if_neg hb, if_neg hb, zero_mul]
+    · rw [ite_eq_left hm, one_mul, hβ α hα (hm ▸ Submodule.mem_top)]
+    · rw [ite_eq_right hm, mul_assoc, inv_mul_cancel₀ (wt_ne_zero_of_ne_zero φ n hα), mul_one]
+  · rw [ite_eq_right hb, ite_eq_right hb, zero_mul]
 
 theorem classUnitPart_eq_of_inv
     (hmul : ∀ a b : Ideal (𝓞 K), X (a * b) = X a * X b)
@@ -1397,7 +1397,7 @@ theorem classUnitPart_eq_of_inv
     rw [h0, zero_mul] at key
     exact mul_ne_zero hwγ hwα key.symm
   unfold classUnitPart
-  rw [if_neg hm]
+  rw [ite_eq_right hm]
   field_simp
   linear_combination key
 
@@ -1430,7 +1430,7 @@ theorem classUnitPart_add
       rw [e]; exact m.add_mem e1 (m.mul_mem_left γ hμ)
     rw [classUnitPart_eq_of_inv hmul hβ hm e1, classUnitPart_eq_of_inv hmul hβ hm e2]
   · have hc' : Ideal.span {α + μ} ⊔ m ≠ ⊤ := hsup ▸ hc
-    simp only [classUnitPart, if_neg hm, hzero _ hc, hzero _ hc', zero_mul]
+    simp only [classUnitPart, ite_eq_right hm, hzero _ hc, hzero _ hc', zero_mul]
 
 theorem classPartFun_add
     (hmul : ∀ a b : Ideal (𝓞 K), X (a * b) = X a * X b)
@@ -1442,9 +1442,9 @@ theorem classPartFun_add
   have hμb : μ ∈ b := (Ideal.mul_le_inf.trans inf_le_right) hμ
   unfold classPartFun
   by_cases h : α ∈ b
-  · rw [if_pos h, if_pos (b.add_mem h hμb), classUnitPart_add hmul hzero hβ hμm]
+  · rw [ite_eq_left h, ite_eq_left (b.add_mem h hμb), classUnitPart_add hmul hzero hβ hμm]
   · have h' : α + μ ∉ b := fun h' => h (by simpa using b.sub_mem h' hμb)
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
 
 theorem classPartFun_unit
     (hβ : ∀ β : 𝓞 K, β ≠ 0 → β - 1 ∈ m → X (Ideal.span {β}) = wt φ n (β : K))
@@ -1458,8 +1458,8 @@ theorem classPartFun_unit
   have hiff : (u : 𝓞 K) * α ∈ b ↔ α ∈ b :=
     ⟨fun h => by simpa using b.mul_mem_left ((u⁻¹ : (𝓞 K)ˣ) : 𝓞 K) h, fun h => b.mul_mem_left _ h⟩
   by_cases h : α ∈ b
-  · rw [if_pos h, if_pos (hiff.2 h)]
-  · rw [if_neg h, if_neg (fun h' => h (hiff.1 h'))]
+  · rw [ite_eq_left h, ite_eq_left (hiff.2 h)]
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h (hiff.1 h'))]
 
 theorem pval_classPartFun
     (hβ : ∀ β : 𝓞 K, β ≠ 0 → β - 1 ∈ m → X (Ideal.span {β}) = wt φ n (β : K))
@@ -1473,8 +1473,8 @@ theorem pval_classPartFun
   unfold pval
   rw [classPartFun_mul_wt hβ b hg, Ideal.span_singleton_generator]
   by_cases h : J ≤ b
-  · rw [if_pos (hle.2 h), if_pos h]
-  · rw [if_neg (fun h' => h (hle.1 h')), if_neg h]
+  · rw [ite_eq_left (hle.2 h), ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h (hle.1 h')), ite_eq_right h]
 
 theorem pSeries_classPartFun
     (hβ : ∀ β : 𝓞 K, β ≠ 0 → β - 1 ∈ m → X (Ideal.span {β}) = wt φ n (β : K))
@@ -1499,10 +1499,10 @@ theorem pSeries_classPartFun
   · by_cases h : J ≤ b
     · rw [Set.indicator_of_mem (show J ∈ {J : Ideal (𝓞 K) | J ≠ ⊥ ∧ J.IsPrincipal} from hJ),
         Set.indicator_of_mem (show J ∈ {J : Ideal (𝓞 K) | J ≠ ⊥ ∧ J.IsPrincipal ∧ J ≤ b} from ⟨hJ.1, hJ.2, h⟩)]
-      simp only [f, g, if_pos h]
+      simp only [f, g, ite_eq_left h]
     · rw [Set.indicator_of_mem (show J ∈ {J : Ideal (𝓞 K) | J ≠ ⊥ ∧ J.IsPrincipal} from hJ),
         Set.indicator_of_notMem (show J ∉ {J : Ideal (𝓞 K) | J ≠ ⊥ ∧ J.IsPrincipal ∧ J ≤ b} from fun h' => h h'.2.2)]
-      simp only [f, if_neg h, zero_mul]
+      simp only [f, ite_eq_right h, zero_mul]
   · rw [Set.indicator_of_notMem (show J ∉ {J : Ideal (𝓞 K) | J ≠ ⊥ ∧ J.IsPrincipal} from hJ),
       Set.indicator_of_notMem (show J ∉ {J : Ideal (𝓞 K) | J ≠ ⊥ ∧ J.IsPrincipal ∧ J ≤ b} from
         fun h' => hJ ⟨h'.1, h'.2.1⟩)]

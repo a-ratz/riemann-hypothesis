@@ -373,7 +373,7 @@ theorem flagDeg_le_gap : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ)
       rw [Fin.lt_def]
       show j - 1 < j
       omega
-    rw [if_pos hlt]
+    rw [ite_eq_left hlt]
     have hden : (((⟨j, hjN⟩ : Fin N) : ℕ) : ℝ) - (((⟨j - 1, hj1⟩ : Fin N) : ℕ) : ℝ) = 1 := by
       show ((j : ℕ) : ℝ) - ((j - 1 : ℕ) : ℝ) = 1
       rw [Nat.cast_sub hj, Nat.cast_one]
@@ -827,7 +827,7 @@ open GlobalTheory.CompanionTheory.Ar.Top.EffLat PositivityTheory.HtPt.Gf in
 theorem GlobalTheory.CompanionTheory.Ar.Top.eff_lat : ∀ II : IntersectionSystem, IsFullIntersectionSystem II → ReciprocityTheory.ChartRestriction.G.Geo.DivSuppArithStatement → ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Ω : Type) [Field Ω] (y : (Σ k, ι k) → Ω) (e : ℕ) (L : Fin e → HermLine ι) (A : HermLine ι) (s : Ω), IsArithVar (mCoordIdeal y) (e + 2) → Birational y → (∀ j, IsSmoothHerm (L j)) → IsSmoothHerm A → s ≠ 0 → s ∈ chartLat y A.a 1 → (∀ W, IsArithVar W (e + 1) → mCoordIdeal y ≤ W → 0 ≤ ptsIntegral W (fun j z => Real.log ((L j).h z)) (fun _ => 1)) → 0 ≤ ptsIntegral (mCoordIdeal y) (fun j z => Real.log (((Fin.snoc L A : Fin (e + 1) → HermLine ι) j).h z)) (fun _ => 1) := by
   classical
   intro II hII hD K _ ι _ Ω _ y e L A s hP hbir hL hA hs0 hs hnef
-  haveI hPp : (mCoordIdeal y).IsPrime := hP.2.1.1
+  have hPp : (mCoordIdeal y).IsPrime := hP.2.1.1
   choose c0 hc0 using hP.2.1.2.2
   have hy0 : ∀ k, y ⟨k, c0 k⟩ ≠ 0 := fun k => EffLat.y_ne_of_not_mem (hc0 k)
   obtain ⟨g, h, dg, dh, hg, hh, hd, hhne, e1⟩ := EffLat.exists_rep hbir hy0 A.a s
@@ -864,7 +864,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Top.eff_lat : ∀ II : IntersectionSyste
     have hyc : ∀ k, y ⟨k, c k⟩ ≠ 0 := fun k => EffLat.y_ne_of_not_mem fun h' => hcW k (hPW h')
     have hsc : s * ∏ k, y ⟨k, c k⟩ ^ (-(((1 : ℕ) : ℤ) * A.a k)) ∈ chartRingZ y c := hs c hyc
     obtain ⟨u, r, hrel⟩ := EffLat.chart_rel hyc hsc hg hh hd e1
-    haveI hWp : W.IsPrime := hWmin.1.1
+    have hWp : W.IsPrime := hWmin.1.1
     obtain ⟨hm, hle⟩ := EffLat.len_le_of_rel hgP (PositivityTheory.HtPt.Gf.mon_not_mem hWp hcW u) hrel hWmin
     refine ⟨⟨hm, hrel'⟩, ?_⟩
     unfold multAt
@@ -1792,12 +1792,12 @@ theorem thmW_tower : ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.KH.Kl
     by_cases h : τ = τ₀ ∧ (i : ℕ) < T.j
     · exact ⟨q + 2 * (5 * (Fintype.card Ψ : ℚ) / B), by
         show l τ i + (if τ = τ₀ ∧ (i : ℕ) < T.j then 2 * θ else 0) = _
-        rw [if_pos h, hq, hθdef]
+        rw [ite_eq_left h, hq, hθdef]
         push_cast
         ring⟩
     · exact ⟨q, by
         show l τ i + (if τ = τ₀ ∧ (i : ℕ) < T.j then 2 * θ else 0) = _
-        rw [if_neg h, hq, add_zero]⟩
+        rw [ite_eq_right h, hq, add_zero]⟩
   have hs0 : (0 : ℝ) < s := by rw [hs]; positivity
   have hsQ : (0 : ℚ) ≤ s := by exact_mod_cast hs0.le
   have hθ2 : θ ^ 2 ≤ θ := by nlinarith

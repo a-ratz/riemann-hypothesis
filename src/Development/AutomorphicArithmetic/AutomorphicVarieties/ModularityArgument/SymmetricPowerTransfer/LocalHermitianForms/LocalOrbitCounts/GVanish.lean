@@ -56,7 +56,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 
 theorem UpperTheory.V.Z.Sym.Loc.gVanish : UpperTheory.V.Z.Sym.Loc.GVanish := by
   intro O K _ _ _ _ _ Δ τ hL j hj χ z hz hne
-  haveI := hL.frac
+  have := hL.frac
   obtain ⟨s, u, t, hn, ht⟩ := exists_of_gOrb_ne (O := O) hj hne
   have hu : algebraMap O K ↑u⁻¹ * algebraMap O K ↑u = 1 := by
     rw [← map_mul]

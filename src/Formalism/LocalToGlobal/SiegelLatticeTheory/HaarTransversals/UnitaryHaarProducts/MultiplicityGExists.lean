@@ -99,8 +99,8 @@ def MExistsCore : Prop :=
 
 theorem mExists_of_core (h : MExistsCore D) : MExists D := by
   intro A L P Rf Xu Bu Pi Mu Wb
-  haveI := Bu.haar
-  haveI := Bu.sf
+  have := Bu.haar
+  have := Bu.sf
   obtain ⟨Mb, hb, hT⟩ := h A L Bu.μf Mu.muN Mu.muH Mu.muN_haar Mu.muH_haar
   exact ⟨Mb, hb, hT⟩
 
@@ -337,7 +337,7 @@ variable (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E)
 theorem haMap_cont {R R' : Type} [CommRing R] [Algebra F R] [TopologicalSpace R]
     [CommRing R'] [Algebra F R'] [TopologicalSpace R'] (φ : R →ₐ[F] R') (hf : Continuous (tensMap (E := E) φ)) :
     Continuous (haMap σ J φ) := by
-  have hs : Continuous (fun g : ↥(HR R σ J) => (g : GL (Fin M) (R ⊗[F] E))) := continuous_subtype_val
+  have hs : Continuous (fun g : ↥(HR R σ J) => (g : GL (Fin M) (R ⊗[F] E))) := continuous_subtypeVal
   have hv : Continuous (fun g : ↥(HR R σ J) =>
       ((g : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E))) :=
     Units.continuous_val.comp hs
@@ -597,7 +597,7 @@ theorem stabT_closed (hE : Module.finrank F E = 2) {a : ℕ} (X0 : Fin a → Fin
     IsClosed (stabT (AF F) σ J X0 : Set (HA (AF F) σ J)) := by
   obtain ⟨a1, a2, a3⟩ := af_facts F
   obtain ⟨t1, t2, -, -, -⟩ := tens_facts (E := E) (AF F) hE
-  have hs : Continuous (fun g : ↥(HR (AF F) σ J) => (g : GL (Fin M) (AF F ⊗[F] E))) := continuous_subtype_val
+  have hs : Continuous (fun g : ↥(HR (AF F) σ J) => (g : GL (Fin M) (AF F ⊗[F] E))) := continuous_subtypeVal
   have hv : Continuous (fun g : HA (AF F) σ J =>
       ((HA.mat (AF F) σ J g : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E))) :=
     Units.continuous_val.comp hs
@@ -605,7 +605,7 @@ theorem stabT_closed (hE : Module.finrank F E = 2) {a : ℕ} (X0 : Fin a → Fin
       Matrix.mulVec ((HA.mat (AF F) σ J g : GL (Fin M) (AF F ⊗[F] E)) : Matrix (Fin M) (Fin M) (AF F ⊗[F] E))
         (ratV (F := F) (AF F) (X0 b)) = ratV (F := F) (AF F) (X0 b)} := by
     ext g
-    simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [mem_stabT]
     rfl
   rw [hset]

@@ -70,9 +70,9 @@ theorem exists_monic_relation {K σ : Type} [Field K] {m : ℕ} (I : Ideal (MvPo
       a ^ s + ∑ l ∈ Finset.range s, aeval y (C l) * a ^ l ∈ I := by
   by_cases htop : I = ⊤
   · exact ⟨1, 0, one_pos, by simp [htop]⟩
-  haveI : Nontrivial (MvPolynomial σ K ⧸ I) := Ideal.Quotient.nontrivial_iff.2 htop
+  have : Nontrivial (MvPolynomial σ K ⧸ I) := Ideal.Quotient.nontrivial_iff.2 htop
   set B := Algebra.adjoin K (Set.range fun k => Ideal.Quotient.mk I (y k)) with hB
-  haveI : Algebra.IsIntegral B (MvPolynomial σ K ⧸ I) := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsIntegral B (MvPolynomial σ K ⧸ I) := Algebra.IsIntegral.of_finite _ _
   obtain ⟨p, hp, hroot⟩ := Algebra.IsIntegral.isIntegral (R := B) (Ideal.Quotient.mk I a)
   have hq : (p * Polynomial.X).Monic := hp.mul Polynomial.monic_X
   have hroot' : Polynomial.eval₂ (algebraMap B (MvPolynomial σ K ⧸ I)) (Ideal.Quotient.mk I a)
@@ -124,7 +124,7 @@ theorem homogeneousComponent_aeval_mul {K σ : Type} [Field K] {m e : ℕ} (he :
       simp
     · have hne : e * r' + t ≠ e * r + t := fun h' =>
         hr (Nat.eq_of_mul_eq_mul_left he (Nat.add_right_cancel h'))
-      rw [if_neg hne.symm, if_neg hr]
+      rw [ite_eq_right hne.symm, ite_eq_right hr]
   conv_lhs => rw [← sum_homogeneousComponent C]
 
   rw [map_sum, Finset.sum_mul, map_sum]

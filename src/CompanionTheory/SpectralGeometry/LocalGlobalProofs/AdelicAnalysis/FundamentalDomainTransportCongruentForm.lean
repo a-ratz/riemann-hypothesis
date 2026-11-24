@@ -84,7 +84,7 @@ variable {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type) [CommRing R] 
 
 theorem isTopologicalGroup_HA [IsTopologicalRing R] [Module.Finite F E] (σ : E →ₐ[F] E) {M : ℕ}
     (J : Matrix (Fin M) (Fin M) E) : IsTopologicalGroup (HA R σ J) := by
-  haveI : IsTopologicalRing (R ⊗[F] E) := GlobalTheory.CompanionTheory.SW.HIsom.isTopologicalRing_tens F E R
+  have : IsTopologicalRing (R ⊗[F] E) := GlobalTheory.CompanionTheory.SW.HIsom.isTopologicalRing_tens F E R
   exact inferInstanceAs (IsTopologicalGroup (HR R σ J))
 
 theorem borelSpace_HA (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) :
@@ -99,12 +99,12 @@ open GlobalTheory.CompanionTheory.SW.FTransfer in
 theorem GlobalTheory.CompanionTheory.SW.FTransfer.cntI_transfer : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (g : GL (Fin M) E) (J' : Matrix (Fin M) (Fin M) E), J' = cT (σ : E →+* E) (g : Matrix (Fin M) (Fin M) E) * J * (g : Matrix (Fin M) (Fin M) E) → ∀ (μ : Measure (HA (AF F) σ J)) (𝓕 : Set (HA (AF F) σ J)), IsHaarH F E σ M J μ → IsFDH F E σ M J μ 𝓕 → ∃ (μ' : Measure (HA (AF F) σ J')) (𝓕' : Set (HA (AF F) σ J')), IsHaarH F E σ M J' μ' ∧ IsFDH F E σ M J' μ' 𝓕' ∧ μ' 𝓕' = μ 𝓕 ∧ ∀ (n : ℕ) (S : Set (Fin n → Fin M → E)) (Φ : (Fin n → Fin M → AF F ⊗[F] E) → ℝ≥0∞), cntI σ J μ 𝓕 S Φ = cntI σ J' μ' 𝓕' {X | (fun a => (g : Matrix (Fin M) (Fin M) E) *ᵥ X a) ∈ S} (fun Y => Φ (actTup (AF F) (bc (inclR (AF F)) g) Y)) := by
   intro F E _ _ _ _ _ σ hCM M J hJ g J' hJ' μ 𝓕 hμ h𝓕
   obtain ⟨e, he1, he2⟩ := GlobalTheory.CompanionTheory.SW.HIsom.unitaryIsom_of_isometry F E σ hCM M J hJ g J' hJ' (AF F)
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
-  haveI := isTopologicalGroup_HA (F := F) (E := E) (AF F) σ J
-  haveI := isTopologicalGroup_HA (F := F) (E := E) (AF F) σ J'
-  haveI := borelSpace_HA (F := F) (E := E) (AF F) σ J
-  haveI := borelSpace_HA (F := F) (E := E) (AF F) σ J'
-  haveI : μ.IsHaarMeasure := hμ
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
+  have := isTopologicalGroup_HA (F := F) (E := E) (AF F) σ J
+  have := isTopologicalGroup_HA (F := F) (E := E) (AF F) σ J'
+  have := borelSpace_HA (F := F) (E := E) (AF F) σ J
+  have := borelSpace_HA (F := F) (E := E) (AF F) σ J'
+  have : μ.IsHaarMeasure := hμ
   let em : HA (AF F) σ J' ≃ᵐ HA (AF F) σ J := e.toHomeomorph.toMeasurableEquiv
   have hmp : MeasurePreserving em (μ.map em.symm) μ := by
     refine ⟨em.measurable, ?_⟩

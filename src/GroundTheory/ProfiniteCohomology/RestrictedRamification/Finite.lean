@@ -133,7 +133,7 @@ theorem finite_cohomology_of_res_top {H : Type} [Group H] [TopologicalSpace H] [
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_mul' := fun _ _ => rfl }
-  have he : Continuous e.toMonoidHom := continuous_subtype_val
+  have he : Continuous e.toMonoidHom := continuous_subtypeVal
   have he' : Continuous e.symm.toMonoidHom := continuous_id.subtype_mk _
   have : IsDiscreteRep (Rep.res ((⊤ : OpenSubgroup H) : Subgroup H).subtype A) :=
     isDiscreteRep_res_subtype A _

@@ -135,19 +135,19 @@ namespace GlobalTheory.ConjSeq
 
 theorem sec_exists_pow_of_D_eq_zero_local : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [IsAlgClosed k] (hk : (p : k) = 0) (X : Scheme.{0}) [IsIntegral X] (s : X ⟶ Sp k) [Smooth s] (U : X.affineOpens) (u : GlobalTheory.CechDR.Sec s U.1), KaehlerDifferential.D k (GlobalTheory.CechDR.Sec s U.1) u = 0 → ∃ h : GlobalTheory.CechDR.Sec s U.1, h ^ p = u := by
   intro p _ k _ _ hk X _ s _ U u hu
-  haveI hsm : Algebra.Smooth k (GlobalTheory.CechDR.Sec s U.1) := by
-    haveI : IsOpenImmersion (GlobalTheory.CechDR.affPt s U) := IsAffineOpen.isOpenImmersion_fromSpec U.2
+  have hsm : Algebra.Smooth k (GlobalTheory.CechDR.Sec s U.1) := by
+    have : IsOpenImmersion (GlobalTheory.CechDR.affPt s U) := IsAffineOpen.isOpenImmersion_fromSpec U.2
     have h : Smooth (GlobalTheory.CechDR.affPt s U ≫ s) := inferInstance
     rw [GlobalTheory.CechDR.affPt_w] at h
     exact RingHom.smooth_algebraMap.1 ((HasRingHomProperty.Spec_iff (P := @Smooth)).1 h)
   by_cases hU : Nonempty U.1
-  · haveI : IsDomain (GlobalTheory.CechDR.Sec s U.1) := IsIntegral.component_integral (X := X) U.1
+  · have : IsDomain (GlobalTheory.CechDR.Sec s U.1) := IsIntegral.component_integral (X := X) U.1
     exact _root_.GlobalTheory.exists_pow_eq_of_kaehlerDifferential_eq_zero_of_smooth_domain p k hk _ u hu
   · have e : U.1 = ⊥ := by
       ext x
       exact ⟨fun hx ↦ hU ⟨⟨x, hx⟩⟩, fun hx ↦ hx.elim⟩
     have hs : Subsingleton Γ(X, U.1) := by rw [e]; infer_instance
-    haveI : Subsingleton (GlobalTheory.CechDR.Sec s U.1) := hs
+    have : Subsingleton (GlobalTheory.CechDR.Sec s U.1) := hs
     exact ⟨u, Subsingleton.elim _ _⟩
 
 
@@ -360,7 +360,7 @@ theorem span_pull_baseChange (H : GlobalTheory.Published.AbelianDeRham.BaseChang
     (hg : SmoothOfRelativeDimension g A.hom) :
     Submodule.span R' (Set.range (GlobalTheory.PDiv.grpMor_of_isGrpPullback h).pull) = ⊤ ∧
       PrimitiveSubmodule A' = Submodule.span R' ((GlobalTheory.PDiv.grpMor_of_isGrpPullback h).pull '' PrimitiveSubmodule A) := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   obtain ⟨hbc, hF⟩ := H R A g hA hg R' A' φ h
   refine ⟨Submodule.eq_top_iff'.2 fun x ↦ ?_, hF⟩
   obtain ⟨z, rfl⟩ := hbc.2 x
@@ -561,11 +561,11 @@ theorem UpperTheory.Gal.Ord.dims :
   have H := GlobalTheory.abelianDeRham
   obtain ⟨g, hg⟩ := GlobalTheory.AbVarRelDim.exists_relDim k o.A o.ab
   obtain ⟨hfd, -, -⟩ := GlobalTheory.finrank_HdR_Fil_of_field H.1 H.2.1 k o.A g o.ab hg
-  haveI := hfd
-  haveI : Module.Finite k (primDR o.A) := (Module.finite_dual_iff k).1 hfd
-  haveI := D.freeLa
-  haveI := D.finLa
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 hk
+  have := hfd
+  have : Module.Finite k (primDR o.A) := (Module.finite_dual_iff k).1 hfd
+  have := D.freeLa
+  have := D.finLa
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).2 hk
   obtain ⟨l, hlp, hl⟩ := Nat.exists_infinite_primes (p + 1)
   have hcop : l.Coprime p := (Nat.coprime_primes hl (Fact.out : p.Prime)).2 (by omega)
   have hcopj : ∀ j : ℕ, (l ^ j).Coprime p := fun j => Nat.Coprime.pow_left j hcop
@@ -578,7 +578,7 @@ theorem UpperTheory.Gal.Ord.dims :
   have hc : ∀ c : 𝓞 D.F, LinearMap.charpoly (cohHom o c) =
       ((LinearMap.charpoly (LinearMap.mulLeft ℤ c)) ^ (D.m * D.n)).map (Int.castRingHom k) := by
     intro c
-    haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c)
+    have := o.act.hom (algebraMap (𝓞 D.F) D.O c)
     have e := GlobalTheory.T.charpoly_deRhamHomology_endomorphism_eq_map_ladic k o.A o.ab (o.act.act (algebraMap (𝓞 D.F) D.O c)) D.La
       (DistribSMul.toLinearMap ℤ D.La (algebraMap (𝓞 D.F) D.O c)) l hl hlk (fun j => I.ev (l ^ j))
       (fun j x y => I.add (l ^ j) x y) (fun j x => I.lin (l ^ j) _ x)
@@ -625,8 +625,8 @@ private lemma core (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k p] (C 
       (∀ x : k ⊗[ℤ] C, ∃ c : I →₀ C, x = c.sum fun j d => β j ⊗ₜ[ℤ] d) ∧
       (∀ (s : Finset I) (c : I → C), ∑ j ∈ s, β j ⊗ₜ[ℤ] c j = 0 → ∀ j ∈ s, (p : C) ∣ c j) := by
   classical
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
-  letI : Algebra (ZMod p) k := ZMod.algebra k p
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  let : Algebra (ZMod p) k := ZMod.algebra k p
   let B := Module.Basis.ofVectorSpace (ZMod p) k
   let J : Ideal C := Ideal.span {(p : C)}
   have hpJ : (Int.castAddHom (C ⧸ J)) (p : ℤ) = 0 := by
@@ -672,7 +672,7 @@ private lemma core (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k p] (C 
       by_cases h : i = j
       · subst h; simp [L, hφ1]
       · simp [L, h, Finsupp.single_apply]
-    rw [Finset.sum_congr rfl step, Finset.sum_ite_eq' s j, if_pos hj, Ideal.Quotient.eq_zero_iff_mem] at h0
+    rw [Finset.sum_congr rfl step, Finset.sum_ite_eq' s j, ite_eq_left hj, Ideal.Quotient.eq_zero_iff_mem] at h0
     exact Ideal.mem_span_singleton.mp h0
 
 private lemma exact1 {R : Type} [CommRing R] (g a b : R) (h : ∀ x : R, g * x = 0 → ∃ u v, x = a * u + b * v)
@@ -819,7 +819,7 @@ variable {p : ℕ} [Fact p.Prime]
 
 private theorem frob_of_mem (hk : (p : k) = 0) (A : Over (Sp k)) [GrpObj A] (hA : IsAbelianScheme A)
     (c : primDR A) (hc : c ∈ PrimitiveSubmodule A) : frobDR p k hk A c = 0 := by
-  letI : Algebra k k := (frobR p k hk).toAlgebra
+  let : Algebra k k := (frobR p k hk).toAlgebra
   obtain ⟨g, hg⟩ := GlobalTheory.AbVarRelDim.exists_relDim k A hA
   have hπ := isGrpPullback_pullback A (spMap (frobR p k hk))
   obtain ⟨F, hFm, hF⟩ := GlobalTheory.T.exists_relativeFrobenius_grpScheme_charP p k hk A _ _ hπ
@@ -876,8 +876,8 @@ theorem UpperTheory.Gal.Ord.lin :
       Lin p π (β.comp (b.t i)) (coh o) (PrimitiveSubmodule o.A) (frobDR p k hk o.A).toAddMonoidHom := by
   intro p _ D R _ b N hN hNp hm k _ _ hk β o i w f hw hn hf π
   obtain ⟨h1, ⟨h₀, h2, h3⟩, -⟩ := UpperTheory.Gal.Ord.lie p D R b N hN hNp hm k hk β o i w f hw hn hf π
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hk
-  letI := tensorModule (dp0 k) (𝟙 _) (o.act.toF D)
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hk
+  let := tensorModule (dp0 k) (𝟙 _) (o.act.toF D)
   have hP := GlobalTheory.CrysProj.hdR_projective D.F k o.A o.ab (o.act.toF D)
   obtain ⟨hG, hA⟩ := UpperTheory.Gal.Ord.proj p k (𝓞 D.F) w f π (HdR o.A)
   have hs : ∀ (c : 𝓞 D.F) (x : HdR o.A), ((1 : k) ⊗ₜ[ℤ] c) • x = (cohHom o c).dualMap x := fun c x ↦ by
@@ -910,9 +910,9 @@ theorem UpperTheory.Gal.Ord.lin :
     exact Module.finite_dual_iff k |>.1 hfd
   · change frobDR p k hk o.A (l • x) = l ^ p • frobDR p k hk o.A x
     rw [LinearMap.map_smulₛₗ, frobR_apply]
-  · haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c)
+  · have := o.act.hom (algebraMap (𝓞 D.F) D.O c)
     exact GlobalTheory.AbDatum.frobDR_primPull p hk _ x
-  · haveI := o.act.hom (algebraMap (𝓞 D.F) D.O c)
+  · have := o.act.hom (algebraMap (𝓞 D.F) D.O c)
     exact (homMor (dp0 k) (𝟙 _) (o.act.act (algebraMap (𝓞 D.F) D.O c))).isMor.pullback1_mem_hodgeFiltration hx
   · refine sep o fun h ↦ ?_
     have e := (Submodule.mem_dualAnnihilator _).1 (h1 c h) x hx

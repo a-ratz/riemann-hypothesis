@@ -70,13 +70,13 @@ def piece (O : Subring F) (ϖ : F) {n a : ℕ} (r : Matrix (Fin n) (Fin a) F) :
 
 theorem mem_piece {O : Subring F} {ϖ : F} {n a : ℕ} {r y : Matrix (Fin n) (Fin a) F} :
     y ∈ piece O ϖ r ↔ ∀ i j, ∃ o ∈ O, y i j - r i j = ϖ * o := by
-  simp only [piece, Set.mem_preimage, IIset, Set.mem_setOf_eq, Matrix.add_apply,
+  simp only [piece, Set.mem_preimage, IIset, Set.mem_ofPred_eq, Matrix.add_apply,
     Matrix.neg_apply, neg_add_eq_sub, Matrix.sub_apply]
 
 theorem iiset_eq (O : Subring F) (ϖ : F) (hϖ0 : ϖ ≠ 0) {n a : ℕ} :
     (IIset O ϖ : Set (Matrix (Fin n) (Fin a) F)) = {y | ∀ i j, ϖ⁻¹ * y i j ∈ O} := by
   ext y
-  simp only [IIset, Set.mem_setOf_eq]
+  simp only [IIset, Set.mem_ofPred_eq]
   refine forall₂_congr fun i j => ⟨?_, fun h => ⟨_, h, ?_⟩⟩
   · rintro ⟨o, ho, e⟩
     rw [e, ← mul_assoc, inv_mul_cancel₀ hϖ0, one_mul]
@@ -239,7 +239,7 @@ theorem meas_piece (O : Subring F) (hO : IsOpen (O : Set F)) (ϖ : F) (hϖ0 : ϖ
 theorem measure_piece {n a : ℕ} (ν : Measure (Matrix (Fin n) (Fin a) F)) [ν.IsAddLeftInvariant]
     (O : Subring F) (ϖ : F) (r : Matrix (Fin n) (Fin a) F) :
     ν (piece O ϖ r) = ν (IIset O ϖ) := by
-  haveI := measurableAdd_mat (F := F) n a
+  have := measurableAdd_mat (F := F) n a
   unfold piece
   exact measure_preimage_add ν (-r) _
 
@@ -250,7 +250,7 @@ def repM (O : Subring F) (ϖ : F) (hϖ : ϖ ∈ O) {n a : ℕ} (c : Fin n → Fi
 theorem intMat_eq_iUnion (O : Subring F) (ϖ : F) (hϖ : ϖ ∈ O) (n a : ℕ) :
     intMat O n a = ⋃ c : Fin n → Fin a → kF O ϖ hϖ, piece O ϖ (repM O ϖ hϖ c) := by
   ext y
-  simp only [intMat, Set.mem_setOf_eq, Set.mem_iUnion, mem_piece]
+  simp only [intMat, Set.mem_ofPred_eq, Set.mem_iUnion, mem_piece]
   constructor
   · intro hy
     refine ⟨fun i j => Ideal.Quotient.mk _ ⟨y i j, hy i j⟩, fun i j => ?_⟩
@@ -287,7 +287,7 @@ theorem measure_uniformizerMatrixSet_mul_card (O : Subring F) (hO : IsOpen (O : 
     [ν.IsAddLeftInvariant] :
     ν (IIset O ϖ) * (Nat.card (kF O ϖ hϖ) : ENNReal) ^ (n * a) = ν (intMat O n a) := by
   classical
-  haveI : Fintype (kF O ϖ hϖ) := Fintype.ofFinite _
+  have : Fintype (kF O ϖ hϖ) := Fintype.ofFinite _
   rw [intMat_eq_iUnion O ϖ hϖ n a,
     measure_iUnion (piece_disjoint O ϖ hϖ n a) (fun c => meas_piece O hO ϖ hϖ0 _), tsum_fintype]
   simp only [measure_piece]
@@ -326,8 +326,8 @@ theorem measure_subgroupMatrixSet_mul_card (O : Subring F) (hO : IsOpen (O : Set
     ν (Jset J') * (Nat.card (kF O ϖ hϖ) : ENNReal) ^ (a * a) =
       (Nat.card (J' ⧸ (congSub O ϖ a).subgroupOf J') : ENNReal) * ν (intMat O a a) := by
   classical
-  haveI := measurableAdd_mat (F := F) a a
-  haveI : Fintype (kF O ϖ hϖ) := Fintype.ofFinite _
+  have := measurableAdd_mat (F := F) a a
+  have : Fintype (kF O ϖ hϖ) := Fintype.ofFinite _
   set K := (congSub O ϖ a).subgroupOf J' with hKdef
   have hoI : ∀ q : J' ⧸ K, ((Quotient.out q : J') : GL (Fin a) F) ∈ GLint O a :=
     fun q => hJ (Quotient.out q).2
@@ -347,7 +347,7 @@ theorem measure_subgroupMatrixSet_mul_card (O : Subring F) (hO : IsOpen (O : Set
     rw [mem_piece]
     intro i j
     exact (sub_mem_iff hϖ _ _).mpr (congrFun (congrFun hqq i) j).symm
-  haveI : Fintype (J' ⧸ K) := Fintype.ofFinite _
+  have : Fintype (J' ⧸ K) := Fintype.ofFinite _
   have hU : Jset J' = ⋃ q : J' ⧸ K,
       piece O ϖ (((Quotient.out q : J') : GL (Fin a) F) : Matrix (Fin a) (Fin a) F) := by
     ext m
@@ -397,12 +397,12 @@ namespace Formalism.DoubleCosetMeasures.P
 
 theorem volII : Formalism.DoubleCosetMeasures.VolII := by
   intro F _ _ _ _ _ O hO ϖ hϖ hϖ0 hfin n a ν _
-  haveI := hfin
+  have := hfin
   exact Vol.measure_uniformizerMatrixSet_mul_card O hO ϖ hϖ hϖ0 n a ν
 
 theorem volJadd : Formalism.DoubleCosetMeasures.VolJadd := by
   intro F _ _ _ _ _ O hO ϖ hϖ hϖ0 hloc hfin a ν _ J' hK hJ
-  haveI := hfin
+  have := hfin
   exact Vol.measure_subgroupMatrixSet_mul_card O hO ϖ hϖ hϖ0 hloc a ν J' hK hJ
 
 end Formalism.DoubleCosetMeasures.P

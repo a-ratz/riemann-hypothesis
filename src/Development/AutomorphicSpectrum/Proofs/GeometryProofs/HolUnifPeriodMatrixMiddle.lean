@@ -86,25 +86,25 @@ open GlobalTheory.CubicUnit
 
 theorem eq_one_at_rational_points : ∀ (K : Type) [Field K] (G : Over (Sp K)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → TorusExtension G → ∀ (v : Γ((G ⊗ G ⊗ G).left, ⊤)ˣ), (∀ (T : Over (Sp K)) (x y : T ⟶ G), (lift (1 : T ⟶ G) (lift x y)).left.appTop.hom v.val = 1 ∧ (lift x (lift (1 : T ⟶ G) y)).left.appTop.hom v.val = 1 ∧ (lift x (lift y (1 : T ⟶ G))).left.appTop.hom v.val = 1) → ∀ x y w : 𝟙_ (Over (Sp K)) ⟶ G, (lift x (lift y w)).left.appTop.hom v.val = 1 := by
   intro K _ G _ _ hs τ v hv x₀ y₀ w₀
-  letI := τ.addCommGroup
-  haveI := τ.free
-  letI := τ.grpB
-  haveI := τ.q_hom
-  haveI := τ.i_hom
-  haveI := τ.q_flat
-  haveI := τ.q_surjective
-  haveI := τ.q_quasiCompact
-  haveI := hs.smooth
-  haveI := hs.geomConnected
-  haveI hGc : ConnectedSpace G.left := (GlobalTheory.GroupConn.connectedSpace_group (Sp K) G).1
-  haveI hYc : ConnectedSpace (G ⊗ G).left := GlobalTheory.GroupConn.connectedSpace_tensor G G
-  haveI hsn : Smooth (snd G G).left := by
+  let := τ.addCommGroup
+  have := τ.free
+  let := τ.grpB
+  have := τ.q_hom
+  have := τ.i_hom
+  have := τ.q_flat
+  have := τ.q_surjective
+  have := τ.q_quasiCompact
+  have := hs.smooth
+  have := hs.geomConnected
+  have hGc : ConnectedSpace G.left := (GlobalTheory.GroupConn.connectedSpace_group (Sp K) G).1
+  have hYc : ConnectedSpace (G ⊗ G).left := GlobalTheory.GroupConn.connectedSpace_tensor G G
+  have hsn : Smooth (snd G G).left := by
     show Smooth (pullback.snd G.hom G.hom)
     infer_instance
-  haveI hsm : Smooth (G ⊗ G).hom := by
+  have hsm : Smooth (G ⊗ G).hom := by
     rw [← Over.w (snd G G)]
     infer_instance
-  haveI hYr : IsReduced (G ⊗ G).left := GlobalTheory.isReduced_of_smooth_of_isReduced (G ⊗ G).hom
+  have hYr : IsReduced (G ⊗ G).left := GlobalTheory.isReduced_of_smooth_of_isReduced (G ⊗ G).hom
   have hf1 : ∀ (T : Over (Sp K)) (x y : T ⟶ G), ev (lift (1 : T ⟶ G) (lift x y)) v = 1 :=
     fun T x y => Units.ext (hv T x y).1
   have hf2 : ∀ (T : Over (Sp K)) (x y : T ⟶ G), ev (lift x (lift (1 : T ⟶ G) y)) v = 1 :=
@@ -466,7 +466,7 @@ theorem weil_value {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
       sym := GlobalTheory.PolBaseChange.sym_pull hpb fun _ => ⟨⊤, trivial, gen_of_iso ((isGen_iff ws).1 gs') _⟩
       ample := relAmple_pull hpb.1 tB.PP.isLB hL' hw ⊤ (isAffineOpen_top _) (fun _ => trivial) hP.2.1
       ktriv := kTriv_pull hpb tB.PP.isLB hL' hw hP.2.2 }
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   have tors : ∀ w : Fin g → ℂ, w ∈ u.Λ → u.ex ((N : ℂ)⁻¹ • w) ^ N = 1 := fun w hw => by
     rw [← ex_nsmul_hol, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, mul_inv_cancel₀ hN0, one_smul]
     exact (u.ker w).2 hw
@@ -498,7 +498,7 @@ theorem cubWeil_eq_exp_riemann : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hN0 : (N : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hN.ne'
   obtain ⟨ρ, hρ⟩ := GlobalTheory.AlphaPair.exists_ptEquiv P.m.cart (𝟙 (Sp ℂ)) (spMap (ψ b)) (Category.id_comp _).symm
   obtain ⟨ρ', hρ'⟩ := GlobalTheory.AlphaPair.exists_ptEquiv hpb (𝟙 (Sp ℂ)) (𝟙 (Sp ℂ)) (Category.id_comp _).symm
-  letI := P.τ.grpB
+  let := P.τ.grpB
   have := P.τ.q_hom
   have := P.e_hom
   have tors : ∀ w : Fin g → ℂ, w ∈ e.per b → e.ex b ((N : ℂ)⁻¹ • w) ^ N = 1 := fun w hw => by

@@ -130,7 +130,7 @@ theorem xi_explicit (D : D7) (u : D.what₂.Word) (h1 : UnitaryVolumeMass.stMass
       (Real.exp 1 * Real.pi / (D.R.k * D.host.v)) ^ (D.R.k * D.R.f) := by
   have hk : s + 2 ≤ D.R.k := by omega
   unfold XiS Xi
-  rw [if_pos ⟨hs, hsk⟩]
+  rw [ite_eq_left ⟨hs, hsk⟩]
   have hR : ∀ j, 3 ≤ j → 0 < Formalism.HermitianLatticesTheory.massRatioRightSide D.host.E j := by
     intro j hj
     have h := massS_ratio D h1 j hj
@@ -142,22 +142,22 @@ theorem xi_explicit (D : D7) (u : D.what₂.Word) (h1 : UnitaryVolumeMass.stMass
     (fun j => if 3 ≤ j then Formalism.HermitianLatticesTheory.massRatioRightSide D.host.E j else 1) D.R.k s
     (fun j => by
       by_cases hj : 3 ≤ j
-      · simp only [if_pos hj]; exact hR j hj
-      · simp only [if_neg hj]; exact one_pos)
+      · simp only [ite_eq_left hj]; exact hR j hj
+      · simp only [ite_eq_right hj]; exact one_pos)
     (massS_pos D 2)
-    (fun j hj => by simp only [if_pos hj]; exact massS_ratio D h1 j hj) hs hk
+    (fun j hj => by simp only [ite_eq_left hj]; exact massS_ratio D h1 j hj) hs hk
   rw [hid]
   have e1 : ∏ j ∈ Finset.Ioc 2 s, (if 3 ≤ j then Formalism.HermitianLatticesTheory.massRatioRightSide D.host.E j else 1) =
       ∏ j ∈ Finset.Ioc 2 s, Formalism.HermitianLatticeCounting.LatticeSumBounds.mJ D.R.f D.host.v (fun i => Formalism.HermitianLatticesTheory.lValEta D.host.E i) j :=
     Finset.prod_congr rfl fun j hj => by
       have : 3 ≤ j := (Finset.mem_Ioc.1 hj).1
-      rw [if_pos this, ratio_eq_mJ]
+      rw [ite_eq_left this, ratio_eq_mJ]
   have e2 : ∏ j ∈ Finset.Ioc (D.R.k - s) D.R.k, (if 3 ≤ j then Formalism.HermitianLatticesTheory.massRatioRightSide D.host.E j else 1) =
       ∏ j ∈ Finset.Ioc (D.R.k - s) D.R.k,
         Formalism.HermitianLatticeCounting.LatticeSumBounds.mJ D.R.f D.host.v (fun i => Formalism.HermitianLatticesTheory.lValEta D.host.E i) j :=
     Finset.prod_congr rfl fun j hj => by
       have : 3 ≤ j := by have := (Finset.mem_Ioc.1 hj).1; omega
-      rw [if_pos this, ratio_eq_mJ]
+      rw [ite_eq_left this, ratio_eq_mJ]
   rw [e1, e2]
   exact Formalism.HermitianLatticeCounting.P.massRatioBound D.R.f D.R.k s D.host.v (massS D 2) _ hv (massS_pos D 2).le hs hk
     (fun j hj => lVal_bounds D j hj)
@@ -209,7 +209,7 @@ theorem xi_factors (f k s : ℕ) (hs : 2 ≤ s) (hk : 1 ≤ k) (C : ℝ) (hC : 4
   have hL : Real.exp (0.72 * f) * 17 ^ f * Real.sqrt (k / (2 * Real.pi)) ^ f *
       Real.pi ^ ((s - 2) * (k - s - 2) * f) =
       (Real.exp 0.72 * 17 * Real.sqrt (k / (2 * Real.pi)) * Real.pi ^ ((s - 2) * (k - s - 2))) ^ f := by
-    rw [mul_comm (0.72 : ℝ), Real.exp_nat_mul, pow_mul, mul_pow, mul_pow, mul_pow]
+    rw [mul_comm (0.72 : ℝ), Real.exp_natCast_mul, pow_mul, mul_pow, mul_pow, mul_pow]
   rw [hL, pow_mul C (s * k) f]
   exact pow_le_pow_left₀ (by positivity) hbase f
 

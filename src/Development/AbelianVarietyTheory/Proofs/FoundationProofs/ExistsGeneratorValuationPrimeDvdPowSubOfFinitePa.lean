@@ -67,11 +67,11 @@ theorem exists_generator_valuation_prime_dvd_pow_sub_of_finite_padicInt :
   obtain ⟨P, hP⟩ : ∃ P : Ideal R, ∀ x, x ∈ P ↔ v (x : Ω) < 1 := by
     refine ⟨{ carrier := {x | v (x : Ω) < 1}, add_mem' := ?_, zero_mem' := ?_, smul_mem' := ?_ }, fun x => Iff.rfl⟩
     · intro a b ha hb
-      simp only [Set.mem_setOf_eq, Subalgebra.coe_add] at *
+      simp only [Set.mem_ofPred_eq, Subalgebra.coe_add] at *
       exact lt_of_le_of_lt (v.map_add _ _) (max_lt ha hb)
     · simp
     · intro c x hx
-      simp only [Set.mem_setOf_eq, smul_eq_mul, Subalgebra.coe_mul, map_mul] at *
+      simp only [Set.mem_ofPred_eq, smul_eq_mul, Subalgebra.coe_mul, map_mul] at *
       calc v (c:Ω) * v x ≤ 1 * v x := mul_le_mul' (hle c) le_rfl
         _ = v x := one_mul _
         _ < 1 := hx
@@ -99,7 +99,7 @@ theorem exists_generator_valuation_prime_dvd_pow_sub_of_finite_padicInt :
     intro h
     rw [h, Ideal.mem_bot] at hpP
     apply hp0; rw [← hpR, hpP]; rfl
-  haveI hPmax : P.IsMaximal := hPprime.isMaximal hPne
+  have hPmax : P.IsMaximal := hPprime.isMaximal hPne
   set g := Submodule.IsPrincipal.generator P with hgdef
   have hgmem : g ∈ P := Submodule.IsPrincipal.generator_mem P
   have hg0 : g ≠ 0 := by
@@ -108,7 +108,7 @@ theorem exists_generator_valuation_prime_dvd_pow_sub_of_finite_padicInt :
   have hdvd : ∀ x : R, x ∈ P → ∃ c : R, x = g * c := fun x hx =>
     (Submodule.IsPrincipal.mem_iff_generator_dvd P).mp hx
 
-  letI : Field (R ⧸ P) := Ideal.Quotient.field P
+  let : Field (R ⧸ P) := Ideal.Quotient.field P
   have hpk : ((p : ℕ) : R ⧸ P) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk P), Ideal.Quotient.eq_zero_iff_mem]; exact hpP
   have hchar : CharP (R ⧸ P) p := by
@@ -126,11 +126,11 @@ theorem exists_generator_valuation_prime_dvd_pow_sub_of_finite_padicInt :
     · rw [PadicInt.maximalIdeal_eq_span_p, Ideal.span_le, Set.singleton_subset_iff]
       show (p : ℤ_[p]) ∈ P.comap (algebraMap ℤ_[p] R)
       rw [Ideal.mem_comap, map_natCast]; exact hpP
-  haveI : Finite (ℤ_[p] ⧸ P.under ℤ_[p]) := by
+  have : Finite (ℤ_[p] ⧸ P.under ℤ_[p]) := by
     rw [hunder]
     exact Finite.of_equiv (ZMod p) (PadicInt.residueField (p := p)).symm.toEquiv
-  haveI : Finite (R ⧸ P) := Module.finite_of_finite (ℤ_[p] ⧸ P.under ℤ_[p])
-  letI := Fintype.ofFinite (R ⧸ P)
+  have : Finite (R ⧸ P) := Module.finite_of_finite (ℤ_[p] ⧸ P.under ℤ_[p])
+  let := Fintype.ofFinite (R ⧸ P)
   obtain ⟨n, -, hcard⟩ := FiniteField.card (R ⧸ P) p
   refine ⟨(g : Ω), g.2, ?_, ?_, ?_, (n : ℕ), n.pos, ?_⟩
   · exact fun h => hg0 (Subtype.ext h)

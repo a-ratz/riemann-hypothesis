@@ -154,7 +154,7 @@ theorem exists_label_action {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
   let a' : S.Gam →+ S.Gam := AddMonoidHom.mk' a fun x y => hinj (by rw [hadd, ha, ha, ha, hadd, map_mul])
   have ainj : Function.Injective a' := fun x y h => hinj (τinj (by
     rw [← ha, ← ha]; exact congrArg p h))
-  haveI : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by have := S.N_ge; omega)⟩
+  have : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by have := S.N_ge; omega)⟩
   have abij : Function.Bijective a' := Finite.injective_iff_bijective.1 ainj
   have h₁ : ∀ x (w : Sp Ω ⟶ G.left), w ≫ b = spMap S.R.val.toRingHom ≫ (ρ.pt x).left → w = (p x).left := fun x w h => by
     refine hb.1.hom_ext (h.trans (hp x).symm) (Eq.trans ?_ (Over.w (p x)).symm)

@@ -65,9 +65,9 @@ theorem isClosed_inN {n r : ℕ} (ε : Fin n → Bool) (e : Fin r → Fin n → 
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ | InN ε e z g} := by
   have hS : ∀ (S : Submodule ℂ (Fin n → ℂ)) (x : Fin n → ℂ),
       IsClosed {g : Matrix (Fin n) (Fin n) ℂ | (g - 1) *ᵥ x ∈ S} := fun S x =>
-    S.closed_of_finiteDimensional.preimage ((continuous_id.sub continuous_const).matrix_mulVec continuous_const)
+    S.isClosed_of_finiteDimensional.preimage ((continuous_id.sub continuous_const).matrix_mulVec continuous_const)
   unfold InN InS
-  simp only [Set.setOf_and, Set.setOf_forall]
+  simp only [Set.ofPred_and, Set.ofPred_forall]
   exact ((isClosed_iInter fun a => hS _ _).inter (hS _ _)).inter
     (isClosed_iInter fun y => isClosed_iInter fun _ => hS _ _)
 
@@ -76,7 +76,7 @@ variable {D : D7}
 theorem isClosed_stV (X : HidaSetting D) (u u' : D.what₂.Word) (γ : X.B.I.Ginf) (v : InfinitePlace X.B.I.F) :
     IsClosed (Formalism.L2.SG.NGPin.StV X u u' γ v) := by
   have hu : Continuous fun y : Formalism.REAL.UJ (X.B.I.ε v) => uMat y :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hc : Continuous fun y : Formalism.REAL.UJ (X.B.I.ε v) => uMat ((γ v)⁻¹ * y * γ v) :=
     hu.comp ((continuous_const.mul continuous_id).mul continuous_const)
   exact ((isClosed_inN _ _ _).preimage hu).inter ((isClosed_inN _ _ _).preimage hc)

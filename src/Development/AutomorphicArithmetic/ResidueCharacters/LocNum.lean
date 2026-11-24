@@ -88,8 +88,8 @@ theorem map_mem {M : ℕ} (hM : 0 < M) (S : IntermediateField ℚ_[l] (Om l)) (h
   exact key hx
 
 theorem finrank_le {M : ℕ} (hM : 0 < M) : Module.finrank ℚ_[l] ↥(Kc l M hM).1 ≤ M := by
-  haveI : NeZero M := ⟨hM.ne'⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) M
+  have : NeZero M := ⟨hM.ne'⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) M
   have e : (Kc l M hM).1 = IntermediateField.adjoin ℚ_[l] {z} := by
     apply le_antisymm
     · refine IntermediateField.adjoin_le_iff.2 fun x hx => ?_
@@ -218,7 +218,7 @@ theorem rI_le (l m h n : ℕ) (hl : l.Prime) (U : Finset ℤ) (U' : Set ℤ) (hU
       have hz : (u - i).natAbs ≤ 2 * h := by omega
       have hv : LocalSituation.vZ l (u - i) ≤ Nat.log l (2 * h) := by
         unfold LocalSituation.vZ padicValInt
-        exact (padicValNat_le_nat_log _).trans (Nat.log_mono_right hz)
+        exact (multiplicity_le_nat_log _).trans (Nat.log_mono_right hz)
       omega
     · exact Nat.zero_le _
   calc ∑ u ∈ hfin.toFinset, (∑ᶠ (_ : u ≠ i), (m + LocalSituation.vZ l (u - i)))

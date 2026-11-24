@@ -100,10 +100,10 @@ open FiniteCover
 theorem finrank_sec_pull_sandwich_flat : ∀ (K : Type) [Field K] (X X' : Scheme.{0}) [IsIntegral X] [IsIntegral X'] (f : X ⟶ Spec (CommRingCat.of K)) (φ : X' ⟶ X) [IsFinite φ] [Flat φ] [Surjective φ] (H : LB X) (n : ℕ) (s : Fin (n + 1) → LB.Sec H), H.IsLB → VeryAmpleBy f H s → ∀ d : ℕ, (∀ x : X, φ.finrank x = d) → (∀ t : ℕ, Module.Finite K (SecOnR f (pw H t) ⊤)) → (∀ t : ℕ, Module.Finite K (SecOnR (φ ≫ f) ((pw H t).pull φ) ⊤)) → ∃ a : ℕ, ∀ t : ℕ, d * Module.finrank K (SecOnR (f) (pw H t) ⊤) ≤ Module.finrank K (SecOnR (φ ≫ f) ((pw H (t + a : ℕ)).pull φ) ⊤) ∧ Module.finrank K (SecOnR (φ ≫ f) ((pw H t).pull φ) ⊤) ≤ d * Module.finrank K (SecOnR (f) (pw H (t + a : ℕ)) ⊤) := by
   intro K _ X X' _ _ f φ _ _ _ H n s hH hs d hd hV hW
   have hd1 : 1 ≤ d := hd _ ▸ φ.one_le_finrank_map (genericPoint X')
-  letI : Algebra X.functionField X'.functionField := (functionFieldMap φ).toAlgebra
-  letI : Algebra K X.functionField := ((toField generic_top).comp (cst f ⊤)).toAlgebra
-  letI : Algebra K X'.functionField := ((toField generic_top).comp (cst (φ ≫ f) ⊤)).toAlgebra
-  haveI : IsScalarTower K X.functionField X'.functionField :=
+  let : Algebra X.functionField X'.functionField := (functionFieldMap φ).toAlgebra
+  let : Algebra K X.functionField := ((toField generic_top).comp (cst f ⊤)).toAlgebra
+  let : Algebra K X'.functionField := ((toField generic_top).comp (cst (φ ≫ f) ⊤)).toAlgebra
+  have : IsScalarTower K X.functionField X'.functionField :=
     IsScalarTower.of_algebraMap_eq fun r => by
       have w : φ ≫ f = (φ ≫ f) ≫ Spec.map (CommRingCat.ofHom (RingHom.id K)) := by simp
       have e := toField_appLE φ (U := ⊤) (V := ⊤) le_top generic_top generic_top (cst f ⊤ r)
@@ -112,7 +112,7 @@ theorem finrank_sec_pull_sandwich_flat : ∀ (K : Type) [Field K] (X X' : Scheme
   obtain ⟨hcov, hs⟩ := hs
   choose haff r hr _ using hs
   let I := {i // genericPoint X ∈ nonzeroLocus (s i)}
-  haveI : Fintype I := Fintype.ofFinite I
+  have : Fintype I := Fintype.ofFinite I
   let D : I → X.Opens := fun i => nonzeroLocus (s i.1)
   have hη : ∀ i, genericPoint X ∈ D i := fun i => i.2
   have hc : ⊤ ≤ ⨆ i, D i := fun x hx => by
@@ -125,7 +125,7 @@ theorem finrank_sec_pull_sandwich_flat : ∀ (K : Type) [Field K] (X X' : Scheme
   obtain ⟨k₀, h₀⟩ := TopologicalSpace.Opens.mem_iSup.1 (hH.cover.ge generic_top)
   obtain ⟨x, hx⟩ := (chart_data φ (fun _ => rfl) (haff i₀.1) (hη i₀)).1
   rw [hd] at hx
-  haveI : Module.Finite X.functionField X'.functionField :=
+  have : Module.Finite X.functionField X'.functionField :=
     Module.finite_of_finrank_pos (by omega)
   let e := Module.finBasisOfFinrankEq _ _ hx
   choose c hcm hc0 hc₁ hc₂ using fun i : I =>
@@ -218,10 +218,10 @@ theorem finrank_eq_of_mapDeg {X Y : Scheme.{0}} [IsIntegral Y] (φ : X ⟶ Y) [I
   obtain ⟨_, ⟨U, hU, rfl⟩, hy, -⟩ :=
     Y.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ y) isOpen_univ
   replace hU : IsAffineOpen U := hU
-  haveI : Nonempty U := ⟨⟨_, hy⟩⟩
-  letI := (φ.app U).hom.toAlgebra
-  haveI : Module.Finite Γ(Y, U) Γ(X, φ ⁻¹ᵁ U) := φ.finite_app U hU
-  haveI : Module.Flat Γ(Y, U) Γ(X, φ ⁻¹ᵁ U) := by
+  have : Nonempty U := ⟨⟨_, hy⟩⟩
+  let := (φ.app U).hom.toAlgebra
+  have : Module.Finite Γ(Y, U) Γ(X, φ ⁻¹ᵁ U) := φ.finite_app U hU
+  have : Module.Flat Γ(Y, U) Γ(X, φ ⁻¹ᵁ U) := by
     have := φ.flat_appLE hU (hU.preimage φ) le_rfl
     rwa [Scheme.Hom.appLE_eq_app] at this
   have hp : IsPullback (hU.preimage φ).fromSpec (Spec.map (φ.app U)) φ hU.fromSpec :=
@@ -257,15 +257,15 @@ namespace GlobalTheory.UU.MulDegree
 theorem finrank_mul_eq : ∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp k)) [GrpObj B] (g n : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → n ≠ 0 → ∀ [IsFinite (𝟙 B ^ n : B ⟶ B).left] [Flat (𝟙 B ^ n : B ⟶ B).left], ∀ x : B.left, (𝟙 B ^ n : B ⟶ B).left.finrank x = n ^ (2 * g) := by
   intro k _ _ B _ g n hB hg hn0 _ _ x
   have hG : GlobalFnsSt := GlobalTheory.abelianSchemeLaws_all.1.globalFns
-  haveI := hB.comm
-  haveI := hB.smooth
-  haveI := hB.proper
-  haveI : GeometricallyIntegral B.hom :=
+  have := hB.comm
+  have := hB.smooth
+  have := hB.proper
+  have : GeometricallyIntegral B.hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hB.smooth hB.geomConnected
-  haveI : IsIntegral B.left := GeometricallyIntegral.isIntegral_of_subsingleton B.hom
+  have : IsIntegral B.left := GeometricallyIntegral.isIntegral_of_subsingleton B.hom
   have hq : 1 ≤ n ^ 2 := Nat.one_le_iff_ne_zero.2 (pow_ne_zero _ hn0)
-  haveI : IsMonHom (𝟙 B ^ n : B ⟶ B) := GlobalTheory.AbLaw.MulN.isMonHom_mulA B n
-  haveI : Surjective (𝟙 B ^ n : B ⟶ B).left :=
+  have : IsMonHom (𝟙 B ^ n : B ⟶ B) := GlobalTheory.AbLaw.MulN.isMonHom_mulA B n
+  have : Surjective (𝟙 B ^ n : B ⟶ B).left :=
     (GlobalTheory.flat_and_surjective_of_isFinite_grpEnd k B (𝟙 B ^ n)).2
   obtain ⟨D, -, hD⟩ := GlobalTheory.DegKer.exists_mapDeg_of_isFinite _ _ (𝟙 B ^ n : B ⟶ B).left inferInstance inferInstance
   have hrank : ∀ y : B.left, (𝟙 B ^ n : B ⟶ B).left.finrank y = D :=
@@ -288,7 +288,7 @@ theorem finrank_mul_eq : ∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp 
   have e := GlobalTheory.UU.TorsionCount.nonempty_secEquiv B.hom _ hφ hH (n ^ 2) hiso
   obtain ⟨a, ha⟩ := GlobalTheory.T.finrank_sections_pullback_finite_flat_degree_bounds k B.left B.left B.hom (𝟙 B ^ n).left H m s hH hs D hrank hfin fun t => by
     obtain ⟨e⟩ := e t
-    haveI := hfin (n ^ 2 * t)
+    have := hfin (n ^ 2 * t)
     exact Module.Finite.equiv e
   rw [pow_mul]
   refine GlobalTheory.UU.degree_eq_pow_of_growth (fun t : ℕ => Module.finrank k (SecOnR B.hom (AbLaw.pw H t) ⊤)) g c C a _ (n ^ 2)
@@ -354,7 +354,7 @@ theorem natCast_algClosed (k : Type) [Field k] [IsAlgClosed k] (A : AbVar k) (n 
     exact ⟨hfin, hsurj⟩
   refine ⟨hiso, ?_⟩
   unfold deg
-  rw [if_pos hiso, e]
+  rw [ite_eq_left hiso, e]
   exact GlobalTheory.UU.MulDegree.finrank_mul_eq k A.X A.dim n A.ab A.smooth hn _
 
 theorem natCast (K : Type) [Field K] (A : AbVar K) (n : ℕ) (hn : n ≠ 0) :
@@ -368,11 +368,11 @@ theorem neg_one (K : Type) [Field K] (A : AbVar K) : IsIsogeny (-𝟙 A) ∧ deg
   have hsq : (-𝟙 A) ≫ (-𝟙 A) = 𝟙 A := by simp
   have hsq' : (-𝟙 A).hom.left ≫ (-𝟙 A).hom.left = 𝟙 A.X.left := by
     rw [← Over.comp_left, ← comp_hom, hsq, id_hom, Over.id_left]
-  haveI : IsIso (-𝟙 A).hom.left := ⟨⟨(-𝟙 A).hom.left, hsq', hsq'⟩⟩
+  have : IsIso (-𝟙 A).hom.left := ⟨⟨(-𝟙 A).hom.left, hsq', hsq'⟩⟩
   have hiso : IsIsogeny (-𝟙 A) := ⟨inferInstance, inferInstance⟩
   refine ⟨hiso, ?_⟩
   unfold deg
-  rw [if_pos hiso]
+  rw [ite_eq_left hiso]
   exact congrFun (Scheme.Hom.finrank_eq_one_of_isIso _) _
 
 theorem mul_isogeny : ∀ (K : Type) [Field K] (A : AbVar K) (n : ℤ), n ≠ 0 → IsIsogeny (n • 𝟙 A) ∧ deg (n • 𝟙 A) = n.natAbs ^ (2 * A.dim) := by

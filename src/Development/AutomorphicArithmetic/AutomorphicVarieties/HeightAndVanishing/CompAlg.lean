@@ -56,7 +56,7 @@ private theorem UpperTheory.V.HV.projProd_ext (N : ℕ) [NeZero N] (a b : (ZMod 
   have key : ∀ r ∈ N.primeFactors, (((r ^ N.factorization r : ℕ)) : ℤ) ∣ ((b : ZMod N).val : ℤ) - ((a : ZMod N).val : ℤ) := by
     intro r hr
     have e := congrArg (fun u : (ZMod (r ^ N.factorization r))ˣ => (u : ZMod (r ^ N.factorization r))) (h r hr)
-    simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_coe] at e
+    simp only [ZMod.unitsMap_def, Units.coe_map, MonoidHom.coe_ofClass] at e
     rw [← ZMod.natCast_zmod_val (a : ZMod N), ← ZMod.natCast_zmod_val (b : ZMod N), map_natCast, map_natCast,
       ZMod.natCast_eq_natCast_iff] at e
     exact Nat.modEq_iff_dvd.mp e

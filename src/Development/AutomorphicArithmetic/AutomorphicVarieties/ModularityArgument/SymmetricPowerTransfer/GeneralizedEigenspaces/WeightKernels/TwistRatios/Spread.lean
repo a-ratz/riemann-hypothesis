@@ -82,15 +82,15 @@ private lemma conj_real {K : Type} [Field K] [NumberField K] [IsTotallyReal K] (
 private lemma exists_emb (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebra L Ω]
     [Algebra.IsAlgebraic L Ω] : Nonempty (Ω →+* ℂ) := by
   let φ : L →+* ℂ := (IsAlgClosed.lift (R := ℚ) (S := L) (M := ℂ)).toRingHom
-  letI : Algebra L ℂ := φ.toAlgebra
+  let : Algebra L ℂ := φ.toAlgebra
   exact ⟨(IsAlgClosed.lift (R := L) (S := Ω) (M := ℂ)).toRingHom⟩
 
 theorem UpperTheory.V.Z.Sym.Ga.conjEx :
     ∀ (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω], ∃ c : G (maximalRealSubfield L) Ω, IsConjEl c := by
   intro L Ω _ _ _ _ _ _
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
-  haveI : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ L Ω
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : IsAlgClosure ℚ Ω := IsAlgClosure.ofAlgebraic ℚ L Ω
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   obtain ⟨j⟩ := exists_emb L Ω
   let j' : Ω →ₐ[ℚ] ℂ := j.toRatAlgHom
   let τ' : Ω →ₐ[ℚ] ℂ := ((starRingEnd ℂ).comp j).toRatAlgHom

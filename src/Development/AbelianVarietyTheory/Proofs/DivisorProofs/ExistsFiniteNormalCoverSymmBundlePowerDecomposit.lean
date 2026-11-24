@@ -164,13 +164,13 @@ theorem exists_finite_normal_cover_of_finiteDimensional : ∀ (R : Type) [CommRi
   have hnorm : IsIntegrallyClosed R := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing R).2
   have hCN : IsCN R := ⟨inferInstance, hnorm, hcomp, inferInstance⟩
   let K := FractionRing R
-  letI : Algebra R K' := ((algebraMap K K').comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
-  haveI : Algebra.IsSeparable K K' := inferInstance
+  let : Algebra R K' := ((algebraMap K K').comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
+  have : Algebra.IsSeparable K K' := inferInstance
   let C := integralClosure R K'
-  haveI hCf : Module.Finite R C := IsIntegralClosure.finite R K K' C
-  haveI : IsFractionRing C K' := integralClosure.isFractionRing_of_finite_extension K K'
+  have hCf : Module.Finite R C := IsIntegralClosure.finite R K K' C
+  have : IsFractionRing C K' := integralClosure.isFractionRing_of_finite_extension K K'
   have hRK' : Function.Injective (algebraMap R K') := by
     rw [IsScalarTower.algebraMap_eq R K K']
     exact (algebraMap K K').injective.comp (IsFractionRing.injective R K)
@@ -179,15 +179,15 @@ theorem exists_finite_normal_cover_of_finiteDimensional : ∀ (R : Type) [CommRi
     GlobalTheory.LocExt.exists_isCN_cover_of_finite R C (algebraMap R C) hCN hRC
       (RingHom.finite_algebraMap.2 hCf)
   obtain ⟨hnoeth', hnorm', -, -⟩ := hCN'
-  letI : Algebra C R' := σ.toAlgebra
-  letI : Algebra R R' := ρ.toAlgebra
-  haveI : IsScalarTower R C R' := IsScalarTower.of_algebraMap_eq (fun r => (RingHom.congr_fun hσρ r).symm)
-  haveI : Algebra.IsIntegral R C := Algebra.IsIntegral.of_finite R C
+  let : Algebra C R' := σ.toAlgebra
+  let : Algebra R R' := ρ.toAlgebra
+  have : IsScalarTower R C R' := IsScalarTower.of_algebraMap_eq (fun r => (RingHom.congr_fun hσρ r).symm)
+  have : Algebra.IsIntegral R C := Algebra.IsIntegral.of_finite R C
   have hσ : Function.Injective σ := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro c hc
     have hker : RingHom.ker σ = ⊥ := by
-      apply Ideal.eq_bot_of_comap_eq_bot (R := R)
+      apply Ideal.eq_bot_of_under_eq_bot (R := R)
       ext r
       simp only [Ideal.mem_comap, RingHom.mem_ker, Ideal.mem_bot]
       constructor
@@ -625,7 +625,7 @@ theorem main (n : ℕ) (Tm : Matrix (Fin n) (Fin n) ℚ) (B : Matrix (Fin n) (Fi
   let ι := Ideal.kerLiftAlg f
   have hι : Function.Injective ι := Ideal.kerLiftAlg_injective f
   have hιm : ∀ p, ι (Ideal.Quotient.mk _ p) = aeval Tm p := Ideal.kerLiftAlg_mk f
-  haveI : Module.Finite ℚ (ℚ[X] ⧸ RingHom.ker f) := Module.Finite.of_injective ι.toLinearMap hι
+  have : Module.Finite ℚ (ℚ[X] ⧸ RingHom.ker f) := Module.Finite.of_injective ι.toLinearMap hι
   let τ : (ℚ[X] ⧸ RingHom.ker f) →ₗ[ℚ] ℚ := Matrix.traceLinearMap (Fin n) ℚ ℚ ∘ₗ ι.toLinearMap
   have hτ : ∀ p, ((τ (Ideal.Quotient.mk _ p) : ℚ) : ℝ) = ∑ k, aeval (d k) p := by
     intro p
@@ -1149,7 +1149,7 @@ theorem lat_basis (g : ℕ) (Λ : Submodule ℤ (Fin g → ℂ)) (hd : DiscreteT
     (hs : Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤) :
     ∃ (n : ℕ) (e : Module.Basis (Fin n) ℝ (Fin g → ℂ)),
       ∀ x, x ∈ Λ ↔ ∀ k, ∃ m : ℤ, e.repr x k = m := by
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
+  have : IsZLattice ℝ Λ := ⟨hs⟩
   let b := Module.finBasis ℤ Λ
   refine ⟨_, b.ofZLatticeBasis ℝ Λ, fun x => ⟨fun hx k => ⟨b.repr ⟨x, hx⟩ k, ?_⟩, fun h => ?_⟩⟩
   · exact b.ofZLatticeBasis_repr_apply ℝ Λ ⟨x, hx⟩ k
@@ -1297,7 +1297,7 @@ theorem frame_power_identity : ∀ (A : Over (Sp ℂ)) [GrpObj A] (L M : LB A.le
       Real.pi / 2 * ((l : Fin g → ℂ) ⬝ᵥ HL.mulVec (star (l : Fin g → ℂ)))) ^ N =
       ∏ k, Complex.exp (Real.pi * (F k z ⬝ᵥ HM.mulVec (star (F k l))) +
         Real.pi / 2 * (F k l ⬝ᵥ HM.mulVec (star (F k l)))) ^ ε k := by
-    rw [← Complex.exp_nat_mul, Finset.prod_congr rfl (fun k _ => (Complex.exp_int_mul (ε k) _).symm),
+    rw [← Complex.exp_natCast_mul, Finset.prod_congr rfl (fun k _ => (Complex.exp_intCast_mul (ε k) _).symm),
       ← Complex.exp_sum]
     congr 1
     have h1 := hdec z l
@@ -1318,8 +1318,8 @@ theorem lbIso_of_sameFactor (A : Over (Sp ℂ)) [GrpObj A] (hA : IsAbelianScheme
     (u : HolUnif A X g) (v : HolUnif A Y g) (hX : X.IsLB) (hY : Y.IsLB) (hex : v.ex = u.ex)
     (hper : ∀ (l : u.Λ) i j z, ⊤ ≤ (u.ex z).left ⁻¹ᵁ X.U i → ⊤ ≤ (u.ex z).left ⁻¹ᵁ Y.U j →
       u.fr i z * v.fr j (z + l) = u.fr i (z + l) * v.fr j z) : LBIso X Y := by
-  haveI := hA.comm
-  haveI := hA.smooth
+  have := hA.comm
+  have := hA.smooth
   have hp : IsProjOver A.hom := (GlobalTheory.ProjSpace.isProjBy_iff_isProjOver A.hom).1
     (GlobalTheory.AbelianProjective.isProjBy_of_isAbelianScheme ℂ A hA)
   obtain ⟨s, hs⟩ := HolUnifSec.exists_isFn (SameFactor.divUnif u v hex) hA hp (LB.isLB_div hY hX)
@@ -1340,7 +1340,7 @@ theorem sqDec_complex : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsAbelianScheme A �
     RelAmple A L → RelAmple A M → LBIso (L.pull (GrpObj.inv : A ⟶ A).left) L →
     LBIso (M.pull (GrpObj.inv : A ⟶ A).left) M → SqDec A L M := by
   intro A _ hA L M hL hM haL haM hsL hsM
-  haveI := hA.comm
+  have := hA.comm
   obtain ⟨g, hg⟩ := AbelianDim.exists_relDim ℂ A hA
   obtain ⟨L₀, ⟨u₀⟩⟩ := HomDescentQb.exists_holUnif A g hA hg
   obtain ⟨uL, HL, χL, hexL, hfL⟩ := exists_isFactorAH_frame_of_unif A hA L₀ g u₀ L hL
@@ -1385,7 +1385,7 @@ theorem sqDec_complex : ∀ (A : Over (Sp ℂ)) [GrpObj A], IsAbelianScheme A �
     rw [hfF k z]
     exact (CubeValues.le_preimage_wchart (uL.ex z).left M (fun k => (f k).left) j).1 hj k
   exact frame_power_identity A L M g uL uM HL HM χL χM hex hfL hfM hχL hχM N _ FF ε hNe
-    (fun k => by cases k with | none => exact (Int.even_coe_nat _).2 ha₀e | some i => exact (Int.even_coe_nat _).2 (hae i))
+    (fun k => by cases k with | none => exact (Int.even_natCast _).2 ha₀e | some i => exact (Int.even_natCast _).2 (hae i))
     (fun k l hl => by cases k with | none => exact (hΛ l).2 hl | some i => exact (hΛ _).2 (hF i l hl))
     (fun z w => by rw [Fintype.sum_option, hdec z w]; simp [FF, ε]) l (i PUnit.unit) j z hi' hj'
 
@@ -1414,7 +1414,7 @@ theorem exists_finite_ext_compat_of_finite :
     ∀ (k K k₁ : Type) [Field k] [Field K] [Field k₁] [Algebra k K] [Algebra k k₁] [FiniteDimensional k k₁], ∃ (K' : Type) (_ : Field K') (_ : Algebra K K') (_ : FiniteDimensional K K') (e : k₁ →+* K'), e.comp (algebraMap k k₁) = (algebraMap K K').comp (algebraMap k K) := by
   intro k K k₁ _ _ _ _ _ _
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (K ⊗[k] k₁)
-  letI : Field ((K ⊗[k] k₁) ⧸ m) := Ideal.Quotient.field m
+  let : Field ((K ⊗[k] k₁) ⧸ m) := Ideal.Quotient.field m
   have hfin : FiniteDimensional K ((K ⊗[k] k₁) ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ K m).toLinearMap
       (Ideal.Quotient.mkₐ_surjective K m)
@@ -1456,7 +1456,7 @@ theorem sqDec_baseChange : ∀ (k R S : Type) [Field k] [CommRing R] [CommRing S
   have hg' : ∀ i, ∃ g : (Over.pullback (spMap (algebraMap k S))).obj A₀ ⟶ (Over.pullback (spMap (algebraMap k S))).obj A₀,
       IsMonHom g ∧ g.left ≫ bc = bc ≫ (β i).left := by
     intro i
-    haveI := hβ i
+    have := hβ i
     obtain ⟨g, hg, e⟩ := GlobalTheory.HomDescent.exists_specialise (β i) ρ
     refine ⟨g, hg, ?_⟩
     apply pullback.hom_ext
@@ -1642,14 +1642,14 @@ theorem exists_algHom_finite (k Ω : Type) [Field k] [Field Ω] [Algebra k Ω] (
     ∃ (k₁ : Type) (_ : Field k₁) (_ : Algebra k k₁) (_ : FiniteDimensional k k₁), Nonempty (R →ₐ[k] k₁) := by
   have : Algebra.FiniteType k R := (Subalgebra.fg_iff_finiteType _).1 hR
   obtain ⟨m, hm⟩ := Ideal.exists_maximal R
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
   have : Algebra.FiniteType k (R ⧸ m) := Algebra.FiniteType.trans (S := R) inferInstance inferInstance
   have : Module.Finite k (R ⧸ m) := finite_of_finite_type_of_isJacobsonRing k (R ⧸ m)
   exact ⟨R ⧸ m, inferInstance, inferInstance, inferInstance, ⟨Ideal.Quotient.mkₐ k m⟩⟩
 
 theorem main : ∀ (k Ω : Type) [Field k] [Field Ω] (σ : k →+* Ω) (A₀ : Over (Sp k)) [GrpObj A₀], IsAbelianScheme A₀ → ∀ (L M : LB A₀.left), L.IsLB → M.IsLB → SqDec ((Over.pullback (spMap σ)).obj A₀) (L.pull (pullback.fst A₀.hom (spMap σ))) (M.pull (pullback.fst A₀.hom (spMap σ))) → ∃ (k₁ : Type) (_ : Field k₁) (_ : Algebra k k₁) (_ : FiniteDimensional k k₁), SqDec ((Over.pullback (spMap (algebraMap k k₁))).obj A₀) (L.pull (pullback.fst A₀.hom (spMap (algebraMap k k₁)))) (M.pull (pullback.fst A₀.hom (spMap (algebraMap k k₁)))) := by
   intro k Ω _ _ σ A₀ _ hA L M hL hM h
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   obtain ⟨R, hR, hRd⟩ := _root_.GlobalTheory.SqDecSpread.sqDec_fg k Ω A₀ hA L M hL hM h
   obtain ⟨k₁, _, _, _, ⟨ρ⟩⟩ := exists_algHom_finite k Ω R hR
   exact ⟨k₁, inferInstance, inferInstance, inferInstance, _root_.GlobalTheory.SqDecBC.sqDec_baseChange k R k₁ ρ A₀ L M hL hM hRd⟩
@@ -1763,7 +1763,7 @@ theorem sqDec_of_baseChange_id : ∀ (F : Type) [CommRing F] (A : Over (Sp F)) [
     exact IsGrpPullback.cancel (isGrpPullback_pullback A _) n e₂
   obtain ⟨N, a₀, r, e, β, hN, ha₀, hβ, hI⟩ := hD
   have hβ' : ∀ i, ∃ g : A ⟶ A, IsMonHom g ∧ g.left ≫ π' = π' ≫ (β i).left := fun i => by
-    haveI := hβ i
+    have := hβ i
     exact GlobalTheory.HomDescent.exists_isMonHom_pull hP hP (β i)
   choose β' hβ'm hβ'c using hβ'
   have iL : LBIso L ((L.pull (pullback.fst A.hom (spMap (RingHom.id F)))).pull π') :=

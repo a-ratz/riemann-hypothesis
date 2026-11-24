@@ -135,7 +135,7 @@ theorem exists_geometricPoint_rootOfUnity_eq_one_of_isDominant :
       have hp' : p ∈ (Sp K).basicOpen (z.appTop.hom s) := hp
       rw [this] at hp'
       exact hp'
-    haveI : IsDomain Γ(Sp K, ⊤) :=
+    have : IsDomain Γ(Sp K, ⊤) :=
       (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.toMulEquiv.isDomain
     have h := congrArg z.appTop.hom hmul
     rw [map_mul, map_zero, map_sub, map_one] at h

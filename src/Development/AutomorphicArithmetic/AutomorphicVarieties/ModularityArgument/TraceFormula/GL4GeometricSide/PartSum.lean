@@ -687,7 +687,7 @@ theorem UpperTheory.RealTr.evInj :
       by_contra hne
       apply ht
       simp only at hab
-      rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, Complex.exp_eq_exp_iff_exists_int] at hab
+      rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, Complex.exp_eq_exp_iff_exists_int] at hab
       obtain ⟨m, hm⟩ := hab
       have hi := congrArg Complex.im hm
       simp [Pi.add_apply, Pi.smul_apply] at hi
@@ -814,7 +814,7 @@ private theorem mem_UU {g : Matrix (Fin n) (Fin n) ℂ} : g ∈ UU n ↔ g ∈ M
 open scoped Norms.Operator in
 private theorem skew_hermitian_of_unitary_exp (X : Matrix (Fin n) (Fin n) ℂ)
     (h : ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • X) ∈ Matrix.unitaryGroup (Fin n) ℂ) : Xᴴ = -X := by
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   have hsm : ∀ (t : ℝ) (Y : Matrix (Fin n) (Fin n) ℂ), (t : ℂ) • Y = t • Y := fun t Y => by
     ext a b
     simp
@@ -908,7 +908,7 @@ private theorem top_of [FiniteDimensional ℂ H] {σ : Matrix (Fin n) (Fin n) �
   have hT : Sᗮ ≠ ⊥ := fun h => hne ((Submodule.orthogonal_eq_bot_iff).1 h)
   obtain ⟨W, ⟨hW0, hWT, hWs⟩, hmin⟩ := (wellFounded_lt (α := Submodule ℂ H)).has_min
     {W | W ≠ ⊥ ∧ W ≤ Sᗮ ∧ ∀ g, ∀ v ∈ W, σ g v ∈ W} ⟨Sᗮ, hT, le_rfl, orth_stable hσ hz hS⟩
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hirr : PI.UpqRep.IsIrredOn (UU n) (rs σ W hWs) := by
     intro S' _ hS'
     by_cases h0 : S' = ⊥
@@ -965,13 +965,13 @@ private theorem sgm_rep (E : KMod n) : PI.UpqRep.IsURepOn (UU n) (sgm E) := by
     exact h
   · rw [show sgm E g = E.ρ ⟨g, mem_UU.1 hg⟩ from sgm_coe E ⟨g, mem_UU.1 hg⟩]
     exact E.iso _ v
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     have e : (fun u : UU n => sgm E u.1 v) = fun u : UU n => E.ρ ⟨u.1, mem_UU.1 u.2⟩ v := by
       funext u
       exact congrArg (fun T : E.V →L[ℂ] E.V => T v) (sgm_coe E ⟨u.1, mem_UU.1 u.2⟩)
     show Continuous (fun u : UU n => sgm E u.1 v)
     rw [e]
-    exact (E.cont.comp (Continuous.subtype_mk continuous_subtype_val _)).clm_apply continuous_const
+    exact (E.cont.comp (Continuous.subtype_mk continuous_subtypeVal _)).clm_apply continuous_const
 
 end UpperTheory.RealTr.KD
 
@@ -1065,7 +1065,7 @@ theorem UpperTheory.RealTr.lefData :
     congr 1
     ext x
     have hx := congrArg (fun f : E.V →L[ℂ] E.V => f x) (hcomm k⁻¹)
-    simp only [ContinuousLinearMap.mul_apply] at hx
+    simp only [mul_apply_eq_comp] at hx
     show ξ (E.ρ k⁻¹ (T x)) = ξ (T (E.ρ k⁻¹ x))
     rw [hx]
   have hTF : ∀ a b, T' * F a b = F a b * T' := by
@@ -1210,7 +1210,7 @@ private theorem domLE_of {ν m : Fin n → ℝ} (h : inCone (fun a => (a : ℕ))
     · omega
     · simp
   · have hs := part_sum c (m - ν) hQ univ
-    simp only [Pi.sub_apply, mem_univ, if_true, sub_self, mul_zero, Finset.sum_const_zero,
+    simp only [Pi.sub_apply, mem_univ, ite_true, sub_self, mul_zero, Finset.sum_const_zero,
       Finset.sum_sub_distrib] at hs
     linarith
 

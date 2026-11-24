@@ -392,9 +392,9 @@ lemma u_succ (c : Cfg) (de : ℕ → ℝ) (hw : IsWord c.k de) (i : ℕ) (hi : 1
     have hi' : i = c.k - 1 := by omega
     have hde : de i = 0 := by rw [hi']; exact hw.2
     have hiR : (i : ℝ) + 1 = c.k := by exact_mod_cast hlast
-    unfold Cfg.u; rw [if_neg h1, if_pos hlast, hde]
+    unfold Cfg.u; rw [ite_eq_right h1, ite_eq_left hlast, hde]
     unfold Cfg.ulast Cfg.v; rw [← hiR]; simp [ht]
-  · unfold Cfg.u; rw [if_neg h1, if_neg hlast]; simp
+  · unfold Cfg.u; rw [ite_eq_right h1, ite_eq_right hlast]; simp
 
 lemma position_ratio (c : Cfg) (de : ℕ → ℝ) (hw : IsWord c.k de) (i j : ℕ) (hi : 1 ≤ i)
     (hij : i < j) (hj : j + 1 ≤ c.k) (h : j + 2 ≤ c.k ∨ c.top = false) :
@@ -497,7 +497,7 @@ lemma prod_ratio_le (s : Finset ℕ) (f g : ℕ → ℝ) (ε : ℝ) (hg : ∀ i 
         rw [div_le_iff₀ (hg i hi)]
         refine (h i hi).trans (mul_le_mul_of_nonneg_right ?_ (hg i hi).le)
         rw [add_comm]; exact Real.add_one_le_exp ε
-    _ = Real.exp ((s.card : ℝ) * ε) := by rw [Finset.prod_const, Real.exp_nat_mul]
+    _ = Real.exp ((s.card : ℝ) * ε) := by rw [Finset.prod_const, Real.exp_natCast_mul]
 
 lemma u_mid (c : Cfg) (de : ℕ → ℝ) (hw : IsWord c.k de) (i : ℕ) (hi : i ∈ Icc 2 (c.k - 1)) :
     c.u de i = c.v (i - 1) - 1 / 2 - de (i - 1) * c.Del := by
@@ -635,10 +635,10 @@ lemma a_sub_ulast_pos (c : Cfg) (hc : c.Ok) : 0 < c.a - c.ulast := by
   unfold Cfg.ulast
   by_cases ht : c.top = true
   · have := bp_pos c hc ht
-    simp only [ht, if_true]; linarith
+    simp only [ht, ite_true]; linarith
   · have hv : c.v 1 = c.vlast + 4 * c.Del * ((c.k : ℝ) - 2) := by unfold Cfg.v; push_cast; ring
     have m : 0 ≤ c.Del * ((c.k : ℝ) - 2) := mul_nonneg (by linarith) (by linarith)
-    simp only [ht]; simp only [Bool.false_eq_true, if_false]; linarith
+    simp only [ht]; simp only [Bool.false_eq_true, ite_false]; linarith
 
 lemma vand_u_decomp (c : Cfg) (de : ℕ → ℝ) (hc : c.Ok) :
     Vand c.k (c.u de) = (∏ j ∈ Icc 2 (c.k - 1), (c.a - c.u de j)) * (c.a - c.ulast) *

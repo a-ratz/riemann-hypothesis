@@ -537,7 +537,7 @@ theorem single_mem {n : ℕ} (i : Fin n) {M : Submodule (𝓞 D.host.E) D.host.E
     (Pi.single i u : Fin n → D.host.E) j ∈ M := by
   by_cases hj : j = i
   · subst hj; simpa using hu
-  · simp only [Pi.single_apply, hj, if_false]; exact zero_mem _
+  · simp only [Pi.single_apply, hj, ite_false]; exact zero_mem _
 
 theorem sd_scaleLat (hs : IsScale D ⊤ r) (n : ℕ) : SD D (scaleLat D r n) := by
   have hr := scale_ne hs
@@ -548,7 +548,7 @@ theorem sd_scaleLat (hs : IsScale D ⊤ r) (n : ℕ) : SD D (scaleLat D r n) := 
   refine ⟨?_, ?_, fun y => ?_⟩
   · refine Submodule.fg_pi fun _ => ?_
     have hM : (Submodule.span (𝓞 D.host.E) {D.host.conj r}).FG := Submodule.fg_span (Set.finite_singleton _)
-    haveI := isNoetherian_of_fg_of_noetherian _ hM
+    have := isNoetherian_of_fg_of_noetherian _ hM
     refine Submodule.FG.of_le_of_isNoetherian (T := Submodule.span (𝓞 D.host.E) {D.host.conj r}) fun y hy => ?_
     obtain ⟨o, ho⟩ := intE_mul_conj hs hy hri
     refine Submodule.mem_span_singleton.2 ⟨o, ?_⟩
@@ -1009,8 +1009,8 @@ theorem ip_cosetVec : ∀ {D : D7} {δ t0 : ℂ} {Q : ℕ} (P : Pair D ⊤ δ t0
   unfold cosetVec at hφ
   generalize La D (tor0 D ⊤ δ) (stdL D P.a) (skewLat D 𝔪 P.d) = L at hidx hpts hφ
   have hne : ((La0 D (tor0 D ⊤ δ) P.a P.d).addSubgroupOf L).index ≠ 0 := by rw [hidx]; positivity
-  haveI : Finite (L ⧸ (La0 D (tor0 D ⊤ δ) P.a P.d).addSubgroupOf L) := AddSubgroup.index_ne_zero_iff_finite.1 hne
-  letI : Fintype (L ⧸ (La0 D (tor0 D ⊤ δ) P.a P.d).addSubgroupOf L) := Fintype.ofFinite _
+  have : Finite (L ⧸ (La0 D (tor0 D ⊤ δ) P.a P.d).addSubgroupOf L) := AddSubgroup.index_ne_zero_iff_finite.1 hne
+  let : Fintype (L ⧸ (La0 D (tor0 D ⊤ δ) P.a P.d).addSubgroupOf L) := Fintype.ofFinite _
   choose z hz _ using fun q : L ⧸ (La0 D (tor0 D ⊤ δ) P.a P.d).addSubgroupOf L => hpts _ (Quotient.out q).2
   have hlv : IsLatVac (heisO X.ψ X.A X.B) (latO X.A X.B (stdLat X.A) LB fun _ => True) f₀ := by
     have e : (fun v : FinPl D => v ∉ (∅ : Finset (FinPl D))) = fun _ => True := by funext v; simp
@@ -1167,14 +1167,14 @@ theorem integral_eq_mean {G V : Type} [AddCommGroup G] [TopologicalSpace G] [IsT
     (hinj : ∀ γ ∈ Γ, γ ∈ P → Y γ = 0 → γ = 0) (𝓕 : Set G) (h𝓕 : IsAddFundamentalDomain Γ 𝓕 ν) (hone : ν 𝓕 = 1)
     (g : G → ℝ) (hg : ∀ γ ∈ Γ, ∀ w, g (γ + w) = g w) (h : V → ℝ) (hh : Continuous h) (hgh : ∀ p ∈ P, g p = h (Y p)) :
     ∫ w in 𝓕, g w ∂ν = ⨍ z in Classical.epsilon (fun Fd => IsAddFundamentalDomain Λ Fd μ), h z ∂μ := by
-  haveI := GlobalTheory.countable_of_discrete_addSubgroup Λ
+  have := GlobalTheory.countable_of_discrete_addSubgroup Λ
   obtain ⟨F0, hF0m, hF0u, hF0⟩ := GlobalTheory.exists_isAddFundamentalDomain_addSubgroup Λ
   have hS := Classical.epsilon_spec (⟨F0, hF0 μ⟩ : ∃ Fd, IsAddFundamentalDomain Λ Fd μ)
   set S := Classical.epsilon (fun Fd => IsAddFundamentalDomain Λ Fd μ)
-  haveI : MeasurableConstVAdd Γ G := ⟨fun c => (continuous_const.add continuous_id).measurable⟩
-  haveI : VAddInvariantMeasure Γ G ν := ⟨fun c s _ => measure_preimage_add ν (c : G) s⟩
-  haveI : MeasurableConstVAdd Λ V := ⟨fun c => (continuous_const.add continuous_id).measurable⟩
-  haveI : VAddInvariantMeasure Λ V μ := ⟨fun c s _ => measure_preimage_add μ (c : V) s⟩
+  have : MeasurableConstVAdd Γ G := ⟨fun c => (continuous_const.add continuous_id).measurable⟩
+  have : VAddInvariantMeasure Γ G ν := ⟨fun c s _ => measure_preimage_add ν (c : G) s⟩
+  have : MeasurableConstVAdd Λ V := ⟨fun c => (continuous_const.add continuous_id).measurable⟩
+  have : VAddInvariantMeasure Λ V μ := ⟨fun c s _ => measure_preimage_add μ (c : V) s⟩
   have hper : ∀ l ∈ Λ, ∀ v, h (l + v) = h v := by
     intro l hl v
     obtain ⟨γ, hγ, hγP, rfl⟩ := h2 l hl
@@ -1216,9 +1216,9 @@ theorem integral_eq_mean {G V : Type} [AddCommGroup G] [TopologicalSpace G] [IsT
     ext x
     simp only [Set.mem_inter_iff, Set.mem_preimage, map_add (f := _), SetLike.mem_coe, Pi.add_apply, id]
     exact and_congr_right fun _ => (P.add_mem_cancel_left hp).symm
-  haveI : m.IsAddLeftInvariant := (forall_measure_preimage_add_iff m).1 hinv
+  have : m.IsAddLeftInvariant := (forall_measure_preimage_add_iff m).1 hinv
   have hm1 : m F0 = 1 := by rw [hmA _ hF0m, ← hone]; exact hfd.measure_eq h𝓕
-  haveI : SigmaFinite m := by
+  have : SigmaFinite m := by
     refine Measure.sigmaFinite_of_countable (S := Set.range fun l : Λ => (fun x => (l : V) + x) ⁻¹' F0)
       (Set.countable_range _) ?_ ?_
     · rintro _ ⟨l, rfl⟩
@@ -1232,7 +1232,7 @@ theorem integral_eq_mean {G V : Type} [AddCommGroup G] [TopologicalSpace G] [IsT
   have hc : m = (m K / μ K) • μ := measure_eq_sub_vadd m μ hK0 K.isCompact.measure_lt_top.ne
   generalize m K / μ K = c at hc
   have hcF : c * μ S = 1 := by
-    rw [hS.measure_eq (hF0 μ), ← hm1, hc, Measure.smul_apply, smul_eq_mul]
+    rw [hS.measure_eq (hF0 μ), ← hm1, hc, smul_apply, smul_eq_mul]
   have hcr : c.toReal = (μ S).toReal⁻¹ := by
     have := congrArg ENNReal.toReal hcF
     rw [ENNReal.toReal_mul, ENNReal.toReal_one] at this
@@ -1370,9 +1370,9 @@ theorem ip_eq_normSq : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
     refine (hP w).trans (exists_congr fun l => and_congr_right fun _ => ?_)
     rw [one_nsmul, ← hφ, φ.map_sub, sub_eq_zero]
     exact eq_comm
-  haveI := hcov.1
-  haveI : Countable (ratL T S) := Formalism.IndefR.Eqv.countable_ratMx (D := D) T.rank S.rank
-  haveI := discreteTopology_unitCurvePeriodLattice δ S.rank T.rank hset.crv
+  have := hcov.1
+  have : Countable (ratL T S) := Formalism.IndefR.Eqv.countable_ratMx (D := D) T.rank S.rank
+  have := discreteTopology_unitCurvePeriodLattice δ S.rank T.rank hset.crv
   have hcont : Continuous fun z : VC D S.rank T.rank =>
       ‖e0 z‖ ^ 2 * Real.exp (-Real.pi * (Hf D (tor0 D ⊤ δ) z z).re) := by
     have := he0.1.continuous
@@ -1434,7 +1434,7 @@ theorem ip_eq_normSq : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFa
     have h3 := hL l hl (p - l)
     rw [sub_add_cancel, hread.2 _ h1, h2] at h3
     change ‖f₀ p‖ ^ 2 = _
-    rw [h3, norm_mul, mul_pow, mul_comm, Complex.norm_exp, ← Real.exp_nat_mul]
+    rw [h3, norm_mul, mul_pow, mul_comm, Complex.norm_exp, ← Real.exp_natCast_mul]
     congr 2
     simp
     ring

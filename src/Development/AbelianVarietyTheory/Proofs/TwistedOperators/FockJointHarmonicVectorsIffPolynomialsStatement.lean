@@ -133,13 +133,13 @@ theorem eab_conjTranspose {p q : ℕ} (i j : Ix p q) : (Eab i j)ᴴ = Eab j i :=
   simp [Eab]
 
 theorem skew_mem_upq {p q : ℕ} {i j : Ix p q} (h : i.isLeft = j.isLeft) : Eab i j - Eab j i ∈ upq p q := by
-  simp only [upq, Set.mem_setOf_eq, Matrix.conjTranspose_sub, eab_conjTranspose, Matrix.mul_sub, Matrix.sub_mul,
+  simp only [upq, Set.mem_ofPred_eq, Matrix.conjTranspose_sub, eab_conjTranspose, Matrix.mul_sub, Matrix.sub_mul,
     jm_comm h, jm_comm h.symm]
   abel
 
 theorem symm_mem_upq {p q : ℕ} {i j : Ix p q} (h : i.isLeft = j.isLeft) (t : ℝ) :
     ((t : ℂ) * Complex.I) • (Eab i j + Eab j i) ∈ upq p q := by
-  simp only [upq, Set.mem_setOf_eq, Matrix.conjTranspose_smul, Matrix.conjTranspose_add, eab_conjTranspose,
+  simp only [upq, Set.mem_ofPred_eq, Matrix.conjTranspose_smul, Matrix.conjTranspose_add, eab_conjTranspose,
     Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_add, Matrix.add_mul, jm_comm h, jm_comm h.symm]
   have : star ((t : ℂ) * Complex.I) = -((t : ℂ) * Complex.I) := by simp
   rw [this]
@@ -247,9 +247,9 @@ theorem killedBy_iff (hA : Side A pt κ (phiFr (M.fr τ) br e) c a) {i j : Ix p 
       rw [← two_smul ℂ v] at hv
       simpa using hv
     cases br
-    · simp only [sb, Bool.false_eq_true, if_false, Complex.ofReal_one, neg_smul, one_smul]
+    · simp only [sb, Bool.false_eq_true, ite_false, Complex.ofReal_one, neg_smul, one_smul]
       exact ⟨fun hv => h2 _ (by linear_combination hv), fun hv => by rw [hv]; ring⟩
-    · simp only [sb, if_true, Complex.ofReal_neg, Complex.ofReal_one, neg_neg, one_smul]
+    · simp only [sb, ite_true, Complex.ofReal_neg, Complex.ofReal_one, neg_neg, one_smul]
       exact ⟨fun hv => h2 _ (by linear_combination -hv), fun hv => by rw [hv]; ring⟩
   simp only [mul_zero, zero_smul, add_zero] at d1 d2
   rw [← key]
@@ -279,13 +279,13 @@ theorem isHi_iff {lam : Ix p q → ℚ} (hp : IsParam lam) (ho : IsOrd (M.ε τ)
     cases br <;> simp [sb, sg]
   · simp only [e.surjective.forall, ho.1 _, lt_iff ho, posC_iff hp]
     cases br
-    · simp only [sg, if_true, one_mul, Rat.cast_lt]
+    · simp only [sg, ite_true, one_mul, Rat.cast_lt]
       constructor
       · rintro h i j ⟨h1, h2⟩
         exact (killedBy_iff hA (fun hh => by subst hh; exact lt_irrefl _ h2) h1 P).1 (h i j h2 h1)
       · intro h i j h2 h1
         exact (killedBy_iff hA (fun hh => by subst hh; exact lt_irrefl _ h2) h1 P).2 (h i j ⟨h1, h2⟩)
-    · simp only [sg, Bool.true_eq_false, if_false, neg_mul, one_mul, neg_lt_neg_iff, Rat.cast_lt]
+    · simp only [sg, Bool.true_eq_false, ite_false, neg_mul, one_mul, neg_lt_neg_iff, Rat.cast_lt]
       constructor
       · rintro h i j ⟨h1, h2⟩
         exact (killedBy_iff hA (fun hh => by subst hh; exact lt_irrefl _ h2) h1.symm P).1 (h j i h2 h1.symm)
@@ -301,13 +301,13 @@ theorem isLo_iff {lam : Ix p q → ℚ} (hp : IsParam lam) (ho : IsOrd (M.ε τ)
     cases br <;> simp [sb, sg]
   · simp only [e.surjective.forall, ho.1 _, lt_iff ho, posC_iff hp]
     cases br
-    · simp only [sg, Bool.false_eq_true, if_false, neg_mul, one_mul, neg_lt_neg_iff, Rat.cast_lt]
+    · simp only [sg, Bool.false_eq_true, ite_false, neg_mul, one_mul, neg_lt_neg_iff, Rat.cast_lt]
       constructor
       · rintro h i j ⟨h1, h2⟩
         exact (killedBy_iff hA (fun hh => by subst hh; exact lt_irrefl _ h2) h1 P).1 (h j i h2 h1.symm)
       · intro h i j h2 h1
         exact (killedBy_iff hA (fun hh => by subst hh; exact lt_irrefl _ h2) h1.symm P).2 (h j i ⟨h1.symm, h2⟩)
-    · simp only [sg, if_true, one_mul, Rat.cast_lt]
+    · simp only [sg, ite_true, one_mul, Rat.cast_lt]
       constructor
       · rintro h i j ⟨h1, h2⟩
         exact (killedBy_iff hA (fun hh => by subst hh; exact lt_irrefl _ h2) h1.symm P).1 (h i j h2 h1)

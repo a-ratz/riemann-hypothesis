@@ -289,7 +289,7 @@ theorem ratV_discrete : DiscreteTopology L.ratV := by
     exact (continuous_apply i).continuousAt.preimage_mem_nhds (by simpa using hV)
   obtain ⟨O, hOW, hO, h0⟩ := mem_nhds_iff.1 hW
   refine discreteTopology_of_isOpen_singleton_zero ?_
-  convert hO.preimage (continuous_subtype_val (p := fun x => x ∈ L.ratV)) using 1
+  convert hO.preimage (continuous_subtypeVal (p := fun x => x ∈ L.ratV)) using 1
   ext ⟨x, hx⟩
   constructor
   · intro h
@@ -311,7 +311,7 @@ theorem ratV_cocompact : ∃ K : Set (Fin L.n → AE F E), IsCompact K ∧ ∀ x
   exact ⟨GlobalTheory.ThK.incV F e, (mem_ratV L _).2 ⟨e, rfl⟩, fun i _ => he i⟩
 
 theorem exists_udata : ∃ uM ν 𝓤, L.UData uM ν 𝓤 := by
-  haveI := ratV_discrete L
+  have := ratV_discrete L
   obtain ⟨K, hK, hc⟩ := ratV_cocompact L
   obtain ⟨ν, 𝓤, hν, h𝓤, h1⟩ :=
     (GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (Fin L.n → AE F E) L.ratV K hK hc).1
@@ -456,7 +456,7 @@ theorem uEx : UEx := by
   intro uM ν 𝓤 hU w φ hφ hrat hw u x
   have he := uM_eq L hU
   subst he
-  haveI := (kfour.doubled_group_topological_properties σ d.Y).1
+  have := (kfour.doubled_group_topological_properties σ d.Y).1
   let S : AddSubgroup (Fin L.n → AE F E) :=
     { carrier := {u | ∀ x, φ (unipotentPoint L u * x) = φ x}
       add_mem' := fun {a b} ha hb x => by
@@ -473,7 +473,7 @@ theorem uEx : UEx := by
   have hS : IsClosed (S : Set (Fin L.n → AE F E)) := by
     have : (S : Set (Fin L.n → AE F E)) = ⋂ x, {u | φ (unipotentPoint L u * x) = φ x} := by
       ext u
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       rfl
     rw [this]
     exact isClosed_iInter fun x => isClosed_eq (hφ.comp ((continuous_unipotentPoint L).mul continuous_const)) continuous_const

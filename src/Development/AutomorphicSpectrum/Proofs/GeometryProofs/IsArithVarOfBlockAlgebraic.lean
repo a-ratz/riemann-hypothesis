@@ -90,7 +90,7 @@ theorem ratioField_eq_blockFnField (y : (Σ k, ι k) → Ω) (c : ∀ k, ι k) (
 theorem ringKrullDim_coord (y : (Σ k, ι k) → Ω) (c : ∀ k, ι k) (hc : ∀ k, y ⟨k, c k⟩ ≠ 0) :
     ringKrullDim (MRing ι ⧸ mCoordIdeal y) =
       (((Algebra.trdeg ℤ (blockFnField y) + (Fintype.card K : Cardinal)).toENat + 1 : ℕ∞) : WithBot ℕ∞) := by
-  haveI hP : (mCoordIdeal y).IsPrime := RingHom.ker_isPrime (mConeMap y)
+  have hP : (mCoordIdeal y).IsPrime := RingHom.ker_isPrime (mConeMap y)
   have hdim := GroundTheory.Heights₂.Heights.IntDomainDim.full (MRing ι ⧸ mCoordIdeal y)
     (algebraMap_injective _ (horizontal y))
   have hne : ∀ k, ∃ i, ratioPtL y c ⟨k, i⟩ ≠ 0 := by
@@ -108,13 +108,13 @@ theorem ringKrullDim_coord (y : (Σ k, ι k) → Ω) (c : ∀ k, ι k) (hc : ∀
 omit [Fintype K] [∀ k, Fintype (ι k)] in
 theorem trdeg_eq_of_le_of_isAlgebraic {L₁ L₂ : IntermediateField ℚ Ω} (h : L₁ ≤ L₂)
     (halg : ∀ t ∈ L₂, IsAlgebraic L₁ t) : Algebra.trdeg ℤ L₂ = Algebra.trdeg ℤ L₁ := by
-  letI : Algebra L₁ L₂ := (IntermediateField.inclusion h).toRingHom.toAlgebra
-  letI : FaithfulSMul L₁ L₂ :=
+  let : Algebra L₁ L₂ := (IntermediateField.inclusion h).toRingHom.toAlgebra
+  let : FaithfulSMul L₁ L₂ :=
     (faithfulSMul_iff_algebraMap_injective L₁ L₂).2 (RingHom.injective _)
   let f : L₂ →ₐ[L₁] Ω :=
     { toRingHom := L₂.val.toRingHom
       commutes' := fun _ => rfl }
-  haveI : Algebra.IsAlgebraic L₁ L₂ :=
+  have : Algebra.IsAlgebraic L₁ L₂ :=
     ⟨fun x => (isAlgebraic_algHom_iff f Subtype.val_injective).mp (halg x x.2)⟩
   have h0 : trdeg L₁ L₂ = 0 := trdeg_eq_zero
   rw [← trdeg_add_eq (R := ℤ) (S := L₁) (A := L₂), h0, add_zero]

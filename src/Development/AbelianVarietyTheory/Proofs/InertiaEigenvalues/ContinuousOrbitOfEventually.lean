@@ -251,7 +251,7 @@ theorem eventually_actT {G Qp LL O : Type} [Group G] [TopologicalSpace G] [Field
     [Algebra Qp LL] [CommRing O] [Algebra O LL] [TopologicalSpace LL] [IsTopologicalRing LL]
     (T : LocLat G Qp LL O) (c : O) (hc : ∀ᶠ z in 𝓝 (0 : LL), ∃ o : O, z = algebraMap O LL (c * o))
     (t : ↥T.L.T) : ∀ᶠ g in 𝓝 (1 : G), ∃ y, actT T.L g t - t = c • y := by
-  haveI : IsTopologicalAddGroup T.V := IsModuleTopology.topologicalAddGroup LL T.V
+  have : IsTopologicalAddGroup T.V := IsModuleTopology.isTopologicalAddGroup LL T.V
   have h : Tendsto (fun g => T.ρ g t - t) (𝓝 1) (𝓝 0) := by
     have h1 : Continuous (fun g => T.ρ g t - t) := (T.cont t).sub continuous_const
     simpa using h1.tendsto 1
@@ -265,7 +265,7 @@ theorem pow_mul_OL_mem_nhds (LL : FinExt l) (r : ℕ) :
     pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
   have hl' : ((l : ℕ) : ↥LL.1) ^ r ≠ 0 :=
     pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
-  have hc : Continuous fun z : ↥LL.1 => ‖(z : Om l)‖ := continuous_subtype_val.norm
+  have hc : Continuous fun z : ↥LL.1 => ‖(z : Om l)‖ := continuous_subtypeVal.norm
   have hU : ∀ᶠ z : ↥LL.1 in 𝓝 0, ‖(z : Om l)‖ < ‖((l : ℕ) : Om l) ^ r‖ := by
     refine (isOpen_lt hc continuous_const).mem_nhds ?_
     have := norm_pos_iff.2 hl
@@ -284,7 +284,7 @@ theorem eventually_actTZ {G : Type} [Group G] [TopologicalSpace G] (LL : FinExt 
     (T : LocLat G ℚ_[l] ↥LL.1 ↥(OL LL)) (r : ℕ) (t : ↥T.L.T) :
     letI := zlMod LL T
     ∀ᶠ g in 𝓝 (1 : G), ∃ y, actTZ LL T g t - t = (l : ℤ_[l]) ^ r • y := by
-  haveI : IsTopologicalRing ↥LL.1 := inferInstanceAs (IsTopologicalRing ↥LL.1.toSubfield.toSubring)
+  have : IsTopologicalRing ↥LL.1 := inferInstanceAs (IsTopologicalRing ↥LL.1.toSubfield.toSubring)
   exact eventually_actT T _ (pow_mul_OL_mem_nhds LL r) t
 
 theorem continuous_orbit_of_eventually {R G M : Type} [CommRing R] [Group G] [TopologicalSpace G]
@@ -324,13 +324,13 @@ theorem continuous_repQ {P : LocPrime l} (AI : LocAinf l P) (K LL : FinExt l)
     letI : TopologicalSpace (TensorProduct ℤ_[l] ↥T.L.T (Qab (AinfSub l) (xiU AI) a b)) :=
       (Ideal.span {(l : ℤ_[l])}).adicModuleTopology _
     ∀ x, Continuous fun g => (repQ AI H ((actTZ LL T).comp (Subgroup.inclusion hle)) a b) g x := by
-  letI := zlMod LL T
+  let := zlMod LL T
   intro x
   refine continuous_orbit_of_eventually (l : ℤ_[l]) _ x fun r => ?_
   have h1 : Tendsto (Subgroup.inclusion hle) (𝓝 1) (𝓝 1) := by
-    have : Continuous (Subgroup.inclusion hle) := continuous_subtype_val.subtype_mk _
+    have : Continuous (Subgroup.inclusion hle) := continuous_subtypeVal.subtype_mk _
     simpa using this.tendsto 1
-  have h2 : Tendsto (fun g : ↥H => (g : GQ l)) (𝓝 1) (𝓝 1) := continuous_subtype_val.tendsto 1
+  have h2 : Tendsto (fun g : ↥H => (g : GQ l)) (𝓝 1) (𝓝 1) := continuous_subtypeVal.tendsto 1
   exact eventually_tensor ((l : ℤ_[l]) ^ r) (𝓝 (1 : ↥H))
     (fun g => actTZ LL T (Subgroup.inclusion hle g)) (fun g => actQab (xiOK AI) a b (g : GQ l))
     (fun t => h1.eventually (eventually_actTZ LL T r t))

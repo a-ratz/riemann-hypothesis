@@ -79,7 +79,7 @@ theorem finiteDimensional_coeffSpan {K W : Type} [Group K] [AddCommGroup W] [Mod
   let b := Module.finBasis ℂ W
   let e : Fin (Module.finrank ℂ W) × Fin (Module.finrank ℂ W) → (K → ℂ) :=
     fun p k => b.repr (ρ k (b p.2)) p.1
-  haveI : FiniteDimensional ℂ ↥(Submodule.span ℂ (Set.range e)) :=
+  have : FiniteDimensional ℂ ↥(Submodule.span ℂ (Set.range e)) :=
     FiniteDimensional.span_of_finite ℂ (Set.finite_range e)
   refine Submodule.finiteDimensional_of_le (S₂ := Submodule.span ℂ (Set.range e)) (Submodule.span_le.mpr ?_)
   rintro f ⟨ℓ, w, rfl⟩
@@ -197,8 +197,8 @@ theorem kFinAt_avg_of_kFinAt : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀
   intro D θ hθ N ψ hψ τ τ' e he hK
   obtain ⟨W, i1, i2, i3, ρ, hρc, hρ⟩ := hK
   refine ⟨W, i1, i2, i3, ρ, hρc, fun x => ?_⟩
-  haveI : IsTopologicalGroup (GA D N.V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI := coeffSpan_finiteDimensional ρ
+  have : IsTopologicalGroup (GA D N.V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have := coeffSpan_finiteDimensional ρ
   have hec : Continuous e := by
     obtain ⟨F, -, heF, hc, -⟩ := he
     exact hc e heF

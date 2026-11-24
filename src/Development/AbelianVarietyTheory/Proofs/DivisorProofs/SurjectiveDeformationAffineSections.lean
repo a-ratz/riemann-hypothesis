@@ -112,13 +112,13 @@ theorem preα_surjective_and_ker : ∀ (R R' R₀ : Type) [CommRing R] [CommRing
   have A := secPull_surjective_and_ker R R' (Ideal.span {t}) σ hσ hk X' X s' s φ h (prePair φ U.unop) rfl
   have B := secPull_surjective_and_ker R R₀ (RingHom.ker σ₀) σ₀ hσ₀ rfl X₀ X s₀ s φ₀ h₀
     (prePair φ₀ U.unop) rfl
-  haveI : Flat s := hF
+  have : Flat s := hF
   have hfl : (algebraMap R (Sec s U.unop.1)).Flat := by
     change ((s.appLE ⊤ U.unop.1 le_top).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom).Flat
     exact RingHom.Flat.comp (RingHom.Flat.of_bijective
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of R)).inv))
       (Flat.flat_appLE s (isAffineOpen_top _) U.unop.2 le_top)
-  haveI : Module.Flat R (Sec s U.unop.1) := hfl
+  have : Module.Flat R (Sec s U.unop.1) := hfl
   exact ⟨A.1, fun b ↦ (A.2 b).trans (mem_map_span_singleton_iff t b), B.1,
     fun b ↦ (B.2 b).trans (mem_map_ann_iff t _ (fun a ↦ RingHom.mem_ker.trans (hk₀ a)) b)⟩
 

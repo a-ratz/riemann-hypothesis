@@ -266,16 +266,16 @@ theorem cell_bij {α β : Type} [Fintype α] [LinearOrder α] [Fintype β] [Line
       Nonempty ((cellFunctor f g (piTensor ρ)).Equiv (piTensor fun j => ρ (e j))) := by
   have hrz : ∀ i j, j ≠ e.symm i → b.1 i j = 0 := by
     intro i j hj
-    rw [hb, if_neg fun h => hj (by rw [← h, Equiv.symm_apply_apply])]
+    rw [hb, ite_eq_right fun h => hj (by rw [← h, Equiv.symm_apply_apply])]
   have hcz : ∀ j i, i ≠ e j → b.1 i j = 0 := by
     intro j i hi
-    rw [hb, if_neg fun h => hi h.symm]
+    rw [hb, ite_eq_right fun h => hi h.symm]
   have hrf : ∀ i, b.1 i (e.symm i) = d i := by
     intro i
-    rw [hb, if_pos (e.apply_symm_apply i)]
+    rw [hb, ite_eq_left (e.apply_symm_apply i)]
   have hcf : ∀ j, b.1 (e j) j = d (e j) := by
     intro j
-    rw [hb, if_pos rfl]
+    rw [hb, ite_eq_left rfl]
   let f : ∀ i, (Σ j, Fin (b.1 i j)) ≃ Fin (d i) := fun i =>
     GlobalTheory.OneBlockCell.valEquiv (e.symm i) (hrf i) (fun j hj => hrz i j hj)
   let g : ∀ j, (Σ i, Fin (b.1 i j)) ≃ Fin (d (e j)) := fun j =>
@@ -464,9 +464,9 @@ theorem card_permCell {l c : ℕ} (x : Fin l → IrrGL (k := k)) (y : Fin c → 
   · intro e he e' he' H
     refine Equiv.ext fun j => ?_
     have h2 := congrArg (fun b : SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1) => b.1 (e j) j) H
-    simp only [permMatrix, if_true] at h2
+    simp only [permMatrix, ite_true] at h2
     by_contra hne
-    rw [if_neg (Ne.symm hne)] at h2
+    rw [ite_eq_right (Ne.symm hne)] at h2
     exact (hxc (e j)).1.ne' h2
   · intro b hb
     obtain ⟨e, he, hb⟩ := (Finset.mem_filter.1 hb).2
@@ -478,7 +478,7 @@ theorem main (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {l c N : ℕ}
     (hx : ∑ a, (x a).1 = N) (hy : ∑ a, (y a).1 = N) (hxc : ∀ a, (x a).IsCusp) (hyc : ∀ a, (y a).IsCusp) :
     jm y hy (prodIrr x hx) = (Set.ncard {e : Fin c ≃ Fin l | ∀ a, y a = x (e a)} : ℕ∞) := by
   classical
-  haveI : Fintype (SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1)) := Fintype.ofFinite _
+  have : Fintype (SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1)) := Fintype.ofFinite _
   obtain ⟨f, g, hfg⟩ := exists_choice hA x y
   have hτ : (piTensor fun j => (y j).rep).IsIrreducible :=
     _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness k _ _ fun j => (y j).2.rep

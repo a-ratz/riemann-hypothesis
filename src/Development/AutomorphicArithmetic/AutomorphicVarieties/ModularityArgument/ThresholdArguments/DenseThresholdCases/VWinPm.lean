@@ -243,7 +243,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Forma
 private theorem chi_map_eq_map_chi_mapRingHom {n : ℕ} {B K Γ : Type} [CommRing B] [CommRing K] [Group Γ]
     (D : W.GDet n B Γ) (f : B →+* K) (z : MonoidAlgebra B Γ) :
     (D.chi z).map f = (D.map f).chi (MonoidAlgebra.mapRingHom Γ f z) := by
-  letI : Algebra B K[X] := ((algebraMap K K[X]).comp f).toAlgebra
+  let : Algebra B K[X] := ((algebraMap K K[X]).comp f).toAlgebra
   let φ : B[X] →ₐ[B] K[X] :=
     { Polynomial.mapRingHom f with
       commutes' := fun a => by simp [RingHom.algebraMap_toAlgebra] }
@@ -381,9 +381,9 @@ theorem UpperTheory.V.Ws.Pu.ptRed :
     ∀ {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] {s : W.HidaSetting l L Ω} (V : s.Lev) {c : Coef l} {n : ℕ} {r : W.Resid V.frame c.O n} (B : W.UniversalOrdinaryDeterminantRing r) (x : B.Pt) (ρ : G L Ω →* GL (Fin n) (PadicAlgCl l)), x.IsRep ρ → RedTo c ρ fun i => (r.chib i).comp V.pr := by
   intro l _ L Ω _ _ _ _ _ _ s V c n r B x ρ hx
   intro y z hz
-  letI := B.ring
-  letI := B.alg
-  haveI := B.co
+  let := B.ring
+  let := B.alg
+  have := B.co
   set D := B.u.D.comap V.pr with hD
   have hxD : D.map (x : B.B →+* PadicAlgCl l) = W.GDet.ofRep (W.mat ρ) := hx
   have hrD : D.map (res c.O B.B : B.B →+* ResidueField c.O) =
@@ -628,7 +628,7 @@ private theorem lift_tw {O Γ A : Type} [CommRing O] [Group Γ] [Ring A] [Algebr
     simp [twHom, MonoidAlgebra.lift_single, smul_smul]
 
 private theorem mem_max {l : ℕ} [Fact l.Prime] (c : Coef l) (x : c.O) (hx : ‖(x : PadicAlgCl l)‖ < 1) : x ∈ maximalIdeal c.O := by
-  haveI := c.fin
+  have := c.fin
   rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
   rintro ⟨u, rfl⟩
   have hint : IsIntegral ℤ_[l] (((u⁻¹ : (c.O)ˣ) : c.O) : PadicAlgCl l) :=
@@ -740,7 +740,7 @@ theorem UpperTheory.V.Ws.Pu.noOm :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c} {T : Tower D} {c' : Coef l} {h : c.O ≤ c'.O} (K : Link T c' h), D.Good → T.Ok → ∀ i j,
       (K.r.chib i).comp K.V.pr ≠ (K.r.chib j).comp K.V.pr * W.pushCh (residue c'.O) (chiO T.L Ω l c'.O) := by
   intro Ω _ _ _ l _ c D T c' h K hD hT i j hne
-  haveI : IsLocalHom (inc h) := (UpperTheory.V.Ws.P1.coefRes c).2.2.1 c' h
+  have : IsLocalHom (inc h) := (UpperTheory.V.Ws.P1.coefRes c).2.2.1 c' h
   obtain ⟨g, hg, hw⟩ := hT.g2 (wt i j)
   obtain ⟨g', hg'⟩ := UpperTheory.V.Ws.Pu.noOm_lift T g hg
   apply hw
@@ -778,7 +778,7 @@ private theorem trace_eq_of_charpoly {K : Type} [Field K] {n : ℕ} {A B : Matri
   rcases Nat.eq_zero_or_pos n with hn | hn
   · subst hn
     simp [Matrix.trace]
-  · haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  · have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
     rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff, h]
 
 private theorem kill_of_charpoly {Γ K : Type} [Group Γ] [Field K] [CharZero K] {n : ℕ}
@@ -957,13 +957,13 @@ theorem UpperTheory.V.Ws.Pu.pureOf_w :
         ∀ x ∈ (W.mat ρ σ).charpoly.roots, ∀ y ∈ (W.mat ρ σ).charpoly.roots, y ≠ 0 → ‖ι x‖ < (p : ℝ) ^ f * ‖ι y‖) → PureW ι r := by
   intro Ω _ _ _ l _ ι L _ r ρ κ Z hZ hcp hab
   classical
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : IsAlgClosure L Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosure L Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
   refine ⟨L.fixingSubgroup, ∏ w ∈ hZ.toFinset, Ideal.absNorm w.asIdeal, L.fixingSubgroup_isOpen, ?_, ?_⟩
   · exact Finset.prod_ne_zero_iff.2 fun w _ h => w.ne_bot (Ideal.absNorm_eq_zero_iff.1 h)
   intro p hp hM A hA f σ hf hσ hF x hx y hy hy0
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨p1, p2, -, -⟩ := UpperTheory.V.Base.places L Ω p A
   obtain ⟨w, hw⟩ := p1 fun ht => (p2 ht).2 hA
   have hpw : (p : 𝓞 L) ∈ w.asIdeal := by
@@ -1067,7 +1067,7 @@ theorem UpperTheory.V.Ws.nePure_w :
   set ρ := mapRep φ r with hρ
   have hb' : ∀ g, IsBlock (ρ g) := fun g i j h => by rw [hρ, mapRep_apply, hb g i j h, map_zero]
   have hc : Continuous ρ := smallCont 𝔞 e he _ hp.small
-  haveI : CharZero 𝔞.V := φ.charZero
+  have : CharZero 𝔞.V := φ.charZero
   have hu : adj u * u = 1 := by simpa [IsGSp] using hp.sp
   have hdet : ∀ s ∈ D.Ip l, ((r s).submatrix ixA ixA).det = 𝔞.a c (D.ps 0 s) * 𝔞.a c (D.ps 2 s) ∧
       ((r s).submatrix ixB ixB).det = 𝔞.a c (D.ps 1 s) * 𝔞.a c (D.ps 3 s) := fun s hs => by

@@ -241,8 +241,8 @@ theorem exists_aut_alg {K : Type} [Field K] (e e' : K →+* ℂ) :
     ∃ τ : ℂ ≃+* ℂ, ∀ a : K, IsAlgebraic ℚ (e a) → τ (e a) = e' a := by
   let k : Subfield K := (algebraicClosure ℚ ℂ).toSubfield.comap e
   have hk : ∀ a : K, a ∈ k ↔ IsAlgebraic ℚ (e a) := fun a => mem_algebraicClosure_iff
-  haveI : Countable {x : ℂ | IsAlgebraic ℚ x} := (Algebraic.countable ℚ ℂ).to_subtype
-  haveI : Countable k :=
+  have : Countable {x : ℂ | IsAlgebraic ℚ x} := (Algebraic.countable ℚ ℂ).to_subtype
+  have : Countable k :=
     Function.Injective.countable (f := fun a : k => (⟨e a, (hk a).1 a.2⟩ : {x : ℂ | IsAlgebraic ℚ x}))
       (fun a b hab => Subtype.ext (e.injective (congrArg Subtype.val hab)))
   obtain ⟨τ, hτ⟩ := GlobalTheory.CompRat.exists_ringEquiv_complex_comp_eq k (e.comp k.subtype) (e'.comp k.subtype)
@@ -288,7 +288,7 @@ theorem fw_eq_zero_or_exists_norm_algComb (hP : GlobalTheory.Published.CuspRapid
       P ∈ ρ.lat t j b (smallInt (Fm.D x i)) g → AlgComb p.nexp p.v₀ j (ν • ρ.theta t j b g P) := by
   obtain ⟨c', w, hw, hfr, B', hv⟩ := exists_framed_half hP h0.size (GlobalTheory.Core5.of_core h0.core) (geoHalf p) h0.unif
     (_root_.GlobalTheory.UnframePt.inGeo_geoHalf_of_ratHyp0 hP Fm x hx i p hR hM t j h0)
-  letI iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
+  let iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
   have hV' : (setCE p.T c').V ((j : ℕ) + 1) (setCE p.T c').σ₀ = Wc (Fm.D x i) j :=
     B'.fw.laws.spaceW _ ⟨Nat.le_add_left _ _, j.2⟩ _ (setCE p.T c').toCore.good_σ₀
   have hU' : (fullHeckeRealDatMovedReadings p.R w).toRealDat.LUnif := GlobalTheory.T.uniformisationLaws_centralMovedReadings p.R.toRealDat w hw h0.unif
@@ -533,7 +533,7 @@ theorem smallComb_of_ratScalar (hRF : GlobalTheory.NT.RayField) {F : Face D A3.A
   have hB := hρ.base i j b
   have hBo := baseOf_of_realPin hcore.lev hρ hpin i j b
 
-  haveI := GlobalTheory.CoverSmall.smallF_normal D hgal
+  have := GlobalTheory.CoverSmall.smallF_normal D hgal
   obtain ⟨C, hpd, hfr, hC⟩ := exists_goodCover_pdAt YS hRF hT hti.alg hval hray hsp (D.ntw.l i) j (κ j).n
     (GlobalTheory.CoverSmall.smallF D) le_rfl
   have hLL : (embLL0 D).fieldRange ≤ C.σ₂.fieldRange := by
@@ -740,7 +740,7 @@ theorem fw_eq_zero_or_exists_norm_algComb (hP : GlobalTheory.Published.CuspRapid
       P ∈ ρ.lat t j b (smallInt (Fm.D x i)) g → SmallComb p.nexp p.v₀ j (ν • ρ.theta t j b g P) := by
   obtain ⟨c', w, hw, hfr, B', hv⟩ := exists_framed_half hP h0.size (GlobalTheory.Core5.of_core h0.core) (geoHalf p) h0.unif
     (_root_.GlobalTheory.UnframePt.inGeo_geoHalf_of_ratHyp0 hP Fm x hx i p hR hM t j h0)
-  letI iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
+  let iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
   have hV' : (setCE p.T c').V ((j : ℕ) + 1) (setCE p.T c').σ₀ = Wc (Fm.D x i) j :=
     B'.fw.laws.spaceW _ ⟨Nat.le_add_left _ _, j.2⟩ _ (setCE p.T c').toCore.good_σ₀
   have hU' : (fullHeckeRealDatMovedReadings p.R w).toRealDat.LUnif := GlobalTheory.T.uniformisationLaws_centralMovedReadings p.R.toRealDat w hw h0.unif

@@ -430,7 +430,7 @@ theorem exists_unique_frMove : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
         show _ ≫ y.x ≫ ρ = _
         rw [← Category.assoc, cond, Category.assoc, Category.assoc, ν.cart.1.w]),
         pullback.lift_fst _ _ _, pullback.lift_snd _ _ _⟩
-    haveI := LevelMoveTest.pinned_isIso ν y.x q q₁ q₂
+    have := LevelMoveTest.pinned_isIso ν y.x q q₁ q₂
     have hw := (isGen_iff w).1 gw₁
     obtain ⟨σ, hσ⟩ := exists_carried_forth hL hL hw q₂ y.s
     refine ⟨⟨y.x ≫ ρ, by rw [Category.assoc, hρ, y.x_over], fun τ i => y.u τ i ≫ ν.φ,

@@ -62,16 +62,16 @@ namespace WeylUnipotentShell
 
 theorem swap_lt_swap_iff_of_add_two {n : ℕ} (A A' a b : Fin n) (hA : A'.val = A.val + 2) (hab : a < b) :
     Equiv.swap A A' a < Equiv.swap A A' b ↔ (a < A ∨ A' < b) := by
-  rw [Fin.lt_iff_val_lt_val] at hab
+  rw [Fin.lt_def] at hab
   rw [Equiv.swap_apply_def, Equiv.swap_apply_def]
   split_ifs with h1 h2 h3 h4 h3 h4 <;>
-    simp only [Fin.lt_iff_val_lt_val, Fin.ext_iff] at * <;> omega
+    simp only [Fin.lt_def, Fin.ext_iff] at * <;> omega
 
 theorem val_rev_lo_of_last {n : ℕ} (k : Fin (n / 2)) (hk : ¬ k.val + 1 < n / 2) (hn : ¬ Even n) :
     ((lo k).rev : Fin n).val = (lo k).val + 2 := by
   have h2 := Nat.odd_iff.1 (Nat.not_even_iff_odd.1 hn)
   have := k.isLt
-  simp only [Fin.val_rev, lo, Fin.coe_castLE]
+  simp only [Fin.val_rev, lo, Fin.val_castLE]
   omega
 
 theorem mem_cellU_last_iff : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))] [CompleteSpace L] (ϖ : L)

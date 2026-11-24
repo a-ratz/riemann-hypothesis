@@ -90,7 +90,7 @@ private def prodEquiv' {M N : Type} [AddCommGroup M] [Module Q M] [AddCommGroup 
 private theorem fixT_finite [FiniteDimensional Q V] (r : G → V →ₗ[Q] V) (a : G → B →ₗ[Q] B) {n : ℕ} (hn : n ≠ 0)
     (h : finrank Q ↥(fixT r a) = n * finrank Q V) : Module.Finite Q ↥(fixT r a) := by
   rcases Nat.eq_zero_or_pos (finrank Q V) with h0 | h0
-  · haveI : Subsingleton V := Module.finrank_zero_iff.mp h0
+  · have : Subsingleton V := Module.finrank_zero_iff.mp h0
     infer_instance
   · exact Module.finite_of_finrank_pos (h ▸ Nat.mul_pos (Nat.pos_of_ne_zero hn) h0)
 
@@ -98,8 +98,8 @@ private theorem fixT_prod [FiniteDimensional Q V] [FiniteDimensional Q V'] (r : 
     (r' : G → V' →ₗ[Q] V') (a : G → B →ₗ[Q] B) {n : ℕ} (hn : n ≠ 0)
     (h : finrank Q ↥(fixT r a) = n * finrank Q V) (h' : finrank Q ↥(fixT r' a) = n * finrank Q V') :
     finrank Q ↥(fixT (fun g => (r g).prodMap (r' g)) a) = n * finrank Q (V × V') := by
-  haveI := fixT_finite r a hn h
-  haveI := fixT_finite r' a hn h'
+  have := fixT_finite r a hn h
+  have := fixT_finite r' a hn h'
   rw [← LinearEquiv.finrank_map_eq (TensorProduct.prodLeft Q Q V V' B), fixT_map,
     (prodEquiv' _ _).finrank_eq, Module.finrank_prod, Module.finrank_prod, h, h', mul_add]
 
@@ -110,7 +110,7 @@ theorem UpperTheory.V.Loc.isCrys_isDR_prod :
   intro l _ G _ _ _ φ hφ A _ _ V _ _ _ _ _ _ _ _ _ V' _ _ _ _ _ _ _ _ _ ρ ρ' _ _
   have ho : IsOpen (φ.range : Set (GQ l)) := by
     rw [MonoidHom.coe_range]; exact hφ.isOpen_range
-  haveI : Finite (GQ l ⧸ φ.range) := Subgroup.quotient_finite_of_isOpen _ ho
+  have : Finite (GQ l ⧸ φ.range) := Subgroup.quotient_finite_of_isOpen _ ho
   have h1 : φ.range.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have h2 : (φ.range ⊔ Iq l).index ≠ 0 := fun h =>
     h1 (Nat.eq_zero_of_zero_dvd (h ▸ Subgroup.index_dvd_of_le le_sup_left))

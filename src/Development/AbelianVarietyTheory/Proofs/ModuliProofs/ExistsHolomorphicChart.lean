@@ -127,7 +127,7 @@ theorem exists_chart_algebra (d : ℕ) [Algebra.IsStandardSmoothOfRelativeDimens
   choose F hF hF' using fun j => exists_continuous_extPt (f j)
   have hN : {u : A → ℂ | ∀ j, ‖F j u - extPt e (f j)‖ < ε} ∈ nhds (e : A → ℂ) := by
     refine IsOpen.mem_nhds ?_ fun j => ?_
-    · rw [Set.setOf_forall]
+    · rw [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun j =>
         isOpen_lt (((hF j).sub continuous_const).norm) continuous_const
     · rw [hF', sub_self, norm_zero]; exact hε

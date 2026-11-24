@@ -78,7 +78,7 @@ theorem integrable_of_haar {A B : HSp D} {ι : A.V →ₗ[D.host.E] B.V} {ρ : �
   obtain ⟨s, -, hs, -⟩ := GlobalTheory.Mem.UnitaryEmb.exists_embHom D B A ι hι
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D A
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B
-  haveI := hμ
+  have := hμ
   have hfin : μ 𝓕 < ⊤ := GlobalTheory.BesselConvDefinite.measure_fundamentalDomain_lt_top (GQ A) hK hcov μ h𝓕
   obtain ⟨M, hM⟩ := (hK.prod hK').exists_bound_of_continuousOn hc.continuousOn
   refine FJConv.iterated_integrableOn hfin.ne (by rw [hN.2.2]; exact ENNReal.one_ne_top) hc (M := M) fun g n => ?_
@@ -219,7 +219,7 @@ theorem bplusConv_col : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
   obtain ⟨hμ, h𝓕⟩ := hM.top.haar_fund
   obtain ⟨-, -, -, -, _, -, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (G.V (.grid D.R.m 0))
   have H := integrable_of_haar hQ G.besTop.e_iso hι hA
-    (((hφ.cont.comp continuous_fst).star.mul (hF.cont.comp (((continuous_subtype_val.comp continuous_snd).mul
+    (((hφ.cont.comp continuous_fst).star.mul (hF.cont.comp (((continuous_subtypeVal.comp continuous_snd).mul
       ((emb_continuous hι hs).comp continuous_fst)).mul continuous_const))).mul
       ((GlobalTheory.BesselChar.besChar_continuous W.ψ W.ψ_std.1 G.besTop).comp continuous_snd).star) hμ h𝓕 hM.unip
   unfold BplusConv

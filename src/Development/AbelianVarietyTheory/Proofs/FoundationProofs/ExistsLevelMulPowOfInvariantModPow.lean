@@ -120,7 +120,7 @@ theorem coprime_card_of_pow_eq_one {Q : Type} [Group Q] [Finite Q] {l m : ℕ} (
     (h : ∀ x : Q, x ^ m = 1) : l.Coprime (Nat.card Q) := by
   rw [hl.coprime_iff_not_dvd]
   intro hd
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' l hd
   have := orderOf_dvd_of_pow_eq_one (h x)
   rw [hx] at this
@@ -131,7 +131,7 @@ theorem exists_invariant {H A : Type} [Group H] [CommGroup A] (s : H → A →* 
     (hm : m.Coprime (Nat.card (H ⧸ D))) (f : A) (hD : ∀ δ ∈ D, s δ f = f) (hf : ∀ γ, ∃ g : A, s γ f = f * g ^ m) :
     ∃ h : A, ∀ γ, s γ (f * h ^ m) = f * h ^ m := by
   classical
-  haveI := Fintype.ofFinite (H ⧸ D)
+  have := Fintype.ofFinite (H ⧸ D)
   choose g hg using hf
   have hwd : ∀ a b : H, (a : H ⧸ D) = b → s a f = s b f := by
     intro a b hab
@@ -176,10 +176,10 @@ theorem exists_lev_mul_pow_of_invariant_mod_pow :
   obtain ⟨a, q, hq, hMq⟩ := Nat.exists_eq_pow_mul_and_not_dvd hM.ne' l hl.ne_one
   have hlq : l.Coprime q := hl.coprime_iff_not_dvd.2 hq
   let H : Subgroup SL(2, ℤ) := CongruenceSubgroup.Gamma (M * l ^ (a * e))
-  haveI := CongruenceSubgroup.Gamma_normal (M ^ e)
-  haveI : NeZero (M ^ e) := ⟨(pow_pos hM e).ne'⟩
+  have := CongruenceSubgroup.Gamma_normal (M ^ e)
+  have : NeZero (M ^ e) := ⟨(pow_pos hM e).ne'⟩
   let D : Subgroup H := (CongruenceSubgroup.Gamma (M ^ e)).subgroupOf H
-  haveI : D.FiniteIndex := inferInstance
+  have : D.FiniteIndex := inferInstance
   have hcard : l.Coprime (Nat.card (H ⧸ D)) := by
     refine CongruenceDescent.coprime_card_of_pow_eq_one hl (hlq.pow_right e) fun x => ?_
     obtain ⟨γ, rfl⟩ := QuotientGroup.mk_surjective x

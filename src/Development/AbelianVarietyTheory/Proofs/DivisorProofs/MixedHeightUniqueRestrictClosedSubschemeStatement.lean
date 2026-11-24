@@ -87,7 +87,7 @@ theorem GlobalTheory.MixHt.eq_of_isMix : ∀ (k : Type) [CommRing k] (X Y : Sche
   have hq : IsAmb q := hi ▸ hp.sub i
   have DX := _root_.GlobalTheory.MixHt.hasDim_basic k X p hp
   have DY := _root_.GlobalTheory.MixHt.hasDim_basic k Y q hq
-  haveI : IsNoetherian Y := hq.isNoetherian
+  have : IsNoetherian Y := hq.isNoetherian
   induction d with
   | zero =>
     intro _ _ L L' _ y hy

@@ -89,9 +89,9 @@ theorem isAdj_sumOp (S S' : Pair k n → Finset (Pair k n)) (w w' : Pair k n →
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun Q _ => Finset.sum_congr rfl fun P _ => ?_
   by_cases hQ : Q ∈ S P
-  · rw [if_pos hQ, if_pos ((hS P Q).1 hQ), hw P Q hQ, map_mul]
+  · rw [ite_eq_left hQ, ite_eq_left ((hS P Q).1 hQ), hw P Q hQ, map_mul]
     ring
-  · rw [if_neg hQ, if_neg (fun h => hQ ((hS P Q).2 h))]
+  · rw [ite_eq_right hQ, ite_eq_right (fun h => hQ ((hS P Q).2 h))]
     simp
 
 variable {M : Type*} [AddCommGroup M] [Module ℂ M]
@@ -111,8 +111,8 @@ theorem FFStar_FF [Fintype n] (q : Unif k) {χ : AddChar 𝓀[k] ℂ} (hχ : χ 
   ext P
   obtain ⟨L, hL, f, rfl⟩ : ∃ (L : Submodule 𝒪[k] (n → k)) (_ : L.IsFullLattice k) (f : _), P = ofDual L f :=
     ⟨P.lat, P.isLat, _, P.ofDual_red.symm⟩
-  letI := Fintype.ofFinite (Red L)
-  letI := Fintype.ofFinite (Module.Dual 𝓀[k] (Red L))
+  let := Fintype.ofFinite (Red L)
+  let := Fintype.ofFinite (Module.Dual 𝓀[k] (Red L))
   have hc : (Fintype.card (Red L) : ℂ) = SplitWeil.resCard k ^ Fintype.card n := by
     rw [← Nat.card_eq_fintype_card, Red.card_eq]; push_cast; rfl
   simp only [FFStar_ofDual, FF_up, Finset.smul_sum, smul_smul, Pi.sub_apply, Pi.smul_apply, tr_apply, ofDual_lat,
@@ -128,11 +128,11 @@ theorem FFStar_FF [Fintype n] (q : Unif k) {χ : AddChar 𝓀[k] ℂ} (hχ : χ 
     refine Finset.sum_congr rfl fun x _ => ?_
     rw [← AddChar.map_add_eq_mul, LinearMap.sub_apply, neg_add_eq_sub]
   simp only [← Finset.sum_smul, key, sub_smul, one_smul, Finset.sum_sub_distrib, ite_smul, zero_smul,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, hc]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, hc]
 
 theorem sum_stable_eq_zero {φ : Form k n M} (h : φ ∈ Mram k n M) (s : Finset (Pair k n))
     (hs : ∀ (c : 𝓀[k]ˣ) P, c • P ∈ s ↔ P ∈ s) : ∑ P ∈ s, φ P = 0 := by
-  letI := Fintype.ofFinite 𝓀[k]ˣ
+  let := Fintype.ofFinite 𝓀[k]ˣ
   have h1 : ∑ P ∈ s, ∑ c : 𝓀[k]ˣ, φ (c • P) = 0 := Finset.sum_eq_zero fun P _ => (mem_Mram φ).1 h P
   rw [Finset.sum_comm] at h1
   have h2 : ∀ c : 𝓀[k]ˣ, ∑ P ∈ s, φ (c • P) = ∑ P ∈ s, φ P := fun c =>

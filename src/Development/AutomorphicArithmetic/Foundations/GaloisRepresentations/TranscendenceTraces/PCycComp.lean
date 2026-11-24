@@ -61,9 +61,9 @@ theorem UpperTheory.Gal.TranscendenceTraces.cycComp_of :
     FibFin → CycComp := by
   classical
   intro hF S Y X c d e a b pb hp hf hw Ω _ _ x y
-  haveI := c.fin
-  haveI := d.fin
-  haveI := e.fin
+  have := c.fin
+  have := d.fin
+  have := e.fin
   let A := (hF c.p Ω x).toFinset
   have hAm : ∀ s, s ∈ A ↔ s ≫ c.p = x := fun s => by simp [A, fib]
   let B : (gp Ω ⟶ Y) → Finset (gp Ω ⟶ d.Z) := fun t => (hF d.p Ω t).toFinset

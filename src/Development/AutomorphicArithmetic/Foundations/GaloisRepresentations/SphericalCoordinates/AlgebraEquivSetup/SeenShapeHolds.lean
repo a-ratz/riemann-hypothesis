@@ -154,7 +154,7 @@ private theorem tj_eq {ϖ : w.adicCompletion E} {i : ℕ} (t : GLw n w)
   unfold Tj dosetInd
   congr 1
   ext y
-  rw [Set.mem_setOf_eq, DoubleCoset.mem_doubleCoset]
+  rw [Set.mem_ofPred_eq, DoubleCoset.mem_doubleCoset]
   constructor
   · rintro ⟨a, ha, b, hb, e⟩
     refine ⟨a, ha, b, hb, Units.ext ?_⟩
@@ -419,7 +419,7 @@ open UpperTheory.Gal.W2.Seed.TensorDenominatorBound in
 theorem UpperTheory.Gal.W2.Seed.pDenom :
     Denom := by
   intro p _ D G L h
-  haveI := D.finLa
+  have := D.finLa
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := ℤ) (M := D.La)
   choose c hc0 hcp hcm using fun x : D.La => hasDen D (L.actG h (inAfH D x))
   refine ⟨∏ x ∈ s, c x, Finset.prod_pos fun x _ => hc0 x,
@@ -674,7 +674,7 @@ theorem UpperTheory.Gal.W2.Seed.pMemDeck :
     induction b using QuotientGroup.induction_on
     rw [QuotientGroup.eq, Subgroup.mem_subgroupOf]
     exact SetLike.coe_mem _
-  letI : Unique (↥T.K₀ ⧸ T.K₀.subgroupOf T.K₀) :=
+  let : Unique (↥T.K₀ ⧸ T.K₀.subgroupOf T.K₀) :=
     ⟨⟨QuotientGroup.mk (1 : ↥T.K₀)⟩, fun a => hall a _⟩
   rw [finsum_unique]
   have hx : (↑(Quotient.out (default : ↥T.K₀ ⧸ T.K₀.subgroupOf T.K₀)) : X) ∈ T.K₀ :=
@@ -766,11 +766,11 @@ private lemma memSum_eq {X : Type} [Group X] (K KM K₀ : Subgroup X) (h y : X)
 theorem UpperTheory.Gal.W2.Seed.pMemSum :
     MemSum := by
   intro X _ K KM K₀ h hK0 hidx hnorm hc
-  haveI : (KM.subgroupOf K).Normal := ⟨fun n hn g => by
+  have : (KM.subgroupOf K).Normal := ⟨fun n hn g => by
     rw [Subgroup.mem_subgroupOf] at hn ⊢
     simpa using hnorm g g.2 n hn⟩
-  haveI : (KM.subgroupOf K).FiniteIndex := ⟨hidx⟩
-  letI : Fintype (K ⧸ KM.subgroupOf K) := Fintype.ofFinite _
+  have : (KM.subgroupOf K).FiniteIndex := ⟨hidx⟩
+  let : Fintype (K ⧸ KM.subgroupOf K) := Fintype.ofFinite _
   have hex : ∀ y, memFn K KM K₀ h y ≠ 0 →
       ∃ q : K ⧸ KM.subgroupOf K, h * (q.out : X) * y ∈ K₀ := by
     intro y hy
@@ -826,23 +826,23 @@ theorem UpperTheory.Gal.W2.Seed.pMemSum :
         conv_lhs => rw [← QuotientGroup.out_eq' x]
         rw [QuotientGroup.eq, inv_inv]
       by_cases hm : h * (q.out : X) * x.out ∈ K₀
-      · rw [if_pos hm, if_pos (hiff.mpr hm), one_smul]
+      · rw [ite_eq_left hm, ite_eq_left (hiff.mpr hm), one_smul]
         have hg : g * x.out = g * (h * (q.out : X))⁻¹ * (h * (q.out : X) * x.out) := by group
         rw [hg]
         exact hΦ _ hm _
-      · rw [if_neg hm, if_neg (fun e => hm (hiff.mp e)), zero_smul]
+      · rw [ite_eq_right hm, ite_eq_right (fun e => hm (hiff.mp e)), zero_smul]
     rw [finsum_eq_sum_of_fintype (fun k : K ⧸ KM.subgroupOf K => Φ (g * (h * (k.out : X))⁻¹)),
       finsum_congr hpt, finsum_sum_comm]
     · refine Finset.sum_congr rfl fun q _ => ?_
       rw [finsum_eq_single _ (QuotientGroup.mk (h * (q.out : X))⁻¹ : X ⧸ K₀)]
       · simp
       · intro x hx
-        rw [if_neg (Ne.symm hx)]
+        rw [ite_eq_right (Ne.symm hx)]
     · intro q _
       apply Set.Finite.subset (Set.finite_singleton (QuotientGroup.mk (h * (q.out : X))⁻¹ : X ⧸ K₀))
       intro x hx
       by_contra hne
-      exact hx (if_neg (Ne.symm hne))
+      exact hx (ite_eq_right (Ne.symm hne))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PMemSum =====
@@ -1156,7 +1156,7 @@ theorem inId_iff_le (𝔟 : Ideal (𝓞 E)) (y : w.adicCompletion E) : InId w �
     have hy : y ∈ w.adicCompletionIntegers E :=
       (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 (hle.trans (w.intValuation_le_one x))
     by_cases h0 : w.intValuation x = 0
-    · rw [h0, le_zero_iff, Valuation.zero_iff] at hle
+    · rw [h0, nonpos_iff_eq_zero, Valuation.zero_iff] at hle
       exact ⟨0, Ideal.zero_mem _, by simp [hle]⟩
     · set a : w.adicCompletionIntegers E := algebraMap (𝓞 E) (w.adicCompletionIntegers E) x with ha_def
       have ha : Valued.v (a : w.adicCompletion E) = w.intValuation x := valued_algebraMap_adicCompletionIntegers_eq_intValuation w x
@@ -1166,7 +1166,7 @@ theorem inId_iff_le (𝔟 : Ideal (𝓞 E)) (y : w.adicCompletion E) : InId w �
         rw [← ha, h, map_zero]
       have hq : y / (a : w.adicCompletion E) ∈ w.adicCompletionIntegers E := by
         rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, ha]
-        exact div_le_one_of_le₀ hle zero_le'
+        exact div_le_one_of_le₀ hle zero_le
       refine ⟨⟨_, hq⟩ * a, Ideal.mul_mem_left _ _ (Ideal.mem_map_of_mem _ hx), ?_⟩
       simp only [MulMemClass.coe_mul]
       exact div_mul_cancel₀ y ha0
@@ -1390,11 +1390,11 @@ theorem UpperTheory.Gal.W2.Seed.pSumDoset :
   obtain ⟨L, hL⟩ : ∃ L : Subgroup X, L = K ⊓ Subgroup.comap (MulEquiv.toMonoidHom (MulAut.conj h)) K :=
     ⟨_, rfl⟩
   rw [← hL]
-  haveI : (KM.subgroupOf K).Normal := ⟨fun n hn k => by
+  have : (KM.subgroupOf K).Normal := ⟨fun n hn k => by
     rw [Subgroup.mem_subgroupOf] at hn ⊢
     simpa using hnorm k k.2 n hn⟩
-  haveI : (KM.subgroupOf K).FiniteIndex := ⟨hidx⟩
-  letI : Fintype (K ⧸ KM.subgroupOf K) := Fintype.ofFinite _
+  have : (KM.subgroupOf K).FiniteIndex := ⟨hidx⟩
+  let : Fintype (K ⧸ KM.subgroupOf K) := Fintype.ofFinite _
   have hLK : L ≤ K := by
     rw [hL]
     exact inf_le_left
@@ -1443,10 +1443,10 @@ theorem UpperTheory.Gal.W2.Seed.pSumDoset :
         conv_lhs => rw [← QuotientGroup.out_eq' x]
         rw [QuotientGroup.eq, inv_inv]
       by_cases hm : h * (q.out : X) * x.out ∈ K
-      · rw [if_pos hm, if_pos (hiff.mpr hm)]
+      · rw [ite_eq_left hm, ite_eq_left (hiff.mpr hm)]
         have hg : g * x.out = g * (h * (q.out : X))⁻¹ * (h * (q.out : X) * x.out) := by group
         rw [hg, hΦ _ hm]
-      · rw [if_neg hm, if_neg (fun e => hm (hiff.mp e))]
+      · rw [ite_eq_right hm, ite_eq_right (fun e => hm (hiff.mp e))]
     rw [Finset.sum_congr rfl (fun q _ => hterm q), ← Finset.sum_filter, Finset.sum_const,
       ← Fintype.card_subtype, ← Nat.card_eq_fintype_card]
     by_cases hy : x.out ∈ DoubleCoset.doubleCoset h⁻¹ (K : Set X) K
@@ -1461,12 +1461,12 @@ theorem UpperTheory.Gal.W2.Seed.pSumDoset :
     rw [finsum_eq_single _ (QuotientGroup.mk (h * (q.out : X))⁻¹ : X ⧸ K)]
     · simp
     · intro x hx
-      rw [if_neg (Ne.symm hx)]
+      rw [ite_eq_right (Ne.symm hx)]
   · intro q _
     apply Set.Finite.subset (Set.finite_singleton (QuotientGroup.mk (h * (q.out : X))⁻¹ : X ⧸ K))
     intro x hx
     by_contra hne
-    exact hx (if_neg (Ne.symm hne))
+    exact hx (ite_eq_right (Ne.symm hne))
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.AlgebraEquivSetup.PSumDoset =====
@@ -1494,7 +1494,7 @@ theorem UpperTheory.Gal.W2.Seed.pTyFact :
   intro hF hS hLF hA hC hD hc hG E _ _ _ A n p _ S F x U w₀ Up V _ _ _ hOff _ r W hAux N _ _ L hw Ty hTy
   have hj : F.j = F.tr.j := F.j_tr
   have hL : ∀ w, L w = fac F.tr hc w := fun w => (hF E A n p S F hc w).2 _ (hTy.fac w)
-  haveI : Fact r.Prime := ⟨hAux.prime⟩
+  have : Fact r.Prime := ⟨hAux.prime⟩
   have hK1 : ∀ k, (∃ k', F.j k' = k ∧ F.th k' ∈ lev V.S V.Kw) ↔ k ∈ F.tr.lv (lev V.S (CertificateRingHomMap.levT V.Kw)) := by
     intro k
     constructor
@@ -1539,8 +1539,8 @@ theorem UpperTheory.Gal.W2.Seed.pTyFact :
       exact one_mem _
   · rw [(hAp w u (h3 u hu)).2 y]
     exact one_mem _
-  · haveI : (Ty.K₀.subgroupOf Ty.K).FiniteIndex := ⟨Ty.idx⟩
-    haveI : Fintype (Ty.K ⧸ Ty.K₀.subgroupOf Ty.K) := Fintype.ofFinite _
+  · have : (Ty.K₀.subgroupOf Ty.K).FiniteIndex := ⟨Ty.idx⟩
+    have : Fintype (Ty.K ⧸ Ty.K₀.subgroupOf Ty.K) := Fintype.ofFinite _
     choose c hc0 hcp hcv using fun q : Ty.K ⧸ Ty.K₀.subgroupOf Ty.K => hD p S.D S.G S.L (q.out : S.G.GAf)
     refine ⟨∏ q, c q, Finset.prod_pos fun q _ => hc0 q, Nat.Coprime.prod_left fun q _ => hcp q, fun k hk v hv => ?_⟩
     obtain ⟨q, hq⟩ : ∃ q : Ty.K ⧸ Ty.K₀.subgroupOf Ty.K, q = QuotientGroup.mk ⟨k, hk⟩ := ⟨_, rfl⟩

@@ -198,7 +198,7 @@ theorem fc_inj_pt_per {B : Base F E} (hB : B.IsGood σ) (b : GL (Fin n ⊕ Fin n
   have htr : Continuous (Algebra.trace (AF F) (AE F E)) := IsModuleTopology.continuous_of_linearMap _
   have key := GlobalTheory.SeparatingCharacters.eq_zero_of_coefficients_eq_zero (nA σ Y b) (nF σ Y b) K hK hcov
     (nF σ Y b) (chr B.ψ b)
-    (fun T => hψ.1.comp (htr.comp ((continuous_const.matrix_mul continuous_subtype_val).matrix_trace)).neg)
+    (fun T => hψ.1.comp (htr.comp ((continuous_const.matrix_mul continuous_subtypeVal).matrix_trace)).neg)
     (fun T β β' => by
       unfold chr
       rw [AddSubgroup.coe_add, Matrix.mul_add, Matrix.trace_add, map_add (f := _), neg_add, AddChar.map_add_eq_mul])

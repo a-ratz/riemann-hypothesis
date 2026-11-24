@@ -97,7 +97,7 @@ private theorem exists_ext {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
       exact map_one (κ.comp (Subgroup.inclusion (Ine_le_Dec A)))
     exact this
   have hU1 : IsOpen {g : ↥(GK Bw.Kw) | ((Bw.e.symm g : ↥(Dec (F := F) A)) : G F Ω) ∈ U} :=
-    hU.preimage (continuous_subtype_val.comp Bw.e_symm_cont)
+    hU.preimage (continuous_subtypeVal.comp Bw.e_symm_cont)
   obtain ⟨U', hU', hUe'⟩ := isOpen_induced_iff.1 hU1
   have h1' : (1 : GQ l) ∈ U' := by
     have : (1 : ↥(GK Bw.Kw)) ∈ Subtype.val ⁻¹' U' := by
@@ -126,9 +126,9 @@ theorem UpperTheory.rankOne_character_isdR_and_jumps_zero :
   intro F Ω _ _ _ _ _ l _ A κ hc hκ O _ _ _ Bw hj
   obtain ⟨K, h, hK⟩ := exists_ext κ hκ Bw hj
   obtain ⟨T⟩ := UpperTheory.V.Loc.tiedP l
-  haveI : CompactSpace ↥(GK Bw.Kw) := GlobalTheory.UnramifiedCrys.compactSpace_GK _
-  haveI : CompactSpace ↥(Dec (F := F) A) := Bw.e.symm.surjective.compactSpace Bw.e_symm_cont
-  haveI : T2Space ↥(Dec (F := F) A) := inferInstance
+  have : CompactSpace ↥(GK Bw.Kw) := GlobalTheory.UnramifiedCrys.compactSpace_GK _
+  have : CompactSpace ↥(Dec (F := F) A) := Bw.e.symm.surjective.compactSpace Bw.e_symm_cont
+  have : T2Space ↥(Dec (F := F) A) := inferInstance
   have hv : ∀ g a b, ((GlobalTheory.TripleGal.rk1 κ g : GL (Fin 1) (Om l)) : Matrix (Fin 1) (Fin 1) (Om l)) a b = κ g := by
     intro g a b
     rw [Subsingleton.elim a b]
@@ -137,7 +137,7 @@ theorem UpperTheory.rankOne_character_isdR_and_jumps_zero :
     continuous_pi fun a => continuous_pi fun b => by
       simp only [hv]
       exact Units.continuous_val.comp hc
-  haveI := K.2
+  have := K.2
   let N : FinExt l := ⟨IntermediateField.normalClosure ℚ_[l] K.1 (PadicAlgCl l), inferInstance⟩
   obtain ⟨LL, hL, hent⟩ := GlobalTheory.CompactRepField.exists_finExt_entries_mem l _ 1 _ hc0 (GlobalTheory.Pst.supExt Bw.LL N)
   obtain ⟨r, hr⟩ := GlobalTheory.CompactRepField.exists_hom_of_entries_mem _ LL.1 hent
@@ -182,7 +182,7 @@ theorem UpperTheory.rankOne_character_isdR_and_jumps_zero :
     rw [Module.finrank_fin_fun] at hd
     exact hd
   refine ⟨⟨_, _, hM, hD⟩, fun τ LL' τ' hτ => ?_⟩
-  obtain ⟨σ, hσ⟩ := IsAlgClosed.surjective_restrictDomain_of_isAlgebraic (K := ℚ_[l]) (L := ↥Bw.Kw.1)
+  obtain ⟨σ, hσ⟩ := IsAlgClosed.surjective_domRestrict_of_isAlgebraic (K := ℚ_[l]) (L := ↥Bw.Kw.1)
     (M := Om l) (E := Om l) (LL'.1.val.comp τ')
   let τ₂ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1 := (σ.comp K.1.val).codRestrict LL.1.toSubalgebra fun x =>
     l₂ (AlgHom.fieldRange_le_normalClosure (σ.comp K.1.val) ⟨x, rfl⟩)
@@ -213,7 +213,7 @@ private theorem potCrys_of_dR (hB : DeRhamPotSemistable) {F Ω : Type} [Field F]
     (hd : IsdRAt (UpperTheory.V.Loc.PP l) Bw (rk1 κ)) : IsPotCrysAt (UpperTheory.V.Loc.PP l) Bw (rk1 κ) := by
   obtain ⟨T⟩ := UpperTheory.V.Loc.tiedP l
   obtain ⟨LL', r', hm, hp⟩ := hB.isPstAt T Bw _ (GlobalTheory.CharAboveRead.continuous_rankOneOperator κ hκ) hd
-  haveI := hp.finite
+  have := hp.finite
   obtain ⟨ι⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex l
   have h1 : Module.finrank ℂ (WDSpace (UpperTheory.V.Loc.PP l) ι (Bw.repE LL' r')) = 1 := by
     rw [GlobalTheory.Pst.LetterDim.finrank_wdSpace l _ ι _ LL' _ _ hp, Module.finrank_fin_fun]

@@ -110,7 +110,7 @@ lemma gaussR_pos (ρ : NNReal) (hρ : 0 < ρ) (P : K[X]) (hP : P ≠ 0) : 0 < ga
     (fun k => ‖P.coeff k‖₊ * ρ ^ k)
   unfold gaussR
   rw [hk']
-  exact mul_pos (nnnorm_pos.2 (Polynomial.mem_support_iff.1 hk)) (pow_pos hρ k)
+  exact mul_pos (nnNorm_pos.2 (Polynomial.mem_support_iff.1 hk)) (pow_pos hρ k)
 
 lemma gaussR_zero (ρ : NNReal) : gaussR ρ (0 : K[X]) = 0 := by
   simp [gaussR]
@@ -144,7 +144,7 @@ lemma le_gaussR_mul (ρ : NNReal) (hρ : 0 < ρ) (P Q : K[X]) :
     have hsum : x.1 + x.2 = i₀ + j₀ := Finset.HasAntidiagonal.mem_antidiagonal.1 hx'
     have e : ‖P.coeff x.1 * Q.coeff x.2‖₊ * ρ ^ (i₀ + j₀) =
         (‖P.coeff x.1‖₊ * ρ ^ x.1) * (‖Q.coeff x.2‖₊ * ρ ^ x.2) := by
-      rw [nnnorm_mul, ← hsum, pow_add]
+      rw [nnNorm_mul, ← hsum, pow_add]
       ring
     rw [e]
     by_cases h1 : x.1 < i₀
@@ -164,12 +164,12 @@ lemma le_gaussR_mul (ρ : NNReal) (hρ : 0 < ρ) (P Q : K[X]) :
       ρ ^ (i₀ + j₀) < gaussR ρ P * gaussR ρ Q := by
     refine lt_of_le_of_lt ?_ hsup
     rw [← le_div_iff₀ hρk]
-    apply IsUltrametricDist.nnnorm_sum_le_of_forall_le
+    apply IsUltrametricDist.nnNorm_sum_le_of_forall_le
     intro x hx
     rw [le_div_iff₀ hρk]
     exact Finset.le_sup (f := fun x => ‖P.coeff x.1 * Q.coeff x.2‖₊ * ρ ^ (i₀ + j₀)) hx
   have hmain : ‖P.coeff i₀ * Q.coeff j₀‖₊ * ρ ^ (i₀ + j₀) = gaussR ρ P * gaussR ρ Q := by
-    rw [nnnorm_mul, pow_add, ← hi₀, ← hj₀]
+    rw [nnNorm_mul, pow_add, ← hi₀, ← hj₀]
     ring
   have h' : ‖∑ x ∈ (Finset.HasAntidiagonal.antidiagonal (i₀ + j₀)).erase (i₀, j₀), P.coeff x.1 * Q.coeff x.2‖₊ *
       ρ ^ (i₀ + j₀) < ‖P.coeff i₀ * Q.coeff j₀‖₊ * ρ ^ (i₀ + j₀) := by
@@ -177,7 +177,7 @@ lemma le_gaussR_mul (ρ : NNReal) (hρ : 0 < ρ) (P Q : K[X]) :
     exact hrest
   have hlt := lt_of_mul_lt_mul_right h' zero_le
   have heq : ‖(P * Q).coeff (i₀ + j₀)‖₊ = ‖P.coeff i₀ * Q.coeff j₀‖₊ := by
-    rw [hsplit, IsUltrametricDist.nnnorm_add_eq_max_of_nnnorm_ne_nnnorm hlt.ne', max_eq_left hlt.le]
+    rw [hsplit, IsUltrametricDist.nnNorm_add_eq_max_of_nnNorm_ne_nnNorm hlt.ne', max_eq_left hlt.le]
   calc gaussR ρ P * gaussR ρ Q = ‖(P * Q).coeff (i₀ + j₀)‖₊ * ρ ^ (i₀ + j₀) := by rw [heq, hmain]
     _ ≤ gaussR ρ (P * Q) := gaussR_term_le ρ (P * Q) _
 
@@ -278,12 +278,12 @@ theorem multiset_card_filter_eq_sum {α : Type} (m : Multiset α) (P : α → Pr
   | cons a m ih =>
     by_cases h : P a
     · rw [Multiset.filter_cons_of_pos _ h]
-      simp only [Multiset.card_cons, Multiset.map_cons, Multiset.sum_cons, h, if_true]
+      simp only [Multiset.card_cons, Multiset.map_cons, Multiset.sum_cons, h, ite_true]
       push_cast
       rw [ih]
       ring
     · rw [Multiset.filter_cons_of_neg _ h]
-      simp only [Multiset.map_cons, Multiset.sum_cons, h, if_false]
+      simp only [Multiset.map_cons, Multiset.sum_cons, h, ite_false]
       rw [ih]
       ring
 
@@ -353,7 +353,7 @@ theorem lieRoots_of (hG : GaussMulRad) : LieRoots := by
   have hpt : ∀ ζ : K, ((max ‖(t₀ : K) - ζ‖₊ (‖(p : K) ^ h‖₊ * ((p : ℝ) ^ (-E)).toNNReal) : NNReal) : ℝ) =
       max ‖(t₀ : K) - ζ‖ ((p : ℝ) ^ (-((h : ℝ) + E))) := by
     intro ζ
-    rw [NNReal.coe_max, NNReal.coe_mul, coe_nnnorm, coe_nnnorm, hnph,
+    rw [NNReal.coe_max, NNReal.coe_mul, coe_nnNorm, coe_nnNorm, hnph,
       Real.coe_toNNReal _ (Real.rpow_pos_of_pos hp0 _).le]
     congr 1
     rw [← Real.rpow_intCast, ← Real.rpow_add hp0]
@@ -364,7 +364,7 @@ theorem lieRoots_of (hG : GaussMulRad) : LieRoots := by
       ‖lead‖ * (roots.map fun ζ => max ‖(t₀ : K) - ζ‖ ((p : ℝ) ^ (-((h : ℝ) + E)))).prod := by
     rw [hcomp, hG K _ _ _ hρ, gaussR_C, gaussR_multiset_prod hG _ hρ]
     simp only [gaussR_lin]
-    rw [NNReal.coe_mul, coe_nnnorm, NNReal.coe_multiset_prod, Multiset.map_map]
+    rw [NNReal.coe_mul, coe_nnNorm, NNReal.coe_multiset_prod, Multiset.map_map]
     congr 1
     exact congrArg Multiset.prod (Multiset.map_congr rfl fun ζ _ => hpt ζ)
   rw [hreal] at hbound
@@ -486,7 +486,7 @@ lemma div_mem_zpS (p k m : ℕ) [hp : Fact p.Prime] (hm1 : 1 ≤ m) (hm : m ≤ 
   have hval : padicValRat p ((p : ℚ) ^ k / m) = (k : ℤ) - multiplicity p m := by
     rw [padicValRat.div hpk0 hm0, show ((p : ℚ) ^ k) = ((p ^ k : ℕ) : ℚ) by push_cast; rfl,
       padicValRat.of_nat, padicValRat.of_nat, Nat.multiplicity_prime_pow]
-  rw [padicNorm.eq_zpow_of_nonzero (div_ne_zero hpk0 hm0), hval]
+  rw [padicNorm.eq_zpow_of_ne_zero (div_ne_zero hpk0 hm0), hval]
   apply zpow_le_one_of_nonpos₀ (by exact_mod_cast hp1.le)
   omega
 
@@ -567,7 +567,7 @@ theorem bB_mem (p k : ℕ) [Fact p.Prime] : ∀ i, i ≤ p ^ k → ∀ t : ℤ, 
 
 theorem mahler_disc_bound : MahlerDisc := by
   intro p k i t₀ hp hi n
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   exact bB_mem p k i hi t₀ n
 
 end Formalism.GM

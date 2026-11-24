@@ -61,7 +61,7 @@ theorem finite_over (g : ℕ) (hg : g ≠ 0) : {v : HeightOneSpectrum (𝓞 F) |
   have hI : Ideal.span {(g : 𝓞 F)} ≠ 0 := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact hg'
   refine (Ideal.finite_factors hI).subset fun v hv => ?_
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hv
 

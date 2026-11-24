@@ -68,7 +68,7 @@ theorem continuous_glEmb (k : Type) [Field k] [TopologicalSpace k] [IsTopologica
 
 theorem continuous_sEmb (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k] (n : ℕ) : Continuous (sEmb k n) :=
-  Continuous.subtype_mk ((continuous_glEmb k (n + 1)).comp continuous_subtype_val) _
+  Continuous.subtype_mk ((continuous_glEmb k (n + 1)).comp continuous_subtypeVal) _
 
 theorem isOpen_rightInv {M X : Type} [Group M] [TopologicalSpace M] [IsTopologicalGroup M] (e : M → X) (A : Set M)
     (hA : IsOpen A) (h1 : (1 : M) ∈ A) (h : ∀ g ∈ A, ∀ m, e (m * g) = e m) :
@@ -139,7 +139,7 @@ theorem isOpen_eC_invariant : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
   intro k _ _ _ _ i t ψ τ σ f
   have hA : IsOpen ((sEmb k ((i + 1) + t)) ⁻¹' fixX f) := (isOpen_fixX f).preimage (continuous_sEmb k _)
   have hB : IsOpen {g : Mir k ((i + 1) + t) | dpowM (k := k) ((i + 1) + t) (-1 / 2) g = 1} :=
-    (GlobalTheory.CompanionTheory.LeibPhi.isOpen_ker_dpow k ((i + 1) + t + 1) (-1 / 2)).preimage continuous_subtype_val
+    (GlobalTheory.CompanionTheory.LeibPhi.isOpen_ker_dpow k ((i + 1) + t + 1) (-1 / 2)).preimage continuous_subtypeVal
   refine isOpen_rightInv (eC ψ f) _ (hA.inter hB) ⟨?_, ?_⟩ fun g hg m => eC_mul ψ f m g hg.1 hg.2
   · show sEmb k ((i + 1) + t) 1 ∈ fixX f
     rw [MonoidHom.map_one]

@@ -136,7 +136,7 @@ theorem isTest_fourB (A : Et F E) (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) (μK
 theorem plancherel (A : Et F E) (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) (μK : Measure A.K)
     (hsd : SelfDual μK (A.kerK ψ)) {f : A.K → ℂ} (hf : IsTest f) :
     ∫⁻ y, ‖fourB μK (A.kerK ψ) f y‖ₑ ^ 2 ∂μK = ∫⁻ x, ‖f x‖ₑ ^ 2 ∂μK := by
-  haveI := hsd.1
+  have := hsd.1
   obtain ⟨-, -, hnd, -⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   have hB := kerK_eq A ψ
   have hP := (_root_.GlobalTheory.JR.selfDual_iff_lattice_volume_and_plancherel F E ψ hψ A.K (Algebra.traceForm F A.K) (Algebra.traceForm_isSymm (R := F) (S := A.K)) hnd μK
@@ -189,7 +189,7 @@ namespace GlobalTheory.PlancherelZero
 
 theorem eq_zero_of_tendsto_fourier : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (μK : Measure A.K), SelfDual μK (A.kerK ψ) → ∀ (u : A.K → ℂ), IsLocallyConstant u → ∫⁻ z, ‖u z‖ₑ ^ 2 ∂μK < ⊤ → (∀ a : A.K, IsUnit a → Tendsto (fun c : F => ∫ z in {z : A.K | c • z ∈ A.OK}, u z * A.psiK ψ (-(a * z)) ∂μK) (𝓝[≠] 0) (𝓝 0)) → u = 0 := by
   intro F E _ _ _ _ _ A ψ hψ μK hsd u hu hT hlim
-  haveI := hsd.1
+  have := hsd.1
   obtain ⟨-, -, -, -, -, -, -, -, hnull, hOo, hOk, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   have hOc : IsClosed A.OK := by
     have hRo : IsOpen ((R.toAddSubgroup : AddSubgroup A.K) : Set A.K) := by rw [← hR] at hOo; exact hOo
@@ -207,7 +207,7 @@ theorem eq_zero_of_tendsto_fourier : ∀ (F E : Type) [NontriviallyNormedField F
   have hTc : ∀ n, Continuous (fourB μK (A.kerK ψ) (g n)) := fun n =>
     (isTest_fourB A ψ hψ μK hsd (hg n)).1.continuous
   have huc : Continuous u := hu.continuous
-  have hum : Measurable fun z => ‖u z‖ₑ ^ 2 := (huc.measurable.enorm).pow_const 2
+  have hum : Measurable fun z => ‖u z‖ₑ ^ 2 := (huc.measurable.eNorm).pow_const 2
   set b : ℕ → ENNReal := fun n => ∫⁻ z, (M n)ᶜ.indicator (fun z => ‖u z‖ₑ ^ 2) z ∂μK with hbdef
   have hev : ∀ z : A.K, ∀ᶠ n in atTop, z ∈ M n := by
     intro z
@@ -250,13 +250,13 @@ theorem eq_zero_of_tendsto_fourier : ∀ (F E : Type) [NontriviallyNormedField F
           = ‖fourB μK (A.kerK ψ) (g N) y‖ₑ ^ 2 := by
       filter_upwards [hae] with y hy
       have ht := ((ENNReal.continuous_pow 2).tendsto _).comp
-        ((continuous_enorm.tendsto _).comp ((tendsto_const_nhds (x := fourB μK (A.kerK ψ) (g N) y)).sub (hlimF y hy)))
+        ((continuous_eNorm.tendsto _).comp ((tendsto_const_nhds (x := fourB μK (A.kerK ψ) (g N) y)).sub (hlimF y hy)))
       simpa [Function.comp_def] using ht.liminf_eq
     calc ∫⁻ y, ‖fourB μK (A.kerK ψ) (g N) y‖ₑ ^ 2 ∂μK
         = ∫⁻ y, liminf (fun n => ‖fourB μK (A.kerK ψ) (g N) y - fourB μK (A.kerK ψ) (g n) y‖ₑ ^ 2) atTop ∂μK :=
           lintegral_congr_ae (hliminf.mono fun y h => h.symm)
       _ ≤ liminf (fun n => ∫⁻ y, ‖fourB μK (A.kerK ψ) (g N) y - fourB μK (A.kerK ψ) (g n) y‖ₑ ^ 2 ∂μK) atTop :=
-          lintegral_liminf_le' fun n => ((((hTc N).sub (hTc n)).measurable.enorm).pow_const 2).aemeasurable
+          lintegral_liminf_le' fun n => ((((hTc N).sub (hTc n)).measurable.eNorm).pow_const 2).aemeasurable
       _ = liminf (fun n => ∫⁻ x, ‖g N x - g n x‖ₑ ^ 2 ∂μK) atTop := by simp_rw [hFd]
       _ ≤ liminf (fun n => b N + b n) atTop := liminf_le_liminf (Eventually.of_forall hle)
       _ = b N := by
@@ -341,13 +341,13 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
       ∀ i (y : A.K), f i * y ∉ A.OK → ∃ w ∈ A.OK, w * (f i * y) = f i := by
   intro F E _ _ _ _ _ _ A hval
   classical
-  haveI : IsArtinianRing A.K := IsArtinianRing.of_finite F A.K
+  have : IsArtinianRing A.K := IsArtinianRing.of_finite F A.K
   let ψ : A.K ≃ₐ[F] (∀ I : MaximalSpectrum A.K, A.K ⧸ I.asIdeal) :=
     (IsArtinianRing.equivPi A.K).restrictScalars F
   obtain ⟨m, ⟨e⟩⟩ := Finite.exists_equiv_fin (MaximalSpectrum A.K)
   let f : Fin m → A.K := fun i => ψ.symm (Pi.single (e.symm i) 1)
   have hf : ∀ i, ψ (f i) = Pi.single (e.symm i) 1 := fun i => ψ.apply_symm_apply _
-  haveI : Fintype (MaximalSpectrum A.K) := Fintype.ofFinite _
+  have : Fintype (MaximalSpectrum A.K) := Fintype.ofFinite _
   have hOK : ∀ x : (∀ I : MaximalSpectrum A.K, A.K ⧸ I.asIdeal),
       IsIntegral (NormedField.valuation (K := F)).integer x → ψ.symm x ∈ A.OK := fun x hx =>
     (mem_OK_iff_isIntegral A _).2 (hx.map (ψ.symm.restrictScalars (NormedField.valuation (K := F)).integer))
@@ -367,8 +367,8 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
     exact Finset.univ_sum_single 1
   · intro i c hc h
     rw [mem_OK_iff_isIntegral] at h
-    haveI := (e.symm i).isMaximal
-    letI : Field (A.K ⧸ (e.symm i).asIdeal) := Ideal.Quotient.field _
+    have := (e.symm i).isMaximal
+    let : Field (A.K ⧸ (e.symm i).asIdeal) := Ideal.Quotient.field _
     have h1 := h.map (((Pi.evalAlgHom F (fun J : MaximalSpectrum A.K => A.K ⧸ J.asIdeal) (e.symm i)).comp
       ψ.toAlgHom).restrictScalars (NormedField.valuation (K := F)).integer)
     have h2 : (((Pi.evalAlgHom F (fun J : MaximalSpectrum A.K => A.K ⧸ J.asIdeal) (e.symm i)).comp
@@ -383,9 +383,9 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
     have h5 : ‖c‖ ≤ 1 := by exact_mod_cast h4
     linarith
   · intro i y hy
-    haveI := (e.symm i).isMaximal
-    letI : Field (A.K ⧸ (e.symm i).asIdeal) := Ideal.Quotient.field _
-    haveI : FiniteDimensional F (A.K ⧸ (e.symm i).asIdeal) :=
+    have := (e.symm i).isMaximal
+    let : Field (A.K ⧸ (e.symm i).asIdeal) := Ideal.Quotient.field _
+    have : FiniteDimensional F (A.K ⧸ (e.symm i).asIdeal) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ F (e.symm i).asIdeal).toLinearMap
         Ideal.Quotient.mk_surjective
     have hfy : ψ (f i * y) = Pi.single (e.symm i) (ψ y (e.symm i)) := by
@@ -484,7 +484,7 @@ theorem tsum_pi_prod_le' {ι : Type} [Fintype ι] {α : ι → Type} (f : ∀ i,
         refine Finset.sum_le_sum_of_subset fun t ht => ?_
         exact Fintype.mem_piFinset.2 fun i => Finset.mem_image_of_mem _ ht
     _ = ∏ i, ∑ x ∈ s.image (fun t => t i), f i x := (Finset.prod_univ_sum _ _).symm
-    _ ≤ _ := Finset.prod_le_prod' fun i _ => ENNReal.sum_le_tsum _
+    _ ≤ _ := Finset.prod_le_prod fun i _ => ENNReal.sum_le_tsum _
 
 section Idem
 variable {K : Type} [CommRing K] {m : ℕ} {f : Fin m → K}
@@ -528,14 +528,14 @@ end Idem
 theorem height_sq_lintegral_lt_top : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (μ : Measure A.K), μ.IsAddHaarMeasure → ∫⁻ z, (⨅ (s : A.Kˣ) (_ : (s : A.K) ∈ A.OK ∧ (s : A.K) * z ∈ A.OK ∧ ∃ α ∈ A.OK, ∃ β ∈ A.OK, α * s + β * (s * z) = 1), ENNReal.ofReal (A.absK s)) ^ 2 ∂μ < ⊤ := by
   intro F E _ _ _ _ hU A μ hμ
   classical
-  haveI := hU.ultraF; haveI := hU.lcF; haveI := hU.charZero
-  haveI : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
-  haveI : IsTopologicalAddGroup A.K := IsModuleTopology.topologicalAddGroup F A.K
-  haveI : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
+  have := hU.ultraF; have := hU.lcF; have := hU.charZero
+  have : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+  have : IsTopologicalAddGroup A.K := IsModuleTopology.isTopologicalAddGroup F A.K
+  have : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
   let b := Module.finBasis F A.K
-  haveI : T2Space A.K := .of_injective_continuous b.equivFun.injective
+  have : T2Space A.K := .of_injective_continuous b.equivFun.injective
     (IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap)
-  haveI : SecondCountableTopology A.K := b.equivFunL.toHomeomorph.secondCountableTopology
+  have : SecondCountableTopology A.K := b.equivFunL.toHomeomorph.secondCountableTopology
   obtain ⟨-, -, -, -, -, -, -, -, -, hOo, hOc, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   obtain ⟨m, f, hid, hor, hsum, hsc, hvp⟩ :=
     _root_.GlobalTheory.JR.Et.Idem.main F E A (fun k _ _ _ y hy => _root_.GlobalTheory.JR.Spec.isIntegral_or_isIntegral_inv F k y hy)
@@ -561,7 +561,7 @@ theorem height_sq_lintegral_lt_top : ∀ (F E : Type) [NontriviallyNormedField F
   have hu : ∀ i, ((u i : A.Kˣ) : A.K) = f i * p + (1 - f i) := fun i => rfl
   have huR : ∀ i, ((u i : A.Kˣ) : A.K) ∈ R := fun i => by
     rw [hu]; exact R.add_mem (R.mul_mem (hfR i) hpR) (R.sub_mem R.one_mem (hfR i))
-  haveI : μ.IsAddHaarMeasure := hμ
+  have : μ.IsAddHaarMeasure := hμ
   have hμO0 : μ A.OK ≠ 0 := hOo.measure_ne_zero μ ⟨0, (hOR 0).2 R.zero_mem⟩
   have hμOt : μ A.OK ≠ ⊤ := hOc.measure_lt_top.ne
   have hsmulO : ∀ v : A.Kˣ, (v : A.K) ∈ R → v • A.OK ⊆ A.OK := by
@@ -667,15 +667,15 @@ theorem height_sq_lintegral_lt_top : ∀ (F E : Type) [NontriviallyNormedField F
       calc f j * (σ * q) = (f j * σ) * q := by ring
         _ = _ := by rw [hfσ]; ring
     have hfs0 : ∀ j, n j = 0 → f j * ((σU * q : A.Kˣ) : A.K) = f j := fun j hj => by
-      rw [hfs, ha, if_pos hj, hj]; simp
+      rw [hfs, ha, ite_eq_left hj, hj]; simp
     have hfsz : ∀ j, f j * (((σU * q : A.Kˣ) : A.K) * z) = if n j = 0 then f j * z else f j := by
       intro j
       rw [← mul_assoc, hfs]
       split_ifs with hj
-      · rw [ha, if_pos hj, hj]; simp
+      · rw [ha, ite_eq_left hj, hj]; simp
       · have h1 := hwf j hj
         rw [hsmul] at h1
-        rw [ha, if_neg hj]; linear_combination h1
+        rw [ha, ite_eq_right hj]; linear_combination h1
     refine ⟨σU * q, ⟨?_, ?_, ?_⟩, ?_⟩
     · rw [hOR, hsval]; exact R.mul_mem hσR hqR
     · rw [hOR, hrep (((σU * q : A.Kˣ) : A.K) * z)]
@@ -698,7 +698,7 @@ theorem height_sq_lintegral_lt_top : ∀ (F E : Type) [NontriviallyNormedField F
         rw [e1, mul_sum_eq hid hor, mul_sum_eq hid hor]
         split_ifs with hj
         · rw [mul_one, mul_zero, zero_mul, add_zero, hfs0 j hj]
-        · rw [mul_zero, zero_mul, zero_add, mul_one, hfsz, if_neg hj]
+        · rw [mul_zero, zero_mul, zero_add, mul_one, hfsz, ite_eq_right hj]
     · rw [map_mul, map_prod]; simp only [map_pow]
       exact mul_le_of_le_one_left zero_le (hle1 σU hσR)
 
@@ -752,7 +752,7 @@ theorem height_sq_lintegral_lt_top : ∀ (F E : Type) [NontriviallyNormedField F
       simp only [hCdef]
       exact_mod_cast hsle
     have h2 : ∏ i, C i ^ (N z i - 1) ≤ (∏ i, D i) * ∏ i, C i ^ N z i := by
-      rw [← Finset.prod_mul_distrib]; exact Finset.prod_le_prod' fun i _ => hpow i _
+      rw [← Finset.prod_mul_distrib]; exact Finset.prod_le_prod fun i _ => hpow i _
     refine le_trans ?_ (ENNReal.le_tsum (N z))
     rw [Set.indicator_of_mem (hzS z), Finset.prod_pow, ← mul_pow]
     exact pow_le_pow_left₀ zero_le (h1.trans h2) 2
@@ -847,7 +847,7 @@ theorem bdd_of_loc_const (K : Type) [CommRing K] [TopologicalSpace K] [IsTopolog
       have := hkM i j
       exact this)
     simpa using this
-  have hg : g M = ‖Ψ k₀‖ := by simp only [g, dif_pos hdet]; rfl
+  have hg : g M = ‖Ψ k₀‖ := by simp only [g, dite_eq_left hdet]; rfl
   rw [he, ← hg]
   exact Finset.single_le_sum (f := g) (fun M _ => by simp only [g]; split_ifs <;> positivity) hMt
 
@@ -974,7 +974,7 @@ theorem weyl_unipotent_l2_finite [Unram F E] (hB1 : type_of% _root_.GlobalTheory
     refine le_iInf₂ fun s hs => ?_
     obtain ⟨hs1, hs2, α, hα, β, hβ, he⟩ := hs
     have hb := hC z s α β hα hβ hs1 hs2 he
-    calc ‖Ψ (wS A.K * nS z)‖ₑ = ENNReal.ofReal ‖Ψ (wS A.K * nS z)‖ := (ofReal_norm_eq_enorm _).symm
+    calc ‖Ψ (wS A.K * nS z)‖ₑ = ENNReal.ofReal ‖Ψ (wS A.K * nS z)‖ := (ofReal_norm _).symm
       _ ≤ ENNReal.ofReal (C * A.absK s) := ENNReal.ofReal_le_ofReal hb
       _ = ENNReal.ofReal C * ENNReal.ofReal (A.absK s) := ENNReal.ofReal_mul' (absK_nonneg A _)
       _ ≤ _ := by gcongr; exact le_self_add

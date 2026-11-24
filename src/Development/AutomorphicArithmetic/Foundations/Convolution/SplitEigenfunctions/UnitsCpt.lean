@@ -205,7 +205,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.decE :
   intro F _ _ _ π f hf
   obtain ⟨ψ, rfl⟩ := UpperTheory.V.Cm.mem_range_ofCusp.2 (π.cusp f hf)
   refine ⟨⟨ψ.2.1.continuous, (π.cusp _ hf).1.left⟩, fun g => ?_, fun C hC c hc r => ?_⟩
-  · letI : Unique (UPos 2 1) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
+  · let : Unique (UPos 2 1) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
     rw [← Pp.int_one (ι := UPos 2 1), ← ψ.2.2 1 one_pos one_lt_two g]
     refine integral_congr_ae (Eventually.of_forall fun x => ?_)
     have : gl (nU (x default)) = unipGL x := by

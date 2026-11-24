@@ -51,7 +51,7 @@ namespace GlobalTheory.TwTrUnit
 theorem trace_eq_zero_of_finrank_eq_zero (W : Type) [AddCommGroup W] [Module ℂ W] (h : Module.finrank ℂ W = 0)
     (L : W →ₗ[ℂ] W) : LinearMap.trace ℂ W L = 0 := by
   by_cases hW : Module.Finite ℂ W
-  · haveI : Subsingleton W := Module.finrank_zero_iff.1 h
+  · have : Subsingleton W := Module.finrank_zero_iff.1 h
     rw [show L = 0 from LinearMap.ext fun x => Subsingleton.elim _ _, map_zero]
   · unfold LinearMap.trace
     rw [dite_eq_right]

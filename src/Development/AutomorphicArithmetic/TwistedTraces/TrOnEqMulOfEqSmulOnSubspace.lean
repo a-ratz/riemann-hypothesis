@@ -54,9 +54,9 @@ theorem UpperTheory.trOn_eq_mul_of_eq_smul_on_subspace :
     ∀ (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (W : Submodule ℂ H) (B C : H →L[ℂ] H) (c : ℂ),
         FiniteDimensional ℂ W → (∀ v ∈ W, B v = c • C v) → trOn W B = c * trOn W C := by
   intro H _ _ _ W B C c hW h
-  haveI := hW
+  have := hW
   have hcl : W.topologicalClosure = W :=
-    (Submodule.closed_of_finiteDimensional W).submodule_topologicalClosure_eq
+    (Submodule.isClosed_of_finiteDimensional W).submodule_topologicalClosure_eq
   have hmem : ∀ x, UpperTheory.ConvolutionTheory.C.prj W x ∈ W := by
     intro x
     have hx : UpperTheory.ConvolutionTheory.C.prj W x ∈ W.topologicalClosure := by

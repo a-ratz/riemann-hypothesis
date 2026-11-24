@@ -82,14 +82,14 @@ theorem rp_rep_ae_eq [μ.IsMulLeftInvariant] [Countable Γ] (h : rr_FD μ Γ D) 
   have hnull := rp_N_pre h hg
   rw [ae_iff]
   refine measure_mono_null (fun x hx => ?_) hnull
-  simp only [Set.mem_setOf_eq] at hx
+  simp only [mem_ofPred_eq] at hx
   show x * g ∈ rr_N Γ D
   have hex : ∃ γ ∈ (Γ : Set G), γ * (x * g) ∈ D := h.cov (x * g)
   obtain ⟨γ, hγ, hr', hD⟩ := hr (x * g)
   have e : rr_rep (Γ : Set G) D (x * g) = hex.choose * (x * g) := by
     unfold rr_rep
     first
-    | exact dif_pos hex
+    | exact dite_eq_left hex
     | rw [dif_pos hex]
     | simp only [dif_pos hex]
   rw [e, hr'] at hx
@@ -155,7 +155,7 @@ theorem rp_meas_pre [μ.IsMulLeftInvariant] [Countable Γ] (h : rr_FD μ Γ D) {
     · simpa [mul_assoc] using h1
     · simpa [mul_assoc] using h2
   have hΦ : ((fun x => r (x * g)) ⁻¹' A ∩ D : Set G) =ᵐ[μ] (⋃ γ : Γ, B γ) := by
-    rw [Filter.eventuallyEq_set]
+    rw [eventuallyEqSet_iff]
     filter_upwards [compl_mem_ae_iff.mpr (rp_N_pre h hg)] with x hx
     have hx' : ¬ ∃ γ₁ ∈ Γ, ∃ γ₂ ∈ Γ, γ₁ ≠ γ₂ ∧ γ₁ * (x * g) ∈ D ∧ γ₂ * (x * g) ∈ D := hx
     obtain ⟨γ₀, hγ₀, hr0, hD0⟩ := hr (x * g)
@@ -188,10 +188,10 @@ theorem rp_map [μ.IsMulLeftInvariant] [Countable Γ] (h : rr_FD μ Γ D) {g : G
     refine ⟨hex.choose, hex.choose_spec.1, ?_, hex.choose_spec.2⟩
     unfold rr_rep
     first
-    | exact dif_pos hex
+    | exact dite_eq_left hex
     | rw [dif_pos hex]
     | simp only [dif_pos hex]
-  haveI : Nonempty Γ := ⟨1⟩
+  have : Nonempty Γ := ⟨1⟩
   obtain ⟨e, he⟩ := exists_surjective_nat Γ
   have hp : ∀ y : G, ∃ n, (e n : G) * y ∈ D := fun y => by
     obtain ⟨γ, hγ, hy⟩ := h.cov y
@@ -224,12 +224,12 @@ theorem rp_rep_comp [μ.IsMulLeftInvariant] [Countable Γ] (h : rr_FD μ Γ D) (
     refine ⟨hex.choose, hex.choose_spec.1, ?_, hex.choose_spec.2⟩
     unfold rr_rep
     first
-    | exact dif_pos hex
+    | exact dite_eq_left hex
     | rw [dif_pos hex]
     | simp only [dif_pos hex]
   rw [ae_iff]
   refine measure_mono_null (fun x hx => ?_) hnull
-  simp only [Set.mem_setOf_eq] at hx
+  simp only [mem_ofPred_eq] at hx
   obtain ⟨c₁, hc₁, e₁, -⟩ := hc (x * g)
   obtain ⟨c₂, hc₂, e₂, d₂⟩ := hc (rr_rep (Γ : Set G) D (x * g) * k)
   obtain ⟨c₃, hc₃, e₃, d₃⟩ := hc (x * (g * k))
@@ -296,7 +296,7 @@ theorem muInf_right : (ProjRows.muInf I).IsMulRightInvariant := by
 theorem rp_inst (μf : Measure I.Gf) [SigmaFinite μf] (g : I.Ginf) :
     RPres (I.muA μf) ((g, 1) : I.GA) := by
   have h1 : MeasurePreserving (fun x : I.Ginf => x * g) (ProjRows.muInf I) (ProjRows.muInf I) := by
-    haveI := muInf_right I
+    have := muInf_right I
     exact measurePreserving_mul_right (ProjRows.muInf I) g
   have h3 : (fun x : I.GA => x * ((g, 1) : I.GA)) = Prod.map (fun x : I.Ginf => x * g) id := by
     funext x
@@ -313,7 +313,7 @@ theorem rp_inst_inv (μf : Measure I.Gf) [SigmaFinite μf] (g : I.Ginf) :
 
 theorem inf_tendsto {C : Set I.Ginf} (hC : MeasurableSet C) (hfin : ProjRows.muInf I C ≠ ∞) :
     Tendsto (fun g : I.Ginf => ProjRows.muInf I (C \ (fun x => x * g) ⁻¹' C)) (𝓝 1) (𝓝 0) := by
-  haveI := muInf_right I
+  have := muInf_right I
   let F : C(I.Ginf, C(I.Ginf, I.Ginf)) :=
     ContinuousMap.curry ⟨fun p : I.Ginf × I.Ginf => p.2 * p.1, continuous_snd.mul continuous_fst⟩
   have hF : ∀ a x : I.Ginf, F a x = x * a := fun a x => rfl
@@ -341,7 +341,7 @@ theorem adele_tendsto (μf : Measure I.Gf) [SigmaFinite μf] {A : Set I.GA} (hA 
         = (fun x : I.Ginf => (x, y)) ⁻¹' A \ (fun x => x * g) ⁻¹' ((fun x : I.Ginf => (x, y)) ⁻¹' A) := by
     intro g y
     ext x
-    simp [Set.mem_diff]
+    simp [Set.mem_sdiff]
   have hmA : ∀ y : I.Gf, MeasurableSet ((fun x : I.Ginf => (x, y)) ⁻¹' A) := fun y => by
     first
     | exact hA.preimage measurable_prod_mk_right
@@ -396,7 +396,7 @@ variable (I : AutInst) (μf : Measure I.Gf) [SigmaFinite μf] [μf.IsHaarMeasure
 include hfd hR in
 theorem reg_norm (g : I.Ginf) (F : I.L2 μf fund) : ‖R (g, 1) F‖ = ‖F‖ := by
   let Γ : Subgroup I.GA := rr_GF I
-  haveI hli : (I.muA μf).IsMulLeftInvariant := by
+  have hli : (I.muA μf).IsMulLeftInvariant := by
     unfold AutInst.muA
     first
     | infer_instance
@@ -414,7 +414,7 @@ theorem reg_norm (g : I.Ginf) (F : I.L2 μf fund) : ‖R (g, 1) F‖ = ‖F‖ :
 include hfd hR in
 theorem reg_mul (a b : I.Ginf) : R (a * b, 1) = (R (a, 1)).comp (R (b, 1)) := by
   let Γ : Subgroup I.GA := rr_GF I
-  haveI hli : (I.muA μf).IsMulLeftInvariant := by
+  have hli : (I.muA μf).IsMulLeftInvariant := by
     unfold AutInst.muA
     first
     | infer_instance
@@ -435,7 +435,7 @@ theorem ind_tendsto {s : Set I.GA} (hs : MeasurableSet s) (hμs : (I.muA μf).re
     Tendsto (fun g : I.Ginf => R (g, 1) (indicatorConstLp 2 hs hμs (1 : ℂ))) (𝓝 1)
       (𝓝 (indicatorConstLp 2 hs hμs (1 : ℂ))) := by
   let Γ : Subgroup I.GA := rr_GF I
-  haveI hli : (I.muA μf).IsMulLeftInvariant := by
+  have hli : (I.muA μf).IsMulLeftInvariant := by
     unfold AutInst.muA
     first
     | infer_instance
@@ -587,7 +587,7 @@ theorem ind_tendsto {s : Set I.GA} (hs : MeasurableSet s) (hμs : (I.muA μf).re
       have e : x * ((g, 1) : I.GA) * ((g⁻¹, 1) : I.GA) = x := by
         have hgg : ((g, 1) : I.GA) * ((g⁻¹, 1) : I.GA) = 1 := Prod.ext (by simp) (by simp)
         rw [mul_assoc, hgg, mul_one]
-      simp only [Set.mem_diff, Set.mem_preimage, e]
+      simp only [Set.mem_sdiff, Set.mem_preimage, e]
     rw [hset, rp_pre (rp_inst I μf g)]
   have hδ := adele_tendsto I μf hs' hs'f
   have hδ' : Tendsto (fun g : I.Ginf =>

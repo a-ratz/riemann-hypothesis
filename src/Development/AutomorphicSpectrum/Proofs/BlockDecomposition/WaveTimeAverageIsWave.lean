@@ -379,7 +379,7 @@ theorem iteratedDeriv_two_eq {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ 
 theorem isWave_avg : WaveSpeed → ∀ (n : ℕ) (E : KMod n) (u : ℝ → Mat n → E.V) (g : ℝ → ℝ) (T : ℝ),
     IsWave E u → IsBump g T → IsWave E (fun t x => ∫ s, (g s : ℂ) • u (t + s) x) := by
   intro hS n E u g T hu hg
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   have hu0 : JS u := hu.1
   have hv : JS (av g u) := av_smooth hu0 hg
   have hu1 : JS (fun s y => deriv (fun r => u r y) s) :=

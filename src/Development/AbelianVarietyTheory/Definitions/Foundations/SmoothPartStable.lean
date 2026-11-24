@@ -194,7 +194,7 @@ theorem smoothPart_stable (ρ : Representation k G V) (g : G) (v : V) (hv : v �
     ρ g v ∈ smoothPart ρ := by
   have : {x : G | ρ x (ρ g v) = ρ g v} = (fun x => g⁻¹ * x * g) ⁻¹' {x : G | ρ x v = v} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, map_mul, Module.End.mul_apply]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, map_mul, Module.End.mul_apply]
     constructor
     · intro h; rw [h, ← Module.End.mul_apply, ← map_mul]; simp
     · intro h

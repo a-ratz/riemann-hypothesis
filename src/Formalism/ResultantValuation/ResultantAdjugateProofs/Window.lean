@@ -167,7 +167,7 @@ lemma lte_unit (l : ℕ) [Fact l.Prime] (hl2 : l ≠ 2) (u : ℤ_[l]) (hu : (u -
     norm_cast
   have hne : u ^ (l ^ a * m) - 1 ≠ 0 := by
     intro h
-    rw [h, emultiplicity_zero] at hE
+    rw [h, emultiplicity_zero_right] at hE
     exact (ENat.natCast_ne_top (1 + a)) hE.symm
   rw [hv]
   exact_mod_cast (emultiplicity_eq_valuation hne).symm.trans hE

@@ -69,13 +69,13 @@ theorem finiteOnCompacts_of_sigmaFinite (η : Measure H) [SigmaFinite η] [IsMul
       by_contra hn
       have := measure_spanningSets_lt_top η n
       rw [show η (spanningSets η n) = (∞ • haarMeasure K) (spanningSets η n) by rw [← h],
-        Measure.smul_apply, smul_eq_mul, ENNReal.top_mul hn] at this
+        smul_apply, smul_eq_mul, ENNReal.top_mul hn] at this
       exact lt_irrefl _ this
     have h2 := measure_iUnion_null h1
     rw [iUnion_spanningSets, measure_univ_eq_zero] at h2
     exact NeZero.ne _ h2
   refine ⟨fun L hL => ?_⟩
-  rw [h, Measure.smul_apply, smul_eq_mul]
+  rw [h, smul_apply, smul_eq_mul]
   exact ENNReal.mul_lt_top hK.lt_top hL.measure_lt_top
 
 end Abstract
@@ -103,12 +103,12 @@ theorem IsHaarOnM.lt_top_of_isCompact (hG : IsMatGroup G) {μ : Measure (MtM m)}
   obtain ⟨hσ, -, h0, hl⟩ := hμ
   have hι := MG.measurableEmbedding_toM (hG := hG)
   have hmap := map_comap_toM hG h0
-  haveI : T2Space (MG G hG) := MG.isClosedEmbedding_mat.isEmbedding.t2Space
-  haveI : SigmaFinite (μ.comap (MG.toM (hG := hG))) :=
+  have : T2Space (MG G hG) := MG.isClosedEmbedding_mat.isEmbedding.t2Space
+  have : SigmaFinite (μ.comap (MG.toM (hG := hG))) :=
     SigmaFinite.of_map _ hι.measurable.aemeasurable (by rwa [hmap])
-  haveI : IsMulLeftInvariant (μ.comap (MG.toM (hG := hG))) :=
+  have : IsMulLeftInvariant (μ.comap (MG.toM (hG := hG))) :=
     ⟨fun g => comap_map_mul hG h0 g (hl _ g.mem)⟩
-  haveI := finiteOnCompacts_of_sigmaFinite (μ.comap (MG.toM (hG := hG)))
+  have := finiteOnCompacts_of_sigmaFinite (μ.comap (MG.toM (hG := hG)))
   rw [← hmap, hι.map_apply]
   exact ((MG.isClosedEmbedding_mat (hG := hG)).isCompact_preimage hK).measure_lt_top
 

@@ -286,7 +286,7 @@ theorem source_gen (hL : N.LeftRule) {n : ℕ} {ε : Fin n → Bool} {H : Type} 
         (Finset.single_le_sum (f := fun i => ∑ j, ‖M i j‖ ^ 2)
           (fun _ _ => Finset.sum_nonneg fun _ _ => by positivity) (Finset.mem_univ c))
     have hexp2 : Real.exp (-τ x) ^ 2 = Real.exp (-2 * τ x) := by
-      rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+      rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
     have e2 : Formalism.REAL.hs M ≤ (C * Formalism.REAL.hs (Y k)) * Real.exp (-τ x) ^ 2 := by
       rw [hexp2]
       calc Formalism.REAL.hs M ≤ C * Real.exp (-2 * τ x) * Formalism.REAL.hs (Y k) := hC x (Y k) (hY k) hx
@@ -428,14 +428,14 @@ theorem assembly_of : Assembly := by
     · intro f' hf' x
       have hc := cont_span (gen σ D E hK.gl χ ss) (fun t : ℝ => S7.toM (x : S7.UJ ε) * aT (A j) t)
         (fun q => hgline j q (x : S7.UJ ε)) f' hf'
-      exact ((continuous_enorm.comp hc).measurable.pow_const 2).mul
+      exact ((continuous_eNorm.comp hc).measurable.pow_const 2).mul
         (Measurable.ennreal_ofReal (by fun_prop)) |>.aemeasurable
     · intro q
       have h := hN (A j) (muPar ε (A j) (ν j)) (hgrad j) ⟨ν j, rfl, hν j⟩ q.2
       simp only [NSet, Set.mem_ofPred_eq] at h
       have h2 : ∀ᵐ y ∂((ν j).map Subtype.val), lineInt ε (famP σ D E hK.gl χ ss q.1 q.2) (A j) (-rhoA (A j) - 1) y < ⊤ :=
         h q.1
-      have h3 := ae_of_ae_map measurable_subtype_coe.aemeasurable h2
+      have h3 := ae_of_ae_map measurable_subtypeVal.aemeasurable h2
       filter_upwards [h3] with x hx
       have e : ∀ t : ℝ, -2 * (-rhoA (A j) - 1) * t = 2 * (rhoA (A j) + 1) * t := fun t => by ring
       simp only [lineInt, e] at hx
@@ -448,7 +448,7 @@ theorem assembly_of : Assembly := by
       fun_prop
     exact lint_span (gen σ D E hK.gl χ ss) Measure.haar (fun g : S7.UJ ε => S7.toM g)
       (fun g => ENNReal.ofReal (Formalism.REAL.hs (S7.toM g) ^ (-M)))
-      (fun f' hf' => (((continuous_enorm.comp (hcontS f' hf')).measurable.pow_const 2).mul
+      (fun f' hf' => (((continuous_eNorm.comp (hcontS f' hf')).measurable.pow_const 2).mul
         (hhs.measurable.pow_const (-M)).ennreal_ofReal).aemeasurable)
       (fun q => hM q.1 q.2) f hf
   have key := hAbs n ε (SS σ D E hK.gl χ ss) m A ν τ (fun j => rhoA (A j)) (fun j => (p j).roots.toFinset) M c₁ R₀ C
@@ -568,7 +568,7 @@ theorem ae_mul_mem (Q : Subgroup G) (hQ : MeasurableSet (Q : Set G)) (ν : Measu
     measurable_const.indicator hQ.compl
   have h := hc _ hF
   have hL : ∫⁻ x, (Q : Set G)ᶜ.indicator (fun _ => (1 : ℝ≥0∞)) x ∂(ν.map Subtype.val) = 0 := by
-    rw [lintegral_indicator_const hQ.compl, Measure.map_apply measurable_subtype_coe hQ.compl, one_mul]
+    rw [lintegral_indicator_const hQ.compl, Measure.map_apply measurable_subtypeVal hQ.compl, one_mul]
     have he : (Subtype.val ⁻¹' ((Q : Set G)ᶜ) : Set Q) = ∅ := by
       ext x
       simp
@@ -620,12 +620,12 @@ theorem slab_formula (Q : Subgroup G) (hQ : MeasurableSet (Q : Set G)) (ν : Mea
       slab (T y) * ∫⁻ t : ℝ, F (y * a t) * ENNReal.ofReal (Real.exp (2 * ρ * t)) :=
     (measurable_slab.comp hT).mul hg
   have hset : MeasurableSet {x : Q | T x ∈ Set.Ico (0 : ℝ) 1} :=
-    (hT.comp measurable_subtype_coe) measurableSet_Ico
+    (hT.comp measurable_subtypeVal) measurableSet_Ico
   have e1 : ∫⁻ x in {x : Q | T x ∈ Set.Ico 0 1},
         (∫⁻ t : ℝ, F ((x : G) * a t) * ENNReal.ofReal (Real.exp (2 * ρ * t))) ∂ν
       = ∫⁻ y, slab (T y) * (∫⁻ t : ℝ, F (y * a t) * ENNReal.ofReal (Real.exp (2 * ρ * t)))
           ∂(ν.map Subtype.val) := by
-    rw [lintegral_map hG measurable_subtype_coe, ← lintegral_indicator hset]
+    rw [lintegral_map hG measurable_subtypeVal, ← lintegral_indicator hset]
     refine lintegral_congr fun x => ?_
     by_cases hx : T x ∈ Set.Ico (0 : ℝ) 1
     · rw [Set.indicator_of_mem (show x ∈ {x : Q | T x ∈ Set.Ico (0 : ℝ) 1} from hx)]
@@ -652,15 +652,15 @@ theorem lineFormula : Fub2 → LineFacts → PSubEq → LineFormula := by
   have hPS' := hPS n ε A hA
   change ℝ → ↥(ReciprocityTheory.ChartRestriction.DS.S7.UJ ε) at a
   change Measure ↥(ReciprocityTheory.ChartRestriction.DS.S7.UJ ε) at μN μM
-  haveI : SFinite μN := hN
-  haveI : SFinite μM := hM
+  have : SFinite μN := hN
+  have : SFinite μM := hM
   have hmulM : ∀ (x : ↥(ReciprocityTheory.ChartRestriction.DS.S7.UJ ε)) (t : ℝ),
       ReciprocityTheory.ChartRestriction.DS.S7.toM (x * a t) = ReciprocityTheory.ChartRestriction.DS.S7.toM x * CompanionTheory.RgExh.Dec.L.aT A t := by
     intro x t
     rw [CompanionTheory.RgExh.Dec.L.aT, ← hau t]
     rfl
   have h1N : (1 : ↥(Formalism.REAL.UJ ε)) ∈ GlobalTheory.FlagMeas.flagN ε (W A) := by
-    simp only [GlobalTheory.FlagMeas.flagN, Set.mem_setOf_eq]
+    simp only [GlobalTheory.FlagMeas.flagN, Set.mem_ofPred_eq]
     constructor
     · intro i y _
       simp [Formalism.MainNotions.S.uMat]
@@ -791,7 +791,7 @@ theorem continuous_hs (ε : Fin n → Bool) : Continuous fun g : S7.UJ ε => For
 theorem measurable_term (ε : Fin n → Bool) {f : Matrix (Fin n) (Fin n) ℂ → ℂ} (s : ℝ)
     (hf : Continuous fun g : S7.UJ ε => f (S7.toM g)) :
     Measurable fun g : S7.UJ ε => ‖f (S7.toM g)‖ₑ ^ 2 * ENNReal.ofReal (Formalism.REAL.hs (S7.toM g) ^ s) :=
-  (hf.measurable.enorm.pow_const 2).mul
+  (hf.measurable.eNorm.pow_const 2).mul
     (ENNReal.measurable_ofReal.comp ((continuous_hs ε).measurable.pow_const s))
 
 theorem lev_row (ε : Fin n → Bool) (m : ℕ) (f : Fin n → Matrix (Fin n) (Fin n) ℂ → ℂ)
@@ -812,7 +812,7 @@ theorem level_zero_of_memLp (ε : Fin n → Bool) (F : Matrix (Fin n) (Fin n) �
     (h : MemLp (fun g : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε)) :
     ∫⁻ g : S7.UJ ε, ‖F (S7.toM g)‖ₑ ^ 2 ∂Measure.haar < ⊤ := by
   let μ : Measure (S7.UJ ε) := Formalism.REAL.muG ε
-  haveI : μ.IsHaarMeasure := Formalism.REAL.instIsHaarMuG n ε
+  have : μ.IsHaarMeasure := Formalism.REAL.instIsHaarMuG n ε
   have h' : MemLp (fun g : S7.UJ ε => F (S7.toM g)) 2 μ := h
   have h2 : ∫⁻ g : S7.UJ ε, ‖F (S7.toM g)‖ₑ ^ 2 ∂μ < ⊤ := by
     simpa only [ENNReal.toReal_ofNat, ENNReal.rpow_two] using
@@ -1275,7 +1275,7 @@ theorem word_of_rightOK {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n
 theorem memLp_of_level {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hc : ContinuousOn F {g | Formalism.REAL.inUJ ε g})
     (hL : LevelF ε F 0) : MemLp (fun g : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat g)) 2 (Formalism.REAL.muG ε) := by
   have hcont : Continuous (fun g : Formalism.REAL.UJ ε => F (Formalism.MainNotions.S.umat g)) :=
-    hc.comp_continuous (Units.continuous_val.comp continuous_subtype_val) (fun g => g.2)
+    hc.comp_continuous (Units.continuous_val.comp continuous_subtypeVal) (fun g => g.2)
   rw [memLp_iff, eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top
     (by norm_num) (by norm_num) hcont.aestronglyMeasurable]
   unfold LevelF at hL
@@ -1332,7 +1332,7 @@ theorem emb_of {X : GMod n} {c : X.V →ₗ[ℂ] (Matrix (Fin n) (Fin n) ℂ →
       rw [h2] at this
       exact this.symm.trans (Lp.coeFn_zero _ _ _)
     have hcont : Continuous (fun g : Formalism.REAL.UJ ε => c u (Formalism.MainNotions.S.umat g)) :=
-      (hC u).comp_continuous (Units.continuous_val.comp continuous_subtype_val) (fun g => g.2)
+      (hC u).comp_continuous (Units.continuous_val.comp continuous_subtypeVal) (fun g => g.2)
     have h4 := (Continuous.ae_eq_iff_eq (Formalism.REAL.muG ε) hcont continuous_zero).mp h3
     exact congrFun h4 1
 
@@ -1392,7 +1392,7 @@ section Abstract
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [FiniteDimensional ℂ E]
 
 theorem exists_riesz (l : E →ₗ[ℂ] ℂ) : ∃ η : E, ∀ x, l x = ⟪η, x⟫_ℂ := by
-  haveI : CompleteSpace E := FiniteDimensional.complete ℂ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
   refine ⟨(InnerProductSpace.toDual ℂ E).symm (LinearMap.toContinuousLinearMap l), fun x => ?_⟩
   rw [InnerProductSpace.toDual_symm_apply]
   rfl
@@ -1418,7 +1418,7 @@ theorem sum_enorm_sq {ι : Type*} [Fintype ι] (z : ι → ℂ) :
     ∑ i, ‖z i‖ₑ ^ 2 = ENNReal.ofReal (∑ i, ‖z i‖ ^ 2) := by
   rw [ENNReal.ofReal_sum_of_nonneg (fun i _ => by positivity)]
   refine Finset.sum_congr rfl fun i _ => ?_
-  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
 
 theorem lintegral_enorm_sq_lt_top {X : Type*} [MeasurableSpace X] {μ : Measure X} {f : X → ℂ}
     (h : MemLp f 2 μ) : (∫⁻ x, ‖f x‖ₑ ^ 2 ∂μ) < ⊤ := by
@@ -1431,7 +1431,7 @@ theorem lintegral_enorm_sq_lt_top {X : Type*} [MeasurableSpace X] {μ : Measure 
 variable {n : ℕ} {ε : Fin n → Bool}
 
 theorem continuous_uMat : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_coef {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hU : Formalism.MainNotions.S.IsURepOn (Formalism.MainNotions.S.UJset ε) σ) (ξ v : H) :
@@ -1470,11 +1470,11 @@ theorem sum_sq_translate {H : Type} [NormedAddCommGroup H] [InnerProductSpace �
 theorem kMaj : CompanionTheory.RgExh.Dec.N.S.KMaj := by
   intro n ε H _ _ _ σ D E hK hU hS u ξ
   obtain ⟨S, hfd, huS, hst⟩ := (hK.mem u).1 u.2
-  haveI := hfd
+  have := hfd
   let b := stdOrthonormalBasis ℂ S
   let c : Formalism.REAL.UJ ε → Fin (Module.finrank ℂ S) → ℂ := fun g i => ⟪ξ, σ (Formalism.MainNotions.S.umat g) (b i : H)⟫_ℂ
   have hcm : ∀ i, Measurable fun g => ‖c g i‖ₑ ^ 2 := fun i =>
-    (continuous_coef hU ξ (b i : H)).measurable.enorm.pow_const 2
+    (continuous_coef hU ξ (b i : H)).measurable.eNorm.pow_const 2
   refine ⟨fun g => ENNReal.ofReal (‖(u : H)‖ ^ 2) * ∑ i, ‖c g i‖ₑ ^ 2, ?_, ?_, ?_, ?_⟩
   · exact (Finset.measurable_sum _ fun i _ => hcm i).const_mul _
   · intro g k hk
@@ -1492,7 +1492,7 @@ theorem kMaj : CompanionTheory.RgExh.Dec.N.S.KMaj := by
         map_smul' := fun c x => by simp [inner_smul_right] }
     have h := sq_le_of_basis l b ⟨(u : H), huS⟩
     show ‖l ⟨(u : H), huS⟩‖ₑ ^ 2 ≤ ENNReal.ofReal (‖(u : H)‖ ^ 2) * ∑ i, ‖l (b i)‖ₑ ^ 2
-    rw [sum_enorm_sq, ← ENNReal.ofReal_mul (by positivity), ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [sum_enorm_sq, ← ENNReal.ofReal_mul (by positivity), ← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
     exact ENNReal.ofReal_le_ofReal h
 
 end GlobalTheory.CompanionTheory.RgKMaj

@@ -146,7 +146,7 @@ theorem exists_approx_matrix (Q : HeightOneSpectrum (𝓞 E)) {n : ℕ}
         Valued.v ((h * X - 1) i j) < 1}) :=
       isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
         hb.preimage ((hc.sub continuous_const).matrix_elem i j)
-    simp only [← Set.setOf_forall] at this
+    simp only [← Set.ofPred_forall] at this
     exact this
   obtain ⟨X, h1, h2⟩ := hd.exists_mem_open hU ⟨g, ⟨fun i j => by rw [hg]; simp, by rw [hg]; simp⟩⟩
   refine ⟨X, fun i j => ?_, ?_⟩
@@ -247,7 +247,7 @@ theorem mem_span_detSet_iff : ∀ (E : Type) [Field E] [NumberField E] (n : ℕ)
         exact hg0 hdv.symm
       obtain ⟨s, hsQ, hs⟩ := exists_clear Q (algebraMap E _ (x / d)) (by
         rw [comp_alg, val_alg, map_div₀, hdv]
-        exact (div_le_one₀ (zero_lt_iff.2 hg0)).2 (hx Q))
+        exact (div_le_one₀ (pos_iff_ne_zero.2 hg0)).2 (hx Q))
       obtain ⟨a, ha⟩ := HeightOneSpectrum.mem_integers_of_valuation_le_one (R := 𝓞 E) E
         ((s : E) * (x / d)) (fun P => by
           have := hs P

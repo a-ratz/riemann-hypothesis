@@ -304,7 +304,7 @@ theorem Iso.frameOK (I : Iso A B) (h : FrameOK A) : FrameOK B := by
       simp [cnorm]
     have hz := normAt_eq_zero A.b A.X v (h v) hy
     simpa using hz
-  haveI hι : IsEmpty B.ι := ⟨fun i => B.b.ne_zero i (h0 _)⟩
+  have hι : IsEmpty B.ι := ⟨fun i => B.b.ne_zero i (h0 _)⟩
   apply hv
   rw [Matrix.det_isEmpty]
   exact isUnit_one
@@ -795,7 +795,7 @@ theorem frameOK_of_emb (A B : HLat K) (ψ : A.V →ₗ[K] B.V) (hB : FrameOK B)
       rw [Matrix.nonsing_inv_apply_not_isUnit _ hv, Matrix.zero_mulVec]
       simp [cnorm]
     exact hψ (by rw [normAt_eq_zero B.b B.X v (hB v) hy, map_zero])
-  haveI hι : IsEmpty A.ι := ⟨fun i => A.b.ne_zero i (h0 _)⟩
+  have hι : IsEmpty A.ι := ⟨fun i => A.b.ne_zero i (h0 _)⟩
   apply hv
   rw [Matrix.det_isEmpty]
   exact isUnit_one

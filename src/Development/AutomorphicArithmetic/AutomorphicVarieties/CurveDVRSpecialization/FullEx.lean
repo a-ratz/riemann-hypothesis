@@ -124,7 +124,7 @@ private theorem irr_cover {G E κ : Type} [Field κ] [AddCommGroup E] [Module κ
         rw [← he] at hg
         exact hg.2
       choose C hC1 hC2 hC3 using fun B : T => ih _ (hlt B)
-      haveI : Finite T := hT
+      have : Finite T := hT
       refine ⟨⋃ B, C B, Set.finite_iUnion hC1, ?_, ?_⟩
       · intro A hA
         obtain ⟨B, hB⟩ := Set.mem_iUnion.1 hA
@@ -161,7 +161,7 @@ private theorem coset_in_member {G E κ : Type} [Group G] [Field κ] [AddCommGro
   have hsub : ∀ A, Irr κ φ A → ∃ D ∈ C, A ⊆ D := by
     intro A hA
     choose W hW using fun D : C => (hC2 D D.2).1
-    haveI : Finite C := hC1
+    have : Finite C := hC1
     obtain ⟨_, ⟨D, rfl⟩, hD⟩ := hA.2 (Set.range W) (Set.finite_range _) (by
       intro g _
       obtain ⟨D, hD, hg⟩ := hC3 g trivial
@@ -348,24 +348,24 @@ private theorem comb {G ι : Type} [Group G] [Fintype ι] (R : G → ι → ι �
     have hsub : T b ⊆ T x := by
       rintro ⟨t, i, j⟩ hs
       cases t
-      · simp only [T, Finset.mem_filter, Finset.mem_univ, true_and, Bool.false_eq_true, if_false] at hs ⊢
+      · simp only [T, Finset.mem_filter, Finset.mem_univ, true_and, Bool.false_eq_true, ite_false] at hs ⊢
         exact hx2 i i j (hcP.2 i) hs
-      · simp only [T, Finset.mem_filter, Finset.mem_univ, true_and, if_true] at hs ⊢
+      · simp only [T, Finset.mem_filter, Finset.mem_univ, true_and, ite_true] at hs ⊢
         exact hx1 i j j hs (hcP.1 j)
     have heq : T b = T x := Finset.eq_of_subset_of_card_le hsub (hmax x hPx)
     constructor
     · intro i j hij
       have : ((true, i, j) : Bool × ι × ι) ∈ T x := by
-        simp only [T, Finset.mem_filter, Finset.mem_univ, true_and, if_true]
+        simp only [T, Finset.mem_filter, Finset.mem_univ, true_and, ite_true]
         exact hx1 i i j (hb.1 i) hij
       rw [← heq] at this
-      simpa only [T, Finset.mem_filter, Finset.mem_univ, true_and, if_true] using this
+      simpa only [T, Finset.mem_filter, Finset.mem_univ, true_and, ite_true] using this
     · intro i j hij
       have : ((false, i, j) : Bool × ι × ι) ∈ T x := by
-        simp only [T, Finset.mem_filter, Finset.mem_univ, true_and, Bool.false_eq_true, if_false]
+        simp only [T, Finset.mem_filter, Finset.mem_univ, true_and, Bool.false_eq_true, ite_false]
         exact hx2 i j j hij (hb.2 j)
       rw [← heq] at this
-      simpa only [T, Finset.mem_filter, Finset.mem_univ, true_and, Bool.false_eq_true, if_false] using this
+      simpa only [T, Finset.mem_filter, Finset.mem_univ, true_and, Bool.false_eq_true, ite_false] using this
   refine ⟨b, hb.1, ?_, ?_⟩
   · have := (key b⁻¹ ⟨hb.2, by rw [inv_inv]; exact hb.1⟩).2
     rwa [inv_inv] at this

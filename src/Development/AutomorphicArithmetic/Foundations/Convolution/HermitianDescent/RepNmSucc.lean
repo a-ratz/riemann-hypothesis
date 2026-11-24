@@ -91,7 +91,7 @@ end
 
 theorem nmRep : NmRep := by
   intro k R _ _ _ _ σ q hσ n δ γ hsep hcp
-  haveI : Module.Finite k R := (galBase k R k σ q hσ).1
+  have : Module.Finite k R := (galBase k R k σ q hσ).1
   have hs : ((nm σ q δ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R).charpoly.Separable := by
     have h := hsep.map (f := algebraMap k R)
     rwa [← hcp] at h

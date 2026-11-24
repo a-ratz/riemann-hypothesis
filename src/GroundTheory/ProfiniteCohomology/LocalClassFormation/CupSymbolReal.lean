@@ -305,7 +305,7 @@ theorem quadraticChar_injective (h2 : Module.finrank F Ω ≤ 2) :
   by_contra hne
   have h1 : Additive.toMul x ≠ 1 := fun h => hne (by rw [show x = Additive.ofMul 1 from h ▸ rfl, ofMul_one])
   change (if Additive.toMul x = 1 then 0 else QZ.mk (1 / 2)) = 0 at hx
-  rw [if_neg h1] at hx
+  rw [ite_eq_right h1] at hx
   exact QZ.mk_half_ne_zero hx
 
 noncomputable def quadraticInv (h2 : Module.finrank F Ω ≤ 2)

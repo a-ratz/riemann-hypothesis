@@ -110,7 +110,7 @@ lemma character_convolution_eq {N N' M : ℕ} (χ : DirichletCharacter ℂ N) (�
   have hi0 : i ≠ 0 := (Nat.pos_of_mem_divisors hi).ne'
   have hni : n / i ≠ 0 :=
     (Nat.div_pos (Nat.le_of_dvd (Nat.pos_of_ne_zero hn) hdvd) (Nat.pos_of_ne_zero hi0)).ne'
-  simp only [toArithmeticFunction, coe_mk, hi0, hni, if_false]
+  simp only [toArithmeticFunction, coe_mk, hi0, hni, ite_false]
   rw [hψ i]
   calc χ' ((n / i : ℕ) : ZMod N') * (χ (i : ZMod N) * χ' (i : ZMod N'))
       = (χ' ((n / i : ℕ) : ZMod N') * χ' (i : ZMod N')) * χ (i : ZMod N) := by ring
@@ -662,7 +662,7 @@ lemma two_sub_pow_le_exp {A P σ : ℝ} {M : ℕ} (hA : 0 ≤ A) (hσ1 : 7 / 8 �
     have := Real.add_one_le_exp (1 - σ); linarith
   have hb0 : 0 ≤ 2 - σ := by linarith
   calc (2 - σ) ^ M ≤ Real.exp (1 - σ) ^ M := pow_le_pow_left₀ hb0 hb M
-    _ = Real.exp (M * (1 - σ)) := by rw [← Real.exp_nat_mul]
+    _ = Real.exp (M * (1 - σ)) := by rw [← Real.exp_natCast_mul]
     _ ≤ Real.exp (A + P * (1 - σ)) := by
         apply Real.exp_le_exp.mpr
         nlinarith [mul_le_mul_of_nonneg_right hM h1.le, mul_nonneg hA (by linarith : (0 : ℝ) ≤ σ)]
@@ -880,7 +880,7 @@ lemma real_character_lfunction_im_eq_zero {q : ℕ} [NeZero q] (χ : DirichletCh
 lemma lfunction_tendsto_one_atTop {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) :
     Tendsto (fun x : ℝ ↦ DirichletCharacter.LFunction χ x) atTop (𝓝 1) := by
   have ha : LSeries.abscissaOfAbsConv (fun n : ℕ => χ n) < ⊤ := by
-    rw [DirichletCharacter.absicssaOfAbsConv_eq_one (NeZero.ne q) χ]
+    rw [DirichletCharacter.abscissaOfAbsConv_eq_one (NeZero.ne q) χ]
     exact EReal.coe_lt_top 1
   have ht := LSeries.tendsto_atTop ha
   simp only [Nat.cast_one, map_one] at ht
@@ -964,7 +964,7 @@ theorem changeLevel_eq_of_agree_coprime {q₁ q : ℕ} [NeZero q₁] [NeZero q] 
     (h : ∀ n : ℕ, Nat.Coprime n (q₁ * q) → χ₁ (n : ZMod q₁) = χ (n : ZMod q)) :
     DirichletCharacter.changeLevel (dvd_mul_right q₁ q) χ₁ =
       DirichletCharacter.changeLevel (dvd_mul_left q q₁) χ := by
-  haveI : NeZero (q₁ * q) := ⟨mul_ne_zero (NeZero.ne q₁) (NeZero.ne q)⟩
+  have : NeZero (q₁ * q) := ⟨mul_ne_zero (NeZero.ne q₁) (NeZero.ne q)⟩
   ext a
   rw [DirichletCharacter.changeLevel_eq_cast_of_dvd, DirichletCharacter.changeLevel_eq_cast_of_dvd,
     ZMod.cast_eq_val, ZMod.cast_eq_val]
@@ -1015,7 +1015,7 @@ theorem prod_one_add_mul_one_sub_le_one (S : Finset ℕ) (hS : ∀ p ∈ S, 2 �
 
 theorem lfunction_one_same_character : SameCharacterLFunctionOne := by
   intro q₁ q _ _ χ₁ χ hχ₁ hχ h
-  haveI : NeZero (q₁ * q) := ⟨mul_ne_zero (NeZero.ne q₁) (NeZero.ne q)⟩
+  have : NeZero (q₁ * q) := ⟨mul_ne_zero (NeZero.ne q₁) (NeZero.ne q)⟩
   have hS : ∀ p ∈ (q₁ * q).primeFactors, 2 ≤ p := fun p hp =>
     (Nat.prime_of_mem_primeFactors hp).two_le
   have hL₁ := DirichletCharacter.LFunction_changeLevel (dvd_mul_right q₁ q) χ₁ (s := 1)

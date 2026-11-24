@@ -58,8 +58,8 @@ namespace GlobalTheory.LKGeo.LiftSys
 theorem exists_lift_sys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (h₀ : Module.End (AfP p) (AfP p ⊗[ℚ] VQ D)), (∀ v ∈ LaHat D, h₀ v ∈ LaHat D) → ∃ h : ℕ → D.La →+ D.La, ∀ n : ℕ, 0 < n → n.Coprime p → ∀ x, ∃ w ∈ LaHat D, h₀ (inAf D x) = inAf D (h n x) + n • w := by
   intro p _ D h₀ hh
   classical
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let Ix := Module.Free.ChooseBasisIndex ℤ D.La
   let b : Module.Basis Ix ℤ D.La := Module.Free.chooseBasis ℤ D.La
   let iA : D.La →+ AfP p ⊗[ℚ] VQ D :=
@@ -75,7 +75,7 @@ theorem exists_lift_sys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (h₀ : Mod
   refine ⟨h, fun n hn hnp x => ?_⟩
   have hx : x ∈ Submodule.span ℤ (Set.range b) := by rw [b.span_eq]; trivial
   have hh' : h n = (b.constr ℤ (fun i => (key n hn hnp i).choose)).toAddMonoidHom := by
-    simp only [h, dif_pos (And.intro hn hnp)]
+    simp only [h, dite_eq_left (And.intro hn hnp)]
   induction hx using Submodule.span_induction with
   | mem y hy =>
     obtain ⟨i, rfl⟩ := hy

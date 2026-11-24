@@ -91,7 +91,7 @@ theorem det_one_add_smul_blk_mem {B : Type} [CommRing B] {n : ℕ} (S : Subring 
     set u : Matrix (Fin n) (Fin n) B := ((w⁻¹ : Aˣ) : A).1 with hu
     have huA : u ∈ A := ((w⁻¹ : Aˣ) : A).2
     have hw' : ((w : A) : Matrix (Fin n) (Fin n) B) = 1 + e • Θ 0 0 := by rw [hw]; rfl
-    letI : Invertible (1 + e • Θ 0 0) :=
+    let : Invertible (1 + e • Θ 0 0) :=
       ⟨u, by rw [← hw', hu, ← Subring.coe_mul]; simp, by rw [← hw', hu, ← Subring.coe_mul]; simp⟩
     have hinv : ⅟(1 + e • Θ 0 0) = u := rfl
     let Bm : Matrix (Fin n) (Fin g × Fin n) B := Matrix.of fun a qb => Θ 0 qb.1.succ a qb.2

@@ -84,7 +84,7 @@ private theorem rot_deriv : HasDerivAt (fun t : ℝ => TR.toL (Unitary.toUnits (
 private theorem lie_mem [IsTotallyReal F] (U : Submodule ℂ (TR.Sm F 2)) [FiniteDimensional ℂ U]
     (hU : ∀ k, ∀ ψ ∈ U, TR.cptRep F 2 k ψ ∈ U) (ψ : TR.Sm F 2) (hψ : ψ ∈ U) : TR.lie F 2 X0 ψ ∈ U := by
   let U' : Submodule ℂ (GA F 2 → ℂ) := U.map (TR.Sm F 2).subtype
-  have hcl : IsClosed (U' : Set (GA F 2 → ℂ)) := U'.closed_of_finiteDimensional
+  have hcl : IsClosed (U' : Set (GA F 2 → ℂ)) := U'.isClosed_of_finiteDimensional
   have key : ∀ g, HasDerivAt (fun t => (TR.cptRep F 2 (rot t) ψ).1 g) ((TR.lie F 2 X0 ψ).1 g) 0 := fun g =>
     TR.hasDerivAt_curve ψ g (fun t => Unitary.toUnits (rot t)) X0 (by rw [rot_zero, map_one]) rot_deriv
   have hm : (TR.lie F 2 X0 ψ).1 ∈ U' := by

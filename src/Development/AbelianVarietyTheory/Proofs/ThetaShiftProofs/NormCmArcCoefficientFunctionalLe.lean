@@ -150,7 +150,7 @@ theorem le_of_invBl {f : (ArcLt Dw → ℂ) → ℝ} (hf : Continuous f) (ρ : �
   have e1 : ∀ᶠ t : ℝ in nhdsWithin 0 (Set.Ioi 0), ∀ τ, (Q τ).eval (t : ℂ) ≠ 0 := by
     refine Filter.eventually_all.2 fun τ => ?_
     have hfin : {t : ℝ | (Q τ).IsRoot (t : ℂ)}.Finite :=
-      (Polynomial.finite_setOf_isRoot (hQ0 τ)).preimage Complex.ofReal_injective.injOn
+      (Polynomial.finite_setOfPred_isRoot (hQ0 τ)).preimage Complex.ofReal_injective.injOn
     exact ((nhdsGT_le_nhdsNE 0).trans (nhdsNE_le_cofinite 0)) hfin.compl_mem_cofinite
   filter_upwards [e1, Ioo_mem_nhdsGT (zero_lt_one (α := ℝ))] with t h1 h2
   refine h _ (fun τ => ?_) fun v => ?_
@@ -244,7 +244,7 @@ theorem const_le (r : ℕ) {La c₁ T C : ℝ} (hLa : 1 ≤ La) (hT : 0 < T) (hC
     calc rdE E * max 1 c₁ ≤ Real.exp (Real.log (rdE E)) * Real.exp (Real.log (max 1 c₁)) := by
           gcongr <;> exact Real.le_exp_log _
       _ ≤ e ^ 2 := by
-          rw [← Real.exp_add, he, ← Real.exp_nat_mul, archP]
+          rw [← Real.exp_add, he, ← Real.exp_natCast_mul, archP]
           exact Real.exp_le_exp.2 (by push_cast; linarith)
   have b1 : (C * (max 1 c₁) ^ fdeg E) ^ ((n : ℝ) / 2) ≤ (T * e ^ fdeg E) ^ n := by
     refine hsq _ _ _ (by positivity) (by positivity) ?_
@@ -262,7 +262,7 @@ theorem const_le (r : ℕ) {La c₁ T C : ℝ} (hLa : 1 ≤ La) (hT : 0 < T) (hC
     Real.rpow_nonneg (h0 τ i) _) (by positivity)).trans (le_of_eq ?_)
   have : archP E r La c₁ * ((absA Dw a : ℝ) + (fdeg E : ℝ) * n) =
       ((absA Dw a + fdeg E * n : ℕ) : ℝ) * archP E r La c₁ := by push_cast; ring
-  rw [this, Real.exp_nat_mul, ← he]
+  rw [this, Real.exp_natCast_mul, ← he]
   ring
 
 theorem num_le {A u K e e' J S Lf N B : ℝ} (hid : A * u = K * (e * u * J)) (hu : u ≠ 0) (hJ : J ≤ S / Lf / N)
@@ -298,9 +298,9 @@ theorem norm_cfOf_le : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have h1 := hK.laws
   have h2 := hK.laws2
   have hev := hK.ev E H Dw l Xo c
-  letI : Algebra (FractionRing ℂ) ℂ := FractionRing.liftAlgebra ℂ ℂ
-  haveI : IsScalarTower ℂ (FractionRing ℂ) ℂ := FractionRing.isScalarTower_liftAlgebra ℂ ℂ
-  letI : Algebra c.F ℂ⸨X⸩ := (ArcId.cstL.comp (em.comp (algebraMap c.F K₁))).toAlgebra
+  let : Algebra (FractionRing ℂ) ℂ := FractionRing.liftAlgebra ℂ ℂ
+  have : IsScalarTower ℂ (FractionRing ℂ) ℂ := FractionRing.isScalarTower_liftAlgebra ℂ ℂ
+  let : Algebra c.F ℂ⸨X⸩ := (ArcId.cstL.comp (em.comp (algebraMap c.F K₁))).toAlgebra
   obtain ⟨Uw⟩ := _root_.GlobalTheory.ArcQ.nonempty_unfWit_of_isUnf E H Dw l Xo c _ r U hunf
   have hth : ThNZ d.th := s.th_nz
   obtain ⟨⟨a₁, p, hp⟩, hbc⟩ := GlobalTheory.ArcQBC.baseChanges h1 h2 hK.ubc hK.laws5 E H Dw l Xo c _ _ d.Y K₁ ℂ _

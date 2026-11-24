@@ -169,10 +169,10 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem two_ne_zero_odd_prime_field {G : Type} [Field G] {p : ℕ} (hp : p.Prime) (hG : Nat.card G = p) (h2 : p ≠ 2) :
     (2 : G) ≠ 0 := by
-  haveI : Finite G := Nat.finite_of_card_ne_zero (by rw [hG]; exact hp.ne_zero)
-  haveI : Fintype G := Fintype.ofFinite G
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : CharP G p := charP_of_card_eq_prime (by rw [← Nat.card_eq_fintype_card]; exact hG)
+  have : Finite G := Nat.finite_of_card_ne_zero (by rw [hG]; exact hp.ne_zero)
+  have : Fintype G := Fintype.ofFinite G
+  have : Fact p.Prime := ⟨hp⟩
+  have : CharP G p := charP_of_card_eq_prime (by rw [← Nat.card_eq_fintype_card]; exact hG)
   intro h
   have h' : ((2 : ℕ) : G) = 0 := by exact_mod_cast h
   rw [CharP.cast_eq_zero_iff G p] at h'
@@ -255,7 +255,7 @@ section Tied
 variable {D : D7} {u : D.what₂.Word}
 
 theorem forms_involution_eq_host_conj (x : D.host.E) : sigD D x = D.host.conj x := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   exact bridge_star_holds D.R D.host x
 
 theorem host_conj_involutive (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
@@ -276,7 +276,7 @@ theorem splitAtT_of_tied (A : AtTTied u) : SplitAtT A := by
     rw [hαE, map_sub, forms_involution_eq_host_conj, forms_involution_eq_host_conj, host_conj_involutive]
     ring
   have hfix : (α : D.host.E) * α ∈ (algebraMap D.host.F D.host.E).range := by
-    letI := D.host.cmStar
+    let := D.host.cmStar
     rw [← D.sp.cm.fixed]
     have h1 : star (α : D.host.E) = -(α : D.host.E) := hσα
     rw [star_mul, h1]

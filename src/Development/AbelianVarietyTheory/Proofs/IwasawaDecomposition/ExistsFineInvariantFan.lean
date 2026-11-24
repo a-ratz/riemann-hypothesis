@@ -547,8 +547,8 @@ theorem dominates : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     intro x; by_cases hx : x = 0
     · simp [hx]
     · exact (hgpos x hx).le
-  haveI : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
-  haveI : Module.IsTorsionFree ℤ X := ⟨fun c hc x y hxy => by
+  have : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
+  have : Module.IsTorsionFree ℤ X := ⟨fun c hc x y hxy => by
     change c • x = c • y at hxy
     have hc0 : c ≠ 0 := hc.ne_zero
     have h0 : c • (x - y) = 0 := by rw [smul_sub]; exact sub_eq_zero.mpr hxy
@@ -967,7 +967,7 @@ theorem resolution : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     intro φ lab hn hP hT hL hS
     by_cases h2 : 2 ≤ maxMult H.bar q φ
     · obtain ⟨φ', lab', hP', hT', hL', hS', hsub, hlt⟩ :=
-        _root_.GlobalTheory.PolFan.exists_round_lt_maxMult E H q φ lab hD hP hT hL hS (hn ▸ ENat.coe_lt_top n) h2
+        _root_.GlobalTheory.PolFan.exists_round_lt_maxMult E H q φ lab hD hP hT hL hS (hn ▸ ENat.natCast_lt_top n) h2
       obtain ⟨k, hk⟩ := ENat.ne_top_iff_exists.1 (hlt.trans_le le_top).ne
       have hkn : k < n := by
         rw [← hk, hn] at hlt; exact_mod_cast hlt
@@ -1192,8 +1192,8 @@ theorem GlobalTheory.PolFan.linearOn_and_isFine_of_linearOn_baseFun (E : Type) [
     (hX : Module.finrank (𝓞 E) X ≤ q) (m : ℕ) (γ : Fin m → LinearMap.BilinForm ℤ X) (hb : ∀ i, γ i ∈ balForms H.bar X)
     (hp : ∀ i y, 0 ≤ γ i y y) (hl : (baseFun (𝓞 E) D φs 𝓜).LinearOn γ) :
     (restr (𝓞 E) φs).LinearOn γ ∧ ∀ M ∈ 𝓜, IsFine (M + 1) γ := by
-  haveI : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
-  haveI : Module.Projective ℤ X := by
+  have : Module.Finite ℤ X := Module.Finite.trans (𝓞 E) X
+  have : Module.Projective ℤ X := by
     obtain ⟨n, r, hr⟩ := Module.Finite.exists_fin' (𝓞 E) X
     obtain ⟨h, hh⟩ := Module.projective_lifting_property r LinearMap.id hr
     exact Module.Projective.of_split (h.restrictScalars ℤ) (r.restrictScalars ℤ)
@@ -1321,7 +1321,7 @@ theorem minVal_twist (σ : 𝓞 E ≃+* 𝓞 E) (n : ℕ) (B : (Fin n → 𝓞 E
   simp only [InvFun.minVal]
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq, tw_zero]
+  simp only [Set.mem_ofPred_eq, tw_zero]
   constructor
   · rintro ⟨⟨y, h⟩, h'⟩
     exact ⟨⟨tw σ y, h⟩, h'⟩
@@ -1454,10 +1454,10 @@ def extFun (H : Host E) (q : ℕ) (φ : InvFun (𝓞 E)) : InvFun (𝓞 E) where
 variable {φ : InvFun (𝓞 E)}
 
 theorem extFun_of {B : (Fin n → 𝓞 E) → (Fin n → 𝓞 E) → ℝ} (h : IsDomT H q n B) :
-    (extFun H q φ).toFun n B = φ.toFun n B := if_pos h
+    (extFun H q φ).toFun n B = φ.toFun n B := ite_eq_left h
 
 theorem extFun_of_not {B : (Fin n → 𝓞 E) → (Fin n → 𝓞 E) → ℝ} (h : ¬ IsDomT H q n B) :
-    (extFun H q φ).toFun n B = (InvFun.minVal (𝓞 E)).toFun n B := if_neg h
+    (extFun H q φ).toFun n B = (InvFun.minVal (𝓞 E)).toFun n B := ite_eq_right h
 
 end Dom
 

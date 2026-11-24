@@ -77,10 +77,10 @@ theorem cfg_aeff (D : D7) (u : D.what₂.Word) (τ : D.what₂.Tau) : (cfgOf D �
   rw [hv, hD, ha]
   by_cases h : IsTop D τ
   · have ht : (cfgOf D τ).top = true := (cfg_top_iff D τ).2 h
-    rw [if_pos ht, if_pos h]
+    rw [ite_eq_left ht, ite_eq_left h]
     rfl
   · have ht : (cfgOf D τ).top = false := (cfg_top_false_iff D τ).2 h
-    rw [if_neg (by simp [ht]), if_neg h]
+    rw [ite_eq_right (by simp [ht]), ite_eq_right h]
 
 theorem deOf_ne (D : D7) (u u' : D.what₂.Word) (τ : D.what₂.Tau)
     (h5 : ∀ w : D.what₂.Word, ¬ IsTop D τ → uOne D w τ D.R.k = vOne D τ (D.R.k - 1) - 1 / 2)
@@ -92,7 +92,7 @@ theorem deOf_ne (D : D7) (u u' : D.what₂.Word) (τ : D.what₂.Tau)
   rw [← cfg_u D u τ (h5 u) (l + 1) (by omega) (by omega), ← cfg_u D u' τ (h5 u') (l + 1) (by omega) (by omega)]
   have a1 : l + 1 ≠ 1 := by omega
   have a2 : l + 1 ≠ (cfgOf D τ).k := by rw [hk]; omega
-  simp only [Formalism.FourierDecayAlt.Sz.Cfg.u, a1, a2, if_false, Nat.add_sub_cancel, heq]
+  simp only [Formalism.FourierDecayAlt.Sz.Cfg.u, a1, a2, ite_false, Nat.add_sub_cancel, heq]
 
 theorem Tr_pos (D : D7) (u : D.what₂.Word) : 0 < Tr D u := by
   unfold Tr

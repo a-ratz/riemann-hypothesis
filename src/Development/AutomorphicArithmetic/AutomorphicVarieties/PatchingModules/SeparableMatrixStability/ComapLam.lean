@@ -93,7 +93,7 @@ private theorem mem_CH {n : ℕ} {A G : Type} [CommRing A] [Group G] (D : GDet n
     z ∈ D.CH ↔ ∃ (m : ℕ) (y : Fin m → MonoidAlgebra A G) (β : Fin m →₀ ℕ),
       z = MonoidAlgebra.map (MvPolynomial.coeffAddMonoidHom β) (Polynomial.aeval (GDet.gen y)
         ((D.map (MvPolynomial.C : A →+* MvPolynomial (Fin m) A)).chi (GDet.gen y))) := by
-  simp only [GDet.CH, Set.mem_setOf_eq]
+  simp only [GDet.CH, Set.mem_ofPred_eq]
   refine exists_congr fun m => exists_congr fun y => exists_congr fun β => ?_
   constructor
   · intro h

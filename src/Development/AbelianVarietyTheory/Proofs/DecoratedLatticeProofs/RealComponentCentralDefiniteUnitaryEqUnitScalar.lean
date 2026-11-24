@@ -114,7 +114,7 @@ theorem scalar_of_comm {n : ℕ} (G s B A : Matrix (Fin n) (Fin n) ℂ) (p : ℕ
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · exact ⟨1, norm_one, Subsingleton.elim _ _⟩
   · refine ⟨ζ, ?_, hAζ⟩
-    haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+    have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
     have hG0 : G ≠ 0 := fun e => hG (by rw [e, Matrix.det_zero])
     rw [hAζ, Matrix.conjTranspose_smul, Matrix.conjTranspose_one, Matrix.smul_mul, Matrix.one_mul, Matrix.mul_smul,
       Matrix.mul_one, smul_smul] at hA

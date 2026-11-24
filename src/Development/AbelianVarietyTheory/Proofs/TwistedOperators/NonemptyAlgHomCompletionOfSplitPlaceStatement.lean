@@ -61,7 +61,7 @@ namespace GlobalTheory.SplitPlaceEmb
 theorem not_isField_of_idem {A : Type} [CommRing A] (σ : A →+* A) {z : A} (hz : z * z = z) (h : z + σ z = 1) :
     ¬ IsField A := by
   intro hf
-  haveI := hf.isDomain
+  have := hf.isDomain
   have h0 : z * (z - 1) = 0 := by rw [mul_sub, hz, mul_one, sub_self]
   rcases mul_eq_zero.1 h0 with h' | h'
   · rw [h', σ.map_zero, zero_add] at h

@@ -96,9 +96,9 @@ private theorem crystalline_of_theta_twist_gl3 {l : ℕ} [Fact l.Prime] {H : Typ
     (φ : H →* GQ l) (hφ : Topology.IsOpenEmbedding φ) (E : FinExt l) (ρ : H →* GL (Fin 3) ↥E.1) (hρ : Continuous ρ)
     (h : Loc.IsCr φ (Loc.colRep ρ)) :
     Loc.IsCr φ (Loc.colRep ((thetaAut 3 ↥E.1).toMonoidHom.comp ρ)) := by
-  haveI := E.2
-  haveI : IsModuleTopology ℚ_[l] ↥E.1 := isModuleTopologyOfFiniteDimensional
-  haveI : IsModuleTopology ℚ_[l] (Fin 3 → ↥E.1) := isModuleTopologyOfFiniteDimensional
+  have := E.2
+  have : IsModuleTopology ℚ_[l] ↥E.1 := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology ℚ_[l] (Fin 3 → ↥E.1) := isModuleTopologyOfFiniteDimensional
   have h0 : Loc.IsCr φ (Loc.chRep (1 : H →* (↥E.1)ˣ)) :=
     Loc.crUnr φ hφ _ (by
       have : ∀ p : H × ↥E.1, Loc.chRep (1 : H →* (↥E.1)ˣ) p.1 p.2 = p.2 := fun p => by simp [Loc.chRep]
@@ -139,7 +139,7 @@ private theorem isAlgClosure_of_number_field (Ω : Type) [Field Ω] [CharZero Ω
   ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
 
 private theorem continuous_rho_of_point (h : D.IsPt U g₁ r) : Continuous (D.rhoK r h.mult) := by
-  haveI := isAlgClosure_of_number_field Ω K
+  have := isAlgClosure_of_number_field Ω K
   exact continuous_of_matrix_units _ (h.cont.comp (galEmbTop ℚ K Ω).1.continuous)
 
 private theorem exists_local_crystalline_gl3_model (hI : CohInp) (h : D.IsPt U g₁ r) :
@@ -147,13 +147,13 @@ private theorem exists_local_crystalline_gl3_model (hI : CohInp) (h : D.IsPt U g
       (∀ g, GeneralLinearGroup.map (E.1.val : ↥E.1 →+* PadicAlgCl l) (ρ g) = (r (D.ι g)).left) ∧
       Loc.IsCr D.loc.HL.subtype (Loc.colRep ρ) := by
   obtain ⟨f, hf, hker, hpush⟩ := h.loc
-  haveI : IsLocalRing c.O := c.dvr.toIsLocalRing
-  haveI := (dvrFacts l c.O).2.2.2.1
+  have : IsLocalRing c.O := c.dvr.toIsLocalRing
+  have := (dvrFacts l c.O).2.2.2.1
   obtain ⟨E, hE⟩ := Loc.ptFin (l := l) U.R ((TrivSqZeroExt.inlAlgHom c.O _ _).comp f) hf
   have hE' : ∀ a, f a ∈ E.1 := fun a => (hE a).1
-  haveI := E.2
-  letI : Algebra c.O ↥E.1 := ((algebraMap c.O (PadicAlgCl l)).codRestrict E.1 fun a => f.commutes a ▸ hE' _).toAlgebra
-  haveI : IsScalarTower ℤ_[l] c.O ↥E.1 := IsScalarTower.of_algebraMap_eq fun _ => Subtype.ext rfl
+  have := E.2
+  let : Algebra c.O ↥E.1 := ((algebraMap c.O (PadicAlgCl l)).codRestrict E.1 fun a => f.commutes a ▸ hE' _).toAlgebra
+  have : IsScalarTower ℤ_[l] c.O ↥E.1 := IsScalarTower.of_algebraMap_eq fun _ => Subtype.ext rfl
   let f' : U.R →ₐ[c.O] ↥E.1 :=
     { (f : U.R →+* PadicAlgCl l).codRestrict E.1 hE' with commutes' := fun a => Subtype.ext (f.commutes a) }
   obtain ⟨-, -, ρ, h1, h2⟩ := Loc.rtPoints hI.loc D.loc U ↥E.1 (push f' U.r.hom)
@@ -164,7 +164,7 @@ private theorem exists_local_crystalline_gl3_model (hI : CohInp) (h : D.IsPt U g
 
 private theorem potentially_crystalline_conjugate_place (hI : CohInp) (h : D.IsPt U g₁ r) (g : G ℚ Ω) (hg : g = 1 ∨ g = D.cc) :
     Af.PotCrysAt (D.rhoK r h.mult) (Loc.placeJ (D.j.comp (g : Ω →+* Ω))) := by
-  haveI := isAlgClosure_of_number_field Ω K
+  have := isAlgClosure_of_number_field Ω K
   obtain ⟨E, ρ, h1, h2⟩ := exists_local_crystalline_gl3_model D hI h
   obtain ⟨-, hcc, -, hη, -⟩ := dat_facts D
   have hop : IsOpen (D.loc.HL : Set (GQ l)) :=
@@ -188,7 +188,7 @@ private theorem potentially_crystalline_conjugate_place (hI : CohInp) (h : D.IsP
   have hρ : Continuous ρ := by
     refine continuous_of_matrix_units _ (continuous_pi fun a => continuous_pi fun b => continuous_induced_rng.2 ?_)
     have h3 : Continuous fun s : ↥D.loc.HL => (r (D.ι s)).mat a b :=
-      (h.cont.comp (D.ι_cont.comp continuous_subtype_val)).matrix_elem a b
+      (h.cont.comp (D.ι_cont.comp continuous_subtypeVal)).matrix_elem a b
     exact h3.congr fun s => by rw [GG.mat, ← h1]; rfl
   rcases hg with rfl | rfl
   · refine Loc.potCrysOf _ _ ψ' hφ hspec _ (continuous_rho_of_point D h) E ρ (fun s a b => ?_) h2
@@ -201,12 +201,12 @@ private theorem potentially_crystalline_conjugate_place (hI : CohInp) (h : D.IsP
 
 private theorem exists_place_over_conjugate_embedding (w : HeightOneSpectrum (𝓞 K)) (hw : ((l : ℕ) : 𝓞 K) ∈ w.asIdeal) :
     ∃ g : G ℚ Ω, (g = 1 ∨ g = D.cc) ∧ IsPlaceOver (Loc.placeJ (D.j.comp (g : Ω →+* Ω))) w := by
-  haveI := isAlgClosure_of_number_field Ω K
+  have := isAlgClosure_of_number_field Ω K
   obtain ⟨-, hcc, -⟩ := dat_facts D
   obtain ⟨j, hj⟩ := (Loc.decEmb (F := K) (Ω := Ω) (v := l)).1 _ w (isPlaceOver_placeOf Ω w) hw
   obtain ⟨g, hg⟩ : ∃ g : G ℚ Ω, ∀ x, j x = D.j (g x) := by
-    letI : Algebra Ω (Om l) := D.j.toAlgebra
-    haveI : IsScalarTower ℚ Ω (Om l) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+    let : Algebra Ω (Om l) := D.j.toAlgebra
+    have : IsScalarTower ℚ Ω (Om l) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
     exact ⟨AlgHom.restrictNormal' j.toRatAlgHom Ω, fun x => (AlgHom.restrictNormal_commutes j.toRatAlgHom Ω x).symm⟩
   have key : ∀ g' : G ℚ Ω, D.η g' = D.η g → IsPlaceOver (Loc.placeJ (D.j.comp (g' : Ω →+* Ω))) w := by
     intro g' hg' x

@@ -124,7 +124,7 @@ theorem hodgePull_hodgeTrace (j : ℕ)
     (H : omegaTrace hc j ≫ omegaPull hπ j = ∑ r ∈ R, liftPull (hσ r) (hσs r) j) (q : ℕ)
     (x : hodgeH s' j q) :
     hodgePull hπ j q (hodgeTrace hc j q x) = ∑ r ∈ R, hodgePull (hσs r) j q x := by
-  letI := algΓ s; letI := algΓ s'; letI := algΓ sW
+  let := algΓ s; let := algΓ s'; let := algΓ sW
   obtain ⟨y, rfl⟩ := (coh.pushforwardEquiv k (appTop_algebraMap hc) (Omega s' j) q).surjective x
   have e1 : hodgeTrace hc j q (coh.pushforwardEquiv k (appTop_algebraMap hc) (Omega s' j) q y) =
       cohOn.map k (omegaTrace hc j) ⊤ q y :=

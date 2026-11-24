@@ -264,7 +264,7 @@ theorem continuous_comps : Continuous (comps (ε := ε) fr) := by
       (fr τ)⁻¹ * Formalism.REAL.toMK (k τ) * fr τ := by
     refine continuous_pi fun τ => ?_
     have h1 : Continuous fun k : Formalism.REAL.KG (ε τ) => Formalism.REAL.toMK k :=
-      (Formalism.REAL.isClosedEmbeddingMatrix _ (ε τ)).1.continuous.comp continuous_subtype_val
+      (Formalism.REAL.isClosedEmbeddingMatrix _ (ε τ)).1.continuous.comp continuous_subtypeVal
     exact (continuous_const.matrix_mul (h1.comp (continuous_apply τ))).matrix_mul continuous_const
   exact key
 

@@ -165,9 +165,9 @@ theorem isEigBasis_uvecT : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       (τT : 𝓞 E →+* T.V), (∀ a, algebraMap T.V T.Fr (τT a) = io (embK c τ a)) →
       IsEigBasis Ch.actT τT (fun i : Fin (Dw.mult τ) => Ch.uvecT ⟨τ, i⟩) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y Ch τ τT hτ
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hu : ∀ ℓ i, Ch.ch.uvec ℓ i = algebraMap T.V T.Fr (Ch.uvecT ℓ i) := Ch.gen.1.2.2.2.2.2.2
   have hA : ∀ a j, Ch.ch.B.A.act a j = MvPowerSeries.map (algebraMap T.V T.Fr) (Ch.actT a j) := Ch.gen.1.2.1
   refine eigBasis_of_generic (K := T.Fr) (m := Dw.mult) (fun a => linPart (Ch.actT a))
@@ -419,8 +419,8 @@ theorem ι_injective {T : CDVR} {p : ℕ} [Fact p.Prime] (X : ValExt T p) : Func
 
 theorem flat {T : CDVR} {p : ℕ} [Fact p.Prime] (X : ValExt T p) :
     letI := X.ι.toAlgebra; Module.Flat T.V X.O := by
-  letI := X.ι.toAlgebra
-  haveI : IsDomain X.O := Function.Injective.isDomain (algebraMap X.O X.C) X.ints.hom_inj
+  let := X.ι.toAlgebra
+  have : IsDomain X.O := Function.Injective.isDomain (algebraMap X.O X.C) X.ints.hom_inj
   rw [Module.Flat.flat_iff_torsion_eq_bot_of_isBezout, eq_bot_iff]
   rintro x ⟨⟨a, ha⟩, hx⟩
   have hx' : X.ι a * x = 0 := hx
@@ -431,7 +431,7 @@ theorem linPart_add {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
     {Xo : Moduli Dw l} {c : Coeff l} [StarRing (𝓞 E)] {T : CDVR} {io : c.F →+* T.Fr} {y : IntFr Xo c T io}
     (Ch : IntegralChartA3 Xo c T io y) (a b : 𝓞 E) :
     linPart (Ch.actT (a + b)) = linPart (Ch.actT a) + linPart (Ch.actT b) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have key : ∀ a i j, ReciprocityTheory.ChartRestriction.G.TB.dAct T.Fr Ch.ch.B a i j = algebraMap T.V T.Fr (linPart (Ch.actT a) i j) := by
     intro a i j
     show MvPowerSeries.coeff (Finsupp.single ((0 : Fin 1), j) 1)
@@ -448,7 +448,7 @@ end GlobalTheory.CharDepth.EigExt
 open GlobalTheory.CharDepth.EigExt in
 theorem GlobalTheory.CharDepth.isEigBasis_valExt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (p : ℕ) [Fact p.Prime] (X : ValExt T p) (τO : (E →+* ℂ) → (𝓞 E →+* X.O)), IsTypes X io τO → ∀ τ : E →+* ℂ, IsEigBasis (fun a i => MvPowerSeries.map X.ι (Ch.actT a i)) (τO τ) (fun (i : Fin (Dw.mult τ)) j => X.ι (Ch.uvecT ⟨τ, i⟩ j)) ∧ Function.Surjective (res (fun (i : Fin (Dw.mult τ)) j => X.ι (Ch.uvecT ⟨τ, i⟩ j))) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y Ch p _ X τO hτ τ
   constructor
   · obtain ⟨τT, hT, hT', -⟩ := GlobalTheory.T.exists_cmType_embeddings_into_valuation_ring E H l c T io p X
@@ -457,8 +457,8 @@ theorem GlobalTheory.CharDepth.isEigBasis_valExt : ∀ (E : Type) [Field E] [Num
       apply X.ints.hom_inj
       rw [hτ τ a]
       exact (hT' τ a).symm
-    letI := X.ι.toAlgebra
-    haveI := flat X
+    let := X.ι.toAlgebra
+    have := flat X
     rw [he]
     exact GlobalTheory.T.isEigenBasis_map_flat_baseChange T.V X.O (𝓞 E) _ _ Ch.actT (linPart_add Ch) (τT τ) _
       (GlobalTheory.T.integral_chart_directions_isEigenBasis E H Dw l Xo c T io y Ch τ (τT τ) (hT τ))

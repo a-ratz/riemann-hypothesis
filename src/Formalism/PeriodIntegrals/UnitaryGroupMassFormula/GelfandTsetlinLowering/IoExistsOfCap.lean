@@ -118,7 +118,7 @@ theorem exists_capelliPolynomial_ne {n : ℕ} (mu sg : DomWeight n) (hne : mu.w 
     · rintro ⟨i, rfl⟩
       obtain ⟨k, hk⟩ := hmem sg mu (fun u => (hall u).symm) i
       exact ⟨k, hk⟩
-  have hab := ((hmono mu).range_inj (hmono sg)).mp hrange
+  have hab := ((hmono mu).range_inj_of_wellFoundedLT (hmono sg)).mp hrange
   funext k
   have := congrFun hab k
   omega
@@ -246,15 +246,15 @@ theorem io_last_emb {n N : ℕ} (h : n + 1 = N) (a : ℂˣ) (g : GL (Fin n) ℂ)
   rcases s with k | k <;> rcases t with l | l
   · have hk : ¬ ((((finSumFinEquiv.trans (finCongr h)) (Sum.inl k) : Fin N) : ℕ) + 1 = N) := by
       have := k.isLt
-      simp only [Equiv.trans_apply, finSumFinEquiv_apply_left, finCongr_apply, Fin.coe_cast,
-        Fin.coe_castAdd]
+      simp only [Equiv.trans_apply, finSumFinEquiv_apply_left, finCongr_apply, Fin.val_cast,
+        Fin.val_castAdd]
       omega
     have hl : ¬ ((((finSumFinEquiv.trans (finCongr h)) (Sum.inl l) : Fin N) : ℕ) + 1 = N) := by
       have := l.isLt
-      simp only [Equiv.trans_apply, finSumFinEquiv_apply_left, finCongr_apply, Fin.coe_cast,
-        Fin.coe_castAdd]
+      simp only [Equiv.trans_apply, finSumFinEquiv_apply_left, finCongr_apply, Fin.val_cast,
+        Fin.val_castAdd]
       omega
-    rw [if_neg hk, if_neg hl]
+    rw [ite_eq_right hk, ite_eq_right hl]
     simp
   · simp
   · simp

@@ -73,7 +73,7 @@ theorem exists_lintegral_enorm_lift_le {G : Type} [Group G] [TopologicalSpace G]
   have h2 : ∫⁻ g in C, ‖lift Γ F g‖ₑ ^ (2 : ℝ≥0∞).toReal ∂μ ≤
       N * ∫⁻ q, ‖F q‖ₑ ^ (2 : ℝ≥0∞).toReal ∂GlobalTheory.AutomorphicL2Unitary.quotMeasure Γ μ := by
     rw [← lintegral_indicator hC.measurableSet,
-      lintegral_eq_lintegral_tsum (Γ := Γ) ((hm.enorm.pow_const _).indicator hC.measurableSet),
+      lintegral_eq_lintegral_tsum (Γ := Γ) ((hm.eNorm.pow_const _).indicator hC.measurableSet),
       ← lintegral_const_mul' _ _ hN]
     refine lintegral_mono fun q => ?_
     rw [hNdef]
@@ -83,8 +83,8 @@ theorem exists_lintegral_enorm_lift_le {G : Type} [Group G] [TopologicalSpace G]
       simp only [GlobalTheory.AutomorphicL2Unitary.lift, mk_mul, Quotient.out_eq]
     · rw [Set.indicator_of_notMem hγ, Set.indicator_of_notMem hγ]
   have h3 : eLpNorm (lift Γ F) 2 (μ.restrict C) ≤ N ^ (1 / 2 : ℝ) * ‖F‖ₑ := by
-    rw [Lp.enorm_def, eLpNorm_eq_lintegral_rpow_enorm_toReal (by simp) (by simp),
-      eLpNorm_eq_lintegral_rpow_enorm_toReal (f := F) (by simp) (by simp)]
+    rw [Lp.eNorm_def, eLpNorm_eq_lintegral_rpow_eNorm_toReal (by simp) (by simp),
+      eLpNorm_eq_lintegral_rpow_eNorm_toReal (f := F) (by simp) (by simp)]
     refine (ENNReal.rpow_le_rpow h2 (by simp)).trans (le_of_eq ?_)
     rw [ENNReal.mul_rpow_of_nonneg _ _ (by simp)]
     simp
@@ -92,7 +92,7 @@ theorem exists_lintegral_enorm_lift_le {G : Type} [Group G] [TopologicalSpace G]
     exact hm.restrict
   have h4 := eLpNorm_le_eLpNorm_mul_rpow_measure_univ (μ := μ.restrict C) (p := 1) (q := 2) (by norm_num) hm.restrict
   have e : (1 / (1 : ℝ≥0∞).toReal - 1 / (2 : ℝ≥0∞).toReal) = (1 / 2 : ℝ) := by norm_num
-  rw [eLpNorm_one_eq_lintegral_enorm, e, Measure.restrict_apply_univ] at h4
+  rw [eLpNorm_one_eq_lintegral_eNorm, e, Measure.restrict_apply_univ] at h4
   calc _ ≤ N ^ (1 / 2 : ℝ) * ‖F‖ₑ * μ C ^ (1 / 2 : ℝ) := h4.trans (by gcongr)
     _ = _ := by ring
   exact hm.restrict
@@ -116,21 +116,21 @@ theorem lintegral_constTerm_le [_root_.NumberField.IsTotallyComplex E] (μ : Mea
     {K : Set (BlockIx a r → Ad E)} (hK : IsCompact K) (hcov : ∀ x, ∃ γ ∈ ratN E a r, γ + x ∈ K) {C : Set (GA E a)}
     (hC : IsCompact C) {u : GA E a → ℂ} (hc : Continuous u) (hl : ∀ γ g, u (ratGL E a γ * g) = u g) :
     ∫⁻ g in C, ‖∫ x in 𝓕, u (unip x * g) ∂ν‖ₑ ∂μ ≤ ν 𝓕 * ∫⁻ g in (unip '' K) * C, ‖u g‖ₑ ∂μ := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI : IsFiniteMeasure (ν.restrict 𝓕) := isFiniteMeasure_restrict.2 hν𝓕
-  haveI : IsFiniteMeasure (μ.restrict C) := isFiniteMeasure_restrict.2 hC.measure_lt_top.ne
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have : IsFiniteMeasure (ν.restrict 𝓕) := isFiniteMeasure_restrict.2 hν𝓕
+  have : IsFiniteMeasure (μ.restrict C) := isFiniteMeasure_restrict.2 hC.measure_lt_top.ne
   have hC' : IsCompact ((unip '' K) * C) := (hK.image continuous_unip).mul hC
   have hb : ∀ x, ∫⁻ g in C, ‖u (unip x * g)‖ₑ ∂μ ≤ ∫⁻ g in (unip '' K) * C, ‖u g‖ₑ ∂μ := fun x => by
     obtain ⟨k, hk, e⟩ := exists_mem_apply_unip_eq hl hcov x
     simp only [e]
     rw [← (measurePreserving_mul_left μ (unip k)).setLIntegral_comp_preimage hC'.measurableSet
-      hc.enorm.measurable]
+      hc.eNorm.measurable]
     exact lintegral_mono_set fun g hg => Set.mul_mem_mul ⟨k, hk, rfl⟩ hg
   have hj : Continuous fun p : GA E a × (BlockIx a r → Ad E) => ‖u (unip p.2 * p.1)‖ₑ :=
-    (hc.comp ((continuous_unip.comp continuous_snd).mul continuous_fst)).enorm
+    (hc.comp ((continuous_unip.comp continuous_snd).mul continuous_fst)).eNorm
   calc ∫⁻ g in C, ‖∫ x in 𝓕, u (unip x * g) ∂ν‖ₑ ∂μ
       ≤ ∫⁻ g in C, ∫⁻ x in 𝓕, ‖u (unip x * g)‖ₑ ∂ν ∂μ :=
-        lintegral_mono fun g => enorm_integral_le_lintegral_enorm _
+        lintegral_mono fun g => eNorm_integral_le_lintegral_eNorm _
     _ = ∫⁻ x in 𝓕, ∫⁻ g in C, ‖u (unip x * g)‖ₑ ∂μ ∂ν := lintegral_lintegral_swap hj.aemeasurable
     _ ≤ ∫⁻ x in 𝓕, (∫⁻ g in (unip '' K) * C, ‖u g‖ₑ ∂μ) ∂ν := lintegral_mono hb
     _ = _ := by rw [setLIntegral_const, mul_comm]
@@ -139,8 +139,8 @@ theorem continuous_constTerm [_root_.NumberField.IsTotallyComplex E] (ν : Measu
     (hν𝓕 : ν 𝓕 ≠ ∞) {K : Set (BlockIx a r → Ad E)} (hK : IsCompact K) (hcov : ∀ x, ∃ γ ∈ ratN E a r, γ + x ∈ K)
     {u : GA E a → ℂ} (hc : Continuous u) (hl : ∀ γ g, u (ratGL E a γ * g) = u g) :
     Continuous fun g => ∫ x in 𝓕, u (unip x * g) ∂ν := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI : IsFiniteMeasure (ν.restrict 𝓕) := isFiniteMeasure_restrict.2 hν𝓕
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have : IsFiniteMeasure (ν.restrict 𝓕) := isFiniteMeasure_restrict.2 hν𝓕
   refine continuous_iff_continuousAt.2 fun g₀ => ?_
   obtain ⟨C, hC, hg⟩ := exists_compact_mem_nhds g₀
   obtain ⟨B, hB⟩ := ((hK.image continuous_unip).mul hC).exists_bound_of_continuousOn hc.continuousOn
@@ -160,9 +160,9 @@ theorem isCuspidal_of_toL2_mem : ∀ (E : Type) [Field E] [NumberField E] [_root
     (∀ γ g, φ (ratGL E a γ * g) = φ g) → (∀ t g, φ (splitCentre E a t * g) = φ g) →
     ∀ h : MemL2Quotient (latticeGL E a) μ φ, h.toL2 ∈ L2cusp μ → IsCuspidal φ := by
   intro E _ _ _ a μ _ _ φ hc hl hs h hF r h0 h1 _ _ ν 𝓕 hν h𝓕 g
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI := GlobalTheory.ConstNotCusp.discreteTopology_ratN E a r
-  haveI : Countable (ratN E a r) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have := GlobalTheory.ConstNotCusp.discreteTopology_ratN E a r
+  have : Countable (ratN E a r) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨K, hK, hcov⟩ := GlobalTheory.ConstNotCusp.exists_compact_ratN E a r
   have hν𝓕 : ν 𝓕 ≠ ∞ := (GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact _ hK hcov ν h𝓕).ne
   have hcont := continuous_constTerm ν hν𝓕 hK hcov hc hl
@@ -187,12 +187,12 @@ theorem isCuspidal_of_toL2_mem : ∀ (E : Type) [Field E] [NumberField E] [_root
       have h3 : Filter.Tendsto (fun n => h.toL2 - u n) Filter.atTop (𝓝 0) := by
         simpa using (tendsto_const_nhds (x := h.toL2)).sub hlim
       have h4 : Filter.Tendsto (fun n => ‖h.toL2 - u n‖ₑ) Filter.atTop (𝓝 0) := by
-        simpa [Function.comp_def] using (continuous_enorm.tendsto _).comp h3
+        simpa [Function.comp_def] using (continuous_eNorm.tendsto _).comp h3
       simpa using ENNReal.Tendsto.const_mul (ENNReal.Tendsto.const_mul h4 (Or.inr hM)) (Or.inr hν𝓕)
     exact le_antisymm (ge_of_tendsto' ht fun n => step _ (hu n)) zero_le
   have hae : (fun g => ∫ x in 𝓕, φ (unip x * g) ∂ν) =ᵐ[μ] 0 := by
     have h5 : ∀ n, ∀ᵐ g ∂μ.restrict (compactCovering (GA E a) n), ∫ x in 𝓕, φ (unip x * g) ∂ν = 0 := fun n => by
-      have := (lintegral_eq_zero_iff' hcont.enorm.aemeasurable).1 (key _ (isCompact_compactCovering _ n))
+      have := (lintegral_eq_zero_iff' hcont.eNorm.aemeasurable).1 (key _ (isCompact_compactCovering _ n))
       exact this.mono fun g eg => by simpa using eg
     have h6 := ae_restrict_iUnion_iff _ _ |>.2 h5
     rwa [iUnion_compactCovering, Measure.restrict_univ] at h6

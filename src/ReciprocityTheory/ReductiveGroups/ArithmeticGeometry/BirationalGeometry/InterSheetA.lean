@@ -194,7 +194,7 @@ theorem cxHessian_add_re {φ : (Fin e → ℂ) → ℝ} {G : (Fin e → ℂ) →
     rw [hH, hH]
     simp [map_smul]
   ext i j
-  simp only [cxHessian, hsum, ContinuousLinearMap.add_apply, k1, k2]
+  simp only [cxHessian, hsum, add_apply, k1, k2]
   push_cast
   ring
 

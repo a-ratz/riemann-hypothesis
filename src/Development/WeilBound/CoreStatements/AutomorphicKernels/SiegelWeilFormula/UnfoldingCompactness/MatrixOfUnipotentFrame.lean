@@ -107,7 +107,7 @@ theorem matrix_of_unipotent_frame (h : IsNMap b nb) (β : nA σ Y b) :
 theorem continuous_nb (h : IsNMap b nb) : Continuous nb := by
   have : IsTopologicalRing (AE F E) := GlobalTheory.EisBL.AETop.ringAE
   have hc : Continuous fun β : nA σ Y b => incM F b.1 * Matrix.fromBlocks 1 β.1 0 1 * incM F (b⁻¹).1 :=
-    (continuous_const.matrix_mul (Continuous.matrix_fromBlocks continuous_const continuous_subtype_val
+    (continuous_const.matrix_mul (Continuous.matrix_fromBlocks continuous_const continuous_subtypeVal
       continuous_const continuous_const)).matrix_mul continuous_const
   refine continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)
   · exact hc.congr fun β => (matrix_of_unipotent_frame h β).symm

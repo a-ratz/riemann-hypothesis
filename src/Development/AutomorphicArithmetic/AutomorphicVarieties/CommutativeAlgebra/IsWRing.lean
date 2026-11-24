@@ -57,7 +57,7 @@ theorem UpperTheory.V.Alg.isWRing :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (W : WPres O ℤ R) (h : W.HasOrigin), (∀ s, -2 ≤ W.wt s ∧ W.wt s ≤ 2) → IsWRing W.gr (W.originA h) := by
   classical
   intro O _ _ _ _ R _ _ _ W h hw
-  haveI := W.fin
+  have := W.fin
   have hz : ∀ s, W.z s ∈ maximalIdeal R := by
     intro s
     by_contra hs

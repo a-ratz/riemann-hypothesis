@@ -200,7 +200,7 @@ theorem ChartMaxIdeals.proof (h₁ : ConeDimOfChowForm.Statement) (h₂ : ConeDi
         ((chartIdeal I t e p W).comap (algebraMap (Localization.AtPrime p) (ChartLoc I t e p)))]
       change Ideal.map _ (Ideal.comap (algebraMap (MvPolynomial (Fin e × Fin n) F) (Localization.AtPrime p)) _) = _
       rw [hO, Localization.AtPrime.map_eq_maximalIdeal]
-    haveI := h𝔓
+    have := h𝔓
     refine ⟨Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := Localization.AtPrime p)
       (chartIdeal I t e p W) ?_, hc𝔓, ?_⟩
     · change (Ideal.comap (algebraMap (Localization.AtPrime p) (ChartLoc I t e p))

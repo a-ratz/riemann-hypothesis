@@ -67,7 +67,7 @@ namespace PI.UnitaryGroupMassFormula.QmBorderES
 
 theorem skip_one_eq_succAbove {t : ℕ} (i : Fin (t + 1)) (j : Fin t) : PI.skip1 i j = i.succAbove j := by
   ext
-  simp only [PI.skip1, Fin.succAbove, Fin.lt_def, Fin.coe_castSucc]
+  simp only [PI.skip1, Fin.succAbove, Fin.lt_def, Fin.val_castSucc]
   split_ifs <;> simp_all
 
 theorem cons_comp_finRotate {n t : ℕ} (e : Fin n) (f : Fin t → Fin n) :
@@ -177,7 +177,7 @@ theorem borderS_of (hC : PI.ExpLastCol) (hF : PI.ExpFirstRow) : PI.BorderS := by
     Finset.sum_mul, Finset.mul_sum, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun x _ => ?_
   erw [comp_skip v w, comp_skip v x]
-  simp only [zmul, mul_smul_comm, smul_mul_assoc, smul_smul, Fin.coe_castSucc, mul_assoc]
+  simp only [zmul, mul_smul_comm, smul_mul_assoc, smul_smul, Fin.val_castSucc, mul_assoc]
   rw [← neg_smul]
   congr 1
   linear_combination (-(-1 : ℤ) ^ ((w : ℕ) + (x : ℕ))) * neg_one_pow_mul_self k

@@ -261,8 +261,8 @@ theorem actZ_isRAct : ∀ (h M d : ℕ) (S : Scheme.{0}) (t : S ⟶ Sp (cycAway 
     IsRAct (GlobalTheory.ZarhinFam.Zob c.A B) (GlobalTheory.ZarhinFam.actZ c.A B d la mu) := by
   intro h M d S t c B _ _ Q la mu hZ _ _ _ hd _ _ _
   obtain ⟨-, -, -, hla, hmu, hlm, hml, -⟩ := hZ
-  haveI := hla
-  haveI := hmu
+  have := hla
+  have := hmu
   exact ⟨fun N => actZ_isMonHom N, actZ_one, fun N N' => actZ_mul hlm hml hd N N', fun N N' => actZ_add N N'⟩
 
 end GlobalTheory.ZarhinFam.RAct

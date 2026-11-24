@@ -200,10 +200,10 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj GlobalTheory.C
 
 theorem nuFacC_field : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (p : ℕ) [Fact p.Prime] (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (Ch : IntegralChartA3 Xo c T io y) (X X' : ValExt T p) (f : Lt1 Dw) (k : ℕ), nuFacC Ch X f k = nuFacC Ch X' f k := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro p _ T io y Ch X X' f k
-  letI := io.toAlgebra
-  haveI : CharZero T.Fr := X.ιF.charZero
+  let := io.toAlgebra
+  have : CharZero T.Fr := X.ιF.charZero
   let w : AddValuation T.Fr (WithTop ℝ) := (vX_vp X).comap X.ιF
   have hw : ∀ (Y : ValExt T p) x, vX_vp Y (Y.ιF x) = w x := by
     intro Y x

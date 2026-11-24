@@ -71,7 +71,7 @@ variable {Ω Z V : Type} [MeasurableSpace Ω] [Countable Z]
 
 lemma tsum_lint {Pr : Measure Ω} {s : Z → Ω → ℂ} (hm : ∀ z, Measurable (s z)) :
     ∫⁻ ω, ∑' z, ‖s z ω‖ₑ ∂Pr = ∑' z, ∫⁻ ω, ‖s z ω‖ₑ ∂Pr :=
-  lintegral_tsum fun z => (hm z).enorm.aemeasurable
+  lintegral_tsum fun z => (hm z).eNorm.aemeasurable
 
 lemma term_lint_ne_top {Pr : Measure Ω} {s : Z → Ω → ℂ} (hm : ∀ z, Measurable (s z))
     (hfin : ∫⁻ ω, ∑' z, ‖s z ω‖ₑ ∂Pr ≠ ∞) (z : Z) : ∫⁻ ω, ‖s z ω‖ₑ ∂Pr ≠ ∞ :=
@@ -84,7 +84,7 @@ lemma term_integrable {Pr : Measure Ω} {s : Z → Ω → ℂ} (hm : ∀ z, Meas
 lemma summable_integral_norm {Pr : Measure Ω} {s : Z → Ω → ℂ} (hm : ∀ z, Measurable (s z))
     (hfin : ∫⁻ ω, ∑' z, ‖s z ω‖ₑ ∂Pr ≠ ∞) : Summable fun z => ∫ ω, ‖s z ω‖ ∂Pr := by
   have h : (fun z => ∫ ω, ‖s z ω‖ ∂Pr) = fun z => (∫⁻ ω, ‖s z ω‖ₑ ∂Pr).toReal :=
-    funext fun z => integral_norm_eq_lintegral_enorm (hm z).aestronglyMeasurable
+    funext fun z => integral_norm_eq_lintegral_eNorm (hm z).aestronglyMeasurable
   rw [h]
   exact ENNReal.summable_toReal (by rwa [← tsum_lint hm])
 
@@ -159,10 +159,10 @@ theorem sum_selected {Pr : Measure Ω} {s : Z → Ω → ℂ} (hm : ∀ z, Measu
     ∑' z : Sel, ∫ ω, s z.1 ω ∂Pr = (((∫⁻ ω, ∑' z : Sel, ‖s z.1 ω‖ₑ ∂Pr).toReal : ℝ) : ℂ) := by
   have hS : ∀ z : Z, ∫ ω, s z ω ∂Pr = (((∫⁻ ω, ‖s z ω‖ₑ ∂Pr).toReal : ℝ) : ℂ) := by
     intro z
-    rw [← integral_norm_eq_lintegral_enorm (hm z).aestronglyMeasurable, ← integral_complex_ofReal]
+    rw [← integral_norm_eq_lintegral_eNorm (hm z).aestronglyMeasurable, ← integral_complex_ofReal]
     exact integral_congr_ae (Filter.Eventually.of_forall fun ω => hpos z ω)
   simp_rw [hS]
-  rw [lintegral_tsum (f := fun (z : Sel) ω => ‖s z.1 ω‖ₑ) fun z => (hm z.1).enorm.aemeasurable,
+  rw [lintegral_tsum (f := fun (z : Sel) ω => ‖s z.1 ω‖ₑ) fun z => (hm z.1).eNorm.aemeasurable,
     ENNReal.tsum_toReal_eq (f := fun z : Sel => ∫⁻ ω, ‖s z.1 ω‖ₑ ∂Pr)
       fun z => term_lint_ne_top hm hfin z.1, Complex.ofReal_tsum]
 
@@ -361,7 +361,7 @@ end Concrete
 
 theorem fourier_coefficient : ∀ (F : Type) [Field F] [NumberField F], ∀ [MeasurableSpace (A F)] [BorelSpace (A F)], ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → ∀ (Ω : Type) [MeasurableSpace Ω] (Pr : Measure Ω) (gf : Ω → Matrix ι ι (A F)) (gi : Ω → InfinitePlace F → Matrix ι ι ℝ), CountData M B ρ Pr gf gi → ∀ a : ℕ, 0 < a → ∀ β : F, β ≠ 0 → ∀ N : ℕ, 0 < N → (∃ r : 𝓞 F, (r : F) = (N : F) * β) → (∀ y : ι → A F, (∀ i, (a : A F) * y i ∈ Oh F) → (N : A F) * qf (hf F) (Bf B) y ∈ Oh F) → ∀ D : Set (InfinitePlace F → ℝ), IsAddFundamentalDomain (latR ρ N) D volume → ∃ I : ℝ≥0, ∫⁻ ω, ∑' x : {x : ι → F // qf (1 / 2 : F) B x = β}, ‖thTerm B ρ P (gf ω) (gi ω) (indL a) (fun _ => Complex.I) x.1‖ₑ ∂Pr = (I : ℝ≥0∞) ∧ IntegrableOn (fun x : InfinitePlace F → ℝ => (∫ ω, theta B ρ P (gf ω) (gi ω) (indL a) (fun w => (x w : ℂ) + Complex.I) ∂Pr) * Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ))) D volume ∧ ∫ x in D, (∫ ω, theta B ρ P (gf ω) (gi ω) (indL a) (fun w => (x w : ℂ) + Complex.I) ∂Pr) * Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ)) = ((volume D).toReal : ℂ) * ((I : ℝ) : ℂ) := by
   intro F _ _ _ _ ι _ _ M B ρ P hQ Ω _ Pr gf gi hC a ha β hβ N hN hNβ hint D hD
-  haveI : Countable F := countable_field
+  have : Countable F := countable_field
   obtain ⟨hTR, -, -, -, hρ, -, -⟩ := id hQ
   obtain ⟨hprob, -, -, hOrth, -⟩ := id hC
   obtain ⟨-, -, hT2, hOc, hOo, -, hmem, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
@@ -392,7 +392,7 @@ theorem fourier_coefficient : ∀ (F : Type) [Field F] [NumberField F], ∀ [Mea
     exact ENNReal.add_ne_top.mpr ⟨ENNReal.one_ne_top, hnz⟩
   have hpos : ∀ z ω, s z ω = ((‖s z ω‖ : ℝ) : ℂ) := fun z ω => thTerm_nonneg B ρ P (gf ω) (gi ω) a z
   set Sel : Set (ι → F) := {z | qf (1 / 2 : F) B z = β} with hSel
-  haveI : IsFiniteMeasure ((volume : Measure (InfinitePlace F → ℝ)).restrict D) :=
+  have : IsFiniteMeasure ((volume : Measure (InfinitePlace F → ℝ)).restrict D) :=
     ⟨by rw [Measure.restrict_apply_univ, hvol]; exact ENNReal.ofReal_lt_top⟩
   have hv : Continuous fun x : InfinitePlace F → ℝ =>
       Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ)) := by

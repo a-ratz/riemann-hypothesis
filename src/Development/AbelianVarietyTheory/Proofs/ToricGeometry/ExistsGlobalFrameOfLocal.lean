@@ -101,7 +101,7 @@ omit [NormedSpace ℂ E] [FiniteDimensional ℂ E] in
 theorem isOpen_cubeChart {X : Type*} [TopologicalSpace X] {p : X → Fin 3 → E}
     (hp : Continuous p) {V : Finset (Fin 3) → Set E} (hV : ∀ I, IsOpen (V I)) :
     IsOpen {y | ∀ I : Finset (Fin 3), ∑ a ∈ I, p y a ∈ V I} := by
-  rw [Set.setOf_forall]
+  rw [Set.ofPred_forall]
   exact isOpen_iInter_of_finite fun I => (hV I).preimage (by fun_prop)
 
 theorem cube_eq_on_ball (hW : ∀ i, IsOpen (W i)) (hcov : ∀ z, ∃ i, z ∈ W i)

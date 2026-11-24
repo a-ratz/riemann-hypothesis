@@ -63,7 +63,7 @@ namespace GlobalTheory.MomCrit
 variable {q : ℕ} [Fact q.Prime] {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V]
 
 theorem continuous_zc' : Continuous (zc : ℤ_[q] → ℂ_[q]) :=
-  (continuous_algebraMap ℚ_[q] ℂ_[q]).comp continuous_subtype_val
+  (continuous_algebraMap ℚ_[q] ℂ_[q]).comp continuous_subtypeVal
 
 def evalFn (ι : ℂ ≃+* ℂ_[q]) {κ : Type} (P : MvPolynomial κ ℂ) : C(κ → ℤ_[q], ℂ_[q]) :=
   ⟨fun a => MvPolynomial.eval (fun i => zc (a i)) (MvPolynomial.map (ι : ℂ →+* ℂ_[q]) P),
@@ -200,7 +200,7 @@ theorem X_pow_mem_span (k : ℕ) :
         have h2 : (descPochhammer ℂ k).degree = k := by
           rw [Polynomial.degree_eq_natDegree h1.ne_zero, descPochhammer_natDegree]
         calc _ < (descPochhammer ℂ k).degree :=
-              Polynomial.degree_sub_lt (by rw [h2, Polynomial.degree_X_pow]) h1.ne_zero
+              Polynomial.degree_sub_lt_left (by rw [h2, Polynomial.degree_X_pow]) h1.ne_zero
                 (by rw [h1.leadingCoeff, Polynomial.leadingCoeff_X_pow])
           _ = k := h2
     rw [Polynomial.degreeLT_eq_span_X_pow] at hd
@@ -306,7 +306,7 @@ theorem momInt_iff_norm_mahler_le : ∀ (q : ℕ) [Fact q.Prime] (ι : ℂ ≃+*
       · simp [GlobalTheory.MultiMahler.fwdDiff_binomC, c, Function.comp_assoc]
       · intro m hm
         obtain ⟨i, hi⟩ := Function.ne_iff.mp hm
-        rw [Finset.prod_eq_zero (Finset.mem_univ i) (by rw [GlobalTheory.MultiMahler.fwdDiff_binomC, if_neg (by simpa using hi)]), mul_zero]
+        rw [Finset.prod_eq_zero (Finset.mem_univ i) (by rw [GlobalTheory.MultiMahler.fwdDiff_binomC, ite_eq_right (by simpa using hi)]), mul_zero]
     have hP := eq_of_mem_span ι (v := v) (G := G) (T.mkContinuous 1 hT) (fun n => by
       rw [Bp_eq, evalFn_smul, map_smul, hB, mahler_eq_jetL, map_smul, smul_eq_mul, smul_eq_mul, map_mul])
     intro k j f hf

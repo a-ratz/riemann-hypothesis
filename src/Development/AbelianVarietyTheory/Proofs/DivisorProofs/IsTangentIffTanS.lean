@@ -214,8 +214,8 @@ theorem lie_away {R O O' : Type} [CommRing R] [CommRing O] [CommRing O'] (G : Ov
     Nonempty (LocalizedModule (Submonoid.powers r) (GlobalTheory.Serre.Lie a) ≃ₗ[Localization.Away r] GlobalTheory.Serre.Lie a') := by
   intro hr
   have : ∀ s : R, Smooth (Chart.Gs G s).hom := fun s => show Smooth (pullback.snd G.hom _) from inferInstance
-  letI : Module R (GlobalTheory.Serre.Lie a') := Module.compHom _ (algebraMap R (Localization.Away r))
-  haveI : IsScalarTower R (Localization.Away r) (GlobalTheory.Serre.Lie a') :=
+  let : Module R (GlobalTheory.Serre.Lie a') := Module.compHom _ (algebraMap R (Localization.Away r))
+  have : IsScalarTower R (Localization.Away r) (GlobalTheory.Serre.Lie a') :=
     ⟨fun x y z => by rw [Algebra.smul_def]; exact mul_smul _ y z⟩
   let ρ : GlobalTheory.Serre.Lie a →ₗ[R] GlobalTheory.Serre.Lie a' :=
     { toFun := resL r a a'
@@ -223,7 +223,7 @@ theorem lie_away {R O O' : Type} [CommRing R] [CommRing O] [CommRing O'] (G : Ov
       map_smul' := resL_smul r a a' }
   have hρ : ∀ v, Chart.pushR G (ρ v).hom =
       Chart.spMap (Chart.dualMapS (Algebra.ofId R (Localization.Away r))) ≫ v.hom := pushR_resL r a a'
-  haveI : IsLocalizedModule (Submonoid.powers r) ρ := by
+  have : IsLocalizedModule (Submonoid.powers r) ρ := by
     refine ⟨fun x => ?_, fun y => ?_, fun {x₁ x₂} h => ?_⟩
     · rw [Module.End.isUnit_iff]
       obtain ⟨u, hu⟩ := IsLocalization.map_units (Localization.Away r) x

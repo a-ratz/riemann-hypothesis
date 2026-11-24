@@ -335,7 +335,7 @@ theorem xi_inv_last (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T T' : D.host.E} 
   have hbt : (admXi D Λ F F').BlockTriangular id := fun i j hij => h1 i j hij
   have hdet : (admXi D Λ F F').det = 1 := by
     rw [Matrix.det_of_isUpperTriangular hbt]; simp [h2]
-  haveI : Invertible (admXi D Λ F F') := Matrix.invertibleOfIsUnitDet _ (by rw [hdet]; exact isUnit_one)
+  have : Invertible (admXi D Λ F F') := Matrix.invertibleOfIsUnitDet _ (by rw [hdet]; exact isUnit_one)
   exact Matrix.blockTriangular_inv_of_blockTriangular hbt (Fin.castSucc_lt_last i)
 
 theorem frameAct_mem {T' : D.host.E} (G : LFlag (D.sp.Y 0) D.R.rS T')

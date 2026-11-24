@@ -114,7 +114,7 @@ theorem lower_bound_of_cyclic_coef : ∀ {Γ : Type} [Group Γ] [TopologicalSpac
     intro g x y
     rw [← hρinner g (ρ g⁻¹ x) y]
     congr 1
-    rw [← ContinuousLinearMap.mul_apply, ← hmul, mul_inv_cancel, h1, ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← hmul, mul_inv_cancel, h1, one_apply_eq_self]
   have hi' : ∀ (g : Γ) (x : A), i (σ g x) = ρ g (i x) := hi
   have hTE' : ∀ x y, ⟪σ x w₀, T (σ y w₀)⟫_ℂ = starRingEnd ℂ ⟪ρ x⁻¹ v, E (ρ y⁻¹ v)⟫_ℂ :=
     fun x y => (hTE x y).trans (starRingEnd_apply _).symm
@@ -139,7 +139,7 @@ theorem lower_bound_of_cyclic_coef : ∀ {Γ : Type} [Group Γ] [TopologicalSpac
 
       simp only [Finsupp.sum, map_sum, map_smul, inner_sum, sum_inner, inner_smul_right,
       inner_smul_left, hTE', map_mul, Complex.conj_conj, RCLike.conj_conj, starRingEnd_self_apply]
-    rw [Set.mem_setOf_eq, h1', h2', Complex.conj_re]
+    rw [Set.mem_ofPred_eq, h1', h2', Complex.conj_re]
     exact hE z
   have ha : a ∈ closure (Submodule.span ℂ (Set.range fun x => σ x w₀) : Set A) := by
     rw [← Submodule.topologicalClosure_coe, hcyc]
@@ -429,7 +429,7 @@ theorem inner_map_map (hU : IsU ρ) (g : Γ) (x y : A) : ⟪ρ g x, ρ g y⟫_�
 
 theorem map_mul_apply (hU : IsU ρ) (g h : Γ) (x : A) : ρ (g * h) x = ρ g (ρ h x) := by
   obtain ⟨_, hmul, _, _⟩ := hU
-  rw [hmul, ContinuousLinearMap.mul_apply]
+  rw [hmul, mul_apply_eq_comp]
 
 theorem inner_translate (hU : IsU ρ) (a g b : Γ) (u : A) :
     ⟪ρ a u, ρ g (ρ b u)⟫_ℂ = ⟪u, ρ (a⁻¹ * g * b) u⟫_ℂ := by
@@ -481,7 +481,7 @@ theorem isInvInvariant_of_right_haar {G : Type} [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G]
     [MeasurableSpace G] [BorelSpace G] (μ : Measure G)
     [μ.IsHaarMeasure] [μ.IsMulRightInvariant] : μ.IsInvInvariant := by
-  haveI : IsFiniteMeasureOnCompacts μ.inv :=
+  have : IsFiniteMeasureOnCompacts μ.inv :=
     ⟨fun K hK => by rw [Measure.inv_apply]; exact hK.inv.measure_lt_top⟩
   obtain ⟨c, hc⟩ : ∃ c : NNReal, μ.inv = c • μ := ⟨_, Measure.isMulLeftInvariant_eq_smul μ.inv μ⟩
   have hsq : μ = (c * c) • μ := by
@@ -493,7 +493,7 @@ theorem isInvInvariant_of_right_haar {G : Type} [Group G] [TopologicalSpace G]
   have hpos : μ K ≠ 0 := (Measure.measure_pos_of_nonempty_interior μ K.interior_nonempty).ne'
   have hfin : μ K ≠ ⊤ := K.isCompact.measure_lt_top.ne
   have hK : μ K = ((c * c) • μ) K := by rw [← hsq]
-  rw [Measure.smul_apply, Measure.nnreal_smul_coe_apply] at hK
+  rw [smul_apply, Measure.nnreal_smul_coe_apply] at hK
   have h1 : ((c * c : NNReal) : ENNReal) = 1 :=
     ((ENNReal.mul_left_inj hpos hfin).1 (by rw [one_mul]; exact hK.symm))
   have hcc : (c : ℝ) * c = 1 := by exact_mod_cast ENNReal.coe_eq_one.1 h1
@@ -507,7 +507,7 @@ theorem isSelfAdjoint_coefOp : ∀ {Γ : Type} [Group Γ] [TopologicalSpace Γ] 
     [InnerProductSpace ℂ B] [CompleteSpace B] (σ : Γ → (A →L[ℂ] A)) (ρ : Γ → (B →L[ℂ] B)) (hσ : IsU σ), IsU ρ → ∀ (v : B) (hm : Integrable (fun g => star ⟪v, ρ g v⟫_ℂ) ν),
     IsSelfAdjoint (coefOp ν σ hσ (fun g => star ⟪v, ρ g v⟫_ℂ) hm) := by
   intro Γ _ _ _ _ _ _ _ ν _ _ A B _ _ _ _ _ _ σ ρ hσ hρ v hm
-  haveI := GlobalTheory.CompanionTheory.RgHeA.isInvInvariant_of_right_haar ν
+  have := GlobalTheory.CompanionTheory.RgHeA.isInvInvariant_of_right_haar ν
   obtain ⟨_, hadj, _, _⟩ := PositivityTheory.UnitaryDecomposition.X4.uRep_of hσ
   obtain ⟨_, hρadj, _, _⟩ := PositivityTheory.UnitaryDecomposition.X4.uRep_of hρ
   rw [ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric]
@@ -653,7 +653,7 @@ theorem inner_orbit {ρ : Γ → (B →L[ℂ] B)} (hU : IsU ρ) (v : B) (g h : �
   obtain ⟨-, hmul, -, -⟩ := hU
   congr 1
   calc ρ h v = ρ (g * (g⁻¹ * h)) v := by rw [mul_inv_cancel_left]
-    _ = ρ g (ρ (g⁻¹ * h) v) := by rw [hmul g (g⁻¹ * h), ContinuousLinearMap.mul_apply]
+    _ = ρ g (ρ (g⁻¹ * h) v) := by rw [hmul g (g⁻¹ * h), mul_apply_eq_comp]
 
 end Unitary
 
@@ -677,13 +677,13 @@ theorem norm_sq_integral_smul_le : ∀ {Γ : Type} [Group Γ] [TopologicalSpace 
   swap
   · rw [integral_undef hF, norm_zero, zero_pow two_ne_zero]
     exact mul_nonneg hA hB
-  have hψc : Continuous fun x : Γ => ‖⟪v, ρ x v⟫_ℂ‖ₑ := (continuous_const.inner (hcont v)).enorm
+  have hψc : Continuous fun x : Γ => ‖⟪v, ρ x v⟫_ℂ‖ₑ := (continuous_const.inner (hcont v)).eNorm
   have hψ : Measurable fun x : Γ => ‖⟪v, ρ x v⟫_ℂ‖ₑ := hψc.measurable
-  have hfe : Measurable fun g : Γ => ‖f g‖ₑ ^ 2 := hf.enorm.pow_const 2
+  have hfe : Measurable fun g : Γ => ‖f g‖ₑ ^ 2 := hf.eNorm.pow_const 2
   have hswap : ∀ g h : Γ, ‖⟪v, ρ (h⁻¹ * g) v⟫_ℂ‖ₑ = ‖⟪v, ρ (g⁻¹ * h) v⟫_ℂ‖ₑ := by
     intro g h
     rw [← GlobalTheory.CompanionTheory.Godement.inner_orbit hU v h g, ← GlobalTheory.CompanionTheory.Godement.inner_orbit hU v g h,
-      ← inner_conj_symm (ρ h v) (ρ g v), RCLike.enorm_conj]
+      ← inner_conj_symm (ρ h v) (ρ g v), RCLike.eNorm_conj]
   have hswapm : AEMeasurable (Function.uncurry fun h g : Γ =>
       2⁻¹ * (‖f g‖ₑ ^ 2 * ‖⟪v, ρ (h⁻¹ * g) v⟫_ℂ‖ₑ)) (ν.prod ν) := by
     apply Measurable.aemeasurable
@@ -704,20 +704,20 @@ theorem norm_sq_integral_smul_le : ∀ {Γ : Type} [Group Γ] [TopologicalSpace 
     rw [hII]
     calc ‖∫ h, f h * starRingEnd ℂ (∫ g, f g * ⟪ρ h v, ρ g v⟫_ℂ ∂ν) ∂ν‖ₑ
         ≤ ∫⁻ h, ‖f h * starRingEnd ℂ (∫ g, f g * ⟪ρ h v, ρ g v⟫_ℂ ∂ν)‖ₑ ∂ν :=
-          enorm_integral_le_lintegral_enorm _
+          eNorm_integral_le_lintegral_eNorm _
       _ ≤ ∫⁻ h, ∫⁻ g, 2⁻¹ * (‖f h‖ₑ ^ 2 + ‖f g‖ₑ ^ 2) * ‖⟪v, ρ (h⁻¹ * g) v⟫_ℂ‖ₑ ∂ν ∂ν := by
           refine lintegral_mono fun h => ?_
           beta_reduce
-          rw [enorm_mul, RCLike.enorm_conj]
+          rw [eNorm_mul, RCLike.eNorm_conj]
           calc ‖f h‖ₑ * ‖∫ g, f g * ⟪ρ h v, ρ g v⟫_ℂ ∂ν‖ₑ
               ≤ ‖f h‖ₑ * ∫⁻ g, ‖f g * ⟪ρ h v, ρ g v⟫_ℂ‖ₑ ∂ν := by
                 gcongr
-                exact enorm_integral_le_lintegral_enorm _
+                exact eNorm_integral_le_lintegral_eNorm _
             _ ≤ ∫⁻ g, ‖f h‖ₑ * ‖f g * ⟪ρ h v, ρ g v⟫_ℂ‖ₑ ∂ν := lintegral_const_mul_le _ _
             _ ≤ _ := by
                 refine lintegral_mono fun g => ?_
                 beta_reduce
-                rw [enorm_mul, GlobalTheory.CompanionTheory.Godement.inner_orbit hU, ← mul_assoc]
+                rw [eNorm_mul, GlobalTheory.CompanionTheory.Godement.inner_orbit hU, ← mul_assoc]
                 gcongr ?_ * _
                 exact GlobalTheory.CompanionTheory.Godement.mul_le_half_add _ _
       _ = ∫⁻ h, (2⁻¹ * ‖f h‖ₑ ^ 2 * ∫⁻ x, ‖⟪v, ρ x v⟫_ℂ‖ₑ ∂ν +
@@ -761,15 +761,15 @@ theorem norm_sq_integral_smul_le : ∀ {Γ : Type} [Group Γ] [TopologicalSpace 
   have hX : ENNReal.ofReal (∫ g, ‖f g‖ ^ 2 ∂ν) = ∫⁻ g, ‖f g‖ₑ ^ 2 ∂ν := by
     rw [ofReal_integral_eq_lintegral_ofReal hf2 (Filter.Eventually.of_forall fun g => sq_nonneg _)]
     refine lintegral_congr fun g => ?_
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   have hY : ENNReal.ofReal (∫ g, ‖⟪v, ρ g v⟫_ℂ‖ ∂ν) = ∫⁻ x, ‖⟪v, ρ x v⟫_ℂ‖ₑ ∂ν := by
     rw [ofReal_integral_eq_lintegral_ofReal hφ.norm (Filter.Eventually.of_forall fun g => norm_nonneg _)]
-    exact lintegral_congr fun g => ofReal_norm_eq_enorm _
+    exact lintegral_congr fun g => ofReal_norm _
   have hL : ‖∫ g, f g • ρ g v ∂ν‖ ^ 2 = ‖⟪∫ g, f g • ρ g v ∂ν, ∫ g, f g • ρ g v ∂ν⟫_ℂ‖ := by
     rw [inner_self_eq_norm_sq_to_K]
     simp
   rw [hL, ← ENNReal.ofReal_le_ofReal_iff (mul_nonneg hA hB), ENNReal.ofReal_mul hA, hX, hY,
-    ofReal_norm_eq_enorm]
+    ofReal_norm]
   exact key
 
 end GlobalTheory.CompanionTheory.Godement
@@ -866,14 +866,14 @@ theorem sq_integrable_and_bound (ρ : Γ → (B →L[ℂ] B)) (hρ : IsU ρ) (v 
       ENNReal.ofReal ((∫ g, ‖⟪v, ρ g v⟫_ℂ‖ ∂ν) * ‖b‖ ^ 2) := by
     intro s hs hs'
     obtain ⟨hi, hle⟩ := integrableOn_and_setIntegral_sq_le_of_isU ν ρ hρ v hm b hs hs'
-    rw [← ofReal_integral_norm_eq_lintegral_enorm hi]
+    rw [← ofReal_integral_norm_eq_lintegral_eNorm hi]
     apply ENNReal.ofReal_le_ofReal
     simpa only [norm_pow, norm_norm] using hle
   have hInt : Integrable (fun g => ‖⟪b, ρ g v⟫_ℂ‖ ^ 2) ν :=
     integrable_of_forall_fin_meas_le _ ENNReal.ofReal_lt_top hcont.aestronglyMeasurable key
   refine ⟨hInt, ?_⟩
   have hle := lintegral_le_of_forall_fin_meas_le _ key
-  rw [← ofReal_integral_norm_eq_lintegral_enorm hInt, ENNReal.ofReal_le_ofReal_iff hK] at hle
+  rw [← ofReal_integral_norm_eq_lintegral_eNorm hInt, ENNReal.ofReal_le_ofReal_iff hK] at hle
   simpa only [norm_pow, norm_norm] using hle
 
 end GlobalTheory.CompanionTheory.GodementCoeff
@@ -1044,7 +1044,7 @@ theorem tMap : TMap := by
     rw [hT, isU_inner_left hσ k, hT]
     refine (integral_mul_left_eq_self (μ := ν) (fun g => ⟪ρ k b, ρ g v⟫_ℂ * ⟪σ g w, a⟫_ℂ) k).symm.trans
       (integral_congr_ae (ae_of_all _ fun g => ?_))
-    simp only [hρ.mul, hσ.mul, ContinuousLinearMap.mul_apply]
+    simp only [hρ.mul, hσ.mul, mul_apply_eq_comp]
     rw [isU_inner hρ, isU_inner_left hσ]
   have hv' : T v = (c : ℂ) • w := ext_inner_right ℂ fun a => by
     rw [hT, inner_smul_left, Complex.conj_ofReal]
@@ -1055,7 +1055,7 @@ theorem tMap : TMap := by
   refine ⟨(c : ℂ)⁻¹ • T, fun g x => ?_, ?_⟩
   · simp [hk]
   · have hc' : (c : ℂ) ≠ 0 := by exact_mod_cast hc
-    rw [ContinuousLinearMap.smul_apply, hv', smul_smul, inv_mul_cancel₀ hc', one_smul]
+    rw [smul_apply, hv', smul_smul, inv_mul_cancel₀ hc', one_smul]
 
 end GlobalTheory.CompanionTheory.RgHeA.TMapPf
 end -- clump:auto
@@ -1215,7 +1215,7 @@ theorem momentHeA_of (hD : DecEx) (hC : Comat) (hW : WordBd) : MomentHeA := by
   set d := c0 * Formalism.QuantumDeterminants.fdegHC lam with hdd
   obtain ⟨i0, e0⟩ := Formalism.MainNotions.BridgeLemma.schur_abs hd v ξ
   rw [hv1, hξ, one_pow, mul_one] at e0
-  haveI : ν.IsInvInvariant := by
+  have : ν.IsInvInvariant := by
     rw [Measure.isMulLeftInvariant_eq_smul ν (muG ε')]
     refine ⟨?_⟩
     rw [Measure.inv, Measure.map_smul]
@@ -1241,11 +1241,11 @@ theorem momentHeA_of (hD : DecEx) (hC : Comat) (hW : WordBd) : MomentHeA := by
       have e1 : π (emb e (um h)) (X.p s x z) = actT π (um (embU hF h)) (X.p s x) z := by
         unfold actT
         rw [← um_inv, Finset.sum_eq_single z (fun b _ hb => by
-          rw [show um (embU hF h)⁻¹ b z = _ from emb_col _ b, if_neg hb, zero_smul]) (by simp),
-          show um (embU hF h)⁻¹ z z = _ from emb_col _ z, if_pos rfl, one_smul]
+          rw [show um (embU hF h)⁻¹ b z = _ from emb_col _ b, ite_eq_right hb, zero_smul]) (by simp),
+          show um (embU hF h)⁻¹ z z = _ from emb_col _ z, ite_eq_left rfl, one_smul]
         rfl
       have e2 := X.form s hs _ (smT_act hU (embU hF h) hx) _ (smT_single hηs z)
-      rw [formT_single, show ε z = true from hF.1, if_pos rfl, one_mul, X.pr_act s hs _ _ hx, X.p_act s hs _ _ hx] at e2
+      rw [formT_single, show ε z = true from hF.1, ite_eq_left rfl, one_mul, X.pr_act s hs _ _ hx, X.p_act s hs _ _ hx] at e2
       simp only
       rw [e1, e2]; ring
     have hκ' : (κ : ℂ) ≠ 0 := by exact_mod_cast hκ.ne'
@@ -1404,7 +1404,7 @@ theorem par_of (hP : Par e ε lam ε' mu B) : GlobalTheory.CompanionTheory.Pairi
   · calc #{a | ε a = false} ≤ #{i | ε' i = false} := by
           refine Finset.card_le_card_of_surjOn (fun i => e (some i)) ?_
           intro a ha
-          simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at ha
+          simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at ha
           cases hsa : e.symm a with
           | none =>
             have : a = e none := by rw [← hsa, Equiv.apply_symm_apply]
@@ -1413,13 +1413,13 @@ theorem par_of (hP : Par e ε lam ε' mu B) : GlobalTheory.CompanionTheory.Pairi
           | some i =>
             have : a = e (some i) := by rw [← hsa, Equiv.apply_symm_apply]
             refine ⟨i, ?_, this.symm⟩
-            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq]
+            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq]
             rw [← hs.2 i, ← this, ha]
       _ ≤ #{i | ε' i = true} := hP.pos
       _ ≤ #{a | ε a = true} := by
           refine Finset.card_le_card_of_injOn (fun i => e (some i)) ?_ ?_
           · intro i hi
-            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hi ⊢
+            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hi ⊢
             rw [hs.2 i, hi]
           · intro i _ j _ hij
             simpa using hij
@@ -1502,8 +1502,8 @@ private theorem isURepOn_embH_of_signs {e : Option (Fin n) ≃ Fin (n + 1)} {ε 
 theorem projLarge_of (hS : PositivityTheory.RgHe.A.SchurEigenProjectionExists) (hB : PositivityTheory.RgHe.A.BigProjP) : ProjLarge := by
   unfold ProjLarge ForPair
   intro n e ε lam ε' mu B hP H H' _ _ _ _ π σ hπ hσ v₀ hv₀
-  haveI : CompleteSpace H := hπ.1
-  haveI : CompleteSpace H' := hσ.1
+  have : CompleteSpace H := hπ.1
+  have : CompleteSpace H' := hσ.1
   obtain ⟨d, hd⟩ := Formalism.MainNotions.BridgeCSchur.fdeg_of_DS mu σ hσ
   have hK : PositivityTheory.RgHe.SchurK ε' σ (muG ε') d⁻¹ := by
     refine ⟨inv_pos.2 hd.1, fun v w v' w' => ⟨(hd.2 v w v' w').1, ?_⟩⟩
@@ -1558,8 +1558,8 @@ theorem projLarge_of (hS : PositivityTheory.RgHe.A.SchurEigenProjectionExists) (
 theorem eigMap_of (hE : PositivityTheory.RgHe.A.EigA) (hT : PositivityTheory.RgHe.A.TMap) : EigMap := by
   unfold EigMap ForPair
   intro n e ε lam ε' mu B hP H H' _ _ _ _ π σ hπ hσ d hd w₀ hw₀ hint j P hjP v hv hPv
-  haveI : CompleteSpace H := hπ.1
-  haveI : CompleteSpace H' := hσ.1
+  have : CompleteSpace H := hπ.1
+  have : CompleteSpace H' := hσ.1
   have hU' : GlobalTheory.CompanionTheory.UnitaryFramesMetricPeriods.IsU (fun g : UJ ε' => σ (umat g)) := isU_comp_umat_of_isURepOn hσ.2.2.1
   have hU : GlobalTheory.CompanionTheory.UnitaryFramesMetricPeriods.IsU (fun g : UJ ε' => π (embH e (umat g))) :=
     isU_comp_umat_of_isURepOn (ρ := fun h => π (embH e h)) (isURepOn_embH_of_signs hP.signs hπ.2.2.1)

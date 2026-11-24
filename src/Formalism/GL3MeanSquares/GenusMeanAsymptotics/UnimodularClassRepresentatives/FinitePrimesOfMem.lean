@@ -97,7 +97,7 @@ theorem mem_pow_iff_le_vF {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) {n : 
 theorem finite_primes_of_mem {n : 𝓞 F} (hn : n ≠ 0) :
     {𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal} | n ∈ 𝔭.1}.Finite := by
   refine Set.Finite.of_finite_image (f := Subtype.val) ?_ Subtype.val_injective.injOn
-  refine (Ideal.finite_setOfPred_absNorm_le (S := 𝓞 F) (Ideal.absNorm (Ideal.span {n}))).subset ?_
+  refine (Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 F) (Ideal.absNorm (Ideal.span {n}))).subset ?_
   rintro _ ⟨𝔭, h𝔭, rfl⟩
   exact Nat.le_of_dvd (Nat.pos_of_ne_zero (absNorm_span_ne_zero hn))
     (Ideal.absNorm_dvd_absNorm_of_le ((Ideal.span_singleton_le_iff_mem _).mpr h𝔭))
@@ -167,7 +167,7 @@ theorem bId_sup_eq_top {v : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal} →₀ ℕ
 theorem exists_vF_eq {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (j : ℕ) :
     ∃ n : 𝓞 F, n ≠ 0 ∧ vF 𝔭 n = j := by
   have := h𝔭.isPrime
-  obtain ⟨n, hn, hn'⟩ := SetLike.exists_of_lt (Ideal.pow_succ_lt_pow (ne_bot_of_max h𝔭) j)
+  obtain ⟨n, hn, hn'⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_succ_lt_pow (ne_bot_of_max h𝔭) j)
   have h0 : n ≠ 0 := fun h => hn' (h ▸ Ideal.zero_mem _)
   refine ⟨n, h0, le_antisymm ?_ ((mem_pow_iff_le_vF h𝔭 h0 j).mp hn)⟩
   by_contra hlt

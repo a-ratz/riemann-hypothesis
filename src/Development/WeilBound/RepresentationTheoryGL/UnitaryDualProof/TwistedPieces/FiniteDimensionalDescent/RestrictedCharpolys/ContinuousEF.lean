@@ -85,7 +85,7 @@ theorem fb_smul {q d : ℕ} (B : FB k q d) (l a : k) : B.cF (l ^ q * a) = fun j 
 
 theorem fb_exists (hF : FinDim k) (p c : ℕ) [Fact p.Prime] [CharP k p] :
     ∃ d : ℕ, 0 < d ∧ Nonempty (FB k (p ^ c) d) := by
-  letI := frMod (k := k) p c
+  let := frMod (k := k) p c
   obtain ⟨hfd, hpos⟩ := hF p c
   set d := Module.finrank k (Fr k p c) with hd
   let b : Module.Basis (Fin d) k (Fr k p c) := Module.finBasis k (Fr k p c)

@@ -90,11 +90,11 @@ theorem tailEnergyStep {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpace X
   have hadd := mIntAdd A P (LocPot.ofFun v) Φ hP hvpot hΦ (logNormSec L s)
     (hI _ (cons_pot A _ P Φ hP hΦ)) (hI _ (cons_pot A _ _ Φ hvpot hΦ))
   have hpl := poincareLelong A L s m W B hL hs hsnc hB v hv Φ hΦ
-  have hW : ∀ k, -(M + 1) * mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtype_val)
-      (fun _ => 1) ≤ mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtype_val)
+  have hW : ∀ k, -(M + 1) * mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtypeVal)
+      (fun _ => 1) ≤ mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtypeVal)
       (v ∘ Subtype.val) := by
     intro k
-    haveI : CompactSpace (W k) :=
+    have : CompactSpace (W k) :=
       isCompact_iff_compactSpace.mp (SimpleNormalCrossingSliceCharts.isClosed_divisorComponent A L s m W hsnc k).isCompact
     have hsm : (B k).Smooth (v ∘ Subtype.val) :=
       (pullPsh A (B k) Subtype.val (hB k) L Set.univ v isOpen_univ hL).1 hv
@@ -118,8 +118,8 @@ theorem tailEnergyStep {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpace X
     linarith
   rw [hadd, hpl]
   have hsum : -(M + 1) * ∑ k, (m k : ℝ) * mInt (B k)
-      (fun i => (Φ i).pullback Subtype.val continuous_subtype_val) (fun _ => 1) ≤
-      ∑ k, (m k : ℝ) * mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtype_val)
+      (fun i => (Φ i).pullback Subtype.val continuous_subtypeVal) (fun _ => 1) ≤
+      ∑ k, (m k : ℝ) * mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtypeVal)
         (v ∘ Subtype.val) := by
     rw [Finset.mul_sum]
     refine Finset.sum_le_sum fun k _ => ?_
@@ -143,7 +143,7 @@ theorem tailTelescopeSucc {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpac
   have hC0 := fun j => exists_psh_chern_bound A (Θ j) L (hΘ j) (hΘp j) hL
   choose C hC hCL hCL' using hC0
   let K : Fin (e + 1) → ℝ := fun j => ∑ k, (m k : ℝ) * mInt (B k)
-      (fun i => (Θ (Equiv.swap 0 j i.succ)).pullback Subtype.val continuous_subtype_val) (fun _ => 1) +
+      (fun i => (Θ (Equiv.swap 0 j i.succ)).pullback Subtype.val continuous_subtypeVal) (fun _ => 1) +
       C j * mInt A Θ (fun _ => 1)
   let Kn : ℕ → ℝ := fun t => if h : t < e + 1 then K ⟨t, h⟩ else 0
   refine ⟨∑ t ∈ Finset.range (e + 1), Kn t, fun M v hM hv hvp hvb => ?_⟩
@@ -195,7 +195,7 @@ theorem tailTelescopeSucc {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpac
       induction i using Fin.cases with
       | zero =>
         simp only [Function.comp, Equiv.swap_apply_left, Fin.cons_zero, G]
-        rw [if_pos (by omega)]
+        rw [ite_eq_left (by omega)]
       | succ i =>
         simp only [Function.comp, Fin.cons_succ, Φ, G]
         have := hne i
@@ -205,21 +205,21 @@ theorem tailTelescopeSucc {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpac
       induction i using Fin.cases with
       | zero =>
         simp only [Function.comp, Equiv.swap_apply_left, Fin.cons_zero, G]
-        rw [if_neg (by omega)]
+        rw [ite_eq_right (by omega)]
       | succ i => simp only [Function.comp, Fin.cons_succ, Φ]
     have e0 : ∀ g, mInt A (G t) g = mInt A (Fin.cons (Θ j) Φ) g := fun g => by
       rw [← hG0, mIntSymm]
     have e1 : mInt A (G (t + 1)) (logNormSec L s) =
         mInt A (Fin.cons (Θ j + LocPot.ofFun (v j)) Φ) (logNormSec L s) := by
       rw [← hG1, mIntSymm]
-    have e3 : ∀ k, mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtype_val)
+    have e3 : ∀ k, mInt (B k) (fun i => (Φ i).pullback Subtype.val continuous_subtypeVal)
         (fun _ => 1) = mInt (B k) (fun i => (Θ (Equiv.swap 0 j i.succ)).pullback Subtype.val
-          continuous_subtype_val) (fun _ => 1) := by
+          continuous_subtypeVal) (fun _ => 1) := by
       intro k
-      haveI : CompactSpace (W k) :=
+      have : CompactSpace (W k) :=
         isCompact_iff_compactSpace.mp (SimpleNormalCrossingSliceCharts.isClosed_divisorComponent A L s m W hsnc k).isCompact
       rw [mInt_congr_phi (B k) _ (fun i => (Θ (Equiv.swap 0 j i.succ)).pullback Subtype.val
-        continuous_subtype_val + LocPot.ofFun (w t (Equiv.swap 0 j i.succ) ∘ Subtype.val)) ?_]
+        continuous_subtypeVal + LocPot.ofFun (w t (Equiv.swap 0 j i.succ) ∘ Subtype.val)) ?_]
       · exact massIndep (B k) _ _
           (fun i => isPotentialPullback A (B k) Subtype.val (hB k) _ (hΘ _))
           (fun i => (pullPsh A (B k) Subtype.val (hB k) L Set.univ _ isOpen_univ hL).1 (hw t _))
@@ -231,7 +231,7 @@ theorem tailTelescopeSucc {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpac
     have e4 : mInt A (Fin.cons (Θ j) Φ) (fun _ => 1) = mInt A Θ (fun _ => 1) := by
       rw [← e0, hmass]
     have hKn : Kn t = K j := by
-      simp only [Kn, dif_pos ht]
+      simp only [Kn, dite_eq_left ht]
       congr 1
       exact Fin.ext hj.symm
     have hP := tailEnergyStep A L s m W B hB hL hs hsnc (Θ j) (hΘ j) (isPsh_of_isPosPot A _ (hΘp j))
@@ -336,7 +336,7 @@ theorem tailBound_holds : TailBoundStatement := by
   have hupot : ∀ i, IsPotential A (Θ i + LocPot.ofFun (u i)) :=
     fun i => isPotentialAdd A _ _ (hΘ i) (isPotential_ofFun A _ (hu i))
   set μ := maMeasure A (fun i => Θ i + LocPot.ofFun (u i)) with hμ
-  haveI : IsFiniteMeasure μ := (maMeasure_thm A _ hupot hpsh).1
+  have : IsFiniteMeasure μ := (maMeasure_thm A _ hupot hpsh).1
   have hK0 : 0 ≤ max CE 0 * (C₁ + 3) := mul_nonneg (le_max_right _ _) (by linarith)
 
   have hfirst : ∀ R' : ℝ, Real.exp 1 ≤ R' → μ (bdry s ∪ {y | R' ≤ rW L s y}) ≤
@@ -356,7 +356,7 @@ theorem tailBound_holds : TailBoundStatement := by
     have hvpot : ∀ i, IsPotential A (Θ i + LocPot.ofFun (v i)) :=
       fun i => isPotentialAdd A _ _ (hΘ i) (isPotential_ofFun A _ (hvs i))
     set μR := maMeasure A (fun i => Θ i + LocPot.ofFun (v i)) with hμR
-    haveI : IsFiniteMeasure μR := (maMeasure_thm A _ hvpot hvpsh).1
+    have : IsFiniteMeasure μR := (maMeasure_thm A _ hvpot hvpsh).1
     set V := {y | y ∉ bdry s ∧ rW L s y < R'} with hV
     have hagree : μ.restrict V = μR.restrict V := by
       refine maMeasure_congr_open A Θ u v V (hro R') fun i => ⟨-1 / 2, fun y hy => ?_⟩

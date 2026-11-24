@@ -165,11 +165,11 @@ theorem sub_mem_pow_succ {O W V : Type} [CommRing O] [IsLocalRing O] [CommRing W
     (hk : ∀ w, θ₁ w - θ₂ w ∈ maximalIdeal V ^ (k + 1)) :
     ∀ w, θ₁ w - θ₂ w ∈ maximalIdeal V ^ (k + 2) := by
   have hW := sub_mem_pow_of_mem_maximalIdeal φ hm θ₁ θ₂ hO k hk
-  letI : Algebra O (ResidueField W) := ((residue W).comp φ).toAlgebra
-  haveI : Algebra.FormallyUnramified O (ResidueField W) := hu
-  letI : Module (ResidueField W) (Gr V k) := grModule θ₁ k
-  letI : Module O (Gr V k) := Module.compHom _ (algebraMap O (ResidueField W))
-  haveI : IsScalarTower O (ResidueField W) (Gr V k) := ⟨fun a b x => by
+  let : Algebra O (ResidueField W) := ((residue W).comp φ).toAlgebra
+  have : Algebra.FormallyUnramified O (ResidueField W) := hu
+  let : Module (ResidueField W) (Gr V k) := grModule θ₁ k
+  let : Module O (Gr V k) := Module.compHom _ (algebraMap O (ResidueField W))
+  have : IsScalarTower O (ResidueField W) (Gr V k) := ⟨fun a b x => by
     show ResidueField.map θ₁ (a • b) • x = ResidueField.map θ₁ (algebraMap O _ a) • (ResidueField.map θ₁ b • x)
     rw [Algebra.smul_def, map_mul, mul_smul]⟩
   let δ₀ : W → Gr V k := fun w => Submodule.Quotient.mk ⟨θ₁ w - θ₂ w, hk w⟩
@@ -733,8 +733,8 @@ theorem GlobalTheory.TInj.low_eq_of_match : ∀ {o : Type} [CommRing o] {ζ : o}
     rintro p₁ p₂ ⟨p', hp'y, hact, heqv⟩ hy
     have hg : p'.g = p₂.g := GlobalTheory.T.torsionPoint_torusPart_eq_of_equiv_same_lattice V D₂ hτ₂ F n (by omega) p' p₂ (hp'y.trans hy.symm) heqv
     rw [← hg, hact.1, Over.comp_left]
-  haveI := hM.2.1
-  haveI : IsMonHom (asIso b).hom := hM.1
+  have := hM.2.1
+  have : IsMonHom (asIso b).hom := hM.1
   set t₁ : Sp V ⟶ L.F.X := spMap ω₁ ≫ L.u ≫ (GlobalTheory.LowChart.powA L.F L.T.r).hom with ht₁
   set t₂ : Sp V ⟶ L.F.X := spMap ω₂ ≫ L.u ≫ (GlobalTheory.LowChart.powA L.F L.T.r).hom with ht₂
   let a₁ : D₁.P.A.left ⟶ L.F.univ.A.left := β₁ ≫ L.β
@@ -807,7 +807,7 @@ theorem GlobalTheory.TInj.low_eq_of_match : ∀ {o : Type} [CommRing o] {ζ : o}
         (TF (R := V) F).hom ≫ (spMap ω₂ ≫ L.u) ≫ (GlobalTheory.LowChart.coord L.F i).left := by
       rw [c1, c2, ha]
     have : IsProper L.F.univ.A.hom := L.F.univ.ab.proper
-    haveI : IsDominant (TF (R := V) F).hom := ReciprocityTheory.ChartRestriction.G.DVR.GC.isDominant_jFR (V := V) F
+    have : IsDominant (TF (R := V) F).hom := ReciprocityTheory.ChartRestriction.G.DVR.GC.isDominant_jFR (V := V) F
     refine ext_of_isDominant_of_isSeparated L.F.univ.A.hom ?_ (TF (R := V) F).hom hgen
     simp only [Category.assoc, Over.w]
     exact ht
@@ -1126,7 +1126,7 @@ theorem tautChart_eq_of_genPt : ∀ {g n : ℕ} {φ : InvFun ℤ}, 3 ≤ n → �
     rw [← Category.assoc, e₁, Category.assoc, hy, ← Category.assoc, ← e₂, Category.assoc]
   have hmap : ∀ f : R₁ →+* V, IsLocalHom f → (maximalIdeal R₁).map f ≤ maximalIdeal V := fun f hf =>
     Ideal.map_le_iff_le_comap.mpr fun x hx => (mem_maximalIdeal _).2 (map_nonunit f x ((mem_maximalIdeal _).1 hx))
-  haveI : CharZero R₁ := hR₁.2.2.2
+  have : CharZero R₁ := hR₁.2.2.2
   obtain ⟨D₁, D₂, hD₁, hD₂, j₁, j₂, b, φ', hE₁, hE₂, hMatch, hpairs⟩ :=
     GlobalTheory.T.uniformisation_pullbacks_match_torsionPairs F.univ (GlobalTheory.LowChart.isUnit_zetaAway n hn) hn1 R₁ (maximalIdeal R₁)
       ⟨hR₁.1, inferInstance, hR₁.2.1, hR₁.2.2.1⟩ D A₀ G₀ U₀ hsa₀ (κρ ≫ y) α₀ ⟨hA, α₂, hsq, hL⟩ V hVc f₁ f₂ hf₁ hf₂
@@ -1282,8 +1282,8 @@ theorem base_eq {o : Type} [CommRing o] {ζ : o} {g n : ℕ} {φ : InvFun ℤ} (
     [CommRing V] [IsLocalRing V] [IsNoetherianRing V] (θ₁ θ₂ : C.R →+* V) [IsLocalHom θ₁] [IsLocalHom θ₂]
     (hu : spMap (θ₁.comp C.iw) ≫ C.u = spMap (θ₂.comp C.iw) ≫ C.u) (hm : ∀ r, θ₁ r - θ₂ r ∈ maximalIdeal V) :
     θ₁.comp C.iw = θ₂.comp C.iw := by
-  haveI : IsLocalHom C.iw := C.ψ_loc
-  haveI : IsNoetherianRing C.W := C.noeth
+  have : IsLocalHom C.iw := C.ψ_loc
+  have : IsNoetherianRing C.W := C.noeth
   have hO := stalk_comp_eq C.u (θ₁.comp C.iw) (θ₂.comp C.iw) hu
   exact GlobalTheory.EtUniq.localHom_ext _ _ _ _ C.complete C.u_et C.u_sep _ _ inferInstance inferInstance hO (fun w => hm _)
 
@@ -1303,10 +1303,10 @@ end GlobalTheory.TChart.Inj
 open GlobalTheory.TChart.Inj in
 theorem GlobalTheory.TChart.galRigid_stalk_of_isFam : ∀ {g n : ℕ} {φ : InvFun ℤ}, 3 ≤ n → ∀ (F : SFam g n (zetaAway n)) (S : Scheme.{0}) (j : F.X ⟶ S) [IsOpenImmersion j], ∀ (C : Taut (zetaAway n) g n φ) (G₁ : Over (Sp C.R)) [GrpObj G₁] [IsCommMonObj G₁] (y : Sp (FractionRing C.R) ⟶ F.X) (α₁ : pullback G₁.hom (jK C.R) ⟶ F.univ.A.left) (ξ : Sp C.R ⟶ S), C.IsFam F G₁ y α₁ → y ≫ j = jK C.R ≫ ξ → GalRigid (Scheme.stalkClosedPointTo ξ).hom := by
   intro g n φ hn F S j _ C G₁ _ _ y α₁ ξ hF hy R' _ _ _ θ σ hR' hθ hfin hσ hfix hres
-  haveI : IsNoetherianRing R' := hR'.1
-  haveI : IsLocalHom θ := RingHom.IsIntegral.isLocalHom hfin.to_isIntegral hθ
-  haveI : IsLocalHom ((σ : R' →+* R').comp θ) := by
-    haveI : IsLocalHom (σ : R' →+* R') := inferInstance
+  have : IsNoetherianRing R' := hR'.1
+  have : IsLocalHom θ := RingHom.IsIntegral.isLocalHom hfin.to_isIntegral hθ
+  have : IsLocalHom ((σ : R' →+* R').comp θ) := by
+    have : IsLocalHom (σ : R' →+* R') := inferInstance
     infer_instance
   obtain ⟨κ₁, hκ₁⟩ := GlobalTheory.PolDeg.exists_genericMap hθ
   obtain ⟨κ₂, hκ₂⟩ := GlobalTheory.PolDeg.exists_genericMap (ρ := (σ : R' →+* R').comp θ) (σ.injective.comp hθ)

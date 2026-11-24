@@ -78,7 +78,7 @@ theorem exists_index {V' K'' : Type} [CommRing V'] [IsDomain V'] [IsDiscreteValu
       vV_mul (inj _ u.ne_zero) (pow_ne_zero _ (inj p hp.ne_zero)), vV_mul h2 (pow_ne_zero _ h1),
       vV_pow (inj p hp.ne_zero), vV_pow h1, vV_unit, vV_irr hp, hr]
     have := vV_unit (K' := K'') (Units.map j.toMonoidHom u)
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at this
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at this
     rw [this]; ring
   refine ⟨r, by omega, fun x => ?_⟩
   by_cases hx : x = 0
@@ -572,8 +572,8 @@ theorem integral_baseChange (T T' : CDVR) (io : c.F →+* T.Fr) (io' : c.F →+*
     letI := io'.toAlgebra
     ∀ (ψ : T.Fr →ₐ[c.F] T'.Fr), (∀ a, ψ (algebraMap T.V T.Fr a) = algebraMap T'.V T'.Fr (f a)) →
       ∀ (y : FrPt Xo c T.Fr) (y' : FrPt Xo c T'.Fr), FrMap ψ y y' → Integral T io y → Integral T' io' y' := by
-  letI := io.toAlgebra
-  letI := io'.toAlgebra
+  let := io.toAlgebra
+  let := io'.toAlgebra
   intro ψ hψ y y' hm hy
   obtain ⟨L₁, L₂, -⟩ := GlobalTheory.firstFiveLaws
   obtain ⟨G, t, m1, m2, ⟨ub, h₁, h₂, h₃, h₄⟩, θ, hθ, w1, w2, σ, s1, θ2, a1, a2, a3, a4, a5, a6⟩ := hy

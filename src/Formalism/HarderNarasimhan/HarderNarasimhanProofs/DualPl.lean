@@ -260,7 +260,7 @@ theorem duality_basic (L : Submodule ℤ E) [DiscreteTopology L] :
     by_cases h : k = i
     · subst h
       simp
-    · rw [if_neg (Ne.symm h), if_neg h]
+    · rw [ite_eq_right (Ne.symm h), ite_eq_right h]
   have hv' : ∀ i, v i ∈ span ℝ (Set.range w) := by
     intro i
     rw [duality_expand v w hw hvw (Submodule.subset_span (Set.mem_range_self i))]
@@ -449,7 +449,7 @@ theorem inner_realize_alt [_root_.NumberField.IsTotallyComplex K] (b : Basis ι 
   refine Finset.sum_congr rfl fun v _ => ?_
   rw [← ident_sum_fcoord b X hX v f x, Complex.re_sum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
-  simp only [Complex.mul_re, if_true, show ¬ ((1 : Fin 2) = 0) from by decide, if_false]
+  simp only [Complex.mul_re, ite_true, show ¬ ((1 : Fin 2) = 0) from by decide, ite_false]
   ring
 
 theorem ident_mem_zl {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] (ρ : V →+ E)
@@ -546,7 +546,7 @@ theorem dualZ_zl_eq [_root_.NumberField.IsTotallyComplex K] (b : Basis ι K V) (
       intro j l
 
       simp only [c, Finset.mul_sum, mul_smul_comm, map_sum, map_smul, hω, smul_eq_mul, mul_ite,
-      mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hsp' : ⊤ ≤ Submodule.span K (Set.range e) := by
       rw [show Set.range e = s from Subtype.range_coe, hspan, hsp]
     let eB : Basis s K V := Basis.mk hli hsp'
@@ -693,7 +693,7 @@ theorem covol_map_scaled (φ : E →ₗ[ℝ] E) (c : ℝ) (hc : 0 < c)
     refine DiscreteTopology.of_continuous_injective (f := g) ?_ ?_
     · have hc' : Continuous (φe.symm : E → E) :=
         LinearMap.continuous_of_finiteDimensional (φe.symm : E →ₗ[ℝ] E)
-      exact Continuous.subtype_mk (hc'.comp continuous_subtype_val) _
+      exact Continuous.subtype_mk (hc'.comp continuous_subtypeVal) _
     · intro y y' h
       have h' : φe.symm (y : E) = φe.symm (y' : E) := congrArg Subtype.val h
       exact Subtype.ext (φe.symm.injective h')
@@ -756,7 +756,7 @@ theorem dual_inf_ann_eq (A N : Submodule (𝓞 K) V) :
     have key : ∀ t ∈ ((𝔡 : FractionalIdeal (𝓞 K)⁰ K) * D1 : FractionalIdeal (𝓞 K)⁰ K),
         t • f ∈ 𝔡 • (tdualLat A ⊓ annO N) := by
       intro t ht
-      rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_mul] at ht
+      rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_mul] at ht
       refine Submodule.mul_induction_on ht ?_ ?_
       · intro r hr η hη
         obtain ⟨r₀, hr₀, rfl⟩ := (FractionalIdeal.mem_coeIdeal _).1 hr
@@ -850,8 +850,8 @@ theorem twist_prime_le (X : Submodule (𝓞 K) W) (hX : X.FG) (𝔭 : Ideal (�
   have : Finite (X ⧸ (𝔭 • (⊤ : Submodule (𝓞 K) X))) := Module.finite_of_finite (𝓞 K ⧸ 𝔭)
   have hcard : Nat.card (X ⧸ (𝔭 • (⊤ : Submodule (𝓞 K) X))) =
       Nat.card (𝓞 K ⧸ 𝔭) ^ finrank (𝓞 K ⧸ 𝔭) (X ⧸ (𝔭 • (⊤ : Submodule (𝓞 K) X))) := by
-    haveI := Fintype.ofFinite (X ⧸ (𝔭 • (⊤ : Submodule (𝓞 K) X)))
-    haveI := Fintype.ofFinite (𝓞 K ⧸ 𝔭)
+    have := Fintype.ofFinite (X ⧸ (𝔭 • (⊤ : Submodule (𝓞 K) X)))
+    have := Fintype.ofFinite (𝓞 K ⧸ 𝔭)
     rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
     exact Module.card_eq_pow_finrank
   have hN : Nat.card (𝓞 K ⧸ 𝔭) = Ideal.absNorm 𝔭 := by
@@ -890,7 +890,7 @@ theorem twist_le (𝔟 : Ideal (𝓞 K)) (h𝔟 : 𝔟 ≠ ⊥) : ∀ (X : Submo
   · intro a p ha hp ih _ X hX
     have hpb : p ≠ ⊥ := hp.ne_zero
     have hab : a ≠ ⊥ := ha
-    haveI : p.IsMaximal := (Ideal.isPrime_of_prime hp).isMaximal hpb
+    have : p.IsMaximal := (Ideal.isPrime_of_prime hp).isMaximal hpb
     rw [Submodule.mul_smul, ← AddSubgroup.relIndex_mul_relIndex (p • a • X).toAddSubgroup
       (a • X).toAddSubgroup X.toAddSubgroup ((Submodule.toAddSubgroup_le _ _).2 Submodule.smul_le_right)
       ((Submodule.toAddSubgroup_le _ _).2 Submodule.smul_le_right)]
@@ -933,7 +933,7 @@ theorem twist_finrank_int [StarRing K] (X : Submodule (𝓞 K) W) (hX : X.FG) :
 theorem twist_int (X : Submodule (𝓞 K) W) (hX : X.FG) (m : ℕ) (hm : m ≠ 0) :
     ((Ideal.span {(m : 𝓞 K)}) • X).toAddSubgroup.relIndex X.toAddSubgroup =
       m ^ finrank ℤ X := by
-  letI : HasUniqueDiv W := ⟨fun n hn a c h => by
+  let : HasUniqueDiv W := ⟨fun n hn a c h => by
     apply smul_right_injective W (Nat.cast_ne_zero.2 hn : (n : K) ≠ 0)
     simpa [Nat.cast_smul_eq_nsmul] using h⟩
   have : Module.Finite (𝓞 K) X := Module.Finite.iff_fg.mpr hX
@@ -1060,7 +1060,7 @@ theorem exists_basis_in (A : Submodule (𝓞 K) V) [FiniteDimensional K V]
     ∃ (n : ℕ) (e : Basis (Fin n) K V), ∀ i, e i ∈ A := by
   obtain ⟨s, hsA, hspan, hli⟩ := exists_linearIndependent K (A : Set V)
   have hfin : s.Finite := hli.setFinite
-  haveI : Fintype s := hfin.fintype
+  have : Fintype s := hfin.fintype
   let e0 : Basis s K V := Basis.mk hli (by rw [Subtype.range_coe, hspan, hsp])
   refine ⟨Fintype.card s, e0.reindex (Fintype.equivFin s), fun i => ?_⟩
   rw [Basis.reindex_apply, Basis.mk_apply]
@@ -1212,12 +1212,12 @@ theorem key_lemma (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
   have hrkAd : rkK A = finrank K V := by unfold rkK; rw [hsp, finrank_top]
   set L := zl ρ A with hL
   set S := zl ρ N with hS
-  haveI hLd : DiscreteTopology L := hlatA.2
+  have hLd : DiscreteTopology L := hlatA.2
   have hSsat : Formalism.F.IsSaturated L S := hN.2
   obtain ⟨hQd, hrkQ, hdegQ⟩ := Formalism.F.degQuot _ L S hLd hSsat
-  haveI := hQd
+  have := hQd
   obtain ⟨hDd, hrkD, hdegD, -⟩ := duality_basic (Formalism.F.quot L S)
-  haveI := hDd
+  have := hDd
   have hSL : S ≤ L := hSsat.1
   have hE1 := dualZ_inf_orth L S hSL
   have hE2 := dualZ_zl_eq b X hX A hA hsp N
@@ -1238,7 +1238,7 @@ theorem key_lemma (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
   obtain ⟨hM'd, hrkM', hcovM'⟩ :=
     covol_map_scaled φh ((1 : ℝ) / 2) (by norm_num) hφhi (dualZ (Formalism.F.quot L S))
   rw [← hM'] at hM'd hrkM' hcovM'
-  haveI := hM'd
+  have := hM'd
   have hRRp : R ≤ Rp := by rw [hRdR]; exact Submodule.smul_le_right
   have hzlle : zl ρ' R ≤ M' := shiftInv_zl_mono ρ' hRRp
   have hn0 : 0 < finrank ℚ K := Module.finrank_pos
@@ -1485,7 +1485,7 @@ theorem dual_dual (b : Basis ι K V) (X : InfinitePlace K → Matrix ι ι ℂ)
     exact mul_left_cancel₀ hc.ne' hhtA2
   obtain ⟨hlat2, hrkz2, -⟩ := place_lattice_structure K V ι b X hX A2 hA2fg
   obtain ⟨hlat1, hrkz1, -⟩ := place_lattice_structure K V ι b X hX A hA
-  haveI := hlat2.2
+  have := hlat2.2
   have hrkeq : Formalism.F.rk (zl (Formalism.HermitianLatticesTheory.realize b X) A) = Formalism.F.rk (zl (Formalism.HermitianLatticesTheory.realize b X) A2) := by
     have h : Formalism.HN.rk (Formalism.HermitianLatticesTheory.realize b X) A = Formalism.HN.rk (Formalism.HermitianLatticesTheory.realize b X) A2 := by
       rw [hrkz1, hrkz2, hrkA, hrk2]
@@ -1672,7 +1672,7 @@ theorem dual_ne_bot (b : Basis ι K V) (A : Submodule (𝓞 K) V) (hA : A.FG)
   have h2 : rkK (⊥ : Submodule (𝓞 K) (Module.Dual K V)) = 0 := by unfold rkK; simp
   have hpos : 0 < finrank K V := by
     obtain ⟨x, -, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hA0
-    haveI : Nontrivial V := ⟨⟨x, 0, hx0⟩⟩
+    have : Nontrivial V := ⟨⟨x, 0, hx0⟩⟩
     exact Module.finrank_pos
   omega
 

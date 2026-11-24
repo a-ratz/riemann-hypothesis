@@ -79,8 +79,8 @@ theorem good_finsum {T : (B.Mat k r → E) → B.Mat k r → E} (hT : Qx2.Good k
     Q.SmoothLev k r 0 Set.univ (fun y => ∑ i ∈ s, c i • h i y) ∧
       ∀ x ∈ Q.Glev k r 0 ∩ Set.univ, T (fun y => ∑ i ∈ s, c i • h i y) x = ∑ i ∈ s, c i • T (h i) x := by
   classical
-  letI : NormedAddCommGroup (Q.Mx k r) := Matrix.normedAddCommGroup
-  letI : NormedSpace ℝ (Q.Mx k r) := Matrix.normedSpace
+  let : NormedAddCommGroup (Q.Mx k r) := Matrix.normedAddCommGroup
+  let : NormedSpace ℝ (Q.Mx k r) := Matrix.normedSpace
   have hz : Q.SmoothLev k r 0 Set.univ (fun _ : B.Mat k r => (0 : E)) := by
     intro g₀ _
     exact ⟨Set.univ, fun _ => 0, isOpen_univ, Set.mem_univ _, contDiffOn_const, fun _ _ _ => rfl⟩

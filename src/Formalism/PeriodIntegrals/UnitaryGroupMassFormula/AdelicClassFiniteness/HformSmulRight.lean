@@ -157,7 +157,7 @@ private theorem exists_finite_residue_reps_mod_natCast (F : Type) [Field F] [Num
   have hI : Ideal.span {(N : 𝓞 F)} ≠ ⊥ := by
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact hN'
-  haveI : Finite (𝓞 F ⧸ Ideal.span {(N : 𝓞 F)}) := by
+  have : Finite (𝓞 F ⧸ Ideal.span {(N : 𝓞 F)}) := by
     first
       | exact @Finite.of_fintype _ (Ideal.fintypeQuotientOfFreeOfNeBot _ hI)
       | exact Ideal.finiteQuotientOfFreeOfNeBot _ hI
@@ -193,7 +193,7 @@ theorem partIso_of (hIB : IdealBoundAll) : PartIso := by
     apply mul_ne_zero ha ha
     linear_combination -h
   · intro p hp x hxM hx0 hxx
-    simp only [Lat, Set.mem_setOf_eq] at hp
+    simp only [Lat, Set.mem_ofPred_eq] at hp
     obtain ⟨hJ, hdet, -, hspan, hint, hdual⟩ := hp
     have hinj : Function.Injective (algebraMap (𝓞 E) E) := by
       first

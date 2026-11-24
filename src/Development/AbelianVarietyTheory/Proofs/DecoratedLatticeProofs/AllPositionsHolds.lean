@@ -415,7 +415,7 @@ theorem entries_core (ψ : AddChar k Circle) (ν : Measure k) [ν.IsAddHaarMeasu
       have hch : ch z = y := by
         simp only [ch, hzent]
         rw [Finset.sum_eq_single i]
-        · simp only [if_true, ζ]; field_simp
+        · simp only [ite_true, ζ]; field_simp
         · intro j _ hj; simp [Fin.succ_inj, hj]
         · simp
       have h1 : (ψ (-ch z) : ℂ) = 1 := by
@@ -495,7 +495,7 @@ namespace GlobalTheory.SymChain
 
 theorem classAt_all : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k), IsUnitVol ν → ∀ (s κ : ℕ) (S : SymData k s κ) (t : Type) [Fintype t] [DecidableEq t], S.ClassAt t ν := by
   intro k _ _ _ _ _ _ ν hν s κ S t _ _ j c H p hp1 hpc h hE
-  haveI := hν.1
+  have := hν.1
   obtain ⟨D, hDdef⟩ : ∃ D : GL (XIx (Fin κ) t (j + 1) ⊕ Fin c) k,
       D = embA (XIx (Fin κ) t (j + 1)) (GlobalTheory.SplitFlip.diagGL fun i : Fin c => S.ϖ ^ (i.val + 1)) := ⟨_, rfl⟩
   obtain ⟨D', hD'def⟩ : ∃ D' : GL (XIx (Fin κ) t j ⊕ Fin (c + 1)) k,
@@ -553,7 +553,7 @@ theorem classAt_all : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
     exact hm1 r s (Nat.ne_of_lt (OrderDual.toDual_lt_toDual.mp hrs))
   have si1 : (m⁻¹).val.BlockTriangular lv' := BlockLevi.blockTriangular_inv lv' m sm1
   have si2 : (m⁻¹).val.BlockTriangular (fun r => OrderDual.toDual (lev p r)) := by
-    letI : Invertible m.val := m.invertible
+    let : Invertible m.val := m.invertible
     rw [Matrix.coe_units_inv]
     exact Matrix.blockTriangular_inv_of_blockTriangular sm2
   have sm1' : (m⁻¹⁻¹).val.BlockTriangular lv' := by rw [inv_inv]; exact sm1
@@ -586,7 +586,7 @@ namespace GlobalTheory.SymChain
 
 theorem oneIndexAt_of_classAt_supportAt : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k), IsUnitVol ν → ∀ (s κ : ℕ) (S : SymData k s κ) (t : Type) [Fintype t] [DecidableEq t], S.ClassAt t ν → S.SupportAt t → S.OneIndexAt t ν := by
   intro k _ _ _ _ _ _ ν hν s κ S t _ _ hC hS j c H p hp1 hpc h hE
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   obtain ⟨r, hr, u, hu, rfl⟩ := hC j c H p hp1 hpc h hE
   obtain ⟨γ, g, hg, rfl⟩ := Radical.exists_of_mem_R hr
   have hmul : ∀ (a b : GL (XIx (Fin κ) t (j + 1) ⊕ Fin c) k) (Ψ : type_of% ((S.T t).Phi j c H)),
@@ -725,7 +725,7 @@ theorem exists_R_mul_KOne : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     (typeFrame ϖ (Equiv.refl (n ⊕ Fin c))).bas * u'⁻¹ * (typeFrame ϖ (Equiv.refl (n ⊕ Fin c))).bas⁻¹, ?_, ?_⟩
   · refine mem_R_of_pattern _ fun a b h1 h2 => ?_
     rw [Units.val_mul, Units.val_mul, eu', Model.typeFrame_val, Model.typeFrame_inv, mul_diagonal, diagonal_mul]
-    simp only [M, Matrix.of_apply, if_pos (And.intro h1 h2)]
+    simp only [M, Matrix.of_apply, ite_eq_left (And.intro h1 h2)]
     by_cases hab : a = b
     · subst hab; simp [mul_inv_cancel₀ (Model.wt_ne_zero ϖ a)]
     · simp [one_apply_ne hab]
@@ -770,22 +770,22 @@ theorem exists_factor {g : GL (n ⊕ Fin c) k} (hg : g ∈ KO k _) (p : ℕ) (T 
   obtain ⟨u, hu, e⟩ := exists_mul_KOne hg (M := M) (fun r s => by
     by_cases hP : P r s
     · rw [Matrix.sub_apply, Valuation.map_sub_swap,
-        show M r s = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r s from if_pos hP]
+        show M r s = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r s from ite_eq_left hP]
       rcases s with s | i
       · obtain ⟨hT, l, rfl, hl⟩ := hP
         simpa using h1 l s hT hl
       · exact h2 r i hP
-    · rw [Matrix.sub_apply, show M r s = g.val r s from if_neg hP]; simp)
+    · rw [Matrix.sub_apply, show M r s = g.val r s from ite_eq_right hP]; simp)
   have hM : IntM M := e ▸ intM_of_mem_KO (mul_mem hg (KOne_le_KO hu))
   have m2 : ∀ r i, lev p (Sum.inr i : n ⊕ Fin c) ≤ lev p r →
       M r (.inr i) = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r (.inr i) :=
-    fun r i hl => if_pos hl
+    fun r i hl => ite_eq_left hl
   have m1 : ∀ (l : Fin c) s, T s → p ≤ l.val + 1 → M (.inr l) (.inl s) = 0 := fun l s hT hl => by
     have : M (.inr l) (.inl s) = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) (.inr l) (.inl s) :=
-      if_pos ⟨hT, l, rfl, hl⟩
+      ite_eq_left ⟨hT, l, rfl, hl⟩
     simpa using this
   have hd : M.toBlocks₂₂.det = 1 := by
-    rw [det_of_upperTriangular, Finset.prod_eq_one]
+    rw [det_of_isUpperTriangular, Finset.prod_eq_one]
     · intro i _
       simpa [toBlocks₂₂] using m2 (.inr i) i le_rfl
     · intro i j hij
@@ -794,7 +794,7 @@ theorem exists_factor {g : GL (n ⊕ Fin c) k} (hg : g ∈ KO k _) (p : ℕ) (T 
   obtain ⟨V, hV, hUV⟩ := exists_int_inv (U := M.toBlocks₂₂) (fun i j => hM _ _) hd
   let D : Matrix (Fin c) n k := Matrix.of fun l s => if T s then 0 else -(V * M.toBlocks₂₁) l s
   have hVM : IntM (V * M.toBlocks₂₁) := hV.mul fun i j => hM _ _
-  refine ⟨u, hu, D, fun i j => ?_, fun l s hT => if_pos hT, ?_⟩
+  refine ⟨u, hu, D, fun i j => ?_, fun l s hT => ite_eq_left hT, ?_⟩
   · by_cases hT : T j
     · simp [D, hT, zero_mem]
     · simpa [D, hT] using neg_mem (hVM i j)
@@ -982,9 +982,9 @@ theorem integral_block_indicator (k : Type) [MeasurableSpace k] [Zero k] (ν : M
       constructor
       · intro h a
         have := h a.1 a.2
-        rwa [dif_pos (hQ _ a.2), e1 _ a.2] at this
+        rwa [dite_eq_left (hQ _ a.2), e1 _ a.2] at this
       · intro h i hi
-        rw [dif_pos (hQ _ hi), e1 _ hi]
+        rw [dite_eq_left (hQ _ hi), e1 _ hi]
         exact h _
     · congr 1
       funext i
@@ -993,7 +993,7 @@ theorem integral_block_indicator (k : Type) [MeasurableSpace k] [Zero k] (ν : M
         simp [hq, this]
       · by_cases hp : P i
         · have : R i := (hR i).2 ⟨hp, hq⟩
-          simp only [hq, if_false, dif_pos hp, dif_pos this]
+          simp only [hq, ite_false, dite_eq_left hp, dite_eq_left this]
           exact e2 i this
         · have : ¬ R i := fun h => hp ((hR i).1 h).1
           simp [hq, hp, this]
@@ -1286,10 +1286,10 @@ theorem phi_add_row : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
     simp only [C, submatrix_apply, coords_typeFrame, hx', Matrix.add_apply, Matrix.of_apply, id, mul_add, add_mul]
     congr 1
     by_cases ha : a = .inl (.inl (.inr q'))
-    · rw [if_pos ha, if_pos (hiff.2 ha), hiff.2 ha]
+    · rw [ite_eq_left ha, ite_eq_left (hiff.2 ha), hiff.2 ha]
       simp only [w]
       rcases o' b with y | y <;> simp
-    · rw [if_neg ha, if_neg (hiff.not.2 ha), mul_zero, zero_mul]
+    · rw [ite_eq_right ha, ite_eq_right (hiff.not.2 ha), mul_zero, zero_mul]
   have e2 : (C x').toRows₂ = (C x).toRows₂ := by
     ext a b; simp [toRows₂, key]
   have e1 : (C x').toRows₁ = (C x).toRows₁ + vecMulVec (Pi.single (.inl (.inr q')) 1) w := by
@@ -1312,7 +1312,7 @@ theorem phi_add_row : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   · by_contra hne
     refine hv fun y => ?_
     have := TypeDatum.intM_of_Phi_ne_zero _ _ hne (.inl (.inl (.inr q'))) (o'.symm (.inl y))
-    rw [key, if_pos rfl] at this
+    rw [key, ite_eq_left rfl] at this
     have h0 : C x (.inl (.inl (.inr q'))) (o'.symm (.inl y)) = 0 := by
       change (typeFrame S.ϖ o).coords (typeFrame S.ϖ o') x (.inl (.inr q')) (o'.symm (.inl y)) = 0
       rw [coords_typeFrame, hoq, o'.apply_symm_apply, hx, mul_zero, zero_mul]
@@ -1340,7 +1340,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem val_inv_mul_le_one (a : kˣ) (z : k) :
     valuation k (((a⁻¹ : kˣ) : k) * z) ≤ 1 ↔ valuation k z ≤ valuation k (a : k) := by
-  have : 0 < valuation k (a : k) := by simp [zero_lt_iff]
+  have : 0 < valuation k (a : k) := by simp [pos_iff_ne_zero]
   rw [map_mul, Units.val_inv_eq_inv_val, map_inv₀, inv_mul_le_one₀ this]
 
 variable [MeasurableSpace k] [BorelSpace k]
@@ -1351,7 +1351,7 @@ theorem opE_step (ν : Measure k) (hν : IsUnitVol ν) {s κ : ℕ} (S : SymData
     [DecidableEq t] (hP : S.Pattern t) (j c : ℕ) (H : j + c = s) (q : Fin c) (hq : q.val + 1 ≤ S.ρ)
     (hqc : q.val + 2 ≤ c) : ∃ C : ℝ, 0 < C ∧
       opE S.ψ ν (q.val + 2) ((S.T t).Phi j c H) = (C : ℂ) • opE S.ψ ν (q.val + 1) ((S.T t).Phi j c H) := by
-  haveI := hν.1
+  have := hν.1
   have := secondCountable k
   have := t2Space k
   set Φ := (S.T t).Phi j c H with hΦ
@@ -1366,7 +1366,7 @@ theorem opE_step (ν : Measure k) (hν : IsUnitVol ν) {s κ : ℕ} (S : SymData
   have oB : IsOpen sB := IsOpen.preimage (by fun_prop) (by simpa using (valuation k).isOpen_ball 1)
   have sBc : sB ⊆ cball b⁻¹ := fun z hz => by
     have hz : valuation k ((b : k) * z) < 1 := hz
-    have : 0 < valuation k (b : k) := by simp [zero_lt_iff]
+    have : 0 < valuation k (b : k) := by simp [pos_iff_ne_zero]
     rw [map_mul] at hz
     change valuation k z ≤ valuation k ((b⁻¹ : kˣ) : k)
     rw [Units.val_inv_eq_inv_val, map_inv₀]
@@ -1414,8 +1414,8 @@ theorem opE_step (ν : Measure k) (hν : IsUnitVol ν) {s κ : ℕ} (S : SymData
     simp only [G]
     rw [hch, hx, hΦ, _root_.GlobalTheory.SymChain.RowShift.phi_add_row k s κ S t hP j c H q hq _ row0 v]
     by_cases hc : ∀ i, A i → m i ∈ sA
-    · rw [if_pos (hiff.2 hc), if_pos hc, one_mul]
-    · rw [if_neg (fun h => hc (hiff.1 h)), if_neg hc, zero_mul, zero_mul]
+    · rw [ite_eq_left (hiff.2 hc), ite_eq_left hc, one_mul]
+    · rw [ite_eq_right (fun h => hc (hiff.1 h)), ite_eq_right hc, zero_mul, zero_mul]
   have gB : ∀ x₀ (m : I → k), G x₀ m = (if ∀ i, B i → m i ∈ sB then (1 : ℂ) else 0) * G x₀ (fun i => if B i then 0 else m i) := by
     intro x₀ m
     let w : XIx (Fin κ) t (j + 1) → k := fun r => m (Sum.inl r, Sum.inr q.succ)
@@ -1442,8 +1442,8 @@ theorem opE_step (ν : Measure k) (hν : IsUnitVol ν) {s κ : ℕ} (S : SymData
     simp only [G]
     rw [hch, hx, hΦ, _root_.GlobalTheory.SymChain.ExchangeCol.phi_add_col k s κ S t hP j c H q hq hqc _ col0 w]
     by_cases hc : ∀ i, B i → m i ∈ sB
-    · rw [if_pos (hiff.2 hc), if_pos hc, one_mul]
-    · rw [if_neg (fun h => hc (hiff.1 h)), if_neg hc, zero_mul, zero_mul]
+    · rw [ite_eq_left (hiff.2 hc), ite_eq_left hc, one_mul]
+    · rw [ite_eq_right (fun h => hc (hiff.1 h)), ite_eq_right hc, zero_mul, zero_mul]
   have e2 : ∀ x₀, opE S.ψ ν (q.val + 2) Φ x₀ = (((ν sA).toReal ^ Fintype.card {i // A i} : ℝ) : ℂ) *
       ∫ e : {i // R i} → k, G x₀ (fun i => if h : R i then e ⟨i, h⟩ else 0) ∂(Measure.pi fun _ => ν) :=
     fun x₀ => _root_.GlobalTheory.BlockFubini.integral_block_indicator k ν I (Free (q.val + 2)) A R hR2 hA sA mA fA (G x₀) (gA x₀)

@@ -67,7 +67,7 @@ namespace GlobalTheory.ThetaLineDer
 theorem schwartz_diffQuotient_eval_mul_eq_slope {κ : Type} [Fintype κ] {F : Type} [Field F] [NumberField F] (s : ℝ → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf F κ)
     (y : κ → mixedEmbedding.mixedSpace F) (R : ℂ) (t : ℝ) :
     (t⁻¹ • (s t - s 0)) y * R = slope (fun t => s t y * R) 0 t := by
-  simp only [slope_def_module, sub_zero, SchwartzMap.smul_apply, SchwartzMap.sub_apply, smul_mul_assoc, sub_mul]
+  simp only [slope_def_module, sub_zero, smul_apply, sub_apply, smul_mul_assoc, sub_mul]
 
 theorem rho_sum {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {n d : ℕ}
     {Y : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E n} {Wd : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Spc F E d} (M : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Model σ Y Wd) (ψ : AddChar (AF F) ℂ)

@@ -189,7 +189,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.absCore_pf :
           intro z hz
           obtain ⟨k, hk, rfl⟩ := List.mem_map.1 hz
           exact (hAB k i _ p).symm)
-      haveI := hnt i
+      have := hnt i
       have t := hT (J i) (M i) Y (α i) (a i)
         ((l.map fun i => FreeAlgebra.lift ℂ (a i) (x i)).prod * A) (hM i) (hrel i)
         (fun p p' => pullbackSymmetry_lift_map_comm _ _ (FreeAlgebra.lift ℂ (b i) p') _ A (hA i p') hAA (c1 p')
@@ -205,7 +205,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.absCore_pf :
         _ = _ := by rw [ihl]; ring
   have hDne : (∏ i, (Module.finrank ℂ (M i) : ℂ)) ≠ 0 := by
     refine Finset.prod_ne_zero_iff.2 fun i _ => ?_
-    haveI := hnt i
+    have := hnt i
     exact_mod_cast (Module.finrank_pos (R := ℂ) (M := M i)).ne'
   have key' : ∀ x : ∀ i, FreeAlgebra ℂ (J i), (∏ i, (Module.finrank ℂ (M i) : ℂ)) *
       LinearMap.trace ℂ Y (((Finset.univ : Finset I).toList.map

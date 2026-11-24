@@ -65,7 +65,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem kc_ring : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
 
 theorem adele_t2Space : T2Space (AE F E) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
   exact e.isEmbedding.t2Space
 
@@ -99,7 +99,7 @@ theorem isCompact_latW (W : Spc F E d) (hW : W.L.FG) (v : Pl F) : IsCompact (lat
   have hsL : ∀ j, s j ∈ W.L := fun j => by
     have : s j ∈ W.L.restrictScalars ℤ := hs ▸ Submodule.subset_span ⟨j, rfl⟩
     exact this
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   let f : (Fin m → v.adicCompletionIntegers F) →+ (Fin d → AE F E) :=
     AddMonoidHom.mk' (fun a => ∑ j, fun i => atPlace v (a j : Fv F v) • inclR (F := F) (AF F) (s j i)) fun a b => by
       rw [← Finset.sum_add_distrib]
@@ -111,7 +111,7 @@ theorem isCompact_latW (W : Spc F E d) (hW : W.L.FG) (v : Pl F) : IsCompact (lat
       ∑ j, fun i => atPlace v (a j : Fv F v) • inclR (F := F) (AF F) (s j i)
     refine continuous_finsetSum _ fun j _ => continuous_pi fun i => ?_
     have h1 : Continuous fun a : Fin m → v.adicCompletionIntegers F => (a j : Fv F v) :=
-      Continuous.subtype_val (continuous_apply j)
+      Continuous.subtypeVal (continuous_apply j)
     have h2 : Continuous fun a : Fin m → v.adicCompletionIntegers F => atPlace v (a j : Fv F v) :=
       (kc_cont_atPlace v).comp h1
     exact h2.fun_smul continuous_const
@@ -192,7 +192,7 @@ theorem kc_closedU (J : Matrix (Fin d) (Fin d) E) :
     (Units.continuous_val.matrix_map hc)) continuous_const
 
 theorem kc_cont_mat (J : Matrix (Fin d) (Fin d) E) : Continuous (mat : UA σ J → _) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem isCompact_KAt (W : Spc F E d) (hW : W.L.IsFullLattice E) (v : Pl F) : IsCompact (KAt σ W v) := by
   obtain ⟨S, hS, h⟩ := kc_mat W hW v

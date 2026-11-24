@@ -62,12 +62,12 @@ theorem UpperTheory.V.Win.disc :
       Real.log ((discr L).natAbs : ℝ) ≤ (Module.finrank ℚ L : ℝ) * Real.log (N : ℝ) := by
   intro L _ _ N hN hφ
   obtain ⟨φ⟩ := hφ
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero (N : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
-  haveI : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero (N : ℚ) := ⟨by exact_mod_cast hN.ne'⟩
+  have : IsCyclotomicExtension {N} ℚ (CyclotomicField N ℚ) :=
     CyclotomicField.isCyclotomicExtension N ℚ
-  letI : Algebra L (CyclotomicField N ℚ) := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ L (CyclotomicField N ℚ) :=
+  let : Algebra L (CyclotomicField N ℚ) := φ.toRingHom.toAlgebra
+  have : IsScalarTower ℚ L (CyclotomicField N ℚ) :=
     IsScalarTower.of_algebraMap_eq (fun x => (φ.commutes x).symm)
   have key := natAbs_discr_eq_absNorm_differentIdeal_mul_natAbs_discr_pow L (𝓞 L)
     (CyclotomicField N ℚ) (𝓞 (CyclotomicField N ℚ))

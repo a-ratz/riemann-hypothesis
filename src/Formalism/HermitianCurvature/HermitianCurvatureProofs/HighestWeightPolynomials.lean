@@ -126,7 +126,7 @@ theorem hval_shift {n : ℕ} (ν : Fin n → ℂ) (a b : Fin n) :
     split_ifs <;> simp <;> ring
   simp_rw [h]
   rw [Finset.sum_sub_distrib, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.sum_ite_eq']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   ring
 
 section mod
@@ -177,7 +177,7 @@ theorem separating_polynomials : Qr.SepPoly := by
     obtain ⟨b, _, hb⟩ := h1
     exact ⟨b, hb⟩
   have hr : (fun a => (m a).re) = fun a => (m' a).re := by
-    rw [← StrictAnti.range_inj (sdec_re hm) (sdec_re hm')]
+    rw [← StrictAnti.range_inj_of_wellFoundedGT (sdec_re hm) (sdec_re hm')]
     ext x
     constructor
     · rintro ⟨a, rfl⟩
@@ -236,14 +236,14 @@ theorem qr_topWeightSing_of (hX : Qr.ExistsSingMax) (hS : Qr.CapSing) : Qr.TopWe
     · subst h1
       have h2 : ¬ (b = c) := fun h => (ne_of_gt hab) h
       have h3 : ¬ (c = b) := fun h => h2 h.symm
-      simp only [if_true, if_neg h2, if_neg h3, LinearMap.zero_apply]
+      simp only [ite_true, ite_eq_right h2, ite_eq_right h3, LinearMap.zero_apply]
       module
     · by_cases h2 : b = c
       · subst h2
-        simp only [if_true, if_neg h1, LinearMap.zero_apply]
+        simp only [ite_true, ite_eq_right h1, LinearMap.zero_apply]
         module
       · have h3 : ¬ (c = b) := fun h => h2 h.symm
-        simp only [if_neg h1, if_neg h2, if_neg h3, LinearMap.zero_apply]
+        simp only [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, LinearMap.zero_apply]
         module
   have h := hmax _ (E a b x) hx' hne hwt
   rw [hval_shift] at h

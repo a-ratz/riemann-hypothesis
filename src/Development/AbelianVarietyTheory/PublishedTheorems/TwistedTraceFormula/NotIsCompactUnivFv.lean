@@ -117,8 +117,8 @@ theorem unitary_elt (c : R →+* R) {J K : Matrix n n R} (hJ : cT c J = J) (hKJ 
     ext x y
     simp only [cT, transpose_apply, map_apply, single_apply]
     by_cases h : p = y ∧ q = x
-    · rw [if_pos h, if_pos h.symm, map_one]
-    · rw [if_neg h, if_neg (fun h' => h h'.symm), map_zero]
+    · rw [ite_eq_left h, ite_eq_left h.symm, map_one]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h h'.symm), map_zero]
   have h1 : cT c (elt J K i j a b) = 1 + b • single j i (1 : R) - a • (J * single i j (1 : R) * K) := by
     have : J * single i j (1 : R) * K = cT c (K * single j i (1 : R) * J) := by
       rw [cT_mul, cT_mul, hJ, hK, hs, Matrix.mul_assoc]
@@ -172,9 +172,9 @@ theorem exists_isPlacesIdem (S₁ : Finset (InfinitePlace F)) (S₂ : Finset (He
   classical
   refine ⟨pairA F (fun w => if w ∈ S₁ then 1 else 0) (∑ v ∈ S₂, singleV F v 1), ?_, ?_, ?_, ?_⟩
   · intro w hw
-    exact if_pos hw
+    exact ite_eq_left hw
   · intro w hw
-    exact if_neg hw
+    exact ite_eq_right hw
   · intro v hv
     change evalV F v (∑ v ∈ S₂, singleV F v 1) = 1
 
@@ -189,7 +189,7 @@ theorem exists_isPlacesIdem (S₁ : Finset (InfinitePlace F)) (S₂ : Finset (He
     exact Finset.sum_eq_zero fun u hu => evalV_single_ne (fun h : v = u => hv (h ▸ hu)) _
 
 theorem not_isCompact_univ_Fv (v : HeightOneSpectrum (𝓞 F)) : ¬ IsCompact (Set.univ : Set (Fv F v)) := by
-  letI : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
+  let : NontriviallyNormedField (v.adicCompletion F) := Valued.toNontriviallyNormedField _ _
   intro h
   obtain ⟨C, hC⟩ := (h.isBounded).exists_norm_le
   obtain ⟨x, hx⟩ := NormedField.exists_lt_norm (Fv F v) C
@@ -238,11 +238,11 @@ theorem not_isCompact_split (σ : E →ₐ[F] E) {M : ℕ} {J : Matrix (Fin M) (
       map_smul' := fun t x => by
         rw [Algebra.smul_def, map_mul, hcι, RingHom.id_apply, Algebra.smul_def] }
   let L : AF F ⊗[F] E →ₗ[AF F] AF F := lam ∘ₗ (LinearMap.id + cl) ∘ₗ LinearMap.mulLeft (AF F) e
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   have hL : Continuous L := IsModuleTopology.continuous_of_linearMap L
   have hent : Continuous fun g : HA (AF F) σ J =>
       ((HA.mat (AF F) σ J g).1 : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) i j :=
-    (Units.continuous_val.comp continuous_subtype_val).matrix_elem i j
+    (Units.continuous_val.comp continuous_subtypeVal).matrix_elem i j
   have hf := (continuous_evalV v).comp (hL.comp hent)
   refine not_isCompact_univ_Fv v ?_
   convert hc.image hf using 1

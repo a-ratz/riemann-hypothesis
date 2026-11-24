@@ -196,14 +196,14 @@ theorem psiM_local (T : KType ε (lowK ε lam)) (μ : Fin n → ℤ) (hμ : IsMu
       ∀ g ∈ W, inUJ ε g → PsiM T μ g = T.op k₀ * psM T μ (g⁻¹ * toMK k₀) := by
   classical
   have hexp : Continuous (fun X : Matrix (Fin n) (Fin n) ℂ => NormedSpace.exp X) := by
-    letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+    let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
     first
       | (letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
          exact NormedSpace.exp_continuous)
       | (letI : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
          exact NormedSpace.exp_continuous)
-      | (letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-         letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) :=
+      | (let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+         let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) :=
            { toAlgebra := by infer_instance
              norm_smul_le := fun q A => by
                rw [← Rat.cast_smul_eq_qsmul ℂ q A]
@@ -214,7 +214,7 @@ theorem psiM_local (T : KType ε (lowK ε lam)) (μ : Fin n → ℤ) (hμ : IsMu
                  | rw [← Rat.norm_cast_real, Real.norm_eq_abs]
                  | rfl }
          first
-           | exact @NormedSpace.exp_continuous _ _ _ (FiniteDimensional.complete ℂ _)
+           | exact @NormedSpace.exp_continuous _ _ _ (FiniteDimensional.completeSpace ℂ _)
            | exact @NormedSpace.exp_continuous _ _ _ _ (FiniteDimensional.complete ℂ _))
   have hnegP : ∀ X : Matrix (Fin n) (Fin n) ℂ, inP ε X → inP ε (-X) := by
     intro X hX

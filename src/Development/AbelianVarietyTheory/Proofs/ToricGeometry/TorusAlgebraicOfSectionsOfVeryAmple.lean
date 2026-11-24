@@ -274,7 +274,7 @@ theorem exists_normal_form {g : ℕ} (τ : Matrix (Fin g) (Fin g) ℂ) (hτ : τ
       w = τ *ᵥ ofIntVec p.1 + ofIntVec p.2 then h.choose.1 ⬝ᵥ h.choose.2 else 0, fun n n' => ?_⟩
     have h : ∃ p : (Fin g → ℤ) × (Fin g → ℤ),
       τ *ᵥ ofIntVec n + ofIntVec n' = τ *ᵥ ofIntVec p.1 + ofIntVec p.2 := ⟨(n, n'), rfl⟩
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     have h1 := h.choose_spec
     generalize h.choose = p at h1
     obtain ⟨h2, h3⟩ := huniq (p.1 + -n) (p.2 + -n') (by
@@ -607,11 +607,11 @@ namespace GlobalTheory
 
 private lemma valAt'_mul_of_preimage_whole {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (U : Y.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
     (f f' : Γ(Y, U)) : valAt' x U (f * f') = valAt' x U f * valAt' x U f' := by
-  simp only [valAt', dif_pos h, valAt, map_mul]
+  simp only [valAt', dite_eq_left h, valAt, map_mul]
 
 private lemma valAt'_one' {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) (U : Y.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U) :
     valAt' x U 1 = 1 := by
-  simp only [valAt', dif_pos h, valAt, map_one]
+  simp only [valAt', dite_eq_left h, valAt, map_one]
 
 private lemma preimage_whole_of_le {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) {V W : Y.Opens} (hVW : V ≤ W)
     (h : ⊤ ≤ x ⁻¹ᵁ V) : ⊤ ≤ x ⁻¹ᵁ W :=
@@ -627,7 +627,7 @@ private lemma valAt'_presheaf_map' {Y : Scheme.{0}} (x : Sp ℂ ⟶ Y) {V W : Y.
   have hW : ⊤ ≤ x ⁻¹ᵁ W := preimage_whole_of_le x hVW h
   have key : Y.presheaf.map (homOfLE hVW).op ≫ x.appLE V ⊤ h = x.appLE W ⊤ hW := by
     rw [Scheme.Hom.map_appLE]
-  simp only [valAt', dif_pos h, dif_pos hW, valAt]
+  simp only [valAt', dite_eq_left h, dite_eq_left hW, valAt]
   rw [← key]
   rfl
 
@@ -769,7 +769,7 @@ theorem exists_mem_thetaLevelChar_apply_ne_zero (hτ : τ ∈ SiegelH (Fin g)) (
   · have hsum : ∑ i ∈ (Finset.univ : Finset (Fin (k + 1))), ((fun _ => 1 : Fin (k + 1) → ℕ) i : ℂ) •
         (fun i : Fin (k + 1) => if i = 0 then (-(k : ℂ)) • w else w) i = 0 := by
       rw [Fin.sum_univ_succ]
-      simp only [Nat.cast_one, one_smul, if_pos, Fin.succ_ne_zero, if_false, Finset.sum_const,
+      simp only [Nat.cast_one, one_smul, ite_eq_left, Fin.succ_ne_zero, ite_false, Finset.sum_const,
         Finset.card_univ, Fintype.card_fin]
       rw [← Nat.cast_smul_eq_nsmul ℂ, neg_smul, neg_add_cancel]
     have := prod_translate_mem_thetaLevelChar (a := a) (b := b) (τ := τ)
@@ -938,17 +938,17 @@ theorem finite_of_isIntegral_of_birational_of_finite_over_normal
     [Algebra A B] [FaithfulSMul A B] [Algebra.IsIntegral A B]
     (hb : ∀ b : B, ∃ a a' : A, a' ≠ 0 ∧ algebraMap A B a' * b = algebraMap A B a) :
     Module.Finite A B := by
-  letI : Algebra R B := ((algebraMap A B).comp (algebraMap R A)).toAlgebra
-  haveI : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R B := ((algebraMap A B).comp (algebraMap R A)).toAlgebra
+  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let L := FractionRing B
-  haveI : IsScalarTower R A L := IsScalarTower.of_algebraMap_eq fun r => by
+  have : IsScalarTower R A L := IsScalarTower.of_algebraMap_eq fun r => by
     rw [IsScalarTower.algebraMap_apply R B L, IsScalarTower.algebraMap_apply A B L]; rfl
   have hAB : Function.Injective (algebraMap A B) := FaithfulSMul.algebraMap_injective A B
   have hBL : Function.Injective (algebraMap B L) := IsFractionRing.injective B L
   have hAL : Function.Injective (algebraMap A L) := by
     rw [IsScalarTower.algebraMap_eq A B L]; exact hBL.comp hAB
 
-  haveI : IsFractionRing A L := by
+  have : IsFractionRing A L := by
     refine ⟨⟨?_, ?_, ?_⟩⟩
     · intro y
       exact IsUnit.mk0 _ ((map_ne_zero_iff _ hAL).mpr (nonZeroDivisors.ne_zero y.2))
@@ -967,25 +967,25 @@ theorem finite_of_isIntegral_of_birational_of_finite_over_normal
       rw [← hz]; ring
     · intro x y hxy
       exact ⟨1, by rw [hAL hxy]⟩
-  haveI : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective R L).mpr (by
+  have : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective R L).mpr (by
     rw [IsScalarTower.algebraMap_eq R A L]
     exact hAL.comp (FaithfulSMul.algebraMap_injective R A))
   let K := FractionRing R
-  letI : Algebra K L := FractionRing.liftAlgebra R L
-  haveI : IsScalarTower R K L := FractionRing.isScalarTower_liftAlgebra R L
-  haveI : Module.Finite K L := Module.Finite.of_isLocalization R A (nonZeroDivisors R)
-  haveI : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
-  haveI : Algebra.IsSeparable K L := Algebra.IsAlgebraic.isSeparable_of_perfectField
-  haveI : Module.Finite R (integralClosure R L) := IsIntegralClosure.finite R K L _
-  haveI : Algebra.IsIntegral R B := Algebra.IsIntegral.trans A
+  let : Algebra K L := FractionRing.liftAlgebra R L
+  have : IsScalarTower R K L := FractionRing.isScalarTower_liftAlgebra R L
+  have : Module.Finite K L := Module.Finite.of_isLocalization R A (nonZeroDivisors R)
+  have : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
+  have : Algebra.IsSeparable K L := Algebra.IsAlgebraic.isSeparable_of_perfectField
+  have : Module.Finite R (integralClosure R L) := IsIntegralClosure.finite R K L _
+  have : Algebra.IsIntegral R B := Algebra.IsIntegral.trans A
   let f : B →ₐ[R] integralClosure R L :=
     (IsScalarTower.toAlgHom R B L).codRestrict (integralClosure R L)
       (fun b => (Algebra.IsIntegral.isIntegral (R := R) b).map (IsScalarTower.toAlgHom R B L))
   have hf : Function.Injective f.toLinearMap := fun x y h =>
     hBL (congrArg Subtype.val h)
-  haveI : IsNoetherian R (integralClosure R L) := isNoetherian_of_isNoetherianRing_of_finite _ _
-  haveI : IsNoetherian R B := isNoetherian_of_injective f.toLinearMap hf
-  haveI : Module.Finite R B := Module.IsNoetherian.finite R B
+  have : IsNoetherian R (integralClosure R L) := isNoetherian_of_isNoetherianRing_of_finite _ _
+  have : IsNoetherian R B := isNoetherian_of_injective f.toLinearMap hf
+  have : Module.Finite R B := Module.IsNoetherian.finite R B
   exact Module.Finite.of_restrictScalars_finite R A B
 
 theorem finite_of_isIntegral_of_birational_complex
@@ -994,10 +994,10 @@ theorem finite_of_isIntegral_of_birational_complex
     (hb : ∀ b : B, ∃ a a' : A, a' ≠ 0 ∧ algebraMap A B a' * b = algebraMap A B a) :
     Module.Finite A B := by
   obtain ⟨d, g, hg, hfin⟩ := exists_finite_inj_algHom_of_fg ℂ A
-  letI : Algebra (MvPolynomial (Fin d) ℂ) A := g.toRingHom.toAlgebra
-  haveI : FaithfulSMul (MvPolynomial (Fin d) ℂ) A :=
+  let : Algebra (MvPolynomial (Fin d) ℂ) A := g.toRingHom.toAlgebra
+  have : FaithfulSMul (MvPolynomial (Fin d) ℂ) A :=
     (faithfulSMul_iff_algebraMap_injective _ A).mpr hg
-  haveI : Module.Finite (MvPolynomial (Fin d) ℂ) A := hfin
+  have : Module.Finite (MvPolynomial (Fin d) ℂ) A := hfin
   exact finite_of_isIntegral_of_birational_of_finite_over_normal (MvPolynomial (Fin d) ℂ) A B hb
 
 theorem finite_of_isIntegral_of_birational_of_presentation :
@@ -1221,7 +1221,7 @@ theorem IsLevel.sq {g : ℕ} {τ : Matrix (Fin g) (Fin g) ℂ} {N : ℕ} {f : (F
   refine ⟨h.1.pow 2, fun n n' z => ?_⟩
   simp only [h.2, mul_pow, eC]
   congr 1
-  rw [← Complex.exp_nat_mul]
+  rw [← exp_natCast_mul]
   congr 1
   push_cast
   ring
@@ -1600,7 +1600,7 @@ theorem thetaConeIdeal_isPrime_and_ringKrullDim_le :
       (fun c => by simpa [hzero, hsingle] using hquasi c (Pi.single j 1) 0 z)
     rw [h]
     congr 1
-    simp only [eC, ← Complex.exp_nat_mul, ← Complex.exp_add]
+    simp only [eC, ← exp_natCast_mul, ← Complex.exp_add]
     congr 1
     push_cast
     ring

@@ -55,8 +55,8 @@ theorem exists_padic_equiv : ∀ (D : D7) (s : SplitPlace D.host.E), s.v ∈ gPl
     ∃ (g : ℕ) (_ : Fact g.Prime) (i : ℚ_[g] ≃+* s.w.adicCompletion D.host.E), Continuous i := by
   intro D s hs
   obtain ⟨w, hw, k, hk⟩ := hs
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hwk : ((D.host.g k : ℕ) : 𝓞 D.host.E) ∈ w.asIdeal := by simpa [placesOver] using hk
   have hv : ((D.host.g k : ℕ) : 𝓞 (maximalRealSubfield D.host.E)) ∈ s.v.asIdeal := by
     rw [← hw, Ideal.mem_comap, map_natCast]; exact hwk
@@ -65,7 +65,7 @@ theorem exists_padic_equiv : ∀ (D : D7) (s : SplitPlace D.host.E), s.v ∈ gPl
     rw [← s.w_under, Ideal.mem_comap, map_natCast] at this
     exact this
   obtain ⟨h1, h2, -⟩ := GlobalTheory.Mem.Chr.splitsC_place (D.host.g_prime k) (D.nd.g_split k) _ hsw
-  haveI : CharZero (s.w.adicCompletion D.host.E) :=
+  have : CharZero (s.w.adicCompletion D.host.E) :=
     charZero_of_injective_ringHom (algebraMap D.host.E _).injective
   obtain ⟨φ, h, -⟩ := GlobalTheory.QpChar.exists_ringEquiv_padic (s.w.adicCompletion D.host.E) (D.host.g k)
     ((GlobalTheory.LocLanglands.resCard_eq_normV _).trans (by

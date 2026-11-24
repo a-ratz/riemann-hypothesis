@@ -98,7 +98,7 @@ theorem isIntegral_exp (k : ℤ) (x : ℝ) (n : ℕ) (hn : 0 < n) (m : ℤ) (h :
     IsIntegral ℤ (Complex.exp ((k : ℂ) * ((Real.pi : ℂ) * Complex.I) * (x : ℂ))) := by
   have h' : (n : ℂ) * (x : ℂ) = m := by exact_mod_cast h
   refine IsIntegral.of_pow (n := 2 * n) (by omega) ?_
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   have : ((2 * n : ℕ) : ℂ) * ((k : ℂ) * ((Real.pi : ℂ) * Complex.I) * (x : ℂ)) =
       ((k * m : ℤ) : ℂ) * (2 * Real.pi * Complex.I) := by
     push_cast

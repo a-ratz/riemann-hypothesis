@@ -275,8 +275,8 @@ theorem card_res (P : HeightOneSpectrum (𝓞 E)) : Nat.card (Res P) = Ideal.abs
 
 theorem psiRes_intCast {T : ℕ} (hT : T.Prime) (h : Ideal.absNorm P.asIdeal = T) (b : ℤ) :
     psiRes P (b : Res P) = Complex.exp (2 * Real.pi * Complex.I * b / (T : ℂ)) := by
-  letI := resAlg P
-  haveI : Finite (Res P) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  let := resAlg P
+  have : Finite (Res P) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   have h1 : Module.finrank (ZMod (resCh P)) (Res P) = 1 := by
     have h2 := Module.natCard_eq_pow_finrank (K := ZMod (resCh P)) (V := Res P)
     rw [card_res, h, Nat.card_zmod, ← resCh_eq hT h] at h2
@@ -287,8 +287,8 @@ theorem psiRes_intCast {T : ℕ} (hT : T.Prime) (h : Ideal.absNorm P.asIdeal = T
   rw [h3, ZMod.stdAddChar_coe, resCh_eq hT h]
 
 theorem exists_intCast_res {T : ℕ} (hT : T.Prime) (h : Ideal.absNorm P.asIdeal = T) (c : Res P) : ∃ b : ℤ, (b : Res P) = c := by
-  letI := resAlg P
-  haveI : Finite (Res P) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  let := resAlg P
+  have : Finite (Res P) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   have hb : Function.Bijective (algebraMap (ZMod (resCh P)) (Res P)) :=
     (Nat.bijective_iff_injective_and_card _).2 ⟨(algebraMap (ZMod (resCh P)) (Res P)).injective, by
       rw [card_res, h, Nat.card_zmod, resCh_eq hT h]⟩
@@ -301,8 +301,8 @@ theorem psiWeil_apply {T : ℕ} (hT : T.Prime) (h : Ideal.absNorm P.asIdeal = T)
   rw [psiWeil, AddChar.mulShift_apply, hb, psiRes_intCast hT h]
 
 theorem psiRes_ne_one (P : HeightOneSpectrum (𝓞 E)) : psiRes P ≠ 1 := by
-  letI := resAlg P
-  haveI : Finite (Res P) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  let := resAlg P
+  have : Finite (Res P) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   obtain ⟨x, hx⟩ := Algebra.trace_surjective (ZMod (resCh P)) (Res P) 1
   intro e
   have h1 : ZMod.stdAddChar (Algebra.trace (ZMod (resCh P)) (Res P) x) = 1 := DFunLike.congr_fun e x
@@ -417,7 +417,7 @@ theorem normFock_self_pos {f : MvPolynomial (Fin N × Fin N) ℂ} (hf : f ≠ 0)
   exact div_pos (GlobalTheory.TensorNormCompare.fockS_re_pos' hf) (GlobalTheory.TensorNormCompare.extremal_fock_pos lam)
 
 theorem fockRatios_bddAbove : BddAbove (fockRatios lam sg b) := by
-  haveI := GlobalTheory.TensorNormCompare.finiteDimensional_nablaSq lam
+  have := GlobalTheory.TensorNormCompare.finiteDimensional_nablaSq lam
   obtain ⟨C, -, h⟩ := GlobalTheory.TensorNormCompare.exists_fock_bound (nablaSq ℂ N lam) (b ∘ₗ (nablaSq ℂ N lam).subtype)
   have h1 := GlobalTheory.TensorNormCompare.extremal_fock_pos lam
   have h2 := GlobalTheory.TensorNormCompare.extremal_fock_pos sg

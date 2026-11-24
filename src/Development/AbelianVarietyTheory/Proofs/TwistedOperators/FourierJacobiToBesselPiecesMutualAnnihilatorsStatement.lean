@@ -117,8 +117,8 @@ theorem mxAt_true_iff {m n : ℕ} (x : Mx D m n) : MxAt (fun _ => True) x ↔ pa
   simp only [Matrix.smul_apply, Matrix.zero_apply, mem_idAt_true, GlobalTheory.AdelicCoord.infPart_eq_zero_iff]
 
 theorem continuous_smul_mx {m n : ℕ} (c : AF D.host.F) : Continuous fun x : Mx D m n => c • x := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : ContinuousSMul (AF D.host.F) (AE D) :=
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : ContinuousSMul (AF D.host.F) (AE D) :=
     IsModuleTopology.toContinuousSMul (AF D.host.F) (AE D)
   refine continuous_pi fun i => continuous_pi fun j => ?_
   show Continuous fun x : Mx D m n => c • x i j
@@ -172,7 +172,7 @@ theorem isCompact_annSet (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ 
     have e1 : annSet ψ Γ = {x : WO S T | pairA D.host.F 1 0 • x = 0} ∩
         ⋂ u ∈ Γ, {x : WO S T | ψ (symplO S T u x) = 1} := by
       ext x
-      simp only [annSet, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, mxAt_true_iff]
+      simp only [annSet, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, mxAt_true_iff]
     rw [e1]
     refine IsClosed.inter (isClosed_eq (continuous_smul_mx _) continuous_const)
       (isClosed_biInter fun u _ => isClosed_eq ?_ continuous_const)
@@ -419,7 +419,7 @@ variable {D : D7}
 private theorem selfDual_isFullLattice {D : D7} : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
     IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
   intro V Λ hΛ
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr

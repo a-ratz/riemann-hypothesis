@@ -67,7 +67,7 @@ theorem mem_pow_iff (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) (hx : x ≠ 0)
   have hspan : Ideal.span {x} ≠ (0 : Ideal (𝓞 K)) := by
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
     exact hx
-  rw [Formalism.DivisionValues.ValuationRepresentative.vw_int, FractionalIdeal.count_coe K w hspan, Nat.cast_le,
+  rw [Formalism.DivisionValues.ValuationRepresentative.vw_int, FractionalIdeal.count_coeIdeal K w hspan, Nat.cast_le,
     ← Ideal.dvd_span_singleton, ← Associates.mk_le_mk_iff_dvd, Associates.mk_pow]
   exact Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero.2 hspan) w.associates_irreducible
 
@@ -107,7 +107,7 @@ theorem exists_clear (w : HeightOneSpectrum (𝓞 K)) (b : K) (hb : 0 ≤ vw w b
       exact Ideal.mem_span_singleton_self y
     rw [pow_succ]
     exact Ideal.mul_mono_right h h1
-  obtain ⟨c, hcJ, hcw⟩ := SetLike.not_le_iff_exists.1 hJw
+  obtain ⟨c, hcJ, hcw⟩ := IsConcreteLE.not_le_iff_exists.1 hJw
   have hxc : x * c ∈ Ideal.span {y} := by
     rw [hJ]
     exact Ideal.mul_mem_mul hxm hcJ

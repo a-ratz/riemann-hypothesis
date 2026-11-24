@@ -111,7 +111,7 @@ private theorem sees_glob {l : ℕ} [Fact l.Prime] {L : Loc} (G0 : Glob l L) {n 
       D.lam i (MonoidAlgebra.single g' 1) - D.lam i (MonoidAlgebra.single g 1) ∈ I ^ e := by
   obtain ⟨V0, hV0⟩ := UpperTheory.V.Pa.Core.dSees n R G0.G₀ D I hD e
   have hop : IsOpen (Subtype.val '' (V0 : Set G0.G₀) : Set G0.Γ) :=
-    G0.η_open.isOpenMap_subtype_val _ V0.isOpen
+    G0.η_open.isOpenMap_subtypeVal _ V0.isOpen
   obtain ⟨V, hV⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hop ⟨1, one_mem V0, rfl⟩
   refine ⟨V, fun g g' hg i => hV0 i _ _ ?_⟩
   obtain ⟨a, ha, e⟩ := hV hg
@@ -154,11 +154,11 @@ theorem UpperTheory.V.Pa.Core.piCong :
     (maximalIdeal B ^ e).map (MvPowerSeries.C : B →+* MvPowerSeries (Fin T.q × Fin n) B) with hK
   by_cases hKt : K = ⊤
   · rw [hKt]; exact Submodule.mem_top
-  haveI := Ideal.Quotient.nontrivial_iff.2 hKt
+  have := Ideal.Quotient.nontrivial_iff.2 hKt
   obtain ⟨f, hf, hfb⟩ := sp_lift O _ _ K le_sup_left
   obtain ⟨f', hf', hfb'⟩ := sp_lift O _ _ K hle
-  haveI := (spoCo l L G0 T Λ n O r B u J D A hA).1.1
-  haveI : IsCO O (MvPowerSeries (Fin T.q × Fin n) B ⧸ K) := co_quot O (Spo A) _ f fun y => by
+  have := (spoCo l L G0 T Λ n O r B u J D A hA).1.1
+  have : IsCO O (MvPowerSeries (Fin T.q × Fin n) B ⧸ K) := co_quot O (Spo A) _ f fun y => by
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective y
     exact ⟨_, hf y⟩
   obtain ⟨p1, p2, p3, p4, p5⟩ := m.π_maps
@@ -389,9 +389,9 @@ private theorem power_maximal_ideal_le_map_power_smul_top (Λ B M : Type) [CommR
     [CommRing B] [IsLocalRing B] [AddCommGroup M] [Module B M] [Module Λ M] [Module.Finite Λ M] (t : Λ →+* B)
     (ht : ∀ (a : Λ) (x : M), a • x = t a • x) (j : ℕ) :
     ∃ e : ℕ, (maximalIdeal B ^ e • ⊤ : Submodule B M) ≤ (maximalIdeal Λ ^ j).map t • ⊤ := by
-  haveI h0 : Finite (Λ ⧸ maximalIdeal Λ) := ‹Finite (ResidueField Λ)›
-  haveI h1 : Finite (Λ ⧸ maximalIdeal Λ ^ j) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) j
-  haveI h2 : Finite (M ⧸ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ M)) :=
+  have h0 : Finite (Λ ⧸ maximalIdeal Λ) := ‹Finite (ResidueField Λ)›
+  have h1 : Finite (Λ ⧸ maximalIdeal Λ ^ j) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) j
+  have h2 : Finite (M ⧸ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ M)) :=
     Submodule.finite_quotient_smul _ (Module.Finite.fg_top)
   have hle : ∀ x ∈ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ M), x ∈ ((maximalIdeal Λ ^ j).map t • ⊤ : Submodule B M) := by
     intro x hx
@@ -403,7 +403,7 @@ private theorem power_maximal_ideal_le_map_power_smul_top (Λ B M : Type) [CommR
   let g : (M ⧸ (maximalIdeal Λ ^ j • ⊤ : Submodule Λ M)) → Q := fun q =>
     Quotient.liftOn' q (fun x => Submodule.Quotient.mk x)
       (fun a b h => (Submodule.Quotient.eq _).2 (hle _ ((Submodule.quotientRel_def _).1 h)))
-  haveI : Finite Q := by
+  have : Finite Q := by
     refine Finite.of_surjective g fun z => ?_
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ z
     exact ⟨Submodule.Quotient.mk x, rfl⟩
@@ -522,8 +522,8 @@ private theorem quotient_equiv_of_compatible_ring_homs {R R' S S' X Y M : Type} 
     ∃ (φ : (X ⧸ (K • ⊤ : Submodule R X)) →ₗ[R] (M ⧸ (K • ⊤ : Submodule R M)))
       (ψ : (M ⧸ (K • ⊤ : Submodule R M)) →ₗ[R] (X ⧸ (K • ⊤ : Submodule R X))),
       (∀ z, φ (ψ z) = f • z) ∧ ∀ z, ψ (φ z) = f • z := by
-  letI : Module R Y := Module.compHom Y (θ.comp ρ)
-  letI : Module R (M ⧸ (Iy • ⊤ : Submodule R' M)) := Module.compHom _ ρ
+  let : Module R Y := Module.compHom Y (θ.comp ρ)
+  let : Module R (M ⧸ (Iy • ⊤ : Submodule R' M)) := Module.compHom _ ρ
   obtain ⟨e, he⟩ := quotient_addEquiv_of_restricted_scalars π hX K KS hKS
   obtain ⟨e', he'⟩ := quotient_addEquiv_of_restricted_scalars (X := Y) (θ.comp ρ) (fun _ _ => rfl) K KS' hKS'
   let κ' : (X ⧸ (K • ⊤ : Submodule R X)) ≃ₗ[R] (Y ⧸ (K • ⊤ : Submodule R Y)) :=
@@ -571,11 +571,11 @@ private theorem quotient_equiv_congr_of_surjective_algHom {B A S S' Q Q' : Type}
 theorem UpperTheory.V.Pa.Core.eventually_exists_patchedModule_quotient_maps :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (A : TWAut u J Unit D T) (W : RRObj Λ A) (m : RMaps W), T.ProL → Adapted T (r := r) → ∀ j : ℕ, ∀ᶠ N in (Λ.U : Filter ℕ), ∃ (φ : (X0 m ⧸ ((kjIdeal (abelian₂ O Unit D) (Fin T.q × Fin n) 1 j).map m.s.toRingHom • ⊤ : Submodule W.R (X0 m))) →ₗ[W.R] (MN m N ⧸ ((kjIdeal (abelian₂ O Unit D) (Fin T.q × Fin n) 1 j).map m.s.toRingHom • ⊤ : Submodule W.R (MN m N)))) (ψ : (MN m N ⧸ ((kjIdeal (abelian₂ O Unit D) (Fin T.q × Fin n) 1 j).map m.s.toRingHom • ⊤ : Submodule W.R (MN m N))) →ₗ[W.R] (X0 m ⧸ ((kjIdeal (abelian₂ O Unit D) (Fin T.q × Fin n) 1 j).map m.s.toRingHom • ⊤ : Submodule W.R (X0 m)))), (∀ z, φ (ψ z) = fo W • z) ∧ ∀ z, ψ (φ z) = fo W • z := by
   intro l hl L G0 T Λ n O _ _ _ hO _ r B _ _ _ u J D A W m hP hA j
-  haveI := hO.complete
-  haveI := hO.finite
-  haveI hco : IsCO O (abelian₂ O Unit D) := co_mvps O O _
-  haveI : Finite (ResidueField (abelian₂ O Unit D)) := Finite.of_surjective _ (resMap_bijective O (abelian₂ O Unit D)).2
-  haveI := A.b.fin
+  have := hO.complete
+  have := hO.finite
+  have hco : IsCO O (abelian₂ O Unit D) := co_mvps O O _
+  have : Finite (ResidueField (abelian₂ O Unit D)) := Finite.of_surjective _ (resMap_bijective O (abelian₂ O Unit D)).2
+  have := A.b.fin
   obtain ⟨e, he⟩ := power_maximal_ideal_le_map_power_smul_top (abelian₂ O Unit D) B A.b.M A.b.lam.toRingHom A.b.smul_lam j
   filter_upwards [piCong l L G0 T Λ n O r B u J D A W m hP hA e, Λ.U_le (eventually_ge_atTop j)] with N hN hjN
   obtain ⟨κ, hκ, hκ0⟩ := spCong B T.q n _ _ (fun j i => algebraMap O B (A.ut j i)) _ _ A.b.M hN.1 he
@@ -583,7 +583,7 @@ theorem UpperTheory.V.Pa.Core.eventually_exists_patchedModule_quotient_maps :
   have hlm : (l : abelian₂ O Unit D) ∈ maximalIdeal (abelian₂ O Unit D) := by
     intro hu
     have h1 := hu.map ((residue O).comp (MvPowerSeries.constantCoeff : abelian₂ O Unit D →+* O))
-    haveI := hO.char
+    have := hO.char
     rw [map_natCast, CharP.cast_eq_zero] at h1
     exact not_isUnit_zero h1
   have hs : ∀ Q : Fin T.q → Polynomial B, Function.Surjective (Sp.mk Q fun j i => algebraMap O B (A.ut j i)) :=

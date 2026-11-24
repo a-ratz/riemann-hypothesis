@@ -537,7 +537,7 @@ theorem cas_bound {K I : Type} [Fintype K] [Fintype I] [DecidableEq I] (σ : K �
   have hsurj : ∀ n, filtX X ι (n + 1) ≤ filtX X ι n ⊔ (filtX X ι (n + 1)).map C := by
     intro n
     by_contra hcon
-    obtain ⟨x, hx, hxn⟩ := SetLike.not_le_iff_exists.1 hcon
+    obtain ⟨x, hx, hxn⟩ := IsConcreteLE.not_le_iff_exists.1 hcon
     obtain ⟨φ, hφx, hφ0⟩ := Submodule.exists_dual_map_eq_bot_of_notMem hxn inferInstance
     have hφz : ∀ y ∈ filtX X ι n ⊔ (filtX X ι (n + 1)).map C, φ y = 0 := by
       intro y hy
@@ -547,7 +547,7 @@ theorem cas_bound {K I : Type} [Fintype K] [Fintype I] [DecidableEq I] (σ : K �
     let W : (Fin (n + 1) → I) → Module.End ℂ M := fun w => wordX X (List.ofFn w)
     have hex : ∀ w : Fin (n + 1) → I, ∃ u : V, ∀ v, ⟪u, v⟫_ℂ = φ (W w (ι v)) := by
       intro w
-      haveI : CompleteSpace V := FiniteDimensional.complete ℂ V
+      have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
       refine ⟨(InnerProductSpace.toDual ℂ V).symm
         (LinearMap.toContinuousLinearMap (φ ∘ₗ (W w) ∘ₗ ι)), fun v => ?_⟩
       rw [InnerProductSpace.toDual_symm_apply]
@@ -574,7 +574,7 @@ theorem cas_bound {K I : Type} [Fintype K] [Fintype I] [DecidableEq I] (σ : K �
                 rw [List.getElem_set, List.getElem_ofFn, List.getElem_ofFn]
                 by_cases hm : (s : ℕ) = m
                 · subst hm; simp
-                · rw [if_neg hm, Function.update_of_ne]
+                · rw [ite_eq_right hm, Function.update_of_ne]
                   intro h; exact hm (by rw [← h])
             rw [e1]
             exact (List.set_perm_cons_eraseIdx (by simpa using s.2) i).trans
@@ -601,7 +601,7 @@ theorem cas_bound {K I : Type} [Fintype K] [Fintype I] [DecidableEq I] (σ : K �
     exact this hz
   have hstep : ∀ n, ∀ x ∈ filtX X ι (n + 1), C x ∈ filtX X ι n → x ∈ filtX X ι n := by
     intro n x hx hCx
-    haveI := filtX_fd X ι (n + 1)
+    have := filtX_fd X ι (n + 1)
     let P : Submodule ℂ (filtX X ι (n + 1)) := (filtX X ι n).comap (filtX X ι (n + 1)).subtype
     let C1 : Module.End ℂ (filtX X ι (n + 1)) := C.restrict (hCF (n + 1))
     have hP : P ≤ P.comap C1 := fun y hy => hCF n y hy
@@ -691,13 +691,13 @@ theorem Eab_mul_apply (a b e f : Ix r s) (Z : Mat r s) :
     (Eab a b * Z) e f = if e = a then Z b f else 0 := by
   by_cases h : e = a
   · subst h; simp [Eab]
-  · rw [if_neg h]; exact Matrix.single_mul_apply_of_ne _ _ _ _ _ h _
+  · rw [ite_eq_right h]; exact Matrix.single_mul_apply_of_ne _ _ _ _ _ h _
 
 theorem mul_Eab_apply (a b e f : Ix r s) (Z : Mat r s) :
     (Z * Eab a b) e f = if f = b then Z e a else 0 := by
   by_cases h : f = b
   · subst h; simp [Eab]
-  · rw [if_neg h]; exact Matrix.mul_single_apply_of_ne _ _ _ _ _ h _
+  · rw [ite_eq_right h]; exact Matrix.mul_single_apply_of_ne _ _ _ _ _ h _
 
 theorem Eab_apply (a b e f : Ix r s) : (Eab a b : Mat r s) e f = if a = e ∧ b = f then 1 else 0 := by
   simp [Eab, Matrix.single_apply]
@@ -717,10 +717,10 @@ theorem pc_ad {a b : Ix r s} (h : sameBlock a b) {Z : Mat r s} (hZ : IsPC Z) :
   rw [sb_iff] at h hef
   rw [Matrix.sub_apply, Eab_mul_apply, mul_Eab_apply]
   by_cases h1 : e = a <;> by_cases h2 : f = b
-  · rw [if_pos h1, if_pos h2, hb b f (by rw [← h2]), hb e a (by rw [h1]), sub_zero]
-  · rw [if_pos h1, if_neg h2, hb b f (by rw [← h, ← h1, hef]), sub_zero]
-  · rw [if_neg h1, if_pos h2, hb e a (by rw [hef, h2, ← h]), sub_zero]
-  · rw [if_neg h1, if_neg h2, sub_zero]
+  · rw [ite_eq_left h1, ite_eq_left h2, hb b f (by rw [← h2]), hb e a (by rw [h1]), sub_zero]
+  · rw [ite_eq_left h1, ite_eq_right h2, hb b f (by rw [← h, ← h1, hef]), sub_zero]
+  · rw [ite_eq_right h1, ite_eq_left h2, hb e a (by rw [hef, h2, ← h]), sub_zero]
+  · rw [ite_eq_right h1, ite_eq_right h2, sub_zero]
 
 theorem kc_mul {Z W : Mat r s} (hZ : IsPC Z) (hW : IsPC W) : IsKC (Z * W) := by
   intro a b hab
@@ -841,7 +841,7 @@ theorem cas_bound_gl {r s : ℕ} {M : Type} [AddCommGroup M] [Module ℂ M] (act
     simp only [genG]
     congr 1
     ext N
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     constructor
     · rintro ⟨hN, hW⟩
       exact ⟨hN, fun k x hx => hW _ x hx, fun i x hx => hW _ x hx⟩

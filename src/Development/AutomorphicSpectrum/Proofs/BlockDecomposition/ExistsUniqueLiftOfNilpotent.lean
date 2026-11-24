@@ -52,10 +52,10 @@ theorem existsUnique_lift_of_nilpotent {P E C D : Type} [CommRing P] [CommRing E
     (ψ : P →+* E) (hψ : ψ.Etale) (u : C →+* D) (hu : Function.Surjective u)
     (hn : IsNilpotent (RingHom.ker u)) (f : P →+* C) (g : E →+* D) (h : g.comp ψ = u.comp f) :
     ∃! l : E →+* C, l.comp ψ = f ∧ u.comp l = g := by
-  letI : Algebra P E := ψ.toAlgebra
-  letI : Algebra P C := f.toAlgebra
-  letI : Algebra P D := (u.comp f).toAlgebra
-  haveI : Algebra.Etale P E := hψ
+  let : Algebra P E := ψ.toAlgebra
+  let : Algebra P C := f.toAlgebra
+  let : Algebra P D := (u.comp f).toAlgebra
+  have : Algebra.Etale P E := hψ
   let uA : C →ₐ[P] D := { u with commutes' := fun _ => rfl }
   let gA : E →ₐ[P] D := { g with commutes' := fun r => congrArg (fun t : P →+* D => t r) h }
   have hn₁ : IsNilpotent (RingHom.ker (uA : C →+* D)) := hn
@@ -101,7 +101,7 @@ open GlobalTheory.CompanionTheory.EtaleLift in
 theorem GlobalTheory.CompanionTheory.EtaleLift.etLift_of_isAdicComplete :
     ∀ {B : Type} [CommRing B] (J : Ideal B), IsAdicComplete J B → EtLift J := by
   intro B _ J hJ P E _ _ ψ hψ f g h
-  haveI := hJ
+  have := hJ
   choose l hl hu using existsUnique_level J ψ hψ f g h
   have hcomp : ∀ {m n : ℕ} (hle : m ≤ n), (Ideal.Quotient.factorPow J (Nat.succ_le_succ hle)).comp (l n) = l m := by
     intro m n hle
@@ -140,9 +140,9 @@ theorem GlobalTheory.CompanionTheory.EtaleLift.etLift_of_isAdicComplete :
     rfl
   refine ⟨H, ⟨h1, h2⟩, ?_⟩
   rintro H' ⟨h1', h2'⟩
-  letI : Algebra P E := ψ.toAlgebra
-  letI : Algebra P B := f.toAlgebra
-  haveI : Algebra.Etale P E := hψ
+  let : Algebra P E := ψ.toAlgebra
+  let : Algebra P B := f.toAlgebra
+  have : Algebra.Etale P E := hψ
   let A : E →ₐ[P] B := { H with commutes' := fun r => congrArg (fun t : P →+* B => t r) h1 }
   let A' : E →ₐ[P] B := { H' with commutes' := fun r => congrArg (fun t : P →+* B => t r) h1' }
   have : A' = A := Algebra.FormallyUnramified.ext_of_iInf J (iInf_pow_eq_bot J hJ) fun x => by

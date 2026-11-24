@@ -81,7 +81,7 @@ theorem exists_char [IsCommMonObj G] {O : Type} [CommRing O] (act : OAct O G) {v
     ∃ τ : O →+* R, (∀ c, IsLieComb ![τ c] ![v] (v ≫ act.act c)) ∧
       ∀ c r, IsLieComb ![r] ![v] (v ≫ act.act c) → τ c = r := by
   have ht : ∀ c, IsTangent (v ≫ act.act c) := fun c => by
-    haveI := act.hom c
+    have := act.hom c
     exact isTangent_comp (hv.1 0) _
   have e1 : ∀ d : Fin 1 → R, d = ![d 0] := fun d => by
     funext i; fin_cases i; rfl

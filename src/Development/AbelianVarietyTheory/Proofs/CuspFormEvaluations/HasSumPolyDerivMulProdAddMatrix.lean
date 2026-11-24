@@ -93,7 +93,7 @@ theorem polyDeriv_const_mul (P : MvPolynomial σ ℂ) (u : σ → W) {F : W → 
   have e : (fun w => c * F w) = c • F := rfl
   rw [e, iteratedFDeriv_const_smul_apply
     (SCV.contDiffAt_of_differentiableOn hF (hU.mem_nhds hx) _)]
-  simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 variable {B : Type*} [NormedAddCommGroup B] [NormedSpace ℂ B] [FiniteDimensional ℂ B]

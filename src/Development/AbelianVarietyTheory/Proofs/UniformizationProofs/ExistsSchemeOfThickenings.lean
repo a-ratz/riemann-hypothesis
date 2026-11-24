@@ -218,8 +218,8 @@ theorem exists_scheme_of_thickenings : ∀ (B₀ : Scheme.{0}) (𝒰 : Set B₀.
       (_ : W = B₀.basicOpen ((p.app (Opposite.op U)).hom a)) (h : W ≤ U),
       IsOpenImmersion (Spec.map (𝒜.map (homOfLE h).op)) := by
     rintro U hU a W rfl h
-    letI := (𝒜.map (homOfLE h).op).hom.toAlgebra
-    haveI := hloc U hU a
+    let := (𝒜.map (homOfLE h).op).hom.toAlgebra
+    have := hloc U hU a
     exact IsOpenImmersion.of_isLocalization
       (S := 𝒜.obj (Opposite.op (B₀.basicOpen ((p.app (Opposite.op U)).hom a)))) a
   have hci : ∀ U ∈ 𝒰, IsClosedImmersion (toSpec p U) := fun U hU ↦

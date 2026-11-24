@@ -76,7 +76,7 @@ private lemma exists_pow_int (u : HeightOneSpectrum (𝓞 E)) {l : ℕ} (hu : ((
   obtain ⟨d, hd⟩ := exists_pow_lt₀ (v_lt_one u hu) (Units.mk0 _ (inv_ne_zero hv))
   refine ⟨d, ?_⟩
   rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_pow]
-  have h0 : (0 : _) < Valued.v y := zero_lt_iff.2 hv
+  have h0 : (0 : _) < Valued.v y := pos_iff_ne_zero.2 hv
   have := mul_le_mul_left (le_of_lt hd) (Valued.v y)
   simpa [hv] using this
 
@@ -137,7 +137,7 @@ theorem UpperTheory.Gal.Gen.denomBdd_pf :
         {g : UA E n | IntMat u (((l : u.adicCompletion E) ^ d) • (((cLoc u g)⁻¹ : GL (Fin n) (u.adicCompletion E)) :
           Matrix (Fin n) (Fin n) (u.adicCompletion E)))}) := by
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_inter_iff, DenomLe]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_inter_iff, DenomLe]
     rw [e]
     refine hS.isOpen_biInter fun u _ => ?_
     exact (isOpen_intMat u _ _ (Units.continuous_val.comp (GlobalTheory.BCT.GlobLev.continuous_cLoc u))).inter

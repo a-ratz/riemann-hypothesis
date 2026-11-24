@@ -73,7 +73,7 @@ open MeasureTheory
 
 theorem GlobalTheory.unimodular_of_isFundamentalDomain_finite : ∀ (S : Type) [Group S] [TopologicalSpace S] [IsTopologicalGroup S] [LocallyCompactSpace S] [T2Space S] [SecondCountableTopology S] [MeasurableSpace S] [BorelSpace S] (Γ : Subgroup S) [Countable Γ] (μS : Measure S) (𝓢 : Set S), μS.IsHaarMeasure → IsFundamentalDomain Γ 𝓢 μS → μS 𝓢 ≠ ⊤ → μS.IsMulRightInvariant := by
   intro S _ _ _ _ _ _ _ _ Γ _ μS 𝓢 hH hF hfin
-  haveI : SMulInvariantMeasure Γ S μS :=
+  have : SMulInvariantMeasure Γ S μS :=
     ⟨fun c s _ => by
       show μS ((fun x => (c : S) * x) ⁻¹' s) = μS s
       exact measure_preimage_mul μS (c : S) s⟩
@@ -92,7 +92,7 @@ theorem GlobalTheory.unimodular_of_isFundamentalDomain_finite : ∀ (S : Type) [
     rw [show (fun x : S => x * g) = ⇑(MeasurableEquiv.mulRight g) from rfl, MeasurableEquiv.map_apply]
     exact heq
   rw [hmap] at h2
-  rw [Measure.smul_apply] at h2
+  rw [smul_apply] at h2
   have hc : (Measure.modularCharacterFun g : ℝ≥0∞) = 1 := by
     have h3 : (Measure.modularCharacterFun g : ℝ≥0∞) * μS 𝓢 = 1 * μS 𝓢 := by
       rw [one_mul]; simpa [ENNReal.smul_def] using h2
@@ -117,10 +117,10 @@ namespace GlobalTheory.DefU.Petersson
 
 theorem topology_facts (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) :
     T2Space (UA E n) ∧ LocallyCompactSpace (UA E n) ∧ SecondCountableTopology (UA E n) ∧ DiscreteTopology (ratU E n) := by
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E n
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E n
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E n
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL (E := E) (a := n)
+  have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E n
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E n
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E n
+  have := GlobalTheory.CuspRep.CuspidalL2GL.discreteTopology_latticeGL (E := E) (a := n)
   refine ⟨inferInstance, (GlobalTheory.DefU.LocAdm.isClosed_UA (E := E) (n := n)).isClosedEmbedding_subtypeVal.locallyCompactSpace,
     (Topology.IsEmbedding.subtypeVal (p := fun g : GA E n => g ∈ UA E n)).secondCountableTopology, ?_⟩
   have hm : ∀ x : ratU E n, ((x : UA E n) : GA E n) ∈ latticeGL E n := fun x => by
@@ -129,18 +129,18 @@ theorem topology_facts (E : Type) [Field E] [NumberField E] [IsCMField E] (n : �
     rw [hδ] at h
     exact h
   let f : ratU E n → latticeGL E n := fun x => ⟨_, hm x⟩
-  have hf : Continuous f := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+  have hf : Continuous f := (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
   have hi : Function.Injective f := fun x y h =>
     Subtype.ext (Subtype.ext (congrArg (fun z : latticeGL E n => (z : GA E n)) h))
   exact DiscreteTopology.of_continuous_injective hf hi
 
 theorem exists_isOpen_isCompact_finU (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) :
     ∃ K : Subgroup (finU (E := E) (n := n)), IsOpen (K : Set (finU (E := E) (n := n))) ∧ IsCompact (K : Set (finU (E := E) (n := n))) := by
-  haveI := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
+  have := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
   obtain ⟨U0, hU0o, hU0c⟩ := GlobalTheory.GLIntegral.exists_isOpen_isCompact E n
   let p : finU (E := E) (n := n) →* GL (Fin n) (Af E) :=
     (GeneralLinearGroup.map (pFin E)).comp ((UA E n).subtype.comp (finU (E := E) (n := n)).subtype)
-  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtype_val.comp continuous_subtype_val)
+  have hp : Continuous p := continuous_map_pFin.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hKo : IsOpen (U0.comap p : Set (finU (E := E) (n := n))) := hU0o.preimage hp
   have hfin : ∀ x : UA E n, x ∈ finU (E := E) (n := n) ↔
       finGL E n (GeneralLinearGroup.map (pFin E) (x : GA E n)) = (x : GA E n) := by
@@ -157,8 +157,8 @@ theorem exists_isOpen_isCompact_finU (E : Type) [Field E] [NumberField E] [IsCMF
         {x : UA E n | finGL E n (GeneralLinearGroup.map (pFin E) (x : GA E n)) = (x : GA E n)} :=
       Set.ext hfin
     rw [e]
-    exact isClosed_eq (GlobalTheory.DefU.LocAdm.continuous_finGL.comp (continuous_map_pFin.comp continuous_subtype_val))
-      continuous_subtype_val
+    exact isClosed_eq (GlobalTheory.DefU.LocAdm.continuous_finGL.comp (continuous_map_pFin.comp continuous_subtypeVal))
+      continuous_subtypeVal
   have hι : Topology.IsClosedEmbedding (fun x : finU (E := E) (n := n) => ((x : UA E n) : GA E n)) :=
     GlobalTheory.DefU.LocAdm.isClosed_UA.isClosedEmbedding_subtypeVal.comp hc.isClosedEmbedding_subtypeVal
   exact ⟨U0.comap p, hKo, IsCompact.of_isClosed_subset
@@ -170,16 +170,16 @@ theorem exists_compact_cover (E : Type) [Field E] [NumberField E] [IsCMField E] 
   classical
   obtain ⟨K, hKo, hKc⟩ := exists_isOpen_isCompact_finU E n
   obtain ⟨S, hS⟩ := GlobalTheory.T.definiteUnitary_classSet_finite E n K hKo
-  haveI : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
-  haveI : ∀ v : InfinitePlace E, CompactSpace (embU n v.embedding) := fun v => by
+  have : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
+  have : ∀ v : InfinitePlace E, CompactSpace (embU n v.embedding) := fun v => by
     obtain ⟨e, -⟩ := _root_.GlobalTheory.EmbUnitary.exists_equiv_unitaryGroup E n v.embedding
     exact e.toHomeomorph.symm.compactSpace
   let P : (∀ v : InfinitePlace E, embU n v.embedding) → UA E n :=
     fun y => (Finset.univ.toList.map fun v => (y v : UA E n)).prod
   have hP : Continuous P :=
-    continuous_list_prod _ fun v _ => continuous_subtype_val.comp (continuous_apply v)
+    continuous_list_prod _ fun v _ => continuous_subtypeVal.comp (continuous_apply v)
   have hPc : IsCompact (Set.range P) := isCompact_range hP
-  have hKc' : IsCompact (Subtype.val '' (K : Set (finU (E := E) (n := n)))) := hKc.image continuous_subtype_val
+  have hKc' : IsCompact (Subtype.val '' (K : Set (finU (E := E) (n := n)))) := hKc.image continuous_subtypeVal
   refine ⟨_, (S.finite_toSet.isCompact.mul hPc).mul hKc', fun g => ?_⟩
   obtain ⟨γ, hγ, s, hs, x, hx, k, hk, e⟩ := hS g
   obtain ⟨y, hy, -, hyx⟩ := _root_.GlobalTheory.DefU.infU_eq_list_prod_embU E n x hx
@@ -200,11 +200,11 @@ theorem exists_invariant_pos_form : ∀ (E : Type) [Field E] [NumberField E] [Is
   classical
   obtain ⟨h1, h2, h3, h4⟩ := topology_facts E n
   obtain ⟨C, hC, hcov⟩ := exists_compact_cover E n
-  letI : MeasurableSpace (UA E n) := borel _
-  haveI : BorelSpace (UA E n) := ⟨rfl⟩
-  haveI : SecondCountableTopology (ratU E n) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : TopologicalSpace.SeparableSpace (ratU E n) := inferInstance
-  haveI : Countable (ratU E n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  let : MeasurableSpace (UA E n) := borel _
+  have : BorelSpace (UA E n) := ⟨rfl⟩
+  have : SecondCountableTopology (ratU E n) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : TopologicalSpace.SeparableSpace (ratU E n) := inferInstance
+  have : Countable (ratU E n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨μ, hμ⟩ : ∃ μ : Measure (UA E n), μ.IsHaarMeasure := ⟨Measure.haar, inferInstance⟩
   obtain ⟨𝓕, -, h𝓕'⟩ := _root_.Bl.SecondBlockLemmaC.goal1 (ratU E n)
   have h𝓕 := h𝓕' μ
@@ -215,7 +215,7 @@ theorem exists_invariant_pos_form : ∀ (E : Type) [Field E] [NumberField E] [Is
     intro g hg
     obtain ⟨γ, hγ, c, hc, rfl⟩ := hcov g
     exact Set.mem_iUnion.2 ⟨⟨γ, hγ⟩, ⟨c, hc, rfl⟩, hg⟩
-  haveI hR : μ.IsMulRightInvariant :=
+  have hR : μ.IsMulRightInvariant :=
     GlobalTheory.unimodular_of_isFundamentalDomain_finite _ (ratU E n) μ 𝓕 hμ h𝓕 hfin.ne
   have hl : ∀ u : autU E n, ∀ γ ∈ ratU E n, ∀ g, u.1 (γ * g) = u.1 g := fun u γ hγ g => u.2.left γ hγ g
   have hI : ∀ u v : autU E n, IntegrableOn (fun g => star (u.1 g) * v.1 g) 𝓕 μ := by

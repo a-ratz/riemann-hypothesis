@@ -82,7 +82,7 @@ private theorem Coords.length [IsLocalRing R] [IsLocalRing O] [IsLocalHom (algeb
     Module.length O N' =
       Module.length R N * Module.length O (O ⧸ (IsLocalRing.maximalIdeal R).map (algebraMap R O)) := by
   classical
-  haveI : Module.Free R O := Module.Free.of_basis b
+  have : Module.Free R O := Module.Free.of_basis b
   let F : O →+ N →+ N' :=
     { toFun := fun o =>
         { toFun := fun x => o • J x
@@ -347,7 +347,7 @@ theorem UpperTheory.V.Base.selBaseEig :
       intro x hx
       simp only [selEig, eig, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply,
         LinearMap.id_apply, MonoidHom.comp_apply, Subgroup.coe_subtype, sub_eq_zero, Units.coe_map,
-        RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at hx ⊢
+        RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at hx ⊢
       intro w
       rw [← hJconj, hx w, hL.smul]
     have hEC : ∀ i, ∀ y ∈ selEig ρ' U h𝒟 W ((Units.map (algebraMap R O).toMonoidHom).comp ψ),
@@ -355,7 +355,7 @@ theorem UpperTheory.V.Base.selBaseEig :
       intro i y hy
       simp only [selEig, eig, Submodule.mem_iInf, LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.smul_apply,
         LinearMap.id_apply, MonoidHom.comp_apply, Subgroup.coe_subtype, sub_eq_zero, Units.coe_map,
-        RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at hy ⊢
+        RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at hy ⊢
       intro w
       rw [← hCconj, hy w, hCs]
     obtain ⟨JE, CE, hE, -, -⟩ := UpperTheory.V.Base.coords_restrict_to_submodules hL _ _ hEJ hEC

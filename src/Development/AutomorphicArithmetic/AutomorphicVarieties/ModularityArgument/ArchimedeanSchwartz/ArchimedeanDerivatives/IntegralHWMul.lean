@@ -379,9 +379,9 @@ theorem UpperTheory.V.Z.Inf.parts :
   intro K _ _ _ n τ Φ hT
   obtain ⟨hΦ, hc, hs⟩ := hT
   have hU : IsOpen (invSet K n) := isOpen_invSet
-  haveI h1 : (volume : Measure (Cinf K)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI h2 : (volume : Measure (Fin n → Cinf K)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI h3 : (volume : Measure (Lie K n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have h1 : (volume : Measure (Cinf K)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have h2 : (volume : Measure (Fin n → Cinf K)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have h3 : (volume : Measure (Lie K n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hsub : tsupport (detD τ Φ) ⊆ tsupport Φ := by
     refine closure_minimal ?_ (isClosed_tsupport _)
     intro x hx

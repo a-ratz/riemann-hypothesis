@@ -70,8 +70,8 @@ theorem exists_integral_gen_split : ∀ (F E : Type) [Field F] [NumberField F] [
   obtain ⟨P, Q, hPQ, hPv, hQv⟩ := hv
   have hσ := hB.cm
   have h2 : Module.finrank F E = 2 := hσ.2.2.1
-  haveI : IsGalois ℚ E := hB.galois
-  haveI : IsGalois F E := IsGalois.tower_top_of_isGalois ℚ F E
+  have : IsGalois ℚ E := hB.galois
+  have : IsGalois F E := IsGalois.tower_top_of_isGalois ℚ F E
   have hPo : P.asIdeal ∈ v.asIdeal.primesOver (𝓞 E) := ⟨P.isPrime, ⟨hPv.symm⟩⟩
   have hQo : Q.asIdeal ∈ v.asIdeal.primesOver (𝓞 E) := ⟨Q.isPrime, ⟨hQv.symm⟩⟩
   obtain ⟨g, hg⟩ := Ideal.exists_comap_galRestrict_eq (𝓞 F) F E (𝓞 E) hPo hQo

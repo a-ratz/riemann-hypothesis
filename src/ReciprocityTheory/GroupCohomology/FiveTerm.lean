@@ -157,7 +157,7 @@ theorem inflD_of_d (y : M.coch.X 1) (z : Q.coch.X 2) (h : M.coch.d 1 y = P.hom.f
 theorem descend1 (w : G → M.V) (hw : Continuous w) (hr : ∀ a (n : N), w (a * n) = w a)
     (hi : ∀ a (n : N), M.rho n (w a) = w a) :
     ∃ v : Q.coch.X 1, ∀ a : G, P.u (v.1 (e1 (a : G ⧸ N))) = w a := by
-  letI : Setoid G := QuotientGroup.leftRel N
+  let : Setoid G := QuotientGroup.leftRel N
   have hw' : ∀ a b : G, a ≈ b → w a = w b := by
     intro a b hab
     have hab' : a⁻¹ * b ∈ N := QuotientGroup.leftRel_apply.mp hab
@@ -294,7 +294,7 @@ theorem transgression_holds : TransgressionStatement.{u} := by
   intro R _ G _ _ _ _ _ _ M _ N _ hNc Q P hP I hI
   have hE : ∀ x : I, ∃ (y : M.coch.X 1) (z : Q.coch.X 2) (_ : Q.coch.d 2 z = 0), ∃ hy,
       M.coch.d 1 y = P.hom.f 2 z ∧
-      x.1 = (M.resSub N).coch.cls 1 ((Pair.res M N.subtype continuous_subtype_val).hom.f 1 y) hy := by
+      x.1 = (M.resSub N).coch.cls 1 ((Pair.res M N.subtype continuous_subtypeVal).hom.f 1 y) hy := by
     intro x
     obtain ⟨f0, hf, hx⟩ := exists_cls x.1
     have hinv : ∀ s : G, ∃ m : M.V, ∀ n : N,
@@ -306,7 +306,7 @@ theorem transgression_holds : TransgressionStatement.{u} := by
   choose yf zf hzf hyf hdf hxf using hE
   have key : ∀ (y : M.coch.X 1) (z : Q.coch.X 2) (hz : Q.coch.d 2 z = 0) hy (x : I),
       M.coch.d 1 y = P.hom.f 2 z →
-      x.1 = (M.resSub N).coch.cls 1 ((Pair.res M N.subtype continuous_subtype_val).hom.f 1 y) hy →
+      x.1 = (M.resSub N).coch.cls 1 ((Pair.res M N.subtype continuous_subtypeVal).hom.f 1 y) hy →
       Q.coch.cls 2 (zf x) (hzf x) = Q.coch.cls 2 z hz := by
     intro y z hz hy x hd hx
     apply cls_unique M N Q P hP _ _ _ _ _ _ (hdf x) hd
@@ -314,7 +314,7 @@ theorem transgression_holds : TransgressionStatement.{u} := by
   let T : I → Q.H 2 := fun x => Q.coch.cls 2 (zf x) (hzf x)
   have hadd : ∀ x x' : I, T (x + x') = T x + T x' := fun x x' => by
     have hy : (M.resSub N).coch.d 1
-        ((Pair.res M N.subtype continuous_subtype_val).hom.f 1 (yf x + yf x')) = 0 := by
+        ((Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (yf x + yf x')) = 0 := by
       rw [map_add (f := _)]; exact d_add_eq_zero (hyf x) (hyf x')
     refine (key (yf x + yf x') (zf x + zf x') (d_add_eq_zero (hzf x) (hzf x')) hy (x + x')
       (by rw [map_add (f := _), map_add (f := _), hdf, hdf]) ?_).trans rfl
@@ -322,7 +322,7 @@ theorem transgression_holds : TransgressionStatement.{u} := by
     exact cls_congr _ _ (map_add _ _ _).symm
   have hsmul : ∀ (r : R) (x : I), T (r • x) = r • T x := fun r x => by
     have hy : (M.resSub N).coch.d 1
-        ((Pair.res M N.subtype continuous_subtype_val).hom.f 1 (r • yf x)) = 0 := by
+        ((Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (r • yf x)) = 0 := by
       rw [map_smul]; exact d_smul_eq_zero r (hyf x)
     refine (key (r • yf x) (r • zf x) (d_smul_eq_zero r (hzf x)) hy (r • x)
       (by rw [map_smul, map_smul, hdf]) ?_).trans rfl
@@ -343,28 +343,28 @@ theorem transgression_holds : TransgressionStatement.{u} := by
       rw [Hom.H_cls, hxf x]
       apply cls_congr
       have hc : (M.resSub N).coch.d 1
-          ((Pair.res M N.subtype continuous_subtype_val).hom.f 1 (P.hom.f 1 v)) = 0 := by
-        have e : (Pair.res M N.subtype continuous_subtype_val).hom.f 1 (P.hom.f 1 v) =
-            (Pair.res M N.subtype continuous_subtype_val).hom.f 1 (yf x) -
-              (Pair.res M N.subtype continuous_subtype_val).hom.f 1 (yf x - P.hom.f 1 v) := by
+          ((Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (P.hom.f 1 v)) = 0 := by
+        have e : (Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (P.hom.f 1 v) =
+            (Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (yf x) -
+              (Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (yf x - P.hom.f 1 v) := by
           rw [map_sub, sub_sub_cancel]
         rw [e]
-        exact d_sub_eq_zero (hyf x) ((Pair.res M N.subtype continuous_subtype_val).hom.d_f_eq_zero hd')
+        exact d_sub_eq_zero (hyf x) ((Pair.res M N.subtype continuous_subtypeVal).hom.d_f_eq_zero hd')
       have h1 := cocycle_one (M.resSub N) _ hc
       have hconst : ∀ g : Fin 1 → N,
-          ((Pair.res M N.subtype continuous_subtype_val).hom.f 1 (P.hom.f 1 v)).1 g =
-            ((Pair.res M N.subtype continuous_subtype_val).hom.f 1 (P.hom.f 1 v)).1 (e1 1) := fun g => by
+          ((Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (P.hom.f 1 v)).1 g =
+            ((Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (P.hom.f 1 v)).1 (e1 1) := fun g => by
         show P.u (v.1 fun i => P.φ (g i : G)) = P.u (v.1 fun _ => P.φ ((1 : N) : G))
         have e : ∀ i, P.φ (g i : G) = 1 := fun i => by
           rw [phi_apply M N Q P hP, (QuotientGroup.eq_one_iff _).2 (g i).2]
         simp only [e, OneMemClass.coe_one, map_one]
-      have h0' : (Pair.res M N.subtype continuous_subtype_val).hom.f 1 (P.hom.f 1 v) = 0 :=
+      have h0' : (Pair.res M N.subtype continuous_subtypeVal).hom.f 1 (P.hom.f 1 v) = 0 :=
         Subtype.ext (funext fun g => by rw [hconst, h1]; rfl)
       rw [map_sub, h0', sub_zero]
     · rintro ⟨c, hc⟩
       obtain ⟨c0, hc0, rfl⟩ := exists_cls c
       change Q.coch.cls 2 (zf x) (hzf x) = 0
-      rw [key c0 0 (map_zero _) ((Pair.res M N.subtype continuous_subtype_val).hom.d_f_eq_zero hc0) x
+      rw [key c0 0 (map_zero _) ((Pair.res M N.subtype continuous_subtypeVal).hom.d_f_eq_zero hc0) x
         (by rw [hc0, map_zero]) (by rw [← hc, Hom.H_cls])]
       rfl
   · intro w
@@ -387,8 +387,8 @@ theorem transgression_holds : TransgressionStatement.{u} := by
         show q - (Q.rho 1 q - q + q) = 0
         simp
       have hres : (M.resSub N).coch.d 1
-          ((Pair.res M N.subtype continuous_subtype_val).hom.f 1 y') = 0 := by
-        rw [← (Pair.res M N.subtype continuous_subtype_val).hom.comm 1 y', hd']
+          ((Pair.res M N.subtype continuous_subtypeVal).hom.f 1 y') = 0 := by
+        rw [← (Pair.res M N.subtype continuous_subtypeVal).hom.comm 1 y', hd']
         refine Subtype.ext (funext fun g => ?_)
         show P.u (z'.1 fun i => P.φ (g i : G)) = 0
         have e : (fun i => P.φ (g i : G)) = ![1, 1] := funext fun i => by

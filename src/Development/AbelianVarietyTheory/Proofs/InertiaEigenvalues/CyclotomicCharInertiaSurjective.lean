@@ -478,23 +478,23 @@ theorem exists_mem_Ine_toZModPow (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgC
     ∃ σ ∈ Ine (F := ℚ) A, PadicInt.toZModPow k ((cycZ ℚ Ω l σ : ℤ_[l]ˣ) : ℤ_[l]) =
       PadicInt.toZModPow k (v : ℤ_[l]) := by
   have hl : l.Prime := Fact.out
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero (l ^ k) := ⟨pow_ne_zero k hl.ne_zero⟩
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨by
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero (l ^ k) := ⟨pow_ne_zero k hl.ne_zero⟩
+  have : NeZero ((l : ℕ) : Ω) := ⟨by
     have h := (algebraMap ℚ Ω).injective.ne (Nat.cast_ne_zero.mpr hl.ne_zero : (l : ℚ) ≠ 0)
     simpa using h⟩
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ k)
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ k)
 
   have e : (IntermediateField.adjoin ℚ {ζ}).algebra' =
       (DivisionRing.toRatAlgebra : Algebra ℚ (IntermediateField.adjoin ℚ {ζ})) :=
     Subsingleton.elim _ _
-  haveI : IsCyclotomicExtension {l ^ k} ℚ (IntermediateField.adjoin ℚ {ζ}) := by
+  have : IsCyclotomicExtension {l ^ k} ℚ (IntermediateField.adjoin ℚ {ζ}) := by
     rw [← e]
     exact hζ.intermediateField_adjoin_isCyclotomicExtension ℚ
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ}) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ}) :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral ζ)
-  haveI : IsGalois ℚ (IntermediateField.adjoin ℚ {ζ}) :=
+  have : IsGalois ℚ (IntermediateField.adjoin ℚ {ζ}) :=
     IsCyclotomicExtension.isGalois {l ^ k} ℚ (IntermediateField.adjoin ℚ {ζ})
 
   let u : (ZMod (l ^ k))ˣ :=
@@ -533,7 +533,7 @@ theorem cycZ_Ine_surjective : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlg
     have hset : {σ | PadicInt.toZModPow k (f σ) = PadicInt.toZModPow k (v : ℤ_[l])} =
         {σ | ‖f σ - (v : ℤ_[l])‖ ≤ (l : ℝ) ^ (-(k : ℤ))} := by
       ext σ
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [PadicInt.norm_le_pow_iff_mem_span_pow, ← PadicInt.ker_toZModPow, RingHom.mem_ker,
         map_sub, sub_eq_zero]
     rw [hset]
@@ -541,7 +541,7 @@ theorem cycZ_Ine_surjective : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlg
   have hdec : ∀ k, t (k + 1) ⊆ t k := by
     rintro k σ ⟨h₁, h₂⟩
     refine ⟨h₁, ?_⟩
-    simp only [Set.mem_setOf_eq] at h₂ ⊢
+    simp only [Set.mem_ofPred_eq] at h₂ ⊢
     rw [← PadicInt.cast_toZModPow k (k + 1) (Nat.le_succ k) (f σ),
       ← PadicInt.cast_toZModPow k (k + 1) (Nat.le_succ k), h₂]
   have hne : ∀ k, (t k).Nonempty := fun k => by

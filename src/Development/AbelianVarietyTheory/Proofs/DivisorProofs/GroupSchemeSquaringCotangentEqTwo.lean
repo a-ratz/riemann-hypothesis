@@ -61,10 +61,10 @@ private theorem unitSec_comp_sqr {S : Scheme.{0}} (G : Over S) [GrpObj G] : unit
 
 theorem sqr_sub_two_mem : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G], QuasiSeparated G.hom → ∀ (s : S) (π : S.presheaf.stalk s →+* G.left.presheaf.stalk (unitSec G s)) (ε : G.left.presheaf.stalk (unitSec G s) →+* S.presheaf.stalk s) (m : G.left.presheaf.stalk (unitSec G s) →+* G.left.presheaf.stalk (unitSec G s)), StalkData G s π ε m → ∀ f ∈ RingHom.ker ε, m f - 2 * f ∈ RingHom.ker ε ^ 2 := by
   intro S G _ hqs s π ε m hd f hf
-  haveI := hqs
+  have := hqs
   obtain ⟨hπ, hε, hm⟩ := _root_.GlobalTheory.Nef.stalkData_germ S G s π ε m hd
   have he : unitSec G ≫ G.hom = 𝟙 S := sec_hom η[G]
-  obtain ⟨U₀, hU₀, g, rfl⟩ := G.left.presheaf.germ_exist f
+  obtain ⟨U₀, hU₀, g, rfl⟩ := G.left.presheaf.exists_germ_eq f
   have hsq : sqr G (unitSec G s) = unitSec G s := by rw [← Scheme.Hom.comp_apply, unitSec_comp_sqr]
   have hb : G.hom (unitSec G s) = s := by rw [← Scheme.Hom.comp_apply, he]; rfl
   obtain ⟨U₁, hU₁, hs₁, -⟩ := QCoh.exists_affine_mem_le (U := (⊤ : S.Opens)) s trivial
@@ -88,7 +88,7 @@ theorem sqr_sub_two_mem : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G], QuasiSep
     have := congrArg (fun φ => φ.app U (GlobalTheory.Conormal.d he hU0 g)) hmul
     simp only at this
     exact (a1.symm.trans this).trans (congrArg₂ (· + ·) a2 a2)
-  letI := c.algebra
+  let := c.algebra
   let h : Γ(G.left, W₁ ⊓ G.hom ⁻¹ᵁ U) := (sqr G).appLE U₀ _ kS g - (resG G.left kW g + resG G.left kW g)
   have hz : AugCot.d (c.aug he) h = 0 := (c.augCotEquiv he).injective (by
     rw [c.augCotEquiv_d he, map_zero, map_sub, map_add (f := _), key, sub_self])

@@ -54,7 +54,7 @@ theorem exists_extension {O E V : Type} [CommRing O] [IsDomain O] [Field E] [Alg
     [IsFractionRing O E] [AddCommGroup V] [Module E V] [Module O V] [IsScalarTower O E V]
     (Λ : Submodule O V) (hspan : Submodule.span E (Λ : Set V) = ⊤) (φ : Λ →ₗ[O] O) :
     ∃ ψ : V →ₗ[E] E, ∀ x : Λ, ψ x = algebraMap O E (φ x) := by
-  haveI : IsLocalizedModule (nonZeroDivisors O) Λ.subtype :=
+  have : IsLocalizedModule (nonZeroDivisors O) Λ.subtype :=
     { map_units := fun x => by
         rw [Module.End.isUnit_iff]
         have hx : algebraMap O E x ≠ 0 :=
@@ -82,9 +82,9 @@ theorem exists_dual_family {E : Type} [Field E] [NumberField E] [StarRing E] {r 
     (hsd : ∀ y : Fin r → E, (∀ x ∈ Λ, ∃ b : 𝓞 E, (b : E) = ∑ i, ∑ j, star (x i) * G i j * y j) → y ∈ Λ) :
     ∃ (n : ℕ) (s s' : Fin n → Fin r → E), (∀ i, s i ∈ Λ ∧ s' i ∈ Λ) ∧
       ∀ a j, ∑ i, s i a * ∑ k, star (s' i k) * G k j = if a = j then 1 else 0 := by
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hfg
-  haveI : Module.FinitePresentation (𝓞 E) Λ := Module.finitePresentation_of_finite _ _
-  haveI : Module.Projective (𝓞 E) Λ := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hfg
+  have : Module.FinitePresentation (𝓞 E) Λ := Module.finitePresentation_of_finite _ _
+  have : Module.Projective (𝓞 E) Λ := Module.Flat.projective_of_finitePresentation
   obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' (𝓞 E) Λ
   obtain ⟨σ, hσ⟩ := Module.projective_lifting_property f LinearMap.id hf
   choose ψ hψ using fun i : Fin n => exists_extension Λ hspan ((LinearMap.proj i).comp σ)

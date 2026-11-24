@@ -70,7 +70,7 @@ theorem flow_pair_mem_range {E H₁ H₂ : Type*} [AddCommGroup E] [Module ℂ E
       exact e.symm_apply_apply x)
     (fun s r => by
       refine ContinuousLinearMap.ext fun x => ?_
-      rw [ContinuousLinearMap.mul_apply, hU, hU, hU, a₁, a₂, e.apply_symm_apply]
+      rw [mul_apply_eq_comp, hU, hU, hU, a₁, a₂, e.apply_symm_apply]
       rfl)
     (fun v => by
       have h := ((e.symm : H₁ × H₂ →L[ℂ] WithLp 2 (H₁ × H₂)).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt
@@ -107,7 +107,7 @@ theorem pair_kEquivariant_of_lie : ∀ (p q : ℕ) (T : GrpData p q), (∀ k ∈
   · intro x y _ _ hx hy w
     obtain ⟨w', h1, h2⟩ := hy w
     obtain ⟨w'', h3, h4⟩ := hx w'
-    exact ⟨w'', by rw [map_mul, ContinuousLinearMap.mul_apply, h1, h3],
-      by rw [map_mul, ContinuousLinearMap.mul_apply, h2, h4]⟩
+    exact ⟨w'', by rw [map_mul, mul_apply_eq_comp, h1, h3],
+      by rw [map_mul, mul_apply_eq_comp, h2, h4]⟩
 
 end GlobalTheory.RealPar

@@ -73,7 +73,7 @@ private theorem pm_iff {n : ℕ} (v : (ZMod n)ˣ) (a : ℕ) (hv : (v : ZMod n) =
 
 private theorem jac_iff {p : ℕ} (hp : p.Prime) (v : (ZMod p)ˣ) (a : ℕ) (hv : (v : ZMod p) = (a : ZMod p)) :
     jacobiSym (a : ℤ) p = 1 ↔ v ∈ (powMonoidHom 2 : (ZMod p)ˣ →* (ZMod p)ˣ).range := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have ha : ((a : ℤ) : ZMod p) ≠ 0 := by
     push_cast
     rw [← hv]

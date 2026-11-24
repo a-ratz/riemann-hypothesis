@@ -119,7 +119,7 @@ theorem diffOpenOnLattice_of (h : SecGram) : DiffOpenOnLattice := by
   have : IsReduced (Fv F v ⊗[F] E) := isReduced_tens_field F E (Fv F v)
   have hss : IsSemisimpleRing (Fv F v ⊗[F] E) := IsArtinianRing.isSemisimpleRing_of_isReduced _
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   obtain ⟨q, hq⟩ := h F E σ hσ M J hJ hdet (Fv F v) hss a x hx
   set T : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E) → (Fin a → Fin M → Fv F v ⊗[F] E) :=
     fun S j k => ∑ i', (algebraMap F (Fv F v ⊗[F] E) (1 / 2) * S i' j) * q k i' with hT
@@ -153,7 +153,7 @@ theorem diffOpenOnLattice_of (h : SecGram) : DiffOpenOnLattice := by
   rintro _ ⟨l, hl, rfl⟩
   have hU : IsOpen {S : HermR (Fv F v) σ a | T ((S - Dx l : HermR (Fv F v) σ a) :
       Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) ∈ L} :=
-    hLo.preimage (hTc.comp (continuous_subtype_val.comp (continuous_id.sub continuous_const)))
+    hLo.preimage (hTc.comp (continuous_subtypeVal.comp (continuous_id.sub continuous_const)))
   refine Filter.mem_of_superset (hU.mem_nhds ?_) ?_
   · show T ((Dx l - Dx l : HermR (Fv F v) σ a) : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) ∈ L
     rw [sub_self, AddSubgroup.coe_zero, hT0]
@@ -174,7 +174,7 @@ theorem gramFiltration_of (hDx : DiffOpenOnLattice) : GramFiltration := by
   have := locallyCompact_Fv F v
   have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   have : T2Space (Fv F v ⊗[F] E) := by
     obtain ⟨ι, _, ⟨h⟩⟩ := PI.AdicCompletionValuation.exists_homeomorph_tens (F := F) (E := E) (Fv F v)
     exact h.isEmbedding.t2Space
@@ -186,7 +186,7 @@ theorem gramFiltration_of (hDx : DiffOpenOnLattice) : GramFiltration := by
     refine ⟨continuous_induced_rng.2 ?_⟩
     show Continuous fun p : Fv F v × HermR (Fv F v) σ a =>
       p.1 • (p.2 : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E))
-    exact continuous_fst.smul (continuous_subtype_val.comp continuous_snd)
+    exact continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)
   obtain ⟨π, hπ0, hπ, hπO⟩ := exists_unif_Fv v
   set L := latSub b v a M with hLdef
   have hLo : IsOpen (L : Set (Fin a → Fin M → Fv F v ⊗[F] E)) :=
@@ -282,11 +282,11 @@ theorem gramFiltration_of (hDx : DiffOpenOnLattice) : GramFiltration := by
     intro i j k
     show PositiveNearLattice.crd b (Fv F v) (e0 i j) k ∈ v.adicCompletionIntegers F
     by_cases hij : i = i0 ∧ j = j0
-    · simp only [e0, if_pos hij, PositiveNearLattice.crd_incl, b.repr_self, Finsupp.single_apply]
+    · simp only [e0, ite_eq_left hij, PositiveNearLattice.crd_incl, b.repr_self, Finsupp.single_apply]
       split_ifs
       · simp
       · simp
-    · simp only [e0, if_neg hij, PositiveNearLattice.crd, map_zero, Finsupp.zero_apply]
+    · simp only [e0, ite_eq_right hij, PositiveNearLattice.crd, map_zero, Finsupp.zero_apply]
       exact zero_mem _
   have hφe : φ e0 = 1 := by
     show PositiveNearLattice.crd b (Fv F v) (e0 i0 j0) k0 = 1
@@ -315,7 +315,7 @@ theorem gramFiltration_of (hDx : DiffOpenOnLattice) : GramFiltration := by
       exact hφc.continuousAt.preimage_mem_nhds (by rw [h0]; exact hT)
     · intro c hc w hw
       have h := hc e0 he0L
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, hφs, hφe, mul_one] at h
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, hφs, hφe, mul_one] at h
       exact h w hw
   exact filt_abstract π hπ0 hπ L hLo hLc hπL β hβc hβ1 hβ2 hβs G hG hGs x hxo hsmall
 
@@ -331,14 +331,14 @@ theorem lb_gram_preimage : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       c * ν S ≤ μ ((gramR (Fv F v) σ J) ⁻¹' (Subtype.val '' S) ∩ W) := by
   intro F E _ _ _ _ _ σ hCM n J hJ v a μ ν hμ hν x S0 hx hxS0 W hW hxW
   obtain ⟨t1, t2, t3, t4, -⟩ := GlobalTheory.LocalUnitaryTop.top_facts F E σ hCM n J hJ v
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI := locallyCompact_Fv F v
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (HermR (Fv F v) σ a) := ⟨rfl⟩
-  haveI : T2Space (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have := locallyCompact_Fv F v
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (HermR (Fv F v) σ a) := ⟨rfl⟩
+  have : T2Space (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
     inferInstanceAs (T2Space (Fin a → Fin a → Fv F v ⊗[F] E))
   have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   have hσ : ∀ y, σ (σ y) = y := sigma_invol σ hCM.2.2.2
@@ -355,7 +355,7 @@ theorem lb_gram_preimage : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     · intro hy
       exact ⟨_, hy, rfl⟩
   rcases Nat.eq_zero_or_pos a with rfl | ha1
-  · haveI : Subsingleton (HermR (Fv F v) σ 0) :=
+  · have : Subsingleton (HermR (Fv F v) σ 0) :=
       ⟨fun s t => Subtype.ext (Matrix.ext fun i => i.elim0)⟩
     have hWu : W = Set.univ := Set.eq_univ_of_forall fun y => (Subsingleton.elim x y) ▸ hxW
     have hμpos : μ Set.univ ≠ 0 := (isOpen_univ.measure_pos μ ⟨x, trivial⟩).ne'
@@ -406,7 +406,7 @@ theorem lb_gram_preimage : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       rw [e]
       exact (H 0).add_mem (hHa (Nat.zero_le 1) h1) (hDW 0 _ hz)
     have hGm : Measurable G := (continuous_gramH (Fv F v) σ hσ J hJ.1).measurable
-    haveI : LocallyCompactSpace (HermR (Fv F v) σ a) :=
+    have : LocallyCompactSpace (HermR (Fv F v) σ a) :=
       (hHc 0).locallyCompactSpace_of_mem_nhds_of_addGroup ((hHo 0).mem_nhds (H 0).zero_mem)
     have hΛ0pos : μ (Λ 0 : Set (Fin a → Fin n → Fv F v ⊗[F] E)) ≠ 0 :=
       ((hΛo 0).measure_pos μ ⟨0, zero_mem _⟩).ne'
@@ -420,7 +420,7 @@ theorem lb_gram_preimage : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     let m : Measure (HermR (Fv F v) σ a) := (μ.restrict Q).map G
     have hm : ∀ s, MeasurableSet s → m s = μ (G ⁻¹' s ∩ Q) := fun s hs => by
       rw [Measure.map_apply hGm hs, Measure.restrict_apply (hGm hs)]
-    haveI : IsFiniteMeasure m := by
+    have : IsFiniteMeasure m := by
       refine ⟨?_⟩
       rw [hm _ MeasurableSet.univ, Set.preimage_univ, Set.univ_inter]
       exact hQc.measure_lt_top
@@ -458,11 +458,11 @@ theorem lb_gram_preimage : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     intro S hSC hSm
     rw [hpre]
     have hνS : ν S ≠ ⊤ := ne_top_of_le_ne_top hCc.measure_lt_top.ne (measure_mono hSC)
-    haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
+    have : SecondCountableTopology (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
       inferInstanceAs (SecondCountableTopology (Fin a → Fin a → Fv F v ⊗[F] E))
-    haveI : SecondCountableTopology (HermR (Fv F v) σ a) :=
+    have : SecondCountableTopology (HermR (Fv F v) σ a) :=
       Topology.IsInducing.subtypeVal.secondCountableTopology
-    haveI : ν.Regular := Measure.regular_of_isAddLeftInvariant (hHc 0)
+    have : ν.Regular := Measure.regular_of_isAddLeftInvariant (hHc 0)
       ⟨0, mem_interior_iff_mem_nhds.2 ((hHo 0).mem_nhds (H 0).zero_mem)⟩ hH0fin
     rw [hSm.measure_eq_iSup_isCompact_of_ne_top hνS, ENNReal.mul_iSup]
     refine iSup_le fun K => ?_

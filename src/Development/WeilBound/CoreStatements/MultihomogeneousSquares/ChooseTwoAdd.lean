@@ -292,8 +292,8 @@ theorem flat_ker {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') (hφ
     [DecidableEq κ] [DecidableEq Ix] (A : Matrix κ Ix R) (x : Ix → R') (hx : (A.map φ).mulVec x = 0) :
     ∃ (s : ℕ) (c : Fin s → R') (y : Fin s → Ix → R), (∀ l, A.mulVec (y l) = 0) ∧
       ∀ k, x k = ∑ l, c l * φ (y l k) := by
-  letI := φ.toAlgebra
-  haveI : Module.Flat R R' := hφ
+  let := φ.toAlgebra
+  have : Module.Flat R R' := hφ
   let X : (Ix → R) →ₗ[R] R' := Fintype.linearCombination R x
   let f : (κ → R) →ₗ[R] (Ix → R) := A.transpose.mulVecLin
   have h : X ∘ₗ f = 0 := by
@@ -528,7 +528,7 @@ theorem flat_dual (hφ : φ.Flat) (hφi : ∀ a, (φ a : Ω') = i a) (hj : IsExt
         exact Submodule.subset_span ⟨_, hm, rfl⟩)
       rw [hev] at h2
       simp only [LinearMap.smul_apply, hBb, smul_eq_mul, mul_ite, mul_one, mul_zero, apply_ite i, map_natCast, map_zero,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true] at h2
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h2
       rw [_root_.mul_one, map_natCast] at h2
       rw [mul_comm]
       exact h2
@@ -683,10 +683,10 @@ theorem exists_flat_regAt {X Z : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field �
 
 theorem hodgeCpt_pull_smooth : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω Ω' : Type) [Field Ω] [Field Ω'] (i : Ω →+* Ω') (K K' : Type) [Fintype K] [Fintype K'] (J : K → Type) (J' : K' → Type) [∀ k, Fintype (J k)] [∀ k, Fintype (J' k)] (y : (Σ k, J k) → Ω) (y' : (Σ k, J' k) → Ω') (A : HodgeCpt Y S y) (Z : Scheme.{0}) (ξ' : Spec (CommRingCat.of Ω') ⟶ Z) (h : Z ⟶ A.X), (∀ q : Z, genPt ξ' ⤳ q) → CoordTie ℤ ξ' (seg y') → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme Z → GlobalTheory.CompanionTheory.Ar.Dominates ξ' A.ξ h i → Smooth h → ∃ (A' : HodgeCpt Y S y') (e : A'.X ≅ Z) (j : A.Li →+ A'.Li), A'.ξ ≫ e.hom = ξ' ∧ HodgeOver A' A (e.hom ≫ h) i j ∧ A'.R = A.R ∧ Submodule.span Ω' (Set.range j) = ⊤ ∧ ∀ s, A'.V s = (A.V s).pull A'.ξ (e.hom ≫ h) j := by
   intro E _ _ _ H D l Xo c Y S Ω Ω' _ _ i K K' _ _ J J' _ _ y y' A Z ξ' h hall htie hnorm hdom hsmh
-  haveI : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
-  haveI : CharZero Ω' := charZero_of_injective_ringHom i.injective
-  haveI := hsmh
-  haveI : AlgebraicGeometry.Flat h := inferInstance
+  have : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
+  have : CharZero Ω' := charZero_of_injective_ringHom i.injective
+  have := hsmh
+  have : AlgebraicGeometry.Flat h := inferInstance
   have hgen := A.tie.gen
   have hgen' := htie.gen
   have hmono : Mono (spMap (algebraMap (𝓞 c.F) c.F)) := by
@@ -797,7 +797,7 @@ theorem hodgeCpt_pull_smooth : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       (∀ u ∈ A.M.omLat q, (p ^ A.R p) • u ∈ A.M.htOm A.t.PP.L (p ^ A.R p) q) := by
     intro p hp hpos
     have hN : 0 < p ^ A.R p := pow_pos (A.S_prime p hp).pos _
-    haveI : IsNoetherian A.X := ((_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie A.X Ω A.ξ ℤ _ _ A.tie).2 A.all).1
+    have : IsNoetherian A.X := ((_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie A.X Ω A.ξ ℤ _ _ A.tie).2 A.all).1
     have hNc : GlobalTheory.CompanionTheory.Ar.Flat.NormalCpt A.ξ := GlobalTheory.CompanionTheory.Ar.XR.normalCpt_of_isCptGen hgen A.normal
     obtain ⟨s0, o, ⟨m0⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ObjAt.exists_obj_at E H D l Xo c _ _ Y A.X A.f A.t A.m Ω A.ξ x hx
     have hζ : ∃ ζ : Ω, IsPrimitiveRoot ζ (p ^ A.R p) :=
@@ -848,7 +848,7 @@ theorem hodgeCpt_pull_smooth : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
           omega
       have hbot : A.Vgen s = ⊥ := by
         obtain ⟨U, hU, b, hb, -⟩ := A.vb s ⟨h p'.1, hsp p'⟩ trivial
-        haveI : IsEmpty (Fin (labelRk D s)) := by rw [hr]; infer_instance
+        have : IsEmpty (Fin (labelRk D s)) := by rw [hr]; infer_instance
         rw [Set.range_eq_empty, Submodule.span_empty] at hb
         exact hb.symm
       have hbot' : eigSp ρ' ((i.comp A.cst).comp (labelEmb c s)) = ⊥ := by
@@ -872,7 +872,7 @@ theorem hodgeCpt_pull_smooth : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
         Submodule.span (regAt ξ' p')
           (j '' (A.M.htW A.t.PP.L (p ^ A.R p) A.ρ (A.emb s) (differentIdeal ℤ (𝓞 E)) ⟨h p'.1, hsp p'⟩ : Set A.Li)) := by
     intro p hp s p'
-    haveI := regAt_isLocalRing (ξ := A.ξ) ⟨h p'.1, hsp p'⟩
+    have := regAt_isLocalRing (ξ := A.ξ) ⟨h p'.1, hsp p'⟩
     obtain ⟨d₀, hd₀, hne, hdv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.differentIdeal_principal_in_localSubring E Ω (regAt A.ξ ⟨h p'.1, hsp p'⟩) (A.emb s) (hint s _)
     exact _root_.GlobalTheory.CompanionTheory.Ar.scale_pull_ext Ω Ω' i (regAt A.ξ ⟨h p'.1, hsp p'⟩) (regAt ξ' p') A.Li Li' j (A.Vgen s) _ (𝓞 E) (A.emb s)
       (differentIdeal ℤ (𝓞 E)) d₀ (A.M.htDual A.t.PP.L (p ^ A.R p) A.ρ (A.emb s) ⟨h p'.1, hsp p'⟩)
@@ -1161,18 +1161,18 @@ theorem exists_blkF_of_not_full (K₀ : Type) (t : StepIx Ψ p q) (ht : (t.2 : �
     refine ⟨(τ, ⟨j, by omega⟩), ?_⟩
     have hP : IsProperStep (p + q) p (⟨j, by omega⟩ : Fin (p + q)) := ⟨ht, by simp only; omega⟩
     unfold blkF
-    rw [if_pos hP]
+    rw [ite_eq_left hP]
     unfold stepOf
-    simp only [dif_pos hj]
+    simp only [dite_eq_left hj]
   · simp only [Sum.elim_inr] at ht hj
     refine ⟨(τ, ⟨p + j, by omega⟩), ?_⟩
     have hP : IsProperStep (p + q) p (⟨p + j, by omega⟩ : Fin (p + q)) :=
       ⟨by simp only; omega, by simp only; omega⟩
     unfold blkF
-    rw [if_pos hP]
+    rw [ite_eq_left hP]
     unfold stepOf
     have hn : ¬ (p + (j : ℕ) < p) := by omega
-    simp only [dif_neg hn]
+    simp only [dite_eq_right hn]
     congr 2
     exact congrArg (fun z => (⟨.inr τ, z⟩ : StepIx Ψ p q)) (Fin.ext (by simp))
 
@@ -1226,7 +1226,7 @@ theorem coordTie_seg_xb {X : Scheme.{0}} (ξ : Spec (CommRingCat.of Ω) ⟶ X)
       (fun J : fullIx n t => ((A t.1.1).submatrix J (Fin.castLE t.1.2.2)).det) J P) :
     CoordTie ℤ ξ (seg (xb (p := p) (q := q) A x₀)) := by
   classical
-  haveI : Fintype (FullStep Ψ p q) := Fintype.ofFinite _
+  have : Fintype (FullStep Ψ p q) := Fintype.ofFinite _
   exact coordTie_seg_equiv (baseEquiv Ψ p q K₀) (baseIxEquiv n) x₀ (fullMinor A) _
     (fun _ _ => rfl) (fun _ _ => rfl) h hw
 
@@ -1744,7 +1744,7 @@ theorem tie_of (hX : StX) (hAlg : StAlg) (hHt : StHt) (hSing : StSing) (hBase : 
   have halg := hAlg E H D l Xo c Y S K ι Φ y M 𝔐₁ tie _ d BM FA hBM
   obtain ⟨x, hxa, hxs, hxc, hxl⟩ := hX _ _ K ι _ _ (FA.S.comap some) (FA.Re.comap some) sing (FA.S.reg none).1 hrd
     fun a t => hFAc (some a) t
-  have hF : 0 < Module.finrank ℚ c.F := by haveI := c.fin; exact Module.finrank_pos
+  have hF : 0 < Module.finrank ℚ c.F := by have := c.fin; exact Module.finrank_pos
   have hFlpos : 0 < Fl.deg := by rw [hFl]; exact hcov.1
   have hKne : Nonempty K := ⟨(κ k₀).1⟩
   obtain ⟨hbir, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.flagged_model_dim E H D l Xo c _ _ Y S Φ K ι y 𝔐' Fl hβ

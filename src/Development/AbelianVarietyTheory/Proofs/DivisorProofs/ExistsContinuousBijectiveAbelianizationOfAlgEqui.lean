@@ -78,7 +78,7 @@ theorem continuous_of_forall_exists_fix {k : Type u_1} {F : Type u_2} {k' : Type
   let b := Module.finBasis k' E'
   let S : Set F := Set.range fun i => x (b i : F')
   have hS : S.Finite := Set.finite_range _
-  haveI : Finite S := hS.to_subtype
+  have : Finite S := hS.to_subtype
   have hfin : FiniteDimensional k (IntermediateField.adjoin k S) :=
     IntermediateField.finiteDimensional_adjoin fun z _ => Algebra.IsIntegral.isIntegral z
   rw [Filter.mem_map]
@@ -146,7 +146,7 @@ theorem exists_abMap_of_algEquiv : ∀ {K : Type} [Field K] [NumberField K] {Ω 
       Continuous φ ∧ Function.Bijective φ ∧
       ∀ σ : Formalism.ConjugateSelfDual.G K Ω, φ (GlobalTheory.HeckeGal.toAb K Ω σ) = Neutral.B1.toAb K ((e.symm.trans σ).trans e) := by
   intro K _ _ Ω _ _ e
-  haveI hint : Algebra.IsIntegral K Ω :=
+  have hint : Algebra.IsIntegral K Ω :=
     ⟨fun x => (isIntegral_algEquiv e).1 (Algebra.IsIntegral.isIntegral (e x))⟩
   let φ : (Ω ≃ₐ[K] Ω) ≃* Field.absoluteGaloisGroup K := AlgEquiv.autCongr e
   have h1 : Continuous φ.toMonoidHom :=

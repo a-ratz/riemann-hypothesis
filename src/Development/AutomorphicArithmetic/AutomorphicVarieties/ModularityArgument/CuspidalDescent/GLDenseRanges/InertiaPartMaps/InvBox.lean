@@ -165,11 +165,11 @@ theorem invBox : InvBox := by
     intro k F i
     simp only [T, LinearMap.pi_apply, LinearMap.sum_apply, LinearMap.smul_apply, LinearMap.comp_apply,
       LinearMap.proj_apply]
-  haveI indexFFirst : Module.Free ℂ (Fin m → W) := Module.Free.of_divisionRing ℂ _
-  haveI indexFSecond : Module.Free ℂ ↥(fixd κ K₂ ⊓ ePart κ a N : Submodule ℂ W') := Module.Free.of_divisionRing ℂ _
-  haveI indexFThird : Module.Free ℂ ↥(inv1 K₁ τ₀ ρ) := Module.Free.of_divisionRing ℂ _
-  haveI iL1 : Module.Flat ℂ (Fin m → W) := Module.Flat.of_free
-  haveI iL2 : Module.Flat ℂ ↥(fixd κ K₂ ⊓ ePart κ a N : Submodule ℂ W') := Module.Flat.of_free
+  have indexFFirst : Module.Free ℂ (Fin m → W) := Module.Free.of_divisionRing ℂ _
+  have indexFSecond : Module.Free ℂ ↥(fixd κ K₂ ⊓ ePart κ a N : Submodule ℂ W') := Module.Free.of_divisionRing ℂ _
+  have indexFThird : Module.Free ℂ ↥(inv1 K₁ τ₀ ρ) := Module.Free.of_divisionRing ℂ _
+  have iL1 : Module.Flat ℂ (Fin m → W) := Module.Flat.of_free
+  have iL2 : Module.Flat ℂ ↥(fixd κ K₂ ⊓ ePart κ a N : Submodule ℂ W') := Module.Flat.of_free
   have hV1 : ∀ F : Fin m → W, F ∈ inv1 K₁ τ₀ ρ ↔ ∀ k, T k F = F := by
     intro F
     rw [show inv1 K₁ τ₀ ρ = invT K₁ ⊥ τ₀ (ρ.comp (MonoidHom.fst G Unit)) from rfl, mem_invT_iff_sum_smul_inl_eq_and_inr_fixed]

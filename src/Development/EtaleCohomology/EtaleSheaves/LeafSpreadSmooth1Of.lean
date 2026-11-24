@@ -233,10 +233,10 @@ theorem stepB {R K B A : Type} [CommRing R] [CommRing K] [CommRing B] [CommRing 
     [Algebra R B] [Algebra K B] [IsScalarTower R K B] [Algebra A B] [IsScalarTower R A B] (M : Submonoid R)
     [IsLocalization M K] [IsLocalization (Algebra.algebraMapSubmonoid A M) B] [Algebra.Smooth K B]
     (Q : Ideal B) [Q.IsPrime] : Algebra.IsSmoothAt R (Q.comap (algebraMap A B)) := by
-  haveI : Algebra.FormallySmooth R K := Algebra.FormallySmooth.of_isLocalization M
-  haveI : Algebra.FormallySmooth K (Localization.AtPrime Q) := inferInstance
-  haveI : Algebra.FormallySmooth R (Localization.AtPrime Q) := Algebra.FormallySmooth.comp R K _
-  haveI := IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
+  have : Algebra.FormallySmooth R K := Algebra.FormallySmooth.of_isLocalization M
+  have : Algebra.FormallySmooth K (Localization.AtPrime Q) := inferInstance
+  have : Algebra.FormallySmooth R (Localization.AtPrime Q) := Algebra.FormallySmooth.comp R K _
+  have := IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
     (Algebra.algebraMapSubmonoid A M) (Localization.AtPrime Q) Q
   exact Algebra.FormallySmooth.of_equiv ((IsLocalization.algEquiv (Q.comap (algebraMap A B)).primeCompl
     (Localization.AtPrime Q) _).restrictScalars R)
@@ -247,19 +247,19 @@ theorem algDescend (k : Type) [Field k] (Ω : Type) [Field Ω] [Algebra k Ω] (R
     (A : Type) [CommRing A] [Algebra R A] (hfp : Algebra.FinitePresentation R A) (hs : Algebra.Smooth Ω (Ω ⊗[R] A))
     (P : PrimeSpectrum (Ω ⊗[R] A)) :
     PrimeSpectrum.comap (Algebra.TensorProduct.includeRight : A →ₐ[R] Ω ⊗[R] A).toRingHom P ∈ Algebra.smoothLocus R A := by
-  letI : Algebra (FractionRing R) Ω := FractionRing.liftAlgebra R Ω
-  haveI : IsScalarTower R (FractionRing R) Ω := FractionRing.isScalarTower_liftAlgebra R Ω
+  let : Algebra (FractionRing R) Ω := FractionRing.liftAlgebra R Ω
+  have : IsScalarTower R (FractionRing R) Ω := FractionRing.isScalarTower_liftAlgebra R Ω
   let e := Algebra.TensorProduct.cancelBaseChange R (FractionRing R) Ω Ω A
-  haveI : Algebra.Smooth Ω (Ω ⊗[FractionRing R] (FractionRing R ⊗[R] A)) := Algebra.Smooth.of_equiv e.symm
-  haveI : Module.Free (FractionRing R) Ω := Module.Free.of_divisionRing _ Ω
-  haveI : Algebra.Smooth (FractionRing R) (FractionRing R ⊗[R] A) :=
+  have : Algebra.Smooth Ω (Ω ⊗[FractionRing R] (FractionRing R ⊗[R] A)) := Algebra.Smooth.of_equiv e.symm
+  have : Module.Free (FractionRing R) Ω := Module.Free.of_divisionRing _ Ω
+  have : Algebra.Smooth (FractionRing R) (FractionRing R ⊗[R] A) :=
     Algebra.Smooth.of_smooth_tensorProduct_of_faithfullyFlat Ω
-  letI : Algebra A (FractionRing R ⊗[R] A) := Algebra.TensorProduct.rightAlgebra
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid A (nonZeroDivisors R)) (FractionRing R ⊗[R] A) :=
+  let : Algebra A (FractionRing R ⊗[R] A) := Algebra.TensorProduct.rightAlgebra
+  have : IsLocalization (Algebra.algebraMapSubmonoid A (nonZeroDivisors R)) (FractionRing R ⊗[R] A) :=
     IsLocalization.tensorRight _ _
   let φ : FractionRing R ⊗[R] A →+* Ω ⊗[R] A := e.toRingHom.comp
     (Algebra.TensorProduct.includeRight : FractionRing R ⊗[R] A →ₐ[FractionRing R] Ω ⊗[FractionRing R] _).toRingHom
-  haveI : (P.asIdeal.comap φ).IsPrime := Ideal.comap_isPrime _ _
+  have : (P.asIdeal.comap φ).IsPrime := Ideal.comap_isPrime _ _
   have hφ : φ.comp (algebraMap A (FractionRing R ⊗[R] A)) =
       (Algebra.TensorProduct.includeRight : A →ₐ[R] Ω ⊗[R] A).toRingHom := by
     ext a

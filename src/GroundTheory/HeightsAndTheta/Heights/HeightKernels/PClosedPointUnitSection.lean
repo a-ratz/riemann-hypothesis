@@ -171,7 +171,7 @@ theorem le_of_mem {P : HeightOneSpectrum (𝓞 K')} {t : T} (ht0 : y ⟨(), t⟩
   have h1 := CurveAffineCharts.mem_integer_of_mem_chartRingZ y P t ht ((mem_chartLat_iff y).mp hg t ht0)
   rw [Valuation.mem_integer_iff, map_div₀, map_pow] at h1
   have hpos : P.valuation K' (y ⟨(), t⟩) ^ d ≠ 0 := pow_ne_zero _ ((Valuation.ne_zero_iff _).mpr ht0)
-  exact (div_le_one₀ (zero_lt_iff.mpr hpos)).mp h1
+  exact (div_le_one₀ (pos_iff_ne_zero.mpr hpos)).mp h1
 
 omit [Fintype T] in
 theorem isUnitAt_iff {P : HeightOneSpectrum (𝓞 K')} {t : T}
@@ -198,7 +198,7 @@ theorem not_isUnitAt_mul (hy : IsArithVar (mCoordIdeal y) 1) {P : HeightOneSpect
   rw [map_mul, pow_add]
   have hb := le_of_mem y ht0 ht hh
   have hpos : 0 < P.valuation K' (y ⟨(), t⟩) ^ b :=
-    zero_lt_iff.mpr (pow_ne_zero _ ((Valuation.ne_zero_iff _).mpr ht0))
+    pos_iff_ne_zero.mpr (pow_ne_zero _ ((Valuation.ne_zero_iff _).mpr ht0))
   calc P.valuation K' g * P.valuation K' h ≤ P.valuation K' g * P.valuation K' (y ⟨(), t⟩) ^ b :=
         mul_le_mul' le_rfl hb
     _ < P.valuation K' (y ⟨(), t⟩) ^ a * P.valuation K' (y ⟨(), t⟩) ^ b :=
@@ -274,7 +274,7 @@ theorem exists_sep (hy : IsArithVar (mCoordIdeal y) 1) {P P' : HeightOneSpectrum
   have hx : P.valuation K' (G / y ⟨(), t⟩ ^ d) < 1 := by
     rw [isUnitAt_iff y ht, not_le] at h2
     rw [map_div₀, map_pow]
-    exact (div_lt_one₀ (zero_lt_iff.mpr (pow_ne_zero _ hyt'))).mpr h2
+    exact (div_lt_one₀ (pos_iff_ne_zero.mpr (pow_ne_zero _ hyt'))).mpr h2
   obtain ⟨N, hN, hxN⟩ := exists_pow_sub_one P' hx'
   have hwR : (G / y ⟨(), t⟩ ^ d) ^ N - 1 ∈ chartRingZ y (fun _ => t) :=
     sub_mem (pow_mem hxR N) (one_mem _)
@@ -286,7 +286,7 @@ theorem exists_sep (hy : IsArithVar (mCoordIdeal y) 1) {P P' : HeightOneSpectrum
     exact pow_lt_one₀ zero_le hx (by omega)
   have hu := H k _ hk ((isUnitAt_iff y ht).mpr (le_of_eq (by rw [map_mul, hw, one_mul, map_pow])))
   rw [isUnitAt_iff y htP', map_mul, map_pow] at hu
-  have hpos : 0 < P'.valuation K' (y ⟨(), t⟩) ^ k := zero_lt_iff.mpr (pow_ne_zero _ hyt)
+  have hpos : 0 < P'.valuation K' (y ⟨(), t⟩) ^ k := pos_iff_ne_zero.mpr (pow_ne_zero _ hyt)
   have hlt := mul_lt_mul_of_pos_right hxN hpos
   rw [one_mul] at hlt
   exact absurd hu (not_le.mpr hlt)
@@ -465,7 +465,7 @@ theorem ClosedPointUnitSection.proof : ClosedPointUnitSection.Statement := by
     apply hPW
     have hPu := hGS P (hF.mem_toFinset.mpr ⟨q, hq, hqm, hqP⟩)
     rw [map_div₀]
-    refine (div_le_one₀ (zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hG0))).mpr ?_
+    refine (div_le_one₀ (pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hG0))).mpr ?_
     rw [map_pow]
     exact hPu u
   · push Not at hq

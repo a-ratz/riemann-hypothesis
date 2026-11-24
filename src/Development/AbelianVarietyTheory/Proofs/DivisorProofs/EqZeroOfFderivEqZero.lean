@@ -98,7 +98,7 @@ theorem eq_zero_of_fderiv_eq_zero (w : Fin g → ℂ)
   obtain ⟨U, hU, hx, -⟩ := exists_isAffineOpen_mem_and_subset (X := A.left)
     (x := (u.ex 0).left (default : PrimeSpectrum ℂ)) (U := ⊤) trivial
   have h0 : ⊤ ≤ (u.ex 0).left ⁻¹ᵁ U := (top_le_preimage_iff_mem _ _).2 hx
-  haveI := u.discrete
+  have := u.discrete
   obtain ⟨O, hO, hOe⟩ := isOpen_induced_iff.1 (isOpen_discrete ({0} : Set u.Λ))
   have hO0 : (0 : Fin g → ℂ) ∈ O := by
     have : (0 : u.Λ) ∈ Subtype.val ⁻¹' O := hOe ▸ rfl

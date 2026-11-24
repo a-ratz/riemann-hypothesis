@@ -105,7 +105,7 @@ theorem coboundary_int_additive_mod : ∀ (K L : Type) [Field K] [ValuativeRel K
     intro h
     unfold OrdIs at hord
     rw [h, IsDiscreteValuationRing.addVal_zero] at hord
-    exact ENat.top_ne_coe E hord
+    exact ENat.top_ne_natCast E hord
   exact int_dvd_of_eq_pow_mul hp hu h0 r _ w key
 
 end GlobalTheory.PMon.Ram

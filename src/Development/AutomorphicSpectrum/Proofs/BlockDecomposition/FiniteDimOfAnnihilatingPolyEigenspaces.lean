@@ -95,7 +95,7 @@ theorem finiteDimensional_of_roots_of_eigenspaces {M : Type} [AddCommGroup M] [M
     have hW3 : ∀ c : ℂ, FiniteDimensional ℂ
         (Submodule.span ℂ {v | v ∈ V.map f ∧ T v = c • v}) := by
       intro c
-      haveI := hfin c
+      have := hfin c
       have hsub : {v | v ∈ V.map f ∧ T v = c • v} ⊆ {v | v ∈ V ∧ T v = c • v} :=
         fun v hv => ⟨hWV v hv.1, hv.2⟩
       exact Submodule.finiteDimensional_of_le (Submodule.span_mono hsub)
@@ -103,7 +103,7 @@ theorem finiteDimensional_of_roots_of_eigenspaces {M : Type} [AddCommGroup M] [M
     apply Module.Finite.iff_fg.mpr
     apply Submodule.fg_of_fg_map_of_fg_inf_ker f
     · exact Module.Finite.iff_fg.mp hWfin
-    · haveI := hfin a
+    · have := hfin a
       have hle : V ⊓ LinearMap.ker f ≤ Submodule.span ℂ {v | v ∈ V ∧ T v = a • v} := by
         rintro v ⟨hv, hk⟩
         apply Submodule.subset_span
@@ -111,7 +111,7 @@ theorem finiteDimensional_of_roots_of_eigenspaces {M : Type} [AddCommGroup M] [M
         have h0 : f v = 0 := hk
         rw [hfv, sub_eq_zero] at h0
         exact h0
-      haveI := Submodule.finiteDimensional_of_le hle
+      have := Submodule.finiteDimensional_of_le hle
       exact Module.Finite.iff_fg.mp inferInstance
 
 theorem finiteDimensional_of_polynomial_of_eigenspaces :

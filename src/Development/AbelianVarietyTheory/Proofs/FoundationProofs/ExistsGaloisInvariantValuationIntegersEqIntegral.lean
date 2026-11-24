@@ -69,12 +69,12 @@ theorem exists_valuation_isInt : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field
   obtain ⟨_, hdvr, hirr⟩ := _root_.GlobalTheory.K5.completed_laurent_isDVR p
   have hmax : IsLocalRing.maximalIdeal (O0 p) = Ideal.span {(p : O0 p)} :=
     hirr.maximalIdeal_eq
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal (O0 p)) (O0 p) := by
+  have : IsAdicComplete (IsLocalRing.maximalIdeal (O0 p)) (O0 p) := by
     rw [hmax]; exact _root_.GlobalTheory.K5.o0_isAdicComplete_span_p p
-  haveI := h.alg
+  have := h.alg
   obtain ⟨v, hv⟩ := _root_.GlobalTheory.valuation_le_one_iff_isIntegral_of_complete_dvr (O0 p) Ω h.inj
   have hinv := _root_.GlobalTheory.valuation_map_algEquiv_eq_of_le_one_iff_isIntegral (O0 p) Ω h.inj v hv
-  haveI : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo h
+  have : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo h
   have hp0 : (p : Ω) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
   refine ⟨v, hv, hinv, ?_, ?_⟩
   · exact (Valuation.pos_iff v).2 hp0

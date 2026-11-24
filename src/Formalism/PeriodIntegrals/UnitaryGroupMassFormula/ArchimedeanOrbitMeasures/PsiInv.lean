@@ -95,8 +95,8 @@ theorem psiInv_of (hL : LieSkewU) (hS : SkewLieU) (hC : CaySkewU) (hI : CayIdU) 
     (unrLin n).continuous_of_finiteDimensional
   have hMc : Continuous Mf := by
     refine Continuous.mul ?_ ?_
-    · exact NormedSpace.exp_continuous.comp (hcu.comp (continuous_subtype_val.comp (L₀.continuous.comp continuous_fst)))
-    · exact NormedSpace.exp_continuous.comp (hcu.comp (continuous_subtype_val.comp (L₁.continuous.comp continuous_snd)))
+    · exact NormedSpace.exp_continuous.comp (hcu.comp (continuous_subtypeVal.comp (L₀.continuous.comp continuous_fst)))
+    · exact NormedSpace.exp_continuous.comp (hcu.comp (continuous_subtypeVal.comp (L₁.continuous.comp continuous_snd)))
   have hdet : ∀ᶠ p in 𝓝 (0 : EuclideanSpace ℝ ι × EuclideanSpace ℝ η), (Mf p + 1).det ≠ 0 := by
     have hc : Continuous fun p => (Mf p + 1).det := (hMc.add continuous_const).matrix_det
     have h0 : (Mf 0 + 1).det ≠ 0 := by
@@ -221,8 +221,8 @@ theorem psiMeas_holds : PsiMeasU := by
     (unrLin n).continuous_of_finiteDimensional
   have hMc : Continuous Mf := by
     refine Continuous.mul ?_ ?_
-    · exact NormedSpace.exp_continuous.comp (hcu.comp (continuous_subtype_val.comp (L₀.continuous.comp continuous_fst)))
-    · exact NormedSpace.exp_continuous.comp (hcu.comp (continuous_subtype_val.comp (L₁.continuous.comp continuous_snd)))
+    · exact NormedSpace.exp_continuous.comp (hcu.comp (continuous_subtypeVal.comp (L₀.continuous.comp continuous_fst)))
+    · exact NormedSpace.exp_continuous.comp (hcu.comp (continuous_subtypeVal.comp (L₁.continuous.comp continuous_snd)))
   have hN : ∀ k j, Measurable fun p => ((Mf p + 1)⁻¹) k j := by
     intro k j
     have e : (fun p => ((Mf p + 1)⁻¹) k j) = fun p => Ring.inverse (Mf p + 1).det * (Mf p + 1).adjugate k j := by
@@ -266,7 +266,7 @@ theorem skew_of_lieOf {n : ℕ} (ε : Fin n → Bool) (X : Matrix (Fin n) (Fin n
   have hc : ∀ t : ℝ, (NormedSpace.exp (t • X))ᴴ * J * NormedSpace.exp (t • X) = J := by
     intro t
     have h1 := hX t
-    simp only [Set.mem_setOf_eq, Formalism.REAL.inUJ] at h1
+    simp only [Set.mem_ofPred_eq, Formalism.REAL.inUJ] at h1
     rw [← Complex.coe_smul]
     exact h1
   have he : HasDerivAt (fun t : ℝ => NormedSpace.exp (t • X)) X 0 := by

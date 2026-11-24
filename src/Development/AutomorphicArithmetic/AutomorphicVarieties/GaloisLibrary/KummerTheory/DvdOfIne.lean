@@ -101,7 +101,7 @@ private theorem dvd_fin {K E : Type} [Field K] [NumberField K] [Field E] [Number
     (v : HeightOneSpectrum (𝓞 K)) (P : Ideal (𝓞 E)) [P.IsPrime] [P.LiesOver v.asIdeal] (n : ℕ) (b : E) (a : Kˣ)
     (hb : b ^ n = algebraMap K E a) (h : ∀ τ ∈ P.inertia (E ≃ₐ[K] E), τ b = b) : (n : ℤ) ∣ ordv v a := by
   let L : IntermediateField K E := IntermediateField.fixedField (P.inertia (E ≃ₐ[K] E))
-  have hle : P.inertia (E ≃ₐ[K] E) ≤ L.fixingSubgroup := (IntermediateField.le_iff_le _ _).1 le_rfl
+  have hle : P.inertia (E ≃ₐ[K] E) ≤ L.fixingSubgroup := (IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).1 le_rfl
   have hbL : b ∈ L := (IntermediateField.mem_fixedField_iff _ _).2 h
   have : (P.under (𝓞 L)).LiesOver v.asIdeal := ⟨by rw [Ideal.under_under]; exact Ideal.LiesOver.over⟩
   exact dvd_of_ram v (P.under (𝓞 L)) (ram_one v P L hle) n ⟨b, hbL⟩ a (Subtype.ext hb)

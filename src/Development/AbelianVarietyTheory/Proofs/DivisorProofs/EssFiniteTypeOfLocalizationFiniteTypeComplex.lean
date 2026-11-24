@@ -85,12 +85,12 @@ theorem essFiniteType_of_eq_div : ∀ (K : Type) [Field K] (c : ℂ →+* K) (R 
           push_cast; exact mul_inv_rev _ _
         rw [this]; exact E.mul_mem _ _ hb ha
       one_mem' := ⟨by simp, by simpa using E.one_mem⟩ }
-  letI : Algebra ℂ R := (c.codRestrict R hcR).toAlgebra
-  letI : Algebra R E := f.toAlgebra
-  letI : Algebra ℂ E := (c.codRestrict E hcE).toAlgebra
-  haveI : IsScalarTower ℂ R E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.FiniteType ℂ R := hft
-  haveI : IsLocalization M E := by
+  let : Algebra ℂ R := (c.codRestrict R hcR).toAlgebra
+  let : Algebra R E := f.toAlgebra
+  let : Algebra ℂ E := (c.codRestrict E hcE).toAlgebra
+  have : IsScalarTower ℂ R E := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.FiniteType ℂ R := hft
+  have : IsLocalization M E := by
     rw [isLocalization_iff]
     refine ⟨?_, ?_, ?_⟩
     · rintro ⟨s, hs0, hs⟩
@@ -113,7 +113,7 @@ theorem essFiniteType_of_eq_div : ∀ (K : Type) [Field K] (c : ℂ →+* K) (R 
       refine ⟨1, ?_⟩
       have : (x : K) = y := congrArg (fun z : E => (z : K)) hxy
       simp [Subtype.ext this]
-  haveI : Algebra.EssFiniteType R E := Algebra.EssFiniteType.of_isLocalization E M
+  have : Algebra.EssFiniteType R E := Algebra.EssFiniteType.of_isLocalization E M
   have h : Algebra.EssFiniteType ℂ E := Algebra.EssFiniteType.comp ℂ R E
   exact h
 

@@ -84,9 +84,9 @@ theorem mem_of_isIntegral {L F Ω : Type*} [Field L] [CharZero L] [Field F] [Fie
     [Algebra L Ω] [IsScalarTower L F Ω] (hLF : ∀ x : F, IsIntegral L x → x ∈ (algebraMap L F).range)
     (M : IntermediateField L Ω) [FiniteDimensional L M] (hgen : adjoin F (M : Set Ω) = ⊤)
     {a : Ω} (ha : IsIntegral L a) : a ∈ M := by
-  haveI : FiniteDimensional L L⟮a⟯ := adjoin.finiteDimensional ha
+  have : FiniteDimensional L L⟮a⟯ := adjoin.finiteDimensional ha
   let N : IntermediateField L Ω := M ⊔ L⟮a⟯
-  haveI : FiniteDimensional L N := inferInstance
+  have : FiniteDimensional L N := inferInstance
   have prim : ∀ P : IntermediateField L Ω, FiniteDimensional L P → ∃ θ : Ω, IsIntegral L θ ∧ L⟮θ⟯ = P ∧
       Module.finrank L P = Module.finrank F F⟮θ⟯ := by
     intro P _
@@ -105,7 +105,7 @@ theorem mem_of_isIntegral {L F Ω : Type*} [Field L] [CharZero L] [Field F] [Fie
       rw [adjoin_simple_le_iff]
       exact mem_adjoin_simple_self F θ
     exact this
-  haveI : FiniteDimensional F F⟮θ⟯ := adjoin.finiteDimensional hθ.tower_top
+  have : FiniteDimensional F F⟮θ⟯ := adjoin.finiteDimensional hθ.tower_top
   have hle : Module.finrank F F⟮η⟯ ≤ Module.finrank F F⟮θ⟯ :=
     IntermediateField.finrank_le_of_le_right (htop ▸ le_top)
   have : M = N := IntermediateField.eq_of_le_of_finrank_le le_sup_left (by omega)
@@ -116,15 +116,15 @@ theorem mem_range_of_isIntegral {F K Ω : Type*} [Field F] [CharZero F] [Field K
     [FiniteDimensional ℚ K] (φ : F →+* Ω) (ψ : K →+* Ω)
     (hgen : ∀ S : Subfield Ω, (∀ x, φ x ∈ S) → (∀ y, ψ y ∈ S) → S = ⊤)
     (hal : ∀ x : F, IsIntegral ℚ x → φ x ∈ ψ.range) {a : Ω} (ha : IsIntegral ℚ a) : a ∈ ψ.range := by
-  letI : Algebra F Ω := φ.toAlgebra
+  let : Algebra F Ω := φ.toAlgebra
   let L := algebraicClosure ℚ F
   let M : IntermediateField L Ω := ψ.fieldRange.toIntermediateField fun x =>
     hal x (mem_algebraicClosure_iff'.1 x.2)
-  haveI : FiniteDimensional ℚ M := by
+  have : FiniteDimensional ℚ M := by
     let g : K →ₗ[ℚ] M := (ψ.rangeRestrictField : K →+* M).toRatAlgHom.toLinearMap
     exact Module.Finite.of_surjective g ψ.rangeRestrictField_bijective.2
-  haveI : FiniteDimensional L M := Module.Finite.of_restrictScalars_finite ℚ L M
-  haveI : Algebra.IsIntegral ℚ L := (algebraicClosure.isAlgebraic ℚ F).isIntegral
+  have : FiniteDimensional L M := Module.Finite.of_restrictScalars_finite ℚ L M
+  have : Algebra.IsIntegral ℚ L := (algebraicClosure.isAlgebraic ℚ F).isIntegral
   refine mem_of_isIntegral (L := L) (F := F) (fun x hx => ?_) M ?_ ha.tower_top
   · exact ⟨⟨x, mem_algebraicClosure_iff'.2 (isIntegral_trans x hx)⟩, rfl⟩
   · have := hgen (adjoin F (M : Set Ω)).toSubfield (fun x => (adjoin F (M : Set Ω)).algebraMap_mem x)
@@ -145,15 +145,15 @@ theorem exists_finset_roots (F : Type*) [Field F] [CharZero F] [Algebra.EssFinit
       ∀ (Ω : Type) [Field Ω] (φ : F →+* Ω) (ψ : K →+* Ω) (x : F), IsIntegral ℚ x → φ x ∈ ψ.range := by
   classical
   let L := algebraicClosure ℚ F
-  haveI : FiniteDimensional ℚ L := finiteDimensional_algebraicClosure_of_essFiniteType ℚ F
+  have : FiniteDimensional ℚ L := finiteDimensional_algebraicClosure_of_essFiniteType ℚ F
   obtain ⟨θ, hθ⟩ := Field.exists_primitive_element ℚ L
   have hi : IsIntegral ℚ θ := Algebra.IsIntegral.isIntegral θ
   let p := minpoly ℚ θ
   refine ⟨(p.aroots ℂ).toFinset, fun z hz => ?_, fun K hK Ω _ φ ψ x hx => ?_⟩
   · rw [Multiset.mem_toFinset, mem_aroots] at hz
     exact ⟨p, hz.1, hz.2⟩
-  haveI : CharZero Ω := charZero_of_injective_ringHom φ.injective
-  letI : Algebra K Ω := ψ.toAlgebra
+  have : CharZero Ω := charZero_of_injective_ringHom φ.injective
+  let : Algebra K Ω := ψ.toAlgebra
   have hs : (p.map (algebraMap ℚ K)).Splits :=
     IntermediateField.splits_of_splits (IsAlgClosed.splits _) fun z hz => hK z (by
       rw [Multiset.mem_toFinset]
@@ -196,14 +196,14 @@ theorem residueField_generated {k K : CommRingCat.{0}} {X : Scheme.{0}} (s : X �
     have h : Spec.map j ≫ Spec.map u = Spec.map j ≫ Spec.map (i ≫ ψ) := by
       rw [hu, Spec.map_comp, reassoc_of% f2, Category.assoc, reassoc_of% f1, pullback.condition]
     rw [← Spec.map_comp, ← Spec.map_comp, Spec.map_inj] at h
-    haveI : Mono j := ConcreteCategory.mono_of_injective j Subtype.val_injective
+    have : Mono j := ConcreteCategory.mono_of_injective j Subtype.val_injective
     rw [← hu, (cancel_mono j).1 h, Spec.map_comp]
   have h : Spec.map j ≫ pullback.lift _ _ w = P.fromSpecResidueField x := by
     apply pullback.hom_ext
     · rw [Category.assoc, pullback.lift_fst, f1]
     · rw [Category.assoc, pullback.lift_snd, f2]
   haveI : SurjectiveOnStalks (Spec.map j ≫ pullback.lift _ _ w) := by rw [h]; infer_instance
-  haveI : SurjectiveOnStalks (Spec.map j) := .of_comp _ (pullback.lift _ _ w)
+  have : SurjectiveOnStalks (Spec.map j) := .of_comp _ (pullback.lift _ _ w)
   have hs : Function.Surjective j.hom :=
     RingHom.surjectiveOnStalks_iff_of_isLocalHom.1 (SurjectiveOnStalks.Spec_iff.1 this)
   rw [eq_top_iff]
@@ -212,7 +212,7 @@ theorem residueField_generated {k K : CommRingCat.{0}} {X : Scheme.{0}} (s : X �
   exact b.2
 
 theorem flat_of_field {A B : Type} [Field A] [CommRing B] (f : A →+* B) : f.Flat := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   exact (inferInstance : Module.Flat A B)
 
 theorem apply_mem_genericPoints {X Y : Scheme.{0}} (f : X ⟶ Y) [Flat f] (Z : Set X)
@@ -251,7 +251,7 @@ theorem compNe_and_exists_fnAlgClosed : ∀ (E : Type) [Field E] [NumberField E]
   have hfin : (genericPoints Xo.X).Finite :=
     genericPoints.finite TopologicalSpace.NoetherianSpace.finite_irreducibleComponents
   have := c.fin
-  haveI : FiniteDimensional ℚ (KA l) :=
+  have : FiniteDimensional ℚ (KA l) :=
     Module.Finite.of_injective (IntermediateField.inclusion c.le).toLinearMap (IntermediateField.inclusion_injective c.le)
   have hchar : ∀ x : Xo.X, CharZero (Xo.X.residueField x) := fun x =>
     charZero_of_injective_ringHom (R := KA l)
@@ -260,7 +260,7 @@ theorem compNe_and_exists_fnAlgClosed : ∀ (E : Type) [Field E] [NumberField E]
       ∀ (Ω : Type) [Field Ω] (φ : Xo.X.residueField x →+* Ω) (ψ : K →+* Ω) (a : Xo.X.residueField x),
         IsIntegral ℚ a → φ a ∈ ψ.range := by
     intro x
-    letI : Algebra (KA l) (Xo.X.residueField x) :=
+    let : Algebra (KA l) (Xo.X.residueField x) :=
       (Spec.preimage (Xo.X.fromSpecResidueField x ≫ Xo.s)).hom.toAlgebra
     have hess : (Spec.preimage (Xo.X.fromSpecResidueField x ≫ Xo.s)).hom.EssFiniteType := by
       have e : Spec.preimage (Xo.X.fromSpecResidueField x ≫ Xo.s) =
@@ -273,8 +273,8 @@ theorem compNe_and_exists_fnAlgClosed : ∀ (E : Type) [Field E] [NumberField E]
       have : SurjectiveOnStalks (Spec.map (Spec.preimage ((Sp (KA l)).fromSpecResidueField (Xo.s x)))) := by
         rw [Spec.map_preimage]; infer_instance
       exact RingHom.surjectiveOnStalks_iff_of_isLocalHom.1 (SurjectiveOnStalks.Spec_iff.1 this)
-    haveI : Algebra.EssFiniteType (KA l) (Xo.X.residueField x) := hess
-    haveI : Algebra.EssFiniteType ℚ (Xo.X.residueField x) := .comp ℚ (KA l) _
+    have : Algebra.EssFiniteType (KA l) (Xo.X.residueField x) := hess
+    have : Algebra.EssFiniteType ℚ (Xo.X.residueField x) := .comp ℚ (KA l) _
     exact exists_finset_roots _
   choose s hs hK using key
   let b := Module.finBasis ℚ c.F
@@ -299,10 +299,10 @@ theorem compNe_and_exists_fnAlgClosed : ∀ (E : Type) [Field E] [NumberField E]
   have := c''.fin
   obtain ⟨r, rfl⟩ := mem_range_of_isAlgebraic_ratFun a (ha.tower_top (kap Z))
   have hr : IsIntegral c''.F r := (isIntegral_algebraMap_iff ).1 ha.isIntegral
-  haveI : CharZero (kap Z) := charZero_of_injective_algebraMap (algebraMap c''.F (kap Z)).injective
+  have : CharZero (kap Z) := charZero_of_injective_algebraMap (algebraMap c''.F (kap Z)).injective
   have hr' : IsIntegral ℚ r := isIntegral_trans r hr
   let p : Xo.XF c'' ⟶ Xo.X := pullback.fst _ _
-  haveI : Flat (spMap (IntermediateField.inclusion c''.le).toRingHom) := by
+  have : Flat (spMap (IntermediateField.inclusion c''.le).toRingHom) := by
     refine (HasRingHomProperty.Spec_iff (P := @Flat)).2 ?_
     exact flat_of_field _
   have hp : p (genPt Z) ∈ genericPoints Xo.X := apply_mem_genericPoints p Z.1 Z.2

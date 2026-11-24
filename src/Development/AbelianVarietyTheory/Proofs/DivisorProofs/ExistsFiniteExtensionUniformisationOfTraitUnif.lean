@@ -139,16 +139,16 @@ theorem evenOn_of_unifTrait : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalR
   intro R _ _ _ _ D G _ _ P hG hU X _ _ _ hQ
   obtain ⟨W, _, _, _, φ, G', _, _, β, D', A', U', hW, -, hφ, hgp, hL, -⟩ := hU
   have hadm : AdmBase W (maximalIdeal W) := by
-    haveI := hW.1
+    have := hW.1
     exact ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
   have hG' : IsSemiAbelian G' := by
     obtain ⟨bc, mbc, -⟩ := grpPullback_iso hgp (isGrpPullback_pullback G (spMap φ))
-    haveI := mbc
+    have := mbc
     exact GlobalTheory.isSemiAbelian_of_grpIso bc (IsSemiAbelian.pullback (spMap φ) G hG)
   obtain ⟨P', hP', hE⟩ := unif_evenOn W hadm D' A' G' hG' U'
   have hpr : IsProper (pullback.snd G'.hom (jK W)) := by
     have := A'.isAb.proper
-    haveI : IsIso U'.gen.hom.left := inferInstanceAs (IsIso ((Over.forget _).map U'.gen.hom))
+    have : IsIso U'.gen.hom.left := inferInstanceAs (IsIso ((Over.forget _).map U'.gen.hom))
     change IsProper ((Over.pullback (jK W)).obj G').hom
     rw [← Over.w U'.gen.hom]
     infer_instance
@@ -214,7 +214,7 @@ theorem exists_common_pull : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   have := hW.1
   have hW' : AdmBase W (maximalIdeal W) := ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
   obtain ⟨bc, mbc, hbc⟩ := grpPullback_iso hβ (isGrpPullback_pullback G (spMap φ))
-  haveI := mbc
+  have := mbc
   have hG' : IsSemiAbelian G' := GlobalTheory.isSemiAbelian_of_grpIso bc (IsSemiAbelian.pullback (spMap φ) G hG)
 
   have sq : spMap (fracMap hφ) ≫ jK R = jK W ≫ spMap φ := (fracMap_sq hφ).symm.trans (Category.id_comp _)
@@ -322,14 +322,14 @@ open GlobalTheory.Spread GlobalTheory.HomExtNormal
 
 theorem exists_finite_hom : ∀ (K Ω : Type) [Field K] [CharZero K] [Field Ω] (ga : K →+* Ω) (A A' : Over (Sp K)) [GrpObj A] [GrpObj A'], IsAbelianScheme A → IsAbelianScheme A' → ∀ f : (Over.pullback (spMap ga)).obj A ⟶ (Over.pullback (spMap ga)).obj A', IsMonHom f → ∃ (K' : Type) (_ : Field K') (io : K →+* K') (Ω' : Type) (_ : Field Ω') (j : Ω →+* Ω') (l : K' →+* Ω') (f' : (Over.pullback (spMap io)).obj A ⟶ (Over.pullback (spMap io)).obj A'), io.Finite ∧ l.comp io = j.comp ga ∧ IsMonHom f' ∧ ∀ (Z : Scheme.{0}) (p : Z ⟶ pullback A.hom (spMap ga)) (p' : Z ⟶ pullback A.hom (spMap io)) (t : Z ⟶ Sp Ω'), p ≫ pullback.fst _ _ = p' ≫ pullback.fst _ _ → p ≫ pullback.snd _ _ = t ≫ spMap j → p' ≫ pullback.snd _ _ = t ≫ spMap l → p ≫ f.left ≫ pullback.fst _ _ = p' ≫ f'.left ≫ pullback.fst _ _ := by
   intro K Ω _ _ _ ga A A' _ _ hA hA' f hf
-  haveI := hf
+  have := hf
   have := hA.proper
   have := hA'.proper
   have := hA.smooth
   have := hA'.smooth
   let Ωb := AlgebraicClosure Ω
   let j : Ω →+* Ωb := algebraMap Ω Ωb
-  letI : Algebra K Ωb := (j.comp ga).toAlgebra
+  let : Algebra K Ωb := (j.comp ga).toAlgebra
   let Kb := algebraicClosure K Ωb
   have hcomp : spMap j ≫ spMap ga = spMap (algebraMap K Ωb) := by
     rw [← Spec.map_comp]; rfl
@@ -456,7 +456,7 @@ theorem exists_finite_iso : ∀ (K L : Type) [Field K] [CharZero K] [Field L] (�
     rw [← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp, ← CommRingCat.ofHom_comp, hc]
   have : Flat (spMap l) := by
     rw [Flat.SpecMap_iff]
-    letI := l.toAlgebra
+    let := l.toAlgebra
     exact (inferInstance : Module.Flat K' Ω)
   have : Surjective (spMap l) := ⟨fun x => ⟨Classical.arbitrary _, Subsingleton.elim _ _⟩⟩
   have hl : IsIso f.hom.left := inferInstanceAs (IsIso ((Over.forget _).map f.hom))
@@ -678,8 +678,8 @@ theorem exists_comp_proj {R R' R'' : Type} [CommRing R] [IsDomain R] [CommRing R
 
 theorem exists_finite_common_pull : ∀ (K L : Type) [Field K] [CharZero K] [Field L] (β : K →+* L) (E₁ E₂ : DegPre K) (E' : DegPre L), IsPullDeg β E₁ E' → IsPullDeg β E₂ E' → ∃ (K' : Type) (_ : Field K') (io : K →+* K') (E₃ : DegPre K'), io.Finite ∧ Nonempty (IsPullDeg io E₁ E₃) ∧ Nonempty (IsPullDeg io E₂ E₃) := by
   intro K L _ _ _ β E₁ E₂ E' h₁ h₂
-  haveI := h₁.e_hom
-  haveI := h₂.e_hom
+  have := h₁.e_hom
+  have := h₂.e_hom
   obtain ⟨K', _, io, Ω, _, j, l, φ, hfin, hl, hφ, hcomp⟩ :=
     GlobalTheory.T.isomorphism_mon_hom_descends_finite_extension K L β E₁.P.A E₂.P.A E₁.P.isAb E₂.P.isAb (h₁.e.symm ≪≫ h₂.e) (by dsimp; infer_instance)
   have hP := GlobalTheory.polBaseChange_holds
@@ -714,9 +714,9 @@ theorem exists_finite_common_pull : ∀ (K L : Type) [Field K] [CharZero K] [Fie
       have c := Over.w h₄.e.hom
       erw [a, b, w₃, c, w₄]
   let Ψ : E₃.P.A ≅ E₄.P.A := h₃.e ≪≫ φ ≪≫ h₄.e.symm
-  haveI := h₃.e_hom
-  haveI := h₄.e_hom
-  haveI := hφ
+  have := h₃.e_hom
+  have := h₄.e_hom
+  have := hφ
   have hΨ : IsMonHom Ψ.hom := by dsimp [Ψ]; infer_instance
   have cΨ : g₃.e.hom.left ≫ pullback.fst E₃.P.A.hom (specOf l) ≫ Ψ.hom.left =
       g₄.e.hom.left ≫ pullback.fst E₄.P.A.hom (specOf l) := by
@@ -1000,9 +1000,9 @@ open GlobalTheory.Mum.GenBundle in
 theorem GlobalTheory.Mum.genBundle_extends : ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R'), AdmBase R' (maximalIdeal R') → Function.Injective ρ → ∀ (D₁ D₂ : DegPre R) (D₃ : DegPre R') (E : DegPre (FractionRing R')) (p : IsPullDeg ρ D₁ D₃) (q₁ : IsPullDeg ((algebraMap R' (FractionRing R')).comp ρ) D₁ E) (q₂ : IsPullDeg ((algebraMap R' (FractionRing R')).comp ρ) D₂ E) (Φ : D₃.P.A.left ⟶ D₂.P.A.left) (κ : E.P.A.left ⟶ D₃.P.A.left), IsGrpPullback D₃.P.A D₂.P.A (spMap ρ) Φ → IsGrpPullback E.P.A D₃.P.A (spMap (algebraMap R' (FractionRing R'))) κ → κ ≫ GlobalTheory.PsiEvenPull.proj p = GlobalTheory.PsiEvenPull.proj q₁ → κ ≫ Φ = GlobalTheory.PsiEvenPull.proj q₂ → ∃ w : LB.Iso D₃.P.L (D₂.P.L.pull Φ), PGen w := by
   intro R R' _ _ _ _ _ ρ hA _ D₁ D₂ D₃ E p q₁ q₂ Φ κ _ hκ h1 h2
   obtain ⟨hN, -, hI, -⟩ := hA
-  haveI := D₃.P.isAb
-  haveI : Smooth D₃.P.A.hom := D₃.P.isAb.smooth
-  haveI : GeometricallyIntegral D₃.P.A.hom := geometricallyIntegral_of_isAbelianScheme D₃.P.A
+  have := D₃.P.isAb
+  have : Smooth D₃.P.A.hom := D₃.P.isAb.smooth
+  have : GeometricallyIntegral D₃.P.A.hom := geometricallyIntegral_of_isAbelianScheme D₃.P.A
   have hL₁ := D₁.P.isLB
   have hL₂ := D₂.P.isLB
   have hL₃ := D₃.P.isLB
@@ -1152,8 +1152,8 @@ attribute [local instance] ReciprocityTheory.ChartRestriction.G.DVR.isDominant_j
 
 theorem grp : ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R'), AdmBase R' (maximalIdeal R') → Function.Injective ρ → ∀ (D₁ D₂ : DegPre R) (D₃ : DegPre R') (E : DegPre (FractionRing R')) (p : IsPullDeg ρ D₁ D₃) (q₁ : IsPullDeg ((algebraMap R' (FractionRing R')).comp ρ) D₁ E) (q₂ : IsPullDeg ((algebraMap R' (FractionRing R')).comp ρ) D₂ E), ∃ (Φ : D₃.P.A.left ⟶ D₂.P.A.left) (κ : E.P.A.left ⟶ D₃.P.A.left), IsGrpPullback D₃.P.A D₂.P.A (spMap ρ) Φ ∧ IsGrpPullback E.P.A D₃.P.A (spMap (algebraMap R' (FractionRing R'))) κ ∧ κ ≫ GlobalTheory.PsiEvenPull.proj p = GlobalTheory.PsiEvenPull.proj q₁ ∧ κ ≫ Φ = GlobalTheory.PsiEvenPull.proj q₂ := by
   intro R R' _ _ _ _ _ ρ hR hρ D₁ D₂ D₃ E p q₁ q₂
-  haveI : IsNoetherianRing R' := hR.1
-  haveI : IsIntegrallyClosed R' := hR.2.2.1
+  have : IsNoetherianRing R' := hR.1
+  have : IsIntegrallyClosed R' := hR.2.2.1
   have sc : spMap ((algebraMap R' (FractionRing R')).comp ρ) = spMap (algebraMap R' (FractionRing R')) ≫ spMap ρ :=
     spMap_comp ρ (algebraMap R' (FractionRing R'))
   have gpp := pull_grp p
@@ -1213,7 +1213,7 @@ theorem cpt : ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommRing R'] [IsDomai
   have hsep := (GlobalTheory.ExtUnique.flat_and_isSeparated_of_isSemiAbelian D₂.P.A
     (GlobalTheory.isSemiAbelian_of_isAbelianScheme D₂.P.A D₂.P.isAb)).2
   have b2 : (D₂.c (q₂.xe y)).left ≫ D₂.P.A.hom = 𝟙 _ := by simpa using Over.w (D₂.c (q₂.xe y))
-  haveI := hsep
+  have := hsep
   refine ext_of_isDominant_of_isSeparated (X := Spec (CommRingCat.of R')) D₂.P.A.hom ?_ (jK R') ?_
   · rw [Category.assoc, gp.1.w, ← Category.assoc, b3, Category.assoc, b2]
     exact (Category.id_comp _).trans (Category.comp_id _).symm
@@ -1345,8 +1345,8 @@ open GlobalTheory.Mum
 theorem GlobalTheory.MumRig.exists_common_pull_finite : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (D₁ D₂ : DegData R (maximalIdeal R)) (W : Type) [CommRing W] [IsDomain W] (φ : R →+* W), Function.Injective φ → ∀ D' : DegPre W, Nonempty (IsPullDeg φ D₁.toPre D') → Nonempty (IsPullDeg φ D₂.toPre D') → ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (D₃ : DegData R' (maximalIdeal R')), FinExt ρ ∧ Nonempty (IsPullDeg ρ D₁.toPre D₃.toPre) ∧ Nonempty (IsPullDeg ρ D₂.toPre D₃.toPre) := by
   intro R _ _ _ hR D₁ D₂ W _ _ φ hφ D' ⟨h₁⟩ ⟨h₂⟩
   obtain ⟨E₁, E₂, L, _, β, E', ⟨e₁⟩, ⟨e₂⟩, ⟨f₁⟩, ⟨f₂⟩⟩ := GlobalTheory.T.exists_generic_fibres_common_pullDeg_to_field R hR D₁ D₂ W φ hφ D' h₁ h₂
-  haveI : CharZero R := hR.2
-  haveI : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R (FractionRing R))
+  have : CharZero R := hR.2
+  have : CharZero (FractionRing R) := charZero_of_injective_algebraMap (IsFractionRing.injective R (FractionRing R))
   obtain ⟨K', _, io, E₃, hio, ⟨g₁⟩, ⟨g₂⟩⟩ := GlobalTheory.T.exists_finite_common_pullback_degenerationData (FractionRing R) L β E₁ E₂ E' f₁ f₂
   obtain ⟨R', _, _, _, ρ, E, hfin, hloc, ⟨k₁⟩, ⟨k₂⟩⟩ := GlobalTheory.T.exists_commonPullback_fractionField_finiteLocalExt R hR D₁.toPre D₂.toPre E₁ E₂ e₁ e₂ K' io E₃ hio g₁ g₂
   obtain ⟨D₃, ⟨p⟩⟩ := GlobalTheory.MumPull.exists_pull R R' ρ hfin.2.1 hloc D₁
@@ -1372,7 +1372,7 @@ namespace GlobalTheory.PolFieldDescent
 
 theorem exists_polAV : ∀ (K K' : Type) [Field K] [Field K'] (ga : K →+* K') (G : Over (Sp K)) [GrpObj G] [IsCommMonObj G] (L : LB G.left), L.IsLB → Out.Sym G L → ∀ (A' : PolAV (Sp K')) (α : A'.A.left ⟶ G.left), IsGrpPullback A'.A G (spMap ga) α → LBIso A'.L (L.pull α) → ∃ (A : PolAV (Sp K)) (gen : G ≅ A.A), IsMonHom gen.hom ∧ LBIso (A.L.pull gen.hom.left) L := by
   intro K K' _ _ ga G _ _ L hL hS A' α hP hw
-  letI : Algebra K K' := ga.toAlgebra
+  let : Algebra K K' := ga.toAlgebra
   have hP' : IsGrpPullback A'.A G (spMap (algebraMap K K')) α := hP
   have : Flat (spMap ga) := Flat.SpecMap_iff.2 (RingHom.flat_algebraMap_iff.2 inferInstance)
   have : Surjective (spMap ga) := ⟨PrimeSpectrum.comap_surjective_of_faithfullyFlat (A := K) (B := K')⟩
@@ -1522,7 +1522,7 @@ namespace GlobalTheory.Mum.Ident
 
 theorem finExt_isLocalHom {R R' : Type} [CommRing R] [IsLocalRing R] [CommRing R'] [IsDomain R'] [IsLocalRing R']
     {ρ : R →+* R'} (h : FinExt ρ) : IsLocalHom ρ := by
-  letI := ρ.toAlgebra
+  let := ρ.toAlgebra
   have hm : (maximalIdeal R').comap ρ = maximalIdeal R :=
     IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (R := R) (algebraMap _ _) h.2.2.to_isIntegral (maximalIdeal R'))
   exact ((IsLocalRing.local_hom_tfae ρ).out 1 5).2 hm
@@ -1541,7 +1541,7 @@ theorem unif_along_finExt : ∀ (R R' : Type) [CommRing R] [IsDomain R] [IsLocal
         LBIso U₃.LG.L (U₂.LG.L.pull β₃) := by
   intro R R' _ _ _ _ _ _ ρ hR hf D₂ A G _ _ hG U₂ D₃ h23
   have := hR.2
-  haveI := finExt_isLocalHom hf
+  have := finExt_isLocalHom hf
   obtain ⟨hL, -, -, h4, h5⟩ := GlobalTheory.firstFiveLaws
   obtain ⟨D', hD, A', U', hP⟩ := GlobalTheory.UT.EndBaseChange.exists_pull hL.polBaseChange h4.unifBaseChange h5.psiOnExists
     hR.1 hf.1 ρ hf.2.1 (map_maximalIdeal_le ρ) hG U₂
@@ -1561,9 +1561,9 @@ theorem exists_finExt_unif : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRi
   intro R _ _ _ hR D G _ _ P hG W _ _ _ hW φ hφ hloc G' _ _ β D' A' U' hβ hL hD
   have hT : UnifTrait D G P.L.L := ⟨W, _, _, _, φ, G', _, _, β, D', A', U', hW, hφ, hloc, hβ, hL, hD⟩
   obtain ⟨R₁, _, _, _, ρ₁, G₁, _, _, β₁, X, _, _, _, hf₁, hβ₁, hQ⟩ := GlobalTheory.Mum.exists_finExt_tq_closedFibre R hR G hG
-  haveI hloc₁ : IsLocalHom ρ₁ := finExt_isLocalHom hf₁
+  have hloc₁ : IsLocalHom ρ₁ := finExt_isLocalHom hf₁
   obtain ⟨D₁, hD₁⟩ := GlobalTheory.MumPull.exists_pull R R₁ ρ₁ hf₁.2.1 hloc₁ D
-  have hR₁ : Base R₁ := ⟨hf₁.1, by haveI := hR.2; exact charZero_of_injective_ringHom hf₁.2.1⟩
+  have hR₁ : Base R₁ := ⟨hf₁.1, by have := hR.2; exact charZero_of_injective_ringHom hf₁.2.1⟩
   have hG₁ : IsSemiAbelian G₁ := by
     obtain ⟨bc, mbc, -⟩ := grpPullback_iso hβ₁ (isGrpPullback_pullback G (spMap ρ₁))
     exact GlobalTheory.isSemiAbelian_of_grpIso bc (IsSemiAbelian.pullback _ G hG)

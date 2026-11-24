@@ -212,7 +212,7 @@ lemma torCh_single (τ : ι) (a : Fin n) (t : ℝ) :
     simp [Pi.single_eq_of_ne hb]
   rw [Finset.prod_eq_single a h2 (fun h => absurd (Finset.mem_univ a) h)]
   simp only [Pi.single_eq_same]
-  rw [← Complex.exp_int_mul]
+  rw [← Complex.exp_intCast_mul]
 
 omit [Fintype ι] in
 lemma oneP_eq (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) (τ : ι) (a : Fin n) (t : ℝ) :
@@ -301,7 +301,7 @@ lemma law_single (h : ∀ τ, OrthFr (Hm τ) (q τ) (x₀ τ)) {f : (ι → Mt n
   have hd : ∀ v ∈ UG Hm, Complex.I * der τ Y f v = (w τ a : ℂ) * f v := by
     intro v hv
     have hkv := hk τ a a le_rfl v hv
-    rw [if_pos rfl, hZ] at hkv
+    rw [ite_eq_left rfl, hZ] at hkv
     unfold derC at hkv
     rw [hconj, add_neg_cancel, smul_zero, der_zero', zero_add, hcoef] at hkv
     exact hkv

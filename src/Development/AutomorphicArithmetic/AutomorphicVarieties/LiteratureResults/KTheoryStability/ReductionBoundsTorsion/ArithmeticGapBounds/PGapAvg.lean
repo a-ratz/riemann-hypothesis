@@ -88,16 +88,16 @@ theorem finite_cosets (h : (B.subgroupOf K).index ≠ 0) :
 
 theorem avg_sub (h : (B.subgroupOf K).index ≠ 0) (u v : S → ℝ) (x : S) :
     avg j B K (fun y => u y - v y) x = avg j B K u x - avg j B K v x := by
-  haveI := finite_cosets (B := B) (K := K) h
-  letI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))
+  have := finite_cosets (B := B) (K := K) h
+  let := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))
   simp only [avg, finsum_eq_sum_of_fintype, Finset.sum_sub_distrib, mul_sub]
 
 theorem avg_mul_left {a : S → ℝ} (ha : LInv j K a) (b : S → ℝ) (x : S) :
     avg j B K (fun y => a y * b y) x = a x * avg j B K b x := by
   by_cases h : (B.subgroupOf K).index = 0
   · simp [avg, h]
-  haveI := finite_cosets (B := B) (K := K) h
-  letI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))
+  have := finite_cosets (B := B) (K := K) h
+  let := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))
   simp only [avg, finsum_eq_sum_of_fintype]
   have hc : ∀ c : Quotient (QuotientGroup.rightRel (B.subgroupOf K)),
       a (j (c.out : Λ) * x) * b (j (c.out : Λ) * x) = a x * b (j (c.out : Λ) * x) := by
@@ -114,8 +114,8 @@ theorem avg_nonneg {u : S → ℝ} (hu : ∀ y, 0 ≤ u y) (x : S) : 0 ≤ avg j
 
 theorem avg_sq_le (h : (B.subgroupOf K).index ≠ 0) (u : S → ℝ) (x : S) :
     avg j B K u x ^ 2 ≤ avg j B K (fun y => u y ^ 2) x := by
-  haveI := finite_cosets (B := B) (K := K) h
-  letI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))
+  have := finite_cosets (B := B) (K := K) h
+  let := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))
   have hc : (Finset.univ : Finset (Quotient (QuotientGroup.rightRel (B.subgroupOf K)))).card
       = (B.subgroupOf K).index := by
     rw [Finset.card_univ, ← Nat.card_eq_fintype_card, card_cosets]

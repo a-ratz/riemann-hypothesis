@@ -64,7 +64,7 @@ theorem hasClassInt_of_lintegral_eq : ∀ (H : Type) [Group H] [TopologicalSpace
     exact mul_mem (mul_mem (inv_mem hg) hγ) hg
   let ι : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ → Γ := fun δ => ⟨δ, hmemΓ _ δ.2⟩
   have hι : Function.Injective ι := fun a b h => Subtype.ext (congrArg Subtype.val h :)
-  haveI : Countable (GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ) := hι.countable
+  have : Countable (GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ) := hι.countable
   have hcont : ∀ δ : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ, Continuous fun x : H => x⁻¹ * (δ : H) * x := fun δ => by
     fun_prop
   have hfm : Measurable f := hf.measurable
@@ -111,7 +111,7 @@ theorem hasClassInt_of_lintegral_eq : ∀ (H : Type) [Group H] [TopologicalSpace
     change ∫⁻ x, ‖f x‖ₑ ∂m1 < ∞ at h
     rw [hm1, lintegral_sum_measure] at h
     refine ne_of_lt (lt_of_eq_of_lt (tsum_congr fun δ => ?_) h)
-    exact (lintegral_map hfm.enorm (hcont δ).measurable).symm
+    exact (lintegral_map hfm.eNorm (hcont δ).measurable).symm
   have hKm : Measurable (GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.classKernel Γ γ f) :=
     measurable_of_tendsto_metrizable' (Filter.atTop : Filter (Finset (GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ)))
       (f := fun (s : Finset (GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ)) x => ∑ δ ∈ s, f (x⁻¹ * (δ : H) * x))
@@ -121,9 +121,9 @@ theorem hasClassInt_of_lintegral_eq : ∀ (H : Type) [Group H] [TopologicalSpace
   · change ∫⁻ x, ‖GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.classKernel Γ γ f x‖ₑ ∂μ.restrict 𝓕 < ∞
     calc ∫⁻ x, ‖GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.classKernel Γ γ f x‖ₑ ∂μ.restrict 𝓕
         ≤ ∫⁻ x, ∑' δ : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ, ‖f (x⁻¹ * δ * x)‖ₑ ∂μ.restrict 𝓕 :=
-          lintegral_mono fun x => enorm_tsum_le_tsum_enorm
+          lintegral_mono fun x => eNorm_tsum_le_tsum_eNorm
       _ = ∑' δ : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ, ∫⁻ x in 𝓕, ‖f (x⁻¹ * δ * x)‖ₑ ∂μ :=
-          lintegral_tsum (fun δ => (hfm.comp (hcont δ).measurable).enorm.aemeasurable)
+          lintegral_tsum (fun δ => (hfm.comp (hcont δ).measurable).eNorm.aemeasurable)
       _ < ∞ := hfinL.lt_top
   · show ∫ x in 𝓕, ∑' δ : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ, f (x⁻¹ * δ * x) ∂μ = _
     rw [integral_tsum (f := fun (δ : GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.ratClass Γ γ) x => f (x⁻¹ * (δ : H) * x)) (fun δ => (hfm.comp (hcont δ).measurable).aestronglyMeasurable) hfinL, ← hval1, hm12, hval2]
@@ -147,22 +147,22 @@ theorem exists_weight (H : Type) [Group H] [TopologicalSpace H] [IsTopologicalGr
     ∃ α : H → ℝ≥0∞, Measurable α ∧ (∀ y, ∑' h : Γ.subgroupOf (cent γ), α (((h : cent γ) : H) * y) = 1) ∧ ∀ ψ : H → ℝ≥0∞, Measurable ψ → LeftInv (cent γ) ψ → ∫⁻ y, α y * ψ y ∂μ = dt 𝓣 * ∫⁻ q, descend (cent γ) ψ q ∂(quotMeas (cent γ) dt μ) := by
   have hTcl : IsClosed ((cent γ : Subgroup H) : Set H) := Set.isClosed_centralizer _
   have hc : ∀ a b : cent γ, a * b = b * a := fun a b => hcomm.is_comm.comm a b
-  haveI : LocallyCompactSpace (cent γ) := hTcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : dt.IsMulRightInvariant := ⟨fun g => by
+  have : LocallyCompactSpace (cent γ) := hTcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : dt.IsMulRightInvariant := ⟨fun g => by
     have : (fun x : cent γ => x * g) = (fun x => g * x) := funext fun x => hc x g
     rw [this]; exact map_mul_left_eq_self dt g⟩
   obtain ⟨β, hβm, hβ⟩ := exists_bruhat (T := cent γ) hTcl dt
   have hprod : Measurable fun p : H × cent γ => β (((p.2 : cent γ) : H) * p.1) :=
-    hβm.comp ((measurable_subtype_coe.comp measurable_snd).mul measurable_fst)
+    hβm.comp ((measurable_subtypeVal.comp measurable_snd).mul measurable_fst)
   have hsec : ∀ x : H, Measurable fun t : cent γ => β ((t : H) * x) := fun x =>
-    hβm.comp (measurable_subtype_coe.mul_const x)
+    hβm.comp (measurable_subtypeVal.mul_const x)
   refine ⟨fun y => ∫⁻ t in 𝓣, β ((t : H) * y) ∂dt, ?_, ?_, ?_⟩
   · exact hprod.lintegral_prod_right'
   · intro y
-    haveI : Countable Γ := by
-      haveI : TopologicalSpace.SeparableSpace Γ := inferInstance
+    have : Countable Γ := by
+      have : TopologicalSpace.SeparableSpace Γ := inferInstance
       exact TopologicalSpace.separableSpace_iff_countable.mp inferInstance
-    haveI : Countable (Γ.subgroupOf (cent γ)) := by
+    have : Countable (Γ.subgroupOf (cent γ)) := by
       refine Function.Injective.countable (f := fun h : Γ.subgroupOf (cent γ) => (⟨((h : cent γ) : H), h.2⟩ : Γ)) ?_
       intro a b hab
       apply Subtype.ext; apply Subtype.ext
@@ -173,7 +173,7 @@ theorem exists_weight (H : Type) [Group H] [TopologicalSpace H] [IsTopologicalGr
     have e : ((h • t : cent γ) : H) = ((h : cent γ) : H) * (t : H) := rfl
     rw [e, ← mul_assoc, ← Subgroup.coe_mul, ← Subgroup.coe_mul, hc]
   · intro ψ hψm hψ
-    haveI : dt.IsMulLeftInvariant := inferInstance
+    have : dt.IsMulLeftInvariant := inferInstance
     have hq := isQuotMeasure_quotMeas (T := cent γ) dt μ hTcl
 
     have hinner : ∀ t : cent γ, ∫⁻ y, β ((t : H) * y) * ψ y ∂μ = ∫⁻ y, β y * ψ y ∂μ := by

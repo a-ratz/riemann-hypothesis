@@ -95,7 +95,7 @@ private theorem tateMat_dvd (h1 : ∀ i n, (p ^ (n + 1)) • τ i n = 0)
     (h2 : ∀ i n, τ i n = p • τ i (n + 1))
     (h3 : ∀ x : Γ, p • x = 0 → ∃! t : κ → ZMod p, x = ∑ j, (t j).val • τ j 0) (n : ℕ) :
     ∀ a : κ → ℤ, ∑ j, a j • τ j n = 0 → ∀ j, ((p ^ (n + 1) : ℕ) : ℤ) ∣ a j := by
-  haveI : NeZero p := ⟨hp.out.ne_zero⟩
+  have : NeZero p := ⟨hp.out.ne_zero⟩
   have base : ∀ a : κ → ℤ, ∑ j, a j • τ j 0 = 0 → ∀ j, (p : ℤ) ∣ a j := by
     intro a ha j
     have hu := (h3 0 (smul_zero _)).unique (y₁ := fun j => (a j : ZMod p)) (y₂ := fun _ => 0)
@@ -132,7 +132,7 @@ private theorem tateMat_limit (h1 : ∀ i n, (p ^ (n + 1)) • τ i n = 0)
     (h3 : ∀ x : Γ, p • x = 0 → ∃! t : κ → ZMod p, x = ∑ j, (t j).val • τ j 0)
     (f : AddMonoid.End Γ) (j : κ) :
     ∃ c : κ → ℤ_[p], ∀ n, f (τ j n) = ∑ k, (PadicInt.toZModPow (n + 1) (c k)).val • τ k n := by
-  haveI : NeZero p := ⟨hp.out.ne_zero⟩
+  have : NeZero p := ⟨hp.out.ne_zero⟩
   have hex : ∀ n, ∃ a : κ → ℤ, f (τ j n) = ∑ k, a k • τ k n := fun n =>
     tateMat_exists h2 h3 n _ (by rw [← map_nsmul, h1, map_zero])
   choose a ha using hex
@@ -158,12 +158,12 @@ private theorem tateMat_unique (h1 : ∀ i n, (p ^ (n + 1)) • τ i n = 0)
     (hb : ∀ n k, (b n k : ZMod (p ^ (n + 1))) = PadicInt.toZModPow (n + 1) (d k))
     (h : ∀ n, ∑ k, (PadicInt.toZModPow (n + 1) (c k)).val • τ k n = ∑ k, b n k • τ k n)
     (k : κ) : c k = d k := by
-  haveI : NeZero p := ⟨hp.out.ne_zero⟩
+  have : NeZero p := ⟨hp.out.ne_zero⟩
   rw [← PadicInt.ext_of_toZModPow]
   intro n
   cases n with
   | zero =>
-    haveI : Subsingleton (ZMod (p ^ 0)) := by rw [pow_zero]; infer_instance
+    have : Subsingleton (ZMod (p ^ 0)) := by rw [pow_zero]; infer_instance
     exact Subsingleton.elim _ _
   | succ n =>
     have := tateMat_congr h1 h2 h3 n
@@ -182,7 +182,7 @@ theorem tate_basis_matrix :
     ∃ ρ : AddMonoid.End Γ →+* Matrix κ κ ℤ_[p], ∀ (f : AddMonoid.End Γ) j n,
       f (τ j n) = ∑ k, (PadicInt.toZModPow (n + 1) (ρ f k j)).val • τ k n) := by
   intro p hp κ Γ _ _ _ τ h1 h2 h3
-  haveI : NeZero p := ⟨hp.out.ne_zero⟩
+  have : NeZero p := ⟨hp.out.ne_zero⟩
   refine ⟨fun n x hx => ?_, ?_⟩
   · obtain ⟨a, ha⟩ := tateMat_exists h2 h3 n x hx
     have key : ∀ t : κ → ZMod (p ^ (n + 1)), x = ∑ j, (t j).val • τ j n →

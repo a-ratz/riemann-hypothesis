@@ -124,7 +124,7 @@ theorem hasDerivAt_line {S : Type*} {J : Type*} [CommRing S] [Fintype J] (φ : S
     simp only [map_mul, eval₂Hom_X', Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     refine (hp.mul hlin).congr_deriv ?_
     rw [Finset.sum_congr rfl fun j _ => key j, Finset.sum_add_distrib, ← Finset.sum_mul]
-    simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true, zero_smul,
+    simp only [Finset.sum_ite_eq', Finset.mem_univ, ite_true, zero_smul,
       add_zero, zero_mul]
     ring
 
@@ -155,7 +155,7 @@ theorem main {E : Type u_1} {S : Type u_2} {J : Type u_3} {σ : Type u_4}
       (∀ w : E × (J → ℂ), Φ w = (w.1, fun r : σ => eval₂Hom (χ w.1) w.2 (rel r))) ∧
         (z₀, u₀) ∈ Φ.source ∧ AnalyticOnNhd ℂ Φ.symm Φ.target := by
   classical
-  have : CompleteSpace E := FiniteDimensional.complete ℂ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
   set G : E × (J → ℂ) → (σ → ℂ) := fun w r => eval₂Hom (χ w.1) w.2 (rel r)
   set F : E × (J → ℂ) → E × (σ → ℂ) := fun w => (w.1, G w)
   set a₀ : E × (J → ℂ) := (z₀, u₀)
@@ -282,12 +282,12 @@ theorem exists_holomorphic_sections :
     ∀ (m g : ℕ) (A R : Type) [CommRing A] [CommRing R] (ψ : MvPolynomial (Fin g) A →+* R) (B : Set (Fin m → ℂ)) (φ : (Fin m → ℂ) → (A →+* ℂ)) (b₀ : Fin m → ℂ) (e : R →+* ℂ), ψ.Etale → IsOpen B → b₀ ∈ B → (∀ a, DifferentiableOn ℂ (fun b => φ b a) B) → (∀ a, e (ψ (MvPolynomial.C a)) = φ b₀ a) → ∃ (N : Set ((Fin m → ℂ) × (Fin g → ℂ))) (σ : (Fin m → ℂ) × (Fin g → ℂ) → (R →+* ℂ)) (n : ℕ) (f : Fin n → R) (O : Set ((Fin m → ℂ) × (Fin n → ℂ))), IsOpen N ∧ IsOpen O ∧ (b₀, fun j => e (f j)) ∈ O ∧ (∀ a, DifferentiableOn ℂ (fun q => σ q a) N) ∧ (∀ q ∈ N, q.1 ∈ B ∧ (∀ a, σ q (ψ (MvPolynomial.C a)) = φ q.1 a) ∧ ∀ i, σ q (ψ (MvPolynomial.X i)) = q.2 i) ∧ ∀ (b : Fin m → ℂ) (x : R →+* ℂ), (∀ a, x (ψ (MvPolynomial.C a)) = φ b a) → (b, fun j => x (f j)) ∈ O → (b, fun i => x (ψ (MvPolynomial.X i))) ∈ N ∧ σ (b, fun i => x (ψ (MvPolynomial.X i))) = x := by
   intro m g A R _ _ ψ B φ b₀ e hψ hB hb₀ hφ he
   classical
-  letI : Algebra (MvPolynomial (Fin g) A) R := ψ.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin g) A) R := hψ
+  let : Algebra (MvPolynomial (Fin g) A) R := ψ.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin g) A) R := hψ
   obtain ⟨J, τ, _, _, P, hP⟩ := (Algebra.Etale.iff_isStandardSmoothOfRelativeDimension_zero.1
     ‹Algebra.Etale (MvPolynomial (Fin g) A) R›).out
-  letI := Fintype.ofFinite J
-  letI := Fintype.ofFinite τ
+  let := Fintype.ofFinite J
+  let := Fintype.ofFinite τ
   have hcard : Fintype.card τ = Fintype.card J := by
     have := P.card_relations_le_card_vars_of_isFinite
     simp only [Algebra.Presentation.dimension, Nat.card_eq_fintype_card] at this hP

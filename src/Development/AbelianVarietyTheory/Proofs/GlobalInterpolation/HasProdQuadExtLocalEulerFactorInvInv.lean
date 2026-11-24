@@ -103,7 +103,7 @@ private theorem exists_sub_algebraMap_mem_of_inertiaDeg_eq_one (p : Ideal (𝓞 
     (P : Ideal (𝓞 E)) [P.IsMaximal] [P.LiesOver p]
     (hf : P.inertiaDeg (𝓞 F) = 1) (θ : 𝓞 E) : ∃ a : 𝓞 F, θ - algebraMap (𝓞 F) (𝓞 E) a ∈ P := by
   rw [Ideal.inertiaDeg_eq_of_isMaximal p P] at hf
-  letI := Ideal.Quotient.field p
+  let := Ideal.Quotient.field p
   have htop := Subalgebra.bot_eq_top_of_finrank_eq_one hf
   have hx : Ideal.Quotient.mk P θ ∈ (⊥ : Subalgebra (𝓞 F ⧸ p) (𝓞 E ⧸ P)) :=
     htop ▸ Algebra.mem_top
@@ -123,7 +123,7 @@ private theorem conjIdeal_eq_smul_of_star_eq (τ : Gal(E/F)) (hs : ∀ x : E, st
   rw [Ideal.pointwise_smul_def, Ideal.map]
   congr 1
   ext r
-  simp only [Set.mem_setOf_eq, Set.mem_image, SetLike.mem_coe]
+  simp only [Set.mem_ofPred_eq, Set.mem_image, SetLike.mem_coe]
   constructor
   · rintro ⟨s, hs', hr⟩
     refine ⟨s, hs', ?_⟩
@@ -152,13 +152,13 @@ theorem _root_.GlobalTheory.EtaEulerProduct.inert_or_split {σ : E →ₐ[F] E} 
   have hfin : Module.finrank F E = 2 := h.2.2.1
   have hsτ : ∀ x : E, star x = τ x := fun x => (hs x).trans (hτ x).symm
   set p := v.asIdeal with hp
-  haveI : p.IsMaximal := v.isMaximal
+  have : p.IsMaximal := v.isMaximal
   have hcount := Ideal.ncard_primesOver_mul_ramificationIdxIn_mul_inertiaDegIn p (𝓞 E) Gal(E/F)
   rw [hc] at hcount
   obtain ⟨P, hP⟩ : (p.primesOver (𝓞 E)).Nonempty := Set.Nonempty.of_subtype
-  haveI : P.IsPrime := hP.1
-  haveI : P.LiesOver p := hP.2
-  haveI : P.IsMaximal := Ideal.IsMaximal.of_liesOver_isMaximal P p
+  have : P.IsPrime := hP.1
+  have : P.LiesOver p := hP.2
+  have : P.IsMaximal := Ideal.IsMaximal.of_liesOver_isMaximal P p
   have he := Ideal.ramificationIdxIn_eq_ramificationIdx p P Gal(E/F)
   have hf := Ideal.inertiaDegIn_eq_inertiaDeg p P Gal(E/F)
   have hfix : (p.primesOver (𝓞 E)).ncard = 1 → ∀ g : Gal(E/F), g • P = P := by
@@ -206,8 +206,8 @@ theorem _root_.GlobalTheory.EtaEulerProduct.inert_or_split {σ : E →ₐ[F] E} 
   have hnorm : ∀ Q ∈ p.primesOver (𝓞 E),
       Ideal.absNorm Q = Ideal.absNorm p ^ p.inertiaDegIn (𝓞 E) := by
     intro Q hQ
-    haveI : Q.IsPrime := hQ.1
-    haveI : Q.LiesOver p := hQ.2
+    have : Q.IsPrime := hQ.1
+    have : Q.LiesOver p := hQ.2
     rw [Ideal.inertiaDegIn_eq_inertiaDeg p Q Gal(E/F), Ideal.absNorm_pow_inertiaDeg p Q]
   have hdvd2 : (p.primesOver (𝓞 E)).ncard ∣ 2 := Dvd.intro _ hcount
   rcases (Nat.dvd_prime Nat.prime_two).mp hdvd2 with hn | hn
@@ -218,8 +218,8 @@ theorem _root_.GlobalTheory.EtaEulerProduct.inert_or_split {σ : E →ₐ[F] E} 
       · exact h'
       · rw [← hp, hn] at h'; omega
     refine ⟨_root_.GlobalTheory.InertField.isField_of_inert F E hfin v hprime, hn, fun Q hQ => ?_⟩
-    haveI : Q.IsPrime := hQ.1
-    haveI : Q.LiesOver p := hQ.2
+    have : Q.IsPrime := hQ.1
+    have : Q.LiesOver p := hQ.2
     refine ⟨?_, by rw [hnorm Q hQ, hf2]⟩
     rw [conjIdeal_eq_smul_of_star_eq τ hsτ]
     obtain ⟨R, hR⟩ := Set.ncard_eq_one.mp hn
@@ -229,16 +229,16 @@ theorem _root_.GlobalTheory.EtaEulerProduct.inert_or_split {σ : E →ₐ[F] E} 
   · right
     have hf1 : p.inertiaDegIn (𝓞 E) = 1 := by rw [hn] at hcount; omega
     refine ⟨_root_.GlobalTheory.SplitPlace.not_isField_of_split F E hfin v hn, hn, fun Q hQ => ?_⟩
-    haveI : Q.IsPrime := hQ.1
-    haveI : Q.LiesOver p := hQ.2
+    have : Q.IsPrime := hQ.1
+    have : Q.LiesOver p := hQ.2
     refine ⟨?_, by rw [hnorm Q hQ, hf1, pow_one]⟩
     rw [conjIdeal_eq_smul_of_star_eq τ hsτ]
     intro hQτ
     obtain ⟨Q₁, Q₂, hne, hQ12⟩ := Set.ncard_eq_two.mp hn
     have hall : ∀ R ∈ p.primesOver (𝓞 E), R = Q := by
       intro R hR
-      haveI : R.IsPrime := hR.1
-      haveI : R.LiesOver p := hR.2
+      have : R.IsPrime := hR.1
+      have : R.LiesOver p := hR.2
       obtain ⟨g, hg⟩ := Ideal.exists_smul_eq_of_isGaloisGroup p Q R Gal(E/F)
       obtain ⟨x, y, hxy, huniv⟩ := Nat.card_eq_two_iff.mp hc
       have hg' : g = 1 ∨ g = τ := by
@@ -281,7 +281,7 @@ open scoped TensorProduct Pointwise in
 open NumberField IsDedekindDomain in
 private theorem absNorm_under_int_prime (K : Type) [Field K] [NumberField K] (P : Ideal (𝓞 K))
     [P.IsMaximal] : (Ideal.absNorm (P.under ℤ)).Prime := by
-  haveI : (P.under ℤ).IsMaximal :=
+  have : (P.under ℤ).IsMaximal :=
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := ℤ) (S := 𝓞 K) P
   have hne : P.under ℤ ≠ ⊥ := Ideal.IsMaximal.ne_bot_of_isIntegral_int (Ideal.under ℤ P)
   have hspan := Int.ideal_span_absNorm_eq_self (P.under ℤ)
@@ -332,7 +332,7 @@ private theorem eulerFac_hasProd_and_primesOver_card_le_two {σ : E →ₐ[F] E}
       1 ≤ (v.asIdeal.primesOver (𝓞 E)).ncard ∧ (v.asIdeal.primesOver (𝓞 E)).ncard ≤ 2 ∧
       ∀ Q ∈ v.asIdeal.primesOver (𝓞 E), 0 < _root_.Formalism.HermitianLatticesTheory.eulerFac E M Q ∧
         |Real.log (_root_.Formalism.HermitianLatticesTheory.eulerFac E M Q)| ≤ 2 * (Ideal.absNorm v.asIdeal : ℝ) ^ (-(2 : ℝ)) := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   set q : ℝ := (Ideal.absNorm v.asIdeal : ℝ) with hqdef
   have hq : 2 ≤ q := by
     rw [hqdef]; exact_mod_cast two_le_absNorm_of_isMaximal F v.asIdeal
@@ -354,12 +354,12 @@ private theorem eulerFac_hasProd_and_primesOver_card_le_two {σ : E →ₐ[F] E}
     have hval : ∀ Q ∈ v.asIdeal.primesOver (𝓞 E), _root_.Formalism.HermitianLatticesTheory.eulerFac E M Q = (1 - t)⁻¹ := by
       intro Q hQm
       unfold _root_.Formalism.HermitianLatticesTheory.eulerFac
-      rw [if_pos (hQ Q hQm).1, (hQ Q hQm).2]
+      rw [ite_eq_left (hQ Q hQm).1, (hQ Q hQm).2]
       push_cast
       rw [Real.sqrt_sq (by positivity)]
     have heul : _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.eulerInv F E M v = 1 - t := by
       unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.eulerInv _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.etaV _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.resCard
-      rw [if_pos hF]
+      rw [ite_eq_left hF]
     have hpos : 0 < 1 - t := by linarith [le_abs_self t]
     refine ⟨?_, by omega, by omega, fun Q hQm => ⟨by rw [hval Q hQm]; positivity, ?_⟩⟩
     · obtain ⟨Q₀, hQ₀⟩ := Set.ncard_eq_one.mp hn
@@ -376,10 +376,10 @@ private theorem eulerFac_hasProd_and_primesOver_card_le_two {σ : E →ₐ[F] E}
   · have hval : ∀ Q ∈ v.asIdeal.primesOver (𝓞 E), _root_.Formalism.HermitianLatticesTheory.eulerFac E M Q = (1 - x) ^ (-1 / 2 : ℝ) := by
       intro Q hQm
       unfold _root_.Formalism.HermitianLatticesTheory.eulerFac
-      rw [if_neg (hQ Q hQm).1, (hQ Q hQm).2]
+      rw [ite_eq_right (hQ Q hQm).1, (hQ Q hQm).2]
     have heul : _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.eulerInv F E M v = 1 - x := by
       unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.eulerInv _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.etaV _root_.GlobalTheory.IndefiniteRowSideFullHecke.LocalDualIndex.resCard
-      rw [if_neg hF]; simp [hxdef, hqdef]
+      rw [ite_eq_right hF]; simp [hxdef, hqdef]
     have hpos : 0 < 1 - x := by linarith
     refine ⟨?_, by omega, by omega, fun Q hQm => ⟨by rw [hval Q hQm]; positivity, ?_⟩⟩
     · obtain ⟨Q₁, Q₂, hne, hS⟩ := Set.ncard_eq_two.mp hn
@@ -428,8 +428,8 @@ private theorem summable_absNorm_maximal_rpow_neg (K : Type) [Field K] [NumberFi
     intro n t ht
     rcases t.eq_empty_or_nonempty with rfl | ⟨P₀, hP₀⟩
     · simp
-    haveI := P₀.2
-    haveI : (P₀.1.under ℤ).IsMaximal :=
+    have := P₀.2
+    have : (P₀.1.under ℤ).IsMaximal :=
       Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := ℤ) (S := 𝓞 K) P₀.1
     have hne : P₀.1.under ℤ ≠ ⊥ := Ideal.IsMaximal.ne_bot_of_isIntegral_int (Ideal.under ℤ P₀.1)
     calc t.card = (t.map (Function.Embedding.subtype _)).card := (Finset.card_map _).symm
@@ -437,7 +437,7 @@ private theorem summable_absNorm_maximal_rpow_neg (K : Type) [Field K] [NumberFi
         apply Finset.card_le_card
         intro Q hQ
         obtain ⟨Q, hQt, rfl⟩ := Finset.mem_map.mp hQ
-        haveI := Q.2
+        have := Q.2
         have hlies : Q.1.LiesOver (P₀.1.under ℤ) := ⟨?_⟩
         · exact (IsDedekindDomain.mem_primesOverFinset_iff hne (𝓞 K)).mpr ⟨Q.2.isPrime, hlies⟩
         exact (under_int_eq_of_absNorm_eq K Q.1 P₀.1 ((ht Q hQt).trans (ht P₀ hP₀).symm)).symm
@@ -458,11 +458,11 @@ private theorem summable_absNorm_maximal_rpow_neg (K : Type) [Field K] [NumberFi
     rw [Finset.card_map, ht] at this
     omega
   rw [← e.symm.summable_iff]
-  refine (summable_sigma_of_nonneg (fun _ => Real.rpow_nonneg (Nat.cast_nonneg _) _)).mpr ⟨fun n => by haveI := hfin n; exact Summable.of_finite, ?_⟩
+  refine (summable_sigma_of_nonneg (fun _ => Real.rpow_nonneg (Nat.cast_nonneg _) _)).mpr ⟨fun n => by have := hfin n; exact Summable.of_finite, ?_⟩
   refine Summable.of_nonneg_of_le (fun n => tsum_nonneg fun _ => Real.rpow_nonneg (Nat.cast_nonneg _) _)
     (fun n => ?_) ((Real.summable_nat_rpow.mpr (by linarith : -s < -1)).mul_left (d : ℝ))
-  haveI := hfin n
-  letI := Fintype.ofFinite {P : {P : Ideal (𝓞 K) // P.IsMaximal} // Ideal.absNorm P.1 = n}
+  have := hfin n
+  let := Fintype.ofFinite {P : {P : Ideal (𝓞 K) // P.IsMaximal} // Ideal.absNorm P.1 = n}
   have hconst : ∀ y : {P : {P : Ideal (𝓞 K) // P.IsMaximal} // Ideal.absNorm P.1 = n},
       (Ideal.absNorm y.1.1 : ℝ) ^ (-s) = (n : ℝ) ^ (-s) := fun y => by rw [y.2]
   simp only [e, Equiv.symm_symm, Equiv.sigmaFiberEquiv_apply]
@@ -499,7 +499,7 @@ theorem _root_.GlobalTheory.EtaEulerProduct.hasProd_eulerInv_inv : ∀ (F E : Ty
   have hfin : ∀ v : HeightOneSpectrum (𝓞 F),
       Finite {P : {P : Ideal (𝓞 E) // P.IsMaximal} // _root_.GlobalTheory.EtaEulerProduct.below F P = v} := by
     intro v
-    haveI : Finite (v.asIdeal.primesOver (𝓞 E)) :=
+    have : Finite (v.asIdeal.primesOver (𝓞 E)) :=
       Set.finite_coe_iff.mpr (Set.finite_of_ncard_ne_zero (by have := (hfib v).2.1; omega))
     exact Finite.of_equiv _ (_root_.GlobalTheory.EtaEulerProduct.fibreEquiv v).symm
   have hsumF : Summable (fun v : HeightOneSpectrum (𝓞 F) =>
@@ -515,12 +515,12 @@ theorem _root_.GlobalTheory.EtaEulerProduct.hasProd_eulerInv_inv : ∀ (F E : Ty
     apply Summable.of_abs
     rw [← e.summable_iff]
     refine (summable_sigma_of_nonneg (fun _ => abs_nonneg _)).mpr ⟨fun v => ?_, ?_⟩
-    · haveI := hfin v
+    · have := hfin v
       exact Summable.of_finite
     · refine Summable.of_nonneg_of_le (fun v => tsum_nonneg fun _ => abs_nonneg _) (fun v => ?_)
         (hsumF.mul_left 4)
-      haveI := hfin v
-      letI := Fintype.ofFinite
+      have := hfin v
+      let := Fintype.ofFinite
         {P : {P : Ideal (𝓞 E) // P.IsMaximal} // _root_.GlobalTheory.EtaEulerProduct.below F P = v}
       rw [tsum_fintype]
       have hb : ∀ y : {P : {P : Ideal (𝓞 E) // P.IsMaximal} // _root_.GlobalTheory.EtaEulerProduct.below F P = v},

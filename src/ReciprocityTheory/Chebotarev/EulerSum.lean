@@ -67,7 +67,7 @@ theorem idealZetaR_tendsto_sum_card_div (E : Type) [Field E] [NumberField E] :
     show 1 = Nat.card {I : Ideal (𝓞 E) // Ideal.absNorm I = 0} by
       simp [Ideal.absNorm_eq_zero_iff],
     Finset.sum_Ioc_add_eq_sum_Icc (n.zero_le),
-    ← Finset.card_preimage_eq_sum_card_image_eq (fun k _ ↦ Ideal.finite_setOfPred_absNorm_eq k)]
+    ← Finset.card_preimage_eq_sum_card_image_eq (fun k _ ↦ Ring.HasFiniteQuotients.finite_absNorm_eq k)]
   simp [Set.coe_eq_subtype]
 
 theorem idealZetaR_term_eq (E : Type) [Field E] [NumberField E] {s : ℝ} (hs : 0 < s) (n : ℕ) :
@@ -116,7 +116,7 @@ theorem sum_le_idealZetaR (E : Type) [Field E] [NumberField E] {s : ℝ} (hs : 1
   refine Finset.sum_le_sum fun n _ ↦ ?_
   rw [Finset.sum_congr rfl (g := fun _ ↦ (n : ℝ) ^ (-s))
     (fun I hI ↦ by rw [(Finset.mem_filter.mp hI).2]), Finset.sum_const, nsmul_eq_mul]
-  have hfin := Ideal.finite_setOfPred_absNorm_eq (S := 𝓞 E) n
+  have hfin := Ring.HasFiniteQuotients.finite_absNorm_eq (S := 𝓞 E) n
   have hc : Nat.card {I : Ideal (𝓞 E) // Ideal.absNorm I = n} = hfin.toFinset.card :=
     Nat.card_eq_card_finite_toFinset hfin
   refine mul_le_mul_of_nonneg_right ?_ (by positivity)

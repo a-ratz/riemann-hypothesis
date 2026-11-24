@@ -204,7 +204,7 @@ theorem blockEmb_hom {K : Type} [Field K] {ι : Type} [Fintype ι] {n : ℕ} (τ
     exact Finsupp.mapDomain_apply_of_injective (fun x y hxy => (Prod.mk.inj hxy).2) u (a, s)
   · rw [Pi.single_eq_of_ne h]
     refine Finset.sum_eq_zero fun s _ => ?_
-    apply Finsupp.mapDomain_notin_range
+    apply Finsupp.mapDomain_of_notMem_range
     rintro ⟨x, hx⟩
     exact h (Prod.mk.inj hx).1.symm
 

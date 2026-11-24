@@ -181,7 +181,7 @@ theorem norm_section_ratio_le {N' : ℕ} (A : WeightedAtlas n Y ι La) (L : La) 
   have hNsq : A.nsq (m • L) Nsec y = ‖U‖ ^ 2 * a ^ m := by
     simp only [nsq, ← hp]
     rw [weight_nsmul_eq_mul A L m p y (A.mem_pick y), show -(↑m * A.ph L p y) = ↑m * (-A.ph L p y)
-      by ring, Real.exp_nat_mul, ← hE, hU, ha, norm_div, norm_pow]
+      by ring, Real.exp_natCast_mul, ← hE, hU, ha, norm_div, norm_pow]
     field_simp
     ring_nf
   have hsqw : 0 ≤ A.sqn L w y :=
@@ -318,7 +318,7 @@ theorem zero (n : ℕ) (Y : Type u) [TopologicalSpace Y] [T2Space Y] [SecondCoun
       obtain ⟨C, hC⟩ := vanishing_order_transfer A L m w0 s Nsec hw0 hs hN ((x : MS) : Y) (x : MS).2.1
         (hF.deriv_ne _ (x : MS).2) (hvan _ hyS)
         (fun t : connectedComponent x0 => ((t : MS) : Y))
-        (continuous_subtype_val.comp continuous_subtype_val) e he x hxe rfl
+        (continuous_subtypeVal.comp continuous_subtypeVal) e he x hxe rfl
       have hex : z' x = e x := he hxe
       rw [hex]
       exact iteratedFDeriv_eq_zero_of_bound _ e.target (e x) e.open_target (e.map_source hxe)

@@ -474,7 +474,7 @@ theorem colPar : ∀ (D : D7) (j : ℕ) (hj : j < D.R.m) (τ : D.what₂.Tau) (n
   have hν : ∀ (b : Fin (n + (D.R.t + 1))) (h : (b : ℕ) < n), (ν b : ℝ) = z ⟨b, h⟩ + ((b : ℕ) : ℝ) + e - n - s := by
     intro b h
     have : ((ν b : ℕ) : ℤ) = z ⟨b, h⟩ + (b : ℕ) + e - n - s := by
-      simp only [ν, dif_pos h]
+      simp only [ν, dite_eq_left h]
       exact Int.toNat_of_nonneg (hpos ⟨b, h⟩)
     have : ((ν b : ℕ) : ℝ) = ((z ⟨b, h⟩ + (b : ℕ) + e - n - s : ℤ) : ℝ) := by exact_mod_cast this
     rw [this]; push_cast; ring
@@ -505,7 +505,7 @@ theorem colPar : ∀ (D : D7) (j : ℕ) (hj : j < D.R.m) (τ : D.what₂.Tau) (n
   · intro b
     rw [GlobalTheory.LastStepParam.lowK_allPos, hshape b]
     by_cases hb : (b : ℕ) < n
-    · rw [dif_pos hb, hz, hν b hb]
+    · rw [dite_eq_left hb, hz, hν b hb]
       push_cast
       linarith [hpR, htR]
     · have h0 : ν b = 0 := by simp only [ν]; rw [dite_eq_right hb]
@@ -583,7 +583,7 @@ theorem exists_isIntw {D : D7} {V W : HSp D} {S S' : D.what₂.Tau → SPar} {σ
     rw [he', h0] at this
     simpa using this.symm
   · intro φ w
-    haveI := fun τ => (hM' τ).1
+    have := fun τ => (hM' τ).1
     let m : (Π τ, M'.H τ) →ₘₗ[ℂ] ℂ :=
       (ellT M w ∘ₗ I φ).compMultilinearMap (PiTensorProduct.tprod ℂ)
     obtain ⟨c, -, hc⟩ := m.exists_bound_of_continuous (continuous_tprod M' this (ellT M w ∘ₗ I φ))
@@ -672,7 +672,7 @@ theorem hasInfExp_mu {D : D7} {T0 : Type} (L : LevCh D T0) {μ0 : T0} (hL : L.Is
   have h1 := GlobalTheory.HeckeInfExp.hasInfExp_of_chrEq D _ _ _ (hL.mu0 k) (GlobalTheory.InnerSteps.hasInfQ_tauE (L.C.isMu0 k).inf) τ
   simp only [Formalism.L2.Host.eExp, Equiv.symm_apply_apply] at h1
   obtain ⟨n, hn, ho⟩ := hL.xi_fin t
-  haveI : IsTotallyComplex D.host.E := by infer_instance
+  have : IsTotallyComplex D.host.E := by infer_instance
   have h3 := GlobalTheory.HeckeInfExp.hasInfExp_of_chrEq D _ _ (fun _ => 0) (hL.xi t)
     ⟨fun _ => 0, fun _ => by norm_num, fun x => by
       rw [GlobalTheory.TypeValues.inf_eq_one _ hn ho x]; simp⟩ τ

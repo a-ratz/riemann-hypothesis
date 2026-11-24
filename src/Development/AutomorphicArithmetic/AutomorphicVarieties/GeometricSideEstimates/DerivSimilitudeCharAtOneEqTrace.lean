@@ -94,7 +94,7 @@ private theorem der_sc (X : Lie E a) :
 
 private theorem sc_mul_star {y : Matrix (Fin a) (Fin a) (Cinf E)} : sc (y * star y) = sc y ^ 2 := by
   unfold sc
-  rw [← Real.exp_nat_mul]
+  rw [← Real.exp_natCast_mul]
   congr 1
   have h : ∀ w, Real.log ‖(y * star y).det w‖ = 2 * Real.log ‖y.det w‖ := fun w => by
     rw [Matrix.det_mul, Matrix.star_eq_conjTranspose, Matrix.det_conjTranspose, Pi.mul_apply, Pi.star_apply,

@@ -219,7 +219,7 @@ theorem decay_ops : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ : Add
       (∀ t : AF F, IsUnit t → Decay (Da t Φ)) ∧ (∀ c : ℂ, Decay (c • Φ)) ∧
       ∀ g : GL (Fin N) (AF F), Decay fun u => Φ ((g : Matrix (Fin N) (Fin N) (AF F)).mulVec u) := by
   intro F _ _ N ψ lam ν a hc Φ hΦ
-  haveI : IsTotallyReal F := hc.1
+  have : IsTotallyReal F := hc.1
   have hψc : Continuous ψ := hc.2.1.1
   have hψ1 : ∀ x, ‖ψ x‖ = 1 := hc.2.1.2.1
   have hGL : ∀ g : GL (Fin N) (AF F), Decay fun u => Φ ((g : Matrix (Fin N) (Fin N) (AF F)).mulVec u) := by

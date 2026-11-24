@@ -906,8 +906,8 @@ theorem UpperTheory.acy_right_of_shortExact :
   intro Q S hS h1 h2 P hP n hn
   obtain ⟨z, hz⟩ := GlobalTheory.T.etaleCohomology_coefficient_longExactSequence ℤ S hS
   have e := (hz (sgl ((free ℤ).obj P)) n).2.1
-  haveI := h1 P hP (n + 1) (by omega)
-  haveI := h2 P hP n hn
+  have := h1 P hP (n + 1) (by omega)
+  have := h2 P hP n hn
   refine ⟨fun y y' => ?_⟩
   have hy : ∀ u : HK ℤ (sgl ((free ℤ).obj P)) S.X₃ n, u = 0 := by
     intro u
@@ -932,7 +932,7 @@ theorem UpperTheory.exists_lift_free_to_kernel_of_shortExact_vanishing_sections 
   have hz : f ≫ S.g = 0 := by
     apply (UpperTheory.bijective_cl_hypercohomology_singleton_zero _ _).1
     exact Subsingleton.elim _ _
-  haveI := hS.mono_f
+  have := hS.mono_f
   exact ⟨hS.exact.lift f hz, hS.exact.lift_f f hz⟩
 end -- clump:auto
 end -- clump:auto
@@ -1245,7 +1245,7 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 theorem UpperTheory.subsingleton_cohomologyClass_chains_of_acy_locally_exact :
     ∀ (C : Cx ℤ) (a : ℤ) [C.IsStrictlyGE a] (E : Spc), (∀ s, Acy (fun U => Nonempty (Sx E 0 U)) (C.X s)) → (∀ (U : Scheme.{0}), Nonempty (Sx E 0 U) → ∀ (n : ℤ) (b : Sec (C.X n) U), Sec.map (C.d n (n + 1)) b = 0 → Loc U fun V g => ∃ c : Sec (C.X (n - 1)) V, Sec.map (C.d (n - 1) n) c = Sec.res g b) → ∀ n : ℤ, Subsingleton (CohomologyClass ((chains ℤ).obj E) C n) := by
   intro C a _ E hAcy hLoc n
-  haveI : IsStrictlyLE ((chains ℤ).obj E) 0 := (GlobalTheory.T.chains_map_and_d_eq_sum_neg_one_pow_smul_delta ℤ).1 E
+  have : IsStrictlyLE ((chains ℤ).obj E) 0 := (GlobalTheory.T.chains_map_and_d_eq_sum_neg_one_pow_smul_delta ℤ).1 E
   refine UpperTheory.subsingleton_cohomologyClass_of_bounded_of_cycles_lift ((chains ℤ).obj E) C a ?_ n
   intro p j f hf
   rcases le_or_gt p 0 with hp | hp
@@ -1298,7 +1298,7 @@ private theorem semi_bij (R : Type) [CommRing R] (L B : Cx R) [L.IsStrictlyGE 0]
   have gL := rcx_ge R L
   have gB := rcx_ge R B
   apply UpperTheory.bijective_semiMap_op_of_bijective_cochain_pushforward
-  haveI hC : (mappingCone ρ.toZ).IsStrictlyGE (-1) := by
+  have hC : (mappingCone ρ.toZ).IsStrictlyGE (-1) := by
     rw [CochainComplex.isStrictlyGE_iff]
     intro i hi
     rw [mappingCone.isZero_X_iff]
@@ -1345,12 +1345,12 @@ theorem UpperTheory.injectiveComplex_productSection_map_quasiIso :
     { app := fun T s => ψ T s
       nat := fun g s a => hψn g s a
       comm := fun T s t a => hψc T s t a }
-  haveI : (UpperTheory.Bc.Bc W I).IsStrictlyGE 0 := by
+  have : (UpperTheory.Bc.Bc W I).IsStrictlyGE 0 := by
     rw [CochainComplex.isStrictlyGE_iff]
     intro i hi'
     exact Functor.map_isZero (UpperTheory.Bc.pw R W) (I.isZero_of_isStrictlyGE 0 i hi')
   have hB : ∀ s, Injective ((UpperTheory.Bc.Bc W I).X s) := fun s => by
-    haveI := hI s
+    have := hI s
     exact UpperTheory.injective_productPushforward_of_injective R W (I.X s)
   have hbij := semi_bij R L (UpperTheory.Bc.Bc W I) hL hB ρ E
     (fun T hT n b hb => hs T (hE T hT) n b hb) (fun T hT n a ha hc => hi T (hE T hT) n a ha hc)

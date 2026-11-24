@@ -234,10 +234,10 @@ theorem cech_OSys_homology_equiv : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) 
     Nonempty (((cechOf e).obj (toMod (MainStatements.Hodge.OSys s S))).homology n ≃ₗ[R]
       GlobalTheory.cechH R (GlobalTheory.structureModule X) ⊤ (fun i ↦ (S.u (e i)).1) n) := by
   intro R _ X s P _ S κ _ e n
-  letI := GlobalTheory.algebraΓOfHom s
+  let := GlobalTheory.algebraΓOfHom s
   have hs : ∀ r : R, algebraMap R Γ(X, ⊤) r = s.appTop ((Scheme.ΓSpecIso (CommRingCat.of R)).inv r) :=
     fun r => rfl
-  haveI := isIso_sysCube s S e hs
+  have := isIso_sysCube s S e hs
   exact ⟨((HomologicalComplex.homologyFunctor (ModuleCat R) (ComplexShape.up ℕ) n).mapIso
     (asIso (GlobalTheory.cechComplexMap (sysCube s S e hs)))).toLinearEquiv⟩
 
@@ -403,11 +403,11 @@ theorem prj_apply (e : κ → P) (M : P → ModuleCat.{0} R) (b : P) {s : Finset
     (x : (cubeOf e (coind M)).obj s) (h : PLift (∀ j ∈ s, b ≤ e j)) :
     (show BV e M b s from prj e M b s x) h =
       (show AV e M s from x) ⟨hs⟩ ⟨b, Finset.le_inf' hs e h.down⟩ :=
-  dif_pos hs
+  dite_eq_left hs
 
 theorem prj_empty (e : κ → P) (M : P → ModuleCat.{0} R) (b : P) {s : Finset κ} (hs : ¬ s.Nonempty)
     (x : (cubeOf e (coind M)).obj s) : prj e M b s x = 0 :=
-  funext fun _ ↦ dif_neg hs
+  funext fun _ ↦ dite_eq_right hs
 
 def prjHom (e : κ → P) (M : P → ModuleCat.{0} R) (b : P) : cubeOf e (coind M) ⟶ cubeB e M b :=
   Cube.homMk κ R (prj e M b) fun {s t} h x ↦ by
@@ -766,11 +766,11 @@ theorem nonempty_iso_of_middle_isZero {S : ShortComplex (CochainComplex (ModuleC
     (h₂ : IsZero (S.X₂.homology (k + 2))) :
     Nonempty (S.X₃.homology (k + 1) ≅ S.X₁.homology (k + 2)) := by
   have r : (ComplexShape.up ℕ).Rel (k + 1) (k + 2) := rfl
-  haveI : Mono (hS.δ (k + 1) (k + 2) r) :=
+  have : Mono (hS.δ (k + 1) (k + 2) r) :=
     (hS.homology_exact₃ (k + 1) (k + 2) r).mono_g (h₁.eq_of_src _ _)
-  haveI : Epi (hS.δ (k + 1) (k + 2) r) :=
+  have : Epi (hS.δ (k + 1) (k + 2) r) :=
     (hS.homology_exact₁ (k + 1) (k + 2) r).epi_f (h₂.eq_of_tgt _ _)
-  haveI : IsIso (hS.δ (k + 1) (k + 2) r) := isIso_of_mono_of_epi _
+  have : IsIso (hS.δ (k + 1) (k + 2) r) := isIso_of_mono_of_epi _
   exact ⟨asIso (hS.δ (k + 1) (k + 2) r)⟩
 
 theorem nonempty_iso_h1 {S₁ S₂ : ShortComplex (CochainComplex (ModuleCat.{0} R) ℕ)}
@@ -781,8 +781,8 @@ theorem nonempty_iso_h1 {S₁ S₂ : ShortComplex (CochainComplex (ModuleCat.{0}
       eI.hom ≫ HomologicalComplex.homologyMap S₂.g 0) :
     Nonempty (S₁.X₁.homology 1 ≅ S₂.X₁.homology 1) := by
   have hr : (ComplexShape.up ℕ).Rel 0 1 := rfl
-  haveI : Epi (hS₁.δ 0 1 hr) := (hS₁.homology_exact₁ 0 1 hr).epi_f (z₁.eq_of_tgt _ _)
-  haveI : Epi (hS₂.δ 0 1 hr) := (hS₂.homology_exact₁ 0 1 hr).epi_f (z₂.eq_of_tgt _ _)
+  have : Epi (hS₁.δ 0 1 hr) := (hS₁.homology_exact₁ 0 1 hr).epi_f (z₁.eq_of_tgt _ _)
+  have : Epi (hS₂.δ 0 1 hr) := (hS₂.homology_exact₁ 0 1 hr).epi_f (z₂.eq_of_tgt _ _)
   have hc₁ := (hS₁.homology_exact₃ 0 1 hr).gIsCokernel
   have hc₂ := (hS₂.homology_exact₃ 0 1 hr).gIsCokernel
   have w' : HomologicalComplex.homologyMap S₂.g 0 ≫ eQ.inv =
@@ -1150,7 +1150,7 @@ theorem nonempty_iso {R : Type} [CommRing R] {P : Type} [SemilatticeInf P] {κ :
 
 theorem cmpSt_of_cxSt : CxSt → CmpSt := by
   intro _ R _ X s _ P _ _ S
-  letI := GlobalTheory.algebraΓOfHom s
+  let := GlobalTheory.algebraΓOfHom s
   obtain ⟨m, ⟨e⟩⟩ := Finite.exists_equiv_fin P
   let e' : Fin m → P := e.symm
   have he' : Function.Bijective e' := e.symm.bijective
@@ -1170,7 +1170,7 @@ theorem cmpSt_of_cxSt : CxSt → CmpSt := by
     intro n
     obtain ⟨i⟩ := nonempty_iso e' he' n (toMod (OSys s S))
     obtain ⟨f⟩ := _root_.GlobalTheory.CompanionTheory.Hodge.Nerve.cech_OSys_homology_equiv R X s P S e' n
-    letI : (GlobalTheory.structureModule X).IsQuasicoherent := GlobalTheory.QCoh.IsFiniteQC.isQuasicoherent
+    let : (GlobalTheory.structureModule X).IsQuasicoherent := GlobalTheory.QCoh.IsFiniteQC.isQuasicoherent
     exact ⟨i.toLinearEquiv ≪≫ₗ f ≪≫ₗ GlobalTheory.cechHEquivCoh R hc hD (GlobalTheory.structureModule X) n⟩
   obtain ⟨⟨a⟩, b⟩ := _root_.GlobalTheory.CompanionTheory.Hodge.Nerve.Low.homology_nerveCx (OSys s S)
   obtain ⟨k⟩ := key 0

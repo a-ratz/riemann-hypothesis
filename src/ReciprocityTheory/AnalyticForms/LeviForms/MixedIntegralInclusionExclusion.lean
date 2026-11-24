@@ -198,7 +198,7 @@ private theorem hessC_eq_lemma_3 {D : ℕ} (φ : (Fin D → ℂ) → ℝ) (z : F
 private theorem hessL_add_lemma_2 {D : ℕ} (H1 H2 : (Fin D → ℂ) →L[ℝ] (Fin D → ℂ) →L[ℝ] ℝ) :
     hessL (H1 + H2) = hessL H1 + hessL H2 := by
   funext i k
-  simp only [hessL, ContinuousLinearMap.add_apply, Pi.add_apply]
+  simp only [hessL, add_apply, Pi.add_apply]
   push_cast
   ring
 

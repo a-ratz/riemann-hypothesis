@@ -60,8 +60,8 @@ private theorem hH_hP (D : D7) (p : ℕ) (hp : p.Prime) (hc : IsResidueClassZero
   have hcop : Nat.Coprime p 2 := (Nat.coprime_primes hp Nat.prime_two).mpr hp2
   refine ⟨hcop, ?_⟩
   have hN : ¬ p ∣ D.host.condN := Formalism.BasicNotions.not_dvd_conductor_of_inert hp (show D.host.cls p = PrimeClass.inertClass from hc)
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : (Ideal.span {(p : ℤ)}).IsMaximal :=
+  have : Fact p.Prime := ⟨hp⟩
+  have : (Ideal.span {(p : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hp).irreducible
   obtain ⟨P, hPm, hPl⟩ : ∃ P : Ideal (𝓞 D.host.E), P.IsMaximal ∧ P.LiesOver (Ideal.span {(p : ℤ)}) := by
     first
@@ -71,7 +71,7 @@ private theorem hH_hP (D : D7) (p : ℕ) (hp : p.Prime) (hc : IsResidueClassZero
     | (obtain ⟨Q, hQm, hQc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 D.host.E)
           (Ideal.span {(p : ℤ)}) (by simp)
        exact ⟨Q, hQm, ⟨hQc.symm⟩⟩)
-  haveI : P.IsPrime := hPm.isPrime
+  have : P.IsPrime := hPm.isPrime
   obtain ⟨⟨σ, hσ⟩, -, -, -⟩ := D.host.der.frob p hN P
   have hmem : D.host.galE σ ∈ frobSet D p := ⟨P, inferInstance, hPl, σ, hσ, rfl⟩
   obtain ⟨P', hP'p, hP'l, σ', hσ', hgal⟩ := Classical.epsilon_spec ⟨_, hmem⟩

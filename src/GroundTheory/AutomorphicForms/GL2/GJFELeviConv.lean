@@ -181,7 +181,7 @@ theorem integrable_block [NeZero m] (μ : Measure (GL (Fin m) F)) [μ.IsHaarMeas
       by_cases hgS : g ∈ S
       · rw [Set.indicator_of_mem ((centralUnif_zpow_mul_mem_centralSat j g).2 hgS),
           Set.indicator_of_mem (Set.mem_inter hg hgS)]
-        rw [Real.enorm_eq_ofReal (hf0 _)]
+        rw [Real.eNorm_eq_ofReal (hf0 _)]
         by_cases hΨ0 : Ψ ((centralUnif F m ^ j * g : GL (Fin m) F) : Matrix (Fin m) (Fin m) F) = 0
         · have h0 : f (centralUnif F m ^ j * g) = 0 := by simp only [hf, hΨ0, norm_zero, zero_mul]
           rw [h0, ENNReal.ofReal_zero]
@@ -195,7 +195,7 @@ theorem integrable_block [NeZero m] (μ : Measure (GL (Fin m) F)) [μ.IsHaarMeas
             push Not at hcon
             have : j * m ≤ (-(A : ℤ) - 1) * m := by nlinarith
             nlinarith
-          simp only [hc, if_pos hj]
+          simp only [hc, ite_eq_left hj]
           refine ENNReal.ofReal_le_ofReal ?_
           rw [hf]
           simp only
@@ -229,7 +229,7 @@ theorem integrable_block [NeZero m] (μ : Measure (GL (Fin m) F)) [μ.IsHaarMeas
         ENNReal.ofReal (B * r ^ (-(A : ℤ) * m)) * ENNReal.ofReal (r ^ (m : ℕ)) ^ k := by
       intro k
       have hk : -(A : ℤ) ≤ (k : ℤ) - A := by linarith [Int.natCast_nonneg k]
-      simp only [hc, if_pos hk]
+      simp only [hc, ite_eq_left hk]
       rw [← ENNReal.ofReal_pow hr'.le, ← ENNReal.ofReal_mul (mul_nonneg hB0 (zpow_nonneg hr0.le _))]
       congr 1
       rw [mul_assoc]

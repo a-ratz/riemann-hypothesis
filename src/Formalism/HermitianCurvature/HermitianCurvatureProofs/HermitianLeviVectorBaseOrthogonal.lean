@@ -110,13 +110,13 @@ lemma hermitian_dual_base_vector_left (v : Fin (2 * (1 + r') + k + 1) → ℂ) :
 
 lemma liftVec_first (y : Fin (2 * r' + k + 1) → ℂ) : liftVec k 1 r' y (iF k r') = 0 := by
   unfold liftVec
-  rw [dif_neg]
+  rw [dite_eq_right]
   simp only [iF, Fin.val_mk]
   omega
 
 lemma liftVec_last (y : Fin (2 * r' + k + 1) → ℂ) : liftVec k 1 r' y (iL k r') = 0 := by
   unfold liftVec
-  rw [dif_neg]
+  rw [dite_eq_right]
   simp only [iL, Fin.val_mk]
   omega
 
@@ -124,7 +124,7 @@ lemma liftVec_mid (y : Fin (2 * r' + k + 1) → ℂ) (j : Fin (2 * r' + k + 1)) 
     liftVec k 1 r' y (levPos k 1 r' j) = y j := by
   have hj := j.isLt
   unfold liftVec
-  rw [dif_pos (show 1 ≤ (levPos k 1 r' j).val ∧ (levPos k 1 r' j).val < 2 * r' + k + 1 + 1 from
+  rw [dite_eq_left (show 1 ≤ (levPos k 1 r' j).val ∧ (levPos k 1 r' j).val < 2 * r' + k + 1 + 1 from
     ⟨show 1 ≤ j.val + 1 by omega, show j.val + 1 < 2 * r' + k + 1 + 1 by omega⟩)]
   congr 1
   all_goals exact Fin.ext (show j.val + 1 - 1 = j.val by omega)
@@ -195,16 +195,16 @@ private lemma w0_apply_iF_col (c : ℂ) (i : Fin (2 * (1 + r') + k + 1)) :
     exact lt_irrefl 0 h2
   by_cases h : i = iL k r'
   · have hi : i.val = 2 * (1 + r') + k := by rw [h]; rfl
-    rw [if_neg (by omega), if_pos ⟨hi, h0⟩, if_pos h]
+    rw [ite_eq_right (by omega), ite_eq_left ⟨hi, h0⟩, ite_eq_left h]
   · have hi : i.val ≠ 2 * (1 + r') + k := fun h' => h (Fin.ext h')
-    rw [if_neg (by omega), if_neg (by omega), if_neg h3, if_neg h]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right h3, ite_eq_right h]
 
 lemma long_weyl_sends_base_to_dual (c : ℂ) : w0 k r' c *ᵥ e0 k r' = c • es0 k r' := by
   rw [e0_eq, dual_base_vector_eq_single]
   ext i
   have hcol : (w0 k r' c *ᵥ Pi.single (iF k r') 1) i = w0 k r' c i (iF k r') := by
     simp only [mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [hcol, w0_apply_iF_col, Pi.smul_apply, Pi.single_apply, smul_eq_mul]
   split_ifs <;> simp
 
@@ -232,8 +232,8 @@ lemma lev_mid (g : Mat k r') (i j : Fin (2 * r' + k + 1)) : ιLev k 1 r' g (levP
   have hi := i.isLt
   have hj := j.isLt
   unfold ιLev levPos
-  rw [dif_pos (show 1 ≤ i.val + 1 ∧ i.val + 1 < 2 * r' + k + 1 + 1 by omega),
-    dif_pos (show 1 ≤ j.val + 1 ∧ j.val + 1 < 2 * r' + k + 1 + 1 by omega)]
+  rw [dite_eq_left (show 1 ≤ i.val + 1 ∧ i.val + 1 < 2 * r' + k + 1 + 1 by omega),
+    dite_eq_left (show 1 ≤ j.val + 1 ∧ j.val + 1 < 2 * r' + k + 1 + 1 by omega)]
   congr 1 <;> exact Fin.ext (by simp)
 
 lemma mid_or (p : Fin (2 * (1 + r') + k + 1)) : (∃ i, p = levPos k 1 r' i) ∨ ¬ (1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1) := by
@@ -254,13 +254,13 @@ lemma levPos_mid (i : Fin (2 * r' + k + 1)) : 1 ≤ (levPos k 1 r' i).val ∧ (l
 private lemma iotaLev_levPos_apply_of_col_outside (g : Mat k r') (i : Fin (2 * r' + k + 1)) (m : Fin (2 * (1 + r') + k + 1))
     (hm : ¬ (1 ≤ m.val ∧ m.val < 2 * r' + k + 1 + 1)) : ιLev k 1 r' g (levPos k 1 r' i) m = 0 := by
   unfold ιLev
-  rw [dif_pos (levPos_mid i), dif_neg hm]
+  rw [dite_eq_left (levPos_mid i), dite_eq_right hm]
 
 private lemma iotaLev_apply_of_first_index_outside (g : Mat k r') (p : Fin (2 * (1 + r') + k + 1))
     (hp : ¬ (1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1)) (m : Fin (2 * (1 + r') + k + 1)) :
     ιLev k 1 r' g p m = if p = m then 1 else 0 := by
   unfold ιLev
-  rw [dif_neg hp]
+  rw [dite_eq_right hp]
 
 lemma lev_mul (g h : Mat k r') : ιLev k 1 r' (g * h) = ιLev k 1 r' g * ιLev k 1 r' h := by
   apply ReciprocityTheory.ChartRestriction.DS.Xi.StepA.lev_mul <;> assumption
@@ -320,7 +320,7 @@ theorem mulM_cont : Continuous (mulM : Mt k r × Mt k r → Mt k r) := by
     | (unfold mulM; continuity)
 
 theorem sigmaFinite_of_haar {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨@fun K hK => h.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨@fun K hK => h.finite_compact K hK⟩
   infer_instance
 
 lemma liftVec_cont : Continuous (liftVec k 1 r') := by
@@ -328,8 +328,8 @@ lemma liftVec_cont : Continuous (liftVec k 1 r') := by
   intro p
   unfold liftVec
   by_cases hp : 1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1
-  · simp only [dif_pos hp]; exact continuous_apply _
-  · simp only [dif_neg hp]; exact continuous_const
+  · simp only [dite_eq_left hp]; exact continuous_apply _
+  · simp only [dite_eq_right hp]; exact continuous_const
 
 lemma herm_cont {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) : Continuous fun p : (Fin m → ℂ) × (Fin m → ℂ) => herm H p.1 p.2 := by
   first
@@ -360,7 +360,7 @@ lemma heisenberg_map_continuous : Continuous (heisF k r') := by
   exact (continuous_const.sub (continuous_const.mul h1)).add ((h2.add (hb'.mul continuous_const)).mul continuous_const)
 
 lemma long_weyl_family_measurable : Measurable (w0F k r') := by
-  apply measurable_pi_lambda; intro i; apply measurable_pi_lambda; intro j
+  apply Measurable.of_eval; intro i; apply Measurable.of_eval; intro j
   unfold w0F w0
   first
     | exact Measurable.ite (MeasurableSet.const _) (continuous_star.measurable.inv)
@@ -372,16 +372,16 @@ lemma levM_cont : Continuous (levM k r') := by
   unfold levM ιLev
   by_cases hp : 1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1
   · by_cases hq : 1 ≤ q.val ∧ q.val < 2 * r' + k + 1 + 1
-    · simp only [dif_pos hp, dif_pos hq]
+    · simp only [dite_eq_left hp, dite_eq_left hq]
       first | exact continuous_apply_apply _ _ | fun_prop | continuity
-    · simp only [dif_pos hp, dif_neg hq]; exact continuous_const
-  · simp only [dif_neg hp]; exact continuous_const
+    · simp only [dite_eq_left hp, dite_eq_right hq]; exact continuous_const
+  · simp only [dite_eq_right hp]; exact continuous_const
 
 lemma tau_meas : Measurable (tau k r') := by
   have h1 : Measurable fun p : ℂ × HPar k r' => heisF k r' p.2 := heisenberg_map_continuous.measurable.comp measurable_snd
   have h2 : Measurable fun p : ℂ × HPar k r' => w0F k r' p.1 := long_weyl_family_measurable.comp measurable_fst
   unfold tau
-  apply measurable_pi_lambda; intro i; apply measurable_pi_lambda; intro j
+  apply Measurable.of_eval; intro i; apply Measurable.of_eval; intro j
   simp only [Matrix.mul_apply]
   apply Finset.measurable_sum; intro l _
   exact ((measurable_pi_apply l).comp ((measurable_pi_apply i).comp h1)).mul
@@ -576,8 +576,8 @@ lemma inner_eq (HIv : HaarInv) (hG : ClosedG) (HI : HeisInv) (μG₁ : Measure (
     (c : ℂ) :
     ∫⁻ p : (HPar k r' × HPar k r') × Mt k r', f (Psi k r' (c, p))
           ∂((volume : Measure (HPar k r' × HPar k r')).prod μG₁) = ∫⁻ x : HPar k r', Ff (muP μG₁) f (tau k r' (c, x)) := by
-  haveI := sigmaFinite_of_haar h₁
-  haveI : SigmaFinite (muP μG₁) := sigmaFinite_of_haar hμP
+  have := sigmaFinite_of_haar h₁
+  have : SigmaFinite (muP μG₁) := sigmaFinite_of_haar hμP
   have hPsi : ∀ (x x' : HPar k r') (g : Mt k r'), Psi k r' (c, ((x, x'), g)) =
       mulM (tau k r' (c, (-x.1, -x.2)), mulM (levM k r' g, heisF k r' x')) := by
     intro x x' g
@@ -615,8 +615,8 @@ lemma inner_eq (HIv : HaarInv) (hG : ClosedG) (HI : HeisInv) (μG₁ : Measure (
 lemma II_eq (HIv : HaarInv) (hG : ClosedG) (HI : HeisInv) (μG₁ : Measure (Mt k r')) (h₁ : IsHaarOn (GV k r') μG₁)
     (hP : IsClosedSubgroup (P1set k r')) (hμP : IsHaarOn (P1set k r') (muP μG₁)) (f : Mt k (1 + r') → ℝ≥0∞) (hf : Measurable f) :
     II μG₁ f = ∫⁻ p, Ff (muP μG₁) f (tau k r' p) ∂(mCone k r') := by
-  haveI := sigmaFinite_of_haar h₁
-  haveI : SigmaFinite (muP μG₁) := sigmaFinite_of_haar hμP
+  have := sigmaFinite_of_haar h₁
+  have : SigmaFinite (muP μG₁) := sigmaFinite_of_haar hμP
   have hm : Measurable fun p : ℂ × HPar k r' => Ff (muP μG₁) f (tau k r' p) := (Ff_meas _ hf).comp tau_meas
   unfold II mCone
   rw [lintegral_prod (fun p => Ff (muP μG₁) f (tau k r' p)) hm.aemeasurable]
@@ -688,8 +688,8 @@ lemma II_inv (HIv : HaarInv) (hG : ClosedG) (HA : HeisAct) (HI : HeisInv) (OM : 
     (SD : StabDecomp) (μG₁ : Measure (Mt k r')) (h₁ : IsHaarOn (GV k r') μG₁)
     (hP : IsClosedSubgroup (P1set k r')) (hμP : IsHaarOn (P1set k r') (muP μG₁)) (f : Mt k (1 + r') → ℝ≥0∞) (hf : Measurable f)
     (a : Mat k (1 + r')) (ha : a ∈ GV k (1 + r')) : II μG₁ (fun g => f (lmulM a g)) = II μG₁ f := by
-  haveI := sigmaFinite_of_haar h₁
-  haveI : SigmaFinite (muP μG₁) := sigmaFinite_of_haar hμP
+  have := sigmaFinite_of_haar h₁
+  have : SigmaFinite (muP μG₁) := sigmaFinite_of_haar hμP
   have hfa : Measurable fun g => f (lmulM a g) := hf.comp (lmulM_cont a).measurable
   rw [II_eq HIv hG HI μG₁ h₁ hP hμP _ hfa, II_eq HIv hG HI μG₁ h₁ hP hμP f hf]
   have hE : Measurable fun v : Fin (2 * (1 + r') + k + 1) → ℂ => Ff (muP μG₁) f (tau k r' (eta k r' v)) :=
@@ -753,7 +753,7 @@ lemma nu_left (HIv : HaarInv) (hG : ClosedG) (HA : HeisAct) (HI : HeisInv) (OM :
     (SD : StabDecomp) (μG₁ : Measure (Mt k r')) (h₁ : IsHaarOn (GV k r') μG₁)
     (hP : IsClosedSubgroup (P1set k r')) (hμP : IsHaarOn (P1set k r') (muP μG₁))
     (a : Mat k (1 + r')) (ha : a ∈ GV k (1 + r')) : (nu μG₁).map (lmulM a) = nu μG₁ := by
-  haveI := sigmaFinite_of_haar h₁
+  have := sigmaFinite_of_haar h₁
   ext S hS
   rw [Measure.map_apply (lmulM_cont a).measurable hS, nu_apply _ _ ((lmulM_cont a).measurable hS),
     nu_apply _ _ hS]
@@ -767,7 +767,7 @@ lemma nu_conc (HIv : HaarInv) (hG : ClosedG) (HI : HeisInv) (OM : OneStepMem)
     (μG₁ : Measure (Mt k r')) (h₁ : IsHaarOn (GV k r') μG₁)
     (hP : IsClosedSubgroup (P1set k r')) (hμP : IsHaarOn (P1set k r') (muP μG₁)) :
     nu μG₁ ((GV k (1 + r'))ᶜ : Set (Mt k (1 + r'))) = 0 := by
-  haveI := sigmaFinite_of_haar h₁
+  have := sigmaFinite_of_haar h₁
   have hGc : @IsClosed (Mt k (1 + r')) _ (GV k (1 + r')) := by
     have hG' := hG k (1 + r')
     first | exact hG'.1 | exact hG'.isClosed | exact hG'.closed | exact hG'.2
@@ -794,7 +794,7 @@ lemma nu_conc (HIv : HaarInv) (hG : ClosedG) (HI : HeisInv) (OM : OneStepMem)
     filter_upwards [hae] with p hp
     have hmem := (OM k r' p.1.1 p.1.2 c hc (Matrix.of p.2) hp).1
     classical
-    rw [Set.indicator_apply, if_neg (fun hn => hn hmem)]
+    rw [Set.indicator_apply, ite_eq_right (fun hn => hn hmem)]
 
 lemma evalE_cont : Continuous fun g : Mt k (1 + r') => (Matrix.of g : Mat k (1 + r')) *ᵥ e0 k r' := by
   first
@@ -963,18 +963,18 @@ lemma lev_off (g : Mat k r') (m : Fin (2 * (1 + r') + k + 1)) (hm : m ∉ Set.ra
   have hp : ¬ (1 ≤ m.val ∧ m.val < 2 * r' + k + 1 + 1) := by
     rintro ⟨h1, h2⟩
     exact hm ⟨⟨m.val - 1, by omega⟩, Fin.ext (show m.val - 1 + 1 = m.val by omega)⟩
-  rw [dif_neg hp, if_neg]
+  rw [dite_eq_right hp, ite_eq_right]
   intro h
   exact hm ⟨j, h.symm⟩
 
 lemma prod_block (x : HPar k r') (g : Mat k r') (i j : Fin (2 * r' + k + 1)) :
     (heis0 k r' x * ιLev k 1 r' g) (levPos k 1 r' i) (levPos k 1 r' j) = g i j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (levPos k 1 r' i)]
-  · rw [heis_block, if_pos rfl, one_mul, lev_block]
+  · rw [heis_block, ite_eq_left rfl, one_mul, lev_block]
   · intro m _ hm
     by_cases hr : m ∈ Set.range (levPos k 1 r')
     · obtain ⟨l, rfl⟩ := hr
-      rw [heis_block, if_neg (fun h => hm (by rw [h])), zero_mul]
+      rw [heis_block, ite_eq_right (fun h => hm (by rw [h])), zero_mul]
     · rw [lev_off g m hr, mul_zero]
   · intro h; exact absurd (Finset.mem_univ _) h
 
@@ -1030,7 +1030,7 @@ namespace Formalism.FourierDecayAlt.P.B2x9.S2
 open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2
 
 theorem sigmaFinite_of_haar {k r : ℕ} {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨@fun K hK => h.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨@fun K hK => h.finite_compact K hK⟩
   infer_instance
 
 end Formalism.FourierDecayAlt.P.B2x9.S2

@@ -212,8 +212,8 @@ theorem nu_map_eq (L : SizeData₂ D) (hN : NprimeDef D L) (u : D.what₂.Word) 
       Formalism.HermitianLatticesTheory.idealSmul ((((Iu D L u)⁻¹ * Iu D L u : FractionalIdeal (nonZeroDivisors (𝓞 D.what₂.LL)) D.what₂.LL)) :
         Submodule (𝓞 D.what₂.LL) D.what₂.LL) X = X := by
     intro X
-    rw [inv_mul_cancel₀ hIu, FractionalIdeal.coe_one, Formalism.LFunctionChainParameters.slopeLatticeData.idealSmul_one]
-  rw [← hone (Nu.map f), ← hone (L.NuLat u), FractionalIdeal.coe_mul, Formalism.LFunctionChainParameters.slopeLatticeData.idealSmul_mul,
+    rw [inv_mul_cancel₀ hIu, FractionalIdeal.coeToSubmodule_one, Formalism.LFunctionChainParameters.slopeLatticeData.idealSmul_one]
+  rw [← hone (Nu.map f), ← hone (L.NuLat u), FractionalIdeal.coeToSubmodule_mul, Formalism.LFunctionChainParameters.slopeLatticeData.idealSmul_mul,
     Formalism.LFunctionChainParameters.slopeLatticeData.idealSmul_mul, h1]
 
 theorem nu_into (L : SizeData₂ D) (hN : NprimeDef D L) (u : D.what₂.Word) {d : ℕ}
@@ -520,7 +520,7 @@ theorem meanEmb_eq_meanLog [_root_.NumberField.IsTotallyComplex K] (κ : Infinit
       intro σ hσ
       rw [hg σ, (Finset.mem_filter.1 hσ).2]
     rw [Finset.sum_congr rfl e1, Finset.sum_const, nsmul_eq_mul, InfinitePlace.card_filter_mk_eq,
-      InfinitePlace.mult, if_neg (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex v))]
+      InfinitePlace.mult, ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex v))]
     norm_num
   have hpos : (0 : ℝ) < (Formalism.HN.nPl K : ℝ) := by
     unfold Formalism.HN.nPl

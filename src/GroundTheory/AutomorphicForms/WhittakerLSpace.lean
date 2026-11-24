@@ -165,7 +165,7 @@ theorem exists_lift {U O : Set X} (hU : IsOpen U) (hOU : O ⊆ U) {φ : O → �
     · exact ⟨∅, isCompact_empty, isOpen_empty, empty_subset _, fun h => absurd hc h⟩
     obtain ⟨hFc, hFo⟩ := isCompact_isOpen_fiber hφ hc
     have hAc : IsCompact ((Subtype.val : O → X) '' {x | φ x = c}) :=
-      hFc.image continuous_subtype_val
+      hFc.image continuous_subtypeVal
     have hAo : IsOpen ((Subtype.val : O → X) ⁻¹' ((Subtype.val : O → X) '' {x | φ x = c})) := by
       rwa [preimage_image_eq _ Subtype.val_injective]
     obtain ⟨B, hBc, hBo, hBU, hBO⟩ := exists_isCompact_isOpen_inter_eq hU hOU

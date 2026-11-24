@@ -154,9 +154,9 @@ end PositivityTheory.Xgp.c_bm_exists_frames
 theorem PositivityTheory.Xgp.t_c_bm_exists_frames : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Φ : Type) [Field Φ] (y : (Σ k, ι k) → Φ) (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j n : ℕ) (M : FlagModel y Ψ N j) (Rb : AnLogRes (mCoordIdeal M.x) ⊤ n), ∃ (q : ℕ) (O : Fin q → Set Rb.X) (F : Fin q → FrameData ι Ψ N M.Ω M.blk), (∀ l, IsOpen (O l)) ∧ (∀ x, ∃ l, x ∈ O l) ∧ (∀ l, M.IsFrame (F l)) ∧ ∀ l, ∀ x ∈ closure (O l), M.GoodAt (F l) (mCoordIdeal (Rb.lift x x)) := by
   intro K _ ι _ Φ _ y Ψ _ _ N j n M Rb
   classical
-  letI := Rb.top
-  haveI := Rb.compact
-  haveI := Rb.t2
+  let := Rb.top
+  have := Rb.compact
+  have := Rb.t2
   have key : ∀ x : Rb.X, ∃ (F : FrameData ι Ψ N M.Ω M.blk) (t : Set Rb.X), M.IsFrame F ∧ t ∈ nhds x ∧
       IsClosed t ∧ ∀ z ∈ t, M.GoodAt F (mCoordIdeal (Rb.lift z z)) := by
     intro x

@@ -111,7 +111,7 @@ theorem zeta_pow (C : Core l) (m : ℕ) : C.ζ m ^ (l ^ m) = 1 := by
 
 theorem cong (C : Core l) (g : GQ l) (m : ℕ) : ∃ w : Per.Acris l,
     sigA g C.t - ((PadicInt.toZModPow m (C.χ g : ℤ_[l])).val : Per.Acris l) * C.t = (l : Per.Acris l) ^ m * w := by
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   set a := (PadicInt.toZModPow m (C.χ g : ℤ_[l])).val with ha
   obtain ⟨b, hb⟩ : ∃ b, a + b = l ^ m := Nat.exists_eq_add_of_le (ZMod.val_lt _).le |>.imp fun _ h => h.symm
   set em := ((frobeniusEquiv (Per.Fl l) l).symm)^[m] C.ε with hem
@@ -143,12 +143,12 @@ theorem cong (C : Core l) (g : GQ l) (m : ℕ) : ∃ w : Per.Acris l,
 theorem t_act : ∀ (l : ℕ) [Fact l.Prime], ∀ (C : Core l) (g : GQ l),
     sigA g C.t = algebraMap (Per.Ainf l) (Per.Acris l) (Per.zA l (C.χ g : ℤ_[l])) * C.t := by
   intro l _ C g
-  haveI := (acris_basic l).1
+  have := (acris_basic l).1
   rw [IsHausdorff.eq_iff_smodEq (I := Ideal.span {(l : Per.Acris l)})]
   intro m
   obtain ⟨w, hw⟩ := cong C g m
   set x : ℤ_[l] := (C.χ g : ℤ_[l])
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hk : x - ((PadicInt.toZModPow m x).val : ℤ_[l]) ∈ RingHom.ker (PadicInt.toZModPow m : ℤ_[l] →+* ZMod (l ^ m)) := by
     rw [RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_self]
   rw [PadicInt.ker_toZModPow, Ideal.mem_span_singleton'] at hk

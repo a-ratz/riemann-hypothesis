@@ -97,7 +97,7 @@ theorem core (h1 : (1 : GL (Fin n) k) ∈ G.JSet) (hmul : ∀ g ∈ G.JSet, ∀ 
     have : CompactSpace (KO k (Fin n)) := isCompact_iff_compactSpace.1 hc
     have ho : IsOpen (((KCg k n r).subgroupOf (KO k (Fin n)) : Subgroup (KO k (Fin n))) : Set (KO k (Fin n))) := by
       have : IsOpen (KCg k n r : Set (GL (Fin n) k)) := by rw [hKCeq]; exact hKCo
-      exact this.preimage continuous_subtype_val
+      exact this.preimage continuous_subtypeVal
     have : Finite (KO k (Fin n) ⧸ (KCg k n r).subgroupOf (KO k (Fin n))) := Subgroup.quotient_finite_of_isOpen _ ho
     have h0 : (KCg k n r).relIndex (KO k (Fin n)) ≠ 0 := Subgroup.index_ne_zero_of_finite
     have h0' : (KCg k n r).relIndex G.Jg ≠ 0 := fun h => h0 (Subgroup.relIndex_eq_zero_of_le_right hJK h)

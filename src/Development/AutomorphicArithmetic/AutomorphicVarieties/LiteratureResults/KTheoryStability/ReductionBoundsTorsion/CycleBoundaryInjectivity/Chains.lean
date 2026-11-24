@@ -82,7 +82,7 @@ def eC (n : ℕ) : ℝ ⊗[ℤ] ((Fin n → G) →₀ ℤ) ≃ₗ[ℝ] Chn G n :
 omit [Group G] in
 theorem eC_single (n : ℕ) (r : ℝ) (g : Fin n → G) (a : ℤ) :
     eC G n (r ⊗ₜ Finsupp.single g a) = Finsupp.single g ((a : ℝ) * r) := by
-  letI := Classical.decEq (Fin n → G)
+  let := Classical.decEq (Fin n → G)
   ext i
   rw [eC, TensorProduct.finsuppScalarRight_apply_tmul_apply, zsmul_eq_mul]
   by_cases h : g = i

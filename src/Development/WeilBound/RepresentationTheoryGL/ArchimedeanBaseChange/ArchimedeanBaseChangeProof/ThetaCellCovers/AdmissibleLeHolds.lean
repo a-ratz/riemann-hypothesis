@@ -130,7 +130,7 @@ theorem cellCover_of (h1 : Cover) (h2 : ConjCpt) : CellCover := by
 theorem discrete_range (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (n : ℕ) :
     DiscreteTopology (ratGL E n).range :=
   DiscreteTopology.of_continuous_injective (β := latticeGL E n) (f := Subgroup.inclusion le_sup_left)
-    (continuous_subtype_val.subtype_mk _) (Subgroup.inclusion_injective _)
+    (continuous_subtypeVal.subtype_mk _) (Subgroup.inclusion_injective _)
 
 theorem domEx_holds : DomEx := by
   intro E _ _ _ n _ _ μ

@@ -67,10 +67,10 @@ theorem isSSRep_of_finiteIndex {Γ k : Type} [Group Γ] [Field k] [CharZero k] {
   let p : (Fin n → k) →ₗ[k] (Fin n → k) := W.subtype ∘ₗ W.linearProjOfIsCompl W' hc
   have hpW : ∀ v, p v ∈ W := fun v => (W.linearProjOfIsCompl W' hc v).2
   have hpl : ∀ w ∈ W, p w = w := fun w hw => by
-    have e := congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨w, hw⟩)
+    have e := congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨w, hw⟩)
     exact e
   have hpr : ∀ w ∈ W', p w = 0 := fun w hw => by
-    have e := congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc ⟨w, hw⟩)
+    have e := congrArg Subtype.val (Submodule.projectionOnto_apply_right hc ⟨w, hw⟩)
     exact e
   have hpN : ∀ m ∈ N, ∀ v, p (ρ m v) = ρ m (p v) := by
     intro m hm v
@@ -92,7 +92,7 @@ theorem isSSRep_of_finiteIndex {Γ k : Type} [Group Γ] [Field k] [CharZero k] {
     intro g w hw
     simp only [T, LinearMap.comp_apply]
     rw [hpl _ (hWρ _ w hw), hρ, mul_inv_cancel, hρ1]
-  haveI : Fintype (Γ ⧸ N) := Fintype.ofFinite _
+  have : Fintype (Γ ⧸ N) := Fintype.ofFinite _
   let S : (Fin n → k) →ₗ[k] (Fin n → k) := ∑ q : Γ ⧸ N, T q.out
   have hout : ∀ (h : Γ) (q : Γ ⧸ N), T (h • q).out = T (h * q.out) := by
     intro h q
@@ -138,7 +138,7 @@ namespace GlobalTheory.WeakBaseChange
 theorem finiteIndex_range_res (E M Ω : Type) [Field E] [NumberField E] [Field M] [NumberField M] [Field Ω] [Algebra E M]
     [Algebra E Ω] [Algebra M Ω] [IsScalarTower E M Ω] : (res E Ω M).range.FiniteIndex := by
   classical
-  haveI : FiniteDimensional E M := Module.Finite.of_restrictScalars_finite ℚ E M
+  have : FiniteDimensional E M := Module.Finite.of_restrictScalars_finite ℚ E M
   let f : G E Ω ⧸ (res E Ω M).range → (M →ₐ[E] Ω) := fun q =>
     ((Quotient.out q : G E Ω) : Ω →ₐ[E] Ω).comp (IsScalarTower.toAlgHom E M Ω)
   have hf : Function.Injective f := by
@@ -152,7 +152,7 @@ theorem finiteIndex_range_res (E M Ω : Type) [Field E] [NumberField E] [Field M
       show a.symm (b (algebraMap M Ω x)) = algebraMap M Ω x
       rw [← hab, AlgEquiv.symm_apply_apply])
     exact ⟨ρ, AlgEquiv.ext fun x => rfl⟩
-  haveI : Finite (G E Ω ⧸ (res E Ω M).range) := Finite.of_injective f hf
+  have : Finite (G E Ω ⧸ (res E Ω M).range) := Finite.of_injective f hf
   exact Subgroup.finiteIndex_of_finite_quotient
 
 end GlobalTheory.WeakBaseChange
@@ -170,7 +170,7 @@ theorem finiteIndex_comap {Γ Γ' : Type} [Group Γ] [Group Γ'] (f : Γ' →* �
     have := QuotientGroup.eq.mp h
     rw [Subgroup.mem_comap, map_mul, map_inv]
     exact this
-  haveI : Finite (Γ' ⧸ N.comap f) := Finite.of_injective g hg
+  have : Finite (Γ' ⧸ N.comap f) := Finite.of_injective g hg
   exact Subgroup.finiteIndex_of_finite_quotient
 
 theorem algSat_pow (n q f : ℕ) (B : Multiset ℂˣ) :
@@ -192,9 +192,9 @@ theorem GlobalTheory.GalCut.weak_comp_res : ∀ (E M Ω : Type) [Field E] [Numbe
   intro E M Ω _ _ _ _ _ _ _ _ _ _ _ _ _ l _ ι a π P hL r hr
   obtain ⟨hc, hss, hatt⟩ := hr
   refine ⟨hc.comp (UpperTheory.V.Af.continuous_restrictScalarsHom E M Ω), ?_, ?_⟩
-  · haveI := finiteIndex_range_res E M Ω
+  · have := finiteIndex_range_res E M Ω
     set H := (res E Ω M).range with hH
-    haveI : (H.normalCore.comap (res E Ω M)).FiniteIndex := finiteIndex_comap _ _
+    have : (H.normalCore.comap (res E Ω M)).FiniteIndex := finiteIndex_comap _ _
     refine isSSRep_of_finiteIndex _ (H.normalCore.comap (res E Ω M)) ?_
     have hrange : ((res E Ω M).comp (H.normalCore.comap (res E Ω M)).subtype).range = H.normalCore := by
       ext x

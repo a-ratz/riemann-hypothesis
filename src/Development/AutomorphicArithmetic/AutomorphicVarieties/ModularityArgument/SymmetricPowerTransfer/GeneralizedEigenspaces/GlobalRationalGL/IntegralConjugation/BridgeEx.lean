@@ -115,7 +115,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.evenVal :
     have h1 : (QuadraticAlgebra.omega : Lsq (Lp L) P.Δ) = 0 := P.e.injective (by rw [h0, map_zero])
     have h2 := congrArg QuadraticAlgebra.im h1
     simp at h2
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQm, hQl⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 L) v.asIdeal
   have hQ0 : Q ≠ ⊥ := by
     rintro rfl
@@ -123,10 +123,10 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.evenVal :
     rw [hQl.over, Ideal.under, Ideal.comap_bot_of_injective]
     exact FaithfulSMul.algebraMap_injective _ _
   let w : HeightOneSpectrum (𝓞 L) := ⟨Q, hQm.isPrime, hQ0⟩
-  haveI : w.asIdeal.LiesOver v.asIdeal := hQl
+  have : w.asIdeal.LiesOver v.asIdeal := hQl
   have hr : w.asIdeal.ramificationIdx (𝓞 (Lp L)) = 1 := by
-    haveI := hU w
-    haveI : w.asIdeal.IsPrime := w.isPrime
+    have := hU w
+    have : w.asIdeal.IsPrime := w.isPrime
     exact Ideal.ramificationIdx_eq_one_of_isUnramifiedAt (R := 𝓞 (Lp L)) (p := w.asIdeal)
   have hv := IsDedekindDomain.HeightOneSpectrum.valuation_liesOver L v w P.Δ
   rw [hr, pow_one, ← hδ, map_mul] at hv
@@ -193,7 +193,7 @@ private theorem exists_unr {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteVal
     exact (WithZero.coe_unitsWithZeroEquiv_eq_units_val _).trans h
   refine ⟨(zpowersHom ℂˣ c⁻¹).comp f, fun u => ?_, fun ϖ x hϖ hx => ?_⟩
   · have h1 : w.valuation K (Units.map (algebraMap O K : O →* K) u : K) = ((1 : Multiplicative ℤ) : ℤᵐ⁰) := by
-      rw [Units.coe_map, MonoidHom.coe_coe, HeightOneSpectrum.valuation_of_algebraMap, WithZero.coe_one,
+      rw [Units.coe_map, MonoidHom.coe_ofClass, HeightOneSpectrum.valuation_of_algebraMap, WithZero.coe_one,
         HeightOneSpectrum.intValuation_eq_one_iff]
       exact fun h => (IsLocalRing.mem_maximalIdeal _).1 h u.isUnit
     rw [MonoidHom.comp_apply, hf _ _ h1, map_one]
@@ -220,16 +220,16 @@ private theorem delta_ne {L : Type} [Field L] [NumberField L] [IsCMField L] (R :
 private theorem hs_one {K : Type} [Field K] [CharZero K] {D : K} (h0 : D ≠ 0) (h : IsSquare D) (x : K) : hs D x = 1 := by
   obtain ⟨r, rfl⟩ := h
   have hr : r ≠ 0 := fun e => h0 (by rw [e, mul_zero])
-  refine if_pos ⟨(x + 1) / 2, (x - 1) / (2 * r), ?_⟩
+  refine ite_eq_left ⟨(x + 1) / 2, (x - 1) / (2 * r), ?_⟩
   field_simp
   ring
 
 private theorem hs_neg {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K]
     {D : K} (L : IsLoc O D) (hD : ¬ IsSquare D) {p : O} (hp : Irreducible p) : hs D (algebraMap O K p) = -1 := by
-  haveI := L.frac
+  have := L.frac
   obtain ⟨ε, s, hs0, rfl⟩ := L.even
   have hp' : algebraMap O K p ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective O K)).2 hp.ne_zero
-  refine if_neg fun ⟨a, b, e⟩ => L.not_even hp ?_
+  refine ite_eq_right fun ⟨a, b, e⟩ => L.not_even hp ?_
   have e' : a ^ 2 - algebraMap O K ε * (s * b) ^ 2 = algebraMap O K p := by rw [← e]; ring
   exact e' ▸ L.even_of_norm ε (fun ⟨r, hr⟩ => hD ⟨r * s, by rw [hr]; ring⟩) (e' ▸ hp')
 
@@ -243,12 +243,12 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.chiEx :
       (2 : 𝓞 (Lp L)) ∉ v.asIdeal ∨ IsSquare (cv v R.Δ) → IsChi (Ov v) (cv v R.Δ) χ := by
     intro v
     obtain ⟨hf, -, hfin, -⟩ := locBase (Lp L) v
-    haveI := hf
-    haveI := hfin
+    have := hf
+    have := hfin
     have hq : (Nat.card (IsLocalRing.ResidueField (Ov v)) : ℂ) ≠ 0 :=
       Nat.cast_ne_zero.2 Nat.card_pos.ne'
     by_cases hsq : IsSquare (cv v R.Δ)
-    · haveI : CharZero (Kv v) := charZero_of_injective_ringHom (cv v).injective
+    · have : CharZero (Kv v) := charZero_of_injective_ringHom (cv v).injective
       have hΔ : cv v R.Δ ≠ 0 := (map_ne_zero _).2 (delta_ne R)
       obtain ⟨χ, h1, h2⟩ := exists_unr (O := Ov v) (K := Kv v) (Units.mk0 _ (div_ne_zero one_ne_zero hq))
       refine ⟨χ, fun _ => ⟨h1, fun ϖ x hϖ hx => ?_⟩⟩
@@ -524,7 +524,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.integral_congr_of_forall_above :
   have hm : m₀ * (N₁ * N₂) ≠ 0 := mul_ne_zero hm₀ (mul_ne_zero hN₁ hN₂)
   refine ⟨m₀ * (N₁ * N₂), hm, fun g v hg i j => ?_⟩
   generalize hmm : m₀ * (N₁ * N₂) = m at hm hg
-  haveI : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap (Lp L) (Kv v)).injective
+  have : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap (Lp L) (Kv v)).injective
   have hmK : (m : Kv v) ≠ 0 := Nat.cast_ne_zero.2 hm
   have hinv : (m : Lsq (Kv v) (cv v B.Δ)) * algebraMap (Kv v) (Lsq (Kv v) (cv v B.Δ)) (m : Kv v)⁻¹ = 1 := by
     rw [← map_natCast (algebraMap (Kv v) (Lsq (Kv v) (cv v B.Δ))), ← map_mul, mul_inv_cancel₀ hmK, map_one]
@@ -586,7 +586,7 @@ private theorem continuous_of_val_iff {k k' : Type} [Field k] [ValuativeRel k] [
   have hc : valuation k (i.symm c) ≠ 0 := by
     intro h0
     have h2 := (h (i.symm c) 0).2 (by simp [h0])
-    simp only [RingEquiv.apply_symm_apply, map_zero, le_zero_iff] at h2
+    simp only [RingEquiv.apply_symm_apply, map_zero, nonpos_iff_eq_zero] at h2
     exact hr h2
   have hm : {x : k | valuation k x < valuation k (i.symm c)} ∈ nhds (0 : k) :=
     (IsValuativeTopology.hasBasis_nhds_zero' k).mem_iff.mpr ⟨_, hc, subset_rfl⟩
@@ -1138,7 +1138,7 @@ private theorem dich [IsLocalRing O] [IsIntegrallyClosed O] [IsFractionRing O K]
     exact hu.add (int_star hu)
   have ht' : IsIntegral O (2 * u.re) :=
     (isIntegral_algebraMap_iff ).1 ht
-  haveI : IsDomain O := (IsFractionRing.injective O K).isDomain (algebraMap O K)
+  have : IsDomain O := (IsFractionRing.injective O K).isDomain (algebraMap O K)
   obtain ⟨τ, hτ⟩ := IsIntegrallyClosed.isIntegral_iff.1 ht'
   have h4 : IsUnit ((2 + τ) + (2 - τ) : O) := by
     have : ((2 + τ) + (2 - τ) : O) = 2 * 2 := by ring
@@ -1202,8 +1202,8 @@ private theorem ex_c (h2 : (2 : K) ≠ 0) (hΔ : Δ ≠ 0) (u : Lsq K Δ) (hu : 
     have hn : QuadraticAlgebra.norm ((1 - u) * QuadraticAlgebra.omega)
         = (2 - 2 * u.re) * (-Δ) := by
       rw [map_mul, QuadraticAlgebra.norm_def (1 - u), QuadraticAlgebra.norm_def QuadraticAlgebra.omega,
-        QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, r1, i1, QuadraticAlgebra.omega_re,
-        QuadraticAlgebra.omega_im]
+        QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, r1, i1, QuadraticAlgebra.re_omega,
+        QuadraticAlgebra.im_omega]
       linear_combination (-Δ) * hN
     have hne : 2 - 2 * u.re ≠ 0 := by
       intro h0
@@ -1354,12 +1354,12 @@ private theorem cof_val (F : Type) [Field F] [NumberField F] (a : F) (ha : a ≠
     rw [Filter.mem_cofinite, compl_compl]
     exact h1.union h2
   filter_upwards [h3] with v hv
-  simp only [Set.mem_compl_iff, Set.mem_union, not_or, HeightOneSpectrum.Support, Set.mem_setOf_eq, not_lt] at hv
+  simp only [Set.mem_compl_iff, Set.mem_union, not_or, HeightOneSpectrum.Support, Set.mem_ofPred_eq, not_lt] at hv
   apply le_antisymm hv.1
   have := hv.2
   rw [map_inv₀] at this
   have h0 : v.valuation F a ≠ 0 := by simpa using ha
-  exact (inv_le_one₀ (zero_lt_iff.2 h0)).1 this
+  exact (inv_le_one₀ (pos_iff_ne_zero.2 h0)).1 this
 
 private theorem unit_of_val (F : Type) [Field F] [NumberField F] (v : Pl F) (a : F) (h : v.valuation F a = 1) :
     ∃ u : (Ov v)ˣ, algebraMap (Ov v) (Kv v) u = cv v a := by
@@ -1419,7 +1419,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.okConj :
     show ∀ᶠ v in Filter.cofinite, Y v ∈ KD (cv v B.Δ) (Ov v)
     filter_upwards [hXi, cof_val (Lp L) B.Δ hΔ, cof_val (Lp L) 2 h2F] with v hi hv h2v
     obtain ⟨h1, -, -, h4⟩ := locBase (Lp L) v
-    haveI := h1
+    have := h1
     have h2n : (2 : 𝓞 (Lp L)) ∉ v.asIdeal := by
       intro hm
       have := (HeightOneSpectrum.valuation_lt_one_iff_mem (K := Lp L) v (2 : 𝓞 (Lp L))).2 hm
@@ -1603,7 +1603,7 @@ theorem UpperTheory.V.Z.Sym.Dict.Br.rhoGlob :
   intro L _ _ _ P v w h x
   have hx : x = algebraMap (Lp L) (Lsq (Lp L) P.Δ) x.re
       + algebraMap (Lp L) (Lsq (Lp L) P.Δ) x.im * QuadraticAlgebra.omega := by
-    ext <;> simp [QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im]
+    ext <;> simp [QuadraticAlgebra.re_omega, QuadraticAlgebra.im_omega]
   have lhs : P.rho v w h (lmap (cv v) P.Δ x)
       = P.φ v w h (cv v x.re) + P.φ v w h (cv v x.im) * P.rt w := rfl
   rw [lhs, P.φ_alg, P.φ_alg, Pre.rt]

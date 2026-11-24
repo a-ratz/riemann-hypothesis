@@ -203,7 +203,7 @@ private theorem exists_rep {V : Type} [AddCommGroup V] [Module ℚ V] [FiniteDim
 theorem UpperTheory.exists_unitary_unit_hermitian_form_of_cm_lattice :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (G : HTGroup p) (L : Link D G) (Y : PLat D.O D.inv) (j : (ℚ ⊗[ℤ] Y.La) ≃ₗ[ℚ] VQ D), (∀ (c : D.O) (u : ℚ ⊗[ℤ] Y.La), j ((DistribSMul.toLinearMap ℤ Y.La c).baseChange ℚ u) = actQ D c (j u)) → ∃ β : G.Cˣ, sh G β = β ∧ ∀ u w : ℚ ⊗[ℤ] Y.La, Y.EF.baseChange ℚ u w = 2 * D.EF.baseChange ℚ (L.rep ((β⁻¹ : G.Cˣ) : G.C) (j u)) (j w) := by
   intro p _ D G L Y j hj
-  haveI := D.finLa
+  have := D.finLa
   set E := D.EF.baseChange ℚ with hEdef
   have sepE : ∀ a, (∀ w, E a w = 0) → a = 0 := fun a h =>
     sep_bc D.EF (fun x hx => D.nondeg (by rw [map_zero]; ext y; simpa using hx y)) a h
@@ -566,8 +566,8 @@ theorem UpperTheory.Reformulated.B.Qh60.Pz_iff_pos :
       definite := fun x hx => by
         by_contra h
         exact (hpos x h).ne' hx }
-  letI : NormedAddCommGroup W := @InnerProductSpace.Core.toNormedAddCommGroup ℝ W _ _ _ c
-  letI : InnerProductSpace ℝ W := InnerProductSpace.ofCore c.toCore
+  let : NormedAddCommGroup W := @InnerProductSpace.Core.toNormedAddCommGroup ℝ W _ _ _ c
+  let : InnerProductSpace ℝ W := InnerProductSpace.ofCore c.toCore
   exact UpperTheory.Reformulated.B.Qh60.aux T (fun x y => hT x y)
 end -- clump:auto
 end -- clump:auto
@@ -766,8 +766,8 @@ theorem UpperTheory.positivity_iff_gram_posDef :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (G : HTGroup p) (L : Link D G) (b : ℝ ⊗[ℚ] G.C), (starT G.star ℝ b).unop = -b → ((∀ x : ℝ ⊗[ℚ] VQ D, x ≠ 0 → 0 < (D.EF.baseChange ℚ).baseChange ℝ (actOn L.rep ℝ b x) x) ↔ ∀ v' : InfinitePlace G.F, ((if v'.embedding (L.e D.ω) = D.ρc then -Complex.I else Complex.I) • (G.gram v' * G.psiR v' b)).PosDef) := by
   intro p _ D G L b hb
   obtain ⟨J, hJJ, hJs, hJp, hJv⟩ := L.orient
-  haveI : Module.Finite ℤ D.La := D.finLa
-  haveI : FiniteDimensional ℝ (ℝ ⊗[ℚ] VQ D) := inferInstance
+  have : Module.Finite ℤ D.La := D.finLa
+  have : FiniteDimensional ℝ (ℝ ⊗[ℚ] VQ D) := inferInstance
   let a : ℝ ⊗[ℚ] G.C := -(J * b)
   have hJa : J * a = b := by
     change J * -(J * b) = b
@@ -873,12 +873,12 @@ private lemma embedding_trace_mulLeft_eq_mul_trace {F A : Type} [Field F] [Ring 
     (hn : Module.finrank F A = n ^ 2) (σ : F →+* ℂ) (φ : A →+* Matrix (Fin n) (Fin n) ℂ)
     (hφ : ∀ x : F, φ (algebraMap F A x) = Matrix.scalar (Fin n) (σ x)) (c : A) :
     σ (LinearMap.trace F A (LinearMap.mulLeft F c)) = n * (φ c).trace := by
-  letI : Algebra F ℂ := σ.toAlgebra
+  let : Algebra F ℂ := σ.toAlgebra
   have hn0 : n ≠ 0 := by
     rintro rfl
     have : 0 < Module.finrank F A := Module.finrank_pos
     simp [hn] at this
-  haveI : NeZero n := ⟨hn0⟩
+  have : NeZero n := ⟨hn0⟩
   let φF : A →ₐ[F] Matrix (Fin n) (Fin n) ℂ :=
     { φ with commutes' := fun x => (hφ x).trans rfl }
   let ι : ℂ →ₐ[ℂ] Matrix (Fin n) (Fin n) ℂ := Algebra.ofId ℂ _
@@ -914,7 +914,7 @@ private lemma embedding_trace_mulLeft_eq_mul_trace {F A : Type} [Field F] [Ring 
   have hdim : Module.finrank ℂ (TensorProduct F ℂ A) = Module.finrank ℂ (Matrix (Fin n) (Fin n) ℂ) := by
     rw [_root_.GroundTheory.Brauer.finrank_baseChange_eq, hn, Module.finrank_matrix]
     simp [sq]
-  haveI : FiniteDimensional ℂ (TensorProduct F ℂ A) :=
+  have : FiniteDimensional ℂ (TensorProduct F ℂ A) :=
     Module.finite_of_finrank_pos (by rw [hdim]; simp [Module.finrank_matrix, Nat.pos_of_ne_zero hn0])
   let e : TensorProduct F ℂ A ≃ₗ[ℂ] Matrix (Fin n) (Fin n) ℂ :=
     LinearEquiv.ofBijective G.toLinearMap
@@ -977,9 +977,9 @@ private lemma trace_mul_finrank_eq_finrank_mul_trace {A M : Type} [Ring A] [Alge
     [FiniteDimensional ℚ M] (c : A) :
     LinearMap.trace ℚ M (DistribSMul.toLinearMap ℚ M c) * Module.finrank ℚ A =
       Module.finrank ℚ M * LinearMap.trace ℚ A (DistribSMul.toLinearMap ℚ A c) := by
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite ℚ A
-  haveI : IsSemisimpleRing A := (IsSimpleRing.isSemisimpleRing_iff_isArtinianRing (R := A)).mpr inferInstance
-  haveI : Module.Finite A M := Module.Finite.of_restrictScalars_finite ℚ A M
+  have : IsArtinianRing A := IsArtinianRing.of_finite ℚ A
+  have : IsSemisimpleRing A := (IsSimpleRing.isSemisimpleRing_iff_isArtinianRing (R := A)).mpr inferInstance
+  have : Module.Finite A M := Module.Finite.of_restrictScalars_finite ℚ A M
   obtain ⟨S, hS⟩ := IsSemisimpleModule.exists_simple_submodule A (A × M)
   have hP : IsIsotypicOfType A (A × M) S := IsSimpleRing.isIsotypic A (A × M) S
   have hA : IsIsotypicOfType A A S := by
@@ -994,7 +994,7 @@ private lemma trace_mul_finrank_eq_finrank_mul_trace {A M : Type} [Ring A] [Alge
     refine isIsotypicOfType_submodule_iff.mpr ?_
     intro m _ _
     exact hP m
-  haveI : FiniteDimensional ℚ S :=
+  have : FiniteDimensional ℚ S :=
     Module.Finite.of_injective ((S.subtype).restrictScalars ℚ) S.injective_subtype
   obtain ⟨k, ⟨eA⟩⟩ := hA.linearEquiv_fun
   obtain ⟨m, ⟨eM⟩⟩ := hM.linearEquiv_fun
@@ -1017,15 +1017,15 @@ theorem _root_.GlobalTheory.QTrace.q_trace : ∀ {F A V : Type} [Field F] [Numbe
     rintro rfl
     have : 0 < Module.finrank F A := Module.finrank_pos
     simp [hn] at this
-  letI : Algebra ℚ A := RingHom.toAlgebra' ((algebraMap F A).comp (algebraMap ℚ F))
+  let : Algebra ℚ A := RingHom.toAlgebra' ((algebraMap F A).comp (algebraMap ℚ F))
     (fun q x => Algebra.commutes _ x)
-  haveI : IsScalarTower ℚ F A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : FiniteDimensional ℚ A := Module.Finite.trans F A
-  letI : Module A V := Module.compHom V ρ
+  have : IsScalarTower ℚ F A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : FiniteDimensional ℚ A := Module.Finite.trans F A
+  let : Module A V := Module.compHom V ρ
   have hρq : ∀ q : ℚ, ρ (algebraMap ℚ A q) = algebraMap ℚ (Module.End ℚ V) q := fun q =>
     congrArg (fun f : ℚ →+* Module.End ℚ V => f q)
       (RingHom.ext_rat (ρ.comp (algebraMap ℚ A)) (algebraMap ℚ (Module.End ℚ V)))
-  haveI : IsScalarTower ℚ A V := ⟨fun q a v => by
+  have : IsScalarTower ℚ A V := ⟨fun q a v => by
     show ρ (q • a) v = q • ρ a v
     rw [Algebra.smul_def, map_mul, Module.End.mul_apply, hρq, Module.algebraMap_end_apply]⟩
   have hV : LinearMap.trace ℚ V (DistribSMul.toLinearMap ℚ V c) = LinearMap.trace ℚ V (ρ c) := rfl
@@ -1114,10 +1114,10 @@ private theorem sum_psiE {p : ℕ} [Fact p.Prime] (G : HTGroup p) (c : G.C) :
   rw [hf, Finset.sum_pair hne.symm]
   have h1 : psiE G v.embedding = G.psi v := by
     unfold psiE
-    rw [InfinitePlace.mk_embedding, if_pos rfl]
+    rw [InfinitePlace.mk_embedding, ite_eq_left rfl]
   have h2 : psiE G (ComplexEmbedding.conjugate v.embedding) = ((starRingEnd ℂ).mapMatrix).comp (G.psi v) := by
     unfold psiE
-    rw [InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding, if_neg hne.symm]
+    rw [InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding, ite_eq_right hne.symm]
   rw [h1, h2, RingHom.comp_apply]
   have h3 : Matrix.trace (((starRingEnd ℂ).mapMatrix) (G.psi v c)) = (starRingEnd ℂ) (Matrix.trace (G.psi v c)) := by
 
@@ -1130,11 +1130,11 @@ private theorem trace_rep {p : ℕ} [Fact p.Prime] (D : Datum p) (G : HTGroup p)
   have h3 : Module.finrank ℚ G.F = Module.finrank ℚ D.F :=
     (AlgEquiv.ofRingEquiv (f := L.e) (fun r => by simp)).toLinearEquiv.finrank_eq.symm
   have h4 : Module.finrank ℚ (VQ D) = D.m * G.n * Module.finrank ℚ G.F := by
-    haveI := D.freeLa
+    have := D.freeLa
     rw [h3, L.n_eq, ← D.rankLa]
     exact Module.finrank_baseChange
-  haveI : FiniteDimensional ℚ (VQ D) := by
-    haveI := D.finLa
+  have : FiniteDimensional ℚ (VQ D) := by
+    have := D.finLa
     infer_instance
   have hq := GlobalTheory.QTrace.q_trace (F := G.F) (A := G.C) (V := VQ D) G.n G.rankC L.rep.toRingHom (psiE G) (psiE_F G) c
   rw [sum_psiE, h4] at hq
@@ -1158,8 +1158,8 @@ private theorem trace_rep {p : ℕ} [Fact p.Prime] (D : Datum p) (G : HTGroup p)
 theorem UpperTheory.trace_action_eq_sum_places :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (G : HTGroup p) (L : Link D G) (x : ℝ ⊗[ℚ] G.C), LinearMap.trace ℝ (ℝ ⊗[ℚ] VQ D) (actOn L.rep ℝ x) = 2 * (D.m : ℝ) * ∑ v : InfinitePlace G.F, (Matrix.trace (G.psiR v x)).re := by
   intro p _ D G L x
-  haveI : FiniteDimensional ℚ (VQ D) := by
-    haveI := D.finLa
+  have : FiniteDimensional ℚ (VQ D) := by
+    have := D.finLa
     infer_instance
   induction x using TensorProduct.induction_on with
   | zero => simp
@@ -1243,7 +1243,7 @@ private theorem jt_indep {E F : Type} [Field E] [NumberField E] [Field F] [Numbe
       have hc : w.IsComplex := IsTotallyComplex.isComplex w
       exact (InfinitePlace.isComplex_iff.mp hc) (ComplexEmbedding.isReal_iff.mpr h)
     simp only [B, InfinitePlace.mk_conjugate_eq, InfinitePlace.mk_embedding]
-    rw [if_neg hne]
+    rw [ite_eq_right hne]
   have key : ∀ c : 𝓞 E, ∑ σ : E →+* ℂ, (a σ - B (r.symm σ)) * σ (c : E) = 0 := by
     intro c
     simp only [sub_mul, Finset.sum_sub_distrib]
@@ -1322,9 +1322,9 @@ private theorem jt_S {p : ℕ} [Fact p.Prime] (D : Datum p) (c : 𝓞 D.F) :
     sub_eq_add_neg, ← Finset.sum_neg_distrib]
   congr 1
   · refine Finset.sum_congr rfl fun τ h => ?_
-    rw [if_pos (Finset.mem_filter.mp h).2]; ring
+    rw [ite_eq_left (Finset.mem_filter.mp h).2]; ring
   · refine Finset.sum_congr rfl fun τ h => ?_
-    rw [if_neg (Finset.mem_filter.mp h).2]; ring
+    rw [ite_eq_right (Finset.mem_filter.mp h).2]; ring
 
 private theorem jt_lhs {p : ℕ} [Fact p.Prime] (D : Datum p) (τ₁ : D.F →+* ℂ) (c : 𝓞 D.F) :
     ∑ σ : D.F →+* ℂ, (Complex.I * (D.m : ℂ) * ((if σ = τ₁ then 2 else 0) -
@@ -1478,18 +1478,18 @@ theorem UpperTheory.trace_complex_structure_places :
       exact jt_ne D (h3.symm.trans hε)
     by_cases hw : v' = v
     · have h1' : σ' = τ₁ := (hvv.mp hw).resolve_right h2'
-      rw [hdiv, if_pos h1', if_neg h2', if_pos hε, if_pos hw, if_neg (not_not.mpr hε)]
+      rw [hdiv, ite_eq_left h1', ite_eq_right h2', ite_eq_left hε, ite_eq_left hw, ite_eq_right (not_not.mpr hε)]
       ring
     · have h1' : σ' ≠ τ₁ := fun h => hw (hvv.mpr (Or.inl h))
-      rw [hdiv, if_neg h1', if_neg h2', if_pos hε, if_neg hw, if_neg (not_not.mpr hε)]
+      rw [hdiv, ite_eq_right h1', ite_eq_right h2', ite_eq_left hε, ite_eq_right hw, ite_eq_right (not_not.mpr hε)]
       ring
   · have h1' : σ' ≠ τ₁ := fun h => hε (by rw [h, hτω])
     by_cases hw : v' = v
     · have h2' : σ' = (starRingEnd ℂ).comp τ₁ := (hvv.mp hw).resolve_left h1'
-      rw [hdiv, if_neg h1', if_pos h2', if_neg hε, if_pos hw, if_pos hε]
+      rw [hdiv, ite_eq_right h1', ite_eq_left h2', ite_eq_right hε, ite_eq_left hw, ite_eq_left hε]
       ring
     · have h2' : σ' ≠ (starRingEnd ℂ).comp τ₁ := fun h => hw (hvv.mpr (Or.inr h))
-      rw [hdiv, if_neg h1', if_neg h2', if_neg hε, if_neg hw, if_pos hε]
+      rw [hdiv, ite_eq_right h1', ite_eq_right h2', ite_eq_right hε, ite_eq_right hw, ite_eq_left hε]
       ring
 end -- clump:auto
 end -- clump:auto
@@ -1517,8 +1517,8 @@ private theorem rational_equiv_local (p : ℕ) [Fact p.Prime] (D : Datum p)
     ∃ e : (ℚ ⊗[ℤ] Y.La) ≃ₗ[ℚ] VQ D,
       ∀ (c : D.O) (u : ℚ ⊗[ℤ] Y.La),
         e ((DistribSMul.toLinearMap ℤ Y.La c).baseChange ℚ u) = actQ D c (e u) := by
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   have hfin : Module.finrank ℚ (ℚ ⊗[ℤ] Y.La) = Module.finrank ℚ (VQ D) := by
     rw [Module.finrank_baseChange, Module.finrank_baseChange, hr]
   obtain ⟨e, he⟩ := UpperTheory.Reformulated.B.ExistsEquivOfFinrank.exists_equiv_of_finrank
@@ -1610,8 +1610,8 @@ private theorem rank_of_period {O : Type} [Ring O] {bar : O → O} {g : ℕ} (ρ
   have hset : ((LinearMap.range f : Submodule ℤ (Fin g → ℂ)) : Set (Fin g → ℂ)) = Set.range P := by
     ext x
     simp [f]
-  haveI : DiscreteTopology (LinearMap.range f) := hdisc
-  haveI : IsZLattice ℝ (LinearMap.range f) := ⟨by rw [hset]; exact hspan⟩
+  have : DiscreteTopology (LinearMap.range f) := hdisc
+  have : IsZLattice ℝ (LinearMap.range f) := ⟨by rw [hset]; exact hspan⟩
   rw [(LinearEquiv.ofInjective f hf).finrank_eq, ZLattice.rank ℝ (LinearMap.range f),
     Module.finrank_pi_fintype]
   simp only [Complex.finrank_real_complex, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul]
@@ -1714,8 +1714,8 @@ theorem UpperTheory.Gal.W2.placeEx_of :
     UpperTheory.Gal.W2.AdCore → UpperTheory.Gal.W2.LatForm → UpperTheory.Gal.W2.PlaceEx := by
   intro hAd _ p _ D G L ha hm v hv t₀ ht ρ hρ N D' t hcls hPe
   obtain ⟨P, hP⟩ := hPe
-  haveI := D'.free
-  haveI := D'.fin
+  have := D'.free
+  have := D'.fin
   have hrk : Module.finrank ℤ D'.La = Module.finrank ℤ D.La := by
     rw [rank_of_period ρ D' P hP, rank_datum D hm]
   have hs : IsSig (algebraMap (𝓞 D.F) D.O) D.inv ρ D.n t₀ (epsD D) := hρ
@@ -1775,7 +1775,7 @@ theorem UpperTheory.Gal.W2.placeEx_of :
       by_cases hvv : v' = v
       · subst hvv
         simpa using hv
-      · rw [if_neg hvv]
+      · rw [ite_eq_right hvv]
         exact sig_zero L ha v v' hv hvv
     refine (UpperTheory.hermitian_congruent_and_positive_eigenvector_of_signature G.n (if v' = v then 1 else 0) (G.gram v' * G.psi v' ((β⁻¹ : G.Cˣ) : G.C))
       (G.gram v') (G.psiR v' Jc) (if v'.embedding (L.e D.ω) = D.ρc then Complex.I else -Complex.I) hH

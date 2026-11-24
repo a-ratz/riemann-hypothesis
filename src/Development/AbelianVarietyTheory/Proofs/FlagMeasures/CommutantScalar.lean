@@ -387,7 +387,7 @@ theorem tensor_rep_rows : ∀ B : RowsAut, (∀ v, IsURepOn (UJset (B.I.ε v)) (
       map_mul' := fun g h => (hB v).1.1.2 _ (hmem v g) _ (hmem v h) }
   have hn : ∀ v g a, ‖π v g a‖ = ‖a‖ := fun v g a => (hB v).1.2.1 _ (hmem v g) a
   have hc : ∀ v a, Continuous fun g => π v g a := fun v a =>
-    ((hB v).1.2.2 a).comp_continuous (Units.continuous_val.comp continuous_subtype_val)
+    ((hB v).1.2.2 a).comp_continuous (Units.continuous_val.comp continuous_subtypeVal)
       (hmem v)
   have hirr : ∀ v, ∀ S : Submodule ℂ (B.H v), IsClosed (S : Set (B.H v)) →
       (∀ g, ∀ a ∈ S, π v g a ∈ S) → S = ⊥ ∨ S = ⊤ := by

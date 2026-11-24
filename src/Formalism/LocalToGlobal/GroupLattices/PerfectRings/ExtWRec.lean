@@ -125,7 +125,7 @@ theorem inv_integral (τ : LL →+* Om p n) {d : 𝓞 LL} (hd : d ∉ placeIdeal
 theorem exists_emb (w : HeightOneSpectrum (𝓞 LL)) (hw : (p : 𝓞 LL) ∈ w.asIdeal) :
     ∃ τ : LL →+* Om p n, placeOf τ = w := by
   classical
-  haveI : CharZero (Om p n) :=
+  have : CharZero (Om p n) :=
     charZero_of_injective_algebraMap (algebraMap (KO p n) (Om p n)).injective
   by_contra hno
   push_neg at hno

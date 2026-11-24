@@ -82,7 +82,7 @@ theorem proof (hI : ResolutionImageSup.Statement) (hND : NonvanishingDense.State
   obtain ⟨C, hC⟩ := hI D Ω κ d
   refine ⟨C, fun n hn f hf z hz => ?_⟩
   set B := C * (n : ℝ) ^ ((D : ℝ) / 2) * resolutionVolumeL2Complex d n f
-  obtain ⟨g, hgJ, hgP⟩ := SetLike.not_le_iff_exists.1 d.R.nondeg
+  obtain ⟨g, hgJ, hgP⟩ := IsConcreteLE.not_le_iff_exists.1 d.R.nondeg
   set S := {w | w ∈ mcPts (ι := GlobalTheory κ) (coordIdeal ℤ d.x) ∧ eval w (map (Int.castRingHom ℂ) g) ≠ 0}
   have hzm : z ∈ mcPts (ι := GlobalTheory κ) (coordIdeal ℤ d.x) := by
     refine ⟨fun _ => ?_, hz.2⟩

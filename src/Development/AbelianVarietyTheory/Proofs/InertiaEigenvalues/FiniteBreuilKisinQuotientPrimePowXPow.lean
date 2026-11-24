@@ -59,7 +59,7 @@ namespace GlobalTheory.BKFin
 
 theorem finite_witt_quot (l : ℕ) [Fact l.Prime] (F : Type) [Field F] [Finite F] [CharP F l] (n : ℕ) :
     Finite (WittVector l F ⧸ Ideal.span {(l : WittVector l F) ^ n}) := by
-  haveI : Fintype F := Fintype.ofFinite F
+  have : Fintype F := Fintype.ofFinite F
   have hker : RingHom.ker (WittVector.truncate (p := l) (R := F) n) =
       Ideal.span {(l : WittVector l F) ^ n} := by
     ext x
@@ -70,7 +70,7 @@ theorem finite_witt_quot (l : ℕ) [Fact l.Prime] (F : Type) [Field F] [Finite F
 theorem finite_quot : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (n c : ℕ),
     Finite (bk.S ⧸ (Ideal.span {(l : bk.S) ^ n} ⊔ Ideal.span {(X : bk.S) ^ c})) := by
   intro l _ K bk n c
-  haveI : Finite (Wq l bk.a ⧸ Ideal.span {(l : Wq l bk.a) ^ n}) := finite_witt_quot l (Fq l bk.a) n
+  have : Finite (Wq l bk.a ⧸ Ideal.span {(l : Wq l bk.a) ^ n}) := finite_witt_quot l (Fq l bk.a) n
   let J : Ideal (Wq l bk.a) := Ideal.span {(l : Wq l bk.a) ^ n}
   let I : Ideal bk.S := Ideal.span {(l : bk.S) ^ n} ⊔ Ideal.span {(X : bk.S) ^ c}
   let g : (Fin c → Wq l bk.a ⧸ J) → bk.S ⧸ I := fun t => Ideal.Quotient.mk I
@@ -84,7 +84,7 @@ theorem finite_quot : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (n
   rw [Ideal.Quotient.eq]
   have hw : ∀ i < c, w i - coeff i s ∈ J := by
     intro i hi
-    simp only [w, dif_pos hi]
+    simp only [w, dite_eq_left hi]
     rw [← Ideal.Quotient.eq]
     exact Ideal.Quotient.mk_out _
   have hsplit : (∑ i ∈ Finset.range c, C (w i) * X ^ i) - s =

@@ -122,7 +122,7 @@ theorem continuous_pInfComp : Continuous (pInf E) := by
   exact h.comp continuous_fst
 
 theorem continuous_cInf : Continuous (cInf : UA E n → GL (Fin n) (Cinf E)) :=
-  (Continuous.units_map _ (continuous_id.matrix_map continuous_pInfComp)).comp continuous_subtype_val
+  (Continuous.units_map _ (continuous_id.matrix_map continuous_pInfComp)).comp continuous_subtypeVal
 
 theorem continuous_cutGL (v : InfinitePlace E) : Continuous (cutGL v : GL (Fin n) (Cinf E) → _) := by
   refine Continuous.units_map _ ?_
@@ -144,7 +144,7 @@ theorem continuous_infGL : Continuous (infGL E n) := by
 theorem coord_embedding (w : InfinitePlace E) : coord w.embedding = Pi.evalRingHom (fun _ => ℂ) w := by
   have h := InfinitePlace.mk_embedding w
   unfold coord
-  rw [if_pos (by rw [h]), h]
+  rw [ite_eq_left (by rw [h]), h]
 
 theorem map_coord_of_evGL (τ : E →+* ℂ) {y : GL (Fin n) (Cinf E)} (h : evGL (InfinitePlace.mk τ) y = 1) :
     GeneralLinearGroup.map (coord τ) y = 1 := by

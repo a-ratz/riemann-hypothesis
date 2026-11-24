@@ -110,7 +110,7 @@ private theorem le_of_subMeanValue_log_sq_le_on_annulus_boundary (g : ℂ → �
     · intro z hz
       simpa using hz.2
   have hAne : A.Nonempty := ⟨(R : ℂ), by
-    simp only [hA, Set.mem_setOf_eq, Complex.norm_real, Real.norm_eq_abs]
+    simp only [hA, Set.mem_ofPred_eq, Complex.norm_real, Real.norm_eq_abs]
     rw [abs_of_pos (hr0.trans hR)]
     exact ⟨hR.le, le_rfl⟩⟩
   have hcont : ContinuousOn (fun ζ : ℂ => ε * Real.log ‖ζ‖ + δ * ‖ζ‖ ^ 2) A := by
@@ -192,7 +192,7 @@ private theorem le_of_subMeanValue_log_sq_le_on_annulus_boundary (g : ℂ → �
     nlinarith
   intro ζ h1 h2
   have := hmax (show ζ ∈ A from ⟨h1, h2⟩)
-  simp only [Set.mem_setOf_eq] at this
+  simp only [Set.mem_ofPred_eq] at this
   linarith
 
 private theorem le_add_two_of_subMeanValue_loglog_bound (g : ℂ → ℝ) (R B K A : ℝ) (hR : 0 < R) (hK : 0 ≤ K) (hA : 1 ≤ A)
@@ -429,12 +429,12 @@ theorem LevelTowerAlt.psh_log_growth_bounded : ∀ (n a : ℕ) (ρ C : ℝ) (u :
               intro i _
               by_cases hij : i = j
               · subst hij
-                rw [Function.update_self, if_pos rfl]
+                rw [Function.update_self, ite_eq_left rfl]
                 linarith [abs_nonneg (Real.log ‖z i‖)]
-              · rw [Function.update_of_ne hij, if_neg hij]
+              · rw [Function.update_of_ne hij, ite_eq_right hij]
                 linarith
             have hsum := Finset.sum_le_sum hterm
-            rw [Finset.sum_add_distrib, Finset.sum_ite_eq', if_pos hjmem] at hsum
+            rw [Finset.sum_add_distrib, Finset.sum_ite_eq', ite_eq_left hjmem] at hsum
             linarith
           have hlog := Real.log_le_log (by linarith [hls1 (Function.update z j ζ)]) hls
           exact h.trans (mul_le_mul_of_nonneg_left (by linarith) hK))
@@ -895,7 +895,7 @@ theorem uLogBound : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n a 
     · subst h
       exact absurd (Subsingleton.elim _ _) ((hb.2 0 h0ball τ₀).1.ne_zero ⟨0, hm⟩)
     · exact h
-  haveI : Nontrivial Λ := by
+  have : Nontrivial Λ := by
     have hrk := L.rank
     exact Module.nontrivial_of_finrank_pos (R := ℤ) (by omega)
   obtain ⟨ρ₁, K, hρ₁, hK, hl⟩ := lattice_lower L.toLogPeriods
@@ -1069,14 +1069,14 @@ theorem limit_strong : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n
     refine ⟨fun m k => if k.val < a then -(((m : ℝ) + 1 : ℝ) : ℂ) else 0, fun m => ⟨fun i => ?_, fun k hk => ?_⟩, ?_⟩
     · have hi : (Fin.castLE L.a_le i).val < a := i.2
       have hm : (0 : ℝ) ≤ m := Nat.cast_nonneg m
-      simp only [hi, if_true, Complex.neg_re, Complex.ofReal_re]
+      simp only [hi, ite_true, Complex.neg_re, Complex.ofReal_re]
       linarith
     · have hk' : ¬ k.val < a := not_lt.2 hk
       simp [hk']
     · rw [tendsto_pi_nhds]
       intro k
       by_cases hk : k.val < a
-      · simp only [expCover, hk, if_true, Pi.zero_apply]
+      · simp only [expCover, hk, ite_true, Pi.zero_apply]
         have h1 : Tendsto (fun m : ℕ => Real.exp (-((m : ℝ) + 1))) atTop (𝓝 0) :=
           Real.tendsto_exp_atBot.comp (tendsto_neg_atTop_atBot.comp
             (tendsto_atTop_add_const_right _ _ tendsto_natCast_atTop_atTop))
@@ -1316,7 +1316,7 @@ theorem lower_centre {E : Type} [Field E] [NumberField E] [IsCMField E] {n a g :
   have hw₀ : (fun k : Fin n => if k.val < a then (-1 : ℂ) else 0) ∈ logCover L.a_le := by
     refine ⟨fun i => ?_, fun k hk => ?_⟩
     · have hi : (Fin.castLE L.a_le i).val < a := i.2
-      simp only [hi, if_true]
+      simp only [hi, ite_true]
       norm_num
     · simp [not_lt.2 hk]
   have hfam : ∃ (r : ℕ) (y : Fin r → Λ), (∀ i, y i ∈ I) ∧ LinearIndependent (𝓞 E) y ∧
@@ -1348,7 +1348,7 @@ theorem lower_centre {E : Type} [Field E] [NumberField E] [IsCMField E] {n a g :
   have h4 : -Real.log (RiemLat.nz (L.riem w hw) σ I) ≤ RiemLat.cuspW (L.riem w hw) σ := by
     by_cases hI0 : I = ⊥
     · have : RiemLat.nz (L.riem w hw) σ I = 1 := by
-        refine dif_neg ?_
+        refine dite_eq_right ?_
         rintro ⟨r, v, hr, hv, hl, -⟩
         exact hl.ne_zero ⟨0, hr⟩ (by simpa [hI0] using hv ⟨0, hr⟩)
       rw [this, Real.log_one, neg_zero]
@@ -1384,14 +1384,14 @@ theorem exists_lift {n a : ℕ} (h : a ≤ n) {z : Fin n → ℂ} (hz : z ∈ Fl
   have h1 : ∀ k, ‖z k‖ < 1 := (pi_norm_lt_iff one_pos).1 (mem_ball_zero_iff.1 hz.1)
   refine ⟨fun k => if k.val < a then Complex.log (z k) else z k, ⟨fun i => ?_, fun k hk => ?_⟩, ?_⟩
   · have hi : (Fin.castLE h i).val < a := i.isLt
-    simp only [if_pos hi, Complex.log_re]
+    simp only [ite_eq_left hi, Complex.log_re]
     exact Real.log_neg (norm_pos_iff.mpr (hz.2 _ hi)) (h1 _)
-  · simp only [if_neg (not_lt.mpr hk)]
+  · simp only [ite_eq_right (not_lt.mpr hk)]
     exact h1 k
   · funext k
     by_cases hk : k.val < a
-    · simp only [expCover, if_pos hk, Complex.exp_log (hz.2 k hk)]
-    · simp only [expCover, if_neg hk]
+    · simp only [expCover, ite_eq_left hk, Complex.exp_log (hz.2 k hk)]
+    · simp only [expCover, ite_eq_right hk]
 
 theorem isPsh_comp_aff {n : ℕ} (t₀ : Fin n → ℂ) (ρ : ℝ) (π : Equiv.Perm (Fin n)) {U V : Set (Fin n → ℂ)}
     {f : (Fin n → ℂ) → ℝ} (h : IsPsh V f) (hUV : ∀ u ∈ U, aff t₀ ρ π u ∈ V) :
@@ -1461,7 +1461,7 @@ theorem logSize_le {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)
     have h3 : t (π.symm i) = ρ * u i := by simp [ht, aff, h2]
     have h4 : Real.log (1 / ‖t (π.symm i)‖ ^ 2) ≤ χ.logR t := by
       have := Finset.single_le_sum (fun i _ => hterm i) (Finset.mem_univ (π.symm i))
-      rw [if_pos h1] at this
+      rw [ite_eq_left h1] at this
       exact this.trans (le_add_of_nonneg_left (Real.exp_pos 1).le)
     have h5 : 0 < ‖u i‖ := norm_pos_iff.2 (hu'.2 i hi)
     rw [h3, one_div, Real.log_inv, Real.log_pow, norm_mul, Complex.norm_real, Real.norm_of_nonneg hρ.le,

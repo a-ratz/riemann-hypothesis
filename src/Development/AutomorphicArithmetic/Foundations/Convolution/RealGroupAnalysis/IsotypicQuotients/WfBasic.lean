@@ -55,7 +55,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Pp.wfBasic :
       funext g
       rw [Measure.restrict_restrict hC.measurableSet, Set.inter_eq_right.2 hs]; rfl
     rw [e]
-    haveI : IsFiniteMeasure ((adeleMeasure F).restrict (fundamentalSet F)) :=
+    have : IsFiniteMeasure ((adeleMeasure F).restrict (fundamentalSet F)) :=
       isFiniteMeasure_restrict.2 (by rw [adeleMeasure_fundamentalSet]; exact ENNReal.one_ne_top)
     set_option synthInstance.maxHeartbeats 200000 in
     exact continuous_parametric_integral_of_continuous

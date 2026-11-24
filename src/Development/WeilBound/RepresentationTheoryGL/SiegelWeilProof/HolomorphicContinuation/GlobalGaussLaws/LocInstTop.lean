@@ -172,7 +172,7 @@ theorem exists_away (θ : InfFam D) (V : HSp D) (n : ℕ) (l : D.what₂.Tau →
     simp [evalPoly]
   · have hg0 : g (fun i j => finPart D ((0 : Mx D V.rank n) i j)) = 1 := by
       simp only [g]
-      rw [if_pos]
+      rw [ite_eq_left]
       exact (QuotientAddGroup.eq_zero_iff (N := W) _).2 fun i j => by simp
     show gAway V l s τ (fun τ => compAt θ τ 0) * g (fun i j => finPart D ((0 : Mx D V.rank n) i j)) ≠ 0
     rw [hg0, mul_one]
@@ -203,7 +203,7 @@ theorem exists_sec (θ : InfFam D) (hθ : IsInfFam θ) (τ : D.what₂.Tau) (m n
     · ext a' i'
       simp [Matrix.sum_apply, Matrix.single_apply]
       rw [Fintype.sum_eq_single a' (fun c hc => by simp [hc]), Fintype.sum_eq_single i' (fun c hc => by simp [hc])]
-      simp only [and_self, if_true]
+      simp only [and_self, ite_true]
       exact Complex.re_add_im _
     · simp
   have hf : ∀ u, (S u).map (finPart D) = 0 := by
@@ -217,16 +217,16 @@ theorem exists_sec (θ : InfFam D) (hθ : IsInfFam θ) (τ : D.what₂.Tau) (m n
   refine ⟨S, fun x u => ?_, fun x u τ' h => ?_, fun x u => ?_⟩
   · funext a i
     simp only [piT, Pi.add_apply]
-    rw [e, map_add (f := _), ← e, ← e, hc, if_pos rfl]
+    rw [e, map_add (f := _), ← e, ← e, hc, ite_eq_left rfl]
     rfl
-  · rw [e, map_add (f := _), ← e, ← e, hc, if_neg h, add_zero]
+  · rw [e, map_add (f := _), ← e, ← e, hc, ite_eq_right h, add_zero]
   · rw [ef, map_add (f := _), ← ef, ← ef, hf, add_zero]
 
 theorem cov {m n : ℕ} (fr : Matrix (Fin m) (Fin m) ℂ) (hfr : IsUnit fr.det) :
     ∃ c' : ℝ, 0 < c' ∧ ∀ f : (Fin m → Fin n → ℂ) → ℂ,
       ∫ u : Fin m → Fin n → ℂ, f (fr⁻¹ * Matrix.of u) = (c' : ℂ) * ∫ y, f y := by
-  haveI : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have h1 : fr * fr⁻¹ = 1 := Matrix.mul_nonsing_inv fr hfr
   have h2 : fr⁻¹ * fr = 1 := Matrix.nonsing_inv_mul fr hfr
   let T : (Fin m → Fin n → ℂ) ≃ₗ[ℝ] (Fin m → Fin n → ℂ) :=
@@ -273,8 +273,8 @@ theorem continuous_evX {m n : ℕ} (P : PX m n) : Continuous (evX P) := by
   · exact (continuous_apply k.2.1).comp (continuous_apply k.1)
 
 theorem int_gauss_ne (hSF : SchFP) {m n : ℕ} {c : ℝ} (hc : 0 < c) : ∫ y : Fin m → Fin n → ℂ, fP c (1 : PX m n) y ≠ 0 := by
-  haveI : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   obtain ⟨S, hS⟩ := hSF m n c hc 1
   have hint : Integrable (fP c (1 : PX m n)) := hS ▸ S.integrable
   have e : fP c (1 : PX m n) = fun y => ((Real.exp (-(c * ∑ a, ∑ i, ‖y a i‖ ^ 2)) : ℝ) : ℂ) := by
@@ -395,8 +395,8 @@ theorem lIcell_of (hAw : AwayAct) (hDA : DecompAway) (hU : UnipTau) (hAI : AwayI
     rw [← e1, hg, map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, weyl0 hC.hω W hW]
     exact integral_congr_ae (Filter.Eventually.of_forall fun z => (hpt z).symm)
   obtain ⟨𝓕, hμ1⟩ := hC.hμ
-  haveI : μ.IsAddHaarMeasure := hμ1.1
-  haveI : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
+  have : μ.IsAddHaarMeasure := hμ1.1
+  have : BorelSpace (Mx D V.rank n) := ⟨rfl⟩
   obtain ⟨S, hS1, hS2, hS3⟩ := exists_sec θ hC.hθ τ V.rank n
   have hπc : Continuous (piT θ τ : Mx D V.rank n → Fin V.rank → Fin n → ℂ) := by
     have := GlobalTheory.RealWeil.continuous_compAt hC.hθ τ V.rank n
@@ -485,13 +485,13 @@ theorem lIcell_of (hAw : AwayAct) (hDA : DecompAway) (hU : UnipTau) (hAI : AwayI
     · right
       refine ⟨?_, ?_, ?_⟩
       · rw [abs_of_neg h]; ring
-      · simp [if_neg (not_lt.2 h.le)]
-      · simp [if_neg (not_lt.2 h.le)]
+      · simp [ite_eq_right (not_lt.2 h.le)]
+      · simp [ite_eq_right (not_lt.2 h.le)]
     · left
       refine ⟨?_, ?_, ?_⟩
       · rw [abs_of_pos h]
-      · simp [if_pos h]
-      · simp [if_pos h]
+      · simp [ite_eq_left h]
+      · simp [ite_eq_left h]
   have hS1 : sLd L (cLoc l τ) 1 1 = 1 := by
     have h := congrFun (hL 1 Ψ0 hΨ0a 1) 0
     rw [map_one, map_one, hphi 1] at h
@@ -568,8 +568,8 @@ theorem coeff_reP (p : MvPolynomial σ ℂ) (m : σ →₀ ℕ) : AddMonoidAlgeb
   unfold reP
   rw [coeff_sum]
   by_cases h : m ∈ p.support
-  · rw [Finset.sum_eq_single m (fun b _ hb => by rw [coeff_monomial, if_neg hb]) (fun hm => absurd h hm), coeff_monomial, if_pos rfl]
-  · rw [Finset.sum_eq_zero (fun b hb => by rw [coeff_monomial, if_neg (fun (e : b = m) => h (e ▸ hb))])]
+  · rw [Finset.sum_eq_single m (fun b _ hb => by rw [coeff_monomial, ite_eq_right hb]) (fun hm => absurd h hm), coeff_monomial, ite_eq_left rfl]
+  · rw [Finset.sum_eq_zero (fun b hb => by rw [coeff_monomial, ite_eq_right (fun (e : b = m) => h (e ▸ hb))])]
     have h0 : AddMonoidAlgebra.coeff p m = 0 := by simpa [mem_support_iff] using h
     simp [h0]
 
@@ -578,8 +578,8 @@ theorem coeff_imP (p : MvPolynomial σ ℂ) (m : σ →₀ ℕ) : AddMonoidAlgeb
   unfold imaginary
   rw [coeff_sum]
   by_cases h : m ∈ p.support
-  · rw [Finset.sum_eq_single m (fun b _ hb => by rw [coeff_monomial, if_neg hb]) (fun hm => absurd h hm), coeff_monomial, if_pos rfl]
-  · rw [Finset.sum_eq_zero (fun b hb => by rw [coeff_monomial, if_neg (fun (e : b = m) => h (e ▸ hb))])]
+  · rw [Finset.sum_eq_single m (fun b _ hb => by rw [coeff_monomial, ite_eq_right hb]) (fun hm => absurd h hm), coeff_monomial, ite_eq_left rfl]
+  · rw [Finset.sum_eq_zero (fun b hb => by rw [coeff_monomial, ite_eq_right (fun (e : b = m) => h (e ▸ hb))])]
     have h0 : AddMonoidAlgebra.coeff p m = 0 := by simpa [mem_support_iff] using h
     simp [h0]
 
@@ -637,10 +637,10 @@ theorem ofRe_toRe {m n : ℕ} (P : PX m n) : ofRe m n (toRe m n P) = P := by
     obtain ⟨a, i, b⟩ := k
     cases b
     · simp only [AlgHom.comp_apply, AlgHom.id_apply, toRe, ofRe, aeval_X, map_add (f := _), map_mul, aeval_C, algebraMap_eq,
-        Bool.false_eq_true, if_false, if_true]
+        Bool.false_eq_true, ite_false, ite_true]
       linear_combination (X (a, i, false) - X (a, i, true)) * hC + X (a, i, false) * hC2
     · simp only [AlgHom.comp_apply, AlgHom.id_apply, toRe, ofRe, aeval_X, map_sub, map_mul, aeval_C, algebraMap_eq,
-        Bool.false_eq_true, if_false, if_true]
+        Bool.false_eq_true, ite_false, ite_true]
       linear_combination -(X (a, i, false) - X (a, i, true)) * hC + X (a, i, true) * hC2
   exact congrArg (fun f => f P) this
 
@@ -1158,7 +1158,7 @@ theorem orbit_cont : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.host
     ⟨omh (κ.symm g.1, 1) f, Submodule.subset_span ⟨κ.symm g.1, hmemK g.1 g.2, rfl⟩⟩
   have hκs : Continuous (fun g : G D n => κ.symm g) := hcont.2
   have hval : Continuous (fun g : Set.Elem (((K D n : Subgroup (G D n)) : Set (G D n))) => (g.1 : G D n)) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   have ho : Continuous o := by
     refine Continuous.subtype_mk ?_ _
     refine continuous_pi fun w => ?_
@@ -1260,14 +1260,14 @@ theorem lIrho : LIrho := by
   let ρ0 : GR n → PX V.rank n → PX V.rank n := fun k P => if hk : InK (mR k) then (hexist k hk P).choose else P
   have hρ0 : ∀ (k : GR n) (hk : InK (mR k)) P, L k (fP (cLoc l τ) P) = fP (cLoc l τ) (ρ0 k P) := by
     intro k hk P
-    simp only [ρ0, dif_pos hk]
+    simp only [ρ0, dite_eq_left hk]
     exact (hexist k hk P).choose_spec
   have hρlin : ∀ (k : GR n) (a : ℂ) (P Q : PX V.rank n), ρ0 k (a • P + Q) = a • ρ0 k P + ρ0 k Q := by
     intro k a P Q
     by_cases hk : InK (mR k)
     · apply fP_inj (cLoc l τ)
       rw [fP_add_smul, ← hρ0 k hk, ← hρ0 k hk, ← hρ0 k hk, hLlin k hk]
-    · simp only [ρ0, dif_neg hk]
+    · simp only [ρ0, dite_eq_right hk]
   have hρ00 : ∀ k : GR n, ρ0 k 0 = 0 := by
     intro k
     have := hρlin k 1 0 0
@@ -1431,7 +1431,7 @@ theorem finite_bad (g : GR n) :
     rw [hm, Matrix.vecMul_smul, hv0, smul_zero]
   apply ((P.roots.toFinset.finite_toSet).preimage Complex.ofReal_injective.injOn).subset
   intro s hs
-  simp only [Set.mem_setOf_eq] at hs
+  simp only [Set.mem_ofPred_eq] at hs
   simp only [Set.mem_preimage, Finset.mem_coe, Multiset.mem_toFinset, Polynomial.mem_roots hP0,
     Polynomial.IsRoot, hev]
   exact hs

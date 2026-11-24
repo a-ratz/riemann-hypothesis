@@ -185,7 +185,7 @@ theorem jac_cross (hA : SmoothOfRelativeDimension (Fintype.card I) A.hom) (D D' 
   obtain ⟨V, e, hxV, hs⟩ := exists_std hA U x hx
   refine ⟨V, e, hxV, ?_⟩
   simp only [map_mul, rs_jac]
-  letI := (cstK A V).toAlgebra
+  let := (cstK A V).toAlgebra
   have : Algebra.IsStandardSmoothOfRelativeDimension (Fintype.card I) K Γ(A.left, V) := hs
   have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth (Fintype.card I) (R := K) (S := Γ(A.left, V))
   have : Nonempty V := ⟨⟨x, hxV⟩⟩
@@ -431,7 +431,7 @@ theorem exists_defAt_of_weakNeron : ∀ (R K : Type) [CommRing R] [IsDomain R] [
   let ψ := (Scheme.ΓSpecIso (.of R)).inv ≫ N.Y.hom.appTop ≫ N.Y.left.presheaf.germ ⊤ y trivial
   let R' : Type := N.Y.left.presheaf.stalk y
   let K' : Type := FractionRing R'
-  letI : Algebra R R' := ψ.hom.toAlgebra
+  let : Algebra R R' := ψ.hom.toAlgebra
   let s : Sp R' ⟶ N.Y.left := N.Y.left.fromSpecStalk y
   have hs : s ≫ N.Y.hom = spMap (algebraMap R R') := fromSpecStalk_comp N.Y.hom y
   have hi' : Irreducible (algebraMap R R' ϖ) := hi
@@ -495,7 +495,7 @@ theorem exists_det_ne_zero {F S : Type} [Field F] {n : ℕ} (D : Fin n → S →
   choose t ht using hf
   refine ⟨fun j => t (j.cast e.symm), ?_⟩
   have h2 := hli.comp (Fin.cast e.symm) (Fin.cast_injective _)
-  refine ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_cols_iff_isUnit.1 ?_)).ne_zero
+  refine ((Matrix.isUnit_iff_isUnit_det _).1 (Matrix.linearIndependent_col_iff_isUnit.1 ?_)).ne_zero
   have e2 : (Matrix.of fun i j : Fin n => D i (t (j.cast e.symm))).col = f ∘ Fin.cast e.symm :=
     funext fun j => ht _
   rw [e2]
@@ -616,7 +616,7 @@ theorem value_invDer {v : epsR K ⟶ G} {dd : ∀ W : G.left.Opens, Γ(G.left, W
     simpa using h5
   · have := key 1
     rw [show pbT ((fst (epsR K) G ≫ v) * snd (epsR K) G).left (1 : Γ(G.left, U))
-      ((snd (epsR K) G).left ⁻¹ᵁ U) = 0 from dif_neg h, pbT_zero, map_zero] at this
+      ((snd (epsR K) G).left ⁻¹ᵁ U) = 0 from dite_eq_right h, pbT_zero, map_zero] at this
     simpa using congrArg TrivSqZeroExt.fst this
 
 theorem exists_mem_basicOpen [Smooth G.hom] {n : ℕ} {v : Fin n → (epsR K ⟶ G)} (hv : IsLieBasis v)
@@ -625,7 +625,7 @@ theorem exists_mem_basicOpen [Smooth G.hom] {n : ℕ} {v : Fin n → (epsR K ⟶
   obtain ⟨_, ⟨U, hU, rfl⟩, hx, -⟩ := G.left.isBasis_affineOpens.exists_subset_of_mem_open
     (Set.mem_univ x) isOpen_univ
   have hU : IsAffineOpen U := hU
-  letI : Algebra K Γ(G.left, U) := (Spec.preimage (hU.fromSpec ≫ G.hom)).hom.toAlgebra
+  let : Algebra K Γ(G.left, U) := (Spec.preimage (hU.fromSpec ≫ G.hom)).hom.toAlgebra
   let j : sp (R₀ := K) Γ(G.left, U) ⟶ G := Over.homMk hU.fromSpec (Spec.map_preimage _).symm
   have : IsOpenImmersion j.left := inferInstanceAs (IsOpenImmersion hU.fromSpec)
   obtain ⟨p, rfl⟩ : x ∈ Set.range hU.fromSpec := by rw [hU.range_fromSpec]; exact hx
@@ -719,16 +719,16 @@ theorem _root_.GlobalTheory.SS.Ord.isOpenImmersion_of_extends_id_of_etale :
       (U : M.Y.left.Opens) (g : U.toScheme ⟶ N.Y.left),
       _root_.GlobalTheory.SS.Extends M N (𝟙 A) U g → Etale g → IsOpenImmersion g := by
   intro R K _ _ _ _ _ _ A M N U g hE _
-  haveI := M.smooth
-  haveI := M.sep
-  haveI := _root_.GlobalTheory.schemeTheoreticallyDominant_fractionField R K
-  haveI : IsSeparated (g ≫ N.Y.hom) := by rw [hE.1]; infer_instance
-  haveI : IsSeparated g := IsSeparated.of_comp g N.Y.hom
-  haveI := FormallyUnramified.isOpenImmersion_diagonal g
+  have := M.smooth
+  have := M.sep
+  have := _root_.GlobalTheory.schemeTheoreticallyDominant_fractionField R K
+  have : IsSeparated (g ≫ N.Y.hom) := by rw [hE.1]; infer_instance
+  have : IsSeparated g := IsSeparated.of_comp g N.Y.hom
+  have := FormallyUnramified.isOpenImmersion_diagonal g
   let ψ := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap R K)
   let q := pullback.fst g g ≫ U.ι ≫ M.Y.hom
   let φ := pullback.fst q ψ
-  haveI : IsSchemeTheoreticallyDominant φ :=
+  have : IsSchemeTheoreticallyDominant φ :=
     IsSchemeTheoreticallyDominant.of_isPullback (IsPullback.of_hasPullback q ψ).flip
   have hU := ((isPullback_morphismRestrict M.j U).paste_vert
     (model_isPullback_genericFibre_spMap M))
@@ -769,10 +769,10 @@ theorem _root_.GlobalTheory.SS.Ord.isOpenImmersion_of_extends_id_of_etale :
     refine Set.eq_univ_of_univ_subset ?_
     rw [← (IsDominant.denseRange (f := φ)).closure_eq]
     exact closure_minimal hrange hclosed
-  haveI : IsIso (pullback.diagonal g) :=
+  have : IsIso (pullback.diagonal g) :=
     isIso_of_isOpenImmersion_of_opensRange_eq_top _
       (TopologicalSpace.Opens.ext (by simpa using huniv))
-  haveI : Mono g := (pullback.isIso_diagonal_iff g).mp inferInstance
+  have : Mono g := (pullback.isIso_diagonal_iff g).mp inferInstance
   exact IsOpenImmersion.of_flat_of_mono g
 
 end GlobalTheory.SS.Ord
@@ -1218,7 +1218,7 @@ theorem exists_dual {Y : Over (Sp K)} (p : P ⟶ X.left) (q : P ⟶ Y.left)
     · exact (congrArg TrivSqZeroExt.fst (h2 u)).trans (germ_appLE q z W _ inf_le_right hz u).symm
   have hf' : ∀ b, (φ.hom b).fst = (P.presheaf.germ _ z hz).hom b := fun b =>
     congrArg (fun φ => φ.hom b) hf
-  letI := P.presheaf.algebra_section_stalk (⟨z, hz⟩ : (p ⁻¹ᵁ U ⊓ q ⁻¹ᵁ W : P.Opens))
+  let := P.presheaf.algebra_section_stalk (⟨z, hz⟩ : (p ⁻¹ᵁ U ⊓ q ⁻¹ᵁ W : P.Opens))
   have loc := hO.isLocalization_stalk ⟨z, hz⟩
   have hu : ∀ s : (hO.primeIdealOf ⟨z, hz⟩).asIdeal.primeCompl, IsUnit (φ.hom s) := fun s => by
     rw [TrivSqZeroExt.isUnit_iff_isUnit_fst, hf']

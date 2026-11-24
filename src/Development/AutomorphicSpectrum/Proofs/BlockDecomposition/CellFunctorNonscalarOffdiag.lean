@@ -104,7 +104,7 @@ theorem scalar_comm (s : β → kˣ) (x : Levi k m') (hx : ∀ j, x j = GeneralL
   funext j
   rw [Pi.mul_apply, Pi.mul_apply, hx]
   ext1
-  simp only [Units.val_mul, Matrix.GeneralLinearGroup.scalar, Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.val_mul, Matrix.GeneralLinearGroup.scalar, Units.coe_map, MonoidHom.coe_ofClass]
   exact (Matrix.scalar_commute _ (fun r => Commute.all _ r) _).symm.eq
 
 
@@ -337,8 +337,8 @@ theorem det_of_isEmpty {n : Type} [Fintype n] [DecidableEq n] [IsEmpty n] (g : G
 theorem relDeltaHalf_eq_one (c : Bool → Bool → Type) [∀ i j, Fintype (c i j)]
     [∀ i j, DecidableEq (c i j)] (h₀ : IsEmpty (c false false)) (h₁ : IsEmpty (c true true))
     (q : ∀ i, Levi k (c i)) : relDeltaHalf k c q = 1 := by
-  haveI := h₀
-  haveI := h₁
+  have := h₀
+  have := h₁
   have hA : ∀ x : kˣ, GlobalTheory.SmGL.absPow k 0 x = 1 := by
     intro x
     apply Units.ext
@@ -418,8 +418,8 @@ theorem cellChar_antidiag (B : SizeMatrix (Two (Fin a) (Fin b)) (Two (Fin a) (Fi
     (x : Levi k (Two (Fin a) (Fin b))) (hx : x ∈ relParab k g) :
     cellChar (c := fun i j => Fin (B.1 i j)) f g (twoChar χ₁ χ₂ (Fin a) (Fin b)) ⟨x, hx⟩ =
       χ₁ (GeneralLinearGroup.det (x true)) * χ₂ (GeneralLinearGroup.det (x false)) := by
-  haveI e00 : IsEmpty (Fin (B.1 false false)) := by rw [h₀]; infer_instance
-  haveI e11 : IsEmpty (Fin (B.1 true true)) := by rw [h₁]; infer_instance
+  have e00 : IsEmpty (Fin (B.1 false false)) := by rw [h₀]; infer_instance
+  have e11 : IsEmpty (Fin (B.1 true true)) := by rw [h₁]; infer_instance
   have hb1 : GeneralLinearGroup.det (swapBlocks k (fun i j => Fin (B.1 i j)) (relProj k g ⟨x, hx⟩) false true) =
       GeneralLinearGroup.det (x true) := by
     have hxt : x true ∈ GlobalTheory.SmGL.parab k (g true) := ((Subgroup.mem_pi Set.univ).1 hx) true (Set.mem_univ _)
@@ -439,7 +439,7 @@ theorem cellChar_antidiag (B : SizeMatrix (Two (Fin a) (Fin b)) (Two (Fin a) (Fi
     det_of_isEmpty (n := Fin (B.1 false false)), det_of_isEmpty (n := Fin (B.1 true true)), mul_one, one_mul, hb1, hb0]
 
 theorem exists_det_eq (ha : 0 < a) (t : kˣ) : ∃ y : GL (Fin a) k, GeneralLinearGroup.det y = t := by
-  haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+  have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
   exact Matrix.GeneralLinearGroup.det_surjective t
 
 theorem sizes (B : SizeMatrix (Two (Fin a) (Fin b)) (Two (Fin a) (Fin b))) :

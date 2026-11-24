@@ -62,12 +62,12 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 namespace GlobalTheory.LevelMeasure
 
 theorem isMinf_unique {p q : ℕ} {m m' : Measure (UpqT p q)} (h : Lev.IsMinf m) (h' : Lev.IsMinf m') : m' = m := by
-  haveI := (GlobalTheory.UpqTopology.upq_lcsc p q).1
-  haveI := (GlobalTheory.UpqTopology.upq_lcsc p q).2.2.1
-  haveI := (GlobalTheory.UpqTopology.upq_lcsc p q).2.2.2.1
-  haveI := (GlobalTheory.UpqTopology.upq_lcsc p q).2.2.2.2.1
-  haveI := h.1
-  haveI := h'.1
+  have := (GlobalTheory.UpqTopology.upq_lcsc p q).1
+  have := (GlobalTheory.UpqTopology.upq_lcsc p q).2.2.1
+  have := (GlobalTheory.UpqTopology.upq_lcsc p q).2.2.2.1
+  have := (GlobalTheory.UpqTopology.upq_lcsc p q).2.2.2.2.1
+  have := h.1
+  have := h'.1
   have e : m' = ((Measure.haarScalarFactor m' m : NNReal) : ENNReal) • m := Measure.isMulLeftInvariant_eq_smul m' m
   have h1 := GlobalTheory.OmegaDensityScale.omegaDensity_smul h.2 (Measure.haarScalarFactor m' m)
   rw [← e] at h1
@@ -95,12 +95,12 @@ theorem exists_isMeasLevW (D : D7) (V : HSp D) (hV : V.SigOK) (K : Subgroup (GL 
     (fun ρ => (V.sig (tauE D ρ)).1) (fun ρ => (V.sig (tauE D ρ)).2) A hcm hτ hθ1 (fun i => hV (tauE D i)) hA1
   obtain ⟨e0, he0⟩ := GlobalTheory.Mem.VolSplit.exists_adelic_split D.host.F D.host.E D.sp.cm.sig V.rank V.gram
   obtain ⟨-, hsc, ht2⟩ := GlobalTheory.AdelicUnitaryTop.lcsc_adelicUnitary D.host.F D.host.E D.sp.cm.sig V.rank V.gram
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
-  haveI := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.1
+  have := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.1
   have hinj := fun P Q => (GlobalTheory.UpqTopology.upq_lcsc P Q).2.2.2.2.2.injective
   let j : HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) D.sp.cm.sig V.gram →* GA D V :=
     (e0.symm.toMulEquiv.toMonoidHom).comp (MonoidHom.inr _ _)
@@ -155,13 +155,13 @@ theorem exists_isMeasLevW (D : D7) (V : HSp D) (hV : V.SigOK) (K : Subgroup (GL 
     (fun i => measurable_const_mul _ (measurable_mul_const _ (hB i)))
   have hcj : ∀ i, m' i ((fun g => u i * g) ⁻¹' ((fun g => g * (u i)⁻¹) ⁻¹' B i)) = m' i (B i) := by
     intro i
-    haveI := GlobalTheory.UpqHaarRight.isMulRightInvariant _ _ _ (hm i)
+    have := GlobalTheory.UpqHaarRight.isMulRightInvariant _ _ _ (hm i)
     rw [measure_preimage_mul, measure_preimage_mul_right]
   rw [Finset.prod_congr rfl (fun i _ => hcj i)] at key
   rw [← key]
   congr 1
   ext h
-  simp only [Set.mem_setOf_eq, hee, Set.mem_preimage]
+  simp only [Set.mem_ofPred_eq, hee, Set.mem_preimage]
   rw [hK]
   refine and_congr_right fun _ => forall_congr' fun i => ?_
   have h1 : UpqT.mat (e1 (e0 h).1 i) * A i = A i * infMat D.sp.cm.sig V.gram (θ' i) h := by

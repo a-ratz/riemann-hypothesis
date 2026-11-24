@@ -90,8 +90,8 @@ theorem exact_lTensor_iff_residueField (p : Ideal R) [p.IsPrime] (L : Type*) [Fi
     simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff, isUnit_iff_ne_zero]
     intro h0
     exact hx (hL ▸ h0))
-  letI : Algebra p.ResidueField L := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower R p.ResidueField L :=
+  let : Algebra p.ResidueField L := φ.toRingHom.toAlgebra
+  have : IsScalarTower R p.ResidueField L :=
     IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
   exact exact_lTensor_iff_of_faithfullyFlat p.ResidueField L f g
 

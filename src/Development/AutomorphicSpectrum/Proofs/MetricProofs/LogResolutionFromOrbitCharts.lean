@@ -143,7 +143,7 @@ theorem continuousOn_aff (p : (k : K) → ι k) :
     ContinuousOn (fun x : PtsOf P => affCoord p (rep x)) (src (P := pC P) p) := by
   refine continuousOn_pi.2 fun q => ?_
   have hEval (r : Σ k, ι k × ι k) : Continuous (fun x : PtsOf P => x.1 r) :=
-    (continuous_apply r).comp continuous_subtype_val
+    (continuous_apply r).comp continuous_subtypeVal
   have hDen (x : PtsOf P) (k : K) : ((∑ i, ‖rep x ⟨k, i⟩‖ ^ 2 : ℝ) : ℂ) ≠ 0 :=
     Complex.ofReal_ne_zero.2 (Top.normSq_pos ((rep_mem x).1 k)).ne'
   have hDiag (x : PtsOf P) (hx : x ∈ src (P := pC P) p) :
@@ -180,7 +180,7 @@ theorem isOpen_srcOf (hP : IsMultiHomogIdeal P) (C : OrbitChart P e) : IsOpen (s
       simp only [proj, ne_eq, div_eq_zero_iff, hDen, or_false, mul_eq_zero, map_eq_zero, or_self]
     rw [hSrc]
     exact isOpen_iInter_of_finite fun k =>
-      isOpen_ne_fun ((continuous_apply _).comp continuous_subtype_val) continuous_const
+      isOpen_ne_fun ((continuous_apply _).comp continuous_subtypeVal) continuous_const
   have hS := hOpen.mem_nhds hp
   have hc : ContinuousAt (fun y : PtsOf P => affCoord p (rep y)) x := (continuousOn_aff p).continuousAt hS
   have hax : affCoord p (rep x) ∈ C.O :=
@@ -207,7 +207,7 @@ theorem continuousOn_rho (hP : IsMultiHomogIdeal P) (C : OrbitChart P e) :
       simp only [proj, ne_eq, div_eq_zero_iff, hDen, or_false, mul_eq_zero, map_eq_zero, or_self]
     rw [hSrc]
     exact isOpen_iInter_of_finite fun k =>
-      isOpen_ne_fun ((continuous_apply _).comp continuous_subtype_val) continuous_const
+      isOpen_ne_fun ((continuous_apply _).comp continuous_subtypeVal) continuous_const
   have hS := hOpen.mem_nhds hp
   have hO : srcOf C ∈ 𝓝 x := (isOpen_srcOf hP C).mem_nhds hx
   have hc : ContinuousAt (fun y : PtsOf P => affCoord p (rep y)) x := (continuousOn_aff p).continuousAt hS
@@ -285,7 +285,7 @@ theorem exists_analyticAt_leftInverse {E F : Type*} [NormedAddCommGroup E] [Norm
     [NormedAddCommGroup F] [NormedSpace ℂ F] [FiniteDimensional ℂ F] {f : E → F} {u : E} (hf : AnalyticAt ℂ f u)
     (hk : (fderiv ℂ f u : E →ₗ[ℂ] F).ker = ⊥) :
     ∃ Λ : F → E, AnalyticAt ℂ Λ (f u) ∧ ∀ᶠ v in 𝓝 u, Λ (f v) = v := by
-  haveI : CompleteSpace E := FiniteDimensional.complete ℂ E
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
   obtain ⟨g, hg⟩ := LinearMap.exists_leftInverse_of_injective _ hk
   let L : F →L[ℂ] E := LinearMap.toContinuousLinearMap g
   have hLf : ∀ x, L (fderiv ℂ f u x) = x := fun x => by
@@ -541,7 +541,7 @@ theorem exists_anLogRes_of_orbitCharts : ∀ (K : Type) [Fintype K] (ι : K → 
   intro K _ ι _ P e _ hP hnd hcov
   have h' : ∀ x : PtsOf P, ∃ C : OrbitChart P e, x ∈ srcOf C := fun x => hcov _ (rep_mem_mcPts x)
   choose Cx hCx using h'
-  haveI : CompactSpace (PtsOf P) := Top.compactSpace_pts (isMultiHomogIdeal_pC hP)
+  have : CompactSpace (PtsOf P) := Top.compactSpace_pts (isMultiHomogIdeal_pC hP)
   obtain ⟨t, ht⟩ := isCompact_univ.elim_nhds_subcover (fun x => srcOf (Cx x))
     (fun x _ => (isOpen_srcOf hP _).mem_nhds (hCx x))
   have hc : ∀ x, ∃ y ∈ t, x ∈ srcOf (Cx y) := fun x => by

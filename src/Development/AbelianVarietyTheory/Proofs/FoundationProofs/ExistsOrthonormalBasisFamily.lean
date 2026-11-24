@@ -233,7 +233,7 @@ theorem theta_signed_translation : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (�
       rfl
     have e3 : Complex.exp (-(Real.pi : ℂ) * Complex.I * ((n : ℝ) : ℂ)) = (-1) ^ n := by
       rw [show -(Real.pi : ℂ) * Complex.I * ((n : ℝ) : ℂ) = (n : ℂ) * (-(Real.pi * Complex.I)) by push_cast; ring,
-        Complex.exp_int_mul, Complex.exp_neg, Complex.exp_pi_mul_I]
+        Complex.exp_intCast_mul, Complex.exp_neg, Complex.exp_pi_mul_I]
       norm_num
     have e4 : (-1 : ℂ) ^ m * (-1) ^ n * (if ω / 2 ∈ Λ then 1 else -1) = 1 := by
       rw [← zpow_add₀ (by norm_num)]

@@ -212,7 +212,7 @@ theorem latAtV_selfDual : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       (by rw [map_one]; exact one_mem _) z hzm γ hγ
     simpa using h
   · intro hψ
-    haveI := hB.unram
+    have := hB.unram
     obtain ⟨m, s, c, hsc⟩ := exists_traceFamily (F := F) (E := E)
     obtain ⟨k, S, T, hS, hTm, -, hTS⟩ := exists_formFrame' σ X.J (det_ne_zero_of_herm σ B hX) X.L hX.lat
       (fun y hy => (hX.dual y).2 fun x hx => by

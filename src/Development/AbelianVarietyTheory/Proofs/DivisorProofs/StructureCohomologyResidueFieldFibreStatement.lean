@@ -93,7 +93,7 @@ theorem exists_quasiInv {M N : Type} [AddCommGroup M] [Module R M] [AddCommGroup
     simp only [r, LinearMap.codRestrict_apply, LinearMap.sub_apply, LinearMap.id_apply,
       LinearMap.comp_apply]
     rw [Submodule.mkQ_apply, (Submodule.Quotient.mk_eq_zero _).2 y.2, map_zero, sub_zero]
-  haveI : Module.Projective R (LinearMap.range d) :=
+  have : Module.Projective R (LinearMap.range d) :=
     Module.Projective.of_split (LinearMap.range d).subtype r (LinearMap.ext hr)
   obtain ⟨s, hs⟩ := Module.projective_lifting_property d.rangeRestrict LinearMap.id
     (LinearMap.surjective_rangeRestrict d)
@@ -178,9 +178,9 @@ theorem cohom_split_baseChange : ∀ (R : Type) [CommRing R] (K : CochainComplex
   intro R _ K hK hQ i h1 h2 R' _ _
   obtain ⟨j, rfl⟩ : ∃ j, i = j + 1 := ⟨i - 1, by omega⟩
   try simp only [Nat.add_sub_cancel, Nat.add_one_sub_one]
-  haveI : Module.Projective R (K.X (j + 1)) := (hK _).2
-  haveI : Module.Projective R (K.X (j + 1 + 1)) := (hK _).2
-  haveI : Module.Finite R (K.X (j + 1)) := (hK _).1
+  have : Module.Projective R (K.X (j + 1)) := (hK _).2
+  have : Module.Projective R (K.X (j + 1 + 1)) := (hK _).2
+  have : Module.Finite R (K.X (j + 1)) := (hK _).1
   have hdd : ∀ x, (K.d (j + 1) (j + 1 + 1)).hom ((K.d j (j + 1)).hom x) = 0 := fun x => by
     rw [← LinearMap.comp_apply, ← ModuleCat.hom_comp, K.d_comp_d]; rfl
   obtain ⟨e, a, b, hee, hed, hde, hid⟩ := SplitCx.exists_decomp (K.d j (j + 1)).hom
@@ -201,7 +201,7 @@ theorem cohom_split_baseChange : ∀ (R : Type) [CommRing R] (K : CochainComplex
     rw [← LinearMap.comp_apply, hde]; rfl
   have hid' : LinearMap.id = σ ∘ₗ π + (K.d j (j + 1)).hom ∘ₗ a + b ∘ₗ (K.d (j + 1) (j + 1 + 1)).hom := by
     rw [hid]; rfl
-  haveI : Module.Projective R (LinearMap.range e) := Module.Projective.of_split σ π hπσ
+  have : Module.Projective R (LinearMap.range e) := Module.Projective.of_split σ π hπσ
   obtain ⟨sR, kR⟩ := SplitCx.bc _ _ π σ a b hπσ hπd hdσ hid' R
   obtain ⟨sR', kR'⟩ := SplitCx.bc _ _ π σ a b hπσ hπd hdσ hid' R'
   refine ⟨LinearMap.range e, inferInstance, inferInstance, inferInstance, inferInstance,
@@ -424,9 +424,9 @@ theorem exists_finite_projective_model : ∀ (R : Type) [CommRing R] [IsNoetheri
       (∀ p, Module.Finite R (K.X p) ∧ Module.Projective R (K.X p)) ∧ (∃ n, ∀ p, n < p → IsZero (K.X p)) ∧
       Nonempty (Model s K) := by
   intro R _ _ X s hP hF
-  haveI := hP
-  haveI := hF
-  letI := algebraΓOfHom s
+  have := hP
+  have := hF
+  let := algebraΓOfHom s
   have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace s
   have := isAffineHom_diagonal_of_isSeparated s
   obtain ⟨m, D, hD, hc⟩ := GlobalTheory.exists_fin_affine_cover (X := X) (V := ⊤) isCompact_univ

@@ -140,8 +140,8 @@ theorem UpperTheory.V.AlgebraTools.clifford :
     have hmono : StrictMono (Subrepresentation.toSubmodule :
         Subrepresentation (ρ.comp N.subtype) → Submodule K V) :=
       fun x y h => h
-    haveI := hmono.wellFoundedLT
-    haveI : IsAtomic (Subrepresentation (ρ.comp N.subtype)) :=
+    have := hmono.wellFoundedLT
+    have : IsAtomic (Subrepresentation (ρ.comp N.subtype)) :=
       isAtomic_of_orderBot_wellFounded_lt wellFounded_lt
     have hne : (⊤ : Subrepresentation (ρ.comp N.subtype)) ≠ ⊥ := by
       intro h
@@ -268,7 +268,7 @@ private theorem exists_proj {K H V : Type} [Field K] [Group H] [AddCommGroup V] 
     (τ : Representation K H V) (hs : τ.IsSemisimpleRepresentation) (hn : ¬ τ.IsIrreducible) :
     ∃ p : V →ₗ[K] V, (∀ g v, τ g (p v) = p (τ g v)) ∧ LinearMap.ker p ≠ ⊥ ∧ LinearMap.ker p ≠ ⊤ := by
   classical
-  haveI : ComplementedLattice (Subrepresentation τ) := hs
+  have : ComplementedLattice (Subrepresentation τ) := hs
   have hnt : (⊥ : Subrepresentation τ) ≠ ⊤ := by
     intro h
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
@@ -290,7 +290,7 @@ private theorem exists_proj {K H V : Type} [Field K] [Group H] [AddCommGroup V] 
   let q := Submodule.linearProjOfIsCompl W'.toSubmodule W.toSubmodule hc
   have hker : LinearMap.ker (W'.toSubmodule.subtype ∘ₗ q) = W.toSubmodule := by
     rw [LinearMap.ker_comp, Submodule.ker_subtype, Submodule.comap_bot]
-    exact Submodule.linearProjOfIsCompl_ker hc
+    exact Submodule.ker_projectionOnto hc
   refine ⟨W'.toSubmodule.subtype ∘ₗ q, ?_, ?_, ?_⟩
   · intro g v
     have hv : v ∈ W'.toSubmodule ⊔ W.toSubmodule := by
@@ -299,10 +299,10 @@ private theorem exists_proj {K H V : Type} [Field K] [Group H] [AddCommGroup V] 
     obtain ⟨b, hb, a, ha, rfl⟩ := Submodule.mem_sup.1 hv
     have ha' : τ g a ∈ W.toSubmodule := W.apply_mem_toSubmodule g ha
     have hb' : τ g b ∈ W'.toSubmodule := W'.apply_mem_toSubmodule g hb
-    have e1 : q b = ⟨b, hb⟩ := Submodule.linearProjOfIsCompl_apply_left hc ⟨b, hb⟩
-    have e2 : q a = 0 := Submodule.linearProjOfIsCompl_apply_right hc ⟨a, ha⟩
-    have e3 : q (τ g b) = ⟨τ g b, hb'⟩ := Submodule.linearProjOfIsCompl_apply_left hc ⟨_, hb'⟩
-    have e4 : q (τ g a) = 0 := Submodule.linearProjOfIsCompl_apply_right hc ⟨_, ha'⟩
+    have e1 : q b = ⟨b, hb⟩ := Submodule.projectionOnto_apply_left hc ⟨b, hb⟩
+    have e2 : q a = 0 := Submodule.projectionOnto_apply_right hc ⟨a, ha⟩
+    have e3 : q (τ g b) = ⟨τ g b, hb'⟩ := Submodule.projectionOnto_apply_left hc ⟨_, hb'⟩
+    have e4 : q (τ g a) = 0 := Submodule.projectionOnto_apply_right hc ⟨_, ha'⟩
     simp only [LinearMap.comp_apply, map_add (f := _), e1, e2, e3, e4]
     simp
   · rw [hker]
@@ -327,10 +327,10 @@ theorem UpperTheory.V.AlgebraTools.twistOfRed :
     intro w
     rw [map_one]
     rfl
-  haveI : Nontrivial V := by
+  have : Nontrivial V := by
     by_contra hV
     rw [not_nontrivial_iff_subsingleton] at hV
-    haveI := hirr
+    have := hirr
     apply (bot_ne_top : (⊥ : Subrepresentation ρ) ≠ ⊤)
     apply Subrepresentation.toSubmodule_injective
     show (⊥ : Submodule K V) = ⊤
@@ -453,7 +453,7 @@ private theorem isIrr_iff {Γ k : Type} [Group Γ] [Field k] {n : ℕ} (r : Γ �
     IsIrr r ↔ (linRep r).IsIrreducible := by
   constructor
   · rintro ⟨h0, -, h⟩
-    haveI : Nontrivial (Subrepresentation (linRep r)) := ⟨⊤, ⊥, fun h' =>
+    have : Nontrivial (Subrepresentation (linRep r)) := ⟨⊤, ⊥, fun h' =>
       h0 (congrArg Subrepresentation.toSubmodule h')⟩
     refine ⟨fun S => ?_⟩
     rcases h S.toSubmodule le_top (fun g v hv => S.apply_mem_toSubmodule g hv) with h1 | h1
@@ -479,15 +479,15 @@ theorem UpperTheory.galois_representation_irreducible_prime_dimension :
   apply isIrr_comp_of_range
   rw [isIrr_iff]
   by_contra hred
-  haveI : φ.range.FiniteIndex := ⟨hp.ne_zero⟩
+  have : φ.range.FiniteIndex := ⟨hp.ne_zero⟩
   have hcomm : commutator Γ ≤ φ.range := by
-    haveI : Fact (φ.range.index).Prime := ⟨hp⟩
-    haveI : IsCyclic (Γ ⧸ φ.range) := isCyclic_of_prime_card (p := φ.range.index) rfl
+    have : Fact (φ.range.index).Prime := ⟨hp⟩
+    have : IsCyclic (Γ ⧸ φ.range) := isCyclic_of_prime_card (p := φ.range.index) rfl
     rw [commutator, Subgroup.commutator_le]
     intro a _ b _
     rw [← QuotientGroup.eq_one_iff]
     rw [← QuotientGroup.mk'_apply, map_commutatorElement, commutatorElement_eq_one_iff_mul_comm]
-    letI := IsCyclic.commGroup (α := Γ ⧸ φ.range)
+    let := IsCyclic.commGroup (α := Γ ⧸ φ.range)
     exact mul_comm _ _
   obtain ⟨η, hη, hker, e, he⟩ := UpperTheory.V.AlgebraTools.twistOfRed k Γ (Fin n → k) (linRep r) φ.range
     (Nat.cast_ne_zero.mpr hp.ne_zero) hcomm ((isIrr_iff r).mp hr) hred

@@ -85,7 +85,7 @@ theorem par_of_unip {X : Matrix (Fin n) (Fin r) E} {T : Finset (Fin r)} {s : ℕ
   refine ⟨1 + Matrix.of fun i j => c (Fin.castLE hs j) (Fin.castLE hs i), fun i j hlt => ?_, ?_⟩
   · have hji : j < i := not_le.1 fun h => absurd hlt (not_lt.2 (hd h))
     have hle : Fin.castLE hs j ≤ Fin.castLE hs i := by
-      rw [Fin.le_def]; simp only [Fin.coe_castLE]; exact hji.le
+      rw [Fin.le_def]; simp only [Fin.val_castLE]; exact hji.le
     simp [Matrix.one_apply_ne hji.ne', hc _ _ hle]
   · ext k j
     have h1 := congrFun (hce (Fin.castLE hs j)) k
@@ -99,7 +99,7 @@ theorem par_of_unip {X : Matrix (Fin n) (Fin r) E} {T : Finset (Fin r)} {s : ℕ
     have : s ≤ i.val := by
       by_contra hlt
       exact hi ⟨⟨i.val, by omega⟩, rfl⟩
-    rw [hc _ _ (by rw [Fin.le_def]; simp only [Fin.coe_castLE]; omega), mul_zero]
+    rw [hc _ _ (by rw [Fin.le_def]; simp only [Fin.val_castLE]; omega), mul_zero]
 
 end GlobalTheory.RatLevi
 
@@ -119,7 +119,7 @@ theorem GlobalTheory.RatLevi.rat_unip_eq_levi_mul_unip : ∀ (F E : Type) [Field
     refine Finset.card_le_card fun k hk => ?_
     simp only [Finset.mem_filter] at hk ⊢
     refine ⟨hk.1, lt_of_lt_of_le hk.2 ?_⟩
-    rw [Fin.le_def]; simp only [Fin.coe_castLE]; exact hij
+    rw [Fin.le_def]; simp only [Fin.val_castLE]; exact hij
   obtain ⟨hu, hl, -⟩ := GlobalTheory.TieStd.stdPar_eq_flag F E σ h n J hJ r X Y hW S s hs hS d hddef
   have hp : γ⁻¹ ∈ parFlag σ J (X.submatrix id (Fin.castLE hs)) d :=
     ⟨GlobalTheory.RatLevi.par_of_unip hs hdm (inv_mem hγT), by rw [inv_inv]; exact GlobalTheory.RatLevi.par_of_unip hs hdm hγT⟩

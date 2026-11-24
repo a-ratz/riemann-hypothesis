@@ -126,7 +126,7 @@ theorem ChartFirstGroupPrime.proof (h₁ : IncIdealPrime.Statement) (h₂ : IncI
       rwa [aeval_rename] at this
     rw [h₂ F n e I f hI hf, Ideal.mem_bot] at hsI
     exact hs (hsI ▸ p.zero_mem)
-  letI := MvPolynomial.algebraMvPolynomial (σ := Fin n) (R := MvPolynomial (Fin e × Fin n) F)
+  let := MvPolynomial.algebraMvPolynomial (σ := Fin n) (R := MvPolynomial (Fin e × Fin n) F)
     (S := Localization.AtPrime p)
   have hprime := IsLocalization.isPrime_of_isPrime_disjoint
     (p.primeCompl.map (C : MvPolynomial (Fin e × Fin n) F →+*

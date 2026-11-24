@@ -78,11 +78,11 @@ theorem continuous_psi (e : Fin n ⊕ Unit ≃ Fin (n + 1)) : Continuous (psi e)
 set_option backward.isDefEq.respectTransparency false in
 theorem emb_exp (e : Fin n ⊕ Unit ≃ Fin (n + 1)) (Y : Matrix (Fin n) (Fin n) ℂ) :
     emb e (NormedSpace.exp Y) = NormedSpace.exp (blk0 e Y) := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedRing (Matrix Unit Unit ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedRing (Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℚ (Matrix Unit Unit ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedRing (Matrix Unit Unit ℂ) := Matrix.linftyOpNormedRing
+  let : NormedRing (Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℚ (Matrix Unit Unit ℂ) := Matrix.linftyOpNormedAlgebra
   have h := NormedSpace.map_exp (psi e) (by exact continuous_psi e) (Y, 0)
   have h3 : psi e (NormedSpace.exp (Y, 0)) = emb e (NormedSpace.exp Y) := by
     show Matrix.reindex e e (Matrix.fromBlocks (NormedSpace.exp (Y, (0 : Matrix Unit Unit ℂ))).1 0 0

@@ -277,8 +277,8 @@ theorem map_eigLat_le {K : Type} [Field K] [NumberField K] {P P' : Out.PolAV (Sp
 theorem letters_independent : ThetaUnifAV → Out.Laws → IndSt := by
   intro hU hL E _ _ _ H K _ _ ρ σ₁ p q X FA FB M hM N
   classical
-  haveI : Finite (𝓞 E →+* 𝓞 K) := (Nat.card_pos_iff.1 (X.split ▸ Module.finrank_pos)).2
-  haveI := Fintype.ofFinite (𝓞 E →+* 𝓞 K)
+  have : Finite (𝓞 E →+* 𝓞 K) := (Nat.card_pos_iff.1 (X.split ▸ Module.finrank_pos)).2
+  have := Fintype.ofFinite (𝓞 E →+* 𝓞 K)
   have hρ : ρ ≠ 0 := fun h => by
     have := X.ρ_sq
     rw [h] at this
@@ -299,8 +299,8 @@ theorem letters_independent : ThetaUnifAV → Out.Laws → IndSt := by
       refine ⟨fun τ => ?_, b, c, by rw [(FA false).fib.1]; simpa using d⟩
       rw [a]
       by_cases h : τ H.rt = ρ
-      · rw [if_pos h, if_neg (by simpa [hsq] using h)]
-      · rw [if_neg h, if_pos (by simpa [hsq] using h)]
+      · rw [ite_eq_left h, ite_eq_right (by simpa [hsq] using h)]
+      · rw [ite_eq_right h, ite_eq_left (by simpa [hsq] using h)]
     · obtain ⟨a, b, c, d, -⟩ := _root_.GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ (X.A true) (FA true) 1 0 X.split X.typeP X.ρ_sq
       refine ⟨fun τ => ?_, b, c, by rw [(FA true).fib.1]; simpa using d⟩
       rw [a]

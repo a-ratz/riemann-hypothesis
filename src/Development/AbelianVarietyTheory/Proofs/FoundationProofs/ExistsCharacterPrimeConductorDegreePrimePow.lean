@@ -54,11 +54,11 @@ open scoped Matrix
 namespace GlobalTheory.Ord2.PrimeChar
 
 theorem normV_prime (v : Pl) : (normV v).Prime := by
-  haveI := v.isPrime
-  haveI := v.isMaximal
-  haveI : Finite (𝓞 ℚ ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
+  have := v.isPrime
+  have := v.isMaximal
+  have : Finite (𝓞 ℚ ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   have hp : (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := CharP.char_is_prime (𝓞 ℚ ⧸ v.asIdeal) _
-  haveI : Fact (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := ⟨hp⟩
+  have : Fact (ringChar (𝓞 ℚ ⧸ v.asIdeal)).Prime := ⟨hp⟩
   have hs : Function.Surjective (ZMod.castHom (dvd_refl (ringChar (𝓞 ℚ ⧸ v.asIdeal))) (𝓞 ℚ ⧸ v.asIdeal)) := by
     intro y
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
@@ -124,9 +124,9 @@ theorem exists_prime_char : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] 
         ∀ B : ValuationSubring Ω, IsPlaceOver B v → Dec (F := ℚ) B ≤ ψ.ker := by
   intro l _ Ω _ _ _ n w _ hdiv
   have hp := normV_prime w
-  haveI : Fact (normV w).Prime := ⟨hp⟩
-  haveI : NeZero (normV w) := ⟨hp.ne_zero⟩
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : Fact (normV w).Prime := ⟨hp⟩
+  have : NeZero (normV w) := ⟨hp.ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨f, hf⟩ := exists_surj (normV w) (l ^ n) hdiv
 
   have hine : ∀ B : ValuationSubring Ω, IsPlaceOver B w →
@@ -138,9 +138,9 @@ theorem exists_prime_char : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] 
     obtain ⟨w0, hw0⟩ := KStar.TotallyRealRoots.redPow_surjective (l := normV w) 1 (ZMod.unitsMap hd g0)
     obtain ⟨σ, hσ, hσw⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω (normV w) B hBp w0
     refine ⟨σ, hσ, ?_⟩
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-    haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-    haveI : NeZero ((normV w : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hp.ne_zero⟩
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+    have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+    have : NeZero ((normV w : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr hp.ne_zero⟩
     have hX : PadicInt.toZModPow 1 (w0 : ℤ_[normV w]) = (((g0 : ZMod (normV w)).val : ℕ) : ZMod (normV w ^ 1)) := by
       have h2 := congrArg (fun u : (ZMod (normV w ^ 1))ˣ => (u : ZMod (normV w ^ 1))) hw0
       simp only [ZMod.unitsMap_val] at h2
@@ -167,7 +167,7 @@ theorem exists_prime_char : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] 
     rw [map_pow, toAdd_pow, hτ, nsmul_eq_mul, mul_one, ZMod.natCast_zmod_val]
   ·
     have hq := normV_prime v
-    haveI : Fact (normV v).Prime := ⟨hq⟩
+    have : Fact (normV v).Prime := ⟨hq⟩
     have hne : normV v ≠ normV w := fun h => hvw (eq_of_normV_eq h)
     have hcop : (normV w).Coprime (normV v) := (Nat.coprime_primes hp hq).2 (Ne.symm hne)
     have hBq := val_normV_lt_one hB

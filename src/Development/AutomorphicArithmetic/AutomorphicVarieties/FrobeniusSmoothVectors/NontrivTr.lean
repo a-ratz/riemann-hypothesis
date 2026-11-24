@@ -303,7 +303,7 @@ private theorem trZ (e : W ≃ₗ[K] W') (ρ : Representation K G W) (ρ' : Repr
     trE G V e x ∈ Z1C loc ρ' b' ↔ x ∈ Z1C loc ρ b := by
   have h1 : (trE G V e x).1 = e ∘ x.1 := rfl
   have h2 : (trE G V e x).2 = e ∘ x.2 := rfl
-  simp only [Z1C, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
+  simp only [Z1C, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
   rw [h1, h2]
   simp only [Function.comp_apply]
   apply and_congr
@@ -333,7 +333,7 @@ private theorem trB (e : W ≃ₗ[K] W') (ρ : Representation K G W) (ρ' : Repr
     trE G V e x ∈ continuousCoboundaries1 ρ' b' ↔ x ∈ continuousCoboundaries1 ρ b := by
   have h1 : (trE G V e x).1 = e ∘ x.1 := rfl
   have h2 : (trE G V e x).2 = e ∘ x.2 := rfl
-  simp only [continuousCoboundaries1, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
+  simp only [continuousCoboundaries1, Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
   rw [h1, h2]
   simp only [Function.comp_apply]
   constructor
@@ -382,7 +382,7 @@ end
 theorem UpperTheory.V.Fr.n4ch :
     ∀ {k K G V : Type} [Field k] [Field K] (f : k →+* K) [Group G] [TopologicalSpace G] [CompactSpace G] {Gv : V → Type} [∀ v, Group (Gv v)] [Finite V] (loc : ∀ v, Gv v →* G) (χ : G →* kˣ) (b : V → Submodule k k) (b' : V → Submodule K K), (∀ v, (b v = ⊥ ∧ b' v = ⊥) ∨ (b v = ⊤ ∧ b' v = ⊤)) → Z1C loc (chRep ((Units.map f.toMonoidHom).comp χ)) b' = Submodule.span K ((fun y : (G → k) × (V → k) => (f ∘ y.1, f ∘ y.2)) '' (Z1C loc (chRep χ) b : Set ((G → k) × (V → k)))) ∧ Module.rank K (H1C loc (chRep ((Units.map f.toMonoidHom).comp χ)) b') = Module.rank k (H1C loc (chRep χ) b) := by
   intro k K G V _ _ f _ _ _ Gv _ _ loc χ b b' hbb
-  letI : Algebra k K := f.toAlgebra
+  let : Algebra k K := f.toAlgebra
   let ρ' : Representation K G (TensorProduct k K k) :=
     { toFun := fun g => ((chRep χ) g).baseChange K
       map_one' := by
@@ -478,7 +478,7 @@ theorem UpperTheory.V.Fr.ok_ext :
     ext g
     simp only [MonoidHom.mem_ker]
     exact ⟨hU1 _, fun h1 => by rw [hΨ, h1, map_one]⟩
-  haveI : CompactSpace F.G0 :=
+  have : CompactSpace F.G0 :=
     isCompact_iff_compactSpace.1 (Subgroup.isClosed_of_isOpen _ h.del_open).isCompact
   have hχ1 : ∀ g : F.Γ, ((F.ext f).Ψ⁻¹ * (F.ext f).delK k') g =
       Units.map f.toMonoidHom ((F.Ψ⁻¹ * F.delK k) g) := by

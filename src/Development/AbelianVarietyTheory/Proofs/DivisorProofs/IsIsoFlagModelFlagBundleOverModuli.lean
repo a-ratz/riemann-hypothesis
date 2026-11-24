@@ -83,7 +83,7 @@ theorem stalkPt_genStr (C : FlagCpt Z e) (z : C.Y.X) (φ : c.F →+* C.Y.X.presh
   let ρ : c.F →+* C.Y.X.presheaf.stalk z := (Spec.preimage (stalkPt C.Y z ≫ C.π ≫ genStr Z)).hom
   have h0 : spMap ρ = stalkPt C.Y z ≫ C.π ≫ genStr Z := Spec.map_preimage _
   let j := algebraMap (C.Y.X.presheaf.stalk z) C.Y.X.functionField
-  letI := (constF e C.Y).toAlgebra
+  let := (constF e C.Y).toAlgebra
   have hgen : spMap j ≫ stalkPt C.Y z = genericPt C.Y :=
     Scheme.SpecMap_stalkSpecializes_fromSpecStalk ((genericPoint_spec C.Y.X).specializes trivial)
   have h1 : spMap (j.comp ρ) = spMap (constF e C.Y) := by
@@ -150,7 +150,7 @@ theorem exists_rel_of_mem_Vo : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
 
   obtain ⟨yF, hyF, hcar⟩ := GlobalTheory.Mean4O.CompModel.exists_flagPt C p
 
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   have hr : Set.range (p ≫ C.π) ⊆ Set.range Y.jQ := by
     rintro _ ⟨s, rfl⟩
     exact hp s
@@ -162,7 +162,7 @@ theorem exists_rel_of_mem_Vo : ∀ {E : Type} [Field E] [NumberField E] [IsCMFie
 
   obtain ⟨P, hPy, hPw⟩ := GlobalTheory.ShFam.exists_frPt_ptF_over_of_eigFrame E H Dw l Xo c c.F (RingHom.id c.F) Y K yF.fK y
     (yF.y ≫ genι Y) yF.frame hys (by rw [← Category.assoc, hy, hyF])
-  letI : Algebra c.F K := yF.fK.toAlgebra
+  let : Algebra c.F K := yF.fK.toAlgebra
   have hPX : GlobalTheory.FlagMod.frX P = y := hPy
   have hl := X.lies_ptY P
   have hxg : X.ptY P ≫ X.π = yF.y ≫ genι Y := by
@@ -274,7 +274,7 @@ theorem rel_unique : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
     rw [← hπ]; exact ⟨g', fun _ _ => rfl⟩
   have hc0 : C.Carries p g0 := (carries_congr C hπ.symm g0 g' hg0 p).2 hc'
   obtain ⟨t, ht⟩ := hC K _ _ (z ≫ X.π) p g g0 hc hc0
-  letI : Algebra c.F K := φ'.toAlgebra
+  let : Algebra c.F K := φ'.toAlgebra
   have hid : spMap (RingHom.id c.F) = 𝟙 _ := Spec.map_id _
   have hxg : (p ≫ C.π) ≫ genι Y = z ≫ X.π := by rw [Category.assoc]; exact e1
   have hr : Set.range (p ≫ C.π) ⊆ Set.range Y.jQ := by

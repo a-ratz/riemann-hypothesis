@@ -83,7 +83,7 @@ theorem inclE_injective (F E : Type) [Field F] [CommRing E] [Algebra F E]
 
 theorem UG_inclusion_injective : Formalism.UG.InclInj := by
   intro F E _ _ _ n _ _ R _ _ hR
-  haveI := hR
+  have := hR
   intro g g' hgg
   apply Units.ext
   have h1 := congrArg Units.val hgg

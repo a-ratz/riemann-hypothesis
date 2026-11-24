@@ -316,9 +316,9 @@ theorem base (t : ℕ) : Pl 0 t t := by
   · rw [h0] at hsq ⊢
     have : finrank ℂ (⊥ : Subalgebra ℂ (Module.End ℂ V)) = 0 := by omega
     rw [this]; simp
-  · haveI : Nontrivial V := Module.finrank_pos_iff.1 hpos
+  · have : Nontrivial V := Module.finrank_pos_iff.1 hpos
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
-    haveI : Nontrivial (Module.End ℂ V) :=
+    have : Nontrivial (Module.End ℂ V) :=
       ⟨⟨1, 0, fun h => hv (by simpa using LinearMap.congr_fun h v)⟩⟩
     have h1 : finrank ℂ (⊥ : Subalgebra ℂ (Module.End ℂ V)) ≤ 1 := by
       first
@@ -577,7 +577,7 @@ theorem step (l t c : ℕ) (hP : Pl l (t * t) c) : Pl (l + 1) t c := by
     rw [hn] at h
     have : finrank ℂ (Algebra.adjoin ℂ (Set.range a)) = 0 := by omega
     rw [this]; simp
-  haveI : Nontrivial V := Module.finrank_pos_iff.1 (show 0 < finrank ℂ V by omega)
+  have : Nontrivial V := Module.finrank_pos_iff.1 (show 0 < finrank ℂ V by omega)
   choose μ hμ using fun i => Module.End.exists_eigenvalue (a i)
   let b : Fin (l + 1) → Module.End ℂ V := fun i => a i - algebraMap ℂ (Module.End ℂ V) (μ i)
   have hb : ∀ i, b i = a i - algebraMap ℂ (Module.End ℂ V) (μ i) := fun i => rfl

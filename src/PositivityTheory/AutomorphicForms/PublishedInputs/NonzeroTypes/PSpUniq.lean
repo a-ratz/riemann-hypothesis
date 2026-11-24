@@ -122,7 +122,7 @@ theorem exists_U (ρ : Representation ℂ (LG G) W) (hρ : IsSmooth ρ) (w₁ w�
   have hH : IsOpen (H : Set (LG G)) := ((isOpen_etaKer G).inter (hρ w₁)).inter (hρ w₂)
   have : CompactSpace (KG G) := isCompact_iff_compactSpace.mp (isCompact_KG G)
   refine ⟨H.subgroupOf (KG G), Subgroup.quotient_finite_of_isOpen _ ?_, fun u hu => ?_⟩
-  · exact hH.preimage continuous_subtype_val
+  · exact hH.preimage continuous_subtypeVal
   · have hu' : (u : LG G) ∈ H := Subgroup.mem_subgroupOf.1 hu
     exact ⟨eta_eq_one G hu'.1.1, hu'.1.2, hu'.2⟩
 
@@ -382,7 +382,7 @@ end P_spUniq
 open P_spUniq in
 theorem step_spUniq {n : ℕ} (G : Grp k n) : G.SphericalVectorUniqueness := by
   intro hLat V _ _ I hI hfin hle A B _ _ _ _ α β hα hβ hsa hsb hηa hηb
-  haveI := hfin
+  have := hfin
   obtain ⟨Sa, fa, hfa⟩ := hsa
   obtain ⟨Sb, fb, hfb⟩ := hsb
   refine hLat (GL (Fin n) k) V I (dd G I) (fun X Y h => dd_mono G I h) (dd_modular G I hI) ?_ A B α β hα hβ

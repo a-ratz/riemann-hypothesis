@@ -107,7 +107,7 @@ theorem exists_functional (L : Submodule R V) (φ : L →ₗ[R] K) :
 theorem exists_dual [IsDedekindDomain R] (L : Submodule R V) (hL : L.FG) :
     ∃ (m : ℕ) (b : Fin m → V) (Φ : Fin m → V →ₗ[K] K), (∀ i, b i ∈ L) ∧
       (∀ i, ∀ y ∈ L, ∃ o : R, Φ i y = algebraMap R K o) ∧ ∀ y ∈ L, y = ∑ i, Φ i y • b i := by
-  haveI : Module.Finite R L := Module.Finite.iff_fg.2 hL
+  have : Module.Finite R L := Module.Finite.iff_fg.2 hL
   have htors : Submodule.torsion R L = ⊥ := by
     rw [eq_bot_iff]
     rintro y ⟨⟨a, ha⟩, hy⟩
@@ -118,9 +118,9 @@ theorem exists_dual [IsDedekindDomain R] (L : Submodule R V) (hL : L.FG) :
     rw [← algebraMap_smul K a (y : V)] at h2
     have h3 : (y : V) = 0 := (smul_eq_zero.1 h2).resolve_left ha0
     exact Subtype.ext h3
-  haveI : Module.Flat R L := flat_iff_torsion_eq_bot.2 htors
-  haveI : Module.FinitePresentation R L := Module.finitePresentation_of_finite R L
-  haveI : Module.Projective R L := Module.Flat.projective_of_finitePresentation
+  have : Module.Flat R L := flat_iff_torsion_eq_bot.2 htors
+  have : Module.FinitePresentation R L := Module.finitePresentation_of_finite R L
+  have : Module.Projective R L := Module.Flat.projective_of_finitePresentation
   obtain ⟨m, g, hg⟩ := Module.Finite.exists_fin' R L
   obtain ⟨t, ht⟩ := Module.projective_lifting_property g LinearMap.id hg
   choose Φ hΦ using fun i : Fin m =>
@@ -204,7 +204,7 @@ theorem exists_smul_mem (Λ : Submodule (𝓞 E) (Fin n → E)) (hΛ : Λ.FG) (x
       rw [this, h0]
       exact Submodule.zero_mem _) hx
     have h2 : A.bc p (Pr x) = 0 := h1
-    haveI := PlacesInt.nontrivial_Ep (A.loc p)
+    have := PlacesInt.nontrivial_Ep (A.loc p)
     funext i
     exact (A.loc p).ιE.injective (by simpa [Places.bc] using congrFun h2 i)
   have hxs : x = ∑ i, Φ i x • b i := by
@@ -248,7 +248,7 @@ theorem exists_base_smul_mem (Λ : Submodule (𝓞 E) (Fin n → E)) (x : Fin n 
   let I : Ideal (𝓞 E) := Λ.comap (LinearMap.toSpanSingleton (𝓞 E) _ x)
   have hI : ∀ s, s ∈ I ↔ s • x ∈ Λ := fun s => by simp [I]
   let q : Ideal (𝓞 E) := Ideal.map (algebraMap (𝓞 F) (𝓞 E)) p.asIdeal
-  haveI := p.isMaximal
+  have := p.isMaximal
   have hinj : Function.Injective (algebraMap (𝓞 F) (𝓞 E)) := FaithfulSMul.algebraMap_injective _ _
   have hker : RingHom.ker (algebraMap (𝓞 F) (𝓞 E)) = ⊥ := (RingHom.injective_iff_ker_eq_bot _).1 hinj
   obtain ⟨Q0, hQ0m, hQ0⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 E) p.asIdeal
@@ -348,13 +348,13 @@ theorem mem_lat_iff_mem_locP : ∀ {F E : Type} [Field F] [NumberField F] [Field
   constructor
   · intro hx P hP
     obtain ⟨s, hs, hsx⟩ := exists_smul_mem A p Λ hΛ x hx
-    haveI := P.isPrime
+    have := P.isPrime
     refine ⟨algebraMap (𝓞 F) (𝓞 E) s, fun h => hs ?_, hsx⟩
     rw [← hP]
     exact h
   · intro h
     obtain ⟨a, ha, hax⟩ := exists_base_smul_mem A p Λ x fun P hP => by
-      haveI := P.isPrime
+      have := P.isPrime
       obtain ⟨s, hs, hsx⟩ := h P hP
       exact ⟨s, hs, hsx⟩
     exact bc_mem_of_smul_mem A p Λ x a ha hax
@@ -475,7 +475,7 @@ theorem loc_cong_approx : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [
         refine ⟨0, zero_mem _, ?_⟩
         simp [ξ, hdiag]
       · refine ⟨o a b, ho a b, ?_⟩
-        simp only [ξ, h1, h2, if_false]
+        simp only [ξ, h1, h2, ite_false]
         exact hξ0 a b
   have hFG : (Ideal.span {(g : 𝓞 E)} • Λ).FG := Submodule.FG.smul (Submodule.fg_span_singleton _) hΛ
   have hmem : ∀ b, A.bc p (x b - ∑ a, ((ξ a b : 𝓞 E) : E) • y a) ∈

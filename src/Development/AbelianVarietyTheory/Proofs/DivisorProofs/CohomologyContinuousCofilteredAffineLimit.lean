@@ -72,7 +72,7 @@ theorem pull_isoSpecSp_naturality (R : Type) [CommRing R] (F : Shv R) (n : ℤ) 
 
 theorem contCone_of_affine_limit : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary F → ∀ (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Scheme.{0}) (c : Cone G), IsLimit c → (∀ i, IsAffine (G.obj i)) → ContCone R F (sch.mapCone c) := by
   intro R _ F hF I _ _ G c hc hG
-  haveI : IsAffine c.pt := Scheme.isAffine_of_isLimit c hc
+  have : IsAffine c.pt := Scheme.isAffine_of_isLimit c hc
   let c' : Cocone (G ⋙ Scheme.Γ.rightOp).leftOp := coconeLeftOpOfCone (Scheme.Γ.rightOp.mapCone c)
   have hc' : IsColimit c' := isColimitCoconeLeftOpOfCone _ (isLimitOfPreserves Scheme.Γ.rightOp hc)
   have hb := _root_.GlobalTheory.EtC.RingContH.main R F hF Iᵒᵖ _ c' hc'

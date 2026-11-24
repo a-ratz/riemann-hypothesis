@@ -114,7 +114,7 @@ theorem piU_adj (s : Hinf X u) (a b : X.Vpi u) :
   have hm := (X.piU_rep u).2.1 _ hs _ hs'
   have e : X.piU u (s : X.B.I.Ginf) (X.piU u ((s⁻¹ : Hinf X u) : X.B.I.Ginf) b) = b := by
     have h1 : (s : X.B.I.Ginf) * ((s⁻¹ : Hinf X u) : X.B.I.Ginf) = 1 := by simp
-    rw [← ContinuousLinearMap.mul_apply, ← hm, h1, (X.piU_rep u).1, ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← hm, h1, (X.piU_rep u).1, one_apply_eq_self]
   conv_lhs => rw [← e]
   exact (X.piU_rep u).2.2.1 _ hs _ _
 

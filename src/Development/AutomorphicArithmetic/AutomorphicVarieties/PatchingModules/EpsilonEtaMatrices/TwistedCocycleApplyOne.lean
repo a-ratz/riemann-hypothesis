@@ -143,8 +143,8 @@ private theorem tw_core {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologi
     (K P : Subgroup Γ) [P.Normal] (hK : IsOpen (K : Set Γ)) (hP : P ≤ K) :
     ∃ U : OpenNormalSubgroup Γ, P ≤ U.toSubgroup ∧ U.toSubgroup ≤ K := by
   have hKc : IsClosed (K : Set Γ) := K.isClosed_of_isOpen hK
-  haveI : Finite (Γ ⧸ K) := K.quotient_finite_of_isOpen hK
-  haveI : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (Γ ⧸ K) := K.quotient_finite_of_isOpen hK
+  have : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hNo : IsOpen (K.normalCore : Set Γ) :=
     K.normalCore.isOpen_of_isClosed_of_finiteIndex (K.normalCore_isClosed hKc)
   refine ⟨⟨⟨K.normalCore, hNo⟩, inferInstance⟩, ?_, ?_⟩
@@ -216,7 +216,7 @@ private theorem rho1_pow_eq_one_pro_l (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : G
       rw [Matrix.smul_apply, hlD, Matrix.zero_apply]
     rw [hz, add_zero]
   let V : Set G0.Γ := Subtype.val '' {g : G0.G₀ | k.ρ1 (x.Am m) (g ^ l) = 1}
-  have hVo : IsOpen V := G0.η_open.isOpenMap_subtype_val _
+  have hVo : IsOpen V := G0.η_open.isOpenMap_subtypeVal _
     ((hlc.comp_continuous (continuous_pow l)).isOpen_fiber 1)
   have hsub : (PL l T.H.toSubgroup : Set G0.Γ) ⊆ V := by
     intro γ hγ
@@ -266,7 +266,7 @@ private theorem phEq_one (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T :
     simp [χ, epsD, map_mul]
   have cρ : IsLocallyConstant ρ' := (lc1 l L G0 G0 (Glob.Hom.refl G0) n x k m).1
   have cχ : IsLocallyConstant χ :=
-    ((lc1 l L G0 G0 (Glob.Hom.refl G0) n x k m).2.1).comp_continuous continuous_subtype_val
+    ((lc1 l L G0 G0 (Glob.Hom.refl G0) n x k m).2.1).comp_continuous continuous_subtypeVal
   obtain ⟨U, hU⟩ := tw_U (ρ := ρ') (z := z) (χ := χ) h1 hm c1 cm hz cρ cχ cz
   have hHk : T.H.toSubgroup ≤ G0.η.ker := fun g hg => T.H_η g hg
   have hχH : ∀ h : G0.G₀, (h : G0.Γ) ∈ T.H → χ h = 1 := fun h hh =>
@@ -284,11 +284,11 @@ private theorem phEq_one (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T :
       exact hp1
     · rw [pow_succ, pow_mul, hp2]
       exact Matrix.ext fun a b => by rw [Matrix.smul_apply, hlD, Matrix.zero_apply]
-  haveI hPn : (PL l T.H.toSubgroup).Normal := (pl_props l G0.Γ T.H.toSubgroup T.H.isOpen').1
+  have hPn : (PL l T.H.toSubgroup).Normal := (pl_props l G0.Γ T.H.toSubgroup T.H.isOpen').1
   let K' : Subgroup G0.Γ := U.toSubgroup.map G0.η.ker.subtype
   have hK'o : IsOpen (K' : Set G0.Γ) := by
     rw [Subgroup.coe_map]
-    exact G0.η_open.isOpenMap_subtype_val _ U.isOpen'
+    exact G0.η_open.isOpenMap_subtypeVal _ U.isOpen'
   have hPK : PL l T.H.toSubgroup ≤ K' := by
     intro γ hγ
     have hγH : γ ∈ T.H := (pl_props l G0.Γ T.H.toSubgroup T.H.isOpen').2.2.1 hγ

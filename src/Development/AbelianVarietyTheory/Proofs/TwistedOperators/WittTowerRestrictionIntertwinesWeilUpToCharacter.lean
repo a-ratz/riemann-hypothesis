@@ -198,7 +198,7 @@ theorem exists_coords_all (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsStdChar D ψ
       exact hd (Matrix.ext hcon)
     obtain ⟨_, ⟨g, rfl⟩, hγ⟩ := GlobalTheory.RatAnnih.exists_symplO_eq S T (rat (y - y')) i j ((y - y') i j)⁻¹
     have h5 : symplO S T (rat (y - y')) (rat g) = algebraMap D.host.F (AF D.host.F) 2 := by
-      haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+      have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
       have e1 : incA D ((y - y') i j)⁻¹ * rat (y - y') i j = incA D 1 := by
         show incA D ((y - y') i j)⁻¹ * incA D ((y - y') i j) = _
         rw [← map_mul, inv_mul_cancel₀ hij]
@@ -377,8 +377,8 @@ theorem exists_nsmul_compact {S T : HSp D} (P : AddSubgroup (WO S T)) (hP : IsOp
     ∃ M : ℕ, 0 < M ∧ ∀ x ∈ K, M • x ∈ P := by
   classical
   obtain ⟨i1, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : IsTopologicalAddGroup (WO S T) := i1
-  haveI : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
+  have : IsTopologicalAddGroup (WO S T) := i1
+  have : ContinuousSub (WO S T) := IsTopologicalAddGroup.to_continuousSub
   have ht : ∀ x : WO S T, IsOpen {y : WO S T | y - x ∈ P} := fun x => hP.preimage (continuous_id.sub continuous_const)
   have hone : ∀ k : WO S T, ∃ N : ℕ, 0 < N ∧ N • k ∈ P := fun k => by
     obtain ⟨N, hN, h⟩ := GlobalTheory.SplitScalar.exists_nsmul_mem P hP (GlobalTheory.Mem.CoefInv.fin_part k)
@@ -443,12 +443,12 @@ theorem core (D : D7) (V W S : HSp D) (hS : S.gram = 1) (C C' : Matrix (Fin V.ra
   classical
   obtain ⟨θ, hθ⟩ := hψ.2.1
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W S
-  haveI : IsTopologicalAddGroup (WO S W) := i1
-  haveI : LocallyCompactSpace (WO S W) := i2
-  haveI : SecondCountableTopology (WO S W) := i3
-  haveI : T2Space (WO S W) := i4
-  haveI : BorelSpace (WO S W) := ⟨rfl⟩
-  haveI := hμ
+  have : IsTopologicalAddGroup (WO S W) := i1
+  have : LocallyCompactSpace (WO S W) := i2
+  have : SecondCountableTopology (WO S W) := i3
+  have : T2Space (WO S W) := i4
+  have : BorelSpace (WO S W) := ⟨rfl⟩
+  have := hμ
   have : IsFiniteMeasure (μV.restrict 𝓕V) := isFiniteMeasure_restrict.2 (GlobalTheory.Size.measure_dom hμV h𝓕V).2
   let Dh : WO S W →+ WO V W :=
     { toFun := isoPart V W C', map_zero' := Matrix.zero_mul _, map_add' := fun a b => Matrix.add_mul a b _ }
@@ -565,7 +565,7 @@ theorem core (D : D7) (V W S : HSp D) (hS : S.gram = 1) (C C' : Matrix (Fin V.ra
     · rw [h0, norm_zero]
       exact hBd0 y
     · simp only [Bd]
-      rw [if_pos ⟨k, hk, h0⟩, le_div_iff₀ (hPpos y)]
+      rw [ite_eq_left ⟨k, hk, h0⟩, le_div_iff₀ (hPpos y)]
       have hx := hCb (ratW W S y + k)
       have hprod : ∏ i, (1 + ℓ (ratW W S y) i ^ 2) ≤ A * ∏ i, (1 + ℓ (ratW W S y + k) i ^ 2) := by
         rw [← Finset.prod_mul_distrib]
@@ -588,7 +588,7 @@ theorem core (D : D7) (V W S : HSp D) (hS : S.gram = 1) (C C' : Matrix (Fin V.ra
     · have hc' : ∃ k ∈ K, T (ratW W S y + k) F G ≠ 0 := by
         by_contra hcon
         apply hy
-        simp only [Bd, if_neg hcon, Complex.ofReal_zero]
+        simp only [Bd, ite_eq_right hcon, Complex.ofReal_zero]
       obtain ⟨k, hk, hne⟩ := hc'
       exact hint y (hkey y k hk hne)
     · rw [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (hBd0 y)]
@@ -669,9 +669,9 @@ theorem integral_eq_setIntegral_tsum (D : D7) (m n : ℕ) (μ : Measure (Mx D m 
     (∀ᵐ y ∂(μ.restrict 𝓕), Summable fun a : Matrix (Fin m) (Fin n) D.host.E => ‖c (y + a.map (incA D))‖) ∧
       ∫ y, c y ∂μ = ∫ y in 𝓕, ∑' a : Matrix (Fin m) (Fin n) D.host.E, c (y + a.map (incA D)) ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : DiscreteTopology (ratMx D m n) := i5
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : DiscreteTopology (ratMx D m n) := i5
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
 
   let e : Matrix (Fin m) (Fin n) D.host.E ≃ ratMx D m n :=
     Equiv.ofBijective (fun a => ⟨a.map (incA D), a, rfl⟩)
@@ -693,12 +693,12 @@ theorem integral_eq_setIntegral_tsum (D : D7) (m n : ℕ) (μ : Measure (Mx D m 
 
   have hae : ∀ᵐ y ∂(μ.restrict 𝓕), Summable fun γ : ratMx D m n => ‖c (y + γ)‖ := by
     have h1 : ∫⁻ y in 𝓕, ∑' γ : ratMx D m n, ‖c (y + γ)‖ₑ ∂μ ≠ ⊤ := by
-      rw [lintegral_tsum fun γ => (hm γ).enorm]; exact hfin
+      rw [lintegral_tsum fun γ => (hm γ).eNorm]; exact hfin
     have h2 : AEMeasurable (fun y => ∑' γ : ratMx D m n, ‖c (y + γ)‖ₑ) (μ.restrict 𝓕) :=
-      AEMeasurable.tsum fun γ => (hm γ).enorm
+      AEMeasurable.tsum fun γ => (hm γ).eNorm
     filter_upwards [ae_lt_top' h2 h1] with y hy
     have : ∑' γ : ratMx D m n, (‖c (y + γ)‖₊ : ENNReal) ≠ ⊤ := by
-      simpa only [enorm_eq_nnnorm] using hy.ne
+      simpa only [eNorm_eq_nnNorm] using hy.ne
     exact (NNReal.summable_coe.2 (ENNReal.tsum_coe_ne_top_iff_summable.1 this)).congr fun _ => rfl
   refine ⟨?_, ?_⟩
   · filter_upwards [hae] with y hy
@@ -839,16 +839,16 @@ theorem mean_iso_mul_star : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix 
   have hμ1 : IsCovolOne (GlobalTheory.MixModel.ratMx D W.rank r) μ 𝓨 := hμ
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank r
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank V'.rank
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI : BorelSpace (WO V' W) := ⟨rfl⟩
-  haveI hfin1 : IsFiniteMeasure (μ.restrict 𝓨) :=
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : BorelSpace (WO V' W) := ⟨rfl⟩
+  have hfin1 : IsFiniteMeasure (μ.restrict 𝓨) :=
     ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure (μ'.restrict 𝓕') :=
+  have : IsFiniteMeasure (μ'.restrict 𝓕') :=
     ⟨by rw [Measure.restrict_apply_univ]; exact lt_top_iff_ne_top.2 (GlobalTheory.Size.measure_dom hμ' h𝓕').2⟩
-  haveI hsf1 : SigmaFinite (μ.restrict 𝓨) := @IsFiniteMeasure.toSigmaFinite _ _ _ hfin1
-  haveI : SFinite (μ.restrict 𝓨) := @instSFiniteOfSigmaFinite _ _ _ hsf1
-  haveI : SigmaFinite (μ'.restrict 𝓕') := inferInstance
-  haveI : SFinite (μ'.restrict 𝓕') := inferInstance
+  have hsf1 : SigmaFinite (μ.restrict 𝓨) := @IsFiniteMeasure.toSigmaFinite _ _ _ hfin1
+  have : SFinite (μ.restrict 𝓨) := @instSFiniteOfSigmaFinite _ _ _ hsf1
+  have : SigmaFinite (μ'.restrict 𝓕') := inferInstance
+  have : SFinite (μ'.restrict 𝓕') := inferInstance
   obtain ⟨cF, hcF⟩ := GlobalTheory.WeilVacMove.exists_bound hψ hF
   obtain ⟨cG, hcG⟩ := GlobalTheory.WeilVacMove.exists_bound hψ hG
   have ciso : Continuous (fun y : Mx D W.rank r => isoPart V W C y) := continuous_id.matrix_mul continuous_const
@@ -1201,27 +1201,27 @@ namespace GlobalTheory.TwistThetaMean
 open TopologicalSpace in
 theorem mean_continuous_periodic : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V.rank) (Fin r) D.host.E) (B : Matrix (Fin V.rank) (Fin V'.rank) D.host.E), IsIsoSplit V V' C B → ∀ C' : Matrix (Fin V.rank) (Fin r) D.host.E, adj D C * V.gram * C' = 1 → adj D C' * V.gram * C' = 0 → adj D C' * V.gram * B = 0 → ∀ (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (μ : Measure (Mx D W.rank r)) (𝓨 : Set (Mx D W.rank r)), IsCovolOne (ratMx D W.rank r) μ 𝓨 → ∀ (μ' : Measure (WO V' W)) (𝓕' : Set (WO V' W)), μ'.IsAddHaarMeasure → IsAddFundamentalDomain (ratL W V') 𝓕' μ' → ∀ P G, IsThetaFunO ψ V W P → IsThetaFunO ψ V W G → Continuous (fun t : Mx D W.rank r => ∫ y' in 𝓨, ∫ x in 𝓕', P (isoPart V W C' t + isoPart V W C y' + midPart V V' W B x) * star (G (isoPart V W C' t + isoPart V W C y' + midPart V V' W B x)) ∂μ' ∂μ) ∧ ∀ γ ∈ ratMx D W.rank r, ∀ t : Mx D W.rank r, (∫ y' in 𝓨, ∫ x in 𝓕', P (isoPart V W C' (γ + t) + isoPart V W C y' + midPart V V' W B x) * star (G (isoPart V W C' (γ + t) + isoPart V W C y' + midPart V V' W B x)) ∂μ' ∂μ) = ∫ y' in 𝓨, ∫ x in 𝓕', P (isoPart V W C' t + isoPart V W C y' + midPart V V' W B x) * star (G (isoPart V W C' t + isoPart V W C y' + midPart V V' W B x)) ∂μ' ∂μ := by
   intro D V V' W r C B _hs C' _h1 _h2 _h3 ψ hψ μ 𝓨 hY μ' 𝓕' hμ' h𝓕' P G hP hG
-  haveI hAE : SecondCountableTopology (AE D) := by
+  have hAE : SecondCountableTopology (AE D) := by
     have : SecondCountableTopology (AF D.host.F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele _
     have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
     obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E)
       (AF D.host.F)
     exact e.secondCountableTopology
-  haveI hM : SecondCountableTopology (Mx D W.rank r) :=
+  have hM : SecondCountableTopology (Mx D W.rank r) :=
     inferInstanceAs (SecondCountableTopology (Fin W.rank → Fin r → AE D))
-  haveI hM2 : SecondCountableTopology (Mx D W.rank r × Mx D W.rank r) :=
+  have hM2 : SecondCountableTopology (Mx D W.rank r × Mx D W.rank r) :=
     @instSecondCountableTopologyProd _ _ _ _ hM hM
-  haveI : FirstCountableTopology (Mx D W.rank r × Mx D W.rank r) :=
+  have : FirstCountableTopology (Mx D W.rank r × Mx D W.rank r) :=
     SecondCountableTopology.to_firstCountableTopology _
-  haveI : FirstCountableTopology (Mx D W.rank r) := SecondCountableTopology.to_firstCountableTopology _
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI : BorelSpace (WO V' W) := ⟨rfl⟩
+  have : FirstCountableTopology (Mx D W.rank r) := SecondCountableTopology.to_firstCountableTopology _
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : BorelSpace (WO V' W) := ⟨rfl⟩
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W V'
-  haveI : Countable (ratL W V') := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : IsFiniteMeasure (μ'.restrict 𝓕') := ⟨by
+  have : Countable (ratL W V') := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : IsFiniteMeasure (μ'.restrict 𝓕') := ⟨by
     rw [Measure.restrict_apply_univ]
     exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WO V' W) (ratL W V') hK hKc μ' h𝓕'⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by
+  have : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by
     rw [Measure.restrict_apply_univ, hY.2.2]; exact ENNReal.one_lt_top⟩
   obtain ⟨b1, hb1⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ hP
   obtain ⟨b2, hb2⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ hG
@@ -1309,14 +1309,14 @@ theorem sum_translates_eq : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix 
   have hY' := hY
   obtain ⟨hμH, hYF, hY1⟩ := hY'
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank r
-  haveI : IsTopologicalAddGroup (Mx D W.rank r) := i1
-  haveI : LocallyCompactSpace (Mx D W.rank r) := i2
-  haveI : SecondCountableTopology (Mx D W.rank r) := i3
-  haveI : T2Space (Mx D W.rank r) := i4
-  haveI : DiscreteTopology (ratMx D W.rank r) := i5
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI : Countable D.host.E := Countable.of_equiv _ (Module.finBasis ℚ D.host.E).equivFun.toEquiv.symm
-  haveI : Countable (Matrix (Fin W.rank) (Fin r) D.host.E) :=
+  have : IsTopologicalAddGroup (Mx D W.rank r) := i1
+  have : LocallyCompactSpace (Mx D W.rank r) := i2
+  have : SecondCountableTopology (Mx D W.rank r) := i3
+  have : T2Space (Mx D W.rank r) := i4
+  have : DiscreteTopology (ratMx D W.rank r) := i5
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have : Countable D.host.E := Countable.of_equiv _ (Module.finBasis ℚ D.host.E).equivFun.toEquiv.symm
+  have : Countable (Matrix (Fin W.rank) (Fin r) D.host.E) :=
     inferInstanceAs (Countable (Fin W.rank → Fin r → D.host.E))
   have hsp := GlobalTheory.T.isotropicDualMiddleParts_symplectic_orthogonal D V V' W r C B hCB C' h1 h2 h3
   have hiso0 : isoPart V W C' (0 : Mx D W.rank r) = 0 := by
@@ -1385,12 +1385,12 @@ theorem coef_unfold : ∀ (D : D7) (V V' W : HSp D) (r : ℕ) (C : Matrix (Fin V
   have hY' := hY
   obtain ⟨hμH, hYF, -⟩ := hY'
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank r
-  haveI := i1
-  haveI := i2
-  haveI := i3
-  haveI := i4
-  haveI : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
-  haveI := hμH
+  have := i1
+  have := i2
+  have := i3
+  have := i4
+  have : BorelSpace (Mx D W.rank r) := ⟨rfl⟩
+  have := hμH
   have hc0 : ENNReal.ofReal κ⁻¹ ≠ 0 := (ENNReal.ofReal_pos.2 (inv_pos.2 hκ0)).ne'
   refine ⟨ENNReal.ofReal κ⁻¹ • μ, MeasureTheory.Measure.IsAddHaarMeasure.smul μ hc0 ENNReal.ofReal_ne_top, ?_⟩
   intro F G hF hG x
@@ -1462,7 +1462,7 @@ variable {D : D7} {ψ : AddChar (AF D.host.F) ℂ}
 theorem exists_fd (S T : HSp D) :
     ∃ (m : Measure (WO S T)) (F : Set (WO S T)), m.IsAddHaarMeasure ∧ IsAddFundamentalDomain (ratL T S) F m := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, h𝓕, -⟩ :=
     (GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact (WO S T) (ratL T S) K hK hKc).1
   exact ⟨μ, 𝓕, hμ, h𝓕⟩
@@ -1472,9 +1472,9 @@ theorem integrable_prod (hψ : IsStdChar D ψ (-1)) {S T : HSp D} (μ : Measure 
     (hf : IsThetaFunO ψ S T f) (hg : IsThetaFunO ψ S T g) :
     Integrable (fun x => f x * star (g x)) (μ.restrict 𝓕) := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
     rw [Measure.restrict_apply_univ]
     exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WO S T) (ratL T S) hK hKc μ h𝓕⟩
   have hcont : Continuous fun x => f x * star (g x) := hf.cont.mul hg.cont.star

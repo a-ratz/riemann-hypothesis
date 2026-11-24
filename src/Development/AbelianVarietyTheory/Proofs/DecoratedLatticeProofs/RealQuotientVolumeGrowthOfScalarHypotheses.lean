@@ -85,7 +85,7 @@ theorem relIndex_mul_measure_preimage {G Q R : Type*} [Group G] [Group Q] [Group
     (H₁ H₀ : Subgroup Q) (h10 : H₁ ≤ H₀) (hsurj : H₀ ≤ N.map φ) (hfi : H₁.relIndex H₀ ≠ 0) (E : Set R)
     (hS : MeasurableSet (φ ⁻¹' (H₁ : Set Q) ∩ ψ ⁻¹' E)) :
     (H₁.relIndex H₀ : ℝ≥0∞) * μ (φ ⁻¹' (H₁ : Set Q) ∩ ψ ⁻¹' E) = μ (φ ⁻¹' (H₀ : Set Q) ∩ ψ ⁻¹' E) := by
-  haveI : (H₁.subgroupOf H₀).FiniteIndex := ⟨hfi⟩
+  have : (H₁.subgroupOf H₀).FiniteIndex := ⟨hfi⟩
   obtain ⟨s, hs, -⟩ := (H₁.subgroupOf H₀).exists_isComplement_left 1
   have hs' : Finite s := hs.finite_left_iff.mpr inferInstance
   have hl : ∀ a : s, ∃ n ∈ N, φ n = ((a.val : H₀) : Q) := fun a => hsurj a.val.2
@@ -223,8 +223,8 @@ theorem scale {D : D7} (V : HSp D)
   obtain ⟨-, k0⟩ := k0 θ hθ
   obtain ⟨-, k0⟩ := k0 A hA
   have k0 := k0 m hm
-  haveI := hH₁
-  haveI := hH₀
+  have := hH₁
+  have := hH₀
   let B : ∀ ρ : D.what₂.Tau, TopologicalSpace.PositiveCompacts (UpqT (V.sig (tauE D ρ)).1 (V.sig (tauE D ρ)).2) :=
     fun ρ => Classical.arbitrary _
   have hB : ∀ ρ, MeasurableSet (B ρ : Set (UpqT (V.sig (tauE D ρ)).1 (V.sig (tauE D ρ)).2)) := fun ρ =>
@@ -242,10 +242,10 @@ theorem scale {D : D7} (V : HSp D)
     · exact ((B ρ).isCompact.image ((GlobalTheory.UpqTopology.continuous_mat).matrix_mul continuous_const)).isClosed
   have hS : MeasurableSet S := hSc.measurableSet
   let E : Set (GinfC V) := Subtype.val ⁻¹' S
-  have hE : MeasurableSet E := measurable_subtype_coe hS
+  have hE : MeasurableSet E := measurable_subtypeVal hS
   have hpre : GlobalTheory.AutMult.toInf V ⁻¹' E = S := by
     ext h
-    simp only [E, S, Set.mem_preimage, Set.mem_setOf_eq, GlobalTheory.RealMeasOne.infMat_toInf]
+    simp only [E, S, Set.mem_preimage, Set.mem_ofPred_eq, GlobalTheory.RealMeasOne.infMat_toInf]
   have hset : ∀ K : Subgroup (GL (Fin V.rank) (Lev.EAf D)), {g : GA D V | Lev.finE V g ∈ K} ∩ GlobalTheory.AutMult.toInf V ⁻¹' E =
       {h | Lev.finE V h ∈ K ∧ ∀ ρ, ∃ b ∈ (B ρ : Set _), UpqT.mat b * A ρ = A ρ * infMat D.sp.cm.sig V.gram (θ ρ) h} := by
     intro K
@@ -268,7 +268,7 @@ theorem scale {D : D7} (V : HSp D)
   have hxt : x ≠ ⊤ := fun h => ht (by rw [← hI, h]; exact ENNReal.mul_top (by exact_mod_cast hne))
   have e : ν₁ = ((Measure.haarScalarFactor ν₁ ν₀ : NNReal) : ENNReal) • ν₀ := Measure.isMulLeftInvariant_eq_smul ν₁ ν₀
   have e' := v1
-  rw [e, Measure.smul_apply, smul_eq_mul, ← hI] at e'
+  rw [e, smul_apply, smul_eq_mul, ← hI] at e'
   have hc : ((Measure.haarScalarFactor ν₁ ν₀ : NNReal) : ENNReal) = (K₁.relIndex K₀ : ℝ≥0∞) :=
     (ENNReal.mul_left_inj hx0 hxt).1 e'
   rw [e, hc]
@@ -291,7 +291,7 @@ theorem vol_step {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L₁ L
         ((lev D.sp.cm V.gram β L₁).relIndex (lev D.sp.cm V.gram β L₀) : ℝ≥0∞) • GlobalTheory.AutomorphicL2Unitary.autMeasure V ν₀ :=
       GlobalTheory.AutomorphicL2Unitary.quotMeasure_smul _
     rw [e2, measureReal_ennreal_smul_apply, ← hN, ENNReal.toReal_natCast, mul_comm]
-  · haveI := h₁.1
+  · have := h₁.1
     exact GlobalTheory.RallisIP.Model.vol_pos ν₁
 
 theorem idxQ_pos {D : D7} (PP : Pl D.host.E) (j : ℕ) : 0 < idxQ PP j := by

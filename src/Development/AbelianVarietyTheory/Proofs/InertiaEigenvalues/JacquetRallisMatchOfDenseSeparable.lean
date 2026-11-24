@@ -80,7 +80,7 @@ theorem charpoly_companion {k : Type} [CommRing k] :
         split_ifs <;> first | rfl | simp_all | omega
       have hlast : ((charmatrix (companion p)).submatrix Fin.succ (Fin.last (n + 1)).succAbove).det
           = (-1) ^ (n + 1) := by
-        rw [Fin.succAbove_last, Matrix.det_of_upperTriangular]
+        rw [Fin.succAbove_last, det_of_isUpperTriangular]
         · have : ∀ i : Fin (n + 1), (charmatrix (companion p)).submatrix Fin.succ Fin.castSucc i i = -1 := by
             intro i
             simp only [submatrix_apply, charmatrix_apply, companion, of_apply, diagonal_apply]
@@ -111,7 +111,7 @@ theorem charpoly_companion {k : Type} [CommRing k] :
           have hjn : (j : ℕ) ≠ n := fun h => hj (Fin.ext (by simp [h]))
           rw [charmatrix_apply, diagonal_apply_ne _ (Fin.succ_ne_zero j).symm]
           simp only [companion, of_apply, Fin.val_succ, Fin.val_zero]
-          rw [if_neg (by omega)]
+          rw [ite_eq_right (by omega)]
           simp
         rw [this, mul_zero, zero_mul]
       · simp
@@ -125,13 +125,13 @@ theorem finite_not_separable_add_C {F : Type} [Field F] [CharZero F] (P : F[X]) 
   by_cases hd : derivative P = 0
   · obtain ⟨c, rfl⟩ : ∃ c, P = C c := ⟨P.coeff 0, eq_C_of_derivative_eq_zero hd⟩
     refine (Set.finite_singleton (-c)).subset fun t ht => ?_
-    simp only [Set.mem_setOf_eq, ← C_add, separable_C, isUnit_iff_ne_zero, not_not] at ht
+    simp only [Set.mem_ofPred_eq, ← C_add, separable_C, isUnit_iff_ne_zero, not_not] at ht
     simp only [Set.mem_singleton_iff]; linear_combination ht
   · let K := AlgebraicClosure F
     have hfin : ((fun α : K => -aeval α P) '' (derivative P).rootSet K).Finite :=
       ((derivative P).rootSet_finite K).image _
     refine (hfin.preimage (algebraMap F K).injective.injOn).subset fun t ht => ?_
-    simp only [Set.mem_setOf_eq, separable_def, isCoprime_iff_aeval_ne_zero_of_isAlgClosed F K,
+    simp only [Set.mem_ofPred_eq, separable_def, isCoprime_iff_aeval_ne_zero_of_isAlgClosed F K,
       not_forall, not_or, not_not, derivative_add, derivative_C, add_zero] at ht
     obtain ⟨α, h1, h2⟩ := ht
     refine ⟨α, ?_, ?_⟩
@@ -146,7 +146,7 @@ theorem frequently_of_curve {Y F : Type} [TopologicalSpace Y] [NontriviallyNorme
   have h1 : ∀ᶠ t in 𝓝[≠] (0 : F), ¬ P (γ t) :=
     ((h0 ▸ hγ.tendsto 0).mono_left nhdsWithin_le_nhds).eventually hne
   have h2 : ∀ᶠ t in 𝓝[≠] (0 : F), t ∉ {t | ¬ P (γ t)} := by
-    have hc : IsClosed ({t | ¬ P (γ t)} \ {0}) := (hfin.subset Set.diff_subset).isClosed
+    have hc : IsClosed ({t | ¬ P (γ t)} \ {0}) := (hfin.subset Set.sdiff_subset).isClosed
     have : ∀ᶠ t in 𝓝 (0 : F), t ∉ ({t | ¬ P (γ t)} \ {0}) := hc.isOpen_compl.mem_nhds (by simp)
     filter_upwards [nhdsWithin_le_nhds this, self_mem_nhdsWithin] with t ht ht0
     exact fun hb => ht ⟨hb, ht0⟩
@@ -198,7 +198,7 @@ theorem frequently_mom_ne_zero {F : Type} [NontriviallyNormedField F] (s : ℕ) 
   refine frequently_of_curve (fun t : F => ((a₀.1, a₀.2.1 + Pi.single 0 t, a₀.2.2) : Inv (s + 1) F))
     (by fun_prop) a₀ (by simp) (fun a => mom (sec a) 0 ≠ 0) ?_
   refine (Set.finite_singleton (-a₀.2.1 0)).subset fun t ht => ?_
-  simp only [Set.mem_setOf_eq, key, not_not, Pi.add_apply, Pi.single_eq_same] at ht
+  simp only [Set.mem_ofPred_eq, key, not_not, Pi.add_apply, Pi.single_eq_same] at ht
   simp only [Set.mem_singleton_iff]; linear_combination ht
 
 theorem match_of_frequently {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E]
@@ -226,7 +226,7 @@ theorem match_of_dense : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivia
       ((∀ a : Inv r F, Delta a ≠ 0 → (companion a.1).charpoly.Separable → MatchAt M f' f a) → Match M f' f) ∧
       (0 < r → (∀ a : Inv r F, Delta a ≠ 0 → mom (sec a) 0 ≠ 0 → MatchAt M f' f a) → Match M f' f) := by
   intro F E _ _ _ _ _ r M f' f hf' hf
-  haveI : CharZero F := Unram.charZero (F := F) (E := E)
+  have : CharZero F := Unram.charZero (F := F) (E := E)
   refine ⟨fun h => match_of_frequently M f' f hf' hf _ (frequently_separable r) h, fun hr h => ?_⟩
   obtain ⟨s, rfl⟩ := Nat.exists_eq_add_one_of_ne_zero hr.ne'
   exact match_of_frequently M f' f hf' hf _ (frequently_mom_ne_zero s) h

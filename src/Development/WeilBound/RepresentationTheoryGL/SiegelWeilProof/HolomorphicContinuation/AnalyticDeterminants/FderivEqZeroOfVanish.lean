@@ -428,11 +428,11 @@ private theorem iteratedFDeriv_eq_zero_of_eq_zero_on_inG {n : ℕ} {Ω : Set (M2
   | succ N ih =>
     intro V _ _ _ H hH h0 g hg
     have hH' := (contDiffOn_infty_iff_fderiv_of_isOpen hΩ).mp hH
-    letI : NormedAddCommGroup (M2 n →L[ℂ] V) := ContinuousLinearMap.toNormedAddCommGroup
-    letI : NormedSpace ℂ (M2 n →L[ℂ] V) := ContinuousLinearMap.toNormedSpace
-    haveI : SequentialSpace (M2 n) :=
+    let : NormedAddCommGroup (M2 n →L[ℂ] V) := ContinuousLinearMap.toNormedAddCommGroup
+    let : NormedSpace ℂ (M2 n →L[ℂ] V) := ContinuousLinearMap.toNormedSpace
+    have : SequentialSpace (M2 n) :=
       inferInstanceAs (SequentialSpace ((Fin n ⊕ Fin n) → (Fin n ⊕ Fin n) → ℂ))
-    haveI : @CompleteSpace (M2 n →L[ℂ] V) PseudoMetricSpace.toUniformSpace :=
+    have : @CompleteSpace (M2 n →L[ℂ] V) PseudoMetricSpace.toUniformSpace :=
       ContinuousLinearMap.instCompleteSpace
     have e : iteratedFDeriv ℂ N (fun y => fderiv ℂ H y) g = 0 :=
       ih (fun y => fderiv ℂ H y) hH'.2 (fun g' hg' => fderiv_eq_zero_of_vanish hΩ hG hH h0 hg') g hg

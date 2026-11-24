@@ -391,7 +391,7 @@ theorem EmbedsBy.affine_and_surjective {f : X ⟶ Y} [IsAffine Y] [UniversallyCl
           have e : θ (lam j) * resG X hV' (rs j i) = θ (lam i) := rat (s i) _ _ (hrs j i) (hρ i)
           rw [map_mul, map_mul, map_mul, MvPolynomial.eval₂Hom_X', ← ha, ← e]
           ring
-      haveI := (haff j).isLocalization_basicOpen (σ j)
+      have := (haff j).isLocalization_basicOpen (σ j)
       obtain ⟨m, y, hy⟩ := IsLocalization.Away.surj (σ j) (resG X hV x₀)
       obtain ⟨p, rfl⟩ := hsurj j y
       obtain ⟨n, a, ha⟩ := poly p
@@ -415,7 +415,7 @@ theorem EmbedsBy.affine_and_surjective {f : X ⟶ Y} [IsAffine Y] [UniversallyCl
       refine ⟨k + n, lam j ^ k * (lam j ^ m * a), ?_⟩
       rw [map_mul ψ (lam j ^ k), map_pow]
       linear_combination -hk
-    letI : Algebra (MvPolynomial ι Γ(Y, ⊤)) Γ(X, nonzeroLocus t₀) := ψ.toAlgebra
+    let : Algebra (MvPolynomial ι Γ(Y, ⊤)) Γ(X, nonzeroLocus t₀) := ψ.toAlgebra
     have := Submodule.mem_of_span_eq_top_of_smul_pow_mem
       (LinearMap.range (Algebra.linearMap (MvPolynomial ι Γ(Y, ⊤)) Γ(X, nonzeroLocus t₀)))
       ((RingHom.ker ψ : Set _) ∪ Set.range lam) (by rw [Ideal.span_union, Ideal.span_eq]; exact top) x₀ (by

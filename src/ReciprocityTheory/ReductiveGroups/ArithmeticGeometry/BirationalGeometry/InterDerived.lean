@@ -57,7 +57,7 @@ variable {K : Type*} [Fintype K] {ι : K → Type*} [∀ k, Fintype (ι k)]
 
 theorem divSupp_one (P : Ideal (MRing ι)) : divSupp P 1 = ∅ := by
   ext W
-  simp only [divSupp, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+  simp only [divSupp, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
   intro hW
   have hp := hW.1
   have htop : (⊤ : Ideal (MRing ι)) ≤ W := by

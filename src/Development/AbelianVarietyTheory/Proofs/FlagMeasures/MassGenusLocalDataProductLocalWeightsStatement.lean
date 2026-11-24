@@ -126,7 +126,7 @@ theorem exists_locOver : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.
     · obtain ⟨τ', h1⟩ := hT p
       exact ⟨τ', h1, fun h' => absurd h' h⟩
   choose τ hτ hτ' using hc
-  haveI : Infinite (PlF D) := GlobalTheory.LvT.Inh.ResFin.infinite_places D.host.F
+  have : Infinite (PlF D) := GlobalTheory.LvT.Inh.ResFin.infinite_places D.host.F
   obtain ⟨p, hp⟩ := Infinite.exists_notMem_finset hfin.toFinset
   have hp' : ∃ t, LocNG.IsTermOver (FP p) (d0 p) t ∧ t.abelian₂ = lattice₂ D Z.M p Λ₀ := by
     by_contra h
@@ -265,7 +265,7 @@ theorem img_key' (p : PlF D) (M : ∀ p : PlF D, Loc.Model (D.s.atP p).Fp (D.s.a
 private theorem latP_fg_and_span_eq_top (Z : LocDat D) (Λ : LV D) (hΛ : Submodule.IsFullLattice D.host.E Λ)
     (p : PlF D) :
     (lattice₂ D Z.M p Λ).FG ∧ Submodule.span (D.s.atP p).Ep (lattice₂ D Z.M p Λ : Set (Vp D p)) = ⊤ := by
-  haveI : Submodule.IsLattice D.host.E (GlobalTheory.Unfold.LatLoc.cL Λ) :=
+  have : Submodule.IsLattice D.host.E (GlobalTheory.Unfold.LatLoc.cL Λ) :=
     GlobalTheory.Unfold.LatLoc.isLattice_map (GlobalTheory.Unfold.LatLoc.cE D) Λ hΛ.toIsLattice
   have hc : Submodule.IsFullLattice D.host.E (GlobalTheory.Unfold.LatLoc.cL Λ) := by
     refine { span_eq_top := ?_ }
@@ -345,7 +345,7 @@ theorem GlobalTheory.DblCos.finite_double_cosets : ∀ (D : D7) (X : HidaSetting
       exact img_one p Z.M _
     · have hc : (∃ h ∈ (FP p).UW0, LocNG.img h (lattice₂ D Z.M p Λ₀) = lattice₂ D Z.M p Λs) ∧
           lattice₂ D Z.M p Λs ≠ lattice₂ D Z.M p Λ₀ := ⟨hex, he⟩
-      simp only [fam, dif_pos hc]
+      simp only [fam, dite_eq_left hc]
       exact hc.1.choose_spec.2
   refine ⟨(Slat.filter (fun Λs => Submodule.IsFullLattice D.host.E Λs)).image fam, ?_, ?_⟩
   ·
@@ -623,7 +623,7 @@ theorem ext_fix_lattice_ae : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u'
   have hfin := ((GlobalTheory.T.hermitianLattice_local_global_principle D Z).1 (Formalism.HermitianLatticesTheory.gmap (h : GV D) Λ₀) Λ₀ (gmap_isFullLattice_rat _ _ hΛ₀) hΛ₀).1
   refine hfin.subset ?_
   intro p hp
-  simp only [Set.mem_setOf_eq] at hp ⊢
+  simp only [Set.mem_ofPred_eq] at hp ⊢
   intro heq
   apply hp
   apply Subgroup.subset_closure
@@ -715,8 +715,8 @@ theorem GlobalTheory.Unfold.massA_eq_sum_orbits : ∀ (D : D7) (X : HidaSetting 
     · rintro ⟨g, hg⟩
       exact ⟨g.1, g.2, (hmov p g (d p) (o.out p)).2 hg⟩
   by_cases hc : (∀ p, ∃ g : ↥(FP p).UW0, g • d p = o.out p) ∧ {p | o.out p ≠ d p}.Finite
-  · rw [if_pos (hin.2 hc), if_pos hc, hstab]
-  · rw [if_neg (mt hin.1 hc), if_neg hc]
+  · rw [ite_eq_left (hin.2 hc), ite_eq_left hc, hstab]
+  · rw [ite_eq_right (mt hin.1 hc), ite_eq_right hc]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.FlagMeasures.GenusMassEqSumOverRationalGroupOrbits =====
@@ -958,8 +958,8 @@ namespace GlobalTheory.HL.LocComm
 
 theorem stab_commensurable : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E] (M : Model F E), M.OK → ∀ {V : Type} [AddCommGroup V] [Module E V] (H : HermSp M V) (r k : ℕ) (P : LocNG.FPair H r), Module.finrank E V = k + 2 * r + 1 → P.RelG (LocNG.theta M) → ∀ (d : LocNG.Datum P) (τ : Term V M r), LocNG.IsTermOver P d τ → P.UW0 ⊓ LocNG.Aut τ.abelian₂ ≤ LocNG.Datum.Stab d ∧ (P.UW0 ⊓ LocNG.Aut τ.abelian₂).relIndex (LocNG.Datum.Stab d) ≠ 0 ∧ ∀ (d' : LocNG.Datum P) (τ' : Term V M r), LocNG.IsTermOver P d' τ' → (LocNG.Datum.Stab d).relIndex (LocNG.Datum.Stab d') ≠ 0 := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P hk hrel d τ hτ
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   obtain ⟨S, ⟨c⟩⟩ := GlobalTheory.HL.CoordExist.exists_coord M hM H r k P hk hrel
   obtain ⟨hUW, -, -, -, hAut, -⟩ := _root_.GlobalTheory.HL.CoordMass.transport M hM H r k P S c
   obtain ⟨-, -, -, hStab, -⟩ := _root_.GlobalTheory.HL.CoordDatum.transport M hM H r k P S c
@@ -1158,7 +1158,7 @@ theorem inv_encard_eq_relIndex_mul {G : Type} [Group G] (H K : Subgroup G) (hle 
     simp [hH, hK]
   · have hH : Nat.card H ≠ 0 := by
       intro h; rw [h, zero_mul] at hc; exact hK hc.symm
-    rw [if_neg hH, if_neg hK, ← hc]
+    rw [ite_eq_right hH, ite_eq_right hK, ← hc]
     push_cast
     rw [ENNReal.mul_inv (Or.inl (by exact_mod_cast hH)) (Or.inl (by simp)), mul_comm,
       mul_assoc, ENNReal.inv_mul_cancel (by exact_mod_cast hr) (by simp), mul_one]
@@ -1220,8 +1220,8 @@ theorem fibre_sum {G : Type} [Group G] (Γ : Subgroup G) {Y Z : Type} [MulAction
   classical
   by_cases hz : Quotient.out O ∈ S
   swap
-  · rw [if_neg hz, mul_zero]
-    haveI : IsEmpty {P // fbar P = O} := by
+  · rw [ite_eq_right hz, mul_zero]
+    have : IsEmpty {P // fbar P = O} := by
       refine ⟨fun ⟨P, hP⟩ => ?_⟩
       have h1 : Quotient.mk (MulAction.orbitRel Γ Z) (f (Quotient.out P))
           = Quotient.mk (MulAction.orbitRel Γ Z) (Quotient.out O) := by
@@ -1230,7 +1230,7 @@ theorem fibre_sum {G : Type} [Group G] (Γ : Subgroup G) {Y Z : Type} [MulAction
       exact (hemp _ hz).false ⟨(γ⁻¹ : G) • Quotient.out P, by
         rw [hf, ← hγ]; simp [Subgroup.smul_def]⟩
     simp
-  rw [if_pos hz]
+  rw [ite_eq_left hz]
   obtain ⟨z, hzO⟩ : ∃ z, Quotient.out O = z := ⟨_, rfl⟩
   rw [hzO] at hz ⊢
   have hOz : Quotient.mk (MulAction.orbitRel Γ Z) z = O := by rw [← hzO, Quotient.out_eq]
@@ -1244,8 +1244,8 @@ theorem fibre_sum {G : Type} [Group G] (Γ : Subgroup G) {Y Z : Type} [MulAction
         rw [Subgroup.smul_def, hf, hy]; exact (hΔ.mp δ.2).2 }
   have hmem : ∀ y : Y, y ∈ p ↔ f y = z := fun y => Iff.rfl
   let e : p ≃ {y // f y = z} := Equiv.subtypeEquivRight hmem
-  haveI : Finite {y // f y = z} := (hfin z hz).1
-  haveI : Finite p := Finite.of_equiv _ e.symm
+  have : Finite {y // f y = z} := (hfin z hz).1
+  have : Finite p := Finite.of_equiv _ e.symm
   have hcard : Nat.card p = n := (Nat.card_congr e).trans (hfin z hz).2
 
   let φ : MulAction.orbitRel.Quotient Δ p → {P // fbar P = O} := fun Q =>
@@ -1309,7 +1309,7 @@ theorem fibre_sum {G : Type} [Group G] (Γ : Subgroup G) {Y Z : Type} [MulAction
     unfold wt
     rw [inv_encard_eq_relIndex_mul _ _ hle (hri ▸ hne), hri]
   rw [← (Equiv.ofBijective φ ⟨hinj, hsurj⟩).tsum_eq]
-  haveI : Fintype (MulAction.orbitRel.Quotient Δ p) := Fintype.ofFinite _
+  have : Fintype (MulAction.orbitRel.Quotient Δ p) := Fintype.ofFinite _
   rw [tsum_fintype]
   have hterm : ∀ Q : MulAction.orbitRel.Quotient Δ p,
       wt Γ (Quotient.out (Equiv.ofBijective φ ⟨hinj, hsurj⟩ Q).1)
@@ -1547,8 +1547,8 @@ theorem pi_le_resPi {ι : Type} {G : ι → Type} [∀ i, Group (G i)] (A U : �
 
 theorem exists_finset_cosets {G : Type} [Group G] (K L : Subgroup G) (h : L.relIndex K ≠ 0) :
     ∃ T : Finset G, ∀ k ∈ K, ∃ t ∈ T, t⁻¹ * k ∈ L := by
-  haveI : (L.subgroupOf K).FiniteIndex := ⟨h⟩
-  haveI : Fintype (K ⧸ L.subgroupOf K) := Fintype.ofFinite _
+  have : (L.subgroupOf K).FiniteIndex := ⟨h⟩
+  have : Fintype (K ⧸ L.subgroupOf K) := Fintype.ofFinite _
   refine ⟨Finset.univ.image (fun q : K ⧸ L.subgroupOf K => ((Quotient.out q : K) : G)), ?_⟩
   intro k hk
   refine ⟨_, Finset.mem_image_of_mem _ (Finset.mem_univ (QuotientGroup.mk ⟨k, hk⟩)), ?_⟩
@@ -1659,7 +1659,7 @@ theorem mass_restricted_product : ∀ {ι : Type} (G : ι → Type) [∀ i, Grou
   have hAx : {i | A i ≠ MulAction.stabilizer (G i) (x i)}.Finite := by
     refine (hae.union hxae).subset (fun i hi => ?_)
     by_contra h
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at h
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at h
     exact hi (by rw [h.1, h.2])
   have hstabx : Subgroup.pi Set.univ (fun i => MulAction.stabilizer (G i) (x i)) ≤ R :=
     pi_le_resPi A _ hAx
@@ -1687,20 +1687,20 @@ theorem mass_restricted_product : ∀ {ι : Type} (G : ι → Type) [∀ i, Grou
       let g : ∀ i, G i := fun i => if y i = x i then 1 else Classical.choose (hall i)
       have hgR : g ∈ R := by
         refine hf.subset (fun i hi hyx => hi ?_)
-        simp only [g, hyx, if_true]
+        simp only [g, hyx, ite_true]
         exact one_mem _
       refine ⟨⟨g, hgR⟩, funext fun i => ?_⟩
       dsimp only
       rw [Subgroup.smul_def, Pi.smul_apply']
       by_cases hyx : y i = x i
       · simp [g, hyx]
-      · simp only [g, hyx, if_false]
+      · simp only [g, hyx, ite_false]
         exact Classical.choose_spec (hall i)
     · rintro ⟨g, rfl⟩
       refine ⟨fun i => ⟨(g : ∀ i, G i) i, by dsimp only; rw [Subgroup.smul_def, Pi.smul_apply']⟩, ?_⟩
       refine ((g.2 : {i | (g : ∀ i, G i) i ∉ A i}.Finite).union hAx).subset (fun i hi => ?_)
       by_contra h
-      simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at h
+      simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at h
       apply hi
       dsimp only
       rw [Subgroup.smul_def, Pi.smul_apply']
@@ -1713,7 +1713,7 @@ theorem mass_restricted_product : ∀ {ι : Type} (G : ι → Type) [∀ i, Grou
     rw [← hφinj.encard_image]
     congr 1
     ext γ
-    simp only [Set.mem_image, Set.mem_setOf_eq, SetLike.mem_coe, Subgroup.mem_inf,
+    simp only [Set.mem_image, Set.mem_ofPred_eq, SetLike.mem_coe, Subgroup.mem_inf,
       MulAction.mem_stabilizer_iff]
     constructor
     · rintro ⟨h, hh, rfl⟩
@@ -1799,7 +1799,7 @@ theorem mass_genus_local_weights : ∀ (D : D7) (X : HidaSetting D) (Y : Full X)
       ∀ d (g : ↥(FP p).UW0), g.1 ∈ LocNG.Datum.Stab d ↔ act.smul g d = d :=
     fun p => _root_.GlobalTheory.InnerDatumAct.exists_mulAction (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS D.R.k (FP p) (hrk p) (hR p)
   choose act hMv hSt using hact
-  letI : ∀ p, MulAction ↥(FP p).UW0 (LocNG.Datum (FP p)) := act
+  let : ∀ p, MulAction ↥(FP p).UW0 (LocNG.Datum (FP p)) := act
   have hMv' : ∀ p (g : ↥(FP p).UW0) (d d' : LocNG.Datum (FP p)), LocNG.Datum.Moves g.1 d d' ↔ g • d = d' := hMv
   have hSt' : ∀ p (d : LocNG.Datum (FP p)) (g : ↥(FP p).UW0), g.1 ∈ LocNG.Datum.Stab d ↔ g • d = d := hSt
   obtain ⟨hc0, hfin, hdd⟩ := GlobalTheory.T.localLatticeStabilisers_commensurable_almostEverywhere D X Y u u' F F' w hw hG Z FP hB hR hMv' hSt' Λ₀ d0 hLO

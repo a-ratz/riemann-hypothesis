@@ -100,23 +100,23 @@ theorem Kmat_mul_Kinv (jj : Fin (m + 1)) (a : Fin (m + 1) → k) (ha : a jj ≠ 
         (if r = p then a p * (Kinv p a p q - (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) k) p q) else 0) := by
       intro r
       by_cases hr : r = p
-      · rw [hr, if_pos rfl]; simp only [Kmat, Matrix.of_apply, ↓reduceIte]; ring
-      · rw [if_neg hr, add_zero]
-        simp only [Kmat, Kinv, Kinv2, Matrix.of_apply, ↓reduceIte, if_neg hr]
+      · rw [hr, ite_eq_left rfl]; simp only [Kmat, Matrix.of_apply, ↓reduceIte]; ring
+      · rw [ite_eq_right hr, add_zero]
+        simp only [Kmat, Kinv, Kinv2, Matrix.of_apply, ↓reduceIte, ite_eq_right hr]
     rw [Finset.sum_congr rfl (fun r _ => hs r), Finset.sum_add_distrib, Finset.sum_ite_eq']
-    simp only [Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     by_cases hq : q = p
     · subst hq
       simp only [Kinv, Kinv2, Matrix.of_apply, ↓reduceIte]
       field_simp
       ring
-    · simp only [Kinv, Kinv2, Matrix.of_apply, ↓reduceIte, if_neg hq, if_neg (Ne.symm hq)]
+    · simp only [Kinv, Kinv2, Matrix.of_apply, ↓reduceIte, ite_eq_right hq, ite_eq_right (Ne.symm hq)]
       field_simp
       ring
   · rw [Finset.sum_eq_single p]
-    · simp only [Kmat, Kinv, Kinv2, Matrix.of_apply, if_neg hp, Matrix.one_apply_eq, one_mul]
+    · simp only [Kmat, Kinv, Kinv2, Matrix.of_apply, ite_eq_right hp, Matrix.one_apply_eq, one_mul]
     · intro r _ hr
-      simp only [Kmat, Matrix.of_apply, if_neg hp, Matrix.one_apply_ne (Ne.symm hr), zero_mul]
+      simp only [Kmat, Matrix.of_apply, ite_eq_right hp, Matrix.one_apply_ne (Ne.symm hr), zero_mul]
     · intro h; exact absurd (Finset.mem_univ p) h
 
 theorem Kinv_mul_Kmat (jj : Fin (m + 1)) (a : Fin (m + 1) → k) (ha : a jj ≠ 0) :
@@ -163,18 +163,18 @@ theorem continuous_Kmat (jj : Fin (m + 1)) :
     Continuous (Kmat jj : (Fin (m + 1) → k) → Matrix (Fin (m + 1)) (Fin (m + 1)) k) :=
   continuous_matrix fun p q => by
     by_cases hp : p = jj
-    · simp only [Kmat, Matrix.of_apply, if_pos hp]; exact continuous_apply q
-    · simp only [Kmat, Matrix.of_apply, if_neg hp]; exact continuous_const
+    · simp only [Kmat, Matrix.of_apply, ite_eq_left hp]; exact continuous_apply q
+    · simp only [Kmat, Matrix.of_apply, ite_eq_right hp]; exact continuous_const
 
 theorem continuous_Kinv2 (jj : Fin (m + 1)) :
     Continuous (Kinv2 jj : (Fin (m + 1) → k) × k → Matrix (Fin (m + 1)) (Fin (m + 1)) k) :=
   continuous_matrix fun p q => by
     by_cases hp : p = jj
     · by_cases hq : q = jj
-      · simp only [Kinv2, Matrix.of_apply, if_pos hp, if_pos hq]; exact continuous_snd
-      · simp only [Kinv2, Matrix.of_apply, if_pos hp, if_neg hq]
+      · simp only [Kinv2, Matrix.of_apply, ite_eq_left hp, ite_eq_left hq]; exact continuous_snd
+      · simp only [Kinv2, Matrix.of_apply, ite_eq_left hp, ite_eq_right hq]
         exact ((continuous_apply q).comp continuous_fst).neg.mul continuous_snd
-    · simp only [Kinv2, Matrix.of_apply, if_neg hp]; exact continuous_const
+    · simp only [Kinv2, Matrix.of_apply, ite_eq_right hp]; exact continuous_const
 
 theorem kappa_nbhd (S : Set (GL (Fin (m + 1)) k)) (hS : IsOpen S) (h1 : (1 : GL (Fin (m + 1)) k) ∈ S)
     (jj : Fin (m + 1)) : ∃ γ : (ValueGroupWithZero k)ˣ, ∀ a : Fin (m + 1) → k,
@@ -263,7 +263,7 @@ theorem psi_ball (ψ : AddChar k Circle) (hψ : Continuous ψ) :
     ∃ γ : (ValueGroupWithZero k)ˣ, ∀ x : k, valuation k x < γ → ψ x = 1 := by
   have hU : {t : k | ‖((ψ t : Circle) : ℂ) - 1‖ < 1 / 2} ∈ 𝓝 (0 : k) := by
     have hc : Continuous fun t : k => ‖((ψ t : Circle) : ℂ) - 1‖ :=
-      ((continuous_subtype_val.comp hψ).sub continuous_const).norm
+      ((continuous_subtypeVal.comp hψ).sub continuous_const).norm
     exact (isOpen_lt hc continuous_const).mem_nhds (by simp)
   obtain ⟨γ, hγ⟩ := (IsValuativeTopology.mem_nhds_zero_iff _).1 hU
   let H : Subgroup Circle :=
@@ -302,8 +302,8 @@ theorem continuous_U (c : Fin (m + 1)) : Continuous (fun x : Fin (m + 1) → k =
     intro x' hx'
     refine continuous_const.add (continuous_matrix fun p q => ?_)
     by_cases h : q = c ∧ p < c
-    · simp only [Matrix.of_apply, if_pos h]; exact (continuous_apply p).comp hx'
-    · simp only [Matrix.of_apply, if_neg h]; exact continuous_const
+    · simp only [Matrix.of_apply, ite_eq_left h]; exact (continuous_apply p).comp hx'
+    · simp only [Matrix.of_apply, ite_eq_right h]; exact continuous_const
   exact Units.continuous_iff.2 ⟨hc id continuous_id, hc (fun x => -x) continuous_neg⟩
 
 end DiscreteGroups.sglob.LConvKir
@@ -416,7 +416,7 @@ theorem step (ψ : AddChar k Circle) (hψc : Continuous ψ) (hψ : ψ ≠ 1) {m 
   have hL''o : IsOpen (L'' : Set (Fin (m + 1) → k)) :=
     ((hsm v).preimage (continuous_U c)).inter (isOpen_set_pi Set.finite_univ fun _ _ => isOpen_ballLt γ₀)
   have hQf : Finite (L ⧸ L''.addSubgroupOf L) :=
-    AddSubgroup.quotient_finite_of_isOpen _ (hL''o.preimage continuous_subtype_val)
+    AddSubgroup.quotient_finite_of_isOpen _ (hL''o.preimage continuous_subtypeVal)
   let _ : Fintype (L ⧸ L''.addSubgroupOf L) := Fintype.ofFinite _
   let xs : (L ⧸ L''.addSubgroupOf L) → Fin (m + 1) → k := fun q => ((Quotient.out q : L) : Fin (m + 1) → k)
   have hN : (Fintype.card (L ⧸ L''.addSubgroupOf L) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -490,8 +490,8 @@ theorem step (ψ : AddChar k Circle) (hψc : Continuous ψ) (hψ : ψ ≠ 1) {m 
       obtain ⟨κ, hκS, hκ, hκi⟩ := hγ₁ w hsmall
       have hgrow : ∀ r, (g : Matrix (Fin (m + 1)) (Fin (m + 1)) k) jj r = w r := fun r => by
         by_cases hr : r < c
-        · simp only [w, if_pos hr]
-        · simp only [w, if_neg hr]
+        · simp only [w, ite_eq_left hr]
+        · simp only [w, ite_eq_right hr]
           rw [hg jj r (fun h => hr (by rw [Fin.lt_def]; exact h.2)),
             Matrix.one_apply_ne (fun h => hr (by rw [← h]; exact hjc))]
       have hMrow : ∀ q, ((g * κ⁻¹ : GL (Fin (m + 1)) k) : Matrix (Fin (m + 1)) (Fin (m + 1)) k) jj q =
@@ -512,15 +512,15 @@ theorem step (ψ : AddChar k Circle) (hψc : Continuous ψ) (hψ : ψ ≠ 1) {m 
             by_cases hr : r = jj
             · rw [hr]
               simp only [Kinv, Kinv2, Matrix.of_apply, ↓reduceIte]
-              rw [if_neg (fun h => hq (by rw [h]; exact hjc)), show w q = 0 from if_neg hq, neg_zero, zero_mul,
+              rw [ite_eq_right (fun h => hq (by rw [h]; exact hjc)), show w q = 0 from ite_eq_right hq, neg_zero, zero_mul,
                 Matrix.one_apply_ne (fun h => hq (by rw [← h]; exact hjc))]
-            · simp only [Kinv, Kinv2, Matrix.of_apply, if_neg hr]
+            · simp only [Kinv, Kinv2, Matrix.of_apply, ite_eq_right hr]
           rw [Finset.sum_congr rfl fun r _ => by rw [hK r], ← Matrix.mul_apply, Matrix.mul_one]
           exact hg p q hpq
         · rw [Finset.sum_eq_single p (fun r _ hr => by
               rw [hg p r (fun h => hp h.1), Matrix.one_apply_ne (Ne.symm hr), zero_mul]) (by simp),
             hg p p (fun h => hp h.1), Matrix.one_apply_eq, one_mul]
-          simp only [Kinv, Kinv2, Matrix.of_apply, if_neg (fun h : p = jj => hp (by rw [h]; exact hjc))]
+          simp only [Kinv, Kinv2, Matrix.of_apply, ite_eq_right (fun h : p = jj => hp (by rw [h]; exact hjc))]
       obtain ⟨yv, h, hh, hM⟩ := decomp j (by omega) (g * κ⁻¹) hMH hMrow
       have hki : ρ κ⁻¹ v = v := by
         conv_lhs => rw [← (hκS : ρ κ v = v)]

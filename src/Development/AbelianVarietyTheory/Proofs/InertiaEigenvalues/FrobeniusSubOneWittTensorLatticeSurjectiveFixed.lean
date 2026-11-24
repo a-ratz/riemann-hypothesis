@@ -203,7 +203,7 @@ theorem lattice_fixed {G : Type} [Group G] [TopologicalSpace G] {Qp LL O : Type}
     (∀ y : TW R T, ∃ b, TWmap f T b - b = y) ∧
     (∀ b : TW R T, TWmap f T b = b ↔ ∃ t : ↥T.L.T, b = (1 : R) ⊗ₜ[O] t) ∧
     Function.Injective (fun t : ↥T.L.T => (1 : R) ⊗ₜ[O] t) := by
-  haveI := flat_lattice hO T
+  have := flat_lattice hO T
   unfold TW TWmap
   exact tensor_flat f hs hk hi
 
@@ -212,7 +212,7 @@ theorem ring_fixed (l : ℕ) [Fact l.Prime] (LL : FinExt l) :
     (∀ b : RW LL, φRW LL b = b → ∃ z, b = algebraMap ↥(OL LL) (RW LL) z) ∧
     Function.Injective (algebraMap ↥(OL LL) (RW LL)) := by
   obtain ⟨_, -, -, -, hfree, -, -⟩ := GlobalTheory.Per.integers_completeDVR l LL
-  haveI : Module.Flat ℤ_[l] ↥(OL LL) := Module.Flat.of_free
+  have : Module.Flat ℤ_[l] ↥(OL LL) := Module.Flat.of_free
   obtain ⟨hs, hk, -⟩ := GlobalTheory.ArtinSchreierWitt.main l
   unfold RW φRW
   exact baseChange_flat (frobW l) hs hk (algebraMap_WCb_injective l)

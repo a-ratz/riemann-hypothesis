@@ -223,9 +223,9 @@ theorem exists_var_refines (F Ω : Type) [Field F] [Field Ω] [Algebra F Ω] (M 
     ∃ (Y : GlobalTheory.ProjVar.Var F) (φ : Ω →ₐ[F] Y.Fn) (f : Y.X ⟶ M.Z) (S' : Fr (ratOf Y) m k),
       Y.dim = d ∧ Refines S S' φ f := by
   obtain ⟨hP, hSm, hGI⟩ := h
-  haveI : SmoothOfRelativeDimension d M.s := hSm
-  haveI : GeometricallyIntegral M.s := hGI
-  haveI : GeometricallyConnected M.s := by
+  have : SmoothOfRelativeDimension d M.s := hSm
+  have : GeometricallyIntegral M.s := hGI
+  have : GeometricallyConnected M.s := by
     constructor
     intro a b y c fst snd hpb
     have := GeometricallyIntegral.geometrically_isIntegral (f := M.s) y fst snd hpb

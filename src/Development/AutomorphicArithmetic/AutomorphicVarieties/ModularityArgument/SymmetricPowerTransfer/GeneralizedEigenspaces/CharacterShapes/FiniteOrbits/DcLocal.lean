@@ -94,8 +94,8 @@ theorem UpperTheory.V.Z.Sym.So.dcLocal :
     have := hJ _ h1
     simpa [map_mul] using this
   refine ⟨hfin, fun φ hφ => ?_⟩
-  haveI : Finite (MulAction.orbit J (d : H ⧸ J)) := Set.Finite.to_subtype hd
-  haveI : Finite (MulAction.orbit U ((j d : G) : G ⧸ U)) := Set.Finite.to_subtype hfin
+  have : Finite (MulAction.orbit J (d : H ⧸ J)) := Set.Finite.to_subtype hd
+  have : Finite (MulAction.orbit U ((j d : G) : G ⧸ U)) := Set.Finite.to_subtype hfin
 
   let e : MulAction.orbit J (d : H ⧸ J) → MulAction.orbit U ((j d : G) : G ⧸ U) := fun q =>
     ⟨((j (q : H ⧸ J).out : G) : G ⧸ U), hin _ (by simpa using q.2)⟩

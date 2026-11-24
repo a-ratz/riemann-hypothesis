@@ -345,11 +345,11 @@ theorem UpperTheory.V.ZK.sNum :
   have hne : LDataCardLeFinrank.shaInv L l ((k + 1 : ℕ) : ℤ) ≠ ⊤ := by
     intro htop
     rw [htop, hs] at hsha
-    exact ENat.coe_ne_top s (top_le_iff.mp hsha)
-  refine ⟨(LDataCardLeFinrank.shaInv L l ((k + 1 : ℕ) : ℤ)).toNat, (ENat.coe_toNat hne).symm, ?_⟩
+    exact ENat.natCast_ne_top s (top_le_iff.mp hsha)
+  refine ⟨(LDataCardLeFinrank.shaInv L l ((k + 1 : ℕ) : ℤ)).toNat, (ENat.natCast_toNat hne).symm, ?_⟩
   have hs0 : (LDataCardLeFinrank.shaInv L l ((k + 1 : ℕ) : ℤ)).toNat ≤ s := by
     have h := hsha
-    rw [← ENat.coe_toNat hne, hs] at h
+    rw [← ENat.natCast_toNat hne, hs] at h
     exact_mod_cast h
   set s0 := (LDataCardLeFinrank.shaInv L l ((k + 1 : ℕ) : ℤ)).toNat with hs0def
   set T1 := tc L' (4 * k + 10) (2 * k + 3) with hT1

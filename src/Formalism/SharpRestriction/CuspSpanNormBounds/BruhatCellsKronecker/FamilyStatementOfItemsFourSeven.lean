@@ -96,7 +96,7 @@ theorem exp_mul_pow_le_succ_pow (k : ℕ) : Real.exp 1 * (k : ℝ) ^ (k + 1) ≤
     rwa [e] at this
   have h2 : ((k : ℝ) / ((k : ℝ) + 1)) ^ (k + 1) ≤ Real.exp (-1) := by
     have := pow_le_pow_left₀ (by positivity) h1 (k + 1)
-    rw [← Real.exp_nat_mul] at this
+    rw [← Real.exp_natCast_mul] at this
     have e : ((k + 1 : ℕ) : ℝ) * -(1 / ((k : ℝ) + 1)) = -1 := by push_cast; field_simp
     rwa [e] at this
   rw [div_pow, div_le_iff₀ (by positivity), Real.exp_neg] at h2
@@ -588,7 +588,7 @@ theorem cell_weight_induction (k r : ℕ) (T T' : ℝ) (δ : ℕ → ℝ) (K : �
         _ ≤ G ^ (k - 1) * max G G⁻¹ * (δ a ^ 6 * (max (δ a) (δ a)⁻¹) ^ K) *
             (max (δ (a + 1)) (δ (a + 1))⁻¹) ^ (2 * K) := by gcongr
         _ = _ := by rw [← e3]; ring
-    · simp only [ptWeightFrom, if_neg hsp, blockEndsFrom, List.map_cons, List.prod_cons]
+    · simp only [ptWeightFrom, ite_eq_right hsp, blockEndsFrom, List.map_cons, List.prod_cons]
       have hpow : ‖t‖ ^ (2 * s * (Ml k r (a + s) + s - 3)) = (‖t‖ ^ s) ^ (2 * (Ml k r (a + s) + s - 3)) := by
         rw [← pow_mul]; congr 1; ring
       rw [hpow]
@@ -676,9 +676,9 @@ theorem cell_weight_lemma (D : D7) : CellWeightBound D := by
     rw [this]
     simp
   have a1 : DminN z z' γ (D.R.rS + 1) = Dmin D.R.k D.R.rS z z' γ (Fin.last (D.R.rS + 1)) := by
-    unfold DminN; rw [dif_pos (by omega)]; rfl
+    unfold DminN; rw [dite_eq_left (by omega)]; rfl
   have a2 : DminN z z' γ D.R.rS = Dmin D.R.k D.R.rS z z' γ ⟨D.R.rS, by omega⟩ := by
-    unfold DminN; rw [dif_pos (by omega)]
+    unfold DminN; rw [dite_eq_left (by omega)]
   have hGd : Gf D.R.k D.R.rS z z' γ = ‖DminN z z' γ (D.R.rS + 1)‖ ^ 2 -
       Tz D.R.k D.R.rS z * Tz D.R.k D.R.rS z' * ‖DminN z z' γ D.R.rS‖ ^ 2 := by
     rw [a1, a2, ← Complex.normSq_eq_norm_sq, ← Complex.normSq_eq_norm_sq]; rfl
@@ -901,7 +901,7 @@ theorem minor_factor_le_size_volume {k r : ℕ} (H : ℝ) (z z' : Fin (2 * r + k
     max 1 (‖DminN z z' γ l‖ / H) ≤ sizeV H z z' γ := by
   unfold DminN
   by_cases h : l < r + 2
-  · rw [dif_pos h]
+  · rw [dite_eq_left h]
     exact single_le_finset_prod Finset.univ (fun l : Fin (r + 2) => max 1 (‖Dmin k r z z' γ l‖ / H))
       (fun _ _ => le_max_left _ _) ⟨l, h⟩ (Finset.mem_univ _)
   · rw [dite_eq_right h]
@@ -944,7 +944,7 @@ theorem term_points_setup (H : ℝ) (hH : 1 ≤ H) {w w' : D.what₂.Word}
       have e : DminN (zs τ) (zs' τ) (γs τ) (D.R.rS + 1) =
           Dmin D.R.k D.R.rS (zs τ) (zs' τ) (γs τ) (Fin.last (D.R.rS + 1)) := by
         unfold DminN
-        rw [dif_pos (by omega)]
+        rw [dite_eq_left (by omega)]
         rfl
       have g1 : Gf D.R.k D.R.rS (zs τ) (zs' τ) (γs τ) ≤ ‖DminN (zs τ) (zs' τ) (γs τ) (D.R.rS + 1)‖ ^ 2 := by
         rw [e, ← Complex.normSq_eq_norm_sq]
@@ -1035,9 +1035,9 @@ theorem heightStatement_of_bounds (C' Cl Cg cb Cu cT CT C0 A C C2 Ch : ℝ) (hC 
   have hξ0 : 0 ≤ ξ := by positivity
   have hXe : scalePowQuadraticExponent D large₂ Ch ^ D.R.f * S = Real.exp ξ := by
     unfold scalePowQuadraticExponent
-    rw [scale_base_rpow_eq_exp, ← Real.exp_nat_mul, hξ, Real.exp_add, ← hSe]
-  rw [hXe, scale_base_rpow_eq_exp, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_mul, ← Real.exp_mul,
-    ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add]
+    rw [scale_base_rpow_eq_exp, ← Real.exp_natCast_mul, hξ, Real.exp_add, ← hSe]
+  rw [hXe, scale_base_rpow_eq_exp, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_mul, ← Real.exp_mul,
+    ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add]
   unfold GamS
   conv_rhs => rw [hSe, ← Real.exp_mul, ← Real.exp_add]
   apply Real.exp_le_exp.2
@@ -1102,8 +1102,8 @@ theorem product_clause_at_record (C' Cl Cg cb Cu cT CT C0 A C C2 Ch : ℝ) (hC :
   have hξ0 : 0 ≤ ξ := by positivity
   have hXe : scalePowQuadraticExponent D large₂ Ch ^ D.R.f * S = Real.exp ξ := by
     unfold scalePowQuadraticExponent
-    rw [scale_base_rpow_eq_exp, ← Real.exp_nat_mul, hξ, Real.exp_add, ← hSe]
-  rw [hXe, scale_base_rpow_eq_exp, ← Real.exp_nat_mul, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_mul]
+    rw [scale_base_rpow_eq_exp, ← Real.exp_natCast_mul, hξ, Real.exp_add, ← hSe]
+  rw [hXe, scale_base_rpow_eq_exp, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_mul]
   conv_rhs => rw [hSe, ← Real.exp_mul, ← Real.exp_add]
   apply Real.exp_le_exp.2
   have b1 : (D.R.rS : ℝ) ^ 3 ≤ (D.R.m : ℝ) ^ 3 := pow_le_pow_left₀ hr0 hr1 3
@@ -1294,8 +1294,8 @@ theorem hs_norm_sq_nonneg {Wp Wq : Type*} [NormedAddCommGroup Wp] [InnerProductS
 theorem hs_norm_sq_le_rank_mul_norm {Wp Wq : Type*} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp]
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (A : Wq →L[ℂ] Wp) :
     hsNormSq A ≤ (Module.finrank ℂ Wp : ℝ) * ‖A‖ ^ 2 := by
-  have := FiniteDimensional.complete ℂ Wp
-  have := FiniteDimensional.complete ℂ Wq
+  have := FiniteDimensional.completeSpace ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wq
   rw [hs_norm_sq_eq_sum_basis]
   have h1 : ∀ i, ‖A (stdOrthonormalBasis ℂ Wq i)‖ ^ 2 =
       ∑ j, ‖⟪stdOrthonormalBasis ℂ Wp j, A (stdOrthonormalBasis ℂ Wq i)⟫_ℂ‖ ^ 2 := fun i =>
@@ -1472,7 +1472,7 @@ theorem hyperbolic_parameters_of_minor {k r : ℕ} (T T' : ℝ) (z z' : Fin (2 *
     0 < shV T T' z z' γ ∧ 0 ≤ chV T T' z z' γ ∧ chV T T' z z' γ ^ 2 = shV T T' z z' γ ^ 2 + 1 ∧
       Gf k r z z' γ = T * T' * ‖DminN z z' γ r‖ ^ 2 * shV T T' z z' γ ^ 2 := by
   have hDe : DminN z z' γ r = Dmin k r z z' γ ⟨r, by omega⟩ := by
-    unfold DminN; rw [dif_pos (by omega)]
+    unfold DminN; rw [dite_eq_left (by omega)]
   have hd : 0 < ‖DminN z z' γ r‖ := norm_pos_iff.2 hD
   have hTT : 0 < T * T' := mul_pos hT hT'
   have hch2 : chV T T' z z' γ ^ 2 =
@@ -1574,8 +1574,8 @@ theorem lossStatement_of_bounds (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb
   have hdim : (0 : ℝ) < Module.finrank ℂ W.Wp := by exact_mod_cast hd0
   by_cases hD : DminN W.z W.z' γ D.R.rS = 0
   ·
-    have e1 : ampMinF D C δ τ w w' W.z W.z' γ = 1 := by unfold ampMinF; rw [if_pos hD]
-    have e2 : chRatio (Tr D w) (Tr D w') W.z W.z' γ = 1 := by unfold chRatio; rw [if_pos hD]
+    have e1 : ampMinF D C δ τ w w' W.z W.z' γ = 1 := by unfold ampMinF; rw [ite_eq_left hD]
+    have e2 : chRatio (Tr D w) (Tr D w') W.z W.z' γ = 1 := by unfold chRatio; rw [ite_eq_left hD]
     rw [e1, e2, one_pow, one_pow, mul_one, mul_one]
     refine ⟨hL2'.trans (product_le_enlarged_losses _ _ _ _ _ hla0 hlac hpa hpac (by positivity)), ?_⟩
     exact numericVolume_bound_ii D.R.k D.R.rS C A _ _ _ _ _ _ _ _ _ _ _ _ hr (by omega) hAC hG hT hT' hg (lt_of_lt_of_le one_pos hv) ht hla0 hlac
@@ -1592,10 +1592,10 @@ theorem lossStatement_of_bounds (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb
     have e1 : ampMinF D C δ τ w w' W.z W.z' γ =
         min 1 (Gf D.R.k D.R.rS W.z W.z' γ / (Tr D w * ‖DminN W.z W.z' γ D.R.rS‖ ^ 2) * tvPr D τ w' *
           (gg D)⁻¹ ^ (2 * D.R.rS + 2) * (C / D.R.k) ^ (2 * (D.R.rS : ℝ) * (1 - δ))) := by
-      unfold ampMinF nuV; rw [if_neg hD, level_rpow_neg_rank_eq D hg0]
+      unfold ampMinF nuV; rw [ite_eq_right hD, level_rpow_neg_rank_eq D hg0]
     have e2 : chRatio (Tr D w) (Tr D w') W.z W.z' γ =
         (1 + chV (Tr D w) (Tr D w') W.z W.z' γ) / shV (Tr D w) (Tr D w') W.z W.z' γ := by
-      unfold chRatio; rw [if_neg hD]
+      unfold chRatio; rw [ite_eq_right hD]
     obtain ⟨hsh, hch, hcs, hGs⟩ := hyperbolic_parameters_of_minor (Tr D w) (Tr D w') W.z W.z' γ hT hT' hTz hTz' hD hG
     rw [e1, e2]
     refine ⟨?_, ?_⟩
@@ -1741,7 +1741,7 @@ theorem degree_ratio_iteration (D : D7) (large₂ : SizeData₂ D) {C' Cl Cg cb 
     classical
     obtain ⟨a, ha0, hasum, haeq⟩ := H
       (fun I => if h : ∃ A : LocS W, GoodS D (lam' + s • epsI I) A then h.choose else A₀)
-      (fun I _ h => by simp only [dif_pos h]; exact h.choose_spec)
+      (fun I _ h => by simp only [dite_eq_left h]; exact h.choose_spec)
     have heq := congrArg hsVec (haeq μsec hμ γ p hRel θ' hθ' νR hν)
     rw [hs_vector_smul, hs_vector_finset_sum] at heq
     have hb0 : 0 < large₂.sc.b := lt_of_lt_of_le one_pos (one_le_b large₂)
@@ -1755,7 +1755,7 @@ theorem degree_ratio_iteration (D : D7) (large₂ : SizeData₂ D) {C' Cl Cg cb 
           have hc : I.card = l := (Finset.mem_filter.1 hI).2
           by_cases hex : ∃ A : LocS W, GoodS D (lam' + s • epsI I) A
           · right
-            refine ih _ _ (by simp only [dif_pos hex]; exact hex.choose_spec) ?_
+            refine ih _ _ (by simp only [dite_eq_left hex]; exact hex.choose_spec) ?_
             have h1 := l1_distance_sign_step lam' (lamD D τ) s hs I
             rw [hc] at h1
             push_cast at hr
@@ -1984,7 +1984,7 @@ theorem L2_decay_of_admissible (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb 
     (constant_bound_mono D large₂ C' Cl Cg cb Cu cT CT C0 C1 Cc _ (le_max_left _ _) hP1) hHyp.1 τ w w' hTT θ hθ W hGW S hGS hdeg
     γ p hRel θ' hθ' νR hν (l : ℕ) hle q hrange
   have hDe : DminN W.z W.z' γ (l : ℕ) = Dmin D.R.k D.R.rS W.z W.z' γ l := by
-    unfold DminN; rw [dif_pos l.isLt]
+    unfold DminN; rw [dite_eq_left l.isLt]
   rw [hDe] at hcore
   rcases eq_or_lt_of_le (Nat.cast_nonneg (α := ℝ) (Module.finrank ℂ W.Wp)) with hd | hd
   · rw [← hd, div_zero, zero_mul]
@@ -2133,8 +2133,8 @@ theorem decayProp_of_l2AbsDecay (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb
   have hL2s := scaled_div_le_of_mul _ _ _ _ s hs0 hL2'
   have hhs' : 0 ≤ hsNormSq (S.J νR γ) / s ^ 2 := by positivity
   by_cases hD : DminN W.z W.z' γ D.R.rS = 0
-  · have e1 : ampMinF D C δ τ w w' W.z W.z' γ = 1 := by unfold ampMinF; rw [if_pos hD]
-    have e2 : chRatio (Tr D w) (Tr D w') W.z W.z' γ = 1 := by unfold chRatio; rw [if_pos hD]
+  · have e1 : ampMinF D C δ τ w w' W.z W.z' γ = 1 := by unfold ampMinF; rw [ite_eq_left hD]
+    have e2 : chRatio (Tr D w) (Tr D w') W.z W.z' γ = 1 := by unfold chRatio; rw [ite_eq_left hD]
     rw [e1, e2, one_pow, one_pow, mul_one, mul_one]
     refine ⟨mul_div_le_of_scaled _ _ _ _ s hs0 (hL2s.trans (product_le_enlarged_losses _ _ _ _ _ hla0 hlac hpa hpac (by positivity))), ?_⟩
     exact mul_div_le_of_scaled_three _ _ _ _ _ s hs0
@@ -2155,10 +2155,10 @@ theorem decayProp_of_l2AbsDecay (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb
     have e1 : ampMinF D C δ τ w w' W.z W.z' γ =
         min 1 (Gf D.R.k D.R.rS W.z W.z' γ / (Tr D w * ‖DminN W.z W.z' γ D.R.rS‖ ^ 2) * tvPr D τ w' *
           (gg D)⁻¹ ^ (2 * D.R.rS + 2) * (C / D.R.k) ^ (2 * (D.R.rS : ℝ) * (1 - δ))) := by
-      unfold ampMinF nuV; rw [if_neg hD, level_rpow_neg_rank_eq D hg0]
+      unfold ampMinF nuV; rw [ite_eq_right hD, level_rpow_neg_rank_eq D hg0]
     have e2 : chRatio (Tr D w) (Tr D w') W.z W.z' γ =
         (1 + chV (Tr D w) (Tr D w') W.z W.z' γ) / shV (Tr D w) (Tr D w') W.z W.z' γ := by
-      unfold chRatio; rw [if_neg hD]
+      unfold chRatio; rw [ite_eq_right hD]
     obtain ⟨hsh, hch, hcs, hGs⟩ := hyperbolic_parameters_of_minor (Tr D w) (Tr D w') W.z W.z' γ hT hT' hTz hTz' hD hG
     rw [e1, e2]
     refine ⟨?_, ?_⟩
@@ -2275,7 +2275,7 @@ theorem degree_ratio_iteration_alt (D : D7) (large₂ : SizeData₂ D) {C' Cl Cg
     classical
     obtain ⟨a, ha0, hasum, haeq⟩ := H
       (fun I => if h : ∃ A : LocS W, GoodS D (lam' + s • epsI I) A then h.choose else A₀)
-      (fun I _ h => by simp only [dif_pos h]; exact h.choose_spec)
+      (fun I _ h => by simp only [dite_eq_left h]; exact h.choose_spec)
     have heq := haeq μsec hμ γ p hRel θ' hθ' νR hν
     have hb0 : 0 < large₂.sc.b := lt_of_lt_of_le one_pos (one_le_b large₂)
     have hB0 : 0 ≤ large₂.sc.b ^ (CDl * (D.R.m : ℝ) ^ 2) := Real.rpow_nonneg hb0.le _
@@ -2292,7 +2292,7 @@ theorem degree_ratio_iteration_alt (D : D7) (large₂ : SizeData₂ D) {C' Cl Cg
           · right
             have hgood : GoodS D (lam' + s • epsI I)
                 (if h : ∃ A : LocS W, GoodS D (lam' + s • epsI I) A then h.choose else A₀) := by
-              simp only [dif_pos hex]; exact hex.choose_spec
+              simp only [dite_eq_left hex]; exact hex.choose_spec
             refine (ih _ _ hgood ?_).trans ?_
             · have h1 := l1_distance_sign_step lam' (lamD D τ) s hs I
               rw [hc] at h1
@@ -2460,7 +2460,7 @@ theorem abs_decay_of_all_parameters (D : D7) (large₂ : SizeData₂ D) (C' Cl C
       exact div_le_div_of_nonneg_right h3 hK0.le)
     q (lamD D τ) S hGS (by rw [hl00, zero_add]; exact hrange)
   have hDe : DminN W.z W.z' γ (l : ℕ) = Dmin D.R.k D.R.rS W.z W.z' γ l := by
-    unfold DminN; rw [dif_pos l.isLt]
+    unfold DminN; rw [dite_eq_left l.isLt]
   rw [hDe, hjh (lamD D τ) S (by rw [hl00]; exact hR0) hGS] at hit
   have hc0 : 0 < Real.sqrt (S.deg / K) := Real.sqrt_pos.2 (div_pos (formal_degree_pos D hGS) hK0)
   have h5 : Real.sqrt (S.deg / K) * (‖S.J νR γ‖ * ‖Dmin D.R.k D.R.rS W.z W.z' γ l‖ ^ q) ≤

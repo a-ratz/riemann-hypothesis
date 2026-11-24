@@ -116,7 +116,7 @@ theorem UpperTheory.Gal.G3.pRelArith :
     RelArith := by
   unfold UpperTheory.Gal.G3.RelArith UpperTheory.Gal.G3.Rel
   intro p _ D G L R _ _ gb S s N N' o' o K _ t I J ψ h f u c k hψ hint hsys hrel hev n hn hnp x y
-  haveI := hψ
+  have := hψ
   have hk : k.Coprime p := hsys.2.1
   have hk0 : 0 < k := by
     apply Nat.pos_of_ne_zero

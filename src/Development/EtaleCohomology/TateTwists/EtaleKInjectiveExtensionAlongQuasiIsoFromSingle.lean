@@ -187,7 +187,7 @@ theorem LateralTheory.EtaleFoundations.etale_tate_twist_resolution_universal_of_
     rw [← sec_map_comp, hι]
     rfl
   refine ⟨⟨hGE, resAug _, hQ, hgen⟩, fun t => ?_, ?_⟩
-  · haveI := hInj t
+  · have := hInj t
     exact hF q _
   · intro T e hT
     obtain ⟨_, ε, hε, he⟩ := hT

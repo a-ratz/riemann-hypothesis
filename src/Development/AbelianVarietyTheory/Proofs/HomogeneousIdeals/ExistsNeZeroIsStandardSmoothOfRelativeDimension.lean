@@ -145,10 +145,10 @@ variable {A B : Type*} [CommRing A] [Algebra ℂ A] [CommRing B] [Algebra ℂ B]
 theorem exists_comap_eq_of_isIntegral {K A B : Type*} [Field K] [IsAlgClosed K] [CommRing A]
     [Algebra K A] [CommRing B] [Algebra K B] (φ : A →ₐ[K] B) (hφ : φ.toRingHom.IsIntegral)
     (p : A →ₐ[K] K) (hp : ∀ a, φ a = 0 → p a = 0) : ∃ q : B →ₐ[K] K, comap φ q = p := by
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  haveI : Algebra.IsIntegral A B := ⟨hφ⟩
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  have : Algebra.IsIntegral A B := ⟨hφ⟩
   have hsurj : Function.Surjective p := fun c => ⟨algebraMap K A c, by simp⟩
-  haveI : (RingHom.ker p).IsMaximal := RingHom.ker_isMaximal_of_surjective p hsurj
+  have : (RingHom.ker p).IsMaximal := RingHom.ker_isMaximal_of_surjective p hsurj
   obtain ⟨Q, hQ, hQp⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := B) (RingHom.ker p) hp
   have hcomp : ∀ a, Ideal.Quotient.mk Q (φ a) = algebraMap K (B ⧸ Q) (p a) := by
     intro a
@@ -158,7 +158,7 @@ theorem exists_comap_eq_of_isIntegral {K A B : Type*} [Field K] [IsAlgClosed K] 
     have h2 : φ (a - algebraMap K A (p a)) ∈ Q := this
     rw [map_sub, AlgHom.commutes] at h2
     exact Ideal.Quotient.eq.2 h2
-  haveI : Algebra.IsIntegral K (B ⧸ Q) := ⟨fun x => by
+  have : Algebra.IsIntegral K (B ⧸ Q) := ⟨fun x => by
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective x
     obtain ⟨h, hm, hb⟩ := hφ b
     refine ⟨h.map p.toRingHom, hm.map _, ?_⟩
@@ -175,9 +175,9 @@ theorem exists_comap_eq_of_isIntegral {K A B : Type*} [Field K] [IsAlgClosed K] 
 theorem finite_fiber_comap {R A B K : Type*} [CommRing R] [CommRing A] [Algebra R A] [CommRing B]
     [Algebra R B] [Field K] [Algebra R K] (φ : A →ₐ[R] B) (hφ : φ.Finite) (p : A →ₐ[R] K) :
     ((comap φ : (B →ₐ[R] K) → (A →ₐ[R] K)) ⁻¹' {p}).Finite := by
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  letI : Algebra A K := p.toRingHom.toAlgebra
-  haveI : Module.Finite A B := hφ
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  let : Algebra A K := p.toRingHom.toAlgebra
+  have : Module.Finite A B := hφ
   let F : ((comap φ : (B →ₐ[R] K) → (A →ₐ[R] K)) ⁻¹' {p}) → (B →ₐ[A] K) := fun q =>
     { q.1.toRingHom with commutes' := fun a => DFunLike.congr_fun q.2 a }
   refine Set.finite_coe_iff.1 (Finite.of_injective F fun q q' h => ?_)
@@ -188,7 +188,7 @@ theorem norm_le_of_isRoot_monic {h : ℂ[X]} (hm : h.Monic) {t : ℂ} (ht : h.Is
     ‖t‖ ≤ ∑ i ∈ Finset.range h.natDegree, ‖h.coeff i‖ + 1 := by
   have h1 := ht.norm_lt_cauchyBound hm.ne_zero
   have h2 : h.cauchyBound ≤ ∑ i ∈ Finset.range h.natDegree, ‖h.coeff i‖₊ + 1 := by
-    simp only [cauchyBound, hm.leadingCoeff, nnnorm_one, div_one, add_le_add_iff_right]
+    simp only [cauchyBound, hm.leadingCoeff, nnNorm_one, div_one, add_le_add_iff_right]
     exact Finset.sup_le fun i hi =>
       Finset.single_le_sum (f := fun i => ‖h.coeff i‖₊) (fun _ _ => zero_le) hi
   have h3 := h1.le.trans h2
@@ -262,14 +262,14 @@ theorem isOpenMap_comap [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] (φ : A
     (hφ : φ.Finite) (hinj : Function.Injective φ) :
     IsOpenMap (comap φ : (B →ₐ[ℂ] ℂ) → (A →ₐ[ℂ] ℂ)) := by
   have hint : φ.toRingHom.IsIntegral := RingHom.Finite.to_isIntegral hφ
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower ℂ A B := IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinj
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  have : IsScalarTower ℂ A B := IsScalarTower.of_algebraMap_eq fun x => (φ.commutes x).symm
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinj
   intro U hU
   rw [isOpen_iff_mem_nhds]
   rintro _ ⟨p, hpU, rfl⟩
   obtain ⟨a, hpa, ha⟩ := exists_apply_eq_zero_and_eq_one p
-    ((finite_fiber_comap φ hφ (comap φ p)).diff (t := U)) (fun h => h.2 hpU)
+    ((finite_fiber_comap φ hφ (comap φ p)).sdiff (t := U)) (fun h => h.2 hpU)
   have hai : IsIntegral A a := hint a
   have hm := minpoly.monic hai
   have hK : IsClosed (comap φ '' (Uᶜ ∩ {q : B →ₐ[ℂ] ℂ | ‖q a‖ ≤ 1 / 2})) :=
@@ -280,14 +280,14 @@ theorem isOpenMap_comap [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] (φ : A
     isOpen_lt (continuous_eval _).norm continuous_const
   refine mem_of_superset ((hK.isOpen_compl.inter hW).mem_nhds ⟨?_, ?_⟩) ?_
   · rintro ⟨q, ⟨hqU, hqa⟩, hq⟩
-    rw [mem_setOf_eq, ha q ⟨hq, hqU⟩] at hqa
+    rw [mem_ofPred_eq, ha q ⟨hq, hqU⟩] at hqa
     norm_num at hqa
   · have h1 : p (φ ((minpoly A a).coeff 0)) = 0 := by
       have h2 : p.toRingHom (eval₂ φ.toRingHom a (minpoly A a)) = 0 := by
         rw [show eval₂ φ.toRingHom a (minpoly A a) = 0 from minpoly.aeval A a, map_zero]
       rw [hom_eval₂, show p.toRingHom a = 0 from hpa, eval₂_at_zero] at h2
       exact h2
-    rw [mem_setOf_eq, comap_apply, h1, norm_zero]
+    rw [mem_ofPred_eq, comap_apply, h1, norm_zero]
     positivity
   · rintro r ⟨hrK, hrW⟩
     obtain ⟨t, ht, htn⟩ := exists_isRoot_norm_lt (h := (minpoly A a).map r.toRingHom) (hm.map _)
@@ -310,7 +310,7 @@ theorem isOpenMap_comap [IsDomain A] [IsIntegrallyClosed A] [IsDomain B] (φ : A
     have hqa : q a = t := by simpa [χ] using DFunLike.congr_fun hq X
     refine ⟨q, ?_, hqr⟩
     by_contra hqU
-    exact hrK ⟨q, ⟨hqU, by rw [mem_setOf_eq, hqa]; exact htn.le⟩, hqr⟩
+    exact hrK ⟨q, ⟨hqU, by rw [mem_ofPred_eq, hqa]; exact htn.le⟩, hqr⟩
 
 end GlobalTheory.AffinePoints
 end -- clump:auto
@@ -371,14 +371,14 @@ variable {K A : Type u} [Field K] [CommRing A] [Algebra K A] {d : ℕ}
 theorem faithfulSMul_and_isAlgebraic_of_etale (R S : Type*) [CommRing R] [IsDomain R] [CommRing S]
     [IsDomain S] [Algebra R S] [Algebra.Etale R S] :
     FaithfulSMul R S ∧ Algebra.IsAlgebraic R S := by
-  haveI : FaithfulSMul R S := inferInstance
+  have : FaithfulSMul R S := inferInstance
   exact ⟨this, isAlgebraic_of_quasiFiniteAt R S ⊥⟩
 
 theorem trdeg_eq_of_etale [IsDomain A] (g : MvPolynomial (Fin d) K →ₐ[K] A) (hg : g.Etale) :
     Algebra.trdeg K A = d := by
-  letI : Algebra (MvPolynomial (Fin d) K) A := g.toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin d) K) A := hg
-  haveI : IsScalarTower K (MvPolynomial (Fin d) K) A :=
+  let : Algebra (MvPolynomial (Fin d) K) A := g.toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin d) K) A := hg
+  have : IsScalarTower K (MvPolynomial (Fin d) K) A :=
     IsScalarTower.of_algebraMap_eq fun x => (g.commutes x).symm
   obtain ⟨_, _⟩ := faithfulSMul_and_isAlgebraic_of_etale (MvPolynomial (Fin d) K) A
   rw [trdeg_eq_of_isAlgebraic_top K (MvPolynomial (Fin d) K) A, MvPolynomial.trdeg_of_isDomain]
@@ -387,26 +387,26 @@ theorem trdeg_eq_of_etale [IsDomain A] (g : MvPolynomial (Fin d) K →ₐ[K] A) 
 theorem ringKrullDim_eq_of_isStandardSmooth [IsDomain A]
     [Algebra.IsStandardSmoothOfRelativeDimension d K A] : ringKrullDim A = d := by
   obtain ⟨g, hg⟩ := Algebra.IsStandardSmoothOfRelativeDimension.exists_etale_mvPolynomial d K A
-  haveI := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth (R := K) (S := A) d
+  have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth (R := K) (S := A) d
   exact ringKrullDim_eq_of_trdeg_eq K A (trdeg_eq_of_etale g hg)
 
 theorem exists_notMem_isStandardSmoothOfRelativeDimension [IsDomain A] [Algebra.FiniteType K A]
     (hd : ringKrullDim A = d) (P : Ideal A) [P.IsPrime] [Algebra.IsSmoothAt K P] :
     ∃ s ∉ P, Algebra.IsStandardSmoothOfRelativeDimension d K (Localization.Away s) := by
-  haveI : Algebra.FinitePresentation K A := Algebra.FinitePresentation.of_finiteType.1 ‹_›
+  have : Algebra.FinitePresentation K A := Algebra.FinitePresentation.of_finiteType.1 ‹_›
   obtain ⟨s, hs, ι, σ, _, _, ⟨Q⟩⟩ := Algebra.IsSmoothAt.exists_notMem_isStandardSmooth K P
   refine ⟨s, hs, ?_⟩
   have hs0 : Submonoid.powers s ≤ nonZeroDivisors A :=
     powers_le_nonZeroDivisors_of_noZeroDivisors fun h => hs (h ▸ P.zero_mem)
-  haveI : IsDomain (Localization.Away s) := IsLocalization.isDomain_localization hs0
-  haveI H : Algebra.IsStandardSmoothOfRelativeDimension Q.dimension K (Localization.Away s) :=
+  have : IsDomain (Localization.Away s) := IsLocalization.isDomain_localization hs0
+  have H : Algebra.IsStandardSmoothOfRelativeDimension Q.dimension K (Localization.Away s) :=
     Q.isStandardSmoothOfRelativeDimension rfl
   obtain ⟨g, hg⟩ := Algebra.IsStandardSmoothOfRelativeDimension.exists_etale_mvPolynomial
     Q.dimension K (Localization.Away s)
   have h1 := trdeg_eq_of_etale g hg
-  haveI : FaithfulSMul A (Localization.Away s) :=
+  have : FaithfulSMul A (Localization.Away s) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (IsLocalization.injective _ hs0)
-  haveI : Algebra.IsAlgebraic A (Localization.Away s) :=
+  have : Algebra.IsAlgebraic A (Localization.Away s) :=
     IsLocalization.isAlgebraic _ (Submonoid.powers s)
   rw [trdeg_eq_of_isAlgebraic_top K A (Localization.Away s)] at h1
   have h2 := ringKrullDim_eq_of_trdeg_eq K A h1
@@ -417,13 +417,13 @@ theorem exists_notMem_isStandardSmoothOfRelativeDimension [IsDomain A] [Algebra.
 theorem exists_ne_zero_isStandardSmoothOfRelativeDimension [PerfectField K] [IsDomain A]
     [Algebra.FiniteType K A] (hd : ringKrullDim A = d) :
     ∃ s : A, s ≠ 0 ∧ Algebra.IsStandardSmoothOfRelativeDimension d K (Localization.Away s) := by
-  haveI : Algebra.IsSmoothAt K (⊥ : Ideal A) := by
-    haveI : IsLocalization (⊥ : Ideal A).primeCompl (FractionRing A) := by
+  have : Algebra.IsSmoothAt K (⊥ : Ideal A) := by
+    have : IsLocalization (⊥ : Ideal A).primeCompl (FractionRing A) := by
       rw [Ideal.primeCompl_bot]; infer_instance
     let e := (IsLocalization.algEquiv (⊥ : Ideal A).primeCompl (FractionRing A)
       (Localization.AtPrime (⊥ : Ideal A))).restrictScalars K
-    haveI : Algebra.EssFiniteType K (FractionRing A) := .comp K A _
-    haveI : Algebra.FormallySmooth K (FractionRing A) := Algebra.FormallySmooth.of_perfectField
+    have : Algebra.EssFiniteType K (FractionRing A) := .comp K A _
+    have : Algebra.FormallySmooth K (FractionRing A) := Algebra.FormallySmooth.of_perfectField
     exact Algebra.FormallySmooth.of_equiv e
   simpa using exists_notMem_isStandardSmoothOfRelativeDimension (K := K) hd ⊥
 
@@ -434,14 +434,14 @@ variable {A : Type} [CommRing A] [Algebra ℂ A] {d : ℕ}
 theorem volume_coords_image_zeroSet [IsDomain A] (g : MvPolynomial (Fin d) ℂ →ₐ[ℂ] A)
     (hg : @Algebra.IsAlgebraic _ A _ _ g.toRingHom.toAlgebra) {f : A} (hf : f ≠ 0) :
     volume (coords g '' {p : A →ₐ[ℂ] ℂ | p f = 0}) = 0 := by
-  letI : Algebra (MvPolynomial (Fin d) ℂ) A := g.toRingHom.toAlgebra
-  obtain ⟨r, hr, c, hc⟩ := (hg.isAlgebraic f).exists_nonzero_dvd
+  let : Algebra (MvPolynomial (Fin d) ℂ) A := g.toRingHom.toAlgebra
+  obtain ⟨r, hr, c, hc⟩ := (hg.isAlgebraic f).exists_ne_zero_dvd
     (mem_nonZeroDivisors_of_ne_zero hf)
   refine measure_mono_null ?_ (ReciprocityTheory.MultiplicativeHeights.ae_eval_ne_zero_of_ne_zero_fin d r hr)
   rintro _ ⟨p, hp, rfl⟩
   have h1 : eval (coords g p) r = p (g r) := aeval_coords g p r
   have h2 : g r = f * c := hc
-  simp only [mem_compl_iff, mem_setOf_eq, not_not]
+  simp only [mem_compl_iff, mem_ofPred_eq, not_not]
   rw [h1, h2, map_mul, hp, zero_mul]
 
 theorem isOpenMap_coords [IsDomain A] (g : MvPolynomial (Fin d) ℂ →ₐ[ℂ] A) (hg : g.Finite)
@@ -461,8 +461,8 @@ theorem dense_nonvanishing [IsDomain A] [Algebra.FiniteType ℂ A] {f : A} (hf :
     Dense {p : A →ₐ[ℂ] ℂ | p f ≠ 0} := by
   obtain ⟨s, g, hinj, hg⟩ := exists_finite_inj_algHom_of_fg ℂ A
   refine dense_compl_of_volume_coords_image g hg hinj (volume_coords_image_zeroSet g ?_ hf)
-  letI := g.toRingHom.toAlgebra
-  haveI : Module.Finite (MvPolynomial (Fin s) ℂ) A := hg
+  let := g.toRingHom.toAlgebra
+  have : Module.Finite (MvPolynomial (Fin s) ℂ) A := hg
   infer_instance
 
 section Cover

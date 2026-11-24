@@ -66,7 +66,7 @@ theorem integral_mul_conj_self {G : Type} [MeasurableSpace G] (ν : Measure G) {
     (hf.norm.pow_const 2).aestronglyMeasurable]
   congr 2
   refine lintegral_congr fun w => ?_
-  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+  rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
 
 theorem integrable_mul_conj {G : Type} [MeasurableSpace G] (ν : Measure G) [IsFiniteMeasure ν] {f g : G → ℂ}
     (hf : Measurable f) (hg : Measurable g) (bf : ∃ C : ℝ, ∀ w, ‖f w‖ ≤ C) (bg : ∃ C : ℝ, ∀ w, ‖g w‖ ≤ C) :

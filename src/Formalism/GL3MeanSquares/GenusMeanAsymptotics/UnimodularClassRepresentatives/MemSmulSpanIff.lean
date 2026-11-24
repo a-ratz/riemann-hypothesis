@@ -123,7 +123,7 @@ theorem exists_smith {A₀ B₀ : Submodule (𝓞 K) V} (hA₀ : Submodule.IsFul
         change Submodule.span K (Submodule.span (RP K 𝔭) (Set.range a0) : Set V) = ⊤
         rw [Submodule.span_span_of_tower, a0.span_eq] }
   let a := b'.extendOfIsLattice K
-  have ha : ∀ i, a i = (b' i : V) := fun i => Basis.extendOfIsLattice_apply K b' i
+  have ha : ∀ i, a i = (b' i : V) := fun i => Basis.extendOfIsFullLattice_apply K b' i
   have hα0 : ∀ i, α i ≠ 0 := fun i h0 => by
     have h1 := hab i
     rw [h0, zero_smul] at h1

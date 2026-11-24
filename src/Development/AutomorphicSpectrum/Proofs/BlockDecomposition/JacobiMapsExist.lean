@@ -348,7 +348,7 @@ def nzxF (hn : ρ + p = n) (z : hermA D ρ) (x : Mx D ρ p) : G D n :=
 
 theorem continuous_nzxF (hn : ρ + p = n) : Continuous fun u : hermA D ρ × Mx D ρ p => nzxF (D := D) hn u.1 u.2 :=
   continuous_nAt (f := fun u : hermA D ρ × Mx D ρ p => (bl hn u.1.1 u.2 (adj u.2) 0 : Mx D n n))
-    (continuous_bl hn (continuous_subtype_val.comp continuous_fst) continuous_snd
+    (continuous_bl hn (continuous_subtypeVal.comp continuous_fst) continuous_snd
       (continuous_adjR.comp continuous_snd) continuous_const) _
 
 def shF (hn : ρ + p = n) (y : Mx D ρ p) : G D n :=

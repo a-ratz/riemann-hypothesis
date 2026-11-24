@@ -92,7 +92,7 @@ theorem measurableEmbedding_shear {N : Subgroup H} (hN : IsClosed (N : Set H)) :
     MeasurableEmbedding (shear N) := by
   rw [shear_eq]
   exact shearEquiv.measurableEmbedding.comp
-    ((MeasurableEmbedding.subtype_coe hN.measurableSet).prodMap MeasurableEmbedding.id)
+    ((MeasurableEmbedding.subtypeVal hN.measurableSet).prodMap MeasurableEmbedding.id)
 
 theorem nullMeasurableSet_shear_image {N : Subgroup H} (hN : IsClosed (N : Set H)) (κ : Measure N)
     (ν : Measure H) {A : Set N} {B : Set H} (hA : NullMeasurableSet A κ) (hB : NullMeasurableSet B ν) :

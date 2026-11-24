@@ -630,8 +630,8 @@ theorem akCount_split (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
     {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (hv : vd h L 𝔭 ≤ 1) {k : ℕ} (hk : 1 ≤ k) :
     akCount h L 𝔭 k = nkCount h L 𝔭 k 1 * akCount h' (S.cut L) 𝔭 k := by
   classical
-  haveI : 𝔭.IsPrime := h𝔭.isPrime
-  haveI : Fact (IsFixF K F) := ⟨hF⟩
+  have : 𝔭.IsPrime := h𝔭.isPrime
+  have : Fact (IsFixF K F) := ⟨hF⟩
 
   obtain ⟨π, hπ⟩ : ∃ π : V →ₗ[K] V', ∀ v, π v = ((prodEquiv S).symm v).2 :=
     ⟨(LinearMap.snd K K V') ∘ₗ (prodEquiv S).symm.toLinearMap, fun v => rfl⟩
@@ -767,7 +767,7 @@ theorem akCount_split (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
         exact e)
     rw [← hred, ← e2, e1]
     rfl
-  haveI : Finite (𝓞 K ⧸ extP K 𝔭 ^ k) := Formalism.HermitianLattices.Ext.L3.idealPowerSpanBounds.finite_quot (K := K) h𝔭 k
+  have : Finite (𝓞 K ⧸ extP K 𝔭 ^ k) := Formalism.HermitianLattices.Ext.L3.idealPowerSpanBounds.finite_quot (K := K) h𝔭 k
   rw [Formalism.HermitianLattices.Ext.L3.integralBasisSpans.akCount_eq h h𝔭 bb hbb hHH k, hmapHH,
     Formalism.HermitianLattices.Ext.L3.PinE.card_split _ htr,
     Formalism.HermitianLattices.Ext.L3.integralBasisSpans.nkCount_eq h h𝔭 bb hbb hHH k 1, hmapHH,

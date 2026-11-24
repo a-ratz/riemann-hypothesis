@@ -335,7 +335,7 @@ theorem dvd_mul_of_val (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClose
   have hlog : Real.log ((v (p : C) : NNReal) : ℝ) < 0 := Real.log_neg hp0 (by exact_mod_cast hp)
   let s : ℝ := Real.log p / (-Real.log ((v (p : C) : NNReal) : ℝ))
   have hs : 0 < s := div_pos (Real.log_pos hp1) (neg_pos.2 hlog)
-  letI : NormedField C := (powAbs v s hs).toNormedField
+  let : NormedField C := (powAbs v s hs).toNormedField
   have hn : ∀ x : C, ‖x‖ = ((v x : NNReal) : ℝ) ^ s := fun _ => rfl
   have hpn : ‖(p : C)‖ = (p : ℝ)⁻¹ := by
     rw [hn, Real.rpow_def_of_pos hp0]
@@ -344,9 +344,9 @@ theorem dvd_mul_of_val (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClose
       simp only [s]
       field_simp
     rw [this, Real.exp_neg, Real.exp_log (by linarith)]
-  letI : NontriviallyNormedField C :=
+  let : NontriviallyNormedField C :=
     { non_trivial := ⟨(p : C)⁻¹, by rw [norm_inv, hpn, inv_inv]; exact hp1⟩ }
-  haveI : IsUltrametricDist C := IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm
+  have : IsUltrametricDist C := IsUltrametricDist.isUltrametricDist_of_isNonarchimedean_norm
     fun x y => by
       rw [hn, hn, hn]
       rcases le_max_iff.1 (v.map_add x y) with h | h
@@ -396,10 +396,10 @@ theorem mem_of_forall_dvd {O A : Type} [CommRing O] [IsDomain O] [ValuationRing 
     (hqN : ∀ a, q • a ∈ N) (x : A)
     (h : ∀ φ : A →ₗ[O] O, (∀ y ∈ N, q ∣ φ y) → q ∣ φ x) : x ∈ N := by
   classical
-  haveI : Module.Finite O N := Module.Finite.iff_fg.mpr hN
-  haveI : Module.Flat O N := Module.Flat.flat_iff_torsion_eq_bot_of_isBezout.2
+  have : Module.Finite O N := Module.Finite.iff_fg.mpr hN
+  have : Module.Flat O N := Module.Flat.flat_iff_torsion_eq_bot_of_isBezout.2
     (Submodule.isTorsionFree_iff_torsion_eq_bot.1 inferInstance)
-  haveI : Module.Free O N := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O N := Module.free_of_flat_of_isLocalRing
   let b := Module.Free.chooseBasis O N
   let ψ : A →ₗ[O] N := LinearMap.codRestrict N (q • LinearMap.id) (fun a => hqN a)
   have hψ : ∀ a, (ψ a : A) = q • a := fun a => rfl
@@ -846,7 +846,7 @@ theorem exists_grpObj_of_mono {A X : C} [GrpObj A] (h : X ⟶ A) [Mono h] (m : X
     (hm : m ≫ h = (fst X X ≫ h) * (snd X X ≫ h)) (he : e ≫ h = 1) (hi : (i ≫ h) * h = 1) :
     ∃ _ : GrpObj X, IsMonHom h := by
   let α := ptRep h m e i hm he hi
-  letI G : GrpObj X := GrpObj.ofRepresentableBy X _ α
+  let G : GrpObj X := GrpObj.ofRepresentableBy X _ α
   have key : ∀ {T : C} (a b : T ⟶ X), (a * b) ≫ h = (a ≫ h) * (b ≫ h) := fun {T} a b =>
     congrArg Subtype.val
       (((yonedaGrpObjIsoOfRepresentableBy X _ α).hom.app (op T)).hom.map_mul a b)
@@ -881,7 +881,7 @@ theorem exists_sp_iso (T : Over (Spec (CommRingCat.of R))) [IsAffine T.left] :
     ∃ (S : Type) (_ : CommRing S) (_ : Algebra R S) (j : sp (R₀ := R) S ⟶ T), IsIso j := by
   have hU := isAffineOpen_top T.left
   obtain ⟨ρ, hρ⟩ := Spec.map_surjective (hU.fromSpec ≫ T.hom)
-  letI : Algebra R Γ(T.left, ⊤) := ρ.hom.toAlgebra
+  let : Algebra R Γ(T.left, ⊤) := ρ.hom.toAlgebra
   let j : sp (R₀ := R) Γ(T.left, ⊤) ⟶ T := Over.homMk hU.fromSpec hρ.symm
   have : IsIso j.left := by
     change IsIso hU.fromSpec
@@ -935,7 +935,7 @@ theorem mono_of_isFinFlatSub (H : IsFinFlatSub A B h) : Mono h := by
   refine Scheme.Cover.hom_ext T.left.affineCover _ _ fun i => ?_
   let T' : Over (Spec (CommRingCat.of R)) := Over.mk (T.left.affineCover.f i ≫ T.hom)
   let j : T' ⟶ T := Over.homMk (T.left.affineCover.f i) rfl
-  haveI : IsAffine T'.left := inferInstanceAs (IsAffine (T.left.affineCover.X i))
+  have : IsAffine T'.left := inferInstanceAs (IsAffine (T.left.affineCover.X i))
   have := affine_mono H (j ≫ a) (j ≫ b) (by rw [Category.assoc, Category.assoc, hab])
   exact congrArg (·.left) this
 
@@ -943,10 +943,10 @@ theorem grpObj_of_isFinFlatSub (R : Type) [CommRing R] (A : Over (Spec (CommRing
     [CommRing B] [Algebra R B] (h : sp (R₀ := R) B ⟶ A) (H : IsFinFlatSub A B h) :
     ∃ _ : GrpObj (sp (R₀ := R) B), IsMonHom h ∧ Mono h := by
   have hmono := mono_of_isFinFlatSub H
-  haveI : IsAffine (sp (R₀ := R) B).left := inferInstanceAs (IsAffine (Spec _))
+  have : IsAffine (sp (R₀ := R) B).left := inferInstanceAs (IsAffine (Spec _))
   haveI : IsAffine (𝟙_ (Over (Spec (CommRingCat.of R)))).left :=
     inferInstanceAs (IsAffine (Spec _))
-  haveI : IsAffine (sp (R₀ := R) B ⊗ sp (R₀ := R) B).left :=
+  have : IsAffine (sp (R₀ := R) B ⊗ sp (R₀ := R) B).left :=
     inferInstanceAs (IsAffine (pullback (sp (R₀ := R) B).hom (sp (R₀ := R) B).hom))
   obtain ⟨m, hm⟩ := affine_mul H (fst _ _) (snd _ _)
   obtain ⟨e, he⟩ := affine_one H (T := 𝟙_ _)
@@ -1587,7 +1587,7 @@ theorem quotientByFiniteFlat_of_freeQuotient (hF : GlobalTheory.CompanionTheory.
   have := hA.proper
   have := hA.geomConnected
   obtain ⟨_, hmon, hmono⟩ := GlobalTheory.T.finite_flat_subgroup_scheme R A B h hsub
-  letI := act h
+  let := act h
   have hgam : (γ[sp (R₀ := R) B, A] : sp (R₀ := R) B ⊗ A ⟶ A) = (fst _ A ≫ h) * snd _ A := act_smul h
   have hsmul : ∀ {T : Over (Spec (CommRingCat.of R))} (g : T ⟶ sp (R₀ := R) B) (x : T ⟶ A),
       g • x = (g ≫ h) * x := by

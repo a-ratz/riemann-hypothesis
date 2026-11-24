@@ -138,7 +138,7 @@ theorem scalar_of_range_le (hS : IsKTypeOf ε σ Λ S) (T : S →ₗ[ℂ] H)
     (hle : ∀ s, T s ∈ S) : ∃ c : ℂ, ∀ s, T s = c • (s : H) := by
   have hS' := hS
   obtain ⟨hfin, _, _, ⟨v, hvS, hv0, _⟩, _⟩ := hS'
-  haveI : Nontrivial S := ⟨⟨⟨v, hvS⟩, 0, fun h => hv0 (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial S := ⟨⟨⟨v, hvS⟩, 0, fun h => hv0 (congrArg Subtype.val h)⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue (LinearMap.codRestrict S T hle)
   obtain ⟨w, hw⟩ := hc.exists_hasEigenvector
   refine ⟨c, ?_⟩

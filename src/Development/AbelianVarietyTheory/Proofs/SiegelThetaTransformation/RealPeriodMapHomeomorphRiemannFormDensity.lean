@@ -123,7 +123,7 @@ theorem exists_equiv_zR (hs : IsSympl X bas) {x : Frame X.Ψ r} (hx : x ∈ X.do
 
   have hsurj : Function.Surjective (zRLin X idx x (n := n)) := by
     have hcl : IsClosed (LinearMap.range (zRLin X idx x (n := n)) : Set (Fin n → Fin g → ℂ)) :=
-      Submodule.closed_of_finiteDimensional _
+      Submodule.isClosed_of_finiteDimensional _
     have hd : Dense (LinearMap.range (zRLin X idx x (n := n)) : Set (Fin n → Fin g → ℂ)) := by
       refine (denseRange_zR_embR X idx hs hx (n := n)).mono ?_
       rintro _ ⟨y, rfl⟩

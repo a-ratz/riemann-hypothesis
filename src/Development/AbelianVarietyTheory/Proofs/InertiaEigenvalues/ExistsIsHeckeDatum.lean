@@ -83,7 +83,7 @@ theorem exists_isHeckeDatum : ∀ (D : D7) (N : NData D.R D.host D.what₂) (X :
   intro D N X ρ _ i j b k P hk
   obtain ⟨-, hkr, hsp, -⟩ := hk
   obtain ⟨e, he⟩ := GlobalTheory.Hk3.SplitMatch.exists_isIdemAt (conj_ne_of_split hsp)
-  obtain ⟨ϖ, h1, h2⟩ := SetLike.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
+  obtain ⟨ϖ, h1, h2⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
   obtain ⟨α, R₀, R₀', hα, -⟩ := GlobalTheory.Hk3.SplitMatch.exists_data he h1 h2 (Wc D j)
   have hA := (hα k (hkr.trans (r_le_rank_Wc j))).1
   obtain ⟨R, hR⟩ := exists_isDC_levG (Wc D j) _ _ hA.1

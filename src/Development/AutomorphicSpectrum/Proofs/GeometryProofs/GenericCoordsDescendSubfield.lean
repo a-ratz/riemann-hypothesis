@@ -140,7 +140,7 @@ theorem exists_frame_map_mkQ {I : Type} [Finite I] {L : Lat ξ Li} {p : Cpt ξ} 
     (hb : ∀ s, (L.inter (V s)).IsFlagVBOn {p} (b₀ s)) (σ : I) (n : ℕ) :
     ∃ (m : ℕ) (h : Fin m → Li ⧸ flagStep Ω (b₀ σ) n), (L.map (flagStep Ω (b₀ σ) n).mkQ).IsFrameAt h p := by
   classical
-  haveI := Fintype.ofFinite I
+  have := Fintype.ofFinite I
   have hfr : ∀ s, ∃ B : Fin (r s) → Li, (∀ i, flagStep Ω B i = flagStep Ω (b₀ s) i) ∧
       (L.inter (V s)).IsFrameAt B p := by
     intro s
@@ -239,7 +239,7 @@ theorem normAt_id_elim {X' : Scheme.{0}} {ξ' : Spec (CommRingCat.of Ω) ⟶ X'}
     · intro a ha
       have ha' : a ∈ (regAt ξ p).map (RingHom.id Ω) := by rw [hmap]; exact ha
       exact isIntegral_algebraMap (x := (⟨a, ha'⟩ : (regAt ξ p).map (RingHom.id Ω)))
-  haveI : IsLocalRing (integralClosure ((regAt ξ p).map (RingHom.id Ω)) Ω).toSubring := isLocalRing_of_eq hA
+  have : IsLocalRing (integralClosure ((regAt ξ p).map (RingHom.id Ω)) Ω).toSubring := isLocalRing_of_eq hA
   refine ⟨fun p' hp' => ?_, fun p₁ p₂ h₁ h₂ => ?_⟩
   · obtain ⟨P, hP, e⟩ := h.1 p' hp'
     rw [e]
@@ -363,7 +363,7 @@ theorem lat_eq_iSup_of_char0 {E : Type} [Field E] [NumberField E] [IsCMField E] 
     iSupIndep (fun s : CMType H ⊕ CMType H => eigSp ρ (cst.comp (labelEmb c s))) ∧
     ∀ q : Cpt ξ, (∀ r : ℕ, r.Prime → ¬ InFibre ξ r q) →
       M.lat q = ⨆ s : CMType H ⊕ CMType H, M.lat.inter (eigSp ρ (cst.comp (labelEmb c s))) q := by
-  haveI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
+  have : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
   have hl := _root_.GlobalTheory.CompanionTheory.Ar.labels_all_once E H l c
   have hinj : Function.Injective fun s : CMType H ⊕ CMType H => cst.comp (labelEmb c s) := by
     intro s s' h
@@ -378,7 +378,7 @@ theorem lat_eq_iSup_of_char0 {E : Type} [Field E] [NumberField E] [IsCMField E] 
   · intro p _
     exact hvb p trivial |>.imp fun U h => ⟨h.1, h.2.imp fun b hb => ⟨hb.1, fun q _ hq => hb.2 q trivial hq⟩⟩
   · intro p _ a e he
-    haveI := t.act.hom
+    have := t.act.hom
     exact lat_stable M t.act.act ρ hact p a e he
   · intro p hp s a
     have hf := (regAt_isLocalRing_isFractionRing_stalk X Ω ξ hg p).2.1

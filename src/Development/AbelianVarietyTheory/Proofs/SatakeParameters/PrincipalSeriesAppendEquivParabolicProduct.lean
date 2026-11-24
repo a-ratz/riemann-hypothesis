@@ -157,7 +157,7 @@ theorem char_split (ψ₁ : Fin r → kˣ →* ℂˣ) (ψ₂ : Fin t → kˣ →
         absPow k ((t : ℂ) / 2) (x (Fin.castAdd t i)) := fun i => by
     rw [← MonoidHom.mul_apply, ← absPow_add]
     congr 2
-    simp only [Fin.coe_castAdd]
+    simp only [Fin.val_castAdd]
     push_cast
     ring
   have h2 : ∀ j : Fin t, absPow k ((((r + t : ℕ) : ℂ) - 1 - 2 * (((Fin.natAdd r j : Fin (r + t)) : ℕ) : ℂ)) / 2)
@@ -165,7 +165,7 @@ theorem char_split (ψ₁ : Fin r → kˣ →* ℂˣ) (ψ₂ : Fin t → kˣ →
         absPow k (-(r : ℂ) / 2) (x (Fin.natAdd r j)) := fun j => by
     rw [← MonoidHom.mul_apply, ← absPow_add]
     congr 2
-    simp only [Fin.coe_natAdd]
+    simp only [Fin.val_natAdd]
     push_cast
     ring
   rw [Fin.prod_univ_add, Fin.prod_univ_add, Finset.prod_congr rfl fun i _ => h1 i,
@@ -197,7 +197,7 @@ def secS : GL (Fin t) k →* midPar k r t :=
     sec_mem
 
 theorem continuous_secS : Continuous (secS (k := k) (r := r) (t := t)) :=
-  (continuous_subtype_val.comp ((Stages.continuous_sec _).comp (Continuous.prodMk_right 1))).subtype_mk _
+  (continuous_subtypeVal.comp ((Stages.continuous_sec _).comp (Continuous.prodMk_right 1))).subtype_mk _
 
 theorem sndB_secS (m : GL (Fin t) k) : sndB (secS (r := r) m) = m :=
   congrArg Prod.snd (Stages.pr_sec (eSt r t) (1, m))
@@ -205,13 +205,13 @@ theorem sndB_secS (m : GL (Fin t) k) : sndB (secS (r := r) m) = m :=
 theorem mem_parab_of_borel {g : GL (Fin (r + t)) k} (hg : g ∈ parab k (points (Fin (r + t)))) :
     g ∈ parab k (two (eSt r t)) :=
   (mem_parab_two k).2 fun j i => (mem_borel _).1 hg _ _ (by
-    rw [eSt_inl, eSt_inr, Fin.lt_def, Fin.coe_castAdd, Fin.coe_natAdd]; omega)
+    rw [eSt_inl, eSt_inr, Fin.lt_def, Fin.val_castAdd, Fin.val_natAdd]; omega)
 
 theorem borel_le_midPar : parab k (points (Fin (r + t))) ≤ midPar k r t := fun g hg =>
   (mem_midPar r t ⟨g, mem_parab_of_borel hg⟩).2 ((mem_borel _).2 fun i j hij => by
     show ((Stages.pr (eSt r t) ⟨g, mem_parab_of_borel hg⟩).1 : Matrix (Fin r) (Fin r) k) i j = 0
     rw [Stages.pr_fst, eSt_inl, eSt_inl]
-    exact (mem_borel _).1 hg _ _ (by rw [Fin.lt_def, Fin.coe_castAdd, Fin.coe_castAdd]; exact hij))
+    exact (mem_borel _).1 hg _ _ (by rw [Fin.lt_def, Fin.val_castAdd, Fin.val_castAdd]; exact hij))
 
 theorem mem_borel_iff (q : midPar k r t) :
     (q : GL (Fin (r + t)) k) ∈ parab k (points (Fin (r + t))) ↔ sndB q ∈ parab k (points (Fin t)) := by
@@ -220,18 +220,18 @@ theorem mem_borel_iff (q : midPar k r t) :
     refine (mem_borel _).2 fun i j hij => ?_
     show ((Stages.pr (eSt r t) (incl q)).2 : Matrix (Fin t) (Fin t) k) i j = 0
     rw [Stages.pr_snd, eSt_inr, eSt_inr]
-    exact (mem_borel _).1 h _ _ (by rw [Fin.lt_def, Fin.coe_natAdd, Fin.coe_natAdd]; have := Fin.lt_def.1 hij; omega)
+    exact (mem_borel _).1 h _ _ (by rw [Fin.lt_def, Fin.val_natAdd, Fin.val_natAdd]; have := Fin.lt_def.1 hij; omega)
   · intro h
     have h1 : twoBlockParabolicFirstBlock k r t (incl q) ∈ parab k (points (Fin r)) := (mem_midPar r t (incl q)).1 q.2
     refine (mem_borel _).2 fun a b hab => ?_
     obtain ⟨a | a, rfl⟩ := (eSt r t).surjective a <;> obtain ⟨b | b, rfl⟩ := (eSt r t).surjective b
-    · have := (mem_borel _).1 h1 a b (by rw [eSt_inl, eSt_inl, Fin.lt_def, Fin.coe_castAdd, Fin.coe_castAdd] at hab; exact Fin.lt_def.2 hab)
+    · have := (mem_borel _).1 h1 a b (by rw [eSt_inl, eSt_inl, Fin.lt_def, Fin.val_castAdd, Fin.val_castAdd] at hab; exact Fin.lt_def.2 hab)
       rwa [twoBlockParabolicFirstBlock, MonoidHom.comp_apply, MonoidHom.coe_fst, Stages.pr_fst] at this
     · exfalso
-      rw [eSt_inl, eSt_inr, Fin.lt_def, Fin.coe_castAdd, Fin.coe_natAdd] at hab
+      rw [eSt_inl, eSt_inr, Fin.lt_def, Fin.val_castAdd, Fin.val_natAdd] at hab
       omega
     · exact (mem_parab_two k).1 (incl q).2 a b
-    · have := (mem_borel _).1 h a b (by rw [eSt_inr, eSt_inr, Fin.lt_def, Fin.coe_natAdd, Fin.coe_natAdd] at hab; exact Fin.lt_def.2 (by omega))
+    · have := (mem_borel _).1 h a b (by rw [eSt_inr, eSt_inr, Fin.lt_def, Fin.val_natAdd, Fin.val_natAdd] at hab; exact Fin.lt_def.2 (by omega))
       rwa [sndB, MonoidHom.comp_apply, MonoidHom.comp_apply, MonoidHom.coe_snd, Stages.pr_snd] at this
 
 theorem dg_fstB (q : midPar k r t) (h : (q : GL (Fin (r + t)) k) ∈ parab k (points (Fin (r + t)))) (i : Fin r) :

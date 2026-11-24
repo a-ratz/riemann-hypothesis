@@ -92,7 +92,7 @@ theorem exists_hypDec_mem_NI : ∀ (D : D7) (V V' : HSp D) (r : ℕ) (C : Matrix
       _ = GlobalTheory.MixModel.adj (C.map (incA D)) * (GlobalTheory.MixModel.adj (mt V m) * (GlobalTheory.MixModel.gA V * mt V m)) := by
           simp only [GlobalTheory.MixModel.adj, Matrix.map_mul, Matrix.transpose_mul, Matrix.mul_assoc]
       _ = _ := by rw [hu]
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine ⟨?_, ?_, ?_⟩
   · change (mt V m - 1) * C.map (incA D) = 0
     rw [Matrix.sub_mul, hC, Matrix.one_mul, sub_self]

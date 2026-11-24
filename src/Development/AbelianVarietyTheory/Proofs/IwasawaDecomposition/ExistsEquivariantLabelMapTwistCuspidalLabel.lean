@@ -86,8 +86,8 @@ theorem algebraMap_det_eq_pow {ι : Type} [Fintype ι] [DecidableEq ι] (γ : GL
       rw [IntermediateField.adjoin.powerBasis_dim, hdeg]
     have h2 : pb.gen = IntermediateField.AdjoinSimple.gen K z := IntermediateField.adjoin.powerBasis_gen hint
     rw [h1, h2, IntermediateField.minpoly_gen]
-  haveI : FiniteDimensional K K⟮z⟯ := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite K⟮z⟯ := Module.finite_of_finite K
+  have : FiniteDimensional K K⟮z⟯ := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite K⟮z⟯ := Module.finite_of_finite K
   have hfr : Module.finrank K K⟮z⟯ = Fintype.card ι := by
     rw [IntermediateField.adjoin.finrank hint, hdeg]
   have h3 := FiniteField.algebraMap_norm_eq_pow_sum (K := K) (L := K⟮z⟯) (x := pb.gen)

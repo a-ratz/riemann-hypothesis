@@ -155,7 +155,7 @@ theorem uniformizer_unit_and_delta_card (h9 : Formalism.MainNotions.DeltaInvaria
 
 theorem isUnit_q_of_uniformizer_unit (hπ : IsUnit (algebraMap (LetA O n) W.EE W.π₀)) :
     IsUnit (algebraMap (LetA O n) W.EE (Formalism.MainNotions.LiftingTheory.qp W)) := by
-  haveI := W.EE_complete
+  have := W.EE_complete
   have hj : ((PD.p : ℕ) : W.EE) ∈ (⊥ : Ideal W.EE).jacobson :=
     IsAdicComplete.le_jacobson_bot (I := Ideal.span {((PD.p : ℕ) : W.EE)})
       (Ideal.subset_span (Set.mem_singleton _))
@@ -785,7 +785,7 @@ theorem lemGB_of [NeZero n] (W : LocWach PD LL O v n) (hQ : Formalism.MainNotion
     intro τ u j hτ hu hj1 hj2
     have h1 := hjump i τ hτ u hu
     unfold JumpWinS at h1
-    rw [if_neg (by omega)] at h1
+    rw [ite_eq_right (by omega)] at h1
     simp only [Set.mem_union, Set.mem_Icc, Finset.mem_union, Finset.mem_Icc] at h1 ⊢
     omega
   have hC := hC4 hA T₁ hsur.1 i a ha1 dop₁ hd₁ cc hcc _ hX (qi ^ a • y₂) (by

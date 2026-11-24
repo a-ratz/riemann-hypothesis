@@ -357,7 +357,7 @@ private theorem isMaximal_comap_C {S : Type u} [CommRing S] [IsJacobsonRing S]
   have hbot : (⊥ : Ideal (Polynomial S ⧸ M')).IsMaximal := by
     let fieldQuot : Field (Polynomial S ⧸ M') := Ideal.Quotient.field M'
     exact Ideal.bot_isMaximal
-  have hmax := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal'
+  have hmax := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal
     ((Ideal.Quotient.mk M').comp (Polynomial.C : S →+* Polynomial S)) hint
     (⊥ : Ideal (Polynomial S ⧸ M'))
   have hker : Ideal.comap ((Ideal.Quotient.mk M').comp (Polynomial.C : S →+* Polynomial S))
@@ -550,7 +550,7 @@ theorem ringKrullDim_stalk_eq_of_etale_affineSpace {k : Type u} [Field k] {m : �
   have heq := ringKrullDim_stalk_eq_of_etale c y
   rw [heq]
   exact le_ringKrullDim_stalk_affineSpace k m (c.base y)
-    (AlgebraicGeometry.Scheme.Hom.closePoints_subset_preimage_closedPoints c hy)
+    (Scheme.Hom.closedPoints_subset_preimage_closedPoints c hy)
 
 end FunctorialResolution.EmbeddedResolution
 end -- clump:auto

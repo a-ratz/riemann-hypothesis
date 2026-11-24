@@ -79,7 +79,7 @@ theorem exists_heckeElt {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.wh
     have : Formalism.L2.Col.cO D.host.E a = a' := RingOfIntegers.ext e.symm
     rwa [this]
   obtain ⟨e, he⟩ := GlobalTheory.MovedIdem.exists_isIdemAt P hso.1
-  obtain ⟨ϖ, h1, h2⟩ := SetLike.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
+  obtain ⟨ϖ, h1, h2⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
   obtain ⟨-, hrep, hel⟩ := GlobalTheory.SplitPlace.split_local (Wc D i) P e he
   obtain ⟨α, hα⟩ := (hel ϖ h1 h2).1 k (hk.trans (r_le_rank_Wc i))
   obtain ⟨Lp, hLp, -, hs, hK⟩ := loc_package hβ (L := R.datWp i R.triv) ⟨hso.1, hN, hoff⟩ he

@@ -62,7 +62,7 @@ theorem UpperTheory.V.LDataCardLeFinrank.ineFixRoots :
     have h := congrArg A.valuation hx
     rw [map_pow, map_one] at h
     rcases lt_trichotomy (A.valuation x) 1 with h1 | h1 | h1
-    · exact absurd h (pow_lt_one₀ zero_le' h1 hm0).ne
+    · exact absurd h (pow_lt_one₀ zero_le h1 hm0).ne
     · exact h1
     · exact absurd h (one_lt_pow₀ h1 hm0).ne'
   have hint : ∀ a : ℤ, A.valuation (a : Ω) ≤ 1 := fun a => by

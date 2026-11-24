@@ -274,7 +274,7 @@ private theorem aw_conc {Q P I : Cx R} (μ : Pair Q P I) {X : Spc} {m n : ℤ} (
     · obtain rfl : r = N := by omega
       obtain rfl : u = 1 := by simpa using hu.symm
       obtain rfl : t = w + -1 := by omega
-      simp only [if_true]
+      simp only [ite_true]
       rw [sub_self_all]
     · rw [hB]
       simp
@@ -282,7 +282,7 @@ private theorem aw_conc {Q P I : Cx R} (μ : Pair Q P I) {X : Spc} {m n : ℤ} (
   · rw [term _ _ (by simp) _ _ rfl rfl]
     simp
   · intro i _
-    rw [term _ _ (by simp <;> omega) _ _ rfl rfl, if_neg (by simp <;> omega)]
+    rw [term _ _ (by simp <;> omega) _ _ rfl rfl, ite_eq_right (by simp <;> omega)]
     simp
 
 end UpperTheory.Kun
@@ -419,8 +419,8 @@ private theorem exists_section_of_etale (O : Type) [CommRing O] [HenselianLocalR
   have hφ : Spec.map φ = U.f (U.idx y) ≫ f := Spec.map_preimage _
   have he : Etale (Spec.map φ) := by rw [hφ]; infer_instance
   have hE : φ.hom.Etale := HasRingHomProperty.Spec_iff.mp he
-  letI : Algebra O (U.X (U.idx y)) := φ.hom.toAlgebra
-  haveI : Algebra.Etale O (U.X (U.idx y)) := hE
+  let : Algebra O (U.X (U.idx y)) := φ.hom.toAlgebra
+  have : Algebra.Etale O (U.X (U.idx y)) := hE
   have h1 : (Spec.map φ).base x = (⟨IsLocalRing.maximalIdeal O, inferInstance⟩ : PrimeSpectrum O) := by
     rw [hφ]
     change f (U.f (U.idx y) x) = _
@@ -596,7 +596,7 @@ theorem UpperTheory.nonempty_primitive_root_of_strictly_henselian :
   have hqk : ((q : ℕ) : IsLocalRing.ResidueField O) ≠ 0 := by
     have := (IsLocalRing.residue_ne_zero_iff_isUnit (q : O)).2 hq
     simpa using this
-  haveI : NeZero ((q : ℕ) : IsLocalRing.ResidueField O) := ⟨hqk⟩
+  have : NeZero ((q : ℕ) : IsLocalRing.ResidueField O) := ⟨hqk⟩
   have hdeg : (Polynomial.cyclotomic q (IsLocalRing.ResidueField O)).degree ≠ 0 := by
     rw [Polynomial.degree_cyclotomic]
     exact_mod_cast (Nat.totient_pos.2 (Nat.pos_of_ne_zero (NeZero.ne q))).ne'
@@ -728,9 +728,9 @@ theorem UpperTheory.bijective_etaleCohomology_laurentPolynomial_of_coordinate_un
   intro q _ O _ hSH hq u hu m j
   have hSH' := hSH
   obtain ⟨hh, hsep⟩ := hSH'
-  haveI : HenselianLocalRing O := hh
-  haveI : ConnectedSpace (Spec (CommRingCat.of O)) := (UpperTheory.connectedSpace_spec_local_and_laurent O).1
-  haveI : ConnectedSpace (Spec (CommRingCat.of (LaurentPolynomial O))) := (UpperTheory.connectedSpace_spec_local_and_laurent O).2
+  have : HenselianLocalRing O := hh
+  have : ConnectedSpace (Spec (CommRingCat.of O)) := (UpperTheory.connectedSpace_spec_local_and_laurent O).1
+  have : ConnectedSpace (Spec (CommRingCat.of (LaurentPolynomial O))) := (UpperTheory.connectedSpace_spec_local_and_laurent O).2
   obtain ⟨ζ₀⟩ := UpperTheory.nonempty_primitive_root_of_strictly_henselian q O hSH hq
   let ζ : Prim q Γ(Spec (CommRingCat.of O), ⊤) := ζ₀.map (Scheme.ΓSpecIso (CommRingCat.of O)).inv.hom
   let f : Spec (CommRingCat.of (LaurentPolynomial O)) ⟶ Spec (CommRingCat.of O) :=
@@ -763,7 +763,7 @@ theorem UpperTheory.bijective_etaleCohomology_laurentPolynomial_of_coordinate_un
     simpa using h1
   have hsurj : Function.Surjective fun b : Ht q (sp O) 0 j => cup q (pull _ (sch.map f) _ _ b) (kum q u) := by
     obtain ⟨e⟩ : Nonempty (Ht q (sch.obj (Spec (CommRingCat.of (LaurentPolynomial O)))) (0 + 1) (j + 1) ≃+ ZMod q) := (hC5 1 (j + 1)).2
-    haveI : Finite (Ht q (sch.obj (Spec (CommRingCat.of (LaurentPolynomial O)))) (0 + 1) (j + 1)) := Finite.of_equiv _ e.symm.toEquiv
+    have : Finite (Ht q (sch.obj (Spec (CommRingCat.of (LaurentPolynomial O)))) (0 + 1) (j + 1)) := Finite.of_equiv _ e.symm.toEquiv
     have key : ∀ a b : ℕ, b < q → a ≤ b → a • rootClass j ζ = b • rootClass j ζ → a = b := by
       intro a b hb hle h
       obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le hle
@@ -782,7 +782,7 @@ theorem UpperTheory.bijective_etaleCohomology_laurentPolynomial_of_coordinate_un
   · rcases eq_or_lt_of_le (show m + 1 ≤ 0 by omega) with h0 | h0
     · have hm' : m = -1 := by omega
       subst hm'
-      haveI := hneg (sp O) (-1) j (by norm_num)
+      have := hneg (sp O) (-1) j (by norm_num)
       have hb := deg0 f ζ (j + 1) _ h0
       refine ⟨fun p p' h => ?_, fun y => ?_⟩
       · have h2 : p.2 = p'.2 := Subsingleton.elim _ _
@@ -795,12 +795,12 @@ theorem UpperTheory.bijective_etaleCohomology_laurentPolynomial_of_coordinate_un
         refine ⟨(b, 0), ?_⟩
         simp
         rfl
-    · haveI := hneg (sp O) _ (j + 1) h0
-      haveI := hneg (sp O) m j hm
-      haveI := hneg (sp (LaurentPolynomial O)) _ (j + 1) h0
+    · have := hneg (sp O) _ (j + 1) h0
+      have := hneg (sp O) m j hm
+      have := hneg (sp (LaurentPolynomial O)) _ (j + 1) h0
       exact ⟨fun a b _ => Subsingleton.elim a b, fun y => ⟨0, Subsingleton.elim _ _⟩⟩
   · subst hm
-    haveI := hpos (0 + 1) (j + 1) (by norm_num)
+    have := hpos (0 + 1) (j + 1) (by norm_num)
     refine ⟨fun p p' h => ?_, fun y => ?_⟩
     · have h1 : p.1 = p'.1 := Subsingleton.elim _ _
       have h' : pull _ (sch.map f) _ _ p.1 + _ = pull _ (sch.map f) _ _ p'.1 + _ := h
@@ -810,9 +810,9 @@ theorem UpperTheory.bijective_etaleCohomology_laurentPolynomial_of_coordinate_un
       refine ⟨(0, b), ?_⟩
       simp
       rfl
-  · haveI := hpos (m + 1) (j + 1) (by omega)
-    haveI := hpos m j hm
-    haveI := (hC5 (m + 1) (j + 1)).1 (by omega)
+  · have := hpos (m + 1) (j + 1) (by omega)
+    have := hpos m j hm
+    have := (hC5 (m + 1) (j + 1)).1 (by omega)
     exact ⟨fun a b _ => Subsingleton.elim a b, fun y => ⟨0, Subsingleton.elim _ _⟩⟩
 end -- clump:auto
 end -- clump:auto
@@ -1113,7 +1113,7 @@ private theorem tw_finitary (q : ℕ) (i : ℤ) : Finitary (tw q i) :=
 
 private theorem affine_prod (W X : Scheme.{0}) [IsAffine W] [IsAffine X] : IsAffine (W ⨯ X) := by
   haveI : IsAffine (⊤_ Scheme.{0}) := IsAffine.of_isIso (terminalIsoIsTerminal specZIsTerminal).hom
-  haveI : IsAffine (pullback (terminal.from W) (terminal.from X)) :=
+  have : IsAffine (pullback (terminal.from W) (terminal.from X)) :=
     isAffine_of_isAffineHom (pullback.snd (terminal.from W) (terminal.from X))
   exact IsAffine.of_isIso (prodIsoPullback W X).hom
 
@@ -1131,10 +1131,10 @@ private theorem exists_nbhd (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (
           ∃ (k' : I) (f : k' ⟶ k), pull _ (sch.map (prod.map (𝟙 (Gq q)) (D.map f))) _ _ y = 0) := by
   obtain ⟨O, _, s, g, hs, v, hv⟩ := GlobalTheory.T.exists_strictlyHenselianEtaleStalk_over_point T (Over.mk (𝟙 T)) (by dsimp; infer_instance) u
   obtain ⟨I, _, _, G, π, ⟨hl⟩, hG⟩ := GlobalTheory.T.exists_cofiltered_limit_affine_etale_of_isStalk' T O s hs
-  haveI : IsConnected I := IsCofiltered.isConnected I
+  have : IsConnected I := IsCofiltered.isConnected I
   have hgs : g.left = s := by simpa using Over.w g
   have hc : IsLimit ((Over.forget T).mapCone (Cone.mk _ π)) := isLimitOfPreserves (Over.forget T) hl
-  haveI := prod_preservesConnectedLimits (J := I) (Gq q)
+  have := prod_preservesConnectedLimits (J := I) (Gq q)
   have hc2 := isLimitOfPreserves (prod.functor.obj (Gq q)) hc
   have hπ : ∀ {i k : I} (f : k ⟶ i), π.app k ≫ G.map f = π.app i := fun f => by
     simpa using (π.naturality f).symm
@@ -1150,7 +1150,7 @@ private theorem exists_nbhd (q : ℕ) [NeZero q] (T : Scheme.{0}) (hq : IsUnit (
     exact _root_.GlobalTheory.EtC.contCone_of_affine_limit (ZMod q) (tw q i') (tw_finitary q i') I (G ⋙ Over.forget T) _ hc (fun i => (hG i).1) n
   · intro n i' k y hy
     have hA : ∀ i, IsAffine (((G ⋙ Over.forget T) ⋙ prod.functor.obj (Gq q)).obj i) := fun i => by
-      haveI := (hG i).1
+      have := (hG i).1
       exact affine_prod (Gq q) (G.obj i).left
     exact (_root_.GlobalTheory.EtC.contCone_of_affine_limit (ZMod q) (tw q i') (tw_finitary q i') I ((G ⋙ Over.forget T) ⋙ prod.functor.obj (Gq q)) _ hc2
       hA n).2 k y hy
@@ -1331,7 +1331,7 @@ private theorem genK (W : Scheme.{0}) (I Q P : Cx R) [I.IsStrictlyGE 0] [Q.IsStr
           (cpull ((chains R).map (prod.fst : sch.obj W ⨯ E ⟶ _)) P 1 (CohomologyClass.mk κ)) := by
   have hz : Sec.map (P.d 1 2) (sg κ) = 0 := ((GlobalTheory.T.cocycle_ev_d_eq_zero_and_mk_eq_zero_iff R W P 0 1 2 (by omega) (by omega)).2 κ).1
   have hmono := GlobalTheory.T.etaleLocal_property_calculus_rules.2.1
-  haveI := LL_ge I Q
+  have := LL_ge I Q
   have key : ∀ (T : Scheme.{0}) (n' : ℤ) (a₁ : Sec (I.X n') T) (a₂ : Sec (Q.X (n' + -1)) T),
       psi W μ (sg κ) T n' (cc a₁ (n'.negOnePow • a₂)) = Sec.res (prod.snd : W ⨯ T ⟶ T) a₁ +
         μ.mul (W ⨯ T) (n' + -1) 1 n' (by omega) (Sec.res (prod.snd : W ⨯ T ⟶ T) a₂) (Sec.res (prod.fst : W ⨯ T ⟶ W) (sg κ)) := by
@@ -1448,8 +1448,8 @@ private theorem UpperTheory.Kun.main (q : ℕ) [NeZero q] (E : Spc) (hE : Inv q 
         cup q (pull _ (prod.snd : sch.obj (Gq q) ⨯ E ⟶ E) _ _ p.2) (pull _ (prod.fst : sch.obj (Gq q) ⨯ E ⟶ _) _ _ (kappa q)) := by
   obtain ⟨κ, hκ⟩ := (kappa q).mk_surjective
   have hr := fun i : ℤ => _root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q i)
-  haveI := (hr (j + 1)).2.2.1
-  haveI := (hr j).2.2.1
+  have := (hr (j + 1)).2.2.1
+  have := (hr j).2.2.1
   have hmono := GlobalTheory.T.etaleLocal_property_calculus_rules.2.1
   have h := UpperTheory.Kun.genK (Gq q) (res _ (tw q (j + 1))) (res _ (tw q j)) (res _ (tw q 1)) (hr (j + 1)).2.1 (hr j).2.1
     (twPair q j 1) κ (fun T => IsUnit (q : Γ(T, ⊤)))

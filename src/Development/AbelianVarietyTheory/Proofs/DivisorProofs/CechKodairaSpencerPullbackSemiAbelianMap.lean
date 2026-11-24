@@ -410,7 +410,7 @@ theorem isField_eq_basicOpen {Z : Scheme.{0}} {V : Z.Opens} (hV : IsAffineOpen V
     (h : ∀ a, d₁ V a = d₂ V a) (s : Γ(Z, V)) (g : Γ(Z, Z.basicOpen s)) :
     d₁ (Z.basicOpen s) g = d₂ (Z.basicOpen s) g := by
   have hle : Z.basicOpen s ≤ V := Z.basicOpen_le s
-  haveI := hV.isLocalization_basicOpen s
+  have := hV.isLocalization_basicOpen s
   have halg : ∀ x, algebraMap Γ(Z, V) Γ(Z, Z.basicOpen s) x = resG Z hle x := fun _ => rfl
 
   have hres : ∀ x : Γ(Z, V), d₁ _ (resG Z hle x) = d₂ _ (resG Z hle x) := by
@@ -608,7 +608,7 @@ theorem exists_field_pullback : ∀ (Z Z' X X' : Scheme.{0}) (p : Z ⟶ X) (p' :
         rw [hδ'2 (bas O s)]
         show _ = (φ.appLE (Z.basicOpen s) (O' (bas O s)) inf_le_left).hom (d (Z.basicOpen s) (resG Z (Z.basicOpen_le s) b))
         rw [res_appLE, hT O _ hle, hd.2.2 O.1.1 (Z.basicOpen s) (Z.basicOpen_le s) O.2, res_appLE]
-      haveI := O.1.2.isLocalization_basicOpen s
+      have := O.1.2.isLocalization_basicOpen s
       obtain ⟨⟨a₀, m⟩, hm⟩ := IsLocalization.surj (Submonoid.powers s) c
       change c * resG Z (Z.basicOpen_le s) m = resG Z (Z.basicOpen_le s) a₀ at hm
       have hunit : IsUnit (ψ (resG Z (Z.basicOpen_le s) m)) := by
@@ -820,7 +820,7 @@ theorem top_le_of_mem {S : Type} [CommRing S] [IsLocalRing S] {Y : Scheme.{0}} (
 
 theorem valR_one_of_le {A : Type} [CommRing A] {Y : Scheme.{0}} (x : Sp A ⟶ Y) (O : Y.Opens)
     (h : ⊤ ≤ x ⁻¹ᵁ O) : valR x O 1 = 1 := by
-  simp only [valR, dif_pos h, map_one]
+  simp only [valR, dite_eq_left h, map_one]
 
 theorem eq_zero_of_kills_both : ∀ (Z Z' X X' : Scheme.{0}) (p : Z ⟶ X) (p' : Z' ⟶ X') (φ : Z' ⟶ Z) (g : X' ⟶ X), IsPullback φ p' p g → ∀ (U : X.affineOpens) (U' : X'.affineOpens), U'.1 ≤ g ⁻¹ᵁ U.1 → ∀ (W₀ : Z.Opens), W₀ ≤ p ⁻¹ᵁ U.1 → ∀ (O : Z'.Opens), O ≤ φ ⁻¹ᵁ W₀ ⊓ p' ⁻¹ᵁ U'.1 → ∀ (S : Type) [CommRing S] [IsLocalRing S] (g₀ : Sp S ⟶ Z'), ⊤ ≤ g₀ ⁻¹ᵁ O → ∀ (Δ : ∀ O' : Z'.Opens, Γ(Z', O') → S), (∀ O' : Z'.Opens, O' ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O' → ∀ f f', Δ O' (f + f') = Δ O' f + Δ O' f') → (∀ O' : Z'.Opens, O' ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O' → ∀ f f', Δ O' (f * f') = valR g₀ O' f * Δ O' f' + valR g₀ O' f' * Δ O' f) → (∀ (O₁ O₂ : Z'.Opens) (h : O₂ ≤ O₁), O₁ ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O₂ → ∀ f, Δ O₂ (resG Z' h f) = Δ O₁ f) → (∀ (O₀ : Z.Opens) (O' : Z'.Opens) (h : O' ≤ φ ⁻¹ᵁ O₀), O₀ ≤ W₀ → O' ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O' → ∀ f₀, Δ O' ((φ.appLE O₀ O' h).hom f₀) = 0) → (∀ (O' : Z'.Opens) (h : O' ≤ p' ⁻¹ᵁ U'.1), O' ≤ O → ⊤ ≤ g₀ ⁻¹ᵁ O' → ∀ r, Δ O' ((p'.appLE U'.1 O' h).hom r) = 0) → ∀ f, Δ O f = 0 := by
   intro Z Z' X X' p p' φ g hpb U U' hU'U W₀ hW₀ O hO S _ _ g₀ hg₀ Δ hadd hmul hres hφ hp' f
@@ -971,7 +971,7 @@ namespace GlobalTheory.KSBaseChange
 
 theorem valR_add_of_le {A : Type} [CommRing A] {Z : Scheme.{0}} (x : Sp A ⟶ Z) (O : Z.Opens)
     (h : ⊤ ≤ x ⁻¹ᵁ O) (a b : Γ(Z, O)) : valR x O (a + b) = valR x O a + valR x O b := by
-  simp only [valR, dif_pos h, map_add (f := _)]
+  simp only [valR, dite_eq_left h, map_add (f := _)]
 
 theorem valR_zero' {A : Type} [CommRing A] {Z : Scheme.{0}} (x : Sp A ⟶ Z) (O : Z.Opens) :
     valR x O 0 = 0 := by

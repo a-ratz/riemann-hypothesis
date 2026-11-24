@@ -101,8 +101,8 @@ theorem finrank_quot_kerIdeal_comp_le {k A B C : Type} [Field k] [CommRing A] [C
         exact Ideal.mem_map_of_mem (f : Y →ₐ[k] X) (by simp [RingHom.mem_ker, ha'])
       exact h hx
     }
-  haveI := hHopf A C (ψ.comp φ)
-  haveI := hHopf B C φ
+  have := hHopf A C (ψ.comp φ)
+  have := hHopf B C φ
   let πA : A →ₐc[k] A ⧸ kerIdeal (ψ.comp φ) := Bialgebra.Quotient.mkBialgHom (kerIdeal (ψ.comp φ))
   let πB : B →ₐc[k] B ⧸ kerIdeal φ := Bialgebra.Quotient.mkBialgHom (kerIdeal φ)
   have hπA : Function.Surjective πA := Ideal.Quotient.mk_surjective

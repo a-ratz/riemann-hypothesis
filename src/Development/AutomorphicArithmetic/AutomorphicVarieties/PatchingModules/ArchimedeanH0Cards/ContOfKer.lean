@@ -139,10 +139,10 @@ theorem UpperTheory.V.Pa.B2.odEx :
     intro Z
     rw [hrep.2 Z]
     simp
-  letI : TopologicalSpace (Od x.A X n x.a) := ⊥
-  haveI : DiscreteTopology (Od x.A X n x.a) := ⟨rfl⟩
-  haveI : Finite (Od x.A X n x.a) := inferInstance
-  have hp : Continuous h.p₀ := continuous_induced_rng.2 (h.cont.comp continuous_subtype_val)
+  let : TopologicalSpace (Od x.A X n x.a) := ⊥
+  have : DiscreteTopology (Od x.A X n x.a) := ⟨rfl⟩
+  have : Finite (Od x.A X n x.a) := inferInstance
+  have hp : Continuous h.p₀ := continuous_induced_rng.2 (h.cont.comp continuous_subtypeVal)
   have hcont : ContAction rep := by
     apply cont_of_ker
     have E := ev_one x X m hm

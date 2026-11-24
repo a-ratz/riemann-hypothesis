@@ -141,7 +141,7 @@ def mkTerm (k j ρ : ℕ) (e : SC (2 * (j + ρ) + k + 1) × List (Mat k (j + ρ)
 theorem mkTerm_word {k j ρ : ℕ} {e : SC (2 * (j + ρ) + k + 1) × List (Mat k (j + ρ))}
     (h : ∀ X ∈ e.2, inLie k (j + ρ) X) : (mkTerm (Wp := Wp) (Wq := Wq) k j ρ e).word = e.2 := by
   first
-  | exact if_pos h
+  | exact ite_eq_left h
   | (show (if ∀ X ∈ e.2, inLie k (j + ρ) X then e.2 else []) = e.2; exact if_pos h)
   | (simp only [mkTerm]; exact if_pos h)
 
@@ -161,7 +161,7 @@ theorem toFS {k j ρ o κ : ℕ} {Θ : DiffOp k (j + ρ) Wp Wq} (h : InDD k j ρ
       have e1 : opApply (T :: Θ) H g = T.coef g (Rw T.word H g) + opApply Θ H g := by
         simp [opApply]
       rw [e1, hEq H g, hc g]
-      simp only [shape, List.map_cons, List.sum_cons, ContinuousLinearMap.smul_apply,
+      simp only [shape, List.map_cons, List.sum_cons, smul_apply,
         ContinuousLinearMap.id_apply]
       congr 1
       rw [hPq g]

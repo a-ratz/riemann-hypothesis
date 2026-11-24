@@ -303,8 +303,8 @@ namespace GlobalTheory.CompanionTheory.GoodBaseChange
 theorem good_baseChange : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A](B : Type) [CommRing B] [Algebra A B] (r : ℕ → A) (K₁ K₀ : Type) [AddCommGroup K₁] [Module A K₁] [AddCommGroup K₀] [Module A K₀] (d : K₁ →ₗ[A] K₀), Good p r d → Good p (fun k => algebraMap A B (r k)) (d.baseChange B) := by
   intro p _ A _ B _ _ r K₁ K₀ _ _ _ _ d hd
   intro C _ _ hC w hw k
-  letI : Algebra A C := Algebra.compHom C (algebraMap A B)
-  haveI : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra A C := Algebra.compHom C (algebraMap A B)
+  have : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let e₁ := AlgebraTensorModule.cancelBaseChange A B C C K₁
   let e₀ := AlgebraTensorModule.cancelBaseChange A B C C K₀
   have hnat : ∀ v, e₀ ((d.baseChange B).lTensor C v) = d.lTensor C (e₁ v) := by
@@ -655,7 +655,7 @@ theorem exists_isWP : ∀ (A : Type) [CommRing A](B : Type) [CommRing B] [Algebr
     constructor
     · intro T _ x y hy
       obtain ⟨z, hz, hzi⟩ := hι.ex T x (fun i => y i.succ) (fun i => hy i.succ)
-      letI : Algebra A T := x.toAlgebra
+      let : Algebra A T := x.toAlgebra
       let f : B →ₐ[A] T := { y 0 with commutes' := fun a => RingHom.congr_fun (hy 0) a }
       let g : K →ₐ[A] T := { z with commutes' := fun a => RingHom.congr_fun hz a }
       refine ⟨(Algebra.TensorProduct.productMap f g).toRingHom, ?_, ?_⟩
@@ -745,7 +745,7 @@ theorem big_step : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
     simpa using this
   obtain ⟨B, instB, i, hQ⟩ := GlobalTheory.CompanionTheory.PerfClos.exists_PQ p (MvPolynomial (𝓔 × Fin 3) A)
     (Ideal.span (gens 𝓔)) hpS
-  letI instAB : Algebra A B := (i.comp MvPolynomial.C).toAlgebra
+  let instAB : Algebra A B := (i.comp MvPolynomial.C).toAlgebra
   let iA : MvPolynomial (𝓔 × Fin 3) A →ₐ[A] B := { i with commutes' := fun _ => rfl }
   refine ⟨B, instB, instAB, hQ.pf, ?_, ?_, ?_⟩
   · apply GlobalTheory.CompanionTheory.CovCmp.cov_of_solv
@@ -833,7 +833,7 @@ theorem cov_root : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] (r : ℕ
     have := congrArg (algebraMap A (AdjoinRoot P)) hA.char
     simpa using this
   obtain ⟨T, _, i, hq⟩ := GlobalTheory.CompanionTheory.PerfClos.exists_PQ p (AdjoinRoot P) ⊥ hpS
-  letI : Algebra A T := (i.comp (algebraMap A (AdjoinRoot P))).toAlgebra
+  let : Algebra A T := (i.comp (algebraMap A (AdjoinRoot P))).toAlgebra
   let i' : AdjoinRoot P →ₐ[A] T := { i with commutes' := fun _ => rfl }
   have hq' : PQ p (i' : AdjoinRoot P →+* T) ⊥ := hq
   refine ⟨T, inferInstance, inferInstance, hq.pf, ?_, i' (AdjoinRoot.root P), ?_⟩
@@ -1512,11 +1512,11 @@ theorem tors_quot : ∀ (p : ℕ) [Fact p.Prime] (B : Type) [CommRing B] (π : B
   let I : Ideal B :=
     { carrier := {x | π * x = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [mul_add, ha, hb, add_zero]
       zero_mem' := by simp
       smul_mem' := fun c x hx => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at hx ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at hx ⊢
         rw [mul_left_comm, hx, mul_zero] }
   have hI : ∀ x, Ideal.Quotient.mk I x = 0 ↔ π * x = 0 := fun x => Ideal.Quotient.eq_zero_iff_mem
   have hsurj : Function.Surjective (Ideal.Quotient.mk I) := Ideal.Quotient.mk_surjective

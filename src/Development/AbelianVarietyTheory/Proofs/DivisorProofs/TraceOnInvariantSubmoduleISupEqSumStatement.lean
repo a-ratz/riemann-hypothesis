@@ -55,7 +55,7 @@ theorem trOn_iSup_eq_sum : ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (ι : 
     (L : V →ₗ[ℂ] V), iSupIndep M → (∀ i, FiniteDimensional ℂ (M i)) → (∀ i, ∀ v ∈ M i, L v ∈ M i) →
     trOn (⨆ i, M i) L = ∑ i, trOn (M i) L := by
   intro V _ _ ι _ M L hind hfin hinv
-  haveI := hfin
+  have := hfin
   have hp : (⨆ i, M i) = ⨆ i ∈ (Finset.univ : Finset ι), M i := by simp
   have hs : iSupIndep (fun i : (Finset.univ : Finset ι) ↦ M i) :=
     hind.comp Subtype.val_injective

@@ -323,7 +323,7 @@ theorem exists_opNorm_blockEmb_infGL_le (hι : IsBlockEmb σ J Xf Yf h ι) (w : 
     ∃ K : ℝ, 0 ≤ K ∧ ∀ y : GL (Fin d) (Cinf E),
       (opNorm ((matHom (AF F) σ J (ι (infGL E d y))).1.map ((infEmb τ).comp (compInf F E w))) : ℝ) ≤
         K * GlobalTheory.CuspRep.height y := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨Φ, j, -, hΦc, -, -, hM⟩ := hι
   set θ := (infEmb τ).comp (compInf F E w) with hθ
   have hθc : Continuous θ := GlobalTheory.Grow.continuous_infEmb_compInf F w τ

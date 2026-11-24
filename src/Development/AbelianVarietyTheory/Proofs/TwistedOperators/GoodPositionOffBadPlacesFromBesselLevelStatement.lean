@@ -134,7 +134,7 @@ theorem lineLat_smul {D : D7} (L : HSp D) (I : FractionalIdeal (𝓞 D.host.E)�
     LiftModel.lineLat L (c • ζ) (FractionalIdeal.spanSingleton _ c⁻¹ * I) = LiftModel.lineLat L ζ I := by
   ext y
   simp only [LiftModel.lineLat, Submodule.mem_map, LinearMap.coe_restrictScalars,
-    LinearMap.toSpanSingleton_apply, FractionalIdeal.mem_coe]
+    LinearMap.toSpanSingleton_apply, FractionalIdeal.mem_coeToSubmodule]
   have e : ∀ x : D.host.E, c⁻¹ * x * c = x := fun x => by field_simp
   constructor
   · rintro ⟨x, hx, rfl⟩
@@ -354,7 +354,7 @@ theorem incAdj_yZero_mulVec_gen {D : D7} {S A L T T₀ : HSp D} (o : OrthDec S A
     Matrix.vecMulVec_apply, smul_eq_mul, map_mul, map_neg, hell]
   rw [Finset.sum_congr rfl fun l _ => by
     rw [Finset.sum_eq_single (⟨ρ - 1, by omega⟩ : Fin ρ) (fun i _ hi => by simp [hi]) (fun h => absurd (Finset.mem_univ _) h)]]
-  simp only [if_true, mul_one, Finset.mul_sum, Finset.sum_mul]
+  simp only [ite_true, mul_one, Finset.mul_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun m _ => ?_
   ring
 
@@ -498,7 +498,7 @@ theorem exists_d : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : Gr
   · unfold shiftId
     rw [← mul_one ((c : D.host.F) : D.host.E)]
     exact FractionalIdeal.mul_mem_mul ((FractionalIdeal.mem_coeIdeal (𝓞 D.host.E)⁰).2 ⟨_, hc, GlobalTheory.BigLoc.coe_alg c⟩)
-      (FractionalIdeal.one_mem_inv_coe_ideal hne)
+      (FractionalIdeal.one_mem_inv_coeIdeal hne)
   · have hm : ((c : D.host.F) : D.host.E) * x ∈
         ((G.pl.modul sc : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) := by
       have := FractionalIdeal.mul_mem_mul

@@ -70,10 +70,10 @@ private theorem test_trM (D : Dom E n 0) {Φ : Matrix ι ι (H E n 0 → ℂ)} (
 
 private theorem measurable_cnt (D : Dom E n 0) {Ω : Set (H E n 0)} (hΩ : IsCompact Ω) :
     Measurable (cnt (ratH E n 0) Ω) := by
-  haveI : T2Space (H E n 0) := (ctx ratProper_holds D).t2
-  haveI : IsTopologicalGroup (H E n 0) := (ctx ratProper_holds D).tg
-  haveI : BorelSpace (H E n 0) := ⟨rfl⟩
-  haveI : Countable (ratH E n 0) := Dcy.countable_ratH'
+  have : T2Space (H E n 0) := (ctx ratProper_holds D).t2
+  have : IsTopologicalGroup (H E n 0) := (ctx ratProper_holds D).tg
+  have : BorelSpace (H E n 0) := ⟨rfl⟩
+  have : Countable (ratH E n 0) := Dcy.countable_ratH'
   unfold cnt
   refine Measurable.tsum fun γ => ?_
   have hc : Continuous fun x : H E n 0 => x⁻¹ * (γ : H E n 0) * x :=
@@ -88,12 +88,12 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.halfTerm_pf :
     Basic → GBound → Supp → Rep → Flip → DomInt → HalfTerm := by
   intro hB hGB hSu hRep hFl hDI E _ _ _ n ι _ s m ψ hψ x₀ hx₀
   classical
-  haveI : T2Space (H E n 0) := (ctx ratProper_holds s.D).t2
-  haveI : SecondCountableTopology (H E n 0) := (ctx ratProper_holds s.D).sc
-  haveI : IsTopologicalGroup (H E n 0) := (ctx ratProper_holds s.D).tg
-  haveI : BorelSpace (H E n 0) := ⟨rfl⟩
-  haveI : IsLocallyFiniteMeasure s.D.μ := s.D.haar.2.2.2
-  haveI : SFinite s.D.ν := by unfold Dom.ν; infer_instance
+  have : T2Space (H E n 0) := (ctx ratProper_holds s.D).t2
+  have : SecondCountableTopology (H E n 0) := (ctx ratProper_holds s.D).sc
+  have : IsTopologicalGroup (H E n 0) := (ctx ratProper_holds s.D).tg
+  have : BorelSpace (H E n 0) := ⟨rfl⟩
+  have : IsLocallyFiniteMeasure s.D.μ := s.D.haar.2.2.2
+  have : SFinite s.D.ν := by unfold Dom.ν; infer_instance
   obtain ⟨hlac, hlmul, -, -, -, hacc, -, -, -, -, hlc, hthc⟩ := hB E n s.pos
   have hφ : IsTestH m.φ := test_trM s.D m.t s.M
   have hψc : Continuous ψ.1 := continuous_of_mem s.π hψ
@@ -127,7 +127,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.halfTerm_pf :
     hFj.comp (continuous_id.prodMk continuous_const)
 
   have hmm : Integrable mm s.D.μ := by
-    haveI : IsFiniteMeasureOnCompacts s.D.μ :=
+    have : IsFiniteMeasureOnCompacts s.D.μ :=
       ⟨fun K hK => hK.measure_lt_top_of_nhdsWithin fun x _ => s.D.μ.finiteAt_nhdsWithin x K⟩
     refine Continuous.integrable_of_hasCompactSupport ?_ hφ.2.mul_right
     refine hφ.1.mul (hψc.comp ?_)
@@ -149,7 +149,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.halfTerm_pf :
       · have hx' : x ∈ {x | |ldet x| ≤ R + 1 ∧ (0 : ℝ) ≤ r0 x} := ⟨hx, Dcy.redSize_nonneg _⟩
         have e1 : d x = ‖ψ.1 x.1‖ * (C * ‖m.U‖) * (cnt (ratH E n 0) Ω x).toReal :=
           Set.indicator_of_mem hx _
-        rw [e1, hf, Set.indicator_of_mem hx', Real.enorm_eq_ofReal (by positivity),
+        rw [e1, hf, Set.indicator_of_mem hx', Real.eNorm_eq_ofReal (by positivity),
           ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm,
           ENNReal.ofReal_toReal (hcf x)]
         exact le_of_eq (by ring)

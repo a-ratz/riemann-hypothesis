@@ -89,7 +89,7 @@ namespace GlobalTheory.UniLevelLift
 
 theorem main : ∀ {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} (J : Subgroup (GAf L n)) (χ : J →* ℂˣ) (s : SplitPlace L) (r q : ℕ), 1 < q → ∀ (ψ₀ : AddChar (s.v.adicCompletion (maximalRealSubfield L)) ℂ) (ξ : (s.v.adicCompletion (maximalRealSubfield L))ˣ →* ℂˣ), NG.IsPsi0 s ψ₀ → NG.LevelUni J χ s r ψ₀ ξ → ∀ p : GAf L n, TrivOutside {s.v} p → IsLiftAt s r q (1 : GL (Fin r) (ZMod q)) (s.loc n p) → ∃ h : p ∈ J, χ ⟨p, h⟩ = 1 := by
   intro L _ _ _ n J χ s r q hq ψ₀ ξ hψ hU p hp hL
-  haveI : Fact (1 < q) := ⟨hq⟩
+  have : Fact (1 < q) := ⟨hq⟩
   set h := s.loc n p with hh
   have hone : ∀ i j : Fin r, ((((1 : GL (Fin r) (ZMod q)) : Matrix (Fin r) (Fin r) (ZMod q)) i j).val :
       s.v.adicCompletion (maximalRealSubfield L)) = if i = j then 1 else 0 := by
@@ -110,7 +110,7 @@ theorem main : ∀ {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} 
       by_cases e : a = b
       · subst e; simp
       · have e' : (⟨a.val, hab.1⟩ : Fin r) ≠ ⟨b.val, hab.2⟩ := fun h2 => e (Fin.ext (by simpa using congrArg Fin.val h2))
-        rw [if_neg e, if_neg e']
+        rw [ite_eq_right e, ite_eq_right e']
     · rw [dite_eq_right hab] at this
       refine ⟨?_, fun _ => this⟩
       rw [Matrix.sub_apply, this, Matrix.one_apply]
@@ -128,7 +128,7 @@ theorem main : ∀ {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} 
     rw [Matrix.one_apply]
     split_ifs
     · rw [map_one]
-    · rw [map_zero]; exact zero_le'
+    · rw [map_zero]; exact zero_le
   have huni : NG.UniRT s r h := by
     refine ⟨⟨GlobalTheory.BlockConj.mem_GLint_of (fun a b => ?_) (fun a b => ?_), fun a b ha hb => ?_⟩,
       fun a b ha hb => ⟨fun hlt => ?_, fun he => ?_⟩⟩
@@ -137,10 +137,10 @@ theorem main : ∀ {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} 
     · refine (HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 (hint _ _ ?_ (hone' a b))
       rw [← Matrix.sub_apply]; exact hKi a b
     · have hne : a ≠ b := fun e => by rw [e] at ha; omega
-      rw [(hent a b).2 (by omega), if_neg hne, map_zero]; exact zero_lt_one
+      rw [(hent a b).2 (by omega), ite_eq_right hne, map_zero]; exact zero_lt_one
     · have hne : a ≠ b := fun e => by rw [e] at hlt; omega
       have := (hent a b).1
-      rwa [Matrix.sub_apply, Matrix.one_apply, if_neg hne, sub_zero] at this
+      rwa [Matrix.sub_apply, Matrix.one_apply, ite_eq_right hne, sub_zero] at this
     · subst he
       have := (hent a a).1
       rwa [Matrix.sub_apply, Matrix.one_apply_eq] at this
@@ -159,7 +159,7 @@ theorem main : ∀ {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} 
     split_ifs with hab
     · have hne : a ≠ b := fun e => by rw [e] at hab; omega
       have := (hent a b).1
-      rwa [Matrix.sub_apply, Matrix.one_apply, if_neg hne, sub_zero] at this
+      rwa [Matrix.sub_apply, Matrix.one_apply, ite_eq_right hne, sub_zero] at this
     · rw [map_zero]; exact zero_lt_one)
   refine ⟨hpJ, Units.ext ?_⟩
   rw [hchr, hsup, map_one, one_mul, Units.val_one]

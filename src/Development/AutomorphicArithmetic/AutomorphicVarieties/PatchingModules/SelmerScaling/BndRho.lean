@@ -58,7 +58,7 @@ theorem UpperTheory.V.Pa.bndRho :
   intro l _ L G G0 h n x k
   have hp : Continuous (h.p₀ : G.G₀ → G0.G₀) := by
     apply Continuous.subtype_mk
-    exact h.cont.comp continuous_subtype_val
+    exact h.cont.comp continuous_subtypeVal
   have hpi : Continuous (fun g : G.G₀ => h.p₀ g⁻¹) := hp.comp continuous_inv
   have hρ : ∀ i j, AdicCont (Ideal.span {x.t}) (fun g : G0.G₀ => (mat x.ρ) g i j) := by
     intro i j

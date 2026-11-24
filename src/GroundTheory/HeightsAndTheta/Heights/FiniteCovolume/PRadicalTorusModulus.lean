@@ -282,7 +282,7 @@ theorem RadicalTorusModulus.proof (h : HermitianForm F E W) (v : Basis ι E W) :
       abel
     rw [e]
     have hfc : Continuous f := continuous_pi fun w => Complex.continuous_im.comp
-      (continuous_hForm_right _ _ ((continuous_apply w).comp continuous_subtype_val))
+      (continuous_hForm_right _ _ ((continuous_apply w).comp continuous_subtypeVal))
     refine MeasurePreserving.skew_product (f := fun y => p.1 + y)
       (g := fun y t => (p.2 - f y) + t) (measurePreserving_add_left _ p.1) ?_
       (Filter.Eventually.of_forall fun y => (measurePreserving_add_left volume _).map_eq)
@@ -294,7 +294,7 @@ theorem RadicalTorusModulus.proof (h : HermitianForm F E W) (v : Basis ι E W) :
     exact (heisPoint_torus hp g α hga hgy _).symm
   have hcm : Measurable (φ ∘ L ∘ φ.symm) :=
     φ.continuous.measurable.comp (hLc.comp φ.symm.continuous.measurable)
-  have hfm : Measurable fun n : unipRadical h v x₀ => f n := hf.comp measurable_subtype_coe
+  have hfm : Measurable fun n : unipRadical h v x₀ => f n := hf.comp measurable_subtypeVal
   have hk : ENNReal.ofReal |(LinearMap.det L)⁻¹| =
       ∏ w, ‖α w‖ₑ⁻¹ ^ (2 * (finrank E W - 1)) := by
     rw [abs_of_pos (inv_pos.2 hpos), hdet, ← Finset.prod_inv_distrib,

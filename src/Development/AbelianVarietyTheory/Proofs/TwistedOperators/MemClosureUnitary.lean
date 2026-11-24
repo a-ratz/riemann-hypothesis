@@ -249,8 +249,8 @@ private theorem exists_norm_one_isUnit_det_one_add_smul {K R : Type} [Field K] [
   have hfin := IsArtinianRing.setOfPred_isMaximal_finite R
   have hbad : ∀ I ∈ {I : Ideal R | I.IsMaximal}, {k : ℕ | (1 + ι (lam k) • g).det ∈ I}.Finite := by
     intro I hI
-    haveI : I.IsMaximal := hI
-    letI := Ideal.Quotient.field I
+    have : I.IsMaximal := hI
+    let := Ideal.Quotient.field I
     set π := Ideal.Quotient.mk I with hπ
     set p : Polynomial (R ⧸ I) := (1 + (Polynomial.X : Polynomial (R ⧸ I)) • (g.map π).map Polynomial.C).det
       with hpdef
@@ -633,8 +633,8 @@ private theorem weak_approx_real_lemma_9 (F E : Type) [Field F] [NumberField F] 
     (J : Matrix (Fin n) (Fin n) E) :
     ∃ S : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J → Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ J, Continuous S ∧ ∀ x,
       ((Algebra.TensorProduct.map (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.fstA F) (AlgHom.id F E)).toRingHom).mapMatrix (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ J (S x) : Matrix (Fin n) (Fin n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F ⊗[F] E)) = (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J x : Matrix (Fin n) (Fin n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F ⊗[F] E)) ∧ ((Algebra.TensorProduct.map (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sndA F) (AlgHom.id F E)).toRingHom).mapMatrix (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ J (S x) : Matrix (Fin n) (Fin n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F ⊗[F] E)) = 1 := by
-  letI tQ : TopologicalSpace (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F ⊗[F] E) := Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.topTens (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F)
-  letI tP : TopologicalSpace (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F ⊗[F] E) := Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.topTens (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F)
+  let tQ : TopologicalSpace (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F ⊗[F] E) := Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.topTens (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F)
+  let tP : TopologicalSpace (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F ⊗[F] E) := Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.topTens (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F)
   have iA : IsModuleTopology (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F ⊗[F] E) := ⟨rfl⟩
   have iF : IsModuleTopology (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F ⊗[F] E) := ⟨rfl⟩
   obtain ⟨Φ, hΦ⟩ := exists_tensor_fst_snd_decomposition F E
@@ -684,9 +684,9 @@ private theorem weak_approx_real_lemma_9 (F E : Type) [Field F] [NumberField F] 
         by rw [hsecmul, Units.mul_inv, mul_one, hsec1], by rw [hsecmul, Units.inv_mul, mul_one, hsec1]⟩,
       (sigR_transpose_mul_JR_mul_eq_JR F E (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ J _).2 (hsecmem _ (hmemI x))⟩ : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F) σ J)
   have hmatc : Continuous fun x : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J => (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J x : Matrix (Fin n) (Fin n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F ⊗[F] E)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hmatc' : Continuous fun x : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J => (↑(Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F) σ J x)⁻¹ : Matrix (Fin n) (Fin n) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Ainf F ⊗[F] E)) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   have hS : Continuous S := by
     refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
     · exact continuous_pi fun i => continuous_pi fun j =>
@@ -697,7 +697,7 @@ private theorem weak_approx_real_lemma_9 (F E : Type) [Field F] [NumberField F] 
 
 private theorem sig_involutive_and_nontrivial (D : Formalism.BasicNotions.D7) :
     (∀ x, D.sp.cm.sig (D.sp.cm.sig x) = x) ∧ ∃ z, D.sp.cm.sig z ≠ z := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   refine ⟨fun x => star_star x, ?_⟩
   by_contra hcon
   push_neg at hcon

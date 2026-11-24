@@ -369,7 +369,7 @@ theorem decays_of_isCuspForm {φ : Sm E a} (hφ : IsCuspForm φ)
   choose C hC using hRD
   obtain ⟨δ, hδ, hgeo⟩ := exists_le_norm_vecMul hω ((isCompact_maxCompact (K := E) (n := a)).mul hC₀.inv) hL
   obtain ⟨m, M, hm, -, hmM⟩ := exists_pos_bounds hC₀ (f := fun c => (ideleModule E (GeneralLinearGroup.det c) : ℝ))
-    (continuous_subtype_val.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det E a)))
+    (continuous_subtypeVal.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det E a)))
     (fun c _ => (ideleModule E _).2)
   refine ⟨(∑ i, |C i|) * ((δ ^ (a * d) * m)⁻¹) ^ N, fun g c hc ξ hξ hξL => ?_⟩
   obtain ⟨γ, b, hb, _, ⟨r, hr, hrat, rfl⟩, k, hk, e⟩ := hsieg (g * c)
@@ -392,7 +392,7 @@ theorem decays_of_isCuspForm {φ : Sm E a} (hφ : IsCuspForm φ)
       (b * diagUnits a (fun i => posIdele (K := E) (r' i) (hr'pos i)) * k) := by
     rw [e, hD, GlobalTheory.CuspBoundSiegel.diagUnits_posIdele a hρpos, ← mul_assoc b, ← splitCentre_comm]
     simp only [mul_assoc]
-  haveI : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
+  have : Nonempty (Fin a) := ⟨⟨0, ha⟩⟩
   obtain ⟨i₀, hi₀⟩ := Finite.exists_min r
 
   have h1 : ‖φ.1 (g * c)‖ ≤ (∑ i, |C i|) * (r' i₀ ^ (a * d)) ^ N := by
@@ -481,9 +481,9 @@ theorem Decays.smoothInf {F : GA E a → ℂ} (hF : Decays F) {f : Lie E a → �
   have hK : IsCompact ((fun y : GL (Fin a) (Cinf E) => toL y.val) ⁻¹' tsupport f) :=
     GlobalTheory.CuspQuot.isOpenEmbedding_val.isInducing.isCompact_preimage' hc fun x hx => hs hx
   obtain ⟨C, h⟩ := hF L hL _ (hC₀.mul (hK.image GlobalTheory.CuspQuot.continuous_infGL)) N
-  haveI : IsFiniteMeasureOnCompacts (volume : Measure (Fin a → Cinf E)) := inferInstance
-  haveI : SigmaFinite (volume : Measure (Fin a → Cinf E)) := inferInstance
-  haveI : IsFiniteMeasureOnCompacts (volume : Measure (Lie E a)) :=
+  have : IsFiniteMeasureOnCompacts (volume : Measure (Fin a → Cinf E)) := inferInstance
+  have : SigmaFinite (volume : Measure (Fin a → Cinf E)) := inferInstance
+  have : IsFiniteMeasureOnCompacts (volume : Measure (Lie E a)) :=
     MeasureTheory.Measure.pi.isFiniteMeasureOnCompacts _
   have hi : Integrable f := hf.integrable_of_hasCompactSupport hc
   refine ⟨(∫ x, ‖f x‖) * C, fun g c hcC ξ hξ hm => ?_⟩

@@ -71,11 +71,11 @@ theorem stalk_isArtinianRing (K : Type) [Field K] (X : Scheme) (f : X ⟶ Sp K) 
   have hfin : ((Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫ f.appTop).hom.Finite :=
     f.finite_appTop.comp (RingHom.Finite.of_surjective _
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of K)).inv).2)
-  letI := ((Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫ f.appTop).hom.toAlgebra
-  haveI : Module.Finite K Γ(X, ⊤) := hfin
-  haveI : IsArtinianRing Γ(X, ⊤) := IsArtinianRing.of_finite K Γ(X, ⊤)
+  let := ((Scheme.ΓSpecIso (CommRingCat.of K)).inv ≫ f.appTop).hom.toAlgebra
+  have : Module.Finite K Γ(X, ⊤) := hfin
+  have : IsArtinianRing Γ(X, ⊤) := IsArtinianRing.of_finite K Γ(X, ⊤)
   have hU := isAffineOpen_top X
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨x, trivial⟩ : (⊤ : X.Opens))
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨x, trivial⟩ : (⊤ : X.Opens))
   have hl := hU.isLocalization_stalk ⟨x, trivial⟩
   exact IsArtinianRing.localization_artinian (hU.primeIdealOf ⟨x, trivial⟩).asIdeal.primeCompl _
 
@@ -96,10 +96,10 @@ theorem stalk_quotient_ne_top_and_isArtinianRing : ∀ (K : Type) [Field K] (A :
       ⟨H.left.fromSpecStalk h₀, (Scheme.SpecMap_stalkMap_fromSpecStalk j.left).symm⟩
   have hne : J ≠ ⊤ := fun h => RingHom.ker_ne_top _ (top_le_iff.1 (h ▸ hJ1))
   refine ⟨hne, ?_⟩
-  haveI : Nontrivial (A.left.presheaf.stalk (j.left.base h₀) ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hne
-  haveI : IsLocalRing (A.left.presheaf.stalk (j.left.base h₀) ⧸ J) :=
+  have : Nontrivial (A.left.presheaf.stalk (j.left.base h₀) ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : IsLocalRing (A.left.presheaf.stalk (j.left.base h₀) ⧸ J) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom (Ideal.Quotient.mk J) :=
+  have : IsLocalHom (Ideal.Quotient.mk J) :=
     Function.Surjective.isLocalHom _ Ideal.Quotient.mk_surjective
   obtain ⟨y, hy⟩ := (hJ _ (Ideal.Quotient.mk J)).2 (by rw [Ideal.mk_ker])
   let R := CommRingCat.of (A.left.presheaf.stalk (j.left.base h₀) ⧸ J)
@@ -109,7 +109,7 @@ theorem stalk_quotient_ne_top_and_isArtinianRing : ∀ (K : Type) [Field K] (A :
         ((Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk J))).base (IsLocalRing.closedPoint R)) :=
       congrArg (fun g : Sp R ⟶ A.left => g.base (IsLocalRing.closedPoint R)) hy
     rw [this]
-    haveI : IsLocalHom (CommRingCat.ofHom (Ideal.Quotient.mk J)).hom := by
+    have : IsLocalHom (CommRingCat.ofHom (Ideal.Quotient.mk J)).hom := by
       change IsLocalHom (Ideal.Quotient.mk J); infer_instance
     rw [Spec_closedPoint, Scheme.fromSpecStalk_closedPoint]
   have key : ∀ z (_ : y.base (IsLocalRing.closedPoint R) = z),
@@ -126,7 +126,7 @@ theorem stalk_quotient_ne_top_and_isArtinianRing : ∀ (K : Type) [Field K] (A :
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective (I := J) r
     exact ⟨(j.left.stalkMap h₀).hom a, by
       rw [← CommRingCat.comp_apply, hcomp]; rfl⟩
-  haveI := stalk_isArtinianRing K H.left H.hom h₀
+  have := stalk_isArtinianRing K H.left H.hom h₀
   exact hsurj.isArtinianRing
 
 end GlobalTheory.FinStalk

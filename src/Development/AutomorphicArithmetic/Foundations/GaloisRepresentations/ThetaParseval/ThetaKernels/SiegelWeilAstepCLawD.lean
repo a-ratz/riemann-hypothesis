@@ -70,9 +70,9 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem chi_adrU_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (w : InfinitePlace F) (τ : ℝ) :
     haveI := d.cm.1
     (d.χ (Units.map (algebraMap (AF F) (AE F E)).toMonoidHom (adrU w τ)) : ℂ) = 1 := by
-  haveI := d.cm.1
-  haveI : Nontrivial (AF F) := (NumberField.AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
-  haveI : StrongRankCondition (AF F) := commRing_strongRankCondition _
+  have := d.cm.1
+  have : Nontrivial (AF F) := (NumberField.AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+  have : StrongRankCondition (AF F) := commRing_strongRankCondition _
   have hfr : Module.finrank (AF F) (AE F E) = 2 := by
     rw [Module.finrank_baseChange]; exact d.cm.2.2.1
   have hmem : adrU w τ ∈ (Units.map (Algebra.norm (AF F) : AE F E →* AF F)).range := by
@@ -80,7 +80,7 @@ theorem chi_adrU_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (w : 
     show Algebra.norm (AF F) (algebraMap (AF F) (AE F E) (adr w (Real.exp (τ / 2)))) = adr w (Real.exp τ)
     rw [Algebra.norm_algebraMap, hfr, sq, adr_mul, ← Real.exp_add, add_halves]
   have := d.ok.res (adrU w τ)
-  rw [if_pos (Subgroup.mem_sup_right hmem)] at this
+  rw [ite_eq_left (Subgroup.mem_sup_right hmem)] at this
   exact this
 end PositivityTheory.SiegelWeilFormula.AStep
 end
@@ -106,7 +106,7 @@ namespace PositivityTheory.SiegelWeilFormula.AStep
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
 theorem inFrame_dil_k {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (i₀ : Fin d.n) (τ : ℝ) (y : GR d.n)
     (hy : IsDil (Pi.single i₀ 1) τ y) : inFrame d.b (R.ι w y) = Matrix.diagonal (dilV d.cm w i₀ τ) := by
-  haveI := d.cm.1
+  have := d.cm.1
   refine Place.mat_ext d.cm d.B.emb (fun u => ?_) ?_
   · have hD : (Matrix.diagonal (dilV d.cm w i₀ τ)).map (piInf (d.B.emb u)) =
         Matrix.diagonal (fun k => piInf (d.B.emb u) (dilV d.cm w i₀ τ k)) := Matrix.diagonal_map (map_zero _)
@@ -131,7 +131,7 @@ theorem inFrame_dil_k {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (R
       simp only [dZ, Matrix.fromBlocks_multiply, Matrix.mul_one, Matrix.one_mul, Matrix.mul_zero, Matrix.zero_mul,
         add_zero, zero_add, Matrix.smul_mul, Matrix.mul_smul, smul_smul, inv_mul_cancel₀ hζ, one_smul, Matrix.one_mul,
         smul_zero, mul_inv_cancel₀ hζ]
-    · simp only [if_neg hu, Matrix.diagonal_one]
+    · simp only [ite_eq_right hu, Matrix.diagonal_one]
       exact R.off_w w u y hu
   · rw [R.off_f w y]
     ext i j
@@ -197,7 +197,7 @@ theorem inFrame_dil'_k {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (
 theorem constantTerm_dilation (H : _root_.PositivityTheory.SiegelWeilFormula.AStep.Hyps_k) {d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ} (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (w : InfinitePlace F) (i₀ : Fin d.n) (τ : ℝ) (y : GR d.n)
     (hy : IsDil (Pi.single i₀ 1) τ y) {Φ : d.Fn} (hΦ : Φ ∈ d.sch) (h : d.G) :
     d.sec0 Φ (R.ι w y * h) = Complex.exp (τ * d.m) * d.sec0 Φ h := by
-  haveI := d.cm.1
+  have := d.cm.1
   have hpres : ∀ x, ∀ Ψ ∈ d.sch, d.om x Ψ ∈ d.sch := d.ok.dbl.weil.2.1.pres
   have hΨ := hpres h Φ hΦ
   unfold _root_.PositivityTheory.SiegelWeilFormula.SD_k.sec0

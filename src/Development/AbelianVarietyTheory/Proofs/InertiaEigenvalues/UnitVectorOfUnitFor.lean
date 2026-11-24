@@ -129,8 +129,8 @@ end Generic
 theorem unitPart : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (H : LocHW l P)
     (F : LocFon l P AI H), GlobalTheory.IndefiniteRowSideFullHecke.UnitDualParts.UnitPart l P AI H F := by
   intro l _ P AI H F K s LL h
-  haveI := GlobalTheory.EtaleExact.finite_OL LL
-  haveI : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
+  have := GlobalTheory.EtaleExact.finite_OL LL
+  have : IsNoetherianRing ↥(OL LL) := IsNoetherianRing.of_finite ℤ_[l] ↥(OL LL)
   have hp : (P.PD K).p = l := P.PD_p K
   refine unitFor_of_tie Subtype.val_injective _
     (GlobalTheory.EtaleExact.map_ne_top_of_tie (F.E K s LL h).tie ?_ ?_)

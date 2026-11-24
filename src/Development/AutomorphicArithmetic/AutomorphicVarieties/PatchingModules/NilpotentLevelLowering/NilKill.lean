@@ -86,7 +86,7 @@ private theorem nilKill_dc {A M A' M' G : Type} [CommRing A] [AddCommGroup M] [M
     [Module A' M'] [Group G] (ρ : Representation A G M) (ρ' : Representation A' G M') (K K' : Subgroup G) (x : G)
     (hx : FinOrb K K' x) (f : M →+ M') (hf : ∀ g m, f (ρ g m) = ρ' g (f m)) (m : M) :
     dc ρ' K K' x (f m) = f (dc ρ K K' x m) := by
-  haveI : Fintype (MulAction.orbit K (x : G ⧸ K')) := Set.Finite.fintype hx
+  have : Fintype (MulAction.orbit K (x : G ⧸ K')) := Set.Finite.fintype hx
   unfold dc
 
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, LinearMap.sum_apply, LinearMap.sum_apply, map_sum]

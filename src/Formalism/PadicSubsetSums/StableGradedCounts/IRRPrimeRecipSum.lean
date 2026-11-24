@@ -192,7 +192,7 @@ theorem centralBinom_le (n : ℕ) (n_large : 2 < n) :
   apply mul_le_mul'
   · rw [← Finset.prod_filter_mul_prod_filter_not _ (· ≤ sqrt (2 * n))]
     apply mul_le_mul'
-    · refine (Finset.prod_le_prod' fun p _ => hf p).trans ?_
+    · refine (prod_le_prod fun p _ => hf p).trans ?_
       rw [Finset.prod_const]
       refine pow_right_mono₀ n2_pos ?_
       rw [← primesLE_card_eq_primeCounting]
@@ -201,13 +201,13 @@ theorem centralBinom_le (n : ℕ) (n_large : 2 < n) :
       obtain ⟨h3, _⟩ := Finset.mem_filter.1 h1
       exact mem_primesLE.mpr ⟨h2, (Finset.mem_filter.1 h3).2⟩
     · refine le_trans ?_ (primorial_le_four_pow (2 * n / 3))
-      refine (Finset.prod_le_prod' fun p hp => (?_ : f p ≤ p)).trans ?_
+      refine (prod_le_prod fun p hp => (?_ : f p ≤ p)).trans ?_
       · obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hp
         obtain ⟨h3, _⟩ := Finset.mem_filter.1 h1
         refine (pow_right_mono₀ (Finset.mem_filter.1 h3).2.one_lt.le ?_).trans (pow_one p).le
         exact Nat.factorization_choose_le_one (sqrt_lt'.mp <| not_le.1 h2)
       · unfold primorial
-        refine Finset.prod_le_prod_of_subset_of_one_le' ?_ ?_
+        refine prod_le_prod_of_subset_of_one_le ?_ ?_
         · intro p hp
           obtain ⟨h1, _⟩ := Finset.mem_filter.1 hp
           obtain ⟨h3, h4⟩ := Finset.mem_filter.1 h1
@@ -222,7 +222,7 @@ theorem centralBinom_le (n : ℕ) (n_large : 2 < n) :
       rw [factorization_centralBinom_of_two_mul_self_lt_three_mul n_large h2 (by omega),
         _root_.pow_zero]
     rw [h1, one_mul]
-    refine (Finset.prod_le_prod' fun p _ => hf p).trans ?_
+    refine (prod_le_prod fun p _ => hf p).trans ?_
     rw [Finset.prod_const]
     refine pow_right_mono₀ n2_pos (Finset.card_le_card fun x hx => ?_)
     obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hx
@@ -367,7 +367,7 @@ theorem four_le_log (N : ℕ) (hN : 100 ≤ N) : 4 ≤ Real.log N := by
   have h1 : Real.exp 4 ≤ 100 := by
     have he := Real.exp_one_lt_d9
     have h2 : Real.exp 4 = Real.exp 1 ^ 4 := by
-      rw [show (4 : ℝ) = ((4 : ℕ) : ℝ) * 1 by norm_num, Real.exp_nat_mul]
+      rw [show (4 : ℝ) = ((4 : ℕ) : ℝ) * 1 by norm_num, Real.exp_natCast_mul]
     rw [h2]
     calc Real.exp 1 ^ 4 ≤ 2.7182818286 ^ 4 := pow_le_pow_left₀ (Real.exp_pos 1).le he.le 4
       _ ≤ 100 := by norm_num

@@ -55,7 +55,7 @@ private theorem mix_cont {k X : Type} [Field k] [TopologicalSpace k] [IsTopologi
 
 theorem continuous_mix_family : UpperTheory.V.Sd.S2.MixCont := by
   intro l _ Γ₀ Γ _ _ _ _ _ j t α β ρ R hM hj hρ
-  haveI hN : j.range.Normal := Subgroup.normal_of_index_eq_two hM.index
+  have hN : j.range.Normal := Subgroup.normal_of_index_eq_two hM.index
   have hc : ∀ h : Γ₀, ∃ h', j h' = t⁻¹ * j h * t := fun h => by
     have := hN.conj_mem (j h) ⟨h, rfl⟩ t⁻¹
     simpa using this

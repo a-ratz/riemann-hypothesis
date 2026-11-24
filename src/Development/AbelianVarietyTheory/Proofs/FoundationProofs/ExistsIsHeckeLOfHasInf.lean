@@ -92,7 +92,7 @@ theorem mem_hatO_of_cong (hn : 0 < n) (hc : (n : OF E) ∈ c) {z : Af E}
       simp) (algebraMap E (Af E) (n : E)⁻¹ * (z - 1)) fun P => by
       have h0 := GlobalTheory.AdLat.valued_natCast_ne_zero P hn
       show Valued.v (algebraMap E (P.adicCompletion E) (n : E)⁻¹ * (z P - 1)) ≤ 1
-      rw [map_mul, map_inv₀, map_inv₀, map_natCast, inv_mul_le_iff₀ (zero_lt_iff.2 h0), mul_one]
+      rw [map_mul, map_inv₀, map_inv₀, map_natCast, inv_mul_le_iff₀ (pos_iff_ne_zero.2 h0), mul_one]
       exact hz P
   have e : z = algebraMap E (Af E) n * (algebraMap E (Af E) (n : E)⁻¹ * (z - 1)) + 1 := by
     rw [← mul_assoc, ← map_mul, mul_inv_cancel₀ hn0, map_one, one_mul, sub_add_cancel]
@@ -188,7 +188,7 @@ theorem exists_emb (i : X.Tw) (k : ℕ) : ∃ J : FractionRing (X.Ok i k) →+* 
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hJ : Function.Injective J0.toRingHom := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := X.O i) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := X.O i) ?_
     rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
     intro a b hab
     exact FaithfulSMul.algebraMap_injective (X.O i) (Kbar X i)
@@ -444,7 +444,7 @@ theorem gen_relation (hA : GlobalTheory.Published.GlobalArtinReciprocity) (hL : 
     ((normV_eq P).trans (absNorm_split (IsCMField.complexConj D.host.E) (Algebra.IsQuadraticExtension.finrank_eq_two _ _)
       (IsCMField.complexConj_ne_one _) host_unram ((conjPl_iff P Pb).2 hconj) hne)).symm
   apply J.injective
-  rw [map_mul, e1, e2, hins, Finset.filter_insert, if_pos (hPP.symm ▸ huχ.mul huξ),
+  rw [map_mul, e1, e2, hins, Finset.filter_insert, ite_eq_left (hPP.symm ▸ huχ.mul huξ),
     Finset.prod_insert fun h => hnot (Finset.mem_filter.1 h).1, hPP, hN, ← inv_inv (val (χ * ξ) P : ℂ), eq_inv,
     map_eq, map_mul J, hJ, ← IsScalarTower.algebraMap_apply, map_zpow₀, map_natCast, mul_left_comm (Λ s), map_mul ι,
     map_eq, map_zpow₀, map_natCast, mul_left_comm u]

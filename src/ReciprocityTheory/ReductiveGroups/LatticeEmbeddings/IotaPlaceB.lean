@@ -107,10 +107,10 @@ namespace ReciprocityTheory.ChartRestriction.B3
 theorem iop_extEmb {R K L : Type} [Field R] [Field K] [Field L] [IsAlgClosed K]
     [IsAlgClosed L] (f : R →+* K) (g : R →+* L) (hR : #R ≤ ℵ₀) (hK : ℵ₀ < #K) (hKL : #K = #L) :
     ∃ σ : K ≃+* L, ∀ r : R, σ (f r) = g r := by
-  letI : Algebra R K := f.toAlgebra
-  letI : Algebra R L := g.toAlgebra
-  haveI : FaithfulSMul R K := (faithfulSMul_iff_algebraMap_injective R K).2 f.injective
-  haveI : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective R L).2 g.injective
+  let : Algebra R K := f.toAlgebra
+  let : Algebra R L := g.toAlgebra
+  have : FaithfulSMul R K := (faithfulSMul_iff_algebraMap_injective R K).2 f.injective
+  have : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective R L).2 g.injective
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis R K
   obtain ⟨t, ht⟩ := exists_isTranscendenceBasis R L
 
@@ -119,8 +119,8 @@ theorem iop_extEmb {R K L : Type} [Field R] [Field K] [Field L] [IsAlgClosed K]
   simp only [Cardinal.lift_id] at h1 h2
   have hst : Cardinal.mk s = Cardinal.mk t := by rw [← h1, ← h2, hKL]
   obtain ⟨e⟩ := Cardinal.eq.1 hst
-  letI := IsAlgClosed.isAlgClosure_of_transcendence_basis _ hs
-  letI := IsAlgClosed.isAlgClosure_of_transcendence_basis _ ht
+  let := IsAlgClosed.isAlgClosure_of_transcendence_basis _ hs
+  let := IsAlgClosed.isAlgClosure_of_transcendence_basis _ ht
   let eA : Algebra.adjoin R (Set.range (Subtype.val : s → K)) ≃ₐ[R]
       Algebra.adjoin R (Set.range (Subtype.val : t → L)) :=
     hs.1.aevalEquiv.symm.trans ((MvPolynomial.renameEquiv R e).trans ht.1.aevalEquiv)

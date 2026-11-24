@@ -96,8 +96,8 @@ lemma fwd (hM : M.OK) (P : LocNG.FPair H r) (S : Frames M.L r k) (c : Coord P S)
     (f f' : Fin (r + 1) → V) (Λ : Submodule M.L.O V)
     (hT : LocNG.IsTermOver P d (⟨Λ, f, f', P.A.T, P.B.T⟩ : Term V M r)) :
     LocNG.IsTermOver P d' (⟨LocNG.img g Λ, f, f', P.A.T, P.B.T⟩ : Term V M r) := by
-  letI := hM.loc
-  haveI := hM.char0
+  let := hM.loc
+  have := hM.char0
   have hT0 := hT
   obtain ⟨-, -, ⟨n, hn, hf, hΛn⟩, ⟨n', hn', hf', hΛn'⟩, -⟩ := hT
   change f = _ at hf

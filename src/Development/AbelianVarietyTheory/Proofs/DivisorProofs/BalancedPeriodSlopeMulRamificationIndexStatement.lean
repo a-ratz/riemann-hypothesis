@@ -120,7 +120,7 @@ theorem HasPhi.baseChange {T T' : CDVR} {io : c.F →+* T.Fr} {io' : c.F →+* T
     (hv : ∀ x, x ≠ 0 → vV T'.V (ψ x) = (r : ℤ) * vV T.V x)
     (hx : letI := io.toAlgebra; letI := io'.toAlgebra; y'.1.x = spMap ψ ≫ y.1.x) {φ : ℝ} (h : HasPhi y φ) :
     HasPhi y' (r * φ) := by
-  letI := io.toAlgebra; letI := io'.toAlgebra
+  let := io.toAlgebra; let := io'.toAlgebra
   obtain ⟨G, t, m1, m2, P, ϖ, Q, β, hϖ, hQ, h0, hβ, rfl⟩ := h
   obtain ⟨h₁, -, h₃, h₄, h₅⟩ := GlobalTheory.firstFiveLaws
   obtain ⟨g, hg, hass⟩ := exists_ringHom_of_vV ψ hv
@@ -157,7 +157,7 @@ theorem HasPhi.baseChange {T T' : CDVR} {io : c.F →+* T.Fr} {io' : c.F →+* T
 
 theorem phi_eq_mul_of_frMap : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T T' : CDVR) (io : c.F →+* T.Fr) (io' : c.F →+* T'.Fr) (y : IntFr Xo c T io) (y' : IntFr Xo c T' io') (r : ℕ), 0 < r → (letI := io.toAlgebra; letI := io'.toAlgebra; ∃ ψ : T.Fr →ₐ[c.F] T'.Fr, (∀ x, x ≠ 0 → vV T'.V (ψ x) = (r : ℤ) * vV T.V x) ∧ FrMap ψ y.1 y'.1) → ∀ φ φ' : ℝ, HasPhi y φ → HasPhi y' φ' → φ' = r * φ := by
   rintro E _ _ _ H Dw l Xo c T T' io io' y y' r hr ⟨ψ, hv, hm⟩ φ φ' h h'
-  letI := io.toAlgebra; letI := io'.toAlgebra
+  let := io.toAlgebra; let := io'.toAlgebra
   exact HasPhi.unique h' (HasPhi.baseChange hr ψ.toRingHom hv hm.1 h)
 
 end GlobalTheory.SlopeRec

@@ -108,12 +108,12 @@ theorem det_zjH_ne {p s : ℕ} (σ : Equiv.Perm (Fin p)) (d : Fin p → ℂ) (hd
          simp [Matrix.one_apply]
        rw [hP, Matrix.det_permute]
        simp)
-    | (first | rw [Matrix.det_of_lowerTriangular _ ?_] | rw [Matrix.det_of_lowerTriangular ?_]
+    | (first | rw [det_of_isLowerTriangular _ ?_] | rw [Matrix.det_of_lowerTriangular ?_]
        · simp
        · intro i j hij
          have hij' : i < j := hij
          simp [Matrix.one_apply, hij'.ne, not_lt.2 hij'.le])
-    | (first | rw [Matrix.det_of_upperTriangular ?_] | rw [Matrix.det_of_upperTriangular _ ?_]
+    | (first | rw [det_of_isUpperTriangular ?_] | rw [Matrix.det_of_upperTriangular _ ?_]
        · simp [G.strictUpper]
        · intro i j hij
          have hij' : j < i := hij

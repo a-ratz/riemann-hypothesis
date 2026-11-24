@@ -231,9 +231,9 @@ theorem splitEquiv (K₁ : Subgroup (HA (Ainf F) σ J)) (K₂ : Subgroup (HA (Af
         rw [Subgroup.coe_mul, map_mul, splitA_haPair, splitA_haPair, splitA_haPair]
         rfl))
       continuous_toFun := ((continuous_haPair σ J).comp
-        (continuous_subtype_val.prodMap continuous_subtype_val)).subtype_mk _
-      continuous_invFun := ((hc1.comp continuous_subtype_val).subtype_mk _).prodMk
-        ((hc2.comp continuous_subtype_val).subtype_mk _) }
+        (continuous_subtypeVal.prodMap continuous_subtypeVal)).subtype_mk _
+      continuous_invFun := ((hc1.comp continuous_subtypeVal).subtype_mk _).prodMk
+        ((hc2.comp continuous_subtypeVal).subtype_mk _) }
   exact ⟨e, fun p => splitA_haPair σ J _ _⟩
 
 end Split

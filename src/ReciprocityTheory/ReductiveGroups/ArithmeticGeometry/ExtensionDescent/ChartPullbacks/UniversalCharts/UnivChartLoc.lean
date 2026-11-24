@@ -72,12 +72,12 @@ private lemma surj_lemma_2 {A : Type} [CommRing A] [Algebra R A] (aug : A →ₐ
   have hsurj : Function.Surjective aug := fun r => ⟨algebraMap R A r, by simp⟩
   have hsurj' : Function.Surjective aug.toRingHom := hsurj
   let P : Ideal A := (z : PrimeSpectrum A).asIdeal
-  haveI hP : P.IsPrime := (z : PrimeSpectrum A).isPrime
+  have hP : P.IsPrime := (z : PrimeSpectrum A).isPrime
   have hker : RingHom.ker aug ≤ P := fun x hx => by
     have h1 : x ^ (m + 1) ∈ (RingHom.ker aug) ^ (m + 1) := Ideal.pow_mem_pow hx _
     rw [hm, Ideal.mem_bot] at h1
     exact hP.mem_of_pow_mem (m + 1) (by rw [h1]; exact P.zero_mem)
-  haveI hQ : (Ideal.map aug P).IsPrime := Ideal.map_isPrime_of_surjective hsurj hker
+  have hQ : (Ideal.map aug P).IsPrime := Ideal.map_isPrime_of_surjective hsurj hker
   refine ⟨(PrimeSpectrum.mk (Ideal.map aug P) hQ : PrimeSpectrum R), ?_⟩
   apply PrimeSpectrum.ext
   first
@@ -153,20 +153,20 @@ theorem univChartLoc [IsLocalRing R] (G : Over (Spec (CommRingCat.of R))) [GrpOb
        exact ⟨W, hW, hxW⟩)
   have he_mem : ∀ w, e.base w ∈ U := mem_of_local_lemma e U hqU
   let jU := hU.fromSpec
-  haveI hjUo : IsOpenImmersion jU := (inferInstance : IsOpenImmersion hU.fromSpec)
+  have hjUo : IsOpenImmersion jU := (inferInstance : IsOpenImmersion hU.fromSpec)
   have hrange : Set.range jU.base = (U : Set G.left) := hU.range_fromSpec
   let Bc : CommRingCat := G.left.presheaf.obj (Opposite.op U)
   let fB : CommRingCat.of R ⟶ Bc :=
     Spec.preimage (jU ≫ G.hom : Spec Bc ⟶ Spec (CommRingCat.of R))
   have hfB : Spec.map fB = jU ≫ G.hom := Spec.map_preimage _
-  letI : Algebra R Bc := fB.hom.toAlgebra
+  let : Algebra R Bc := fB.hom.toAlgebra
   let jO : sp (R₀ := R) Bc ⟶ G := Over.homMk jU hfB.symm
-  haveI hmono : Mono jO.left := (inferInstance : Mono jU)
+  have hmono : Mono jO.left := (inferInstance : Mono jU)
 
   have hsm : Smooth (jU ≫ G.hom) := by
     first
     | exact inferInstance
-  haveI hBsm : Algebra.Smooth R Bc := by
+  have hBsm : Algebra.Smooth R Bc := by
     have h2 : Smooth (Spec.map fB) := by rw [hfB]; exact hsm
     first
     | exact (HasRingHomProperty.Spec_iff (P := @Smooth)).mp h2

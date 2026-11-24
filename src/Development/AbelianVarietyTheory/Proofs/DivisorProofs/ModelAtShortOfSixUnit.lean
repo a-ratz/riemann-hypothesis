@@ -50,7 +50,7 @@ theorem mem_of_pow_mem_valSubring (V : ValuationSubring ℂ) {x : ℂ} {n : ℕ}
     x ∈ V := by
   rw [← V.valuation_le_one_iff] at h ⊢
   rw [map_pow] at h
-  exact (pow_le_one_iff_of_nonneg zero_le' hn).1 h
+  exact (pow_le_one_iff_of_nonneg zero_le hn).1 h
 
 theorem inv_two_three_mem (V : ValuationSubring ℂ) (h : V.valuation (6 : ℂ) = 1) :
     (2 : ℂ)⁻¹ ∈ V ∧ (3 : ℂ)⁻¹ ∈ V := by

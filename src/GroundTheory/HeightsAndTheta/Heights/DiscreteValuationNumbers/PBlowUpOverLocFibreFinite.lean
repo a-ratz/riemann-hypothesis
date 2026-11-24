@@ -148,7 +148,7 @@ theorem isMultiHomog_prod_X_pow (e : ∀ o, extIdx ι J o) (b : Option K → ℕ
 theorem prod_X_pow_not_mem {Q : Ideal (MRing (extIdx ι J) R)} (hQ : Q.IsPrime)
     {e : ∀ o, extIdx ι J o} (he : ∀ o, (X ⟨o, e o⟩ : MRing (extIdx ι J) R) ∉ Q) (b : Option K → ℕ) :
     (∏ o, (X ⟨o, e o⟩ : MRing (extIdx ι J) R) ^ b o) ∉ Q := by
-  haveI := hQ
+  have := hQ
   exact fun h => (Q.primeCompl.prod_mem fun o _ => Q.primeCompl.pow_mem (he o) _) h
 
 def chartCoord (P : Ideal (MRing ι R)) [P.IsPrime] (u : J → MRing ι R) (e : ∀ o, extIdx ι J o) :
@@ -188,7 +188,7 @@ theorem eq_of_le_of_mem_fibre (P W : Ideal (MRing ι R)) [P.IsPrime]
     (hle : Q₀ ≤ Q) : Q₀ = Q := by
   obtain ⟨hQ₀p, hQ₀h, hQ₀r, hQ₀le, hQ₀W⟩ := hQ₀
   obtain ⟨hQp, hQh, hQr, hQle, hQW⟩ := hQ
-  haveI := hN
+  have := hN
   by_contra hne
   choose e he using hQr
   have hL : ∀ f : MRing ι R, f ∉ P →
@@ -286,7 +286,7 @@ theorem eq_of_le_of_mem_fibre (P W : Ideal (MRing ι R)) [P.IsPrime]
       chartVal_of_homog P u e (isMultiHomog_liftForm hx), blowUpFrac_apply, blowUpEval_liftForm] at h
     exact div_ne_zero (hL x hxP) (hφne (hG _) fun h' => hGQ _ (hQle h')) h
 
-  obtain ⟨F, hFQ, hFQ₀⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hle hne)
+  obtain ⟨F, hFQ, hFQ₀⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hle hne)
   obtain ⟨b, hbQ₀⟩ : ∃ b, weightedHomogeneousComponent (blockWeight (extIdx ι J)) b F ∉ Q₀ := by
     by_contra h
     push_neg at h
@@ -306,9 +306,9 @@ theorem eq_of_le_of_mem_fibre (P W : Ideal (MRing ι R)) [P.IsPrime]
     calc (2 : ℕ∞) = 0 + 1 + 1 := by norm_num
       _ ≤ 𝔮₀.height + 1 := add_le_add e1 le_rfl
       _ ≤ 𝔮.height := e2
-  haveI : Algebra.FiniteType (homLocRing P W) B :=
+  have : Algebra.FiniteType (homLocRing P W) B :=
     Algebra.FiniteType.adjoin_of_finite (R := homLocRing P W) (t := Set.range (chartCoord P u e)) (Set.finite_range _)
-  haveI hAlg : Algebra.IsAlgebraic (homLocRing P W) B := by
+  have hAlg : Algebra.IsAlgebraic (homLocRing P W) B := by
     refine (Subalgebra.isAlgebraic_iff B).mp (Algebra.isAlgebraic_adjoin_iff.mpr ?_)
     rintro _ ⟨⟨o, i⟩, rfl⟩
     cases o with
@@ -366,7 +366,7 @@ open BlowUpOverLocFibreFinite in
 theorem BlowUpOverLocFibreFinite.proof : BlowUpOverLocFibreFinite.Statement.{u} := by
   intro O _ _ _ K _ _ ι _ J _ P n hP N u hu hu' c x hx hxP W hWmin hWrel
   have hPp : P.IsPrime := hP.multiProj.isPrime
-  haveI : P.IsPrime := hPp
+  have : P.IsPrime := hPp
   have hWp : W.IsPrime := hWmin.1.1
   have hPW : P ≤ W := le_sup_left.trans hWmin.1.2
   have hxW : x ∈ W := hWmin.1.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self x))
@@ -407,7 +407,7 @@ theorem BlowUpOverLocFibreFinite.proof : BlowUpOverLocFibreFinite.Statement.{u} 
         rcases h1 with h1 | h1
         · exact hxP h1
         · exact hgW (hPW h1)
-      haveI := hlocal
+      have := hlocal
       have hlt : (⊥ : Ideal (homLocRing P W)) < IsLocalRing.maximalIdeal (homLocRing P W) := by
         refine bot_lt_iff_ne_bot.mpr fun h => hne ?_
         have hm := (IsLocalRing.mem_maximalIdeal _).mpr hnu
@@ -427,7 +427,7 @@ theorem BlowUpOverLocFibreFinite.proof : BlowUpOverLocFibreFinite.Statement.{u} 
     rw [← Ideal.mem_comap, hQW]
     exact hxW
   refine ⟨⟨hQp, sup_le hQle ((Ideal.span_singleton_le_iff_mem _).mpr hxQ)⟩, fun Q' hQ' hQ'Q => ?_⟩
-  haveI := hQ'.1
+  have := hQ'.1
   obtain ⟨Q₀, hQ₀, hQ₀Q'⟩ := Ideal.exists_minimalPrimes_le hQ'.2
   have hQ₀p : Q₀.IsPrime := hQ₀.1.1
   have hQ₀Q : Q₀ ≤ Q := hQ₀Q'.trans hQ'Q

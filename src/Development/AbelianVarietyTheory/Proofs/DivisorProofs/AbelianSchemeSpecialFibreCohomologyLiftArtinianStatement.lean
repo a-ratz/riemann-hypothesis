@@ -96,7 +96,7 @@ namespace GlobalTheory.AbCoh.FieldSq
 
 theorem axes_noPrim_wedge : (∀ (k : Type) [CommRing k], IsField k → ∀ (B : Over (Sp k)) [GrpObj B] (g : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → AxesVanishingStructureSheafDegOne B ∧ NoPrimitiveStructureSheafH2 B ∧ WedgeO (OAff B.hom)) := by
   intro k _ hk B _ g hab hsm
-  letI : Field k := hk.toField
+  let : Field k := hk.toField
   obtain ⟨-, -, hw, hn, ha⟩ := GlobalTheory.T.abelianVariety_structureSheaf_cohomology_anyField k B g hab hsm
   exact ⟨ha, hn, hw⟩
 
@@ -252,9 +252,9 @@ theorem tmul_pull_eq_zero : ∀ (R R' R₀ : Type) [CommRing R] [CommRing R'] [C
   intro R R' R₀ _ _ _ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ Y Y' Y₀ q q' q₀ χ χ₀ k k₀ ψ ψ' ψ₀ w w' w₀
     _hψ' hψ₀ hE _hs hq hC u y hT hy
   obtain ⟨hσ, hker, hσ₀, hker₀⟩ := hE
-  haveI : IsClosedImmersion χ := isClosedImmersion_of_isPullback_surj hσ k
-  haveI : IsClosedImmersion χ₀ := isClosedImmersion_of_isPullback_surj hσ₀ k₀
-  haveI : IsClosedImmersion φ₀ := isClosedImmersion_of_isPullback_surj hσ₀ h₀
+  have : IsClosedImmersion χ := isClosedImmersion_of_isPullback_surj hσ k
+  have : IsClosedImmersion χ₀ := isClosedImmersion_of_isPullback_surj hσ₀ k₀
+  have : IsClosedImmersion φ₀ := isClosedImmersion_of_isPullback_surj hσ₀ h₀
   have ht : σ t = 0 := by rw [← RingHom.mem_ker, hker]; exact Ideal.mem_span_singleton_self t
   obtain ⟨f, c, hcf, hcy, hred⟩ := hT
 
@@ -425,7 +425,7 @@ theorem pO1_id {R : Type} [CommRing R] (A : Over (Sp R)) (a : HO1 A.hom) : pO1 (
   ((GlobalTheory.T.structureSheafCohomology_pullback_comp_cup_id).2.2 R A).1 a
 
 theorem eq_zero_of_base {R : Type} [CommRing R] (a : HO1 (𝟙_ (Over (Sp R))).hom) : a = 0 := by
-  haveI := ((GlobalTheory.AbCoh.Vanish.main).1 R (𝟙_ (Over (Sp R))).left (𝟙_ (Over (Sp R))).hom
+  have := ((GlobalTheory.AbCoh.Vanish.main).1 R (𝟙_ (Over (Sp R))).left (𝟙_ (Over (Sp R))).hom
     (inferInstanceAs (IsAffine (Sp R)))).1
   exact Subsingleton.elim _ _
 
@@ -442,7 +442,7 @@ theorem axes_defect {R : Type} [CommRing R] (A : Over (Sp R)) [GrpObj A] (x : HO
 
 theorem main : ∀ (R : Type) [CommRing R] [IsLocalRing R] (t : R) (R' : Type) [CommRing R'] (σ' : R →+* R'), Function.Surjective σ' → RingHom.ker σ' = Ideal.span {t} → t ≠ 0 → (∀ a ∈ IsLocalRing.maximalIdeal R, a * t = 0) → (∀ (k : Type) [CommRing k], IsField k → ∀ (B : Over (Sp k)) [GrpObj B] (g : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → AxesVanishingStructureSheafDegOne B ∧ NoPrimitiveStructureSheafH2 B ∧ WedgeO (OAff B.hom)) → (∀ (B : Over (Sp R')) [GrpObj B] (g : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → StructureSheafH1Primitive B) → ∀ (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → StructureSheafH1Primitive A := by
   intro R _ _ t R' _ σ' hsurj hker ht hmt hfield hR' A _ g hab hsm
-  letI : Algebra R R' := σ'.toAlgebra
+  let : Algebra R R' := σ'.toAlgebra
   have hkF : IsField (R ⧸ IsLocalRing.maximalIdeal R) :=
     (Ideal.Quotient.maximal_ideal_iff_isField_quotient _).mp inferInstance
   have hSE : SmallExt t (algebraMap R R') (algebraMap R (R ⧸ IsLocalRing.maximalIdeal R)) := by
@@ -451,9 +451,9 @@ theorem main : ∀ (R : Type) [CommRing R] [IsLocalRing R] (t : R) (R' : Type) [
     refine ⟨hmt a, fun h ↦ ?_⟩
     by_contra hna
     exact ht ((IsLocalRing.notMem_maximalIdeal.mp hna).mul_right_eq_zero.mp h)
-  haveI := hsm
-  haveI : Smooth A.hom := SmoothOfRelativeDimension.smooth g A.hom
-  haveI : Flat A.hom := inferInstance
+  have := hsm
+  have : Smooth A.hom := SmoothOfRelativeDimension.smooth g A.hom
+  have : Flat A.hom := inferInstance
   have hfl2 : Flat (A ⊗ A).hom := by rw [Over.tensorObj_hom]; infer_instance
   obtain ⟨B', _, pr, pr', hab', hsm', hpr, hpr', hμ', hf', hs', he1', he2'⟩ := GlobalTheory.T.exists_abelianScheme_baseChange_and_square R R' A g hab hsm
   obtain ⟨B₀, _, pr0, pr0', hab0, hsm0, hpr0, hpr0', -, -, -, he10, he20⟩ :=
@@ -568,8 +568,8 @@ theorem exists_bock : ∀ (R R' R₀ : Type) [CommRing R] [CommRing R'] [CommRin
   intro R R' R₀ _ _ _ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hS hF x
   have hc : IsClosedImmersion (spMap σ) := IsClosedImmersion.spec_of_surjective _ hS.1
   have hc₀ : IsClosedImmersion (spMap σ₀) := IsClosedImmersion.spec_of_surjective _ hS.2.2.1
-  haveI : IsClosedImmersion φ := MorphismProperty.of_isPullback h.flip hc
-  haveI : IsClosedImmersion φ₀ := MorphismProperty.of_isPullback h₀.flip hc₀
+  have : IsClosedImmersion φ := MorphismProperty.of_isPullback h.flip hc
+  have : IsClosedImmersion φ₀ := MorphismProperty.of_isPullback h₀.flip hc₀
   have sec := fun U ↦ GlobalTheory.T.surjective_deformation_affine_sections R R' R₀ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hS hF U
   have red := GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R' X X' s s' σ φ h.w
   have red₀ := GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R₀ X X₀ s s₀ σ₀ φ₀ h₀.w
@@ -645,8 +645,8 @@ theorem exists_lift_of_bock_zero : ∀ (R R' R₀ : Type) [CommRing R] [CommRing
   intro R R' R₀ _ _ _ t σ σ₀ X X' X₀ s s' s₀ φ φ₀ h h₀ hse hfl x hB
   have hσc : IsClosedImmersion (spMap σ) := IsClosedImmersion.spec_of_surjective _ hse.1
   have hσ₀c : IsClosedImmersion (spMap σ₀) := IsClosedImmersion.spec_of_surjective _ hse.2.2.1
-  haveI : IsClosedImmersion φ := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h.flip hσc
-  haveI : IsClosedImmersion φ₀ := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h₀.flip hσ₀c
+  have : IsClosedImmersion φ := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h.flip hσc
+  have : IsClosedImmersion φ₀ := MorphismProperty.of_isPullback (P := @IsClosedImmersion) h₀.flip hσ₀c
   obtain ⟨f, w, hfw, hf, hw⟩ := hB
   have R1 := (GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R' X X' s s' σ φ h.w).1
   have R2 := (GlobalTheory.T.cocyclePullback_iff_preimage_affineHom R R₀ X X₀ s s₀ σ₀ φ₀ h₀.w).2.1
@@ -780,10 +780,10 @@ theorem bock_natural : ∀ (R R' R₀ : Type) [CommRing R] [CommRing R'] [CommRi
     hS hs hq x z z' hB hB'
   obtain ⟨f, v, hfv, hf, hv⟩ := hB
   obtain ⟨f₂, v₂, hfv₂, hf₂, hv₂⟩ := hB'
-  haveI : IsClosedImmersion φ := isClosedImmersion_of_isPullback_spMap_surj hS.1 h
-  haveI : IsClosedImmersion φ₀ := isClosedImmersion_of_isPullback_spMap_surj hS.2.2.1 h₀
-  haveI : IsClosedImmersion χ := isClosedImmersion_of_isPullback_spMap_surj hS.1 k
-  haveI : IsClosedImmersion χ₀ := isClosedImmersion_of_isPullback_spMap_surj hS.2.2.1 k₀
+  have : IsClosedImmersion φ := isClosedImmersion_of_isPullback_spMap_surj hS.1 h
+  have : IsClosedImmersion φ₀ := isClosedImmersion_of_isPullback_spMap_surj hS.2.2.1 h₀
+  have : IsClosedImmersion χ := isClosedImmersion_of_isPullback_spMap_surj hS.1 k
+  have : IsClosedImmersion χ₀ := isClosedImmersion_of_isPullback_spMap_surj hS.2.2.1 k₀
   have hsec := GlobalTheory.AbCoh.preα_surjective_and_ker R R' R₀ t σ σ₀ Y Y' Y₀ q q' q₀ χ χ₀ k k₀ hS hq
   obtain ⟨c₁, hc₁, hC₁⟩ :=
     (GlobalTheory.AbCoh.red_preimage_pairs R R' σ X X' Y Y' s s' q q' φ χ h.w ψ ψ' w w' hc inferInstance).1 f x hf
@@ -909,7 +909,7 @@ namespace GlobalTheory.AbCoh
 
 theorem pullHO1_surjective_of_smallExt : ∀ (R R' R₀ : Type) [CommRing R] [CommRing R'] [CommRing R₀] (t : R) (σ : R →+* R') (σ₀ : R →+* R₀) (g : ℕ) (A : Over (Sp R)) [GrpObj A] (A' : Over (Sp R')) [GrpObj A'] (A₀ : Over (Sp R₀)) [GrpObj A₀] (φ : A'.left ⟶ A.left) (φ₀ : A₀.left ⟶ A.left) (h : IsGrpPullback A' A (spMap σ) φ) (h₀ : IsGrpPullback A₀ A (spMap σ₀) φ₀), SmallExt t σ σ₀ → IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → StructureSheafH1Primitive A' → NoPrimitiveStructureSheafH2 A₀ → Function.Surjective (pullHO1 h.1.w) := by
   intro R R' R₀ _ _ _ t σ σ₀ g A _ A' _ A₀ _ φ φ₀ h h₀ hS hA _ hP hN x
-  haveI := hA.smooth
+  have := hA.smooth
   have hF : Flat A.hom := inferInstance
   have hF2 : Flat (A ⊗ A).hom := by
     show Flat (pullback.fst A.hom A.hom ≫ A.hom)
@@ -1206,7 +1206,7 @@ namespace GlobalTheory.AbCohWedgeLift
 
 theorem wedgeO_fibre : (∀ (k : Type) [CommRing k], IsField k → ∀ (B : Over (Sp k)) [GrpObj B] (g : ℕ), IsAbelianScheme B → SmoothOfRelativeDimension g B.hom → AxesVanishingStructureSheafDegOne B ∧ NoPrimitiveStructureSheafH2 B ∧ WedgeO (OAff B.hom)) → ∀ (R : Type) [CommRing R] (A : Over (Sp R)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (k : Type) [Field k] (σ : R →+* k) (X₀ : Scheme.{0}) (s₀ : X₀ ⟶ Sp k) (ψ : X₀ ⟶ A.left) (w : IsPullback ψ s₀ A.hom (spMap σ)), WedgeO (OAff s₀) := by
   intro hF R _ A _ g hA hg k _ σ X₀ s₀ ψ w
-  letI : Algebra R k := σ.toAlgebra
+  let : Algebra R k := σ.toAlgebra
   obtain ⟨B, _, pr, -, hB, hBg, hsq, -⟩ := GlobalTheory.T.exists_abelianScheme_baseChange_and_square R k A g hA hg
   have hsq' : IsPullback pr B.hom A.hom (spMap σ) := hsq
   have hW : WedgeO (OAff B.hom) := (hF k (Field.toIsField k) B g hB hBg).2.2
@@ -1473,7 +1473,7 @@ theorem artinian_pullHO_surjective : ∀ (R : Type) [CommRing R] [IsArtinianRing
       by_cases hF : IsField R
       · refine ⟨?_, GlobalTheory.T.primitive_of_axes_vanishing R A (FF R hF A g hA hsm).1⟩
         intro k _ σ hσ X₀ s₀ ψ w
-        letI := hF.toField
+        let := hF.toField
         exact GlobalTheory.T.pull_h1_surjective_bijective_fibre R k σ ⟨σ.injective, hσ⟩ _ _ X₀ s₀ ψ w
       · obtain ⟨t, ht0, htm, hlt⟩ := (GlobalTheory.T.isArtinianLocal_length_finite_and_exists_socle_elem R).2 hF
         obtain ⟨n0, hn0⟩ := (GlobalTheory.T.isArtinianLocal_length_finite_and_exists_socle_elem R).1
@@ -1486,8 +1486,8 @@ theorem artinian_pullHO_surjective : ∀ (R : Type) [CommRing R] [IsArtinianRing
             have := htm a ha
             simpa [hu.mul_left_eq_zero] using this
           exact (IsLocalRing.isField_iff_maximalIdeal_eq).2 hm
-        haveI : Nontrivial (R ⧸ Ideal.span {t}) := Ideal.Quotient.nontrivial_iff.2 htop
-        haveI : IsLocalRing (R ⧸ Ideal.span {t}) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
+        have : Nontrivial (R ⧸ Ideal.span {t}) := Ideal.Quotient.nontrivial_iff.2 htop
+        have : IsLocalRing (R ⧸ Ideal.span {t}) := IsLocalRing.of_surjective' _ Ideal.Quotient.mk_surjective
         obtain ⟨n1, hn1⟩ := (GlobalTheory.T.isArtinianLocal_length_finite_and_exists_socle_elem (R ⧸ Ideal.span {t})).1
         have hlt' : n1 < n := by
           rw [hn0, hn1] at hlt; rw [hn0] at hlen

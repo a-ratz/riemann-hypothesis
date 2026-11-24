@@ -453,7 +453,7 @@ theorem congrOver_of_free (A : Type*) [CommRing A] [Algebra D.host.F A] (ev : AF
 
 theorem noFrame (_ : IdemEx) : NoFrame := by
   intro D t B W ⟨d⟩ b₀ hb hno
-  haveI : Algebra.IsQuadraticExtension D.host.F D.host.E := { finrank_eq_two' := D.sp.cm.deg2 }
+  have : Algebra.IsQuadraticExtension D.host.F D.host.E := { finrank_eq_two' := D.sp.cm.deg2 }
   have hσ : sgE D ≠ 1 := by
     intro h
     have h1 : Module.finrank D.host.F D.host.E = 1 := by
@@ -502,7 +502,7 @@ theorem noFrame (_ : IdemEx) : NoFrame := by
     refine ⟨{v}, fun S hS e he z hz hh => hv ?_⟩
     refine congrOver_of_free _ (evFin D.host.F v) ε b₀ hb ?_ hz hh.1 hh.2.2.2
     have := he.2 v
-    rw [if_pos (hS (Finset.mem_singleton_self v))] at this
+    rw [ite_eq_left (hS (Finset.mem_singleton_self v))] at this
     exact this
   · push Not at h
     obtain ⟨w, hw⟩ := h

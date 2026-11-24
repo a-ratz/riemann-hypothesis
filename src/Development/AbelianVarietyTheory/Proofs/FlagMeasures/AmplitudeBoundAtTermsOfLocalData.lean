@@ -314,8 +314,8 @@ private lemma hsNormSq_eq_sum_norm_sq {Wp Wq : Type*} [NormedAddCommGroup Wp] [I
 theorem hsNormSq_le_finrank_target_mul {Wp Wq : Type*} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
     [FiniteDimensional ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq]
     (J : Wq →L[ℂ] Wp) : hsNormSq J ≤ Module.finrank ℂ Wp * ‖J‖ ^ 2 := by
-  have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
-  have : CompleteSpace Wq := FiniteDimensional.complete ℂ Wq
+  have : CompleteSpace Wp := FiniteDimensional.completeSpace ℂ Wp
+  have : CompleteSpace Wq := FiniteDimensional.completeSpace ℂ Wq
 
   rw [hsNormSq_eq_sum_norm_sq]
   calc ∑ i, ‖J (stdOrthonormalBasis ℂ Wq i)‖ ^ 2
@@ -410,8 +410,8 @@ theorem exists_sigmaFinite_quot : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : Fin (
   rw [Matrix.nonsing_inv_nonsing_inv _ (isUnit_det_of_mem_GG hγ)] at a5
   obtain ⟨-, b2, b3, b4, -⟩ := GlobalTheory.Amp.StabMeas.stabilizer_measure_normalisation k r j hj z z' γ 1 _ one_pos a5
   obtain ⟨ν, hν⟩ := GlobalTheory.SgQuot.exists_isQuotMeas k r _ μG _ b2 hG b3 b4
-  haveI := hG.1
-  haveI := b3.1
+  have := hG.1
+  have := b3.1
   exact ⟨a3.1, a3, a5, ν, sigmaFinite_quot b3.2.1 hν,
     (GlobalTheory.Amp.CutQuot.cut_quotient k r _ μG _ ν b2 hG b3 b4 hν).1, hν⟩
 
@@ -541,7 +541,7 @@ theorem flagToFrameOfNonzeroLevel_isotropic_eq (F : FlagG S r T) (hT : T ≠ 0) 
   unfold FlagG.Xa FlagG.X
   congr 1
   ext x
-  simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range]
+  simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range]
   exact ⟨fun ⟨i, _, h⟩ => ⟨i, h⟩, fun ⟨i, h⟩ => ⟨i, i.2, h⟩⟩
 
 theorem inN_frF_iff (F : FlagG S r T) (hT : T ≠ 0) (n : S.V ≃ₗ[E] S.V) :
@@ -937,7 +937,7 @@ theorem covTC_holds : CovTC := by
     have hm := hμ τ
     rw [hinv] at hm
     exact GlobalTheory.Amp.StabHaar.normalFormStabilizerMeasure_eq_any_normalForm _ _ _ N.j_le _ _ _ _ _ β c _ h1 h2 hc hm
-  haveI : SigmaFinite (GlobalTheory.Amp.lebR0 D.R.k D.R.rS N.j β) := (hμeq τ0).2
+  have : SigmaFinite (GlobalTheory.Amp.lebR0 D.R.k D.R.rS N.j β) := (hμeq τ0).2
 
   have hrat := GlobalTheory.TypeAsm.gam_iff_nLam D large₂ X Y u hStd t N hAd
   have hGiso : ∀ n ∈ (N.Gam t.lam : Set ((VS D).V ≃ₗ[D.host.E] (VS D).V)), n ∈ Formalism.HermitianLatticesTheory.isom (VS D).hT :=
@@ -1358,7 +1358,7 @@ theorem prodC_holds : ProdC := by
         unfold GlobalTheory.Amp.sgV
         refine (Finset.le_fold_max _).2 (Or.inr ⟨⟨l, hlr⟩, Finset.mem_univ _, le_of_eq ?_⟩)
         rw [← hDm, hgram τ ⟨l, hlr⟩]
-        simp only [labT, if_pos hlj]
+        simp only [labT, ite_eq_left hlj]
   have hA : 0 ≤ (16 * Real.pi * Real.exp 1 / D.R.k) ^ (jT t * (D.R.k - 1 - jT t) * D.R.f) * (P ^ (D.R.k - 1 - jT t))⁻¹ *
       (8 * D.R.rS * H1C large₂ CH) ^ (80 * D.R.rS ^ 4 * D.R.f) := by
     have := hP.le

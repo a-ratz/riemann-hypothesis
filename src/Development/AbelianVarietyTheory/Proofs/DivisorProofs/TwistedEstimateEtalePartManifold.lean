@@ -324,7 +324,7 @@ theorem rho_measurable (A : WeightedAtlas n Y ι La) {U : Set Y} {z : Y → V n}
     (hE : Etale A U z) : Measurable (rho A U z) := by
   have hfr := _root_.GlobalTheory.OTY.jdet_isFrameOn_kap n Y ι La A U z hE
   have hc : ContinuousOn (A.nsq A.kap (jdet A z)) U := api_nsq_contOn A hE.isOpen hfr.1
-  have hc' : Continuous (fun x : U => A.nsq A.kap (jdet A z) x) := hc.restrict
+  have hc' : Continuous (fun x : U => A.nsq A.kap (jdet A z) x) := hc.domRestrict
   exact ENNReal.measurable_ofReal.comp hc'.measurable.inv
 
 theorem mu_piece (A : WeightedAtlas n Y ι La) {U : Set Y} {z : Y → V n}
@@ -333,7 +333,7 @@ theorem mu_piece (A : WeightedAtlas n Y ι La) {U : Set Y} {z : Y → V n}
     (hB : MeasurableSet B) (hBs : B ⊆ e.source) (hBi : ∀ m ∈ B, (m : Y) ∈ (A.chart i).source) :
     A.mu.comap Subtype.val B = ∫⁻ m in B, rho A U z m ∂vol n (fun y : U => z y) := by
   have hUm : MeasurableSet U := hE.isOpen.measurableSet
-  have hemb := MeasurableEmbedding.subtype_coe hUm
+  have hemb := MeasurableEmbedding.subtypeVal hUm
   have hz : IsLocalHomeomorph (fun y : U => z y) := _root_.GlobalTheory.OTY.etale_isLocalHomeomorph n Y ι La A U z hE
   have hfr := _root_.GlobalTheory.OTY.jdet_isFrameOn_kap n Y ι La A U z hE
   have hρ : Measurable (rho A U z) := rho_measurable A hE
@@ -413,14 +413,14 @@ theorem lintegral_mu_etale : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Sp
     let W : U → Set U := fun x =>
       (e x).source ∩ Subtype.val ⁻¹' (A.chart (A.pick x)).source
     have hWo : ∀ x, IsOpen (W x) := fun x =>
-      (e x).open_source.inter ((A.chart _).open_source.preimage continuous_subtype_val)
+      (e x).open_source.inter ((A.chart _).open_source.preimage continuous_subtypeVal)
     obtain ⟨T, hTc, hTW⟩ := TopologicalSpace.isOpen_iUnion_countable W hWo
     have huniv : ⋃ t : T, W t = Set.univ := by
       refine Set.eq_univ_of_forall fun x => ?_
       have hx : x ∈ ⋃ i ∈ T, W i := hTW ▸ Set.mem_iUnion.2 ⟨x, hxe x, A.mem_pick _⟩
       obtain ⟨t, ht, hxt⟩ := Set.mem_iUnion₂.1 hx
       exact Set.mem_iUnion.2 ⟨⟨t, ht⟩, hxt⟩
-    haveI := hTc.to_subtype
+    have := hTc.to_subtype
     refine Measure.ext_of_iUnion_eq_univ huniv fun t => ?_
     ext B hB
     rw [Measure.restrict_apply hB, Measure.restrict_apply hB,
@@ -428,7 +428,7 @@ theorem lintegral_mu_etale : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Sp
     exact mu_piece A hE (e t) (he t) (A.pick (t : Y)) (B ∩ W t)
       (hB.inter (hWo t).measurableSet) (fun m hm => hm.2.1) (fun m hm => hm.2.2)
   rw [← lintegral_subtype_comap hUm, hmeas]
-  exact (lintegral_withDensity_eq_lintegral_mul _ hρ (hφ.comp measurable_subtype_coe)).trans
+  exact (lintegral_withDensity_eq_lintegral_mul _ hρ (hφ.comp measurable_subtypeVal)).trans
     (lintegral_congr fun x => mul_comm _ _)
 
 end GlobalTheory.EtaleMeasure
@@ -625,7 +625,7 @@ theorem nzEtaleStein : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space Y]
     have heq : {y : nz A τ | -Real.log (A.nsq Λ τ y) ≤ a} =
         Subtype.val ⁻¹' {y : Y | Real.exp (-a) ≤ A.nsq Λ τ y} := by
       ext ⟨y, hy⟩
-      simp only [Set.mem_setOf_eq, Set.mem_preimage]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage]
       have hne : τ (A.pick y) y ≠ 0 := hy
       have hp : 0 < A.nsq Λ τ y := by
         unfold WeightedAtlas.nsq
@@ -795,7 +795,7 @@ theorem GlobalTheory.OTY.TwEst.rhs_le_manifold : ∀ (n : ℕ) (Y : Type) [Topol
     (Real.measurable_exp.comp hpsi.neg).indicator hSm
   have key := htr _ _ hm hw (fun y _ => Set.indicator_nonneg (fun _ _ => (Real.exp_pos _).le) y)
   have hS' : MeasurableSet {x : U | -T - 1 ≤ δ * psi A L s x ∧ δ * psi A L s x ≤ -T + 1} :=
-    measurable_subtype_coe hSm
+    measurable_subtypeVal hSm
   rw [← lintegral_indicator hS']
   refine le_trans (le_of_eq ?_) (le_trans key.ge ?_)
   · refine lintegral_congr fun x => ?_
@@ -894,7 +894,7 @@ theorem GlobalTheory.OTY.TwEst.twisted_estimate_nz : ∀ (n : ℕ) (Y : Type) [T
     rw [hXz]
     exact (_root_.GlobalTheory.OTY.holo_etale_iff_holo_chart n Y ι La A (nz A τ) z hz Ω (GlobalTheory.OTY.TwEst.quot A h β) hΩ).2 hqd
   have hGm : Measurable (fun y : nz A τ => GlobalTheory.OTY.TwEst.quot A h β y) := by
-    have h1 := hqm.comp (measurable_subtype_coe : Measurable (Subtype.val : nz A τ → Y))
+    have h1 := hqm.comp (measurable_subtypeVal : Measurable (Subtype.val : nz A τ → Y))
     convert h1 using 1
     ext y
     exact (GlobalTheory.OTY.TwEst.extendByZeroOnSubset_apply_coe (nz A τ)
@@ -906,7 +906,7 @@ theorem GlobalTheory.OTY.TwEst.twisted_estimate_nz : ∀ (n : ℕ) (Y : Type) [T
     (fun y => GlobalTheory.OTY.TwEst.wt A E β z y) (fun y => psi A L s y)
     (fun y => GlobalTheory.OTY.TwEst.quot A h β y) (Subtype.val ⁻¹' Ω) δ T θ
     (by rw [hXz]; exact hsmφ) (by rw [hXz]; exact hsmψ) (fun x => (hpt x x.2).2.1) hδ hT hθ
-    (by rw [hXz]; exact hlevi) (hΩ.preimage continuous_subtype_val) hGm hGholo
+    (by rw [hXz]; exact hlevi) (hΩ.preimage continuous_subtypeVal) hGm hGholo
     (fun x hx => hΩcov x (hpt x x.2).1 hx)
     ⟨n, n * Real.log C, fun x => by rw [hXe]; exact (hpt x x.2).2.2⟩
     (by rw [hXz]; exact lt_of_le_of_lt hwint hfin)

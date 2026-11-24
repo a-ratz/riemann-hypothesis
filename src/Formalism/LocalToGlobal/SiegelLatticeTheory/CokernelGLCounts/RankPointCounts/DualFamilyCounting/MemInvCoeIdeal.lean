@@ -84,7 +84,7 @@ theorem exists_loc_gen {J : Ideal (𝓞 K)} (hJ : J ≠ ⊥) (P : Ideal (𝓞 K)
     intro h
     have h2 : J * P = J * ⊤ := by rw [Ideal.mul_top]; exact h
     exact hP.ne_top (mul_left_cancel₀ hJ h2)
-  obtain ⟨a, haJ, haP⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨a, haJ, haP⟩ := IsConcreteLE.exists_of_lt hlt
   have ha0 : a ≠ 0 := fun h => haP (h ▸ Submodule.zero_mem _)
   have haK : algebraMap (𝓞 K) K a ≠ 0 := by
     intro h; exact ha0 ((map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective (𝓞 K) K)).1 h)

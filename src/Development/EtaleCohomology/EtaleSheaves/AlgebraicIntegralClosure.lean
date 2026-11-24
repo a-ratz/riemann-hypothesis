@@ -178,7 +178,7 @@ def BaseLocLoc : Prop := ∀ {Z S : Scheme.{0}} (c : Z ⟶ S) [QuasiCompact c] [
 theorem BaseLoc_of (h : BaseLocLoc) : BaseLoc := by
   intro Z S c _ _ _ hZ hS x W y hy
   obtain ⟨U, hyU, hUW, V, hV, hne, f, M, hM⟩ := h c hZ hS x W y hy
-  letI := f.toAlgebra
+  let := f.toAlgebra
   exact ⟨U, hyU, hUW, LateralTheory.E.BaseAICPf.Loc.aic_loc M (hZ.2 V hV hne)⟩
 
 theorem BaseAIC_of (h1 : BaseInt) (h2 : BaseLoc) : LateralTheory.E.FibreEqvPf.BaseAIC := by

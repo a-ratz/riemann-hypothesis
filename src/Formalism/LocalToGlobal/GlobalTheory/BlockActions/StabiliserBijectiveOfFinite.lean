@@ -141,7 +141,7 @@ open Formalism.BasicNotions Formalism.L2.Forms
 
 theorem bij_of_inj_back {A B : Type} [Finite A] (f : A → B) (hf : Function.Injective f) (g : B → A) (hg : Function.Injective g) :
     Function.Bijective f := by
-  haveI : Finite B := Finite.of_injective g hg
+  have : Finite B := Finite.of_injective g hg
   exact hf.bijective_of_nat_card_le (Nat.card_le_card_of_injective g hg)
 
 theorem stabiliser_bijective_of_injection

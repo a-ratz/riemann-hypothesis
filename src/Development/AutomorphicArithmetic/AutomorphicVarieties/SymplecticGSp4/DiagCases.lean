@@ -256,8 +256,8 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.diagonal_character_order_lt_
   have hU : ∀ A : ValuationSubring Ω, ∃ m, ∀ g ∈ Ine (F := ℚ) A, z g = θ g * m - m := by
     intro A
     by_cases hA : Raw.Away D.T A
-    · haveI := D.rbar.ker.quotient_finite_of_isOpen fo
-      haveI : D.rbar.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    · have := D.rbar.ker.quotient_finite_of_isOpen fo
+      have : D.rbar.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
       exact cob_fin θ z hz _ D.rbar.ker fun g hg h1 => hz1 g (hunr A hA g hg h1)
     · simp only [Raw.Away, not_forall, not_not] at hA
       obtain ⟨p, hpT, hA⟩ := hA
@@ -267,8 +267,8 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.diagonal_character_order_lt_
       · have hpp := (fSb p hpb).1
         obtain ⟨u, -, hu⟩ := hconj p A (D.pl p) hpp hA (hD.pl_over p hpp)
         refine cob_conj θ z hz _ _ u hu ?_
-        haveI := D.ψ.ker.quotient_finite_of_isOpen hD.psi_open
-        haveI : D.ψ.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+        have := D.ψ.ker.quotient_finite_of_isOpen hD.psi_open
+        have : D.ψ.ker.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
         exact cob_fin θ z hz _ D.ψ.ker fun g hg h1 => hz1 g ((heqP p hpb).2 ⟨g, hg.1⟩ ⟨hg, h1⟩)
   have hw : ∀ a b : Fin 4, a < b → D.wts4 b < D.wts4 a := by
     have := hD.two_le

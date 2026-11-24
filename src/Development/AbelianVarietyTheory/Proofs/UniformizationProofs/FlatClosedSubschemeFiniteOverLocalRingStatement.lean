@@ -117,11 +117,11 @@ theorem flat_of_isFinite_of_ideals : ∀ (V : Type) [CommRing V] [IsLocalRing V]
     rw [Spec.map_comp, hσ, Scheme.SpecMap_stalkMap_fromSpecStalk_assoc]
     exact (Scheme.SpecMap_stalkMap_fromSpecStalk (j ≫ f)).symm
   let S := (Spec (CommRingCat.of V)).presheaf.stalk ((j ≫ f) h)
-  letI : Algebra V S := StructureSheaf.stalkAlgebra V ((j ≫ f) h)
+  let : Algebra V S := StructureSheaf.stalkAlgebra V ((j ≫ f) h)
   have : ((j ≫ f) h).asIdeal.IsPrime := PrimeSpectrum.isPrime (R := V) _
   have : IsLocalization.AtPrime S ((j ≫ f) h).asIdeal := StructureSheaf.IsLocalization.to_stalk V _
-  letI : Algebra V (H.presheaf.stalk h) := (σ ≫ j.stalkMap h).hom.toAlgebra
-  letI : Algebra S (H.presheaf.stalk h) := ((j ≫ f).stalkMap h).hom.toAlgebra
+  let : Algebra V (H.presheaf.stalk h) := (σ ≫ j.stalkMap h).hom.toAlgebra
+  let : Algebra S (H.presheaf.stalk h) := ((j ≫ f).stalkMap h).hom.toAlgebra
   have : IsScalarTower V S (H.presheaf.stalk h) := IsScalarTower.of_algebraMap_eq' (congrArg (·.hom) e)
   exact (Module.flat_iff_of_isLocalization S ((j ≫ f) h).asIdeal.primeCompl (H.presheaf.stalk h)).2 fl
 

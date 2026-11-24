@@ -227,7 +227,7 @@ theorem goodLift_eq : ∀ (q : ℕ) [Fact q.Prime] (lam : Qbar →+* ℂ_[q]) (g
 
   obtain ⟨s, c, hs, hc, hbc, hexp⟩ := _root_.GlobalTheory.MomDual.dual_basis q g S r b hS hb
   choose a ha using fun j => (hZ _ (hbOK v hv (c j) (hc j))).1
-  haveI : NeZero (q ^ n) := ⟨pow_ne_zero _ hqp.ne_zero⟩
+  have : NeZero (q ^ n) := ⟨pow_ne_zero _ hqp.ne_zero⟩
   let A : Fin r → ZMod (q ^ n) := fun j =>
     PadicInt.toZModPow n (a j) * (N₀ : ZMod (q ^ n)) * ((s : ZMod (q ^ n)))⁻¹
   let yt : Fin r → Fin (q ^ n) := fun j => ⟨(A j).val, ZMod.val_lt _⟩

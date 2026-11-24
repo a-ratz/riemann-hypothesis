@@ -82,7 +82,7 @@ theorem locK_eq_of_tame (χ : HChar L) {v : HeightOneSpectrum (𝓞 L)} (h : χ.
   have h1 : v.valuation L (((y * x⁻¹ : Lˣ) : L) - 1) ≤ WithZero.exp (-1 : ℤ) := by
     have : ((y * x⁻¹ : Lˣ) : L) - 1 = ((y : L) - x) * (x : L)⁻¹ := by
       rw [Units.val_mul, Units.val_inv_eq_inv_val, _root_.sub_mul, mul_inv_cancel₀ x.ne_zero]
-    rw [this, map_mul, map_inv₀, mul_inv_le_iff₀ (zero_lt_iff.2 hx0)]
+    rw [this, map_mul, map_inv₀, mul_inv_le_iff₀ (pos_iff_ne_zero.2 hx0)]
     exact hxy
   have h2 : v.valuation L ((y * x⁻¹ : Lˣ) : L) = 1 := by
     have := Valuation.map_one_add_of_lt (v.valuation L) (h1.trans_lt exp_neg_one_lt_one)
@@ -250,8 +250,8 @@ theorem trivOn_of_cofinite (hr : ∀ (P : HeightOneSpectrum (𝓞 E)) (k : Fˣ),
         χ.val P ^ ordF P (upF F k)) = 1 := by
       refine finprod_eq_one_of_forall_eq_one fun P => ?_
       by_cases hP : P ∈ T'.biUnion (aboveF (L := E) F)
-      · exact finprod_eq_if.trans (if_neg (not_not.2 hP))
-      rw [finprod_eq_if, if_pos hP]
+      · exact finprod_eq_if.trans (ite_eq_right (not_not.2 hP))
+      rw [finprod_eq_if, ite_eq_left hP]
       have : ordF (P.under (𝓞 F)) k = 0 := by
         by_contra hne
         exact hP ((hS P).2 (Finset.mem_union_right _ ((Set.Finite.mem_toFinset _).2 hne)))
@@ -278,11 +278,11 @@ theorem trivOn_of_cofinite (hr : ∀ (P : HeightOneSpectrum (𝓞 E)) (k : Fˣ),
       obtain ⟨y, hy⟩ := exists_approx T (fun u => if u = v then a else 1)
         (fun u => by split_ifs; exacts [ha', one_ne_zero])
       have hP := hy v hvT
-      simp only [if_true] at hP
+      simp only [ite_true] at hP
       have hy0 : (y : F) ≠ 0 := by
         intro h0
         rw [h0, zero_sub, Valuation.map_neg] at hP
-        have hpos : 0 < v.valuation F (a : F) := zero_lt_iff.2 (by simpa using ha')
+        have hpos : 0 < v.valuation F (a : F) := pos_iff_ne_zero.2 (by simpa using ha')
         have := mul_lt_mul_of_pos_right exp_neg_one_lt_one hpos
         rw [one_mul] at this
         exact absurd hP (not_le.2 this)
@@ -290,7 +290,7 @@ theorem trivOn_of_cofinite (hr : ∀ (P : HeightOneSpectrum (𝓞 E)) (k : Fˣ),
       symm
       refine Finset.prod_eq_single_of_mem v hvT fun u hu hne => ?_
       have h3 := hy u hu
-      simp only [if_neg hne] at h3
+      simp only [ite_eq_right hne] at h3
       rw [h2 u 1 _ (by simpa using h3), map_one]
     obtain ⟨a, b, hb, hab⟩ := IsFractionRing.div_surjective (𝓞 F) (k : F)
     have hb0 : (b : F) ≠ 0 := by simpa using nonZeroDivisors.ne_zero hb
@@ -349,9 +349,9 @@ theorem not_forall_pow_sub_mem {P : HeightOneSpectrum (𝓞 E)} {q : ℕ} (hq : 
   intro h
   classical
   have := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  let := Ideal.Quotient.field P.asIdeal
   have hfin : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
-  letI := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
+  let := Fintype.ofFinite (𝓞 E ⧸ P.asIdeal)
   have hc : Fintype.card (𝓞 E ⧸ P.asIdeal) = q ^ 2 := by rw [← hq, ← Nat.card_eq_fintype_card]; rfl
   have h1 : 1 < q := by
     have : 1 < q ^ 2 := hc ▸ Fintype.one_lt_card
@@ -359,7 +359,7 @@ theorem not_forall_pow_sub_mem {P : HeightOneSpectrum (𝓞 E)} {q : ℕ} (hq : 
   have h3 := Polynomial.card_le_degree_of_subset_roots
     (p := (Polynomial.X ^ q - Polynomial.X : Polynomial (𝓞 E ⧸ P.asIdeal))) (Z := Finset.univ) (fun z _ => by
       obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective z
-      rw [Polynomial.mem_roots (FiniteField.X_pow_card_sub_X_ne_zero h1)]
+      rw [Polynomial.mem_roots (Polynomial.X_pow_sub_X_ne_zero h1)]
       simpa using Ideal.Quotient.eq_zero_iff_mem.2 (h x))
   rw [Polynomial.natDegree_X_pow_sub_X h1, Finset.card_univ, hc] at h3
   nlinarith
@@ -379,9 +379,9 @@ theorem exists_frob_inert [IsAlgClosure E Ω] (c : E ≃ₐ[F] E) (h2 : Module.f
     {P : HeightOneSpectrum (𝓞 E)} (hP : ∀ P' : HeightOneSpectrum (𝓞 E), P'.under (𝓞 F) = P.under (𝓞 F) → P' = P)
     {A : ValuationSubring Ω} (hA : IsPlaceOver A P) :
     ∃ g g' : G E Ω, (∀ x, g' x = cc (g (cc.symm x))) ∧ IsFrob (F := E) A (normV P) (g * g') := by
-  letI : Algebra F Ω := ((algebraMap E Ω).comp (algebraMap F E)).toAlgebra
-  haveI : IsScalarTower F E Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
+  let : Algebra F Ω := ((algebraMap E Ω).comp (algebraMap F E)).toAlgebra
+  have : IsScalarTower F E Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
   have : Algebra.IsQuadraticExtension F E := { finrank_eq_two' := h2 }
   have : IsGalois F E := inferInstance
   have hall : ∀ σ : E ≃ₐ[F] E, σ = 1 ∨ σ = c := by

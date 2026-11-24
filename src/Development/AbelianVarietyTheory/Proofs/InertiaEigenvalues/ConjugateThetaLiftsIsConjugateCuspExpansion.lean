@@ -355,12 +355,12 @@ theorem isPeriod_permP {D : Datum H} {ty : Fin g → (E →+* ℂ)} {ty' : Fin g
   · rw [permP_apply, permP_apply, hlin, ← hπ, Equiv.apply_symm_apply]
   · have := congrFun hxy (π j)
     simpa using this
-  · haveI := hdisc
+  · have := hdisc
     refine DiscreteTopology.of_continuous_injective (f := fun v : (permP π P).range =>
       (⟨permCLE π v.1, ?_⟩ : P.range)) ?_ ?_
     · obtain ⟨x, hx⟩ := v.2
       exact ⟨x, by rw [← hx, permCLE_permP]⟩
-    · exact Continuous.subtype_mk ((permCLE π).continuous.comp continuous_subtype_val) _
+    · exact Continuous.subtype_mk ((permCLE π).continuous.comp continuous_subtypeVal) _
     · intro v w hvw
       exact Subtype.ext ((permCLE π).injective (congrArg Subtype.val hvw))
   · have hr : Set.range (permP π P) = ((permCLE π).symm.toLinearEquiv.restrictScalars ℝ).toLinearMap '' Set.range P := by
@@ -676,7 +676,7 @@ theorem galRul_eq_cmul_complex (V : HSp D) (r : ℕ) (σ : c.F →+* ℂ) (C : C
     ∃ (u : GA D V) (ka : c.F), σ ka = τ a₀ / a₀' * ((xi' (Matrix.GeneralLinearGroup.det (finHom V u)) : ℂˣ) : ℂ)⁻¹ ∧
       ∀ (k : Type) [Field k] [IsAlgClosed k] [Algebra c.F k] (y : FrPt Xo c k),
         evR Xo c (galRul hta f) y = algebraMap c.F k ka * evR Xo c f' y := by
-  haveI : Countable c.F := (Module.finBasis ℚ c.F).equivFun.toEquiv.countable_iff.2 inferInstance
+  have : Countable c.F := (Module.finBasis ℚ c.F).equivFun.toEquiv.countable_iff.2 inferInstance
   have hg : σ (IntermediateField.inclusion c.le (baseKA l).ρ) = H.rt0 := hC.good
   have hrt : τ H.rt0 = H.rt0 := by
     conv_lhs => rw [← hg, hτ, hta.base, hg]
@@ -708,7 +708,7 @@ theorem galRul_eq_cmul_complex (V : HSp D) (r : ℕ) (σ : c.F →+* ℂ) (C : C
   obtain ⟨y1⟩ := GlobalTheory.nonempty_frPt_complex GlobalTheory.closing_of_abelianSchemeLaws GlobalTheory.abelianSchemeLaws_all.2.secTwist _ _ _ _
     Xo c hC.pos σ
   have hmem : (τ a₀ / a₀' * ((xi' (Matrix.GeneralLinearGroup.det (finHom V u)) : ℂˣ) : ℂ)⁻¹) ∈ Set.range σ := by
-    letI : Algebra c.F ℂ := σ.toAlgebra
+    let : Algebra c.F ℂ := σ.toAlgebra
     refine GlobalTheory.GaloisDescent.complex_mem_range_of_forall_algEquiv (K := c.F) _ fun s => ?_
     have hs : ∀ a, s.toRingEquiv (σ a) = σ a := fun a => s.commutes a
     obtain ⟨y₀, hy₀⟩ := exists_conj_pt_fix σ s.toRingEquiv hs y1
@@ -1186,7 +1186,7 @@ theorem conj_lifts : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2
     funext g
 
     rw [hy, map_sum]
-    simp only [map_smul, MultilinearMap.sum_apply, MultilinearMap.smul_apply, Finset.sum_apply, Pi.smul_apply,
+    simp only [map_smul, sum_apply, smul_apply, Finset.sum_apply, Pi.smul_apply,
       smul_eq_mul, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [mul_left_comm, hA k g]
@@ -1196,7 +1196,7 @@ theorem conj_lifts : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2
     funext g
 
     rw [hy', map_sum]
-    simp only [map_smul, MultilinearMap.sum_apply, MultilinearMap.smul_apply, Finset.sum_apply, Pi.smul_apply,
+    simp only [map_smul, sum_apply, smul_apply, Finset.sum_apply, Pi.smul_apply,
       smul_eq_mul, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => ?_
     have hu' : (u : ℂ) = k0 * ((R.xi t' s : Circle) : ℂ) := hu

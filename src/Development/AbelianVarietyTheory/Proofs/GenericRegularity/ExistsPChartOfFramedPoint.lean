@@ -299,7 +299,7 @@ end Theta
 theorem integral_of_frMap (T : CDVR) [Algebra c.F T.V] (io : c.F →+* T.Fr) : letI := io.toAlgebra
     ∀ (j : T.V →ₐ[c.F] T.Fr), (∀ v, j v = algebraMap T.V T.Fr v) → ∀ (y : FrPt Xo c T.V) (z : FrPt Xo c T.Fr),
       FrMap j y z → Integral T io z := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro j hj y z ⟨hx, hu, pm, hs, hf, ha⟩
   have ej : j.toRingHom = algebraMap T.V T.Fr := RingHom.ext hj
   rw [ej] at hx hu hf

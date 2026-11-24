@@ -501,7 +501,7 @@ private theorem exists_generalized_inverse_mod_ideal {R S B P : Type} [CommRing 
 
     rw [Matrix.sub_apply, map_sub, Matrix.mul_apply, map_sum]
     simp only [AlgHom.coe_toRingHom, map_mul, hcomp, Pi.sub_apply, sub_mul, Finset.sum_sub_distrib, Pi.single_apply,
-      ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [show ∑ m, s (p m) l * π (Φ m j) = ∑ m, π (Φ m j) * s (p m) l from
       Finset.sum_congr rfl fun _ _ => mul_comm _ _, hsuml]
     ring
@@ -683,11 +683,11 @@ theorem _root_.GlobalTheory.exists_noetherian_subring_homogeneous_matrix_flat_ch
       simp only [map_add (f := _), map_sum, map_mul, hg₀, hwa₀, hwb₀, hφX]
       rw [← aeval_eq_bind₁]
       exact hwit i j
-    haveI : Algebra.FormallySmooth R₀ (MvPolynomial ι R₀ ⧸ Ideal.span (Set.range (g₀ i))) :=
+    have : Algebra.FormallySmooth R₀ (MvPolynomial ι R₀ ⧸ Ideal.span (Set.range (g₀ i))) :=
       formallySmooth_quotient_of_aeval_shift_mem_sq (g₀ i) (wa₀ i) (wb₀ i) hwit₀
-    haveI : Algebra.FinitePresentation R₀ (MvPolynomial ι R₀ ⧸ Ideal.span (Set.range (g₀ i))) :=
+    have : Algebra.FinitePresentation R₀ (MvPolynomial ι R₀ ⧸ Ideal.span (Set.range (g₀ i))) :=
       Algebra.FinitePresentation.of_finiteType.1 inferInstance
-    haveI : Algebra.Smooth R₀ (MvPolynomial ι R₀ ⧸ Ideal.span (Set.range (g₀ i))) :=
+    have : Algebra.Smooth R₀ (MvPolynomial ι R₀ ⧸ Ideal.span (Set.range (g₀ i))) :=
       ⟨inferInstance, inferInstance⟩
     refine _root_.GlobalTheory.flat_quotSMulTop_coker_of_matrix_witnesses R₀ (MvPolynomial ι R₀) (r i) a b (g₀ i)
       (X i - 1) Φ₀ inferInstance ⟨c₀ i, ?_⟩ (fun k => ⟨C₀ i k, C'₀ i k, ?_⟩) ⟨Ψ₀ i, E₀ i, ?_⟩
@@ -1314,7 +1314,7 @@ theorem finite_projective_extendScalars_obj {R₀ R : Type} [CommRing R₀] [Com
     (f : R₀ →+* R) (M : ModuleCat.{0} R₀) [Module.Finite R₀ M] [Module.Projective R₀ M] :
     Module.Finite R ((ModuleCat.extendScalars.{0, 0, 0} f).obj M) ∧
       Module.Projective R ((ModuleCat.extendScalars.{0, 0, 0} f).obj M) := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   exact ⟨inferInstanceAs (Module.Finite R (R ⊗[R₀] M)),
     inferInstanceAs (Module.Projective R (R ⊗[R₀] M))⟩
 
@@ -1350,7 +1350,7 @@ theorem exists_finite_projective_complex_of_noetherian_model :
   · have := h1 p
     have := h2 p
     exact finite_projective_extendScalars_obj (algebraMap R₀ R) (K₀.X p)
-  · letI := ((algebraMap R R').comp (algebraMap R₀ R)).toAlgebra
+  · let := ((algebraMap R R').comp (algebraMap R₀ R)).toAlgebra
     have := quasiIso_extendScalars_extendScalars (algebraMap R₀ R) (algebraMap R R') φ₀ (h3 R')
     rw [Functor.map_comp]
     infer_instance
@@ -1381,7 +1381,7 @@ theorem exists_finite_projective_complex_cechLB : ∀ (R : Type) [CommRing R] (Y
     exists_noetherian_model_grCube (Fin (m + 1)) R (GrSum (hx ⊤)) (GrSum.grading (hx ⊤)) fun i => by
       obtain ⟨haff, r, hr, hsurj⟩ := hs.2 i
       obtain ⟨hri, ε, hε, hker, -⟩ := GlobalTheory.AbLaw.exists_dehom_chart R Y f H m s M hH hM hs hx i r hr
-      letI := cstAlgebra f (nonzeroLocus (s i))
+      let := cstAlgebra f (nonzeroLocus (s i))
       obtain ⟨hfp, hproj⟩ := secOn_finitePresentation_projective Y (tw M H 0) (nonzeroLocus (s i))
         (isLB_tw hM hH 0) haff
       exact ⟨Γ(Y, nonzeroLocus (s i)), inferInstance, cstAlgebra f _, MvPolynomial.aeval r,

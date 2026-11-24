@@ -248,7 +248,7 @@ theorem basis_exists (k r : ℕ) : ∃ (N : ℕ) (e : Fin N → B.Mat k r) (c : 
     show ‖((s i)⁻¹ • ((bs i : lieSub k r) : B.Mat k r)) p q‖ ≤ 1
     rw [Matrix.smul_apply, norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.2 (hs0 i)),
       inv_mul_le_iff₀ (hs0 i), mul_one]
-    exact le_trans (Matrix.norm_entry_le_entrywise_sup_norm _) (le_max_right _ _)
+    exact le_trans (norm_apply_le_norm _) (le_max_right _ _)
   · intro X hX
     have h1 := congrArg Subtype.val (bs.sum_repr ⟨X, hX⟩)
     rw [Submodule.coe_sum] at h1

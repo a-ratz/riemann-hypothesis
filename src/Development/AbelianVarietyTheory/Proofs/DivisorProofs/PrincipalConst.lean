@@ -375,7 +375,7 @@ theorem no_dependence_of_general : ∀ (k A : Type) [Field k] [CharZero k] [Comm
       have : Q = 0 := hinj (by rw [h0, map_zero])
       exact nonZeroDivisors.ne_zero hQ this
     obtain ⟨𝔮, h𝔮, -, hd⟩ := Ideal.exists_le_prime_disjoint ⊥ S hdisj
-    haveI := h𝔮
+    have := h𝔮
     let D := T ⧸ 𝔮
     let κ := FractionRing D
     let π : MvPolynomial (Var M ι) A →+* κ :=
@@ -599,18 +599,18 @@ theorem bertini_cotangent_independent : ∀ (k A : Type) [Field k] [CharZero k] 
     intro s w hw i₀ hi₀
     by_contra hne
     let ψ : A →+* ResidueField R := (residue R).comp (algebraMap A R)
-    letI : Algebra k (ResidueField R) := (ψ.comp (algebraMap k A)).toAlgebra
+    let : Algebra k (ResidueField R) := (ψ.comp (algebraMap k A)).toAlgebra
     let φ : A →ₐ[k] ResidueField R := { ψ with commutes' := fun _ => rfl }
     let J : Finset (Fin M) := s.map (Function.Embedding.subtype _)
     let c : Fin M → ResidueField R := fun j =>
       if h : algebraMap A R (∑ p, u (j, p) • f p) ∈ maximalIdeal R then w ⟨j, h⟩ / w i₀ else 0
     have hJ : i₀.1 ∈ J := Finset.mem_map_of_mem _ hi₀
     have hx := hu (J, i₀.1, p₀) (Finset.mem_univ _)
-    simp only [Qf, dif_pos hJ] at hx
+    simp only [Qf, dite_eq_left hJ] at hx
     refine (hC J i₀.1 p₀ hJ).choose_spec.2 u hx (ResidueField R) φ c ?_ ?_ ?_ ?_
     · exact fun h => hp₀ ((residue_algebraMap_eq_zero_iff_mem q _).1 h)
     · show c i₀.1 = 1
-      rw [show c i₀.1 = w i₀ / w i₀ from dif_pos i₀.2]
+      rw [show c i₀.1 = w i₀ / w i₀ from dite_eq_left i₀.2]
       exact div_self hne
     · intro i hi
       obtain ⟨j, _, rfl⟩ := Finset.mem_map.1 hi
@@ -625,7 +625,7 @@ theorem bertini_cotangent_independent : ∀ (k A : Type) [Field k] [CharZero k] 
       rw [Finset.sum_map]
       convert key using 2 with j hj
       show c j.1 * φ _ = _
-      rw [show c j.1 = w j / w i₀ from dif_pos j.2]
+      rw [show c j.1 = w j / w i₀ from dite_eq_left j.2]
       rfl
 
 end GlobalTheory
@@ -652,10 +652,10 @@ namespace GlobalTheory.FrameEtale
 theorem etale_eval₂Hom_of_basis {k A : Type} [CommRing k] [CommRing A] (α : k →+* A) (hα : α.Smooth)
     {n : ℕ} (z : Fin n → A) (b : Module.Basis (Fin n) A (Omega α)) (hb : ∀ i, b i = dFun α (z i)) :
     (MvPolynomial.eval₂Hom α z).Etale := by
-  letI := α.toAlgebra
-  haveI : Algebra.Smooth k A := hα
-  letI := (MvPolynomial.eval₂Hom α z).toAlgebra
-  haveI : IsScalarTower k (MvPolynomial (Fin n) k) A :=
+  let := α.toAlgebra
+  have : Algebra.Smooth k A := hα
+  let := (MvPolynomial.eval₂Hom α z).toAlgebra
+  have : IsScalarTower k (MvPolynomial (Fin n) k) A :=
     IsScalarTower.of_algebraMap_eq fun r => (MvPolynomial.eval₂Hom_C α z r).symm
   have hX (i) : algebraMap (MvPolynomial (Fin n) k) A (MvPolynomial.X i) = z i :=
     MvPolynomial.eval₂Hom_X' α z i
@@ -665,7 +665,7 @@ theorem isEtCoord_of_isFrame : ∀ (k : Type) [Field k] (Y : Scheme.{0}) (q : Y 
   intro k _ Y q n hq V z hz
   refine ⟨hz.affine, ?_⟩
   obtain ⟨b, hb⟩ := FrameBasis.exists_basis_of_isFrame k Y q n hq V z hz
-  haveI : Smooth q := SmoothOfRelativeDimension.smooth n q
+  have : Smooth q := SmoothOfRelativeDimension.smooth n q
   have h := HasRingHomProperty.appLE (@Smooth) q inferInstance
     ⟨⊤, isAffineOpen_top _⟩ ⟨V, hz.affine⟩ le_top
   have h₁ : (DVR.FlatBC.algX q V).Smooth :=
@@ -703,8 +703,8 @@ theorem smooth_quotient_of_isEtCoord (Y : Scheme.{0}) (q : Y ⟶ Sp ℂ) (n : �
   let A := MvPolynomial (Fin n) ℂ
   let B := Γ(Y, U)
   let φ : A →+* B := MvPolynomial.eval₂Hom (cstOn q U) z
-  letI : Algebra A B := φ.toAlgebra
-  haveI : Algebra.Etale A B := RingHom.etale_algebraMap.1 hE
+  let : Algebra A B := φ.toAlgebra
+  have : Algebra.Etale A B := RingHom.etale_algebraMap.1 hE
   let I : Ideal A := Ideal.span (MvPolynomial.X '' (J : Set (Fin n)))
   have hI : I.map (algebraMap A B) = Ideal.span (z '' (J : Set (Fin n))) := by
     rw [Ideal.map_span, Set.image_image]
@@ -714,7 +714,7 @@ theorem smooth_quotient_of_isEtCoord (Y : Scheme.{0}) (q : Y ⟶ Sp ℂ) (n : �
     constructor <;> rintro ⟨j, hj, rfl⟩ <;> exact ⟨j, hj, by rw [MvPolynomial.eval₂Hom_X']⟩
   have h1 : (algebraMap ℂ (A ⧸ I)).Smooth := by
     rw [RingHom.smooth_algebraMap]
-    haveI : Algebra.Smooth ℂ (MvPolynomial {x // x ∉ (J : Set (Fin n))} ℂ) := ⟨inferInstance, inferInstance⟩
+    have : Algebra.Smooth ℂ (MvPolynomial {x // x ∉ (J : Set (Fin n))} ℂ) := ⟨inferInstance, inferInstance⟩
     exact Algebra.Smooth.of_equiv (quotientSpanXEquiv ℂ (J : Set (Fin n))).symm
   have h2 : (algebraMap (A ⧸ I) ((A ⧸ I) ⊗[A] B)).Smooth := by
     rw [RingHom.smooth_algebraMap]; infer_instance
@@ -745,7 +745,7 @@ theorem smooth_quotient_of_isEtCoord (Y : Scheme.{0}) (q : Y ⟶ Sp ℂ) (n : �
     rw [AlgEquiv.symm_apply_eq, Algebra.TensorProduct.quotIdealMapEquivTensorQuot_mk]
   rw [k1, k2]
   simp only [e, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, RingEquiv.trans_apply,
-    AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv, Algebra.TensorProduct.comm_tmul, k3,
+    AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_toRingEquiv, Algebra.TensorProduct.comm_tmul, k3,
     Ideal.quotEquivOfEq_mk]
 
 theorem smooth_coordStratum : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp ℂ) (n : ℕ) [SmoothOfRelativeDimension n q], ∀ (U : Y.Opens) (z : Fin n → Γ(Y, U)), IsFrame (dOn q z) → ∀ J : Finset (Fin n), ((Ideal.Quotient.mk (Ideal.span (z '' (J : Set (Fin n))))).comp (algX q U)).Smooth := by
@@ -856,8 +856,8 @@ theorem key (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ S
           Ideal.span (Set.range (fun j : J => Y.presheaf.germ U y hy (z j))) := by
   have hU : IsAffineOpen U := hfr.affine
   set I : Ideal Γ(Y, U) := Ideal.span (z '' (J : Set (Fin n))) with hIdef
-  letI : Algebra ℂ (Γ(Y, U) ⧸ I) := ((Ideal.Quotient.mk I).comp (algX q U)).toAlgebra
-  haveI : Algebra.Smooth ℂ (Γ(Y, U) ⧸ I) := _root_.GlobalTheory.PairStep.smooth_coordStratum Y q n U z hfr J
+  let : Algebra ℂ (Γ(Y, U) ⧸ I) := ((Ideal.Quotient.mk I).comp (algX q U)).toAlgebra
+  have : Algebra.Smooth ℂ (Γ(Y, U) ⧸ I) := _root_.GlobalTheory.PairStep.smooth_coordStratum Y q n U z hfr J
   obtain ⟨Q1, hQ1, hQ1u⟩ :=
     GlobalTheory.bertini_cotangent_independent ℂ (Γ(Y, U) ⧸ I) (fun i => Ideal.Quotient.mk I (f i)) 1
   have hinj : Function.Injective (Prod.snd : Fin 1 × ι → ι) :=
@@ -866,10 +866,10 @@ theorem key (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ S
     (by rw [h0, map_zero])), ?_⟩
   intro u hu y hy hf hz ht
   have hu' : MvPolynomial.eval (u ∘ Prod.snd) Q1 ≠ 0 := by rwa [MvPolynomial.eval_rename] at hu
-  letI : Algebra Γ(Y, U) (Y.presheaf.stalk y) :=
+  let : Algebra Γ(Y, U) (Y.presheaf.stalk y) :=
     TopCat.Presheaf.algebra_section_stalk Y.presheaf ⟨y, hy⟩
   set p := (hU.primeIdealOf ⟨y, hy⟩).asIdeal with hpdef
-  haveI : IsLocalization.AtPrime (Y.presheaf.stalk y) p := hU.isLocalization_stalk ⟨y, hy⟩
+  have : IsLocalization.AtPrime (Y.presheaf.stalk y) p := hU.isLocalization_stalk ⟨y, hy⟩
   have hgerm : ∀ a, algebraMap Γ(Y, U) (Y.presheaf.stalk y) a = Y.presheaf.germ U y hy a :=
     fun a => rfl
   have hpm : ∀ a, a ∈ p ↔ Y.presheaf.germ U y hy a ∈ maximalIdeal (Y.presheaf.stalk y) := by
@@ -879,16 +879,16 @@ theorem key (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ S
   have hIp : I ≤ p := Ideal.span_le.2 (by
     rintro _ ⟨j, hj, rfl⟩
     exact (hpm _).2 (hz ⟨j, hj⟩))
-  haveI : (p.map (Ideal.Quotient.mk I)).IsPrime :=
+  have : (p.map (Ideal.Quotient.mk I)).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rw [Ideal.mk_ker]; exact hIp)
   set IS := I.map (algebraMap Γ(Y, U) (Y.presheaf.stalk y)) with hISdef
   have hISm : IS ≤ maximalIdeal (Y.presheaf.stalk y) :=
     Ideal.map_le_iff_le_comap.2 (fun a ha => (hpm a).1 (hIp ha))
-  haveI : Nontrivial (Y.presheaf.stalk y ⧸ IS) :=
+  have : Nontrivial (Y.presheaf.stalk y ⧸ IS) :=
     Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (maximalIdeal.isMaximal _).ne_top hISm)
-  haveI : IsLocalRing (Y.presheaf.stalk y ⧸ IS) :=
+  have : IsLocalRing (Y.presheaf.stalk y ⧸ IS) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk IS) Ideal.Quotient.mk_surjective
-  haveI : IsLocalization.AtPrime (Y.presheaf.stalk y ⧸ IS) (p.map (Ideal.Quotient.mk I)) :=
+  have : IsLocalization.AtPrime (Y.presheaf.stalk y ⧸ IS) (p.map (Ideal.Quotient.mk I)) :=
     isLocalization_atPrime_quotient p I hIp
   have hmk : ∀ a ∈ maximalIdeal (Y.presheaf.stalk y),
       Ideal.Quotient.mk IS a ∈ maximalIdeal (Y.presheaf.stalk y ⧸ IS) := by
@@ -1008,7 +1008,7 @@ namespace GlobalTheory.Discrepancy
 theorem IsSncChart.discrep_eq_formOrd_sub_sum : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp ℂ) (n : ℕ) [SmoothOfRelativeDimension n q] (B : Closeds Y) (y : Y) (U : Y.Opens) (hy : y ∈ U) (z : Fin n → Γ(Y, U)) (J : Finset (Fin n)) (w : Fin n → Y) (u : Fin n → Y.functionFieldˣ), IsSncChart q n B y U hy z J w u → ∀ (η : RatForms q n) (K Θ : CartierDiv Y) (m : ℕ) (g : Y.functionFieldˣ), η ≠ 0 → IsDivOfForm K η → 0 < m → Θ.supp ≤ B → (Θ + m • K).IsEqn y g → ∀ E : DivOver q, E.Through y → discrep E η m g = ((fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (formOf U (gen_mem hy) (dOn q z)) : ℚ) - ∑ j ∈ J, ((Θ.mult (w j) : ℚ) / m) * E.ord (u j) := by
   intro Y _ _ q n _ B y U hy z J w u hc η K Θ m g hη hK hm hΘ hg E hE
   classical
-  haveI := SmoothOfRelativeDimension.smooth n q
+  have := SmoothOfRelativeDimension.smooth n q
   have hn : topologicalKrullDim Y = n := by
     have hd (V : Y.Opens) (hV : IsAffineOpen V) (hne : (V : Set Y).Nonempty) :
         topologicalKrullDim (V : Set Y) = n := by
@@ -1082,8 +1082,8 @@ namespace GlobalTheory.IndepDiscrep
 theorem neg_one_lt_formOrd_sub_sum : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp ℂ) (n : ℕ) [SmoothOfRelativeDimension n q], topologicalKrullDim Y = n → ∀ (y : Y) (U : Y.Opens) (hy : y ∈ U) (ω : FormsOn q n U), IsFrame ω → ∀ (J : Type) [Fintype J] (a : J → Y.presheaf.stalk y) (ha : ∀ j, a j ∈ IsLocalRing.maximalIdeal (Y.presheaf.stalk y)) (v : J → Y.functionFieldˣ) (c : J → ℚ), LinearIndependent (IsLocalRing.ResidueField (Y.presheaf.stalk y)) (fun j : J => ((IsLocalRing.maximalIdeal (Y.presheaf.stalk y)).toCotangent ⟨a j, ha j⟩ : IsLocalRing.CotangentSpace (Y.presheaf.stalk y))) → (∀ j, (v j : Y.functionField) = algebraMap (Y.presheaf.stalk y) Y.functionField (a j)) → (∀ j, c j < 1) → ∀ E : DivOver q, E.Through y → -1 < ((fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (formOf U (gen_mem hy) ω) : ℚ) - ∑ j, c j * E.ord (v j) := by
   classical
   intro Y _ _ q n _ hn y U hy ω hω J _ a ha v c hind hv hc E hE
-  haveI := SmoothOfRelativeDimension.smooth n q
-  haveI : GlobalTheory.IsNormalScheme Y := GlobalTheory.ModifSections.isNormalScheme_of_smooth q
+  have := SmoothOfRelativeDimension.smooth n q
+  have : GlobalTheory.IsNormalScheme Y := GlobalTheory.ModifSections.isNormalScheme_of_smooth q
   obtain ⟨U', hy', z, e, he, hze, hz⟩ :=
     GlobalTheory.AdaptedFrame.exists_adapted_frame (p := q) (n := n) y a ha hind
   have h0 : formOf U (gen_mem hy) ω ≠ 0 := fun h =>
@@ -1161,7 +1161,7 @@ namespace GlobalTheory.Discrepancy
 theorem IsSncChart.neg_one_lt_formOrd_sub_sum : ∀ (k : Type) [Field k] [CharZero k] (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp k) (n : ℕ) [SmoothOfRelativeDimension n q] (B : Closeds Y) (y : Y) (U : Y.Opens) (hy : y ∈ U) (z : Fin n → Γ(Y, U)) (J : Finset (Fin n)) (w : Fin n → Y) (u : Fin n → Y.functionFieldˣ), IsSncChart q n B y U hy z J w u → ∀ (E : DivOver q), E.Through y → ∀ a : Fin n → ℚ, ((∀ j ∈ J, a j < 1) → -1 < ((fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (formOf U (gen_mem hy) (dOn q z)) : ℚ) - ∑ j ∈ J, a j * E.ord (u j)) ∧ ((∀ j ∈ J, a j ≤ 1) → -1 ≤ ((fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (formOf U (gen_mem hy) (dOn q z)) : ℚ) - ∑ j ∈ J, a j * E.ord (u j)) := by
   intro k _ _ Y _ _ q n _ B y U hy z J w u hc E hE a
   classical
-  haveI := SmoothOfRelativeDimension.smooth n q
+  have := SmoothOfRelativeDimension.smooth n q
   have hn : topologicalKrullDim Y = n := by
     have hd (V : Y.Opens) (hV : IsAffineOpen V) (hne : (V : Set Y).Nonempty) :
         topologicalKrullDim (V : Set Y) = n := by
@@ -1228,7 +1228,7 @@ namespace GlobalTheory.Discrepancy
 theorem IsSncChart.neg_one_lt_formOrd_sub_sum_sub_ord_of_indep : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp ℂ) (n : ℕ) [SmoothOfRelativeDimension n q] (B : Closeds Y) (y : Y) (U : Y.Opens) (hy : y ∈ U) (z : Fin n → Γ(Y, U)) (J : Finset (Fin n)) (w : Fin n → Y) (u : Fin n → Y.functionFieldˣ), IsSncChart q n B y U hy z J w u → (∀ j ∈ J, y ∉ Y.basicOpen (z j)) → ∀ F : Γ(Y, U), (∀ h : ∀ j : Option J, Y.presheaf.germ U y hy (j.elim F fun j => z j) ∈ IsLocalRing.maximalIdeal (Y.presheaf.stalk y), LinearIndependent (IsLocalRing.ResidueField (Y.presheaf.stalk y)) (fun j : Option J => ((IsLocalRing.maximalIdeal (Y.presheaf.stalk y)).toCotangent ⟨Y.presheaf.germ U y hy (j.elim F fun j => z j), h j⟩ : IsLocalRing.CotangentSpace (Y.presheaf.stalk y)))) → ∀ (φ f : Y.functionFieldˣ) (a : Fin n → ℚ) (c : ℚ), (φ : Y.functionField) = fnOf U (gen_mem hy) F → UnitAt y ((f : Y.functionField) / φ) → (∀ j ∈ J, a j < 1) → c < 1 → ∀ E : DivOver q, E.Through y → -1 < ((fun ω => @dite ℤ (∃ a, E.IsFormOrd ω a) (Classical.propDecidable _) (fun h => h.choose) (fun _ => 0)) (formOf U (gen_mem hy) (dOn q z)) : ℚ) - ∑ j ∈ J, a j * E.ord (u j) - c * E.ord f := by
   intro Y _ _ q n _ B y U hy z J w u hc hJ F hind φ f a c hφ hf ha hc1 E hE
   classical
-  haveI := SmoothOfRelativeDimension.smooth n q
+  have := SmoothOfRelativeDimension.smooth n q
   have hn : topologicalKrullDim Y = n := by
     have hd (V : Y.Opens) (hV : IsAffineOpen V) (hne : (V : Set Y).Nonempty) :
         topologicalKrullDim (V : Set Y) = n := by
@@ -1356,12 +1356,12 @@ theorem exists_nbhd_specializes_of_isClosed {Y : Scheme.{0}} [IsIntegral Y] [IsL
       ∀ y' ∈ V, ∀ v, v ⤳ y' → Order.coheight v = 1 → v ∈ F → v ⤳ y := by
   classical
   obtain ⟨W, hW, hyW, hWO⟩ := exists_isAffineOpen_mem_and_subset hy
-  haveI := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
+  have := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
   have hN : NoetherianSpace W := by
     have := NoetherianSpace.range hW.fromSpec hW.fromSpec.continuous
     rw [hW.range_fromSpec] at this
     exact this
-  have hC : IsClosed ((Subtype.val : W → Y) ⁻¹' F) := hF.preimage continuous_subtype_val
+  have hC : IsClosed ((Subtype.val : W → Y) ⁻¹' F) := hF.preimage continuous_subtypeVal
   obtain ⟨S, hS, hc, hi, hU⟩ := @NoetherianSpace.exists_finite_set_isClosed_irreducible _ _ hN _ hC
   let y₀ : W := ⟨y, hyW⟩
   let bad : Set W := ⋃₀ {T ∈ S | y₀ ∉ T}
@@ -1370,7 +1370,7 @@ theorem exists_nbhd_specializes_of_isClosed {Y : Scheme.{0}} [IsIntegral Y] [IsL
     change IsClosed (⋃₀ {T ∈ S | y₀ ∉ T})
     rw [Set.sUnion_eq_biUnion]
     exact hS'.isClosed_biUnion fun T hT => hc T hT.1
-  refine ⟨⟨Subtype.val '' badᶜ, W.isOpen.isOpenMap_subtype_val _ hbad.isOpen_compl⟩,
+  refine ⟨⟨Subtype.val '' badᶜ, W.isOpen.isOpenMap_subtypeVal _ hbad.isOpen_compl⟩,
     ⟨y₀, ?_, rfl⟩, ?_, ?_⟩
   · rintro ⟨T, ⟨-, hyT⟩, hyT'⟩
     exact hyT hyT'
@@ -1423,7 +1423,7 @@ theorem isSncChart_spread : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoethe
       exact this)
   have hord0 : ∀ j ∈ J, ∀ v ∈ Y.basicOpen (z j), Scheme.ord (u j : Y.functionField) v = 0 := by
     intro j hj v hv
-    haveI : Nonempty (Y.basicOpen (z j)) := ⟨⟨v, hv⟩⟩
+    have : Nonempty (Y.basicOpen (z j)) := ⟨⟨v, hv⟩⟩
     have h1 := Scheme.ord_of_isUnit (U := Y.basicOpen (z j))
       (Y.toRingedSpace.isUnit_res_basicOpen (z j)) hv
     rw [hc.val j hj, ← h1]
@@ -1559,8 +1559,8 @@ theorem exists_mvPolynomial_of_forall_nhds {X : Type} [TopologicalSpace X] [Comp
 
 theorem exists_poly_neg_one_lt_discrep_member : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp ℂ) (n : ℕ) [SmoothOfRelativeDimension n q], IsProjOver q → ∀ (B : Closeds Y), FinalTheorems.Snc (Scheme.IdealSheafData.vanishingIdeal B) → ∀ (A : CartierDiv Y) (ι : Type) [Fintype ι] (s : ι → Y.functionField), (∀ i, s i ∈ A.sections) → ∃ Q : MvPolynomial ι ℂ, Q ≠ 0 ∧ ∀ u : ι → ℂ, MvPolynomial.eval u Q ≠ 0 → ∀ t : Y.functionFieldˣ, (t : Y.functionField) = ∑ i, Cartier.constFn q (u i) * s i → ∀ y : Y, (∃ i, A.GeneratesAt y (s i)) → ∀ (η : RatForms q n) (K Θ : CartierDiv Y) (m : ℕ) (c : ℚ) (g f : Y.functionFieldˣ), η ≠ 0 → IsDivOfForm K η → 0 < m → Θ.supp ≤ B → c < 1 → (∀ w, w ⤳ y → Θ.mult w < m) → (Θ + m • K).IsEqn y g → (GlobalTheory.Cartier.CartierDiv.principal t + A).IsEqn y f → ∀ E : DivOver q, E.Through y → -1 < discrep E η m g - c * E.ord f := by
   intro Y _ _ q n _ hproj B hB A ι _ s hs
-  haveI : IsProper q := ((isProjOver_iff_isProper_and_exists_isAmpleLB q).1 hproj).1
-  haveI : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace q
+  have : IsProper q := ((isProjOver_iff_isProper_and_exists_isAmpleLB q).1 hproj).1
+  have : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace q
   refine (exists_mvPolynomial_of_forall_nhds (X := Y) (fun c y =>
     ∀ t : Y.functionFieldˣ, (t : Y.functionField) = ∑ i, Cartier.constFn q (c i) * s i →
     (∃ i, A.GeneratesAt y (s i)) → ∀ (η : RatForms q n) (K Θ : CartierDiv Y) (m : ℕ) (c' : ℚ)
@@ -1685,11 +1685,11 @@ theorem GlobalTheory.PairStep.kltAt_add_general_member : GlobalTheory.Published.
   obtain ⟨m', D₀, hm', -, rfl⟩ := hD
   obtain ⟨Y, hY, π, hπ, K, B, hres, hB⟩ :=
     _root_.GlobalTheory.LogResExist.exists_logRes hP ℂ X p n hproj hn η m G hη.ne_zero D₀.supp D₀.supp_ne_top
-  haveI : IsNoetherian Y := isNoetherian_of_isProjOver hres.proj
-  haveI := hres.smooth
-  haveI : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hproj).1
-  haveI : IsProper (π ≫ p) := ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hres.proj).1
-  haveI : IsProper π := IsProper.of_comp π p
+  have : IsNoetherian Y := isNoetherian_of_isProjOver hres.proj
+  have := hres.smooth
+  have : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hproj).1
+  have : IsProper (π ≫ p) := ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hres.proj).1
+  have : IsProper π := IsProper.of_comp π p
   obtain ⟨Q, hQ0, hQ⟩ := _root_.GlobalTheory.Discrepancy.exists_poly_neg_one_lt_discrep_member Y (π ≫ p) n hres.proj B hres.snc (pullCart π A) ι
     (fun i => functionFieldMap π (s i)) fun i => functionFieldMap_mem_sections π (hs i)
   refine ⟨Q, hQ0, fun u hu t ht y ⟨i, hi⟩ a c ha hc hklt => ?_⟩

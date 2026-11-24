@@ -90,8 +90,8 @@ theorem discreteTopology_of_sep {L : Submodule ℤ W} {lam : ℝ} (hlam : 0 < la
 theorem finite_of_sep {L : Submodule ℤ W} {lam : ℝ} (hlam : 0 < lam) (h : Sep L lam) (r : ℝ) :
     {x : W | x ∈ L ∧ ‖x‖ ≤ r}.Finite := by
   have := discreteTopology_of_sep hlam h
-  letI : MeasurableSpace W := borel W
-  letI : BorelSpace W := ⟨rfl⟩
+  let : MeasurableSpace W := borel W
+  let : BorelSpace W := ⟨rfl⟩
   exact GroundTheory.Heights₂.Heights.finite_lattice_closedBall L r
 
 theorem linearIndependent_real_of_int {n : ℕ} {b : Fin n → W} (hb : LinearIndependent ℤ b)

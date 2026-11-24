@@ -284,10 +284,10 @@ theorem meas_hOf {d : SD σ} {R : RD d} {x : d.G} {t u : GL (Fin d.n) (AE F E)} 
       IsAddFundamentalDomain (MeasP.ratHerm F E σ d.n) (hOf '' 𝓖) (lam.map hOf) ∧ lam.map hOf (hOf '' 𝓖) = 1 := by
   have hσ := sigma_sigma_of_good d.ok.good
   obtain ⟨-, -, -, hbo⟩ := nA_top hσ d.ok.frame
-  haveI := hbo
-  haveI : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.HermR (AF F) σ d.n) := ⟨rfl⟩
+  have := hbo
+  have : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.HermR (AF F) σ d.n) := ⟨rfl⟩
   obtain ⟨-, hlam, hfd, h1⟩ := hc
-  haveI := hlam
+  have := hlam
   let e := hEq hOf hR.ne hR.hof hR.herm
   let eM := e.toHomeomorph.toMeasurableEquiv
   have hemb : MeasurableEmbedding hOf := eM.measurableEmbedding
@@ -361,19 +361,19 @@ theorem measDict_of (hH : MeasP.HermCovol) (hT : MeasP.TupCovol) : MeasDict := b
   constructor
   · intro nb lam 𝓖 hc ν hν
     obtain ⟨i1, i2, i3, i4, i5⟩ := meas_herm_top d
-    haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5
+    have := i1; have := i2; have := i3; have := i4; have := i5
     obtain ⟨hemb, hH', hfd, h1⟩ := meas_hOf hR hc
-    haveI := hH'
+    have := hH'
     obtain ⟨𝓕, hF, hF1⟩ := hH F E σ (meas_cm d) d.B.ψ (meas_char d) d.n ν hν
-    haveI := hν.1
+    have := hν.1
     exact ⟨hemb, hemb.measurable, @MeasG.covol_unique _ _ _ _ _ _ _ _ (MeasP.ratHerm F E σ d.n) _ _ _ hν.1 hH' _ _ hF hfd hF1 h1⟩
   · intro μ νc hμ hνc
     obtain ⟨i1, i2, i3, i4, i5⟩ := meas_mx_top d
-    haveI := i1; haveI := i2; haveI := i3; haveI := i4; haveI := i5
+    have := i1; have := i2; have := i3; have := i4; have := i5
     obtain ⟨𝓕, hF, hF1⟩ := hT F E σ (meas_cm d) d.m (Jd d η) (meas_hermND d hR.ne hR.herm) d.B.ψ (meas_char d) d.n μ hμ
     obtain ⟨hemb, hH', hfd, h1⟩ := meas_toMx d μ 𝓕 hμ.1 hF hF1
     obtain ⟨hνH, 𝓖, hG, hG1⟩ := hνc
-    haveI := hνH; haveI := hH'
+    have := hνH; have := hH'
     exact ⟨hemb, hemb.measurable, @MeasG.covol_unique _ _ _ _ _ _ _ _ d.ratM _ _ _ hνH hH' _ _ hG hfd hG1 h1⟩
 
 theorem measDict : MeasDict := measDict_of _root_.GlobalTheory.CompanionTheory.SW.HermCov.hermCovol _root_.GlobalTheory.CompanionTheory.SiegelND.TupCovolume.tupCovol

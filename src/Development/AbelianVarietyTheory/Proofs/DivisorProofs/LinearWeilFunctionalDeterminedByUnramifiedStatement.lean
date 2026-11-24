@@ -103,9 +103,9 @@ namespace GlobalTheory
 theorem haar_exists_matrix_local_field : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {a d : ℕ},
     ∃ ν : @Measure (Matrix (Fin a) (Fin d) k) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) ν := by
   intro k _ _ _ _ a d
-  letI : MeasurableSpace (Matrix (Fin a) (Fin d) k) := borel _
-  haveI : BorelSpace (Matrix (Fin a) (Fin d) k) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin d) k) :=
+  let : MeasurableSpace (Matrix (Fin a) (Fin d) k) := borel _
+  have : BorelSpace (Matrix (Fin a) (Fin d) k) := ⟨rfl⟩
+  have : LocallyCompactSpace (Matrix (Fin a) (Fin d) k) :=
     inferInstanceAs (LocallyCompactSpace (Fin a → Fin d → k))
   exact ⟨Measure.addHaar, inferInstance⟩
 
@@ -149,11 +149,11 @@ theorem lintegral_mul_invT_sq : ∀ {k : Type} [Field k] [ValuativeRel k] [Topol
       ∫⁻ Y, ‖Φ (Y * (GlobalTheory.SplitFlip.invT h).1)‖ₑ ^ 2 ∂ν =
         ‖GlobalTheory.SplitFlip.apow (GlobalTheory.SplitFlip.gdet h) (a : ℂ)‖ₑ * ∫⁻ Y, ‖Φ Y‖ₑ ^ 2 ∂ν := by
   intro k _ _ _ _ a d Φ h ν hν
-  letI mk : MeasurableSpace k := borel k
-  haveI : BorelSpace k := ⟨rfl⟩
-  letI mM : MeasurableSpace (Matrix (Fin a) (Fin d) k) := borel _
-  haveI : BorelSpace (Matrix (Fin a) (Fin d) k) := ⟨rfl⟩
-  haveI := hν
+  let mk : MeasurableSpace k := borel k
+  have : BorelSpace k := ⟨rfl⟩
+  let mM : MeasurableSpace (Matrix (Fin a) (Fin d) k) := borel _
+  have : BorelSpace (Matrix (Fin a) (Fin d) k) := ⟨rfl⟩
+  have := hν
   set M : Matrix (Fin d) (Fin d) k := (invT h).1 with hM
   set M' : Matrix (Fin d) (Fin d) k := ((invT h)⁻¹).1
   have hMM' : M * M' = 1 := Units.mul_inv _
@@ -176,7 +176,7 @@ theorem lintegral_mul_invT_sq : ∀ {k : Type} [Field k] [ValuativeRel k] [Topol
   let EM : Matrix (Fin a) (Fin d) k ≃ᵐ (Fin a × Fin d → k) :=
     { toFun := f0, invFun := g0, left_inv := fun _ => rfl, right_inv := fun _ => rfl,
       measurable_toFun := hEc.measurable, measurable_invFun := hEsc.measurable }
-  haveI hμ : (ν.map E).IsAddHaarMeasure := E.isAddHaarMeasure_map ν hEc hEsc
+  have hμ : (ν.map E).IsAddHaarMeasure := E.isAddHaarMeasure_map ν hEc hEsc
   let K : Matrix (Fin a × Fin d) (Fin a × Fin d) k := Matrix.kroneckerMap (· * ·) (1 : Matrix (Fin a) (Fin a) k) Mᵀ
   have hK : ∀ Y, K *ᵥ f0 Y = f0 (Y * M) := by
     intro Y; funext p
@@ -210,8 +210,8 @@ theorem lintegral_mul_invT_sq : ∀ {k : Type} [Field k] [ValuativeRel k] [Topol
   refine hl.symm.trans ?_
   rw [lintegral_smul_measure, ENNReal.smul_def, smul_eq_mul]
   congr 1
-  simp only [apow, GlobalTheory.SplitWeil.nabs, Complex.cpow_natCast, enorm_pow]
-  rw [ENNReal.coe_pow]; congr 1; rw [← ofReal_norm_eq_enorm]; simp
+  simp only [apow, GlobalTheory.SplitWeil.nabs, Complex.cpow_natCast, eNorm_pow]
+  rw [ENNReal.coe_pow]; congr 1; rw [← ofReal_norm]; simp
 
 end GlobalTheory.SplitFlip
 end -- clump:auto
@@ -253,12 +253,12 @@ theorem schwartzBruhat_matrix_lintegral_sq_ne_zero_ne_top : ∀ {k : Type} [Fiel
     ∀ ν : @Measure (Matrix (Fin a) (Fin d) k) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) ν →
       ∫⁻ Y, ‖Φ Y‖ₑ ^ 2 ∂ν ≠ 0 ∧ ∫⁻ Y, ‖Φ Y‖ₑ ^ 2 ∂ν ≠ ⊤ := by
   intro k _ _ _ _ a d Φ hΦ h0 ν hν
-  letI : MeasurableSpace (Matrix (Fin a) (Fin d) k) := borel _
-  haveI : BorelSpace (Matrix (Fin a) (Fin d) k) := ⟨rfl⟩
+  let : MeasurableSpace (Matrix (Fin a) (Fin d) k) := borel _
+  have : BorelSpace (Matrix (Fin a) (Fin d) k) := ⟨rfl⟩
   obtain ⟨hlc, hcs⟩ : IsLocallyConstant Φ ∧ HasCompactSupport Φ := hΦ
   have hc : Continuous Φ := hlc.continuous
   have hcont : Continuous fun Y => ‖Φ Y‖ₑ ^ 2 :=
-    (ENNReal.continuous_pow 2).comp hc.enorm
+    (ENNReal.continuous_pow 2).comp hc.eNorm
   constructor
   · intro h
     rw [lintegral_eq_zero_iff hcont.measurable] at h
@@ -274,7 +274,7 @@ theorem schwartzBruhat_matrix_lintegral_sq_ne_zero_ne_top : ∀ {k : Type} [Fiel
       by_cases hY : Y ∈ tsupport Φ
       · rw [Set.indicator_of_mem hY]
         gcongr
-        rw [← ofReal_norm_eq_enorm]
+        rw [← ofReal_norm]
         exact ENNReal.ofReal_le_ofReal (hC Y)
       · simp [image_eq_zero_of_notMem_tsupport hY]
     refine ne_top_of_le_ne_top ?_ hle
@@ -368,7 +368,7 @@ theorem ip_self (μ : Measure X) [IsFiniteMeasureOnCompacts μ] {f : X → ℂ} 
     hf.2.comp_left (by norm_num : ‖(0 : ℂ)‖ ^ 2 = 0)
   have hint : Integrable (fun y => ‖f y‖ ^ 2) μ := (hcf.norm.pow 2).integrable_of_hasCompactSupport hs
   have hE : ∀ y, ENNReal.ofReal (‖f y‖ ^ 2) = ‖f y‖ₑ ^ 2 := fun y => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   have hfin := hint.lintegral_lt_top
   simp only [hE] at hfin
   refine ⟨?_, hfin.ne⟩
@@ -383,7 +383,7 @@ theorem ip_self (μ : Measure X) [IsFiniteMeasureOnCompacts μ] {f : X → ℂ} 
 theorem lintegral_ne_zero (μ : Measure X) [μ.IsOpenPosMeasure] {f : X → ℂ} (hf : f ∈ SB X) (h0 : f ≠ 0) :
     ∫⁻ y, ‖f y‖ₑ ^ 2 ∂μ ≠ 0 := by
   have hc : Continuous f := hf.1.continuous
-  have hcont : Continuous fun Y => ‖f Y‖ₑ ^ 2 := (ENNReal.continuous_pow 2).comp hc.enorm
+  have hcont : Continuous fun Y => ‖f Y‖ₑ ^ 2 := (ENNReal.continuous_pow 2).comp hc.eNorm
   intro h
   rw [lintegral_eq_zero_iff hcont.measurable] at h
   have h' := (Continuous.ae_eq_iff_eq μ hcont continuous_zero).1 h
@@ -532,13 +532,13 @@ theorem linIso_lintegral_eq : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Ty
     ∀ ν : @Measure (Matrix (Fin a) (Fin (a + a')) (Fv F v)) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) ν →
       ∫⁻ Y, ‖ι φ₁ Y‖ₑ ^ 2 ∂ν = ∫⁻ Y, ‖ι φ Y‖ₑ ^ 2 ∂ν := by
   intro hP F E _ _ _ _ _ σ B a a' G X om om' hTr v hv t ι hι φ hφ φ₁ hφ₁ hnorm ν hν
-  letI : MeasurableSpace (Fin a × Fin (a + a') → Fv F v) := borel _
-  haveI : BorelSpace (Fin a × Fin (a + a') → Fv F v) := ⟨rfl⟩
-  letI : MeasurableSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) := borel _
-  haveI : BorelSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) :=
+  let : MeasurableSpace (Fin a × Fin (a + a') → Fv F v) := borel _
+  have : BorelSpace (Fin a × Fin (a + a') → Fv F v) := ⟨rfl⟩
+  let : MeasurableSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) := borel _
+  have : BorelSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) := ⟨rfl⟩
+  have : LocallyCompactSpace (Matrix (Fin a) (Fin (a + a')) (Fv F v)) :=
     inferInstanceAs (LocallyCompactSpace (Fin a → Fin (a + a') → Fv F v))
-  haveI := hν
+  have := hν
   let μ : Measure (Fin a × Fin (a + a') → Fv F v) := Measure.addHaar
   have hμ : μ.IsAddHaarMeasure := inferInstance
   obtain ⟨hψc, hψ1, wT, wM, hA⟩ := GlobalTheory.UnitWShape.heisW B G X om om' hTr v t 1 id (fun f hf => hf)
@@ -733,17 +733,17 @@ def nu (μA : Measure (κ → AF F)) : Measure (κ → Fv F v) :=
 include hS in
 theorem lintegral_nu (μA : Measure (κ → AF F)) {g : (κ → Fv F v) → ℝ≥0∞} (hg : Measurable g) :
     ∫⁻ y, g y ∂nu v r μA = ∫⁻ x, ‖r x‖ₑ ^ 2 * g (prj v x) ∂μA := by
-  have hd : Measurable fun x => ‖r x‖ₑ ^ 2 := ((continuous_r v r hS).measurable.enorm).pow_const 2
+  have hd : Measurable fun x => ‖r x‖ₑ ^ 2 := ((continuous_r v r hS).measurable.eNorm).pow_const 2
   rw [nu, lintegral_map hg (continuous_prj v).measurable]
   exact lintegral_withDensity_eq_lintegral_mul μA hd (hg.comp (continuous_prj v).measurable)
 
 include hS in
 theorem lintegral_nu_sq (μA : Measure (κ → AF F)) {ψ : (κ → Fv F v) → ℂ} (hψ : Continuous ψ) :
     ∫⁻ y, ‖ψ y‖ₑ ^ 2 ∂nu v r μA = ∫⁻ x, ‖tens (evFin F v) ψ r x‖ₑ ^ 2 ∂μA := by
-  rw [lintegral_nu v r hS μA ((hψ.measurable.enorm).pow_const 2)]
+  rw [lintegral_nu v r hS μA ((hψ.measurable.eNorm).pow_const 2)]
   congr 1; funext x
   show _ = ‖ψ (prj v x) * r x‖ₑ ^ 2
-  rw [enorm_mul, mul_pow, mul_comm]
+  rw [eNorm_mul, mul_pow, mul_comm]
 
 include hr hS in
 theorem nu_invariant (μA : Measure (κ → AF F)) [μA.IsAddHaarMeasure] : (nu v r μA).IsAddLeftInvariant := by
@@ -772,7 +772,7 @@ theorem nu_box_lt_top (μA : Measure (κ → AF F)) [μA.IsAddHaarMeasure] (y₀
     nu v r μA (box v y₀) < ⊤ := by
   rw [nu_box_eq, lintegral_nu_sq v r hS μA (sb_box v y₀).1.continuous]
   have hL := _root_.GlobalTheory.WeilM.schA_memLp_two F κ μA inferInstance _ (hS _ (sb_box v y₀))
-  have := lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top two_ne_zero ENNReal.ofNat_ne_top hL.eLpNorm_lt_top
+  have := lintegral_rpow_eNorm_lt_top_of_eLpNorm_lt_top two_ne_zero ENNReal.ofNat_ne_top hL.eLpNorm_lt_top
   simpa using this
 
 include hS in
@@ -786,7 +786,7 @@ theorem nu_box_ne_zero (μA : Measure (κ → AF F)) [μA.IsAddHaarMeasure] {x�
   intro hz
   have hc := GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F (hS _ (sb_box v (prj v x₀)))
   have hcm : Continuous fun x => ‖tens (evFin F v) ((box v (prj v x₀)).indicator (1 : (κ → Fv F v) → ℂ)) r x‖ₑ ^ 2 :=
-    (ENNReal.continuous_pow 2).comp hc.enorm
+    (ENNReal.continuous_pow 2).comp hc.eNorm
   rw [lintegral_eq_zero_iff hcm.measurable] at hz
   have h1 := congrFun ((Continuous.ae_eq_iff_eq μA hcm continuous_const).1 hz) x₀
   have h2 : tens (evFin F v) ((box v (prj v x₀)).indicator (1 : (κ → Fv F v) → ℂ)) r x₀ = r x₀ := by
@@ -801,8 +801,8 @@ theorem exists_const (μA : Measure (κ → AF F)) [μA.IsAddHaarMeasure] (h0 : 
     (μ : Measure (κ → Fv F v)) [μ.IsAddHaarMeasure] :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ ∀ ψ ∈ SB (κ → Fv F v),
       ∫⁻ x, ‖tens (evFin F v) ψ r x‖ₑ ^ 2 ∂μA = c * ∫⁻ y, ‖ψ y‖ₑ ^ 2 ∂μ := by
-  haveI := nu_invariant v r hr hS μA
-  haveI := nu_locFin v r hS μA
+  have := nu_invariant v r hr hS μA
+  have := nu_locFin v r hS μA
   obtain ⟨x₀, hx₀⟩ := h0
   set c := Measure.addHaarScalarFactor (nu v r μA) μ
   have key : ∀ s : Set (κ → Fv F v), IsCompact (closure s) → nu v r μA s = (c : ℝ≥0∞) * μ s := fun s hs => by
@@ -815,7 +815,7 @@ theorem exists_const (μA : Measure (κ → AF F)) [μA.IsAddHaarMeasure] (h0 : 
     have hK : IsCompact (tsupport ψ) := hψ.2
     have hres : (nu v r μA).restrict (tsupport ψ) = (c : ℝ≥0∞) • μ.restrict (tsupport ψ) := by
       ext s hs
-      rw [Measure.restrict_apply hs, Measure.smul_apply, Measure.restrict_apply hs, smul_eq_mul]
+      rw [Measure.restrict_apply hs, smul_apply, Measure.restrict_apply hs, smul_eq_mul]
       exact key _ (hK.of_isClosed_subset isClosed_closure
         (closure_minimal Set.inter_subset_right (isClosed_tsupport ψ)))
     have hsupp : Function.support (fun y => ‖ψ y‖ₑ ^ 2) ⊆ tsupport ψ := by
@@ -876,11 +876,11 @@ theorem GlobalTheory.LocalUnitaryL2.lintegral_eq : GlobalTheory.FunPr.Hypotheses
     ∀ μ : @Measure (Fin a × Fin (a + a') → Fv F v) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
       ∫⁻ x, ‖φ₁ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ := by
   intro _ F E _ _ _ _ _ σ B a a' G X om om' hT v h _ φ hφ φ₁ hφ₁ hA μ hμ
-  letI : MeasurableSpace (Fin a × Fin (a + a') → AF F) := borel _
-  haveI : BorelSpace (Fin a × Fin (a + a') → AF F) := ⟨rfl⟩
-  letI : MeasurableSpace (Fin a × Fin (a + a') → Fv F v) := borel _
-  haveI : BorelSpace (Fin a × Fin (a + a') → Fv F v) := ⟨rfl⟩
-  haveI := hμ
+  let : MeasurableSpace (Fin a × Fin (a + a') → AF F) := borel _
+  have : BorelSpace (Fin a × Fin (a + a') → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (Fin a × Fin (a + a') → Fv F v) := borel _
+  have : BorelSpace (Fin a × Fin (a + a') → Fv F v) := ⟨rfl⟩
+  have := hμ
   obtain ⟨r, hr, hS, h0⟩ := GlobalTheory.LocalUnitaryL2.exists_r (κ := Fin a × Fin (a + a')) v
   let μA : Measure (Fin a × Fin (a + a') → AF F) := Measure.addHaar
   obtain ⟨c, hc0, hct, hc⟩ := GlobalTheory.LocalUnitaryL2.exists_const v r hr hS μA ⟨0, h0⟩ μ
@@ -1102,9 +1102,9 @@ theorem units_valuation_eq_one_mem_nhds_one {k : Type} [Field k] [ValuativeRel k
       (fun x : kˣ => (x : k)) ⁻¹' (𝒪[k] : Set k) ∩
         (fun x : kˣ => ((x⁻¹ : kˣ) : k)) ⁻¹' (𝒪[k] : Set k) := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, SetLike.mem_coe,
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, SetLike.mem_coe,
       Valuation.mem_integer_iff, Units.val_inv_eq_inv_val, map_inv₀]
-    rw [inv_le_one₀ (by simp [zero_lt_iff])]
+    rw [inv_le_one₀ (by simp [pos_iff_ne_zero])]
     exact le_antisymm_iff
   have hopen : IsOpen {x : kˣ | ValuativeRel.valuation k (x : k) = 1} := by
     rw [hset]
@@ -1239,9 +1239,9 @@ theorem charW_smooth_unitary : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : T
     set c : ℂ := (β₀ x : ℂ) * GlobalTheory.SplitFlip.apow x (-(a : ℂ) / 2) with hcdef
     have hc : ∀ Y : Matrix (Fin a) (Fin (a + a')) (Fv F v), ‖c * ι φ₀ (Y * (GlobalTheory.SplitFlip.invT h').1)‖ₑ ^ 2 =
         ‖c‖ₑ ^ 2 * ‖ι φ₀ (Y * (GlobalTheory.SplitFlip.invT h').1)‖ₑ ^ 2 := by
-      intro Y; rw [enorm_mul, mul_pow]
+      intro Y; rw [eNorm_mul, mul_pow]
     simp_rw [hc] at hl
-    rw [lintegral_const_mul' _ _ (by simp [enorm_eq_nnnorm]), GlobalTheory.T.lintegral_norm_sq_right_translate (ι φ₀) h' ν hν, hg] at hl
+    rw [lintegral_const_mul' _ _ (by simp [eNorm_eq_nnNorm]), GlobalTheory.T.lintegral_norm_sq_right_translate (ι φ₀) h' ν hν, hg] at hl
     obtain ⟨hn0, hntop⟩ := GlobalTheory.T.lintegral_norm_sq_schwartz_pos_finite (ι φ₀) (hι.bij.mapsTo hφ₀) (fun hz => h0 (by simp [hz])) ν hν
     rw [← mul_assoc] at hl
     have h1 : ‖c‖ₑ ^ 2 * ‖GlobalTheory.SplitFlip.apow x (a : ℂ)‖ₑ = 1 :=
@@ -1256,13 +1256,13 @@ theorem charW_smooth_unitary : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : T
           rw [this, GlobalTheory.SplitFlip.apow_zero]
         linear_combination ((β₀ x : ℂ) * (β₀ x : ℂ)) * e3
       calc ‖c‖ₑ ^ 2 * ‖GlobalTheory.SplitFlip.apow x (a : ℂ)‖ₑ = ‖c * c * GlobalTheory.SplitFlip.apow x (a : ℂ)‖ₑ := by
-            rw [enorm_mul, enorm_mul]; ring
+            rw [eNorm_mul, eNorm_mul]; ring
         _ = ‖(β₀ x : ℂ) * (β₀ x : ℂ)‖ₑ := by rw [this]
-        _ = ‖(β₀ x : ℂ)‖ₑ ^ 2 := by rw [enorm_mul]; ring
+        _ = ‖(β₀ x : ℂ)‖ₑ ^ 2 := by rw [eNorm_mul]; ring
     rw [h2] at h1
     have h3 : ‖(β₀ x : ℂ)‖₊ = 1 := by
-      rw [enorm_eq_nnnorm, ← ENNReal.coe_pow, ENNReal.coe_eq_one] at h1
-      exact (pow_eq_one_iff_of_nonneg zero_le' two_ne_zero).1 h1
+      rw [eNorm_eq_nnNorm, ← ENNReal.coe_pow, ENNReal.coe_eq_one] at h1
+      exact (pow_eq_one_iff_of_nonneg zero_le two_ne_zero).1 h1
     exact congrArg NNReal.toReal h3
 
 end GlobalTheory.WeilLinW

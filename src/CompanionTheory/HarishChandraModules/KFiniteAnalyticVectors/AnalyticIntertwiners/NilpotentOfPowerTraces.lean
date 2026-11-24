@@ -89,7 +89,7 @@ theorem dS_mem_of_inK_A (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.MainN
     {s : H} (hs : s ∈ S) (hsm : s ∈ smD ε σ) : dS σ Z s ∈ S := by
   have hd := hasDerivAt_dS hσ hZ.1 ((mem_smD_iff ε σ s).1 hsm)
   have ht := hd.tendsto_slope_zero
-  have hcl : IsClosed (S : Set H) := Submodule.closed_of_finiteDimensional S
+  have hcl : IsClosed (S : Set H) := Submodule.isClosed_of_finiteDimensional S
   refine hcl.mem_of_tendsto ht (Eventually.of_forall fun t => ?_)
   have hZt : inK ε (((t : ℝ) : ℂ) • Z) := by
     obtain ⟨h1, h2⟩ := hZ
@@ -199,7 +199,7 @@ theorem integral_weights : IntWts := by
     simp only [LinearMap.sub_apply, Module.End.mul_apply] at h
     by_cases hab : a = b
     · subst hab; rfl
-    · rw [if_neg hab, if_neg (Ne.symm hab), sub_self] at h
+    · rw [ite_eq_right hab, ite_eq_right (Ne.symm hab), sub_self] at h
       exact sub_eq_zero.1 h
   have htop := LinearMap.IsSymmetric.iSup_iInf_eq_top_of_commute hT hC
   set G : Set (smD ε σ) := {w | w ∈ KF ε σ ∧ ∃ μ : Fin n → ℤ, ∀ a, smE ε σ a a w = (μ a : ℂ) • w}

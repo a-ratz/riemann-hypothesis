@@ -66,7 +66,7 @@ theorem exists_eval_regular_at_fieldPoint :
       obtain ⟨a, ha⟩ := u.2
       exact ⟨a, Subtype.ext ha⟩⟩
   let s : Z.presheaf.stalk z →+* k := (Scheme.stalkClosedPointTo (R := .of k) w).hom
-  haveI : IsLocalHom s := Scheme.isLocalHom_stalkClosedPointTo' w
+  have : IsLocalHom s := Scheme.isLocalHom_stalkClosedPointTo' w
   have he : ∀ a, e.symm ⟨ι a, ⟨a, rfl⟩⟩ = a := fun a => e.symm_apply_eq.2 rfl
   refine ⟨s.comp e.symm.toRingHom, ?_, ?_⟩
   · rintro ⟨_, a, rfl⟩

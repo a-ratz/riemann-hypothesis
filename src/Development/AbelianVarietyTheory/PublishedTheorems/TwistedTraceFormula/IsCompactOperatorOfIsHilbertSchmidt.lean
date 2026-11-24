@@ -202,7 +202,7 @@ theorem EnoughCompact.multIn_lt (hρ : IsUnitaryRep ρ) (h : EnoughCompact ρ) (
   by_cases h0 : homIn π ρ ⊤ = ⊥
   · rw [h0]; infer_instance
   have := hπ.complete
-  haveI := hπ.irred.1
+  have := hπ.irred.1
   obtain ⟨v, hvnorm⟩ := exists_norm_eq H zero_le_one
   have inner_eq_be : ∀ (T T' : H →L[ℂ] K), T ∈ homIn π ρ ⊤ → T' ∈ homIn π ρ ⊤ →
       ∀ x y, ⟪T' y, T x⟫_ℂ = ⟪T' v, T v⟫_ℂ * ⟪y, x⟫_ℂ := by
@@ -260,7 +260,7 @@ theorem multIn_eq_ncard (hρ : IsUnitaryRep ρ) (hπ : IsIrrUnitary π) (hm : mu
     {i | IsCopy π ρ (W i)}.Finite ∧ multIn π ρ ⊤ = {i | IsCopy π ρ (W i)}.ncard := by
   classical
   have := hπ.complete
-  haveI := hπ.irred.1
+  have := hπ.irred.1
   obtain ⟨v, hvnorm⟩ := exists_norm_eq H zero_le_one
   have inner_eq_be : ∀ (T T' : H →L[ℂ] K), T ∈ homIn π ρ ⊤ → T' ∈ homIn π ρ ⊤ →
       ∀ x y, ⟪T' y, T x⟫_ℂ = ⟪T' v, T v⟫_ℂ * ⟪y, x⟫_ℂ := by
@@ -317,7 +317,7 @@ theorem exists_nhds_repOp_ne_zero [MeasurableSpace G] [OpensMeasurableSpace G] (
   rw [e, inner_zero_right] at h2
   have h3 := integral_re (𝕜 := ℂ) (μ := μ) ((hf.mul (continuous_const.inner (𝕜 := ℂ) (f := fun _ => v)
     (hρ.continuous_apply v))).integrable_of_hasCompactSupport hfs.mul_right)
-  refine ((hφ.mul hc).integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := μ) hs.mul_right (fun g => ?_)
+  refine ((hφ.mul hc).integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := μ) hs.mul_right (fun g => ?_)
     (mul_ne_zero hφ1 h1.ne')).ne' ?_
   · by_cases hg : φ g = 0
     · simp [hg]

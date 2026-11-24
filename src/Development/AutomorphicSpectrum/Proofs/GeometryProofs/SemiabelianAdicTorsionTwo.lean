@@ -175,7 +175,7 @@ theorem res_iff_abs (hB : IsHopfOrder B) (hB' : IsHopfOrder B') (hl : IsLoc H B)
   classical
   constructor
   · intro hg
-    haveI : Fintype (T' ⧸ H') := Fintype.ofFinite _
+    have : Fintype (T' ⧸ H') := Fintype.ofFinite _
     have hex : ∀ t : T, ∃ f ∈ B', ∀ h ∈ H, g (t * h) = f (ι h) :=
       fun t => hb _ (translate_mem_of_isHopfOrder' hB hg t)
     choose fr hfr hfrH using hex
@@ -184,7 +184,7 @@ theorem res_iff_abs (hB : IsHopfOrder B) (hB' : IsHopfOrder B') (hl : IsLoc H B)
     have hrep : ∀ t0 : T, ((ι (rep (ι t0 : T' ⧸ H')) : T') : T' ⧸ H') = (ι t0 : T' ⧸ H') := by
       intro t0
       have hc : ∃ t : T, (ι t : T' ⧸ H') = (ι t0 : T' ⧸ H') := ⟨t0, rfl⟩
-      simp only [rep, dif_pos hc]
+      simp only [rep, dite_eq_left hc]
       exact hc.choose_spec
     let F : T' ⧸ H' → T' → R := fun c s => fr (rep c) ((ι (rep c))⁻¹ * s)
     refine ⟨∑ c, cosetInd R H' c * F c, ?_, ?_⟩
@@ -233,7 +233,7 @@ theorem ker_abs {N : ℕ} (hB' : IsHopfOrder B') (hl' : IsLoc H' B') (hN : ∀ t
     (hc : ∀ f ∈ B', (∀ t, f (ι t) = 0) → ∃ j ∈ torsJ B' N, ∀ h ∈ H', j.1 h = f h)
     (f : B') (hf : ∀ t, f.1 (ι t) = 0) : f ∈ torsJ B' N := by
   classical
-  haveI : Fintype (T' ⧸ H') := Fintype.ofFinite _
+  have : Fintype (T' ⧸ H') := Fintype.ofFinite _
   have hE : ∀ c : T' ⧸ H', cosetInd R H' c ∈ B' := fun c => cosetInd_mem hl' c
   have hdecomp : f = ∑ c, (⟨cosetInd R H' c, hE c⟩ : B') * f := by
     apply Subtype.ext
@@ -282,7 +282,7 @@ theorem ker_abs {N : ℕ} (hB' : IsHopfOrder B') (hl' : IsLoc H' B') (hN : ∀ t
           simp [h0, cosetInd, QuotientGroup.mk_pow, hx]
         have e2 : h0 1 = 0 := by
           simp only [h0, cosetInd]
-          rw [if_neg]
+          rw [ite_eq_right]
           intro h1
           apply hs
           rw [← QuotientGroup.mk_pow] at h1
@@ -514,7 +514,7 @@ theorem exists_fun [IsIntegrallyClosed R] [IsLocalRing R]
     ∃ f ∈ Γ.btOrder ⊤, ∀ t h, valAt (Γ.pt t).left U h s = algebraMap R _ (f t) := by
   obtain ⟨H, A, hH, hA, hAf⟩ := sub_order R T Γ U hF
   have hV := isAffineOpen_of_fin Γ hF
-  letI : Algebra R Γ(Γ.G.left, U) := (secRho Γ hV).toAlgebra
+  let : Algebra R Γ(Γ.G.left, U) := (secRho Γ hV).toAlgebra
   have hρ : hV.fromSpec ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom (algebraMap R Γ(Γ.G.left, U))) :=
     fromSpec_hom Γ hV
   have hfin := sec_finite hρ hF

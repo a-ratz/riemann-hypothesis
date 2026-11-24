@@ -223,7 +223,7 @@ theorem exists_eigenvector_of_stable {F : Type} [Field F] [Fintype F] (ψ : AddC
     obtain ⟨i, hi⟩ := Function.ne_iff.1 hx
     refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
     have := AddChar.sum_mulShift (ψ := ψ) (-x i) hprim
-    rw [if_neg (by simpa using hi)] at this
+    rw [ite_eq_right (by simpa using hi)] at this
     simpa using this
   have hsum : ∑ l, w l = (Fintype.card (ι → F) : ℂ) • v := by
     simp only [w]
@@ -331,9 +331,9 @@ theorem colEl_neg_mul {b : Fin r → ℕ} (hb : Monotone b) (k : Fin r) (x : Fin
     · obtain rfl : j = k := Fin.ext h
       rw [hu.1.2 j]
       rcases lt_trichotomy i j with h' | h' | h'
-      · rw [if_pos h', hx i h', Matrix.one_apply_ne h'.ne]; ring
+      · rw [ite_eq_left h', hx i h', Matrix.one_apply_ne h'.ne]; ring
       · subst h'; simp [hu.1.2 i]
-      · rw [if_neg (lt_asymm h'), hu.1.1 (show j.val < i.val from h'), Matrix.one_apply_ne h'.ne']; simp
+      · rw [ite_eq_right (lt_asymm h'), hu.1.1 (show j.val < i.val from h'), Matrix.one_apply_ne h'.ne']; simp
   refine ⟨⟨(unip F r).mul_mem (colGL_mem_unip k (-x)) hu.1, hc⟩, ?_⟩
   unfold edgeSum
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
@@ -341,10 +341,10 @@ theorem colEl_neg_mul {b : Fin r → ℕ} (hb : Monotone b) (k : Fin r) (x : Fin
   · have h1 := hij.1
     by_cases hk : k < j
     · have : ¬ i < k := by rw [Fin.lt_def] at hk ⊢; omega
-      rw [if_pos hij, if_pos ⟨hij, hk⟩, e, if_neg this, add_zero]
-    · rw [if_pos hij, if_neg (fun h => hk h.2), hc i j (by rw [Fin.lt_def] at hk; omega),
+      rw [ite_eq_left hij, ite_eq_left ⟨hij, hk⟩, e, ite_eq_right this, add_zero]
+    · rw [ite_eq_left hij, ite_eq_right (fun h => hk h.2), hc i j (by rw [Fin.lt_def] at hk; omega),
         Matrix.one_apply_ne (fun h' => by simp [h'] at h1)]
-  · rw [if_neg hij, if_neg (fun h => hij h.1)]
+  · rw [ite_eq_right hij, ite_eq_right (fun h => hij h.1)]
 
 theorem mul_colEl_val {b : Fin r → ℕ} (hb : Monotone b) (k : Fin r) (x : Fin r → F) {u : blockTri (κ := F) b}
     (hu : u ∈ colSet F b (k.val + 1)) (i j : Fin r) :
@@ -371,9 +371,9 @@ theorem colEl_stable {V : Type} [AddCommGroup V] [Module ℂ V] (ψ : AddChar F 
   have hu' : u ∈ colSet F b k.val := ⟨hu.1, fun i j hj => hu.2 i j (by omega)⟩
   have hm : u * colEl hb k x ∈ colSet F b k.val := by
     refine ⟨(unip F r).mul_mem hu.1 (colGL_mem_unip k x), fun i j hj => ?_⟩
-    rw [mul_colEl_val hb k x hu, hu.2 i j (by omega), if_neg (fun h => by simp [h.2] at hj), add_zero]
+    rw [mul_colEl_val hb k x hu, hu.2 i j (by omega), ite_eq_right (fun h => by simp [h.2] at hj), add_zero]
   obtain ⟨h1, h2⟩ := colEl_neg_mul hb k x hm (fun i hi => by
-    rw [mul_colEl_val hb k x hu, hu.2 i k (by omega), if_pos ⟨hi, rfl⟩, Matrix.one_apply_ne hi.ne, zero_add])
+    rw [mul_colEl_val hb k x hu, hu.2 i k (by omega), ite_eq_left ⟨hi, rfl⟩, Matrix.one_apply_ne hi.ne, zero_add])
   obtain ⟨-, h3⟩ := colEl_neg_mul hb k 0 hu' (fun i hi => by
     rw [hu.2 i k (by omega), Matrix.one_apply_ne hi.ne]; rfl)
   rw [neg_zero, colEl_zero, one_mul] at h3
@@ -382,7 +382,7 @@ theorem colEl_stable {V : Type} [AddCommGroup V] [Module ℂ V] (ψ : AddChar F 
     unfold edgeSum
     refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
     split_ifs with h
-    · rw [mul_colEl_val hb k x hu, if_neg (fun h' => h.2.ne' h'.2), add_zero]
+    · rw [mul_colEl_val hb k x hu, ite_eq_right (fun h' => h.2.ne' h'.2), add_zero]
     · rfl
   have h5 := hv _ h1
   rw [h2, h4, ← h3] at h5
@@ -449,7 +449,7 @@ theorem fixed_mem_of_stable {ι : Type} [Finite ι] {H : ι → Type} [∀ c, Mo
     (E : Submodule ℂ V) (hE : E ≠ ⊥) (hst : ∀ c g, ∀ v ∈ E, e c (a c g v) ∈ E)
     (v : V) (hv : ∀ c, e c v = v) : v ∈ E := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   let Y : Finset ι → Submodule ℂ V := fun s =>
     sInf {Y | E ≤ Y ∧ ∀ c ∈ s, ∀ g, ∀ v ∈ Y, a c g v ∈ Y}
   have hEY : ∀ s, E ≤ Y s := fun s => le_sInf fun _ h => h.1
@@ -535,7 +535,7 @@ theorem finrank_fixed_le_one (ι : Type) [Finite ι] (H : ι → Type) [∀ c, M
   refine le_trans (Submodule.finrank_mono hWle) ?_
   by_cases hbot : W0 = ⊥
   · rw [hbot]; simp
-  haveI : Nontrivial W0 := Submodule.nontrivial_iff_ne_bot.2 hbot
+  have : Nontrivial W0 := Submodule.nontrivial_iff_ne_bot.2 hbot
   have hscal : ∀ c g, ∃ μ : ℂ, ∀ v ∈ W0, e c (a c g v) = μ • v := by
     intro c g
     obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue
@@ -660,7 +660,7 @@ theorem heckeIdem_comm [Finite H] (hm : ∀ x ∈ U, ∀ y ∈ U, χ (x * y) = �
       by_contra hc
       push Not at hc
       apply hi
-      haveI : Nontrivial (Subrepresentation τ) := ⟨⊥, ⊤, fun e => by
+      have : Nontrivial (Subrepresentation τ) := ⟨⊥, ⊤, fun e => by
         have := congrArg Subrepresentation.toSubmodule e
         exact (bot_ne_top : (⊥ : Submodule ℂ V) ≠ ⊤) this⟩
       exact ⟨fun W => by
@@ -668,7 +668,7 @@ theorem heckeIdem_comm [Finite H] (hm : ∀ x ∈ U, ∀ y ∈ U, χ (x * y) = �
         · exact Or.inl hW
         · exact Or.inr (hc W hW)⟩
     obtain ⟨W, hb, ht⟩ := hex
-    haveI : NeZero (Nat.card H : ℂ) := ⟨by exact_mod_cast Nat.card_pos.ne'⟩
+    have : NeZero (Nat.card H : ℂ) := ⟨by exact_mod_cast Nat.card_pos.ne'⟩
     have hss : τ.IsSemisimpleRepresentation := inferInstance
     obtain ⟨W', hW'⟩ := hss.exists_isCompl W
     have ht' : W' ≠ ⊤ := by
@@ -697,7 +697,7 @@ end
 
 theorem exists_idem_hecke_comm : ∀ (H : Type) [Group H] [Finite H] (U : Subgroup H) (χ : H → ℂ), (∀ x ∈ U, ∀ y ∈ U, χ (x * y) = χ x * χ y) → χ 1 = 1 → (∀ (W : Type) [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] (τ : Representation ℂ H W), τ.IsIrreducible → finrank ℂ (eig τ (U : Set H) χ) ≤ 1) → ∀ (V : Type) [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V] (τ : Representation ℂ H V), ∃ e : Module.End ℂ V, e * e = e ∧ (∀ v ∈ eig τ (U : Set H) χ, e v = v) ∧ (∀ T : Module.End ℂ V, (∀ g, Commute T (τ g)) → Commute T e) ∧ ∀ g h : H, e * τ g * e * τ h * e = e * τ h * e * τ g * e := by
   intro H _ _ U χ hm h1 hirr V _ _ _ τ
-  letI : Fintype U := Fintype.ofFinite U
+  let : Fintype U := Fintype.ofFinite U
   refine ⟨heckeIdem U χ τ, ?_, heckeIdem_of_mem U χ hm h1 τ, ?_, ?_⟩
   · ext v
     exact heckeIdem_of_mem U χ hm h1 τ _ (heckeIdem_mem U χ hm τ v)

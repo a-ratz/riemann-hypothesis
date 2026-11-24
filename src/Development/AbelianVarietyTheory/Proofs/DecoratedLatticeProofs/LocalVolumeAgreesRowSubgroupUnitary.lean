@@ -99,7 +99,7 @@ theorem relIndex_comap_of_dense_image {Γ G : Type} [Group Γ] [Group G] (φ : �
 theorem vol_agree : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X Pr R.m) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (S₀ : Set ℕ) (mu : Tup X.F X.E X.K S₀) (cst : LocCst X (rowSG Pr sel mu)) (σ₀ : X.K →+* ℂ) (P : rowSG Pr sel mu) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : X.E →+* k) (s : ℕ) (W : TwData k) [MeasurableSpace k] [BorelSpace k] (ν : Measure k), IsUnitVol ν → cst.Ok → AtTwist (R := R) sel mu cst σ₀ P ι s W → VolAgree (R := R) sel mu cst σ₀ P ι s W ν := by
   intro X Pr R Ch sel S₀ mu cst σ₀ P k _ _ _ _ ι s W _ _ ν hν hok hat
   have hLev := _root_.GlobalTheory.TwBridge.Lev.levelAgree X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hok hat
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   intro j c h γ g hg
   obtain ⟨e, he, hge⟩ := hg
   have hcc : cOf R j = c + 1 := by unfold cOf; have := hat.steps; omega
@@ -123,7 +123,7 @@ theorem vol_agree : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X P
   have hN1 := _root_.GlobalTheory.UnipRead.mem_N1_iff_local_hom ι e hcc heR
   have hlam : lamYat (Pr := Pr) (R := R) j P.1 = stdAt X.E _ P.1 := by
     ext v
-    simp only [lamYat, if_neg hat.nmem, LocE.lamY, LocE.sclLat, Submodule.mem_comap]
+    simp only [lamYat, ite_eq_right hat.nmem, LocE.lamY, LocE.sclLat, Submodule.mem_comap]
     congr! 1
     funext l
     simp [LocE.scE]
@@ -135,7 +135,7 @@ theorem vol_agree : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X P
   refine ⟨?_, ?_⟩
   ·
     have hH := GlobalTheory.RootEx.VolN.volN_haar_and_modulus k (XIx (Fin R.k) (Fin R.t) j) (c + 1) 1 le_rfl (by omega) ν
-    haveI := hH.2.2.1
+    have := hH.2.2.1
     obtain ⟨ho, hAc, hBc⟩ := _root_.GlobalTheory.UnipLevelTopo.isOpen_inf_isCompact J g hJo hJc
     have hst : stabLat (1 : GL (XIx (Fin R.k) (Fin R.t) j ⊕ Fin (c + 1)) k) = KO k _ := by
       ext z; simp [stabLat, Subgroup.mem_comap]
@@ -183,7 +183,7 @@ theorem vol_agree : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X P
     rw [← h1, ← h2]
     simp [Loc.volN, map_div₀, map_natCast]
   · intro hle m hm hm1
-    haveI := hm
+    have := hm
     set e' := GlobalTheory.VolBridge.eX e hcc heR with he'
     set φ' := GlobalTheory.VolBridge.locHom ι e' with hφ'
     have hOo : IsOpen {w : GL (XIx (Fin R.k) (Fin R.t) j ⊕ Fin (c + 1)) k | g⁻¹ * w * g ∈ J} :=

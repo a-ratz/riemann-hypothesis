@@ -79,7 +79,7 @@ namespace PI.UnitaryGroupMassFormula.IdCellInSW
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem traceOne_holds (D : D7) : TraceOne D := by
-  haveI : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
+  have : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
 
   have hgal := (D.host.der.conj_iff D.host.φ₀ ((NumberField.IsCMField.complexConj D.host.E).restrictScalars ℚ)).mp (fun x =>
     NumberField.ComplexEmbedding.IsConj.eq (NumberField.IsCMField.isConj_complexConj D.host.E D.host.φ₀) x)

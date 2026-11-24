@@ -146,7 +146,7 @@ theorem volTUOEq_of {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
     rw [mul_neg, Submodule.neg_mem_iff, mul_comm]
   unfold VolTUOEq
   ext p
-  simp only [deepCongruenceVolume, VolTUSet, UO, Set.mem_setOf_eq, e, key]
+  simp only [deepCongruenceVolume, VolTUSet, UO, Set.mem_ofPred_eq, e, key]
   simp only [VolTU.mem_OEv]
   constructor
   · rintro ⟨h1, h2, h3⟩

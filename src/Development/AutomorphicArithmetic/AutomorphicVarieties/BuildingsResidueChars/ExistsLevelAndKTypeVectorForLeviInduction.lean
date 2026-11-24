@@ -180,10 +180,10 @@ private theorem block_mem {K : Type} [Field K] [NumberField K] (S : Finset (Pl K
   change ∀ v, finAt v (finEmb K 2 d) ∈ (if v ∈ S then V v else GLnLocal.integralGL (v.adicCompletion K) 2)
   intro v
   by_cases hv : v ∈ S
-  · rw [if_pos hv]
+  · rw [ite_eq_left hv]
     refine hV v ((GLnLocal.mem_congruenceSubgroup_iff _ _).2 ⟨hint v, fun i j => ?_⟩)
     have h1 := hu' v
-    rw [if_pos hv] at h1
+    rw [ite_eq_left hv] at h1
     have h2 := ((GLnLocal.mem_congruenceSubgroup_iff _ _).1 h1).2 (f i) (f j)
     have h3 : finAt v (finEmb K (2 + 2) u) (f i) (f j) = finAt v (finEmb K 2 d) i j := by
       simp only [finAt_apply, he]
@@ -192,7 +192,7 @@ private theorem block_mem {K : Type} [Field K] [NumberField K] (S : Finset (Pl K
         (1 : Matrix (Fin 2) (Fin 2) (v.adicCompletion K)) i j := by
       simp [Matrix.one_apply, hf.eq_iff]
     rwa [h4] at h2
-  · rw [if_neg hv]
+  · rw [ite_eq_right hv]
     exact hint v
 
 theorem UpperTheory.exists_level_indicator_unipotent_invariant :
@@ -230,14 +230,14 @@ theorem UpperTheory.exists_level_indicator_unipotent_invariant :
   refine ⟨U, χ, hU, ?_, fun h => ?_, ?_, ?_, hχR, ?_⟩
   · refine IsLocallyConstant.continuous ((IsLocallyConstant.iff_eventually_eq _).2 fun x => ?_)
     have ho : IsOpen {y : AdelicGLn.integralFiniteGL K (2 + 2) | ((x⁻¹ * y : AdelicGLn.integralFiniteGL K (2 + 2)) : FA K (2 + 2)) ∈ levOn S U} :=
-      hopen.preimage (continuous_subtype_val.comp (continuous_const.mul continuous_id))
+      hopen.preimage (continuous_subtypeVal.comp (continuous_const.mul continuous_id))
     filter_upwards [ho.mem_nhds (by simp)] with y hy
     have := hχR x _ hy
     rwa [mul_inv_cancel_left] at this
   · by_cases hp : P h
-    · exact Or.inr (if_pos hp)
-    · exact Or.inl (if_neg hp)
-  · refine if_pos ⟨0, 1, one_mem _, ?_⟩
+    · exact Or.inr (ite_eq_left hp)
+    · exact Or.inl (ite_eq_right hp)
+  · refine ite_eq_left ⟨0, 1, one_mem _, ?_⟩
     rw [show nn (0 : UPos (2 + 2) 2 → 𝔸[K]) = 1 from unipOne_zero 2]
     simp
   · intro h₀ h X e
@@ -245,7 +245,7 @@ theorem UpperTheory.exists_level_indicator_unipotent_invariant :
   · intro d₁ d₂ h e hne
     have hP : P h := by
       by_contra hn
-      exact hne (if_neg hn)
+      exact hne (ite_eq_right hn)
     obtain ⟨X, u, hu, e'⟩ := hP
     have key : blk (finEmb K 2 d₁) (finEmb K 2 d₂) = unipGL X * finEmb K (2 + 2) u := by
       have a1 := congrArg Subtype.val e
@@ -298,14 +298,14 @@ theorem UpperTheory.haar_decomposition_norm_one_gl2 :
     ∀ {K : Type} [Field K] [NumberField K] (κ₂ : Measure (archCompact K 2)), IsHaarK κ₂ → ∃ (ν : Measure (AdelicGLn.integralFiniteGL K 2)) (ρ : Measure (KG K 2)), IsProbabilityMeasure ν ∧ ν.IsOpenPosMeasure ∧ IsProbabilityMeasure ρ ∧ (∀ u : KG K 2, MeasurePreserving (· * u) ρ ρ) ∧ ∀ F : G1 K 2 → ℂ, (Continuous fun k : KG K 2 => F k) → ∫ v, F (v : G1 K 2) ∂ρ = ∫ a, ∫ d, F (arc1 a * fin1 (d : FA K 2)) ∂ν ∂κ₂ := by
   set_option synthInstance.maxHeartbeats 200000 in
     intro K _ _ κ₂ hκ
-    haveI := hκ.prob
+    have := hκ.prob
     obtain ⟨α, β, -, -, hdec, -, hA, hF⟩ := UpperTheory.maximalCompact_unique_arch_finite_decomposition (K := K) 2
     obtain ⟨-, -, hcomm, harc, -⟩ := UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.levLaws (K := K) 2 ∅
 
     let ν₀ : Measure (AdelicGLn.integralFiniteGL K 2) := Measure.haarMeasure ⊤
-    haveI : IsProbabilityMeasure ν₀ := ⟨by simpa using Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (AdelicGLn.integralFiniteGL K 2)))⟩
+    have : IsProbabilityMeasure ν₀ := ⟨by simpa using Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (AdelicGLn.integralFiniteGL K 2)))⟩
     let ν : Measure (AdelicGLn.integralFiniteGL K 2) := ν₀.inv
-    haveI hνp : IsProbabilityMeasure ν := by
+    have hνp : IsProbabilityMeasure ν := by
       change IsProbabilityMeasure (Measure.map Inv.inv ν₀)
       infer_instance
     have hνo : ν.IsOpenPosMeasure := continuous_inv.isOpenPosMeasure_map inv_surjective
@@ -314,7 +314,7 @@ theorem UpperTheory.haar_decomposition_norm_one_gl2 :
     let p : archCompact K 2 × AdelicGLn.integralFiniteGL K 2 → KG K 2 := fun x =>
       ⟨arc1 x.1 * fin1 (x.2 : FA K 2), (KG K 2).mul_mem (hA x.1) (hF x.2)⟩
     have hpc : Continuous p := Continuous.subtype_mk ((harc.comp continuous_fst).mul
-      (MultiplicityOne.continuous_finProj.comp (continuous_subtype_val.comp continuous_snd))) _
+      (MultiplicityOne.continuous_finProj.comp (continuous_subtypeVal.comp continuous_snd))) _
     have hpm : Measurable p := hpc.measurable
     have hps : Function.Surjective p := fun k => ⟨(α k, β k), Subtype.ext (hdec k).symm⟩
     have hmul : ∀ x y, p x * p y = p (x * y) := by
@@ -326,7 +326,7 @@ theorem UpperTheory.haar_decomposition_norm_one_gl2 :
       have e2 : fin1 ((x.2 * y.2 : AdelicGLn.integralFiniteGL K 2) : FA K 2) = fin1 (x.2 : FA K 2) * fin1 (y.2 : FA K 2) := by
         simp [fin1]
       rw [e1, e2, mul_assoc, mul_assoc, ← mul_assoc (fin1 (x.2 : FA K 2)), (hcomm y.1 (x.2 : FA K 2)).symm.eq, mul_assoc]
-    haveI : IsProbabilityMeasure (κ₂.prod ν) := inferInstance
+    have : IsProbabilityMeasure (κ₂.prod ν) := inferInstance
     refine ⟨ν, Measure.map p (κ₂.prod ν), hνp, hνo, inferInstance,
       map_right_inv κ₂ ν p hpm (continuous_mul.measurable) hps hmul hκ.right hνr, ?_⟩
     intro F hFc
@@ -622,7 +622,7 @@ private theorem arcKG (y : archCompact K (2 + 2)) : arc1 y ∈ KG K (2 + 2) := b
 private theorem lvy_cont (Ψ : G1 K (2 + 2) → ℂ) (hΨc : Continuous fun k : KG K (2 + 2) => Ψ k) (y : archCompact K (2 + 2))
     (v₁ : KG K 2) : Continuous fun k : KG K 2 => Ψ (lv (v₁ : G1 K 2) (k : G1 K 2) 0 * arc1 y) := by
   have h1 : Continuous fun k : KG K 2 => ((v₁ : G1 K 2), (k : G1 K 2), (0 : ℝ)) :=
-    continuous_const.prodMk (continuous_subtype_val.prodMk continuous_const)
+    continuous_const.prodMk (continuous_subtypeVal.prodMk continuous_const)
   have h0 : Continuous (fun p : G1 K 2 × G1 K 2 × ℝ => lv p.1 p.2.1 p.2.2) := (blkLaws (K := K)).2.2.2.1
   have h2 : Continuous fun k : KG K 2 => lv (v₁ : G1 K 2) (k : G1 K 2) 0 := by
     have h := Continuous.comp h0 h1
@@ -694,13 +694,13 @@ private theorem value (κ : Measure (archCompact K 2)) (ν : Measure (AdelicGLn.
       φ₂ (m₂ * (v₂ : G1 K 2)⁻¹) ∂ρ ∂ρ) =
       (∫ a, f₁ a * φ₁ (m₁ * arc1 a⁻¹) ∂κ) * (∫ a, f₂ a * φ₂ (m₂ * arc1 a⁻¹) ∂κ) * ∫ d, X d ∂ν := by
   obtain ⟨α₂, β₂, hα₂, hβ₂, hdec₂, huniq₂, harc₂, hfin₂⟩ := UpperTheory.maximalCompact_unique_arch_finite_decomposition (K := K) 2
-  have hac : Continuous (arc1 : archCompact K 2 → G1 K 2) := continuous_archP.comp continuous_subtype_val
+  have hac : Continuous (arc1 : archCompact K 2 → G1 K 2) := continuous_archP.comp continuous_subtypeVal
   have hg₁c : Continuous fun a => f₁ a * φ₁ (m₁ * arc1 a⁻¹) :=
     hf₁.mul (hφ₁.comp (continuous_const.mul (hac.comp continuous_inv)))
   refine closing κ ν ρ hρF _ hg₁c _ X hXc _ α₂ β₂ hα₂ hβ₂ huniq₂ harc₂ hfin₂ fun v₁ => ?_
   have hc : Continuous fun k : KG K 2 => Ψ (lv (v₁ : G1 K 2) (k : G1 K 2) 0 * arc1 y) * φ₁ (m₁ * (v₁ : G1 K 2)⁻¹) *
       φ₂ (m₂ * (k : G1 K 2)⁻¹) :=
-    ((lvy_cont Ψ hΨc y v₁).mul continuous_const).mul (hφ₂.comp (continuous_const.mul continuous_subtype_val.inv))
+    ((lvy_cont Ψ hΨc y v₁).mul continuous_const).mul (hφ₂.comp (continuous_const.mul continuous_subtypeVal.inv))
   rw [hρF (fun g => Ψ (lv (v₁ : G1 K 2) g 0 * arc1 y) * φ₁ (m₁ * (v₁ : G1 K 2)⁻¹) * φ₂ (m₂ * g⁻¹)) hc]
   have e : ∀ a (d : AdelicGLn.integralFiniteGL K 2),
       Ψ (lv (v₁ : G1 K 2) (arc1 a * fin1 (d : FA K 2)) 0 * arc1 y) * φ₁ (m₁ * (v₁ : G1 K 2)⁻¹) *
@@ -735,7 +735,7 @@ private theorem blockEx (β : KG K (2 + 2) → AdelicGLn.integralFiniteGL K (2 +
   refine ⟨fun d₁ d₂ => β ⟨_, hm d₁ d₂⟩, hB, ?_, ?_⟩
   · have h0 : Continuous (fun p : G1 K 2 × G1 K 2 × ℝ => lv p.1 p.2.1 p.2.2) := (blkLaws (K := K)).2.2.2.1
     have hf : Continuous fun d : AdelicGLn.integralFiniteGL K 2 => fin1 (d : FA K 2) :=
-      MultiplicityOne.continuous_finProj.comp continuous_subtype_val
+      MultiplicityOne.continuous_finProj.comp continuous_subtypeVal
     have h1 : Continuous fun p : AdelicGLn.integralFiniteGL K 2 × AdelicGLn.integralFiniteGL K 2 =>
         ((fin1 (p.1 : FA K 2) : G1 K 2), (fin1 (p.2 : FA K 2) : G1 K 2), (0 : ℝ)) :=
       (hf.comp continuous_fst).prodMk ((hf.comp continuous_snd).prodMk continuous_const)
@@ -752,7 +752,7 @@ private theorem blockEx (β : KG K (2 + 2) → AdelicGLn.integralFiniteGL K (2 +
 
 private theorem compact_integral_finite_gl2 : CompactSpace (AdelicGLn.integralFiniteGL K 2) := by
   obtain ⟨α, β, -, hβ, -, huniq, harc, hfin⟩ := UpperTheory.maximalCompact_unique_arch_finite_decomposition (K := K) 2
-  haveI : CompactSpace (KG K 2) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 2).1
+  have : CompactSpace (KG K 2) := isCompact_iff_compactSpace.1 ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 2).1
   refine Function.Surjective.compactSpace (f := β) hβ (fun h => ⟨⟨_, hfin h⟩, ?_⟩)
   exact (huniq 1 h ⟨_, hfin h⟩ (by rw [archimedean_projection_one, one_mul])).2
 
@@ -762,7 +762,7 @@ private theorem cEx (ν : Measure (AdelicGLn.integralFiniteGL K 2)) [IsProbabili
     (χ : AdelicGLn.integralFiniteGL K (2 + 2) → ℂ) (hχc : Continuous χ) (h01 : ∀ h, χ h = 0 ∨ χ h = 1) (h1 : χ 1 = 1) :
     ∃ (c : ℝ) (X : AdelicGLn.integralFiniteGL K 2 → ℂ), 0 < c ∧ Continuous X ∧ (∀ d₁, ∫ d₂, χ (B d₁ d₂) ∂ν = X d₁) ∧
       ∫ d, X d ∂ν = c := by
-  haveI := compact_integral_finite_gl2 (K := K)
+  have := compact_integral_finite_gl2 (K := K)
   have hre : ∀ h, χ h = (((χ h).re : ℝ) : ℂ) := by
     intro h
     rcases h01 h with e | e <;> simp [e]

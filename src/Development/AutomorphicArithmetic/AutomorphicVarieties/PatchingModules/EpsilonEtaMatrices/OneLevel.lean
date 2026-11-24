@@ -134,7 +134,7 @@ theorem UpperTheory.V.Pa.selN :
   obtain ⟨-, -, fD, -, -, -, ht, h2, -⟩ := finAm l G0.frame n x m k.g
   have hlc : LC rep := (lc1 l L G G0 h n x k m).2.2 _ _ rep (IsLocallyConstant.const _) had
   obtain ⟨-, -, -, -, hine⟩ := rho1 l G0.frame n x k (x.Am m)
-  haveI : Finite (k.M1 (x.Am m)) := Subtype.finite
+  have : Finite (k.M1 (x.Am m)) := Subtype.finite
   obtain ⟨c1, -, c3⟩ := cCount x.A G.Γ (k.M1 (x.Am m)) rep G.c G.c_sq (h2 hl)
   have hP := (polZ l G.frame x.A _ n _ _ _ rep had).1
   have a1 : ∀ (g : G.G₀) (Z : k.M1 (x.Am m)), (rep g Z : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) =
@@ -177,7 +177,7 @@ theorem UpperTheory.V.Pa.selN :
         rfl
       refine AddSubgroup.mem_sup.2 ⟨fun g => rep (G.φ v g) ⟨Y, hY⟩ - ⟨Y, hY⟩, (mem_Bl _).2 ⟨_, fun _ => rfl⟩,
         fun g => β (G.φ v g), ⟨?_, fun g g' => ?_, fun g i j hij => ?_, fun g hg i => ?_⟩, ?_⟩
-      · exact w1.comp_continuous (continuous_subtype_val.comp (G.φ_cont v))
+      · exact w1.comp_continuous (continuous_subtypeVal.comp (G.φ_cont v))
       · show (β (G.φ v (g * g')) : Matrix (Fin n) (Fin n) (DD (x.Am m) k.g)) = β (G.φ v g) +
           k.ρ1 (x.Am m) (G0.φ v g) * β (G.φ v g') * k.ρ1 (x.Am m) (G0.φ v g)⁻¹
         rw [map_mul, Subgroup.coe_mul, w2, Submodule.coe_add, a1, map_inv, pφ]
@@ -215,16 +215,16 @@ private def Cnd (lo same : Prop) (d : DD X g) : Prop :=
 private theorem card_cnd (lo same : Prop) [Decidable lo] [Decidable same] :
     Nat.card {d : DD X g // Cnd lo same d} = Nat.card X ^ (if lo then 0 else if same then 1 else g) := by
   by_cases hlo : lo
-  · rw [if_pos hlo, pow_zero, Nat.card_eq_one_iff_exists]
+  · rw [ite_eq_left hlo, pow_zero, Nat.card_eq_one_iff_exists]
     refine ⟨⟨0, fun _ => rfl, rfl, rfl, fun _ => rfl, fun _ => rfl⟩, fun d => Subtype.ext (d.2.1 hlo)⟩
   · by_cases hs : same
-    · rw [if_neg hlo, if_pos hs, pow_one]
+    · rw [ite_eq_right hlo, ite_eq_left hs, pow_one]
       exact Nat.card_congr
         { toFun := fun d => d.1.a
           invFun := fun y => ⟨⟨y, 0, 0, 0⟩, fun h => absurd h hlo, rfl, rfl, fun _ => rfl, fun h => absurd hs h⟩
           left_inv := fun d => Subtype.ext (DD.ext rfl (d.2.2.2.2.1 hs).symm d.2.2.1.symm d.2.2.2.1.symm)
           right_inv := fun y => rfl }
-    · rw [if_neg hlo, if_neg hs]
+    · rw [ite_eq_right hlo, ite_eq_right hs]
       have e : {d : DD X g // Cnd lo same d} ≃ (Fin g → X) :=
         { toFun := fun d => d.1.ep
           invFun := fun f => ⟨⟨0, f, 0, 0⟩, fun h => absurd h hlo, rfl, rfl, fun h => absurd h hs, fun _ => rfl⟩
@@ -597,17 +597,17 @@ private theorem card_pow_nu_le_card_skew_w1 (A X : Type) [CommRing A] [CommRing 
       (¬((i : ℕ) < a ↔ (j : ℕ) < a) → (Mf s i j).a = 0) := by
     intro s i j
     by_cases hij : (i : ℕ) < j
-    · simp only [Mf, dif_pos hij]
+    · simp only [Mf, dite_eq_left hij]
       exact hV s i j hij
     · by_cases hji : (j : ℕ) < i
-      · simp only [Mf, dif_neg hij, dif_pos hji]
+      · simp only [Mf, dite_eq_right hij, dite_eq_left hji]
         obtain ⟨h1, h2, h3, h4⟩ := hV s j i hji
         refine ⟨funext fun t => ?_, ?_, fun hs => funext fun t => ?_, fun hs => ?_⟩
         · simp [DD.neg_ep', h1]
         · simp [DD.neg_eta, h2]
         · simp [DD.neg_ep, h3 hs.symm]
         · simp [DD.neg_a, h4 (fun h => hs h.symm)]
-      · simp only [Mf, dif_neg hij, dif_neg hji]
+      · simp only [Mf, dite_eq_right hij, dite_eq_right hji]
         exact ⟨funext fun t => DD.zero_ep' t, DD.zero_eta, fun _ => funext fun t => DD.zero_ep t,
           fun _ => DD.zero_a⟩
   have hanti : ∀ s, (Mf s)ᵀ = -(Mf s) := by
@@ -616,24 +616,24 @@ private theorem card_pow_nu_le_card_skew_w1 (A X : Type) [CommRing A] [CommRing 
     show Mf s j i = -(Mf s i j)
     simp only [Mf]
     rcases lt_trichotomy (i : ℕ) j with h | h | h
-    · simp only [dif_neg (lt_asymm h), dif_pos h]
+    · simp only [dite_eq_right (lt_asymm h), dite_eq_left h]
     · have h1 : ¬ (j : ℕ) < i := by omega
       have h2 : ¬ (i : ℕ) < j := by omega
-      simp only [dif_neg h1, dif_neg h2, neg_zero]
-    · simp only [dif_pos h, dif_neg (lt_asymm h), neg_neg]
+      simp only [dite_eq_right h1, dite_eq_right h2, neg_zero]
+    · simp only [dite_eq_left h, dite_eq_right (lt_asymm h), neg_neg]
   have hx1 : ∀ s (i j : Fin n) (hij : (i : ℕ) < j) (hi : (i : ℕ) < a) (hj : (j : ℕ) < a),
       Mf s i j = DD.C (s.1 ⟨(⟨i, hi⟩, ⟨j, hj⟩), hij⟩) := by
     intro s i j hij hi hj
-    simp only [Mf, V, dif_pos hij, dif_pos hi, dif_pos hj]
+    simp only [Mf, V, dite_eq_left hij, dite_eq_left hi, dite_eq_left hj]
   have hx2 : ∀ s (i j : Fin n) (hij : (i : ℕ) < j) (hi : ¬ (i : ℕ) < a),
       Mf s i j = DD.C (s.2.1 ⟨(⟨i - a, by have := i.isLt; omega⟩, ⟨j - a, by have := j.isLt; omega⟩),
         Fin.mk_lt_mk.2 (by omega)⟩) := by
     intro s i j hij hi
-    simp only [Mf, V, dif_pos hij, dif_neg hi]
+    simp only [Mf, V, dite_eq_left hij, dite_eq_right hi]
   have hx3 : ∀ s (i j : Fin n) (hij : (i : ℕ) < j) (hi : (i : ℕ) < a) (hj : ¬ (j : ℕ) < a),
       Mf s i j = ⟨0, s.2.2 (⟨i, hi⟩, ⟨j - a, by have := j.isLt; omega⟩), 0, 0⟩ := by
     intro s i j hij hi hj
-    simp only [Mf, V, dif_pos hij, dif_pos hi, dif_neg hj]
+    simp only [Mf, V, dite_eq_left hij, dite_eq_left hi, dite_eq_right hj]
   let φ : S → {Y : ↥(W1 n A X g a) //
       (Y : Matrix (Fin n) (Fin n) (DD X g))ᵀ = -(Y : Matrix (Fin n) (Fin n) (DD X g))} :=
     fun s => ⟨⟨Mf s, memW _ (hM s)⟩, hanti s⟩
@@ -761,8 +761,8 @@ theorem UpperTheory.V.Pa.oneLevel :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G G0 : Glob l L) (h : G.Hom G0) (n : ℕ) (x : NP G0.frame n) (k : Kap x) (m q d : ℕ) (a : ArData G q d) (rep : Representation x.A G.Γ (k.M1 (x.Am m))) (rep' : Representation x.A G.Γ (k.EpsilonEtaTensorDual (x.Am m))) (e : L.Vl → ℕ) (f : Option (Fin q) → ℕ) (c₁ c₂ : ℕ), l ≠ 2 → a.Counts → IsAd G.frame (fun g => k.ρ1 (x.Am m) (h.p₀ g)) (fun _ => 1) (k.M1 (x.Am m)) rep → IsAd G.frame (fun g => k.ρ1 (x.Am m) (h.p₀ g)) (fun g => epsD k (x.Am m) (h.p g)) (k.EpsilonEtaTensorDual (x.Am m)) rep' → (∀ v, Finite (k.Zb (x.Am m) v) ∧ Nat.card (k.Zb (x.Am m) v) ≤ Nat.card x.K ^ e v) → (∀ j, Nat.card (Representation.invariants (rep'.comp (a.ι (.inr (.inr j))) : Representation x.A (a.D (.inr (.inr j))) _)) ≤ Nat.card x.K ^ f j) → Nat.card rep.invariants ≤ Nat.card x.K ^ c₁ → (Finite (Zl rep') → {y | y ∈ Zl rep' ∧ ∀ j : Fin q, y ∘ a.ι (.inr (.inr (some j))) ∈ Bl (rep'.comp (a.ι (.inr (.inr (some j)))) : Representation x.A (a.D (.inr (.inr (some j)))) _)}.ncard ≤ Nat.card (Bl rep') * Nat.card x.K ^ c₂) → (Sel1 h (x.Am m) k).Finite ∧ (Sel1 h (x.Am m) k).ncard * Nat.card x.K ^ (m * (n + nu n x.a k.g) * Fintype.card L.Vl + m * nu n x.a k.g * d) ≤ (Bd1 h (x.Am m) k).ncard * Nat.card x.K ^ (c₁ + c₂ + ∑ v, e v + ∑ j, f j) := by
   intro l _ L G G0 h n x k m q d a rep rep' e f c₁ c₂ hl ha hrep hrep' hZb hf hc1 hc2
   obtain ⟨hfA, hcA, hfD, hlA, hlD, -, -, h2, -⟩ := finAm l G0.frame n x m k.g
-  haveI := hfA
-  haveI := hfD
+  have := hfA
+  have := hfD
   have hLC := (lc1 l L G G0 h n x k m).2.2 (fun _ => 1) (k.M1 (x.Am m)) rep (IsLocallyConstant.const _) hrep
   have hLC' := (lc1 l L G G0 h n x k m).2.2 _ (k.EpsilonEtaTensorDual (x.Am m)) rep' (lc1 l L G G0 h n x k m).2.1 hrep'
   obtain ⟨b, hb⟩ := pairEx l L G G0 h n x k m
@@ -770,9 +770,9 @@ theorem UpperTheory.V.Pa.oneLevel :
   have hgw := ha.gw
   have hcont : ∀ w, Continuous (a.ι w) := by
     rintro (v | u | j)
-    · exact continuous_subtype_val.comp (G.φ_cont v)
-    · exact continuous_subtype_val.comp (G.φu_cont u)
-    · exact continuous_subtype_val.comp (a.φq_cont j)
+    · exact continuous_subtypeVal.comp (G.φ_cont v)
+    · exact continuous_subtypeVal.comp (G.φu_cont u)
+    · exact continuous_subtypeVal.comp (a.φq_cont j)
   have hsmul : ∀ y : ↥(k.M1 (x.Am m)), l • y = 0 := by
     intro y
     apply Subtype.ext
@@ -852,7 +852,7 @@ theorem UpperTheory.V.Pa.oneLevel :
   have hPv : ∀ v, Nat.card ↥(𝓛 (.inl v)) * Nat.card x.K ^ (m * (n + nu n x.a k.g)) ≤
       Nat.card ↥(k.M1 (x.Am m)) * Nat.card x.K ^ e v := by
     intro v
-    haveI := (hZb v).1
+    have := (hZb v).1
     have hsc := sumCount x.A (L.Gv v) ↥(k.M1 (x.Am m)) (rep.comp (a.ι (.inl v))) (k.b1 (x.Am m) v)
       (k.Zb (x.Am m) v) (hZb v).1 (fun y hy => bMem l G0.frame n x k m v y _ hy
         ((lc_comp_of_lc_of_continuous _ hLC (a.ι (.inl v)) (hcont _) y).sub (IsLocallyConstant.const y)) (fun g => by
@@ -969,8 +969,8 @@ theorem UpperTheory.V.Pa.oneLevel :
       _ = _ := by ring
   have hNpos : 0 < Nat.card ↥(k.M1 (x.Am m)) := Nat.card_pos
   have hBpos : 0 < Nat.card ↥(Bl rep') := by
-    haveI : Finite ↥(Zl rep') := hZfin'
-    haveI : Finite ↥(Bl rep') := Finite.of_injective _ (Submodule.inclusion_injective (bl_le_zl_of_lc rep' hLC'))
+    have : Finite ↥(Zl rep') := hZfin'
+    have : Finite ↥(Bl rep') := Finite.of_injective _ (Submodule.inclusion_injective (bl_le_zl_of_lc rep' hLC'))
     exact Nat.card_pos
   have key : Set.ncard {z : G.Γ → ↥(k.M1 (x.Am m)) | z ∈ Zl rep ∧ ∀ w, z ∘ ⇑(a.ι w) ∈ 𝓛 w} *
       ((Nat.card x.K ^ (m * (n + nu n x.a k.g))) ^ Fintype.card L.Vl * (Nat.card x.K ^ (m * nu n x.a k.g)) ^ d) ≤

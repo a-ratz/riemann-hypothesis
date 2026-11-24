@@ -94,7 +94,7 @@ open GlobalTheory.SiegelOfPolarised GlobalTheory.PrimNorm Geo.Tor in
 theorem exists_siegPre : ∀ (O : Type) [CommRing O] [IsLocalRing O] (T : Type) [CommRing T] [IsNoetherianRing T] (P₀ : Out.PolAV (Geo.Tor.Sp T)) (io : T →+* O) (P : Out.PolAV (Geo.Tor.Sp O)) (φ : P.A.left ⟶ P₀.A.left), Geo.Tor.IsGrpPullback P.A P₀.A (Geo.Tor.spMap io) φ → Geo.Tor.LBIso P.L (P₀.L.pull φ) → P.g = P₀.g → ∀ (o : Type) [CommRing o] (em : o →+* O) (h M : ℕ) (ζ : o) (ze : Oˣ) (lev : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over (Geo.Tor.Sp O)) ⟶ P.A)), P.g = h → IsUnit (M : O) → (ze : O) = em ζ → (∀ (k : Type) [Field k] (gk : O →+* k), IsPrimitiveRoot (gk ze) M) → (∀ x y, lev (x + y) = lev x * lev y) → (∀ x, lev x ^ M = 1) → (∀ x y, Out.WeilIs P.A P.L M (lev x) (lev y) (Geo.Tor.unitOn (ze ^ Geo.Tor.omegaStd x y))) → ∃ (c : Geo.Tor.SiegPre h M ζ (Geo.Tor.spMap em)) (ψ : c.A ≅ P.A), IsMonHom ψ.hom ∧ c.Principal ∧ Geo.Tor.LBIso c.P ((abelian₂ P.A P.L).pull (lift (fst c.A c.A ≫ ψ.hom) (snd c.A c.A ≫ ψ.hom)).left) := by
   intro O _ _ T _ _ P₀ io P ϕ hpb _ hgg o _ em h k ζ ze lev hg hk hze hprim add tors weil
   have hL : Out.Laws := GlobalTheory.firstFiveLaws.1
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   have lam : (abelian₂ P.A P.L).IsLB := LB.isLB_linComb P.isLB _ _
   have dg : ((abelian₂ P.A P.L).pull (lift (𝟙 P.A) (𝟙 P.A)).left).IsLB := LB.isLB_linComb lam _ _
   have diag := GlobalTheory.SiegelOfTheta.cls_diag hL.globalFns GlobalTheory.AbLaw.CubeAssembly.cube_gen P

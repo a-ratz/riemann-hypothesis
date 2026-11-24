@@ -104,7 +104,7 @@ theorem mem_conePts_iff_chartIdeal {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (
     show z q / z ⟨q.1, p q.1⟩ = _
     rw [div_eq_inv_mul]
   unfold conePts
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   constructor
   · rintro ⟨-, hzP⟩
     have hle : chartIdeal P p ≤ RingHom.ker (eval (affCoord p z)) := by
@@ -146,7 +146,7 @@ theorem conePts_of_chartIdeal {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : 
     exact this
   refine ⟨?_, h1, ?_⟩
   · unfold conePts
-    rw [Set.mem_setOf_eq]
+    rw [Set.mem_ofPred_eq]
     exact ⟨fun k => ⟨p k, by rw [h1 k]; exact one_ne_zero⟩, fun f hf => hy f (hleP hf)⟩
   · funext q
     show y q / y ⟨q.1, p q.1⟩ = y q
@@ -156,7 +156,7 @@ theorem exists_chart (z : (Σ k, ι k) → ℂ) (hz : ∀ k, ∃ i, z ⟨k, i⟩
     ∃ p : (k : K) → ι k, (∀ k, z ⟨k, p k⟩ ≠ 0) ∧ ∀ k i, ‖z ⟨k, i⟩‖ ≤ ‖z ⟨k, p k⟩‖ := by
   have hmax : ∀ k, ∃ i, ∀ j, ‖z ⟨k, j⟩‖ ≤ ‖z ⟨k, i⟩‖ := fun k => by
     obtain ⟨i0, _⟩ := hz k
-    haveI : Nonempty (ι k) := ⟨i0⟩
+    have : Nonempty (ι k) := ⟨i0⟩
     exact Finite.exists_max (fun j => ‖z ⟨k, j⟩‖)
   choose p hp using hmax
   refine ⟨p, fun k => ?_, fun k i => hp k i⟩

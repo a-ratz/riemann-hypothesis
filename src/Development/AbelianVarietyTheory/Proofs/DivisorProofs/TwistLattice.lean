@@ -150,7 +150,7 @@ theorem exists_decomp : ∀ (K : Type) [Field K] [NumberField K] (E : Type) [Fie
       ∀ k (v : HeightOneSpectrum (𝓞 K)),
         Valued.v (((t : Af K) * algebraMap K (Af K) (a' k) - algebraMap K (Af K) (a k)) v) ≤ 1 := by
   intro K _ _ E _ _ _ _ t c y hc x x' hx
-  haveI : Module.Finite K E := Module.Finite.of_restrictScalars_finite ℚ K E
+  have : Module.Finite K E := Module.Finite.of_restrictScalars_finite ℚ K E
   set B := Module.finBasis K E
   set yi : Af E := ((y⁻¹ : (Af E)ˣ) : Af E)
   choose N hN0 hN using fun k => exists_nat_mul_good hc y (B k)

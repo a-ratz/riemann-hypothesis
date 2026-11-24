@@ -737,13 +737,13 @@ theorem block_qr {D : ℕ} (τ : Fin D → ℕ) (hτ : Monotone τ) (h : Matrix 
   have hbτ : b.BlockTriangular τ := fun i j hij => hb (by
     by_contra hc
     exact absurd (hτ (not_lt.1 hc)) (not_le.2 hij))
-  haveI : Invertible b := hbu.invertible
+  have : Invertible b := hbu.invertible
   have hbi : (b⁻¹).BlockTriangular τ := Matrix.blockTriangular_inv_of_blockTriangular hbτ
   have hkeq : k = (k * b) * b⁻¹ := by
     rw [Matrix.mul_assoc, Matrix.mul_nonsing_inv _ ((Matrix.isUnit_iff_isUnit_det b).1 hbu), Matrix.mul_one]
   have hkt : k.BlockTriangular τ := hkeq ▸ ht.mul hbi
   have hkinv : kᴴ = k⁻¹ := (Matrix.inv_eq_left_inv hk2).symm
-  haveI : Invertible k := (IsUnit.of_mul_eq_one _ hk1).invertible
+  have : Invertible k := (IsUnit.of_mul_eq_one _ hk1).invertible
   exact ⟨k, hk, b, rfl, hb, hkt, hkinv ▸ Matrix.blockTriangular_inv_of_blockTriangular hkt⟩
 
 theorem blockTri_keeps {D : ℕ} {τ : Fin D → ℕ} {M : Matrix (Fin D) (Fin D) ℂ} (hM : M.BlockTriangular τ) {i : ℕ}
@@ -849,7 +849,7 @@ theorem iwaOn_leviOne : ∀ {n a : ℕ} (ε : Fin n → Bool) (j : Fin a → ℕ
     have : k₀ᴴ * h = b := by rw [hb, ← Matrix.mul_assoc, hk01, Matrix.one_mul]
     rw [← this]
     exact (IsUnit.of_mul_eq_one _ hk01).mul hu
-  haveI : Invertible b := hbu.invertible
+  have : Invertible b := hbu.invertible
   have hci : (b⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hbT
   have hbb : b⁻¹ * b = 1 := Matrix.nonsing_inv_mul _ ((Matrix.isUnit_iff_isUnit_det b).1 hbu)
   have hhinv : (hᴴ)⁻¹ = k₀ * (b⁻¹)ᴴ := Matrix.inv_eq_right_inv (by

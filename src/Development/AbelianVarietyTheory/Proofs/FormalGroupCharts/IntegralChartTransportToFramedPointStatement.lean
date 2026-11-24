@@ -1045,7 +1045,7 @@ open GlobalTheory.FrameMove in
 theorem GlobalTheory.chartFrameTransport : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H)
     (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], ChartFrameTrSt Xo c := by
   intro E _ _ _ H Dw l Xo c _ _ T io y I d B B' tgT xT eT wPT hF hA h1 h2 hs had hch hfr hpr _ hrig
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro x x' hx2 hx1
   obtain ⟨wP, hwP, wP', hwP', tw2, tw1⟩ := GlobalTheory.T.integralFramedPoint_diagonalBiextensionIso_compatible E H Dw l Xo c T io y I wPT hpr
   have hab : IsAbelianScheme I.t'.G := GlobalTheory.T.isAbelianScheme_pullback_universalTriple E H Dw l Xo _ I.t' _ I.m1
@@ -1137,7 +1137,7 @@ theorem chartTransport_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   obtain ⟨e, wP, hfrx, hprx, hrx, hfe, hwp⟩ :=
     hF hstar T io y I d B B' tgT xT eT wPT hF1 hA1 hp1 hp2 hsy had hch hfr hpr htr hrig x x' hj2 hj1
   obtain ⟨h, hh⟩ := canonGauge_exists T.Fr d (𝓞 E) T.Fr B'
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hchx' : IsChart y.1 d B'.G.F B'.A.act (fun ℓ i => algebraMap T.V T.Fr (uvecT ℓ i)) x := by
     have eF : B'.G.F = fun j => MvPowerSeries.map (algebraMap T.V T.Fr) (B.G.F j) := funext hF1
     have eA : B'.A.act = fun a j => MvPowerSeries.map (algebraMap T.V T.Fr) (B.A.act a j) :=

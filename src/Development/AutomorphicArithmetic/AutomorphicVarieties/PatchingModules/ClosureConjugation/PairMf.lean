@@ -54,12 +54,12 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.pair_mf :
     ∀ {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] {r : Resid F O n} {B : Type} [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B), PhiCond F.G₀ l → Finite (ResidueField B) ∧ (l : B) ∈ maximalIdeal B ∧ ∃ (h : ℕ) (χ : Fin n → F.G₀ →* (ResidueField B)ˣ), u.D.map (residue B) = GDet.ofChars χ ∧ MultFree χ h := by
   intro l _ F n O _ _ _ hc _ r B _ _ _ u hΦ
-  haveI := hc.finite
-  haveI := hc.char
+  have := hc.finite
+  have := hc.char
   let e : ResidueField O ≃+* ResidueField B := RingEquiv.ofBijective _ (resMap_bijective O B)
-  haveI hfin : Finite (ResidueField B) := Finite.of_equiv _ e.toEquiv
-  haveI hch : CharP (ResidueField B) l := charP_of_injective_ringHom (f := e.toRingHom) e.injective l
-  haveI : CompactSpace F.G₀ :=
+  have hfin : Finite (ResidueField B) := Finite.of_equiv _ e.toEquiv
+  have hch : CharP (ResidueField B) l := charP_of_injective_ringHom (f := e.toRingHom) e.injective l
+  have : CompactSpace F.G₀ :=
     isCompact_iff_compactSpace.1 (F.η.ker.isClosed_of_isOpen F.η_open).isCompact
   let χ : Fin n → F.G₀ →* (ResidueField B)ˣ := fun i => pushCh e.toRingHom (r.chib i)
   have hU : Function.Injective (Units.map (e.toRingHom : ResidueField O →* ResidueField B)) :=

@@ -76,17 +76,17 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
     (h : ∀ (M : Type) [AddCommGroup M] [Module (ZMod n) M] [TopologicalSpace M] [DiscreteTopology M] [Finite M]
       (ρ : Representation (ZMod n) Γ M), ContAction ρ → Finite (H1 ρ)) : PhiCond Γ n := by
   intro H hH
-  haveI : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology hH
-  haveI : Finite (Γ ⧸ H) := finite_of_compact_of_discrete
-  letI : TopologicalSpace (ZMod n) := ⊥
-  haveI : DiscreteTopology (ZMod n) := ⟨rfl⟩
+  have : DiscreteTopology (Γ ⧸ H) := QuotientGroup.discreteTopology hH
+  have : Finite (Γ ⧸ H) := finite_of_compact_of_discrete
+  let : TopologicalSpace (ZMod n) := ⊥
+  have : DiscreteTopology (ZMod n) := ⟨rfl⟩
   have hs : ∀ x : Γ ⧸ H, Continuous fun g : Γ => g⁻¹ • x := fun x => continuous_inv.smul continuous_const
   have hc : ContAction (permR (ZMod n) H) := by
     refine continuous_pi fun x => ?_
     have h1 : Continuous fun p : (Γ ⧸ H → ZMod n) × (Γ ⧸ H) => p.1 p.2 := continuous_of_discreteTopology
     exact h1.comp (continuous_snd.prodMk ((hs x).comp continuous_fst))
-  haveI h1 := h _ _ hc
-  haveI : Finite (Z1 (permR (ZMod n) H)) := by
+  have h1 := h _ _ hc
+  have : Finite (Z1 (permR (ZMod n) H)) := by
     have hB : Finite (B1 (permR (ZMod n) H)) := (Set.finite_range _).to_subtype
     have hB' : Finite ((B1 (permR (ZMod n) H)).comap (Z1 (permR (ZMod n) H)).subtype).toAddSubgroup :=
       Finite.of_injective (fun z => (⟨z.1.1, z.2⟩ : B1 (permR (ZMod n) H)))
@@ -125,9 +125,9 @@ private theorem phi_condition_of_finite_cohomology {Γ : Type} [Group Γ] [Topol
 theorem UpperTheory.V.Pa.phiDec :
     LocalFiniteness → ∀ (l : ℕ) [Fact l.Prime] (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 F)), IsPlaceOver A v → PhiCond (Dec (F := F) A) l := by
   intro hLF l hl F Ω _ _ _ _ _ A v hA
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   have key : PhiCond (Dec (F := F) A) (l ^ 1) := phi_condition_of_finite_cohomology (l ^ 1) fun M _ _ _ _ _ ρ hρ => by
     obtain ⟨-, f1, -⟩ := hLF F Ω l 1 M A ρ v one_pos hA hρ
     exact f1

@@ -384,11 +384,11 @@ open GlobalTheory.PlaceComp GlobalTheory.SelfDualGenus GlobalTheory.InertLatMult
 theorem GlobalTheory.InertLatMult.lattice_eq_mult : ∀ {D : D7} (V : HSp D) (P : Pl D.host.E) (e : Formalism.L2.Theta.AE D), (∃ v ε, IsPlaceIdem D v ε ∧ e = algebraMap (AF D.host.F) (Formalism.L2.Theta.AE D) ε) → (∀ x : 𝓞 D.host.E, x ≠ 0 → (x ∈ P.asIdeal ↔ finPart D (e * incA D ((x : D.host.E)⁻¹)) ∉ intAE D)) → ∀ (M : AddSubgroup (Fin V.rank → (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E))), (∀ a ∈ intAE D, ∀ z ∈ M, a • z ∈ M) → (∀ z ∈ M, finPart D (e) • z = z) → (∃ N : ℕ, 0 < N ∧ (∀ y ∈ Formalism.L2.NTheta.LamHat V, ((N : ℕ) : (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E)) • (finPart D (e) • y) ∈ M) ∧ ∀ z ∈ M, ((N : ℕ) : (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E)) • z ∈ Formalism.L2.NTheta.LamHat V) → (∀ g : GA D V, g ∈ KsphC V ∅ → SuppF V (e) g → ∀ z ∈ M, (finMat D.sp.cm.sig V.gram g).mulVec z ∈ M) → ∃ c : (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E), IsUnit c ∧ ∀ z, z ∈ M ↔ (finPart D (e) • z = z ∧ c • z ∈ Formalism.L2.NTheta.LamHat V) := by
   intro D V P e he hP M hMa hMe hN hG
   obtain ⟨v, ε, ⟨α, rfl, a1, a2⟩, rfl⟩ := he
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hI := GlobalTheory.PlaceComp.isIdemOf_algebraMap (E := D.host.E) a1 a2
   obtain ⟨x0, y, hy, hy1, hy2⟩ := GlobalTheory.SphLabelOps.exists_real_unif D P
   have hin := GlobalTheory.InertDoubleCoset.inert_of_idem (E := D.host.E) hI hP ⟨x0, y, hy, hy1, hy2⟩
-  haveI := GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
+  have := GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
   obtain ⟨σ, π, hσE, hσσ, hσv, hσx, hσπ, hπ⟩ := _root_.GlobalTheory.InertConj.exists_conj_completion D.host.E v P hin
   obtain ⟨ψ, hψE, hψσ, hψO⟩ := _root_.GlobalTheory.InertCompletion.exists_ringEquiv_completion D.host.E v P hin σ hσE hσv
   obtain ⟨h, hfr, hon⟩ := GlobalTheory.PlaceComp.exists_orthonormal D.sp.cm V v
@@ -676,7 +676,7 @@ theorem eq_multiple_of_standard_lattice : ∀ {F : Type} [Field F] [NumberField 
   have hmax : ∀ w ∈ S, ∀ i, Valued.v (w i) ≤ Valued.v c := by
     intro w hw i
     by_cases h0 : w i = 0
-    · rw [h0, map_zero]; exact zero_le'
+    · rw [h0, map_zero]; exact zero_le
     obtain ⟨m, hm⟩ : ∃ m : Multiplicative ℤ, (m : WithZero (Multiplicative ℤ)) = Valued.v (w i) :=
       WithZero.ne_zero_iff_exists.1 ((Valuation.ne_zero_iff _).2 h0)
     have hk := hlb (Multiplicative.toAdd m) ⟨w, hw, i, by simp [← hm]⟩
@@ -1010,7 +1010,7 @@ theorem card_eq_of_inv {a b : ℕ} (A : Matrix (Fin a) (Fin b) R) (B : Matrix (F
 end Abstract
 
 theorem nontrivial_R (D : D7) : Nontrivial (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E) := by
-  haveI : Nontrivial (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) := by
+  have : Nontrivial (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 D.host.F)
     exact (Formalism.UG.evalV D.host.F ⟨P, hP.isPrime,
       Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField D.host.F)⟩).toRingHom.domain_nontrivial
@@ -1021,7 +1021,7 @@ theorem nontrivial_R (D : D7) : Nontrivial (Formalism.MainNotions.GlobalTheoryTh
 
 theorem frames_match_lattices : ∀ {D : D7} {V V' : HSp D} {n : ℕ} (hF : D.host.F = maximalRealSubfield D.host.E) (Q : principalLevelFrame.RowPsi V n) (Q' : principalLevelFrame.RowPsi V' n), StdPsi hF Q → StdPsi hF Q' → ∀ (P : Pl D.host.E) (e f : Formalism.L2.Theta.AE D), IsPrimeIdem P e f → V'.rank = V.rank ∧ ∃ (J : Matrix (Fin V'.rank) (Fin V.rank) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E)) (J' : Matrix (Fin V.rank) (Fin V'.rank) (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af D.host.F ⊗[D.host.F] D.host.E)), J * J' = 1 ∧ J' * J = 1 ∧ (∀ κ, finMat D.sp.cm.sig V'.gram (Q'.ψ κ) * J = J * finMat D.sp.cm.sig V.gram (Q.ψ κ)) ∧ ∀ y, finPart D f • y ∈ Formalism.L2.NTheta.LamHat V ↔ finPart D f • J.mulVec y ∈ Formalism.L2.NTheta.LamHat V' := by
   intro D V V' n hF Q Q' hQ hQ' P e f hP
-  haveI := nontrivial_R D
+  have := nontrivial_R D
   obtain ⟨⟨β, β', hb1, hb2, hK⟩, hU⟩ := hQ
   obtain ⟨⟨γ, γ', hc1, hc2, hK'⟩, hU'⟩ := hQ'
   have hr : V.rank = n := card_eq_of_inv β β' hb1 hb2

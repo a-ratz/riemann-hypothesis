@@ -193,7 +193,7 @@ theorem map_le_primeE {p : E ⊗[F] v.adicCompletion F →+* v.adicCompletion F}
 theorem absNorm_le_of_map_le (P : HeightOneSpectrum (𝓞 E))
     (h : v.asIdeal.map (algebraMap (𝓞 F) (𝓞 E)) ≤ P.asIdeal) :
     Ideal.absNorm v.asIdeal ≤ Ideal.absNorm P.asIdeal := by
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := P.asIdeal.finiteQuotientOfFreeOfNeBot P.ne_bot
+  have : Finite (𝓞 E ⧸ P.asIdeal) := P.asIdeal.finiteQuotientOfFreeOfNeBot P.ne_bot
   have hle := Ideal.map_le_iff_le_comap.1 h
   have heq : v.asIdeal = P.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E)) :=
     v.isMaximal.eq_of_le (Ideal.comap_ne_top _ P.isPrime.ne_top) hle
@@ -280,9 +280,9 @@ theorem exists_primes (hdeg : Module.finrank F E = 2) {σ : E →ₐ[F] E}
         rw [e]
         refine lt_of_le_of_lt (Valuation.map_add _ _ _) (max_lt ?_ ?_)
         · rw [map_mul]
-          exact mul_lt_one_of_nonneg_of_lt_one_right ((h3 x).1 hx').1 zero_le' hy
+          exact mul_lt_one_of_nonneg_of_lt_one_right ((h3 x).1 hx').1 zero_le hy
         · rw [map_mul]
-          exact mul_lt_one_of_nonneg_of_lt_one_right ((h3 y).1 hy').2 zero_le' hx
+          exact mul_lt_one_of_nonneg_of_lt_one_right ((h3 y).1 hy').2 zero_le hx
     have := key (s.symm (1, 0)) ((h3 _).2 (by simp))
     simp at this
   exact ⟨P, Q, hne, map_eq_mul hdeg P Q hne map_le_primeE map_le_primeE, h1, h2, h3,

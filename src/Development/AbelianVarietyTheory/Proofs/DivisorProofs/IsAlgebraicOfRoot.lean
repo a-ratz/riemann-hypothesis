@@ -64,7 +64,7 @@ open GlobalTheory.ConjTwist
 
 theorem exists_aut_on {K : Type} [Field K] (e e' : K →+* ℂ) {s : Set K} (hs : s.Countable) :
     ∃ τ : ℂ ≃+* ℂ, ∀ a ∈ s, τ (e a) = e' a := by
-  haveI : Countable (Subfield.closure s) := Cardinal.mk_le_aleph0_iff.1
+  have : Countable (Subfield.closure s) := Cardinal.mk_le_aleph0_iff.1
     ((Subfield.cardinalMk_closure_le_max _).trans (max_le (Cardinal.mk_le_aleph0_iff.2 hs.to_subtype) le_rfl))
   obtain ⟨τ, hτ⟩ := GlobalTheory.CompRat.exists_ringEquiv_complex_comp_eq (Subfield.closure s) (e.comp (Subfield.closure s).subtype)
     (e'.comp (Subfield.closure s).subtype)

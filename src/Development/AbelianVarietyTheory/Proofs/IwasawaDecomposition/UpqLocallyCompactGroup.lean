@@ -65,7 +65,7 @@ theorem left_inv {u : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ}
 theorem mat_unitary (b : UpqT P Q) : (UpqT.mat b)ᴴ * Formalism.UG.Jpq P Q * UpqT.mat b = Formalism.UG.Jpq P Q := b.2
 
 theorem continuous_mat : Continuous (UpqT.mat (P := P) (Q := Q)) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem range_mat : Set.range (UpqT.mat (P := P) (Q := Q)) =
     {u | uᴴ * Formalism.UG.Jpq P Q * u = Formalism.UG.Jpq P Q} := by

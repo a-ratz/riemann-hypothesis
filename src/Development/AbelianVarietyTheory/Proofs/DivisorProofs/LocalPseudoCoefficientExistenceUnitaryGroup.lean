@@ -532,8 +532,8 @@ theorem localPC4_of (hAlg : StAlg) (hProf : StProfile) (hFam : StFam) (hHom : St
     (hSh : StShape) (hOA : StOrbAd) (hOC : StOrbCpt) (hNE : StNonEll) (hTr : StTr) (hTA : StTrAd)
     (hK : StKData) : LocalPC4 := by
   intro r hr ε lam hgap X _ _ D hD μ _
-  haveI := hD.1
-  haveI := hD.2.1
+  have := hD.1
+  have := hD.2.1
   obtain ⟨M, P, hP, hcl, htor, hone, hzero⟩ := hK r hr ε lam hgap X D hD
   obtain ⟨p, q, hpq, htop⟩ := hAlg r ε M P hP
   obtain ⟨G, hG⟩ := hProf (nMode ε)
@@ -663,7 +663,7 @@ theorem isCompact_cent_of_mem_KG : ∀ (n : ℕ) (ε : Fin n → Bool) (k : UJ �
     IsCompact (cent k : Set (UJ ε)) := by
   intro n ε k hk hr
   have hK : IsCompact (KG ε : Set (UJ ε)) := by
-    simpa [Subtype.range_coe] using (isCompact_univ (X := KG ε)).image continuous_subtype_val
+    simpa [Subtype.range_coe] using (isCompact_univ (X := KG ε)).image continuous_subtypeVal
   exact hK.of_isClosed_subset (isClosed_cent k) (cent_subset_KG_of_regSS hk hr)
 
 end GlobalTheory
@@ -927,7 +927,7 @@ namespace GlobalTheory.PsCo.Pc1
 
 theorem orbInt_adSpan_eq_zero : GlobalTheory.PsCo.Pc1.StOrbAd := by
   intro n ε μ _ s hs dt _ _ φ hφ
-  haveI : μ.IsMulRightInvariant := _root_.GlobalTheory.haar_UJ_isMulRightInvariant n ε μ
+  have : μ.IsMulRightInvariant := _root_.GlobalTheory.haar_UJ_isMulRightInvariant n ε μ
   have hp := isProperOrbit_realUJ hs
   induction hφ using Submodule.span_induction with
   | mem φ hφ =>
@@ -976,7 +976,7 @@ namespace GlobalTheory
 
 theorem hasOrbInt_of_isCompact_cent_conj : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [MeasurableSpace H] [BorelSpace H] [SecondCountableTopology H] [LocallyCompactSpace H] [T2Space H] (μ : Measure H) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (s : H), IsCompact (cent s : Set H) → ∀ (dt : Measure (cent s)) [dt.IsHaarMeasure] [dt.IsMulRightInvariant], IsProperOrbit (cent s) s → ∀ (y : H) (f : H → ℂ), Continuous f → HasCompactSupport f → HasOrbInt μ s dt f ((∫ x, f (x⁻¹ * (y⁻¹ * s * y) * x) ∂μ) / dt.real Set.univ) := by
   intro H _ _ _ _ _ _ _ _ μ _ _ s hT dt _ _ hP y f hf hc
-  haveI : CompactSpace (cent s) := isCompact_iff_compactSpace.1 hT
+  have : CompactSpace (cent s) := isCompact_iff_compactSpace.1 hT
   obtain ⟨C, hC, h0⟩ := hP _ hc
   have hcont : Continuous (conjFn s f) := hf.comp (by fun_prop)
   have hsupp : HasCompactSupport (conjFn s f) := by
@@ -1008,7 +1008,7 @@ namespace GlobalTheory.PsCo.Pc1
 
 theorem stOrbCpt : GlobalTheory.PsCo.Pc1.StOrbCpt := by
   intro n ε μ _ s hs hT dt _ _ y f hf hc
-  haveI : μ.IsMulRightInvariant := GlobalTheory.haar_UJ_isMulRightInvariant n ε μ
+  have : μ.IsMulRightInvariant := GlobalTheory.haar_UJ_isMulRightInvariant n ε μ
   exact GlobalTheory.hasOrbInt_of_isCompact_cent_conj _ μ s hT dt (isProperOrbit_realUJ hs) y f hf hc
 
 end GlobalTheory.PsCo.Pc1
@@ -1219,8 +1219,8 @@ theorem trace_adBas (hSh : StShape) (hBD : StBasDeriv) (hUF : UFin) (hRS : Range
   have h0 : π (x 0) = 1 := by rw [hx0, map_one]
   have hCD' := hCD U L (fun t => π (x t)) (fun t => π (x t)⁻¹) A h0
     (fun t v u => by
-      rw [hπ.inner_apply_left, ← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one,
-        ContinuousLinearMap.one_apply])
+      rw [hπ.inner_apply_left, ← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one,
+        one_apply_eq_self])
     (fun t v u => (hπ.inner_apply_left _ v u).symm) (fun v hv => hLd v hv Z hZG)
     (fun u => hLmem _ (hAr u).1) (fun u => hLmem _ (hAr u).2)
   have hfun : (fun t => ∑ j, ⟪(stdOrthonormalBasis ℂ L j : U), π (x t) (A (π (x t)⁻¹
@@ -1288,7 +1288,7 @@ theorem stTrAd_of : StShape → StBasDeriv → UFin → RangeShape → TraceSum 
   | zero =>
     refine ⟨⟨0, zero_mem _⟩, ?_⟩
     have h0 : IsRepOp π μ (fun g => (0 : Mat n → ℂ) (toM g)) 0 := fun v => by
-      simp only [Pi.zero_apply, zero_smul, integral_zero, ContinuousLinearMap.zero_apply]
+      simp only [Pi.zero_apply, zero_smul, integral_zero, zero_apply]
       exact ⟨integrable_zero _ _ _, trivial⟩
     rw [h0.repOp_eq]
     exact ⟨isTraceClass_zero, trace_zero⟩
@@ -1303,7 +1303,7 @@ theorem stTrAd_of : StShape → StBasDeriv → UFin → RangeShape → TraceSum 
       refine ⟨?_, ?_⟩
       · refine ((o₁ v).1.add (o₂ v).1).congr (Eventually.of_forall fun g => ?_)
         simp only [Pi.add_apply, add_smul]
-      · rw [ContinuousLinearMap.add_apply, (o₁ v).2, (o₂ v).2, ← integral_add (o₁ v).1 (o₂ v).1]
+      · rw [add_apply, (o₁ v).2, (o₂ v).2, ← integral_add (o₁ v).1 (o₂ v).1]
         simp only [Pi.add_apply, add_smul]
     rw [hs.repOp_eq]
     simpa using hasTrace_add' ht₁ ht₂
@@ -1315,7 +1315,7 @@ theorem stTrAd_of : StShape → StBasDeriv → UFin → RangeShape → TraceSum 
       refine ⟨?_, ?_⟩
       · refine ((o v).1.smul c).congr (Eventually.of_forall fun g => ?_)
         simp only [Pi.smul_apply, smul_eq_mul, mul_smul]
-      · rw [ContinuousLinearMap.smul_apply, (o v).2, ← integral_smul]
+      · rw [smul_apply, (o v).2, ← integral_smul]
         simp only [Pi.smul_apply, smul_eq_mul, mul_smul]
     rw [hs.repOp_eq]
     simpa using hasTrace_smul' c ht
@@ -1414,7 +1414,7 @@ theorem conjDeriv : ∀ (U : Type) [NormedAddCommGroup U] [InnerProductSpace ℂ
     have hP : HasDerivAt (fun t => L.starProjection (x t v)) (L.starProjection w) 0 :=
       (L.starProjection.restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt (0 : ℝ) hw
     refine ⟨w - L.starProjection w, hw.sub hP, ?_⟩
-    rw [hx0, ContinuousLinearMap.one_apply, L.starProjection_eq_self_iff.2 hv, sub_self]
+    rw [hx0, one_apply_eq_self, L.starProjection_eq_self_iff.2 hv, sub_self]
   have hsum : HasDerivAt (fun t => ∑ k, ⟪x t (b k) - L.starProjection (x t (b k)),
       x t (E k) - L.starProjection (x t (E k))⟫_ℂ) 0 0 := by
     have : (0 : ℂ) = ∑ _k : Fin (Module.finrank ℂ L), (0 : ℂ) := by simp
@@ -1574,7 +1574,7 @@ theorem rangeK : RangeK := by
       · exact continuous_star.comp ((continuous_apply x.2).comp ((continuous_apply x.1).comp hφc))
     exact (MvPolynomial.continuous_eval Q).comp hent
   have horb : ∀ v : U, Continuous fun k : KG ε => π k v :=
-    fun v => (hπ.continuous_apply v).comp continuous_subtype_val
+    fun v => (hπ.continuous_apply v).comp continuous_subtypeVal
   have hint : ∀ (Q : Poly n) (v : U), Integrable (fun k : KG ε => ev (toMK k) Q • π k v) (muK ε) :=
     fun Q v => ((hevc Q).smul (horb v)).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hintC : ∀ g : KG ε → ℂ, Continuous g → Integrable g (muK ε) :=
@@ -1621,7 +1621,7 @@ theorem rangeK : RangeK := by
       have e2 : ∫ k, π k₀ (ev (toMK k) P • π k u) ∂(muK ε) =
           ∫ k, (fun k' : KG ε => ev (toMK (k₀⁻¹ * k')) P • π (k' : UJ ε) u) (k₀ * k) ∂(muK ε) := by
         refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
-        simp only [map_smul, inv_mul_cancel_left, Subgroup.coe_mul, map_mul, ContinuousLinearMap.mul_apply]
+        simp only [map_smul, inv_mul_cancel_left, Subgroup.coe_mul, map_mul, mul_apply_eq_comp]
       rw [e2, integral_mul_left_eq_self (fun k' : KG ε => ev (toMK (k₀⁻¹ * k')) P • π (k' : UJ ε) u) k₀]
     have hexp : ∀ k : KG ε, ev (toMK (k₀⁻¹ * k)) P =
         ∑ s ∈ p.support, ev (toMK k) (AddMonoidAlgebra.coeff p s) * ev (toMK k₀) (monomial s 1) := by

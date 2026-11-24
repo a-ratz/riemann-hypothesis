@@ -126,7 +126,7 @@ theorem MixedSectionStep.proof (hS : SmallSectionMixed.Statement) (hR : GroundTh
     · subst hj
       rw [Function.update_self]
       simp only [F, Fin.val_last]
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
     · rw [Function.update_of_ne hj]
 
   have hscale : II K ι P (n + 1) (Fin.snoc L (HermLine.zcomb M H ((m * q : ℕ) : ℤ) ((m * p : ℕ) : ℤ))) =
@@ -184,7 +184,7 @@ theorem MixedSectionStep.proof (hS : SmallSectionMixed.Statement) (hR : GroundTh
 
   have hcyc : cycR (II K ι) P L g ≤ cycR (II K ι) P L f := by
     rw [cycR_eq_finsum, cycR_eq_finsum]
-    refine finsum_le_finsum' ?_ ?_ fun W => ?_
+    refine finsum_le_finsum ?_ ?_ fun W => ?_
     · exact Set.Finite.subset (Finsupp.hasFiniteSupport (ReciprocityTheory.ChartRestriction.G.Geo.divCycle P g)) fun W hW h => hW (by simp [h])
     · exact Set.Finite.subset (Finsupp.hasFiniteSupport (ReciprocityTheory.ChartRestriction.G.Geo.divCycle P f)) fun W hW h => hW (by simp [h])
     · have hle : ReciprocityTheory.ChartRestriction.G.Geo.divCycle P g W ≤ ReciprocityTheory.ChartRestriction.G.Geo.divCycle P f W := hdiv W

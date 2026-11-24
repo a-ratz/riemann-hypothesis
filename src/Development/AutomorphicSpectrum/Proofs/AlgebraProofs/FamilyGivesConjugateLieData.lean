@@ -226,7 +226,7 @@ theorem composition_assoc_frobenius_point {V : Pt R 1 d} {p n : ℕ} (hp : p ≠
 theorem lin_tau {p : ℕ} (hp : p ≠ 1) : lin (ptPow R d p 0 : Pt R 1 d) 1 = 0 := by
   ext i j
   simp only [lin, ptPow, Matrix.zero_apply]
-  rw [coeff_X_pow, if_neg]
+  rw [coeff_X_pow, ite_eq_right]
   intro h
   rcases (Finsupp.single_eq_single_iff _ _ _ _).1 h with ⟨_, h⟩ | ⟨h, _⟩
   · exact hp h.symm
@@ -937,7 +937,7 @@ theorem locSplit_of_mats (B : FB K d O) (p : ℕ) (i : C.I) (r₁ r₂ s₁ s₂
 
 theorem locSplit {p : ℕ} [Fact p.Prime] [CharP K p] (F : Family C p d O) (i : C.I) :
     LocSplit C i (alpha (F.BK i) p) (beta (F.BK i) p) := by
-  haveI : CharP (C.v i).valuationSubring p :=
+  have : CharP (C.v i).valuationSubring p :=
     (RingHom.charP_iff (C.v i).valuationSubring.subtype Subtype.val_injective p).2 inferInstance
   have mK := _root_.GlobalTheory.CompanionTheory.Ar.Conj.map_mats_baseChange _ _ (C.v i).valuationSubring.subtype d O (F.Bi i) (F.BK i) (F.mapK i)
   have mk := _root_.GlobalTheory.CompanionTheory.Ar.Conj.map_mats_baseChange _ _ (IsLocalRing.residue _) d O (F.Bi i) (F.Bk i) (F.mapk i)

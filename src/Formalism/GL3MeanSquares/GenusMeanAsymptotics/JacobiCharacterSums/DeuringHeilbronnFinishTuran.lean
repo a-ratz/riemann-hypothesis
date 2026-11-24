@@ -124,7 +124,7 @@ theorem lb_part (a : ℕ) (D : ℝ) (m n j : ℕ) (T : ℝ) (hmj : m ≤ j)
   have heq : 1 / (E0 a D * (rr a / 8) ^ j)
       = (1 / 2) ^ j * Real.exp (-((a : ℝ) * D / eps a ^ 2) - ((a : ℝ) + 1) * j) := by
     rw [hR, E0, mul_pow, Real.exp_sub, Real.exp_neg, mul_comm ((a : ℝ) + 1) (j : ℝ),
-      Real.exp_nat_mul]
+      Real.exp_natCast_mul]
     rw [one_div (2 : ℝ)]
     first
     | ring1
@@ -141,7 +141,7 @@ theorem x_part (a : ℕ) (c₁ K : ℝ) (hc₁ : 0 < c₁) (j : ℕ) (hj : (j : 
   have hid := th_log a
   have hRpos : 0 < rr a := by linarith [rr_gt a]
   have hRj : rr a ^ j = Real.exp (j * Real.log (rr a)) := by
-    rw [Real.exp_nat_mul, Real.exp_log hRpos]
+    rw [Real.exp_natCast_mul, Real.exp_log hRpos]
   rw [hRj, mul_div_assoc, ← Real.exp_sub]
   refine mul_le_mul_of_nonneg_left ?_ hc₁.le
   rw [Real.exp_le_exp]

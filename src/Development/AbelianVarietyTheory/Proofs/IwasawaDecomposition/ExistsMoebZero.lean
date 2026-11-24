@@ -85,8 +85,8 @@ theorem exists_congr_one {n : Type} [Fintype n] [DecidableEq n] {M : Matrix n n 
 private lemma posDef_one_sub_mul_conjTranspose_of_posDef {p q : ℕ} {z : Matrix (Fin p) (Fin q) ℂ} (hz : (1 - zᴴ * z).PosDef) :
     (1 - z * zᴴ).PosDef := by
   have hsd : (1 - z * zᴴ).PosSemidef := by
-    haveI : Invertible (1 : Matrix (Fin p) (Fin p) ℂ) := invertibleOne
-    haveI : Invertible (1 : Matrix (Fin q) (Fin q) ℂ) := invertibleOne
+    have : Invertible (1 : Matrix (Fin p) (Fin p) ℂ) := invertibleOne
+    have : Invertible (1 : Matrix (Fin q) (Fin q) ℂ) := invertibleOne
     have h1 : (fromBlocks (1 : Matrix (Fin p) (Fin p) ℂ) z zᴴ 1).PosSemidef := by
       rw [PosDef.fromBlocks₁₁ (A := (1 : Matrix (Fin p) (Fin p) ℂ)) z 1 PosDef.one]
       simpa using hz.posSemidef
@@ -220,7 +220,7 @@ theorem frame_onto : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r j
       have hl : ReciprocityTheory.ChartRestriction.G.FD.dmin X.Gm x τ i = ((ReciprocityTheory.ChartRestriction.G.FD.psgn X.p0 i : ℝ) : ℂ) := by
         unfold ReciprocityTheory.ChartRestriction.G.FD.dmin ReciprocityTheory.ChartRestriction.G.FD.lminor ReciprocityTheory.ChartRestriction.G.FD.psgn
         rw [hgram τ, hD, submatrix_diagonal _ _ (Fin.castLE_injective _), det_diagonal]
-        simp only [Function.comp_apply, Fin.coe_castLE]
+        simp only [Function.comp_apply, Fin.val_castLE]
         rw [Fin.prod_univ_eq_prod_range (fun a => ((ReciprocityTheory.ChartRestriction.G.FD.sgn X.p0 a : ℝ) : ℂ)) (i : ℕ),
           Complex.ofReal_prod]
       have hps : ReciprocityTheory.ChartRestriction.G.FD.psgn X.p0 i ≠ 0 := by

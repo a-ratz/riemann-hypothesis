@@ -106,7 +106,7 @@ theorem isBoxSecG_boxSecG (pG : IsPowGrp G' G j) (w : LB.Iso LG' (boxLB LG pG.pr
       (fun _ hy => hy), zpow_natCast]
     congr 1
     ext
-    simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe, Scheme.Hom.id_app]
+    simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass, Scheme.Hom.id_app]
     show (G'.left.presheaf.map (homOfLE _).op).hom ((w.s (jN, jL)).val) = (w.s (jN, jL)).val
     rw [show (homOfLE (le_refl V)).op = 𝟙 _ from Subsingleton.elim _ _, CategoryTheory.Functor.map_id]
     rfl

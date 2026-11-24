@@ -59,7 +59,7 @@ theorem massCl_of_triv {G : Type} [Group G] (Γ K : Subgroup G)
     (h : ∀ x : G, Γ ⊓ K.map (MulAut.conj x).toMonoidHom = ⊥) :
     massCl Γ K = Nat.card (DoubleCoset.Quotient (Γ : Set G) (K : Set G)) := by
   classical
-  haveI := Fintype.ofFinite (DoubleCoset.Quotient (Γ : Set G) (K : Set G))
+  have := Fintype.ofFinite (DoubleCoset.Quotient (Γ : Set G) (K : Set G))
   unfold massCl
   simp only [h, Subgroup.card_bot, Nat.cast_one, inv_one]
   rw [finsum_eq_sum_of_fintype]
@@ -112,8 +112,8 @@ theorem classCountStep_of (hB : ClassBijStep) (hS : HAStabTrivStep) (hU : Unfold
   have hpos : 0 < Nat.card (ClsHA X hb u) := by
     rw [← hcard]
     exact Nat.card_pos
-  haveI hfinH : Finite (ClsHA X hb u) := Nat.finite_of_card_ne_zero hpos.ne'
-  haveI : IsTopologicalGroup (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := PIW.MassDataColumns.isTopGroup_HA _ _
+  have hfinH : Finite (ClsHA X hb u) := Nat.finite_of_card_ne_zero hpos.ne'
+  have : IsTopologicalGroup (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := PIW.MassDataColumns.isTopGroup_HA _ _
   have hK2c : IsCompact (unitaryLevelClosureSubgroup X hb u : Set (Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u))) :=
     hcpt.of_isClosed_subset (Subgroup.isClosed_of_isOpen _ hopen) hle
   have hMF : MassFinite (GamHA X u) (unitaryLevelClosureSubgroup X hb u) := by

@@ -109,8 +109,8 @@ theorem continuous_colGL (k : ℕ) :
     intro a b
     simp only [uMat_apply, colX_apply]
     by_cases h1 : a = b
-    · simp only [h1, if_true]; exact continuous_const
-    · simp only [h1, if_false]
+    · simp only [h1, ite_true]; exact continuous_const
+    · simp only [h1, ite_false]
       by_cases h2 : a < b
       · simp only [h2, dite_true]
         by_cases h3 : b.val = k
@@ -136,7 +136,7 @@ instance firstCountableTopology_adelicGL : FirstCountableTopology (AdelicGLn.Ade
 theorem continuous_stepCoeff (k : ℕ) {F : AdelicGLn.AdelicGL K n → ℂ} (hF : Continuous F) :
     Continuous (stepCoeff k F) := by
   unfold stepCoeff vecCoeff
-  haveI : LocallyCompactSpace (AdelicGLn.AdelicGL K n) := AdelicGLn.locallyCompactSpace K n
+  have : LocallyCompactSpace (AdelicGLn.AdelicGL K n) := AdelicGLn.locallyCompactSpace K n
   exact continuous_setIntegral_vecDomain (H := fun g x => F (colGL k x * g) *
     (GroundTheory.Global.adelicChar K (-pair (lastVec k) x) : ℂ))
     ((hF.comp ((continuous_colGL k).comp continuous_snd |>.mul continuous_fst)).mul
@@ -165,7 +165,7 @@ theorem vecMul_lastVec {j : ℕ} (M : Matrix (Fin j) (Fin j) K) (c : Fin j) (hj 
   rw [Finset.sum_eq_single ⟨j - 1, by omega⟩]
   · simp; omega
   · intro r _ hr
-    rw [if_neg, zero_mul]
+    rw [ite_eq_right, zero_mul]
     intro h; apply hr; ext; simp; omega
   · simp
 

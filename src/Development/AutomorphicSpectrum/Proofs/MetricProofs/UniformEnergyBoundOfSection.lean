@@ -88,8 +88,8 @@ theorem tailLogBound_of_tailBound : TailBoundStatement → ∀ {e : ℕ} {X : Ty
       linarith
     have hk : 0 ≤ Real.log R₀ ^ (0 + 1) := by positivity
     exact div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_right (le_max_left _ _) hk) hpos.le
-  · letI : MeasurableSpace X := borel X
-    haveI : BorelSpace X := ⟨rfl⟩
+  · let : MeasurableSpace X := borel X
+    have : BorelSpace X := ⟨rfl⟩
     obtain ⟨C, hC⟩ := tb A Θ L s m W hΘ hΘp hL hS hsnc hle
     obtain ⟨hbm, hrm⟩ := TailBoundAlt.bdry_rW_meas A L s hL hS
     have hCp : 0 ≤ max C 0 * (C₁ + 3) :=

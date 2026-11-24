@@ -68,7 +68,7 @@ section Grp
 variable {S : Scheme.{0}} {A : Over S} [GrpObj A] {T : Over S}
 
 lemma one_comp_hom (f : A ⟶ A) (hf : IsMonHom f) : (1 : T ⟶ A) ≫ f = 1 := by
-  haveI := hf
+  have := hf
   exact MonObj.one_comp f
 
 lemma comp_act_nat {O : Type} [Ring O] (ρ : RingAct A O) (x : T ⟶ A) :

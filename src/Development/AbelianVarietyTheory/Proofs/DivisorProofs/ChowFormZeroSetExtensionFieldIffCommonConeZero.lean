@@ -70,8 +70,8 @@ namespace GlobalTheory.PointTransfer
 theorem exists_algHom_algebraicClosure (F A : Type) [Field F] [CommRing A] [Nontrivial A] [Algebra F A]
     [Algebra.FiniteType F A] : Nonempty (A →ₐ[F] AlgebraicClosure F) := by
   obtain ⟨m, hm⟩ := Ideal.exists_maximal A
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
-  haveI : Module.Finite F (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing F (A ⧸ m)
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
+  have : Module.Finite F (A ⧸ m) := finite_of_finite_type_of_isJacobsonRing F (A ⧸ m)
   exact ⟨(IsAlgClosed.lift : (A ⧸ m) →ₐ[F] AlgebraicClosure F).comp (Ideal.Quotient.mkₐ F m)⟩
 
 theorem exists_common_zero {Ω τ : Type} [Field Ω] [IsAlgClosed Ω] [Finite τ]
@@ -129,7 +129,7 @@ theorem solvable_transfer (F σ τ : Type) [Field F] [Finite σ] [Finite τ]
     have hS : S.Finite :=
       (Set.finite_range u).union (Set.finite_iUnion fun i => (c i).coeffs.finite_toSet)
     let A : Subalgebra F Ω := Algebra.adjoin F S
-    haveI : Algebra.FiniteType F A :=
+    have : Algebra.FiniteType F A :=
       (Subalgebra.fg_iff_finiteType A).1 (Subalgebra.fg_def.2 ⟨S, hS, rfl⟩)
     obtain ⟨ψ⟩ := exists_algHom_algebraicClosure F A
     let uA : σ → A := fun s => ⟨u s, Algebra.subset_adjoin (Or.inl ⟨s, rfl⟩)⟩

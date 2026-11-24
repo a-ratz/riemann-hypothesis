@@ -143,7 +143,7 @@ theorem psiM_iso {n : ℕ} {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T T' : S7
     intro A B
     ext w
     obtain ⟨v, rfl⟩ := φ.surjective w
-    simp only [ContinuousLinearMap.mul_apply, hC]
+    simp only [mul_apply_eq_comp, hC]
   have hfin : Module.finrank ℂ T'.V = Module.finrank ℂ T.V :=
     (φ.toLinearEquiv.finrank_eq).symm
   have hps : ∀ (μ : Fin n → ℤ) (x : Matrix (Fin n) (Fin n) ℂ), S7.psM T' μ x = C (S7.psM T μ x) := by
@@ -166,10 +166,10 @@ theorem uw_closedSubgroup (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) :
     Formalism.FourierDecayAlt.B2.IsClosedSubgroup (UWset k r z) := by
   have hG := Formalism.QuantumDeterminants.uHGroup _ (Hpk k r) (Formalism.FourierDecayAlt.P.B2x2.hpk_unit k r)
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · simp only [UWset, Set.mem_setOf_eq, Matrix.one_mulVec]
+  · simp only [UWset, Set.mem_ofPred_eq, Matrix.one_mulVec]
     exact ⟨hG.1, by simp⟩
   · intro g hg h hh
-    simp only [UWset, Set.mem_setOf_eq] at hg hh ⊢
+    simp only [UWset, Set.mem_ofPred_eq] at hg hh ⊢
     obtain ⟨hg1, hg2, hg3⟩ := hg
     obtain ⟨hh1, hh2, hh3⟩ := hh
     refine ⟨hG.2.1 g hg1 h hh1, fun a => ⟨?_, ?_⟩, ?_⟩
@@ -177,7 +177,7 @@ theorem uw_closedSubgroup (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) :
     · rw [← Matrix.mulVec_mulVec, (hh2 a).2, (hg2 a).2]
     · rw [← Matrix.mulVec_mulVec, hh3, hg3]
   · intro g hg
-    simp only [UWset, Set.mem_setOf_eq] at hg ⊢
+    simp only [UWset, Set.mem_ofPred_eq] at hg ⊢
     obtain ⟨hg1, hg2, hg3⟩ := hg
     have hu := (hG.2.2 g hg1).1
     have key : ∀ v, g *ᵥ v = v → g⁻¹ *ᵥ v = v := by
@@ -186,14 +186,14 @@ theorem uw_closedSubgroup (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) :
       rw [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hu, Matrix.one_mulVec]
     exact ⟨(hG.2.2 g hg1).2, fun a => ⟨key _ (hg2 a).1, key _ (hg2 a).2⟩, key _ hg3⟩
   · intro g hg
-    simp only [UWset, Set.mem_setOf_eq] at hg
+    simp only [UWset, Set.mem_ofPred_eq] at hg
     exact (hG.2.2 g hg.1).1
   · have hA : IsClosed (UH (Hpk k r)) :=
       isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul
         continuous_id) continuous_const
     have hB : IsClosed {g : Mat k r | ∀ a : Fin r, g *ᵥ bvec (eI k r a) = bvec (eI k r a) ∧
         g *ᵥ bvec (esI k r a) = bvec (esI k r a)} := by
-      simp only [Set.setOf_forall, Set.setOf_and]
+      simp only [Set.ofPred_forall, Set.ofPred_and]
       exact isClosed_iInter fun a =>
         (isClosed_eq (continuous_id.matrix_mulVec continuous_const) continuous_const).inter
           (isClosed_eq (continuous_id.matrix_mulVec continuous_const) continuous_const)
@@ -250,7 +250,7 @@ theorem haar_conj {k r : ℕ} {S S' : Set (Mat k r)} {a : Mat k r} (ha : IsUnit 
   · exact (Measure.map_ne_zero_iff hmeas.aemeasurable).2 hne
   · have hpre : (conjEquiv a ha) ⁻¹' {x | Matrix.of x ∉ S'} = {x | Matrix.of x ∉ S} := by
       ext x
-      simp only [Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq]
       rw [hSS (Matrix.of x)]
       exact Iff.rfl
     rw [hmapeq, MeasurableEquiv.map_apply, hpre]
@@ -388,7 +388,7 @@ theorem aaFun_K {k r : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {Λ : Fin (2 * r
   have hinner : ∀ a b : T.V, ⟪T.op k₂ a, b⟫_ℂ = ⟪a, T.op k₂⁻¹ b⟫_ℂ := by
     intro a b
     have hb : b = T.op k₂ (T.op k₂⁻¹ b) := by
-      rw [← ContinuousLinearMap.mul_apply, ← S7.op_mul', mul_inv_cancel, S7.op_one']
+      rw [← mul_apply_eq_comp, ← S7.op_mul', mul_inv_cancel, S7.op_one']
       rfl
     conv_lhs => rw [hb]
     exact ContinuousLinearMap.inner_map_map_of_mem_unitary (T.τ k₂).property a _

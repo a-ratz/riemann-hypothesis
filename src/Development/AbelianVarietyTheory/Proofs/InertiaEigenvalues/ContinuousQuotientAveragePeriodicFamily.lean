@@ -59,8 +59,8 @@ theorem continuous_avg_of_periodic : ∀ (G : Type) [AddCommGroup G] [Topologica
     ∀ (X : Type) [TopologicalSpace X] (F : X × G → ℂ), Continuous F →
       (∀ x, ∀ γ ∈ Γ, ∀ y, F (x, γ + y) = F (x, y)) → Continuous fun x => avg Γ (fun y => F (x, y)) := by
   intro G _ _ _ _ _ _ Γ hΓ X _ F hF hper
-  letI : MeasurableSpace G := borel G
-  haveI : BorelSpace G := ⟨rfl⟩
+  let : MeasurableSpace G := borel G
+  have : BorelSpace G := ⟨rfl⟩
 
   obtain ⟨μ, D, hμ, hD, hD1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one G Γ hΓ
   have hsec : ∀ x : X, Continuous fun y : G => F (x, y) := fun x =>

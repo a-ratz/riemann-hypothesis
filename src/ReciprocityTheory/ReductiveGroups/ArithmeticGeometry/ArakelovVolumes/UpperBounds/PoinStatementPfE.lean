@@ -63,7 +63,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 def idF (X : Data E r) : Frame X.Ψ r := fun _ => (1 : Matrix (Fin r) (Fin r) ℂ)
 
 theorem idF_mem (X : Data E r) : idF X ∈ Bor X.Ψ r := by
-  simp only [Bor, Set.mem_setOf_eq]
+  simp only [Bor, Set.mem_ofPred_eq]
   intro τ
   refine ⟨?_, fun a c h => ?_⟩
   · have h1 : mat (idF X) τ = 1 := by
@@ -184,7 +184,7 @@ theorem subMeanLoc_of (hLU : LUStatement (E := E)) : SubMeanLocStatement (E := E
     rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
     exact ENNReal.ofReal_le_ofReal (by nlinarith [norm_nonneg (bchar la (bOf y))])
   calc ‖P y‖ₑ ^ 2 = ‖bchar la (bOf y)‖ₑ ^ 2 * ‖P (cpt X x (zOf y))‖ₑ ^ 2 := by
-        rw [hPy, enorm_mul, mul_pow]
+        rw [hPy, eNorm_mul, mul_pow]
     _ ≤ ENNReal.ofReal 4 * (v⁻¹ * (ENNReal.ofReal 4 * ∫⁻ w in Bset X x ρ,
           ‖P (cpt X x w)‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (-phla X la (cpt X x w))))) := by
         refine mul_le_mul' hbb (hle.trans (mul_le_mul_of_nonneg_left ?_ zero_le))

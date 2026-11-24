@@ -241,7 +241,7 @@ theorem cas_eigen (hσ : IsURepOn (UJset ε) σ) (hD : IsDer ε σ V E) {μ : Fi
       obtain ⟨w, hw, rfl⟩ := hz
       exact ⟨E a b w, compactSpan_isCompactInvariant ε E u a b hab w hw, (hyc a b w).symm⟩
     have hfy : FiniteDimensional ℂ (kSpan ε E (Cas E u)) := by
-      haveI := hf
+      have := hf
       exact Submodule.finiteDimensional_of_le hle
     have hT := (GlobalTheory.Jet.KType.kType_iff n ε H σ V E hσ hD).1 μ (Cas E u) hy0 hyK hfy
     have hymem : Cas E u ∈ kSpan ε E u := by

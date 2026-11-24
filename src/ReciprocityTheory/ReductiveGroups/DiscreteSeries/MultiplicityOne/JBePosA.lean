@@ -262,13 +262,13 @@ theorem inner_pi {h : Mat k r} (hh : h ∈ UWset k r D.z) (a b : Wp) : ⟪D.π h
   LinearIsometry.inner_map_map ⟨(D.π h).toLinearMap, fun v => D.π_unitary h hh v⟩ a b
 
 theorem inner_PiO {q : Mt k r × Mt k r} (hq : q ∈ SS D.z) (a b : Wp) : ⟪PiO D q a, PiO D q b⟫_ℂ = ⟪a, b⟫_ℂ := by
-  simp only [PiO, ContinuousLinearMap.smul_apply, inner_smul_left, inner_smul_right, inner_pi D hq.1]
+  simp only [PiO, smul_apply, inner_smul_left, inner_smul_right, inner_pi D hq.1]
   have h2 : psiD D (Matrix.of q.2) * starRingEnd ℂ (psiD D (Matrix.of q.2)) = 1 := by
     rw [RCLike.mul_conj, norm_psiD]; simp
   rw [← mul_assoc, h2, one_mul]
 
 theorem norm_PiO {q : Mt k r × Mt k r} (hq : q ∈ SS D.z) (a : Wp) : ‖PiO D q a‖ = ‖a‖ := by
-  simp only [PiO, ContinuousLinearMap.smul_apply, norm_smul, norm_psiD, D.π_unitary _ hq.1, one_mul]
+  simp only [PiO, smul_apply, norm_smul, norm_psiD, D.π_unitary _ hq.1, one_mul]
 
 theorem PiO_Lq (hEA : EllAdd) (hUN : UWNormal) {q p : Mt k r × Mt k r} (hq : q ∈ SS D.z) (hp : p ∈ SS D.z)
     (a : Wp) : PiO D (Lq q p) a = PiO D q (PiO D p a) := by
@@ -279,16 +279,16 @@ theorem PiO_Lq (hEA : EllAdd) (hUN : UWNormal) {q p : Mt k r × Mt k r} (hq : q 
     rw [psiD_mul D hEA hq.2 h1, psiD_conj D hUN hq.1 hp.2]
   have e2 : D.π (Matrix.of (Lq q p).1) = (D.π (Matrix.of q.1)).comp (D.π (Matrix.of p.1)) :=
     D.π_rep.2 _ hq.1 _ hp.1
-  simp only [PiO, ContinuousLinearMap.smul_apply, e1, e2, ContinuousLinearMap.comp_apply, map_smul, smul_smul]
+  simp only [PiO, smul_apply, e1, e2, ContinuousLinearMap.comp_apply, map_smul, smul_smul]
   rw [mul_comm]
 
 theorem cont_ell (z : Fin (2 * r + k + 1) → ℂ) : Continuous (ell k r z) := by
   unfold ell
   refine continuous_finsetSum _ fun a _ => ?_
   by_cases h : a.val + 1 < r
-  · simp only [h, dif_pos]
+  · simp only [h, dite_eq_left]
     fun_prop
-  · simp only [h, dif_neg, not_false_eq_true, mulVec, dotProduct]
+  · simp only [h, dite_eq_right, not_false_eq_true, mulVec, dotProduct]
     fun_prop
 
 theorem cont_psiD : Continuous (psiD D) := by

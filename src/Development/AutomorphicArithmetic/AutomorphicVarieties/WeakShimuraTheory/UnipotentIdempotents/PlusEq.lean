@@ -54,7 +54,7 @@ private theorem plus_eq {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
       right_inv := fun _ => rfl
       map_mul' := fun _ _ => rfl
       map_add' := fun _ _ => rfl }
-  haveI : IsTotallyReal E := IsTotallyReal.ofRingEquiv e.symm
+  have : IsTotallyReal E := IsTotallyReal.ofRingEquiv e.symm
   have hEM : E ≤ maximalRealSubfield T.L := IsTotallyReal.le_maximalRealSubfield E
   have hdE : Module.finrank ℚ E = Module.finrank ℚ T.F :=
     (RingEquiv.toRatAlgEquiv e).toLinearEquiv.finrank_eq
@@ -65,7 +65,7 @@ private theorem plus_eq {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
   have hM : Module.finrank ℚ (maximalRealSubfield T.L) * 2 = Module.finrank ℚ T.L := by
     rw [← Algebra.IsQuadraticExtension.finrank_eq_two (maximalRealSubfield T.L) T.L]
     exact (letI : Module.Free (maximalRealSubfield T.L) T.L := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank ℚ (maximalRealSubfield T.L) T.L)
-  letI : Module.Free E T.L := Module.Free.of_divisionRing _ _
+  let : Module.Free E T.L := Module.Free.of_divisionRing _ _
   have hE2 : Module.finrank ℚ E * Module.finrank E T.L = Module.finrank ℚ T.L :=
     Module.finrank_mul_finrank ℚ E T.L
   have hle : Module.finrank ℚ E ≤ Module.finrank ℚ (maximalRealSubfield T.L) :=
@@ -83,7 +83,7 @@ private theorem plus_eq {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
         rw [hM, ← hE2]
         exact Nat.mul_le_mul_right _ hle
       exact Nat.le_of_mul_le_mul_left this hposM
-  haveI : Algebra.IsQuadraticExtension E T.L := { finrank_eq_two' := hdeg }
+  have : Algebra.IsQuadraticExtension E T.L := { finrank_eq_two' := hdeg }
   have hEq : E = maximalRealSubfield T.L := NumberField.CMExtension.eq_maximalRealSubfield T.L E
   constructor
   · intro hx

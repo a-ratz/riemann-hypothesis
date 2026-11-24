@@ -142,7 +142,7 @@ theorem thetaBase_hasType : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
       exact congrArg (fun T => T (fun ρ => v' ρ)) e
     by_cases hu : ∃ κ, IsLevelLift (Wc D i) (R.βW i) (R.datWp i R.triv) (R.eG u) κ
     · refine sub_eq_zero.1 (hd _ fun v' => ?_)
-      rw [GlobalTheory.BaseKernelType.adForm_sub, adForm_smul, MultilinearMap.sub_apply, MultilinearMap.smul_apply, hρ v', hy v',
+      rw [GlobalTheory.BaseKernelType.adForm_sub, adForm_smul, sub_apply, smul_apply, hρ v', hy v',
         one_smul, GlobalTheory.BaseKernelType.actL_levelTrace F.P0 F.ψ0⁻¹ u hu (hT v'), sub_self]
     · have h0 : (R.FW i).ρ u y = 0 := hd _ fun v' => by
         rw [hρ v']

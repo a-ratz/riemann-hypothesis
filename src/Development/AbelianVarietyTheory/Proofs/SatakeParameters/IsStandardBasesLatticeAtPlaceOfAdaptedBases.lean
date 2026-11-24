@@ -214,10 +214,10 @@ theorem exists_intBasis (D : D7) (ρ : D.host.E →+* ℂ_[p]) {N : ℕ} (L : Su
     let B : Module.Basis b D.host.E (Fin N → D.host.E) := Module.Basis.mk hli (by simp [hb, hsp])
     let e := B.indexEquiv (Pi.basisFun D.host.E (Fin N))
     refine ⟨fun a => ⟨(e.symm a).1, hbs (e.symm a).2⟩, ?_⟩
-    have h := (Matrix.linearIndependent_cols_iff_isUnit (A := M fun a => ⟨(e.symm a).1, hbs (e.symm a).2⟩)).1
+    have h := (Matrix.linearIndependent_col_iff_isUnit (A := M fun a => ⟨(e.symm a).1, hbs (e.symm a).2⟩)).1
       (hli.comp _ e.symm.injective)
     exact ((Matrix.isUnit_iff_isUnit_det _).1 h).ne_zero
-  haveI : Nonempty (Fin N → s) := ⟨f₀⟩
+  have : Nonempty (Fin N → s) := ⟨f₀⟩
   obtain ⟨f, hf⟩ := Finite.exists_max fun f => ‖ρ (M f).det‖
   have hpos : 0 < ‖ρ (M f).det‖ := lt_of_lt_of_le (norm_pos_iff.2 ((map_ne_zero ρ).2 hf₀)) (hf f₀)
   have hdet : (M f).det ≠ 0 := (map_ne_zero ρ).1 (norm_pos_iff.1 hpos)

@@ -72,12 +72,12 @@ theorem posM_blk_apply (m : ℕ) (c : UnipotentBlockColumnIndex a m m → R) (i 
   · rw [Finset.sum_eq_single ⟨(i, j), h.1, h.2.ge, h.2.le⟩]
     · simp
     · intro t _ ht
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨e1, e2⟩
       exact ht (Subtype.ext (Prod.ext e1 e2))
     · simp
   · refine Finset.sum_eq_zero fun t _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨e1, e2⟩
     apply h
     have h1 := t.2
@@ -95,8 +95,8 @@ theorem posM_mul_of_row (m : ℕ) (c : UnipotentBlockColumnIndex a m m → R) (M
         simp only [Matrix.mul_apply, Matrix.single_apply]
         refine Finset.sum_congr rfl fun l _ => ?_
         by_cases h : t.1.1 = p ∧ t.1.2 = l
-        · rw [if_pos h, hM l q (by rw [← h.2]; omega)]
-        · rw [if_neg h, zero_mul, zero_mul]
+        · rw [ite_eq_left h, hM l q (by rw [← h.2]; omega)]
+        · rw [ite_eq_right h, zero_mul, zero_mul]
     _ = _ := mul_one _
 
 theorem blkU_mul_val (m : ℕ) (c : UnipotentBlockColumnIndex a m m → R) (γ : GL (Fin a) R)
@@ -200,8 +200,8 @@ theorem lintegral_nuD_succ (m d : ℕ) (hm : m = k - (d + 1)) [SFinite (nuD E k 
 theorem unfold_vec (ι : Type) [Fintype ι] (G : (ι → Ad E) → ℝ≥0∞) :
     ∫⁻ y, G y ∂vecMeasure E ι =
       ∑' c : ι → E, ∫⁻ x in vecDomain E ι, G (-x + fun t => algebraMap E (Ad E) (c t)) ∂vecMeasure E ι := by
-  haveI : (vecMeasure E ι).IsNegInvariant := Measure.pi.isNegInvariant _
-  haveI := GroundTheory.Global.countable_numberField E
+  have : (vecMeasure E ι).IsNegInvariant := Measure.pi.isNegInvariant _
+  have := GroundTheory.Global.countable_numberField E
   rw [← lintegral_neg_eq_self, (isAddFundamentalDomain_vecDomain (K := E) (ι := ι)).lintegral_eq_tsum']
   let e : (ι → E) ≃ vecLattice E ι := Equiv.ofBijective
     (fun c => ⟨fun t => algebraMap E (Ad E) (c t), c, rfl⟩) (by
@@ -218,8 +218,8 @@ theorem unfold_vec (ι : Type) [Fintype ι] (G : (ι → Ad E) → ℝ≥0∞) :
   rw [neg_add, neg_neg, add_comm]
 
 theorem countable_GL : Countable (GL (Fin k) E) := by
-  haveI := GroundTheory.Global.countable_numberField E
-  haveI : Countable (Matrix (Fin k) (Fin k) E) := inferInstanceAs (Countable (Fin k → Fin k → E))
+  have := GroundTheory.Global.countable_numberField E
+  have : Countable (Matrix (Fin k) (Fin k) E) := inferInstanceAs (Countable (Fin k → Fin k → E))
   exact Function.Injective.countable (f := fun g : GL (Fin k) E => g.val) Units.val_injective
 
 def innerI (d : ℕ) (F : GA E k → ℝ≥0∞) (g u : GA E k) : ℝ≥0∞ := ∫⁻ n, F (u * (g * n)) ∂nuD E k d
@@ -274,8 +274,8 @@ theorem main (m d : ℕ) (hm : m = k - (d + 1)) (hd : d + 1 ≤ k) (sf : SFinite
     {F : GA E k → ℝ≥0∞} (hF : Measurable F) :
     ∫⁻ h, F h ∂nuB E k m =
       ∫⁻ x in vecDomain E (UnipotentBlockColumnIndex k m m), ∫⁻ h, F ((blkU x)⁻¹ * h) ∂nuP E k m ∂vecMeasure E (UnipotentBlockColumnIndex k m m) := by
-  haveI := GroundTheory.Global.countable_numberField E
-  haveI : Countable (GL (Fin k) E) := countable_GL
+  have := GroundTheory.Global.countable_numberField E
+  have : Countable (GL (Fin k) E) := countable_GL
   have hmeas : ∀ (γ : ({γ | GlobalTheory m γ} : Set (GL (Fin k) E))) (c : UnipotentBlockColumnIndex k m m → E),
       Measurable fun x : UnipotentBlockColumnIndex k m m → Ad E =>
         innerI d F (ratGL E k γ.1) (blkU (-x + fun t => algebraMap E (Ad E) (c t))) := fun γ c =>

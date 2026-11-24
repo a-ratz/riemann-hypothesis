@@ -100,7 +100,7 @@ theorem UpperTheory.ConvolutionTheory.C.summandFactor :
     haveI := hm i
     exact UpperTheory.integralOperator_fixed_invariant_of_left_invariant_kernel (Gw n (w i)) (LL μ) (σ i).V (locU μ (w i)) (σ i).ρ (m i) (φ i) (T i) (A i) (U i)
       (fun u v => hT i u v) (hA i) (hφ i)
-  haveI := fun i => hfd U hU i
+  have := fun i => hfd U hU i
   let B : ∀ i, Module.End ℂ (fixedVectors (σ i).ρ (U i)) := fun i =>
     (A i).restrict fun x _ => (hf i).2.1 x
   have hB : ∀ i, LinearMap.trace ℂ (fixedVectors (σ i).ρ (U i)) (B i) = s i := by

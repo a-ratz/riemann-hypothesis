@@ -168,8 +168,8 @@ theorem IsTriangular.repr_eq (H : IsTriangular v rk e g) (hv : ∀ j, IsFrame (v
     have hcf : cf a = resG C (le_inf h h') (g a j j') * (if b = a then 1 else 0) := by
       by_cases hab : b = a
       · subst hab
-        rw [if_pos rfl, mul_one, h1]
-      · rw [if_neg hab, mul_zero]
+        rw [ite_eq_left rfl, mul_one, h1]
+      · rw [ite_eq_right hab, mul_zero]
         exact h2 a (Ne.symm hab) (ha b hb)
     have hB : ∀ i, resM F h (v j i) = (hv j).basis h i := fun i => ((hv j).basis_apply h i).symm
     have hr : ((hv j').basis h').repr (resM F h' (v j' (e j' b))) (e j' a) = if b = a then 1 else 0 := by
@@ -181,7 +181,7 @@ theorem IsTriangular.repr_eq (H : IsTriangular v rk e g) (hv : ∀ j, IsFrame (v
     rw [hr, h3, map_sum, Finset.sum_apply']
     simp only [hB, map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply,
       (e j).injective.eq_iff, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     rwa [mul_ite, mul_one, mul_zero] at hcf
   | zero => simp
   | add x y _ _ hx hy =>
@@ -493,9 +493,9 @@ theorem IsTriangular.deg_insert [DecidableEq α] {k : Type} [Field k] [Algebra k
       rw [← LinearMap.comp_apply, ← GlobalTheory.QCoh.stalkLinear_comp, hzero, GlobalTheory.QCoh.stalkLinear_zero,
         LinearMap.zero_apply]
   have hSE : (ShortComplex.mk f φ hzero).ShortExact := ⟨hex⟩
-  haveI : GlobalTheory.QCoh.IsFiniteQC (sub hv e S).toMod := (H.isVB hT hv hS).isFiniteQC
-  haveI : GlobalTheory.QCoh.IsFiniteQC (sub hv e (insert a S)).toMod := (H.isVB hT hv hS').isFiniteQC
-  haveI : GlobalTheory.QCoh.IsFiniteQC (toMod (⟨J, T, u⟩ : LB C)) := (isVB_toMod hL).isFiniteQC
+  have : GlobalTheory.QCoh.IsFiniteQC (sub hv e S).toMod := (H.isVB hT hv hS).isFiniteQC
+  have : GlobalTheory.QCoh.IsFiniteQC (sub hv e (insert a S)).toMod := (H.isVB hT hv hS').isFiniteQC
+  have : GlobalTheory.QCoh.IsFiniteQC (toMod (⟨J, T, u⟩ : LB C)) := (isVB_toMod hL).isFiniteQC
   have h3 := hC.deg_shortExact hSE
   unfold degLB
   exact h3

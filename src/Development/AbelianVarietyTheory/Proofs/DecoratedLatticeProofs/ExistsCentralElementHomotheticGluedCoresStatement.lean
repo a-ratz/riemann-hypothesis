@@ -131,7 +131,7 @@ theorem lattice_exists_scalar_bound_attained : ∀ (k : Type) [Field k] [Valuati
     intro h0
     have := hmax (x0, j0) (by simp [hx0])
     simp only [h0, map_zero] at this
-    have h' : valuation k (x0 j0) = 0 := le_antisymm this zero_le'
+    have h' : valuation k (x0 j0) = 0 := le_antisymm this zero_le
     exact hx0j ((Valuation.zero_iff _).mp h')
   refine ⟨p.1 p.2, hc, ?_, p.1, ?_, p.2, rfl⟩
   · intro x hx
@@ -322,7 +322,7 @@ theorem latPair_hasVal_residue_of_transvections : ∀ (k : Type) [Field k] [Valu
     rw [hcoef]
     by_cases h : j = b
     · subst h; simp only [Pi.single_eq_same]; exact one_mem _
-    · simp only [Pi.single_apply, h, if_false]; exact zero_mem _)
+    · simp only [Pi.single_apply, h, ite_false]; exact zero_mem _)
   let v : n → 𝓀[k] := fun b => P.fn ⟨e b, hmem b⟩
   have hv : ∀ b, P.HasVal (e b) (v b) := fun b => P.hasVal_fn ⟨e b, hmem b⟩
   have hzero : ∀ a, a ≠ i → v a = 0 := by

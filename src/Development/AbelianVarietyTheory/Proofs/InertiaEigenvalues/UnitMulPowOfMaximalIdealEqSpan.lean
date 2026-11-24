@@ -137,7 +137,7 @@ theorem dvr_of_maximalIdeal_eq_span {S : Type} [CommRing S] [IsLocalRing S] [IsN
     obtain ⟨b, v, hv, rfl⟩ := unit_mul_pow_of_maximalIdeal_eq_span hm h.2
     have : π ^ (a + b) * (u * v) = 0 := by rw [← hxy, pow_add]; ring
     exact (hu.mul hv).ne_zero (hpow _ _ this)
-  haveI : IsDomain S := NoZeroDivisors.to_isDomain S
+  have : IsDomain S := NoZeroDivisors.to_isDomain S
   have hπ0 : π ≠ 0 := fun h => one_ne_zero (hreg 1 (by rw [h, zero_mul]))
   have hnf : ¬ IsField S := by
     rw [isField_iff_maximalIdeal_eq, hm, Ideal.span_singleton_eq_bot]

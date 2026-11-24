@@ -127,7 +127,7 @@ theorem latS_mul {Y Z : HahnSeries ℚ Ω} (hY : LatS L Y) (hZ : LatS L Z) : Lat
   intro r hr
   rw [HahnSeries.coeff_mul] at hr
   obtain ⟨ij, hij, -⟩ := Finset.exists_ne_zero_of_sum_ne_zero hr
-  rw [Finset.mem_addAntidiagonal] at hij
+  rw [Finset.mem_antidiagonal] at hij
   obtain ⟨h1, h2, h3⟩ := hij
   obtain ⟨a, ha⟩ := hY _ ((HahnSeries.mem_support _ _).1 h1)
   obtain ⟨b, hb⟩ := hZ _ ((HahnSeries.mem_support _ _).1 h2)
@@ -314,7 +314,7 @@ theorem core (A : ValuationSubring Ω) (c : Ω) (hnil : ∀ x ∈ A.nonunits, �
         rw [← ValuationSubring.valuation_le_one_iff, map_div₀]
         have hle := hmax r ((Set.Finite.mem_toFinset hF).2 ((HahnSeries.mem_support _ _).2 hr))
         have hpos : 0 < A.valuation (N.coeff r0) := by
-          rw [zero_lt_iff]; exact (map_ne_zero _).2 hr0'
+          rw [pos_iff_ne_zero]; exact (map_ne_zero _).2 hr0'
         exact (div_le_one₀ hpos).2 hle
   obtain ⟨x, hxn, hxN⟩ := hx
   obtain ⟨k, z, hz, hxk⟩ := hnil x hxn
@@ -324,9 +324,9 @@ theorem core (A : ValuationSubring Ω) (c : Ω) (hnil : ∀ x ∈ A.nonunits, �
     intro r hr
     rw [hEe, HahnSeries.coeff_sub, HahnSeries.coeff_sub, hN, HahnSeries.coeff_one]
     rcases hr.lt_or_eq with h | h
-    · rw [if_pos h, if_neg h.ne]; ring
+    · rw [ite_eq_left h, ite_eq_right h.ne]; ring
     · subst h
-      rw [if_neg (lt_irrefl _), if_pos rfl, hP1, zero_add, inv_mul_cancel₀ hu0]; ring
+      rw [ite_eq_right (lt_irrefl _), ite_eq_left rfl, hP1, zero_add, inv_mul_cancel₀ hu0]; ring
   have hEpos : 0 < (-E).orderTop := pos_orderTop _ (fun r hr => by simp [hE0 r hr])
   have hEI : IntS A E := by rw [hEe]; exact intS_sub (intS_sub hP1I intS_one) hNI
   have hEL : LatS L E := by rw [hEe]; exact latS_sub (latS_sub hP1L latS_one) hNL

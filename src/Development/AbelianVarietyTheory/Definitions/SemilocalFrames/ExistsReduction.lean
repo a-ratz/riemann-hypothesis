@@ -256,8 +256,8 @@ theorem prime : p.Prime := by
   have h0 : p ≠ 0 := by
     rw [← fr.absNorm_eq, Ne, Ideal.absNorm_eq_zero_iff]
     exact w.ne_bot
-  haveI := w.isPrime
-  haveI : IsDomain (ZMod p) := fr.residueEquiv.symm.toMulEquiv.isDomain
+  have := w.isPrime
+  have : IsDomain (ZMod p) := fr.residueEquiv.symm.toMulEquiv.isDomain
   exact (CharP.char_is_prime_or_zero (ZMod p) p).resolve_right h0
 
 theorem ker_r : RingHom.ker fr.r = extId I w.asIdeal := ker_eq_extId fr.prime.ne_zero fr.r fr.r_psi
@@ -312,12 +312,12 @@ theorem exists_act : ∃ ρ : I.Gf → GL (Fin N) (ZMod p),
   refine ⟨fun x => if h : x ∈ Ksub I then φ ⟨x, h⟩ else 1, fun x hx => ?_, fun x hx y hy => ?_⟩
   · have hx' : x ∈ Ksub I := hx
     beta_reduce
-    rw [dif_pos hx', hφ]
+    rw [dite_eq_left hx', hφ]
     exact hM ⟨x, hx'⟩
   · have hx' : x ∈ Ksub I := hx
     have hy' : y ∈ Ksub I := hy
     beta_reduce
-    rw [dif_pos hx', dif_pos hy', dif_pos (mul_mem hx' hy'), ← φ.map_mul]
+    rw [dite_eq_left hx', dite_eq_left hy', dite_eq_left (mul_mem hx' hy'), ← φ.map_mul]
     rfl
 
 end PlFrame
@@ -364,7 +364,7 @@ theorem exists_choice (I : AutInst) (g : Fin 2 → ℕ) (hg : ∀ k, (g k).Prime
     fun k v hv h => (hsp k v hv).2.2 ((hconj v v).2 h.symm)
   have hcm : ∀ k (v : HeightOneSpectrum (𝓞 I.E)), ((g k : ℕ) : 𝓞 I.E) ∈ v.asIdeal →
       ((g k : ℕ) : 𝓞 I.E) ∈ (cj v).asIdeal := fun k v hv => by rw [hcj, map_natCast]; exact hv
-  letI : LinearOrder (HeightOneSpectrum (𝓞 I.E)) := linearOrderOfSTO WellOrderingRel
+  let : LinearOrder (HeightOneSpectrum (𝓞 I.E)) := linearOrderOfSTO WellOrderingRel
   refine ⟨fun k => {v : HeightOneSpectrum (𝓞 I.E) // ((g k : ℕ) : 𝓞 I.E) ∈ v.asIdeal ∧ v < cj v},
     fun k v => v.1, ?_, hg, hne, ?_, fun k v => ⟨v.2.1, (hsp k v.1 v.2.1).1⟩, fun k => Subtype.val_injective, ?_, ?_⟩
   · intro k

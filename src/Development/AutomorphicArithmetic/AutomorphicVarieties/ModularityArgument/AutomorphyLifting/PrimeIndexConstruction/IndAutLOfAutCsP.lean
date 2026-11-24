@@ -61,8 +61,8 @@ private theorem deg_two {Ω : Type} [Field Ω] [CharZero Ω] (A B M : Intermedia
     [FiniteDimensional ℚ B] (hM : M = A ⊔ B) (hA : Module.finrank ℚ A = 2) (hn : ¬ A ≤ B) [Algebra B M] [IsScalarTower ℚ B M] :
     Module.finrank B M = 2 := by
   have h1 : Module.finrank ℚ M ≤ Module.finrank ℚ A * Module.finrank ℚ B := hM ▸ IntermediateField.finrank_sup_le A B
-  haveI : FiniteDimensional ℚ M := hM ▸ IntermediateField.finiteDimensional_sup A B
-  haveI : Module.Free B M := Module.Free.of_divisionRing B M
+  have : FiniteDimensional ℚ M := hM ▸ IntermediateField.finiteDimensional_sup A B
+  have : Module.Free B M := Module.Free.of_divisionRing B M
   have h2 := Module.finrank_mul_finrank ℚ B M
   have h3 : 0 < Module.finrank ℚ B := Module.finrank_pos
   have h4 : 0 < Module.finrank ℚ M := Module.finrank_pos
@@ -87,11 +87,11 @@ private theorem two_places {k : Type} [Field k] [NumberField k] [IsTotallyReal k
 
 private theorem two_emb {L M : Type} [Field L] [Field M] [CharZero L] [Algebra L M] (h : Module.finrank L M = 2) (φ : L →+* ℂ) :
     ∃ τ τ' : M →+* ℂ, τ ≠ τ' ∧ τ.comp (algebraMap L M) = φ ∧ τ'.comp (algebraMap L M) = φ := by
-  letI : Algebra L ℂ := φ.toAlgebra
-  haveI : FiniteDimensional L M := Module.finite_of_finrank_pos (by omega)
+  let : Algebra L ℂ := φ.toAlgebra
+  have : FiniteDimensional L M := Module.finite_of_finrank_pos (by omega)
   have hc := AlgHom.card L M ℂ
   obtain ⟨a, b, hab⟩ := Fintype.exists_pair_of_one_lt_card (α := M →ₐ[L] ℂ) (by omega)
-  exact ⟨a, b, fun e => hab (AlgHom.coe_ringHom_injective e), a.comp_algebraMap, b.comp_algebraMap⟩
+  exact ⟨a, b, fun e => hab (AlgHom.toRingHom_injective e), a.comp_algebraMap, b.comp_algebraMap⟩
 
 private theorem hom_ext_sup {Ω : Type} [Field Ω] [CharZero Ω] (A B M : IntermediateField ℚ Ω) (hA : A ≤ M) (hB : B ≤ M)
     (hM : M ≤ A ⊔ B) (τ τ' : M →+* ℂ) (eA : ∀ x : A, τ ⟨x, hA x.2⟩ = τ' ⟨x, hA x.2⟩) (eB : ∀ x : B, τ ⟨x, hB x.2⟩ = τ' ⟨x, hB x.2⟩) :

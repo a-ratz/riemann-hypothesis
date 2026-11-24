@@ -164,7 +164,7 @@ theorem actO_fin {S T : HSp D} (g : GA D S) (h : GA D T) {x : WO S T} (hx : x.ma
   rw [Matrix.map_mul, Matrix.map_mul, hx, Matrix.mul_zero, Matrix.zero_mul]
 
 private theorem continuous_actO_one {S T : HSp D} (h : GA D T) : Continuous (actO S T 1 h) := by
-  haveI := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   unfold actO
   fun_prop
 
@@ -172,7 +172,7 @@ theorem exists_approx {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {f : WO S T
     (g : GA D T) {x : WO S T} (hx : x.map (infPart D) = 0) :
     ∃ (ℓ : Matrix (Fin T.rank) (Fin S.rank) D.host.E) (w : WO S T), w.map (infPart D) = 0 ∧ heisO ψ S T w f = f ∧
       x = actO S T 1 g⁻¹ (ratW T S ℓ - GlobalTheory.IndefiniteRowSideFullHecke.OrthonormalLatticeThetaValues.realPt S T ℓ) + w := by
-  haveI := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   obtain ⟨U, hUo, hU⟩ := hf.level
   have hy : (actO S T 1 g x).map (infPart D) = 0 := actO_fin 1 g hx
   have hVo : IsOpen {v : WO S T | actO S T 1 g⁻¹ (actO S T 1 g x - v) ∈ U} :=

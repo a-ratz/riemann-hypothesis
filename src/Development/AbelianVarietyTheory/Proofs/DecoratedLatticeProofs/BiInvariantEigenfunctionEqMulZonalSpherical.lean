@@ -161,8 +161,8 @@ theorem val_det_le_one {ι : Type*} [Fintype ι] [DecidableEq ι] (M : Matrix ι
   rw [Matrix.det_apply]
   refine Valuation.map_sum_le _ fun σ _ => ?_
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h <;> rw [h]
-  · rw [one_smul, map_prod]; exact Finset.prod_le_one' fun i _ => hM _ _
-  · rw [Units.neg_smul, one_smul, Valuation.map_neg, map_prod]; exact Finset.prod_le_one' fun i _ => hM _ _
+  · rw [one_smul, map_prod]; exact Finset.prod_le_one fun i _ => hM _ _
+  · rw [Units.neg_smul, one_smul, Valuation.map_neg, map_prod]; exact Finset.prod_le_one fun i _ => hM _ _
 
 theorem minor_mul_int {m ι : Type*} [Fintype m] [DecidableEq m] [Fintype ι] [DecidableEq ι] (X A : Matrix m m k)
     (γ : ValueGroupWithZero k) (hA : ∀ i j, valuation k (A i j) ≤ 1)
@@ -173,7 +173,7 @@ theorem minor_mul_int {m ι : Type*} [Fintype m] [DecidableEq m] [Fintype ι] [D
   rw [e, det_mul_eq_sum_fun]
   refine Valuation.map_sum_le _ fun σ _ => ?_
   rw [map_mul, map_prod]
-  calc _ ≤ 1 * γ := mul_le_mul' (Finset.prod_le_one' fun i _ => hA _ _)
+  calc _ ≤ 1 * γ := mul_le_mul' (Finset.prod_le_one fun i _ => hA _ _)
           (by simpa [Matrix.submatrix_submatrix] using hX f σ)
     _ = γ := one_mul γ
 
@@ -253,10 +253,10 @@ theorem tail_diag {N : ℕ} (ϖ : kˣ) (hϖ : valuation k (ϖ : k) = uniformizer
   by_cases hf : Function.Injective f
   · rw [map_mul, val_torus_prod]
     have hw1 : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
-    have hw0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
+    have hw0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
     exact mul_le_mul' ((zpow_le_zpow_iff_right_of_lt_one₀ hw0 hw1).2 (sum_tail_le e he j hj f hf)) (hM f h)
   · rw [det_submatrix_eq_zero _ _ _ hf, mul_zero, map_zero]
-    exact zero_le'
+    exact zero_le
 
 theorem tail_bound {N : ℕ} (ϖ : kˣ) (hϖ : valuation k (ϖ : k) = uniformizer k) (μ ν ε : Fin N → ℤ)
     (hμ : Antitone μ) (hε : Antitone ε) (g : GL (Fin N) k)
@@ -275,7 +275,7 @@ theorem tail_bound {N : ℕ} (ϖ : kˣ) (hϖ : valuation k (ϖ : k) = uniformize
   obtain ⟨κ, hκ, κ', hκ', rfl⟩ := hg
   obtain ⟨κ₁, hκ₁, κ₁', hκ₁', h1⟩ := hmain
   have hw1 : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
-  have hw0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
+  have hw0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
   have hA : ∀ f h : {i : Fin N // ¬ (i : ℕ) < j} → Fin N,
       valuation k (((torusElt k (Fin N) ϖ ε).1 * κ'.1).submatrix f h).det ≤
         valuation k (ϖ : k) ^ (∑ i ∈ Finset.univ.filter (fun i : Fin N => ¬ (i : ℕ) < j), ε i) * 1 := by
@@ -320,7 +320,7 @@ theorem total_eq {N : ℕ} (ϖ : kˣ) (hϖ : valuation k (ϖ : k) = uniformizer 
   obtain ⟨κ, hκ, κ', hκ', rfl⟩ := hg
   obtain ⟨κ₁, hκ₁, κ₁', hκ₁', h1⟩ := hmain
   have hw1 : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
-  have hw0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
+  have hw0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
   have hd : ∀ e : Fin N → ℤ, valuation k (torusElt k (Fin N) ϖ e).1.det = valuation k (ϖ : k) ^ ∑ i, e i := by
     intro e; rw [val_torusElt, det_diagonal, val_torus_prod]
   have h2 := congrArg (fun x : GL (Fin N) k => valuation k x.1.det) h1
@@ -381,7 +381,7 @@ theorem _root_.GlobalTheory.T.cartan_decomposition_dominance_local_field :
   change ∃ κ ∈ KO k (Fin N), ∃ κ' ∈ KO k (Fin N), T μ * g = κ * T ν * κ' at hmain
   obtain ⟨κ, hκ, κ', hκ', rfl⟩ := hg
   obtain ⟨κ₁, hκ₁, κ₂, hκ₂, hdecomp⟩ := hmain
-  have hϖ₀ : 0 < valuation k (ϖ : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
+  have hϖ₀ : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
   have hϖ₁ : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
   have hT (e : Fin N → ℤ) : (T e).1 = diagonal (fun i => (ϖ : k) ^ e i) :=
     GlobalTheory.GLDoubling.val_torusElt ..
@@ -655,7 +655,7 @@ theorem vanish_dominant {N : ℕ} {ϖ : kˣ} {c : ℕ → ℂ} {h : GL (Fin N) k
     apply pot_lt
     · intro j; unfold psum
       exact Finset.sum_le_sum fun i _ => by simp only [hμdef, hind]; split_ifs <;> omega
-    · intro hh; have := congrFun hh i₀; simp only [hμdef, hind, if_pos hi₀pos] at this; omega
+    · intro hh; have := congrFun hh i₀; simp only [hμdef, hind, ite_eq_left hi₀pos] at this; omega
   have hμv := IH μ hμa hμ0 hμlt
   have hTe : torusElt k (Fin N) ϖ e = torusElt k (Fin N) ϖ μ * torusElt k (Fin N) ϖ (indic s) := by
     rw [← torusElt_add']; congr 1; funext i; exact (hμe i).symm
@@ -693,8 +693,8 @@ theorem vanish_dominant {N : ℕ} {ϖ : kˣ} {c : ℕ → ℂ} {h : GL (Fin N) k
       if h (torusElt k (Fin N) ϖ μ * g) = h (torusElt k (Fin N) ϖ e) then h (torusElt k (Fin N) ϖ e) else 0 := by
     intro g hg
     rcases hterm g hg with h0 | h0
-    · rw [h0, if_neg (Ne.symm hx)]
-    · rw [if_pos h0]; exact h0
+    · rw [h0, ite_eq_right (Ne.symm hx)]
+    · rw [ite_eq_left h0]; exact h0
   rw [Finset.sum_congr rfl hite, Finset.sum_ite, Finset.sum_const_zero, add_zero, Finset.sum_const,
     nsmul_eq_mul] at hsum
   have hcard : (R.filter fun g => h (torusElt k (Fin N) ϖ μ * g) = h (torusElt k (Fin N) ϖ e)).card ≠ 0 :=
@@ -1390,8 +1390,8 @@ theorem _root_.GlobalTheory.BorelCosetSum.sum_cosets_eq : ∀ (k : Type) [Field 
     have := _root_.GlobalTheory.SatakeBound.card_quot hirr 1
     rw [pow_one, pow_one] at this
     exact this
-  haveI : Finite (_root_.Formalism.UG.P.satakeRes 𝒪[k] π) := Nat.finite_of_card_ne_zero (by rw [hcardres]; omega)
-  haveI : Fintype (_root_.Formalism.UG.P.satakeRes 𝒪[k] π) := Fintype.ofFinite _
+  have : Finite (_root_.Formalism.UG.P.satakeRes 𝒪[k] π) := Nat.finite_of_card_ne_zero (by rw [hcardres]; omega)
+  have : Fintype (_root_.Formalism.UG.P.satakeRes 𝒪[k] π) := Fintype.ofFinite _
   have hcardres' : Fintype.card (_root_.Formalism.UG.P.satakeRes 𝒪[k] π) = q := by
     rw [← Nat.card_eq_fintype_card, hcardres]
   let X := _root_.GlobalTheory.BorelCosetSum.RepIdx hϖ N j
@@ -1406,7 +1406,7 @@ theorem _root_.GlobalTheory.BorelCosetSum.sum_cosets_eq : ∀ (k : Type) [Field 
       from hcardres']
     exact (Finset.sum_subtype _ (fun S => by simp [Finset.mem_powersetCard])
       (fun S => q ^ _root_.Formalism.UG.P.satakeInv Finset.univ S)).symm
-  haveI : Fintype (IsLocalRing.ResidueField 𝒪[k]) := Fintype.ofFinite _
+  have : Fintype (IsLocalRing.ResidueField 𝒪[k]) := Fintype.ofFinite _
   have hqres : Fintype.card (IsLocalRing.ResidueField 𝒪[k]) = q := by
     rw [← Nat.card_eq_fintype_card]; rfl
   have hjN : j ≤ N := by simpa using s.card_le_univ
@@ -1462,8 +1462,8 @@ theorem _root_.GlobalTheory.BorelCosetSum.sum_cosets_eq : ∀ (k : Type) [Field 
     rw [← QuotientGroup.out_eq' x, QuotientGroup.eq, hx, hd',
       show g⁻¹ * (a * (a₀⁻¹ * d * b₀⁻¹) * b) = (g⁻¹ * (a * a₀⁻¹ * d)) * (b₀⁻¹ * b) by group]
     exact K.mul_mem hgκ (K.mul_mem (K.inv_mem hb₀) hb)
-  haveI : Nonempty X := ⟨⟨⟨s, rfl⟩, fun _ => (0 : 𝒪[k] ⧸ Ideal.span {π})⟩⟩
-  haveI : Finite Q := Nat.finite_of_card_ne_zero (by rw [hQcard]; exact Fintype.card_ne_zero)
+  have : Nonempty X := ⟨⟨⟨s, rfl⟩, fun _ => (0 : 𝒪[k] ⧸ Ideal.span {π})⟩⟩
+  have : Finite Q := Nat.finite_of_card_ne_zero (by rw [hQcard]; exact Fintype.card_ne_zero)
   have hFXbij : Function.Bijective FX := by
     refine hFXinj.bijective_of_nat_card_le ?_
     rw [hQcard, Nat.card_eq_fintype_card]
@@ -1539,7 +1539,7 @@ theorem zonalInt_biInvariant : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolo
         (continuous_indicator (by simp [hKfr]) continuous_one.continuousOn)
         (HasCompactSupport.intro hKc fun x hx => by simp [hx])
       rw [integral_indicator_one hKm, integral_indicator_one hKm] at h1
-      simp only [Measure.real, hν, Measure.map_apply (measurable_mul_const κ₀) hKm, hpre, Measure.smul_apply, hK] at h1
+      simp only [Measure.real, hν, Measure.map_apply (measurable_mul_const κ₀) hKm, hpre, smul_apply, hK] at h1
       simpa using h1.symm
     set F : GL (Fin N) k → ℂ := (KO k (Fin N) : Set (GL (Fin N) k)).indicator fun x => ψ (x * m) with hFdef
     have hF : Continuous F :=

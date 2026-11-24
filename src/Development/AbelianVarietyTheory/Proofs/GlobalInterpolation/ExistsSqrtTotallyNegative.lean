@@ -70,8 +70,8 @@ theorem exists_integer_not_mem (K : Type) [Field K] [NumberField K] [IsCMField K
 theorem exists_extension (K : Type) [Field K] [NumberField K] (φ : maximalRealSubfield K →+* ℝ) :
     ∃ ψ : K →+* ℂ, ∀ x : maximalRealSubfield K,
       ψ (algebraMap (maximalRealSubfield K) K x) = (φ x : ℂ) := by
-  letI : Algebra (maximalRealSubfield K) ℂ := (Complex.ofRealHom.comp φ).toAlgebra
-  haveI : Algebra.IsAlgebraic (maximalRealSubfield K) K := Algebra.IsAlgebraic.tower_top (K := ℚ) _
+  let : Algebra (maximalRealSubfield K) ℂ := (Complex.ofRealHom.comp φ).toAlgebra
+  have : Algebra.IsAlgebraic (maximalRealSubfield K) K := Algebra.IsAlgebraic.tower_top (K := ℚ) _
   let f : K →ₐ[maximalRealSubfield K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

@@ -214,10 +214,10 @@ theorem mem_of_val {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
   have hint : IsIntegral K c0 := by
     refine IsIntegral.of_pow hm ?_
     rw [hc0]; exact isIntegral_one
-  haveI : FiniteDimensional K L := IntermediateField.adjoin.finiteDimensional hint
-  haveI : FiniteDimensional ℚ K := c.fin
-  haveI : FiniteDimensional ℚ L := Module.Finite.trans K L
-  haveI : Countable L := (Module.finBasis ℚ L).equivFun.toEquiv.countable_iff.2 inferInstance
+  have : FiniteDimensional K L := IntermediateField.adjoin.finiteDimensional hint
+  have : FiniteDimensional ℚ K := c.fin
+  have : FiniteDimensional ℚ L := Module.Finite.trans K L
+  have : Countable L := (Module.finBasis ℚ L).equivFun.toEquiv.countable_iff.2 inferInstance
   have hr : IsIntegral K (⟨c0, IntermediateField.mem_adjoin_simple_self K c0⟩ : L) := by
     refine IsIntegral.of_pow hm ?_
     have : (⟨c0, IntermediateField.mem_adjoin_simple_self K c0⟩ : L) ^ m = 1 := Subtype.ext (by simpa using hc0)
@@ -572,7 +572,7 @@ theorem conjFun_base_root : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartI
   refine ⟨h4.choose, h4.choose_spec.1, fun τ hB y y' hyy => ?_⟩
   have hP := h4.choose_spec.2
   let τa : ℂ ≃ₐ[ℚ] ℂ := AlgEquiv.ofRingEquiv (f := τ) (fun q => by simp)
-  haveI := hMn
+  have := hMn
   let ta : M.c'.F ≃+* M.c'.F := (τa.restrictNormal M.c'.F).toRingEquiv
   have hta : ∀ a : M.c'.F, ((ta a : M.c'.F) : ℂ) = τ (a : ℂ) := fun a => AlgEquiv.restrictNormal_commutes τa M.c'.F a
   have hct : ConjTup R τ A.μ0 A.μ0 := by
@@ -592,10 +592,10 @@ theorem conjFun_base_root : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartI
   subst hy hy'
   convert hL using 2 with g g
 
-  · simp only [map_sum, map_smul, MultilinearMap.sum_apply, MultilinearMap.smul_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
+  · simp only [map_sum, map_smul, sum_apply, smul_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => by ring
 
-  · simp only [map_sum, map_smul, MultilinearMap.sum_apply, MultilinearMap.smul_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
+  · simp only [map_sum, map_smul, sum_apply, smul_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
     refine Finset.sum_congr rfl fun k _ => by ring
 
 end GlobalTheory.ConjRefTup

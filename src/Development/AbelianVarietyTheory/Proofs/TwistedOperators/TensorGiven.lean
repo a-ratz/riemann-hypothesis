@@ -88,7 +88,7 @@ theorem tensor_given (B : Frames G) (t : T) (Φ : G.Datum) (w : Pl D.host.E)
         · obtain ⟨k, hk, hk'⟩ := (GlobalTheory.OppConv.mem_edges_down t i j _).1 h'
           simp only [GlobalTheory.SplitFlip.Edge.theta.injEq] at hk'
           omega
-        · exact dif_pos rfl
+        · exact dite_eq_left rfl
   have hθ : ∀ j : Fin D.R.m, pathArgs B t w (givenPath t D.R.m)
       (Path.Fam.append (q := rowPath T 0 D.R.m) (downFam (S := fun a => WO (G.pS a.pair) (G.pT a.pair)) t 0 D.R.m y)
         (rowFam (S := fun a => WO (G.pS a.pair) (G.pT a.pair)) 0 D.R.m x)) (.theta 0 j) = locArg B t w (.down t 0 j) (y j) := by
@@ -170,7 +170,7 @@ theorem repFin_of (W : G.Weil) (B : Frames G) (ρ : RealMatch W) (t : T) (f : �
   refine ⟨e, he, fun _ => Path.Fam.append (q := rowPath T 0 D.R.m)
     (downFam t 0 D.R.m fun j => c j • givenFn B t Φ e (.down t 0 j)) (rowFam 0 D.R.m fun i => givenFn B t Φ e (.right i 0)),
     fun d hd => ?_, fun x hx => ?_⟩
-  · rw [Finsupp.support_single_ne_zero _ (by rintro rfl; simp at hz), Finset.mem_singleton] at hd
+  · rw [Finsupp.support_single _ (by rintro rfl; simp at hz), Finset.mem_singleton] at hd
     subst hd
     exact (GlobalTheory.OppConv.vecAll_append ρ e _ _ _ _ _ _).2
       ⟨(GlobalTheory.OppConv.vecAll_down ρ e t 0 _ _ _).2 hcol, (GlobalTheory.OppConv.vecAll_row ρ e 0 _ _ _).2 hrow⟩
@@ -184,7 +184,7 @@ theorem repFin_of (W : G.Weil) (B : Frames G) (ρ : RealMatch W) (t : T) (f : �
     dsimp only
     rw [Finset.prod_congr rfl fun w _ => tensor_given B t Φ w y y']
     erw [GlobalTheory.OppConv.famProd_append (downPath t 0 D.R.m), GlobalTheory.OppConv.famProd_down, GlobalTheory.OppConv.famProd_row]
-    simp only [Pi.smul_apply, smul_eq_mul, Finset.prod_mul_distrib, givenFn, if_pos (hy _), if_pos (hy' _)]
+    simp only [Pi.smul_apply, smul_eq_mul, Finset.prod_mul_distrib, givenFn, ite_eq_left (hy _), ite_eq_left (hy' _)]
     rw [Finset.prod_comm (s := Finset.univ) (t := locPl G t), Finset.prod_comm (s := Finset.univ) (t := locPl G t),
       ← mul_assoc, ← mul_assoc, hz, one_mul]
 

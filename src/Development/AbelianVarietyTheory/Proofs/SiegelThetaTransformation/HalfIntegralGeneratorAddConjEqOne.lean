@@ -131,8 +131,8 @@ theorem theta_smul₂ (hr : X.p0 + q0 = r) (idx : Fin g ≃ X.Ψ × Fin r) (hs :
 theorem rdU_eq_thP : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (n : ℕ) (d : DeltaDat Xo c n) (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r), GoodEmb c σ → IsUnf U → 1 ≤ r → d.IsLev → (∃ _ : StarRing (𝓞 E), IsNab d.Xo₂ d.c₂ d.nab₂) → UnitC d → (Dw.p + Dw.q ≤ n → ∃ ph ψ x₀, d.PhiPin ph ψ x₀) → ∀ (W : UW U) (k : U.Comp) (a : (E →+* ℂ) × ℕ → ℕ), Dom a n → ∀ Dc : Dic Dw c σ (U.X k) W.g Dw.p n a, Dc.e = W.e → ∀ (Λ : GenLat E n) (N : ℕ) (rk : Bool) (x0 : Fin n → Dw.La) (P : MvPolynomial (LtN Dw n) c.F), Λ.Unimod → Λ.TrivAt d.l₂.M → Λ.LevOK N d.l₂.M → AdmX (l := l) rk x0 → P ∈ HHa Dw.mult n c.F ComplexEmbedding.conjugate (InPsi H) (fun τ i => a (τ, i)) → ∀ f ∈ sec Xo c a n, IsShortRule Xo c d Λ N x0 P f → ∃ φ : TF n W.g, IsSB φ ∧ ∀ x ∈ (U.X k).dom, rdU U f k x = thP (U.X k) Dc.hr Dc.bas Dc.idx φ (MvPolynomial.rename Dc.eL (MvPolynomial.map σ P)) x := by
   intro hCI E _ _ _ H Dw l Xo c n d σ r U hσ hU hr1 hlev ⟨sr, hnab⟩ hunit hpin W k a hdom Dc hDe Λ N rk x0 P
     hΛ1 hΛ2 hΛ3 hadm hP f hf hshort
-  letI : Algebra c.F ℂ := σ.toAlgebra
-  letI A₂ : Algebra d.c₂.F ℂ := (σ.comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
+  let A₂ : Algebra d.c₂.F ℂ := (σ.comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
   have halg : ∀ t : c.F, algebraMap d.c₂.F ℂ (d.eF t) = algebraMap c.F ℂ t := fun t => by
     change σ (d.eF.symm (d.eF t)) = σ t
     rw [AlgEquiv.symm_apply_apply]
@@ -202,7 +202,7 @@ theorem rdU_eq_thP : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2
         exact congrArg (fun s : c.F →+* ℂ => MvPolynomial.map s P) (RingHom.ext halg)
       rw [hmm, hmove, theta_smul₂ Dc.hr Dc.idx Dc.sympl hn hG hP' hx, ← hu] at hval
       refine ⟨evR d.Xo₂ d.c₂ d.cδ y₂ * κ * t, by rw [norm_mul, norm_mul, hunit A₂ y₂, hκn, ht]; ring, fun _ => ?_⟩
-      have hrd : rdU U f k x = evR Xo c f (unC U k ⟨x, hx⟩) := dif_pos hx
+      have hrd : rdU U f k x = evR Xo c f (unC U k ⟨x, hx⟩) := dite_eq_left hx
       beta_reduce
       rw [hrd, hev, hval, theta_smul₂ Dc.hr Dc.idx Dc.sympl hn hG hP' hx]
       ring)

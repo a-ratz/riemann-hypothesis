@@ -152,8 +152,8 @@ theorem exists_lower (hst : ∀ x : E, IsIntegral ℤ x → IsIntegral ℤ (star
       exact Submodule.zero_mem _
     let j : E →ₗ[𝓞 E] V.L0 :=
       ((LinearMap.toSpanSingleton E V.V w).restrictScalars (𝓞 E)).codRestrict V.L0 hsmul
-    letI : Module.Finite (𝓞 E) V.L0 := Module.Finite.iff_fg.mpr hfg
-    letI : Module.Finite (𝓞 E) E := Module.Finite.of_injective j fun a b hab =>
+    let : Module.Finite (𝓞 E) V.L0 := Module.Finite.iff_fg.mpr hfg
+    let : Module.Finite (𝓞 E) E := Module.Finite.of_injective j fun a b hab =>
       smul_left_injective E hw0 (congrArg Subtype.val hab)
     exact RingOfIntegers.not_isField E
       (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))

@@ -191,7 +191,7 @@ open Formalism.L2.Th1.H
 def Sm (x : ℂ) : Prop := x ∈ TaylorLogMetric.Qbar ∧ ∀ ρ : TaylorLogMetric.Qbar →ₐ[ℚ] ℂ, ‖StandardLatticesGL3.cj TaylorLogMetric.Qbar ρ x‖ ≤ 1
 
 theorem cj_coe (ρ : TaylorLogMetric.Qbar →ₐ[ℚ] ℂ) (x : ℂ) (hx : x ∈ TaylorLogMetric.Qbar) : StandardLatticesGL3.cj TaylorLogMetric.Qbar ρ x = ρ ⟨x, hx⟩ := by
-  simp only [StandardLatticesGL3.cj, TaylorLogMetric.liftM, dif_pos hx]
+  simp only [StandardLatticesGL3.cj, TaylorLogMetric.liftM, dite_eq_left hx]
 
 theorem sm_iff (x : ℂ) : Sm x ↔ ∃ y : TaylorLogMetric.Qbar, (y : ℂ) = x ∧ ∀ ρ : TaylorLogMetric.Qbar →ₐ[ℚ] ℂ, ‖ρ y‖ ≤ 1 := by
   constructor
@@ -238,7 +238,7 @@ theorem sm_of_pow {x : ℂ} {n : ℕ} (hn : 0 < n) (h : x ^ n = 1) : Sm x := by
 
 theorem sm_exp (q : ℚ) : Sm (Complex.exp ((Real.pi : ℂ) * Complex.I * (q : ℂ))) := by
   refine sm_of_pow (n := 2 * q.den) (by have := q.den_pos; omega) ?_
-  rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+  rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
   refine ⟨q.num, ?_⟩
   have : (q : ℂ) * q.den = q.num := by exact_mod_cast q.mul_den_eq_num
   push_cast

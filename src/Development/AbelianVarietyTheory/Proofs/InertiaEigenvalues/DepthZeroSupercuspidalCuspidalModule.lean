@@ -67,7 +67,7 @@ theorem exists_dual_frequently {M : Type} [AddCommGroup M] [Module ℂ M] (u : �
   obtain ⟨b, hb, hs, hl⟩ := exists_linearIndependent ℂ (Set.range u)
   by_cases hf : b.Finite
   · let W := Submodule.span ℂ b
-    haveI : FiniteDimensional ℂ W := FiniteDimensional.span_of_finite ℂ hf
+    have : FiniteDimensional ℂ W := FiniteDimensional.span_of_finite ℂ hf
     have hm : ∀ m, u m ∈ W := fun m => hs.ge (Submodule.subset_span ⟨m, rfl⟩)
     let β := Module.finBasis ℂ W
     have : ∀ m, ∃ i, β.coord i ⟨u m, hm m⟩ ≠ 0 := fun m => by
@@ -96,12 +96,12 @@ variable (g n) in
 def KOne : Subgroup (GL (Fin n) ℚ_[g]) := (red g n).ker.map (inc g n)
 
 theorem isCompact_KOne : IsCompact (KOne g n : Set (GL (Fin n) ℚ_[g])) := by
-  haveI : CompactSpace (Matrix (Fin n) (Fin n) ℤ_[g]) := inferInstanceAs (CompactSpace (Fin n → Fin n → ℤ_[g]))
+  have : CompactSpace (Matrix (Fin n) (Fin n) ℤ_[g]) := inferInstanceAs (CompactSpace (Fin n → Fin n → ℤ_[g]))
   have hc : Continuous (inc g n) :=
-    Units.continuous_map (continuous_id.matrix_map continuous_subtype_val)
+    Units.continuous_map (continuous_id.matrix_map continuous_subtypeVal)
   refine (Subgroup.isClosed_of_isOpen _ ?_).isCompact.image hc
   have ho : IsOpen {x : GL (Fin n) ℤ_[g] | ∀ i j, ‖(x.val - 1) i j‖ < 1} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => isOpen_lt ?_ continuous_const
     exact ((Units.continuous_val.sub continuous_const).matrix_elem i j).norm
   refine Subgroup.isOpen_of_mem_nhds _ (g := 1) (Filter.mem_of_superset (ho.mem_nhds (by simp)) fun x hx => ?_)
@@ -237,7 +237,7 @@ theorem eq_zero_of_mem_twKer {π : Representation ℂ (GL (Fin n) ℚ_[g]) V} (h
     have k2 := ih ⟨π (dd hP 1) t, (mem_principalCongruenceFixedVectors_iff π _).2 fun k hk => k1 k (hk ▸ one_mem _)⟩ (fun u hu => by
       obtain ⟨k, rfl⟩ := red_surjective g n u
       exact Subtype.ext ((repK_red π k _).trans (k1 k hu))) (by
-      haveI := Fintype.ofFinite (U (1 - φ P) (φ P))
+      have := Fintype.ofFinite (U (1 - φ P) (φ P))
       change π (dd hP m) (π (dd hP 1) t) ∈ _
 
       rw [← Module.End.mul_apply, ← map_mul, ← dd_succ, ht, S_apply, Submodule.coe_sum, map_sum]
@@ -300,9 +300,9 @@ theorem isCuspidal_repK {π : Representation ℂ (GL (Fin n) ℚ_[g]) V} (hπ : 
     simp only [FiniteGL.twoBlocks] at hij
     by_cases hi : (i : ℕ) < a
     · by_cases hj : (j : ℕ) < a
-      · rw [← a2, if_pos hj, mul_one, sub_self]
+      · rw [← a2, ite_eq_left hj, mul_one, sub_self]
       · simp [hi, hj] at hij
-    · rw [← a1, if_neg hi, zero_mul]
+    · rw [← a1, ite_eq_right hi, zero_mul]
   by_contra hne
   obtain ⟨l, hl⟩ := exists_dual_frequently (fun m => (twKer π (KOne g n) 1).mkQ (π (dd hP m) v)) fun m h =>
     hne (eq_zero_of_mem_twKer hπ.1 hP m v hv' ((Submodule.Quotient.mk_eq_zero _).1 h))

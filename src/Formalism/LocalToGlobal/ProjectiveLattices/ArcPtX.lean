@@ -82,7 +82,7 @@ theorem arcPt_point (Y : Model Xo c β) {K₁ : Type} [Field K₁] (b : O →+* 
     (hj : ∀ x : Sp (PowerSeries K₁), PowerSeries.X ∉ x.asIdeal → χ x ∈ Set.range Y.j) :
     ∃ z : Sp (ArcS Dw K₁) ⟶ Xo.XF c, z ≫ Y.j = spMap (arcι Dw K₁) ≫ χ ∧
       z ≫ Y.jQ ≫ pullback.snd _ _ = spMap (algebraMap c.F (ArcS Dw K₁)) := by
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   have hw : (spMap (arcι Dw K₁) ≫ χ) ≫ Y.s = spMap (algebraMap c.F (ArcS Dw K₁)) ≫ spMap β := by
     rw [Category.assoc, hχs, ← spMap_comp, ← spMap_comp, ← spMap_comp, hcomp]
   let g : Sp (ArcS Dw K₁) ⟶ pullback Y.s (spMap β) :=

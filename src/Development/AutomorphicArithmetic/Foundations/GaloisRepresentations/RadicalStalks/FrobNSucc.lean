@@ -81,7 +81,7 @@ private noncomputable def rho {A : Over (Sp k)} [GrpObj A] {C : Type} [CommRing 
 
 private theorem smor_act {A : Over (Sp k)} [GrpObj A] {C : Type} [CommRing C] (i : OAct C A) (c : C) :
     SMor A (RingHom.id k) (i.act c).left := by
-  haveI := i.hom c
+  have := i.hom c
   have hc := homMor (dp0 k) (𝟙 (Sp k)) (i.act c)
   unfold SMor
   rw [spMap_id]
@@ -145,8 +145,8 @@ private theorem rho_ringHom {A : Over (Sp k)} [GrpObj A] {C : Type} [CommRing C]
 
 private theorem sig_eq (hk : (p : k) = 0) {j : ℕ} {σ τ : k →+* k} (h1 : ∀ x, σ x ^ p ^ j = x)
     (h2 : ∀ x, τ x ^ p ^ j = x) : τ = σ := by
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hk
-  haveI : ExpChar k p := ExpChar.prime Fact.out
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero Fact.out).mpr hk
+  have : ExpChar k p := ExpChar.prime Fact.out
   ext x
   apply (iterateFrobenius k p j).injective
   simp only [iterateFrobenius_def]
@@ -158,13 +158,13 @@ private theorem pull_congr {A : Over (Sp k)} [GrpObj A] {σ : k →+* k} {ψ ψ'
 
 private theorem smor_right {A : Over (Sp k)} [GrpObj A] {C : Type} [CommRing C] (i : OAct C A) (c : C)
     {σ : k →+* k} {ψ : A.left ⟶ A.left} (m : SMor A σ ψ) : SMor A σ (ψ ≫ (i.act c).left) := by
-  haveI := i.hom c
+  have := i.hom c
   have hc := GrpMor.comp (homMor (dp0 k) (𝟙 (Sp k)) (i.act c)) m
   rwa [RingHom.comp_id, Category.comp_id] at hc
 
 private theorem smor_left {A : Over (Sp k)} [GrpObj A] {C : Type} [CommRing C] (i : OAct C A) (c : C)
     {σ : k →+* k} {ψ : A.left ⟶ A.left} (m : SMor A σ ψ) : SMor A σ ((i.act c).left ≫ ψ) := by
-  haveI := i.hom c
+  have := i.hom c
   have hc := GrpMor.comp m (homMor (dp0 k) (𝟙 (Sp k)) (i.act c))
   rwa [RingHom.id_comp, Category.id_comp] at hc
 
@@ -190,7 +190,7 @@ private theorem kill (hk : (p : k) = 0) {A : Over (Sp k)} [GrpObj A] [IsReduced 
     ∀ x ∈ PrimitiveSubmodule A, m.pull x = 0 := by
   have hst : σ = τ := (sig_eq hk hσ hτ).symm
   subst hst
-  haveI := (UpperTheory.Gal.Ord.epi p A.left (cast_left p k hk A)).2 j
+  have := (UpperTheory.Gal.Ord.epi p A.left (cast_left p k hk A)).2 j
   have hcomm : ∀ c : C, (i.act c).left ≫ ψ = ψ ≫ (i.act c).left := by
     intro c
     apply Epi.left_cancellation (f := frobN p A.left (cast_left p k hk A) j)
@@ -282,8 +282,8 @@ private theorem vaGen [IsAlgClosed k] (hk : (p : k) = 0) {A : Over (Sp k)} [GrpO
     (hN : Nat.card (C ⧸ RingHom.ker χ) = p ^ f) :
     ∃ (σ : k →+* k) (ψ : A.left ⟶ A.left), Function.Bijective σ ∧ SMor A σ ψ ∧
       frobN p A.left (cast_left p k hk A) f ≫ ψ = (i.act π.a).left := by
-  haveI : Smooth A.hom := IsAbelianScheme.smooth (self := hab)
-  haveI : AlgebraicGeometry.IsReduced A.left := GlobalTheory.isReduced_of_smooth_of_isReduced A.hom
+  have : Smooth A.hom := IsAbelianScheme.smooth (self := hab)
+  have : AlgebraicGeometry.IsReduced A.left := GlobalTheory.isReduced_of_smooth_of_isReduced A.hom
   have key : ∀ j ≤ f, ∃ (σ : k →+* k) (ψ : A.left ⟶ A.left), Function.Bijective σ ∧ SMor A σ ψ ∧
       (∀ x, σ x ^ p ^ j = x) ∧ frobN p A.left (cast_left p k hk A) j ≫ ψ = (i.act π.a).left := by
     intro j

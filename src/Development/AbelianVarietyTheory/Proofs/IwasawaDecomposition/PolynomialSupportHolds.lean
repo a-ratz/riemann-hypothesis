@@ -97,7 +97,7 @@ variable (Y : Model Xo c β)
 theorem densePart (h : IsDedFrac β) : IsLocallyNoetherian Y.X ∧ IsReduced Y.X ∧ Y.X.IsSeparated ∧
     IsPreimmersion Y.j ∧ Flat Y.j ∧ IsDominant Y.j ∧ QuasiCompact Y.j := by
   obtain ⟨⟨_, _⟩, -, hfr⟩ := h
-  letI := β.toAlgebra
+  let := β.toAlgebra
   obtain ⟨h₁, -, h₂, h₃⟩ :=
     GlobalTheory.genericPart_dense_proOpen O c.F Y.X _ Y.s Y.jQ Y.flat Y.proj Y.jQ_open Y.jQ_dense
   have : ∀ x : Y.X, _root_.IsReduced (Y.X.presheaf.stalk x) := fun x ↦
@@ -159,7 +159,7 @@ theorem exists_periodForm {W : Type} [CommRing W] [IsDomain W] [IsDiscreteValuat
     [IsAdicComplete (maximalIdeal W) W] {t : SAB H (Sp W)}
     (P : PELUnif (maximalIdeal W) t) {ϖ : W} (hϖ : Irreducible ϖ) :
     ∃ be ∈ levelForms H 1 P.D.toPre.X, IsMonomial P.D.toPre ![ϖ] ![be] ∧ ∀ y, y ≠ 0 → 0 < be y y := by
-  letI := H.starRing
+  let := H.starRing
   choose Q hQ using QForm.exists_QVal hϖ P.D
   have hQ' : QForm.IsQ P.D.toPre ϖ Q := hQ
   have hex : ∀ χ, ∃ r, PsiCoord P.D.toPre χ r := fun χ =>

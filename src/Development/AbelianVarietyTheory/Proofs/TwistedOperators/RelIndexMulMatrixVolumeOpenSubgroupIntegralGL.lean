@@ -127,10 +127,10 @@ theorem relIndex_mul_volM : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
   obtain ⟨hB, hlc, hsc, hc, -, -, hhaar, -⟩ := volGL_haar k n ν
   have hL : IsOpen (L : Set (GL n k)) := Subgroup.isOpen_mono hHL hH
   have hLc : IsCompact (L : Set (GL n k)) := hc.of_isClosed_subset (L.isClosed_of_isOpen hL) hLK
-  haveI : CompactSpace L := isCompact_iff_compactSpace.1 hLc
-  haveI : Finite (L ⧸ H.subgroupOf L) :=
-    Subgroup.quotient_finite_of_isOpen _ (hH.preimage continuous_subtype_val)
-  haveI : (H.subgroupOf L).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : CompactSpace L := isCompact_iff_compactSpace.1 hLc
+  have : Finite (L ⧸ H.subgroupOf L) :=
+    Subgroup.quotient_finite_of_isOpen _ (hH.preimage continuous_subtypeVal)
+  have : (H.subgroupOf L).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have key := relIndex_mul_measure_subgroup H L hHL hH.measurableSet (volGL ν n)
   have h0 : volGL ν n H ≠ 0 := (hH.measure_pos _ ⟨1, one_mem _⟩).ne'
   have ht : volGL ν n H ≠ ⊤ := ((measure_mono (hHL.trans hLK)).trans_lt hc.measure_lt_top).ne

@@ -395,8 +395,8 @@ theorem exists_vert_of_mem (S : Type) [CommRing S] [IsDomain S] (X : Scheme.{0})
     (p : X ⟶ Sp S) [IsDominant p] (f : S) (hf : f ≠ 0) (hx : ∃ x : X, f ∈ (p x).asIdeal) : ∃ z : X, Vert p f z := by
   obtain ⟨x, hfx⟩ := hx
   obtain ⟨U, hU, hx, -⟩ := exists_isAffineOpen_mem_and_subset (x := x) (U := ⊤) trivial
-  haveI : Nonempty U := ⟨⟨x, hx⟩⟩
-  haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have : Nonempty U := ⟨⟨x, hx⟩⟩
+  have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (hU.fromSpec ≫ p)
   have key : ∀ q : PrimeSpectrum Γ(X, U), f ∈ (p (hU.fromSpec q)).asIdeal ↔ φ.hom f ∈ q.asIdeal := by
     intro q
@@ -419,7 +419,7 @@ theorem exists_vert_of_mem (S : Type) [CommRing S] [IsDomain S] (X : Scheme.{0})
   have hle : Ideal.span {φ.hom f} ≤ (hU.primeIdealOf ⟨x, hx⟩).asIdeal :=
     (Ideal.span_singleton_le_iff_mem _).2 ((key' ⟨x, hx⟩).1 hfx)
   obtain ⟨Q, hQ, -⟩ := Ideal.exists_minimalPrimes_le hle
-  haveI hQp : Q.IsPrime := hQ.1.1
+  have hQp : Q.IsPrime := hQ.1.1
   have haQ : φ.hom f ∈ Q := hQ.1.2 (Ideal.mem_span_singleton_self _)
   have h1 : Q.height ≤ 1 := Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes _ Q hQ
   have h0 : Q.height ≠ 0 := by
@@ -435,8 +435,8 @@ theorem exists_vert_of_mem (S : Type) [CommRing S] [IsDomain S] (X : Scheme.{0})
   have hP : hU.primeIdealOf z = P :=
     hU.fromSpec.isOpenEmbedding.injective (hU.fromSpec_primeIdealOf z)
   clear_value z
-  letI := X.presheaf.algebra_section_stalk z
-  haveI := hU.isLocalization_stalk z
+  let := X.presheaf.algebra_section_stalk z
+  have := hU.isLocalization_stalk z
   refine ⟨z.1, ?_, (key' z).2 (by rw [hP]; exact haQ)⟩
   have := IsLocalization.AtPrime.ringKrullDim_eq_height (hU.primeIdealOf z).asIdeal
     (X.presheaf.stalk (z : X))
@@ -499,19 +499,19 @@ theorem fnOf_appLE {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] {π : Y ⟶ 
 theorem linDisj_of_flat : ∀ (T D : Type) [CommRing T] [CommRing D] (a : T →+* D), a.Flat → ∀ (H : Over (Sp T)) [IsIntegral H.left] (H' : Over (Sp D)) [IsIntegral H'.left] (π : H'.left ⟶ H.left) (θ : H.left.functionField →+* H'.left.functionField), IsPullback π H'.hom H.hom (spMap a) → PFF (𝟙 _) π θ → LinDisj (GlobalTheory.Desc.cst H.hom) (GlobalTheory.Desc.cst H'.hom) θ := by
   intro T D _ _ a ha H _ H' _ π θ hpb hθ n u hu r hr
   classical
-  letI : Algebra T D := a.toAlgebra
-  haveI : Module.Flat T D := ha
+  let : Algebra T D := a.toAlgebra
+  have : Module.Flat T D := ha
   have hη : π (genericPoint H'.left) = genericPoint H.left := gen_map hθ
   obtain ⟨U, hUa, hηU, -⟩ := (TopologicalSpace.Opens.isBasis_iff_nbhd.1 H.left.isBasis_affineOpens)
     (show genericPoint H.left ∈ (⊤ : H.left.Opens) from trivial)
-  haveI : Nonempty U := ⟨⟨_, hηU⟩⟩
-  haveI := functionField_isFractionRing_of_isAffineOpen H.left U hUa
+  have : Nonempty U := ⟨⟨_, hηU⟩⟩
+  have := functionField_isFractionRing_of_isAffineOpen H.left U hUa
   obtain ⟨s, hs⟩ := IsLocalization.exist_integer_multiples_of_finite (nonZeroDivisors Γ(H.left, U)) u
   choose A hA using hs
   have hA' : ∀ i, fnOf U hηU (A i) = fnOf U hηU s * u i := fun i => by
     have := hA i; rw [Algebra.smul_def] at this; exact this
   have hs0 : fnOf U hηU s ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors s.2
-  letI : Algebra T Γ(H.left, U) := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX H.hom U).toAlgebra
+  let : Algebra T Γ(H.left, U) := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX H.hom U).toAlgebra
   let f : (Fin n → T) →ₗ[T] Γ(H.left, U) :=
     { toFun := fun c => ∑ i, c i • A i
       map_add' := fun c d => by simp [add_smul, Finset.sum_add_distrib]
@@ -588,14 +588,14 @@ theorem eq_map_maximalIdeal_of_ringKrullDim_eq_one (R A : Type) [CommRing R] [Is
       p = (maximalIdeal R).map (algebraMap R A) := by
   intro hle hdim hdom
   set I := (maximalIdeal R).map (algebraMap R A) with hI
-  haveI : I.IsPrime := (Ideal.Quotient.isDomain_iff_prime I).1 hdom
+  have : I.IsPrime := (Ideal.Quotient.isDomain_iff_prime I).1 hdom
   have hp1 : p.height = 1 := by
     have h := IsLocalization.AtPrime.ringKrullDim_eq_height p (Localization.AtPrime p)
     rw [hdim] at h
     exact_mod_cast h.symm
-  haveI : p.FiniteHeight := by
+  have : p.FiniteHeight := by
     rw [Ideal.finiteHeight_iff]; right; rw [hp1]; exact ENat.one_ne_top
-  haveI : I.FiniteHeight := Ideal.finiteHeight_of_le hle (Ideal.IsPrime.ne_top ‹_›)
+  have : I.FiniteHeight := Ideal.finiteHeight_of_le hle (Ideal.IsPrime.ne_top ‹_›)
 
   have hIne : I ≠ ⊥ := by
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
@@ -650,12 +650,12 @@ theorem isDomain_quot_maximalIdeal_of_smooth :
         G.hom y = closedPoint R →
           IsDomain (Γ(G.left, U) ⧸ (maximalIdeal R).map (GlobalTheory.AbLaw.cst G.hom U)) := by
   intro R _ _ G hsm hgc U hU y hyU hy
-  haveI := hsm
-  haveI := hgc
+  have := hsm
+  have := hgc
   let f : G.left ⟶ Spec (CommRingCat.of R) := G.hom
   let g : Spec (CommRingCat.of (ResidueField R)) ⟶ Spec (CommRingCat.of R) :=
     Spec.map (CommRingCat.ofHom (residue R))
-  haveI hI : IsIntegral (pullback f g) := GlobalTheory.isIntegral_specialFibre_of_smooth f
+  have hI : IsIntegral (pullback f g) := GlobalTheory.isIntegral_specialFibre_of_smooth f
   let q := pullback.fst f g
   have H : IsPullback q (pullback.snd f g) f g := IsPullback.of_hasPullback f g
   have hsurj : Function.Surjective (q.app U).hom :=
@@ -676,7 +676,7 @@ theorem isDomain_quot_maximalIdeal_of_smooth :
       exact (IsLocalRing.comap_closedPoint (residue R)).symm
     obtain ⟨z, hz, -⟩ := Scheme.Pullback.exists_preimage_pullback y _ hpt
     exact ⟨⟨z, show q z ∈ U from hz ▸ hyU⟩⟩
-  haveI : IsDomain Γ(pullback f g, q ⁻¹ᵁ U) := inferInstance
+  have : IsDomain Γ(pullback f g, q ⁻¹ᵁ U) := inferInstance
   rw [← hker]
   exact (RingHom.quotientKerEquivOfSurjective hsurj).toMulEquiv.isDomain
 
@@ -698,13 +698,13 @@ theorem pushout_residue_linearIndependent :
   ∀ (T D A B : Type) [CommRing T] [CommRing D] [CommRing A] [CommRing B] [IsLocalRing T] [IsLocalRing D] [Algebra T D] [Algebra T A] [Algebra D B] [Algebra A B] [Algebra T B] [IsScalarTower T D B] [IsScalarTower T A B] [Algebra.IsPushout T D A B], (maximalIdeal T).map (algebraMap T D) = maximalIdeal D → ∀ (n : ℕ) (x : Fin n → A), (∀ c : Fin n → T, ∑ i, c i • x i ∈ (maximalIdeal T).map (algebraMap T A) → ∀ i, c i ∈ maximalIdeal T) → ∀ d : Fin n → D, ∑ i, d i • algebraMap A B (x i) ∈ (maximalIdeal D).map (algebraMap D B) → ∀ i, d i ∈ maximalIdeal D := by
   intro T D A B _ _ _ _ _ _ _ _ _ _ _ _ _ _ hTD n x hx d hd j
 
-  haveI : IsLocalHom (algebraMap T D) := by
+  have : IsLocalHom (algebraMap T D) := by
     refine ⟨fun a ha => ?_⟩
     by_contra hna
     have h1 : a ∈ maximalIdeal T := (mem_maximalIdeal a).2 hna
     have h2 : algebraMap T D a ∈ maximalIdeal D := hTD ▸ Ideal.mem_map_of_mem _ h1
     exact (mem_maximalIdeal _).1 h2 ha
-  letI : Field (T ⧸ maximalIdeal T) := Ideal.Quotient.field _
+  let : Field (T ⧸ maximalIdeal T) := Ideal.Quotient.field _
 
   let v : Fin n → A ⧸ (maximalIdeal T • (⊤ : Submodule T A)) := fun i => Submodule.Quotient.mk (x i)
   have hmem : ∀ y : A, y ∈ maximalIdeal T • (⊤ : Submodule T A) ↔
@@ -767,9 +767,9 @@ theorem pushout_residue_linearIndependent :
     · intro a b ha hb; rw [map_add (f := _), ha, hb, add_zero]
   have := hkill _ hd
 
-  rw [map_sum, Finset.sum_eq_single j (fun i _ hi => by rw [map_smul, hψ, hg, if_neg hi, smul_zero])
+  rw [map_sum, Finset.sum_eq_single j (fun i _ hi => by rw [map_smul, hψ, hg, ite_eq_right hi, smul_zero])
   (by simp)] at this
-  rw [map_smul, hψ, hg, if_pos rfl, Algebra.smul_def, mul_one] at this
+  rw [map_smul, hψ, hg, ite_eq_left rfl, Algebra.smul_def, mul_one] at this
   exact (residue_eq_zero_iff _).1 this
 
 end GlobalTheory
@@ -827,12 +827,12 @@ theorem GlobalTheory.Desc.ResInj.exists_affine_fnOf : ∀ (X : Scheme.{0}) [IsIn
 
 theorem GlobalTheory.Desc.ResInj.mem_map_of_germ_mem : ∀ (R : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] (G : Over (Sp R)) [IsIntegral G.left], Smooth G.hom → GeometricallyConnected G.hom → ∀ y : G.left, G.hom y = closedPoint R → ringKrullDim (G.left.presheaf.stalk y) = 1 → ∀ (U : G.left.Opens) (hy : y ∈ U), IsAffineOpen U → ∀ b : Γ(G.left, U), (G.left.presheaf.germ U y hy).hom b ∈ maximalIdeal (G.left.presheaf.stalk y) → b ∈ (maximalIdeal R).map (GlobalTheory.AbLaw.cst G.hom U) := by
   intro R _ _ _ G _ hsm hgc y hy hdim U hyU hU b hb
-  haveI : Nonempty U := ⟨⟨y, hyU⟩⟩
-  letI : Algebra R Γ(G.left, U) := (GlobalTheory.AbLaw.cst G.hom U).toAlgebra
-  haveI : Module.Flat R Γ(G.left, U) := GlobalTheory.AbLaw.flat_cst G.hom hU
+  have : Nonempty U := ⟨⟨y, hyU⟩⟩
+  let : Algebra R Γ(G.left, U) := (GlobalTheory.AbLaw.cst G.hom U).toAlgebra
+  have : Module.Flat R Γ(G.left, U) := GlobalTheory.AbLaw.flat_cst G.hom hU
   let p := hU.primeIdealOf ⟨y, hyU⟩
-  letI : Algebra Γ(G.left, U) (G.left.presheaf.stalk y) := G.left.presheaf.algebra_section_stalk ⟨y, hyU⟩
-  haveI hloc := hU.isLocalization_stalk ⟨y, hyU⟩
+  let : Algebra Γ(G.left, U) (G.left.presheaf.stalk y) := G.left.presheaf.algebra_section_stalk ⟨y, hyU⟩
+  have hloc := hU.isLocalization_stalk ⟨y, hyU⟩
   have hmem : ∀ c : Γ(G.left, U), (G.left.presheaf.germ U y hyU).hom c ∈ maximalIdeal (G.left.presheaf.stalk y) ↔ c ∈ p.asIdeal := by
     intro c
     exact IsLocalization.AtPrime.to_map_mem_maximal_iff (G.left.presheaf.stalk y) p.asIdeal c
@@ -858,17 +858,17 @@ theorem GlobalTheory.Desc.ResInj.residue_linearIndependent : ∀ (T D : Type) [C
   have hy'V : y' ∈ V := by show π y' ∈ U; rw [hπy]; exact hyU
   have hgU : genericPoint H.left ∈ U := gen_mem hyU
   have hgV : genericPoint H'.left ∈ V := gen_mem hy'V
-  letI : Algebra T D := a.toAlgebra
-  letI : Algebra T Γ(H.left, U) := (GlobalTheory.AbLaw.cst H.hom U).toAlgebra
-  letI : Algebra D Γ(H'.left, V) := (GlobalTheory.AbLaw.cst H'.hom V).toAlgebra
-  letI : Algebra Γ(H.left, U) Γ(H'.left, V) := (π.app U).hom.toAlgebra
-  letI : Algebra T Γ(H'.left, V) := ((GlobalTheory.AbLaw.cst H'.hom V).comp a).toAlgebra
-  haveI : IsScalarTower T D Γ(H'.left, V) := .of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower T Γ(H.left, U) Γ(H'.left, V) := .of_algebraMap_eq fun r => by
+  let : Algebra T D := a.toAlgebra
+  let : Algebra T Γ(H.left, U) := (GlobalTheory.AbLaw.cst H.hom U).toAlgebra
+  let : Algebra D Γ(H'.left, V) := (GlobalTheory.AbLaw.cst H'.hom V).toAlgebra
+  let : Algebra Γ(H.left, U) Γ(H'.left, V) := (π.app U).hom.toAlgebra
+  let : Algebra T Γ(H'.left, V) := ((GlobalTheory.AbLaw.cst H'.hom V).comp a).toAlgebra
+  have : IsScalarTower T D Γ(H'.left, V) := .of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower T Γ(H.left, U) Γ(H'.left, V) := .of_algebraMap_eq fun r => by
     have e := GlobalTheory.AbLaw.appLE_cst hpb.w (V := U) (V' := V) le_rfl r
     rw [Scheme.Hom.appLE_eq_app] at e
     exact e.symm
-  haveI : Algebra.IsPushout T D Γ(H.left, U) Γ(H'.left, V) := by
+  have : Algebra.IsPushout T D Γ(H.left, U) Γ(H'.left, V) := by
     have po := GlobalTheory.AbLaw.isPushout_cst hpb hUa (V' := V) rfl
     rw [Scheme.Hom.appLE_eq_app] at po
     exact CommRingCat.isPushout_iff_isPushout.mp po
@@ -1281,10 +1281,10 @@ theorem rel_transfer {T E F₁ FH Ω : Type} [CommRing T] [IsDomain T] [IsPrinci
     (W : Submodule T F₁) (lam : W →ₗ[T] Ω) {J : Type} [Fintype J] (r : J → E) (x : J → W)
     (h : ∑ i, cE (r i) * θb (x i) = 0) : ∑ i, v (r i) * lam (x i) = 0 := by
   classical
-  haveI : FaithfulSMul T F₁ := (faithfulSMul_iff_algebraMap_injective T F₁).2 hc
+  have : FaithfulSMul T F₁ := (faithfulSMul_iff_algebraMap_injective T F₁).2 hc
   let M : Submodule T W := Submodule.span T (Set.range x)
-  haveI : Module.Finite T M := Module.Finite.span_of_finite T (Set.finite_range x)
-  haveI : Module.Free T M := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite T M := Module.Finite.span_of_finite T (Set.finite_range x)
+  have : Module.Free T M := Module.free_of_finite_type_torsion_free'
   let B := Module.finBasis T M
   let x' : J → M := fun i => ⟨x i, Submodule.subset_span ⟨i, rfl⟩⟩
   have hx : ∀ i, x i = ∑ t, B.repr (x' i) t • (B t : W) := fun i => by
@@ -1380,8 +1380,8 @@ theorem sp_inj {A B : Type} [CommRing A] [CommRing B] {f g : A →+* B} (h : spM
 theorem flat_ne_zero {R S : Type} [CommRing R] [IsDomain R] [CommRing S] [Nontrivial S] (a : R →+* S) (ha : a.Flat)
     {r : R} (hr : r ≠ 0) : a r ≠ 0 := by
   intro h
-  letI := a.toAlgebra
-  haveI : Module.Flat R S := ha
+  let := a.toAlgebra
+  have : Module.Flat R S := ha
   have := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := S) (mem_nonZeroDivisors_of_ne_zero hr)
   have h1 : r • (1 : S) = r • (0 : S) := by
     rw [smul_zero, Algebra.smul_def, _root_.mul_one]; exact h
@@ -1487,9 +1487,9 @@ theorem eq_closedPoint {T : Type} [CommRing T] [IsDomain T] [IsDiscreteValuation
 theorem exists_closed_codim_one {E : Type} [CommRing E] [IsDomain E] [IsDiscreteValuationRing E] (H : Over (Sp E))
     [GrpObj H] [IsIntegral H.left] (hH : IsSemiAbelian H) :
     ∃ y : H.left, H.hom y = closedPoint E ∧ ringKrullDim (H.left.presheaf.stalk y) = 1 := by
-  haveI := hH.smooth
-  haveI := surjective_hom H
-  haveI : IsLocallyNoetherian H.left := LocallyOfFiniteType.isLocallyNoetherian H.hom
+  have := hH.smooth
+  have := surjective_hom H
+  have : IsLocallyNoetherian H.left := LocallyOfFiniteType.isLocallyNoetherian H.hom
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible E
   obtain ⟨x, hx⟩ := H.hom.surjective (closedPoint E)
   obtain ⟨y, h1, h2⟩ := exists_vert_of_mem E H.left H.hom t ht.ne_zero ⟨x, by rw [hx]; exact ht.not_isUnit⟩
@@ -1505,14 +1505,14 @@ theorem exists_unram {R T : Type} [CommRing R] [IsDomain R] [IsNoetherianRing R]
   subst cen
   let y : PrimeSpectrum R := spMap ρ (closedPoint T)
   let A := (Spec (CommRingCat.of R)).presheaf.stalk y
-  letI : Algebra R A := StructureSheaf.stalkAlgebra R y
-  haveI hA : IsLocalization.AtPrime A y.asIdeal := StructureSheaf.IsLocalization.to_stalk R y
+  let : Algebra R A := StructureSheaf.stalkAlgebra R y
+  have hA : IsLocalization.AtPrime A y.asIdeal := StructureSheaf.IsLocalization.to_stalk R y
   have e : StructureSheaf.toStalk R y ≫ Scheme.stalkClosedPointTo (spMap ρ) = CommRingCat.ofHom ρ := by
     have h := Scheme.germ_stalkClosedPointTo_Spec (CommRingCat.ofHom ρ)
     rw [← Iso.inv_comp_eq] at h
     exact h
-  haveI : IsNoetherianRing A := IsLocalization.isNoetherianRing y.asIdeal.primeCompl A inferInstance
-  haveI : IsDomain A := IsLocalization.isDomain_of_le_nonZeroDivisors A y.asIdeal.primeCompl_le_nonZeroDivisors
+  have : IsNoetherianRing A := IsLocalization.isNoetherianRing y.asIdeal.primeCompl A inferInstance
+  have : IsDomain A := IsLocalization.isDomain_of_le_nonZeroDivisors A y.asIdeal.primeCompl_le_nonZeroDivisors
   have hic : IsIntegrallyClosed A := isIntegrallyClosed_of_isLocalization A _ y.asIdeal.primeCompl_le_nonZeroDivisors
   have hd : Ring.KrullDimLE 1 A := by
     rw [Ring.krullDimLE_iff, IsLocalization.AtPrime.ringKrullDim_eq_height y.asIdeal A]
@@ -1532,10 +1532,10 @@ theorem finite_separable {O T : Type} [CommRing O] [IsLocalRing O] [CommRing T] 
     [IsLocalHom (algebraMap O T)] (h : ((residue T).comp (algebraMap O T)).Finite)
     (h' : ((residue T).comp (algebraMap O T)).FormallyUnramified) :
     Module.Finite (ResidueField O) (ResidueField T) ∧ Algebra.IsSeparable (ResidueField O) (ResidueField T) := by
-  haveI : Module.Finite O (ResidueField T) := RingHom.finite_algebraMap.1 h
-  haveI : Algebra.FormallyUnramified O (ResidueField T) := RingHom.formallyUnramified_algebraMap.1 h'
-  haveI : Module.Finite (ResidueField O) (ResidueField T) := Module.Finite.of_restrictScalars_finite O _ _
-  haveI := Algebra.FormallyUnramified.of_restrictScalars O (ResidueField O) (ResidueField T)
+  have : Module.Finite O (ResidueField T) := RingHom.finite_algebraMap.1 h
+  have : Algebra.FormallyUnramified O (ResidueField T) := RingHom.formallyUnramified_algebraMap.1 h'
+  have : Module.Finite (ResidueField O) (ResidueField T) := Module.Finite.of_restrictScalars_finite O _ _
+  have := Algebra.FormallyUnramified.of_restrictScalars O (ResidueField O) (ResidueField T)
   exact ⟨inferInstance, Algebra.FormallyUnramified.isSeparable _ _⟩
 
 theorem pff_refl (X : Scheme.{0}) [IsIntegral X] : PFF (𝟙 X) (𝟙 X) (RingHom.id _) :=
@@ -1548,7 +1548,7 @@ end GaussDvr
 open GaussDvr in
 theorem gaussAt_chart_of_height_one : ∀ (σ : Setup) (p : Sp σ.R) (z : (σ.C p).G.left), p.asIdeal.height = 1 → Vert (σ.C p).G.hom (σ.ρ p σ.f) z → GaussAt (GlobalTheory.Desc.cst (σ.C p).G.hom) (maximalIdeal (σ.C p).R) (σ.θ p) (σ.W p) (regSet z) := by
   intro σ p z hp hz
-  haveI : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
+  have : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
   have etc := (σ.C p).etc
   have unr := (σ.C p).unr
   have cen := (σ.C p).centre
@@ -1560,7 +1560,7 @@ theorem gaussAt_chart_of_height_one : ∀ (σ : Setup) (p : Sp σ.R) (z : (σ.C 
     have := le_maximalIdeal ((σ.C p).G.hom z).isPrime.ne_top hz.2
     rw [hm, h, Ideal.span_singleton_zero] at this
     exact hf this
-  haveI : IsDiscreteValuationRing (σ.C p).R := dvr_of_span hπ0 hm
+  have : IsDiscreteValuationRing (σ.C p).R := dvr_of_span hπ0 hm
   have hirr : Irreducible (φ π) := IsDiscreteValuationRing.irreducible_of_span_eq_maximalIdeal _ hπ0 hm
   have hcl : ∀ z', Vert (σ.C p).G.hom (σ.ρ p σ.f) z' → (σ.C p).G.hom z' = closedPoint _ :=
     fun z' h => eq_closedPoint _ hf h.2
@@ -1573,7 +1573,7 @@ theorem gaussAt_chart_of_height_one : ∀ (σ : Setup) (p : Sp σ.R) (z : (σ.C 
     ext u
     exact ⟨fun h => h z hz, fun h z' h' => show σ.θ p u ∈ regSet z' from (hreg z' h').symm ▸ h⟩
   rw [hW]
-  haveI := surjective_hom (σ.C p).G
+  have := surjective_hom (σ.C p).G
   have hc := cst_injective (σ.C p).G.hom
   have hcomm : (σ.θ p).comp σ.c₀ = (GlobalTheory.Desc.cst (σ.C p).G.hom).comp (σ.ρ p) :=
     cst_comm (σ.hθ p) _ _ _ (σ.cart p).w
@@ -1585,9 +1585,9 @@ theorem gaussAt_chart_of_height_one : ∀ (σ : Setup) (p : Sp σ.R) (z : (σ.C 
       rw [← RingHom.comp_apply, ← hcomm, RingHom.comp_apply, h, map_zero]
     rw [← hφ'] at h1
     exact (((IsLocalization.map_units O s).map φ).map _).ne_zero h1
-  letI : Algebra O (σ.C p).R := φ.toAlgebra
-  haveI : IsLocalHom (algebraMap O (σ.C p).R) := hloc
-  letI := (GlobalTheory.Desc.cst (σ.C p).G.hom).toAlgebra
+  let : Algebra O (σ.C p).R := φ.toAlgebra
+  have : IsLocalHom (algebraMap O (σ.C p).R) := hloc
+  let := (GlobalTheory.Desc.cst (σ.C p).G.hom).toAlgebra
   obtain ⟨_, _⟩ := finite_separable (O := O) (T := (σ.C p).R) hfin hunr
   refine gauss_of_key (O := O) (Ω := AlgebraicClosure (ResidueField (σ.C p).R)) hc (IsLocalization.lift hunit) (σ.θ p)
     ?_ π hirr (regAlg (σ.C p).G.hom z) (fun x => exists_pow_mul_regAt _ z hz.1 ?_ x) ?_
@@ -1612,7 +1612,7 @@ theorem gaussAt_chart_of_height_one : ∀ (σ : Setup) (p : Sp σ.R) (z : (σ.C 
   have hE : maximalIdeal E = Ideal.span {a (φ π)} := by rw [← hma, hm, Ideal.map_span, Set.image_singleton]
   have hmb : (maximalIdeal _).map b = maximalIdeal E := by rw [hE, hm, Ideal.map_span, Set.image_singleton, hπab]
   have ha0 : a (φ π) ≠ 0 := flat_ne_zero a ha hπ0
-  haveI : IsDiscreteValuationRing E := dvr_of_span ha0 hE
+  have : IsDiscreteValuationRing E := dvr_of_span ha0 hE
   obtain ⟨y', hy', hd⟩ := exists_closed_codim_one H hH
   obtain ⟨-, hra, -⟩ := _root_.GlobalTheory.Desc.GaussBC.gauss_baseChange _ _ a ha hma _ H πa θa (σ.C p).semi pa fa z y' (hcl z hz) hy' hz.1 hd
   obtain ⟨hG, -, hld⟩ := _root_.GlobalTheory.Desc.GaussBC.gauss_baseChange _ _ b hb hmb _ H πb θb (σ.C p).semi pb fb z y' (hcl z hz) hy' hz.1 hd

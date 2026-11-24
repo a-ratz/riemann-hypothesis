@@ -113,7 +113,7 @@ theorem sg_one (hd : d.AxH 𝒜) (h : d.S1) (hI2be : d.HeightIntegralBoundEstima
     d.delc c * (d.tableLineDegreeFive * d.DF + d.cc * d.tableLineDegreeTwo) + d.cc / d.i *
     ∫ z, (∑ᶠ (P : Ω c →+* ℂ) (_ : P ∈ d.ST c sg (fun i j => ReciprocityTheory.MultiplicativeHeights.spherePoint (z i) j)),
       -Real.log (d.nrm c (d.n1 • d.wde) (d.et c) P)) ∂(ReciprocityTheory.MultiplicativeHeights.blockSphereProb d.D (d.N + 1)) := by
-  haveI := ReciprocityTheory.MultiplicativeHeights.blockSphereMeasure_isProbability (B := d.D) (Nat.succ_pos d.N)
+  have := ReciprocityTheory.MultiplicativeHeights.blockSphereMeasure_isProbability (B := d.D) (Nat.succ_pos d.N)
   have hint := d.int_Nsg hd h hI2be c sg
   have I1 := d.int_neg c sg (fun P => Real.log (d.nrm c d.wL (f c) P))
     (hint.1 d.wL (f c) (by simp) (hf c).1 (hf c).2)

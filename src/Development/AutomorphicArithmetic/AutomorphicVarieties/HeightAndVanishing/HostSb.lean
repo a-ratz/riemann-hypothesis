@@ -107,7 +107,7 @@ theorem UpperTheory.V.HV.hostSb :
       (∀ p ∈ Sb l ψ, p.Prime ∧ p ≠ 2 ∧ p ≠ l ∧ p ∣ h.q ∧ p ≡ 1 [MOD l]) ∧ (kap l ψ).conductor ∣ h.q ∧ comp 2 (kap l ψ) = 1 ∧
       (∀ p, p.Prime → p ≠ l → (p ∈ Sb l ψ ↔ l ∣ orderOf (comp p ψ))) ∧ ∀ v ∈ Tb l ψ, v ∣ l * h.q := by
   intro h O _ _ ψ hc l hl hl2
-  haveI : NeZero h.N := ⟨h.N_pos.ne'⟩
+  have : NeZero h.N := ⟨h.N_pos.ne'⟩
   obtain ⟨-, hψ, hcomp⟩ := hostComp h O ψ hc
   obtain ⟨s, hs⟩ := kap_pow ψ hψ l hl
   have hlodd : ¬ l ∣ 2 := fun hd => hl2 ((Nat.prime_dvd_prime_iff_eq hl Nat.prime_two).1 hd)

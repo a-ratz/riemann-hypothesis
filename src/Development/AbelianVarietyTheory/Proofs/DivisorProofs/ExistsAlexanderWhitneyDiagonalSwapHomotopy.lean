@@ -74,7 +74,7 @@ open GlobalTheory.EtC.CupSpec (sub_δ_val δ_sub_val sub_val hom_ext_val)
 def cm (N j l : ℕ) : SimplexCategory.mk l ⟶ SimplexCategory.mk N :=
   if h : j + l ≤ N then SimplexCategory.subinterval j l h else SimplexCategory.const _ _ 0
 
-theorem cm_eq (N j l : ℕ) (h : j + l ≤ N) : cm N j l = SimplexCategory.subinterval j l h := dif_pos h
+theorem cm_eq (N j l : ℕ) (h : j + l ≤ N) : cm N j l = SimplexCategory.subinterval j l h := dite_eq_left h
 
 section
 variable {N : ℕ}
@@ -684,12 +684,12 @@ theorem key {N : ℕ} (z : Pr N) (hpos : 0 < z.1 + z.2.1) :
     cases r with
     | zero => simp at hpos
     | succ s =>
-      simp only [hz, if_pos rfl, if_true, map_add (f := _), d_single]
+      simp only [hz, ite_eq_left rfl, ite_true, map_add (f := _), d_single]
       rw [d₁_cone_zero, d₂_succ, d₁_zero, d₂_cone_succ, d₁_zero, d₂_succ, map_zero, map_smul, H_sum]
-      simp only [hz, if_true, ↓reduceIte, Finset.sum_add_distrib, smul_add]
+      simp only [hz, ite_true, ↓reduceIte, Finset.sum_add_distrib, smul_add]
       module
   | succ q =>
-    simp only [hz, Nat.succ_ne_zero, if_false, ↓reduceIte, add_zero, map_add (f := _), d_single, map_smul]
+    simp only [hz, Nat.succ_ne_zero, ite_false, ↓reduceIte, add_zero, map_add (f := _), d_single, map_smul]
     rw [d₁_cone_succ, d₁_succ, H_sum]
     have hX : ∑ i : Fin (q + 2), ((-1 : ℤ) ^ (i : ℕ)) • hz (⟨q, r, SimplexCategory.δ i ≫ a, b⟩ : Pr N) =
         ∑ i : Fin (q + 2), ((-1 : ℤ) ^ (i : ℕ)) • Finsupp.single (⟨q + 1, r, cone (SimplexCategory.δ i ≫ a), b⟩ : Pr N) 1 := by
@@ -702,7 +702,7 @@ theorem key {N : ℕ} (z : Pr N) (hpos : 0 < z.1 + z.2.1) :
     | zero => rw [d₂_zero, d₂_zero, map_zero]; module
     | succ s =>
       rw [d₂_succ, d₂_succ, H_sum]
-      simp only [hz, Nat.succ_ne_zero, if_false, ↓reduceIte, add_zero]
+      simp only [hz, Nat.succ_ne_zero, ite_false, ↓reduceIte, add_zero]
       rw [pow_succ]
       module
 

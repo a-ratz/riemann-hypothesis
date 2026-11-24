@@ -100,7 +100,7 @@ namespace GlobalTheory.CompanionTheory.ThetaUniq
 
 theorem comb_of_basis : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] (ι : Type) [Fintype ι] (B : Module.Basis ι ℝ V) (T : SchwartzMap V ℂ →L[ℂ] ℂ), (∀ (i : ι) (f g : SchwartzMap V ℂ), (∀ x, g x = cexp (2 * π * I * (B.repr x i : ℝ)) * f x) → T g = T f) → (∀ (m : ι → ℤ) (f g : SchwartzMap V ℂ), (∀ x, g x = f (x + ∑ i, (m i : ℝ) • B i)) → T g = T f) → ∃ a : ℂ, ∀ f : SchwartzMap V ℂ, T f = a * ∑' m : ι → ℤ, f (∑ i, (m i : ℝ) • B i) := by
   intro V _ _ ι _ B T h1 h2
-  haveI : FiniteDimensional ℝ V := Module.Finite.of_basis B
+  have : FiniteDimensional ℝ V := Module.Finite.of_basis B
   let e := Fintype.equivFin ι
   let C := B.reindex e
   let Cc : V ≃L[ℝ] (Fin (Fintype.card ι) → ℝ) := C.equivFun.toContinuousLinearEquiv
@@ -204,7 +204,7 @@ theorem cosetInd_mem_SB : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [
   have hK : IsCompact ((fun x => x - c) ⁻¹' (levelSub F κ N : Set (κ → FiniteAdeleRing (𝓞 F) F))) :=
     (Homeomorph.subRight c).isCompact_preimage.2 (levelSub_isCompact F κ N)
   refine HasCompactSupport.intro hK fun x hx => ?_
-  rw [GroundTheory.Automorphic.GJMatrix.cosetInd_apply, if_neg (show ¬ (x - c ∈ levelSub F κ N) from hx)]
+  rw [GroundTheory.Automorphic.GJMatrix.cosetInd_apply, ite_eq_right (show ¬ (x - c ∈ levelSub F κ N) from hx)]
 
 theorem levelSub_basis (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ]
     (W : Set (κ → FiniteAdeleRing (𝓞 F) F)) (hW : W ∈ nhds (0 : κ → FiniteAdeleRing (𝓞 F) F)) :
@@ -510,14 +510,14 @@ theorem level_zero (hψ : Continuous ψ) (h1 : ψ ≠ 1) (hn : ∀ x, ‖ψ x‖
     exact congrArg (fun z => ω.repr z j) h2
   rw [← hinj.tsum_eq]
   · refine tsum_congr fun m => ?_
-    rw [pureA_algebraMap', hB, cosetInd_apply, if_pos ((inCoset_rat_iff F hN _).2 ⟨_, rfl⟩), mul_one]
+    rw [pureA_algebraMap', hB, cosetInd_apply, ite_eq_left ((inCoset_rat_iff F hN _).2 ⟨_, rfl⟩), mul_one]
   · intro ξ hξ
     rw [Function.mem_support, pureA_algebraMap', cosetInd_apply] at hξ
     by_cases h : InCoset F N 0 (fun i => algebraMap F _ (ξ i))
     · obtain ⟨a, rfl⟩ := (inCoset_rat_iff F hN _).1 h
       refine ⟨fun p => ω.repr (a p.1) p.2, ?_⟩
       simp only [e, Module.Basis.sum_repr]
-    · rw [if_neg h, mul_zero] at hξ
+    · rw [ite_eq_right h, mul_zero] at hξ
       exact absurd rfl hξ
 
 theorem level_span

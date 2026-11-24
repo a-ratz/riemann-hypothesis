@@ -60,8 +60,8 @@ open scoped nonZeroDivisors
 
 theorem isFractionRing_of_integers {C : Type} [Field C] {v : Valuation C NNReal} {O : Type}
     [CommRing O] [Algebra O C] (hv : v.Integers O) : IsFractionRing O C := by
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
-  haveI : FaithfulSMul O C := (faithfulSMul_iff_algebraMap_injective O C).2 hv.hom_inj
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have : FaithfulSMul O C := (faithfulSMul_iff_algebraMap_injective O C).2 hv.hom_inj
   refine IsFractionRing.of_field O C fun z => ?_
   obtain ⟨a, h | h⟩ := hv.eq_algebraMap_or_inv_eq_algebraMap z
   · exact ⟨a, 1, by simp [h]⟩
@@ -70,7 +70,7 @@ theorem isFractionRing_of_integers {C : Type} [Field C] {v : Valuation C NNReal}
 theorem finrank_lattice {A K : Type} [CommRing A] [IsDomain A] [Field K] [Algebra A K]
     [IsFractionRing A K] {Ω : Type} [AddCommGroup Ω] [Module K Ω] [Module A Ω] [IsScalarTower A K Ω]
     (M : Submodule A Ω) (hM : M.IsFullLattice K) : finrank A M = finrank K Ω := by
-  haveI : IsLocalizedModule A⁰ M.subtype :=
+  have : IsLocalizedModule A⁰ M.subtype :=
     { map_units := fun s => by
         rw [← (Algebra.lsmul A (A := K) A Ω).commutes]
         exact (IsLocalization.map_units K s).map _
@@ -100,8 +100,8 @@ theorem exists_lift {A O : Type} [CommRing A] [CommRing O] [Algebra A O] {M : Ty
     [Module A M] {Ω' : Type} [AddCommGroup Ω'] [Module O Ω'] (ι : M →ₛₗ[algebraMap A O] Ω') :
     ∃ j : O ⊗[A] M →ₗ[O] Ω', (∀ x, j (1 ⊗ₜ x) = ι x) ∧
       LinearMap.range j = Submodule.span O (Set.range ι) := by
-  letI : Module A Ω' := Module.compHom Ω' (algebraMap A O)
-  haveI : IsScalarTower A O Ω' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module A Ω' := Module.compHom Ω' (algebraMap A O)
+  have : IsScalarTower A O Ω' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   let f : M →ₗ[A] Ω' :=
     { toFun := ι, map_add' := map_add ι, map_smul' := fun a x => ι.map_smulₛₗ a x }
   refine ⟨f.liftBaseChange O, fun x => by simp [f], ?_⟩
@@ -110,16 +110,16 @@ theorem exists_lift {A O : Type} [CommRing A] [CommRing O] [Algebra A O] {M : Ty
 
 theorem bc_iso : ∀ (A K : Type) [CommRing A] [IsDomain A] [Field K] [Algebra A K] [IsFractionRing A K] (Ω : Type) [AddCommGroup Ω] [Module K Ω] [Module A Ω] [IsScalarTower A K Ω] (M : Submodule A Ω) (C : Type) [Field C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] (hv : v.Integers O) [Algebra A O] (Ω' : Type) [AddCommGroup Ω'] [Module C Ω'] [Module O Ω'] [IsScalarTower O C Ω'] (L : Submodule O Ω') (ι : M →ₛₗ[algebraMap A O] Ω'), M.IsFullLattice K → Module.Projective A M → L.IsFullLattice C → Submodule.span O (Set.range ι) = L → Module.finrank K Ω = Module.finrank C Ω' → ∃ j : O ⊗[A] M →ₗ[O] Ω', Function.Injective j ∧ LinearMap.range j = L ∧ ∀ x, j (1 ⊗ₜ x) = ι x := by
   intro A K _ _ _ _ _ Ω _ _ _ _ M C _ v O _ _ hv _ Ω' _ _ _ _ L ι hM hP hL hspan hrk
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
-  haveI := isFractionRing_of_integers hv
-  haveI : Module.Finite A M := Module.Finite.iff_fg.2 hM.fg
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have := isFractionRing_of_integers hv
+  have : Module.Finite A M := Module.Finite.iff_fg.2 hM.fg
   obtain ⟨j, hj, hr⟩ := exists_lift ι
   rw [hspan] at hr
   refine ⟨j, ?_, hr, hj⟩
   have h1 : finrank O (O ⊗[A] M) = finrank O (LinearMap.range j) := by
     rw [finrank_baseChange_flat, finrank_lattice M hM, hr, finrank_lattice L hL, hrk]
   have h2 := j.rank_range_add_rank_ker
-  haveI : Module.Finite O (LinearMap.range j) := inferInstance
+  have : Module.Finite O (LinearMap.range j) := inferInstance
   rw [← finrank_eq_rank O (O ⊗[A] M), ← finrank_eq_rank O (LinearMap.range j), h1] at h2
   have h3 : Module.rank O (LinearMap.ker j) = 0 := by
     rw [add_comm] at h2

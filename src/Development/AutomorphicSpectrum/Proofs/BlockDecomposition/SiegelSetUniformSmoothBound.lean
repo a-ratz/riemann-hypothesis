@@ -219,7 +219,7 @@ theorem norm_le_of_entries {X : Matrix (Fin n) (Fin n) ℂ} {r : ℝ} (hr : 0 �
     refine Finset.sup_le fun i _ => ?_
     calc ∑ j, ‖X i j‖₊ ≤ ∑ _j : Fin n, r.toNNReal :=
           Finset.sum_le_sum fun j _ => by
-            rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal _ hr]
+            rw [← NNReal.coe_le_coe, coe_nnNorm, Real.coe_toNNReal _ hr]
             exact h i j
       _ = (n : ℝ≥0) * r.toNNReal := by simp
   have key' := NNReal.coe_le_coe.mpr key
@@ -252,8 +252,8 @@ theorem one_place (h : IsCMExt F E σ) (hJ : IsHermND σ J) (τ : EmbOver E w) :
           ‖ψ (g * embArch σ J w y) - ψ g‖ ≤ C * δ * ∑ i, c i := by
   have hA := isUnit_det_map hJ τ.1
   obtain ⟨δ₁, C₀, h1, hlog⟩ := GlobalTheory.UnitaryLog.exists_log_unitary n (J.map τ.1) hA
-  haveI : FiniteDimensional ℝ (LieL (J.map τ.1)) := inferInstance
-  haveI : ProperSpace (LieL (J.map τ.1)) := FiniteDimensional.proper_real _
+  have : FiniteDimensional ℝ (LieL (J.map τ.1)) := inferInstance
+  have : ProperSpace (LieL (J.map τ.1)) := FiniteDimensional.proper_real _
   let b := Module.finBasis ℝ (LieL (J.map τ.1))
   obtain ⟨K₀, hK₀, hco⟩ := GlobalTheory.CuspGeo.MeanValue.exists_coord_bound b
   choose yOf hy1 hy2 using fun Y : LieL (J.map τ.1) => isLineOf_expMap h hJ τ Y 1
@@ -263,7 +263,7 @@ theorem one_place (h : IsCMExt F E σ) (hJ : IsHermND σ J) (τ : EmbOver E w) :
     change Continuous fun Y => archMat σ J τ (yOf Y) i j
     simp only [hy2]
     have : Continuous fun Y : LieL (J.map τ.1) => NormedSpace.exp Y.1 :=
-      (NormedSpace.exp_continuous).comp continuous_subtype_val
+      (NormedSpace.exp_continuous).comp continuous_subtypeVal
     exact (continuous_apply j).comp ((continuous_apply i).comp this))
   have hy0 : yOf 0 = 1 := archMat_injective h τ (by
     rw [hy2, map_one]; simp)
@@ -374,7 +374,7 @@ theorem mean_value : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   classical
   have τ : ∀ w : InfinitePlace F, EmbOver E w := fun w => Classical.arbitrary _
   choose ι hι b K C d hb hK h1K hd hC key using fun w => one_place (J := J) h hJ (τ w)
-  letI : ∀ w, Fintype (ι w) := hι
+  let : ∀ w, Fintype (ι w) := hι
   obtain ⟨δ₁, hδ₁, hle⟩ : ∃ δ₁ > 0, ∀ w, δ₁ ≤ d w := by
     obtain ⟨w₀, h0⟩ := Finite.exists_min d
     exact ⟨d w₀, hd w₀, h0⟩

@@ -115,6 +115,6 @@ theorem mat_unitary {P Q : ℕ} (g : UpqT P Q) :
     (UpqT.mat g)ᴴ * Formalism.UG.Jpq P Q * UpqT.mat g = Formalism.UG.Jpq P Q := g.2
 
 theorem continuous_mat {P Q : ℕ} : Continuous (UpqT.mat : UpqT P Q → _) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 end GlobalTheory.UpqExpChart

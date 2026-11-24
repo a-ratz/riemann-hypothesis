@@ -258,17 +258,17 @@ theorem corner_equiv {R : Type} [CommRing R] (I : Ideal R) (hI : IsLocalRing (R 
     intro x a
     have h := congrFun (smul_eq_zero_of_equiv I e a.2 (Pi.single (⟨0, hm⟩ : Fin m) x)) ⟨0, hm⟩
     simpa using h
-  letI : Module (R ⧸ I) C := hC.module
-  haveI : IsScalarTower R (R ⧸ I) C := hC.isScalarTower
+  let : Module (R ⧸ I) C := hC.module
+  have : IsScalarTower R (R ⧸ I) C := hC.isScalarTower
   let e' : (Fin m → C) ≃ₗ[R ⧸ I] (Fin (m * k) → R ⧸ I) :=
     LinearEquiv.extendScalarsOfSurjective Ideal.Quotient.mk_surjective e
-  haveI : Module.Finite (R ⧸ I) (Fin m → C) := Module.Finite.equiv e'.symm
-  haveI : Module.Free (R ⧸ I) (Fin m → C) := Module.Free.of_equiv e'.symm
+  have : Module.Finite (R ⧸ I) (Fin m → C) := Module.Finite.equiv e'.symm
+  have : Module.Free (R ⧸ I) (Fin m → C) := Module.Free.of_equiv e'.symm
   let i0 : C →ₗ[R ⧸ I] (Fin m → C) := LinearMap.single (R ⧸ I) (fun _ => C) ⟨0, hm⟩
   let p0 : (Fin m → C) →ₗ[R ⧸ I] C := LinearMap.proj ⟨0, hm⟩
-  haveI : Module.Projective (R ⧸ I) C := Module.Projective.of_split i0 p0 (by ext x; simp [i0, p0])
-  haveI : Module.Finite (R ⧸ I) C := Module.Finite.of_surjective p0 (fun x => ⟨Pi.single ⟨0, hm⟩ x, by simp [p0]⟩)
-  haveI : Module.Free (R ⧸ I) C := Module.free_of_flat_of_isLocalRing
+  have : Module.Projective (R ⧸ I) C := Module.Projective.of_split i0 p0 (by ext x; simp [i0, p0])
+  have : Module.Finite (R ⧸ I) C := Module.Finite.of_surjective p0 (fun x => ⟨Pi.single ⟨0, hm⟩ x, by simp [p0]⟩)
+  have : Module.Free (R ⧸ I) C := Module.free_of_flat_of_isLocalRing
   have h1 : Module.finrank (R ⧸ I) (Fin m → C) = m * k := by
     rw [e'.finrank_eq, Module.finrank_fin_fun]
   rw [Module.finrank_pi_fintype, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] at h1
@@ -466,8 +466,8 @@ theorem exists_matRed : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.D
     ∃ φ : D.O →ₐ[𝓞 D.F] Matrix (Fin D.m) (Fin D.m) (𝓞 D.F ⧸ w0 ^ r), Function.Surjective φ ∧
       ∀ b, φ b = 0 → b ∈ (w0 ^ r) • (⊤ : Submodule (𝓞 D.F) D.O) := by
   intro p _ D w0 r _ hp
-  haveI := D.freeO
-  haveI := D.finO
+  have := D.freeO
+  have := D.finO
   obtain ⟨e⟩ := D.splitP
   have hpr : (p : 𝓞 D.F) ^ r ∈ w0 ^ r := Ideal.pow_mem_pow hp r
   have hA : ((p ^ r : ℕ) : 𝓞 D.F ⧸ w0 ^ r) = 0 := by
@@ -574,7 +574,7 @@ namespace GlobalTheory.EtLevMorita
 theorem isLocalRing_quot_pow {A : Type} [CommRing A] (m : Ideal A) [hm : m.IsMaximal] (k : ℕ)
     (hk : k ≠ 0) : IsLocalRing (A ⧸ m ^ k) := by
   have hne : m ^ k ≠ ⊤ := fun h => hm.ne_top (top_le_iff.1 (h ▸ Ideal.pow_le_self hk))
-  haveI : Nontrivial (A ⧸ m ^ k) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : Nontrivial (A ⧸ m ^ k) := Ideal.Quotient.nontrivial_iff.2 hne
   obtain ⟨M0, hM0⟩ := Ideal.exists_maximal (A ⧸ m ^ k)
   have key : ∀ M : Ideal (A ⧸ m ^ k), M.IsMaximal → M.comap (Ideal.Quotient.mk (m ^ k)) = m := by
     intro M hM
@@ -642,14 +642,14 @@ theorem GlobalTheory.EtLevMorita.exists_lev : ∀ (p : ℕ) [Fact p.Prime] (D : 
     · have h1 := hg 1 (by simp)
       rw [map_one, hone] at h1
       exact h1.symm
-  · haveI := isLocalRing_quot_pow w0 r hr.ne'
-    letI : Module D.O (Additive G) := actModule act hmul hone hcomp hadd
-    letI : Module (𝓞 D.F) (Additive G) := Module.compHom (Additive G) (algebraMap (𝓞 D.F) D.O)
-    haveI : IsScalarTower (𝓞 D.F) D.O (Additive G) := ⟨fun c b x => by
+  · have := isLocalRing_quot_pow w0 r hr.ne'
+    let : Module D.O (Additive G) := actModule act hmul hone hcomp hadd
+    let : Module (𝓞 D.F) (Additive G) := Module.compHom (Additive G) (algebraMap (𝓞 D.F) D.O)
+    have : IsScalarTower (𝓞 D.F) D.O (Additive G) := ⟨fun c b x => by
       show (c • b) • x = algebraMap (𝓞 D.F) D.O c • (b • x)
       rw [Algebra.smul_def, mul_smul]⟩
-    letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
-    haveI : IsScalarTower (𝓞 D.F) D.O D.La := ⟨fun c b x => by
+    let : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+    have : IsScalarTower (𝓞 D.F) D.O D.La := ⟨fun c b x => by
       show (c • b) • x = algebraMap (𝓞 D.F) D.O c • (b • x)
       rw [Algebra.smul_def, mul_smul]⟩
     have hsm : ∀ (b : D.O) (x : Additive G), b • x = Additive.ofMul (act b x.toMul) := fun _ _ => rfl

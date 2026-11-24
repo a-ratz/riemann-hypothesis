@@ -83,9 +83,9 @@ theorem UpperTheory.orbitalFiber_pair_correspondence :
     UpperTheory.V.Z.Sym.Glob.Fib.Pair := by
   classical
   intro H G I _ _ j H₀ U c f δ Hi _ φ hcen hfix hc hf hfin hT hidx hrange hδ hcov
-  letI : MulAction H (PairSp H G U) := pairAct j U
-  letI : MulAction H (G ⧸ U) := MulAction.compHom (G ⧸ U) j
-  letI : ∀ i, MulAction (Hi i) (G ⧸ U) := fun i => MulAction.compHom (G ⧸ U) (j.comp (φ i))
+  let : MulAction H (PairSp H G U) := pairAct j U
+  let : MulAction H (G ⧸ U) := MulAction.compHom (G ⧸ U) j
+  let : ∀ i, MulAction (Hi i) (G ⧸ U) := fun i => MulAction.compHom (G ⧸ U) (j.comp (φ i))
   have hnorm : H₀.Normal := ⟨fun n hn g => by
     have hc' := Subgroup.mem_center_iff.1 (hcen hn) g
     rw [hc', mul_inv_cancel_right]

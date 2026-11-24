@@ -64,7 +64,7 @@ theorem htFin_bc_inv {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
 theorem finprod_htFin_le {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     {n : Type} [Fintype n] [DecidableEq n] (g : GL n (AF F ⊗[F] E)) :
     ∏ᶠ v, htFin F v (bc (compFin F E v) g) ≤ heightGL F g :=
-  le_mul_of_one_le_left' (Finset.one_le_prod' fun _ _ => one_le_htOf _ _)
+  le_mul_of_one_le_left' (Finset.one_le_prod fun _ _ => one_le_htOf _ _)
 
 end GlobalTheory.MovedLat
 
@@ -92,8 +92,8 @@ theorem GlobalTheory.MovedLat.exists_scale : ∀ (F E : Type) [Field F] [NumberF
   choose Kx hKxf hKx hKxb using fun i => GlobalTheory.FixedBound.exists_entry_absFin_bound (Y i)
   let Kc : HeightOneSpectrum (𝓞 F) → ℝ≥0 := fun v => (∏ j, K1 j v * K2 j v) * ∏ i, Kx i v
   have hKc1 : ∀ v, 1 ≤ Kc v := fun v =>
-    one_le_mul_of_one_le_of_one_le (Finset.one_le_prod' fun j _ => one_le_mul_of_one_le_of_one_le (hK1 j v) (hK2 j v))
-      (Finset.one_le_prod' fun i _ => hKx i v)
+    one_le_mul_of_one_le_of_one_le (Finset.one_le_prod fun j _ => one_le_mul_of_one_le_of_one_le (hK1 j v) (hK2 j v))
+      (Finset.one_le_prod fun i _ => hKx i v)
   have hKcf : (Function.mulSupport Kc).Finite := by
     refine ((Set.finite_iUnion fun j => (hK1f j).union (hK2f j)).union (Set.finite_iUnion hKxf)).subset ?_
     refine (Function.mulSupport_mul _ _).trans (Set.union_subset_union ?_ ?_)
@@ -108,16 +108,16 @@ theorem GlobalTheory.MovedLat.exists_scale : ∀ (F E : Type) [Field F] [NumberF
       obtain ⟨i, -, hi⟩ := hv
       exact ⟨i, hi⟩
   have hP1 : ∀ v, ∏ j, K1 j v * K2 j v ≤ Kc v := fun v =>
-    le_mul_of_one_le_right' (Finset.one_le_prod' fun i _ => hKx i v)
+    le_mul_of_one_le_right' (Finset.one_le_prod fun i _ => hKx i v)
   have hP2 : ∀ v, ∏ i, Kx i v ≤ Kc v := fun v =>
-    le_mul_of_one_le_left' (Finset.one_le_prod' fun j _ => one_le_mul_of_one_le_of_one_le (hK1 j v) (hK2 j v))
+    le_mul_of_one_le_left' (Finset.one_le_prod fun j _ => one_le_mul_of_one_le_of_one_le (hK1 j v) (hK2 j v))
   have hK1c : ∀ v i j, K1 j v * Kx i v ≤ Kc v := fun v i j => by
-    refine le_trans ?_ (mul_le_mul' (Finset.single_le_prod' (fun j _ => one_le_mul_of_one_le_of_one_le (hK1 j v) (hK2 j v))
-      (Finset.mem_univ j)) (Finset.single_le_prod' (fun i _ => hKx i v) (Finset.mem_univ i)))
+    refine le_trans ?_ (mul_le_mul' (Finset.single_le_prod (fun j _ => one_le_mul_of_one_le_of_one_le (hK1 j v) (hK2 j v))
+      (Finset.mem_univ j)) (Finset.single_le_prod (fun i _ => hKx i v) (Finset.mem_univ i)))
     exact mul_le_mul' (le_mul_of_one_le_right' (hK2 j v)) le_rfl
   have hK2c : ∀ v i j, K2 j v * Kx i v ≤ Kc v := fun v i j => by
-    refine le_trans ?_ (mul_le_mul' (Finset.single_le_prod' (fun j _ => one_le_mul_of_one_le_of_one_le (hK1 j v) (hK2 j v))
-      (Finset.mem_univ j)) (Finset.single_le_prod' (fun i _ => hKx i v) (Finset.mem_univ i)))
+    refine le_trans ?_ (mul_le_mul' (Finset.single_le_prod (fun j _ => one_le_mul_of_one_le_of_one_le (hK1 j v) (hK2 j v))
+      (Finset.mem_univ j)) (Finset.single_le_prod (fun i _ => hKx i v) (Finset.mem_univ i)))
     exact mul_le_mul' (le_mul_of_one_le_left' (hK1 j v)) le_rfl
   let C0 : ℝ≥0 := ∏ᶠ v, Kc v
   refine ⟨N * C0, 1, fun g h => ?_⟩

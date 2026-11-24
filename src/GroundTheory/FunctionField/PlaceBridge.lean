@@ -147,7 +147,7 @@ theorem center_ofHeightOneSpectrum (P : HeightOneSpectrum B) :
       rw [this]
       exact P.asIdeal.zero_mem
     have h1 := (ofHeightOneSpectrum B hk P).ring.valuation_le_one_iff _ |>.2 hinv
-    rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb0))] at h1
+    rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb0))] at h1
     exact absurd hb (not_lt.2 h1)
   · intro hbP
     by_contra hb
@@ -161,7 +161,7 @@ theorem center_ofHeightOneSpectrum (P : HeightOneSpectrum B) :
     have hle := HeightOneSpectrum.valuationSubringAtPrime_le_valuation (K := K) (v := P)
     have h1 : P.valuation K (algebraMap B K b)⁻¹ ≤ 1 := hle hinv
     have h2 : P.valuation K (algebraMap B K b) < 1 := (P.valuation_lt_one_iff_mem (K := K) b).2 hbP
-    rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb0))] at h1
+    rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb0))] at h1
     exact absurd h2 (not_lt.2 h1)
 
 theorem valuation_ofHeightOneSpectrum (P : HeightOneSpectrum B) :

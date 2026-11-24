@@ -77,7 +77,7 @@ theorem fib_iso_quot {A : Type} [CommRing A] [IsLocalRing A] {U : Scheme.{0}} [I
   let φ := Spec.preimage (e.inv ≫ f)
   have hf : f = e.hom ≫ Spec.map φ := by
     rw [Spec.map_preimage]; simp
-  letI : Algebra A Γ(U, ⊤) := φ.hom.toAlgebra
+  let : Algebra A Γ(U, ⊤) := φ.hom.toAlgebra
   refine ⟨φ.hom, ⟨?_⟩⟩
   refine (pullback.congrHom hf rfl) ≪≫
     (asIso (pullback.map (e.hom ≫ Spec.map φ) (cpt A) (Spec.map φ) (cpt A) e.hom (𝟙 _) (𝟙 _) (by simp) (by simp))) ≪≫ ?_

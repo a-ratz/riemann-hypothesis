@@ -66,7 +66,7 @@ theorem traceGram_det_ne_zero {F E : Type} [Field F] [NumberField F] [Field E] [
     {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {d : ℕ} (b : Module.Basis (Fin d) F E) :
     (Matrix.of fun k l : Fin d => Algebra.trace F E (b k * σ (b l))).det ≠ 0 := by
   have hσ : ∀ e, σ (σ e) = e := sig_invol hCM
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   intro h0
   obtain ⟨v, hv, hmul⟩ := Matrix.exists_mulVec_eq_zero_iff.2 h0
   apply hv

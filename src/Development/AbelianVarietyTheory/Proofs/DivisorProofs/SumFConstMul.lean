@@ -74,7 +74,7 @@ def TransExp {X₁ : Setup F W i} {z₁ : X₁.M.Z} {act : Matrix (Fin 8) (Fin 8
 theorem sumF_const_mul {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {K : Type} [Field K]
     [Algebra (FractionRing R) K] {Ix : Type} {x : Ix → K} {s : K} (c : K) (h : SumF I K x s) :
     SumF I K (fun j => c * x j) (c * s) := by
-  letI : Module R K := Module.compHom K (algebraMap R (FractionRing R))
+  let : Module R K := Module.compHom K (algebraMap R (FractionRing R))
   obtain ⟨N, hN, hs, hx, hlim⟩ := h
   let f : K →ₗ[R] K :=
     { toFun := fun y => c * y

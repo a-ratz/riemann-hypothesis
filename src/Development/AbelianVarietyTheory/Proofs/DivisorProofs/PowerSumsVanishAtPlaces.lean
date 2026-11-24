@@ -60,9 +60,9 @@ theorem pts_equiv (k : Type) [Field k] [IsAlgClosed k] (B : GlobalTheory.AV.AbVa
       ∀ (f : B ⟶ B) (q : Over.mk (𝟙 (Sp k)) ⟶ B.X), e (q ≫ f.hom) = e q ≫ f.hom := by
   have hb : Function.Bijective (algebraMap k (AlgebraicClosure k)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
-  haveI : IsIso (CommRingCat.ofHom (algebraMap k (AlgebraicClosure k))) :=
+  have : IsIso (CommRingCat.ofHom (algebraMap k (AlgebraicClosure k))) :=
     (RingEquiv.ofBijective _ hb).toCommRingCatIso.isIso_hom
-  haveI : IsIso (spMap (algebraMap k (AlgebraicClosure k))) :=
+  have : IsIso (spMap (algebraMap k (AlgebraicClosure k))) :=
     inferInstanceAs (IsIso (Spec.map (CommRingCat.ofHom (algebraMap k (AlgebraicClosure k)))))
   let i : ptOver k (AlgebraicClosure k) ≅ Over.mk (𝟙 (Sp k)) :=
     Over.isoMk (asIso (spMap (algebraMap k (AlgebraicClosure k)))) (Category.comp_id _)
@@ -103,8 +103,8 @@ theorem charpoly_reduce {R S : Type} [CommRing R] [CommRing S] (π : R →+* S)
   let b' := Module.Basis.mk hli hsp
   have hb' : ∀ i, b' i = e (b i) := fun i => Module.Basis.mk_apply hli hsp i
   refine ⟨Module.Free.of_basis b', Module.Finite.of_basis b', ?_⟩
-  haveI := Module.Free.of_basis b'
-  haveI := Module.Finite.of_basis b'
+  have := Module.Free.of_basis b'
+  have := Module.Finite.of_basis b'
   rw [← LinearMap.charpoly_toMatrix G b', ← LinearMap.charpoly_toMatrix g b, ← Matrix.charpoly_map]
   congr 1
   ext i j
@@ -168,7 +168,7 @@ theorem charpoly_eq_lattice_model : ∀ (k : Type) [Field k] [IsAlgClosed k] (B 
     (∀ j (q : Over.mk (𝟙 (Sp k)) ⟶ B.X), q ^ (l ^ j) = 1 ↔ ∃ x, ev j x = q) →
     LinearMap.charpoly φ = GlobalTheory.AV.AbVar.charpoly (End.of f) := by
   intro k _ _ B f L _ _ _ φ l hl hlk ev hadd hequi hker him
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   obtain ⟨e, he⟩ := pts_equiv k B
   obtain ⟨hfree, hfin, -, hfinV, -⟩ := tl_free_finrank k l hlk B
   have hc : ∀ n : ℕ, Nat.card {x : B.Pt // x ^ (l ^ n) = 1} = l ^ (2 * B.dim * n) := by
@@ -182,10 +182,10 @@ theorem charpoly_eq_lattice_model : ∀ (k : Type) [Field k] [IsAlgClosed k] (B 
   have key : ∀ j : ℕ, (LinearMap.charpoly φ).map (Int.castRingHom (ZMod (l ^ j))) =
       (LinearMap.charpoly (tend l B (End.of f))).map (PadicInt.toZModPow j) := by
     intro j
-    haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    have : NeZero (l ^ j) := ⟨pow_ne_zero _ hl.ne_zero⟩
     let K := (powMonoidHom (l ^ j) : B.Pt →* B.Pt).ker
     have hK : ∀ x : B.Pt, x ∈ K ↔ x ^ (l ^ j) = 1 := fun x => MonoidHom.mem_ker
-    letI : Module (ZMod (l ^ j)) (Additive K) := AddCommGroup.zmodModule fun x =>
+    let : Module (ZMod (l ^ j)) (Additive K) := AddCommGroup.zmodModule fun x =>
       congrArg Additive.ofMul (Subtype.ext (by
         change ((Additive.toMul x : K) : B.Pt) ^ (l ^ j) = 1
         exact (hK _).1 (Additive.toMul x).2))

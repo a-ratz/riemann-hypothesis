@@ -107,13 +107,13 @@ section Fields
 variable {F F' : Type} [Field F] [Field F'] [Algebra F F'] [Finite F']
 
 theorem pow_finrank_eq_one (s : F' ≃ₐ[F] F') : s ^ Module.finrank F F' = 1 := by
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
   rw [← IsGalois.card_aut_eq_finrank]
   exact pow_card_eq_one'
 
 theorem fixed_iff (s : F' ≃ₐ[F] F') (hs : ∀ t : F' ≃ₐ[F] F', t ∈ Subgroup.zpowers s) (x : F') :
     s x = x ↔ x ∈ Set.range (algebraMap F F') := by
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
   constructor
   · intro hx
     rw [← IntermediateField.mem_bot, ← IsGalois.fixedField_top, IntermediateField.mem_fixedField_iff]

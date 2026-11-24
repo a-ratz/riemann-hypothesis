@@ -326,7 +326,7 @@ theorem log_two_mul_pow_div_add_le {a : ℕ} {k : ℝ} (ha : 1 ≤ a) (hk : 3 * 
   have h2 : log 2 < 1 := by have := log_two_lt_d9; norm_num at this; linarith
   have h36 : log 36 < 4 := by
     rw [log_lt_iff_lt_exp (by norm_num)]
-    have he : exp 4 = exp 1 ^ 4 := by rw [← exp_nat_mul]; norm_num
+    have he : exp 4 = exp 1 ^ 4 := by rw [← exp_natCast_mul]; norm_num
     have h := pow_lt_pow_left₀ exp_one_gt_d9 (by norm_num) (by norm_num : (4 : ℕ) ≠ 0)
     rw [he]; norm_num at h ⊢; linarith
   have hlog : log (2 * 36 ^ a) = log 2 + a * log 36 := by

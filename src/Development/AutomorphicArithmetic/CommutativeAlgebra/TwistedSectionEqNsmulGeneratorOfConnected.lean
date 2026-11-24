@@ -102,12 +102,12 @@ theorem UpperTheory.twisted_section_eq_nsmul_generator_of_connected :
   have hlc : IsLocallyConstant (fun x => c x % q) := by
     rw [IsLocallyConstant.iff_exists_open]
     intro x
-    haveI := hE x
+    have := hE x
     refine ⟨Set.range (g x), (g x).isOpenMap.isOpen_range, hx x, ?_⟩
     rintro x' ⟨v, hv⟩
     obtain ⟨v', hv'⟩ := hx x'
     obtain ⟨z, -, -⟩ := Scheme.Pullback.exists_preimage_pullback (f := g x) (g := g x') v v' (hv.trans hv'.symm)
-    haveI : Nonempty ↥(pullback (g x) (g x')) := ⟨z⟩
+    have : Nonempty ↥(pullback (g x) (g x')) := ⟨z⟩
     have e1 := congrArg (Sec.res (pullback.fst (g x) (g x'))) (hc x)
     have e2 := congrArg (Sec.res (pullback.snd (g x) (g x'))) (hc x')
     rw [← res_comp, res_nsmul, res_gen] at e1 e2

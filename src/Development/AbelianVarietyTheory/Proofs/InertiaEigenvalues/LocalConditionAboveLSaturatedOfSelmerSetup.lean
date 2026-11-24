@@ -67,7 +67,7 @@ theorem exists_dvd_all (c : X → Y → O) (hc : c ≠ 0) :
     ∃ x₀ y₀, c x₀ y₀ ≠ 0 ∧ ∀ x y, c x₀ y₀ ∣ c x y := by
   obtain ⟨x₁, hx₁⟩ := Function.ne_iff.1 hc
   obtain ⟨y₁, hy₁⟩ := Function.ne_iff.1 hx₁
-  haveI : Nonempty (X × Y) := ⟨(x₁, y₁)⟩
+  have : Nonempty (X × Y) := ⟨(x₁, y₁)⟩
   let p := Function.argmin fun p : X × Y => IsDiscreteValuationRing.addVal O (c p.1 p.2)
   have hp : ∀ x y, c p.1 p.2 ∣ c x y := fun x y =>
     IsDiscreteValuationRing.addVal_le_iff_dvd.1
@@ -174,7 +174,7 @@ variable [IsTopologicalRing O]
 
 omit [IsTopologicalRing O] in
 theorem continuous_toLL : Continuous Bw.toLL :=
-  continuous_subtype_val.comp Bw.eO_cont
+  continuous_subtypeVal.comp Bw.eO_cont
 
 theorem cob_mem_intCrys (hT : Continuous fun g => (T g : Matrix (Fin m) (Fin m) O)) (a : Fin m) :
     (fun (g : ↥Gw) j => ((T g : Matrix (Fin m) (Fin m) O) - 1) j a) ∈ intCrys Bw P T := by
@@ -190,7 +190,7 @@ theorem cob_mem_intCrys (hT : Continuous fun g => (T g : Matrix (Fin m) (Fin m) 
   · refine continuous_pi fun j => (continuous_toLL Bw).comp ?_
     simp only [Matrix.sub_apply]
     exact (((continuous_apply_apply j a).comp hT).comp
-      (continuous_subtype_val.comp Bw.e_symm_cont)).sub continuous_const
+      (continuous_subtypeVal.comp Bw.e_symm_cont)).sub continuous_const
   · simp only [funext (hx _)]
     rw [map_mul, map_sub, Module.End.mul_apply]
     abel
@@ -298,7 +298,7 @@ theorem locSat (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) 
 
 theorem main : LocalFiniteness → LocalTateDuality → LocalEulerChar → Gen.ArchimedeanSignatureMatching → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X) (i : X.Tw) (s : X.Sig i) (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [Algebra (X.O0 i) Λ] (κ : GE N →* Λˣ) (Q : Finset (PlE D.host)), Setup bkP i s κ Q → LocSat bkP i s κ := by
   intro _ _ _ _ D N X bkP i s Λ _ _ _ κ Q h
-  haveI := h.2.1
+  have := h.2.1
   exact locSat D N X bkP i s Λ κ h.2.2.2.2.2.1
 
 end GlobalTheory.LocalSaturation

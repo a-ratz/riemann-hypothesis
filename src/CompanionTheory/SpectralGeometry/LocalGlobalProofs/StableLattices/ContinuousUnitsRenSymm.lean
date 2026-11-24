@@ -346,10 +346,10 @@ def ujRen (ε : Fin n → Bool) (r : Equiv.Perm (Fin n)) : Formalism.REAL.UJ ε 
   map_mul' g h := by ext1; simp
 
 lemma continuous_ujRen (ε : Fin n → Bool) (r : Equiv.Perm (Fin n)) : Continuous (ujRen ε r) :=
-  Continuous.subtype_mk ((continuous_unitsRen r).comp continuous_subtype_val) _
+  Continuous.subtype_mk ((continuous_unitsRen r).comp continuous_subtypeVal) _
 
 lemma continuous_ujRen_symm (ε : Fin n → Bool) (r : Equiv.Perm (Fin n)) : Continuous (ujRen ε r).symm :=
-  Continuous.subtype_mk ((continuous_unitsRen_symm r).comp continuous_subtype_val) _
+  Continuous.subtype_mk ((continuous_unitsRen_symm r).comp continuous_subtypeVal) _
 
 lemma memLp_ren (ε : Fin n → Bool) (r : Equiv.Perm (Fin n)) {f : Formalism.REAL.UJ (ε ∘ r) → ℂ}
     (h : MemLp f 2 (Formalism.REAL.muG (ε ∘ r))) : MemLp (f ∘ ujRen ε r) 2 (Formalism.REAL.muG ε) := by

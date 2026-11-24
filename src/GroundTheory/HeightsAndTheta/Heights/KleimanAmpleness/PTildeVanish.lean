@@ -492,7 +492,7 @@ def liftCochain {i : ℕ} (t : Cech.Cochain (fun I : Chart x => ↥((M.tildeSys 
 theorem liftCochain_of {i : ℕ} (t : Cech.Cochain (fun I : Chart x => ↥((M.tildeSys c).sub I)) i)
     (J : Cech.Idx (Finset.univ : Finset (Fin (N + 1))) i) (hJ : J.1.1 ⊆ support x) :
     liftCochain M c t J = liftTilde M c J.1 hJ (t ⟨⟨J.1.1, J.1.2.1, hJ⟩, J.2⟩) :=
-  dif_pos hJ
+  dite_eq_left hJ
 
 theorem liftCochain_mem {i : ℕ} (t : Cech.Cochain (fun I : Chart x => ↥((M.tildeSys c).sub I)) i) :
     liftCochain M c t ∈ Cech.Cdeg (locSys S N M.coneSubE) (degLoc M.coneGradedE c) i := by
@@ -543,7 +543,7 @@ theorem d_liftCochain {i : ℕ} (t : Cech.Cochain (fun I : Chart x => ↥((M.til
       _ = 0 := by
           rw [← h0]
           exact map_zero _
-  · haveI := locModE_subsingleton (S := S) M (Finset.not_subset.mp hK).choose_spec.1
+  · have := locModE_subsingleton (S := S) M (Finset.not_subset.mp hK).choose_spec.1
       (by simpa [mem_support] using (Finset.not_subset.mp hK).choose_spec.2)
     exact Subsingleton.elim _ _
 

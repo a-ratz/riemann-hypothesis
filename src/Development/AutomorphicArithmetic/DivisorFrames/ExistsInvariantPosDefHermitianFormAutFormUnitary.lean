@@ -215,11 +215,11 @@ theorem UpperTheory.exists_invariant_posDef_hermitian_form_autForm_unitary :
     have hT := hAN T hT0
     have hT' := hAN T' hT0'
     rw [hB _ (hRN k T hT) _ (hRN k T' hT'), hB _ hT _ hT']
-    haveI := h5
-    haveI := h4
-    haveI := h2
-    haveI := h7
-    haveI := hR
+    have := h5
+    have := h4
+    have := h2
+    have := h7
+    have := hR
     have hmap : Measure.map (fun g => g * j k) μ = μ := map_mul_right_eq_self μ (j k)
     have hh : ∀ x : UA D.host.E V.rank → ℂ, ∀ g, RU D.host.E V.rank k x (j.symm g) = x (j.symm (g * j k)) := by
       intro x g

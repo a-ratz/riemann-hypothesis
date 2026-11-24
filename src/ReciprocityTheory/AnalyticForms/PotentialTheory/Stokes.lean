@@ -117,13 +117,13 @@ theorem st_gradDens_leibniz {n : ℕ} (φ : Fin n → (Fin (n + 1) → ℂ) → 
   have e1 : ∀ j, dz j (cplx c) y = (a y : ℂ) * dz j (cplx b) y + (b y : ℂ) * dz j (cplx a) y := by
     intro j
     rw [st_dz_cplx hc', st_dz_cplx hLb, st_dz_cplx hLa]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+    simp only [add_apply, smul_apply, smul_eq_mul,
       Complex.ofReal_add, Complex.ofReal_mul]
     ring
   have e2 : ∀ k, dzb k (cplx (fun z => 1 / 2 * (b z * b z))) y = (b y : ℂ) * dzb k (cplx b) y := by
     intro k
     rw [st_dzb_cplx hbb, st_dzb_cplx hLb]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+    simp only [add_apply, smul_apply, smul_eq_mul,
       Complex.ofReal_add, Complex.ofReal_mul]
     push_cast
     ring
@@ -454,7 +454,7 @@ theorem st_massIndep_of (hP : PartsStatement) : MassIndepStatement := by
           · simp [hi, Finset.mem_insert]
         have hstep := st_mass_step hP A (fun i => if i ∈ s then Φ i + LocPot.ofFun (u i) else Φ i)
           hpot a (u a) (hu a)
-        simp only [ha, if_false] at hstep
+        simp only [ha, ite_false] at hstep
         rw [hupd, hstep, ih]
     simpa using key Finset.univ
 

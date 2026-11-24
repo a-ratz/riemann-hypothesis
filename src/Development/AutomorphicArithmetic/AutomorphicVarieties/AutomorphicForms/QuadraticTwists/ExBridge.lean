@@ -66,9 +66,9 @@ theorem UpperTheory.V.Af.Cq.exBridge :
     ∀ (F K Ω : Type) [Field F] [NumberField F] [Field K] [NumberField K] [Field Ω] [Algebra F K] [Algebra F Ω] [Algebra K Ω] [IsScalarTower F K Ω] [IsAlgClosure F Ω] [IsAlgClosure K Ω] (l : ℕ) [Fact l.Prime] (A : ValuationSubring Ω) (O : Type) [CommRing O] [Algebra ℤ_[l] O] [TopologicalSpace O] (Bw : LocBridge l F Ω (Dec (F := F) A) O), (∀ x : K, Bw.j (algebraMap K Ω x) ∈ Bw.Kw.1) →
         ∃ Bw' : LocBridge l K Ω (Dec (F := K) A) O, Bw'.Kw = Bw.Kw ∧ Bw'.j = Bw.j ∧ Bw'.LL = Bw.LL := by
   intro F K Ω _ _ _ _ _ _ _ _ _ _ _ l _ A O _ _ _ Bw hK
-  haveI : IsGalois K Ω := {}
-  haveI : IsGalois F Ω := {}
-  haveI : T2Space (G F Ω) := krullTopology_t2
+  have : IsGalois K Ω := {}
+  have : IsGalois F Ω := {}
+  have : T2Space (G F Ω) := krullTopology_t2
   let r : G K Ω →* G F Ω := AlgEquiv.restrictScalarsHom F
   have hr : Continuous r := continuous_restrictScalarsHom F K Ω
   have hinj : Function.Injective r := fun a b h => AlgEquiv.ext fun x => congrArg (fun g : G F Ω => g x) h
@@ -88,10 +88,10 @@ theorem UpperTheory.V.Af.Cq.exBridge :
     have hσ : r σ = g := AlgEquiv.ext fun _ => rfl
     exact ⟨⟨σ, (hmem σ).2 (hσ ▸ g.2)⟩, Subtype.ext hσ⟩
   let φ : ↥(Dec (F := K) A) ≃* ↥(Dec (F := F) A) := MulEquiv.ofBijective f hf
-  have hφ : Continuous φ := (hr.comp continuous_subtype_val).subtype_mk _
+  have hφ : Continuous φ := (hr.comp continuous_subtypeVal).subtype_mk _
   have hφs : Continuous φ.symm := by
     rw [(hind.comp Topology.IsInducing.subtypeVal).continuous_iff]
-    exact continuous_subtype_val.congr fun g => (congrArg Subtype.val (φ.apply_symm_apply g)).symm
+    exact continuous_subtypeVal.congr fun g => (congrArg Subtype.val (φ.apply_symm_apply g)).symm
   refine ⟨{ Kw := Bw.Kw, j := Bw.j, j_E := hK, j_dense := ?_, e := φ.trans Bw.e
             e_cont := Bw.e_cont.comp hφ, e_symm_cont := hφs.comp Bw.e_symm_cont
             e_comm := fun g x => Bw.e_comm (φ g) x

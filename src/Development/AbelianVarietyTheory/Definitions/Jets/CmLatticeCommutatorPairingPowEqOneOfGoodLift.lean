@@ -381,7 +381,7 @@ theorem _root_.GlobalTheory.MomOne.Basic.cmLatticeCommutatorPairing_pow_eq_one_o
   have key : _root_.GlobalTheory.MomOne.kap1 d 1 ((s : ℂ) * ((u : ℂ) + (w : ℂ) *
       _root_.GlobalTheory.MomOne.wK d) / (q : ℂ) ^ n) ^ (q ^ n) = 1 := by
     unfold _root_.GlobalTheory.MomOne.kap1
-    rw [← Complex.exp_nat_mul, hIm]
+    rw [← Complex.exp_natCast_mul, hIm]
     have hqn : ((q : ℂ) ^ n) ≠ 0 := pow_ne_zero _ (by exact_mod_cast hq.ne')
     have : ((q ^ n : ℕ) : ℂ) * (-(2 * (Real.pi : ℂ) * Complex.I) *
         ((-((s : ℝ) * w) / (q : ℝ) ^ n : ℝ) : ℂ)) = ((s * w : ℤ) : ℂ) * (2 * Real.pi * Complex.I) := by

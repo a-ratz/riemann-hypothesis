@@ -98,7 +98,7 @@ open Matrix in
 variable {k r : ℕ} in
 private lemma det_eq_one_of_upUni {n : ℕ} {U : Matrix (Fin n) (Fin n) ℂ}
     (hU : _root_.GlobalTheory.LeadingMinorInv.UpUni U) : U.det = 1 := by
-  rw [det_of_upperTriangular (fun i j h => hU.1 i j h)]
+  rw [det_of_isUpperTriangular (fun i j h => hU.1 i j h)]
   simp [hU.2]
 
 

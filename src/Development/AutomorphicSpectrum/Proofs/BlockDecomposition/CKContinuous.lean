@@ -101,7 +101,7 @@ theorem hI_nonneg (hMul : PhiMul) {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T 
 theorem hI_integrable (hC : PhiCont) {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ)
     (μ : Fin n → ℤ) (g : UJ ε) :
     Integrable (fun p : KG ε × KG ε => hI T μ (pP (toM g)) p) ((dk ε).prod (dk ε)) := by
-  haveI : IsProbabilityMeasure (dk ε) := (dk_props ε).1
+  have : IsProbabilityMeasure (dk ε) := (dk_props ε).1
   have hc : Continuous fun p : KG ε × KG ε => hI T μ (pP (toM g)) p :=
     cont_slice (fun z : UJ ε × (KG ε × KG ε) => hI T μ (pP (toM z.1)) z.2)
       (hI_continuous hC T μ) g

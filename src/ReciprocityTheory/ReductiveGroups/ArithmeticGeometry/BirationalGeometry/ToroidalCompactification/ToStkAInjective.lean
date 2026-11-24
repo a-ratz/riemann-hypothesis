@@ -266,7 +266,7 @@ theorem thick_mono (R : Type) [CommRing R] (I : Ideal R) (n : ℕ) : Mono (Out.t
   first
   | exact inferInstance
   | exact (IsClosedImmersion.spec_of_surjective _ Ideal.Quotient.mk_surjective).mono
-  | (haveI := IsClosedImmersion.spec_of_surjective
+  | (have := IsClosedImmersion.spec_of_surjective
         (CommRingCat.ofHom (Ideal.Quotient.mk (I ^ (n + 1)))) Ideal.Quotient.mk_surjective
      infer_instance)
 
@@ -275,7 +275,7 @@ theorem thick_map_eq {R : Type} [CommRing R] {I : Ideal R} {n : ℕ} {G G' : Ove
     (hh : h ≫ (Out.fstG I n G').left = (Out.fstG I n G).left ≫ ψ.left) :
     h = ((Over.pullback (Out.thick R I n)).map ψ).left := by
   have hh' : h ≫ pullback.fst G'.hom (Out.thick R I n) = pullback.fst G.hom (Out.thick R I n) ≫ ψ.left := hh
-  haveI := thick_mono R I n
+  have := thick_mono R I n
   have m1 : ((Over.pullback (Out.thick R I n)).map ψ).left ≫ pullback.fst G'.hom (Out.thick R I n) =
       pullback.fst G.hom (Out.thick R I n) ≫ ψ.left := by
     first

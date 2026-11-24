@@ -61,9 +61,9 @@ theorem exists_even_sec_evR_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [
   have hR : Odd 3 := by decide
   have h1 : 1 < 3 := by decide
   obtain ⟨hfG, hfL, -⟩ := GlobalTheory.EtaCard.card_levGrp_and_span E H Dw 3 h1
-  letI hFin : Fintype (LatMod Dw 3) := Fintype.ofFinite _
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
-  haveI : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
+  let hFin : Fintype (LatMod Dw 3) := Fintype.ofFinite _
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  have : IsAlgClosed (CAt σ) := inferInstanceAs (IsAlgClosed ℂ)
   have hT : AllTest Xo c := GlobalTheory.Frames.allTest_of_secBaseChange GlobalTheory.firstFiveLaws.1.secBaseChange E H Dw l Xo c
   obtain ⟨cf, -, hne⟩ := GlobalTheory.EtaForm.exists_small_coeff_etaValAt_ne_zero GlobalTheory.firstFiveLaws.1 E H Dw l Xo c 3 hR h1
     2 0 (CAt σ) 1 (fun _ => y)

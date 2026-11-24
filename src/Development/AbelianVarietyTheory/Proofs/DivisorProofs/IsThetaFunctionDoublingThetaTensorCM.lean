@@ -72,7 +72,7 @@ theorem continuous_topH (nS nT : ℕ) : Continuous (topH F E nS nT) :=
   continuous_matrix fun i j => continuous_id.matrix_elem _ j
 
 theorem continuous_sndH (nS nT : ℕ) : Continuous (sndH F E nS nT) := by
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   exact (continuous_matrix fun i j => continuous_id.matrix_elem (finSumFinEquiv (Sum.inr i)) j).neg
 
 theorem map_topH {R : Type} [CommRing R] (φ : AEF F E →+* R) {nS nT : ℕ} {u : WOF F E nS (nT + nT)}

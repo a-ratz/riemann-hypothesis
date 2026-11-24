@@ -82,7 +82,7 @@ theorem ainf_zeta0 (h2 : p = 2) :
     simp [zetaV, root, fontaineTheta_teichmuller]
   rw [hz]
   clear hz
-  haveI : NoZeroDivisors O :=
+  have : NoZeroDivisors O :=
     hv.hom_inj.noZeroDivisors _ (map_zero _) (map_mul _)
   set z := ((frobeniusEquiv (PreTilt O p) p).symm ε).untilt with hzdef
   clear_value z

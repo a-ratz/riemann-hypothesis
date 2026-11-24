@@ -192,7 +192,7 @@ theorem proj_sum {E R : Type} [Field E] [CommRing R] {w v : ℕ} (ι : E →+* R
     map_mul]
   have h3 : ∑ p' : Fin w, ∑ q' : Fin v, ι (Matrix.single p' q' (1 : E) p q) * x p' q' = x p q := by
     simp only [Matrix.single_apply, ite_and, apply_ite ι, map_one, map_zero, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [Fintype.sum_eq_single p (fun p' hp' => by simp [hp']), Fintype.sum_eq_single q (fun q' hq' => by simp [hq'])]
     simp
   rw [h3, Finset.sum_comm, sub_eq_self]
@@ -236,11 +236,11 @@ theorem core (ι : E →+* R) (P : Matrix (Fin w) (Fin a) E) (Q : Matrix (Fin b)
   let K : Submodule E (Matrix (Fin w) (Fin v) E) :=
     { carrier := {κ | A * κ * C = 0}
       add_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Matrix.mul_add, Matrix.add_mul, hx, hy, add_zero]
       zero_mem' := by simp
       smul_mem' := fun c x hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Matrix.mul_smul, Matrix.smul_mul, hx, smul_zero] }
   let Xs : Submodule E (Matrix (Fin w) (Fin v) E) :=
     { carrier := {x | ∃ y : Matrix (Fin a) (Fin b) E, x = P * y * Q}
@@ -372,7 +372,7 @@ open GlobalTheory.MixModel
 
 theorem trace_nondeg {D : D7} (t : AE D)
     (h : ∀ e : D.host.E, Algebra.trace (AF D.host.F) (AE D) (incA D e * t) = 0) : t = 0 := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   obtain ⟨e₀, he₀⟩ := GlobalTheory.RatAnnih.tensor_rat t fun e => ⟨0, by rw [map_zero]; exact h e⟩
   by_contra hne
   have he : e₀ ≠ 0 := by
@@ -446,7 +446,7 @@ theorem T_zero_of_orth (x : WO V W) (h : ∀ y : Mx D a b, symplO V W x (GlobalT
     ext i j
     simp only [adj, Matrix.transpose_apply, Matrix.map_apply, Matrix.single_apply]
     by_cases h1 : r = j <;> by_cases h2 : s = i <;>
-      simp only [h1, h2, and_true, true_and, and_false, false_and, if_true, if_false, map_zero,
+      simp only [h1, h2, and_true, true_and, and_false, false_and, ite_true, ite_false, map_zero,
         GlobalTheory.DualPairCheck.cA_incA, star_star]
   rw [symplO_eq, hO_emb, h2, trace_single_mul, ← mul_assoc, ← map_mul,
     mul_inv_cancel_left₀ (GlobalTheory.DualPairCompare.embedding_xi_zero_ne_zero D)] at h1
@@ -650,18 +650,18 @@ namespace GlobalTheory.ThetaCoefCont
 private theorem measure_fundamentalDomain_ratL_lt_infty {D : D7} (V W : HSp D) (ν : Measure (WO V W)) (𝓕 : Set (WO V W))
     (hν : ν.IsAddHaarMeasure) (h𝓕 : IsAddFundamentalDomain (ratL W V) 𝓕 ν) : ν 𝓕 < ⊤ := by
   obtain ⟨hg, -, hsc, -, hdisc, K, hK, hcov⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W V
-  haveI := hg
-  haveI := hsc
-  haveI := hdisc
-  haveI : BorelSpace (WO V W) := ⟨rfl⟩
-  haveI : Countable (ratL W V) := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
+  have := hg
+  have := hsc
+  have := hdisc
+  have : BorelSpace (WO V W) := ⟨rfl⟩
+  have : Countable (ratL W V) := TopologicalSpace.separableSpace_iff_countable.mp inferInstance
   exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (ratL W V) hK hcov ν h𝓕
 
 theorem continuous_coef : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.rank) (Fin a) D.host.E) (Q : Matrix (Fin b) (Fin V.rank) D.host.E) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (ν : Measure (WO V W)) (𝓕 : Set (WO V W)), ν.IsAddHaarMeasure → IsAddFundamentalDomain (ratL W V) 𝓕 ν → ∀ G G' : WO V W → ℂ, IsThetaFunO ψ V W G → IsThetaFunO ψ V W G' → Continuous (fun y : Mx D a b => ∫ u in 𝓕, heisO ψ V W (GlobalTheory.IsoMean.emb V W P Q y) G u * star (G' u) ∂ν) := by
   intro D V W a b P Q ψ hψ ν 𝓕 hν h𝓕 G G' hG hG'
-  haveI : BorelSpace (WO V W) := ⟨rfl⟩
+  have : BorelSpace (WO V W) := ⟨rfl⟩
   have hfin : ν 𝓕 < ⊤ := measure_fundamentalDomain_ratL_lt_infty V W ν 𝓕 hν h𝓕
-  haveI : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
+  have : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin⟩
   obtain ⟨C', hC'⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ hG'
   obtain ⟨C, hC⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ hG
   have hE : Continuous (GlobalTheory.IsoMean.emb V W P Q) := by
@@ -669,8 +669,8 @@ theorem continuous_coef : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fi
     exact (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
   rw [continuous_iff_continuousAt]
   intro y₀
-  haveI : SecondCountableTopology (Mx D a b) := (GlobalTheory.MixModel.lattice_Mx D a b).2.2.1
-  haveI : FirstCountableTopology (Mx D a b) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
+  have : SecondCountableTopology (Mx D a b) := (GlobalTheory.MixModel.lattice_Mx D a b).2.2.1
+  have : FirstCountableTopology (Mx D a b) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
   refine MeasureTheory.continuousAt_of_dominated (bound := fun _ => C * C') ?_ ?_ ?_ ?_
   · exact Filter.Eventually.of_forall fun y =>
       (((hψ.1.1.comp (continuous_const.mul (GlobalTheory.SplitScalar.continuous_symplO V W continuous_id continuous_const))).mul
@@ -739,7 +739,7 @@ namespace GlobalTheory.AdelicIntegrable
 theorem integrable_of_rapid_decay : ∀ (D : D7) (a b : ℕ) (μ : Measure (Mx D a b)), μ.IsAddHaarMeasure → ∀ θ : InfFam D, IsInfFam θ → ∀ f : Mx D a b → ℂ, Continuous f → ∀ K : Set (Matrix (Fin a) (Fin b) (Af D.host.F ⊗[D.host.F] D.host.E)), IsCompact K → (∀ y : Mx D a b, y.map (finPart D) ∉ K → f y = 0) → (∀ N : ℕ, ∃ C : ℝ, ∀ y : Mx D a b, (1 + ∑ τ, ∑ i, ∑ j, ‖θ τ (infPart D (y i j))‖) ^ N * ‖f y‖ ≤ C) → Integrable f μ := by
   intro D a b μ hμ θ hθ f hf K hK hKf hdec
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.MixModel.lattice_Mx D a b
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
   obtain ⟨σ, hσ⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
 
   let π : Mx D a b → (Fin a → Fin b → D.what₂.Tau → ℂ) := fun y i j τ => θ τ (infPart D (y i j))
@@ -760,14 +760,14 @@ theorem integrable_of_rapid_decay : ∀ (D : D7) (a b : ℕ) (μ : Measure (Mx D
   let ν : Measure (Fin a → Fin b → D.what₂.Tau → ℂ) := (μ.restrict S).map π
   have hνA : ∀ A, MeasurableSet A → ν A = μ (π ⁻¹' A ∩ S) := fun A hA => by
     rw [Measure.map_apply hπm hA, Measure.restrict_apply (hπm hA)]
-  haveI : ν.IsAddLeftInvariant := by
+  have : ν.IsAddLeftInvariant := by
     refine ⟨fun c => Measure.ext fun A hA => ?_⟩
     rw [Measure.map_apply (measurable_const_add c) hA, hνA _ (measurable_const_add c hA), hνA _ hA]
     have e : π ⁻¹' ((fun x => c + x) ⁻¹' A) ∩ S = (fun y => s c + y) ⁻¹' (π ⁻¹' A ∩ S) := by
       ext y
-      simp only [Set.mem_inter_iff, Set.mem_preimage, S, Set.mem_setOf_eq, hπs, hfs]
+      simp only [Set.mem_inter_iff, Set.mem_preimage, S, Set.mem_ofPred_eq, hπs, hfs]
     rw [e, measure_preimage_add]
-  haveI : IsFiniteMeasureOnCompacts ν := by
+  have : IsFiniteMeasureOnCompacts ν := by
     refine ⟨fun A hA => ?_⟩
     obtain ⟨R, hR⟩ := hA.isBounded.exists_norm_le
     choose C hC hCK using fun i j => GlobalTheory.StabCompact.exists_compact_adele D θ hθ R
@@ -776,7 +776,7 @@ theorem integrable_of_rapid_decay : ∀ (D : D7) (a b : ℕ) (μ : Measure (Mx D
     have hc : IsCompact (Set.pi Set.univ fun i => Set.pi Set.univ fun j => C i j : Set (Mx D a b)) :=
       isCompact_univ_pi fun i => isCompact_univ_pi fun j => hC i j
     rw [hνA _ hA.isClosed.measurableSet]
-    haveI : IsFiniteMeasureOnCompacts μ := hμ.toIsFiniteMeasureOnCompacts
+    have : IsFiniteMeasureOnCompacts μ := hμ.toIsFiniteMeasureOnCompacts
     refine lt_of_le_of_lt (measure_mono ?_) (IsFiniteMeasureOnCompacts.lt_top_of_isCompact (μ := μ) hc)
     rintro y ⟨hyA, hyS⟩ i - j -
     refine hCK i j _ ⟨_, hyS, rfl⟩ fun ρ => le_trans ?_ (hR _ hyA)
@@ -980,7 +980,7 @@ theorem decay_real_coords : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (
       show 2 * (c τ * GlobalTheory.IndefiniteRowSideFullHecke.HermitianSymplecticScalars.hermAt V W τ _ _).re = _
       rw [herm_key V W τ _ _ (hPlτ τ) _ _ (hQrτ τ), trace_single]
     rw [Fintype.sum_bool]
-    simp only [ℓ, zι, if_true, if_false, Bool.false_eq_true]
+    simp only [ℓ, zι, ite_true, ite_false, Bool.false_eq_true]
     rw [hs, hs]
     have := norm_le_re (c τ) (compAt θ τ y k l) (hc τ)
     rw [add_comm]
@@ -1199,7 +1199,7 @@ theorem meanX_prod_zero_eq : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix 
   intro D V W a b P Q hP hQ hiso ψ hψ μ 𝓨 hμ F₁ F₁' F₂ F₂' h₁ h₁' h₂ h₂' H
   obtain ⟨k, B, horth, hdec, huniq, hrat, hsep⟩ := GlobalTheory.T.exists_rational_complement_isotropic_sandwich D V W a b P Q hP hQ hiso ψ hψ
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.MixModel.lattice_Mx D 1 k
-  haveI : BorelSpace (Mx D 1 k) := ⟨rfl⟩
+  have : BorelSpace (Mx D 1 k) := ⟨rfl⟩
   obtain ⟨η, 𝓩, hη⟩ := GlobalTheory.MixModel.exists_isCovolOne D 1 k
   obtain ⟨ν, 𝓕, hν⟩ := GlobalTheory.MixModel.exists_isCovolOne D W.rank V.rank
   have hμ' : IsCovolOne (GlobalTheory.MixModel.ratMx D a b) μ 𝓨 := hμ

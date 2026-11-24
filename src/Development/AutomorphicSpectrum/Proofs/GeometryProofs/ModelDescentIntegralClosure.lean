@@ -106,7 +106,7 @@ omit [Fintype K] [DecidableEq K] [∀ k, Fintype (ι k)] in
 theorem of_idealCycle_ne {R : Type} [CommRing R] {J W : Ideal (MRing ι R)} (h : idealCycle J W ≠ 0) :
     W ∈ J.minimalPrimes ∧ IsRelevant W := by
   by_contra h'
-  exact h (dif_neg h')
+  exact h (dite_eq_right h')
 
 omit [Fintype K] [DecidableEq K] [∀ k, Fintype (ι k)] in
 theorem cycEval_eq_zero {R : Type} [CommRing R] {J : Ideal (MRing ι R)} {n : Ideal (MRing ι R) → ℤ}
@@ -190,8 +190,8 @@ theorem NN_nzd (hϖ : Irreducible ϖ) {d : ℕ} {J : Ideal (MRing ι O)} (hJ : I
 omit [Fintype K] [DecidableEq K] [∀ k, Fintype (ι k)] in
 theorem multAt_zero {R : Type} [CommRing R] {I W : Ideal (MRing ι R)} [W.IsPrime] (h : ¬ I ≤ W) :
     multAt I W = 0 := by
-  obtain ⟨q, hq, hqW⟩ := SetLike.not_le_iff_exists.1 h
-  haveI : Subsingleton (LocalizedModule W.primeCompl (MRing ι R ⧸ I)) := by
+  obtain ⟨q, hq, hqW⟩ := IsConcreteLE.not_le_iff_exists.1 h
+  have : Subsingleton (LocalizedModule W.primeCompl (MRing ι R ⧸ I)) := by
     rw [LocalizedModule.subsingleton_iff]
     intro y
     refine ⟨q, hqW, ?_⟩
@@ -218,15 +218,15 @@ theorem NN_add (hϖ : Irreducible ϖ) {d : ℕ} {J : Ideal (MRing ι O)} (hJ : I
   rw [← add_mul]
   congr 1
   by_cases hW : W ∈ J.minimalPrimes ∧ IsRelevant W
-  · haveI : W.IsPrime := hW.1.1.1
+  · have : W.IsPrime := hW.1.1.1
     have h1 : ∀ I : Ideal (MRing ι O), J ≤ I → idealCycle I W = ((multAt I W).toNat : ℤ) := by
       intro I hI
       by_cases hIW : I ≤ W
       · have h2 : W ∈ I.minimalPrimes :=
           ⟨⟨hW.1.1.1, hIW⟩, fun Q hQ hQW => hW.1.2 ⟨hQ.1, hI.trans hQ.2⟩ hQW⟩
-        exact dif_pos ⟨h2, hW.2⟩
+        exact dite_eq_left ⟨h2, hW.2⟩
       · rw [multAt_zero hIW]
-        exact dif_neg fun h => hIW h.1.1.2
+        exact dite_eq_right fun h => hIW h.1.1.2
     have h2 : multAt J W ≠ ⊤ := ReciprocityTheory.ChartRestriction.G.AI.I1.locLen_ne_top hW.1
     have h3 := FiltrationStepLength.full O K ι J W x
     rw [h1 J le_rfl, h1 _ le_sup_left, h1 _ (le_colon J x), h3]
@@ -236,7 +236,7 @@ theorem NN_add (hϖ : Irreducible ϖ) {d : ℕ} {J : Ideal (MRing ι O)} (hJ : I
       intro I hI hh
       by_contra h
       obtain ⟨h2, h3⟩ := of_idealCycle_ne h
-      haveI : W.IsPrime := h2.1.1
+      have : W.IsPrime := h2.1.1
       have hJW : J ≤ W := hI.trans h2.1.2
       have h4 := (key hϖ h2.1.1 (MinimalPrimeMultiHomog.proof O K ι I W hh h2)
         ((dim_mono hJW).trans_lt hd) hn).2
@@ -335,7 +335,7 @@ theorem map_colon {O O' σ : Type} [CommRing O] [CommRing O'] [Algebra O O'] [Mo
       (I.colon {x}).map (MvPolynomial.map (algebraMap O O')) := by
   have hb := (inferInstance :
     Algebra.IsPushout O (MvPolynomial σ O) O' (MvPolynomial σ O')).out
-  haveI : Module.Flat (MvPolynomial σ O) (MvPolynomial σ O') :=
+  have : Module.Flat (MvPolynomial σ O) (MvPolynomial σ O') :=
     Module.Flat.isBaseChange O (MvPolynomial σ O) O' (MvPolynomial σ O') hb
   exact flat_colon (R' := MvPolynomial σ O') I x
 
@@ -348,12 +348,12 @@ theorem ram_colon {O O' σ : Type} [CommRing O] [CommRing O'] [IsDomain O'] [Alg
   classical
   set J' := J.map (MvPolynomial.map (algebraMap O O')) with hJ'
   set m : Ideal O := Ideal.span {ϖ} with hmdef
-  letI : Field (O ⧸ m) := Ideal.Quotient.field m
+  let : Field (O ⧸ m) := Ideal.Quotient.field m
   have hle : m ≤ J.comap (algebraMap O (MvPolynomial σ O)) := by
     rw [hmdef, Ideal.span_le, Set.singleton_subset_iff]
     exact hJ
-  letI : Algebra (O ⧸ m) (MvPolynomial σ O ⧸ J) := Ideal.Quotient.algebraQuotientOfLEComap hle
-  haveI : IsScalarTower O (O ⧸ m) (MvPolynomial σ O ⧸ J) :=
+  let : Algebra (O ⧸ m) (MvPolynomial σ O ⧸ J) := Ideal.Quotient.algebraQuotientOfLEComap hle
+  have : IsScalarTower O (O ⧸ m) (MvPolynomial σ O ⧸ J) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨ι, ⟨b⟩⟩ : ∃ ι : Type, Nonempty (Module.Basis ι (O ⧸ m) (MvPolynomial σ O ⧸ J)) :=
     ⟨_, ⟨Module.Basis.ofVectorSpace _ _⟩⟩

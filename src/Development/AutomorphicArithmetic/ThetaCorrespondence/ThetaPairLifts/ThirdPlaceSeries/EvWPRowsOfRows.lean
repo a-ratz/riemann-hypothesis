@@ -557,9 +557,9 @@ theorem exists_ext_alt (hc : NChTie D ex.nch) (Q : _root_.Formalism.IndefR.Indef
               ((1 : KB Q.Sx (ex.nch.twI w) (ex.nch.sd w)) ⊗ₜ[Q.Sx.Ks] f k)) ∧
       (∀ (ι : Type) (v : ι → Q.Sx.WL j), LinearIndependent D.what₂.LL v →
         LinearIndependent (FractionRing (ex.nch.Oe w)) (fun a => e (v a))) := by
-  letI aK : Algebra Q.Sx.Ks (FractionRing (D.ntw.O (ex.nch.twI w))) := (ιK Q.Sx (ex.nch.twI w) (ex.nch.sd w)).toAlgebra
-  letI aE : Algebra (FractionRing (D.ntw.O (ex.nch.twI w))) (FractionRing (ex.nch.Oe w)) := (fracExt ex.nch w).toAlgebra
-  haveI : IsScalarTower (D.ntw.O (ex.nch.twI w)) (FractionRing (D.ntw.O (ex.nch.twI w))) (FractionRing (ex.nch.Oe w)) :=
+  let aK : Algebra Q.Sx.Ks (FractionRing (D.ntw.O (ex.nch.twI w))) := (ιK Q.Sx (ex.nch.twI w) (ex.nch.sd w)).toAlgebra
+  let aE : Algebra (FractionRing (D.ntw.O (ex.nch.twI w))) (FractionRing (ex.nch.Oe w)) := (fracExt ex.nch w).toAlgebra
+  have : IsScalarTower (D.ntw.O (ex.nch.twI w)) (FractionRing (D.ntw.O (ex.nch.twI w))) (FractionRing (ex.nch.Oe w)) :=
     IsScalarTower.of_algebraMap_eq fun x => by
       change _ = fracExt ex.nch w (algebraMap _ (FractionRing (D.ntw.O (ex.nch.twI w))) x)
       rw [IsScalarTower.algebraMap_apply (D.ntw.O (ex.nch.twI w)) (ex.nch.Oe w) (FractionRing (ex.nch.Oe w))]
@@ -576,8 +576,8 @@ theorem embW_Ks_alt (hc : NChTie D ex.nch) (Q : _root_.Formalism.IndefR.Indefini
         FractionRing (ex.nch.Oe w) ⊗[D.ntw.O (ex.nch.twI w)] D.nexp.Fm (ex.nch.twI w) j (ex.nch.sd w)) =
       (1 : FractionRing (ex.nch.Oe w)) ⊗ₜ[D.ntw.O (ex.nch.twI w)]
         ((show FractionRing (D.ntw.O (ex.nch.twI w)) from ιK Q.Sx (ex.nch.twI w) (ex.nch.sd w) a) • m) := by
-  letI aE : Algebra (FractionRing (D.ntw.O (ex.nch.twI w))) (FractionRing (ex.nch.Oe w)) := (fracExt ex.nch w).toAlgebra
-  haveI : IsScalarTower (D.ntw.O (ex.nch.twI w)) (FractionRing (D.ntw.O (ex.nch.twI w))) (FractionRing (ex.nch.Oe w)) :=
+  let aE : Algebra (FractionRing (D.ntw.O (ex.nch.twI w))) (FractionRing (ex.nch.Oe w)) := (fracExt ex.nch w).toAlgebra
+  have : IsScalarTower (D.ntw.O (ex.nch.twI w)) (FractionRing (D.ntw.O (ex.nch.twI w))) (FractionRing (ex.nch.Oe w)) :=
     IsScalarTower.of_algebraMap_eq fun x => by
       change _ = fracExt ex.nch w (algebraMap _ (FractionRing (D.ntw.O (ex.nch.twI w))) x)
       rw [IsScalarTower.algebraMap_apply (D.ntw.O (ex.nch.twI w)) (ex.nch.Oe w) (FractionRing (ex.nch.Oe w))]
@@ -604,7 +604,7 @@ theorem reading_ext_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi 
     if h : 1 ≤ j ∧ j ≤ D.R.m then (E w j h.1 h.2).comp (_root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel B.Q j) else 0
   have heM : ∀ w j (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) (x : (Y.MjH j).V), eM w j x = E w j h1 h2 (_root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel B.Q j x) := by
     intro w j h1 h2 x
-    simp only [eM, dif_pos (And.intro h1 h2)]
+    simp only [eM, dite_eq_left (And.intro h1 h2)]
     rfl
   refine ⟨_root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embeddingAtLevel B.Q, eM, fun i x y h => _root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.e_embeddingAtLevel_succ_eq_jDL_of_heq B.Q i x y h, hks, ?_, fun w j a m => _root_.LinearIndependenceOfCarries.GlobalTheory.CompanionTheory.ReadingExt.embW_Ks_alt hc B.Q w j a m, ?_⟩
   · intro w j h1 h2 x n a f hx

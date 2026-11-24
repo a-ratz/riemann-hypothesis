@@ -52,7 +52,7 @@ namespace PositivityTheory.Rg.Sw.AbsSt
 open PositivityTheory.Rg.Sw
 
 theorem tsb_mR_cont (n : ℕ) : Continuous (mR : GR n → M2 n) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_lower_left_block_alt (n : ℕ) : Continuous (fun M : M2 n => M.toBlocks₂₁) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
@@ -115,8 +115,8 @@ def kOf (n : ℕ) (M : kSet n) : KR n :=
 
 theorem tsb_kOf_cont (n : ℕ) : Continuous (kOf n) := by
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
-  refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
-  exact continuous_subtype_val.matrix_conjTranspose
+  refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
+  exact continuous_subtypeVal.matrix_conjTranspose
 
 theorem tsb_kOf_surj (n : ℕ) : Function.Surjective (kOf n) := by
   intro k
@@ -251,7 +251,7 @@ theorem tsbFacts : TSBFacts := by
     obtain ⟨a, ha⟩ := tsb_dil_exists n X t
     have : Φ (y, (t : ℂ)) = mR (y * a) := by
       simp only [hΦ]; rw [← tsb_dil_aZ X t a ha]; rfl
-    simp only [hO, Set.mem_setOf_eq, this]
+    simp only [hO, mem_ofPred_eq, this]
     exact hD n (y * a)
   have tube : ∀ t : ℝ, ∃ v : Set ℂ, IsOpen v ∧ (t : ℂ) ∈ v ∧ C ×ˢ v ⊆ O := by
     intro t

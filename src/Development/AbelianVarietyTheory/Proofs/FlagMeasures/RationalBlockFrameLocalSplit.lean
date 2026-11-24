@@ -133,7 +133,7 @@ theorem mem_locFlag_iff {E : Type} [Field E] [NumberField E] {n m : ℕ} {r : �
         (P⁻¹ * (T b).map φ) *ᵥ (fun l => φ (v l)) ∈ locFlag φ P F k := by
       intro v
       have hv : v ∈ Submodule.span E (Λ b : Set (Fin (r b) → E)) := by
-        letI := hΛ b
+        let := hΛ b
         rw [Submodule.IsFullLattice.span_eq_top]; trivial
       induction hv using Submodule.span_induction with
       | mem x hx =>

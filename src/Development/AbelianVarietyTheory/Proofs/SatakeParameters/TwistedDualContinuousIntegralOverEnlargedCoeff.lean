@@ -74,7 +74,7 @@ theorem continuous_and_integral : ∀ (D : D7) (i : D.nd.Loc) (w : HeightOneSpec
   intro D i w hw LL' h ρ π hρ
   have hc := GlobalTheory.WordJumpsCompare.continuous_loc D i w hw (T2O D.nd i ρ π) (continuous_T2O D i ρ π hρ)
   refine ⟨continuous_matrix fun a b => ?_, fun g a b => ?_⟩
-  · exact Continuous.subtype_mk (continuous_subtype_val.comp (hc.matrix_elem a b)) _
+  · exact Continuous.subtype_mk (continuous_subtypeVal.comp (hc.matrix_elem a b)) _
   · exact GlobalTheory.LocalH1Finiteness.norm_toLL_le (D.nbr i w hw) _
 
 end GlobalTheory.TwistedDualLoc

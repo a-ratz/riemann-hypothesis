@@ -160,7 +160,7 @@ private lemma det_field {T L Q : Type} [CommRing T] [Field L] [Fintype Q] {r : �
     rw [← hx j]
     simp [v, Matrix.col, Matrix.sum_apply, Matrix.mul_apply, Matrix.mulVec, dotProduct,
       Finset.sum_apply]
-  rw [← this, Matrix.linearIndependent_cols_iff_isUnit, Matrix.isUnit_iff_isUnit_det] at h2
+  rw [← this, Matrix.linearIndependent_col_iff_isUnit, Matrix.isUnit_iff_isUnit_det] at h2
   exact h2.ne_zero
 
 private lemma det_domain {T R Q : Type} [CommRing T] [CommRing R] [IsDomain R] [Fintype Q] {r : ℕ}
@@ -387,8 +387,8 @@ private lemma step (ρ : G →* R ≃+* R) {r : ℕ} (M : G →* Matrix (Fin r) 
   obtain ⟨a, ha, hN⟩ := hlev
   obtain ⟨⟨b, hb, hS⟩, hW⟩ := hW
   have hm : 0 < a * b := Nat.mul_pos ha hb
-  haveI := hfin _ hm
-  haveI := Fintype.ofFinite (G ⧸ Nm ρ p (a * b))
+  have := hfin _ hm
+  have := Fintype.ofFinite (G ⧸ Nm ρ p (a * b))
   obtain ⟨t, ht, ht1⟩ := free_etale_sheaf_zmod_exists_hom_sending_generator (p := p) ρ hm
   have hS' : ∀ i j, W i j ∈ Sm p R (a * b) := by
     intro i j
@@ -418,8 +418,8 @@ private lemma base (ρ : G →* R ≃+* R) {r : ℕ} (M : G →* Matrix (Fin r) 
     (hlev : ∃ m, 0 < m ∧ ∀ ν ∈ Nm ρ p m, (Mw p R M ν).map (WittVector.truncate 1) = 1) :
     ∃ W, Good ρ M 1 W ∧ IsUnit (W.det.coeff 0) := by
   obtain ⟨m, hm, hN⟩ := hlev
-  haveI := hfin _ hm
-  haveI := Fintype.ofFinite (G ⧸ Nm ρ p m)
+  have := hfin _ hm
+  have := Fintype.ofFinite (G ⧸ Nm ρ p m)
   let c : WittVector p R →+* R := WittVector.constantCoeff
   let q0 : G ⧸ Nm ρ p m := ((1 : G) : _)
   obtain ⟨B, hB⟩ := det_domain (chi ρ p m) (chi_inj ρ m) (fun q => (Mw p R M q.out).map c) q0
@@ -536,7 +536,7 @@ private lemma level (ρ : G →* R ≃+* R)
       apply hg
       rw [Set.mem_iInter] at hg'
       have := hM g fun m hm => hg' ⟨m, hm⟩
-      simp only [U, Set.mem_iInter, Set.mem_setOf_eq, this, sub_self, norm_zero]
+      simp only [U, Set.mem_iInter, Set.mem_ofPred_eq, this, sub_self, norm_zero]
       intro i j
       positivity)
     (fun a b => ⟨a * b, fun g hg y hy => hg y (per_mul hy b), fun g hg y hy => hg y (by
@@ -545,7 +545,7 @@ private lemma level (ρ : G →* R ≃+* R)
   have hν' : ν ∈ U := by
     by_contra hn
     exact Set.disjoint_left.1 hm hn hν
-  simp only [U, Set.mem_iInter, Set.mem_setOf_eq] at hν'
+  simp only [U, Set.mem_iInter, Set.mem_ofPred_eq] at hν'
   ext1 i j
   have := hν' i j
   rw [← PadicInt.norm_le_pow_iff_norm_lt_pow_add_one, PadicInt.norm_le_pow_iff_mem_span_pow,

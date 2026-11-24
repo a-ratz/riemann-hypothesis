@@ -65,7 +65,7 @@ private theorem map_inf (F : Type) [Field F] [NumberField F] [IsTotallyReal F] :
       c • (volume : Measure (InfinitePlace F → ℝ)) := ⟨_, h⟩
   refine ⟨(c : ENNReal), hν.trans ?_⟩
   ext s _
-  rw [Measure.smul_apply, Measure.smul_apply, ENNReal.smul_def]
+  rw [smul_apply, smul_apply, ENNReal.smul_def]
 
 private theorem psi_inf (F : Type) [Field F] [NumberField F] [IsTotallyReal F]
     (y : InfinitePlace F → ℝ) :

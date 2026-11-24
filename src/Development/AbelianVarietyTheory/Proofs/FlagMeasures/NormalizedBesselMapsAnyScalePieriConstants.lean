@@ -78,8 +78,8 @@ theorem bessel_move_gap : GlobalTheory.GapIn.Hyp → ∀ (k r : ℕ) (Wp : Type)
     rw [e] at h
     exact h
   · intro l₁ hl x hx v hv
-    haveI := hW.1
-    haveI := hμN.1
+    have := hW.1
+    have := hμN.1
     rw [← (hl.2 _ (sig_sm hR (inv_mem ht) hx) _ (sig_TK hR (inv_mem ht) hv)).2]
     show _ = Formalism.FourierDecayAlt.ThreeDimData.be z cStd π R.σ μW (μN.map (conjE ht)) _ _
     unfold Formalism.FourierDecayAlt.ThreeDimData.be

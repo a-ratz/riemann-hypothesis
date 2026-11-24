@@ -84,11 +84,11 @@ theorem exists_etale_model_of_isColimit :
     simp only [CommRingCat.hom_comp, RingHom.coe_comp, Function.comp_apply] at h2
     rw [h2]
     exact h1
-  letI : Algebra (D.obj j) c.pt := (c.ι.app j).hom.toAlgebra
-  letI : Algebra (D.obj j) A := ((algebraMap c.pt A).comp (c.ι.app j).hom).toAlgebra
-  haveI : IsScalarTower (D.obj j) c.pt A := IsScalarTower.of_algebraMap_eq (fun _ ↦ rfl)
-  haveI : P.HasCoeffs (D.obj j) := ⟨by rw [RingHom.coe_range]; exact hj⟩
-  letI : Fintype σ := Fintype.ofFinite σ
+  let : Algebra (D.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  let : Algebra (D.obj j) A := ((algebraMap c.pt A).comp (c.ι.app j).hom).toAlgebra
+  have : IsScalarTower (D.obj j) c.pt A := IsScalarTower.of_algebraMap_eq (fun _ ↦ rfl)
+  have : P.HasCoeffs (D.obj j) := ⟨by rw [RingHom.coe_range]; exact hj⟩
+  let : Fintype σ := Fintype.ofFinite σ
   let P₀ := P.toPreSubmersivePresentation.ofHasCoeffs (D.obj j)
   have hP₀ : P₀.jacobian = Ideal.Quotient.mk _ (P.jacobianOfHasCoeffs (D.obj j)) := by
     simp only [P₀]
@@ -130,9 +130,9 @@ theorem exists_etale_model_of_isColimit :
       exact map_zero _
     · rw [MvPolynomial.notMem_support_iff.mp hm, map_zero]
 
-  letI : Algebra (D.obj j) (D.obj K) := (D.map g).hom.toAlgebra
-  letI : Algebra (D.obj K) c.pt := (c.ι.app K).hom.toAlgebra
-  haveI : IsScalarTower (D.obj j) (D.obj K) c.pt := IsScalarTower.of_algebraMap_eq (fun x ↦ by
+  let : Algebra (D.obj j) (D.obj K) := (D.map g).hom.toAlgebra
+  let : Algebra (D.obj K) c.pt := (c.ι.app K).hom.toAlgebra
+  have : IsScalarTower (D.obj j) (D.obj K) c.pt := IsScalarTower.of_algebraMap_eq (fun x ↦ by
     change (c.ι.app j).hom x = (c.ι.app K).hom ((D.map g).hom x)
     rw [← c.w g]
     rfl)
@@ -164,7 +164,7 @@ theorem exists_etale_model_of_isColimit :
     exact h2
   let Q' : Algebra.SubmersivePresentation (D.obj K) (D.obj K ⊗[D.obj j] M) ι σ :=
     { toPreSubmersivePresentation := Q, jacobian_isUnit := hQ }
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension 0 (D.obj K) (D.obj K ⊗[D.obj j] M) :=
+  have : Algebra.IsStandardSmoothOfRelativeDimension 0 (D.obj K) (D.obj K ⊗[D.obj j] M) :=
     Q'.isStandardSmoothOfRelativeDimension (by rw [← hP]; rfl)
   refine ⟨K, D.obj K ⊗[D.obj j] M, inferInstance, inferInstance, inferInstance, ⟨?_⟩⟩
   exact (Algebra.TensorProduct.cancelBaseChange (D.obj j) (D.obj K) c.pt c.pt M).trans

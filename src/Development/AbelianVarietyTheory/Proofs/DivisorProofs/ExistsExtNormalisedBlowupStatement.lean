@@ -215,23 +215,23 @@ namespace GlobalTheory.FinLift
 theorem lift_fieldPoint : ∀ (U X : Scheme.{0}) (c : U ⟶ X) [IsFinite c] [Surjective c] (K : Type) [Field K] (y : Sp K ⟶ X), ∃ (K' : Type) (_ : Field K') (_ : Algebra K K') (_ : FiniteDimensional K K') (y' : Sp K' ⟶ U), y' ≫ c = spMap (algebraMap K K') ≫ y := by
   intro U X c _ _ K _ y
   set P := pullback y c
-  haveI : IsAffine P := inferInstance
+  have : IsAffine P := inferInstance
   let f : P ⟶ Sp K := pullback.fst y c
   let A : CommRingCat := Γ(P, ⊤)
   let φ : CommRingCat.of K ⟶ A := Spec.preimage (P.isoSpec.inv ≫ f)
   have hφ : Spec.map φ = P.isoSpec.inv ≫ f := Spec.map_preimage _
-  haveI : IsFinite (Spec.map φ) := by rw [hφ]; infer_instance
+  have : IsFinite (Spec.map φ) := by rw [hφ]; infer_instance
   have hfin : φ.hom.Finite := (IsFinite.SpecMap_iff φ).mp inferInstance
 
   obtain ⟨p, -⟩ := (pullback.fst y c).surjective (IsLocalRing.closedPoint K)
-  haveI : Nontrivial A := by
+  have : Nontrivial A := by
     have q : PrimeSpectrum A := P.isoSpec.hom.base p
     exact q.nontrivial
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (A : Type)
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
-  letI : Algebra K A := φ.hom.toAlgebra
-  haveI : Module.Finite K A := hfin
-  haveI : Module.Finite K (A ⧸ m) := Module.Finite.trans A (A ⧸ m)
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
+  let : Algebra K A := φ.hom.toAlgebra
+  have : Module.Finite K A := hfin
+  have : Module.Finite K (A ⧸ m) := Module.Finite.trans A (A ⧸ m)
   refine ⟨A ⧸ m, inferInstance, inferInstance, inferInstance,
     Spec.map (CommRingCat.ofHom (Ideal.Quotient.mk m)) ≫ P.isoSpec.inv ≫ pullback.snd y c, ?_⟩
   simp only [Category.assoc]
@@ -289,16 +289,16 @@ theorem exists_eq_of_mul_mem_integralClosure
     ∃ r : R, algebraMap R K r = x := by
   classical
   let L := IntermediateField.normalClosure K K' (AlgebraicClosure K')
-  letI : Algebra R L := ((algebraMap K L).comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower R K' L := IsScalarTower.of_algebraMap_eq (fun r => by
+  let : Algebra R L := ((algebraMap K L).comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower R K' L := IsScalarTower.of_algebraMap_eq (fun r => by
     rw [IsScalarTower.algebraMap_apply R K K', ← IsScalarTower.algebraMap_apply K K' L]; rfl)
-  haveI : FiniteDimensional K L := inferInstance
-  haveI : IsGalois K L := inferInstance
-  haveI : IsScalarTower R R L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : FiniteDimensional K L := inferInstance
+  have : IsGalois K L := inferInstance
+  have : IsScalarTower R R L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let S := integralClosure R L
   let C := integralClosure R K'
-  haveI : IsFractionRing S L := integralClosure.isFractionRing_of_finite_extension K L
+  have : IsFractionRing S L := integralClosure.isFractionRing_of_finite_extension K L
   let f : C →ₐ[R] S := ((IsScalarTower.toAlgHom R K' L).comp C.val).codRestrict S
     (fun c => (c.2 : IsIntegral R (c : K')).map (IsScalarTower.toAlgHom R K' L))
   have hfv : ∀ c : C, ((f c : S) : L) = algebraMap K' L (c : K') := fun _ => rfl
@@ -307,9 +307,9 @@ theorem exists_eq_of_mul_mem_integralClosure
     have := congrArg (fun u : S => (u : L)) h
     simp only [hfv] at this
     exact Subtype.ext ((algebraMap K' L).injective this)
-  letI : Algebra C S := f.toRingHom.toAlgebra
-  haveI : IsScalarTower R C S := IsScalarTower.of_algebraMap_eq (fun r => (f.commutes r).symm)
-  haveI : Algebra.IsIntegral C S := ⟨fun u => (Algebra.IsIntegral.isIntegral (R := R) u).tower_top⟩
+  let : Algebra C S := f.toRingHom.toAlgebra
+  have : IsScalarTower R C S := IsScalarTower.of_algebraMap_eq (fun r => (f.commutes r).symm)
+  have : Algebra.IsIntegral C S := ⟨fun u => (Algebra.IsIntegral.isIntegral (R := R) u).tower_top⟩
   obtain ⟨Q, hQmax, hQ⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := S) P
     (by rw [(RingHom.injective_iff_ker_eq_bot (algebraMap C S)).mp hfinj]; exact bot_le)
   obtain ⟨a, b, hb, hab⟩ := IsFractionRing.div_surjective (A := R) x
@@ -343,8 +343,8 @@ theorem exists_eq_of_mul_mem_integralClosure
   have hJtop : J = ⊤ := by
     by_contra hne
     obtain ⟨N, hNmax, hJN⟩ := Ideal.exists_le_maximal J hne
-    haveI : Finite (S ≃ₐ[R] S) := Finite.of_equiv _ (galRestrict R K L S).toEquiv
-    haveI : Algebra.IsInvariant R S (S ≃ₐ[R] S) := Algebra.isInvariant_of_isGalois' R K L S
+    have : Finite (S ≃ₐ[R] S) := Finite.of_equiv _ (galRestrict R K L S).toEquiv
+    have : Algebra.IsInvariant R S (S ≃ₐ[R] S) := Algebra.isInvariant_of_isGalois' R K L S
     obtain ⟨g, hg⟩ := Algebra.IsInvariant.exists_smul_of_under_eq (A := R) (B := S) (G := S ≃ₐ[R] S) Q N
       ((hmax Q).trans (hmax N).symm)
     set_option synthInstance.maxHeartbeats 200000 in
@@ -367,30 +367,30 @@ theorem exists_local_normal_domain_of_finite_extension : ∀ (R : Type) [CommRin
   intro R _ _ _ _ _ _ K' _ _ _
   classical
   let K := FractionRing R
-  haveI : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
-  letI : Algebra R K' := ((algebraMap K K').comp (algebraMap R K)).toAlgebra
-  haveI : IsScalarTower R K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : CharZero K := charZero_of_injective_algebraMap (IsFractionRing.injective R K)
+  let : Algebra R K' := ((algebraMap K K').comp (algebraMap R K)).toAlgebra
+  have : IsScalarTower R K K' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let C := integralClosure R K'
-  haveI : IsFractionRing C K' := integralClosure.isFractionRing_of_finite_extension K K'
-  haveI : IsIntegrallyClosed C := integralClosure.isIntegrallyClosedOfFiniteExtension K
-  haveI : IsNoetherianRing C := IsIntegralClosure.isNoetherianRing R K K' C
-  haveI : IsDomain C := inferInstance
+  have : IsFractionRing C K' := integralClosure.isFractionRing_of_finite_extension K K'
+  have : IsIntegrallyClosed C := integralClosure.isIntegrallyClosedOfFiniteExtension K
+  have : IsNoetherianRing C := IsIntegralClosure.isNoetherianRing R K K' C
+  have : IsDomain C := inferInstance
   obtain ⟨m', hm'⟩ := Ideal.exists_maximal C
   obtain ⟨R', _, _, _⟩ : ∃ (R' : Type) (_ : CommRing R') (_ : Algebra C R'),
       IsLocalization.AtPrime R' m' :=
     ⟨Localization.AtPrime m', inferInstance, inferInstance, inferInstance⟩
-  haveI : IsLocalRing R' := IsLocalization.AtPrime.isLocalRing R' m'
-  haveI : IsDomain R' :=
+  have : IsLocalRing R' := IsLocalization.AtPrime.isLocalRing R' m'
+  have : IsDomain R' :=
     IsLocalization.isDomain_of_le_nonZeroDivisors (M := m'.primeCompl) (S := R') m'.primeCompl_le_nonZeroDivisors
-  haveI : IsNoetherianRing R' := IsLocalization.isNoetherianRing m'.primeCompl R' inferInstance
-  haveI : IsIntegrallyClosed R' :=
+  have : IsNoetherianRing R' := IsLocalization.isNoetherianRing m'.primeCompl R' inferInstance
+  have : IsIntegrallyClosed R' :=
     isIntegrallyClosed_of_isLocalization R' m'.primeCompl m'.primeCompl_le_nonZeroDivisors
-  letI : Algebra R' K' := (IsLocalization.lift (M := m'.primeCompl) (S := R') (g := algebraMap C K')
+  let : Algebra R' K' := (IsLocalization.lift (M := m'.primeCompl) (S := R') (g := algebraMap C K')
     (fun y => IsUnit.mk0 _ ((map_ne_zero_iff _ (IsFractionRing.injective C K')).mpr
       (fun h => y.2 (h ▸ m'.zero_mem))))).toAlgebra
-  haveI : IsScalarTower C R' K' :=
+  have : IsScalarTower C R' K' :=
     IsScalarTower.of_algebraMap_eq (fun c => (IsLocalization.lift_eq _ c).symm)
-  haveI : IsFractionRing R' K' :=
+  have : IsFractionRing R' K' :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization m'.primeCompl R' K'
   let e : FractionRing R' ≃+* K' :=
     (FractionRing.algEquiv R' K').toRingEquiv
@@ -802,15 +802,15 @@ theorem relDim {S' : Scheme.{0}} {g : ℕ} {G : Over S'} [GrpObj G] (hGg : Smoot
 
 theorem exists_integral_hodgeGen : ∀ (S' : Scheme.{0}) (g : ℕ) (G : Over S') [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → SmoothOfRelativeDimension g G.hom → ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianRing R] [IsIntegrallyClosed R] (G₁ : Over (Sp R)) [GrpObj G₁] [IsCommMonObj G₁], IsSemiAbelian G₁ → ∀ (y : Sp (FractionRing R) ⟶ S') (α : pullback G₁.hom (jK R) ⟶ G.left), IsGrpPullback ((Over.pullback (jK R)).obj G₁) G y α → ∃ e₀ : LB.Gen ((hodge G g).pull y), e₀.IsGen ∧ ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ (φ : R →+* W) (gam : FractionRing R →+* FractionRing W), (∀ r, gam (algebraMap R _ r) = algebraMap W _ (φ r)) → ∀ χ' : Sp W ⟶ S', spMap gam ≫ y = jK W ≫ χ' → ∃ e₀' : LB.Gen ((hodge G g).pull χ'), e₀'.IsGen ∧ ∀ (z : Sp (FractionRing W)) (J : (Sp (FractionRing W) ⟶ S') → (hodge G g).ι), Good (hodge G g) z J → val (L := hodge G g) (φ := fun _ : PUnit => y) (ε := fun _ => 1) e₀ (spMap gam) z J = val (L := hodge G g) (φ := fun _ : PUnit => χ') (ε := fun _ => 1) e₀' (jK W) z J := by
   intro S' g G _ _ hG hGg R _ _ _ _ _ G₁ _ _ hG₁ y α hα
-  haveI := hG; haveI := hG₁
-  haveI : SmoothOfRelativeDimension g G₁.hom := relDim hGg hG₁ hα
+  have := hG; have := hG₁
+  have : SmoothOfRelativeDimension g G₁.hom := relDim hGg hG₁ hα
   obtain ⟨ε, hε⟩ := exists_isFrame_top_of_isLocalRing R (omega G₁) (isVB_omega G₁ g)
   have p₁ := isGrpPullback_pullback G₁ (jK R)
   have ha : IsFrame fun i => (omegaBase p₁).app ⊤ (pullbackSections (jK R) _ le_top (ε i)) :=
     (GlobalTheory.BadPt.Fibre.frame_pb (jK R) hε le_top).map_iso _
   refine ⟨gen hα ha, GlobalTheory.T.hodgeBundlePullbackGenOfFrame_isGen hα ha, ?_⟩
   intro W _ _ _ hW φ gam hgam χ' hχ
-  haveI : IsDiscreteValuationRing W := hW.1
+  have : IsDiscreteValuationRing W := hW.1
   obtain ⟨ρ', ψ', hρ', hψ', e₁, e₂⟩ := GlobalTheory.T.traitPullback_semiAbelianModel_identification hG hG₁ hα φ gam hgam χ' hχ
   have pW := isGrpPullback_pullback G₁ (spMap φ)
   have ha' : IsFrame fun i => (omegaBase pW).app ⊤ (pullbackSections (spMap φ) _ le_top (ε i)) :=
@@ -1124,16 +1124,16 @@ theorem exists_ext_of_minAt5 : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (Z : 
   intro g n F Z z i OZ h R _ _ _ _ _ _ G₁ _ _ hG₁ y α₁ hα₁ b hyb
   obtain ⟨o', _, β, S', s', U, c, π, G, _, e, _, N, ⟨-, hz, -, hiz, -, hOZ, hamp⟩,
     ⟨-, -, -, -, -, hcfin, hcsurj, hUπ, -, -, hπp, -⟩, ⟨hGsa, hGsm, he⟩, ⟨-, hL⟩⟩ := h
-  haveI := hcfin
-  haveI := hcsurj
-  haveI := hπp
-  haveI : IsProper z := by
+  have := hcfin
+  have := hcsurj
+  have := hπp
+  have : IsProper z := by
     obtain ⟨m, j, hj, rfl⟩ := hz
     have := isProper_str (cycAway n) m
     infer_instance
   obtain ⟨K', _, _, _, y', hy'⟩ := GlobalTheory.T.exists_fieldPoint_lift_finite_surjective_morphism U.toScheme F.X c (FractionRing R) y
   obtain ⟨R', _, _, _, _, _, ρ, eR, -, hinj, hcomp, hmeet⟩ := GlobalTheory.T.exists_local_normal_domain_finite_extension R K'
-  haveI : CharZero R' := charZero_of_injective_ringHom hinj
+  have : CharZero R' := charZero_of_injective_ringHom hinj
   let gam : FractionRing R →+* FractionRing R' := (eR.symm : K' →+* FractionRing R').comp (algebraMap (FractionRing R) K')
   have E1 : spMap gam = spMap (eR.symm : K' →+* FractionRing R') ≫ spMap (algebraMap (FractionRing R) K') :=
     spMap_comp_eq _ _
@@ -1154,7 +1154,7 @@ theorem exists_ext_of_minAt5 : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (Z : 
     simp only [Category.assoc]
   let G₁' := (Over.pullback (spMap ρ)).obj G₁
   have hG₁' : IsSemiAbelian G₁' := IsSemiAbelian.pullback (spMap ρ) G₁ hG₁
-  haveI : IsCommMonObj G₁' := hG₁'.comm
+  have : IsCommMonObj G₁' := hG₁'.comm
   have h1 := ((isGrpPullback_pullback G₁' (jK R')).comp (isGrpPullback_pullback G₁ (spMap ρ))).congr E2.symm rfl
   obtain ⟨φ1, hφ1⟩ := exists_factor (isGrpPullback_pullback G₁ (jK R)) h1 rfl
   have h2 := (hφ1.comp hα₁).congr E4 rfl
@@ -1192,10 +1192,10 @@ theorem Taut.exists_ext_normBl : ∀ g : ℕ, 1 ≤ g → ∀ φ : InvFun ℤ, I
   obtain ⟨J, -, -, hval, hbl, -, -, hji, hpre, -, -⟩ := hB
   obtain ⟨hreg, hchar, -, -, hpar, -⟩ := Taut.isRegularLocalRing_and_isRelParam g n φ hn C
   obtain ⟨hmono, hrk, hcone, hdef, ht⟩ := Taut.monomial_chart g n φ (by omega) C
-  haveI : IsOpenImmersion i := hM.isThetaCompact.1.2.2.1
-  haveI : IsCommMonObj G₁ := hsa.comm
-  haveI : IsNoetherianRing C.R := C.compl.1
-  haveI : IsIntegrallyClosed C.R := hmum.1.2.1
+  have : IsOpenImmersion i := hM.isThetaCompact.1.2.2.1
+  have : IsCommMonObj G₁ := hsa.comm
+  have : IsNoetherianRing C.R := C.compl.1
+  have : IsIntegrallyClosed C.R := hmum.1.2.1
   obtain ⟨a, ha⟩ := GlobalTheory.MinExt.exists_ext_of_minAt5 g n F Z z i OZ hM C.R G₁ hsa y α₁ hgen C.b hy
   have hon : IsPolFanOn id φ C.Q.X := hφ C.Q.X hrk
   have he : ∀ k, ∃ e : ℕ, (e : ℝ) = d * φ.evalZ ((n : ℤ) • C.δ k) := by

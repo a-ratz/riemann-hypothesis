@@ -67,21 +67,21 @@ theorem _root_.GlobalTheory.CuspGL.ipGL_charpoly_eq_finsum_mass (F : Type) [Fiel
       ∑ᶠ P ∈ {P : F[X] | P.Monic ∧ P.natDegree = Module.finrank F V ∧ P.coeff 0 ≠ 0},
         _root_.GlobalTheory.CuspGL.mass φ P * star (s P) := by
   classical
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Module.End F V) :=
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Module.End F V) :=
     Finite.of_injective (fun g : Module.End F V => (g : V → V)) DFunLike.coe_injective
   set S := {P : F[X] | P.Monic ∧ P.natDegree = Module.finrank F V ∧ P.coeff 0 ≠ 0} with hS
   set I := S ∩ Set.range (fun g : Module.End F V => LinearMap.charpoly g) with hI
   have hunit : ∀ g : Module.End F V, IsUnit g ↔ LinearMap.charpoly g ∈ S := by
     intro g
-    simp only [hS, Set.mem_setOf_eq, LinearMap.charpoly_monic, LinearMap.charpoly_natDegree,
+    simp only [hS, Set.mem_ofPred_eq, LinearMap.charpoly_monic, LinearMap.charpoly_natDegree,
       true_and]
     rw [LinearMap.isUnit_iff_isUnit_det, LinearMap.det_eq_sign_charpoly_coeff, isUnit_iff_ne_zero]
     simp
   have hset : {g : Module.End F V | IsUnit g} =
       ⋃ P ∈ I, {g : Module.End F V | LinearMap.charpoly g = P} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion, hI, Set.mem_inter_iff, Set.mem_range,
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, hI, Set.mem_inter_iff, Set.mem_range,
       exists_prop]
     rw [hunit]
     constructor
@@ -100,7 +100,7 @@ theorem _root_.GlobalTheory.CuspGL.ipGL_charpoly_eq_finsum_mass (F : Type) [Fiel
       apply hne
       have hempty : {g : Module.End F V | LinearMap.charpoly g = P} = ∅ := by
         ext g
-        simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
         exact fun h => hr ⟨g, h⟩
       unfold _root_.GlobalTheory.CuspGL.mass
       simp [hempty]

@@ -140,7 +140,7 @@ theorem UpperTheory.V.Z.J.triOk :
     have e : (B.r (F.loc v s)).mat = ρ.r (F.loc0 v s) := hB.res (F.loc0 v s)
     rw [e]
     exact hB.psi v j s
-  have hloc : Continuous (F.loc v) := continuous_subtype_val.comp (hF.loc_cont v)
+  have hloc : Continuous (F.loc v) := continuous_subtypeVal.comp (hF.loc_cont v)
   refine ⟨⟨fun i j => ?_, fun s => ?_, ?_⟩, ?_, hd⟩
   · have e : (fun s => (triOf B v s : Matrix (Fin 3) (Fin 3) O) i j) = fun s =>
         ∑ b, (∑ a, (B.g v : Matrix (Fin 3) (Fin 3) O) i a * (B.r (F.loc v s)).mat a b) *

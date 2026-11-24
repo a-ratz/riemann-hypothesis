@@ -29,7 +29,7 @@ private theorem out_eq (h : Umg φ) :
   rfl
 
 private theorem cont_of (h : Rep μ v φ) : IsContRep μ v fun y => φ.1 (y : GA E n) := by
-  refine ⟨(((umgOps E) n).2 φ h.umg).1.comp continuous_subtype_val, fun γ hγ y => ?_, ?_⟩
+  refine ⟨(((umgOps E) n).2 φ h.umg).1.comp continuous_subtypeVal, fun γ hγ y => ?_, ?_⟩
   · obtain ⟨γ', hγ'⟩ := Subgroup.mem_subgroupOf.1 hγ
     change φ.1 ((γ : AdelicGLn.AdelicGL E n) * y) = _
     rw [← hγ']

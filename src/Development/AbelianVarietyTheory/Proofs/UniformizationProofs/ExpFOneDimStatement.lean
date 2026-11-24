@@ -67,7 +67,7 @@ namespace GlobalTheory.UU.OneDim
 theorem gs_zero {X Y : Scheme.{0}} (f : Y ⟶ X) (y : Y) (U : X.Opens) : gs f y U 0 = 0 := by
   by_cases h : f y ∈ U
   · rw [gs_eq f y U h, map_zero, map_zero]
-  · exact dif_neg h
+  · exact dite_eq_right h
 
 def zeroSec {Y : Scheme.{0}} (M : LB Y) : LB.Sec M :=
   ⟨fun _ => 0, fun i j => by rw [map_zero, map_zero, mul_zero]⟩
@@ -132,8 +132,8 @@ end
 
 theorem exists_smul_of_finrank_one {F B M : Type} [Field F] [CommRing B] [AddCommGroup M] [Module B M]
     (e : F ≃+* B) (h : Module.finrank B M = 1) {v : M} (hv : v ≠ 0) (w : M) : ∃ c : F, e c • v = w := by
-  letI : Field B := (e.symm.toMulEquiv.isField (Field.toIsField F)).toField
-  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (K := B) v hv).1 h w
+  let : Field B := (e.symm.toMulEquiv.isField (Field.toIsField F)).toField
+  obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (K := B) v hv).1 h w
   exact ⟨e.symm c, by rw [e.apply_symm_apply]; exact hc⟩
 
 theorem expF_one_dim : Laws → Laws2 → (AllPre fun {V} _ _ _ {D} {A} {G} _ _ U => ∀ θ f, U.Theta θ f → ∀ (th : LB.Sec (LPow A.A A.L ((1 : ℕ) : ℤ) (TFK (R := V) (Kbar V)))) (s₀ : Raw D (Kbar V) 1), U.PullG (Kbar V) (toUnit _) 1 θ th → PullB D (Kbar V) (toUnit _) 1 f s₀ → (∃ j, th.f j ≠ 0) ∧ U.ExpF (Kbar V) 1 th s₀ ∧ ∀ t s, U.ExpF (Kbar V) 1 t s → ∃ c : (Kbar V), ∀ α j, (s α).f j = DegPre.constBF D (Kbar V) c _ * (s₀ α).f j) := by

@@ -87,7 +87,7 @@ lemma luMap_eq (z : ι → Fin n → Fin n → ℂ) :
     simp only [loP, upperParabolic]; split_ifs <;> simp
   simp only [luMap, Pi.add_apply, Matrix.mul_apply, Matrix.of_apply, add_mul, mul_add,
     Finset.sum_add_distrib, oneE, ite_mul, one_mul, zero_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true, ↓reduceIte]
+    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true, ↓reduceIte]
   linear_combination hz
 
 lemma strict_coord (τ : ι) (a c : Fin n) : ∃ L, HasStrictFDerivAt (𝕜 := ℂ) (fun z : ι → Fin n → Fin n → ℂ => z τ a c) L 0 := by
@@ -200,7 +200,7 @@ lemma local_zero {Q : (ι → Fin n → Fin n → ℂ) → ℂ} {Ω : Set (ι �
     have he : ∀ (θ : ℝ) (k : Fin n), Complex.exp ((((k : ℕ) : ℝ) * θ : ℝ) * Complex.I) =
         Complex.exp (θ * Complex.I) ^ (k : ℕ) := by
       intro θ k
-      rw [← Complex.exp_nat_mul]; congr 1; push_cast; ring
+      rw [← Complex.exp_natCast_mul]; congr 1; push_cast; ring
     have hcirc : ∀ ζ : ℂ, ‖ζ‖ = 1 → Q (oneE ι n + loP ζ z) = Q (oneE ι n + loP 1 z) := by
       intro ζ hζ
       have hζe : Complex.exp ((Complex.arg ζ : ℂ) * Complex.I) = ζ := by
@@ -215,8 +215,8 @@ lemma local_zero {Q : (ι → Fin n → Fin n → ℂ) → ℂ} {Ω : Set (ι �
       simp only [oneE, loP]
       rcases lt_trichotomy c a with h | h | h
       · have hne : a ≠ c := (ne_of_lt h).symm
-        have hca : (c : ℕ) ≤ a := (Fin.lt_iff_val_lt_val.mp h).le
-        simp only [if_neg hne, if_pos h, zero_add, one_pow, one_mul]
+        have hca : (c : ℕ) ≤ a := (Fin.lt_def.mp h).le
+        simp only [ite_eq_right hne, ite_eq_left h, zero_add, one_pow, one_mul]
         rw [show ζ ^ (a : ℕ) = ζ ^ ((a : ℕ) - c) * ζ ^ (c : ℕ) by
           rw [← pow_add, Nat.sub_add_cancel hca]]
         ring
@@ -236,7 +236,7 @@ lemma local_zero {Q : (ι → Fin n → Fin n → ℂ) → ℂ} {Ω : Set (ι �
       funext τ a c
       simp only [loP, Pi.zero_apply]
       split_ifs with h
-      · rw [zero_pow (Nat.sub_ne_zero_of_lt (Fin.lt_iff_val_lt_val.mp h)), zero_mul]
+      · rw [zero_pow (Nat.sub_ne_zero_of_lt (Fin.lt_def.mp h)), zero_mul]
       · rfl
     have : Q (oneE ι n + loP 1 z) = Q (oneE ι n + loP 0 z) := by
       have h0 := norm_le_zero_iff.1 hmax
@@ -258,7 +258,7 @@ lemma local_zero {Q : (ι → Fin n → Fin n → ℂ) → ℂ} {Ω : Set (ι �
       intro a c h
       simp [oneE, upperParabolic, h, (ne_of_lt h).symm]
     refine ⟨?_, hlow⟩
-    rw [Matrix.det_of_upperTriangular (by intro a c h; exact hlow a c h)]
+    rw [det_of_isUpperTriangular (by intro a c h; exact hlow a c h)]
     refine Finset.prod_ne_zero_iff.2 fun a _ => ?_
     have hv : (Matrix.of ((oneE ι n + upperParabolic z) τ) : Mt n) a a = 1 + z τ a a := by simp [oneE, upperParabolic]
     rw [hv]
@@ -282,15 +282,15 @@ theorem eq_zero_of_torus_law (n : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι]
   have hUpT1 : UpT (1 : Mt n) := ⟨by simp, fun a c hac => Matrix.one_apply_ne (ne_of_lt hac).symm⟩
   have hUHmul : ∀ (H g k : Mt n), g ∈ Formalism.QuantumDeterminants.UH H → k ∈ Formalism.QuantumDeterminants.UH H → g * k ∈ Formalism.QuantumDeterminants.UH H := by
     intro H g k hg hk
-    simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at hg hk ⊢
+    simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq] at hg hk ⊢
     rw [Matrix.conjTranspose_mul]
     calc kᴴ * gᴴ * H * (g * k) = kᴴ * (gᴴ * H * g) * k := by simp only [Matrix.mul_assoc]
       _ = H := by rw [hg, hk]
   have hUG1 : (1 : ι → Mt n) ∈ UG Hm := by
-    simp only [UG, Set.mem_setOf_eq]; intro τ; simp [Formalism.QuantumDeterminants.UH]
+    simp only [UG, Set.mem_ofPred_eq]; intro τ; simp [Formalism.QuantumDeterminants.UH]
   have hUGmul : ∀ u v : ι → Mt n, u ∈ UG Hm → v ∈ UG Hm → u * v ∈ UG Hm := by
     intro u v hu hv
-    simp only [UG, Set.mem_setOf_eq] at hu hv ⊢
+    simp only [UG, Set.mem_ofPred_eq] at hu hv ⊢
     intro τ; exact hUHmul _ _ _ (hu τ) (hv τ)
   have htor : ∀ s, torEl x₀ s ∈ UG Hm := fun s => by
     have := TorusLaw.mul_torEl_mem h s hUG1
@@ -306,7 +306,7 @@ theorem eq_zero_of_torus_law (n : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι]
       ⟨_, fun _ => rfl⟩
     have hbT : ∀ τ, UpT (b τ) := fun τ => by rw [hb]; exact (hβ τ (x τ) (hxτ τ)).1
     have huG : u ∈ UG Hm := by
-      simp only [UG, Set.mem_setOf_eq]; intro τ; rw [hu, hb]; exact (hβ τ (x τ) (hxτ τ)).2
+      simp only [UG, Set.mem_ofPred_eq]; intro τ; rw [hu, hb]; exact (hβ τ (x τ) (hxτ τ)).2
     have hxeq : ∀ τ, (Matrix.of (x τ) : Mt n) = u τ * x₀ τ * b τ := by
       intro τ
       have hbu : IsUnit (b τ).det := isUnit_iff_ne_zero.2 (hbT τ).1

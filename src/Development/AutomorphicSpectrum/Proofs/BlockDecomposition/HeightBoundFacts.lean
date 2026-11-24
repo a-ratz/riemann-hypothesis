@@ -68,7 +68,7 @@ theorem sum_single_one : ∑ a : Fin n, (Matrix.single a a (1 : ℂ) : Mat n) = 
   · subst h
     simp
   · rw [Matrix.one_apply_ne h]
-    refine Finset.sum_eq_zero fun x _ => if_neg fun hx => h (hx.1.symm.trans hx.2)
+    refine Finset.sum_eq_zero fun x _ => ite_eq_right fun hx => h (hx.1.symm.trans hx.2)
 
 theorem sqrt_two_inv_sq : ((Real.sqrt 2 : ℝ) : ℂ)⁻¹ * ((Real.sqrt 2 : ℝ) : ℂ)⁻¹ = 1 / 2 :=
   GlobalTheory.CompanionTheory.TopClass.sqrt_two_inv_sq

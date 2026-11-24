@@ -550,7 +550,7 @@ private theorem exists_unique_pt {G : Type} [TopologicalSpace G] [TopologicalSpa
   obtain ⟨Z, hZ, haZ⟩ : ∃ Z ∈ irreducibleComponents G, a ∈ Z :=
     ⟨_, irreducibleComponent_mem_irreducibleComponents a, mem_irreducibleComponent⟩
   have hfin : (irreducibleComponents G \ {Z}).Finite :=
-    TopologicalSpace.NoetherianSpace.finite_irreducibleComponents.diff
+    TopologicalSpace.NoetherianSpace.finite_irreducibleComponents.sdiff
   have hnot : ¬ Z ⊆ ⋃₀ (irreducibleComponents G \ {Z}) := by
     intro hsub
     obtain ⟨W, hW, hZW⟩ := (isIrreducible_iff_sUnion_isClosed.1 hZ.1) hfin.toFinset
@@ -630,7 +630,7 @@ theorem UpperTheory.V.AlgebraTools.idComp :
       apply QuotientGroup.eq.2
       rw [← hcb, inv_mul_cancel_left]
       exact hc
-    haveI : Finite (irreducibleComponents G) :=
+    have : Finite (irreducibleComponents G) :=
       TopologicalSpace.NoetherianSpace.finite_irreducibleComponents.to_subtype
     exact Finite.of_injective F hFinj
   refine ⟨N, ⟨fun n hn g => ?_⟩, Subgroup.finiteIndex_of_finite_quotient,
@@ -640,8 +640,8 @@ theorem UpperTheory.V.AlgebraTools.idComp :
     have h2 : g * n * g⁻¹ ∈ ((hl g).trans (hr g⁻¹)) '' C := ⟨n, hn, rfl⟩
     rw [e1] at h2
     exact h2
-  · haveI : Finite (G ⧸ U) := Subgroup.finite_quotient_of_finiteIndex
-    haveI := Fintype.ofFinite (G ⧸ U)
+  · have : Finite (G ⧸ U) := Subgroup.finite_quotient_of_finiteIndex
+    have := Fintype.ofFinite (G ⧸ U)
     let S : G ⧸ U → Set G := fun q => {y | y ∈ C ∧ (y : G ⧸ U) = q}
     obtain ⟨z, hz, hCz⟩ := (isIrreducible_iff_sUnion_isClosed.1 hC.1)
       (Finset.univ.image fun q => closure (S q)) (by simp [isClosed_closure]) (by
@@ -728,9 +728,9 @@ theorem UpperTheory.V.AlgebraTools.idCompMat :
   classical
   intro K G ι _ _ _ _ r
   let f : G → PrimeSpectrum (MvPolynomial (ι × ι) K) := fun g => UpperTheory.V.AlgebraTools.icmPt (r g)
-  letI tG : TopologicalSpace G := TopologicalSpace.induced f inferInstance
+  let tG : TopologicalSpace G := TopologicalSpace.induced f inferInstance
   have hind : Topology.IsInducing f := ⟨rfl⟩
-  haveI : TopologicalSpace.NoetherianSpace G := hind.noetherianSpace
+  have : TopologicalSpace.NoetherianSpace G := hind.noetherianSpace
   have hf : Continuous f := continuous_induced_dom
   have hL : ∀ g : G, Continuous fun x => g * x := by
     intro g
@@ -786,7 +786,7 @@ theorem UpperTheory.V.AlgebraTools.idCompMat :
       have h2 := h1.preimage (hL σ)
       convert h2 using 1
       ext g
-      simp only [W, Set.mem_setOf_eq, Set.mem_preimage, f, SetLike.mem_coe,
+      simp only [W, Set.mem_ofPred_eq, Set.mem_preimage, f, SetLike.mem_coe,
         PrimeSpectrum.mem_basicOpen]
       show _ ↔ q ∉ RingHom.ker _
       rw [RingHom.mem_ker]
@@ -859,7 +859,7 @@ theorem UpperTheory.V.AlgebraTools.relWeight :
       smul_mem' := by
         rintro c m ⟨k, hk, hm⟩
         exact ⟨k, hk, by rw [smul_comm, hPsmul, hm, _root_.one_zpow]⟩ }
-  haveI : Module.IsTorsionFree ℤ ((ι → ℤ) ⧸ L) :=
+  have : Module.IsTorsionFree ℤ ((ι → ℤ) ⧸ L) :=
     Module.IsTorsionFree.of_smul_eq_zero fun r x hx => by
       obtain ⟨m, rfl⟩ := Submodule.Quotient.mk_surjective L x
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hx
@@ -1122,7 +1122,7 @@ theorem UpperTheory.Reformulated.B.Qh2.diagz :
   have hli : LinearIndependent K v :=
     Module.End.eigenvectors_linearIndependent' (Matrix.toLin' M) a ha v hv
   let P : Matrix (Fin 4) (Fin 4) K := Matrix.of fun r c => v c r
-  have hP : IsUnit P := Matrix.linearIndependent_cols_iff_isUnit.mp hli
+  have hP : IsUnit P := Matrix.linearIndependent_col_iff_isUnit.mp hli
   have hdet : IsUnit P.det := (Matrix.isUnit_iff_isUnit_det P).mp hP
   have hMP : M * P = P * Matrix.diagonal a := by
     ext r c

@@ -125,17 +125,17 @@ theorem symK_X (i j : Fin n) (v : (Fin m × Fin n × Bool) ⊕ (Fin m × Fin n �
   rw [mkDerivation_X]
   rcases v with ⟨a, b, e⟩ | ⟨a, b, e⟩ <;> simp only [Sum.elim_inl, Sum.elim_inr]
   · by_cases ha : ε a = true
-    · rw [if_pos ha]; split_ifs with h
+    · rw [ite_eq_left ha]; split_ifs with h
       · exact Or.inr ⟨Sum.inl (a, i, false), 1, by simp, by simp [inF1, ha]⟩
       · exact Or.inl rfl
-    · rw [if_neg ha]; split_ifs with h
+    · rw [ite_eq_right ha]; split_ifs with h
       · exact Or.inr ⟨Sum.inl (a, j, true), -1, by simp, by simp [inF1]; simpa using ha⟩
       · exact Or.inl rfl
   · by_cases ha : ε a = true
-    · rw [if_pos ha]; split_ifs with h
+    · rw [ite_eq_left ha]; split_ifs with h
       · exact Or.inr ⟨Sum.inr (a, j, false), -1, by simp, by simp [inF1, ha]⟩
       · exact Or.inl rfl
-    · rw [if_neg ha]; split_ifs with h
+    · rw [ite_eq_right ha]; split_ifs with h
       · exact Or.inr ⟨Sum.inr (a, i, true), 1, by simp, by simp [inF1]; simpa using ha⟩
       · exact Or.inl rfl
 
@@ -160,7 +160,7 @@ theorem symK_monomial_mem {N : ℕ} (i j : Fin n) {t} (ht : t ∈ U ε N) (r : �
   rw [mkDerivation_X] at hsymk
   rcases hsymk with h0 | ⟨v', c, hc, hv'⟩
   · rw [h0, smul_zero]; exact Submodule.zero_mem _
-  · rw [hc, smul_eq_mul, mul_smul_comm, X, monomial_mul]
+  · rw [hc, smul_eq_mul, mul_smul_comm, X, monomial_mul_monomial]
     refine Submodule.smul_mem _ _ (monomial_mem_S ⟨?_, ?_⟩ _)
     · have hle : Finsupp.single v 1 ≤ t := by
         rw [Finsupp.single_le_iff]; exact Nat.one_le_iff_ne_zero.2 (Finsupp.mem_support_iff.1 hv)
@@ -173,7 +173,7 @@ theorem symK_monomial_mem {N : ℕ} (i j : Fin n) {t} (ht : t ∈ U ε N) (r : �
     · intro w hw
       rcases Finset.mem_union.1 (Finsupp.support_add hw) with hw | hw
       · exact ht.2 w (Finsupp.support_tsub hw)
-      · rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hw
+      · rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hw
         exact hw ▸ hv'
 
 theorem symK_mem {N : ℕ} (i j : Fin n) {s : Sym m n} (hs : s ∈ S ε N) : symK ε i j s ∈ S ε N := by
@@ -988,7 +988,7 @@ theorem monomial_split (ε : Fin m → Bool) (s : Fin m × Fin n × Bool →₀ 
     (monomial s a : PX m n) = monomial (s.filter (inF1 ε)) 1 * monomial (s.filter fun k => ¬ inF1 ε k) a ∧
       (monomial (s.filter (inF1 ε)) 1 : PX m n) ∈ box ε {rdeg ε s} ∧
       (monomial (s.filter fun k => ¬ inF1 ε k) a : PX m n) ∈ F2 ε := by
-  refine ⟨by rw [monomial_mul, Finsupp.filter_pos_add_filter_neg, one_mul], ?_, ?_⟩
+  refine ⟨by rw [monomial_mul_monomial, Finsupp.filter_add_filter_not, one_mul], ?_, ?_⟩
   · refine Submodule.subset_span ⟨s.filter (inF1 ε), fun k hk => ?_, by simp [rdeg_filter], rfl⟩
     rw [Finsupp.support_filter, Finset.mem_filter] at hk; exact hk.2
   · refine monomial_mem_supported' _ (fun k hk => ?_) a
@@ -1044,7 +1044,7 @@ theorem coreLC_of' (hBi : Bicomm) (hEL : EquivLift) (hRep : RepB) (hFF : FormFac
   obtain ⟨hherm, hpos, hadj, hKbox, -⟩ := hFF m n ε c hc
   set R : Finset (Fin m → ℕ) := p.support.image (rdeg ε) with hR
   set V := box (n := n) ε (R : Set (Fin m → ℕ)) with hV
-  haveI : FiniteDimensional ℂ V := box_finiteDimensional ε R
+  have : FiniteDimensional ℂ V := box_finiteDimensional ε R
   have hKV : ∀ ij : Fin n × Fin n, ∀ f ∈ V, KopL ε ij.1 ij.2 f ∈ V := fun ij f hf => hKbox ij.1 ij.2 _ f hf
   have hBV : ∀ f ∈ V, B f ∈ V := fun f hf => hBbox _ f hf
   have hBF : ∀ f ∈ F1 ε, B f ∈ F1 ε := fun f hf => by
@@ -1061,7 +1061,7 @@ theorem coreLC_of' (hBi : Bicomm) (hEL : EquivLift) (hRep : RepB) (hFF : FormFac
     obtain ⟨q, hq⟩ := V.exists_isCompl
     let t' : Module.End ℂ (PX m n) := V.subtype ∘ₗ t ∘ₗ V.linearProjOfIsCompl q hq
     have ht' : ∀ f (hf : f ∈ V), t' f = (t ⟨f, hf⟩ : PX m n) := fun f hf => by
-      have e0 := Submodule.linearProjOfIsCompl_apply_left hq ⟨f, hf⟩
+      have e0 := Submodule.projectionOnto_apply_left hq ⟨f, hf⟩
       simp only [t', LinearMap.comp_apply, Submodule.coe_subtype]
       exact congrArg (fun v => ((t v : V) : PX m n)) e0
     have h1 : ∀ f ∈ box ε (R : Set (Fin m → ℕ)), t' f ∈ box ε (R : Set (Fin m → ℕ)) := fun f hf => by
@@ -1153,7 +1153,7 @@ theorem list_single_apply (γ : σ → ℕ) (l : List σ) (k : σ) (hk : k ∉ l
   | cons k' l' ih =>
     rw [List.mem_cons, not_or] at hk
     simp only [List.map_cons, List.sum_cons, Finsupp.coe_add, Pi.add_apply, Finsupp.single_apply,
-      if_neg (Ne.symm hk.1), zero_add]
+      ite_eq_right (Ne.symm hk.1), zero_add]
     exact ih hk.2
 
 theorem list_pderiv (γ : σ → ℕ) (l : List σ) (hl : l.Nodup) (s : σ →₀ ℕ) (a : ℂ) :
@@ -1220,7 +1220,7 @@ theorem op_sum {ι : Type*} (S : Finset ι) (g : ι → Sym m n) (f : PX m n) :
 
 theorem op_monomial (t : σ ⊕ σ →₀ ℕ) (c : ℂ) (f : PX m n) : op (monomial t c) f = c • opMono t f := by
   classical
-  rw [op_eq_sum (monomial t c) {t} (support_monomial_subset), Finset.sum_singleton, coeff_monomial, if_pos rfl]
+  rw [op_eq_sum (monomial t c) {t} (support_monomial_subset), Finset.sum_singleton, coeff_monomial, ite_eq_left rfl]
 
 theorem op_f_add (s : Sym m n) (f g : PX m n) : op s (f + g) = op s f + op s g := by
   unfold op; rw [← Finset.sum_add_distrib]
@@ -1249,7 +1249,7 @@ theorem opMono_shiftL (t : σ ⊕ σ →₀ ℕ) (μ : σ →₀ ℕ) (f : PX m 
   unfold opMono
   rw [comap_inl_add]
   simp only [inr_add]
-  rw [← mul_assoc, monomial_mul, one_mul, add_comm]
+  rw [← mul_assoc, monomial_mul_monomial, one_mul, add_comm]
 
 theorem op_mulL (μ : σ →₀ ℕ) (s : Sym m n) (f : PX m n) :
     op (monomial (Finsupp.mapDomain Sum.inl μ) 1 * s) f = monomial μ 1 * op s f := by
@@ -1257,7 +1257,7 @@ theorem op_mulL (μ : σ →₀ ℕ) (s : Sym m n) (f : PX m n) :
   rw [op_sum]
   conv_rhs => rw [op, Finset.mul_sum]
   refine Finset.sum_congr rfl fun t _ => ?_
-  rw [monomial_mul, one_mul, op_monomial, add_comm, opMono_shiftL, mul_smul_comm]
+  rw [monomial_mul_monomial, one_mul, op_monomial, add_comm, opMono_shiftL, mul_smul_comm]
 
 theorem op_renameL (p : PX m n) (s : Sym m n) (f : PX m n) : op (rename Sum.inl p * s) f = p * op s f := by
 
@@ -1334,7 +1334,7 @@ theorem sf_mulL (μ : σ →₀ ℕ) (hμ : ∀ k ∈ μ.support, inF1 ε k) {s 
     SymbolInFirstFamily ε (monomial (Finsupp.mapDomain Sum.inl μ) c * s) := by
   rw [s.as_sum, Finset.mul_sum]
   refine sf_sum ε _ _ fun t ht => ?_
-  rw [monomial_mul]
+  rw [monomial_mul_monomial]
   exact sf_monomial ε _ _ (goodT_add_inl ε t μ (h t ht) hμ)
 
 theorem sf_renameL (p : PX m n) (hp : p ∈ F1 ε) {s : Sym m n} (h : SymbolInFirstFamily ε s) : SymbolInFirstFamily ε (rename Sum.inl p * s) := by
@@ -1473,7 +1473,7 @@ theorem dens : Dens := by
     simp only [op_renameL]
     rw [Finset.sum_congr rfl fun γ hγ => by rw [(hP γ hγ).2 δ hδ]]
     simp only [mul_ite, mul_one, mul_zero]
-    rw [Finset.sum_ite_eq, if_pos hδ]
+    rw [Finset.sum_ite_eq, ite_eq_left hδ]
   | zero => rw [op_f_zero, map_zero]
   | add x y _ _ hx hy => rw [op_f_add, map_add (f := _), hx, hy]
   | smul a x _ hx => rw [op_f_smul, map_smul, hx]
@@ -1553,7 +1553,7 @@ theorem monomial_mem_first_family (ε : Fin m → Bool) {t : Fin m × Fin n × B
   rw [mem_first_family_iff]
   intro s hs
   have : s = t := by
-    by_contra h; exact (MvPolynomial.mem_support_iff.mp hs) (by rw [coeff_monomial, if_neg (Ne.symm h)])
+    by_contra h; exact (MvPolynomial.mem_support_iff.mp hs) (by rw [coeff_monomial, ite_eq_right (Ne.symm h)])
   subst this; exact ht
 
 theorem monomial_mem_second_family (ε : Fin m → Bool) {t : Fin m × Fin n × Bool →₀ ℕ} (ht : ∀ k ∈ t.support, ¬ inF1 ε k) (d : ℂ) :
@@ -1561,7 +1561,7 @@ theorem monomial_mem_second_family (ε : Fin m → Bool) {t : Fin m × Fin n × 
   rw [mem_second_family_iff]
   intro s hs
   have : s = t := by
-    by_contra h; exact (MvPolynomial.mem_support_iff.mp hs) (by rw [coeff_monomial, if_neg (Ne.symm h)])
+    by_contra h; exact (MvPolynomial.mem_support_iff.mp hs) (by rw [coeff_monomial, ite_eq_right (Ne.symm h)])
   subst this; exact ht
 
 theorem representing_monomial_mem_first_family (ε : Fin m → Bool) (c : ℝ) (Λ : PX m n →ₗ[ℂ] ℂ) (s) : Bm ε c Λ s ∈ F1 ε := by
@@ -1600,7 +1600,7 @@ theorem key_mono (ε : Fin m → Bool) {c : ℝ} (hc : 0 < c) (Λ : PX m n →�
     {s u : Fin m × Fin n × Bool →₀ ℕ} (hs : ∀ k ∈ s.support, inF1 ε k) (hu : ∀ k ∈ u.support, ¬ inF1 ε k) :
     Λ (monomial s 1 * monomial u 1) = contr c (Bm ε c Λ s * monomial u 1) := by
   unfold Bm
-  rw [if_pos hs, Finset.sum_mul, contr_sum]
+  rw [ite_eq_left hs, Finset.sum_mul, contr_sum]
   simp_rw [smul_mul_assoc, contr_smul]
   have e : ∀ t ∈ cand ε (rdeg ε s), contr c (monomial t 1 * monomial u 1) =
       if t = u.mapDomain pE then (wt c t : ℂ) else 0 := fun t ht => by
@@ -1693,21 +1693,21 @@ theorem contraction_first_operator_adjoint (ε : Fin m → Bool) {c : ℝ} (hc :
   have hc2 : ((2 * c : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (by positivity : (2 * c) ≠ 0)
   unfold D1 D2
   by_cases hab : ε a = ε b
-  · rw [if_pos hab, if_pos hab]
+  · rw [ite_eq_left hab, ite_eq_left hab]
     cases ha : ε a
     · have hb : ε b = false := by rw [← hab, ha]
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       rw [Finset.sum_mul, contr_sum, mul_neg, contr_neg, Finset.mul_sum, contr_sum, neg_neg]
       exact Finset.sum_congr rfl fun i _ => tB ε hc ha hb i hh hg
     · have hb : ε b = true := by rw [← hab, ha]
-      simp only [if_true]
+      simp only [ite_true]
       rw [neg_mul, contr_neg, Finset.sum_mul, contr_sum, Finset.mul_sum, contr_sum]
       congr 1
       exact Finset.sum_congr rfl fun i _ => tA ε hc ha hb i hh hg
-  · rw [if_neg hab, if_neg hab]
+  · rw [ite_eq_right hab, ite_eq_right hab]
     cases ha : ε a
     · have hb : ε b = true := by cases h' : ε b <;> simp_all
-      simp only [Bool.false_eq_true, if_false]
+      simp only [Bool.false_eq_true, ite_false]
       rw [smul_mul_assoc, contr_smul, Finset.sum_mul, contr_sum, mul_smul_comm, contr_smul, Finset.mul_sum _ _ h,
         contr_sum]
       simp_rw [← tD ε hc ha hb _ hh hg]
@@ -1715,7 +1715,7 @@ theorem contraction_first_operator_adjoint (ε : Fin m → Bool) {c : ℝ} (hc :
       push_cast at hc2 ⊢
       field_simp
     · have hb : ε b = false := by cases h' : ε b <;> simp_all
-      simp only [if_true]
+      simp only [ite_true]
       rw [smul_mul_assoc, contr_smul, Finset.sum_mul, contr_sum, mul_smul_comm, contr_smul, Finset.mul_sum _ _ h,
         contr_sum]
       simp_rw [tC ε hc ha hb _ hh hg]
@@ -1801,7 +1801,7 @@ theorem Bop_box (ε : Fin m → Bool) (c : ℝ) (Λ : PX m n →ₗ[ℂ] ℂ) (R
   · rintro x ⟨s, hs, hR, rfl⟩
     rw [Bop_mono]
     unfold Bm
-    rw [if_pos hs]
+    rw [ite_eq_left hs]
     refine Submodule.sum_mem _ fun t ht => Submodule.smul_mem _ _ (Submodule.subset_span ?_)
     obtain ⟨htF, htr⟩ := (mem_cand ε _ t).mp ht
     exact ⟨t, htF, by rw [htr]; exact hR, rfl⟩

@@ -129,7 +129,7 @@ theorem dpow_mem_pdP (γ : DividedPowers I) (n : ℕ) {x : A} (hx : x ∈ I) : �
 
 theorem dividedPowerFiltration_mul (γ : DividedPowers I) (a b : ℕ) : pdP γ a * pdP γ b ≤ pdP γ (a + b) := by
   unfold pdP
-  rw [Ideal.span_mul_span']
+  rw [Ideal.span_mul_span]
   refine Ideal.span_le.2 ?_
   rintro _ ⟨x, ⟨L1, h1, r1, rfl⟩, y, ⟨L2, h2, r2, rfl⟩, rfl⟩
   refine Ideal.subset_span ⟨L1 ++ L2, ?_, ?_, ?_⟩
@@ -249,8 +249,8 @@ theorem cg_basis_empty {L : Lev R m} (hL : L.Good) (M : Model l K) (hM : M.Sm) (
     have hx : x ∈ (⊤ : M.gen.Opens) := trivial
     rw [← h] at hx
     simp at hx
-  haveI := CgEmpty.HO_sub hX (QB L M s) j
-  haveI := CgEmpty.HdR_sub M.q hX j
+  have := CgEmpty.HO_sub hX (QB L M s) j
+  have := CgEmpty.HdR_sub M.q hX j
   have ha : a = 0 := by
     by_contra h
     exact bs.ne_zero ⟨0, Nat.pos_of_ne_zero h⟩ (Subsingleton.elim _ _)

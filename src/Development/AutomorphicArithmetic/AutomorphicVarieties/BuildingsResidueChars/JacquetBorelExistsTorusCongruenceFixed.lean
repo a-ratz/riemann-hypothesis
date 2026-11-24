@@ -99,7 +99,7 @@ theorem UpperTheory.eq_one_of_irreducible_pi_abelian_fixed_ne_bot :
       exact Submodule.mem_top
     have := hy h
     simpa using this
-  letI : ∀ a, CommGroup (Γ a) := fun a => { (inferInstance : Group (Γ a)) with mul_comm := hcomm a }
+  let : ∀ a, CommGroup (Γ a) := fun a => { (inferInstance : Group (Γ a)) with mul_comm := hcomm a }
   have hs : ∀ (s : Finset α) (y : Y), τ (∏ a ∈ s, Pi.mulSingle a (g a)) y = y := by
     intro s
     induction s using Finset.induction_on with
@@ -144,7 +144,7 @@ private theorem UpperTheory.fixed_vectors_nonzero_character {k : Type} [Field k]
   have h' : IrrGL.of y.ρ y.smooth y.irr = IrrGL.of (detRep (Fin 1) χ) (isCuspidal_detRep_one hχ).1
       (isIrreducible_ofChar _) := h
   obtain ⟨φ⟩ := IrrGL.of_eq_of.1 h'
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible y.irr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible y.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : y.V)
   refine (Submodule.ne_bot_iff _).2 ⟨v, fun g => ?_, hv⟩
   have hg : valuation k ((g.1.val - 1) 0 0) < γ := g.2 0 0
@@ -199,7 +199,7 @@ theorem UpperTheory.jacquet_exists_levi_congruence_fixed_of_char_support :
     Subgroup.pi Set.univ fun _ => GlobalTheory.CentralExponent.cong (Fin 1) γ hγ
   have hH : IsCompact (H : Set (Levi k fun _ : Fin N => Fin 1)) :=
     isCompact_univ_pi fun _ => GlobalTheory.CentralExponent.isCompact_cong γ hγ
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτ
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτ
   obtain ⟨v, hv⟩ := exists_ne (0 : Y)
   have hτf : fixed τ H ≠ ⊥ := (Submodule.ne_bot_iff _).2 ⟨v, fun g => by
     rw [htriv g.1 fun a => g.2 a trivial]

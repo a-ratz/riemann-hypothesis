@@ -124,13 +124,13 @@ lemma mulLeftRight_envBaseChange (x : S ⊗[A] (Λ ⊗[A] Λᵐᵒᵖ)) :
 theorem isAzumaya_baseChange [IsAzumaya A Λ] [Module.Free A Λ] :
     IsAzumaya S (S ⊗[A] Λ) := by
   classical
-  haveI : Module.Finite A Λ := inferInstance
+  have : Module.Finite A Λ := inferInstance
   refine { toProjective := inferInstance, toFinite := inferInstance,
            toFaithfulSMul := ?_, bij := ?_ }
   · rcases subsingleton_or_nontrivial S with hS | hS
     · exact ⟨fun _ => Subsingleton.elim _ _⟩
-    · haveI : Nontrivial A := (algebraMap A S).domain_nontrivial
-      haveI : Nontrivial Λ := by
+    · have : Nontrivial A := (algebraMap A S).domain_nontrivial
+      have : Nontrivial Λ := by
         by_contra hΛ
         rw [not_nontrivial_iff_subsingleton] at hΛ
         have : (0 : A) = 1 :=

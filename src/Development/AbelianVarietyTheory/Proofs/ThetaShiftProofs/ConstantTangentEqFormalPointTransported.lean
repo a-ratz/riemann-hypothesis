@@ -102,7 +102,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   let I : Ideal ℂ⟦X⟧ := Ideal.span {PowerSeries.X}
   have hI : I ≠ ⊤ := by
     rw [Ne, Ideal.span_singleton_eq_top]
-    exact PowerSeries.X_prime.not_isUnit
+    exact PowerSeries.prime_X.not_isUnit
   have : IsLocalRing (ℂ⟦X⟧ ⧸ I ^ (e + 1)) := isLocalRing_quotient_pow hI e
   have := isLocalRing_dual (ℂ⟦X⟧ ⧸ I ^ (e + 1))
   have := isLocalRing_dual ℂ⟦X⟧

@@ -159,11 +159,11 @@ theorem _root_.GlobalTheory.DiscrJacobian.mem_span_of_mu_eq_zero {ι : Type} [Fi
     rw [hI, Ideal.map_le_iff_le_comap, Ideal.span_le]
     rintro _ ⟨j, rfl⟩
     rw [SetLike.mem_coe, Ideal.mem_comap]
-    haveI : Algebra.IsIntegral S (S ⊗[R] B) := Algebra.IsIntegral.of_finite _ _
+    have : Algebra.IsIntegral S (S ⊗[R] B) := Algebra.IsIntegral.of_finite _ _
     unfold Ideal.jacobson
     rw [Ideal.mem_sInf]
     intro M hM
-    haveI : M.IsMaximal := hM.2
+    have : M.IsMaximal := hM.2
     have hMc : (M.comap (algebraMap S (S ⊗[R] B))).IsMaximal :=
       Ideal.isMaximal_under_of_isIntegral_of_isMaximal M
     have h2 := hx j
@@ -228,8 +228,8 @@ theorem _root_.GlobalTheory.DiscrJacobian.isUnit_det_of_productMap_ne_zero [IsLo
     IsUnit M.det := by
   classical
   subst hDe
-  haveI : Module.Finite R B := Module.Finite.of_basis b
-  haveI : Algebra.IsIntegral R B := Algebra.IsIntegral.of_finite R B
+  have : Module.Finite R B := Module.Finite.of_basis b
+  have : Algebra.IsIntegral R B := Algebra.IsIntegral.of_finite R B
   obtain ⟨i0, hi0⟩ : ∃ i, ev (∑ j, M i j • b j) ≠ 0 := by
     by_contra hcon
     push_neg at hcon
@@ -330,15 +330,15 @@ theorem _root_.GlobalTheory.DiscrJacobian.map_mem_radical {R S B : Type} [CommRi
   rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
   intro P hPmem
   have hP : Ideal.map (algebraMap R B) (maximalIdeal R) ≤ P := hPmem.1
-  haveI hPprime : P.IsPrime := hPmem.2
+  have hPprime : P.IsPrime := hPmem.2
   have hle : maximalIdeal R ≤ P.comap (algebraMap R B) := Ideal.map_le_iff_le_comap.mp hP
-  haveI : (P.comap (algebraMap R B)).IsPrime := Ideal.IsPrime.comap (algebraMap R B)
+  have : (P.comap (algebraMap R B)).IsPrime := Ideal.IsPrime.comap (algebraMap R B)
   have hcomap : P.comap (algebraMap R B) = maximalIdeal R :=
     le_antisymm (IsLocalRing.le_maximalIdeal Ideal.IsPrime.ne_top') hle
   have hm : (P.comap (algebraMap R B)).IsMaximal := by
     rw [hcomap]; exact maximalIdeal.isMaximal R
-  haveI : Algebra.IsIntegral R B := Algebra.IsIntegral.of_finite R B
-  haveI hPmax : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under P hm
+  have : Algebra.IsIntegral R B := Algebra.IsIntegral.of_finite R B
+  have hPmax : P.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under P hm
   have hmax : (P.comap (algebraMap S B)).IsMaximal := Ideal.comap_isMaximal_of_surjective _ hsurj
   unfold Ideal.jacobson at hx
   exact Ideal.mem_sInf.mp hx ⟨bot_le, hmax⟩
@@ -429,9 +429,9 @@ theorem _root_.GlobalTheory.DiscrJacobian.associated_discr_norm_jacobian (R : Ty
     Associated (Algebra.discr R b) (Algebra.norm R (Ideal.Quotient.mk (Ideal.span (Set.range f))
       (Matrix.of fun i j => pderiv (R := R) j (f i)).det)) := by
   classical
-  haveI : Module.Finite R (MvPowerSeries (Fin g) R ⧸ Ideal.span (Set.range f)) :=
+  have : Module.Finite R (MvPowerSeries (Fin g) R ⧸ Ideal.span (Set.range f)) :=
     Module.Finite.of_basis b
-  haveI : Module.FinitePresentation (MvPowerSeries (Fin g) R)
+  have : Module.FinitePresentation (MvPowerSeries (Fin g) R)
       (MvPowerSeries (Fin g) R ⧸ Ideal.span (Set.range f)) :=
     Module.finitePresentation_of_surjective (Submodule.mkQ (Ideal.span (Set.range f)))
       (Submodule.mkQ_surjective _)

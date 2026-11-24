@@ -98,7 +98,7 @@ theorem isCompact_latLoc (L : Submodule (𝓞 E) (Fin n → E)) (hfg : L.FG) :
   have hf : Continuous f := by
     refine continuous_finsetSum _ fun i _ => ?_
     have hi : Continuous fun c : (s → v.adicCompletionIntegers F) =>
-        ((c i : v.adicCompletionIntegers F) : Fv F v) := (continuous_apply i).subtype_val
+        ((c i : v.adicCompletionIntegers F) : Fv F v) := (continuous_apply i).subtypeVal
     exact hi.smul (continuous_const : Continuous fun _ : (s → v.adicCompletionIntegers F) => g i)
   have hle : latLoc (E := E) v (L : Set (Fin n → E)) ≤
       Submodule.span (v.adicCompletionIntegers F) (Set.range g) := by

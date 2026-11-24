@@ -266,7 +266,7 @@ theorem eLpNorm_le_of_le_conv {h g : E → ℂ} {K : E → ℝ≥0∞} (hK : Mea
       L2Kernel.eLpNorm_two_sq]
     calc ∫⁻ ξ, ‖h ξ‖ₑ ^ 2 ≤ ∫⁻ ξ, (∫⁻ η, K (ξ - η) * ‖g η‖ₑ) ^ 2 :=
           lintegral_mono fun ξ ↦ by gcongr; exact hh ξ
-      _ ≤ _ := lintegral_conv_sq_le_mul hK hg.enorm
+      _ ≤ _ := lintegral_conv_sq_le_mul hK hg.eNorm
   exact (ENNReal.pow_le_pow_left_iff two_ne_zero).1 hsq
 
 theorem fourier_smulLeftCLM_apply (χ φ : 𝓢(E, ℂ)) (ξ : E) :
@@ -446,7 +446,7 @@ theorem enorm_weight_mul_fourier_smulLeft_le (r : ℝ) (φ : 𝓢(E, ℂ)) (ξ :
       ∫⁻ η, ENNReal.ofReal (2 ^ (|r| / 2)) * wK (|r| / 2) (𝓕 χ) (ξ - η) *
         ‖weight r η * (𝓕 φ : 𝓢(E, ℂ)) η‖ₑ := by
   rw [fourier_smulLeftCLM_apply, ← integral_const_mul]
-  refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun η ↦ ?_)
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun η ↦ ?_)
   rw [wK, ← ofReal_norm, ← ofReal_norm, ← ENNReal.ofReal_mul (by positivity),
     ← ENNReal.ofReal_mul (by positivity)]
   apply ENNReal.ofReal_le_ofReal
@@ -523,7 +523,7 @@ theorem enorm_weight_mul_fourier_commRem_le (r a : ℝ) (φ : 𝓢(E, ℂ)) (ξ 
         ‖weight (r + a - 1) η * (𝓕 φ : 𝓢(E, ℂ)) η‖ₑ := by
   rw [show r + a = a + r by ring, ← weight_mul_weight a r, mul_assoc, weight_mul_fourier_commRem,
     ← integral_const_mul]
-  refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun η ↦ ?_)
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun η ↦ ?_)
   rw [wK, ← ofReal_norm, ← ofReal_norm, ← ENNReal.ofReal_mul (commConst_nonneg r a),
     ← ENNReal.ofReal_mul (by have := commConst_nonneg r a; positivity)]
   apply ENNReal.ofReal_le_ofReal
@@ -600,14 +600,14 @@ theorem sob_congr {s t : ℝ} (h : s = t) (u : 𝓢'(E, ℂ)) : sob s u = sob t 
 theorem sob_lt_top_iff {s : ℝ} {u : 𝓢'(E, ℂ)} : sob s u < ⊤ ↔ MemSobolev s 2 u := by
   constructor
   · intro h; by_contra hc; rw [sob_of_not_mem hc] at h; exact lt_irrefl _ h
-  · intro h; rw [sob_of_mem h]; exact enorm_lt_top
+  · intro h; rw [sob_of_mem h]; exact eNorm_lt_top
 
 theorem sob_ofSchwartz {s : ℝ} (φ : 𝓢(E, ℂ)) :
     sob s (φ : 𝓢'(E, ℂ)) = ‖SobolevSpace.ofSchwartz s φ‖ₑ := by
   rw [← sob_toDistribution, SobolevSpace.toDistribution_ofSchwartz]
 
 theorem sob_zero {s : ℝ} : sob s (0 : 𝓢'(E, ℂ)) = 0 := by
-  rw [← SobolevSpace.toDistribution_zero (s := s), sob_toDistribution, enorm_zero]
+  rw [← SobolevSpace.toDistribution_zero (s := s), sob_toDistribution, eNorm_zero]
 
 theorem sob_add_le {s : ℝ} (u v : 𝓢'(E, ℂ)) : sob s (u + v) ≤ sob s u + sob s v := by
   by_cases hu : MemSobolev s 2 u
@@ -616,7 +616,7 @@ theorem sob_add_le {s : ℝ} (u v : 𝓢'(E, ℂ)) : sob s (u + v) ≤ sob s u +
       obtain ⟨v', rfl⟩ := (SobolevSpace.exists_toDistribution_eq_iff (s := s) v).2 hv
       rw [← SobolevSpace.toDistribution_add, sob_toDistribution, sob_toDistribution,
         sob_toDistribution]
-      exact enorm_add_le _ _
+      exact eNorm_add_le _ _
     · rw [sob_of_not_mem hv, add_top]; exact le_top
   · rw [sob_of_not_mem hu, top_add]; exact le_top
 
@@ -627,7 +627,7 @@ theorem sob_smul_le {s : ℝ} (c : ℂ) (u : 𝓢'(E, ℂ)) : sob s (c • u) �
     rw [h0, sob_zero]; exact zero_le
   by_cases hu : MemSobolev s 2 u
   · obtain ⟨u', rfl⟩ := (SobolevSpace.exists_toDistribution_eq_iff (s := s) u).2 hu
-    rw [← SobolevSpace.toDistribution_smul, sob_toDistribution, sob_toDistribution, enorm_smul]
+    rw [← SobolevSpace.toDistribution_smul, sob_toDistribution, sob_toDistribution, eNorm_smul]
   · rw [sob_of_not_mem hu, ENNReal.mul_top (by simpa using hc)]; exact le_top
 
 theorem sob_neg {s : ℝ} (u : 𝓢'(E, ℂ)) : sob s (-u) = sob s u := by
@@ -667,7 +667,7 @@ theorem sob_le_of_schwartz (T : 𝓢'(E, ℂ) →L[ℂ] 𝓢'(E, ℂ)) {s t C : 
     have h1 := h φ
     rw [sob_ofSchwartz] at h1
     have hmem : MemSobolev t 2 (T φ) :=
-      sob_lt_top_iff.1 (h1.trans_lt (ENNReal.mul_lt_top ENNReal.ofReal_lt_top enorm_lt_top))
+      sob_lt_top_iff.1 (h1.trans_lt (ENNReal.mul_lt_top ENNReal.ofReal_lt_top eNorm_lt_top))
     refine ⟨SobolevSpace.mk _ hmem, rfl, ?_⟩
     rw [sob_of_mem hmem, ← ofReal_norm, ← ofReal_norm, ← ENNReal.ofReal_mul hC] at h1
     exact (ENNReal.ofReal_le_ofReal_iff (by positivity)).1 h1
@@ -793,7 +793,7 @@ theorem sob_mulPrin_le (χ : 𝓢(E, ℂ)) {M : ℝ} (hM0 : 0 ≤ M) (hM : ∀ x
       (f := g) (g := SchwartzMap.fourierMultiplierCLM ℂ (weight r) φ) (c := M.toNNReal)
       g.continuous.aestronglyMeasurable (ae_of_all _ fun x ↦ ?_)
     · rw [ENNReal.ofReal]; exact this
-    · rw [← NNReal.coe_le_coe, NNReal.coe_mul, coe_nnnorm, coe_nnnorm, Real.coe_toNNReal _ hM0]
+    · rw [← NNReal.coe_le_coe, NNReal.coe_mul, coe_nnNorm, coe_nnNorm, Real.coe_toNNReal _ hM0]
       simp only [g, SchwartzMap.smulLeftCLM_apply_apply χ.hasTemperateGrowth, smul_eq_mul, norm_mul]
       exact mul_le_mul_of_nonneg_right (hM x) (norm_nonneg _)
   have hfin := ((SchwartzMap.fourierMultiplierCLM ℂ (weight r) φ).memLp 2 volume).eLpNorm_lt_top

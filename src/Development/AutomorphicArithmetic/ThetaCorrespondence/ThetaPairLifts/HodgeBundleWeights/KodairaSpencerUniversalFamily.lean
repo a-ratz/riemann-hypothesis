@@ -88,22 +88,22 @@ attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.ConstDeform
 theorem constDeformation_act_eq : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → GlobalTheory.FlagTan.IsTanX y x' → ∀ (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp (DualNumber K))) [GrpObj A'] (π : A.left ⟶ Xo.univ.t.G.left) (π' : A'.left ⟶ Xo.univ.t.G.left) (i : A.left ⟶ A'.left) (q : A'.left ⟶ A.left), IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i → IsGrpPullback A Xo.univ.t.G y.x π → IsGrpPullback A' Xo.univ.t.G x' π' → i ≫ π' = π → i ≫ q = 𝟙 _ → IsGrpPullback A' A (spMap (algebraMap K (DualNumber K))) q → ∀ (o : Obj Dw l (baseKA l) (x' ≫ Xo.s)) (m : ObjMap o Xo.univ x') (g : o.t.G.left ⟶ A'.left), g ≫ π' = m.cm.F → g ≫ A'.hom = o.t.G.hom → ∀ hF : IsGrpPullback o.t.G Xo.univ.t.G (constPt x') (g ≫ q ≫ π), ∀ a, (o.t.act.act a).left ≫ (g ≫ q ≫ π) = (g ≫ q ≫ π) ≫ (Xo.univ.t.act.act a).left := by
   intro hP hGD E _ _ _ H Dw l Xo c K _ _ y x' hpq hT A _ A' _ π π' i q hi hπ hπ' hiπ hiq hq o m g hg hgw hF a
-  haveI := Xo.univ.t.act.hom a
+  have := Xo.univ.t.act.hom a
   have wβ : (π ≫ (Xo.univ.t.act.act a).left) ≫ Xo.univ.t.G.hom = A.hom ≫ y.x := by
     rw [Category.assoc, Over.w (Xo.univ.t.act.act a), hπ.1.w]
   let β : A ⟶ A := Over.homMk (hπ.1.lift _ A.hom wβ) (hπ.1.lift_snd _ _ _)
   have hβ : β.left ≫ π = π ≫ (Xo.univ.t.act.act a).left := hπ.1.lift_fst _ _ _
-  haveI : IsMonHom β := GlobalTheory.UU.isMonHom_of_over_isMonHom hπ hπ (Xo.univ.t.act.act a) β hβ
+  have : IsMonHom β := GlobalTheory.UU.isMonHom_of_over_isMonHom hπ hπ (Xo.univ.t.act.act a) β hβ
   have wα : (π' ≫ (Xo.univ.t.act.act a).left) ≫ Xo.univ.t.G.hom = A'.hom ≫ x' := by
     rw [Category.assoc, Over.w (Xo.univ.t.act.act a), hπ'.1.w]
   let α : A' ⟶ A' := Over.homMk (hπ'.1.lift _ A'.hom wα) (hπ'.1.lift_snd _ _ _)
   have hα : α.left ≫ π' = π' ≫ (Xo.univ.t.act.act a).left := hπ'.1.lift_fst _ _ _
-  haveI : IsMonHom α := GlobalTheory.UU.isMonHom_of_over_isMonHom hπ' hπ' (Xo.univ.t.act.act a) α hα
+  have : IsMonHom α := GlobalTheory.UU.isMonHom_of_over_isMonHom hπ' hπ' (Xo.univ.t.act.act a) α hα
   have wδ : (q ≫ β.left) ≫ A.hom = A'.hom ≫ spMap (algebraMap K (DualNumber K)) := by
     rw [Category.assoc, Over.w β, hq.1.w]
   let δ : A' ⟶ A' := Over.homMk (hq.1.lift _ A'.hom wδ) (hq.1.lift_snd _ _ _)
   have hδ : δ.left ≫ q = q ≫ β.left := hq.1.lift_fst _ _ _
-  haveI : IsMonHom δ := GlobalTheory.UU.isMonHom_of_over_isMonHom hq hq β δ hδ
+  have : IsMonHom δ := GlobalTheory.UU.isMonHom_of_over_isMonHom hq hq β δ hδ
   have hA' := PolPull.isAbelianScheme_of_isGrpPullback (ObjDim.isAbelianScheme Xo.univ) hπ'
   have gA' := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ'.1
     (ObjDim.smoothOfRelativeDimension Xo.univ)
@@ -159,7 +159,7 @@ open ReciprocityTheory.ChartRestriction.G.Semi
 namespace GlobalTheory.ConstDefCub
 theorem cubical_structure_pullback_const_point : _root_.GlobalTheory.CovTop.Hypotheses'' → GlobalTheory.Published.GrothendieckDeformation → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K) (x' : Sp (DualNumber K) ⟶ Xo.X), 1 ≤ Dw.p + Dw.q → GlobalTheory.FlagTan.IsTanX y x' → ∀ (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp (DualNumber K))) [GrpObj A'] (π : A.left ⟶ Xo.univ.t.G.left) (π' : A'.left ⟶ Xo.univ.t.G.left) (i : A.left ⟶ A'.left) (q : A'.left ⟶ A.left), IsGrpPullback A A' (GlobalTheory.DeRham.epsRed K) i → IsGrpPullback A Xo.univ.t.G y.x π → IsGrpPullback A' Xo.univ.t.G x' π' → i ≫ π' = π → i ≫ q = 𝟙 _ → IsGrpPullback A' A (spMap (algebraMap K (DualNumber K))) q → ∀ (o : Obj Dw l (baseKA l) (x' ≫ Xo.s)) (m : ObjMap o Xo.univ x') (g : o.t.G.left ⟶ A'.left), g ≫ π' = m.cm.F → g ≫ A'.hom = o.t.G.hom → ∀ hF : IsGrpPullback o.t.G Xo.univ.t.G (constPt x') (g ≫ q ≫ π), (cubeMapOf hF).IsPullCubical o.t.cub Xo.univ.t.cub := by
   intro hP hGD E _ _ _ H Dw l Xo c K _ _ y x' hpq htan A _ A' _ π π' i q hi hπ hπ' hiπ hiq hq o m g hg1 hg2 hF
-  haveI : IsProper o.t.G.hom := o.proper
+  have : IsProper o.t.G.hom := o.proper
   have hA : IsAbelianScheme o.t.G := AbelianSchemeGerms.isAbelianScheme_of_proper o.t.G o.t.semi
   refine GlobalTheory.TripleModel.isPullCubical_of_lbIso GlobalTheory.SemiRigid.globalFns hA hF o.t.cub Xo.univ.t.cub ?_
   obtain ⟨w, -, hw, -⟩ := rigIso_congr rfl m.cm m.lin rfl rfl
@@ -210,7 +210,7 @@ theorem constDeformation_objMap_eq : _root_.GlobalTheory.CovTop.Hypotheses'' →
     rw [← hT.2]; rfl
   have hF : IsGrpPullback o.t.G Xo.univ.t.G (constPt x') (g ≫ q ≫ π) :=
     (hgc.comp (hq.comp hπ)).congr (by rw [Category.id_comp, hred]) rfl
-  haveI : CharZero K := (RingHom.charZero_iff (algebraMap c.F K).injective).1 inferInstance
+  have : CharZero K := (RingHom.charZero_iff (algebraMap c.F K).injective).1 inferInstance
   have hgq := hgc.comp hq
   have hcomm : ∀ (T : Over (Sp K)) (x y : T ⟶ A), x * y = y * x := by
     intro T x y
@@ -416,7 +416,7 @@ theorem kodaira_spencer_full : _root_.GlobalTheory.CovTop.Hypotheses'' → ∀ (
   have gA := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ.1 hg
   have hA' := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hU hπ'
   have gA' := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ'.1 hg
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   obtain ⟨a', ha'⟩ := GlobalTheory.T.exists_ringAction_of_isGrpPullback Xo.univ.t.act hπ'
   obtain ⟨a, ha⟩ := GlobalTheory.T.exists_ringAction_of_isGrpPullback Xo.univ.t.act hπ
   have hc : ∀ z, (a.act z).left ≫ i = i ≫ (a'.act z).left := fun z => by
@@ -503,8 +503,8 @@ theorem eq_const_of_kodaira_spencer_eq_zero : _root_.GlobalTheory.CovTop.Hypothe
         x' = spMap (algebraMap K (DualNumber K)) ≫ y.x := by
   intro P G E _ _ _ H Dw l Xo c K _ _ y x' hpq hx hks
   obtain ⟨A, hA, A', hA', π, π', i, h, h1, h2, h3, h4⟩ := _root_.GlobalTheory.T.kodaira_spencer_full_flag_tangent P E H Dw l Xo c K y x' hpq hx hks
-  letI := hA
-  letI := hA'
+  let := hA
+  let := hA'
   obtain ⟨q, hq1, hq2⟩ := _root_.GlobalTheory.T.deformation_retracts_of_kodaira_spencer_zero P G E H Dw l Xo c K y x' hpq hx A A' π π' i h h1 h2 h3 h4
   obtain ⟨o, m⟩ := GlobalTheory.obj_pull E H Dw l _ _ (baseKA l) (baseKA l) (RingHom.id _) _ _ Xo.s (x' ≫ Xo.s) x' rfl rfl
     (by rw [spMap, CommRingCat.ofHom_id, Spec.map_id, Category.comp_id]) Xo.univ
@@ -601,7 +601,7 @@ theorem kodaira_spencer_direct_sum : _root_.GlobalTheory.CovTop.Hypotheses'' →
       (by rw [← Category.assoc, sq, Category.assoc, eφ, hiπ]) hpol hu hl τ a hf hd
     obtain ⟨v', hv', -⟩ := hL.1 (gs k)
     have fl := hgs (Pi.single k 1) B χ _ hj hχ sq
-    simp only [Pi.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true] at fl
+    simp only [Pi.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at fl
     obtain rfl := IsKSValue.unique P (PolPull.isAbelianScheme_of_isGrpPullback aC hχ)
       ((smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hχ.1 gC) hv ⟨_, fl, hv'⟩
     exact ⟨_, hc, hv'⟩

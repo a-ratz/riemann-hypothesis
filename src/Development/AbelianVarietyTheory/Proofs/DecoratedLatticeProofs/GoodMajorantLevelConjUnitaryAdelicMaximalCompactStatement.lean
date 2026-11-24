@@ -756,7 +756,7 @@ theorem good_level_conj_stab : ∀ (D : D7) (T T₀ : HSp D) (r : ℕ) (d : HypD
     · intro h
       have := (Kmax T b).mul_mem ((Kmax T b).inv_mem hk₀) ((Kmax T b).mul_mem h hk₀)
       simpa [mul_assoc] using this
-  haveI : Submodule.IsFullLattice D.host.E l.L := hl.1
+  have : Submodule.IsFullLattice D.host.E l.L := hl.1
   refine ⟨?_, isCompact_levelAll (AdelicU.isCMExt_host D) _ _ _, q, hconj⟩
   intro h
   obtain ⟨q₁, k₁, hk₁, e⟩ := hIw (h * q)

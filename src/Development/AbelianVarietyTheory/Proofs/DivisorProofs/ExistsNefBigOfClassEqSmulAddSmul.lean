@@ -67,7 +67,7 @@ namespace GlobalTheory
 
 theorem nef_big_of_cls_eq_smul_add_smul : GlobalTheory.Published.NefNumerics → ∀ (k : Type) [Field k] (X : Scheme.{0}) [IsIntegral X] (q : X ⟶ Sp k), IsProjOver q → letI := algebraΓOfHom q; ∀ (N N' : LB X) (hN : N.IsLB) (hN' : N'.IsLB) (a b : ℕ), IsNef k N → IsBig k N → IsNef k N' → 0 < a → ∃ (N₀ : LB X) (h₀ : N₀.IsLB), cls N₀ h₀ = a • cls N hN + b • cls N' hN' ∧ IsNef k N₀ ∧ IsBig k N₀ := by
   intro hNN k _ X _ q hq
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   intro N N' hN hN' a b hNn hNb hN'n ha
   have hp : IsProjOver (strHom k (X := X)) := by
     rwa [strHom_eq (f := q) fun _ => rfl]

@@ -67,7 +67,7 @@ theorem exists_emb_of_fixed {F E L : Type} [Field F] [Field E] [Field L] [Algebr
     have h := IntermediateField.finrank_fixedField_eq_card (Subgroup.zpowers g)
     rw [hbot, IntermediateField.finrank_bot', Nat.card_zpowers] at h
     exact h.symm
-  haveI : NeZero (Module.finrank F E) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank F E) := ⟨Module.finrank_pos.ne'⟩
   let emb : ZMod (Module.finrank F E) → (E →ₐ[F] L) := fun i =>
     e.comp (g⁻¹ ^ i.val : E ≃ₐ[F] E).toAlgHom
   have hord' : orderOf g⁻¹ = Module.finrank F E := by rw [orderOf_inv, hord]
@@ -93,7 +93,7 @@ variable {l : ℕ} [Fact l.Prime]
 
 theorem sigma_fixed (P : LocPrime l) (K : FinExt l) (x : ↥(K0 K)) (hx : (P.PD K).σ x = x) :
     ∃ c : ℚ_[l], algebraMap ℚ_[l] ↥(K0 K) c = x := by
-  haveI : Nontrivial P.R.B := by
+  have : Nontrivial P.R.B := by
     refine ⟨⟨(P.PD K).t, 0, fun h => (P.PD K).not_mem_filtration_two ?_⟩⟩
     rw [h, map_zero]
     exact zero_mem _
@@ -110,7 +110,7 @@ namespace GlobalTheory.HWL
 
 theorem exists_letters : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (s : ℕ) (LL : FinExt l), Good K s LL → ∃ emb : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → (↥(K0 K) →ₐ[ℚ_[l]] ↥LL.1), Function.Bijective emb ∧ ∀ i, (emb (i + 1)).comp (P.PD K).σ = emb i := by
   intro l _ P K s LL h
-  haveI := (P.PD K).finK₀
+  have := (P.PD K).finK₀
   have hle : K0 K ≤ LL.1 := fun x hx =>
     h.2.2.2 (Ks K s).val ⟨x, (le_sup_left : K0 K ≤ Ks K s) hx⟩
   exact Letters.exists_emb_of_fixed _ (P.PD K).σ_bij (Letters.sigma_fixed P K)

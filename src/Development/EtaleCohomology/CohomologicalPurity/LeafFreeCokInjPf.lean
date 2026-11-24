@@ -154,7 +154,7 @@ theorem leafFreeCokInj : LeafFreeCokInj := by
       (fun t : ULift.{1} (B.obj (op T)) => ∃ x, i.app (op T) x = t.down) (fun z => ∃ x', i'.app (op V) x' = z.down)
       (by
         intro t ht
-        have := Finsupp.mapDomain_notin_range n t (by
+        have := Finsupp.mapDomain_of_notMem_range n t (by
           rintro ⟨x, hx⟩
           exact ht ⟨x.down, congrArg ULift.down hx⟩)
         exact (DFunLike.congr_fun hn' t).symm.trans this)

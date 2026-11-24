@@ -137,7 +137,7 @@ def rpowHom (e : ℝ) : {r : ℝ // 0 < r} →* {r : ℝ // 0 < r} where
   map_mul' s t := Subtype.ext (Real.mul_rpow s.2.le t.2.le)
 
 theorem continuous_rpowHom (e : ℝ) : Continuous (rpowHom e) :=
-  (continuous_subtype_val.rpow_const fun s => Or.inl s.2.ne').subtype_mk _
+  (continuous_subtypeVal.rpow_const fun s => Or.inl s.2.ne').subtype_mk _
 
 
 variable (K) in
@@ -275,7 +275,7 @@ theorem exists_measure_eq_mul_measure_image (hn : 0 < n)
       exact hp
   have h1 : μ₁ E = (Measure.haarScalarFactor μ₁ ρ • ρ) E :=
     congrArg (fun m : Measure (normOneGL (K := K) (n := n)) => m E) hμ₁
-  rw [h1, Measure.smul_apply, hρE, himg, ENNReal.smul_def, smul_eq_mul]
+  rw [h1, smul_apply, hρE, himg, ENNReal.smul_def, smul_eq_mul]
 
 end Reduction
 

@@ -124,7 +124,7 @@ theorem UpperTheory.ConvolutionTheory.T.ampFin :
     (AdelicGLn.isCompact_integralFiniteGL K n).of_isClosed_subset (𝔞.U.isClosed_of_isOpen 𝔞.isOpen)
       fun _ h => 𝔞.le h
   obtain ⟨m, hm, hC⟩ := (UpperTheory.ConvolutionTheory.Tf.compatEx K n hn).2.1 μ 𝔞.ν
-  haveI := hm
+  have := hm
   obtain ⟨e, -, he⟩ := UpperTheory.ConvolutionTheory.Tf.prjFix K n μ m 𝔞.U 𝔞.isOpen hUc
   have hAR : RR μ (tens 𝔞.a₀ e) = 𝔞.A := by
     rw [UpperTheory.ConvolutionTheory.Tf.rrTens K n hn μ 𝔞.ν m hC, he]

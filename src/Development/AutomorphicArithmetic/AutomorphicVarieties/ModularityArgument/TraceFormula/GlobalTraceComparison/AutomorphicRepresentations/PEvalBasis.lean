@@ -48,7 +48,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.evalBasis_pf :
     EvalBasis := by
   intro X V _ _ ev hsep W hW
   classical
-  haveI := hW
+  have := hW
   let r : X → Module.Dual ℂ W := fun x => (ev x).domRestrict W
   have hspan : Submodule.span ℂ (Set.range r) = ⊤ := by
     by_contra hne
@@ -61,8 +61,8 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.evalBasis_pf :
     exact hf0 (by simp [hv0])
   obtain ⟨b, hbs, hbspan, hli⟩ := exists_linearIndependent ℂ (Set.range r)
   let B0 := Module.Basis.mk hli (by simp [hbspan, hspan])
-  haveI : Finite b := Module.Finite.finite_basis B0
-  letI := Fintype.ofFinite b
+  have : Finite b := Module.Finite.finite_basis B0
+  let := Fintype.ofFinite b
   let B := B0.reindex (Fintype.equivFin b)
   have hx : ∀ i, ∃ x, r x = B i := fun i => by
     have hm : B i ∈ b := by simp [B, B0]

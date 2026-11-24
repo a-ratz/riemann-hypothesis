@@ -65,7 +65,7 @@ theorem UpperTheory.V.Loc.laCyc :
   have hu : Formalism.L2.Host.IsUnitAt w (a (ineIncl h σ)) := by
     have h2 := ha.ord_eq (ineIncl h σ)
     rw [deg_ineIncl, neg_zero] at h2
-    haveI : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+    have : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
       Valuation.Compatible.ofValuation _
     exact (ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion F))
       (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ)))).eq_one_iff_eq_one.1

@@ -68,7 +68,7 @@ theorem eq_zero_of_q_nonpos {X : Type} [AddCommGroup X] [Module.Free ℤ X] (q :
   have h1 : {x | ¬ 0 < q x}.Finite := Filter.eventually_cofinite.1 (hq.eventually_gt_atTop 0)
   refine Set.infinite_of_injective_forall_mem (f := fun n : ℤ => n • α) (smul_left_injective ℤ h0)
     (fun n => ?_) h1
-  rw [Set.mem_setOf_eq, q.map_smul, not_lt]
+  rw [Set.mem_ofPred_eq, q.map_smul, not_lt]
   exact smul_nonpos_of_nonneg_of_nonpos (mul_self_nonneg n) h
 
 theorem proj_congr {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (S : ThetaSys o Ω)
@@ -136,7 +136,7 @@ theorem span_eq_of_test {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [hA
     by_cases h : 0 = τ.wt (a i)
     · rw [hL, h, hb']
       exact Submodule.subset_span ⟨i, hz _ (ha i) h, rfl⟩
-    · rw [hL, ← hb', Matrix.mulVec_mulVec, hQ, if_neg h, Matrix.zero_mulVec]
+    · rw [hL, ← hb', Matrix.mulVec_mulVec, hQ, ite_eq_right h, Matrix.zero_mulVec]
       exact Submodule.zero_mem _
   refine le_antisymm (Submodule.span_le.2 ?_) (Submodule.span_le.2 ?_)
   · rintro _ ⟨i, hi, rfl⟩
@@ -153,7 +153,7 @@ theorem span_eq_of_test {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [hA
     · simp
     · funext j
       rw [map_zero, _root_.one_mul, hQd]
-    · rw [hcol, hQ, if_pos rfl]
+    · rw [hcol, hQ, ite_eq_left rfl]
 
 theorem short_transfer {X Y Z : Type} [AddCommGroup X] [AddCommGroup Y] [AddCommGroup Z] (e : X ≃+ Y) (f : Z ≃+ Y)
     (q : QuadraticMap ℤ X ℝ) (q' : QuadraticMap ℤ Y ℝ) (hq : ∀ α, q α = q' (e α)) {N : ℕ} {y : Y}

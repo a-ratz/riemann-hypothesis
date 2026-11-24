@@ -55,7 +55,7 @@ abbrev frobOrder (D : D7) (p : ℕ) : ℕ := orderOf (zH D.R.toFrame (hP D p))
 
 theorem frobOrder_spec (D : D7) {T p : ℕ} (hg : GIdx D.host T p) : 2 ≤ frobOrder D p ∧ Even (frobOrder D p) := by
   obtain ⟨hp, -, hc, hn, -⟩ := hg
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hpZ : Prime (p : ℤ) := Nat.prime_iff_prime_int.1 hp
   have hpI : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hpZ.ne_zero).2 hpZ
   obtain ⟨⟨P, hPp, hL⟩⟩ : Nonempty ((Ideal.span {(p : ℤ)}).primesOver (𝓞 D.host.E)) := inferInstance

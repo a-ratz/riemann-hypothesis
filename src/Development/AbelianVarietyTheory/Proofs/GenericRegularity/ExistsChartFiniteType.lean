@@ -101,7 +101,7 @@ theorem exists_chart_finiteType {O : Type} [CommRing O] {X : Scheme.{0}} (s : X 
 theorem model_points_charts :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β), (∀ (W L : Type) [CommRing W] [IsDomain W] [ValuationRing W] [Field L] [Algebra W L] [IsFractionRing W L] (oV : O →+* W) (fK : c.F →+* L) (y : Sp L ⟶ Xo.XF c), (algebraMap W L).comp oV = fK.comp β → y ≫ pullback.snd _ _ = spMap fK → ∃! yt : Sp W ⟶ Y.X, yt ≫ Y.s = spMap oV ∧ spMap (algebraMap W L) ≫ yt = y ≫ Y.j) ∧ (∀ (S : Scheme.{0}) (f : S ⟶ Y.X), ∃ G : SAB H S, Nonempty (SABMap G Y.t f)) ∧ ∀ (U : Y.X.Opens) (hU : IsAffineOpen U), ∃ α : O →+* Γ(Y.X, U), hU.fromSpec ≫ Y.s = spMap α ∧ α.FiniteType ∧ ∀ (W : Type) [CommRing W] [IsLocalRing W] (yt : Sp W ⟶ Y.X), yt (IsLocalRing.closedPoint W) ∈ U → ∃! ψ : Γ(Y.X, U) →+* W, spMap ψ ≫ hU.fromSpec = yt := by
   intro E _ _ _ H D l Xo c O _ β Y
-  haveI : IsProper Y.s := projProper O Y.X Y.s Y.proj
+  have : IsProper Y.s := projProper O Y.X Y.s Y.proj
   refine ⟨?_, ?_, ?_⟩
   · intro W L _ _ _ _ _ _ oV fK y hc hy
     apply existsUnique_extension Y.s (y ≫ Y.j) (spMap oV)

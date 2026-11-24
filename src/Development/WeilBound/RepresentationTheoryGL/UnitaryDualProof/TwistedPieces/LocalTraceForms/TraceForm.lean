@@ -122,7 +122,7 @@ theorem cp_eq_iff (x : Matrix (Fin n) (Fin n) k) (y : Fin (n + 1) → k) : cp x 
   · intro h
     funext i
     simp only [cp, h, poly, finsetSum_coeff, coeff_C_mul, coeff_X_pow]
-    rw [Finset.sum_eq_single i (fun j _ hj => by rw [if_neg (fun e => hj (Fin.ext e.symm)), mul_zero]) (by simp)]
+    rw [Finset.sum_eq_single i (fun j _ hj => by rw [ite_eq_right (fun e => hj (Fin.ext e.symm)), mul_zero]) (by simp)]
     simp
 
 theorem locChi_pf : PositivityTheory.RgUd.TP.Loc.LocChi k := by
@@ -229,7 +229,7 @@ theorem exists_clopen_in {S A B : Set X} (hSc : IsCompact S) (hSo : IsOpen S) (h
     (fun x => (hV x.1 x.2).1.isOpen) (fun x hx => mem_iUnion.2 ⟨⟨x, hx⟩, (hV x hx).2.1⟩)
   refine ⟨⋃ i ∈ t, V i.1 i.2, ?_, ?_, ht, ?_⟩
   · exact t.finite_toSet.isClopen_biUnion (fun i _ => (hV i.1 i.2).1)
-  · exact iUnion₂_subset fun i _ => ((hV i.1 i.2).2.2).trans diff_subset
+  · exact iUnion₂_subset fun i _ => ((hV i.1 i.2).2.2).trans sdiff_subset
   · refine disjoint_left.2 fun y hy hyB => ?_
     obtain ⟨i, -, hyi⟩ := mem_iUnion₂.1 hy
     exact ((hV i.1 i.2).2.2 hyi).2 hyB
@@ -312,10 +312,10 @@ theorem exists_clopens {m : ℕ} (F : Fin m → Set (Matrix (Fin n) (Fin n) k)) 
   have hna : NonarchimedeanRing k := by
     convert! (ValuativeRel.nonarchimedeanRing k)
     exact Valuation.toTopologicalSpace_eq _
-  haveI : TotallyDisconnectedSpace k := inferInstance
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) :=
+  have : TotallyDisconnectedSpace k := inferInstance
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin n) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin n → k))
-  haveI : SigmaCompactSpace (Matrix (Fin n) (Fin n) k) :=
+  have : SigmaCompactSpace (Matrix (Fin n) (Fin n) k) :=
     inferInstanceAs (SigmaCompactSpace (Fin n → Fin n → k))
   let B : Fin m → Set (Matrix (Fin n) (Fin n) k) := fun i => ⋃ j ∈ Finset.univ.filter (· ≠ i), F j
   have hBmem : ∀ i j, j ≠ i → ∀ x ∈ F j, x ∈ B i := fun i j h x hx =>
@@ -868,7 +868,7 @@ instance isMax {R : Type*} [CommRing R] (I : MaximalSpectrum R) : I.asIdeal.IsMa
 theorem finQ (k : Type*) {R V : Type*} [Field k] [CommRing R] [Algebra k R] [AddCommGroup V] [Module R V] [Module k V]
     [IsScalarTower k R V] [FiniteDimensional k V] (I : MaximalSpectrum R) :
     FiniteDimensional (R ⧸ I.asIdeal) (V ⧸ (I.asIdeal • (⊤ : Submodule R V))) := by
-  haveI : Module.Finite R V := Module.Finite.of_restrictScalars_finite k R V
+  have : Module.Finite R V := Module.Finite.of_restrictScalars_finite k R V
   exact Module.Finite.of_restrictScalars_finite R _ _
 
 theorem exists_lam (k : Type*) {R : Type*} [Field k] [CommRing R] [Algebra k R] (I : MaximalSpectrum R) :
@@ -916,7 +916,7 @@ theorem tau_comm (x y : V →ₗ[R] V) : tau (k := k) (x * y) = tau (k := k) (y 
 theorem tau_nil (x : V →ₗ[R] V) (hx : IsNilpotent x) : tau (k := k) x = 0 := by
   rw [tau_apply]
   refine Finset.sum_eq_zero fun I _ => ?_
-  haveI := finQ k (V := V) I
+  have := finQ k (V := V) I
   obtain ⟨m, hm⟩ := hx
   have h1 : IsNilpotent (xq I.asIdeal x) := ⟨m, by rw [← xq_pow, hm, xq_zero]⟩
   have h2 := (LinearMap.isNilpotent_trace_of_isNilpotent h1).eq_zero
@@ -997,7 +997,7 @@ theorem tau_nondeg (x : V →ₗ[R] V) (h : ∀ y : V →ₗ[R] V, tau (k := k) 
     by_contra hne
     push_neg at hne
     exact hx (eq_zero_of_xq x hne)
-  haveI := finQ k (V := V) I
+  have := finQ k (V := V) I
   obtain ⟨w, hw⟩ : ∃ w, xq I.asIdeal x w ≠ 0 := by
     by_contra hne
     push_neg at hne
@@ -1083,9 +1083,9 @@ theorem traceForm_core (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z)
     ∃ τ : Matrix (Fin n) (Fin n) k →ₗ[k] k,
       (∀ x ∈ Bz Z, ∀ y ∈ Bz Z, τ (x * y) = τ (y * x)) ∧ (∀ x ∈ Bz Z, (∀ y ∈ Bz Z, τ (x * y) = 0) → x = 0) ∧
         ∀ x ∈ NB Z, τ x = 0 := by
-  letI : CommRing (RZ Z) := crZ Z hZ
-  letI : Algebra k (RZ Z) := (algZ Z hZ).toAlgebra
-  letI : Module (RZ Z) (Fin n → k) := Module.compHom (Fin n → k)
+  let : CommRing (RZ Z) := crZ Z hZ
+  let : Algebra k (RZ Z) := (algZ Z hZ).toAlgebra
+  let : Module (RZ Z) (Fin n → k) := Module.compHom (Fin n → k)
     ((Matrix.toLinAlgEquiv' (R := k) (n := Fin n)).toRingEquiv.toRingHom.comp (valZ Z hZ))
   have hsmul : ∀ (r : RZ Z) (v : Fin n → k), r • v = (valZ Z hZ r) *ᵥ v := fun r v => rfl
   have hval : ∀ (c : k) (r : RZ Z), valZ Z hZ (c • r) = c • valZ Z hZ r := by
@@ -1093,16 +1093,16 @@ theorem traceForm_core (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z)
     rw [Algebra.smul_def, map_mul]
     show algebraMap k (Matrix (Fin n) (Fin n) k) c * valZ Z hZ r = _
     rw [Algebra.smul_def]
-  haveI : IsScalarTower k (RZ Z) (Fin n → k) := ⟨fun c r v => by
+  have : IsScalarTower k (RZ Z) (Fin n → k) := ⟨fun c r v => by
     rw [hsmul, hsmul, hval, Matrix.smul_mulVec]⟩
   let L : RZ Z →ₗ[k] Matrix (Fin n) (Fin n) k :=
     { toFun := valZ Z hZ
       map_add' := map_add _
       map_smul' := hval }
   have hLinj : Function.Injective L := fun a b h => Subtype.ext h
-  haveI : Module.Finite k (RZ Z) := Module.Finite.of_injective L hLinj
-  haveI : IsArtinianRing (RZ Z) := IsArtinianRing.of_finite k (RZ Z)
-  haveI : IsReduced (RZ Z) := hZ.2
+  have : Module.Finite k (RZ Z) := Module.Finite.of_injective L hLinj
+  have : IsArtinianRing (RZ Z) := IsArtinianRing.of_finite k (RZ Z)
+  have : IsReduced (RZ Z) := hZ.2
   obtain ⟨τ0, hc, hnd, hnil⟩ := exists_tau (k := k) (R := RZ Z) (V := Fin n → k)
   have hcomm : ∀ x ∈ Bz Z, ∀ r : RZ Z, x * valZ Z hZ r = valZ Z hZ r * x :=
     fun x hx r => (hx _ (show Z from r).2).symm

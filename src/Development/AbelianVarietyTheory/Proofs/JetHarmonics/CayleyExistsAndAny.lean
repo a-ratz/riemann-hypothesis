@@ -115,7 +115,7 @@ private theorem isKTypeOf_map_of_intertwining {σ₁ σ₂ : Matrix (Fin n) (Fin
     apply e.injective
     rw [← he _ hθ, hx θ hθ, map_smul]
   refine ⟨?_, inv_map S hinv, ?_, ⟨e v, ⟨v, hvS, rfl⟩, by simpa using hv0, wt μ v hvw⟩, ?_⟩
-  · haveI := hfin
+  · have := hfin
     infer_instance
   · intro T hT hTinv
     have hle : T.comap (e : H →ₗ[ℂ] H) ≤ S := by

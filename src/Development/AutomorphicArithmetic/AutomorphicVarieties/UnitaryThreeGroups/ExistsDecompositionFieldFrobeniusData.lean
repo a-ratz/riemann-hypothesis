@@ -108,12 +108,12 @@ theorem UpperTheory.exists_decompositionField_frobenius_data :
           (∃ fr : Dec (F := ℚ) A, ((Ine (F := ℚ) A).subgroupOf (Dec (F := ℚ) A) ⊔ Subgroup.zpowers fr).topologicalClosure = ⊤) ∧
           ∀ n : ℕ, 0 < n → ∃ U : Subgroup (Dec (F := ℚ) A), IsOpen (U : Set (Dec (F := ℚ) A)) ∧ (Ine (F := ℚ) A).subgroupOf (Dec (F := ℚ) A) ≤ U ∧ U.index = n := by
   intro Ω _ _ _ A v hv
-  haveI : IsGalois ℚ Ω := {}
+  have : IsGalois ℚ Ω := {}
   obtain ⟨φ, -, h1, h2⟩ := UpperTheory.V.GC.decZhat ℚ Ω v A hv
   refine ⟨isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact, inferInstance, isClosed_Ine A, ⟨φ, h1⟩,
     fun n hn => ?_⟩
   obtain ⟨d, hd, hI, hφ⟩ := h2 n hn
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   refine ⟨d.ker, hd {1}, fun s hs => hI s hs, ?_⟩
   have hs : d.range = ⊤ := by
     rw [eq_top_iff]

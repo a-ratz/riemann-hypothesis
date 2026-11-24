@@ -116,7 +116,7 @@ theorem ld_loc_ch {D : D7} {u : D.what₂.Word} {i : ℕ} {hi : i ≤ D.R.m} {cl
           (Submodule.span (𝓞 D.host.E) (dualSet (sigD D : D.host.E →+* D.host.E) (gramN D i hi) K.lev.Lb)) := by
   let φ := (D.sp.X i).frame.equivFun.trans
     (LinearEquiv.funCongrLeft D.host.E D.host.E (finCongr (rankN D i hi)).symm)
-  letI : Submodule.IsLattice D.host.E (clsCrd D u i hi (cc c)) := bwB_clsCrd_lat D u i hi (cc c)
+  let : Submodule.IsLattice D.host.E (clsCrd D u i hi (cc c)) := bwB_clsCrd_lat D u i hi (cc c)
   have hL : Submodule.IsFullLattice D.host.E (clsCrd D u i hi (cc c)) := by
     constructor
     change Submodule.span D.host.E (((D.clsLat u i (cc c)).map
@@ -127,7 +127,7 @@ theorem ld_loc_ch {D : D7} {u : D.what₂.Word} {i : ℕ} {hi : i ≤ D.R.m} {cl
           rw [Submodule.map_span]; rfl,
       (D.clsLat_lat u i (cc c)).span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
     exact φ.surjective
-  letI : Submodule.IsLattice D.host.E K.lev.Lb :=
+  let : Submodule.IsLattice D.host.E K.lev.Lb :=
     Submodule.IsLattice.of_fg D.host.E (Module.Finite.iff_fg.1 K.lev.Lb_fin)
   have hLb : Submodule.IsFullLattice D.host.E K.lev.Lb := ⟨K.lev.Lb_span⟩
   refine GlobalTheory.DualCompletion.dual_move D.host.F D.host.E (sigD D) _ (gramN D i hi) v (clsCrd D u i hi (cc c)) K.lev.Lb

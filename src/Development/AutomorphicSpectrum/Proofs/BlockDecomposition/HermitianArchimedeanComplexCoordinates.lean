@@ -110,7 +110,7 @@ theorem continuous_hermEquiv (σ : E →ₐ[F] E) (Θ : Ainf F ⊗[F] E ≃+* (I
   refine continuous_matrix fun a c => ?_
   have h1 : Continuous fun b : HermR (Ainf F) σ n =>
       (b : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) a c :=
-    (continuous_id.matrix_elem a c).comp continuous_subtype_val
+    (continuous_id.matrix_elem a c).comp continuous_subtypeVal
   exact (continuous_apply w).comp (hΘ.comp h1)
 
 theorem continuous_hermEquiv_symm (σ : E →ₐ[F] E) (Θ : Ainf F ⊗[F] E ≃+* (InfinitePlace F → ℂ))
@@ -120,7 +120,7 @@ theorem continuous_hermEquiv_symm (σ : E →ₐ[F] E) (Θ : Ainf F ⊗[F] E ≃
   refine continuous_matrix fun a c => ?_
   refine hΘ.comp (continuous_pi fun w => ?_)
   have h1 : Continuous fun b : hermC n => (b : Matrix (Fin n) (Fin n) ℂ) a c :=
-    (continuous_id.matrix_elem a c).comp continuous_subtype_val
+    (continuous_id.matrix_elem a c).comp continuous_subtypeVal
   exact h1.comp (continuous_apply w)
 
 theorem continuous_symm (Θ : Ainf F ⊗[F] E ≃+* (InfinitePlace F → ℂ)) (hΘ : IsHomeomorph Θ) :
@@ -159,8 +159,8 @@ theorem exists_hermEquiv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   obtain ⟨hΘ, hconj, -, -⟩ := hc
   have c1 : Continuous Θ := hΘ.continuous
   have c2 : Continuous Θ.symm := continuous_symm Θ hΘ
-  haveI := topAddGroup_tens Θ hΘ
-  haveI : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
+  have := topAddGroup_tens Θ hΘ
+  have : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
   have h1 := continuous_hermEquiv σ Θ hconj c1 n
   have h2 := continuous_hermEquiv_symm σ Θ hconj c2 n
   refine ⟨hermEquiv σ Θ hconj n, fun b w => rfl, fun ν hν => ⟨?_, fun G hG => ?_⟩⟩

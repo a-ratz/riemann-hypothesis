@@ -80,7 +80,7 @@ private theorem val_eq {M : Type} [AddCommGroup M] [Module ℂ M] (T : Module.En
 
 private theorem chi_map {n : ℕ} {R S G : Type} [CommRing R] [CommRing S] [Group G] (D : W.GDet n R G) (f : R →+* S) (g : G) :
     (D.map f).chi (MonoidAlgebra.single g 1) = (D.chi (MonoidAlgebra.single g 1)).map f := by
-  letI : Algebra R (Polynomial S) := ((algebraMap S (Polynomial S)).comp f).toAlgebra
+  let : Algebra R (Polynomial S) := ((algebraMap S (Polynomial S)).comp f).toAlgebra
   let φ : Polynomial R →ₐ[R] Polynomial S :=
     { Polynomial.mapRingHom f with commutes' := fun b => Polynomial.map_C f }
   refine Eq.trans ?_ (D.nat (Polynomial R) (Polynomial S) φ

@@ -112,7 +112,7 @@ theorem exists_index {V' K'' : Type} [CommRing V'] [IsDomain V'] [IsDiscreteValu
       vV_mul (inj _ u.ne_zero) (pow_ne_zero _ (inj p hp.ne_zero)), vV_mul h2 (pow_ne_zero _ h1),
       vV_pow (inj p hp.ne_zero), vV_pow h1, vV_unit, vV_irr hp, hr]
     have := vV_unit (K' := K'') (Units.map j.toMonoidHom u)
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] at this
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] at this
     rw [this]; ring
   refine ⟨r, by omega, fun x => ?_⟩
   by_cases hx : x = 0
@@ -133,10 +133,10 @@ end Val
 
 theorem exists_cdvr_finite_extension : ∀ (T : CDVR) (L : Type) [Field L] [Algebra T.Fr L] [FiniteDimensional T.Fr L], ∃ (T' : CDVR) (iT : T.Fr →+* T'.Fr) (e : ℕ) (ψ : L ≃+* T'.Fr) (φ : T.V →+* T'.V), 0 < e ∧ (∀ a : T.Fr, vV T'.V (iT a) = (e : ℤ) * vV T.V a) ∧ (∀ a, ψ (algebraMap T.Fr L a) = iT a) ∧ (∀ a, algebraMap T'.V T'.Fr (φ a) = iT (algebraMap T.V T.Fr a)) ∧ (T.FinRes → T'.FinRes) := by
   intro T L _ _ _
-  haveI : CharZero T.Fr := algebraRat.charZero _
+  have : CharZero T.Fr := algebraRat.charZero _
   obtain ⟨W, _, _, _, _, _, _, _, hc, hfin, hinj, hloc, -, -⟩ :=
     GlobalTheory.SS.exists_complete_dvr_finite_extension T.V T.Fr L
-  haveI : CharZero W := charZero_of_injective_algebraMap hinj
+  have : CharZero W := charZero_of_injective_algebraMap hinj
   let T' : CDVR := { V := W }
   let ψ : L ≃+* FractionRing W := (FractionRing.algEquiv W L).symm.toRingEquiv
   let iT : T.Fr →+* FractionRing W := ψ.toRingHom.comp (algebraMap T.Fr L)
@@ -148,7 +148,7 @@ theorem exists_cdvr_finite_extension : ∀ (T : CDVR) (L : Type) [Field L] [Alge
     rw [h1, AlgEquiv.commutes]
   obtain ⟨e, he, hv⟩ := exists_index (algebraMap T.V W) iT hφ
   refine ⟨T', iT, e, ψ, algebraMap T.V W, he, hv, fun a => rfl, fun a => (hφ a).symm, fun h => ?_⟩
-  haveI : Finite (ResidueField T.V) := h
+  have : Finite (ResidueField T.V) := h
   exact Module.finite_of_finite (ResidueField T.V) (M := ResidueField W)
 
 end GlobalTheory.PlaceExtField

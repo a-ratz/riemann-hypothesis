@@ -336,10 +336,10 @@ theorem nondeg_right (hP : PerfectRight Dat.bT) (y : VT') (hy : ∀ x, Dat.bT x 
 
 theorem isDual1 (hreal : Formalism.RepresentationBoundsCohomology.FIN.RealLat Dat) (hcyc : CycMatch Dat e ι PD) :
     IsDual1 PD (repL e Dat.ρT ι) (repL e Dat.ρT' ι) (pairLL Dat e) := by
-  haveI : Module.Finite (FractionRing O) VT := finK_of_lat hreal.lat
-  haveI : Module.Finite (FractionRing O) VT' := finK' Dat hreal.perf
-  haveI := fd_of_finK e (V := VT)
-  haveI := fd_of_finK e (V := VT')
+  have : Module.Finite (FractionRing O) VT := finK_of_lat hreal.lat
+  have : Module.Finite (FractionRing O) VT' := finK' Dat hreal.perf
+  have := fd_of_finK e (V := VT)
+  have := fd_of_finK e (V := VT')
   have hl : ∀ x : TrV e VT, (∀ y, pairLL Dat e x y = 0) → x = 0 := fun x hx =>
     nondeg_left Dat hreal.perf (toV e x) fun y => (map_eq_zero_iff e e.injective).1 (hx y)
   have hr : ∀ y : TrV e VT', (∀ x, pairLL Dat e x y = 0) → y = 0 := fun y hy =>
@@ -495,10 +495,10 @@ theorem bka_gen [Module (FractionRing O) (H1 Dat.ρT)] [IsScalarTower O (Fractio
   have hιc : Continuous ι := by
     rw [show (ι : G → Γ) = h from funext fun g => (hh g).symm]
     exact h.continuous
-  haveI : Module.Finite (FractionRing O) VT := finK_of_lat hreal.lat
-  haveI : Module.Finite (FractionRing O) VT' := finK' Dat hreal.perf
-  haveI : ContinuousConstSMul (FractionRing O) VT := hreal.cs
-  haveI : ContinuousConstSMul (FractionRing O) VT' := hreal.cs'
+  have : Module.Finite (FractionRing O) VT := finK_of_lat hreal.lat
+  have : Module.Finite (FractionRing O) VT' := finK' Dat hreal.perf
+  have : ContinuousConstSMul (FractionRing O) VT := hreal.cs
+  have : ContinuousConstSMul (FractionRing O) VT' := hreal.cs'
   have fdV := fd_of_finK e (V := VT)
   have fdV' := fd_of_finK e (V := VT')
   have hcA : ∀ x, Continuous fun g => repL e Dat.ρT ι g x := fun x =>

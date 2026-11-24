@@ -225,7 +225,7 @@ private theorem fin_case [FiniteDimensional ℂ V] [MeasurableSpace (Un n)] [Bor
     (hσ : ∀ v w : V, Continuous fun k => ⟪w, σ k v⟫_ℂ) (E : KMod n) (T : E.V →L[ℂ] E.V) (P A : Module.End ℂ V)
     (hT : ∀ k, T * E.ρ k = E.ρ k * T) (hP : IsAvg ν σ E T P) (hA : ∀ k, A * σ k = σ k * A) :
     LinearMap.trace ℂ V (P * A) = trOn (invA σ E) (flipA E A T) := by
-  haveI : CompactSpace (Un n) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
+  have : CompactSpace (Un n) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
   rw [tr_inv ν (fun g => flipA E (σ g) (E.ρ g)) (fun g h => by simp only [flipA_mul, map_mul]) (wc_flip σ hσ E)
     (invA σ E) (mem_invA σ E) _ (flip_mem σ E hT hA)]
   simp only [flipA_mul, tr_flipA]
@@ -254,7 +254,7 @@ end UpperTheory.V.Z.GSp4Splitting
 theorem UpperTheory.V.Z.GSp4Splitting.avgTr :
     AvgFacts → AvgTr := by
   intro hF n _ _ ν _ hν V _ _ σ hσ E T P A hT hP hA hfd
-  haveI : IsProbabilityMeasure ν := ⟨hν⟩
+  have : IsProbabilityMeasure ν := ⟨hν⟩
   set S := isoSp σ E with hS
   have hPS : ∀ x, P x ∈ S := (hF n ν V σ hσ E T P hT hP).1
   have hσS : ∀ k, ∀ x ∈ S, σ k x ∈ S := fun k =>

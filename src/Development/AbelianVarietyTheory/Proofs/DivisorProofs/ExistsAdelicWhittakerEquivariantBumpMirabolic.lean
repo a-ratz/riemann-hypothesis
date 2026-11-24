@@ -117,7 +117,7 @@ theorem continuous_psiInf : Continuous (psiInf (E := E)) := by
   have hs : Continuous (fun z : Cinf E => sInf E z) :=
     ((continuous_infEq E).prodMk continuous_const :
       Continuous fun x : Cinf E => ((infEq E x, 0) : InfiniteAdeleRing E × Af E))
-  exact continuous_subtype_val.comp ((GroundTheory.Global.continuous_adelicChar (K := E)).comp hs)
+  exact continuous_subtypeVal.comp ((GroundTheory.Global.continuous_adelicChar (K := E)).comp hs)
 
 theorem psiInf_zero : psiInf (0 : Cinf E) = 1 := by
   simp [psiInf, map_zero]
@@ -139,9 +139,9 @@ theorem continuous_toL_nu : Continuous fun t : Vp E n => toL (nu t) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
   change Continuous fun t : Vp E n => nu t i j
   by_cases hij : i < j
-  · simp only [nu, Matrix.of_apply, dif_pos hij]
+  · simp only [nu, Matrix.of_apply, dite_eq_left hij]
     exact continuous_apply _
-  · simp only [nu, Matrix.of_apply, dif_neg hij]
+  · simp only [nu, Matrix.of_apply, dite_eq_right hij]
     exact continuous_const
 
 theorem nu_zero : nu (0 : Vp E n) = 1 := by
@@ -196,10 +196,10 @@ theorem exists_bumpInf_oneL_ne_zero (E : Type) [Field E] [NumberField E] [_root_
     congr 1
     funext t
     simp [hG, hh, Complex.re_ofReal_mul]
-  haveI : (volume : Measure (InfinitePlace E → ℂ)).IsOpenPosMeasure := Measure.pi.isOpenPosMeasure _
-  haveI : (volume : Measure (Vp E n)).IsOpenPosMeasure := Measure.pi.isOpenPosMeasure _
+  have : (volume : Measure (InfinitePlace E → ℂ)).IsOpenPosMeasure := Measure.pi.isOpenPosMeasure _
+  have : (volume : Measure (Vp E n)).IsOpenPosMeasure := Measure.pi.isOpenPosMeasure _
   have hpos : 0 < ∫ t, f (φ t) * h (φ t) := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := (0 : Vp E n))
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := (0 : Vp E n))
       ((hfd.continuous.comp hφc).mul (hc.comp hφc)) hfφ.mul_right (fun t => ?_) ?_
     · have h0 : 0 ≤ f (φ t) := (hfr ⟨φ t, rfl⟩).1
       by_cases hz : f (φ t) = 0
@@ -232,10 +232,10 @@ theorem isCompact_GL_of_invSet : ∀ (E : Type) [Field E] [NumberField E] (n : �
     IsCompact T → T ⊆ invSet E n →
       IsCompact {y : GL (Fin n) (Cinf E) | toL (y : Matrix (Fin n) (Fin n) (Cinf E)) ∈ T} := by
   intro E _ _ n T hT hsub
-  haveI : CompactSpace T := isCompact_iff_compactSpace.1 hT
+  have : CompactSpace T := isCompact_iff_compactSpace.1 hT
   have hu : Continuous fun p : T =>
       (IsUnit.unit (hsub p.2 : IsUnit (Matrix.of p.1)) : GL (Fin n) (Cinf E)) := by
-    refine Units.continuous_iff.2 ⟨continuous_subtype_val, ?_⟩
+    refine Units.continuous_iff.2 ⟨continuous_subtypeVal, ?_⟩
     have hinv : ContDiffOn ℝ ∞ (GlobalTheory.ConstTermSmooth.invM (E := E) (a := n)) (invSet E n) := by
       have h1 : ContDiffOn ℝ ∞ (fun y : Lie E n => Ring.inverse (Matrix.of y).det) (invSet E n) := fun y hy => by
         obtain ⟨u, hu⟩ := (Matrix.isUnit_iff_isUnit_det _).1 hy
@@ -253,7 +253,7 @@ theorem isCompact_GL_of_invSet : ∀ (E : Type) [Field E] [NumberField E] (n : �
         exact contDiff_det.comp h3
       exact h1.mul h2.contDiffOn
     have := hinv.continuousOn.comp_continuous
-      (f := fun p : T => (p : Lie E n)) continuous_subtype_val fun p => hsub p.2
+      (f := fun p : T => (p : Lie E n)) continuous_subtypeVal fun p => hsub p.2
     refine Continuous.congr this fun p => ?_
     simp only [Matrix.coe_units_inv]
     rfl
@@ -416,7 +416,7 @@ theorem GlobalTheory.WhitBump.exists_shear_measurePreserving : ∀ (E : Type) [F
       ∀ t, nu (τ t) = nu t * (u : Matrix (Fin n) (Fin n) (Cinf E)) := by
   intro E _ _ n u hu
   obtain ⟨hl, hd⟩ := (GlobalTheory.SmGL.mem_unipB (Cinf E)).1 hu
-  haveI : Measure.IsAddHaarMeasure (volume : Measure (Vp E n)) := Measure.pi.isAddHaarMeasure _
+  have : Measure.IsAddHaarMeasure (volume : Measure (Vp E n)) := Measure.pi.isAddHaarMeasure _
   set L := lin (u : Matrix (Fin n) (Fin n) (Cinf E)) with hLdef
   have hdet : LinearMap.det L = 1 := det_lin hl hd
   have hdet0 : LinearMap.det L ≠ 0 := by rw [hdet]; exact one_ne_zero
@@ -478,7 +478,7 @@ theorem continuous_psiInf_sdM : Continuous fun t : Vp E n => psiInf (-sdM (nu t)
     ((continuous_infEq E).prodMk continuous_const : Continuous fun x : Cinf E => ((infEq E x, 0) : InfiniteAdeleRing E × Af E))
   have hd : Continuous fun t : Vp E n => sdM (nu t) :=
     continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => (contDiff_nu_apply i j).continuous
-  exact continuous_subtype_val.comp (GroundTheory.Global.continuous_adelicChar.comp (hs.comp hd.neg))
+  exact continuous_subtypeVal.comp (GroundTheory.Global.continuous_adelicChar.comp (hs.comp hd.neg))
 
 theorem bumpInf_contDiffOn_invSet : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (n : ℕ) (f : Lie E n → ℝ),
     ContDiff ℝ ∞ f → HasCompactSupport f → tsupport f ⊆ invSet E n → ContDiffOn ℝ ∞ (bumpInf f) (invSet E n) := by

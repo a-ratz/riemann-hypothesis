@@ -487,7 +487,7 @@ theorem tau_shifted_periodic (j : Fin a) (w : Fin n → ℂ) (hw : w ∈ logCove
     · simp [cusp_ne P hij, hij]
   simp only [PeriodPolydisc.tau0, P.periodic j w hw]
   rw [Finset.sum_congr rfl (fun i _ => key i), Finset.sum_add_distrib, Finset.sum_pi_single']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   abel
 
 def phi (w : Fin n → ℂ) : ℂ := 2 * Real.pi * Complex.I * qf (P.tau0 w) v
@@ -558,7 +558,7 @@ theorem logLift_mem {z : Fin n → ℂ} (hz : z ∈ puncturedChart P.a_le (ball 
     have h0 : z (Fin.castLE P.a_le i) ≠ 0 := hz.2 i
     exact Real.log_neg (norm_pos_iff.mpr h0) (norm_lt_one_of_mem_ball hz.1 _)
   · have : ¬ k.val < a := not_lt.mpr hk
-    simp only [logLift, this, if_false]
+    simp only [logLift, this, ite_false]
     exact norm_lt_one_of_mem_ball hz.1 k
 
 theorem expCover_mem {w : Fin n → ℂ} (hw : w ∈ logCover P.a_le) :
@@ -568,9 +568,9 @@ theorem expCover_mem {w : Fin n → ℂ} (hw : w ∈ logCover P.a_le) :
     · have hk' : Fin.castLE P.a_le ⟨k.val, hk⟩ = k := Fin.ext rfl
       have h1 := hw.1 ⟨k.val, hk⟩
       rw [hk'] at h1
-      simp only [expCover, hk, if_true, Complex.norm_exp]
+      simp only [expCover, hk, ite_true, Complex.norm_exp]
       exact (Real.exp_lt_exp.mpr h1).trans_eq Real.exp_zero
-    · simp only [expCover, hk, if_false]
+    · simp only [expCover, hk, ite_false]
       exact hw.2 k (not_lt.mp hk)
   · show expCover a w (Fin.castLE P.a_le j) ≠ 0
     rw [expCover_castLE P]
@@ -628,7 +628,7 @@ theorem slice_order (hD : LogCoverDescent.Statement) (hO : PuncturedExpOrder.Sta
           (Fin.castLE P.a_le j) * ((intQuad (P.B j) v : ℤ) : ℂ)) =
           Function.update z (Fin.castLE P.a_le i) x (Fin.castLE P.a_le j) ^ intQuad (P.B j) v := by
         intro j
-        rw [logLift_castLE P, mul_comm, Complex.exp_int_mul,
+        rw [logLift_castLE P, mul_comm, Complex.exp_intCast_mul,
           Complex.exp_log (show Function.update z (Fin.castLE P.a_le i) x (Fin.castLE P.a_le j) ≠ 0
             from hy.2 j)]
       simp only [hj]
@@ -730,7 +730,7 @@ theorem ExpQuadMonomial.proof (hE : RiemannExtensionSlices.Statement)
     congr 1
     rw [Complex.exp_sum]
     refine Finset.prod_congr rfl fun i _ => ?_
-    rw [ExpQuad.expCover_castLE P, ← Complex.exp_nat_mul, mul_comm]
+    rw [ExpQuad.expCover_castLE P, ← Complex.exp_natCast_mul, mul_comm]
     congr 2
     exact_mod_cast (Int.toNat_of_nonneg (hk i)).symm
 
@@ -1119,9 +1119,9 @@ theorem pos_of_punctured {n a g : ℕ} (P : PeriodPolydisc n a g)
   have hw : logLift a z ∈ logCover P.a_le := by
     refine ⟨fun i => ?_, fun k hk => ?_⟩
     · have hi : (Fin.castLE P.a_le i).val < a := i.isLt
-      simp only [logLift, if_pos hi, Complex.log_re]
+      simp only [logLift, ite_eq_left hi, Complex.log_re]
       exact Real.log_neg (norm_pos_iff.mpr (hz0 _)) (hzk _)
-    · simp only [logLift, if_neg (not_lt.mpr hk)]
+    · simp only [logLift, ite_eq_right (not_lt.mpr hk)]
       exact hzk k
   have hexp : expCover a (logLift a z) = z := by
     funext k

@@ -77,7 +77,7 @@ theorem closedLift : LeafClosedLift := by
       exact IsLocalRing.comap_closedPoint (IsLocalRing.residue A)
     rw [ht, Scheme.Hom.comp_base, TopCat.comp_app, hy]
     exact hc
-  haveI := isIso_of_isClosedImmersion_of_surjective (pullback.fst t ι)
+  have := isIso_of_isClosedImmersion_of_surjective (pullback.fst t ι)
   refine ⟨inv (pullback.fst t ι) ≫ pullback.snd t ι, ?_⟩
   rw [Category.assoc, ← pullback.condition, IsIso.inv_hom_id_assoc]
 

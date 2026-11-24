@@ -77,7 +77,7 @@ theorem resDeg_addv (v : HeightOneSpectrum (integralClosure O L)) :
       (ResidueField (vRing (addv L v))) = v.asIdeal.inertiaDeg O := by
   classical
   set w := addv L v with hw_def
-  letI : Algebra (ResidueField ((vRing w).comap (algebraMap F L))) (ResidueField (vRing w)) :=
+  let : Algebra (ResidueField ((vRing w).comap (algebraMap F L))) (ResidueField (vRing w)) :=
     resAlg (F := F) w
   have hunit : ∀ x : vRing w, IsUnit x ↔ w (x : L) = 0 := by
     intro x
@@ -112,7 +112,7 @@ theorem resDeg_addv (v : HeightOneSpectrum (integralClosure O L)) :
     ext b
     rw [RingHom.mem_ker, hψB, IsLocalRing.residue_eq_zero_iff, hmaxV]
     exact addv_pos_iff v b
-  haveI := v.isMaximal
+  have := v.isMaximal
   have hsurjB : Function.Surjective ψB := by
     intro z
     obtain ⟨x, rfl⟩ := IsLocalRing.residue_surjective z
@@ -205,7 +205,7 @@ theorem resDeg_addv (v : HeightOneSpectrum (integralClosure O L)) :
     (Ideal.quotEquivOfEq hkerO.symm).trans (RingHom.quotientKerEquivOfSurjective hsurjO)
   have hmax : (v.asIdeal.comap (algebraMap O (integralClosure O L))).IsMaximal :=
     Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := O) v.asIdeal
-  haveI : v.asIdeal.LiesOver (maximalIdeal O) := ⟨(IsLocalRing.eq_maximalIdeal hmax).symm⟩
+  have : v.asIdeal.LiesOver (maximalIdeal O) := ⟨(IsLocalRing.eq_maximalIdeal hmax).symm⟩
   have hc : (algebraMap (ResidueField ((vRing w).comap (algebraMap F L)))
       (ResidueField (vRing w))).comp jO.toRingHom =
       jB.toRingHom.comp (algebraMap (O ⧸ maximalIdeal O) (integralClosure O L ⧸ v.asIdeal)) := by
@@ -264,7 +264,7 @@ theorem norm_integral (b : integralClosure O L) (hb : b ≠ 0) {ϖ : O} (hϖ : I
         (ϖ ^ (∑ᶠ v : HeightOneSpectrum (integralClosure O L), v.asIdeal.inertiaDeg O *
           Multiset.count v.asIdeal (UniqueFactorizationMonoid.normalizedFactors (Ideal.span {b})))
           * u) := by
-  haveI : Module.Finite O (integralClosure O L) :=
+  have : Module.Finite O (integralClosure O L) :=
     IsIntegralClosure.finite O F L (integralClosure O L)
   have hinj : Function.Injective (algebraMap O L) := by
     rw [IsScalarTower.algebraMap_eq O F L]
@@ -274,7 +274,7 @@ theorem norm_integral (b : integralClosure O L) (hb : b ≠ 0) {ϖ : O} (hϖ : I
     apply hinj
     rw [IsScalarTower.algebraMap_apply O (integralClosure O L) L x,
       IsScalarTower.algebraMap_apply O (integralClosure O L) L y, hxy]
-  haveI : NoZeroSMulDivisors O (integralClosure O L) := by
+  have : NoZeroSMulDivisors O (integralClosure O L) := by
     refine ⟨fun {c x} h => ?_⟩
     rw [Algebra.smul_def, mul_eq_zero] at h
     exact h.imp_left (fun h' => hinjB (h'.trans (map_zero _).symm))
@@ -282,7 +282,7 @@ theorem norm_integral (b : integralClosure O L) (hb : b ≠ 0) {ϖ : O} (hϖ : I
   have hne : Algebra.norm O b ≠ 0 := by
     intro h0
     rw [h0, IsDiscreteValuationRing.addVal_zero] at hN
-    exact ENat.top_ne_coe _ hN
+    exact ENat.top_ne_natCast _ hN
   obtain ⟨n, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hne hϖ
   have hn := IsDiscreteValuationRing.addVal_def _ u hϖ n hu
   rw [hn] at hN
@@ -295,7 +295,7 @@ theorem norm_integral (b : integralClosure O L) (hb : b ≠ 0) {ϖ : O} (hϖ : I
     exact finsum_comp_equiv (hoEquiv (O := O) (F := F) (L := L))
       (f := fun Q : {Q : Ideal (integralClosure O L) // Q.IsMaximal} => Q.1.inertiaDeg O *
         Multiset.count Q.1 (UniqueFactorizationMonoid.normalizedFactors (Ideal.span {b})))
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (integralClosure O L) (nonZeroDivisors O)) L :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid (integralClosure O L) (nonZeroDivisors O)) L :=
     IsIntegralClosure.isLocalization O F L (integralClosure O L)
   refine ⟨u, u.isUnit, ?_⟩
   rw [Algebra.norm_localization O (nonZeroDivisors O) b, hu, hsum, mul_comm (u : O)]
@@ -305,7 +305,7 @@ theorem norm_eq_heightOne (y : L) (hy : y ≠ 0) {ϖ : O} (hϖ : Irreducible ϖ)
       Algebra.norm F y = (algebraMap O F ϖ) ^
         (∑ᶠ v : HeightOneSpectrum (integralClosure O L),
           (v.asIdeal.inertiaDeg O : ℤ) * WithTop.untopD 0 (addv L v y)) * algebraMap O F u := by
-  haveI : Finite (HeightOneSpectrum (integralClosure O L)) := by
+  have : Finite (HeightOneSpectrum (integralClosure O L)) := by
     have hinj : Function.Injective (algebraMap O L) := by
       rw [IsScalarTower.algebraMap_eq O F L]
       exact (algebraMap F L).injective.comp (IsFractionRing.injective O F)
@@ -339,7 +339,7 @@ theorem norm_eq_heightOne (y : L) (hy : y ≠ 0) {ϖ : O} (hϖ : Irreducible ϖ)
       Set.eq_univ_of_forall hdvd
     rw [huniv] at hfin
     exact Set.finite_univ_iff.1 hfin
-  haveI := Fintype.ofFinite (HeightOneSpectrum (integralClosure O L))
+  have := Fintype.ofFinite (HeightOneSpectrum (integralClosure O L))
   obtain ⟨b1, b2, hb2m, hyb⟩ := IsFractionRing.div_surjective (A := (integralClosure O L)) y
   have hb2 : b2 ≠ 0 := nonZeroDivisors.ne_zero hb2m
   have hb1 : b1 ≠ 0 := by

@@ -86,7 +86,7 @@ theorem exists_moved {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (τ : ∀ w : I
     rw [h x] at this
     rw [ComplexEmbedding.conjugate_coe_eq, starRingEnd_apply]
     exact this.symm
-  haveI := hCM.2.1
+  have := hCM.2.1
   exact (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex (InfinitePlace.mk (τ w).1)))
     (InfinitePlace.isReal_mk_iff.2 hr)
 

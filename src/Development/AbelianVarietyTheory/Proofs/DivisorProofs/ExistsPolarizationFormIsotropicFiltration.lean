@@ -93,14 +93,14 @@ theorem mem_of_annihilates {R V : Type*} [CommRing R] [AddCommGroup V] [Module R
     rwa [LinearMap.ker_comp_of_ker_eq_bot _ hk] at h
   let ep := Submodule.prodEquivOfIsCompl _ _ hc2
   let es : Dual R W ≃ₗ[R] LinearMap.range s := LinearEquiv.ofInjective s hsinj
-  haveI : Module.Finite R (LinearMap.range s) := Module.Finite.equiv es
-  haveI : Module.Projective R (LinearMap.range s) := Module.Projective.of_equiv es
+  have : Module.Finite R (LinearMap.range s) := Module.Finite.equiv es
+  have : Module.Projective R (LinearMap.range s) := Module.Projective.of_equiv es
   let pr : W' →ₗ[R] LinearMap.ker Φ := LinearMap.snd R _ _ ∘ₗ ep.symm.toLinearMap
   have hpr : pr ∘ₗ (LinearMap.ker Φ).subtype = LinearMap.id := LinearMap.ext fun x ↦ by
     simp [pr, ep, Submodule.prodEquivOfIsCompl_symm_apply_right]
-  haveI : Module.Finite R (LinearMap.ker Φ) :=
+  have : Module.Finite R (LinearMap.ker Φ) :=
     Module.Finite.of_surjective pr (fun x ↦ ⟨x, by simpa using congrArg (fun m ↦ m x) hpr⟩)
-  haveI : Module.Projective R (LinearMap.ker Φ) := Module.Projective.of_split _ _ hpr
+  have : Module.Projective R (LinearMap.ker Φ) := Module.Projective.of_split _ _ hpr
   have hr0 : rankAtStalk (R := R) (LinearMap.ker Φ) = 0 := by
     have h1 := rankAtStalk_eq_of_equiv ep
     rw [rankAtStalk_prod, rankAtStalk_eq_of_equiv es.symm] at h1
@@ -110,7 +110,7 @@ theorem mem_of_annihilates {R V : Type*} [CommRing R] [AddCommGroup V] [Module R
     rw [hrk p] at this
     simp only [Pi.zero_apply]
     omega
-  haveI := (rankAtStalk_eq_zero_iff_subsingleton).1 hr0
+  have := (rankAtStalk_eq_zero_iff_subsingleton).1 hr0
   have hb : (e.symm f).2 ∈ LinearMap.ker Φ := LinearMap.mem_ker.2 (LinearMap.ext fun g ↦ by
     rw [hΦ' f g]; exact hf g g.2)
   have h0 : (e.symm f).2 = 0 := by
@@ -158,13 +158,13 @@ theorem mem_of_annihilates_dual {R M : Type*} [CommRing R] [AddCommGroup M] [Mod
     (Submodule.quotientEquivOfIsCompl F N hc).dualMap.trans (Submodule.dualQuotEquivDualAnnihilator F)
   have hpN : (N.projectionOnto F hc.symm) ∘ₗ N.subtype = LinearMap.id :=
     LinearMap.ext fun x ↦ Submodule.projectionOnto_apply_left hc.symm x
-  haveI : Module.Projective R N := Module.Projective.of_split _ _ hpN
-  haveI : Module.Finite R N := Module.Finite.of_surjective _ (Submodule.projectionOnto_surjective hc.symm)
+  have : Module.Projective R N := Module.Projective.of_split _ _ hpN
+  have : Module.Finite R N := Module.Finite.of_surjective _ (Submodule.projectionOnto_surjective hc.symm)
   let eN : Dual R F.dualAnnihilator ≃ₗ[R] N := eW.dualMap.trans (Module.evalEquiv R N).symm
-  haveI : Module.Finite R N.dualAnnihilator := Module.Finite.equiv eW'
-  haveI : Module.Projective R N.dualAnnihilator := Module.Projective.of_equiv eW'
-  haveI : Module.Finite R (Dual R F.dualAnnihilator) := Module.Finite.equiv eN.symm
-  haveI : Module.Projective R (Dual R F.dualAnnihilator) := Module.Projective.of_equiv eN.symm
+  have : Module.Finite R N.dualAnnihilator := Module.Finite.equiv eW'
+  have : Module.Projective R N.dualAnnihilator := Module.Projective.of_equiv eW'
+  have : Module.Finite R (Dual R F.dualAnnihilator) := Module.Finite.equiv eN.symm
+  have : Module.Projective R (Dual R F.dualAnnihilator) := Module.Projective.of_equiv eN.symm
   refine mem_of_annihilates ψ _ _ hc' (fun p ↦ ?_) hiso f hf
   rw [← rankAtStalk_eq_of_equiv eW', rankAtStalk_eq_of_equiv eN, GlobalTheory.TopExt.rankAtStalk_dual F p, hF p]
   have h1 := congrFun (rankAtStalk_eq_of_equiv e) p

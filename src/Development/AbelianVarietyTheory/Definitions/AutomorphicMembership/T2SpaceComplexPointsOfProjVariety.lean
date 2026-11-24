@@ -86,7 +86,7 @@ def of : A →+* CxExt σ A :=
   (Algebra.TensorProduct.includeRight (R := F) (A := ℂ) (B := A)).toRingHom
 
 theorem of_algebraMap (a : F) : of σ (algebraMap F A a) = algebraMap ℂ (CxExt σ A) (σ a) := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   first
   | exact (Algebra.TensorProduct.includeRight (R := F) (A := ℂ) (B := A)).commutes a
 
@@ -95,7 +95,7 @@ theorem of_smul (a : F) (x : A) : of σ (a • x) = σ a • of σ x := by
 
 private theorem complex_smul_of_eq (c : ℂ) (a : A) :
     c • of σ a = (letI := σ.toAlgebra; (c ⊗ₜ[F] a : ℂ ⊗[F] A) : CxExt σ A) := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   first
   | (show c • ((1 : ℂ) ⊗ₜ[F] a) = c ⊗ₜ[F] a
      rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one])
@@ -104,7 +104,7 @@ private theorem complex_smul_of_eq (c : ℂ) (a : A) :
 variable {σ} in
 @[elab_as_elim] theorem induction {P : CxExt σ A → Prop} (x : CxExt σ A)
     (smul : ∀ (c : ℂ) (a : A), P (c • of σ a)) (add : ∀ x y, P x → P y → P (x + y)) : P x := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   refine TensorProduct.induction_on (R := F) (M := ℂ) (N := A) (motive := P) x ?_ ?_ ?_
   · have h := smul 0 0
     rw [zero_smul] at h
@@ -141,7 +141,7 @@ def map (f : A →ₐ[F] A') : CxExt σ A →ₐ[ℂ] CxExt σ A' :=
 
 theorem map_injective {f : A →ₐ[F] A'} (hf : Function.Injective f) :
     Function.Injective (map σ f) := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   have hk : ∀ x : CxExt σ A,
       map σ f x = (LinearMap.lTensor ℂ f.toLinearMap : ℂ ⊗[F] A →ₗ[F] ℂ ⊗[F] A') x := by
     intro x
@@ -160,7 +160,7 @@ theorem exists_components (f : A →ₐ[F] A') (x : CxExt σ A) :
     ∃ (ι : Type) (s : Finset ι) (e : ι → ℂ) (π : ι → CxExt σ A → A) (π' : ι → CxExt σ A' → A'),
       x = ∑ i ∈ s, e i • of σ (π i x) ∧ (∀ i y, π' i (map σ f y) = f (π i y)) ∧
       ∀ i y a, π' i (y * of σ a) = π' i y * a := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   obtain ⟨b⟩ : Nonempty (Module.Basis (Module.Basis.ofVectorSpaceIndex F ℂ) F ℂ) := ⟨Module.Basis.ofVectorSpace F ℂ⟩
   refine ⟨Module.Basis.ofVectorSpaceIndex F ℂ, (TensorProduct.equivFinsuppOfBasisLeft (N := A) b x).support,
     fun i => b i, fun i y => TensorProduct.equivFinsuppOfBasisLeft (N := A) b y i,
@@ -246,7 +246,7 @@ theorem evStalk_germ {y : Y.pts σ} {U : Y.X.Opens} (h : base y ∈ U) (a : Γ(Y
 
 theorem evStalk_ne_zero_iff {y : Y.pts σ} (a : Y.X.presheaf.stalk (base y)) :
     evStalk y a ≠ 0 ↔ IsUnit a := by
-  haveI : IsLocalHom (evStalk y) := Scheme.isLocalHom_stalkClosedPointTo y.1
+  have : IsLocalHom (evStalk y) := Scheme.isLocalHom_stalkClosedPointTo y.1
   rw [← isUnit_iff_ne_zero]
   exact isUnit_map_iff (evStalk y) a
 
@@ -433,7 +433,7 @@ theorem exists_spread {x : Y.X} (a : CxExt σ (Y.X.presheaf.stalk x)) :
       ∀ z ∈ ptsIn Y.str σ U, ∃ a', germIncl z a' = CxExt.map σ (Y.stalkIncl x) a ∧
         germEv z a' = A z := by
   refine CxExt.induction a (fun c s => ?_) (fun a₁ a₂ h₁ h₂ => ?_)
-  · obtain ⟨U, hx, g, rfl⟩ := Y.X.presheaf.germ_exist s
+  · obtain ⟨U, hx, g, rfl⟩ := Y.X.presheaf.exists_germ_eq s
     refine ⟨U, fun z => c * ev Y.str σ U g z, hx, ?_, fun z hz => ?_⟩
     · exact (show (Y.an σ).HoloOn (ptsIn Y.str σ U) (fun _ => c) from
         fun _ => differentiableOn_const c).mul ((Y.an σ).holoOn_ev U g)

@@ -251,7 +251,7 @@ variable {K : Type*} [Field K] [NumberField K] {n : ℕ} [NeZero n] [HasEnoughRo
 theorem index_range_powMonoidHom_adicCompletion_mul_norm (v : HeightOneSpectrum (𝓞 K)) :
     ((powMonoidHom n : (v.adicCompletion K)ˣ →* (v.adicCompletion K)ˣ).range.index : ℝ) *
       ‖(n : v.adicCompletion K)‖ = (n : ℝ) ^ 2 := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K n
   have hζv := hζ.map_of_injective (algebraMap K (v.adicCompletion K)).injective
   have hn : ‖(n : v.adicCompletion K)‖ ≠ 0 :=
     norm_ne_zero_iff.2 (natCast_ne_zero_adicCompletion (v := v) (NeZero.ne n))
@@ -261,7 +261,7 @@ theorem index_range_powMonoidHom_adicCompletion_mul_norm (v : HeightOneSpectrum 
 
 omit [NumberField K] in
 theorem eq_one_or_eq_two_of_isReal {w : InfinitePlace K} (hw : w.IsReal) : n = 1 ∨ n = 2 := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K n
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K n
   have h := hζ.map_of_injective (InfinitePlace.embedding_of_isReal hw).injective
   set x := InfinitePlace.embedding_of_isReal hw ζ
   have habs : |x| = 1 := by

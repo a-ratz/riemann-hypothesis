@@ -76,7 +76,7 @@ theorem chi_cont_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (T : 
     Continuous fun β : nA σ d.Y d.b => d.B.ψ (-(Algebra.trace (AF F) (AE F E) (Matrix.trace (T.1.1 * β.1)))) := by
   have htr : Continuous (Algebra.trace (AF F) (AE F E)) :=
     IsModuleTopology.continuous_of_linearMap (R := AF F) (Algebra.trace (AF F) (AE F E))
-  exact d.ok.good.std.1.comp ((htr.comp (continuous_const.matrix_mul continuous_subtype_val).matrix_trace).neg)
+  exact d.ok.good.std.1.comp ((htr.comp (continuous_const.matrix_mul continuous_subtypeVal).matrix_trace).neg)
 theorem chi_per_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (T : nF σ d.Y d.b) {l : nA σ d.Y d.b} (hl : l ∈ nF σ d.Y d.b) :
     d.B.ψ (-(Algebra.trace (AF F) (AE F E) (Matrix.trace (T.1.1 * l.1)))) = 1 := by
   obtain ⟨T₀, hT₀⟩ := (kfour.mem_nF_iff T.1).1 T.2

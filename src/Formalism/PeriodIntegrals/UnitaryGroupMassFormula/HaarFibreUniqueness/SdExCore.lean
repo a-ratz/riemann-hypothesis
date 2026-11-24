@@ -104,7 +104,7 @@ theorem exists_normalized (μ0 : Measure V) [μ0.IsAddHaarMeasure] (A B : ℕ �
   refine ⟨r • μ0, Measure.IsAddHaarMeasure.smul (μ := μ0) hr0 hrt, fun k => ?_⟩
   have hk : (μ0 (A k)).toReal * (μ0 (B k)).toReal = c := by
     rw [← ENNReal.toReal_mul, hconst k]
-  simp only [Measure.real, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul]
+  simp only [Measure.real, smul_apply, smul_eq_mul, ENNReal.toReal_mul]
   rw [hr, ENNReal.toReal_ofReal (by positivity)]
   calc 1 / s * (μ0 (A k)).toReal * (1 / s * (μ0 (B k)).toReal)
       = ((μ0 (A k)).toReal * (μ0 (B k)).toReal) / (s * s) := by field_simp
@@ -139,7 +139,7 @@ theorem key (Φ : V → ℂ) (hc : Continuous Φ) (hs : HasCompactSupport Φ) (z
     funext x
     rw [hχ z x y, hsym z y, mul_assoc]
   simp only [h1]
-  haveI : IsFiniteMeasure (μ.restrict (M : Set V)) :=
+  have : IsFiniteMeasure (μ.restrict (M : Set V)) :=
     isFiniteMeasure_restrict.2 hMc.measure_lt_top.ne
   have hint : Integrable (Function.uncurry fun (y x : V) => Φ x * χ (x + z) y)
       ((μ.restrict (M : Set V)).prod μ) := by
@@ -228,7 +228,7 @@ theorem selfDual_of_pairs (χ : V → V → ℂ) (hχc : Continuous (fun p : V �
     have hb : ‖∫ u in ann χ (M k), (Φ (u - z) - Φ (-z)) ∂μ‖ ≤ ε / 2 * μ.real (ann χ (M k)) := by
       refine norm_setIntegral_le_of_norm_le_const hfin fun u hu => ?_
       have := hk hu
-      simp only [Set.mem_setOf_eq, dist_eq_norm] at this
+      simp only [Set.mem_ofPred_eq, dist_eq_norm] at this
       exact this.le
     calc μ.real (M k : Set V) * ‖∫ u in ann χ (M k), (Φ (u - z) - Φ (-z)) ∂μ‖
         ≤ μ.real (M k : Set V) * (ε / 2 * μ.real (ann χ (M k))) :=

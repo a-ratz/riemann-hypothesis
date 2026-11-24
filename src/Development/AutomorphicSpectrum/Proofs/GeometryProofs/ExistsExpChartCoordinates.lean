@@ -98,8 +98,8 @@ theorem compactSpace_points (A : Over (Sp ℂ)) [GrpObj A] (L : LB A.left) (hL :
     · obtain ⟨p, rfl⟩ := hs f
       obtain ⟨q, rfl⟩ := MvPolynomial.map_surjective c₀ hc₀ p
       exact ⟨q, (MvPolynomial.eval₂_map c₀ r _ q).symm⟩
-  letI := PointsCompact.pointTopology Y
-  letI := PointsCompact.pointTopology A
+  let := PointsCompact.pointTopology Y
+  let := PointsCompact.pointTopology A
   have hsurj : Function.Surjective fun x : 𝟙_ (Over (Sp ℂ)) ⟶ Y => x ≫ φ := by
     intro x
     have hrange : Set.range x.left ⊆ Set.range (A.hom ⁻¹ᵁ ⊤).ι := by

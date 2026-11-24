@@ -155,8 +155,8 @@ theorem exists_chart : ∀ {O R : Type} [CommRing O] [CommRing R] {I : Ideal R} 
   obtain ⟨𝓛⟩ := GlobalTheory.CompanionTheory.EtaleLift.nonempty_lift (strV q V) c.t I κ c.etale
   have hflat : 𝓛.i.Flat := (GlobalTheory.CompanionTheory.LiftFlat.lift_flat 𝓛.i 𝓛.t 𝓛.et).1
   obtain ⟨δ, hδ⟩ : ∃ δ : DividedPowers (I.map 𝓛.i), IsDPMorphism γ δ 𝓛.i := by
-    letI := 𝓛.i.toAlgebra
-    haveI : Module.Flat R 𝓛.D := hflat
+    let := 𝓛.i.toAlgebra
+    have : Module.Flat R 𝓛.D := hflat
     exact GlobalTheory.CompanionTheory.JLiftDP.dpFlat R 𝓛.D I γ
   have hadm : (p ≠ 0 → IsNilpotent (p : 𝓛.D)) ∧ (p = 0 → IsNilpotent (I.map 𝓛.i)) :=
     ⟨fun _ => by simpa using hn.map 𝓛.i, fun h => absurd h hp⟩

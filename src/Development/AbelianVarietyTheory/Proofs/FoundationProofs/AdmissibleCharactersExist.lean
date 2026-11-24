@@ -163,7 +163,7 @@ theorem rep_mem {B A : AddSubgroup V} (q : A ⧸ B.addSubgroupOf A) : rep q ∈ 
 
 theorem rep_mk {B A : AddSubgroup V} (a : A) :
     ∃ l, l ∈ A ∧ l ∈ B ∧ rep (QuotientAddGroup.mk a : A ⧸ B.addSubgroupOf A) = a + l := by
-  obtain ⟨h, hh⟩ := QuotientAddGroup.mk_out_eq_mul (B.addSubgroupOf A) a
+  obtain ⟨h, hh⟩ := QuotientAddGroup.mk_out_eq_add (B.addSubgroupOf A) a
   refine ⟨((h : A) : V), (h : A).2, h.2, ?_⟩
   unfold rep; rw [hh]; rfl
 
@@ -225,8 +225,8 @@ theorem itw_eq (H : (∀ x y f, W x (W y f) = c x y • W (x + y) f) ∧
       itw W A B f = ρ • ∑ q : B ⧸ A₀.addSubgroupOf B, W (rep q) f := by
   have h0 : A₀.relIndex B ≠ 0 := AddSubgroup.index_ne_zero_of_finite
   have h1 : A.relIndex B ≠ 0 := fun h => h0 (AddSubgroup.relIndex_eq_zero_of_le_left hA h)
-  haveI : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h1
-  letI : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
+  have : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h1
+  let : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
   obtain ⟨k, hk, hs⟩ := sum_refine (A := B) hA (fun x => W x f) (fun x hx l hl hl' => by
     have := H.1 x l f
     rw [hf l hl', cB x hx l hl, one_smul] at this
@@ -400,12 +400,12 @@ theorem itw_triple (H : (∀ x y f, W x (W y f) = c x y • W (x + y) f) ∧
   have hA : A₀ ≤ A := inf_le_left.trans inf_le_left
   have hB : A₀ ≤ B := inf_le_left.trans inf_le_right
   have hC : A₀ ≤ C := inf_le_right
-  haveI : Finite (A ⧸ A₀.addSubgroupOf A) := Nat.finite_of_card_ne_zero fA
-  haveI : Finite (B ⧸ A₀.addSubgroupOf B) := Nat.finite_of_card_ne_zero fB
-  haveI : Finite (C ⧸ A₀.addSubgroupOf C) := Nat.finite_of_card_ne_zero fC
-  letI : Fintype (A ⧸ A₀.addSubgroupOf A) := Fintype.ofFinite _
-  letI : Fintype (B ⧸ A₀.addSubgroupOf B) := Fintype.ofFinite _
-  letI : Fintype (C ⧸ A₀.addSubgroupOf C) := Fintype.ofFinite _
+  have : Finite (A ⧸ A₀.addSubgroupOf A) := Nat.finite_of_card_ne_zero fA
+  have : Finite (B ⧸ A₀.addSubgroupOf B) := Nat.finite_of_card_ne_zero fB
+  have : Finite (C ⧸ A₀.addSubgroupOf C) := Nat.finite_of_card_ne_zero fC
+  let : Fintype (A ⧸ A₀.addSubgroupOf A) := Fintype.ofFinite _
+  let : Fintype (B ⧸ A₀.addSubgroupOf B) := Fintype.ofFinite _
+  let : Fintype (C ⧸ A₀.addSubgroupOf C) := Fintype.ofFinite _
   obtain ⟨r1, s1, e1⟩ := itw_eq H hA hB cB f hf
   obtain ⟨r2, s2, e2⟩ := itw_eq H hB hC cC _ h1
   obtain ⟨r3, s3, e3⟩ := itw_eq H hC hA cA _ h2
@@ -545,8 +545,8 @@ theorem iop_eq_itw (A B : AddSubgroup (VC D N N'))
   simp only [Iop, itw, Pi.smul_apply, smul_eq_mul]
   by_cases h : (A.addSubgroupOf B).index = 0
   · simp [h]
-  · haveI : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h
-    letI : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
+  · have : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h
+    let : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Finset.sum_apply]
     congr 1
     refine Finset.sum_congr rfl fun q _ => ?_
@@ -556,8 +556,8 @@ theorem itw_smul {V F : Type} [AddCommGroup V] [AddCommGroup F] [Module ℂ F] (
     (A B : AddSubgroup V) (a : ℂ) (f : F) : itw W A B (a • f) = a • itw W A B f := by
   by_cases h : (A.addSubgroupOf B).index = 0
   · simp [itw, h]
-  · haveI : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h
-    letI : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
+  · have : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h
+    let : Fintype (B ⧸ A.addSubgroupOf B) := Fintype.ofFinite _
     simp only [itw, finsum_eq_sum_of_fintype, map_smul, ← Finset.smul_sum]
     rw [smul_comm]
 

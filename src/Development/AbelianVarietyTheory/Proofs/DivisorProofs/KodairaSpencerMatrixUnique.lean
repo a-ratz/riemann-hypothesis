@@ -129,7 +129,7 @@ theorem constMor_surjective (P : AbelianDeRham) {A : Over (Sp R)} [GrpObj A] {g 
     rw [Category.assoc, eid, Category.comp_id, Category.id_comp]
   have e1 : hφ.1.lift _ _ w ≫ φ = 𝟙 _ := hφ.1.lift_fst _ _ _
   have e2 : hφ.1.lift _ _ w ≫ C.hom = A.hom ≫ epsRed R := hφ.1.lift_snd _ _ _
-  haveI : IsMonHom (Iso.refl A).hom := inferInstanceAs (IsMonHom (𝟙 A))
+  have : IsMonHom (Iso.refl A).hom := inferInstanceAs (IsMonHom (𝟙 A))
   have hic : IsGrpPullback A C (epsRed R) (hφ.1.lift _ _ w) :=
     hφ.cancel ((isGrpPullback_of_iso (Iso.refl A)).congr eid.symm e1.symm) e2
   have hC := PolPull.isAbelianScheme_of_isGrpPullback hA hφ
@@ -162,7 +162,7 @@ theorem IsKSValue.unique (P : AbelianDeRham) {A : Over (Sp R)} [GrpObj A] {A' : 
     have := (isLieImage_one_iff.2 hkk).add hk'
     rw [sub_add_cancel, show (1 * v' : epsR R ⟶ A) = v' from _root_.one_mul v'] at this
     exact (hL.1 k).unique hk this
-  letI : Algebra (DualNumber R) R := (TrivSqZeroExt.fstHom R R R).toRingHom.toAlgebra
+  let : Algebra (DualNumber R) R := (TrivSqZeroExt.fstHom R R R).toRingHom.toAlgebra
   obtain ⟨-, hF⟩ := P.2.2.1 (DualNumber R) A' g hA hg R A i h
   rw [Fil, hF, Submodule.mem_dualAnnihilator]
   intro c hc
@@ -278,7 +278,7 @@ theorem IsKS.unique (P : AbelianDeRham) {Φ : Finset (E →+* ℂ)} {y : FrPt Xo
   have gA' := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hπ'.1 hg
   have hB' := PolPull.isAbelianScheme_of_isGrpPullback hU hρ'
   have gB' := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hρ'.1 hg
-  haveI : IsCommMonObj B := PolPull.isCommMonObj_of_isGrpPullback hρ
+  have : IsCommMonObj B := PolPull.isCommMonObj_of_isGrpPullback hρ
   have sq : j ≫ φ' = φ ≫ i := by
     apply hπ'.1.hom_ext
     · rw [Category.assoc, Category.assoc, eφ', e₂, e, eφ]

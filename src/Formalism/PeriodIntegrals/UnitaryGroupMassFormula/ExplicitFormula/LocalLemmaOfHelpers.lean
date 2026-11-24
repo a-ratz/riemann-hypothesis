@@ -127,7 +127,7 @@ theorem L_nontriv_growth (hB : PI.LBoundRight) {χ : DirichletCharacter ℂ N} (
         exfalso
         apply hχ1
         exact MulChar.ext fun a => by rw [Subsingleton.elim a 1]; simp
-      · haveI : Nontrivial (ZMod N) := ZMod.nontrivial_iff.2 hN1
+      · have : Nontrivial (ZMod N) := ZMod.nontrivial_iff.2 hN1
         exact χ.map_nonunit not_isUnit_zero
     have hw1 : 1 / 2 ≤ (1 - s).re := by simp only [Complex.sub_re, Complex.one_re]; linarith
     have hw2 : (1 - s).re ≤ 5 := by simp only [Complex.sub_re, Complex.one_re]; linarith
@@ -1110,9 +1110,9 @@ lemma zero_term_le (hZL : ZeroLocus) {χ : DirichletCharacter ℂ N} (hχ : χ.I
     · simp at h
     · obtain ⟨-, he, h1⟩ := h
       have hm := (mult_zero_of_even hχ he h1).2
-      simp only [h0, if_true, mult, hm, eps0, he, h1, ne_eq, not_false_eq_true, and_self, sub_zero]
+      simp only [h0, ite_true, mult, hm, eps0, he, h1, ne_eq, not_false_eq_true, and_self, sub_zero]
       simp
-  · simp only [h0, if_false, zero_sub, norm_neg]
+  · simp only [h0, ite_false, zero_sub, norm_neg]
     unfold eps0
     split_ifs with he
     · have hL := (mult_zero_of_even hχ he.1 he.2).1
@@ -1190,7 +1190,7 @@ lemma sum_DZ_eq {χ : DirichletCharacter ℂ N} (t : ℝ)
     intro ρ hρ
     rw [ZerosNear.eq_1] at hρ
     obtain ⟨h0, h1, him, hL⟩ := hρ
-    rw [DZ.eq_1, Set.mem_setOf_eq]
+    rw [DZ.eq_1, mem_ofPred_eq]
     refine ⟨?_, ?_⟩
     · rw [Metric.mem_closedBall, ctr.eq_1, Complex.dist_eq]
       have hre : (ρ - (2 + (t : ℂ) * Complex.I)).re = ρ.re - 2 := by simp

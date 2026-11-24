@@ -81,7 +81,7 @@ private theorem lev_basis {ι k : Type} [Field k] [IsAlgClosed k] [CharZero k] {
     rw [Module.Basis.reindex_apply, Module.Basis.mk_apply]
     exact ht (Subtype.coe_prop _)
   choose d hd using hb
-  haveI := (Pi.basisFun k (Fin n)).invertibleToMatrix b
+  have := (Pi.basisFun k (Fin n)).invertibleToMatrix b
   refine ⟨unitOfInvertible ((Pi.basisFun k (Fin n)).toMatrix b), fun a i => d i a, fun a => ?_⟩
   ext i j
   have := congrFun (hd j a) i
@@ -133,7 +133,7 @@ private theorem lev_diag {Γ A k : Type} [Group Γ] [CommGroup A] [Field k] [IsA
 private theorem lev_place {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {p : ℕ} (hp : p.Prime)
     {A : ValuationSubring Ω} (hA : A.valuation (p : Ω) < 1) {w : HeightOneSpectrum (𝓞 ℚ)} (hw : (p : 𝓞 ℚ) ∈ w.asIdeal) :
     IsPlaceOver A w := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨p1, p2, p3, -⟩ := places ℚ Ω p A
   obtain ⟨v, hv⟩ := p1 fun h => (p2 h).2 hA
   have hpr : Prime (p : 𝓞 ℚ) := by
@@ -179,8 +179,8 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.level :
   · exact Units.continuous_iff.2 ⟨hcont, hcont.comp continuous_inv⟩
   · let φ := D.ψ.prod (D.ξ.prod D.om)
     have hφ : ∀ s, IsOfFinOrder (φ s) := fun s => by
-      haveI : Finite (G ℚ Ω ⧸ D.ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hD.psi_open
-      haveI : Finite (G ℚ Ω ⧸ D.ξ.ker) := Subgroup.quotient_finite_of_isOpen _ hD.xi_open
+      have : Finite (G ℚ Ω ⧸ D.ψ.ker) := Subgroup.quotient_finite_of_isOpen _ hD.psi_open
+      have : Finite (G ℚ Ω ⧸ D.ξ.ker) := Subgroup.quotient_finite_of_isOpen _ hD.xi_open
       refine IsOfFinOrder.prod_mk ?_ (IsOfFinOrder.prod_mk ?_ ?_)
       · exact (QuotientGroup.kerLift D.ψ).isOfFinOrder (isOfFinOrder_of_finite (s : G ℚ Ω ⧸ D.ψ.ker))
       · exact (QuotientGroup.kerLift D.ξ).isOfFinOrder (isOfFinOrder_of_finite (s : G ℚ Ω ⧸ D.ξ.ker))

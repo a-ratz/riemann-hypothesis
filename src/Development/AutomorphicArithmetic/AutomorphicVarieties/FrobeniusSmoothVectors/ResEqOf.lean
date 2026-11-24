@@ -100,7 +100,7 @@ theorem adjoinRoot_unramified (hϖ : Irreducible ϖ) {f : O[X]} (hf : f.Monic)
     Ideal.Quotient.maximal_of_isField _ (e.toMulEquiv.isField (Field.toIsField _))
   have huniq : ∀ M : Ideal (AdjoinRoot f), M.IsMaximal → M = J := by
     intro M hM
-    letI : M.IsMaximal := hM
+    let : M.IsMaximal := hM
     have h1 := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal
       (algebraMap O (AdjoinRoot f)) (by
         intro x
@@ -156,17 +156,17 @@ private theorem unr_ex {l : ℕ} (O : Type) [CommRing O] [IsDomain O] [IsDiscret
     ∃ (O' : Type) (_ : CommRing O') (_ : IsDomain O') (_ : IsDiscreteValuationRing O') (_ : IsCoef l O')
       (_ : Algebra O O') (_ : Module.Finite O O'), (maximalIdeal O).map (algebraMap O O') = maximalIdeal O' ∧
       Nonempty (K →ₐ[O] ResidueField O') := by
-  letI : Algebra (ResidueField O) K := (Ideal.Quotient.lift (maximalIdeal O) (algebraMap O K) hK).toAlgebra
-  haveI : IsScalarTower O (ResidueField O) K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (ResidueField O) K := (Ideal.Quotient.lift (maximalIdeal O) (algebraMap O K) hK).toAlgebra
+  have : IsScalarTower O (ResidueField O) K := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨g, hg, hgi, ⟨e⟩⟩ := prim_ex (ResidueField O) K
   obtain ⟨f, hf1, -, hf⟩ := Polynomial.lifts_and_natDegree_eq_and_monic
     (f := residue O) (p := g) (Polynomial.mem_lifts_of_surjective residue_surjective _) hg
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨hd, hv, hi, hc⟩ := KStar.Binom.adjoinRoot_unramified hϖ hf (hf1 ▸ hgi)
-  haveI : Module.Finite O (AdjoinRoot f) := hf.finite_adjoinRoot
+  have : Module.Finite O (AdjoinRoot f) := hf.finite_adjoinRoot
   have hm : (maximalIdeal O).map (algebraMap O (AdjoinRoot f)) = maximalIdeal (AdjoinRoot f) := by
     rw [hϖ.maximalIdeal_eq, hi.maximalIdeal_eq, Ideal.map_span, Set.image_singleton]
-  haveI hl : IsLocalHom (algebraMap O (AdjoinRoot f)) := ((local_hom_tfae _).out 1 3).2 hm.le
+  have hl : IsLocalHom (algebraMap O (AdjoinRoot f)) := ((local_hom_tfae _).out 1 3).2 hm.le
   have hcl : UpperTheory.V.CA.IsCL O (AdjoinRoot f) := UpperTheory.V.CA.cl_fin O O (AdjoinRoot f) (UpperTheory.V.CA.IsCL.of_isCO O O)
   have hfin : Finite (ResidueField (AdjoinRoot f)) := Nat.finite_of_card_ne_zero (by
     rw [hc]; exact pow_ne_zero _ Nat.card_pos.ne')
@@ -204,7 +204,7 @@ private theorem cpl_univ (O D R : Type) [CommRing O] [IsLocalRing O] [CommRing D
       refine ⟨a, ha.symm, ?_⟩
       rw [IsScalarTower.algebraMap_apply O D R, ← map_sub, hy, map_sub, AlgHom.commutes, sub_eq_zero]
       exact ha.symm
-  haveI := hc.noeth
+  have := hc.noeth
   have hco : IsCO O R :=
     { complete := hc.complete
       isLocalHom := ⟨fun a ha => by
@@ -239,7 +239,7 @@ private theorem cpl_ex (O D : Type) [CommRing O] [IsLocalRing O] [CommRing D] [A
     ∃ (R : Type) (_ : CommRing R) (_ : Algebra O R) (_ : IsCO O R) (j : D →ₐ[O] R), (∀ a, res O R (j a) = φ a) ∧
       ∀ (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (f : D →ₐ[O] C),
         (∀ a, res O C (f a) = φ a) → ∃! g : R →ₐ[O] C, ∀ a, g (j a) = f a := by
-  haveI hm : (RingHom.ker φ.toRingHom).IsMaximal := RingHom.ker_isMaximal_of_surjective _ fun z => by
+  have hm : (RingHom.ker φ.toRingHom).IsMaximal := RingHom.ker_isMaximal_of_surjective _ fun z => by
     obtain ⟨a, rfl⟩ := residue_surjective z
     exact ⟨algebraMap O D a, φ.commutes a⟩
   have key : ∃ (R : Type) (_ : CommRing R) (_ : IsLocalRing R) (_ : Algebra D R),
@@ -247,21 +247,21 @@ private theorem cpl_ex (O D : Type) [CommRing O] [IsLocalRing O] [CommRing D] [A
     obtain ⟨hloc, hc⟩ := UpperTheory.V.CA.cpl_is D (RingHom.ker φ.toRingHom)
     exact ⟨_, _, hloc, _, hc⟩
   obtain ⟨R, _, _, _, hc⟩ := key
-  letI : Algebra O R := ((algebraMap D R).comp (algebraMap O D)).toAlgebra
-  haveI : IsScalarTower O D R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra O R := ((algebraMap D R).comp (algebraMap O D)).toAlgebra
+  have : IsScalarTower O D R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨hco, h1, h2⟩ := cpl_univ O D R φ hc
   exact ⟨R, _, _, hco, IsScalarTower.toAlgHom O D R, h1, h2⟩
 
 private theorem res_fin (O B A : Type) [CommRing O] [IsLocalRing O] [Finite (ResidueField O)] [CommRing B] [Algebra O B]
     [IsCO O B] [CommRing A] [Algebra B A] [Algebra.FiniteType B A] (x : Ideal A) [x.IsMaximal]
     (hx : maximalIdeal B ≤ x.comap (algebraMap B A)) : Finite (A ⧸ x) := by
-  letI := Ideal.Quotient.field x
-  haveI : Finite (ResidueField B) := Finite.of_surjective _ (resMap_bijective O B).2
-  letI : Algebra (ResidueField B) (A ⧸ x) := (Ideal.Quotient.lift (maximalIdeal B) (algebraMap B (A ⧸ x))
+  let := Ideal.Quotient.field x
+  have : Finite (ResidueField B) := Finite.of_surjective _ (resMap_bijective O B).2
+  let : Algebra (ResidueField B) (A ⧸ x) := (Ideal.Quotient.lift (maximalIdeal B) (algebraMap B (A ⧸ x))
     fun a ha => Ideal.Quotient.eq_zero_iff_mem.2 (hx ha)).toAlgebra
-  haveI : IsScalarTower B (ResidueField B) (A ⧸ x) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FiniteType (ResidueField B) (A ⧸ x) := Algebra.FiniteType.of_restrictScalars_finiteType B _ _
-  haveI : Module.Finite (ResidueField B) (A ⧸ x) := finite_of_finite_type_of_isJacobsonRing _ _
+  have : IsScalarTower B (ResidueField B) (A ⧸ x) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.FiniteType (ResidueField B) (A ⧸ x) := Algebra.FiniteType.of_restrictScalars_finiteType B _ _
+  have : Module.Finite (ResidueField B) (A ⧸ x) := finite_of_finite_type_of_isJacobsonRing _ _
   exact Module.finite_of_finite (ResidueField B)
 
 theorem UpperTheory.V.Fr.loc_ex :
@@ -271,8 +271,8 @@ theorem UpperTheory.V.Fr.loc_ex :
   have hT : Algebra.FiniteType S.B S.A := (gr_A hF hn S).2.2.2.2.1
   obtain ⟨hco, hm⟩ := UpperTheory.V.Fr.co_B hF hn S
   rw [← hm] at hB
-  haveI : Finite (S.A ⧸ x) := res_fin O S.B S.A x hB
-  letI := Ideal.Quotient.field x
+  have : Finite (S.A ⧸ x) := res_fin O S.B S.A x hB
+  let := Ideal.Quotient.field x
   obtain ⟨O', _, _, _, _, _, _, hu, ⟨e⟩⟩ := unr_ex (l := l) O (S.A ⧸ x) fun a ha => by
     have h1 : algebraMap O S.B a ∈ maximalIdeal S.B := fun h => ha (IsLocalHom.map_nonunit a h)
     exact Ideal.Quotient.eq_zero_iff_mem.2 (hB h1)
@@ -283,8 +283,8 @@ theorem UpperTheory.V.Fr.loc_ex :
   let φ : TensorProduct O O' S.A →ₐ[O'] ResidueField O' :=
     Algebra.TensorProduct.lift (Algebra.ofId _ _) (e.comp (Ideal.Quotient.mkₐ O x)) fun _ _ => Commute.all _ _
   obtain ⟨R, _, _, _, j, h1, h2⟩ := cpl_ex O' _ φ
-  letI : Algebra O R := ((algebraMap O' R).comp (algebraMap O O')).toAlgebra
-  haveI : IsScalarTower O O' R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra O R := ((algebraMap O' R).comp (algebraMap O O')).toAlgebra
+  have : IsScalarTower O O' R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hφ : ∀ a : S.A, φ (1 ⊗ₜ a) = e (Ideal.Quotient.mk x a) := fun a => by simp [φ]
   refine ⟨{
     O' := O'

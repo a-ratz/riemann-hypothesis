@@ -75,7 +75,7 @@ variable (d : Data K ι Ω WT A)
 
 theorem gen_span {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne) : p = Ideal.span {d.gen p} := by
   obtain ⟨hprime, hh⟩ := hp
-  haveI := hprime
+  have := hprime
   have hne : p ≠ ⊥ := by
     rintro rfl
     rw [Ideal.height_bot] at hh
@@ -85,7 +85,7 @@ theorem gen_span {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne) : p = Ideal.sp
   have hle : Ideal.span {q} ≤ p := (Ideal.span_singleton_le_iff_mem _).mpr hqp
   have heq : Ideal.span {q} = p := by
     by_contra hne2
-    haveI := hsq
+    have := hsq
     have hqb : (⊥ : Ideal (KTp K d.D d.N)) < Ideal.span {q} := by
       rw [bot_lt_iff_ne_bot, Ne, Ideal.span_singleton_eq_bot]
       exact hq.ne_zero
@@ -105,11 +105,11 @@ theorem gen_span {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne) : p = Ideal.sp
 
 private lemma span_singleton_mem_htOne_of_prime {π : KTp K d.D d.N} (hπ : Prime π) : Ideal.span {π} ∈ d.HtOne := by
   have hP : (Ideal.span {π}).IsPrime := (Ideal.span_singleton_prime hπ.ne_zero).mpr hπ
-  haveI := hP
+  have := hP
   refine ⟨hP, le_antisymm ?_ ?_⟩
   · rw [show (1 : ℕ∞) = ((1 : ℕ) : ℕ∞) by norm_num, Ideal.height_le_iff]
     intro q hq hlt
-    haveI := hq
+    have := hq
     by_cases hqb : q = ⊥
     · subst hqb
       rw [Ideal.height_bot]
@@ -130,7 +130,7 @@ private lemma span_singleton_mem_htOne_of_prime {π : KTp K d.D d.N} (hπ : Prim
           rw [mul_one]
           conv_rhs => rw [ht, hr]
           ring
-        exact hπ.not_unit (isUnit_iff_exists_inv.mpr ⟨r, mul_left_cancel₀ hπ'.ne_zero e⟩)
+        exact hπ.not_isUnit (isUnit_iff_exists_inv.mpr ⟨r, mul_left_cancel₀ hπ'.ne_zero e⟩)
   · by_contra hlt
     push_neg at hlt
     have h0 : (Ideal.span {π}).height ≤ ((0 : ℕ) : ℕ∞) := by
@@ -147,7 +147,7 @@ private lemma gen_notMem_of_ne {p q : Ideal (KTp K d.D d.N)} (hp : p ∈ d.HtOne
   have hle : q ≤ p := by
     rw [d.gen_span hq]
     exact (Ideal.span_singleton_le_iff_mem _).mpr hg
-  haveI := hp.1
+  have := hp.1
   have h1 := (Ideal.height_le_iff (n := 1)).mp (by rw [hp.2]; norm_num) q hq.1 (lt_of_le_of_ne hle hne)
   rw [hq.2] at h1
   norm_num at h1
@@ -190,10 +190,10 @@ private lemma exists_const_of_locally_unit_at_htOne (u : KTf K d.D d.N) (hu : u 
     · have h1 : π ∣ a * m := hR ▸ dvd_mul_of_dvd_left hπx s
       rcases hπ.dvd_or_dvd h1 with h | h
       · exact hπa h
-      · exact hπ.not_unit (hred hπx h)
+      · exact hπ.not_isUnit (hred hπx h)
     · have h1 : π ∣ n * s := hR.symm ▸ dvd_mul_of_dvd_right hπx a
       rcases hπ.dvd_or_dvd h1 with h | h
-      · exact hπ.not_unit (hred h hπx)
+      · exact hπ.not_isUnit (hred h hπx)
       · exact hπs h
   obtain ⟨r1, hr1, hn⟩ := MvPolynomial.isUnit_iff_eq_C_of_isReduced.mp (hunit n hn0 (Or.inl rfl))
   obtain ⟨r2, hr2, hm⟩ := MvPolynomial.isUnit_iff_eq_C_of_isReduced.mp (hunit _ hm0' (Or.inr rfl))
@@ -221,7 +221,7 @@ private lemma prod_gen_zpow_split_at {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.H
     by_cases hqp : q = p
     · subst hqp
       refine ⟨A, B, hA, hB, ?_⟩
-      rw [if_pos (Finset.mem_insert_self _ _), mul_assoc, hAB, if_neg hqT, zpow_zero, one_mul]
+      rw [ite_eq_left (Finset.mem_insert_self _ _), mul_assoc, hAB, ite_eq_right hqT, zpow_zero, one_mul]
     · have hgq : d.gen q ∉ p := gen_notMem_of_ne d hp hqH hqp
       have hgq0 : d.gen q ≠ 0 := by
         intro h0
@@ -258,17 +258,17 @@ private lemma prod_gen_zpow_split_at {p : Ideal (KTp K d.D d.N)} (hp : p ∈ d.H
 
 private lemma overP_finite (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (p : Ideal (KTp K d.D d.N))
     (hp : p ∈ d.HtOne) : (d.OverP c p).Finite := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  have : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
   have hmap : ∀ x : KTp K d.D d.N, algebraMap (KTf K d.D d.N) (OmS (Ω c) d.D d.N)
       (algebraMap (KTp K d.D d.N) (KTf K d.D d.N) x) = d.sH c x := by
     intro x
     exact IsFractionRing.lift_algebraMap (h c) x
   have hOver : d.OverP c p = HNm.OverR (R := KTp K d.D d.N) (F := KTf K d.D d.N) (L := OmS (Ω c) d.D d.N) p := by
     ext w
-    simp only [Data.OverP, HNm.OverR, Set.mem_setOf_eq, hmap]
+    simp only [Data.OverP, HNm.OverR, Set.mem_ofPred_eq, hmap]
   obtain ⟨hprime, hh⟩ := hp
-  haveI := hprime
+  have := hprime
   rw [hOver]
   exact (HNm.local_norm (R := KTp K d.D d.N) (F := KTf K d.D d.N) (L := OmS (Ω c) d.D d.N) p hh
     (d.gen p) (d.gen_span ⟨hprime, hh⟩) 1 one_ne_zero).1
@@ -285,8 +285,8 @@ theorem norm_by_places (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
               algebraMap (KTp K d.D d.N) (KTf K d.D d.N) (d.gen p) ^
                 (∑ᶠ (w : AddValuation (OmS (Ω c) d.D d.N) (WithTop ℤ)) (_ : w ∈ d.OverP c p),
                   (d.fze h c w : ℤ) * WithTop.untopD 0 (w y)) := by
-  letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-  haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
+  let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+  have : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.omS_finite hd h c).1
   have hmap : ∀ x : KTp K d.D d.N, algebraMap (KTf K d.D d.N) (OmS (Ω c) d.D d.N)
       (algebraMap (KTp K d.D d.N) (KTf K d.D d.N) x) = d.sH c x := by
     intro x
@@ -295,13 +295,13 @@ theorem norm_by_places (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
       HNm.OverR (R := KTp K d.D d.N) (F := KTf K d.D d.N) (L := OmS (Ω c) d.D d.N) p := by
     intro p
     ext w
-    simp only [Data.OverP, HNm.OverR, Set.mem_setOf_eq, hmap]
+    simp only [Data.OverP, HNm.OverR, Set.mem_ofPred_eq, hmap]
   refine ⟨fun p hp => overP_finite d hd h c p hp, fun y hy => ?_⟩
   have hset : {p | p ∈ d.HtOne ∧ ∃ w ∈ d.OverP c p, w y ≠ 0} =
       {p : Ideal (KTp K d.D d.N) | p.IsPrime ∧ p.height = 1 ∧
         ∃ w ∈ HNm.OverR (R := KTp K d.D d.N) (F := KTf K d.D d.N) (L := OmS (Ω c) d.D d.N) p, w y ≠ 0} := by
     ext p
-    simp only [Set.mem_setOf_eq, Data.HtOne, hOver, and_assoc]
+    simp only [Set.mem_ofPred_eq, Data.HtOne, hOver, and_assoc]
   have hfin : {p | p ∈ d.HtOne ∧ ∃ w ∈ d.OverP c p, w y ≠ 0}.Finite := by
     rw [hset]
     exact HNm.fin_support (R := KTp K d.D d.N) (F := KTf K d.D d.N) (L := OmS (Ω c) d.D d.N) y hy
@@ -343,7 +343,7 @@ theorem norm_by_places (hd : d.AxH 𝒜) (h : d.S1) (c : ι) :
       z / P * algebraMap (KTp K d.D d.N) (KTf K d.D d.N) s =
         algebraMap (KTp K d.D d.N) (KTf K d.D d.N) a := by
     intro p hp
-    haveI := hp.1
+    have := hp.1
     obtain ⟨-, a, s, ha, hs, hzs⟩ := HNm.local_norm (R := KTp K d.D d.N) (F := KTf K d.D d.N)
       (L := OmS (Ω c) d.D d.N) p hp.2 (d.gen p) (d.gen_span hp) y hy
     rw [← hOver p] at hzs

@@ -105,7 +105,7 @@ theorem colFlag_iff' (m : Matrix (Idx r k) (Idx r k) K) :
   rw [himg, mem_span_single]
   refine forall_congr' fun i => ?_
   have h1 : i ∉ pe '' {a | a < b} ↔ ∀ a, a < b → i ≠ pe a := by
-    simp only [Set.mem_image, Set.mem_setOf_eq, not_exists, not_and]
+    simp only [Set.mem_image, Set.mem_ofPred_eq, not_exists, not_and]
     exact forall_congr' fun a => imp_congr_right fun _ => ne_comm
   rw [h1]
   refine imp_congr_right fun _ => ?_

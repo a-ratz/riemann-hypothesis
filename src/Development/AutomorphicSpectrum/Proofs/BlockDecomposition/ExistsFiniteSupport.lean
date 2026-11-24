@@ -109,7 +109,7 @@ theorem mem_span_of_normal (ρ : Representation ℂ L V) (σ : Representation �
     (v : V) (hfv : f v ∈ Submodule.span ℂ
       {y | ∃ (n : L) (w : W), (∀ m ∈ M, σ m w = w) ∧ y = σ n w - ((χ n : ℂˣ) : ℂ) • w}) :
     v ∈ Submodule.span ℂ {y | ∃ (n : L) (u : V), y = ρ n u - ((χ n : ℂˣ) : ℂ) • u} := by
-  haveI := Fintype.ofFinite (L ⧸ M)
+  have := Fintype.ofFinite (L ⧸ M)
   set S := Submodule.span ℂ {y | ∃ (n : L) (u : V), y = ρ n u - ((χ n : ℂˣ) : ℂ) • u} with hS
   have h1 : f (avg ρ χ M v) = avg σ χ M (f v) := by
     set_option synthInstance.maxHeartbeats 100000 in
@@ -192,7 +192,7 @@ def stabIn (τ : Representation ℂ G V) (L : Subgroup G) (x : V) : Subgroup L w
 
 theorem isOpen_stabIn [TopologicalSpace G] (τ : Representation ℂ G V) (hτ : IsSmooth τ)
     (L : Subgroup G) (x : V) : IsOpen (stabIn τ L x : Set L) :=
-  (hτ x).preimage continuous_subtype_val
+  (hτ x).preimage continuous_subtypeVal
 
 theorem exists_open_fixing [TopologicalSpace G] (ρ : Representation ℂ G V)
     (σ : Representation ℂ G W) (hρ : IsSmooth ρ) (hσ : IsSmooth σ) (L : Subgroup G) (O : Subgroup L)
@@ -231,10 +231,10 @@ theorem twKer_reflect : ∀ {G V W : Type} [Group G] [TopologicalSpace G] [IsTop
     simp only [Finset.coe_image, Set.mem_image, Finset.mem_coe] at hx
     obtain ⟨n, -, rfl⟩ := hx
     exact n.2)
-  haveI : CompactSpace L := isCompact_iff_compactSpace.1 hLc
+  have : CompactSpace L := isCompact_iff_compactSpace.1 hLc
   let ι : L →* N := Subgroup.inclusion hLN
   have hι : Continuous ι := by
-    exact Continuous.subtype_mk continuous_subtype_val _
+    exact Continuous.subtype_mk continuous_subtypeVal _
   let χ : L →* ℂˣ := θ.comp ι
   have hχ : IsOpen (χ.ker : Set L) := by
     have : (χ.ker : Set L) = ι ⁻¹' (θ.ker : Set N) := by
@@ -243,12 +243,12 @@ theorem twKer_reflect : ∀ {G V W : Type} [Group G] [TopologicalSpace G] [IsTop
     rw [this]
     exact hθ.preimage hι
   obtain ⟨M, hMo, hMχ, hMv, hMt⟩ := exists_open_fixing ρ σ hρ hσ L χ.ker hχ v t
-  haveI : Finite (L ⧸ M) := Subgroup.quotient_finite_of_isOpen M hMo
-  haveI : M.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (L ⧸ M) := Subgroup.quotient_finite_of_isOpen M hMo
+  have : M.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   let C : Subgroup L := M.normalCore
-  haveI : C.Normal := Subgroup.normalCore_normal M
-  haveI : C.FiniteIndex := inferInstance
-  haveI : Finite (L ⧸ C) := inferInstance
+  have : C.Normal := Subgroup.normalCore_normal M
+  have : C.FiniteIndex := inferInstance
+  have : Finite (L ⧸ C) := inferInstance
   have hCM : C ≤ M := Subgroup.normalCore_le M
   have hmain := mem_span_of_normal (ρ.comp L.subtype) (σ.comp L.subtype) χ C (hCM.trans hMχ) f hf
     (fun g x => hfi g x) v (by

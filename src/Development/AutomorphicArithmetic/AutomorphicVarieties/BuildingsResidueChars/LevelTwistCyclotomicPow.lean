@@ -89,7 +89,7 @@ theorem UpperTheory.isCrysAt_cyclotomic_zpow_restrict_decompositionGroup :
     change algebraMap ↥Bw.LL.1 (Om l) (((cycLL (P.PD Bw.Kw) ↥Bw.LL.1 (Bw.e g)) ^ j : (↥Bw.LL.1)ˣ) : ↥Bw.LL.1) =
       (((cycBar F Ω l (g : G F Ω)) ^ j : (Qbar l)ˣ) : Qbar l)
     rw [Units.val_zpow_eq_zpow_val, Units.val_zpow_eq_zpow_val, map_zpow₀, key]
-  · haveI := Bw.LL.2
+  · have := Bw.LL.2
     have h1 := GlobalTheory.BlockCrys.isCrys_cyc_zpow (LL := ↥Bw.LL.1) (P.PD Bw.Kw) j
     refine GlobalTheory.Cmp.WachMonoidal.isCrys_of_equiv (P.PD Bw.Kw) (LinearEquiv.funUnique (Fin 1) ↥Bw.LL.1 ↥Bw.LL.1).symm
       (fun g x => ?_) h1
@@ -125,7 +125,7 @@ theorem UpperTheory.level_twist_cyclotomic_pow :
   have hz : Continuous fun s : G K Ω => ((cycZ K Ω l s : ℤ_[l]ˣ) : ℤ_[l]) :=
     Units.continuous_val.comp (continuous_cycZ K Ω l)
   have hcyc : Continuous fun s : G K Ω => (cycBar K Ω l s : Qbar l) :=
-    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp (continuous_subtype_val.comp hz)
+    (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp (continuous_subtypeVal.comp hz)
   have hχ : Continuous fun s : G K Ω => cycBar K Ω l s ^ j := (cont_units _ hcyc).zpow j
   refine ⟨?_, fun w hw => ?_, fun w hw => ?_⟩
   · refine cont_units _ ?_

@@ -128,7 +128,7 @@ theorem exists_loc {B : Base F E} (hB : B.IsGood σ) {Y : Spc F E n} {r s : ℕ}
       (∀ y, (∀ i, y i ∈ intLoc F E v) ↔ a.1 *ᵥ y ∈ latLoc F Y.L v) ∧ a.1 = l.1 • g.1 ∧ Uni σ v Y.J g := by
   have hc := hB.cm
   have hσ := cm_conj_conj hc
-  haveI hL : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
+  have hL : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
   obtain ⟨P, h1, h2⟩ := Frames.exists_rational_frame Y.L v
   let ι := inclR (F := F) (E := E) (Fv F v)
   set G := P.1ᵀ * Y.J * P.1.map σ with hG
@@ -189,7 +189,7 @@ theorem exists_ad {B : Base F E} (hB : B.IsGood σ) {Y : Spc F E n} {r s : ℕ} 
       (∀ v, (∃ l : (Fv F v ⊗[F] E)ˣ, (bc (compFin F E v) a).1 = l.1 • (bc (compFin F E v) g).1) ∧ Uni σ v Y.J (bc (compFin F E v) g)) ∧
       ∀ w, bc (piInf (B.emb w)) g = c w := by
   classical
-  haveI hL : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
+  have hL : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
   obtain ⟨S, hS⟩ := Frames.exists_finset_latLoc_eq (F := F) Y.L
   have h0 : ∀ᶠ v : Pl F in cofinite, v ∉ S ∧ ∀ i j, LocInt v (Y.J i j) ∧ LocInt v (Y.J⁻¹ i j) :=
     S.eventually_cofinite_notMem.and (eventually_all.2 fun i => eventually_all.2 fun j => (ae_locInt _).and (ae_locInt _))

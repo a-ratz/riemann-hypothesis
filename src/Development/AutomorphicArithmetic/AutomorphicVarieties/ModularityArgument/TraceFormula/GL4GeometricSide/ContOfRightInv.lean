@@ -156,7 +156,7 @@ theorem UpperTheory.V.Z.GSp4Splitting.rlEx :
   intro hP hM E _ _ _ n hn π hθ K ho hc hK _ _ μf _
   obtain ⟨H, hH⟩ := hP E n hn π hθ
   choose R hR using hecke_ex hM π K ho hc μf
-  letI c : InnerProductSpace.Core ℂ (Fx π K) := core π K H hH
+  let c : InnerProductSpace.Core ℂ (Fx π K) := core π K H hH
   exact ⟨{
     U := Fx π K
     nacg := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)

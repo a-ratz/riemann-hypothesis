@@ -91,7 +91,7 @@ theorem birational_of_ratGen {Y : Model Xo c (RingHom.id c.F)} (X : FlagCover Y)
     (h : Ready R ω x V dict) (f₁ : CuspFrame Z U x V dict P.u₁) (f₂ : CuspFrame Z U x V dict P.u₂) (th : R.L.Sec)
     (k : Consts) (hR : RatGen X Z U P.u₁) : (h.geo f₁ f₂ th k).Birational := by
   obtain ⟨η, hη, hgen, hrat⟩ := hR
-  haveI : IsIntegral R.X := HilbertSamuel.Geo.isIntegral (h.geo f₁ f₂ th k)
+  have : IsIntegral R.X := HilbertSamuel.Geo.isIntegral (h.geo f₁ f₂ th k)
   obtain ⟨he, hmem, hiso⟩ := modif_genericPoint R.toModif hη hgen
   subst he
   set G := h.geo f₁ f₂ th k with hG

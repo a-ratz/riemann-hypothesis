@@ -211,8 +211,8 @@ theorem exists_ext_all_models_uniformised_charZero (E : Type) [Field E] [NumberF
   obtain ⟨φ, hφ⟩ : ∃ φ : T.Fr →+* T'.Fr, ∀ v, φ (algebraMap T.V T.Fr v) = algebraMap T'.V T'.Fr (algebraMap T.V W v) :=
     ⟨IsFractionRing.lift hj, IsFractionRing.lift_algebraMap hj⟩
   obtain ⟨r, hr0, hv⟩ := GlobalTheory.IntegralPull.exists_index (V' := T'.V) (algebraMap T.V W) φ hφ
-  letI := io.toAlgebra
-  letI := (φ.comp io).toAlgebra
+  let := io.toAlgebra
+  let := (φ.comp io).toAlgebra
   let ψ : T.Fr →ₐ[c.F] T'.Fr := { φ with commutes' := fun _ => rfl }
   obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap GlobalTheory.firstFiveLaws.1 E H Dw l Xo c _ _ ψ y.1
   obtain ⟨p, χ, y₀, hy₀⟩ := y.2.1
@@ -230,16 +230,16 @@ namespace GlobalTheory.ExtScaleZero
 
 theorem exists_ext_chart_scale_charZero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), CharZero (ResidueField T.V) → ∀ φ : ℝ, GlobalTheory.SlopeRec.HasPhi y φ → ∃ (T' : CDVR) (io' : c.F →+* T'.Fr) (y' : IntFr Xo c T' io') (r : ℕ) (C : IntegralChartA3 Xo c T' io' y') (P : PELUnif (maximalIdeal T'.V) C.I.G), CharZero (ResidueField T'.V) ∧ 0 < r ∧ FrTrunc C.I.G (𝟙 (Sp T'.V)) (chD C.ch) C.xT C.eT ∧ P.TorsionIso ∧ GlobalTheory.SlopeRec.HasPhi y' (r * φ) ∧ ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n e : ℕ) (s : c.F), ∀ f ∈ thGen Xo c nab a n, nval T'.V (r * e) (io' s * evI y' f) = nval T.V e (io s * evI y f) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y hy φ hφ
   obtain ⟨S', io', z', r, hz', hr, hU, ψA, hv, hm⟩ :=
     exists_ext_all_models_uniformised_charZero E H Dw l Xo c T io y hy
   have hphi : ∀ φ' : ℝ, GlobalTheory.SlopeRec.HasPhi z' φ' → φ' = r * φ := fun φ' h' =>
     GlobalTheory.T.balancedPeriodSlope_mul_ramificationIndex _ _ _ _ Xo c T S' io io' y z' r hr ⟨ψA, hv, hm⟩ φ φ' hφ h'
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let ψ : T.Fr →+* S'.Fr := letI := io'.toAlgebra; ψA.toRingHom
   have hio : io' = ψ.comp io := by
-    letI := io'.toAlgebra
+    let := io'.toAlgebra
     exact RingHom.ext fun a => (ψA.commutes a).symm
   have hv' : ∀ a : T.Fr, vV S'.V (ψ a) = (r : ℤ) * vV T.V a := fun a => by
     by_cases ha : a = 0
@@ -286,7 +286,7 @@ namespace GlobalTheory.ResZeroDepth
 
 theorem exists_harmA_nuLocOf_nonpos : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), (∀ τ, Antitone fun i => a (τ, i)) → ∑ f : Lt1 Dw, 2 * rk f ≤ n → ∃ P₁ ∈ harmA (Dw := Dw) c a n, ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), CharZero (IsLocalRing.ResidueField T.V) → ∀ e k : ℕ, 0 < e → GlobalTheory.FactorDepth.nuLocOf C e k (MvPolynomial.map io P₁) ≤ 0 := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro a n ha hn
   classical
   have hcard : Fintype.card (Lt1 Dw) ≤ n := by
@@ -300,7 +300,7 @@ theorem exists_harmA_nuLocOf_nonpos : ∀ (E : Type) [Field E] [NumberField E] [
       (Formalism.L2.Pj.Crude.Pmin Dw.mult n (Formalism.L2.Pj.colP Dw hcard) fun τ i => a (τ, i)),
     Formalism.L2.Pj.Crude.Pmin_mem Dw.mult n c.F _ _ _ _ _ (fun τ _ => Formalism.L2.Pj.conj_ne_self_of_CM τ) hinj hdom, ?_⟩
   intro T io y C hres e k _
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hmap : MvPolynomial.map io (MvPolynomial.map (Int.castRingHom c.F)
       (Formalism.L2.Pj.Crude.Pmin Dw.mult n (Formalism.L2.Pj.colP Dw hcard) fun τ i => a (τ, i))) =
       Formalism.L2.Pj.P1 Dw T a hcard := by
@@ -422,10 +422,10 @@ end GlobalTheory.FramePower
 open GlobalTheory.FramePower in
 theorem GlobalTheory.FramePower.exists_nabValN_eq_of_harmonic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), CharZero (IsLocalRing.ResidueField T.V) → letI := io.toAlgebra; ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n k k' : ℕ) (P : MvPolynomial (LtN Dw n) c.F), P ∈ harmA c a n → ∀ f : PS T.Fr n (chD C.ch), IsIntPS T f → ∃ f' : PS T.Fr n (chD C.ch), IsIntPS T f' ∧ nabValN C.ch.B T.Fr C.ch.h H.w0 k f (fun ℓ : LtN Dw n => ℓ.2.2) (fun ℓ : LtN Dw n => C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩) (MvPolynomial.map io P) = nabValN C.ch.B T.Fr C.ch.h H.w0 k' f' (fun ℓ : LtN Dw n => ℓ.2.2) (fun ℓ : LtN Dw n => C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩) (MvPolynomial.map io P) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   have hstar : ∀ a : 𝓞 E, star a = H.bar a := fun _ => rfl
   intro T io y C hchar
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro a n k k' P hP f hf
   obtain ⟨B, hBT, hB⟩ := GlobalTheory.PlaceInt.integralBiext_gauge_eig_bound E H Dw l Xo c hstar T io y C
   obtain ⟨hg, -, heig, -⟩ := hB B hBT
@@ -440,7 +440,7 @@ theorem GlobalTheory.FramePower.exists_nabValN_eq_of_harmonic : ∀ (E : Type) [
     funext i
     change MvPowerSeries.map _ (B.A.act a i) = MvPowerSeries.map _ (C.ch.B.A.act a i)
     rw [GlobalTheory.ChartBiext.toK_self, hA, e2]
-  letI : Algebra ℚ T.V := (IsLocalization.lift (M := nonZeroDivisors ℤ) (S := ℚ) (g := Int.castRingHom T.V) (by
+  let : Algebra ℚ T.V := (IsLocalization.lift (M := nonZeroDivisors ℤ) (S := ℚ) (g := Int.castRingHom T.V) (by
     rintro ⟨z, hz⟩
     have h0 : z ≠ 0 := nonZeroDivisors.ne_zero hz
     rw [← residue_ne_zero_iff_isUnit]
@@ -750,7 +750,7 @@ theorem sv_of_tie_at {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
     sv Xo.univ.t hh ((ptSecT Xo.univ.t.G a).left ≫ (jBaseG xF (chD C.ch) m 1 ▷ Xo.univ.t.G).left) z J =
       gs (𝟙 _) z ⊤ (toΓ _ f) * (val (eL y.1 C.ch.d C.ch.x C.ch.B.A.act C.ch.e C.ch.wP m)
         (spMap (jetCoef (algebraMap T.Fr F) _ m)) z J ^ q).val := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨p, p₀, p₁, p₂, hp⟩ := frames_tied C m (spMap (jetCoef (algebraMap T.Fr F) (Fin 1 × Fin (chD C.ch)) m))
   obtain ⟨zF, z₁, z₂, hz⟩ := hf
   have hLG : P.U.LG.L.IsLB := P.U.LG.isLB
@@ -780,10 +780,10 @@ theorem sv_of_tie_at {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
 
 theorem harmonic_value_at : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y) (P : PELUnif (maximalIdeal T.V) C.I.G) (τ : Frames P.U.LG.L (κ := Fin 1 × Fin (chD C.ch)) C.xT), IsEL P C.xT C.actT C.eT C.wPT τ → ∀ (F : Type) [Field F] [CharZero F] [Algebra T.Fr F] [Algebra T.V F] [IsScalarTower T.V T.Fr F], letI := io.toAlgebra; letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra; ∀ (φ : T.Fr →ₐ[c.F] F), φ.toRingHom = algebraMap T.Fr F → ∀ (yF : FrPt Xo c F), FrMap φ y.1 yF → ∀ (q n m : ℕ) (σ : Fin n → P.U.toUnifPre.SecGF F q) (hh : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L (q : ℤ) (ptO Xo yF.x))) (f : Fin n → PS F 1 (chD C.ch)), (∀ i, SecTieF C.I P F yF.x q (σ i) (hh i)) → (∀ i, JetAt P.U.toUnifPre m (C.xT m) (τ m) F q (σ i) (psJet m (f i))) → ∀ (a : ((E →+* ℂ) × ℕ → ℕ)) (Pp : MvPolynomial (LtN Dw n) c.F), Pp ∈ harmA c a n → Pp.totalDegree ≤ m → ∑ m ∈ Pp.support, algebraMap c.F F (Pp.coeff m) * ∏ i, nab yF (q : ℤ) (hh i) (colOf m i) = nabValN C.ch.B F (MvPowerSeries.map (algebraMap T.Fr F) C.ch.h) H.w0 q (boxSer f) (fun ℓ : LtN Dw n => ℓ.2.2) (fun (ℓ : LtN Dw n) i => algebraMap T.Fr F (C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩ i)) (MvPolynomial.map (algebraMap c.F F) Pp) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab T io y C P τ hτ F _ _ _ _ _
-  letI := io.toAlgebra
-  letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
+  let := io.toAlgebra
+  let : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
   intro φ hφ yF hy q n m σ hh f ht hf a Pp hP hdeg
   obtain ⟨x', e', h₁, h₂, h₃, h₄, h₅⟩ := exists_chart_baseChange φ hy C.ch
   rw [hφ] at h₁ h₂ h₃ h₄ h₅
@@ -808,13 +808,13 @@ theorem translate_eq_box : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   obtain ⟨hL, hL2, -, hL4, -⟩ := GlobalTheory.firstFiveLaws
   have hT := GlobalTheory.twistBaseChange_and_valuation_statements.1
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro T io y C P hTor ϖ hϖ F _ _ _ _ _ _ v hv n D' A' G' _ _ pD pA pG U' PU _ oD' hx hact
     α N hN hα θ₁ θα₁ hθ₁ hθα₁ θ θα hθ hθα p w ζ x t₀ t q e hw hfin hpx hΦt hsm
   subst e
   have hG := hL.globalFns
   have hk : 1 ≤ 1 * N := by omega
-  haveI : CharZero T.V := (algebraMap T.V F).charZero
+  have : CharZero T.V := (algebraMap T.V F).charZero
   obtain ⟨p₁, hp, hp₁⟩ := UnboxQk.exists_isBoxQk_toA hL hL2 hL4 hT T.V E H C.I.G P hTor n D' A' G' pD pA pG U' PU F
     (1 * N) hk p
   have hw₁ : ∀ i, ∃ w₁ : LB.Gen (LB.LinComb P.D.toPre.P.L (DegPre.lineφ P.D.toPre F (p₁ i).g.b)
@@ -947,7 +947,7 @@ theorem isVtOver_of_isNormPull_dvd {S : Scheme.{0}} {A : Over S} [GrpObj A] [IsC
 
 theorem isVtOver_conj_pull_dvd : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l), letI := H.starRing; ∀ (F : Type) [Field F] [IsAlgClosed F] (xF : Sp F ⟶ Xo.X) (α : 𝓞 E) (N k : ℕ), l.M = N * k → α * star α = (N : 𝓞 E) → l.Mb ≤ Ideal.span {star α} → ∀ (s : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L 1 (ptO Xo xF))) (b : ptO Xo xF ⟶ Xo.univ.t.G) (hh : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L (N : ℤ) (ptO Xo xF))), b ≫ Xo.univ.t.act.act (star α) = 1 → IsTransPull Xo.univ.t.G Xo.univ.t.PP (Xo.univ.t.act.act α) N s b hh → ∃ Fs : LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((l.M : ℤ) ^ 2) (ptO Xo xF)), IsNormPull Xo.univ.t.G Xo.univ.t.PP (Xo.univ.t.act.act ((k : 𝓞 E) * star α)) ((l.M : ℤ) ^ 2) (N : ℤ) hh Fs ∧ IsVtOver Xo.univ.t.G Xo.univ.t.PP l.M (KilledBy Xo (l.Mb ^ 2)) s (b ≫ Xo.univ.t.act.act α) Fs := by
   intro E _ _ _ H Dw l Xo F _ _ xF α N k hk hα hMb s b hh hb h
-  letI := H.starRing
+  let := H.starRing
   have := UnivPol.isLocallyNoetherian Xo
   have hom := Xo.univ.t.act.hom
   have := hom α
@@ -1008,13 +1008,13 @@ theorem isVtOver_conj_pull_dvd : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
 
 theorem alphaForm_at_point_dvd : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (F : Type) [Field F] [IsAlgClosed F] [Algebra c.F F] (yF : FrPt Xo c F) (α : 𝓞 E) (N : ℕ), N ∣ l.M → α * star α = (N : 𝓞 E) → l.Mb ≤ Ideal.span {star α} → ∀ (n : ℕ) (b : Fin n → (ptO Xo yF.x ⟶ Xo.univ.t.G)) (hh : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L (N : ℤ) (ptO Xo yF.x))), (∀ i, b i ≫ Xo.univ.t.act.act (star α) = 1) → (∀ i, IsTransPull Xo.univ.t.G Xo.univ.t.PP (Xo.univ.t.act.act α) N yF.s (b i) (hh i)) → ∃ (xx : Fin n → Dw.La) (Fs : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((l.M : ℤ) ^ 2) (ptO Xo yF.x))), (∀ i, IsVtOver Xo.univ.t.G Xo.univ.t.PP l.M (KilledBy Xo (l.Mb ^ 2)) yF.s (levPt Xo yF.x (xx i)) (Fs i)) ∧ ∀ (a : ((E →+* ℂ) × ℕ → ℕ)) (Pp : MvPolynomial (LtN Dw n) c.F), Pp ∈ harmA c a n → ∑ m ∈ Pp.support, algebraMap c.F F (Pp.coeff m) * ∏ i, nab yF (N : ℤ) (hh i) (colOf m i) = algebraMap c.F F (nrm Dw c a α) * thExpr Xo c nab yF Pp Fs := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab F _ _ _ yF α N ⟨k, hk'⟩ hα hMb n b hh hb hT
   choose Fs hN hV using fun i => isVtOver_conj_pull_dvd E H Dw l Xo F yF.x α N k hk' hα hMb yF.s (b i) (hh i) (hb i) (hT i)
   have hk : ∀ i, KilledBy Xo l.Mb (b i ≫ Xo.univ.t.act.act α) := by
     intro i x hx
     obtain ⟨y, rfl⟩ := Ideal.mem_span_singleton'.1 (hMb hx)
-    haveI := Xo.univ.t.act.hom (α * y)
+    have := Xo.univ.t.act.hom (α * y)
     rw [Category.assoc, ← Xo.univ.t.act.mul, show α * (y * star α) = star α * (α * y) by ring,
       Xo.univ.t.act.mul, ← Category.assoc, hb i, MonObj.one_comp]
   choose xx hxx using fun i => GlobalTheory.T.exists_levelPoint_eq_of_killedByHalfLevel E H Dw l Xo c F yF _ (hk i)
@@ -1043,13 +1043,13 @@ theorem alphaForm_at_point_dvd : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
 
 theorem harmonicValue_translate_dvd_unit : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y) (P : PELUnif (maximalIdeal T.V) C.I.G), P.TorsionIso → ∀ (ϖ : T.V), Irreducible ϖ → ∀ (F : Type) [Field F] [IsAlgClosed F] [CharZero F] [Algebra T.Fr F] [Algebra T.V F] [IsScalarTower T.V T.Fr F] (v : AddValuation F (WithTop ℚ)), ValOver ϖ F v → ∀ (n : ℕ) (D' : DegData T.V (maximalIdeal T.V)) (A' : PolAV (Spec (CommRingCat.of T.Fr))) (G' : Over (Sp T.V)) [GrpObj G'] [IsCommMonObj G'] (pD : IsPowDeg D'.toPre P.D.toPre n) (pA : IsPowPolAV A' P.A n) (pG : IsPowGrp G' C.I.G.G n) (U' : Unif (maximalIdeal T.V) D' A' G') (PU : UnifPowOf3 pD pA pG U' P.U) [Module (𝓞 E) D'.toPre.X] (oD' : D'.toPre.OAct (𝓞 E)), (∀ (a : 𝓞 E) (x : D'.toPre.X) (i : Fin n), pD.xe (a • x) i = a • pD.xe x i) → (∀ (a : 𝓞 E) (i : Fin n), oD'.onB.act a ≫ pD.pw.pr i = pD.pw.pr i ≫ P.oD.onB.act a) → ∀ (α : 𝓞 E) (N : ℕ), N ∣ l.M → α * star α = (N : 𝓞 E) → l.Mb ≤ Ideal.span {star α} → ∀ (θ : Fam D'.toPre F 1) (θα : Fam D'.toPre F (1 * N)), ThFrame D' ϖ F θ → PullAl D' F oD' α 1 N θ θα → ∀ (p : QkPt D'.toPre F (1 * N)) (w : LB.Gen (LB.LinComb D'.toPre.P.L (DegPre.lineφ D'.toPre F p.g.b) (DegPre.lineε (1 * N)))) (ζ : F) (x : TFK (R := T.V) F ⟶ A'.A) (t₀ t : Fam D'.toPre F (1 * N)) (q : ℕ) (e : 1 * N = q) (_ : N = q) (σ' : U'.toUnifPre.SecGF F q) (h : PS F n (chD C.ch)), w.IsGen → FinOrd D' F (1 * N) p w ζ → QkToAkU U'.toUnifPre F (1 * N) p x → PhiRel D'.toPre F (1 * N) p w θα t₀ → Fam.IsSmul D'.toPre F ζ t₀ t → U'.toUnifPre.ExpandsG F q σ' (PowGerm.famCast (Dp := D'.toPre) (F := F) e t) → IsGermN P C.xT C.actT C.eT C.wPT pG PU.toUnifPowOf F q σ' h → (∀ k, x ≫ pA.pr k ≫ P.oA.act (star α) = 1) → letI := io.toAlgebra; ∃ (xx : Fin n → Dw.La) (u : F), v u = 0 ∧ ∀ (a : ((E →+* ℂ) × ℕ → ℕ)) (Pp : MvPolynomial (LtN Dw n) c.F), Pp ∈ harmA c a n → ∀ f, IsThRule Xo c nab xx Pp f → nabValN C.ch.B F (MvPowerSeries.map (algebraMap T.Fr F) C.ch.h) H.w0 q h (fun ℓ : LtN Dw n => ℓ.2.2) (fun (ℓ : LtN Dw n) i => algebraMap T.Fr F (C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩ i)) (MvPolynomial.map ((algebraMap T.Fr F).comp io) Pp) = u * algebraMap T.Fr F (io (nrm Dw c a α) * evI y f) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab T io y C P htors ϖ hϖ F _ _ _ _ _ _ v hv n D' A' G' _ _ pD pA pG U' PU _ oD' hx ho
     α N hN hα hMb θ θα hθ hθα p w ζ x t₀ t q e₀ hNq σ' h hw hfo hq hphi hsm hexp hgerm hkill
   subst hNq
   have hodd : Odd N := Odd.of_dvd_nat l.odd hN
-  letI := io.toAlgebra
-  letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
+  let := io.toAlgebra
+  let : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
   let φ : T.Fr →ₐ[c.F] F := { algebraMap T.Fr F with commutes' := fun _ => rfl }
   have hφ : φ.toRingHom = algebraMap T.Fr F := rfl
   have hM : 1 ≤ N := hodd.pos
@@ -1153,7 +1153,7 @@ theorem val_nonneg_of_isIntegral {F : Type} [Field F] (v : AddValuation F (WithT
 
 theorem harmonicValue_translate_dvd : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (P : PELUnif (IsLocalRing.maximalIdeal T.V) C.I.G), P.TorsionIso → CharZero (IsLocalRing.ResidueField T.V) → ∀ (ϖ : T.V), Irreducible ϖ → ∀ (Q : P.D.toPre.X → ℤ), IsQ P.D.toPre ϖ Q → ∀ (F : Type) [Field F] [IsAlgClosed F] [CharZero F] [Algebra T.Fr F] [Algebra T.V F] [IsScalarTower T.V T.Fr F] (v : AddValuation F (WithTop ℚ)), ValOver ϖ F v → ∀ (n : ℕ) (D' : DegData T.V (IsLocalRing.maximalIdeal T.V)) (A' : PolAV (Spec (CommRingCat.of T.Fr))) (G' : Over (Sp T.V)) [GrpObj G'] [IsCommMonObj G'] (pD : IsPowDeg D'.toPre P.D.toPre n) (pA : IsPowPolAV A' P.A n) (pG : IsPowGrp G' C.I.G.G n) (U' : Unif (IsLocalRing.maximalIdeal T.V) D' A' G') (PU : UnifPowOf3 pD pA pG U' P.U) [Module (𝓞 E) D'.toPre.X] (oD' : D'.toPre.OAct (𝓞 E)), (∀ (a : 𝓞 E) (x : D'.toPre.X) (i : Fin n), pD.xe (a • x) i = a • pD.xe x i) → (∀ (a : 𝓞 E) (i : Fin n), oD'.onB.act a ≫ pD.pw.pr i = pD.pw.pr i ≫ P.oD.onB.act a) → ∀ (α : 𝓞 E) (N : ℕ), N ∣ l.M → α * star α = (N : 𝓞 E) → l.Mb ≤ Ideal.span {star α} → ∀ (θ : Fam D'.toPre F 1) (θα : Fam D'.toPre F (1 * N)), ThFrame D' ϖ F θ → PullAl D' F oD' α 1 N θ θα → ∀ (p : QkPt D'.toPre F (1 * N)) (w : LB.Gen (LB.LinComb D'.toPre.P.L (DegPre.lineφ D'.toPre F p.g.b) (DegPre.lineε (1 * N)))) (ζ : F) (x : TFK (R := T.V) F ⟶ A'.A) (t₀ t : Fam D'.toPre F (1 * N)) (σ' : U'.toUnifPre.SecGF F (1 * N)) (h : PS F n (chD C.ch)), w.IsGen → ζ ≠ 0 → FinOrd D' F (1 * N) p w ζ → QkToAkU U'.toUnifPre F (1 * N) p x → PhiRel D'.toPre F (1 * N) p w θα t₀ → Fam.IsSmul D'.toPre F ζ t₀ t → U'.toUnifPre.ExpandsG F (1 * N) σ' t → IsGermN P C.xT C.actT C.eT C.wPT pG PU.toUnifPowOf F (1 * N) σ' h → (∀ k, x ≫ pA.pr k ≫ P.oA.act (star α) = 1) → letI := io.toAlgebra; ∀ (a : (E →+* ℂ) × ℕ → ℕ) (Pp : MvPolynomial (LtN Dw n) c.F), Pp ∈ harmA c a n → ∃ (xx : Fin n → Dw.La) (u : F), 0 ≤ v u ∧ ∀ f, IsThRule Xo c nab xx Pp f → nabValN C.ch.B F (MvPowerSeries.map (algebraMap T.Fr F) C.ch.h) H.w0 (1 * N) h (fun ℓ : LtN Dw n => ℓ.2.2) (fun (ℓ : LtN Dw n) i => algebraMap T.Fr F (C.ch.uvec ⟨ℓ.1, ℓ.2.1⟩ i)) (MvPolynomial.map ((algebraMap T.Fr F).comp io) Pp) = u * algebraMap T.Fr F (evI y f) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab T io y C _ P htors _ ϖ hϖ Q _ F _ _ _ _ _ _ v hv n D' A' G' _ _ pD pA pG U' PU _ oD' hx ho
     α N hN hα hMb θ θα hθ hθα p w ζ x t₀ t σ' h hw _ hfo hq hphi hsm hexp hgerm hkill a Pp hPp
   obtain ⟨xx, u, hu, hval⟩ := harmonicValue_translate_dvd_unit E H Dw l Xo c nab hnab T io y C P htors ϖ hϖ F v hv
@@ -1250,7 +1250,7 @@ theorem jets_on_copies_any : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have TB := GlobalTheory.twistBaseChange_and_valuation_statements.1
   intro E _ _ _ H Dw l Xo c inst hstar
   obtain rfl : inst = H.starRing := starSt E H inst hstar
-  letI := H.starRing
+  let := H.starRing
   intro T io y C htr P ϖ hϖ Q hQ Φ M0 r b hΦ0 hΦ hM n _ D' A' G' _ _ pD pA pG U' PU F _ _ _ _ _ v hv q D hq hD f hf
   choose f₀ hf₀ using hf
   obtain ⟨τ, hτ, htrunc, hgerm⟩ := frameNSt_holds E H T.V C.I.G P (chD C.ch) C.FT C.actT C.ph1T C.ph2T C.syT C.adT C.tgT
@@ -1376,12 +1376,12 @@ namespace GlobalTheory.JetsLevelZero
 
 theorem iInf_thRule_le_nuLocOf_charZero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (P : PELUnif (IsLocalRing.maximalIdeal T.V) C.I.G), P.TorsionIso → CharZero (IsLocalRing.ResidueField T.V) → ∀ (ϖ : T.V), Irreducible ϖ → ∀ (Q : P.D.toPre.X → ℤ), IsQ P.D.toPre ϖ Q → ∀ (r : ℕ) (Φ M0 : ℝ), GlobalTheory.PtTie.ShortBasis Q r Φ M0 → ∀ (α : 𝓞 E) (q : ℕ), α * star α = ((q : ℕ) : 𝓞 E) → q ∣ l.M → l.Mb ≤ Ideal.span {star α} → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n e : ℕ), 1 ≤ n → 0 < e → 4 * DF Dw a + 4 ≤ q → (DF Dw a : ℝ) * M0 < q → ∀ P₁ ∈ harmA (Dw := Dw) c a n, (⨅ (f : Rul Xo c) (_ : ∃ x : Fin n → Dw.La, IsThRule Xo c nab x P₁ f), nval T.V e (evI y f)) ≤ GlobalTheory.FactorDepth.nuLocOf C e l.M (MvPolynomial.map io P₁) + (((DF Dw a : ℝ) ^ 2 * Φ / q / e : ℝ) : EReal) := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab T io y C hTr P hP hchar ϖ hϖ Q hQ r Φ M0 hSB α q hα hqM hMb a n e hn he h4 hM0 P₁ hP₁
   obtain ⟨hΦ, b, hb, hb'⟩ := hSB
   have hth : ThValTot Xo c nab :=
     GlobalTheory.thValTot_of_chartIndep GlobalTheory.firstFiveLaws.1 GlobalTheory.chartIndependence_unconditional E H Dw l Xo c nab hnab
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨F, _, _, _, _, _, _, v, hv, hvx⟩ : ∃ (F : Type) (_ : Field F) (_ : IsAlgClosed F) (_ : CharZero F)
       (_ : Algebra T.Fr F) (_ : Algebra T.V F) (_ : IsScalarTower T.V T.Fr F) (v : AddValuation F (WithTop ℚ)),
       ValOver ϖ F v ∧ ∀ x : T.Fr, x ≠ 0 → v (algebraMap T.Fr F x) = (((vV T.V x : ℤ) : ℚ) : WithTop ℚ) := by
@@ -1513,7 +1513,7 @@ theorem num_le (dF R N r g0 g1 cst : ℝ) (hR : 0 ≤ R) (hN : 0 ≤ N) (hr : 0 
 
 theorem exists_thRule_value_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C : IntegralChartA3 Xo c T io y), FrTrunc C.I.G (𝟙 (Sp T.V)) (chD C.ch) C.xT C.eT → ∀ (P : PELUnif (IsLocalRing.maximalIdeal T.V) C.I.G), P.TorsionIso → CharZero (IsLocalRing.ResidueField T.V) → ∀ (φ : ℝ), GlobalTheory.SlopeRec.HasPhi y φ → ∀ (α : 𝓞 E) (q : ℕ), α * star α = ((q : ℕ) : 𝓞 E) → q ∣ l.M → l.Mb ≤ Ideal.span {star α} → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ), (∀ τ, Antitone fun i => a (τ, i)) → ∑ f : Lt1 Dw, 2 * rk f ≤ n → 1 ≤ n → ∀ (N cst : ℝ), ((Module.finrank ℚ E * Dw.q : ℕ) : ℝ) ≤ N → 4 * DF Dw a + 4 ≤ q → (DF Dw a : ℝ) * (2 * Real.sqrt N) < q → (DF Dw a : ℝ) ^ 2 * ((|(discr E : ℝ)| ^ ((2 : ℝ) / Module.finrank ℚ E)) / (2 * Module.finrank ℚ E) * N ^ 3) / q ≤ cst → ∃ f ∈ thGen Xo c nab a n, evI y f ≠ 0 ∧ (vV T.V (evI y f) : ℝ) ≤ cst * φ := by
   intro E _ _ _ H Dw l Xo c
-  letI := H.starRing
+  let := H.starRing
   intro nab hnab T io y C hTr P hP hch φ hφ α q hα hq hMb a n hanti hs hn N cst hρN h4 hM0 hcst
   obtain ⟨P₁, hP₁, hB⟩ := GlobalTheory.T.exists_harmonicPoly_localInvariant_nonpos_char0 E H Dw l Xo c a n hanti hs
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible T.V
@@ -1596,7 +1596,7 @@ theorem divisor_half_generated_on_cover_alt : _root_.GlobalTheory.CovTop.Publish
   refine Formalism.MainNotions.Closed.imp h2 ?_
   intro eps Fm CH _ _
   refine ⟨0, le_rfl, 0, fun x hx _ ι p _ i hi Y hY => ?_⟩
-  letI := p.T.Q.H.starRing
+  let := p.T.Q.H.starRing
   have hL := p.fw.laws
   obtain ⟨⟨α, hα1, hα2⟩, -⟩ := GlobalTheory.HalfGen.half_principal_and_split (Fm.D x ι) p.T.toCore hL.toLawsM (Fm.ex x hx ι).errX
   have hM : p.T.Q.l.M = (Fm.D x ι).host.g 0 * (Fm.D x ι).host.g 1 := hL.pins.2.1.1
@@ -1753,7 +1753,7 @@ theorem GlobalTheory.ThetaCuspOn.theta_value_on_cusp_neighbourhood' : _root_.Glo
   refine ⟨C3, hC3, x3, fun x hx hle ι p hp i hi Y hY => ?_⟩
   obtain ⟨hp1, hgap⟩ := h3 x hx hle ι p hp i hi Y hY
   intro Z TF la hla
-  letI := p.T.Q.H.starRing
+  let := p.T.Q.H.starRing
   intro nab hnab f hf y T io y' g hfac
   have hU := hY.1.unf
   obtain ⟨hanti, hgp⟩ := hgap la hla
@@ -1773,7 +1773,7 @@ theorem GlobalTheory.ThetaCuspOn.theta_value_on_cusp_neighbourhood' : _root_.Glo
   have hcusp := (GlobalTheory.thetaRules_exist_and_cusp _ _ _ _ Y.d.Xo₂ Y.d.c₂ _ Y.U hr hU nab hnab).2 _ _ hw.1 hw.2.2.1 f hf
   obtain ⟨g', hg'e, -⟩ := GlobalTheory.CompRestr.exists_cuspOn_restrict _ _ _ _ Y.d.Xo₂ Y.d.c₂ _ Y.U hU Z _ ⟨f, hcusp⟩
   refine ⟨g', g'.2, ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hfac' : TF.X.ptY y'.1 = Spec.map (CommRingCat.ofHom ((algebraMap T.V T.Fr).comp g)) ≫ (Y₀ TF.X Z).fromSpecStalk y ≫ inc₀ TF.X Z := hfac
   have hL : GlobalTheory.AllWt.LiesOn Z y'.1 := by
     refine (ptY_le_iff TF.X Z y'.1).1 ?_

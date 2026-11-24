@@ -123,13 +123,13 @@ private theorem nrmT_sg [FiniteDimensional k E] (σ : E ≃ₐ[k] E) (u : Fin n 
     nrmT k (sgT (σ : E ≃+* E) u) = nrmT k u := by
   funext i
   ext
-  simp only [nrmT, sgT, Units.coe_map, MonoidHom.coe_coe]
+  simp only [nrmT, sgT, Units.coe_map, MonoidHom.coe_ofClass]
   exact Algebra.norm_eq_of_algEquiv σ _
 
 private theorem h90 [FiniteDimensional k E] [IsGalois k E] (σ : E ≃ₐ[k] E)
     (hg : ∀ τ : E ≃ₐ[k] E, τ ∈ Subgroup.zpowers σ) (z : Fin n → Eˣ) (hz : nrmT k z = 1) :
     ∃ w : Fin n → Eˣ, sgT (σ : E ≃+* E) w / w = z := by
-  haveI : IsCyclic (E ≃ₐ[k] E) := ⟨⟨σ, hg⟩⟩
+  have : IsCyclic (E ≃ₐ[k] E) := ⟨⟨σ, hg⟩⟩
   have hzi : ∀ i, Algebra.norm k ((z i : Eˣ) : E) = 1 := by
     intro i
     have h1 := congrArg Units.val (congrFun hz i)
@@ -234,7 +234,7 @@ private theorem near_compact {r : ValueGroupWithZero E} (hr : r < 1) :
   rw [Units.isEmbedding_val₀.isCompact_iff]
   convert hB using 1
   ext x
-  simp only [Set.mem_image, Set.mem_setOf_eq]
+  simp only [Set.mem_image, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨u, hu, rfl⟩
     exact ⟨(u : E) - 1, hu, sub_add_cancel _ _⟩
@@ -273,7 +273,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.L.normDiag :
       ValuativeExtension.mapValueGroupWithZero_valuation, ValuativeExtension.mapValueGroupWithZero_valuation]
     show valuation E (algebraMap k E (Algebra.norm k (d i : E))) < valuation E (algebraMap k E (Algebra.norm k (d j : E)))
     rw [hvn, hvn]
-    exact pow_lt_pow_left₀ (hd i j hij) zero_le' hq.ne'
+    exact pow_lt_pow_left₀ (hd i j hij) zero_le hq.ne'
   have hdiag : ∀ d : Fin n → Eˣ, normGL σ (diagT E (Fin n) d) = incl (diagT k (Fin n) (nrmT k d)) := by
     intro d
     rw [← hnrm]

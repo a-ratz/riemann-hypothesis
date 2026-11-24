@@ -56,7 +56,7 @@ section
 variable {n : ℕ}
 
 theorem upper_inv (U : GL (Fin n) ℂ) (hU : U.val.BlockTriangular id) : (U⁻¹).val.BlockTriangular id := by
-  letI : Invertible U.val := U.invertible
+  let : Invertible U.val := U.invertible
   rw [Matrix.coe_units_inv]
   exact Matrix.blockTriangular_inv_of_blockTriangular hU
 

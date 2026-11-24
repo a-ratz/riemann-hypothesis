@@ -99,7 +99,7 @@ def resI : Ine (F := L) A →* Ine (F := K) A :=
     fun σ => res_mem_Ine σ.2
 
 theorem continuous_resI : Continuous (resI (K := K) (L := L) (Ω := Ω) (A := A)) :=
-  ((UpperTheory.V.Af.continuous_restrictScalarsHom K L Ω).comp continuous_subtype_val).subtype_mk _
+  ((UpperTheory.V.Af.continuous_restrictScalarsHom K L Ω).comp continuous_subtypeVal).subtype_mk _
 
 theorem resW_ineIncl (h : IsPlaceOver A v) (h' : IsPlaceOver A v') (τ : Ine (F := L) A) :
     resW h h' (ineIncl h' τ) = ineIncl h (resI τ) := Subtype.ext rfl

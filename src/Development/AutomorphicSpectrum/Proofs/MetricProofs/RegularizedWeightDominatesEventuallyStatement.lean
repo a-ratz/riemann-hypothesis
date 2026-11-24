@@ -216,7 +216,7 @@ theorem bregWeight_ge_and_MUc_smooth : ∀ (K : Type) [Fintype K] (J : K → Typ
       set linv := hcd.localInverse hFD hn with hlinv
       have hlinv_cd : ContDiffAt ℂ ω linv (f u₀) := hcd.to_localInverse hFD hn
       have hlinv₀ : linv (f u₀) = u₀ := hcd.localInverse_apply_image hFD hn
-      have hleft : ∀ᶠ u in 𝓝 u₀, linv (f u) = u := (hcd.hasStrictFDerivAt' hFD hn).eventually_left_inverse
+      have hleft : ∀ᶠ u in 𝓝 u₀, linv (f u) = u := (hcd.hasStrictFDerivAt hFD hn).eventually_left_inverse
       have hfu₀ : f u₀ = κ z₀ := by simp only [hf, hσ₀, hκs₀]
     
       set Φ : ((Σ k, JJ k) → ℂ) → (Fin D.n → ℂ) := fun z => linv (κ z) with hΦ

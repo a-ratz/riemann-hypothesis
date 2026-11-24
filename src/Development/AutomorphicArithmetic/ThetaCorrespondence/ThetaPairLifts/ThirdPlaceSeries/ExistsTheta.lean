@@ -121,7 +121,7 @@ theorem exists_theta_ne_one_psiU_eq_psi0_inv {G : Type} [Group G] {P0 : Subgroup
         apply (res kv).injective
         rw [map_intCast, Int.cast_natCast, ZMod.natCast_zmod_val]
       apply D.what₂.embLL.injective
-      rw [hW kv _ _ hb, map_pow, hζ, ← Complex.exp_nat_mul]
+      rw [hW kv _ _ hb, map_pow, hζ, ← Complex.exp_natCast_mul]
       congr 1
       push_cast
       ring

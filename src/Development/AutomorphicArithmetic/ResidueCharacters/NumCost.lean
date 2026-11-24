@@ -129,7 +129,7 @@ theorem cost_le' (L : SizeData₂ D) (P : ParameterChoice' D L) {A B C0 : ℝ} (
       have a3 : Real.log 12 ≤ 3 := by
         rw [Real.log_le_iff_le_exp (by norm_num)]
         have := Real.add_one_le_exp (1 : ℝ)
-        have e : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_nat_mul]; norm_num
+        have e : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_natCast_mul]; norm_num
         have := Real.exp_one_gt_d9
         rw [e]
         calc (12 : ℝ) ≤ 2.7 ^ 3 := by norm_num

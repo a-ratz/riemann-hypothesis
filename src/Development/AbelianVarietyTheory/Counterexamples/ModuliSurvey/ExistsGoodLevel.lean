@@ -223,9 +223,9 @@ theorem exists_prime_eq {l : Level H} (c : Coeff l) (W : ValuationSubring ℂ) (
       rw [h, Ideal.mem_bot] at hpm
       exact hp.ne_zero (by exact_mod_cast hpm)⟩
   refine ⟨v, hpm, ?_⟩
-  haveI : IsLocalization v.asIdeal.primeCompl (v.valuationSubringAtPrime c.F) :=
+  have : IsLocalization v.asIdeal.primeCompl (v.valuationSubringAtPrime c.F) :=
     Localization.subalgebra.isLocalization_ofField c.F v.asIdeal.primeCompl v.asIdeal.primeCompl_le_nonZeroDivisors
-  haveI : IsDiscreteValuationRing (v.valuationSubringAtPrime c.F) :=
+  have : IsDiscreteValuationRing (v.valuationSubringAtPrime c.F) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 c.F) v.ne_bot _
   refine ValuationSubring.eq_of_le_of_ne_top _ ?_ ?_
   · intro x hx

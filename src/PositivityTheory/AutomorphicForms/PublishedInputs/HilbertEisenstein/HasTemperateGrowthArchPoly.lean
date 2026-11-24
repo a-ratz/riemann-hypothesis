@@ -73,7 +73,7 @@ theorem count_levelIdeal {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w
   unfold levelIdeal
   rw [count_finprod_primeIdealUnit_zpow]
   refine Filter.eventually_cofinite.2 (hc.subset fun v hv => ?_)
-  simp only [Set.mem_setOf_eq, Nat.cast_eq_zero] at hv ⊢
+  simp only [Set.mem_ofPred_eq, Nat.cast_eq_zero] at hv ⊢
   exact hv
 
 theorem mem_level_iff {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w ≠ 0}.Finite) (B : Af F) :
@@ -85,7 +85,7 @@ theorem mem_level_iff {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w �
 
 theorem count_different (w : HeightOneSpectrum (𝓞 F)) :
     FractionalIdeal.count F w ((differentIdeal ℤ (𝓞 F) : Ideal (𝓞 F)) : FractionalIdeal (𝓞 F)⁰ F) = dd w := by
-  rw [FractionalIdeal.count_coe F w (differentIdeal_ne_bot (A := ℤ))]
+  rw [FractionalIdeal.count_coeIdeal F w (differentIdeal_ne_bot (A := ℤ))]
   rfl
 
 theorem mem_dual_iff {c : HeightOneSpectrum (𝓞 F) → ℕ} (hc : {w | c w ≠ 0}.Finite) (Z : Af F) :
@@ -131,7 +131,7 @@ theorem archSchwartz_eq_prod (a : InfinitePlace F → ℝ) (x : mixedSpace F) :
     archSchwartz a x = ∏ w : {w : InfinitePlace F // IsReal w},
       (((a w.1 : ℝ) : ℂ) + Complex.I * ((x.1 w : ℝ) : ℂ)) *
         Complex.exp (-(π : ℂ) * (((a w.1 : ℝ) : ℂ) ^ 2 + ((x.1 w : ℝ) : ℂ) ^ 2)) := by
-  haveI := isEmpty_complex (F := F)
+  have := isEmpty_complex (F := F)
   rw [archSchwartz_apply, archPoly, Finset.univ_eq_empty (α := {w : InfinitePlace F // IsComplex w}),
     Finset.sum_empty, mul_zero, add_zero, Finset.mul_sum, Real.exp_sum, Complex.ofReal_prod,
     ← Finset.prod_mul_distrib]

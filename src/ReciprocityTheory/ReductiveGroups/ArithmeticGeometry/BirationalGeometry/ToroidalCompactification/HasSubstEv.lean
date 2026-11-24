@@ -78,7 +78,7 @@ lemma ev_mul {m n : ℕ} (a : Fin m → Pt R n d) (h : ∀ j i, constantCoeff (a
 
 lemma ev_C {m n : ℕ} (a : Fin m → Pt R n d) (r : R) : ev a (C r : PS R m d) = C r := by
   unfold ev MvPowerSeries.subst
-  letI : UniformSpace R := ⊥
+  let : UniformSpace R := ⊥
   first
   | (open MvPowerSeries.WithPiTopology in rw [MvPowerSeries.eval₂_C])
   | erw [MvPowerSeries.eval₂_C]

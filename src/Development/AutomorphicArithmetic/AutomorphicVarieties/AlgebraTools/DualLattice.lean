@@ -111,8 +111,8 @@ theorem UpperTheory.V.AlgebraTools.dual_lattice :
     ∀ {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] {F V : Type} [Field F] [Algebra A F] [IsFractionRing A F] [AddCommGroup V] [Module F V] [Module A V] [IsScalarTower A F V] [Module.Finite F V] (Bf : LinearMap.BilinForm F V), Bf.IsSymm → Bf.Nondegenerate → ∀ Y : Submodule A V, Submodule.IsFullLattice F Y → Submodule.IsFullLattice F (Bf.dualSubmodule Y) ∧ Bf.dualSubmodule (Bf.dualSubmodule Y) = Y ∧ ∀ Z : Submodule A V, Submodule.IsLattice F Z → ∃ s : ℕ, maximalIdeal A ^ s • Z ≤ Y := by
   intro A _ _ _ F V _ _ _ _ _ _ _ _ Bf hs hn Y hY
   classical
-  haveI : Module.Free A Y := Submodule.IsLattice.free F Y
-  haveI : Module.Finite A Y := Submodule.IsLattice.finite F Y
+  have : Module.Free A Y := Submodule.IsLattice.free F Y
+  have : Module.Finite A Y := Submodule.IsLattice.finite F Y
   let b0 := Module.Free.chooseBasis A Y
   let b := b0.extendOfIsFullLattice F
   have hb : Submodule.span A (Set.range b) = Y := by

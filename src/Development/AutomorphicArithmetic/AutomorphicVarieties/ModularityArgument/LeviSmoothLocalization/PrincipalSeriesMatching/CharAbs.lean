@@ -52,7 +52,7 @@ private theorem isUnifAt_unif {K : Type} [Field K] [NumberField K] (v : HeightOn
       ValuativeRel.valuation (v.adicCompletion K) x ≤ ValuativeRel.valuation (v.adicCompletion K) y ↔
         Valued.v x ≤ Valued.v y := by
     intro x y
-    letI : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+    let : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
       Valuation.Compatible.ofValuation _
     exact ValuativeRel.isEquiv _ _ x y
   have hlt1 : ∀ x : v.adicCompletion K,
@@ -64,7 +64,7 @@ private theorem isUnifAt_unif {K : Type} [Field K] [NumberField K] (v : HeightOn
   have hdisc : ∀ a : WithZero (Multiplicative ℤ), a < 1 → a ≤ WithZero.exp (-1) := by
     intro a h
     rcases eq_or_ne a 0 with rfl | ha
-    · exact zero_le'
+    · exact zero_le
     · rw [← WithZero.exp_log ha] at h ⊢
       rw [← WithZero.exp_zero, WithZero.exp_lt_exp] at h
       rw [WithZero.exp_le_exp]

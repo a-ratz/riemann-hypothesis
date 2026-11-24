@@ -125,7 +125,7 @@ theorem expt_mem (T : GrpData p q) {X : Mat p q} (hX : X ∈ upq p q) (hK : IsKC
 
 theorem deriv_mem {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] (S : Submodule ℂ H)
     [FiniteDimensional ℂ S] {f : ℝ → H} {y : H} (hf : HasDerivAt f y 0) (hS : ∀ t, f t ∈ S) : y ∈ S := by
-  have hc : IsClosed (S : Set H) := S.closed_of_finiteDimensional
+  have hc : IsClosed (S : Set H) := S.isClosed_of_finiteDimensional
   refine hc.mem_of_tendsto (hasDerivAt_iff_tendsto_slope.1 hf) (Filter.Eventually.of_forall fun t => ?_)
   rw [slope_def_module]
   exact S.smul_of_tower_mem _ (S.sub_mem (hS t) (hS 0))

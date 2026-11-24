@@ -129,7 +129,7 @@ theorem isIrreducible_of_clsGL_eq_single {N : ℕ} {B : Representation ℂ (GL (
       intro e
       rw [Submodule.comap_subtype_eq_top] at e
       exact hS1 (Subrepresentation.toSubmodule_injective (eq_top_iff.mpr e))
-    obtain ⟨x, -, hx⟩ := SetLike.exists_of_lt (lt_top_iff_ne_top.mpr hp)
+    obtain ⟨x, -, hx⟩ := IsConcreteLE.exists_of_lt (lt_top_iff_ne_top.mpr hp)
     exact nontrivial_of_ne (Submodule.Quotient.mk x) 0 (by rwa [Ne, Submodule.Quotient.mk_eq_zero])
   obtain ⟨Y₁, i₁, j₁, σ₁, hi₁, hq₁⟩ := IrrSubquot.exists_irreducible_subquotient _ _ S.toRepresentation hn1
   obtain ⟨Y₂, i₂, j₂, σ₂, hi₂, hq₂⟩ := IrrSubquot.exists_irreducible_subquotient _ _ (subQuot ⊤ S) hn2
@@ -213,7 +213,7 @@ theorem msum_eq_of_coeff_ne (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFini
         intro h2
         apply hu
         have e := congrArg (fun f => f u) hsum
-        simp only [Finsupp.add_apply, h2, add_zero, Finsupp.single_apply, if_neg (Ne.symm huw)] at e
+        simp only [Finsupp.add_apply, h2, add_zero, Finsupp.single_apply, ite_eq_right (Ne.symm huw)] at e
         exact e
       obtain ⟨n', hn'S, hn'⟩ := exists_hasSupport_of_symm_sum_ne_zero hS hΨ hX _ (fun n => AddMonoidAlgebra.coeff P n) u h2
       have h3 := (Finset.mem_filter.mp hn'S).2
@@ -225,7 +225,7 @@ theorem msum_eq_of_coeff_ne (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFini
   have hc : AddMonoidAlgebra.coeff P1 m = AddMonoidAlgebra.coeff P m := by
     rw [hP1def, coeff_sum]
     simp only [coeff_monomial]
-    rw [Finset.sum_ite_eq' S m (fun n => AddMonoidAlgebra.coeff P n), if_pos hmS]
+    rw [Finset.sum_ite_eq' S m (fun n => AddMonoidAlgebra.coeff P n), ite_eq_left hmS]
   rw [hP1] at hc
   have hc0 : AddMonoidAlgebra.coeff (0 : MvPolynomial (Segment k) ℤ) m = 0 := by rfl
   rw [hc0] at hc
@@ -390,7 +390,7 @@ theorem bas_eq_X (hS : IsSegmentClass k Z) (hΨ : IsProductIso k Ψ)
     intro u hu
     refine le_antisymm ?_ (hpos u)
     have e := hle u
-    rwa [Finsupp.single_apply, if_neg (Ne.symm hu)] at e
+    rwa [Finsupp.single_apply, ite_eq_right (Ne.symm hu)] at e
   have hz1 : Q z = 1 := by
     have a := hle z
     have b := hpos z
@@ -409,7 +409,7 @@ theorem bas_eq_X (hS : IsSegmentClass k Z) (hΨ : IsProductIso k Ψ)
     by_cases hu : u = z
     · subst hu
       simpa using hz1
-    · rw [hoff u hu, Finsupp.single_apply, if_neg (Ne.symm hu)]
+    · rw [hoff u hu, Finsupp.single_apply, ite_eq_right (Ne.symm hu)]
   apply Ψ.symm.injective
   rw [hb, ← hQ1]
 
@@ -440,7 +440,7 @@ theorem isIrreducible_of_cls_eq_mul (hG : GeometricLemma) (hBZ : BernsteinZelevi
   classical
   set m0 := Finsupp.single (Segment.single x hx) 1 + Finsupp.single (Segment.single y hy) 1 with hm0
   have hmon : Ψ (clsGL B hB) = monomial m0 1 := by
-    rw [eB, bas_eq_X hS hΨ hX x hx, bas_eq_X hS hΨ hX y hy, X, X, monomial_mul, one_mul]
+    rw [eB, bas_eq_X hS hΨ hX x hx, bas_eq_X hS hΨ hX y hy, X, X, monomial_mul_monomial, one_mul]
   set C := clsGL B hB with hCdef
   have hC0 : C ≠ 0 := by
     intro h

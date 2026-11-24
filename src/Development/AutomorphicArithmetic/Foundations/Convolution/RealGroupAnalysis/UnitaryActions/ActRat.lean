@@ -105,7 +105,7 @@ theorem UpperTheory.ConvolutionTheory.R2.actRat :
       ∃ N : GL (Fin 4) F, D.actM (ratGL E 2 γ) = N.val.map (algebraMap F (A F)) ∧
         ∀ ξ : Fin 4 → F, D.act (ratGL E 2 γ) (fun i => rt (ξ i)) = fun i => rt ((N.val *ᵥ ξ) i) := by
   intro F E _ _ _ _ _ D γ
-  haveI := AdeleBaseChange.nontrivial_adeleRing F
+  have := AdeleBaseChange.nontrivial_adeleRing F
   obtain ⟨N₀, h₀⟩ := actM_rat D γ
   obtain ⟨N₁, h₁⟩ := actM_rat D γ⁻¹
   have inj : Function.Injective (algebraMap F (A F)) := (algebraMap F (A F)).injective

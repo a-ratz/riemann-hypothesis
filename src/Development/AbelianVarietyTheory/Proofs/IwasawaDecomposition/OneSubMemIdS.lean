@@ -130,7 +130,7 @@ theorem div_pow_mem {ϖ : 𝓞 E} (h1 : ϖ ∈ Q.asIdeal) (h2 : ϖ ∉ Q.asIdeal
     refine h.mul_mem_of_val ?_
     have a1 := (Q.intValuation_le_pow_iff_mem p m).2 hp
     rw [map_mul, map_inv₀, map_pow, val_unif h1 h2, HeightOneSpectrum.valuation_of_algebraMap, ← WithZero.exp_nsmul,
-      inv_mul_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), mul_one]
+      inv_mul_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), mul_one]
     simpa using a1
   · simp
   · intro a b _ _ ha hb

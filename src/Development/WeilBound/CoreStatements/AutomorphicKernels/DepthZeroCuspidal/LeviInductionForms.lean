@@ -102,7 +102,7 @@ theorem wildPf_of_isWild {σ : G E Ω} (hσ : Formalism.MainNotions.BlochKatoRed
   have hv : A.valuation y ≠ 0 := by simpa using hy
   have e : σ y / y - 1 = (σ y - y) / y := by field_simp
   rw [e, map_div₀]
-  exact (div_lt_one₀ (zero_lt_iff.2 hv)).2 (hσ.2 y hy)
+  exact (div_lt_one₀ (pos_iff_ne_zero.2 hv)).2 (hσ.2 y hy)
 
 theorem wild_to_unitsOne (a : Weil h →* (w.adicCompletion E)ˣ) (ha : IsLocalArtin h a) (σ : Weil h)
     (hσ : Formalism.MainNotions.BlochKatoReduction.IsWild A (σ : G E Ω)) : Valued.v ((a σ : w.adicCompletion E) - 1) < 1 := by

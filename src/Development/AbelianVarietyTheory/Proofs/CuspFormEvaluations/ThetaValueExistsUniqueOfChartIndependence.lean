@@ -95,7 +95,7 @@ private theorem thExpr_tmul_lemma (hL : Laws) (hC : ChartIndepSt2) {E : Type} [F
       (levPt Xo y2.x (x b)) (F2 b)) :
     TensorProduct.tmul S (thExpr Xo c nab y1 P F1) (1 : S2) =
       TensorProduct.tmul S (1 : S1) (thExpr Xo c nab y2 P F2) := by
-  letI : Algebra c.F (TensorProduct S S1 S2) :=
+  let : Algebra c.F (TensorProduct S S1 S2) :=
     ((algebraMap S (TensorProduct S S1 S2)).comp (algebraMap c.F S)).toAlgebra
   let χ1 : S1 →ₐ[S] TensorProduct S S1 S2 := Algebra.TensorProduct.includeLeft
   let χ2 : S2 →ₐ[S] TensorProduct S S1 S2 := Algebra.TensorProduct.includeRight
@@ -123,8 +123,8 @@ theorem thValTot_of_chartIndep : Laws → ChartIndepSt2 → ∀ (E : Type) [Fiel
   intro hL hC E _ _ _ H Dw l Xo c _ nab hnab S _ _ y a n x P hP
 
   obtain ⟨S', _, _, φ, y', F, hff, hy', hF⟩ := GlobalTheory.T.exists_faithfullyFlat_cover_level_sections hL E H Dw l Xo c S y n x
-  letI : Algebra S S' := φ.toRingHom.toAlgebra
-  haveI : Module.FaithfullyFlat S S' := hff
+  let : Algebra S S' := φ.toRingHom.toAlgebra
+  have : Module.FaithfullyFlat S S' := hff
   have hφ : ∀ s, φ s = algebraMap S S' s := fun _ => rfl
 
   have htmul := thExpr_tmul_lemma hL hC hnab y x hP φ hφ y' F hy' hF φ hφ y' F hy' hF
@@ -133,8 +133,8 @@ theorem thValTot_of_chartIndep : Laws → ChartIndepSt2 → ∀ (E : Type) [Fiel
   refine ⟨v, ⟨S', inferInstance, inferInstance, φ, y', F, hff, hy', hF, hv⟩, ?_⟩
 
   rintro w ⟨S2, _, _, φ2, y2, F2, hff2, hy2, hF2, hw⟩
-  letI : Algebra S S2 := φ2.toRingHom.toAlgebra
-  haveI : Module.FaithfullyFlat S S2 := hff2
+  let : Algebra S S2 := φ2.toRingHom.toAlgebra
+  have : Module.FaithfullyFlat S S2 := hff2
   have h12 := thExpr_tmul_lemma hL hC hnab y x hP φ hφ y' F hy' hF φ2 (fun _ => rfl) y2 F2 hy2 hF2
   have hv' : φ v = thExpr Xo c nab y' P F := hv
   rw [← hv', ← hw, hφ, Algebra.TensorProduct.tmul_one_eq_one_tmul] at h12

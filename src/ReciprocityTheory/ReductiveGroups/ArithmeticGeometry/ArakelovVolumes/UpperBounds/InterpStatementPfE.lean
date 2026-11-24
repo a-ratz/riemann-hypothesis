@@ -100,8 +100,8 @@ theorem levi_logNormSq_zero_at (g : V n → ℂ) (v0 : V n) (hg : ContDiffAt ℂ
       (Filter.Eventually.of_forall fun w => by simp [Complex.normSq_apply])
     simp only [wdb]
     rw [hh.fderiv]
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_restrictScalars',
+    simp only [ContinuousLinearMap.comp_apply, smul_apply,
+      add_apply, ContinuousLinearMap.coe_restrictScalars',
       Complex.reCLM_apply, Complex.imCLM_apply, Complex.ofRealCLM_apply, smul_eq_mul, map_smul]
     have hz0 : (g y).re * (g y).re + (g y).im * (g y).im ≠ 0 := hpos.ne'
     apply Complex.ext <;>

@@ -169,8 +169,8 @@ theorem map_comap_eq {Z : Scheme.{0}} (F : ∀ U : Z.affineOpens, Ideal Γ(Z, U)
       (F B).comap (Z.presheaf.map (homOfLE hBD).op).hom := by
   subst hB
   rw [← hI]
-  haveI := U.2.isLocalization_basicOpen f
-  haveI := V.2.isLocalization_basicOpen ((Z.presheaf.map (homOfLE hVU).op).hom f)
+  have := U.2.isLocalization_basicOpen f
+  have := V.2.isLocalization_basicOpen ((Z.presheaf.map (homOfLE hVU).op).hom f)
   refine map_comap_localization (S := Γ(Z, Z.basicOpen f)) f _
     (T := Γ(Z, Z.basicOpen ((Z.presheaf.map (homOfLE hVU).op).hom f))) _ ?_ _
   intro a
@@ -243,7 +243,7 @@ theorem exists_idealSheafData_of_isClopen : ∀ (Z : Scheme.{0}) (W : Set Z), Is
       simp only [V, W', TopologicalSpace.Opens.coe_inf, TopologicalSpace.Opens.coe_mk,
         Set.mem_inter_iff, TopologicalSpace.Opens.coe_bot, Set.mem_empty_iff_false, iff_false]
       exact fun h => hUW h.1 h.2
-    haveI : Subsingleton Γ(Z, (V ⟨U, hU⟩ : Z.Opens)) :=
+    have : Subsingleton Γ(Z, (V ⟨U, hU⟩ : Z.Opens)) :=
       CommRingCat.subsingleton_of_isTerminal (Z.sheaf.isTerminalOfEqEmpty hbot)
     have htop : F (V ⟨U, hU⟩) = ⊤ := by
       rw [Ideal.eq_top_iff_one, Subsingleton.elim (1 : Γ(Z, (V ⟨U, hU⟩ : Z.Opens))) 0]
@@ -351,7 +351,7 @@ theorem isField_stalk_genPt :
     ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsIntegral Y] [GlobalTheory.IsNormalScheme Z], IsOpen (Set.range π) →
     IsField (Z.presheaf.stalk (GlobalTheory.NormSheafDescent.genPt π)) := by
   intro Y Z π _ _ hW
-  haveI := GlobalTheory.IsNormalScheme.isDomain_stalk (X := Z) (genPt π)
+  have := GlobalTheory.IsNormalScheme.isDomain_stalk (X := Z) (genPt π)
   refine isField_stalk_of_forall_specializes _ fun z hz => ?_
   obtain ⟨y, rfl⟩ : z ∈ Set.range π := hz.mem_open hW ⟨_, rfl⟩
   exact (hz.antisymm ((genericPoint_specializes y).map π.continuous)).eq
@@ -410,13 +410,13 @@ theorem isIntegral_normForm (A K L : Type) [CommRing A] [Field K] [Field L] [Alg
     @IsIntegral (MvPolynomial (Fin m) A) (MvPolynomial (Fin m) K) _ _
       MvPolynomial.algebraMvPolynomial (GlobalTheory.NormSheaf.normForm K L x) := by
   classical
-  letI : Algebra (MvPolynomial (Fin m) A) (MvPolynomial (Fin m) K) := MvPolynomial.algebraMvPolynomial
+  let : Algebra (MvPolynomial (Fin m) A) (MvPolynomial (Fin m) K) := MvPolynomial.algebraMvPolynomial
   set R := MvPolynomial (Fin m) K
   set R' := MvPolynomial (Fin m) A
   let F := FractionRing R
-  haveI : IsScalarTower R' R F := inferInstance
+  have : IsScalarTower R' R F := inferInstance
   let S := R ⊗[K] L
-  letI : Algebra R' S := ((algebraMap R S).comp (algebraMap R' R)).toAlgebra
+  let : Algebra R' S := ((algebraMap R S).comp (algebraMap R' R)).toAlgebra
   let y : S := ∑ i, (X i : R) ⊗ₜ[K] x i
   have hy : IsIntegral R' y := by
     refine IsIntegral.sum _ fun i _ => ?_
@@ -470,7 +470,7 @@ theorem coeff_normForm_mem_range : ∀ (A K L : Type) [CommRing A] [IsDomain A] 
     (x : Fin m → L), (∀ i, IsIntegral A (x i)) →
     ∀ s, (GlobalTheory.NormSheaf.normForm K L x).coeff s ∈ (algebraMap A K).range := by
   intro A K L _ _ _ _ _ _ _ _ _ _ _ m x hx s
-  letI : Algebra (MvPolynomial (Fin m) A) (MvPolynomial (Fin m) K) := MvPolynomial.algebraMvPolynomial
+  let : Algebra (MvPolynomial (Fin m) A) (MvPolynomial (Fin m) K) := MvPolynomial.algebraMvPolynomial
   have key := isIntegral_normForm A K L x hx
   have hc := MvPolynomial.isIntegral_iff_isIntegral_coeff.mp key s
   obtain ⟨a, ha⟩ := IsIntegrallyClosed.isIntegral_iff.mp hc
@@ -612,22 +612,22 @@ theorem famIdeal_map_basicOpen : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFinite
     have hD' : genPt π ∈ (Z.affineBasicOpen f).1 := hD
     have hUD : ((Z.affineBasicOpen f : Z.affineOpens) : Set Z) ⊆ Set.range π :=
       fun x hx => hU (Z.basicOpen_le f hx)
-    letI := fieldK π hK
-    letI := algKL π
+    let := fieldK π hK
+    let := algKL π
     obtain ⟨hdomA, hfrA⟩ := _root_.GlobalTheory.NormSheafDescent.sections_isDomain_isFractionRing_stalk Y Z π U.1 U.2 hU hζU
     obtain ⟨_, hfrA'⟩ := _root_.GlobalTheory.NormSheafDescent.sections_isDomain_isFractionRing_stalk Y Z π (Z.basicOpen f) (Z.affineBasicOpen f).2 hUD hD
-    letI iA := algAK π U.1 hζU
-    letI iB := algBL π U.1 hζU
-    letI iA' := algAK π (Z.basicOpen f) hD
-    letI iB' := algBL π (Z.basicOpen f) hD
-    letI iAA' : Algebra Γ(Z, U) Γ(Z, Z.basicOpen f) :=
+    let iA := algAK π U.1 hζU
+    let iB := algBL π U.1 hζU
+    let iA' := algAK π (Z.basicOpen f) hD
+    let iB' := algBL π (Z.basicOpen f) hD
+    let iAA' : Algebra Γ(Z, U) Γ(Z, Z.basicOpen f) :=
       (Z.presheaf.map (homOfLE (Z.basicOpen_le f)).op).hom.toAlgebra
     have hleY : π ⁻¹ᵁ Z.basicOpen f ≤ π ⁻¹ᵁ U.1 := π.preimage_mono (Z.basicOpen_le f)
-    letI iBB' : Algebra Γ(Y, π ⁻¹ᵁ U.1) Γ(Y, π ⁻¹ᵁ Z.basicOpen f) :=
+    let iBB' : Algebra Γ(Y, π ⁻¹ᵁ U.1) Γ(Y, π ⁻¹ᵁ Z.basicOpen f) :=
       (Y.presheaf.map (homOfLE hleY).op).hom.toAlgebra
-    letI iAB : Algebra Γ(Z, U) Γ(Y, π ⁻¹ᵁ U.1) := (π.app U.1).hom.toAlgebra
-    haveI : IsLocalization.Away f Γ(Z, Z.basicOpen f) := U.2.isLocalization_basicOpen f
-    haveI : IsLocalization.Away (algebraMap Γ(Z, U) Γ(Y, π ⁻¹ᵁ U.1) f) Γ(Y, π ⁻¹ᵁ Z.basicOpen f) :=
+    let iAB : Algebra Γ(Z, U) Γ(Y, π ⁻¹ᵁ U.1) := (π.app U.1).hom.toAlgebra
+    have : IsLocalization.Away f Γ(Z, Z.basicOpen f) := U.2.isLocalization_basicOpen f
+    have : IsLocalization.Away (algebraMap Γ(Z, U) Γ(Y, π ⁻¹ᵁ U.1) f) Γ(Y, π ⁻¹ᵁ Z.basicOpen f) :=
       isLocalization_away_of_eq_basicOpen (U.2.preimage π) (π.app U.1 f) _
         (Scheme.preimage_basicOpen π f) hleY
     have h1 : (algebraMap Γ(Z, Z.basicOpen f) (Z.presheaf.stalk (genPt π))).comp
@@ -651,11 +651,11 @@ theorem famIdeal_map_basicOpen : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFinite
           (fun i => algebraMap Γ(Y, π ⁻¹ᵁ U.1) Y.functionField (g i))).coeff s ∈
             (algebraMap Γ(Z, U) (Z.presheaf.stalk (genPt π))).range := by
       intro m g s
-      haveI : IsIntegrallyClosed Γ(Z, U) := GlobalTheory.IsNormalScheme.isIntegrallyClosed_of_isAffineOpen U.2
-      letI iAL : Algebra Γ(Z, U) Y.functionField :=
+      have : IsIntegrallyClosed Γ(Z, U) := GlobalTheory.IsNormalScheme.isIntegrallyClosed_of_isAffineOpen U.2
+      let iAL : Algebra Γ(Z, U) Y.functionField :=
         ((algebraMap (Z.presheaf.stalk (genPt π)) Y.functionField).comp
           (algebraMap Γ(Z, U) (Z.presheaf.stalk (genPt π)))).toAlgebra
-      haveI : IsScalarTower Γ(Z, U) (Z.presheaf.stalk (genPt π)) Y.functionField :=
+      have : IsScalarTower Γ(Z, U) (Z.presheaf.stalk (genPt π)) Y.functionField :=
         IsScalarTower.of_algebraMap_eq (fun _ => rfl)
       have hfin : (π.app U.1).hom.Finite := π.finite_app U.1 U.2
       let φ : Γ(Y, π ⁻¹ᵁ U.1) →ₐ[Γ(Z, U)] Y.functionField :=
@@ -669,7 +669,7 @@ theorem famIdeal_map_basicOpen : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFinite
           (algebraMap Γ(Y, π ⁻¹ᵁ U.1) Γ(Y, π ⁻¹ᵁ Z.basicOpen f)) :=
       (I.map_ideal (U := ⟨π ⁻¹ᵁ (Z.affineBasicOpen f).1, (Z.affineBasicOpen f).2.preimage π⟩)
         (V := ⟨π ⁻¹ᵁ U.1, U.2.preimage π⟩) hleY).symm
-    simp only [famIdeal, dif_pos hζU, dif_pos hD']
+    simp only [famIdeal, dite_eq_left hζU, dite_eq_left hD']
     rw [hJ]
     exact _root_.GlobalTheory.NormSheaf.normIdeal_map_away Γ(Z, U) (Z.presheaf.stalk (genPt π)) Y.functionField Γ(Y, π ⁻¹ᵁ U.1)
       Γ(Z, Z.basicOpen f) Γ(Y, π ⁻¹ᵁ Z.basicOpen f) f h1 h2 h3 h4 h5 _
@@ -679,9 +679,9 @@ theorem famIdeal_map_basicOpen : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFinite
       intro hx
       obtain ⟨y, rfl⟩ := hU (Z.basicOpen_le f hx)
       exact hD (((genericPoint_specializes y).map π.continuous).mem_open (Z.basicOpen f).isOpen hx)
-    haveI : Subsingleton Γ(Z, Z.basicOpen f) :=
+    have : Subsingleton Γ(Z, Z.basicOpen f) :=
       CommRingCat.subsingleton_of_isTerminal (Z.sheaf.isTerminalOfEqEmpty hbot)
-    haveI : Subsingleton Γ(Z, (Z.affineBasicOpen f : Z.Opens)) := this
+    have : Subsingleton Γ(Z, (Z.affineBasicOpen f : Z.Opens)) := this
     ext x
     rw [Subsingleton.elim x 0]
     exact iff_of_true (Ideal.zero_mem _) (Ideal.zero_mem _)
@@ -740,7 +740,7 @@ theorem famIdeal_eq_top_of_disjoint : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsF
   · have hV : I.ideal ⟨π ⁻¹ᵁ U.1, U.2.preimage π⟩ = ⊤ :=
       ideal_eq_top_of_forall_not_mem I _ (fun y hy hyV => hU y hy hyV)
     simp only [hV]
-    letI := fieldK π hK; letI := algKL π; letI := algAK π U.1 h; letI := algBL π U.1 h
+    let := fieldK π hK; let := algKL π; let := algAK π U.1 h; let := algBL π U.1 h
     exact normIdeal_top _ _ _ _
   · rfl
 
@@ -772,8 +772,8 @@ theorem descendedIdealSheaf_exists : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFi
   intro Y Z π _ hY _ _ hnZ hW hchar I
   have hK := _root_.GlobalTheory.NormSheafDescent.isField_stalk_genPt Y Z π hW
   have hfd := GlobalTheory.T.finiteDimensional_functionField_stalk_imageGenericPoint Y Z π hK
-  letI := GlobalTheory.NormSheafDescent.fieldK π hK
-  letI := GlobalTheory.NormSheafDescent.algKL π
+  let := GlobalTheory.NormSheafDescent.fieldK π hK
+  let := GlobalTheory.NormSheafDescent.algKL π
   have hcl : IsClosed (Set.range π) := π.isClosedMap.isClosed_range
   obtain ⟨J, hJ, hJs⟩ := _root_.GlobalTheory.ClopenIdealSheaf.exists_idealSheafData_of_isClopen Z (Set.range π) ⟨hcl, hW⟩ (GlobalTheory.NormSheafDescent.famIdeal π hK hfd I)
     (fun U f hU => _root_.GlobalTheory.NormSheafDescent.famIdeal_map_basicOpen Y Z π hK hfd I U f hU)
@@ -798,9 +798,9 @@ theorem descendedIdealSheaf_exists : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFi
   · rintro U hUW ⟨x, hxU⟩
     have h := hgen U.1 x hxU (hUW hxU)
     obtain ⟨hdom, hfr⟩ := _root_.GlobalTheory.NormSheafDescent.sections_isDomain_isFractionRing_stalk Y Z π U.1 U.2 hUW h
-    letI := GlobalTheory.NormSheafDescent.algAK π U.1 h
-    letI := GlobalTheory.NormSheafDescent.algBL π U.1 h
-    haveI : Nonempty (π ⁻¹ᵁ U.1) := ⟨⟨genericPoint Y, h⟩⟩
+    let := GlobalTheory.NormSheafDescent.algAK π U.1 h
+    let := GlobalTheory.NormSheafDescent.algBL π U.1 h
+    have : Nonempty (π ⁻¹ᵁ U.1) := ⟨⟨genericPoint Y, h⟩⟩
     refine ⟨inferInstance, inferInstance, hdom, GlobalTheory.IsNormalScheme.isIntegrallyClosed_of_isAffineOpen U.2,
       inferInstance, ?_, hfr, ?_, ?_, ?_⟩
     · exact π.finite_app U.1 U.2
@@ -808,7 +808,7 @@ theorem descendedIdealSheaf_exists : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFi
     · ext a
       exact Scheme.Hom.germ_stalkMap_apply π U.1 (genericPoint Y) h a
     · rw [hJ U hUW]
-      simp only [GlobalTheory.NormSheafDescent.famIdeal, dif_pos h]
+      simp only [GlobalTheory.NormSheafDescent.famIdeal, dite_eq_left h]
 
 end GlobalTheory.NormSheafDescent
 end -- clump:auto
@@ -938,8 +938,8 @@ theorem exists_finite_split_normForm : ∀ (A B K L : Type) [CommRing A] [IsDoma
           P.map (algebraMap A R) = ∏ j, ∑ i, C (σ j (g i)) * X i := by
   intro A B K L _ _ _ _ _ _ _ _ _ _ _ _ _ _ φ hφ hcomp
   classical
-  letI : Algebra A B := φ.toAlgebra
-  haveI : Module.Finite A B := hφ
+  let : Algebra A B := φ.toAlgebra
+  have : Module.Finite A B := hφ
   have hcard : Fintype.card (L →ₐ[K] AlgebraicClosure K) = Module.finrank K L := AlgHom.card K L _
   let e : Fin (Module.finrank K L) ≃ (L →ₐ[K] AlgebraicClosure K) := (Fintype.equivFinOfCardEq hcard).symm
   have hAΩ : algebraMap A (AlgebraicClosure K) = (algebraMap K (AlgebraicClosure K)).comp (algebraMap A K) :=
@@ -1036,16 +1036,16 @@ theorem exists_lift_to_complete_dvr_of_finite : ∀ (A R : Type) [CommRing A] [C
   intro A R _ _ _ hinj hfin V _ _ _ _ hC h
   classical
   let p : Ideal A := RingHom.ker h
-  haveI : p.IsPrime := RingHom.ker_isPrime h
-  haveI : Algebra.IsIntegral A R := Algebra.IsIntegral.of_finite A R
+  have : p.IsPrime := RingHom.ker_isPrime h
+  have : Algebra.IsIntegral A R := Algebra.IsIntegral.of_finite A R
   obtain ⟨Q, -, hQ, hQp⟩ := Ideal.exists_ideal_over_prime_of_isIntegral p (⊥ : Ideal R) (by
     rw [(show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ hinj)]; exact bot_le)
   let K := FractionRing V
   let Ω := AlgebraicClosure K
-  letI : Algebra (A ⧸ p) (R ⧸ Q) := Ideal.Quotient.algebraQuotientOfLEComap (le_of_eq hQp.symm)
+  let : Algebra (A ⧸ p) (R ⧸ Q) := Ideal.Quotient.algebraQuotientOfLEComap (le_of_eq hQp.symm)
   have hcomp : (algebraMap (A ⧸ p) (R ⧸ Q)).comp (Ideal.Quotient.mk p) =
       (Ideal.Quotient.mk Q).comp (algebraMap A R) := rfl
-  haveI : Algebra.IsIntegral (A ⧸ p) (R ⧸ Q) := by
+  have : Algebra.IsIntegral (A ⧸ p) (R ⧸ Q) := by
     constructor
     intro x
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -1056,11 +1056,11 @@ theorem exists_lift_to_complete_dvr_of_finite : ∀ (A R : Type) [CommRing A] [C
   let g0 : (A ⧸ p) →+* Ω := (algebraMap K Ω).comp ((algebraMap V K).comp (RingHom.kerLift h))
   have hg0 : Function.Injective g0 :=
     (algebraMap K Ω).injective.comp ((IsFractionRing.injective V K).comp (RingHom.kerLift_injective h))
-  letI : Algebra (A ⧸ p) Ω := g0.toAlgebra
-  haveI : Module.IsTorsionFree (A ⧸ p) (R ⧸ Q) :=
+  let : Algebra (A ⧸ p) Ω := g0.toAlgebra
+  have : Module.IsTorsionFree (A ⧸ p) (R ⧸ Q) :=
     Module.isTorsionFree_iff_algebraMap_injective.2 hinj0
-  haveI : Module.IsTorsionFree (A ⧸ p) Ω := Module.isTorsionFree_iff_algebraMap_injective.2 hg0
-  haveI : Algebra.IsAlgebraic (A ⧸ p) (R ⧸ Q) := Algebra.IsIntegral.isAlgebraic
+  have : Module.IsTorsionFree (A ⧸ p) Ω := Module.isTorsionFree_iff_algebraMap_injective.2 hg0
+  have : Algebra.IsAlgebraic (A ⧸ p) (R ⧸ Q) := Algebra.IsIntegral.isAlgebraic
   let σ : (R ⧸ Q) →ₐ[A ⧸ p] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1074,7 +1074,7 @@ theorem exists_lift_to_complete_dvr_of_finite : ∀ (A R : Type) [CommRing A] [C
     rfl
   obtain ⟨s, hs⟩ := hfin.fg_top
   let M : IntermediateField K Ω := IntermediateField.adjoin K (ρ1 '' (s : Set R))
-  haveI : FiniteDimensional K M :=
+  have : FiniteDimensional K M :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   have hmem : ∀ r : R, ρ1 r ∈ M := by
     intro r
@@ -1094,9 +1094,9 @@ theorem exists_lift_to_complete_dvr_of_finite : ∀ (A R : Type) [CommRing A] [C
   have hint : ∀ r : R, ψ r ∈ integralClosure V M := fun r =>
     IsIntegral.map_of_comp_eq h ψ hψ (Algebra.IsIntegral.isIntegral r)
   let ρ : R →+* integralClosure V M := ψ.codRestrict (integralClosure V M) hint
-  haveI hdvr := Formalism.L2.G.IntCl.isDVR V K M hC
+  have hdvr := Formalism.L2.G.IntCl.isDVR V K M hC
   have hfinj := Formalism.L2.G.IntCl.alg_injective V K M
-  haveI : FaithfulSMul V (integralClosure V M) := (faithfulSMul_iff_algebraMap_injective _ _).2 hfinj
+  have : FaithfulSMul V (integralClosure V M) := (faithfulSMul_iff_algebraMap_injective _ _).2 hfinj
   refine ⟨integralClosure V M, inferInstance, inferInstance, hdvr,
     (RingHom.charZero_iff hfinj).1 inferInstance, algebraMap V (integralClosure V M), ρ,
     Formalism.L2.G.IntCl.complete V K M hC, hfinj, Algebra.IsIntegral.isLocalHom _ _, ?_⟩
@@ -1293,7 +1293,7 @@ theorem GlobalTheory.NormSheaf.normIdeal_map_eq_prod_lifts : ∀ (A B K L : Type
       Ideal.subset_span ⟨s, by rw [ha]⟩
     rw [key m g P hPR] at hmem
     have hle : ∏ j, Ideal.span (Set.range fun i => ψ j (g i)) ≤ ∏ j, J.map (ψ j) :=
-      Finset.prod_le_prod' (fun j _ => Ideal.span_le.2 (by
+      Finset.prod_le_prod (fun j _ => Ideal.span_le.2 (by
         rintro _ ⟨i, rfl⟩; exact Ideal.mem_map_of_mem _ (hgJ i)))
     exact hle hmem
   · have hfg : ∀ j, ∃ t : Finset V', (↑t : Set V') ⊆ ψ j '' (J : Set B) ∧ J.map (ψ j) = Ideal.span (↑t : Set V') := by
@@ -1354,7 +1354,7 @@ theorem normDescentSheaf : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z), IsFinite π �
           (f : V →+* V') (ψ : Fin d → (Sp V' ⟶ Y)), IsAdicComplete (maximalIdeal V') V' ∧ Function.Injective f ∧
           IsLocalHom f ∧ (∀ j, ψ j ≫ π = spMap f ≫ ξ) ∧ (idlAlong J ξ).map f = ∏ j, idlAlong I (ψ j) := by
   intro Y Z π hπ hY hYn hYN hZN hopen hchar I
-  haveI : IsAffineHom π := hπ.toIsAffineHom
+  have : IsAffineHom π := hπ.toIsAffineHom
   obtain ⟨K, L, _, _, _, _, hK, J, hsupp, hJ⟩ := _root_.GlobalTheory.NormSheafDescent.descendedIdealSheaf_exists Y Z π hY hYn hYN hZN hopen hchar I
   refine ⟨Module.finrank K L, J, Module.finrank_pos, hsupp, ?_⟩
   intro V _ _ _ _ hV ξ hξ

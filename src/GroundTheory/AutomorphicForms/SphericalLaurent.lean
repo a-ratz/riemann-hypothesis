@@ -175,18 +175,18 @@ theorem exists_ker_evalAt_comp_eq {A : Type*} [CommRing A] [Algebra ℂ A]
     ∃ w : Fin n → ℂˣ, RingHom.ker ((evalAt w).comp Φ) = I := by
   let e : A ≃ₐ[ℂ] Φ.range := AlgEquiv.ofInjective Φ hΦ
   let P : Ideal Φ.range := I.comap (e.symm : Φ.range →+* A)
-  haveI : P.IsMaximal := Ideal.comap_isMaximal_of_surjective _ e.symm.surjective
+  have : P.IsMaximal := Ideal.comap_isMaximal_of_surjective _ e.symm.surjective
   have hP : RingHom.ker (algebraMap Φ.range (LaurentRing n)) ≤ P := by
     intro x hx
     have : x = 0 := Subtype.ext hx
     rw [this]
     exact P.zero_mem
   obtain ⟨Q, hQ, hQP⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral P hP
-  letI := Ideal.Quotient.field Q
-  haveI : Algebra.FiniteType ℂ (LaurentRing n ⧸ Q) :=
+  let := Ideal.Quotient.field Q
+  have : Algebra.FiniteType ℂ (LaurentRing n ⧸ Q) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℂ Q)
       (Ideal.Quotient.mkₐ_surjective ℂ Q)
-  haveI := finite_of_finite_type_of_isJacobsonRing ℂ (LaurentRing n ⧸ Q)
+  have := finite_of_finite_type_of_isJacobsonRing ℂ (LaurentRing n ⧸ Q)
   have hbij : Function.Bijective (Algebra.ofId ℂ (LaurentRing n ⧸ Q)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral (k := ℂ) (K := LaurentRing n ⧸ Q)
   let e' : ℂ ≃ₐ[ℂ] LaurentRing n ⧸ Q := AlgEquiv.ofBijective (Algebra.ofId ℂ (LaurentRing n ⧸ Q)) hbij

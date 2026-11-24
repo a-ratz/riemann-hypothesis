@@ -70,7 +70,7 @@ theorem reads_mem (u : B.Word) (i : ℕ) {Lb Lb' : Submodule (𝓞 B.host.E) (Fi
   obtain ⟨p0, hp0, -⟩ := hR.k_std ()
   have hk : k () ∈ UAd B.sp.cm (B.R.N i) := hp0.uni
   have hQ : QE I.sel (I.tup I.mu0 : Chr B.fields.F B.fields.E B.fields.K) = ∅ := ColIn.twistPrimes_reference_tuple_eq_empty I
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   have h1 : PtOf (y c * k ()) ((I.stp u I.mu0 i).rep c).1.1 := pt_of_deco hQ (extTo_deco _ _).symm (hR.pt c)
   have h2 : PtOf (y c * k' ()) ((I.stp u I.mu0 i).rep c).1.1 := pt_of_deco hQ (extTo_deco _ _).symm (hR'.pt c)
   have hyk : y c * k () ∈ UAd B.sp.cm (B.R.N i) := h1.uni

@@ -51,9 +51,9 @@ theorem exists_prime_absNorm_eq_of_splitsFully (F E : Type) [Field F] [NumberFie
   classical
 
   set P : Ideal ℤ := W.asIdeal.under ℤ with hPdef
-  have hP0 : P ≠ ⊥ := mt Ideal.eq_bot_of_comap_eq_bot W.ne_bot
-  haveI hPprime : P.IsPrime := Ideal.IsPrime.under ℤ W.asIdeal
-  haveI hPmax : P.IsMaximal := hPprime.isMaximal hP0
+  have hP0 : P ≠ ⊥ := mt Ideal.eq_bot_of_under_eq_bot W.ne_bot
+  have hPprime : P.IsPrime := Ideal.IsPrime.under ℤ W.asIdeal
+  have hPmax : P.IsMaximal := hPprime.isMaximal hP0
 
   have hunder : (W.under (𝓞 F)).asIdeal.under ℤ = P := by
     change (W.asIdeal.under (𝓞 F)).under ℤ = W.asIdeal.under ℤ
@@ -68,14 +68,14 @@ theorem exists_prime_absNorm_eq_of_splitsFully (F E : Type) [Field F] [NumberFie
 
   have hone : ∀ q : P.primesOver (𝓞 E), q.1.ramificationIdx ℤ * q.1.inertiaDeg ℤ = 1 := by
     intro q
-    haveI : q.1.IsPrime := q.2.1
+    have : q.1.IsPrime := q.2.1
     have hpos := Nat.mul_pos (Ideal.ramificationIdx_pos (R := ℤ) q.1) (Ideal.inertiaDeg_pos q.1 ℤ)
     by_contra hne
     have hlt : ∑ _r : P.primesOver (𝓞 E), (1 : ℕ) <
         ∑ r : P.primesOver (𝓞 E), r.1.ramificationIdx ℤ * r.1.inertiaDeg ℤ := by
       apply Finset.sum_lt_sum
       · intro r _
-        haveI : r.1.IsPrime := r.2.1
+        have : r.1.IsPrime := r.2.1
         exact Nat.mul_pos (Ideal.ramificationIdx_pos (R := ℤ) r.1) (Ideal.inertiaDeg_pos r.1 ℤ)
       · exact ⟨q, Finset.mem_univ _, by omega⟩
     rw [hsum, Finset.sum_const, Finset.card_univ, smul_eq_mul, mul_one, Fintype.card_eq_nat_card,
@@ -96,7 +96,7 @@ theorem exists_prime_absNorm_eq_of_splitsFully (F E : Type) [Field F] [NumberFie
   have hnprime : n.Prime := by
     rw [Nat.prime_iff_prime_int, ← Ideal.span_singleton_prime hn0, hspan]
     exact hPprime
-  haveI : W.asIdeal.LiesOver (Ideal.span {((n : ℕ) : ℤ)}) := ⟨by rw [hspan]⟩
+  have : W.asIdeal.LiesOver (Ideal.span {((n : ℕ) : ℤ)}) := ⟨by rw [hspan]⟩
   refine ⟨n, hnprime, ?_, ?_⟩
   ·
     rw [← Ideal.pow_inertiaDeg n W.asIdeal, hf, pow_one]

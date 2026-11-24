@@ -105,7 +105,7 @@ theorem perFr_of_zero {E : Type} [Field E] [NumberField E] [IsCMField E] {n r : 
     perFr X x v ρ i = ((mat x ⟨ρ, hρ⟩)⁻¹ *ᵥ Data.emb ρ v) (Fin.cast h i) := by
   have hi : X.p0 + (i : ℕ) < r := by have := i.2; omega
   unfold perFr
-  rw [dif_pos hρ, dif_pos hi]
+  rw [dite_eq_left hρ, dite_eq_left hi]
   congr 1
   ext
   simp [h0]
@@ -122,19 +122,19 @@ theorem det_frChg : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   obtain ⟨P', hPe', p', -, hd', -⟩ := hpt k x'
   have hm : ∀ ρ, relab c σ ρ ∈ (U.X k).Ψ → Dw.mult ρ = r := fun ρ h => by
     unfold Datum.mult
-    rw [if_pos ((hrt ρ).1 ((hΨ _).1 h))]; omega
+    rw [ite_eq_left ((hrt ρ).1 ((hΨ _).1 h))]; omega
   have hm' : ∀ ρ, Fin (Dw.mult ρ) → relab c σ ρ ∈ (U.X k).Ψ := fun ρ i => by
     by_contra h
     have h1 : Dw.mult ρ = 0 := by
       unfold Datum.mult
-      rw [if_neg (fun h' => h ((hΨ _).2 ((hrt ρ).2 h'))), hq]
+      rw [ite_eq_right (fun h' => h ((hΨ _).2 ((hrt ρ).2 h'))), hq]
     have := i.2
     omega
   let B : (U.X k).Ψ → Matrix (Fin r) (Fin r) ℂ := fun ρ => (mat x'.1 ρ)⁻¹ * mat x.1 ρ
   let K : ∀ ρ, Matrix (Fin (Dw.mult ρ)) (Fin (Dw.mult ρ)) ℂ := fun ρ =>
     if h : relab c σ ρ ∈ (U.X k).Ψ then (B ⟨_, h⟩).submatrix (Fin.cast (hm ρ h)) (Fin.cast (hm ρ h)) else 0
   have hK : ∀ ρ (h : relab c σ ρ ∈ (U.X k).Ψ),
-      K ρ = (B ⟨_, h⟩).submatrix (Fin.cast (hm ρ h)) (Fin.cast (hm ρ h)) := fun ρ h => dif_pos h
+      K ρ = (B ⟨_, h⟩).submatrix (Fin.cast (hm ρ h)) (Fin.cast (hm ρ h)) := fun ρ h => dite_eq_left h
   obtain ⟨V, hV⟩ := exists_blockMat e K
   have hPV : ∀ b, P' b = V *ᵥ P b := by
     intro b
@@ -233,7 +233,7 @@ theorem nonempty_flatSec {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (
       exact (congrArg σ (Subtype.ext τ.2)).trans hσ0)
     have rd : ∀ k y (hy : (⟨k, y⟩ : Σ k, Frame ((U σ).X k).Ψ r) ∈ framesOn (U σ) Z) g a,
         FrChg g a ((U σ).un k ⟨y, hy.1⟩) z → rdU (U σ) f k y = toC (g τ.1).det := fun k y hy g a hc => by
-      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, hy.1, dif_pos]
+      simp only [rdU, LinearMap.coe_mk, AddHom.coe_mk, hy.1, dite_eq_left]
       exact congrArg toC (hv _ _ z g a (ht _ hy hy.1) hz hc)
     have hh : IsHorizontal (U σ) Z τ f := fun k => by
       by_cases hne : ∃ y, (⟨k, y⟩ : Σ k, Frame ((U σ).X k).Ψ r) ∈ framesOn (U σ) Z
@@ -265,7 +265,7 @@ theorem nonempty_flatSec {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (
   obtain ⟨S, hS0, hS⟩ := GlobalTheory.FlatLine.exists_finset_integral_of_definite E H Dw l Xo c hq hp hg y₀
   refine ⟨⟨f, f', m₁, m₂, i₁, i₂, hm, cI, hI₁, hI₂, ρ, fun w => image_eq_singleton_iff.2 ⟨hP.2 w, ?_⟩, ?_⟩⟩
   · rintro _ ⟨⟨_, T, io, e, ho, y, hy, η, hη, rfl⟩, rfl⟩
-    letI := io.toAlgebra
+    let := io.toAlgebra
     obtain ⟨z, hz⟩ := exists_bc (Algebra.ofId c.F T.Fr) y₀
     obtain ⟨g, a, -, hc⟩ := chg _ y.1 z hy.2 hz
     show nval T.V e (evR Xo c f y.1) = _
@@ -275,7 +275,7 @@ theorem nonempty_flatSec {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (
     by_contra hn
     simp only [Set.mem_iUnion, Function.mem_support, not_exists, not_not, Int.cast_eq_zero] at hn
     obtain ⟨_, ⟨_, T, io, e, ho, -⟩, -⟩ := hP.2 w
-    letI := io.toAlgebra
+    let := io.toAlgebra
     obtain ⟨z, hz⟩ := exists_bc (Algebra.ofId c.F T.Fr) y₀
     have hi := hS T io (fun s hs => by rw [ho.2 s]; exact mul_eq_zero_of_right _ (hn s hs)) z hz
     have h1 := hρ w T io e ho z z _ _ hi hz (frChg_refl_and_comp E H Dw l Xo c _ z z z).1

@@ -86,7 +86,7 @@ private theorem coe_equiv (D : TensorDecomposition F n ρ) (g : GL (Fin n) (Af F
 private theorem exists_vec (D : TensorDecomposition F n ρ) : ∃ η : ∀ v, D.W v, IsRestricted D.ξ η ∧ ∀ v, η v ≠ 0 := by
   classical
   choose u hu using fun v => @exists_ne _ (nontrivial_of_isIrreducible (D.isIrreducible v)) 0
-  refine ⟨fun v => if D.ξ v = 0 then u v else D.ξ v, D.ne_zero.mono fun v hv => if_neg hv, fun v => ?_⟩
+  refine ⟨fun v => if D.ξ v = 0 then u v else D.ξ v, D.ne_zero.mono fun v hv => ite_eq_right hv, fun v => ?_⟩
   beta_reduce
   split_ifs with h
   exacts [hu v, h]
@@ -214,7 +214,7 @@ private theorem proj_range {G H X Y : Type} [Group G] [TopologicalSpace G] [IsTo
         show ρ u (W.starProjection (f x)) = W.starProjection (f x)
         rw [← hP, ← hf, hU u hu])
     have := hτ.2 U hc ho
-    have h2 : IsClosed (((fixedVectors τ U).map J : Submodule ℂ W) : Set W) := Submodule.closed_of_finiteDimensional _
+    have h2 : IsClosed (((fixedVectors τ U).map J : Submodule ℂ W) : Set W) := Submodule.isClosed_of_finiteDimensional _
     obtain ⟨y, -, hy⟩ := closure_minimal (t := (((fixedVectors τ U).map J : Submodule ℂ W) : Set W))
       (by rintro _ ⟨y, hy, rfl⟩; exact Submodule.mem_map_of_mem (mem_fixedVectors.2 hy)) h2 h1
     exact ⟨y, congrArg Subtype.val hy⟩

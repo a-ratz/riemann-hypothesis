@@ -167,10 +167,10 @@ theorem transport_covol_one : ∀ (D : D7) (S T : HSp D) (κ : Type) [Fintype κ
       lam 𝓖 = 1 ∧ ∀ g : (κ → AF D.host.F) × (κ → AF D.host.F) → ℂ,
         ∫ w in 𝓕, g (e w) ∂ν = ∫ p in 𝓖, g p ∂lam := by
   intro D S T κ _ e he ν 𝓕 hc
-  letI mP : MeasurableSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := borel _
-  haveI : BorelSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := ⟨rfl⟩
-  haveI : BorelSpace (Formalism.IndefR.Datum.WO S T) := ⟨rfl⟩
-  haveI : IsModuleTopology (AF D.host.F)
+  let mP : MeasurableSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := borel _
+  have : BorelSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := ⟨rfl⟩
+  have : BorelSpace (Formalism.IndefR.Datum.WO S T) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F)
       (Matrix (Fin T.rank) (Fin S.rank) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := D.host.F) (E := D.host.E))) :=
     inferInstanceAs (IsModuleTopology (AF D.host.F) (Fin T.rank → Fin S.rank → GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := D.host.F) (E := D.host.E)))
   obtain ⟨hH, hF, h1⟩ := hc
@@ -352,11 +352,11 @@ theorem integral_thetaSum_schr_diag : ∀ (F : Type) [Field F] [NumberField F] (
   intro F _ _ ψ hψ κ _
   intro μ hμ 𝓕₁ hF hfin Φ hΦ x
   classical
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : Countable F := GlobalTheory.ThetaParsevalInner.countable_numberField F
-  haveI : IsFiniteMeasure (μ.restrict 𝓕₁) := isFiniteMeasure_restrict.mpr hfin
-  haveI := hμ
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : Countable F := GlobalTheory.ThetaParsevalInner.countable_numberField F
+  have : IsFiniteMeasure (μ.restrict 𝓕₁) := isFiniteMeasure_restrict.mpr hfin
+  have := hμ
   obtain ⟨hcont, hnorm, htriv, s0, hs0⟩ := hψ
   obtain ⟨emb, hemb⟩ : ∃ emb : (κ → F) → (κ → AF F), emb = fun ξ i => algebraMap F (AF F) (ξ i) := ⟨_, rfl⟩
   obtain ⟨e, he⟩ : ∃ e : (κ → F) → (κ → AF F) → ℂ, e = fun ξ y => ψ (emb ξ ⬝ᵥ y) := ⟨_, rfl⟩
@@ -405,7 +405,7 @@ theorem integral_thetaSum_schr_diag : ∀ (F : Type) [Field F] [NumberField F] (
       simp_rw [this]; rw [setIntegral_const]; simp
     · obtain ⟨i, hi⟩ : ∃ i, ζ i ≠ 0 := by
         by_contra h; push_neg at h; exact hζ (funext h)
-      haveI : Countable (GlobalTheory.ThetaParseval.ratVec F κ) := by
+      have : Countable (GlobalTheory.ThetaParseval.ratVec F κ) := by
         refine Function.Surjective.countable (f := fun ρ : κ → F => (⟨emb ρ, ?_⟩ : GlobalTheory.ThetaParseval.ratVec F κ)) ?_
         · exact (GlobalTheory.ThetaParseval.mem_ratVec_iff _).2 ⟨ρ, by rw [hemb]⟩
         · rintro ⟨r, hr⟩
@@ -438,13 +438,13 @@ theorem integral_thetaSum_schr_diag : ∀ (F : Type) [Field F] [NumberField F] (
   rw [← hinj.tsum_eq, ← tsum_mul_left]
   · refine tsum_congr fun η => ?_
     have hd0 : d (Sum.elim η η) = 0 := by rw [hd]; funext i; simp
-    rw [if_pos hd0, ha]
+    rw [ite_eq_left hd0, ha]
     dsimp only
     congr 2
     funext s; cases s <;> simp
   · intro ξ hξ
     have h0 : d ξ = 0 := by
-      by_contra h; exact hξ (if_neg h)
+      by_contra h; exact hξ (ite_eq_right h)
     refine ⟨ξ ∘ Sum.inl, ?_⟩
     funext s
     cases s with
@@ -516,14 +516,14 @@ theorem integral_fundamentalDomain_tsum : ∀ (F : Type) [Field F] [NumberField 
         ∑' η : κ → F, ‖h ((fun i => algebraMap F (AF F) (η i)) + x)‖ ≤ B) →
       ∫ x in 𝓕₁, ∑' η : κ → F, h ((fun i => algebraMap F (AF F) (η i)) + x) ∂μ = ∫ u, h u ∂μ := by
   intro F _ _ κ _
-  letI : MeasurableSpace (κ → AF F) := borel _
+  let : MeasurableSpace (κ → AF F) := borel _
   intro μ hμ 𝓕₁ h𝓕 hfin h hc hB
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
   obtain ⟨B, hB⟩ := hB
-  haveI : Countable F := by
+  have : Countable F := by
     have b := Module.finBasis ℚ F
     exact Countable.of_equiv _ b.equivFun.toEquiv.symm
-  haveI : Countable (GlobalTheory.ThetaParseval.ratVec F κ) := Countable.of_equiv _ (GlobalTheory.ThetaUnfold.ratEquiv F κ)
+  have : Countable (GlobalTheory.ThetaParseval.ratVec F κ) := Countable.of_equiv _ (GlobalTheory.ThetaUnfold.ratEquiv F κ)
   have hcont : ∀ η : κ → F, Continuous fun x => h ((fun i => algebraMap F (AF F) (η i)) + x) :=
     fun η => hc.comp (continuous_const.add continuous_id)
   have hreidx : ∀ f : (κ → AF F) → ENNReal,
@@ -536,11 +536,11 @@ theorem integral_fundamentalDomain_tsum : ∀ (F : Type) [Field F] [NumberField 
   have hpt : ∀ x, ∑' η : κ → F, ‖h ((fun i => algebraMap F (AF F) (η i)) + x)‖ₑ ≤ ENNReal.ofReal B := by
     intro x
     obtain ⟨hs, hle⟩ := hB x
-    simp_rw [← ofReal_norm_eq_enorm]
+    simp_rw [← ofReal_norm]
     rw [← ENNReal.ofReal_tsum_of_nonneg (fun _ => norm_nonneg _) hs]
     exact ENNReal.ofReal_le_ofReal hle
   have hfinite : ∑' η : κ → F, ∫⁻ x in 𝓕₁, ‖h ((fun i => algebraMap F (AF F) (η i)) + x)‖ₑ ∂μ ≠ ⊤ := by
-    rw [← lintegral_tsum fun η => (hcont η).measurable.enorm.aemeasurable]
+    rw [← lintegral_tsum fun η => (hcont η).measurable.eNorm.aemeasurable]
     refine ne_top_of_le_ne_top ?_ (lintegral_mono hpt)
     rw [setLIntegral_const]
     exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hfin
@@ -624,8 +624,8 @@ theorem integral_fundamentalDomain_eq_iterated (Γ₁ : AddSubgroup V) [Countabl
       (∀ γ ∈ Γ, ∀ w, G (γ + w) = G w) → (∃ B : ℝ, ∀ w, ‖G w‖ ≤ B) →
       ∫ w in 𝓕, G w ∂ν = c₁ * ∫ x in 𝓕₁, ∫ y in 𝓕₁, G (x, y) ∂μ ∂μ := by
   subst hmW
-  haveI := hν
-  haveI : Countable Γ := by
+  have := hν
+  have : Countable Γ := by
     have hinj : Function.Injective (fun k : Γ =>
         ((⟨(k : V × V).1, ((hΓ _).1 k.2).1⟩ : Γ₁), (⟨(k : V × V).2, ((hΓ _).1 k.2).2⟩ : Γ₁))) := by
       intro k k' hk
@@ -670,7 +670,7 @@ theorem integral_fundamentalDomain_eq_iterated (Γ₁ : AddSubgroup V) [Countabl
         rw [show μ _ = 0 from this, zero_mul]
   have hD : IsAddFundamentalDomain Γ (𝓕₁ ×ˢ 𝓕₁) ν :=
     hprod.mono (by rw [hν']; exact Measure.smul_absolutelyContinuous)
-  haveI : IsFiniteMeasure (μ.restrict 𝓕₁) := isFiniteMeasure_restrict.mpr hfin
+  have : IsFiniteMeasure (μ.restrict 𝓕₁) := isFiniteMeasure_restrict.mpr hfin
   have hint : Integrable G ((μ.restrict 𝓕₁).prod (μ.restrict 𝓕₁)) :=
     Integrable.of_bound hG.aestronglyMeasurable B (Filter.Eventually.of_forall hB)
   rw [h𝓕.setIntegral_eq hD (fun g x => hper g g.2 x), hν', Measure.restrict_smul,
@@ -695,13 +695,13 @@ theorem integral_ratPair_fundamentalDomain_eq_iterated : ∀ (F : Type) [Field F
       (∀ γ ∈ GlobalTheory.WeilUnitaryTransport.ratPair F κ, ∀ w, G (γ + w) = G w) → (∃ B : ℝ, ∀ w, ‖G w‖ ≤ B) →
       ∫ w in 𝓖, G w ∂lam = c₁ * ∫ x in 𝓕₁, ∫ y in 𝓕₁, G (x, y) ∂μ ∂μ := by
   intro F _ _ κ _ μ hμ lam hlam 𝓖 h𝓖 𝓕₁ h𝓕₁ hfin
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI := GlobalTheory.PeriodicIterated.countable_ratVec F κ
-  haveI := hμ
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.PeriodicIterated.countable_ratVec F κ
+  have := hμ
   exact integral_fundamentalDomain_eq_iterated (GlobalTheory.ThetaParseval.ratVec F κ)
     (GlobalTheory.WeilUnitaryTransport.ratPair F κ) (GlobalTheory.PeriodicIterated.mem_ratPair_iff_ratVec F κ) μ (borel _)
     (Prod.borelSpace (α := κ → AF F) (β := κ → AF F)).measurable_eq.symm lam hlam 𝓖 h𝓖 𝓕₁ h𝓕₁ hfin
@@ -772,9 +772,9 @@ theorem ratL_iff_ratPair : ∀ (D : D7) (S T : HSp D) (κ : Type) [Fintype κ]
     ∀ w : Matrix (Fin T.rank) (Fin S.rank) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := D.host.F) (E := D.host.E)),
       w ∈ ratL T S ↔ e w ∈ GlobalTheory.WeilUnitaryTransport.ratPair D.host.F κ := by
   intro D S T κ _ e hrat w
-  haveI : FiniteDimensional D.host.F D.host.E :=
+  have : FiniteDimensional D.host.F D.host.E :=
     Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
-  haveI : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
+  have : Nontrivial (AF D.host.F) := (AdeleRing.algebraMap_injective (𝓞 D.host.F) D.host.F).nontrivial
   constructor
   · rintro ⟨x, rfl⟩
     obtain ⟨y, z, h⟩ := hrat x
@@ -782,8 +782,8 @@ theorem ratL_iff_ratPair : ∀ (D : D7) (S T : HSp D) (κ : Type) [Fintype κ]
   · intro hp
 
     let bA := Algebra.TensorProduct.basis (AF D.host.F) (Module.finBasis D.host.F D.host.E)
-    haveI : Module.Free (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := Module.Free.of_basis bA
-    haveI : Module.Finite (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := Module.Finite.of_basis bA
+    have : Module.Free (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := Module.Free.of_basis bA
+    have : Module.Finite (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := Module.Finite.of_basis bA
     have hAE : Module.finrank (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) =
         Module.finrank D.host.F D.host.E := by
       rw [Module.finrank_eq_card_basis bA, Fintype.card_fin]
@@ -952,7 +952,7 @@ theorem pureA_bound {κ : Type} [Fintype κ] (f : SchwartzMap (κ → mixedEmbed
   let C : Set (κ → FiniteAdeleRing (𝓞 F) F) := (fun p => p.1 - p.2) '' (tsupport g ×ˢ (zf '' K))
   have hC : IsCompact C := (hg.2.isCompact.prod (hK.image hzf)).image (continuous_fst.sub continuous_snd)
   obtain ⟨N, hN, hNC⟩ := GlobalTheory.WeilM.exists_nat_mul_integral_of_isCompact F hC
-  haveI := GlobalTheory.WeilM.discreteTopology_denomLattice F κ hN
+  have := GlobalTheory.WeilM.discreteTopology_denomLattice F κ hN
   let e : (κ → F) → (κ → mixedEmbedding.mixedSpace F) := fun ξ i => mixedEmbedding F (ξ i)
   let S : Set (κ → F) := {ξ | e ξ ∈ GlobalTheory.WeilM.denomLattice F κ N}
   obtain ⟨D, hD0, hD⟩ := schwartz_translate_decay f (Module.finrank ℤ (GlobalTheory.WeilM.denomLattice F κ N) + 1)
@@ -1104,10 +1104,10 @@ theorem diag_theta_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
               GlobalTheory.DiagSiegel.thetaDiagInt ν 𝓕 (GlobalTheory.WeilSchrodinger.thetaTr D.host.F (GlobalTheory.DblSchr.ddr co) ψ Φ) =
                 c * GlobalTheory.DiagSiegel.diagInt μ Φ := by
   intro D ψ hψ S T JA JB ξ hJA hJB κ _ co hrat ν 𝓕 hν μ hμ
-  letI mV : MeasurableSpace (κ → AF D.host.F) := borel _
-  haveI : BorelSpace (κ → AF D.host.F) := ⟨rfl⟩
-  letI mVV : MeasurableSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := borel _
-  haveI : BorelSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := ⟨rfl⟩
+  let mV : MeasurableSpace (κ → AF D.host.F) := borel _
+  have : BorelSpace (κ → AF D.host.F) := ⟨rfl⟩
+  let mVV : MeasurableSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := borel _
+  have : BorelSpace ((κ → AF D.host.F) × (κ → AF D.host.F)) := ⟨rfl⟩
   have hψc : IsCharAF D.host.F ψ := hψ.1
   obtain ⟨lam, 𝓖, hlam, h𝓖, -, htr⟩ := GlobalTheory.T.darbouxCoords_transport_covolumeOne_haar D S T κ co.e (GlobalTheory.T.ratDarbouxCoords_rationalMatrix_iff_ratPair D S T κ co.e hrat) ν 𝓕 hν
   obtain ⟨𝓕₁, h𝓕₁, h0, htop⟩ := GlobalTheory.RatVecDomain.exists_fundamentalDomain D.host.F κ μ hμ
@@ -1152,8 +1152,8 @@ theorem diag_theta_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsS
           tsum_congr hn
       _ ≤ B := hB _
   have hGm : Measurable G := by
-    letI mW : MeasurableSpace ((κ ⊕ κ → AF D.host.F) × (κ ⊕ κ → AF D.host.F)) := borel _
-    haveI : BorelSpace ((κ ⊕ κ → AF D.host.F) × (κ ⊕ κ → AF D.host.F)) := ⟨rfl⟩
+    let mW : MeasurableSpace ((κ ⊕ κ → AF D.host.F) × (κ ⊕ κ → AF D.host.F)) := borel _
+    have : BorelSpace ((κ ⊕ κ → AF D.host.F) × (κ ⊕ κ → AF D.host.F)) := ⟨rfl⟩
     have hm := GlobalTheory.ThetaTransformMeas.main D.host.F ψ hψc (κ ⊕ κ) Φ hΦ
     have hc : Continuous fun p : (κ → AF D.host.F) × (κ → AF D.host.F) =>
         ((Sum.elim p.1 p.1, Sum.elim p.2 (-p.2)) : (κ ⊕ κ → AF D.host.F) × (κ ⊕ κ → AF D.host.F)) := by
@@ -1345,8 +1345,8 @@ theorem GlobalTheory.DiagSiegel.siegelRule_ddr : ∀ (D : D7) (ψ : AddChar (AF 
   intro D ψ hψ S T χS χT hS hT rS rT JA JB ξ hJA hξ κ _ co hco ωd hωd omd₀ htr
   intro l hl hinv p t hpt φ hφ
   obtain ⟨ν, 𝓕, hν⟩ := GlobalTheory.Size.exists_isCovolOne (D := D) S T
-  letI mκ : MeasurableSpace (κ → AF D.host.F) := borel _
-  haveI : BorelSpace (κ → AF D.host.F) := ⟨rfl⟩
+  let mκ : MeasurableSpace (κ → AF D.host.F) := borel _
+  have : BorelSpace (κ → AF D.host.F) := ⟨rfl⟩
   let μ : MeasureTheory.Measure (κ → AF D.host.F) := MeasureTheory.Measure.addHaar
   have hμ : μ.IsAddHaarMeasure := inferInstance
   have hinv' : ∀ x y : κ → AF D.host.F, ∀ Φ ∈ GlobalTheory.WeilM.schA D.host.F (κ ⊕ κ),

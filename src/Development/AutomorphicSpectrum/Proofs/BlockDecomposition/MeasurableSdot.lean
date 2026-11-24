@@ -64,20 +64,20 @@ theorem ratCent_le (d : GL (Fin n) E) : ratCent d ≤ adCent d := by
   exact congrArg _ h
 
 theorem discrete_ratIn (d : GL (Fin n) E) : DiscreteTopology (ratIn d) := by
-  haveI := GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (E := E) (n := n)
+  have := GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (E := E) (n := n)
   have hmem : ∀ x : ratIn d, (x.1.1 : GA E n) ∈ (ratGL E n).range := fun x => by
     obtain ⟨g, -, hg⟩ := (Subgroup.mem_subgroupOf.1 x.2)
     exact ⟨g, hg⟩
   refine DiscreteTopology.of_continuous_injective
     (f := fun x : ratIn d => (⟨x.1.1, hmem x⟩ : (ratGL E n).range)) ?_ ?_
-  · exact (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+  · exact (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
   · intro x y h
     have h' : (x.1.1 : GA E n) = y.1.1 := congrArg (fun z : (ratGL E n).range => (z : GA E n)) h
     exact Subtype.ext (Subtype.ext h')
 
 theorem isClosed_adCent (d : GL (Fin n) E) : IsClosed (adCent d : Set (GA E n)) := by
-  haveI : T2Space (GA E n) := by
-    haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
+  have : T2Space (GA E n) := by
+    have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
     exact Units.isEmbedding_embedProduct.t2Space
   have hc : Continuous fun g : GA E n => twConj (thetaA E n) g (ratGL E n d) := by
     unfold twConj

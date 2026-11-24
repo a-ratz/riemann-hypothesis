@@ -87,7 +87,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.dvrBase :
     ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (maximalIdeal O) O], IsBase O := by
   intro O _ _ _ _
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
-  haveI : Nontrivial (QuotSMulTop ϖ O) := by
+  have : Nontrivial (QuotSMulTop ϖ O) := by
     open Pointwise in
     refine Submodule.Quotient.nontrivial_iff.mpr ?_
     intro h
@@ -140,7 +140,7 @@ private theorem psBase_equiv {A B : Type} [CommRing A] [CommRing B] [IsLocalRing
 
 private theorem psBase_cm (R : Type) [CommRing R] [IsLocalRing R] [IsDomain R]
     (h : ReciprocityTheory.CA.IsCM R) : ReciprocityTheory.CA.IsCM (PowerSeries R) := by
-  haveI := h.1
+  have := h.1
   have hker : Ideal.span {(PowerSeries.X : PowerSeries R)} =
       RingHom.ker (PowerSeries.constantCoeff : PowerSeries R →+* R) := by
     ext f
@@ -149,7 +149,7 @@ private theorem psBase_cm (R : Type) [CommRing R] [IsLocalRing R] [IsDomain R]
     fun a => ⟨PowerSeries.C a, by simp⟩
   let e : (PowerSeries R ⧸ Ideal.span {(PowerSeries.X : PowerSeries R)}) ≃+* R :=
     (Ideal.quotEquivOfEq hker).trans (RingHom.quotientKerEquivOfSurjective hsurj)
-  haveI : IsLocalRing (PowerSeries R ⧸ Ideal.span {(PowerSeries.X : PowerSeries R)}) :=
+  have : IsLocalRing (PowerSeries R ⧸ Ideal.span {(PowerSeries.X : PowerSeries R)}) :=
     e.symm.isLocalRing
   refine ReciprocityTheory.CA.isCM_of_quotient_span_singleton (x := PowerSeries.X) ?_
     (mem_nonZeroDivisors_of_ne_zero PowerSeries.X_ne_zero) (h.of_ringEquiv e.symm)
@@ -158,10 +158,10 @@ private theorem psBase_cm (R : Type) [CommRing R] [IsLocalRing R] [IsDomain R]
 
 private theorem psBase_one (R : Type) [CommRing R] [IsLocalRing R] (h : IsBase R) :
     IsBase (PowerSeries R) := by
-  haveI := h.dom
-  haveI := h.normal
-  haveI := h.cm.1
-  haveI := h.complete
+  have := h.dom
+  have := h.normal
+  have := h.cm.1
+  have := h.complete
   exact ⟨inferInstance, GlobalTheory.PowerSeriesNormal.isIntegrallyClosed_powerSeries R,
     psBase_cm R h.cm, UpperTheory.V.abelian₂.adicComplete R⟩
 
@@ -204,8 +204,8 @@ theorem UpperTheory.V.CA.inj_dim :
     intro a ha
     obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.mp ha
     rw [map_mul, hr, mul_zero])
-  letI : Algebra (A ⧸ Ideal.span {r}) B := g.toAlgebra
-  haveI : Algebra.IsIntegral (A ⧸ Ideal.span {r}) B := by
+  let : Algebra (A ⧸ Ideal.span {r}) B := g.toAlgebra
+  have : Algebra.IsIntegral (A ⧸ Ideal.span {r}) B := by
     refine ⟨fun b => ?_⟩
     obtain ⟨p, hp, hpb⟩ := Algebra.IsIntegral.isIntegral (R := A) b
     refine ⟨p.map (Ideal.Quotient.mk _), hp.map _, ?_⟩
@@ -215,7 +215,7 @@ theorem UpperTheory.V.CA.inj_dim :
     Order.krullDim_le_of_strictMono
       (fun P => (⟨Ideal.comap (algebraMap (A ⧸ Ideal.span {r}) B) P.asIdeal, inferInstance⟩ :
         PrimeSpectrum _))
-      (fun P Q h => Ideal.IsIntegral.comap_lt_comap h)
+      (fun P Q h => Ideal.IsIntegral.under_lt_under h)
   have h2 := ringKrullDim_quotient_succ_le_of_nonZeroDivisor hrz
   rw [hA] at h2
   rw [hB] at h1
@@ -239,12 +239,12 @@ private theorem sop_mod (S : Type) [CommRing S] [IsLocalRing S] [IsNoetherianRin
       maximalIdeal S ≤ (Ideal.span (Set.range x) ⊔ J).radical := by
   have hne : J ≠ ⊤ := fun h =>
     (maximalIdeal.isMaximal S).ne_top (top_le_iff.mp (h ▸ hle))
-  haveI : Nontrivial (S ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hne
-  haveI : IsLocalRing (S ⧸ J) :=
+  have : Nontrivial (S ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hne
+  have : IsLocalRing (S ⧸ J) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
   set π := Ideal.Quotient.mk J with hπ
   have hsurj : Function.Surjective π := Ideal.Quotient.mk_surjective
-  haveI : IsLocalHom π := IsLocalHom.of_surjective π hsurj
+  have : IsLocalHom π := IsLocalHom.of_surjective π hsurj
   obtain ⟨s, hs, hcard⟩ :=
     Ideal.exists_finset_card_eq_height_of_isNoetherianRing (maximalIdeal (S ⧸ J))
   choose g hg using hsurj
@@ -279,17 +279,17 @@ private theorem sop_mod (S : Type) [CommRing S] [IsLocalRing S] [IsNoetherianRin
 private theorem inj_of_finite {A B : Type} [CommRing A] [Nontrivial A] [NoZeroDivisors A] [CommRing B] (φ : A →+* B)
     (h : φ.Finite) (d : ℕ) (hA : ringKrullDim A = d) (hB : ringKrullDim B = d) :
     Function.Injective φ := by
-  haveI : IsDomain A := NoZeroDivisors.to_isDomain A
-  letI := φ.toAlgebra
-  haveI : Module.Finite A B := h
+  have : IsDomain A := NoZeroDivisors.to_isDomain A
+  let := φ.toAlgebra
+  have : Module.Finite A B := h
   exact inj_dim A B d hA hB
 
 private theorem nn_field (k : Type) [Field k] (R : Type) [CommRing R] [Algebra k R] [IsLocalRing R]
     (h : IsCL k R) : ∃ (d : ℕ) (φ : MvPowerSeries (Fin d) k →ₐ[k] R),
       Function.Injective φ ∧ φ.toRingHom.Finite ∧ IsLocalHom φ ∧ ringKrullDim R = d := by
-  haveI := h.noeth
+  have := h.noeth
   obtain ⟨d, x, hx, hd, hrad⟩ := sop_mod R ⊥ bot_le
-  haveI : IsAdicComplete (maximalIdeal k) k := by
+  have : IsAdicComplete (maximalIdeal k) k := by
     rw [maximalIdeal_eq_bot]; infer_instance
   obtain ⟨φ, -, hfin, hloc⟩ := cl_mvps k R h (Fin d) x hx
     (hrad.trans (Ideal.radical_mono (sup_le_sup_left bot_le _)))
@@ -306,8 +306,8 @@ private theorem isCL_field (O k R : Type) [CommRing O] [Field k] [CommRing R] [I
 theorem UpperTheory.V.CA.cl_nn :
     ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (maximalIdeal O) O] (R : Type) [CommRing R] [Algebra O R] [IsLocalRing R] [IsDomain R], IsCL O R → (Function.Injective (algebraMap O R) → ∃ (d : ℕ) (φ : MvPowerSeries (Fin d) O →ₐ[O] R), Function.Injective φ ∧ φ.toRingHom.Finite ∧ IsLocalHom φ ∧ ringKrullDim R = (d + 1 : ℕ)) ∧ (¬ Function.Injective (algebraMap O R) → ∃ (d : ℕ) (φ : MvPowerSeries (Fin d) (ResidueField O) →ₐ[O] R), Function.Injective φ ∧ φ.toRingHom.Finite ∧ IsLocalHom φ ∧ ringKrullDim R = d) := by
   intro O _ _ _ _ R _ _ _ _ h
-  haveI := h.noeth
-  haveI := h.isLocalHom
+  have := h.noeth
+  have := h.isLocalHom
   refine ⟨fun hinj => ?_, fun hninj => ?_⟩
   · obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
     have hm : maximalIdeal O = Ideal.span {ϖ} := hϖ.maximalIdeal_eq
@@ -328,8 +328,8 @@ theorem UpperTheory.V.CA.cl_nn :
       eq_maximalIdeal (Ideal.IsPrime.isMaximal (RingHom.ker_isPrime _) hk0)
     let ψ : ResidueField O →+* R := Ideal.Quotient.lift (maximalIdeal O) (algebraMap O R)
       (fun a ha => by rwa [← hk] at ha)
-    letI : Algebra (ResidueField O) R := ψ.toAlgebra
-    haveI : IsScalarTower O (ResidueField O) R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    let : Algebra (ResidueField O) R := ψ.toAlgebra
+    have : IsScalarTower O (ResidueField O) R := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have h' : IsCL (ResidueField O) R := isCL_field O (ResidueField O) R h
     obtain ⟨d, φ, h1, h2, h3, h4⟩ := nn_field (ResidueField O) R h'
     exact ⟨d, φ.restrictScalars O, h1, h2, ⟨fun a ha => h3.1 a ha⟩, h4⟩
@@ -348,8 +348,8 @@ theorem UpperTheory.V.AlgebraTools.Conn.cohen :
     ∀ {O R : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (maximalIdeal O) O]
       [CommRing R] [IsLocalRing R] [Algebra O R], UpperTheory.V.CA.IsCL O R → CohenType R := by
   intro O R _ _ _ _ _ _ _ h p hp
-  haveI : IsDomain (R ⧸ p) := Ideal.Quotient.isDomain p
-  haveI : IsLocalRing (R ⧸ p) :=
+  have : IsDomain (R ⧸ p) := Ideal.Quotient.isDomain p
+  have : IsLocalRing (R ⧸ p) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
   have hS : UpperTheory.V.CA.IsCL O (R ⧸ p) :=
     UpperTheory.V.CA.cl_quot O R (R ⧸ p) (Ideal.Quotient.mkₐ O p) (Ideal.Quotient.mkₐ_surjective O p) h

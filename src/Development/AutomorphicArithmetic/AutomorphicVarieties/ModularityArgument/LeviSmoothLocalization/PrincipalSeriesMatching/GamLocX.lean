@@ -101,11 +101,11 @@ private theorem UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.kappa_one {F : Ty
 theorem UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.gamLocX :
     UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.GamLocX := by
   intro K _ _ n hn v V _ _ π s hs
-  haveI := hs.isIrreducible
+  have := hs.isIrreducible
   obtain ⟨β, W, _, _, σ, hirr, hsm, hcusp, hadm, Φ, hinj⟩ := exists_embedding_parabolicInd hs.isSmooth
-  letI : MeasurableSpace (levi (HeightOneSpectrum.adicCompletion K v) n β) := borel _
-  haveI : BorelSpace (levi (HeightOneSpectrum.adicCompletion K v) n β) := ⟨rfl⟩
-  haveI := hirr
+  let : MeasurableSpace (levi (HeightOneSpectrum.adicCompletion K v) n β) := borel _
+  have : BorelSpace (levi (HeightOneSpectrum.adicCompletion K v) n β) := ⟨rfl⟩
+  have := hirr
   obtain ⟨ω, hω⟩ := exists_blockChar (σ := σ) hsm
   have hB := gxBlock_of UpperTheory.local_zeta_integral_laurent_expansion UpperTheory.local_zeta_integral_shell_mean UpperTheory.local_zeta_integral_tate_comparison
   have hψc := GroundTheory.Global.continuous_localAdelicChar (K := K) v

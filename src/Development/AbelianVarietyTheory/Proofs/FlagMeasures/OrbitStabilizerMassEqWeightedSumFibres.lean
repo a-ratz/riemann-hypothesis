@@ -197,7 +197,7 @@ private theorem tsum_inv_card_stabilizer_mul_encard_orbit_fibre (π : α → β)
     have hyY : k • π x ∈ Y := hY k _ hx
     have hfy := hfin _ hyY
     have hyT : ((ENat.card (MulAction.stabilizer G (k • π x)) : ℕ∞) : ℝ≥0∞) ≠ ⊤ := by
-      haveI := hfy
+      have := hfy
       rw [ENat.card_eq_coe_natCard]
       simp
     rw [_root_.GlobalTheory.Mass.OrbFib.key π hπ x k] at hyT

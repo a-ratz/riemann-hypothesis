@@ -66,7 +66,7 @@ theorem local_factorisation :
     obtain ⟨z, hz⟩ := hne
     exact hz (AnalyticOnNhd.eqOn_zero_of_preconnected_of_eventuallyEq_zero
       (fun w _ => hA.analyticAt w) isPreconnected_univ (Set.mem_univ s₀) hev (Set.mem_univ z))
-  obtain ⟨n, g, hg, hg0, hev⟩ := han.exists_eventuallyEq_pow_smul_nonzero_iff.mpr hnz
+  obtain ⟨n, g, hg, hg0, hev⟩ := han.exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hnz
   have hall : ∀ᶠ z in 𝓝 s₀, AnalyticAt ℂ g z ∧ g z ≠ 0 ∧ A z = (z - s₀) ^ n * g z :=
     hg.eventually_analyticAt.and ((hg.continuousAt.eventually_ne hg0).and
       (hev.mono fun z hz => by simpa [smul_eq_mul] using hz))

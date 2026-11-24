@@ -121,13 +121,13 @@ end
 open GlobalTheory.RootEx.VolN in
 theorem GlobalTheory.HaarR.volN_KO_eq_one : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (c p : ℕ), 1 ≤ p → p ≤ c → ∀ (ν : Measure k), IsUnitVol ν → volN ν n c p {u : N k n c p | (u : GL (n ⊕ Fin c) k) ∈ KO k (n ⊕ Fin c)} = 1 := by
   intro k _ _ _ _ _ _ n _ _ c p h1 hp ν hν
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
   rw [volN_eq, MeasurableEquiv.map_apply]
   have : (coEquiv (k := k) (n := n) (c := c) p) ⁻¹' {u : N k n c p | (u : GL (n ⊕ Fin c) k) ∈ KO k (n ⊕ Fin c)} =
       Set.univ.pi fun _ => (𝒪[k] : Set k) := by
     ext e
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_univ_pi]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_univ_pi]
     exact GlobalTheory.HaarR.UnitVolN.mkNel_mem_KO_iff p e
   rw [this, Measure.pi_pi]
   simp [hν.2]

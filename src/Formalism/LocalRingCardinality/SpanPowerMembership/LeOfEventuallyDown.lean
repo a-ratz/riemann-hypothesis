@@ -105,13 +105,13 @@ theorem le_of_eventually_up {ε δ : ℝ} (hε1 : ε < 1) (hq : QInv nu ε δ) (
     rw [← mul_assoc, mul_inv_cancel₀ ha.ne', one_mul] at hq'
     have e := Measure.addHaar_closedBall_mul lam x ha.le hr.le
     rw [← mul_assoc, mul_inv_cancel₀ ha.ne', one_mul] at e
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
     calc nu (closedBall x ρ) ≤ nu (closedBall 0 ((1 - ε)⁻¹ * ρ)) := hq'
       _ ≤ M * lam (closedBall 0 ((1 - ε)⁻¹ * ρ)) := h1
       _ ≤ (M' * ENNReal.ofReal ((1 - ε) ^ finrank ℝ V)) * lam (closedBall 0 ((1 - ε)⁻¹ * ρ)) :=
           by gcongr
       _ = M' * lam (closedBall x ρ) := by rw [e, mul_assoc]
-  simpa only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] using key
+  simpa only [smul_apply, ENNReal.smul_def, smul_eq_mul] using key
 
 theorem le_of_eventually_down {ε δ : ℝ} (hε0 : 0 < ε) (hq : QInv nu ε δ) (M M' : ℝ≥0)
     (hM : (M' : ℝ≥0∞) * ENNReal.ofReal ((1 + ε) ^ finrank ℝ V) ≤ M)
@@ -132,14 +132,14 @@ theorem le_of_eventually_down {ε δ : ℝ} (hε0 : 0 < ε) (hq : QInv nu ε δ)
     rw [← mul_assoc, mul_inv_cancel₀ hb.ne', one_mul] at hq'
     have e := Measure.addHaar_closedBall_mul lam x hb.le hr.le
     rw [← mul_assoc, mul_inv_cancel₀ hb.ne', one_mul] at e
-    simp only [Measure.smul_apply, smul_eq_mul]
+    simp only [smul_apply, smul_eq_mul]
     calc (M' : ℝ≥0∞) * lam (closedBall x ρ)
         = (M' * ENNReal.ofReal ((1 + ε) ^ finrank ℝ V)) * lam (closedBall 0 ((1 + ε)⁻¹ * ρ)) := by
           rw [e, mul_assoc]
       _ ≤ M * lam (closedBall 0 ((1 + ε)⁻¹ * ρ)) := by gcongr
       _ ≤ nu (closedBall 0 ((1 + ε)⁻¹ * ρ)) := h1
       _ ≤ nu (closedBall x ρ) := hq'
-  simpa only [Measure.smul_apply, smul_eq_mul] using key
+  simpa only [smul_apply, smul_eq_mul] using key
 
 theorem tendsto_ofReal_pow (n : ℕ) (σ : ℝ) :
     Tendsto (fun ε : ℝ => ENNReal.ofReal ((1 + σ * ε) ^ n)) (𝓝[>] 0) (𝓝 1) := by

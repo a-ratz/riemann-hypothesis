@@ -75,11 +75,11 @@ theorem numBlockSetsOfTotalSize_le_choose {r : ℕ} (b : Fin r → ℕ) (j : ℕ
   rw [h]
   refine Finset.card_le_card_of_injOn (fun J => Finset.univ.filter fun i => b i ∈ J) ?_ ?_
   · intro J hJ
-    simp only [Finset.coe_filter, Set.mem_setOf_eq] at hJ
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hJ
     simp only [Finset.mem_coe, Finset.mem_powersetCard]
     exact ⟨Finset.subset_univ _, hJ.2⟩
   · intro J hJ K hK hJK
-    simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_powerset] at hJ hK
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_powerset] at hJ hK
     have key : ∀ i, b i ∈ J ↔ b i ∈ K := fun i => by
       have := Finset.ext_iff.1 hJK i
       simpa using this
@@ -103,7 +103,7 @@ theorem gam_cast {q k : ℕ} (hq : 1 ≤ q) (hk : 1 ≤ k) :
   obtain ⟨m, rfl⟩ : ∃ m, k = m + 1 := ⟨k - 1, by omega⟩
   have hq0 : (q : ℝ) ≠ 0 := by positivity
   unfold gam
-  rw [if_neg (by omega), Nat.add_sub_cancel, Nat.cast_sub (Nat.pow_le_pow_right hq (by omega))]
+  rw [ite_eq_right (by omega), Nat.add_sub_cancel, Nat.cast_sub (Nat.pow_le_pow_right hq (by omega))]
   push_cast
   field_simp
   ring
@@ -113,7 +113,7 @@ theorem one_add_pow_le_two_mul {x : ℝ} (hx : 0 ≤ x) {r : ℕ} (h : (r : ℝ)
   have h0 : 0 ≤ (r : ℝ) * x := by positivity
   have h1 : (1 + x) ^ r ≤ Real.exp x ^ r :=
     pow_le_pow_left₀ (by positivity) (by linarith [Real.add_one_le_exp x]) r
-  rw [← Real.exp_nat_mul] at h1
+  rw [← Real.exp_natCast_mul] at h1
   have h2 := Real.abs_exp_sub_one_le (x := r * x) (by rwa [abs_of_nonneg h0])
   rw [abs_of_nonneg h0] at h2
   linarith [(abs_le.1 h2).2]

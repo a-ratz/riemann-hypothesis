@@ -257,7 +257,7 @@ theorem laurentConst_div_pow (k : ℕ) : ∀ {g : ℂ → ℂ} {p : FormalMultil
     exact hp.continuousAt.tendsto.mono_left nhdsWithin_le_nhds
   | succ k ih =>
     intro g p hp
-    have h1 := ih hp.has_fpower_series_dslope_fslope
+    have h1 := ih hp.dslope_fslope
     rw [FormalMultilinearSeries.coeff_fslope] at h1
     have h2 := laurentConst_add_poly_eval_inv h1 (Polynomial.C (g s₀) * Polynomial.X ^ (k + 1))
       (by simp [Polynomial.coeff_X_pow])

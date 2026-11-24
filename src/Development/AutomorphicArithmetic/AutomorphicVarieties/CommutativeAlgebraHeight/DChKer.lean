@@ -197,7 +197,7 @@ private theorem chkK_sat {w : A[X] ⊗[A] E} (hw : chkK D A[X] (((X : A[X]) ⊗�
   let L := Localization.Away (X : S[X])
   let i : S[X] →ₐ[A] L := IsScalarTower.toAlgHom A S[X] L
   have hi : Function.Injective i :=
-    IsLocalization.injective L ((Submonoid.powers_le (P := nonZeroDivisors S[X])).2 X_mem_nonzeroDivisors)
+    IsLocalization.injective L ((Submonoid.powers_le (P := nonZeroDivisors S[X])).2 X_mem_nonZeroDivisors)
   let g : A[X] →ₐ[A] S[X] := mapAlgHom (Algebra.ofId A S)
   let c : S →ₐ[A] S[X] := IsScalarTower.toAlgHom A S S[X]
   let ev : S[X] →ₐ[A] S := (aeval (R := S) (f X)).restrictScalars A

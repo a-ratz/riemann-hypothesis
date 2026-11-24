@@ -94,7 +94,7 @@ theorem setIntegral_pull {k : Type} [CommRing k] {X Y : Scheme.{0}} [IsIntegral 
       Measure.map F ((((N.φ σ).pull g rfl).chernPart e ε).restrict
         (F ⁻¹' (ptsIn p σ U ∩ ptsIn p σ V))) := by
     ext A hA
-    rw [Measure.smul_apply, Measure.restrict_apply hA, Measure.map_apply hFm hA,
+    rw [smul_apply, Measure.restrict_apply hA, Measure.map_apply hFm hA,
       Measure.restrict_apply (hFm hA), ← Set.preimage_inter,
       GlobalTheory.CoverChern.chernPart_preimage_of_cover hX hY g rfl (N.φ σ) (N.cInf σ) ε (ptsIn p σ V)
         (isOpen_ptsIn V) _ hcard hchart hlift
@@ -119,7 +119,7 @@ theorem setIntegral_pull {k : Type} [CommRing k] {X Y : Scheme.{0}} [IsIntegral 
 
   have hae : S' =ᵐ[((N.φ σ).pull g rfl).chernPart e ε] T' := by
     refine ae_eq_set.2 ⟨measure_mono_null (fun x hx => hx.2) h0', ?_⟩
-    rw [Set.diff_eq_empty.2 (hT'U.trans hsub)]
+    rw [sdiff_eq_empty.2 (hT'U.trans hsub)]
     exact measure_empty
   have hfm : AEStronglyMeasurable f (Measure.map F ((((N.φ σ).pull g rfl).chernPart e ε).restrict T')) := by
     rw [← hmeas]

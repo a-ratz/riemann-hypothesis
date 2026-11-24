@@ -250,9 +250,9 @@ theorem flat_pair : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
         (by rw [hw, neg_one_smul, add_neg_cancel_right]) f hf
       convert this using 1 <;> first | rfl | (funext y; simp [resRd_apply])
   obtain ⟨σ0, hσ0⟩ : ∃ σ, GoodEmb c σ := ⟨_, goodEmb_goodOf c c.F.val.toRingHom⟩
-  haveI : FiniteDimensional c.F (cuspOn U Z (wtZ a n)) :=
+  have : FiniteDimensional c.F (cuspOn U Z (wtZ a n)) :=
     (GlobalTheory.T.cuspForms_component_finiteDimensional_and_spanned E H Dw l Xo c r U x hL Z σ0 hσ0 a n hD h1 hn).1
-  haveI : FiniteDimensional c.F (cuspOn U Z (wtZ a' n)) :=
+  have : FiniteDimensional c.F (cuspOn U Z (wtZ a' n)) :=
     (GlobalTheory.T.cuspForms_component_finiteDimensional_and_spanned E H Dw l Xo c r U x hL Z σ0 hσ0 a' n hD' h1' hn).1
   have hprod : ∀ f ∈ cuspOn U Z (wtZ a n), ∀ g ∈ cuspOn U Z (wtZ a' n),
       f * g ∈ sec Xo c (a + a') (n + n) ⊓ suppOn Z := by
@@ -282,7 +282,7 @@ theorem flat_pair : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   refine ⟨wtZ a n, f0, T ⟨f0, hf0⟩, hEv, hf0, hVV' ▸ (T ⟨f0, hf0⟩).2, hf0ne, fun σ hσ => ?_⟩
   obtain ⟨k1, hτ, hk, hA, hA'⟩ := pk σ hσ
   obtain ⟨y0, -⟩ := (res_indep hL Z σ hσ k1 hk a n).2 f0 (hsec a hf0) (hsupp _ hf0) hf0ne
-  haveI := _root_.GlobalTheory.FlatPair.holAlg_isDomain E r ((U σ).X k1) ⟨y0.1, y0.2⟩
+  have := _root_.GlobalTheory.FlatPair.holAlg_isDomain E r ((U σ).X k1) ⟨y0.1, y0.2⟩
   obtain ⟨hh, hh', hne⟩ := horizGen_mem ((U σ).X k1) ⟨_, hτ⟩
   obtain ⟨α, hα, hαT⟩ := _root_.GlobalTheory.commuting_multiplier_eq_const_smul_generator c.F (Rul Xo c) (↥((U σ).X k1).dom → ℂ) σ (resRd (U σ) hT k1)
     (resRd_smul _ _ _) (holAlg ((U σ).X k1)) (cuspOn U Z (wtZ a n)) (cuspOn U Z (wtZ a' n))

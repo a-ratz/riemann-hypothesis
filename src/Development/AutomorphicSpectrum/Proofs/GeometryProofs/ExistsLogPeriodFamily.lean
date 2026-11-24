@@ -189,7 +189,7 @@ theorem smul_mem_punct {ρ : ℝ} (hρ : 0 < ρ) {z : Fin n → ℂ} :
   have hρ' : (ρ : ℂ) ≠ 0 := by exact_mod_cast hρ.ne'
   have hn : ‖(ρ : ℂ) • z‖ = ρ * ‖z‖ := by
     rw [norm_smul, Complex.norm_real, Real.norm_of_nonneg hρ.le]
-  simp only [punct, Set.mem_setOf_eq, mem_ball_zero_iff, hn, Pi.smul_apply, smul_eq_mul, ne_eq,
+  simp only [punct, Set.mem_ofPred_eq, mem_ball_zero_iff, hn, Pi.smul_apply, smul_eq_mul, ne_eq,
     mul_eq_zero, hρ', false_or]
   constructor
   · rintro ⟨h1, h2⟩
@@ -216,13 +216,13 @@ theorem expCover_mem_punct (h : a ≤ n) {w : Fin n → ℂ} (hw : w ∈ logCove
     · have hre := hw.1 ⟨k.val, hk⟩
       have hcast : Fin.castLE h ⟨k.val, hk⟩ = k := Fin.ext rfl
       rw [hcast] at hre
-      simp only [expCover, if_pos hk]
+      simp only [expCover, ite_eq_left hk]
       rw [Complex.norm_exp]
       rw [← Real.exp_zero]
       exact Real.exp_lt_exp.2 hre
-    · simp only [expCover, if_neg hk]
+    · simp only [expCover, ite_eq_right hk]
       exact hw.2 k (not_lt.mp hk)
-  · simp only [expCover, if_pos hi]
+  · simp only [expCover, ite_eq_left hi]
     exact Complex.exp_ne_zero _
 
 theorem exists_seq_punct : ∃ u : ℕ → (Fin n → ℂ), Tendsto u atTop (𝓝 0) ∧ ∀ k, u k ∈ punct n a 1 := by

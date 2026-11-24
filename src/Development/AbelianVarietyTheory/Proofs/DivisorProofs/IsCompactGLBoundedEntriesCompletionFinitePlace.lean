@@ -91,7 +91,7 @@ theorem isCompact_le (c : WithZero (Multiplicative ℤ)) :
         refine ⟨u⁻¹ * x, ?_, by simp [hu0]⟩
         show Valued.v (u⁻¹ * x) ≤ 1
         rw [map_mul, map_inv₀, hvu]
-        exact inv_mul_le_one_of_le₀ hx zero_le'
+        exact inv_mul_le_one_of_le₀ hx zero_le
       · rintro ⟨y, hy, rfl⟩
         show Valued.v (u * y) ≤ c
         rw [map_mul, hvu]
@@ -116,7 +116,7 @@ theorem isCompact_bounded : ∀ (E : Type) [Field E] [NumberField E] (w : Height
     (hK.prod (hK.image MulOpposite.continuous_op))
   convert h using 1
   ext g
-  simp only [hS, Set.mem_setOf_eq, Set.mem_preimage, Units.embedProduct_apply,
+  simp only [hS, Set.mem_ofPred_eq, Set.mem_preimage, Units.embedProduct_apply,
     Set.mem_prod, (MulOpposite.op_injective).mem_set_image]
   exact ⟨fun hg => ⟨fun i j => (hg i j).1, fun i j => (hg i j).2⟩, fun hg i j => ⟨hg.1 i j, hg.2 i j⟩⟩
 

@@ -251,7 +251,7 @@ theorem restT_of (hGeo : RestGeo) : RestT := by
     have e1 : rename (castV hk) ((∏ j ∈ Finset.range Fr.J, phSeg O K p Fr (j : ℤ) (plEmb O r K (A j))) * monomial l 1) *
         monomial ga 1 = rename (castV hk) (∏ j ∈ Finset.range Fr.J, phSeg O K p Fr (j : ℤ) (plEmb O r K (A j))) *
           monomial (l.mapDomain (castV hk) + ga) 1 := by
-      rw [map_mul, MvPolynomial.rename_monomial, mul_assoc, monomial_mul, one_mul]
+      rw [map_mul, MvPolynomial.rename_monomial, mul_assoc, monomial_mul_monomial, one_mul]
     have h1 := MvPolynomial.support_map_subset (algebraMap O (KK O)) _ ha
     rw [e1] at h1
     obtain ⟨d, hd, b, hb, rfl⟩ := Finset.mem_add.1 (MvPolynomial.support_mul _ _ h1)

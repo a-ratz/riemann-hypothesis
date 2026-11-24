@@ -126,7 +126,7 @@ theorem adjoint_sq_sq_le [FiniteDimensional ℂ V] [FiniteDimensional ℂ E] (l 
 theorem sum_norm_sq_le [FiniteDimensional ℂ E] (b : OrthonormalBasis ι ℂ V) (l : V →ₗ[ℂ] E)
     {C : ℝ} (hC : 0 ≤ C) (h : ∀ f, ‖l f‖ ^ 2 ≤ C * ‖f‖ ^ 2) :
     ∑ i, ‖l (b i)‖ ^ 2 ≤ finrank ℂ E * C := by
-  haveI : FiniteDimensional ℂ V := Module.Finite.of_basis b.toBasis
+  have : FiniteDimensional ℂ V := Module.Finite.of_basis b.toBasis
   rw [sum_norm_sq_eq_adjoint b (stdOrthonormalBasis ℂ E) l]
   have : ∀ k, ‖LinearMap.adjoint l (stdOrthonormalBasis ℂ E k)‖ ^ 2 ≤ C := by
     intro k
@@ -196,7 +196,7 @@ theorem sum_eq_finrank_of_homogeneous' [IsProbabilityMeasure μ] {ι : Type*} [F
     (hhom : ∀ x y, ∃ u : V →ₗ[ℂ] V, (∀ f, ‖u f‖ = ‖f‖) ∧ ∀ f, ‖l y (u f)‖ = ‖l x f‖)
     (b : OrthonormalBasis ι ℂ V) (x : X) :
     ∑ i, ‖l x (b i)‖ ^ 2 = finrank ℂ V := by
-  haveI : FiniteDimensional ℂ V := Module.Finite.of_basis b.toBasis
+  have : FiniteDimensional ℂ V := Module.Finite.of_basis b.toBasis
   have hconst : ∀ y, ∑ i, ‖l y (b i)‖ ^ 2 = ∑ i, ‖l x (b i)‖ ^ 2 := by
     intro y
     obtain ⟨u, hu, hl⟩ := hhom x y
@@ -262,8 +262,8 @@ theorem l2_inner_product_norm_sq_eq_integral (l : ∀ x, V →ₗ[ℂ] E x)
     (hpos : ∀ f, ∫ x, ‖l x f‖ ^ 2 ∂μ = 0 → f = 0) (f : V) :
     letI := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
     ‖f‖ ^ 2 = ∫ x, ‖l x f‖ ^ 2 ∂μ := by
-  letI := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
+  let := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
   have h : ⟪f, f⟫_ℂ = ∫ x, ⟪l x f, l x f⟫_ℂ ∂μ := rfl
   rw [integral_inner_self, inner_self_eq_norm_sq_to_K] at h
   exact Complex.ofReal_injective (by simpa using h)
@@ -275,8 +275,8 @@ theorem exists_orthonormal_basis [FiniteDimensional ℂ V] (l : ∀ x, V →ₗ[
     (hpos : ∀ f, ∫ x, ‖l x f‖ ^ 2 ∂μ = 0 → f = 0) :
     ∃ b : Basis (Fin (finrank ℂ V)) ℂ V,
       ∀ i j, ∫ x, ⟪l x (b i), l x (b j)⟫_ℂ ∂μ = if i = j then 1 else 0 := by
-  letI := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
+  let := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
   exact ⟨(stdOrthonormalBasis ℂ V).toBasis,
     orthonormal_iff_ite.1 (stdOrthonormalBasis ℂ V).orthonormal⟩
 
@@ -285,8 +285,8 @@ theorem norm_sq_le_bergman_mul (l : ∀ x, V →ₗ[ℂ] E x)
     (hpos : ∀ f, ∫ x, ‖l x f‖ ^ 2 ∂μ = 0 → f = 0) (b : Basis ι ℂ V)
     (hb : ∀ i j, ∫ x, ⟪l x (b i), l x (b j)⟫_ℂ ∂μ = if i = j then 1 else 0) (f : V) (x : X) :
     ‖l x f‖ ^ 2 ≤ (∑ i, ‖l x (b i)‖ ^ 2) * ∫ y, ‖l y f‖ ^ 2 ∂μ := by
-  letI := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
+  let := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
   have := norm_sq_le_sum_mul (b.toOrthonormalBasis (orthonormal_iff_ite.2 hb)) (l x) f
   rw [l2_inner_product_norm_sq_eq_integral l hint hpos f] at this
   simpa using this
@@ -305,8 +305,8 @@ theorem finite_and_finrank_le_mul [IsFiniteMeasure μ]
     have := h f x
     rw [hf, mul_zero] at this
     exact norm_eq_zero.1 (pow_eq_zero_iff two_ne_zero |>.1 (le_antisymm this (by positivity)))
-  letI := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
+  let := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
   exact finite_and_finrank_le' hr l hint (l2_inner_product_norm_sq_eq_integral l hint hpos) hC
     fun f x => by rw [l2_inner_product_norm_sq_eq_integral l hint hpos f]; exact h f x
 
@@ -329,8 +329,8 @@ theorem bergman_eq_finrank_of_transitive (l : ∀ x, V →ₗ[ℂ] E x)
     (ρ : G → V →ₗ[ℂ] V) (hρ : ∀ g x f, ‖l (g • x) (ρ g f)‖ = ‖l x f‖) (b : Basis ι ℂ V)
     (hb : ∀ i j, ∫ x, ⟪l x (b i), l x (b j)⟫_ℂ ∂μ = if i = j then 1 else 0) (x : X) :
     ∑ i, ‖l x (b i)‖ ^ 2 = finrank ℂ V := by
-  letI := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
-  letI : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
+  let := (l2InnerCore μ l hint hpos).toNormedAddCommGroup
+  let : InnerProductSpace ℂ V := InnerProductSpace.ofCore (l2InnerCore μ l hint hpos).toCore
   have := sum_eq_finrank_of_homogeneous' l hint (l2_inner_product_norm_sq_eq_integral l hint hpos) ?_
     (b.toOrthonormalBasis (orthonormal_iff_ite.2 hb)) x
   · simpa using this

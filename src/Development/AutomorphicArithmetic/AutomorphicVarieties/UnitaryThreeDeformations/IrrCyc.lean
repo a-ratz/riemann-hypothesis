@@ -116,17 +116,17 @@ private theorem abs_irr {G κ B : Type} [Group G] [TopologicalSpace G] [IsTopolo
     have : (φ.ker : Set η.ker) = {g : η.ker | (M : Matrix (Fin 3) (Fin 3) κ) * mats r g = mats r g * M} :=
       Set.ext hiff
     rw [this]
-    have hc' := hc.comp (continuous_subtype_val (p := fun g => g ∈ η.ker))
+    have hc' := hc.comp (continuous_subtypeVal (p := fun g => g ∈ η.ker))
     exact isClosed_eq (continuous_const.mul hc') (hc'.mul continuous_const)
-  haveI : φ.ker.FiniteIndex := by
-    haveI : Finite φ.range := Finite.of_injective
+  have : φ.ker.FiniteIndex := by
+    have : Finite φ.range := Finite.of_injective
       (fun x => (⟨x.1, by
         obtain ⟨_, g, rfl⟩ := x
         exact DFunLike.congr_fun hφ3 g⟩ : rootsOfUnity 3 κ))
       (fun x y h => Subtype.ext (Subtype.mk.inj h))
     exact Subgroup.finiteIndex_ker φ
   have hop : IsOpen (φ.ker.map η.ker.subtype : Set G) :=
-    hη.isOpenMap_subtype_val _ (Subgroup.isOpen_of_isClosed_of_finiteIndex (G := η.ker) φ.ker hcl)
+    hη.isOpenMap_subtypeVal _ (Subgroup.isOpen_of_isClosed_of_finiteIndex (G := η.ker) φ.ker hcl)
   obtain ⟨x, hx⟩ := schur _ _ (ho _ hop (Subgroup.map_subtype_le _)) M (by
     rintro _ ⟨g, hg, rfl⟩
     exact (hiff g).1 hg)
@@ -138,8 +138,8 @@ theorem UpperTheory.V.UnitaryThreeInertia.matIrr_cyc :
     ∀ (g₁ : Gam Ω S), F.Marked g₁ → ∀ r : Gam Ω S →* GG (m := 3) (R := PadicAlgCl l), F.IsCharZeroPt g₁ r → TypeI F.η r → MatIrr ((eta4 Ω).ker ⊓ (cycZ ℚ Ω l).ker) fun s => (r (toGS Ω _ s)).mat := by
   intro Ω _ _ _ l _ c N _ e ψ o₁ h S A F hF g₁ hg r hr hI
   have hok := hostFrame_ok Ω c e ψ o₁ h S A F hF
-  haveI hcl := isClosed_NS Ω (S : Set Pl)
-  haveI : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
+  have hcl := isClosed_NS Ω (S : Set Pl)
+  have : TotallyDisconnectedSpace (Gam Ω S) := totDisc_quot _ hcl
   obtain ⟨hm, -, hc, -⟩ := isCharZeroPt_basic F hok g₁ hg r hr
   have hη : ∀ s, F.η (toGS Ω _ s) = eta4 Ω s := fun s => by rw [← hF.η, hF.π]; rfl
   refine abs_irr (eta4 Ω) ?_ (r.comp (toGS Ω _)) (fun s => (hm _).trans (hη s)) (hc.comp (continuous_toGS Ω _))

@@ -217,7 +217,7 @@ theorem isOpen_scaledInt [Finite κ] (a : F) : IsOpen (scaledInt F κ a : Set (�
       algebraMap F (FiniteAdeleRing (𝓞 F) F) a⁻¹ * z i) ⁻¹'
       {x : FiniteAdeleRing (𝓞 F) F | ∀ v : HeightOneSpectrum (𝓞 F), x v ∈ v.adicCompletionIntegers F} := by
     ext z
-    simp only [SetLike.mem_coe, mem_scaledInt, Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_scaledInt, Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq]
     refine forall_congr' fun i => forall_congr' fun v => ?_
     have h : (algebraMap F (FiniteAdeleRing (𝓞 F) F) a⁻¹ * z i) v =
         (algebraMap F (v.adicCompletion F) a)⁻¹ * (z i) v := by
@@ -251,7 +251,7 @@ theorem indicator_cosetBoxV_mem_SB [Finite κ] {a : F} (ha : a ≠ 0) (r : κ �
     continuous_pi fun i => (continuous_const.mul (continuous_apply i)).add continuous_const
   have hS : cosetBoxV a r v = f ⁻¹' P := by
     ext x
-    simp only [cosetBoxV, P, f, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq,
+    simp only [cosetBoxV, P, f, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq,
       SetLike.mem_coe]
   have hPo : IsOpen P := isOpen_set_pi Set.finite_univ fun _ _ => Valued.isOpen_valuationSubring _
   have hPc : IsCompact P := isCompact_univ_pi fun _ => isCompact_iff_compactSpace.2 (GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v)
@@ -295,7 +295,7 @@ theorem eventually_cosetBoxV_eq {a : F} (ha : a ≠ 0) (r : κ → FiniteAdeleRi
   rw [e1] at hv1
   rw [e2] at hv2
   ext x
-  simp only [cosetBoxV, Set.mem_setOf_eq]
+  simp only [cosetBoxV, Set.mem_ofPred_eq]
   refine forall_congr' fun i => ⟨fun h => ?_, fun h => ?_⟩
   · have hd : x i - (r i) v ∈ v.adicCompletionIntegers F := by
       rw [← mul_inv_cancel_left₀ ha0 (x i - (r i) v)]
@@ -355,7 +355,7 @@ theorem exists_scaled_integral_lattice_subset : ∀ (F : Type) [Field F] [Number
     rw [← map_natCast (algebraMap (𝓞 F) F), ← HeightOneSpectrum.valuation_of_algebraMap (K := F)]
     exact HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v _
   have h := mem_scaledInt.1 hz i v
-  rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀, e1, inv_mul_le_iff₀ (zero_lt_iff.mpr h0), mul_one] at h
+  rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀, e1, inv_mul_le_iff₀ (pos_iff_ne_zero.mpr h0), mul_one] at h
   exact h
 
 variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]

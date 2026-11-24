@@ -52,7 +52,7 @@ open GlobalTheory.LocGL
 
 theorem isIrrRep_of_isIrreducible {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
     {ρ : Representation ℂ G V} (h : ρ.IsIrreducible) : IsIrrRep ρ := by
-  haveI := h
+  have := h
   refine ⟨?_, fun W hW => ?_⟩
   · by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn

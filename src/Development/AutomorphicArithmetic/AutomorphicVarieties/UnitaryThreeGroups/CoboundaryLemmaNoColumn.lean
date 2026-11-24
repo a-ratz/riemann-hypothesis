@@ -160,12 +160,12 @@ theorem UpperTheory.V.U3.exists_lieElement_middleBlockPart :
           rw [map_mul, SemidirectProduct.mul_right]
         rcases Int.units_eq_one_or (r g).right with hg | hg <;>
           rcases Int.units_eq_one_or (r h).right with hh | hh
-        · simp only [Wfun, hgh, hg, hh, mul_one, if_true, hp g h hg]
-        · simp only [Wfun, hgh, hg, hh, one_mul, if_true, hne, if_false, hp g h hg,
+        · simp only [Wfun, hgh, hg, hh, mul_one, ite_true, hp g h hg]
+        · simp only [Wfun, hgh, hg, hh, one_mul, ite_true, hne, ite_false, hp g h hg,
             Matrix.mul_assoc]
-        · simp only [Wfun, hgh, hg, hh, mul_one, if_true, hne, if_false, hn g h hg,
+        · simp only [Wfun, hgh, hg, hh, mul_one, ite_true, hne, ite_false, hn g h hg,
             Matrix.mul_assoc, hD]
-        · simp only [Wfun, hgh, hg, hh, neg_mul_neg, mul_one, if_true, hne, if_false, hn g h hg,
+        · simp only [Wfun, hgh, hg, hh, neg_mul_neg, mul_one, ite_true, hne, ite_false, hn g h hg,
             Matrix.mul_assoc] }
   refine ⟨W0.toHomUnits, fun g => rfl, fun g => ?_⟩
   change (Wfun r g).det = _
@@ -285,7 +285,7 @@ private theorem W_facts {Γ k : Type} [Group Γ] [TopologicalSpace Γ] [IsTopolo
   obtain ⟨hB, hirr⟩ := hII
   obtain ⟨W, hW, hWd⟩ := exists_lieElement_middleBlockPart η r cc hm hc hat hB hb
   have hWk : ∀ g ∈ η.ker, (W g : Matrix (Fin 2) (Fin 2) k) = corner (r g).mat := fun g hg => by
-    rw [hW, Wfun, if_pos ((hm g).trans hg)]
+    rw [hW, Wfun, ite_eq_left ((hm g).trans hg)]
   have hWc : Continuous fun g => (W g : Matrix (Fin 2) (Fin 2) k) := by
     have e : (fun g => (W g : Matrix (Fin 2) (Fin 2) k)) = fun g => corner (r g).mat *
         (fun s : ℤˣ => if s = 1 then (1 : Matrix (Fin 2) (Fin 2) k) else Matrix.diagonal ![-1, 1]) (η g) := by
@@ -298,7 +298,7 @@ private theorem W_facts {Γ k : Type} [Group Γ] [TopologicalSpace Γ] [IsTopolo
       (hηc.comp fun s : ℤˣ => if s = 1 then (1 : Matrix (Fin 2) (Fin 2) k) else Matrix.diagonal ![-1, 1]).continuous
   refine ⟨W, hWk, ?_, ?_, ⟨top_ne_bot, fun _ _ _ => Submodule.mem_top, fun V _ hV => hirr V fun g hg v hv => ?_⟩,
     hW, hWd⟩
-  · rw [hW, Wfun, if_neg (by rw [hm, hc]; decide), hat]
+  · rw [hW, Wfun, ite_eq_right (by rw [hm, hc]; decide), hat]
     rw [Matrix.trace_fin_two, Matrix.mul_diagonal, Matrix.mul_diagonal]
     change (1 : k) * (-1) + 1 * 1 = 0
     ring
@@ -347,7 +347,7 @@ theorem UpperTheory.V.U3.typeII_facts :
     rwa [map_sub, map_one] at this
   have hcm : ∀ a b, Continuous fun g => (r g).mat a b := fun a b => h.cont.matrix_elem a b
   have hκ : midChar D.η r h.mult hB = 1 := by
-    refine char_eq_one D _ ((hcm 1 1).comp continuous_subtype_val) (fun g => hnear g) fun A g hA => ?_
+    refine char_eq_one D _ ((hcm 1 1).comp continuous_subtypeVal) (fun g => hnear g) fun A g hA => ?_
     by_cases hb : barChar c.O D.Ψ g = 1
     · by_cases hl : A.valuation (l : Ω) < 1
       · obtain ⟨hle, s, hs, hu⟩ := habove A hl
@@ -374,7 +374,7 @@ theorem UpperTheory.V.U3.typeII_facts :
   have hdet : ∀ g ∈ D.η.ker, (r g).mat.det = (corner (r g).mat).det := fun g hg => by
     rw [corner_det, Matrix.det_fin_three, h0 g hg, h2 g hg, ha g hg]; ring
   have hδ : (Matrix.GeneralLinearGroup.det).comp (glPart D.η r h.mult) = 1 := by
-    refine char_eq_one D _ (h.cont.matrix_det.comp continuous_subtype_val) (fun g => ?_) fun A g hA => ?_
+    refine char_eq_one D _ (h.cont.matrix_det.comp continuous_subtypeVal) (fun g => ?_) fun A g hA => ?_
     · change ‖(r g).mat.det - 1‖ < 1
       rw [hdet g g.2]
       exact det_near _ _ (h.int g) (h.red g) (hΨn g)

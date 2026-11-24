@@ -77,7 +77,7 @@ instance borelSpace_herm (σ : E →ₐ[F] E) (n : ℕ) : BorelSpace (HermR R σ
 
 theorem continuous_norm_tens : Continuous (fun x : R ⊗[F] E => Algebra.norm R x) := by
   classical
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   let b := Algebra.TensorProduct.basis R (Module.finBasis F E)
   have hn : (fun x : R ⊗[F] E => Algebra.norm R x) = fun x => (Algebra.leftMulMatrix b x).det :=
     funext fun x => Algebra.norm_eq_matrix_det b x
@@ -88,7 +88,7 @@ theorem continuous_norm_tens : Continuous (fun x : R ⊗[F] E => Algebra.norm R 
     ((b.coord i).comp (LinearMap.mulRight R (b j)))
 
 theorem isUnit_iff_norm_tens (x : R ⊗[F] E) : IsUnit x ↔ IsUnit (Algebra.norm R x) := by
-  haveI : Module.Free R (R ⊗[F] E) :=
+  have : Module.Free R (R ⊗[F] E) :=
     Module.Free.of_basis (Algebra.TensorProduct.basis R (Module.finBasis F E))
   constructor
   · intro h
@@ -110,8 +110,8 @@ theorem isOpen_units_tens (h : IsOpen {r : R | IsUnit r}) :
 
 theorem isOpen_isUnit_det (h : IsOpen {r : R | IsUnit r}) (n : ℕ) :
     IsOpen {S : Matrix (Fin n) (Fin n) (R ⊗[F] E) | IsUnit S.det} := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   exact (isOpen_units_tens R h).preimage (continuous_id.matrix_det)
 
 def hLin (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) (x : Fin M → R ⊗[F] E) :
@@ -147,8 +147,8 @@ variable [LocallyCompactSpace R] [T2Space R]
 
 theorem continuous_hR (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) :
     Continuous (fun p : (Fin M → R ⊗[F] E) × (Fin M → R ⊗[F] E) => hR R σ J p.1 p.2) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   let sL : R ⊗[F] E →ₗ[R] R ⊗[F] E :=
     { toFun := sigR R σ
       map_add' := map_add _
@@ -164,8 +164,8 @@ theorem continuous_hR (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M)
 
 theorem continuous_gramR_apply (σ : E →ₐ[F] E) {M n : ℕ} (J : Matrix (Fin M) (Fin M) E)
     (a b : Fin n) : Continuous (fun X : Fin n → Fin M → R ⊗[F] E => gramR R σ J X a b) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   let sL : R ⊗[F] E →ₗ[R] R ⊗[F] E :=
     { toFun := sigR R σ
       map_add' := map_add _
@@ -185,8 +185,8 @@ theorem continuous_gramR (σ : E →ₐ[F] E) {M n : ℕ} (J : Matrix (Fin M) (F
 
 theorem isClosed_HermR (σ : E →ₐ[F] E) (n : ℕ) :
     IsClosed (HermR R σ n : Set (Matrix (Fin n) (Fin n) (R ⊗[F] E))) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   let sL : R ⊗[F] E →ₗ[R] R ⊗[F] E :=
     { toFun := sigR R σ
       map_add' := map_add _
@@ -198,7 +198,7 @@ theorem isClosed_HermR (σ : E →ₐ[F] E) (n : ℕ) :
   have hset : (HermR R σ n : Set (Matrix (Fin n) (Fin n) (R ⊗[F] E))) =
       ⋂ a, ⋂ b, {S | sigR R σ (S b a) = S a b} := by
     ext S
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     rfl
   rw [hset]
   exact isClosed_iInter fun a => isClosed_iInter fun b =>
@@ -293,7 +293,7 @@ theorem continuous_gramH (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) {M n 
 
 theorem isOpen_unitHerm (h : IsOpen {r : R | IsUnit r}) (σ : E →ₐ[F] E) (n : ℕ) :
     IsOpen {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} :=
-  (isOpen_isUnit_det R h n).preimage continuous_subtype_val
+  (isOpen_isUnit_det R h n).preimage continuous_subtypeVal
 
 end GlueTop
 

@@ -89,7 +89,7 @@ theorem residue_perfect_and_char :
     have := congrArg (algebraMap W L) hab
     rw [hφ, hφ] at this
     exact hRK ((algebraMap K L).injective this)
-  haveI : IsLocalHom φ := by
+  have : IsLocalHom φ := by
     constructor
     intro r hr
     obtain ⟨u, hu⟩ := hr
@@ -106,11 +106,11 @@ theorem residue_perfect_and_char :
   let f := ResidueField.map φ
   have hf : Function.Injective f := f.injective
   refine ⟨?_, fun m hm hW => hm (hf (by rw [map_natCast, map_zero]; exact hW))⟩
-  letI : Algebra (ResidueField R) (ResidueField W) := f.toAlgebra
-  letI := UniqueFactorizationMonoid.normalizationMonoid (α := R)
-  letI := UniqueFactorizationMonoid.toNormalizedGCDMonoid R
+  let : Algebra (ResidueField R) (ResidueField W) := f.toAlgebra
+  let := UniqueFactorizationMonoid.normalizationMonoid (α := R)
+  let := UniqueFactorizationMonoid.toNormalizedGCDMonoid R
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
-  haveI : Algebra.IsAlgebraic (ResidueField R) (ResidueField W) := by
+  have : Algebra.IsAlgebraic (ResidueField R) (ResidueField W) := by
     constructor
     intro y
     obtain ⟨w, rfl⟩ := residue_surjective y

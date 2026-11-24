@@ -57,7 +57,7 @@ theorem exists_addChar_quotient {G : Type} [AddCommGroup G] (H : AddSubgroup G) 
     ∃ χ : AddChar (G ⧸ H) ℂ, ∀ g : G, χ (g : G ⧸ H) = f g := by
   have hout : ∀ g : G, f (Quotient.out (g : G ⧸ H)) = f g := by
     intro g
-    obtain ⟨h, hh⟩ := QuotientAddGroup.mk_out_eq_mul H g
+    obtain ⟨h, hh⟩ := QuotientAddGroup.mk_out_eq_add H g
     rw [hh, hadd, hH _ h.2, mul_one]
   refine ⟨⟨fun q => f (Quotient.out q), ?_, ?_⟩, hout⟩
   · rw [← QuotientAddGroup.mk_zero, hout, h0]
@@ -77,7 +77,7 @@ theorem exists_injective_addChar {G K : Type} [AddCommGroup G] [AddCommGroup K] 
     exists_addChar_quotient L (p g) (h0 g) (hr g) (fun k hk => hL k hk g)
   have hout : ∀ (g : G) (k : K), p (Quotient.out (g : G ⧸ H)) k = p g k := by
     intro g k
-    obtain ⟨h, hh⟩ := QuotientAddGroup.mk_out_eq_mul H g
+    obtain ⟨h, hh⟩ := QuotientAddGroup.mk_out_eq_add H g
     rw [hh, hl, (hH _).1 h.2, mul_one]
   have hΦ : ∀ (g : G) (k : K), χ (Quotient.out (g : G ⧸ H)) (k : K ⧸ L) = p g k := by
     intro g k
@@ -109,10 +109,10 @@ theorem perfect_pairing_quotients : ∀ {R X M : Type} [CommRing R] [AddCommGrou
   obtain ⟨Ψ, hΨi, hΨ⟩ := exists_injective_addChar (T₀.addSubgroupOf T) (S.addSubgroupOf A)
     (fun t a => γ a t) (fun x y z => h.add_right _ _ _) (fun x y z => h.add_left _ _ _)
     (fun x => h.zero_left _) (fun x => h.zero_right _) hT' (fun k hk => (hS' k).1 hk)
-  haveI : Finite (T ⧸ T₀.addSubgroupOf T) := Nat.finite_of_card_ne_zero hfin
-  haveI : Finite (A ⧸ S.addSubgroupOf A) := Finite.of_injective Φ hΦi
-  letI := Fintype.ofFinite (T ⧸ T₀.addSubgroupOf T)
-  letI := Fintype.ofFinite (A ⧸ S.addSubgroupOf A)
+  have : Finite (T ⧸ T₀.addSubgroupOf T) := Nat.finite_of_card_ne_zero hfin
+  have : Finite (A ⧸ S.addSubgroupOf A) := Finite.of_injective Φ hΦi
+  let := Fintype.ofFinite (T ⧸ T₀.addSubgroupOf T)
+  let := Fintype.ofFinite (A ⧸ S.addSubgroupOf A)
   have c1 := Fintype.card_le_of_injective Φ hΦi
   have c2 := Fintype.card_le_of_injective Ψ hΨi
   have c3 := c2

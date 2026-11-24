@@ -208,7 +208,7 @@ theorem herm_bound_psi {y : X.Ψ → Matrix (Fin r) (Fin r) ℂ} (hy : IntegralB
   have hSq := sum_sq_le X y τ q
   rw [← hermC_emb, ← hyinv (Data.emb τ.1 p), ← hyinv (Data.emb τ.1 q), hcols, hcols,
     hermC_sum_left_lemma]
-  simp only [hermC_sum_right_lemma_2, hgl, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [hermC_sum_right_lemma_2, hgl, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   set A := (y τ)⁻¹ *ᵥ Data.emb τ.1 p with hA
   set B := (y τ)⁻¹ *ᵥ Data.emb τ.1 q with hB
   have hterm : ∀ k, ‖A k * (conj (B k) * ((sgn X.p0 (k : ℕ) : ℝ) : ℂ))‖ ≤ ‖A k‖ ^ 2 + ‖B k‖ ^ 2 := by
@@ -328,10 +328,10 @@ theorem reductionTheory_holds : MahlerCompactnessCriterion (E := E) := by
     refine ⟨fun t => if h : ∃ f : Basis (Fin (finrank ℤ X.Λ)) ℤ X.Λ, HermitianLatticeMaps.ty X f = t
       then h.choose else RealPlaceEmbeddings.zb X, fun t ht => ?_⟩
     have h : ∃ f : Basis (Fin (finrank ℤ X.Λ)) ℤ X.Λ, HermitianLatticeMaps.ty X f = t := by
-      simp only [FiniteTranslateSets.TS, Set.mem_setOf_eq] at ht
+      simp only [FiniteTranslateSets.TS, Set.mem_ofPred_eq] at ht
       obtain ⟨f, -, hf⟩ := ht
       exact ⟨f, hf⟩
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     exact h.choose_spec
   obtain ⟨S, hS⟩ := X.Γ_index
   let q := fun t (s : GL (Fin r) E) (k : Fin r) (i : Fin (finrank ℤ X.Λ)) =>
@@ -355,7 +355,7 @@ theorem reductionTheory_holds : MahlerCompactnessCriterion (E := E) := by
   obtain ⟨f, hfB, hfZ⟩ := IntegralBasisReduction.reduce (X := X) hy hm hmin
 
   have hmem : HermitianLatticeMaps.ty X f ∈ FiniteTranslateSets.TS X (ι := Fin (finrank ℤ X.Λ)) R T := by
-    simp only [FiniteTranslateSets.TS, FiniteTranslateSets.Sh, FiniteTranslateSets.Sz, Set.mem_setOf_eq]
+    simp only [FiniteTranslateSets.TS, FiniteTranslateSets.Sh, FiniteTranslateSets.Sz, Set.mem_ofPred_eq]
     refine ⟨f, ⟨fun i j => ?_, fun k i j => ?_⟩, rfl⟩
     · refine ⟨⟨(X.den : E) * herm X.Gm (f i : Fin r → E) (f j : Fin r → E),
         X.Λ_int _ (f i).2 _ (f j).2⟩, rfl, fun σ => ?_⟩
@@ -387,7 +387,7 @@ theorem reductionTheory_holds : MahlerCompactnessCriterion (E := E) := by
   obtain ⟨s, hsS, hsΓ⟩ := hS γ hγU
   refine ⟨s⁻¹ * γ, hsΓ, b, hb, ?_⟩
   have hgU := X.Γ_stab _ hsΓ
-  simp only [CompactEntryBounds.Kset, Set.mem_setOf_eq]
+  simp only [CompactEntryBounds.Kset, Set.mem_ofPred_eq]
   intro τ
   have hgram : gram τ.1 X.Gm (((s⁻¹ * γ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E).map τ.1 *
       mat (rmul x b) τ) = diagonal (fun a : Fin r => ((sgn X.p0 (a : ℕ) : ℝ) : ℂ)) := by

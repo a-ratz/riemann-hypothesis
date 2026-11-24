@@ -58,8 +58,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem continuous_theta_infPartF {τ : E →+* ℂ} {θ : Ainf F ⊗[F] E →+* ℂ} (hθ : IsInfEmbF τ θ) :
     Continuous fun z : AEF F E => θ (infPartF F E z) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := isModuleTopology_AE F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := isModuleTopology_AE F E
   let b := Module.finBasis F E
   let bb := Algebra.TensorProduct.basis (AF F) b
   have hz : ∀ z : AEF F E, θ (infPartF F E z) = ∑ i, θ (fstA F (bb.repr z i) ⊗ₜ[F] (1 : E)) * τ (b i) := by

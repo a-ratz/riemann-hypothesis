@@ -119,7 +119,7 @@ lemma nontrivial_B' : Nontrivial B := by
 
 include PD in
 lemma tmul_one_injective' {v w : V} (h : v ⊗ₜ[Qp] (1 : B) = w ⊗ₜ[Qp] (1 : B)) : v = w := by
-  haveI := nontrivial_B' PD
+  have := nontrivial_B' PD
   obtain ⟨f, hf⟩ := Module.Projective.exists_dual_eq_one Qp (one_ne_zero : (1 : B) ≠ 0)
   have := congrArg (fun z => TensorProduct.rid Qp V (LinearMap.lTensor V f z)) h
   simpa [hf] using this

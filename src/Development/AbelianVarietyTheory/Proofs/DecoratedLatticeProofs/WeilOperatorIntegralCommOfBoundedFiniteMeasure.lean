@@ -59,11 +59,11 @@ theorem om_integral_comm_dom : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S 
   intro D ψ S T χS χT om hom U _ _ _ _ m _ F p β hF hFc hOc hβ hdom hG w
   have hψ := hom.std
   obtain ⟨-, -, i3, -, -, -⟩ := GlobalTheory.MixModel.lattice_Mx D T.rank S.rank
-  haveI : FirstCountableTopology (WO S T) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : FirstCountableTopology (WO S T) := @TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _ _ i3
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨μ, 𝓕, hμ, h𝓕, h1⟩ := GlobalTheory.Size.exists_isCovolOne S T
-  haveI hfin : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
-  haveI : SFinite (μ.restrict 𝓕) := @instSFiniteOfSigmaFinite _ _ _ (@IsFiniteMeasure.toSigmaFinite _ _ _ hfin)
+  have hfin : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
+  have : SFinite (μ.restrict 𝓕) := @instSFiniteOfSigmaFinite _ _ _ (@IsFiniteMeasure.toSigmaFinite _ _ _ hfin)
   set G : WO S T → ℂ := fun w => ∫ u, F u w ∂m with hGdef
   set H : WO S T → ℂ := fun w => ∫ u, om p (F u) w ∂m with hHdef
   have hHc : Continuous H := by
@@ -90,7 +90,7 @@ theorem om_integral_comm_dom : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S 
       ring
     · intro f hf
 
-      haveI : SecondCountableTopology (WO S T) := i3
+      have : SecondCountableTopology (WO S T) := i3
       obtain ⟨CG, hCG⟩ := GlobalTheory.IsoMean.isThetaFunO_bounded S T ψ hψ _ hOG
       have hf0 := hom.om_pres p⁻¹ f hf
       have hff0 : om p (om p⁻¹ f) = f := by

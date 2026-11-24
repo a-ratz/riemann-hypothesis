@@ -138,7 +138,7 @@ theorem int_span [IsTopologicalGroup G] [CompactSpace G] (χ : G →* ℤ_[l]ˣ)
     simp only [d1_apply, charRep_apply, MonoidHom.comp_apply, Units.coe_map, map_sub, map_mul, hxr]
     have e := hXB r (g, h)
     simp only at e
-    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     linear_combination -e
   have hker : ∀ r : ℕ, ∃ w' ∈ Z2 (charRep χ), (fun p => w p - x * c p) - (l : ℤ_[l]) ^ r • w' ∈
       B2 (charRep χ) := fun r =>
@@ -198,14 +198,14 @@ theorem tateH2OAt_of_fund (P : LocPrime l) (K Lf : FinExt l) [CompactSpace ↥(G
       ((Units.map (PadicInt.toZModPow r : ℤ_[l] →+* ZMod (l ^ r)).toMonoidHom).comp χ)))) :
     Formalism.MainNotions.TruncatedSeriesCountingIdentities.TateDualityH2Integral (P.PD K) ↥Lf.1 ↥(OL Lf) := by
   classical
-  haveI : FiniteDimensional ℚ_[l] ↥Lf.1 := Lf.2
-  haveI : IsIntegralClosure ↥(OL Lf) ℤ_[l] ↥Lf.1 := integralClosure.isIntegralClosure _ _
-  haveI : FaithfulSMul ℤ_[l] ↥Lf.1 := by
+  have : FiniteDimensional ℚ_[l] ↥Lf.1 := Lf.2
+  have : IsIntegralClosure ↥(OL Lf) ℤ_[l] ↥Lf.1 := integralClosure.isIntegralClosure _ _
+  have : FaithfulSMul ℤ_[l] ↥Lf.1 := by
     rw [faithfulSMul_iff_algebraMap_injective, IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] ↥Lf.1]
     exact (algebraMap ℚ_[l] ↥Lf.1).injective.comp (IsFractionRing.injective ℤ_[l] ℚ_[l])
-  haveI : Module.Finite ℤ_[l] ↥(OL Lf) := IsIntegralClosure.finite ℤ_[l] ℚ_[l] ↥Lf.1 _
-  haveI : Module.Free ℤ_[l] ↥(OL Lf) := IsIntegralClosure.module_free ℤ_[l] ℚ_[l] ↥Lf.1 _
-  haveI := IsIntegralClosure.isLocalization ℤ_[l] ℚ_[l] ↥Lf.1 ↥(OL Lf)
+  have : Module.Finite ℤ_[l] ↥(OL Lf) := IsIntegralClosure.finite ℤ_[l] ℚ_[l] ↥Lf.1 _
+  have : Module.Free ℤ_[l] ↥(OL Lf) := IsIntegralClosure.module_free ℤ_[l] ℚ_[l] ↥Lf.1 _
+  have := IsIntegralClosure.isLocalization ℤ_[l] ℚ_[l] ↥Lf.1 ↥(OL Lf)
   let b := Module.finBasis ℤ_[l] ↥(OL Lf)
   let bL := b.localizationLocalization ℚ_[l] (nonZeroDivisors ℤ_[l]) ↥Lf.1
   let ι : ↥(OL Lf) →+* ↥Lf.1 := algebraMap _ _

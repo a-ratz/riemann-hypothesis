@@ -66,7 +66,7 @@ theorem epi_of_surj {X Y Z : Scheme.{0}} (p : X ⟶ Y) [IsSchemeTheoreticallyDom
     have h0 := congrArg (fun k => k.base x0) h
     simpa using h0
   refine Scheme.Hom.ext hbase (fun U => ?_)
-  haveI : Mono (p.app (g ⁻¹ᵁ U)) := ConcreteCategory.mono_of_injective _ (p.app_injective _)
+  have : Mono (p.app (g ⁻¹ᵁ U)) := ConcreteCategory.mono_of_injective _ (p.app_injective _)
   rw [← cancel_mono (p.app (g ⁻¹ᵁ U))]
   have h1 := Scheme.Hom.congr_app h U
   rw [Scheme.Hom.comp_app, Scheme.Hom.comp_app] at h1
@@ -121,7 +121,7 @@ theorem joint_epi {D A B : Type} [CommRing D] [CommRing A] [CommRing B] (φ : D 
     · simp only [← Category.assoc, coprodSpec_inr]
       rw [e2]
       exact h₂
-  haveI := std_of_inj (CommRingCat.ofHom (φ.prod ψ)) hi
+  have := std_of_inj (CommRingCat.ofHom (φ.prod ψ)) hi
   exact epi_of_surj (Spec.map (CommRingCat.ofHom (φ.prod ψ))) hp f g hcov
 
 variable {S : Scheme.{0}} {R : Type} [CommRing R] (x : Spec (CommRingCat.of R) ⟶ S)
@@ -306,7 +306,7 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 theorem lieModel_exists (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (R : Type) [CommRing R]
     (x : Spec (CommRingCat.of R) ⟶ S) :
     ∃ (E : Type) (_ : AddCommGroup E) (_ : Module R E), Nonempty (LieModel G x E) := by
-  letI := LieEx.tanModule x G
+  let := LieEx.tanModule x G
   refine ⟨Additive (LieEx.tanSub x G), inferInstance, LieEx.tanModule x G, ⟨?_⟩⟩
   exact
     { pt := fun e => e.toMul.1

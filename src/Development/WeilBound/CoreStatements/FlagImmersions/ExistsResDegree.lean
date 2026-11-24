@@ -127,13 +127,13 @@ theorem homog_X [DecidableEq K] (k : K) (i : J k) : IsMultiHomog (X ⟨k, i⟩ :
     rw [Finset.sum_eq_single i]
     · simp
     · intro b _ hb
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro e
       exact hb (eq_of_heq (Sigma.mk.inj e).2).symm
     · simp
   · rw [Pi.single_eq_of_ne h]
     refine Finset.sum_eq_zero fun b _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro e
     exact h (Sigma.mk.inj e).1.symm
 
@@ -194,7 +194,7 @@ theorem zeros_proj {Ω₀ Ω : Type} [Field Ω₀] [Field Ω] (y₀ : (Σ k, J�
       ∀ z ∈ mcPts (mCoordIdeal y), eval z (map (Int.castRingHom ℂ) F) = 0 →
         eval (fun p => z (v p)) (map (Int.castRingHom ℂ) G) = 0 := by
   classical
-  letI := i.toAlgebra
+  let := i.toAlgebra
   have hFy : aeval y F ≠ 0 := fun h => hFP (mem_mCoordIdeal_of_aeval_eq_zero y hF h)
   have hren : ∀ g : MRing J₀, aeval y (rename v g) = i (aeval y₀ g) := by
     intro g
@@ -337,7 +337,7 @@ theorem analytic_union {e : ℕ} {X : Type} [TopologicalSpace X] {A : FinHolAtla
   · ext y
     have h1 := Set.ext_iff.1 hSW y
     have h2 := Set.ext_iff.1 hTW y
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_union] at h1 h2 ⊢
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_union] at h1 h2 ⊢
     constructor
     · rintro ⟨h | h, hy⟩
       · exact ⟨hy, fun i => by rw [(h1.1 ⟨h, hy.1⟩).2, zero_mul]⟩
@@ -583,7 +583,7 @@ theorem exists_res_degree (hRes : ResExistsStatement) {K₀ K : Type} [Fintype K
     exact hcon f (Ideal.subset_span hf) hfP a ha
   have halg1 : ∀ α : Ω, letI := (RingHom.id Ω).toAlgebra; IsAlgebraic Ω α := by
     intro α
-    letI := (RingHom.id Ω).toAlgebra
+    let := (RingHom.id Ω).toAlgebra
     exact isAlgebraic_algebraMap (R := Ω) (A := Ω) α
   obtain ⟨G₄, a₄', hG₄h, hG₄y, hG₄z⟩ := RootFieldNumerics.Ref.Zeros.zeros_proj y₀ y (RingHom.id Ω) hv hy hB₀ halg1 hF₁h hF₁P
   have hG₄P : G₄ ∉ mCoordIdeal y₀ := not_mem_mCoordIdeal_of_aeval_ne_zero y₀ G₄ hG₄y
@@ -603,8 +603,8 @@ theorem exists_res_degree (hRes : ResExistsStatement) {K₀ K : Type} [Fintype K
     fun p => hyf p.2
   have hBf := RootFieldNumerics.Ref.Zeros.birational_of_closure yf hgen
   have halg2 : ∀ α : Ω, letI := g.toAlgebra; IsAlgebraic Ωf α := by
-    letI := g.toAlgebra
-    haveI : FiniteDimensional Ωf Ω := Module.finite_of_finrank_pos hfin
+    let := g.toAlgebra
+    have : FiniteDimensional Ωf Ω := Module.finite_of_finrank_pos hfin
     exact fun α => Algebra.IsAlgebraic.isAlgebraic α
   obtain ⟨G', b', hG'h, hG'y, hG'z⟩ := RootFieldNumerics.Ref.Zeros.zeros_proj
     (fun p : (Σ _ : Unit, Fin (n + 1)) => yf p.2) y₀ g hv' hy' hBf halg2 hFh hFP
@@ -636,10 +636,10 @@ theorem exists_res_degree (hRes : ResExistsStatement) {K₀ K : Type} [Fintype K
     exact ⟨hFw.1.1, hFw.1.2, hFw.2⟩
   obtain ⟨h, hh, hho⟩ := GlobalTheory.CompanionTheory.Ar.PB.Proj.holoMap_of_blockProj K₀ ι₀ K ι κ (blkV κ bx) (mCoordIdeal y₀)
     (mCoordIdeal y) J' D D R₀ R hv (GlobalTheory.CompanionTheory.Ar.Chg.mCoordIdeal_le_imageZ (RingHom.id Ω) bx hyk)
-  haveI := R₀.compact
-  haveI := R₀.t2
-  haveI := R.compact
-  haveI := R.t2
+  have := R₀.compact
+  have := R₀.t2
+  have := R.compact
+  have := R.t2
   have hdeg1 := GlobalTheory.CompanionTheory.Ar.PB.CovMap.Deg.isDegreeOff_of_correspondence K₀ ι₀ K ι (mCoordIdeal y₀) ⊤
     (mCoordIdeal y) J' D R₀.X R₀.A R₀ id R h (fun z w => SameOrbit (fun p => z (blkV κ bx p)) w)
     (rename (blkV bk' bx') G') (rename (blkV κ bx) (rename (blkV bk' bx') G')) _ _ 1 rfl hA₀ hA
@@ -726,7 +726,7 @@ theorem exists_res_degree (hRes : ResExistsStatement) {K₀ K : Type} [Fintype K
       fun _ y => eval (fun p : (Σ _ : Unit, Fin (n + 1)) => lam y p.2) (map (Int.castRingHom ℂ) G'),
       fun _ => hpoly _, ?_⟩
     ext y
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, hSdef]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, hSdef]
     constructor
     · rintro ⟨hyS, hyU⟩
       refine ⟨hyU, fun _ => ?_⟩

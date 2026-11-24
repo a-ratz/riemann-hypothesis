@@ -100,7 +100,7 @@ theorem trdeg_of_isGenericFlag (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [Algeb
     · rw [IntermediateField.adjoin_le_iff]
       rintro _ ⟨⟨σ, ⟨⟨l, k⟩, hkl⟩⟩, rfl⟩
       exact IntermediateField.subset_adjoin _ _ ⟨⟨σ, (l, k)⟩, rfl⟩
-  haveI : Module.Finite (IntermediateField.adjoin Ω₀
+  have : Module.Finite (IntermediateField.adjoin Ω₀
       (Set.range fun q : Σ σ, Fin (r σ) × Fin (r σ) => u q.1 q.2.1 q.2.2)) Ω :=
     Module.finite_of_finrank_pos (by rw [hfr]; exact hd)
   have halg : Algebra.IsAlgebraic (IntermediateField.adjoin Ω₀

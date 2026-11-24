@@ -102,7 +102,7 @@ theorem mk_tauE_bijective (D : D7) :
 
 theorem places_bijective : ∀ D : D7, Function.Bijective fun τ : D.what₂.Tau => NumberField.InfinitePlace.mk ((tauE D τ).comp (algebraMap D.host.F D.host.E)) := by
   intro D
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   exact (IsCMField.equivInfinitePlace D.host.E).bijective.comp (mk_tauE_bijective D)
 
 end GlobalTheory.CMTypePlaces

@@ -85,7 +85,7 @@ theorem hsInner_sum_smul_left [FiniteDimensional ℂ Wq] {ι : Type} (s : Finset
     (X : ι → Wq →L[ℂ] Wp) (Y : Wq →L[ℂ] Wp) :
     Formalism.FourierDecayAlt.B.hsInner (∑ j ∈ s, a j • X j) Y = ∑ j ∈ s, a j * Formalism.FourierDecayAlt.B.hsInner (X j) Y := by
   first
-    | (simp only [hsInner_eq, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, inner_sum, inner_smul_right, Finset.mul_sum]; exact Finset.sum_comm)
+    | (simp only [hsInner_eq, sum_apply, smul_apply, inner_sum, inner_smul_right, Finset.mul_sum]; exact Finset.sum_comm)
     | (simp only [hsInner_eq, ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, inner_sum, inner_smul_right, Finset.mul_sum]; exact Finset.sum_comm)
     | (simp [hsInner_eq, inner_sum, inner_smul_right, Finset.mul_sum]; exact Finset.sum_comm)
     | (simp [hsInner_eq, inner_sum, inner_smul_right, Finset.mul_sum, Finset.sum_comm]; done)
@@ -198,7 +198,7 @@ theorem typ_dOp_skew (hπ : IsCRepOn (UWset k r z) π) (hc : ContinuousOn π (UW
   have h0 := hi.unique hconst
   have he : π (NormedSpace.exp (((0 : ℝ) : ℂ) • X)) = 1 := by
     simp [NormedSpace.exp_zero, hπ.1]
-  simp only [he, ContinuousLinearMap.one_apply] at h0
+  simp only [he, one_apply_eq_self] at h0
   linear_combination h0
 
 theorem typ_EB_adj (hπ : IsCRepOn (UWset k r z) π) (hc : ContinuousOn π (UWset k r z))
@@ -220,10 +220,10 @@ theorem typ_EB_adj (hπ : IsCRepOn (UWset k r z) π) (hc : ContinuousOn π (UWse
   show inner ℂ (QrD.ecOp π (unitB (Hpk k r) Bs a b) v) v' = inner ℂ v (QrD.ecOp π (unitB (Hpk k r) Bs b a) v')
   unfold QrD.ecOp
   rw [e1, e2, hlin]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, inner_add_left, inner_add_right,
+  simp only [add_apply, smul_apply, inner_add_left, inner_add_right,
     inner_smul_left, inner_smul_right, Complex.conj_I]
   rw [typ_dOp_skew hπ hc hu h1, typ_dOp_skew hπ hc hu h2]
-  simp only [neg_smul, one_smul, ContinuousLinearMap.neg_apply, inner_neg_right]
+  simp only [neg_smul, one_smul, neg_apply, inner_neg_right]
   ring
 
 end adj
@@ -516,7 +516,7 @@ theorem type_projectors_exist : Formalism.FourierDecayAlt.Top.TypeProjExists := 
     exact Submodule.starProjection_eq_self_iff.mpr ((J ρ).starProjection_apply_mem v)
   · intro ρ ρ' h
     ext v
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.zero_apply]
+    simp only [ContinuousLinearMap.comp_apply, zero_apply]
     exact typ_proj_orth _ (horth ρ' ρ (Ne.symm h) _ ((J ρ').starProjection_apply_mem v))
   · intro ρ v v'
     exact Submodule.inner_starProjection_left_eq_right _ v v'
@@ -1032,7 +1032,7 @@ theorem vecw_good_of_type {P : M.Par} {π : B.Mat P.k P.r → (Wp →L[ℂ] Wp)}
     have h1 : (TP.E ρ).comp (TP.E ρ0) = 0 := TP.orth ρ ρ0 hne
     calc TP.E ρ x = TP.E ρ (TP.E ρ0 x) := by rw [h0]
       _ = ((TP.E ρ).comp (TP.E ρ0)) x := rfl
-      _ = 0 := by rw [h1, ContinuousLinearMap.zero_apply]
+      _ = 0 := by rw [h1, zero_apply]
   · intro hn
     exact absurd (Finset.mem_univ ρ0) hn
 

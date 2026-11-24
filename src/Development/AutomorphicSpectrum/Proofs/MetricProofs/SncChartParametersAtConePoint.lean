@@ -428,8 +428,8 @@ theorem isRegularLocalRing_locRing_of_span :
       IsRegularLocalRing (locRing I t) := by
   intro m e I t r hI hdim hspan
   obtain ⟨hloc, hnoeth⟩ := locRing_isLocalRing_isNoetherian I t hI
-  haveI := hloc
-  haveI := hnoeth
+  have := hloc
+  have := hnoeth
   have hle : I ≤ ptIdeal t := (le_ptIdeal_iff' I t).2 hI
   apply IsRegularLocalRing.of_spanFinrank_maximalIdeal_le
   rw [maximalIdeal_locRing hle, ← hspan, hdim]
@@ -564,8 +564,8 @@ theorem snd_eq_zero_of_span {S : Type} [CommRing S] [Algebra ℚ S]
     (hspan : Submodule.span S (Set.range fun i => KaehlerDifferential.D ℚ S (z i)) = ⊤)
     (h : ∀ i, snd (φ (z i)) = 0) (s : S) : snd (φ s) = 0 := by
   let f : S →+* ℂ := (TrivSqZeroExt.fstHom ℚ ℂ ℂ).toRingHom.comp φ.toRingHom
-  letI : Module S ℂ := Module.compHom ℂ f
-  haveI : IsScalarTower ℚ S ℂ := ⟨fun q a m => by
+  let : Module S ℂ := Module.compHom ℂ f
+  have : IsScalarTower ℚ S ℂ := ⟨fun q a m => by
     show f (q • a) * m = q • (f a * m)
     rw [Algebra.smul_def, map_mul, Algebra.smul_def, mul_assoc]
     congr 1
@@ -625,13 +625,13 @@ theorem tangent_eq_zero : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (σ : Type
       obtain ⟨r, hr, n, rfl⟩ := hy
       obtain ⟨r', hr', n', rfl⟩ := hy'
       exact ⟨r * r', Subalgebra.mul_mem _ hr hr', n + n', by rw [pow_add]; ring⟩
-  letI : Algebra (aeval τ : MvPolynomial σ ℚ →ₐ[ℚ] Ω).range S := (Subalgebra.inclusion hRS).toRingHom.toAlgebra
+  let : Algebra (aeval τ : MvPolynomial σ ℚ →ₐ[ℚ] Ω).range S := (Subalgebra.inclusion hRS).toRingHom.toAlgebra
   let xR : (aeval τ : MvPolynomial σ ℚ →ₐ[ℚ] Ω).range := ⟨aeval τ F, AlgHom.mem_range_self _ F⟩
   have hxS : IsUnit (algebraMap _ S xR) :=
     isUnit_iff_exists_inv.2 ⟨⟨(aeval τ F)⁻¹, memInv⟩, Subtype.ext (by
       show aeval τ F * (aeval τ F)⁻¹ = 1
       exact mul_inv_cancel₀ hF0)⟩
-  haveI : IsLocalization.Away xR S := by
+  have : IsLocalization.Away xR S := by
     refine ⟨?_, ?_, ?_⟩
     · rintro ⟨y, n, rfl⟩
       rw [map_pow]
@@ -855,10 +855,10 @@ theorem span_algebraMap_eq_map_ptIdeal (e : ℕ) (I : Ideal (MvPolynomial (Fin m
         have h3 := hvS _ ⟨r l, Or.inr ⟨l, rfl⟩, rfl⟩
         simpa only [gradP_eq_eval_pderiv] using h3
   have hMle : M ≤ N ⊔ M ^ 2 := Ideal.map_le_iff_le_comap.mpr (hpt.symm.le.trans key)
-  haveI := hloc
-  haveI := hnoeth
+  have := hloc
+  have := hnoeth
   have hMtop : M ≠ ⊤ := by
-    haveI : (ptIdeal t).IsPrime := ptIdeal_isPrime t
+    have : (ptIdeal t).IsPrime := ptIdeal_isPrime t
     intro htop
     have hmax : Ideal.map (algebraMap (MvPolynomial (Fin m) ℂ) (locPt t)) (ptIdeal t) =
         IsLocalRing.maximalIdeal (Localization.AtPrime (ptIdeal t)) :=

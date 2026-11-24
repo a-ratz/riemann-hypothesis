@@ -161,11 +161,11 @@ theorem exists_rightInv_uElt : ∀ {G : Type} [Group G] [Fintype G] (U : Subgrou
     let A : Subrepresentation (lreg (G := G)) := ⟨K, fun g x hx => by
       rw [hK] at hx ⊢
       rw [lreg_apply, ← mul_assoc, ← single_mul_uElt U f e hC g, mul_assoc, hx, mul_zero]⟩
-    haveI : Nontrivial A.toSubmodule :=
+    have : Nontrivial A.toSubmodule :=
       Submodule.nontrivial_iff_ne_bot.2 (fun hb => hy0 ((Submodule.eq_bot_iff _).1 hb y hy))
     obtain ⟨τ, hτs, φ, hφ, hφ0⟩ := PI.GreenLabelSurjWork.exists_simple_constituent A.toRepresentation
-    haveI := hτs
-    haveI := PI.CharIdemW.nontrivial_of_simple τ
+    have := hτs
+    have := PI.CharIdemW.nontrivial_of_simple τ
     have hcomm : ∀ a : MonoidAlgebra ℂ G, (∀ k : G, MonoidAlgebra.single k (1 : ℂ) * a = a * MonoidAlgebra.single k 1) →
         ∀ k : G, τ.ρ k * Representation.asAlgebraHom τ.ρ a = Representation.asAlgebraHom τ.ρ a * τ.ρ k := by
       intro a ha k
@@ -250,13 +250,13 @@ theorem adjoin_roots_of_unity_embeds_complex {L0 K : Type} [Field L0] [Field K] 
     (t : L0 →+* ℂ) (Z : Set K) (hZ : ∀ z ∈ Z, ∃ n : ℕ, 0 < n ∧ z ^ n = 1) :
     ∃ (E : Subfield K) (j : E →+* ℂ), (∀ x, s x ∈ E) ∧ Z ⊆ E ∧
       ∀ x (hx : s x ∈ E), j ⟨s x, hx⟩ = t x := by
-  letI : Algebra L0 K := s.toAlgebra
-  letI : Algebra L0 ℂ := t.toAlgebra
+  let : Algebra L0 K := s.toAlgebra
+  let : Algebra L0 ℂ := t.toAlgebra
   have hint : ∀ z ∈ Z, IsIntegral L0 z := by
     intro z hz
     obtain ⟨n, hn, hzn⟩ := hZ z hz
     exact ⟨Polynomial.X ^ n - Polynomial.C 1, Polynomial.monic_X_pow_sub_C 1 hn.ne', by simp [hzn]⟩
-  haveI : Algebra.IsAlgebraic L0 (IntermediateField.adjoin L0 Z) :=
+  have : Algebra.IsAlgebraic L0 (IntermediateField.adjoin L0 Z) :=
     IntermediateField.isAlgebraic_adjoin hint
   let φ : IntermediateField.adjoin L0 Z →ₐ[L0] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -313,8 +313,8 @@ theorem local_sum_ne_zero {p : ℕ} [hp : Fact p.Prime] {r : ℕ} [Fintype (unip
       (((θ' (Multiplicative.ofAdd (Formalism.L2.NX.supSum r ((h : GL (Fin r) (ZMod p)) : Matrix (Fin r) (Fin r) (ZMod p)))))⁻¹ : ℂˣ) : ℂ)
       ≠ 0 := by
   obtain ⟨d, b, σ, hσ, hθe⟩ := hθ
-  haveI : NeZero p := ⟨hp.out.ne_zero⟩
-  haveI := GlobalTheory.IndefiniteRowSideFullHecke.GenericMultiplicityOne.finite_parInd (F := ZMod p) b σ
+  have : NeZero p := ⟨hp.out.ne_zero⟩
+  have := GlobalTheory.IndefiniteRowSideFullHecke.GenericMultiplicityOne.finite_parInd (F := ZMod p) b σ
   have h1 := GlobalTheory.GenericProduct.sum_unip_eq (addOf θ') (parInd b σ)
   rw [_root_.GlobalTheory.FinGL.whDim_parInd_eq_one (ZMod p) (addOf θ') (addOf_ne_one θ' h') r _ b σ hσ, Nat.cast_one, mul_one] at h1
   have e : ∀ h : unip (ZMod p) r, θ h *
@@ -336,12 +336,12 @@ theorem sum_ne_zero : ∀ (D : D7), GrpSide D → ∀ [Fintype (G0g D.nd)] (U : 
   intro D S _ U _ hU ψ hψ hr χ hχ he
   classical
   subst hU
-  haveI hF : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), Fact (D.host.g kv.1).Prime := fun kv => ⟨D.host.g_prime kv.1⟩
-  haveI hN : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), NeZero (D.host.g kv.1) := fun kv => ⟨(D.host.g_prime kv.1).ne_zero⟩
+  have hF : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), Fact (D.host.g kv.1).Prime := fun kv => ⟨D.host.g_prime kv.1⟩
+  have hN : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), NeZero (D.host.g kv.1) := fun kv => ⟨(D.host.g_prime kv.1).ne_zero⟩
   obtain ⟨θ, hθ, hχe⟩ := GlobalTheory.GoodFactor.irreducible_character_good_idempotent_cuspidal_product D (fun k => ⟨_, S.O k, S.eSer_def k⟩) χ hχ he
   obtain ⟨θ', hθ'1, hψe⟩ := hψ
   have hθ' := hθ'1 hr
-  letI : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), Fintype (unip (ZMod (D.host.g kv.1)) D.R.r) := fun kv => Fintype.ofFinite _
+  let : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), Fintype (unip (ZMod (D.host.g kv.1)) D.R.r) := fun kv => Fintype.ofFinite _
   let f : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), unip (ZMod (D.host.g kv.1)) D.R.r → ℂ := fun kv h =>
     θ kv h * (((θ' kv (Multiplicative.ofAdd (Formalism.L2.NX.supSum D.R.r
       ((h : GL (Fin D.R.r) (ZMod (D.host.g kv.1))) : Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (D.host.g kv.1))))))⁻¹ : ℂˣ) : ℂ)
@@ -536,9 +536,9 @@ theorem GlobalTheory.TwInputs.meetsAll_of_ties : GlobalTheory.Published.GreenCus
     rw [hFm0, inf_top_eq]
     exact hW
   have hr : 2 ≤ D.R.r := by omega
-  haveI : ∀ k : Fin 2, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
-  haveI : Fintype (G0g D.nd) := Fintype.ofFinite _
-  haveI : Fintype D.nexp.U := Fintype.ofFinite _
+  have : ∀ k : Fin 2, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
+  have : Fintype (G0g D.nd) := Fintype.ofFinite _
+  have : Fintype D.nexp.U := Fintype.ofFinite _
   obtain ⟨θ, hθ, hψ⟩ := T.psiU_gen i b
   let s : ↥D.LL0 →+* FractionRing (D.ntw.O i) :=
     (IsFractionRing.map (A := D.ntw.O0 i) (B := D.ntw.O i) (K := FractionRing (D.ntw.O0 i))
@@ -548,7 +548,7 @@ theorem GlobalTheory.TwInputs.meetsAll_of_ties : GlobalTheory.Published.GreenCus
     {z | ∃ (x : Σ k : Fin 2, D.nd.PlG k) (a : Multiplicative (ZMod (D.host.g x.1))), z = ((θ x a : (FractionRing (D.ntw.O i))ˣ) : FractionRing (D.ntw.O i))}
   have hZ : ∀ z ∈ Z, ∃ n : ℕ, 0 < n ∧ z ^ n = 1 := by
     rintro z ⟨x, a, rfl⟩
-    haveI : NeZero (D.host.g x.1) := ⟨(D.host.g_prime x.1).ne_zero⟩
+    have : NeZero (D.host.g x.1) := ⟨(D.host.g_prime x.1).ne_zero⟩
     refine ⟨Fintype.card (Multiplicative (ZMod (D.host.g x.1))), Fintype.card_pos, ?_⟩
     rw [← Units.val_pow_eq_pow_val, ← map_pow, pow_card_eq_one, map_one, Units.val_one]
   obtain ⟨E, jE, hsE, hZE, hj⟩ := _root_.GlobalTheory.adjoin_roots_of_unity_embeds_complex s t Z hZ

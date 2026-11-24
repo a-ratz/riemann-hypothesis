@@ -76,8 +76,8 @@ theorem trCochain_Z1T [IsTopologicalGroup G'] (ι : G →* G') (hι : Continuous
     trCochain ι T c ∈ latticeCocycles T.L := by
   obtain ⟨⟨hcont, hcoc⟩, hT⟩ := hc
   have hj : ∀ g, Function.invFun ι (ι g) = g := Function.leftInverse_invFun he.injective
-  haveI : ContinuousSMul LL T.V := IsModuleTopology.toContinuousSMul LL T.V
-  haveI : IsTopologicalAddGroup T.V := IsModuleTopology.topologicalAddGroup LL T.V
+  have : ContinuousSMul LL T.V := IsModuleTopology.toContinuousSMul LL T.V
+  have : IsTopologicalAddGroup T.V := IsModuleTopology.isTopologicalAddGroup LL T.V
   refine ⟨⟨?_, ?_⟩, ?_⟩
   · refine GlobalTheory.transfer_continuous_of_continuousOn LL G' T.V T.ρ ι.range ho
       (fun g => IsModuleTopology.continuous_of_linearMap (T.ρ g))
@@ -201,7 +201,7 @@ theorem coreCor_of_isOpen [IsTopologicalGroup G'] (PD : PeriodData G Qp K₀ K B
     (he : Topology.IsEmbedding ι) (ho : IsOpen (ι.range : Set G')) [ι.range.FiniteIndex]
     (hact : ∀ g b, PD.actB g b = PD'.actB (ι g) b) :
     LiftingTheory.coreCor PD PD' LL O ι hι ι.range.index := by
-  haveI : Fintype (G' ⧸ ι.range) := Fintype.ofFinite _
+  have : Fintype (G' ⧸ ι.range) := Fintype.ofFinite _
   refine ⟨?_, corH1 ι hι he ho, corH1_res ι hι he ho, ?_, corH1_natural ι hι he ho⟩
   · rintro T _ ⟨c, ⟨hc, hc', x, hx⟩, rfl⟩
     have hz := LiftingTheory.resFun_Z1T ι hι T c c.2
@@ -248,20 +248,20 @@ open Formalism.BasicNotions.Loc
 theorem res_cor_H1f : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW),
     LiftingTheory.adm20 D HW F := by
   intro D HW F l _ K K' _ hle LL
-  haveI := K.2
-  haveI := K'.2
+  have := K.2
+  have := K'.2
   have hidx := InducedSectionsSpanStatement.inclusion_GK_index K K' hle
   have hpos : 0 < Module.finrank ℚ_[l] ↥K.1 := Module.finrank_pos
   have hpos' : 0 < Module.finrank ℚ_[l] ↥K'.1 := Module.finrank_pos
   have hg : Module.finrank ℚ_[l] ↥K.1 / Module.finrank ℚ_[l] ↥K'.1
       = (Subgroup.inclusion hle).range.index := by
     rw [← hidx, Nat.mul_div_cancel _ hpos']
-  haveI : (Subgroup.inclusion hle).range.FiniteIndex := ⟨fun h => by
+  have : (Subgroup.inclusion hle).range.FiniteIndex := ⟨fun h => by
     rw [h, zero_mul] at hidx; omega⟩
   rw [hg]
   refine InducedSectionsSpanStatement.coreCor_of_isOpen _ _ _ _ (Topology.IsEmbedding.inclusion hle) ?_ ?_
   · rw [Subgroup.inclusion_range]
-    exact (IntermediateField.fixingSubgroup_isOpen K.1).preimage continuous_subtype_val
+    exact (IntermediateField.fixingSubgroup_isOpen K.1).preimage continuous_subtypeVal
   · intro g b
     rw [(D.loc l).PD_actB, (D.loc l).PD_actB]
     rfl

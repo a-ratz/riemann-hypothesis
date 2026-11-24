@@ -156,7 +156,7 @@ private theorem exists_fixed_abs {Γ : Type} [Group Γ] [TopologicalSpace Γ] [I
   have hN : IsOpen {g : Γ | ‖σ g v - v‖ < ‖v‖ / 2} :=
     isOpen_lt ((σ.continuous_orbit v).sub continuous_const).norm continuous_const
   have h1N : (1 : Γ) ∈ {g : Γ | ‖σ g v - v‖ < ‖v‖ / 2} := by
-    simp only [Set.mem_setOf_eq, σ.map_one_apply, sub_self, norm_zero]
+    simp only [Set.mem_ofPred_eq, σ.map_one_apply, sub_self, norm_zero]
     exact hpos
   obtain ⟨Hh, hH⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hN h1N
   set U : Subgroup Γ := Hh.toOpenSubgroup.toSubgroup with hUdef
@@ -164,7 +164,7 @@ private theorem exists_fixed_abs {Γ : Type} [Group Γ] [TopologicalSpace Γ] [I
   have hUN : ∀ u ∈ U, ‖σ u v - v‖ < ‖v‖ / 2 := fun u hu => hH hu
   have _ : CompactSpace U := isCompact_iff_compactSpace.1 (U.isClosed_of_isOpen hU).isCompact
   set ρ : Measure U := CuspidalSpectrum.haarProb U with hρ
-  have hcont : Continuous fun u : U => σ (u : Γ) v := (σ.continuous_orbit v).comp continuous_subtype_val
+  have hcont : Continuous fun u : U => σ (u : Γ) v := (σ.continuous_orbit v).comp continuous_subtypeVal
   have hint : Integrable (fun u : U => σ (u : Γ) v) ρ :=
     integrableOn_univ.1 (hcont.continuousOn.integrableOn_compact isCompact_univ)
   set e : H := ∫ u : U, σ (u : Γ) v ∂ρ with hedef
@@ -205,7 +205,7 @@ private theorem exists_off_open (U : Subgroup (AdelicGLn.integralFiniteGL K n))
       IsOpen (GLnLocal.integralGL (v.adicCompletion K) n : Set (GL (Fin n) (v.adicCompletion K))) :=
     fun v => GLnLocal.isOpen_integralGL (v.adicCompletion K) n
   set U' : Set (AdelicGLn.FiniteAdelicGL K n) := Subtype.val '' (U : Set (AdelicGLn.integralFiniteGL K n)) with hU'
-  have hU'o : IsOpen U' := (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtype_val _ hU
+  have hU'o : IsOpen U' := (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtypeVal _ hU
   have h1U : U' ∈ 𝓝 (1 : AdelicGLn.FiniteAdelicGL K n) := hU'o.mem_nhds ⟨1, U.one_mem, rfl⟩
   have : Fact (∀ v : Pl K,
       IsOpen (GLnLocal.integralGL (v.adicCompletion K) n : Set (GL (Fin n) (v.adicCompletion K)))) :=
@@ -356,7 +356,7 @@ theorem UpperTheory.ConvolutionTheory.L1.typedEx :
     refine ⟨e, he0, heV, fun w hw => (UpperTheory.ConvolutionTheory.L1.mem_eigL' μ).2 fun g hg => ?_⟩
     have hw1 : w ∉ I := fun h => hw (Finset.mem_coe.2 (Finset.mem_union_left _ h))
     have hw2 : w ∉ hb.toFinset := fun h => hw (Finset.mem_coe.2 (Finset.mem_union_right _ h))
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hw2
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hw2
     rw [hw2.1] at hg
     rw [hfix w hw1 g hg, hw2.2]
     simp

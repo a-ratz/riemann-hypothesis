@@ -238,7 +238,7 @@ theorem similitude_bij_mod (h N m : ℕ) (T : (Fin h ⊕ Fin h → ℤ) →ₗ[�
     (hm : m.Coprime N) (hT : ∀ x y, omegaStd (T x) (T y) ≡ m * omegaStd x y [ZMOD N]) :
     (∀ a, (∃ b, T a = N • b) ↔ ∃ b, a = N • b) ∧ ∀ a', ∃ a c, a' = T a + N • c := by
   classical
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   let red : (Fin h ⊕ Fin h → ℤ) → (Fin h ⊕ Fin h → ZMod N) := fun a i => (a i : ZMod N)
   have red_zero : ∀ a : Fin h ⊕ Fin h → ℤ, red a = 0 ↔ ∃ b, a = N • b := by
     intro a
@@ -539,7 +539,7 @@ theorem symplecticSimilitude_modN : ∀ (h N m : ℕ) (T : (Fin h ⊕ Fin h → 
     rcases j with i | i
     · simpa [omegaStd_single_inr] using hd (Pi.single (.inr i) 1)
     · simpa [omegaStd_single_inl] using hd (Pi.single (.inl i) 1)
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   let red : (Fin h ⊕ Fin h → ℤ) → (Fin h ⊕ Fin h → ZMod N) := fun a j => (a j : ZMod N)
   let lift : (Fin h ⊕ Fin h → ZMod N) → (Fin h ⊕ Fin h → ℤ) := fun v j => ((v j).val : ℤ)
   have hred0 : ∀ a, red a = 0 ↔ ∃ b, a = N • b := by
@@ -885,7 +885,7 @@ theorem Twist.exists_inv (hN : N ≠ 0) (hN1 : 1 < N) (hn0 : n ≠ 0) (hj : j (z
     ∃ (T' : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (Fin h ⊕ Fin h → ℤ)) (m' : ℕ) (σ' : cycAway N →+* cycAway N) (f' : F.X ⟶ F.X),
       Twist F j T' m' σ' f' ∧ f ≫ f' = 𝟙 _ := by
   obtain ⟨-, -, T', hT', hω'⟩ := _root_.GlobalTheory.SympModN.symplecticSimilitude_modN h N m T hN t.cop t.symp
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   set m' : ℕ := (((ZMod.unitOfCoprime m t.cop)⁻¹ : (ZMod N)ˣ) : ZMod N).val with hm'
   have hmm : m * m' ≡ 1 [MOD N] := by
     refine (ZMod.natCast_eq_natCast_iff _ _ _).1 ?_
@@ -948,7 +948,7 @@ theorem lev_eq_of_cast {B : Type} [CommRing B] {ζ : B} {S : Scheme.{0}} {s : S 
   rw [this, C.lev_add, lev_N_smul, _root_.mul_one]
 
 theorem Grp.finite (hN : N ≠ 0) : Finite (Grp F j) := by
-  haveI : NeZero N := ⟨hN⟩
+  have : NeZero N := ⟨hN⟩
   choose T m σ t using fun a : Grp F j => a.2
   have key : ∀ (U : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (Fin h ⊕ Fin h → ℤ)) x k, ((U x k : ℤ) : ZMod N) =
       ∑ i, ((x i : ℤ) : ZMod N) * ((U (fun l => if i = l then 1 else 0) k : ℤ) : ZMod N) := by
@@ -972,7 +972,7 @@ theorem siegel_group_action : ∀ (h n N : ℕ) (F : SFam h N (zetaAway N)) (j :
   have hN0 : N ≠ 0 := hN.pos.ne'
   have hn0 : n ≠ 0 := by omega
   have hN1 : 1 < N := by have := Nat.le_of_dvd hN.pos hnN; omega
-  letI G := Grp.group (F := F) (j := j) hN0 hN1 hn0 hj
+  let G := Grp.group (F := F) (j := j) hN0 hN1 hn0 hj
   have hν : ∀ a : Grp F j, ∃ ν : F.univ.A.left ⟶ F.univ.A.left, SRelBy F.univ F.univ (N / n) (N / n) a.1 ν :=
     fun a => by
       obtain ⟨T, m, σ, t⟩ := a.2

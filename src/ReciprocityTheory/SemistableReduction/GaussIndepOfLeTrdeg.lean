@@ -59,9 +59,9 @@ private theorem exists_transcendenceBasis_subset_adjoin_range {E C : Type} [Fiel
       IsTranscendenceBasis E (Subtype.val : t → Algebra.adjoin E (Set.range tb)) := by
   have htop : Algebra.adjoin E ((↑) ⁻¹' Set.range tb : Set (Algebra.adjoin E (Set.range tb))) = ⊤ :=
     Algebra.adjoin_adjoin_coe_preimage
-  haveI : FaithfulSMul E (Algebra.adjoin E (Set.range tb)) :=
+  have : FaithfulSMul E (Algebra.adjoin E (Set.range tb)) :=
     (faithfulSMul_iff_algebraMap_injective E _).mpr (algebraMap E _).injective
-  haveI : Algebra.IsAlgebraic
+  have : Algebra.IsAlgebraic
       (Algebra.adjoin E ((↑) ⁻¹' Set.range tb : Set (Algebra.adjoin E (Set.range tb))))
       (Algebra.adjoin E (Set.range tb)) := ⟨fun a => by
     have ha : a ∈ Algebra.adjoin E ((↑) ⁻¹' Set.range tb : Set (Algebra.adjoin E (Set.range tb))) := by
@@ -82,9 +82,9 @@ theorem gauss_card_le_trdeg_add {F E C : Type} [Field F] [Field E] [Field C] [Al
     [Algebra F C] [IsScalarTower F E C] {σ τ : Type} (tb : σ → C) (ub : τ → C)
     (hu : AlgebraicIndependent F ub) (hmem : ∀ j, ub j ∈ Algebra.adjoin E (Set.range tb)) :
     Cardinal.mk τ ≤ Algebra.trdeg F E + Algebra.trdeg E (Algebra.adjoin E (Set.range tb)) := by
-  haveI : FaithfulSMul F E :=
+  have : FaithfulSMul F E :=
     (faithfulSMul_iff_algebraMap_injective F E).mpr (algebraMap F E).injective
-  haveI : FaithfulSMul E (Algebra.adjoin E (Set.range tb)) :=
+  have : FaithfulSMul E (Algebra.adjoin E (Set.range tb)) :=
     (faithfulSMul_iff_algebraMap_injective E _).mpr (algebraMap E _).injective
   rw [trdeg_add_eq F E (A := Algebra.adjoin E (Set.range tb))]
   have hu' : AlgebraicIndependent F (fun j => (⟨ub j, hmem j⟩ : Algebra.adjoin E (Set.range tb))) :=

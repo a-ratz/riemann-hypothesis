@@ -174,7 +174,7 @@ theorem isRealLine_lineM {N : ℕ} (l : Fin N) (w₀ : {w : InfinitePlace F // w
 
 theorem norm_le_sum (hF : IsTotallyReal F) {N : ℕ} (t : Fin N → mixedEmbedding.mixedSpace F) :
     ‖t‖ ≤ ∑ l, ∑ w : {w : InfinitePlace F // w.IsReal}, |(t l).1 w| := by
-  haveI : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
+  have : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.2 w.2 (hF.isReal w.1)⟩
   refine (pi_norm_le_iff_of_nonneg (Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => abs_nonneg _)).2
     fun l => ?_

@@ -548,7 +548,7 @@ def rmul (x : Mat n) : Mat n →L[ℝ] Mat n :=
 theorem lmul_apply (x y : Mat n) : lmul x y = x * y := rfl
 
 theorem mul_mem_gls {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hx hy
 
 variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V]

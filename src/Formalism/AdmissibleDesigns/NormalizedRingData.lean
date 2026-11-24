@@ -153,14 +153,14 @@ open Formalism.NG
 theorem exists_irreducible_big (k : Type) [Field k] [Finite k] (N : ℕ) :
     ∃ f : k[X], f.Monic ∧ Irreducible f ∧ (N : Cardinal) < Cardinal.mk (AdjoinRoot f) := by
   classical
-  haveI hKinf : Infinite (AlgebraicClosure k) := by
+  have hKinf : Infinite (AlgebraicClosure k) := by
     first
     | exact inferInstance
     | exact IsAlgClosed.instInfinite
   obtain ⟨S, hS⟩ := Infinite.exists_subset_card_eq (AlgebraicClosure k) (N + 1)
-  haveI hfd : FiniteDimensional k (IntermediateField.adjoin k (S : Set (AlgebraicClosure k))) :=
+  have hfd : FiniteDimensional k (IntermediateField.adjoin k (S : Set (AlgebraicClosure k))) :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
-  haveI : Finite (IntermediateField.adjoin k (S : Set (AlgebraicClosure k))) :=
+  have : Finite (IntermediateField.adjoin k (S : Set (AlgebraicClosure k))) :=
     Module.finite_of_finite k
   obtain ⟨α, hα⟩ : ∃ α : IntermediateField.adjoin k (S : Set (AlgebraicClosure k)),
       IntermediateField.adjoin k {α} = ⊤ := by
@@ -248,7 +248,7 @@ theorem unram_ext (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing 
   have hmaxk : (RingHom.ker ψ).IsMaximal := RingHom.ker_isMaximal_of_surjective ψ hψs
   have hloc : IsLocalRing A := by
     refine IsLocalRing.of_unique_max_ideal ⟨RingHom.ker ψ, hmaxk, fun M hM => ?_⟩
-    letI : Module.Finite O A := hfin
+    let : Module.Finite O A := hfin
     have h1 : (M.comap (algebraMap O A)).IsMaximal :=
       Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap O A)
         (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) M
@@ -394,7 +394,7 @@ theorem exists_sigma (hj : Function.Injective (algebraMap O O')) (hX : DistinctE
     let α' : ℕ → O := fun i => if h : i < t then b i h else 0
     have hα' : ∀ i, i < t → algebraMap O O' (α' i) = (D'.rr i : D'.X' → O') y' := by
       intro i hi
-      simp only [α', dif_pos hi]
+      simp only [α', dite_eq_left hi]
       exact hb i hi
     have hPinj : Function.Injective
         (Polynomial.map ((algebraMap O' (FractionRing O')).comp (algebraMap O O'))) :=
@@ -471,7 +471,7 @@ theorem bcR'_mem (hD : RingDef O T r π χ₁ ε g₀ eB e₁ s D)
   obtain ⟨-, -, -, -, -, -, hr', hR', -⟩ := hD'
   have ha2 := (hR a).1 ha
   refine (hR' _).2 ?_
-  simp only [tSpan, Set.mem_setOf_eq] at ha2 ⊢
+  simp only [tSpan, Set.mem_ofPred_eq] at ha2 ⊢
   obtain ⟨s0, c, hc, rfl⟩ := ha2
   refine ⟨s0, fun g y' => algebraMap O O' (c g (σ y')),
     fun g => hmem _ (hc g), ?_⟩

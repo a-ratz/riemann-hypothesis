@@ -259,8 +259,8 @@ theorem ordR_eq_zero_iff {a : R} (ha : a ≠ 0) : ordR R a = 0 ↔ IsUnit a := b
 theorem dvd_of_ordR_le {a b : R} (ha : a ≠ 0) (hb : b ≠ 0) (h : ordR R b ≤ ordR R a) : b ∣ a := by
   unfold ordR at h
   rw [← IsDiscreteValuationRing.addVal_le_iff_dvd]
-  rw [← ENat.coe_toNat (n := IsDiscreteValuationRing.addVal R a) (by simpa [IsDiscreteValuationRing.addVal_eq_top_iff] using ha),
-    ← ENat.coe_toNat (n := IsDiscreteValuationRing.addVal R b) (by simpa [IsDiscreteValuationRing.addVal_eq_top_iff] using hb)]
+  rw [← ENat.natCast_toNat (n := IsDiscreteValuationRing.addVal R a) (by simpa [IsDiscreteValuationRing.addVal_eq_top_iff] using ha),
+    ← ENat.natCast_toNat (n := IsDiscreteValuationRing.addVal R b) (by simpa [IsDiscreteValuationRing.addVal_eq_top_iff] using hb)]
   exact_mod_cast h
 
 theorem ordK_eq {x : FractionRing R} (hx : x ≠ 0) {a b : R} (hb : b ≠ 0)
@@ -399,14 +399,14 @@ theorem vw_le_of_bound : ∀ {D : D7} (nch : NChoice D) (w : D.what₂.places.Pl
     rw [hl] at this
     exact (IsLocalRing.mem_maximalIdeal _).1 this
   have huk : ¬ IsUnit (l : D.ntw.Ok (nch.twI w) (nch.k' w)) := by
-    haveI := D.ntw.Ok_fin (nch.twI w) (nch.k' w)
-    haveI : FaithfulSMul (D.ntw.O (nch.twI w)) (D.ntw.Ok (nch.twI w) (nch.k' w)) :=
+    have := D.ntw.Ok_fin (nch.twI w) (nch.k' w)
+    have : FaithfulSMul (D.ntw.O (nch.twI w)) (D.ntw.Ok (nch.twI w) (nch.k' w)) :=
       (faithfulSMul_iff_algebraMap_injective _ _).2 (D.ntw.Ok_inj _ _)
     intro h
     rw [← map_natCast (algebraMap (D.ntw.O (nch.twI w)) (D.ntw.Ok (nch.twI w) (nch.k' w)))] at h
     exact huO (IsUnit.of_map _ _ h)
   have huE : ¬ IsUnit (l : nch.Oe w) := by
-    haveI := nch.Oe_loc w
+    have := nch.Oe_loc w
     intro h
     rw [← map_natCast (algebraMap (D.ntw.Ok (nch.twI w) (nch.k' w)) (nch.Oe w))] at h
     exact huk (IsUnit.of_map _ _ h)
@@ -498,7 +498,7 @@ theorem exists_pow_of_two_emb {L K : Type} [Field L] [Field K] (f g : L →+* K)
 theorem exists_extend {A B K : Type} [CommRing A] [IsDomain A] [CommRing B] [IsDomain B] [Algebra A B] [Module.Finite A B]
     [Field K] [IsAlgClosed K] (hi : Function.Injective (algebraMap A B)) (f : A →+* K) (hf : Function.Injective f) :
     ∃ g : FractionRing B →+* K, ∀ a, g (algebraMap B _ (algebraMap A B a)) = f a := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective _ _).2 hi
   have : FaithfulSMul A K := (faithfulSMul_iff_algebraMap_injective _ _).2 hf
   let J0 : B →ₐ[A] K := (by
@@ -508,7 +508,7 @@ theorem exists_extend {A B K : Type} [CommRing A] [IsDomain A] [CommRing B] [IsD
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hJ : Function.Injective J0.toRingHom := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := A) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := A) ?_
     rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
     intro a b hab
     exact hf ((J0.commutes a).symm.trans (Eq.trans hab (J0.commutes b)))
@@ -588,10 +588,10 @@ theorem cond0_eq {D : D7} {T : Type} {Lc : Formalism.IndefR.Links.LevCh D T} {sc
     rw [hw0] at h1 h0
     refine Eq.trans ?_ (FieldDatPf.expIn_condF' G.pl (below w)).symm
     by_cases e : below w = G.pl.v0
-    · rw [(h1 e).2, if_pos (G.pl.mem_S0_of_sum_eq.2 (Or.inl e)), condExp, if_pos e]
+    · rw [(h1 e).2, ite_eq_left (G.pl.mem_S0_of_sum_eq.2 (Or.inl e)), condExp, ite_eq_left e]
     · by_cases e' : below w ∈ S1 D
-      · rw [h2 (h4.2 e'), if_pos (G.pl.mem_S0_of_sum_eq.2 (Or.inr e')), condExp, if_neg e]
-      · rw [h0 (fun h => e' (h4.1 h)) e, if_neg fun h => (G.pl.mem_S0_of_sum_eq.1 h).elim e e']
+      · rw [h2 (h4.2 e'), ite_eq_left (G.pl.mem_S0_of_sum_eq.2 (Or.inr e')), condExp, ite_eq_right e]
+      · rw [h0 (fun h => e' (h4.1 h)) e, ite_eq_right fun h => (G.pl.mem_S0_of_sum_eq.1 h).elim e e']
   have hne : GlobalTheory.LamTie.cond0 D.host (G.pl.w G.pl.v0) ≠ ⊥ := by
     refine mul_ne_zero (pow_ne_zero _ ?_) (below _).ne_bot
     rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot, Nat.cast_eq_zero]
@@ -810,11 +810,11 @@ theorem read_twisted_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi
   cases b
   · have : BlochKatoReduction.Gen.psiAt false (ex.nch.psi' w ^ a) = ex.nch.psi' w ^ (-a) := by simp [BlochKatoReduction.Gen.psiAt]
     rw [this, key]
-    simp only [Bool.false_eq_true, if_false, mul_neg, neg_mul]
+    simp only [Bool.false_eq_true, ite_false, mul_neg, neg_mul]
     ring
   · have : BlochKatoReduction.Gen.psiAt true (ex.nch.psi' w ^ a) = ex.nch.psi' w ^ a := rfl
     rw [this, key]
-    simp only [if_true]
+    simp only [ite_true]
     ring
 end GlobalTheory.ThmAUpper
 end
@@ -873,14 +873,14 @@ theorem exists_ext {R S : Type} [CommRing R] [IsDomain R] [CommRing S] [IsDomain
     (hinj : Function.Injective (algebraMap R S)) [IsAlgClosed K] (jk : FractionRing R →+* K) :
     ∃ je : FractionRing S →+* K, ∀ x, je (IsFractionRing.map (j := algebraMap R S) hinj x) = jk x := by
   let k : FractionRing R →+* FractionRing S := IsFractionRing.map (j := algebraMap R S) hinj
-  letI : Algebra (FractionRing R) (FractionRing S) := k.toAlgebra
-  letI : Algebra (FractionRing R) K := jk.toAlgebra
+  let : Algebra (FractionRing R) (FractionRing S) := k.toAlgebra
+  let : Algebra (FractionRing R) K := jk.toAlgebra
   have hi : ∀ a : S, IsIntegral (FractionRing R) (algebraMap S (FractionRing S) a) := fun a =>
     IsIntegral.map_of_comp_eq (algebraMap R (FractionRing R)) (algebraMap S (FractionRing S))
       (RingHom.ext fun r => by
         show k (algebraMap R _ r) = _
         simp [k, IsFractionRing.map]) (Algebra.IsIntegral.isIntegral a)
-  haveI : Algebra.IsAlgebraic (FractionRing R) (FractionRing S) := ⟨fun x => by
+  have : Algebra.IsAlgebraic (FractionRing R) (FractionRing S) := ⟨fun x => by
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := S) x
     rw [div_eq_mul_inv]
     exact ((hi a).mul (hi b).inv).isAlgebraic⟩
@@ -979,7 +979,7 @@ theorem val_eq_of_unit (α β : L →+* K) (P : HeightOneSpectrum (𝓞 L)) {l :
   simp only [map_mul, map_zpow₀, map_natCast] at h1
   have h0 : A.valuation (l : K) ^ (-n) ≠ 0 := zpow_ne_zero _ (by
     rw [← map_natCast α, map_ne_zero, map_ne_zero]; exact hl1)
-  exact (zpow_left_inj₀ zero_le' zero_le' he).1 (mul_right_cancel₀ h0 h1)
+  exact (zpow_left_inj₀ zero_le zero_le he).1 (mul_right_cancel₀ h0 h1)
 
 theorem exists_aut_centre [IsGalois ℚ L] (L0 : IntermediateField ℚ L) (β : L →+* K) (P : HeightOneSpectrum (𝓞 L))
     (h : ∀ x : 𝓞 L0, A.valuation (β ((x : L0) : L)) < 1 ↔ algebraMap (𝓞 L0) (𝓞 L) x ∈ P.asIdeal) :
@@ -987,9 +987,9 @@ theorem exists_aut_centre [IsGalois ℚ L] (L0 : IntermediateField ℚ L) (β : 
   let f : 𝓞 L →+* A := (β.comp (algebraMap (𝓞 L) L)).codRestrict A fun x => (A.valuation_le_one_iff _).1 (int_le_one A β x)
   let P' : Ideal (𝓞 L) := (IsLocalRing.maximalIdeal A).comap f
   have hP' : ∀ x : 𝓞 L, x ∈ P' ↔ A.valuation (β x) < 1 := fun x => A.valuation_lt_one_iff (f x)
-  haveI : P'.IsPrime := Ideal.comap_isPrime _ _
-  haveI := P.isPrime
-  haveI : P'.LiesOver (P.asIdeal.under (𝓞 L0)) := ⟨Ideal.ext fun x => ((hP' (algebraMap (𝓞 L0) (𝓞 L) x)).trans (h x)).symm⟩
+  have : P'.IsPrime := Ideal.comap_isPrime _ _
+  have := P.isPrime
+  have : P'.LiesOver (P.asIdeal.under (𝓞 L0)) := ⟨Ideal.ext fun x => ((hP' (algebraMap (𝓞 L0) (𝓞 L) x)).trans (h x)).symm⟩
   obtain ⟨σ, hσ⟩ := Ideal.exists_smul_eq_of_isGaloisGroup (P.asIdeal.under (𝓞 L0)) P.asIdeal P' (L ≃ₐ[L0] L)
   refine ⟨σ, fun x => ?_⟩
   rw [← Ideal.smul_mem_pointwise_smul_iff (a := σ), hσ, hP']
@@ -1040,7 +1040,7 @@ theorem exists_exponent {G : Type} [CommGroup G] (ψ : G →* ℂˣ) {l n : ℕ}
     {c : ℤ} (hc : IsCoprime c (l : ℤ)) :
     ∃ a : ℤ, IsCoprime a (l : ℤ) ∧ (Units.map g.toRingHom.toMonoidHom).comp ψ = ψ ^ (c * a) := by
   have hN : l ^ (n + 1) ≠ 0 := pow_ne_zero _ hl.ne_zero
-  haveI : NeZero (l ^ (n + 1)) := ⟨hN⟩
+  have : NeZero (l ^ (n + 1)) := ⟨hN⟩
   have hζ := Complex.isPrimitiveRoot_exp _ hN
   generalize Complex.exp _ = ζ at hζ
   have hg : IsPrimitiveRoot (g ζ) (l ^ (n + 1)) := hζ.map_of_injective g.injective
@@ -1076,20 +1076,20 @@ theorem ratio_conj (hA : GlobalTheory.Published.GlobalArtinReciprocity) (hG : To
   obtain ⟨T₀', T', a1, -, a2, -, a3⟩ := hG E K d δ ι I φ s κ 𝔣 Q χ h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 h11
   obtain rfl : T₀' = T₀ := a1.unique hT₀
   obtain rfl : T' = T := funext fun ψ => (a2 ψ).unique (hT ψ)
-  haveI : IsTotallyComplex K := ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.1 fun hw => by
+  have : IsTotallyComplex K := ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.1 fun hw => by
     have h := congrArg (InfinitePlace.embedding_of_isReal hw) h4
     rw [map_pow, map_neg, map_natCast] at h
     have : (0 : ℝ) < d := by exact_mod_cast h3
     nlinarith [sq_nonneg (InfinitePlace.embedding_of_isReal hw δ)]⟩
   let Ω := AlgebraicClosure K
-  letI : Algebra K ℂ := ι.toAlgebra
+  let : Algebra K ℂ := ι.toAlgebra
   let j : Ω →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω ℂ := j.toRingHom.toAlgebra
-  haveI : IsScalarTower K Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  let : Algebra Ω ℂ := j.toRingHom.toAlgebra
+  have : IsScalarTower K Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
   have hg : ∀ x : K, g (algebraMap K ℂ x) = algebraMap K ℂ x := fun x => by
     change g (ι x) = ι x
     rw [← h6 (Classical.arbitrary I)]
@@ -1153,8 +1153,8 @@ private theorem exists_place_pz (C : NChoice D) (w w' : D.what₂.places.Pl) (hw
       (∀ y, (D.plEq w).valuation D.what₂.LL y = 1 → A.valuation (je (C.embW w y)) = 1) ∧
       (∀ x : D.LL0, g (D.what₂.embLL x) = D.what₂.embLL x) ∧
       ∀ y, (D.plEq w').valuation D.what₂.LL y = 1 → A.valuation (ι (g (D.what₂.embLL y))) = 1 := by
-  haveI := C.Oe_fin w
-  haveI := D.galLL
+  have := C.Oe_fin w
+  have := D.galLL
   obtain ⟨je, hje⟩ := exists_ext (C.Oe_inj w) jk
   obtain ⟨A, hA, hloc⟩ := IsLocalRing.exists_factor_valuationRing (je.comp (algebraMap (C.Oe w) (FractionRing (C.Oe w))))
   have hu : ∀ a : C.Oe w, A.valuation (je (algebraMap _ _ a)) = 1 → IsUnit a := fun a h =>
@@ -1170,7 +1170,7 @@ private theorem exists_place_pz (C : NChoice D) (w w' : D.what₂.places.Pl) (hw
     have hy0 : y ≠ 0 := by
       rintro rfl
       simp at hy
-    rwa [map_inv₀, map_inv₀, map_inv₀, inv_le_one₀ (zero_lt_iff.2 (by simpa using hy0))] at h1
+    rwa [map_inv₀, map_inv₀, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 (by simpa using hy0))] at h1
   have hp := D.what₂.places.resChar_prime w
   have hl : A.valuation ((D.what₂.places.resChar w : ℕ) : Kbar D.ntw (C.twI w)) < 1 := by
     refine lt_of_le_of_ne ((A.valuation_le_one_iff _).2 (natCast_mem A _)) fun h => ?_
@@ -1204,7 +1204,7 @@ private theorem exists_place_pz (C : NChoice D) (w w' : D.what₂.places.Pl) (hw
     rw [e1, ← mem_max_iff A f0 hf0 hl0 hl, ← HeightOneSpectrum.valuation_lt_one_iff_mem (K := D.what₂.LL), ← val_pos_iff_pz]
     refine Iff.trans ⟨fun h => ⟨a, h, ha⟩, fun ⟨y, hy, e⟩ => ?_⟩ (hw' x)
     rwa [← IsFractionRing.injective _ (FractionRing (D.ntw.O0 (C.twI w))) (e.trans ha.symm)]
-  haveI : Countable D.what₂.LL := Countable.of_equiv _ (Module.finBasis ℚ D.what₂.LL).equivFun.toEquiv.symm
+  have : Countable D.what₂.LL := Countable.of_equiv _ (Module.finBasis ℚ D.what₂.LL).equivFun.toEquiv.symm
   obtain ⟨g, hg⟩ := GlobalTheory.GaloisDescent.exists_complex_ringEquiv_comp_eq D.what₂.embLL (D.what₂.embLL.comp σ.toRingEquiv.toRingHom)
   refine ⟨je, A, g, hje, fun x y h => exists_unit A je hA hu h, hα, fun x => ?_, fun y hy => ?_⟩
   · rw [hg]
@@ -1243,7 +1243,7 @@ private theorem exists_side_pz (C : NChoice D) (w : D.what₂.places.Pl)
       refine (congrArg c (h4 x)).trans ?_
       show starRingEnd ℂ (Formalism.L2.Host.embLL0 D x) = t
       rw [hx, Complex.conj_conj]
-    · letI := D.starLL
+    · let := D.starLL
       have h6 := h5 (star y) (by rw [← val_zero_iff_pz, D.conj_val, star_star, val_zero_iff_pz, hy])
       rw [D.starLL_cx] at h6
       show A.valuation (ι (starRingEnd ℂ (starRingEnd ℂ (g (starRingEnd ℂ (D.what₂.embLL y)))))) = 1
@@ -1324,7 +1324,7 @@ theorem _root_.GlobalTheory.T.toric_ratio_field_data_cm_alt : ∀ {D : D7} {L : 
     refine h3 _ (mul_mem (hval y) hm) ?_
     rw [GlobalTheory.IndefiniteRowSideFullHecke.ToricSymbols.lamF, map_mul, Complex.conj_ofReal, ← Complex.inv_eq_conj (show ‖(finPart χ y : ℂ)‖ = 1 from hv.1 _)]
     exact mul_mem (inv_mem (hval y)) hm
-  haveI : Nonempty D.what₂.Tau := Fintype.card_pos_iff.1 (by have := hfd.2.2.2.2.2.1; omega)
+  have : Nonempty D.what₂.Tau := Fintype.card_pos_iff.1 (by have := hfd.2.2.2.2.2.1; omega)
   let τ₀ : D.what₂.Tau := Classical.arbitrary _
   let δ : D.host.K := ⟨D.host.sqrtMinusD, GlobalTheory.Mem.Col2.HostK.sqrt_mem D.host⟩
   have hδ : δ ^ 2 = -(D.host.d : D.host.K) := Subtype.ext (by simpa using Formalism.BasicNotions.Host.sqrtMinusD_sq D.host)
@@ -1516,8 +1516,8 @@ theorem GlobalTheory.ThmARatio.values_as_toric_sums_alt : ∀ {D : D7} {L : Size
       nuH d.G p.P.A3.A.μ0 i j * p.R.C.delAt (D.what₂.places.resChar w) := by
     unfold fam GlobalTheory.FunObj.SqNum.delOf Formalism.L2.Host.CharFrame.delAt
     by_cases h : D.what₂.places.resChar w = D.host.pde
-    · simp only [h, decide_true, cond_true, if_true]
-    · simp only [h, decide_false, cond_false, if_false]
+    · simp only [h, decide_true, cond_true, ite_true]
+    · simp only [h, decide_false, cond_false, ite_false]
   obtain ⟨T₀, ⟨hv, h0⟩, hne, hL, -⟩ := hTor i j s hs1 hs2 (some (decide (D.what₂.places.resChar w = D.host.pde)))
   rw [hχ] at hv h0 hL
   have hP := p.Tp.psi_is w hw

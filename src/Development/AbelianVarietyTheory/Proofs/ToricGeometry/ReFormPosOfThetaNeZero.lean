@@ -221,7 +221,7 @@ theorem _root_.GlobalTheory.ThetaPositivity.re_form_pos_of_theta_ne_zero :
         ∀ z : Fin g → ℂ, z ≠ 0 → 0 < (z ⬝ᵥ Hm.mulVec (star z)).re := by
   intro g Λ hdisc hspan Hm χ Ef θ hH hχ hE hinj hθ hθ0 htr z hz
   classical
-  haveI : IsZLattice ℝ Λ := ⟨hspan⟩
+  have : IsZLattice ℝ Λ := ⟨hspan⟩
   have hpsd : ∀ w : Fin g → ℂ, 0 ≤ (w ⬝ᵥ Hm.mulVec (star w)).re := by
     intro w
     by_contra hw

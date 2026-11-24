@@ -102,7 +102,7 @@ theorem prime_generically_regular_quotient :
   intro Λ _ _ _ _ B _ _ _ p _ hp
   obtain ⟨n, φ, hφ⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp (inferInstance : Algebra.FiniteType Λ B)
   set Q : Ideal (MvPolynomial (Fin n) Λ) := p.comap φ with hQdef
-  haveI : Q.IsPrime := Ideal.comap_isPrime _ _
+  have : Q.IsPrime := Ideal.comap_isPrime _ _
   have hQ : ∀ a : Λ, MvPolynomial.C a ∈ Q → a = 0 := by
     intro a ha
     apply hp a
@@ -118,7 +118,7 @@ theorem prime_generically_regular_quotient :
     · exact hdet h1
   · intro q _ hpq hgq
     set N : Ideal (MvPolynomial (Fin n) Λ) := q.comap φ with hN
-    haveI : N.IsPrime := Ideal.comap_isPrime _ _
+    have : N.IsPrime := Ideal.comap_isPrime _ _
     have hQN : Q ≤ N := Ideal.comap_mono hpq
     have hgN : g₀ * δ ∉ N := hgq
     have hg₀N : g₀ ∉ N := fun h1 => hgN (N.mul_mem_right _ h1)
@@ -182,7 +182,7 @@ theorem generically_regular_quotient_of_finiteType_int :
   obtain ⟨x, hx, hxp⟩ := Ideal.IsPrime.exists_mem_prime_of_ne_bot (Ideal.IsPrime.comap _) hP
   set l := x.natAbs with hl
   have hlp : l.Prime := Int.prime_iff_natAbs_prime.mp hxp
-  haveI : Fact l.Prime := ⟨hlp⟩
+  have : Fact l.Prime := ⟨hlp⟩
   have hlmem : (l : B) ∈ p := by
     have hx' : algebraMap ℤ B x ∈ p := hx
     rcases Int.natAbs_eq x with h1 | h1
@@ -207,12 +207,12 @@ theorem generically_regular_quotient_of_finiteType_int :
   let ψ : ZMod l →+* B ⧸ I :=
     (Ideal.Quotient.lift (Ideal.span {((l : ℕ) : ℤ)}) (Int.castRingHom (B ⧸ I)) hl0).comp
       (Int.quotientSpanNatEquivZMod l).symm.toRingHom
-  letI : Algebra (ZMod l) (B ⧸ I) := ψ.toAlgebra
-  haveI : IsScalarTower ℤ (ZMod l) (B ⧸ I) :=
+  let : Algebra (ZMod l) (B ⧸ I) := ψ.toAlgebra
+  have : IsScalarTower ℤ (ZMod l) (B ⧸ I) :=
     IsScalarTower.of_algebraMap_eq' (RingHom.ext_int _ _)
-  haveI : Algebra.FiniteType (ZMod l) (B ⧸ I) :=
+  have : Algebra.FiniteType (ZMod l) (B ⧸ I) :=
     Algebra.FiniteType.of_restrictScalars_finiteType ℤ (ZMod l) (B ⧸ I)
-  haveI : PerfectField (FractionRing (ZMod l)) := by
+  have : PerfectField (FractionRing (ZMod l)) := by
     have : Finite (FractionRing (ZMod l)) :=
       Finite.of_equiv _ (FractionRing.algEquiv (ZMod l) (ZMod l)).toEquiv.symm
     infer_instance
@@ -262,9 +262,9 @@ theorem geomRegFib_of_isRegularRing_essFiniteType :
       (∀ (K : Type) [Field K] [Algebra R K] [Algebra.EssFiniteType R K], IsRegularRing (B ⊗[R] K)) →
         FinalTheorems.GeomRegFib R B := by
   intro R B _ _ _ h P _ K _ _ _ _ hfg
-  haveI : Algebra.EssFiniteType P.ResidueField K := IntermediateField.fg_top_iff.mp hfg
-  haveI : Algebra.EssFiniteType R K := Algebra.EssFiniteType.comp R P.ResidueField K
-  haveI hr : IsRegularRing (B ⊗[R] K) := h K
+  have : Algebra.EssFiniteType P.ResidueField K := IntermediateField.fg_top_iff.mp hfg
+  have : Algebra.EssFiniteType R K := Algebra.EssFiniteType.comp R P.ResidueField K
+  have hr : IsRegularRing (B ⊗[R] K) := h K
   exact ⟨inferInstance, fun Q _ => hr.isRegularLocalRing_localization Q⟩
 
 end GlobalTheory
@@ -393,7 +393,7 @@ theorem _root_.GlobalTheory.RegularAscent.exists_regular_near_of_regular_quotien
   choose! c hcp hcT using hc
   have hg : ∀ x ∈ p, (∏ v ∈ V, c v) * x ∈ Ideal.span (T : Set B) := by
     have : Ideal.span {∏ v ∈ V, c v} * p ≤ Ideal.span (T : Set B) := by
-      rw [← hV, Ideal.span_mul_span', Ideal.span_le]
+      rw [← hV, Ideal.span_mul_span, Ideal.span_le]
       rintro _ ⟨a, ha, v, hv, rfl⟩
       rw [Set.mem_singleton_iff.mp ha, ← Finset.prod_erase_mul V c hv]
       change (∏ x ∈ V.erase v, c x) * c v * v ∈ Ideal.span (T : Set B)
@@ -534,16 +534,16 @@ theorem isRegularLocalRing_atPrime_of_le {B : Type} [CommRing B] (p q : Ideal B)
     intro x hx hxp
     exact hx (hpq hxp)
   let P' : Ideal (Localization.AtPrime q) := p.map (algebraMap B _)
-  haveI hP' : P'.IsPrime := IsLocalization.isPrime_of_isPrime_disjoint q.primeCompl _ p ‹_› hd
+  have hP' : P'.IsPrime := IsLocalization.isPrime_of_isPrime_disjoint q.primeCompl _ p ‹_› hd
   have hc : P'.comap (algebraMap B (Localization.AtPrime q)) = p :=
     IsLocalization.under_map_of_isPrime_disjoint q.primeCompl _ ‹p.IsPrime› hd
   have hsub : (P'.comap (algebraMap B (Localization.AtPrime q))).primeCompl = p.primeCompl := by
     ext x
     rw [Ideal.mem_primeCompl_iff, Ideal.mem_primeCompl_iff, hc]
-  haveI : IsRegularRing (Localization.AtPrime q) := isRegularRing_of_isRegularLocalRing _
+  have : IsRegularRing (Localization.AtPrime q) := isRegularRing_of_isRegularLocalRing _
   have hreg : IsRegularLocalRing (Localization.AtPrime P') :=
     IsRegularRing.isRegularLocalRing_localization P'
-  haveI : IsLocalization p.primeCompl (Localization.AtPrime P') := by
+  have : IsLocalization p.primeCompl (Localization.AtPrime P') := by
     rw [← hsub]
     exact IsLocalization.isLocalization_atPrime_localization_atPrime q.primeCompl P'
   exact IsRegularLocalRing.of_ringEquiv
@@ -585,16 +585,16 @@ theorem qeRing_of_finiteType_int : ∀ (A : Type) [CommRing A] [Algebra.FiniteTy
   · exact AdicCompletion.flat_of_isNoetherian _
   · apply _root_.GlobalTheory.geomRegFib_of_isRegularRing_essFiniteType
     intro K _ _ _
-    haveI : Algebra.EssFiniteType A (Localization.AtPrime P) :=
+    have : Algebra.EssFiniteType A (Localization.AtPrime P) :=
       Algebra.EssFiniteType.of_isLocalization _ P.primeCompl
-    haveI : Algebra.EssFiniteType ℤ (Localization.AtPrime P) :=
+    have : Algebra.EssFiniteType ℤ (Localization.AtPrime P) :=
       Algebra.EssFiniteType.comp ℤ A (Localization.AtPrime P)
     have hZ : @Algebra.EssFiniteType ℤ (Localization.AtPrime P) _ _ (Ring.toIntAlgebra _) := by
       convert this
       exact Subsingleton.elim _ _
     exact @_root_.GlobalTheory.formalFibre_isRegularRing_of_essFiniteType_int (Localization.AtPrime P) K _ _ hZ _ _ _
-  · haveI : Algebra.FiniteType ℤ B := Algebra.FiniteType.trans (inferInstance : Algebra.FiniteType ℤ A) ‹_›
-    haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing ℤ B
+  · have : Algebra.FiniteType ℤ B := Algebra.FiniteType.trans (inferInstance : Algebra.FiniteType ℤ A) ‹_›
+    have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing ℤ B
     exact _root_.GlobalTheory.isOpen_regularLocus_of_nagata B (fun p _ => _root_.GlobalTheory.generically_regular_quotient_of_finiteType_int B p)
 
 end GlobalTheory
@@ -619,29 +619,29 @@ theorem exists_etale_of_isEtaleCompletion (A R : Type) [CommRing A] [IsLocalRing
   obtain ⟨hflat, hmap, hfin⟩ := het
   set h := algebraMap A R with hh
   let D := AdicCompletion (maximalIdeal A) A
-  haveI : IsNoetherianRing D := AdicNoeth.isNoetherianRing_adicCompletion A _
-  haveI : IsAdicComplete ((maximalIdeal A).map h) R := by rw [hmap]; infer_instance
+  have : IsNoetherianRing D := AdicNoeth.isNoetherianRing_adicCompletion A _
+  have : IsAdicComplete ((maximalIdeal A).map h) R := by rw [hmap]; infer_instance
   obtain ⟨g, hg⟩ := exists_adicCompletion_ringHom_extend (maximalIdeal A) h
-  letI : Algebra D R := g.toAlgebra
+  let : Algebra D R := g.toAlgebra
   have hgA : ∀ a, g (algebraMap A D a) = h a := fun a => RingHom.congr_fun hg a
   have hmA : (maximalIdeal D).map (algebraMap D R) = maximalIdeal R := by
     rw [AdicCompletion.maximalIdeal_eq_map, Ideal.map_map]
     change (maximalIdeal A).map (g.comp _) = _
     rw [hg, hmap]
-  haveI : IsLocalHom (algebraMap D R) := ((local_hom_tfae _).out 1 3).mpr hmA.le
+  have : IsLocalHom (algebraMap D R) := ((local_hom_tfae _).out 1 3).mpr hmA.le
   have hres : ((residue R).comp g).Finite :=
     RingHom.Finite.of_comp_finite (f := algebraMap A D) (by rw [RingHom.comp_assoc, hg]; exact hfin)
-  haveI : Module.Finite D (R ⧸ (maximalIdeal D).map (algebraMap D R)) := by
+  have : Module.Finite D (R ⧸ (maximalIdeal D).map (algebraMap D R)) := by
     rw [← RingHom.finite_algebraMap]
     show ((Ideal.Quotient.mk _).comp (algebraMap D R)).Finite
     rw [hmA]
     exact hres
-  haveI : IsHausdorff ((maximalIdeal D).map (algebraMap D R)) R := by rw [hmA]; infer_instance
-  haveI : Module.Finite D R := FormalIsogeny.finite_of_finite_quotient_map (maximalIdeal D)
-  haveI : Module.Flat D R := by
+  have : IsHausdorff ((maximalIdeal D).map (algebraMap D R)) R := by rw [hmA]; infer_instance
+  have : Module.Finite D R := FormalIsogeny.finite_of_finite_quotient_map (maximalIdeal D)
+  have : Module.Flat D R := by
     refine LocalFlat.flat_of_relationsLift R (I := maximalIdeal D)
       (hmA.le.trans (maximalIdeal_le_jacobson _)) fun n => ?_
-    haveI : Module.Flat A R := RingHom.flat_algebraMap_iff.mp hflat
+    have : Module.Flat A R := RingHom.flat_algebraMap_iff.mp hflat
     have fg := (maximalIdeal A).fg_of_isNoetherianRing
     have hkerA : ∀ x : D, AdicCompletion.evalₐ (maximalIdeal A) n x = 0 ↔ x ∈ maximalIdeal D ^ n := by
       intro x
@@ -679,14 +679,14 @@ theorem exists_etale_of_isEtaleCompletion (A R : Type) [CommRing A] [IsLocalRing
     · rw [RingHom.flat_algebraMap_iff]
       exact Module.Flat.of_linearEquiv
         (Algebra.TensorProduct.quotIdealMapEquivQuotTensor R (maximalIdeal A ^ n)).toLinearEquiv
-  haveI : Algebra.FormallyUnramified D (ResidueField R) := by
+  have : Algebra.FormallyUnramified D (ResidueField R) := by
     rw [← RingHom.formallyUnramified_algebraMap]
     have e : (algebraMap D (ResidueField R)).comp (algebraMap A D) = (residue R).comp h := by
       rw [← hg]; rfl
     exact RingHom.FormallyUnramified.of_comp (f := algebraMap A D) (by rw [e]; exact hfu)
-  haveI : Algebra.FormallyUnramified D R :=
+  have : Algebra.FormallyUnramified D R :=
     GlobalTheory.EtaleCompletionNormal.formallyUnramified_of_map_maximalIdeal hmA
-  haveI : Algebra.FinitePresentation D R :=
+  have : Algebra.FinitePresentation D R :=
     (Algebra.FinitePresentation.of_finiteType (R := D) (A := R)).1 inferInstance
   exact ⟨g, hg, Algebra.Etale.of_formallyUnramified_of_flat⟩
 
@@ -717,7 +717,7 @@ theorem exists_loc (A : Type) [CommRing A] [IsLocalRing A] [Algebra.EssFiniteTyp
       mem_nonunits_iff, IsUnit.mem_submonoid_iff]
   have hloc := Algebra.EssFiniteType.isLocalization ℤ A
   rw [hsub] at hloc
-  haveI : IsLocalization.AtPrime A ((maximalIdeal A).comap (algebraMap (Algebra.EssFiniteType.subalgebra ℤ A) A)) := hloc
+  have : IsLocalization.AtPrime A ((maximalIdeal A).comap (algebraMap (Algebra.EssFiniteType.subalgebra ℤ A) A)) := hloc
   exact ⟨(IsLocalization.algEquiv ((maximalIdeal A).comap (algebraMap (Algebra.EssFiniteType.subalgebra ℤ A) A)).primeCompl
     (Localization.AtPrime _) A).toRingEquiv⟩
 
@@ -889,7 +889,7 @@ theorem regular_transfer {T T' : Type} [CommRing T] [CommRing T'] (F : T ≃+* T
     IsNoetherianRing T' ∧
       ∀ (Q' : Ideal T') [Q'.IsPrime], IsRegularLocalRing (Localization.AtPrime Q') := by
   refine ⟨isNoetherianRing_of_ringEquiv T F, fun Q' _ => ?_⟩
-  haveI := hR (Q'.comap F)
+  have := hR (Q'.comap F)
   exact IsRegularLocalRing.of_ringEquiv (IsLocalization.ringEquivOfRingEquiv
     (Localization.AtPrime (Q'.comap F)) (Localization.AtPrime Q') F (F.map_primeCompl_comap_eq Q'))
 
@@ -906,11 +906,11 @@ theorem transport (A A' B B' : Type) [CommRing A] [CommRing A'] [CommRing B] [Co
     GeomRegFib A B → GeomRegFib A' B' := by
   intro h P' _ K _ _ _ _ hfg
   let P : Ideal A := P'.comap (e : A →+* A')
-  haveI : P.IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := Ideal.comap_isPrime _ _
   let φ : P.ResidueField ≃+* P'.ResidueField := Ideal.residueFieldRingEquiv P P' e rfl
-  letI : Algebra A K := ((algebraMap A' K).comp (e : A →+* A')).toAlgebra
-  letI : Algebra P.ResidueField K := ((algebraMap P'.ResidueField K).comp (φ : _ →+* _)).toAlgebra
-  haveI : IsScalarTower A P.ResidueField K := IsScalarTower.of_algebraMap_eq fun a => by
+  let : Algebra A K := ((algebraMap A' K).comp (e : A →+* A')).toAlgebra
+  let : Algebra P.ResidueField K := ((algebraMap P'.ResidueField K).comp (φ : _ →+* _)).toAlgebra
+  have : IsScalarTower A P.ResidueField K := IsScalarTower.of_algebraMap_eq fun a => by
     change algebraMap A' K (e a) = algebraMap P'.ResidueField K (φ (algebraMap A P.ResidueField a))
     rw [residueFieldRingEquiv_algebraMap e P' a, ← IsScalarTower.algebraMap_apply]
   have hfg' : (⊤ : IntermediateField P.ResidueField K).FG := fg_top_transfer φ (fun _ => rfl) hfg
@@ -948,9 +948,9 @@ theorem isRadical_map_of_flat {A B : Type} [CommRing A] [CommRing B] [Algebra A 
     (hfib : ∀ (P : Ideal A) [P.IsPrime], _root_.IsReduced (B ⊗[A] P.ResidueField)) :
     (I.map (algebraMap A B)).IsRadical := by
   classical
-  haveI : Finite I.minimalPrimes := (Ideal.finite_minimalPrimes_of_isNoetherianRing A I).to_subtype
-  haveI : Fintype I.minimalPrimes := Fintype.ofFinite _
-  haveI hpr : ∀ P : I.minimalPrimes, P.1.IsPrime := fun P => P.2.1.1
+  have : Finite I.minimalPrimes := (Ideal.finite_minimalPrimes_of_isNoetherianRing A I).to_subtype
+  have : Fintype I.minimalPrimes := Fintype.ofFinite _
+  have hpr : ∀ P : I.minimalPrimes, P.1.IsPrime := fun P => P.2.1.1
   have hle : ∀ P : I.minimalPrimes, I ≤ P.1 := fun P => P.2.1.2
   let g : ∀ P : I.minimalPrimes, (A ⧸ I) →ₐ[A] P.1.ResidueField := fun P =>
     Ideal.Quotient.liftₐ I (IsScalarTower.toAlgHom A A P.1.ResidueField) (fun a ha => by
@@ -965,7 +965,7 @@ theorem isRadical_map_of_flat {A B : Type} [CommRing A] [CommRing B] [Algebra A 
     refine hI (Ideal.sInf_minimalPrimes (I := I) ▸ ?_)
     refine Ideal.mem_sInf.2 fun P hP => ?_
     have h0 := congrFun hy ⟨P, hP⟩
-    haveI : P.IsPrime := hP.1.1
+    have : P.IsPrime := hP.1.1
     exact Ideal.algebraMap_residueField_eq_zero.1 h0
   have hfB := Module.Flat.lTensor_preserves_injective_linearMap (M := B) f hf
   intro x ⟨n, hn⟩
@@ -1011,7 +1011,7 @@ theorem isReduced_adicCompletion_tensor_residueField (A : Type) [CommRing A] [Is
     GlobalTheory.qeRing_of_finiteType_int A P P.ResidueField (IntermediateField.fg_of_noetherian _)
   obtain ⟨-, hreg⟩ := h
   refine isReduced_ofLocalizationMaximal _ fun Q hQ => ?_
-  haveI := hreg Q
+  have := hreg Q
   infer_instance
 
 theorem isRadical_map_of_isEtaleCompletion : ∀ (A R : Type) [CommRing A] [IsLocalRing A] [Algebra.EssFiniteType ℤ A]
@@ -1019,11 +1019,11 @@ theorem isRadical_map_of_isEtaleCompletion : ∀ (A R : Type) [CommRing A] [IsLo
     IsEtaleCompletion φ → ((residue R).comp φ).FormallyUnramified → ∀ I : Ideal A, I.IsRadical →
     (I.map φ).IsRadical := by
   intro A R _ _ _ _ _ _ φ hc het hfu I hI
-  haveI : IsNoetherianRing A := Algebra.EssFiniteType.isNoetherianRing ℤ A
-  haveI := hc
-  letI : Algebra A R := φ.toAlgebra
+  have : IsNoetherianRing A := Algebra.EssFiniteType.isNoetherianRing ℤ A
+  have := hc
+  let : Algebra A R := φ.toAlgebra
   obtain ⟨g, hg, het'⟩ := GlobalTheory.NormalBaseChange.exists_etale_of_isEtaleCompletion A R het hfu
-  letI : Algebra (AdicCompletion (maximalIdeal A) A) R := g.toAlgebra
+  let : Algebra (AdicCompletion (maximalIdeal A) A) R := g.toAlgebra
   have h1 : (I.map (algebraMap A (AdicCompletion (maximalIdeal A) A))).IsRadical :=
     isRadical_map_of_flat I hI fun P _ => isReduced_adicCompletion_tensor_residueField A P
   have h2 := GlobalTheory.EtaleReducedEq.isRadical_map_of_etale (C := R) _ h1

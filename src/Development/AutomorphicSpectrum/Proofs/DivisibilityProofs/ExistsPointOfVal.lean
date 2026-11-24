@@ -80,9 +80,9 @@ theorem exists_prime_eq {L : Type} [Field L] [NumberField L] (O : ValuationSubri
     rw [h, Ideal.mem_bot] at hpm
     exact h0 hpm⟩
   refine ⟨v, ?_⟩
-  haveI : IsLocalization v.asIdeal.primeCompl (v.valuationSubringAtPrime L) :=
+  have : IsLocalization v.asIdeal.primeCompl (v.valuationSubringAtPrime L) :=
     Localization.subalgebra.isLocalization_ofField L v.asIdeal.primeCompl v.asIdeal.primeCompl_le_nonZeroDivisors
-  haveI : IsDiscreteValuationRing (v.valuationSubringAtPrime L) :=
+  have : IsDiscreteValuationRing (v.valuationSubringAtPrime L) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 L) v.ne_bot _
   refine ValuationSubring.eq_of_le_of_ne_top _ ?_ ?_
   · intro x hx

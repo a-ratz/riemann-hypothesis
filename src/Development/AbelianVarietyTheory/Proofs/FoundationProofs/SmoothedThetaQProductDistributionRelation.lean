@@ -69,7 +69,7 @@ theorem _root_.GlobalTheory.Sieg.prod_sub_pow_mul_of_isPrimitiveRoot {m : ℕ} {
 open scoped UpperHalfPlane MatrixGroups Manifold in
 theorem _root_.GlobalTheory.Sieg.ee_nat_div_eq_pow (m j : ℕ) :
     _root_.GlobalTheory.Sieg.ee ((j : ℂ) / m) = Complex.exp (2 * Real.pi * Complex.I / m) ^ j := by
-  rw [_root_.GlobalTheory.Sieg.ee, ← Complex.exp_nat_mul]
+  rw [_root_.GlobalTheory.Sieg.ee, ← Complex.exp_natCast_mul]
   congr 1
   ring
 

@@ -134,7 +134,7 @@ theorem tof_torLift_mk {d : ℕ} (F : (Fin d → ℝ) → ℂ) (hF : Continuous 
 
 theorem tof_box_measurable (d : ℕ) : MeasurableSet {x : Fin d → ℝ | ∀ i, x i ∈ Set.Ioc (0 : ℝ) 1} := by
   first
-  | (simp only [Set.setOf_forall]
+  | (simp only [Set.ofPred_forall]
      exact MeasurableSet.iInter fun i => measurable_pi_apply i measurableSet_Ioc)
   | measurability
 

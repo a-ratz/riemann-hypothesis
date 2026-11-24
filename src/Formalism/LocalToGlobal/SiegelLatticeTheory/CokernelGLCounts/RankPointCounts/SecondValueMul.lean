@@ -81,7 +81,7 @@ def CellPair : Type :=
 theorem intLow_inv_mul {n : ℕ} {l : Matrix (Fin n) (Fin n) E} (h : TieN.IntLow M l) : l⁻¹ * l = 1 := by
   apply Matrix.nonsing_inv_mul
   have hd : l.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular l (fun i j hij => h.2.1 i j hij)]
+    rw [Matrix.det_of_isLowerTriangular l (fun i j hij => h.2.1 i j hij)]
     simp [h.1]
   rw [hd]
   exact isUnit_one
@@ -89,7 +89,7 @@ theorem intLow_inv_mul {n : ℕ} {l : Matrix (Fin n) (Fin n) E} (h : TieN.IntLow
 theorem intUp_mul_inv {n : ℕ} {l : Matrix (Fin n) (Fin n) E} (h : TieN.IntUp M l) : l * l⁻¹ = 1 := by
   apply Matrix.mul_nonsing_inv
   have hd : l.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (fun i j hij => h.2.1 i j hij)]
+    rw [Matrix.det_of_isUpperTriangular (fun i j hij => h.2.1 i j hij)]
     simp [h.1]
   rw [hd]
   exact isUnit_one
@@ -123,7 +123,7 @@ abbrev rhoA (X : Matrix (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr 
 theorem eA_val (i : Fin (m + 1)) : ((eA a i : Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) : ℕ) = (i : ℕ) := rfl
 
 theorem eA_lt {i j : Fin (m + 1)} : eA a i < eA a j ↔ i < j := by
-  rw [Fin.lt_iff_val_lt_val, eA_val, eA_val, ← Fin.lt_iff_val_lt_val]
+  rw [Fin.lt_def, eA_val, eA_val, ← Fin.lt_def]
 
 theorem rhoA_mul (X Y : Matrix (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) E) :
     rhoA a (X * Y) = rhoA a X * rhoA a Y :=
@@ -233,7 +233,7 @@ theorem va_of_lowW (g : Formalism.DoubleCosetMeasures.lowW E (Formalism.MainNoti
   · simp [Matrix.submatrix_apply, mk]
   · have hne : eA a i ≠ eA a j := (eA a).injective.ne (ne_of_lt hij)
     have hlt : eA a i < eA a j := (eA_lt a).2 hij
-    simp only [Matrix.submatrix_apply, mk, hne, if_false]
+    simp only [Matrix.submatrix_apply, mk, hne, ite_false]
     rw [dite_eq_right]
     intro hp
     exact absurd hp.1 (not_lt.2 hlt.le)
@@ -241,7 +241,7 @@ theorem va_of_lowW (g : Formalism.DoubleCosetMeasures.lowW E (Formalism.MainNoti
     have hs : sbA a (eA a i) (eA a j) = true := by
       simp only [sbA, eA_val]
       exact hsb
-    simp only [Matrix.submatrix_apply, mk, hne, if_false]
+    simp only [Matrix.submatrix_apply, mk, hne, ite_false]
     rw [dite_eq_right]
     intro hp
     have h2 : sbA a (eA a i) (eA a j) = false := hp.2
@@ -310,7 +310,7 @@ theorem upUniG_of_up {u : Matrix (Fin (m + 1)) (Fin (m + 1)) E} (h1 : ∀ i, u i
     · intro b
       simp [hXdef, h1]
   have hdet : X.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hup.1]
+    rw [Matrix.det_of_isUpperTriangular hup.1]
     simp [hup.2]
   let gU : GL (Fin (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum) E := Matrix.nonsingInvUnit X (by rw [hdet]; exact isUnit_one)
   have hmem : gU ∈ Formalism.DoubleCosetMeasures.upUniG E (Formalism.MainNotions.LocalModelPeriodLattices.tr a).1.sum := hup

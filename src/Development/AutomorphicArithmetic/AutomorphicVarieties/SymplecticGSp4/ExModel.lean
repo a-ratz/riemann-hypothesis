@@ -461,7 +461,7 @@ private theorem ex_unit (l : ℕ) [hl : Fact l.Prime] (O : Type) [CommRing O] [I
   refine ⟨u, ?_⟩
   intro hfin
   obtain ⟨n, hn, hpow⟩ := isOfFinOrder_iff_pow_eq_one.mp hfin
-  haveI : CharZero O := charZero_of_injective_algebraMap hinj
+  have : CharZero O := charZero_of_injective_algebraMap hinj
   have h1 : ((l + 1 : ℕ) : O) ^ n = 1 := by
     rw [← hu, ← Units.val_pow_eq_pow_val, hpow, Units.val_one]
   have h2 : (((l + 1) ^ n : ℕ) : O) = ((1 : ℕ) : O) := by
@@ -474,7 +474,7 @@ private theorem ex_unit (l : ℕ) [hl : Fact l.Prime] (O : Type) [CommRing O] [I
 theorem UpperTheory.smoothPt_weightedPresentation_of_pointDerivations :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ (L : LocBase D) (y : L.B →ₐ[c.O] DualNumber c.O) (j : ℤ × ℤ), (∀ (v : D.T) (g : D.Gp v) (a b : Fin 4), (y ((L.ρ v).hom g a b)).fst = D.r0 g a b ∧ (wt a b ≠ j → (y ((L.ρ v).hom g a b)).snd = 0)) → (∀ x, (y x).fst = L.W.origin L.org x) ∧ ∀ i, i ≠ j → ∀ x ∈ L.W.part i, (y x).snd = 0 := by
   intro Ω _ _ _ l _ c D _ L y j H
-  haveI := c.dvr
+  have := c.dvr
   obtain ⟨u, hu⟩ := ex_unit l c.O
   refine core u hu L.W L.org (ι := (v : D.T) × D.Gp v × Fin 4 × Fin 4)
     (fun a => (L.ρ a.1).hom a.2.1 a.2.2.1 a.2.2.2) (fun a => wt a.2.2.1 a.2.2.2) (fun a => L.hom _ _ _ _) ?_ y j
@@ -647,7 +647,7 @@ private theorem main (hD : D.Good) (L : LocBase D) (F : Fr D L) (Q : Type) [Comm
     ∃ Db ∈ PtDer (F.W.origin F.org) Q, ∃ DB ∈ PtDer (L.W.origin L.org) c.O, HasWt L.W.part (-wPs) DB ∧
       (∀ x, Db (F.i x) = algebraMap c.O Q (DB x)) ∧ (∀ g i j, Db (F.r.hom g i j) = (Xm c.O * D.r0 g) i j • z g) ∧
       ∀ v i j, Db (F.α v i j) = 0 := by
-  haveI : IsCO c.O (TrivSqZeroExt c.O Q) := co_sqz c.O c.O _ fun _ => rfl
+  have : IsCO c.O (TrivSqZeroExt c.O Q) := co_sqz c.O c.O _ fun _ => rfl
   obtain ⟨-, -, f3, -, -, f6, -, -, -, -, f11, -⟩ := facts D hD
   have h1 : z 1 = 0 := by
     have := coc 1 1
@@ -932,9 +932,9 @@ theorem UpperTheory.nonempty_cover_of_relative_presentation_smoothPt :
   have hle : ∀ F ∈ J, W.π F = 0 := fun F hF => (hker ▸ Ideal.mem_sup_left hF : F ∈ RingHom.ker W.π)
   let qh : (MvPowerSeries W.σ O ⧸ J) →ₐ[O] U := Ideal.Quotient.liftₐ J W.π hle
   have hqh : ∀ F, qh (Ideal.Quotient.mk J F) = W.π F := fun _ => rfl
-  haveI : Nontrivial (MvPowerSeries W.σ O ⧸ J) := ((W.origin h).comp qh).toRingHom.domain_nontrivial
-  haveI := co_mvps O O W.σ
-  haveI : IsCO O (MvPowerSeries W.σ O ⧸ J) :=
+  have : Nontrivial (MvPowerSeries W.σ O ⧸ J) := ((W.origin h).comp qh).toRingHom.domain_nontrivial
+  have := co_mvps O O W.σ
+  have : IsCO O (MvPowerSeries W.σ O ⧸ J) :=
     co_quot O _ _ (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
   have hkm : RingHom.ker (Ideal.Quotient.mkₐ O J) = J := Ideal.Quotient.mkₐ_ker O J
   let WA : WPres O X (MvPowerSeries W.σ O ⧸ J) :=
@@ -1218,7 +1218,7 @@ private theorem alg_desc {O A B M : Type} [CommRing O] [CommRing A] [Algebra O A
     (Ideal.quotientKerAlgEquivOfSurjective hp).symm.toAlgHom, fun y => ?_⟩
   have : (Ideal.quotientKerAlgEquivOfSurjective hp).symm (p y) = Ideal.Quotient.mk _ y := by
     rw [AlgEquiv.symm_apply_eq]; rfl
-  simp only [AlgHom.comp_apply, AlgEquiv.coe_algHom]
+  simp only [AlgHom.comp_apply, AlgEquiv.coe_toAlgHom]
   erw [this]
   rfl
 
@@ -1270,7 +1270,7 @@ private theorem tower {O X B U : Type} [CommRing O] [IsDomain O] [IsLocalRing O]
   have hne : I ≠ ⊤ := fun e => by
     have := hI 1 (e ▸ Submodule.mem_top)
     simp at this
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hne
   let π : R →ₐ[O] R ⧸ I := Ideal.Quotient.mkₐ O I
   have hπ : Function.Surjective π := Ideal.Quotient.mkₐ_surjective O I
   have hπ0 : ∀ k, π (eq k) = 0 := fun k => Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.subset_span ⟨k, rfl⟩)
@@ -1394,11 +1394,11 @@ private theorem dims (b : ℕ) (a n' : ℤ × ℤ → ℕ) (ha : ∀ j, j ≠ 0 
             (j ≠ wPs ∧ j ≠ -wPs ∧ j = 0 ∧ dimL j = 2 ∧ dimP j = 2))) := by decide
     unfold tDims
     rcases this j hj with ⟨e1, e2, e3, e4, e5, ⟨e6, e7⟩ | ⟨e6, e7⟩⟩ | ⟨e1, e2, ⟨e3, e4, e5⟩ | ⟨e3, e4, e5, e6⟩ | ⟨e3, e4, e5, e6, e7⟩⟩
-    · rw [if_pos e6]; rw [e1, e2, e7, h2 e3 e4 e5] at h1; omega
-    · rw [if_neg e6, if_neg e4, if_neg e5, if_neg e3]; rw [e1, e2, e7, h2 e3 e4 e5] at h1; omega
-    · rw [if_neg e2, if_pos e3, ← e3]; rw [e1, e4, e5] at h1; omega
-    · rw [if_neg e2, if_neg e3, if_pos e4, ← e4]; rw [e1, e5, e6] at h1; omega
-    · rw [if_neg e2, if_neg e3, if_neg e4, if_pos e5, ← e5]; rw [e1, e6, e7] at h1; omega
+    · rw [ite_eq_left e6]; rw [e1, e2, e7, h2 e3 e4 e5] at h1; omega
+    · rw [ite_eq_right e6, ite_eq_right e4, ite_eq_right e5, ite_eq_right e3]; rw [e1, e2, e7, h2 e3 e4 e5] at h1; omega
+    · rw [ite_eq_right e2, ite_eq_left e3, ← e3]; rw [e1, e4, e5] at h1; omega
+    · rw [ite_eq_right e2, ite_eq_right e3, ite_eq_left e4, ← e4]; rw [e1, e5, e6] at h1; omega
+    · rw [ite_eq_right e2, ite_eq_right e3, ite_eq_right e4, ite_eq_left e5, ← e5]; rw [e1, e6, e7] at h1; omega
   · have n : ∀ x ∈ wts, j ≠ x := fun x hx e => hj (e ▸ hx)
     have e1 := n wAl (by decide)
     have e2 := n wBe (by decide)
@@ -1406,8 +1406,8 @@ private theorem dims (b : ℕ) (a n' : ℤ × ℤ → ℕ) (ha : ∀ j, j ≠ 0 
     have e4 := n wPs (by decide)
     have e5 := n (-wPs) (by decide)
     have e6 := n 0 (by decide)
-    simp only [dimL, dimP, e1, e2, e3, e4, e6, hj, or_self, if_false, h2 e6 e4 e5] at h1
-    simp only [tDims, e1, e2, e3, e4, e5, e6, or_self, if_false]
+    simp only [dimL, dimP, e1, e2, e3, e4, e6, hj, or_self, ite_false, h2 e6 e4 e5] at h1
+    simp only [tDims, e1, e2, e3, e4, e5, e6, or_self, ite_false]
     omega
 
 private theorem enum {ι R X : Type} [Finite ι] (q : ι → R) (w : ι → X) (j : X) (n : ℕ) (h : Nat.card {k // w k = j} = n) :
@@ -1502,21 +1502,21 @@ private theorem tOdd_ind (hD : D.Good) (k : D.T × Fin 6) :
       simp only [Raw.r0, diagRep, MonoidHom.coe_mk, OneHom.coe_mk, Matrix.sub_apply, Matrix.mul_diagonal, Matrix.diagonal_mul]
       ring
     refine ⟨δ, d1, ?_, ?_⟩
-    · simp only [tOdd, if_pos hv]
-      rw [e, if_pos rfl, one_mul]
+    · simp only [tOdd, ite_eq_left hv]
+      rw [e, ite_eq_left rfl, one_mul]
       exact ph_ne hD k
     · rintro ⟨v', k'⟩ hne
       unfold tOdd
       split_ifs with h
-      · rw [e, if_neg, zero_mul]
+      · rw [e, ite_eq_right, zero_mul]
         rintro rfl
         exact hne (Prod.ext (h.trans hv.symm) rfl)
       · rw [d3]; rfl
   · obtain ⟨δ, d1, d2, d3⟩ := UpperTheory.exists_pointDerivation_framed_commutator_tangent D hD L F 0 (zero_mem _) (fun v' => if v' = v then X else 0)
-      (fun v' => by split_ifs; exacts [hX, zero_mem _]) (if_neg (Ne.symm hv))
+      (fun v' => by split_ifs; exacts [hX, zero_mem _]) (ite_eq_right (Ne.symm hv))
     refine ⟨δ, d1, ?_, ?_⟩
-    · simp only [tOdd, if_neg hv]
-      rw [d3, if_pos rfl, hk, if_pos rfl]
+    · simp only [tOdd, ite_eq_right hv]
+      rw [d3, ite_eq_left rfl, hk, ite_eq_left rfl]
       exact one_ne_zero
     · rintro ⟨v', k'⟩ hne
       unfold tOdd
@@ -1524,10 +1524,10 @@ private theorem tOdd_ind (hD : D.Good) (k : D.T × Fin 6) :
       · rw [d2, zero_mul, mul_zero, sub_zero]; rfl
       · rw [d3]
         by_cases h' : v' = v
-        · rw [if_pos h', hk, if_neg]
+        · rw [ite_eq_left h', hk, ite_eq_right]
           rintro rfl
           exact hne (Prod.ext h' rfl)
-        · rw [if_neg h']; rfl
+        · rw [ite_eq_right h']; rfl
 
 variable {S : Type} [CommRing S] [Algebra c.O S] [IsCO c.O S] (σ : F.U →ₐ[c.O] S)
 
@@ -1545,7 +1545,7 @@ private theorem al_one (ht : ∀ k, σ (tOdd F k) = 0) (hs : ∀ k, σ (sEq F k)
     rw [map_one] at h1
     have t : ∀ k, σ (F.α ⟨p, hp⟩ (p6 k).1 (p6 k).2) = 0 := fun k => by
       have := ht (⟨p, hp⟩, k)
-      simpa only [tOdd, if_neg hv] using this
+      simpa only [tOdd, ite_eq_right hv] using this
     have s : ∀ k, σ (F.α ⟨p, hp⟩ (p4 k).1 (p4 k).2) = (1 : M4 S) (p4 k).1 (p4 k).2 := fun k => by
       have := hs (.inl (⟨p, hp'⟩, k))
       simp only [sEq, Matrix.sub_apply] at this
@@ -1559,7 +1559,7 @@ private theorem nrm (ht : ∀ k, σ (tOdd F k) = 0) (hs : ∀ k, σ (sEq F k) = 
   refine ⟨?_, ?_, ?_⟩
   · have t : ∀ k, σ (F.r.hom D.ph (p6 k).1 (p6 k).2) = 0 := fun k => by
       have := ht (⟨l, D.residueChar_mem_levelPrimes⟩, k)
-      simpa only [tOdd, if_pos] using this
+      simpa only [tOdd, ite_eq_left] using this
     refine (sixBlock S _ _ ((D.th D.ph).isUnit.map _) (Ex.mult_map D σ F.r F.fr.mult D.ph)
       (off_mem (c := c) ((F.r.map σ).red D.ph) fun a b h => ?_) (t 0) (t 1) (t 2) (t 3) (t 4) (t 5)).1
     show residue c.O (D.r0 D.ph a b) = 0
@@ -1633,18 +1633,18 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.exModel :
     rw [card_sum, card_sum (fun k => Sum.elim F.wf (wEq D) (.inr k) = j), ← hb, ← card_prod (fun k => wp (p4 k) = j)]
     rfl
   obtain ⟨Fq, f1, f2⟩ := enum q _ (-wPs) (1 + D.Sb.card + Nat.card {t // F.W.wt (F.e (.inr t)) = -wPs} + 1) (by
-    rw [hc, F.numf, c1, c4, if_neg (by decide), if_pos (Or.inr rfl)]; omega)
+    rw [hc, F.numf, c1, c4, ite_eq_right (by decide), ite_eq_left (Or.inr rfl)]; omega)
   obtain ⟨Eq, e1, e2⟩ := enum q _ wPs (2 + D.Sb.card + Nat.card {t // F.W.wt (F.e (.inr t)) = wPs}) (by
-    rw [hc, F.numf, c2, c5, if_neg (by decide), if_pos (Or.inl rfl)]; omega)
+    rw [hc, F.numf, c2, c5, ite_eq_right (by decide), ite_eq_left (Or.inl rfl)]; omega)
   obtain ⟨Zq, z1, z2⟩ := enum q (Sum.elim F.wf (wEq D)) 0 (2 + 2 * D.Sb.card + Nat.card {t // F.W.wt (F.e (.inr t)) = 0}) (by
-    rw [hc, F.numf, c3, c6, if_pos rfl]; omega)
+    rw [hc, F.numf, c3, c6, ite_eq_left rfl]; omega)
   have hw : ∀ k, Sum.elim F.wf (wEq D) k = -wPs ∨ Sum.elim F.wf (wEq D) k = wPs ∨ Sum.elim F.wf (wEq D) k = 0 := by
     rintro (u | k | k)
     · by_contra hne
       simp only [not_or, Sum.elim_inl] at hne
       have h1 := F.numf (F.wf u)
-      rw [F.numz _ hne.2.2 hne.2.1 hne.1, if_neg hne.2.2, if_neg (not_or.2 ⟨hne.2.1, hne.1⟩)] at h1
-      haveI : Nonempty {u' // F.wf u' = F.wf u} := ⟨⟨u, rfl⟩⟩
+      rw [F.numz _ hne.2.2 hne.2.1 hne.1, ite_eq_right hne.2.2, ite_eq_right (not_or.2 ⟨hne.2.1, hne.1⟩)] at h1
+      have : Nonempty {u' // F.wf u' = F.wf u} := ⟨⟨u, rfl⟩⟩
       exact Nat.card_pos.ne' h1
     · exact c7 _
     · exact c8 _

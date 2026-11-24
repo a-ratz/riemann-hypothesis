@@ -52,7 +52,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem urIndex_mem {k D M : Type} [Field k] [Group D] [TopologicalSpace D] [AddCommGroup M] [Module k M]
     [TopologicalSpace M] [DiscreteTopology M] (ρ : Representation k D M) (J : Subgroup D) (f : Z1 ρ) :
     (Submodule.Quotient.mk f : H1 ρ) ∈ H1ur ρ J ↔ ∃ m, ∀ j ∈ J, f.1 j = ρ j m - m := by
-  have hJc : Continuous J.subtype := continuous_subtype_val
+  have hJc : Continuous J.subtype := continuous_subtypeVal
   show resH1 ρ J.subtype hJc (Submodule.Quotient.mk f) = 0 ↔ _
   unfold resH1
   rw [Submodule.mapQ_apply, Submodule.Quotient.mk_eq_zero]
@@ -75,8 +75,8 @@ private theorem urIndex_avg {k Γ M : Type} [Field k] [Group Γ] [AddCommGroup M
     ∃ m, ∀ g, c g = ρ g m - m := by
   classical
   have hNi : N.index ≠ 0 := fun h => hN (by rw [h, Nat.cast_zero])
-  haveI : N.FiniteIndex := ⟨hNi⟩
-  haveI : Fintype (Γ ⧸ N) := Fintype.ofFinite _
+  have : N.FiniteIndex := ⟨hNi⟩
+  have : Fintype (Γ ⧸ N) := Fintype.ofFinite _
   have hconst : ∀ g n, n ∈ N → c (g * n) = c g := fun g n hn => by
     rw [hc, h0 n hn, map_zero, add_zero]
   let c' : Γ ⧸ N → M := Quotient.lift (s := QuotientGroup.leftRel N) c (fun a b hab => by

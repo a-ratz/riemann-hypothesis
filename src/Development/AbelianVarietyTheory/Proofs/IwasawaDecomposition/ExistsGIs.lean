@@ -201,8 +201,8 @@ theorem iota_sigma_mem_range {p n' : ℕ} {W Qq O Kf : Type} [CommRing W] [IsDom
     [Field Qq] [Algebra W Qq] [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field Kf] [Algebra O Kf]
     {ι : Qq →+* Kf} {σ : Qq ≃+* Qq} {j : W →+* O} {w : O} (S : HidaSetting p n' W Qq O Kf ι σ j w) (s : ℕ) (y : Qq) :
     ι ((σ ^ s) y) ∈ Set.range (algebraMap O Kf) ↔ y ∈ Set.range (algebraMap W Qq) := by
-  haveI := S.frac_alt
-  haveI := S.frac_O
+  have := S.frac_alt
+  have := S.frac_O
 
   have h1 : ∀ z : Qq, z ∈ Set.range (algebraMap W Qq) → σ z ∈ Set.range (algebraMap W Qq) := by
     rintro _ ⟨t, rfl⟩
@@ -238,9 +238,9 @@ theorem iota_sigma_mem_range {p n' : ℕ} {W Qq O Kf : Type} [CommRing W] [IsDom
     apply ι.injective
     rw [S.ι_comp, S.ι_comp, h]
   have hnu : ¬ IsUnit (p : O) := by
-    letI := j.toAlgebra
-    haveI : Module.Finite W O := S.finite
-    haveI : FaithfulSMul W O := (faithfulSMul_iff_algebraMap_injective _ _).2 hj
+    let := j.toAlgebra
+    have : Module.Finite W O := S.finite
+    have : FaithfulSMul W O := (faithfulSMul_iff_algebraMap_injective _ _).2 hj
     intro h
     exact S.p_unif.not_isUnit ((isUnit_map_iff (algebraMap W O) _).1 (by simpa using h))
   have hι : ∀ z : Qq, ι z ∈ Set.range (algebraMap O Kf) ↔ z ∈ Set.range (algebraMap W Qq) := by
@@ -297,7 +297,7 @@ theorem mem_asIdeal_iff_inv {R K : Type} [CommRing R] [IsDedekindDomain R] [Fiel
     rw [h1, HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
     have h0 : v.valuation K (algebraMap R K x) ≠ 0 := by
       simpa using hx
-    rw [one_lt_inv₀ (zero_lt_iff.2 h0)]
+    rw [one_lt_inv₀ (pos_iff_ne_zero.2 h0)]
 
 theorem inv_int_iff {p : ℕ} {G : GAtP p} (v : Fin G.P.nV) (s : ℕ) {LL : Type} [Field LL]
     (val : AddValuation LL (WithTop ℤ)) (emb : LL →+* G.Kf)
@@ -373,8 +373,8 @@ theorem place_of_tie : ∀ (D : D7) (sc : Scale) (Ce : ℝ)
           ((gatTiesC D sc Ce Lc I ψ hd).gat_pos u w hg ⟨v, s⟩) (if Even s.val then algebraMap D.host.F D.host.E (x : D.host.F)
             else sigD (recC D sc Ce Lc I ψ hd) (algebraMap D.host.F D.host.E (x : D.host.F))) := by
       by_cases he : Even s.val
-      · simp only [he, if_true, ite_true, ↓reduceIte]; rfl
-      · simp only [he, if_false, ite_false, ↓reduceIte, hsig]; rfl
+      · simp only [he, ite_true, ite_true, ↓reduceIte]; rfl
+      · simp only [he, ite_false, ite_false, ↓reduceIte, hsig]; rfl
     rw [e]
     exact hpos
   refine (tie_mem_iff ((hermitianLevelZeroOfRecursion D sc Ce Lc I ψ hd H0 hL).g u w hg) v x).trans ?_

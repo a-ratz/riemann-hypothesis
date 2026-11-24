@@ -131,7 +131,7 @@ theorem det_eq_of_matrix [Algebra.Unramified (𝓞 (maximalRealSubfield E)) (�
 
 theorem det_eq_norm_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Formalism.HermitianLatticesTheory.IsCMUnram E → ∀ W₁ W₂ : HSpace E, W₁.SigOK → W₂.SigOK → W₁.rank = W₂.rank → (∀ τ, W₁.sig τ = W₂.sig τ) → ∃ z : E, W₂.gram.det = z * star z * W₁.gram.det := by
   intro E _ _ _ hc W₁ W₂ h₁ h₂ hr hs
-  haveI := GlobalTheory.DefiniteMass.unramified_of_isCMUnram hc
+  have := GlobalTheory.DefiniteMass.unramified_of_isCMUnram hc
   exact det_eq_of_matrix hr (fun a b => W₁.herm.eq (W₁.frame b) (W₁.frame a))
     (fun a b => W₂.herm.eq (W₂.frame b) (W₂.frame a))
     (GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.gram_det_isUnit W₁).ne_zero (GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.gram_det_isUnit W₂).ne_zero

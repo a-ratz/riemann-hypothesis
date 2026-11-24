@@ -82,7 +82,7 @@ theorem exists_res {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι 
         ∀ x ∈ ψ.source, SameOrbit (C.φ (ψ x)) (R.lift x x) := by
   have h' : ∀ x : PtsOf P, ∃ C : OrbitChart P e, x ∈ srcOf C := fun x => hcov _ (rep_mem_mcPts x)
   choose Cx hCx using h'
-  haveI : CompactSpace (PtsOf P) := Top.compactSpace_pts (isMultiHomogIdeal_pC hP)
+  have : CompactSpace (PtsOf P) := Top.compactSpace_pts (isMultiHomogIdeal_pC hP)
   obtain ⟨t, ht⟩ := isCompact_univ.elim_nhds_subcover (fun x => srcOf (Cx x))
     (fun x _ => (isOpen_srcOf hP _).mem_nhds (hCx x))
   have hc : ∀ x, ∃ y ∈ t, x ∈ srcOf (Cx y) := fun x => by

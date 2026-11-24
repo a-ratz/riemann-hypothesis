@@ -145,8 +145,8 @@ theorem isProper_of_polGeneric_of_abLocus : ∀ (V : Type) [CommRing V] [IsDomai
     ∀ (A : PolAV (Sp (FractionRing V))) (G : Over (Sp V)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G →
     ∀ φ : A.A.left ⟶ G.left, IsGrpPullback A.A G (jK V) φ → (∀ x, x ∈ abLocus G) → IsProper G.hom := by
   intro V _ _ _ hV A G _ _ hG φ hφ hab
-  haveI := hV.1
-  haveI := hV.2.2
+  have := hV.1
+  have := hV.2.2
   obtain ⟨l₁, l₂, -⟩ := GlobalTheory.firstFiveLaws
   obtain ⟨e, he, -⟩ := grpPullback_iso (isGrpPullback_pullback G (jK V)) hφ
   obtain ⟨L, hL⟩ := GlobalTheory.UU.polarisation_extends l₁ V A G hG e he
@@ -160,7 +160,7 @@ theorem isProper_of_polGeneric_of_abLocus : ∀ (V : Type) [CommRing V] [IsDomai
     exact (default : PrimeSpectrum (V ⧸ maximalIdeal V ^ (0 + 1)))
   have h0 : IsAbelianScheme (thickObj V (maximalIdeal V) 0 G) := by
     have h₂ := IsSemiAbelian.pullback (thick V (maximalIdeal V) 0) G hG
-    letI := hF.toField
+    let := hF.toField
     exact ⟨h₂.comm, h₂.smooth, GlobalTheory.ArcNotAbelian.isProper_fibre G hG _ _ p (hab _), h₂.geomConnected⟩
   obtain ⟨P₀, h₀⟩ := GlobalTheory.UU.exists_isLevelCP (maximalIdeal V) 0 P
   let s : GlobalTheory.UU.HidaSetting V A G := ⟨hV, hG, e, he, P, w, hw, PUnit, GlobalTheory.UU.TQ.abelian _ h0 PUnit, P₀, h₀,
@@ -208,16 +208,16 @@ theorem isProper_away (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] 
     (gen : (Over.pullback (jK R)).obj G ≅ A.A) (hgen : IsMonHom gen.hom) (f : R) (hf : f ≠ 0)
     (hab : ∀ z ∈ Set.range (spMap (algebraMap R (Localization.Away f))), z ∈ abLocus G) :
     IsProper (pullback.snd G.hom (spMap (algebraMap R (Localization.Away f)))) := by
-  haveI : IsDomain (Localization.Away f) :=
+  have : IsDomain (Localization.Away f) :=
     IsLocalization.isDomain_localization (powers_le_nonZeroDivisors_of_noZeroDivisors hf)
-  haveI : IsNoetherianRing (Localization.Away f) := IsLocalization.isNoetherianRing (Submonoid.powers f) _ inferInstance
+  have : IsNoetherianRing (Localization.Away f) := IsLocalization.isNoetherianRing (Submonoid.powers f) _ inferInstance
   set j := spMap (algebraMap R (Localization.Away f)) with hj
   let Gf := (Over.pullback j).obj G
-  haveI hGf : IsSemiAbelian Gf := IsSemiAbelian.pullback j G hG
-  haveI := hGf.separated
-  haveI := hGf.quasiCompact
-  haveI := hGf.smooth
-  haveI : IsIntegral Gf.left := GlobalTheory.isIntegral_left_of_isSemiAbelian Gf
+  have hGf : IsSemiAbelian Gf := IsSemiAbelian.pullback j G hG
+  have := hGf.separated
+  have := hGf.quasiCompact
+  have := hGf.smooth
+  have : IsIntegral Gf.left := GlobalTheory.isIntegral_left_of_isSemiAbelian Gf
   change IsProper Gf.hom
   refine GlobalTheory.T.isProper_of_completeDVR_lift_genericPoint (Localization.Away f) Gf.left Gf.hom ?_
   intro V K _ _ _ _ _ _ _ x y hx hxy
@@ -235,7 +235,7 @@ theorem isProper_away (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] 
     have : a ∈ Ideal.comap φ (Ideal.comap (algebraMap V K) (⊥ : Ideal K)) := by simp [ha]
     rw [h₃] at this
     simpa using this
-  haveI : CharZero V := charZero_of_injective_ringHom hinj
+  have : CharZero V := charZero_of_injective_ringHom hinj
   let GV := (Over.pullback (spMap φ)).obj G
   have hGV : IsSemiAbelian GV := IsSemiAbelian.pullback (spMap φ) G hG
   have habV : ∀ z, z ∈ abLocus GV := fun z =>
@@ -272,8 +272,8 @@ theorem isProper_restrict : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRin
     IsProper (G.hom ∣_ W) := by
   intro R _ _ _ hR D A G _ _ hG U W hW
   obtain ⟨⟨hN, -, -, -⟩, hc⟩ := hR
-  haveI := hN
-  haveI := hc
+  have := hN
+  have := hc
   let I := {f : R // f ≠ 0 ∧ ∀ z ∈ Set.range (spMap (algebraMap R (Localization.Away f))), z ∈ W}
   refine GlobalTheory.AbLocusLocal.isProper_restrict_of_cover G.hom (I := I)
     (fun i => spMap (algebraMap R (Localization.Away i.1))) (fun i => pullback.snd G.hom _)

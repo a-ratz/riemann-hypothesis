@@ -74,7 +74,7 @@ private theorem pow_eq_one_of_kills {F Ω : Type} [Field F] [Field Ω] [Algebra 
       smul_mem' := fun s ζ (h : ζ ^ M = 1) => by
         show (s ζ) ^ M = 1
         rw [← map_pow, h, map_one] }
-  haveI : Finite S := by
+  have : Finite S := by
     classical
     refine Set.Finite.subset (s := ((nthRoots M (1 : Ω)).toFinset : Set Ω)) (Finset.finite_toSet _) fun ζ h => ?_
     exact Finset.mem_coe.2 (Multiset.mem_toFinset.2 ((mem_nthRoots hM).2 h))
@@ -89,7 +89,7 @@ private theorem charpoly_of_flag {H k : Type} [Group H] [CommRing k] {n : ℕ} {
     {κ : Fin n → H →* kˣ} (h : W.HasFlag r κ) (s : H) (b : GL (Fin n) k) :
     ((b * r s * b⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).charpoly = ∏ i, (X - C ((κ i s : kˣ) : k)) := by
   obtain ⟨a, ha⟩ := h
-  have h1 := Matrix.charpoly_of_upperTriangular ((a * r s * a⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)
+  have h1 := Matrix.charpoly_of_isUpperTriangular ((a * r s * a⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k)
     fun i j hij => (ha s).1 i j hij
   simp only [(ha s).2] at h1
   rw [← h1]

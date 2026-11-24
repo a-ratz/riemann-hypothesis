@@ -165,8 +165,8 @@ private theorem exists_mul_apply_eq_of_fixed_involution {F : Type} [Field F] [Fi
     (hσ : ∀ x, σ (σ x) = x) (hne : ∃ x, σ x ≠ x) (u : F) (hu : u ≠ 0) (hfix : σ u = u) :
     ∃ z, z * σ z = u := by
   classical
-  haveI : Fact (ringChar F).Prime := ⟨CharP.char_is_prime F (ringChar F)⟩
-  letI : Algebra (ZMod (ringChar F)) F := ZMod.algebra F (ringChar F)
+  have : Fact (ringChar F).Prime := ⟨CharP.char_is_prime F (ringChar F)⟩
+  let : Algebra (ZMod (ringChar F)) F := ZMod.algebra F (ringChar F)
   have hcomm : ∀ r : ZMod (ringChar F), σ (algebraMap (ZMod (ringChar F)) F r) =
       algebraMap (ZMod (ringChar F)) F r := fun r =>
     congrArg (· r) (RingHom.ext_zmod ((σ : F →+* F).comp (algebraMap _ _)) (algebraMap _ _))
@@ -180,7 +180,7 @@ private theorem exists_mul_apply_eq_of_fixed_involution {F : Type} [Field F] [Fi
     simp [τ, pow_two, hσ]
   have hord : orderOf τ = 2 := orderOf_eq_prime hτ2 hτ
   let k0 := IntermediateField.fixedField (Subgroup.zpowers τ)
-  haveI : FiniteDimensional (ZMod (ringChar F)) F := Module.Finite.of_finite
+  have : FiniteDimensional (ZMod (ringChar F)) F := Module.Finite.of_finite
   have hrank : Module.finrank k0 F = 2 := by
     rw [IntermediateField.finrank_fixedField_eq_card, Nat.card_zpowers, hord]
   have hmem : ∀ x : F, σ x = x → x ∈ k0 := by

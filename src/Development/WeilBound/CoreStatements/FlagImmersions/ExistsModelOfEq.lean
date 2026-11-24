@@ -122,11 +122,11 @@ theorem stalk_model [IsCommMonObj G] [Smooth G.hom] {Li : Type} [AddCommGroup Li
     obtain ⟨t, rfl⟩ := M0.onto w hw.1
     refine ⟨t, M.inj ?_⟩
     rw [hi, ((M.extends_iff _ _ _).1 hw).2]
-  letI alg : Algebra (X.presheaf.stalk (centre z)) L := (Scheme.stalkClosedPointTo z).hom.toAlgebra
-  letI mV : Module (X.presheaf.stalk (centre z)) V := Module.compHom V (Scheme.stalkClosedPointTo z).hom
+  let alg : Algebra (X.presheaf.stalk (centre z)) L := (Scheme.stalkClosedPointTo z).hom.toAlgebra
+  let mV : Module (X.presheaf.stalk (centre z)) V := Module.compHom V (Scheme.stalkClosedPointTo z).hom
   have hmV : ∀ (a : X.presheaf.stalk (centre z)) (x : V), a • x = (Scheme.stalkClosedPointTo z).hom a • x :=
     fun _ _ => rfl
-  haveI tower : IsScalarTower (X.presheaf.stalk (centre z)) L V :=
+  have tower : IsScalarTower (X.presheaf.stalk (centre z)) L V :=
     ⟨fun a b x => by rw [Algebra.smul_def, hmV, mul_smul]; rfl⟩
   obtain ⟨M', hM'⟩ := exists_model_of_eq
     (show z = Spec.map (CommRingCat.ofHom (algebraMap (X.presheaf.stalk (centre z)) L)) ≫ X.fromSpecStalk (centre z)
@@ -298,7 +298,7 @@ theorem frameVals : FrameVals := by
     obtain ⟨A, _, φ, u, χ, hpb, hAH, hact, -, -, h3⟩ := hf
     obtain ⟨v₁, e₁, d₁⟩ := h3 i
     obtain ⟨h1, w, hw, hr⟩ := hσ s a
-    haveI := 𝔐.t.act.hom a
+    have := 𝔐.t.act.hom a
     have hsc := PhMuFree.val_eig 𝔐 𝔐.tie.gen h1 s a w hw (hbs i) (hv i)
     exact SheetPot.eig_of_isDiff hpb u (𝔐.t.act.act a) (R.B a) (fun p => hact a p) (hv i).isTanAt
       (c := σ s a) (by rw [← hr]; exact hsc) e₁ d₁

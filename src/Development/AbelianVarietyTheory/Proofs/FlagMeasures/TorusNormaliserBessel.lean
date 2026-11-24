@@ -269,8 +269,8 @@ theorem prod_conj {t : MM k r} (ht : t ∈ GG k r) (μW μN : Measure (Mt k r)) 
 theorem ae_prod {S T : Set (MM k r)} {μW μN : Measure (Mt k r)} (hW : PI.BesselPeriodGGP.IsHaarOn S μW)
     (hN : PI.BesselPeriodGGP.IsHaarOn T μN) :
     ∀ᵐ p ∂(μW.prod μN), Matrix.of p.1 ∈ S ∧ Matrix.of p.2 ∈ T := by
-  haveI := hW.1
-  haveI := hN.1
+  have := hW.1
+  have := hN.1
   have a : ∀ᵐ x ∂μW, Matrix.of x ∈ S := hW.2.2.1
   have b : ∀ᵐ x ∂μN, Matrix.of x ∈ T := hN.2.2.1
   exact (Measure.quasiMeasurePreserving_fst.ae a).and (Measure.quasiMeasurePreserving_snd.ae b)
@@ -279,8 +279,8 @@ theorem muS_conj {t : MM k r} (ht : t ∈ GG k r) {S T : Set (MM k r)} {μW μN 
     (hW : PI.BesselPeriodGGP.IsHaarOn S μW) (hN : PI.BesselPeriodGGP.IsHaarOn T μN)
     (hc : ∀ h ∈ S, t * h = h * t) :
     Formalism.FourierDecayAlt.ThreeDimData.muSof μW (μN.map (conjE ht)) = (Formalism.FourierDecayAlt.ThreeDimData.muSof μW μN).map (conjE ht) := by
-  haveI := hW.1
-  haveI := hN.1
+  have := hW.1
+  have := hN.1
   unfold Formalism.FourierDecayAlt.ThreeDimData.muSof
   rw [prod_conj ht, Measure.map_map meas_mul (MeasurableEquiv.measurable _),
     Measure.map_map (conjE ht).measurable meas_mul]
@@ -331,8 +331,8 @@ theorem bessel_move : Hyps → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup W
     rw [e] at h
     exact h
   · intro l₁ hl x hx v hv
-    haveI := hW.1
-    haveI := hμN.1
+    have := hW.1
+    have := hμN.1
     rw [← (hl.2 _ (sig_sm hR (inv_mem ht) hx) _ (sig_TK hR (inv_mem ht) hv)).2]
     show _ = Formalism.FourierDecayAlt.ThreeDimData.be z cStd π R.σ μW (μN.map (conjE ht)) _ _
     unfold Formalism.FourierDecayAlt.ThreeDimData.be

@@ -94,7 +94,7 @@ def levOf (W : LocWach PD LL O v n) (i : ZMod n) (ζ : LL) : LetA O n →ₐ[O] 
   if ∃ j : ℕ, IsPrimitiveRoot ζ (PD.p ^ j) then W.lev i ζ else W.lev i 1
 
 theorem levOf_root (W : LocWach PD LL O v n) (i : ZMod n) {ζ : LL} (h : ∃ j : ℕ, IsPrimitiveRoot ζ (PD.p ^ j)) :
-    levOf W i ζ = W.lev i ζ := if_pos h
+    levOf W i ζ = W.lev i ζ := ite_eq_left h
 
 theorem levOf_cases (W : LocWach PD LL O v n) (i : ZMod n) (ζ : LL) : ∃ ζ', levOf W i ζ = W.lev i ζ' := by
   unfold levOf; split_ifs <;> exact ⟨_, rfl⟩
@@ -144,7 +144,7 @@ open Classical in
 def nOf (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) : Submodule (LetA O n) (W.DD T) :=
   if IsCrys PD T.ρ then W.N T else ⊥
 
-theorem nOf_crys (W : LocWach PD LL O v n) {T : LocLat G Qp LL O} (h : IsCrys PD T.ρ) : nOf W T = W.N T := if_pos h
+theorem nOf_crys (W : LocWach PD LL O v n) {T : LocLat G Qp LL O} (h : IsCrys PD T.ρ) : nOf W T = W.N T := ite_eq_left h
 
 theorem nOf_ind (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) (p : Submodule (LetA O n) (W.DD T) → Prop)
     (h1 : p (W.N T)) (h0 : p ⊥) : p (nOf W T) := by

@@ -62,7 +62,7 @@ private theorem fin_supp (hf : s.IsTest f) (k : G ⧸ B.U → V) :
     (Function.support fun x : G ⧸ B.U => f (s.θ x.out) • k x).Finite := by
   refine hf.fin.subset fun x hx => ?_
   rw [Function.mem_support] at hx
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   intro h0
   exact hx (by rw [h0, zero_smul])
 

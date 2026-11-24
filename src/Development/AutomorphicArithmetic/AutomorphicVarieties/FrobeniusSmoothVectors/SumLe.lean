@@ -446,7 +446,7 @@ private theorem isUnit_of_isUnit_algHom_map_of_isCO {O C' C : Type} [CommRing O]
     have h1 : algebraMap O C a ∈ maximalIdeal C := (IsLocalRing.mem_maximalIdeal _).mpr hna
     have h2 : p x ∈ maximalIdeal C := by simpa using Ideal.add_mem _ ha h1
     exact ((IsLocalRing.mem_maximalIdeal _).mp h2) hx
-  haveI := IsCO.isLocalHom (O := O) (R := C)
+  have := IsCO.isLocalHom (O := O) (R := C)
   obtain ⟨u, rfl⟩ := isUnit_of_map_unit (algebraMap O C) a hau
   have h1 : IsUnit (1 - algebraMap O C' ↑u⁻¹ * x) :=
     IsLocalRing.isUnit_one_sub_self_of_mem_nonunits _ ((IsLocalRing.mem_maximalIdeal _).mp (Ideal.mul_mem_left _ _ hxm))
@@ -687,7 +687,7 @@ private theorem ns_coeff {O σ : Type} [CommRing O] [DecidableEq σ] (s t : σ) 
   by_cases h : t = s
   · subst h
     simp
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_right h, ite_eq_right]
     intro hle
     have := hle t
     simp [Finsupp.single_apply, Ne.symm h] at this
@@ -719,10 +719,10 @@ theorem UpperTheory.V.Fr.ep_nosec :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (ι : Type) [Finite ι] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (C : Type) [CommRing C] [Algebra O C] [IsCO O C] (π : MvPowerSeries ι O →ₐ[O] C) (p : C →ₐ[O] R) (s : R →ₐ[O] C), Function.Surjective π → IsMinPres (p.comp π) → (∀ i, π (MvPowerSeries.X i) ∈ maximalIdeal C) → p.comp s = AlgHom.id O R → Function.Injective p := by
   intro O _ _ _ _ ι _ R _ _ _ C _ _ _ π p s hπ hmin hX hps
   classical
-  haveI : Fintype ι := Fintype.ofFinite ι
-  haveI : IsCO O O := ⟨‹IsAdicComplete (maximalIdeal O) O›, ⟨fun a ha => by simpa using ha⟩,
+  have : Fintype ι := Fintype.ofFinite ι
+  have : IsCO O O := ⟨‹IsAdicComplete (maximalIdeal O) O›, ⟨fun a ha => by simpa using ha⟩,
     fun x => ⟨x, by simp⟩⟩
-  haveI : IsCO O (MvPowerSeries ι O) := co_mvps O O ι
+  have : IsCO O (MvPowerSeries ι O) := co_mvps O O ι
   have hq : ∀ x : C, p (s (p x)) = p x := fun x => by
     have := congrArg (fun φ : R →ₐ[O] R => φ (p x)) hps
     simpa using this
@@ -837,7 +837,7 @@ private theorem small {O : Type} [CommRing O] [IsLocalRing O] (h2 : IsUnit (2 : 
     intro u v
     obtain ⟨a, ha, hya⟩ := hco ⟨ε v, hεK v⟩
     have h0 : ∑ w, (a w - if w = v then 1 else 0) • ε w = 0 := by
-      simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       rw [← hya]
       exact sub_self _
     have hmem := hind _ h0 u
@@ -883,8 +883,8 @@ private theorem small {O : Type} [CommRing O] [IsLocalRing O] (h2 : IsUnit (2 : 
       have h1 : (1 : C) ∈ RingHom.ker p := hIK (h ▸ Submodule.mem_top)
       rw [RingHom.mem_ker, map_one] at h1
       exact one_ne_zero h1
-    haveI : Nontrivial (C ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI1
-    haveI : IsCO O (C ⧸ I) := co_quot O C (C ⧸ I) (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
+    have : Nontrivial (C ⧸ I) := Ideal.Quotient.nontrivial_iff.mpr hI1
+    have : IsCO O (C ⧸ I) := co_quot O C (C ⧸ I) (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
     let q : C →ₐ[O] C ⧸ I := Ideal.Quotient.mkₐ O I
     let p'' : C ⧸ I →ₐ[O] R := Ideal.Quotient.liftₐ I p (fun y hy => hIK hy)
     have hcomp : p''.comp q = p := by
@@ -916,7 +916,7 @@ theorem UpperTheory.V.Fr.ep_mazur :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O], IsUnit (2 : O) → ∀ (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (σ : R →ₐ[O] R), (∀ y, σ (σ y) = y) → ∀ (P : GPres O σ) (j : ZMod 2) (H : Type) [AddCommGroup H] [Module (ResidueField O) H] [Module.Finite (ResidueField O) H], HasObsG O σ j H → Nat.card {u // P.wf u = j} ≤ Module.finrank (ResidueField O) H := by
   intro O _ _ _ _ h2 R _ _ _ σ hσ P j H _ _ _ hobs
   classical
-  haveI hA : IsCO O (MvPowerSeries (Fin P.a ⊕ Fin P.g) O) := co_mvps O O (Fin P.a ⊕ Fin P.g)
+  have hA : IsCO O (MvPowerSeries (Fin P.a ⊕ Fin P.g) O) := co_mvps O O (Fin P.a ⊕ Fin P.g)
   obtain ⟨τ0, hτ0, hev, hdec⟩ := ep_ps O h2 (Fin P.a ⊕ Fin P.g) (Space.Loc.par P.a P.g)
   have hwp : ∀ i (y : MvPowerSeries (Fin P.a ⊕ Fin P.g) O), y ∈ wtPart O (Space.Loc.par P.a P.g) i → σ (P.p y) = sg R i * P.p y := by
     intro i y hy
@@ -971,8 +971,8 @@ theorem UpperTheory.V.Fr.ep_mazur :
     have h1 : (1 : MvPowerSeries (Fin P.a ⊕ Fin P.g) O) ∈ RingHom.ker P.p := hJk (h ▸ Submodule.mem_top)
     rw [RingHom.mem_ker, map_one] at h1
     exact one_ne_zero h1
-  haveI : Nontrivial (MvPowerSeries (Fin P.a ⊕ Fin P.g) O ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJtop
-  haveI : IsCO O (MvPowerSeries (Fin P.a ⊕ Fin P.g) O ⧸ J) := co_quot O _ _ (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
+  have : Nontrivial (MvPowerSeries (Fin P.a ⊕ Fin P.g) O ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hJtop
+  have : IsCO O (MvPowerSeries (Fin P.a ⊕ Fin P.g) O ⧸ J) := co_quot O _ _ (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
   have hsurj := Ideal.Quotient.mkₐ_surjective O J
   let pC : (MvPowerSeries (Fin P.a ⊕ Fin P.g) O ⧸ J) →ₐ[O] R := Ideal.Quotient.liftₐ J P.p (fun y hy => RingHom.mem_ker.1 (hJk hy))
   let τC : (MvPowerSeries (Fin P.a ⊕ Fin P.g) O ⧸ J) →ₐ[O] (MvPowerSeries (Fin P.a ⊕ Fin P.g) O ⧸ J) := Ideal.quotientMapₐ J τ0 hJ
@@ -1085,7 +1085,7 @@ theorem UpperTheory.Reformulated.B.PowerSeriesMemSpanIndexedVariables.ep_odd_spa
     have h2 : (MvPowerSeries.X (e a) : MvPowerSeries σ O) ∣ f - g := by
       rw [MvPowerSeries.X_dvd_iff]
       intro n hn
-      rw [map_sub, hg, if_pos hn, sub_self]
+      rw [map_sub, hg, ite_eq_left hn, sub_self]
     have h3 : f - g ∈ Ideal.span
         (Set.range fun (i : ι) ↦ (MvPowerSeries.X (e i) : MvPowerSeries σ O)) :=
       Ideal.mem_of_dvd _ h2 (Ideal.subset_span ⟨a, rfl⟩)
@@ -1132,7 +1132,7 @@ theorem UpperTheory.V.Fr.ep_odd :
   · rw [Ideal.span_le]
     rintro _ ⟨i, rfl⟩
     refine Ideal.subset_span ⟨MvPowerSeries.X (.inr i), fun n hn => ?_, rfl⟩
-    rw [MvPowerSeries.coeff_X, if_neg]
+    rw [MvPowerSeries.coeff_X, ite_eq_right]
     rintro rfl
     apply hn
     simp [Finsupp.weight_single, Space.Loc.par]
@@ -1150,7 +1150,7 @@ open IsLocalRing Matrix UpperTheory.V.Alg UpperTheory.V.U3 UpperTheory.V.Fr
 theorem UpperTheory.V.Fr.ep_rels :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O], IsUnit (2 : O) → ∀ (ι : Type) [Finite ι] (wt : ι → ZMod 2) (J : Ideal (MvPowerSeries ι O)), IsHomog O wt J → ∃ (κ : Type) (_ : Fintype κ) (f : κ → MvPowerSeries ι O) (wf : κ → ZMod 2), (∀ u, f u ∈ wtPart O wt (wf u)) ∧ J = Ideal.span (Set.range f) ∧ ∀ c : κ → O, ∑ u, c u • f u ∈ maximalIdeal (MvPowerSeries ι O) * J → ∀ u, c u ∈ maximalIdeal O := by
   intro O _ _ _ _ h2 ι _ wt J hJ
-  haveI : IsCO O (MvPowerSeries ι O) := co_mvps O O ι
+  have : IsCO O (MvPowerSeries ι O) := co_mvps O O ι
   obtain ⟨τ, hττ, hev, hw⟩ := ep_ps O h2 ι wt
   have hτJ : ∀ y ∈ J, τ y ∈ J := by
     intro y hy
@@ -1234,8 +1234,8 @@ theorem UpperTheory.Reformulated.B.Qf39.ev_decomp :
     intro i m
     rw [MvPowerSeries.X_def, MvPowerSeries.coeff_monomial_mul, one_mul]
     by_cases hle : Finsupp.single i 1 ≤ m
-    · rw [if_pos hle, hh, tsub_add_cancel_of_le hle]
-    · rw [if_neg hle, if_neg]
+    · rw [ite_eq_left hle, hh, tsub_add_cancel_of_le hle]
+    · rw [ite_eq_right hle, ite_eq_right]
       intro hi
       exact hle (Finsupp.single_le_iff.2 (Nat.one_le_iff_ne_zero.2 (hc₂ m i hi)))
   refine ⟨h, ?_, fun i => ?_⟩
@@ -1254,7 +1254,7 @@ theorem UpperTheory.Reformulated.B.Qf39.ev_decomp :
     have hji : j = i := by
       by_contra hji
       exact hc₂ _ j hj (Finsupp.single_eq_of_ne hji)
-    rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hh, zero_add, if_pos (hji ▸ hj)]
+    rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply, hh, zero_add, ite_eq_left (hji ▸ hj)]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.EvDecomp =====
@@ -1306,7 +1306,7 @@ theorem UpperTheory.V.Fr.ep_vars :
       exact fun y hy => this hy)
     (by rw [← pow_two]; exact le_sup_right)
   obtain ⟨τ, -, hτe, hτw⟩ := ep_ps O h2 (Fin a ⊕ Fin g) (Space.Loc.par a g)
-  haveI := co_mvps O O (Fin a ⊕ Fin g)
+  have := co_mvps O O (Fin a ⊕ Fin g)
   obtain ⟨p, ⟨-, hpX⟩, -⟩ := co_ev O O R (Fin a ⊕ Fin g) (Algebra.ofId O R) z fun s => (hz s).1
   have hC : ∀ (H : MvPowerSeries (Fin a ⊕ Fin g) O →ₐ[O] R) (x : O),
       H (MvPowerSeries.C x) = Algebra.ofId O R x := fun H x => by
@@ -1399,7 +1399,7 @@ private theorem exists_padded_family {κ M : Type} [Finite κ] [Zero M] (q : κ 
     (h : Nat.card {u // q u} ≤ n) :
     ∃ G : Fin n → M, (∀ i, G i = 0 ∨ ∃ u, q u ∧ G i = f u) ∧ ∀ u, q u → ∃ i, G i = f u := by
   classical
-  haveI := Fintype.ofFinite κ
+  have := Fintype.ofFinite κ
   have hc : Fintype.card {u // q u} ≤ Fintype.card (Fin n) := by
     rw [Fintype.card_fin, ← Nat.card_eq_fintype_card]
     exact h
@@ -1795,9 +1795,9 @@ theorem UpperTheory.V.Fr.ep_ee :
       have hxm := hx hmem
       rw [← L.lies] at hxm
       exact Ideal.mem_comap.mp hxm
-    haveI : Nontrivial (L.R ⧸ L.ρ.ee) :=
+    have : Nontrivial (L.R ⧸ L.ρ.ee) :=
       Ideal.Quotient.nontrivial_iff.mpr (ne_top_of_le_ne_top (maximalIdeal.isMaximal L.R).ne_top hIm)
-    haveI : IsCO L.O' (L.R ⧸ L.ρ.ee) :=
+    have : IsCO L.O' (L.R ⧸ L.ρ.ee) :=
       co_quot L.O' L.R _ (Ideal.Quotient.mkₐ L.O' L.ρ.ee) (Ideal.Quotient.mkₐ_surjective _ _)
     have key' : ∀ z (hz : z ∈ Algebra.adjoin O ((S.B : Set S.R) ∪ {x | ∃ g i j, x = S.ρ.r g i j})),
         Ideal.Quotient.mk L.ρ.ee (σ (L.ι ⟨z, hz⟩)) = Ideal.Quotient.mk L.ρ.ee (L.ι ⟨z, hz⟩) := by
@@ -1931,7 +1931,7 @@ theorem UpperTheory.V.Fr.epres :
   have hdimb := ep_dimb h2K (Box.bar L.O' B) π hEv
   have hcw := fun w => ep_cw h2K (Box.bar L.O' B) π hEv (F.cw w) (hok.cw_sq w) (hok.del_cw w)
   refine ep_pad S x L σ hσ P ?_ ?_ hee
-  · haveI := (EC 0).1
+  · have := (EC 0).1
     have hm := ep_mazur L.O' h2 L.R σ hσ.sq P 0 _ (ep_hasobs hok L.O' h2 L.R σ hσ.sq L.ρ B π hU hBo hBc hgood.1 hG hEv 0)
     have hs1 : 4 * F.d ≤ ∑ v, F.dv v * Module.finrank (ResidueField L.O') ((Box.bar L.O' B).bp 0 v) :=
       sum_ge F 4 _ (fun v => (hdimb v).1)
@@ -1942,7 +1942,7 @@ theorem UpperTheory.V.Fr.epres :
     have t := htan.2
     have d0 := hder.2.1
     omega
-  · haveI := (EC 1).1
+  · have := (EC 1).1
     have hm := ep_mazur L.O' h2 L.R σ hσ.sq P 1 _ (ep_hasobs hok L.O' h2 L.R σ hσ.sq L.ρ B π hU hBo hBc hgood.1 hG hEv 1)
     have hs1 : 2 * F.d ≤ ∑ v, F.dv v * Module.finrank (ResidueField L.O') ((Box.bar L.O' B).bp 1 v) :=
       sum_ge F 2 _ (fun v => (hdimb v).2)

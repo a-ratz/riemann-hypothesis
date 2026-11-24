@@ -94,7 +94,7 @@ end polar
 theorem sphMonom_volumeIoiPow_integral (m : ℕ) (φ : ℝ → ℝ) :
     ∫ r : Ioi (0 : ℝ), φ r ∂(Measure.volumeIoiPow m) = ∫ r in Ioi (0 : ℝ), r ^ m * φ r := by
   rw [Measure.volumeIoiPow, integral_withDensity_eq_integral_toReal_smul
-    ((measurable_subtype_coe.pow_const m).ennreal_ofReal) (ae_of_all _ fun _ => ENNReal.ofReal_lt_top)]
+    ((measurable_subtypeVal.pow_const m).ennreal_ofReal) (ae_of_all _ fun _ => ENNReal.ofReal_lt_top)]
   rw [integral_subtype_comap measurableSet_Ioi (fun r : ℝ => (ENNReal.ofReal (r ^ m)).toReal • φ r)]
   refine setIntegral_congr_fun measurableSet_Ioi fun r hr => ?_
   simp only [smul_eq_mul]
@@ -157,7 +157,7 @@ theorem sphMonom_key [NeZero N] {k : ℕ} (f : (Fin N → ℂ) → ℂ)
         ((Real.Gamma ((((2 * N - 1 + 0 : ℕ) : ℝ) + 1) / 2) / 2 : ℝ) : ℂ) =
       (∫ z, f ((Real.sqrt (sqN z))⁻¹ • z) * (Real.exp (-sqN z) : ℂ)) *
         ((Real.Gamma ((((2 * N - 1 + k : ℕ) : ℝ) + 1) / 2) / 2 : ℝ) : ℂ) := by
-  haveI : Nonempty (Fin N) := ⟨⟨0, Nat.pos_of_ne_zero (NeZero.ne N)⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, Nat.pos_of_ne_zero (NeZero.ne N)⟩⟩
   have hzs : ∀ z : Fin N → ℂ, z = Real.sqrt (sqN z) • ((Real.sqrt (sqN z))⁻¹ • z) := by
     intro z
     by_cases hs : Real.sqrt (sqN z) = 0

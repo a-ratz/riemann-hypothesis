@@ -279,7 +279,7 @@ theorem plUnder_conj (h : Enl B B') (w : B'.places.Pl) : plUnder h (B'.places.co
   exact h1.trans (by rw [← e]; exact h2.symm)
 
 theorem plUnder_surjective (h : Enl B B') : Function.Surjective (plUnder h) := fun v => by
-  letI : Algebra B.LL B'.LL := (incl h).toAlgebra
+  let : Algebra B.LL B'.LL := (incl h).toAlgebra
   have := (v : HeightOneSpectrum (𝓞 B.LL)).isPrime
   obtain ⟨Q, hQ, hl⟩ := (Ideal.nonempty_primesOver (v : HeightOneSpectrum (𝓞 B.LL)).asIdeal (S := 𝓞 B'.LL)).some
   exact ⟨⟨Q, hQ, Ideal.ne_bot_of_liesOver_of_ne_bot (v : HeightOneSpectrum (𝓞 B.LL)).ne_bot Q⟩,
@@ -460,14 +460,14 @@ theorem exists_twDat_stagesOn (X : Stages) (f : Fr X.B.toPre) (pl : Finset ℕ) 
     rw [← hl w]
     exact ⟨a, b, c, fun v hv => (pick_not_over (hψ w hw) hv).1⟩
   refine ⟨h1, ofFamilyOn X.B pl Wt hsub hc s Q k (settingChar ha A Q k ψ ι) h2 hs, rfl, fun w v hv hm => ?_,
-    fun w hw => ⟨if_pos hw, if_pos hw, if_pos hw⟩, fun w hw => ⟨if_neg hw, if_neg hw, if_neg hw⟩, fun S hS => ?_⟩
+    fun w hw => ⟨ite_eq_left hw, ite_eq_left hw, ite_eq_left hw⟩, fun w hw => ⟨ite_eq_right hw, ite_eq_right hw, ite_eq_right hw⟩, fun S hS => ?_⟩
   · by_cases hw : w ∈ Wt
     · have hv' : v ∈ Q (s w) :=
-        (if_pos hw : (ofFamilyOn X.B pl Wt hsub hc s Q k (settingChar ha A Q k ψ ι) h2 hs).Q w = _) ▸ hv
+        (ite_eq_left hw : (ofFamilyOn X.B pl Wt hsub hc s Q k (settingChar ha A Q k ψ ι) h2 hs).Q w = _) ▸ hv
       have hp := ((GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramified X.toD7.host.E).1 v).2 ((hψ w hw).1 v hv').2.1
       exact (pick_not_over (hψ w hw) hv').2 (hA (s w) _ (Or.inr (hl w ▸ hm)) hp (Ideal.absNorm_mem _))
     · exact Finset.notMem_empty v
-        ((if_neg hw : (ofFamilyOn X.B pl Wt hsub hc s Q k (settingChar ha A Q k ψ ι) h2 hs).Q w = _) ▸ hv)
+        ((ite_eq_right hw : (ofFamilyOn X.B pl Wt hsub hc s Q k (settingChar ha A Q k ψ ι) h2 hs).Q w = _) ▸ hv)
   · obtain ⟨B', h, a, b⟩ := exists_enl_roots (ofFamilyOn X.B pl Wt hsub hc s Q k (settingChar ha A Q k ψ ι) h2 hs) S hS
     exact ⟨B', h, a, fun w z hz => b (plUnder h w) z (by rwa [resChar_plUnder]), set_pull h _ f⟩
 

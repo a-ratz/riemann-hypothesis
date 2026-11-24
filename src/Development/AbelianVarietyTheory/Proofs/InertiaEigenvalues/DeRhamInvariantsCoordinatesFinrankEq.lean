@@ -59,7 +59,7 @@ namespace GlobalTheory
 theorem deRham_invariants_coord_finrank :
     ∀ {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀] [Field K] [Algebra Qp K₀] [Algebra Qp K] [Algebra K₀ K] [IsScalarTower Qp K₀ K] {B BdR : Type} [CommRing B] [CommRing BdR] [Algebra Qp B] [Algebra K₀ B] [IsScalarTower Qp K₀ B] [Algebra Qp BdR] [Algebra K₀ BdR] [Algebra K BdR] [IsScalarTower Qp K BdR] [IsScalarTower K₀ K BdR] [IsScalarTower Qp K₀ BdR] (PD : PeriodData G Qp K₀ K B BdR) {LL : Type} [Field LL] [Algebra Qp LL] {V : Type} [AddCommGroup V] [Module LL V] [Module Qp V] [IsScalarTower Qp LL V] (ρ : Representation LL G V) {d : ℕ} (bV : Module.Basis (Fin d) Qp V), FiniteDimensional Qp LL → Module.Finite LL ↥(DdR PD ρ) → Module.finrank LL ↥(DdR PD ρ) = Module.finrank Qp K * Module.finrank LL V → ∀ Φ : V ⊗[Qp] BdR ≃ₗ[Qp] (Fin d → BdR), (∀ (g : G) (z : V ⊗[Qp] BdR), Φ (actVdR PD ρ g z) = (Matrix.of fun i j => algebraMap Qp BdR (bV.repr (ρ g (bV j)) i)).mulVec (fun i => PD.actdR g (Φ z i))) → ∃ D : Submodule K (Fin d → BdR), (∀ y, y ∈ D ↔ ∀ g : G, (Matrix.of fun i j => algebraMap Qp BdR (bV.repr (ρ g (bV j)) i)).mulVec (fun i => PD.actdR g (y i)) = y) ∧ Module.Finite K ↥D ∧ Module.finrank K ↥D = d := by
   intro G _ Qp K₀ K _ _ _ _ _ _ _ B BdR _ _ _ _ _ _ _ _ _ _ _ PD LL _ _ V _ _ _ _ ρ d bV hL hfin hrk Φ hΦ
-  haveI := PD.finK
+  have := PD.finK
   let D : Submodule K (Fin d → BdR) :=
     { carrier := {y | ∀ g : G, (Matrix.of fun i j => algebraMap Qp BdR (bV.repr (ρ g (bV j)) i)).mulVec
           (fun i => PD.actdR g (y i)) = y}
@@ -93,8 +93,8 @@ theorem deRham_invariants_coord_finrank :
       map_smul' := fun c a => Subtype.ext (by simp)
       left_inv := fun z => Subtype.ext (by simp)
       right_inv := fun y => Subtype.ext (by simp) }
-  haveI : Module.Finite Qp ↥(DdR PD ρ) := Module.Finite.trans LL _
-  haveI : Module.Finite Qp ↥D := Module.Finite.equiv e
+  have : Module.Finite Qp ↥(DdR PD ρ) := Module.Finite.trans LL _
+  have : Module.Finite Qp ↥D := Module.Finite.equiv e
   refine ⟨D, fun y => Iff.rfl, Module.Finite.of_restrictScalars_finite Qp K _, ?_⟩
   have h1 := Module.finrank_mul_finrank Qp K ↥D
   have h2 := Module.finrank_mul_finrank Qp LL ↥(DdR PD ρ)

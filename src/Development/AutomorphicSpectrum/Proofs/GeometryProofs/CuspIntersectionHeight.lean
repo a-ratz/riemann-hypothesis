@@ -745,7 +745,7 @@ theorem core (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (K : Typ
   rw [map_prod]
   refine Finset.prod_congr rfl fun k _ => ?_
   have hsup : (⨆ i, v (w ⟨k, i⟩)) = v (w ⟨k, ch k⟩) :=
-    le_antisymm (by haveI : Nonempty (J k) := ⟨ch k⟩; exact ciSup_le (hmax k))
+    le_antisymm (by have : Nonempty (J k) := ⟨ch k⟩; exact ciSup_le (hmax k))
       (le_ciSup (f := fun i => v (w ⟨k, i⟩)) (Set.finite_range _).bddAbove (ch k))
   rw [map_zpow₀, map_div₀, hsup]
 
@@ -758,8 +758,8 @@ theorem det_frames_size : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp �
     have : (d : 𝓞 L) = 0 := (FaithfulSMul.algebraMap_injective (𝓞 L) L) (by rw [h0, map_zero])
     rw [this]
     exact zero_mem _
-  letI : Algebra (Localization.AtPrime (primeOf v).asIdeal) L := (IsLocalization.lift hu).toAlgebra
-  haveI : IsScalarTower (𝓞 L) (Localization.AtPrime (primeOf v).asIdeal) L :=
+  let : Algebra (Localization.AtPrime (primeOf v).asIdeal) L := (IsLocalization.lift hu).toAlgebra
+  have : IsScalarTower (𝓞 L) (Localization.AtPrime (primeOf v).asIdeal) L :=
     IsScalarTower.of_algebraMap_eq fun x => (IsLocalization.lift_eq hu x).symm
   exact core X Ω ξ K J y Ψ Ei Vl m s a e₀ hall hT hs hdeg L w z c₀ g v b' T' T hC hw0 hg hfr hb hval hdet
     (Localization.AtPrime (primeOf v).asIdeal)
@@ -916,7 +916,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Cusp.PtHt
 theorem g_height : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (II : IntersectionSystem) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (Hd : HodgeData Dc) (S₀ : Finset ℕ) (Or : CptOrigin Y S₀ Dc Hd) (B : ℕ) (L : Type) [Field L] [NumberField L] (z : Sp (𝓞 L) ⟶ Or.𝔐.X) (P : AbPart Or.𝔐.t (spMap (algebraMap (𝓞 L) L) ≫ z)) (V : Type) [AddCommGroup V] [Module L V] [Module (𝓞 L) V] [IsScalarTower (𝓞 L) L V] (MV : LieModel P.tK.G (𝟙 (Sp L)) V) (A : LinPt E L (CMType H) V) (w : (Σ k, J k) → L) (r k : ℕ) (v : Fin r → V) (q : CMType H → Fin k → A.Λ), Or.Good → CoordsAt Or.𝔐.ξ Dc.y (spMap (algebraMap (𝓞 L) L) ≫ z) w → Or.𝔐.IsLinPtOf z P MV A → IsOFamily A.ρ A.I v → (∀ τ, A.IsAdapted (Or.sm τ) v (q τ) ∧ ∀ i, (q τ i : V) ∈ A.eig (Or.sm τ)) → ∃ x : (L →+* ℂ) → ℝ, (∀ e : L →+* ℂ, Or.PhiWeight (spMap e ≫ spMap (algebraMap (𝓞 L) L) ≫ z) (fun p => e (w p)) (x e)) ∧ Ht.ptHt (fun k => (muTwDeg Hd B k : ℝ)) (twW (D := Dc) B fun _ => 0) L w + (∑ e : L →+* ℂ, x e) / Module.finrank ℚ L = -A.phiDeg Or.sm (fun τ => Or.𝔐.FibLat (Or.𝔐.VS (S₀ ∪ Dc.SB B) (Or.sm τ)) z P MV) v q := by
   intro hG E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or B L _ _ z P V _ _ _ _ MV A w r k v q hGood hw hLP hO hAd
   classical
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   obtain ⟨cc, f, b, u, uL, s, hc, had, hun, heq, huL, hval, hdom, hvalC, hsm, hfr⟩ :=
     datum hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or L (spMap (algebraMap (𝓞 L) L) ≫ z) w hw
 

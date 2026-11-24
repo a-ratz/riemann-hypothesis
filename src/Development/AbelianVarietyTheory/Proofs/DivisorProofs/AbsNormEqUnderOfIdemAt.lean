@@ -86,11 +86,11 @@ theorem absNorm_eq_under_of_idemAt {P : HeightOneSpectrum (𝓞 D.host.E)} {e : 
   set p := P.asIdeal.under (𝓞 D.host.F) with hp
   have hp0 : p ≠ ⊥ := by
     obtain ⟨x, hxP, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot P.ne_bot
-    exact Ideal.comap_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
+    exact Ideal.under_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
   have hpP : p.IsPrime := Ideal.IsPrime.comap _
   have hpM : p.IsMaximal := hpP.isMaximal hp0
-  haveI hl1 : P.asIdeal.LiesOver p := ⟨rfl⟩
-  haveI hl2 : Q.LiesOver p := ⟨hQv.symm⟩
+  have hl1 : P.asIdeal.LiesOver p := ⟨rfl⟩
+  have hl2 : Q.LiesOver p := ⟨hQv.symm⟩
   have hsum := Ideal.sum_ramification_inertia_eq_finrank p (𝓞 D.host.E)
   rw [← IsFractionRing.finrank_eq (𝓞 D.host.F) D.host.F (𝓞 D.host.E) D.host.E, D.sp.cm.deg2] at hsum
   let P1 : p.primesOver (𝓞 D.host.E) := ⟨P.asIdeal, P.isPrime, hl1⟩

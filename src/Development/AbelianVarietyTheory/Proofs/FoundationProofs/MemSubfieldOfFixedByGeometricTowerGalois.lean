@@ -71,16 +71,16 @@ theorem mem_of_fixed_ggeo_gn : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field �
     (∀ x : Ω, IsAlgZp (p := p) x → x ∈ F) → T.qq n ∈ F →
     ∀ o : Ω, (∀ g ∈ Ggeo (p := p) Ω ⊓ Gn T n, g o = o) → o ∈ F := by
   intro p _ Ω _ _ hc T n F hO hA hq o ho
-  haveI : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hc
-  haveI : IsAlgClosed Ω := hc.clo
+  have : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hc
+  have : IsAlgClosed Ω := hc.clo
   let f : O0 p →+* F := (algebraMap (O0 p) Ω).codRestrict F hO
-  letI : Algebra (O0 p) F := f.toAlgebra
-  haveI : IsScalarTower (O0 p) F Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (O0 p) F := f.toAlgebra
+  have : IsScalarTower (O0 p) F Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hf : Function.Injective (algebraMap (O0 p) F) := fun a b h => hc.inj (congrArg Subtype.val h)
-  haveI : Algebra.IsAlgebraic (O0 p) Ω := hc.alg
-  haveI : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.extendScalars (R := O0 p) hf
-  haveI : IsAlgClosure F Ω := ⟨hc.clo, inferInstance⟩
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : Algebra.IsAlgebraic (O0 p) Ω := hc.alg
+  have : Algebra.IsAlgebraic F Ω := Algebra.IsAlgebraic.extendScalars (R := O0 p) hf
+  have : IsAlgClosure F Ω := ⟨hc.clo, inferInstance⟩
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
   have key := (InfiniteGalois.mem_range_algebraMap_iff_fixed (k := F) o).2 fun σ => by
     let g : Gal p Ω := AlgEquiv.ofRingEquiv (f := σ.toRingEquiv) fun c => σ.commutes (f c)
     have hg : g ∈ Ggeo (p := p) Ω ⊓ Gn T n := by

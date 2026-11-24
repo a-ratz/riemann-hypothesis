@@ -110,7 +110,7 @@ theorem torMatch_unique : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
     (g := (algebraMap V (FractionRing V)).comp g) ((IsFractionRing.injective V (FractionRing V)).comp hg)
   have hgK : ∀ r, gK (algebraMap R _ r) = algebraMap V _ (g r) := IsFractionRing.lift_algebraMap _
   let F := AlgebraicClosure (FractionRing V)
-  letI : Algebra (FractionRing R) F := ((algebraMap (FractionRing V) F).comp gK).toAlgebra
+  let : Algebra (FractionRing R) F := ((algebraMap (FractionRing V) F).comp gK).toAlgebra
   have hF : ∀ r, algebraMap (FractionRing R) F (algebraMap R (FractionRing R) r) =
       algebraMap (FractionRing V) F (algebraMap V (FractionRing V) (g r)) :=
     fun r => congrArg (algebraMap (FractionRing V) F) (hgK r)
@@ -177,8 +177,8 @@ theorem torMatch_unique : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing 
     have := hk.map ((algebraMap (FractionRing R) F).comp (algebraMap R (FractionRing R)))
     rw [map_natCast] at this
     exact this.ne_zero
-  haveI : NeZero ((l ^ n : ℕ) : F) := ⟨hkF⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F (l ^ n)
+  have : NeZero ((l ^ n : ℕ) : F) := ⟨hkF⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F (l ^ n)
   have hn0 : l ^ n ≠ 0 := pow_ne_zero _ (by omega)
   obtain ⟨z, hz⟩ := exists_eq_add_nsmul (ζ := (hζ.isUnit hn0).unit) (IsPrimitiveRoot.coe_units_iff.1 hζ)
     (key (l ^ n) hk · · χ)

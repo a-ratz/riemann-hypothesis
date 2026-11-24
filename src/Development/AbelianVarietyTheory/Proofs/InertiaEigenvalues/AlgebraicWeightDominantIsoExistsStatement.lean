@@ -156,9 +156,9 @@ variable {n : ℕ} {κ : Type} [Fintype κ] [DecidableEq κ]
 
 theorem exists_beig_mem {Ψ : GL (Fin n) ℂ → Matrix κ κ ℂ} (hΨ : IsPolyRep Ψ) (S : Submodule ℂ (κ → ℂ)) (hS : S ≠ ⊥)
     (hst : ∀ A, ∀ x ∈ S, Ψ A *ᵥ x ∈ S) : ∃ v ∈ S, ∃ lam, IsBEig Ψ v lam := by
-  haveI : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS
+  have : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS
   let b := Module.finBasis ℂ S
-  haveI : Nonempty (Fin (Module.finrank ℂ S)) := b.index_nonempty
+  have : Nonempty (Fin (Module.finrank ℂ S)) := b.index_nonempty
   let e : (Fin (Module.finrank ℂ S) → ℂ) →ₗ[ℂ] (κ → ℂ) := S.subtype ∘ₗ b.equivFun.symm.toLinearMap
   have he : Function.Injective e := S.subtype_injective.comp b.equivFun.symm.injective
   obtain ⟨p, hp⟩ := LinearMap.exists_leftInverse_of_injective e (LinearMap.ker_eq_bot.2 he)
@@ -313,7 +313,7 @@ theorem eq_zero_of_LU {f : (ι → GL (Fin n) ℂ) → ℂ} (hf : Continuous f)
     Filter.eventually_all.2 fun τ => PI.UnitaryGroupMassFormula.HwConjInf.dense_LU (g τ).val
   have hval : ∀ x τ, (M x τ).det ≠ 0 → (c x τ).val = M x τ := by
     intro x τ hx
-    simp only [c, dif_pos hx]
+    simp only [c, dite_eq_left hx]
     rfl
   have hc : Tendsto c (𝓝[≠] 0) (𝓝 g) := by
     refine tendsto_pi_nhds.2 fun τ => ?_
@@ -492,11 +492,11 @@ theorem ptOf_single (τ : ι) (B : GL (Fin n) ℂ) : upt (ptOf emb (Pi.mulSingle
   · rw [ptOf_conj emb hinj hcm]
     have h2 : ComplexEmbedding.conjugate (emb t) ≠ emb τ := fun e => hcm τ t e.symm
     by_cases h : t = τ
-    · subst h; simp only [tauPt, if_neg h2, if_true, Pi.mulSingle_eq_same]
+    · subst h; simp only [tauPt, ite_eq_right h2, ite_true, Pi.mulSingle_eq_same]
     · have h1 : ComplexEmbedding.conjugate (emb t) ≠ ComplexEmbedding.conjugate (emb τ) := fun e => h (hinj (by
         have := congrArg ComplexEmbedding.conjugate e
         rwa [conj_conj, conj_conj] at this))
-      simp only [tauPt, if_neg h2, if_neg h1, Pi.mulSingle_eq_of_ne h, inv_one, Units.val_one, Matrix.transpose_one]
+      simp only [tauPt, ite_eq_right h2, ite_eq_right h1, Pi.mulSingle_eq_of_ne h, inv_one, Units.val_one, Matrix.transpose_one]
 
 theorem ptOf_rat (γ₀ : GL (Fin n) L) (h : γ₀ ∈ GQ0 L n) : ptOf emb (mtwEmb emb γ₀) = ratPt γ₀.val := by
   funext σ
@@ -531,13 +531,13 @@ theorem iso_of_hwAt (a a' : AlgWt L n) (lam : ι → Fin n → ℤ) (ha : ∀ τ
     intro c hc
     obtain ⟨_, κ, _, _, b, P, hP⟩ := c.alg
     have hP' : Agrees c b P := hP
-    haveI : Nontrivial c.W := by
+    have : Nontrivial c.W := by
       by_contra h
       rw [not_nontrivial_iff_subsingleton] at h
       have := c.irr
       exact bot_ne_top (α := Subrepresentation c.ρ)
         (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
-    haveI := b.index_nonempty
+    have := b.index_nonempty
     obtain ⟨h1, h2⟩ := _root_.GlobalTheory.AlgWtMul.evM_mul L n c κ b P hP'
     have hone : evM P (upt (ptOf emb (1 : ι → GL (Fin n) ℂ))) = 1 := by rw [ptOf_one emb hinj hcm hall, h1]
     have hmul : ∀ g h : ι → GL (Fin n) ℂ, evM P (upt (ptOf emb (g * h))) =

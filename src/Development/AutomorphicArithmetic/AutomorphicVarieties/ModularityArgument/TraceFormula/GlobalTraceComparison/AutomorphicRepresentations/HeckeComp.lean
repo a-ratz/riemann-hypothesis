@@ -185,7 +185,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.toYd_pf :
     rw [this]
     exact (continuous_const.mul hcont).mul continuous_const
   have hv : (μf (Lev S N : Set (GF E n))).toReal ≠ 0 := by
-    haveI := hμ
+    have := hμ
     exact (ENNReal.toReal_pos (hO.measure_pos μf ⟨1, (Lev S N).one_mem⟩).ne' hC.measure_lt_top.ne).ne'
   obtain ⟨v, hvdef⟩ : ∃ v : ℂ, v = (((μf (Lev S N : Set (GF E n))).toReal : ℝ) : ℂ) := ⟨_, rfl⟩
   have hv0 : v ≠ 0 := by

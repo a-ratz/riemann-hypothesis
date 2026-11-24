@@ -178,8 +178,8 @@ theorem densEq_of_C (hB : PositivityTheory.PfSWUS.HMass.SchwartzDensInf) (hC : S
   obtain ⟨hei0, he0, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F ei ci e c he1 hc1
   refine ⟨⟨_, (hWi _).2 rfl⟩, fun μinf hμinf => ⟨⟨_, (hHi _).2 rfl⟩, fun νinf hνinf =>
     ⟨⟨_, fun v => (hWv v _).2 rfl⟩, fun μv hμv => ⟨⟨_, fun v => (hHv v _).2 rfl⟩, fun νv hνv => ?_⟩⟩⟩⟩
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hLi : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v : HeightOneSpectrum (𝓞 F), IsLocR (Fv F v) := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have key : ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R],
@@ -229,9 +229,9 @@ theorem densEq_of_C (hB : PositivityTheory.PfSWUS.HMass.SchwartzDensInf) (hC : S
   have e4 := fun v => (hHv v (νv v)).1 (hνv v)
   obtain ⟨κ, hE, hκ⟩ := hC F E σ hCM M hM J hJ ha T hT hdet d b laminf lam hli hlam μ 𝓕 hμ h𝓕 minf m hmi hm
   have hE1 := isEulerProd_smul b _ κ _ _ hE
-  haveI : IsLocallyFiniteMeasure (minf (hermOf (Ainf F) σ T hT)) := hfi _
+  have : IsLocallyFiniteMeasure (minf (hermOf (Ainf F) σ T hT)) := hfi _
   have hlf : ∀ v, IsLocallyFiniteMeasure (cfac E v • m v (hermOf (Fv F v) σ T hT)) := fun v => by
-    haveI := hf v (hermOf (Fv F v) σ T hT)
+    have := hf v (hermOf (Fv F v) σ T hT)
     infer_instance
   obtain ⟨hmeas, hint, hmul, hI⟩ := PositivityTheory.PfSWUS.HMass.euler_int_integrable F E σ hCM d b M M _ _ _ hE1
     inferInstance hlf Φ Φinf Φf Φv hcI
@@ -346,17 +346,17 @@ theorem isomC : IsomC := by
   have hJ' := isHermND_conj σ hCM J hJ g
   intro d b laminf lam hinf hlam μ 𝓕 hμ h𝓕 minf m hminf hm
   obtain ⟨⟨i1, i2, i3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := i1
-  haveI := i2
-  haveI := i3
+  have := i1
+  have := i2
+  have := i3
   obtain ⟨e, hmat, hrat⟩ := GlobalTheory.CompanionTheory.SW.HIsom.unitaryIsom_of_isometry F E σ hCM M J hJ g _ rfl (AF F)
   obtain ⟨tg, -, -, -, bs, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
   obtain ⟨tg', -, -, -, bs', -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M _ hJ' (AF F)
-  haveI := tg
-  haveI := tg'
-  haveI := bs
-  haveI := bs'
-  haveI : μ.IsHaarMeasure := hμ
+  have := tg
+  have := tg'
+  have := bs
+  have := bs'
+  have : μ.IsHaarMeasure := hμ
   let He := e.toHomeomorph.toMeasurableEquiv
   have hμ' : IsHaarH F E σ M _ (μ.map He.symm) := ContinuousMulEquiv.isHaarMeasure_map μ e.symm
   have hmm : (μ.map He.symm).map He = μ := by
@@ -368,8 +368,8 @@ theorem isomC : IsomC := by
     isFD_pull σ e.toMulEquiv hrat hq h𝓕
   have hLi : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hWi := haar_of_loc σ hCM (Ainf F) hLi b laminf hinf.1 n M
   have hWv := fun v => haar_of_loc σ hCM (Fv F v) (hLv v) b (lam v) (hlam v).1 n M
   obtain ⟨minf', hminf'⟩ := _root_.GlobalTheory.CompanionTheory.SW.GramExist.exists_gramFib F E σ hCM M _ hJ' (Ainf F) hLi n _ _ hWi.1 hWi.2
@@ -380,9 +380,9 @@ theorem isomC : IsomC := by
   refine ⟨κ, ?_, hκ⟩
   have hfin : ∀ v, (cfac E v • m v (hermOf (Fv F v) σ T hT)) (latV b v) < ⊤ := by
     intro v
-    haveI := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM M J hJ (Fv F v) (hLv v) n _ _ (m v) (hWv v).1 (hWv v).2 (hm v)
+    have := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM M J hJ (Fv F v) (hLv v) n _ _ (m v) (hWv v).1 (hWv v).2 (hm v)
       (hermOf (Fv F v) σ T hT)).1
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
     exact ENNReal.mul_lt_top ENNReal.coe_lt_top
       ((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d b n M).2.2.2.1 v).1.measure_lt_top
   have hproj : ∀ X : Fin n → Fin M → AF F ⊗[F] E,
@@ -507,17 +507,17 @@ theorem massCAll_of (hE2 : PositivityTheory.PfSWUS.HMass.OneVecBinaryMass) (hO :
   · intro v
     have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
     obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc
-    haveI := hTR
-    haveI := hLC
-    haveI := hSC
-    haveI := hT2
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := hTR
+    have := hLC
+    have := hSC
+    have := hT2
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     have hh := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b (lam v) (hlam v).1
-    haveI hW := hh.2.1 (n + 1) (n + 1)
-    haveI hH := hh.2.2 (n + 1)
-    haveI hlf := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM (n + 1) J hJ (Fv F v) hloc (n + 1) _ _ (m v) hW hH (hm v)
+    have hW := hh.2.1 (n + 1) (n + 1)
+    have hH := hh.2.2 (n + 1)
+    have hlf := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM (n + 1) J hJ (Fv F v) hloc (n + 1) _ _ (m v) hW hH (hm v)
       (hermOf (Fv F v) σ T hT)).1
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
     exact ENNReal.mul_lt_top ENNReal.coe_lt_top (_root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hCM d b (n + 1) (n + 1) v).1.measure_lt_top
   · obtain ⟨C, hC⟩ := mass_good_eq hE2 hO hCM n J hJ T hT hdet d b
     refine Summable.of_norm_bounded_eventually
@@ -525,7 +525,7 @@ theorem massCAll_of (hE2 : PositivityTheory.PfSWUS.HMass.OneVecBinaryMass) (hO :
       ((GlobalTheory.CompanionTheory.SW.Primes.summable_one_div_absNorm_sq F).mul_left C) ?_
     filter_upwards [hC] with v hv
     have := hv (lam v) (hlam v) (m v) (hm v)
-    rw [Real.norm_eq_abs, abs_abs, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [Real.norm_eq_abs, abs_abs, smul_apply, ENNReal.smul_def, smul_eq_mul]
     simpa [div_eq_mul_inv] using this
 
 end PositivityTheory.SiegelWeilFormula.Densx
@@ -651,8 +651,8 @@ theorem notRepC_of (hE1 : PositivityTheory.PfSWUS.HMass.OneVecBinary) (hM : Mass
   intro F E _ _ _ _ _ σ hCM M J hJ hM1 hA t ht T hT hdet hT' hne
   intro d b laminf lam hinf hv μ 𝓕 hμ h𝓕 minf m hminf hm
   refine ⟨halfLam F E, ?_, fun Λ hΛ => halfLam_spec Λ hΛ⟩
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hLinf : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v : HeightOneSpectrum (𝓞 F), IsLocR (Fv F v) := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
   have haarOf : ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R]
@@ -678,12 +678,12 @@ theorem notRepC_of (hE1 : PositivityTheory.PfSWUS.HMass.OneVecBinary) (hM : Mass
   have hEul := hsw d b laminf lam hinf hv μ 𝓕 hμ h𝓕 minf1 m1 hminf1 hm1
   have hS1 : {X : Fin 1 → Fin (M + 1) → E | gramE σ J X = T1} = ∅ := by
     ext X
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     intro hX
     exact hne (X 0) (congrFun (congrFun hX 0) 0)
   have hS : {X : Fin (M + 1) → Fin (M + 1) → E | gramE σ J X = blockOne (algebraMap F E t) T} = ∅ := by
     ext X
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     intro hX
     apply hne (X 0)
     simpa [gramE, blockOne] using congrFun (congrFun hX 0) 0
@@ -752,8 +752,8 @@ theorem scaleC : ScaleC := by
   obtain ⟨hci0, hc0, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F ci ai c a hcu hau
   have hrI : IsLocR (Ainf F) := isLocR_Ainf F hcm.1
   have hrV : ∀ v, IsLocR (Fv F v) := fun v => LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have sInf := unitary_conjugate_local σ hcm hinv J hJ (Ainf F) hrI b laminf hinf.1 minf hminf H T T' hdetH hT hT'
     hrel' ai ci hci0 hai hci
   have sV := fun v => unitary_conjugate_local σ hcm hinv J hJ (Fv F v) (hrV v) b (lam v) (hv v).1 (m v) (hm v) H T T'
@@ -777,9 +777,9 @@ theorem scaleC : ScaleC := by
     intro v
     obtain ⟨r1, r2, r3, r4, -⟩ := id (hrV v)
     obtain ⟨-, hW, hHm⟩ := coord_measures_haar F E σ hcm (Fv F v) d b (lam v) (hv v).1
-    haveI := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hcm M J hJ (Fv F v) (hrV v) n _ _ (m v) (hW n M) (hHm n) (hm v)
+    have := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hcm M J hJ (Fv F v) (hrV v) n _ _ (m v) (hW n M) (hHm n) (hm v)
       (hermOf (Fv F v) σ T hT)).1
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
     exact ENNReal.mul_lt_top ENNReal.coe_lt_top (hlat.1 v).1.measure_lt_top
   rw [isEulerProd_const_iff, ← hth]
   exact _root_.GlobalTheory.CompanionTheory.SW.EulerMove.euler_move F E σ hcm d b n M _ (κ • minf (hermOf (Ainf F) σ T' hT')) (κ • minf (hermOf (Ainf F) σ T hT))
@@ -817,8 +817,8 @@ theorem theta_hypothesis_c : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   classical
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   obtain ⟨hfin, hsum, S₀, hS₀⟩ := hE
   obtain ⟨S₁, hS₁⟩ := _root_.GlobalTheory.CompanionTheory.SW.PureH.pure_h F E σ hCM M J hJ t ht d b
   refine ⟨S₀ ∪ S₁, fun S hS φinf φ Ψinf Ψ hφinf hφ hΨinf hΨ hG h => ?_⟩
@@ -834,18 +834,18 @@ theorem theta_hypothesis_c : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   simp_rw [hi]
   have hmψ : ∀ v, Measurable (fun Y : Fin n → Fin M → Fv F v ⊗[F] E => if v ∈ S then φ v (actW (Fv F v) σ _ (g v) (consTup Y)) else (latV b v).indicator 1 (actW (Fv F v) σ _ (g v) (consTup Y))) := fun v => by
     by_cases hv : v ∈ S
-    · simp only [hv, if_true]; exact (hφ v).comp (hmv v)
-    · simp only [hv, if_false]; exact (measurable_one.indicator (hlatm v)).comp (hmv v)
+    · simp only [hv, ite_true]; exact (hφ v).comp (hmv v)
+    · simp only [hv, ite_false]; exact (measurable_one.indicator (hlatm v)).comp (hmv v)
   have hsplit : ∏ v ∈ S ∪ Sh, ∫⁻ X, (if v ∈ S then φ v (actW (Fv F v) σ _ (g v) (consTup X)) else (latV b v).indicator 1 (actW (Fv F v) σ _ (g v) (consTup X))) ∂(m v) =
       (∏ v ∈ S, Ψ v (actW (Fv F v) σ _ (g v) (fun _ : Fin 1 => Fin.cons 1 (fun _ => 0)))) *
         ((∏ v ∈ Sh \ S, (latV b v).indicator 1 (actW (Fv F v) σ _ (g v) (fun _ : Fin 1 => Fin.cons 1 (fun _ => 0)))) * ∏ v ∈ Sh \ S, m v (latV b v)) := by
     rw [Finset.union_comm, ← Finset.sdiff_union_self_eq_union, Finset.prod_union Finset.sdiff_disjoint, mul_comm, ← Finset.prod_mul_distrib]
     congr 1
     · refine Finset.prod_congr rfl fun v hv => ?_
-      simp only [hv, if_true]; exact (hΨ v (g v)).symm
+      simp only [hv, ite_true]; exact (hΨ v (g v)).symm
     · refine Finset.prod_congr rfl fun v hv => ?_
       have hvS : v ∉ S := (Finset.mem_sdiff.1 hv).2
-      simp only [hvS, if_false]
+      simp only [hvS, ite_false]
       have e1 : ∫⁻ X, (latV b v).indicator 1 (actW (Fv F v) σ _ (g v) (consTup X)) ∂(m v) =
           m v {X | actW (Fv F v) σ _ (g v) (consTup X) ∈ latV b v} := by
         have : (fun X : Fin n → Fin M → Fv F v ⊗[F] E => (latV b v).indicator (1 : (Fin (n + 1) → Fin (M + 1) → Fv F v ⊗[F] E) → ℝ≥0∞) (actW (Fv F v) σ _ (g v) (consTup X))) =
@@ -889,17 +889,17 @@ theorem smul_indicator_mass {α : Type} [MeasurableSpace α] {β : Type} (k : �
     (k • μ) A = L.indicator (fun _ => (k • μ) B) y := by
   by_cases hy : y ∈ L
   · rw [Set.indicator_of_mem hy] at h ⊢
-    rw [Measure.smul_apply, Measure.smul_apply, h]
+    rw [smul_apply, smul_apply, h]
   · rw [Set.indicator_of_notMem hy] at h ⊢
-    rw [Measure.smul_apply, h, smul_zero]
+    rw [smul_apply, h, smul_zero]
 
 theorem stepC_of (hE1 : PositivityTheory.PfSWUS.HMass.OneVecBinary) (hM : MassCAll) : StepC := by
   intro F E _ _ _ _ _ σ hCM M J hJ hM1 t ht hA T hT hdet hT' hSW d b laminf lam hinf hlam μ 𝓕 hμ h𝓕 minf m hminf hm
   classical
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   have hta : algebraMap F E t ≠ 0 := by simpa using ht
   obtain ⟨hdetb, hhermb, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.BlockAlg.block_alg F E σ hCM M J t
   have hJ' : IsHermND σ (blockOne (algebraMap F E t) J) :=
@@ -1004,7 +1004,7 @@ theorem stepC_of (hE1 : PositivityTheory.PfSWUS.HMass.OneVecBinary) (hM : MassCA
     have hcong : ∀ v : {v // v ∉ S}, ((cfac E v.1 • m v.1 (hermOf (Fv F v.1) σ _ hT')) (latV b v.1)).toReal =
         ((cfac E v.1 • m' v.1 (hermOf (Fv F v.1) σ T hT)) (latV b v.1)).toReal *
           (m₁ v.1 (hermScal (Fv F v.1) σ (algebraMap F (Fv F v.1) t)) (latV b v.1)).toReal := fun v => by
-      rw [Measure.smul_apply, Measure.smul_apply, GlobalTheory.CompanionTheory.SW.Step.of_cofinite hG hS4 v.2 (lam v.1) (hlam v.1).1 (m v.1) (m₁ v.1) (m' v.1) (hm v.1) (hm₁ v.1) (hm' v.1) (c v.1) (hKv v.1), hc1 v.1 v.2]
+      rw [smul_apply, smul_apply, GlobalTheory.CompanionTheory.SW.Step.of_cofinite hG hS4 v.2 (lam v.1) (hlam v.1).1 (m v.1) (m₁ v.1) (m' v.1) (hm v.1) (hm₁ v.1) (hm' v.1) (c v.1) (hKv v.1), hc1 v.1 v.2]
       simp [ENNReal.toReal_mul, ENNReal.smul_def, mul_assoc]
     rw [tprod_congr hcong, hA.1.tprod_mul hB.1, ENNReal.ofReal_mul (hA.2.2.2 fun _ => ENNReal.toReal_nonneg)]
   rw [hprod, htail]

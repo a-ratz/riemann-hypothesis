@@ -150,9 +150,9 @@ private theorem ec_mem_tw (ρ : Representation k G V) (K : Subgroup G) (χ : K �
 private theorem ec_fin [TopologicalSpace G] [IsTopologicalGroup G] (ρ : Representation k G V) (K : Subgroup G)
     (χ : K →* kˣ) (hρ : IsSmooth ρ) (hK : IsCompact (K : Set G)) (hχ : IsOpen {x : K | χ x = 1}) (v : V) :
     (ecStab (ecTw ρ K χ) v).FiniteIndex := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have ho : IsOpen (ecStab (ecTw ρ K χ) v : Set K) := by
-    have h1 : IsOpen ((fun x : K => (x : G)) ⁻¹' {g : G | ρ g v = v}) := (hρ v).preimage continuous_subtype_val
+    have h1 : IsOpen ((fun x : K => (x : G)) ⁻¹' {g : G | ρ g v = v}) := (hρ v).preimage continuous_subtypeVal
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1)
       (Filter.mem_of_superset ((h1.inter hχ).mem_nhds (by simp)) ?_)
     rintro x ⟨hx1, hx2⟩
@@ -161,7 +161,7 @@ private theorem ec_fin [TopologicalSpace G] [IsTopologicalGroup G] (ρ : Represe
     show ecTw ρ K χ x v = v
     rw [ecTw_apply, a, b]
     simp
-  haveI := Subgroup.quotient_finite_of_isOpen _ ho
+  have := Subgroup.quotient_finite_of_isOpen _ ho
   exact Subgroup.finiteIndex_of_finite_quotient
 
 end SlopeTestRemainingChoices
@@ -175,10 +175,10 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.repEigCompl :
   have part2 : ∀ W : Submodule k V, (∀ x ∈ K, ∀ v ∈ W, ρ x v ∈ W) → ∀ v ∈ W,
       ∃ w ∈ W, w ∈ eig ρ K χ ∧ v - w ∈ twKer ρ K χ := by
     intro W hW v hv
-    haveI := hfin v
+    have := hfin v
     set S := (ecStab (ecTw ρ K χ) v).normalCore with hSdef
     have hS : S ≤ ecStab (ecTw ρ K χ) v := Subgroup.normalCore_le _
-    letI : Fintype (K ⧸ S) := Fintype.ofFinite _
+    let : Fintype (K ⧸ S) := Fintype.ofFinite _
     have hc : (Fintype.card (K ⧸ S) : k) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
     refine ⟨(Fintype.card (K ⧸ S) : k)⁻¹ • ∑ q : K ⧸ S, ecTw ρ K χ q.out v, ?_, ?_, ?_⟩
     · exact W.smul_mem _ (W.sum_mem fun q _ => W.smul_mem _ (hW _ q.out.2 v hv))
@@ -215,7 +215,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.repEigCompl :
   · rw [Submodule.disjoint_def]
     intro w he hw
     obtain ⟨A, hA, h⟩ := key w hw
-    letI : Fintype (K ⧸ A.normalCore) := Fintype.ofFinite _
+    let : Fintype (K ⧸ A.normalCore) := Fintype.ofFinite _
     have hc : (Fintype.card (K ⧸ A.normalCore) : k) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
     have h2 := h A.normalCore A.normalCore_le
     simp only [(ec_mem_eig ρ K χ w).1 he, Finset.sum_const, Finset.card_univ, ← Nat.cast_smul_eq_nsmul k] at h2
@@ -245,12 +245,12 @@ private theorem map_smooth {k G V : Type} [Field k] [Group G] [AddCommGroup V] [
     { carrier := {g | ρ g (f n) = f n}
       mul_mem' := by
         intro x y hx hy
-        simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+        simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
         rw [hy, hx]
       one_mem' := by simp
       inv_mem' := by
         intro x hx
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul]; simp }
   refine T.isOpen_of_mem_nhds (g := 1) (Filter.mem_of_superset ((hσ n).mem_nhds (by simp)) ?_)

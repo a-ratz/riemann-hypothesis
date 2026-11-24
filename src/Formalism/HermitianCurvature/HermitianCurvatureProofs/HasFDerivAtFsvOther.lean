@@ -214,7 +214,7 @@ theorem wirt_fsv_smul_other (t : ℂ) {l l' : Fin m} (hl : l' ≠ l) (φ : (Fin 
   have e : ∀ v : ℂ, fderiv ℝ (fun c' => fsv t (c' l) • φ c') c (Pi.single l' v) =
       fsv t (c l) • fderiv ℝ φ c (Pi.single l' v) := by
     intro v
-    rw [hf, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply,
+    rw [hf, add_apply, smul_apply, ContinuousLinearMap.smulRight_apply,
       hD0 l' hl v, zero_smul, add_zero]
   constructor
   · unfold Formalism.QuantumDeterminants.wirt

@@ -334,7 +334,7 @@ theorem UpperTheory.Lit.Cusp.eq_zero_of_test :
   have hc2 : Continuous (fun y => χ y * ‖F y‖ ^ 2) := hχcont.mul (hF.norm.pow 2)
   have hs2 : HasCompactSupport (fun y => χ y * ‖F y‖ ^ 2) :=
     hχc.mul_right (f' := fun y => ‖F y‖ ^ 2)
-  have hpos := hc2.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := μ) (x := y₀) hs2
+  have hpos := hc2.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := μ) (x := y₀) hs2
     (fun y => mul_nonneg (hχ0 y) (sq_nonneg _))
     (mul_ne_zero hχy (pow_ne_zero 2 (norm_ne_zero_iff.mpr hy)))
   exact hpos.ne' h1
@@ -475,7 +475,7 @@ theorem UpperTheory.Lit.Cusp.transl_small :
       [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] (μ : Measure G) [μ.IsHaarMeasure] (f : G → ℂ), Integrable f μ →
       ∀ ε : ℝ, 0 < ε → ∀ᶠ b in 𝓝 (1 : G), ∫ g, ‖f (b * g) - f g‖ ∂μ ≤ ε := by
   intro G _ _ _ _ _ _ _ _ μ _ f hf ε hε
-  haveI : Fact ((1 : ENNReal) ≠ ⊤) := ⟨ENNReal.one_ne_top⟩
+  have : Fact ((1 : ENNReal) ≠ ⊤) := ⟨ENNReal.one_ne_top⟩
   have hm : MemLp f 1 μ := memLp_one_iff_integrable.2 hf
   set F : Lp ℂ 1 μ := hm.toLp f with hF
   have hc : Continuous fun b : G => ‖(DomMulAct.mk b) • F - F‖ :=
@@ -667,8 +667,8 @@ theorem UpperTheory.Lit.Cusp.conv_average :
       IsRay N a H → ∀ f ψ : G → ℂ, Continuous f → Integrable f μ → Continuous ψ → HasCompactSupport ψ → ∀ x,
         conv μ f (fun g => ∫ m, ψ (g * m) ∂ν) x = ∫ y, ψ y⁻¹ * ∫ m, f (x * m * y) ∂ν ∂μ := by
   intro G _ _ _ _ _ _ _ _ μ _ N a H ν _ hN hinv hray f ψ hf hfi hψ hψc x
-  haveI : IsLocallyFiniteMeasure ν := inferInstance
-  haveI : SigmaFinite ν := inferInstance
+  have : IsLocallyFiniteMeasure ν := inferInstance
+  have : SigmaFinite ν := inferInstance
   have hn := isBand_of_compact G N a H ν hN hinv hray (fun g => ((‖ψ g‖ : ℝ) : ℂ))
     (Complex.continuous_ofReal.comp hψ.norm)
     (hψc.comp_left (g := fun z : ℂ => ((‖z‖ : ℝ) : ℂ)) (by simp))
@@ -812,7 +812,7 @@ theorem UpperTheory.Lit.Cusp.integrable_wt :
       Integrable (fun g : UJ ε => (wt g)⁻¹) ν := by
   intro n ε S ν hν
   classical
-  haveI : IsFiniteMeasureOnCompacts ν := hν.2.1
+  have : IsFiniteMeasureOnCompacts ν := hν.2.1
   let lam : Measure (MatrixCoordinates n) := Measure.addHaar
   let O : Set (MatrixCoordinates n) := {x | hs (Matrix.of x - 1) < 1 / 4}
   let W : Set (UJ ε) := {k | hsG k ≤ (2 * Real.sqrt n + 1) ^ 2}
@@ -950,7 +950,7 @@ theorem UpperTheory.Lit.Cusp.continuous_average :
   have hC0 : 0 ≤ C := le_trans (mul_nonneg (norm_nonneg _) (wt_pos' _).le) (hC 1)
   refine ⟨?_, fun S ν hν x => ?_⟩
   · have hH : IsHaarSub ((⊤ : Subgroup (UJ ε)) : Set (UJ ε)) (muG ε) := by
-      haveI : (muG ε).IsHaarMeasure := by unfold muG; infer_instance
+      have : (muG ε).IsHaarMeasure := by unfold muG; infer_instance
       exact GlobalTheory.Dec.isHaarSub_univ (muG ε)
     refine ((integrable_wt n ε ⊤ _ hH).const_mul C).mono' hf.aestronglyMeasurable
       (Eventually.of_forall fun g => ?_)
@@ -996,7 +996,7 @@ theorem UpperTheory.Lit.Cusp.conv_coef :
   have hcoef : ∀ w z : H, Continuous (coefOn (ε := ε) σ w z) := by
     intro w z
     have hu : Continuous fun g : UJ ε => umat g :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have hs : Continuous fun g : UJ ε => σ (umat g) w :=
       (hcont w).comp_continuous hu hmem
     exact continuous_const.inner hs
@@ -1083,7 +1083,7 @@ theorem UpperTheory.Lit.Cusp.flagN_eq_NW :
   · ext g
     have e : ∀ y, (umat g - 1) *ᵥ y = uMat g *ᵥ y - y := fun y => by
       rw [Matrix.sub_mulVec, Matrix.one_mulVec]
-    simp only [flagN, NW, Set.mem_setOf_eq, hl, e]
+    simp only [flagN, NW, Set.mem_ofPred_eq, hl, e]
     constructor
     · rintro ⟨h1, h2⟩
       have h1' : ∀ x ∈ W, uMat g *ᵥ x - x = 0 := fun x hx => (Submodule.mem_bot ℂ).1 (h1 0 x hx)
@@ -1143,7 +1143,7 @@ theorem UpperTheory.Lit.Cusp.exists_split :
   choose a ha using key
   have hs : ∀ t, IsSplit ε W (fun _ => t) (a t) := fun t => by
     convert isSplit_of_tor hW h0 h1 h2 (ha t) using 2 with i
-    rw [if_pos (Fin.le_last _)]
+    rw [ite_eq_left (Fin.le_last _)]
   refine ⟨a, ?_, fun s t => ?_, hs⟩
   · refine (Formalism.REAL.isClosedEmbeddingMatrix n ε).1.isInducing.continuous_iff.2 ?_
     refine Continuous.congr (f := fun r : ℝ => GlobalTheory.IsoTorus.tor P (Jm ε * P * Jm ε) (Real.exp r) (Real.exp (-r)))
@@ -1202,7 +1202,7 @@ private theorem comm_mem {n a : ℕ} {ε : Fin n → Bool} {W : Flag n a} {p t :
   have htS : ∀ i, ∀ y ∈ W i, uMat t *ᵥ y ∈ W i := fun i y hy => (ht.1 i y hy).1
   have htiS : ∀ i, ∀ y ∈ W i, uMat t⁻¹ *ᵥ y ∈ W i :=
     (parab ε W).inv_mem (show t ∈ parab ε W from htS)
-  simp only [flagN, Set.mem_setOf_eq]
+  simp only [flagN, Set.mem_ofPred_eq]
   refine ⟨fun i y hy => ?_, fun y hy => ?_⟩
   · have e : uMat (t⁻¹ * (p * t * p⁻¹)) *ᵥ y - y =
         uMat t⁻¹ *ᵥ (uMat p *ᵥ (uMat t *ᵥ (uMat p⁻¹ *ᵥ y) -
@@ -1338,7 +1338,7 @@ theorem UpperTheory.Lit.Cusp.integral_coef_eq_zero :
   obtain ⟨hivv, -⟩ := continuous_average n ε _ hcvv hvv
   obtain ⟨hiav, hcontav⟩ := continuous_average n ε _ hcav hav
   obtain ⟨hν0, hνf, hνN, hνinv⟩ := hν
-  haveI := hνf
+  have := hνf
   obtain ⟨hflag, h1, hNeq, S, hS⟩ := flagN_eq_NW n ε W hW
   obtain ⟨r, Hr, hr⟩ := exists_isRay n ε _ _ hflag (fun i => by fin_cases i; simpa using h1)
   rw [hNeq] at hr

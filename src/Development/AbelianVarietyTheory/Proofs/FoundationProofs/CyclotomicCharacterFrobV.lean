@@ -130,10 +130,10 @@ theorem cyclotomicCharacter_frobV : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] 
     q.Prime → q ≠ l → ∀ (V : ValuationSubring Ω) (s : Ω ≃ₐ[ℚ] Ω), FrobV V q s →
       (cyclotomicCharacter Ω l s.toRingEquiv : ℤ_[l]) = q := by
   intro Ω _ _ _ l q hl hq hql V s hs
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : ∀ i, NeZero ((l ^ i : ℕ) : Ω) := fun i => ⟨by exact_mod_cast pow_ne_zero i hl.out.ne_zero⟩
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : ∀ i, NeZero ((l ^ i : ℕ) : Ω) := fun i => ⟨by exact_mod_cast pow_ne_zero i hl.out.ne_zero⟩
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   refine PadicInt.ext_of_toZModPow.mp fun n => ?_
   rw [cyclotomicCharacter.toZModPow, map_natCast]
   symm

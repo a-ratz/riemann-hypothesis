@@ -83,9 +83,9 @@ theorem coord_mul_tmul {ι : Type} (b : Module.Basis ι F E) (i : ι) (x : AE F 
 theorem continuous_coord {ι : Type} (b : Module.Basis ι F E) (i : ι) :
     letI := tensTop (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
     Continuous (coord b i) := by
-  letI := tensTop (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
-  letI : Algebra (AF F) (AE F E) := Algebra.TensorProduct.rightAlgebra
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  let := tensTop (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  let : Algebra (AF F) (AE F E) := Algebra.TensorProduct.rightAlgebra
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
   let f : AE F E →ₗ[AF F] AF F :=
     { toFun := coord b i
       map_add' := map_add _

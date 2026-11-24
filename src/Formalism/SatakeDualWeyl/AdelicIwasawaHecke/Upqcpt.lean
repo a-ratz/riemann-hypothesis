@@ -99,12 +99,12 @@ theorem isCompact_units_of_unitary {T : Set (Matrix n n ℂ)} (hT : IsClosed T)
     (hU : ∀ M ∈ T, star M * M = 1) :
     IsCompact {g : GL n ℂ | (g : Matrix n n ℂ) ∈ T} := by
   have hK : IsCompact T := isCompact_of_unitary hT hU
-  haveI : CompactSpace T := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace T := isCompact_iff_compactSpace.mp hK
   let f : T → GL n ℂ := fun M =>
     ⟨M.1, star M.1, mul_star_eq_one_of_star_mul_eq_one (hU M.1 M.2), hU M.1 M.2⟩
   have hf : Continuous f := by
     rw [Units.continuous_iff]
-    exact ⟨continuous_subtype_val, continuous_star.comp continuous_subtype_val⟩
+    exact ⟨continuous_subtypeVal, continuous_star.comp continuous_subtypeVal⟩
   have hS : {g : GL n ℂ | (g : Matrix n n ℂ) ∈ T} = Set.range f := by
     ext g
     constructor
@@ -137,7 +137,7 @@ theorem indefinite_unitary_compact : Formalism.UG.UpqCompact := by
   have h := isCompact_units_of_unitary hT (fun M hM => hM)
   convert h using 1
   ext g
-  simp only [SetLike.mem_coe, mem_Upq_iff, Jpq_zero, mul_one, Set.mem_setOf_eq]
+  simp only [SetLike.mem_coe, mem_Upq_iff, Jpq_zero, mul_one, Set.mem_ofPred_eq]
 
 theorem Jpq_eq_diagonal (p q : ℕ) :
     Formalism.UG.Jpq p q = diagonal (Sum.elim (fun _ => (1 : ℂ)) (fun _ => -1)) := by

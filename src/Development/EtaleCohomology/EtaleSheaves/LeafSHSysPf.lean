@@ -108,7 +108,7 @@ theorem monic_rep {J : Type} [SmallCategory J] [IsFiltered J] (D : J ⥤ CommRin
     (hc : IsColimit c) [Nontrivial c.pt] (p : c.pt[X]) (hp : p.Monic) :
     ∃ (j : J) (P : (D.obj j)[X]), P.map (c.ι.app j).hom = p ∧ P.Monic := by
   obtain ⟨j, P, hP⟩ := poly_rep D c hc p
-  haveI : Nontrivial (((Functor.const J).obj c.pt).obj j) := inferInstanceAs (Nontrivial c.pt)
+  have : Nontrivial (((Functor.const J).obj c.pt).obj j) := inferInstanceAs (Nontrivial c.pt)
   obtain ⟨Q, hQ, -, hm⟩ := lifts_and_degree_eq_and_monic (f := (c.ι.app j).hom) ⟨P, hP⟩ hp
   exact ⟨j, Q, hQ, hm⟩
 

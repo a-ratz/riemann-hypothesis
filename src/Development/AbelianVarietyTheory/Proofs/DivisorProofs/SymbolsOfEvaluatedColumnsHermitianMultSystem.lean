@@ -69,7 +69,7 @@ theorem word_join (hc : ∀ u v, mul u * mul v = mul v * mul u) {D t : ℕ} (s :
       pw mul s α * mul l ^ (Finset.univ.filter fun q => β q = Fin.last D).card := by
   classical
   let P := Submonoid.closure (Set.range mul)
-  letI : CommMonoid P := { P.toMonoid with
+  let : CommMonoid P := { P.toMonoid with
     mul_comm := by
       intro ⟨x, hx⟩ ⟨y, hy⟩
       apply Subtype.ext

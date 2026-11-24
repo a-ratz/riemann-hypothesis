@@ -245,7 +245,7 @@ theorem exists_unit_at {N : Submodule (𝓞 E) (Sp E n)} (hN : IsSdLat N) (P : H
       · convert hB j using 1
         funext k; simp [Matrix.col, Matrix.updateCol_ne hj])
     rw [← hc, map_mul] at this
-    exact (mul_le_iff_le_one_right (zero_lt_iff.2 hvB)).1 this
+    exact (mul_le_iff_le_one_right (pos_iff_ne_zero.2 hvB)).1 this
   obtain ⟨S, hS⟩ := hN.1.fg
   obtain ⟨t, ht, H⟩ := exists_denom P ((S ×ˢ (Finset.univ : Finset (Fin n))).image fun p => (B⁻¹ *ᵥ p.1) p.2)
     (by

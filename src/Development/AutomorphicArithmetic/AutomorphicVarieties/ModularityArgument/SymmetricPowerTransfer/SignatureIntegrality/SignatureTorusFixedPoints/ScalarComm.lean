@@ -69,14 +69,14 @@ private theorem one_orbit {T Y : Type} [Group T] [MulAction T Y] (C S : Subgroup
   refine ⟨Set.Subsingleton.finite fun o ho o' ho' => (key o ho).trans (key o' ho').symm, ?_⟩
   unfold wcount
   by_cases hP : P
-  · rw [if_pos hP, finsum_eq_single _ (Quotient.mk'' y₀)]
+  · rw [ite_eq_left hP, finsum_eq_single _ (Quotient.mk'' y₀)]
     · have hm : (Quotient.mk'' y₀ : orbitRel.Quotient T Y).out ∈ orbit T y₀ :=
         orbitRel_apply.1 (Quotient.eq''.1 (Quotient.out_eq' _))
       rw [ht _ hm, hv hP _ hm]
     · intro o ho
       have h0 : f o.out = 0 := by_contra fun h => ho (key o h)
       simp [h0]
-  · rw [if_neg hP]
+  · rw [ite_eq_right hP]
     have h0 : ∀ o : orbitRel.Quotient T Y, f o.out = 0 := fun o => by_contra fun h => hP (hs _ h).1
     simp [h0]
 
@@ -113,7 +113,7 @@ private theorem sdom2 {x : Fin 2 → kˣ} (h : valuation k (x 0 : k) < valuation
 private theorem dg_mem_ZJ (V : Lev k) (ω : kˣ →* ℂˣ) (hω : ∀ u ∈ V.H, ω u = 1) {w : Fin 2 → kˣ} :
     dg w ∈ V.ZJ 2 ↔ w 0 / w 1 ∈ V.H := by
   have hz : ∀ u : GL (Fin 2) k, u ∈ V.ZJ 2 ↔ ∃ z : kˣ, ∃ j ∈ V.J 2, u = GeneralLinearGroup.scalar (Fin 2) z * j := by
-    haveI : (GeneralLinearGroup.scalar (Fin 2) : kˣ →* GL (Fin 2) k).range.Normal := ⟨by
+    have : (GeneralLinearGroup.scalar (Fin 2) : kˣ →* GL (Fin 2) k).range.Normal := ⟨by
       rintro _ ⟨z, rfl⟩ g
       exact ⟨z, by rw [← scalar_comm z g]; simp⟩⟩
     intro u
@@ -165,7 +165,7 @@ private theorem supp_orb (V : Lev k) (ω : kˣ →* ℂˣ) (d : Fin 2 → kˣ) (
     rw [dg_mul, dg_mul, mul_assoc (dg fun _ => z), ← e', ← scalar_eq, conj_sc _ _ _ hc]
     group
   have hv : ∀ i, valuation k (s' i : k) = 1 := fun i => V.H_le (hs i)
-  have hzpos : 0 < valuation k (z : k) := zero_lt_iff.2 (by simp)
+  have hzpos : 0 < valuation k (z : k) := pos_iff_ne_zero.2 (by simp)
   have hsd : SDom ((fun _ => z) * s' * d) := sdom2 (by
     simp only [Pi.mul_apply, Units.val_mul, map_mul, hv, mul_one]
     exact mul_lt_mul_of_pos_left (hd 0 1 (by decide)) hzpos)
@@ -185,7 +185,7 @@ private theorem value_orb (V : Lev k) (ω : kˣ →* ℂˣ) (hω : ∀ u ∈ V.H
     (hv : v ∈ V.ZJ 2) :
     V.fZ ω d ((g₀ * dg u * v)⁻¹ * (g₀ * dg ![a, b] * g₀⁻¹) * (g₀ * dg u * v)) = (ω (d 1 / b) : ℂ) := by
   have hz : ∀ u : GL (Fin 2) k, u ∈ V.ZJ 2 ↔ ∃ z : kˣ, ∃ j ∈ V.J 2, u = GeneralLinearGroup.scalar (Fin 2) z * j := by
-    haveI : (GeneralLinearGroup.scalar (Fin 2) : kˣ →* GL (Fin 2) k).range.Normal := ⟨by
+    have : (GeneralLinearGroup.scalar (Fin 2) : kˣ →* GL (Fin 2) k).range.Normal := ⟨by
       rintro _ ⟨z, rfl⟩ g
       exact ⟨z, by rw [← scalar_comm z g]; simp⟩⟩
     intro u
@@ -259,7 +259,7 @@ private theorem value_orb (V : Lev k) (ω : kˣ →* ℂˣ) (hω : ∀ u ∈ V.H
 theorem orbZ : OrbZ := by
   classical
   intro k _ _ _ _ V ω hω d hd T _ p q hpq g₀ ι hι a b hab
-  letI : MulAction T (GL (Fin 2) k ⧸ V.ZJ 2) := MulAction.compHom _ ι
+  let : MulAction T (GL (Fin 2) k ⧸ V.ZJ 2) := MulAction.compHom _ ι
   have hJ : V.J 2 ≤ V.ZJ 2 := le_sup_right
   have hrel : (V.H.comap (p / q)).relIndex ((Uo k).comap (p / q)) = V.H.relIndex (Uo k) := by
     rw [Subgroup.relIndex_comap, Subgroup.map_comap_eq_self_of_surjective hpq]

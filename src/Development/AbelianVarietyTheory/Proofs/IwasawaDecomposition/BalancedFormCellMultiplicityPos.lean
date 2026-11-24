@@ -46,19 +46,19 @@ namespace GlobalTheory.PolFan
 
 theorem cellMult_pos {O : Type} [CommRing O] [Module.Finite ℤ O] (bar : O → O) {X : Type} [AddCommGroup X] [Module O X]
     [Module.Finite O X] {m : ℕ} (δ : Fin m → balForms bar X) : 0 < cellMult bar δ := by
-  haveI : Module.Finite ℤ X := Module.Finite.trans O X
+  have : Module.Finite ℤ X := Module.Finite.trans O X
   unfold cellMult
   set M := balForms bar X ⧸ Submodule.span ℤ (Set.range δ)
   set T := Submodule.torsion ℤ M
-  haveI : IsNoetherian ℤ (LinearMap.BilinForm ℤ X) := inferInstance
-  haveI : Module.Finite ℤ M := inferInstance
-  haveI : IsNoetherian ℤ M := inferInstance
-  haveI : IsNoetherian ℤ T := isNoetherian_of_submodule_of_noetherian ℤ M T inferInstance
-  haveI : Module.Finite ℤ T := ⟨IsNoetherian.noetherian ⊤⟩
-  haveI : AddGroup.FG T := by
+  have : IsNoetherian ℤ (LinearMap.BilinForm ℤ X) := inferInstance
+  have : Module.Finite ℤ M := inferInstance
+  have : IsNoetherian ℤ M := inferInstance
+  have : IsNoetherian ℤ T := isNoetherian_of_submodule_of_noetherian ℤ M T inferInstance
+  have : Module.Finite ℤ T := ⟨IsNoetherian.noetherian ⊤⟩
+  have : AddGroup.FG T := by
     rw [← Module.Finite.iff_addGroup_fg]; infer_instance
-  haveI : Finite T := by
-    apply AddCommGroup.finite_of_fg_torsion
+  have : Finite T := by
+    apply AddCommGroup.finite_of_fg_isAddTorsion
     rintro ⟨x, hx⟩
     obtain ⟨⟨a, ha⟩, hax⟩ := hx
     refine (isOfFinAddOrder_iff_zsmul_eq_zero).2 ⟨a, nonZeroDivisors.ne_zero ha, ?_⟩

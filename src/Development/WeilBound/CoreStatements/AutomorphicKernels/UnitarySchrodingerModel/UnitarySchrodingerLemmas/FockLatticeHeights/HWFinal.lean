@@ -125,8 +125,8 @@ attribute [local instance] isTopologicalRing_Ev t2Space_Fv_tensor locallyCompact
 theorem distribHaarChar_Ev (u : (Fv F v ⊗[F] E)ˣ) :
     distribHaarChar (Fv F v ⊗[F] E) u = ‖Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E)‖₊ := by
   borelize (Fv F v ⊗[F] E)
-  haveI := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   set b := basisEv (E := E) v
   set M := Algebra.leftMulMatrix b (u : Fv F v ⊗[F] E) with hMdef
   have hdet : M.det = Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E) := (Algebra.norm_eq_matrix_det b _).symm
@@ -294,16 +294,16 @@ end Haar
 theorem hwFin : PositivityTheory.PfSWUS.SwFockk.HWFin := by
   intro D n w hw nb hnb b p k hp hk hwk a ha v lam hlam
   obtain ⟨m, u, b0, rfl, hm, hu⟩ := GlobalTheory.StdUnn.LeftInvSect.exists_levi_unip hp a ha
-  haveI := hlam
-  haveI : IsTopologicalRing (Fv D.host.F v ⊗[D.host.F] D.host.E) := GlobalTheory.LocTateInt.isTopologicalRing_Ev v
-  haveI : T2Space (Fv D.host.F v ⊗[D.host.F] D.host.E) := GlobalTheory.LocTateInt.t2Space_Fv_tensor v
-  haveI : LocallyCompactSpace (Fv D.host.F v ⊗[D.host.F] D.host.E) := GlobalTheory.LocTateInt.locallyCompactSpace_Ev v
-  haveI : SecondCountableTopology (Fv D.host.F v ⊗[D.host.F] D.host.E) := GlobalTheory.LocTateInt.secondCountable_Ev v
-  haveI : BorelSpace (Fv D.host.F v ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ D.host.F D.host.E
+  have := hlam
+  have : IsTopologicalRing (Fv D.host.F v ⊗[D.host.F] D.host.E) := GlobalTheory.LocTateInt.isTopologicalRing_Ev v
+  have : T2Space (Fv D.host.F v ⊗[D.host.F] D.host.E) := GlobalTheory.LocTateInt.t2Space_Fv_tensor v
+  have : LocallyCompactSpace (Fv D.host.F v ⊗[D.host.F] D.host.E) := GlobalTheory.LocTateInt.locallyCompactSpace_Ev v
+  have : SecondCountableTopology (Fv D.host.F v ⊗[D.host.F] D.host.E) := GlobalTheory.LocTateInt.secondCountable_Ev v
+  have : BorelSpace (Fv D.host.F v ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ D.host.F D.host.E
   have hAr : IsArtinianRing (Fv D.host.F v ⊗[D.host.F] D.host.E) := IsArtinianRing.of_finite (Fv D.host.F v) _
   have hRd : IsReduced (Fv D.host.F v ⊗[D.host.F] D.host.E) := by
-    haveI : Algebra.FormallyUnramified D.host.F D.host.E := Algebra.FormallyUnramified.of_isSeparable _ _
+    have : Algebra.FormallyUnramified D.host.F D.host.E := Algebra.FormallyUnramified.of_isSeparable _ _
     exact Algebra.FormallyUnramified.isReduced_of_field (Fv D.host.F v) _
   set cf := compFin D.host.F D.host.E v with hcf
 
@@ -602,7 +602,7 @@ theorem prod_absEw {θ : InfFam D} (hθ : IsInfFam θ) (x : (AE D)ˣ) :
     ((∏ w' : InfinitePlace D.host.F, absEw D.host.F D.host.E w' (unitInf D.host.F D.host.E w' x) : ℝ≥0) : ℝ) =
       ∏ τ, ‖θ τ (infPart D (x : AE D))‖ ^ 2 := by
   have hcm := (GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND _ _ D.sp.cm).1
-  haveI := hcm.1
+  have := hcm.1
   have hw : ∀ τ : D.what₂.Tau, absEw D.host.F D.host.E
       (InfinitePlace.mk ((tauE D τ).comp (algebraMap D.host.F D.host.E)))
       (unitInf D.host.F D.host.E _ x) = ‖θ τ (infPart D (x : AE D))‖₊ ^ 2 := by

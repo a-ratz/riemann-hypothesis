@@ -96,9 +96,9 @@ private theorem nn_int {μ : Measure X} {g : X → ℝ} (hg : Measurable g) (h0 
     (hg.mul hρ.ennreal_toReal).aestronglyMeasurable]
   congr 1
   apply lintegral_congr_ae
-  have hae := ae_lt_top (hg.enorm.mul hρ) hfin.ne
+  have hae := ae_lt_top (hg.eNorm.mul hρ) hfin.ne
   filter_upwards [hae] with x hx
-  rw [ENNReal.ofReal_mul (h0 x), ← Real.enorm_of_nonneg (h0 x)]
+  rw [ENNReal.ofReal_mul (h0 x), ← Real.eNorm_of_nonneg (h0 x)]
   by_cases h : ρ x = ⊤
   · have hz : ‖g x‖ₑ = 0 := by
       by_contra hne
@@ -113,7 +113,7 @@ private theorem int_of {μ : Measure X} {g : X → ℝ} (hg : Measurable g) {ρ 
     Integrable (fun x => g x * (ρ x).toReal) μ := by
   refine ⟨(hg.mul hρ.ennreal_toReal).aestronglyMeasurable, ?_⟩
   refine lt_of_le_of_lt (lintegral_mono fun x => ?_) hfin
-  rw [enorm_mul, Real.enorm_of_nonneg ENNReal.toReal_nonneg]
+  rw [eNorm_mul, Real.eNorm_of_nonneg ENNReal.toReal_nonneg]
   gcongr
   exact ENNReal.ofReal_toReal_le
 
@@ -135,17 +135,17 @@ private theorem real_eq {μ : Measure X} [μ.IsMulLeftInvariant] [SFinite μ] {�
   have hpi : ∀ t x, max (g (i t * x)) 0 = max (g x) 0 := fun t x => by rw [hgi]
   have hni : ∀ t x, max (-g (i t * x)) 0 = max (-g x) 0 := fun t x => by rw [hgi]
   have hple : ∀ x, ‖max (g x) 0‖ₑ ≤ ‖g x‖ₑ := fun x => by
-    rw [Real.enorm_eq_ofReal_abs, Real.enorm_eq_ofReal_abs]
+    rw [Real.eNorm_eq_ofReal_abs, Real.eNorm_eq_ofReal_abs]
     exact ENNReal.ofReal_le_ofReal (by
       rw [abs_of_nonneg (le_max_right _ _)]
       exact max_le (le_abs_self _) (abs_nonneg _))
   have hnle : ∀ x, ‖max (-g x) 0‖ₑ ≤ ‖g x‖ₑ := fun x => by
-    rw [Real.enorm_eq_ofReal_abs, Real.enorm_eq_ofReal_abs]
+    rw [Real.eNorm_eq_ofReal_abs, Real.eNorm_eq_ofReal_abs]
     exact ENNReal.ofReal_le_ofReal (by
       rw [abs_of_nonneg (le_max_right _ _)]
       exact max_le (neg_le_abs _) (abs_nonneg _))
   have hfin' : ∫⁻ x, ‖g x‖ₑ * ρ' x ∂μ < ⊤ := by
-    rw [← lint_eq hi hg.enorm (fun t x => by rw [hgi]) hρ hρ1 hρ' hρ'1]
+    rw [← lint_eq hi hg.eNorm (fun t x => by rw [hgi]) hρ hρ1 hρ' hρ'1]
     exact hfin
   have split : ∀ r : X → ℝ≥0∞, Measurable r → ∫⁻ x, ‖g x‖ₑ * r x ∂μ < ⊤ →
       ∫ x, g x * (r x).toReal ∂μ =
@@ -161,13 +161,13 @@ private theorem real_eq {μ : Measure X} [μ.IsMulLeftInvariant] [SFinite μ] {�
     show g x * (r x).toReal = max (g x) 0 * (r x).toReal - max (-g x) 0 * (r x).toReal
     rw [← sub_mul, max_zero_sub_max_neg_zero_eq_self]
   rw [split ρ hρ hfin, split ρ' hρ' hfin',
-    lint_eq hi hpm.enorm (fun t x => by rw [hpi]) hρ hρ1 hρ' hρ'1,
-    lint_eq hi hnm.enorm (fun t x => by rw [hni]) hρ hρ1 hρ' hρ'1]
+    lint_eq hi hpm.eNorm (fun t x => by rw [hpi]) hρ hρ1 hρ' hρ'1,
+    lint_eq hi hnm.eNorm (fun t x => by rw [hni]) hρ hρ1 hρ' hρ'1]
 
 private theorem cpx_int {μ : Measure X} {Φ : X → ℂ} (hΦ : Measurable Φ) {ρ : X → ℝ≥0∞}
     (hρ : Measurable ρ) (hfin : ∫⁻ x, ‖Φ x‖ₑ * ρ x ∂μ < ⊤) :
     Integrable (fun x => Φ x * ((ρ x).toReal : ℂ)) μ := by
-  have h := int_of (μ := μ) (g := fun x => ‖Φ x‖) hΦ.norm hρ (by simpa [enorm_norm] using hfin)
+  have h := int_of (μ := μ) (g := fun x => ‖Φ x‖) hΦ.norm hρ (by simpa [eNorm_norm] using hfin)
   refine h.mono (hΦ.mul (Complex.measurable_ofReal.comp hρ.ennreal_toReal)).aestronglyMeasurable
     (Filter.Eventually.of_forall fun x => ?_)
   simp [abs_of_nonneg ENNReal.toReal_nonneg]
@@ -179,18 +179,18 @@ private theorem cpx_eq {μ : Measure X} [μ.IsMulLeftInvariant] [SFinite μ] {ν
     (hρ'1 : ∀ x, ∫⁻ t, ρ' (i t * x) ∂ν = 1) (hfin : ∫⁻ x, ‖Φ x‖ₑ * ρ x ∂μ < ⊤) :
     ∫ x, Φ x * ((ρ x).toReal : ℂ) ∂μ = ∫ x, Φ x * ((ρ' x).toReal : ℂ) ∂μ := by
   have hfin' : ∫⁻ x, ‖Φ x‖ₑ * ρ' x ∂μ < ⊤ := by
-    rw [← lint_eq hi hΦ.enorm (fun t x => by rw [hΦi]) hρ hρ1 hρ' hρ'1]
+    rw [← lint_eq hi hΦ.eNorm (fun t x => by rw [hΦi]) hρ hρ1 hρ' hρ'1]
     exact hfin
   have h1 := cpx_int hΦ hρ hfin
   have h2 := cpx_int hΦ hρ' hfin'
   have bre : ∫⁻ x, ‖(Φ x).re‖ₑ * ρ x ∂μ < ⊤ :=
     lt_of_le_of_lt (lintegral_mono fun x => by
       gcongr
-      exact enorm_le_iff_norm_le.2 (Complex.abs_re_le_norm _)) hfin
+      exact eNorm_le_iff_norm_le.2 (Complex.abs_re_le_norm _)) hfin
   have bim : ∫⁻ x, ‖(Φ x).im‖ₑ * ρ x ∂μ < ⊤ :=
     lt_of_le_of_lt (lintegral_mono fun x => by
       gcongr
-      exact enorm_le_iff_norm_le.2 (Complex.abs_im_le_norm _)) hfin
+      exact eNorm_le_iff_norm_le.2 (Complex.abs_im_le_norm _)) hfin
   apply Complex.ext
   · have a := Complex.reCLM.integral_comp_comm h1
     have b := Complex.reCLM.integral_comp_comm h2

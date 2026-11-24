@@ -62,7 +62,7 @@ namespace GlobalTheory
 theorem exists_algHom_ker_eq_of_isMaximal (F B : Type) [Field F] [IsAlgClosed F] [CommRing B]
     [Algebra F B] [Module.Finite F B] (m : Ideal B) [m.IsMaximal] :
     ∃ ψ : B →ₐ[F] F, ∀ b, ψ b = 0 → b ∈ m := by
-  letI : Field (B ⧸ m) := Ideal.Quotient.field m
+  let : Field (B ⧸ m) := Ideal.Quotient.field m
   have hb : Function.Bijective (algebraMap F (B ⧸ m)) :=
     IsAlgClosed.algebraMap_bijective_of_isIntegral
   let e : F ≃ₐ[F] (B ⧸ m) := AlgEquiv.ofBijective (Algebra.ofId F (B ⧸ m)) hb
@@ -75,7 +75,7 @@ theorem tensor_eq_zero_of_forall_geometric_point :
     ∀ (O F : Type) [CommRing O] [Field F] [IsAlgClosed F] [Algebra O F], Function.Injective (algebraMap O F) → ∀ (A : Type) [CommRing A] [Algebra O A] [Module.Finite O A] [Module.Flat O A] [IsReduced (TensorProduct O F A)] (M : Type) [AddCommGroup M] [Module O M] [Module.Flat O M] (t : TensorProduct O A M), (∀ φ : A →ₐ[O] F, TensorProduct.map φ.toLinearMap (LinearMap.id : M →ₗ[O] M) t = 0) → t = 0 := by
   intro O F _ _ _ _ hinj A _ _ _ _ _ M _ _ _ t ht
   classical
-  haveI : IsArtinianRing (TensorProduct O F A) := IsArtinianRing.of_finite F _
+  have : IsArtinianRing (TensorProduct O F A) := IsArtinianRing.of_finite F _
   have hpt : ∀ m : MaximalSpectrum (TensorProduct O F A),
       ∃ ψ : TensorProduct O F A →ₐ[F] F, ∀ b, ψ b = 0 → b ∈ m.asIdeal := fun m =>
     haveI := m.isMaximal
@@ -104,7 +104,7 @@ theorem tensor_eq_zero_of_forall_geometric_point :
     exact IsNilpotent.eq_zero ⟨n, by simpa using h2⟩
   have hLM : Function.Injective (L.rTensor M) :=
     Module.Flat.rTensor_preserves_injective_linearMap L hL
-  haveI : Fintype (MaximalSpectrum (TensorProduct O F A)) := Fintype.ofFinite _
+  have : Fintype (MaximalSpectrum (TensorProduct O F A)) := Fintype.ofFinite _
   apply hLM
   rw [map_zero]
   apply (TensorProduct.piLeft O M (fun _ : MaximalSpectrum (TensorProduct O F A) => F)).injective

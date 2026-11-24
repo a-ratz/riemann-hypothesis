@@ -102,9 +102,9 @@ theorem charpoly_lmul_splits_of_conjugates (E : Type) [Field E] [NumberField E]
     (hO : ∀ (s' : E →+* Ω) (a : 𝓞 E), s' (a : E) ∈ (algebraMap O Ω).range) (a : 𝓞 E) :
     ((Algebra.lmul ℤ (𝓞 E) a : Module.End ℤ (𝓞 E)).charpoly.map (Int.castRingHom K)).Splits := by
   classical
-  haveI : Finite (E →+* Ω) :=
+  have : Finite (E →+* Ω) :=
     Nat.finite_of_card_ne_zero (by rw [hc]; exact Module.finrank_pos.ne')
-  letI : Fintype (E →+* Ω) := Fintype.ofFinite _
+  let : Fintype (E →+* Ω) := Fintype.ofFinite _
   have hO' : ∀ (s' : E →+* Ω) (a : 𝓞 E), ∃ y, algebraMap O Ω y = s' (a : E) :=
     fun s' a => RingHom.mem_range.mp (hO s' a)
   choose o ho using hO'

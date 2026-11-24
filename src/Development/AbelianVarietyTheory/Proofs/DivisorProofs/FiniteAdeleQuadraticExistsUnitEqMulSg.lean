@@ -300,7 +300,7 @@ theorem GlobalTheory.UCls.normOne_classes_le_classNumber : ∀ (E : Type) [Field
   have hset : {x : E | IsIntegral ℤ x} = Set.range (algebraMap (𝓞 E) E) := by
     ext x
     exact ⟨fun hx => ⟨⟨x, hx⟩, rfl⟩, by rintro ⟨y, rfl⟩; exact RingOfIntegers.isIntegral_coe y⟩
-  haveI : Nonempty {t : RA (maximalRealSubfield E) E // IsTA (IsCMField.complexConj E) t} :=
+  have : Nonempty {t : RA (maximalRealSubfield E) E // IsTA (IsCMField.complexConj E) t} :=
     ⟨⟨1, by simp [IsTA]⟩⟩
   refine ⟨Finset.univ.image fun x => (Function.invFun f x).1, Finset.card_image_le, fun t ht => ?_⟩
   obtain ⟨u, hu, k, hk, hk', e⟩ := hf ⟨t, ht⟩ (Function.invFun f (f ⟨t, ht⟩))

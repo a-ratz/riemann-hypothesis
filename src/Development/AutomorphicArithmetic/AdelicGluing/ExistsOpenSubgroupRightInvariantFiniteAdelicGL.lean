@@ -65,7 +65,7 @@ private theorem locally_constant_right_invariant_open_subgroup {G : Type*} [Grou
     (K₀ : Subgroup G) (hK : IsOpen (K₀ : Set G)) [CompactSpace K₀] [TotallyDisconnectedSpace K₀]
     (e : G → ℂ) (he : IsLocallyConstant e) (hc : HasCompactSupport e) :
     ∃ W : Subgroup G, IsOpen (W : Set G) ∧ ∀ k ∈ W, ∀ x, e (x * k) = e x := by
-  letI : Inv (Set G) := Set.inv
+  let : Inv (Set G) := Set.inv
   have hF : IsLocallyConstant fun p : G × G => e (p.1 * p.2) - e p.1 :=
     (he.comp_continuous (continuous_fst.mul continuous_snd)).sub (he.comp_continuous continuous_fst)
   have hN : IsOpen {p : G × G | e (p.1 * p.2) - e p.1 = 0} := hF.isOpen_fiber 0
@@ -78,7 +78,7 @@ private theorem locally_constant_right_invariant_open_subgroup {G : Type*} [Grou
   have hinv : ∀ x ∈ tsupport e, ∀ k ∈ V, e (x * k) = e x :=
     fun x hx k hk => sub_eq_zero.1 (hAV (Set.mk_mem_prod (hCA hx) hk))
   have hVi : IsOpen (V ∩ V⁻¹) := hVo.inter hVo.inv
-  have hUo : IsOpen ((↑) ⁻¹' (V ∩ V⁻¹) : Set K₀) := hVi.preimage continuous_subtype_val
+  have hUo : IsOpen ((↑) ⁻¹' (V ∩ V⁻¹) : Set K₀) := hVi.preimage continuous_subtypeVal
   have hU1 : (1 : K₀) ∈ ((↑) ⁻¹' (V ∩ V⁻¹) : Set K₀) := by
     simp [h1]
   obtain ⟨H, hH⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hUo hU1

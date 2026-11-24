@@ -143,10 +143,10 @@ theorem Contains.mono {E : Place c} {R R' : Subring K} (h : E.Contains R') (hR :
 
 theorem isFreeGen_toRat {ω : Forms E.const n} (hω : IsFreeGen E.ring ω) :
     IsFreeGen K (E.toRat n ω) := by
-  letI := E.const.toAlgebra
-  letI := c.toAlgebra
-  haveI : IsScalarTower k E.ring K := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.FormallyEtale E.ring K := .of_isLocalization (nonZeroDivisors E.ring)
+  let := E.const.toAlgebra
+  let := c.toAlgebra
+  have : IsScalarTower k E.ring K := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.FormallyEtale E.ring K := .of_isLocalization (nonZeroDivisors E.ring)
   exact hω.of_isBaseChange (isBaseChange_exteriorPower
     (KaehlerDifferential.isBaseChange_of_formallyEtale k E.ring K) n)
 
@@ -248,11 +248,11 @@ theorem isLocModel : IsLocModel c E.ring.toSubring :=
 
 theorem exists_isFreeGen [PerfectField k] {x : Fin n → K} (hx : TrBasis c x) :
     ∃ ω : Forms E.const n, IsFreeGen E.ring ω := by
-  letI := E.const.toAlgebra
-  letI := c.toAlgebra
-  haveI : IsScalarTower k E.ring K := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.EssFiniteType k E.ring := E.essFiniteType
-  haveI := formallySmooth_of_isRegularLocalRing_of_perfectField k E.ring
+  let := E.const.toAlgebra
+  let := c.toAlgebra
+  have : IsScalarTower k E.ring K := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.EssFiniteType k E.ring := E.essFiniteType
+  have := formallySmooth_of_isRegularLocalRing_of_perfectField k E.ring
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible E.ring
   obtain ⟨m, z, b, -, hb⟩ := exists_basis_kaehler_uniformiser k ht
   have h1 := trdeg_eq_of_basis_kaehler k K b

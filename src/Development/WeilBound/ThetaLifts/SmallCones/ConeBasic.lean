@@ -117,11 +117,11 @@ theorem kfin_dec (hp : IsPair B M χX χW om r s r' s') {K : Subgroup (UA σ X.J
     ∃ (m : ℕ) (Ψ : Fin m → Fn F n d) (c : Fin m → K → ℂ), (∀ i, Ψ i ∈ S) ∧ (∀ i, Continuous (c i)) ∧
       ∀ k : K, om (k.1, 1) Φ = ∑ i, c i k • Ψ i := by
   set V := Submodule.span ℂ (Set.range fun k : K => om (k.1, 1) Φ)
-  haveI : FiniteDimensional ℂ V := hK
+  have : FiniteDimensional ℂ V := hK
   let b := Module.finBasis ℂ V
   have hc : Continuous fun k : K => (⟨om (k.1, 1) Φ, Submodule.subset_span ⟨k, rfl⟩⟩ : V) := by
     refine Continuous.subtype_mk (continuous_pi fun y => ?_) _
-    exact (pair_cont hp (ev_adm y) hΦ).comp (continuous_subtype_val.prodMk continuous_const)
+    exact (pair_cont hp (ev_adm y) hΦ).comp (continuous_subtypeVal.prodMk continuous_const)
   refine ⟨_, fun i => (b i).1, fun i k => b.repr ⟨om (k.1, 1) Φ, Submodule.subset_span ⟨k, rfl⟩⟩ i,
     fun i => Submodule.span_le.2 (by rintro _ ⟨k, rfl⟩; exact hS k) (b i).2,
     fun i => (b.coord i).continuous_of_finiteDimensional.comp hc, fun k => ?_⟩

@@ -82,18 +82,18 @@ theorem exists_weight_mass_one_right_coset :
   have hclosed : IsClosed ((ι.range : Subgroup G) : Set G) := by
     rw [MonoidHom.coe_range]; exact hι.isClosed_range
   let e : G₁ ≃ₜ* ι.range := closedEmbeddingRangeEquiv ι hι
-  haveI : IsFiniteMeasureOnCompacts μ₁.inv :=
+  have : IsFiniteMeasureOnCompacts μ₁.inv :=
     ⟨fun K hK => by rw [Measure.inv_apply]; exact hK.inv.measure_lt_top⟩
-  haveI : μ₁.inv.IsOpenPosMeasure :=
+  have : μ₁.inv.IsOpenPosMeasure :=
     ⟨fun U hU hne => by
       rw [Measure.inv_apply]; exact hU.inv.measure_ne_zero μ₁ hne.inv⟩
-  haveI hinv : μ₁.inv.IsHaarMeasure := {}
+  have hinv : μ₁.inv.IsHaarMeasure := {}
   have hν : (μ₁.inv.map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ₁.inv e
   obtain ⟨β, hβ, hmass⟩ := PI.WeilQuotMeas.UnitaryGroupMassFormula.stepBruhat G ι.range hclosed _ hν
   refine ⟨fun g => β g⁻¹, hβ.comp measurable_inv, fun g => ?_⟩
   have hem : Measurable e := e.continuous.measurable
   have hf : Measurable fun h : ι.range => β (g⁻¹ * (h : G)) :=
-    hβ.comp (measurable_const.mul measurable_subtype_coe)
+    hβ.comp (measurable_const.mul measurable_subtypeVal)
   have h1 := hmass g⁻¹
   have hcomp : Measurable fun a : G₁ => β (g⁻¹ * (e a : G)) := hf.comp hem
   rw [lintegral_map hf hem, Measure.inv, lintegral_map hcomp measurable_inv] at h1
@@ -243,11 +243,11 @@ end
 
 theorem lintegral_sum_cosets_average : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G] [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] (G₁ : Type) [Group G₁] [TopologicalSpace G₁] [IsTopologicalGroup G₁] [LocallyCompactSpace G₁] [SecondCountableTopology G₁] [MeasurableSpace G₁] [BorelSpace G₁] (ι : G₁ →* G), IsClosedEmbedding ι → ∀ (μ : Measure G) [μ.IsHaarMeasure] (μ₁ : Measure G₁) [μ₁.IsHaarMeasure] (Γ : Subgroup G) [Countable Γ] (Γ₁ : Subgroup G₁) [Countable Γ₁] (𝓕 : Set G) (𝓕₁ : Set G₁), IsFundamentalDomain Γ 𝓕 μ → IsFundamentalDomain Γ₁ 𝓕₁ μ₁ → μ₁ 𝓕₁ < ⊤ → (∀ u ∈ Γ₁, ι u ∈ Γ) → ∀ (Q : Type) [Countable Q] (r : Q → G), (∀ q, r q ∈ Γ) → (∀ γ ∈ Γ, ∃! q, ∃ u ∈ Γ₁, γ = ι u * r q) → ∀ φ : G → ℝ≥0∞, Measurable φ → (∀ u ∈ Γ₁, ∀ g, φ (ι u * g) = φ g) → ∫⁻ h in 𝓕, ∑' q, φ (r q * h) ∂μ = ∫⁻ h in 𝓕, ∑' q, (μ₁ 𝓕₁)⁻¹ * ∫⁻ u in 𝓕₁, φ (ι u * (r q * h)) ∂μ₁ ∂μ := by
   intro G _ _ _ _ _ _ _ _ G₁ _ _ _ _ _ _ _ ι hιce μ _ μ₁ _ Γ _ Γ₁ _ 𝓕 𝓕₁ h𝓕 h𝓕₁ hfin hΓ Q _ r hr hQ φ hφ hinv
-  haveI : T2Space G₁ := hιce.isEmbedding.t2Space
+  have : T2Space G₁ := hιce.isEmbedding.t2Space
   obtain ⟨hne, hright, hinvinv⟩ :=
     GlobalTheory.CompanionTheory.SW.LatticeUnimod.unimodular_of_isFundamentalDomain G₁ Γ₁ μ₁ 𝓕₁ h𝓕₁ hfin
-  haveI := hright
-  haveI := hinvinv
+  have := hright
+  have := hinvinv
   obtain ⟨w, hw, hw1⟩ := _root_.GlobalTheory.CompanionTheory.SW.exists_weight_mass_one_right_coset G G₁ ι hιce μ₁
   have hιc : Continuous ι := hιce.continuous
   have hι : Function.Injective ι := hιce.injective

@@ -132,7 +132,7 @@ lemma rr_roots_pow {K : Type} [Field K] [IsAlgClosed K] (q : ℕ) : ∀ (n : ℕ
       have hB : IsNilpotent B := ⟨1, LinearMap.ext fun x => Subsingleton.elim _ _⟩
       rw [(LinearMap.isNilpotent_iff_charpoly B).mp hB, hn, hn0, pow_zero]
     simp [hnil]
-  · haveI : Nontrivial V := Module.finrank_pos_iff.mp (hn ▸ hnpos)
+  · have : Nontrivial V := Module.finrank_pos_iff.mp (hn ▸ hnpos)
     obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue A
     obtain ⟨f, hf⟩ : ∃ f : Module.End K V, f = A - μ • 1 := ⟨_, rfl⟩
     obtain ⟨N0, hN0⟩ :=

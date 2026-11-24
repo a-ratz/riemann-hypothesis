@@ -94,7 +94,7 @@ theorem nkCount_succ_fine (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
     (h𝔭 : 𝔭.IsMaximal) {n : 𝓞 F} {v : ℕ} (hn : n ∉ 𝔭 ^ (v + 1)) {k : ℕ}
     (hk : vd h L 𝔭 + v + 1 ≤ k) :
     nkCount h L 𝔭 (k + 1) n = Ideal.absNorm 𝔭 ^ (2 * finrank K V - 1) * nkCount h L 𝔭 k n := by
-  haveI : Fact (IsFixF K F) := ⟨hF⟩
+  have : Fact (IsFixF K F) := ⟨hF⟩
   obtain ⟨b, H, D, hb, hH, hHh, hD, hD0, hv⟩ := exists_local_data hF hs hd hL hLi h𝔭
   rw [nkCount_eq h h𝔭 b hb hH, nkCount_eq h h𝔭 b hb hH]
   change nkM 𝔭 (k + 1) H n = _ * nkM 𝔭 k H n
@@ -140,7 +140,7 @@ theorem nkCount_congr (hF : IsFixF K F)
     (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) {n n' : 𝓞 F} {k : ℕ} (hc : n - n' ∈ 𝔭 ^ k) :
     nkCount h L 𝔭 k n = nkCount h L 𝔭 k n' := by
-  haveI : Fact (IsFixF K F) := ⟨hF⟩
+  have : Fact (IsFixF K F) := ⟨hF⟩
   obtain ⟨b, H, D, hb, hH, hHh, hD, hD0, hv⟩ := exists_local_data hF hs hd hL hLi h𝔭
   rw [nkCount_eq h h𝔭 b hb hH, nkCount_eq h h𝔭 b hb hH]
   have e : Ideal.Quotient.mk (extP K 𝔭 ^ k) (ι n) = Ideal.Quotient.mk (extP K 𝔭 ^ k) (ι n') := by
@@ -153,7 +153,7 @@ theorem akCount_succ_fine (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (
     (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) {k : ℕ} (hk : 2 * vd h L 𝔭 + 1 ≤ k) :
     akCount h L 𝔭 (k + 1) = Ideal.absNorm 𝔭 ^ (finrank K V ^ 2) * akCount h L 𝔭 k := by
-  haveI : Fact (IsFixF K F) := ⟨hF⟩
+  have : Fact (IsFixF K F) := ⟨hF⟩
   obtain ⟨b, H, D, hb, hH, hHh, hD, hD0, hv⟩ := exists_local_data hF hs hd hL hLi h𝔭
   rw [akCount_eq h h𝔭 b hb hH, akCount_eq h h𝔭 b hb hH]
   rw [hv] at hk
@@ -174,11 +174,11 @@ theorem akCount_pos (hF : IsFixF K F)
     {h : V →ₗ⋆[K] V →ₗ[K] K} (hs : h.IsSymm) (hd : IsTotPosDef h) {L : Submodule (𝓞 K) V}
     (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) (k : ℕ) : 0 < akCount h L 𝔭 k := by
-  haveI : Fact (IsFixF K F) := ⟨hF⟩
+  have : Fact (IsFixF K F) := ⟨hF⟩
   obtain ⟨b, H, D, hb, hH, hHh, hD, hD0, hv⟩ := exists_local_data hF hs hd hL hLi h𝔭
   rw [akCount_eq h h𝔭 b hb hH]
-  haveI := finite_quot (K := K) h𝔭 k
-  haveI : Nonempty {X : Matrix (Fin (finrank K V)) (Fin (finrank K V)) (𝓞 K ⧸ extP K 𝔭 ^ k) //
+  have := finite_quot (K := K) h𝔭 k
+  have : Nonempty {X : Matrix (Fin (finrank K V)) (Fin (finrank K V)) (𝓞 K ⧸ extP K 𝔭 ^ k) //
       Xᴴ * H.map (Ideal.Quotient.mk (extP K 𝔭 ^ k)) * X = H.map (Ideal.Quotient.mk (extP K 𝔭 ^ k))} :=
     ⟨⟨1, by rw [Matrix.conjTranspose_one, Matrix.one_mul, Matrix.mul_one]⟩⟩
   exact Nat.card_pos
@@ -189,7 +189,7 @@ theorem nkCount_le_nat (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF 
     {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) (k : ℕ) (n : 𝓞 F) :
     nkCount h L 𝔭 k n ≤ 2 * Ideal.absNorm 𝔭 ^ (2 * vd h L 𝔭 + 1) *
       Ideal.absNorm 𝔭 ^ (k * (2 * finrank K V - 1)) := by
-  haveI : Fact (IsFixF K F) := ⟨hF⟩
+  have : Fact (IsFixF K F) := ⟨hF⟩
   obtain ⟨b, H, D, hb, hH, hHh, hD, hD0, hv⟩ := exists_local_data hF hs hd hL hLi h𝔭
   rw [nkCount_eq h h𝔭 b hb hH, hv]
   have key := nkM_le hK h𝔭 hHh hD (notMem_pow_vF h𝔭 hD0) (by rw [Fintype.card_fin]; exact hm) k n

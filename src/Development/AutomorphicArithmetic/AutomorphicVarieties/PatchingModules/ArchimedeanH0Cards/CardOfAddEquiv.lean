@@ -62,7 +62,7 @@ theorem UpperTheory.V.Pa.B2.arLoc :
        (((l : ℕ) : 𝓞 F) ∉ v.asIdeal →
         Nat.card (H1 M.ρ) = Nat.card (H0 M.ρ) * Nat.card (H2 M.ρ) * Nat.card M.X ^ 0)) := by
     intro A _ M hl
-    letI : Module (ZMod (l ^ 1)) M.X := AddCommGroup.zmodModule (fun m => by rw [pow_one]; exact hl m)
+    let : Module (ZMod (l ^ 1)) M.X := AddCommGroup.zmodModule (fun m => by rw [pow_one]; exact hl m)
     obtain ⟨hc, ⟨e0⟩, ⟨e1, -⟩, ⟨e2, -⟩⟩ := scal A _ M (l ^ 1)
     have hf := hP.lf F Ω l 1 M.X B (GlobalTheory.Published.zmodRep (l ^ 1) M.ρ) v one_pos hB hc
     have he := hP.le F Ω l 1 M.X B (GlobalTheory.Published.zmodRep (l ^ 1) M.ρ) v one_pos hB hc

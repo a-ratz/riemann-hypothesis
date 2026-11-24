@@ -133,7 +133,7 @@ theorem hermOf_sub_gramH_mem_latH : ∀ (F E : Type) [Field F] [NumberField F] [
   filter_upwards [hdiag, h1, h2, h3, h4] with v hd hb hs hJv hTv
   intro X hX
   clear intF hdiag h1 h2 h3 h4
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   unfold latH gramH
   refine ⟨fun i => ?_, fun i j _ k => ?_⟩
   · have hX' := hd i (fun _ => X i) (fun _ a k => hX i a k)

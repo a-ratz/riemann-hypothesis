@@ -104,7 +104,7 @@ theorem prod_monomial_eq {τ R ι : Type} [CommSemiring R] (s : Finset ι) (f : 
   classical
   induction s using Finset.induction_on with
   | empty => simp
-  | insert j s hj ih => rw [Finset.prod_insert hj, ih, monomial_mul, Finset.sum_insert hj, Finset.prod_insert hj]
+  | insert j s hj ih => rw [Finset.prod_insert hj, ih, monomial_mul_monomial, Finset.sum_insert hj, Finset.prod_insert hj]
 
 open Classical in
 theorem coeff_det_eq {F τ : Type} [Field F] {d : ℕ} (P : Matrix (Fin d) (Fin d) (MvPolynomial τ F))
@@ -129,10 +129,10 @@ theorem coeff_det_eq {F τ : Type} [Field F] {d : ℕ} (P : Matrix (Fin d) (Fin 
   split_ifs with h
   · subst h
     refine Finset.sum_congr rfl (fun σ _ => ?_)
-    simp only [Units.smul_def, MvPolynomial.coeff_smul, coeff_monomial, if_pos rfl]
+    simp only [Units.smul_def, MvPolynomial.coeff_smul, coeff_monomial, ite_eq_left rfl]
     rfl
   · refine Finset.sum_eq_zero (fun σ _ => ?_)
-    simp only [Units.smul_def, MvPolynomial.coeff_smul, coeff_monomial, if_neg h, smul_zero]
+    simp only [Units.smul_def, MvPolynomial.coeff_smul, coeff_monomial, ite_eq_right h, smul_zero]
 
 end GlobalTheory.DetCoeff
 
@@ -284,10 +284,10 @@ theorem exists_maxIdeal_smul_mem_of_lt_of_relIndex_ne_zero (F V : Type) [Field F
   set P : Submodule (𝓞 F) N := N₀.comap N.subtype with hP
   have hPne : P ≠ ⊤ := by
     intro h
-    obtain ⟨v, hvN, hvN₀⟩ := SetLike.exists_of_lt hlt
+    obtain ⟨v, hvN, hvN₀⟩ := IsConcreteLE.exists_of_lt hlt
     have hv : (⟨v, hvN⟩ : N) ∈ P := h ▸ Submodule.mem_top
     exact hvN₀ hv
-  haveI : Nontrivial (N ⧸ P) := Submodule.Quotient.nontrivial_iff.2 hPne
+  have : Nontrivial (N ⧸ P) := Submodule.Quotient.nontrivial_iff.2 hPne
   obtain ⟨p, hp⟩ := associatedPrimes.nonempty (𝓞 F) (N ⧸ P)
   obtain ⟨hprime, x, hx⟩ := (isAssociatedPrime_iff (R := 𝓞 F) (M := N ⧸ P)).1 hp
   obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective P x
@@ -1158,7 +1158,7 @@ theorem arch {F V : Type} [Field F] [AddCommGroup V] [Module F V] (nm : HermFam 
       cnrm nm σ (fun i => eval₂ σ u (P i k)) b ≤ Bd k) :
     blockSphereMean B N (linSubst A (map σ P.det)) ≤
       ∑ k, Real.log (Bd k) - Real.log (nm.gram σ b).det.re / 2 := by
-  haveI := blockSphereMeasure_isProbability (B := B) hN
+  have := blockSphereMeasure_isProbability (B := B) hN
   have hmap0 : map σ P.det ≠ 0 := fun h =>
     hP (MvPolynomial.map_injective σ σ.injective (by rw [h, map_zero]))
   have hf0 : linSubst A (map σ P.det) ≠ 0 :=

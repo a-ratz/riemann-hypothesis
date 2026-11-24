@@ -136,7 +136,7 @@ theorem main (B : Matrix (Fin a) (Fin a) R)
   have hϖres : residue R ϖ = 0 := (residue_eq_zero_iff ϖ).mpr hϖm
   have hinj := IsFractionRing.injective R k
   set L := intLattice (R := R) W with hLdef
-  haveI : NoZeroSMulDivisors R ((Fin a → R) ⧸ L) := by
+  have : NoZeroSMulDivisors R ((Fin a → R) ⧸ L) := by
     refine ⟨fun {r q} h => ?_⟩
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective L q
     by_cases hr : r = 0
@@ -144,7 +144,7 @@ theorem main (B : Matrix (Fin a) (Fin a) R)
     · right
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h
       exact (Submodule.Quotient.mk_eq_zero L).mpr (mem_intLattice_of_smul hr h)
-  haveI : Module.Free R ((Fin a → R) ⧸ L) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free R ((Fin a → R) ⧸ L) := Module.free_of_finite_type_torsion_free'
   have hmemL : ∀ {y : Fin a → k}, y ∈ W → ∀ {d : R} {x : Fin a → R},
       (fun i => algebraMap R k (x i)) = algebraMap R k d • y → x ∈ L := by
     intro y hy d x hx

@@ -105,7 +105,7 @@ theorem _root_.GlobalTheory.ProjSpace.isClosedImmersion_sigmaDesc {ι : Type} [F
     IsZariskiLocalAtSource.sigmaDesc (P := @SurjectiveOnStalks) fun i => (hf i).toSurjectiveOnStalks
   have key : ⇑(Sigma.desc f) ∘ AlgebraicGeometry.sigmaMk X = fun p => f p.1 p.2 := by
     funext ⟨i, x⟩
-    rw [Function.comp_apply, AlgebraicGeometry.sigmaMk_mk, ← Scheme.Hom.comp_apply, Sigma.ι_desc]
+    rw [Function.comp_apply, AlgebraicGeometry.sigmaMk_mk, ← Scheme.Hom.comp_apply, Sigma.ι_comp_desc]
   have hce : Topology.IsClosedEmbedding (Sigma.desc f) := by
     have e := isClosedEmbedding_sigma_desc_of_pairwise_disjoint_range (fun i => ⇑(f i))
       (fun i => (hf i).isClosedEmbedding) h
@@ -116,7 +116,7 @@ theorem _root_.GlobalTheory.ProjSpace.isClosedImmersion_sigmaDesc {ι : Type} [F
       simp
     rw [hsplit]
     exact e.comp (AlgebraicGeometry.sigmaMk X).symm.isClosedEmbedding
-  haveI : IsPreimmersion (Sigma.desc f) := (isPreimmersion_iff _).2 ⟨hsurj, hce.isEmbedding⟩
+  have : IsPreimmersion (Sigma.desc f) := (isPreimmersion_iff _).2 ⟨hsurj, hce.isEmbedding⟩
   exact .of_isPreimmersion _ hce.isClosed_range
 
 end GlobalTheory.ProjSpace
@@ -415,7 +415,7 @@ theorem exists_smul_eq_primitive {ι : Type} [Finite ι] {v : ι → K} (hv : v 
   obtain ⟨i, hi⟩ := Finite.exists_max fun j => ValuationRing.valuation V K (v j)
   have h0 : v i ≠ 0 := fun h => hk (by
     have := hi k
-    rwa [h, map_zero, le_zero_iff, map_eq_zero] at this)
+    rwa [h, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this)
   have h1 : ∀ j, ∃ a : V, algebraMap V K a = (v i)⁻¹ * v j := fun j =>
     (ValuationRing.mem_integer_iff V K _).1 (by
       rw [Valuation.mem_integer_iff, map_mul, map_inv₀]

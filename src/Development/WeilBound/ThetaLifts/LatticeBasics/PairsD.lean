@@ -177,7 +177,7 @@ theorem exists_mem_adjoin_eq {V : Type} [AddCommGroup V] [Module ℂ V] [Nontriv
     ∃ T ∈ Algebra.adjoin ℂ O, ∀ x ∈ s, T x = f x := by
   classical
   let A := Algebra.adjoin ℂ O
-  haveI : IsSimpleOrder (Submodule A V) := by
+  have : IsSimpleOrder (Submodule A V) := by
     refine ⟨fun N => ?_⟩
     have hst : ∀ T ∈ O, ∀ x ∈ N.restrictScalars ℂ, T x ∈ N.restrictScalars ℂ := by
       intro T hT x hx
@@ -189,7 +189,7 @@ theorem exists_mem_adjoin_eq {V : Type} [AddCommGroup V] [Module ℂ V] [Nontriv
     · right
       rw [← Submodule.restrictScalars_eq_top_iff ℂ]
       exact h
-  haveI : IsSimpleModule A V := ⟨⟩
+  have : IsSimpleModule A V := ⟨⟩
   let F : Module.End (Module.End A V) V :=
     { toFun := f
       map_add' := f.map_add
@@ -283,7 +283,7 @@ theorem exists_tmul_mem {α : Type} [Finite α] [DecidableEq α] {A : Type} [Add
     let f : ∀ a, Module.End ℂ (X a) := fun a => ((b a).coord (p a)).smulRight (v a)
     have hT : ∀ a, ∃ T ∈ Asub a, ∀ y ∈ (e x).support.image (fun q => b a (q a)), T y = f a y :=
       fun a => by
-        haveI := hnt a
+        have := hnt a
         obtain ⟨T, hT1, hT2⟩ := exists_mem_adjoin_eq (O a) (hrank a) (hirr a) (f a)
           ((e x).support.image (fun q => b a (q a)))
         exact ⟨T, hA a hT1, hT2⟩

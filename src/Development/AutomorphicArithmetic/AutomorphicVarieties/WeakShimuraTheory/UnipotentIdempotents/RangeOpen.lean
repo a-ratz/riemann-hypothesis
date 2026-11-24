@@ -135,7 +135,7 @@ theorem UpperTheory.V.Ws.Lk.v0Ex :
         exact Subgroup.mem_sup_right (hIne hx)
     have hclosed : IsClosed (((Subgroup.zpowers (W.resP L Ω g) ⊔ N.toSubgroup).subgroupOf
         (Dec (F := W.Lp L) A) : Subgroup (Dec (F := W.Lp L) A)) : Set (Dec (F := W.Lp L) A)) :=
-      hHclosed.preimage continuous_subtype_val
+      hHclosed.preimage continuous_subtypeVal
     have hmin := Subgroup.topologicalClosure_minimal _ hle hclosed
     rw [hcl] at hmin
     exact Subgroup.mem_subgroupOf.mp (hmin (Subgroup.mem_top (⟨d, hd⟩ : Dec (F := W.Lp L) A)))

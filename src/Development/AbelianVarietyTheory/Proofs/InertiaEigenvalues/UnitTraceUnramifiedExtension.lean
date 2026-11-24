@@ -149,15 +149,15 @@ theorem exists_trace_unit_of_span (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (h
       algebraMap K'.O K'.E y = ∑ i, φ (algebraMap K.O K.E (a i)) * algebraMap K'.O K'.E (u i)) :
     ∃ y : K'.O, ∃ a : K.O, IsUnit a ∧
       @Algebra.trace K.E K'.E _ _ φ.toAlgebra (algebraMap K'.O K'.E y) = algebraMap K.O K.E a := by
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  letI : Algebra K.O K'.O := (intMap hU).toAlgebra
-  letI : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
-  haveI : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower K.O K'.O K'.E := IsScalarTower.of_algebraMap_eq fun a => (intMap_spec hU a).symm
+  let : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.O K'.O := (intMap hU).toAlgebra
+  let : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
+  have : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower K.O K'.O K'.E := IsScalarTower.of_algebraMap_eq fun a => (intMap_spec hU a).symm
   have hmap : ∀ a : K.O, algebraMap K.O K'.O a = intMap hU a := fun _ => rfl
 
   obtain ⟨u, hu⟩ := hB
-  haveI hfin : Module.Finite K.O K'.O := by
+  have hfin : Module.Finite K.O K'.O := by
     classical
     refine ⟨⟨Finset.univ.image u, eq_top_iff.2 fun y _ => ?_⟩⟩
     obtain ⟨a, ha⟩ := hu y
@@ -169,11 +169,11 @@ theorem exists_trace_unit_of_span (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (h
       rw [Algebra.smul_def, map_mul, hmap, intMap_spec]
     rw [hy]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span (by simp))
-  haveI : FaithfulSMul K.O K'.O :=
+  have : FaithfulSMul K.O K'.O :=
     (faithfulSMul_iff_algebraMap_injective K.O K'.O).2 (intMap_injective hU)
-  haveI : Module.Free K.O K'.O := Module.free_of_finite_type_torsion_free'
+  have : Module.Free K.O K'.O := Module.free_of_finite_type_torsion_free'
 
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid K'.O K.O⁰) K'.E := by
+  have : IsLocalization (Algebra.algebraMapSubmonoid K'.O K.O⁰) K'.E := by
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible K.O
     have hϖ0 : algebraMap K.O K.E ϖ ≠ 0 := by simpa using hϖ.ne_zero
     have hφϖ : φ (algebraMap K.O K.E ϖ) ≠ 0 := by simpa using hϖ0
@@ -201,18 +201,18 @@ theorem exists_trace_unit_of_span (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (h
 
   have hpS : Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O) =
       IsLocalRing.maximalIdeal K'.O := map_maximalIdeal hU
-  haveI hmax : (Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)).IsMaximal := by
+  have hmax : (Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)).IsMaximal := by
     rw [hpS]; infer_instance
-  letI : Field (K.O ⧸ IsLocalRing.maximalIdeal K.O) := Ideal.Quotient.field _
-  letI : Field (K'.O ⧸ Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)) :=
+  let : Field (K.O ⧸ IsLocalRing.maximalIdeal K.O) := Ideal.Quotient.field _
+  let : Field (K'.O ⧸ Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)) :=
     Ideal.Quotient.field _
-  haveI : Finite (K'.O ⧸ IsLocalRing.maximalIdeal K'.O) := K'.fin
-  haveI : Finite (K'.O ⧸ Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)) :=
+  have : Finite (K'.O ⧸ IsLocalRing.maximalIdeal K'.O) := K'.fin
+  have : Finite (K'.O ⧸ Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)) :=
     Finite.of_equiv _ (Ideal.quotEquivOfEq hpS).symm.toEquiv
-  haveI : Finite (K.O ⧸ IsLocalRing.maximalIdeal K.O) := K.fin
-  haveI : FiniteDimensional (K.O ⧸ IsLocalRing.maximalIdeal K.O)
+  have : Finite (K.O ⧸ IsLocalRing.maximalIdeal K.O) := K.fin
+  have : FiniteDimensional (K.O ⧸ IsLocalRing.maximalIdeal K.O)
       (K'.O ⧸ Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)) := inferInstance
-  haveI : Algebra.IsSeparable (K.O ⧸ IsLocalRing.maximalIdeal K.O)
+  have : Algebra.IsSeparable (K.O ⧸ IsLocalRing.maximalIdeal K.O)
       (K'.O ⧸ Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)) := inferInstance
   obtain ⟨z, hz⟩ := Algebra.trace_surjective (K.O ⧸ IsLocalRing.maximalIdeal K.O)
     (K'.O ⧸ Ideal.map (algebraMap K.O K'.O) (IsLocalRing.maximalIdeal K.O)) 1

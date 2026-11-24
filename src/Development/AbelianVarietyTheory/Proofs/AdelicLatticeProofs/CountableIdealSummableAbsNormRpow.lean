@@ -64,7 +64,7 @@ theorem _root_.GlobalTheory.countable_ideal_and_summable_absNorm_rpow :
       ext I; simp
     have hc : (Set.univ : Set (Ideal (𝓞 K))).Countable := by
       rw [hU]
-      exact Set.countable_iUnion fun n => (Ideal.finite_setOfPred_absNorm_eq n).countable
+      exact Set.countable_iUnion fun n => (Ring.HasFiniteQuotients.finite_absNorm_eq n).countable
     exact Set.countable_univ_iff.mp hc
   · have hsum : Summable fun I : Ideal (𝓞 K) => (Ideal.absNorm I : ℝ) ^ (-σ) := by
       have h := _root_.GlobalTheory.Mem.summable_norm_absNorm_cpow K (s := (σ : ℂ)) (by simpa using hσ)

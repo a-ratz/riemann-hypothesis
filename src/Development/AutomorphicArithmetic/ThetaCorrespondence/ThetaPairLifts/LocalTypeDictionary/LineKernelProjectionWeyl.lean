@@ -412,7 +412,7 @@ theorem algebraicDatum_eq_sum_pureTensors_vacua {F E : Type} [Field F] [NumberFi
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [hg i]
   funext x
-  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, SchwartzMap.smul_apply, smul_eq_mul, Pi.smul_apply, mul_assoc]
+  simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, smul_apply, smul_eq_mul, Pi.smul_apply, mul_assoc]
 
 end GlobalTheory.SquareAgree.LineDerFun
 

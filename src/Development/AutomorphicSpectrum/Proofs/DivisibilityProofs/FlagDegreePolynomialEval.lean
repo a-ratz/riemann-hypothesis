@@ -320,18 +320,18 @@ theorem eq_linForm (k₀ : K) (hK : ∀ a : K, a = k₀) {f : MRingOver F ι}
     subst hk
     by_cases hb : b = a
     · subst hb; simp [ha]
-    · rw [h0 b hb, Finsupp.single_apply, if_neg]
+    · rw [h0 b hb, Finsupp.single_apply, ite_eq_right]
       intro h
       exact hb (sigma_mk_injective h).symm
   ext m
   rw [linForm_apply, coeff_sum]
-  simp only [MvPolynomial.coeff_smul, coeff_X', smul_eq_mul, mul_ite, mul_one, mul_zero]
+  simp only [MvPolynomial.coeff_smul, coeff_X, smul_eq_mul, mul_ite, mul_one, mul_zero]
   by_cases hm : m ∈ f.support
   · obtain ⟨q, rfl⟩ := hsupp m hm
     rw [Finset.sum_eq_single q]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hb (Finsupp.single_left_injective one_ne_zero h)
     · simp
@@ -359,7 +359,7 @@ theorem ptDeg_eq_one [DecidableEq (Σ k, ι k)] (k₀ : K) (hK : ∀ a : K, a = 
   have hne : U.mkQ e0 ≠ 0 := by simpa using h0
   have hq : ∀ q : Σ k, ι k, ∃ c : F, c • e0 - Pi.single q 1 ∈ U := by
     intro q
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' _ hne).1 hd (U.mkQ (Pi.single q 1))
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' _ hne).1 hd (U.mkQ (Pi.single q 1))
     refine ⟨c, (Submodule.Quotient.eq U).1 ?_⟩
     change U.mkQ _ = U.mkQ _
     rw [map_smul, hc]
@@ -541,7 +541,7 @@ theorem pivotRatio_algebraicIndependent (F : Type) [Field F] (Ψ : Type) (n : �
       simp only [δ, incl, Fin.val_castLE] at this
       have := q.2.2.2
       omega
-    simp only [Function.comp_apply, hne, if_false]
+    simp only [Function.comp_apply, hne, ite_false]
     rfl
   exact hrat ▸ hz.comp incl hincl
 
@@ -821,7 +821,7 @@ theorem ptsIntegral_bot (II : IntersectionSystem) (hII : IsIntersectionSystem II
     have hg : geoNum n (Ideal.span {C ((2 : ℕ) : ℤ)} : Ideal (MRing ι)) (fun j => ((fun _ : Fin n => L) j).a) = 1 :=
       geoNum_span 2 k₀ hk σ L.a ha
     unfold vertR
-    rw [divSupp_bot 2 k₀ hk σ, finsum_mem_singleton, if_neg (Inter.Conservation.not_horizontal Nat.prime_two hW),
+    rw [divSupp_bot 2 k₀ hk σ, finsum_mem_singleton, ite_eq_right (Inter.Conservation.not_horizontal Nat.prime_two hW),
       Inter.Conservation.charOf_eq Nat.prime_two hW, bot_sup_eq, ReciprocityTheory.ChartRestriction.G.AI.I1.inh_multAt_self, hg]
     simp
   rw [h1, hv] at h2
@@ -1021,10 +1021,10 @@ theorem lex_sum_Ico {σ : Type*} [LinearOrder σ] [WellFoundedGT σ] {n : ℕ} (
     rw [hdegX, MonomialOrder.degree_lt_iff hzero]
     intro c hc
     obtain ⟨s, hs, hcs⟩ := Finset.mem_biUnion.mp (MvPolynomial.support_sum hc)
-    rw [X, support_monomial, if_neg one_ne_zero, Finset.mem_singleton] at hcs
+    rw [X, support_monomial, ite_eq_right one_ne_zero, Finset.mem_singleton] at hcs
     rw [hcs]
     exact hlt s (Finset.mem_Ioo.mp hs).1
-  rw [← Finset.Ioo_insert_left hab, Finset.sum_insert (by simp)]
+  rw [← Finset.insert_left_Ioo hab, Finset.sum_insert (by simp)]
   refine ⟨?_, ?_⟩
   · rw [MonomialOrder.degree_add_of_lt hrest, hdegX]
   · rw [MonomialOrder.leadingCoeff_add_of_lt hrest, MonomialOrder.leadingCoeff_X]
@@ -1051,12 +1051,12 @@ theorem rhoM_eq_sum (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) :
 theorem coeff_rhoM_gapDelta (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) :
     AddMonoidAlgebra.coeff (gapDelta Ψ N) (rhoM Ψ N) = 1 := by
   let e := Fintype.equivFin Ψ
-  letI : LinearOrder (Ψ × Fin N) :=
+  let : LinearOrder (Ψ × Fin N) :=
     LinearOrder.lift' (fun p => toLex (e p.1, p.2)) (fun p q h => by
       have h' : (e p.1, p.2) = (e q.1, q.2) := toLex.injective h
       obtain ⟨h1, h2⟩ := Prod.mk.inj h'
       exact Prod.ext (e.injective h1) h2)
-  haveI : WellFoundedGT (Ψ × Fin N) := Finite.to_wellFoundedGT
+  have : WellFoundedGT (Ψ × Fin N) := Finite.to_wellFoundedGT
   have hv : ∀ τ : Ψ, StrictMono (fun s : Fin N => (τ, s)) := fun τ s t hst => by
     show toLex (e τ, s) < toLex (e τ, t)
     exact Prod.Lex.toLex_lt_toLex.mpr (Or.inr ⟨rfl, hst⟩)
@@ -1097,12 +1097,12 @@ theorem prod_range_sub_eq_factorial (i n : ℕ) :
     · obtain ⟨t, rfl⟩ : ∃ t, n = i + 1 + t := ⟨n - (i + 1), by omega⟩
       have e1 : i + 1 + t - 1 - i = t := by omega
       have e2 : i + 1 + t + 1 - 1 - i = t + 1 := by omega
-      rw [if_pos h, e1, e2, Nat.factorial_succ]
+      rw [ite_eq_left h, e1, e2, Nat.factorial_succ]
       push_cast
       ring
     · have e1 : n - 1 - i = 0 := by omega
       have e2 : n + 1 - 1 - i = 0 := by omega
-      rw [if_neg h, e1, e2]
+      rw [ite_eq_right h, e1, e2]
       simp
 
 theorem prod_rhoM_factorial (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) :
@@ -1395,7 +1395,7 @@ theorem tie (II : IntersectionSystem) (hII : IsIntersectionSystem II) {K : Type}
   rw [hperm, hsec]
   have hd : divSupp P (1 : MRing ι) = ∅ := by
     ext W
-    simp only [divSupp, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+    simp only [divSupp, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_and]
     intro hW
     have : (P ⊔ Ideal.span {(1 : MRing ι)}) = ⊤ := by simp
     rw [this] at hW
@@ -1425,7 +1425,7 @@ theorem isPull_unit [Fintype K] [DecidableEq K] (j : K → FlBlock Ψ N) (k₀ :
     show (if k' = k.1 then (1 : ℤ) else 0) = Function.extend _ _ _ k'
     by_cases h : k' = k₀
     · subst h
-      rw [Function.extend_apply' _ _ _ (by rintro ⟨x, hx⟩; exact x.2 hx), if_neg (Ne.symm k.2)]
+      rw [Function.extend_apply' _ _ _ (by rintro ⟨x, hx⟩; exact x.2 hx), ite_eq_right (Ne.symm k.2)]
       rfl
     · rw [show k' = ((⟨k', h⟩ : {k // k ≠ k₀}) : K) from rfl, Subtype.val_injective.extend_apply]
       show _ = if (⟨k', h⟩ : {k // k ≠ k₀}) = k then (1 : ℤ) else 0
@@ -1499,8 +1499,8 @@ theorem step (hIn : PB.Inputs) (II : IntersectionSystem) (hII : IsFullIntersecti
   classical
   have hc₀ := isChain_drop j hj k₀ hmax
   obtain ⟨k₁, hk₁⟩ := hne
-  haveI : Nonempty {k // k ≠ k₀} := ⟨⟨k₁, hk₁⟩⟩
-  haveI : Nonempty K := ⟨k₀⟩
+  have : Nonempty {k // k ≠ k₀} := ⟨⟨k₁, hk₁⟩⟩
+  have : Nonempty K := ⟨k₀⟩
   have hA₀ : IsArithVar (PPart (dropJ j k₀)) (e₀ + 1) := he ▸ arith _ hc₀
   have hAe : IsArithVar (PPart j) (e₀ + r + 1) := by
     have := arith j hj
@@ -1596,7 +1596,7 @@ theorem tower (hIn : PB.Inputs) (II : IntersectionSystem) (hII : IsFullIntersect
     simp
   | succ n ih =>
     intro K _ _ hc j hj
-    haveI : Nonempty K := Fintype.card_pos_iff.1 (by omega)
+    have : Nonempty K := Fintype.card_pos_iff.1 (by omega)
     obtain ⟨k₀, hmax⟩ := Finite.exists_max (fun k => ((j k).2 : ℕ))
     have hcard : Fintype.card {k // k ≠ k₀} = n + 1 := by
       have h := Fintype.card_subtype_compl (α := K) (fun k => k = k₀)
@@ -1697,7 +1697,7 @@ theorem degFlPoly_eval' : PB.Inputs → ∀ II : IntersectionSystem, IsFullInter
   have hAr := (_root_.GlobalTheory.CompanionTheory.Ar.PB.flag_isArithVar_and_image Ψ N hN).1
   have hL := (_root_.GlobalTheory.CompanionTheory.Ar.PB.flLines_polys hIn II hII Ψ N hN hAr).2
   have hchain : IsChain (id : FlBlock Ψ N → FlBlock Ψ N) := ⟨Function.injective_id, fun _ q _ _ => ⟨q, rfl⟩⟩
-  haveI hK : Nonempty (FlBlock Ψ N) := ⟨(Classical.arbitrary Ψ, ⟨0, by omega⟩)⟩
+  have hK : Nonempty (FlBlock Ψ N) := ⟨(Classical.arbitrary Ψ, ⟨0, by omega⟩)⟩
   obtain ⟨n, hn⟩ : ∃ n, Fintype.card (FlBlock Ψ N) = n + 1 :=
     ⟨Fintype.card (FlBlock Ψ N) - 1, by have := Fintype.card_pos (α := FlBlock Ψ N); omega⟩
   obtain ⟨e, w, hcnt, hval⟩ := tower hIn II hII n (FlBlock Ψ N) hn id hchain

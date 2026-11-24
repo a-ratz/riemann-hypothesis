@@ -217,14 +217,14 @@ attribute [local instance] algebraOfOver
 include i in
 theorem finite_H (F : X.Modules) (hF : IsCoherent F) (p : ℕ) :
     Module.Finite A (Sheaf.H.{w'} (modulesAb F) p) := by
-  letI := hF.1
-  letI := ProjSpace.finite_H.{w'} _ (isCoherent_pushforward i hF) p
+  let := hF.1
+  let := ProjSpace.finite_H.{w'} _ (isCoherent_pushforward i hF) p
   exact Module.Finite.equiv (HLinearEquivPushforward.{w'} i F p).symm
 
 theorem exists_subsingleton_H_twist (F : X.Modules) (hF : IsCoherent F) :
     ∃ q₀ : ℕ, ∀ q : ℕ, q₀ ≤ q → ∀ p : ℕ, 0 < p →
       Subsingleton (Sheaf.H.{w'} (modulesAb (twist i F q)) p) := by
-  letI := hF.1
+  let := hF.1
   obtain ⟨q₀, hq₀⟩ := ProjSpace.exists_subsingleton_H_twist.{w'} _ (isCoherent_pushforward i hF)
   refine ⟨q₀, fun q hq p hp => ?_⟩
   have h₁ := hq₀ q hq p hp

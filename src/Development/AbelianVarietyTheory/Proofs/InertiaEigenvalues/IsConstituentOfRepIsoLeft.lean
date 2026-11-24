@@ -126,8 +126,8 @@ theorem zIdem_eq_centralIdem {Γ : Type} [Group Γ] [Fintype Γ] (τ : FDRep ℂ
 theorem zIdem_mul_eq_zero_of_ne : ∀ {Γ : Type} [Group Γ] [Fintype Γ] (τ τ' : FDRep ℂ Γ),
     Simple τ → Simple τ' → zIdem τ ≠ zIdem τ' → zIdem τ * zIdem τ' = 0 := by
   intro Γ _ _ τ τ' hτ hτ' hne
-  haveI := nontrivial_of_simpleRep τ hτ
-  haveI := nontrivial_of_simpleRep τ' hτ'
+  have := nontrivial_of_simpleRep τ hτ
+  have := nontrivial_of_simpleRep τ' hτ'
   rw [zIdem_eq_centralIdem, zIdem_eq_centralIdem]
   exact Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.central_idempotents_orthogonal Γ τ τ' τ.ρ τ'.ρ
     (invariant_eq_bot_or_top_of_simple τ) (invariant_eq_bot_or_top_of_simple τ')

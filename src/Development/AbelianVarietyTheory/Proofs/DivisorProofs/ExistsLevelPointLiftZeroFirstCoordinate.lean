@@ -410,7 +410,7 @@ theorem exists_levPt : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H
   intro E _ _ _ H D' l c L V _ _ Q _ oQ iw I _ s ε e g hD _ hs hdiv a
   have hM : 1 ≤ l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
   have hG : GlobalFnsSt := GlobalTheory.allSixLaws.1.globalFns
-  letI := H.starRing
+  let := H.starRing
   have hB0 : (mulDeg L.D l.M').TauBimult :=
     (GlobalTheory.UCanon.MulDeg.mulDeg_laws L.W L.D (𝓞 E) L.oa H.w0 l.M' L.even L.bimult L.w0 L.gen).2.1
   have hB1 : (GlobalTheory.PolDeg.rescale Q g).TauBimult := GlobalTheory.TauPull.tauBimult_pull hG hD hB0

@@ -95,8 +95,8 @@ theorem exists_ratCoords : ∀ (F : Type) [Field F] (Y : Scheme.{0}) [IsIntegral
           GlobalTheory.Cartier.fnOf (φ ⁻¹ᵁ GlobalTheory.ProjSpace.chart F N k) (GlobalTheory.Cartier.gen_mem hk)
             (GlobalTheory.ProjSpace.pullRatio φ _ k le_rfl j) := by
   intro F _ Y _ N U hU φ
-  haveI : Nonempty U := hU.to_subtype
-  haveI : IsIntegral U.toScheme := isIntegral_of_isOpenImmersion U.ι
+  have : Nonempty U := hU.to_subtype
+  have : IsIntegral U.toScheme := isIntegral_of_isOpenImmersion U.ι
   have hηU : U.ι (genericPoint U.toScheme) ⤳ genericPoint Y :=
     specializes_of_eq (genericPoint_eq_of_isOpenImmersion U.ι)
   obtain ⟨i₀, hi₀⟩ := exists_mem_chart F N (φ (genericPoint U.toScheme))
@@ -171,8 +171,8 @@ theorem exists_ratCoords_extend : ∀ (F : Type) [Field F] (Y : Scheme.{0}) [IsI
           (GlobalTheory.TrueGeo.SmallSec.fnMap s (specializes_of_eq hη) (w j) / GlobalTheory.TrueGeo.SmallSec.fnMap s (specializes_of_eq hη) (w k))) →
         ∃ g : Y' ⟶ PSpace F N, g ≫ PSpace.str F N = s ≫ p ∧ (s ⁻¹ᵁ U).ι ≫ g = (s ∣_ U) ≫ φ := by
   intro F _ Y _ p N U φ hφ hU
-  haveI : Nonempty U := hU.to_subtype
-  haveI : IsIntegral U.toScheme := isIntegral_of_isOpenImmersion U.ι
+  have : Nonempty U := hU.to_subtype
+  have : IsIntegral U.toScheme := isIntegral_of_isOpenImmersion U.ι
   have hηU : U.ι (genericPoint U.toScheme) ⤳ genericPoint Y :=
     specializes_of_eq (genericPoint_eq_of_isOpenImmersion U.ι)
   obtain ⟨w, i₀, hw₀, hw⟩ := exists_ratCoords F Y N U hU φ
@@ -188,8 +188,8 @@ theorem exists_ratCoords_extend : ∀ (F : Type) [Field F] (Y : Scheme.{0}) [IsI
   obtain ⟨g, hg, hgW⟩ := exists_hom_of_ratCoords F N Y' (s ≫ p) (fun j => fnMap s (specializes_of_eq hη) (w j)) hY'
   refine ⟨g, hg, hom_ext ?_ fun z => ?_⟩
   · rw [Category.assoc, hg, Category.assoc, hφ, ← Category.assoc (s ∣_ U), morphismRestrict_ι, Category.assoc]
-  haveI : Nonempty (s ⁻¹ᵁ U).toScheme := ⟨z⟩
-  haveI : IsIntegral (s ⁻¹ᵁ U).toScheme := isIntegral_of_isOpenImmersion (s ⁻¹ᵁ U).ι
+  have : Nonempty (s ⁻¹ᵁ U).toScheme := ⟨z⟩
+  have : IsIntegral (s ⁻¹ᵁ U).toScheme := isIntegral_of_isOpenImmersion (s ⁻¹ᵁ U).ι
   have hu : U.ι ((s ∣_ U) z) = s ((s ⁻¹ᵁ U).ι z) := by
     rw [← Scheme.Hom.comp_apply, morphismRestrict_ι, Scheme.Hom.comp_apply]
   have hηι : (s ⁻¹ᵁ U).ι (genericPoint (s ⁻¹ᵁ U).toScheme) ⤳ genericPoint Y' :=

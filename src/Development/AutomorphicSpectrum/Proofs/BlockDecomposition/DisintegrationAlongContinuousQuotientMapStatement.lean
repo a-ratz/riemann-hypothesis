@@ -116,12 +116,12 @@ theorem tail_lintegral {φ : V → ℂ} (hφ : Measurable φ) (hq : Measurable q
     (hY : ∀ Y, MeasurableSet Y → ∫⁻ X in Aᶜ ∩ q ⁻¹' Y, ‖φ X‖ₑ ∂μ ≤ e * ν Y)
     {s : H → ℝ≥0∞} (hs : Measurable s) :
     ∫⁻ X in Aᶜ, ‖φ X‖ₑ * s (q X) ∂μ ≤ e * ∫⁻ y, s y ∂ν := by
-  have hφe : Measurable fun X => ‖φ X‖ₑ := hφ.enorm
+  have hφe : Measurable fun X => ‖φ X‖ₑ := hφ.eNorm
   set ρ : Measure V := (μ.restrict Aᶜ).withDensity fun X => ‖φ X‖ₑ with hρ
   have hle : ρ.map q ≤ e • ν := by
     refine Measure.le_iff.2 fun Y hYm => ?_
     rw [Measure.map_apply hq hYm, hρ, withDensity_apply _ (hq hYm),
-      Measure.restrict_restrict (hq hYm), Set.inter_comm, Measure.smul_apply, smul_eq_mul]
+      Measure.restrict_restrict (hq hYm), Set.inter_comm, smul_apply, smul_eq_mul]
     exact hY Y hYm
   calc ∫⁻ X in Aᶜ, ‖φ X‖ₑ * s (q X) ∂μ = ∫⁻ X, s (q X) ∂ρ := by
         rw [hρ]
@@ -139,9 +139,9 @@ variable {V : Type} [TopologicalSpace V] [T2Space V] [LocallyCompactSpace V] [Se
 theorem exists_cutoffs {U : Set V} (hU : IsOpen U) :
     ∃ χ : ℕ → V → ℝ, (∀ n, Continuous (χ n) ∧ HasCompactSupport (χ n) ∧ tsupport (χ n) ⊆ U ∧
       ∀ X, 0 ≤ χ n X ∧ χ n X ≤ 1) ∧ ∀ X ∈ U, ∀ᶠ n in atTop, χ n X = 1 := by
-  haveI : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.isOpenEmbedding_subtypeVal.locallyCompactSpace
   have hK : ∀ n, IsCompact (Subtype.val '' compactCovering U n) := fun n =>
-    (isCompact_compactCovering U n).image continuous_subtype_val
+    (isCompact_compactCovering U n).image continuous_subtypeVal
   have hKU : ∀ n, Subtype.val '' compactCovering U n ⊆ U := by
     rintro n _ ⟨x, -, rfl⟩
     exact x.2
@@ -170,7 +170,7 @@ theorem integral_re_im {α : Type} [MeasurableSpace α] {ρ : Measure α} {a b :
     integral_complex_ofReal]
 
 theorem enorm_coe (x : ℝ) : ‖(x : ℂ)‖ₑ = ‖x‖ₑ := by
-  rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, Complex.norm_real]
+  rw [← ofReal_norm, ← ofReal_norm, Complex.norm_real]
 
 end SlopeTestRemainingChoices
 
@@ -224,7 +224,7 @@ theorem fibre_le [ν.IsOpenPosMeasure] [IsFiniteMeasureOnCompacts ν]
           by_cases hXY : q X ∈ interior K
           · have hmem : X ∈ Aᶜ ∩ q ⁻¹' interior K := ⟨hXA, hXY⟩
             rw [Set.indicator_of_mem hmem, Set.indicator_of_mem hXY, Pi.one_apply, mul_one,
-              ← ofReal_norm_eq_enorm]
+              ← ofReal_norm]
             exact ENNReal.ofReal_le_ofReal (hgφ X)
           · simp [hXY]
       _ = ∫⁻ X in Aᶜ ∩ q ⁻¹' interior K, ‖φ X‖ₑ ∂μ := lintegral_indicator (hA.compl.inter (hq hYm)) _
@@ -271,7 +271,7 @@ theorem fibre_tail [ν.IsOpenPosMeasure] [IsFiniteMeasureOnCompacts ν] (hU : Is
     refine (Tendsto.liminf_eq (tendsto_const_nhds.congr' ?_)).symm
     filter_upwards [hev X hX.2] with n hn
     simp only [hg, hn, mul_one]
-    rw [ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_mul (norm_nonneg _), ofReal_norm]
   calc ∫⁻ X, ‖φ X‖ₑ * ENNReal.ofReal (1 - χ X) ∂(m c)
       = ∫⁻ X, liminf (fun n => ENNReal.ofReal (g n X)) atTop ∂(m c) := lintegral_congr_ae hlim
     _ ≤ liminf (fun n => ∫⁻ X, ENNReal.ofReal (g n X) ∂(m c)) atTop :=
@@ -308,11 +308,11 @@ theorem fibre_integrable {φ : V → ℂ} (hφ : Continuous φ) (h : IsFibreFami
   refine ⟨hφ.aestronglyMeasurable, ?_⟩
   have h1 := ((fibre_cut hφ h hχ hχs hχU).1 c).2
   have hm1 : Measurable fun X => ‖φ X‖ₑ * ENNReal.ofReal (1 - χ X) :=
-    hφ.measurable.enorm.mul (continuous_const.sub hχ).measurable.ennreal_ofReal
+    hφ.measurable.eNorm.mul (continuous_const.sub hχ).measurable.ennreal_ofReal
   have hle : ∀ X, ‖φ X‖ₑ ≤ ‖φ X * (χ X : ℂ)‖ₑ + ‖φ X‖ₑ * ENNReal.ofReal (1 - χ X) := fun X => by
-    rw [enorm_mul, enorm_coe, ← mul_add]
+    rw [eNorm_mul, enorm_coe, ← mul_add]
     have : (1 : ℝ≥0∞) ≤ ‖χ X‖ₑ + ENNReal.ofReal (1 - χ X) := by
-      rw [← ofReal_norm_eq_enorm, Real.norm_of_nonneg (hχ01 X).1,
+      rw [← ofReal_norm, Real.norm_of_nonneg (hχ01 X).1,
         ← ENNReal.ofReal_add (hχ01 X).1 (sub_nonneg.2 (hχ01 X).2)]
       simp
     calc ‖φ X‖ₑ = ‖φ X‖ₑ * 1 := (mul_one _).symm
@@ -329,12 +329,12 @@ theorem fibre_diff {φ : V → ℂ} {χ : V → ℝ} {c : H} (h1 : Integrable φ
     ‖∫ X, φ X ∂(m c) - ∫ X, φ X * (χ X : ℂ) ∂(m c)‖ ≤ ε := by
   rw [← integral_sub h1 h2]
   have h3 : ‖∫ X, (φ X - φ X * (χ X : ℂ)) ∂(m c)‖ₑ ≤ ENNReal.ofReal ε := by
-    refine (enorm_integral_le_lintegral_enorm _).trans (le_trans (le_of_eq ?_) ht)
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (le_trans (le_of_eq ?_) ht)
     refine lintegral_congr fun X => ?_
     have : φ X - φ X * (χ X : ℂ) = φ X * ((1 - χ X : ℝ) : ℂ) := by push_cast; ring
-    rw [this, enorm_mul, enorm_coe, ← ofReal_norm_eq_enorm (1 - χ X),
+    rw [this, eNorm_mul, enorm_coe, ← ofReal_norm (1 - χ X),
       Real.norm_of_nonneg (sub_nonneg.2 (hχ01 X).2)]
-  rw [← ofReal_norm_eq_enorm] at h3
+  rw [← ofReal_norm] at h3
   exact (ENNReal.ofReal_le_ofReal_iff hε).1 h3
 
 theorem pos_identity (hUm : MeasurableSet U) (hι : Function.Injective ι) (hf : ∀ X, ι (q X) = f X)
@@ -474,15 +474,15 @@ theorem tail_mu {φ : V → ℂ} (hφ : Continuous φ) (hq : Continuous q) {A : 
   have hsm : Measurable fun y => ENNReal.ofReal (s y) := hsc.measurable.ennreal_ofReal
   have hI : 0 ≤ ∫ y, s y ∂ν := integral_nonneg hs0
   have h3 : ‖∫ X, φ X * ((1 - χ X : ℝ) : ℂ) * (s (q X) : ℂ) ∂μ‖ₑ ≤ ENNReal.ofReal (ε * ∫ y, s y ∂ν) := by
-    refine (enorm_integral_le_lintegral_enorm _).trans ?_
+    refine (eNorm_integral_le_lintegral_eNorm _).trans ?_
     calc ∫⁻ X, ‖φ X * ((1 - χ X : ℝ) : ℂ) * (s (q X) : ℂ)‖ₑ ∂μ
         ≤ ∫⁻ X, Aᶜ.indicator (fun X => ‖φ X‖ₑ * ENNReal.ofReal (s (q X))) X ∂μ := by
           refine lintegral_mono fun X => ?_
           by_cases hX : X ∈ A
           · simp [hχA X hX]
-          · rw [Set.indicator_of_mem (show X ∈ Aᶜ from hX), enorm_mul, enorm_mul,
-              enorm_coe, enorm_coe, ← ofReal_norm_eq_enorm (s (q X)),
-              Real.norm_of_nonneg (hs0 _), ← ofReal_norm_eq_enorm (1 - χ X),
+          · rw [Set.indicator_of_mem (show X ∈ Aᶜ from hX), eNorm_mul, eNorm_mul,
+              enorm_coe, enorm_coe, ← ofReal_norm (s (q X)),
+              Real.norm_of_nonneg (hs0 _), ← ofReal_norm (1 - χ X),
               Real.norm_of_nonneg (sub_nonneg.2 (hχ01 X).2)]
             have : ENNReal.ofReal (1 - χ X) ≤ 1 :=
               ENNReal.ofReal_le_one.2 (by linarith [(hχ01 X).1])
@@ -495,7 +495,7 @@ theorem tail_mu {φ : V → ℂ} (hφ : Continuous φ) (hq : Continuous q) {A : 
       _ = ENNReal.ofReal (ε * ∫ y, s y ∂ν) := by
           rw [ENNReal.ofReal_mul hε,
             ofReal_integral_eq_lintegral_ofReal hsi (Eventually.of_forall hs0)]
-  rw [← ofReal_norm_eq_enorm] at h3
+  rw [← ofReal_norm] at h3
   exact (ENNReal.ofReal_le_ofReal_iff (mul_nonneg hε hI)).1 h3
 
 theorem avg_tendsto [IsFiniteMeasureOnCompacts ν] {F : H → ℂ} (hF : Continuous F) (c : H)

@@ -119,7 +119,7 @@ theorem fil_lagrangian : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.
   refine ⟨GlobalTheory.PtExt.HodgeOrth.fil_orthogonal GlobalTheory.AbCoh.abelianHodgeDeRham C₀ o₀.A o₀.A g o₀.ab o₀.ab hg hg o₀.P
     o₀.isLB φ' hφ, fun x hx ↦ ?_⟩
   rcases subsingleton_or_nontrivial C₀ with hC | hC
-  · haveI : Subsingleton (HdR o₀.A) := Module.subsingleton C₀ _
+  · have : Subsingleton (HdR o₀.A) := Module.subsingleton C₀ _
     rw [Subsingleton.elim x 0]
     exact Submodule.zero_mem _
   obtain ⟨e, hep, hker⟩ := o₀.kerP

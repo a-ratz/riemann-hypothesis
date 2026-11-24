@@ -112,7 +112,7 @@ theorem isAffineOpen_of_isHom (R : Subalgebra o Ω) [Algebra.FiniteType o R] [Is
     (hU : Set.range g ⊆ U) : IsAffineOpen U ∧ M.ringOn U = R := by
   have hne : (U : Set M.Z).Nonempty := ⟨_, hU ⟨genericPoint _, rfl⟩⟩
   refine ⟨?_, le_antisymm (fun x hx => ?_) hR⟩
-  · haveI : IsAffine (ofAffine o Ω R).Z := inferInstanceAs (IsAffine (Sp R))
+  · have : IsAffine (ofAffine o Ω R).Z := inferInstanceAs (IsAffine (Sp R))
     obtain ⟨p, h, hp, -, e⟩ := exists_hom_range_subset (M := ofAffine o Ω R) (φ := AlgHom.id o Ω)
       (isAffineOpen_top _) ⟨genericPoint _, trivial⟩ hne fun x hx => by
         obtain ⟨a, rfl⟩ := mem_ringOn_univ_ofAffine.1 hx
@@ -131,7 +131,7 @@ theorem isAffineOpen_of_isHom (R : Subalgebra o Ω) [Algebra.FiniteType o R] [Is
       refine IsHom.unique (φ := AlgHom.id o Ω) ?_ (isHom_id _)
       have : (ofAffine o Ω R).pt ≫ l = p := by rw [← cancel_mono U.ι, Category.assoc, hl, hg', hp]
       rw [IsHom, ← Category.assoc, this, e]
-    haveI : IsIso h := ⟨l, e2, e3⟩
+    have : IsIso h := ⟨l, e2, e3⟩
     exact IsAffine.of_isIso h
   · obtain ⟨a, rfl⟩ := mem_ringOn_univ_ofAffine.1 (mem_ringOn.2 fun z _ =>
       hg.map_mem_O (mem_ringOn.1 hx (g z) (hU ⟨z, rfl⟩)))

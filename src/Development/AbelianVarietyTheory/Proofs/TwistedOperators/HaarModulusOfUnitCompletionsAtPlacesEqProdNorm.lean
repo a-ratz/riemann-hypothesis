@@ -60,8 +60,8 @@ theorem distribHaarChar_pi {ι : Type} [Fintype ι] (A : ι → Type) [∀ i, Co
     [∀ i, T2Space (A i)] [∀ i, SecondCountableTopology (A i)] (u : (∀ i, A i)ˣ) :
     distribHaarChar (∀ i, A i) u = ∏ i, distribHaarChar (A i) (Units.map (Pi.evalRingHom A i).toMonoidHom u) := by
   classical
-  letI : ∀ i, MeasurableSpace (A i) := fun i => borel (A i)
-  haveI : ∀ i, BorelSpace (A i) := fun i => ⟨rfl⟩
+  let : ∀ i, MeasurableSpace (A i) := fun i => borel (A i)
+  have : ∀ i, BorelSpace (A i) := fun i => ⟨rfl⟩
   let μ : ∀ i, Measure (A i) := fun i => Measure.addHaar
   let S : ∀ i, TopologicalSpace.PositiveCompacts (A i) := fun i => Classical.choice inferInstance
   have h0 : ∀ i, μ i (S i : Set (A i)) ≠ 0 := fun i =>

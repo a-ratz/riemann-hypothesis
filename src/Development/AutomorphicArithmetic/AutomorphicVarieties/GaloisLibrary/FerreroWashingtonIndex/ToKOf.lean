@@ -93,7 +93,7 @@ theorem UpperTheory.V.FW.frobEig :
   intro l _ a k G A _ _ _ _ _ r p χ e θ h
   rcases subsingleton_or_nontrivial A with hA | hA
   · exact Subsingleton.elim _ _
-  haveI : CharP A l := charP_of_injective_algebraMap (algebraMap k A).injective l
+  have : CharP A l := charP_of_injective_algebraMap (algebraMap k A).injective l
   set q := l ^ a with hq
   have frob_add : ∀ x y : A, (x + y) ^ q = x ^ q + y ^ q := fun x y => by
     rw [hq]
@@ -225,19 +225,19 @@ theorem UpperTheory.V.FW.sepChar :
     ∀ (k D A : Type) [Field k] [IsAlgClosed k] [CommGroup D] [Finite D] [CommRing A] [Algebra k A] (ρ : D →* A) (x : A), (Nat.card D : k) ≠ 0 → (∀ (ψ : D →* kˣ) (e : A), (∀ d, ρ d * e = (ψ d : k) • e) → x * e = 0) → x = 0 := by
   intro k D A _ _ _ _ _ _ ρ x hD h
   classical
-  letI := Fintype.ofFinite D
+  let := Fintype.ofFinite D
   have hexp : ((Monoid.exponent D : ℕ) : k) ≠ 0 := by
     intro h0
     obtain ⟨c, hc⟩ := Group.exponent_dvd_nat_card (G := D)
     apply hD
     rw [hc]; push_cast; rw [h0, zero_mul]
-  haveI : NeZero ((Monoid.exponent D : ℕ) : k) := ⟨hexp⟩
-  haveI : NeZero (Monoid.exponent D) := ⟨fun h0 => hexp (by rw [h0]; simp)⟩
-  haveI : HasEnoughRootsOfUnity k (Monoid.exponent D) := inferInstance
+  have : NeZero ((Monoid.exponent D : ℕ) : k) := ⟨hexp⟩
+  have : NeZero (Monoid.exponent D) := ⟨fun h0 => hexp (by rw [h0]; simp)⟩
+  have : HasEnoughRootsOfUnity k (Monoid.exponent D) := inferInstance
   have hcard : Nat.card (D →* kˣ) = Nat.card D :=
     CommGroup.card_monoidHom_of_hasEnoughRootsOfUnity D k
-  haveI : Finite (D →* kˣ) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact Nat.card_pos.ne')
-  letI := Fintype.ofFinite (D →* kˣ)
+  have : Finite (D →* kˣ) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact Nat.card_pos.ne')
+  let := Fintype.ofFinite (D →* kˣ)
   have h1 : ∀ ψ : D →* kˣ, x * (∑ d : D, ((ψ d⁻¹ : kˣ) : k) • ρ d) = 0 := by
     intro ψ
     apply h ψ
@@ -375,7 +375,7 @@ open UpperTheory.V.FW
 
 private theorem UpperTheory.V.FW.descZ_retr (l : ℕ) [Fact l.Prime] (k : Type) [Field k] [CharP k l] :
     ∃ ϖ : k →+ ZMod l, ϖ 1 = 1 := by
-  letI := ZMod.algebra k l
+  let := ZMod.algebra k l
   have hinj : LinearMap.ker (LinearMap.toSpanSingleton (ZMod l) k 1) = ⊥ := by
     rw [LinearMap.ker_eq_bot]
     intro a b h
@@ -395,7 +395,7 @@ private theorem UpperTheory.V.FW.descZ_mul {k F G : Type} [CommRing k] [CommRing
   | single g n =>
     ext h
     simp only [toK, MonoidAlgebra.mapRingHom_single, eq_intCast, MonoidAlgebra.coeff_map,
-      Finsupp.mapRange_apply, MonoidAlgebra.mul_single_apply, AddMonoidHom.coe_coe]
+      Finsupp.mapRange_apply, MonoidAlgebra.coeff_mul_single_apply, AddMonoidHom.coe_ofClass]
     rw [← zsmul_eq_mul', map_zsmul, zsmul_eq_mul']
 
 private theorem UpperTheory.V.FW.descZ_ker (l : ℕ) {G : Type} [CommGroup G] (y : MonoidAlgebra ℤ G)
@@ -408,7 +408,7 @@ private theorem UpperTheory.V.FW.descZ_ker (l : ℕ) {G : Type} [CommGroup G] (y
     simp only [toK, MonoidAlgebra.coeff_mapRingHom, eq_intCast, MonoidAlgebra.coeff_zero,
       Finsupp.coe_zero, Pi.zero_apply] at h0
     exact (CharP.intCast_eq_zero_iff (ZMod l) l _).mp h0
-  rw [MonoidAlgebra.natCast_def, MonoidAlgebra.mul_single_apply, inv_one, mul_one,
+  rw [MonoidAlgebra.natCast_def, MonoidAlgebra.coeff_mul_single_apply, inv_one, mul_one,
     MonoidAlgebra.coeff_ofCoeff, Finsupp.mapRange_apply, Int.ediv_mul_cancel hg]
 
 theorem UpperTheory.V.FW.descZ :
@@ -553,7 +553,7 @@ theorem UpperTheory.V.FW.gcDiff :
       have t0 : t = 0 := by rw [ht, h0, mul_zero]
       rw [t0, ZMod.val_zero] at hvt
       omega
-    rw [hvt, if_neg hs0, sub_zero]
+    rw [hvt, ite_eq_right hs0, sub_zero]
     have e : c * (w + 1) = c * w + c := by ring
     rw [e, key]
     ring
@@ -562,7 +562,7 @@ theorem UpperTheory.V.FW.gcDiff :
       omega
     have ht0 : t = 0 := by rw [htw, hwe, ZMod.natCast_self]
     have hs0 : s = 0 := by rw [hs, ht0, mul_zero]
-    rw [ht0, ZMod.val_zero, if_pos hs0]
+    rw [ht0, ZMod.val_zero, ite_eq_left hs0]
     have e : c * w + c = c * M := by rw [← hwe]; ring
     rw [e, Nat.mul_div_cancel _ hM] at key
     simp only [mul_zero, Nat.zero_div, Nat.cast_zero]
@@ -632,7 +632,7 @@ theorem UpperTheory.V.FW.gcShift :
   rw [hp c, ← sub_mul, ← Int.cast_sub, gauss_count_shift_eq_sum M c s hc F, Int.cast_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun j _ => ?_
   by_cases h : (j : ZMod M) = s
-  · rw [if_pos h, if_pos h, h, mul_comm]
+  · rw [ite_eq_left h, ite_eq_left h, h, mul_comm]
     by_cases h' : c ∣ j <;> simp [h']
   · simp [h]
 end -- clump:auto
@@ -678,8 +678,8 @@ theorem UpperTheory.V.FW.pushDiff :
     rw [Finset.mem_filter, ZMod.castHom_apply, ZMod.cast_natCast h]
     simp
   by_cases hj : (j : ZMod m) = y
-  · rw [if_pos (key.mpr hj), if_pos hj]
-  · rw [if_neg (fun t => hj (key.mp t)), if_neg hj]
+  · rw [ite_eq_left (key.mpr hj), ite_eq_left hj]
+  · rw [ite_eq_right (fun t => hj (key.mp t)), ite_eq_right hj]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.FerreroWashingtonIndex.PushDiff =====
@@ -880,7 +880,7 @@ theorem UpperTheory.V.FW.sinLem :
     rw [Finset.sum_eq_single s] at hcoef
     · simpa using hcoef
     · intro t ht hts
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro he
       rw [← map_nsmul φ, ← map_nsmul φ] at he
       have hmem := (QuotientAddGroup.eq (s := H)).mp he
@@ -991,7 +991,7 @@ theorem UpperTheory.V.FW.sinnott :
   obtain ⟨n₀, hn₀⟩ := sep l S
   refine ⟨n₀, fun n hn k _ P α h1 h2 => ?_⟩
   have hl : l.Prime := Fact.out
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have h3 := sinFin k ι (l ^ n) (fun i => redU l n (η i)) N P α h1 h2
   have h4 := sinMap k ℤ_[l] (ZMod (l ^ n)) ι
     (PadicInt.toZModPow n : ℤ_[l] →+* ZMod (l ^ n)).toAddMonoidHom (fun i => (η i : ℤ_[l])) N P
@@ -1038,12 +1038,12 @@ theorem UpperTheory.V.FW.halfSum :
   · intro x hx
     by_cases h : x ∈ H'
     · simp [h]
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
       exact (hHH' x hx).resolve_left h
   · intro y hy
     by_cases h : y ∈ H
     · simp [h]
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
       exact (hH'H y hy).resolve_left h
   · intro x hx
     by_cases h : x ∈ H'
@@ -1101,7 +1101,7 @@ private theorem push_units {k : Type} [CommRing k] {M : ℕ} [NeZero M] {m : ℕ
 
 private theorem half_val {M : ℕ} [NeZero M] (hM : 2 < M) (s : (ZMod M)ˣ) :
     2 * ((-s : (ZMod M)ˣ) : ZMod M).val < M ↔ ¬ 2 * (s : ZMod M).val < M := by
-  haveI : Fact (1 < M) := ⟨by omega⟩
+  have : Fact (1 < M) := ⟨by omega⟩
   have hs0 : (s : ZMod M) ≠ 0 := s.ne_zero
   have hv : (s : ZMod M).val < M := ZMod.val_lt _
   have hne : 2 * (s : ZMod M).val ≠ M := by
@@ -1118,7 +1118,7 @@ private theorem half_val {M : ℕ} [NeZero M] (hM : 2 < M) (s : (ZMod M)ˣ) :
     rw [ZMod.natCast_eq_zero_iff] at h5
     have := Nat.le_of_dvd (by norm_num) h5
     omega
-  rw [Units.val_neg, ZMod.neg_val, if_neg hs0]
+  rw [Units.val_neg, ZMod.neg_val, ite_eq_right hs0]
   omega
 
 theorem UpperTheory.V.FW.twCoef :
@@ -1165,7 +1165,7 @@ theorem UpperTheory.V.FW.twCoef :
     have h1 := congrArg (fun x => MonoidAlgebra.coeff x q) htw
 
     simp only [map_sum, toK, MonoidAlgebra.mapRingHom_single, eq_intCast, tw_single,
-    MonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply, MonoidAlgebra.single_apply,
+    MonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply, MonoidAlgebra.coeff_single_apply,
     MonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply] at h1
     rw [Finset.sum_filter]
     exact h1
@@ -1287,7 +1287,7 @@ theorem UpperTheory.V.FW.nonvan :
     exact hl.one_lt.ne' (Nat.coprime_zero_left l |>.mp hf)
   have hN0 : c * (f * l) ≠ 0 :=
     Nat.mul_ne_zero (by omega) (Nat.mul_ne_zero hf0 hl.ne_zero)
-  haveI : Nonempty R := hRne.to_subtype
+  have : Nonempty R := hRne.to_subtype
   obtain ⟨n₁, hn₁⟩ := sinnott l R (fun r => (r : ℤ_[l]ˣ)) (c * (f * l)) hN0
     (fun i j hij a b hab => hRind i i.2 j j.2 (fun e => hij (Subtype.ext e)) a b hab)
   refine ⟨max n₁ 2, le_max_right _ _, ?_⟩
@@ -1297,7 +1297,7 @@ theorem UpperTheory.V.FW.nonvan :
     Nat.coprime_mul_iff_right.mpr ⟨hcf.1, Nat.Coprime.pow_right n hcf.2⟩
   have hn1 : 1 ≤ n := le_trans (by omega) (le_trans (le_max_right n₁ 2) hn)
   have hn2 : 2 ≤ n := le_trans (le_max_right n₁ 2) hn
-  haveI : Fact (1 < f * l ^ n) := ⟨by
+  have : Fact (1 < f * l ^ n) := ⟨by
     have h1 : 1 < l ^ n := Nat.one_lt_pow (by omega) hl.one_lt
     have h2 : 1 ≤ f := Nat.one_le_iff_ne_zero.mpr hf0
     calc 1 < l ^ n := h1
@@ -1324,7 +1324,7 @@ theorem UpperTheory.V.FW.nonvan :
     intro hd
     have := Nat.le_of_dvd one_pos hd
     omega
-  simp only [hndvd, if_false, sub_zero, mul_one, Nat.cast_one, hΨ, map_one] at hP
+  simp only [hndvd, ite_false, sub_zero, mul_one, Nat.cast_one, hΨ, map_one] at hP
   exact one_ne_zero hP
 end -- clump:auto
 end -- clump:auto
@@ -1428,7 +1428,7 @@ private theorem neg_mem_WW (l : ℕ) [hl : Fact l.Prime] : (-1 : ℤ_[l]ˣ) ∈ 
 private theorem red_red (l : ℕ) [Fact l.Prime] (m n : ℕ) (hmn : m ≤ n) (w : ℤ_[l]ˣ) :
     ZMod.unitsMap (pow_dvd_pow l hmn) (redU l n w) = redU l m w := by
   ext
-  simp only [ZMod.unitsMap_def, redU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [ZMod.unitsMap_def, redU, Units.coe_map, MonoidHom.coe_ofClass]
   exact RingHom.congr_fun (PadicInt.zmod_cast_comp_toZModPow m n hmn) (w : ℤ_[l])
 
 theorem UpperTheory.V.FW.struct :
@@ -1443,8 +1443,8 @@ theorem UpperTheory.V.FW.struct :
     exact hl.one_lt.ne' hf
   have hdiv : f * l ^ ee l ∣ f * l ^ n := Nat.mul_dvd_mul_left f (pow_dvd_pow l hen)
   have hdiv' : l ^ n ∣ f * l ^ n := Dvd.intro_left f rfl
-  haveI : NeZero (f * l ^ n) := ⟨mul_ne_zero hf0 (pow_ne_zero _ hl.ne_zero)⟩
-  haveI : NeZero (f * l ^ ee l) := ⟨mul_ne_zero hf0 (pow_ne_zero _ hl.ne_zero)⟩
+  have : NeZero (f * l ^ n) := ⟨mul_ne_zero hf0 (pow_ne_zero _ hl.ne_zero)⟩
+  have : NeZero (f * l ^ ee l) := ⟨mul_ne_zero hf0 (pow_ne_zero _ hl.ne_zero)⟩
   have hnil : IsNilpotent ((f : ZMod (f * l ^ n)) * (l : ZMod (f * l ^ n)) ^ ee l) := by
     refine ⟨n, ?_⟩
     have hz : ((f ^ n * l ^ (ee l * n) : ℕ) : ZMod (f * l ^ n)) = 0 := by
@@ -1511,7 +1511,7 @@ theorem UpperTheory.V.FW.struct :
   · intro n₀ h hn₀
     refine ⟨fun g => ?_, ?_⟩
     · rw [hp, map_div, hQ n₀ h hn₀ (σ g) (e.symm (ZMod.unitsMap hdiv g)).2, div_one]
-    · haveI : NeZero (l ^ n₀) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    · have : NeZero (l ^ n₀) := ⟨pow_ne_zero _ hl.ne_zero⟩
       have h1 : ZMod.unitsMap h γ ^ l ^ n = 1 := by rw [← map_pow, hγpow, map_one]
       have h2 : ZMod.unitsMap h γ ^ (l ^ n₀).totient = 1 := by
         rw [← ZMod.card_units_eq_totient, ← Nat.card_eq_fintype_card]

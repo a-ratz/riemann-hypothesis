@@ -569,7 +569,7 @@ private theorem finprod_ind (S : Finset (Pl F)) (U : ∀ v : Pl F, Subgroup (GL 
         rw [← hU v hvS] at h
         change (U v : Set (GL (Fin n) (CompletionsOver E v))).indicator (1 : GL (Fin n) (CompletionsOver E v) → ℂ) (pv v x) = 1
         rw [Set.indicator_of_mem h, Pi.one_apply]
-      simp only [unitSet, Set.mem_setOf_eq, not_forall] at hnot
+      simp only [unitSet, Set.mem_ofPred_eq, not_forall] at hnot
       obtain ⟨w', hw'⟩ := hnot
       refine ⟨w'.1, ?_, under_eq w'⟩
       intro h
@@ -602,7 +602,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.sideX :
     rw [h1, pow_two] at h2
     exact h2
   have hl : (σ • w₀.1).asIdeal.LiesOver q.asIdeal := by
-    haveI := w₀.2
+    have := w₀.2
     change (σ • w₀.1.asIdeal).LiesOver q.asIdeal
     infer_instance
   let w₁ : PlacesOver E q := ⟨σ • w₀.1, hl⟩
@@ -614,10 +614,10 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.sideX :
       exact (Subgroup.zpow_mem _ hm k)
     have hall : ∀ w : PlacesOver E q, w = w₀ := by
       intro w
-      haveI := w.1.isPrime
-      haveI := w₀.1.isPrime
-      haveI := w.2
-      haveI := w₀.2
+      have := w.1.isPrime
+      have := w₀.1.isPrime
+      have := w.2
+      have := w₀.2
       obtain ⟨τ, hτ⟩ := Ideal.exists_smul_eq_of_isGaloisGroup q.asIdeal w₀.1.asIdeal w.1.asIdeal (E ≃ₐ[F] E)
       obtain ⟨k, rfl⟩ := Subgroup.mem_zpowers_iff.1 (hσ τ)
       exact Subtype.ext (HeightOneSpectrum.ext (hτ.symm.trans (congrArg HeightOneSpectrum.asIdeal (hfix k))))
@@ -677,8 +677,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.sideX :
     exact hsm _
   have hcases : ∀ i : ZMod 2, i = 0 ∨ i = 1 := by decide
   let Uq : ZMod 2 → LL μ →L[ℂ] LL μ := fun i => if i = 0 then Uiw μ w₀.1 ν else Uiw μ w₁.1 ν
-  have h0 : Uq 0 = Uiw μ w₀.1 ν := if_pos rfl
-  have h1 : Uq 1 = Uiw μ w₁.1 ν := if_neg (by decide)
+  have h0 : Uq 0 = Uiw μ w₀.1 ν := ite_eq_left rfl
+  have h1 : Uq 1 = Uiw μ w₁.1 ν := ite_eq_right (by decide)
   have hin : ∀ w : PlacesOver E q, Inner μ (Uiw μ w.1 ν) := fun w =>
     (UpperTheory.ConvolutionTheory.Tf.innerOps E n μ).2.2.2.2.2 w.1 _ _ (iw_oc μ w.1).1 (iw_oc μ w.1).2
   have hcm : Commute (Uiw μ w₀.1 ν) (Uiw μ w₁.1 ν) :=
@@ -1076,9 +1076,9 @@ private theorem rep_smul (μ : Measure (G1 K n)) [μ.IsHaarMeasure] (τ : Submod
 
 private theorem fix_int (D : TypeDat K n) {f : G1 K n → ℂ} (hf : Continuous f) (g : G1 K n) :
     Integrable (fun k => D.e k * f (g * k)) D.ν := by
-  haveI := D.prob
-  haveI : IsFiniteMeasure D.ν := MeasureTheory.IsZeroOrProbabilityMeasure.toIsFiniteMeasure D.ν
-  haveI : IsFiniteMeasureOnCompacts D.ν := ⟨fun _ _ => measure_lt_top _ _⟩
+  have := D.prob
+  have : IsFiniteMeasure D.ν := MeasureTheory.IsZeroOrProbabilityMeasure.toIsFiniteMeasure D.ν
+  have : IsFiniteMeasureOnCompacts D.ν := ⟨fun _ _ => measure_lt_top _ _⟩
   have hc : Continuous fun k => D.e k * f (g * k) := D.cont.mul (hf.comp (continuous_const.mul continuous_id))
   have hU := (typeFin D).1
   have h1 : IntegrableOn (fun k => D.e k * f (g * k)) (D.U : Set (G1 K n)) D.ν :=
@@ -1092,7 +1092,7 @@ private theorem cosets (D : TypeDat K n) :
   have h1 : ((1 : G1 K n) : AdelicGLn.AdelicGL K n) ∈ O := ((hU 1).1 D.U.one_mem).1
   obtain ⟨s, hs, hcov⟩ := hK.elim_nhds_subcover
     (fun j => {g : G1 K n | ((j⁻¹ * g : G1 K n) : AdelicGLn.AdelicGL K n) ∈ O}) (fun j _ => by
-      refine IsOpen.mem_nhds (hO.preimage (continuous_subtype_val.comp (continuous_const.mul continuous_id))) ?_
+      refine IsOpen.mem_nhds (hO.preimage (continuous_subtypeVal.comp (continuous_const.mul continuous_id))) ?_
       simpa using h1)
   refine ⟨s, hs, fun k hk => ?_⟩
   obtain ⟨j, hj, hkj⟩ := Set.mem_iUnion₂.1 (hcov hk)
@@ -1212,8 +1212,8 @@ private theorem frame_ex {V : Type} [AddCommGroup V] [Module ℂ V] (S : Submodu
         have hx' : B x x = 0 := hx
         rw [hx'] at h
         simp at h }
-  letI : NormedAddCommGroup S := @InnerProductSpace.Core.toNormedAddCommGroup ℂ S _ _ _ core
-  letI : InnerProductSpace ℂ S := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup S := @InnerProductSpace.Core.toNormedAddCommGroup ℂ S _ _ _ core
+  let : InnerProductSpace ℂ S := InnerProductSpace.ofCore core.toCore
   let e := (stdOrthonormalBasis ℂ S).repr.symm
   refine ⟨Module.finrank ℂ S, S.subtype ∘ₗ (e.toLinearEquiv : _ →ₗ[ℂ] S), ?_, ?_, ?_⟩
   · exact S.injective_subtype.comp e.injective
@@ -1228,8 +1228,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.lineEx :
   intro K _ _ _ μ _ μ₂ _ τ₁ τ₂ hP D
   have hK : IsCompact (KG K (2 + 2) : Set (G1 K (2 + 2))) :=
     ((blkLaws (K := K)).2.2.2.2.2.2.2.2.2.2.2 (2 + 2)).1
-  haveI : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.mp hK
-  haveI : LocallyCompactSpace (KG K (2 + 2)) := hK.isClosed.locallyCompactSpace
+  have : CompactSpace (KG K (2 + 2)) := isCompact_iff_compactSpace.mp hK
+  have : LocallyCompactSpace (KG K (2 + 2)) := hK.isClosed.locallyCompactSpace
   let κ : Measure (KG K (2 + 2)) := Measure.haar
   obtain ⟨⟨c, hc⟩, hvol⟩ := unf μ μ₂ κ
   obtain ⟨S, hfd, hS⟩ := secFD μ₂ τ₁ τ₂ D hP.irr₁ hP.irr₂
@@ -1369,10 +1369,10 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.coreInd :
     have h := hu' v
     by_cases h1 : v ∈ SE'
     · have h1' := (hSE' v).1 h1
-      rw [if_pos ((hSE v).2 (Or.inl h1')), ] at h
-      rw [if_pos h1]
+      rw [ite_eq_left ((hSE v).2 (Or.inl h1')), ] at h
+      rw [ite_eq_left h1]
       exact hUle v h1' h
-    · rw [if_neg h1]
+    · rw [ite_eq_right h1]
       split_ifs at h with h2
       · exact (hU v).2 h
       · exact h

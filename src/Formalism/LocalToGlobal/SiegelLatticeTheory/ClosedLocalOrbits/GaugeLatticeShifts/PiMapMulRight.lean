@@ -62,7 +62,7 @@ variable {ι : Type} [Fintype ι] {α : ι → Type} [∀ i, MeasurableSpace (α
 theorem pi_withDensity (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)] (f : ∀ i, α i → ℝ≥0∞)
     (hf : ∀ i, Measurable (f i)) (hfin : ∀ i x, f i x ≠ ∞) :
     Measure.pi (fun i => (μ i).withDensity (f i)) = (Measure.pi μ).withDensity (fun x => ∏ i, f i (x i)) := by
-  haveI : ∀ i, SigmaFinite ((μ i).withDensity (f i)) := fun i =>
+  have : ∀ i, SigmaFinite ((μ i).withDensity (f i)) := fun i =>
     SigmaFinite.withDensity_of_ne_top (ae_of_all _ (hfin i))
   refine Measure.pi_eq fun s hs => ?_
   rw [withDensity_apply _ (MeasurableSet.univ_pi hs), Measure.restrict_pi_pi,
@@ -82,7 +82,7 @@ theorem pi_conc (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)] (S : �
 theorem pi_ne_zero (μ : ∀ i, Measure (α i)) [∀ i, SigmaFinite (μ i)] (h : ∀ i, μ i ≠ 0) : Measure.pi μ ≠ 0 := by
   intro h0
   have h1 := congrArg (fun ν : Measure (∀ i, α i) => ν Set.univ) h0
-  simp only [Measure.pi_univ, Measure.coe_zero, Pi.zero_apply] at h1
+  simp only [Measure.pi_univ, FunLike.coe_zero, Pi.zero_apply] at h1
   obtain ⟨i, -, hi⟩ := Finset.prod_eq_zero_iff.1 h1
   exact h i (Measure.measure_univ_eq_zero.1 hi)
 
@@ -142,7 +142,7 @@ theorem uniq_on_closed {G : Type*} [Group G] [TopologicalSpace G] [IsTopological
     (hν0 : ν ≠ 0) : ∃ κ : ℝ≥0∞, κ ≠ 0 ∧ κ ≠ ∞ ∧ μ = κ • ν := by
   classical
   have hHm : MeasurableSet (H : Set G) := hH.measurableSet
-  have he : MeasurableEmbedding (Subtype.val : H → G) := MeasurableEmbedding.subtype_coe hHm
+  have he : MeasurableEmbedding (Subtype.val : H → G) := MeasurableEmbedding.subtypeVal hHm
   have hback : ∀ (m : Measure G), m (H : Set G)ᶜ = 0 →
       (m.comap (Subtype.val : H → G)).map Subtype.val = m := by
     intro m hm
@@ -186,20 +186,20 @@ theorem uniq_on_closed {G : Type*} [Group G] [TopologicalSpace G] [IsTopological
     intro m hm h0 h
     apply h0
     rw [← hback m hm, h, Measure.map_zero]
-  haveI := hsf μ hμc
-  haveI := hsf ν hνc
-  haveI := hinv μ hμi
-  haveI := hinv ν hνi
+  have := hsf μ hμc
+  have := hsf ν hνc
+  have := hinv μ hμi
+  have := hinv ν hνi
   obtain ⟨t, -, htν0, htνi⟩ := exists_pos_fin (ν.comap (Subtype.val : H → G)) (hne ν hνc hν0)
   obtain ⟨t', -, htμ0, htμi⟩ := exists_pos_fin (μ.comap (Subtype.val : H → G)) (hne μ hμc hμ0)
-  haveI : BorelSpace H := Subtype.borelSpace _
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
-  haveI : MeasurableMul₂ H := ContinuousMul.measurableMul₂
-  haveI : MeasurableInv H := ContinuousInv.measurableInv
+  have : BorelSpace H := Subtype.borelSpace _
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
+  have : MeasurableMul₂ H := ContinuousMul.measurableMul₂
+  have : MeasurableInv H := ContinuousInv.measurableInv
   have key := measure_eq_div_smul (μ.comap (Subtype.val : H → G)) (ν.comap (Subtype.val : H → G)) htν0 htνi
   set κ := μ.comap (Subtype.val : H → G) t / ν.comap (Subtype.val : H → G) t with hκ
   have hval := congrArg (fun m : Measure H => m t') key
-  simp only [Measure.smul_apply, smul_eq_mul] at hval
+  simp only [smul_apply, smul_eq_mul] at hval
   refine ⟨κ, ?_, ?_, ?_⟩
   · intro h0
     rw [h0, zero_mul] at hval

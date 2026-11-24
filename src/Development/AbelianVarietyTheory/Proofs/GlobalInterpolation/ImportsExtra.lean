@@ -53,7 +53,7 @@ namespace GlobalTheory.PrimeOrderModule
 theorem exists_character (S M : Type) [CommRing S] [AddCommGroup M] [Module S M] (T : ℕ)
     (hT : T.Prime) (hM : Nat.card M = T) :
     ∃ χ : S →+* ZMod T, ∀ (a : S) (m : M), χ a = 0 → a • m = 0 := by
-  haveI : Fact T.Prime := ⟨hT⟩
+  have : Fact T.Prime := ⟨hT⟩
   have hZ : Nat.card (ZMod T) = T := Nat.card_zmod T
   let e : M ≃+ ZMod T := addEquivOfPrimeCardEq hM hZ
   have key : ∀ (a : S) (m : M), e (a • m) = e (a • e.symm 1) * e m := by

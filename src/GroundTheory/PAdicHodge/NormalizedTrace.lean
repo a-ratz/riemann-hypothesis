@@ -88,7 +88,7 @@ theorem normTraceF_eq_trace_div [CharZero F] (L : Type*) [Field L] [Algebra F L]
     [IsScalarTower F L Ω] [FiniteDimensional F L] (y : L) :
     normTraceF F (algebraMap L Ω y) = Algebra.trace F L y / (finrank F L : F) := by
   have hy : IsIntegral F y := IsIntegral.of_finite F y
-  haveI : FiniteDimensional F⟮y⟯ L := FiniteDimensional.right F F⟮y⟯ L
+  have : FiniteDimensional F⟮y⟯ L := FiniteDimensional.right F F⟮y⟯ L
   rw [normTraceF, minpoly.algebraMap_eq (algebraMap L Ω).injective,
     trace_eq_finrank_mul_minpoly_nextCoeff, ← Module.finrank_mul_finrank F F⟮y⟯ L,
     IntermediateField.adjoin.finrank hy]
@@ -101,7 +101,7 @@ theorem normTraceF_eq_trace_div [CharZero F] (L : Type*) [Field L] [Algebra F L]
 variable [CharZero F] [Algebra.IsIntegral F Ω]
 
 theorem normTraceF_add (y z : Ω) : normTraceF F (y + z) = normTraceF F y + normTraceF F z := by
-  haveI := IntermediateField.finiteDimensional_adjoin_pair
+  have := IntermediateField.finiteDimensional_adjoin_pair
     (Algebra.IsIntegral.isIntegral (R := F) y) (Algebra.IsIntegral.isIntegral (R := F) z)
   have hy : y ∈ F⟮y, z⟯ := subset_adjoin F _ (by simp)
   have hz : z ∈ F⟮y, z⟯ := subset_adjoin F _ (by simp)
@@ -113,7 +113,7 @@ theorem normTraceF_add (y z : Ω) : normTraceF F (y + z) = normTraceF F y + norm
   exact h3
 
 theorem normTraceF_smul (a : F) (y : Ω) : normTraceF F (a • y) = a * normTraceF F y := by
-  haveI := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral (R := F) y)
+  have := IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral (R := F) y)
   have e := normTraceF_eq_trace_div F (Ω := Ω) F⟮y⟯
   have h1 := e (AdjoinSimple.gen F y)
   have h2 := e (a • AdjoinSimple.gen F y)
@@ -146,12 +146,12 @@ theorem normTrace_algebraMap_mul (a : F) (y : Ω) :
 theorem normTraceF_normTrace (E : Type*) [Field E] [Algebra F E] [Algebra E Ω]
     [IsScalarTower F E Ω] [FiniteDimensional F E] (y : Ω) :
     normTraceF F (normTrace E y) = normTraceF F y := by
-  haveI : Algebra.IsIntegral E Ω := Algebra.IsIntegral.tower_top F
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
+  have : Algebra.IsIntegral E Ω := Algebra.IsIntegral.tower_top F
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap F E).injective
   have hyE : IsIntegral E y := Algebra.IsIntegral.isIntegral y
-  haveI : FiniteDimensional E E⟮y⟯ := IntermediateField.adjoin.finiteDimensional hyE
-  haveI : FiniteDimensional F E⟮y⟯ := FiniteDimensional.trans F E E⟮y⟯
-  haveI : IsScalarTower F E⟮y⟯ Ω := IsScalarTower.of_algebraMap_eq fun a => by
+  have : FiniteDimensional E E⟮y⟯ := IntermediateField.adjoin.finiteDimensional hyE
+  have : FiniteDimensional F E⟮y⟯ := FiniteDimensional.trans F E E⟮y⟯
+  have : IsScalarTower F E⟮y⟯ Ω := IsScalarTower.of_algebraMap_eq fun a => by
     rw [IsScalarTower.algebraMap_apply F E Ω, IsScalarTower.algebraMap_apply F E E⟮y⟯]; rfl
   set g : E⟮y⟯ := AdjoinSimple.gen E y
   have hE : normTraceF E y = Algebra.trace E E⟮y⟯ g / (finrank E E⟮y⟯ : E) :=
@@ -252,7 +252,7 @@ theorem natDegree_minpoly_eq_of_finrank_sup {k A B : IntermediateField B₀ Ω} 
     (hB : k ≤ B) [FiniteDimensional B₀ A] [FiniteDimensional B₀ B]
     (h : finrank B₀ ↥(A ⊔ B) * finrank B₀ k = finrank B₀ A * finrank B₀ B) {z : Ω} (hz : z ∈ A) :
     (minpoly B z).natDegree = (minpoly k z).natDegree := by
-  haveI := finiteDimensional_of_le hA
+  have := finiteDimensional_of_le hA
   have hz0 : IsIntegral B₀ z := by
     have := IsIntegral.of_finite B₀ (⟨z, hz⟩ : A)
     exact this.map (IsScalarTower.toAlgHom B₀ A Ω)
@@ -296,14 +296,14 @@ theorem normTrace_eq_of_finrank_sup {k A B : IntermediateField B₀ Ω} (hA : k 
     (hB : k ≤ B) [FiniteDimensional B₀ A] [FiniteDimensional B₀ B]
     (h : finrank B₀ ↥(A ⊔ B) * finrank B₀ k = finrank B₀ A * finrank B₀ B) {z : Ω} (hz : z ∈ A) :
     normTrace B z = normTrace k z := by
-  haveI := finiteDimensional_of_le hA
+  have := finiteDimensional_of_le hA
   have hz0 : IsIntegral B₀ z := by
     have := IsIntegral.of_finite B₀ (⟨z, hz⟩ : A)
     exact this.map (IsScalarTower.toAlgHom B₀ A Ω)
   have hzk : IsIntegral k z := hz0.tower_top
   have hzB : IsIntegral B z := hz0.tower_top
-  letI : Algebra k B := (IntermediateField.inclusion hB).toAlgebra
-  haveI : IsScalarTower k B Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra k B := (IntermediateField.inclusion hB).toAlgebra
+  have : IsScalarTower k B Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hdvd := minpoly.dvd_map_of_isScalarTower k B z
   have heq : (minpoly k z).map (algebraMap k B) = minpoly B z :=
     eq_of_monic_of_dvd_of_natDegree_le (minpoly.monic hzB) ((minpoly.monic hzk).map _) hdvd
@@ -315,12 +315,12 @@ theorem normTrace_eq_of_finrank_sup {k A B : IntermediateField B₀ Ω} (hA : k 
 theorem normTrace_normTrace_of_le [CharZero Ω] [Algebra.IsIntegral B₀ Ω]
     {k E : IntermediateField B₀ Ω} (h : k ≤ E) [FiniteDimensional B₀ E] (y : Ω) :
     normTrace k (normTrace E y) = normTrace k y := by
-  haveI : CharZero k := (algebraMap k Ω).charZero
-  haveI : Algebra.IsIntegral k Ω := Algebra.IsIntegral.tower_top B₀
-  letI : Algebra k E := (IntermediateField.inclusion h).toAlgebra
-  haveI : IsScalarTower k E Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower B₀ k E := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : FiniteDimensional k E := Module.Finite.of_restrictScalars_finite B₀ k E
+  have : CharZero k := (algebraMap k Ω).charZero
+  have : Algebra.IsIntegral k Ω := Algebra.IsIntegral.tower_top B₀
+  let : Algebra k E := (IntermediateField.inclusion h).toAlgebra
+  have : IsScalarTower k E Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower B₀ k E := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : FiniteDimensional k E := Module.Finite.of_restrictScalars_finite B₀ k E
   exact normTrace_normTrace k E y
 
 theorem normTrace_mem (k : IntermediateField B₀ Ω) (y : Ω) : normTrace k y ∈ k :=
@@ -331,8 +331,8 @@ theorem normTrace_of_mem (k : IntermediateField B₀ Ω) {a : Ω} (ha : a ∈ k)
 
 theorem normTrace_mul_of_mem [CharZero Ω] [Algebra.IsIntegral B₀ Ω] (k : IntermediateField B₀ Ω)
     {a : Ω} (ha : a ∈ k) (y : Ω) : normTrace k (a * y) = a * normTrace k y := by
-  haveI : CharZero k := (algebraMap k Ω).charZero
-  haveI : Algebra.IsIntegral k Ω := Algebra.IsIntegral.tower_top B₀
+  have : CharZero k := (algebraMap k Ω).charZero
+  have : Algebra.IsIntegral k Ω := Algebra.IsIntegral.tower_top B₀
   exact normTrace_algebraMap_mul k ⟨a, ha⟩ y
 
 end Degree

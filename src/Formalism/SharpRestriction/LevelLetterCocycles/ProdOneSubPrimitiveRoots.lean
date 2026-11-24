@@ -67,7 +67,7 @@ instance enoughRoots (i : ℕ) : HasEnoughRootsOfUnity (Om l) (l ^ i) := by
 variable (l)
 
 theorem exists_root_ne_one : ∃ z : Om l, z ^ l = 1 ∧ z ≠ 1 := by
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ 1)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ 1)
   rw [pow_one] at hζ
   exact ⟨ζ, hζ.pow_eq_one, hζ.ne_one (Fact.out : l.Prime).one_lt⟩
 
@@ -232,7 +232,7 @@ theorem natDegree_minpoly_eq (hF : F ≤ MaximalUnramifiedExtension l) {k : ℕ}
   have hd : 0 < m.natDegree := minpoly.natDegree_pos hint
   have hmon : P.Monic := (minpoly.monic hint).map _
   have hsplit := IsAlgClosed.splits P
-  haveI : NeZero ((l ^ k : ℕ) : Om l) := ⟨by exact_mod_cast hpos.ne'⟩
+  have : NeZero ((l ^ k : ℕ) : Om l) := ⟨by exact_mod_cast hpos.ne'⟩
   have hroots : ∀ a ∈ P.roots, IsPrimitiveRoot a (l ^ k) := by
     intro a ha
     rw [mem_roots hmon.ne_zero] at ha

@@ -100,16 +100,16 @@ theorem _root_.GlobalTheory.TestLat.SlopeModel.sumGram_posDef (lam : ι → _roo
     intro a b
     rw [hentry, hentry]
     by_cases h : (e a).1 = (e b).1
-    · rw [if_pos h.symm, if_pos h, star_mul', hDstar, _root_.Formalism.L2.DIV.ps_nfL_symm]
-    · rw [if_neg (Ne.symm h), if_neg h, star_zero]
+    · rw [ite_eq_left h.symm, ite_eq_left h, star_mul', hDstar, _root_.Formalism.L2.DIV.ps_nfL_symm]
+    · rw [ite_eq_right (Ne.symm h), ite_eq_right h, star_zero]
   intro x hx
   rcases isEmpty_or_nonempty C with hC | hC
   · exact absurd (funext fun a => (hC.false (e a).1).elim) hx
   obtain ⟨c0⟩ := hC
-  haveI : Finite (_root_.Formalism.L2.DIV.VVIdx lam) :=
+  have : Finite (_root_.Formalism.L2.DIV.VVIdx lam) :=
     Finite.of_injective (fun i => e.symm (c0, i)) (fun i j h => by simpa using h)
-  letI := Fintype.ofFinite C
-  letI := Fintype.ofFinite (_root_.Formalism.L2.DIV.VVIdx lam)
+  let := Fintype.ofFinite C
+  let := Fintype.ofFinite (_root_.Formalism.L2.DIV.VVIdx lam)
   have hinv : (_root_.Formalism.GradedWeylDivisibility.blockAct ℂ (fun τ => (B τ)⁻¹)).comp (_root_.Formalism.GradedWeylDivisibility.blockAct ℂ B) =
       AlgHom.id ℂ (MvPolynomial (ι × Fin n × Fin n) ℂ) := by
     rw [_root_.Formalism.L2.DIV.blockAct_comp]
@@ -137,7 +137,7 @@ theorem _root_.GlobalTheory.TestLat.SlopeModel.sumGram_posDef (lam : ι → _roo
       enter [2, c, 2, i, 2]
       rw [← e.symm.sum_comp, Fintype.sum_prod_type]
     simp only [Equiv.apply_symm_apply, ite_mul, zero_mul, mul_ite, mul_zero, Finset.sum_ite_irrel,
-      Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      Finset.sum_const_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     rw [hW, Finset.mul_sum]
     refine Finset.sum_congr rfl fun c _ => ?_
 
@@ -202,7 +202,7 @@ theorem _root_.GlobalTheory.TestLat.SlopeModel.nonempty_idx (lam : ι → _root_
   have h := _root_.Formalism.L2.Col.evV_extV_ne_zero (E := ℚ) (K := ℚ) (fun _ : ι => RingHom.id ℚ) (1 : Matrix (Fin n) (Fin n) ℚ)
     lam (Rat.castHom ℂ) ⟨fun _ => 1, fun _ => by simp⟩
   have hne : _root_.Formalism.L2.Col.extV ℚ lam ≠ 0 := fun h0 => h (by rw [h0, map_zero])
-  haveI : Nontrivial ↥(_root_.Formalism.L2.DIV.VV ℚ lam) := nontrivial_of_ne _ _ hne
+  have : Nontrivial ↥(_root_.Formalism.L2.DIV.VV ℚ lam) := nontrivial_of_ne _ _ hne
   exact (_root_.Formalism.L2.DIV.bVV ℚ lam).index_nonempty
 
 end GlobalTheory.TestLat.SlopeModel

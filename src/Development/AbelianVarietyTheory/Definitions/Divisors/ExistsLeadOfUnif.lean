@@ -170,7 +170,7 @@ theorem LabCover.exists_trait (C : LabCover D) (W : Type) [CommRing W] [IsDomain
       Function.Injective io ∧ io.Finite ∧ T.φ = io.comp φ ∧ T.ξ = spMap io ≫ ξ := by
   obtain ⟨W', _, _, _, io, G', _, _, β, D', A', U', hD, hW', hi, hf, hc, ⟨ℓ, hℓ⟩, hlab⟩ := C.trait W hW φ ξ hφ hl hξ
   have hio : IsLocalHom io := by
-    letI := io.toAlgebra
+    let := io.toAlgebra
     have : Module.Finite W W' := hf
     have : FaithfulSMul W W' := (faithfulSMul_iff_algebraMap_injective W W').2 hi
     exact (inferInstance : IsLocalHom (algebraMap W W'))

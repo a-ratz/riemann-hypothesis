@@ -150,7 +150,7 @@ theorem exists_openSubgroup_subgroupOf_eq (U : OpenSubgroup G) (N : Subgroup (U 
     (hN : IsOpen (N : Set (U : Subgroup G))) :
     ∃ V : OpenSubgroup G, V ≤ U ∧ (V : Subgroup G).subgroupOf U = N := by
   refine ⟨⟨N.map (U : Subgroup G).subtype, ?_⟩, Subgroup.map_subtype_le N, ?_⟩
-  · exact U.isOpen.isOpenMap_subtype_val _ hN
+  · exact U.isOpen.isOpenMap_subtypeVal _ hN
   · exact Subgroup.comap_map_eq_self_of_injective (U : Subgroup G).subtype_injective N
 
 variable {C : Rep.{0} (ULift.{0} ℤ) G} [IsDiscreteRep C] (F : ClassFormation C)

@@ -68,9 +68,9 @@ theorem c_eq_iff (hD : IsPullDeg φ D D') (hφ : Function.Injective φ) (x x' : 
     refine Over.OverMorphism.ext ((pull_grp hD).1.hom_ext ?_ (by rw [Over.w, Over.w]))
     rw [hD.c_pr, hD.c_pr, h]
   · intro h
-    haveI : IsDominant (spMap φ) := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical φ).2 (by
+    have : IsDominant (spMap φ) := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical φ).2 (by
       rw [(RingHom.injective_iff_ker_eq_bot φ).1 hφ]; exact bot_le)⟩
-    haveI : IsProper D.P.A.hom := D.P.isAb.proper
+    have : IsProper D.P.A.hom := D.P.isAb.proper
     exact Over.OverMorphism.ext (ext_of_isDominant_of_isSeparated (X := Sp R) D.P.A.hom
       ((Over.w _).trans (Over.w _).symm) (spMap φ)
       ((hD.c_pr x).symm.trans ((congrArg (fun q => q.left ≫ _) h).trans (hD.c_pr x'))))

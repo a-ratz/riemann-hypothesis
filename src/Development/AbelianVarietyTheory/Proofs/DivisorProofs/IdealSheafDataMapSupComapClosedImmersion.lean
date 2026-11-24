@@ -87,7 +87,7 @@ theorem map_sup_comap_and_comap_map : ∀ (T W : Scheme.{0}) (i : T ⟶ W), IsCl
     ∀ (a : T.IdealSheafData) (J : W.IdealSheafData),
       (a ⊔ J.comap i).map i = a.map i ⊔ J ∧ (a.map i).comap i = a := by
   intro T W i hi a J
-  haveI := hi
+  have := hi
   refine ⟨?_, comap_map_eq i a⟩
   have hb : (⊥ : T.IdealSheafData).map i ≤ a.map i ⊔ J :=
     le_sup_of_le_left (Scheme.IdealSheafData.map_mono i bot_le)

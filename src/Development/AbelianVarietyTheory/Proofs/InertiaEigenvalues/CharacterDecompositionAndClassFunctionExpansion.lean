@@ -105,7 +105,7 @@ theorem ip_char_nat {G : Type} [Group G] [Fintype G] {χ ρ : G → ℂ} (hχ : 
     ∃ n : ℕ, ip χ ρ = n := by
   obtain ⟨V, hV⟩ := hχ
   obtain ⟨W, hW⟩ := hρ
-  haveI : Invertible ((Nat.card G : ℕ) : ℂ) := invertibleOfNonzero (by
+  have : Invertible ((Nat.card G : ℕ) : ℂ) := invertibleOfNonzero (by
     rw [Nat.card_eq_fintype_card]; exact_mod_cast Fintype.card_ne_zero)
   refine ⟨Module.finrank ℂ (W ⟶ V), ?_⟩
   rw [← FDRep.scalar_product_char_eq_finrank_equivariant W V]
@@ -151,7 +151,7 @@ theorem class_eq_zero_of_orth {G : Type} [Group G] [Fintype G] (f : G → ℂ) (
       rw [hf w h]
       congr 3
       group
-    haveI := hS
+    have := hS
     let f' : V ⟶ V := ⟨FGModuleCat.ofHom T, fun g => by
       ext v
       exact hcomm g v⟩
@@ -177,7 +177,7 @@ theorem class_eq_zero_of_orth {G : Type} [Group G] [Fintype G] (f : G → ℂ) (
       rw [hT, map_smul, LinearMap.trace_id, smul_eq_mul] at htr
       rcases mul_eq_zero.1 htr with hc0 | hd
       · rw [hT, hc0, zero_smul]
-      · haveI : Subsingleton V := Module.finrank_zero_iff.1 (by exact_mod_cast hd)
+      · have : Subsingleton V := Module.finrank_zero_iff.1 (by exact_mod_cast hd)
         exact Subsingleton.elim _ _
     have hy : LinearMap.trace ℂ V (T ∘ₗ V.ρ y) = ∑ x, f x * ρ (x⁻¹ * y) := by
       have hS' : T ∘ₗ V.ρ y = ∑ x, f x • (V.ρ x⁻¹ ∘ₗ V.ρ y) := LinearMap.ext fun v => by
@@ -197,7 +197,7 @@ theorem class_eq_zero_of_orth {G : Type} [Group G] [Fintype G] (f : G → ℂ) (
     intro w
     have := congrArg (fun a : MonoidAlgebra ℂ G => a.coeff w) hsum
     simp only [MonoidAlgebra.coeff_sum, zOf, Finsupp.finsetSum_apply, MonoidAlgebra.coeff_single,
-      Finsupp.single_apply, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+      Finsupp.single_apply, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
     rw [this, MonoidAlgebra.one_def, MonoidAlgebra.coeff_single, Finsupp.single_apply]
     simp [eq_comm]
   funext z
@@ -240,7 +240,7 @@ theorem class_expand {G : Type} [Group G] [Fintype G] (χ : G → ℂ) (hχ : Is
       split_ifs with h
       · subst h; ring
       · ring
-    rw [Finset.sum_congr rfl this, Finset.sum_ite_eq' F ρ', if_pos ((hmem ρ').2 hρ'), sub_self]
+    rw [Finset.sum_congr rfl this, Finset.sum_ite_eq' F ρ', ite_eq_left ((hmem ρ').2 hρ'), sub_self]
 
 theorem list_sum_flatMap {α M : Type} [AddCommMonoid M] (l : List α) (f : α → List M) :
     (l.flatMap f).sum = (l.map fun a => (f a).sum).sum := by

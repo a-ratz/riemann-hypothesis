@@ -122,8 +122,8 @@ theorem Aff.sum {ι : Type*} (s : Finset ι) {f : ι → V → k} (h : ∀ i, Af
 
 theorem Aff.ite (p : Prop) [Decidable p] {f : V → k} (h : Aff O S f) : Aff O S fun v => if p then f v else 0 := by
   by_cases hp : p
-  · simpa only [if_pos hp] using h
-  · simpa only [if_neg hp] using Aff.const 0
+  · simpa only [ite_eq_left hp] using h
+  · simpa only [ite_eq_right hp] using Aff.const 0
 
 theorem Aff.quad {f : V → k} (h : Aff O S f) : Quad O S f := by
   obtain ⟨a, ha, -⟩ := h
@@ -156,8 +156,8 @@ theorem Quad.sum {ι : Type*} (s : Finset ι) {f : ι → V → k} (h : ∀ i, Q
 
 theorem Quad.ite (p : Prop) [Decidable p] {f : V → k} (h : Quad O S f) : Quad O S fun v => if p then f v else 0 := by
   by_cases hp : p
-  · simpa only [if_pos hp] using h
-  · simpa only [if_neg hp] using (Aff.const 0).quad
+  · simpa only [ite_eq_left hp] using h
+  · simpa only [ite_eq_right hp] using (Aff.const 0).quad
 
 end General
 
@@ -170,15 +170,15 @@ theorem aff_stepPt (j : Fin (G.m - 1)) (x₀ : Matrix (Fin (topRank G (j + 1))) 
     Aff O (intVars O G) fun e : Vars G => stepPt x₀ (e j) r s := by
   by_cases h : Free ((G.m - 2 - j) / 2 + 1) (r, s) ∨ Kept (r, s)
   · refine ⟨fun l => l j ⟨(r, s), h⟩, fun v l => ?_, fun l hl => hl j _⟩
-    simp only [stepPt, Matrix.add_apply, Matrix.of_apply, dif_pos h, Pi.add_apply, add_assoc]
+    simp only [stepPt, Matrix.add_apply, Matrix.of_apply, dite_eq_left h, Pi.add_apply, add_assoc]
   · refine ⟨fun _ => 0, fun v l => ?_, fun _ _ => zero_mem _⟩
-    simp only [stepPt, Matrix.add_apply, Matrix.of_apply, dif_neg h, add_zero]
+    simp only [stepPt, Matrix.add_apply, Matrix.of_apply, dite_eq_right h, add_zero]
 
 theorem aff_rowVar (x : ColArgs G) (j : ℕ) (s) : Aff O (intVars O G) fun e : Vars G => rowVar x e j s := by
   by_cases h : j < G.m - 1
-  · simp only [rowVar, dif_pos h]
+  · simp only [rowVar, dite_eq_left h]
     exact Aff.sum _ fun l => Aff.ite _ (aff_stepPt O ⟨j, h⟩ (x j) _ _)
-  · simp only [rowVar, dif_neg h]
+  · simp only [rowVar, dite_eq_right h]
     exact Aff.const _
 
 theorem quad_phase (x : ColArgs G) : Quad O (intVars O G) fun e : Vars G => phase x e := by
@@ -254,10 +254,10 @@ namespace GlobalTheory.UnfoldLoss.ResCardAway
 theorem absNorm_eq_plc_pow {K : Type} [Field K] [NumberField K] (P : HeightOneSpectrum (𝓞 K)) :
     ∃ n : ℕ, Ideal.absNorm P.asIdeal = ringChar (𝓞 K ⧸ P.asIdeal) ^ n := by
   classical
-  haveI : P.asIdeal.IsMaximal := P.isMaximal
-  letI : Field (𝓞 K ⧸ P.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 K ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
-  letI : Fintype (𝓞 K ⧸ P.asIdeal) := Fintype.ofFinite _
+  have : P.asIdeal.IsMaximal := P.isMaximal
+  let : Field (𝓞 K ⧸ P.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 K ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+  let : Fintype (𝓞 K ⧸ P.asIdeal) := Fintype.ofFinite _
   obtain ⟨n, -, hn⟩ := FiniteField.card (𝓞 K ⧸ P.asIdeal) (ringChar (𝓞 K ⧸ P.asIdeal))
   refine ⟨n, ?_⟩
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
@@ -273,7 +273,7 @@ theorem vw_resCard_eq_zero : ∀ {D : D7} (P : Pl D.host.E) (w : PlL D),
   have hnot : ((resCard (Kw P) : ℕ) : 𝓞 D.what₂.LL) ∉ w.asIdeal := by
     rw [hq, Nat.cast_pow]
     exact fun hm => h (w.isPrime.mem_of_pow_mem n hm)
-  letI : StarRing D.what₂.LL := starRingOfComm
+  let : StarRing D.what₂.LL := starRingOfComm
   have := Formalism.DivisionValues.ValuationZeroReduction.vw_eq_zero_of_not_mem w _ hnot
   simpa using this
 
@@ -568,7 +568,7 @@ theorem integral_eq_sum_twisted : ∀ {X : Type} [AddCommGroup X] [TopologicalSp
   by_cases hint : Integrable g μ
   swap
   · exact ⟨∅, by rw [integral_undef hint]; simp⟩
-  haveI := GlobalTheory.LCIntegralField.discrete_quot U hU
+  have := GlobalTheory.LCIntegralField.discrete_quot U hU
   have hfin : ((QuotientAddGroup.mk : X → X ⧸ U) '' tsupport g).Finite :=
     (hc.isCompact.image QuotientAddGroup.continuous_mk).finite_of_discrete
   set T := hfin.toFinset with hT
@@ -582,8 +582,8 @@ theorem integral_eq_sum_twisted : ∀ {X : Type} [AddCommGroup X] [TopologicalSp
         g y = if c = (y : X ⧸ U) then g y else 0 := by
       intro c
       by_cases h : c = (y : X ⧸ U)
-      · rw [if_pos h, Set.indicator_of_mem (show y ∈ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from (hind c y).2 h)]
-      · rw [if_neg h, Set.indicator_of_notMem (show y ∉ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from fun hm => h ((hind c y).1 hm))]
+      · rw [ite_eq_left h, Set.indicator_of_mem (show y ∈ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from (hind c y).2 h)]
+      · rw [ite_eq_right h, Set.indicator_of_notMem (show y ∉ (fun x => -(Quotient.out c) + x) ⁻¹' (U : Set X) from fun hm => h ((hind c y).1 hm))]
     simp only [key]
     rw [Finset.sum_ite_eq']
     split_ifs with hmem
@@ -670,9 +670,9 @@ theorem stairElt_diag (G : Grid k) (hs : 1 ≤ G.s) (ϖ : kˣ) (e : ℕ) (J : G.
       | zero => exact h2 0
       | succ j =>
         have : ¬ j < G.m - 2 := by omega
-        simp only [dif_neg this]
+        simp only [dite_eq_right this]
         exact h1 _
-  · rw [Reps.elt, onColumn, dif_neg hi]
+  · rw [Reps.elt, onColumn, dite_eq_right hi]
     exact h1 _
 
 theorem valuation_fill_sub_le (G : Grid k) (hs : 1 ≤ G.s) (ϖ : kˣ) (n : ℕ) (x : ColArgs G) (y : RowArgs G)
@@ -715,7 +715,7 @@ theorem moved_stair_periodic : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
   generalize fill hs x y (v + l) - fill hs x y v = d at hf
   obtain ⟨n, -, hn⟩ := hd b.tgt
   obtain ⟨n', hn1, hn'⟩ := hd b.src
-  have h0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 (by simp)
   have h1 : valuation k (ϖ : k) ≤ 1 := hϖ.mem
   rw [SplitFlip.stdLat, smul_diagLat, mem_diagLat]
   intro s
@@ -910,7 +910,7 @@ theorem moved_loss : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : T
   have hTT := isTensor_Tflip hL ch.W ch.S.B t Φ hde hc' P.2
   have hcond : HasConductor (psiAt ch.W P.1) 1 :=
     (((Good.locGrid_isGood hL ch.G ch.W t hde hc').1 P.1 P.2).square 0 hm 0 hm).cond
-  haveI := (isUnitVol_unitVol P.1).1
+  have := (isUnitVol_unitVol P.1).1
   set e := cosExp ch.G P with he
   have hdep : depthAt ch.G P = e := by
     obtain ⟨v, hv, hvP⟩ := Finset.mem_image.1 hW
@@ -1181,7 +1181,7 @@ theorem GlobalTheory.MovedTwist.moved_lossLe : ∀ {D : D7} {Γ : Type} [Group �
     classical
     simp [keepAt, hP]
   have hg := unitIn_prod _ _ (hedge ((repsAt ch.G t P).elt (β P)))
-  simp only [moved, Grid.pathAct, hk, if_true, one_mul]
+  simp only [moved, Grid.pathAct, hk, ite_true, one_mul]
   exact lossLe_unit_mul hw hg.1 hg.2 (hT _)
 
 end
@@ -1358,7 +1358,7 @@ theorem eventually_cball_subset {ϖ : kˣ} (hϖ : IsUnif ϖ) {U : Set k} (hU : U
     ∀ᶠ n : ℕ in Filter.atTop, cball (ϖ ^ n) ⊆ U := by
   obtain ⟨γ, hγ⟩ := (IsValuativeTopology.mem_nhds_zero_iff U).mp hU
   have h1 : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
-  haveI : MulArchimedean (ValueGroupWithZero k) := ValuativeRel.isRankLeOne_iff_mulArchimedean.mp inferInstance
+  have : MulArchimedean (ValueGroupWithZero k) := ValuativeRel.isRankLeOne_iff_mulArchimedean.mp inferInstance
   obtain ⟨N, hN⟩ := exists_pow_lt₀ h1 γ
   refine Filter.eventually_atTop.2 ⟨N, fun n hn z hz => hγ ?_⟩
   have hz' : valuation k z ≤ valuation k ((ϖ ^ n : kˣ) : k) := hz
@@ -1383,8 +1383,8 @@ theorem varLat_basis_open_vol : ∀ {k : Type} [Field k] [ValuativeRel k] [Topol
       exact hut fun r _ => hn r (he r trivial)
     obtain ⟨n, hn⟩ := (Filter.eventually_all.2 key).exists
     refine ⟨n, fun e he => hts fun j _ => hn j fun r _ => he j r⟩
-  · haveI := hν.1
-    haveI := secondCountable k
+  · have := hν.1
+    have := secondCountable k
     have h1 : ((distribHaarChar k ϖ : NNReal) : ℝ) = (resCard k : ℝ)⁻¹ :=
       nabs_uniformiser hϖ.irreducible rfl
     have hv : varsVol G ν (varLat G ϖ n : Set (Vars G)) =
@@ -1487,9 +1487,9 @@ theorem datum_loss {large₂ : SizeData₂ D} {F : Face D A} {CF b : ℝ} (hS : 
   have hTT := isTensor_Tflip hL ch.W ch.S.B t Φ hde hc' P.2
   have hcond : HasConductor (psiAt ch.W P.1) 1 :=
     (((Good.locGrid_isGood hL ch.G ch.W t hde hc').1 P.1 P.2).square 0 hm 0 hm).cond
-  haveI := (isUnitVol_unitVol P.1).1
+  have := (isUnitVol_unitVol P.1).1
   obtain ⟨_, _⟩ := Model.secondCountable_and_t2_local_field (k := Kw P.1)
-  haveI : (varsVol (locGrid ch.G t P) (unitVol P.1)).IsAddLeftInvariant := varsVol_isAddLeftInvariant _ _
+  have : (varsVol (locGrid ch.G t P) (unitVol P.1)).IsAddLeftInvariant := varsVol_isAddLeftInvariant _ _
   set S := moved (locGrid ch.G t P) (keepAt ch.G P) ((repsAt ch.G t P).elt (β P)) (Tflip ch.W ch.S.B t Φ P) with hSdef
   set f := flatIntegrand one_le_sLen (psiAt ch.W P.1) S X Y with hf
   have hdat : (ch.S.term t Φ β P).datum X Y = ∫ e, f e ∂(varsVol (locGrid ch.G t P) (unitVol P.1)) := rfl

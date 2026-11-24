@@ -70,12 +70,12 @@ theorem TF_hom : (TF (R := V) F).hom = Spec.map (CommRingCat.ofHom (algVF (F := 
   rfl
 
 theorem exists_liftO (b : TF (R := V) F ⟶ D.toPre.P.A) : ∃ m : TO hϖ hv ⟶ D.toPre.P.A, ιS hϖ hv ≫ m = b := by
-  haveI : IsProper D.toPre.P.A.hom := D.toPre.P.isAb.proper
+  have : IsProper D.toPre.P.A.hom := D.toPre.P.isAb.proper
   obtain ⟨x', hx'p, hx'⟩ := TWO.exists_lift v hϖ hv D.toPre.P.A.hom b.left (by rw [Over.w b, TF_hom])
   exact ⟨Over.homMk x' hx'p, Over.OverMorphism.ext hx'⟩
 
 theorem liftO_unique (m₁ m₂ : TO hϖ hv ⟶ D.toPre.P.A) (h : ιS hϖ hv ≫ m₁ = ιS hϖ hv ≫ m₂) : m₁ = m₂ := by
-  haveI : IsProper D.toPre.P.A.hom := D.toPre.P.isAb.proper
+  have : IsProper D.toPre.P.A.hom := D.toPre.P.isAb.proper
   apply Over.OverMorphism.ext
   exact TWO.lift_unique v hϖ hv D.toPre.P.A.hom m₁.left m₂.left (Over.w m₁) (Over.w m₂)
     (congrArg (fun g => g.left) h)

@@ -58,7 +58,7 @@ theorem NE_pos (D : D7) : 0 < NE D :=
 
 theorem splits_of_modEq (D : D7) (hC : CycSplit) {p : ℕ} (hp : p.Prime) (h1 : p ≡ 1 [MOD NE D]) :
     SplitsCompletely D p := by
-  letI : Algebra D.host.E (CyclotomicField (NE D) ℚ) := D.host.cycEmb.toRingHom.toAlgebra
+  let : Algebra D.host.E (CyclotomicField (NE D) ℚ) := D.host.cycEmb.toRingHom.toAlgebra
   exact hC (NE D) p D.host.E (NE_pos D) hp h1
 
 theorem modEq_of_normOneMod (D : D7) {M g : ℕ} (h : NormOneMod D M g) : g ≡ 1 [MOD M] := by

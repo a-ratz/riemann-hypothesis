@@ -132,10 +132,10 @@ theorem exists_regular_part {f : ℂ → ℂ} {K : Set ℂ} (hf : AnalyticOnNhd 
       filter_upwards [h1, h2] with s hs1 hs2
       by_cases hss : s = s0
       · subst hss
-        simp only [H, if_pos (And.intro hz hs0)]
+        simp only [H, ite_eq_left (And.intro hz hs0)]
       · have hsZ : s ∉ Z := fun h => hs2 (Finset.mem_erase.2 ⟨hss, h⟩)
         obtain ⟨_, hl⟩ := hs1 hss
-        simp only [H, hsZ, false_and, if_false]
+        simp only [H, hsZ, false_and, ite_false]
         rw [hl, ← Finset.add_sum_erase Z _ hz]
         ring
     · have hf0 : f s0 ≠ 0 := fun h => hz (hK s0 hs0 h)
@@ -148,10 +148,10 @@ theorem exists_regular_part {f : ℂ → ℂ} {K : Set ℂ} (hf : AnalyticOnNhd 
         exact (hf s0 hs0).deriv.div (hf s0 hs0) hf0
       refine hA.congr ?_
       filter_upwards [h2] with s hs
-      simp only [H, hs, false_and, if_false]
+      simp only [H, hs, false_and, ite_false]
   · intro s _ hfs
     have hsZ : s ∉ Z := fun h => hfs (hZ0 s h)
-    simp only [H, hsZ, false_and, if_false]
+    simp only [H, hsZ, false_and, ite_false]
     ring
 
 lemma finite_zeros_of_compact {f : ℂ → ℂ} (hf : Differentiable ℂ f) {x : ℂ} (hx : f x ≠ 0)
@@ -215,13 +215,13 @@ lemma differentiable_Lent (χ : DirichletCharacter ℂ N) : Differentiable ℂ (
 
 lemma Lent_of_ne {χ : DirichletCharacter ℂ N} (h : χ ≠ 1) : Lent χ = LFunction χ := by
   unfold Lent
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 lemma Lent_one_apply {χ : DirichletCharacter ℂ N} (h : χ = 1) {s : ℂ} (hs : s ≠ 1) :
     Lent χ s = (s - 1) * LFunction χ s := by
   subst h
   unfold Lent
-  rw [if_pos rfl]
+  rw [ite_eq_left rfl]
   first
     | (rw [LFunctionTrivChar₁, Function.update_of_ne hs]; rfl)
     | (simp [LFunctionTrivChar₁, Function.update_of_ne hs])
@@ -239,7 +239,7 @@ lemma Lent_two_ne_zero (χ : DirichletCharacter ℂ N) : Lent χ 2 ≠ 0 := by
 lemma Lent_one_ne_zero (χ : DirichletCharacter ℂ N) : Lent χ 1 ≠ 0 := by
   by_cases h : χ = 1
   · unfold Lent
-    rw [if_pos h]
+    rw [ite_eq_left h]
     exact LFunctionTrivChar₁_apply_one_ne_zero N
   · rw [Lent_of_ne h]
     exact LFunction_ne_zero_of_one_le_re χ (Or.inl h) (by simp)
@@ -287,7 +287,7 @@ lemma logDeriv_Lent (χ : DirichletCharacter ℂ N) {s : ℂ} (hs : s ≠ 1) (h0
     have hdz : DifferentiableAt ℂ (fun z : ℂ => z - 1) s := differentiableAt_id.sub_const (1 : ℂ)
     rw [h1, logDeriv_fun_mul (f := fun z : ℂ => z - 1) (g := LFunction χ) s
       (sub_ne_zero.mpr hs) h0 hdz hd, h2]
-    simp only [del1, if_pos h]
+    simp only [del1, ite_eq_left h]
     ring
   · rw [Lent_of_ne h]
     simp [del1, h]
@@ -315,9 +315,9 @@ theorem regularPart : RegularPart := by
     intro ρ
     rw [hE0]
     by_cases he : χ.Even ∧ χ ≠ 1
-    · rw [if_pos he, Finset.mem_singleton]
+    · rw [ite_eq_left he, Finset.mem_singleton]
       exact ⟨fun h => ⟨h, he⟩, fun h => h.1⟩
-    · rw [if_neg he]
+    · rw [ite_eq_right he]
       simp only [Finset.notMem_empty, false_iff]
       exact fun h => he h.2
   have hre1 : ∀ ρ ∈ ZerosBelow χ T', ρ ≠ 1 := by
@@ -368,12 +368,12 @@ theorem regularPart : RegularPart := by
   have hE : ∑ ρ ∈ E0, (analyticOrderNatAt (Lent χ) ρ : ℂ) / (s - ρ) = eps0 χ / s := by
     rw [hE0]
     by_cases he : χ.Even ∧ χ ≠ 1
-    · rw [if_pos he, Finset.sum_singleton, order_Lent χ zero_ne_one,
+    · rw [ite_eq_left he, Finset.sum_singleton, order_Lent χ zero_ne_one,
         (mult_zero_of_even hχ he.1 he.2).2]
-      simp only [eps0, if_pos he]
+      simp only [eps0, ite_eq_left he]
       simp
-    · rw [if_neg he]
-      simp only [eps0, if_neg he]
+    · rw [ite_eq_right he]
+      simp only [eps0, ite_eq_right he]
       simp
   rw [logDeriv_Lent χ hs1 hL0, hHeq s hs hLe, Finset.sum_union hdisj,
     finsum_mem_eq_finite_toFinset_sum _ hSfin, hS, hE]

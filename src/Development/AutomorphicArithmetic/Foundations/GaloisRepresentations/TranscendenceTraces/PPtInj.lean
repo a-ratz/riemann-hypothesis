@@ -88,7 +88,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.ptInj_of :
           have h2 := hy Ω (x ≫ g)
           rw [← res_res, hc, res_nsmul', (GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.2.1] at h2
           exact h2
-        haveI : Nonempty (gp Ω) := ⟨IsLocalRing.closedPoint Ω⟩
+        have : Nonempty (gp Ω) := ⟨IsLocalRing.closedPoint Ω⟩
         obtain ⟨d, rfl⟩ := (GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.1 (gp Ω) _ c h1
         rw [hc, mul_nsmul', q_smul_sec]
   rw [res_sub'] at key

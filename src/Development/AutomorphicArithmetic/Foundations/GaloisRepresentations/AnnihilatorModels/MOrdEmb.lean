@@ -86,7 +86,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.ordEmb_of :
   intro hOG hGD hRC hOR hEW
   intro p _ D O _ _ _ _ f b N r w _ hS M ϖ hϖ T Y h hflat I a ha hsep C g hpb hr himg
   intro V _ _ _ _ hpV y hgen φ hφ
-  haveI := hRC V
+  have := hRC V
   obtain ⟨hcl, hmax⟩ := hGD O ϖ hϖ M.X Y M.s h hflat _ hgen
   have hi : 0 < D.a := by rw [hS.a1]; exact Nat.one_pos
   have hcom : (IsLocalRing.maximalIdeal O).comap (b.t ⟨0, hi⟩) = w := by
@@ -101,7 +101,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.ordEmb_of :
     hcl hord φ hφ
   have hcard : Nat.card (𝓞 D.F ⧸ w) = p ^ f := by
     rw [← hS.norm, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 D.F ⧸ w) :=
+  have : Finite (𝓞 D.F ⧸ w) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero _ (Fact.out : p.Prime).ne_zero)
   let s : ∀ j, (C j).Sec y ≃ {z : Sp V ⟶ (T j).Y // z ≫ (T j).s = y ≫ h} := fun j =>
     { toFun := fun z => ⟨z.1 ≫ g j, by rw [Category.assoc, ← (hpb j).w, ← Category.assoc, z.2]⟩

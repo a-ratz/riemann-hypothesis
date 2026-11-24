@@ -118,7 +118,7 @@ theorem measurable_modChar :
       fun g => (∫⁻ x, K.indicator 1 (x * g) ∂μ) / μ K := by
     funext g
     have e := congrArg (fun m : Measure G => m K) (map_mul_right_eq μ g)
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at e
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at e
     rw [Measure.map_apply (measurable_mul_const g) hK.measurableSet] at e
     rw [ENNReal.eq_div_iff hpos hfin, mul_comm, ← e,
       ← lintegral_indicator_one (hK.measurableSet.preimage (measurable_mul_const g))]
@@ -131,7 +131,7 @@ theorem measurable_modChar :
 theorem modChar_eq_one (H : Subgroup G) (ν : Measure H) [ν.IsMulLeftInvariant]
     (h0 : ν univ ≠ 0) (hfin : ν univ ≠ ∞) (k : H) : Measure.modularCharacterFun (k : G) = 1 := by
 
-  haveI : MeasurableMul H := by
+  have : MeasurableMul H := by
     first
     | infer_instance
     | exact ⟨fun c => ((measurable_const_mul (c : G)).comp measurable_subtype_coe).subtype_mk,
@@ -141,7 +141,7 @@ theorem modChar_eq_one (H : Subgroup G) (ν : Measure H) [ν.IsMulLeftInvariant]
   have hDm : Measurable D := by
     rw [show D = fun h : H => (Measure.modularCharacterFun (h : G) : ℝ) from funext hD]
     exact measurable_coe_nnreal_real.comp
-      ((measurable_coe_nnreal_ennreal_iff.1 measurable_modChar).comp measurable_subtype_coe)
+      ((measurable_coe_nnreal_ennreal_iff.1 measurable_modChar).comp measurable_subtypeVal)
   have hmul : ∀ a b : H, D (a * b) = D a * D b := by
     intro a b
     have e : Measure.modularCharacterFun ((a : G) * b) =
@@ -187,7 +187,7 @@ theorem modChar_eq_one (H : Subgroup G) (ν : Measure H) [ν.IsMulLeftInvariant]
     have e : {h : H | ⌊Real.log (D h) / t⌋ = m + 1} =
         (fun h => k⁻¹ * h) ⁻¹' {h : H | ⌊Real.log (D h) / t⌋ = m} := by
       ext h
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, hN]
+      simp only [mem_ofPred_eq, Set.mem_preimage, hN]
       constructor <;> intro hh <;> omega
     rw [e, measure_preimage_mul]
   have hall : ∀ m : ℤ, ν {h : H | ⌊Real.log (D h) / t⌋ = m} =
@@ -226,12 +226,12 @@ theorem lintegral_mul_right_of_mem (μ : Measure G) [μ.IsHaarMeasure] (H : Subg
 theorem meas_avg (H : Subgroup G) (ν : Measure H) [SFinite ν] {f : G → ℝ≥0∞} (hf : Measurable f) :
     Measurable (fun g : G => ∫⁻ h, f (g * (h : G)) ∂ν) := by
 
-  exact (hf.comp (measurable_fst.mul (measurable_subtype_coe.comp measurable_snd))).lintegral_prod_right'
+  exact (hf.comp (measurable_fst.mul (measurable_subtypeVal.comp measurable_snd))).lintegral_prod_right'
 
 theorem avg_mul_mem (H : Subgroup G) (ν : Measure H) [ν.IsMulLeftInvariant] (f : G → ℝ≥0∞)
     (g : G) (k : H) : ∫⁻ h, f (g * k * (h : G)) ∂ν = ∫⁻ h, f (g * (h : G)) ∂ν := by
 
-  haveI : MeasurableMul H := by
+  have : MeasurableMul H := by
     first
     | infer_instance
     | exact ⟨fun c => ((measurable_const_mul (c : G)).comp measurable_subtype_coe).subtype_mk,
@@ -287,27 +287,27 @@ theorem unfold_stab (x0 : X) (hc : Continuous fun g : G => g • x0) (μ : Measu
     (hs : ∀ y, (∃ g : G, g • x0 = y) → s y • x0 = y) :
     ∫⁻ g, f g ∂μ = (ν univ)⁻¹ *
       ∫⁻ y, ∫⁻ h', f (s y * (h' : G)) ∂ν ∂(μ.map (fun g => g • x0)) := by
-  haveI := hν
-  haveI : IsFiniteMeasure ν := ⟨lt_top_iff_ne_top.2 hfin⟩
+  have := hν
+  have : IsFiniteMeasure ν := ⟨lt_top_iff_ne_top.2 hfin⟩
   have hS : IsClosed ((MulAction.stabilizer G x0 : Subgroup G) : Set G) := by
     have e : ((MulAction.stabilizer G x0 : Subgroup G) : Set G) = (fun g : G => g • x0) ⁻¹' {x0} := by
       ext g
       exact MulAction.mem_stabilizer_iff
     rw [e]
     exact isClosed_singleton.preimage hc
-  haveI : IsClosed ((MulAction.stabilizer G x0 : Subgroup G) : Set G) := hS
-  haveI : PolishSpace (G ⧸ MulAction.stabilizer G x0) := polish_of_lcsc _
-  haveI : PolishSpace G := polish_of_lcsc G
+  have : IsClosed ((MulAction.stabilizer G x0 : Subgroup G) : Set G) := hS
+  have : PolishSpace (G ⧸ MulAction.stabilizer G x0) := polish_of_lcsc _
+  have : PolishSpace G := polish_of_lcsc G
   have hqc : Continuous (QuotientGroup.mk : G → G ⧸ MulAction.stabilizer G x0) :=
     (QuotientGroup.isQuotientMap_mk _).continuous
-  haveI : BorelSpace (G ⧸ MulAction.stabilizer G x0) := by
+  have : BorelSpace (G ⧸ MulAction.stabilizer G x0) := by
     refine ⟨le_antisymm ?_ ?_⟩
     · intro A hA
       have hA' : MeasurableSet ((QuotientGroup.mk : G → G ⧸ MulAction.stabilizer G x0) ⁻¹' A) := hA
       have hAc' : MeasurableSet ((QuotientGroup.mk : G → G ⧸ MulAction.stabilizer G x0) ⁻¹' Aᶜ) :=
         hA'.compl
-      letI : MeasurableSpace (G ⧸ MulAction.stabilizer G x0) := borel _
-      haveI : BorelSpace (G ⧸ MulAction.stabilizer G x0) := ⟨rfl⟩
+      let : MeasurableSpace (G ⧸ MulAction.stabilizer G x0) := borel _
+      have : BorelSpace (G ⧸ MulAction.stabilizer G x0) := ⟨rfl⟩
       have h1 : AnalyticSet A := by
         rw [← Set.image_preimage_eq A QuotientGroup.mk_surjective]
         exact hA'.analyticSet_image hqc.measurable
@@ -350,7 +350,7 @@ theorem unfold_stab (x0 : X) (hc : Continuous fun g : G => g • x0) (μ : Measu
   rw [lintegral_map (meas_avg_q (MulAction.stabilizer G x0) ν hf) hmk]
   simp only [avg_out]
   rw [lintegral_lintegral_swap (f := fun (g : G) (h : MulAction.stabilizer G x0) => f (g * (h : G)))
-    ((hf.comp (measurable_fst.mul (measurable_subtype_coe.comp measurable_snd))).aemeasurable)]
+    ((hf.comp (measurable_fst.mul (measurable_subtypeVal.comp measurable_snd))).aemeasurable)]
   simp only [hinner, lintegral_const]
   rw [mul_comm (∫⁻ g, f g ∂μ), ← mul_assoc, ENNReal.inv_mul_cancel h0 hfin, one_mul]
 

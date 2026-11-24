@@ -81,7 +81,7 @@ theorem rdIndep_of_wt (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (σ : c.F →+
   intro a k _ n b hb hli
   have hT : ∀ kk x, FromTest (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z) ((U σ).un kk x) := by
     intro kk x
-    letI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
+    let : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
     exact hAT (CAt σ) ((U σ).un kk x)
   rw [Fintype.linearIndependent_iff]
   intro g hg

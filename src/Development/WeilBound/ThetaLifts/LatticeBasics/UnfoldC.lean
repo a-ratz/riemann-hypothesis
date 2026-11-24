@@ -158,21 +158,21 @@ theorem unfoldC (hO : OffOpen) (hU : PositivityTheory.ThKEnd.Grp.UnipUGood) {B :
     (hD : IsFundamentalDomain (ratU σ Y.J) D μ) (hi : Integrable (fun g => f (e (1, g))) μ) {φ : UA σ Y.J → ℂ} (hφ : IsRapid φ)
     (hc : IsCusp Y φ) (h : UA σ Y.J) (hfin : ∑' q : Cos σ Y, ∫⁻ x in D, ‖eisTerm f (e (h, x)) q * detInv χ x * φ x‖ₑ ∂μ ≠ ⊤) :
     ∫ h' in D, Ê (e (h, h')) * detInv χ h' * φ h' ∂μ = ∫ g, f (e (1, g)) * detInv χ g * φ (h * g) ∂μ := by
-  haveI := countable_ratU (σ := σ) (Y := Y)
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : Countable (rat2 σ Y) := by
-    haveI : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
-    haveI : Countable (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) E) := inferInstanceAs (Countable (_ → _ → E))
-    haveI : Countable (GL (Fin n ⊕ Fin n) E) := Units.val_injective.countable
+  have := countable_ratU (σ := σ) (Y := Y)
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have : Countable (rat2 σ Y) := by
+    have : Countable E := Countable.of_equiv _ (Module.finBasis ℚ E).equivFun.toEquiv.symm
+    have : Countable (Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) E) := inferInstanceAs (Countable (_ → _ → E))
+    have : Countable (GL (Fin n ⊕ Fin n) E) := Units.val_injective.countable
     exact (Set.countable_range (Matrix.GeneralLinearGroup.map (n := Fin n ⊕ Fin n) (inclR (F := F) (E := E) (AF F)))).preimage
       Subtype.val_injective
-  letI := cosAct he
+  let := cosAct he
   let T : Cos σ Y → UA σ Y.J → ℂ := fun q x => eisTerm f (e (h, x)) q * detInv χ x * φ x
   have cK : ∀ q, Continuous fun x => eisTerm f (e (h, x)) q * detInv χ x := fun q =>
     (cf.comp (continuous_const.mul (ce.comp (Continuous.prodMk_right h)))).mul (continuous_detInv hχ)
   have cT : ∀ q, Continuous (T q) := fun q => (cK q).mul hφ.1
   have sa : Summable fun q => ∫ x in D, T q x ∂μ := Summable.of_norm_bounded (ENNReal.summable_toReal hfin) fun q =>
-    toReal_enorm (∫ x in D, T q x ∂μ) ▸ ENNReal.toReal_mono (ENNReal.ne_top_of_tsum_ne_top hfin q) (enorm_integral_le_lintegral_enorm _)
+    toReal_eNorm (∫ x in D, T q x ∂μ) ▸ ENNReal.toReal_mono (ENNReal.ne_top_of_tsum_ne_top hfin q) (eNorm_integral_le_lintegral_eNorm _)
   have nd : ∀ (δ : ratU σ Y.J) q, Neg e (δ • q) ↔ Neg e q := fun δ q => by
     rw [neg_iff he, neg_iff he]
     have k : ∀ (δ η : ratU σ Y.J), δ • (Quotient.mk _ (ratE he η) : Cos σ Y) = Quotient.mk _ (ratE he (η * δ⁻¹)) := fun δ η =>
@@ -191,7 +191,7 @@ theorem unfoldC (hO : OffOpen) (hU : PositivityTheory.ThKEnd.Grp.UnipUGood) {B :
     by_cases hq : Neg e q
     swap
     · simp [hq]
-    simp only [if_pos hq] at ig ⊢
+    simp only [ite_eq_left hq] at ig ⊢
     obtain ⟨U, u1, u2, u3, u4⟩ := hO F E σ B n Y r s hB hY e he _ q.out.2 hq
     obtain ⟨g, -⟩ := hU F E σ hB.cm n Y (.inr hY.skew) d0 U
     obtain ⟨κ, 𝓜, k1, k2, k3⟩ := g.ex
@@ -237,10 +237,10 @@ theorem unfoldC (hO : OffOpen) (hU : PositivityTheory.ThKEnd.Grp.UnipUGood) {B :
         exact tsum_congr fun q => by by_cases hq : Neg e q <;> simp [hq]
     _ = ∑' δ : ratU σ Y.J, ∫ x in D, k (h⁻¹ * (δ • x)) ∂μ := by
         rw [← (ratE_inj he).tsum_eq]
-        · exact tsum_congr fun δ => by rw [if_pos (by rw [neg_iff he, not_not]; exact ⟨δ, rfl⟩)]; simp only [op]
+        · exact tsum_congr fun δ => by rw [ite_eq_left (by rw [neg_iff he, not_not]; exact ⟨δ, rfl⟩)]; simp only [op]
         · intro q hq
           by_contra hn
-          exact hq (if_neg (not_not.2 ((neg_iff he q).2 hn)))
+          exact hq (ite_eq_right (not_not.2 ((neg_iff he q).2 hn)))
     _ = _ := by
         rw [← hD.integral_eq_tsum'' (fun x => k (h⁻¹ * x)) (ik.comp_mul_left h⁻¹), integral_mul_left_eq_self k]
 

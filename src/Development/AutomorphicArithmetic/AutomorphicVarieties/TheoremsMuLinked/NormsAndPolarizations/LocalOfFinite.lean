@@ -57,8 +57,8 @@ private theorem local_of_finite {R S : Type} [CommRing R] [IsLocalRing R] [CommR
   have hm : a ∈ maximalIdeal R := hna
   let g : R →+* ResidueField S := (residue S).comp f
   have hker : RingHom.ker g = maximalIdeal R := by
-    haveI : (RingHom.ker g).IsPrime := RingHom.ker_isPrime g
-    haveI : Finite (R ⧸ RingHom.ker g) := Finite.of_injective _ (RingHom.kerLift_injective g)
+    have : (RingHom.ker g).IsPrime := RingHom.ker_isPrime g
+    have : Finite (R ⧸ RingHom.ker g) := Finite.of_injective _ (RingHom.kerLift_injective g)
     have hmax : (RingHom.ker g).IsMaximal :=
       Ideal.Quotient.maximal_of_isField _ (Finite.isField_of_domain _)
     exact IsLocalRing.eq_maximalIdeal hmax
@@ -72,8 +72,8 @@ private theorem local_of_finite {R S : Type} [CommRing R] [IsLocalRing R] [CommR
 theorem UpperTheory.V.Th.Nm.redOf :
     ∀ {l : ℕ} [Fact l.Prime] {n : ℕ} (F : GFrame l) (c c' : Coef l) (h : c.O ≤ c'.O) (r : Resid F c.O n) (r' : Resid F c'.O n) (R : Type) [CommRing R] [Algebra c.O R] [IsCO c.O R] (p : Pair r R) (x : R →ₐ[c.O] Qbar l) (ρ₀ : F.G₀ →* GL (Fin n) c'.O) (ψ₀ : ∀ v, Fin n → F.Gv v →* c'.Oˣ), RPush h r r' → (∀ b, x b ∈ c'.O) → p.D.map (x : R →+* Qbar l) = GDet.ofRep (mat (pushRep (algebraMap c'.O (Qbar l)) ρ₀)) → (∀ v i, pushCh (algebraMap c'.O (Qbar l)) (ψ₀ v i) = pushCh (x : R →+* Qbar l) (p.ψ v i)) → (GDet.ofRep (mat ρ₀)).map (res c'.O c'.O : c'.O →+* ResidueField c'.O) = r'.Dbar ∧ ∀ v i, r'.IsPsi v i (ψ₀ v i) := by
   intro l _ n F c c' h r r' R _ _ _ p x ρ₀ ψ₀ hpush hx hD hψ
-  haveI : Module.Finite ℤ_[l] c'.O := c'.fin
-  haveI : Finite (ResidueField c'.O) := (abelian₂.dvr_finite l c'.O).2.1
+  have : Module.Finite ℤ_[l] c'.O := c'.fin
+  have : Finite (ResidueField c'.O) := (abelian₂.dvr_finite l c'.O).2.1
   obtain ⟨f, hf, hchi, hpsi, hth⟩ := hpush
   let ι : c'.O →+* Qbar l := algebraMap c'.O (Qbar l)
   have hι : Function.Injective ι := Subtype.val_injective
@@ -81,7 +81,7 @@ theorem UpperTheory.V.Th.Nm.redOf :
   have hy : ι.comp y = (x : R →+* Qbar l) := by
     ext z
     rfl
-  haveI : IsLocalHom y := local_of_finite y
+  have : IsLocalHom y := local_of_finite y
   have hyalg : ∀ a : c.O, y (algebraMap c.O R a) = inc h a := by
     intro a
     apply hι

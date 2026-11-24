@@ -57,8 +57,8 @@ theorem isLB_detOm_of_smooth {E : Type} [Field E] [NumberField E] [IsCMField E] 
     (hsm : SmoothOfRelativeDimension D.dim (genStr Y)) : (GlobalTheory.FlagMod.detOm Y).IsLB := by
   have e : spMap (RingHom.id c.F) = 𝟙 _ := by
     simp [spMap]
-  haveI : IsIso (spMap (RingHom.id c.F)) := by rw [e]; infer_instance
-  haveI : IsIso (genι Y) := inferInstance
+  have : IsIso (spMap (RingHom.id c.F)) := by rw [e]; infer_instance
+  have : IsIso (genι Y) := inferInstance
   have hs : SmoothOfRelativeDimension D.dim Y.s := by
     have hw : Y.s = inv (genι Y) ≫ genStr Y ≫ spMap (RingHom.id c.F) := by
       rw [← pullback.condition, IsIso.inv_hom_id_assoc]

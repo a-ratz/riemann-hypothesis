@@ -62,7 +62,7 @@ theorem isOpen_of_fg_of_span_eq_top {LL O V : Type} [Field LL] [TopologicalSpace
       Submodule.span_span_of_tower]
   have hopen : IsOpenMap (Fintype.linearCombination LL b) :=
     IsModuleTopology.isOpenMap_of_surjective hsurj
-  haveI := IsModuleTopology.topologicalAddGroup LL V
+  have := IsModuleTopology.isTopologicalAddGroup LL V
   have hU : IsOpen (Set.pi Set.univ fun _ : Fin n => Set.range (algebraMap O LL)) :=
     isOpen_set_pi Set.finite_univ fun _ _ => hO
   refine M.toAddSubgroup.isOpen_of_mem_nhds (g := 0)
@@ -76,7 +76,7 @@ theorem isOpen_of_fg_of_span_eq_top {LL O V : Type} [Field LL] [TopologicalSpace
 
 theorem locLat_isOpen : ∀ {G : Type} [Group G] [TopologicalSpace G] {Qp : Type} [Field Qp] [TopologicalSpace Qp] {LL : Type} [Field LL] [Algebra Qp LL] [TopologicalSpace LL] {O : Type} [CommRing O] [Algebra O LL], GoodO (Qp := Qp) LL O → ∀ T : LocLat G Qp LL O, IsOpen (T.L.T : Set T.V) := by
   intro G _ _ Qp _ _ LL _ _ _ O _ _ h T
-  haveI := h.2.2.2.1
+  have := h.2.2.2.1
   exact isOpen_of_fg_of_span_eq_top h.2.2.2.2 T.L.T T.L.fg T.L.span
 
 end GlobalTheory.Cyc

@@ -97,7 +97,7 @@ namespace GlobalTheory.CompanionTheory.ConeInt
 theorem setLIntegral_Ici_rpow_lt_top {a b : ℝ} (ha : a < -1) (hb : 0 < b) :
     ∫⁻ x in Ici b, ENNReal.ofReal (x ^ a) < ⊤ := by
   have h : IntegrableOn (fun x : ℝ => x ^ a) (Ici b) :=
-    (integrableOn_Ici_iff_integrableOn_Ioi enorm_ne_top).2 (integrableOn_Ioi_rpow_of_lt ha hb)
+    (integrableOn_Ici_iff_integrableOn_Ioi eNorm_ne_top).2 (integrableOn_Ioi_rpow_of_lt ha hb)
   exact h.lintegral_lt_top
 
 theorem le_of_mem_cone {r : ℕ} {c : ℝ} (hc : 0 < c) {t : Fin r → ℝ} (ht : t ∈ cone r c) (i : Fin r) :
@@ -244,7 +244,7 @@ theorem integrable_descend_of_cover : ∀ (D : D7) (V : HSp D) (μ : Measure (GA
       exact hφ.aestronglyMeasurable)
   refine ⟨hmeas, ?_⟩
   have hfin : ∫⁻ g in S, ‖φ g‖ₑ ∂μ < ⊤ := hint.2
-  have hmf : AEMeasurable (S.indicator fun g => ‖φ g‖ₑ) μ := (hφ.enorm.indicator hS).aemeasurable
+  have hmf : AEMeasurable (S.indicator fun g => ‖φ g‖ₑ) μ := (hφ.eNorm.indicator hS).aemeasurable
   have key := GlobalTheory.AutomorphicL2Unitary.lintegral_eq_lintegral_tsum (Γ := GQ V) (μ := μ) hmf
   rw [lintegral_indicator hS] at key
   show ∫⁻ q, ‖descend (GQ V) φ q‖ₑ ∂(autMeasure V μ) < ⊤
@@ -807,11 +807,11 @@ theorem coset_sum {G : Type} [Group G] (N : Subgroup G) (Cl : Set G) (h : G → 
     have hq : ∀ ν : N, q (δ₀ * ν) = q δ₀ := fun ν => by
       exact QuotientGroup.eq.2 (by simp)
     have e3 : ∑' ν : N, h (δ₀ * ν) = ∑' ν : N, u (δ₀ * ν) :=
-      tsum_congr fun ν => by simp only [hu, hq ν, if_true]
+      tsum_congr fun ν => by simp only [hu, hq ν, ite_true]
     have hsupp : Function.support u ⊆ Set.range fun ν : N => δ₀ * (ν : G) := by
       intro δ hδ
       have hδ' : q δ = q δ₀ := by
-        by_contra hn; exact hδ (by simp only [hu, if_neg hn])
+        by_contra hn; exact hδ (by simp only [hu, ite_eq_right hn])
       have : δ₀⁻¹ * δ ∈ N := QuotientGroup.eq.1 hδ'.symm
       exact ⟨⟨_, this⟩, by simp⟩
     rw [e3, hinj.tsum_eq hsupp]
@@ -819,15 +819,15 @@ theorem coset_sum {G : Type} [Group G] (N : Subgroup G) (Cl : Set G) (h : G → 
       refine tsum_eq_sum fun δ hδ => ?_
       by_contra hne'
       have hq' : q δ = q δ₀ := by
-        by_contra hn; exact hne' (by simp only [hu, if_neg hn])
+        by_contra hn; exact hne' (by simp only [hu, ite_eq_right hn])
       have hhδ : h δ ≠ 0 := by
-        intro h0; exact hne' (by simp only [hu, if_pos hq', h0])
+        intro h0; exact hne' (by simp only [hu, ite_eq_left hq', h0])
       have hN : δ₀⁻¹ * δ ∈ N := QuotientGroup.eq.1 hq'.symm
       have hc := h1 δ₀ hcl hne _ hN
       rw [mul_inv_cancel_left] at hc
       exact hδ (Finset.mem_filter.2 ⟨(hSm δ).2 ⟨hhδ, hc⟩, hq'⟩)
     rw [e4]
-    exact Finset.sum_congr rfl fun δ hδ => by simp only [hu, if_pos (Finset.mem_filter.1 hδ).2]
+    exact Finset.sum_congr rfl fun δ hδ => by simp only [hu, ite_eq_left (Finset.mem_filter.1 hδ).2]
   have hcardS : ((S.image q).card : ℝ) ≤ κ := by
     refine le_trans ?_ hcard
     rw [Set.ncard_eq_toFinset_card _ hfin]
@@ -1102,7 +1102,7 @@ theorem regClassInt : PositivityTheory.ThKR.SiegelCore → MainStatements.Regula
     exact ((measurable_pi_apply i).inv).pow_const _
   have h1 := hbd (fun g => ‖GlobalTheory.IndefiniteRowSideFullHecke.NonFieldTypeVanishingAlt.classKernel (GQ V) (rat V γ) f g‖ₑ)
     (fun t => ENNReal.ofReal B * q t) (hqm.const_mul _) (fun p hp t ht a ha k hk => by
-      rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul hB0]
+      rw [← ofReal_norm, ← ENNReal.ofReal_mul hB0]
       exact ENNReal.ofReal_le_ofReal (hB p hp t ht a ha k hk))
   have h2 : ∫⁻ t in cone r c, ENNReal.ofReal B * q t * w t =
       ENNReal.ofReal B * ∫⁻ t in cone r c, q t * w t := by

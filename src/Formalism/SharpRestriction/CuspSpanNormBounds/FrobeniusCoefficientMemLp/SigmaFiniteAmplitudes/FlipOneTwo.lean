@@ -465,12 +465,12 @@ theorem pair_split (L : LocBessel k r) [SFinite L.μW] [SFinite L.μW'] [SFinite
   have hprod : ∫⁻ q : PairSp k r, ‖(innerSL ℂ (b q.2)).smulRight (a q.1)‖ₑ ∂((L.μW.prod L.μN).prod (L.μW'.prod L.μN)) =
       (∫⁻ p, ‖a p‖ₑ ∂(L.μW.prod L.μN)) * ∫⁻ p, ‖b p‖ₑ ∂(L.μW'.prod L.μN) := by
     simp_rw [enorm_rankOne, mul_comm (‖b _‖ₑ)]
-    exact lintegral_prod_mul haS.enorm hbS.enorm
+    exact lintegral_prod_mul haS.eNorm hbS.eNorm
   have hfin : (∫⁻ p, ‖a p‖ₑ ∂(L.μW.prod L.μN)) * ∫⁻ p, ‖b p‖ₑ ∂(L.μW'.prod L.μN) < ⊤ := by
     rw [← hprod]; exact hI.2
   by_cases hA0 : ∫⁻ p, ‖a p‖ₑ ∂(L.μW.prod L.μN) = 0
   · have hz : ∀ᵐ p ∂(L.μW.prod L.μN), a p = 0 :=
-      ((lintegral_eq_zero_iff' haS.enorm).mp hA0).mono fun p hp => enorm_eq_zero.mp hp
+      ((lintegral_eq_zero_iff' haS.eNorm).mp hA0).mono fun p hp => eNorm_eq_zero.mp hp
     have e := ha_eq (Or.inr hz)
     rw [integral_eq_zero_of_ae hz] at e
     rw [← e, rankOne_zero_right]
@@ -479,7 +479,7 @@ theorem pair_split (L : LocBessel k r) [SFinite L.μW] [SFinite L.μW'] [SFinite
     rw [hq, rankOne_zero_right]; rfl
   by_cases hB0 : ∫⁻ p, ‖b p‖ₑ ∂(L.μW'.prod L.μN) = 0
   · have hz : ∀ᵐ p ∂(L.μW'.prod L.μN), b p = 0 :=
-      ((lintegral_eq_zero_iff' hbS.enorm).mp hB0).mono fun p hp => enorm_eq_zero.mp hp
+      ((lintegral_eq_zero_iff' hbS.eNorm).mp hB0).mono fun p hp => eNorm_eq_zero.mp hp
     have e := hb_eq (Or.inr hz)
     rw [integral_eq_zero_of_ae hz] at e
     rw [← e, rankOne_zero_left]
@@ -549,10 +549,10 @@ theorem lint_cell (hγ : γ ∈ UH (Hpk k r)) (hrel : IsRelStab L γ) (hμG : Is
     {p : PairSp k r} (hp : InPair L p) :
     ∫⁻ a, ∫⁻ x, ‖PsiM L w0 v v' ξ ξ' γ (mStab γ (p, a), x)‖ₑ ∂νR ∂μR =
       ∫⁻ y, ‖Psi L w0 v v' ξ ξ' γ p y‖ₑ ∂μG := by
-  haveI : SigmaFinite μR := hμR.1
-  haveI : SigmaFinite νR := sigmaFinite_nuR hμG hμR hQ
+  have : SigmaFinite μR := hμR.1
+  have : SigmaFinite νR := sigmaFinite_nuR hμG hμR hQ
   have hmeasP : Measurable (fun y : Mt k r => ‖PsiM L w0 v v' ξ ξ' γ (p, y)‖ₑ) :=
-    ((sm_PsiM L w0 v v' ξ ξ' γ).measurable.comp measurable_prodMk_left).enorm
+    ((sm_PsiM L w0 v v' ξ ξ' γ).measurable.comp measurable_prodMk_left).eNorm
   have hmeasQ : Measurable (fun q : Mt k r × Mt k r => ‖PsiM L w0 v v' ξ ξ' γ (p, qG γ q)‖ₑ) :=
     hmeasP.comp (continuous_qG γ).measurable
   have hR : ∀ᵐ a ∂μR, Matrix.of a ∈ RStab k r γ := ae_iff.mpr hμR.2.2.1
@@ -582,8 +582,8 @@ theorem int_cell (hγ : γ ∈ UH (Hpk k r)) (hrel : IsRelStab L γ) (hμG : IsH
     (hQ : PI.BesselPeriodGGP.IsQuotMeas μG (μR.map (fun x => fun i j => (γ⁻¹ * Matrix.of x * γ) i j)) νR)
     {p : PairSp k r} (hp : InPair L p) (hint : Integrable (fun y => Psi L w0 v v' ξ ξ' γ p y) μG) :
     ∫ a, ∫ x, PsiM L w0 v v' ξ ξ' γ (mStab γ (p, a), x) ∂νR ∂μR = ∫ y, Psi L w0 v v' ξ ξ' γ p y ∂μG := by
-  haveI : SigmaFinite μR := hμR.1
-  haveI : SigmaFinite νR := sigmaFinite_nuR hμG hμR hQ
+  have : SigmaFinite μR := hμR.1
+  have : SigmaFinite νR := sigmaFinite_nuR hμG hμR hQ
   have hsmP : StronglyMeasurable (fun y : Mt k r => PsiM L w0 v v' ξ ξ' γ (p, y)) :=
     (sm_PsiM L w0 v v' ξ ξ' γ).comp_measurable measurable_prodMk_left
   have hsmQ : StronglyMeasurable (fun q : Mt k r × Mt k r => PsiM L w0 v v' ξ ξ' γ (p, qG γ q)) :=
@@ -693,7 +693,7 @@ theorem amp_core' (L : LocBessel k r) {μG : Measure (Mt k r)} (hμG : IsHaarOn 
       PsiM L w0 v v' ξ ξ' γ (mStab γ q.1, q.2)) ((ν.prod μR).prod νR) := by
     refine ⟨hsm.aestronglyMeasurable, ?_⟩
     have hmeas : Measurable (fun q : (PairSp k r × Mt k r) × Mt k r =>
-        ‖PsiM L w0 v v' ξ ξ' γ (mStab γ q.1, q.2)‖ₑ) := hsm.measurable.enorm
+        ‖PsiM L w0 v v' ξ ξ' γ (mStab γ q.1, q.2)‖ₑ) := hsm.measurable.eNorm
     have hmeas2 : Measurable (fun pa : PairSp k r × Mt k r =>
         ∫⁻ x, ‖PsiM L w0 v v' ξ ξ' γ (mStab γ pa, x)‖ₑ ∂νR) :=
       hmeas.lintegral_prod_right'

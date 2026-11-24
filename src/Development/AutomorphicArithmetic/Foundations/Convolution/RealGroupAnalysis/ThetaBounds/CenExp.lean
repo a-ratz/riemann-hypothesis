@@ -120,7 +120,7 @@ private theorem norm_euE {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
     intro w
     split_ifs
     · change ‖Complex.exp (t * s w)‖ ^ 2 = _
-      rw [Complex.norm_exp, ← Real.exp_nat_mul]
+      rw [Complex.norm_exp, ← Real.exp_natCast_mul]
       simp
       ring_nf
     · simp

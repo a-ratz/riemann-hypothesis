@@ -66,7 +66,7 @@ theorem mem_of_mul (I : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host
     refine FractionalIdeal.mul_le.2 fun a ha b hb => ?_
     obtain ⟨c, rfl⟩ := (FractionalIdeal.mem_spanSingleton _).1 ha
     rw [smul_mul_assoc, mul_comm]
-    exact (FractionalIdeal.mem_coe).1 (Submodule.smul_mem _ c ((FractionalIdeal.mem_coe).2 (h b hb)))
+    exact (FractionalIdeal.mem_coeToSubmodule).1 (Submodule.smul_mem _ c ((FractionalIdeal.mem_coeToSubmodule).2 (h b hb)))
   have h2 : I ^ (-n) * (FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) y * I ^ n) ≤ I ^ (-n) * I ^ m :=
     mul_right_mono hle
   rw [mul_comm (FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 D.host.E)) y), ← mul_assoc, ← zpow_add₀ hI,
@@ -94,12 +94,12 @@ theorem coef_XS {T : D.host.E} (F0 : FlagG (VS D) D.R.rS T) {v : (VS D).V} (hv :
     | add x w _ _ hx hw =>
       obtain ⟨y1, h1, rfl⟩ := hx
       obtain ⟨y2, h2, rfl⟩ := hw
-      exact ⟨y1 + y2, fun a => (FractionalIdeal.mem_coe).1 (Submodule.add_mem _ ((FractionalIdeal.mem_coe).2 (h1 a))
-        ((FractionalIdeal.mem_coe).2 (h2 a))), by simp [add_smul, Finset.sum_add_distrib]⟩
+      exact ⟨y1 + y2, fun a => (FractionalIdeal.mem_coeToSubmodule).1 (Submodule.add_mem _ ((FractionalIdeal.mem_coeToSubmodule).2 (h1 a))
+        ((FractionalIdeal.mem_coeToSubmodule).2 (h2 a))), by simp [add_smul, Finset.sum_add_distrib]⟩
     | smul c x _ hx =>
       obtain ⟨y1, h1, rfl⟩ := hx
       refine ⟨fun a => (c : D.host.E) * y1 a, fun a => ?_, ?_⟩
-      · have := (FractionalIdeal.mem_coe).1 (Submodule.smul_mem _ c ((FractionalIdeal.mem_coe).2 (h1 a)))
+      · have := (FractionalIdeal.mem_coeToSubmodule).1 (Submodule.smul_mem _ c ((FractionalIdeal.mem_coeToSubmodule).2 (h1 a)))
         rwa [Algebra.smul_def] at this
       · rw [Finset.smul_sum]
         refine Finset.sum_congr rfl fun a _ => ?_

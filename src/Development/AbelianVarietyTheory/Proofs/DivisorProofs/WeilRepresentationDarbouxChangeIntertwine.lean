@@ -100,8 +100,8 @@ theorem isUSplitting_of_isOp (hψ : IsStd ψ) (hs : ∀ w, s (d.e w) = d'.e w) (
     refine adm_of_eqOn_schA (fun φ hφ => ?_) h2
     simp only [LinearMap.coe_comp, Function.comp_apply]
     rw [hom g φ hφ]
-  · letI : MeasurableSpace (κ → AF F) := borel _
-    haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  · let : MeasurableSpace (κ → AF F) := borel _
+    have : BorelSpace (κ → AF F) := ⟨rfl⟩
     obtain ⟨c, -, -, hc⟩ := hS.norm Measure.addHaar μ' inferInstance hμ'
     rw [hom g φ hφ, hc _ (h.pres g _ (hS.pres' φ hφ)), h.unit Measure.addHaar inferInstance g _ (hS.pres' φ hφ),
       ← hc _ (hS.pres' φ hφ), hS.right φ hφ]

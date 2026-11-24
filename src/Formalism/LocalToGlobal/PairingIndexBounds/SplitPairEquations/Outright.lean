@@ -437,10 +437,10 @@ theorem rowProjection_mem_lattice {M : Submodule (𝓞 D.host.E) (Fin N → D.ho
     refine mem_stdL.2 fun i => ?_
     by_cases hi : i.val < N' / 2
     · have e : (rowPM N N' A *ᵥ x) i = (A *ᵥ x) i := by
-        simp only [rowPM, LinearMap.coe_mk, AddHom.coe_mk, mulVec, dotProduct, of_apply, if_pos hi]
+        simp only [rowPM, LinearMap.coe_mk, AddHom.coe_mk, mulVec, dotProduct, of_apply, ite_eq_left hi]
       rw [e]; exact h i
     · have e : (rowPM N N' A *ᵥ x) i = 0 := by
-        simp only [rowPM, LinearMap.coe_mk, AddHom.coe_mk, mulVec, dotProduct, of_apply, if_neg hi, zero_mul,
+        simp only [rowPM, LinearMap.coe_mk, AddHom.coe_mk, mulVec, dotProduct, of_apply, ite_eq_right hi, zero_mul,
           Finset.sum_const_zero]
       rw [e]; exact Submodule.zero_mem _
 
@@ -897,7 +897,7 @@ theorem bet_add_right (x y y' : TaylorLogMetric.VC D N N') :
 
 theorem bet_phi (e : Matrix (Fin N') (Fin N') D.host.E) (x y : TaylorLogMetric.VC D N N') :
     bet D cc δ N N' (phi e x) (phi e y) = bet D cc δ N N' x (phi (letI := D.host.cmStar; eᴴ * e) y) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h1 : HH D cc δ N N' (phi e x) (phi e y) = HH D cc δ N N' x (phi (eᴴ * e) y) := by
     unfold HH
     rw [formV_phi, phi_mul]
@@ -909,7 +909,7 @@ theorem bet_phi (e : Matrix (Fin N') (Fin N') D.host.E) (x y : TaylorLogMetric.V
 
 theorem negpow (b : ℤ) : ((-1 : ℂ) ^ b) = Complex.exp ((Real.pi : ℂ) * Complex.I * (b : ℂ)) := by
   rw [show (Real.pi : ℂ) * Complex.I * (b : ℂ) = (b : ℂ) * ((Real.pi : ℂ) * Complex.I) by ring,
-    Complex.exp_int_mul, Complex.exp_pi_mul_I]
+    Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
 
 theorem al_of_q {z : TaylorLogMetric.VC D N N'} {m : ℤ} (h : qq D cc δ N N' z = m) : TaylorLogMetric.al D (TaylorLogMetric.tor0 D cc δ) z = (-1 : ℂ) ^ m := by
   show (-1 : ℂ) ^ (round (qq D cc δ N N' z)) = _
@@ -1152,7 +1152,7 @@ open NumberField Matrix
 namespace Formalism.L2.PairingIndexBounds.Eq.SqG
 
 theorem splitPair_of_gen (h : SplitPairGen) (D : Formalism.BasicNotions.D7) : SquareSplitPairs.SplitPair D := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro N' L' L'' hN h1 h2 n hn
   exact h D.host.E D.sp.cm.cmUnram N' L' L'' hN h1 h2 n hn
 

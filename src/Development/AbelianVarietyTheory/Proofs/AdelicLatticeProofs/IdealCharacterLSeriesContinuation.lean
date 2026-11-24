@@ -601,8 +601,8 @@ theorem tsum_idealLattice (K : Type) [Field K] [NumberField K] (J : (Ideal (𝓞
 
 theorem ideal_sum_periodic_dilate : ∀ (K : Type) [Field K] [NumberField K] (m : Ideal (𝓞 K)) (ψ : 𝓞 K → ℂ) (f : mixedSpace K → ℂ), m ≠ ⊥ → (∀ a b, a - b ∈ m → ψ a = ψ b) → ContDiff ℝ ∞ f → HasCompactSupport f → ∃ κ : ℂ, ∀ b : Ideal (𝓞 K), b ≠ ⊥ → b ⊔ m = ⊤ → ∀ A : ℕ, ∃ C : ℝ, ∀ t : ℝ, 0 < t → t ≤ 1 → ‖∑' α : b, ψ α * f (t • mixedEmbedding K ((α : 𝓞 K) : K)) - κ / (((Ideal.absNorm b : ℝ) * t ^ Module.finrank ℚ K : ℝ) : ℂ)‖ ≤ C * t ^ A := by
   intro K _ _ m ψ f hm hψ hf hfc
-  haveI : Finite (𝓞 K ⧸ m) := Ideal.finiteQuotientOfFreeOfNeBot m hm
-  haveI : Fintype (𝓞 K ⧸ m) := Fintype.ofFinite _
+  have : Finite (𝓞 K ⧸ m) := Ideal.finiteQuotientOfFreeOfNeBot m hm
+  have : Fintype (𝓞 K ⧸ m) := Fintype.ofFinite _
   set D : ℝ := 2⁻¹ ^ InfinitePlace.nrComplexPlaces K * √|(discr K : ℝ)| with hD
   refine ⟨(∑ r : 𝓞 K ⧸ m, ψ (Quotient.out r)) * (∫ x, f x) /
     (((Ideal.absNorm m : ℝ) * D : ℝ) : ℂ), fun b hb hbm A => ?_⟩
@@ -710,7 +710,7 @@ private theorem exists_periodic_mod_ideal_eq_character_div_infinity_type {K : Ty
     by_cases ha : a = 0
     · simp [ψ, ha, hm]
     · have h1 : Ideal.span {a} ⊔ m = ⊤ := by rw [hm, sup_top_eq]
-      simp only [ψ, h1, ne_eq, ha, not_false_eq_true, and_self, if_true]
+      simp only [ψ, h1, ne_eq, ha, not_false_eq_true, and_self, ite_true]
       rw [hXφ a ha (by rw [hm]; exact Submodule.mem_top)]
       exact mul_inv_cancel₀ (hφne a ha)
   refine ⟨ψ, ?_, ?_⟩
@@ -755,7 +755,7 @@ private theorem exists_periodic_mod_ideal_eq_character_div_infinity_type {K : Ty
         rw [h0, zero_mul] at eA
         exact mul_ne_zero (hφne r (fun h => by simp [h] at hr; exact hm ((Ideal.eq_top_iff_one _).2
           (by simpa using m.neg_mem hr)))) (hφne a ha0) eA.symm
-      simp only [ψ, ha, hb, ne_eq, ha0, hb0, not_false_eq_true, and_self, if_true]
+      simp only [ψ, ha, hb, ne_eq, ha0, hb0, not_false_eq_true, and_self, ite_true]
       have hφa := hφne a ha0
       have hφb := hφne b hb0
       rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_eq_div_iff hφa hφb]
@@ -765,7 +765,7 @@ private theorem exists_periodic_mod_ideal_eq_character_div_infinity_type {K : Ty
       simp [ψ, ha, hb, hm]
   · intro β hβ
     by_cases hc : Ideal.span {β} ⊔ m = ⊤
-    · simp only [ψ, hc, ne_eq, hβ, not_false_eq_true, and_self, if_true]
+    · simp only [ψ, hc, ne_eq, hβ, not_false_eq_true, and_self, ite_true]
       rw [mul_assoc, inv_mul_cancel₀ (hφne β hβ), mul_one]
     · have hm : m ≠ ⊤ := fun hm => hc (by rw [hm, sup_top_eq])
       simp [ψ, hc, hm, hXcop _ hc]
@@ -843,7 +843,7 @@ open scoped ContDiff nonZeroDivisors in
 private theorem finite_setOf_ringOfIntegers_mixedEmbedding_mem_compact {K : Type} [Field K] [NumberField K]
     (C : Set (mixedSpace K)) (hC : IsCompact C) :
     {β : 𝓞 K | mixedEmbedding K (β : K) ∈ C}.Finite := by
-  haveI : DiscreteTopology (mixedEmbedding.integerLattice K).toAddSubgroup :=
+  have : DiscreteTopology (mixedEmbedding.integerLattice K).toAddSubgroup :=
     (inferInstance : DiscreteTopology (mixedEmbedding.integerLattice K))
   have hcl : IsClosed ((mixedEmbedding.integerLattice K : Submodule ℤ (mixedSpace K)) :
       Set (mixedSpace K)) :=
@@ -957,7 +957,7 @@ private theorem finite_support_mul_weight_absNorm_of_bounded_support {K : Type} 
     (X : Ideal (𝓞 K) → ℂ) (wt : ℝ → ℂ) (a b : ℝ)
     (hw : ∀ y, wt y ≠ 0 → a ≤ y ∧ y ≤ b) (t : ℝ) (ht : 0 < t) :
     (Function.support fun I : Ideal (𝓞 K) => X I * wt (t * (Ideal.absNorm I : ℝ))).Finite := by
-  refine (Ideal.finite_setOfPred_absNorm_le (⌊b / t⌋₊)).subset ?_
+  refine (Ring.HasFiniteQuotients.finite_absNorm_le (⌊b / t⌋₊)).subset ?_
   intro I hI
   have h1 : wt (t * (Ideal.absNorm I : ℝ)) ≠ 0 := right_ne_zero_of_mul hI
   have h2 := (hw _ h1).2
@@ -1061,7 +1061,7 @@ theorem _root_.GlobalTheory.smoothedSum_main_term_representatives : ∀ (K : Typ
       refine ((finite_setOf_ringOfIntegers_mixedEmbedding_mem_compact C hC).preimage
         (f := fun β : (B c : Ideal (𝓞 K)) => (β : 𝓞 K)) Subtype.val_injective.injOn).subset ?_
       intro β hβ
-      simp only [Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq]
       have hh : h (mixedEmbedding K ((β : 𝓞 K) : K)) ≠ 0 := fun h0 => hβ (by simp [h0])
       have hw : wt (t * (Ideal.absNorm (Ideal.span {(β : 𝓞 K)}) : ℝ) /
           (Ideal.absNorm (B c : Ideal (𝓞 K)) : ℝ)) ≠ 0 := fun h0 => hβ (by
@@ -1265,7 +1265,7 @@ theorem _root_.GlobalTheory.idealCharacter_LSeries_continuation : ∀ (K : Type)
   have hmain := _root_.GlobalTheory.smoothedSum_main_term_representatives K m X φ hm hX0 hXmul
     hXn hXz hφmul hφh hφs hφn hβ
   obtain ⟨hcount, hsum⟩ := _root_.GlobalTheory.countable_ideal_and_summable_absNorm_rpow K
-  haveI := hcount
+  have := hcount
   choose b hb using _root_.GlobalTheory.exists_integral_ideal_in_class_coprime K m hm
   have hbij : Function.Bijective fun c => ClassGroup.mk0 (b c) := by
     have : (fun c => ClassGroup.mk0 (b c)) = id := funext fun c => (hb c).1

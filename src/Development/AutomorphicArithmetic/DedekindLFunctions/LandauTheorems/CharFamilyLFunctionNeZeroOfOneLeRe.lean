@@ -51,7 +51,7 @@ namespace Deduction
 
 theorem charFamily_LFunction_ne_zero_of_one_le_re (F : CharFamily) (i : F.ι) (s : ℂ) (hs : 1 ≤ s.re) :
     DirichletCharacter.LFunction (F.χ i) s ≠ 0 := by
-  haveI := F.nz i
+  have := F.nz i
   rcases F.adm i with h | h
   · have key : ∀ (M : ℕ) [NeZero M] (ψ : DirichletCharacter ℂ M), M = 1 →
         DirichletCharacter.LFunction ψ s ≠ 0 := by

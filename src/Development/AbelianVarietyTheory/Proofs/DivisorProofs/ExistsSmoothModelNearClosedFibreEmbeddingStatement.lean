@@ -97,7 +97,7 @@ namespace ClosedInj
 theorem epi_spMap_field {Ω Ω' : Type} [Field Ω] [Field Ω'] (io : Ω →+* Ω') : Epi (spMap io) := by
   have : Flat (spMap io) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
-    letI := io.toAlgebra
+    let := io.toAlgebra
     exact RingHom.flat_algebraMap_iff.mpr inferInstance
   have : Surjective (spMap io) := ⟨fun t ↦ ⟨IsLocalRing.closedPoint Ω', Subsingleton.elim _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
@@ -248,7 +248,7 @@ theorem smooth_affineSpace_sp (R : Type) [CommRing R] (g : ℕ) : Smooth (𝔸(F
       Spec.map (CommRingCat.ofHom MvPolynomial.C) ≫ (Sp R).isoSpec.inv := by
     rw [← AffineSpace.isoOfIsAffine_inv_over (n := Fin g) (S := Sp R), Iso.hom_inv_id_assoc]
   rw [e]
-  haveI : Algebra.Smooth Γ(Sp R, ⊤) (MvPolynomial (Fin g) Γ(Sp R, ⊤)) := ⟨inferInstance, inferInstance⟩
+  have : Algebra.Smooth Γ(Sp R, ⊤) (MvPolynomial (Fin g) Γ(Sp R, ⊤)) := ⟨inferInstance, inferInstance⟩
   have : Smooth (Spec.map (CommRingCat.ofHom (MvPolynomial.C (R := Γ(Sp R, ⊤)) (σ := Fin g)))) := by
     rw [HasRingHomProperty.Spec_iff (P := @Smooth)]
     exact RingHom.smooth_algebraMap.mpr inferInstance
@@ -260,9 +260,9 @@ end GlobalTheory.Mum.FibEt
 
 theorem GlobalTheory.Mum.fibre_etale_near : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (M : Modif R) (G' : Over M.S) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (E : Emb M.π G') (P' : Scheme.{0}) (b : P' ⟶ PSpace R E.N) (X : E.H.toScheme.Opens) (a : X.toScheme ⟶ P'), a ≫ b = X.ι ≫ E.f → ∀ (x : P') (y : E.Y.left), E.j y = b x → (b ≫ PSpace.str R E.N) x = closedPoint R → ∀ (W0 : (PSpace R E.N).Opens) (g : ℕ) (τ0 : W0.toScheme ⟶ 𝔸(Fin g; Sp R)) (O : E.Y.left.Opens) (e : O.toScheme ⟶ pullback (𝔸(Fin g; Sp R) ↘ Sp R) (spMap (residue R))), y ∈ O → (O : Set E.Y.left) ⊆ E.j ⁻¹' W0 → τ0 ≫ (𝔸(Fin g; Sp R) ↘ Sp R) = W0.ι ≫ PSpace.str R E.N → Etale e → e ≫ pullback.snd _ _ = O.ι ≫ E.Y.hom → (∀ (T : Scheme.{0}) (t : T ⟶ O.toScheme) (w : T ⟶ W0.toScheme), w ≫ W0.ι = t ≫ O.ι ≫ E.j → t ≫ e ≫ pullback.fst _ _ = w ≫ τ0) → ∀ (c : (a ⁻¹ᵁ (b ⁻¹ᵁ W0)).toScheme ⟶ pullback (𝔸(Fin g; Sp R) ↘ Sp R) M.π), c ≫ pullback.fst _ _ = (a ∣_ (b ⁻¹ᵁ W0)) ≫ (b ∣_ W0) ≫ τ0 → c ≫ pullback.snd _ _ = (a ⁻¹ᵁ (b ⁻¹ᵁ W0)).ι ≫ X.ι ≫ E.H.ι ≫ G'.hom → ∀ z : (a ⁻¹ᵁ (b ⁻¹ᵁ W0)).toScheme, ((a ⁻¹ᵁ (b ⁻¹ᵁ W0)).ι ≫ a) z = x → ∃ U : (a ⁻¹ᵁ (b ⁻¹ᵁ W0)).toScheme.Opens, z ∈ U ∧ Etale (U.ι ≫ c) := by
   intro R _ _ _ hR M G' _ _ hG E P' b X a hab x y hyb hx0 W0 g τ0 O e hyO hOW hτ0 he he2 he3 c hc1 hc2 z hz
-  haveI : Smooth G'.hom := hG.smooth
-  haveI : Smooth (𝔸(Fin g; Sp R) ↘ Sp R) := FibEt.smooth_affineSpace_sp R g
-  haveI : Etale e := he
+  have : Smooth G'.hom := hG.smooth
+  have : Smooth (𝔸(Fin g; Sp R) ↘ Sp R) := FibEt.smooth_affineSpace_sp R g
+  have : Etale e := he
   let iV : (a ⁻¹ᵁ (b ⁻¹ᵁ W0)).toScheme ⟶ G'.left := (a ⁻¹ᵁ (b ⁻¹ᵁ W0)).ι ≫ X.ι ≫ E.H.ι
   let p : (a ⁻¹ᵁ (b ⁻¹ᵁ W0)).toScheme ⟶ M.S := iV ≫ G'.hom
   have hh : c ≫ pullback.snd (𝔸(Fin g; Sp R) ↘ Sp R) M.π = p := by
@@ -302,7 +302,7 @@ theorem GlobalTheory.Mum.fibre_etale_near : ∀ (R : Type) [CommRing R] [IsDomai
     erw [← hl2]
     rw [reassoc_of% E1, hab]
   have hgmw : (gm ≫ pullback.fst E.Y.hom k') w = y := by
-    haveI : IsImmersion E.j := E.imm
+    have : IsImmersion E.j := E.imm
     apply E.j.isEmbedding.injective
     have h := congrArg (fun f : pullback p x' ⟶ PSpace R E.N => f w) E2
     simp only [Scheme.Hom.comp_apply] at h hz ⊢
@@ -317,7 +317,7 @@ theorem GlobalTheory.Mum.fibre_etale_near : ∀ (R : Type) [CommRing R] [IsDomai
   let eΩ : Oy ⟶ pullback (pullback.snd A (spMap (residue R))) k' :=
     pullback.map (O.ι ≫ E.Y.hom) k' (pullback.snd A (spMap (residue R))) k' e (𝟙 _) (𝟙 _)
       (by rw [Category.comp_id, he2]) (by simp)
-  haveI : MorphismProperty.IsStableUnderComposition @Etale := MorphismProperty.IsMultiplicative.toIsStableUnderComposition
+  have : MorphismProperty.IsStableUnderComposition @Etale := MorphismProperty.IsMultiplicative.toIsStableUnderComposition
   have heΩ : Etale eΩ :=
     MorphismProperty.pullbackMap (P := @Etale) (f := O.ι ≫ E.Y.hom) (g := k') (f' := pullback.snd A (spMap (residue R)))
       (g' := k') (i₁ := e) (i₂ := 𝟙 _) he inferInstance he2.symm (by simp)
@@ -347,13 +347,13 @@ theorem GlobalTheory.Mum.fibre_etale_near : ∀ (R : Type) [CommRing R] [IsDomai
   have hψ2 : ψ ≫ pullback.snd (O.ι ≫ E.Y.hom) k' = Wo.ι ≫ gm ≫ pullback.snd E.Y.hom k' := pullback.lift_snd _ _ _
   let jO : Oy ⟶ pullback E.Y.hom k' :=
     pullback.map (O.ι ≫ E.Y.hom) k' E.Y.hom k' O.ι (𝟙 _) (𝟙 _) (by simp) (by simp)
-  haveI : IsOpenImmersion jO :=
+  have : IsOpenImmersion jO :=
     MorphismProperty.pullbackMap (P := @IsOpenImmersion) (f := O.ι ≫ E.Y.hom) (g := k') (f' := E.Y.hom) (g' := k')
       (i₁ := O.ι) (i₂ := 𝟙 _) inferInstance inferInstance rfl (by simp)
-  haveI : IsOpenImmersion mG :=
+  have : IsOpenImmersion mG :=
     MorphismProperty.pullbackMap (P := @IsOpenImmersion) (f := p) (g := x') (f' := G'.hom) (g' := x')
       (i₁ := iV) (i₂ := 𝟙 _) (by dsimp only [iV]; infer_instance) inferInstance rfl (by simp)
-  haveI : IsIso eG.hom.left := by
+  have : IsIso eG.hom.left := by
     show IsIso ((Over.forget _).map eG.hom); infer_instance
   have hψj : ψ ≫ jO = Wo.ι ≫ gm := by
     apply pullback.hom_ext
@@ -364,8 +364,8 @@ theorem GlobalTheory.Mum.fibre_etale_near : ∀ (R : Type) [CommRing R] [IsDomai
     · dsimp only [jO]
       rw [Category.assoc, FibEt.map_snd', Category.comp_id, hψ2]
       simp only [Category.assoc]
-  haveI : IsOpenImmersion (ψ ≫ jO) := by rw [hψj]; dsimp only [gm]; infer_instance
-  haveI : IsOpenImmersion ψ := IsOpenImmersion.of_comp ψ jO
+  have : IsOpenImmersion (ψ ≫ jO) := by rw [hψj]; dsimp only [gm]; infer_instance
+  have : IsOpenImmersion ψ := IsOpenImmersion.of_comp ψ jO
   have hEq : Wo.ι ≫ pullback.map p x' (pullback.snd A M.π) x' c (𝟙 _) (𝟙 _) (by rw [Category.comp_id, hh]) (by simp) = ψ ≫ eΩ ≫ θ := by
     apply pullback.hom_ext
     · apply pullback.hom_ext
@@ -653,7 +653,7 @@ theorem exists_open_etale_restrict_of_universallyClosed : ∀ (X P' T : Scheme.{
       intro w _
       exact TopologicalSpace.Opens.mem_iSup.mpr ⟨w, hwU w⟩
     · rw [← Category.assoc, ← Scheme.Hom.resLE_comp_ι (X.homOfLE hle) (le_refl ((X.homOfLE hle) ⁻¹ᵁ U w)), Category.assoc]
-      haveI : IsOpenImmersion ((X.homOfLE hle).resLE (U w) ((X.homOfLE hle) ⁻¹ᵁ U w) le_rfl) := by
+      have : IsOpenImmersion ((X.homOfLE hle).resLE (U w) ((X.homOfLE hle) ⁻¹ᵁ U w) le_rfl) := by
         have h2 : IsOpenImmersion ((X.homOfLE hle).resLE (U w) ((X.homOfLE hle) ⁻¹ᵁ U w) le_rfl ≫ (U w).ι) := by
           rw [Scheme.Hom.resLE_comp_ι]; infer_instance
         exact IsOpenImmersion.of_comp _ (U w).ι
@@ -790,11 +790,11 @@ namespace GlobalTheory.Mum
 
 theorem etale_chart_at_closed_point : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (M : Modif R) (G' : Over M.S) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (E : Emb M.π G') (P' : Scheme.{0}) (b : P' ⟶ PSpace R E.N) (X : E.H.toScheme.Opens) (a : X.toScheme ⟶ P'), IsSeparated b → LocallyOfFiniteType b → IsProper a → (∀ V : P'.Opens, Function.Bijective (a.app V).hom) → a ≫ b = X.ι ≫ E.f → Function.Bijective M.π.appTop.hom → Surjective M.π → ∀ x : P', IsClosed ({x} : Set P') → (b ≫ PSpace.str R E.N) x = closedPoint R → (∀ (Ω : Type) [Field Ω] (p p' : Sp Ω ⟶ X.toScheme), Set.range (p ≫ a) = {x} → p ≫ a = p' ≫ a → p ≫ X.ι ≫ E.H.ι ≫ G'.hom = p' ≫ X.ι ≫ E.H.ι ≫ G'.hom → p = p') → (∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (ξ : Sp Ω ⟶ P') (s : Sp Ω ⟶ M.S), Set.range ξ = {x} → ξ ≫ b ≫ PSpace.str R E.N = s ≫ M.π → ∃ p : Sp Ω ⟶ X.toScheme, p ≫ a = ξ ∧ p ≫ X.ι ≫ E.H.ι ≫ G'.hom = s) → ∃ V : P'.Opens, x ∈ V ∧ Smooth (V.ι ≫ b ≫ PSpace.str R E.N) ∧ IsPullback (a ∣_ V) ((a ⁻¹ᵁ V).ι ≫ X.ι ≫ E.H.ι ≫ G'.hom) (V.ι ≫ b ≫ PSpace.str R E.N) M.π := by
   intro R _ _ _ hR M G' _ _ hG E P' b X a hbsep hblft ha hsec hab hπΓ hπs x hx hx0 hinj hlift
-  haveI := hbsep
-  haveI := hblft
-  haveI := ha
-  haveI : IsProper M.π := M.proper
-  haveI : IsProper (PSpace.str R E.N) := isProper_str R E.N
+  have := hbsep
+  have := hblft
+  have := ha
+  have : IsProper M.π := M.proper
+  have : IsProper (PSpace.str R E.N) := isProper_str R E.N
   have key : a ≫ b ≫ PSpace.str R E.N = X.ι ≫ E.H.ι ≫ G'.hom ≫ M.π := by
     rw [reassoc_of% hab, E.f_over]
   obtain ⟨z, hz⟩ := GlobalTheory.T.exists_mem_fiber_of_geometric_lifting R M.S P' X.toScheme M.π (b ≫ PSpace.str R E.N) a (X.ι ≫ E.H.ι ≫ G'.hom) hπs x hx0 hlift
@@ -897,8 +897,8 @@ theorem etale_chart_at_closed_point : ∀ (R : Type) [CommRing R] [IsDomain R] [
     ((a ⁻¹ᵁ W).ι ≫ X.ι ≫ E.H.ι ≫ G'.hom) g τ c M.proper hπs hπΓ hLFT hSep hPr hSec hτ hc1 hc2 (hWet hle)
     x' hcl hx'0 hinj' hlift'
   refine ⟨W.ι ''ᵁ V, ⟨x', hxV, hx'⟩, ?_, ?_⟩
-  · haveI : Etale (V.ι ≫ τ) := hVet
-    haveI : Smooth (𝔸(Fin g; Sp R) ↘ Sp R) := GlobalTheory.Mum.EtChart.affineSpace_smooth (Sp R) g
+  · have : Etale (V.ι ≫ τ) := hVet
+    have : Smooth (𝔸(Fin g; Sp R) ↘ Sp R) := GlobalTheory.Mum.EtChart.affineSpace_smooth (Sp R) g
     have e1 : (W.ι ''ᵁ V).ι ≫ b ≫ PSpace.str R E.N =
         (W.ι.isoImage V).inv ≫ (V.ι ≫ τ) ≫ (𝔸(Fin g; Sp R) ↘ Sp R) := by
       rw [Category.assoc, hτ, Iso.eq_inv_comp, ← Category.assoc, Scheme.Hom.isoImage_hom_ι, Category.assoc]
@@ -1141,7 +1141,7 @@ theorem GlobalTheory.Mum.smooth_iSup_comp (P' T : Scheme.{0}) (q : P' ⟶ T) (I 
       exact ⟨by rintro ⟨x, hx, rfl⟩; exact hx, fun hy => ⟨⟨y, hle i hy⟩, hy, rfl⟩⟩
     rw [← Category.assoc, ← IsOpenImmersion.isoOfRangeEq_hom_fac ((U.ι ⁻¹ᵁ V i).ι ≫ U.ι) (V i).ι hrange,
       Category.assoc]
-    haveI := h i
+    have := h i
     infer_instance
 end -- clump:auto
 end -- clump:auto
@@ -1224,7 +1224,7 @@ theorem exists_near : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], 
     have : IsProper (PSpace.str R E.N) := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R E.N
     infer_instance
   have hqc : QuasiCompact (U.ι ≫ b ≫ PSpace.str R E.N) := by
-    haveI := hPn
+    have := hPn
     have : CompactSpace U := isCompact_iff_compactSpace.mp (TopologicalSpace.NoetherianSpace.isCompact (U : Set P'))
     exact (quasiCompact_iff_compactSpace _).2 this
   let e := hUp.isoPullback

@@ -108,7 +108,7 @@ theorem sm_of_weak_deriv_closed : ∀ (V : Type) [NormedAddCommGroup V] [NormedS
     have hD : ∀ z, D z = g z := fun z => rfl
     refine ⟨D, fun z => hg z, hasFDerivAt_of_norming l h1 h2 _ _ ?_ ?_⟩
     · refine continuous_clm_apply.2 fun z => ?_
-      simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
+      simp only [sub_apply, ContinuousLinearMap.comp_apply,
         ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.smulRight_apply]
       have a1 := h.2.2.2 (D z)
       have a2 := h.2.2.2 f
@@ -142,7 +142,7 @@ theorem sm_of_weak_deriv_closed : ∀ (V : Type) [NormedAddCommGroup V] [NormedS
       obtain ⟨D, hD, hF⟩ := key f hf
       rw [Nat.cast_succ, contDiff_succ_iff_fderiv_apply]
       refine ⟨fun v => (hF v).differentiableAt, by simp, fun z => ?_⟩
-      simp only [(hF _).fderiv, ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
+      simp only [(hF _).fderiv, sub_apply, ContinuousLinearMap.comp_apply,
         ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.smulRight_apply]
       exact (ih _ (hD z)).sub ((om.contDiff.clm_apply contDiff_const).smul ((ih f hf).const_smul _))
   intro f hf

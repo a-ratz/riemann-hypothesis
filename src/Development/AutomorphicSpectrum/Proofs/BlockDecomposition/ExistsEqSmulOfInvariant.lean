@@ -138,9 +138,9 @@ namespace GlobalTheory.CompanionTheory.OrbUniq
 variable {D : D7} {r t : ℕ}
 
 theorem ae_facts (D : D7) : LocallyCompactSpace (AE D) ∧ SecondCountableTopology (AE D) ∧ T2Space (AE D) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele D.host.F
-  haveI : LocallyCompactSpace (AF D.host.F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele D.host.F
+  have : LocallyCompactSpace (AF D.host.F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele D.host.F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (AF D.host.F)
   exact ⟨e.isClosedEmbedding.locallyCompactSpace, e.secondCountableTopology, e.isEmbedding.t2Space⟩
 
@@ -159,7 +159,7 @@ theorem mt_one (V : HSp D) : Formalism.L2.Theta.mt V 1 = 1 := by
   simp [Formalism.L2.Theta.mt, map_one]
 
 theorem continuous_mt (V : HSp D) : Continuous (Formalism.L2.Theta.mt V) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem smul_sub_one_mul {R : Type*} [CommRing R] {n : ℕ} (e : R) (A B : Matrix (Fin n) (Fin n) R)
     (hA : e • (A - 1) = A - 1) (hB : e • (B - 1) = B - 1) : e • (A * B - 1) = A * B - 1 := by
@@ -190,7 +190,7 @@ def gS (V : HSp D) (e : AE D) : Subgroup (GA D V) where
 
 theorem isClosed_gS (V : HSp D) (e : AE D) : IsClosed (gS V e : Set (GA D V)) := by
   obtain ⟨h1, h2, h3, h4, h5⟩ := mx_facts D V.rank V.rank
-  haveI : ContinuousSub (Matrix (Fin V.rank) (Fin V.rank) (AE D)) := @IsTopologicalAddGroup.to_continuousSub _ _ _ h4
+  have : ContinuousSub (Matrix (Fin V.rank) (Fin V.rank) (AE D)) := @IsTopologicalAddGroup.to_continuousSub _ _ _ h4
   have hc : Continuous fun h : GA D V => Formalism.L2.Theta.mt V h - 1 := (continuous_mt V).sub continuous_const
   exact isClosed_eq (hc.const_smul e) hc
 
@@ -274,16 +274,16 @@ theorem uniq_of_trans : IdemEx → NullSing → Trans → Uniq := by
   obtain ⟨p1, p2, p3, p4, p5⟩ := mx_facts D V.rank r
   obtain ⟨q1, q2, q3, q4, q5⟩ := mx_facts D V.rank t
   obtain ⟨s1, s2, s3, s4, s5⟩ := mx_facts D r t
-  haveI hGB : BorelSpace (GA D V) := ⟨rfl⟩
+  have hGB : BorelSpace (GA D V) := ⟨rfl⟩
 
-  haveI : LocallyCompactSpace (gS V e) := (isClosed_gS V e).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (gS V e) := (isClosed_gS V e).isClosedEmbedding_subtypeVal.locallyCompactSpace
   let m₁ : Measure (gS V e) := Measure.haar
   let m₂ : Measure (Mx D r t) := Measure.addHaar
   let T : (gS V e × Mx D r t) → (Mx D V.rank r × Mx D V.rank t) → (Mx D V.rank r × Mx D V.rank t) :=
     fun g => act V e (g.1 : GA D V) g.2
   have hTc : Continuous fun p : (gS V e × Mx D r t) × (Mx D V.rank r × Mx D V.rank t) => T p.1 p.2 :=
     (continuous_act (r := r) (t := t) V e).comp
-      (((continuous_subtype_val.comp (continuous_fst.comp continuous_fst)).prodMk
+      (((continuous_subtypeVal.comp (continuous_fst.comp continuous_fst)).prodMk
         (continuous_snd.comp continuous_fst)).prodMk continuous_snd)
   have hTm : Measurable fun p : (gS V e × Mx D r t) × (Mx D V.rank r × Mx D V.rank t) => T p.1 p.2 :=
     hTc.measurable
@@ -293,13 +293,13 @@ theorem uniq_of_trans : IdemEx → NullSing → Trans → Uniq := by
     have h1 : m₁ Set.univ ≠ 0 := (isOpen_univ.measure_pos m₁ Set.univ_nonempty).ne'
     have h2 : m₂ Set.univ ≠ 0 := (isOpen_univ.measure_pos m₂ Set.univ_nonempty).ne'
     have h3 := congrArg (fun μ : Measure (gS V e × Mx D r t) => μ (Set.univ ×ˢ Set.univ)) h0
-    simp only [Measure.prod_prod, Measure.coe_zero, Pi.zero_apply] at h3
+    simp only [Measure.prod_prod, FunLike.coe_zero, Pi.zero_apply] at h3
     exact mul_ne_zero h1 h2 h3
 
-  haveI := hν.fin
-  haveI := hν'.fin
-  haveI : SigmaFinite ν := inferInstance
-  haveI : SigmaFinite ν' := inferInstance
+  have := hν.fin
+  have := hν'.fin
+  have : SigmaFinite ν := inferInstance
+  have : SigmaFinite ν' := inferInstance
   have hinv : ∀ g : gS V e × Mx D r t, ∃ g', ∀ y, T g' (T g y) = y ∧ T g (T g' y) = y := by
     intro g
     refine ⟨(g.1⁻¹, -g.2), fun y => ⟨?_, ?_⟩⟩
@@ -318,7 +318,7 @@ theorem uniq_of_trans : IdemEx → NullSing → Trans → Uniq := by
       (measure_union_null (hN D r t V b₀ hb S e he μ hμ) hμ.supp)
     intro z hz
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
     exact hz hc
   have htr : ∀ y₀ ∈ O, ∀ y ∈ O, ∃ φ : (gS V e × Mx D r t) → (gS V e × Mx D r t),
       Measure.QuasiMeasurePreserving φ (m₁.prod m₂) (m₁.prod m₂) ∧ ∀ g, T g y = T (φ g) y₀ := by

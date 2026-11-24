@@ -146,7 +146,7 @@ theorem continuousSMul_integer :
   refine continuousSMul_of_algebraMap _ _ ?_
   rw [IsScalarTower.algebraMap_eq 𝒪[v.adicCompletion K] (v.adicCompletion K)]
   exact (continuous_algebraMap (v.adicCompletion K) (w.adicCompletion L)).comp
-    continuous_subtype_val
+    continuous_subtypeVal
 
 theorem isClosed_integralClosure :
     IsClosed ((integralClosure 𝒪[v.adicCompletion K] (w.adicCompletion L) :

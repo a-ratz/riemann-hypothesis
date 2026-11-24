@@ -75,8 +75,8 @@ theorem app_constFn_of_comm {R S : Type} [CommRing R] [CommRing S] (x₀ : R →
 
 theorem exists_locDer_of_smooth : ∀ (R : Type) [CommRing R] (x₀ : R →+* ℂ) (Y X : Scheme.{0}) (q : Y ⟶ Sp ℂ) (p : X ⟶ Sp R) (m : Y ⟶ X) (D : R → ℂ) (W₀ : X.Opens), Smooth p → m ≫ p = q ≫ spMap x₀ → IsDer x₀ D → IsAffineOpen W₀ → ∃ d, LocDer q p m D W₀ d := by
   intro R _ x₀ Y X q p m D W₀ hp hm hD hW
-  letI : Algebra R Γ(X, W₀) := (liftConstHom p W₀).toAlgebra
-  haveI : Algebra.Smooth R Γ(X, W₀) := liftConstHom_smooth p W₀ hp hW
+  let : Algebra R Γ(X, W₀) := (liftConstHom p W₀).toAlgebra
+  have : Algebra.Smooth R Γ(X, W₀) := liftConstHom_smooth p W₀ hp hW
   have hc : ∀ a, (m.app W₀).hom (algebraMap R Γ(X, W₀) a) = liftConstHom q (m ⁻¹ᵁ W₀) (x₀ a) :=
     fun a => app_constFn_of_comm x₀ q p m hm W₀ a
   obtain ⟨d₀, h1, h2, h3⟩ := _root_.GlobalTheory.KS.exists_derivation_extend_of_formallySmooth R Γ(X, W₀) Γ(Y, m ⁻¹ᵁ W₀) (m.app W₀).hom

@@ -66,7 +66,7 @@ namespace GlobalTheory.ConstSzRows
 
 theorem supConst_size_rows : ∀ (D : D7) (M : ℕ) (Lb w : ℝ), 1 ≤ M → 1 ≤ Lb → Real.log M ≤ 30 * Lb → fieldSz D.host.E ≤ 3 * Lb → Real.log (D.R.f * D.R.r) ≤ Lb → 1 ≤ w → Real.log w ≤ 25 * Lb → 1 ≤ GlobalTheory.LevGeo.supConst D.host.E D.R.r D.host.d M w ∧ Real.log (GlobalTheory.LevGeo.supConst D.host.E D.R.r D.host.d M w) ≤ 4000 * ((D.R.f : ℝ) * D.R.r * Lb) ^ 3 := by
   intro D M Lb w hM hLb hMl hsz hfrl hw hwl
-  haveI : IsCMField D.host.E := inferInstance
+  have : IsCMField D.host.E := inferInstance
   have hfd := GlobalTheory.FramedCMPointCompare.fdeg_host D
   have hf0 : 1 ≤ D.R.f := by have : 0 < D.R.n := D.R.ord_pos; unfold Formalism.BasicNotions.Ranks.f; omega
   have hr2 : 2 ≤ D.R.r := by

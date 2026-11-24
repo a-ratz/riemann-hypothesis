@@ -97,8 +97,8 @@ theorem exists_redDual : ∃ r' : Mod B G hG →ₛₗ[(WittVector.constantCoeff
       Module.Dual k G.dual.RigExt,
     (∀ l m, r' l (B.red G.dual (dual_conn hG) m) = WittVector.constantCoeff (l m)) ∧
       Function.Surjective r' ∧ ∀ l, r' l = 0 ↔ ∃ l', l = p • l' := by
-  haveI := B.free G.dual (dual_conn hG)
-  haveI := B.finite G.dual (dual_conn hG)
+  have := B.free G.dual (dual_conn hG)
+  have := B.finite G.dual (dual_conn hG)
   exact wittDual_reduction p k _ _ (B.red G.dual (dual_conn hG))
     (B.red_surjective G.dual (dual_conn hG)) (B.red_eq_zero G.dual (dual_conn hG))
 

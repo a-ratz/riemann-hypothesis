@@ -50,8 +50,8 @@ open CategoryTheory Limits AlgebraicGeometry GlobalTheory.EtC LateralTheory.E.t_
 namespace LateralTheory.E.KillCokPf.Lem
 
 theorem et_isOpenMap {D D₁ : CommRingCat.{0}} (e : D ⟶ D₁) (he : Et e) : IsOpenMap (PrimeSpectrum.comap e.hom) := by
-  letI := e.hom.toAlgebra
-  haveI : Algebra.Etale D D₁ := he
+  let := e.hom.toAlgebra
+  have : Algebra.Etale D D₁ := he
   exact PrimeSpectrum.isOpenMap_comap_of_hasGoingDown_of_finitePresentation (R := D) (S := D₁)
 
 theorem finite_subcover {D : CommRingCat.{0}} (D₁ : PrimeSpectrum D → CommRingCat.{0}) (e : ∀ r, D ⟶ D₁ r)

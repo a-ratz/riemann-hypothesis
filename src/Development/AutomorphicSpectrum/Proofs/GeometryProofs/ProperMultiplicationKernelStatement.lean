@@ -320,7 +320,7 @@ theorem hm_inj {A B : Type} [CommRing A] [Algebra k A] [CommRing B] [Algebra k B
     (h : hm φ = hm ψ) : φ = ψ := by
   have e : Spec.map (CommRingCat.ofHom (φ : A →+* B)) = Spec.map (CommRingCat.ofHom (ψ : A →+* B)) :=
     congrArg (fun q => q.left) h
-  exact AlgHom.coe_ringHom_injective (congrArg CommRingCat.Hom.hom (Spec.map_injective e))
+  exact AlgHom.toRingHom_injective (congrArg CommRingCat.Hom.hom (Spec.map_injective e))
 
 theorem hm_surj {A B : Type} [CommRing A] [Algebra k A] [CommRing B] [Algebra k B] (y : Ov k B ⟶ Ov k A) :
     ∃ φ : A →ₐ[k] B, hm φ = y := by
@@ -462,7 +462,7 @@ theorem aeval_two {d : ℕ} (a b : Fin d → R) (ha : ∀ i j, a i * a j = 0) (h
       · simp
 
 theorem span_sq {I : Type} (c : I → R) (hc : ∀ i j, c i * c j = 0) : Ideal.span (Set.range c) ^ 2 = ⊥ := by
-  rw [pow_two, Ideal.span_mul_span', Ideal.span_eq_bot]
+  rw [pow_two, Ideal.span_mul_span, Ideal.span_eq_bot]
   rintro _ ⟨_, ⟨i, rfl⟩, _, ⟨j, rfl⟩, rfl⟩
   exact hc i j
 
@@ -583,7 +583,7 @@ theorem exists_dual (k : Type) [Field k] : ∃ (x : Jet k Unit 1) (θ : DualNumb
   · rw [DualNumber.lift_apply_apply, TrivSqZeroExt.fst_inr, map_zero, zero_add, TrivSqZeroExt.snd_inr,
       Algebra.smul_def, Algebra.ofId_apply]
   · have h5 : (jetTan () : Jet k Unit (0 + 1) →ₐ[k] DualNumber k) (Ideal.Quotient.mk _ (MvPolynomial.X ())) =
-        DualNumber.eps := (MvPolynomial.aeval_X _ _).trans (if_pos rfl)
+        DualNumber.eps := (MvPolynomial.aeval_X _ _).trans (ite_eq_left rfl)
     have h4 := congrArg (jetTan () : Jet k Unit (0 + 1) →ₐ[k] DualNumber k) hc
     rw [map_smul, h5, map_zero] at h4
     simpa using congrArg TrivSqZeroExt.snd h4
@@ -954,7 +954,7 @@ theorem exists_hopf {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] [IsCommMon
   have hid : hm (AlgHom.id k A) ≫ κ = κ := by rw [homAt_id, Category.id_comp]
   have cg : ∀ {R : Type} [CommRing R] [Algebra k R] {φ ψ : A →ₐ[k] R}, φ = ψ → hm φ ≫ κ = hm ψ ≫ κ :=
     fun h => by rw [h]
-  letI : Bialgebra k A := Bialgebra.ofAlgHom Δ ε
+  let : Bialgebra k A := Bialgebra.ofAlgHom Δ ε
     (pt_inj h₁ h₂ (by
       let a := (Algebra.TensorProduct.assoc k k k A A A).toAlgHom
       have e₁ : (a.comp (Algebra.TensorProduct.map Δ (.id k A))).comp includeLeft =
@@ -974,7 +974,7 @@ theorem exists_hopf {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] [IsCommMon
         (includeRight : k →ₐ[k] A ⊗[k] k).comp ε := by ext x; simp
       rw [mul, e₁, one, _root_.mul_one]
       exact cg (by ext x; simp)))
-  letI : HopfAlgebra k A := HopfAlgebra.ofAlgHom σ
+  let : HopfAlgebra k A := HopfAlgebra.ofAlgHom σ
     (pt_inj h₁ h₂ (by
       refine (mul _).trans (Eq.trans ?_ (one _).symm)
       exact (congrArg₂ (· * ·) ((cg (Algebra.TensorProduct.lift_comp_includeLeft _ _ fun _ _ => Commute.all _ _)).trans hσ)

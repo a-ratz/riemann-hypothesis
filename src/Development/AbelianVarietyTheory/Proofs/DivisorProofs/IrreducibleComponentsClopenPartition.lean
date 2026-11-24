@@ -48,7 +48,7 @@ namespace GlobalTheory.CompPart
 
 theorem isIrreducible_generizations {Z : Scheme.{0}} (hd : ∀ x : Z, IsDomain (Z.presheaf.stalk x)) (x : Z) :
     IsIrreducible {y : Z | y ⤳ x} := by
-  haveI := hd x
+  have := hd x
   rw [← Scheme.range_fromSpecStalk, ← Set.image_univ]
   exact (IrreducibleSpace.isIrreducible_univ (Spec (Z.presheaf.stalk x))).image _
     (Z.fromSpecStalk x).continuous.continuousOn
@@ -94,9 +94,9 @@ theorem GlobalTheory.irreducibleComponents_clopen_partition : ∀ (n : ℕ) (Z :
     IsProjOver z → GlobalTheory.IsNormalScheme Z → ∃ (ι : Type) (_ : Fintype ι) (W : ι → Set Z),
       (∀ c, IsClopen (W c)) ∧ (∀ c, IsIrreducible (W c)) ∧ ∀ x, ∃! c, x ∈ W c := by
   intro n Z z hz hN
-  haveI : IsNoetherianRing (cycAway n) :=
+  have : IsNoetherianRing (cycAway n) :=
     is_noetherian_subring_closure _ (Set.toFinite _)
-  haveI : AlgebraicGeometry.IsNoetherian Z := GlobalTheory.isNoetherian_of_isProjOver hz
+  have : AlgebraicGeometry.IsNoetherian Z := GlobalTheory.isNoetherian_of_isProjOver hz
   have hd : ∀ x : Z, IsDomain (Z.presheaf.stalk x) := fun x => hN.isDomain_stalk x
   have hfin : (irreducibleComponents Z).Finite := NoetherianSpace.finite_irreducibleComponents
   exact ⟨irreducibleComponents Z, hfin.fintype, fun C => (C : Set Z),

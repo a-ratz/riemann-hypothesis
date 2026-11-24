@@ -160,7 +160,7 @@ theorem finprod_norm (f : Af F →+* Af E)
       rw [val_algebraMap]
       refine c2.trans_lt ?_
       have hm2 : P.valuation E (algebraMap F E kk) ≠ 0 := (Valuation.ne_zero_iff _).2 (by simp)
-      refine mul_lt_of_lt_one_left (zero_lt_iff.2 hm2) ?_
+      refine mul_lt_of_lt_one_left (pos_iff_ne_zero.2 hm2) ?_
       rw [← WithZero.exp_zero, WithZero.exp_lt_exp]; norm_num
     rw [this]; rfl
   rw [finprod_eq_prod_of_mulSupport_subset (s := S.biUnion (aboveF (L := E) F))]
@@ -235,7 +235,7 @@ theorem val_infinite (D : D7) (c : (AE D)ˣ →* Circle) (χ : HChar D.host.E) (
   obtain ⟨ρ, hρ, r1, r0⟩ := exists_real_chart D θ hθ (GlobalTheory.CMTypePlaces.places_bijective D)
   obtain ⟨s, hs⟩ := RealChart.exists_chart D θ hθ ρ hρ r1 r0
   obtain ⟨-, a, b, -, -, hab, ha, hb⟩ := GlobalTheory.IdeleParts.congr_open_and_parts D
-  haveI : Nonempty D.what₂.Tau :=
+  have : Nonempty D.what₂.Tau :=
     ⟨((GlobalTheory.CMTypePlaces.places_bijective D).2 (Classical.arbitrary _)).choose⟩
   have ext : ∀ a b : AE D, finPart D a = finPart D b → (∀ τ, θ τ (infPart D a) = θ τ (infPart D b)) → a = b := by
     intro a b h1 h2
@@ -268,7 +268,7 @@ theorem val_infinite (D : D7) (c : (AE D)ˣ →* Circle) (χ : HChar D.host.E) (
       ∏ τ, ((z τ : ℂ) / (‖(z τ : ℂ)‖ : ℂ)) ^ n (D.eTau τ) := by
     intro z
     refine (GlobalTheory.HeckeFinTrivial.denseRange_units (tauE D) hd).induction_on z
-      (isClosed_eq (continuous_subtype_val.comp (hc.1.1.comp Tc)) ?_) fun k => ?_
+      (isClosed_eq (continuous_subtypeVal.comp (hc.1.1.comp Tc)) ?_) fun k => ?_
     · refine continuous_finsetProd _ fun τ _ => ?_
       have c1 : Continuous fun z : D.what₂.Tau → ℂˣ => (z τ : ℂ) := Units.continuous_val.comp (continuous_apply τ)
       have n0 : ∀ z : D.what₂.Tau → ℂˣ, (‖(z τ : ℂ)‖ : ℂ) ≠ 0 := fun z => by simp
@@ -381,7 +381,7 @@ theorem isEta_res (D : D7) (c : (AE D)ˣ →* Circle) (χ : HChar D.host.E) (hc 
     have e := hinf (idF D u) rfl
     have e1 : c (idF D u) = 1 := DFunLike.congr_fun h1 u
     have e2 : infPart D (idF D u : AE D) = w ⊗ₜ[D.host.F] (1 : D.host.E) := rfl
-    rw [e1, e2, Finset.prod_eq_single τ₀ (fun τ _ hτ => by rw [hw, if_neg hτ]; simp) (by simp), hw, if_pos rfl] at e
+    rw [e1, e2, Finset.prod_eq_single τ₀ (fun τ _ hτ => by rw [hw, ite_eq_right hτ]; simp) (by simp), hw, ite_eq_left rfl] at e
     norm_num at e
 
 theorem exists_etaTilde : ∀ D : D7, ∃ χ : GlobalTheory.Mem.Th.IdC D, IsHeckeChar D χ ∧ (∀ τ, HasInfExp D χ τ (1 / 2)) ∧

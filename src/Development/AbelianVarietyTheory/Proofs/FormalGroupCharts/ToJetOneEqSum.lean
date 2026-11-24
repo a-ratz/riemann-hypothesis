@@ -96,12 +96,12 @@ theorem toJet_one_eq_sum {R : Type} [CommRing R] {κ : Type} [Fintype κ] (g : M
   have h : truncTotal (1 + 1) g = ∑ p, coeff (Finsupp.single p 1) g • (MvPolynomial.X p : MvPolynomial κ R) := by
     ext e
     rw [coeff_truncTotal_eq_ite, MvPolynomial.coeff_sum]
-    simp only [MvPolynomial.coeff_smul, MvPolynomial.coeff_X', smul_eq_mul, mul_ite, _root_.mul_one, mul_zero]
+    simp only [MvPolynomial.coeff_smul, MvPolynomial.coeff_X, smul_eq_mul, mul_ite, _root_.mul_one, mul_zero]
     by_cases he : ∃ p, Finsupp.single p 1 = e
     · obtain ⟨p, rfl⟩ := he
-      rw [if_pos (by simp), Finset.sum_eq_single p (fun q _ hq => if_neg fun h =>
-        hq (Finsupp.single_left_injective one_ne_zero h)) (by simp), if_pos rfl]
-    · rw [Finset.sum_eq_zero fun p _ => if_neg fun h => he ⟨p, h⟩]
+      rw [ite_eq_left (by simp), Finset.sum_eq_single p (fun q _ hq => ite_eq_right fun h =>
+        hq (Finsupp.single_left_injective one_ne_zero h)) (by simp), ite_eq_left rfl]
+    · rw [Finset.sum_eq_zero fun p _ => ite_eq_right fun h => he ⟨p, h⟩]
       split_ifs with hd
       · have h0 : e.degree = 0 := by
           by_contra h0

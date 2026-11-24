@@ -57,7 +57,7 @@ theorem isTest_coord : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriviall
   let tr : A.L →ₗ[F] A.K := (Algebra.trace A.K A.L).restrictScalars F
   let g : A.L →ₗ[F] A.K × A.K :=
     LinearMap.prod (tr ∘ₗ LinearMap.mulRight F e) (tr ∘ₗ LinearMap.mulRight F (1 - e))
-  haveI : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
+  have : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
   have hf : ∀ p, f p = cc A e p := fun p => rfl
   have hg : ∀ y, g y = ci A e y := fun y => rfl
   have cf : Continuous (cc A e) := by

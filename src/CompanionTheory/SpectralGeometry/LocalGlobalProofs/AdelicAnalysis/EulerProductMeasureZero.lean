@@ -83,10 +83,10 @@ theorem exists_tail_pos {ι : Type} {a : ι → ℝ} (h : Summable (fun v => |a 
 
 theorem countable_places (F : Type) [Field F] [NumberField F] :
     Countable (HeightOneSpectrum (𝓞 F)) := by
-  haveI : Countable (𝓞 F) := by
-    haveI : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
+  have : Countable (𝓞 F) := by
+    have : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
     exact RingOfIntegers.coe_injective.countable
-  haveI : Countable (Ideal (𝓞 F)) := by
+  have : Countable (Ideal (𝓞 F)) := by
     refine Function.Surjective.countable
       (f := fun s : Finset (𝓞 F) => Ideal.span (s : Set (𝓞 F))) ?_
     intro I
@@ -123,7 +123,7 @@ theorem GlobalTheory.CompanionTheory.SW.EulerZero.euler_zero : ∀ (F E : Type) 
   obtain ⟨-, -, -, -, hopen, hcof, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hσ d b n M
   obtain ⟨⟨hlc, hsc, ht2⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨-, -, -, -, -, -, -, hborel, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
-  haveI := hborel n M
+  have := hborel n M
   have hmeas : ∀ S, MeasurableSet (intOff (n := n) (M := M) b S) := fun S => (hopen S).measurableSet
   refine ⟨fun h hI => ?_, fun h hz => ?_, fun hfin hsum hz => ?_⟩
   · by_contra hcon
@@ -148,7 +148,7 @@ theorem GlobalTheory.CompanionTheory.SW.EulerZero.euler_zero : ∀ (F E : Type) 
       · exact ⟨S₀, subset_rfl, fun S _ => by simp [hz]⟩
       · refine ⟨insert v S₀, Finset.subset_insert _ _, fun S hS => ?_⟩
         rw [Finset.prod_eq_zero (hS (Finset.mem_insert_self v S₀)) (by simp [hv]), mul_zero]
-    haveI := countable_places F
+    have := countable_places F
     have hcover : (Set.univ : Set (Fin n → Fin M → AF F ⊗[F] E)) ⊆
         ⋃ T : Finset (HeightOneSpectrum (𝓞 F)), intOff b (S₁ ∪ T) := by
       intro X _

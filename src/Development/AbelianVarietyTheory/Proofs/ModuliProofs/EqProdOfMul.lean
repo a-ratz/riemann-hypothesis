@@ -296,8 +296,8 @@ end ResultantNorm
 theorem eq_of_norm_resultant_eq : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ_[l] Ω] [Algebra.IsAlgebraic ℚ_[l] Ω] (a b : Multiset Ω) (P Q : Polynomial ℚ_[l]), P.map (algebraMap ℚ_[l] Ω) = (a.map fun x => Polynomial.X - Polynomial.C x).prod → Q.map (algebraMap ℚ_[l] Ω) = (b.map fun x => Polynomial.X - Polynomial.C x).prod → (∀ (F : Polynomial ℤ) (u v : ℚ_[l]), algebraMap ℚ_[l] Ω u = (a.map fun x => Polynomial.aeval x F).prod → algebraMap ℚ_[l] Ω v = (b.map fun x => Polynomial.aeval x F).prod → ‖u‖ = ‖v‖) → P = Q := by
   intro l _ Ω _ _ _ a b P Q hP hQ h
   classical
-  letI : NormedField Ω := spectralNorm.normedField ℚ_[l] Ω
-  letI : NormedAlgebra ℚ_[l] Ω := spectralNorm.normedAlgebra ℚ_[l] Ω
+  let : NormedField Ω := spectralNorm.normedField ℚ_[l] Ω
+  let : NormedAlgebra ℚ_[l] Ω := spectralNorm.normedAlgebra ℚ_[l] Ω
   have h1 : ∀ F : Polynomial ℤ, ‖(a.map fun x => Polynomial.aeval x F).prod‖ =
       ‖(b.map fun x => Polynomial.aeval x F).prod‖ := by
     intro F
@@ -410,7 +410,7 @@ theorem mul_all (Good : ℤ[X] → Prop) (hG : ∀ F, ∀ᶠ t : ℕ in Filter.a
     refine Set.Infinite.mono (s := (fun t : ℕ => (t : ℚ)) '' Set.Ici a) ?_
       ((Set.Ici_infinite a).image Nat.cast_injective.injOn)
     rintro _ ⟨t, ht, rfl⟩
-    simp only [Set.mem_setOf_eq, eval_mul]
+    simp only [Set.mem_ofPred_eq, eval_mul]
     rw [← hp, ← hq, ← hs, hm _ _ (ha t ht).1 (ha t ht).2]
   have h0 := hs 0
   rw [this, eval_mul, ← hp, ← hq] at h0
@@ -539,7 +539,7 @@ theorem norm_all {l : ℕ} [hl : Fact l.Prime] {m : ℕ} (U : Matrix (Fin m) (Fi
     tendsto_pow_atTop_nhds_zero_of_norm_lt_one (by
       rw [PadicInt.norm_p]; exact inv_lt_one_of_one_lt₀ (by exact_mod_cast hl.out.one_lt))
   have c1 : Continuous fun x : ℤ_[l] => ‖(p.map (Rat.castHom ℚ_[l])).eval (x : ℚ_[l])‖ :=
-    ((p.map (Rat.castHom ℚ_[l])).continuous.comp continuous_subtype_val).norm
+    ((p.map (Rat.castHom ℚ_[l])).continuous.comp continuous_subtypeVal).norm
   have c2 : Continuous fun x : ℤ_[l] =>
       ‖(Polynomial.aeval U F + x • (1 : Matrix (Fin m) (Fin m) ℤ_[l])).det‖ :=
     ((continuous_const.add (continuous_id.smul continuous_const)).matrix_det).norm
@@ -586,7 +586,7 @@ theorem eq_det : ∀ (l : ℕ) [Fact l.Prime] (m : ℕ) (U : Matrix (Fin m) (Fin
   obtain ⟨E, _, _, _, _⟩ : ∃ (E : Type) (_ : Field E) (_ : Algebra ℚ_[l] E),
       IsAlgClosed E ∧ Algebra.IsAlgebraic ℚ_[l] E :=
     ⟨AlgebraicClosure ℚ_[l], inferInstance, inferInstance, inferInstance, inferInstance⟩
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap ℚ_[l] E).injective
   have inj : Function.Injective (algebraMap ℚ_[l] E) := (algebraMap ℚ_[l] E).injective
   obtain ⟨M, hM⟩ := exists_ext N Φ hN h1 hm' E
   obtain ⟨hP, hPd⟩ := monic_ev (hh 2) (ev_one N Φ hN h1 1)

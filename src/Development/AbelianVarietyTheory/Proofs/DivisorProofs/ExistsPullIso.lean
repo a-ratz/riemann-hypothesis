@@ -77,8 +77,8 @@ theorem sumF_map (φ : R →+* R') (hI : I.map φ ≤ I') (σ : F →+* F')
     (hσ : ∀ r, σ (algebraMap (FractionRing R) F (algebraMap R (FractionRing R) r)) =
       algebraMap (FractionRing R') F' (algebraMap R' (FractionRing R') (φ r)))
     {x : Ix → F} {s : F} (h : SumF I F x s) : SumF I' F' (fun i => σ (x i)) (σ s) := by
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
-  letI : Module R' F' := Module.compHom F' (algebraMap R' (FractionRing R'))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R' F' := Module.compHom F' (algebraMap R' (FractionRing R'))
   let l : F →ₛₗ[φ] F' :=
     { toFun := σ
       map_add' := map_add σ
@@ -109,7 +109,7 @@ theorem sumF_map (φ : R →+* R') (hI : I.map φ ≤ I') (σ : F →+* F')
 
 theorem sumF_lin {x x' : Ix → F} {s s' : F} (h : SumF I F x s) (h' : SumF I F x' s') (c : F) :
     SumF I F (fun i => c * x i + x' i) (c * s + s') := by
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   let f : F →ₗ[R] F :=
     { toFun := fun y => c * y
       map_add' := mul_add c
@@ -121,7 +121,7 @@ theorem sumF_zero : SumF I F (fun _ : Ix => (0 : F)) 0 :=
   ⟨_, Submodule.fg_bot, zero_mem _, fun _ => zero_mem _, fun _ => ⟨∅, fun _ _ => by simp⟩⟩
 
 theorem sumF_equiv {Jx : Type} (e : Jx ≃ Ix) {x : Ix → F} {s : F} (h : SumF I F x s) : SumF I F (fun j => x (e j)) s := by
-  letI : Module R F := Module.compHom F (algebraMap R (FractionRing R))
+  let : Module R F := Module.compHom F (algebraMap R (FractionRing R))
   exact (AdicSum.sumI_comp_iff e.injective (fun i hi => absurd (e.surjective i) hi)).2 h
 
 end Sums
@@ -313,7 +313,7 @@ theorem exists_ext (hG : GlobalFnsSt) (U : Unif I D A G) {w₀ : W0 U.toUnifPre}
       (∀ s χ, coef (famPull D.toPre E F hG 1 s) g₁ w₁ χ = algebraMap E F (coef s g w χ)) ∧
       ∀ (x : TFK (R := R) E ⟶ A.A) (fr : FrAt x), fr.IsGen → LiesOver U.toUnifPre E w₀ g w x fr →
         LiesOver U.toUnifPre F w₀ g₁ w₁ (fieldMap (R := R) E F ≫ x) (frExt F fr) := by
-  letI := @TorusExt.gtGroup
+  let := @TorusExt.gtGroup
   have hf : (algebraMap E F).comp (algebraMap (FractionRing R) E) = algebraMap (FractionRing R) F :=
     (IsScalarTower.algebraMap_eq _ _ _).symm
   have hb : (TorusExt.gtExt D.toPre _ hf g).b = baseMap (R := R) E F ≫ g.b := TorusExt.gtExt_b _ hf g
@@ -489,7 +489,7 @@ theorem exists_point (hG : GlobalFnsSt) (hI : I.map φ ≤ I') (hF : Compat φ F
       (∀ s s', FamUp hD κ s' s → ∀ α, coef s' g' w' α * ρ = coef s g w (hD.xe α)) ∧
       ∀ (x' : TFK (R := R') F ⟶ A'.A) (e' : FrAt x') (x : TFK (R := R) F ⟶ A.A) (e : FrAt x), e.IsGen →
         x'.left ≫ Φ = x.left → FrUp v e' e ρ → LiesOver U F w₀ g w x e → LiesOver U' F w₀' g' w' x' e' := by
-  letI := @TorusExt.gtGroup
+  let := @TorusExt.gtGroup
   have hg := isPullGtF_pullGt hD hG hF g
   obtain ⟨w₁, hw₁, vw₁⟩ := FamPull.exists_lineDown hD hF hg.1 w hw
   obtain ⟨w', hw', vw'⟩ := PhiProj.exists_scaled hw₁ (ρ⁻¹).val (Units.ne_zero _)

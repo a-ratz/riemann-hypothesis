@@ -187,7 +187,7 @@ theorem UpperTheory.V.ML.xJac :
       jacobiSum χ (χ ^ j) ∈ conjI M K (RingHom.ker π) t ↔ carry M (1 * (t : ZMod M)) ((j : ZMod M) * t) = 0 := by
     intro j hj
     obtain ⟨hj1, hj2⟩ := Finset.mem_Ico.1 hj
-    haveI : Fact (1 < M) := ⟨by omega⟩
+    have : Fact (1 < M) := ⟨by omega⟩
     have hn : ∀ n : ℕ, 0 < n → n < M → (n : ZMod M) ≠ 0 := fun n h1 h2 h =>
       absurd (Nat.le_of_dvd h1 ((ZMod.natCast_eq_zero_iff n M).1 h)) (by omega)
     have := xJac_one M K p π χ hco hχ 1 j one_ne_zero (hn j hj1 (by omega))

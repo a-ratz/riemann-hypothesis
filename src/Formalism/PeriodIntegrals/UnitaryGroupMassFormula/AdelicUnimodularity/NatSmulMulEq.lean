@@ -519,7 +519,7 @@ theorem mem_range_psi (d D D1 : ℕ) (hN : 0 < D * (d * D1))
       Matrix (Fin I.n) (Fin I.n) (I.E ⊗[I.F] Af I.F)) i j), fun i j => coord (bs I)
       ((((x : GL (Fin I.n) (I.E ⊗[I.F] Af I.F))⁻¹ : GL (Fin I.n) (I.E ⊗[I.F] Af I.F)) :
         Matrix (Fin I.n) (Fin I.n) (I.E ⊗[I.F] Af I.F)) i j)), ?_⟩, ?_⟩
-  · simp only [Cset, Set.mem_setOf_eq]
+  · simp only [Cset, Set.mem_ofPred_eq]
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
     · intro i j k
       exact ⟨coord_mem_Bx_of_intC_nsmul I _ hN _ (intC_smul_entry_of_preserves_Lf I d D D1 hlow hup h1 _ hx' i j) k,
@@ -615,7 +615,7 @@ theorem isCompact_Kset : IsCompact I.Kset := by
       coord_incl, Pi.smul_apply, nsmul_eq_mul, ← map_natCast (algebraMap I.F (Af I.F)), ← map_mul]
     exact h1F k
   have hN : 0 < D * (d * D1) := Nat.mul_pos hD (Nat.mul_pos hd hD1)
-  haveI : CompactSpace (Cset I (D * (d * D1))) :=
+  have : CompactSpace (Cset I (D * (d * D1))) :=
     isCompact_iff_compactSpace.mp (isCompact_Cset I _ d hd hlow)
   have : I.Kset = Set.range (psi I (D * (d * D1))) := by
     ext x

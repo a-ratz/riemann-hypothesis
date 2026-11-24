@@ -120,7 +120,7 @@ theorem _root_.GlobalTheory.gN_rpow_neg_integrable_haar : _root_.Formalism.Fouri
   calc ∫⁻ x, ‖_root_.Formalism.FourierDecayAlt.B.gN (Matrix.of x) ^ (-A)‖ₑ ∂μG
       = ∫⁻ x, ENNReal.ofReal (N x ^ (-A)) ∂μG := by
         refine lintegral_congr fun x ↦ ?_
-        rw [Real.enorm_eq_ofReal
+        rw [Real.eNorm_eq_ofReal
           (Real.rpow_nonneg (by unfold _root_.Formalism.FourierDecayAlt.B.gN; exact Real.sqrt_nonneg _) _)]
     _ ≤ ∫⁻ x, ∑' n : ℕ, {y | N y ≤ (2:ℝ) ^ (n + 1)}.indicator
           (fun _ ↦ ENNReal.ofReal (((2:ℝ) ^ n) ^ (-A))) x ∂μG := lintegral_mono_ae hpt

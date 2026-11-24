@@ -88,7 +88,7 @@ theorem isReduced_tensor_field_of_perfectField (K L F : Type*) [Field K] [Perfec
   obtain ⟨s, hs, hsep⟩ := exists_isTranscendenceBasis_and_isSeparable_of_perfectField K L
   let R := Algebra.adjoin K (s : Set L)
   let E := IntermediateField.adjoin K (s : Set L)
-  letI : Algebra R E :=
+  let : Algebra R E :=
     (Subalgebra.inclusion (IntermediateField.algebra_adjoin_le_adjoin K (s : Set L))).toAlgebra
   have : IsScalarTower K R E := IsScalarTower.of_algebraMap_eq' rfl
   have : FaithfulSMul R E :=
@@ -105,7 +105,7 @@ theorem isReduced_tensor_field_of_perfectField (K L F : Type*) [Field K] [Perfec
         (MvPolynomial.algebraTensorAlgEquiv (σ := s) K F).toRingEquiv)).toMulEquiv.isDomain
 
   have hT : IsDomain (E ⊗[R] (R ⊗[K] F)) := by
-    letI : Algebra (R ⊗[K] F) (E ⊗[R] (R ⊗[K] F)) := Algebra.TensorProduct.rightAlgebra
+    let : Algebra (R ⊗[K] F) (E ⊗[R] (R ⊗[K] F)) := Algebra.TensorProduct.rightAlgebra
     have := IsLocalization.tensorRight (R := R) (S := R ⊗[K] F) (A := E) (nonZeroDivisors R)
     refine IsLocalization.isDomain_of_le_nonZeroDivisors (R := R ⊗[K] F)
       (M := Algebra.algebraMapSubmonoid (R ⊗[K] F) (nonZeroDivisors R)) (E ⊗[R] (R ⊗[K] F)) ?_

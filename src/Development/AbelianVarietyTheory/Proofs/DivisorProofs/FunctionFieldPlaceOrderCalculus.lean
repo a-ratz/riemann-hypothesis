@@ -101,7 +101,7 @@ theorem nrm_max (v : Place k F) (n : ℕ) (x : Fin n → F) (hx : x ≠ 0) :
   refine ⟨i, ?_, hi, ?_, hle⟩
   · intro h0
     have := hle i0
-    rw [h0, map_zero, le_zero_iff, map_eq_zero] at this
+    rw [h0, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
     exact hi0 this
   · unfold ordVec ord nrm; rw [hi]
 

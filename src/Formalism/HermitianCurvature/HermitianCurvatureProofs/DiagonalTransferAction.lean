@@ -101,7 +101,7 @@ theorem dOp_skew (hπ : IsCRepOn (UWset k r z) π) (hc : ContinuousOn π (UWset 
   have hone : π (NormedSpace.exp (((0 : ℝ) : ℂ) • X)) = 1 := by
     simp [NormedSpace.exp_zero, hπ.1]
   rw [hone] at h0
-  simp only [ContinuousLinearMap.one_apply] at h0
+  simp only [one_apply_eq_self] at h0
   linear_combination h0
 
 theorem EB_adj (hπ : IsCRepOn (UWset k r z) π) (hc : ContinuousOn π (UWset k r z))
@@ -121,9 +121,9 @@ theorem EB_adj (hπ : IsCRepOn (UWset k r z) π) (hc : ContinuousOn π (UWset k 
   show ⟪ecOp π (unitB (Hpk k r) Bs a b) v, w⟫_ℂ = ⟪v, ecOp π (unitB (Hpk k r) Bs b a) w⟫_ℂ
   unfold ecOp
   rw [e1, e2, hlin]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, inner_add_left, inner_add_right,
+  simp only [add_apply, smul_apply, inner_add_left, inner_add_right,
     inner_smul_left, inner_smul_right, dOp_skew hπ hc hu l1, dOp_skew hπ hc hu l2]
-  simp only [Complex.conj_I, neg_smul, one_smul, ContinuousLinearMap.neg_apply, inner_neg_right]
+  simp only [Complex.conj_I, neg_smul, one_smul, neg_apply, inner_neg_right]
   ring
 
 end Skew
@@ -227,7 +227,7 @@ theorem sep_real {P : M.Par} (hP : P.OK) :
   refine ⟨(Y₀ : ℂ), ?_, Complex.ofReal_re Y₀⟩
   simp only [Finset.mem_biUnion, Finset.mem_univ, true_and]
   refine ⟨(σ, σ'), ?_⟩
-  rw [if_neg hss, Multiset.mem_toFinset, Polynomial.mem_roots (hne σ σ' hss), Polynomial.IsRoot.def,
+  rw [ite_eq_right hss, Multiset.mem_toFinset, Polynomial.mem_roots (hne σ σ' hss), Polynomial.IsRoot.def,
     Polynomial.eval_sub, LieAlgebraWeightVectors.cb_eval_xPoly, LieAlgebraWeightVectors.cb_eval_xPoly, sub_eq_zero]
   exact h
 
@@ -243,7 +243,7 @@ theorem interp_exists {ι : Type} [Fintype ι] (node : ι → ℂ) (hinj : Funct
     show Polynomial.eval (id (node i)) (Lagrange.interpolate s id val) = f i
     rw [Lagrange.eval_interpolate_at_node val (Set.injOn_id _) hi]
     have hex : ∃ j, node j = node i := ⟨i, rfl⟩
-    simp only [val, id, dif_pos hex]
+    simp only [val, id, dite_eq_left hex]
     rw [hinj hex.choose_spec]
   · intro μ hμ
     show 0 < Polynomial.eval (id μ) (Lagrange.interpolate s id val)
@@ -279,13 +279,13 @@ theorem aeval_act (T : Module.End ℂ (RadSp k r z z' π π')) (C : Module.End �
   induction p using Polynomial.induction_on' with
   | add p q hp hq =>
     intro Ψ v
-    rw [map_add (f := _), LinearMap.add_apply, Submodule.coe_add, Pi.add_apply, Pi.add_apply, ContinuousLinearMap.add_apply,
+    rw [map_add (f := _), LinearMap.add_apply, Submodule.coe_add, Pi.add_apply, Pi.add_apply, add_apply,
       hp, hq, map_add, LinearMap.add_apply, map_add]
   | monomial m a =>
     intro Ψ v
     rw [Polynomial.aeval_monomial, Polynomial.aeval_monomial, Module.End.mul_apply, Module.End.mul_apply,
       Module.algebraMap_end_apply, Module.algebraMap_end_apply, Submodule.coe_smul, Pi.smul_apply, Pi.smul_apply,
-      ContinuousLinearMap.smul_apply, hpow, map_smul]
+      smul_apply, hpow, map_smul]
 
 variable [FiniteDimensional ℂ Wq]
 
@@ -303,7 +303,7 @@ theorem diagonal_transfer_action (X : ActualOps k r z z' π π') (hz : inWb k r 
   have h := LieAlgebraWeightVectors.top_level_pointwise_identity capelli_two_by_two right_type_action hz hz' (Qx5.Dp_dom k r z z')
     hπ'r hπ'c hF ⟨hg, hG⟩ hGG Bs hBs Y v
   have hq := (frame_general_linear Wq k r (k - 1) z' π' Bs ⟨hπ'r, hπ'c⟩ (LieAlgebraWeightVectors.frame_sub hBs (by simp))).2
-  rw [ContinuousLinearMap.smul_apply]
+  rw [smul_apply]
   erw [h]
   rw [← hq, smul_smul]
   have : (fnVal k r z z' 5 g) * (GGl k r z z' g : ℂ) = 1 := by

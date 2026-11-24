@@ -374,7 +374,7 @@ theorem chernTopPart_image : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       glueMeas (fun ch : AlgChart X.str (σ.comp e.toRingHom) X.dim => ch.e) ρ := rfl
   have hpre : ∀ S : Set (CxPts X.str (σ.comp e.toRingHom)), MeasurableSet S → MeasurableSet (D ∩ ψ ⁻¹' S) := by
     intro S hS
-    have hm : Measurable (D.restrict ψ) := (continuousOn_iff_continuous_restrict.1 hcont).measurable
+    have hm : Measurable (D.restrict ψ) := (continuousOn_iff_continuous_domRestrict.1 hcont).measurable
     have := hDo.measurableSet.subtype_image (hm hS)
     convert this using 1
     ext w
@@ -454,7 +454,7 @@ theorem chernTopPart_image : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hae : AEMeasurable ψ (μD.restrict A) := (hcont.mono hAD).aemeasurable hAm
   have hνT : ∀ S, MeasurableSet S → ν S = ENNReal.ofReal C * μD (A ∩ ψ ⁻¹' S) := by
     intro S hS
-    rw [hν, Measure.smul_apply, Measure.map_apply_of_aemeasurable hae hS, Measure.restrict_apply' hAm,
+    rw [hν, smul_apply, Measure.map_apply_of_aemeasurable hae hS, Measure.restrict_apply' hAm,
       Set.inter_comm, smul_eq_mul]
   have hAS : ∀ S : Set (CxPts X.str (σ.comp e.toRingHom)), MeasurableSet S → MeasurableSet (A ∩ ψ ⁻¹' S) := by
     intro S hS
@@ -563,7 +563,7 @@ theorem psi_moebI_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   intro E _ _ _ H Dw l Xo c O _ β Y T F _ e σ U hG hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ γ hγ v hv
   obtain ⟨-, hk, -, h4, -⟩ := hU
   have hp0 : (U.X k).p0 = Dw.p + Dw.q - Dw.p := by rw [(hk k).1]; omega
-  haveI : IsOpenImmersion j := hL.1
+  have : IsOpenImmersion j := hL.1
   have hinj : Function.Injective (GlobalTheory.LieBase.cxOf (Z := T.Z) e σ hj) := by
     intro a b hab
     apply Subtype.ext
@@ -632,7 +632,7 @@ theorem fibre_gamma : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have h4 : (U.un k ⟨x, hx⟩).x = (U.un k ⟨x', hx'⟩).x := by
     have h5 := congrArg Subtype.val h3
     simp only [cxPt] at h5
-    haveI := T.Z.jQ_open
+    have := T.Z.jQ_open
     have h6 := (cancel_mono T.Z.jQ).1 h5
     have h7 := congrArg (· ≫ CategoryTheory.Limits.pullback.fst _ _) h6
     simp only [GlobalTheory.AllWt.ptF] at h7
@@ -672,7 +672,7 @@ theorem flat_inj {ι : Type} {p q : ℕ} {z z' : ι → Matrix (Fin p) (Fin q) �
 theorem exists_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (T : TorModel Y) (F : Type) [Field F] (e : F ≃+* c.F) (σ : c.F →+* ℂ) (U : Formalism.L2.PjFree.Unf Xo c σ (Dw.p + Dw.q)), Formalism.L2.PjFree.GoodEmb c σ → Formalism.L2.PjFree.IsUnf U → ∀ (Φ : FlagTor T.Z e U) (k : U.Comp), ∀ (X : Var F) (j : X.X ⟶ gen T.Z) (f : (Φ.C k).Y.X ⟶ X.X) (f₀ : EigFrame T.Z (constF e X) (genericPt X ≫ j ≫ genι T.Z)) (Eb : Fr (ratOf X) Dw.mult 0) (A₀ : Mat Dw.mult X.Fn) (hj : j ≫ genStr T.Z ≫ spMap e.toRingHom = X.str), IsLieBase e (Φ.C k) X j f f₀ Eb A₀ → ∃ ψ : ((U.X k).Ψ × Fin Dw.p × Fin (Dw.p + Dw.q - Dw.p) → ℂ) → CxPts X.str (σ.comp e.toRingHom), (∀ x : (U.X k).dom, cxOf e σ hj (ψ (flat (domPt (U.X k) (Nat.le_add_right Dw.p Dw.q) (Equiv.refl (U.X k).Ψ) x.1))) = cxPt T.Z (U.un k x)) := by
   intro E _ _ _ H Dw l Xo c O _ β Y T F _ e σ U hσ hU Φ k X j f f₀ Eb A₀ hj hL
   obtain ⟨hoi, hfj, -⟩ := hL
-  haveI := hoi
+  have := hoi
   have hp : (U.X k).p0 = Dw.p + Dw.q - Dw.p := first_index_eq_of_unfolded U hU rfl k
   have hle : Dw.p ≤ Dw.p + Dw.q := Nat.le_add_right Dw.p Dw.q
   have hrange : ∀ x : (U.X k).dom, Set.range (cxPt T.Z (U.un k x)).1 ⊆ Set.range j := by
@@ -704,7 +704,7 @@ theorem exists_unif : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     fun x => ?_⟩
   have h : ∃ x' : (U.X k).dom, flat (domPt (U.X k) (Nat.le_add_right Dw.p Dw.q) (Equiv.refl (U.X k).Ψ) x'.1) =
       flat (domPt (U.X k) (Nat.le_add_right Dw.p Dw.q) (Equiv.refl (U.X k).Ψ) x.1) := ⟨x, rfl⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   rw [hlf]
   exact hwell _ _ (flat_inj h.choose_spec)
 
@@ -910,7 +910,7 @@ theorem exists_isFD : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r 
     Subtype.ext (congrArg flat h)
   have hcont : ∀ γ, Continuous (a γ) := fun γ => by
     have h : Continuous fun v : DomFlat Tau j (r - j) => flat (moebI (toUpq X hj κ γ) (unflat v.1)) :=
-      continuousOn_iff_continuous_restrict.1 (hD _ (hU γ)).1.continuousOn
+      continuousOn_iff_continuous_domRestrict.1 (hD _ (hU γ)).1.continuousOn
     exact h.subtype_mk _
   obtain ⟨F, hF, h1, h2⟩ := exists_section a hcont
     (fun γ δ v => by
@@ -925,11 +925,11 @@ theorem exists_isFD : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r 
       obtain ⟨x, h, e⟩ := hx v
       obtain ⟨W, hW, hf⟩ := eventually_finite X hj κ hp h v.2
       have hc : Continuous fun v : DomFlat Tau j (r - j) => unflat v.1 :=
-        continuous_pi fun t => continuous_matrix fun a b => (continuous_apply (t, a, b)).comp continuous_subtype_val
+        continuous_pi fun t => continuous_matrix fun a b => (continuous_apply (t, a, b)).comp continuous_subtypeVal
       refine ⟨_, hc.continuousAt.preimage_mem_nhds hW, (hf.preimage Subtype.val_injective.injOn).subset ?_⟩
       intro γ hγ
       exact ⟨γ.2, by rw [← ha γ v x h e]; exact hγ⟩)
-  refine ⟨Subtype.val '' F, (MeasurableEmbedding.subtype_coe hO.measurableSet).measurableSet_image.2 hF,
+  refine ⟨Subtype.val '' F, (MeasurableEmbedding.subtypeVal hO.measurableSet).measurableSet_image.2 hF,
     Subtype.coe_image_subset _ _, fun z hz => ?_, ?_⟩
   · obtain ⟨γ, h⟩ := h1 ⟨flat z, hz⟩
     exact ⟨_, ⟨γ, γ.2, rfl⟩, _, h, rfl⟩
@@ -964,7 +964,7 @@ namespace GlobalTheory.UnifHolo
 theorem holo : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (T : TorModel Y) (F : Type) [Field F] (e : F ≃+* c.F) (σ : c.F →+* ℂ) (U : Formalism.L2.PjFree.Unf Xo c σ (Dw.p + Dw.q)), Formalism.L2.PjFree.GoodEmb c σ → Formalism.L2.PjFree.IsUnf U → ∀ (Φ : FlagTor T.Z e U) (k : U.Comp), ∀ (X : Var F) (j : X.X ⟶ gen T.Z) (f : (Φ.C k).Y.X ⟶ X.X) (f₀ : EigFrame T.Z (constF e X) (genericPt X ≫ j ≫ genι T.Z)) (Eb : Fr (ratOf X) Dw.mult 0) (A₀ : Mat Dw.mult X.Fn) (hj : j ≫ genStr T.Z ≫ spMap e.toRingHom = X.str), IsLieBase e (Φ.C k) X j f f₀ Eb A₀ → ∀ ψ : ((U.X k).Ψ × Fin Dw.p × Fin (Dw.p + Dw.q - Dw.p) → ℂ) → CxPts X.str (σ.comp e.toRingHom), (∀ x : (U.X k).dom, cxOf e σ hj (ψ (flat (domPt (U.X k) (Nat.le_add_right Dw.p Dw.q) (Equiv.refl (U.X k).Ψ) x.1))) = cxPt T.Z (U.un k x)) → ∀ (W : X.X.Opens) (g : Γ(X.X, W)), DifferentiableOn ℂ (ev X.str (σ.comp e.toRingHom) W g ∘ ψ) (DomFlat (U.X k).Ψ Dw.p (Dw.p + Dw.q - Dw.p) ∩ ψ ⁻¹' ptsIn X.str (σ.comp e.toRingHom) W) := by
   intro E _ _ _ H Dw l Xo c O _ β Y T F _ e σ U hG hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ W g
   classical
-  haveI : IsOpenImmersion j := hL.1
+  have : IsOpenImmersion j := hL.1
   have hjr : Dw.p ≤ Dw.p + Dw.q := Nat.le_add_right _ _
   have hp : (U.X k).p0 = Dw.p + Dw.q - Dw.p := by
     have := (hU.2.1 k).1
@@ -1040,7 +1040,7 @@ open Set in
 theorem iSup_apply_eq_zero {Z : Type*} [MeasurableSpace Z] {ι : Type*} (μ : ι → Measure Z) {T : Set Z}
     (hT : MeasurableSet T) (h : ∀ i, μ i T = 0) : (⨆ i, μ i) T = 0 := by
   have hle : (⨆ i, μ i) ≤ (⨆ i, μ i).restrict Tᶜ := iSup_le fun i => Measure.le_iff.2 fun B hB => by
-    rw [Measure.restrict_apply hB, ← measure_inter_add_diff B hT, diff_eq,
+    rw [Measure.restrict_apply hB, ← measure_inter_add_sdiff B hT, Set.sdiff_eq,
       measure_mono_null inter_subset_right (h i), zero_add]
     exact Measure.le_iff'.1 (le_iSup μ i) _
   refine le_antisymm ((Measure.le_iff'.1 hle T).trans ?_) (zero_le)
@@ -1150,7 +1150,7 @@ theorem chart_image_null {k : Type} [CommRing k] {Y : Scheme.{0}} {p : Y ⟶ Sp 
       (measure_mono_null inter_subset_left hs)
   have e2 : (c.e ∘ ψ) '' t = L.symm ⁻¹' ((L.symm ∘ (c.e ∘ ψ)) '' t) := by
     rw [← L.image_eq_preimage_symm, image_image]; simp
-  haveI : (Measure.map L.symm (volume : Measure (ReciprocityTheory.L2DbarEstimates.V D))).IsAddHaarMeasure :=
+  have : (Measure.map L.symm (volume : Measure (ReciprocityTheory.L2DbarEstimates.V D))).IsAddHaarMeasure :=
     L.symm.isAddHaarMeasure_map volume
   have hac := Measure.absolutelyContinuous_isAddHaarMeasure
     (Measure.map L.symm (volume : Measure (ReciprocityTheory.L2DbarEstimates.V D))) volume
@@ -1220,16 +1220,16 @@ theorem mass_openPart_eq_covol : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       by_contra hne
       exact hnb ⟨hv.1, γ, hγ, by rw [hγe, hfu]; exact hw.1, hne⟩
     rw [← hfu v, ← hfu w, ← hγe, h1]
-  have hD := hdens (FD \ B') (Set.diff_subset.trans hFsub) (hFm.diff (measurableSet_toMeasurable _ _)) hinj
+  have hD := hdens (FD \ B') (Set.sdiff_subset.trans hFsub) (hFm.diff (measurableSet_toMeasurable _ _)) hinj
   have hN := hnull (FD ∩ B') (Set.inter_subset_left.trans hFsub) (measure_mono_null Set.inter_subset_right hB'0)
-  have hmF : μD (FD \ B') = μD FD := measure_diff_null hB'0
+  have hmF : μD (FD \ B') = μD FD := measure_sdiff_null hB'0
   have hsub : ψ '' DomFlat (U.X k).Ψ Dw.p (Dw.p + Dw.q - Dw.p) ⊆ ψ '' (FD \ B') ∪ ψ '' (FD ∩ B') := by
     rintro _ ⟨v, hv, rfl⟩
     obtain ⟨γ, hγ, hγF⟩ := hFcov (unflat v) hv
-    rw [← Set.image_union, Set.diff_union_inter, ← hinv γ hγ v hv]
+    rw [← Set.image_union, Set.sdiff_union_inter, ← hinv γ hγ v hv]
     exact Set.mem_image_of_mem _ hγF
   have hsup : ψ '' (FD \ B') ⊆ ψ '' DomFlat (U.X k).Ψ Dw.p (Dw.p + Dw.q - Dw.p) :=
-    Set.image_mono (Set.diff_subset.trans hFsub)
+    Set.image_mono (Set.sdiff_subset.trans hFsub)
   rw [← himg, hcov, ENNReal.ofReal_mul' ENNReal.toReal_nonneg, ENNReal.ofReal_toReal hlt.ne, ← hmF, ← hD]
   refine le_antisymm ?_ (measure_mono hsup)
   calc _ ≤ _ := measure_mono hsub

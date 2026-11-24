@@ -75,13 +75,13 @@ private theorem sub_mul_lemma {R : Type*} [CommRing R] {d : ℕ} (A B : Matrix (
 private theorem det_lo_lemma_2 {R : Type*} [CommRing R] {d : ℕ} (L : Matrix (Fin d) (Fin d) R)
     (hL : ∀ i j : Fin d, (i < j → L i j = 0) ∧ (i = j → L i j = 1)) (q : ℕ) :
     (L.submatrix (fun i : {i : Fin d // (i : ℕ) < q} => i.1) (fun i : {i : Fin d // (i : ℕ) < q} => i.1)).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular _ (fun i j hij => (hL i.1 j.1).1 (OrderDual.toDual_lt_toDual.mp hij))]
+  rw [Matrix.det_of_isLowerTriangular _ (fun i j hij => (hL i.1 j.1).1 (OrderDual.toDual_lt_toDual.mp hij))]
   exact Finset.prod_eq_one (fun i _ => (hL i.1 i.1).2 rfl)
 
 private theorem det_up_lemma_3 {R : Type*} [CommRing R] {d : ℕ} (U : Matrix (Fin d) (Fin d) R)
     (hU : ∀ i j : Fin d, (j < i → U i j = 0) ∧ (i = j → U i j = 1)) (q : ℕ) :
     (U.submatrix (fun i : {i : Fin d // (i : ℕ) < q} => i.1) (fun i : {i : Fin d // (i : ℕ) < q} => i.1)).det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j hij => (hU i.1 j.1).1 hij)]
+  rw [Matrix.det_of_isUpperTriangular (fun i j hij => (hU i.1 j.1).1 hij)]
   exact Finset.prod_eq_one (fun i _ => (hU i.1 i.1).2 rfl)
 
 theorem lead_cell {d : ℕ} (Z : Matrix (Fin d) (Fin d) K) (w : Point K d) (h : IsInCell Z w) (q : ℕ) :
@@ -229,7 +229,7 @@ theorem lead_mem {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hun : Formalism.Herm
       (x := fun i : Fin q => O (Fin.castLE hq (σ i)) (Fin.castLE hq i))
       (fun i _ => by
         have h0 := hO (Fin.castLE hq (σ i)) (Fin.castLE hq i)
-        simpa only [Fin.coe_castLE] using h0)
+        simpa only [Fin.val_castLE] using h0)
     rw [Finset.prod_pow_eq_pow_sum] at hp
     have he : ∑ i : Fin q, ((D.R.rS - ((σ i : Fin q) : ℕ)) + (D.R.rS - (i : ℕ))) = q * (2 * D.R.rS + 1 - q) := by
       rw [Finset.sum_add_distrib, Equiv.sum_comp σ (fun i : Fin q => D.R.rS - (i : ℕ)), ← two_mul,

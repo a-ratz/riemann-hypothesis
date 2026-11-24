@@ -90,7 +90,7 @@ theorem exists_sim_inducing (D : Datum H) (hpq : 1 ≤ D.p + D.q) (l l₂ : Leve
         k (Submodule.Quotient.mk a) := by
   obtain ⟨e, he, e', he', hee⟩ := Submodule.mem_sup.1
     (show (1 : 𝓞 E) ∈ l.Mb ⊔ I by rw [sup_eq_top_of_level l l₂ p I hM hp hI]; trivial)
-  haveI : Module.Projective (𝓞 E) D.La := D.proj
+  have : Module.Projective (𝓞 E) D.La := D.proj
   obtain ⟨f, hf⟩ := Module.projective_lifting_property (I • ⊤ : Submodule (𝓞 E) D.La).mkQ
     (k.toLinearMap ∘ₗ (I • ⊤ : Submodule (𝓞 E) D.La).mkQ) (Submodule.mkQ_surjective _)
   have hf' : ∀ a, (Submodule.Quotient.mk (f a) : D.La ⧸ (I • ⊤ : Submodule (𝓞 E) D.La)) =

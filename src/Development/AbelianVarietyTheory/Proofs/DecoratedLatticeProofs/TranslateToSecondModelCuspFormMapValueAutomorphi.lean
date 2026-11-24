@@ -72,19 +72,19 @@ theorem exists_fundamentalDomain_measure_eq (I : AutInst) (μf : Measure I.Gf) [
   obtain ⟨-, -, T, hT, -, -⟩ := GlobalTheory.AdelicModels.exists_adelic_equiv I
   obtain ⟨Γ, hΓ, -, -, hdom⟩ := GlobalTheory.RatDiscrete.rational_points I
   have hF : IsFundamentalDomain Γ fund (I.muA μf) := hdom μf fund hfund
-  haveI : BorelSpace (HA (AF I.F) I.cm.sig I.J) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA _ _
-  haveI : IsTopologicalGroup (HA (AF I.F) I.cm.sig I.J) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : SecondCountableTopology I.Gf := (GlobalTheory.CongTop.adelic_topology I).2.2.1
-  haveI : BorelSpace I.GA := inferInstance
-  haveI hG1 : ∀ v, (Formalism.REAL.muG (I.ε v)).IsHaarMeasure := fun v => inferInstance
-  haveI hG2 : ∀ v, SigmaFinite (Formalism.REAL.muG (I.ε v)) := fun v => inferInstance
-  haveI hP : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := inferInstance
-  haveI hPs : SigmaFinite (Measure.pi fun v => Formalism.REAL.muG (I.ε v)) := inferInstance
-  haveI : (I.muA μf).IsHaarMeasure := by unfold AutInst.muA; infer_instance
+  have : BorelSpace (HA (AF I.F) I.cm.sig I.J) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA _ _
+  have : IsTopologicalGroup (HA (AF I.F) I.cm.sig I.J) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : SecondCountableTopology I.Gf := (GlobalTheory.CongTop.adelic_topology I).2.2.1
+  have : BorelSpace I.GA := inferInstance
+  have hG1 : ∀ v, (Formalism.REAL.muG (I.ε v)).IsHaarMeasure := fun v => inferInstance
+  have hG2 : ∀ v, SigmaFinite (Formalism.REAL.muG (I.ε v)) := fun v => inferInstance
+  have hP : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := inferInstance
+  have hPs : SigmaFinite (Measure.pi fun v => Formalism.REAL.muG (I.ε v)) := inferInstance
+  have : (I.muA μf).IsHaarMeasure := by unfold AutInst.muA; infer_instance
   have hTm : Measurable T := T.continuous.measurable
   have hTsm : Measurable T.symm := T.symm.continuous.measurable
   let μ : Measure (HA (AF I.F) I.cm.sig I.J) := Measure.map T.symm (I.muA μf)
-  haveI hμ : μ.IsHaarMeasure :=
+  have hμ : μ.IsHaarMeasure :=
     T.symm.toMulEquiv.isHaarMeasure_map (I.muA μf) T.symm.continuous T.continuous
   let e : Γ → HFinIn (AF I.F) I.cm.sig I.J := fun g =>
     ⟨T.symm g, (hT (T.symm g)).2 (by
@@ -218,7 +218,7 @@ theorem rowFun_of_good (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.
     have e1 : t⁻¹⁻¹ * κ * t⁻¹ = (iotaX X h).symm (1, k) := by simp [hκ, mul_assoc]
     rw [e1] at hc1
     have hrow : (iotaX X h).symm (1, k) ∈ rowJ X h := by
-      simp only [rowJ, Set.mem_preimage, ContinuousMulEquiv.apply_symm_apply, Set.mem_setOf_eq]
+      simp only [rowJ, Set.mem_preimage, ContinuousMulEquiv.apply_symm_apply, Set.mem_ofPred_eq]
       exact ⟨trivial, hk⟩
     have hκJ : κ ∈ J := hc1.1.2 hrow
     have hχ := hc1.2 hκJ
@@ -242,7 +242,7 @@ theorem GlobalTheory.Core.Mi.rowFun_evS : GlobalTheory.Published.CuspRapidDecay 
   have hg := good_of_mem hP hθ hT x
   have hR := rowFun_of_good X h hm hg
   refine ⟨hR, ?_⟩
-  haveI := muX_finite X
+  have := muX_finite X
   obtain ⟨C, hC⟩ := hR.bdd
   exact MemLp.of_bound hR.cont.aestronglyMeasurable C (.of_forall hC)
 

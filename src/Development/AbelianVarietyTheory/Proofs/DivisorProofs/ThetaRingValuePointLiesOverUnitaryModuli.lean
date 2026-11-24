@@ -88,13 +88,13 @@ theorem valPt_lies_over_unitary : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     spMap (φ.comp ψ), fun a => rfl, ?_, ?_⟩
   · rw [hK]
     simp only [spMap, CommRingCat.ofHom_comp, Spec.map_comp]
-  haveI := C.isPreimmersion_i
-  haveI : IsProper C.z := GlobalTheory.ThetaDescent.isProper_of_isProjOver C.proj
-  haveI : C.Z.IsSeparated := by
+  have := C.isPreimmersion_i
+  have : IsProper C.z := GlobalTheory.ThetaDescent.isProper_of_isProjOver C.proj
+  have : C.Z.IsSeparated := by
     constructor
     rw [← terminal.comp_from C.z]
     infer_instance
-  haveI : IsDominant (spMap (X₁.M.stalkHom w)) := by
+  have : IsDominant (spMap (X₁.M.stalkHom w)) := by
     refine ⟨?_⟩
     change DenseRange (PrimeSpectrum.comap (X₁.M.stalkHom w))
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical,

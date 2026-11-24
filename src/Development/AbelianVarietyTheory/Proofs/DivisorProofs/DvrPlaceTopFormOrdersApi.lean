@@ -55,12 +55,12 @@ open scoped TensorProduct in
 theorem _root_.GlobalTheory.FieldPair.isFreeGen_dForm_of_trBasis {k K : Type} [Field k] [CharZero k]
     [Field K] (c : k →+* K) {n : ℕ} {x : Fin n → K} (hx : _root_.GlobalTheory.FieldPair.TrBasis c x) :
     _root_.GlobalTheory.TopForm.IsFreeGen K (_root_.GlobalTheory.TopForm.dForm c x) := by
-  letI : Algebra k K := c.toAlgebra
+  let : Algebra k K := c.toAlgebra
   have hb : IsTranscendenceBasis k x := hx
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap k K).injective
-  haveI : Algebra.IsAlgebraic (IntermediateField.adjoin k (Set.range x)) K :=
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap k K).injective
+  have : Algebra.IsAlgebraic (IntermediateField.adjoin k (Set.range x)) K :=
     hb.isAlgebraic_field
-  haveI : Algebra.IsSeparable (IntermediateField.adjoin k (Set.range x)) K :=
+  have : Algebra.IsSeparable (IntermediateField.adjoin k (Set.range x)) K :=
     Algebra.IsAlgebraic.isSeparable_of_perfectField
   obtain ⟨b, hbx⟩ := _root_.GlobalTheory.exists_basis_kaehler_of_algebraicIndependent hb.1
   exact _root_.GlobalTheory.TopForm.isFreeGen_dForm x b (fun i => by rw [hbx i])

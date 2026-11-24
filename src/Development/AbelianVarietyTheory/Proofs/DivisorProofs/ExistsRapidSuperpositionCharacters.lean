@@ -141,7 +141,7 @@ theorem exists_rapid_superposition_characters :
   have hB : ∀ w z, 2 * Real.pi * B w z = A w z := by
     intro w z
     have : (2 * Real.pi) ≠ 0 := by positivity
-    simp only [B, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [B, smul_apply, smul_eq_mul]
     field_simp
   refine ⟨EuclideanSpace ℝ (Fin m), inferInstance, volume, inferInstance, φ, fun w => B w,
     hφ.measurable, fun z => ?_, fun N => ?_, fun z => ?_⟩

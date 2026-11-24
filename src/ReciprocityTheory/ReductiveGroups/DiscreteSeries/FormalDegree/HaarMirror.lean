@@ -77,7 +77,7 @@ theorem comap_muPolarMat_isHaar (ε : Fin n → Bool) :
 
 theorem muCD_isHaar (ε : Fin n → Bool) : (muCD ε).IsHaarMeasure := by
 
-  haveI hH := comap_muPolarMat_isHaar ε (Formalism.REAL.UJ ε) (real_UJ_eq_UJ ε) inferInstance inferInstance
+  have hH := comap_muPolarMat_isHaar ε (Formalism.REAL.UJ ε) (real_UJ_eq_UJ ε) inferInstance inferInstance
   unfold muCD
   have hc : ENNReal.ofReal (cPQ ε) ≠ 0 := (ENNReal.ofReal_pos.mpr (cPQ_pos ε)).ne'
   have ht : ENNReal.ofReal (cPQ ε) ≠ ⊤ := ENNReal.ofReal_ne_top

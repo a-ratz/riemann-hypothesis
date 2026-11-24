@@ -216,7 +216,7 @@ theorem exists_unit_generic (hL : Laws) (hL₂ : Laws2) {o Ω : Type} [CommRing 
   have h₂ := ThetaBaseChange.isThetaPtOver_pull_of_gen ρ.P h₁ w
     fun _ => EmbPull.isGenSec_pullS ρ.P hL₂.secBaseChangeAny w
   let e : Γ(Sp Ω, ⊤) ≃+* Ω := (Scheme.ΓSpecIso (CommRingCat.of Ω)).commRingCatIsoToRingEquiv
-  haveI : IsLocalRing Γ((Over.mk (spMap S.R.val.toRingHom)).left, ⊤) := e.symm.isLocalRing
+  have : IsLocalRing Γ((Over.mk (spMap S.R.val.toRingHom)).left, ⊤) := e.symm.isLocalRing
   obtain ⟨d, hd⟩ := ThetaUniq.exists_unit_over hL.globalFns ρ.P H.1 h₂ (ThetaUniq.isThetaPtOver_of_local _ _ H)
   refine ⟨e d.val * (c : S.R), mul_ne_zero (d.isUnit.map e).ne_zero (c.isUnit.map S.R.val).ne_zero, fun i => ?_⟩
   obtain ⟨m, hm⟩ := hc i
@@ -230,8 +230,8 @@ theorem exists_unit_generic (hL : Laws) (hL₂ : Laws2) {o Ω : Type} [CommRing 
 
 theorem finite_of_le {Ω : Type} [Field Ω] {F F' : Subfield Ω} (le : F ≤ F') (H : Module.Finite F Ω) :
     Module.Finite F' Ω := by
-  letI := (Subfield.inclusion le).toAlgebra
-  haveI : IsScalarTower F F' Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := (Subfield.inclusion le).toAlgebra
+  have : IsScalarTower F F' Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Module.Finite.of_restrictScalars_finite F _ _
 
 theorem finite_of_ratios {o Ω I K : Type} [CommRing o] [Field Ω] [Algebra o Ω] {v : I → Ω} {t : K → Ω} {a : I → K}

@@ -114,7 +114,7 @@ private theorem contAction_sub {G A V : Type} [Group G] [TopologicalSpace G] [Co
     [Module A V] [TopologicalSpace V] (ρ : Representation A G V) (h : ReciprocityTheory.Gal.ContAction ρ) (H : Subgroup G) :
     ReciprocityTheory.Gal.ContAction (ρ.comp H.subtype : Representation A H V) :=
   h.comp (f := fun p : H × V => ((p.1 : G), p.2))
-    ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+    ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
 
 section
 
@@ -261,17 +261,17 @@ private theorem entry (hφ : IsOpenEmbedding φ) (hr : Continuous fun g => (r g 
     (h : UpperTri r κ) (U : Subgroup G) [U.Normal] (hU : IsOpen (U : Set G)) (hcr : CrOn φ (adGL r) U)
     (y : G → Matrix (Fin n) (Fin n) E) (hy : y ∈ finiteCocycles φ (adGL r)) (i j : Fin n) (hm : ∀ g, y g ∈ corner E i j) :
     (fun g => y g i j) ∈ finiteCocycles φ (chRep (κ i * (κ j)⁻¹)) := by
-  haveI : IsModuleTopology ℚ_[l] (Matrix (Fin n) (Fin n) E) :=
+  have : IsModuleTopology ℚ_[l] (Matrix (Fin n) (Fin n) E) :=
     inferInstanceAs (IsModuleTopology ℚ_[l] (Fin n → Fin n → E))
-  haveI : ContinuousSMul ℚ_[l] (Matrix (Fin n) (Fin n) E) := IsModuleTopology.toContinuousSMul _ _
-  haveI : FiniteDimensional ℚ_[l] (corner E i j) :=
+  have : ContinuousSMul ℚ_[l] (Matrix (Fin n) (Fin n) E) := IsModuleTopology.toContinuousSMul _ _
+  have : FiniteDimensional ℚ_[l] (corner E i j) :=
     Module.Finite.of_injective ((corner E i j).subtype.restrictScalars ℚ_[l]) Subtype.val_injective
-  haveI : ContinuousSMul ℚ_[l] (corner E i j) :=
-    ⟨continuous_induced_rng.2 (continuous_fst.smul (continuous_subtype_val.comp continuous_snd))⟩
-  haveI : IsModuleTopology ℚ_[l] (corner E i j) := isModuleTopologyOfFiniteDimensional
+  have : ContinuousSMul ℚ_[l] (corner E i j) :=
+    ⟨continuous_induced_rng.2 (continuous_fst.smul (continuous_subtypeVal.comp continuous_snd))⟩
+  have : IsModuleTopology ℚ_[l] (corner E i j) := isModuleTopologyOfFiniteDimensional
   let σ := (adGL r).subrepresentation (corner E i j) (corner_stable h i j)
   have hσ : ContAction σ := continuous_induced_rng.2
-    ((cont_ad hr).comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))
+    ((cont_ad hr).comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)))
   let c : G → corner E i j := fun g => ⟨y g, hm g⟩
   have hc : c ∈ Z1 σ := ⟨continuous_induced_rng.2 hy.1.1, fun g k => Subtype.ext (hy.1.2 g k)⟩
   have h1 := z1fSub φ hφ σ (adGL r) hσ (cont_ad hr) (corner E i j).subtype (fun _ _ => rfl) Subtype.val_injective
@@ -285,10 +285,10 @@ private theorem crOn_ad (P : LocalPublishedTheorems) (hφ : IsOpenEmbedding φ)
     (hr : Continuous fun g => (r g : Matrix (Fin n) (Fin n) E)) (h : UpperTri r κ) (w : Fin n → ℤ) (hw : StrictAnti w)
     (U : Subgroup G) (hU : IsOpen (U : Set G)) (hI : ∀ i, ∀ g ∈ U, φ g ∈ Iq l → κ i g = cycA l l E (φ g) ^ w i)
     (hne : ∀ i j, i < j → ∃ g ∈ U, (κ i g : E) ≠ κ j g * (cycA l l E (φ g) : E)) : CrOn φ (adGL r) U := by
-  haveI : IsModuleTopology ℚ_[l] (Matrix (Fin n) (Fin n) E) :=
+  have : IsModuleTopology ℚ_[l] (Matrix (Fin n) (Fin n) E) :=
     inferInstanceAs (IsModuleTopology ℚ_[l] (Fin n → Fin n → E))
   have hφU : IsOpenEmbedding (φ.comp U.subtype) := hφ.comp hU.isOpenEmbedding_subtypeVal
-  have hr1 : Continuous fun g : U => (r.comp U.subtype g : Matrix (Fin n) (Fin n) E) := hr.comp continuous_subtype_val
+  have hr1 : Continuous fun g : U => (r.comp U.subtype g : Matrix (Fin n) (Fin n) E) := hr.comp continuous_subtypeVal
   have h1 : IsCr (φ.comp U.subtype) (colRep (r.comp U.subtype)) :=
     prC P _ hφU (AlgHom.id E E) (fun a ha => ⟨1, by simpa using ha⟩) (r.comp U.subtype)
       (fun i j => by
@@ -315,7 +315,7 @@ private theorem fin (P : LocalPublishedTheorems) (hφ : IsOpenEmbedding φ)
     (y : G → Matrix (Fin n) (Fin n) E) (hy : y ∈ finiteCocycles φ (adGL r)) :
     ∃ X, ∀ g, (∀ i j, j < i → (y g - (adGL r g X - X)) i j = 0) ∧
       (φ g ∈ Iq l → ∀ i, (y g - (adGL r g X - X)) i i = 0) := by
-  haveI : IsModuleTopology ℚ_[l] (Matrix (Fin n) (Fin n) E) :=
+  have : IsModuleTopology ℚ_[l] (Matrix (Fin n) (Fin n) E) :=
     inferInstanceAs (IsModuleTopology ℚ_[l] (Fin n → Fin n → E))
   have hcr := crOn_ad P hφ hr h w hw U hU hI hne
   have hκ : ∀ i, Continuous fun g => (κ i g : E) := fun i => by
@@ -408,8 +408,8 @@ private theorem desc [T2Space G] (r : G →* GL (Fin n) (PadicAlgCl l))
   obtain ⟨T⟩ := tiedP l
   have hB : Nontrivial (Bcr l) := (GlobalTheory.RegularRing.isDomain_of_tied T (botExt l)).toNontrivial
   let t : Set (PadicAlgCl l) := Set.range fun p : S × Fin n × Fin n => p.1.1.1 p.2.1 p.2.2
-  haveI : Finite t := (Set.finite_range _).to_subtype
-  haveI : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] t) :=
+  have : Finite t := (Set.finite_range _).to_subtype
+  have : FiniteDimensional ℚ_[l] (IntermediateField.adjoin ℚ_[l] t) :=
     IntermediateField.finiteDimensional_adjoin fun z _ => (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
   let E : IntermediateField ℚ_[l] (PadicAlgCl l) := E₀ ⊔ IntermediateField.adjoin ℚ_[l] t
   have hrE : ∀ g a b, (r g).val a b ∈ E := fun g a b =>
@@ -506,9 +506,9 @@ private theorem bar (P : LocalPublishedTheorems) (hφ : IsOpenEmbedding φ) {r :
     (y : G → Matrix (Fin n) (Fin n) (PadicAlgCl l)) (hy : y ∈ finiteCocycles φ (adGL r)) :
     ∃ X, ∀ g, (∀ i j, j < i → (y g - (adGL r g X - X)) i j = 0) ∧
       (φ g ∈ Iq l → ∀ i, (y g - (adGL r g X - X)) i i = 0) := by
-  haveI : T2Space G := hφ.isEmbedding.t2Space
+  have : T2Space G := hφ.isEmbedding.t2Space
   obtain ⟨E, _, s, z, hs, had, hz, hzf⟩ := desc r hr y hy
-  haveI : IsModuleTopology ℚ_[l] ↥E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology ℚ_[l] ↥E := isModuleTopologyOfFiniteDimensional
   have hs' : ∀ g a b, ((s g).val a b : PadicAlgCl l) =
       (r g).val a b := fun g a b => congrFun (congrFun (hs g) a) b
   have hκE : ∀ i g, (κ i g : PadicAlgCl l) ∈ E := fun i g => by
@@ -541,7 +541,7 @@ private theorem cont_cyc (l : ℕ) [Fact l.Prime] : Continuous (cycA l l (PadicA
   have hc : Continuous (cyc l l) := cyclotomicCharacter.continuous l ℚ_[l] (PadicAlgCl l)
   have ha : Continuous (algebraMap ℤ_[l] (PadicAlgCl l)) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] (PadicAlgCl l)]
-    exact (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtype_val
+    exact (continuous_algebraMap ℚ_[l] (PadicAlgCl l)).comp continuous_subtypeVal
   exact (Continuous.units_map (algebraMap ℤ_[l] (PadicAlgCl l) : ℤ_[l] →* PadicAlgCl l) ha).comp hc
 
 private theorem small {K ι : Type} [TotallyDisconnectedSpace G] [Field K] [TopologicalSpace K] [T1Space K] [Finite ι]
@@ -601,8 +601,8 @@ theorem UpperTheory.V.Th.bkOrd :
       simp only [div_eq_mul_inv, ← map_inv, Units.val_mul]
       exact ((hψ i).mul hψ0).mul (Units.continuous_val.comp (((cont_cyc l).comp hφ.continuous).zpow _)))
     (fun i => by simp only [map_one, one_zpow, div_one, mul_one, Units.val_one]) hk
-  haveI : Finite (H ⧸ U.toSubgroup) := U.toSubgroup.quotient_finite_of_isOpen U.isOpen
-  haveI : U.toSubgroup.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (H ⧸ U.toSubgroup) := U.toSubgroup.quotient_finite_of_isOpen U.isOpen
+  have : U.toSubgroup.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨X, hX⟩ := bar (κ := fun i => ψ i * (ψ 0)⁻¹) P hφ (r := r) (hψ0.smul hρc)
     (fun g => ⟨fun i j hij => by rw [hr, Matrix.smul_apply, (ha g).1 i j hij, smul_zero],
       fun i => by
@@ -653,9 +653,9 @@ private theorem adL_rho {C G V : Type} [CommRing C] [Group G] [AddCommGroup V] [
 private theorem adL_emb {F Ω K : Type} [Field F] [Field Ω] [Field K] [CharZero F] [Algebra F Ω] [IsAlgClosure F Ω]
     (j j₀ : Ω →+* K) (h : j₀.comp (algebraMap F Ω) = j.comp (algebraMap F Ω)) :
     ∃ γ : Ω ≃ₐ[F] Ω, ∀ y, j (γ y) = j₀ y := by
-  letI : Algebra F K := (j.comp (algebraMap F Ω)).toAlgebra
-  letI : Algebra Ω K := j.toAlgebra
-  haveI : IsScalarTower F Ω K := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra F K := (j.comp (algebraMap F Ω)).toAlgebra
+  let : Algebra Ω K := j.toAlgebra
+  have : IsScalarTower F Ω K := IsScalarTower.of_algebraMap_eq' rfl
   let f : Ω →ₐ[F] K := { j₀ with commutes' := fun x => RingHom.congr_fun h x }
   exact ⟨f.restrictNormal' Ω, fun y => f.restrictNormal_commutes Ω y⟩
 private theorem adL_above {F Ω : Type} [Field F] [NumberField F] [Field Ω] [CharZero Ω] [Algebra F Ω] [IsAlgClosure F Ω]
@@ -738,7 +738,7 @@ private theorem adL_triv {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [Numbe
 theorem UpperTheory.V.Th.adjointLiftingTheorem_of_locPrints_of_core :
     Loc.LocalPublishedTheorems → _root_.UpperTheory.V.Th.DenseThresholdMainCase → _root_.UpperTheory.V.Th.AdjointLiftingTheorem := by
   intro hP hC l _ L Ω _ _ _ _ _ _ s V hS hζ c hL n hn hn' r hr B ι x ρ H hpar P R hform hR z hz hb
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
   have hz' : (fun g => z (toGS Ω V.S' g)) ∈ Z1 (R.comp (toGS Ω V.S') :
       Representation (Qbar l) (G (W.Lp L) Ω) (Matrix (Fin n) (Fin n) (Qbar l))) :=
     ⟨hz.1.comp (continuous_toGS Ω _), fun g h => (congrArg z (map_mul _ g h)).trans (hz.2 _ _)⟩
@@ -762,7 +762,7 @@ theorem UpperTheory.V.Th.adjointLiftingTheorem_of_locPrints_of_core :
     obtain ⟨φ, a, b, hi, d⟩ := key
     have d' : ∀ g, Loc.cycA l l (Qbar l) (φ g) = cycBar L Ω l (g : G L Ω) := fun g => congrArg (Units.map _) (d g)
     have h3 := adL_above (F := W.Lp L) j φ ((W.resP L Ω).comp (Dec (F := L) (s.A v.1)).subtype) a
-      (W.continuous_resP.comp continuous_subtype_val) b _ _ hz' hb
+      (W.continuous_resP.comp continuous_subtypeVal) b _ _ hz' hb
     have e : ((R.comp (toGS Ω V.S')).comp ((W.resP L Ω).comp (Dec (F := L) (s.A v.1)).subtype) :
         Representation (Qbar l) (Dec (F := L) (s.A v.1)) (Matrix (Fin n) (Fin n) (Qbar l))) =
         Loc.adGL (ρ.comp (V.frame.φ v)) :=
@@ -772,7 +772,7 @@ theorem UpperTheory.V.Th.adjointLiftingTheorem_of_locPrints_of_core :
     obtain ⟨g₀, hg₀, hf⟩ := H.free v
     have hI : V.frame.Iv v = (Loc.Iq l).comap φ := Subgroup.ext fun g => (hi g).symm
     rw [hI]
-    haveI : CompactSpace (Dec (F := L) (s.A v.1)) := V.frame.cv v
+    have : CompactSpace (Dec (F := L) (s.A v.1)) := V.frame.cv v
     refine bkOrd hP l (Dec (F := L) (s.A v.1)) φ a n _ _ m k (H.cont.comp (V.frame.φ_cont v)) (H.flag v) hm hk
       (fun i i' g hg => ?_) ⟨g₀, ?_, hf⟩ _ h3
     · rw [d']
@@ -840,7 +840,7 @@ theorem UpperTheory.V.Th.core_of_ord_vanishing_two_phi_all :
   have hc : Continuous fun g : V.frame.G₀ => W.mat ρ g := Units.continuous_val.comp hN.cont
   refine (hO l L Ω s V c n r B ι x h ρ P hV h2 h4 h0 hh hD hN.cont hN.aut hfull hP hN.unr0 hno hdet
     (fun g => z g - Pa.dY V.frame (W.mat ρ) X₀ g) ⟨?_, fun g g' => ?_, hpol, fun u g hg => ?_, fun v => ?_⟩).elim hext
-  · exact cont_sub hc (hz.1.comp continuous_subtype_val) X₀
+  · exact cont_sub hc (hz.1.comp continuous_subtypeVal) X₀
   · have e1 : z ((g * g' : V.frame.G₀) : V.frame.Γ) = z g + W.mat ρ g * z g' * W.mat ρ g⁻¹ := by
       rw [← ad_eq, ← hR.ad]
       exact hz.2 _ _

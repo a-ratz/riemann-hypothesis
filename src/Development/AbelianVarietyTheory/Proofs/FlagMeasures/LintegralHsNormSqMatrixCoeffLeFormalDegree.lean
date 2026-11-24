@@ -79,7 +79,7 @@ theorem rankOneInnerOperator_smul_smul_eq_mul_conj_smul {Wp : Type} [NormedAddCo
     {Wq : Type} [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] (α β : ℂ) (a : Wp) (b : Wq) :
     rk1 (α • a) (β • b) = (α * (starRingEnd ℂ) β) • rk1 a b := by
   ext η
-  rw [ContinuousLinearMap.smul_apply, rankOneInnerOperator_apply, rankOneInnerOperator_apply, inner_smul_left, smul_smul, smul_smul]
+  rw [smul_apply, rankOneInnerOperator_apply, rankOneInnerOperator_apply, inner_smul_left, smul_smul, smul_smul]
   congr 1
   ring
 
@@ -219,7 +219,7 @@ theorem tendsto_of_integrable {k r : ℕ} {S : Set (Mat k r)} {μ : Measure (Mt 
     {Om : ℕ → Set (Mt k r)} (hO : IsFolner S μ Om) {f : Mt k r → ℂ} (hf : Integrable f μ) :
     Filter.Tendsto (fun j => (∫ p, ((μ {s | s ∈ Om j ∧ lmulM (Matrix.of p) s ∈ Om j}).toReal : ℂ) * f p ∂μ)
       / ((μ (Om j)).toReal : ℂ)) Filter.atTop (nhds (∫ p, f p ∂μ)) := by
-  haveI : SigmaFinite μ := hμ.1
+  have : SigmaFinite μ := hμ.1
   have hae : ∀ᵐ p ∂μ, (Matrix.of p : Mat k r) ∈ S := hμ.2.2.1
   have heq : ∀ j, (∫ p, ((μ {s | s ∈ Om j ∧ lmulM (Matrix.of p) s ∈ Om j}).toReal : ℂ) * f p ∂μ)
       / ((μ (Om j)).toReal : ℂ) =
@@ -354,7 +354,7 @@ theorem entry_eq [CompleteSpace Wp] {μ : Measure α} {ν : Measure β} [IsFinit
   rw [← T.integral_comp_comm hG, inner_integral_integral hF (T.integrable_comp hG),
     ContinuousLinearMap.integral_apply hI, ← integral_inner (hI.apply_continuousLinearMap η')]
   refine integral_congr_ae (Filter.Eventually.of_forall fun p => ?_)
-  simp only [ContinuousLinearMap.smul_apply, rankOneInnerOperator_apply, map_smul, inner_smul_left, inner_smul_right,
+  simp only [smul_apply, rankOneInnerOperator_apply, map_smul, inner_smul_left, inner_smul_right,
     inner_conj_symm]
   ring
 
@@ -378,7 +378,7 @@ theorem eq_sum_entries {ι κ : Type*} [Fintype ι] [Fintype κ] (e : Orthonorma
   ext η
 
   conv_lhs => rw [← f.sum_repr' η, map_sum]
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, rankOneInnerOperator_apply, map_smul]
+  simp only [sum_apply, smul_apply, rankOneInnerOperator_apply, map_smul]
   refine Finset.sum_congr rfl fun j _ => ?_
   conv_lhs => rw [← e.sum_repr' (A (f j)), Finset.smul_sum]
   exact Finset.sum_congr rfl fun i _ => smul_comm _ _ _
@@ -417,8 +417,8 @@ theorem integral_sub_var {S : Set (Mat k r)} (hS : IsClosedSub k r S) {μ : Meas
     {f : Mt k r → ℂ} (hf : Integrable f μ) :
     ∫ t in Om, ∫ s in Om, f (rmulM (Matrix.of t : Mat k r)⁻¹ s) ∂μ ∂μ =
       ∫ p, ((μ {s | s ∈ Om ∧ lmulM (Matrix.of p) s ∈ Om}).toReal : ℂ) * f p ∂μ := by
-  haveI := hμ.1
-  haveI : IsFiniteMeasure (μ.restrict Om) := isFiniteMeasure_restrict.2 hfin.ne
+  have := hμ.1
+  have : IsFiniteMeasure (μ.restrict Om) := isFiniteMeasure_restrict.2 hfin.ne
   have hc : Continuous fun q : Mt k r × Mt k r => lmulM (Matrix.of q.1) q.2 :=
     Continuous.matrix_mul (X := Mt k r × Mt k r) continuous_fst continuous_snd
   have hE : MeasurableSet {q : Mt k r × Mt k r | lmulM (Matrix.of q.1) q.2 ∈ Om} := hc.measurable hO
@@ -511,8 +511,8 @@ theorem sum_norm_side [CompleteSpace H] {S : Set (Mat k r)} (hS : IsClosedSub k 
         ∫ s in Om, ⟪P (Matrix.of s)⁻¹ ξ, e i⟫_ℂ • σ (Matrix.of s)⁻¹ y ∂μ⟫_ℂ =
       ∫ p, ((μ {s | s ∈ Om ∧ lmulM (Matrix.of p) s ∈ Om}).toReal : ℂ) *
         (coef σ y y (Matrix.of p) * ⟪ξ, P (Matrix.of p)⁻¹ ξ⟫_ℂ) ∂μ := by
-  haveI := hμ.1
-  haveI : IsFiniteMeasure (μ.restrict Om) := isFiniteMeasure_restrict.2 hfin.ne
+  have := hμ.1
+  have : IsFiniteMeasure (μ.restrict Om) := isFiniteMeasure_restrict.2 hfin.ne
   have hu := aesm_rep_inv hS hμ hσ y Om
   have ha := aesm_rep_inv hS hμ hP ξ Om
   have huC := ae_norm_rep_inv hS hμ hσ y Om
@@ -560,8 +560,8 @@ theorem truncated_norm_sq : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [I
   have hU' := (_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z' hz' hT' μS').1 hμ'
   have hσS := IsURepOn_mono hS.1 hσ
   have hσS' := IsURepOn_mono hS'.1 hσ
-  haveI : IsFiniteMeasure (μS.restrict Om) := isFiniteMeasure_restrict.2 hfin.ne
-  haveI : IsFiniteMeasure (μS'.restrict Om') := isFiniteMeasure_restrict.2 hfin'.ne
+  have : IsFiniteMeasure (μS.restrict Om) := isFiniteMeasure_restrict.2 hfin.ne
+  have : IsFiniteMeasure (μS'.restrict Om') := isFiniteMeasure_restrict.2 hfin'.ne
   set I := Iint (psiGen k r z c) (psiGen k r z' c') π π' (μS.restrict Om) (μS'.restrict Om') σ x y ξ ξ'
     with hI
   set e := stdOrthonormalBasis ℂ Wp
@@ -677,7 +677,7 @@ theorem dd_pair {τ : ℝ} (hτ : τ ≠ 0) {i j : Fin (2 * r + k + 1)} (h : i.v
 theorem dd_middle (τ : ℝ) {i : Fin (2 * r + k + 1)} (h1 : r ≤ i.val) (h2 : i.val ≤ r + k) :
     dd k r τ i = 1 := by
   unfold dd
-  rw [if_neg (by omega), if_pos h2]
+  rw [ite_eq_right (by omega), ite_eq_left h2]
 
 theorem dil_entry (a b : ℝ) (m : Mat k r) (i j : Fin (2 * r + k + 1)) :
     (dil k r a * m * dil k r b) i j = dd k r a i * m i j * dd k r b j := by
@@ -713,8 +713,8 @@ theorem dil_mem {τ : ℝ} (hτ : τ ≠ 0) : dil k r τ ∈ UH (Hpk k r) := by
       rw [dd_middle τ hr hk, one_mul, mul_one]
     · have h0 : Hpk k r i j = 0 := by
         simp only [Hpk]
-        rw [if_neg (fun hc => h1 ⟨Or.inl hc.1, hc.2⟩), if_neg (fun hc => h1 ⟨Or.inr hc.1, hc.2⟩),
-          if_neg h2]
+        rw [ite_eq_right (fun hc => h1 ⟨Or.inl hc.1, hc.2⟩), ite_eq_right (fun hc => h1 ⟨Or.inr hc.1, hc.2⟩),
+          ite_eq_right h2]
       rw [h0, mul_zero, zero_mul]
 
 theorem Hpk_row {i p t : Fin (2 * r + k + 1)} (h : i.val < r ∨ r + k < i.val)
@@ -722,12 +722,12 @@ theorem Hpk_row {i p t : Fin (2 * r + k + 1)} (h : i.val < r ∨ r + k < i.val)
   have hpo : ¬ (r ≤ p.val ∧ p.val ≤ r + k) := by omega
   simp only [Hpk]
   rcases eq_or_ne t i with rfl | hti
-  · rw [if_pos rfl]
+  · rw [ite_eq_left rfl]
     rcases h with h | h
-    · rw [if_neg (by omega), if_pos ⟨h, by omega⟩]
-    · rw [if_pos ⟨by omega, by omega⟩]
+    · rw [ite_eq_right (by omega), ite_eq_left ⟨h, by omega⟩]
+    · rw [ite_eq_left ⟨by omega, by omega⟩]
   · have hv : t.val ≠ i.val := fun e => hti (Fin.ext e)
-    rw [if_neg hti, if_neg (by omega), if_neg (by omega), if_neg (fun hc => hpo ⟨hc.1, hc.2.1⟩)]
+    rw [ite_eq_right hti, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_right (fun hc => hpo ⟨hc.1, hc.2.1⟩)]
 
 theorem uw_col {z : Fin (2 * r + k + 1) → ℂ} {h : Mat k r} (hh : h ∈ UWset k r z)
     {p : Fin (2 * r + k + 1)} (hp : p.val < r ∨ r + k < p.val) (s : Fin (2 * r + k + 1)) :
@@ -770,9 +770,9 @@ theorem uw_zero {z : Fin (2 * r + k + 1) → ℂ} {h : Mat k r} (hh : h ∈ UWse
     · simp
   have e := congrFun (congrFun hU p) j
   rw [Matrix.mul_apply] at e
-  simp only [hleft, hrow, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true] at e
+  simp only [hleft, hrow, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at e
   have hji : j ≠ i := fun hc => by subst hc; omega
-  rw [if_neg hji] at e
+  rw [ite_eq_right hji] at e
   exact e
 
 theorem dil_comm {z : Fin (2 * r + k + 1) → ℂ} (τ : ℝ) {h : Mat k r} (hh : h ∈ UWset k r z) :
@@ -830,11 +830,11 @@ theorem contract {τ : ℝ} (hτ : 1 ≤ τ) {m : Mat k r} (hm : m ∈ Nset k r)
   rw [dil_inv hτ0, Matrix.sub_apply, Matrix.sub_apply, dil_entry, Matrix.one_apply]
   rcases lt_trichotomy i j with hij | rfl | hij
   · have hij' : i.val < j.val := hij
-    rw [if_neg hij.ne, sub_zero, sub_zero]
+    rw [ite_eq_right hij.ne, sub_zero, sub_zero]
     by_cases hmid : r ≤ i.val ∧ j.val ≤ r + k
     · have h0 : m i j = 0 := by
         have e := hb i j (by omega) hmid.2 hmid.1
-        rwa [if_neg hij.ne] at e
+        rwa [ite_eq_right hij.ne] at e
       rw [h0]
       simp
     · have hw := wt_lt (k := k) (r := r) hij' hmid
@@ -843,12 +843,12 @@ theorem contract {τ : ℝ} (hτ : 1 ≤ τ) {m : Mat k r} (hm : m ∈ Nset k r)
       rw [norm_zpow, Complex.norm_real, Real.norm_of_nonneg hpos.le, ← _root_.zpow_neg_one]
       exact _root_.zpow_le_zpow_right₀ hτ (by omega)
   · have h1 : m i i = 1 := by simpa using apply_self_eq_one_of_mem_Nset hm i
-    rw [h1, if_pos rfl, mul_one, dd_inv_mul hτ0, sub_self, _root_.zpow_zero]
+    rw [h1, ite_eq_left rfl, mul_one, dd_inv_mul hτ0, sub_self, _root_.zpow_zero]
     simp
   · have h0 : m i j = 0 := by
       have e := Formalism.FourierDecayAlt.P.UnipotentUpperFacts.N_upper hm i j hij.le
-      rwa [if_neg hij.ne'] at e
-    rw [if_neg hij.ne', h0]
+      rwa [ite_eq_right hij.ne'] at e
+    rw [ite_eq_right hij.ne', h0]
     simp
 
 theorem main : ∀ (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ), inWb k r z → (∀ τ : ℝ, 0 < τ → dil k r τ ∈ GG k r ∧ (∀ h ∈ UWset k r z, dil k r τ * h = h * dil k r τ) ∧ (∀ m ∈ Nset k r, dil k r τ * m * (dil k r τ)⁻¹ ∈ Nset k r ∧ (dil k r τ)⁻¹ * m * dil k r τ ∈ Nset k r)) ∧ (∀ τ : ℝ, 1 ≤ τ → ∀ m ∈ Nset k r, ∀ i j, ‖((dil k r τ)⁻¹ * m * dil k r τ - 1) i j‖ ≤ τ⁻¹ * ‖(m - 1) i j‖) := by
@@ -981,7 +981,7 @@ theorem isOpen_U (H : Set (Mat k r)) (t : ℝ) :
     IsOpen {x : Mt k r | ∃ h ∈ H, sn (h * Matrix.of x) < t} := by
   have : {x : Mt k r | ∃ h ∈ H, sn (h * Matrix.of x) < t} =
       ⋃ h ∈ H, {x : Mt k r | sn (lmulM h x) < t} := by
-    ext x; simp only [Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]; rfl
+    ext x; simp only [Set.mem_ofPred_eq, Set.mem_iUnion, exists_prop]; rfl
   rw [this]
   exact isOpen_biUnion fun h _ => isOpen_lt (continuous_sn.comp (continuous_lmulM h)) continuous_const
 
@@ -1397,8 +1397,8 @@ theorem hsNormSq_Iint_le_liminf : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup
   have hP' := _root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z' c' π' hS'.1 hS'.2.1 hS'.2.2.1
   have hinv := ((_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hS.1 hS.2.1 μS).1 hS.2.2.2.1).2
   have hinv' := ((_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z' hS'.1 hS'.2.1 μS').1 hS'.2.2.2.1).2
-  haveI := hS.2.2.2.1.1
-  haveI := hS'.2.2.2.1.1
+  have := hS.2.2.2.1.1
+  have := hS'.2.2.2.1.1
   have h0 := hS.2.2.2.1.2.2.1
   have h0' := hS'.2.2.2.1.2.2.1
   refine ENNReal.le_of_forall_nnreal_lt fun b hb => ?_
@@ -1522,7 +1522,7 @@ theorem integrable_coef {H : Type*} [NormedAddCommGroup H] [InnerProductSpace �
   · refine lt_of_le_of_lt (b := ∫⁻ x, ENNReal.ofReal C * ENNReal.ofReal (opn (Matrix.of x) ^ (-a)) ∂μ)
       (lintegral_mono_ae ?_) ?_
     · filter_upwards [hae] with p hp
-      rw [← ENNReal.ofReal_mul' (Real.rpow_nonneg (opn_nonneg _) _), ← ofReal_norm_eq_enorm]
+      rw [← ENNReal.ofReal_mul' (Real.rpow_nonneg (opn_nonneg _) _), ← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hC _ (hS.1 hp))
     · rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
       exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top hfin
@@ -1537,8 +1537,8 @@ theorem dis_of_continuousOn {Ω S S' : Set (Mat k r)} {μG μS μS' ν : Measure
         g γ = ∫⁻ p, ENNReal.ofReal (f (Matrix.of (act2 (Matrix.of γ) p))) ∂(μS.prod μS')) ∧
       ∫⁻ γ, g γ ∂ν = ENNReal.ofReal (∫ g, f (Matrix.of g) ∂μG) := by
   classical
-  haveI := hμ.1
-  haveI := hμ'.1
+  have := hμ.1
+  have := hμ'.1
   have hGm : MeasurableSet {p : Mt k r | (Matrix.of p : Mat k r) ∈ GG k r} :=
     IsClosed.measurableSet (α := Mt k r) hG.2.1
   let f0 : Mt k r → ℝ := {p : Mt k r | (Matrix.of p : Mat k r) ∈ GG k r}.piecewise

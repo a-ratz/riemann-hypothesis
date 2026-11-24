@@ -127,7 +127,7 @@ section Conj
 variable (A : Rep.{u} k G) [IsDiscreteRep A] (N : Subgroup G) [N.Normal]
 
 theorem continuous_conjHom (g : G) : Continuous (GroundTheory.GroupCoh.conjHom N g) :=
-  Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+  Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
 
 noncomputable def cohomologyConj (n : ℕ) (g : G) :
     cohomology (Rep.res N.subtype A) n ⟶ cohomology (Rep.res N.subtype A) n :=

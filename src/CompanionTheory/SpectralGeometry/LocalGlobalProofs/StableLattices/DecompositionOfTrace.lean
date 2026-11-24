@@ -239,11 +239,11 @@ theorem decOfTrace : DecOfTrace := by
         ∑ k ∈ univ.filter (fun k => par k = ν), (a k + b k + α - cs ν) := by
     intro ν
     obtain ⟨bs, -⟩ := exists_basis hc hT hd₁ ν
-    haveI : Module.Finite ℂ (homSub hc (T ν) X) := Module.Finite.of_basis bs
+    have : Module.Finite ℂ (homSub hc (T ν) X) := Module.Finite.of_basis bs
     have hid : post hc (T ν) q hq ∘ₗ post hc (T ν) j hj = LinearMap.id := by
       ext w x
       exact LinearMap.congr_fun hqj (w.1 x)
-    haveI hfin : Module.Finite ℂ (homSub hc (T ν) Z) :=
+    have hfin : Module.Finite ℂ (homSub hc (T ν) Z) :=
       Module.Finite.of_surjective (post hc (T ν) q hq) fun w =>
         ⟨post hc (T ν) j hj w, LinearMap.congr_fun hid w⟩
     refine ⟨hfin, ?_⟩

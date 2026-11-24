@@ -82,7 +82,7 @@ theorem ee_add (z w : ℂ) : ee (z + w) = ee z * ee w := by
   simp only [ee, mul_add, Complex.exp_add]
 
 theorem ee_nat_mul (n : ℕ) (z : ℂ) : ee (n * z) = ee z ^ n := by
-  simp only [ee, ← Complex.exp_nat_mul]; congr 1; ring
+  simp only [ee, ← Complex.exp_natCast_mul]; congr 1; ring
 
 theorem ee_neg (z : ℂ) : ee (-z) = (ee z)⁻¹ := by
   simp only [ee, ← Complex.exp_neg]; congr 1; ring
@@ -184,7 +184,7 @@ theorem summable_exp_abs {a : ℝ} (ha : 0 < a) : Summable fun n : ℤ => Real.e
   have hs : Summable fun n : ℕ => Real.exp (-(a * n)) := by
     have := summable_geometric_of_lt_one (Real.exp_pos (-a)).le (Real.exp_lt_one_iff.2 (by linarith))
     refine this.congr fun n => ?_
-    rw [← Real.exp_nat_mul]; congr 1; ring
+    rw [← Real.exp_natCast_mul]; congr 1; ring
   apply Summable.of_nat_of_neg <;> simpa using hs
 
 theorem summable_pow_exp_abs {a : ℝ} (ha : 0 < a) (k : ℕ) (s : ℝ) :

@@ -192,10 +192,10 @@ private theorem lintegral_pi_one {ι : Type} [Fintype ι] {T : ι → Type} [∀
 theorem UpperTheory.ConvolutionTheory.G.quotPi_of :
     UpperTheory.ConvolutionTheory.G.NormEx → UpperTheory.ConvolutionTheory.G.QuotEq → UpperTheory.ConvolutionTheory.G.QuotPi := by
   intro hN hE ι _ G _ _ _ _ _ _ _ _ T _ _ _ _ _ _ _ _ μ j ν hP J hJ
-  haveI : ∀ i, (μ i).IsHaarMeasure := fun i => (hP i).1.1
-  haveI : ∀ i, (μ i).IsInvInvariant := fun i => (hP i).1.2
-  haveI : ∀ i, (ν i).IsHaarMeasure := fun i => (hP i).2.2.1
-  haveI : ∀ i, (ν i).IsInvInvariant := fun i => (hP i).2.2.2
+  have : ∀ i, (μ i).IsHaarMeasure := fun i => (hP i).1.1
+  have : ∀ i, (μ i).IsInvInvariant := fun i => (hP i).1.2
+  have : ∀ i, (ν i).IsHaarMeasure := fun i => (hP i).2.2.1
+  have : ∀ i, (ν i).IsInvInvariant := fun i => (hP i).2.2.2
   have hJe : (J : (∀ i, T i) → ∀ i, G i) = Pi.map (fun i => (j i : T i → G i)) := by
     funext t i
     exact hJ t i

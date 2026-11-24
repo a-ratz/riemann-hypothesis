@@ -107,7 +107,7 @@ private theorem card_H0dual {R k Γ Γ' M : Type} [Field R] [Field k] [Finite k]
     (ρ : Representation k Γ M) (ρ' : Representation R Γ' M) (e : Γ' ≃* Γ) (h : ∀ g m, ρ' g m = ρ (e g) m)
     (χ : Γ →* kˣ) (χ' : Γ' →* Rˣ) (hχ : ∀ g, (χ (e g) : k) = algebraMap R k (χ' g)) :
     Nat.card (H0dual χ ρ) = Nat.card (H0dual χ' ρ') := by
-  haveI : Finite R := Finite.of_injective _ (algebraMap R k).injective
+  have : Finite R := Finite.of_injective _ (algebraMap R k).injective
   let T : Module.Dual k M →+ Module.Dual R M :=
     { toFun := fun f => (Algebra.trace R k).comp (f.restrictScalars R)
       map_zero' := by ext; simp
@@ -121,7 +121,7 @@ private theorem card_H0dual {R k Γ Γ' M : Type} [Field R] [Field k] [Finite k]
     have := hT f (a • m)
     rw [hf, f.map_smul, smul_eq_mul, mul_comm] at this
     exact this.symm
-  haveI : Finite (Module.Dual R M) := DFunLike.finite _
+  have : Finite (Module.Dual R M) := DFunLike.finite _
   have hbij : Function.Bijective T := hinj.bijective_of_nat_card_le (by
     rw [Module.natCard_eq_pow_finrank (K := R) (V := Dual R M), Module.natCard_eq_pow_finrank (K := k) (V := Dual k M),
       Subspace.dual_finrank_eq, Subspace.dual_finrank_eq, ← Module.natCard_eq_pow_finrank,
@@ -160,7 +160,7 @@ private theorem card_twDual {R Γ Γ' M : Type} [CommRing R] [Group Γ] [Group �
 
 private theorem card_eq_card_pow_finrank (k V : Type) [Field k] [AddCommGroup V] [Module k V] [Finite V] :
     Nat.card V = Nat.card k ^ finrank k V := by
-  haveI : Module.Finite k V := Module.Finite.of_finite
+  have : Module.Finite k V := Module.Finite.of_finite
   exact Module.natCard_eq_pow_finrank
 
 end SlopeTestRemainingChoices
@@ -173,12 +173,12 @@ theorem UpperTheory.V.GC.ptTail :
   have hl : l.Prime := Fact.out
   let χ := cycF F Ω l k
   let c : ZMod (l ^ 1) →+* k := ZMod.castHom (dvd_pow_self l one_ne_zero) k
-  haveI : Fact (l ^ 1).Prime := ⟨by rwa [pow_one]⟩
-  haveI : CharP k (l ^ 1) := by rwa [pow_one]
-  letI : Algebra (ZMod (l ^ 1)) k := ZMod.algebra k (l ^ 1)
-  letI : Module (ZMod (l ^ 1)) M := Module.compHom M (algebraMap (ZMod (l ^ 1)) k)
-  haveI : IsScalarTower (ZMod (l ^ 1)) k M := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : Finite M := Module.finite_of_finite k
+  have : Fact (l ^ 1).Prime := ⟨by rwa [pow_one]⟩
+  have : CharP k (l ^ 1) := by rwa [pow_one]
+  let : Algebra (ZMod (l ^ 1)) k := ZMod.algebra k (l ^ 1)
+  let : Module (ZMod (l ^ 1)) M := Module.compHom M (algebraMap (ZMod (l ^ 1)) k)
+  have : IsScalarTower (ZMod (l ^ 1)) k M := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : Finite M := Module.finite_of_finite k
   let ρ' : Representation (ZMod (l ^ 1)) _ M := resCoef (ZMod (l ^ 1)) ρ
   have h : ∀ g m, ρ' g m = ρ g m := fun _ _ => rfl
   have hρ' : ContAction ρ' := hρ
@@ -188,11 +188,11 @@ theorem UpperTheory.V.GC.ptTail :
   obtain ⟨⟨-, -, -, -, -, -, -, -, -, hex, hsurj⟩, ⟨⟨-, hfs, -⟩, -⟩, -⟩ := hN S hS A hA μ hμ M ρ' hρ'
   have hc := card_exact _ _ hex hsurj
   have hker : LinearMap.ker (loc2 S A ρ') = Sha2 ρ' (locFam S A) (continuous_locFam S A) := LinearMap.ker_pi _
-  haveI f2 : ∀ v : S, Finite (H2 (ρ'.comp (locFam S A v))) := fun v => by
+  have f2 : ∀ v : S, Finite (H2 (ρ'.comp (locFam S A v))) := fun v => by
     obtain ⟨-, -, f2, -⟩ := hL F Ω l 1 M (A v) (ρ'.comp (locFam S A v)) v.1 one_pos (hA v)
       (hρ'.comp' (continuous_locFam S A v))
     exact f2
-  haveI : Finite (H2 ρ') := by
+  have : Finite (H2 ρ') := by
     apply Nat.finite_of_card_ne_zero
     rw [card_ker_range (loc2 S A ρ'), hker]
     exact mul_ne_zero Nat.card_pos.ne' Nat.card_pos.ne'
@@ -200,11 +200,11 @@ theorem UpperTheory.V.GC.ptTail :
   have e2 := h2EquivOfRepEq ρ ρ' h
   have e3 : ∀ v : S, H2 (ρ.comp (locFam S A v)) ≃ H2 (ρ'.comp (locFam S A v)) := fun v =>
     h2EquivOfRepEq _ _ fun g m => h _ m
-  haveI : Finite (H2 ρ) := Finite.of_equiv _ e2.symm
-  haveI : ∀ v : S, Finite (H2 (ρ.comp (locFam S A v))) := fun v => Finite.of_equiv _ (e3 v).symm
-  haveI : Finite (Module.Dual k M) := DFunLike.finite _
-  haveI : Finite (TDual (ZMod (l ^ 1)) M) := (DFunLike.finite _ : Finite (M →ₗ[ZMod (l ^ 1)] ZMod (l ^ 1)))
-  haveI : Finite (H0 (twDual μ ρ')) := Subtype.finite
+  have : Finite (H2 ρ) := Finite.of_equiv _ e2.symm
+  have : ∀ v : S, Finite (H2 (ρ.comp (locFam S A v))) := fun v => Finite.of_equiv _ (e3 v).symm
+  have : Finite (Module.Dual k M) := DFunLike.finite _
+  have : Finite (TDual (ZMod (l ^ 1)) M) := (DFunLike.finite _ : Finite (M →ₗ[ZMod (l ^ 1)] ZMod (l ^ 1)))
+  have : Finite (H0 (twDual μ ρ')) := Subtype.finite
   have hk : 1 < Nat.card k := Finite.one_lt_card
   have hd : Nat.card (Module.Dual (ZMod (l ^ 1)) (H0 (twDual μ ρ'))) =
       Nat.card (H0dual χ (ρ.comp (toGS Ω _))) := by
@@ -218,8 +218,8 @@ theorem UpperTheory.V.GC.ptTail :
   apply Nat.pow_right_injective hk
   beta_reduce
   rw [pow_add, pow_add, ← Finset.prod_pow_eq_pow_sum]
-  haveI : Finite (Sha2 ρ (locFam S A) (continuous_locFam S A)) := Subtype.finite
-  haveI : Finite (H0dual χ (ρ.comp (toGS Ω (S : Set (HeightOneSpectrum (𝓞 F)))))) := Subtype.finite
+  have : Finite (Sha2 ρ (locFam S A) (continuous_locFam S A)) := Subtype.finite
+  have : Finite (H0dual χ (ρ.comp (toGS Ω (S : Set (HeightOneSpectrum (𝓞 F)))))) := Subtype.finite
   rw [← card_eq_card_pow_finrank, ← card_eq_card_pow_finrank, ← card_eq_card_pow_finrank, Finset.prod_congr rfl fun v _ => (card_eq_card_pow_finrank k _).symm]
   rw [Nat.card_congr eS, Nat.card_congr e2, ← hd, ← hc, hker, Nat.card_pi]
   exact congrArg _ (Finset.prod_congr rfl fun v _ => Nat.card_congr (e3 v))

@@ -61,8 +61,8 @@ theorem schr_unitary : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     ∀ (w : (κ → k) × (κ → k)) (φ φ' : (κ → k) → ℂ),
       ∫ y, GlobalTheory.WeilM.schr ψ0 w φ y * (starRingEnd ℂ) (GlobalTheory.WeilM.schr ψ0 w φ' y) ∂μ = ∫ y, φ y * (starRingEnd ℂ) (φ' y) ∂μ := by
   intro k _ _ _ _ _ ψ0 hψ κ _ μ hμ w φ φ'
-  letI : MeasurableSpace (κ → k) := borel _
-  haveI : BorelSpace (κ → k) := ⟨rfl⟩
+  let : MeasurableSpace (κ → k) := borel _
+  have : BorelSpace (κ → k) := ⟨rfl⟩
   have h1 : ∀ s : k, ψ0 s * (starRingEnd ℂ) (ψ0 s) = 1 := fun s => by
     rw [Complex.mul_conj, Complex.normSq_eq_norm_sq, norm_addChar_nonarch ψ0 hψ s]; simp
   have h2 : (fun y => GlobalTheory.WeilM.schr ψ0 w φ y * (starRingEnd ℂ) (GlobalTheory.WeilM.schr ψ0 w φ' y)) =

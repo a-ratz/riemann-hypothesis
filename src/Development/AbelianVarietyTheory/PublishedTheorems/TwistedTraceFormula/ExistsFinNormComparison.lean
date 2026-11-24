@@ -120,7 +120,7 @@ theorem finprod_le_mul {α : Type} {f g K : α → ℝ≥0} (hf : (Function.mulS
     (hg : (Function.mulSupport g).Finite) (hK : (Function.mulSupport K).Finite) (h : ∀ a, f a ≤ K a * g a) :
     ∏ᶠ a, f a ≤ (∏ᶠ a, K a) * ∏ᶠ a, g a := by
   rw [← finprod_mul_distrib hK hg]
-  exact finprod_le_finprod' hf ((hK.union hg).subset (Function.mulSupport_mul _ _)) h
+  exact finprod_le_finprod hf ((hK.union hg).subset (Function.mulSupport_mul _ _)) h
 
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 

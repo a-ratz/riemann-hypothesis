@@ -145,7 +145,7 @@ theorem torus_mem_twKer {τ : Representation ℂ (GL (Fin n) 𝓀[k]) W} (hτ : 
   obtain ⟨l0, hl0⟩ := hj0
   have hne : unipRad 𝓀[k] e ≠ ⊥ :=
     GlobalTheory.SmGL.CuspMax.unipRad_ne_bot_iff.2 ⟨i0, l0, (blk_lt_iff a i0 l0).2 ⟨hmax, hl0⟩⟩
-  haveI := Fintype.ofFinite (unipRad 𝓀[k] e)
+  have := Fintype.ofFinite (unipRad 𝓀[k] e)
 
   have hsum : ∑ u : unipRad 𝓀[k] e, τ u w = 0 := by
     refine hτ 2 _ e hne _ fun x hx => ?_
@@ -239,7 +239,7 @@ theorem st6 : St6 := by
   let U : Subrepresentation π.ρ := ⟨S, fun g _ hx => hS g _ hx⟩
   obtain ⟨w0, hw0⟩ := exists_ne (0 : W)
   have hj0 : j w0 ∈ S := Submodule.subset_span ⟨1, w0, by rw [map_one, Module.End.one_apply]⟩
-  haveI := π.irr
+  have := π.irr
   have hU : U = ⊤ := by
     rcases IsSimpleOrder.eq_bot_or_eq_top U with h | h
     · exfalso

@@ -101,7 +101,7 @@ theorem exists_common {ι : Type*} [Finite ι] {V : Type*} [AddCommGroup V] [Mod
     (h : ∀ i, ∃ s ∉ v.asIdeal, algebraMap (𝓞 F) (𝓞 E) s • x i ∈ N) :
     ∃ s ∉ v.asIdeal, ∀ i, algebraMap (𝓞 F) (𝓞 E) s • x i ∈ N := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   choose s hs h using h
   refine ⟨∏ i, s i, (prod_mem (S := v.asIdeal.primeCompl) fun i _ => hs i), fun i => ?_⟩
   rw [← Finset.prod_erase_mul _ _ (Finset.mem_univ i), map_mul, mul_smul]
@@ -111,12 +111,12 @@ theorem exists_frame {k : ℕ} (L : Submodule (𝓞 E) (Fin k → E)) (h1 : L.FG
     (h2 : Submodule.span E (L : Set (Fin k → E)) = ⊤) :
     ∃ g : GL (Fin k) E, ∀ x, (∃ s ∉ v.asIdeal, algebraMap (𝓞 F) (𝓞 E) s • x ∈ L) ↔
       ∀ i, (((g⁻¹ : GL (Fin k) E) : Matrix (Fin k) (Fin k) E) *ᵥ x) i ∈ semiLoc E v := by
-  haveI : Submodule.IsLattice E (Submodule.span (semiLoc E v) (L : Set (Fin k → E))) := by
+  have : Submodule.IsLattice E (Submodule.span (semiLoc E v) (L : Set (Fin k → E))) := by
     constructor
     · obtain ⟨s, rfl⟩ := h1
       exact ⟨s, (Submodule.span_span_of_tower (𝓞 E) _ _).symm⟩
     · exact fun _ _ => (LinearIndependent.iff_fractionRing (semiLoc E v) E).mp
-  haveI : Submodule.IsFullLattice E (Submodule.span (semiLoc E v) (L : Set (Fin k → E))) := by
+  have : Submodule.IsFullLattice E (Submodule.span (semiLoc E v) (L : Set (Fin k → E))) := by
     constructor
     rw [Submodule.span_span_of_tower, h2]
   obtain ⟨g, hg⟩ := exists_eq_frameLattice (Submodule.span (semiLoc E v) (L : Set (Fin k → E)))

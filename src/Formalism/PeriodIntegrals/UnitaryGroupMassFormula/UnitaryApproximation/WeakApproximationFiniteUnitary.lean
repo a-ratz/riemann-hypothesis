@@ -65,7 +65,7 @@ theorem wa_isOpen_lt_one (v : HeightOneSpectrum (𝓞 F)) (x : v.adicCompletion 
   have hz' : Valued.v (z - y) < 1 := by
     first
       | simpa using hz
-  simp only [Set.mem_setOf_eq] at hy ⊢
+  simp only [Set.mem_ofPred_eq] at hy ⊢
   have hzx : z - x = (z - y) + (y - x) := by abel
   rw [hzx]
   exact lt_of_le_of_lt (Valuation.map_add _ _ _) (max_lt hz' hy)
@@ -121,7 +121,7 @@ theorem wa_exists_int_approx (T : Finset (HeightOneSpectrum (𝓞 F)))
     rw [eq_div_iff hdF, sub_mul, div_mul_cancel₀ _ hdF, map_sub, hn v hv]
     ring
   rw [hkey, map_div₀, v.valuation_of_algebraMap, v.valuation_of_algebraMap]
-  have hlt : (0 : WithZero (Multiplicative ℤ)) < v.intValuation (d : 𝓞 F) := zero_lt_iff.mpr (hne v)
+  have hlt : (0 : WithZero (Multiplicative ℤ)) < v.intValuation (d : 𝓞 F) := pos_iff_ne_zero.mpr (hne v)
   first
     | exact (div_le_one₀ hlt).mpr (h1.trans (he v))
 

@@ -133,7 +133,7 @@ theorem exists_den (p : HeightOneSpectrum (𝓞 F)) (y : F) (hy : p.valuation F 
   have h2 : p.intValuation n ≤ p.intValuation d := by
     rw [map_div₀, HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.valuation_of_algebraMap] at hy
     have hpos : 0 < p.intValuation d := by
-      rw [zero_lt_iff]; exact p.intValuation_ne_zero d hd0
+      rw [pos_iff_ne_zero]; exact p.intValuation_ne_zero d hd0
     exact (div_le_one₀ hpos).1 hy
   have h3 : p.asIdeal ^ k ∣ Ideal.span {n} := (p.intValuation_le_pow_iff_dvd n k).1 (h2.trans h1)
   have hn : n ∈ p.asIdeal ^ k := (Ideal.dvd_iff_le.1 h3) (Ideal.mem_span_singleton_self n)
@@ -554,7 +554,7 @@ theorem typed_iff (s : ℕ) (X : A.Ep) :
     simp only [map_mul, map_sub, map_pow, map_neg, map_one, e_alg A sg, sg.e_cj]
     ext <;> simp
   rw [O_split A sg, O_split A sg, e1, e2, e3]
-  simp only [Formalism.FourierDecayAlt.I.orderR, Set.mem_setOf_eq]
+  simp only [Formalism.FourierDecayAlt.I.orderR, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨h1, h2, t, ht, hteq⟩
     have htD : t = ((sg.q : A.Fp) ^ 2)⁻¹ * ((sg.e X).1 - (-1) ^ s * (sg.e X).2) :=
@@ -676,7 +676,7 @@ theorem gpart_none (p : PlF D) (h : (D.s.atP p).split = none) : gpart p = 1 := b
     rw [← D.s_split p, h]; simp
   simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at h1
   unfold gpart
-  rw [if_neg h1.1, if_neg h1.2]
+  rw [ite_eq_right h1.1, ite_eq_right h1.2]
 
 theorem gpart_some (p : PlF D) (sg) (h : (D.s.atP p).split = some sg) : gpart p = Loc.resChar p := by
   have h1 : Loc.resChar p ∈ ({D.host.g 0, D.host.g 1} : Finset ℕ) := by
@@ -722,7 +722,7 @@ theorem inverse_alg {K R : Type} [Field K] [CommRing R] [Algebra K R] (b : K) (h
     _ = algebraMap K R b⁻¹ := by rw [← mul_assoc, Ring.inverse_mul_cancel _ hu, one_mul]
 
 theorem natFp_ne_zero (p : PlF D) (n : ℕ) (hn : n ≠ 0) : ((n : ℕ) : (D.s.atP p).Fp) ≠ 0 := by
-  haveI := (D.s.atP p).char0
+  have := (D.s.atP p).char0
   exact Nat.cast_ne_zero.2 hn
 
 theorem tMod_eq (δ : ∀ p, (D.s.atP p).Fp) (p : PlF D) (hδ : δ p ≠ 0) (ν s : ℕ) (t : D.host.E) :
@@ -792,7 +792,7 @@ theorem twist_membership_iff_integral (p : PlF D) (Mp : Loc.Model (D.s.atP p).Fp
     have key : ∀ Y : (D.s.atP p).Ep, Y ∈ Mp.R ↔
         sg.e Y ∈ Formalism.FourierDecayAlt.I.orderR (𝒪[(D.s.atP p).Fp]) ((sg.q : (D.s.atP p).Fp)) := by
       intro Y
-      simp only [Loc.Model.R, h1, Formalism.FourierDecayAlt.I.orderR, Set.mem_setOf_eq]
+      simp only [Loc.Model.R, h1, Formalism.FourierDecayAlt.I.orderR, Set.mem_ofPred_eq]
       rw [he, ← hq, Subring.mem_comap, Subring.mem_map]
       constructor
       · rintro ⟨w, hw, hwY⟩
@@ -888,7 +888,7 @@ theorem laIsPeriod_of (δ : ∀ p, (D.s.atP p).Fp) (M : ∀ p : PlF D, Loc.Model
     exact ((locGen_gdd p c hc k ν).2 x).symm
   unfold LaIsPeriod
   intro t
-  simp only [La, Set.mem_setOf_eq]
+  simp only [La, Set.mem_ofPred_eq]
   rw [mem_iff_forall_atP (F := D.host.F) (gdd (D := D) 1 ν) t,
     mem_iff_forall_atP (F := D.host.F) (gdd (D := D) 2 ν) _, ← forall_and]
   apply forall_congr'

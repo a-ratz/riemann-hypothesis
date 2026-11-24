@@ -103,7 +103,7 @@ namespace GlobalTheory
 theorem genFibre_prime_meets_polynomial :
     ∀ (T : Type) [CommRing T] [IsDomain T] [IsLocalRing T], AIC T → ∀ (O : Type) [CommRing O] [Algebra T O] [Algebra (Polynomial T) O] [IsScalarTower T (Polynomial T) O] [HenselianLocalRing O] [IsSepClosed (IsLocalRing.ResidueField O)], (∃ (ι : Type) (_ : Preorder ι) (_ : IsDirected ι (· ≤ ·)) (_ : Nonempty ι) (Si : ι → Subalgebra (Polynomial T) O), Monotone Si ∧ (∀ s : O, ∃ i, s ∈ Si i) ∧ ∀ i, ∃ (E : Type) (_ : CommRing E) (_ : Algebra (Polynomial T) E) (_ : Algebra.Etale (Polynomial T) E) (P : Ideal E) (_ : P.IsPrime), Nonempty (Localization.AtPrime P ≃ₐ[(Polynomial T)] Si i)) → ∀ P : Ideal (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))), P.IsPrime → P ≠ ⊥ → ∃ g : Polynomial T, g ≠ 0 ∧ algebraMap (Polynomial T) (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))) g ∈ P := by
   intro T _ _ _ hA O _ _ _ _ _ _ hind P hP hne
-  haveI : IsDomain (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))) :=
+  have : IsDomain (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))) :=
     (locIndEtale_isDomain_isIntegrallyClosed T O 1 ⟨inferInstance, hA⟩ (by simp) one_pos hind).1
   by_contra hcon
   push_neg at hcon
@@ -119,14 +119,14 @@ theorem genFibre_prime_meets_polynomial :
   obtain ⟨ι, _, _, _, Si, -, hcov, hloc⟩ := hind
   obtain ⟨i, hoi⟩ := hcov o
   obtain ⟨E, _, _, _, p, _, ⟨e⟩⟩ := hloc i
-  haveI : Algebra.QuasiFinite (Polynomial T) (Localization.AtPrime p) := inferInstance
-  haveI : Algebra.QuasiFinite (Polynomial T) (Si i) := (Algebra.QuasiFinite.iff_of_algEquiv e).1 this
+  have : Algebra.QuasiFinite (Polynomial T) (Localization.AtPrime p) := inferInstance
+  have : Algebra.QuasiFinite (Polynomial T) (Si i) := (Algebra.QuasiFinite.iff_of_algEquiv e).1 this
   let φ : Si i →+* (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))) := (algebraMap O (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T)))).comp (Si i).val.toRingHom
   have hφ : ∀ g : Polynomial T, φ (algebraMap (Polynomial T) (Si i) g) =
       algebraMap (Polynomial T) (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))) g := fun g => by
     simp [φ, IsScalarTower.algebraMap_apply (Polynomial T) O (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T)))]
-  haveI h1 : (P.comap φ).IsPrime := Ideal.comap_isPrime φ P
-  haveI h0 : ((⊥ : Ideal (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T)))).comap φ).IsPrime := Ideal.comap_isPrime φ ⊥
+  have h1 : (P.comap φ).IsPrime := Ideal.comap_isPrime φ P
+  have h0 : ((⊥ : Ideal (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T)))).comap φ).IsPrime := Ideal.comap_isPrime φ ⊥
   have hunder : ((⊥ : Ideal (Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T)))).comap φ).under (Polynomial T) = (P.comap φ).under (Polynomial T) := by
     ext g
     simp only [Ideal.under, Ideal.mem_comap, hφ, Ideal.mem_bot]
@@ -297,7 +297,7 @@ open scoped TensorProduct
 
 theorem mem_range_of_eval₂ {K D : Type} [Field K] [IsAlgClosed K] [CommRing D] [IsDomain D]
     (ψ : K →+* D) (f : K[X]) (hf : f ≠ 0) (τ : D) (h : f.eval₂ ψ τ = 0) : ∃ r, ψ r = τ := by
-  letI : Algebra K D := ψ.toAlgebra
+  let : Algebra K D := ψ.toAlgebra
   have hK : AIC K := fun p _ hd => IsAlgClosed.exists_root p (natDegree_pos_iff_degree_pos.mp hd).ne'
   have hm : (f * C f.leadingCoeff⁻¹).Monic := monic_mul_leadingCoeff_inv hf
   exact GlobalTheory.AICIff.root_mem_range hK _ _ hm rfl τ (by
@@ -308,9 +308,9 @@ theorem mem_range_of_eval₂ {K D : Type} [Field K] [IsAlgClosed K] [CommRing D]
 theorem mem_range_of_etale {R K E D : Type} [CommRing R] [Field K] [IsAlgClosed K] [CommRing E]
     [CommRing D] [IsDomain D] [Algebra R K] [Algebra R E] [Algebra.Etale R E] [Algebra R D]
     (ψ : K →ₐ[R] D) (Φ : E →ₐ[R] D) (u : E) : ∃ r, ψ r = Φ u := by
-  haveI : Algebra.Etale K (K ⊗[R] E) := Algebra.Etale.baseChange R E K
-  haveI : Module.Finite K (K ⊗[R] E) := Algebra.FormallyUnramified.finite_of_free _ _
-  haveI : Algebra.IsIntegral K (K ⊗[R] E) := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.Etale K (K ⊗[R] E) := Algebra.Etale.baseChange R E K
+  have : Module.Finite K (K ⊗[R] E) := Algebra.FormallyUnramified.finite_of_free _ _
+  have : Algebra.IsIntegral K (K ⊗[R] E) := Algebra.IsIntegral.of_finite _ _
   obtain ⟨f, hfm, hf⟩ := Algebra.IsIntegral.isIntegral (R := K) ((1 : K) ⊗ₜ[R] u)
   let Θ : K ⊗[R] E →ₐ[R] D := Algebra.TensorProduct.productMap ψ Φ
   have hΘ : (Θ : K ⊗[R] E →+* D).comp (algebraMap K (K ⊗[R] E)) = (ψ : K →+* D) := by
@@ -330,8 +330,8 @@ theorem isMaximal_of_mem : ∀ (T : Type) [CommRing T] [IsDomain T], AIC T → �
   intro T _ _ hT O _ _ _ _ hO P hP g hg hgP
   let L := Localization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))
   let K := FractionRing T
-  haveI : IsAlgClosed K := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hT
-  haveI := hP
+  have : IsAlgClosed K := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hT
+  have := hP
   let mk : L →+* L ⧸ P := Ideal.Quotient.mk P
   have hunitL : ∀ t : T, t ≠ 0 → IsUnit (algebraMap T L t) := by
     intro t ht
@@ -355,7 +355,7 @@ theorem isMaximal_of_mem : ∀ (T : Type) [CommRing T] [IsDomain T], AIC T → �
       ((Polynomial.map_ne_zero_iff (IsFractionRing.injective T K)).2 hg) τ ?_
     rw [eval₂_map, hψ, ← coe_eval₂RingHom, ← hpoly, RingHom.comp_apply]
     exact Ideal.Quotient.eq_zero_iff_mem.2 hgP
-  letI : Algebra (Polynomial T) K := (eval₂RingHom (algebraMap T K) a).toAlgebra
+  let : Algebra (Polynomial T) K := (eval₂RingHom (algebraMap T K) a).toAlgebra
   let ψA : K →ₐ[Polynomial T] L ⧸ P :=
     { ψ with
       commutes' := fun p => by
@@ -505,7 +505,7 @@ open CategoryTheory in
 theorem divConstAll_of_divConstLocal : DivConstLocal → DivConstAll := by
   intro hL T O _ _ _ _ _ _ _ _ hAIC P _ φ hφ hSH
   set p : Ideal T := P.comap (C : T →+* T[X]) with hp
-  haveI : p.IsPrime := Ideal.comap_isPrime _ _
+  have : p.IsPrime := Ideal.comap_isPrime _ _
   let T' := Localization.AtPrime p
   have hle : p.primeCompl ≤ nonZeroDivisors T := p.primeCompl_le_nonZeroDivisors
   have hAIC' : AbsIntClosed T' :=
@@ -520,23 +520,23 @@ theorem divConstAll_of_divConstLocal : DivConstLocal → DivConstAll := by
       (⟨C (s : T), hs⟩ : P.primeCompl)).map φ
     rw [← RingHom.comp_apply, hφ] at hu
     rwa [hTO]
-  letI : Algebra T' O := (IsLocalization.lift (M := p.primeCompl) (S := T') hunit).toAlgebra
-  haveI : IsScalarTower T T' O :=
+  let : Algebra T' O := (IsLocalization.lift (M := p.primeCompl) (S := T') hunit).toAlgebra
+  have : IsScalarTower T T' O :=
     IsScalarTower.of_algebraMap_eq (fun x => (IsLocalization.lift_eq hunit x).symm)
-  letI : Algebra T'[X] O := (eval₂RingHom (algebraMap T' O) (algebraMap T[X] O X)).toAlgebra
-  haveI : IsScalarTower T' T'[X] O :=
+  let : Algebra T'[X] O := (eval₂RingHom (algebraMap T' O) (algebraMap T[X] O X)).toAlgebra
+  have : IsScalarTower T' T'[X] O :=
     IsScalarTower.of_algebraMap_eq (fun x => by
       change _ = eval₂ (algebraMap T' O) (algebraMap T[X] O X) (algebraMap T' T'[X] x)
       rw [Polynomial.algebraMap_eq, eval₂_C])
-  letI : Algebra T[X] T'[X] := Polynomial.algebra T T'
-  haveI : IsLocalization (Submonoid.map C p.primeCompl) T'[X] :=
+  let : Algebra T[X] T'[X] := Polynomial.algebra T T'
+  have : IsLocalization (Submonoid.map C p.primeCompl) T'[X] :=
     Polynomial.isLocalization p.primeCompl T'
   have hdisj : Disjoint (Submonoid.map C p.primeCompl : Set T[X]) (P : Set T[X]) := by
     rw [Set.disjoint_left]
     rintro _ ⟨s, hs, rfl⟩ hsP
     exact hs hsP
   set P' : Ideal T'[X] := P.map (algebraMap T[X] T'[X]) with hP'
-  haveI hP'prime : P'.IsPrime :=
+  have hP'prime : P'.IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint _ T'[X] P inferInstance hdisj
   have hcomapP' : P'.comap (algebraMap T[X] T'[X]) = P :=
     IsLocalization.under_map_of_isPrime_disjoint _ T'[X] inferInstance hdisj
@@ -551,7 +551,7 @@ theorem divConstAll_of_divConstLocal : DivConstLocal → DivConstAll := by
     ext a
     change C (algebraMap T T' a) ∈ P' ↔ C a ∈ P
     rw [hCcomm, ← Ideal.mem_comap, hcomapP']
-  haveI : IsLocalization.AtPrime (Localization.AtPrime P') P := by
+  have : IsLocalization.AtPrime (Localization.AtPrime P') P := by
     have := IsLocalization.isLocalization_isLocalization_atPrime_isLocalization
       (Submonoid.map C p.primeCompl) (Localization.AtPrime P') P'
     have hc : (P'.comap (algebraMap T[X] T'[X])).primeCompl = P.primeCompl := by
@@ -581,11 +581,11 @@ theorem divConstAll_of_divConstLocal : DivConstLocal → DivConstAll := by
       change IsUnit (φ (e.symm a)) at ha
       have h5 : IsUnit (e.symm a) := h3.map_nonunit _ ha
       simpa using h5.map e
-    · haveI : (RingHom.toMorphismProperty @RingHom.Etale).RespectsIso :=
+    · have : (RingHom.toMorphismProperty @RingHom.Etale).RespectsIso :=
         RingHom.toMorphismProperty_respectsIso_iff.mp RingHom.Etale.respectsIso
       unfold GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsIndEtale at h4 ⊢
       rw [CommRingCat.ofHom_comp]
-      haveI : IsIso (CommRingCat.ofHom e.symm.toRingEquiv.toRingHom) :=
+      have : IsIso (CommRingCat.ofHom e.symm.toRingEquiv.toRingHom) :=
         inferInstanceAs (IsIso (e.symm.toRingEquiv.toCommRingCatIso).hom)
       exact (MorphismProperty.cancel_left_of_respectsIso _ _ _).mpr h4
   have key : DivConst T' O := hL T' O hAIC' P' φ' hφ' hSH' hmax trivial
@@ -624,14 +624,14 @@ theorem divConstClosedPts_of_divConstOrigin :
   unfold GlobalTheory.VertUnits.DivConstClosedPts GlobalTheory.VertUnits.DivConstWith
   intro T O _ _ _ _ _ _ _ _ hT P _ φ hφ hsh hPm hne
   have hne' : P ≠ (maximalIdeal T).map (C : T →+* T[X]) := hne
-  haveI hac : IsAlgClosed (ResidueField T) :=
+  have hac : IsAlgClosed (ResidueField T) :=
     (GlobalTheory.AbsIntClosedLocal.henselian_isAlgClosed_pow_surj T ⟨inferInstance, hT⟩).2.1
   obtain ⟨c, hc⟩ := GlobalTheory.LocAcyc.Translate.exists_X_sub_C_mem T P hPm hne'
   let τ : T[X] ≃ₐ[T] T[X] := algEquivAevalXAddC (-c)
   have hτX : τ X = X - C c := by simp [τ, sub_eq_add_neg]
   have hτC : ∀ a : T, τ (C a) = C a := fun a => τ.commutes a
   let P' : Ideal T[X] := P.comap (τ : T[X] →+* T[X])
-  haveI hP'p : P'.IsPrime := Ideal.comap_isPrime _ _
+  have hP'p : P'.IsPrime := Ideal.comap_isPrime _ _
   have hP'C : P'.comap (C : T →+* T[X]) = maximalIdeal T := by
     rw [← hPm]; ext a
     simp only [Ideal.mem_comap, P']
@@ -693,8 +693,8 @@ theorem divConstClosedPts_of_divConstOrigin :
   have hsh' : GlobalTheory.IndefiniteRowSideFullHecke.ProjectiveSpaceOverSpec.IsStrictHenselisation φ' := by
     obtain ⟨h1, h2, h3, h4⟩ := hsh
     refine ⟨h1, h2, ?_, ?_⟩
-    · haveI := h3
-      haveI : IsLocalHom (Lq : Localization.AtPrime P' →+* Localization.AtPrime P) :=
+    · have := h3
+      have : IsLocalHom (Lq : Localization.AtPrime P' →+* Localization.AtPrime P) :=
         ⟨fun a ha => by simpa using ha.map (Lq.symm : Localization.AtPrime P →+* Localization.AtPrime P')⟩
       exact RingHom.isLocalHom_comp _ _
     · have : (RingHom.toMorphismProperty @RingHom.Etale).RespectsIso :=
@@ -772,7 +772,7 @@ private theorem exists_maximal_over_closedPt : ∀ (T E : Type) [CommRing T] [Is
       (RingHom.FiniteType.of_surjective _ Ideal.Quotient.mk_surjective).comp hft
     have hgint : g.IsIntegral :=
       (RingHom.finite_iff_finiteType_of_isJacobsonRing.mpr hgft).to_isIntegral
-    have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' g hgint ⊥
+    have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal g hgint ⊥
     have heq : m.comap f = (⊥ : Ideal ((E ⧸ Q) ⧸ m)).comap g := by
       ext a
       simp [g, Ideal.Quotient.eq_zero_iff_mem]
@@ -1267,7 +1267,7 @@ theorem tensorFractionRing_units_pow_surj : ∀ (q : ℕ) [NeZero q] (T : Type) 
       intro x hx
       rw [← h, Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.2 hx]
       exact I.zero_mem
-    haveI : Ring.KrullDimLE 0 (L ⧸ J) := by
+    have : Ring.KrullDimLE 0 (L ⧸ J) := by
       refine Ring.KrullDimLE.mk₀ ?_
       intro I hI
       have hP : (I.comap (Ideal.Quotient.mk J)).IsPrime := Ideal.comap_isPrime _ _
@@ -1353,17 +1353,17 @@ theorem surj_of_strictHenselisation_polynomial : ∀ (T : Type) [CommRing T] (A 
   intro T _ A _ _ _ _ hSH hA
   obtain ⟨hHA, hsepA⟩ := hSH
   let y : Ideal (Polynomial T) := (maximalIdeal A).comap (algebraMap (Polynomial T) A)
-  haveI : y.IsPrime := Ideal.comap_isPrime _ _
+  have : y.IsPrime := Ideal.comap_isPrime _ _
   set_option synthInstance.maxHeartbeats 400000 in
   obtain ⟨O, _, algRO, _, hloc, hsc, -, -, -, hind⟩ :=
     GlobalTheory.exists_strictHenselisation (Localization.AtPrime y)
       (SeparableClosure (ResidueField (Localization.AtPrime y)))
-  letI algPO : Algebra (Polynomial T) O :=
+  let algPO : Algebra (Polynomial T) O :=
     ((algebraMap (Localization.AtPrime y) O).comp
       (algebraMap (Polynomial T) (Localization.AtPrime y))).toAlgebra
-  letI algTO : Algebra T O := ((algebraMap (Polynomial T) O).comp (algebraMap T (Polynomial T))).toAlgebra
-  haveI t1 : IsScalarTower T (Polynomial T) O := IsScalarTower.of_algebraMap_eq' rfl
-  haveI t2 : IsScalarTower (Polynomial T) (Localization.AtPrime y) O :=
+  let algTO : Algebra T O := ((algebraMap (Polynomial T) O).comp (algebraMap T (Polynomial T))).toAlgebra
+  have t1 : IsScalarTower T (Polynomial T) O := IsScalarTower.of_algebraMap_eq' rfl
+  have t2 : IsScalarTower (Polynomial T) (Localization.AtPrime y) O :=
     IsScalarTower.of_algebraMap_eq' rfl
   have hP := GlobalTheory.indEtale_localPieces_trans (Polynomial T) (Localization.AtPrime y) O
     ⟨Unit, inferInstance, inferInstance, inferInstance, fun _ => ⊤, monotone_const,
@@ -1388,20 +1388,20 @@ theorem surj_of_strictHenselisation_polynomial : ∀ (T : Type) [CommRing T] (A 
     rw [IsScalarTower.algebraMap_apply (Polynomial T) A (ResidueField A), ResidueField.algebraMap_eq,
       residue_eq_zero_iff]
     rfl
-  letI algyO : Algebra y.ResidueField (ResidueField O) :=
+  let algyO : Algebra y.ResidueField (ResidueField O) :=
     (Ideal.ResidueField.lift y (algebraMap (Polynomial T) (ResidueField O)) (fun r hr => (hkO r).2 hr)
       (fun r hr => by
         simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff]
         exact isUnit_iff_ne_zero.mpr (fun h => hr ((hkO r).1 h)))).toAlgebra
-  haveI : IsScalarTower (Polynomial T) y.ResidueField (ResidueField O) := .of_algebraMap_eq fun r => by
+  have : IsScalarTower (Polynomial T) y.ResidueField (ResidueField O) := .of_algebraMap_eq fun r => by
     rw [RingHom.algebraMap_toAlgebra]
     exact (Ideal.ResidueField.lift_algebraMap y _ _ _ r).symm
-  letI algyA : Algebra y.ResidueField (ResidueField A) :=
+  let algyA : Algebra y.ResidueField (ResidueField A) :=
     (Ideal.ResidueField.lift y (algebraMap (Polynomial T) (ResidueField A)) (fun r hr => (hkA r).2 hr)
       (fun r hr => by
         simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff]
         exact isUnit_iff_ne_zero.mpr (fun h => hr ((hkA r).1 h)))).toAlgebra
-  haveI : IsScalarTower (Polynomial T) y.ResidueField (ResidueField A) := .of_algebraMap_eq fun r => by
+  have : IsScalarTower (Polynomial T) y.ResidueField (ResidueField A) := .of_algebraMap_eq fun r => by
     rw [RingHom.algebraMap_toAlgebra]
     exact (Ideal.ResidueField.lift_algebraMap y _ _ _ r).symm
 
@@ -1430,11 +1430,11 @@ theorem surj_of_strictHenselisation_polynomial : ∀ (T : Type) [CommRing T] (A 
     rw [hx, ← mem_separableClosure_iff]
     refine mul_mem ?_ (inv_mem ?_) <;> rw [mem_separableClosure_iff] <;>
       exact GlobalTheory.Specialise.sepEtale (Polynomial T) B y _ f _
-  haveI : Algebra.IsSeparable y.ResidueField (ResidueField O) := ⟨fun x => by
+  have : Algebra.IsSeparable y.ResidueField (ResidueField O) := ⟨fun x => by
     obtain ⟨s, rfl⟩ := residue_surjective x
     have := hsepO s
     rwa [ResidueField.algebraMap_eq] at this⟩
-  haveI : IsSepClosure y.ResidueField (ResidueField O) := ⟨hsc, inferInstance⟩
+  have : IsSepClosure y.ResidueField (ResidueField O) := ⟨hsc, inferInstance⟩
   let L := separableClosure y.ResidueField (ResidueField A)
   let e : ResidueField O ≃ₐ[y.ResidueField] L := IsSepClosure.equiv y.ResidueField (ResidueField O) L
   let ι : ResidueField O →ₐ[y.ResidueField] ResidueField A := L.val.comp e.toAlgHom

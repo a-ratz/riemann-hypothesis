@@ -117,7 +117,7 @@ theorem discrete_of_finite {V : Type} [NormedAddCommGroup V] (L : AddSubgroup V)
       apply hne
       simpa using hz0
   rw [hset]
-  exact hU.preimage continuous_subtype_val
+  exact hU.preimage continuous_subtypeVal
 
 theorem summable_gaussian_coset : ∀ (G V : Type) [AddCommGroup G] [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V] (p : G →+ V) (Γ U : AddSubgroup G), (∀ g ∈ Γ, p g = 0 → g = 0) → (∀ R : ℝ, {g : G | g ∈ Γ ∧ g ∈ U ∧ ‖p g‖ ≤ R}.Finite) → ∀ (c : ℝ), 0 < c → ∀ (R : ℝ) (w : G) (y : V), Summable fun g : Γ => Set.indicator (U : Set G) (fun _ => Real.exp (-c * ‖p g + y‖ ^ 2 + R * ‖p g + y‖)) ((g : G) + w) := by
   intro G V _ _ _ _ p Γ U hinj hfin c hc R w y

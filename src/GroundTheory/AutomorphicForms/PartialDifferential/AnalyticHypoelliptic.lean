@@ -806,7 +806,7 @@ theorem analyticAt_of_norm_iteratedFDeriv_le {f : E → F} {x₀ : E} {r C M : �
   · simpa using hρpos
   · intro y hy
     have hy' : ‖y‖ < ρ := by
-      simpa [Metric.mem_eball, edist_zero_right, enorm_eq_nnnorm, ENNReal.ofReal,
+      simpa [Metric.mem_eball, edist_zero_right, eNorm_eq_nnNorm, ENNReal.ofReal,
         ← NNReal.coe_lt_coe, Real.coe_toNNReal _ hρpos.le] using hy
 
     set q : ℝ := M' * ‖y‖ with hq
@@ -913,7 +913,7 @@ theorem nnnorm_changeOrigin_le_of_bound (p : FormalMultilinearSeries ℝ E F) {�
     (hzr : (‖z‖₊ : ℝ≥0∞) < p.radius) (k : ℕ) :
     ‖p.changeOrigin z k‖₊ ≤ 2 * (K * (2 / ρ) ^ k) := by
   have hsum := p.changeOriginSeries_summable_aux₂ hzr k
-  have h1 := p.nnnorm_changeOrigin_le k hzr
+  have h1 := p.nnNorm_changeOrigin_le k hzr
   rw [← ENNReal.coe_le_coe] at h1 ⊢
   refine h1.trans ?_
   rw [ENNReal.coe_tsum hsum, ENNReal.tsum_sigma']
@@ -962,7 +962,7 @@ theorem exists_norm_iteratedFDeriv_le_of_analyticAt {f : E → F} {x₀ : E}
   set z := y - x₀ with hzdef
   have hz : ‖z‖ < (ρ : ℝ) / 4 := by rwa [Metric.mem_ball, dist_eq_norm] at hy
   have hzρ : ‖z‖₊ < ρ := by
-    rw [← NNReal.coe_lt_coe, coe_nnnorm]; linarith [norm_nonneg z]
+    rw [← NNReal.coe_lt_coe, coe_nnNorm]; linarith [norm_nonneg z]
   have hzR : (‖z‖₊ : ℝ≥0∞) < R := lt_trans (by exact_mod_cast hzρ) hρR
   have hq := hp.changeOrigin hzR
   have hxy : x₀ + z = y := by simp [hzdef]

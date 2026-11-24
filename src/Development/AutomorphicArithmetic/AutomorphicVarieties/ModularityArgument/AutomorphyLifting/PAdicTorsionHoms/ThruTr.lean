@@ -81,14 +81,14 @@ private theorem exists_char {F E E' M : Type} [Field F] [NumberField F] [Field E
     (χ' : (w'.adicCompletion E')ˣ →* ℂˣ) (hχ' : IsSmoothChar χ') :
     ∃ χ : (w.adicCompletion E)ˣ →* ℂˣ, IsSmoothChar χ ∧
       χ.comp (nm (⟨U, hU⟩ : PlacesOver M w)) = χ'.comp (nm (⟨U, hU'⟩ : PlacesOver M w')) := by
-  haveI hUv : U.asIdeal.LiesOver v.asIdeal := Ideal.LiesOver.trans U.asIdeal w'.asIdeal v.asIdeal
-  haveI hwv : w.asIdeal.LiesOver v.asIdeal := Ideal.LiesOver.tower_bot U.asIdeal w.asIdeal v.asIdeal
-  haveI := tower v w U
-  haveI := tower v w' U
-  haveI f1 : FiniteDimensional (v.adicCompletion F) (w.adicCompletion E) := GroundTheory.Global.finite_adicCompletion v w
-  haveI f2 : FiniteDimensional (w.adicCompletion E) (U.adicCompletion M) := GroundTheory.Global.finite_adicCompletion w U
-  haveI f3 : FiniteDimensional (v.adicCompletion F) (w'.adicCompletion E') := GroundTheory.Global.finite_adicCompletion v w'
-  haveI f4 : FiniteDimensional (w'.adicCompletion E') (U.adicCompletion M) := GroundTheory.Global.finite_adicCompletion w' U
+  have hUv : U.asIdeal.LiesOver v.asIdeal := Ideal.LiesOver.trans U.asIdeal w'.asIdeal v.asIdeal
+  have hwv : w.asIdeal.LiesOver v.asIdeal := Ideal.LiesOver.tower_bot U.asIdeal w.asIdeal v.asIdeal
+  have := tower v w U
+  have := tower v w' U
+  have f1 : FiniteDimensional (v.adicCompletion F) (w.adicCompletion E) := GroundTheory.Global.finite_adicCompletion v w
+  have f2 : FiniteDimensional (w.adicCompletion E) (U.adicCompletion M) := GroundTheory.Global.finite_adicCompletion w U
+  have f3 : FiniteDimensional (v.adicCompletion F) (w'.adicCompletion E') := GroundTheory.Global.finite_adicCompletion v w'
+  have f4 : FiniteDimensional (w'.adicCompletion E') (U.adicCompletion M) := GroundTheory.Global.finite_adicCompletion w' U
   have hmap : ∀ a, algebraMap (v.adicCompletion F) (w'.adicCompletion E') a = i a := by
     intro a
     change completionMap v w' a = i a

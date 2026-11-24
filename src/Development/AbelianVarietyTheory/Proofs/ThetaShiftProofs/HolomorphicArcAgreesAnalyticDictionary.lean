@@ -146,7 +146,7 @@ theorem exists_linear (hT : ThetaUnifAV) {g : ℕ} (ex : (Fin g → ℂ) → Out
     have h₂ := (d.hol_chi (d.eX x) j).comp (f := fun z => ((0, F z) : d.A.V))
       (s := {z | ⊤ ≤ LB.wchart D₀.P.L (Out.DegPre.gtφ D₀ ℂ (ex z).b (d.eX x)) j})
       ((differentiable_const _).prodMk hFd).differentiableOn (fun z hz => by
-        rw [Set.mem_setOf_eq, hb]; exact hz)
+        rw [Set.mem_ofPred_eq, hb]; exact hz)
     have c₀ : ∀ z, ⊤ ≤ LB.wchart D₀.P.L (Out.DegPre.gtφ D₀ ℂ (ex z).b (d.eX x)) j → ∀ l',
         chiVal (d.ex₀ (l', F z)) (d.eX x) j =
           eTwoPi (l' x) * frameProd d.u j ![d.A.ct x + F z, d.A.ct x, F z, 0] Out.DegPre.gtε := fun z hz l' =>
@@ -185,7 +185,7 @@ theorem exists_linear (hT : ThetaUnifAV) {g : ℕ} (ex : (Fin g → ℂ) → Out
   exact congrArg Complex.exp (mul_inv_cancel_left₀ Complex.two_pi_I_ne_zero _)
 
 theorem eq_of_ex₀_smul {v v' : d.A.V} (h : ∀ s : ℂ, d.ex₀ (s • v) = d.ex₀ (s • v')) : v = v' := by
-  have : Countable d.A.La := Finsupp.Countable.of_moduleFinite (R := ℤ)
+  have : Countable d.A.La := Countable.of_moduleFinite (R := ℤ)
   rw [← sub_eq_zero]
   refine eq_zero_of_forall_smul_mem_countable (Set.countable_range d.A.P0) fun s => ?_
   obtain ⟨la, -, e⟩ := (d.ex₀_eq_iff _ _).1 (h s)
@@ -351,12 +351,12 @@ end ThetaShiftProofs
 
 theorem holArc_agrees : Known → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [Algebra (FractionRing ℂ) ℂ] [IsScalarTower ℂ (FractionRing ℂ) ℂ] (σ : c.F →+* ℂ) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (a : ArcIn Dw l β ℂ (σ.comp β)) (χ : Sp (PowerSeries ℂ) ⟶ Y.X) (W : Wit Y a χ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (Fu : FamilyUnif Xo (σ.comp (IntermediateField.inclusion c.le).toRingHom) ty) (Ha : HolArc Y σ a χ W Fu) (Λ : GtAn₀ a), letI := H.starRing; ∃ (gam : (Fu.Di Ha.i).La ≃ₗ[𝓞 E] Λ.A.La) (h : (Fin g → ℂ) ≃ₗ[ℂ] Λ.A.V), (∀ z, Λ.ex₀ (h z) = Ha.ex₀ z) ∧ (∀ v, Λ.y (gam v) = Ha.y v) ∧ (∀ w v, h (Ha.Pw w v) = Λ.A.Pw w (gam v)) ∧ ∀ v v', Λ.A.EF (gam v) (gam v') = (Fu.Di Ha.i).EF v v' := by
   intro hK E _ _ _ H Dw l Xo c _ _ σ O _ β Y a χ W g ty Fu Ha Λ
-  letI := H.starRing
-  letI := TorusExt.gtGroup a.D₀ ℂ
-  have hO : Countable (𝓞 E) := Finsupp.Countable.of_moduleFinite (R := ℤ)
+  let := H.starRing
+  let := TorusExt.gtGroup a.D₀ ℂ
+  have hO : Countable (𝓞 E) := Countable.of_moduleFinite (R := ℤ)
   have hfin := (Fu.Di Ha.i).fin
-  have cL : Countable (Fu.Di Ha.i).La := Finsupp.Countable.of_moduleFinite (R := 𝓞 E)
-  have cA : Countable Λ.A.La := Finsupp.Countable.of_moduleFinite (R := ℤ)
+  have cL : Countable (Fu.Di Ha.i).La := Countable.of_moduleFinite (R := 𝓞 E)
+  have cA : Countable Λ.A.La := Countable.of_moduleFinite (R := ℤ)
   obtain ⟨nn, hN, -, -, hnn, -, hξ⟩ := holArc_nilpotent E H Dw l Xo c σ O β Y a χ W g ty Fu Ha
   have hP : ∀ w v, Ha.y v = 0 → Ha.Pw w v = Ha.P₀ v := fun w v hv => by
     rw [Ha.Pw_eq, hN, hnn v hv, map_zero, smul_zero, add_zero]

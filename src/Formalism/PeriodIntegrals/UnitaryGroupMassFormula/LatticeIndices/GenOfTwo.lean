@@ -90,9 +90,9 @@ theorem quad_root {K : Type*} [NormedField K] [IsUltrametricDist K] [CompleteSpa
     intro x hx
     rw [mem_closedBall_zero_iff] at hx ⊢
     simp only [hf, norm_div, norm_neg, hnorm x hx, div_one, le_refl]
-  haveI : IsClosed (closedBall (0 : K) ‖c0‖) := isClosed_closedBall
-  haveI : CompleteSpace (closedBall (0 : K) ‖c0‖) := IsClosed.completeSpace_coe
-  haveI : Nonempty (closedBall (0 : K) ‖c0‖) := ⟨⟨0, mem_closedBall_self (norm_nonneg _)⟩⟩
+  have : IsClosed (closedBall (0 : K) ‖c0‖) := isClosed_closedBall
+  have : CompleteSpace (closedBall (0 : K) ‖c0‖) := IsClosed.completeSpace_coe
+  have : Nonempty (closedBall (0 : K) ‖c0‖) := ⟨⟨0, mem_closedBall_self (norm_nonneg _)⟩⟩
   have hcon : ContractingWith ⟨‖c0‖, norm_nonneg _⟩ (hmaps.restrict f _ _) := by
     refine ⟨NNReal.coe_lt_coe.1 (by rw [NNReal.coe_one]; exact h0),
       LipschitzWith.of_dist_le_mul fun a b => ?_⟩

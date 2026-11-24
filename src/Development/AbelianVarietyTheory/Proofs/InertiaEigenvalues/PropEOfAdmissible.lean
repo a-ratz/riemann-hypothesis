@@ -389,7 +389,7 @@ theorem exists_char {i : X.Tw} {M : ℕ} {ι : Type} [Fintype ι] {P : ι → Pl
     {Q : Finset (PlE D.host)} (hQ : ∀ v, v ∈ Q ↔ ∃ q, T q ∧ Over (P q) v) {A : Type} [CommGroup A] (u : ι → A)
     (hu : ∀ q, u q ^ (X.l i ^ M) = 1) (hT : ∀ q, ¬ T q → u q = 1) :
     ∃ ψ : X.RCG i Q →* A, ∀ g, ψ (X.art i Q g) = ∏ q, u q ^ (Multiplicative.toAdd (d q g)).val := by
-  haveI : NeZero (X.l i ^ M) := ⟨pow_ne_zero _ (X.lPrime i).out.ne_zero⟩
+  have : NeZero (X.l i ^ M) := ⟨pow_ne_zero _ (X.lPrime i).out.ne_zero⟩
   have key : ∀ q, ∃ f : X.RCG i Q →* A, ∀ g, f (X.art i Q g) = u q ^ (Multiplicative.toAdd (d q g)).val := by
     intro q
     by_cases hq : T q
@@ -566,14 +566,14 @@ theorem propE (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (
       · exact hT h
     have e2 : nval (X.O i) (X.l i) ((X.l i : X.O i) ^ N0 i) = N0 i := by
       unfold nval
-      rw [IsDiscreteValuationRing.addVal_pow, nsmul_eq_mul, ENat.toNat_mul, ENat.toNat_coe]
+      rw [IsDiscreteValuationRing.addVal_pow, nsmul_eq_mul, ENat.toNat_mul, ENat.toNat_natCast]
       push_cast
       field_simp
     rw [c0, e, e2, sub_add_cancel]
     rfl
   intro M R P d Q hM hA hSt hQ
   have hn1 : 1 < X.l i ^ M := Nat.one_lt_pow (by omega) (X.lPrime i).out.one_lt
-  haveI : Fact (1 < X.l i ^ M) := ⟨hn1⟩
+  have : Fact (1 < X.l i ^ M) := ⟨hn1⟩
   choose σ hσ using fun q => exists_isFrob (N.plOm.2 (P q))
   have hx : ∀ q, X.Xv i lam (P q) = (X.lamG i lam (σ q) : (X.O i)ˣ) := fun q =>
     X.Xv_def i lam (P q) (hA.1 q _ (Or.inl rfl)).2.2.2.1 (σ q) (hσ q)
@@ -663,7 +663,7 @@ theorem propE (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (
       rw [← map_inv] at h
       exact (sub_eq_zero.1 h).symm
     rw [e4, IsDiscreteValuationRing.addVal_mul, IsDiscreteValuationRing.addVal_eq_zero_iff.2 hu, zero_add,
-      ENat.coe_toNat]
+      ENat.natCast_toNat]
     simpa [IsDiscreteValuationRing.addVal_eq_top_iff] using hY0
   · choose u e hu he hue using fun a : Fin R => eR_res (Sum.inl a : Fin R ⊕ Fin R) (resChar i lam (σ (.inr a)))
       (n := X.l i ^ M) (by omega) (residue_pow_l i hM)

@@ -143,7 +143,7 @@ theorem unit_exponent_holds : UnitEx := by
     have e : (((ω * χ ^ m).1 (zc E t) : ℂˣ) : ℂ) = ((ω.1 (zc E t) : ℂˣ) : ℂ) * (((χ.1 (zc E t) : ℂˣ) : ℂ)) ^ m := by
       rw [Subgroup.coe_mul, Subgroup.coe_pow, MonoidHom.mul_apply, MonoidHom.pow_apply, Units.val_mul,
         Units.val_pow_eq_pow_val]
-    rw [e, norm_mul, norm_pow, hc, hχ, norm_absChar_zc, ← Real.exp_nat_mul, ← Real.exp_add]
+    rw [e, norm_mul, norm_pow, hc, hχ, norm_absChar_zc, ← Real.exp_natCast_mul, ← Real.exp_add]
     rw [Real.exp_eq_one_iff]
     rw [hr]
     field_simp

@@ -110,8 +110,8 @@ theorem ext_tower (x : K) : algebraMap K' (Ext K K' R) (algebraMap K K' x) = alg
   (IsScalarTower.algebraMap_apply K K' (K' ⊗[K] R) x).symm
 
 theorem ext_reduced [CharZero K] (p : TRing K) : IsReduced (Ext K K' p.R) := by
-  haveI := ((GlobalTheory.reduced_finiteType_iff_testRing K).2 p).2
-  haveI := ((GlobalTheory.reduced_finiteType_iff_testRing K).2 p).1
+  have := ((GlobalTheory.reduced_finiteType_iff_testRing K).2 p).2
+  have := ((GlobalTheory.reduced_finiteType_iff_testRing K).2 p).1
   exact GlobalTheory.ReducedAlg.isReduced_field_tensor _ _
 
 def inR (K' : Type) [Field K'] [Algebra K K'] (R : Type) [CommRing R] [Algebra K R] : R →ₐ[K] Ext K K' R :=
@@ -136,7 +136,7 @@ theorem exists_lift {S : Type} [CommRing S] [Algebra K S] [Algebra K' S]
     ∃ (Φ : Ext K K' R →ₐ[K'] S) (Φ₀ : Ext K K' R →ₐ[K] S), (∀ x, Φ₀ x = Φ x) ∧ Φ₀.comp (inR K' R) = φ ∧
       ∀ (d : ℕ) (B : Module.Basis (Fin d) K K') (v : Ext K K' R),
         Φ v = ∑ j, algebraMap K' S (B j) * φ (crd (B.coord j) v) := by
-  haveI : IsScalarTower K K' S := IsScalarTower.of_algebraMap_eq fun x => (h x).symm
+  have : IsScalarTower K K' S := IsScalarTower.of_algebraMap_eq fun x => (h x).symm
   let Φ : K' ⊗[K] R →ₐ[K'] S := Algebra.TensorProduct.lift (Algebra.ofId K' S) φ (fun _ _ => Commute.all _ _)
   refine ⟨Φ, Φ.restrictScalars K, fun _ => rfl, AlgHom.ext fun v => ?_, fun d B v => ?_⟩
   · show Φ ((1 : K') ⊗ₜ[K] v) = φ v
@@ -189,7 +189,7 @@ theorem section_base_change_of_basis [Algebra c.F c'.F] (halg : ∀ x, algebraMa
     rw [← halg]; exact ext_tower x
   choose z hz using fun (p : TRing c.F) (y : FrPt Xo c p.R) => hBC p.R (Ext c.F c'.F p.R) (inR c'.F p.R) y
   have hT : ∀ (p : TRing c.F) (y : FrPt Xo c p.R), FromT ((z p y).ext hle (hov p)) := fun p y => by
-    haveI := ext_reduced (K' := c'.F) p
+    have := ext_reduced (K' := c'.F) p
     exact hA' _ _
   obtain ⟨fs, hfs⟩ : ∃ fs : Fin d → Rul Xo c, ∀ j p y,
       fs j p y = crd (B.coord j) (evR Xo c' f' ((z p y).ext hle (hov p))) := ⟨fun j p y => _, fun _ _ _ => rfl⟩
@@ -220,9 +220,9 @@ theorem section_base_change_of_basis [Algebra c.F c'.F] (halg : ∀ x, algebraMa
       rw [evR_of_map hWD (hnat j) hy₀, hfs]
     · have hy' : ¬ FromT y := by
         rintro ⟨q, ψ, y₁, hy₁⟩
-        letI : Algebra c.F q.R := ((algebraMap c'.F q.R).comp (incF c c' hle)).toAlgebra
+        let : Algebra c.F q.R := ((algebraMap c'.F q.R).comp (incF c c' hle)).toAlgebra
         have hq : AlgOver c c' hle q.R := fun _ => rfl
-        haveI := ((GlobalTheory.reduced_finiteType_iff_testRing c'.F).2 q).2
+        have := ((GlobalTheory.reduced_finiteType_iff_testRing c'.F).2 q).2
         obtain ⟨p, φ, y₀, hy₀'⟩ := hA q.R (y₁.res hle hq)
         have hy₀ : FrMap φ y₀ (y₁.res hle hq) := hy₀'
         let ψ' : q.R →ₐ[c.F] S := { ψ.toRingHom with commutes' := fun x => (ψ.commutes _).trans (h x) }
@@ -233,11 +233,11 @@ theorem section_base_change_of_basis [Algebra c.F c'.F] (halg : ∀ x, algebraMa
 
 theorem secBC_of_laws (hWD : ValueWD Xo c) (hWD' : ValueWD Xo c') (hBC : HasBC Xo c) (hA : AllTest Xo c)
     (hA' : AllTest Xo c') (hB' : BorChartF Xo c') : Formalism.L2.Pj.SecBC Xo hle := by
-  letI alg : Algebra c.F c'.F := (incF c c' hle).toAlgebra
-  haveI : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun q => by
+  let alg : Algebra c.F c'.F := (incF c c' hle).toAlgebra
+  have : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun q => by
     rw [eq_ratCast (algebraMap ℚ c'.F), eq_ratCast (algebraMap ℚ c.F), map_ratCast]
-  haveI := c'.fin
-  haveI : FiniteDimensional c.F c'.F := Module.Finite.of_restrictScalars_finite ℚ c.F c'.F
+  have := c'.fin
+  have : FiniteDimensional c.F c'.F := Module.Finite.of_restrictScalars_finite ℚ c.F c'.F
   exact section_base_change_of_basis hle (fun _ => rfl) (Module.finBasis c.F c'.F) hWD hWD' hBC hA hA' hB'
 
 theorem secBC_holds : Formalism.L2.Pj.SecBC Xo hle :=

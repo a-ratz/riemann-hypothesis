@@ -128,7 +128,7 @@ private theorem exists_deep_neg_natCast (x : k) : ∃ N : ℕ, Deep (-(N : ℤ))
   refine ⟨N, ?_⟩
   rw [Units.val_mk0] at hN
   have hpos : (0 : ValueGroupWithZero k) < uniformizer k ^ N := pow_pos uniformizer_pos N
-  have hx0 : (0 : ValueGroupWithZero k) < valuation k x := zero_lt_iff.2 hx
+  have hx0 : (0 : ValueGroupWithZero k) < valuation k x := pos_iff_ne_zero.2 hx
   rw [_root_.zpow_neg, zpow_natCast]
   exact ((lt_inv_comm₀ hpos hx0).1 hN).le
 

@@ -113,9 +113,9 @@ theorem span_translates_vacuum : ∀ {R X M : Type} [CommRing R] [AddCommGroup X
     rw [Finset.sum_congr rfl fun i _ => h4 i, ← Finset.smul_sum] at h3
     rw [← Submodule.smul_mem_iff _ (h.ne_zero (w • t) (-t)), h3]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨t, rfl⟩)
-  haveI : Finite (T.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf T.toAddSubgroup) :=
+  have : Finite (T.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf T.toAddSubgroup) :=
     Nat.finite_of_card_ne_zero hT
-  letI := Fintype.ofFinite (T.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf T.toAddSubgroup)
+  let := Fintype.ofFinite (T.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf T.toAddSubgroup)
   have h5 := Submodule.sum_mem (Submodule.span ℂ (Set.range fun x => W x e))
     (t := (Finset.univ : Finset
       (T.toAddSubgroup ⧸ A.toAddSubgroup.addSubgroupOf T.toAddSubgroup)))
@@ -130,10 +130,10 @@ theorem span_translates_vacuum : ∀ {R X M : Type} [CommRing R] [AddCommGroup X
     rw [← Finset.sum_smul, ← finsum_eq_sum_of_fintype, h2 _ (hf i)]
     by_cases hii : i = i₀
     · subst hii
-      rw [if_pos rfl, if_pos (show f i ∈ S.toAddSubgroup from hi₀), hSv _ hi₀]
+      rw [ite_eq_left rfl, ite_eq_left (show f i ∈ S.toAddSubgroup from hi₀), hSv _ hi₀]
       rfl
-    · rw [if_neg hii, if_neg (fun hh : f i ∈ S.toAddSubgroup => hii (hi i hh)), zero_smul]
-  rw [Finset.sum_congr rfl fun i _ => h6 i, Finset.sum_ite_eq', if_pos (Finset.mem_univ _)] at h5
+    · rw [ite_eq_right hii, ite_eq_right (fun hh : f i ∈ S.toAddSubgroup => hii (hi i hh)), zero_smul]
+  rw [Finset.sum_congr rfl fun i _ => h6 i, Finset.sum_ite_eq', ite_eq_left (Finset.mem_univ _)] at h5
   exact (Submodule.smul_mem_iff _ (Nat.cast_ne_zero.2 hT)).1 h5
 
 end GlobalTheory.FinWeil

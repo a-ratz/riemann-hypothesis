@@ -235,13 +235,13 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem charpoly_rho_eq_map_pol (G : HTGroup p) (P : DPair G) (w : Fin G.m) :
     (G.rho w (P.γ : G.C)).charpoly = P.pol.map (G.embW w) := by
-  letI : Algebra G.F (G.Fw w) := (G.embW w).toAlgebra
+  let : Algebra G.F (G.Fw w) := (G.embW w).toAlgebra
   have hg : ∀ a, G.rho w (algebraMap G.F G.C a) = algebraMap G.F (Matrix (Fin G.n) (Fin G.n) (G.Fw w)) a :=
     fun a => by rw [G.rho_F, Matrix.algebraMap_eq_diagonal]; rfl
   let g : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) (G.Fw w) := { G.rho w with commutes' := hg }
   let L : G.Fw w ⊗[G.F] G.C →ₐ[G.Fw w] Matrix (Fin G.n) (Fin G.n) (G.Fw w) :=
     Algebra.TensorProduct.lift (Algebra.ofId (G.Fw w) _) g (fun r _ => Algebra.commute_algebraMap_left r _)
-  haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
   have hinj : Function.Injective L :=
     (IsSimpleRing.injective_ringHom_or_subsingleton_codomain L.toRingHom).resolve_right (not_subsingleton _)
   have hL : ∀ x : G.C, L ((1 : G.Fw w) ⊗ₜ x) = G.rho w x := fun x => by
@@ -255,8 +255,8 @@ theorem charpoly_rho_eq_map_pol (G : HTGroup p) (P : DPair G) (w : Fin G.m) :
     have := linearIndependent_pow (K := G.F) γ
     rw [hdeg] at this
     exact this
-  letI : Module.Free G.F (G.Fw w) := Module.Free.of_divisionRing G.F (G.Fw w)
-  letI : Module.Flat G.F (G.Fw w) := Module.Flat.of_free
+  let : Module.Free G.F (G.Fw w) := Module.Free.of_divisionRing G.F (G.Fw w)
+  let : Module.Flat G.F (G.Fw w) := Module.Flat.of_free
   have hT : LinearIndependent (G.Fw w) (fun i : Fin G.n => (1 : G.Fw w) ⊗ₜ[G.F] (γ ^ (i : ℕ))) :=
     Module.Flat.linearIndependent_one_tmul hli
   have hM : LinearIndependent (G.Fw w) (fun i : Fin G.n => (G.rho w γ) ^ (i : ℕ)) := by

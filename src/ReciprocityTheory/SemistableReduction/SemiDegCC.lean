@@ -93,7 +93,7 @@ theorem mem_cImage {K : Type} [Field K] [NumberField K] (c : K →+* K) (C : Sub
 
 theorem cImage_fg {K : Type} [Field K] [NumberField K] (c : K →+* K) (hc : ∀ x, c (c x) = x)
     (C : Submodule (𝓞 K) K) (hC : C.FG) : (cImage c C).FG := by
-  haveI : RingHomSurjective (intInv c) :=
+  have : RingHomSurjective (intInv c) :=
     ⟨fun y => ⟨intInv c y, by
       apply RingOfIntegers.ext
       show algebraMap (𝓞 K) K (intInv c (intInv c y)) = algebraMap (𝓞 K) K y

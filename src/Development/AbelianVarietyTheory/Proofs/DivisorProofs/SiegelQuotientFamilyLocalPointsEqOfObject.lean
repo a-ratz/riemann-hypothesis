@@ -87,13 +87,13 @@ theorem lift : ∀ (R : Type) [CommRing R] [IsLocalRing R] (X Y : Scheme.{0}) (�
   obtain ⟨p, hp⟩ := (pullback.fst x π).surjective (IsLocalRing.closedPoint R)
   have hb := toStalk_bijective R _ hp
   have hτ : IsLocalHom (StructureSheaf.toStalk R ((pullback.fst x π) p)).hom := isLocalHom_of_bijective _ hb
-  letI : Algebra ((Sp R).presheaf.stalk ((pullback.fst x π) p)) ((pullback x π).presheaf.stalk p) :=
+  let : Algebra ((Sp R).presheaf.stalk ((pullback.fst x π) p)) ((pullback x π).presheaf.stalk p) :=
     ((pullback.fst x π).stalkMap p).hom.toAlgebra
-  haveI : Module.Flat ((Sp R).presheaf.stalk ((pullback.fst x π) p)) ((pullback x π).presheaf.stalk p) :=
+  have : Module.Flat ((Sp R).presheaf.stalk ((pullback.fst x π) p)) ((pullback x π).presheaf.stalk p) :=
     Flat.stalkMap (pullback.fst x π) p
-  haveI : IsLocalHom (algebraMap ((Sp R).presheaf.stalk ((pullback.fst x π) p)) ((pullback x π).presheaf.stalk p)) :=
+  have : IsLocalHom (algebraMap ((Sp R).presheaf.stalk ((pullback.fst x π) p)) ((pullback x π).presheaf.stalk p)) :=
     inferInstanceAs (IsLocalHom ((pullback.fst x π).stalkMap p).hom)
-  haveI := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have := Module.FaithfullyFlat.of_flat_of_isLocalHom
     (A := (Sp R).presheaf.stalk ((pullback.fst x π) p)) (B := (pullback x π).presheaf.stalk p)
   have hψ : Function.Injective ((pullback.fst x π).stalkMap p).hom := FaithfulSMul.algebraMap_injective _ _
   have hψl : IsLocalHom ((pullback.fst x π).stalkMap p).hom := inferInstance
@@ -166,7 +166,7 @@ open scoped CategoryTheory.Obj
 
 theorem GlobalTheory.SiegLev.SQuot.eq_of_siegPB : ∀ (h n N : ℕ) (o o' : Type) [CommRing o] [CommRing o'] (ζ : o) (ζ' : o') (F : SFam h N ζ') (j : o →+* o') (Q : SQuot F n ζ j) (R : Type) [CommRing R] [IsLocalRing R] (x y : Sp R ⟶ Q.X) (s' : Sp R ⟶ Sp o) (c : SiegPre h n ζ s'), x ≫ Q.s = y ≫ Q.s → SiegPB c Q.univ x → SiegPB c Q.univ y → x = y := by
   intro h n N o o' _ _ ζ ζ' F j Q R _ _ x y s' c hxy hx hy
-  haveI := Q.fin; haveI := Q.etale; haveI := Q.onto
+  have := Q.fin; have := Q.etale; have := Q.onto
   obtain ⟨R1, _, _, φ1, hl1, hφ1, x1, hx1⟩ := _root_.GlobalTheory.LiftLocal.lift R Q.X F.X Q.π x
   obtain ⟨R2, _, _, φ2, hl2, hφ2, y2, hy2⟩ := _root_.GlobalTheory.LiftLocal.lift R1 Q.X F.X Q.π (spMap φ1 ≫ y)
   set g : Sp R2 ⟶ Sp R := spMap φ2 ≫ spMap φ1 with hg

@@ -128,7 +128,7 @@ theorem isCuspForm_act' (hP : GlobalTheory.Published.AutomorphicFormsFiniteGL) (
     · have e : {k' | finRep E a k' (finRep E a k φ) = finRep E a k φ} =
           (fun k' => k⁻¹ * k' * k) ⁻¹' {k' | finRep E a k' φ = φ} := by
         ext k'
-        simp only [Set.mem_setOf_eq, Set.mem_preimage, map_mul]
+        simp only [Set.mem_ofPred_eq, Set.mem_preimage, map_mul]
         constructor
         · intro e
           rw [Module.End.mul_apply, Module.End.mul_apply, e, ← Module.End.mul_apply, ← map_mul, inv_mul_cancel,

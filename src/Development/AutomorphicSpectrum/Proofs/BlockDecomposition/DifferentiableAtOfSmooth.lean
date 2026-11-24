@@ -82,7 +82,7 @@ theorem fderiv_field_bracket {U : Set E} (hU : IsOpen U) {f : E → F} (hf : Con
   have hA := (h2.hasFDerivAt.clm_apply A.hasFDerivAt).fderiv
   have hB := (h2.hasFDerivAt.clm_apply B.hasFDerivAt).fderiv
   rw [hA, hB]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.flip_apply, map_sub]
+  simp only [add_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.flip_apply, map_sub]
   rw [hs.eq (A g) (B g)]
   abel
 

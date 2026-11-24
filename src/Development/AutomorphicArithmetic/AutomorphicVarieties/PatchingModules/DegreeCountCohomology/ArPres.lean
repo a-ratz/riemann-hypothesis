@@ -70,7 +70,7 @@ theorem UpperTheory.V.Pa.sumDegF :
   classical
   have hl : l.Prime := Fact.out
   let p : Ideal ℤ := Ideal.span {(l : ℤ)}
-  haveI hpmax : p.IsMaximal :=
+  have hpmax : p.IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.mp hl).irreducible
   have hp0 : p ≠ ⊥ := by
     simp only [p, ne_eq, Ideal.span_singleton_eq_bot, Nat.cast_eq_zero]
@@ -191,7 +191,7 @@ theorem UpperTheory.V.Pa.arPres :
       cpt := fun o => isCompact_iff_compactSpace.1 (isClosed_Dec (F := L) _).isCompact
       φq := fun o => (P.e N).p₀.comp ((P.V N).pr.comp (Dec (F := L) _).subtype)
       φq_cont := fun o => ((P.e N).cont.comp
-        (((continuous_toGS Ω _).comp continuous_resP).comp continuous_subtype_val)).subtype_mk _
+        (((continuous_toGS Ω _).comp continuous_resP).comp continuous_subtypeVal)).subtype_mk _
       cw := fun i => (P.e N).p (toGS Ω (P.V N).S' (c (ip i)))
       cw_sq := fun i => (map_mul (P.e N).p _ _).symm.trans
         ((congrArg (P.e N).p ((map_mul (toGS Ω (P.V N).S') _ _).symm.trans

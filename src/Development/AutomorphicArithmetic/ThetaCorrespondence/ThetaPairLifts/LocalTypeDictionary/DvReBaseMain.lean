@@ -366,7 +366,7 @@ theorem soLoc_reG' {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     {a a' : ℕ} (G : Geo σ a a') (V : Spc F E a) (V' : Spc F E a') (W : Spc F E (a + a')) (ψ : AddChar (AF F) ℂ) {v : Pl (F := F)}
     (t : E →ₐ[F] Fv F v) : (reG G V V' W).M'.SoLoc ψ t = G.M'.SoLoc ψ t := by
   ext φ
-  simp only [Model.SoLoc, Model.IsLinBar, Set.mem_setOf_eq]
+  simp only [Model.SoLoc, Model.IsLinBar, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨h1, ι, ⟨a, b, c⟩, h2⟩; exact ⟨h1, ι, ⟨a, b, c⟩, h2⟩
   · rintro ⟨h1, ι, ⟨a, b, c⟩, h2⟩; exact ⟨h1, ι, ⟨a, b, c⟩, h2⟩
@@ -636,7 +636,7 @@ theorem continuous_prU [TopologicalSpace A] [ContinuousAdd A] [ContinuousConstSM
     (J : Matrix ι ι A) (e : R) (he : e * e = e) : Continuous (prU c J e he) := by
   refine Continuous.subtype_mk ?_ _
   have h : Continuous (prM (A := A) e he ι) := (continuous_id.const_smul e).add continuous_const
-  exact (Continuous.units_map _ h).comp continuous_subtype_val
+  exact (Continuous.units_map _ h).comp continuous_subtypeVal
 
 theorem smul_det_prM (e : R) (he : e * e = e) (M : Matrix ι ι A) {u : R} (hu : u * e = 0) :
     u • ((prM e he ι M).det - 1) = 0 := by
@@ -773,8 +773,8 @@ theorem member_arch_eq (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) {a b : ℕ} (
     refine Units.ext ?_
     rw [hcv, Units.val_one]
     exact mul_right_cancel₀ hl0 (by rw [one_mul]; exact e1.symm)
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
-  haveI : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul (AF F) (AE F E)
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have : ContinuousSMul (AF F) (AE F E) := IsModuleTopology.toContinuousSMul (AF F) (AE F E)
   let π := prU (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (dbl ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) JB)) (eInf F) eInf_mul
   have hc1 := GlobalTheory.T.doubledUnitary_character_trivial_of_siegel F E σ hσ b JB ε hJ hdet (c.comp π) (hcont.comp (continuous_prU _ _ _ _)) (fun p t hpt => by
     refine hP (π p) (Units.map (prM (eInf F) eInf_mul (Fin b)) t) ?_ (hχ _ fun u hu => ?_)
@@ -1390,7 +1390,7 @@ theorem real_maps_unique : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ (F
   have hT : ∀ x, T x = c • x := fun x => by rw [hc]; rfl
   refine ⟨ψ, c, ?_, hψ, fun f hf => ?_⟩
   · rintro rfl
-    haveI := hR.nontriv
+    have := hR.nontriv
     obtain ⟨x, hx⟩ := exists_ne (0 : R.Pi)
     have h0 : ψ.symm (ψ₁ x) = 0 := by rw [← zero_smul ℂ x, ← hT x]; rfl
     exact hx (ψ₁.injective (ψ.symm.injective (h0.trans (map_zero _).symm) |>.trans (map_zero _).symm))
@@ -1473,8 +1473,8 @@ theorem exists_local_iso_scalar_of_reG : _root_.GlobalTheory.FunPr.ThetaLocalInp
       exact hN h hh φ' hφ' φ₁' hφ₁' hact' (e ▸ hmem)
   obtain ⟨sV, sV', iV'⟩ := props Rf (hf.onto' v) (hf.equiv v) (hf.irred v)
   obtain ⟨tV, tV', jV'⟩ := props Rf₃ (h₃.onto' v) (h₃.equiv v) (h₃.irred v)
-  haveI := hf.nontriv v
-  haveI := h₃.nontriv v
+  have := hf.nontriv v
+  have := h₃.nontriv v
   have mV := ker_maximal om v (Rf.p v) (hf.onto v) (hf.inv v) sV (hf.irred v)
   have mV₃ := ker_maximal (Y := G.V) (Z := G.W) om v (Rf₃.p v) (h₃.onto v) (h₃.inv v) tV (h₃.irred v)
   have mV' := ker_maximal om' v (Rf.p' v) (hf.onto' v) (hf.inv' v) sV' iV'
@@ -1500,7 +1500,7 @@ theorem exists_local_iso_scalar_of_reG : _root_.GlobalTheory.FunPr.ThetaLocalInp
     have e4 : Rf₃.p v φ₁ = Rf₃.p' v χ₁' := h₃.equiv v h hh φ hφ χ' hχ' φ₁ hφ₁ χ₁' hχ₁' ha hc' e3
     rw [hTapp, e2, ← hψ' χ₁' hχ₁', ← e4, hψ φ₁ hφ₁, LinearEquiv.symm_apply_apply]
   have hrank : Module.rank ℂ (Rf.Pi v) ≤ Cardinal.aleph0 := by
-    haveI := sc_Fv v
+    have := sc_Fv v
     have sp : Function.Surjective ((Rf.p v).comp (SB (Fin a × Fin (a + a') → Fv F v)).subtype) := fun y => by
       have : y ∈ (SB (Fin a × Fin (a + a') → Fv F v)).map (Rf.p v) := by rw [hf.onto v]; trivial
       obtain ⟨x, hx, rfl⟩ := this
@@ -1636,12 +1636,12 @@ theorem isMulRightInvariant_of_equiv {G H : Type} [Group G] [Group H]
 theorem isMulRightInvariant (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {n : ℕ} (J : Matrix (Fin n) (Fin n) E)
     (hJ : ∀ i j, σ (J j i) = J i j) (hd : IsUnit J.det) (μ : Measure (UA σ J)) [μ.IsHaarMeasure] :
     μ.IsMulRightInvariant := by
-  haveI : IsTopologicalRing (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : BorelSpace (UA σ J) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (HA (AF F) σ Jᵀ) := inferInstanceAs (IsTopologicalGroup (HR (AF F) σ Jᵀ))
-  haveI : BorelSpace (HA (AF F) σ Jᵀ) := ⟨rfl⟩
+  have : IsTopologicalRing (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : BorelSpace (UA σ J) := ⟨rfl⟩
+  have : IsTopologicalGroup (HA (AF F) σ Jᵀ) := inferInstanceAs (IsTopologicalGroup (HR (AF F) σ Jᵀ))
+  have : BorelSpace (HA (AF F) σ Jᵀ) := ⟨rfl⟩
   refine isMulRightInvariant_of_equiv (toHA σ J) μ ?_
-  haveI : (μ.map (toHA σ J)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ (toHA σ J)
+  have : (μ.map (toHA σ J)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ (toHA σ J)
   obtain ⟨d, hd'⟩ := GlobalTheory.HermLineZeros.exists_conj_ne hcm
   have hss := GlobalTheory.HermLineZeros.conj_invol hcm
   have hJ' : IsHermND σ Jᵀ := ⟨fun i j => hJ j i, by rw [Matrix.det_transpose]; exact hd.ne_zero⟩
@@ -1651,16 +1651,16 @@ theorem isMulRightInvariant (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) {n : ℕ
 theorem countable_subgroupOf_range {G H : Type} [Group G] [Group H] [Countable G] (f : G →* H)
     (K : Subgroup H) : Countable ((f.range).subgroupOf K) := by
   have hc : (Set.range f).Countable := Set.countable_range f
-  haveI := hc.to_subtype
+  have := hc.to_subtype
   refine Function.Injective.countable (f := fun γ : (f.range).subgroupOf K =>
     (⟨γ.1.1, MonoidHom.mem_range.1 (Subgroup.mem_subgroupOf.1 γ.2)⟩ : Set.range f)) ?_
   intro a b hab
   exact Subtype.ext (Subtype.ext (Subtype.mk.inj hab))
 
 theorem countable_ratU (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E) : Countable (ratU σ J) := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
-  haveI : Countable (GL (Fin n) E) := Function.Injective.countable (f := (Units.val : GL (Fin n) E → Matrix (Fin n) (Fin n) E)) (fun a b h => Units.ext h)
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (Matrix (Fin n) (Fin n) E) := inferInstanceAs (Countable (Fin n → Fin n → E))
+  have : Countable (GL (Fin n) E) := Function.Injective.countable (f := (Units.val : GL (Fin n) E → Matrix (Fin n) (Fin n) E)) (fun a b h => Units.ext h)
   unfold ratU
   exact countable_subgroupOf_range _ _
 
@@ -1693,14 +1693,14 @@ theorem thetaIntegral_rightTranslate_eq : _root_.GlobalTheory.FunPr.ThetaLocalIn
     intro γ hγ x
     have := (hTB.1 Φ hΦ).2.1 γ hγ 1 (one_mem _) x (y * h)
     rwa [one_mul] at this
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
-  haveI := hp.good.haar
-  haveI : M.μ.IsMulRightInvariant := isMulRightInvariant σ hp.base.cm X.J hp.herm.herm
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  have := hp.good.haar
+  have : M.μ.IsMulRightInvariant := isMulRightInvariant σ hp.base.cm X.J hp.herm.herm
     (GlobalTheory.isUnit_det_of_isHerm F E σ B n X r s hp.herm) M.μ
-  haveI := countable_ratU σ X.J
-  haveI : MeasurableConstSMul (ratU σ X.J) (UA σ X.J) := ⟨fun c => measurable_const_mul (c : UA σ X.J)⟩
-  haveI : SMulInvariantMeasure (ratU σ X.J) (UA σ X.J) M.μ :=
+  have := countable_ratU σ X.J
+  have : MeasurableConstSMul (ratU σ X.J) (UA σ X.J) := ⟨fun c => measurable_const_mul (c : UA σ X.J)⟩
+  have : SMulInvariantMeasure (ratU σ X.J) (UA σ X.J) M.μ :=
     ⟨fun c s _ => measure_preimage_mul M.μ (c : UA σ X.J) s⟩
   have hL : M.I om (om (g, h) Φ) y = ∫ x in M.dom, theta om Φ (x * g) (y * h) ∂M.μ := by
     unfold Model.I theta
@@ -1766,7 +1766,7 @@ theorem rebase_finite_scalar (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) {
   have key : ∀ v : B.P, l v.1 = (chrW X.ν (B.τ v) (kap G V V' Z v.1) : ℂ) := by
     intro v
     by_cases hv : v.1 ∈ X.T
-    · haveI := hM.fin.nontriv v.1
+    · have := hM.fin.nontriv v.1
       obtain ⟨y, hy⟩ := exists_ne (0 : Rf.Pi v.1)
       obtain ⟨φ, hφ, e⟩ : y ∈ (SB _).map (Rf.p v.1) := by rw [hM.fin.onto]; trivial
       obtain ⟨φ', hφ', e'⟩ : y ∈ (SB _).map (Rf.p' v.1) := by rw [hM.fin.onto']; trivial

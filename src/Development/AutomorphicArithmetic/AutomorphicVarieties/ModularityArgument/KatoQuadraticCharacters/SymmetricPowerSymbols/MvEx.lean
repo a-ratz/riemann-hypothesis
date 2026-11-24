@@ -73,8 +73,8 @@ private theorem kum_lagr {K L : Type} [Field K] [Field L] [Algebra K L] [IsGaloi
     ∃ θ : L, θ ≠ 0 ∧ ∀ g : L ≃ₐ[K] L, g θ = algebraMap K L (c g) * θ := by
   classical
   let F : IntermediateField K L := (FiniteGaloisIntermediateField.adjoin K (B : Set L)).toIntermediateField
-  haveI : FiniteDimensional K F := (FiniteGaloisIntermediateField.adjoin K (B : Set L)).finiteDimensional
-  haveI : IsGalois K F := (FiniteGaloisIntermediateField.adjoin K (B : Set L)).isGalois
+  have : FiniteDimensional K F := (FiniteGaloisIntermediateField.adjoin K (B : Set L)).finiteDimensional
+  have : IsGalois K F := (FiniteGaloisIntermediateField.adjoin K (B : Set L)).isGalois
   have hBF : ∀ b ∈ B, b ∈ F := fun b hb =>
     FiniteGaloisIntermediateField.subset_adjoin K (B : Set L) hb
   have hagree : ∀ (g : L ≃ₐ[K] L) (σ : F ≃ₐ[K] F), (∀ x : F, g (x : L) = (σ x : L)) →
@@ -124,10 +124,10 @@ theorem UpperTheory.V.Z.Kato.Sym.kum :
     UpperTheory.V.Z.Kato.Sym.Kum := by
   intro Ω _ _ _ ε X m hm
   classical
-  haveI : NeZero m := ⟨hm.ne'⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
-  haveI : IsGalois X.K (Kb X) := IsGalois.mk
+  have : NeZero m := ⟨hm.ne'⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero X.K := charZero_of_injective_algebraMap (algebraMap Ω X.K).injective
+  have : IsGalois X.K (Kb X) := IsGalois.mk
   obtain ⟨hprim, hL2, hL3, -, -, -, -⟩ := lgB Ω ε X m hm
   set ζK : X.K := algebraMap Ω X.K (eOm ε (1 / (m : ℚ))) with hζK
   have hzt : zt X m = io X ζK := rfl
@@ -278,23 +278,23 @@ theorem UpperTheory.V.Z.Kato.Sym.kumUn :
     UpperTheory.V.Z.Kato.Sym.KumUn := by
   unfold UpperTheory.V.Z.Kato.Sym.KumUn
   rintro Ω _ _ _ ε X m hm φ f ⟨θ, hθ, hka⟩ hU
-  rw [Tower.Un, Set.mem_setOf_eq]
+  rw [Tower.Un, Set.mem_ofPred_eq]
   intro W hW
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hinj : Function.Injective (Polynomial.aeval (R := Ω) X.jK) :=
     transcendental_iff_injective.mp (jK_transcendental X)
   let P : Polynomial Ω →ₐ[Ω] X.K := Polynomial.aeval X.jK
   let Λ : RatFunc Ω →ₐ[Ω] X.K :=
     RatFunc.liftAlgHom P (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective _ hinj)
-  letI : Algebra (Polynomial Ω) X.K := P.toRingHom.toAlgebra
-  letI : Algebra (RatFunc Ω) X.K := Λ.toRingHom.toAlgebra
+  let : Algebra (Polynomial Ω) X.K := P.toRingHom.toAlgebra
+  let : Algebra (RatFunc Ω) X.K := Λ.toRingHom.toAlgebra
   have hΛP : ∀ p : Polynomial Ω, Λ (algebraMap (Polynomial Ω) (RatFunc Ω) p) = P p := fun p => by
     simpa using RatFunc.liftAlgHom_apply_div P
       (nonZeroDivisors_le_comap_nonZeroDivisors_of_injective _ hinj) p 1
-  haveI : IsScalarTower (Polynomial Ω) (RatFunc Ω) X.K :=
+  have : IsScalarTower (Polynomial Ω) (RatFunc Ω) X.K :=
     IsScalarTower.of_algebraMap_eq fun p => (hΛP p).symm
-  haveI : Algebra.IsAlgebraic (RatFunc Ω) X.K := by
+  have : Algebra.IsAlgebraic (RatFunc Ω) X.K := by
     refine ⟨fun g => ?_⟩
     obtain ⟨p, hp0, hpg⟩ := X.alg_j g
     have hle : ∀ y ∈ IntermediateField.adjoin Ω {X.jK}, ∃ r, Λ r = y := by

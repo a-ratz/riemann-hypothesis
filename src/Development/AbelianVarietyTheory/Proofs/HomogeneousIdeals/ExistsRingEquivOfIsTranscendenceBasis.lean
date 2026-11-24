@@ -67,8 +67,8 @@ theorem _root_.GlobalTheory.GaloisDescent.exists_ringEquiv_of_isTranscendenceBas
     {v : ι → L} {w : κ → L'} (hv : IsTranscendenceBasis F v) (hw : IsTranscendenceBasis F' w)
     (e : MvPolynomial ι F ≃+* MvPolynomial κ F') :
     ∃ σ : L ≃+* L', ∀ p, σ (aeval v p) = aeval w (e p) := by
-  letI : Algebra (MvPolynomial ι F) L := (aeval v).toRingHom.toAlgebra
-  letI : Algebra (MvPolynomial κ F') L' := (aeval w).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial ι F) L := (aeval v).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial κ F') L' := (aeval w).toRingHom.toAlgebra
   have : Module.IsTorsionFree (MvPolynomial ι F) L :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr hv.1
   have : Module.IsTorsionFree (MvPolynomial κ F') L' :=
@@ -162,7 +162,7 @@ theorem _root_.GlobalTheory.GaloisDescent.mem_range_algebraMap_of_forall_algEqui
 open MvPolynomial Cardinal in
 theorem _root_.GlobalTheory.GaloisDescent.complex_mem_range_of_forall_algEquiv {K : Type*} [Field K] [Algebra K ℂ] (x : ℂ)
     (hx : ∀ σ : ℂ ≃ₐ[K] ℂ, σ x = x) : x ∈ Set.range (algebraMap K ℂ) := by
-  haveI : CharZero K := RingHom.charZero (algebraMap K ℂ)
+  have : CharZero K := RingHom.charZero (algebraMap K ℂ)
   exact _root_.GlobalTheory.GaloisDescent.mem_range_algebraMap_of_forall_algEquiv x hx
 
 
@@ -172,10 +172,10 @@ theorem _root_.GlobalTheory.GaloisDescent.exists_complex_ringEquiv_comp_eq {K : 
   have hK : Cardinal.mk K ≤ Cardinal.aleph0 := Cardinal.mk_le_aleph0
   have hC : Cardinal.aleph0 < Cardinal.mk ℂ := by
     rw [Cardinal.mk_complex]; exact Cardinal.aleph0_lt_continuum
-  letI Af : Algebra K ℂ := f.toAlgebra
+  let Af : Algebra K ℂ := f.toAlgebra
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis K ℂ
   have hsc := IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt' _ hs hK hC
-  letI Ag : Algebra K ℂ := g.toAlgebra
+  let Ag : Algebra K ℂ := g.toAlgebra
   obtain ⟨t, ht⟩ := exists_isTranscendenceBasis K ℂ
   have htc := IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt' _ ht hK hC
   obtain ⟨eqv⟩ := Cardinal.eq.1 (hsc.symm.trans htc)

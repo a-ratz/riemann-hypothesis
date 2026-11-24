@@ -317,7 +317,7 @@ theorem exists_fixed_mk_eq_of_commute : ∀ {G V : Type} [Group G] [TopologicalS
     intro z hz c hc
     rw [hconj c (s t) z, hz c hc]
   set W : Submodule ℂ (V ⧸ twKer π N 1) := (fixed π I).map (twKer π N 1).mkQ with hW
-  haveI : FiniteDimensional ℂ (fixed π I) := hfd I hIo hIc
+  have : FiniteDimensional ℂ (fixed π I) := hfd I hIo hIc
   have hWfd : FiniteDimensional ℂ W := by
     rw [hW]
     infer_instance

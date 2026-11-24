@@ -72,7 +72,7 @@ namespace Formalism.MainNotions.N.T2
 open Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.WeaklyAdmissibleFiltrations in
 theorem litGoodO : Formalism.MainNotions.N.LitGoodO := by
   intro l _ LL
-  haveI : FiniteDimensional ℚ_[l] LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] LL.1 := LL.2
   refine ⟨⟨inferInstance, inferInstance, inferInstance⟩, LL.2, isModuleTopologyOfFiniteDimensional,
     inferInstance, ?_⟩
   have hr : Set.range (algebraMap (OL LL) LL.1) = ((OL LL).toSubring.toAddSubgroup : Set LL.1) := by

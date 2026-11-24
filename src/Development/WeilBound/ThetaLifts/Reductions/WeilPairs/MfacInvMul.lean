@@ -98,15 +98,15 @@ theorem parseval_pol {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) {nS 
           (c : ℂ) * ∫ x, Φ₁ x * starRingEnd ℂ (Φ₂ x) ∂μN := by
   obtain ⟨μW, 𝓕W, hμW, h𝓕W⟩ := GlobalTheory.TowerFD.exists_fd_any F E nS (nT + nT)
   obtain ⟨i1, i2, -, -, -, -⟩ := _root_.GlobalTheory.AdelicMatrixLatticeF.lattice F E nS (nT + nT)
-  haveI := i1
-  haveI := i2
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  have := i1
+  have := i2
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
   have hb : (MeasurableSpace.pi : MeasurableSpace (Fin N → AF F)) = borel _ := BorelSpace.measurable_eq
-  letI mP : MeasurableSpace (VA F N) := borel _
-  haveI : BorelSpace (VA F N) := ⟨rfl⟩
-  haveI : BorelSpace (WOF F E nS (nT + nT)) := ⟨rfl⟩
+  let mP : MeasurableSpace (VA F N) := borel _
+  have : BorelSpace (VA F N) := ⟨rfl⟩
+  have : BorelSpace (WOF F E nS (nT + nT)) := ⟨rfl⟩
   let ca : WOF F E nS (nT + nT) ≃ₜ+ VA F N :=
     { e.toAddEquiv with continuous_toFun := hec, continuous_invFun := hes }
   let me : WOF F E nS (nT + nT) ≃ᵐ VA F N := ca.toHomeomorph.toMeasurableEquiv
@@ -199,8 +199,8 @@ theorem schA_facts {B : Base F E} {σ : E →ₐ[F] E} (hB : B.IsGood σ) (N : �
     Continuous Φ ∧ Integrable (fun x => Φ x * starRingEnd ℂ (Φ x)) μN ∧
       ∀ b : Fin N → AF F, (fun x => B.ψ (x ⬝ᵥ b) * Φ x) ∈ schA F (Fin N) := by
   refine ⟨GlobalTheory.ThKOp.continuous_of_mem_schA hΦ, ?_, fun b => ?_⟩
-  · haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-    haveI : BorelSpace (AF F) := ⟨rfl⟩
+  · have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+    have : BorelSpace (AF F) := ⟨rfl⟩
     have hb : (MeasurableSpace.pi : MeasurableSpace (Fin N → AF F)) = borel _ := BorelSpace.measurable_eq
     have key : ∀ (m : MeasurableSpace (Fin N → AF F)), m = borel _ → ∀ μ : @Measure _ m,
         @Measure.IsAddHaarMeasure _ _ _ m μ → Integrable (fun x => Φ x * starRingEnd ℂ (Φ x)) μ := by

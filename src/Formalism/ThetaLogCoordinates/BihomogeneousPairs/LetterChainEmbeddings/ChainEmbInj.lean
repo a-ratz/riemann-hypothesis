@@ -124,7 +124,7 @@ theorem deg_U (hB : D.BlockOK) (j : Fin D.T.t → ℕ) (jp : ℕ) :
   simp only [BlockData.lettersAt]
   simp only [← List.sum_toFinset _ (List.nodup_finRange _), List.toFinset_finRange]
   rw [Finset.sum_eq_zero (fun b _ => by
-      rw [if_neg]
+      rw [ite_eq_right]
       have := pos_lt_u hB b
       omega)]
   simp
@@ -180,13 +180,13 @@ theorem wv_chain (hB : D.BlockOK) (i : Fin D.T.t) (c : Fin r) :
     wv D i c = chainEmb N r D.T.t (D.letterAt (D.T.pos i), c) := by
   simp only [wv, chainEmb, Sum.inl.injEq, Prod.mk.injEq, and_true]
   apply Fin.ext
-  rw [finPos_pos_val hB, Fin.coe_castSucc, letterAt_pos_val hB]
+  rw [finPos_pos_val hB, Fin.val_castSucc, letterAt_pos_val hB]
 
 theorem ev_chain (hB : D.BlockOK) (i : Fin D.T.t) (c : Fin r) :
     ev D i c = chainEmb N r D.T.t (D.letterAt (D.T.pos i + 1), c) := by
   simp only [ev, chainEmb, Sum.inl.injEq, Prod.mk.injEq, and_true]
   apply Fin.ext
-  rw [finPos_succ_val hB, Fin.coe_castSucc, letterAt_succ_val hB]
+  rw [finPos_succ_val hB, Fin.val_castSucc, letterAt_succ_val hB]
 
 theorem chainEmb_inj : Function.Injective (chainEmb N r D.T.t) := by
   intro x y h

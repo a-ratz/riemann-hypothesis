@@ -176,7 +176,7 @@ theorem nodeS_eq {R : RealDat D A Ks} {G : GlobalTheory.Grid.GridPre R} (hG : G.
       by_cases h : j + 1 < D.R.m
       · simp [GlobalTheory.Grid.GridPre.V, GlobalTheory.Grid.row0, GlobalTheory.Grid.nodeY, h, min_eq_left h.le]
       · have e : j + 1 = D.R.m := by omega
-        simp only [GlobalTheory.Grid.GridPre.V, GlobalTheory.Grid.GridSp.vert, GlobalTheory.Grid.row0, if_neg h]
+        simp only [GlobalTheory.Grid.GridPre.V, GlobalTheory.Grid.GridSp.vert, GlobalTheory.Grid.row0, ite_eq_right h]
         rw [e]
   | succ i => exact (hG.spaces.vert i j (by omega) hj).par
 

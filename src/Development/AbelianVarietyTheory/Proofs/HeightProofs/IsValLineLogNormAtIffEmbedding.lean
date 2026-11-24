@@ -284,7 +284,7 @@ theorem weight_periodic {u : HolUnif A L g} (hL : L.IsLB) {Hm : Matrix (Fin g) (
   have a := hs i _ hz'
   rw [e, hs i _ hz, h.2.2.2 l i z hz, ← _root_.mul_assoc] at a
   rw [← mul_right_cancel₀ (u.fr_ne i _ hz') a, norm_mul, norm_mul, h.2.2.1, Complex.norm_exp, hermSq_add h.1,
-    _root_.one_mul, mul_pow, _root_.mul_assoc, ← Real.exp_nat_mul, ← Real.exp_add]
+    _root_.one_mul, mul_pow, _root_.mul_assoc, ← Real.exp_natCast_mul, ← Real.exp_add]
   congr 2
   have : ((Real.pi : ℂ) / 2) = ((Real.pi / 2 : ℝ) : ℂ) := by push_cast; rfl
   rw [this, Complex.add_re, Complex.re_ofReal_mul, Complex.re_ofReal_mul]
@@ -439,7 +439,7 @@ theorem isL2Sq_iff_isThNormAt (P : Out.PolAV (Sp K₁)) (rig : LB.Gen (P.L.pull 
   constructor
   · rintro ⟨hr, A', _, φ, u, Hm, χ, θ, Fd, h, hAH, h0, hθ, hF, -, -, -, rfl⟩
     have hL' := pull_isLB P.isLB φ
-    haveI : IsCommMonObj A' := (pullPol P h).isAb.comm
+    have : IsCommMonObj A' := (pullPol P h).isAb.comm
     have he : eSec A' ≫ φ = spMap σ ≫ eSec P.A := PolBaseChange.eSec_comm h
     have hr' : (rigPullOf φ (spMap σ) he P.L rig).IsGen :=
       Out.LBxP.isGen_pullAlong P.L φ (spMap σ) (fun _ : PUnit => eSec P.A) (fun _ => 1)
@@ -552,7 +552,7 @@ theorem isIso_of_cj : IsIso ψ := h.1.isIso_fst_of_isIso
 theorem cjPt_left (x : 𝟙_ (Over (Sp ℂ)) ⟶ A) :
     haveI := isIso_of_cj h
     (cjPt h x).left = cj ≫ (show Sp ℂ ⟶ _ from x.left) ≫ inv ψ := by
-  haveI := isIso_of_cj h
+  have := isIso_of_cj h
   rw [← Category.assoc, ← cjPt_comp h x]
   exact ((Category.assoc _ _ _).trans (by rw [IsIso.hom_inv_id, Category.comp_id])).symm
 
@@ -652,7 +652,7 @@ theorem cj_domain {Fd : Set (Fin g → ℂ)} (hF : IsAddFundamentalDomain u.Λ F
 theorem cj_isDiff {t : epsR ℂ ⟶ A} {t' : epsR ℂ ⟶ A'} (ht : IsTangent t)
     (e : t'.left ≫ ψ = spMap (dualMap (starRingEnd ℂ)) ≫ t.left) {w : Fin g → ℂ} (hd : u.IsDiff w t) :
     (cjUnif h u).IsDiff (star w) t' := by
-  haveI := isIso_of_cj h
+  have := isIso_of_cj h
   intro U hU f
   have h0 := (TangentOrigin.tangent_mem_iff (u := cjUnif h u) (isTangent_of_pull h ht e) U).1 hU
   have h1 : ⊤ ≤ (u.ex 0).left ⁻¹ᵁ (inv ψ ⁻¹ᵁ U) := by

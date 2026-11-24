@@ -117,7 +117,7 @@ theorem finrank_lattice {A K : Type} [CommRing A] [IsDomain A] [Field K] [Algebr
     [IsFractionRing A K] {Ω : Type} [AddCommGroup Ω] [Module K Ω] [Module A Ω]
     [IsScalarTower A K Ω] (M : Submodule A Ω) (hM : Submodule.span K (M : Set Ω) = ⊤) :
     finrank K Ω = finrank A M := by
-  haveI := isLocalizedModule_subtype M hM
+  have := isLocalizedModule_subtype M hM
   rw [IsFractionRing.finrank_right_eq A K Ω]
   exact IsLocalizedModule.finrank_eq (nonZeroDivisors A) M.subtype le_rfl
 
@@ -213,7 +213,7 @@ theorem chart_ii : ∀ (A K : Type) [CommRing A] [IsDomain A] [IsNoetherianRing 
     rw [map_pow, map_natCast]
     exact pow_ne_zero _ (Nat.cast_ne_zero.2 hp.out.ne_zero)
   have hlat : D.om'.IsFullLattice K := by
-    letI : D.om'.IsLattice K :=
+    let : D.om'.IsLattice K :=
       Submodule.IsLattice.of_fg K (Submodule.FG.of_le D.om_lat.fg (om'_le D))
     refine ⟨?_⟩
     apply top_unique
@@ -232,7 +232,7 @@ theorem chart_ii : ∀ (A K : Type) [CommRing A] [IsDomain A] [IsNoetherianRing 
     exact pow_smul_mem D (D.om.smul_mem κ hx)
   obtain ⟨C, O, _, _, _, _, _, v, φ, V, Ω', _, _, _, _, _, _, _, _, P, ι, hv, hφ, hcen, hred⟩ :=
     hT q hq h1 hpq
-  letI : Algebra A O := φ.toAlgebra
+  let : Algebra A O := φ.toAlgebra
   obtain ⟨j, hj, -, hj1⟩ := bc_iso A K Ω D.om C v O hv Ω' P.om ι D.om_lat D.om_proj P.om_lat
     hred.span_eq hred.rank_eq
   obtain ⟨s, hs, hsx⟩ := test_descend A K C v O hv q D.om (D.om'.comap D.om.subtype)

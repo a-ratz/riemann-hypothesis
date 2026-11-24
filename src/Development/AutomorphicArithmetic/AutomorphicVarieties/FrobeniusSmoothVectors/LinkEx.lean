@@ -77,9 +77,9 @@ private theorem deg_eq (l : ℕ) [Fact l.Prime] {A : ValuationSubring Ω} {w : H
 
 omit [CharZero Ω] [IsAlgClosure ℚ Ω] in
 private theorem cc_ex [IsTotallyReal F] (w : InfinitePlace F) : ∃ c : G F Ω, IsCCAt w c := by
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : IsGalois F Ω := {}
-  letI : Algebra F ℂ := w.embedding.toAlgebra
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : IsGalois F Ω := {}
+  let : Algebra F ℂ := w.embedding.toAlgebra
   let j : Ω →ₐ[F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -87,8 +87,8 @@ private theorem cc_ex [IsTotallyReal F] (w : InfinitePlace F) : ∃ c : G F Ω, 
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hr : ComplexEmbedding.IsReal w.embedding := InfinitePlace.isReal_iff.1 (IsTotallyReal.isReal w)
   let cj : ℂ →ₐ[F] ℂ := { starRingEnd ℂ with commutes' := fun x => RingHom.congr_fun hr x }
-  letI : Algebra Ω ℂ := j.toRingHom.toAlgebra
-  haveI : IsScalarTower F Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  let : Algebra Ω ℂ := j.toRingHom.toAlgebra
+  have : IsScalarTower F Ω ℂ := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
   refine ⟨(cj.comp j).restrictNormal' Ω, j.toRingHom, fun x => ?_, ?_⟩
   · exact AlgHom.restrictNormal_commutes (cj.comp j) Ω x
   · rw [show j.toRingHom.comp (algebraMap F Ω) = w.embedding from RingHom.ext fun x => j.commutes x]
@@ -96,12 +96,12 @@ private theorem cc_ex [IsTotallyReal F] (w : InfinitePlace F) : ∃ c : G F Ω, 
 
 private theorem kills_open {N : ℕ} (hN : N ≠ 0) {C : Type} [Group C] {χ : G ℚ Ω →* C} (h : Af.KillsMu N χ) :
     IsOpen (χ.ker : Set (G ℚ Ω)) := by
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hf : {ζ : Ω | ζ ^ N = 1}.Finite :=
     (Polynomial.nthRootsFinset N (1 : Ω)).finite_toSet.subset fun ζ hζ =>
       (Polynomial.mem_nthRootsFinset (Nat.pos_of_ne_zero hN) _).2 hζ
-  haveI := hf.to_subtype
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ N = 1}) :=
+  have := hf.to_subtype
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ N = 1}) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   refine Subgroup.isOpen_mono (H₁ := (IntermediateField.adjoin ℚ {ζ : Ω | ζ ^ N = 1}).fixingSubgroup) (fun s hs => h s fun ζ hζ => ?_)
     (IntermediateField.fixingSubgroup_isOpen _)
@@ -190,7 +190,7 @@ private theorem equiv_ex (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ 
   have hr : (galEmb ℚ (W.Lp L) Ω).range = upl Ω L := (range_galEmb ℚ (W.Lp L) Ω).trans (upl_eq Ω L).symm
   let e : G (W.Lp L) Ω ≃* upl Ω L := (MonoidHom.ofInjective hE.injective).trans (MulEquiv.subgroupCongr hr)
   refine ⟨{ e with continuous_toFun := hE.continuous.subtype_mk _, continuous_invFun := hE.continuous_iff.2 ?_ }, fun _ => rfl⟩
-  convert continuous_subtype_val using 1
+  convert continuous_subtypeVal using 1
   funext s
   exact congrArg Subtype.val (e.apply_symm_apply s)
 
@@ -200,12 +200,12 @@ theorem UpperTheory.V.Fr.link_ex :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] [CharP (ResidueField O) l] (η : G ℚ Ω →* ℤˣ) (Ψ : G ℚ Ω →* Oˣ) (σ : G ℚ Ω) (B : ValuationSubring Ω) (M : ℕ) (Hb : Subgroup (G ℚ Ω)), Gen l η Ψ σ B M Hb → ∀ (m : ℕ) (L : Type) [Field L] [NumberField L] [IsCMField L] [Algebra L Ω] (g₁ : G ℚ Ω), UFacts l η Ψ M m (upl Ω L) → IsAbelianGalois ℚ L → galOf ℚ L Ω = upl Ω L ⊓ η.ker → g₁ ∈ galOf ℚ L Ω → ∃ Φ : Frame l (ResidueField O), Linked l η Ψ σ g₁ B M L Φ := by
   intro Ω _ _ _ l hl O _ _ _ η Ψ σ B M Hb g m L _ _ _ _ g₁ U hab hgal hg₁
   classical
-  haveI := tf L Ω
-  haveI := tf (W.Lp L) Ω
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ,
+  have := tf L Ω
+  have := tf (W.Lp L) Ω
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ,
     haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic; Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
-  haveI : IsGalois (W.Lp L) Ω := {}
-  haveI := g.fin
+  have : IsGalois (W.Lp L) Ω := {}
+  have := g.fin
   obtain ⟨e, he⟩ := equiv_ex Ω L
   have he' : ∀ s : upl Ω L, galEmb ℚ (W.Lp L) Ω (e.symm s) = s := fun s => by rw [← he, e.apply_symm_apply]
   obtain ⟨hDI, -, hcyc, -⟩ := galEmbFam ℚ (W.Lp L) Ω l
@@ -229,7 +229,7 @@ theorem UpperTheory.V.Fr.link_ex :
     rcases h2 with h2 | h2
     · rw [Nat.card_eq_fintype_card, Fintype.card_units_int] at h2
       exact g.odd ((Nat.prime_dvd_prime_iff_eq hl.out Nat.prime_two).1 h2)
-    · haveI := Fintype.ofFinite (ResidueField O)
+    · have := Fintype.ofFinite (ResidueField O)
       obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' l h2
       have h3 : ((x : ResidueField O) - 1) ^ l = 0 := by
         rw [sub_pow_char, one_pow, ← Units.val_pow_eq_pow_val, ← hx, pow_orderOf_eq_one, Units.val_one, sub_self]
@@ -245,8 +245,8 @@ theorem UpperTheory.V.Fr.link_ex :
   have hval : ∀ {A : ValuationSubring Ω} {v : HeightOneSpectrum (𝓞 (W.Lp L))}, IsPlaceOver A v →
       (A.valuation (l : Ω) < 1 ↔ ((l : ℕ) : 𝓞 (W.Lp L)) ∈ v.asIdeal) := fun {A v} h => (places (W.Lp L) Ω l A).2.2.1 v h
   set N := GC.tameN (S : Set (HeightOneSpectrum (𝓞 (W.Lp L)))) K with hN
-  haveI : N.Normal := Subgroup.is_normal_topologicalClosure _
-  haveI hNc : IsClosed (N : Set (G (W.Lp L) Ω)) := Subgroup.isClosed_topologicalClosure _
+  have : N.Normal := Subgroup.is_normal_topologicalClosure _
+  have hNc : IsClosed (N : Set (G (W.Lp L) Ω)) := Subgroup.isClosed_topologicalClosure _
   have hNK : N ≤ K := tame_le _ _ _ (K.isClosed_of_isOpen hKo) fun _ _ _ _ => inf_le_right
   have hNc' : N ≤ (cycZ (W.Lp L) Ω l).ker :=
     tame_le _ _ _ (isClosed_singleton.preimage (continuous_cycZ _ _ l)) fun v hv A hA =>
@@ -332,7 +332,7 @@ theorem UpperTheory.V.Fr.link_ex :
         rw [← emb_smul, he', ← h] at h1
         exact Subtype.ext (eq_of_isPlaceOver h1 hv)
       j := fun v => (e : G (W.Lp L) Ω →* upl Ω L).comp (Dec (F := W.Lp L) (A v)).subtype
-      j_cont := fun v => e.continuous.comp continuous_subtype_val
+      j_cont := fun v => e.continuous.comp continuous_subtypeVal
       j_inj := fun v => e.injective.comp Subtype.val_injective
       j_range := fun v s => by
         refine ⟨?_, fun h => ⟨⟨e.symm s, by rw [hDec, he']; exact h⟩, e.apply_symm_apply s⟩⟩
@@ -347,7 +347,7 @@ theorem UpperTheory.V.Fr.link_ex :
         exact (congrArg Subtype.val (e.apply_symm_apply ⟨s, hs.2⟩)).symm ▸ h }
   refine ⟨Φ, k, S, π, fun v => (Dec (F := W.Lp L) (A v)).subtype, Subtype.val, Equiv.refl _, c,
     ⟨inferInstance, GC.gLink_quot l g.odd (fun v hv => (hS v).2 hv) inferInstance hKo hKi, fun w hw => (hS w).1 hw,
-      ⟨hA, Subtype.val_injective, fun w => ⟨?_, fun h => ⟨⟨w, h⟩, rfl⟩⟩, fun v => continuous_subtype_val,
+      ⟨hA, Subtype.val_injective, fun w => ⟨?_, fun h => ⟨⟨w, h⟩, rfl⟩⟩, fun v => continuous_subtypeVal,
         fun v => Subtype.val_injective, fun v => Subgroup.range_subtype _⟩,
       fun _ _ => rfl, fun _ => rfl, fun _ => rfl, fun _ => rfl, hcc, fun _ => rfl, ?_, hc, fun _ h => h.1, fun _ h => h.2⟩,
     fun s h => congrArg π ?_, fun v s => (he s.1).symm⟩

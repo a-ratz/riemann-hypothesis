@@ -412,7 +412,7 @@ def toStalkField (F : Type) [Field F] (z : Spec (CommRingCat.of F)) : F →+* (S
 theorem toStalkField_surjective (F : Type) [Field F] (z : Spec (CommRingCat.of F)) :
     Function.Surjective (toStalkField F z) := by
   intro v
-  obtain ⟨U, hU, a, rfl⟩ := (Spec (CommRingCat.of F)).presheaf.germ_exist v
+  obtain ⟨U, hU, a, rfl⟩ := (Spec (CommRingCat.of F)).presheaf.exists_germ_eq v
   obtain rfl : U = ⊤ := top_unique fun y _ => Subsingleton.elim (α := PrimeSpectrum F) z y ▸ hU
   obtain ⟨x, rfl⟩ := (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of F)).inv).2 a
   exact ⟨x, rfl⟩

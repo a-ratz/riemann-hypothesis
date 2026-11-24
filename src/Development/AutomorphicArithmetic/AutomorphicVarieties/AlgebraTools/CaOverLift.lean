@@ -58,8 +58,8 @@ private theorem exists_field_lift {R S F K L : Type} [CommRing R] [CommRing S] [
       ((f i).map (d.comp a)).Splits) :
     ∃ ψ : S →+* L, ψ.comp (algebraMap R S) = d.comp a ∧
       RingHom.ker ψ = RingHom.ker b := by
-  letI : Algebra F K := c.toAlgebra
-  letI : Algebra F L := d.toAlgebra
+  let : Algebra F K := c.toAlgebra
+  let : Algebra F L := d.toAlgebra
   change b.comp (algebraMap R S) = (algebraMap F K).comp a at hab
   have hab' : ∀ r, b (algebraMap R S r) = algebraMap F K (a r) := fun r => RingHom.congr_fun hab r
   have hT : ∀ s ∈ Set.range (fun i => b (u i)),
@@ -103,7 +103,7 @@ theorem UpperTheory.V.AlgebraTools.exists_lift_ker_eq :
       ∀ P : Ideal S, P.IsPrime → P.comap (algebraMap R S) = RingHom.ker x →
       ∃ x' : S →+* A, x'.comp (algebraMap R S) = x ∧ RingHom.ker x' = P := by
   intro R S A _ _ _ _ _ x ι u f hu hf P hP hPx
-  haveI : (RingHom.ker x).IsPrime := RingHom.ker_isPrime x
+  have : (RingHom.ker x).IsPrime := RingHom.ker_isPrime x
   let j : A →+* FractionRing A := algebraMap A (FractionRing A)
   have hj : Function.Injective j := IsFractionRing.injective A (FractionRing A)
   let b : S →+* FractionRing (S ⧸ P) :=

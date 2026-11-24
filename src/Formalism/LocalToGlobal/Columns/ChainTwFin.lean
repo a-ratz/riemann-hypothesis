@@ -138,7 +138,7 @@ theorem tfFinite_quot (hN : 0 < N) : Finite (𝓞 E ⧸ P.asIdeal ^ N) := by
 theorem tfFinite_of_princ (hN : 0 < N) (H : Subgroup ↥(GLint E n P)) (hH : ∀ g : ↥(GLint E n P), lqPrinc P N (g : Sp E n ≃ₗ[E] Sp E n) → g ∈ H) :
     Finite (↥(GLint E n P) ⧸ H) := by
   classical
-  haveI := tfFinite_quot P N hN
+  have := tfFinite_quot P N hN
   let q : Set.range (tfRed P N) → (↥(GLint E n P) ⧸ H) := fun v => QuotientGroup.mk v.2.choose
   refine Finite.of_surjective q ?_
   intro x
@@ -154,7 +154,7 @@ theorem tfRoot_of_princ (hN : 0 < N) (H : Subgroup ↥(GLint E n P)) (lam : ↥H
     (hH : ∀ g : ↥(GLint E n P), lqPrinc P N (g : Sp E n ≃ₗ[E] Sp E n) → ∃ h : g ∈ H, lam ⟨g, h⟩ = 1) (x : ↥H) :
     ∃ m : ℕ, 0 < m ∧ lam x ^ m = 1 := by
   classical
-  haveI := tfFinite_quot P N hN
+  have := tfFinite_quot P N hN
   have key : ∀ k1 k2 : ℕ, k1 < k2 →
       tfRed P N ((x : ↥(GLint E n P)) ^ k1) = tfRed P N ((x : ↥(GLint E n P)) ^ k2) →
       ∃ m : ℕ, 0 < m ∧ lam x ^ m = 1 := by

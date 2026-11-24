@@ -83,7 +83,7 @@ theorem val_lt_one_iff {E : Type} [Field E] [NumberField E] {P : HeightOneSpectr
   · simp [ha]
   have h := hi a⁻¹
   rw [GlobalTheory.AtTypeExists.intAt_iff, Valuation.mem_integer_iff, map_inv₀, map_inv₀, map_inv₀,
-    inv_le_one₀ (zero_lt_iff.2 (by simpa using ha)), inv_le_one₀ (zero_lt_iff.2 (by simpa using ha))] at h
+    inv_le_one₀ (pos_iff_ne_zero.2 (by simpa using ha)), inv_le_one₀ (pos_iff_ne_zero.2 (by simpa using ha))] at h
   rw [← not_le, ← not_le, h]
 
 theorem exists_unif {E : Type} [Field E] [NumberField E] {P : HeightOneSpectrum (𝓞 E)} {ι : E →+* k}
@@ -113,7 +113,7 @@ theorem exists_unif {E : Type} [Field E] [NumberField E] {P : HeightOneSpectrum 
       rw [← WithZero.exp_log ha0, WithZero.exp_le_exp]
       omega
   have h6 := (hi _).2 h5
-  rw [Valuation.mem_integer_iff, map_div₀, map_div₀, div_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 ((map_ne_zero ι).2 h0))), h3] at h6
+  rw [Valuation.mem_integer_iff, map_div₀, map_div₀, div_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 ((map_ne_zero ι).2 h0))), h3] at h6
   exact h6
 
 theorem mul_sec (q : GlobalTheory.FinPl.SplitPt D k) (x : AE D) (y : k) : x * q.sec y = q.sec (q.pr x * y) := by

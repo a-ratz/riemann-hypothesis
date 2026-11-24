@@ -76,9 +76,9 @@ theorem baseUnif_of_kUnif (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (sm : CMT
     (q : CMType H × Fin j × Fin j' ≃ Fin n) (U : ∀ κ, KUnif Y sm j j' n g q κ) :
     ∃ B : BaseUnif Y sm j j' n, B.Locc := by
   classical
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
-  haveI : ∀ κ, Finite (U κ).ι := fun κ => (U κ).fin
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : ∀ κ, Finite (U κ).ι := fun κ => (U κ).fin
   let C : Type := Σ κ : c.F →+* ℂ, (U κ).ι
   obtain ⟨np, ⟨e⟩⟩ := Finite.exists_equiv_fin C
   let a : Fin np → C := e.symm

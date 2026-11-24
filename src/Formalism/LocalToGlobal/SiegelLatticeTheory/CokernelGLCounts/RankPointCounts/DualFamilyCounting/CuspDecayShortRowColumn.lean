@@ -287,7 +287,7 @@ theorem exists_basis_in {X : Submodule K V} {L : Submodule (𝓞 K) V} (hL : Cnt
     ∃ x : Fin (finrank K X) → V, (∀ i, x i ∈ L) ∧ LinearIndependent K x ∧
       Submodule.span K (Set.range x) = X ∧
       locF 𝔭 (Submodule.span (𝓞 K) (Set.range x)) = locF 𝔭 L := by
-  haveI : 𝔭.IsPrime := h𝔭.isPrime
+  have : 𝔭.IsPrime := h𝔭.isPrime
   obtain ⟨hfg, hspan⟩ := hL
   have hLX : ∀ v ∈ L, v ∈ X := fun v hv => hspan ▸ Submodule.subset_span hv
   have hmapN : (L.comap (X.subtype.restrictScalars (𝓞 K))).map
@@ -376,7 +376,7 @@ variable {K F : Type} [Field K] [NumberField K] [StarRing K] [Field F] [NumberFi
 
 theorem exists_over (𝔭 : Ideal (𝓞 F)) (h𝔭 : 𝔭.IsMaximal) :
     ∃ P : Ideal (𝓞 K), P.IsMaximal ∧ P.comap (algebraMap (𝓞 F) (𝓞 K)) = 𝔭 := by
-  haveI := h𝔭
+  have := h𝔭
   refine Ideal.exists_ideal_over_maximal_of_isIntegral 𝔭 ?_
   intro t ht
   rw [RingHom.mem_ker] at ht

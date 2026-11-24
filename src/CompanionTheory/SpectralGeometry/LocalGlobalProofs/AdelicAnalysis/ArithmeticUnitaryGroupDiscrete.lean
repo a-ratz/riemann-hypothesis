@@ -86,7 +86,7 @@ theorem rational_countable_discrete : ∀ (F E : Type) [Field F] [NumberField F]
     let m : HA (AF F) σ J → Matrix (Fin M) (Fin M) (AF F ⊗[F] E) :=
       fun h => ((HA.mat (AF F) σ J h : GL (Fin M) (AF F ⊗[F] E)) :
         Matrix (Fin M) (Fin M) (AF F ⊗[F] E))
-    have hm : Continuous m := Units.continuous_val.comp continuous_subtype_val
+    have hm : Continuous m := Units.continuous_val.comp continuous_subtypeVal
     have hm1 : m 1 = 1 := rfl
     let e : HA (AF F) σ J → Fin M → Fin M → _ → AF F := fun h i j k =>
       B.coord k (m h i j) - B.coord k ((1 : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) i j)

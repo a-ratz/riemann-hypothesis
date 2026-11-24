@@ -119,7 +119,7 @@ theorem UpperTheory.V.Pr.T.curveOverSeries :
     obtain ⟨h, rfl⟩ := (PowerSeries.X_dvd_iff).mpr hc
     rw [map_mul, hfX] at hg
     exact (IsLocalRing.mem_maximalIdeal _).mp (Ideal.mul_mem_right _ _ hπm) hg
-  · letI : Algebra (PowerSeries (ZMod p)) R := f.toAlgebra
+  · let : Algebra (PowerSeries (ZMod p)) R := f.toAlgebra
     have hmap : Ideal.map (algebraMap (PowerSeries (ZMod p)) R)
         (Ideal.span {PowerSeries.X}) = Ideal.span {π} := by
       rw [Ideal.map_span, Set.image_singleton]
@@ -146,9 +146,9 @@ theorem UpperTheory.V.Pr.T.curveOverSeries :
         fun k => ?_⟩
       refine SModEq.mono ?_ (hx k)
       exact Submodule.smul_mono_left (Ideal.pow_right_mono (Ideal.span_singleton_le_iff_mem _ |>.mpr hπm) k)
-    haveI : IsHausdorff (Ideal.map (algebraMap (PowerSeries (ZMod p)) R)
+    have : IsHausdorff (Ideal.map (algebraMap (PowerSeries (ZMod p)) R)
         (Ideal.span {PowerSeries.X})) R := hmap ▸ hH
-    haveI : Module.Finite (PowerSeries (ZMod p)) (R ⧸ Ideal.map
+    have : Module.Finite (PowerSeries (ZMod p)) (R ⧸ Ideal.map
         (algebraMap (PowerSeries (ZMod p)) R) (Ideal.span {PowerSeries.X})) := by
       rw [hmap]
       exact Module.Finite.of_finite
@@ -188,7 +188,7 @@ open IsLocalRing in
 private theorem curveDVR_complete {R R' : Type} [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     [IsAdicComplete (maximalIdeal R) R] [CommRing R'] [Algebra R R'] [Module.Finite R R']
     [IsLocalRing R'] : IsAdicComplete (maximalIdeal R') R' := by
-  haveI hN : IsNoetherianRing R' := IsNoetherianRing.of_finite R R'
+  have hN : IsNoetherianRing R' := IsNoetherianRing.of_finite R R'
   have hcomap : (maximalIdeal R').comap (algebraMap R R') = maximalIdeal R :=
     eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal R'))
   have hle : (maximalIdeal R).map (algebraMap R R') ≤ maximalIdeal R' :=
@@ -218,10 +218,10 @@ private theorem exists_dvr_quotient_of_complete_local {A R : Type} [CommRing A] 
     ∃ (B : Type) (_ : CommRing B) (_ : IsDomain B) (_ : IsDiscreteValuationRing B) (f : R →+* B),
         IsAdicComplete (IsLocalRing.maximalIdeal B) B ∧ Finite (IsLocalRing.ResidueField B) ∧
         Function.Injective f ∧ IsLocalHom f ∧ f.Finite := by
-  letI : Algebra (FractionRing A) (FractionRing R) := FractionRing.liftAlgebra A (FractionRing R)
-  haveI : IsScalarTower A (FractionRing A) (FractionRing R) :=
+  let : Algebra (FractionRing A) (FractionRing R) := FractionRing.liftAlgebra A (FractionRing R)
+  have : IsScalarTower A (FractionRing A) (FractionRing R) :=
     FractionRing.isScalarTower_liftAlgebra A (FractionRing R)
-  haveI : FiniteDimensional (FractionRing A) (FractionRing R) := inferInstance
+  have : FiniteDimensional (FractionRing A) (FractionRing R) := inferInstance
   obtain ⟨hfin, hdvr⟩ :=
     UpperTheory.V.Pr.T.completeDVRExt (A := A) (K := FractionRing A) (L := FractionRing R)
   have hmem : ∀ r : R, algebraMap R (FractionRing R) r ∈ integralClosure A (FractionRing R) :=
@@ -230,15 +230,15 @@ private theorem exists_dvr_quotient_of_complete_local {A R : Type} [CommRing A] 
     (algebraMap R (FractionRing R)).codRestrict (integralClosure A (FractionRing R)) hmem
   have hinj : Function.Injective f := fun x y h =>
     IsFractionRing.injective R (FractionRing R) (congrArg Subtype.val h)
-  letI : Algebra R (integralClosure A (FractionRing R)) := f.toAlgebra
-  haveI : IsScalarTower A R (integralClosure A (FractionRing R)) :=
+  let : Algebra R (integralClosure A (FractionRing R)) := f.toAlgebra
+  have : IsScalarTower A R (integralClosure A (FractionRing R)) :=
     IsScalarTower.of_algebraMap_eq fun x => Subtype.ext
       (IsScalarTower.algebraMap_apply A R (FractionRing R) x)
-  haveI hF : Module.Finite R (integralClosure A (FractionRing R)) :=
+  have hF : Module.Finite R (integralClosure A (FractionRing R)) :=
     Module.Finite.of_restrictScalars_finite A R _
   have hf : f.Finite := hF
-  haveI hl : IsLocalHom f := hf.to_isIntegral.isLocalHom hinj
-  haveI : IsLocalHom (algebraMap R (integralClosure A (FractionRing R))) := hl
+  have hl : IsLocalHom f := hf.to_isIntegral.isLocalHom hinj
+  have : IsLocalHom (algebraMap R (integralClosure A (FractionRing R))) := hl
   refine ⟨integralClosure A (FractionRing R), inferInstance, inferInstance, hdvr, f,
     curveDVR_complete (R := R), ?_, hinj, hl, hf⟩
   exact Module.finite_of_finite (ResidueField R)
@@ -252,11 +252,11 @@ theorem UpperTheory.V.Pr.T.curveDVR :
         Function.Injective f ∧ IsLocalHom f ∧ f.Finite := by
   intro R _ _ _ _ _ _ p _ _ hdim
   obtain ⟨g, hinj, -, hfin⟩ := UpperTheory.V.Pr.T.curveOverSeries (R := R) p hdim
-  letI : Algebra (PowerSeries (ZMod p)) R := g.toAlgebra
-  haveI : FaithfulSMul (PowerSeries (ZMod p)) R :=
+  let : Algebra (PowerSeries (ZMod p)) R := g.toAlgebra
+  have : FaithfulSMul (PowerSeries (ZMod p)) R :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : Module.Finite (PowerSeries (ZMod p)) R := hfin
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal (PowerSeries (ZMod p))) (PowerSeries (ZMod p)) := by
+  have : Module.Finite (PowerSeries (ZMod p)) R := hfin
+  have : IsAdicComplete (IsLocalRing.maximalIdeal (PowerSeries (ZMod p))) (PowerSeries (ZMod p)) := by
     rw [PowerSeries.maximalIdeal_eq_span_X]
     infer_instance
   exact exists_dvr_quotient_of_complete_local (A := PowerSeries (ZMod p))
@@ -276,10 +276,10 @@ private theorem UpperTheory.V.Pr.T.curveNorm_coeffField {A : Type} [CommRing A] 
     (p : ℕ) [Fact p.Prime] [CharP A p] :
     ∃ ι : IsLocalRing.ResidueField A →+* A,
       Function.Surjective ((IsLocalRing.residue A).comp ι) := by
-  letI : Algebra (ZMod p) A := ZMod.algebra A p
-  haveI : Algebra.FormallySmooth (ZMod p) (IsLocalRing.ResidueField A) := by
-    haveI : Module.Finite (ZMod p) (IsLocalRing.ResidueField A) := Module.Finite.of_finite
-    haveI : Algebra.FormallyEtale (ZMod p) (IsLocalRing.ResidueField A) :=
+  let : Algebra (ZMod p) A := ZMod.algebra A p
+  have : Algebra.FormallySmooth (ZMod p) (IsLocalRing.ResidueField A) := by
+    have : Module.Finite (ZMod p) (IsLocalRing.ResidueField A) := Module.Finite.of_finite
+    have : Algebra.FormallyEtale (ZMod p) (IsLocalRing.ResidueField A) :=
       Algebra.FormallyEtale.of_isSeparable _ _
     infer_instance
   obtain ⟨g, hg⟩ := Algebra.FormallySmooth.exists_mkₐ_comp_eq_of_isAdicComplete
@@ -296,12 +296,12 @@ theorem UpperTheory.V.Pr.T.curveNorm :
         Function.Injective f ∧ IsLocalHom f ∧ f.Finite := by
   intro R _ _ _ _ _ _ p _ _ hdim
   obtain ⟨A, _, _, _, f, hc, hfin, hinj, hloc, hf⟩ := UpperTheory.V.Pr.T.curveDVR (R := R) p hdim
-  haveI : CharP A p := charP_of_injective_ringHom hinj p
+  have : CharP A p := charP_of_injective_ringHom hinj p
   obtain ⟨ι, hι⟩ := UpperTheory.V.Pr.T.curveNorm_coeffField (A := A) p
   obtain ⟨e, -⟩ := GlobalTheory.ArcAvoid.exists_ringEquiv_powerSeries_of_complete ι hι
   refine ⟨IsLocalRing.ResidueField A, inferInstance, hfin,
     (e.symm : A →+* PowerSeries _).comp f, e.symm.injective.comp hinj, ?_, ?_⟩
-  · haveI : IsLocalHom (e.symm : A →+* PowerSeries (IsLocalRing.ResidueField A)) :=
+  · have : IsLocalHom (e.symm : A →+* PowerSeries (IsLocalRing.ResidueField A)) :=
       isLocalHom_equiv e.symm |>.1 |> fun h => ⟨h⟩
     exact RingHom.isLocalHom_comp _ _
   · exact (RingHom.Finite.of_surjective _ e.symm.surjective).comp hf

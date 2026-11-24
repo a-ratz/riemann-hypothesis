@@ -177,7 +177,7 @@ theorem infIdelesProj_comp (g : K.1.fixingSubgroup) (z : IdeleLimit) :
     intro x
     change infCompletionEmbedding ι p.1 (AdeleBaseChange.infiniteCompletionMap (r : p.1.1 ≃+* p.1.1) w
       (algebraMap p.1.1 _ x)) = ι ((g : ℚ̄ ≃ₐ[ℚ] ℚ̄) (x : ℚ̄))
-    rw [AdeleBaseChange.infiniteCompletionMap_algebraMap, infCompletionEmbedding_algebraMap, AlgEquiv.coe_ringEquiv,
+    rw [AdeleBaseChange.infiniteCompletionMap_algebraMap, infCompletionEmbedding_algebraMap, AlgEquiv.coe_toRingEquiv,
       hr, coe_restrictHom_apply]
   exact (infCompletionEmbedding_eq_of_algebraMap _ p.1 u j hj (y : 𝔸[p.1.1])).symm
 

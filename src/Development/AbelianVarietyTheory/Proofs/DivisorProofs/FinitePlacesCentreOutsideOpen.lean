@@ -76,21 +76,21 @@ theorem finite_centre_not_mem (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
     (x : Sp K ⟶ C) (hx : IsGenOver k x) (V : C.Opens) (hV : (V : Set C).Nonempty) :
     {p : Place k E | ∃ b : Sp p.O ⟶ C, spMap p.O.subtype ≫ b = spMap (algebraMap K E) ≫ x ∧ ¬ ⊤ ≤ b ⁻¹ᵁ V}.Finite := by
   have hC := hx.1
-  haveI : IsIntegral C := GlobalTheory.LieSemineg.isIntegral_curve hC.1 hC.2.2
+  have : IsIntegral C := GlobalTheory.LieSemineg.isIntegral_curve hC.1 hC.2.2
   obtain ⟨z, hz⟩ := hV
   obtain ⟨V', hV'a, hzV', hV'V⟩ := Opens.isBasis_iff_nbhd.1 C.isBasis_affineOpens hz
   have hV'a : IsAffineOpen V' := hV'a
   obtain ⟨hxV', -, -⟩ := _root_.GlobalTheory.Nef.isGen_evAt_frac K C x hx.2.1 V' ⟨z, hzV'⟩
   obtain ⟨ev1, ev2, -, -, ev5, ev6, -⟩ := _root_.GlobalTheory.Nef.evAt_calculus
   let f : Γ(C, V') →+* E := (algebraMap K E).comp (evAt x hxV')
-  haveI := hC.1
-  haveI : Smooth (strHom k (X := C)) := SmoothOfRelativeDimension.smooth 1 _
+  have := hC.1
+  have : Smooth (strHom k (X := C)) := SmoothOfRelativeDimension.smooth 1 _
   have eV : V' ≤ strHom k C ⁻¹ᵁ ⊤ := fun _ _ => trivial
   let ψ := ((strHom k C).appLE ⊤ V' eV).hom
   have hft : ψ.FiniteType :=
     HasRingHomProperty.appLE (P := @LocallyOfFiniteType) (strHom k C) inferInstance
       ⟨⊤, isAffineOpen_top _⟩ ⟨V', hV'a⟩ eV
-  letI := ψ.toAlgebra
+  let := ψ.toAlgebra
   obtain ⟨s, hs⟩ := hft.out
 
   have hconst : ∀ (p : Place k E) (c : Γ(Sp k, ⊤)), p.1 (f (ψ c)) ≤ 1 := by
@@ -108,7 +108,7 @@ theorem finite_centre_not_mem (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
       rw [h1, h2, h3, ← IsScalarTower.algebraMap_apply]
     rw [hf]
     by_cases hd : evAt (𝟙 (Sp k)) htop c = 0
-    · rw [hd, map_zero, map_zero]; exact zero_le'
+    · rw [hd, map_zero, map_zero]; exact zero_le
     · exact (p.2.2 _ hd).le
   have key : ∀ p : Place k E, (∀ a ∈ s, p.1 (f a) ≤ 1) → ∀ g, p.1 (f g) ≤ 1 := by
     intro p hp g
@@ -124,7 +124,7 @@ theorem finite_centre_not_mem (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
     · simpa [h0] using (Set.finite_empty : (∅ : Set (Place k E)).Finite)
     · exact (_root_.GlobalTheory.Nef.finite_support_and_sum_ord_eq_zero k E hE (f a) h0).1.subset fun p hp h1 => hp h1.le
   · rintro p ⟨b, hb1, hb2⟩
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
     by_contra hno
     push_neg at hno
     have hall := key p fun a ha => hno a ha

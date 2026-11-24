@@ -170,7 +170,7 @@ theorem cong_mem_nhds (t : w.adicCompletionIntegers E) (ht : (t : w.adicCompleti
     rw [sub_self, mul_zero] at h0
     refine mem_of_superset (h0 hO) fun y hy => ?_
     have hy' := (HeightOneSpectrum.mem_adicCompletionIntegers (R := 𝓞 E) E w).1 hy
-    rw [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.2 hv), mul_one] at hy'
+    rw [map_mul, map_inv₀, inv_mul_le_iff₀ (pos_iff_ne_zero.2 hv), mul_one] at hy'
     exact hy'
   have hc1 : ∀ i j, Tendsto (fun g : GL (Fin a) (w.adicCompletion E) => (g : Matrix (Fin a) (Fin a) _) i j) (𝓝 1)
       (𝓝 ((1 : Matrix (Fin a) (Fin a) (w.adicCompletion E)) i j)) := fun i j => by

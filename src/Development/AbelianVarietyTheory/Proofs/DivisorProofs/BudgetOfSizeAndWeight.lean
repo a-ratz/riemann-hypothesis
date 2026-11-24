@@ -145,13 +145,13 @@ theorem adj_ge (hW : W.Hyp) (hD : W.IsDiv) (τ : ι) (a b : Fin N) (hab : (b : �
   · have := g_le_of W hW (h2 hp).2
     have ha : (a : ℕ) < W.p := by omega
     have hb' : ¬ (b : ℕ) < W.p := by omega
-    simp only [reWt, Wts.u', ha, hb', if_true, if_false]
+    simp only [reWt, Wts.u', ha, hb', ite_true, ite_false]
     push_cast at this ⊢
     linarith
   · have := g_le_of W hW (h3 hp (by omega))
     have ha : ¬ (a : ℕ) < W.p := by omega
     have hb' : ¬ (b : ℕ) < W.p := by omega
-    simp only [reWt, Wts.u', ha, hb', if_false]
+    simp only [reWt, Wts.u', ha, hb', ite_false]
     push_cast at this ⊢
     linarith
 
@@ -166,7 +166,7 @@ theorem adj_lt (hW : W.Hyp) (hD : W.IsDiv) (τ : ι) (a b : Fin N) (hab : (b : �
     have h' : W.u1 τ b < W.u1 τ a := by omega
     have ha : (a : ℕ) < W.p := by omega
     have hb' : (b : ℕ) < W.p := by omega
-    simp only [reWt, Wts.u', ha, hb', if_true]
+    simp only [reWt, Wts.u', ha, hb', ite_true]
     exact_mod_cast h'
 
 theorem regular (hW : W.Hyp) (hD : W.IsDiv) (τ : ι) (a b : Fin N) (hab : a < b) :
@@ -228,7 +228,7 @@ theorem spread_le_at {ι : Type} [Fintype ι] {N : ℕ} (W : Wts ι N) (hW : W.H
   classical
   obtain ⟨h1, h2⟩ := _root_.GlobalTheory.MeanTop.nodes_far_and_spread ι N W hW hD τ
   have hN : 0 < N := lt_of_le_of_lt (Nat.zero_le _) hW.p_lt
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   obtain ⟨a, ha⟩ := exists_eq_ciSup_of_finite (f := reWt W.u' τ)
   obtain ⟨b, hb⟩ := exists_eq_ciInf_of_finite (f := reWt W.u' τ)
   have hsp : (⨆ i, reWt W.u' τ i) - ⨅ i, reWt W.u' τ i ≤ 3 / 2 * W.w τ / W.T := by

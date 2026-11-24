@@ -163,7 +163,7 @@ theorem bound_of_chBound (Xo : Moduli Dw l) (c : Coeff l) (π : 𝓞 E) (hπ : �
     (f : Rul Xo c) (hf : f ∈ thGen Xo c nab w n) :
     ((-(ρ + ((vLa la (nrm Dw c w π) : ℤ) : ℝ)) : ℝ) : EReal) ≤ nval T.V e (evI y f) := by
   obtain rfl : inst = H.starRing := GlobalTheory.PowGerm.starRing_ext_of_star inst H.starRing hnab.1
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨x, P, hP, hf⟩ := hf
   have hM0 : 0 < l.M := lt_of_lt_of_le (by norm_num) l.three_le
   obtain ⟨T', iT, r, y', C', ⟨hr, hiT, φ, hφ, hmap⟩, hfin, hgood, hrat⟩ :=
@@ -172,11 +172,11 @@ theorem bound_of_chBound (Xo : Moduli Dw l) (c : Coeff l) (π : 𝓞 E) (hπ : �
   rw [← nval_bc iT hr hiT e]
   obtain ⟨ℓ, hp, hu⟩ := exists_resChar T' hfin
   obtain ⟨n', A, Bn, α, α', β, e1, a1, a2, a3, a4, a5⟩ := exists_fac Xo π hM ℓ hp
-  letI := (iT.comp io).toAlgebra
+  let := (iT.comp io).toAlgebra
   choose F hF using fun b : Fin n =>
     (RatData.exists_thetaVal_data E H Dw l Xo c T'.Fr y'.1).1 hrat (x b)
   have hev : iT (evI y f) = thExpr Xo c nab y'.1 P F := by
-    letI : Algebra T.Fr T'.Fr := iT.toAlgebra
+    let : Algebra T.Fr T'.Fr := iT.toAlgebra
     exact GlobalTheory.T.thetaRule_value_integral_framed_point_extension_field E H Dw l Xo c nab hnab T io y T'.Fr φ hφ y'.1 hmap w n x P hP F hF f hf
   have ht : ∀ b, ∃ t' : ptO Xo (xOf y') ⟶ Xo.univ.t.G, KilledBy Xo (l.Mb ^ 2) t' ∧
       IsUUOver Xo.univ.t.G Xo.univ.t.PP l.M (sOf1 y') 1 t' (F b) := by
@@ -191,7 +191,7 @@ theorem bound_of_chBound (Xo : Moduli Dw l) (c : Coeff l) (π : 𝓞 E) (hπ : �
   have hb := GlobalTheory.T.harmonicValue_translated_product_valuation_bound E H Dw l Xo c hnab.1 T' (iT.comp io) y' C' hgood nab hnab (r * e) ρ w n ho'.1
     (hρ T' _ y' C' _ ho') l.M n' A Bn α β l.odd a2 a3 a4 (hu n' a1) (fun _ => 1) t' F
     (fun b => ⟨one_pow _, (a5 _ _ (ht1 b)).1, by
-      haveI := Xo.univ.t.act.hom (α * β)
+      have := Xo.univ.t.act.hom (α * β)
       rw [MonObj.one_comp, one_pow], (a5 _ _ (ht1 b)).2, ht2 b⟩) P hP.1
     (ReciprocityTheory.ChartRestriction.G.PullbackSections.ffvMap E H Dw l c w n P hP T' _)
   have hh := (hv_linear E H Dw l Xo c hnab.1 nab hnab T'.Fr y'.1 n P).2.2 l.M F

@@ -131,7 +131,7 @@ theorem isOpen_intM : IsOpen {m : GL (Fin n) k | IntM m} := by
   exact continuous_ofAdd.comp (continuous_pi fun j => Units.continuous_val.matrix_elem i j)
 
 theorem continuous_colv : Continuous (colv : Mir k n → Fin n → k) :=
-  continuous_pi fun i => (Units.continuous_val.comp continuous_subtype_val).matrix_elem (Fin.castSucc i) (Fin.last n)
+  continuous_pi fun i => (Units.continuous_val.comp continuous_subtypeVal).matrix_elem (Fin.castSucc i) (Fin.last n)
 
 theorem continuous_mvec : Continuous (mvec : Mir k n → Fin n → k) := by
   have h1 : Continuous fun x : Mir k n =>
@@ -199,8 +199,8 @@ theorem bumpF_fix (p m : GL (Fin n) k) (v a : Fin n → k) (h1 : IntM m) (h2 : I
       rw [ofAdd_add]
       exact mul_mem (h2.mulVec_mem h) ha
   by_cases hv : Multiplicative.ofAdd v ∈ polyBall (k := k) n s
-  · rw [if_pos hv, if_pos (hiff.2 hv)]
-  · rw [if_neg hv, if_neg (fun c => hv (hiff.1 c))]
+  · rw [ite_eq_left hv, ite_eq_left (hiff.2 hv)]
+  · rw [ite_eq_right hv, ite_eq_right (fun c => hv (hiff.1 c))]
 
 def nbhd : Set (Mir k n) :=
   {x | IntM (mirabolicProjection k n x) ∧ IntM (mirabolicProjection k n x)⁻¹ ∧ ρ (lv k n (mirabolicProjection k n x)) e = e ∧
@@ -249,7 +249,7 @@ theorem bumpF_support : ∃ C : Set (Mir k n), IsCompact C ∧ ∀ g, bumpF ρ s
     (isCompact_polyBall n s).image (continuous_unipIn n), fun g hg => ?_⟩
   have hL : Multiplicative.ofAdd (mvec g) ∈ polyBall (k := k) n s := by
     by_contra hc
-    exact hg (if_neg hc)
+    exact hg (ite_eq_right hc)
   exact ⟨levi k n (mirabolicProjection k n g), ⟨_, rfl⟩, uv n (mvec g), ⟨_, hL, rfl⟩, decomp g⟩
 
 theorem exists_bump_restr : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
@@ -317,8 +317,8 @@ theorem exists_finset_eq_sum_polyBall_translates :
   rw [Finset.sum_image (fun a _ b _ h => hf h)]
   by_cases hv : q (Multiplicative.ofAdd v) ∈ T.image q
   · rw [Finset.sum_eq_single_of_mem _ hv
-      (fun b _ hb => if_neg (fun h => hb ((hmem v b).1 h).symm)),
-      if_pos ((hmem v _).2 rfl), hval]
+      (fun b _ hb => ite_eq_right (fun h => hb ((hmem v b).1 h).symm)),
+      ite_eq_left ((hmem v _).2 rfl), hval]
   · have h0 : φ v = 0 := by
       by_contra hne
       obtain ⟨x, hx, y, hy, hxy⟩ := Set.mem_iUnion₂.1 (hT (hsupp v hne))
@@ -328,7 +328,7 @@ theorem exists_finset_eq_sum_polyBall_translates :
         simpa using hy
       exact QuotientGroup.eq.2 hxv
     rw [h0]
-    refine (Finset.sum_eq_zero fun b hb => if_neg fun h => hv ?_).symm
+    refine (Finset.sum_eq_zero fun b hb => ite_eq_right fun h => hv ?_).symm
     rw [(hmem v b).1 h]
     exact hb
 
@@ -386,7 +386,7 @@ theorem isLocallyConstant_of_periodic {n : ℕ} {Y : Type} (g : (Fin n → k) �
 
 theorem hasCompactSupport_of_ball {n : ℕ} {E : Type} [AddCommGroup E] (g : (Fin n → k) → E) (S : kˣ)
     (h : ∀ v, g v ≠ 0 → Multiplicative.ofAdd v ∈ polyBall (k := k) n S) : HasCompactSupport g := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   refine HasCompactSupport.intro (isCompact_ball n S) fun x hx => ?_
   by_contra h1
   exact hx (h x h1)
@@ -434,7 +434,7 @@ theorem smInt_comp_inv_mulVec (g : GL (Fin (N + 1)) k) {φ : (Fin (N + 1) → k)
     intro B hB
     have h1 := GlobalTheory.WeilM.smul_map_mulVec_pi ν g.val (Matrix.GeneralLinearGroup.det g) rfl
     conv_lhs => rw [← h1]
-    rw [Measure.smul_apply, Measure.map_apply (hm _) ((hm _) hB), smul_eq_mul]
+    rw [smul_apply, Measure.map_apply (hm _) ((hm _) hB), smul_eq_mul]
     congr 2
     ext x
     simp only [Set.mem_preimage, mulVec_mulVec]
@@ -451,11 +451,11 @@ end Int
 theorem exists_twisted_integral : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ψ : AddChar k Circle), Continuous ψ → ∀ (N : ℕ) (X E : Type) [AddCommGroup X] [Module ℂ X] [AddCommGroup E] [Module ℂ E] (r : X →ₗ[ℂ] (Fin (N + 1) → k) → E), (∀ f, ∃ s : kˣ, ∀ (v a : Fin (N + 1) → k), Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s → r f (v + a) = r f v) → (∀ f, ∃ S : kˣ, ∀ v : Fin (N + 1) → k, r f v ≠ 0 → Multiplicative.ofAdd v ∈ polyBall (k := k) (N + 1) S) → ∀ (tr : (Fin (N + 1) → k) → X → X), (∀ a f v, r (tr a f) v = r f (v + a)) → ∀ (lev : GL (Fin (N + 1)) k → X → X) (A : GL (Fin (N + 1)) k → E →ₗ[ℂ] E), (∀ m f v, r (lev m f) v = A m (r f (((m⁻¹ : GL (Fin (N + 1)) k) : Matrix (Fin (N + 1)) (Fin (N + 1)) k).mulVec v))) → ∃ T : X →ₗ[ℂ] E, (∀ a f, T (tr a f) = ((ψ (a (Fin.last N)) : Circle) : ℂ) • T f) ∧ (∀ m : GL (Fin (N + 1)) k, m ∈ Mir k N → ∀ f, T (lev m f) = ((nabs k (Matrix.GeneralLinearGroup.det m) : ℝ) : ℂ) • A m (T f)) ∧ (∀ s : kˣ, (∀ a : Fin (N + 1) → k, Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s → ψ (a (Fin.last N)) = 1) → ∃ c : ℂ, c ≠ 0 ∧ ∀ (b : X) (e : E), (∀ v, r b v = @ite _ (Multiplicative.ofAdd v ∈ polyBall (k := k) (N + 1) s) (Classical.propDecidable _) e 0) → T b = c • e) := by
   intro k _ _ _ _ ψ hψ N X E _ _ _ _ r hper hsup tr htr lev A hlev
   borelize k
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   obtain ⟨ν, hν⟩ : ∃ ν : Measure k, ν.IsAddHaarMeasure := ⟨Measure.addHaar, inferInstance⟩
   let μ : Measure (Fin (N + 1) → k) := Measure.pi fun _ => ν
-  haveI hμ : μ.IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have hμ : μ.IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hl : ∀ f, IsLocallyConstant (tw ψ (r f)) := fun f => by
     obtain ⟨s, hs⟩ := hper f
     exact isLocallyConstant_tw ψ hψ (isLocallyConstant_of_periodic _ s fun v a ha => hs v a ha)
@@ -513,11 +513,11 @@ theorem exists_twisted_integral : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
         by_cases hv : Multiplicative.ofAdd v ∈ polyBall (k := k) (N + 1) s
         · have h1 : ψ (v (Fin.last N)) = 1 := hs v hv
           simp only [tw]
-          rw [hb v, if_pos hv, Set.indicator_of_mem (show v ∈ {a | Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s} from hv),
+          rw [hb v, ite_eq_left hv, Set.indicator_of_mem (show v ∈ {a | Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s} from hv),
             AddChar.map_neg_eq_inv, h1]
           simp
         · simp only [tw]
-          rw [hb v, if_neg hv, Set.indicator_of_notMem (show v ∉ {a | Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s} from hv),
+          rw [hb v, ite_eq_right hv, Set.indicator_of_notMem (show v ∉ {a | Multiplicative.ofAdd a ∈ polyBall (k := k) (N + 1) s} from hv),
             smul_zero]
       rw [hT, e', smInt_indicator]
 
@@ -570,7 +570,7 @@ theorem restr_periodic (ρ : Representation ℂ (LH k n) E) (f : cIndSpace (LH k
 theorem continuous_mvec (n : ℕ) : Continuous (mvec (k := k) (n := n)) := by
   have hval : Continuous fun g : Mir k n =>
       ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hblock : Continuous fun g : Mir k n =>
       ((mirabolicProjection k n g : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) := by
     refine continuous_pi fun i => continuous_pi fun j => ?_
@@ -838,7 +838,7 @@ theorem smooth_gp {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] 
 
 theorem continuous_pgProj (i t : ℕ) : Continuous (pgProj k i t) := by
   have hincl : Continuous (hpgIncl k i t) :=
-    Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
+    Continuous.subtype_mk (continuous_subtypeVal.comp continuous_subtypeVal) _
   have hlevi : Continuous fun h : HPG k i t => leviProj k (ePG i t) (hpgIncl k i t h) :=
     (GlobalTheory.SmGL.LeviInt.levi_integral_facts k Bool (Fin (i + t + 1)) (Two (Fin (i + 1)) (Fin t))
       (ePG i t)).2.2.2.2.2.1.comp hincl
@@ -910,7 +910,7 @@ theorem cInd_top {G W : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
       have ho := (hσ w).preimage (Continuous.subtype_mk continuous_id hm)
       convert ho using 1
       ext g
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, id]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, id]
       rw [← h ⟨g, hm g⟩]
     refine ⟨⟨⟨⟨fun g => σ' g w, fun x g => ?_⟩, ?_⟩, ⟨{1}, isCompact_singleton, fun g _ => ⟨g, hm g, 1, rfl, (mul_one g).symm⟩⟩⟩, ?_⟩
     · show σ' ((x : G) * g) w = σ x (σ' g w)
@@ -918,7 +918,7 @@ theorem cInd_top {G W : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
     · show IsOpen {x : G | ind H σ x _ = _}
       convert hO using 1
       ext x
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · intro hx
         have := congrFun (congrArg Subtype.val hx) 1
@@ -1022,10 +1022,10 @@ theorem sm_tw {n : ℕ} {σ : GRep k n} (hσ : IsSmooth σ.ρ) (s : ℝ) : IsSmo
   isSmooth_twist hσ (smc_dpow n s)
 
 theorem sm_gres {n : ℕ} {σ : GRep k (n + 1)} (hσ : IsSmooth σ.ρ) : IsSmooth (gres σ).ρ :=
-  isSmooth_comp hσ _ continuous_subtype_val
+  isSmooth_comp hσ _ continuous_subtypeVal
 
 theorem sm_mtw {n : ℕ} {τ : MRep k n} (hτ : IsSmooth τ.ρ) (s : ℝ) : IsSmooth (mtw τ s).ρ :=
-  isSmooth_twist hτ ((smc_dpow (n + 1) s).preimage continuous_subtype_val)
+  isSmooth_twist hτ ((smc_dpow (n + 1) s).preimage continuous_subtypeVal)
 
 section Final
 variable {t : ℕ} (τ : MRep k 0) (σ : GRep k (t + 1))
@@ -1252,7 +1252,7 @@ theorem coinv_equiv (H U : Subgroup G) (Q : Subgroup M) (s : M →* G) (q : G �
     ∃ E : (cIndSpace H σ ⧸ twKer (cInd H σ) U 1) ≃ₗ[ℂ] smoothPart (ind Q σ'),
       ∀ (f : cIndSpace H σ) (x : M), (E (Submodule.Quotient.mk f)).1.1 x = (χ x : ℂ) • c (f.1.1.1 (s x)) := by
   classical
-  haveI hUn : U.Normal := by
+  have hUn : U.Normal := by
     have : U = q.ker := by
       ext g
       rw [MonoidHom.mem_ker, hker]
@@ -1357,10 +1357,10 @@ theorem coinv_equiv (H U : Subgroup G) (Q : Subgroup M) (s : M →* G) (q : G �
         { carrier := {h | σ h w = w}
           one_mem' := by simp
           mul_mem' := fun {a b} ha hb => by
-            simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+            simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
             rw [hb, ha]
           inv_mem' := fun {a} ha => by
-            simp only [Set.mem_setOf_eq] at *
+            simp only [Set.mem_ofPred_eq] at *
             conv_lhs => rw [← ha]
             rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
       exact ⟨S, hσ w, fun t ht _ => ht⟩) ⟨⟨⟨b, hb⟩, hbs⟩, hbc⟩
@@ -1485,7 +1485,7 @@ theorem isClosed_HGP : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
   intro k _ _ _ _ m j
   have h := GlobalTheory.SmGL.LeviInt.levi_integral_facts k Bool (Fin (m + j + 1))
     (GlobalTheory.SmGL.Two (Fin m) (Fin (j + 1))) (GlobalTheory.BZMir.Leib.eGP m j)
-  exact h.2.2.2.2.2.2.1.preimage continuous_subtype_val
+  exact h.2.2.2.2.2.2.1.preimage continuous_subtypeVal
 
 end GlobalTheory.CompanionTheory.MirGP
 end -- clump:auto
@@ -1809,7 +1809,7 @@ theorem isOpen_dpow_ker (n : ℕ) (s : ℝ) : IsOpen ((dpow (k := k) n s).ker : 
 theorem isSmooth_sig (hρ : IsSmooth ρ.ρ) (hτ : IsSmooth τ.ρ) : IsSmooth (sig ρ τ) := by
   refine isSmooth_comp (isSmooth_extTensor (isSmooth_twist hρ (isOpen_dpow_ker _ _)) ?_) _ (_root_.GlobalTheory.CompanionTheory.BZMir.continuous_gpProj k m j)
   exact isSmooth_twist hτ (IsSmoothChar.comp (χ := dpow (j + 1) (-((m : ℕ) : ℝ) / 2)) (isOpen_dpow_ker _ _) (Mir k j).subtype
-    continuous_subtype_val)
+    continuous_subtypeVal)
 
 theorem exE (hρ : IsSmooth ρ.ρ) (hτ : IsSmooth τ.ρ) :
     ∃ E : (cIndSpace (MirabolicParabolic k m j) (sig ρ τ) ⧸ twKer (cInd (MirabolicParabolic k m j) (sig ρ τ)) (MirUin k (m + j)) 1) ≃ₗ[ℂ]
@@ -1865,7 +1865,7 @@ theorem exE (hρ : IsSmooth ρ.ρ) (hτ : IsSmooth τ.ρ) :
   have hproj_cont : Continuous (mirabolicProjection k (m + j)) := by
     have hval : Continuous fun g : Mir k (m + j) =>
         (g.1 : Matrix (Fin (m + j + 1)) (Fin (m + j + 1)) k) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have hblock : Continuous fun g : Mir k (m + j) =>
         (mirabolicProjection k (m + j) g : Matrix (Fin (m + j)) (Fin (m + j)) k) := by
       refine continuous_pi fun a => continuous_pi fun b => ?_

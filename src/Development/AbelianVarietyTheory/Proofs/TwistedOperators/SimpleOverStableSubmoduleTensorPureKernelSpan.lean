@@ -65,7 +65,7 @@ theorem exists_adjoin_agree {V : Type} [AddCommGroup V] [Module ℂ V] [Nontrivi
     (hA : ∀ U : Submodule ℂ V, Stab A U → U = ⊥ ∨ U = ⊤) (p : Module.End ℂ V) (s : Finset V) :
     ∃ r ∈ Algebra.adjoin ℂ A, ∀ m ∈ s, p m = r m := by
   set R := Algebra.adjoin ℂ A with hR
-  haveI : IsSimpleModule R V := by
+  have : IsSimpleModule R V := by
     rw [isSimpleModule_iff]
     refine { eq_bot_or_eq_top := fun N => ?_ }
     have h := hA (N.restrictScalars ℂ) (fun g hg x hx =>
@@ -135,7 +135,7 @@ theorem simple_tensor :
     rw [ht, h, Finsupp.sum_zero_index]
   obtain ⟨i, hi⟩ := Finsupp.support_nonempty_iff.2 hc0
   have hbi : b i ≠ 0 := b.ne_zero i
-  haveI : Nontrivial S₀ := ⟨⟨b i, 0, hbi⟩⟩
+  have : Nontrivial S₀ := ⟨⟨b i, 0, hbi⟩⟩
   obtain ⟨r, hr, hrp⟩ := exists_adjoin_agree A hrank hA ((b.coord i).smulRight (b i))
     (c.support.image b)
   have h1 : b i ⊗ₜ[ℂ] c i ∈ U := by

@@ -61,7 +61,7 @@ section Gen
 variable {LL Kf : Type} [Field LL] [Field Kf] (e : LL →+* Kf)
 
 theorem exists_fun_ne {c : Kf} (hc : c ≠ 0) : ∃ π : Kf →+ LL, (∀ a x, π (e a * x) = a * π x) ∧ π c ≠ 0 := by
-  letI : Module LL Kf := e.toModule
+  let : Module LL Kf := e.toModule
   have hne : ¬ ∀ φ : Module.Dual LL Kf, φ c = 0 := fun h => hc ((Module.forall_dual_apply_eq_zero_iff LL c).1 h)
   push_neg at hne
   obtain ⟨φ, hφ⟩ := hne

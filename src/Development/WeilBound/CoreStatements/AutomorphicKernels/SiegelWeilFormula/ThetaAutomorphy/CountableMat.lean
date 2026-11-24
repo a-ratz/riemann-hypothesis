@@ -56,7 +56,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem countable_E : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
 
 theorem countable_mat (p q : ℕ) : Countable (Matrix (Fin p) (Fin q) E) := by
-  haveI := countable_E (E := E)
+  have := countable_E (E := E)
   exact inferInstanceAs (Countable (Fin p → Fin q → E))
 
 def tr (d : SD σ) (g : UA σ d.A.J) (X : Matrix (Fin d.m) (Fin d.n) E) : Mx F E d.m d.n := mat g⁻¹ * incM F X
@@ -67,7 +67,7 @@ theorem cont_tr (d : SD σ) {f : Mx F E d.m d.n → ℂ} (hf : f ∈ d.schM) (X 
   have e : ∀ Y, f Y = (f ∘ d.cmb) (d.crd Y) := fun Y => by simp [Kdil.Tb.cmb_crd]
   have h2 : Continuous fun h : UA σ d.A.J =>
       (((h : GL (Fin d.m) (AE F E))⁻¹ : GL (Fin d.m) (AE F E)) : Matrix (Fin d.m) (Fin d.m) (AE F E)) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   simp only [tr, e, Kdil.Tb.crd_mul]
   exact h1.comp (((Kdil.Tb.continuous_mh d).comp h2).matrix_mulVec continuous_const)
 

@@ -100,13 +100,13 @@ theorem exists_line_of_upqD : ∀ (F E : Type) [Field F] [NumberField F] [Field 
         exact piInf_cA hCM (τ w) z
       rw [Matrix.map_mul, Matrix.map_mul, hc, Matrix.transpose_map, hfπ]
       by_cases hb : b = 0
-      · haveI := isEmpty_of_zero (hb ▸ (hC w).1) (hC' w)
+      · have := isEmpty_of_zero (hb ▸ (hC w).1) (hC' w)
         ext i
         exact isEmptyElim i
       · have h1 := conj_unitary (hC w).1 (hC' w) (hY w) t
         rw [Matrix.mul_smul, Matrix.smul_mul] at h1
         exact smul_right_injective _ hb h1
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
   have hfc : Continuous f :=
     continuous_const.add ((continuous_liftM τ ξ).comp (continuous_pi fun w =>
       (((continuous_const.matrix_mul (continuous_exp_smul (Y w))).matrix_mul continuous_const).sub continuous_const)))

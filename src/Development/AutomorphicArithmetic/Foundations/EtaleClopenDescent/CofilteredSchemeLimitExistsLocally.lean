@@ -331,7 +331,7 @@ end UpperTheory.Cb.GluingProjections
 theorem UpperTheory.Cb.cofiltered_scheme_limit_exists_locally :
     LateralTheory.E.BuildCut.LimInt → LateralTheory.E.t_E2Cut.Cont → LateralTheory.E.t_E2Cut.MV → LateralTheory.E.HasLimPf.Loc := by
   intro _ _ _ J _ _ D j₀ _ hlim
-  letI : ∀ U : (D.obj j₀).directedAffineCover.I₀,
+  let : ∀ U : (D.obj j₀).directedAffineCover.I₀,
       HasLimit (opensDiagram D j₀ U.1) :=
     fun U => hlim U.1 U.2
   exact ⟨⟨⟨UpperTheory.Cb.GluingProjections.glCone D j₀, UpperTheory.Cb.GluingProjections.isLimitGlCone D j₀⟩⟩⟩

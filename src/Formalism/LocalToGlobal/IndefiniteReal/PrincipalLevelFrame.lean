@@ -363,10 +363,10 @@ theorem mult_lev {T : Mult.MMap M} (hT : T ∈ Mult.Mult θ M J χ) : ∀ v, ∀
   | mem x hx => exact hx.lev v k hk g
   | zero => simp
   | add x y _ _ hx hy =>
-    simp only [MultilinearMap.add_apply, Pi.add_apply, hx, hy]
+    simp only [add_apply, Pi.add_apply, hx, hy]
     ring
   | smul a x _ hx =>
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, hx]
+    simp only [smul_apply, Pi.smul_apply, smul_eq_mul, hx]
     ring
 
 theorem pre_spec (P : RowPsi V n) {γ : GA D V} (hγ : γ ∈ GfC V) : P.ψ (pre P γ) = γ := by

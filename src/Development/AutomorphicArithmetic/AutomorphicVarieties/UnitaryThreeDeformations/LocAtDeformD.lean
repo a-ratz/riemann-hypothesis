@@ -182,7 +182,7 @@ private theorem gRep_zero {k D : Type} [CommRing k] [Group D] (η : D →* ℤˣ
 variable {O R : Type} [CommRing O] [IsLocalRing O] [CommRing R] [Algebra O R] [IsCO O R] {D : Type} [Group D]
 
 private theorem smul_f {f : R} (hf : ∀ x ∈ maximalIdeal R, x * f = 0) {o : O} (ho : residue O o = 0) : o • f = 0 := by
-  haveI : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
+  have : IsLocalHom (algebraMap O R) := IsCO.isLocalHom
   have ho' : o ∈ maximalIdeal O := (residue_eq_zero_iff o).1 ho
   have hm : algebraMap O R o ∈ maximalIdeal R := map_nonunit (algebraMap O R) o ho'
   rw [Algebra.smul_def]
@@ -312,7 +312,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.locAt_deform_d :
         rw [pow_succ, hcoc, ih, hgl _ hgn, succ_nsmul]
     have hcard : ((Nat.card (ResidueField O)ˣ : ℕ) : ResidueField O) = -1 := by
       classical
-      haveI := Fintype.ofFinite (ResidueField O)
+      have := Fintype.ofFinite (ResidueField O)
       rw [Nat.card_eq_fintype_card, Fintype.card_units, Nat.cast_sub Fintype.card_pos, FiniteField.cast_card_eq_zero,
         Nat.cast_one, zero_sub]
     have hzI : ∀ g ∈ F.Iv v, F.ηv v g = 1 → z g = 0 := by
@@ -330,7 +330,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.locAt_deform_d :
     rcases hab with hne | hI
     · rw [show (z g).val a b = 0 from (z g).2 a b (fun h => hne (hw a b h)), zero_mul]
     · rw [show (z g).val a b = 0 by rw [hzI g hI hg]; rfl, zero_mul]
-  · haveI := hV.h1 v hv j hj
+  · have := hV.h1 v hv j hj
     have hB : z ∈ B1 (F.gloc j v) := by
       have e : (Submodule.Quotient.mk ⟨z, hz1⟩ : H1 (F.gloc j v)) = 0 := Subsingleton.elim _ _
       rwa [Submodule.Quotient.mk_eq_zero, Submodule.mem_comap] at e

@@ -69,13 +69,13 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {X : Sc
   {O : Type} [CommRing O] (x0 : R →+* O) (hu : IsUnit (x0 P'.f))
 
 theorem flat_Bt : Module.Flat O (Bt P' x0 hu) := by
-  haveI : Module.Free (Localization.Away P'.f) P'.B := P'.fin.free
-  haveI : Module.Flat (OL P' x0 hu) (Bt P' x0 hu) := Module.Flat.baseChange _ _ _
-  haveI : Module.Flat O (OL P' x0 hu) := inferInstanceAs (Module.Flat O O)
+  have : Module.Free (Localization.Away P'.f) P'.B := P'.fin.free
+  have : Module.Flat (OL P' x0 hu) (Bt P' x0 hu) := Module.Flat.baseChange _ _ _
+  have : Module.Flat O (OL P' x0 hu) := inferInstanceAs (Module.Flat O O)
   exact Module.Flat.trans O (OL P' x0 hu) (Bt P' x0 hu)
 
 theorem flat_Hs : Flat (Hs P' x0 hu).hom := by
-  haveI := flat_Bt P' x0 hu
+  have := flat_Bt P' x0 hu
   change Flat (Spec.map (CommRingCat.ofHom (algebraMap O (Bt P' x0 hu))))
   rw [Flat.SpecMap_iff]
   exact (RingHom.flat_algebraMap_iff).2 inferInstance

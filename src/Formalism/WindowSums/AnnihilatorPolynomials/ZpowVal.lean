@@ -61,19 +61,19 @@ lemma zv_prime : Prime (ℓ : ℤ_[ℓ]) := PadicInt.prime_p
 lemma zv_emult_eq_val {x : ℤ_[ℓ]} (hx : x ≠ 0) :
     emultiplicity (ℓ : ℤ_[ℓ]) x = (x.valuation : ℕ∞) := by
   conv_lhs => rw [PadicInt.unitCoeff_spec hx]
-  rw [emultiplicity_mul zv_prime, emultiplicity_of_isUnit_right zv_prime.not_unit (Units.isUnit _),
+  rw [emultiplicity_mul zv_prime, emultiplicity_of_isUnit_right zv_prime.not_isUnit (Units.isUnit _),
     zero_add, emultiplicity_pow_self_of_prime zv_prime]
 
 lemma zv_emult_unit_mul {c : ℤ_[ℓ]} (hc : IsUnit c) (y : ℤ_[ℓ]) :
     emultiplicity (ℓ : ℤ_[ℓ]) (c * y) = emultiplicity (ℓ : ℤ_[ℓ]) y := by
-  rw [emultiplicity_mul zv_prime, emultiplicity_of_isUnit_right zv_prime.not_unit hc, zero_add]
+  rw [emultiplicity_mul zv_prime, emultiplicity_of_isUnit_right zv_prime.not_isUnit hc, zero_add]
 
 lemma zv_not_dvd_of_dvd_sub_one {x : ℤ_[ℓ]} (hx : (ℓ : ℤ_[ℓ]) ∣ x - 1) : ¬ (ℓ : ℤ_[ℓ]) ∣ x := by
   intro h
   have h1 : (ℓ : ℤ_[ℓ]) ∣ 1 := by
     have h2 := dvd_sub h hx
     rwa [sub_sub_cancel] at h2
-  exact zv_prime.not_unit (isUnit_of_dvd_one h1)
+  exact zv_prime.not_isUnit (isUnit_of_dvd_one h1)
 
 lemma zv_two_sq_step (h2 : ℓ = 2) {x : ℤ_[ℓ]} (h4 : (ℓ : ℤ_[ℓ]) ^ 2 ∣ x - 1) :
     emultiplicity (ℓ : ℤ_[ℓ]) (x ^ 2 - 1) = emultiplicity (ℓ : ℤ_[ℓ]) (x - 1) + 1 := by
@@ -93,7 +93,7 @@ lemma zv_two_sq_step (h2 : ℓ = 2) {x : ℤ_[ℓ]} (h4 : (ℓ : ℤ_[ℓ]) ^ 2 
       rw [e, add_sub_cancel_left] at h5
       rw [pow_one]
       exact h5
-    have h6 := (pow_dvd_pow_iff zv_prime.ne_zero zv_prime.not_unit).1 h3
+    have h6 := (pow_dvd_pow_iff zv_prime.ne_zero zv_prime.not_isUnit).1 h3
     omega
   rw [show x ^ 2 - 1 = (x - 1) * (x + 1) by ring, emultiplicity_mul zv_prime, hp1]
 
@@ -158,7 +158,7 @@ theorem valuation_zpow_sub_one : ZpowVal := by
     rw [← Units.val_pow_eq_pow_val, hy] at he
     have hne : ((y ^ n : ℤ_[ℓ]ˣ) : ℤ_[ℓ]) - 1 ≠ 0 := by
       intro h0
-      rw [h0, emultiplicity_zero] at he
+      rw [h0, emultiplicity_zero_right] at he
       exact absurd he (by norm_cast)
     refine ⟨hne, ?_⟩
     rw [zv_emult_eq_val hne] at he

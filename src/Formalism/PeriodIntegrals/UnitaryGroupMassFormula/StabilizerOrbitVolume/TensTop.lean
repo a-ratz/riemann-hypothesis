@@ -74,7 +74,7 @@ instance borelSpace_tens : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
 instance borelSpace_herm (σ : E →ₐ[F] E) (n : ℕ) : BorelSpace (HermR R σ n) := ⟨rfl⟩
 
 theorem continuous_norm_tens : Continuous (fun x : R ⊗[F] E => Algebra.norm R x) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   let b := Algebra.TensorProduct.basis R (Module.finBasis F E)
   have hc : Continuous (Algebra.leftMulMatrix b) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.leftMulMatrix b).toLinearMap
@@ -108,8 +108,8 @@ theorem isOpen_units_tens (h : IsOpen {r : R | IsUnit r}) :
 
 theorem isOpen_isUnit_det (h : IsOpen {r : R | IsUnit r}) (n : ℕ) :
     IsOpen {S : Matrix (Fin n) (Fin n) (R ⊗[F] E) | IsUnit S.det} := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R (R ⊗[F] E)
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R (R ⊗[F] E)
   exact (isOpen_units_tens R h).preimage (continuous_id.matrix_det)
 
 def hLin (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) (x : Fin M → R ⊗[F] E) :
@@ -148,7 +148,7 @@ theorem linIndep_of_isUnit_det (σ : E →ₐ[F] E) {M n : ℕ} (J : Matrix (Fin
 variable [LocallyCompactSpace R] [T2Space R]
 
 private theorem continuous_sigR_stabilizer_orbit_volume (σ : E →ₐ[F] E) : Continuous (sigR R σ) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   have e : ⇑(sigR R σ) = ⇑(LinearMap.baseChange R σ.toLinearMap) := by
     funext z
     induction z using TensorProduct.induction_on with
@@ -160,8 +160,8 @@ private theorem continuous_sigR_stabilizer_orbit_volume (σ : E →ₐ[F] E) : C
 
 theorem continuous_hR (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E) :
     Continuous (fun p : (Fin M → R ⊗[F] E) × (Fin M → R ⊗[F] E) => hR R σ J p.1 p.2) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R (R ⊗[F] E)
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R (R ⊗[F] E)
   have hs := continuous_sigR_stabilizer_orbit_volume (F := F) (E := E) R σ
   unfold hR Formalism.UG.hform
   exact continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ =>
@@ -170,8 +170,8 @@ theorem continuous_hR (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M)
 
 theorem continuous_gramR_apply (σ : E →ₐ[F] E) {M n : ℕ} (J : Matrix (Fin M) (Fin M) E)
     (a b : Fin n) : Continuous (fun X : Fin n → Fin M → R ⊗[F] E => gramR R σ J X a b) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R (R ⊗[F] E)
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R (R ⊗[F] E)
   have hs := continuous_sigR_stabilizer_orbit_volume (F := F) (E := E) R σ
   show Continuous fun X : Fin n → Fin M → R ⊗[F] E => hR R σ J (X a) (X b)
   unfold hR Formalism.UG.hform
@@ -184,8 +184,8 @@ theorem continuous_gramR (σ : E →ₐ[F] E) {M n : ℕ} (J : Matrix (Fin M) (F
 
 theorem isClosed_HermR (σ : E →ₐ[F] E) (n : ℕ) :
     IsClosed (HermR R σ n : Set (Matrix (Fin n) (Fin n) (R ⊗[F] E))) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : T2Space (R ⊗[F] E) :=
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : T2Space (R ⊗[F] E) :=
     T2Space.of_injective_continuous (Algebra.TensorProduct.basis R (Module.finBasis F E)).equivFun.injective
       (IsModuleTopology.continuous_of_linearMap
         (Algebra.TensorProduct.basis R (Module.finBasis F E)).equivFun.toLinearMap)
@@ -193,7 +193,7 @@ theorem isClosed_HermR (σ : E →ₐ[F] E) (n : ℕ) :
   have e : (HermR R σ n : Set (Matrix (Fin n) (Fin n) (R ⊗[F] E))) =
       ⋂ a, ⋂ b, {S | sigR R σ (S b a) = S a b} := by
     ext S
-    simp only [Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_ofPred_eq]
     rfl
   rw [e]
   exact isClosed_iInter fun a => isClosed_iInter fun b =>
@@ -252,7 +252,7 @@ instance secondCountable_Ainf : SecondCountableTopology (InfiniteAdeleRing F) :=
 theorem isOpen_units_Ainf : IsOpen {x : InfiniteAdeleRing F | IsUnit x} := by
   have e : {x : InfiniteAdeleRing F | IsUnit x} = ⋂ v, {x : InfiniteAdeleRing F | x v ≠ 0} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     exact Pi.isUnit_iff.trans (forall_congr' fun v => isUnit_iff_ne_zero)
   rw [e]
   exact isOpen_iInter_of_finite fun v => isOpen_ne_fun (continuous_apply v) continuous_const
@@ -280,7 +280,7 @@ theorem continuous_gramH (σ : E →ₐ[F] E) (hσ : ∀ x, σ (σ x) = x) {M n 
     Continuous (gramH (n := n) R σ hσ J hJ) := (continuous_gramR R σ J).subtype_mk _
 
 theorem isOpen_unitHerm (h : IsOpen {r : R | IsUnit r}) (σ : E →ₐ[F] E) (n : ℕ) :
-    IsOpen {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} := (isOpen_isUnit_det R h n).preimage continuous_subtype_val
+    IsOpen {S : HermR R σ n | IsUnit (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)).det} := (isOpen_isUnit_det R h n).preimage continuous_subtypeVal
 
 end GlueTop
 

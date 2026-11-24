@@ -70,12 +70,12 @@ theorem exists_ne_zero_forall_point_extend_subalgebra :
   have hT : ∀ t ∈ T, t ∈ S := fun t ht => Algebra.subset_adjoin (Set.subset_union_right ht)
   have hSfg : S.FG := Subalgebra.fg_def.2
     ⟨_, (s.finite_toSet.image ξ).union T.finite_toSet, rfl⟩
-  haveI : Algebra.FiniteType k S := (Subalgebra.fg_iff_finiteType S).1 hSfg
+  have : Algebra.FiniteType k S := (Subalgebra.fg_iff_finiteType S).1 hSfg
   let f : A →ₐ[k] S := ξ.codRestrict S hξ
-  letI : Algebra A S := f.toRingHom.toAlgebra
-  haveI : IsScalarTower k A S := IsScalarTower.of_algebraMap_eq fun c => (f.commutes c).symm
-  haveI : Algebra.FiniteType A S := Algebra.FiniteType.of_restrictScalars_finiteType k A S
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing k A
+  let : Algebra A S := f.toRingHom.toAlgebra
+  have : IsScalarTower k A S := IsScalarTower.of_algebraMap_eq fun c => (f.commutes c).symm
+  have : Algebra.FiniteType A S := Algebra.FiniteType.of_restrictScalars_finiteType k A S
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing k A
   have hfinj : Function.Injective (algebraMap A S) := by
     intro x y h
     apply hinj
@@ -96,7 +96,7 @@ theorem exists_ne_zero_forall_point_extend_subalgebra :
   have h1 : (algebraMap k S c) = ⟨ξ (algebraMap k A c), hξ _⟩ := by
     ext; simp
   simp only [RingHom.toMonoidHom_eq_coe, OneHom.toFun_eq_coe, MonoidHom.toOneHom_coe,
-    MonoidHom.coe_coe]
+    MonoidHom.coe_ofClass]
   rw [h1, hψu, φ.commutes]
 
 end GlobalTheory

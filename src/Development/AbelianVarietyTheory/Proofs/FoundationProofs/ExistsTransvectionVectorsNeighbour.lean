@@ -113,7 +113,7 @@ theorem exists_sub_mul {P : Ideal (𝓞 K)} (hP : P.IsMaximal) (hP0 : P ≠ ⊥)
 
 theorem exists_c {P : Ideal (𝓞 K)} (hP : P.IsMaximal) {q : 𝓞 K} (hq : q ≠ 0) :
     ∃ c : 𝓞 K, c ∉ P ∧ ∀ Q : Ideal (𝓞 K), Q.IsPrime → q ∈ Q → Q ≠ P → c ∈ Q := by
-  haveI := hP
+  have := hP
   obtain ⟨J, hJ, e⟩ := Ideal.eq_prime_pow_mul_coprime
     (I := Ideal.span {q}) (by simpa using hq) P
   have : (1 : 𝓞 K) ∈ P ⊔ J := by rw [hJ]; trivial
@@ -141,7 +141,7 @@ theorem exists_nat {q : ℕ} (hq : q.Prime) (μ : K)
         exact ⟨c * r, by
           show (c : K) * a = ((c : K) * r) * μ
           rw [hr, mul_assoc]⟩ }
-  haveI hqp : (Ideal.span {(q : ℤ)}).IsPrime :=
+  have hqp : (Ideal.span {(q : ℤ)}).IsPrime :=
     (Ideal.span_singleton_prime (by exact_mod_cast hq.ne_zero)).2 (Nat.prime_iff_prime_int.1 hq)
   have hnot : ¬ J.comap (algebraMap ℤ (𝓞 K)) ≤ Ideal.span {(q : ℤ)} := by
     intro hle

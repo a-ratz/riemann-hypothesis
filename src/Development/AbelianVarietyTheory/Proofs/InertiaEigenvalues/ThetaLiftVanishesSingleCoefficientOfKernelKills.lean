@@ -373,7 +373,7 @@ theorem GlobalTheory.GenRealSchur.lift_vanish_single : ∀ (D : D7) (G : Type) [
   have hint : ∀ (f : WO (Vc D i) (Wc D i) → ℂ) (l : (R.cV i).W →ₗ[ℂ] ℂ), IsThetaFunO R.ψ (Vc D i) (Wc D i) f →
       IntegrableOn (fun h => thetaKO (R.ωP i t) h g f * l (R.extV i t y h)) (R.fdV i t) (R.νV i t) :=
     fun f l hf => GlobalTheory.T.integrableOn_downwardThetaLift_integrand D G Pl0 T A Ks R F hG hF i t y f l g hf
-  haveI : Nontrivial (R.cV i).W := (hM.cV i).2.2.2.1
+  have : Nontrivial (R.cV i).W := (hM.cV i).2.2.2.1
   have hpure : ∀ v : ∀ ρ, lowT (R.MW i (sg0 D A)) ρ, ∀ w l,
       downInt R i t y (phi R i t (PiTensorProduct.tprod ℂ v) w) l g = 0 := by
     intro v

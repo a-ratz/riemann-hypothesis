@@ -80,8 +80,8 @@ theorem degW_twist : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.
   have hrank : rankW U (G + G₀) = rankW U G := by
     rw [hr1, hr2]; exact finsum_congr fun Z => (hgr Z).2
   refine ⟨hG', hrank, ?_⟩
-  haveI : Finite (Comp Xo c) := finite_comp
-  letI := Fintype.ofFinite (Comp Xo c)
+  have : Finite (Comp Xo c) := finite_comp
+  let := Fintype.ofFinite (Comp Xo c)
   have hZ : ∀ Z, degOn U (xiR D) V dict Z G + (rankOn U Z G : ℝ) * (τ - logSum B) ≤
       degOn U (xiR D) V dict Z (G + G₀) := fun Z => by
     have h1 := _root_.GlobalTheory.FlatTw.degOn_add_rank_mul_degLo_le D.host.E H Dw l Xo c r U (xiR D) D V dict Z G₀ (s Z) G B hU hev hB (hint Z) (hOn Z)

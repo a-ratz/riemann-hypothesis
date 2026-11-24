@@ -219,7 +219,7 @@ theorem bE_mem : D.host.sqd ∈ D.host.K :=
   IntermediateField.subset_adjoin ℚ _ (Set.mem_singleton _)
 
 theorem embA_bij : letI := algKC D; Function.Bijective (embA D) := by
-  letI := algKC D
+  let := algKC D
   constructor
   · intro τ τ' h
     apply embT_inj D
@@ -249,7 +249,7 @@ theorem embA_bij : letI := algKC D; Function.Bijective (embA D) := by
 theorem sum_tau_trace (z : D.host.E) :
     ∑ τ : D.what₂.Tau, embT D τ z =
       D.host.φ₀ ((Algebra.trace D.host.K D.host.E z : D.host.K) : D.host.E) := by
-  letI := algKC D
+  let := algKC D
   have h := _root_.trace_eq_sum_embeddings (K := D.host.K) (L := D.host.E) ℂ (x := z)
   rw [RingHom.algebraMap_toAlgebra, RingHom.comp_apply] at h
   change _ = D.host.φ₀ (algebraMap D.host.K D.host.E _)

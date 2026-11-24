@@ -253,7 +253,7 @@ theorem isCompact_Kv (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) :
 
 theorem isOpen_Kv (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) :
     IsOpen (Kv σ J (L : Set (Fin n → E)) v) :=
-  (isOpen_kloc v L hL hfg).preimage continuous_subtype_val
+  (isOpen_kloc v L hL hfg).preimage continuous_subtypeVal
 
 end Grp
 
@@ -291,7 +291,7 @@ theorem isClosed_Ssub (σ : E →ₐ[F] E) (J : Matrix (Fin n) (Fin n) E) {r : �
   refine isClosed_iInter fun b => (isClosed_submodule v _).preimage ?_
   have hm : Continuous fun g : HA (Fv F v) σ J =>
       ((HA.mat (Fv F v) σ J g : GL (Fin n) (Fv F v ⊗[F] E)) : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   exact (hm.matrix_mulVec continuous_const).sub continuous_const
 
 end Flag

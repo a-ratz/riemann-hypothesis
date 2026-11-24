@@ -178,7 +178,7 @@ private lemma rt_sq (hN : 3 ≤ N) (a : (ZMod N)ˣ) : rt ι (a : ZMod N) ^ 2 ≠
   omega
 
 private lemma unit_ne_zero (hN : 3 ≤ N) (a : (ZMod N)ˣ) : (a : ZMod N) ≠ 0 := by
-  haveI : Fact (1 < N) := ⟨by omega⟩
+  have : Fact (1 < N) := ⟨by omega⟩
   exact a.ne_zero
 
 private lemma eis_coef0 (hN : 3 ≤ N) (k : ℕ) (hk : 3 ≤ k) (a : (ZMod N)ˣ) :

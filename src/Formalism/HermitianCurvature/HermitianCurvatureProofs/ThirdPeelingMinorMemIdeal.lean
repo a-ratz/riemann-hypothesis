@@ -95,7 +95,7 @@ theorem dpsi_e_w (k r : ℕ) (z' : Fin (2 * r + k + 1) → ℂ) (p : ℕ) (hp : 
   have h1 : min p (2 * r + k) = p := by omega
   have hw : (wI k r w).val = r + w.val := rfl
   simp only [dpsiP, pe_val, h1, hw]
-  rw [if_neg (by omega), if_pos (by omega)]
+  rw [ite_eq_right (by omega), ite_eq_left (by omega)]
 
 theorem dpsi_last_basis_shift (k r : ℕ) (z' : Fin (2 * r + k + 1) → ℂ) (a b : ℕ) (ha : a < r) (hb : b < r) :
     dpsiP k r z' (ps k r a) (ps k r b) = if b + 1 = a then 1 else 0 := by
@@ -105,7 +105,7 @@ theorem dpsi_last_basis_shift (k r : ℕ) (z' : Fin (2 * r + k + 1) → ℂ) (a 
   have c4 : r + k < 2 * r + k - a ∧ r + k < 2 * r + k - b := by omega
   have c5 : (2 * r + k - b = 2 * r + k - a + 1) ↔ (b + 1 = a) := by omega
   have c6 : ¬(2 * r + k - a ≤ r + k) := by omega
-  simp only [dpsiP, ps_val, c1, c2, c3, c4, c5, c6, if_false, if_true, and_self, and_false, false_and, and_true]
+  simp only [dpsiP, ps_val, c1, c2, c3, c4, c5, c6, ite_false, ite_true, and_self, and_false, false_and, and_true]
 
 theorem third_peeling_minor_mem_ideal {A : Type} [Ring A] [Algebra ℂ A] (k r : ℕ) (z' : Fin (2 * r + k + 1) → ℂ)
     (E : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → A) (hG : GlRel E) (ell : ℂ) : ∀ (m i : ℕ), i ≤ m → m + 1 ≤ r →
@@ -140,7 +140,7 @@ theorem third_peeling_minor_mem_ideal {A : Type} [Ring A] [Algebra ℂ A] (k r :
           (fun l _ => Tm E (ell + (m : ℂ)) (ps k r (m + 1)) (ps k r l.val)) 1 ?_
         · rw [Formalism.FourierDecayAlt.P.expansion_last_line A (2 * r + k + 1) m E hG]
           have hm : ¬ (m < i) := by omega
-          simpa [Fin.succAbove_last, Fin.val_last, hm, Function.comp_def, Fin.coe_castSucc] using hc
+          simpa [Fin.succAbove_last, Fin.val_last, hm, Function.comp_def, Fin.val_castSucc] using hc
         · intro l
           have hl := l.isLt
           have hne : ps k r (m + 1) ≠ ps k r l.val := by
@@ -164,21 +164,21 @@ theorem third_peeling_minor_mem_ideal {A : Type} [Ring A] [Algebra ℂ A] (k r :
       have e : (fun l : Fin (m + 1) => ps k r (if l.val < m + 1 then l.val else l.val + 1)) =
           fun l : Fin (m + 1) => ps k r l.val := by
         funext l
-        rw [if_pos l.isLt]
+        rw [ite_eq_left l.isLt]
       rw [e, sub_self]
       exact Submodule.zero_mem _
 
 private theorem sR_eq_ps (k r j : ℕ) (hj : j ≤ r) : sR k r j hj = fun l : Fin j => ps k r l.val := by
   funext l
   apply Fin.ext
-  simp only [sR, Formalism.QuantumDeterminants.esI, Fin.coe_castLE, ps_val]
+  simp only [sR, Formalism.QuantumDeterminants.esI, Fin.val_castLE, ps_val]
 
 private theorem sR_succAbove_eq_ps (k r m : ℕ) (hm : m + 1 ≤ r) (i : Fin (m + 1)) :
     (fun l : Fin m => sR k r (m + 1) hm (i.succAbove l)) =
       fun l : Fin m => ps k r (if l.val < i.val then l.val else l.val + 1) := by
   funext l
   apply Fin.ext
-  simp only [sR, Formalism.QuantumDeterminants.esI, Fin.coe_castLE, ps_val, succAbove_val]
+  simp only [sR, Formalism.QuantumDeterminants.esI, Fin.val_castLE, ps_val, succAbove_val]
 
 theorem third_peeling_identity : PeelingDualColumn := by
   intro A _ _ k r z' E hG m hm i ell
@@ -210,7 +210,7 @@ theorem second_peeling_identity : PeelingCovector := by
       · simp only [dpsi_e_w k (m + 1) z' l.val (by omega), last_iff]
         by_cases hl : l.val = m
         · have e : l.val + 1 = m + 1 := by omega
-          simp only [e, if_true, hl]
+          simp only [e, ite_true, hl]
           rw [herm_wsum k (m + 1) z' yb hz']
           congr 1; ext w; ring
         · have e : ¬ (l.val + 1 = m + 1) := by omega

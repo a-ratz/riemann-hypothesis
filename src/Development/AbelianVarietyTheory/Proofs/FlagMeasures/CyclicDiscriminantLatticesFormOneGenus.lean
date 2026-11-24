@@ -342,7 +342,7 @@ theorem exists_form {M L : Submodule (𝓞 K) V} (hM : Submodule.IsLattice K M) 
       rw [algebraMap_smul]; exact congrArg Subtype.val ha
     have h3 : algebraMap (𝓞 K) K a ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors a.2
     exact Subtype.ext ((smul_eq_zero.1 h2).resolve_left h3)
-  letI : Submodule.IsLattice K M := hM
+  let : Submodule.IsLattice K M := hM
   have : Module.Finite (𝓞 K) M := Submodule.IsLattice.finite K M
   have : Module.FinitePresentation (𝓞 K) M := Module.finitePresentation_of_finite _ _
   have : Module.Projective (𝓞 K) M := Module.Flat.projective_of_finitePresentation
@@ -351,7 +351,7 @@ theorem exists_form {M L : Submodule (𝓞 K) V} (hM : Submodule.IsLattice K M) 
   let S := Submodule.span K (M : Set V)
   let m : M →ₗ[𝓞 K] S := M.subtype.codRestrict (S.restrictScalars (𝓞 K))
     (fun x => Submodule.subset_span x.2)
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 K)) m := by
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 K)) m := by
     refine ⟨?_, ?_, ?_⟩
     · intro a
       rw [Module.End.isUnit_iff]
@@ -580,7 +580,7 @@ theorem exists_ann {A B : Submodule R W} (s : Finset (Ideal R)) (hs : ∀ P ∈ 
       obtain ⟨Q, hQ, hQP⟩ := ((hs P hP).isPrime.inf_le').1 hle
       rw [Finset.mem_erase] at hQ
       exact hQ.1 ((hs Q hQ.2).eq_of_le (hs P hP).ne_top hQP)
-    obtain ⟨e, h1, h2⟩ := SetLike.not_le_iff_exists.1 this
+    obtain ⟨e, h1, h2⟩ := IsConcreteLE.not_le_iff_exists.1 this
     exact ⟨e, h2, fun Q hQ hne => (Finset.inf_le (f := id) (Finset.mem_erase.2 ⟨hne, hQ⟩)) h1⟩
   choose! e he1 he2 using he
   have hy : ∀ P ∈ s, ∃ y ∈ A, e P • y ∉ B := fun P hP => hn P hP _ (he1 P hP)
@@ -666,7 +666,7 @@ theorem hcompl_conj (P : Ideal (𝓞 K)) :
   unfold hcompl
   congr 1
   ext s
-  rw [Set.mem_setOf_eq, Set.mem_setOf_eq, key, key, mem_conj, mem_conj, cj_cj]
+  rw [Set.mem_ofPred_eq, Set.mem_ofPred_eq, key, key, mem_conj, mem_conj, cj_cj]
   exact and_comm
 
 theorem conj_ne (hK : IsCMUnram K) {T : ℕ} (hT : T.Prime) {P : Ideal (𝓞 K)} (hP : P.IsMaximal)
@@ -676,7 +676,7 @@ theorem conj_ne (hK : IsCMUnram K) {T : ℕ} (hT : T.Prime) {P : Ideal (𝓞 K)}
   have ht' : t = cj θ := genusCovol_hinj (by rw [locBasic_sigma_spec, ht])
   have hc : Nat.card (𝓞 K ⧸ P) = T := by rw [← hN, Ideal.absNorm_apply, Submodule.cardQuot_apply]
   have : Finite (𝓞 K ⧸ P) := Nat.finite_of_card_ne_zero (hc ▸ hT.ne_zero)
-  letI := Fintype.ofFinite (𝓞 K ⧸ P)
+  let := Fintype.ofFinite (𝓞 K ⧸ P)
   let φ := ZMod.ringEquivOfPrime (𝓞 K ⧸ P) hT (by rw [← hc, Nat.card_eq_fintype_card])
   obtain ⟨z, hz⟩ := φ.surjective (Ideal.Quotient.mk P θ)
   obtain ⟨n, rfl⟩ := ZMod.intCast_surjective z
@@ -914,8 +914,8 @@ theorem backward (s : Finset (Ideal (𝓞 K))) (hm : ∀ P ∈ s, P.IsMaximal)
     unfold loc at this ⊢
     rwa [hcompl_conj] at this
   obtain ⟨t, ht, htI⟩ : ∃ t ∈ hcompl (K := K) P, t ∈ ∏ Q ∈ s, Q := by
-    obtain ⟨a, ha, ha'⟩ := SetLike.not_le_iff_exists.1 h1
-    obtain ⟨b, hb, hb'⟩ := SetLike.not_le_iff_exists.1 h2
+    obtain ⟨a, ha, ha'⟩ := IsConcreteLE.not_le_iff_exists.1 h1
+    obtain ⟨b, hb, hb'⟩ := IsConcreteLE.not_le_iff_exists.1 h2
     by_cases hac : a ∈ conjIdeal (K := K) P
     · by_cases hbp : b ∈ P
       · refine ⟨a + b, locBasic_mem_hcompl P _ (fun h => ha' ?_) (fun h => hb' ?_), Ideal.add_mem _ ha hb⟩
@@ -947,8 +947,8 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
     rw [hp] at one
     obtain ⟨M, ⟨hM, uM, hLM, ⟨cL⟩⟩, -⟩ := one L hL ⟨eL⟩
     obtain ⟨M', ⟨hM', uM', hNM, ⟨cN⟩⟩, -⟩ := one N hN eN
-    letI := hL.1
-    letI := hN.1
+    let := hL.1
+    let := hN.1
     have hMf : Submodule.IsFullLattice K M := Submodule.IsFullLattice.of_le_of_fg K hLM hM.fg
     have hM'f : Submodule.IsFullLattice K M' := Submodule.IsFullLattice.of_le_of_fg K hNM hM'.fg
     exact backward h hK hs hn s (fun P hP => (hm P hP).1) hco L N M M' hMf hM'f uM uM' hLM hNM

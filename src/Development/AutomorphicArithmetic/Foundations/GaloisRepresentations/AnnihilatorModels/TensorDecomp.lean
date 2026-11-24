@@ -106,7 +106,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.oMod_of :
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective P q
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
     exact ⟨y, by simp⟩
-  letI : Module (ZMod p) (D.O ⧸ P) := AddCommGroup.zmodModule hP
+  let : Module (ZMod p) (D.O ⧸ P) := AddCommGroup.zmodModule hP
   let Φ : D.O ⊗[ℤ] ℤ_[p] →ₗ[ℤ] D.O ⧸ P := TensorProduct.lift <|
     LinearMap.mk₂ ℤ (fun y z => PadicInt.toZMod z • (Submodule.Quotient.mk y : D.O ⧸ P))
       (fun y y' z => by simp [smul_add])

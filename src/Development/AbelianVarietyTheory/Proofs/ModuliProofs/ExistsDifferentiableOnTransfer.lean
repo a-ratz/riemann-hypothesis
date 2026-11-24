@@ -108,7 +108,7 @@ theorem exists_local_section {n : ℕ} {U : Set (Fin n → ℂ)} {F : (Fin n →
     have : (f' : (Fin n → ℂ) →L[ℂ] (Fin n → ℂ)) = fderiv ℂ F a := by ext1; rfl
     rw [this]; exact han.differentiableAt.hasFDerivAt
   have hinv := hc.to_localInverse hd (by simp)
-  have hs := hc.hasStrictFDerivAt' hd (by simp)
+  have hs := hc.hasStrictFDerivAt hd (by simp)
   have h1 : ∀ᶠ w in nhds (F a), F (hc.localInverse hd (by simp) w) = w := hs.eventually_right_inverse
   have h2 : ∀ᶠ w in nhds (F a), hc.localInverse hd (by simp) w ∈ U := by
     have := hinv.continuousAt
@@ -145,8 +145,8 @@ theorem exists_differentiableOn_transfer {V Λ : Type} [NormedAddCommGroup V] [N
     ext1 z
     have : ∀ i, ∑ a ∈ (c i).support, ((c i a : ℝ) : ℂ) • Q b₀ a = Pi.single i 1 := fun i => by
       rw [← hc i]; simp [Finsupp.sum]
-    simp only [M, this, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smulRight_apply,
-      ContinuousLinearMap.proj_apply, ContinuousLinearMap.one_apply]
+    simp only [M, this, sum_apply, ContinuousLinearMap.smulRight_apply,
+      ContinuousLinearMap.proj_apply, one_apply_eq_self]
     ext j; simp [Pi.single_apply]
   have hkM : ∀ b ∈ B, ∀ z, k b (M Q b z) = M Q' b z := by
     intro b hb z
@@ -163,8 +163,8 @@ theorem exists_differentiableOn_transfer {V Λ : Type} [NormedAddCommGroup V] [N
     (hd.comp differentiableOn_fst (fun (bz : V × (Fin g → ℂ))
       (hbz : bz ∈ (B ∩ M Q ⁻¹' {x | IsUnit x}) ×ˢ Set.univ) => hbz.1)).clm_apply differentiableOn_snd
   refine hd2.congr fun bz hbz => ?_
-  rw [ContinuousLinearMap.mul_apply, ← hkM _ hbz.1.1, ← ContinuousLinearMap.mul_apply,
-    Ring.mul_inverse_cancel _ hbz.1.2, ContinuousLinearMap.one_apply]
+  rw [mul_apply_eq_comp, ← hkM _ hbz.1.1, ← mul_apply_eq_comp,
+    Ring.mul_inverse_cancel _ hbz.1.2, one_apply_eq_self]
 
 theorem isDerivAt0_comp_equiv {g : ℕ} {X : Scheme.{0}} (e : (Fin g → ℂ) → (Sp ℂ ⟶ X))
     (k : (Fin g → ℂ) ≃ₗ[ℂ] (Fin g → ℂ)) (w : Fin g → ℂ) (v : Sp (DualNumber ℂ) ⟶ X) :

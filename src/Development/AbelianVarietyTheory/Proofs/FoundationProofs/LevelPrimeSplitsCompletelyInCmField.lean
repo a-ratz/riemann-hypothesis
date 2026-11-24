@@ -72,12 +72,12 @@ theorem unram_card_of_split (hp : p.Prime)
   · have := Ideal.mem_map_of_mem (algebraMap (𝓞 F) (𝓞 E)) h2
     rw [Ideal.map_pow, map_natCast] at this
     exact Ideal.pow_right_mono (Ideal.map_le_iff_le_comap.2 hPl.over.le) 2 this
-  · haveI : Fact p.Prime := ⟨hp⟩
-    haveI : Nontrivial (𝓞 F ⧸ v) := Ideal.Quotient.nontrivial_iff.2 hv.ne_top
+  · have : Fact p.Prime := ⟨hp⟩
+    have : Nontrivial (𝓞 F ⧸ v) := Ideal.Quotient.nontrivial_iff.2 hv.ne_top
     have h0 : ((p : ℕ) : 𝓞 F ⧸ v) = 0 := by
       rw [← map_natCast (Ideal.Quotient.mk v), Ideal.Quotient.eq_zero_iff_mem]
       exact hpv
-    haveI : CharP (𝓞 F ⧸ v) p := (CharP.charP_iff_prime_eq_zero hp).2 h0
+    have : CharP (𝓞 F ⧸ v) p := (CharP.charP_iff_prime_eq_zero hp).2 h0
     have hb : Function.Bijective (ZMod.castHom (dvd_refl p) (𝓞 F ⧸ v)) := by
       refine ⟨RingHom.injective _, fun x => ?_⟩
       obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -93,15 +93,15 @@ theorem ncard_primesOver_of_split (hp : p.Prime)
     (Ideal.primesOver (Ideal.span {(p : ℤ)}) (𝓞 F)).ncard = Module.finrank ℚ F := by
   classical
   have hp' : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
-  haveI : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp'.ne_zero).mpr hp'
+  have : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp'.ne_zero).mpr hp'
   have hne : (Ideal.span {(p : ℤ)}) ≠ ⊥ := by simpa using hp.ne_zero
-  haveI hmax : (Ideal.span {(p : ℤ)}).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hne
+  have hmax : (Ideal.span {(p : ℤ)}).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hne
   have hs := Ideal.sum_ramification_inertia (𝓞 F) ℚ F (p := Ideal.span {(p : ℤ)}) hne
   rw [← hs, ← IsDedekindDomain.coe_primesOverFinset hne, Set.ncard_coe_finset, Finset.card_eq_sum_ones]
   refine Finset.sum_congr rfl fun q hq => ?_
   rw [IsDedekindDomain.mem_primesOverFinset_iff hne] at hq
-  haveI := hq.1
-  haveI := hq.2
+  have := hq.1
+  have := hq.2
   have hpq : (p : 𝓞 F) ∈ q := by
     simpa using (Ideal.mem_of_liesOver q (Ideal.span {(p : ℤ)}) (p : ℤ)).1 (Ideal.mem_span_singleton_self _)
   obtain ⟨h2, hc⟩ := unram_card_of_split (E := E) hp h q hpq
@@ -121,7 +121,7 @@ theorem ncard_primesOver_of_split (hp : p.Prime)
 end Descent
 
 theorem finrank_F (D : D7) : Module.finrank ℚ D.host.F = D.R.f := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h1 := Module.finrank_mul_finrank ℚ D.host.F D.host.E
   rw [D.sp.cm.deg2, finrank_host D] at h1
   omega
@@ -134,7 +134,7 @@ theorem splitsF_of_splitsCompletely (D : D7) {p : ℕ} (h : SplitsCompletely D.h
     rw [← GlobalTheory.HostSplit.ncard_placesOver _ hp, finrank_F] at h1
     rw [← h1, ← Nat.card_coe_set_eq]
     rfl
-  · haveI := v.isPrime
+  · have := v.isPrime
     exact (unram_card_of_split hp h v.asIdeal hv).2
 
 theorem levelPrime_mod (D : D7) (u : D.what₂.Word) :

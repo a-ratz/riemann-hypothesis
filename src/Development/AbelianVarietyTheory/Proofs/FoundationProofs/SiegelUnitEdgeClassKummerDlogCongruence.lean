@@ -377,7 +377,7 @@ theorem divide_ev : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra
     ∑ t, e t * ψ (algebraMap (Lau p) (O0 p) (a t)) = (p : Ω) ^ v * o → ∃ (c : ℤ → Ω) (x' : Ω), Ev ψ c o x' := by
   intro p _ Ω _ _ hc T n ψ h d e a he v o ho hsum
   classical
-  haveI := Basic.charZero_of_isClo hc
+  have := Basic.charZero_of_isClo hc
   set c : ℤ → Ω := fun r => ∑ t, e t * zp Ω ((a t).coeff r) with hcdef
   have hev : Ev ψ c (∑ t, e t * ψ (algebraMap (Lau p) (O0 p) (a t)))
       (∑ t, e t * ψ (algebraMap (Lau p) (O0 p) (thL (a t)))) :=
@@ -615,8 +615,8 @@ theorem adjoin_top (L : ℕ) : Algebra.adjoin (O0 p) {xn p L, yn p L} = ⊤ := b
 
 theorem emb_int (L : ℕ) (ι : On p L →ₐ[O0 p] Ω) (z : On p L) : IsInt (p := p) (ι z) := by
   obtain ⟨b, -⟩ := GlobalTheory.K5.OnFree.on_free p L
-  haveI : Module.Finite (O0 p) (On p L) := Module.Finite.of_basis b
-  haveI : Algebra.IsIntegral (O0 p) (On p L) := Algebra.IsIntegral.of_finite _ _
+  have : Module.Finite (O0 p) (On p L) := Module.Finite.of_basis b
+  have : Algebra.IsIntegral (O0 p) (On p L) := Algebra.IsIntegral.of_finite _ _
   exact IsIntegral.map ι (Algebra.IsIntegral.isIntegral z)
 
 theorem emb_fix (T : Tower p Ω) {L : ℕ} {ι : On p L →ₐ[O0 p] Ω} (hι : IsEmb T L ι) {g : Gal p Ω}
@@ -732,7 +732,7 @@ theorem edge_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, ∀ (
   obtain ⟨c₄, h71⟩ := hlevel
   refine ⟨c₂ + c₃ + c₄, ?_⟩
   intro Ω _ _ hΩ T L n hnL hn1 ψ hψ ι hι u v α β α' β' hu hv r s hr hs x y lz η hx hy hlz hcup hloc
-  haveI := hΩ.clo
+  have := hΩ.clo
   have hpn : p ^ n ≠ 0 := pow_ne_zero _ (Fact.out : p.Prime).ne_zero
   have hr0 : r ≠ 0 := by
     rintro rfl; rw [zero_pow hpn] at hr; exact (u.isUnit.map ι).ne_zero hr.symm
@@ -1161,18 +1161,18 @@ namespace GlobalTheory.PairTop
 
 theorem extend_to_closure (K Ω' Ωl : Type) [Field K] [Field Ω'] [Field Ωl] [Algebra K Ω'] [IsAlgClosure K Ω'] [IsAlgClosed Ωl]
     (f : K →+* Ωl) : ∃ E : Ω' →+* Ωl, ∀ k, E (algebraMap K Ω' k) = f k := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   exact ⟨(IsAlgClosed.lift : Ω' →ₐ[K] Ωl).toRingHom, fun k => (IsAlgClosed.lift : Ω' →ₐ[K] Ωl).commutes k⟩
 
 theorem restrict_aut (F K Ω' Ωl : Type) [Field F] [Field K] [Field Ω'] [Field Ωl] [Algebra F K] [Algebra F Ω'] [Algebra K Ω']
     [IsScalarTower F K Ω'] [IsAlgClosure K Ω'] [Normal F K] (E : Ω' →+* Ωl) (g : Ωl ≃+* Ωl)
     (hg : ∀ f : F, g (E (algebraMap F Ω' f)) = E (algebraMap F Ω' f)) : ∃ τ : Ω' ≃ₐ[F] Ω', ∀ x, E (τ x) = g (E x) := by
-  haveI : Algebra.IsAlgebraic F Ω' := Algebra.IsAlgebraic.trans F K Ω'
-  haveI : IsAlgClosure F Ω' := ⟨IsAlgClosure.isAlgClosed K, inferInstance⟩
-  haveI : Normal F Ω' := IsAlgClosure.normal F Ω'
-  letI : Algebra Ω' Ωl := E.toAlgebra
-  letI : Algebra F Ωl := (E.comp (algebraMap F Ω')).toAlgebra
-  haveI : IsScalarTower F Ω' Ωl := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.IsAlgebraic F Ω' := Algebra.IsAlgebraic.trans F K Ω'
+  have : IsAlgClosure F Ω' := ⟨IsAlgClosure.isAlgClosed K, inferInstance⟩
+  have : Normal F Ω' := IsAlgClosure.normal F Ω'
+  let : Algebra Ω' Ωl := E.toAlgebra
+  let : Algebra F Ωl := (E.comp (algebraMap F Ω')).toAlgebra
+  have : IsScalarTower F Ω' Ωl := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let g' : Ωl ≃ₐ[F] Ωl := AlgEquiv.ofRingEquiv (f := g) hg
   exact ⟨g'.restrictNormal Ω', fun x => g'.restrictNormal_commutes Ω' x⟩
 
@@ -1209,10 +1209,10 @@ theorem cmul_hahn {Ω Ωl : Type} [Field Ω] [CharZero Ω] [Field Ωl] (j : Ω �
     intro u i
     rw [PowerSeries.coeff_coe]
     by_cases hi : 0 ≤ i
-    · rw [if_neg (not_lt.2 hi), if_pos hi]
+    · rw [ite_eq_right (not_lt.2 hi), ite_eq_left hi]
       congr 2
       omega
-    · rw [if_pos (not_le.1 hi), if_neg hi]
+    · rw [ite_eq_left (not_le.1 hi), ite_eq_right hi]
   have e1 : C = HahnSeries.ofPowerSeries ℤ Ωl (PowerSeries.mk fun k => j (f k)) := by
     ext i; rw [key, hC, PowerSeries.coeff_mk]
   have e2 : D = HahnSeries.ofPowerSeries ℤ Ωl (PowerSeries.mk fun k => j (g k)) := by
@@ -1300,7 +1300,7 @@ theorem exists_xi {Ω : Type} [Field Ω] (A : ValuationSubring Ω) (j : Ω →+*
     · exact absurd rfl hr
   · have h : ∃ m' : ℤ, (m : ℚ) / (p : ℚ) ^ L = (m' : ℚ) / (p : ℚ) ^ L := ⟨m, rfl⟩
     have e : h.choose = m := by
-      have := (div_left_inj' hp0).1 h.choose_spec
+      have := (div_left_inj₀ hp0).1 h.choose_spec
       exact_mod_cast this.symm
     dsimp only
     rw [dite_eq_left h, e]
@@ -1320,7 +1320,7 @@ theorem coef_bridge {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω
     (hDc : ∀ m : ℤ, Cong (p := p) n (DL.coeff m) (j (D ((m : ℚ) / (p : ℚ) ^ L))))
     (hv : Cong (p := p) n ((p : Ωl) ^ K0 * (a' / a - b' / b)) dv) (r : ℚ) :
     CgA A p n ((p : Ω) ^ K0 * φ.coeff r) (D r) := by
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hM : 0 < p ^ L := pow_pos hp.out.pos L
   have cM : ((p ^ L : ℕ) : ℚ) = (p : ℚ) ^ L := by push_cast; rfl
   have hp0 : (0 : ℚ) < (p : ℚ) ^ L := cM ▸ (by exact_mod_cast hM)
@@ -1485,7 +1485,7 @@ theorem galois_side {p : ℕ} [hp : Fact p.Prime] {Ωl : Type} [Field Ωl] [Alge
         (∀ g ∈ geo F K Ω', kum (K := F) (N := p ^ n) ζ θ g = edge x y η σ g) →
         IsKum T n (Ggeo p Ωl ⊓ Gn T L) (E θ) (fun h => ηl (g0 * h * g0⁻¹) - ηl h - xl h * yl g0 + xl g0 * yl h) := by
   classical
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.out.ne_zero⟩
   have hEinj : Function.Injective E := E.injective
   have hζp : IsPrimitiveRoot ζ (p ^ n) := (IsPrimitiveRoot.map_iff_of_injective hEinj).1 (hζ ▸ T.prim n)
   let Fx : Gal p Ωl → Prop := fun g => ∀ f : F, g (E (algebraMap F Ω' f)) = E (algebraMap F Ω' f)
@@ -1520,7 +1520,7 @@ theorem galois_side {p : ℕ} [hp : Fact p.Prime] {Ωl : Type} [Field Ωl] [Alge
     rw [hres g (hFx g hg), hres h (hFx h hh)]
     exact hz _ (Finset.mem_image_of_mem _ hzS)
   · intro g0 hg0 hF0 σ hσ w θ hw0 hθ hkum h hh
-    haveI : (geo F K Ω').Normal := ⟨fun m hm s => TopW.conj_mem_geo s hm⟩
+    have : (geo F K Ω').Normal := ⟨fun m hm s => TopW.conj_mem_geo s hm⟩
     obtain ⟨P1, P2, P3⟩ := edge_cup_props _ (p ^ n) (geo F K Ω') x y η hη
     have hinv : ∀ z, E ((res g0)⁻¹ z) = g0⁻¹ (E z) := fun z => by
       have h1 := hres g0 hF0 ((res g0)⁻¹ z)
@@ -1581,7 +1581,7 @@ theorem coefQ_supp {Ω : Type} [Field Ω] (p L : ℕ) (hp : 0 < p) (f : ℕ → 
   have hp0 : (0 : ℚ) < (p : ℚ) ^ L := pow_pos (by exact_mod_cast hp) L
   have h1 : 0 ≤ r ∧ (r * ((p ^ L : ℕ) : ℚ)).den = 1 := by
     by_contra h2
-    exact h (if_neg h2)
+    exact h (ite_eq_right h2)
   refine ⟨(r * ((p ^ L : ℕ) : ℚ)).num, Rat.num_nonneg.2 (mul_nonneg h1.1 (Nat.cast_nonneg _)), ?_⟩
   rw [(Rat.den_eq_one_iff _).1 h1.2, GlobalTheory.IoEx.castM, mul_div_cancel_right₀ _ hp0.ne']
 
@@ -1632,7 +1632,7 @@ theorem GlobalTheory.pair_edge_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → 
     obtain ⟨c₄, h71⟩ := GlobalTheory.K5.Reb.h1_geometric_level_coboundary p hp2
     refine ⟨c₂ + c₃ + c₄, ?_⟩
     intro Ω _ _ hΩ T L n hnL hn1 ψ hψ ι hι u v α β α' β' hu hv r s hr hs x y lz η hx hy hlz hcup hloc
-    haveI := hΩ.clo
+    have := hΩ.clo
     have hpn : p ^ n ≠ 0 := pow_ne_zero _ (Fact.out : p.Prime).ne_zero
     have hr0 : r ≠ 0 := by
       rintro rfl; rw [zero_pow hpn] at hr; exact (u.isUnit.map ι).ne_zero hr.symm
@@ -1740,8 +1740,8 @@ theorem GlobalTheory.pair_edge_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → 
   have hL1 : 1 ≤ L := le_trans hn1 hnL
   have hM : 0 < p ^ L := pow_pos hp.pos L
   obtain ⟨Ωl, _, _, hclo, T, j, hcusp⟩ := exists_cusp_embedding ε X hj p hp2 A hpA
-  haveI : IsAlgClosed Ωl := hclo.clo
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : IsAlgClosed Ωl := hclo.clo
+  have : CharZero Ω := algebraRat.charZero Ω
   obtain ⟨ψ, hψ⟩ := exists_isReb p Ωl hclo T L
   obtain ⟨io, hio⟩ := GlobalTheory.IoEx.exists_isIo ε X hj p hp2 A hpA Ωl hclo T j hcusp L ψ hψ
   obtain ⟨ι, hι⟩ := GlobalTheory.K5.Basic.exists_isEmb T L
@@ -1807,7 +1807,7 @@ theorem GlobalTheory.pair_edge_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → 
     rw [← map_pow, hθ, hEK, ← hconst, ← map_mul, ← map_mul]
     exact congrArg io (Subtype.ext hpres)) hEa hEb ha0 hai hb0 hbi
   have hlt : lz g0 = t := by
-    haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
+    have : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
     have e1 := hlz g0 hg0
     have e2 : g0 (T.ζ (L + n)) = T.ζ n ^ t.val * T.ζ (L + n) := by
       rw [← hcusp.root, hg0j, ht, map_mul, map_pow, hcusp.root]

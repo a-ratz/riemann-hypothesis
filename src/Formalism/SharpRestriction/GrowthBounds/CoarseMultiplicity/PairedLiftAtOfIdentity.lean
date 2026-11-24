@@ -100,7 +100,7 @@ open Formalism.L2.G.Model (dE dual_edgeBasis pQ_ne edgeBasis dual_edge Th0)
 
 theorem testFlatAt1 : TestFlatAt1 := by
   intro p n' _ W Qq O Kf _ _ _ _ _ _ _ _ _ _ ι σ jO w hS φ hφ m TT aT bT hm e he
-  letI : Algebra (WF p n') O := algOfIdent jO φ
+  let : Algebra (WF p n') O := algOfIdent jO φ
   obtain ⟨b, hb⟩ := edgeBasis hS m 1 e he
   have hb' := dual_edgeBasis p 1 (pQ_ne hS) e b hb
   obtain ⟨Θ, hΘ1, hΘ2⟩ := flatTheta hS φ hφ m TT aT bT hm b hb.1
@@ -143,11 +143,11 @@ theorem srcHalf1_of {C0 CYb Cde Ck CD Cb CE1 CE2 Cm Ct Cc H : ℝ} (hCm : 13 ≤
     (h44 : CoarseMultiplicityAtIdentity C0 CYb Cde Ck CD Cb CE1 CE2 Cc) (hM : MonoAt) (hP : PlaneAt) (hI : SymIntAt C0 CE1 CE2) :
     SrcHalfAt1 C0 CYb Cde Ck CD Cb CE1 CE2 Cm Ct Cc := by
   intro X _ _ W Qq O Kf _ _ _ _ _ _ _ _ _ _ ι σ jO w hS hH hc hc1 φ hφ h Θ hΘ e he hsrc hgE β hβ s hs
-  letI : Algebra (WF X.p X.n') O := algOfIdent jO φ
+  let : Algebra (WF X.p X.n') O := algOfIdent jO φ
   have hD1 : D1num X := ⟨hS.1.prime, hS.1.five_le, hS.1.two_le, hS.1.even⟩
   have St := hstd X hD1 hH hc
   have hw0 : w ≠ 0 := hS.2.1.ne_zero
-  haveI : IsFractionRing O Kf := hS.1.frac_O
+  have : IsFractionRing O Kf := hS.1.frac_O
 
   have hmar : 13 * X.k * X.N1 * X.Q * (X.c : ℝ) + 12 * (X.c : ℝ) ≤ X.m0 Cm := by
     have hk : 0 ≤ X.k := by unfold Loc.k; positivity
@@ -221,10 +221,10 @@ theorem paired_lift_at_of_identity {C0 CYb Cde Ck CD Cb CE1 CE2 Cm Ct Cc : ℝ} 
     PairLiftAt C0 CYb Cde Ck CD Cb CE1 CE2 Cm Ct Cc := by
   classical
   intro X _ W Qq O Kf _ _ _ _ _ _ _ _ _ _ ι σ jO w hS hH hc hc1 e he
-  haveI : Fact X.p.Prime := ⟨hS.1.prime⟩
-  haveI := hS.1.frac_O
+  have : Fact X.p.Prime := ⟨hS.1.prime⟩
+  have := hS.1.frac_O
   obtain ⟨φ, hφ⟩ := hW X.p X.n' W Qq O Kf ι σ jO w hS.1
-  letI : Algebra (WF X.p X.n') O := algOfIdent jO φ
+  let : Algebra (WF X.p X.n') O := algOfIdent jO φ
   have hm : 1 ≤ X.m := Nat.one_le_iff_ne_zero.2 (NeZero.ne X.m)
   obtain ⟨h, h', Θ, Θ', Ξ, ⟨hΘ, hsrc, hgE⟩, ⟨he', hΘ', hsrc', hgE'⟩, hΞ, hPol, hpair⟩ :=
     hT X.p X.n' W Qq O Kf ι σ jO w hS.1 φ hφ X.m X.TT X.aT X.bT hm e he
@@ -275,7 +275,7 @@ theorem paired_lift_at_of_identity {C0 CYb Cde Ck CD Cb CE1 CE2 Cm Ct Cc : ℝ} 
       · refine ⟨0, ?_⟩
         rw [hGv0 β' u' fun hh => hk' hh.1]
         have hne : β ≠ β' := fun hh => hk' (hh ▸ hk)
-        rw [if_neg hne]
+        rw [ite_eq_right hne]
         simp [beHH]
     · refine ⟨0, ?_⟩
       rw [hFv0 β u fun hh => hk hh.1]

@@ -217,7 +217,7 @@ theorem integral_normSq_coef_ne_zero : ∀ (D : D7) (V : HSp D), V.SigOK → V.I
     isCompact_iff_compactSpace.1 (Formalism.IndefR.Eqv.isCompact_GinfC hS fun τ => Or.inl (hp τ))
   set f : GinfC V → ℝ := fun b => ‖⟪w, c.ρ (b : GA D V) w⟫_ℂ‖ ^ 2 with hfdef
   have hcont : Continuous f := by
-    have h1 : Continuous fun b : GinfC V => c.ρ (b : GA D V) w := (hc.2.2.1 w).comp continuous_subtype_val
+    have h1 : Continuous fun b : GinfC V => c.ρ (b : GA D V) w := (hc.2.2.1 w).comp continuous_subtypeVal
     exact ((continuous_const.inner h1).norm).pow 2
   have hnn : 0 ≤ f := fun b => by positivity
   have hint : Integrable f mR := hcont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace f)
@@ -284,8 +284,8 @@ theorem rcoef_of_fun {D : D7} {V : HSp D} (c : CoefA V) (hc : c.Is) (m : Measure
     (hsh : ∀ b ∈ GinfC V, ∀ g, Y (g * b) = c.ρ b⁻¹ (Y g)) :
     ∃ z : ℂ, (∀ w : c.W, ∀ b ∈ GinfC V,
       GlobalTheory.Core.Rk.IP.rcoef m (fun g => ⟪w, Y g⟫_ℂ) (fun g => ⟪w, Y g⟫_ℂ) b = z * ⟪c.ρ b w, w⟫_ℂ) ∧ (Y ≠ 0 → z ≠ 0) := by
-  haveI := hm
-  haveI : m.IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds V m hm
+  have := hm
+  have : m.IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds V m hm
   let φ : c.W → GA D V → ℂ := fun x g => ⟪x, Y g⟫_ℂ
   have hφL : ∀ x, GlobalTheory.AutomorphicL2Unitary.LeftInv (GQ V) (φ x) := fun x γ hγ g => by
     simp only [φ, hYi γ hγ g]
@@ -760,7 +760,7 @@ theorem param_of_sysParam : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
     have hext2 : s P d • (R.cV i).ext ((R.HV i t).e y) g =
         ∑ a ∈ GlobalTheory.Hk3.rep (Vc D i) P d, (R.cV i).ext ((R.HV i t).e y) (g * a) := by
       have h0 := (congrArg (fun z => (R.cV i).ext z g) hop).symm.trans hext
-      simpa only [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same,
+      simpa only [Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same,
         one_smul, map_smul, Pi.smul_apply, LinearMap.smul_apply] using h0
     show ∑ γ ∈ Rr, l ((R.extV i t) y (g * γ)) = s P d • l ((R.extV i t) y g)
     refine hsum.trans ?_

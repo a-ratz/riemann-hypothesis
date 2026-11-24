@@ -121,7 +121,7 @@ theorem eta_nsmul {S : Scheme.{0}} {G : Over S} [GrpObj G] {La : Type} [AddCommG
 
 theorem exists_objMap_fixing_descended_points : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Datum H} {l : Geo.Tor.Level H} {Bb : Type} [CommRing Bb] {b : Base l Bb} (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (k₀ : Subfield K), IsAlgClosed k₀ → ∀ {s : Sp K ⟶ Sp Bb} (o : Obj D l b s) (B₀ : Over (Sp k₀)) [GrpObj B₀] [IsCommMonObj B₀] (M₀ : LB B₀.left) (π : o.t.G.left ⟶ B₀.left), IsAbelianScheme B₀ → M₀.IsLB → IsGrpPullback o.t.G B₀ (spMap k₀.subtype) π → LBIso o.t.PP.L (M₀.pull π) → ∀ σ : K ≃+* K, (∀ a ∈ k₀, σ a = a) → ∃ n : ObjMap o o (spMap (σ : K →+* K)), ∀ x : Sp K ⟶ o.t.G.left, x ≫ o.t.G.hom = 𝟙 _ → (∃ x₀ : Sp k₀ ⟶ B₀.left, x ≫ π = spMap k₀.subtype ≫ x₀) → x ≫ n.toSABMap.φ = spMap (σ : K →+* K) ≫ x := by
   intro E _ _ _ H D l Bb _ b K _ _ _ k₀ hk₀ s o B₀ _ _ M₀ π hB₀ hM₀ hpb hL σ hσ
-  haveI : IsAlgClosed k₀ := hk₀
+  have : IsAlgClosed k₀ := hk₀
   have hfix := spMap_fix K k₀ σ hσ
   let st : o.t.G.left ⟶ o.t.G.left := hpb.1.lift π (o.t.G.hom ≫ spMap (σ : K →+* K))
     (by rw [hpb.1.w, Category.assoc, hfix])
@@ -575,7 +575,7 @@ theorem GlobalTheory.UCanon.pulled_lowObj_grp_ident : ∀ {E : Type} [Field E] [
     (IsGrpPullback.comp m₁.cart L.ab.1).congr (Category.comp_id _) rfl
   obtain ⟨θe, hθm, hθ⟩ := grpPullback_iso h₁ h₂
   refine ⟨θe.hom.left, ?_, ?_, ?_⟩
-  · haveI := hθm
+  · have := hθm
     exact isGrpPullback_of_iso θe
   · have A : LBIso o'.t.PP.L (L.o.t.PP.L.pull m₁.toSABMap.φ) := GlobalTheory.LN.GenericPoint.lbIso_of_sabMap m₁.toSABMap
     have B : LBIso (L.o.t.PP.L.pull m₁.toSABMap.φ) (L.D.P.L.pull (m₁.toSABMap.φ ≫ L.φB)) :=
@@ -638,8 +638,8 @@ namespace GlobalTheory.UCanon.BaseDescent
 
 theorem ratHom_mem_of_isAlgClosed : ∀ (K : Type) [Field K] (k₀ : Subfield K), IsAlgClosed k₀ → ∀ (F : IntermediateField ℚ ℂ), FiniteDimensional ℚ F → ∀ (g : F →+* K) (x : F), g x ∈ k₀ := by
   intro K _ k₀ hk₀ F hF g x
-  haveI : CharZero K := (RingHom.charZero_iff g.injective).mp inferInstance
-  haveI : CharZero k₀ := (RingHom.charZero_iff k₀.subtype.injective).mpr inferInstance
+  have : CharZero K := (RingHom.charZero_iff g.injective).mp inferInstance
+  have : CharZero k₀ := (RingHom.charZero_iff k₀.subtype.injective).mpr inferInstance
   have h1 : IsAlgebraic ℚ x := Algebra.IsAlgebraic.isAlgebraic x
   have h2 : IsAlgebraic ℚ (g x) := by
     have := h1.algHom g.toRatAlgHom
@@ -665,7 +665,7 @@ theorem GlobalTheory.UCanon.base_value_mem_of_descended_point : ∀ {E : Type} [
   intro E _ _ _ H D' l c L V _ _ Q _ oQ iw I _ s ε e hDiv K _ _ ev k₀ hk₀ hB a
   let f : L.W →+* K := ev.comp iw
   have hF : ∀ x : c.F, (f.comp L.b) x ∈ k₀ := GlobalTheory.UCanon.BaseDescent.ratHom_mem_of_isAlgClosed K k₀ hk₀ c.F c.fin (f.comp L.b)
-  haveI : CharZero K := (RingHom.charZero_iff (f.comp L.b).injective).mp inferInstance
+  have : CharZero K := (RingHom.charZero_iff (f.comp L.b).injective).mp inferInstance
   obtain ⟨o', ⟨m₁⟩⟩ := (GlobalTheory.T.shimuraObject_pullback_comp_cancel (D := D') (l := GlobalTheory.LowDat.lowLevel l)).1 (lowMap c L.b) L.o (spMap f)
     (lowMap c (f.comp L.b)) (by simp only [lowMap, spMap, ← Spec.map_comp]; rfl)
   obtain ⟨B₀, _, _, M₀, π, hab, hM, hpb, hL, hpts⟩ := GlobalTheory.UCanon.BaseDescent.pulledObj_descends L Q oQ iw s ε e hDiv K ev k₀ hk₀ o' m₁ hB
@@ -728,12 +728,12 @@ theorem eq_maximalIdeal_of_trdeg_le (F A : Type) [Field F] [CommRing A] [IsDomai
     by_contra h
     push_neg at h
     exact hne (le_antisymm hle h)
-  haveI := hA
-  haveI : Algebra.EssFiniteType F (ResidueField A) :=
+  have := hA
+  have : Algebra.EssFiniteType F (ResidueField A) :=
     Algebra.EssFiniteType.of_surjective (IsScalarTower.toAlgHom F A (ResidueField A))
       (IsLocalRing.residue_surjective)
   obtain ⟨s, hs⟩ := exists_isTranscendenceBasis F (ResidueField A)
-  haveI : Finite s := finite_of_isTranscendenceBasis hs
+  have : Finite s := finite_of_isTranscendenceBasis hs
   let f : A ⧸ p →ₐ[F] ResidueField A :=
     Ideal.Quotient.liftₐ p (IsScalarTower.toAlgHom F A (ResidueField A)) (fun x hx => by
       simpa [IsLocalRing.residue_eq_zero_iff] using hle hx)
@@ -759,7 +759,7 @@ theorem eq_maximalIdeal_of_trdeg_le (F A : Type) [Field F] [CommRing A] [IsDomai
   have hinj := algebraicIndependent_iff_injective_aeval.mp hs.1
   have htrans : Transcendental (Algebra.adjoin F (Set.range z)) b := by
     intro halg
-    apply Ideal.comap_ne_bot_of_algebraic_mem hb0 hbk halg
+    apply Ideal.under_ne_bot_of_algebraic_mem hb0 hbk halg
     rw [eq_bot_iff]
     intro c hc
     rw [Ideal.mem_comap, RingHom.mem_ker] at hc
@@ -787,7 +787,7 @@ theorem eq_maximalIdeal_of_trdeg_le (F A : Type) [Field F] [CommRing A] [IsDomai
   rw [← hs.cardinalMk_eq_trdeg] at htr
   have hle2 : Cardinal.mk (Option s) ≤ Cardinal.mk s := hc1.trans htr
   obtain ⟨e⟩ := Cardinal.le_def _ _ |>.mp hle2
-  haveI := Fintype.ofFinite s
+  have := Fintype.ofFinite s
   have := Fintype.card_le_of_embedding e
   rw [Fintype.card_option] at this
   omega
@@ -809,7 +809,7 @@ namespace GlobalTheory.PointAlg
 theorem trdeg_le_of_hom_algClosure (X Y Z : Type) [Field X] [Field Y] [Field Z] [Algebra ℚ X] [Algebra ℚ Y]
     (f : X →+* AlgebraicClosure Z) (e : Y →+* Z) (he : Function.Surjective e) :
     Algebra.trdeg ℚ X ≤ Algebra.trdeg ℚ Y := by
-  letI : Algebra ℚ Z := (e.comp (algebraMap ℚ Y)).toAlgebra
+  let : Algebra ℚ Z := (e.comp (algebraMap ℚ Y)).toAlgebra
   have h1 : Algebra.trdeg ℚ X ≤ Algebra.trdeg ℚ (AlgebraicClosure Z) :=
     trdeg_le_of_injective f.toRatAlgHom f.injective
   have h2 : Algebra.trdeg ℚ Z ≤ Algebra.trdeg ℚ Y :=
@@ -825,7 +825,7 @@ theorem closed_point_of_values (F A R K : Type) [Field F] [NumberField F] [CommR
   obtain ⟨j⟩ := hk
   obtain ⟨-, -, -, hmap, hres⟩ := hψ
   set q : Ideal A := (maximalIdeal R).comap ψ with hq
-  haveI hqp : q.IsPrime := Ideal.comap_isPrime ψ _
+  have hqp : q.IsPrime := Ideal.comap_isPrime ψ _
   let L := Localization.AtPrime q
   have hu : ∀ y : q.primeCompl, IsUnit (ψ y) := fun y => by
     by_contra h
@@ -840,7 +840,7 @@ theorem closed_point_of_values (F A R K : Type) [Field F] [NumberField F] [CommR
     simp only [map_mul, hΦ] at h2
     rw [eq_div_of_mul_eq (hne _ (hu s)) h2]
     exact k₀.div_mem (hev _) (hev _)
-  haveI : IsLocalHom Φ := by
+  have : IsLocalHom Φ := by
     refine ⟨fun x hx => ?_⟩
     obtain ⟨⟨a, s⟩, h⟩ := IsLocalization.surj q.primeCompl x
     have h2 := congrArg Φ h
@@ -859,12 +859,12 @@ theorem closed_point_of_values (F A R K : Type) [Field F] [NumberField F] [CommR
     rw [map_div₀, ResidueField.map_residue, ResidueField.map_residue, hΦ, hΦ, ← h]
     exact mul_div_cancel_right₀ _ (hs.map (residue R)).ne_zero
   let g : L →+* AlgebraicClosure (ResidueField R) := j.comp ((ev.comp Φ).codRestrict k₀ hΦk)
-  haveI hP : (RingHom.ker g).IsPrime := RingHom.ker_isPrime g
+  have hP : (RingHom.ker g).IsPrime := RingHom.ker_isPrime g
   have hE : ((algebraMap A L).comp (b.comp (algebraMap ℚ F))).EssFiniteType := by
     refine RingHom.EssFiniteType.comp (RingHom.EssFiniteType.comp ?_ hb) ?_
     · exact RingHom.essFiniteType_algebraMap.mpr inferInstance
     · exact RingHom.essFiniteType_algebraMap.mpr (Algebra.EssFiniteType.of_isLocalization L q.primeCompl)
-  letI : Algebra ℚ L := ((algebraMap A L).comp (b.comp (algebraMap ℚ F))).toAlgebra
+  let : Algebra ℚ L := ((algebraMap A L).comp (b.comp (algebraMap ℚ F))).toAlgebra
   have hmax : RingHom.ker g = maximalIdeal L :=
     GlobalTheory.eq_maximalIdeal_of_trdeg_le ℚ L hE _ hP
       (trdeg_le_of_hom_algClosure _ _ _

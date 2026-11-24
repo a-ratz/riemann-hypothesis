@@ -71,7 +71,7 @@ def cvA {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSp
 
 theorem umat_mem_UJset (ε : Fin n → Bool) (g : Formalism.REAL.UJ ε) : Formalism.MainNotions.S.umat g ∈ UJset ε := g.2
 
-theorem continuous_umatA (ε : Fin n → Bool) : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) := Units.continuous_val.comp continuous_subtype_val
+theorem continuous_umatA (ε : Fin n → Bool) : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) := Units.continuous_val.comp continuous_subtypeVal
 
 private theorem Jm_sq_lemma (e : Fin n → Bool) : Formalism.REAL.Jm e * Formalism.REAL.Jm e = 1 := by
   unfold Formalism.REAL.Jm
@@ -151,7 +151,7 @@ private theorem muG_fin_lemma_3 (e : Fin n → Bool) : IsFiniteMeasureOnCompacts
 theorem integrable_cvA (hσ : IsURepOn (UJset ε) σ) {α : Matrix (Fin n) (Fin n) ℂ → ℂ} (hα : Continuous α)
     (hαc : HasCompactSupport α) (v : H) :
     Integrable (fun g : Formalism.REAL.UJ ε => α (Formalism.MainNotions.S.umat g) • σ (Formalism.MainNotions.S.umat g) v) (Formalism.REAL.muG ε) := by
-  haveI := muG_fin_lemma_3 ε
+  have := muG_fin_lemma_3 ε
   have hc : Continuous (fun g : Formalism.REAL.UJ ε => α (Formalism.MainNotions.S.umat g) • σ (Formalism.MainNotions.S.umat g) v) :=
     (hα.comp (continuous_umatA ε)).smul (continuous_orbitA hσ v)
   have h1 : HasCompactSupport (fun g : Formalism.REAL.UJ ε => α (Formalism.MainNotions.S.umat g)) :=
@@ -204,7 +204,7 @@ theorem cvA_near (hσ : IsURepOn (UJset ε) σ) {φ : Matrix (Fin n) (Fin n) ℂ
     (hφ1 : ∫ g : Formalism.REAL.UJ ε, φ (Formalism.MainNotions.S.umat g) ∂(Formalism.REAL.muG ε) = 1) {w : H} {η : ℝ}
     (hη : ∀ g : Formalism.REAL.UJ ε, φ (Formalism.MainNotions.S.umat g) ≠ 0 → ‖σ (Formalism.MainNotions.S.umat g) w - w‖ ≤ η) :
     ‖cvA ε σ (fun g => (φ g : ℂ)) w - w‖ ≤ η := by
-  haveI := muG_fin_lemma_3 ε
+  have := muG_fin_lemma_3 ε
   have hψi : Integrable (fun g : Formalism.REAL.UJ ε => φ (Formalism.MainNotions.S.umat g)) (Formalism.REAL.muG ε) :=
     (hφc.comp (continuous_umatA ε)).integrable_of_hasCompactSupport
       (hφs.comp_isClosedEmbedding (isClosedEmbedding_umatA ε))
@@ -319,7 +319,7 @@ theorem bumpA_conj {δ : ℝ} {k : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Matri
 theorem tsupport_bumpA (δ : ℝ) : tsupport (bumpA (n := n) δ) ⊆ {g | hsdA g ≤ δ} := closure_minimal (fun g hg => (hsdA_lt_of_bumpA hg).le) (isClosed_le contDiff_hsdA.continuous continuous_const)
 
 theorem hasCompactSupport_bumpA (δ : ℝ) : HasCompactSupport (bumpA (n := n) δ) := by
-  haveI : ProperSpace (Matrix (Fin n) (Fin n) ℂ) := by
+  have : ProperSpace (Matrix (Fin n) (Fin n) ℂ) := by
     first
     | infer_instance
   have hsub : tsupport (bumpA (n := n) δ) ⊆ Metric.closedBall 1 (Real.sqrt δ) := by
@@ -372,9 +372,9 @@ private theorem muG_pos_lemma_4 (e : Fin n → Bool) : Measure.IsOpenPosMeasure 
 
 theorem integral_bumpA_pos (ε : Fin n → Bool) {δ : ℝ} (hδ : 0 < δ) :
     0 < ∫ g : Formalism.REAL.UJ ε, bumpA δ (Formalism.MainNotions.S.umat g) ∂(Formalism.REAL.muG ε) := by
-  haveI := muG_fin_lemma_3 ε
-  haveI := muG_pos_lemma_4 ε
-  exact Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero
+  have := muG_fin_lemma_3 ε
+  have := muG_pos_lemma_4 ε
+  exact Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero
     ((contDiff_bumpA δ).continuous.comp (continuous_umatA ε))
     ((hasCompactSupport_bumpA δ).comp_isClosedEmbedding (isClosedEmbedding_umatA ε))
     (fun g => bumpA_nonneg δ _)
@@ -446,7 +446,7 @@ theorem exists_nearA (hσ : IsURepOn (UJset ε) σ) {U : Set (Matrix (Fin n) (Fi
       linarith
     have h3 : ∀ j, dist (σ (Formalism.MainNotions.S.umat g) (b j)) (σ 1 (b j)) < η := hU₂ hmem
     have h4 := h3 i
-    rw [hσ.1.1, ContinuousLinearMap.one_apply, dist_eq_norm] at h4
+    rw [hσ.1.1, one_apply_eq_self, dist_eq_norm] at h4
     exact h4.le
 
 end Bump

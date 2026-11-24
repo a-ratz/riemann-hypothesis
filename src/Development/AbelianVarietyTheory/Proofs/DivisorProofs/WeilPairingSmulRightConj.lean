@@ -76,8 +76,8 @@ theorem weilEq_act_right : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     WeilEq B.t.PP.L f (A.t.act.act s ≫ g) A.t.PP.L (A.t.act.act (r * H.bar s)) (𝟙 _)
       (spMap (σ₁.comp (algebraMap (𝓞 K) K))) := by
   intro E _ _ _ H K _ _ σ₁ A B f g _ _ r s h n x y c hn hx hy
-  haveI := A.t.act.hom s
-  haveI := A.t.act.hom r
+  have := A.t.act.hom s
+  have := A.t.act.hom r
   have hy' : (y ≫ A.t.act.act s) ^ n = 1 := by rw [← MonObj.pow_comp, hy, MonObj.one_comp]
   have hx' : (x ≫ A.t.act.act r) ^ n = 1 := by rw [← MonObj.pow_comp, hx, MonObj.one_comp]
   have h1 := h n x (y ≫ A.t.act.act s) c hn hx hy'

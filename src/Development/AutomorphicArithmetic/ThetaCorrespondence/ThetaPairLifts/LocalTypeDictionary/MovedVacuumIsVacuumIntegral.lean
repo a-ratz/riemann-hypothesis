@@ -104,7 +104,7 @@ theorem moved_vacuum_isVacuumIntegral : _root_.GlobalTheory.FunPr.ThetaLocalInpu
     rw [e, e, ← map_smul, ← map_add (f := _), h0, map_zero]
   · show nrm2 q.1 q.2 (ch.W.om p gh (ch.S.Z.vac p)) = 1
     have hU := hom.om_unit q.1 q.2 hq.1 hq.2.1 gh _ hv.theta
-    haveI : OpensMeasurableSpace (WO (ch.G.pS p) (ch.G.pT p)) := ⟨le_rfl⟩
+    have : OpensMeasurableSpace (WO (ch.G.pS p) (ch.G.pT p)) := ⟨le_rfl⟩
     have key : ∀ F : WO (ch.G.pS p) (ch.G.pT p) → ℂ, Continuous F → nrm2 q.1 q.2 F = (∫⁻ w in q.2, ‖F w‖ₑ ^ 2 ∂q.1).toReal := by
       intro F hF
       unfold nrm2
@@ -113,7 +113,7 @@ theorem moved_vacuum_isVacuumIntegral : _root_.GlobalTheory.FunPr.ThetaLocalInpu
         (Filter.Eventually.of_forall fun w => sq_nonneg ‖F w‖) hc.aestronglyMeasurable]
       congr 1
       refine MeasureTheory.lintegral_congr fun w => ?_
-      rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+      rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
     rw [key _ hth'.cont, hU, ← key _ hv.theta.cont]
     exact hv.norm.2 q hq
 end GlobalTheory.MovedDict

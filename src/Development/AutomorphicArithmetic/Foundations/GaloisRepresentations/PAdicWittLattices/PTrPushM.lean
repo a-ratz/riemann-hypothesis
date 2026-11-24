@@ -49,10 +49,10 @@ universe u v
 theorem UpperTheory.Gal.G3.pTrPushM :
     FEtBasic → SplitsBasic → SplitsComp → MultiSplit → FEtInj.{u} → TrPushM.{u} := by
   intro hF hSB hSC hMS hInj B R _ T hT Y P Z p q r κ s d m hκ hs hd hm tr tr' htr htr' x
-  haveI : IsFinite s := hd.1
-  haveI : Etale s := hd.2.1
-  haveI : IsFinite κ := hm.1
-  haveI : Etale κ := hm.2.1
+  have : IsFinite s := hd.1
+  have : Etale s := hd.2.1
+  have : IsFinite κ := hm.1
+  have : Etale κ := hm.2.1
   obtain ⟨W1, c1, e1, he1, hc1, hτ0⟩ := hMS 1 (fun _ => P) (fun _ => s) (fun _ => d) (fun _ => hd)
   obtain ⟨τ, hτ⟩ : ∃ τ : Fin d → (W1 ⟶ P), Splits s c1 τ := hτ0 0
   have hPb : ∀ i : Fin d, FEt (pullback.snd κ (τ i)) m := fun i =>

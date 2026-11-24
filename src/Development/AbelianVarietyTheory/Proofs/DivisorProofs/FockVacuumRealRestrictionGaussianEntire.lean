@@ -71,7 +71,7 @@ theorem differentiable_mul_of_cr {V : Type} [NormedAddCommGroup V] [NormedSpace 
   have hI : ∀ Y, L (Complex.I • Y) = Complex.I * L Y := fun Y => by
     have h1 := hGc Z Y
     have h2 := hEc Z Y
-    simp only [hLdef, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [hLdef, add_apply, smul_apply, smul_eq_mul]
     linear_combination (-(Complex.I * E Z)) * h1 + (-(Complex.I * G Z)) * h2 +
       (E Z * fderiv ℝ G Z (Complex.I • Y) + G Z * fderiv ℝ E Z (Complex.I • Y)) * Complex.I_sq
   have hsm : ∀ (a : ℂ) (Y : V), L (a • Y) = a * L Y := fun a Y => by
@@ -115,9 +115,9 @@ theorem gauss_cr {ι : Type} [Fintype ι] {m n : ℕ} (r : ℝ) :
     fun Z => (Complex.ofRealCLM.hasFDerivAt.comp Z ((hq Z).const_mul (Real.pi * r))).cexp
   refine ⟨fun Z => (hE Z).differentiableAt, fun Z Y => ?_⟩
   rw [(hE Z).fderiv]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_sum',
+  simp only [smul_apply, ContinuousLinearMap.comp_apply, FunLike.coe_sum,
     Finset.sum_apply, smul_eq_mul, Complex.ofRealCLM_apply, innerSL_apply_apply, hP, Pi.smul_apply,
-    ContinuousLinearMap.smul_apply, nsmul_eq_mul]
+    smul_apply, nsmul_eq_mul]
   have key : ∀ z y : ℂ, z * starRingEnd ℂ y =
       ((inner ℝ z y : ℝ) : ℂ) + Complex.I * ((inner ℝ z (Complex.I * y) : ℝ) : ℂ) := by
     intro z y

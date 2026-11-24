@@ -89,7 +89,7 @@ theorem hasDSComp_of_trace_ne_zero : GlobalTheory.Published.DiscreteSeriesClassi
     have hmem : ∀ w, fa w ∈ CcArch D.sp.cm.sig V.gram w := hTD.2.2.2.2.2.1.mem
     have hfin : IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff := hTD.2.2.2.2.2.2.isFinFamily
     obtain ⟨Q, hQ, hrep⟩ := GlobalTheory.T.pureTensorOperator_split_oneRealPlace D V μa μf μ hRP fa ff hmem hfin H π hπ.unitary (placeOf D τ)
-    haveI : (μa (placeOf D τ)).IsHaarMeasure := hRP.1 _
+    have : (μa (placeOf D τ)).IsHaarMeasure := hRP.1 _
     have hint : Integrable (fa (placeOf D τ)) (μa (placeOf D τ)) :=
       (continuous_of_mem_ccSmooth (continuous_archCoord _ _ _) (hmem _)).integrable_of_hasCompactSupport (hmem _).1
     have hπw : IsUnitaryRep (π.comp (embArch D.sp.cm.sig V.gram (placeOf D τ))) :=

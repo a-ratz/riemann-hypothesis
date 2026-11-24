@@ -120,7 +120,7 @@ theorem UpperTheory.V.Pa.Det.spanDesc :
       by_cases e : ((i : ℕ) < a) ↔ ((j : ℕ) < a)
       · have h1 : (single i j 1 : Matrix (Fin n) (Fin n) F) ∈ Ev F F n a :=
           fun p q => ⟨fun _ => trivial, fun e' => by
-            rw [Submodule.mem_bot, Matrix.single_apply, if_neg]
+            rw [Submodule.mem_bot, Matrix.single_apply, ite_eq_right]
             rintro ⟨rfl, rfl⟩
             exact e' e⟩
         rw [← h] at h1
@@ -137,7 +137,7 @@ theorem UpperTheory.V.Pa.Det.spanDesc :
       rintro _ ⟨i, rfl⟩
       exact hr i
     · intro Z hZ
-      letI : Algebra F F' := f.toAlgebra
+      let : Algebra F F' := f.toAlgebra
       obtain ⟨p, hp⟩ := LinearMap.exists_leftInverse_of_injective (Algebra.linearMap F F')
         (LinearMap.ker_eq_bot.2 f.injective)
       have hp1 : ∀ x : F, p (f x) = x := fun x => LinearMap.congr_fun hp x

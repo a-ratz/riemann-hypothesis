@@ -132,7 +132,7 @@ private theorem residue_constant_subalgebra_isLocalRing (O : Type) [CommRing O] 
     [IsLocalRing R] [IsLocalHom (algebraMap O R)] (S : Subalgebra O R)
     (hS : ∀ c, c ∈ S ↔ ∃ a : O, c - algebraMap O R a ∈ maximalIdeal R) :
     IsLocalRing S := by
-  haveI : Nontrivial S := ⟨⟨0, 1, fun h => zero_ne_one (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial S := ⟨⟨0, 1, fun h => zero_ne_one (congrArg Subtype.val h)⟩⟩
   refine IsLocalRing.of_nonunits_add ?_
   intro a b ha hb
   rw [mem_nonunits_iff, residue_constant_subalgebra_isUnit_iff O R S hS, not_not] at ha hb ⊢
@@ -217,11 +217,11 @@ private theorem residue_constant_subalgebra_module_finite (O : Type) [CommRing O
 private theorem isNoetherian_of_finite_torsion_by_maximalIdeal (A : Type) [CommRing A] [IsLocalRing A] (P : Type) [AddCommGroup P]
     [Module A P] [Module.Finite A P]
     (h : Module.IsTorsionBySet A P (maximalIdeal A : Set A)) : IsNoetherian A P := by
-  letI : Module (A ⧸ maximalIdeal A) P := h.module
-  haveI : IsScalarTower A (A ⧸ maximalIdeal A) P := h.isScalarTower
-  letI : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field _
-  haveI : Module.Finite (A ⧸ maximalIdeal A) P := Module.Finite.of_restrictScalars_finite A _ _
-  haveI : IsNoetherian (A ⧸ maximalIdeal A) P := inferInstance
+  let : Module (A ⧸ maximalIdeal A) P := h.module
+  have : IsScalarTower A (A ⧸ maximalIdeal A) P := h.isScalarTower
+  let : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field _
+  have : Module.Finite (A ⧸ maximalIdeal A) P := Module.Finite.of_restrictScalars_finite A _ _
+  have : IsNoetherian (A ⧸ maximalIdeal A) P := inferInstance
   refine ⟨fun N => ?_⟩
   let N' : Submodule (A ⧸ maximalIdeal A) P :=
     { carrier := N
@@ -301,7 +301,7 @@ private theorem residue_constant_subalgebra_isNoetherian (O : Type) [CommRing O]
     have := hLJ hx
     rw [← ht] at this
     exact this
-  haveI : Module.Finite S K := Module.Finite.iff_fg.2 ⟨t, rfl⟩
+  have : Module.Finite S K := Module.Finite.iff_fg.2 ⟨t, rfl⟩
   let L0 : Submodule S K := L'.comap K.subtype
   let N0 : Submodule S K := N.comap K.subtype
   have hL0fg : L0.FG := by
@@ -316,7 +316,7 @@ private theorem residue_constant_subalgebra_isNoetherian (O : Type) [CommRing O]
       change ((x : S) : R) • (j : R) ∈ (maximalIdeal R • J).restrictScalars S
       rw [Submodule.restrictScalars_mem]
       exact Submodule.smul_mem_smul ((residue_constant_subalgebra_mem_maximalIdeal_iff O R S hS _).1 x.2) (hKJ _ j.2)
-  haveI : IsNoetherian S (K ⧸ L0) := isNoetherian_of_finite_torsion_by_maximalIdeal S (K ⧸ L0) tors
+  have : IsNoetherian S (K ⧸ L0) := isNoetherian_of_finite_torsion_by_maximalIdeal S (K ⧸ L0) tors
   have hN0 : N0.FG := by
     refine Submodule.fg_of_fg_map_of_fg_inf_ker L0.mkQ (IsNoetherian.noetherian _) ?_
     rw [Submodule.ker_mkQ, inf_eq_right.2]
@@ -369,17 +369,17 @@ private theorem isAdicComplete_residue_constant_subalgebra (O : Type) [CommRing 
 theorem UpperTheory.V.CA.cl_sub :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (R : Type) [CommRing R] [Algebra O R] [IsLocalRing R], IsCL O R → ∃ S : Subalgebra O R, (∀ c, c ∈ S ↔ ∃ a : O, c - algebraMap O R a ∈ maximalIdeal R) ∧ Module.Finite S R ∧ ∃ _ : IsCO O S, ∀ (N : ℕ) (c : S), c ∈ maximalIdeal S ^ N ↔ (c : R) ∈ maximalIdeal R ^ N := by
   intro O _ _ _ _ R _ _ _ hR
-  haveI := hR.noeth
-  haveI := hR.complete
-  haveI := hR.isLocalHom
-  haveI := hR.res_fin
+  have := hR.noeth
+  have := hR.complete
+  have := hR.isLocalHom
+  have := hR.res_fin
   obtain ⟨S, hS⟩ := exists_subalgebra_of_residue_constants O R
-  haveI : IsLocalRing S := residue_constant_subalgebra_isLocalRing O R S hS
-  haveI : Module.Finite S R := residue_constant_subalgebra_module_finite O R S hS
-  haveI : IsNoetherian S R := residue_constant_subalgebra_isNoetherian O R S hS
-  haveI : IsNoetherian S S :=
+  have : IsLocalRing S := residue_constant_subalgebra_isLocalRing O R S hS
+  have : Module.Finite S R := residue_constant_subalgebra_module_finite O R S hS
+  have : IsNoetherian S R := residue_constant_subalgebra_isNoetherian O R S hS
+  have : IsNoetherian S S :=
     isNoetherian_of_injective (Algebra.linearMap S R) Subtype.val_injective
-  haveI : IsAdicComplete (maximalIdeal S) S := isAdicComplete_residue_constant_subalgebra O R S hS
+  have : IsAdicComplete (maximalIdeal S) S := isAdicComplete_residue_constant_subalgebra O R S hS
   refine ⟨S, hS, inferInstance,
     { complete := inferInstance, isLocalHom := ?_, res_surj := ?_ },
     fun N c => residue_constant_subalgebra_mem_maximalIdeal_pow_iff O R S hS N c⟩

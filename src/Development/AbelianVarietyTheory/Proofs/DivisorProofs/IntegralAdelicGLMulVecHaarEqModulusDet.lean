@@ -95,8 +95,8 @@ theorem chi_AF_split (F : Type) [Field F] [NumberField F] {κ : Type} [Fintype �
         rfl
       rw [← e1, ← e2]
       rfl
-  haveI : IsArtinianRing (Ainf F) := inferInstanceAs (IsArtinianRing (∀ v : InfinitePlace F, v.Completion))
-  haveI : IsReduced (Ainf F) := inferInstanceAs (IsReduced (∀ v : InfinitePlace F, v.Completion))
+  have : IsArtinianRing (Ainf F) := inferInstanceAs (IsArtinianRing (∀ v : InfinitePlace F, v.Completion))
+  have : IsReduced (Ainf F) := inferInstanceAs (IsReduced (∀ v : InfinitePlace F, v.Completion))
   have s2 : addEquivAddHaarChar (mulVecCE Mi hMi) = modu (Ainf F) Mi.det :=
     _root_.GlobalTheory.ModuArtin.addEquivAddHaarChar_mulVecCE (Ainf F) inferInstance inferInstance κ Mi hMi
   rw [s1, _root_.GlobalTheory.ModuLR.addEquivAddHaarChar_prodCE, NNReal.coe_mul, s2, chi_Af F Mf hMf, hi, hf]
@@ -151,21 +151,21 @@ theorem GlobalTheory.JacSubst.integral_mulVec : ∀ (F E : Type) [Field F] [Numb
       (((distribHaarChar (AF F) (Units.map (Algebra.norm (AF F) : AE F E →* AF F) (Matrix.GeneralLinearGroup.det t)) : ℝ)⁻¹ : ℝ) : ℂ) *
         ∫ u, f u ∂μ := by
   intro F E _ _ _ _ _ d t μ hμ f
-  letI mV : MeasurableSpace (Fin d → AE F E) := borel _
-  haveI : BorelSpace (Fin d → AE F E) := ⟨rfl⟩
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
+  let mV : MeasurableSpace (Fin d → AE F E) := borel _
+  have : BorelSpace (Fin d → AE F E) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) (AE F E)
   let e := coordCE F E (Module.finBasis F E)
-  haveI : LocallyCompactSpace (AE F E) := e.isOpenEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AE F E) := e.secondCountableTopology
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
-  haveI : LocallyCompactSpace (Matrix (Fin d) (Fin 1) (AE F E)) :=
+  have : LocallyCompactSpace (AE F E) := e.isOpenEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AE F E) := e.secondCountableTopology
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : LocallyCompactSpace (Matrix (Fin d) (Fin 1) (AE F E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin d → Fin 1 → AE F E))
-  haveI : SecondCountableTopology (Matrix (Fin d) (Fin 1) (AE F E)) :=
+  have : SecondCountableTopology (Matrix (Fin d) (Fin 1) (AE F E)) :=
     inferInstanceAs (SecondCountableTopology (Fin d → Fin 1 → AE F E))
-  letI : MeasurableSpace (Matrix (Fin d) (Fin 1) (AE F E)) := borel _
-  haveI : BorelSpace (Matrix (Fin d) (Fin 1) (AE F E)) := ⟨rfl⟩
-  haveI : μ.Regular := inferInstance
+  let : MeasurableSpace (Matrix (Fin d) (Fin 1) (AE F E)) := borel _
+  have : BorelSpace (Matrix (Fin d) (Fin 1) (AE F E)) := ⟨rfl⟩
+  have : μ.Regular := inferInstance
   have hdt : IsUnit (t : Matrix (Fin d) (Fin d) (AE F E)).det := by
     rw [← Matrix.GeneralLinearGroup.val_det_apply]; exact Units.isUnit _
   let φ := mulVecCE (t : Matrix (Fin d) (Fin d) (AE F E)) hdt
@@ -184,7 +184,7 @@ theorem GlobalTheory.JacSubst.integral_mulVec : ∀ (F E : Type) [Field F] [Numb
     rw [h1, hχ, chi_AF_det]
     congr 1
     ext
-    simp only [IsUnit.unit_spec, hdet, Units.coe_map, MonoidHom.coe_coe, map_one, one_pow, mul_one, pow_one]
+    simp only [IsUnit.unit_spec, hdet, Units.coe_map, MonoidHom.coe_ofClass, map_one, one_pow, mul_one, pow_one]
   have hmap : μ.map φ = (addEquivAddHaarChar φ)⁻¹ • μ := by
     have key := addEquivAddHaarChar_smul_map μ φ
     have hne : addEquivAddHaarChar φ ≠ 0 := (addEquivAddHaarChar_pos φ).ne'

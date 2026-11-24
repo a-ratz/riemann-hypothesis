@@ -78,8 +78,8 @@ theorem UpperTheory.V.Hi.ordLevel :
   · classical
     unfold Frame.FinLevel at hU ⊢
     obtain ⟨s, hs⟩ := hU
-    haveI : (V.subgroupOf U).FiniteIndex := ⟨hidx⟩
-    haveI : Fintype (U ⧸ V.subgroupOf U) := Fintype.ofFinite _
+    have : (V.subgroupOf U).FiniteIndex := ⟨hidx⟩
+    have : Fintype (U ⧸ V.subgroupOf U) := Fintype.ofFinite _
     refine ⟨(s ×ˢ (Finset.univ : Finset (U ⧸ V.subgroupOf U))).image
       (fun p => p.1 * ((((Quotient.out p.2 : U) : X.Ub) : Ga), (1 : Gp))), ?_⟩
     intro g
@@ -374,7 +374,7 @@ private theorem ordProj_mul (V : Subgroup X.Ub) (χ : Ga × Gp → A)
   obtain ⟨hA, hV⟩ := hf
   have hV' : ∀ w ∈ V, X.ra τ w f = f := hV
   rw [Frame.Amb.eq_1] at hA ⊢
-  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq] at hA ⊢
+  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq] at hA ⊢
   obtain ⟨h1, h2, h3, h4⟩ := hA
   have h2' : ∀ b ∈ X.I.N, X.rp A m b f = f := h2
   refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_⟩
@@ -506,8 +506,8 @@ theorem UpperTheory.V.Hi.ordProj :
     simp [h1]
   obtain ⟨hV, hFV, hUV⟩ := ordLevel Γ Ga Gp X A m τ θ hθ U V hVU hidx hU hFU
   obtain ⟨_, hfree, _⟩ := ordFree Γ Ga Gp X A m τ θ hθ V hV hFV
-  haveI : (V.subgroupOf U).FiniteIndex := ⟨hidx⟩
-  letI : Fintype (U ⧸ V.subgroupOf U) := Fintype.ofFinite _
+  have : (V.subgroupOf U).FiniteIndex := ⟨hidx⟩
+  let : Fintype (U ⧸ V.subgroupOf U) := Fintype.ofFinite _
   have hOS : ∀ f ∈ X.Ord τ θ V, f ∈ X.Sp τ θ V := fun f hf => ((mem_ord_iff X τ θ V f).1 hf).1
   have hfixd : ∀ f ∈ X.Ord τ θ V, f ∈ fixd (X.ra τ) V := fun f hf => by
     have h := hOS f hf
@@ -538,7 +538,7 @@ theorem UpperTheory.V.Hi.ordProj :
   let ρ : Representation A (U ⧸ V.subgroupOf U) (X.Ord τ θ V) := QuotientGroup.lift (V.subgroupOf U) σ hker
   have hρ : ∀ (u : U) f, ((ρ (u : U ⧸ V.subgroupOf U) f : X.Ord τ θ V) : X.Fn A m) = X.ra τ u f :=
     fun u f => rfl
-  haveI : Module.Free A (X.Ord τ θ V) := hfree
+  have : Module.Free A (X.Ord τ θ V) := hfree
   obtain ⟨φ, hφ⟩ := ordProj_phi X τ θ hθ U V hVU hN hV hFV ρ hρ
   have hc : ∀ (q : U ⧸ V.subgroupOf U) (w : X.Ord τ θ V),
       ((ρ q w : X.Ord τ θ V) : X.Fn A m) = X.ra τ ((q.out : U) : X.Ub) (w : X.Fn A m) := by
@@ -688,8 +688,8 @@ private theorem pb_proj {N : Type} [AddCommGroup N] [Module A N] {G G' : Type} [
   let ρ1 : Representation A G N := ρ'.comp e.toMonoidHom
   have h1 : Module.Projective (MonoidAlgebra A G) ρ1.asModule := by
     let σ : MonoidAlgebra A G' ≃+* MonoidAlgebra A G := (MonoidAlgebra.domCongr A A e.symm).toRingEquiv
-    letI := RingHomInvPair.of_ringEquiv σ
-    letI := RingHomInvPair.of_ringEquiv_symm σ
+    let := RingHomInvPair.of_ringEquiv σ
+    let := RingHomInvPair.of_ringEquiv_symm σ
     let E : ρ'.asModule ≃ₛₗ[(σ : MonoidAlgebra A G' →+* MonoidAlgebra A G)] ρ1.asModule :=
       { toFun := fun x => x
         invFun := fun x => x
@@ -910,7 +910,7 @@ private theorem pb_main (hθ : X.I.ContChar θ) {B Lev ι : Type} [Group B] [Non
     have h3 := hMle _ _ l2 h
     have h4 := hMY _ h3
     rw [hMK] at h3 ⊢
-    haveI := (hY K'').2
+    have := (hY K'').2
     exact pb_locInf op a (hYle _ _ l1) (hY K).1.1 (hY K'').1.1 _ h3
       ⟨⟨h4.1.1, hfix K _ (fun u hu => h4.1.2 u (hUQ _ hu)) fun k hk => congrArg Subtype.val (hf k hk)⟩, h4.2⟩
   have h2 : ∀ K f (hf : f ∈ MK K), (⟨f, Submodule.mem_iSup_of_mem K hf⟩ : (⨆ K, MK K : Submodule A (X.Fn A m))) ∈ fixd ρ (κ K) :=
@@ -919,7 +919,7 @@ private theorem pb_main (hθ : X.I.ContChar θ) {B Lev ι : Type} [Group B] [Non
   · rintro _ ⟨f, hf, rfl⟩
     exact h1 K f hf
   intro hneat K K' hN hle hinj
-  haveI := pb_normal J UQ hc (κ K) (κ K') hle
+  have := pb_normal J UQ hc (κ K) (κ K') hle
   obtain ⟨e, he⟩ := pb_equiv J UQ hc (κ K) (κ K') (by rw [← hlev]; exact hinj)
   have hi : (UQ ⊔ (κ K').map J).relIndex (UQ ⊔ (κ K).map J) ≠ 0 := by
     have := hidx K K'
@@ -931,7 +931,7 @@ private theorem pb_main (hθ : X.I.ContChar θ) {B Lev ι : Type} [Group B] [Non
   have hMK' : MK K' = locPart (X.Ord τ θ (UQ ⊔ (κ K').map J)) op a := by rw [hMK, hlev]
   have hY' := hY K'
   rw [hlev] at hY'
-  haveI := hY'.2
+  have := hY'.2
   obtain ⟨ε, -, hε, hε1, hε2⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.locIdem A _ ι (X.Ord τ θ (UQ ⊔ (κ K').map J)) op a hY'.1
   have hst' : ∀ u : κ K, fixd ρ (κ K') ≤ (fixd ρ (κ K')).comap (ρ u) := fun u f hf k hk => by
     have := hf _ (hN.conj_mem' ⟨k, hle hk⟩ hk u)
@@ -967,9 +967,9 @@ end Main
 
 private theorem pb_idx {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {K K' : Subgroup G}
     (hK : IsCompact (K : Set G)) (hK' : IsOpen (K' : Set G)) : K'.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI : DiscreteTopology (K ⧸ K'.subgroupOf K) := QuotientGroup.discreteTopology (hK'.preimage continuous_subtype_val)
-  haveI : Finite (K ⧸ K'.subgroupOf K) := finite_of_compact_of_discrete
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : DiscreteTopology (K ⧸ K'.subgroupOf K) := QuotientGroup.discreteTopology (hK'.preimage continuous_subtypeVal)
+  have : Finite (K ⧸ K'.subgroupOf K) := finite_of_compact_of_discrete
   exact Subgroup.index_ne_zero_of_finite
 
 section Top
@@ -1039,9 +1039,9 @@ theorem UpperTheory.V.Hi.piBasic :
     ∀ (A : Type) [CommRing A] [Algebra c.O A] [Alg.IsCO c.O A] (θ : H.X.I.T →* Aˣ), H.IsWt θ →
     ∀ (a : H.Op → c.O) [DecidableEq H.Q], ∃ ρ : Representation A (GV n H.wq) (⨆ K, H.MK θ a K : Submodule A (H.X.Fn A H.m)), (∀ q g f, (ρ (Pi.mulSingle q g) f : H.X.Fn A H.m) = H.X.ra (H.τA A) (H.sec (H.wq q) g) f) ∧ (∀ K : H.Lev, (fixd ρ (Subgroup.pi Set.univ K.1)).map (Submodule.subtype _) = H.MK θ a K) ∧ (∀ f : (⨆ K, H.MK θ a K : Submodule A (H.X.Fn A H.m)), ∃ K, (f : H.X.Fn A H.m) ∈ H.MK θ a K) ∧ ((∀ K, H.X.Neat (H.lev K)) → ∀ (K K' : H.Lev) [((Subgroup.pi Set.univ K'.1).subgroupOf (Subgroup.pi Set.univ K.1)).Normal], (∀ q, K'.1 q ≤ K.1 q) → (∀ k ∈ Subgroup.pi Set.univ K.1, ∀ j : GV n H.wq →* H.X.Ub, (∀ q g, j (Pi.mulSingle q g) = H.sec (H.wq q) g) → j k ∈ H.lev K' → k ∈ Subgroup.pi Set.univ K'.1) → ∃ ρ' : Representation A (Subgroup.pi Set.univ K.1 ⧸ (Subgroup.pi Set.univ K'.1).subgroupOf (Subgroup.pi Set.univ K.1)) (fixd ρ (Subgroup.pi Set.univ K'.1)), (∀ (u : Subgroup.pi Set.univ K.1) f, (ρ' (u : _ ⧸ _) f).1 = ρ u f) ∧ Module.Projective (MonoidAlgebra A (Subgroup.pi Set.univ K.1 ⧸ (Subgroup.pi Set.univ K'.1).subgroupOf (Subgroup.pi Set.univ K.1))) ρ'.asModule) := by
   intro L Ω _ _ _ _ _ l _ n c H hH A _ _ _ θ hθ a _
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
-  haveI : IsCNL A := IsCNL.ofCO c.O A
-  haveI : Nonempty H.Lev := ⟨⟨fun q => KO _ (Fin n), fun q => ⟨GlobalTheory.SplitFlip.isOpen_KO, GlobalTheory.SplitFlip.isCompact_KO⟩⟩⟩
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : IsCNL A := IsCNL.ofCO c.O A
+  have : Nonempty H.Lev := ⟨⟨fun q => KO _ (Fin n), fun q => ⟨GlobalTheory.SplitFlip.isOpen_KO, GlobalTheory.SplitFlip.isCompact_KO⟩⟩⟩
   obtain ⟨J, hJ, hcm, hK⟩ := pb_J (fun q => H.sec (H.wq q)) hH.Q_Q
   have hlev : ∀ K : H.Lev, H.lev K = H.UQ ⊔ (Subgroup.pi Set.univ K.1).map J := fun K => congrArg (H.UQ ⊔ ·) (hK K.1)
   have hcomm := hiComm L Ω l n c H hH A θ hθ

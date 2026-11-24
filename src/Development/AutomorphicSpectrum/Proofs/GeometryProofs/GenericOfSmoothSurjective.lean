@@ -73,7 +73,7 @@ theorem isCptGen_of_smooth_of_surjective : ∀ (K : Type) [Field K] (X₀ X' : S
       exact ⟨_, ha⟩
   refine ⟨hbij, fun p => ?_⟩
   have hinj : Function.Injective (X'.presheaf.stalkSpecializes p.2).hom := by
-    haveI := hd (genPt ξ')
+    have := hd (genPt ξ')
     exact GlobalTheory.PushInv.stalkSpecializes_injective p.2
   intro a b hab
   exact hinj (hbij.1 hab)

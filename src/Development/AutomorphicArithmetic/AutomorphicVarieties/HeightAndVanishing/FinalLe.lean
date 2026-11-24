@@ -187,8 +187,8 @@ private theorem exists_doubleCoset_section {G : Type} [Group G] (U' U : Subgroup
   classical
   set K : Subgroup U := U'.subgroupOf U with hK
   have hfi : K.FiniteIndex := ⟨by rw [hK]; exact h0⟩
-  haveI : Finite (U ⧸ K) := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (U ⧸ K) := Fintype.ofFinite _
+  have : Finite (U ⧸ K) := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (U ⧸ K) := Fintype.ofFinite _
   refine ⟨Finset.univ.image (fun q : U ⧸ K => ((Quotient.out q : U) : G)), ?_, ?_, ?_⟩
   · intro x hx
     simp only [Finset.coe_image, Finset.coe_univ, Set.image_univ, Set.mem_range] at hx
@@ -219,8 +219,8 @@ theorem UpperTheory.V.Chr.kerFin :
   have h0 : U'.relIndex U ≠ 0 := fun hz => hn (Nat.eq_zero_of_zero_dvd (hz ▸ hdiv))
   set K : Subgroup U := U'.subgroupOf U with hK
   have hfi : K.FiniteIndex := ⟨by rw [hK]; exact h0⟩
-  haveI : Finite (U ⧸ K) := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (U ⧸ K) := Fintype.ofFinite _
+  have : Finite (U ⧸ K) := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (U ⧸ K) := Fintype.ofFinite _
   have hnorm : K.Normal := by
     constructor
     intro k hk g
@@ -256,7 +256,7 @@ theorem UpperTheory.V.Chr.kerFin :
     push_cast
     rw [← mul_assoc]
     gcongr
-  · obtain ⟨g, hg, hgk⟩ := SetLike.not_le_iff_exists.mp htriv
+  · obtain ⟨g, hg, hgk⟩ := IsConcreteLE.not_le_iff_exists.mp htriv
     set ζ : O := ((θ g : Oˣ) : O) with hζdef
     have hθn : (θ g) ^ n = 1 := by
       rw [← map_pow]
@@ -305,8 +305,8 @@ private theorem exists_reps {G : Type} [Group G] (U' U : Subgroup G) (h0 : U'.re
   classical
   set K : Subgroup U := U'.subgroupOf U with hK
   have hfi : K.FiniteIndex := ⟨by rw [hK]; exact h0⟩
-  haveI : Finite (U ⧸ K) := Subgroup.finite_quotient_of_finiteIndex
-  letI : Fintype (U ⧸ K) := Fintype.ofFinite _
+  have : Finite (U ⧸ K) := Subgroup.finite_quotient_of_finiteIndex
+  let : Fintype (U ⧸ K) := Fintype.ofFinite _
   refine ⟨Finset.univ.image (fun q : U ⧸ K => ((Quotient.out q : U) : G)), ?_, ?_, ?_⟩
   · intro x hx
     simp only [Finset.coe_image, Finset.coe_univ, Set.image_univ, Set.mem_range] at hx
@@ -703,7 +703,7 @@ private theorem exists_of_mk_eq_zero (ρ : Representation R G M) {U' U : Subgrou
   have hw' : (w : _ → _) ∈ B2 (quotRep ρ U U') := hw0
   obtain ⟨cb, hcb, hd⟩ := (separated_dvr_second_cohomology_mem _ _).mp hw'
   refine ⟨fun a => (cb (QuotientGroup.mk a) : M), ?_, ?_, ?_⟩
-  · exact continuous_subtype_val.comp (hcb.comp continuous_coinduced_rng)
+  · exact continuous_subtypeVal.comp (hcb.comp continuous_coinduced_rng)
   · intro u
     have h1 : (QuotientGroup.mk (Subgroup.inclusion h u) : U ⧸ U'.subgroupOf U) = QuotientGroup.mk 1 := by
       rw [QuotientGroup.mk_one, QuotientGroup.eq_one_iff]
@@ -754,7 +754,7 @@ private theorem mem_range_resU (ρ : Representation R G M) {U' U : Subgroup G} (
 theorem length_restriction_coker_le_H2 (ρ : Representation R G M) (hρ : ContAction ρ) {U' U : Subgroup G} [U'.Normal]
     (h : U' ≤ U) (ho : IsOpen (U'.subgroupOf U : Set U)) :
     Module.length R (resCoker ρ h) ≤ Module.length R (H2 (quotRep ρ U U')) := by
-  haveI : DiscreteTopology (U ⧸ U'.subgroupOf U) := QuotientGroup.discreteTopology ho
+  have : DiscreteTopology (U ⧸ U'.subgroupOf U) := QuotientGroup.discreteTopology ho
   let P : Submodule R (↥(Z1U ρ U') × ((U → M) × ↥(Z2 (quotRep ρ U U')))) :=
     { carrier := {x | (Submodule.Quotient.mk x.1 : H1U ρ U') ∈ invariantsUnderSubgroupH1 ρ U U' ∧ Continuous x.2.1 ∧
         (∀ u : U', x.2.1 (Subgroup.inclusion h u) = x.1.1 u) ∧
@@ -849,9 +849,9 @@ theorem UpperTheory.V.Base.cokerAb :
       ∀ (U' U : Subgroup G) [U'.Normal] (h : U' ≤ U), IsClosed (U : Set G) → IsOpen (U'.subgroupOf U : Set U) →
       (∀ a ∈ U, ∀ b ∈ U, a * b * a⁻¹ * b⁻¹ ∈ U') → Module.length R (resCoker ρ h) ≤ (U'.relIndex U : ℕ∞) ^ 2 * Module.length R (H0U ρ U) := by
   intro R G M _ _ _ _ _ _ _ _ _ _ ρ _ _ _ _ hρ hfin hsc U' U _ h hcl ho hab
-  haveI : CompactSpace U := isCompact_iff_compactSpace.1 hcl.isCompact
-  haveI : Finite (U ⧸ U'.subgroupOf U) := Subgroup.quotient_finite_of_isOpen _ ho
-  haveI : DiscreteTopology (U ⧸ U'.subgroupOf U) := QuotientGroup.discreteTopology ho
+  have : CompactSpace U := isCompact_iff_compactSpace.1 hcl.isCompact
+  have : Finite (U ⧸ U'.subgroupOf U) := Subgroup.quotient_finite_of_isOpen _ ho
+  have : DiscreteTopology (U ⧸ U'.subgroupOf U) := QuotientGroup.discreteTopology ho
   refine (length_restriction_coker_le_H2 ρ hρ h ho).trans ((h2Ab R _ _ (quotRep ρ U U') (fun a b => ?_) (fun m => ?_)
     fun g => ?_).trans (mul_le_mul_right (length_H0_quotient_rep_le ρ U' U) _))
   · obtain ⟨a, rfl⟩ := QuotientGroup.mk_surjective a
@@ -1065,7 +1065,7 @@ theorem UpperTheory.V.Chr.eigLe :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (N : ℕ) [NeZero N] (H : Subgroup (ZMod N)ˣ) (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] (e : ℕ) (ψ : G ℚ Ω →* Oˣ), e ≠ 0 → levH ℚ Ω H ≤ ψ.ker →
           eigL l e (levH ℚ Ω H) ψ ≤ V l e ψ + (loss l N H.index e : ℕ∞) * eO l O := by
   intro Ω _ _ _ N _ H l hl O _ _ _ _ _ e ψ he hψ
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   obtain ⟨hopen, -, -, -, hine⟩ := clsFacts ℚ Ω N
   obtain ⟨hex, hN, hconj⟩ := placesQ Ω
   have hk : (cls ℚ Ω N).ker ≤ levH ℚ Ω H := fun g hg => by
@@ -1122,7 +1122,7 @@ theorem UpperTheory.V.Chr.eigLe :
     (fun u hu => hψ hu) _ (conjStable_shaFam ℚ Ω l)).2 ⊤ 1
   rw [mul_one] at h2
   have h3 := cokerAb O _ _ (rho l e ψ) hc (qoFacts l O).1 (fun g => ⟨_, fun _ => rfl⟩) (levH ℚ Ω H) ⊤ le_top
-    isClosed_univ (hUo.preimage continuous_subtype_val) fun a _ b _ => hcomm a b
+    isClosed_univ (hUo.preimage continuous_subtypeVal) fun a _ b _ => hcomm a b
   have h3' := h3.trans (mul_le_mul' (pow_le_pow_left' (Nat.cast_le.2 (Nat.le_of_dvd (Nat.pos_of_ne_zero hn) hdvd)) 2) hb2)
   have h4 := (kerIdx l O _ _ hc _ _ (inf_le_inf_right (D none) (le_top : levH ℚ Ω H ≤ ⊤)) (comm_inf _ _ hcomm) _ hn
     ((relIndex_inf_dvd _ _ _).trans hdvd)).trans (mul_le_mul' le_rfl (hb1 A₀ _ hA₀ (le_inf le_top (hID A₀))))
@@ -1249,8 +1249,8 @@ theorem UpperTheory.V.HV.redAll :
         (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (e : ℕ), e ≠ 0 → ∀ T : Finset (DirichletCharacter c.O N), (T : Set _) = Chr.evenSet c.O H e →
         plusLen D e * eO l c.O ≤ ∑ ψ ∈ T, (Vlen Ω c e ψ + (lossAll l N H.index e : ℕ∞) * eO l c.O) := by
   intro E _ _ _ N _ H hH l _ hl2 c _ Ω' _ _ _ D Ω _ _ _ e he T hT
-  haveI : NeZero (Nat.totient N) := ⟨(Nat.totient_pos.2 (Nat.pos_of_ne_zero (NeZero.ne N))).ne'⟩
-  haveI : HasEnoughRootsOfUnity c.O (Monoid.exponent ((ZMod N)ˣ ⧸ H)) := by
+  have : NeZero (Nat.totient N) := ⟨(Nat.totient_pos.2 (Nat.pos_of_ne_zero (NeZero.ne N))).ne'⟩
+  have : HasEnoughRootsOfUnity c.O (Monoid.exponent ((ZMod N)ˣ ⧸ H)) := by
     refine HasEnoughRootsOfUnity.of_dvd c.O (n := Nat.totient N) ?_
     refine Monoid.exponent_dvd_of_forall_pow_eq_one (fun g => ?_)
     induction g using QuotientGroup.induction_on with
@@ -1283,9 +1283,9 @@ private theorem sum_split {ι : Type} (T : ℕ → Finset ι) (O : Finset ι) (v
           apply Finset.sum_le_sum
           intro i hi
           by_cases hO : i ∈ O
-          · rw [if_pos hO]
+          · rw [ite_eq_left hO]
             linarith
-          · rw [if_neg hO]
+          · rw [ite_eq_right hO]
             rcases h1 e he i hi with h | h
             · exact absurd h hO
             · linarith [mul_comm (v i e) L]
@@ -1346,8 +1346,8 @@ theorem UpperTheory.V.HV.sumIn :
     CountII → CountV → CountVs → CountIV → SumIn := by
   unfold SumIn
   intro hII hV hVs hIV χ l j hl
-  haveI : Fact (l : ℕ).Prime := ⟨l.2⟩
-  haveI : IsAlgClosure ℚ (AlgebraicClosure ℚ) := by
+  have : Fact (l : ℕ).Prime := ⟨l.2⟩
+  have : IsAlgClosure ℚ (AlgebraicClosure ℚ) := by
     convert (AlgebraicClosure.instIsAlgClosure (k := ℚ))
   obtain ⟨C2, hC2⟩ := hII χ
   obtain ⟨C5, hC5⟩ := hV χ
@@ -1357,10 +1357,10 @@ theorem UpperTheory.V.HV.sumIn :
   refine ⟨C4 + 2 * Cm + 9 + (l : ℕ) * χ.N, ?_⟩
   intro h hχ t ht2 hBig B hB hLay E _ _ _ hE Ω _ _ _ ld
   classical
-  haveI : NeZero h.N := ⟨h.N_pos.ne'⟩
-  haveI : NeZero (Nat.totient h.N) := ⟨(Nat.totient_pos.2 h.N_pos).ne'⟩
+  have : NeZero h.N := ⟨h.N_pos.ne'⟩
+  have : NeZero (Nat.totient h.N) := ⟨(Nat.totient_pos.2 h.N_pos).ne'⟩
   obtain ⟨c, hc⟩ := exists_coef (l : ℕ) (Nat.totient h.N)
-  haveI := hc
+  have := hc
   have hlp : (l : ℕ).Prime := l.2
   have hl2 : (l : ℕ) ≠ 2 := (prime_of_mem_Bchi hl).2
   have hlB : (l : ℕ) ∈ Bchi h.chi := by

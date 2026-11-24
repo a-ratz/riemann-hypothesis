@@ -349,13 +349,13 @@ theorem sup_dual_eq (σ : E →+* E) {n : ℕ} (t pb : 𝓞 E) (ht : (t : E) ≠
       · obtain ⟨r, hr, hd⟩ := (hΛ x0).1 hx0 i
         obtain ⟨s, rfl⟩ := hd hi
         obtain ⟨a, ha⟩ := hx' i
-        simp only [z, hi, if_true, hr]
+        simp only [z, hi, ite_true, hr]
         have e : σ ((t * s : 𝓞 E) : E) * (x i / (pb : E)) = σ (s : E) * x i := by
           rw [hpb]; push_cast; rw [map_mul]; field_simp
         rw [e, ← ha]
         obtain ⟨b, hb⟩ := sig_int σ s
         exact ⟨b * a, by rw [map_mul, hb]⟩
-      · simp only [z, hi, if_false, mul_zero]
+      · simp only [z, hi, ite_false, mul_zero]
         exact Subring.zero_mem _
 
 end GlobalTheory.Mem.Col2.TC.ChartBase
@@ -395,7 +395,7 @@ theorem mem_of_baseL {B : Base} {a b : ℕ} (h : a = b) (t : 𝓞 B.host.E) (L :
     x ∈ L ↔ ∀ j : Fin a, ∃ r : 𝓞 B.host.E, x j = r ∧ (j.1 + 1 = a → t ∣ r) := by
   rw [mem_reL_iff h L x, ← hL', hb]
   unfold baseL
-  simp only [Set.mem_setOf_eq, reV_apply]
+  simp only [Set.mem_ofPred_eq, reV_apply]
   constructor
   · intro H j
     obtain ⟨r, hr, hd⟩ := H (Fin.cast h j)
@@ -663,10 +663,10 @@ variable {S M : Type} [CommRing S] [AddCommGroup M] [Module S M] {T : ℕ}
 
 theorem zsmul_eq_zero_iff (hT : T.Prime) (hM : Nat.card M = T) (n : ℤ) :
     (∀ m : M, n • m = 0) ↔ (T : ℤ) ∣ n := by
-  haveI : Finite M := Nat.finite_of_card_ne_zero (by rw [hM]; exact hT.ne_zero)
+  have : Finite M := Nat.finite_of_card_ne_zero (by rw [hM]; exact hT.ne_zero)
   constructor
   · intro h
-    haveI : Nontrivial M :=
+    have : Nontrivial M :=
       Finite.one_lt_card_iff_nontrivial.mp (by rw [hM]; exact hT.one_lt)
     obtain ⟨a, ha⟩ := exists_ne (0 : M)
     have hord : addOrderOf a = T := by
@@ -688,8 +688,8 @@ theorem zsmul_eq_zero_iff (hT : T.Prime) (hM : Nat.card M = T) (n : ℤ) :
 
 theorem exists_int_smul (hT : T.Prime) (hM : Nat.card M = T) (s : S) :
     ∃ k : ℤ, ∀ m : M, s • m = k • m := by
-  haveI : Fact T.Prime := ⟨hT⟩
-  haveI : IsAddCyclic M := isAddCyclic_of_prime_card hM
+  have : Fact T.Prime := ⟨hT⟩
+  have : IsAddCyclic M := isAddCyclic_of_prime_card hM
   obtain ⟨g, hg⟩ := IsAddCyclic.exists_generator (α := M)
   obtain ⟨k, hk⟩ := AddSubgroup.mem_zmultiples_iff.mp (hg (s • g))
   refine ⟨k, fun m => ?_⟩
@@ -699,8 +699,8 @@ theorem exists_int_smul (hT : T.Prime) (hM : Nat.card M = T) (s : S) :
 theorem not_isUnit_of_kills (hT : T.Prime) (hM : Nat.card M = T) {u : S}
     (hu : ∀ m : M, u • m = 0) : ¬ IsUnit u := by
   intro h
-  haveI : Finite M := Nat.finite_of_card_ne_zero (by rw [hM]; exact hT.ne_zero)
-  haveI : Nontrivial M :=
+  have : Finite M := Nat.finite_of_card_ne_zero (by rw [hM]; exact hT.ne_zero)
+  have : Nontrivial M :=
     Finite.one_lt_card_iff_nontrivial.mp (by rw [hM]; exact hT.one_lt)
   obtain ⟨a, ha⟩ := exists_ne (0 : M)
   exact ha ((h.smul_eq_zero).mp (hu a))
@@ -1328,9 +1328,9 @@ theorem _root_.GlobalTheory.Mem.LevDual.unitary_carry_dual : ∀ (F E : Type) [F
     have hd : ∀ i, d i ∈ _root_.Formalism.BasicNotions.dualSet (σ : E →+* E) 1 L := by
       intro i
       by_cases h : i = Fin.last m
-      · simp only [d, h, if_true]
+      · simp only [d, h, ite_true]
         exact he0
-      · simp only [d, h, if_false]
+      · simp only [d, h, ite_false]
         exact hd_single i
     let c : Fin (m + 1) → _root_.Formalism.BasicNotions.intV (F := F) E w := fun i =>
       if h : i = Fin.last m then ⟨_, hcoef_last⟩ else ⟨_, hcoef_low i h⟩
@@ -1341,7 +1341,7 @@ theorem _root_.GlobalTheory.Mem.LevDual.unitary_carry_dual : ∀ (F E : Type) [F
       rw [Finset.sum_apply, Finset.sum_eq_single k]
       · by_cases hk : k = Fin.last m
         · subst hk
-          simp only [c, d, dif_pos, if_pos, Pi.smul_apply, Subring.smul_def, smul_eq_mul, he0_def,
+          simp only [c, d, dite_eq_left, ite_eq_left, Pi.smul_apply, Subring.smul_def, smul_eq_mul, he0_def,
             Pi.single_eq_same]
           rw [mul_comm, ← mul_assoc, ← map_mul, inv_mul_cancel₀ hq, map_one, one_mul]
         · simp [c, d, hk, Subring.smul_def]
@@ -1395,14 +1395,14 @@ theorem frLat_of_reindex {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
 
 theorem surj_of_card_prime {M A : Type} [AddCommGroup M] [AddCommGroup A] {T : ℕ} (hT : T.Prime) (hA : Nat.card A = T)
     (f : M →+ A) {m : M} (hm : f m ≠ 0) : Function.Surjective f := by
-  haveI : Fact (Nat.card A).Prime := ⟨hA ▸ hT⟩
+  have : Fact (Nat.card A).Prime := ⟨hA ▸ hT⟩
   rcases AddSubgroup.eq_bot_or_eq_top_of_prime_card f.range with h | h
   · exact absurd ((AddSubgroup.eq_bot_iff_forall _).1 h _ ⟨m, rfl⟩) hm
   · exact AddMonoidHom.range_eq_top.1 h
 
 theorem zsmul_eq_zero_iff_of_card_prime {A : Type} [AddCommGroup A] {T : ℕ} (hT : T.Prime) (hA : Nat.card A = T)
     {a : A} (ha : a ≠ 0) (k : ℤ) : k • a = 0 ↔ (T : ℤ) ∣ k := by
-  haveI : Finite A := Nat.finite_of_card_ne_zero (hA ▸ hT.ne_zero)
+  have : Finite A := Nat.finite_of_card_ne_zero (hA ▸ hT.ne_zero)
   have h1 : addOrderOf a = T := by
     rcases (Nat.dvd_prime hT).1 (hA ▸ addOrderOf_dvd_natCard a) with h | h
     · exact absurd (AddMonoid.addOrderOf_eq_one_iff.1 h) ha

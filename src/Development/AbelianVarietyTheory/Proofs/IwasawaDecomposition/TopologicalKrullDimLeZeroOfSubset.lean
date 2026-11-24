@@ -95,7 +95,7 @@ theorem topologicalKrullDim_le_zero_of_subset {T : Type} [TopologicalSpace T] {S
   have : Finite s := (S.finite_toSet.subset hs).to_subtype
   have : T1Space s := ⟨fun x => by
     simpa [← Set.image_singleton, Set.preimage_image_eq _ Subtype.val_injective] using
-      (hc x.1 (hs x.2)).preimage (continuous_subtype_val (p := (· ∈ s)))⟩
+      (hc x.1 (hs x.2)).preimage (continuous_subtypeVal (p := (· ∈ s)))⟩
   exact topologicalKrullDim_zero_of_discreteTopology s
 
 variable {k : Type} [Field k] (f : X ⟶ Sp k)
@@ -104,7 +104,7 @@ theorem interNum_sub_eq (hf : IsProjOver f) {F G : X.Modules} [IsFiniteQC F] [Is
     {P : Fin d → LB X} (hP : ∀ i, (P i).IsLB) :
     letI := algebraΓOfHom f
     interNum k F P - interNum k G P = interNum k (cokernel φ) P - interNum k (kernel φ) P := by
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   have := isNoetherian_of_isProjOver hf
   have fin : ∀ (H : X.Modules) [IsFiniteQC H], FiniteCohTwists k H := fun H _ =>
     finiteCohTwists_of_isProjOver (fun _ => rfl) H hf
@@ -126,7 +126,7 @@ theorem interNum_eq_sum_length (hf : IsProjOver f) (hL : L.IsLB) (c : X → L.ι
     interNum k F (fun _ : Fin l.length => L) = (∑ x ∈ S, (Module.length (X.presheaf.stalk x)
       ((F.presheaf.stalk x :) ⧸ (Ideal.ofList (l.map fun s => X.presheaf.germ _ x (hc x) (s.f (c x))) • ⊤ :
         Submodule (X.presheaf.stalk x) (F.presheaf.stalk x :)))).toNat * f.residueDegree x : ℕ) := by
-  letI := algebraΓOfHom f
+  let := algebraΓOfHom f
   have := isNoetherian_of_isProjOver hf
   have := ((isProjOver_iff_isProper_and_exists_isAmpleLB f).1 hf).1
   induction l generalizing F with

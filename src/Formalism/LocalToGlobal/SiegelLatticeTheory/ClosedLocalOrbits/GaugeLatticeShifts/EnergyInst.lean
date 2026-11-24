@@ -78,7 +78,7 @@ variable {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
 
 theorem tauU_unit (u : D.what₂.Word) (s : X.B.I.Ginf) (hs : s ∈ X.SinfU u) (a b : X.Vpi u) :
     ⟪tauU X u s a, tauU X u s b⟫_ℂ = ⟪a, b⟫_ℂ := by
-  simp only [tauU, ContinuousLinearMap.smul_apply, inner_smul_left, inner_smul_right, (X.piU_rep u).2.2.1 s hs]
+  simp only [tauU, smul_apply, inner_smul_left, inner_smul_right, (X.piU_rep u).2.2.1 s hs]
   rw [← mul_assoc, Complex.mul_conj', Formalism.L2.SG.RealObj.InfCut.norm_psiInfU]
   simp
 

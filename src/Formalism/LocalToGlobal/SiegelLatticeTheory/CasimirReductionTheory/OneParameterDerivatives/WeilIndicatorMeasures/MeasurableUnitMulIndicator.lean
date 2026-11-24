@@ -68,7 +68,7 @@ variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
   [BorelSpace G] {H : Subgroup G}
 
 lemma measurable_mulH : Measurable (fun p : G × H => p.1 * (p.2 : G)) := by
-  exact measurable_fst.mul (measurable_subtype_coe.comp measurable_snd)
+  exact measurable_fst.mul (measurable_subtypeVal.comp measurable_snd)
 
 noncomputable def fib (κ : Measure H) (f : G → ℝ≥0∞) (g : G) : ℝ≥0∞ := ∫⁻ h, f (g * h) ∂κ
 
@@ -122,7 +122,7 @@ lemma measure_coset_lt_top (hH : IsClosed (H : Set G)) (κ : Measure H)
 lemma measure_nhds_pos (κ : Measure H) [IsOpenPosMeasure κ] {V : Set G} (hV : V ∈ 𝓝 (1 : G)) :
     0 < κ {h : H | (h : G) ∈ V} := by
   have h1 : ((↑) : H → G) ⁻¹' V ∈ 𝓝 (1 : H) :=
-    continuous_subtype_val.continuousAt.preimage_mem_nhds hV
+    continuous_subtypeVal.continuousAt.preimage_mem_nhds hV
   first
   | exact measure_pos_of_mem_nhds κ h1
   | exact (measure_pos_of_nonempty_interior κ ⟨1, mem_interior_iff_mem_nhds.2 h1⟩)
@@ -137,13 +137,13 @@ lemma exists_fib_eq_one (hH : IsClosed (H : Set G)) (κ : Measure H) [SFinite κ
     let d := TopologicalSpace.denseSeq G
     have hd : DenseRange d := TopologicalSpace.denseRange_denseSeq G
     have hS : ∀ y : G, MeasurableSet {h : H | y * (h : G) ∈ V} := fun y =>
-      hVm.preimage ((measurable_const_mul y).comp measurable_subtype_coe)
+      hVm.preimage ((measurable_const_mul y).comp measurable_subtypeVal)
     have hfib : ∀ x, fib κ (fun x => ∑' n, (2⁻¹ : ℝ≥0∞) ^ n * V.indicator 1 ((d n)⁻¹ * x)) x
         = ∑' n, (2⁻¹ : ℝ≥0∞) ^ n * κ {h : H | (d n)⁻¹ * x * (h : G) ∈ V} := by
       intro x
       have hm1 : ∀ n, Measurable (fun h : H => V.indicator (1 : G → ℝ≥0∞) ((d n)⁻¹ * (x * (h : G)))) :=
         fun n => (measurable_one.indicator hVm).comp
-          ((measurable_const_mul _).comp ((measurable_const_mul x).comp measurable_subtype_coe))
+          ((measurable_const_mul _).comp ((measurable_const_mul x).comp measurable_subtypeVal))
       have hm : ∀ n, Measurable (fun h : H =>
           (2⁻¹ : ℝ≥0∞) ^ n * V.indicator (1 : G → ℝ≥0∞) ((d n)⁻¹ * (x * (h : G)))) :=
         fun n => measurable_const.mul (hm1 n)
@@ -208,7 +208,7 @@ lemma exists_fib_eq_one (hH : IsClosed (H : Set G)) (κ : Measure H) [SFinite κ
     show ∫⁻ h, φ (x * h) * (fib κ φ (x * h))⁻¹ ∂κ = 1
     simp_rw [e]
     have hφx : Measurable (fun h : H => φ (x * (h : G))) :=
-      hφ.comp ((measurable_const_mul x).comp measurable_subtype_coe)
+      hφ.comp ((measurable_const_mul x).comp measurable_subtypeVal)
     rw [lintegral_mul_const _ hφx]
     exact ENNReal.mul_inv_cancel (hpos x).ne' (hfin x).ne
 

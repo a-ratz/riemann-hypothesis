@@ -388,7 +388,7 @@ theorem zero_off (θ : InfFam D) (hθ : IsInfFam θ) (ε : Bool) (S X : HSp D) {
     (z : Matrix (Fin X.rank) (Fin S.rank) ℂ) :
     (cS.symm (lineAt θ τ z 1)).map φ = 0 := by
   have h := read_line θ hθ ε S X e cS hcS τ τ' φ hφ z
-  rw [if_neg hne] at h
+  rw [ite_eq_right hne] at h
   have h0 : ((cS.symm (lineAt θ τ z 1)).map φ)ᵀ.submatrix e id = 0 := by
     calc _ = ((cS.symm (lineAt θ τ z 1)).map φ)ᵀ.submatrix e id *
           (((if ε then -1 else 1 : D.host.E) • S.gram).map ((starRingEnd ℂ).comp (tauE D τ'))) *
@@ -425,12 +425,12 @@ theorem at_place (θ : InfFam D) (hθ : IsInfFam θ) (ε : Bool) (S X : HSp D) (
   have hdet : IsUnit G.det := det_ne ε S τ
   have h1 : ((cS.symm (lineAt θ τ z 1)).map φ)ᵀ.submatrix e id * G = z.map (starRingEnd ℂ) := by
     have h := read_line θ hθ ε S X e cS hcS τ τ φ hφ z
-    rw [if_pos rfl] at h
+    rw [ite_eq_left rfl] at h
     exact h
   have h2 : ((cS.symm (lineAt θ τ (cplxO ((frSgn ε A).cart τ) (B.cart τ) z) 1)).map φ)ᵀ.submatrix e id * G =
       (cplxO ((frSgn ε A).cart τ) (B.cart τ) z).map (starRingEnd ℂ) := by
     have h := read_line θ hθ ε S X e cS hcS τ τ φ hφ (cplxO ((frSgn ε A).cart τ) (B.cart τ) z)
-    rw [if_pos rfl] at h
+    rw [ite_eq_left rfl] at h
     exact h
   have hP : ∀ M N : Matrix (Fin S.rank) (Fin d) ℂ, Mᵀ.submatrix e id = Nᵀ.submatrix e id → M = N := by
     intro M N h; ext i j; have h5 := congrFun (congrFun h (e.symm j)) i; simpa using h5
@@ -446,8 +446,8 @@ theorem at_place (θ : InfFam D) (hθ : IsInfFam θ) (ε : Bool) (S X : HSp D) (
     have hn : ((-1 : ℂ) • A.cart τ).map (starRingEnd ℂ) = -(A.cart τ).map (starRingEnd ℂ) := by
       ext i j; simp
     cases ε
-    · simp only [Bool.false_eq_true, if_false, one_smul, neg_smul, Matrix.transpose_neg, Matrix.neg_mul, hh]
-    · simp only [if_true, one_smul, hn, neg_smul, Matrix.neg_mul, Matrix.mul_neg, neg_neg, hh]
+    · simp only [Bool.false_eq_true, ite_false, one_smul, neg_smul, Matrix.transpose_neg, Matrix.neg_mul, hh]
+    · simp only [ite_true, one_smul, hn, neg_smul, Matrix.neg_mul, Matrix.mul_neg, neg_neg, hh]
       have hn2 : (-A.cart τ).map (starRingEnd ℂ) = -(A.cart τ).map (starRingEnd ℂ) := by ext i j; simp
       rw [hn2, Matrix.mul_neg]
   have hm : ∀ M : Matrix (Fin X.rank) (Fin S.rank) ℂ,
@@ -773,7 +773,7 @@ theorem fockVac_of_isGauss : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ :
     funext x
     have := congrArg (fun h : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf D.host.F (Fin S.rank × Fin d) => h (fun i => GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI D.host.F (x i))) h0
     simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.add_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply] at this ⊢
-    simp only [SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.zero_apply, smul_eq_mul] at this
+    simp only [add_apply, smul_apply, zero_apply, smul_eq_mul] at this
     linear_combination (∏ᶠ (v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := D.host.F)), φ v fun i ↦ (GlobalTheory.AdelicU.evFin D.host.F v) (x i)) * this
   rw [hpure] at hsum
   have := eq_zero_of_isDatum_zero M ψ cS _ hsum

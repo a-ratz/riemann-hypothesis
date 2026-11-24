@@ -95,8 +95,8 @@ theorem dEquiv : DEquiv := by
   · have hAp : (G.ρ γ⁻¹) p ∉ G.Y := by
       intro h
       have h2 := G.maps γ _ h
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-        ContinuousLinearMap.one_apply] at h2
+      rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+        one_apply_eq_self] at h2
       exact hp h2
     rw [Set.indicator_of_notMem hp, Set.indicator_of_notMem hAp, map_zero]
 

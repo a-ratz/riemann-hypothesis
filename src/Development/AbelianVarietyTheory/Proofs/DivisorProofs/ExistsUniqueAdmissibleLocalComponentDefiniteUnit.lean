@@ -79,14 +79,14 @@ theorem isOpen_isCompact_KL (hU : Unr E) (n : ℕ) (w : Pl E) :
     IsOpen (KL n w : Set (UL n w)) ∧ IsCompact (KL n w : Set (UL n w)) := by
   have hK := GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL w n
   rw [KL, Subgroup.coe_subgroupOf]
-  exact ⟨hK.1.preimage continuous_subtype_val,
+  exact ⟨hK.1.preimage continuous_subtypeVal,
     (isClosed_UL hU n w).isClosedEmbedding_subtypeVal.isCompact_preimage hK.2⟩
 
 theorem exists_equiv (hU : Unr E) (n : ℕ) (w : Pl E) :
     ∃ e : locU n w ≃ₜ* UL n w, ∀ x : locU n w, ((e x : UL n w) : GLw n w) = cLoc w (x : UA E n) := by
   by_cases hs : IsSplitAt w
   · obtain ⟨e, he⟩ := GlobalTheory.locU_equiv_GL E n w hs
-    have h : UL n w = ⊤ := if_pos hs
+    have h : UL n w = ⊤ := ite_eq_left hs
     have hm : ∀ g : GLw n w, g ∈ UL n w := fun g => by rw [h]; exact Subgroup.mem_top _
     refine ⟨{ toFun := fun x => ⟨e x, hm _⟩
               invFun := fun g => e.symm g.1
@@ -94,10 +94,10 @@ theorem exists_equiv (hU : Unr E) (n : ℕ) (w : Pl E) :
               right_inv := fun g => Subtype.ext (by simp)
               map_mul' := fun x y => Subtype.ext (by simp)
               continuous_toFun := e.continuous.subtype_mk _
-              continuous_invFun := e.symm.continuous.comp continuous_subtype_val }, fun x => he x⟩
+              continuous_invFun := e.symm.continuous.comp continuous_subtypeVal }, fun x => he x⟩
   · obtain ⟨-, -, hv, hns, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
     obtain ⟨e, he⟩ := GlobalTheory.DefU.Inert.locU_equiv E n w (cj w) (hns hs).1 hv
-    have h : UL n w = UJ (cj w) 1 := if_neg hs
+    have h : UL n w = UJ (cj w) 1 := ite_eq_right hs
     rw [h]
     exact ⟨e, he⟩
 
@@ -130,7 +130,7 @@ theorem exists_unique_locComp : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       have hK'c : IsCompact (K' : Set (locU n w)) := by
         change IsCompact (e ⁻¹' ((U : Set (UL n w)) ∩ (KL n w : Set (UL n w))))
         exact e.toHomeomorph.isCompact_preimage.2 (hKc.inter_left (U.isClosed_of_isOpen hUo))
-      haveI := hadm.2 K' hK'o hK'c
+      have := hadm.2 K' hK'o hK'c
       have hle : fixed σ.ρ U ≤ fixed σ₀.ρ K' := by
         intro v hv k
         have h1 := hv ⟨e k, k.2.1⟩

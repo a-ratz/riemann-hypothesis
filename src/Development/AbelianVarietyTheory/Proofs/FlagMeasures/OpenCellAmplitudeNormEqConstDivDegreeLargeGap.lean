@@ -108,8 +108,8 @@ open Formalism.FourierDecayAlt Formalism.FourierDecayAlt.P GlobalTheory.AmpNorm
 
 theorem lintegral_hsNormSq_amp_gap : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 → CellConv → ∀ (k r : ℕ) (L : LocBessel k r) (μG : Measure (Mt k r)) (μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ), 2 ≤ k → L.c ≠ 0 → L.κN ≠ 0 → L.κN ≠ ⊤ → IsHaarOn (UH (Hpk k r)) μG → IsSection k r L.z L.z' μsec → ∃ c : ℝ, 0 < c ∧ ∀ (R : Rep k r) (mu : Fin (2 * r + k + 1) → ℝ) (h : ℝ) (l : R.H → L.Wp) (l' : R.H → L.Wq) (w : R.H), haveI := FiniteDimensional.complete ℂ L.Wp; haveI := FiniteDimensional.complete ℂ L.Wq; R.IsDS L.ε mu → GapAtLeast L.ε mu h → Formalism.FourierDecayAlt.ThreeDimData.GapOK k r h → GapCell k r h → (∀ x ∈ R.sm, ∀ v ∈ R.TK, Formalism.FourierDecayAlt.ThreeDimData.be L.z L.c L.π R.σ L.μW L.μN x v = (innerSL ℂ (l v)).smulRight (l x)) → (∀ x ∈ R.sm, ∀ v ∈ R.TK, Formalism.FourierDecayAlt.ThreeDimData.be L.z' L.c L.π' R.σ L.μW' L.μN x v = (innerSL ℂ (l' v)).smulRight (l' x)) → (∃ v, R.KFin v ∧ l v ≠ 0) → (∃ v, R.KFin v ∧ l' v ≠ 0) → PI.UpqRep.IsLowUnitH k r L.ε mu R.σ w → ∫⁻ q : (Fin r → ℂ) × ℂ, ENNReal.ofReal (bcWeight k r (Tz k r L.z) (Tz k r L.z') q * hsNormSq (amp R l l' w μG (bigCell k r q.1 (μsec q.2)))) = ENNReal.ofReal (c / PI.BesselPeriodGGP.fdegH μG R.σ w ^ 3) := by
   intro hH hAmp hConv k r L μG μsec hk hc hκ0 hκt hG hsec
-  have := FiniteDimensional.complete ℂ L.Wp
-  have := FiniteDimensional.complete ℂ L.Wq
+  have := FiniteDimensional.completeSpace ℂ L.Wp
+  have := FiniteDimensional.completeSpace ℂ L.Wq
   have hK : PI.KFinSmooth := hH.1.1.2.2.1
   have hk1 : 1 ≤ k := by omega
   have hstd : cStd ≠ 0 := by simp [cStd]
@@ -126,18 +126,18 @@ theorem lintegral_hsNormSq_amp_gap : GlobalTheory.GapIn.Hyp → GlobalTheory.Gap
   have hδ : 0 < ‖α‖ ^ B.kap k r := by positivity
   have hN₁ : B.IsHaarOn (Nset k r) (ENNReal.ofReal (‖α‖ ^ B.kap k r) • L.μN) := by
     refine ⟨?_, ?_, ?_, ?_, ?_⟩
-    · rw [Measure.smul_apply, hNB.conc, smul_zero]
+    · rw [smul_apply, hNB.conc, smul_zero]
     · intro a ha; rw [Measure.map_smul, hNB.left a ha]
       exact (show Continuous (lmulM a) from by unfold lmulM; exact continuous_const.matrix_mul continuous_id).measurable.aemeasurable
     · intro a ha; rw [Measure.map_smul, hNB.right a ha]
       exact (show Continuous (B.rmulF a) from by unfold B.rmulF; exact continuous_id.matrix_mul continuous_const).measurable.aemeasurable
     · intro K hK
-      rw [Measure.smul_apply, smul_eq_mul]
+      rw [smul_apply, smul_eq_mul]
       exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top (hNB.finite_compact K hK)
     · intro h0
       apply hNB.ne_zero
       have h1 := Measure.measure_univ_eq_zero.2 h0
-      rw [Measure.smul_apply, smul_eq_mul] at h1
+      rw [smul_apply, smul_eq_mul] at h1
       exact Measure.measure_univ_eq_zero.1 ((mul_eq_zero.1 h1).resolve_left (ENNReal.ofReal_pos.2 hδ).ne')
   set μ₁ := ENNReal.ofReal (‖α‖ ^ B.kap k r) • L.μN with hμ₁
   have hmap : μ₁.map (conjM (ThA.aT k r α)) = L.μN := by
@@ -295,8 +295,8 @@ theorem norm_eq_const_div_deg_gap : GlobalTheory.GapIn.Hyp → GlobalTheory.GapI
   swap
   · exact ⟨1, one_pos, fun lam' _ A hA => absurd ⟨lam', A, hA⟩ hex⟩
   obtain ⟨lam₀, A₀, hA₀⟩ := hex
-  haveI := FiniteDimensional.complete ℂ W.Wp
-  haveI := FiniteDimensional.complete ℂ W.Wq
+  have := FiniteDimensional.completeSpace ℂ W.Wp
+  have := FiniteDimensional.completeSpace ℂ W.Wq
   have hθ : 0 < θ := lt_of_lt_of_le (Real.rpow_pos_of_pos (Real.exp_pos _) _) hθw.1
   have hv1 : 1 ≤ D.host.v := hZ.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hv : 0 < D.host.v := by linarith
@@ -311,8 +311,8 @@ theorem norm_eq_const_div_deg_gap : GlobalTheory.GapIn.Hyp → GlobalTheory.GapI
   have hk : 2 ≤ D.R.k := by have := D.R.m_add_three_le_k; omega
   have hκN : kapN D θ ≠ 0 := (ENNReal.ofReal_pos.2 (by positivity)).ne'
   obtain ⟨-, -, -, o1, o2⟩ := GlobalTheory.T.local_data_both_amplitude_sides D τ w w' θ W lam₀ A₀ hθ hv hTT hW hA₀
-  have n1' : 0 < Module.finrank ℂ W.Wp := by haveI := o1.2.2.1; exact Module.finrank_pos
-  have n2' : 0 < Module.finrank ℂ W.Wq := by haveI := o2.2.2.1; exact Module.finrank_pos
+  have n1' : 0 < Module.finrank ℂ W.Wp := by have := o1.2.2.1; exact Module.finrank_pos
+  have n2' : 0 < Module.finrank ℂ W.Wq := by have := o2.2.2.1; exact Module.finrank_pos
   have hNH : IsHaarOn (Nset D.R.k D.R.rS) W.μN := o1.2.2.2.2.2.2.2.2.1
   obtain ⟨κ, hκ, hdeg⟩ := GlobalTheory.T.datumDegree_eq_mul_formalDegree_gap hH D τ w w' θ W hcd hW
   obtain ⟨c, hc0, hnorm⟩ := _root_.GlobalTheory.AmpNormGap.lintegral_hsNormSq_amp_gap hH hKF hCC _ _ (toBessel D τ w w' θ W lam₀ A₀ hW hA₀ hT hT') W.μG μsec hk hc

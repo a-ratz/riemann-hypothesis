@@ -226,7 +226,7 @@ theorem closure_normOneProducts_subgroup_properties : ∀ (F : Type) [Field F] [
       rat δ * x * rat δ' ∈ closure (H0 (a := a) (b := b) ε)) ∧
     (∀ x ∈ closure (H0 (a := a) (b := b) ε), nrm x = 1) := by
   intro F _ _ a b ε _
-  haveI := t2Space_adeleRing_numberField F
+  have := t2Space_adeleRing_numberField F
   refine ⟨fun x hx y hy => ?_, fun x hx => ?_, fun δ δ' hδ x hx => ?_, fun x hx => ?_⟩
   · exact map_mem_closure₂ cont_mul hx hy fun u hu v hv => mul_mem hu hv
   · exact map_mem_closure cont_star hx fun u hu => star_mem hu

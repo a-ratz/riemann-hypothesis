@@ -79,7 +79,7 @@ theorem absHalf_conjPl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w _
     rw [h1, h2]
     have := hcu (IsCMField.complexConj E x)
-    simp only [AlgEquiv.coe_ringEquiv, IsCMField.complexConj_apply_apply] at this
+    simp only [AlgEquiv.coe_toRingEquiv, IsCMField.complexConj_apply_apply] at this
     exact this
   have hq : qV E u = qV E w := by
     unfold qV

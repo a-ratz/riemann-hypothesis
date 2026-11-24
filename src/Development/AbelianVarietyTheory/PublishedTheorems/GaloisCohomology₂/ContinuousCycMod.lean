@@ -107,7 +107,7 @@ theorem continuous_cycMod (l : ℕ) [Fact l.Prime] (n : ℕ) :
 
 theorem contAction_muDec (A : ValuationSubring Ω) (l : ℕ) [Fact l.Prime] (n : ℕ) :
     ContAction (muDec F A l n) :=
-  (((continuous_cycMod l n).comp continuous_subtype_val).comp continuous_fst).mul continuous_snd
+  (((continuous_cycMod l n).comp continuous_subtypeVal).comp continuous_fst).mul continuous_snd
 
 
 variable (F) in

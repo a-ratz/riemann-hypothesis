@@ -441,7 +441,7 @@ end
 
 theorem pHeckeFormal : PHeckeFormal := by
   intro G K _ _ ρ q hfin m F F' c hF
-  haveI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (Gq ρ q)))
+  have := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (Gq ρ q)))
   refine ⟨?_, ?_, ?_⟩
   · intro g y
     rw [hecke_apply, hecke_apply]
@@ -483,7 +483,7 @@ theorem bd_cmap {G H : Type} [Group G] [Group H] (f : G →* H) (m : ℕ) (z : C
 
 theorem pHeckeKer (hT : PTransfer) (hE : PEvDC) : PHeckeKer := by
   intro hSEv G K _ _ ρ hρ q hfin m F hF hdF hcyc z hz
-  haveI := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (Gq ρ q)))
+  have := Fintype.ofFinite (Quotient (QuotientGroup.rightRel (Gq ρ q)))
   have heq : ∀ (c : Quotient (QuotientGroup.rightRel (Gq ρ q))) (g : G) (y : Fin (m + 2) → G),
       ((Gq ρ q).index : ℝ)⁻¹ * F (fun j => q * ρ (actQ (Gq ρ q) c g).out * ρ (y j)) =
         ((Gq ρ q).index : ℝ)⁻¹ * F (fun j => q * ρ c.out * ρ (g * y j)) := by
@@ -658,7 +658,7 @@ theorem aff_conj {K : Type} [Field K] (n r : ℕ) (i : Fin r) (h : GL (Fin n) K)
     simp only [vecMul, dotProduct, vecMulVec_apply, Pi.zero_apply]
     rw [Finset.sum_eq_single (Fin.natAdd n i)]
     · rw [h2]; ring
-    · intro c _ hc; rw [he, Pi.single_apply, if_neg hc]; ring
+    · intro c _ hc; rw [he, Pi.single_apply, ite_eq_right hc]; ring
     · simp
   have h4 : S *ᵥ e = e := by
     funext a
@@ -813,7 +813,7 @@ theorem aff_blk_top {K : Type} [Field K] (n r : ℕ) (i : Fin r) (h : GL (Fin n)
     have := congrArg Fin.val hh
     simp only [Fin.val_castAdd, Fin.val_natAdd] at this
     omega
-  rw [Matrix.add_apply, vecMulVec_apply, Pi.single_apply, if_neg hne, mul_zero, add_zero, aff_stab_top]
+  rw [Matrix.add_apply, vecMulVec_apply, Pi.single_apply, ite_eq_right hne, mul_zero, add_zero, aff_stab_top]
 
 theorem aff_blk_low {K : Type} [Field K] (n r : ℕ) (i : Fin r) (h : GL (Fin n) K) (y : Fin (n + r) → K)
     (a : Fin r) (b : Fin (n + r)) :
@@ -875,7 +875,7 @@ theorem pStabVan : PStabVan := by
         finSumFinEquiv_symm_apply_castAdd, finSumFinEquiv_symm_apply_natAdd]
       show (f x : Matrix (Fin (n + r)) (Fin (n + r)) (𝓞 L)) (Fin.natAdd n a) (Fin.castAdd r b) = 0
       apply aff_alg_inj
-      rw [map_zero, ← aff_toK_val, hM, aff_blk_low, Matrix.one_apply, if_neg]
+      rw [map_zero, ← aff_toK_val, hM, aff_blk_low, Matrix.one_apply, ite_eq_right]
       intro hh
       have := congrArg Fin.val hh
       simp only [Fin.val_castAdd, Fin.val_natAdd] at this
@@ -888,7 +888,7 @@ theorem pStabVan : PStabVan := by
       rw [← aff_toK_val, hM, aff_blk_low, Matrix.one_apply, Matrix.one_apply]
       by_cases hab : a = b
       · subst hab; simp
-      · rw [if_neg hab, if_neg (fun hh => hab (Fin.ext (by
+      · rw [ite_eq_right hab, ite_eq_right (fun hh => hab (Fin.ext (by
         have := congrArg Fin.val hh; simp only [Fin.val_natAdd] at this; omega))), map_zero]
   have key : ∀ h : H, q * toK L (n + r) (c * stab (𝓞 L) n (n + r) (Nat.le_add_right n r) ((h : Gm L n) * 1)) =
       toK L (n + r) γ • ((toK L (n + r)).comp f h • G⁻¹) := by
@@ -1102,13 +1102,13 @@ theorem keyGen (hT : PTransfer) (hcomm : ∀ c, ρN (sO c) = sL (ρn c)) (hq : q
     have e := hvan x.1.out hx _ hst w hw
     show ev _ (fun t => F (fun j => q * ρN x.1.out * ρN (sO (t j))) - F (fun j => ρN (sO (t j)))) 1 w = 0
     rw [ev_sub_hecke_double_cosets, e, sub_self]
-  haveI : Finite X := Subtype.finite
+  have : Finite X := Subtype.finite
   have hz0 := hT' Γn X act h1 hm m Φ hΦ1 hΦ2 hΦ3 z hz
   rw [ev_one_eq_finsupp_sum] at hz0
   simp only [MonoidHom.id_apply] at hz0
-  haveI : Fintype (Quotient (QuotientGroup.rightRel (Gq ρN q))) := Fintype.ofFinite _
-  haveI : Fintype (Quotient (QuotientGroup.rightRel (Gq ρn qn))) := Fintype.ofFinite _
-  haveI : Fintype X := Fintype.ofFinite _
+  have : Fintype (Quotient (QuotientGroup.rightRel (Gq ρN q))) := Fintype.ofFinite _
+  have : Fintype (Quotient (QuotientGroup.rightRel (Gq ρn qn))) := Fintype.ofFinite _
+  have : Fintype X := Fintype.ofFinite _
   have himg : Finset.univ.filter (fun c : Quotient (QuotientGroup.rightRel (Gq ρN q)) =>
       ¬ ∀ a : Γn, Quotient.mk (QuotientGroup.rightRel (Gq ρN q)) (sO a) ≠ c) =
       Finset.univ.image (fun d : Quotient (QuotientGroup.rightRel (Gq ρn qn)) =>
@@ -1204,8 +1204,8 @@ open PositivityTheory.KB
 
 theorem pKey (hT : PTransfer) : PKey := by
   intro hCh hEv hAff L _ _ hC k hk π hπ n r hn1 hr1 F hFinv hFcoc z hz
-  haveI := (pIndex L (n + r) π hπ).1
-  haveI := (pIndex L n π hπ).1
+  have := (pIndex L (n + r) π hπ).1
+  have := (pIndex L n π hπ).1
   have hSK := pStabK L π hπ.ne_zero n r hn1
   refine keyGen hT hSK.1 hSK.2 (fun c => pGqStab L π hπ n r hn1 c) k F hFinv hFcoc ?_ z hz
   intro c hc H hH w hw
@@ -1489,7 +1489,7 @@ theorem dC_translate {Γ : Type} [Group Γ] {m : ℕ} (F : (Fin (m + 1) → Γ) 
 theorem pTransfer (hC : PCobSub) (hE : PEvDC) : PTransfer := by
   intro Γ X _ _ act h1 hm m Φ hΦ hd hcyc z hz
   classical
-  haveI : Fintype X := Fintype.ofFinite X
+  have : Fintype X := Fintype.ofFinite X
   have hinv : ∀ x, Inv (stabR act h1 hm x).subtype (Φ x) := by
     intro x g y
     have hg : act x (g : Γ) = x := g.2
@@ -1500,7 +1500,7 @@ theorem pTransfer (hC : PCobSub) (hE : PEvDC) : PTransfer := by
   choose Ψ hΨi hΨd using hex
   obtain ⟨rep, hrep1, hrep2⟩ : ∃ rep : X → X, (∀ x h, rep (act x h) = rep x) ∧
       ∀ x, ∃ g, act (rep x) g = x := by
-    letI S : Setoid X := ⟨fun a b => ∃ g, act a g = b, ⟨fun a => ⟨1, h1 a⟩,
+    let S : Setoid X := ⟨fun a b => ∃ g, act a g = b, ⟨fun a => ⟨1, h1 a⟩,
       fun ⟨g, hg⟩ => ⟨g⁻¹, by rw [← hg, ← hm, mul_inv_cancel, h1]⟩,
       fun ⟨g, hg⟩ ⟨k, hk⟩ => ⟨g * k, by rw [hm, hg, hk]⟩⟩⟩
     refine ⟨fun x => (Quotient.mk S x).out, fun x h => ?_, fun x => ?_⟩

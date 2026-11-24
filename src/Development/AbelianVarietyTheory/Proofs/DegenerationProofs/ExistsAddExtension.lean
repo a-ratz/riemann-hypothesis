@@ -364,13 +364,13 @@ theorem Core.exists_add_extension : ∀ C : Core, C.HasTests → SmoothOfRelativ
       simpa using f.isClosedMap _ hz
     have key (z : Γ) (hz : IsClosed ({z} : Set Γ)) : g z ∈ F (f z) (hcl z hz) := by
       obtain ⟨p, hp, hpz⟩ := GlobalTheory.exists_prime_residueField_eq_zero (f ≫ π) hz
-      haveI : Fact p.Prime := ⟨hp⟩
+      have : Fact p.Prime := ⟨hp⟩
       obtain ⟨K, hK, y₀, hy₀, hyU₀, -⟩ := GlobalTheory.exists_padic_point_scheme (f ≫ π) hz hpz j.opensRange (Set.range_nonempty _)
       let integralClosureToPadicAlgClIntegers : integralClosure ℤ_[p] K →+* OO p :=
         (K.val.toRingHom.comp (integralClosure ℤ_[p] K).val.toRingHom).codRestrict (OO p) fun x => by
           rw [Valuation.mem_valuationSubring_iff, ← NNReal.coe_le_coe]
           exact (mem_integralClosure_padicInt_iff K _).mp x.2
-      haveI : IsLocalHom integralClosureToPadicAlgClIntegers := by
+      have : IsLocalHom integralClosureToPadicAlgClIntegers := by
         refine ⟨fun x hx => ?_⟩
         obtain ⟨y, hy⟩ := hx.exists_right_inv
         have hy' : ((x : K) : PadicAlgCl p) * (y : PadicAlgCl p) = 1 :=
@@ -400,7 +400,7 @@ theorem Core.exists_add_extension : ∀ C : Core, C.HasTests → SmoothOfRelativ
           apply le_antisymm _ bot_le
           intro a ha
           have ha' : ((a : K) : PadicAlgCl p) ∈ (x : PrimeSpectrum (PadicAlgCl p)).asIdeal := ha
-          haveI := (x : PrimeSpectrum (PadicAlgCl p)).isPrime
+          have := (x : PrimeSpectrum (PadicAlgCl p)).isPrime
           rw [Ideal.eq_bot_of_prime (x : PrimeSpectrum (PadicAlgCl p)).asIdeal, Ideal.mem_bot] at ha'
           exact Subtype.ext (Subtype.ext ha')
         rw [Scheme.Hom.comp_apply, key]

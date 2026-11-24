@@ -129,12 +129,12 @@ theorem UpperTheory.V.Win.point :
     have hst : s ≠ ⊤ := by
       refine ne_top_of_le_ne_top ?_ hs
       rw [← Nat.cast_add]
-      exact ENat.coe_ne_top _
+      exact ENat.natCast_ne_top _
     lift s to ℕ using hst
     have hs' : s ≤ v + R * (m - jZero l R) := by exact_mod_cast hs
-    refine ⟨ENat.coe_ne_top s, ?_⟩
-    rw [ENat.toNat_coe]
-    simp only [ENat.toNat_coe] at hvb
+    refine ⟨ENat.natCast_ne_top s, ?_⟩
+    rw [ENat.toNat_natCast]
+    simp only [ENat.toNat_natCast] at hvb
     have hN : s ≤ v + R * (m + jZero l R + c + Nat.log l Z) := by
       refine le_trans hs' (Nat.add_le_add_left (Nat.mul_le_mul_left _ ?_) _)
       omega
@@ -143,11 +143,11 @@ theorem UpperTheory.V.Win.point :
     linarith
   · have hb := hF.2 e he1 heZ he m L₁ hL₁
     generalize shaInv L₁ l ↑e = s at hb ⊢
-    have hst : s ≠ ⊤ := ne_top_of_le_ne_top (ENat.coe_ne_top _) hb
+    have hst : s ≠ ⊤ := ne_top_of_le_ne_top (ENat.natCast_ne_top _) hb
     lift s to ℕ using hst
     have hs' : s ≤ R * (max m (jZero l R) + c + Nat.log l Z) := by exact_mod_cast hb
-    refine ⟨ENat.coe_ne_top s, ?_⟩
-    rw [ENat.toNat_coe]
+    refine ⟨ENat.natCast_ne_top s, ?_⟩
+    rw [ENat.toNat_natCast]
     have hN : s ≤ R * (m + jZero l R + c + Nat.log l Z) := by
       refine le_trans hs' (Nat.mul_le_mul_left _ ?_)
       omega

@@ -52,8 +52,8 @@ theorem GlobalTheory.ShFam.EigFrame.exists_baseChange : ∀ (E : Type) [Field E]
   intro E _ _ _ H Dw l Xo c O _ β Z A B _ _ φ x fr ψ
   open ReciprocityTheory.ChartRestriction.G.PullbackSections GlobalTheory.LieMet GlobalTheory.LocM GlobalTheory.LocM.FrameBC in
   have h : GlobalTheory.LocM.IsFrame Z.t (ψ.comp φ) (spMap ψ ≫ x) ((fun τ i => spMap (Formalism.L2.Pj.dualMap ψ) ≫ fr.v τ i)) := by
-    letI : Algebra c.F A := φ.toAlgebra
-    letI : Algebra c.F B := (ψ.comp φ).toAlgebra
+    let : Algebra c.F A := φ.toAlgebra
+    let : Algebra c.F B := (ψ.comp φ).toAlgebra
     let v : ∀ τ, Fin (Dw.mult τ) → TanM x Z.t.G := fun τ i => tanOf (fr.tan τ i)
     have eps_dual (a : A) : spMap (Formalism.L2.Pj.dualMap ψ) ≫ spMap (epsMul a) = spMap (epsMul (ψ a)) ≫ spMap (Formalism.L2.Pj.dualMap ψ) := by
       rw [spMap_comp_spMap, spMap_comp_spMap]

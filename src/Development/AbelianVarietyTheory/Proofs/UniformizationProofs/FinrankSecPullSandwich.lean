@@ -82,20 +82,20 @@ theorem chart_data (φ : X' ⟶ X) [IsFinite φ] [Flat φ] [Surjective φ]
         (∀ j, ∀ y ∈ (toField (generic_mem_preimage φ h)).range, c * e.repr y j ∈ (toField h).range) ∧
         ∀ j, c • e j ∈ (toField (generic_mem_preimage φ h)).range := by
   have h' := generic_mem_preimage φ h
-  haveI : Nonempty D := ⟨⟨_, h⟩⟩
-  haveI : Nonempty (φ ⁻¹ᵁ D) := ⟨⟨_, h'⟩⟩
-  letI := (φ.app D).hom.toAlgebra
-  haveI : Module.Finite Γ(X, D) Γ(X', φ ⁻¹ᵁ D) := φ.finite_app D hD
-  haveI : Module.Flat Γ(X, D) Γ(X', φ ⁻¹ᵁ D) := by
+  have : Nonempty D := ⟨⟨_, h⟩⟩
+  have : Nonempty (φ ⁻¹ᵁ D) := ⟨⟨_, h'⟩⟩
+  let := (φ.app D).hom.toAlgebra
+  have : Module.Finite Γ(X, D) Γ(X', φ ⁻¹ᵁ D) := φ.finite_app D hD
+  have : Module.Flat Γ(X, D) Γ(X', φ ⁻¹ᵁ D) := by
     have := φ.flat_appLE hD (hD.preimage φ) le_rfl
     rwa [Scheme.Hom.appLE_eq_app] at this
-  haveI := functionField_isFractionRing_of_isAffineOpen X D hD
-  haveI := functionField_isFractionRing_of_isAffineOpen X' _ (hD.preimage φ)
-  letI : Algebra Γ(X, D) X'.functionField :=
+  have := functionField_isFractionRing_of_isAffineOpen X D hD
+  have := functionField_isFractionRing_of_isAffineOpen X' _ (hD.preimage φ)
+  let : Algebra Γ(X, D) X'.functionField :=
     ((algebraMap X.functionField X'.functionField).comp (algebraMap Γ(X, D) X.functionField)).toAlgebra
-  haveI : IsScalarTower Γ(X, D) X.functionField X'.functionField :=
+  have : IsScalarTower Γ(X, D) X.functionField X'.functionField :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower Γ(X, D) Γ(X', φ ⁻¹ᵁ D) X'.functionField :=
+  have : IsScalarTower Γ(X, D) Γ(X', φ ⁻¹ᵁ D) X'.functionField :=
     IsScalarTower.of_algebraMap_eq fun a => by
       have e := toField_appLE φ le_rfl h h' a
       rw [Scheme.Hom.appLE_eq_app] at e
@@ -160,11 +160,11 @@ open FiniteCover
 theorem finrank_sec_pull_sandwich : ∀ (K : Type) [Field K] (X X' : Scheme.{0}) [IsIntegral X] [IsIntegral X'] (f : X ⟶ Spec (CommRingCat.of K)) (φ : X' ⟶ X) [IsFinite φ] [Etale φ] (H : LB X) (n : ℕ) (s : Fin (n + 1) → LB.Sec H), H.IsLB → VeryAmpleBy f H s → ∀ d : ℕ, (∀ x : X, φ.finrank x = d) → (∀ t : ℕ, Module.Finite K (SecOnR f (pw H t) ⊤)) → (∀ t : ℕ, Module.Finite K (SecOnR (φ ≫ f) ((pw H t).pull φ) ⊤)) → ∃ a : ℕ, ∀ t : ℕ, d * Module.finrank K (SecOnR (f) (pw H t) ⊤) ≤ Module.finrank K (SecOnR (φ ≫ f) ((pw H (t + a : ℕ)).pull φ) ⊤) ∧ Module.finrank K (SecOnR (φ ≫ f) ((pw H t).pull φ) ⊤) ≤ d * Module.finrank K (SecOnR (f) (pw H (t + a : ℕ)) ⊤) := by
   intro K _ X X' _ _ f φ _ _ H n s hH hs d hd hV hW
   have hd1 : 1 ≤ d := hd _ ▸ φ.one_le_finrank_map (genericPoint X')
-  haveI : Surjective φ := φ.one_le_finrank_iff_surjective.1 fun x => (hd x).symm ▸ hd1
-  letI : Algebra X.functionField X'.functionField := (functionFieldMap φ).toAlgebra
-  letI : Algebra K X.functionField := ((toField generic_top).comp (cst f ⊤)).toAlgebra
-  letI : Algebra K X'.functionField := ((toField generic_top).comp (cst (φ ≫ f) ⊤)).toAlgebra
-  haveI : IsScalarTower K X.functionField X'.functionField :=
+  have : Surjective φ := φ.one_le_finrank_iff_surjective.1 fun x => (hd x).symm ▸ hd1
+  let : Algebra X.functionField X'.functionField := (functionFieldMap φ).toAlgebra
+  let : Algebra K X.functionField := ((toField generic_top).comp (cst f ⊤)).toAlgebra
+  let : Algebra K X'.functionField := ((toField generic_top).comp (cst (φ ≫ f) ⊤)).toAlgebra
+  have : IsScalarTower K X.functionField X'.functionField :=
     IsScalarTower.of_algebraMap_eq fun r => by
       have w : φ ≫ f = (φ ≫ f) ≫ Spec.map (CommRingCat.ofHom (RingHom.id K)) := by simp
       have e := toField_appLE φ (U := ⊤) (V := ⊤) le_top generic_top generic_top (cst f ⊤ r)
@@ -173,7 +173,7 @@ theorem finrank_sec_pull_sandwich : ∀ (K : Type) [Field K] (X X' : Scheme.{0})
   obtain ⟨hcov, hs⟩ := hs
   choose haff r hr _ using hs
   let I := {i // genericPoint X ∈ nonzeroLocus (s i)}
-  haveI : Fintype I := Fintype.ofFinite I
+  have : Fintype I := Fintype.ofFinite I
   let D : I → X.Opens := fun i => nonzeroLocus (s i.1)
   have hη : ∀ i, genericPoint X ∈ D i := fun i => i.2
   have hc : ⊤ ≤ ⨆ i, D i := fun x hx => by
@@ -186,7 +186,7 @@ theorem finrank_sec_pull_sandwich : ∀ (K : Type) [Field K] (X X' : Scheme.{0})
   obtain ⟨k₀, h₀⟩ := TopologicalSpace.Opens.mem_iSup.1 (hH.cover.ge generic_top)
   obtain ⟨x, hx⟩ := (chart_data φ (fun _ => rfl) (haff i₀.1) (hη i₀)).1
   rw [hd] at hx
-  haveI : Module.Finite X.functionField X'.functionField :=
+  have : Module.Finite X.functionField X'.functionField :=
     Module.finite_of_finrank_pos (by omega)
   let e := Module.finBasisOfFinrankEq _ _ hx
   choose c hcm hc0 hc₁ hc₂ using fun i : I =>

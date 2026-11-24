@@ -65,7 +65,7 @@ private theorem card_sigma_fibre {Y Z : Scheme.{0}} (s : Y ⟶ Z) (I : Type) (K 
   let F : I × {y' : Spec (CommRingCat.of K) ⟶ Y // y' ≫ s = x} →
       {y : Spec (CommRingCat.of K) ⟶ ∐ (fun _ : I => Y) // y ≫ (Sigma.desc fun _ : I => s) = x} :=
     fun q => ⟨q.2.1 ≫ Sigma.ι (fun _ : I => Y) q.1, by
-      rw [Category.assoc, Sigma.ι_desc]
+      rw [Category.assoc, Sigma.ι_comp_desc]
       exact q.2.2⟩
   have hF : Function.Bijective F := by
     constructor
@@ -84,7 +84,7 @@ private theorem card_sigma_fibre {Y Z : Scheme.{0}} (s : Y ⟶ Z) (I : Type) (K 
     · rintro ⟨y, hy⟩
       obtain ⟨i, y', rfl⟩ := exists_sigma_point K y
       refine ⟨⟨i, y', ?_⟩, rfl⟩
-      rw [Category.assoc, Sigma.ι_desc] at hy
+      rw [Category.assoc, Sigma.ι_comp_desc] at hy
       exact hy
   rw [← Nat.card_congr (Equiv.ofBijective F hF), Nat.card_prod]
 
@@ -100,9 +100,9 @@ theorem UpperTheory.Gal.G3.pSigmaFEt :
     have h3 : (Sigma.desc fun _ : I => 𝟙 Y) =
         (Sigma.reindex e (fun _ : Fin n => Y)).hom ≫ Sigma.desc fun _ : Fin n => 𝟙 Y := by
       refine Sigma.hom_ext (f := fun _ : I => Y) _ _ fun i => ?_
-      rw [Sigma.ι_desc, ← Category.assoc]
+      rw [Sigma.ι_comp_desc, ← Category.assoc]
       erw [Sigma.ι_reindex_hom (f := fun _ : Fin n => Y) e i]
-      rw [Sigma.ι_desc]
+      rw [Sigma.ι_comp_desc]
     rw [h3]
     exact h2
   have hfac : (Sigma.desc fun _ : I => s) = (Sigma.desc fun _ : I => 𝟙 Y) ≫ s := by

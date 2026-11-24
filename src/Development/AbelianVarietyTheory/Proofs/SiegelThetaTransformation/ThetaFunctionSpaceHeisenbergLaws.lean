@@ -103,8 +103,8 @@ theorem isTh_rho (C : Ctx S T) {f : WO S T → ℂ} (hf : C.IsTh f) (w : WO S T)
       unfold Ctx.rho
       rw [heisO_heisO, heisO_heisO, h2.1, h2.2, add_comm]
     cont := by
-      haveI : IsTopologicalAddGroup (AE D) := IsTopologicalRing.to_topologicalAddGroup
-      haveI : IsTopologicalAddGroup (WO S T) := Pi.topologicalAddGroup
+      have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
+      have : IsTopologicalAddGroup (WO S T) := Pi.isTopologicalAddGroup
       exact (C.std.1.1.comp (continuous_symplOH S T continuous_id continuous_const)).mul
         (hg.cont.comp (continuous_id.add continuous_const))
     smooth k L h1 h2 w := by

@@ -605,7 +605,7 @@ theorem exists_iso_translate_levels [IsLocalRing R] (hR : AdmBase R I) (hG : IsS
   have eΨ' : (padd D.toPre.P.A β.hom (toUnit D'.toPre.P.A ≫ b)).left = Ψ.hom.left := by rw [eΨ]
   rw [eΨ']
   refine ⟨w, hwg, fun e h hh Z r z jM jM' jL jL' a₁ a₂ a₃ a₄ => ?_⟩
-  haveI := GlobalTheory.TorsionTranslate.mono_fst (I := I) e G
+  have := GlobalTheory.TorsionTranslate.mono_fst (I := I) e G
   have heq : h = (tr (ae e)).left := (cancel_mono (fstG I e G).left).1 (by rw [hh, tr_fst (hae e)])
   subst heq
   have hq : (U'.gt e).pG.left = (U'.gt e).q.left ≫ (fstG I e D'.toPre.P.A).left := rfl
@@ -686,7 +686,7 @@ theorem lift_comp_pG {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] {D : D
     (e : ℕ) (h : (thickObj R (maximalIdeal R) e G).left ⟶ (thickObj R (maximalIdeal R) e G).left) (hh' : h ≫ (fstG (maximalIdeal R) e G).left = (fstG (maximalIdeal R) e G).left ≫ ((toUnit G ≫ a) * 𝟙 G).left) :
     h ≫ (U.gt e).pG.left = (U₂.gt e).pG.left ≫ GlobalTheory.MumCmp.twφ D₂.toPre D.toPre β.hom b 0 := by
   classical
-  haveI := GlobalTheory.TorsionTranslate.mono_fst (I := maximalIdeal R) e G
+  have := GlobalTheory.TorsionTranslate.mono_fst (I := maximalIdeal R) e G
   have hs : (thick R (maximalIdeal R) e ≫ a.left) ≫ G.hom = 𝟙 (𝟙_ (Over (Spec (CommRingCat.of (R ⧸ maximalIdeal R ^ (e + 1)))))).left ≫ thick R (maximalIdeal R) e := by
     rw [Category.assoc, Over.w a]; simp
   let ae : 𝟙_ (Over (Spec (CommRingCat.of (R ⧸ maximalIdeal R ^ (e + 1))))) ⟶ thickObj R (maximalIdeal R) e G :=
@@ -995,7 +995,7 @@ theorem exists_translated_coef : ∀ (R : Type) [CommRing R] [IsDomain R] (D D�
       (∏ κ, Geo.Tor.gv w (r ≫ D₂.famφB χ κ) z (fun i => J ((r ≫ D₂.famφB χ κ) ≫ GlobalTheory.MumCmp.twφ D₂ D β g.b i))
         (J' (r ≫ D₂.famφB χ κ)) ^ DegPre.famε 1 κ).val * Geo.Tor.sval f₂ r z J' := by
     intro χ
-    haveI := hβ
+    have := hβ
     let u := LB.mulGen D.P.L _ _ _ _ (LB.pullGen D.P.L _ _ (g.s (xe χ)) (toUnit D₂.P.A).left)
       (LB.pullGen D.P.L _ _ ν (toUnit D₂.P.A).left)
     have hu : u.IsGen := DVR.mulGen_isGen _ _ _ _ _ _ _ (DVR.pullGen_isGen _ _ _ _ (g.isGen _) _)

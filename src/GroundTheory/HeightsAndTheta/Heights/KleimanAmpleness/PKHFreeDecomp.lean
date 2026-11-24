@@ -74,7 +74,7 @@ theorem cellMon_monomial {I : ∀ k, Finset (ι k)} {t : MRingOver S ι} (ht : t
   | mul f g _ _ hf hg =>
     obtain ⟨u, rfl, hu⟩ := hf
     obtain ⟨v, rfl, hv⟩ := hg
-    refine ⟨u + v, by rw [monomial_mul, one_mul], fun q hq => ?_⟩
+    refine ⟨u + v, by rw [monomial_mul_monomial, one_mul], fun q hq => ?_⟩
     rcases Finset.mem_union.mp (Finsupp.support_add hq) with h | h
     · exact hu q h
     · exact hv q h
@@ -115,7 +115,7 @@ theorem mk_monomial_eq (I : ∀ k, Finset (ι k)) (u v : (Σ k, ι k) →₀ ℕ
   rw [monoFrac, dite_eq_left hneg, LocalizedModule.mk_eq]
   refine ⟨1, ?_⟩
   simp only [one_smul, Submonoid.smul_def, Algebra.smul_def, Ideal.Quotient.algebraMap_eq, ← map_mul,
-    monomial_mul, mul_one]
+    monomial_mul_monomial, mul_one]
   rw [hexp]
 
 theorem locPart_le (I : ∀ k, Finset (ι k)) (c d : K → ℤ) :
@@ -133,7 +133,7 @@ theorem locPart_le (I : ∀ k, Finset (ι k)) (c d : K → ℤ) :
   have hub : ∀ k, ∑ i, u ⟨k, i⟩ = b k := by
     intro k
     refine htb u ?_ k
-    rw [support_monomial, if_neg one_ne_zero]
+    rw [support_monomial, ite_eq_right one_ne_zero]
     exact Finset.mem_singleton_self u
   have hle : KH.quotPart S (⊥ : Ideal (MRingOver S ι)) ((c + fun k => (b k : ℤ)) + d) ≤
       (Submodule.span S (monoFrac S I '' {a | blockSum a = c + d})).comap

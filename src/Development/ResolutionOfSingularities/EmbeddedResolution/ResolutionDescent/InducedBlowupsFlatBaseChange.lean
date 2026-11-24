@@ -91,11 +91,11 @@ private noncomputable def sigmaBoolFamilyInr (X₁ X₂ : Scheme.{u}) : X₂ ⟶
 
 private theorem pairInl_comp_desc {X₁ X₂ Y : Scheme.{u}} (f₁ : X₁ ⟶ Y) (f₂ : X₂ ⟶ Y) :
     sigmaBoolFamilyInl X₁ X₂ ≫ Limits.Sigma.desc (boolFamilyDesc f₁ f₂) = f₁ :=
-  Limits.Sigma.ι_desc (boolFamilyDesc f₁ f₂) ⟨true⟩
+  Sigma.ι_comp_desc (boolFamilyDesc f₁ f₂) ⟨true⟩
 
 private theorem pairInr_comp_desc {X₁ X₂ Y : Scheme.{u}} (f₁ : X₁ ⟶ Y) (f₂ : X₂ ⟶ Y) :
     sigmaBoolFamilyInr X₁ X₂ ≫ Limits.Sigma.desc (boolFamilyDesc f₁ f₂) = f₂ :=
-  Limits.Sigma.ι_desc (boolFamilyDesc f₁ f₂) ⟨false⟩
+  Sigma.ι_comp_desc (boolFamilyDesc f₁ f₂) ⟨false⟩
 
 private theorem pairInl_comp_map {X₁ X₂ P₁ P₂ : Scheme.{u}} (a₁ : P₁ ⟶ X₁) (a₂ : P₂ ⟶ X₂) :
     sigmaBoolFamilyInl P₁ P₂ ≫ Limits.Sigma.map (boolFamilyMap a₁ a₂) = a₁ ≫ sigmaBoolFamilyInl X₁ X₂ :=

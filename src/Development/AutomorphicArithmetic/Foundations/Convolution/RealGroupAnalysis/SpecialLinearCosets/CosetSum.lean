@@ -47,12 +47,12 @@ theorem UpperTheory.ConvolutionTheory.R2.I.cosetSum :
     ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G] (U U' : Subgroup G), U' ≤ U → IsCompact (U : Set G) → IsOpen (U' : Set G) →
       ∃ s : Finset G, s.Nonempty ∧ (∀ g ∈ s, g ∈ U) ∧ ∀ x, ind U x = ∑ g ∈ s, ind U' (x * g⁻¹) := by
   intro G _ _ _ _ U U' hle hU hU'
-  haveI : CompactSpace U := isCompact_iff_compactSpace.mp hU
-  have hopen : IsOpen ((U'.subgroupOf U : Subgroup U) : Set U) := hU'.preimage continuous_subtype_val
-  haveI : Finite (U ⧸ U'.subgroupOf U) := Subgroup.quotient_finite_of_isOpen _ hopen
-  haveI : Finite (Quotient (QuotientGroup.rightRel (U'.subgroupOf U))) :=
+  have : CompactSpace U := isCompact_iff_compactSpace.mp hU
+  have hopen : IsOpen ((U'.subgroupOf U : Subgroup U) : Set U) := hU'.preimage continuous_subtypeVal
+  have : Finite (U ⧸ U'.subgroupOf U) := Subgroup.quotient_finite_of_isOpen _ hopen
+  have : Finite (Quotient (QuotientGroup.rightRel (U'.subgroupOf U))) :=
     Finite.of_equiv _ (QuotientGroup.quotientRightRelEquivQuotientLeftRel (U'.subgroupOf U)).symm
-  letI : Fintype (Quotient (QuotientGroup.rightRel (U'.subgroupOf U))) := Fintype.ofFinite _
+  let : Fintype (Quotient (QuotientGroup.rightRel (U'.subgroupOf U))) := Fintype.ofFinite _
   let mk : U → Quotient (QuotientGroup.rightRel (U'.subgroupOf U)) := fun u => Quotient.mk _ u
   let r : Quotient (QuotientGroup.rightRel (U'.subgroupOf U)) → G := fun q => ((Quotient.out q : U) : G)
   have hrU : ∀ q, r q ∈ U := fun q => (Quotient.out q : U).2

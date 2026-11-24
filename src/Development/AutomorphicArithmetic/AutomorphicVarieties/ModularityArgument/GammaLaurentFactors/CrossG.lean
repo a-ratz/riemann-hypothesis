@@ -313,7 +313,7 @@ open UpperTheory.V.Z.Gam in
 theorem UpperTheory.V.Z.Gam.indTorOf :
     UpperTheory.V.Z.Gam.IndTorOf := by
   intro hS hN hM K M _ _ _ _ _ _ _ hKM P π hI v hv
-  haveI : Algebra.IsQuadraticExtension K M := ⟨hKM⟩
+  have : Algebra.IsQuadraticExtension K M := ⟨hKM⟩
   obtain ⟨η, -, hη⟩ := hN K M (hKM ▸ Nat.prime_two)
   obtain ⟨w₀⟩ : Nonempty (PlacesOver M v) := (placesOverEquiv M v).nonempty_congr.2 inferInstance
   obtain ⟨⟨s, hs⟩, -, h3, -⟩ := hS K (2 * 2) (by norm_num) P v
@@ -590,7 +590,7 @@ private theorem norm_units [IsGalois K L] (hd : (Module.finrank K L).Prime) :
   obtain ⟨η, h1, h3⟩ := normCnt K L hd
   refine ⟨⟨(Filter.eventually_cofinite.1 h1).toFinset, fun u hu w θ hθ hn => ?_⟩,
     fun u w θ hθ => ((h3 u w).2.2 θ (isSmoothChar_of_isUnram hθ)).2.1 hθ⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hu
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hu
   have hc := ((h3 u w).2.2 θ hθ).2.2 hn
   have hpos : 0 < ∑ w' : PlacesOver L u, fdeg w' := by
     have hw := (hu.2 w).2
@@ -602,7 +602,7 @@ private theorem norm_units [IsGalois K L] (hd : (Module.finrank K L).Prime) :
   rw [← hc] at hpos
   obtain ⟨j, hj⟩ := Finset.card_pos.1 hpos
   intro x hx
-  haveI : (Valued.v : Valuation (u.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (u.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have hx' := (ValuativeRel.isEquiv (ValuativeRel.valuation (u.adicCompletion K)) Valued.v).eq_one_iff_eq_one.1 hx
   have hjx := (Finset.mem_filter.1 hj).2 x hx
@@ -618,7 +618,7 @@ theorem matchBCOf : MatchBCOf := by
   obtain ⟨R, hR⟩ : ∃ R : Finset (HeightOneSpectrum (𝓞 K)), ∀ u ∉ R, η.UnrAt u ∧ ∀ w : PlacesOver L u,
       IsPrimitiveRoot (η.val u) (fdeg w) ∧ Fintype.card (PlacesOver L u) * fdeg w = Module.finrank K L :=
     ⟨(Filter.eventually_cofinite.1 hη).toFinset, fun u hu => by
-      rwa [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hu⟩
+      rwa [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hu⟩
   have FK := hSupp K n (by omega) π
   have FL := hSupp L n (by omega) P
   choose sK hsK using fun u => (FK u).1
@@ -653,7 +653,7 @@ theorem matchBCOf : MatchBCOf := by
   have r₀ : ∀ u ∉ S₀, u ∉ R := fun u hu h => hu ((hS₀ _).2 (by tauto))
   have hunrAt : ∀ (ψ : HChar K) (u : HeightOneSpectrum (𝓞 K)), ψ.UnrAt u ↔ IsUnram (ψ.loc u) := by
     intro ψ u
-    haveI : (Valued.v : Valuation (u.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+    have : (Valued.v : Valuation (u.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
       Valuation.Compatible.ofValuation _
     refine forall_congr' fun x => imp_congr_left ?_
     exact (ValuativeRel.isEquiv (ValuativeRel.valuation (u.adicCompletion K)) Valued.v).eq_one_iff_eq_one.symm
@@ -831,7 +831,7 @@ private theorem comb {I : Type} (S : Finset I) (N : I → ℕ) (P : I → ℂ[X]
     have hN : (N v : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by have := (h v hv).1; omega)
     rw [hev v hv, hev v hv, sub_eq_add_neg, Complex.cpow_add _ _ hN, Complex.cpow_one]
     congr 3
-    rw [Complex.cpow_def_of_ne_zero hN, ← Complex.exp_int_mul, ← Complex.natCast_log]
+    rw [Complex.cpow_def_of_ne_zero hN, ← Complex.exp_intCast_mul, ← Complex.natCast_log]
     congr 1
     push_cast
     ring
@@ -903,11 +903,11 @@ theorem UpperTheory.V.Z.Gam.sideGCenOf :
     choose Φb hΦb b hb0 hb using hb
     let Φ : ∀ v : HeightOneSpectrum (𝓞 K), Matrix (Fin n) (Fin n) (v.adicCompletion K) → ℂ :=
       fun v => if v ∈ S then Φb v else integralIndicator (v.adicCompletion K) n
-    have hΦS : ∀ v ∈ S, Φ v = Φb v := fun v hv => if_pos hv
+    have hΦS : ∀ v ∈ S, Φ v = Φb v := fun v hv => ite_eq_left hv
     obtain ⟨c, c', hc, hc', hSB1, hG⟩ := genFE hn μ φ₀.2 φ₀.2 (h hmem) S hRS
       D.finite.π x ℓ hsm hℓs (fun v hv => ⟨hfix v hv, hℓ1 v⟩) (fun v hv => hℓK v (hfix v hv)) D.finite.isIrreducible
       D.finite.isAdmissible z (fun v hv => (hz v hv).1) fi hf' ⟨1, hF1'⟩ Φ (fun v hv => hΦS v hv ▸ hΦb v)
-      (fun v hv => if_neg hv)
+      (fun v hv => ite_eq_right hv)
     obtain ⟨σ₁, Λ, hΛ, h1⟩ := hG φ
     obtain ⟨σ₂, Λ', hΛ', h2⟩ := hG φ'
     have hloc : ∀ s, ∏ v ∈ S, zetaIntegral (localHaar n v) (Φ v)
@@ -1044,7 +1044,7 @@ private theorem cnt_unram {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
 
 private theorem unram_loc {χ : HChar K} {v : HeightOneSpectrum (𝓞 K)} (h : χ.UnrAt v) : IsUnram (χ.loc v) := by
   intro x hx
-  haveI : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact h x ((ValuativeRel.isEquiv (ValuativeRel.valuation (v.adicCompletion K)) Valued.v).eq_one_iff_eq_one.1 hx)
 
@@ -1176,7 +1176,7 @@ private theorem unram_iff {D : ℕ} {Y : Type} [AddCommGroup Y] [Module ℂ Y] (
     rw [map_smul]
     simp [detRep]
     rfl
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible y.irr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible y.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : y.V)
   constructor
   · rintro ⟨ξ, hξ, h, hu⟩
@@ -1283,8 +1283,8 @@ private theorem cnt_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
     exact (OrderIso.isSimpleOrder_iff o).2 hi
   obtain ⟨E⟩ := GlobalTheory.CompanionTheory.ParIndBridge.parInd_equiv_parabolicInd k e β hβ φ hφ τ
   rw [hστ] at E
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hs.isIrreducible
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτ
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hs.isIrreducible
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hτ
   obtain ⟨v, hv⟩ := exists_ne (0 : V)
   let f := E.symm.toIntertwiningMap.comp ι
   have hf : f v ≠ 0 := fun h => hv (hι (E.symm.toLinearEquiv.injective (by
@@ -1311,7 +1311,7 @@ private theorem cnt_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
       ((hu j).of_equiv (IrrGL.equivOf _ _ _))
     have h0 := cusp_block e hβ φ hφ σ hc j e' hU
     obtain ⟨S, g, hg⟩ := GlobalTheory.JacquetExact.isSubquotient_jac e' (hsm j) (hy j)
-    haveI : Subsingleton S.toSubmodule := ⟨fun a b => Subtype.ext (h0.elim _ _)⟩
+    have : Subsingleton S.toSubmodule := ⟨fun a b => Subtype.ext (h0.elim _ _)⟩
     exact Function.Surjective.subsingleton hg
   suffices key : ∀ j, (∃ ξ hξ, IrrGL.of (y j).ρ (y j).smooth (y j).irr = IrrGL.ofChar ξ hξ ∧ IsUnram (ξ * 1)) ↔
       d j = 1 ∧ ∀ g ∈ integralGL k (d j), σ (φ (Pi.mulSingle j g)) = 1 by
@@ -1326,7 +1326,7 @@ private theorem cnt_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
     funext a
     by_cases ha : a = j
     · subst ha
-      haveI : Unique (Fin (d a)) := hD ▸ inferInstance
+      have : Unique (Fin (d a)) := hD ▸ inferInstance
       ext p q
       simp [Matrix.mul_apply, Subsingleton.elim p default, Subsingleton.elim q default, mul_comm]
     · simp [Pi.mulSingle_eq_of_ne ha]
@@ -1335,7 +1335,7 @@ private theorem cnt_eq {n r : ℕ} {d : Fin r → ℕ} (hd : ∀ j, 0 < d j) (e 
       have hz' : τ (Pi.mulSingle j g) z = z := hz
       show (τ (Pi.mulSingle j g) * τ x) z = τ x z
       rw [← map_mul, hcomm, map_mul, Module.End.mul_apply, hz']⟩
-  haveI := hτ
+  have := hτ
   rcases eq_bot_or_eq_top K with h | h
   · have : w ∈ K.toSubmodule := hw
     rw [h] at this
@@ -1462,10 +1462,10 @@ private theorem sum_card_filter {Y : Type*} (s : Multiset Y) (d F : ℕ) (A : Y 
     simp only [Multiset.filter_cons, Multiset.card_add, Finset.sum_add_distrib, ih, mul_add]
     congr 1
     by_cases hB : B y
-    · rw [← h1 y hB, Finset.card_filter, if_pos hB, Multiset.card_singleton, mul_one]
+    · rw [← h1 y hB, Finset.card_filter, ite_eq_left hB, Multiset.card_singleton, mul_one]
       exact Finset.sum_congr rfl fun j _ => by split_ifs <;> simp
-    · rw [if_neg hB]
-      exact Finset.sum_eq_zero fun j _ => by rw [if_neg fun hA => hB (h2 y j hA)]; simp
+    · rw [ite_eq_right hB]
+      exact Finset.sum_eq_zero fun j _ => by rw [ite_eq_right fun hA => hB (h2 y j hA)]; simp
 
 private theorem loc_pow {K : Type} [Field K] [NumberField K] (η : HChar K) (j : ℕ) (v : HeightOneSpectrum (𝓞 K)) :
     (η ^ j).loc v = η.loc v ^ j := by

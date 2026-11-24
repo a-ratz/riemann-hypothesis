@@ -65,7 +65,7 @@ theorem nz_eq_nzOf_of_family : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       exact hl.ne_zero (⟨0, h1⟩ : Fin ρ) (by simpa using hv ⟨0, h1⟩)
     have hnz : R.nz σ (⊥ : Submodule (𝓞 E) Λ) = 1 := by
       simp only [RiemLat.nz]
-      exact dif_neg hno
+      exact dite_eq_right hno
     have hof : R.nzOf σ (⊥ : Submodule (𝓞 E) Λ) y = 1 := by
       have hs : Submodule.span (𝓞 E) (Set.range y) = ⊥ := by
         simp [Set.range_eq_empty]
@@ -80,9 +80,9 @@ theorem nz_eq_nzOf_of_family : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
         simp [Set.range_eq_empty]
       have hb : (⊥ : Submodule (𝓞 E) Λ).toAddSubgroup = ⊥ := rfl
       rw [hs, hb, AddSubgroup.relIndex_bot_left] at hidx
-      haveI : Finite I.toAddSubgroup := Nat.finite_of_card_ne_zero hidx
+      have : Finite I.toAddSubgroup := Nat.finite_of_card_ne_zero hidx
       obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hbot
-      haveI := R.free
+      have := R.free
       have hfin : IsOfFinAddOrder (⟨x, hx⟩ : I.toAddSubgroup) := isOfFinAddOrder_of_finite _
       obtain ⟨n, hn, hnx⟩ := isOfFinAddOrder_iff_nsmul_eq_zero.1 hfin
       have hnx' : n • x = 0 := congrArg Subtype.val hnx

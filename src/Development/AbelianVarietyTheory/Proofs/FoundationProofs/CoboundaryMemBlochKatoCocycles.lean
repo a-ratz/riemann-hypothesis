@@ -94,8 +94,8 @@ variable {O : Type} [CommRing O]
 theorem finrank_quot_smul_top (I : Ideal O) [I.IsMaximal] (N : Type) [AddCommGroup N] [Module O N]
     [Module.Free O N] [Module.Finite O N] :
     finrank (O ⧸ I) (N ⧸ (I • (⊤ : Submodule O N))) = finrank O N := by
-  haveI : Nontrivial (O ⧸ I) := Ideal.Quotient.nontrivial_iff.2 (Ideal.IsMaximal.ne_top inferInstance)
-  haveI : Nontrivial O := (Ideal.Quotient.mk I).domain_nontrivial
+  have : Nontrivial (O ⧸ I) := Ideal.Quotient.nontrivial_iff.2 (Ideal.IsMaximal.ne_top inferInstance)
+  have : Nontrivial O := (Ideal.Quotient.mk I).domain_nontrivial
   have e := (TensorProduct.quotTensorEquivQuotSMul N I).extendScalarsOfSurjective
     (S := O ⧸ I) Ideal.Quotient.mk_surjective
   rw [← e.finrank_eq, Module.finrank_baseChange]
@@ -116,10 +116,10 @@ theorem exists_generators [IsLocalRing O] (I : Ideal O) [hI : I.IsMaximal] {N Z 
     [AddCommGroup Z] [Module O Z] [Module.Free O Z] [Module.Finite O Z] (f : N →ₗ[O] Z) :
     ∃ (m : ℕ) (z : Fin m → Z), Submodule.span O (Set.range z) ⊔ LinearMap.range f = ⊤ ∧
       m + finrank O N = finrank O Z + finrank (O ⧸ I) ↥(LinearMap.ker (redMap I f)) := by
-  letI : Field (O ⧸ I) := Ideal.Quotient.field I
-  haveI : Module.Finite (O ⧸ I) (N ⧸ (I • (⊤ : Submodule O N))) :=
+  let : Field (O ⧸ I) := Ideal.Quotient.field I
+  have : Module.Finite (O ⧸ I) (N ⧸ (I • (⊤ : Submodule O N))) :=
     Module.Finite.of_restrictScalars_finite O _ _
-  haveI : Module.Finite (O ⧸ I) (Z ⧸ (I • (⊤ : Submodule O Z))) :=
+  have : Module.Finite (O ⧸ I) (Z ⧸ (I • (⊤ : Submodule O Z))) :=
     Module.Finite.of_restrictScalars_finite O _ _
   set R := LinearMap.range (redMap I f) with hR
   let Q := (Z ⧸ (I • (⊤ : Submodule O Z))) ⧸ R
@@ -180,8 +180,8 @@ theorem exists_smul_mem (L : Lattice (O := O) ρ) (x : V) : ∃ a : O, a ≠ 0 �
 
 theorem finrank_lattice [FiniteDimensional LL V] (L : Lattice (O := O) ρ) :
     finrank O ↥L.T = finrank LL V := by
-  haveI := L.free
-  haveI : Module.Finite O ↥L.T := Module.Finite.iff_fg.2 L.fg
+  have := L.free
+  have : Module.Finite O ↥L.T := Module.Finite.iff_fg.2 L.fg
   refine le_antisymm (finrank_le_of_injective L.T.subtype L.T.injective_subtype) ?_
   let b := Module.finBasis O ↥L.T
   have h : Submodule.span LL (Set.range fun i => (b i : V)) = ⊤ := by
@@ -301,11 +301,11 @@ omit [TopologicalSpace G] [TopologicalSpace V] [IsTopologicalAddGroup V] [Contin
   [IsFractionRing O LL] in
 theorem h0_mod_uniformizer_le_rank (L : Lattice (O := O) ρ) {ϖ : O} (hϖ : Irreducible ϖ) :
     h0ModResidueDim L ϖ ≤ finrank O ↥L.T := by
-  haveI hI : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
-  letI : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
-  haveI := L.free
-  haveI : Module.Finite O ↥L.T := Module.Finite.iff_fg.2 L.fg
-  haveI := finite_latMod L (Ideal.span {ϖ})
+  have hI : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
+  let : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
+  have := L.free
+  have : Module.Finite O ↥L.T := Module.Finite.iff_fg.2 L.fg
+  have := finite_latMod L (Ideal.span {ϖ})
   rw [← finrank_quot_smul_top (Ideal.span {ϖ})]
   exact Submodule.finrank_le _
 
@@ -348,24 +348,24 @@ section Local
 variable {l : ℕ} [Fact l.Prime]
 
 theorem compactSpace_GK (K : FinExt l) : CompactSpace ↥(GK K) := by
-  haveI := K.2
+  have := K.2
   have h : IsClosed ((GK K : Subgroup (GQ l)) : Set (GQ l)) :=
     IntermediateField.fixingSubgroup_isClosed K.1
   exact isCompact_iff_compactSpace.1 h.isCompact
 
 theorem splits_of_good {K LL : FinExt l} {s : ℕ} (h : Good K s LL)
     [Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)] : Splits (Qp := ℚ_[l]) (K := ↥K.1) ↥LL.1 := by
-  haveI := K.2
+  have := K.2
   refine ⟨LL.2, ?_⟩
   rw [← AlgHom.card ℚ_[l] ↥K.1 (Om l)]
   refine Fintype.card_of_bijective (f := fun τ => LL.1.val.comp τ) ⟨fun τ τ' hτ => ?_, fun σ => ?_⟩
   · exact AlgHom.ext fun x => Subtype.ext (DFunLike.congr_fun hτ x)
   · have hσ : ∀ x, σ x ∈ LL.1 := by
       intro x
-      letI : Algebra ↥K.1 ↥(Ks K s) := (IntermediateField.inclusion h.2.2.1).toAlgebra
-      haveI : IsScalarTower ℚ_[l] ↥K.1 ↥(Ks K s) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-      haveI : Algebra.IsAlgebraic ↥K.1 ↥(Ks K s) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) _
-      obtain ⟨τ, hτ⟩ := IsAlgClosed.surjective_restrictDomain_of_isAlgebraic
+      let : Algebra ↥K.1 ↥(Ks K s) := (IntermediateField.inclusion h.2.2.1).toAlgebra
+      have : IsScalarTower ℚ_[l] ↥K.1 ↥(Ks K s) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+      have : Algebra.IsAlgebraic ↥K.1 ↥(Ks K s) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) _
+      obtain ⟨τ, hτ⟩ := IsAlgClosed.surjective_domRestrict_of_isAlgebraic
         (K := ℚ_[l]) (L := ↥K.1) (E := ↥(Ks K s)) (M := Om l) σ
       rw [← hτ]
       exact h.2.2.2 τ _

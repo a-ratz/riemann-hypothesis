@@ -77,12 +77,12 @@ theorem card_eq_mul_of_fibers {X Y : Type*} [Finite X] (f : X → Y) (c : ℕ)
 
   classical
   by_cases hY : Finite Y
-  · haveI := Fintype.ofFinite Y
-    haveI := Fintype.ofFinite X
+  · have := Fintype.ofFinite Y
+    have := Fintype.ofFinite X
     rw [← Nat.card_congr (Equiv.sigmaFiberEquiv f), Nat.card_sigma,
       Finset.sum_congr rfl (fun y _ => hc y), Finset.sum_const, Finset.card_univ, smul_eq_mul,
       Nat.card_eq_fintype_card (α := Y), mul_comm]
-  · haveI : Infinite Y := not_finite_iff_infinite.mp hY
+  · have : Infinite Y := not_finite_iff_infinite.mp hY
     rw [Nat.card_eq_zero_of_infinite (α := Y), mul_zero]
     obtain ⟨y, hy⟩ := (Set.finite_range f).infinite_compl.nonempty
     have hc0 : c = 0 := by
@@ -250,7 +250,7 @@ theorem card_lift [Finite A] (hπ : Function.Surjective π) (hστ : ∀ a, π (
     rw [hmemI] at ha ⊢
     rw [hστ, ha, map_zero]
   have hsqI : ∀ a ∈ I, ∀ b ∈ I, a * b = 0 := fun a ha b hb => hsq a b ((hmemI a).mp ha) ((hmemI b).mp hb)
-  haveI : Finite B := Finite.of_surjective π hπ
+  have : Finite B := Finite.of_surjective π hπ
   have hAIB : Nat.card I * Nat.card B = Nat.card A := by
     have h1 := card_fiber_mul_card_range π.toAddMonoidHom 0 (zero_mem _)
     have e1 : {g : A // π.toAddMonoidHom g = 0} ≃ I :=

@@ -341,7 +341,7 @@ theorem measurePreserving_mul_right {y : GL (Fin n) F} (hy : y ∈ integralGL F 
   have ht : μ B ≠ ⊤ := hBc.measure_lt_top.ne
   have hc : Measure.addHaarScalarFactor (μ.map e) μ = 1 := by
     have h1 := congrArg (fun m : Measure (Matrix (Fin n) (Fin n) F) => m B) hsmul
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h1
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h1
     have hme : Measurable e := e.continuous.measurable
     rw [Measure.map_apply hme hBo.measurableSet, hpre] at h1
     have h2 : (Measure.addHaarScalarFactor (μ.map e) μ : ENNReal) * μ B = 1 * μ B := by
@@ -498,7 +498,7 @@ theorem map_inv_withDensity_haar :
   have hμVt : μ V ≠ ∞ := hV.measure_lt_top.ne
   have hc : haarScalarFactor ν μ = 1 := by
     have := congrArg (fun m : Measure G => m V) hsmul
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at this
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at this
     rw [hνV] at this
     have h1 : (haarScalarFactor ν μ : ℝ≥0∞) * μ V = 1 * μ V := by rw [one_mul, ← this]
     exact_mod_cast (ENNReal.mul_left_inj hμV0 hμVt).1 h1
@@ -723,7 +723,7 @@ theorem continuous_parabolicB {φ : GL (Fin n) F → W} (hφ : φ ∈ parabolicI
     rintro _ ⟨k, hk, rfl⟩
     simp only [Set.mem_preimage, smul_eq_mul, hK k hk]
     exact hg
-  have hv : Continuous fun p : blockUpper F n β => (p : GL (Fin n) F) := continuous_subtype_val
+  have hv : Continuous fun p : blockUpper F n β => (p : GL (Fin n) F) := continuous_subtypeVal
   exact ((hΞ.1.continuous.comp (Units.continuous_val.comp hv)).mul
     ((continuous_detPow _).comp hv)).mul (hℓφ.comp ((hv.inv).mul continuous_const))
 
@@ -737,7 +737,7 @@ theorem lintegral_parabolicB_inv {φ : GL (Fin n) F → W} (hφ : φ ∈ parabol
   have : SecondCountableTopology (blockUpper F n β) :=
     Topology.IsEmbedding.subtypeVal.secondCountableTopology
   have hc := continuous_parabolicB hφ hΞ ℓ s y
-  have hmeas : Measurable fun p => ‖parabolicB β Ξ φ ℓ s y p‖ₑ := hc.enorm.measurable
+  have hmeas : Measurable fun p => ‖parabolicB β Ξ φ ℓ s y p‖ₑ := hc.eNorm.measurable
   have hΔ := LinearChart.measurable_modularCharacter (parabolicChart F n β)
   rw [show measureP β ψ = (parabolicChart F n β).haar
       (parabolicMeasure β (leviCoordMeasure β ψ) (unipMeasure β ψ)) from rfl,
@@ -756,18 +756,18 @@ theorem lintegral_parabolicB_inv {φ : GL (Fin n) F → W} (hφ : φ ∈ parabol
       ‖parabolicB β Ξ φ ℓ s y (parabolicMk β m u)‖ₑ =
         ‖Ξ (((m : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) + unipMatrix F u)‖ₑ * ‖c‖ₑ := by
     intro u
-    rw [← enorm_coe_nnreal, ← enorm_mul]
+    rw [← enorm_coe_nnreal, ← eNorm_mul]
     have := modular_mul_parabolicB (σ := σ) hφ Ξ ℓ s y m u
-    rw [this, enorm_mul]
+    rw [this, eNorm_mul]
   simp_rw [hpt]
   have hΞm : Measurable fun u : UnipotentIndex n β → F =>
       ‖Ξ (((m : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) + unipMatrix F u)‖ₑ :=
-    (hΞ.1.continuous.comp (continuous_const.add continuous_unipMatrix)).enorm.measurable
-  rw [lintegral_mul_const _ hΞm, ← ofReal_integral_norm_eq_lintegral_enorm hint]
+    (hΞ.1.continuous.comp (continuous_const.add continuous_unipMatrix)).eNorm.measurable
+  rw [lintegral_mul_const _ hΞm, ← ofReal_integral_norm_eq_lintegral_eNorm hint]
   have hI : 0 ≤ ∫ u, ‖Ξ (((m : GL (Fin n) F) : Matrix (Fin n) (Fin n) F) + unipMatrix F u)‖
       ∂unipMeasure β ψ := integral_nonneg fun _ => norm_nonneg _
   rw [← leviIntegrandB_eq, integral_complex_ofReal, hcdef]
-  simp only [enorm_mul]
+  simp only [eNorm_mul]
   rw [enorm_ofReal_complex hI, enorm_coe_nnreal, enorm_coe_nnreal]
   push_cast
   ring
@@ -794,9 +794,9 @@ theorem integral_parabolicB_inv {φ : GL (Fin n) F → W} (hφ : φ ∈ paraboli
         ∂measureP β ψ = ∫⁻ p, ‖parabolicB β Ξ φ ℓ s y p⁻¹‖ₑ ∂measureP β ψ := by
       rw [show measureP β ψ = (parabolicChart F n β).haar
           (parabolicMeasure β (leviCoordMeasure β ψ) (unipMeasure β ψ)) from rfl,
-        LinearChart.lintegral_inv_haar _ _ hc.enorm.measurable]
+        LinearChart.lintegral_inv_haar _ _ hc.eNorm.measurable]
       refine lintegral_congr fun p => ?_
-      rw [enorm_mul, enorm_coe_nnreal]
+      rw [eNorm_mul, enorm_coe_nnreal]
     rw [h1]
     exact hint.2
   rw [show measureP β ψ = (parabolicChart F n β).haar

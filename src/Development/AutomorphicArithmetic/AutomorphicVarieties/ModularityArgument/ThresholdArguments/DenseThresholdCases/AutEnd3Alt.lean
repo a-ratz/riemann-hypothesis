@@ -60,11 +60,11 @@ theorem UpperTheory.V.Z.Win.Dn.autEnd3_alt :
       ∀ [Algebra K Ω] [Algebra K L] [IsScalarTower K L Ω] (ρ : G K Ω →* GL (Fin 3) (Qbar l)),
         (∀ s, (ρ s).val = (UnitaryThreeInertia.push A.val r (Base.galEmb ℚ K Ω s)).mat) → IneAb ρ ∧ Flagged ρ ∧ Keeps ρ L) → _root_.UpperTheory.V.Pr.AutPtAlt k 3 ι (cycBar L Ω l)⁻¹ → _root_.UpperTheory.V.Pr.AutEnd3Alt c η Ψ σ g₁ B K ι := by
   intro hD Ω _ _ _ l _ c η Ψ σ g₁ B M L _ _ _ _ Φ k _ C₀ hok hl hcc ι K _ _ _ hK hS hA A dvrA _ r hr hirr _ ρ hρ
-  haveI : Module.IsTorsionFree L Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
-  haveI : Module.IsTorsionFree K Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
-  haveI : IsGalois L Ω := {}
+  have : Module.IsTorsionFree L Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) L⟩
+  have : Module.IsTorsionFree K Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have : IsGalois L Ω := {}
   have hσ : σ * σ = 1 := by
     obtain ⟨j, hj⟩ := hcc
     exact AlgEquiv.ext fun x => j.injective (by simp [AlgEquiv.mul_apply, hj])
@@ -85,15 +85,15 @@ theorem UpperTheory.V.Z.Win.Dn.autEnd3_alt :
       map_mul' := fun x y => hinj (by rw [hf, map_mul, map_mul, hf, hf])
       map_zero' := hinj (by rw [hf, map_zero, map_zero])
       map_add' := fun x y => hinj (by rw [hf, map_add (f := _), map_add (f := _), hf, hf]) }
-  letI : Algebra K L := φ.toAlgebra
-  haveI : IsScalarTower K L Ω := IsScalarTower.of_algebraMap_eq fun x => (hf x).symm
-  haveI := k.ab
-  haveI : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
-  haveI : Group.IsSolvable (L ≃ₐ[K] L) := Group.isSolvable_of_comm fun a b => mul_comm' a b
+  let : Algebra K L := φ.toAlgebra
+  have : IsScalarTower K L Ω := IsScalarTower.of_algebraMap_eq fun x => (hf x).symm
+  have := k.ab
+  have : IsAbelianGalois K L := IsAbelianGalois.tower_top ℚ K L
+  have : Group.IsSolvable (L ≃ₐ[K] L) := Group.isSolvable_of_comm fun a b => mul_comm' a b
   have : IsLocalRing A := dvrA.toIsLocalRing
   obtain ⟨_, hloc, hcont⟩ := UpperTheory.V.Th.End3.sub_facts c A
   have : IsLocalHom (algebraMap c.O A) := hloc
-  haveI : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
+  have : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
   obtain ⟨ρ', h1, h2, h3⟩ := exists_nrep3 k hok hl hσ r hr
   have hU := hirr (Base.galOf ℚ L Ω) (Base.galEmbTop ℚ L Ω).2.1 hLη
   have hcomp : ∀ s : G L Ω, Base.galEmb ℚ K Ω (Base.galEmb K L Ω s) = Base.galEmb ℚ L Ω s := fun s => rfl

@@ -202,10 +202,10 @@ theorem data_of_rows (eps CD : ℝ) (he : 0 < eps) (he' : eps < 1 / 52) (hCD : 3
     by_cases hL : D.s.letter u ⟨l - 1, by omega⟩ = true
     · right
       intro τ
-      rw [key τ, if_pos hL]
+      rw [key τ, ite_eq_left hL]
     · left
       intro τ
-      rw [key τ, if_neg hL]
+      rw [key τ, ite_eq_right hL]
       ring
   ·
     intro u τ
@@ -366,7 +366,7 @@ lemma vand_inner_le (c : Sz.Cfg) (hc : c.Ok) (hs : c.vth ≤ 1 / 10) (de : ℕ �
 
   have hu1 : c.u de 1 = c.a := by unfold Sz.Cfg.u; simp
   have huk : c.u de c.k = c.ulast := by
-    unfold Sz.Cfg.u; rw [if_neg (by omega), if_pos rfl]
+    unfold Sz.Cfg.u; rw [ite_eq_right (by omega), ite_eq_left rfl]
   have F1 : ∀ j ∈ Icc 2 c.k, 1 ≤ c.u de 1 - c.u de j := by
     intro j hj
     rw [mem_Icc] at hj
@@ -510,7 +510,7 @@ lemma vand_lam_le_cfg (c : Sz.Cfg) (hc : c.Ok) (hs : c.vth ≤ 1 / 10) (hmk : c.
 
   have hexp : Real.exp (((c.k : ℝ) - 1) / 4) * Real.exp (2 * L) ^ c.k * (Real.exp (3 * L) ^ c.m) ^ c.k *
       (Real.exp (2 * L) ^ c.m) ^ c.k ≤ Real.exp (10 * c.k * c.m * L) := by
-    simp only [← Real.exp_nat_mul, ← Real.exp_add]
+    simp only [← Real.exp_natCast_mul, ← Real.exp_add]
     refine Real.exp_le_exp.2 ?_
     have h1 : (c.k : ℝ) * 1 ≤ c.k * L := mul_le_mul_of_nonneg_left hL (by linarith)
     have h2 : (c.k : ℝ) * L * 2 ≤ c.k * L * c.m := mul_le_mul_of_nonneg_left hmR (by linarith)
@@ -608,7 +608,7 @@ theorem root_le (ka rd g Q b Cg m k : ℝ) (hb1 : 1 < b) (hm : 2 ≤ m) (hmk : 4
 
 theorem tcrit_le_pow : Formalism.L2.SG.Pf.SzHypFD.DsigHC → ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb Cu cT CT C0 : ℝ), Ties D → Cnt.Hyp0 D large₂ C' Cl Cg cb Cu cT CT C0 → 40 ≤ Cl → ∀ u τ, Tcrit D u τ ≤ large₂.sc.b ^ ((4 * Cg + 12) * (D.R.m : ℝ)) := by
   intro hDs D large₂ C' Cl Cg cb Cu cT CT C0 hT h h40 u τ
-  haveI : Fact Formalism.L2.SG.Pf.SzHypFD.DsigHC := ⟨hDs⟩
+  have : Fact Formalism.L2.SG.Pf.SzHypFD.DsigHC := ⟨hDs⟩
   have hH := h.1
   obtain ⟨_, _, _, _, _, _, hm2L, _, _, _, hlogrd, hkg1, hg1, _, hg2, -⟩ := hH
   have hL : 1 ≤ large₂.sc.L := Formalism.MainNotions.BridgeLemma.one_le_L large₂
@@ -852,7 +852,7 @@ theorem levelPrime_size : Formalism.HermitianLatticesTheory.SiegelMassRatio → 
       calc (D.R.f:ℝ) * (2:ℝ) ^ ((3:ℝ) - D.R.k) ≤ (D.R.f:ℝ) * 8 := mul_le_mul_of_nonneg_left h2pow hfpos.le
         _ ≤ 8 * D.R.k := by linarith
     have hqk : q ^ D.R.k = Real.exp (-((D.R.k:ℝ) * large₂.sc.L * D.R.m)) := by
-      rw [hq, show large₂.sc.b = Real.exp large₂.sc.L from rfl, ← Real.exp_mul, ← Real.exp_nat_mul]
+      rw [hq, show large₂.sc.b = Real.exp large₂.sc.L from rfl, ← Real.exp_mul, ← Real.exp_natCast_mul]
       congr 1
       ring
     have hLm : (40:ℝ) * D.R.k ≤ (D.R.k:ℝ) * large₂.sc.L * D.R.m := by

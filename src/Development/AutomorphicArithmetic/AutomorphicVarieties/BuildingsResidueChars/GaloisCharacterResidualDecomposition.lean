@@ -89,7 +89,7 @@ private theorem cyc_eq (g : G ℚ Ω) : cycBar ℚ Ω l g = mU c (chiO ℚ Ω l 
 omit [IsAlgClosure ℚ Ω] in
 private theorem cont_cyc : Continuous (cycBar ℚ Ω l) :=
   (Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ ℚ Ω l)
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ ℚ Ω l)
 
 variable {c} {D : Raw Ω c}
 
@@ -242,7 +242,7 @@ theorem UpperTheory.galois_character_residual_decomposition :
     · rw [H.φ_in _ hg, mul_one, ← map_pow, ← map_mul, cong_iff, b_th hD, map_mul, map_pow, ho, (hin g).1 hg, mul_one, one_mul]
     · rw [H.φ_out _ hg, hm1, ← map_pow, ← map_mul, ← map_mul, cong_iff, b_th hD, map_mul, map_mul, map_pow, ho, hout g hg, bU_neg,
         map_one, one_mul]
-  · haveI : FiniteDimensional ℚ k₀ := Module.finite_of_finrank_pos (by rw [H.deg]; norm_num)
+  · have : FiniteDimensional ℚ k₀ := Module.finite_of_finrank_pos (by rw [H.deg]; norm_num)
     have cφ : Continuous φ := cont_of_ker φ _ k₀.fixingSubgroup_isOpen H.φ_in
     have cu : ∀ χ : G ℚ Ω →* c.Oˣ, IsOpen (χ.ker : Set (G ℚ Ω)) → Continuous (up χ) := fun χ hχ =>
       cont_of_ker _ _ hχ fun g hg => by rw [hup, MonoidHom.mem_ker.1 hg, map_one]

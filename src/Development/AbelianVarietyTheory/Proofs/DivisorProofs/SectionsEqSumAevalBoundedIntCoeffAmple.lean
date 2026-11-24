@@ -159,15 +159,15 @@ theorem key_sum {n q N : ℕ} {T : MvPolynomial (Fin n) ℤ} (hT : T.IsHomogeneo
       rw [geom_root hζ (by have := hα i; omega) (by have := hα i; have := hdq i; omega)]
       have := hα i; have := hdq i
       by_cases h : d i = α i
-      · rw [if_pos (by omega), if_pos h]
-      · rw [if_neg (by omega), if_neg h]
+      · rw [ite_eq_left (by omega), ite_eq_left h]
+      · rw [ite_eq_right (by omega), ite_eq_right h]
     simp_rw [e2]
     by_cases h : d = α
     · subst h; simp [Finset.prod_const, Finset.card_univ]
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       obtain ⟨i, hi⟩ : ∃ i, d i ≠ α i := by
         by_contra hc; push_neg at hc; exact h (Finsupp.ext hc)
-      rw [Finset.prod_eq_zero (Finset.mem_univ i) (by rw [if_neg hi]), mul_zero]
+      rw [Finset.prod_eq_zero (Finset.mem_univ i) (by rw [ite_eq_right hi]), mul_zero]
   simp_rw [aeval_def, eval₂_eq', Finset.sum_mul]
   rw [Finset.sum_comm, Finset.sum_congr rfl inner, Finset.sum_ite_eq']
   split_ifs with h
@@ -287,16 +287,16 @@ theorem mem_polyring_of_integral_closure_range : ∀ {K : Type} [Field K] {D : �
     intro q
     exact Subfield.subring_closure_le _ ((hsub _).mpr ⟨q, rfl⟩)
   let φ : MvPolynomial (Fin D) ℤ →+* F := (aeval y).toRingHom.codRestrict F hmem
-  letI : Algebra (MvPolynomial (Fin D) ℤ) F := φ.toAlgebra
+  let : Algebra (MvPolynomial (Fin D) ℤ) F := φ.toAlgebra
   have hφ : ∀ q, ((algebraMap (MvPolynomial (Fin D) ℤ) F q : F) : K) = aeval y q := fun q => rfl
   have hinj : Function.Injective (aeval y : MvPolynomial (Fin D) ℤ →ₐ[ℤ] K) :=
     algebraicIndependent_iff_injective_aeval.mp hy
-  haveI : FaithfulSMul (MvPolynomial (Fin D) ℤ) F := by
+  have : FaithfulSMul (MvPolynomial (Fin D) ℤ) F := by
     rw [faithfulSMul_iff_algebraMap_injective]
     intro a b h
     apply hinj
     rw [← hφ a, ← hφ b, h]
-  haveI : IsFractionRing (MvPolynomial (Fin D) ℤ) F := by
+  have : IsFractionRing (MvPolynomial (Fin D) ℤ) F := by
     refine IsFractionRing.of_field _ _ ?_
     intro w
     obtain ⟨u, hu, v, hv, huv⟩ := Subfield.mem_closure_iff.mp w.2
@@ -305,7 +305,7 @@ theorem mem_polyring_of_integral_closure_range : ∀ {K : Type} [Field K] {D : �
     refine ⟨a, b, ?_⟩
     apply Subtype.ext
     simp only [Subfield.coe_div, hφ, ha, hb, huv]
-  haveI : IsIntegrallyClosed (MvPolynomial (Fin D) ℤ) :=
+  have : IsIntegrallyClosed (MvPolynomial (Fin D) ℤ) :=
     UniqueFactorizationMonoid.instIsIntegrallyClosed
   have hcomp : (aeval y).toRingHom.comp (bind₁ p).toRingHom = (aeval z).toRingHom := by
     refine RingHom.ext fun q => ?_
@@ -518,11 +518,11 @@ theorem trace_monic_over_mvPolynomial {K : Type} [Field K] (F : Subfield K) [Fin
         simpa [map_mul, hφdef] using S.mul_mem hp (Subring.subset_closure ⟨i, rfl⟩)
   let ψ : MvPolynomial ι ℤ →+* F := φ.codRestrict F hφF
   let θ : MvPolynomial ι ℤ →+* S := φ.codRestrict S hφS
-  letI : Algebra (MvPolynomial ι ℤ) K := φ.toAlgebra
-  letI : Algebra (MvPolynomial ι ℤ) F := ψ.toAlgebra
-  letI : Algebra (MvPolynomial ι ℤ) S := θ.toAlgebra
-  haveI : IsScalarTower (MvPolynomial ι ℤ) F K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower (MvPolynomial ι ℤ) S K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra (MvPolynomial ι ℤ) K := φ.toAlgebra
+  let : Algebra (MvPolynomial ι ℤ) F := ψ.toAlgebra
+  let : Algebra (MvPolynomial ι ℤ) S := θ.toAlgebra
+  have : IsScalarTower (MvPolynomial ι ℤ) F K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower (MvPolynomial ι ℤ) S K := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hθsurj : Function.Surjective θ := by
     rintro ⟨s, hs⟩
     have hle : S ≤ φ.range := by
@@ -531,7 +531,7 @@ theorem trace_monic_over_mvPolynomial {K : Type} [Field K] (F : Subfield K) [Fin
       exact ⟨X i, by simp [hφdef]⟩
     obtain ⟨p, hp⟩ := hle hs
     exact ⟨p, Subtype.ext hp⟩
-  haveI : Algebra.IsIntegral (MvPolynomial ι ℤ) S :=
+  have : Algebra.IsIntegral (MvPolynomial ι ℤ) S :=
     Algebra.IsIntegral.of_surjective (Algebra.ofId _ _) hθsurj
   have hvP : IsIntegral (MvPolynomial ι ℤ) v := isIntegral_trans v hv
   have hT : IsIntegral (MvPolynomial ι ℤ) (Algebra.trace F K v) := Algebra.isIntegral_trace hvP
@@ -668,16 +668,16 @@ theorem norm_aeval_trace_le : ∀ (K : Type) [Field K] [CharZero K] (D : ℕ) (x
   have hAF := ratR_zero_le_ratF x h0
   have memA : ∀ l, x l / x 0 ∈ ratR x 0 := fun l => Subring.subset_closure ⟨l, rfl⟩
   have hAB : ratR x 0 ≤ B := Subring.closure_le.2 (by rintro _ ⟨l, rfl⟩; exact hB l)
-  letI : Algebra (ratR x 0) (ratF x) := (Subring.inclusion hAF).toAlgebra
-  letI : Algebra (ratR x 0) B := (Subring.inclusion hAB).toAlgebra
-  haveI : IsScalarTower (ratR x 0) (ratF x) K := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower (ratR x 0) B K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (ratR x 0) (ratF x) := (Subring.inclusion hAF).toAlgebra
+  let : Algebra (ratR x 0) B := (Subring.inclusion hAB).toAlgebra
+  have : IsScalarTower (ratR x 0) (ratF x) K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (ratR x 0) B K := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨e, he⟩ := exists_ringEquiv_ratR x h0 hind
-  haveI : UniqueFactorizationMonoid (ratR x 0) := e.toMulEquiv.uniqueFactorizationMonoid inferInstance
+  have : UniqueFactorizationMonoid (ratR x 0) := e.toMulEquiv.uniqueFactorizationMonoid inferInstance
   have hinjF : Function.Injective (algebraMap (ratR x 0) (ratF x)) := Subring.inclusion_injective hAF
   have hinjB : Function.Injective (algebraMap (ratR x 0) B) := Subring.inclusion_injective hAB
-  haveI : FaithfulSMul (ratR x 0) (ratF x) := (faithfulSMul_iff_algebraMap_injective _ _).2 hinjF
-  haveI : IsFractionRing (ratR x 0) (ratF x) := by
+  have : FaithfulSMul (ratR x 0) (ratF x) := (faithfulSMul_iff_algebraMap_injective _ _).2 hinjF
+  have : IsFractionRing (ratR x 0) (ratF x) := by
     refine IsFractionRing.of_field _ _ fun y => ?_
     obtain ⟨a, ha, b, hb, hab⟩ := Subfield.mem_closure_iff.1 y.2
     rw [← ratR_zero_eq_closure x h0] at ha hb
@@ -687,7 +687,7 @@ theorem norm_aeval_trace_le : ∀ (K : Type) [Field K] [CharZero K] (D : ℕ) (x
     minpoly.isIntegrallyClosed_eq_field_fractions' (ratF x) hwint
   have hminB : minpoly (ratR x 0) w = minpoly (ratR x 0) (w : K) :=
     (minpoly.algHom_eq (IsScalarTower.toAlgHom (ratR x 0) B K) Subtype.val_injective w).symm
-  haveI : Algebra.IsIntegral (ratR x 0) B :=
+  have : Algebra.IsIntegral (ratR x 0) B :=
     ⟨fun b => (isIntegral_algHom_iff (IsScalarTower.toAlgHom (ratR x 0) B K) Subtype.val_injective).1 (hint b b.2)⟩
   set p := minpoly (ratR x 0) (w : K) with hp
   have hpm : p.Monic := minpoly.monic hwint
@@ -792,7 +792,7 @@ theorem rep_of_trace {K : Type} [Field K] [CharZero K] {D : ℕ} (x : Fin (D + 1
       (∀ i, (Algebra.trace (ratF x) K (f * g i / x 0 ^ N) : K) = aeval (fun l => x l / x 0) (T i)) →
       f = ∑ i, aeval x (T i) * w i := by
   classical
-  haveI : Nonempty (Fin (Module.finrank (ratF x) K)) := ⟨⟨0, Module.finrank_pos⟩⟩
+  have : Nonempty (Fin (Module.finrank (ratF x) K)) := ⟨⟨0, Module.finrank_pos⟩⟩
   let b := basisOfLinearIndependentOfCardEqFinrank hg (by simp)
   have hB : (Algebra.traceForm (ratF x) K).Nondegenerate := traceForm_nondegenerate _ _
   refine ⟨fun i => (Algebra.traceForm (ratF x) K).dualBasis hB b i, ?_⟩
@@ -822,9 +822,9 @@ theorem sections_eq_sum_aeval_bounded : ∀ (k : Type) [CommRing k] (X : Scheme.
   intro k _ X _ p D hV P hA e x hG a b
   classical
   obtain ⟨hx0s, hai, hfd⟩ := _root_.GlobalTheory.HSAmp.gens_quot_trBasis k X p D hV P hA e x hG
-  haveI := hfd
+  have := hfd
   obtain ⟨hch, -⟩ := _root_.GlobalTheory.ArithFnField.charZero_and_trdeg_functionField k X p D hV
-  haveI := hch
+  have := hch
   set n' := Module.finrank (ratF x) X.functionField with hn'
   obtain ⟨c0, g0, hg0, hli0⟩ := _root_.GlobalTheory.HSAmp.exists_linearIndependent_mem_H k X p D hV P hA e x hG (-a) (-b)
 

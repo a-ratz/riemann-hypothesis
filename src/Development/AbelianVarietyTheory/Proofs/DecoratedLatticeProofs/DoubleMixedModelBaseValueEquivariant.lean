@@ -67,7 +67,7 @@ theorem det_UX {ρ : ℕ} (γ : UX D ρ) : Matrix.GeneralLinearGroup.det γ.1 = 
   ext
   rw [Matrix.GeneralLinearGroup.val_det_apply, Units.val_one]
   have hT : (γ.1.1 : Matrix (Fin ρ) (Fin ρ) (AE D)).BlockTriangular id := fun i j hij => (hu i j).1 hij
-  rw [Matrix.det_of_upperTriangular hT]
+  rw [det_of_isUpperTriangular hT]
   exact Finset.prod_eq_one fun i _ => (hu i i).2
 
 end GlobalTheory.EvalAtZero

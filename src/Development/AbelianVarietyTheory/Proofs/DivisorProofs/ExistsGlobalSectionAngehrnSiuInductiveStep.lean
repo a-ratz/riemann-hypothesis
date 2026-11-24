@@ -311,7 +311,7 @@ theorem residueMap : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X]
     rw [← GlobalTheory.topologicalKrullDim_eq_of_isEmbedding i.isClosedEmbedding.isEmbedding hrange]
     exact hk
   obtain ⟨-, w, hw⟩ := isLocModel_locRing_and_exists_trBasis Z q k (genericPoint Z) hdim
-  letI alg : Algebra ℂ Z.functionField := (Cartier.constFn q).toAlgebra
+  let alg : Algebra ℂ Z.functionField := (Cartier.constFn q).toAlgebra
   let π₀ : locRing (i (genericPoint Z)) →+* Z.functionField :=
     (i.stalkMap (genericPoint Z)).hom.comp (stalkEquiv (i (genericPoint Z))).symm.toRingHom
   refine ⟨Z.functionField, inferInstance, alg, π₀, ?_, ?_, ?_, ⟨w, hw⟩, ?_⟩
@@ -517,7 +517,7 @@ theorem secPull_secOfTwist_eq {X : Scheme.{0}} (I : X.IdealSheafData) (M : LB X)
 theorem exists_secPull_eq_of_subsingleton {X : Scheme.{0}} (I : X.IdealSheafData) (M : LB X) (hM : M.IsLB)
     (h : Subsingleton (coh (twist (idealModule I) M) 1)) (σ : (M.pull I.subschemeι).Sec) :
     ∃ s : M.Sec, GlobalTheory.secPull s I.subschemeι = σ := by
-  haveI := epi_toSubscheme I
+  have := epi_toSubscheme I
   let S : ShortComplex X.Modules :=
     ShortComplex.mk (idealModuleι I) (toSubscheme I) (Limits.kernel.condition _)
   have hS : S.ShortExact := { exact := ShortComplex.exact_kernel _ }
@@ -528,7 +528,7 @@ theorem exists_secPull_eq_of_subsingleton {X : Scheme.{0}} (I : X.IdealSheafData
 
 theorem eventually_exists_secPull_eq : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp ℂ), IsProjOver p → ∀ (N : LB X) (Z : Closeds X), IsAmpleLB N → ∀ᶠ l in atTop, ∀ σ : ((lbPow N l).pull (redι Z)).Sec, ∃ s : (lbPow N l).Sec, GlobalTheory.secPull s (redι Z) = σ := by
   intro X _ _ p hp N Z hN
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   have := (isProper_and_exists_isAmpleLB_of_isProjOver hp).1
   refine (hN.eventually_subsingleton_coh_twist (f := p) (fun _ => rfl)
     (idealModule (Scheme.IdealSheafData.vanishingIdeal Z))).mono fun l hl σ => ?_
@@ -601,15 +601,15 @@ theorem exists_sections_restrict_basis :
             lbH0 ℂ ((toLB (l • A)).pull (redι (Closeds.closure ({z} : Set X))))) ∧
           ∀ a : Fin r → ℂ, a ≠ 0 → (l • A).GeneratesAt z (∑ i, Cartier.constFn p (a i) * f i) := by
   intro X _ _ p hp A z hA
-  haveI hYi : IsIntegral (Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme :=
+  have hYi : IsIntegral (Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme :=
     isIntegral_red isIrreducible_singleton.closure
   obtain ⟨l₁, hl₁⟩ := eventually_atTop.1 (_root_.GlobalTheory.LiftClosed.eventually_exists_secPull_eq X p hp (toLB A) (Closeds.closure ({z} : Set X)) hA)
   refine ⟨l₁, fun l hl => ?_⟩
-  letI : Algebra ℂ Γ((Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme, ⊤) :=
+  let : Algebra ℂ Γ((Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme, ⊤) :=
     algebraΓOfHom (redι (Closeds.closure ({z} : Set X)) ≫ p)
-  letI : Module ℂ ((lbPow (toLB A) l).pull (redι (Closeds.closure ({z} : Set X)))).Sec :=
+  let : Module ℂ ((lbPow (toLB A) l).pull (redι (Closeds.closure ({z} : Set X)))).Sec :=
     Module.compHom _ (algebraMap ℂ Γ((Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme, ⊤))
-  haveI : IsScalarTower ℂ Γ((Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme, ⊤)
+  have : IsScalarTower ℂ Γ((Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme, ⊤)
       ((lbPow (toLB A) l).pull (redι (Closeds.closure ({z} : Set X)))).Sec :=
     ⟨fun a g s => by
       show (algebraMap ℂ Γ((Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme, ⊤) a * g) • s =
@@ -684,16 +684,16 @@ theorem isAlgebraic_of_mul_eq {S K : Type} [CommRing S] [Field K] [Algebra S K] 
   refine ⟨Polynomial.C b * Polynomial.X - Polynomial.C a, fun h0 => hb ?_, ?_⟩
   · have h1 := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 1) h0
     simpa only [Polynomial.coeff_sub, Polynomial.coeff_C_mul_X, Polynomial.coeff_C_succ, sub_zero,
-      Polynomial.coeff_zero, if_true] using h1
+      Polynomial.coeff_zero, ite_true] using h1
   · rw [map_sub, map_mul, Polynomial.aeval_C, Polynomial.aeval_X, Polynomial.aeval_C, mul_comm, e,
       sub_self]
 
 theorem exists_trBasis_mem_of_isLocModel {K : Type} [Field K] (c : ℂ →+* K) (R : Subring K)
     (n : ℕ) (hR : IsLocModel c R) (hx : ∃ x : Fin n → K, TrBasis c x) :
     ∃ xi : Fin n → R, TrBasis c (fun j => (xi j : K)) := by
-  letI := c.toAlgebra
+  let := c.toAlgebra
   obtain ⟨x, hx⟩ := hx
-  haveI : Algebra.IsAlgebraic (Algebra.adjoin ℂ (R : Set K)) K := by
+  have : Algebra.IsAlgebraic (Algebra.adjoin ℂ (R : Set K)) K := by
     refine ⟨fun f => ?_⟩
     obtain ⟨a, ha, b, hb, hb0, e⟩ := hR.frac f
     exact isAlgebraic_of_mul_eq (⟨a, Algebra.subset_adjoin ha⟩ : Algebra.adjoin ℂ (R : Set K))
@@ -781,11 +781,11 @@ theorem h0_ge_of_lt_interNumRed : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocally
     (letI := algebraΓOfHom (redι (Closeds.closure ({z} : Set X)) ≫ p);
       lbH0 ℂ ((toLB (l • A)).pull (redι (Closeds.closure ({z} : Set X)))) : ℚ) := by
   intro X _ _ p hp A z k q hA
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   intro hdim hq
-  haveI : IsIntegral (Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme :=
+  have : IsIntegral (Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme :=
     isIntegral_red isIrreducible_singleton.closure
-  letI := algebraΓOfHom (redι (Closeds.closure ({z} : Set X)) ≫ p)
+  let := algebraΓOfHom (redι (Closeds.closure ({z} : Set X)) ≫ p)
   have hi : ∀ r : ℂ, (redι (Closeds.closure ({z} : Set X))).appTop (algebraMap ℂ Γ(X, ⊤) r) =
       algebraMap ℂ Γ((Scheme.IdealSheafData.vanishingIdeal (Closeds.closure ({z} : Set X))).subscheme, ⊤) r :=
     fun r => rfl
@@ -836,7 +836,7 @@ theorem isIntegrallyClosed_locRing : ∀ (X : Scheme.{0}) [IsIntegral X] [Global
     (algebraMap (X.presheaf.stalk x) X.functionField).rangeRestrict
     ⟨fun _ _ h => IsFractionRing.injective _ X.functionField (congrArg Subtype.val h),
       RingHom.rangeRestrict_surjective _⟩
-  haveI : IsIntegrallyClosed (X.presheaf.stalk x) := GlobalTheory.IsNormalScheme.isIntegrallyClosed_stalk x
+  have : IsIntegrallyClosed (X.presheaf.stalk x) := GlobalTheory.IsNormalScheme.isIntegrallyClosed_stalk x
   exact IsIntegrallyClosed.of_equiv e
 
 end GlobalTheory.FieldPair
@@ -927,7 +927,7 @@ namespace GlobalTheory.FieldPair
 theorem ratRes_locRing_of_isClosed_of_isProjOver : ∀ (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℂ), IsProjOver p → ∀ x : X,
     IsClosed ({x} : Set X) → RatRes (Cartier.constFn p) (locRing x) := by
   intro X _ p hP x hx
-  haveI : LocallyOfFiniteType p := GlobalTheory.isProjOver_locallyOfFiniteType ℂ X p hP
+  have : LocallyOfFiniteType p := GlobalTheory.isProjOver_locallyOfFiniteType ℂ X p hP
   exact ratRes_locRing_of_isClosed X p x hx
 
 end GlobalTheory.FieldPair
@@ -1005,7 +1005,7 @@ theorem not_kltAt_of_local : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoeth
       ¬ KltAt p n (Δ + (1 - δ) • D + (h / l) • qWeil (CartierDiv.principal g + l • A) 1) x := by
   intro X _ _ _ p n hp hn Δ m G A D z x k l M r h δ f₀ aX mD fD κ _ π₀ hxz w a hΔ hG hm hD hzx hl hh
     hδ0 hδ1 hπ hA hmD hfD hDx hw hcase H u hu hvan g hg hK
-  haveI := GlobalTheory.isProjOver_locallyOfFiniteType ℂ X p hp
+  have := GlobalTheory.isProjOver_locallyOfFiniteType ℂ X p hp
   have hLM : IsLocModel (Cartier.constFn p) (locRing x) := isLocModel_locRing x
   obtain ⟨-, hx0⟩ := isLocModel_locRing_and_exists_trBasis X p n x hn
   obtain ⟨xi, hxi⟩ := _root_.GlobalTheory.FieldPair.exists_trBasis_mem_of_isLocModel (Cartier.constFn p) (locRing x) n hLM hx0
@@ -1169,7 +1169,7 @@ theorem exists_global_step : GlobalTheory.Published.Principalisation → ∀ (X 
       ∀ g : X.functionFieldˣ, (g : X.functionField) = f₀ + u → ∀ δ : ℚ, 0 ≤ δ → δ ≤ δ₀ → ∀ x ∈ P,
         ¬ KltAt p n (Δ + (1 - δ) • D + (h / l) • qWeil (CartierDiv.principal g + l • A) 1) x := by
   intro hPr X _ _ _ p n hp hn Δ m G A D P z k h hΔ _ hm hG hA hD hP hk hZ hcase hh hnum l₀
-  haveI := GlobalTheory.isProjOver_locallyOfFiniteType ℂ X p hp
+  have := GlobalTheory.isProjOver_locallyOfFiniteType ℂ X p hp
 
   obtain ⟨q, hq, hnumq⟩ := _root_.GlobalTheory.elementary_binom_bound P.card k h _ hk hh hnum
   obtain ⟨l₁, hl₁⟩ := _root_.GlobalTheory.ClosureRR.h0_ge_of_lt_interNumRed X p hp A z k q hA hZ hq
@@ -1182,7 +1182,7 @@ theorem exists_global_step : GlobalTheory.Published.Principalisation → ∀ (X 
     exact_mod_cast this
 
   obtain ⟨κ, _, _, π₀, -, hπ, hconst, hκ, hloc⟩ := _root_.GlobalTheory.ResMap.residueMap X p hp z k hZ
-  letI : Algebra ℂ X.functionField := (Cartier.constFn p).toAlgebra
+  let : Algebra ℂ X.functionField := (Cartier.constFn p).toAlgebra
   choose aX haX using fun x : X => A.exists_isEqn x
   obtain ⟨aZ, haZ⟩ := A.exists_isEqn z
   choose mD fD hmD hfD hDx using fun x : X => exists_localEqn_of_isQCart X p D hD x

@@ -75,7 +75,7 @@ theorem rank_subquotient_eq {O K X Y : Type} [CommRing O] [IsDomain O] [Field K]
   have hle : LinearMap.ker g ≤ LinearMap.ker f := fun a ha =>
     (hfk a).2 (h2 _ ((hgk a).1 ha))
   let F := (LinearMap.ker g).liftQ f hle
-  haveI : IsLocalizedModule (nonZeroDivisors O) F := by
+  have : IsLocalizedModule (nonZeroDivisors O) F := by
     refine ⟨fun s => ?_, fun y => ?_, fun {x y} h => ?_⟩
     · have hs : algebraMap O K s ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors s.2
       rw [Module.End.isUnit_iff]

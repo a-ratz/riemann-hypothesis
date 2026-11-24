@@ -81,8 +81,8 @@ private theorem UpperTheory.V.Hi.projective_transport_along_equiv {Λ₀ Λ V₀
       map_mul' := fun g h => by ext v; simp }
   refine ⟨ρ'', fun _ _ => rfl, ?_⟩
   let E : MonoidAlgebra Λ Q ≃+* MonoidAlgebra Λ₀ Q := MonoidAlgebra.mapRingEquiv Q e.symm
-  haveI := RingHomInvPair.of_ringEquiv E
-  haveI := RingHomInvPair.of_ringEquiv_symm E
+  have := RingHomInvPair.of_ringEquiv E
+  have := RingHomInvPair.of_ringEquiv_symm E
   let ψ : ρ'.asModule ≃+ ρ''.asModule :=
     (ρ'.asModuleEquiv.toAddEquiv.trans φ).trans ρ''.asModuleEquiv.symm.toAddEquiv
   have hψ : ∀ (r : MonoidAlgebra Λ Q) (x : ρ'.asModule), ψ (r • x) = E r • ψ x := by
@@ -119,7 +119,7 @@ theorem UpperTheory.V.Hi.levelUR2ProjTr :
         map_smul' := fun a v => by
           rw [← hφ]
           simp }
-    haveI : RingHomSurjective (e.symm : Λ →+* Λ₀) := ⟨e.symm.surjective⟩
+    have : RingHomSurjective (e.symm : Λ →+* Λ₀) := ⟨e.symm.surjective⟩
     exact Module.Finite.of_surjective f φ.surjective
   · obtain ⟨ρ'', h1, h2⟩ := UpperTheory.V.Hi.projective_transport_along_equiv e φ hφ ρ' hP
     refine ⟨ρ'', fun u f => ?_, h2⟩

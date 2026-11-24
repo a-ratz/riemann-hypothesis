@@ -157,7 +157,7 @@ theorem _root_.GlobalTheory.FiniteDVRValuation.main :
       have hx0 : x ≠ 0 := by
         rintro rfl
         simp at hx
-      have hmax := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' i hfin.to_isIntegral
+      have hmax := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal i hfin.to_isIntegral
         (IsLocalRing.maximalIdeal W')
       have hcomap : (IsLocalRing.maximalIdeal W').comap i = IsLocalRing.maximalIdeal W :=
         IsLocalRing.eq_maximalIdeal hmax

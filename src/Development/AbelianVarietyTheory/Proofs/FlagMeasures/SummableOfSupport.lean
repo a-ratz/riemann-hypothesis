@@ -85,7 +85,7 @@ theorem pow_bound (s t R : ℝ) (m f : ℕ) (hs : 1 ≤ s) (ht : 0 < t) (ht1 : t
     have e2 : 3 * s / t ^ 2 * Real.exp (R / f) = 3 * (s * Real.exp (R / f) / (t * t)) := by ring
     rw [e1, e2]; linarith
   have h3 : Real.exp (2 * (m : ℝ) * R) = Real.exp (R / f) ^ (2 * (m * f)) := by
-    rw [← Real.exp_nat_mul]; congr 1; push_cast; field_simp
+    rw [← Real.exp_natCast_mul]; congr 1; push_cast; field_simp
   rw [h3, ← mul_pow]
   exact pow_le_pow_left₀ (by positivity) h2 _
 
@@ -140,7 +140,7 @@ theorem exp_neg_mul_two_pow_le_geometric (T : ℝ) (hT : 1 ≤ T) (i : ℕ) :
     nlinarith [mul_nonneg (show (0 : ℝ) ≤ T by linarith) (sub_nonneg.mpr hb),
       mul_nonneg (sub_nonneg.mpr hT) hi]
   calc Real.exp (-T * 2 ^ i) ≤ Real.exp (-T + (i : ℝ) * (-1)) := Real.exp_le_exp.mpr hexp
-    _ = Real.exp (-T) * Real.exp (-1) ^ i := by rw [Real.exp_add, Real.exp_nat_mul]
+    _ = Real.exp (-T) * Real.exp (-1) ^ i := by rw [Real.exp_add, exp_natCast_mul]
     _ ≤ Real.exp (-T) * (1 / 2 : ℝ) ^ i :=
       mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (Real.exp_pos _).le he i) (Real.exp_pos _).le
 
@@ -315,14 +315,14 @@ theorem sum_over_dyadic_shells :
     have hal0 : 0 ≤ W 0 := hW0 0
     have hal2 : W 0 ≤ 2 := by
       show Real.exp (κ * (2 ^ 0 * ep)) * (if (0 : ℕ) = 0 then 1 else Real.exp (-T * 2 ^ 0)) ≤ 2
-      rw [if_pos rfl, pow_zero, one_mul, mul_one]
+      rw [ite_eq_left rfl, pow_zero, one_mul, mul_one]
       calc Real.exp (κ * ep) ≤ Real.exp (Real.log 2) := Real.exp_le_exp.mpr hκep
         _ = 2 := Real.exp_log (by norm_num)
     have hT1 : 1 ≤ T := hT
     have hWs : ∀ i, W (i + 1) ≤ Real.exp (-T) * (1 / 2 : ℝ) ^ i := by
       intro i
       refine le_trans ?_ (exp_neg_mul_two_pow_le_geometric T hT1 i)
-      simp only [W, F, if_neg (Nat.succ_ne_zero i)]
+      simp only [W, F, ite_eq_right (Nat.succ_ne_zero i)]
       rw [← Real.exp_add, Real.exp_le_exp, pow_succ]
       have hp : (0 : ℝ) ≤ 2 ^ i := pow_nonneg (by norm_num) _
       nlinarith
@@ -423,7 +423,7 @@ theorem farBound_of_ptBound : GlobalTheory.Deep.PtBound → GlobalTheory.Deep.Fa
     exact γ.2.2 (by simp [h0])
   have hM0 : 0 ≤ (∏ v, d v) * (B.e 1).re := (norm_nonneg _).trans (hbd 1)
   rcases eq_or_lt_of_le hM0 with hM | hM
-  · haveI : IsEmpty {a // a ∈ GlobalTheory.IndefiniteRowSideFullHecke.FarTermsLatticeBound.farSet B d ep x ∧ ‖phe B d (x⁻¹ * a * x)‖ ≠ 0} :=
+  · have : IsEmpty {a // a ∈ GlobalTheory.IndefiniteRowSideFullHecke.FarTermsLatticeBound.farSet B d ep x ∧ ‖phe B d (x⁻¹ * a * x)‖ ≠ 0} :=
       ⟨fun γ => hne γ (norm_eq_zero.1 (le_antisymm ((hbd _).trans_eq hM.symm) (norm_nonneg _)))⟩
     refine summable_of_support (GlobalTheory.IndefiniteRowSideFullHecke.FarTermsLatticeBound.farSet B d ep x)
       (fun a => ‖phe B d (x⁻¹ * a * x)‖) _ ⟨summable_empty, ?_⟩

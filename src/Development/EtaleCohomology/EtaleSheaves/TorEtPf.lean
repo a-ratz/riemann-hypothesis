@@ -86,7 +86,7 @@ theorem surj_local (S C ι : Type) [CommRing S] [CommRing C] [Algebra S C] [None
 
 theorem TorEt_of (hL : LocalGlue) (hF : LocF) (hG : LocG) : TorEt := by
   intro q _ S _ f g hfg ε hε
-  letI := (torMap f g hε).toAlgebra
+  let := (torMap f g hε).toAlgebra
   exact hL S (Tor f g hε) (ZMod q) f g hfg (hF q S f g hfg ε hε) (hG q S f g hfg ε hε)
 
 theorem surj_glue (S C ι : Type) [CommRing S] [CommRing C] [Algebra S C] [Nonempty ι] (f g : S) (hfg : Ideal.span {f, g} = ⊤)
@@ -171,15 +171,15 @@ def ProjF : Prop := ∀ (q : ℕ) [NeZero q] (S : Type) [CommRing S] (f g : S), 
 
 theorem locF_of (h : ProjF) : LocF := by
   intro q _ S _ f g hfg ε hε
-  letI := (torMap f g hε).toAlgebra
-  letI := (pr1 f g hε).toAlgebra
-  haveI := h q S f g hfg ε hε
+  let := (torMap f g hε).toAlgebra
+  let := (pr1 f g hε).toAlgebra
+  have := h q S f g hfg ε hε
   let e := IsLocalization.algEquiv (Submonoid.powers (algebraMap S (Tor f g hε) f))
     (Localization.Away (algebraMap S (Tor f g hε) f)) (ZMod q → Localization.Away f)
   refine ⟨AlgEquiv.ofRingEquiv (f := e.toRingEquiv) (fun s => ?_)⟩
   have h1 : algebraMap S (Localization.Away (algebraMap S (Tor f g hε) f)) s =
       algebraMap (Tor f g hε) (Localization.Away (algebraMap S (Tor f g hε) f)) (torMap f g hε s) := rfl
-  rw [AlgEquiv.coe_ringEquiv, h1, AlgEquiv.commutes]
+  rw [AlgEquiv.coe_toRingEquiv, h1, AlgEquiv.commutes]
   rfl
 
 def pr2 {q : ℕ} [NeZero q] {S : Type} [CommRing S] (f g : S) {ε : ZMod q → Localization.Away (f * g)}
@@ -194,15 +194,15 @@ def ProjG : Prop := ∀ (q : ℕ) [NeZero q] (S : Type) [CommRing S] (f g : S), 
 
 theorem locG_of (h : ProjG) : LocG := by
   intro q _ S _ f g hfg ε hε
-  letI := (torMap f g hε).toAlgebra
-  letI := (pr2 f g hε).toAlgebra
-  haveI := h q S f g hfg ε hε
+  let := (torMap f g hε).toAlgebra
+  let := (pr2 f g hε).toAlgebra
+  have := h q S f g hfg ε hε
   let e := IsLocalization.algEquiv (Submonoid.powers (algebraMap S (Tor f g hε) g))
     (Localization.Away (algebraMap S (Tor f g hε) g)) (ZMod q → Localization.Away g)
   refine ⟨AlgEquiv.ofRingEquiv (f := e.toRingEquiv) (fun s => ?_)⟩
   have h1 : algebraMap S (Localization.Away (algebraMap S (Tor f g hε) g)) s =
       algebraMap (Tor f g hε) (Localization.Away (algebraMap S (Tor f g hε) g)) (torMap f g hε s) := rfl
-  rw [AlgEquiv.coe_ringEquiv, h1, AlgEquiv.commutes]
+  rw [AlgEquiv.coe_toRingEquiv, h1, AlgEquiv.commutes]
   rfl
 
 theorem TorEt_of_proj (hF : ProjF) (hG : ProjG) : TorEt := TorEt_of'' (locF_of hF) (locG_of hG)

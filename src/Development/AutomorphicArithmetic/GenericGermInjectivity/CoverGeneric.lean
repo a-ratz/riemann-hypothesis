@@ -81,7 +81,7 @@ def gm (hinst : inst = ffAlg p) (hU : IsAffCover p U B) (a : ℕ) (s : Finset ι
 theorem gm_pos (hinst : inst = ffAlg p) (hU : IsAffCover p U B) (a : ℕ) {s : Finset ι}
     (h : s.Nonempty) :
     gm p hinst hU a s = formGermI p a (cover_affine hU h) (cover_generic hU s) hinst :=
-  dif_pos h
+  dite_eq_left h
 
 theorem gm_spec (d : ℕ) [SmoothOfRelativeDimension d p] (hinst : inst = ffAlg p)
     (hU : IsAffCover p U B) (a : ℕ) :
@@ -130,7 +130,7 @@ theorem cube_exists (hinst : inst = ffAlg p) (hU : IsAffCover p U B) (a b : ℕ)
         (∀ t : {s : Finset ι // s.card = b + 1},
           (w : Finset ι → DR ℂ Z.functionField) t.1 = gm p hinst hU a t.1 (x t)) →
         Cube.d (cechCube ℂ (Omega p a) ⊤ U) (b + 1) x = 0) := by
-  letI := algΓ p
+  let := algΓ p
   have hs := gm_spec (p := p) d hinst hU a
   exact GlobalTheory.T.cechHomologyEquivFamAlt ℂ ι (DR ℂ Z.functionField) (fun I => omB ℂ Z.functionField (B I) a)
     (cechCube ℂ (Omega p a) ⊤ U) (gm p hinst hU a) hs.1 hs.2.1 hs.2.2 b
@@ -149,7 +149,7 @@ theorem cmp_class (hinst : inst = ffAlg p) (hU : IsAffCover p U B) (a b : ℕ) :
         (w : Finset ι → DR ℂ Z.functionField) t.1 = gm p hinst hU a t.1 (z.1 t)) →
       cmp d p hinst hU a b (cechHEquivCoh ℂ hU.cover (cover_biInf hU) (Omega p a) b
         (cechClass _ b z)) = Submodule.Quotient.mk w := by
-  letI := algΓ p
+  let := algΓ p
   intro z w h
   exact (congrArg (DFunLike.coe (Classical.choose (cube_exists d p hinst hU a b)))
     (LinearEquiv.symm_apply_apply (cechHEquivCoh ℂ hU.cover (cover_biInf hU) (Omega p a) b)

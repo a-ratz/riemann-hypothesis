@@ -81,7 +81,7 @@ private theorem sc_tf {t : A} (h : ∀ y : C, t • y = 0 → y = 0) (n : ℕ) (
 private theorem sc_cover (S T : Submodule A C) [Finite (S.map T.mkQ)] :
     ∃ F : Finset C, (∀ f ∈ F, f ∈ S) ∧ ∀ x ∈ S, ∃ f ∈ F, x - f ∈ T := by
   classical
-  haveI := Fintype.ofFinite (S.map T.mkQ)
+  have := Fintype.ofFinite (S.map T.mkQ)
   choose g hg using fun q : S.map T.mkQ => Submodule.mem_map.1 q.2
   refine ⟨Finset.univ.image g, ?_, ?_⟩
   · intro f hf
@@ -116,7 +116,7 @@ private theorem sc_count (S T B : Submodule A C) [Finite (B.map T.mkQ)] (F : Fin
 
 private theorem sc_fin (S T : Submodule A C) (F : Finset C)
     (h : ∀ x ∈ S, ∃ f ∈ F, x - f ∈ T) : Finite (S.map T.mkQ) := by
-  haveI : Finite ((⊥ : Submodule A C).map T.mkQ) := by
+  have : Finite ((⊥ : Submodule A C).map T.mkQ) := by
     rw [Submodule.map_bot]; infer_instance
   refine (sc_count S T ⊥ F fun x hx => ?_).1
   obtain ⟨f, hf, hx'⟩ := h x hx
@@ -162,8 +162,8 @@ private theorem scS_fin {t : A} (Φ : C →ₗ[A] C') (h : ∀ y : C', t • y =
     exact ⟨x, by rw [pow_zero, one_smul]⟩
   | succ m ih =>
     classical
-    haveI := ih
-    haveI : Finite ((scS t Φ (m + 1)).map (Ideal.span {t ^ m} • ⊤ : Submodule A C).mkQ) :=
+    have := ih
+    have : Finite ((scS t Φ (m + 1)).map (Ideal.span {t ^ m} • ⊤ : Submodule A C).mkQ) :=
       sc_mono _ (scS_anti t Φ (Nat.le_succ m))
     obtain ⟨F, hF, hFc⟩ := sc_cover (scS t Φ (m + 1)) (Ideal.span {t ^ m} • ⊤ : Submodule A C)
     obtain ⟨G, -, hGc⟩ := sc_cover (scS t Φ 1) (Ideal.span {t} • ⊤ : Submodule A C)
@@ -197,8 +197,8 @@ private theorem scS_stab {t : A} (Φ : C →ₗ[A] C')
   rcases le_or_gt M (n + 1) with hM | hM
   · exact ⟨x, scS_anti t Φ hM hx, 0, by rw [smul_zero, sub_self]⟩
   · obtain ⟨k, rfl⟩ : ∃ k, M = k + 1 := ⟨M - 1, by omega⟩
-    haveI := hfin n
-    haveI := hfin k
+    have := hfin n
+    have := hfin k
     have hle : I (k + 1) ≤ I (n + 1) := Submodule.map_mono (scS_anti t Φ (by omega))
     have hcard : Nat.card (I (n + 1)) ≤ Nat.card (I (k + 1)) := not_lt.1 (hn _ ⟨k, rfl⟩)
     have hbij : Function.Bijective (Submodule.inclusion hle) :=
@@ -313,7 +313,7 @@ private theorem exists_finset_ker_cover_mod_span_smul_module {t : A} (Φ : C →
     ∃ F : Finset (LinearMap.ker Φ), ∀ x : LinearMap.ker Φ, ∃ f ∈ F,
       x - f ∈ (Ideal.span {t} • ⊤ : Submodule A (LinearMap.ker Φ)) := by
   classical
-  haveI : Finite ((LinearMap.ker Φ).map (Ideal.span {t} • ⊤ : Submodule A C).mkQ) :=
+  have : Finite ((LinearMap.ker Φ).map (Ideal.span {t} • ⊤ : Submodule A C).mkQ) :=
     sc_mono _ (sc_kerS t Φ 1)
   obtain ⟨F, hF, hFc⟩ := sc_cover (LinearMap.ker Φ) (Ideal.span {t} • ⊤ : Submodule A C)
   refine ⟨F.subtype (· ∈ LinearMap.ker Φ), fun x => ?_⟩
@@ -332,7 +332,7 @@ private theorem sc_kerfin {t : A} (Φ : C →ₗ[A] C') (h : ∀ y : C', t • y
     Module.Finite A (LinearMap.ker Φ) := by
   classical
   obtain ⟨F, hF⟩ := exists_finset_ker_cover_mod_span_smul_module Φ h
-  haveI : IsHausdorff (Ideal.span {t}) (LinearMap.ker Φ) := ⟨fun x hx => by
+  have : IsHausdorff (Ideal.span {t}) (LinearMap.ker Φ) := ⟨fun x hx => by
     apply Subtype.ext
     show (x : C) = 0
     apply IsHausdorff.haus' (I := Ideal.span {t}) (x : C)
@@ -341,7 +341,7 @@ private theorem sc_kerfin {t : A} (Φ : C →ₗ[A] C') (h : ∀ y : C', t • y
     rw [SModEq.zero, Ideal.span_singleton_pow, sc_mem] at e ⊢
     obtain ⟨c, hc⟩ := e
     exact ⟨c, by rw [← hc]; rfl⟩⟩
-  haveI : Finite (LinearMap.ker Φ ⧸ (Ideal.span {t} • ⊤ : Submodule A (LinearMap.ker Φ))) := by
+  have : Finite (LinearMap.ker Φ ⧸ (Ideal.span {t} • ⊤ : Submodule A (LinearMap.ker Φ))) := by
     refine Finite.of_surjective (fun f : F => Submodule.Quotient.mk (f : LinearMap.ker Φ)) ?_
     intro q
     obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ q
@@ -373,25 +373,25 @@ theorem UpperTheory.V.Pa.solCnt :
     ∀ (A C C' : Type) [CommRing A] [IsDomain A] [IsDiscreteValuationRing A] [Finite (IsLocalRing.ResidueField A)] [AddCommGroup C] [Module A C] [AddCommGroup C'] [Module A C'] (t : A) (Φ : C →ₗ[A] C') (B : Submodule A C), Irreducible t → (∀ y : C, t • y = 0 → y = 0) → (∀ y : C', t • y = 0 → y = 0) → IsAdicComplete (Ideal.span {t}) A → IsAdicComplete (Ideal.span {t}) C → IsHausdorff (Ideal.span {t}) C' → Finite (((Ideal.span {t} • ⊤ : Submodule A C').comap Φ).map (Ideal.span {t} • ⊤ : Submodule A C).mkQ) → B ≤ LinearMap.ker Φ → (∀ z, Φ z = 0 → ∃ s : ℕ, t ^ s • z ∈ B) → Module.Finite A (LinearMap.ker Φ) ∧ ∃ e : ℕ, ∀ m : ℕ, Finite (((Ideal.span {t ^ m} • ⊤ : Submodule A C').comap Φ).map (Ideal.span {t ^ m} • ⊤ : Submodule A C).mkQ) ∧ Nat.card (((Ideal.span {t ^ m} • ⊤ : Submodule A C').comap Φ).map (Ideal.span {t ^ m} • ⊤ : Submodule A C).mkQ) ≤ Nat.card (B.map (Ideal.span {t ^ m} • ⊤ : Submodule A C).mkQ) * Nat.card (IsLocalRing.ResidueField A) ^ e := by
   intro A C C' _ _ _ _ _ _ _ _ t Φ B ht hC hC' hA hCc hC'h hfin hB hBk
   classical
-  haveI := hA
-  haveI := hCc
-  haveI := hC'h
-  haveI hf1 : Finite ((scS t Φ 1).map (Ideal.span {t} • ⊤ : Submodule A C).mkQ) := by
+  have := hA
+  have := hCc
+  have := hC'h
+  have hf1 : Finite ((scS t Φ 1).map (Ideal.span {t} • ⊤ : Submodule A C).mkQ) := by
     show Finite (((Ideal.span {t ^ 1} • ⊤ : Submodule A C').comap Φ).map
       (Ideal.span {t} • ⊤ : Submodule A C).mkQ)
     rw [pow_one]
     exact hfin
   have hkf : Module.Finite A (LinearMap.ker Φ) := sc_kerfin Φ hC'
-  haveI := hkf
+  have := hkf
   obtain ⟨s, hs⟩ := sc_unif (t := t) (LinearMap.ker Φ) B fun z hz => hBk z (LinearMap.mem_ker.1 hz)
   have hA0 : ∀ y : A, t • y = 0 → y = 0 := fun y hy => by
     rw [smul_eq_mul] at hy
     exact (mul_eq_zero.1 hy).resolve_left ht.ne_zero
   obtain ⟨F1, hF1⟩ := exists_finset_ker_cover_mod_span_smul_module Φ hC'
-  haveI : Finite ((scS t (0 : LinearMap.ker Φ →ₗ[A] A) 1).map
+  have : Finite ((scS t (0 : LinearMap.ker Φ →ₗ[A] A) 1).map
       (Ideal.span {t} • ⊤ : Submodule A (LinearMap.ker Φ)).mkQ) :=
     sc_fin _ _ F1 (fun x _ => hF1 x)
-  haveI := scS_fin (0 : LinearMap.ker Φ →ₗ[A] A) hA0 s
+  have := scS_fin (0 : LinearMap.ker Φ →ₗ[A] A) hA0 s
   obtain ⟨Gk, -, hGk⟩ := sc_cover (scS t (0 : LinearMap.ker Φ →ₗ[A] A) s)
     (Ideal.span {t ^ s} • ⊤ : Submodule A (LinearMap.ker Φ))
   let G : Finset C := Gk.map (Function.Embedding.subtype _)
@@ -405,15 +405,15 @@ theorem UpperTheory.V.Pa.solCnt :
     exact e
   obtain ⟨m0, h0⟩ := scS_stab (t := t) Φ
   have h1 := scS_step Φ hC' h0
-  haveI := scS_fin Φ hC' m0
+  have := scS_fin Φ hC' m0
   obtain ⟨F0, -, hF0c⟩ := sc_cover (scS t Φ m0) (Ideal.span {t ^ m0} • ⊤ : Submodule A C)
   let N := G.card * F0.card
   let P := ∑ i ∈ Finset.range m0,
     Nat.card ((scS t Φ i).map (Ideal.span {t ^ i} • ⊤ : Submodule A C).mkQ)
   have hq : 1 < Nat.card (IsLocalRing.ResidueField A) := Finite.one_lt_card
   refine ⟨hkf, N + P, fun m => ?_⟩
-  haveI hSm := scS_fin Φ hC' m
-  haveI hBm : Finite (B.map (Ideal.span {t ^ m} • ⊤ : Submodule A C).mkQ) :=
+  have hSm := scS_fin Φ hC' m
+  have hBm : Finite (B.map (Ideal.span {t ^ m} • ⊤ : Submodule A C).mkQ) :=
     sc_mono _ (hB.trans (sc_kerS t Φ m))
   refine ⟨hSm, ?_⟩
   have hNP : N + P ≤ Nat.card (IsLocalRing.ResidueField A) ^ (N + P) := (Nat.lt_pow_self hq).le

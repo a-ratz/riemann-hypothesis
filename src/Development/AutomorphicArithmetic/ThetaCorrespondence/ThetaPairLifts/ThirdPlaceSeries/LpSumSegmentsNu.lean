@@ -65,8 +65,8 @@ theorem lpSum_segments_nu_alt : ∀ (E Ω : Type) [Field E] [NumberField E] [Fie
           ((rc Δ.first).lpTw (((Δ.len : ℝ) - 1) / 2)).lpChar (WD.lpSp (h := h) Δ.len)) =
         (sumList (l.map fun Δ => ((rc Δ.first).lpTw (((Δ.len : ℝ) - 1) / 2)).lpChar (WD.lpSp (h := h) Δ.len))).lpTw c := by
   intro E Ω _ _ _ _ _ A w
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   intro h rc hrc l c
   obtain ⟨a, ha, L⟩ := hrc
   rw [← sumList_lpTw, List.map_map, List.map_map]

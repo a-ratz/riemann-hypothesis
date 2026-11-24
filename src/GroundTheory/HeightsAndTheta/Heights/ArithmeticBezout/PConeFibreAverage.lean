@@ -78,7 +78,7 @@ theorem coneFibreAverage_of_lt {n m : ℕ} (hnm : n < m) (h : HermNorm n)
   have hlt : (finrank ℝ (EuclideanSpace ℂ (Fin n)) : ℝ) < ((2 * m : ℕ) : ℝ) := by
     rw [finrank_real_of_complex, finrank_euclideanSpace_fin]
     exact_mod_cast (by omega : 2 * n < 2 * m)
-  rw [Real.hausdorffMeasure_of_finrank_lt hlt, Measure.coe_zero, Pi.zero_apply, mul_zero]
+  rw [Real.hausdorffMeasure_of_finrank_lt hlt, FunLike.coe_zero, Pi.zero_apply, mul_zero]
   have hin : ∀ π : Fin m → Fin n → ℂ,
       ∫⁻ w in Metric.ball (0 : EuclideanSpace ℂ (Fin m)) 1, (fibreCount h J π w : ℝ≥0∞) = 0 := by
     intro π

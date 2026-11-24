@@ -106,7 +106,7 @@ theorem exists_tateIsoO_of_given {p : ℕ} [Fact p.Prime] (D : Datum p) {R : Typ
         (fun n g g' z => Out.WeilIs A' (P'.pull (lift (𝟙 A') (𝟙 A')).left) n g g' (unitOn z)),
       (∀ y, toUnit _ ≫ (o.eta (h (N * k) y) ≫ ψ) = I'.ev N y) ∧
       ∀ n, 0 < n → n.Coprime p → ∀ y, I'.ev n y = I.ev (n * k) (h (n * k) y) ≫ ψ := by
-  haveI := D.freeLa
+  have := D.freeLa
   have kpos : 0 < k := levelPos_of_coprime hkp
   have cpos : 0 < c := levelPos_of_coprime hcp
   have Npos : 0 < N := by omega
@@ -164,8 +164,8 @@ theorem exists_tateIsoO_of_given {p : ℕ} [Fact p.Prime] (D : Datum p) {R : Typ
     intro n hn hnp q
     constructor
     · intro hq
-      haveI := hGal.fin
-      haveI := hGal.onto
+      have := hGal.fin
+      have := hGal.onto
       obtain ⟨a₀, ha₀⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective ψ.left q.left
       let a : Over.mk x ⟶ o.A := Over.homMk a₀ (by
         show a₀ ≫ o.A.hom = x
@@ -217,7 +217,7 @@ theorem exists_tateIsoO_of_given {p : ℕ} [Fact p.Prime] (D : Datum p) {R : Typ
   let ev' : ℕ → D.La → (Over.mk x ⟶ A') := fun n y =>
     if 0 < n ∧ n.Coprime p then I.ev (n * k) (h (n * k) y) ≫ ψ else 1
   have hev' : ∀ n, 0 < n → n.Coprime p → ∀ y, ev' n y = I.ev (n * k) (h (n * k) y) ≫ ψ :=
-    fun n hn hnp y => if_pos ⟨hn, hnp⟩
+    fun n hn hnp y => ite_eq_left ⟨hn, hnp⟩
   refine ⟨⟨fun n => I.ζ n ^ u n, ?_, ?_, ev', ?_, ?_, ?_, ?_, ?_, ?_⟩, fun y => ?_, hev'⟩
   · intro n hn hnp
     exact (I.ζ_prim n hn hnp).zpow_of_gcd_eq_one (u n) (Int.isCoprime_iff_gcd_eq_one.1 (hsim n hn hnp).1)
@@ -241,7 +241,7 @@ theorem exists_tateIsoO_of_given {p : ℕ} [Fact p.Prime] (D : Datum p) {R : Typ
       obtain ⟨z, hz⟩ := hlin (n * k) hnk hnkp b' y
       rw [hz, I.add, (I.ker _ hnk hnkp _).2 ⟨z, rfl⟩, _root_.mul_one, I.lin, Category.assoc, hact,
         ← Category.assoc]
-    · haveI := act'.hom b'
+    · have := act'.hom b'
       rw [MonObj.one_comp]
   · intro n hn hnp y
     rw [hev' n hn hnp]
@@ -348,9 +348,9 @@ theorem UpperTheory.Gal.G3.pTransDeep :
   let o : GObj gb N s := GenCmp.toGObj o3 (GenCmp.geomFull N.2.2 o3)
   refine ⟨o, ψ, ?_⟩
   unfold UpperTheory.Gal.Int.Geo.IsTrans
-  haveI := hψm
-  haveI : Epi (Over.Hom.left ψ) := GlobalTheory.GaloisCartDesc.epi_of_isGaloisCover hgal
-  haveI : Epi ψ := Over.epi_of_epi_left ψ
+  have := hψm
+  have : Epi (Over.Hom.left ψ) := GlobalTheory.GaloisCartDesc.epi_of_isGaloisCover hgal
+  have : Epi ψ := Over.epi_of_epi_left ψ
   obtain ⟨ψ', hψ'm, hψψ'⟩ := GlobalTheory.HomDescent.exists_desc S o1.A o2.A o1.A
     (HeckeAd.heckeSubA o1 (f (↑N * k)) ↑N) ψ hψm hgal (o1.act.act (k : D.O)) (o1.act.hom _)
     (fun g hg => by

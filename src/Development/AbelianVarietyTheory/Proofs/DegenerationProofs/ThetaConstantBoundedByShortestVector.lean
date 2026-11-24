@@ -189,7 +189,7 @@ theorem exists_scale (hL : Laws) (hL₂ : Laws2) {ρ : S.Real} {p : ℕ} [Fact p
   · obtain ⟨q, hq₁, hq₂⟩ := ex a
     obtain ⟨z, hz⟩ := (QuotientAddGroup.eq_zero_iff _).1 (hq₂.symm.trans ha)
     have hz' : (S.r * S.N) • z = q.y := hz
-    letI := gtGroup (D := u.D.toPre) (F := PadicAlgCl p)
+    let := gtGroup (D := u.D.toPre) (F := PadicAlgCl p)
     let iota : u.D.toPre.X →+ GtPtF u.D.toPre (PadicAlgCl p) :=
       AddMonoidHom.mk' (fun x => (exists_iota (F := PadicAlgCl p) hB x).choose) fun x x' => by
         obtain ⟨b, v⟩ := (isIota_iff_val _ _).1 (exists_iota (F := PadicAlgCl p) hB x).choose_spec

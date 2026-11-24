@@ -162,7 +162,7 @@ theorem conj_locF (h : CMData F c φ) {C : Ideles L →* Ideles L} (hC : IsConjI
   choose σ hσ hu using fun w => existsUnique_conjPl c.toRingEquiv w
   have hσσ : ∀ w, σ (σ w) = w := fun w => (hu _ _ (conjPl_symm (conj_conj h) (hσ w))).symm
   have hm : ∀ w ∈ aboveF (L := L) F v, σ w ∈ aboveF (L := L) F v := fun w hw => by
-    simp only [aboveF, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hw ⊢
+    simp only [aboveF, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hw ⊢
     rw [← hw]
     exact (under_eq_iff_conjPl c h.rank h.ne w (σ w)).2 (Or.inr (hσ w))
   unfold locF

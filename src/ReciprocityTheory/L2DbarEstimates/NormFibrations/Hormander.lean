@@ -166,8 +166,8 @@ private lemma differentiableAt_wdb_and_fderiv_wdb_eq {n : ℕ} (k : Fin n) (h : 
     exact hW
   refine ⟨HasFDerivAt.differentiableAt hW', fun v => ?_⟩
   rw [HasFDerivAt.fderiv hW']
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.comp_apply, ContinuousLinearMap.zero_apply, map_zero, zero_add,
+  simp only [smul_apply, add_apply,
+    ContinuousLinearMap.comp_apply, zero_apply, map_zero, zero_add,
     ContinuousLinearMap.flip_apply, smul_eq_mul]
   ring
 
@@ -192,9 +192,9 @@ private lemma differentiableAt_wd_and_fderiv_wd_eq {n : ℕ} (k : Fin n) (h : V 
     exact hW
   refine ⟨HasFDerivAt.differentiableAt hW', fun v => ?_⟩
   rw [HasFDerivAt.fderiv hW']
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply,
-    ContinuousLinearMap.zero_apply, map_zero, zero_add, ContinuousLinearMap.flip_apply,
+  simp only [smul_apply, add_apply,
+    sub_apply, ContinuousLinearMap.comp_apply,
+    zero_apply, map_zero, zero_add, ContinuousLinearMap.flip_apply,
     smul_eq_mul]
   ring
 
@@ -267,8 +267,8 @@ theorem comm (n : ℕ) (M : Type*) [TopologicalSpace M] : CommStatement n M := b
     d_apply_eq_wd_of_mem_source z e0 he0 k (db n z j (fun y => ((ph y : ℝ) : ℂ))) x hx0, hux]
   unfold wd wdb
   rw [hloc1.fderiv_eq, hloc2.fderiv_eq, hloc3.fderiv_eq, hFG]
-  simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [sub_apply, add_apply,
+    smul_apply, smul_eq_mul]
   rw [hW1 (bas n k), hW1 (Complex.I • bas n k), hW2.2 (bas n j), hW2.2 (Complex.I • bas n j),
     hW3.2 (bas n j), hW3.2 (Complex.I • bas n j), hW4 (bas n k), hW4 (Complex.I • bas n k)]
   unfold wd
@@ -741,7 +741,7 @@ theorem bg_wint_eq_lintegral (n : ℕ) (z : M → V n) (ps : M → ℝ) (hps : M
     (Filter.Eventually.of_forall fun x => ENNReal.coe_lt_top)]
   refine lintegral_congr fun x => ?_
   simp only [Pi.mul_apply, bgDens]
-  rw [← ofReal_norm_eq_enorm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) (by norm_num),
+  rw [← ofReal_norm, ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) (by norm_num),
     Real.rpow_two, mul_comm (‖f x‖ ^ 2), ENNReal.ofReal_mul (Real.exp_pos _).le]
   rfl
 
@@ -826,7 +826,7 @@ theorem bergmanExists (n : ℕ) (M : Type u) [TopologicalSpace M] [T2Space M] [S
     bg_memLp_of_wint n X.z ps hpsm F0 hF0.aestronglyMeasurable hw
   have hK : IsClosed (bgHoloSub n X.z ps : Set (Lp ℂ 2 (bgMeas n X.z ps))) :=
     bgHoloSub_closed n X ps hps hpsm hC
-  haveI : CompleteSpace (bgHoloSub n X.z ps) := hK.completeSpace_coe
+  have : CompleteSpace (bgHoloSub n X.z ps) := hK.completeSpace_coe
   set K := bgHoloSub n X.z ps with hKdef
   set P : Lp ℂ 2 (bgMeas n X.z ps) := (K.orthogonalProjection (hF0L.toLp F0) : Lp ℂ 2 (bgMeas n X.z ps))
     with hPdef
@@ -1469,7 +1469,7 @@ private theorem wd_wd_comm_of_contDiffOn {n : ℕ} {U : Set (V n)} (hU : IsOpen 
       simp only [Pi.sub_apply]
       ring
     rw [hwd, h4.fderiv]
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sub_apply,
+    simp only [smul_apply, sub_apply,
       ContinuousLinearMap.flip_apply, smul_eq_mul]
     ring
   show (fderiv ℝ (wd n i G) y (bas n j) - Complex.I * fderiv ℝ (wd n i G) y (Complex.I • bas n j)) / 2 =
@@ -1508,9 +1508,9 @@ theorem macof_main (n : ℕ) : MACofStatement n := by
       intro i l
       by_cases hij : i = j
       · subst hij
-        simp only [Matrix.updateRow_self, if_true]
+        simp only [Matrix.updateRow_self, ite_true]
         exact hasFDerivAt_const _ _
-      · simp only [Matrix.updateRow_ne hij, if_neg hij]
+      · simp only [Matrix.updateRow_ne hij, ite_eq_right hij]
         exact (hd i l).hasFDerivAt
     have hdet := macof_hasFDerivAt_det
       (fun w => (cHess n (fun w' => (f w' : ℂ)) w).updateRow j (Pi.single k 1)) y _ hB
@@ -1519,10 +1519,10 @@ theorem macof_main (n : ℕ) : MACofStatement n := by
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [hZ]
     by_cases hij : i = j
-    · simp only [if_pos hij, ContinuousLinearMap.zero_apply]
+    · simp only [ite_eq_left hij, zero_apply]
       simp only [← Pi.zero_def, hdz]
       first | ring | simp
-    · simp only [if_neg hij]
+    · simp only [ite_eq_right hij]
       rw [← macofRow_apply, ← macofRow_apply, ← macofRow_apply]
       have hρ : (fun l => wd n j (fun w => cHess n (fun w' => (f w' : ℂ)) w i l) y) =
           (2 : ℂ)⁻¹ • ((fun l => fderiv ℝ (fun w => cHess n (fun w' => (f w' : ℂ)) w i l) y (bas n j)) -
@@ -1538,7 +1538,7 @@ theorem macof_main (n : ℕ) : MACofStatement n := by
     rw [hZ, hZ]
     by_cases hij : i = j
     · simp [hij]
-    · rw [if_neg hij, if_neg (Ne.symm hij)]
+    · rw [ite_eq_right hij, ite_eq_right (Ne.symm hij)]
       have hc : (fun l => wd n i (fun w => cHess n (fun w' => (f w' : ℂ)) w j l) y) =
           fun l => wd n j (fun w => cHess n (fun w' => (f w' : ℂ)) w i l) y := by
         funext l
@@ -1712,11 +1712,11 @@ theorem moll_enorm_sq_le (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] 
   have h1 : ‖moll K u x‖ₑ ≤ ∫⁻ t, ENNReal.ofReal (K.toFun t) * ‖u (x - t)‖ₑ ∂μ := by
     have hmoll : moll K u x = ∫ t, K.toFun t • u (x - t) ∂μ := rfl
     rw [hmoll]
-    refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq ?_)
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq ?_)
     refine lintegral_congr fun t => ?_
-    rw [enorm_smul, Real.enorm_of_nonneg (hK0 t)]
+    rw [eNorm_smul, Real.eNorm_of_nonneg (hK0 t)]
   have hum : AEMeasurable (fun t => ‖u (x - t)‖ₑ) μ :=
-    (hu.comp_quasiMeasurePreserving (quasiMeasurePreserving_sub_left μ x)).enorm
+    (hu.comp_quasiMeasurePreserving (quasiMeasurePreserving_sub_left μ x)).eNorm
   set f : E → ℝ≥0∞ := fun t => ENNReal.ofReal (Real.sqrt (K.toFun t)) with hfdef
   set g : E → ℝ≥0∞ := fun t => ENNReal.ofReal (Real.sqrt (K.toFun t)) * ‖u (x - t)‖ₑ with hgdef
   have hf : AEMeasurable f μ := hKm.sqrt.ennreal_ofReal.aemeasurable
@@ -1758,7 +1758,7 @@ theorem moll_young_sq (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] [Fi
   have hF : AEMeasurable (Function.uncurry F) ((μ.restrict s).prod μ) := by
     have hq := hu.comp_quasiMeasurePreserving (quasiMeasurePreserving_sub μ μ)
     have hF0 : AEMeasurable (Function.uncurry F) (μ.prod μ) :=
-      (hKm.comp measurable_snd).ennreal_ofReal.aemeasurable.mul (hq.enorm.pow_const 2)
+      (hKm.comp measurable_snd).ennreal_ofReal.aemeasurable.mul (hq.eNorm.pow_const 2)
     exact hF0.mono_ac (Measure.restrict_le_self.absolutelyContinuous.prod
       (Measure.AbsolutelyContinuous.refl μ))
   have htrans : ∀ t, ∫⁻ x in (fun x => x - t) ⁻¹' T, ‖u (x - t)‖ₑ ^ 2 ∂μ =
@@ -1808,8 +1808,8 @@ theorem moll_young (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] [Finit
       (fun x => ∫ t, K.toFun t • u (x - t) ∂μ) μ
     exact hprod.integral_prod_right'
   have hmolls : AEStronglyMeasurable (moll K u) (μ.restrict s) := hmoll.restrict
-  rw [MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) huT,
-    MeasureTheory.eLpNorm_eq_lintegral_rpow_enorm_toReal (by norm_num) (by norm_num) hmolls]
+  rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num) huT,
+    eLpNorm_eq_lintegral_rpow_eNorm_toReal (by norm_num) (by norm_num) hmolls]
   simp_rw [e]
   exact ENNReal.rpow_le_rpow h (by norm_num)
 

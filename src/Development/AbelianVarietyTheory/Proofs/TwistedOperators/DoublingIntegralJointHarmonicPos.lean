@@ -117,7 +117,7 @@ theorem exists_eigen_form {E H : Type} [AddCommGroup E] [Module ℂ E] [FiniteDi
     intro f
     let K := LinearMap.range j
     have : FiniteDimensional ℂ K := LinearMap.finiteDimensional_range j
-    have : CompleteSpace K := FiniteDimensional.complete ℂ K
+    have : CompleteSpace K := FiniteDimensional.completeSpace ℂ K
     let e : E ≃ₗ[ℂ] K := LinearEquiv.ofInjective j hj
     have he : ∀ x, ((e x : K) : H) = j x := fun x => rfl
     let ℓ : K →ₗ[ℂ] ℂ :=
@@ -179,10 +179,10 @@ theorem vanish : ∀ (p q : ℕ) (T : GrpData p q) (π₁ π₂ : URep T) (E : T
   have hj2a : ∀ k ∈ T.Kset, ∀ w, j₂ (act k w) = π₂.π k (j₂ w) := fun k hk w => ((hact k hk w).2).symm
   have hback : ∀ (σ : URep T) (g : T.G) (x : σ.H), σ.π g (σ.π g⁻¹ x) = x := by
     intro σ g x
-    rw [← pi_mul, mul_inv_cancel, map_one, ContinuousLinearMap.one_apply]
+    rw [← pi_mul, mul_inv_cancel, map_one, one_apply_eq_self]
   have hback2 : ∀ (σ : URep T) (g : T.G) (x : σ.H), σ.π g⁻¹ (σ.π g x) = x := by
     intro σ g x
-    rw [← pi_mul, inv_mul_cancel, map_one, ContinuousLinearMap.one_apply]
+    rw [← pi_mul, inv_mul_cancel, map_one, one_apply_eq_self]
 
   have htop : ∀ U : Submodule ℂ E, (∀ k ∈ T.Kset, ∀ w ∈ U, act k w ∈ U) →
       ∀ x : E, x ≠ 0 → x ∈ U → ∀ w, w ∈ U := by
@@ -554,7 +554,7 @@ theorem isometric_case (p q : ℕ) (T : GrpData p q)
   have hΦ1 : Φ 1 = ∑ l, inner ℂ (j₁ (ob l)) (j₁ (ob l)) := by
     rw [hΦ]
     refine Finset.sum_congr rfl fun l _ => ?_
-    rw [map_one, map_one, ContinuousLinearMap.one_apply, ContinuousLinearMap.one_apply, hD₂j, hD₁]
+    rw [map_one, map_one, one_apply_eq_self, one_apply_eq_self, hD₂j, hD₁]
 
   rw [hΦ1, map_sum] at h1
   simp only [inner_self_eq_norm_sq] at h1
@@ -620,7 +620,7 @@ theorem map_flow_eq_zero {V E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
       funext r
       have hr : r = s + (r - s) := by ring
       conv_lhs => rw [hr]
-      rw [hadd, ContinuousLinearMap.mul_apply]
+      rw [hadd, mul_apply_eq_comp]
     rw [e]
     have hs : HasDerivAt (fun r : ℝ => r - s) 1 s := (hasDerivAt_id s).sub_const s
     have hz : HasDerivAt (fun r : ℝ => U r (ι w)) (ι (a w)) ((fun r : ℝ => r - s) s) := by
@@ -649,7 +649,7 @@ theorem map_flow_eq_zero {V E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
     have h1 := hpr.factorial_smul 1 n
     rw [← iteratedDeriv_eq_iteratedFDeriv, iteratedDeriv_eq_iterate, hit n v] at h1
     dsimp only at h1
-    rw [h0, ContinuousLinearMap.one_apply, hL] at h1
+    rw [h0, one_apply_eq_self, hL] at h1
     have h2 : ((n.factorial : ℝ)) • p.coeff n = 0 := by
       rw [Nat.cast_smul_eq_nsmul ℝ]
       exact h1
@@ -728,7 +728,7 @@ theorem inner_apply_eq_of_analytic : ∀ (p q : ℕ) (T : GrpData p q), Subgroup
       exact h2
   have q1 : Q 1 := by
     intro x y
-    rw [map_one, map_one, ContinuousLinearMap.one_apply, ContinuousLinearMap.one_apply]
+    rw [map_one, map_one, one_apply_eq_self, one_apply_eq_self]
     exact hiso x y
   intro g
   have hg : g ∈ S := hle (by rw [hT]; exact Subgroup.mem_top g)
@@ -824,7 +824,7 @@ theorem adjZ_Eab {p q : ℕ} {a b : Ix p q} (h : sameBlock a b) : adjZ (Eab a b)
 theorem isKC_Eab {p q : ℕ} {a b : Ix p q} (h : sameBlock a b) : IsKC (Eab a b) := by
   unfold IsKC Eab
   intro c d hcd
-  rw [Matrix.single_apply, if_neg]
+  rw [Matrix.single_apply, ite_eq_right]
   rintro ⟨rfl, rfl⟩
   exact hcd h
 
@@ -909,7 +909,7 @@ theorem inner_eq_of_irreducible (p q : ℕ) (M : GKMod p q) (H₁ : Type) [Norme
       exact hc0
     have hne : (⟨v, hvmem⟩ : hwSub M.act μ) ≠ 0 := by
       rwa [Ne, Submodule.mk_eq_zero]
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' _ hne).mp hdim ⟨z, hzmem⟩
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' _ hne).mp hdim ⟨z, hzmem⟩
     exact ⟨c, by simpa using congrArg Subtype.val hc⟩
 
   have hvN : v ∈ N := by
@@ -957,17 +957,17 @@ namespace GlobalTheory.DoublingPos
 variable {p q r s : ℕ}
 
 theorem secondCountable (T : GrpData p q) : SecondCountableTopology T.G := by
-  haveI : SecondCountableTopology (Mat p q) := inferInstanceAs (SecondCountableTopology (Ix p q → Ix p q → ℂ))
-  haveI : SecondCountableTopology (Mat p q)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : SecondCountableTopology ℂᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
-  haveI : SecondCountableTopology (GL (Ix p q) ℂ) := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : SecondCountableTopology ℂˣ := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : SecondCountableTopology (Mat p q) := inferInstanceAs (SecondCountableTopology (Ix p q → Ix p q → ℂ))
+  have : SecondCountableTopology (Mat p q)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : SecondCountableTopology ℂᵐᵒᵖ := MulOpposite.opHomeomorph.symm.secondCountableTopology
+  have : SecondCountableTopology (GL (Ix p q) ℂ) := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : SecondCountableTopology ℂˣ := Units.isEmbedding_embedProduct.secondCountableTopology
   exact T.emb.secondCountableTopology
 
 theorem inner_opE (T : GrpData p q) (πU : URep T) {e : T.G → ℂ} (hi : Integrable e T.haar)
     (hc : Continuous e) (z x : πU.H) :
     inner ℂ z (opE T πU.π e x) = ∫ g, e g * inner ℂ z (πU.π g x) ∂T.haar := by
-  haveI := secondCountable T
+  have := secondCountable T
   have h : Integrable (fun g => e g • πU.π g x) T.haar := by
     refine Integrable.mono' (hi.norm.mul_const ‖x‖) (hc.smul (πU.cont x)).aestronglyMeasurable
       (Filter.Eventually.of_forall fun g => ?_)
@@ -1041,7 +1041,7 @@ theorem exists_diag (M₁ M₂ : GKMod p q) {μ : Ix p q → ℚ} {v₁ : M₁.V
   obtain ⟨W₁, hW₁, hv₁, hK₁⟩ := M₁.kfin v₁
   obtain ⟨W₂, hW₂, hv₂, hK₂⟩ := M₂.kfin v₂
   have hK : KStable (prodAct M₁ M₂) (W₁.prod W₂) := fun Z hZ w hw => ⟨hK₁ Z hZ _ hw.1, hK₂ Z hZ _ hw.2⟩
-  haveI hW : FiniteDimensional ℂ (W₁.prod W₂) := by
+  have hW : FiniteDimensional ℂ (W₁.prod W₂) := by
     exact Module.Finite.iff_fg.2 (Submodule.FG.prod (Module.Finite.iff_fg.1 hW₁) (Module.Finite.iff_fg.1 hW₂))
   have hlie : IsKLieAct (prodAct M₁ M₂) := by
     intro Y Z _ _
@@ -1121,7 +1121,7 @@ theorem exists_coeff_ne_zero (hn : 1 ≤ p + q) (T : GrpData p q) (π₁ π₂ :
     if h : IsKC Z then (prodAct M₁ M₂ Z).restrict (hK Z h) else 0
   have ha : ∀ Z, IsKC Z → ∀ w : E, (a Z w : M₁.V × M₂.V) = prodAct M₁ M₂ Z w := by
     intro Z hZ w
-    simp only [a, dif_pos hZ, LinearMap.restrict_coe_apply]
+    simp only [a, dite_eq_left hZ, LinearMap.restrict_coe_apply]
   have heq := _root_.GlobalTheory.RealPar.pair_kEquivariant_of_lie p q T (_root_.GlobalTheory.CoverKGen.kset_gen p q hn T) π₁ π₂ E a i₁ i₂ (by
     intro Y hY hYK w
     simp only [i₁, i₂, LinearMap.comp_apply, Submodule.subtype_apply, ha Y hYK]
@@ -1209,7 +1209,7 @@ theorem kron_mem {Y : Mat p q} (hY : Y ∈ upq p q) :
     Matrix.kroneckerMap_apply, Matrix.one_apply]
   by_cases h : c = d
   · subst h
-    simp only [if_true, mul_one]
+    simp only [ite_true, mul_one]
     linear_combination sg c * hY a b
   · simp [h, Ne.symm h]
 
@@ -1274,7 +1274,7 @@ theorem casimir_compact (h : r = 0 ∨ s = 0) {V W : Type} [AddCommGroup V] [Mod
     {c : ℂ} (hc : casimir b w = c • w) : casimir a v = c • v := by
   have h1 := (_root_.GlobalTheory.CasimirHighest.casimir_central_and_highest r s V a ha).2 μ v hv
   have h2 := (_root_.GlobalTheory.CasimirHighest.casimir_central_and_highest r s W b hb).2 μ w hw
-  simp only [sameBlock_of_compact h, if_true] at h1 h2
+  simp only [sameBlock_of_compact h, ite_true] at h1 h2
   simp only [casimir, LinearMap.sum_apply, Module.End.mul_apply] at hc ⊢
   rw [h1]
   rw [h2] at hc

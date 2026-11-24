@@ -75,11 +75,11 @@ theorem aT_keep {h : FinX Y} {h' : FinX (reY Z Y)} (u u' : D.what₂.Word) (s : 
 
 theorem aR_keep {h : FinX Y} {h' : FinX (reY Z Y)} (u u' : D.what₂.Word) (t : RT Y u u') (x : ColT (h.shInj u')) :
     eCure Z h h' u (aR h u u' t x) = aR h' (wd Z u) (wd Z u') (eRT Z Y u u' t) (eCure Z h h' u' x) := by
-  letI := h.fibFT t
-  letI := h'.fibFT (eRT Z Y u u' t)
+  let := h.fibFT t
+  let := h'.fibFT (eRT Z Y u u' t)
   unfold aR
 
-  rw [ContinuousLinearMap.sum_apply, ContinuousLinearMap.sum_apply, map_sum]
+  rw [sum_apply, sum_apply, map_sum]
   exact Fintype.sum_equiv (eFib Z Y u u' t) _ _ fun s => aT_keep Z Y u u' s.1 x
 
 

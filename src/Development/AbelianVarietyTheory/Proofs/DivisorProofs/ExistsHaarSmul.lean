@@ -158,7 +158,7 @@ theorem kerSmall_inv {μ₀ : T} (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (
   have hfull : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
       IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
     intro V Λ hΛ
-    haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+    have : Submodule.IsLattice D.host.E Λ := hΛ.1
     refine ⟨?_⟩
     obtain ⟨s, hs⟩ := hΛ.1.fg
     apply eq_top_iff.mpr
@@ -215,7 +215,7 @@ theorem kerSmall_inv {μ₀ : T} (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (
     rw [← smul_assoc, smul_eq_mul, inv_mul_cancel₀ ha0, one_smul] at this
     exact this
   refine ⟨G.Λ (.grid i j), hfin.toFinset ∪ (locPl G t).image (fun PP => (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)),
-    s0.1.fg, by letI := hfull _ _ s0; exact Submodule.IsFullLattice.span_eq_top, ?_⟩
+    s0.1.fg, by let := hfull _ _ s0; exact Submodule.IsFullLattice.span_eq_top, ?_⟩
   intro κ hκ u
   have hgd : ∀ v, v ∉ hfin.toFinset ∪ (locPl G t).image (fun PP => (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)) → good v := by
     intro v hv
@@ -289,7 +289,7 @@ theorem exists_reg_at (hK : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorMo
           rw [← mul_assoc]
           exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ h3 h4 k) (mul_nonneg (abs_nonneg C₀) (abs_nonneg C))
   have hWl := (hM.vtx (.grid i j) ⟨i.2.le, j.2.le⟩).haar_fund
-  haveI : IsFiniteMeasure ((M.ν (.grid i j)).restrict (M.fd (.grid i j))) :=
+  have : IsFiniteMeasure ((M.ν (.grid i j)).restrict (M.fd (.grid i j))) :=
     isFiniteMeasure_restrict.2 (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol _ _ _ hWl.1 hWl.2).ne
   have hcont := GlobalTheory.SmallRoute.continuous_translates_kerSmall hL W B ρ t i j Θ Θ' hΘ g₁ z
   exact ⟨Bs.v₁, hvP, z, hz, Integrable.of_bound ((hcont.comp (continuous_const.prodMk continuous_id)).aestronglyMeasurable) _
@@ -312,7 +312,7 @@ theorem reg_const (hK : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels
     have := hright _ (hKb b) (u * b' b)
     rw [← this, mul_assoc, mul_inv_cancel_left]
   have hfd := (hM.vtx (.grid i j) ⟨i.2.le, j.2.le⟩).haar_fund
-  haveI := hfd.1
+  have := hfd.1
   have key := zdeg_mul_integral_comm (G.V (.grid i j)) (M.ν _) (M.fd _) hfd.2 f hinv
   obtain ⟨v₀, -, w₀, hw₀, hi₀, hs₀⟩ := k2 ∅
   refine ⟨(∫ u in M.fd _, translates w₀ f u ∂M.ν _) / zdeg w₀, fun z hz => ?_⟩

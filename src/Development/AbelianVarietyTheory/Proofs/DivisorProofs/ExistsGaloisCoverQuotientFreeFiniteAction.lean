@@ -79,15 +79,15 @@ theorem exists_isGaloisCover_of_isQProjOver_noetherian :
       have key : y ≫ ρ (b * g) = y := by
         rw [hm, ← Category.assoc, hb, ← hg, hτg, Category.assoc, ← hm, inv_mul_cancel, h1, Category.comp_id]
       exact eq_inv_of_mul_eq_one_left (hfree k y _ key)
-  · haveI : IsSeparated (π ≫ sY) := by
+  · have : IsSeparated (π ≫ sY) := by
       rw [hπs]; exact hsep
     exact hQ.isSeparated sY
-  · haveI : LocallyOfFiniteType (π ≫ sY) := by
+  · have : LocallyOfFiniteType (π ≫ sY) := by
       rw [hπs]; exact hlft
-    haveI : IsLocallyNoetherian (Sp K) :=
+    have : IsLocallyNoetherian (Sp K) :=
       inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of K)))
     exact hQ.locallyOfFiniteType sY
-  · haveI : QuasiCompact (π ≫ sY) := by
+  · have : QuasiCompact (π ≫ sY) := by
       rw [hπs]; exact hqc
     exact hQ.quasiCompact sY
 

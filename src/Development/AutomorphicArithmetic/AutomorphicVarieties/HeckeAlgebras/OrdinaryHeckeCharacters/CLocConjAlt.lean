@@ -95,7 +95,7 @@ theorem UpperTheory.V.Hi.secU :
   have hs : ∀ y, cLoc w (e.symm y : UA L n) = y := fun y => by
     rw [← he, e.apply_symm_apply]
   refine ⟨⟨(locU n w).subtype.comp e.symm.toMulEquiv.toMonoidHom, fun g => (e.symm g).2, hs,
-    continuous_subtype_val.comp e.symm.continuous, fun x hx => ?_⟩, fun hS => ?_⟩
+    continuous_subtypeVal.comp e.symm.continuous, fun x hx => ?_⟩, fun hS => ?_⟩
   · have h1 := he ⟨x, hx⟩
     change x = (e.symm (cLoc w x) : UA L n)
     rw [← h1, e.symm_apply_apply]

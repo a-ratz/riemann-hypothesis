@@ -150,7 +150,7 @@ theorem bejj_bdd (j : Fin G.T.t → ℕ) (jp : ℕ) (D : ℤ) :
       (∀ i, x i ∈ Ljj p (r := r) G j jp) ∧ (∀ i, y i ∈ Ljj p (r := r) G j jp) ∧
       ∀ i k, bejj p (r := r) G j jp (x i) (y k) = if i = k then (p : ℚ_[p]) ^ D else 0} := by
   obtain ⟨W, hW, hLW⟩ := exists_fd_Ljj p (r := r) G j jp
-  haveI := hW
+  have := hW
   exact gc_bdd_gen p (bejj p (r := r) G j jp) (bejj_smul_left p G j jp)
     (fun n s f v => bejj_sum_left p G j jp s f v) (Ljj p (r := r) G j jp) W hLW D
 

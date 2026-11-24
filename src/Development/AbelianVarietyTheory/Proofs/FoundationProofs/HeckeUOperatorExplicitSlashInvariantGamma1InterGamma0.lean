@@ -90,7 +90,7 @@ theorem lev_periodic {N l : ℕ} {k : ℤ} {f : ℍ → ℂ}
 theorem sum_range_affine {q : ℕ} (hq : 0 < q) (F : ℤ → ℂ) (hF : Function.Periodic F q)
     (u v : ℤ) (hu : ∃ w : ZMod q, w * u = 1) :
     ∑ j ∈ Finset.range q, F (v + u * j) = ∑ j ∈ Finset.range q, F j := by
-  haveI : NeZero q := ⟨hq.ne'⟩
+  have : NeZero q := ⟨hq.ne'⟩
   let G : ZMod q → ℂ := fun x => F (x.val : ℤ)
   have hFG : ∀ m : ℤ, F m = G m := by
     intro m

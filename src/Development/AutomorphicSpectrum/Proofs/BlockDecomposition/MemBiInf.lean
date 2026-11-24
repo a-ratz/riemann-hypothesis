@@ -192,7 +192,7 @@ theorem cmp_bij : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] {X : Sche
       ∀ (hT : Good (l := l) cO.D m) (σ : cL.D ⟶ GObj h cO.D m hT),
         (∀ i, σ.φ (cL.t i) = Ideal.Quotient.mk _ (cO.t i)) → Function.Bijective σ.φ := by
   intro l _ O _ X q h W d c m cL hcL cO
-  letI := (strV q W).toAlgebra
+  let := (strV q W).toAlgebra
   intro e he het hev hT σ hσ
   let E : Γ(X, W) ≃+* cO.D.B := (Algebra.TensorProduct.lid O Γ(X, W)).symm.toRingEquiv.trans e
   have hE : ∀ f, E f = e (1 ⊗ₜ f) := fun f => rfl

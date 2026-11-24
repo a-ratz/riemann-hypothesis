@@ -56,7 +56,7 @@ theorem equiv_of_isSubquotient {G V W : Type} [Group G] [AddCommGroup V] [Module
     (hρ : ρ.IsIrreducible) : Nonempty (ρ.Equiv σ) := by
   obtain ⟨S, f, hf⟩ := h
   obtain ⟨y, hy⟩ := exists_ne (0 : W)
-  letI : ρ.IsIrreducible := hρ
+  let : ρ.IsIrreducible := hρ
   rcases eq_bot_or_eq_top S with rfl | rfl
   · obtain ⟨v, rfl⟩ := hf y
     have hv : v = 0 := Subtype.ext ((Submodule.mem_bot ℂ).1 v.property)
@@ -74,7 +74,7 @@ theorem nontrivial_of_isSubquotient {G V W : Type} [Group G] [AddCommGroup V] [M
     [Module ℂ W] {σ : Representation ℂ G W} {ρ : Representation ℂ G V} (h : IsSubquotient σ ρ) [Nontrivial W] :
     Nontrivial V := by
   obtain ⟨S, f, hf⟩ := h
-  letI : Nontrivial S.toSubmodule := hf.nontrivial
+  let : Nontrivial S.toSubmodule := hf.nontrivial
   exact Subtype.val_injective.nontrivial (α := S.toSubmodule)
 
 end GlobalTheory.TypeTwo.PowIrrProof

@@ -120,7 +120,7 @@ theorem dEmb_mul_entry (i t : ℕ) (d : Fin (t + 1) → k) (g : Mir k ((i + 1) +
       1 + colMat k ((i + 1) + (t + 1)) (Fin.append (0 : Fin (i + 1) → k) d) := rfl
   have hc : colMat k ((i + 1) + (t + 1)) (Fin.append (0 : Fin (i + 1) → k) d)
       (Fin.castSucc (Fin.natAdd (i + 1) b)) (Fin.last _) = d b := by
-    simp only [colMat, if_true, Fin.lastCases_castSucc, Fin.append_right]
+    simp only [colMat, ite_true, Fin.lastCases_castSucc, Fin.append_right]
   rw [Subgroup.coe_mul, Units.val_mul, hv, add_mul, one_mul, Matrix.add_apply, Matrix.mul_apply,
     Finset.sum_eq_single (Fin.last _)]
   · rw [hc]
@@ -159,7 +159,7 @@ theorem fibre_isLocallyConstant_hasCompactSupport (k : Type) [Field k] [Valuativ
     have h1 : Continuous fun c : Mir k ((i + 1) + t + 1) =>
         (((y * c⁻¹ : Mir k ((i + 1) + t + 1)) : GL (Fin ((i + 1) + t + 2)) k) :
           Matrix (Fin ((i + 1) + t + 2)) (Fin ((i + 1) + t + 2)) k) :=
-      Units.continuous_val.comp (continuous_subtype_val.comp (continuous_const.mul continuous_inv))
+      Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_const.mul continuous_inv))
     exact (continuous_apply_apply _ _).comp h1
   refine HasCompactSupport.intro (hC.image hφ) fun x hx => ?_
   by_contra hne

@@ -63,7 +63,7 @@ structure AdmK (u : B.Word) (a : I.ι) (i : ℕ) {Ch : Type} (k : Ch → GA B (B
 
 theorem finite_chart (l : I.Laws) (u : B.Word) (a : I.ι) (i : ℕ) : Finite (Chart I u a i) := by
   have h := (l.ch u a).step i
-  haveI : Finite (I.stp u a i).Cl := @Finite.instSigma _ _ inferInstance h.fin_orb
+  have : Finite (I.stp u a i).Cl := @Finite.instSigma _ _ inferInstance h.fin_orb
   exact (Set.finite_range _).to_subtype
 
 end GlobalTheory.Mem.Col2.TC.ChTw

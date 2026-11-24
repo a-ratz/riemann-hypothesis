@@ -188,7 +188,7 @@ theorem exists_integrated_ne_zero [IsTopologicalGroup G] [LocallyCompactSpace G]
   have hfg : ∀ g, f g = (h g : ℂ) := fun _ => rfl
   refine ⟨f, fun hzero => ?_⟩
   set c : ℝ := ∫ g, h g ∂μ with hc
-  have hcpos : 0 < c := h.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hcs hnn
+  have hcpos : 0 < c := h.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hcs hnn
     (by rw [h1 (Set.mem_singleton 1)]; exact one_ne_zero)
   have hint : Integrable (fun g => h g) μ := h.continuous.integrable_of_hasCompactSupport hcs
   have hint1 : Integrable (fun g => f g • π g v) μ :=
@@ -229,7 +229,7 @@ theorem isIrreducible_restrict_of_isMinimal {V : Submodule ℂ H} [CompleteSpace
   set U : Submodule ℂ H := W.map V.subtype with hU
   have hUcl : IsClosed (U : Set H) := by
     rw [hU, Submodule.map_coe]
-    exact hcl.isClosedMap_subtype_val _ hW
+    exact hcl.isClosedMap_subtypeVal _ hW
   have hUinv : π.IsInvariant U := by
     rintro g _ ⟨w, hw, rfl⟩
     exact ⟨π.restrict V hV g w, hWinv g w hw, rfl⟩

@@ -81,8 +81,8 @@ variable {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [FiniteD
 theorem kerProj_re_inner_reg (T : E →L[ℂ] F) (t : ℝ) (w : E) :
     (⟪w, (ContinuousLinearMap.adjoint T ∘L T + (t : ℂ) • (1 : E →L[ℂ] E)) w⟫_ℂ).re
       = ‖T w‖ ^ 2 + t * ‖w‖ ^ 2 := by
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
-    ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, inner_add_right,
+  simp only [add_apply, ContinuousLinearMap.comp_apply,
+    smul_apply, one_apply_eq_self, inner_add_right,
     inner_smul_right, ContinuousLinearMap.adjoint_inner_right, inner_self_eq_norm_sq_to_K]
   simp [← Complex.ofReal_pow]
 
@@ -116,7 +116,7 @@ theorem kerProj_reg_estimate (T : E →L[ℂ] F) {t : ℝ} (ht : 0 < t) (k : E) 
   have hBw : B w = (t : ℂ) • ContinuousLinearMap.adjoint T z := by
     have : B (Ring.inverse B (k + ContinuousLinearMap.adjoint T z))
         = k + ContinuousLinearMap.adjoint T z := by
-      rw [← ContinuousLinearMap.mul_apply, Ring.mul_inverse_cancel _ hu]; rfl
+      rw [← mul_apply_eq_comp, Ring.mul_inverse_cancel _ hu]; rfl
     rw [hw, map_sub, map_smul, this, hBk, smul_add]; abel
   have h := kerProj_re_inner_reg T t w
   rw [← hB, hBw, inner_smul_right, ContinuousLinearMap.adjoint_inner_right,
@@ -254,7 +254,7 @@ theorem measurable_gramProj (k r j : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (
       gramProj (Ppos k r z z' γ (Matrix.of x.1)) (fun a : Fin j => (Matrix.of x.1 : Mat k r)⁻¹ *ᵥ w a) := by
   have hH : IsUnit (Hpk k r).det := Matrix.isUnit_det_of_left_inverse (hpkFacts k r).2.1
   have hc : Continuous fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => (Matrix.of x.1 : Mat k r) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   have hinv : Continuous fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => (Matrix.of x.1 : Mat k r)⁻¹ := by
     rw [continuous_iff_continuousAt]
     intro x
@@ -286,7 +286,7 @@ theorem yj_measurable : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k
   have hY : Measurable fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => Yj k r hj z z' γ (Matrix.of x.1) :=
     (measurable_gramProj k r j z z' γ _).div_const _
   have hc : Continuous fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => (Matrix.of x.1 : Mat k r) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   have h1 : Continuous fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => Sg2 k r z' (Matrix.of x.1) :=
     (TwoSided.Sg2_invariant_continuousOn_one_le_bounds k r z' hz' hT').2.2.1.comp_continuous hc fun x => x.2
   have h2 : Continuous fun x : {x : Mt k r | Matrix.of x ∈ GG k r} => Sg2 k r z (γ * Matrix.of x.1) :=

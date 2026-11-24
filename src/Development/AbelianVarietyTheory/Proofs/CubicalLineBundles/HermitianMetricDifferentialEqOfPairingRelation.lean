@@ -164,8 +164,8 @@ theorem form_diff_eq : ThetaUnifAV → Out.Laws → ∀ (K : Type) [Field K] [Nu
   obtain ⟨Q', ψ', v', u', Hm', χ', W', hQ', hAH', hW', hF'⟩ := hh' s
   obtain ⟨-, f₀, hf₀, ef₀, hc₀⟩ := _root_.GlobalTheory.CM.DiffCoord.existsUnique_isDiffOf K P F P' F' f hf
   obtain ⟨-, g₀, hg₀, eg₀, hcg₀⟩ := _root_.GlobalTheory.CM.DiffCoord.existsUnique_isDiffOf K P F P F g hg
-  haveI := hf₀
-  haveI := hg₀
+  have := hf₀
+  have := hg₀
   obtain ⟨f₁, hf₁, ef₁⟩ := GlobalTheory.NormHom.exists_monHom_lift hQ.2.1 hQ'.2.1 f₀
   obtain ⟨g₁, hg₁, eg₁⟩ := GlobalTheory.NormHom.exists_monHom_lift hQ.2.1 hQ.2.1 g₀
   obtain ⟨-, -, -, -, tu1, tu2, -⟩ := GlobalTheory.AHWeil.tangent_and_weil_of_isAH hT Q Q.g u Hm χ hAH

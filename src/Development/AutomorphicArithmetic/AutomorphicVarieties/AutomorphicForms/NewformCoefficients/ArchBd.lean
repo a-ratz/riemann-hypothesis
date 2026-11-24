@@ -49,7 +49,7 @@ open CongruenceSubgroup
 theorem UpperTheory.V.Af.Nf.archBd :
     UpperTheory.V.Af.Nf.ArchBd := by
   intro k M hM f
-  haveI : NeZero M := ⟨by omega⟩
+  have : NeZero M := ⟨by omega⟩
   obtain ⟨C, hC⟩ := CuspFormClass.exists_bound f
   refine ⟨C, fun x hx => ?_⟩
   unfold UpperTheory.V.Af.Nf.nsl

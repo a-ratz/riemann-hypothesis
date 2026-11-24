@@ -61,7 +61,7 @@ theorem heckeIdeal_pow_finrank [IsGalois K L] (χ : (L ≃ₐ[K] L) →* ℂˣ) 
   | h₃ a p ha hpp ih =>
     let 𝔭 : HeightOneSpectrum (𝓞 K) := ⟨p, Ideal.isPrime_of_prime hpp, hpp.ne_zero⟩
     have hnd : ¬ 𝔭.asIdeal ∣ 𝔮 := fun hd =>
-      hpp.not_unit (hc.of_mul_left_left.isUnit_of_dvd' dvd_rfl hd)
+      hpp.not_isUnit (hc.of_mul_left_left.isUnit_of_dvd' dvd_rfl hd)
     obtain ⟨σ, hσ⟩ := GlobalTheory.NT.exists_isFrob L 𝔭
     rw [GlobalTheory.NT.Model.heckeIdeal_mul L _ hpp.ne_zero ha, mul_pow, ih ha hc.of_mul_left_right, mul_one,
       show p = 𝔭.asIdeal from rfl, GlobalTheory.NT.Model.heckeIdeal_prime, heckeVal_of_unramIn L χ (hun 𝔭 hnd) hσ,

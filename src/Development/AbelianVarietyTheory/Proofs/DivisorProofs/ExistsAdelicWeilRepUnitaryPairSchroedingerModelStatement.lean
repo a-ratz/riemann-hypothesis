@@ -163,7 +163,7 @@ theorem exists_isWeil : ∀ (D : D7) (B : Base D.host.F D.host.E), B.IsGood D.sp
   obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.hermitianSelfDualLatticeSpace_form_hermitian_nondeg_unimodular D B hB n X r s hX
   obtain ⟨hJ, L, hL, h4, h5, h6⟩ := GlobalTheory.T.skewHermitian_neg_traceZero_inv_hermitian_unimodular D B hB d Y r' s' hY
   have hξ : D.host.xi0 ≠ 0 := GlobalTheory.DualPairCompare.embedding_xi_zero_ne_zero D
-  let T := hspOf D X.Jᵀ h1 h2 X.L (by letI := hX.lat; infer_instance) h3 (fun _ => (r, s))
+  let T := hspOf D X.Jᵀ h1 h2 X.L (by let := hX.lat; infer_instance) h3 (fun _ => (r, s))
   let S := hspOf D (-D.host.xi0 • Y.J⁻¹) h4 h5 L hL h6 (fun _ => (s', r'))
   have eA : X.J = T.gramᵀ := by rw [gram_hspOf]; rfl
   have eB : (-1 : AF D.host.F ⊗[D.host.F] D.host.E) • incM D.host.F Y.J = incM D.host.F (D.host.xi0 • S.gram⁻¹) := by

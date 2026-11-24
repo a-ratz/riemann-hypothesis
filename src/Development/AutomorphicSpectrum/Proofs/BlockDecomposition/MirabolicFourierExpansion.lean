@@ -104,7 +104,7 @@ theorem ann_subset_of_mem_nhds {k : Type} [Field k] [ValuativeRel k] [Topologica
         show valuation k ((Pi.single j (y / x.toAdd j) : Fin n → k) j) ≤
           valuation k ((Units.mk0 y hy0 * s⁻¹ : kˣ) : k)
         have hs0 : 0 < valuation k (s : k) :=
-          zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr s.ne_zero)
+          pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr s.ne_zero)
         rw [Pi.single_eq_same, map_div₀, Units.val_mul, map_mul, Units.val_mk0,
           Units.val_inv_eq_inv_val, map_inv₀, div_eq_mul_inv]
         exact mul_le_mul_right ((inv_le_inv₀ (hs0.trans hlt') hs0).mpr hlt'.le) _
@@ -269,7 +269,7 @@ end
 private theorem isHecke_div_and_resEtaPow_div {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (ψ : AddChar k Circle) (hψ : Continuous ψ) : ∃ c : kˣ, ∀ y ∈ GlobalTheory.SplitWeil.cball c, ψ y = 1 := by
   have hU : IsOpen {z : Circle | 0 < (z : ℂ).re} :=
-    isOpen_lt continuous_const (Complex.continuous_re.comp continuous_subtype_val)
+    isOpen_lt continuous_const (Complex.continuous_re.comp continuous_subtypeVal)
   have hW : ψ ⁻¹' {z : Circle | 0 < (z : ℂ).re} ∈ 𝓝 (0 : k) := by
     apply hψ.continuousAt.preimage_mem_nhds
     rw [AddChar.map_zero_eq_one]
@@ -281,10 +281,10 @@ private theorem isHecke_div_and_resEtaPow_div {k : Type} [Field k] [ValuativeRel
   have hmem : ∀ m : ℕ, m • y ∈ GlobalTheory.SplitWeil.cball c := by
     intro m
     induction m with
-    | zero => simp only [zero_smul, GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq, map_zero]; exact zero_le'
+    | zero => simp only [zero_smul, GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq, map_zero]; exact zero_le
     | succ m ih =>
       rw [succ_nsmul]
-      simp only [GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq] at ih hy ⊢
+      simp only [GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq] at ih hy ⊢
       exact Valuation.map_add_le _ ih hy
   have hpos : ∀ m : ℕ, 0 < (((ψ y) ^ m : Circle) : ℂ).re := by
     intro m
@@ -343,7 +343,7 @@ theorem exists_polyBall_twKer_uniform : ∀ {k : Type} [Field k] [ValuativeRel k
   obtain ⟨T, hT⟩ := (GlobalTheory.SplitWeil.FourierPi.isCompact_box (n := Fin n) t).elim_finite_subcover
     (fun a : Fin n → k => (fun b => b - a) ⁻¹' GlobalTheory.SplitWeil.FourierPi.box (Fin n) (c * (S a)⁻¹))
     (fun a => (GlobalTheory.SplitWeil.FourierPi.isOpen_box _).preimage (continuous_id.sub continuous_const))
-    (fun b _ => Set.mem_iUnion.2 ⟨b, fun i _ => by simp only [sub_self, Pi.zero_apply, GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq, map_zero]; exact zero_le'⟩)
+    (fun b _ => Set.mem_iUnion.2 ⟨b, fun i _ => by simp only [sub_self, Pi.zero_apply, GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq, map_zero]; exact zero_le⟩)
   obtain ⟨s, hs⟩ := exists_unit_valuation_ge S T
   refine ⟨s, fun a ha => ?_⟩
   have haK : a ∈ GlobalTheory.SplitWeil.FourierPi.box (Fin n) t := fun i _ => ha i
@@ -442,7 +442,7 @@ theorem GlobalTheory.CompanionTheory.MirFourier.fourier : ∀ (k : Type) [Field 
   obtain ⟨R, hRne, hRt, hRsum⟩ := exists_reps_sum_eq_zero ψ hψ n t s
   refine GlobalTheory.CompanionTheory.FiniteFourier.eq_zero_of_twKer ρ hρ (polyBall n s) (isCompact_polyBall n s) ((ann ψ n t).subgroupOf _) ?_ v ?_ R hRne
     (fun a => resChr ψ a (polyBall n s)) ?_ (fun a ha => hs a (hRt a ha)) (fun x hx => hRsum x hx)
-  · exact (isOpen_ann ψ hψ n t).preimage continuous_subtype_val
+  · exact (isOpen_ann ψ hψ n t).preimage continuous_subtypeVal
   · intro x hx
     exact ht hx
   · intro a ha x hx

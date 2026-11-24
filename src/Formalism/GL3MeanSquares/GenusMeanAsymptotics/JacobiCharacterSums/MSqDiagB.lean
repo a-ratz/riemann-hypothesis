@@ -212,7 +212,7 @@ theorem sP_cN_le_log_div (x : ℝ) (hx : 0 ≤ x) (N p : ℕ) (hp : p.Prime) :
     intro n hn
     rw [Finset.mem_filter] at hn
     unfold cN
-    rw [ArithmeticFunction.vonMangoldt_apply, if_pos hn.2.1, hn.2.2]
+    rw [ArithmeticFunction.vonMangoldt_apply, ite_eq_left hn.2.1, hn.2.2]
     exact mul_le_mul_of_nonneg_left (min_le_right _ _) hlog
   calc sP (cN x) N p ≤ ∑ n ∈ (Icc 1 N).filter (fun n => IsPrimePow n ∧ n.minFac = p),
         Real.log p * (x / n) := h1

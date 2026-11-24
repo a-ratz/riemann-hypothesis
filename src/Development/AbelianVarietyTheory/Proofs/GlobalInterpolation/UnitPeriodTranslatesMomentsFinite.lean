@@ -97,7 +97,7 @@ theorem wop_transport (D : D7) (T : Tor D) {N N' g : ℕ} (S : JMB.Setup g) (e :
   have hphase : wPh D T p y = Complex.exp ((Real.pi : ℂ) * Complex.I * (qH D T y : ℂ)) := by
     have hE : Complex.exp ((Real.pi : ℂ) * Complex.I * (qH D T y : ℂ)) = (-1 : ℂ) ^ m := by
       rw [hqH.trans hm, show (Real.pi : ℂ) * Complex.I * ((m : ℝ) : ℂ) = (m : ℂ) * (Real.pi * Complex.I) by
-        push_cast; ring, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+        push_cast; ring, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
     unfold wPh
     split_ifs with hp
     · rfl

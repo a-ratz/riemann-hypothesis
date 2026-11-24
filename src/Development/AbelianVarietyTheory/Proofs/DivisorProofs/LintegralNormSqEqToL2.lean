@@ -95,7 +95,7 @@ def blk (b : O → Matrix (Fin m) (Fin m) ℂ) (a : O → Matrix (Fin n) (Fin n)
 theorem blockDiagonal_mulVec {κ : Type} [Fintype κ] (M : O → Matrix κ κ ℂ) (v : κ × O → ℂ) (i : κ) (τ : O) :
     (blockDiagonal M *ᵥ v) (i, τ) = (M τ *ᵥ fun j => v (j, τ)) i := by
   simp only [mulVec, dotProduct, Fintype.sum_prod_type, blockDiagonal_apply, ite_mul, zero_mul, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 theorem cpt_blk (b : O → Matrix (Fin m) (Fin m) ℂ) (a : O → Matrix (Fin n) (Fin n) ℂ)
     (v : (Fin m × Fin n) × O → ℂ) (τ : O) : cpt (blk b a *ᵥ v) τ = b τ * cpt v τ * a τ := by
@@ -274,10 +274,10 @@ theorem BB_norm_periodic (hψ : IsStdChar D ψ (-1)) (f : BB ψ S T) : ∀ γ �
 
 theorem continuous_rhoB (hψ : IsStdChar D ψ (-1)) (f : BB ψ S T) : Continuous fun w => rhoB hψ w f := by
   obtain ⟨i1, -, -, -, -, K, hK, hc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   let F : C(WO S T × K, ℂ) := ⟨fun p => heisO ψ S T p.1 f.1 p.2,
-    (hψ.1.1.comp (continuous_symplOH (continuous_subtype_val.comp continuous_snd) continuous_fst)).mul
-      (f.1.continuous.comp ((continuous_subtype_val.comp continuous_snd).add continuous_fst))⟩
+    (hψ.1.1.comp (continuous_symplOH (continuous_subtypeVal.comp continuous_snd) continuous_fst)).mul
+      (f.1.continuous.comp ((continuous_subtypeVal.comp continuous_snd).add continuous_fst))⟩
   refine continuous_iff_continuousAt.2 fun w₀ => ?_
   have h1 := tendsto_iff_norm_sub_tendsto_zero.1 (F.curry.continuous.tendsto w₀)
   refine tendsto_iff_norm_sub_tendsto_zero.2 (squeeze_zero (fun _ => norm_nonneg _) (fun w => ?_) h1)
@@ -397,7 +397,7 @@ theorem mM_unitary (hθ : IsInfFam θ) (p : GA D S × GA D T) : (mM θ S T p)ᴴ
     conv_rhs => rw [← h1, Matrix.mul_inv_rev, Matrix.mul_inv_rev, ← conjTranspose_nonsing_inv, inv_eq_right_inv h2]
 
 theorem continuous_mt (V : HSp D) : Continuous (Formalism.L2.Theta.mt V) ∧ Continuous fun g : GA D V => Formalism.L2.Theta.mt V g⁻¹ := by
-  have h : Continuous fun g : GA D V => matHom V g := continuous_subtype_val
+  have h : Continuous fun g : GA D V => matHom V g := continuous_subtypeVal
   refine ⟨Units.continuous_val.comp h, ?_⟩
   have e : (fun g : GA D V => Formalism.L2.Theta.mt V g⁻¹) = fun g => ((matHom V g)⁻¹).1 := by
     funext g

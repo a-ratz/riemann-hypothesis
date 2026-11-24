@@ -62,7 +62,7 @@ variable {σ τ R : Type*} [CommRing R]
 theorem supp_one {m : σ →₀ ℕ} (hm : m ∈ (1 : MvPolynomial σ R).support) : m = 0 := by
   classical
   by_contra h
-  exact (MvPolynomial.mem_support_iff.mp hm) (by rw [MvPolynomial.coeff_one, if_neg (fun h' => h h'.symm)])
+  exact (MvPolynomial.mem_support_iff.mp hm) (by rw [MvPolynomial.coeff_one, ite_eq_right (fun h' => h h'.symm)])
 
 theorem supp_prod_bound {ι : Type*} (w : (σ →₀ ℕ) →+ ℕ) (s : Finset ι) (f : ι → MvPolynomial σ R) (b : ι → ℝ)
     (h : ∀ j ∈ s, ∀ m ∈ (f j).support, (w m : ℝ) ≤ b j) :
@@ -107,7 +107,7 @@ theorem supp_aeval_pow (g : σ → τ) (e : σ → ℕ) (x : MvPolynomial σ R) 
 
   rw [x.as_sum, map_sum, MvPolynomial.coeff_sum]
   refine Finset.sum_eq_zero fun m hm => ?_
-  rw [aeval_pow_monomial, MvPolynomial.coeff_monomial, if_neg (fun h => hne m hm h.symm)]
+  rw [aeval_pow_monomial, MvPolynomial.coeff_monomial, ite_eq_right (fun h => hne m hm h.symm)]
 
 end Supp
 
@@ -322,11 +322,11 @@ theorem XX'_supported (O : Type) [CommRing O] (F : Frames n' r) (j : ℤ) (m : �
     simp only [Finset.coe_image, Set.mem_image, Finset.mem_coe, Finset.mem_image] at hv
     obtain ⟨w, hw, rfl⟩ := hv
     have h1 : w.1 ∈ F.letters j := hA (Finset.mem_coe.mpr hw)
-    simp only [okVars, Set.mem_setOf_eq]
+    simp only [okVars, Set.mem_ofPred_eq]
     refine ⟨h1, fun h => ?_⟩
     exfalso
     have := w.2.isLt
-    simp only [Fin.coe_castAdd] at h
+    simp only [Fin.val_castAdd] at h
     omega
   · rw [MvPolynomial.mem_supported] at hG ⊢
     unfold nmEmb
@@ -335,7 +335,7 @@ theorem XX'_supported (O : Type) [CommRing O] (F : Frames n' r) (j : ℤ) (m : �
     simp only [Finset.coe_image, Set.mem_image, Finset.mem_coe, Finset.mem_image] at hv
     obtain ⟨w, hw, rfl⟩ := hv
     have h1 : w.1 ∈ F.letters j ∧ ¬ F.IsW j w.1 := hG (Finset.mem_coe.mpr hw)
-    simp only [okVars, Set.mem_setOf_eq]
+    simp only [okVars, Set.mem_ofPred_eq]
     exact ⟨h1.1, fun _ => h1.2⟩
 
 theorem ordDeg_eq (he : Even n') (m : ℤ × Fin (r + K) →₀ ℕ) (x : ℤ) :
@@ -379,7 +379,7 @@ theorem vs_img_le (he : Even n') {F : Frames n' r} {L₁ N₁ : ℕ} (hV : F.Val
         apply Finset.sum_le_sum_of_ne_zero
         intro v hv hne
         have hok := hm v hv
-        simp only [okVars, Set.mem_setOf_eq] at hok
+        simp only [okVars, Set.mem_ofPred_eq] at hok
         rw [Finset.mem_product]
         refine ⟨?_, Finset.mem_univ _⟩
         simp only [nonW, Finset.mem_filter]
@@ -558,10 +558,10 @@ theorem gen_bound (O : Type) [CommRing O] (hX : X.Hyp p K) (hC : 0 ≤ X.CLa) {P
   swap
   · exfalso
     apply MvPolynomial.mem_support_iff.mp hmm
-    rw [MvPolynomial.coeff_mul_monomial', if_neg hle]
+    rw [MvPolynomial.coeff_mul_monomial', ite_eq_right hle]
   have hm'' : mm - l ∈ (∏ j ∈ Finset.range X.F.J, (phSeg O K p X.F (j : ℤ)) (x j)).support := by
     have hcoef := MvPolynomial.mem_support_iff.mp hmm
-    rw [MvPolynomial.coeff_mul_monomial', if_pos hle, mul_one] at hcoef
+    rw [MvPolynomial.coeff_mul_monomial', ite_eq_left hle, mul_one] at hcoef
     exact MvPolynomial.mem_support_iff.mpr hcoef
   have hadd : vsDeg mm = vsDeg (mm - l) + vsDeg l := by
     conv_lhs => rw [← tsub_add_cancel_of_le hle]
@@ -569,7 +569,7 @@ theorem gen_bound (O : Type) [CommRing O] (hX : X.Hyp p K) (hC : 0 ≤ X.CLa) {P
   unfold RRdeg Dat.d at hdeg
   rw [MvPolynomial.mem_restrictSupport_iff] at hdeg
   have hrow := hdeg (Finset.mem_coe.mpr hmm)
-  simp only [Set.mem_setOf_eq] at hrow
+  simp only [Set.mem_ofPred_eq] at hrow
   have h0 : ∀ t, t ∉ X.F.TT → ∀ c, l (t, c) = 0 := by
     intro t ht c
     have h1 : ∑ c, mm (t, c) = 0 := by

@@ -879,28 +879,28 @@ theorem choose_em_k (j : Fin L.n) (h : ∃ j', L.em j' = L.em j) : h.choose = j 
 theorem ext_sub_k (X : Mx F E d.m d.n) (hX : ∀ a, X a L.i₀ = 0) : _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k L (X.submatrix id L.em) = X := by
   funext a i
   by_cases h : ∃ j, L.em j = i
-  · simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, dif_pos h, Matrix.submatrix_apply, id, h.choose_spec]
+  · simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, dite_eq_left h, Matrix.submatrix_apply, id, h.choose_spec]
   · have : i = L.i₀ := by
       by_contra hi
       exact h ((L.rng i).1 hi)
-    simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, dif_neg h]
+    simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, dite_eq_right h]
     rw [this, hX]
 theorem crd_ext_k (X' : Mx F E d.m L.n) (k : Fin d.m × Fin d.n × Fin 2) :
     (d.crd (_root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k L X') k).2 = _root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k L (fun k' => (L.sd.crd X' k').2) k := by
   by_cases h : ∃ j, L.em j = k.2.1
-  · simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.crd, _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, _root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dif_pos h]
-  · simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.crd, _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, _root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dif_neg h, map_zero, Finsupp.coe_zero, Pi.zero_apply]
+  · simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.crd, _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, _root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dite_eq_left h]
+  · simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.crd, _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, _root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dite_eq_right h, map_zero, Finsupp.coe_zero, Pi.zero_apply]
     rfl
 theorem continuous_ins_k : Continuous (_root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k L (F := F)) := by
   refine continuous_pi fun k => ?_
   by_cases h : ∃ j, L.em j = k.2.1
-  · simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dif_pos h]; exact continuous_apply _
-  · simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dif_neg h]; exact continuous_const
+  · simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dite_eq_left h]; exact continuous_apply _
+  · simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dite_eq_right h]; exact continuous_const
 def prj_k (z : Fin d.m × Fin d.n × Fin 2 → Af F) : Fin d.m × Fin L.n × Fin 2 → Af F := fun k => z (k.1, L.em k.2.1, k.2.2)
 theorem prj_ins_k (z : Fin d.m × Fin L.n × Fin 2 → Af F) : _root_.PositivityTheory.SiegelWeilFormula.Avac.prj_k L (_root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k L z) = z := by
   funext k
   have h : ∃ j, L.em j = L.em k.2.1 := ⟨_, rfl⟩
-  simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.prj_k, _root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dif_pos h, _root_.PositivityTheory.SiegelWeilFormula.Avac.choose_em_k L k.2.1 h]
+  simp only [_root_.PositivityTheory.SiegelWeilFormula.Avac.prj_k, _root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k, dite_eq_left h, _root_.PositivityTheory.SiegelWeilFormula.Avac.choose_em_k L k.2.1 h]
 theorem SB_ins_k {g : (Fin d.m × Fin d.n × Fin 2 → Af F) → ℂ} (hg : g ∈ SB (Fin d.m × Fin d.n × Fin 2 → Af F)) :
     (fun z => g (_root_.PositivityTheory.SiegelWeilFormula.Avac.ins_k L z)) ∈ SB (Fin d.m × Fin L.n × Fin 2 → Af F) := by
   refine ⟨hg.1.comp_continuous (_root_.PositivityTheory.SiegelWeilFormula.Avac.continuous_ins_k L), ?_⟩
@@ -926,12 +926,12 @@ theorem gauss_ext_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (R' :
   · have h : ¬ ∃ j, L.em j = i := fun ⟨j, hj⟩ => hi ⟨j, hj⟩
     have : (fun b => d.cw w (_root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k L X') b i) = 0 := by
       funext b
-      simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.cw, _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, Matrix.map_apply, dif_neg h, map_zero, Pi.zero_apply]
+      simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.cw, _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, Matrix.map_apply, dite_eq_right h, map_zero, Pi.zero_apply]
     simp [this]
   · have h : ∃ j', L.em j' = L.em j := ⟨_, rfl⟩
     have e : (fun b => d.cw w (_root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k L X') b (L.em j)) = fun b => L.sd.cw w X' b j := by
       funext b
-      simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.cw, _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, Matrix.map_apply, dif_pos h, _root_.PositivityTheory.SiegelWeilFormula.Avac.choose_em_k L j h]
+      simp only [_root_.PositivityTheory.SiegelWeilFormula.SD_k.cw, _root_.PositivityTheory.SiegelWeilFormula.Avac.ext_k, Matrix.map_apply, dite_eq_left h, _root_.PositivityTheory.SiegelWeilFormula.Avac.choose_em_k L j h]
     rw [e]
     exact norm_frame_eq d.ok.hm (d.A.J.map (d.B.emb w).1) (R'.fr w) (R.fr w) R'.ζ R.ζ (R'.sg w) (R.sg w) (_root_.PositivityTheory.SiegelWeilFormula.Avac.hζ'_k R')
       (_root_.PositivityTheory.SiegelWeilFormula.Avac.hζ'_k R) (R'.hfr w) (R.hfr w) _
@@ -1092,13 +1092,13 @@ theorem exists_embU_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (R
   · rw [inv_inv]
     show (fri * d.cw w (_root_.PositivityTheory.SiegelWeilFormula.Krd.atM_k d w Z * X)).map star = u * (fri * d.cw w X).map star
     rw [_root_.PositivityTheory.SiegelWeilFormula.KSplitA.cw_mul'_k, _root_.PositivityTheory.SiegelWeilFormula.Krd.cw_atM_k]
-    simp only [Krd.fam, if_true]
+    simp only [Krd.fam, ite_true]
     rw [hZ_def, show fri * (fr * h * fri * d.cw w X) = (fri * fr) * h * (fri * d.cw w X) by
       simp only [Matrix.mul_assoc], hb', Matrix.one_mul, mapStar_mul', hhs]
   · rw [inv_inv]
     show d.cw w' (_root_.PositivityTheory.SiegelWeilFormula.Krd.atM_k d w Z * X - X) = 0
     rw [_root_.PositivityTheory.SiegelWeilFormula.KSplitA.cw_sub_k, _root_.PositivityTheory.SiegelWeilFormula.KSplitA.cw_mul'_k, _root_.PositivityTheory.SiegelWeilFormula.Krd.cw_atM_k]
-    simp only [Krd.fam, if_neg hw', Matrix.one_mul, sub_self]
+    simp only [Krd.fam, ite_eq_right hw', Matrix.one_mul, sub_self]
   · rw [inv_inv]
     show finOne F • (_root_.PositivityTheory.SiegelWeilFormula.Krd.atM_k d w Z * X - X) = 0
     rw [smul_sub, ← Matrix.smul_mul, _root_.PositivityTheory.SiegelWeilFormula.Krd.fin_atM_k, Matrix.smul_mul, Matrix.one_mul, sub_self]
@@ -1433,7 +1433,7 @@ theorem unfoldCore_k (B : Base F E) (hB : _root_.UpperTheory.TP.W.GoodK σ B) (h
   have htr : Continuous fun M : Matrix (Fin n) (Fin n) (AE F E) => Algebra.trace (AF F) (AE F E) M.trace :=
     (IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF F) (AE F E))).comp continuous_id.matrix_trace
   have hχc : Continuous χ₀ :=
-    hB.std.1.comp ((htr.comp (continuous_const.matrix_mul continuous_subtype_val)).neg)
+    hB.std.1.comp ((htr.comp (continuous_const.matrix_mul continuous_subtypeVal)).neg)
   have hχadd : ∀ β β', χ₀ (β + β') = χ₀ β * χ₀ β' := fun β β' => by
     simp only [χ₀, AddSubgroup.coe_add, Matrix.mul_add, Matrix.trace_add, map_add (f := _), neg_add]
     exact AddChar.map_add_eq_mul _ _ _
@@ -1551,7 +1551,7 @@ theorem exists_meanAdm_k (hS : GlobalTheory.Published.SiegelSetUnitary) (hP : _r
     fun f => Submodule.subset_span ⟨f, gf, hgf, rfl⟩
   have hTv : ∀ h f, Th h f = thetaSum F (d.S h (pureA F f gf)) := fun h f => by
     rw [← hTh h f, LinearMap.comp_apply, hlθ _ (hpres h _ (hmem f))]
-  haveI : BarrelledSpace ℂ (SchwartzMap (d.κ → mixedEmbedding.mixedSpace F) ℂ) := GlobalTheory.T.schwartzMap_barrelledSpace' _
+  have : BarrelledSpace ℂ (SchwartzMap (d.κ → mixedEmbedding.mixedSpace F) ℂ) := GlobalTheory.T.schwartzMap_barrelledSpace' _
   have hUE : UniformEquicontinuous ((↑) ∘ Th) := (norm_withSeminorms ℂ ℂ).banach_steinhaus fun _ f => by
     obtain ⟨C, hC⟩ := _root_.PositivityTheory.SiegelWeilFormula.Tauto.bdd_S_k hS hP hT d (hmem f)
     refine ⟨C, ?_⟩
@@ -1576,8 +1576,8 @@ theorem exists_meanAdm_k (hS : GlobalTheory.Published.SiegelSetUnitary) (hP : _r
     rw [← hTh g f]; rfl
   have hfin : d.μ d.D < ⊤ := (_root_.PositivityTheory.SiegelWeilFormula.Tauto.cpt_k hS d).fin d.μ d.D d.ok.haar d.ok.dom
   have hpos : 0 < d.μ.real d.D := by
-    haveI := (_root_.PositivityTheory.SiegelWeilFormula.Tauto.cpt_k hS d).cnt
-    haveI := d.ok.haar
+    have := (_root_.PositivityTheory.SiegelWeilFormula.Tauto.cpt_k hS d).cnt
+    have := d.ok.haar
     exact ENNReal.toReal_pos (fd_ne d.ok.dom) hfin.ne
   have hcont : Continuous Lf := by
     refine continuous_of_continuousAt_zero Lf.toAddMonoidHom ?_
@@ -1623,8 +1623,8 @@ theorem thetaAuto_at_k (hS : GlobalTheory.Published.SiegelSetUnitary) (hP : _roo
       (∀ x, IntegrableOn (fun g => thetaSum F (d.om x (d.S g Φ))) d.D d.μ) ∧ Continuous (d.I Φ) ∧
       ∀ γ ∈ rat2 σ d.Y, ∀ x, d.I Φ (γ * x) = d.I Φ x := by
   have hc := _root_.PositivityTheory.SiegelWeilFormula.Tauto.cpt_k hS d
-  haveI := hc.cnt
-  haveI := d.ok.haar
+  have := hc.cnt
+  have := d.ok.haar
   have hom : ∀ x, ∀ Ψ ∈ d.sch, d.om x Ψ ∈ d.sch := fun x Ψ hΨ => d.ok.dbl.weil.2.1.pres x Ψ hΨ
   have hcomm : ∀ Φ ∈ d.sch, ∀ x g, d.om x (d.S g Φ) = d.S g (d.om x Φ) := fun Φ hΦ => (hT F E σ d Φ hΦ).2
   obtain ⟨Λ, hΛ, hΛv⟩ := _root_.PositivityTheory.SiegelWeilFormula.Tauto.exists_meanAdm_k hS hP hT d

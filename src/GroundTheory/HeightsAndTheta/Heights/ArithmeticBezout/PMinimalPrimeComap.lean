@@ -60,15 +60,15 @@ theorem MinimalPrimeComap.flat (K L : Type) [Field K] [Field L] (σ : K →+* L)
     letI := σ.toAlgebra
     letI := MvPolynomial.algebraMvPolynomial (σ := ι) (R := K) (S := L)
     Module.Flat (MvPolynomial ι K) (MvPolynomial ι L) := by
-  letI := σ.toAlgebra
-  letI := MvPolynomial.algebraMvPolynomial (σ := ι) (R := K) (S := L)
+  let := σ.toAlgebra
+  let := MvPolynomial.algebraMvPolynomial (σ := ι) (R := K) (S := L)
   have h : Algebra.IsPushout K (MvPolynomial ι K) L (MvPolynomial ι L) := inferInstance
   exact Module.Flat.isBaseChange K (MvPolynomial ι K) L (MvPolynomial ι L) h.out
 
 theorem MinimalPrimeComap.proof : MinimalPrimeComap.Statement := by
   intro K L _ _ σ ι I hI P hP
-  letI := σ.toAlgebra
-  letI := MvPolynomial.algebraMvPolynomial (σ := ι) (R := K) (S := L)
+  let := σ.toAlgebra
+  let := MvPolynomial.algebraMvPolynomial (σ := ι) (R := K) (S := L)
   have := MinimalPrimeComap.flat K L σ ι
   have halg : algebraMap (MvPolynomial ι K) (MvPolynomial ι L) = MvPolynomial.map σ := rfl
   have : P.IsPrime := hP.1.1

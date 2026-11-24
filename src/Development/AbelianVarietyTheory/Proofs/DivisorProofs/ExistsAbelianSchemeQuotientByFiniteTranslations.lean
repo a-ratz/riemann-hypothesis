@@ -148,7 +148,7 @@ theorem grp_descent : ∀ (S : Scheme.{0}) (A Q : Over S) [GrpObj A] [IsCommMonO
   have key : ∀ {W : Over S} (a b : W ⟶ A), lift (a ≫ q) (b ≫ q) ≫ m = (a * b) ≫ q := by
     intro W a b
     rw [← lift_map, Category.assoc, hm, Hom.mul_def, Category.assoc]
-  letI : MonObj Q :=
+  let : MonObj Q :=
     { one := η[A] ≫ q
       mul := m
       one_mul := by
@@ -181,7 +181,7 @@ theorem grp_descent : ∀ (S : Scheme.{0}) (A Q : Over S) [GrpObj A] [IsCommMonO
           ext <;> simp [hm]
         rw [reassoc_of% h1, reassoc_of% h2, hm, MonObj.mul_assoc_assoc] }
   have hhom : IsMonHom q := ⟨rfl, hm.symm⟩
-  letI : GrpObj Q :=
+  let : GrpObj Q :=
     { inv := n
       left_inv := by
         rw [← cancel_epi q, comp_lift_assoc, hn, Category.comp_id]

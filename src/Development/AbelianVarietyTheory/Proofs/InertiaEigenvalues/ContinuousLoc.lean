@@ -97,9 +97,9 @@ variable (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.host.E))
 theorem continuous_loc {k : ℕ} (M : GE D.nd →* Matrix (Fin k) (Fin k) (D.nd.O i))
     (hM : Continuous fun g => M g) : Continuous (Br.loc D.nbr i w hw M) := by
   have hfc : Continuous (D.nbr i w hw).toLL :=
-    continuous_subtype_val.comp (D.nbr i w hw).eO_cont
+    continuous_subtypeVal.comp (D.nbr i w hw).eO_cont
   have hι : Continuous fun g : Br.G D.nbr i w hw => ((Br.iota D.nbr i w hw g : Gw D.nd w) : GE D.nd) :=
-    continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw)
+    continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw)
   exact (hM.comp hι).matrix_map hfc
 
 theorem isDual1_loc (r : D.nd.X i → (GE D.nd →* GL (Fin D.R.nV) (D.nd.O i))) (x : D.nd.X i) :

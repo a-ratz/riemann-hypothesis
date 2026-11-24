@@ -89,12 +89,12 @@ theorem UpperTheory.V.Base.kerResCyc :
         { carrier := {g | ρ g m = m}
           mul_mem' := by
             intro a b ha hb
-            simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+            simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
             rw [hb, ha]
           one_mem' := by simp
           inv_mem' := by
             intro a ha
-            simp only [Set.mem_setOf_eq] at *
+            simp only [Set.mem_ofPred_eq] at *
             calc ρ a⁻¹ m = ρ a⁻¹ (ρ a m) := by rw [ha]
               _ = m := by rw [← Module.End.mul_apply, ← map_mul]; simp }
       have hScl : IsClosed (S : Set G) :=

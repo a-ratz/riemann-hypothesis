@@ -74,8 +74,8 @@ theorem saturated_has_complement {R : Type u_1} {V : Type u_2} [CommRing R] [IsD
     ∃ A : Submodule R V, A ⊓ N = ⊥ ∧ A ⊔ N = M := by
   classical
   let N' : Submodule R M := N.comap M.subtype
-  haveI : Module.Finite R M := Module.Finite.iff_fg.mpr hM
-  haveI : IsTorsionFree R (M ⧸ N') := by
+  have : Module.Finite R M := Module.Finite.iff_fg.mpr hM
+  have : IsTorsionFree R (M ⧸ N') := by
     refine Module.IsTorsionFree.of_smul_eq_zero ?_
     intro r q hq
     by_cases hr : r = 0
@@ -87,8 +87,8 @@ theorem saturated_has_complement {R : Type u_1} {V : Type u_2} [CommRing R] [IsD
       simpa using hq
     have h2 : (m : V) ∈ N := hsat r m hr m.2 (by simpa [N'] using h1)
     exact (Submodule.Quotient.mk_eq_zero N').mpr (by simpa [N'] using h2)
-  haveI : Module.FinitePresentation R (M ⧸ N') := Module.finitePresentation_of_finite R _
-  haveI : Module.Projective R (M ⧸ N') := Module.Flat.projective_of_finitePresentation
+  have : Module.FinitePresentation R (M ⧸ N') := Module.finitePresentation_of_finite R _
+  have : Module.Projective R (M ⧸ N') := Module.Flat.projective_of_finitePresentation
   obtain ⟨g, hg⟩ := Module.projective_lifting_property N'.mkQ LinearMap.id N'.mkQ_surjective
   have hg' : ∀ q, N'.mkQ (g q) = q := fun q => LinearMap.congr_fun hg q
   refine ⟨(LinearMap.range g).map M.subtype, ?_, ?_⟩

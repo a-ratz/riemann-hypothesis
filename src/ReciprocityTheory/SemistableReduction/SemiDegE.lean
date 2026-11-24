@@ -70,7 +70,7 @@ theorem exists_kBasisIn {K : Type} [Field K] [NumberField K] {r : ℕ}
     | exact hli.setFinite
     | exact Set.toFinite s
     | exact (Set.finite_coe_iff.mp hli.finite)
-  haveI : Fintype s := hfin.fintype
+  have : Fintype s := hfin.fintype
   let e := Fintype.equivFin s
   refine ⟨Fintype.card s, fun i => ((e.symm i : s) : Fin r → K), fun i => hsB (e.symm i).2,
     hli.comp _ e.symm.injective, ?_⟩
@@ -173,11 +173,11 @@ theorem spanIdx_ne_zero {K : Type} [Field K] [NumberField K] {r k : ℕ}
     rw [← Int.cast_smul_eq_zsmul (𝓞 K), hdiv, mul_smul]
     exact hβS _ (Submodule.smul_mem _ _ hx)
   have hfinB : Module.Finite ℤ B := by
-    haveI : Module.Finite (𝓞 K) B := Module.Finite.iff_fg.mpr hB
+    have : Module.Finite (𝓞 K) B := Module.Finite.iff_fg.mpr hB
     exact Module.Finite.trans (𝓞 K) B
-  haveI hfg : AddGroup.FG B := Module.Finite.iff_addGroup_fg.mp hfinB
+  have hfg : AddGroup.FG B := Module.Finite.iff_addGroup_fg.mp hfinB
   let N : Submodule (𝓞 K) B := (Submodule.span (𝓞 K) (Set.range b)).comap B.subtype
-  haveI hfgQ : AddGroup.FG (B ⧸ N.toAddSubgroup) := by
+  have hfgQ : AddGroup.FG (B ⧸ N.toAddSubgroup) := by
     first
     | exact AddGroup.fg_of_surjective (QuotientAddGroup.mk'_surjective N.toAddSubgroup)
     | exact QuotientAddGroup.fg N.toAddSubgroup
@@ -198,7 +198,7 @@ theorem spanIdx_ne_zero {K : Type} [Field K] [NumberField K] {r k : ℕ}
         exact Submodule.neg_mem _ (hmS _ x.2)
   have hfinQ : Finite (B ⧸ N.toAddSubgroup) := by
     first
-    | exact AddCommGroup.finite_of_fg_torsion _ htors
+    | exact AddCommGroup.finite_of_fg_isAddTorsion _ htors
     | exact AddCommGroup.finite_of_fg_torsion htors
   have : N.toAddSubgroup.index ≠ 0 := AddSubgroup.index_ne_zero_of_finite
   exact this
@@ -237,7 +237,7 @@ theorem sum_log_norm_emb {K : Type} [Field K] [NumberField K] (a : K) :
       simp only [eq_ratCast] at h
       rw [h]
       exact Fintype.prod_bijective (fun σ : K →ₐ[ℚ] ℂ => (σ : K →+* ℂ))
-        ⟨fun σ τ h => AlgHom.coe_ringHom_injective h,
+        ⟨fun σ τ h => AlgHom.toRingHom_injective h,
           fun τ => ⟨τ.toRatAlgHom, RingHom.ext fun x => rfl⟩⟩ _ _ (fun σ => rfl)
     rw [← Real.log_prod (s := Finset.univ) (f := fun σ : K →+* ℂ => ‖σ a‖)
       (fun σ _ => norm_ne_zero_iff.mpr ((map_ne_zero σ).mpr ha)), ← norm_prod,

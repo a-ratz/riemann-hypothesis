@@ -77,7 +77,7 @@ theorem exists_mem_valuation_eq (w : Pl D.host.E) {I : FractionalIdeal (𝓞 D.h
     have := FractionalIdeal.count_mono D.host.E w hI h
     rw [FractionalIdeal.count_mul D.host.E w hI hw0, FractionalIdeal.count_self] at this
     omega
-  obtain ⟨c, hc, hc'⟩ := SetLike.not_le_iff_exists.1 hne
+  obtain ⟨c, hc, hc'⟩ := IsConcreteLE.not_le_iff_exists.1 hne
   refine ⟨c, hc, le_antisymm ((GlobalTheory.Idele.mem_iff_valuation_le hI c).1 hc w) ?_⟩
   by_contra hlt
   push_neg at hlt
@@ -87,7 +87,7 @@ theorem exists_mem_valuation_eq (w : Pl D.host.E) {I : FractionalIdeal (𝓞 D.h
   · subst hQ
     rw [FractionalIdeal.count_self]
     rcases eq_or_ne (w.valuation D.host.E c) 0 with h0 | h0
-    · rw [h0]; exact zero_le'
+    · rw [h0]; exact zero_le
     · rw [← WithZero.exp_log h0, WithZero.exp_lt_exp] at hlt
       rw [← WithZero.exp_log h0, WithZero.exp_le_exp]
       omega
@@ -125,7 +125,7 @@ theorem hasConductor_psiAt_AA {T : Type} {L : LevCh D T} {sc : Consts} {G : Grid
     obtain ⟨u, hu, hu1, hu2⟩ := exists_pole w
     refine hu (int_of_xi hP D fun a ha j hj => mem_Dinv.2 fun c => ?_)
     have hx1 : WithZero.exp (-n + 1) ≤ Valued.v x := by
-      have h0 : Valued.v x ≠ 0 := fun h0 => hx (h0 ▸ zero_le')
+      have h0 : Valued.v x ≠ 0 := fun h0 => hx (h0 ▸ zero_le)
       rw [← WithZero.exp_log h0, WithZero.exp_le_exp] at hx
       rw [← WithZero.exp_log h0, WithZero.exp_le_exp]
       omega

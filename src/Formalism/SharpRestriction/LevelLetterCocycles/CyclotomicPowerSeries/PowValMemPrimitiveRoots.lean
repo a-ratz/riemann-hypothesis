@@ -100,7 +100,7 @@ theorem exists_toZModPow_eq_of_pow_pred_eq_one {l : ℕ} [Fact l.Prime] {Δ : Ty
     ∃ j, PadicInt.toZModPow (s + 1) (om j) = a := by
   have hp : l.Prime := Fact.out
   have h2 := hp.two_le
-  haveI : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ (s + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hdvd : l ∣ l ^ (s + 1) := dvd_pow_self l (Nat.succ_ne_zero s)
   set π := ZMod.castHom hdvd (ZMod l) with hπ
   have hψ : π.comp (PadicInt.toZModPow (s + 1)) = (PadicInt.toZMod : ℤ_[l] →+* ZMod l) := by

@@ -145,7 +145,7 @@ theorem exists_nat_mul_isIntegral_of_isCompact (F E : Type) [Field F] [NumberFie
     [Algebra F E] (L : Set (Af F ⊗[F] E)) (hL : IsCompact L) :
     ∃ d : ℕ, 0 < d ∧ ∀ e : E, inclR (F := F) (Af F) e ∈ L → IsIntegral ℤ ((d : E) * e) := by
   classical
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have key : ∀ x : E, ∃ m : ℕ, 0 < m ∧ IsIntegral ℤ ((m : E) * x) := by
     intro x
     have halg : IsAlgebraic ℤ x :=
@@ -299,7 +299,7 @@ theorem stabilises_flag_span : ∀ (E : Type) [Field E] (S : E →+* E) (n r : �
     have h1 : (∑ α, frameIdem S J X Y α) *ᵥ v = ∑ α, frameIdem S J X Y α *ᵥ v :=
       map_sum (Matrix.mulVec.addMonoidHomLeft v) (fun α => frameIdem S J X Y α) Finset.univ
     rwa [sum_frameIdem, Matrix.one_mulVec] at h1
-  refine ⟨fun m => if m ≤ j then ((cT S Y * J) *ᵥ v) m else 0, ?_, fun m hm => if_neg (not_le.2 hm)⟩
+  refine ⟨fun m => if m ≤ j then ((cT S Y * J) *ᵥ v) m else 0, ?_, fun m hm => ite_eq_right (not_le.2 hm)⟩
   refine hsum.trans ?_
   rw [Fintype.sum_option, Fintype.sum_sum_type, hz none (by simp [frameLev]), zero_add]
   have hinr : ∑ i, frameIdem S J X Y (some (Sum.inr i)) *ᵥ v = 0 := by
@@ -425,7 +425,7 @@ theorem minPar_frame_block_eq_zero : ∀ (F E : Type) [Field F] [NumberField F] 
       · have hj : ¬ j ≤ s := by
           intro h
           change (if j ≤ s then 2 else 1) < 2 at hα
-          rw [if_pos h] at hα
+          rw [ite_eq_left h] at hα
           exact absurd hα (by decide)
         have hij : i < j := lt_of_le_of_lt hi (not_le.mp hj)
         have hBji : (B.map φ) j i = 0 := by
@@ -441,13 +441,13 @@ theorem minPar_frame_block_eq_zero : ∀ (F E : Type) [Field F] [NumberField F] 
         rw [h2]
         simp
     · change (if i ≤ s then 2 else 1) = 2 at hβ
-      rw [if_neg hi] at hβ
+      rw [ite_eq_right hi] at hβ
       exact absurd hβ (by decide)
   · change (if i ≤ s then 0 else 1) = 2 at hβ
     by_cases hi : i ≤ s
-    · rw [if_pos hi] at hβ
+    · rw [ite_eq_left hi] at hβ
       exact absurd hβ (by decide)
-    · rw [if_neg hi] at hβ
+    · rw [ite_eq_right hi] at hβ
       exact absurd hβ (by decide)
 
 end GlobalTheory.CompanionTheory.RapidDecay
@@ -475,7 +475,7 @@ variable {r : ℕ}
 
 theorem exists_embOver (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (h : IsCMExt F E σ) (φ : E →+* ℂ) : ∃ (w : InfinitePlace F) (τ : EmbOver E w), τ.1 = φ := by
-  haveI := h.1
+  have := h.1
   let ψ : F →+* ℂ := φ.comp (algebraMap F E)
   let w : InfinitePlace F := InfinitePlace.mk ψ
   have hr : ComplexEmbedding.IsReal w.embedding := InfinitePlace.isReal_iff.1 (IsTotallyReal.isReal w)
@@ -504,7 +504,7 @@ theorem gram_YX {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
 
 theorem exists_denom : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (ι : Type) [Finite ι] (P : ι → Matrix (Fin n) (Fin n) E) (Ω C : Set (GAd σ J)), IsCompact Ω → IsCompact C → ∃ d : ℕ, 0 < d ∧ ∀ p ∈ Ω, ∀ a ∈ infPts σ J, ∀ m ∈ C, ∀ γ : GRat σ J, ratEmb σ J γ = p * a * m * a⁻¹ * p⁻¹ → ∀ (α β : ι) (u v : Fin n), IsIntegral ℤ ((d : E) * (P α * γ.1.1 * P β) u v) := by
   intro F E _ _ _ _ _ σ n J ι _ P Ω C hΩ hC
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := Af F)
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := Af F)
   let Cf : Set (GFin σ J) := (fun q : GAd σ J × GAd σ J => projFin σ J (q.1 * q.2 * q.1⁻¹)) '' (Ω ×ˢ C)
   have hCf : IsCompact Cf := (hΩ.prod hC).image
     ((continuous_projFin σ J).comp ((continuous_fst.mul continuous_snd).mul continuous_fst.inv))
@@ -628,7 +628,7 @@ theorem block_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
 
 theorem flag_key : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin r) E), IsWittFrame σ J X Y → ∀ (Ω : Set (GAd σ J)), IsCompact Ω → Ω ⊆ minParOne σ J X → ∀ (K : Subgroup (GAd σ J)), IsCompact (K : Set (GAd σ J)) → ∀ c : ℝ, 0 < c → ∀ (C : Set (GAd σ J)), IsCompact C → ∃ t1 : ℝ, ∀ p ∈ Ω, ∀ t ∈ cone r c, ∀ a, IsTorusElt σ J X Y t a → ∀ k ∈ K, ∀ γ : GRat σ J, (p * a * k)⁻¹ * ratEmb σ J γ * (p * a * k) ∈ C → ∀ j : Fin r, t1 < t j → (∀ j' : Fin r, j'.val = j.val + 1 → t1 * t j' < t j) → (∀ l : Fin r, l ≤ j → ∃ b : Fin r → E, γ.1.1 *ᵥ (fun a => X a l) = X *ᵥ b ∧ ∀ m : Fin r, j < m → b m = 0) := by
   intro F E _ _ _ _ _ σ hcm n J hJ r X Y hW Ω hΩ hΩP K hK c hc C hC
-  haveI := hcm.1
+  have := hcm.1
   let C' : Set (GAd σ J) := (fun q : GAd σ J × GAd σ J × GAd σ J => q.1 * q.2.1 * q.2.2) '' ((K : Set (GAd σ J)) ×ˢ C ×ˢ (K : Set (GAd σ J)))
   have hC' : IsCompact C' := (hK.prod (hC.prod hK)).image (by fun_prop)
   obtain ⟨B, hB0, hB⟩ := block_bound F E σ hcm n J hJ r X Y hW Ω C' hΩ hΩP hC' c hc

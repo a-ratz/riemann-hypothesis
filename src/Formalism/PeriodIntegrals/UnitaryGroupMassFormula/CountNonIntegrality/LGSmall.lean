@@ -66,7 +66,7 @@ theorem small_powers_bound : PowSmall := by
     have hn' : valuation Fp y ^ n < (valuation Fp x)⁻¹ := by rwa [Units.val_mk0] at hn
     refine ⟨n, ?_⟩
     rw [map_mul, map_pow]
-    have hpos : 0 < valuation Fp x := zero_lt_iff.2 hx
+    have hpos : 0 < valuation Fp x := pos_iff_ne_zero.2 hx
     calc valuation Fp y ^ n * valuation Fp x < (valuation Fp x)⁻¹ * valuation Fp x :=
           mul_lt_mul_of_pos_right hn' hpos
       _ = 1 := inv_mul_cancel₀ hx

@@ -139,9 +139,9 @@ open scoped ContDiff
 theorem UpperTheory.cuspDecay_of_rank_zero :
     ∀ (K : Type) [Field K] [NumberField K] (μ : Measure (G1 K 0)) [μ.IsHaarMeasure] (a : CC K 0), CuspDecay μ a := by
   intro K _ _ μ _ a N'
-  haveI : Subsingleton (AdelicGLn.AdelicGL K 0) :=
+  have : Subsingleton (AdelicGLn.AdelicGL K 0) :=
     ⟨fun x y => Units.ext (Subsingleton.elim _ _)⟩
-  haveI : Subsingleton (G1 K 0) := ⟨fun x y => Subtype.ext (Subsingleton.elim _ _)⟩
+  have : Subsingleton (G1 K 0) := ⟨fun x y => Subtype.ext (Subsingleton.elim _ _)⟩
   obtain ⟨Ω₀, hΩ₁, hΩ₁B, t, ht, hsieg⟩ := exists_siegelSet (K := K) 0
   have hbasic : ∃ (C : ℝ) (N : ℕ), ∀ φ : Lp ℂ 2 (quotientMeasure (Gam K 0) μ), ∀ b ∈ Ω₀,
       ∀ (ρ : Fin 0 → ℝ) (hρ : ∀ i, 0 < ρ i),
@@ -282,7 +282,7 @@ theorem UpperTheory.cuspDecay_archConv_finAvg :
       have h1 := Finset.single_le_sum (f := fun r : Fin n =>
         if h : 0 < (r : ℕ) then max (Cf r h r.2) 0 else 0)
         (fun r _ => by split_ifs <;> simp) (Finset.mem_univ ⟨r, hrn⟩)
-      simp only [hr, dif_pos] at h1
+      simp only [hr, dite_eq_left] at h1
       exact (le_max_left _ _).trans (h1.trans (le_add_of_nonneg_left (le_max_right _ _)))
     have hC₀_le : C₀ ≤ Cmax := (le_max_left _ _).trans (le_add_of_nonneg_right hsum0)
     have hCmax0 : 0 ≤ Cmax := (le_max_right _ _).trans (le_add_of_nonneg_right hsum0)
@@ -532,7 +532,7 @@ theorem UpperTheory.finAvg_tens_of_leftInvariant :
     exact congrArg _ h
   ext x
   rw [finAvg_apply]
-  haveI := compactSpace_of_isOpen U hU
+  have := compactSpace_of_isOpen U hU
   change ∫ u : U, tens γ e ((finOne K n u)⁻¹ * x) ∂haarProb U = _
   simp only [hc]
   simp
@@ -658,11 +658,11 @@ theorem UpperTheory.cuspDecay_tens_conv_real_smoothT :
   obtain ⟨β, hβ, hβc, hβu, hβκ⟩ := UpperTheory.exists_contDiff_archMatrix_extension_of_smooth K n (fun g => (κ g).re) hsm hcs
   let φ : archGroup K n ≃ₜ* ArchUnits K n :=
     { Subgroup.topEquiv (G := ArchUnits K n) with
-      continuous_toFun := continuous_subtype_val
+      continuous_toFun := continuous_subtypeVal
       continuous_invFun := continuous_id.subtype_mk _ }
   let m : archGroup K n ≃ᵐ ArchUnits K n := φ.toHomeomorph.toMeasurableEquiv
   have hmφ : (m : archGroup K n → ArchUnits K n) = φ.toFun := rfl
-  haveI hH : (Measure.map m ν).IsHaarMeasure := by
+  have hH : (Measure.map m ν).IsHaarMeasure := by
     rw [hmφ]
     exact φ.isHaarMeasure_map ν
   have hint : ∀ f : archGroup K n → ℂ,
@@ -739,7 +739,7 @@ theorem UpperTheory.exists_sum_conv_real_smoothT :
     rw [ex, CompactlySupportedContinuousMap.sum_apply, Fintype.sum_prod_type]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [Fintype.sum_bool]
-    simp only [if_true, Bool.false_eq_true, if_false]
+    simp only [ite_true, Bool.false_eq_true, ite_false]
     rw [add_comm, conv_split]
     rfl
 end -- clump:auto
@@ -1000,7 +1000,7 @@ theorem UpperTheory.exists_smooth_archCutoff_kbar_eq_one :
       smul_eq_mul, mul_one, mul_inv_cancel₀ hc0.ne']
     simp
   · set C' : Set (archGroup K n) := (fun x : G1 K n => infPart K n (x : AdelicGLn.AdelicGL K n)) '' C with hC'
-    have hC'c : IsCompact C' := hC.image (continuous_infPart.comp continuous_subtype_val)
+    have hC'c : IsCompact C' := hC.image (continuous_infPart.comp continuous_subtypeVal)
     obtain ⟨M, hM⟩ := hC'c.exists_bound_of_continuousOn (continuous_lq K n hn).continuousOn
     set R : ℝ := (2 + M) / c with hR
     refine ⟨(fun p : archGroup K n × ℝ => p.1 * zInf K n (GroundTheory.Global.expPos p.2)) '' (C' ×ˢ Set.Icc (-R) R),
@@ -1051,7 +1051,7 @@ theorem UpperTheory.exists_smoothT_kbar_eq_restriction :
   intro K _ _ n hn a x₀ ha
   obtain ⟨χ, hχs, hχ1, hχc⟩ := UpperTheory.exists_smooth_archCutoff_kbar_eq_one K n hn
   have hχcont : Continuous fun A : archGroup K n => (χ A : ℂ) := by
-    letI := (isExpLieAlgebra K n).chartedSpace
+    let := (isExpLieAlgebra K n).chartedSpace
     exact ContMDiff.continuous hχs
   have hcont : Continuous fun A : archGroup K n => (χ A : ℂ) * a (archP K n A * x₀) :=
     hχcont.mul (a.continuous.comp (continuous_archP.mul continuous_const))
@@ -1118,7 +1118,7 @@ theorem UpperTheory.exists_sum_tens_of_isLeftSmooth :
   have hVc : IsCompact (((finOpenSubgroup U hU).toSubgroup : Subgroup _) : Set (AdelicGLn.FiniteAdelicGL K n)) :=
     isCompact_openSubgroupOf U hU
   have hS : IsCompact ((fun x : G1 K n => finPart K n (x : AdelicGLn.AdelicGL K n)) '' tsupport a) :=
-    a.hasCompactSupport.isCompact.image (continuous_finPart.comp continuous_subtype_val)
+    a.hasCompactSupport.isCompact.image (continuous_finPart.comp continuous_subtypeVal)
   obtain ⟨m, b, e, heV, hE⟩ := UpperTheory.exists_finite_basis_leftInvariant_compactSupport _ (finOpenSubgroup U hU).toSubgroup hVo hVc _ hS
   choose F hF hFk using fun j => UpperTheory.exists_smoothT_kbar_eq_restriction K n hn a (MultiplicityOne.finProj K n (b j)) (hsm _)
   refine ⟨U, hU, m, F, e, hF, fun j u hu h => heV j _ (coe_mem_openSubgroupOf U hU hu) h, ?_⟩

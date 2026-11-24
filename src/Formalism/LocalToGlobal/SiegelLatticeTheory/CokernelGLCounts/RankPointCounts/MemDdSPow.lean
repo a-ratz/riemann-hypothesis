@@ -72,7 +72,7 @@ theorem mem_ddS_pow (t : 𝓞 D.host.F) (ht : t ∈ differentIdeal ℤ (𝓞 D.h
   have h2 : ((algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t : 𝓞 D.host.E) : D.host.E) ∈ ddS D :=
     FractionalIdeal.mem_coeIdeal_of_mem _ h1
   have h3 := Submodule.pow_mem_pow (ddS D : Submodule (𝓞 D.host.E) D.host.E) h2 k
-  rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_pow]
+  rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_pow]
   push_cast
   exact h3
 

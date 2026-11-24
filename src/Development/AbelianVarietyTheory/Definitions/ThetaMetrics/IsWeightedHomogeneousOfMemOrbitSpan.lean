@@ -247,7 +247,7 @@ def diffOf {m : ℕ} (l : Fin m → ℕ) (i : Fin m) : ℕ :=
 
 theorem partOf_eq_add {m : ℕ} (c : Fin m → ℕ) (i : Fin m) :
     partOf c i = c i + if h : i.val + 1 < m then partOf c ⟨i.val + 1, h⟩ else 0 := by
-  rw [partOf, ← Finset.Ioi_insert, Finset.sum_insert (by simp)]
+  rw [partOf, ← Finset.insert_Ioi, Finset.sum_insert (by simp)]
   congr 1
   split_ifs with h
   · rw [partOf]; congr 1; ext j

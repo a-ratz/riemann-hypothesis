@@ -198,7 +198,7 @@ theorem exists_cocycle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     by_cases hc : C0 c
     · have hgc : C0 (g • c) := hstab g c hc
       have hhgc : C0 ((h * g) • c) := hstab (h * g) c hc
-      simp only [hc, hgc, if_true]
+      simp only [hc, hgc, ite_true]
       obtain ⟨f', x, hfx⟩ := hc
       set f := ρ (h * g) f' with hfdef
       have hV : (f : C → M.dom → ℂ) ((h * g) • c) (Lmap M (h * g) c x) ≠ 0 := by
@@ -214,10 +214,10 @@ theorem exists_cocycle : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       simp [hc, hgc]
   · intro h f c x
     by_cases hc : C0 c
-    · simp only [hc, if_true]
+    · simp only [hc, ite_true]
       exact hform h f c x
     · have hhc : ¬ C0 (h • c) := hstab' h c hc
-      simp only [hc, if_false, Units.val_one, one_mul]
+      simp only [hc, ite_false, Units.val_one, one_mul]
       have l0 : ((ρ h⁻¹ f : M.cusp ka) : C → M.dom → ℂ) c x = 0 := by
         by_contra hne
         exact hc ⟨ρ h⁻¹ f, x, hne⟩
@@ -358,7 +358,7 @@ theorem tw_law (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (U C
       ∀ u v : U, (tw M (fun c => (a v c : ℂ)) v).comp (tw M (fun c => (a u c : ℂ)) u) =
         tw M (fun c => (a (u * v) c : ℂ)) (u * v) := by
   refine ⟨?_, fun u v => ?_⟩
-  · apply AlgHom.coe_ringHom_injective
+  · apply AlgHom.toRingHom_injective
     apply Polynomial.ringHom_ext
     · intro f
       show tw M _ 1 (Polynomial.C f) = Polynomial.C f
@@ -376,7 +376,7 @@ theorem tw_law (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (U C
           simpa using this.symm
         rw [h', Units.val_one]
       rw [h1, map_one, one_mul]
-  · apply AlgHom.coe_ringHom_injective
+  · apply AlgHom.toRingHom_injective
     apply Polynomial.ringHom_ext
     · intro f
       show tw M _ v (tw M _ u (Polynomial.C f)) = tw M _ (u * v) (Polynomial.C f)
@@ -567,7 +567,7 @@ theorem GlobalTheory.CuspEmb.cusp_embReg : ∀ (E : Type) [Field E] [NumberField
     ∃ n : ℕ, GlobalTheory.BadCount.EmbReg ρ H n ∧ n * Nat.card H ≤ finrank ℂ (M.cusp (ka + 2 • deMul M.Ψ r M.p0 (sOf M))) := by
   intro E _ _ _ r U C _ _ _ _ M ka ρ hρ ep c0 hR H hL
   classical
-  haveI : Fintype U := Fintype.ofFinite U
+  have : Fintype U := Fintype.ofFinite U
   obtain ⟨u0, hu0, hdet⟩ := _root_.GlobalTheory.TranslatesDet.independentTranslates E r H C (sub M H) hL (sOf M) (even_sOf M) (le_sOf M)
   have hu0' : u0 ∈ M.SS (deMul M.Ψ r M.p0 (sOf M)) := hu0
   have hVHA : ∀ f ∈ M.cusp ka, f ∈ HA M := fun f hf => by
@@ -623,8 +623,8 @@ theorem GlobalTheory.CuspEmb.cusp_embReg : ∀ (E : Type) [Field E] [NumberField
     Submodule.span ℂ {p | ∃ x ∈ V, ∃ h : H, p = x * act h (Polynomial.C ut)}
   let e := deg1Equiv M (M.cusp ka) hVHA
   let e2 := deg1Equiv M _ h2HA
-  haveI : Module.Finite ℂ (M.cusp (ka + 2 • deMul M.Ψ r M.p0 (sOf M))) := hR.2.1
-  haveI : FiniteDimensional ℂ V2 := LinearEquiv.finiteDimensional e2
+  have : Module.Finite ℂ (M.cusp (ka + 2 • deMul M.Ψ r M.p0 (sOf M))) := hR.2.1
+  have : FiniteDimensional ℂ V2 := LinearEquiv.finiteDimensional e2
   let ρ' : Representation ℂ U V :=
     { toFun := fun k => e.toLinearMap ∘ₗ ρ k ∘ₗ e.symm.toLinearMap
       map_one' := by ext; simp
@@ -805,7 +805,7 @@ theorem embReg_of_baseChange : ∀ (K V V' G : Type) [Field K] [NumberField K] [
     (∀ g v, ρ' g (f' v) = f' (ρK g v)) → ∀ (H : Subgroup G) (n : ℕ),
     GlobalTheory.BadCount.EmbReg ρ H n → GlobalTheory.BadCount.EmbReg ρ' H n := by
   intro K V V' G _ _ _ _ _ _ _ _ N ρK σ σ' ρ ρ' f f' hl _ hl' hsp' he he' H n h
-  haveI : Countable K := (Module.finBasis ℚ K).equivFun.injective.countable
+  have : Countable K := (Module.finBasis ℚ K).equivFun.injective.countable
   obtain ⟨τ, hτ⟩ := GlobalTheory.CompRat.exists_ringEquiv_complex_comp_eq K σ σ'
   let b' : Basis (Fin N) ℂ V' := Basis.mk hl' (top_le_span_single f' hsp')
   have hb' : ∀ k, b' k = f' (Pi.single k 1) := fun k => Basis.mk_apply _ _ k
@@ -863,9 +863,9 @@ theorem finrank_iInf_ker_semilinear : ∀ (K V ι : Type) [Field K] [AddCommGrou
       finrank ℂ (⨅ i, LinearMap.ker (a' i) : Submodule ℂ V) =
         finrank K (⨅ i, LinearMap.ker (a i) : Submodule K (Fin N → K)) := by
   intro K V ι _ _ _ _ σ N f hli hsp a a' ha
-  letI : Algebra K ℂ := σ.toAlgebra
-  letI : Module K V := Module.compHom V σ
-  haveI : IsScalarTower K ℂ V := ⟨fun k c v => by
+  let : Algebra K ℂ := σ.toAlgebra
+  let : Module K V := Module.compHom V σ
+  have : IsScalarTower K ℂ V := ⟨fun k c v => by
     show (σ k * c) • v = σ k • c • v
     rw [mul_smul]⟩
   let g : (Fin N → K) →ₗ[K] V :=
@@ -1146,7 +1146,7 @@ theorem centralBinom_le_pow_primeCounting (n : ℕ) (n_large : 2 < n) :
   apply mul_le_mul'
   · rw [← Finset.prod_filter_mul_prod_filter_not S (· ≤ Nat.sqrt (2 * n))]
     apply mul_le_mul'
-    · refine (Finset.prod_le_prod' fun p _ => hf p).trans ?_
+    · refine (Finset.prod_le_prod fun p _ => hf p).trans ?_
       rw [Finset.prod_const]
       refine pow_right_mono₀ n2_pos ?_
       rw [← Nat.primesLE_card_eq_primeCounting]
@@ -1154,13 +1154,13 @@ theorem centralBinom_le_pow_primeCounting (n : ℕ) (n_large : 2 < n) :
       obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hx
       exact Nat.mem_primesLE.2 ⟨h2, (Finset.mem_filter.1 h1).2⟩
     · refine le_trans ?_ (primorial_le_four_pow (2 * n / 3))
-      refine (Finset.prod_le_prod' fun p hp => (?_ : f p ≤ p)).trans ?_
+      refine (Finset.prod_le_prod fun p hp => (?_ : f p ≤ p)).trans ?_
       · obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hp
         refine (pow_right_mono₀ (Finset.mem_filter.1 h1).2.one_lt.le ?_).trans (pow_one p).le
         exact Nat.factorization_choose_le_one (Nat.sqrt_lt'.mp <| not_le.1 h2)
-      refine Finset.prod_le_prod_of_subset_of_one_le' (Finset.filter_subset _ _) ?_
+      refine Finset.prod_le_prod_of_subset_of_one_le (Finset.filter_subset _ _) ?_
       exact fun p hp _ => (Finset.mem_filter.1 hp).2.one_lt.le
-  · refine (Finset.prod_le_prod' fun p _ => hf p).trans ?_
+  · refine (Finset.prod_le_prod fun p _ => hf p).trans ?_
     rw [Finset.prod_const]
 
 theorem inv_five_log_le_sum_inv_primes_of_large (N : ℕ) (hN : 16900 ≤ N) :
@@ -1333,7 +1333,7 @@ theorem eU_coeff_one_ne (g N : ℕ) [NeZero g] (ψ₀ : AddChar (ZMod g) ℂ) :
   · rw [Finsupp.single_eq_same, h0, AddChar.map_zero_eq_one, inv_one, Complex.one_re]
     exact one_ne_zero
   · intro b _ hb
-    rw [Finsupp.single_apply, if_neg hb]
+    rw [Finsupp.single_apply, ite_eq_right hb]
     simp
   · intro h; exact absurd h1 h
 
@@ -1446,7 +1446,7 @@ theorem tupleMass_not_good_le (g : ℕ) [Fact g.Prime] (N m q d : ℕ) (ι : Typ
     have h2 : (mass g N fun f => ¬ HasPrimeFactor g N f) ≤ Real.exp (-(1 / (5 * Real.log N))) :=
       (mass_not_hasPrimeFactor_le_five g N hN).trans (Real.one_sub_le_exp_neg _)
     refine (pow_le_pow_left₀ (mass_nonneg _ _) h2 _).trans (le_of_eq ?_)
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     ring
   linarith
@@ -1476,7 +1476,7 @@ theorem propW_eUk : ∀ (D : Formalism.BasicNotions.D7) (ψ₀ : ∀ k : Fin 2, 
         (1 + Real.log (D.R.r : ℝ)) / ((D.host.g k : ℝ) - 1)) +
       (D.R.r : ℝ) / 2 * (7 / 8 : ℝ) ^ D.R.f + Real.exp (-(D.R.f : ℝ) / (5 * Real.log (D.R.r : ℝ))) := by
   intro D ψ₀ hψ hA _hT hr hg k S hS
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   obtain ⟨S0, hmem, hsum⟩ := D.ntypes.eSer_sum k
   obtain ⟨hA0, hA1, -, -⟩ := hA k (ψ₀ k) (hψ k)
   set w : (ZMod (D.host.g k))[X] → ℝ := fun f => Formalism.MainNotions.ArithmeticCylinders.wtOf D k (Formalism.MainNotions.ArithmeticCylinders.eUk D k (ψ₀ k)) f with hw
@@ -1542,13 +1542,13 @@ theorem propW_eUk : ∀ (D : Formalism.BasicNotions.D7) (ψ₀ : ∀ k : Fin 2, 
     have hs0 := Finset.sum_nonneg (s := Finset.univ) fun v (_ : v ∈ Finset.univ) =>
       hite (¬ Squarefree (t v)) t
     by_cases h : ∀ v, Squarefree (t v)
-    · rw [if_pos h]; linarith
+    · rw [ite_eq_left h]; linarith
     · push Not at h
       obtain ⟨v, hv⟩ := h
-      rw [if_neg (fun h => hv (h v))]
+      rw [ite_eq_right (fun h => hv (h v))]
       have := Finset.single_le_sum (f := fun v => if ¬ Squarefree (t v) then ∏ v, w (t v) else 0)
         (fun v _ => hite _ t) (Finset.mem_univ v)
-      simp only [if_pos hv] at this
+      simp only [ite_eq_left hv] at this
       linarith
   set S' := S.filter (fun t => ∀ v, t v ∈ S0) with hS'
   have hA : ∑ t ∈ S', ∑ v, (if ¬ Squarefree (t v) then ∏ v, w (t v) else 0) ≤
@@ -1746,7 +1746,7 @@ theorem badW_of_del_bound_of_T_bound (p : PtAt ex Csz) (i : Fin D.R.m) (T : ℕ)
     rw [hsp]
     exact _root_.GlobalTheory.BadCount.finrank_iInf_ker_semilinear D.what₂.LL (Fin N → ℂ) P' D.what₂.embLL N (GlobalTheory.TwistedRepresentationEmbedding.embV D.what₂.embLL N) (GlobalTheory.TwistedRepresentationEmbedding.embV_li _ _) (GlobalTheory.TwistedRepresentationEmbedding.embV_span _ _) aK
       (fun γ => ρE γ - ((lamb γ : ℂˣ) : ℂ) • LinearMap.id) haE
-  haveI : Fintype (G0g D.nd) := Fintype.ofEquiv p.P.Gp e.toEquiv
+  have : Fintype (G0g D.nd) := Fintype.ofEquiv p.P.Gp e.toEquiv
   have hsumE : Representation.asAlgebraHom (ρE.comp ιs) D.ntypes.e0 =
       ∑ g : p.P.Gp, D.ntypes.e0.coeff (e g) • ρE g := by
     rw [Representation.asAlgebraHom_def, MonoidAlgebra.lift_apply, Finsupp.sum_fintype D.ntypes.e0.coeff (fun a b => b • (ρE.comp ιs) a) (fun a => zero_smul ℂ _)]
@@ -1794,8 +1794,8 @@ theorem badW_of_del_bound_of_T_bound (p : PtAt ex Csz) (i : Fin D.R.m) (T : ℕ)
     ZMod.stdAddChar
   have hψ₀ : ∀ k, ψ₀ k ≠ 1 := by
     intro k h
-    haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
-    haveI : Fact (1 < D.host.g k) := ⟨(D.host.g_prime k).one_lt⟩
+    have : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
+    have : Fact (1 < D.host.g k) := ⟨(D.host.g_prime k).one_lt⟩
     have := ZMod.isPrimitive_stdAddChar (D.host.g k) (one_ne_zero)
     rw [AddChar.mulShift_one] at this
     exact this h

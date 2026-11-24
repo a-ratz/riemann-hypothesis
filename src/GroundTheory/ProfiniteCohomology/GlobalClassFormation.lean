@@ -119,11 +119,11 @@ def openEquiv (U : OpenSubgroup K.1.fixingSubgroup) : (U : Subgroup K.1.fixingSu
     (Subgroup.subgroupOfEquivOfLe (fixingSubgroup_fieldOf_le U))
 
 theorem continuous_openEquiv (U : OpenSubgroup K.1.fixingSubgroup) : Continuous (openEquiv U).toMonoidHom :=
-  (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+  (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
 
 theorem continuous_openEquiv_symm (U : OpenSubgroup K.1.fixingSubgroup) :
     Continuous (openEquiv U).symm.toMonoidHom :=
-  (continuous_subtype_val.subtype_mk _).subtype_mk _
+  (continuous_subtypeVal.subtype_mk _).subtype_mk _
 
 def classOpenMor (U : OpenSubgroup K.1.fixingSubgroup) :
     Rep.res (openEquiv U).symm.toMonoidHom (Rep.res (U : Subgroup K.1.fixingSubgroup).subtype (classLimitRep K)) ⟶
@@ -197,7 +197,7 @@ theorem classResField_classLevelInfl (y : cohomology (ideleClassRep K.1 F.1) 2) 
   have hle : F.1.fixingSubgroup ≤ K.1.fixingSubgroup :=
     IntermediateField.fixingSubgroup_le (Fact.out : K ≤ F)
   have : DiscreteTopology (K.1.fixingSubgroup ⧸ F.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup) :=
-    QuotientGroup.discreteTopology (F.1.fixingSubgroup_isOpen.preimage continuous_subtype_val)
+    QuotientGroup.discreteTopology (F.1.fixingSubgroup_isOpen.preimage continuous_subtypeVal)
   have hfac : classLevelInfl K F 2 =
       cohomologyMapAlong (quotGalEquiv K F).toMonoidHom continuous_of_discreteTopology (classInvMor K F) 2 ≫
         cohomologyInfl (classLimitRep K) (F.1.fixingSubgroup.subgroupOf K.1.fixingSubgroup) 2 := by
@@ -889,11 +889,11 @@ theorem subsingleton_cohomology_three_infiniteDecomposition :
     Subsingleton (cohomology (Rep.ofMulDistribMulAction (MulAction.stabilizer Gal(L/K) w)
       (w.Completion)ˣ) 3) := by
   classical
-  haveI := isCyclic_infiniteDecomposition v w
-  letI : CommGroup (MulAction.stabilizer Gal(L/K) w) := IsCyclic.commGroup
-  haveI : Fintype (MulAction.stabilizer Gal(L/K) w) := Fintype.ofFinite _
+  have := isCyclic_infiniteDecomposition v w
+  let : CommGroup (MulAction.stabilizer Gal(L/K) w) := IsCyclic.commGroup
+  have : Fintype (MulAction.stabilizer Gal(L/K) w) := Fintype.ofFinite _
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := MulAction.stabilizer Gal(L/K) w)
-  haveI := subsingleton_groupCohomology_one_infiniteDecomposition v w
+  have := subsingleton_groupCohomology_one_infiniteDecomposition v w
   let A := Rep.ofMulDistribMulAction (MulAction.stabilizer Gal(L/K) w) (w.Completion)ˣ
   let e : cohomology A 3 ≅ groupCohomology A 1 :=
     cohomologyIsoGroupCohomology A 3 ≪≫ Rep.FiniteCyclicGroup.groupCohomologyIsoOdd A g hg 3 ⟨1, rfl⟩ ≪≫
@@ -923,7 +923,7 @@ theorem subsingleton_localGaloisCohomology_three (ι : LocalEmbeddings K) (v : P
   rcases v with v | v
   · have key : ∀ t : localGaloisCohomology K 3 (.inl v), t = 0 := fun t => by
       obtain ⟨p, z, rfl⟩ := (ι.localLimit 3).exists_infl (.inl v) t
-      haveI : (ι.places.inf v p).1.LiesOver v := (ι.places.inf v p).2
+      have : (ι.places.inf v p).1.LiesOver v := (ι.places.inf v p).2
       have hs := subsingleton_cohomology_three_infiniteDecomposition (K := K.1) (L := p.1.1) v
         (ι.places.inf v p).1
       have hz : z = 0 := hs.elim _ _
@@ -936,9 +936,9 @@ theorem subsingleton_cohomology_three_limitRep : Subsingleton (cohomology (limit
   obtain ⟨ι⟩ := nonempty_localEmbeddings K
   have h : ∀ ζ : ⨁ v : Place K.1, localGaloisCohomology K 3 v, ζ = 0 := fun ζ => by
     ext v
-    haveI := subsingleton_localGaloisCohomology_three ι v
+    have := subsingleton_localGaloisCohomology_three ι v
     exact Subsingleton.elim _ _
-  haveI : Subsingleton (⨁ v : Place K.1, localGaloisCohomology K 3 v) :=
+  have : Subsingleton (⨁ v : Place K.1, localGaloisCohomology K 3 v) :=
     ⟨fun a b => (h a).trans (h b).symm⟩
   exact (idelesLimitCohomologyEquiv ι (by norm_num : 1 ≤ 3)).injective.subsingleton
 

@@ -938,22 +938,22 @@ theorem eq_smul_map_haar {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
     (hμ : μ (M : Set G)ᶜ = 0)
     (hinv : ∀ s ∈ M, μ.map (fun g => s * g) = μ) [IsFiniteMeasureOnCompacts μ] :
     ∃ c : NNReal, μ = (c : ENNReal) • (Measure.haar : Measure M).map (Subtype.val : M → G) := by
-  haveI : SecondCountableTopology M := TopologicalSpace.Subtype.secondCountableTopology (M : Set G)
-  have hemb : MeasurableEmbedding (Subtype.val : M → G) := MeasurableEmbedding.subtype_coe hM.measurableSet
+  have : SecondCountableTopology M := TopologicalSpace.Subtype.secondCountableTopology (M : Set G)
+  have hemb : MeasurableEmbedding (Subtype.val : M → G) := MeasurableEmbedding.subtypeVal hM.measurableSet
   set ν : Measure M := μ.comap Subtype.val with hν
   have hmap : ν.map Subtype.val = μ := by
     rw [hν, hemb.map_comap, Subtype.range_coe]
     exact Measure.restrict_eq_self_of_ae_mem hμ
   have hinj : ∀ ρ : Measure M, (ρ.map (Subtype.val : M → G)).comap Subtype.val = ρ := fun ρ => hemb.comap_map ρ
-  haveI : ν.IsMulLeftInvariant := by
+  have : ν.IsMulLeftInvariant := by
     refine ⟨fun s => ?_⟩
     rw [← hinj (ν.map _), Measure.map_map hemb.measurable (measurable_const_mul s)]
     have : (Subtype.val : M → G) ∘ (fun g => s * g) = (fun g => (s : G) * g) ∘ Subtype.val := rfl
     rw [this, ← Measure.map_map (measurable_const_mul _) hemb.measurable, hmap, hinv s s.2]
-  haveI : IsFiniteMeasureOnCompacts ν := by
+  have : IsFiniteMeasureOnCompacts ν := by
     refine ⟨fun K hK => ?_⟩
     rw [hν, hemb.comap_apply]
-    exact (hK.image continuous_subtype_val).measure_lt_top
+    exact (hK.image continuous_subtypeVal).measure_lt_top
   have e1 := Measure.isMulLeftInvariant_eq_smul ν (Measure.haar : Measure M)
   refine ⟨Measure.haarScalarFactor ν (Measure.haar : Measure M), ?_⟩
   rw [← Measure.map_smul _ hemb.measurable.aemeasurable]
@@ -966,10 +966,10 @@ theorem map_conj_eq_smul_of_group {G : Type} [Group G] [TopologicalSpace G] [IsT
     (hinv : ∀ s ∈ S, μ.map (fun g => s * g) = μ) (hfin : IsFiniteMeasureOnCompacts μ) (h0 : μ ≠ 0)
     (m : G) (hm : ∀ g, g ∈ S ↔ m * g * m⁻¹ ∈ S) :
     ∃ c : NNReal, μ.map (fun u => m * u * m⁻¹) = (c : ENNReal) • μ := by
-  haveI : LocallyCompactSpace S := hS.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace S := hS.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have hcm : Measurable (fun u : G => m * u * m⁻¹) :=
     ((continuous_const.mul continuous_id).mul continuous_const).measurable
-  haveI : IsFiniteMeasureOnCompacts (μ.map (fun u => m * u * m⁻¹)) :=
+  have : IsFiniteMeasureOnCompacts (μ.map (fun u => m * u * m⁻¹)) :=
     Measure.IsFiniteMeasureOnCompacts.map μ ((Homeomorph.mulLeft m).trans (Homeomorph.mulRight m⁻¹))
   obtain ⟨a, ha⟩ := eq_smul_map_haar S hS μ hμ hinv
   obtain ⟨b, hb⟩ := eq_smul_map_haar S hS (μ.map (fun u => m * u * m⁻¹))
@@ -1143,7 +1143,7 @@ theorem map_conj_eq_inv_det_smul (n : ℕ) (ε : Fin n → Bool) (A : Submodule 
     (((h3.eventually (lt_mem_nhds hp)).and (h3.eventually (gt_mem_nhds hf))).and self_mem_nhdsWithin).exists
   have hr : 0 < r := hr
   have hcu : Continuous (fun g : Formalism.REAL.UJ ε => uMat g) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hc : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.REAL.hs (uMat g - 1)) := by
     unfold Formalism.REAL.hs
     refine continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ => ?_
@@ -1593,7 +1593,7 @@ def dblFlag (W : Fin (a + 1) → Submodule ℂ (Fin n → ℂ)) (s : ℕ) : Subm
 
 variable {j : Fin a → ℕ} {W : Fin (a + 1) → Submodule ℂ (Fin n → ℂ)}
 
-theorem dblFlag_le {s : ℕ} (hs : s ≤ a) : dblFlag ε W s = natFlag W s := by rw [dblFlag, if_pos hs]
+theorem dblFlag_le {s : ℕ} (hs : s ≤ a) : dblFlag ε W s = natFlag W s := by rw [dblFlag, ite_eq_left hs]
 
 theorem dblFlag_fin (i : Fin (a + 1)) : dblFlag ε W i = W i := by
   rw [dblFlag_le (Nat.lt_succ_iff.mp i.isLt)]
@@ -1612,7 +1612,7 @@ theorem dblFlag_last : dblFlag ε W a = W (Fin.last a) := by
   rwa [Fin.val_last] at h
 
 theorem dblFlag_sub {s : ℕ} (hs : s ≤ a) : dblFlag ε W (2 * a + 1 - s) = perpJ ε (dblFlag ε W s) := by
-  rw [dblFlag_le hs, dblFlag, if_neg (by omega), show 2 * a + 1 - (2 * a + 1 - s) = s by omega]
+  rw [dblFlag_le hs, dblFlag, ite_eq_right (by omega), show 2 * a + 1 - (2 * a + 1 - s) = s by omega]
 
 theorem dblFlag_dual {s : ℕ} (hs : s ≤ 2 * a + 1) :
     dblFlag ε W (2 * a + 1 - s) = perpJ ε (dblFlag ε W s) := by
@@ -1653,11 +1653,11 @@ theorem dblFlag_mono (hW : IsIsoFlag ε j W) : Monotone (dblFlag ε W) := by
   by_cases ht : t ≤ a
   · rw [dblFlag_le (hst.trans ht), dblFlag_le ht]
     exact nm hst
-  · have et : dblFlag ε W t = perpJ ε (natFlag W (2 * a + 1 - t)) := by rw [dblFlag, if_neg ht]
+  · have et : dblFlag ε W t = perpJ ε (natFlag W (2 * a + 1 - t)) := by rw [dblFlag, ite_eq_right ht]
     by_cases hs : s ≤ a
     · rw [dblFlag_le hs, et]
       exact (nm hs).trans (iso.trans (anti (nm (by omega))))
-    · have es : dblFlag ε W s = perpJ ε (natFlag W (2 * a + 1 - s)) := by rw [dblFlag, if_neg hs]
+    · have es : dblFlag ε W s = perpJ ε (natFlag W (2 * a + 1 - s)) := by rw [dblFlag, ite_eq_right hs]
       rw [es, et]
       exact anti (nm (by omega))
 
@@ -1683,7 +1683,7 @@ theorem dblFlag_keeps (m : UJ ε) (hm : ∀ i, ∀ y ∈ W i, uMat m *ᵥ y ∈ 
   by_cases hs : s ≤ a
   · rw [dblFlag_le hs] at hy ⊢
     exact hm _ y hy
-  · have e : dblFlag ε W s = perpJ ε (natFlag W (2 * a + 1 - s)) := by rw [dblFlag, if_neg hs]
+  · have e : dblFlag ε W s = perpJ ε (natFlag W (2 * a + 1 - s)) := by rw [dblFlag, ite_eq_right hs]
     rw [e, mem_perpJ] at hy ⊢
     intro x hx
     have h1 := GlobalTheory.FlagLeviGroup.form_inv m⁻¹ x y

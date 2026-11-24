@@ -157,7 +157,7 @@ theorem det_frame_ne_zero (D : SW.Level X) : (Matrix.of D.β).det ≠ 0 := by
     intro v hv
     have := Submodule.span_le_restrictScalars (𝓞 E) E _ (hN v hv)
     exact (Submodule.smul_mem_iff _ hs0).1 this
-  have : IsUnit (Matrix.of D.β) := Matrix.linearIndependent_rows_iff_isUnit.1 hli
+  have : IsUnit (Matrix.of D.β) := linearIndependent_row_iff_isUnit.1 hli
   exact ((Matrix.isUnit_iff_isUnit_det _).1 this).ne_zero
 
 theorem det_red {ga : GL (Fin r) E} {k : GL (Fin r) (𝓞 E ⧸ D.𝔪)}

@@ -105,7 +105,7 @@ theorem classNum_monomial {σ : Type*} (cls : σ → K → ℤ) (μ : σ →₀ 
   by_cases hc : c = 0
   · subst hc
     simp
-  · rw [support_monomial, if_neg hc, Finset.sum_singleton, coeff_monomial, if_pos rfl]
+  · rw [support_monomial, ite_eq_right hc, Finset.sum_singleton, coeff_monomial, ite_eq_left rfl]
 
 
 omit [DecidableEq K] in
@@ -129,7 +129,7 @@ theorem classNum_psumExpansion_diag {N : ℕ} (x : Fin N → K → ℤ) (k : ℕ
     have e : j + (k - 1 - j) = k - 1 := by
       have := Finset.mem_range.mp hj
       omega
-    rw [X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul, one_mul, classNum_monomial, one_mul,
+    rw [X_pow_eq_monomial, X_pow_eq_monomial, monomial_mul_monomial, one_mul, classNum_monomial, one_mul,
       classList_diag, e]
   rw [Finset.sum_congr rfl key, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
 

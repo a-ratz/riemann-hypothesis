@@ -114,20 +114,20 @@ theorem integrable_ip (u w : 𝓢(V, ℂ)) : Integrable (fun x => u x * conj (w 
   simpa [pairing_apply] using h
 
 theorem ip_smul_left (c : ℂ) (u w : 𝓢(V, ℂ)) : ip μ (c • u) w = c * ip μ u w := by
-  simp only [ip, SchwartzMap.smul_apply, smul_eq_mul, mul_assoc]
+  simp only [ip, smul_apply, smul_eq_mul, mul_assoc]
   exact integral_const_mul c _
 
 theorem ip_smul_right (c : ℂ) (u w : 𝓢(V, ℂ)) : ip μ u (c • w) = conj c * ip μ u w := by
-  simp only [ip, SchwartzMap.smul_apply, smul_eq_mul, map_mul]
+  simp only [ip, smul_apply, smul_eq_mul, map_mul]
   rw [← integral_const_mul]
   congr 1; funext x; ring
 
 theorem ip_sub_left (u v w : 𝓢(V, ℂ)) : ip μ (u - v) w = ip μ u w - ip μ v w := by
-  simp only [ip, SchwartzMap.sub_apply, sub_mul]
+  simp only [ip, sub_apply, sub_mul]
   exact integral_sub (integrable_ip μ u w) (integrable_ip μ v w)
 
 theorem ip_sub_right (u v w : 𝓢(V, ℂ)) : ip μ w (u - v) = ip μ w u - ip μ w v := by
-  simp only [ip, SchwartzMap.sub_apply, map_sub, mul_sub]
+  simp only [ip, sub_apply, map_sub, mul_sub]
   exact integral_sub (integrable_ip μ w u) (integrable_ip μ w v)
 
 theorem ip_lineDerivOp (a : V) (u w : 𝓢(V, ℂ)) : ip μ (∂_{a} u) w = - ip μ u (∂_{a} w) := by
@@ -152,13 +152,13 @@ theorem lineDerivOp_twD (v a : V) (ℓ : V →ₗ[ℝ] ℝ) (f : 𝓢(V, ℂ)) (
       2 * Real.pi * Complex.I * ((ℓ x : ℂ) * ∂_{v} f x + (ℓ v : ℂ) * f x) := by
   rw [twD, ← LineDeriv.lineDerivOpCLM_apply (R := ℂ), map_sub, map_smul,
     LineDeriv.lineDerivOpCLM_apply, LineDeriv.lineDerivOpCLM_apply]
-  simp only [SchwartzMap.sub_apply, SchwartzMap.smul_apply, smul_eq_mul, lineDerivOp_mulForm]
+  simp only [sub_apply, smul_apply, smul_eq_mul, lineDerivOp_mulForm]
 
 theorem twD_comm (a₁ a₂ : V) (ℓ₁ ℓ₂ : V →ₗ[ℝ] ℝ) (f : 𝓢(V, ℂ)) :
     twD a₁ ℓ₁ (twD a₂ ℓ₂ f) - twD a₂ ℓ₂ (twD a₁ ℓ₁ f) =
       (-(2 * Real.pi * Complex.I) * ((ℓ₂ a₁ - ℓ₁ a₂ : ℝ) : ℂ)) • f := by
   ext x
-  simp only [SchwartzMap.sub_apply, SchwartzMap.smul_apply, smul_eq_mul, twD_apply _ _ (twD _ _ f),
+  simp only [sub_apply, smul_apply, smul_eq_mul, twD_apply _ _ (twD _ _ f),
     lineDerivOp_twD]
   rw [twD_apply, twD_apply, lineDerivOp_comm' a₁ a₂ f x]
   push_cast
@@ -201,12 +201,12 @@ theorem vanish : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [Fini
       Complex.I * (fderiv ℝ f y a₁ + (-(2 * Real.pi * Complex.I) * (ℓ₁ y : ℂ)) * f y)) →
     ℓ₂ a₁ - ℓ₁ a₂ < 0 → f = 0 := by
   intro V _ _ _ f a₁ a₂ ℓ₁ ℓ₂ hf hc
-  letI : MeasurableSpace V := borel V
-  haveI : BorelSpace V := ⟨rfl⟩
+  let : MeasurableSpace V := borel V
+  have : BorelSpace V := ⟨rfl⟩
   let μ : Measure V := Measure.addHaar
   have hD : twD a₂ ℓ₂ f = Complex.I • twD a₁ ℓ₁ f := by
     ext y
-    simp only [SchwartzMap.smul_apply, smul_eq_mul, twD_apply, SchwartzMap.lineDerivOp_apply_eq_fderiv]
+    simp only [smul_apply, smul_eq_mul, twD_apply, SchwartzMap.lineDerivOp_apply_eq_fderiv]
     linear_combination hf y
   have hk := norm_sq_twD μ f a₁ a₂ ℓ₁ ℓ₂ hD
   have hG : 0 ≤ ∫ x, ‖twD a₁ ℓ₁ f x‖ ^ 2 ∂μ := integral_nonneg (fun x => by positivity)

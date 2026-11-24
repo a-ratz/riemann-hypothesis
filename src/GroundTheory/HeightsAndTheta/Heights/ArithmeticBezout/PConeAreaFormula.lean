@@ -78,7 +78,7 @@ theorem encard_iUnion_disjoint_nat {α : Type*} (s : ℕ → Set α) (hs : Pairw
 theorem volume_linProj_image_null {m n : ℕ} (π : Fin m → Fin n → ℂ) {s : Set (EuclideanSpace ℂ (Fin n))}
     (hs : Measure.hausdorffMeasure ((2 * m : ℕ) : ℝ) s = 0) : volume (linProj π '' s) = 0 := by
   refine volume_null_of_hausdorff_null (nonpos_iff_eq_zero.1 ?_)
-  have hL := (LinearMap.toContinuousLinearMap (linProjₗ π)).lipschitz.hausdorffMeasure_image_le
+  have hL := (LinearMap.toContinuousLinearMap (linProjₗ π)).lipschitzWith.hausdorffMeasure_image_le
     (d := ((2 * m : ℕ) : ℝ)) (by positivity) s
   rw [LinearMap.coe_toContinuousLinearMap', hs, mul_zero] at hL
   exact hL

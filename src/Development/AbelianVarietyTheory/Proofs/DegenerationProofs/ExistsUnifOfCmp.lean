@@ -378,7 +378,7 @@ theorem expBij_descends (hL : Laws) (hL₂ : Laws2) (hR : AdmBase R I) (hR' : Ad
   have := hG'.geomConnected
   have inj : Function.Injective ((algebraMap R' (FractionRing R')).comp φ) :=
     (IsFractionRing.injective R' (FractionRing R')).comp hφ
-  letI : Algebra (FractionRing R) (FractionRing R') := (IsFractionRing.lift (K := FractionRing R) inj).toAlgebra
+  let : Algebra (FractionRing R) (FractionRing R') := (IsFractionRing.lift (K := FractionRing R) inj).toAlgebra
   have hF : ∀ r : R, algebraMap (FractionRing R) (FractionRing R') (algebraMap R (FractionRing R) r) =
       algebraMap (FractionRing R') (FractionRing R') (algebraMap R' (FractionRing R') (φ r)) := fun r =>
     IsFractionRing.lift_algebraMap (K := FractionRing R) inj r

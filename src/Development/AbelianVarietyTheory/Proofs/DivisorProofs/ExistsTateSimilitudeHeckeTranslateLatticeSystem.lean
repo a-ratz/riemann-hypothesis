@@ -80,8 +80,8 @@ theorem zpow_eq_zpow_of_dvd {G : Type} [CommGroup G] {ζ : G} {n : ℕ} (h : ζ 
 theorem exists_nsmul_of_dvd_EF {p : ℕ} [Fact p.Prime] (D : Datum p) {e : ℕ} (he0 : e ≠ 0)
     (he : ∀ f : D.La →ₗ[ℤ] ℤ, ∃ x, D.EF x = e • f) (n : ℕ) (a : D.La)
     (ha : ∀ y, ((n * e : ℕ) : ℤ) ∣ D.EF a y) : ∃ z, a = n • z := by
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let bs := Module.Free.chooseBasis ℤ D.La
   have hd : ∀ i, ∃ q : ℤ, bs.coord i a = n * q := by
     intro i
@@ -166,7 +166,7 @@ theorem weilIs_ev_value {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommR
   have hev : ∀ w : D.La, I.ev (n * k) w = I.ev (n * (m * k ^ 2)) (m • w) ≫ Out.mulA o.A k := fun w => by
     rw [Out.mulA, MonObj.comp_pow, Category.comp_id, ← TateIsoO.ev_nsmul, smul_smul, mul_comm k m,
       TateIsoO.ev_nsmul, eN, I.tower (n * k) (m * k) (by positivity) (by positivity) (by rw [← eN]; exact hp)]
-  haveI := isMonHom_mulA (A := o.A) k
+  have := isMonHom_mulA (A := o.A) k
   have hw := GlobalTheory.HeckeWeilValue.lbIso_mulA_diag o.ab o.isLB o.ample o.rig₁ o.rig₂ k
   rw [hev w, hev w'] at he
   have h1 := GlobalTheory.WeilIsogeny.weilIs_pull_hom hG o.ab hL hL (Out.mulA o.A k) hw he
@@ -179,7 +179,7 @@ theorem exists_tateIsoO_transl_sys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) 
   intro p _ D R _ b h u c k N hcp hkp hN hNp hck hlin hcomp hsim hsurj S s o A' _ _ act' ψ hA' hψ hGal hact P' hP' r₁ r₂
     hiso κ _ _ x β hx
   obtain ⟨I, hI⟩ := o.geom κ x β hx
-  haveI := D.freeLa
+  have := D.freeLa
   have kpos : 0 < k := levelPos_of_coprime hkp
   have cpos : 0 < c := levelPos_of_coprime hcp
   have Npos : 0 < N := by omega
@@ -237,8 +237,8 @@ theorem exists_tateIsoO_transl_sys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) 
     intro n hn hnp q
     constructor
     · intro hq
-      haveI := hGal.fin
-      haveI := hGal.onto
+      have := hGal.fin
+      have := hGal.onto
       obtain ⟨a₀, ha₀⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective ψ.left q.left
       let a : Over.mk x ⟶ o.A := Over.homMk a₀ (by
         show a₀ ≫ o.A.hom = x
@@ -290,7 +290,7 @@ theorem exists_tateIsoO_transl_sys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) 
   let ev' : ℕ → D.La → (Over.mk x ⟶ A') := fun n y =>
     if 0 < n ∧ n.Coprime p then I.ev (n * k) (h (n * k) y) ≫ ψ else 1
   have hev' : ∀ n, 0 < n → n.Coprime p → ∀ y, ev' n y = I.ev (n * k) (h (n * k) y) ≫ ψ :=
-    fun n hn hnp y => if_pos ⟨hn, hnp⟩
+    fun n hn hnp y => ite_eq_left ⟨hn, hnp⟩
   refine ⟨⟨fun n => I.ζ n ^ u n, ?_, ?_, ev', ?_, ?_, ?_, ?_, ?_, ?_⟩, fun y => ?_⟩
   · intro n hn hnp
     exact (I.ζ_prim n hn hnp).zpow_of_gcd_eq_one (u n) (Int.isCoprime_iff_gcd_eq_one.1 (hsim n hn hnp).1)
@@ -314,7 +314,7 @@ theorem exists_tateIsoO_transl_sys : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) 
       obtain ⟨z, hz⟩ := hlin (n * k) hnk hnkp b' y
       rw [hz, I.add, (I.ker _ hnk hnkp _).2 ⟨z, rfl⟩, _root_.mul_one, I.lin, Category.assoc, hact,
         ← Category.assoc]
-    · haveI := act'.hom b'
+    · have := act'.hom b'
       rw [MonObj.one_comp]
   · intro n hn hnp y
     rw [hev' n hn hnp]

@@ -74,7 +74,7 @@ open NumberField IsDedekindDomain in
 variable {K : Type} [Field K] (d : K) [Fact (∀ r : K, r ^ 2 ≠ d + 0 * r)] in
 theorem _root_.GlobalTheory.QuadSymbol.Model.numberField [NumberField K] :
     NumberField (QuadraticAlgebra K d 0) := by
-  haveI : Module.Finite ℚ (QuadraticAlgebra K d 0) := Module.Finite.trans K _
+  have : Module.Finite ℚ (QuadraticAlgebra K d 0) := Module.Finite.trans K _
   exact ⟨⟩
 
 

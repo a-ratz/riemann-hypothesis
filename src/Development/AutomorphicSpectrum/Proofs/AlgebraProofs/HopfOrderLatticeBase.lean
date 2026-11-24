@@ -154,7 +154,7 @@ theorem mem_vanSub {C F : Type} [Field C] [Field F] {n i : ℕ} (g : (Fin n → 
     g ∈ (vanSub C F n i).toAddSubgroup ↔ ∀ x : Fin n → F, (∀ j : Fin n, i ≤ (j : ℕ) → x j = 0) → g x = 0 := by
   rw [Submodule.mem_toAddSubgroup]
   show g ∈ Submodule.pi {x : Fin n → F | ∀ j : Fin n, i ≤ (j : ℕ) → x j = 0} (fun _ => (⊥ : Submodule C C)) ↔ _
-  simp only [Submodule.mem_pi, Set.mem_setOf_eq, Submodule.mem_bot]
+  simp only [Submodule.mem_pi, Set.mem_ofPred_eq, Submodule.mem_bot]
 
 theorem eq_on_step {C F : Type} [Field C] [Field F] {n : ℕ} (i : Fin n) (H : (Fin n → F) → C)
     (χ : F → C) (hχ0 : χ 0 = 0)
@@ -239,7 +239,7 @@ theorem stepGraph_snd_eq_kk : ∀ {o C : Type} [CommRing o] [Field C] [Algebra o
     have hvF : v ((Fintype.card F : ℕ) : C) < 1 := by
       obtain ⟨k, -, hk⟩ := FiniteField.card F p
       rw [hk, Nat.cast_pow, map_pow]
-      exact pow_lt_one₀ zero_le' hp (PNat.ne_zero k)
+      exact pow_lt_one₀ zero_le hp (PNat.ne_zero k)
     have hvU : v ((Fintype.card Fˣ : ℕ) : C) = 1 := by
       have e3 : ((Fintype.card Fˣ : ℕ) : C) = -(1 - ((Fintype.card F : ℕ) : C)) := by
         rw [Fintype.card_units, Nat.cast_sub Fintype.card_pos, Nat.cast_one]

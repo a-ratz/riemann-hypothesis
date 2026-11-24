@@ -98,7 +98,7 @@ theorem isNonarchimedean_expNegAbsoluteValue {F : Type} [Field F]
 
 theorem exists_norm_eq_of_completion {K : Type*} [NormedField K] [IsUltrametricDist K]
     (x : UniformSpace.Completion K) : ∃ y : K, ‖x‖ = ‖y‖ := by
-  haveI : IsUltrametricDist (UniformSpace.Completion K) := IsUltrametricDist.of_normedAlgebra K
+  have : IsUltrametricDist (UniformSpace.Completion K) := IsUltrametricDist.of_normedAlgebra K
   rcases eq_or_ne x 0 with rfl | hx
   · exact ⟨0, by simp⟩
   obtain ⟨y, hy⟩ := Metric.denseRange_iff.1 (UniformSpace.Completion.denseRange_coe (α := K)) x
@@ -116,16 +116,16 @@ theorem exists_addValuation_expNegTop_eq_nnnorm {C : Type} [NormedField C] [IsUl
   choose f hf using h
   refine ⟨AddValuation.of f ?_ ?_ ?_ ?_, hf⟩
   · apply expNegTop_inj_of_eq
-    rw [hf, nnnorm_zero, expNegTop_top]
+    rw [hf, nnNorm_zero, expNegTop_top]
   · apply expNegTop_inj_of_eq
-    rw [hf, nnnorm_one, expNegTop_zero]
+    rw [hf, nnNorm_one, expNegTop_zero]
   · intro x y
-    rcases le_max_iff.1 (IsUltrametricDist.nnnorm_add_le_max x y) with h | h
+    rcases le_max_iff.1 (IsUltrametricDist.nnNorm_add_le_max x y) with h | h
     · exact min_le_of_left_le ((expNegTop_le_iff _ _).1 (by rwa [hf, hf]))
     · exact min_le_of_right_le ((expNegTop_le_iff _ _).1 (by rwa [hf, hf]))
   · intro x y
     apply expNegTop_inj_of_eq
-    rw [expNegTop_add, hf, hf, hf, nnnorm_mul]
+    rw [expNegTop_add, hf, hf, hf, nnNorm_mul]
 
 end GlobalTheory
 end -- clump:auto
@@ -153,20 +153,20 @@ theorem exists_isAlgClosed_forall_isAdicComplete (F₀ : Type) [Field F₀] [IsA
     rw [hw, ← NNReal.coe_one, NNReal.coe_lt_coe, ← expNegTop_zero, ← not_le, expNegTop_le_iff]
     exact not_le.2 hv
   have hp0 : 0 < w a := w.pos ha
-  letI : NontriviallyNormedField (WithAbs w) :=
+  let : NontriviallyNormedField (WithAbs w) :=
     { (inferInstance : NormedField (WithAbs w)) with
       non_trivial := ⟨(WithAbs.toAbs w a)⁻¹, by
         rw [norm_inv]
         change 1 < (w a)⁻¹
         exact (one_lt_inv₀ hp0).2 hp1⟩ }
-  haveI : IsUltrametricDist (WithAbs w) :=
+  have : IsUltrametricDist (WithAbs w) :=
     IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm fun x y =>
       isNonarchimedean_expNegAbsoluteValue v₀ x.ofAbs y.ofAbs
-  haveI : IsAlgClosed (WithAbs w) := IsAlgClosed.of_ringEquiv F₀ _ (WithAbs.equiv w).symm
+  have : IsAlgClosed (WithAbs w) := IsAlgClosed.of_ringEquiv F₀ _ (WithAbs.equiv w).symm
   let C := UniformSpace.Completion (WithAbs w)
-  letI : NontriviallyNormedField C := completionNontriviallyNormedField (WithAbs w)
-  haveI : IsUltrametricDist C := IsUltrametricDist.of_normedAlgebra (WithAbs w)
-  haveI : IsAlgClosed C :=
+  let : NontriviallyNormedField C := completionNontriviallyNormedField (WithAbs w)
+  have : IsUltrametricDist C := IsUltrametricDist.of_normedAlgebra (WithAbs w)
+  have : IsAlgClosed C :=
     isAlgClosed_of_denseRange (K := WithAbs w) UniformSpace.Completion.denseRange_coe
   let e : F₀ →+* C := (algebraMap (WithAbs w) C).comp (WithAbs.equiv w).symm.toRingHom
   have he : ∀ x, ‖e x‖₊ = expNegTop (v₀ x) := fun x =>
@@ -182,7 +182,7 @@ theorem exists_isAlgClosed_forall_isAdicComplete (F₀ : Type) [Field F₀] [IsA
     fun x => expNegTop_inj_of_eq (by rw [hvC, he]), fun b hb =>
     NormIntegers.isAdicComplete_span_singleton hO (by
       change ‖(b : C)‖ < 1
-      rw [← coe_nnnorm, ← hvC, ← NNReal.coe_one, NNReal.coe_lt_coe, ← expNegTop_zero, ← not_le,
+      rw [← coe_nnNorm, ← hvC, ← NNReal.coe_one, NNReal.coe_lt_coe, ← expNegTop_zero, ← not_le,
         expNegTop_le_iff]
       exact not_le.2 hb)⟩
 
@@ -207,13 +207,13 @@ theorem exists_field_over_cdvr : ∀ (T : CDVR) (ϖ : T.V), Irreducible ϖ → C
   obtain ⟨F, _, _, e, v, he, hc⟩ := exists_isAlgClosed_forall_isAdicComplete
     (AlgebraicClosure T.Fr) v₀ ((map_ne_zero_iff _ hinj).2 hϖ.ne_zero)
     (lt_of_lt_of_le zero_lt_one ((TWO.v_of_V v₀ hϖ hv₀ ϖ).2 hϖ.not_isUnit hϖ.ne_zero))
-  letI : Algebra T.Fr F := (e.comp (algebraMap T.Fr (AlgebraicClosure T.Fr))).toAlgebra
-  haveI : CharZero F := charZero_of_injective_ringHom (algebraMap T.Fr F).injective
-  letI : Algebra T.V F := (TWO.algVF (V := T.V) (F := F)).toAlgebra
-  haveI : IsScalarTower T.V T.Fr F := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra T.Fr F := (e.comp (algebraMap T.Fr (AlgebraicClosure T.Fr))).toAlgebra
+  have : CharZero F := charZero_of_injective_ringHom (algebraMap T.Fr F).injective
+  let : Algebra T.V F := (TWO.algVF (V := T.V) (F := F)).toAlgebra
+  have : IsScalarTower T.V T.Fr F := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hv : ValOver ϖ F v := fun c n h => (he _).trans (hv₀ c n h)
-  letI : Algebra T.V (TWO.Ov v) := (TWO.fO v hϖ hv).toAlgebra
-  haveI : IsScalarTower T.V (TWO.Ov v) F := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra T.V (TWO.Ov v) := (TWO.fO v hϖ hv).toAlgebra
+  have : IsScalarTower T.V (TWO.Ov v) F := IsScalarTower.of_algebraMap_eq fun _ => rfl
   refine ⟨F, inferInstance, inferInstance, inferInstance, inferInstance, inferInstance,
     inferInstance, v, hv, TWO.Ov v, inferInstance, inferInstance, inferInstance, inferInstance,
     Subtype.val_injective, fun z => ⟨fun h => ⟨⟨z, h⟩, rfl⟩, ?_⟩, fun g hg hu => hc _ ?_⟩

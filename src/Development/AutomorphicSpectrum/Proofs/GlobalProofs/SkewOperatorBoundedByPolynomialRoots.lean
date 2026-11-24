@@ -151,9 +151,9 @@ theorem norm_le_of_aeval_eq_zero (M H : Type) [AddCommGroup M] [Module ℂ M] [N
         rw [map_add (f := _), h2, zero_add] at h3
         exact h3
     · exact LinearMap.map_le_range
-  haveI : Module.Finite ℂ (Polynomial.degreeLT ℂ m.natDegree) :=
+  have : Module.Finite ℂ (Polynomial.degreeLT ℂ m.natDegree) :=
     Module.Finite.equiv (Polynomial.degreeLTEquiv ℂ m.natDegree).symm
-  haveI hfin : Module.Finite ℂ N := by
+  have hfin : Module.Finite ℂ N := by
     rw [hNeq]
     exact Module.Finite.map _ _
   have hN : ∀ v ∈ N, T v ∈ N := by

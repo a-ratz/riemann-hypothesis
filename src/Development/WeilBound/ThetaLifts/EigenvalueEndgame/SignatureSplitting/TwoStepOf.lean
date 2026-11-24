@@ -88,8 +88,8 @@ theorem UpperTheory.Reformulated.B.ConjugateSubgroup.conj_sub :
                           c
                             x := by
   intro G _ _ _ _ _ _ _ _ Γ A hA L f c h γ hγ h1 h2 hf x
-  haveI : LocallyCompactSpace A := hA.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology A := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : LocallyCompactSpace A := hA.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology A := Topology.IsInducing.subtypeVal.secondCountableTopology
   let e : A ≃ₜ* A :=
     { toFun := fun u => ⟨γ⁻¹ * u * γ, h1 u u.2⟩
       invFun := fun u => ⟨γ * u * γ⁻¹, h2 u u.2⟩
@@ -124,7 +124,7 @@ variable {G B : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Mea
 theorem cnt_sub [Countable Γ] [DiscreteTopology Γ] (S : Subgroup G) : Countable (Γ.subgroupOf S) ∧ DiscreteTopology (Γ.subgroupOf S) := by
   let j : Γ.subgroupOf S → Γ := fun γ => ⟨γ.1.1, γ.2⟩
   have ji : Function.Injective j := fun a b h => Subtype.ext (Subtype.ext (congrArg Subtype.val h :))
-  exact ⟨ji.countable, DiscreteTopology.of_continuous_injective ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _) ji⟩
+  exact ⟨ji.countable, DiscreteTopology.of_continuous_injective ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _) ji⟩
 
 theorem IsAv.conj_sub (hA : IsClosed (A : Set G)) (L : Lat (Γ.subgroupOf A)) {f c : G → ℂ} (h : IsAv (Γ.subgroupOf A) Subtype.val f c)
     {γ : G} (hγ : γ ∈ Γ) (h1 : ∀ u ∈ A, γ⁻¹ * u * γ ∈ A) (h2 : ∀ u ∈ A, γ * u * γ⁻¹ ∈ A) (hf : ∀ x, f (γ * x) = f x) (x : G) :
@@ -146,10 +146,10 @@ theorem stage_sub [Countable Γ] [DiscreteTopology Γ] (hS : IsClosed (S : Set G
   have : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology _
   have h : Semi (Γ.subgroupOf S) (Γ.subgroupOf A) ΓB (Subgroup.inclusion hAS) (ι.codRestrict S hι)
       (fun s => ⟨s.1 * (ι (π s))⁻¹, (ker (s * (⟨ι (π s), hι _⟩ : S)⁻¹)).1 (by rw [map_mul, map_inv, πι, mul_inv_cancel])⟩) π :=
-    ⟨continuous_subtype_val.subtype_mk _, cι.subtype_mk _, Continuous.subtype_mk (by fun_prop) _, cπ, Subgroup.inclusion_injective _,
+    ⟨continuous_subtypeVal.subtype_mk _, cι.subtype_mk _, Continuous.subtype_mk (by fun_prop) _, cπ, Subgroup.inclusion_injective _,
       fun s => Subtype.ext (inv_mul_cancel_right _ _), fun a => (ker _).2 a.2, πι, fun _ => Iff.rfl, hB, hπ⟩
   have L := h.lat LA LB (cnt_sub S).1 (cnt_sub S).2
-  exact ⟨L, fun f cA c a b d e => h.stage L LA LB (inc := S.subtype) continuous_subtype_val a (fun γ hγ => b _ hγ) d e⟩
+  exact ⟨L, fun f cA c a b d e => h.stage L LA LB (inc := S.subtype) continuous_subtypeVal a (fun γ hγ => b _ hγ) d e⟩
 
 end PositivityTheory.ThKEnd.Two
 
@@ -307,7 +307,7 @@ theorem two_orders [MeasurableSpace (Multiplicative (AE F E))] [BorelSpace (Mult
     rintro ⟨_, u, hu, rfl⟩
     exact hu
   have cS : IsClosed (S : Set (UA σ W.J)) := (stab_closed H.x).isClosedEmbedding_subtypeVal.isClosedMap _ (G1.closed.preimage c2)
-  have cI : Continuous (Subgroup.inclusion sS) := continuous_subtype_val.subtype_mk _
+  have cI : Continuous (Subgroup.inclusion sS) := continuous_subtypeVal.subtype_mk _
   have k0 : ∀ u (hu : u ∈ stab σ W H.x), ρ ⟨u, hu⟩ = 1 ↔ u ∈ unip σ W H := fun u hu => by
     refine ⟨fun k => Subgroup.subset_closure ⟨hu, fun z => ?_⟩, fun k => ρeq _ _ fun z => ?_⟩
     · simpa only [k, mat_one, Matrix.one_mulVec] using v4 ⟨u, hu⟩ z
@@ -318,7 +318,7 @@ theorem two_orders [MeasurableSpace (Multiplicative (AE F E))] [BorelSpace (Mult
     ⟨0, by rw [zero_smul, add_zero, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, (v1 y).2.2]⟩
   obtain ⟨LS, st1⟩ := stage_sub (Γ := ratU σ W.J) (ΓB := (ratU σ W₁.J).subgroupOf (unip σ W₁ H₁)) cS G0.closed
     (fun u hu => mS u (((mem_unip h (Or.inr hJ) hH).1 hu).1.trans (one_smul _ _)) ((k0 _ _).2 hu ▸ one_mem _))
-    (ι := lev.comp (unip σ W₁ H₁).subtype) (c1.comp continuous_subtype_val) (fun b => mS _ (ls b) ((lρ b).symm ▸ b.2))
+    (ι := lev.comp (unip σ W₁ H₁).subtype) (c1.comp continuous_subtypeVal) (fun b => mS _ (ls b) ((lρ b).symm ▸ b.2))
     (π := (ρ.comp (Subgroup.inclusion sS)).codRestrict _ rS) ((c2.comp cI).subtype_mk _) (fun b => Subtype.ext (lρ b))
     (fun s => Subtype.ext_iff.trans (k0 _ _)) (fun b hb => v2 _ hb) (fun s hs => v3 _ hs) (lat_of_good G0) (lat_of_good G1)
   have A1 := st1 f c₀ c hf.1 hf.2 h0 (h1 lev v1)
@@ -345,7 +345,7 @@ theorem two_orders [MeasurableSpace (Multiplicative (AE F E))] [BorelSpace (Mult
       have hx : u ∈ stab σ W H.x := ((unipU_eq _).choose_spec.choose_spec.2 u).1 hu |>.1 _ (Submodule.subset_span (by simp))
       exact mS u hx ((mem_pair h hJ hH hH₁ hJ₁ hx (v4 ⟨u, hx⟩)).1 hu).1)
     (ι := m.comp uni) (mc.comp continuous_uni) (fun b => mS _ (ns b) (nρ b ▸ one_mem _)) (π := π)
-    (continuous_ofAdd.comp (((continuous_mat.comp continuous_subtype_val).matrix_mulVec continuous_const).dotProduct continuous_const))
+    (continuous_ofAdd.comp (((continuous_mat.comp continuous_subtypeVal).matrix_mulVec continuous_const).dotProduct continuous_const))
     (fun b => by
       change Multiplicative.ofAdd (fa σ W.J (mat (emb2 h hJ hH hH₁ (uni b)) *ᵥ x₁) _) = b
       rw [(emb2_mulVec_incV_x_and_complement_x h hJ hH hH₁ _).2, add_comm, uni_val]
@@ -379,18 +379,18 @@ theorem two_kill (hd : W.J.det ≠ 0) (hJ₁ : ∀ i j, σ (W₁.J j i) = -W₁.
   have G2 := (unipUGood F E σ h d W (Or.inr hJ) hd (Submodule.span E {H.x, H.ι *ᵥ H₁.x})).1
   have := G2.lc
   have := G2.sc
-  letI : MeasurableSpace (Multiplicative (AE F E)) := borel _
+  let : MeasurableSpace (Multiplicative (AE F E)) := borel _
   have : BorelSpace (Multiplicative (AE F E)) := ⟨rfl⟩
   have : SecondCountableTopology (Multiplicative (AE F E)) := k2
   have : T2Space (Multiplicative (AE F E)) := t2AE
-  letI : MeasurableSpace SL(2, AE F E) := borel _
+  let : MeasurableSpace SL(2, AE F E) := borel _
   have : BorelSpace SL(2, AE F E) := ⟨rfl⟩
   have := first_of (UA σ W.J)
   let m := emb2 h hJ hH hH₁
   have mc : Continuous m := continuous_SL2_embedding h hJ hH hH₁
   have ur := uni_map (inclR (F := F) (E := E) (AF F))
   obtain ⟨φ, hφ⟩ := (lat_of_good G2).isAv_ex (ι := Subgroup.subtype _) (f := f) fun γ hγ => hf.2 _ hγ
-  have φc : Continuous φ := hφ.cont (lat_of_good G2) continuous_subtype_val hf.1 fun γ hγ => hf.2 _ hγ
+  have φc : Continuous φ := hφ.cont (lat_of_good G2) continuous_subtypeVal hf.1 fun γ hγ => hf.2 _ hγ
   have φi : ∀ γ ∈ (Matrix.SpecialLinearGroup.map (n := Fin 2) (inclR (F := F) (E := E) (AF F))).range, ∀ x, φ (m γ * x) = φ x := by
     rintro _ ⟨g, rfl⟩
     have r := emb2_map_inclR h hJ hH hH₁ g

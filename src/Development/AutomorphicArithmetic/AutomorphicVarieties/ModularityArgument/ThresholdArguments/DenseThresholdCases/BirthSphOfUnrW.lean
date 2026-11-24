@@ -117,7 +117,7 @@ theorem winSph : WinSph := by
   have hl := winUnl K n π t v hw s hs
   obtain ⟨α, rfl⟩ := exists_family (h4.1 hw.1) h5 (hu s hs)
   obtain ⟨σ, hσ, hs⟩ := hs
-  haveI : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
+  have : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
   have hq : GroundTheory.LocalField.residueCard (v.adicCompletion K) = Ideal.absNorm v.asIdeal :=
     GroundTheory.Global.residueCard_adicCompletion
   obtain ⟨e⟩ := unlFull (v.adicCompletion K) n σ.V σ.ρ _ _ hs (hq ▸ hl)
@@ -148,7 +148,7 @@ namespace UpperTheory.V.Z.Win.Birth
 private theorem exists_polarized {K Ω : Type} [Field K] [NumberField K] [IsCMField K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω]
     {l : ℕ} [Fact l.Prime] {n : ℕ} (H : _root_.UpperTheory.V.Af.HypothesesH') {ι : Qbar l ≃+* ℂ} (hn : 1 ≤ n) {r : G K Ω →* GL (Fin n) (Qbar l)}
     {π : CuspSub K n} (hp : Sol.Pol ι r) (ha : AttC ι r π) : ∃ χ, GlobalTheory.ContraPair.PolarizedPair π χ := by
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
+  have : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
   obtain ⟨μ, χ, c, P, hμ, hs, hc, hP⟩ := UpperTheory.cyclotomicCharacter_plusPart (_root_.UpperTheory.V.Af.algOfCyc_s H) UpperTheory.cyclotomic_char_conj_invariant K Ω l ι n r hp
   have hdual := _root_.UpperTheory.V.Af.self_dual_complex_of_printed_hida H K Ω l ι n hn r π ha χ μ hμ c P hc hP
@@ -194,7 +194,7 @@ theorem UpperTheory.V.Z.Win.Birth.sphOfUnrW_alt :
   obtain ⟨t, ht⟩ := hW π hreg hatt
   refine winSph M n hn π t w (ht w) ?_
   rintro s ⟨σ, hσ, hsup⟩ ζ ⟨hζ, hmem⟩
-  haveI : CharZero (w.adicCompletion M) := charZero_of_injective_algebraMap (algebraMap M _).injective
+  have : CharZero (w.adicCompletion M) := charZero_of_injective_algebraMap (algebraMap M _).injective
   obtain ⟨rc, hrc⟩ := UpperTheory.Zero.LLC.recTExists M Ω A w hA
   obtain ⟨hPT, hTor, hMono⟩ := plainRec M Ω A w hA rc hrc n π t (ht w) σ hσ
   have hwd : IsWDOf ι r (rc (algNorm σ)) := (((hC w σ hσ).1 A hA rc hrc).1 hw).isWDOf ⟨hTor, hMono⟩

@@ -98,7 +98,7 @@ private theorem red_approx (v : HeightOneSpectrum (𝓞 K)) {n : 𝓞 K} (hn : n
     ⟨y, by simp⟩
   have ht : Valued.v ((y - algebraMap K (v.adicCompletion K) t) *
     (algebraMap K (v.adicCompletion K) (n : K))⁻¹) < 1 := ht
-  rw [map_mul, map_inv₀, red_int, mul_inv_lt_iff₀ (zero_lt_iff.2 h0), one_mul] at ht
+  rw [map_mul, map_inv₀, red_int, mul_inv_lt_iff₀ (pos_iff_ne_zero.2 h0), one_mul] at ht
   have ht1 : v.valuation K t ≤ 1 := by
     rw [← red_field, ← sub_sub_cancel y (algebraMap K (v.adicCompletion K) t)]
     exact Valuation.map_sub_le _ hy (ht.le.trans (v.intValuation_le_one n))
@@ -278,11 +278,11 @@ private theorem lev_mem_nhds (K : Type) [Field K] [NumberField K] {N : ℕ} (hN 
       rw [map_mul, map_one] at e'
       exact eq_one_of_one_le_mul_left (hy v) (hy' v) e'.ge
     · have e : Valued.v ((y.val.2 v - 1) * algebraMap K (v.adicCompletion K) (N : K)⁻¹) ≤ 1 := hy'' v
-      haveI : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
+      have : CharZero (v.adicCompletion K) := charZero_of_injective_algebraMap (algebraMap K _).injective
       have h0 : Valued.v (N : v.adicCompletion K) ≠ 0 := by
         rw [Valuation.ne_zero_iff]
         exact Nat.cast_ne_zero.2 hN
-      rw [map_inv₀, map_natCast, map_mul, map_inv₀, mul_inv_le_iff₀ (zero_lt_iff.2 h0), one_mul] at e
+      rw [map_inv₀, map_natCast, map_mul, map_inv₀, mul_inv_le_iff₀ (pos_iff_ne_zero.2 h0), one_mul] at e
       exact e
 
 private noncomputable def crd (K : Type) [Field K] [NumberField K] (w : InfinitePlace K) : Ideles K →* ℂˣ :=
@@ -342,9 +342,9 @@ private theorem prod_type (E : Type) [Field E] [NumberField E] (a : ℤ) (k : E)
   rw [← Finset.prod_fiberwise Finset.univ InfinitePlace.mk]
   refine Finset.prod_congr rfl fun w _ => ?_
   rw [Finset.prod_eq_single_of_mem w.embedding (by simp)]
-  · rw [InfinitePlace.mk_embedding, if_pos rfl]
+  · rw [InfinitePlace.mk_embedding, ite_eq_left rfl]
   · intro φ hφ hne
-    rw [(Finset.mem_filter.1 hφ).2, if_neg hne.symm, zpow_zero]
+    rw [(Finset.mem_filter.1 hφ).2, ite_eq_right hne.symm, zpow_zero]
 
 private theorem loc_self {E : Type} [Field E] [NumberField E] (v : HeightOneSpectrum (𝓞 E))
     (x : (v.adicCompletion E)ˣ) : ((localIdele E v x : Ideles E) : AdeleRing (𝓞 E) E).2 v = x := by
@@ -460,7 +460,7 @@ theorem UpperTheory.V.Sd.Tw.hecke :
       rw [sub_self, map_zero]
       exact zero_le
   · simp
-  · refine if_neg ?_
+  · refine ite_eq_right ?_
     rw [hw₀ (InfinitePlace.mk _)]
     intro h
     exact IsTotallyComplex.complexEmbedding_not_isReal _ (ComplexEmbedding.isReal_iff.2 h.symm)

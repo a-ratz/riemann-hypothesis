@@ -96,7 +96,7 @@ theorem continuousOn_integral_of_bounded {V X P : Type}
   have hcs : ∀ p ∈ W, HasCompactSupport (Φ p) := fun p hp =>
     HasCompactSupport.intro hC (hsupp p hp)
   have hint : ∀ p ∈ W, ∀ b, Integrable (Φ p) (fib b) := fun p hp b => by
-    haveI := hloc b
+    have := hloc b
     exact (hslice p hp).integrable_of_hasCompactSupport (hcs p hp)
   rintro ⟨p₀, b₀⟩ ⟨hp₀, hb₀⟩
   simp only [Set.mem_prod] at hp₀ hb₀ ⊢
@@ -239,8 +239,8 @@ theorem actW_vec_zero {F E : Type} [Field F] [Field E] [Algebra F E] (σ : E →
 theorem continuous_tmul_one {F E : Type} [Field F] [Field E] [Algebra F E]
     (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [IsTopologicalRing R] :
     Continuous (fun α : R => α ⊗ₜ[F] (1 : E)) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R (R ⊗[F] E)
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R (R ⊗[F] E)
   have h : Continuous (fun α : R => α • (1 : R ⊗[F] E)) :=
     continuous_smul.comp (continuous_id.prodMk continuous_const)
   convert h using 2 with α
@@ -249,44 +249,44 @@ theorem continuous_tmul_one {F E : Type} [Field F] [Field E] [Algebra F E]
 theorem cont_double : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (t : F) (n : ℕ) (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R] (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : Measure R) (m₁ : HermR R σ 1 → Measure (Fin 1 → Fin (M + 1) → R ⊗[F] E)) (m' : HermR R σ n → Measure (Fin n → Fin M → R ⊗[F] E)) (s : (Fin 1 → Fin (M + 1) → R ⊗[F] E) → HA R σ (blockOne (algebraMap F E t) J)) (B₀ : Set R) (a : R → Rˣ) (κ₁ cm : Rˣ → ℝ≥0), StageData σ J t n b lam m₁ m' s B₀ a κ₁ cm → ∀ φ : (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) → ℝ, Continuous φ → HasCompactSupport φ → ContinuousOn (fun z : R × (Fin n → R ⊗[F] E) × HermR R σ n => Preal σ J t m₁ m' s φ z.1 z.2.1 z.2.2) ({α : R | IsUnit α} ×ˢ (Set.univ ×ˢ Unt σ R n)) := by
   open scoped Pointwise in
    intro F E _ _ _ _ _ σ M J t n R _ _ _ _ _ d b lam m₁ m' s B₀ a κ₁ cm D φ hφ hφc
-   haveI iTR : IsTopologicalRing R := D.hR.1
-   haveI iLC : LocallyCompactSpace R := D.hR.2.1
-   haveI iSC : SecondCountableTopology R := D.hR.2.2.1
-   haveI iT2 : T2Space R := D.hR.2.2.2.1
+   have iTR : IsTopologicalRing R := D.hR.1
+   have iLC : LocallyCompactSpace R := D.hR.2.1
+   have iSC : SecondCountableTopology R := D.hR.2.2.1
+   have iT2 : T2Space R := D.hR.2.2.2.1
    have hval : IsOpenEmbedding (Units.val : Rˣ → R) := D.hR.2.2.2.2.2.2.1
    have hJ' := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.isHermND_blockOne_algebraMap F E σ M J D.hJ t D.ht
    obtain ⟨kTR, kLC, kSC, kT2, -, -, -, kB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ D.hCM R
-   haveI := kTR
-   haveI := kLC
-   haveI := kSC
-   haveI := kT2
-   haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+   have := kTR
+   have := kLC
+   have := kSC
+   have := kT2
+   have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
    obtain ⟨eLC, eSC, eT2, eB, hlift⟩ := _root_.GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ D.hCM R n
-   haveI := eLC
-   haveI := eSC
-   haveI := eT2
-   haveI := eB
+   have := eLC
+   have := eSC
+   have := eT2
+   have := eB
    obtain ⟨g, hgc, hg⟩ := hlift M J D.hJ
    obtain ⟨gTG, gLC, gSC, gT2, gB, hactall⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ D.hCM (M + 1) _ hJ' R
-   haveI := gTG
-   haveI := gLC
-   haveI := gSC
-   haveI := gT2
-   haveI := gB
+   have := gTG
+   have := gLC
+   have := gSC
+   have := gT2
+   have := gB
    obtain ⟨hact, hact1, hactm, -⟩ := hactall (n + 1)
    obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ D.hCM R d b lam D.hlam
-   haveI := hW n M
-   haveI := hH n
+   have := hW n M
+   have := hH n
    obtain ⟨hUo, -, -, -, hbd', -⟩ := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramFib_basic F E σ D.hCM M n J D.hJ R D.hR d b lam D.hlam m' D.hm'
    obtain ⟨-, hloc₁, -, -, -, hgram₁⟩ :=
      _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramFib_basic F E σ D.hCM (M + 1) 1 _ hJ' R D.hR d b lam D.hlam m₁ D.hm₁
-   haveI : BorelSpace (Fin n → Fin M → R ⊗[F] E) := kB n M
-   haveI : BorelSpace (Fin 1 → Fin (M + 1) → R ⊗[F] E) := kB 1 (M + 1)
+   have : BorelSpace (Fin n → Fin M → R ⊗[F] E) := kB n M
+   have : BorelSpace (Fin 1 → Fin (M + 1) → R ⊗[F] E) := kB 1 (M + 1)
    have hfam : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.IsFibreFamily (coordW R b lam n M) (gramR R σ J) Subtype.val
        (g ⁻¹' Unt σ R n) (coordHerm R σ b lam n) (Unt σ R n) m' := by
      have he : g ⁻¹' Unt σ R n = {X | IsUnit (gramR R σ J X).det} := by
        ext X
-       simp only [Set.mem_preimage, Unt, Set.mem_setOf_eq, hg X]
+       simp only [Set.mem_preimage, Unt, Set.mem_ofPred_eq, hg X]
      rw [he]
      exact D.hm'
 
@@ -356,7 +356,7 @@ theorem cont_double : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
    obtain ⟨cD, hcD⟩ := hbd' C₂ Dc hC₂c hDc hDs
    obtain ⟨Bd, hBd⟩ := hφ.bounded_above_of_compact_support hφc
    have hBd0 : 0 ≤ Bd := (norm_nonneg _).trans (hBd 0)
-   haveI := hloc₁ (hermScal R σ (algebraMap F R t))
+   have := hloc₁ (hermScal R σ (algebraMap F R t))
    have eU : ∀ᶠ z : R × (Fin n → R ⊗[F] E) × HermR R σ n in 𝓝 (α₀, c₀, S₀), z.2.2 ∈ Unt σ R n :=
      (continuous_snd.comp continuous_snd).continuousAt (hUo.mem_nhds hS₀)
    have eD : ∀ᶠ z : R × (Fin n → R ⊗[F] E) × HermR R σ n in 𝓝 (α₀, c₀, S₀), z.2.2 ∈ Dc :=

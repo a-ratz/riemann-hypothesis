@@ -115,7 +115,7 @@ theorem span_inf {Λ : Submodule (𝓞 K) V} (hΛ : Submodule.IsFullLattice K Λ
 omit [StarRing K] in
 theorem isLattice_field {M : Submodule (𝓞 K) K} (hfg : M.FG) {x : K} (hx : x ∈ M) (h0 : x ≠ 0) :
     Submodule.IsFullLattice K M := by
-  haveI : Submodule.IsLattice K M := Submodule.IsLattice.of_fg K hfg
+  have : Submodule.IsLattice K M := Submodule.IsLattice.of_fg K hfg
   refine ⟨?_⟩
   apply eq_top_iff.mpr
   intro y _
@@ -385,7 +385,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
     obtain ⟨N, hN, hNΛ⟩ := hU.1.1
     have heq : Λ = N := by simpa [rs] using hNΛ
     have hfg : Λ.FG := heq.symm ▸ hN
-    haveI : Submodule.IsLattice K Λ := Submodule.IsLattice.of_fg K hfg
+    have : Submodule.IsLattice K Λ := Submodule.IsLattice.of_fg K hfg
     exact ⟨hU.1.2⟩
   have hb := bOne_symm H N hS hΛ hF hF'
   obtain ⟨hc0, -, -, -, z1, z2, x1, x2, hz⟩ := hS

@@ -90,7 +90,7 @@ namespace GlobalTheory.CoverRoot
 theorem eq_zero_of_complex {K : Type} [Field K] (σ : K →+* ℂ) (p : TRing K) (r : p.R)
     (h : ∀ χ : p.R →ₐ[K] CAt σ, χ r = 0) : r = 0 := by
   refine ReciprocityTheory.ChartRestriction.G.TB.detAlg_holds K p.n p.I p.rad r fun L _ _ _ ψ => ?_
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   let e : L →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -112,7 +112,7 @@ theorem value_pow_eq_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     have e1 : evR d.Xo₂ d.c₂ d.cδ z = χ (d.cδ p y') :=
       ReciprocityTheory.ChartRestriction.G.PullbackSections.evalAt_eq_of _ _ hWD d.cδ hnat p χ y' z hz
     have e2 := h.2 z
-    rw [map_sub, map_pow, map_one, ← e1, e2, ← map_pow, if_neg (by simp), ← Units.val_pow_eq_pow_val, ← map_pow,
+    rw [map_sub, map_pow, map_one, ← e1, e2, ← map_pow, ite_eq_right (by simp), ← Units.val_pow_eq_pow_val, ← map_pow,
       pow_card_eq_one', map_one, Units.val_one, map_one, sub_self]
   have e3 : evR d.Xo₂ d.c₂ d.cδ y₂ = φ (d.cδ p y') :=
     ReciprocityTheory.ChartRestriction.G.PullbackSections.evalAt_eq_of _ _ hWD d.cδ hnat p φ y' y₂ hy
@@ -213,9 +213,9 @@ theorem le_nval_avg (e : ℕ) {J : Type} [Finite J] (w X : J → K') (ζ u cc b 
 end Val
 
 theorem exists_resChar (T : CDVR) (h : T.FinRes) : ∃ ℓ : ℕ, ℓ.Prime ∧ ¬ IsUnit (ℓ : T.V) := by
-  haveI : Finite (ResidueField T.V) := h
+  have : Finite (ResidueField T.V) := h
   obtain ⟨p, hp⟩ := CharP.exists (ResidueField T.V)
-  haveI := Fintype.ofFinite (ResidueField T.V)
+  have := Fintype.ofFinite (ResidueField T.V)
   refine ⟨p, (CharP.char_is_prime_or_zero (ResidueField T.V) p).resolve_right
     (CharP.char_ne_zero_of_finite (ResidueField T.V) p), fun hu => ?_⟩
   have := hu.map (residue T.V)
@@ -331,7 +331,7 @@ theorem exists_alpha (D : D7) (T : Top D) (h : LawsP T) (hs : LawsSh T) (j : ℕ
     rw [hM, Nat.squarefree_mul hcop.symm, hM0,
       Nat.squarefree_mul ((Nat.coprime_primes (D.host.g_prime 0) (D.host.g_prime 1)).2 D.host.g_ne)]
     exact ⟨⟨(D.host.g_prime 0).prime.squarefree, (D.host.g_prime 1).prime.squarefree⟩, hpp.prime.squarefree⟩
-  refine ⟨fun hd => hℓ.prime.not_unit (hsf ℓ (by rwa [← pow_two])), hpp.ne_zero, ?_⟩
+  refine ⟨fun hd => hℓ.prime.not_isUnit (hsf ℓ (by rwa [← pow_two])), hpp.ne_zero, ?_⟩
   by_cases hd : ℓ ∣ (T.dδ j n).l₂.M
   · have hd' := hd
     rw [hM, hM0, hℓ.dvd_mul, hℓ.dvd_mul, Nat.prime_dvd_prime_iff_eq hℓ (D.host.g_prime 0),
@@ -402,7 +402,7 @@ theorem shortBound : ShortBoundSt := by
   rw [hfin, hpq, Nat.mul_div_cancel_left _ two_pos, hM2] at hcard
   have hc0 : Nat.card (Fin w.n → LevQ (T.Q.Dw j) (T.dδ j w.n).l₂) ≠ 0 := by
     rw [hcard]; exact pow_ne_zero _ (mul_ne_zero hg0 hp0)
-  haveI := Nat.finite_of_card_ne_zero hc0
+  have := Nat.finite_of_card_ne_zero hc0
   have hu0 : io₂ (nrm (T.Q.Dw j) (T.dδ j w.n).c₂ (wtA w) α) ≠ 0 := (map_ne_zero io₂).2 (nrm_ne_zero _ _ hα0)
   have key := le_nval_avg (V := T'.V) (r * e) (fun q => io₂ ((T.dδ j w.n).w x0 q)) _ ζ _
     ((Nat.card (Fin w.n → LevQ (T.Q.Dw j) (T.dδ j w.n).l₂) : ℕ) : T'.Fr) _ m₀ hm₀ hζ hu0 (by exact_mod_cast hc0)

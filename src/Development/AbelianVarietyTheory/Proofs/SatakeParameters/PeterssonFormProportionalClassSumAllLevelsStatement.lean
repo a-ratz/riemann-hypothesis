@@ -220,8 +220,8 @@ theorem mult_level {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam D) (M :
   induction hU using Submodule.span_induction with
   | mem x hx => exact hx.lev v k hk g
   | zero => simp
-  | add x y _ _ hx hy => simp only [MultilinearMap.add_apply, Pi.add_apply, hx, hy, mul_add]
-  | smul a x _ hx => simp only [MultilinearMap.smul_apply, Pi.smul_apply, hx, smul_eq_mul, mul_left_comm]
+  | add x y _ _ hx hy => simp only [add_apply, Pi.add_apply, hx, hy, mul_add]
+  | smul a x _ hx => simp only [smul_apply, Pi.smul_apply, hx, smul_eq_mul, mul_left_comm]
 
 theorem natCast_pow_notMem (P : Pl D.host.E) {n : ℕ} (h : ((n : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal) (c : ℕ) :
     ((n ^ c : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal := fun h' =>

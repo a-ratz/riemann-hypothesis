@@ -104,5 +104,5 @@ theorem GlobalTheory.UnitaryBC.finiteDimensional_levelForms : ∀ (E : Type) [Fi
     have e' : a.1 g - b.1 g = a.1 (s * y) - b.1 (s * y) := e
     rw [this, sub_self, sub_eq_zero] at e'
     exact e'
-  haveI : FiniteDimensional ℂ M := Module.Finite.of_injective f hf
+  have : FiniteDimensional ℂ M := Module.Finite.of_injective f hf
   exact Submodule.finiteDimensional_of_le hle

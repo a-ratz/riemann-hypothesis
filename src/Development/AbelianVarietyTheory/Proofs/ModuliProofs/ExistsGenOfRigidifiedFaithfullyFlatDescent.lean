@@ -63,7 +63,7 @@ private lemma res_res_lemma {X : Scheme.{0}} {U V W : X.Opens} (h₁ : V ≤ U) 
     res h₂ (res h₁ a) = res (h₂.trans h₁) a := by
   unfold res
   ext
-  simp only [Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -77,7 +77,7 @@ private lemma res_pullU_id_moduli {X : Scheme.{0}} {U V : X.Opens} (h : V ≤ (�
     (a : Γ(X, U)ˣ) : res h (pullU (𝟙 X) U a) = res h' a := by
   unfold res pullU
   ext
-  simp only [Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass]
   rfl
 
 private lemma res_self_moduli {X : Scheme.{0}} {U : X.Opens} (h : U ≤ U) (a : Γ(X, U)ˣ) : res h a = a := by

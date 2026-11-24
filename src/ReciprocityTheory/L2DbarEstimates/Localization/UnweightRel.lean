@@ -164,7 +164,7 @@ lemma uwr_integrable (hz : IsLocalHomeomorph z) (u h : M → ℂ) (p : M → ℝ
     (hfin : ∫⁻ x, ENNReal.ofReal (‖u x‖ ^ 2 * Real.exp (-p x)) ∂vol n z < ⊤)
     (hh : Continuous h) (hc : HasCompactSupport h) :
     Integrable (fun x => u x * h x) (vol n z) := by
-  haveI := vol_isFiniteMeasureOnCompacts n z hz
+  have := vol_isFiniteMeasureOnCompacts n z hz
   have hcont : Continuous (fun x => ‖h x‖ ^ 2 * Real.exp (p x)) :=
     (hh.norm.pow 2).mul (Real.continuous_exp.comp hp)
   have hcs : HasCompactSupport (fun x => ‖h x‖ ^ 2 * Real.exp (p x)) :=
@@ -178,7 +178,7 @@ lemma uwr_integrable (hz : IsLocalHomeomorph z) (u h : M → ℂ) (p : M → ℝ
       ≤ ∫⁻ x, (ENNReal.ofReal (‖u x‖ ^ 2 * Real.exp (-p x)) +
           ENNReal.ofReal (‖h x‖ ^ 2 * Real.exp (p x))) ∂vol n z := by
         refine lintegral_mono fun x => ?_
-        rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_add (by positivity) (by positivity), norm_mul]
+        rw [← ofReal_norm, ← ENNReal.ofReal_add (by positivity) (by positivity), norm_mul]
         exact ENNReal.ofReal_le_ofReal (uwr_amgm ‖u x‖ ‖h x‖ (p x))
     _ = _ := lintegral_add_right' _ hcont.measurable.ennreal_ofReal.aemeasurable
     _ < ⊤ := ENNReal.add_lt_top.2 ⟨hfin, h2⟩
@@ -198,7 +198,7 @@ lemma locL2_of_sq_le_integrable_sum {E : Type*} [NormedAddCommGroup E] (u : M �
       ≤ ∫⁻ x in C, ENNReal.ofReal (max K 0) * (ENNReal.ofReal (F1 x) + ENNReal.ofReal (F2 x))
           ∂vol n z := by
         refine setLIntegral_mono' hC.measurableSet fun x hx => ?_
-        rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _),
+        rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _),
           ← ENNReal.ofReal_add (hF1 x) (hF2 x), ← ENNReal.ofReal_mul (le_max_right _ _)]
         apply ENNReal.ofReal_le_ofReal
         calc ‖u x‖ ^ 2 ≤ c x * (F1 x + F2 x) := hb x

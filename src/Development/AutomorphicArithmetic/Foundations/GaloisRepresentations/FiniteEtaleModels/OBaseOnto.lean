@@ -617,14 +617,14 @@ theorem qSys : QSys := by
   intro q _ D hm r hr 𝔞 hf g₀
   obtain ⟨hbij, hproj, hfin⟩ := mOne q D hm
   obtain ⟨ε, hε⟩ := idem q D r hr
-  letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
-  haveI : IsScalarTower (𝓞 D.F) D.O D.La := ⟨fun a b x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
-  haveI : Module.Finite (𝓞 D.F) D.O := Module.Finite.of_surjective (Algebra.linearMap _ _) hbij.2
-  haveI : Module.Finite (𝓞 D.F) D.La := Module.Finite.trans D.O D.La
-  haveI : Module.Projective (𝓞 D.F) D.La := by
+  let : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  have : IsScalarTower (𝓞 D.F) D.O D.La := ⟨fun a b x => by rw [Algebra.smul_def, mul_smul]; rfl⟩
+  have : Module.Finite (𝓞 D.F) D.O := Module.Finite.of_surjective (Algebra.linearMap _ _) hbij.2
+  have : Module.Finite (𝓞 D.F) D.La := Module.Finite.trans D.O D.La
+  have : Module.Projective (𝓞 D.F) D.La := by
     let ρ : D.O ≃+* 𝓞 D.F := (RingEquiv.ofBijective (algebraMap (𝓞 D.F) D.O) hbij).symm
-    letI i₁ : RingHomInvPair (ρ : D.O →+* 𝓞 D.F) (ρ.symm : 𝓞 D.F →+* D.O) := RingHomInvPair.of_ringEquiv ρ
-    letI i₂ : RingHomInvPair (ρ.symm : 𝓞 D.F →+* D.O) (ρ : D.O →+* 𝓞 D.F) := RingHomInvPair.symm _ _
+    let i₁ : RingHomInvPair (ρ : D.O →+* 𝓞 D.F) (ρ.symm : 𝓞 D.F →+* D.O) := RingHomInvPair.of_ringEquiv ρ
+    let i₂ : RingHomInvPair (ρ.symm : 𝓞 D.F →+* D.O) (ρ : D.O →+* 𝓞 D.F) := RingHomInvPair.symm _ _
     let e₂ : D.La ≃ₛₗ[(ρ : D.O →+* 𝓞 D.F)] D.La :=
       { AddEquiv.refl D.La with
         map_smul' := fun c x => by
@@ -995,16 +995,16 @@ theorem tResim : TResim := by
             isom := ?_ }, ?_⟩
   · intro n x y
     by_cases h0 : 0 < n
-    · simp only [if_pos h0, map_add (f := _), I.add]
-    · simp only [if_neg h0, I.add]
+    · simp only [ite_eq_left h0, map_add (f := _), I.add]
+    · simp only [ite_eq_right h0, I.add]
   · intro n b x
     by_cases h0 : 0 < n
-    · simp only [if_pos h0]
+    · simp only [ite_eq_left h0]
       obtain ⟨z, hz⟩ := hg.lin n h0 b x
       rw [hz, hadd n h0, I.lin]
-    · simp only [if_neg h0, I.lin]
+    · simp only [ite_eq_right h0, I.lin]
   · intro n h0 x
-    simp only [if_pos h0]
+    simp only [ite_eq_left h0]
     rw [I.ker n h0]
     constructor
     · rintro ⟨y, hy⟩
@@ -1012,7 +1012,7 @@ theorem tResim : TResim := by
     · rintro ⟨v, rfl⟩
       exact ⟨g n v, map_nsmul (g n) n v⟩
   · intro n h0 q
-    simp only [if_pos h0]
+    simp only [ite_eq_left h0]
     rw [I.onto n h0]
     constructor
     · rintro ⟨x, rfl⟩
@@ -1022,12 +1022,12 @@ theorem tResim : TResim := by
       exact ⟨g n x, hx⟩
   · intro n m hn0 hm0 x
     have h0 : 0 < n * m := Nat.mul_pos hn0 hm0
-    simp only [if_pos h0, if_pos hn0]
+    simp only [ite_eq_left h0, ite_eq_left hn0]
     rw [I.tower n m hn0 hm0]
     obtain ⟨z, hz⟩ := hg.tow n m hn0 hm0 x
     rw [hz, hadd n hn0]
   · intro n h0 x y
-    simp only [if_pos h0]
+    simp only [ite_eq_left h0]
     have h := I.isom n h0 (g n x) (g n y)
     obtain ⟨c, hc⟩ := hg.iso n h0 x y
     have hz : I.ζ n ^ (n : ℤ) = 1 := by
@@ -1040,7 +1040,7 @@ theorem tResim : TResim := by
     rw [hE] at h
     exact h
   · intro n h0 x
-    simp only [if_pos h0]
+    simp only [ite_eq_left h0]
 
 end UpperTheory.Gal.FiniteEtaleModels.O
 end -- clump:auto
@@ -1119,10 +1119,10 @@ theorem UpperTheory.Gal.FiniteEtaleModels.O.tExt :
     rw [spMap, spMap, spMap, ← Spec.map_comp]
     rfl
   obtain ⟨J, -⟩ := o.geom k (spMap f) (f.comp g) hcomp
-  haveI := G.finLa
+  have := G.finLa
   let h : Over.mk (spMap f) ⟶ Over.mk (𝟙 (Sp Ω)) := Over.homMk (spMap f) (by simp)
-  haveI : Epi h := by
-    haveI : Epi h.left := (GlobalTheory.UPel.GeometricLevelExistence.epi_spMap_field f : _)
+  have : Epi h := by
+    have : Epi h.left := (GlobalTheory.UPel.GeometricLevelExistence.epi_spMap_field f : _)
     exact Over.epi_of_epi_left h
   have hadd : ∀ n a b, h ≫ I.ev n (a + b) = (h ≫ I.ev n a) * (h ≫ I.ev n b) := by
     intro n a b

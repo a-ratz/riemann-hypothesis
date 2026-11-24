@@ -105,9 +105,9 @@ theorem not_hasConductor_one (c : kˣ) : ¬ HasConductor (1 : AddChar k Circle) 
   have := (h (c / r)).1 (fun y _ => rfl)
   have hc : valuation k (c : k) ≠ 0 := by simp
   have hr' : valuation k r ≠ 0 := by simpa using hr
-  rw [map_div₀, div_le_iff₀ (zero_lt_iff.2 hr')] at this
+  rw [map_div₀, div_le_iff₀ (pos_iff_ne_zero.2 hr')] at this
   have h2 : valuation k (c : k) * valuation k r < valuation k (c : k) * 1 :=
-    mul_lt_mul_of_pos_left hr1 (zero_lt_iff.2 hc)
+    mul_lt_mul_of_pos_left hr1 (pos_iff_ne_zero.2 hc)
   rw [mul_one] at h2
   exact absurd this (not_le.2 h2)
 
@@ -188,7 +188,7 @@ theorem measurableEmbedding_val (n : Type*) [Fintype n] [DecidableEq n] :
   have hB : BorelSpace (Matrix n n k) := inferInstanceAs (BorelSpace (n → n → k))
   have : Set.range (fun g : GL n k => g.val) = {x : Matrix n n k | x.det ≠ 0} := by
     ext x
-    simp only [Set.mem_range, Set.mem_setOf_eq]
+    simp only [Set.mem_range, Set.mem_ofPred_eq]
     rw [← isUnit_iff_ne_zero, ← Matrix.isUnit_iff_isUnit_det]
     rfl
   rw [this]

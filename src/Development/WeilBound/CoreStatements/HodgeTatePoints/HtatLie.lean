@@ -252,8 +252,8 @@ theorem loc_of_charts {R : Type} [CommRing R] (x : Sp R ⟶ S) {J : Type} [Finit
     have hu' : IsUnit (algebraMap R (Localization.Away g'.1) (f (ix g))) :=
       unit_of_dvd ((hix g).trans h)
     obtain ⟨e, he⟩ := exists_equiv (R := R) (ptAt x g'.1) (m (ix g) _ hu') (m (ix g') _ (unit_of_dvd (hix g')))
-    haveI := cmap_loc h ht
-    haveI hcr := _root_.GlobalTheory.CompanionTheory.LocHom.isLocalizedModule_compRight_away R (P (ix g)) (Localization.Away g.1) (Localization.Away g'.1) (f (ix g)) t
+    have := cmap_loc h ht
+    have hcr := _root_.GlobalTheory.CompanionTheory.LocHom.isLocalizedModule_compRight_away R (P (ix g)) (Localization.Away g.1) (Localization.Away g'.1) (f (ix g)) t
       (unit_of_dvd (hix g)) (cmap h) (cmap_loc h ht)
     have hrr : r = (e : _ →ₗ[R] _) ∘ₗ LinearMap.compRight R (cmap h).toLinearMap := by
       refine LinearMap.ext fun y => pt_left_inj (m (ix g') _ (unit_of_dvd (hix g'))) ?_
@@ -269,7 +269,7 @@ theorem loc_of_charts {R : Type} [CommRing R] (x : Sp R ⟶ S) {J : Type} [Finit
   have hrr : r = (e : _ →ₗ[R] _) ∘ₗ ρ ⟨f i, i, dvd_rfl⟩ :=
     LinearMap.ext fun y => pt_left_inj Mi ((hr y).trans ((he _).trans (hρ ⟨f i, i, dvd_rfl⟩ y)).symm)
   rw [hrr]
-  haveI := hloc i
+  have := hloc i
   exact IsLocalizedModule.of_linearEquiv _ _ _
 
 
@@ -340,8 +340,8 @@ theorem isBaseChange_lie [Smooth G.hom] {R : Type} [CommRing R] (x : Sp R ⟶ S)
     have hC : IsUnit (algebraMap R C (f i)) := unit_away (f i)
     let κ : A →+* C := IsLocalization.Away.lift (f i) hC
     have hκ : κ.comp (algebraMap R A) = algebraMap R C := IsLocalization.Away.lift_comp _ _
-    letI : Algebra A C := κ.toAlgebra
-    haveI : IsScalarTower R A C := IsScalarTower.of_algebraMap_eq' hκ.symm
+    let : Algebra A C := κ.toAlgebra
+    have : IsScalarTower R A C := IsScalarTower.of_algebraMap_eq' hκ.symm
     let c : A →ₐ[R] C := IsScalarTower.toAlgHom R A C
     obtain ⟨a, ha⟩ := exists_trL (R := R') (spMap (algebraMap R R') ≫ x) (spMap (algebraMap R C) ≫ x)
       (algebraMap R' C) (fun _ => rfl) (pt_eq x _).symm M' (m C hC)

@@ -74,7 +74,7 @@ def sec : thickObj R I e G ⟶ Te D I e ⊗ thickObj R I e G :=
 lemma i_q : g.i ≫ g.q = toUnit _ ≫ η[thickObj R I e D.P.A] := g.isKernel.w
 
 lemma act_q : act g ≫ g.q = snd (Te D I e) (thickObj R I e G) ≫ g.q := by
-  haveI : IsMonHom g.q := g.q_hom
+  have : IsMonHom g.q := g.q_hom
   have hq : g.i ≫ g.q = toUnit _ ≫ η[thickObj R I e D.P.A] := i_q g
   have hf : fst (Te D I e) (thickObj R I e G) ≫ toUnit (Te D I e) =
       toUnit (Te D I e ⊗ thickObj R I e G) := toUnit_unique _ _
@@ -82,7 +82,7 @@ lemma act_q : act g ≫ g.q = snd (Te D I e) (thickObj R I e G) ≫ g.q := by
     reassoc_of% hq, reassoc_of% hf, MonObj.lift_comp_one_left]
 
 lemma sec_act : sec (D := D) (G := G) (I := I) (e := e) ≫ act g = 𝟙 _ := by
-  haveI : IsMonHom g.i := g.i_hom
+  have : IsMonHom g.i := g.i_hom
   have h1 : sec (D := D) (G := G) (I := I) (e := e) ≫
       lift (fst (Te D I e) (thickObj R I e G) ≫ g.i) (snd (Te D I e) (thickObj R I e G)) =
       lift (toUnit (thickObj R I e G) ≫ η[thickObj R I e G]) (𝟙 _) := by

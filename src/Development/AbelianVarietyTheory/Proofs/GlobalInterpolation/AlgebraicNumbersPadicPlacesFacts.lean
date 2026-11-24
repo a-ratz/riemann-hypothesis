@@ -98,7 +98,7 @@ theorem norm_le_one_of_valuation (K : Type) [Field K] [NumberField K] (p : ℕ) 
 
 theorem exp_rat_pow_den (r : ℚ) :
     Complex.exp (-(2 * (Real.pi : ℂ)) * Complex.I * ((r : ℝ) : ℂ)) ^ r.den = 1 := by
-  rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+  rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
   refine ⟨-r.num, ?_⟩
   have h : ((r.den : ℂ)) * (r : ℂ) = (r.num : ℂ) := by
     exact_mod_cast Rat.den_mul_eq_num r

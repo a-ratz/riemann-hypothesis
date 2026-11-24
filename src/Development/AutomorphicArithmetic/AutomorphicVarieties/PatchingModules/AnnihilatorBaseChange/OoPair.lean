@@ -71,7 +71,7 @@ open UpperTheory.V.CA
 private theorem oo_finite_hom (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (h : TopFG G)
     (Z : Type) [Group Z] [Finite Z] : Finite {φ : G →* Z // IsOpen (φ.ker : Set G)} := by
   obtain ⟨s, hs, hgen⟩ := h
-  haveI : Finite s := hs.to_subtype
+  have : Finite s := hs.to_subtype
   rw [topGen_iff] at hgen
   refine Finite.of_injective (fun φ : {φ : G →* Z // IsOpen (φ.ker : Set G)} => fun x : s => φ.1 x) ?_
   intro φ ψ hφψ
@@ -98,7 +98,7 @@ private theorem oo_finite_hom (G : Type) [Group G] [TopologicalSpace G] [IsTopol
 private theorem oo_phi (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
     (l : ℕ) [Fact l.Prime] (h : TopFG G) : PhiCond G l := by
   intro H hH
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   exact oo_finite_hom H ((TopFG.subgroup_quot G h).1 H hH) (Multiplicative (ZMod l))
 
 private theorem oo_lam_comap {n : ℕ} {A G H : Type} [CommRing A] [Group G] [Group H] (D : GDet n A G) (φ : H →* G)
@@ -119,11 +119,11 @@ private theorem oo_kills {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [Com
     (h0 : PhiCond G l) {R : Type} [CommRing R] [Algebra O R] [IsCO O R] (D : GDet n R G)
     (hc : D.IsCont (maximalIdeal R)) (hr : D.map (res O R : R →+* ResidueField O) = r.Dbar.comap p) (hn : 1 ≤ n)
     (y : MonoidAlgebra R G) (hy : ∀ g : G, D.tr (MonoidAlgebra.single g 1 * y) = 0) : D.Kills y := by
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   set e : ResidueField O →+* ResidueField R := ResidueField.map (algebraMap O R) with he_def
   have hbij : Function.Bijective e := resMap_bijective O R
-  haveI : Finite (ResidueField R) := Finite.of_surjective e hbij.2
-  haveI : CharP (ResidueField R) l := charP_of_injective_ringHom hbij.1 l
+  have : Finite (ResidueField R) := Finite.of_surjective e hbij.2
+  have : CharP (ResidueField R) l := charP_of_injective_ringHom hbij.1 l
   let χ : Fin n → G →* (ResidueField R)ˣ := fun i => pushCh e ((r.chib i).comp p)
   have hres : residue R = e.comp (res O R : R →+* ResidueField O) := by
     ext x
@@ -137,7 +137,7 @@ private theorem oo_kills {l : ℕ} [Fact l.Prime] {F : GFrame l} {O : Type} [Com
     induction x using MonoidAlgebra.induction_linear with
     | zero => simp
     | add a b ha hb =>
-      simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.coe_toRingHom, map_add (f := _)] at ha hb ⊢
+      simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.coe_toRingHom, map_add (f := _)] at ha hb ⊢
       rw [ha, hb]
     | single g b =>
       simp [GDet.repAlg, MonoidAlgebra.lift_single, diagRep, GDet.diagRep, χ, pushCh,
@@ -206,8 +206,8 @@ end
 theorem UpperTheory.V.Pa.Core.ooDet :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T : TWGrp G0) (Λ : Lim T) (n : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (A : TWAut u J Unit D T) (W : RRObj Λ A) [IsCO O (W.R ⧸ ii W)], 1 ≤ n → ∃ D' : GDet n (W.R ⧸ ii W) Λ.G.G₀, D'.comap (πo0 Λ) = W.t.D.map (Ideal.Quotient.mk (ii W)) ∧ D'.IsCont (maximalIdeal (W.R ⧸ ii W)) := by
   intro l _ L G0 T Λ n O _ _ _ _ _ r B _ _ _ u J D A W _ hn
-  haveI : Finite (ResidueField O) := IsCoef.finite (l := l)
-  haveI : CharP (ResidueField O) l := IsCoef.char
+  have : Finite (ResidueField O) := IsCoef.finite (l := l)
+  have : CharP (ResidueField O) l := IsCoef.char
   have hdef : IsDef O (r.Dbar.comap (Λ.h.p₀.comp (πo0 Λ)))
       (W.t.D.map ((Ideal.Quotient.mkₐ O (ii W) : W.R →ₐ[O] W.R ⧸ ii W) : W.R →+* W.R ⧸ ii W)) :=
     oo_def_map (Ideal.Quotient.mkₐ O (ii W)) ⟨W.t.cont, W.t.red⟩

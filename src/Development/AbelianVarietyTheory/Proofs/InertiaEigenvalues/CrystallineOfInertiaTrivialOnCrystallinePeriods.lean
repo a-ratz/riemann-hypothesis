@@ -340,7 +340,7 @@ theorem isCrys_of_span_generic {G G' : Type} [Group G] [Group G'] {Qp K₀ K K�
     {V : Type} [AddCommGroup V] [Module LL V] [Module Qp V] [IsScalarTower Qp LL V] [FiniteDimensional LL V]
     (ρ : Representation LL G V) (ρ' : Representation LL G' V) (hc : IsCrys PD' ρ')
     (hsp : ∀ m ∈ DcrisK₀ PD' ρ', m ∈ Submodule.span U (DcrisK₀ PD ρ : Set (B ⊗[Qp] V))) : IsCrys PD ρ := by
-  haveI : FiniteDimensional Qp V := Module.Finite.trans LL V
+  have : FiniteDimensional Qp V := Module.Finite.trans LL V
   obtain ⟨h1, h2⟩ := finite_le₀ PD hf ρ
   obtain ⟨h3, -⟩ := finite_le₀ PD' hf' ρ'
   rw [isCrys_iff_finrank] at hc ⊢
@@ -354,8 +354,8 @@ theorem isCrys_of_span_generic {G G' : Type} [Group G] [Group G'] {Qp K₀ K K�
 theorem isCrys_of_dcris_le_span : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), IsStd P AI → ∀ (LL : FinExt l) (T : QLat LL) (F K'' : FinExt l), IsCrys (P.PD K'') (T.ρ.comp (inclG K'')) → (∀ m ∈ DcrisK₀ (P.PD K'') (T.ρ.comp (inclG K'')), m ∈ Submodule.span ↥(MaximalUnramifiedExtension l) (↑(DcrisK₀ (P.PD F) (T.ρ.comp (inclG F))) : Set (P.R.B ⊗[ℚ_[l]] T.V))) → IsCrys (P.PD F) (T.ρ.comp (inclG F)) := by
   intro l _ P AI hs LL T F K'' hc hsp
   obtain ⟨Ti⟩ := hs
-  haveI := LL.2
-  haveI : IsDomain P.R.B := isDomain_of_tied Ti F
+  have := LL.2
+  have : IsDomain P.R.B := isDomain_of_tied Ti F
   exact isCrys_of_span_generic (U := ↥(MaximalUnramifiedExtension l)) (P.PD F) (P.PD K'') (GlobalTheory.Per.TiedRestrict.fracInv_of_tied Ti F)
     (GlobalTheory.Per.TiedRestrict.fracInv_of_tied Ti K'') (fun c => ⟨⟨c.1, c.2.2⟩, rfl⟩) _ _ hc hsp
 
@@ -421,7 +421,7 @@ theorem speiser_descent_span :
   intro G L Ω M _ _ _ _ _ _ _ _ b a σ W hb ha1 _hσ1 hσmul hσsmul hfin hstab hker m hm
   classical
   let S : Set (L →+* Ω) := Set.range a
-  haveI : Fintype S := hfin.fintype
+  have : Fintype S := hfin.fintype
   have hrep : ∀ h : S, ∃ g, a g = h := fun h => h.2
   choose gs hgs using hrep
   have hleft : ∀ g x c, a x c = b g⁻¹ (a (g * x) c) := by
@@ -472,7 +472,7 @@ theorem speiser_descent_span :
     rw [e1, Fintype.sum_eq_single ⟨a 1, h1S⟩]
     · have hg1 : ∀ c, a (gs ⟨a 1, h1S⟩) c = algebraMap L Ω c := by
         intro c; rw [hgs]; exact ha1 c
-      simp only [δ, if_pos rfl, one_smul]
+      simp only [δ, ite_eq_left rfl, one_smul]
       exact hker _ hg1 m hm
     · intro h hne
       have : (h : L →+* Ω) ≠ a 1 := fun e => hne (Subtype.ext e)
@@ -724,13 +724,13 @@ theorem descend (P : LocPrime l) {LL : FinExt l} (T : QLat LL) (K' F K'' : FinEx
       ∀ w ∈ DcrisK₀ (P.PD K'') (T.ρ.comp (inclG K'')), sigQ P T i w = w) :
     ∀ m ∈ DcrisK₀ (P.PD K'') (T.ρ.comp (inclG K'')),
       m ∈ Submodule.span ↥(MaximalUnramifiedExtension l) (↑(DcrisK₀ (P.PD F) (T.ρ.comp (inclG F))) : Set (P.R.B ⊗[ℚ_[l]] T.V)) := by
-  letI : Algebra ↥(K0 K'') ↥(MaximalUnramifiedExtension l) :=
+  let : Algebra ↥(K0 K'') ↥(MaximalUnramifiedExtension l) :=
     (IntermediateField.inclusion (inf_le_right : K0 K'' ≤ MaximalUnramifiedExtension l)).toRingHom.toAlgebra
-  haveI : IsScalarTower ↥(K0 K'') ↥(MaximalUnramifiedExtension l) (P.R.B ⊗[ℚ_[l]] T.V) :=
+  have : IsScalarTower ↥(K0 K'') ↥(MaximalUnramifiedExtension l) (P.R.B ⊗[ℚ_[l]] T.V) :=
     IsScalarTower.of_algebraMap_smul fun c w => by
       rw [← algebraMap_smul P.R.B c w, ← algebraMap_smul P.R.B (algebraMap ↥(K0 K'') ↥(MaximalUnramifiedExtension l) c) w]
       rfl
-  haveI := (P.PD K'').finK₀
+  have := (P.PD K'').finK₀
   intro m hm
   have key := L_speiser (G := ↥(GK F)) (L := ↥(K0 K'')) (Ω := ↥(MaximalUnramifiedExtension l)) (M := P.R.B ⊗[ℚ_[l]] T.V)
     (fun g c => ⟨(g : GQ l) c, kur_stable _ c.2⟩) (fun g => embeddingRestrictMaxUnramified K'' (g : GQ l))
@@ -786,8 +786,8 @@ namespace GlobalTheory.CrysInertDescent
 theorem main : GlobalTheory.Published.FontaineBcris → ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l) (Pl : LocPrime l) (AI : LocAinf l Pl), IsStd Pl AI → ∀ (K' F : FinExt l), (GK K').Normal → ∀ T : QLat LL, IsCrys (Pl.PD K') (resF T K').ρ → ((∀ g ∈ IK (Formalism.MainNotions.ElementDenominator.qlExt l), (g : GQ l) ∈ GK F → ∀ x ∈ Dcris (Pl.PD K') (resF T K').ρ, actVB (Pl.PD (Formalism.MainNotions.ElementDenominator.qlExt l)) T.ρ g x = x) → IsCrys (Pl.PD F) (resF T F).ρ) ∧ ∀ g ∈ IK (Formalism.MainNotions.ElementDenominator.qlExt l), ∀ p : Polynomial ↥LL.1, (∀ x ∈ Dcris (Pl.PD K') (resF T K').ρ, Polynomial.aeval (actVB (Pl.PD (Formalism.MainNotions.ElementDenominator.qlExt l)) T.ρ g : Module.End ↥LL.1 (T.V ⊗[ℚ_[l]] Pl.R.B)) p x = 0) → ∀ x ∈ Dcris (Pl.PD F) (resF T F).ρ, Polynomial.aeval (actVB (Pl.PD (Formalism.MainNotions.ElementDenominator.qlExt l)) T.ρ g : Module.End ↥LL.1 (T.V ⊗[ℚ_[l]] Pl.R.B)) p x = 0 := by
   intro _ l _ LL Pl AI hstd K' F hN T hc
   have hT : LocTied l Pl AI := hstd.some
-  haveI := K'.2
-  haveI := F.2
+  have := K'.2
+  have := F.2
   obtain ⟨K'', hK''⟩ : ∃ K'' : FinExt l, K''.1 = K'.1 ⊔ F.1 := ⟨⟨_, inferInstance⟩, rfl⟩
   have hK' : K'.1 ≤ K''.1 := hK'' ▸ le_sup_left
   have hF : F.1 ≤ K''.1 := hK'' ▸ le_sup_right

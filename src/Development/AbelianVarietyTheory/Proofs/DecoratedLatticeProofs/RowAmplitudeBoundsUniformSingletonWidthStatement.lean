@@ -703,7 +703,7 @@ theorem deg_eq_fdegHC (D : D7) (ht : cdScaleTie D) {W : LocW D.R.k D.R.rS}
     · exact ⟨b1, by cases h2 : epsSH D.R b1 <;> simp_all⟩
   have hF := _root_.GlobalTheory.FdegGap.fdeg_gap D.cd D.s.cdScale hsc _ (epsSH D.R) l h hA.1 ht1 hf1 hg hth A.H
     (fun g => A.σ (Q⁻¹ * g * Q)) hDS
-  haveI := hDS.2.1
+  have := hDS.2.1
   obtain ⟨w, hw⟩ := exists_ne (0 : A.H)
   have h2 := GlobalTheory.FormalDegreeDatum.fdeg_of_conj _ (fun g => A.σ (P⁻¹ * g * P))
     (fun g => A.σ (Q⁻¹ * g * Q)) a (fun g => by

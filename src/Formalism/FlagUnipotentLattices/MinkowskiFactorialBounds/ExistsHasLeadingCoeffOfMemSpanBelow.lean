@@ -110,7 +110,7 @@ lemma Xa_succ (F : FlagD H r) (a : Fin r) :
   unfold Formalism.HermitianLatticeCounting.S6.FlagD.Xa
   have hs : {b : Fin r | b.val < a.val + 1} = {b | b.val < a.val} ∪ {a} := by
     ext b
-    simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_singleton_iff, Fin.ext_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_singleton_iff, Fin.ext_iff]
     omega
   rw [hs, Set.image_union, Submodule.span_union, Set.image_singleton]
 
@@ -179,9 +179,9 @@ lemma level_unique (F : FlagD H r) {x : V} {a b : Fin r} {al bl : K} (h : F.HasL
     by_contra hne
     rcases lt_or_gt_of_ne hne with hlt | hlt
     · exact (level_notMem F) h'
-        ((Xa_mono F) (by have := Fin.lt_iff_val_lt_val.1 hlt; omega) ((level_mem F) h))
+        ((Xa_mono F) (by have := Fin.lt_def.1 hlt; omega) ((level_mem F) h))
     · exact (level_notMem F) h
-        ((Xa_mono F) (by have := Fin.lt_iff_val_lt_val.1 hlt; omega) ((level_mem F) h'))
+        ((Xa_mono F) (by have := Fin.lt_def.1 hlt; omega) ((level_mem F) h'))
   subst hab
   refine ⟨rfl, ?_⟩
   by_contra hne
@@ -302,7 +302,7 @@ theorem wedgeMapInLieAlgebra : Formalism.HermitianLatticeCounting.S6.Y1 := by
       · rw [hv b hba, zero_smul]
         exact Submodule.zero_mem _
       · push_neg at hba
-        exact Submodule.smul_mem _ _ ((Xa_mono F) (by have := Fin.lt_iff_val_lt_val.1 hba; omega) hx1)
+        exact Submodule.smul_mem _ _ ((Xa_mono F) (by have := Fin.lt_def.1 hba; omega) hx1)
     · rw [hperp y hy]
       exact Submodule.smul_mem _ _ hxI
   · unfold Formalism.HermitianLatticeCounting.S6.FlagD.DPsi
@@ -310,18 +310,18 @@ theorem wedgeMapInLieAlgebra : Formalism.HermitianLatticeCounting.S6.Y1 := by
     dsimp only
     rw [hYe]
     rcases lt_trichotomy b a with hba | hba | hba
-    · have hba' := Fin.lt_iff_val_lt_val.1 hba
+    · have hba' := Fin.lt_def.1 hba
       have hb1 : b.succ = (⟨b.val + 1, by omega⟩ : Fin r).castSucc := Fin.ext (by simp)
       have h0 : H.B (F.e b.succ) v = 0 := by
         rw [hb1]
         exact hv _ (Fin.le_iff_val_le_val.2 (show b.val + 1 ≤ a.val by omega))
-      rw [h0, if_neg (ne_of_lt hba)]
+      rw [h0, ite_eq_right (ne_of_lt hba)]
       simp
     · subst hba
-      rw [if_pos rfl, mul_comm, ← smul_smul, ← smul_sub]
+      rw [ite_eq_left rfl, mul_comm, ← smul_smul, ← smul_sub]
       exact Submodule.smul_mem _ _ hxa
-    · rw [if_neg (ne_of_gt hba), zero_smul, sub_zero]
-      exact Submodule.smul_mem _ _ ((Xa_mono F) (by have := Fin.lt_iff_val_lt_val.1 hba; omega) hx1)
+    · rw [ite_eq_right (ne_of_gt hba), zero_smul, sub_zero]
+      exact Submodule.smul_mem _ _ ((Xa_mono F) (by have := Fin.lt_def.1 hba; omega) hx1)
 
 theorem lastVectorNotMemSup : Formalism.HermitianLatticeCounting.S6.LastVectorNotMemSup := by
   intro K V _ _ _ _ H r F F' hz

@@ -132,7 +132,7 @@ theorem tw_bij (hA : PositivityTheory.Mix.AdelSt) {ψ : AddChar (AF F) ℂ} (hψ
     · intro l hl g hg
       obtain ⟨T, hT⟩ := h'.adm l hl g hg
       refine ⟨a⁻¹ • T, fun f => ?_⟩
-      rw [LinearMap.comp_smul, LinearMap.smul_apply, hT, ContinuousLinearMap.smul_apply]
+      rw [LinearMap.comp_smul, LinearMap.smul_apply, hT, smul_apply]
     ·
       obtain ⟨Φ, hΦ, h0⟩ := h'.ne
       exact ⟨Φ, hΦ, smul_ne_zero (inv_ne_zero a0) h0⟩

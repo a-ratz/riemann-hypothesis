@@ -64,7 +64,7 @@ namespace GlobalTheory.KSPtUniq
 
 theorem isKS_unique_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X) (V : X.Opens) (U : X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left)), (∀ i, IsTanAtG t (chart U) (v i)) → (∀ w, IsTanAtG t (chart U) w → ∃! cf : Fin n → Γ(X, U.1), IsCombAtG t (chart U) v cf w) → ∀ (K : Type) [Field K] [CharZero K] (φ : Γ(X, U.1) →+* K) (P₀ : PolAV (Sp K)) (m : P₀.A.left ⟶ t.G.left), ⊤ ≤ (spMap φ ≫ chart U) ⁻¹ᵁ V → IsGrpPullback P₀.A t.G (spMap φ ≫ chart U) m → LBIso P₀.L (t.PP.L.pull m) → ∀ (D : Γ(X, U.1) → Γ(X, U.1)) (Θ Θ' : Matrix (Fin n) (Fin n) Γ(X, U.1)), IsKS t V U v D Θ → IsKS t V U v D Θ' → φ.mapMatrix Θ = φ.mapMatrix Θ' := by
   intro E _ _ _ H X t V U n v hv hb K _ _ φ P₀ m hV hpb hiso D Θ Θ' hK hK'
-  haveI : IsCommMonObj P₀.A := P₀.isAb.comm
+  have : IsCommMonObj P₀.A := P₀.isAb.comm
   set x0 : Sp K ⟶ X := spMap φ ≫ chart U with hx0def
   have hUx : ⊤ ≤ x0 ⁻¹ᵁ U.1 := fun o _ => by
     show (chart U) ((spMap φ) o) ∈ (U.1 : Set X)

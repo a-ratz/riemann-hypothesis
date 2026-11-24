@@ -67,7 +67,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.fibreNe :
     ∀ {T K M : Type*} [CommRing T] [Field K] [Algebra T K] [AddCommGroup M] [Module T M] [Module.Finite T M] [FaithfulSMul T M], Nontrivial (K ⊗[T] M) := by
   intro T K M _ _ _ _ _ _ _
   classical
-  haveI hp : (RingHom.ker (algebraMap T K)).IsPrime := RingHom.ker_isPrime _
+  have hp : (RingHom.ker (algebraMap T K)).IsPrime := RingHom.ker_isPrime _
   set p : Ideal T := RingHom.ker (algebraMap T K) with hpdef
   let P : PrimeSpectrum T := ⟨p, hp⟩
   have hP : P ∈ Module.support T M := by
@@ -79,11 +79,11 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.fibreNe :
     intro x hx
     have hx' : algebraMap T K x ≠ 0 := fun h => hx ((RingHom.mem_ker).mpr h)
     exact (isUnit_iff_ne_zero.mpr hx'))
-  letI : Algebra p.ResidueField K := f.toAlgebra
-  haveI : IsScalarTower T p.ResidueField K := IsScalarTower.of_algebraMap_eq fun r =>
+  let : Algebra p.ResidueField K := f.toAlgebra
+  have : IsScalarTower T p.ResidueField K := IsScalarTower.of_algebraMap_eq fun r =>
     (Ideal.ResidueField.lift_algebraMap p (algebraMap T K) le_rfl _ r).symm
   let e := AlgebraTensorModule.cancelBaseChange T p.ResidueField K K M
-  haveI : Nontrivial (K ⊗[p.ResidueField] (p.ResidueField ⊗[T] M)) :=
+  have : Nontrivial (K ⊗[p.ResidueField] (p.ResidueField ⊗[T] M)) :=
     TensorProduct.nontrivial_of_linearMap_injective_of_flat_right p.ResidueField
       K (p.ResidueField ⊗[T] M) (Algebra.linearMap p.ResidueField K)
       (algebraMap p.ResidueField K).injective
@@ -102,9 +102,9 @@ open UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite TensorProduct
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.pointEig :
     ∀ {Λ T K M : Type*} [CommRing Λ] [CommRing T] [Algebra Λ T] [Field K] [Algebra Λ K] [AddCommGroup M] [Module Λ M] [Module T M] [IsScalarTower Λ T M] [Module.Finite Λ M] [FaithfulSMul T M] (x : T →ₐ[Λ] K), ∃ y : K ⊗[Λ] M, y ≠ 0 ∧ ∀ t : T, (Algebra.lsmul Λ Λ M t).baseChange K y = x t • y := by
   intro Λ T K M _ _ _ _ _ _ _ _ _ _ _ x
-  letI : Algebra T K := x.toRingHom.toAlgebra
-  haveI : IsScalarTower Λ T K := IsScalarTower.of_algebraMap_eq fun r => (x.commutes r).symm
-  haveI : Module.Finite T M := Module.Finite.of_restrictScalars_finite Λ T M
+  let : Algebra T K := x.toRingHom.toAlgebra
+  have : IsScalarTower Λ T K := IsScalarTower.of_algebraMap_eq fun r => (x.commutes r).symm
+  have : Module.Finite T M := Module.Finite.of_restrictScalars_finite Λ T M
   have hne : Nontrivial (K ⊗[T] M) := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.fibreNe
   let φ : K ⊗[Λ] M →ₗ[K] K ⊗[T] M := TensorProduct.AlgebraTensorModule.lift
     ((LinearMap.restrictScalarsₗ Λ T M (K ⊗[T] M) K).comp

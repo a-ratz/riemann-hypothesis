@@ -105,7 +105,7 @@ theorem quot_meas_not_mem_UH_eq_zero {μG μS ν : Measure (Mt k r)} (hG : IsHaa
       · rw [Set.indicator_of_mem hx]; exact hlow x hx
       · rw [Set.indicator_of_notMem hx]; exact zero_le)
   rw [← hint] at hge
-  rcases mul_eq_zero.mp (le_zero_iff.mp hge) with h | h
+  rcases mul_eq_zero.mp (nonpos_iff_eq_zero.mp hge) with h | h
   · exact absurd h hmass
   · exact h
 
@@ -187,7 +187,7 @@ theorem smulRight_smul_smul {E F : Type*} [NormedAddCommGroup E] [InnerProductSp
     [NormedSpace ℂ F] (a b : ℂ) (u : E) (v : F) :
     (innerSL ℂ (a • u)).smulRight (b • v) = (star a * b) • (innerSL ℂ u).smulRight v := by
   ext x
-  rw [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.smulRight_apply,
+  rw [ContinuousLinearMap.smulRight_apply, smul_apply, ContinuousLinearMap.smulRight_apply,
     smul_smul, smul_smul]
   congr 1
   have h1 : (innerSL ℂ (a • u)) x = star a * (innerSL ℂ u) x := by
@@ -214,7 +214,7 @@ theorem amplitude_transport : Formalism.MainNotions.S.Pv.LemmaJ.AmpTransport := 
     simp at h1
     exact hG.2.1 h1
   have hSc : μS {x | Matrix.of x ∉ UH (Hpk D.R.k D.R.rS)} = 0 := by
-    rw [hμS, Measure.smul_apply, smul_eq_mul,
+    rw [hμS, smul_apply, smul_eq_mul,
       show (fun x : Mt D.R.k D.R.rS => fun i j => (n'⁻¹ * Matrix.of x * n') i j) = ⇑(conjE n' ha) from rfl,
       MeasurableEquiv.map_apply]
     refine mul_eq_zero_of_right _ (measure_mono_null ?_ hμ₀)
@@ -240,7 +240,7 @@ theorem amplitude_transport : Formalism.MainNotions.S.Pv.LemmaJ.AmpTransport := 
     intro g hg
     have h2 := hA.2.2.1.2.2.1 1 (h1W W.z) n hn (A.σ g A.v0)
       (Formalism.MainNotions.LowestKTypeMultiplicity.smooth_orbit hσ hv0 hg)
-    rw [one_mul, hπ1, ContinuousLinearMap.one_apply] at h2
+    rw [one_mul, hπ1, one_apply_eq_self] at h2
     simp only [LocS.Φ]
     rw [hσ.1.2 n hnU g hg, ContinuousLinearMap.comp_apply]
     exact h2
@@ -248,7 +248,7 @@ theorem amplitude_transport : Formalism.MainNotions.S.Pv.LemmaJ.AmpTransport := 
     intro g hg
     have h2 := hA.2.2.2.1.2.2.1 1 (h1W W.z') n' hn' (A.σ g A.v0)
       (Formalism.MainNotions.LowestKTypeMultiplicity.smooth_orbit hσ hv0 hg)
-    rw [one_mul, hπ'1, ContinuousLinearMap.one_apply] at h2
+    rw [one_mul, hπ'1, one_apply_eq_self] at h2
     simp only [LocS.Φ']
     rw [hσ.1.2 n' hn'U g hg, ContinuousLinearMap.comp_apply]
     exact h2

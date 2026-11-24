@@ -98,7 +98,7 @@ theorem abv_p : abv p (p : KK p) = (p : ℝ)⁻¹ := by
   have h : (p : KK p) = algebraMap (WW p) (KK p) (p : WW p) := by simp
   rw [h, abv, adicAbv_of_algebraMap]
   have h2 := intValuation_singleton (IsDiscreteValuationRing.maximalIdeal (WW p))
-    (WittVector.p_nonzero p _) (maxIdeal_eq p)
+    (WittVector.p_ne_zero p _) (maxIdeal_eq p)
   simp only [intAdicAbv, intAdicAbvDef, AbsoluteValue.coe_mk, MulHom.coe_mk, h2]
   rw [toNNReal_exp]
   simp

@@ -179,7 +179,7 @@ theorem eq_of_shifted_residues_eq :
   have hrange : Set.range b = Set.range a := by
     have := congrArg (fun s : Finset ℕ => (s : Set ℕ)) himg
     simpa using this.symm
-  have hab : b = a := (StrictAnti.range_inj hb ha).1 hrange
+  have hab : b = a := (StrictAnti.range_inj_of_wellFoundedGT hb ha).1 hrange
   funext i
   have e : b i = a i := congrFun hab i
   have e' : μ i + (N - 1 - i.val) = ν i + (N - 1 - i.val) := e
@@ -328,8 +328,8 @@ end GlobalTheory.AlcMult
 open GlobalTheory.AlcMult in
 theorem GlobalTheory.Alc.multiset_eq_of_series_eq : ∀ (p : ℕ), p.Prime → ∀ (k : Type) [Field k] [CharP k p] (N : ℕ) (l l' : Fin N → ℕ), (∏ i, (1 - PowerSeries.C ((l i : k) + 1) * PowerSeries.X)) * ∏ i, (1 - PowerSeries.C (l' i : k) * PowerSeries.X) = (∏ i, (1 - PowerSeries.C ((l' i : k) + 1) * PowerSeries.X)) * ∏ i, (1 - PowerSeries.C (l i : k) * PowerSeries.X) → ∀ x : ZMod p, (Finset.univ.filter fun i => (l i : ZMod p) = x).card = (Finset.univ.filter fun i => (l' i : ZMod p) = x).card := by
   intro p hp k _ _ N l l' H
-  haveI : Fact p.Prime := ⟨hp⟩
-  letI : DecidableEq k := Classical.decEq k
+  have : Fact p.Prime := ⟨hp⟩
+  let : DecidableEq k := Classical.decEq k
   have HP : linProd (fun i => (l i : k) + 1) * linProd (fun i => (l' i : k)) =
       linProd (fun i => (l' i : k) + 1) * linProd (fun i => (l i : k)) := by
     apply Polynomial.coe_injective
@@ -432,7 +432,7 @@ theorem hcTelescope (R : Type) [CommRing R] (N : ℕ) (μ : Fin N → R) :
     have hnot : i ∉ Finset.univ.filter (fun j : Fin N => N - d ≤ j.val) := by
       simp [hi]; omega
     have hgt : Finset.univ.filter (fun j : Fin N => i < j) = Finset.univ.filter (fun j : Fin N => N - d ≤ j.val) := by
-      ext j; simp [hi, Fin.lt_iff_val_lt_val]; omega
+      ext j; simp [hi, Fin.lt_def]; omega
     have h := hcRowSeries_eq R N μ i
     rw [hgt] at h
     have IH := ih (by omega)

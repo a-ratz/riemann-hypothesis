@@ -65,7 +65,7 @@ theorem digitSum_le (l N : ℕ) (hl : 1 < l) :
       have := Nat.digits_lt_base hl hd
       omega
     calc (Nat.digits l N).sum ≤ (Nat.digits l N).length * (l - 1) := by
-          simpa [smul_eq_mul] using List.sum_le_card_nsmul _ _ hd
+          simpa [smul_eq_mul] using List.sum_le_length_nsmul _ _ hd
       _ = (Nat.log l N + 1) * (l - 1) := by rw [hlen]
 
 theorem legendre_real (l : ℕ) (hl : l.Prime) (N : ℕ) :

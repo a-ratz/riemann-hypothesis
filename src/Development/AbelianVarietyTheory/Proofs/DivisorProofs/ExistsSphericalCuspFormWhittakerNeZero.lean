@@ -119,7 +119,7 @@ theorem gl_mem_int_cofinite (E : Type) [Field E] [NumberField E] (a : ℕ) (k : 
   rw [Filter.eventually_cofinite] at h
   refine h.subset ?_
   intro w hw
-  simp only [Set.mem_setOf_eq] at hw ⊢
+  simp only [Set.mem_ofPred_eq] at hw ⊢
   intro hg
   apply hw
   have key : ∀ M : Matrix (Fin a) (Fin a) (Af E), (∀ i j, (M i j) w ∈ w.adicCompletionIntegers E) →

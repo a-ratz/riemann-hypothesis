@@ -115,7 +115,7 @@ theorem exists_frob_eq_X_pow_mul {F : K⟦X⟧} (hF : F ∈ S O K e) {s : ℕ} (
     · rw [coeff_frob]
       split_ifs with h'
       · obtain ⟨G, rfl⟩ := hd
-        rw [coeff_X_pow_mul', if_neg]
+        rw [coeff_X_pow_mul', ite_eq_right]
         intro h''
         have : s * l ≤ n / l * l := Nat.mul_le_mul_right l h''
         have := Nat.div_mul_le_self n l

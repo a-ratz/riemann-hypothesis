@@ -107,7 +107,7 @@ theorem liftSemi_prim_baseChange_bijective {R A : Type} (R' : Type) [CommRing R]
     have hz : (cobOne R A).lTensor R' x = 0 := by
       have h0 : cobOne R' (R' ⊗[R] A) x = 0 := hx
       rw [cobOne_baseChange, LinearMap.comp_apply, LinearEquiv.coe_coe,
-        LinearEquiv.map_eq_zero_iff, LinearMap.baseChange_eq_ltensor] at h0
+        LinearEquiv.map_eq_zero_iff, LinearMap.baseChange_eq_lTensor] at h0
       exact h0
     obtain ⟨y, hy⟩ := (hex x).1 hz
     exact ⟨y, Subtype.ext ((hsub y).trans hy)⟩
@@ -615,7 +615,7 @@ namespace PDiv
 theorem SemiBialgHom.map_mulBy {R R' A A' : Type} [CommRing R] [CommRing R'] {σ : R →+* R'}
     [CommRing A] [Bialgebra R A] [CommRing A'] [Bialgebra R' A'] [IsCocomm R A] [IsCocomm R' A']
     (f : SemiBialgHom σ A A') (k : ℕ) (a : A) : f (mulBy R A k a) = mulBy R' A' k (f a) := by
-  letI : Algebra R A' := ((algebraMap R' A').comp σ).toAlgebra
+  let : Algebra R A' := ((algebraMap R' A').comp σ).toAlgebra
   have h := map_pow (f.pts A' fun _ => rfl) (toConv (AlgHom.id R' A')) k
   have h1 := DFunLike.congr_fun (congrArg ofConv h) a
   have h2 := DFunLike.congr_fun

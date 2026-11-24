@@ -424,8 +424,8 @@ theorem chart_periods {Xo : Moduli D l} {σ : KA l →+* ℂ} {n : ℕ} (C : Bdr
     have hD : IsDerivAt0 (fun x => (r z x).left) (W a z) (spMap (dualMap (C.ψ z)) ≫ (C.M.pt (x a)).left) := by
       rw [(hl2 z hz).2.2, hW z hz]
       exact Marking.isDerivAt0_frame e (hsubB hz) (x a)
-    haveI := C.j_open
-    haveI : IsOpenImmersion C.m₁.φ := MorphismProperty.of_isPullback C.m₁.cart.1.flip ‹IsOpenImmersion C.j›
+    have := C.j_open
+    have : IsOpenImmersion C.m₁.φ := MorphismProperty.of_isPullback C.m₁.cart.1.flip ‹IsOpenImmersion C.j›
     obtain ⟨v', hv1, hv2⟩ := Marking.deriv_of_open C.m₁.φ (Wt z) (W a z) _ (by
       have : (fun x => Wt z x ≫ C.m₁.φ) = fun x => (r z x).left := funext fun x => (hWz x).2.2
       rw [this]; exact hD)
@@ -474,13 +474,13 @@ theorem exists_chart {Xo : Moduli D l} {c : Coeff l} (Y : Model Xo c (algebraMap
   obtain ⟨mk, -⟩ := GlobalTheory.ObjMaps.exists_sab_comp Y.m0.toSABMap mU
 
   let p' : (Fin n → ℂ) → (Sp ℂ ⟶ X') := fun u => if u ∈ Metric.ball (0 : Fin n → ℂ) 1 then p u else p 0
-  have hp'e : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, p' u = p u := fun u hu => if_pos hu
+  have hp'e : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, p' u = p u := fun u hu => ite_eq_left hu
   have hp' : IsHolTo (Metric.ball (0 : Fin n → ℂ) 1) p' := GlobalTheory.LocLift.isHolTo_congr hp hp'e
   have hs' : ∀ u, (p' u ≫ jx) ≫ Y.s = spMap τ ≫ spMap (algebraMap (𝓞 c.F) c.F) := fun u => by
     have : p' u ≫ jx ≫ Y.s = spMap (τ.comp (algebraMap (𝓞 c.F) c.F)) := by
       by_cases hu : u ∈ Metric.ball (0 : Fin n → ℂ) 1
       · rw [hp'e u hu]; exact hs u hu
-      · simp only [p', if_neg hu]; simpa [h0] using hs 0 h0
+      · simp only [p', ite_eq_right hu]; simpa [h0] using hs 0 h0
     rw [Category.assoc, this]
     simp [spMap]
   let q : (Fin n → ℂ) → (Sp ℂ ⟶ pullback Y.s (spMap (algebraMap (𝓞 c.F) c.F))) :=
@@ -778,7 +778,7 @@ theorem model_periods {Xo : Moduli D l} {c : Coeff l} {Y : Model Xo c (algebraMa
         rw [hpt u (hsub hu)]
         exact hc _ (FramePeriods.smul_mem_ball' hρ hρ' (hsub hu))) ⟨_, hint⟩
     have h2 := (hw1 a).smul h1 st
-    haveI := 𝔐.t.act.hom t
+    have := 𝔐.t.act.hom t
     have h3 := lieValAt_end (𝔐.act t) (hw1 a)
     have h4 : 𝔐.ρ t (b a) = 𝔐.emb s t • b a := sub_eq_zero.1 ((Submodule.mem_iInf _).1 hs t)
     have h5 : genMap 𝔐.ξ ⟨_, h1⟩ st = 𝔐.emb s t := hst
@@ -813,8 +813,8 @@ theorem model_periods {Xo : Moduli D l} {c : Coeff l} {Y : Model Xo c (algebraMa
         rw [h2, (hall 0 h0).1]
       · obtain ⟨δ, hδ⟩ : ∃ δ : c.F →+* DualNumber ℂ, spMap δ = v' ≫ κ ≫ pullback.snd _ _ :=
           ⟨(Spec.preimage (v' ≫ κ ≫ pullback.snd _ _)).hom, Spec.map_preimage _⟩
-        haveI : FiniteDimensional ℚ c.F := c.fin
-        haveI : NumberField c.F := ⟨⟩
+        have : FiniteDimensional ℚ c.F := c.fin
+        have : NumberField c.F := ⟨⟩
         have h4 : C.pt 0 = spMap (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom ≫ v' := hv'.1.symm
         simp only [Category.assoc, h4, ← hδ]
         conv_lhs => rw [hom_dual_const δ]
@@ -960,7 +960,7 @@ theorem exists_family {n : ℕ} (Rb : AnLogRes (mCoordIdeal M.x) ⊤ n) {Z : Set
   have hex : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, ∃ z : Sp ℂ ⟶ 𝔐.X, genPt 𝔐.ξ ⤳ centre z ∧
       CoordsAt 𝔐.ξ M.x z (Rb.lift x ((Rb.A.chart j).symm (Rb.A.chart j x + (r : ℂ) • u))) := fun u hu =>
     (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie _).1 (Rb.mem x _ (hm u hu).2.1)
-  haveI : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨(hex 0 (by simp)).choose⟩
+  have : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨(hex 0 (by simp)).choose⟩
   choose! p hp₀ hp using hex
   refine ⟨j, r, p, hr, hj, differentiableOn_pi.2 fun q u hu => ?_, fun u hu => ⟨(hm u hu).2.2, hp u hu, ?_⟩⟩
   · have h1 := (Rb.holo x q j _ ⟨(hm u hu).1, (hm u hu).2.1⟩).differentiableAt
@@ -983,7 +983,7 @@ theorem to_manifold {n : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas n
   have h1 : AnalyticAt ℂ (fun t => r⁻¹ • (A.chart j ((A.chart k).symm t) - A.chart j x)) t := by
     have := ((A.holo k j t ⟨ht.1, ht.2.1⟩).sub (analyticAt_const (v := A.chart j x))).const_smul (c := r⁻¹)
     exact this
-  exact (GlobalTheory.SCV.analyticOnNhd_of_differentiableOn hB hf _ ht.2.2).comp_of_eq' h1 rfl
+  exact (GlobalTheory.SCV.analyticOnNhd_of_differentiableOn hB hf _ ht.2.2).fun_comp_of_eq h1 rfl
 
 end PositivityTheory.Xgp.c_bm_exists_period
 end -- clump:auto

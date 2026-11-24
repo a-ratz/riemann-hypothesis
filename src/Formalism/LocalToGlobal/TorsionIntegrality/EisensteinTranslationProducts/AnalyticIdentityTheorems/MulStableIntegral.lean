@@ -157,8 +157,8 @@ theorem det_mulEnd (L : PeriodPair) (α : ℂ) (h : MulStable L α) :
 
 theorem card_quot (L : PeriodPair) (α : ℂ) (hα : α ≠ 0) (h : MulStable L α) :
     ((Nat.card (L.lattice ⧸ LinearMap.range (mulEnd L α h)) : ℕ) : ℝ) = Complex.normSq α := by
-  haveI := Module.Free.of_basis L.latticeBasis
-  haveI := Module.Finite.of_basis L.latticeBasis
+  have := Module.Free.of_basis L.latticeBasis
+  have := Module.Finite.of_basis L.latticeBasis
   have key : (LinearMap.det (mulEnd L α h)).natAbs =
       Nat.card (L.lattice ⧸ LinearMap.range (mulEnd L α h)) := by
     rw [← Submodule.natAbs_det_equiv (LinearMap.range (mulEnd L α h))
@@ -198,7 +198,7 @@ theorem kernel_reps_card : KerRepsCard := by
   unfold KerRepsCard
   intro L α S hα h hS
   obtain ⟨h1, h2, h3⟩ := hS
-  haveI : Finite (L.lattice ⧸ LinearMap.range (mulEnd L α h)) := by
+  have : Finite (L.lattice ⧸ LinearMap.range (mulEnd L α h)) := by
     apply Nat.finite_of_card_ne_zero
     intro h0
     have hc := card_quot L α hα h
@@ -209,7 +209,7 @@ theorem kernel_reps_card : KerRepsCard := by
     fun q => Quotient.out_eq' q
   have hdiv : ∀ u : ℂ, α * (u / α) = u := fun u => by field_simp
   classical
-  haveI := Fintype.ofFinite (L.lattice ⧸ LinearMap.range (mulEnd L α h))
+  have := Fintype.ofFinite (L.lattice ⧸ LinearMap.range (mulEnd L α h))
   have hφ0 : ∀ P : S, (Submodule.Quotient.mk (⟨α * P, (h1 P P.2).1⟩ : L.lattice) :
       L.lattice ⧸ LinearMap.range (mulEnd L α h)) ≠ 0 := by
     intro P h0
@@ -263,7 +263,7 @@ theorem kernel_reps_card : KerRepsCard := by
 theorem kernel_reps_exist : KerRepsExist := by
   unfold KerRepsExist
   intro L α hα h
-  haveI : Finite (L.lattice ⧸ LinearMap.range (mulEnd L α h)) := by
+  have : Finite (L.lattice ⧸ LinearMap.range (mulEnd L α h)) := by
     apply Nat.finite_of_card_ne_zero
     intro h0
     have hc := card_quot L α hα h
@@ -274,7 +274,7 @@ theorem kernel_reps_exist : KerRepsExist := by
     fun q => Quotient.out_eq' q
   have hdiv : ∀ u : ℂ, α * (u / α) = u := fun u => by field_simp
   classical
-  haveI := Fintype.ofFinite (L.lattice ⧸ LinearMap.range (mulEnd L α h))
+  have := Fintype.ofFinite (L.lattice ⧸ LinearMap.range (mulEnd L α h))
   refine ⟨(Finset.univ.filter (fun q : L.lattice ⧸ LinearMap.range (mulEnd L α h) => q ≠ 0)).image
     (fun q => ((Quotient.out q : L.lattice) : ℂ) / α), ?_⟩
   unfold IsKerReps

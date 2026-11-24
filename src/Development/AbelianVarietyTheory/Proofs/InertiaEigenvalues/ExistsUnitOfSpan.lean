@@ -61,8 +61,8 @@ theorem exists_unit_of_span {k F R : Type} [Field k] [Infinite k] [Field F] [Com
     [Module k R] [Module.Finite F R] (hk : ∀ (c : k) (x : R), ∃ r : R, c • x = r * x)
     (U : Submodule k R) (hU : Submodule.span F (U : Set R) = ⊤) : ∃ d ∈ U, IsUnit d := by
   classical
-  haveI : IsArtinianRing R := IsArtinianRing.of_finite F R
-  haveI : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
+  have : IsArtinianRing R := IsArtinianRing.of_finite F R
+  have : Fintype (MaximalSpectrum R) := Fintype.ofFinite _
   let S : MaximalSpectrum R → Submodule k U := fun m =>
     { carrier := {x | (x : R) ∈ m.asIdeal}
       add_mem' := fun ha hb => m.asIdeal.add_mem ha hb
@@ -126,7 +126,7 @@ def twInv (χ : G → LL) : Submodule K (BdR ⊗[Qp] LL) where
 theorem finrank_twInv [FiniteDimensional Qp LL] (ν : Representation LL G (Fin 1 → LL)) (χ : G → LL)
     (hν : ∀ g x, ν g x = χ g • x) (h : finrank LL ↥(DdR PD ν) = finrank Qp K * finrank LL (Fin 1 → LL)) :
     finrank K ↥(twInv PD χ) = finrank Qp LL := by
-  haveI := PD.finK
+  have := PD.finK
   let e : (Fin 1 → LL) ⊗[Qp] BdR ≃ₗ[Qp] BdR ⊗[Qp] LL :=
     ((LinearEquiv.funUnique (Fin 1) Qp LL).rTensor BdR).trans (TensorProduct.comm Qp LL BdR)
   have he : ∀ g x, e (actVdR PD ν g x) = tw PD χ g (e x) := by
@@ -151,10 +151,10 @@ theorem finrank_twInv [FiniteDimensional Qp LL] (ν : Representation LL G (Fin 1
 
 theorem exists_unit [Infinite Qp] [FiniteDimensional Qp LL] (hB : IsField BdR) (χ : G → LL)
     (h : finrank K ↥(twInv PD χ) = finrank Qp LL) : ∃ d ∈ twInv PD χ, IsUnit d := by
-  letI : Field BdR := hB.toField
-  haveI : Infinite K := Infinite.of_injective _ (algebraMap Qp K).injective
+  let : Field BdR := hB.toField
+  have : Infinite K := Infinite.of_injective _ (algebraMap Qp K).injective
   have hpos : 0 < finrank Qp LL := finrank_pos
-  haveI : Module.Finite K ↥(twInv PD χ) := Module.finite_of_finrank_pos (h ▸ hpos)
+  have : Module.Finite K ↥(twInv PD χ) := Module.finite_of_finrank_pos (h ▸ hpos)
   refine exists_unit_of_span (F := BdR) (fun c x => ⟨algebraMap K _ c, Algebra.smul_def c x⟩) _ ?_
   let v := Module.finBasisOfFinrankEq K _ h
   have h1 : LinearIndependent K fun i => (v i : BdR ⊗[Qp] LL) :=
@@ -171,7 +171,7 @@ theorem exists_unit [Infinite Qp] [FiniteDimensional Qp LL] (hB : IsField BdR) (
       rw [map_div₀, div_eq_div_iff h3 hb]
       linear_combination hg g
     exact ⟨c, by rw [hc, div_mul_cancel₀ _ hb]⟩
-  haveI : Nonempty (Fin (finrank Qp LL)) := ⟨⟨0, hpos⟩⟩
+  have : Nonempty (Fin (finrank Qp LL)) := ⟨⟨0, hpos⟩⟩
   rw [eq_top_iff, ← h2.span_eq_top_of_card_eq_finrank (by simp)]
   refine Submodule.span_mono ?_
   rintro _ ⟨i, rfl⟩
@@ -250,7 +250,7 @@ end Generic
 
 theorem isDR_twist_iff : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ ρ' : Representation ↥LL.1 ↥(GK K) V) (ν : Representation ↥LL.1 ↥(GK K) (Fin 1 → ↥LL.1)) (χ : ↥(GK K) → ↥LL.1), (∀ g x, ν g x = χ g • x) → (∀ g x, ρ' g x = χ g • ρ g x) → IsDR (P.PD K) ν → (IsDR (P.PD K) ρ ↔ IsDR (P.PD K) ρ') := by
   intro l _ P AI T K LL V _ _ _ _ _ ρ ρ' ν χ hν hρ h
-  haveI := LL.2
+  have := LL.2
   unfold IsDR
   rw [finrank_DdR_twist (P.PD K) (GlobalTheory.RegularRing.isField_of_tied T) ρ ρ' ν χ hν hρ h]
 

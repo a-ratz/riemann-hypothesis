@@ -105,7 +105,7 @@ theorem mem_thetaLevelChar : f ∈ thetaLevelChar a b N τ ↔ Differentiable �
 theorem eC_ne_zero (x : ℂ) : eC x ≠ 0 := Complex.exp_ne_zero _
 
 theorem eC_nat_mul (N : ℕ) (x : ℂ) : eC (N * x) = eC x ^ N := by
-  unfold eC; rw [← Complex.exp_nat_mul]; congr 1; ring
+  unfold eC; rw [← exp_natCast_mul]; congr 1; ring
 
 omit [Fintype ι] in
 theorem ofRealVec_zero : ofRealVec (0 : ι → ℝ) = 0 := by ext i; simp [ofRealVec]

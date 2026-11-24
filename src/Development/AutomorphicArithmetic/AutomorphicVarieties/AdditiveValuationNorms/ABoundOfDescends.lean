@@ -251,7 +251,7 @@ theorem UpperTheory.V.PropA.detBound :
   have hφ : ∀ x, ‖φ x‖ = ‖x‖ := by
     intro x
     show ‖algebraMap ℚ_[l] (PadicAlgCl l) (x : ℚ_[l])‖ = ‖x‖
-    rw [← PadicInt.padic_norm_e_of_padicInt]
+    rw [← PadicInt.norm_coe]
     exact PadicAlgCl.norm_extends l (x : ℚ_[l])
   obtain ⟨z, hz⟩ := detFactor (PadicAlgCl l) R (S.map φ)
   choose s hs using fun i => ball l u c hc j (z i)
@@ -396,7 +396,7 @@ theorem UpperTheory.V.PropA.step :
     ∀ (l : ℕ) [Fact l.Prime] (X : Type) [AddCommGroup X] [Module ℤ_[l] X] (R : ℕ) (w : Module.End ℤ_[l] X), GenBy l R X → InPow 2 (w - 1) →
       cokLen (w ^ l - 1) ≤ cokLen (w - 1) + R := by
   intro l _ X _ _ R w hG hw
-  haveI : Module.Finite ℤ_[l] X := by
+  have : Module.Finite ℤ_[l] X := by
     obtain ⟨π, hπ⟩ := hG
     exact Module.Finite.of_surjective π hπ
   have h1 := (UpperTheory.V.Base.lenComp ℤ_[l] X (∑ i ∈ Finset.range l, w ^ i) (w - 1)).2
@@ -838,8 +838,8 @@ theorem UpperTheory.V.PropA.torsFin :
   intro l _ D _ _ hfin
   have hl : l.Prime := Fact.out
   obtain ⟨ι, hιinj, hιrange, -⟩ := UpperTheory.V.Kum.zmodToQZ l 1
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  haveI : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl.one_lt⟩
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl.one_lt⟩
   set Q : Set (QZ l) := {q | (l : ℤ_[l]) • q = 0} with hQ
   have hQfin : Q.Finite := by
     have : Q = Set.range ι := by
@@ -1026,8 +1026,8 @@ theorem aBound_of_descends (hP : GlobalTheory.Published.PoitouTateDuality) (hF :
     rw [PadicInt.norm_def]
     push_cast
     rfl
-  · haveI := ht.complex
-    haveI : IsTotallyComplex L₂ := isTotallyComplex_of_algebra L₀ L₂
+  · have := ht.complex
+    have : IsTotallyComplex L₂ := isTotallyComplex_of_algebra L₀ L₂
     rw [h.eq_twLen he h₁]
     refine (twLen_le_growth hX hγ hu e m).trans (add_le_add ?_ le_rfl)
     rw [← h.eq_twLen he (m := jZero l R) h₂, ← shaLen_eq_shaInv D]

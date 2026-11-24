@@ -122,9 +122,9 @@ theorem unip_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (a b
         Subgroup _) : Set (Multiplicative (Matrix (Fin a) (Fin b) (w.adicCompletion E)))) :=
       hK'.preimage ((continuous_blk_one h w).comp continuous_toAdd)
     rw [intMat_eq_intSub]
-    haveI : CompactSpace (intSub a b w) := isCompact_iff_compactSpace.1 (isCompact_intSub a b w)
-    haveI : Finite ((intSub a b w) ⧸ ((K'.subgroupOf (GlobalTheory.LeviFubini.parB h w)).comap (GlobalTheory.LeviFubini.uN h w)).subgroupOf (intSub a b w)) :=
-      Subgroup.quotient_finite_of_isOpen _ (hopen.preimage continuous_subtype_val)
+    have : CompactSpace (intSub a b w) := isCompact_iff_compactSpace.1 (isCompact_intSub a b w)
+    have : Finite ((intSub a b w) ⧸ ((K'.subgroupOf (GlobalTheory.LeviFubini.parB h w)).comap (GlobalTheory.LeviFubini.uN h w)).subgroupOf (intSub a b w)) :=
+      Subgroup.quotient_finite_of_isOpen _ (hopen.preimage continuous_subtypeVal)
     exact Subgroup.index_ne_zero_of_finite
 
 end GlobalTheory.CompanionTheory.UnipLevel

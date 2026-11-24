@@ -55,10 +55,10 @@ namespace GlobalTheory.GaugeGlue
 theorem polishSpace_addCommGroup (G : Type) [AddCommGroup G] [TopologicalSpace G]
     [IsTopologicalAddGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G] :
     PolishSpace G := by
-  letI : UniformSpace G := IsTopologicalAddGroup.rightUniformSpace G
-  haveI : IsUniformAddGroup G := isUniformAddGroup_of_addCommGroup
-  haveI : CompleteSpace G := IsRightUniformAddGroup.completeSpace_of_weaklyLocallyCompactSpace G
-  haveI : (uniformity G).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  let : UniformSpace G := IsTopologicalAddGroup.rightUniformSpace G
+  have : IsUniformAddGroup G := isUniformAddGroup_of_addCommGroup
+  have : CompleteSpace G := IsRightUniformAddGroup.completeSpace_of_weaklyLocallyCompactSpace G
+  have : (uniformity G).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
   infer_instance
 
 section Coord
@@ -87,7 +87,7 @@ include b in
 theorem continuous_map [TopologicalSpace R] [IsTopologicalRing R] [TopologicalSpace R']
     [IsTopologicalRing R'] (φ : R →ₐ[F] R') (hφ : Continuous φ) :
     Continuous (Algebra.TensorProduct.map φ (AlgHom.id F E)) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have h1 : Continuous (Algebra.TensorProduct.basis R b).equivFun :=
     IsModuleTopology.continuous_of_linearMap (Algebra.TensorProduct.basis R b).equivFun.toLinearMap
   have h2 : Continuous (Algebra.TensorProduct.basis R' b).equivFun.symm :=
@@ -193,15 +193,15 @@ end Adele
 theorem adelicTuple_measurableEmbedding : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E], ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (n M : ℕ), MeasurableEmbedding (fun X : (Fin n → Fin M → AF F ⊗[F] E) => (projInf X, fun v : HeightOneSpectrum (𝓞 F) => projV v (projFin X))) ∧ Set.range (fun X : (Fin n → Fin M → AF F ⊗[F] E) => (projInf X, fun v : HeightOneSpectrum (𝓞 F) => projV v (projFin X))) = {Y | ∀ᶠ v : HeightOneSpectrum (𝓞 F) in Filter.cofinite, Y.2 v ∈ latV b v} ∧ Continuous (projInf (F := F) (E := E) (M := M) (n := n)) ∧ ∀ v : HeightOneSpectrum (𝓞 F), Continuous fun X : (Fin n → Fin M → AF F ⊗[F] E) => projV v (projFin X) := by
   intro F E _ _ _ _ _ d b n M
   refine ⟨?_, range_glue b, continuous_projInf b, continuous_projV b⟩
-  haveI := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
-  haveI : PolishSpace (Fin n → Fin M → AF F ⊗[F] E) := polishSpace_addCommGroup _
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (Fv F v ⊗[F] E) := fun v =>
+  have := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum F
+  have : PolishSpace (Fin n → Fin M → AF F ⊗[F] E) := polishSpace_addCommGroup _
+  have : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (Fv F v ⊗[F] E) := fun v =>
     inferInstance
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := fun v =>
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) := fun v =>
     inferInstance
-  haveI : BorelSpace (∀ v : HeightOneSpectrum (𝓞 F), Fin n → Fin M → Fv F v ⊗[F] E) :=
+  have : BorelSpace (∀ v : HeightOneSpectrum (𝓞 F), Fin n → Fin M → Fv F v ⊗[F] E) :=
     Pi.borelSpace
-  haveI : BorelSpace (Fin n → Fin M → Ainf F ⊗[F] E) := inferInstance
+  have : BorelSpace (Fin n → Fin M → Ainf F ⊗[F] E) := inferInstance
   exact ((continuous_projInf b).prodMk (continuous_pi (continuous_projV b))).measurableEmbedding
     (injective_glue b)
 

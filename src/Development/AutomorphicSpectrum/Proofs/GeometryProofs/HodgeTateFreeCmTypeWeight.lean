@@ -857,7 +857,7 @@ theorem exactModLat_hodgeTate : FarguesHodgeTate → ∀ (E : Type) [Field E] [N
   obtain ⟨Dc, hfam, htest⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hodgeTate_family_exists E H D l Xo c O β Y S Ω K J y 𝔐 p hpS hpq o ho
   obtain ⟨hproj, hdiff, κ, hκ, hκs⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.family_proj E H D l Xo c O β Y S Ω K J y 𝔐 p hpS hpq o ho Dc hfam hfree
   obtain ⟨hchar, -, -, -, -, -, hcharts⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hcpt_generic_point E H D l Xo c O β Y S Ω K J y 𝔐 p hpS o ho
-  haveI := hchar
+  have := hchar
   have hPt : PointHT := _root_.GlobalTheory.CompanionTheory.Ar.HT.Fargues.pointHT hF
   have hc : ∀ x, cmConj E (cmConj E x) = x := fun x => by
     simp [cmConj]
@@ -888,9 +888,9 @@ theorem exactModLat_hodgeTate : FarguesHodgeTate → ∀ (E : Type) [Field E] [N
           ∃ z ∈ B, ∑ l, Jc e l * (Dc s).h (Pi.single l 1) e' = (p : Ω) ^ m * z := by
     intro s
     obtain ⟨hN, hI, hFr, -⟩ := hcharts s.1 s.2
-    haveI := hN
-    haveI := hI
-    haveI := hFr
+    have := hN
+    have := hI
+    have := hFr
     obtain ⟨ds, hds1, hds2⟩ := hd s
     obtain ⟨ds', -, hds2'⟩ := hd' s
     let κs : chartRing o (mseg y) s.1 := ⟨κ, hκs s⟩

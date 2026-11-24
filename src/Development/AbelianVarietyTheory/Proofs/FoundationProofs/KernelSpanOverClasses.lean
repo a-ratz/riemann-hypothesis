@@ -199,7 +199,7 @@ theorem nabAtr_hLat_fg (g : Bridge.Gf (Vc D i)) : (nabAtr (labLL D) (lamV D i) (
     obtain ⟨-, -, hfg, hsp, -⟩ := GlobalTheory.Member.latHat_eq_hat_and_gram D (Vc D i)
     obtain ⟨Λ, hΛ, h1, h2, -⟩ := GlobalTheory.AdLat.exists_lattice_latOf D.host.F D.host.E (Vc D i).rank (GlobalTheory.Member.latC (Vc D i)) g.1 hfg hsp
     rw [SetLike.coe_injective ((GlobalTheory.RepsCompare.coe_hLat (Vc D i) g).trans hΛ.symm)]
-    letI : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
+    let : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
     exact { span_eq_top := h2 }
   exact (GlobalTheory.TransLattice.nabDelLattice _ _ _ _ _ fun τ => (GlobalTheory.dualFrLattice_holds D.what₂.LL _ 1 _ (by simp)
     (GlobalTheory.TauLat.tauLatLattice _ _ _ _ (labLL D) τ _ hLat)).1).1.fg

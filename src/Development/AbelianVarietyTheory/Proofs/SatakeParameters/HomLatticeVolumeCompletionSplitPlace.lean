@@ -204,7 +204,7 @@ theorem exists_unit_cols {W : Type} [CommRing W] [IsLocalRing W] {k : ℕ} (G : 
     exact hred c (hG ▸ Submodule.mem_top)
   obtain ⟨b, hbG, hbs, hbli⟩ := exists_linearIndependent (IsLocalRing.ResidueField W) (red '' G)
   let bs := Module.Basis.mk hbli (by rw [Subtype.range_coe, hbs, htop])
-  haveI : Fintype b := Module.Basis.fintypeIndexOfRankLtAleph0 bs (by simp)
+  have : Fintype b := Module.Basis.fintypeIndexOfRankLtAleph0 bs (by simp)
   have hcard : Fintype.card (Fin k) = Fintype.card b := by
     have := Module.finrank_eq_card_basis bs
     simpa using this
@@ -255,7 +255,7 @@ theorem den_of_int (P : HeightOneSpectrum O) {p : ℕ} (ρ : E →+* Qq)
   by_cases e0 : e = 0
   · exact ⟨1, fun h => P.isPrime.ne_top ((Ideal.eq_top_iff_one _).2 h), 0, by simp [e0]⟩
   have hS := P.asIdeal.primeCompl_le_nonZeroDivisors
-  haveI : IsLocalization P.asIdeal.primeCompl (P.valuationSubringAtPrime E) :=
+  have : IsLocalization P.asIdeal.primeCompl (P.valuationSubringAtPrime E) :=
     Localization.subalgebra.isLocalization_ofField E _ hS
   rcases (P.valuationSubringAtPrime E).mem_or_inv_mem e with h | h
   · obtain ⟨⟨r, s⟩, hh⟩ := IsLocalization.surj P.asIdeal.primeCompl (⟨e, h⟩ : P.valuationSubringAtPrime E)
@@ -713,7 +713,7 @@ theorem mem_closure_iff_map_mem_homLat {E : Type} [Field E] [NumberField E] (P :
       exact fun i j => ⟨0, by simp⟩
     have hUS : U ⊆ S := by
       intro d hd
-      simp only [U, Set.mem_iInter, Set.mem_preimage, Set.mem_setOf_eq] at hd
+      simp only [U, Set.mem_iInter, Set.mem_preimage, Set.mem_ofPred_eq] at hd
       choose w hw using hd
       refine (hS d).2 ?_
       have : d.map φ = algebraMap W Qq ((p : W) ^ N) • (Matrix.of w).map (algebraMap W Qq) := by
@@ -902,7 +902,7 @@ theorem surjective_algebraMap_adicCompletion : ∀ {W Qq : Type} [CommRing W] [I
   by_cases ha : Valued.v a ≤ 1
   · obtain ⟨L, hL⟩ := exists_eq_algebraMap_of_valued_le_one hπ hc v ha
     exact ⟨_, hL.symm⟩
-  have ha0 : Valued.v a ≠ 0 := fun h => ha (h ▸ zero_le')
+  have ha0 : Valued.v a ≠ 0 := fun h => ha (h ▸ zero_le)
   set p := algebraMap Qq (v.adicCompletion Qq) (algebraMap W Qq π) with hpdef
   have hp : Valued.v p = exp (-1) := by
     rw [hpdef, GlobalTheory.Idele.valued_algebraMap, valuation_uniformiser hπ v]
@@ -1013,7 +1013,7 @@ theorem completion_ringEquiv_of_dense : ∀ {E : Type} [Field E] [NumberField E]
       (γ := MonoidWithZeroHom.ValueGroup₀.embedding γ.1) (by simp)
     refine ⟨n, fun z hz => hγ ?_⟩
     have hz' := (hS n z).1 hz
-    simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
+    simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
     exact hz'.trans_lt hn
 
 end GlobalTheory.DenseCompl
@@ -1276,7 +1276,7 @@ theorem latAt_lattice {p : ℕ} [Fact p.Prime] (X : Sys p) (v : X.Pl) (j : ℕ) 
     ∃ g : Matrix (Fin ((X.Pj j).m + 1)) (Fin ((X.Pj j).m + 1)) (X.G.P.Qq v), IsUnit g.det ∧
       X.latAt v j L = colSpan (X.G.P.W v) g ∧ len X v j L = -ordP (X.G.P.W v) p g.det := by
   have hS := X.G.P.setting v
-  haveI := hS.frac_alt
+  have := hS.frac_alt
   cases j with
   | zero =>
     have h0 : IsLattice (X.G.P.W v) (X.latAt v 0 L) := hL v
@@ -1328,7 +1328,7 @@ theorem homLat_conj {W Qq : Type} [CommRing W] [Field Qq] [Algebra W Qq] {k k' :
 theorem vol_main : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (X : Sys p) (v : X.Pl) (j : ℕ) (ρ : D.host.E →+* X.G.P.Qq v) (P : HeightOneSpectrum (𝓞 D.host.E)), Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (D.host.AA0 : Submodule (𝓞 D.host.E) D.host.E) = Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (1 : Submodule (𝓞 D.host.E) D.host.E) → (∀ x : 𝓞 D.host.E, ∃ y : X.G.P.W v, ρ x = algebraMap _ _ y ∧ (x ∈ P.asIdeal ↔ (p : X.G.P.W v) ∣ y)) → (∀ (y : X.G.P.W v) (n : ℕ), ∃ (x : 𝓞 D.host.E) (z : X.G.P.W v), ρ x = algebraMap _ _ (y + (p : X.G.P.W v) ^ n * z)) → ∃ φ : GL3Theta.EP D P ≃+* X.G.P.Qq v, (∀ x : D.host.E, φ (algebraMap _ _ x) = ρ x) ∧ ∀ (M : Matrix (Fin ((X.Pj j).m + 1)) (Fin ((X.Pj j).m + 1)) (X.G.P.Qq v)) (M' : Matrix (Fin ((X.Pj (j + 1)).m + 1)) (Fin ((X.Pj (j + 1)).m + 1)) (X.G.P.Qq v)), IsUnit M.det → IsUnit M'.det → ∀ (N : (X.Pj j).Tup → Submodule (𝓞 D.host.E) (Fin ((X.Pj j).m + 1) → D.host.E)) (N' : (X.Pj (j + 1)).Tup → Submodule (𝓞 D.host.E) (Fin ((X.Pj (j + 1)).m + 1) → D.host.E)) (S : Set ((X.Pj j).Tup × (X.Pj (j + 1)).Tup)), (∀ q ∈ S, (X.Pj j).IsLatTup q.1 ∧ (X.Pj (j + 1)).IsLatTup q.2 ∧ TaylorLogMetric.admitted D _ _ (N q.1) (N' q.2) ∧ Submodule.span (X.G.P.W v) ((fun x k => ρ (x k)) '' (N q.1 : Set (Fin ((X.Pj j).m + 1) → D.host.E))) = (X.latAt v j q.1).map ((M.mulVecLin).restrictScalars (X.G.P.W v)) ∧ Submodule.span (X.G.P.W v) ((fun x k => ρ (x k)) '' (N' q.2 : Set (Fin ((X.Pj (j + 1)).m + 1) → D.host.E))) = (X.latAt v (j + 1) q.2).map ((M'.mulVecLin).restrictScalars (X.G.P.W v))) → ∀ q ∈ S, (∀ y, y ∈ GL3Theta.YP D P (N q.1) (N' q.2) ↔ X.ind v j q.1 q.2 (M'⁻¹ * y.map φ * M) = 1) ∧ ∀ q₀ ∈ S, GL3Theta.volP (GL3Theta.YP D P (N q₀.1) (N' q₀.2)) (GL3Theta.YP D P (N q.1) (N' q.2)) = (p : ℝ) ^ ((X.G.P.n' v : ℤ) * (volE X v j q.1 q.2 - volE X v j q₀.1 q₀.2)) := by
   intro D p _ X v j ρ P hA h1 h2
   have hS := X.G.P.setting v
-  haveI := hS.frac_alt
+  have := hS.frac_alt
   obtain ⟨φ, hφ, hop, hnb⟩ := _root_.GlobalTheory.DenseCompl.completion_ringEquiv_of_dense P p hS.p_unif hS.eq_sum_herm_smul_frame_of_inW ρ h1 h2
   refine ⟨φ, hφ, ?_⟩
   intro M M' hM hM' N N' S hSq

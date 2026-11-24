@@ -281,7 +281,7 @@ theorem trace_jm {m n : ℕ} (a : Fin n → Bool) (b : Fin m → Bool) (X Y : Ma
   rw [Finset.sum_comm]
   simp only [jm_eq, Matrix.trace, Matrix.diag, Matrix.diagonal_mul]
   simp only [Matrix.mul_apply, Matrix.diagonal_apply, ite_mul, zero_mul, mul_ite, mul_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true, Finset.mul_sum, Matrix.conjTranspose_apply, RCLike.star_def]
+    Finset.mem_univ, ite_true, Finset.mul_sum, Matrix.conjTranspose_apply, RCLike.star_def]
 
 theorem term_re (b a : Bool) (ξ z y : ℂ) (hξ : ξ.re = 0) :
     2 * (ξ * (((sg a : ℝ) : ℂ) * (conj (cf b a y) * (((sg b : ℝ) : ℂ) * cf b a z)))).re =
@@ -368,7 +368,7 @@ theorem gauss_w_cr {ι : Type} [Fintype ι] {a b : ℕ} (c : ι → ℝ) :
     fun Z => Complex.ofRealCLM.hasFDerivAt.comp Z (hq Z).exp
   refine ⟨fun Z => (hE Z).differentiableAt, fun Z Y => ?_⟩
   rw [(hE Z).fderiv]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_sum',
+  simp only [smul_apply, ContinuousLinearMap.comp_apply, FunLike.coe_sum,
     Finset.sum_apply, smul_eq_mul, Complex.ofRealCLM_apply, innerSL_apply_apply, hP, Pi.smul_apply,
     nsmul_eq_mul]
   have key : ∀ z y : ℂ, z * starRingEnd ℂ y =

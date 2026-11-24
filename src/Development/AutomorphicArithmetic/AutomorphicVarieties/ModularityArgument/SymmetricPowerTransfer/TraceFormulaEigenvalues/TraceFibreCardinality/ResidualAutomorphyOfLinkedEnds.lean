@@ -83,7 +83,7 @@ theorem triv0 : (letI := act B; ∀ z ∈ B.Γ₀, ∀ y : G ⧸ B.U, z • y = 
     exact QuotientGroup.mk_mul_of_mem _ (B.memU z hz)
 
 theorem stab0 (hB : B.Fin) : (letI := act B; ∀ y : G ⧸ B.U, B.Γ₀.relIndex (stabilizer Γ y) ≠ 0) := by
-  letI := act B
+  let := act B
   intro y
   induction y using QuotientGroup.induction_on with
   | H g =>
@@ -94,7 +94,7 @@ theorem stab0 (hB : B.Fin) : (letI := act B; ∀ y : G ⧸ B.U, B.Γ₀.relIndex
     rw [eq_comm, QuotientGroup.eq]; simp [mul_assoc]
 
 theorem finQ (hB : B.Fin) : (letI := act B; Finite (orbitRel.Quotient Γ (G ⧸ B.U))) := by
-  letI := act B
+  let := act B
   obtain ⟨S, hS⟩ := hB.cls
   refine Finite.of_surjective (fun s : S => (Quotient.mk'' ((s : G) : G ⧸ B.U) : orbitRel.Quotient Γ (G ⧸ B.U))) ?_
   rintro ⟨y⟩
@@ -143,7 +143,7 @@ noncomputable def Ek (s : B.Tw) (f : G → ℂ) (g y : G) : Module.End ℂ V :=
   ∑ᶠ x : Γ ⧸ B.Γ₀, Tk s f g y x.out⁻¹
 
 theorem Ek_left (hf : s.IsTest f) (hD : HD s f) (γ : Γ) (g y : G) : Ek s f (B.ι γ * g) y = B.W γ * Ek s f g y := by
-  haveI := normal0 B
+  have := normal0 B
   unfold Ek
   rw [mul_finsum' _ _ (Tk_fin hD g y), ← finsum_comp_equiv (Equiv.mulRight ((s.θΓ.symm γ : Γ) : Γ ⧸ B.Γ₀)) (f := fun x => B.W γ * Tk s f g y x.out⁻¹)]
   refine finsum_congr fun x => ?_
@@ -167,11 +167,11 @@ theorem Ek_right (hf : s.IsTest f) (hD : HD s f) (u : B.U) (g y : G) : Ek s f (g
 theorem traceA [FiniteDimensional ℂ V] (hB : B.Fin) (hf : s.IsTest f) (hD : HD s f) : (letI := act B
     LinearMap.trace ℂ B.Forms (s.R f) = ∑ᶠ o : orbitRel.Quotient Γ (G ⧸ B.U), ∑ᶠ x : Γ ⧸ B.Γ₀,
       (B.Γ₀.relIndex (stabilizer Γ o.out) : ℂ)⁻¹ * LinearMap.trace ℂ V (Tk s f o.out.out o.out.out x.out⁻¹)) := by
-  letI := act B
-  haveI := normal0 B
-  haveI := finQ B hB
-  haveI := formsFin _ _ _ B hB
-  letI := Fintype.ofFinite (orbitRel.Quotient Γ (G ⧸ B.U))
+  let := act B
+  have := normal0 B
+  have := finQ B hB
+  have := formsFin _ _ _ B hB
+  let := Fintype.ofFinite (orbitRel.Quotient Γ (G ⧸ B.U))
   let n : orbitRel.Quotient Γ (G ⧸ B.U) → ℂ := fun o => (B.Γ₀.relIndex (stabilizer Γ o.out) : ℂ)⁻¹
   let A : (orbitRel.Quotient Γ (G ⧸ B.U) → V) →ₗ[ℂ] B.Forms :=
     { toFun := fun w => ⟨fun g => ∑ o, n o • Ek s f g o.out.out (w o), fun γ g => by simp [Ek_left hf hD], fun g u => by
@@ -293,8 +293,8 @@ private theorem FF_conj [FiniteDimensional ℂ V] (hf : s.IsTest f) (δ x : Γ) 
 private theorem termC [FiniteDimensional ℂ V] (hB : B.Fin) (hf : s.IsTest f) (δ : Γ) : letI := act B
     s.term f δ = ∑ᶠ a : orbitRel.Quotient Γ (G ⧸ B.U) × (Γ ⧸ s.Cent δ),
       (B.Γ₀.relIndex (stabilizer Γ a.1.out) : ℂ)⁻¹ * FF s f (a.2.out * δ * s.θΓ a.2.out⁻¹) a.1.out := by
-  letI := act B
-  haveI := normal0 B
+  let := act B
+  have := normal0 B
   have hle : B.Γ₀ ≤ s.Cent δ := by
     intro z hz
     show ∃ w ∈ B.Γ₀, z⁻¹ * δ * s.θΓ z = δ * w
@@ -392,8 +392,8 @@ private theorem sum_phi_add_star_eq_trace {Γ G V : Type} [Group Γ] [Group G] [
 theorem UpperTheory.V.Z.Sym.Tf.trace :
     UpperTheory.V.Z.Sym.Tf.Trace := by
   intro Γ G V _ _ _ _ _ B hB s f hf I δ hinj hcov
-  letI := act B
-  haveI := finQ B hB
+  let := act B
+  have := finQ B hB
   have hHD : HD s f := finD B hB s f hf
   have hzc : ∀ z ∈ B.Γ₀, ∀ g : Γ, g * z = z * g := fun z hz g =>
     Subgroup.mem_center_iff.mp (B.cenΓ hz) g

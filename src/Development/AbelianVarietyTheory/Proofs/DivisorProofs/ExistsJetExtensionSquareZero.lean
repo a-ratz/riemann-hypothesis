@@ -106,8 +106,8 @@ theorem exists_hom_jet {I : Type} [Fintype I] {g : ℕ} {Λ : Type} [AddCommGrou
       ∀ x : TrivSqZeroExt (Hol (K.W k)) (Fin g → Hol (K.W k)),
         Hom.φ χ x = Hom.φ f₁ x.fst + ∑ a, Hom.φ f₁ (x.snd a) * n a := by
   let ρ : Hol (K.W k) →+* T.C := (Hom.φ f₁ : (K.triv k).C →+* T.C)
-  letI := (K.jet k).alg
-  letI := (K.triv k).alg
+  let := (K.jet k).alg
+  let := (K.triv k).alg
   let φ : (K.jet k).C →ₐ[Hol F.V] T.C :=
     { liftSq ρ n hn with
       commutes' := fun f ↦ (liftSq_inl ρ n hn (K.cst k f)).trans ((Hom.φ f₁).commutes f) }

@@ -97,7 +97,7 @@ private theorem Bd.pow (h : Bd a M) (ha : a ≤ 1) (m : ℕ) : Bd (a * a) ((1 + 
 
 private theorem Bd.inv (h : Bd a M) (ha : a < 1) (e : N = -M + -(M * N)) : Bd a N := by
   intro i j
-  haveI : Nonempty (Fin n × Fin n) := ⟨(i, j)⟩
+  have : Nonempty (Fin n × Fin n) := ⟨(i, j)⟩
   obtain ⟨p, hp⟩ := Finite.exists_max fun p : Fin n × Fin n => valuation E (N p.1 p.2)
   have hN : Bd (valuation E (N p.1 p.2)) N := fun i j => hp (i, j)
   refine (hp (i, j)).trans ?_
@@ -202,6 +202,6 @@ theorem exists_fixed_root {σ : E ≃+* E} (hσ : Isom σ) {q : ℕ} {r : ValueG
 
 theorem exists_radius {w : ValueGroupWithZero E} (hw : w ≠ 0) : ∃ r : ValueGroupWithZero E, 0 < r ∧ r < w := by
   obtain ⟨c, hc0, hc1⟩ := ValuativeRel.IsNontrivial.exists_lt_one (R := E)
-  exact ⟨c * w, mul_pos hc0 (zero_lt_iff.mpr hw), mul_lt_of_lt_one_left (zero_lt_iff.mpr hw) hc1⟩
+  exact ⟨c * w, mul_pos hc0 (pos_iff_ne_zero.mpr hw), mul_lt_of_lt_one_left (pos_iff_ne_zero.mpr hw) hc1⟩
 
 end UpperTheory.ConvolutionTheory.Loc.BallG

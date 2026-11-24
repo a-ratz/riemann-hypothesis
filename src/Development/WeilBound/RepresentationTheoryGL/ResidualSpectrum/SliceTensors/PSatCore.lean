@@ -427,7 +427,7 @@ theorem isSatVecGL_of_levi (hs : ∀ a, IsSmooth (π a)) (S : Fin c → Multiset
     have hEmb (g : ∀ a, GL (Fin (N a)) (w.adicCompletion E)) :
         leviEmb (w.adicCompletion E) (stdBlocks N h) g ∈ parab (w.adicCompletion E) (stdBlocks N h) :=
       mem_parab_iff.2 fun _ _ i j hab => by
-        letI : DecidableEq (Fin c) := Classical.typeDecidableEq _
+        let : DecidableEq (Fin c) := Classical.typeDecidableEq _
         simpa [leviEmb, Matrix.reindex_apply] using
           (Matrix.blockDiagonal'_apply_ne
             (fun a => (g a : Matrix (Fin (N a)) (Fin (N a)) (w.adicCompletion E))) i j hab.ne')
@@ -565,7 +565,7 @@ theorem cc_cornerGL_leviEmb {c N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n i = N)
         (stdBlocks n h ⟨a, i⟩) (stdBlocks n h ⟨b, j⟩) = 0 := by
     classical
     simp [leviEmb]
-    letI : DecidableEq (Fin c) := Classical.typeDecidableEq _
+    let : DecidableEq (Fin c) := Classical.typeDecidableEq _
     exact Matrix.blockDiagonal'_apply_ne _ _ _ hab
   apply Units.ext
   ext p q
@@ -619,7 +619,7 @@ theorem iwasawa_inf {c N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n i = N) (x : GA
     intro a b i j hab
     classical
     simp [leviEmb]
-    letI : DecidableEq (Fin c) := Classical.typeDecidableEq _
+    let : DecidableEq (Fin c) := Classical.typeDecidableEq _
     exact Matrix.blockDiagonal'_apply_ne _ _ _ (ne_of_gt hab)
   have hproj (g : ∀ i, GL (Fin (n i)) (Cinf E)) :
       leviProj (Cinf E) (stdBlocks n h) ⟨leviEmb (Cinf E) (stdBlocks n h) g, hLmem g⟩ = g := by

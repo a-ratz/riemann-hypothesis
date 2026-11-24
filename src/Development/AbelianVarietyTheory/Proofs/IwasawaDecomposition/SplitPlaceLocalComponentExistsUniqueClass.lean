@@ -433,7 +433,7 @@ theorem exists_compactOpen_congr :
     have e : (I : Set (v.adicCompletion F)) = (fun x => x / c) ⁻¹' (O : Set (v.adicCompletion F)) := by
       ext x
       change Valued.v x ≤ Valued.v c ↔ Valued.v (x / c) ≤ 1
-      rw [map_div₀, div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hc))]
+      rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hc))]
     rw [e]
     exact hO.preimage (continuous_id.div_const c)
   exact ⟨congrSubgroup n O I hI, isOpen_congrSubgroup n O I hI hO hIo,
@@ -520,7 +520,7 @@ theorem finiteDimensional_of_level : ∀ (L : Type) [Field L] [NumberField L] [I
     ∀ S : Submodule ℂ (GAf L n → W), (∀ f ∈ S, f ∈ NG.AFall L n ρ ∧ ∀ κ, NG.Cong L n N κ → NG.rt L n κ f = f) →
     FiniteDimensional ℂ S := by
   intro L _ _ _ n W _ _ _ ρ N hN S hS
-  haveI := GlobalTheory.AlgFormsFin.fixedForms_finite L n ρ (_root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n) hN
+  have := GlobalTheory.AlgFormsFin.fixedForms_finite L n ρ (_root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n) hN
   refine Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.AlgFormsFin.fixedForms L n ρ N) fun f hf => ?_
   exact ⟨(hS f hf).1.1, fun κ hκ g => congrFun ((hS f hf).2 κ hκ) g⟩
 
@@ -644,7 +644,7 @@ theorem exists_local {n : ℕ} (π : NG.AutRep L n) (s : SplitPlace L)
       ∃ T : σ.V →ₗ[ℂ] (GAf L n → π.W),
       Function.Injective T ∧ (∀ a, T a ∈ π.S) ∧ ∀ g a, T (σ.ρ g a) = NG.rt L n (e g) (T a) := by
   classical
-  haveI : FiniteDimensional ℂ π.W := π.alg.1
+  have : FiniteDimensional ℂ π.W := π.alg.1
   have hirrG : (rtOf π).IsIrreducible := rtOf_irreducible π
   have hlev : ∀ f : π.S, ∃ N, 0 < N ∧ ∀ κ, NG.Cong L n N κ → (rtOf π) κ f = f := by
     intro f

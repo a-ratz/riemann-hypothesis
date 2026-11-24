@@ -137,7 +137,7 @@ theorem eventually_isSquare_infinite (w : InfinitePlace F) :
     simpa using hs.map φ.symm
   · let φ := InfinitePlace.Completion.ringEquivComplexOfIsComplex hw
     refine Filter.Eventually.of_forall fun x => ?_
-    obtain ⟨z, hz⟩ := IsAlgClosed.exists_eq_mul_self (φ x)
+    obtain ⟨z, hz⟩ := IsAlgClosed.isSquare (φ x)
     simpa using IsSquare.map φ.symm (⟨z, hz⟩ : IsSquare (φ x))
 
 theorem eventually_integral :

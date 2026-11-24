@@ -87,7 +87,7 @@ theorem orbQuot_exists (L : LocBessel k r) {g : Mx k r} (hg : g ∈ UH (Hpk k r)
     rw [hs, Measure.map_smul, hν.2.2.2 s hs']
     exact (Formalism.MainNotions.BridgeCSB.continuous_lmulM s).measurable.aemeasurable
   have hc : L.μN (PI.AmpOrbQuot.NS k r)ᶜ = 0 := by
-    rw [hs, Measure.smul_apply, smul_eq_mul]
+    rw [hs, smul_apply, smul_eq_mul]
     have : haarLie (Nset k r) 1 (PI.AmpOrbQuot.NS k r)ᶜ = 0 := hν.2.2.1
     rw [this, mul_zero]
   exact PI.AmpOrbQuot.exists_isOrbQuot_of_isHaarOn L g μR hg hμ hN hc

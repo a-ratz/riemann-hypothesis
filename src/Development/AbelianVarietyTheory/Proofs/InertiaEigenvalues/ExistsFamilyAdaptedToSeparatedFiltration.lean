@@ -92,7 +92,7 @@ theorem exists_family_adapted_filtration :
       exact hb (anti (not_le.mp h).le (hz hyD))
     obtain ⟨lo, hlo, hmax⟩ := Int.exists_greatest_of_bdd hbdd hinh
     have hnot : ¬ D ≤ F (lo + 1) := fun h => by have := hmax _ h; omega
-    obtain ⟨x0, hx0D, hx0F⟩ := SetLike.not_le_iff_exists.mp hnot
+    obtain ⟨x0, hx0D, hx0F⟩ := IsConcreteLE.not_le_iff_exists.mp hnot
     obtain ⟨f, hf0, hf⟩ := Submodule.exists_le_ker_of_notMem hx0F
     have hx0 : x0 ∉ D ⊓ LinearMap.ker f := fun h => hf0 h.2
     have hfin' : Module.Finite E ↥(D ⊓ LinearMap.ker f) :=

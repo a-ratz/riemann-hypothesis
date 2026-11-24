@@ -100,11 +100,11 @@ theorem _root_.GlobalTheory.LeastExponentCompare.isCMField_of_conj (E : Type) [F
     rw [hS]
     exact (IntermediateField.finrank_fixedField_eq_card (Subgroup.zpowers σ)).trans
       (by rw [Nat.card_zpowers, hord])
-  haveI : IsTotallyComplex E := ⟨fun v => InfinitePlace.not_isReal_iff_isComplex.mp fun hv => by
+  have : IsTotallyComplex E := ⟨fun v => InfinitePlace.not_isReal_iff_isComplex.mp fun hv => by
     rw [InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff] at hv
     obtain ⟨z, hz⟩ := hne
     exact hz (v.embedding.injective ((h _ z).trans (RingHom.congr_fun hv z)))⟩
-  haveI : Algebra.IsQuadraticExtension (maximalRealSubfield E) E := ⟨hfin⟩
+  have : Algebra.IsQuadraticExtension (maximalRealSubfield E) E := ⟨hfin⟩
   exact ⟨⟩
 
 
@@ -116,7 +116,7 @@ theorem _root_.GlobalTheory.LeastExponentCompare.conj_iff (E : Type) [Field E] [
       ∃ _ : IsCMField E, cj = fun z => complexConj E z := by
   constructor
   · rintro ⟨h, hne⟩
-    haveI := _root_.GlobalTheory.LeastExponentCompare.isCMField_of_conj E cj h hne
+    have := _root_.GlobalTheory.LeastExponentCompare.isCMField_of_conj E cj h hne
     refine ⟨this, funext fun z => ?_⟩
     let φ₀ : E →+* ℂ := (Classical.arbitrary (InfinitePlace E)).embedding
     exact φ₀.injective (by rw [h, complexEmbedding_complexConj, RCLike.star_def])

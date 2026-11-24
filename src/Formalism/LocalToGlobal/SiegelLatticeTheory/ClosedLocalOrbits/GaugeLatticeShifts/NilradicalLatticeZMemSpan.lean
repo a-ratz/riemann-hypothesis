@@ -106,7 +106,7 @@ theorem tr_orth (j : E →+* R) (ι : (Fin n → E) →+ (Fin n → R)) (hs : �
     intro i b
 
     simp only [hw'def, map_sub, map_sum, map_smul, hef, smul_eq_mul, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, sub_self]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, sub_self]
   have hdec : ∀ i, ι (w i) = ι (w' i) + ∑ a, j (hE (e a) (w i)) • ι (f a) := by
     intro i
 
@@ -406,7 +406,7 @@ theorem hJ_spL (ε : Fin n → Bool) (e f : Fin r → Fin n → ℂ)
     refine Submodule.span_le.2 ?_
     rintro _ ⟨b, hb, rfl⟩
     show hJL ε (f a) (e b) = 0
-    rw [hJL_apply, hfe, if_neg]
+    rw [hJL_apply, hfe, ite_eq_right]
     intro h
     rw [h] at hb
     exact lt_irrefl a.1 hb
@@ -429,7 +429,7 @@ theorem rootCoord_mul (ε : Fin n → Bool) (e f : Fin r → Fin n → ℂ) (z :
   have hx0 : hJ ε (f a) (nxt e z a) = 0 := by
     unfold nxt
     split_ifs with hlt
-    · rw [hfe, if_neg]
+    · rw [hfe, ite_eq_right]
       intro h'
       have := congrArg Fin.val h'
       simp at this
@@ -493,14 +493,14 @@ theorem isClosed_InN (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fi
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ | InN ε e z g} := by
   have hW : ∀ (W : Submodule ℂ (Fin n → ℂ)) (y : Fin n → ℂ),
       IsClosed {g : Matrix (Fin n) (Fin n) ℂ | (g - 1) *ᵥ y ∈ W} := fun W y =>
-    (Submodule.closed_of_finiteDimensional W).preimage
+    (Submodule.isClosed_of_finiteDimensional W).preimage
       ((continuous_id.sub continuous_const).matrix_mulVec continuous_const)
   have : {g : Matrix (Fin n) (Fin n) ℂ | InN ε e z g} =
       ((⋂ a, {g : Matrix (Fin n) (Fin n) ℂ | (g - 1) *ᵥ e a ∈ spanLt e a.1}) ∩
         {g | (g - 1) *ᵥ z ∈ spanLt e r}) ∩
         ⋂ y, ⋂ (_ : ∀ a, hJ ε (e a) y = 0), {g | (g - 1) *ᵥ y ∈ spanLt e r} := by
     ext g
-    simp only [InN, InS, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [InN, InS, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [this]
   exact ((isClosed_iInter fun a => hW _ _).inter (hW _ _)).inter
     (isClosed_iInter fun y => isClosed_iInter fun _ => hW _ _)
@@ -509,10 +509,10 @@ theorem ninf_closed (I : AutInst) (e : Fin r → Fin I.n → I.E) (z : Fin I.n �
   have : Ninf I e z = ⋂ v, (fun s : I.Ginf => uMat (s v)) ⁻¹'
       {g | InN (I.ε v) (fun a => rv I v (e a)) (rv I v z) g} := by
     ext s
-    simp only [Ninf, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+    simp only [Ninf, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
   rw [this]
   exact isClosed_iInter fun v => (isClosed_InN _ _ _).preimage
-    (Units.continuous_val.comp (continuous_subtype_val.comp (continuous_apply v)))
+    (Units.continuous_val.comp (continuous_subtypeVal.comp (continuous_apply v)))
 
 end Closed
 

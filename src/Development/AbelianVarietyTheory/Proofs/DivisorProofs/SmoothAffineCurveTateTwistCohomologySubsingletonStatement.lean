@@ -338,15 +338,15 @@ theorem exists_isAlgebraic_ratFunc_of_ringHom (k B : Type) [Field k] [CommRing B
     (hπ : Function.Surjective π) :
     ∃ _ : Algebra (RatFunc k) K, Algebra.IsAlgebraic (RatFunc k) K := by
   let ι : R →+* Q := algebraMap R Q
-  letI : Algebra B R := ((algebraMap A' R).comp (algebraMap B A')).toAlgebra
-  haveI : IsScalarTower B A' R := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  letI : Algebra A' K := (π.comp (ι.comp (algebraMap A' R))).toAlgebra
-  letI : Algebra B K := ((algebraMap A' K).comp (algebraMap B A')).toAlgebra
-  haveI : IsScalarTower B A' K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra B R := ((algebraMap A' R).comp (algebraMap B A')).toAlgebra
+  have : IsScalarTower B A' R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra A' K := (π.comp (ι.comp (algebraMap A' R))).toAlgebra
+  let : Algebra B K := ((algebraMap A' K).comp (algebraMap B A')).toAlgebra
+  have : IsScalarTower B A' K := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let F := FractionRing B
 
-  haveI : Module.Flat A' R := IsLocalization.flat R (Submonoid.powers (algebraMap B A' f))
-  haveI : Module.Flat B R := Module.Flat.trans B A' R
+  have : Module.Flat A' R := IsLocalization.flat R (Submonoid.powers (algebraMap B A' f))
+  have : Module.Flat B R := Module.Flat.trans B A' R
   have hreg : ∀ b ∈ nonZeroDivisors B, algebraMap B R b ∈ nonZeroDivisors R := by
     intro b hb
     have hs := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := R) hb
@@ -363,11 +363,11 @@ theorem exists_isAlgebraic_ratFunc_of_ringHom (k B : Type) [Field k] [CommRing B
   have hBK : ∀ b : B, algebraMap B K b = π (ι (algebraMap B R b)) := fun b => rfl
   have hunit : ∀ y : nonZeroDivisors B, IsUnit (algebraMap B K y) := fun y => by
     rw [hBK]; exact hunitR _ (hreg _ y.2)
-  letI : Algebra F K := (IsLocalization.lift (M := nonZeroDivisors B) (S := F) hunit).toAlgebra
-  haveI : IsScalarTower B F K := IsScalarTower.of_algebraMap_eq fun b =>
+  let : Algebra F K := (IsLocalization.lift (M := nonZeroDivisors B) (S := F) hunit).toAlgebra
+  have : IsScalarTower B F K := IsScalarTower.of_algebraMap_eq fun b =>
     (IsLocalization.lift_eq (M := nonZeroDivisors B) (S := F) hunit b).symm
 
-  haveI : Module.Finite F (TensorProduct B F A') := Algebra.FormallyUnramified.finite_of_free F _
+  have : Module.Finite F (TensorProduct B F A') := Algebra.FormallyUnramified.finite_of_free F _
   let ψ : TensorProduct B F A' →ₐ[F] K :=
     Algebra.TensorProduct.lift (Algebra.ofId F K) (IsScalarTower.toAlgHom B A' K)
       (fun _ _ => Commute.all _ _)
@@ -400,18 +400,18 @@ theorem exists_isAlgebraic_ratFunc_of_ringHom (k B : Type) [Field k] [CommRing B
     have : π q = π (ι x) * (π (ι s))⁻¹ := (eq_mul_inv_iff_mul_eq₀ (hunitR _ s.2).ne_zero).2 hq'
     rw [this]
     exact (hR x).mul (hR s).inv
-  haveI : Algebra.IsIntegral F K := ⟨hall⟩
-  haveI : Algebra.IsAlgebraic F K := inferInstance
+  have : Algebra.IsIntegral F K := ⟨hall⟩
+  have : Algebra.IsAlgebraic F K := inferInstance
 
   obtain ⟨algRF, hRF⟩ := GlobalTheory.FracAlgDedekind.exists_isAlgebraic_ratFunc k B hB
-  letI algK : Algebra (RatFunc k) K := ((algebraMap F K).comp (algebraMap (RatFunc k) F)).toAlgebra
-  haveI : IsScalarTower (RatFunc k) F K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let algK : Algebra (RatFunc k) K := ((algebraMap F K).comp (algebraMap (RatFunc k) F)).toAlgebra
+  have : IsScalarTower (RatFunc k) F K := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact ⟨algK, Algebra.IsAlgebraic.trans (RatFunc k) F K⟩
 
 theorem exists_isAlgebraic_ratFunc_residue : ∀ (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], ¬ IsField B → ∀ (f : B), f ≠ 0 → ∀ (A' : Type) [CommRing A'] [Algebra B A'] [Algebra.Etale B A'] (M : MaximalSpectrum (FractionRing (Localization.Away (algebraMap B A' f)))), ∃ _ : Algebra (RatFunc k) (FractionRing (Localization.Away (algebraMap B A' f)) ⧸ M.asIdeal), Algebra.IsAlgebraic (RatFunc k) (FractionRing (Localization.Away (algebraMap B A' f)) ⧸ M.asIdeal) := by
   intro k B _ _ _ _ _ _ hB f hf A' _ _ _ M
-  haveI : M.asIdeal.IsMaximal := M.isMaximal
-  letI : Field (FractionRing (Localization.Away (algebraMap B A' f)) ⧸ M.asIdeal) :=
+  have : M.asIdeal.IsMaximal := M.isMaximal
+  let : Field (FractionRing (Localization.Away (algebraMap B A' f)) ⧸ M.asIdeal) :=
     Ideal.Quotient.field M.asIdeal
   exact exists_isAlgebraic_ratFunc_of_ringHom k B hB f hf A' (Localization.Away (algebraMap B A' f))
     (FractionRing (Localization.Away (algebraMap B A' f)))
@@ -489,7 +489,7 @@ theorem span_singleton_eq_maximalIdeal_pow {L : Type} [CommRing L] [IsLocalRing 
 
 theorem exists_local_uniformizer (B : Type) [CommRing B] [IsDedekindDomain B] (m : Ideal B) [m.IsPrime]
     (hm0 : m ≠ ⊥) : ∃ π ∈ m, ∀ b ∈ m, ∃ t ∉ m, ∃ c : B, t * b = π * c := by
-  haveI : IsDiscreteValuationRing (Localization.AtPrime m) :=
+  have : IsDiscreteValuationRing (Localization.AtPrime m) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain B hm0 _
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (Localization.AtPrime m)
   obtain ⟨⟨π, t⟩, hπt⟩ := IsLocalization.surj m.primeCompl ϖ
@@ -519,15 +519,15 @@ theorem exists_dvd_mul_pow : ∀ (B A' : Type) [CommRing B] [IsDedekindDomain B]
   intro B A' _ _ _ _ _ f hf hN a ha M hM hfM
   classical
   set m : Ideal B := M.comap (algebraMap B A') with hm_def
-  haveI : m.IsPrime := Ideal.comap_isPrime _ _
+  have : m.IsPrime := Ideal.comap_isPrime _ _
   have hfm : f ∈ m := hfM
   have hm0 : m ≠ ⊥ := by
     intro h; apply hf
     rw [h] at hfm; exact (Submodule.mem_bot _).1 hfm
   obtain ⟨π, hπm, hπ⟩ := exists_local_uniformizer B m hm0
   let L := Localization.AtPrime M
-  haveI : IsNoetherianRing A' := Algebra.FiniteType.isNoetherianRing B A'
-  haveI : IsNoetherianRing L := IsLocalization.isNoetherianRing M.primeCompl L inferInstance
+  have : IsNoetherianRing A' := Algebra.FiniteType.isNoetherianRing B A'
+  have : IsNoetherianRing L := IsLocalization.isNoetherianRing M.primeCompl L inferInstance
   let φ : B →+* L := (algebraMap A' L).comp (algebraMap B A')
   have hmem : ∀ b ∈ m, φ b ∈ Ideal.span {φ π} := by
     intro b hb
@@ -788,7 +788,7 @@ theorem main : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [
   intro m i hm z
   set R := Localization.Away f'
   have hBf : ¬ IsField B := fun hB => hfu (by
-    letI := hB.toField; exact isUnit_iff_ne_zero.mpr hf)
+    let := hB.toField; exact isUnit_iff_ne_zero.mpr hf)
   have hqR : IsUnit (q : R) := by
     have := ((hq.map (algebraMap k B)).map (algebraMap B A')).map (algebraMap A' R)
     simpa only [map_natCast] using this
@@ -800,8 +800,8 @@ theorem main : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [
     have hqM : IsUnit (q : FractionRing R ⧸ M.asIdeal) := by
       have := (hqR.map (algebraMap R (FractionRing R))).map (Ideal.Quotient.mk M.asIdeal)
       rwa [map_natCast, map_natCast] at this
-    haveI := M.isMaximal
-    letI : Field (FractionRing R ⧸ M.asIdeal) := Ideal.Quotient.field _
+    have := M.isMaximal
+    let : Field (FractionRing R ⧸ M.asIdeal) := Ideal.Quotient.field _
     exact GlobalTheory.T.etale_cohomology_vanishing_algebraic_over_ratFunc q k (FractionRing R ⧸ M.asIdeal) hqM m i hm
 
   obtain ⟨g, hg, hz⟩ := GlobalTheory.T.class_vanishes_away_nonZeroDivisor q R hqR m i z (Subsingleton.elim _ _)

@@ -101,7 +101,7 @@ theorem mem_normOneIdeles (e : A ⊕ Fin c ≃ Fin (M + c')) (hcc : c' = c) (he 
     intro g hg r hr
     refine ⟨fun i v hv => ?_, ?_, fun i => ?_⟩
     · intro l hl
-      simp only [Set.mem_setOf_eq, not_lt] at hl
+      simp only [Set.mem_ofPred_eq, not_lt] at hl
       rw [hr, key g hg v l ?_]
       · exact hv l (by simpa using hl)
       · intro j hj
@@ -116,7 +116,7 @@ theorem mem_normOneIdeles (e : A ⊕ Fin c ≃ Fin (M + c')) (hcc : c' = c) (he 
         by_contra h; exact hj (by simp [Loc.eN, h])
       rw [hL, hL]; split_ifs <;> omega
     · intro l hl
-      simp only [Set.mem_setOf_eq, not_lt] at hl
+      simp only [Set.mem_ofPred_eq, not_lt] at hl
       rw [Pi.sub_apply, hr, key g hg _ l, sub_self]
       intro j hj
       have : j.val = M + i := by
@@ -145,7 +145,7 @@ open NormOneIdeleAutomorphisms
 theorem exists_N1_local_hom_mem_open : ∀ {E k : Type} [Field E] [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (ι : E →+* k), DenseRange ι → ∀ {A : Type} [Fintype A] [DecidableEq A] {M c c' : ℕ} (e : A ⊕ Fin c ≃ Fin (M + c')), c' = c → (∀ i : Fin c, (e (Sum.inr i)).val = M + i.val) → ∀ u ∈ N k A c 1, ∀ V : Set (GL (A ⊕ Fin c) k), IsOpen V → u ∈ V → ∃ x ∈ Loc.N1 E M c', locHom ι e x ∈ V := by
   intro E k _ _ _ _ _ ι hι A _ _ M c c' e hcc he u hu V hV huV
   let f : (VolN.Ix A c 1 → k) → GL (A ⊕ Fin c) k := fun a => ((Model.mkNel 1 a : N k A c 1) : GL (A ⊕ Fin c) k)
-  have hf : Continuous f := continuous_subtype_val.comp (VolN.continuous_mkNel 1)
+  have hf : Continuous f := continuous_subtypeVal.comp (VolN.continuous_mkNel 1)
   have hW : IsOpen (f ⁻¹' V) := hV.preimage hf
   have h0 : VolN.co 1 ⟨u, hu⟩ ∈ f ⁻¹' V := by
     show ((Model.mkNel 1 (VolN.co 1 ⟨u, hu⟩) : N k A c 1) : GL (A ⊕ Fin c) k) ∈ V

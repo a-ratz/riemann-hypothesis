@@ -61,7 +61,7 @@ theorem subalgebra_eq_top_of_irreducible {X : Type} [AddCommGroup X] [Module ℂ
   · refine eq_top_iff.2 fun f _ => ?_
     rw [Subsingleton.elim f 0]
     exact A.zero_mem
-  haveI : IsSimpleModule A X := by
+  have : IsSimpleModule A X := by
     rw [isSimpleModule_iff]
     refine { eq_bot_or_eq_top := fun U => ?_ }
     rcases h (U.restrictScalars ℂ) (fun a ha x hx => U.smul_mem (⟨a, ha⟩ : A) hx) with h1 | h1
@@ -169,7 +169,7 @@ theorem piTensor_irreducible {ι κ : Type} [Finite ι] [DecidableEq ι] {H : ι
 theorem tensor_irreducible : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S), (∀ τ, FiniteDimensional ℂ (M.H τ) ∧ M.sm τ = ⊤ ∧ ∀ U : Submodule ℂ (M.H τ), (∀ u : Matrix.unitaryGroup (Fin V.rank) ℂ, ∀ x ∈ U, M.σ τ u x ∈ U) → U = ⊥ ∨ U = ⊤) → AllPlus M → FiniteDimensional ℂ (SmT M) ∧ Function.Injective (inclT M) ∧ ∃ π, IsTensAct M π ∧ IrrFam π := by
   intro D V S M h _
   classical
-  haveI := fun τ => (h τ).1
+  have := fun τ => (h τ).1
   let e : SmT M ≃ₗ[ℂ] ⨂[ℂ] τ, M.H τ := PiTensorProduct.congr fun τ => LinearEquiv.ofTop (M.sm τ) (h τ).2.1
   have he : ∀ x, e x = inclT M x := fun x => rfl
   refine ⟨inferInstance, fun x y hxy => e.injective hxy,

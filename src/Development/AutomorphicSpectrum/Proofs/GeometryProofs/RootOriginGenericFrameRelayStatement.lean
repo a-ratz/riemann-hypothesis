@@ -339,7 +339,7 @@ theorem lie_lattice_action_stable : ∀ (E : Type) [Field E] [NumberField E] [Is
     obtain ⟨v, hv1, hv2⟩ := hx
     apply Submodule.subset_span
     refine ⟨v ≫ tX.act.act a, ?_, ?_⟩
-    · haveI := tX.act.hom a
+    · have := tX.act.hom a
       unfold IsTanAt at hv1 ⊢
       rw [Over.comp_left, ← Category.assoc, hv1, ← Over.comp_left, MonObj.one_comp]
     · rw [hM a x, Over.comp_left, hv2, Over.comp_left]
@@ -654,24 +654,24 @@ attribute [local instance 1100] Subalgebra.algebra in
 attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in
 theorem diag_root_line : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y S RM Fx) (Fr : Small.GenFrame Or) (h : GenFrEx Xo c) (C : GlobalTheory.Reg.FChart h) (V : ValuationSubring RM.Ω), letI := Small.cstAlg Or; ∀ (ψ : C.R →ₐ[c.F] RM.Ω) (z : FrPt Xo c RM.Ω) (d : Ix Dw → (RM.Ω)ˣ), FrMap ψ C.y z → FrBor d Fr.y₀ z → (∀ x, ψ x ∈ V) → ∀ cc : (k : RM.K) → RM.ι k, (∀ k, RM.y ⟨k, cc k⟩ ≠ 0) → (∀ k i, RM.y ⟨k, i⟩ / RM.y ⟨k, cc k⟩ ∈ V) → ∀ r : RootIx Dw, ∃ v : Vˣ, ((d (Small.rootFrameIx Dw r) ^ HodgeCpt.rootSgn Dw r : (RM.Ω)ˣ) : RM.Ω) = ((v : V) : RM.Ω) * ((∏ k, RM.y ⟨k, cc k⟩ ^ RM.xdeg r k) * Or.e r) := by
   intro E _ _ _ H Dw l Xo c Y S RM Sys Fx Or Fr h C V
-  letI := Small.cstAlg Or
+  let := Small.cstAlg Or
   intro ψ z d hmap hbor hψ cc hy hrat r
   let A : Subring RM.Ω := V.toSubring
-  haveI : IsLocalRing A := inferInstanceAs (IsLocalRing V)
+  have : IsLocalRing A := inferInstanceAs (IsLocalRing V)
   have hmemA : ∀ a : RM.Ω, a ∈ A ↔ a ∈ V := fun a => Iff.rfl
   have hcst : ∀ a : c.F, Or.𝔐.cst a ∈ A := fun a => by
     have h1 := hψ (algebraMap c.F C.R a)
     rw [ψ.commutes] at h1
     exact h1
-  letI algA : Algebra c.F A := (Or.𝔐.cst.codRestrict A hcst).toAlgebra
-  haveI towA : IsScalarTower c.F A RM.Ω := .of_algebraMap_eq fun _ => rfl
+  let algA : Algebra c.F A := (Or.𝔐.cst.codRestrict A hcst).toAlgebra
+  have towA : IsScalarTower c.F A RM.Ω := .of_algebraMap_eq fun _ => rfl
   have hxc : (∏ k, RM.y ⟨k, cc k⟩) ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => hy k
   have hxr : ∀ c' : (k : RM.K) → RM.ι k, (∏ k, RM.y ⟨k, c' k⟩) / (∏ k, RM.y ⟨k, cc k⟩) ∈ A := fun c' => by
     rw [← Finset.prod_div_distrib]
     exact prod_mem fun k _ => hrat k (c' k)
   obtain ⟨zq, hc, hz, hch, hreg, hloc⟩ := ModelDimension.exists_local_chart_centre _ _ Or.𝔐.ξ _ _ Or.𝔐.tie A cc hxc hxr
   let q : Cpt Or.𝔐.ξ := ⟨centre zq, hc⟩
-  haveI : CharZero RM.Ω := charZero_of_injective_ringHom Or.𝔐.cst.injective
+  have : CharZero RM.Ω := charZero_of_injective_ringHom Or.𝔐.cst.injective
   have hchar : ∀ p : ℕ, p.Prime → ¬ InFibre Or.𝔐.ξ p q := by
     intro p hp hf
     apply hf
@@ -755,7 +755,7 @@ theorem diag_root_line : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
         rw [hdRs]
         exact Submodule.subset_span ⟨k, rfl⟩
       exact (hsp _).1 ⟨Submodule.subset_span hb.1, hb.2⟩
-    letI : Fintype (CMType H ⊕ CMType H) := Fintype.ofEquiv _ (Small.labelEquiv H).symm
+    let : Fintype (CMType H ⊕ CMType H) := Fintype.ofEquiv _ (Small.labelEquiv H).symm
     have h2 : Submodule.span A (Set.range w) ≤ Submodule.span A (Set.range b) := by
       refine Submodule.span_le.2 ?_
       rintro _ ⟨k, rfl⟩

@@ -87,9 +87,9 @@ theorem finite_unitsChar (G : Type) [Group G] [Finite G] : Finite (G →* Fˣ) :
 theorem card_unitsChar_le (G : Type) [Group G] [Finite G] :
     Nat.card (G →* Fˣ) ≤ Nat.card G := by
   classical
-  haveI := finite_unitsChar (F := F) G
-  haveI := Fintype.ofFinite (G →* Fˣ)
-  haveI := Fintype.ofFinite G
+  have := finite_unitsChar (F := F) G
+  have := Fintype.ofFinite (G →* Fˣ)
+  have := Fintype.ofFinite G
   have h := (linearIndependent_unitsChar (F := F) G).fintype_card_le_finrank
   rw [Module.finrank_fintype_fun_eq_card] at h
   simpa [Nat.card_eq_fintype_card] using h
@@ -99,7 +99,7 @@ variable {A : Type} [CommGroup A] [Finite A]
 theorem card_ker_mul_le (E : A →* (A →* Fˣ)) (hE : ∀ a, (∀ b, E a b = 1) → a = 1)
     (H K : Subgroup A) (hK : ∀ k ∈ K, ∀ h ∈ H, E k h = 1) :
     Nat.card K * Nat.card H ≤ Nat.card A := by
-  haveI := finite_unitsChar (F := F) (A ⧸ H)
+  have := finite_unitsChar (F := F) (A ⧸ H)
   let φ : K → (A ⧸ H →* Fˣ) := fun k =>
     QuotientGroup.lift H (E k) (fun h hh => hK k k.2 h hh)
   have hφ : Function.Injective φ := by
@@ -166,7 +166,7 @@ theorem one_side (E : A →* (A →* Fˣ)) (hE : ∀ a, (∀ b, E a b = 1) → a
     exact Nat.le_of_mul_le_mul_right this hHpos
   have heq : T = R.ker := Subgroup.eq_of_le_of_card_ge hle hcard
   refine ⟨fun x => by rw [← hR, heq], ?_⟩
-  haveI := finite_unitsChar (F := F) H
+  have := finite_unitsChar (F := F) H
   have hrange : Nat.card R.range = Nat.card H := by
     have h1 := Subgroup.card_eq_card_quotient_mul_card_subgroup R.ker
     rw [Nat.card_congr (QuotientGroup.quotientKerEquivRange R).toEquiv, ← heq, ← hc,

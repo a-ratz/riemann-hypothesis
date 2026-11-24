@@ -156,10 +156,10 @@ theorem discreteTopology_periodLattice_of_isUnit {τ : Matrix ι ι ℂ}
         continuous_const
     · exact isOpen_lt (((continuous_apply i).comp (continuous_periodCoordSnd τ)).abs)
         continuous_const
-  convert hO.preimage (continuous_subtype_val (p := fun w => w ∈ periodLattice τ)) using 1
+  convert hO.preimage (continuous_subtypeVal (p := fun w => w ∈ periodLattice τ)) using 1
   ext ⟨w, hw⟩
   simp only [Set.mem_singleton_iff, Set.mem_preimage, Set.mem_inter_iff, Set.mem_iInter,
-    Set.mem_setOf_eq]
+    Set.mem_ofPred_eq]
   constructor
   · intro h
     have h0 : w = 0 := congrArg Subtype.val h

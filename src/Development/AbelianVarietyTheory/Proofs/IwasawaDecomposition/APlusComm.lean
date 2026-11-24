@@ -99,13 +99,13 @@ theorem dRho_laws (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {f : WO S T �
       hD_eq_fderiv _ _ _ _ (theta_sm h hf')]
     have e : (fun x : RW T S => (f + f') (w + iotaW σ T S x)) =
         fun x : RW T S => f (w + iotaW σ T S x) + f' (w + iotaW σ T S x) := rfl
-    rw [e, fderiv_fun_add (hd hf w) (hd hf' w), ContinuousLinearMap.add_apply, Pi.add_apply]
+    rw [e, fderiv_fun_add (hd hf w) (hd hf' w), add_apply, Pi.add_apply]
     ring
   · funext w
     rw [Pi.smul_apply, hE, hE, hD_eq_fderiv _ _ _ _ (theta_sm h (theta_smul a hf)), hD_eq_fderiv _ _ _ _ hs]
     have e : (fun x : RW T S => (a • f) (w + iotaW σ T S x)) =
         fun x : RW T S => a • f (w + iotaW σ T S x) := rfl
-    rw [e, fderiv_fun_const_smul (hd hf w), ContinuousLinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul,
+    rw [e, fderiv_fun_const_smul (hd hf w), smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul,
       smul_eq_mul]
     ring
   · have e : dirPt τ (z + z') = dirPt τ z + dirPt τ z' := by

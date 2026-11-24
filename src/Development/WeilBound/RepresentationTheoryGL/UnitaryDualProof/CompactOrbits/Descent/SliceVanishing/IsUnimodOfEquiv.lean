@@ -62,7 +62,7 @@ theorem isUnimod_of_equiv {G₁ G₂ : Type*} [Group G₁] [TopologicalSpace G�
   let μ₂ : Measure G₂ := haar
   have hme : MeasurableEmbedding (φ.symm : G₂ → G₁) := φ.symm.toHomeomorph.measurableEmbedding
   let μ₁ : Measure G₁ := map (φ.symm : G₂ → G₁) μ₂
-  haveI : IsHaarMeasure μ₁ := ContinuousMulEquiv.isHaarMeasure_map μ₂ φ.symm
+  have : IsHaarMeasure μ₁ := ContinuousMulEquiv.isHaarMeasure_map μ₂ φ.symm
   rw [modularCharacterFun_eq_haarScalarFactor μ₁ g]
   rw [modularCharacterFun_eq_haarScalarFactor μ₂ (φ g)] at hg
   obtain ⟨f, hfc, hf0, hf1⟩ := exists_continuous_nonneg_pos (1 : G₁)
@@ -78,7 +78,7 @@ theorem isUnimod_of_equiv {G₁ G₂ : Type*} [Group G₁] [TopologicalSpace G�
     funext x
     simp [f₂, map_mul]
   have hpos : ∫ x, f x ∂μ₁ ≠ 0 :=
-    (f.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hfc hf0 hf1).ne'
+    (f.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hfc hf0 hf1).ne'
   have hpos₂ : ∫ y, f₂ y ∂μ₂ ≠ 0 := by
     rw [← I1]
     exact hpos

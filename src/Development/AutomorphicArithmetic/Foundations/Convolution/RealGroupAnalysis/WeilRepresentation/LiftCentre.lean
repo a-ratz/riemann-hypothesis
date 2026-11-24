@@ -55,7 +55,7 @@ variable {F : Type} [Field F] [NumberField F]
 private theorem int_comp (M : Meas F) (e : G1 F ≃ G1 F) (hm : MeasurePreserving e M.μ M.μ)
     (hemb : MeasurableEmbedding e) (hfd : IsFundamentalDomain (Gam F) (e '' M.D) M.μ) (u : G1 F → ℂ)
     (hu : ∀ γ g, u (ratS F γ * g) = u g) : ∫ g in M.D, u (e g) ∂M.μ = ∫ g in M.D, u g ∂M.μ := by
-  haveI := M.haar
+  have := M.haar
   have hinv : ∀ (g : Gam F) x, u (g • x) = u x := by
     rintro ⟨_, γ, rfl⟩ x
     simpa [Subgroup.smul_def] using hu γ x
@@ -67,8 +67,8 @@ private theorem int_comp (M : Meas F) (e : G1 F ≃ G1 F) (hm : MeasurePreservin
 
 private theorem int_right (M : Meas F) (u : G1 F → ℂ) (hu : ∀ γ g, u (ratS F γ * g) = u g) (k : G1 F) :
     ∫ g in M.D, u (g * k) ∂M.μ = ∫ g in M.D, u g ∂M.μ := by
-  haveI := M.haar
-  haveI := M.right
+  have := M.haar
+  have := M.right
   have hfd : IsFundamentalDomain (Gam F) ((Equiv.mulRight k) '' M.D) M.μ := by
     refine M.fund.image_of_equiv (Equiv.mulRight k) ?_ (Equiv.refl _) ?_
     · exact (measurePreserving_mul_right M.μ k⁻¹).quasiMeasurePreserving
@@ -79,7 +79,7 @@ private theorem int_right (M : Meas F) (u : G1 F → ℂ) (hu : ∀ γ g, u (rat
 
 private theorem int_cD (M : Meas F) (u : G1 F → ℂ) (hu : ∀ γ g, u (ratS F γ * g) = u g) (c : Fˣ) :
     ∫ g in M.D, u (cD (IdeleGroup.diagonal F c) g) ∂M.μ = ∫ g in M.D, u g ∂M.μ := by
-  haveI := M.haar
+  have := M.haar
   set t := IdeleGroup.diagonal F c with ht
   have hti : t⁻¹ = IdeleGroup.diagonal F c⁻¹ := by rw [ht, map_inv]
   have l1 : ∀ g, cD t⁻¹ (cD t g) = g := fun g => by rw [← cD_mul_left, inv_mul_cancel, cD_one_left]

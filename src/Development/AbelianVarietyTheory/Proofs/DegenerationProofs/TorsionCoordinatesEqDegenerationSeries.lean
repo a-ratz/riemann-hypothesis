@@ -537,9 +537,9 @@ theorem value_at_level (hL : LL) (hB : AdmBase R I) (hG : IsSemiAbelian G) (U : 
     (hx : QkToAkU U.toUnifPre C N q x) (e) (he : e.IsGen) (w : Frm D.toPre C N q.g.b) (hw : w.IsGen) :
     ∃ κ : C, κ ≠ 0 ∧ ∀ (t : SecA A C N) s (c : C), U.ExpandsF C N w₀ t s → ValIs t x e c →
       HasSum (coef s q.g w) (κ * c) := by
-  haveI : IsNoetherianRing R := hB.1
-  haveI : Subsingleton (TFK (R := R) C).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of C)))
-  haveI : Nonempty (TFK (R := R) C).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of C)))
+  have : IsNoetherianRing R := hB.1
+  have : Subsingleton (TFK (R := R) C).left := inferInstanceAs (Subsingleton (Spec (CommRingCat.of C)))
+  have : Nonempty (TFK (R := R) C).left := inferInstanceAs (Nonempty (Spec (CommRingCat.of C)))
   obtain ⟨hxN, hθ⟩ := hx w₀ hN.1
   obtain ⟨θ, rfl⟩ := GlobalTheory.BoxTheta.exists_theta hL.1.kerPow A hN1 (T := TFK (R := R) C) x hxN
   obtain ⟨w', hw', hΦ⟩ := hθ θ rfl
@@ -573,7 +573,7 @@ theorem value_at_torsion (hL : LL) (hB : AdmBase R I) (hG : IsSemiAbelian G) (U 
     (hx : QkToAkU U.toUnifPre C n p x) (e) (he : e.IsGen) {k : ℕ} (hk : 1 ≤ k) :
     ∃ (w : Frm D.toPre C k p.g.b) (u : C), w.IsGen ∧ u ≠ 0 ∧ ∀ (t : SecA A C k) s (c : C), U.ExpandsF C k w₀ t s →
       ValIs t x e c → Summable (coef s p.g w) → HasSum (coef s p.g w) (u * c) := by
-  haveI : IsNoetherianRing R := hB.1
+  have : IsNoetherianRing R := hB.1
   have hbij := (expBijF_and_expandsF_lin hL R _ hB D A G hG U).1 C
   obtain ⟨ω, hω⟩ := (coef_basic R D.toPre C 1 p.g).1
   choose Ω hΩ hΩv using exists_frm_pow ω hω
@@ -613,7 +613,7 @@ theorem value_at_torsion (hL : LL) (hB : AdmBase R I) (hG : IsSemiAbelian G) (U 
 theorem summable_vt [IsLocalRing R] (hL : LL) (hgt : BrGtSt) (hfam : BrFamSt) (hB : AdmBase R I) (hC : CExt R I C)
     {N : NumD C} (ν : NumOf D.toPre C N) {ϑ : Fam D.toPre C 1} {c₀ : C} (hc₀ : c₀ ≠ 0) (hϑ : ν.FamV ϑ (c₀ • N.vth))
     {k : ℕ} (hk : k ≠ 0) (q : N.QT k) : Summable (N.vt q.1.2) := by
-  haveI : IsNoetherianRing R := hB.1
+  have : IsNoetherianRing R := hB.1
   have mem : ∀ x : C, x ∈ (NormedField.valuation (K := C)).valuationSubring ↔ ‖x‖ ≤ 1 := fun x => by
     rw [Valuation.mem_valuationSubring_iff, NormedField.valuation_apply]
     exact Iff.rfl

@@ -150,7 +150,7 @@ theorem exists_linearMap_of_isHkIsog : ∀ (E : Type) [Field E] [NumberField E] 
     rw [hr₀, hr₀, ← map_smul h, ← map_smul h, hh, hh, he, he] at w'
     have := congrArg Units.val (weilIs_unique_fieldPoint _ _ _ Xo.univ.t.PP.isLB ℂ (F.u j P') k _ _ _ _ w' w1)
     simp only [Units.val_mk0, Units.val_pow_eq_pow_val] at this
-    rw [show r₁ a = r₀ a from rfl, show r₁ b = r₀ b from rfl, this, ← Complex.exp_nat_mul]
+    rw [show r₁ a = r₀ a from rfl, show r₁ b = r₀ b from rfl, this, ← Complex.exp_natCast_mul]
     congr 1
     push_cast
     ring

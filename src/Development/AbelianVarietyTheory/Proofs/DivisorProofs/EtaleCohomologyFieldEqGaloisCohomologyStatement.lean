@@ -99,23 +99,23 @@ open CategoryTheory Limits AlgebraicGeometry Opposite CochainComplex CochainComp
 namespace GlobalTheory.EtC
 theorem sh_of_isSepClosed (Ω : Type) [Field Ω] [IsSepClosed Ω] : SH Ω := by
   refine ⟨inferInstance, ?_⟩
-  haveI : Algebra.IsIntegral Ω (IsLocalRing.ResidueField Ω) :=
+  have : Algebra.IsIntegral Ω (IsLocalRing.ResidueField Ω) :=
     Algebra.IsIntegral.of_surjective (Algebra.ofId Ω (IsLocalRing.ResidueField Ω)) IsLocalRing.residue_surjective
   exact Algebra.IsAlgebraic.isSepClosed (F := Ω)
 
 theorem cech_level_acyclic : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary F → ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω] (k : ℕ) (m : ℕ), 0 < m → ∀ y : H R (disc.obj ((cech (Spec.map (CommRingCat.ofHom (algebraMap K Ω)))).obj (op ⦋k⦌))) F m, y = 0 := by
   intro R _ F hF K Ω _ _ _ _ k m hm y
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
-  haveI : Algebra.IsSeparable K Ω := IsSepClosure.separable
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : Algebra.IsSeparable K Ω := IsSepClosure.separable
   have hf : IsIntegralHom (Spec.map (CommRingCat.ofHom (algebraMap K Ω))) :=
     IsIntegralHom.SpecMap_iff.2 fun x => Algebra.IsIntegral.isIntegral x
   obtain ⟨Z, π, e, hπ, -⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsIntegralHom _ _ _ hf (op ⦋k⦌)
-  haveI : IsIntegralHom π := hπ
-  haveI : IsAffine Z := isAffine_of_isAffineHom π
+  have : IsIntegralHom π := hπ
+  have : IsAffine Z := isAffine_of_isAffineHom π
   let φ : Ω →+* Γ(Z, ⊤) := ((Scheme.ΓSpecIso (CommRingCat.of Ω)).inv ≫ π.appTop).hom
-  letI : Algebra Ω Γ(Z, ⊤) := φ.toAlgebra
+  let : Algebra Ω Γ(Z, ⊤) := φ.toAlgebra
   have hint : (π.app ⊤).hom.IsIntegral := π.isIntegral_app ⊤ (isAffineOpen_top _)
-  haveI : Algebra.IsIntegral Ω Γ(Z, ⊤) := by
+  have : Algebra.IsIntegral Ω Γ(Z, ⊤) := by
     refine ⟨fun b => ?_⟩
     obtain ⟨p, hp, h⟩ := hint b
     refine ⟨p.map (Scheme.ΓSpecIso (CommRingCat.of Ω)).hom.hom, hp.map _, ?_⟩
@@ -292,18 +292,18 @@ namespace GlobalTheory.SepCech
 
 theorem ringCocone_isColimit (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [Algebra.IsAlgebraic K Ω] :
     Nonempty (IsColimit (ringCocone K Ω)) := by
-  haveI : ReflectsColimitsOfShape (FinSub K Ω) (forget CommRingCat.{0}) :=
+  have : ReflectsColimitsOfShape (FinSub K Ω) (forget CommRingCat.{0}) :=
     reflectsColimitsOfShape_of_reflectsIsomorphisms
   refine ⟨isColimitOfReflects (forget CommRingCat.{0}) ?_⟩
   refine Types.FilteredColimit.isColimitOf _ _ ?_ ?_
   · intro x
     change Ω at x
     have hx : _root_.IsIntegral K x := (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
-    haveI := IntermediateField.adjoin.finiteDimensional hx
+    have := IntermediateField.adjoin.finiteDimensional hx
     exact ⟨⟨IntermediateField.adjoin K {x}, inferInstance⟩,
       ⟨x, IntermediateField.mem_adjoin_simple_self K x⟩, rfl⟩
   · intro i j xi xj h
-    refine ⟨⟨i.1 ⊔ j.1, by haveI := i.2; haveI := j.2; infer_instance⟩,
+    refine ⟨⟨i.1 ⊔ j.1, by have := i.2; have := j.2; infer_instance⟩,
       homOfLE (le_sup_left (a := i.1)), homOfLE (le_sup_right (b := j.1)), ?_⟩
     apply Subtype.ext
     exact h
@@ -398,7 +398,7 @@ theorem cont (R : Type) [CommRing R] (F : Shv R) (hF : Finitary F) (K Ω : Type)
     (fun _ => show IsIso (𝟙 _) from inferInstance) k
   refine _root_.GlobalTheory.contCone_of_represented R F hF _ _ _ hk (fun L => ?_) ?_
   · obtain ⟨Z, π, e, hπ, -⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsAffineHom _ _ (Spec.map (CommRingCat.ofHom (algebraMap K L.unop.1))) inferInstance k
-    haveI := hπ
+    have := hπ
     exact ⟨Z, isAffine_of_isAffineHom π, ⟨e⟩⟩
   · obtain ⟨Z, π, e, -, -⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsAffineHom _ _ (Spec.map (CommRingCat.ofHom (algebraMap K Ω))) inferInstance k
     exact ⟨Z, ⟨e⟩⟩
@@ -406,12 +406,12 @@ theorem cont (R : Type) [CommRing R] (F : Shv R) (hF : Finitary F) (K Ω : Type)
 theorem cechAug_sepClosure_eqv : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary F → ∀ (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω]
     [IsSepClosure K Ω], Eqv R (cechAug (Spec.map (CommRingCat.ofHom (algebraMap K Ω)))) F := by
   intro R _ F hF K Ω _ _ _ _
-  haveI : Algebra.IsSeparable K Ω := IsSepClosure.separable
+  have : Algebra.IsSeparable K Ω := IsSepClosure.separable
   have hc := cont R F hF K Ω
   have hA : ∀ L : (FinSub K Ω)ᵒᵖ, Eqv R (cechAug (Spec.map (CommRingCat.ofHom (algebraMap K L.unop.1)))) F := by
     intro L
-    haveI := L.unop.2
-    haveI : Algebra.IsSeparable K L.unop.1 := Algebra.isSeparable_tower_bot_of_isSeparable K L.unop.1 Ω
+    have := L.unop.2
+    have : Algebra.IsSeparable K L.unop.1 := Algebra.isSeparable_tower_bot_of_isSeparable K L.unop.1 Ω
     obtain ⟨h1, h2⟩ := _root_.GlobalTheory.spec_map_smooth_surjective_of_isSeparable K L.unop.1
     exact _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology R _ F
   have hw : ∀ L : (FinSub K Ω)ᵒᵖ, (cechCone K Ω).π.app L ≫ cechAug (Spec.map (CommRingCat.ofHom (algebraMap K L.unop.1))) =

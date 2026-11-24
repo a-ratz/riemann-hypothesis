@@ -174,7 +174,7 @@ theorem UpperTheory.ConvolutionTheory.R2.G.prodExt :
       obtain ⟨Cg, hCg⟩ := g.exists_forall_norm_le
       have hif := hint (fun ω => f (r ω, s ω)) Cf (f.measurable.comp hφ) (fun ω => hCf _)
       have hig := hint (fun ω => g (r ω, s ω)) Cg (g.measurable.comp hφ) (fun ω => hCg _)
-      simp only [SimpleFunc.coe_add, Pi.add_apply, add_mul]
+      simp only [FunLike.coe_add, Pi.add_apply, add_mul]
       rw [integral_add hif hig, hf, hg, add_zero]
 
   have hSM : StronglyMeasurable Q := hQ.stronglyMeasurable

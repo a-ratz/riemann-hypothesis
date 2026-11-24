@@ -195,7 +195,7 @@ private theorem isolated {Z Y : Scheme.{0}} {sZ : Z ⟶ Sp ℂ} {s' : Y ⟶ Sp �
       ∀ y' : CxPts s' (RingHom.id ℂ), y'.1 ≫ c₁ = y'.1 ≫ c₂ →
         y' ∈ CxPts.ptsIn s' (RingHom.id ℂ) W → y' = y := by
   obtain ⟨U, V, hV1, hV2, t, hyV, hU, hVa, φ, hφs, hφ1, hφ2, hφk⟩ := hT
-  haveI : IsNoetherianRing (Sec s' V) := IsLocallyNoetherian.component_noetherian ⟨V, hVa⟩
+  have : IsNoetherianRing (Sec s' V) := IsLocallyNoetherian.component_noetherian ⟨V, hVa⟩
   let g : Fin d → Sec s' V := fun j =>
     Sec.res s' hV1 (appSec sZ s' c₁ U (t j)) - Sec.res s' hV2 (appSec sZ s' c₂ U (t j))
   have hgz : ∀ (y' : CxPts s' (RingHom.id ℂ)) (hy' : y' ∈ CxPts.ptsIn s' (RingHom.id ℂ) V),
@@ -226,9 +226,9 @@ private theorem isolated {Z Y : Scheme.{0}} {sZ : Z ⟶ Sp ℂ} {s' : Y ⟶ Sp �
 
 theorem fixFinite_of : FixFinite := by
   intro Z Y sZ s' d c₁ c₂ h₁ h₂ _ _ _ hiso
-  haveI : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian s'
-  haveI : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace s'
-  haveI : IsNoetherian Y := {}
+  have : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian s'
+  have : CompactSpace Y := QuasiCompact.compactSpace_of_compactSpace s'
+  have : IsNoetherian Y := {}
   set F := {y : CxPts s' (RingHom.id ℂ) | y.1 ≫ c₁ = y.1 ≫ c₂} with hF
   have hW : ∀ y : F, ∃ W : Y.Opens, y.1 ∈ CxPts.ptsIn s' (RingHom.id ℂ) W ∧
       ∀ y' : CxPts s' (RingHom.id ℂ), y'.1 ≫ c₁ = y'.1 ≫ c₂ →

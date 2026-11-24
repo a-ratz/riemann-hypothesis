@@ -54,7 +54,7 @@ theorem poly_mul_gaussian_bounded :
   have h1 : ((1 : ℝ) + r) ^ N ≤ Real.exp ((N : ℝ) * r) := by
     calc ((1 : ℝ) + r) ^ N ≤ (Real.exp r) ^ N :=
           pow_le_pow_left₀ (by linarith) (by linarith [Real.add_one_le_exp r]) N
-      _ = Real.exp ((N : ℝ) * r) := by rw [← Real.exp_nat_mul]
+      _ = Real.exp ((N : ℝ) * r) := by rw [← Real.exp_natCast_mul]
   calc ((1 : ℝ) + r) ^ N * Real.exp (-(c * r ^ (2 : ℕ)))
       ≤ Real.exp ((N : ℝ) * r) * Real.exp (-(c * r ^ (2 : ℕ))) :=
         mul_le_mul_of_nonneg_right h1 (Real.exp_pos _).le

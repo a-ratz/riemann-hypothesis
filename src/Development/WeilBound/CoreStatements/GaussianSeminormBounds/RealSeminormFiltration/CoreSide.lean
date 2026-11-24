@@ -98,7 +98,7 @@ theorem gen_minus_small {σ : Type} (A : Module.End ℂ (MvPolynomial σ ℂ)) {
   unfold minusPart
   have h : ∀ e : ℕ, homogeneousComponent e (A (homogeneousComponent (e + 2) g)) = 0 := by
     intro e
-    rw [homogeneousComponent_of_mem hg, if_neg (by omega)]
+    rw [homogeneousComponent_of_mem hg, ite_eq_right (by omega)]
     simp
   simp [h]
 
@@ -229,7 +229,7 @@ theorem exists_gen (c : ℂ) (c0 : ℚ) (hc : c = c0) (La : Ix r s → ℚ)
           epsB b a * fockInner x (fockAct2 p q r s (Eab a b) z) := adj2 p q r s b a x z
       have h2 := hz.2 _ (show units (fockAct2 p q r s) b a x ∈ U ⊓ V from
         ⟨hUK b a hba x hx.1, hVK b a hba x hx.2⟩)
-      rw [epsB, if_pos hba, one_mul] at h1
+      rw [epsB, ite_eq_left hba, one_mul] at h1
       exact h1.symm.trans h2
     obtain ⟨ν, g, hgZ, hg0, hgw⟩ := hwExist2 Z hne hZK
     have hg1 := (mem_polChi_iff_hw c c0 hc g).1 hgZ.1.2
@@ -337,17 +337,17 @@ theorem root_of_hw {p q r s : ℕ} (c : ℂ) (c0 : ℚ) (hc : c = c0) (La : Ix r
         by_cases h1 : x = c1
         · subst h1
           have h2 : ¬ d1 = x := fun h => hc1d1 h.symm
-          simp only [if_true, h2, if_false, hc1d1]
+          simp only [ite_true, h2, ite_false, hc1d1]
           push_cast
           module
         · by_cases h2 : d1 = x
           · subst h2
             have h3 : ¬ d1 = c1 := fun h => hc1d1 h.symm
-            simp only [h1, if_true, if_false]
+            simp only [h1, ite_true, ite_false]
             push_cast
             module
           · have h3 : ¬ x = d1 := fun h => h2 h.symm
-            simp only [h1, h2, h3, if_false]
+            simp only [h1, h2, h3, ite_false]
             push_cast
             module
       · have hsb := PI.FockOneDegW.Core.posC_sb a b hab
@@ -426,10 +426,10 @@ private theorem coeff_pderiv_real_seminorm_filtration (l : σ) (P : MvPolynomial
     by_cases hs : s = γ + Finsupp.single l 1
     · subst hs
       simp
-    · rw [if_neg hs, zero_mul]
+    · rw [ite_eq_right hs, zero_mul]
       rcases Nat.eq_zero_or_pos (s l) with h0 | hpos
       · simp [h0]
-      · rw [if_neg]
+      · rw [ite_eq_right]
         intro h
         apply hs
         rw [← h]
@@ -501,7 +501,7 @@ private theorem exists_mem_support_mul_weight_eq_of_weight_zero (w : σ → ℕ)
     have h2 := mem_support_iff.mp hy
     rw [hc0] at h2
     by_contra hne
-    exact h2 (if_neg hne)
+    exact h2 (ite_eq_right hne)
   refine ⟨γ, ?_, hwγ⟩
   have hsplit : D * g = D * g0 + D * (g - g0) := by ring
   have hrest : ∀ δ ∈ (D * (g - g0)).support, b + 1 ≤ Finsupp.weight w δ := by
@@ -512,9 +512,9 @@ private theorem exists_mem_support_mul_weight_eq_of_weight_zero (w : σ → ℕ)
       first | rw [eq_sub_iff_add_eq, ← MvPolynomial.coeff_add, sub_add_cancel] | simp
     rw [mem_support_iff, hsub, hc0] at hδ
     by_cases hδb : Finsupp.weight w δ = b
-    · rw [if_pos hδb, sub_self] at hδ
+    · rw [ite_eq_left hδb, sub_self] at hδ
       exact absurd rfl hδ
-    · rw [if_neg hδb, sub_zero] at hδ
+    · rw [ite_eq_right hδb, sub_zero] at hδ
       have h3 := hg δ (mem_support_iff.mpr hδ)
       omega
   rw [mem_support_iff, hsplit, MvPolynomial.coeff_add]
@@ -538,9 +538,9 @@ theorem supp_gen_pos {N : ℕ} (pos : κ → Bool) (ρ : Fin N → κ) (hρ : �
     apply Finset.sum_nonpos
     intro c _
     by_cases hc : pos c = true
-    · rw [if_pos hc, hz c hc]
+    · rw [ite_eq_left hc, hz c hc]
       simp
-    · rw [if_neg hc]
+    · rw [ite_eq_right hc]
       simp
   by_contra hk
   push_neg at hk
@@ -548,20 +548,20 @@ theorem supp_gen_pos {N : ℕ} (pos : κ → Bool) (ρ : Fin N → κ) (hρ : �
   have hwu : ∀ j c, w (u j c) = 0 := by
     intro j c
     simp only [w]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨c', _, hc'⟩
     exact huv j c c' hc'.symm
   have hwpos : ∀ c, pos c = true → w (v c) = 0 := by
     intro c hc
     simp only [w]
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨c', hc', h'⟩
     rw [hv h', hc] at hc'
     exact absurd hc' (by decide)
   have hwneg : ∀ c, ¬ pos c = true → w (v c) = 1 := by
     intro c hc
     simp only [w]
-    rw [if_pos]
+    rw [ite_eq_left]
     exact ⟨c, by simpa using hc, rfl⟩
   have hsw : ∀ y, Finsupp.weight w (Finsupp.single y 1) = w y := by
     intro y
@@ -702,7 +702,7 @@ theorem supp_gR (hg : IsHW (fockAct2 p q r s) ν g) {c d : Ix r s} (h : posC c d
     unfold PI.FJM.rai2
     refine Finset.sum_congr rfl (fun a _ => ?_)
     unfold omE
-    rw [if_neg (fun hh => hcd (Prod.ext_iff.mp hh).2), add_zero]
+    rw [ite_eq_right (fun hh => hcd (Prod.ext_iff.mp hh).2), add_zero]
   rw [← e]
   exact h0
 
@@ -768,25 +768,25 @@ theorem supp2 {p q r s : ℕ} {ν : Ix r s → ℚ} {g : Pol p q r s} (hg : IsHW
       (by intro a; cases a <;> simp [linePos]) Sum.inl_injective
       (fun j => (Sum.inl ⟨j, by have := j.isLt; have := k.isLt; omega⟩ : Ix r s))
       (by intro j1 j2 h; simp only [Sum.inl.injEq, Fin.mk.injEq] at h; exact Fin.ext h)
-      (by intro j; simp only [posC, Fin.lt_iff_val_lt_val]; have := j.isLt; omega)
+      (by intro j; simp only [posC, Fin.lt_def]; have := j.isLt; omega)
   · intro l hl
     exact supp_col_pos hg (Sum.inr l) (Sum.inr : Fin q → Ix p q)
       (by intro a; cases a <;> simp [linePos]) Sum.inr_injective
       (fun j => (Sum.inr ⟨j, by have := j.isLt; have := l.isLt; omega⟩ : Ix r s))
       (by intro j1 j2 h; simp only [Sum.inr.injEq, Fin.mk.injEq] at h; exact Fin.ext h)
-      (by intro j; simp only [posC, Fin.lt_iff_val_lt_val]; have := j.isLt; omega)
+      (by intro j; simp only [posC, Fin.lt_def]; have := j.isLt; omega)
   · intro k hk
     exact supp_col_neg hg (Sum.inl k) (Sum.inr : Fin q → Ix p q)
       (by intro a; cases a <;> simp [linePos]) Sum.inr_injective
       (fun j => (Sum.inl ⟨k + 1 + j, by have := j.isLt; omega⟩ : Ix r s))
       (by intro j1 j2 h; simp only [Sum.inl.injEq, Fin.mk.injEq] at h; exact Fin.ext (by omega))
-      (by intro j; simp only [posC, Fin.lt_iff_val_lt_val]; omega)
+      (by intro j; simp only [posC, Fin.lt_def]; omega)
   · intro l hl
     exact supp_col_neg hg (Sum.inr l) (Sum.inl : Fin p → Ix p q)
       (by intro a; cases a <;> simp [linePos]) Sum.inl_injective
       (fun j => (Sum.inr ⟨l + 1 + j, by have := j.isLt; omega⟩ : Ix r s))
       (by intro j1 j2 h; simp only [Sum.inr.injEq, Fin.mk.injEq] at h; exact Fin.ext (by omega))
-      (by intro j; simp only [posC, Fin.lt_iff_val_lt_val]; omega)
+      (by intro j; simp only [posC, Fin.lt_def]; omega)
 
 end PositivityTheory.KReal
 
@@ -812,7 +812,7 @@ theorem star_inj_quot {M T : Type} [AddCommGroup M] [Module ℂ M] [AddCommGroup
     (Y : Submodule ℂ M) [FiniteDimensional ℂ Y] (hY : ∀ y ∈ Y, D y ∈ Y) (hi : ∀ y ∈ Y, D y = 0 → y = 0)
     {y : M} (hy : y ∈ Y) (h0 : D' (π y) = 0) : π y = 0 := by
   let Z : Submodule ℂ M := Y ⊓ LinearMap.ker π
-  haveI : FiniteDimensional ℂ Z := Submodule.finiteDimensional_of_le (S₂ := Y) inf_le_left
+  have : FiniteDimensional ℂ Z := Submodule.finiteDimensional_of_le (S₂ := Y) inf_le_left
   have hZ : ∀ z ∈ Z, D z ∈ Z := by
     intro z hz
     refine ⟨hY z hz.1, ?_⟩
@@ -881,9 +881,9 @@ theorem star_th {p q r s : ℕ} (c τ : ℂ) (c0 τ0 : ℚ) (hc : c = c0) (hτ :
   intro t ht x hx hcas
   let Y : Submodule ℂ (Pol p q r s) :=
     harm1 p q r s ⊓ polChi p q r s c ⊓ homog (Ix p q × Ix r s) (d0 + 2)
-  haveI : FiniteDimensional ℂ (homog (Ix p q × Ix r s) (d0 + 2)) :=
+  have : FiniteDimensional ℂ (homog (Ix p q × Ix r s) (d0 + 2)) :=
     Module.Finite.iff_fg.2 (homogeneousSubmodule_fg _ ℂ (d0 + 2))
-  haveI : FiniteDimensional ℂ Y :=
+  have : FiniteDimensional ℂ Y :=
     Submodule.finiteDimensional_of_le (S₂ := homog (Ix p q × Ix r s) (d0 + 2)) inf_le_right
   have hYK : KSt (units (fockAct2 p q r s)) Y := fun a b hab y hy =>
     ⟨⟨harmonic_stable_second_action a b hab y hy.1.1, polChi_stable_second_action c _ hy.1.2⟩, homogeneous_stable_second_action (d0 + 2) a b hab y hy.2⟩
@@ -906,7 +906,7 @@ theorem star_th {p q r s : ℕ} (c τ : ℂ) (c0 τ0 : ℚ) (hc : c = c0) (hτ :
         refine th_small c c0 hc e ?_ (low_homog a b hg)
         rw [← hd]; push_cast; linarith
     refine ⟨_, second_action_add_lowering hab hg, ?_⟩
-    rw [map_add (f := _), hlow, add_zero, thAct_mk, twAct_apply, star_trace, if_neg hne]
+    rw [map_add (f := _), hlow, add_zero, thAct_mk, twAct_apply, star_trace, ite_eq_right hne]
     simp
   obtain ⟨y, hy, rfl⟩ := th_next c c0 hc d0 hd hx1
   let D : Module.End ℂ (Pol p q r s) := casK (units (twAct p q r s τ)) - (t : ℂ) • 1
@@ -921,7 +921,7 @@ theorem star_th {p q r s : ℕ} (c τ : ℂ) (c0 τ0 : ℚ) (hc : c = c0) (hτ :
   · intro g0 hg0 hDg0
     by_contra hne
     let U : Submodule ℂ (Pol p q r s) := Y ⊓ LinearMap.ker D
-    haveI : FiniteDimensional ℂ U := Submodule.finiteDimensional_of_le (S₂ := Y) inf_le_left
+    have : FiniteDimensional ℂ U := Submodule.finiteDimensional_of_le (S₂ := Y) inf_le_left
     have hU0 : U ≠ ⊥ := by
       intro h
       have : g0 ∈ U := ⟨hg0, hDg0⟩
@@ -947,9 +947,9 @@ theorem star_th {p q r s : ℕ} (c τ : ℂ) (c0 τ0 : ℚ) (hc : c = c0) (hτ :
     have hK := hwK_of_hwSub.1 hw.2
     have hKT : HwK (units (twAct p q r s τ)) (fun x => ν x + τ0) g := by
       refine ⟨fun a => ?_, fun a b h => ?_⟩
-      · rw [star_tw, hK.1 a, if_pos rfl, hτ, ← add_smul]
+      · rw [star_tw, hK.1 a, ite_eq_left rfl, hτ, ← add_smul]
         push_cast; rfl
-      · rw [star_tw, hK.2 a b h, if_neg (PI.FockOneDegW.Core.posC_ne a b h)]
+      · rw [star_tw, hK.2 a b h, ite_eq_right (PI.FockOneDegW.Core.posC_ne a b h)]
         simp
     have h1 : D g = 0 := hgU.2
     rw [hD, cas_hw hgl hKT, ← sub_smul, smul_eq_zero] at h1
@@ -1147,7 +1147,7 @@ theorem side_of {p q r s : ℕ} (c τ : ℂ) (c0 τ0 : ℚ) (hc : c = c0) (hτ :
     sd_rhoA p q r s τ d0, ι, f, sd_rhoA_adj τ τ0 hτ d0, sd_rhoA_gl τ d0, ⟨?_, ?_⟩, ?_, ?_, ?_⟩
   · intro a
     apply Subtype.ext
-    rw [sd_rhoA_coe τ d0 (sd_sb_refl a), sd_fvTw_apply, sd_trace_Eab, if_pos rfl]
+    rw [sd_rhoA_coe τ d0 (sd_sb_refl a), sd_fvTw_apply, sd_trace_Eab, ite_eq_left rfl]
     have h1 : fvAct2 p q r s (Eab a a) (f : FV p q r s) = ((La a : ℚ) : ℂ) • (f : FV p q r s) :=
       hhw.1 a
     rw [h1, Submodule.coe_smul, hτ]
@@ -1156,7 +1156,7 @@ theorem side_of {p q r s : ℕ} (c τ : ℂ) (c0 τ0 : ℚ) (hc : c = c0) (hτ :
   · intro a b hab
     by_cases hs : sameBlock a b
     · apply Subtype.ext
-      rw [sd_rhoA_coe τ d0 hs, sd_fvTw_apply, sd_trace_Eab, if_neg (hne a b hab)]
+      rw [sd_rhoA_coe τ d0 hs, sd_fvTw_apply, sd_trace_Eab, ite_eq_right (hne a b hab)]
       have h1 : fvAct2 p q r s (Eab a b) (f : FV p q r s) = 0 := hhw.2 a b hab
       rw [h1]
       simp

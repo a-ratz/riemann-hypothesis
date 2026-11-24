@@ -111,7 +111,7 @@ theorem cj_smul_P (P : HeightOneSpectrum (𝓞 H.E))
     apply P.ne_bot
     have h' := congrArg (fun I : Ideal (𝓞 H.E) => (cj H)⁻¹ • I) h
     simpa only [inv_smul_smul, Ideal.smul_bot] using h'
-  haveI := P.isPrime
+  have := P.isPrime
   let Q : HeightOneSpectrum (𝓞 H.E) := ⟨(cj H) • P.asIdeal, Ideal.IsPrime.smul (cj H), hne⟩
   have hunder : Q.under (𝓞 H.F) = P.under (𝓞 H.F) := by
     apply HeightOneSpectrum.ext
@@ -120,27 +120,27 @@ theorem cj_smul_P (P : HeightOneSpectrum (𝓞 H.E))
     show algebraMap (𝓞 H.F) (𝓞 H.E) a ∈ (cj H) • P.asIdeal ↔ _
     rw [Ideal.mem_pointwise_smul_iff_inv_smul_mem, cj_inv_fix]
   have hP : P ∈ aboveF (L := H.E) H.F (P.under (𝓞 H.F)) := by
-    simp only [aboveF, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [aboveF, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   have hQ : Q ∈ aboveF (L := H.E) H.F (P.under (𝓞 H.F)) := by
-    simp only [aboveF, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [aboveF, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     exact hunder
   obtain ⟨x, hx⟩ := Finset.card_eq_one.mp h1
   rw [hx, Finset.mem_singleton] at hP hQ
   exact congrArg HeightOneSpectrum.asIdeal (hQ.trans hP.symm)
 
 theorem finrank_OE : Module.finrank (𝓞 H.F) (𝓞 H.E) = 2 := by
-  haveI := H.isCMField_hostE
+  have := H.isCMField_hostE
   rw [← IsFractionRing.finrank_eq (𝓞 H.F) H.F (𝓞 H.E) H.E]
   exact Algebra.IsQuadraticExtension.finrank_eq_two _ _
 
 theorem ef_le_two (P : HeightOneSpectrum (𝓞 H.E)) :
     P.asIdeal.ramificationIdx (𝓞 H.F) * P.asIdeal.inertiaDeg (𝓞 H.F) ≤ 2 := by
   set v := P.under (𝓞 H.F)
-  haveI := v.isPrime
-  haveI : Fintype (v.asIdeal.primesOver (𝓞 H.E)) := Fintype.ofFinite _
+  have := v.isPrime
+  have : Fintype (v.asIdeal.primesOver (𝓞 H.E)) := Fintype.ofFinite _
   have hsum := Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 H.E)
   rw [finrank_OE] at hsum
-  haveI : P.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
+  have : P.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
   have hmem : P.asIdeal ∈ v.asIdeal.primesOver (𝓞 H.E) := ⟨P.isPrime, inferInstance⟩
   have hle := Finset.single_le_sum
     (f := fun q : v.asIdeal.primesOver (𝓞 H.E) => q.1.ramificationIdx (𝓞 H.F) * q.1.inertiaDeg (𝓞 H.F))
@@ -151,12 +151,12 @@ theorem ef_le_two (P : HeightOneSpectrum (𝓞 H.E)) :
 theorem approx (P : HeightOneSpectrum (𝓞 H.E)) (hf : P.asIdeal.inertiaDeg (𝓞 H.F) = 1)
     (x : 𝓞 H.E) : ∃ a : 𝓞 H.F, x - algebraMap (𝓞 H.F) (𝓞 H.E) a ∈ P.asIdeal := by
   set v := P.under (𝓞 H.F)
-  haveI : P.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
-  haveI := v.isMaximal
-  haveI := P.isMaximal
+  have : P.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
+  have := v.isMaximal
+  have := P.isMaximal
   rw [Ideal.inertiaDeg_eq_of_isMaximal v.asIdeal P.asIdeal] at hf
-  letI : Field (𝓞 H.F ⧸ v.asIdeal) := Ideal.Quotient.field _
-  letI : Field (𝓞 H.E ⧸ P.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 H.F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 H.E ⧸ P.asIdeal) := Ideal.Quotient.field _
   have htop : (⊥ : Subalgebra (𝓞 H.F ⧸ v.asIdeal) (𝓞 H.E ⧸ P.asIdeal)) = ⊤ :=
     Subalgebra.bot_eq_top_iff_finrank_eq_one.mpr hf
   have hx : Ideal.Quotient.mk P.asIdeal x ∈ (⊥ : Subalgebra (𝓞 H.F ⧸ v.asIdeal) (𝓞 H.E ⧸ P.asIdeal)) :=
@@ -169,7 +169,7 @@ theorem approx (P : HeightOneSpectrum (𝓞 H.E)) (hf : P.asIdeal.inertiaDeg (�
 
 theorem unram : PI.EtaHostFacts.Unram := by
   intro R H P h1
-  haveI := P.isPrime
+  have := P.isPrime
   have he := Ideal.ramificationIdx_pos (R := 𝓞 H.F) P.asIdeal
   have hf := Ideal.inertiaDeg_pos P.asIdeal (𝓞 H.F)
   have hef := ef_le_two H P

@@ -275,7 +275,7 @@ theorem slice_mem' {κ : Type} [Fintype κ] {Ψ : (κ → AF F) → ℂ} (h : Ψ
   induction h using Submodule.span_induction with
   | mem Ψ h =>
     obtain ⟨f, g, hg, rfl⟩ := h
-    haveI : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+    have : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
     exact Submodule.smul_mem _ (f fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (z i).1)
       (slice_mem (epsK v) (piK v) (continuous_epsK v) (continuous_piK v) (piK_epsK v) hg _)
   | zero => exact zero_mem _

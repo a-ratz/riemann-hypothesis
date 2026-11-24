@@ -99,7 +99,7 @@ def mxC (j : ℕ) (w : what₂.places.Pl) (i : LocT B) : Ideal (heckeAlg0 B j w)
 
 theorem mxC_self (i : LocT B) : mxC B (jOf B i) (wOf B i) i = i.2.1 := by
   unfold mxC
-  exact (dif_pos (rfl : i.1 = (jOf B i, wOf B i))).trans rfl
+  exact (dite_eq_left (rfl : i.1 = (jOf B i, wOf B i))).trans rfl
 
 theorem mxC_max (i : LocT B) : (mxC B (jOf B i) (wOf B i) i).IsMaximal := by
   rw [mxC_self]; exact i.2.2.1
@@ -142,13 +142,13 @@ theorem PsiC_pr (hC : PartCompl B) (hL : MtLoc B hC) (i : LocT B) (x : what₂.M
     simp [PsiC, prMtC]
   rw [e]
   show _ ∈ offOf B i
-  rw [← Submodule.linearProjOfIsCompl_ker (hC i), LinearMap.mem_ker, map_sub]
-  simp only [projOf, Submodule.linearProjOfIsCompl_apply_left]
+  rw [← Submodule.ker_projectionOnto (hC i), LinearMap.mem_ker, map_sub]
+  simp only [projOf, Submodule.projectionOnto_apply_left]
   exact sub_eq_zero.2 rfl
 
 theorem ptX_val (i : LocT B) (v : HeightOneSpectrum (𝓞 H.E)) (k : ℕ) (hvk : GenAt0 H (lOf B i) (B.Qw (wOf B i)) v k)
     (x : XOf B i) : (hTOf B i v k : XOf B i → OOf B i) x = x.1 ⟨B.hK (jOf B i) (wOf B i) v k, Algebra.subset_adjoin ⟨v, k, hvk, rfl⟩⟩ := by
-  simp [hTOf, hTfun, dif_pos hvk]
+  simp [hTOf, hTfun, dite_eq_left hvk]
 
 end Gen
 
@@ -269,7 +269,7 @@ theorem tSep (i : LocT B) (x y : XOf B i) (hxy : x ≠ y) :
   have hz' : z = ⟨B.hK (jOf B i) (wOf B i) v k, Algebra.subset_adjoin ⟨v, k, hvk, rfl⟩⟩ := Subtype.ext hzv
   have := hcon (hTfun B i v k) (Algebra.subset_adjoin ⟨v, k, hvk, rfl⟩)
   rw [hz']
-  simpa [hTfun, dif_pos hvk] using this
+  simpa [hTfun, dite_eq_left hvk] using this
 
 end Gen
 

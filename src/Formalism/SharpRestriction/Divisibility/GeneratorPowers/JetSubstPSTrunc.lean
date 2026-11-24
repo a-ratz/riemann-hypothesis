@@ -140,7 +140,7 @@ private theorem cc_psTrunc_lemma (n : ℕ) (f : MvPowerSeries κ S) :
 
   rw [map_sum]
   simp only [MvPolynomial.constantCoeff_monomial]
-  rw [Finset.sum_ite_eq', if_pos ((mem_degLE_lemma n 0).2 (by simp))]
+  rw [Finset.sum_ite_eq', ite_eq_left ((mem_degLE_lemma n 0).2 (by simp))]
   rfl
 
 private theorem jetTrunc_mk_lemma (n : ℕ) (P : MvPolynomial κ S) :

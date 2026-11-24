@@ -230,7 +230,7 @@ def dI (om : V →L[ℝ] V →L[ℝ] ℝ) (ρ : V → B →L[ℂ] B) (ι : Y →
 
 theorem dI_apply (h : Y → ℂ) (g : V → B) (v : V) (y : Y) (z : V) :
     dI om ρ ι h g v y z = itg om ρ ι (dh om ι h z) g v y + itg om ρ ι h (fun w => fderiv ℝ g w z) v y := by
-  simp only [dI, itg, dh, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [dI, itg, dh, add_apply, smul_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.smulRight_apply,
     Complex.ofRealCLM_apply, ContinuousLinearMap.flip_apply, smul_eq_mul, smul_smul]
   rw [add_comm]
@@ -334,7 +334,7 @@ theorem sm_superpos : ∀ (V Y : Type) [NormedAddCommGroup V] [NormedSpace ℝ V
   have skew : ∀ v w, om w v = -om v w := by
     intro v w
     have := hom (v + w)
-    simp only [map_add (f := _), ContinuousLinearMap.add_apply, hom] at this
+    simp only [map_add (f := _), add_apply, hom] at this
     linarith
   have comm : ∀ v w b, ρ v (ρ w b) = cexp (2 * π * I * (om v w : ℂ)) • ρ w (ρ v b) := by
     intro v w b

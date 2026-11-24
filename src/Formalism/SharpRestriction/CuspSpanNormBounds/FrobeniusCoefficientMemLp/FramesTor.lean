@@ -124,13 +124,13 @@ theorem dT_esI {k r : ℕ} (a : Fin r) : dT k r (esI k r a) = Complex.I ^ a.val 
 
 theorem dT_mid {k r : ℕ} (i : Fin (2 * r + k + 1)) (h1 : r ≤ i.val) (h2 : i.val ≤ r + k) : dT k r i = Complex.I ^ r := by
   unfold dT
-  rw [if_neg (by omega), if_neg (by omega)]
+  rw [ite_eq_right (by omega), ite_eq_right (by omega)]
 
 theorem dT_pair {k r : ℕ} (i j : Fin (2 * r + k + 1)) (hi : i.val < r) (hij : i.val + j.val = 2 * r + k) :
     dT k r j = dT k r i := by
   have hj := j.isLt
   unfold dT
-  rw [if_neg (by omega), if_pos (by omega), if_pos hi]
+  rw [ite_eq_right (by omega), ite_eq_left (by omega), ite_eq_left hi]
   congr 1
   omega
 

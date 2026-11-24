@@ -154,7 +154,7 @@ theorem inum_update (h1 : PtDim) (h3 : UnitZero) {z : (Σ b, ι b) → Ω} {d : 
       obtain ⟨j, hj⟩ := hz.1 c
       have hle : O.valuation (z ⟨c, j⟩) ≤ 0 :=
         h0 ▸ Finset.le_sup (f := fun j : ι c => O.valuation (z ⟨c, j⟩)) (Finset.mem_univ j)
-      exact hj ((Valuation.zero_iff _).mp (le_antisymm hle zero_le'))
+      exact hj ((Valuation.zero_iff _).mp (le_antisymm hle zero_le))
     have hv : vdeg O z (b - a i) * vdeg O z (a i) = vdeg O z b := by
       unfold vdeg
       rw [← Finset.prod_mul_distrib]
@@ -202,8 +202,8 @@ theorem fnField_le_join_inl (y : (Σ b, ι b) → Ω) (y' : (Σ b, ι' b) → Ω
   exact ⟨⟨Sum.inl p.1, p.2⟩, ⟨Sum.inl q.1, q.2⟩, congrArg Sum.inl hpq, rfl⟩
 
 theorem finite_of_le {F F' : IntermediateField k Ω} (h : F ≤ F') [FiniteDimensional F Ω] : FiniteDimensional F' Ω := by
-  letI := (IntermediateField.inclusion h).toRingHom.toAlgebra
-  haveI : IsScalarTower F F' Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := (IntermediateField.inclusion h).toRingHom.toAlgebra
+  have : IsScalarTower F F' Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Module.Finite.of_restrictScalars_finite F F' Ω
 
 theorem IsPt.join_inl {y : (Σ b, ι b) → Ω} {y' : (Σ b, ι' b) → Ω} {d : ℕ} (h : IsPt k y d) (h' : ∀ b, ∃ i, y' ⟨b, i⟩ ≠ 0) :
@@ -213,7 +213,7 @@ theorem IsPt.join_inl {y : (Σ b, ι b) → Ω} {y' : (Σ b, ι' b) → Ω} {d :
   · rintro (b | b)
     · exact h0 b
     · exact h' b
-  · haveI := hf
+  · have := hf
     exact finite_of_le (fnField_le_join_inl (k := k) y y')
 
 theorem num_join_inl (h2 : NumPull) {y : (Σ b, ι b) → Ω} {y' : (Σ b, ι' b) → Ω} {d : ℕ} (h : IsPt k y d)
@@ -279,7 +279,7 @@ theorem exists_top (y : (Σ b, ι b) → Ω) [FiniteDimensional (fnField k y) Ω
 theorem numEq : PtDim → NumPull → UnitZero → NumEq := by
   intro h1 h2 h3 k _ Ω _ _ K _ ι _ K' _ ι' _ y y' d a a' hy hy' h
   have hj := hy.join_inl hy'.1
-  haveI := hj.2.1
+  have := hj.2.1
   obtain ⟨m, w, hw, ht⟩ := exists_top (k := k) (joinPt y y')
   rw [← num_join_inl h2 hy hy'.1, ← num_join_inr h2 hy hy', ← num_join_inl h2 hj hw, ← num_join_inl h2 hj hw]
   unfold num

@@ -143,16 +143,16 @@ private theorem cr_set (p₀ : ℕ) (hp₀ : p₀ ≠ 0) [CharP (ResidueField O)
   have hA : ∀ v, IsPlaceOver (A v) v := by
     intro v
     by_cases h : (l : 𝓞 (W.Lp L)) ∈ v.asIdeal
-    · simp only [A, dif_pos h]
+    · simp only [A, dite_eq_left h]
       exact he ⟨v, h⟩
     · by_cases h' : v = v0
-      · simp only [A, dif_neg h, if_pos h']
+      · simp only [A, dite_eq_right h, ite_eq_left h']
         rw [h']
         exact hA0
-      · simp only [A, dif_neg h, if_neg h']
+      · simp only [A, dite_eq_right h, ite_eq_right h']
         exact isPlaceOver_placeOf Ω v
   have hAl : ∀ v : W.Vl l L, A ↑v = k.pl (e v) := fun v => by
-    simp only [A, dif_pos v.2]
+    simp only [A, dite_eq_left v.2]
   have hAv0 : A v0 = A0 := by simp [A, hlv0]
   have hA_ne_top (v : W.Plc (W.Lp L)) : A v ≠ ⊤ := by
     intro htop
@@ -167,7 +167,7 @@ private theorem cr_set (p₀ : ℕ) (hp₀ : p₀ ≠ 0) [CharP (ResidueField O)
     · rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
       exact_mod_cast hM
     · intro u hu
-      simp only [Set.mem_setOf_eq] at hu ⊢
+      simp only [Set.mem_ofPred_eq] at hu ⊢
       rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
       exact hu.1
   have hsplit_of_valuation (v : W.Plc (W.Lp L)) (hv : (A v).valuation (M : Ω) < 1) :
@@ -264,7 +264,7 @@ theorem UpperTheory.Gal.projectedFormsSystemPart.cRealAv :
       · rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
         exact_mod_cast (Fact.out : l.Prime).ne_zero
       · intro u hu
-        simp only [Set.mem_setOf_eq] at hu ⊢
+        simp only [Set.mem_ofPred_eq] at hu ⊢
         rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
         exact hu
     refine (h1.union (s.St.finite_toSet.union (Set.finite_singleton s.v0))).subset ?_
@@ -314,10 +314,10 @@ theorem UpperTheory.Gal.projectedFormsSystemPart.cRealAv :
       PadicInt.ker_toZModPow, pow_one, ← PadicInt.maximalIdeal_eq_span_p, ← PadicInt.ker_toZMod,
       RingHom.sub_mem_ker_iff, map_one]
     exact h
-  haveI := ok.fin
+  have := ok.fin
   have hcard : ¬ l ∣ Nat.card (ResidueField c.O)ˣ := by
     classical
-    haveI := Fintype.ofFinite (ResidueField c.O)
+    have := Fintype.ofFinite (ResidueField c.O)
     intro hd
     rw [Nat.card_eq_fintype_card, Fintype.card_units] at hd
     obtain ⟨m, -, hm⟩ := FiniteField.card (ResidueField c.O) l
@@ -370,10 +370,10 @@ theorem UpperTheory.Gal.projectedFormsSystemPart.cRealAv :
     obtain ⟨h, hh, rfl⟩ := Subgroup.mem_map.1 hg
     have := hκ1 h 1 (by rw [pow_one]; exact hka.unr _ x.v0M h hh)
     rwa [pow_one] at this
-  haveI : CharP (ResidueField c₁.O) l := Fr.IsCoef.char
-  haveI : Finite (ResidueField c₁.O) := Fr.IsCoef.fin (l := l)
-  haveI : IsAdicComplete (maximalIdeal c₁.O) c₁.O := Fr.IsCoef.complete (l := l)
-  haveI : IsCO c₁.O (ResidueField c₁.O) := (co_res c₁.O).1
+  have : CharP (ResidueField c₁.O) l := Fr.IsCoef.char
+  have : Finite (ResidueField c₁.O) := Fr.IsCoef.fin (l := l)
+  have : IsAdicComplete (maximalIdeal c₁.O) c₁.O := Fr.IsCoef.complete (l := l)
+  have : IsCO c₁.O (ResidueField c₁.O) := (co_res c₁.O).1
   have hφ : ∀ y : ℤ_[l], ((algebraMap c₁.O (ResidueField c₁.O)).comp (algebraMap ℤ_[l] c₁.O)) y = 1 →
       PadicInt.toZMod y = 1 := by
     intro y hy

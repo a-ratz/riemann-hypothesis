@@ -143,7 +143,7 @@ private theorem decompose_coe_eq_homogeneousComponent {σ L : Type} [Field L]
     letI := MvPolynomial.gradedAlgebra (σ := σ) (R := L)
     (((DirectSum.decompose (homogeneousSubmodule σ L)) g) n : MvPolynomial σ L) =
       homogeneousComponent n g := by
-  letI := MvPolynomial.gradedAlgebra (σ := σ) (R := L)
+  let := MvPolynomial.gradedAlgebra (σ := σ) (R := L)
   conv_lhs => rw [← sum_homogeneousComponent g]
   rw [DirectSum.decompose_sum, DirectSum.sum_apply, Submodule.coe_sum]
   by_cases hn : n ∈ Finset.range (g.totalDegree + 1)
@@ -232,7 +232,7 @@ theorem _root_.GlobalTheory.HilbBaseChange.idealHilbertPoly_map : ∀ (K L : Typ
     apply le_antisymm
     · rintro g ⟨hg1, hg2⟩
       have := homogeneousComponent_mem_span_map_homogeneous P hP (mem_span_image_of_mem_ideal_map P hg1) n
-      rwa [homogeneousComponent_of_mem hg2, if_pos rfl] at this
+      rwa [homogeneousComponent_of_mem hg2, ite_eq_left rfl] at this
     · refine Submodule.span_le.2 ?_
       rintro _ ⟨w, ⟨hw1, hw2⟩, rfl⟩
       exact ⟨Ideal.mem_map_of_mem _ hw1,
@@ -273,7 +273,7 @@ theorem _root_.GlobalTheory.HilbBaseChange.idealHilbertPoly_map : ∀ (K L : Typ
     simpa using h
   · intro m
     obtain ⟨h1, h2⟩ := hn₀ (m + n₀) (by omega)
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [← h1, ← h2, hdim]
 
 end GlobalTheory.HilbBaseChange

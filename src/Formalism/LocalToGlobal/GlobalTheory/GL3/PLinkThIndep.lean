@@ -241,7 +241,7 @@ theorem pow_unitary {𝔞 : IdE D} (ha : N1 D 𝔞) :
       ← span_singleton_mul_span_singleton_host D, ← hah, two_mul, pow_add]
 
 theorem norm_chi_eq_one_of_normOne (χ : IdE D → ℂ) (hχ : IsChi D χ) {𝔞 : IdE D} (ha : N1 D 𝔞) : ‖χ 𝔞‖ = 1 := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   obtain ⟨k, hk, z, hz, hspan⟩ := pow_unitary D ha
   have hzu : z ∈ unitary D.host.E := by
     rw [Unitary.mem_iff, star_conj]

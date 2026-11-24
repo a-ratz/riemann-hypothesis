@@ -106,8 +106,8 @@ theorem wd_iop_of (D : D7) (T : Tor D) {N N' : ℕ} (A B : AddSubgroup (VC D N N
   rw [hI]
   by_cases h0 : (A.addSubgroupOf B).index = 0
   · simp [Wd, U, h0]
-  · haveI : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h0
-    haveI := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
+  · have : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h0
+    have := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
     simp only [finsum_eq_sum_of_fintype]
     rw [wd_mul_sum]
     congr 1

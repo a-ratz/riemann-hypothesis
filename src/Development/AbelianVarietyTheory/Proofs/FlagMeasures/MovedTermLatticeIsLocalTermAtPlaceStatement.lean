@@ -135,7 +135,7 @@ theorem coeff_dvd {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace 
   have hgO : (g : 𝓞 E) ≠ 0 := fun h0 => hgE (by rw [← hgcoe, h0]; simp [RingOfIntegers.coe_eq_algebraMap])
   apply dvd_of_loc hgO
   intro P hgP
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨s, hs, hsx⟩ := hc P hgP
   have hsP : s ∉ P.asIdeal := hs
   rw [Submodule.ideal_span_singleton_smul, Submodule.mem_smul_pointwise_iff_exists] at hsx
@@ -437,10 +437,10 @@ theorem leadMinorE_unitri_both {E : Type} [Field E] {N : ℕ} (Z U U' : Matrix (
       intro a b hab
       exact (hU' (Fin.castLE h a) (Fin.castLE h b)).1 hab
     have d1 : (U.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
-      rw [Matrix.det_of_upperTriangular t1]
+      rw [Matrix.det_of_isUpperTriangular t1]
       exact Finset.prod_eq_one (fun a _ => (hU (Fin.castLE h a) (Fin.castLE h a)).2 rfl)
     have d2 : (U'.submatrix (Fin.castLE h) (Fin.castLE h)).det = 1 := by
-      rw [Matrix.det_of_upperTriangular t2]
+      rw [Matrix.det_of_isUpperTriangular t2]
       exact Finset.prod_eq_one (fun a _ => (hU' (Fin.castLE h a) (Fin.castLE h a)).2 rfl)
     rw [key, Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, d1, d2, one_mul, mul_one]
   · rw [dite_eq_right h, dite_eq_right h]

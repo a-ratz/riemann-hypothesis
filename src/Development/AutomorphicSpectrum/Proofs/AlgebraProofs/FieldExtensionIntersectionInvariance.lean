@@ -675,7 +675,7 @@ theorem Setup.exists_centre (S : Setup φ P 𝒲) (V : ValuationSubring L) (hV :
       (fun j => V.valuation (φ (X ⟨k, j⟩))) ⟨i₀, Finset.mem_univ _⟩
     refine ⟨i, fun h0 => hi₀ ((S.ker _ _ (homX _)).mp ?_), fun j => hmx j (Finset.mem_univ _)⟩
     have := hmx i₀ (Finset.mem_univ _)
-    rw [h0, map_zero, le_zero_iff] at this
+    rw [h0, map_zero, nonpos_iff_eq_zero] at this
     exact (Valuation.zero_iff _).mp this
   choose c hc hcmax using hmax
   have hchart : ∀ p, dehom φ c p ∈ V := by
@@ -689,7 +689,7 @@ theorem Setup.exists_centre (S : Setup φ P 𝒲) (V : ValuationSubring L) (hV :
       rw [dehom, eval₂Hom_X', ← V.valuation_le_one_iff, map_div₀]
       have h0 : V.valuation (φ (X ⟨v.1, c v.1⟩)) ≠ 0 := by
         rw [Ne, Valuation.zero_iff]; exact hc v.1
-      exact (div_le_one₀ (zero_lt_iff.mpr h0)).mpr (hcmax v.1 v.2)
+      exact (div_le_one₀ (pos_iff_ne_zero.mpr h0)).mpr (hcmax v.1 v.2)
   let χ : MRing ι R →+* V := (dehom φ c).codRestrict V hchart
   have hχ : ∀ p, (χ p : L) = dehom φ c p := fun p => rfl
   let ρ : MRing ι R →+* IsLocalRing.ResidueField V := (IsLocalRing.residue V).comp χ
@@ -1162,7 +1162,7 @@ theorem loc_facts {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing 
   have : W.IsPrime := hW.1.1
   have htop : multAt (P ⊔ Ideal.span {f}) W ≠ ⊤ := length_localizedQuot_ne_top _ W hW
   unfold divCycle
-  rw [dite_eq_left ⟨hW, hrel⟩, Int.toNat_natCast, ENat.coe_toNat htop]
+  rw [dite_eq_left ⟨hW, hrel⟩, Int.toNat_natCast, ENat.natCast_toNat htop]
   exact h4.symm
 
 omit [DecidableEq K] in
@@ -1493,7 +1493,7 @@ theorem fibre_degree (hϖ : Irreducible ϖ) (hP' : IsModelOver P' d)
   rw [← key4, finsum_eq_sum_of_support_subset _ (s := 𝒲.toFinset),
     Finset.sum_set_coe 𝒲 (f := fun W' => divCycle P' (rr j ι' O f) W' * (srd j W' : ℤ))]
   · refine Finset.sum_congr rfl fun W' h => ?_
-    rw [if_pos (Set.mem_toFinset.mp h).2.2]
+    rw [ite_eq_left (Set.mem_toFinset.mp h).2.2]
   · intro W' h
     rw [Function.mem_support] at h
     rw [Set.coe_toFinset]
@@ -1606,26 +1606,26 @@ theorem push (hϖ : Irreducible ϖ) (hP' : IsModelOver P' d)
           (if (C ϖ : MRing (fun k => ι' (j k)) O) ∈ W then vNum W a else 0)) := by
     intro W
     by_cases hW : (C ϖ : MRing (fun k => ι' (j k)) O) ∈ W
-    · rw [if_pos hW, hδ, ← fibre_num hϖ hP' hP hf hfP hW φ hφ a,
+    · rw [ite_eq_left hW, hδ, ← fibre_num hϖ hP' hP hf hfP hW φ hφ a,
         finsum_eq_sum_of_support_subset _ (s := hZ.toFinset), Finset.sum_filter]
       · refine Finset.sum_congr rfl fun W' _ => ?_
         by_cases h1 : W'.comap (rr j ι' O) = W
-        · rw [if_pos h1, if_pos h1, hg_def]
+        · rw [ite_eq_left h1, ite_eq_left h1, hg_def]
           dsimp only
-          rw [if_pos ((C_mem_comap j ι' W').mp (by rw [h1]; exact hW))]
-        · rw [if_neg h1, if_neg h1]
+          rw [ite_eq_left ((C_mem_comap j ι' W').mp (by rw [h1]; exact hW))]
+        · rw [ite_eq_right h1, ite_eq_right h1]
       · intro W' hW'
         refine hZ.mem_toFinset.mpr ?_
         rw [Function.mem_support] at hW' ⊢
         intro h0
         apply hW'
         simp [h0]
-    · rw [if_neg hW, mul_zero, mul_zero]
+    · rw [ite_eq_right hW, mul_zero, mul_zero]
       refine Finset.sum_eq_zero fun W' hW' => ?_
       have h1 := (Finset.mem_filter.mp hW').2
       rw [hg_def]
       dsimp only
-      rw [if_neg (fun h => hW (h1 ▸ (C_mem_comap j ι' W').mpr h)), mul_zero]
+      rw [ite_eq_right (fun h => hW (h1 ▸ (C_mem_comap j ι' W').mpr h)), mul_zero]
   unfold cycEval
   rw [mul_finsum]
   calc (∑ᶠ W', g W') = ∑ W' ∈ hZ.toFinset, g W' := finsum_eq_sum_of_support_subset g hg

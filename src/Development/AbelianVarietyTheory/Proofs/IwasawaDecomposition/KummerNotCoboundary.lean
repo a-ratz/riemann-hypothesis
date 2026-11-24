@@ -309,7 +309,7 @@ theorem dvd_of_root {k A B : ℕ} {q : ℚ_[l]}
   have hl : (l : ℚ_[l]) ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : l.Prime).ne_zero
   have hl1 : ((l + 1 : ℕ) : ℚ_[l]) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.succ_ne_zero _)
   have hv : ((l + 1 : ℕ) : ℚ_[l]).valuation = 0 := by
-    rw [Padic.valuation_natCast, padicValNat.eq_zero_of_not_dvd]
+    rw [Padic.valuation_natCast, multiplicity_eq_zero_of_not_dvd]
     · simp
     · rw [Nat.dvd_add_right dvd_rfl]
       exact (Fact.out : l.Prime).not_dvd_one
@@ -499,9 +499,9 @@ variable {l : ℕ} [Fact l.Prime]
 theorem exists_full (P : LocPrime l) (K : FinExt l) (b : P.R.B)
     (hb : ∀ g ∈ GK K, P.actQ g b - b = (kummer P g : ℚ_[l]) • P.tB) :
     ∃ b' : P.R.B, ∀ g : GQ l, P.actQ g b' - b' = (kummer P g : ℚ_[l]) • P.tB := by
-  haveI := K.2
-  haveI : Finite (GQ l ⧸ GK K) := Subgroup.quotient_finite_of_isOpen _ K.1.fixingSubgroup_isOpen
-  haveI := Fintype.ofFinite (GQ l ⧸ GK K)
+  have := K.2
+  have : Finite (GQ l ⧸ GK K) := Subgroup.quotient_finite_of_isOpen _ K.1.fixingSubgroup_isOpen
+  have := Fintype.ofFinite (GQ l ⧸ GK K)
   let F : GQ l → P.R.B := fun g => P.actQ g b - (kummer P g : ℚ_[l]) • P.tB
   have h1 : ∀ s g, P.actQ s (F g) = F (s * g) + (kummer P s : ℚ_[l]) • P.tB := fun s g => by
     simp only [F, map_sub, map_smul, map_mul, AlgEquiv.mul_apply, localPrime_galoisAction_periodT, kummer_mul, add_smul, smul_smul,
@@ -535,7 +535,7 @@ theorem log_cong (C : Core l) (e : Per.Fl l) (d : ℤ_[l]) (y : Per.Acris l)
     (hr : ∀ m : ℕ, (rootT e m : ℂ_[l]) = algebraMap (Om l) ℂ_[l] (C.ζ m ^ (PadicInt.toZModPow m d).val))
     (hy : IsLogA e y) (m : ℕ) : ∃ w : Per.Acris l,
     y - ((PadicInt.toZModPow m d).val : Per.Acris l) * C.t = (l : Per.Acris l) ^ m * w := by
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have he1 : e.untilt = 1 := Subtype.ext (by
     have := hr 0
     rw [C.ζ_zero, one_pow, map_one] at this
@@ -570,11 +570,11 @@ theorem log_cong (C : Core l) (e : Per.Fl l) (d : ℤ_[l]) (y : Per.Acris l)
 theorem log_eq (C : Core l) (e : Per.Fl l) (x : ℤ_[l]) (y : Per.Acris l)
     (hr : ∀ m : ℕ, (rootT e m : ℂ_[l]) = algebraMap (Om l) ℂ_[l] (C.ζ m ^ (PadicInt.toZModPow m x).val))
     (hy : IsLogA e y) : y = algebraMap (Per.Ainf l) (Per.Acris l) (Per.zA l x) * C.t := by
-  haveI := (acris_basic l).1
+  have := (acris_basic l).1
   rw [IsHausdorff.eq_iff_smodEq (I := Ideal.span {(l : Per.Acris l)})]
   intro m
   obtain ⟨w, hw⟩ := log_cong C e x y hr hy m
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hk : x - ((PadicInt.toZModPow m x).val : ℤ_[l]) ∈
       RingHom.ker (PadicInt.toZModPow m : ℤ_[l] →+* ZMod (l ^ m)) := by
     rw [RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_self]

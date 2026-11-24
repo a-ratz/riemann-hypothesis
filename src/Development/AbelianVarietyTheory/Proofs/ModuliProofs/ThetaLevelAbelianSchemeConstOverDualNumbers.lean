@@ -92,7 +92,7 @@ theorem rigidity (hG : Out.GlobalFnsSt) {A₀ : Over (Sp K)} {A' G' : Over (Sp (
     {j : A₀.left ⟶ A'.left} {a b : A' ⟶ G'} (hA : IsAbelianScheme A')
     (hj : IsPullback j A₀.hom A'.hom (spMap (TrivSqZeroExt.fstHom K K K).toRingHom))
     (hab : j ≫ a.left = j ≫ b.left) (hη : η[A'] ≫ a = η[A'] ≫ b) : a = b := by
-  haveI := subsingleton_sp (K := K)
+  have := subsingleton_sp (K := K)
   let c : A' ⟶ G' := a * b⁻¹
   let j' : Over.mk (j ≫ A'.hom) ⟶ A' := Over.homMk j rfl
   have h1 : j' ≫ a = j' ≫ b := Over.OverMorphism.ext hab
@@ -185,7 +185,7 @@ theorem lam_push {S S' : Scheme.{0}} {G : Over S} {G' : Over S'} [GrpObj G] [Grp
 theorem lam_eq_zero (hG : Out.GlobalFnsSt) (hA : IsAbelianScheme A)
     (hi : IsPullback io A₀.hom A.hom (spMap (TrivSqZeroExt.fstHom K K K).toRingHom))
     (q : Pic A.left) (hq : pull io q = 0) {T : Over (Sp (DualNumber K))} (x y : T ⟶ A) : lam q x y = 0 := by
-  letI := hA.comm
+  let := hA.comm
   obtain ⟨Q, hQ, rfl⟩ := cls_surj q
   have hN : (cubeLB A ![fst A A, snd A A] Q).IsLB := LB.isLB_linComb hQ _ _
   have eN := cls_cube_two hQ _ _ hN
@@ -246,8 +246,8 @@ theorem tMap_of_const : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Ou
     haveI := t.hom j
     haveI := t₀.hom j
     endo_const hL.globalFns t.ab hi hψ e _ _ (hact j)
-  letI := t.ab.comm
-  letI := t₀.ab.comm
+  let := t.ab.comm
+  let := t₀.ab.comm
   have hk : IsUnit (k : Γ(Sp K, ⊤)) := by
     simpa using b.unit.map (s₀.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of o)).inv.hom)
   exact ⟨ψ₀, hψ, lb_const hL.globalFns t.ab hi hψ e _ _ (hact w) (hw w) t.isLB t₀.isLB h₀ hp.2.2,

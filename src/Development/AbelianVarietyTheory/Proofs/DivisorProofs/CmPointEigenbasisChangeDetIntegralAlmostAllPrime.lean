@@ -148,7 +148,7 @@ theorem tangent_letter_model_relation : ∀ (E : Type) [Field E] [NumberField E]
         (∀ k, mu k = ∑ l, iK (A k l) • nu l) ∧
         ∀ b i, ∑ j, g b i j • fullB yT ⟨b, j⟩ = ∑ k, C ⟨b, i⟩ k • mu k := by
   intro E _ _ _ H Dw l Xo c _ z f La hz p T iK M hval A hA
-  letI := (iK.comp (algebraMap c.F z.K)).toAlgebra
+  let := (iK.comp (algebraMap c.F z.K)).toAlgebra
   intro φ yT y' g a hφ hmap hchg hg hint
   obtain ⟨-, hlet, -, hx, -, hu⟩ := hz
   obtain ⟨vV, hvV, hvw⟩ := _root_.GlobalTheory.LamT.exists_isLieBasis_locMod E H Dw l Xo c z p T iK M hval A hA
@@ -305,7 +305,7 @@ theorem valuation_div_le_one_cofinite : ∀ (K : Type) [Field K] [NumberField K]
     (FractionalIdeal.finite_factors (K := K) (FractionalIdeal.spanSingleton (𝓞 K)⁰ u))
   refine ⟨(h1.union h2).toFinset, ?_⟩
   intro p hp a ha hu
-  simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hp
+  simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hp
   obtain ⟨hpI, hpu⟩ := hp
   have hau : a / u ≠ 0 := div_ne_zero ha.1 hu
   have hsa : FractionalIdeal.spanSingleton (𝓞 K)⁰ a ≠ 0 := by
@@ -357,7 +357,7 @@ theorem GlobalTheory.DetInt.det_integral : ∀ (E : Type) [Field E] [NumberField
   intro E _ _ _ H Dw l Xo c _ z f La hz
   obtain ⟨S, hS⟩ := _root_.GlobalTheory.LocGenVal.valuation_div_le_one_cofinite z.K z.LamL.I z.U.det
   refine ⟨S, fun p hp T iK _hfin hval M => ?_⟩
-  letI := (iK.comp (algebraMap c.F z.K)).toAlgebra
+  let := (iK.comp (algebraMap c.F z.K)).toAlgebra
   intro φ yT y' g a hφ hmap hchg hg hint
   obtain ⟨A, hA, hloc⟩ := hz.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2 p
   obtain ⟨nu, mu, C, hCint, hU, hAmu, hC⟩ :=

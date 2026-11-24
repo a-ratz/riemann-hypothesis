@@ -72,7 +72,7 @@ theorem X_mul_monomial_pderiv_term {R : Type} [CommRing R] {r n : ℕ} (a b : Fi
     (d : Fin r × Fin n →₀ ℕ) (c : R) :
     X (a, s) * pderiv (b, s) (monomial d c) =
       monomial (Finsupp.single (a, s) 1 + (d - Finsupp.single (b, s) 1)) (c * (d (b, s) : R)) := by
-  rw [pderiv_monomial, X, monomial_mul, one_mul]
+  rw [pderiv_monomial, X, monomial_mul_monomial, one_mul]
 
 end GlobalTheory.Alc
 

@@ -75,7 +75,7 @@ private theorem UpperTheory.Reformulated.B.Qp7.partial_sums_isBigO (K : Type*) [
           fun _ _ _ ↦ by positivity
     _ = _ := by
         rw [← Nat.cast_sum, ← Finset.card_preimage_eq_sum_card_image_eq
-          (fun k _ ↦ Ideal.finite_setOfPred_absNorm_eq k)]
+          (fun k _ ↦ Ring.HasFiniteQuotients.finite_absNorm_eq k)]
         simp [Set.coe_eq_subtype]
 
 private theorem UpperTheory.Reformulated.B.Qp7.summable_count_mul (K : Type*) [Field K] [NumberField K] {σ : ℝ}
@@ -99,7 +99,7 @@ theorem UpperTheory.Reformulated.B.Qp7.summable_absNorm_rpow_inv.{u_1} :
         ((↑((Ideal.absNorm : Ideal (NumberField.RingOfIntegers K) → ℕ) I) : ℝ) ^ σ)⁻¹ := by
   intro K _ _ σ hσ
   have hfin : ∀ n : ℕ, Finite {I : Ideal (𝓞 K) // Ideal.absNorm I = n} :=
-    fun n ↦ (Ideal.finite_setOfPred_absNorm_eq n).to_subtype
+    fun n ↦ (Ring.HasFiniteQuotients.finite_absNorm_eq n).to_subtype
   rw [← (Equiv.sigmaFiberEquiv (fun I : Ideal (𝓞 K) ↦ Ideal.absNorm I)).summable_iff,
     summable_sigma_of_nonneg (fun _ ↦ by simp only [Function.comp_apply]; positivity)]
   refine ⟨fun n ↦ Summable.of_finite, ?_⟩

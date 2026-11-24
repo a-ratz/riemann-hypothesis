@@ -138,8 +138,8 @@ theorem evR_rulBC {L : Type} [CommRing L] (ι₀ : c'.F →+* L) (κ : c.F →+*
     (y : letI := ι₀.toAlgebra; FrPt Xo c' L) :
     (letI := ι₀.toAlgebra; evR Xo c' (rulBC hle f) y) =
       (letI : Algebra c.F L := κ.toAlgebra; letI := ι₀.toAlgebra; evR Xo c f (y.res hle h₀)) := by
-  letI : Algebra c.F L := κ.toAlgebra
-  letI := ι₀.toAlgebra
+  let : Algebra c.F L := κ.toAlgebra
+  let := ι₀.toAlgebra
   exact ((rulBC_sec_val_linear E H Dw l Xo c c' hle).1 a n f hf).2 L h₀ y
 
 theorem integral_reread {T : CDVR} (ι₀ ι₁ : c'.F →+* T.Fr) (κ : c.F →+* T.Fr)

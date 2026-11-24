@@ -494,7 +494,7 @@ theorem finrank_le_card_mul_finrank_eig_baseChange : ∀ (K L Γ R W : Type) [Fi
   have inj_of : ∀ {M : Type} [AddCommGroup M] [Module K M] (g : M →ₗ[K] R), Function.Injective g →
       Function.Injective (g.baseChange L) := by
     intro M _ _ g hg
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_preserves_injective_linearMap g hg
   let ιV : L ⊗[K] V →ₗ[L] L ⊗[K] R := V.subtype.baseChange L
   let ιm : L ⊗[K] Vm →ₗ[L] L ⊗[K] R := Vm.subtype.baseChange L
@@ -721,8 +721,8 @@ theorem embReg_of_submodules [Algebra K ℂ] [Finite Γ] (Vm V V₁ V₂ U : Sub
     ∃ n : ℕ, EmbReg ρ S n ∧ (n : ℝ) * Nat.card S ≤ t * Nat.card S₀ * Module.finrank ℂ (eig ρ S₀ lam) := by
   obtain ⟨u0, hu0, r0⟩ := h0
   obtain ⟨u, hu, r1⟩ := h1
-  haveI := (subEquiv B V b0).symm.finiteDimensional
-  haveI := (subEquiv B V₂ b2).symm.finiteDimensional
+  have := (subEquiv B V b0).symm.finiteDimensional
+  have := (subEquiv B V₂ b2).symm.finiteDimensional
   refine GlobalTheory.BadCount.embReg_count_of_ranks K Γ B (ℂ ⊗[K] V) (subAct B tr t1 tm tB) S₀ S ⟨u0, bU _ hu0⟩ ⟨u, bU _ hu⟩
     (det_mem_nonZeroDivisors B tr t1 tm tB S₀ _ r0) (det_mem_nonZeroDivisors B tr t1 tm tB S _ r1)
     (Vm.comap B.val.toLinearMap) (V.comap B.val.toLinearMap) (V₁.comap B.val.toLinearMap) (V₂.comap B.val.toLinearMap)
@@ -786,7 +786,7 @@ theorem shiftG_zero' (a : (E →+* ℂ) × ℕ → ℕ) (n : ℕ) : shiftG Dw a 
   rw [shiftG, zero_smul, AllWt.wtOf_zero, add_zero]
 
 theorem even_shiftG (a : (E →+* ℂ) × ℕ → ℕ) {n : ℕ} (hn : Even n) (s : ℤ) : Even (shiftG Dw a n s).2 :=
-  Even.add ((Int.even_coe_nat n).2 hn) (AllWt.even_wtOf _ _)
+  Even.add ((Int.even_natCast n).2 hn) (AllWt.even_wtOf _ _)
 
 theorem antitone_add_hodge (v : AllWt.Weight Dw) (τ : Psi H) (hv : Antitone (v τ)) {t : ℤ} (ht : 0 ≤ t) :
     Antitone ((v + t • hodgeWt Dw) τ) := by
@@ -799,7 +799,7 @@ theorem antitone_add_hodge (v : AllWt.Weight Dw) (τ : Psi H) (hv : Antitone (v 
 theorem gap_add_hodge (hp : 1 ≤ Dw.p) (hq : 1 ≤ Dw.q) (v : AllWt.Weight Dw) (τ : Psi H) (t : ℤ) :
     gap ((v + t • hodgeWt Dw) τ) (Dw.p - 1) = gap (v τ) (Dw.p - 1) + t := by
   have hk : Dw.p - 1 + 1 < Dw.p + Dw.q := by omega
-  simp only [gap, dif_pos hk, Pi.add_apply, Pi.smul_apply, hodgeWt, CompHt.barWt, Fin.val_mk, smul_eq_mul]
+  simp only [gap, dite_eq_left hk, Pi.add_apply, Pi.smul_apply, hodgeWt, CompHt.barWt, Fin.val_mk, smul_eq_mul]
   split_ifs <;> first | omega | ring
 
 end Weights
@@ -832,7 +832,7 @@ theorem embReg_deep {D : D7} {T : CoreJ D} (hL : LawsJ T) {j : ℕ} (hp1 : 1 ≤
     rw [shiftG_add, neg_add_cancel, shiftG_zero']
   exact embReg_of_cusp (le_add_right hp1) hA Y.U (shiftG (T.Q.Dw j) a n (-c)) (wtZ a n) (shiftG (T.Q.Dw j) a n c)
     (shiftG (T.Q.Dw j) a n (c + c)) (wtOf (T.Q.Dw j) (c • hodgeWt (T.Q.Dw j)) 0) (even_shiftG _ _ hn _) (AllWt.even_wtOf _ _)
-    a0 rfl (shiftG_add _ _ _ _ _) (kp _ (AllWt.even_wtOf _ _)) (kp _ ((Int.even_coe_nat _).2 hn)) (kp _ (even_shiftG _ _ hn _))
+    a0 rfl (shiftG_add _ _ _ _ _) (kp _ (AllWt.even_wtOf _ _)) (kp _ ((Int.even_natCast _).2 hn)) (kp _ (even_shiftG _ _ hn _))
     (finrank_of_goodAt g0).1 (finrank_of_goodAt g2).1 t ht hr S₀ S h0 h1 ρ χ lam hρ
 
 
@@ -1038,7 +1038,7 @@ theorem bad_components_indefinite_alt : GlobalTheory.CovTop.HypothesesX → _roo
   have hemb := fun k => h3 x hx l3 ι p hp i hi Y hY fr π ρ χ Pb lamb H hPb hH hρ k
   choose n hn1 hn2 using hemb
   have hgd := (h4 x hx l4 ι p hp i hi Y hY).1
-  haveI : FiniteDimensional Y.d.c₂.F (Y.V (Gk p i)) := finiteDimensional_of_lat _ hgd.2.1 hgd.2.2
+  have : FiniteDimensional Y.d.c₂.F (Y.V (Gk p i)) := finiteDimensional_of_lat _ hgd.2.1 hgd.2.2
   obtain ⟨S, hSg, hbd⟩ := _root_.GlobalTheory.BadCount.bad_part_le_locShare (Fm.D x ι) _ _ π s hsp ρ Pb lam ψ hwh lamb hlb H hhalf n (3 / 2) hn1 hn2 ψ₀ hψ₀
   have hs := hsh S hSg
   have e0 : (0 : ℝ) ≤ Module.finrank ℂ (eig ρ (Pb.comap π) lamb) := Nat.cast_nonneg _

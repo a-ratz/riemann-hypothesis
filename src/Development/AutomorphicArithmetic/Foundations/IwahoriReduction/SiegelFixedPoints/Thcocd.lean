@@ -291,7 +291,7 @@ theorem UpperTheory.Kd.L.actcls :
     exact GlobalTheory.CyclotomicQExpansion.ThnEx.diam_B X N l w _ hN0 hNl hdc b hbB
   · set A := clsBmu X l n m N x c d (w + 2) gm σ with hAe
     set A' := clsBmu X l n m N x c d (w + 2) (fun r => gm r * g₀) σ with hA'e
-    haveI : NeZero (topMu l n m N) :=
+    have : NeZero (topMu l n m N) :=
       ⟨by unfold topMu; exact mul_ne_zero (pow_ne_zero _ hl.ne_zero) (mul_ne_zero (NeZero.ne N) (NeZero.ne N))⟩
     have hdiv : l ^ n ∣ topMu l n m N := by
       unfold topMu
@@ -391,8 +391,8 @@ theorem lam_eq : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ �
   ∀ tt tt' : ZMod (p ^ n), IsLamG ε p n m s tt → (s ^ (p ^ (L - m))) (zt ε p (L + n)) = zt ε p n ^ tt'.val * zt ε p (L + n) → tt = tt' := by
   intro Ω _ _ _ ε p hpf hp2 L n m hm1 hmn hnL s _ tt tt' hlam hL
   have hp : p.Prime := hpf.out
-  haveI : NeZero p := ⟨hp.ne_zero⟩
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ hp.ne_zero⟩
   obtain ⟨e, rfl⟩ : ∃ e, L = n + e := ⟨L - n, by omega⟩
   set z := zt ε p (n + e + n) with hzdef
   have hz : IsPrimitiveRoot z (p ^ (n + e + n)) := IsNTr.isPrimitiveRoot_zt ε p _
@@ -471,10 +471,10 @@ theorem exists_pow_eq {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) {m n i : ℕ} (hm
   have hlt : 1 < 1 + p ^ m := by omega
   have hnd : ¬ p ∣ 1 + p ^ m := fun h =>
     hp.not_dvd_one ((Nat.dvd_add_left (dvd_pow_self p (by omega))).1 h)
-  have hval := padicValNat.pow_sub_pow (p := p) hodd (x := 1 + p ^ m) (y := 1) hlt
+  have hval := Nat.multiplicity_pow_sub_pow (p := p) hodd (x := 1 + p ^ m) (y := 1) hlt
     (by rw [Nat.add_sub_cancel_left]; exact dvd_pow_self p (by omega)) hnd
     (n := p ^ (n - v - 1 - m)) (pow_ne_zero _ hp.ne_zero)
-  rw [one_pow, Nat.add_sub_cancel_left, padicValNat.prime_pow, padicValNat.prime_pow] at hval
+  rw [one_pow, Nat.add_sub_cancel_left, Nat.multiplicity_prime_pow, Nat.multiplicity_prime_pow] at hval
   have hK1 : 1 < (1 + p ^ m) ^ (p ^ (n - v - 1 - m)) :=
     Nat.one_lt_pow (pow_ne_zero _ hp.ne_zero) hlt
   obtain ⟨e, d, hd, hed⟩ := Nat.exists_eq_pow_mul_and_not_dvd (Nat.sub_ne_zero_of_lt hK1) p
@@ -677,7 +677,7 @@ theorem tate_inv : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, ∀ {�
   refine ⟨1, ?_⟩
   intro Ω _ _ _ ε L m hm1 hmL F F' hF hNT γ hγ
   have hp : p.Prime := hpf.out
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hζ := GlobalTheory.NTr.zt_prim ε p L hp.pos
   obtain ⟨D, hD, hDF⟩ := hF
   obtain ⟨τ, hτ, hT⟩ := hNT
@@ -786,7 +786,7 @@ theorem stab_pow {Ω : Type} [Field Ω] [Algebra ℚ Ω] {A : ValuationSubring �
 theorem mem_of_inZl {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (p : ℕ) [Fact p.Prime]
     (A : ValuationSubring Ω) (hp : ((p : ℕ) : Ω) ∈ A.nonunits) (L : ℕ) (F : Ω) (hF : InZl ε p L F) : F ∈ A := by
   have hpp : p.Prime := Fact.out
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hζ := IsNTr.isPrimitiveRoot_zt ε p L
   have hN : 0 < p ^ L := pow_pos hpp.pos L
   have hz : zt ε p L ∈ A := by
@@ -828,7 +828,7 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω]
 theorem lc_exists (ε : Ω →+* ℂ) (p : ℕ) [Fact p.Prime] (M : ℕ) :
     ∃ e : (Ω ≃ₐ[ℚ] Ω) → ZMod (p ^ M), ∀ g, g (zt ε p M) = zt ε p M ^ (e g).val := by
   have hpp : p.Prime := Fact.out
-  haveI : NeZero (p ^ M) := ⟨pow_ne_zero _ hpp.ne_zero⟩
+  have : NeZero (p ^ M) := ⟨pow_ne_zero _ hpp.ne_zero⟩
   have hζ := IsNTr.isPrimitiveRoot_zt ε p M
   have : ∀ g : Ω ≃ₐ[ℚ] Ω, ∃ t : ZMod (p ^ M), g (zt ε p M) = zt ε p M ^ t.val := fun g => by
     obtain ⟨i, hi, he⟩ := hζ.eq_pow_of_pow_eq_one (ξ := g (zt ε p M)) (by rw [← map_pow, hζ.pow_eq_one, map_one])
@@ -838,7 +838,7 @@ theorem lc_exists (ε : Ω →+* ℂ) (p : ℕ) [Fact p.Prime] (M : ℕ) :
 theorem lc_mul (ε : Ω →+* ℂ) (p : ℕ) [Fact p.Prime] (M : ℕ) (e : (Ω ≃ₐ[ℚ] Ω) → ZMod (p ^ M))
     (he : ∀ g, g (zt ε p M) = zt ε p M ^ (e g).val) (s t : Ω ≃ₐ[ℚ] Ω) : e (s * t) = e s * e t := by
   have hpp : p.Prime := Fact.out
-  haveI : NeZero (p ^ M) := ⟨pow_ne_zero _ hpp.ne_zero⟩
+  have : NeZero (p ^ M) := ⟨pow_ne_zero _ hpp.ne_zero⟩
   have hζ := IsNTr.isPrimitiveRoot_zt ε p M
   apply ZMod.val_injective
   apply hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _)
@@ -847,8 +847,8 @@ theorem lc_mul (ε : Ω →+* ℂ) (p : ℕ) [Fact p.Prime] (M : ℕ) (e : (Ω �
 theorem lc_one (ε : Ω →+* ℂ) (p : ℕ) [Fact p.Prime] (M : ℕ) (hM : 1 ≤ M) (e : (Ω ≃ₐ[ℚ] Ω) → ZMod (p ^ M))
     (he : ∀ g, g (zt ε p M) = zt ε p M ^ (e g).val) : e 1 = 1 := by
   have hpp : p.Prime := Fact.out
-  haveI : NeZero (p ^ M) := ⟨pow_ne_zero _ hpp.ne_zero⟩
-  haveI : Fact (1 < p ^ M) := ⟨Nat.one_lt_pow (by omega) hpp.one_lt⟩
+  have : NeZero (p ^ M) := ⟨pow_ne_zero _ hpp.ne_zero⟩
+  have : Fact (1 < p ^ M) := ⟨Nat.one_lt_pow (by omega) hpp.one_lt⟩
   have hζ := IsNTr.isPrimitiveRoot_zt ε p M
   apply ZMod.val_injective
   apply hζ.pow_inj (ZMod.val_lt _) (ZMod.val_lt _)
@@ -949,7 +949,7 @@ theorem fix_pow {x : Ω} {g : Ω ≃ₐ[ℚ] Ω} (hg : g x = x) (k : ℕ) : (g ^
 
 theorem tt_exists {g : Ω ≃ₐ[ℚ] Ω} (hg : g (zt ε p L) = zt ε p L) : ∃ t, Tt ε p L n g t := by
   have hpp : p.Prime := Fact.out
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hpp.ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ hpp.ne_zero⟩
   have hζ := IsNTr.isPrimitiveRoot_zt ε p (L + n)
   have h0 : zt ε p (L + n) ≠ 0 := hζ.ne_zero (pow_ne_zero _ hpp.ne_zero)
   have h1 : (g (zt ε p (L + n)) / zt ε p (L + n)) ^ p ^ n = 1 := by
@@ -960,7 +960,7 @@ theorem tt_exists {g : Ω ≃ₐ[ℚ] Ω} (hg : g (zt ε p L) = zt ε p L) : ∃
 
 theorem tt_mul {g h : Ω ≃ₐ[ℚ] Ω} {t t' : ZMod (p ^ n)} (hg : g (zt ε p n) = zt ε p n) (h1 : Tt ε p L n g t)
     (h2 : Tt ε p L n h t') : Tt ε p L n (g * h) (t + t') := by
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   unfold Tt at *
   rw [AlgEquiv.mul_apply, h2, map_mul, map_pow, hg, h1, GlobalTheory.K4.TopW.pow_val_add (IsNTr.isPrimitiveRoot_zt ε p n)]
   ring
@@ -1108,9 +1108,9 @@ theorem cores_law : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, ∀ {
   intro Ω _ _ _ ε A hpA L n m hm hmn hnL χ₀ hχ₀ z hzA hcoc ξ F hξF hz1 F' hF'
   have hpp : p.Prime := Fact.out
   have hmL : m ≤ L := hmn.trans hnL
-  haveI : NeZero (p ^ L) := ⟨pow_ne_zero _ hpp.ne_zero⟩
-  haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ hpp.ne_zero⟩
-  haveI : Fact (1 < p ^ L) := ⟨Nat.one_lt_pow (by omega) hpp.one_lt⟩
+  have : NeZero (p ^ L) := ⟨pow_ne_zero _ hpp.ne_zero⟩
+  have : NeZero (p ^ n) := ⟨pow_ne_zero _ hpp.ne_zero⟩
+  have : Fact (1 < p ^ L) := ⟨Nat.one_lt_pow (by omega) hpp.one_lt⟩
   have hζL := IsNTr.isPrimitiveRoot_zt ε p L
   let χ : (Ω ≃ₐ[ℚ] Ω) →* (ZMod (p ^ L))ˣ := MonoidHom.mk' χ₀ fun s t =>
     Units.ext (lc_mul ε p L (fun g => (χ₀ g : ZMod (p ^ L))) hχ₀ s t)
@@ -1305,7 +1305,7 @@ private theorem coc_col [IsAlgClosure ℚ Ω] [CharZero Ω] (ε : Ω →+* ℂ) 
     (hB : ∀ σ ∈ fixMu Ω (topMu l n m N), LiftB X l N w n c₀ (clsBmu X l n m N x c d (w + 2) gm σ) (bB σ))
     {σ τ : Ω ≃ₐ[ℚ] Ω} (hσ : σ ∈ fixMu Ω (topMu l n m N)) (hτ : τ ∈ fixMu Ω (topMu l n m N)) :
     E1 X l n (bB (σ * τ)) (bB σ + X.galB l σ (bB τ)) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨hmem, hco⟩ := wcoc ε X l N c d gm hp x m n hm
   obtain ⟨u, -, hu0, hu⟩ := hco σ hσ τ hτ
   have hN1 : 1 ≤ N := Nat.one_le_iff_ne_zero.2 (NeZero.ne N)
@@ -1331,9 +1331,9 @@ private theorem coc_col [IsAlgClosure ℚ Ω] [CharZero Ω] (ε : Ω →+* ℂ) 
 
 private theorem cycM_mul' [IsAlgClosure ℚ Ω] (M : ℕ) [NeZero M] (s t : Ω ≃ₐ[ℚ] Ω) :
     cycM M (s * t) = cycM M s * cycM M t := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   have h1 := cycM_apply M (s * t) hζ.pow_eq_one
   rw [AlgEquiv.mul_apply, cycM_apply M t hζ.pow_eq_one, map_pow, cycM_apply M s hζ.pow_eq_one, ← pow_mul] at h1
   apply Units.ext
@@ -1345,9 +1345,9 @@ private theorem redTop_cycM [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (n m 
     (y : (ZMod (l ^ (m + n)))ˣ) (s : Ω ≃ₐ[ℚ] Ω)
     (h : s (zt ε l (m + n)) = zt ε l (m + n) ^ (y : ZMod (l ^ (m + n))).val) :
     redTop l n m N (cycM (topM l n m (N * N)) s) = y := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
-  haveI : NeZero l := ⟨hl0⟩
+  have : NeZero l := ⟨hl0⟩
   have hζ : IsPrimitiveRoot (zt ε l (m + n)) (l ^ (m + n)) := by
     have h0 := isPrimitiveRoot_eOm ε (pow_ne_zero (m + n) hl0)
     rw [Nat.cast_pow] at h0
@@ -1424,7 +1424,7 @@ open UpperTheory.Kd.L.Zc in
 theorem UpperTheory.Kd.L.zcoc :
     ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] [CharZero Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (N : ℕ) [NeZero N] (c d : ℕ) (gm : (ZMod l)ˣ → SL(2, ℤ)), Par l N c d gm → ∀ (A : ValuationSubring Ω), ((l : ℕ) : Ω) ∈ A.nonunits → ∀ (x : ZMod N) (w m n c₀ : ℕ), Odd w → 1 ≤ m → ∀ bB : (Ω ≃ₐ[ℚ] Ω) → X.Fn l, (∀ σ ∈ fixMu Ω (topMu l n m N), LiftB X l N w n c₀ (clsBmu X l n m N x c d (w + 2) gm σ) (bB σ)) → (∀ s z, bMid X l n m N bB s z ∈ X.B N l w) ∧ ∀ χ : (Ω ≃ₐ[ℚ] Ω) → (ZMod (l ^ (m + n)))ˣ, (∀ s, s (zt ε l (m + n)) = zt ε l (m + n) ^ (χ s : ZMod (l ^ (m + n))).val) → ∀ s t, Stab A s → ∀ z (φ₁ φ₂ φ₃ : HahnSeries ℚ Ω), IsThB X A N l n (bMid X l n m N bB (s * t) z) φ₁ → IsThB X A N l n (bMid X l n m N bB s z) φ₂ → IsThB X A N l n (bMid X l n m N bB t (z * (χ s)⁻¹)) φ₃ → ∀ r, CgA A l n (φ₁.coeff r) (φ₂.coeff r + s (φ₃.coeff r)) := by
   intro Ω _ _ _ _ ε X l _ N _ c d gm hp A hA x w m n c₀ hw hm bB hB
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have hN1 : 1 ≤ N := Nat.one_le_iff_ne_zero.2 (NeZero.ne N)
   have hcop : Nat.Coprime N l := ((Nat.Prime.coprime_iff_not_dvd Fact.out).2 hp.cop).symm
   have hj : ∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero) := by
@@ -1532,9 +1532,9 @@ private theorem inZl_nat_mul {ε : Ω →+* ℂ} {l k : ℕ} {F : Ω} (a : ℕ) 
 private theorem exists_chi [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (l L : ℕ) [Fact l.Prime] (s : Ω ≃ₐ[ℚ] Ω) :
     ∃ u : (ZMod (l ^ L))ˣ, s (zt ε l L) = zt ε l L ^ (u : ZMod (l ^ L)).val := by
   have hp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hp.ne_zero⟩
+  have : NeZero l := ⟨hp.ne_zero⟩
   have hM : 0 < l ^ L := pow_pos hp.pos L
-  haveI : NeZero (l ^ L) := ⟨hM.ne'⟩
+  have : NeZero (l ^ L) := ⟨hM.ne'⟩
   have hz := IsNTr.isPrimitiveRoot_zt ε l L
   have hs : IsPrimitiveRoot (s (zt ε l L)) (l ^ L) := hz.map_of_injective s.injective
   obtain ⟨k, hk, e⟩ := hz.eq_pow_of_pow_eq_one hs.pow_eq_one
@@ -1550,12 +1550,12 @@ private theorem exists_series (A : ValuationSubring Ω) (f : ℚ → Ω) (hf : �
     exact (Set.isPWO_of_wellQuasiOrderedLE _).image_of_monotone Nat.mono_cast
   refine ⟨⟨fun r => if r ∈ Set.range (Nat.cast : ℕ → ℚ) then f r else 0, hpwo.mono fun r hr => ?_⟩, fun r => ?_, fun i => ?_⟩
   · by_contra h
-    exact hr (if_neg h)
+    exact hr (ite_eq_right h)
   · show (if r ∈ Set.range (Nat.cast : ℕ → ℚ) then f r else 0) ∈ A
     split_ifs
     · exact hf r
     · exact A.zero_mem
-  · exact if_pos ⟨i, rfl⟩
+  · exact ite_eq_left ⟨i, rfl⟩
 
 end Helpers
 
@@ -1575,13 +1575,13 @@ private theorem redZ_redTop (l n m N : ℕ) (y : (ZMod (topM l n m (N * N)))ˣ) 
 
 private theorem redZ_coe (l n m : ℕ) [Fact l.Prime] (x : (ZMod (l ^ (m + n)))ˣ) :
     ((redZ l n m x : (ZMod (l ^ m))ˣ) : ZMod (l ^ m)) = (((x : ZMod (l ^ (m + n))).val : ℕ) : ZMod (l ^ m)) := by
-  haveI : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   rw [ZMod.natCast_val]
   rfl
 
 private theorem val_iff (l n m : ℕ) [Fact l.Prime] (x : (ZMod (l ^ (m + n)))ˣ) :
     (x : ZMod (l ^ (m + n))).val ≡ 1 [MOD l ^ m] ↔ redZ l n m x = 1 := by
-  haveI : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   rw [Units.ext_iff, ← ZMod.natCast_eq_natCast_iff]
   rw [redZ_coe]
   simp
@@ -1661,7 +1661,7 @@ private theorem exists_kappa (l : ℕ) (hp : l.Prime) (κ : ℚ) : ∃ v : ℕ, 
     (A : ValuationSubring Ω), (l : Ω) ∈ A.nonunits → (l : Ω) ^ v * (κ : Ω) ∈ A := by
   obtain ⟨v, b, hb, e⟩ := Nat.exists_eq_pow_mul_and_not_dvd κ.den_nz l hp.ne_one
   refine ⟨v, fun {Ω} _ _ A hl => ?_⟩
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   have hl0 : (l : Ω) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
   have hb0 : (b : Ω) ≠ 0 := Nat.cast_ne_zero.2 (fun h => hb (h ▸ dvd_zero l))
   have e' : (l : Ω) ^ v * (κ : Ω) = (κ.num : Ω) * (b : Ω)⁻¹ := by
@@ -1711,7 +1711,7 @@ theorem UpperTheory.Kd.L.law :
   by_cases hl2 : l = 2
   · exact ⟨0, 1, one_ne_zero, fun ε X c d gm P => absurd hl2 P.odd⟩
   have hp : l.Prime := Fact.out
-  haveI : NeZero l := ⟨hp.ne_zero⟩
+  have : NeZero l := ⟨hp.ne_zero⟩
   obtain ⟨κ, hκ, L₀, har⟩ := arith l N w hw.pos
   obtain ⟨c₂, hsm⟩ := small l w L₀
   obtain ⟨cc, hmk⟩ := mackey l
@@ -1727,13 +1727,13 @@ theorem UpperTheory.Kd.L.law :
       (hsm ε N c' d gm P A hl x m hm (by omega) β t a i) (hv A hl) (natCast_mem A _)
   have hL : L₀ ≤ m + n := not_lt.1 hsmall
   have hn : 1 ≤ n := hm.trans hmn
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have halg : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hj := X.j_hol
   obtain ⟨hB, hcoc⟩ := zcoc ε X l N c' d gm P A hl x w m n c₀ hw hm bB hbB
   choose Φ hΦ using fun s z => _root_.GlobalTheory.ThEx.thex Ω ε X A N l halg hj hl2 P.cop P.five hl n w hw (bMid X l n m N bB s z) (hB s z)
   choose χ hχ using fun s => exists_chi ε l (m + n) s
-  haveI : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ (m + n)) := ⟨pow_ne_zero _ hp.ne_zero⟩
   obtain ⟨zh, hzh⟩ : ∃ zh, redZ l n m zh = y := ZMod.unitsMap_surjective (pow_dvd_pow l (Nat.le_add_right m n)) y
   have hdv : N * l ∣ topMu l n m N := by
     refine ⟨l ^ (m + n - 1) * N, ?_⟩
@@ -1904,11 +1904,11 @@ theorem UpperTheory.Kd.L.thcocd :
   intro Ω _ _ _ ε X l _ hl2 hj A j hOver hjA N _ hN c d e gm hc hd hcc hdc he _hrow _hN10 pr α hAdm
   have hl : l.Prime := Fact.out
   have hl0 : l ≠ 0 := hl.ne_zero
-  haveI : NeZero l := ⟨hl0⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr hl0⟩
-  haveI : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => IsSepClosed.hasEnoughRootsOfUnity_pow Ω l i
+  have : NeZero l := ⟨hl0⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr hl0⟩
+  have : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => IsSepClosed.hasEnoughRootsOfUnity_pow Ω l i
   have hw : Odd (2 * e - 1) := ⟨e - 1, by omega⟩
   have hw2 : 2 * e - 1 + 2 = 2 * e + 1 := by omega
   obtain ⟨c₁, κ, hκ, H⟩ := UpperTheory.Kd.L.twist l N (2 * e - 1) hw

@@ -188,7 +188,7 @@ namespace GlobalTheory.CoverHyp
 theorem restrict_bijective : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s : X ⟶ Sp R) (J : Type) [Finite J] [SemilatticeInf J] (U : J → X.affineOpens) (hU : Monotone U), (∀ i j, (U (i ⊓ j)).1 = (U i).1 ⊓ (U j).1) → ⨆ i, (U i).1 = ⊤ → Function.Bijective (pullHyp1 (CoefMap.restrict (OAff s) hU.functor.op)) := by
   intro R _ X s J _ _ U hU hinf hcov
   classical
-  haveI := Fintype.ofFinite J
+  have := Fintype.ofFinite J
   let B : Type := {V : X.affineOpens // ∃ i, V.1 ≤ (U i).1}
   have hne : ∀ V : B, (Finset.univ.filter fun i => V.1.1 ≤ (U i).1).Nonempty := fun V => by
     obtain ⟨i, hi⟩ := V.2
@@ -457,11 +457,11 @@ theorem bijective_liftSemi_mOm (R R' : Type) [CommRing R] [CommRing R'] [Algebra
     (h : SemiHom (algebraMap R R') α) (f : B →ₛₗ[algebraMap R R'] B') (hf : ∀ b, f b = α b)
     (h0 : Function.Bijective (liftSemi f)) (h1 : Function.Bijective (liftSemi h.m1)) (j : ℕ) :
     Function.Bijective (liftSemi (h.mOm j)) := by
-  letI : Algebra B B' := α.toAlgebra
-  letI : Algebra R B' := ((algebraMap R' B').comp (algebraMap R R')).toAlgebra
-  haveI : IsScalarTower R R' B' := .of_algebraMap_eq fun _ ↦ rfl
-  haveI : IsScalarTower R B B' := .of_algebraMap_eq fun r ↦ (h.map_algebraMap r).symm
-  haveI : Algebra.IsPushout R R' B B' :=
+  let : Algebra B B' := α.toAlgebra
+  let : Algebra R B' := ((algebraMap R' B').comp (algebraMap R R')).toAlgebra
+  have : IsScalarTower R R' B' := .of_algebraMap_eq fun _ ↦ rfl
+  have : IsScalarTower R B B' := .of_algebraMap_eq fun r ↦ (h.map_algebraMap r).symm
+  have : Algebra.IsPushout R R' B B' :=
     ⟨IsBaseChange.of_equiv (LinearEquiv.ofBijective _ h0) fun x ↦ by
       change liftSemi f (1 ⊗ₜ x) = α x
       rw [liftSemi_tmul, one_smul, hf]⟩
@@ -749,7 +749,7 @@ theorem square {R R' : Type} [CommRing R] [CommRing R'] {σ : R →+* R'} {X X' 
 theorem main : ∀ (R R' : Type) [CommRing R] [CommRing R'] [Algebra R R'] [Module.Flat R R'] (X X' : Scheme.{0}) (s : X ⟶ Sp R) (s' : X' ⟶ Sp R') (φ : X' ⟶ X) (h : IsPullback φ s' s (spMap (algebraMap R R'))), IsSeparated s → QuasiCompact s → Function.Bijective (liftSemi (pullHH1 h.w)) := by
   intro R R' _ _ _ _ X X' s s' φ h hs hq
   obtain ⟨J, _, _, U, hU, hinf, hcov⟩ := GlobalTheory.exists_finite_affine_cover_infClosed R X s hs hq
-  haveI : IsAffineHom φ := MorphismProperty.of_isPullback (P := @IsAffineHom) h.flip inferInstance
+  have : IsAffineHom φ := MorphismProperty.of_isPullback (P := @IsAffineHom) h.flip inferInstance
   let U' : J → X'.affineOpens := fun i ↦ ⟨φ ⁻¹ᵁ (U i).1, (U i).2.preimage φ⟩
   have hU' : Monotone U' := fun i j hij x hx ↦ hU hij hx
   have hinf' : ∀ i j, (U' (i ⊓ j)).1 = (U' i).1 ⊓ (U' j).1 := fun i j ↦ by
@@ -759,8 +759,8 @@ theorem main : ∀ (R R' : Type) [CommRing R] [CommRing R'] [Algebra R R'] [Modu
     change ⨆ i, φ ⁻¹ᵁ (U i).1 = ⊤
     rw [← Scheme.Hom.preimage_iSup, hcov]; rfl
   have hp : Monotone fun i : J ↦ (⟨(U' i, U i), le_rfl⟩ : Pair φ) := fun i j hij ↦ ⟨hU' hij, hU hij⟩
-  haveI : Finite Jᵒᵖ := Finite.of_equiv J Opposite.equivToOpposite
-  haveI : ∀ T T' : Jᵒᵖ, Finite (T ⟶ T') := fun T T' ↦
+  have : Finite Jᵒᵖ := Finite.of_equiv J Opposite.equivToOpposite
+  have : ∀ T T' : Jᵒᵖ, Finite (T ⟶ T') := fun T T' ↦
     Finite.of_injective (β := T'.unop ⟶ T.unop) Quiver.Hom.unop Quiver.Hom.unop_inj
   have hb := GlobalTheory.T.deRhamHypercohomologyOne_baseChange_flat_bijective R R' Jᵒᵖ (hU.functor.op ⋙ OAff s) (hU'.functor.op ⋙ OAff s')
     (fun T ↦ GlobalTheory.CechDR.secPull s s' ⟨(U' T.unop, U T.unop), le_rfl⟩)
@@ -997,11 +997,11 @@ namespace GlobalTheory
 
 theorem primCris_isBC_of_nilThick : ∀ (A₀ : Over (Sp ℂ)) [GrpObj A₀] (g : ℕ), IsAbelianScheme A₀ → SmoothOfRelativeDimension g A₀.hom → ∀ (D : Type) [CommRing D] [Algebra ℂ D] (π : D →+* ℂ) (κ : DividedPowers (RingHom.ker π)), IsNilDP κ → (∀ a : ℂ, π (algebraMap ℂ D a) = a) → ∀ (k : GrpMor (dp0 ℂ) (𝟙 _) A₀ κ (spMap π) A₀ (algebraMap ℂ D) (𝟙 _) (Over.Hom.left (𝟙 A₀))), k.IsBC ∧ Submodule.span D (Set.range k.pull) = ⊤ := by
   intro A₀ _ g hA _ D _ _ π κ hκ hπ k
-  haveI : Smooth A₀.hom := hA.smooth
-  haveI : IsProper A₀.hom := hA.proper
+  have : Smooth A₀.hom := hA.smooth
+  have : IsProper A₀.hom := hA.proper
   let P : Over (Sp ℂ) := A₀ ⊗ A₀
-  haveI : Smooth P.hom := smooth_tensorObj_hom A₀ A₀
-  haveI : IsProper P.hom := by
+  have : Smooth P.hom := smooth_tensorObj_hom A₀ A₀
+  have : IsProper P.hom := by
     change IsProper (A₀ ⊗ A₀).hom
     rw [Over.tensorObj_hom]; infer_instance
   have m2 : IsMor (dp0 ℂ) (P.hom ≫ 𝟙 _) κ (P.hom ≫ spMap π) (algebraMap ℂ D) (𝟙 P.left) :=

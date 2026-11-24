@@ -67,7 +67,7 @@ theorem fixed_frob (c : ↥(MaximalUnramifiedExtension l)) (hc : frobUr (l := l)
     rw [e3, e, e2]
     exact Submodule.smul_mem _ _ (P.PD K).one_mem
   obtain ⟨q, hq⟩ := (P.PD K).fund _ h1 h2
-  haveI := nontrivial_B P
+  have := nontrivial_B P
   refine ⟨q, (algebraMap ↥(MaximalUnramifiedExtension l) P.R.B).injective ?_⟩
   rw [← hq, ← IsScalarTower.algebraMap_apply]
 
@@ -81,7 +81,7 @@ theorem act_zpow (g : GQ l) (a : ℤ) :
       Units.map (algebraMap ℚ_[l] P.R.B : ℚ_[l] →* P.R.B) (P.χQ g) * (isUnit_tB P).unit := by
     ext; simp [localPrime_galoisAction_periodT, Algebra.smul_def]
   have h2 := congrArg (fun u : P.R.Bˣ => ((u ^ a : P.R.Bˣ) : P.R.B)) h
-  simp only [mul_zpow, ← map_zpow, Units.val_mul, Units.coe_map, MonoidHom.coe_coe] at h2
+  simp only [mul_zpow, ← map_zpow, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass] at h2
   rw [← map_zpow P.χQ]
   exact h2
 

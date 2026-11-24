@@ -101,7 +101,7 @@ theorem frobDense : ∀ D : D7, GlobalTheory.TwSys.Cheb → FrobDense D := by
     Ideal.finite_factors (by simpa using hne)
   obtain ⟨v, hv, hf, -, B, hB, -, σ, hσ, hU⟩ := hC D.host.E D.nd.Om L.fixingSubgroup L.fixingSubgroup_isOpen
     ((InfiniteGalois.normal_iff_isGalois L).2 hgal) g (f1.toFinset ∪ hT.toFinset)
-  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton,
+  simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton,
     not_or] at hv
   obtain ⟨h1, h2⟩ := hv
   obtain ⟨n, hx⟩ := exists_int_sub_mem v hf x

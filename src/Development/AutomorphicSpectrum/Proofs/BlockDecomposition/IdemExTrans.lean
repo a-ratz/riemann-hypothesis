@@ -274,9 +274,9 @@ theorem evalV_sum (S : Finset (Pl F)) (u : Pl F) :
     unfold singleV
     by_cases huv : u = v
     · subst huv
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       exact RestrictedProduct.single_eq_same _ _ _
-    · rw [if_neg huv]
+    · rw [ite_eq_right huv]
       exact RestrictedProduct.single_eq_of_ne _ _ huv
   simp only [hs]
   rw [Finset.sum_ite_eq]
@@ -403,7 +403,7 @@ theorem exists_open_mul_eq_idem :
     (∀ (D : D7) (a : AE D), (∀ w, compInf D.host.F D.host.E w a = 0) → (∀ v, cv D v a = 0) → a = 0) →
     ∀ (D : D7) (S : Finset (Pl D)) (e : AE D), IsIdem S e → ∃ U : Set (AE D), IsOpen U ∧ 1 ∈ U ∧ ∀ x ∈ U, ∃ b, x * b = e := by
   intro hc D S e he
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have hn := continuous_norm (R := AF D.host.F) (A := AE D)
   have cI : ∀ w, Continuous (evInf D.host.F w) := fun w => (continuous_apply w).comp continuous_fst
   have cF : ∀ v, Continuous (evFin D.host.F v) := fun v => (RestrictedProduct.continuous_eval v).comp continuous_snd
@@ -414,12 +414,12 @@ theorem exists_open_mul_eq_idem :
         (⋂ w, {a : AE D | evInf D.host.F w (Algebra.norm (AF D.host.F) a) ≠ 0}) ∩
         ⋂ v ∈ S, {a : AE D | evFin D.host.F v (Algebra.norm (AF D.host.F) a) ≠ 0} := by
       ext a
-      simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+      simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     rw [h]
     refine (isOpen_iInter_of_finite fun w => ?_).inter (isOpen_biInter_finset fun v _ => ?_)
     · exact isOpen_ne_fun ((cI w).comp hn) continuous_const
     · exact isOpen_ne_fun ((cF v).comp hn) continuous_const
-  · simp only [Set.mem_setOf_eq, map_one]
+  · simp only [Set.mem_ofPred_eq, map_one]
     exact ⟨fun _ => one_ne_zero, fun _ _ => one_ne_zero⟩
   · rintro x ⟨h1, h2⟩
     obtain ⟨c, hxc⟩ := exists_mul_eq_norm (R := AF D.host.F) x
@@ -561,7 +561,7 @@ theorem complete_frame (σ : A →+* A) (hσ : ∀ a, σ (σ a) = a) {G Gi : Mat
     ∃ N : Matrix ι ((ρ ⊕ τ) ⊕ τ) A, e • N = N ∧ (N.map σ)ᵀ * (G * N) = e • gam B ∧
       (∀ i j, N i (Sum.inl (Sum.inl j)) = x i j) ∧
       ∀ i j, N i (Sum.inl (Sum.inr j)) = (v - x * (Bi * ((x.map σ)ᵀ * (G * v)))) i j := by
-  letI : StarRing A :=
+  let : StarRing A :=
     { star := σ
       star_involutive := hσ
       star_mul := fun a b => by rw [map_mul, mul_comm]

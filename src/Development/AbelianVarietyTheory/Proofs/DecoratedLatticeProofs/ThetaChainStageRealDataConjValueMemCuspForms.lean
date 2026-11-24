@@ -77,7 +77,7 @@ local notation:max "MultilinearMap" R:max M:max N:max =>
 
 theorem _root_.GlobalTheory.T.finiteDimensional_span_multilinear_values' : ∀ {ι : Type} [Fintype ι] (E : ι → Type) [∀ i, AddCommGroup (E i)] [∀ i, Module ℂ (E i)] (F : Type) [AddCommGroup F] [Module ℂ F] (T : MultilinearMap ℂ E F) (W : ∀ i, Submodule ℂ (E i)), (∀ i, FiniteDimensional ℂ (W i)) → FiniteDimensional ℂ (Submodule.span ℂ {f | ∃ v : ∀ i, E i, (∀ i, v i ∈ W i) ∧ f = T v}) := by
   intro ι _ E _ _ F _ _ T W hW
-  letI : ∀ i, FiniteDimensional ℂ (W i) := hW
+  let : ∀ i, FiniteDimensional ℂ (W i) := hW
   let restricted : (∀ i, W i) →ₘₗ[ℂ] F := T.compLinearMap (fun i => (W i).subtype)
   apply Submodule.finiteDimensional_of_le (S₂ := LinearMap.range (PiTensorProduct.lift restricted))
   rw [Submodule.span_le]
@@ -312,7 +312,7 @@ theorem isKFinite_value (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel V S) (h
   choose W hWf hvW hWK using fun τ => exists_kStable M τ (hv τ)
   let W' : ∀ τ, Submodule ℂ (M.sm τ) := fun τ => (W τ).comap (M.sm τ).subtype
   have hW' : ∀ τ, FiniteDimensional ℂ (W' τ) := fun τ => by
-    haveI := hWf τ
+    have := hWf τ
     refine Module.Finite.of_injective (LinearMap.codRestrict (W τ) ((M.sm τ).subtype.comp (W' τ).subtype)
       fun x => x.2) fun x y h => ?_
     exact Subtype.ext (Subtype.ext (congrArg (fun z : W τ => (z : M.H τ)) h))

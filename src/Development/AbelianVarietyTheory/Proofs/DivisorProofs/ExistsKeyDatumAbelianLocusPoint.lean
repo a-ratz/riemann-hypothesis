@@ -105,7 +105,7 @@ theorem exists_keyOn : ∀ (A B : Type) [CommRing A] [IsDomain A] [IsNoetherianR
   have hWsub : (W : Set (Sp A)) ⊆ abLocus G := subset_rfl
   have hprop : IsProper (G.hom ∣_ W) := GlobalTheory.AbLocusProperNormal.isProper_restrict_of_subset_abLocus A G hG W hWsub
   have hGW : IsAbelianScheme ((Over.pullback W.ι).obj G) := GlobalTheory.SquareSemiOpen.isAb_pullback_open G hG W hprop
-  haveI : IsProper ((Over.pullback W.ι).obj G).hom := hGW.proper
+  have : IsProper ((Over.pullback W.ι).obj G).hom := hGW.proper
   obtain ⟨ha, hk⟩ := hpol W hWsub
   obtain ⟨x', hx'⟩ : ∃ x' : Sp B ⟶ W.toScheme, x' ≫ W.ι = spMap f :=
     ⟨IsOpenImmersion.lift W.ι (spMap f) (by rw [Scheme.Opens.range_ι]; exact hr), IsOpenImmersion.lift_fac _ _ _⟩
@@ -138,7 +138,7 @@ theorem exists_keyOn : ∀ (A B : Type) [CommRing A] [IsDomain A] [IsNoetherianR
     { comm := hsa.comm, smooth := hsa.smooth,
       proper := MorphismProperty.of_isPullback (P := @IsProper) h₃.1 hGW.proper
       geomConnected := hsa.geomConnected }
-  haveI := hsa.comm
+  have := hsa.comm
   let P : PolAV (Sp B) :=
     { A := (Over.pullback (spMap f)).obj G
       isAb := hA

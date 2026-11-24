@@ -107,7 +107,7 @@ end Local
 theorem one_mem_GLs (n : ℕ) : (1 : Mat n) ∈ GLs n := by simp [GLs]
 
 theorem mul_mem_GLs {n : ℕ} {x y : Mat n} (hx : x ∈ GLs n) (hy : y ∈ GLs n) : x * y ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq, det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, det_mul] at *
   exact mul_ne_zero hx hy
 
 theorem unitary_mem_GLs {n : ℕ} (k : Matrix.unitaryGroup (Fin n) ℂ) : k.1 ∈ GLs n := by

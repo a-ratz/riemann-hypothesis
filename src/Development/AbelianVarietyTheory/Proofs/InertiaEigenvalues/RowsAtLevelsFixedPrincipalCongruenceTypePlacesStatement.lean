@@ -110,7 +110,7 @@ theorem isLift_of_isLiftAt {L : Type} [Field L] [NumberField L] [IsCMField L] {g
       j (((y : Matrix (Fin n) (Fin n) ℤ_[g]) a b - (c : ℤ_[g]) : ℤ_[g]) : ℚ_[g]) := by
     simp [GlobalTheory.GLp.inc, Matrix.GeneralLinearGroup.map]
   rw [he]
-  exact val_lt_one_of_cont _ j hj (by rw [PadicInt.padic_norm_e_of_padicInt]; exact hnorm)
+  exact val_lt_one_of_cont _ j hj (by rw [PadicInt.norm_coe]; exact hnorm)
 
 theorem exists_conj {R S : Type} [CommRing R] [CommRing S] (θ : R ≃+* S) (σ : R →+* R) (hσ : ∀ a, σ (σ a) = a) {m n : ℕ} (h : m = n)
     {ι : Type} [Fintype ι] (ε : ι → R) (h1 : ∀ j, ε j * ε j = ε j) (h2 : ∀ j, ε j * σ (ε j) = 0)
@@ -379,7 +379,7 @@ theorem rows_fixed : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : T
   obtain ⟨plg, iso, hplg, -, -, hpe⟩ := hP.keep.grp
   have hβ := hP.char.base.lev.βY 0 Y.hm
   have hinj := GlobalTheory.PlaceInj.splitPlace_v_injective D s hs
-  haveI : Fintype (Σ k : Fin 2, D.nd.PlG k) := Fintype.ofEquiv _ plg.symm
+  have : Fintype (Σ k : Fin 2, D.nd.PlG k) := Fintype.ofEquiv _ plg.symm
   obtain ⟨c, hc⟩ := core Y.hF Y.PY Y.stdPsi.1 (R.βY 0) _ _ hβ (fun kv : (Σ k : Fin 2, D.nd.PlG k) => s kv.1 kv.2) hinj
   have hA : ∀ (k : Fin 2) (v : D.nd.PlG k) (y : GL (Fin D.R.r) ℤ_[D.host.g k]) (x : GAf D.host.E D.R.r),
       IsLiftAt (s k v) (j k v) y x → IsLevelLift (Yc D 0) (R.βY 0) (R.dat0 R.triv)
@@ -394,7 +394,7 @@ theorem rows_fixed : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : T
       intro i i' hij
       exfalso
       unfold blkOf at hij
-      rw [if_pos (hr i), if_pos (hr i')] at hij
+      rw [ite_eq_left (hr i), ite_eq_left (hr i')] at hij
       exact lt_irrefl 0 hij
     · exact absurd hP (Finset.notMem_empty PP)
     · generalize hγ : GlobalTheory.GoodTypes.facHom D k v (GlobalTheory.GLp.red (D.host.g k) D.R.r y) = γ

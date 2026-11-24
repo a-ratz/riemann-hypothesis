@@ -403,7 +403,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.matIrr_open :
   obtain ⟨x, hx, hx', -⟩ := exists_sigma Ω c e ψ o₁ hD S A F hF F.vl (Set.mem_insert _ _)
   have hv : (A F.vl).valuation (l : Ω) < 1 := by simpa using (hF.isOver F.vl (l : 𝓞 ℚ)).2 hF.vl
   have hu : IsUnit (1 + (l : ℤ_[l])) := by
-    simpa using isUnit_one_sub_self_of_mem_nonunits (-(l : ℤ_[l])) (by simpa using PadicInt.prime_p.not_unit)
+    simpa using isUnit_one_sub_self_of_mem_nonunits (-(l : ℤ_[l])) (by simpa using PadicInt.prime_p.not_isUnit)
   obtain ⟨σ, hσ, hσ'⟩ := GlobalTheory.CycInertia.cycZ_Ine_surjective Ω l (A F.vl) hv hu.unit
   set m := U.normalCore.index * Nat.card (ZMod N)ˣ with hm
   have hm0 : m ≠ 0 := mul_ne_zero Subgroup.FiniteIndex.index_ne_zero Nat.card_pos.ne'

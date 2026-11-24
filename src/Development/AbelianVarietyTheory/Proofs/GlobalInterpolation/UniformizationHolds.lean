@@ -98,8 +98,8 @@ theorem lamConj_spec (hU : Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensit
     (ρ : M →ₐ[ℚ] ℂ) (Λ : AddSubgroup ℂ) (h2 : g2 Λ ∈ M) (h3 : g3 Λ ∈ M) (h1 : Formalism.MainNotions.TaylorLogMetric.discr Λ = 1) :
     g2 (lamConj M ρ Λ) = ρ ⟨g2 Λ, h2⟩ ∧ g3 (lamConj M ρ Λ) = ρ ⟨g3 Λ, h3⟩ ∧
       Formalism.MainNotions.TaylorLogMetric.discr (lamConj M ρ Λ) = 1 := by
-  have hl2 : liftM M (g2 Λ) = ⟨g2 Λ, h2⟩ := dif_pos h2
-  have hl3 : liftM M (g3 Λ) = ⟨g3 Λ, h3⟩ := dif_pos h3
+  have hl2 : liftM M (g2 Λ) = ⟨g2 Λ, h2⟩ := dite_eq_left h2
+  have hl3 : liftM M (g3 Λ) = ⟨g3 Λ, h3⟩ := dite_eq_left h3
   have hdM : (⟨g2 Λ, h2⟩ : M) ^ 3 - 27 * (⟨g3 Λ, h3⟩ : M) ^ 2 = 1 := by
     apply M.val.injective
     rw [map_sub, map_mul, map_pow, map_pow, map_ofNat, map_one]
@@ -124,7 +124,7 @@ def conjO (D : D7) : 𝓞 D.host.K ≃+* 𝓞 D.host.K :=
 theorem phi_conjO (D : D7) (a : 𝓞 D.host.K) :
     D.host.φ₀ (((conjO D a : 𝓞 D.host.K) : D.host.K) : D.host.E) =
       starRingEnd ℂ (D.host.φ₀ ((a : D.host.K) : D.host.E)) := by
-  haveI := Formalism.MainNotions.UnusedSlot33.HK.isGalK D.host
+  have := Formalism.MainNotions.UnusedSlot33.HK.isGalK D.host
   have h : (((conjO D a : 𝓞 D.host.K) : D.host.K) : D.host.E) = D.host.conj ((a : D.host.K) : D.host.E) := by
     rw [conjO, RingOfIntegers.mapRingEquiv_apply]
     exact AlgEquiv.restrictNormal_commutes D.host.conj D.host.K (a : D.host.K)
@@ -137,7 +137,7 @@ theorem lamOf_map_cj (D : D7) (c : Ideal (𝓞 D.host.K)) (x : ℂ) :
   rw [AddMonoidHom.map_closure]
   congr 1
   ext w
-  simp only [Set.mem_image, Set.mem_setOf_eq]
+  simp only [Set.mem_image, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨_, ⟨a, ha, rfl⟩, rfl⟩
     refine ⟨conjO D a, Ideal.mem_map_of_mem _ ha, ?_⟩

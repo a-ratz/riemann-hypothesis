@@ -57,7 +57,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] [FiniteD
   (σ : E →ₐ[F] E) {n : ℕ} (J : Matrix (Fin n) (Fin n) E)
 
 theorem isTopRing_tens : IsTopologicalRing (Af F ⊗[F] E) := by
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
   first
   | exact IsModuleTopology.topologicalRing (Af F) (Af F ⊗[F] E)
   | exact IsModuleTopology.isTopologicalRing (Af F) (Af F ⊗[F] E)
@@ -69,15 +69,15 @@ private theorem subgroup_isTopologicalGroup {G : Type*} [Group G] [TopologicalSp
   inferInstance
 
 theorem isTopGroup_HA : IsTopologicalGroup (HA (Af F) σ J) := by
-  haveI := isTopRing_tens (F := F) (E := E)
+  have := isTopRing_tens (F := F) (E := E)
   unfold HA HR Formalism.UG.UJ
   exact subgroup_isTopologicalGroup (G := GL (Fin n) (Af F ⊗[F] E)) _
 
 theorem borel_HA : BorelSpace (HA (Af F) σ J) := ⟨rfl⟩
 
 theorem sub_top_borel (H : Subgroup (HA (Af F) σ J)) : IsTopologicalGroup H ∧ BorelSpace H := by
-  haveI := isTopGroup_HA σ J
-  haveI := borel_HA σ J
+  have := isTopGroup_HA σ J
+  have := borel_HA σ J
   exact ⟨inferInstance, inferInstance⟩
 
 end Gen

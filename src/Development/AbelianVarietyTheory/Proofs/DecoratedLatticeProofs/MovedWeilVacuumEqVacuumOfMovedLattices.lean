@@ -199,7 +199,7 @@ theorem norm_weilRepresentation_thetaFunction_preserved : ∀ (D : D7) (ψ : Add
   intro D ψ S T μ om hW f hf p m 𝓕 hm
   have hU := hW.om_unit m 𝓕 hm.1 hm.2.1 p f hf
   have hf' := hW.om_pres p f hf
-  haveI : OpensMeasurableSpace (WO S T) := ⟨le_rfl⟩
+  have : OpensMeasurableSpace (WO S T) := ⟨le_rfl⟩
   have key : ∀ F : WO S T → ℂ, Continuous F → nrm2 m 𝓕 F = (∫⁻ w in 𝓕, ‖F w‖ₑ ^ 2 ∂m).toReal := by
     intro F hF
     unfold nrm2
@@ -208,7 +208,7 @@ theorem norm_weilRepresentation_thetaFunction_preserved : ∀ (D : D7) (ψ : Add
       (Filter.Eventually.of_forall fun w => sq_nonneg ‖F w‖) hc.aestronglyMeasurable]
     congr 1
     refine lintegral_congr fun w => ?_
-    rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _)]
+    rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _)]
   rw [key _ hf'.cont, key _ hf.cont, hU]
 
 theorem latMove : ∀ (D : D7) (S T : HSp D) (a b : ℕ) (hS : S.rank = a) (hT : T.rank = b), S.gram = 1 → T.gram = 1 →

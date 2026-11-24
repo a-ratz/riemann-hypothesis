@@ -147,7 +147,7 @@ private theorem ab_char {l : ℕ} [Fact l.Prime] (k : Type) [Field k] [CharP k l
   let j : Multiplicative (ZMod l) →* Multiplicative k :=
     AddMonoidHom.toMultiplicative (ZMod.castHom (dvd_refl l) k).toAddMonoidHom
   have hj : Function.Injective j := (ZMod.castHom (dvd_refl l) k).injective
-  haveI : Nontrivial (B ⧸ K) := Finite.one_lt_card_iff_nontrivial.1 (hq.symm ▸ hl.one_lt)
+  have : Nontrivial (B ⧸ K) := Finite.one_lt_card_iff_nontrivial.1 (hq.symm ▸ hl.one_lt)
   obtain ⟨q, hq1⟩ := exists_ne (1 : B ⧸ K)
   obtain ⟨b, rfl⟩ := QuotientGroup.mk_surjective q
   refine ⟨j.comp (e.toMonoidHom.comp (QuotientGroup.mk' K)), b, fun h => hq1 ?_⟩
@@ -165,11 +165,11 @@ private theorem ab_plus (hF : F.Ok C₀) : ∃ t : Fin (1 + C₀) → F.Γ,
       simpa using h s)
   have hr : Module.rank k (LinearMap.range L) ≤ ((1 + C₀ : ℕ) : Cardinal) :=
     (rank_range_le L).trans (by exact_mod_cast hF.h1)
-  haveI : Inhabited F.Γ := ⟨1⟩
+  have : Inhabited F.Γ := ⟨1⟩
   obtain ⟨t, ht⟩ := ab_eval' (1 + C₀) (LinearMap.range L) hr
   refine ⟨t, fun A _ _ hA φ ho hz g => ?_⟩
   by_contra hg
-  haveI : Nontrivial φ.range := ⟨⟨φ.rangeRestrict g, 1, fun e => hg (congrArg Subtype.val e)⟩⟩
+  have : Nontrivial φ.range := ⟨⟨φ.rangeRestrict g, 1, fun e => hg (congrArg Subtype.val e)⟩⟩
   obtain ⟨ψ, b, hb⟩ := ab_char k (hA.to_subgroup φ.range)
   obtain ⟨x, rfl⟩ := φ.rangeRestrict_surjective b
   let f : F.Γ → k := fun s => (ψ (φ.rangeRestrict s)).toAdd
@@ -221,8 +221,8 @@ private theorem ab_ext (hF : F.Ok C₀) : ∃ π : F.Γ → F.G0, (∀ g : F.G0,
     show F.c * g * F.c⁻¹ = _
     rw [hci]
   let π : F.Γ → F.G0 := fun γ => if h : γ ∈ F.del.ker then ⟨γ, h⟩ else ⟨γ * F.c, hc γ h⟩
-  have p1 : ∀ γ, γ ∈ F.del.ker → (π γ : F.Γ) = γ := fun γ h => by simp only [π, dif_pos h]
-  have p2 : ∀ γ, γ ∉ F.del.ker → (π γ : F.Γ) = γ * F.c := fun γ h => by simp only [π, dif_neg h]
+  have p1 : ∀ γ, γ ∈ F.del.ker → (π γ : F.Γ) = γ := fun γ h => by simp only [π, dite_eq_left h]
+  have p2 : ∀ γ, γ ∉ F.del.ker → (π γ : F.Γ) = γ * F.c := fun γ h => by simp only [π, dite_eq_right h]
   refine ⟨π, fun g => Subtype.ext (p1 g g.2), fun A _ χ hχ => ⟨MonoidHom.mk' (fun γ => χ (π γ)) fun a b => ?_, fun _ => rfl⟩⟩
   by_cases ha : a ∈ F.del.ker
   · rw [← map_mul]
@@ -254,9 +254,9 @@ theorem UpperTheory.V.Fr.ab_gen :
   obtain ⟨t, ht⟩ := ab_plus hF
   obtain ⟨s', h, h0, hs', hm⟩ := ab_minus hF
   obtain ⟨π, hπ, hext⟩ := ab_ext hF
-  haveI := hF.fin
+  have := hF.fin
   have hcop : (Nat.card kˣ).Coprime l := by
-    haveI := Fintype.ofFinite k
+    have := Fintype.ofFinite k
     obtain ⟨n, hl, hn⟩ := FiniteField.card k l
     rw [Nat.card_units, Nat.card_eq_fintype_card, hn]
     refine Nat.Coprime.coprime_dvd_right (dvd_pow_self l n.ne_zero) ?_
@@ -282,7 +282,7 @@ theorem UpperTheory.V.Fr.ab_gen :
         show φ g = 1
         rw [hφ, hπ]
         exact (congrArg₂ (· * ·) h1 h2).trans (mul_one 1)
-      · exact hF.del_open.isOpenMap_subtype_val _ (ho.inter (ho.preimage hcont))
+      · exact hF.del_open.isOpenMap_subtypeVal _ (ho.inter (ho.preimage hcont))
     have h1 := ht A hA φ hop fun a => by
       have := hz (Fin.castAdd _ a)
       rw [Fin.append_left, map_pow, map_mul] at this

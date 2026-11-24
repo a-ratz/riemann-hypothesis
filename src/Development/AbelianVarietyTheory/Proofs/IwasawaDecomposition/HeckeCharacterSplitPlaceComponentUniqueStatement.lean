@@ -129,7 +129,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (χ : HCha
     rw [map_mul, map_pow, hπ', ← WithZero.exp_nsmul]; congr 2; simp
   have hnhds := ball_mem_nhds' (u : s.v.adicCompletion (maximalRealSubfield L)) _ (mul_ne_zero hu0 (pow_ne_zero N hπ0))
   obtain ⟨x, hx⟩ := (HeightOneSpectrum.denseRange_algebraMap (K := maximalRealSubfield L) s.v).mem_nhds hnhds
-  rw [Set.mem_setOf_eq, hvr] at hx
+  rw [Set.mem_ofPred_eq, hvr] at hx
   have hle : WithZero.exp (-(N : ℤ)) ≤ 1 := by
     rw [← WithZero.exp_zero, WithZero.exp_le_exp]; omega
   obtain ⟨hy0, hw⟩ := val_div_sub_one_lt hu0 hle hx

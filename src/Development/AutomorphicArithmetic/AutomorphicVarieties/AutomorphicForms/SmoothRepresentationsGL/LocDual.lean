@@ -56,9 +56,9 @@ private theorem mul_inv_lt_mul_inv_mul_inv_of_le_of_lt_one {G : Type} [LinearOrd
     ua * ux⁻¹ < ua * g⁻¹ * p⁻¹ := by
   have h1 : ux⁻¹ ≤ g⁻¹ := inv_anti₀ hg hgx
   have h2 : ua * ux⁻¹ ≤ ua * g⁻¹ := by gcongr
-  have h3 : 1 < p⁻¹ := one_lt_inv₀ (zero_lt_iff.mpr hp0) |>.mpr hp
+  have h3 : 1 < p⁻¹ := one_lt_inv₀ (pos_iff_ne_zero.mpr hp0) |>.mpr hp
   have h4 : 0 < ua * g⁻¹ := by
-    apply zero_lt_iff.mpr
+    apply pos_iff_ne_zero.mpr
     exact mul_ne_zero hua (inv_ne_zero hg.ne')
   calc ua * ux⁻¹ ≤ ua * g⁻¹ := h2
     _ = ua * g⁻¹ * 1 := (mul_one _).symm
@@ -114,7 +114,7 @@ theorem UpperTheory.V.Af.Smo.locDual :
     refine ⟨(π₀ : HeightOneSpectrum.adicCompletion E w) ^ n * y, hγ₁ ?_, ?_⟩
     · show Valued.v.restrict ((π₀ : HeightOneSpectrum.adicCompletion E w) ^ n * y) < γ₁
       rw [map_mul, map_pow]
-      refine mul_lt_of_lt_mul_inv_of_lt _ _ _ _ (zero_lt_iff.mpr R.ne_zero) hy ?_
+      refine mul_lt_of_lt_mul_inv_of_lt _ _ _ _ (pos_iff_ne_zero.mpr R.ne_zero) hy ?_
       simpa using hn
     · exact inv_mul_cancel_left₀ (pow_ne_zero n hπ0) y
   · intro x hx
@@ -126,12 +126,12 @@ theorem UpperTheory.V.Af.Smo.locDual :
     have hx0 : x ≠ 0 := by
       rintro rfl
       rw [map_zero] at hxg
-      exact γ.ne_zero (le_antisymm hxg zero_le')
+      exact γ.ne_zero (le_antisymm hxg zero_le)
     have hy : a * x⁻¹ ∈ Valued.v.restrict.ltAddSubgroup R := by
       rw [← SetLike.mem_coe, Valuation.coe_ltAddSubgroup]
       show Valued.v.restrict (a * x⁻¹) < R
       rw [map_mul, map_inv₀, hR, Units.val_mk0, Units.val_inv_eq_inv_val]
-      exact mul_inv_lt_mul_inv_mul_inv_of_le_of_lt_one _ _ _ _ hua (zero_lt_iff.mpr γ.ne_zero) hxg hπ1 hπn
+      exact mul_inv_lt_mul_inv_mul_inv_of_le_of_lt_one _ _ _ _ hua (pos_iff_ne_zero.mpr γ.ne_zero) hxg hπ1 hπn
     have h1 := hx _ hy
     rw [mul_comm a, ← mul_assoc, mul_inv_cancel₀ hx0, one_mul] at h1
     exact ha h1

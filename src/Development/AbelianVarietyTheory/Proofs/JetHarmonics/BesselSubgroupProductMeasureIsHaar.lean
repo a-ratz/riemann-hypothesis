@@ -192,7 +192,7 @@ theorem isClosed_UH : IsClosed (UH (Hpk k r)) :=
 
 theorem isClosed_Nset : IsClosed (Nset k r) := by
   unfold Nset
-  simp only [Set.setOf_and, Set.setOf_forall]
+  simp only [Set.ofPred_and, Set.ofPred_forall]
   refine isClosed_UH.inter (IsClosed.inter ?_ ?_)
   · refine isClosed_iInter fun a => isClosed_iInter fun i => isClosed_iInter fun _ => ?_
     exact isClosed_eq (continuous_id.matrix_elem _ _) continuous_const
@@ -201,10 +201,10 @@ theorem isClosed_Nset : IsClosed (Nset k r) := by
     exact isClosed_eq (continuous_id.matrix_elem _ _) continuous_const
 
 theorem isClosed_Sset (hz : inWb k r z) (hT : 0 < Tz k r z) : IsClosed (Sset k r z) := by
-  haveI : CompactSpace (UWset k r z) := isCompact_iff_compactSpace.1 (unitary_weyl_compact k r z hz hT)
+  have : CompactSpace (UWset k r z) := isCompact_iff_compactSpace.1 (unitary_weyl_compact k r z hz hT)
   have hc : Continuous fun p : UWset k r z × Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ =>
       Hpk k r * (p.1.1)ᴴ * Hpk k r * p.2 :=
-    ((continuous_const.matrix_mul (continuous_subtype_val.comp
+    ((continuous_const.matrix_mul (continuous_subtypeVal.comp
       continuous_fst).matrix_conjTranspose).matrix_mul continuous_const).matrix_mul continuous_snd
   have h := isClosedMap_snd_of_compactSpace _ (isClosed_Nset.preimage hc)
   convert h using 1
@@ -284,7 +284,7 @@ theorem haar_prod (hz : inWb k r z) (hT : 0 < Tz k r z) (μ ν : Measure (MtM (2
     · rw [Measure.prod_prod]; exact mul_eq_zero_of_left hμc _
     · rw [Measure.prod_prod]; exact mul_eq_zero_of_right _ hνc
   refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_⟩
-  · haveI : PolishSpace (MtM (2 * r + k + 1) × MtM (2 * r + k + 1)) :=
+  · have : PolishSpace (MtM (2 * r + k + 1) × MtM (2 * r + k + 1)) :=
       { toSecondCountableTopology := inferInstance
         toIsCompletelyMetrizableSpace := MetricSpace.toIsCompletelyMetrizableSpace }
     refine sigmaFinite_map_of_injOn _ continuous_mulP hTm ?_ hT0
@@ -294,7 +294,7 @@ theorem haar_prod (hz : inWb k r z) (hT : 0 < Tz k r z) (μ ν : Measure (MtM (2
   · intro h0
     rw [Measure.map_eq_zero_iff continuous_mulP.measurable.aemeasurable] at h0
     have hu := congrArg (fun ρ : Measure (MtM (2 * r + k + 1) × MtM (2 * r + k + 1)) => ρ Set.univ) h0
-    simp only [Measure.coe_zero, Pi.zero_apply] at hu
+    simp only [FunLike.coe_zero, Pi.zero_apply] at hu
     rw [← Set.univ_prod_univ, Measure.prod_prod] at hu
     rcases mul_eq_zero.mp hu with h | h
     · exact hμ0 (Measure.measure_univ_eq_zero.mp h)

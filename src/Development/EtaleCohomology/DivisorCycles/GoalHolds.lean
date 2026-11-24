@@ -517,7 +517,7 @@ private theorem coset_of_cover {G : Type} [Group G] [TopologicalSpace G]
     (Z : Set G) (hZ : IsClosed Z) (s : Finset G) (hs : ∀ x : G, ∃ a ∈ s, a * x ∈ Z) :
     ∃ U : Subgroup G, U.Normal ∧ U.FiniteIndex ∧ ∃ g : G, ∀ u ∈ U, g * u ∈ Z := by
   classical
-  haveI : ContinuousConstSMul G G := ⟨hc⟩
+  have : ContinuousConstSMul G G := ⟨hc⟩
   set X : Set G := irreducibleComponent (1 : G) with hX
   have hXc : X ∈ irreducibleComponents G := irreducibleComponent_mem_irreducibleComponents _
   have horb : MulAction.orbit G X ⊆ irreducibleComponents G := by
@@ -536,7 +536,7 @@ private theorem coset_of_cover {G : Type} [Group G] [TopologicalSpace G]
       exact h4
   have hfin : (MulAction.orbit G X).Finite :=
     TopologicalSpace.NoetherianSpace.finite_irreducibleComponents.subset horb
-  haveI : (MulAction.stabilizer G X).FiniteIndex := by
+  have : (MulAction.stabilizer G X).FiniteIndex := by
     refine ⟨?_⟩
     rw [MulAction.index_stabilizer]
     exact ((Set.ncard_pos hfin).mpr ⟨X, MulAction.mem_orbit_self X⟩).ne'
@@ -582,12 +582,12 @@ theorem main :
     intro g S
     rw [PrimeSpectrum.mem_zeroLocus]
     exact Iff.rfl
-  letI : TopologicalSpace Γ := TopologicalSpace.induced p inferInstance
+  let : TopologicalSpace Γ := TopologicalSpace.induced p inferInstance
   have hcl (k : MP C n) : IsClosed {g | ev ↑(r g) k = 0} := by
     refine (isClosed_induced_iff (f := p)).mpr ⟨_, PrimeSpectrum.isClosed_zeroLocus {k}, ?_⟩
     ext g
     simp [hp]
-  haveI : TopologicalSpace.NoetherianSpace Γ :=
+  have : TopologicalSpace.NoetherianSpace Γ :=
     (show Topology.IsInducing p from ⟨rfl⟩).noetherianSpace
   have hc (h : Γ) : Continuous fun x => h * x := by
     refine continuous_iff_isClosed.mpr ?_
@@ -599,7 +599,7 @@ theorem main :
     have : (fun x => h * x) ⁻¹' (p ⁻¹' PrimeSpectrum.zeroLocus S) =
         ⋂ k ∈ S, {g | ev ↑(r g) (F k) = 0} := by
       ext g
-      simp only [Set.mem_preimage, hp, Set.mem_iInter, Set.mem_setOf_eq, (hF _).1,
+      simp only [Set.mem_preimage, hp, Set.mem_iInter, Set.mem_ofPred_eq, (hF _).1,
         LinearMap.mulLeft_apply, map_mul, Units.val_mul]
     rw [this]
     exact isClosed_biInter fun k _ => hcl (F k)

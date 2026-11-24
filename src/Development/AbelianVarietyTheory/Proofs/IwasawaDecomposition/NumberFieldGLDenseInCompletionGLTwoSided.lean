@@ -69,7 +69,7 @@ theorem approx (x : P.adicCompletion E) (M : ℤ) :
     refine ho.mem_nhds ?_
     show Valued.v (x - x) < _
     rw [sub_self, map_zero]
-    exact zero_lt_iff.2 hc0
+    exact pos_iff_ne_zero.2 hc0
   obtain ⟨e, he⟩ := hd.mem_nhds hN
   refine ⟨e, le_of_lt (lt_of_lt_of_le he ?_)⟩
   rw [hvc, WithZero.exp_le_exp]

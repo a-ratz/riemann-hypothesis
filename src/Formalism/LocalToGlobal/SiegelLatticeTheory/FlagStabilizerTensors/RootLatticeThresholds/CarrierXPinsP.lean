@@ -309,7 +309,7 @@ theorem hs_right [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (U : Wq �
 
 theorem hs_smul [FiniteDimensional ℂ Wq] (c : ℂ) (hc : ‖c‖ = 1) (X : Wq →L[ℂ] Wp) :
     ‖hsVec (c • X)‖ = ‖hsVec X‖ := by
-  simp only [hsVec, PiLp.norm_eq_of_L2, ContinuousLinearMap.smul_apply, norm_smul, hc, one_mul]
+  simp only [hsVec, PiLp.norm_eq_of_L2, smul_apply, norm_smul, hc, one_mul]
 
 theorem hSsgs_holds : HSsgs := by
   intro k r Wp Wq _ _ _ _ _ _ D F p hp g
@@ -450,7 +450,7 @@ theorem relDiag_holds : RelDiag := by
     rw [ptEntry_ones, Matrix.diagonal_apply]
     by_cases h : i = j
     · subst h
-      simp only [if_true]
+      simp only [ite_true]
       rw [List.getD_eq_getElem _ _ (by simp; omega), List.getElem_ofFn]
     · simp [h, Fin.val_inj]
 
@@ -476,7 +476,7 @@ theorem trMeas_dirac (P : Parts X u u') (v : InfinitePlace X.B.I.F) (hQ : P.Qi v
     trMeas P v (Measure.dirac 1) = Measure.dirac (Matrix.of.symm (1 : Formalism.FourierDecayAlt.B.Mat P.S.G.k P.S.G.r)) := by
   unfold trMeas
   have h1 : Continuous (fun s : Formalism.REAL.UJ (X.B.I.ε v) => ((s : (Matrix (Fin X.B.I.n) (Fin X.B.I.n) ℂ)ˣ) :
-      Matrix (Fin X.B.I.n) (Fin X.B.I.n) ℂ)) := Units.continuous_val.comp continuous_subtype_val
+      Matrix (Fin X.B.I.n) (Fin X.B.I.n) ℂ)) := Units.continuous_val.comp continuous_subtypeVal
   have hm : Measurable (fun s : Formalism.REAL.UJ (X.B.I.ε v) => Matrix.of.symm (trG (P.Q v) (P.Qi v) s)) := by
     refine Continuous.measurable ?_
     exact (continuous_const.matrix_mul h1).matrix_mul continuous_const
@@ -574,8 +574,8 @@ theorem recon (e u : Fin r → Fin n → ℂ) (κ : Fin r → ℂ) (hκ : ∀ d,
   | mem x hx =>
     obtain ⟨b, hb, rfl⟩ := hx
     rw [Finset.sum_eq_single b]
-    · rw [hue, if_pos rfl, div_self (hκ b), one_smul]
-    · intro c _ hcb; rw [hue, if_neg hcb, zero_div, zero_smul]
+    · rw [hue, ite_eq_left rfl, div_self (hκ b), one_smul]
+    · intro c _ hcb; rw [hue, ite_eq_right hcb, zero_div, zero_smul]
     · intro h; exact absurd hb h
   | zero => simp [hJ_zero_r]
   | add x y _ _ hx hy =>
@@ -621,7 +621,7 @@ theorem st_one_lin (e : Fin r → Fin n → ℂ) (z z' : Fin n → ℂ) (G Gi M 
     rw [hJ_conj_swap, hZ]
     by_cases h : c = d
     · subst h; simp
-    · rw [if_neg h, if_neg (Ne.symm h), map_zero]
+    · rw [ite_eq_right h, ite_eq_right (Ne.symm h), map_zero]
   have hu2 : ∀ d c, hJ ε (Gi *ᵥ e d) (e c) = if d = c then cv d else 0 := by
     intro d c
     rw [← hJ_unit ε G hG, hGGi, hZ]
@@ -669,13 +669,13 @@ theorem st_one_lin (e : Fin r → Fin n → ℂ) (z z' : Fin n → ℂ) (G Gi M 
       intro d
       rw [hv1, hJ_sub_r, hJ_sub_r, hS1, hS2, hJ_sum_r, hJ_sum_r]
       simp only [hJ_smul_r, hee, mul_zero, Finset.sum_const_zero, sub_zero, hZ]
-      rw [Finset.sum_eq_single d (fun c _ hc => by rw [if_neg (Ne.symm hc), mul_zero]) (by simp), if_pos rfl,
+      rw [Finset.sum_eq_single d (fun c _ hc => by rw [ite_eq_right (Ne.symm hc), mul_zero]) (by simp), ite_eq_left rfl,
         div_mul_cancel₀ _ (hcv d), sub_self]
     have ho2 : ∀ d, hJ ε (G *ᵥ e d) v1 = 0 := by
       intro d
       rw [hv1, hJ_sub_r, hJ_sub_r, hS1, hS2, hJ_sum_r, hJ_sum_r]
       simp only [hJ_smul_r, hGe, mul_zero, Finset.sum_const_zero, sub_zero, hu1]
-      rw [Finset.sum_eq_single d (fun c _ hc => by rw [if_neg (Ne.symm hc), mul_zero]) (by simp), if_pos rfl,
+      rw [Finset.sum_eq_single d (fun c _ hc => by rw [ite_eq_right (Ne.symm hc), mul_zero]) (by simp), ite_eq_left rfl,
         div_mul_cancel₀ _ (hk1 d), sub_self]
     have hv : v = v1 + S1 + S2 := by rw [hv1]; abel
     clear_value v1 S1 S2

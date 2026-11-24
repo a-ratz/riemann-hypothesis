@@ -443,7 +443,7 @@ theorem pow_card_le {R Q : Type} [CommRing R] [AddCommGroup Q] [Module R Q] [Fin
     choose c hc using fun b => Ideal.Quotient.mk_surjective (I := I) (t b)
     have hx : ∃ c' : Fin n → R, ∑ b, c' b • q b = ∑ b, c b • q b := ⟨c, rfl⟩
     refine ⟨∑ b, c b • q b, ?_⟩
-    simp only [f, dif_pos hx]
+    simp only [f, dite_eq_left hx]
     funext b
     rw [key _ c hx.choose_spec b, hc]
   have hle := Nat.card_le_card_of_surjective f hf
@@ -471,11 +471,11 @@ theorem frame_indep (F : FlagG S r T) (F' : FlagG S r T') (hG : Gflag F F' ≠ 0
     rw [hlast, Matrix.mulVec_zero, Pi.single_zero]
   have hd1 : Dl F F' (r + 1) = (Zhat F F').det := by
     unfold Dl leadMinorE
-    rw [dif_pos le_rfl]
+    rw [dite_eq_left le_rfl]
     congr 1
   have hd0 : Dl F F' r = ((Zhat F F').submatrix Fin.castSucc Fin.castSucc).det := by
     unfold Dl leadMinorE
-    rw [dif_pos (Nat.le_succ r)]
+    rw [dite_eq_left (Nat.le_succ r)]
     congr 1
   have hG' := hG
   unfold Gflag at hG'
@@ -665,7 +665,7 @@ theorem fullLattice_latIn_span {K V : Type} [Field K] [NumberField K] [AddCommGr
     [Module (𝓞 K) V] [Module K V] [IsScalarTower (𝓞 K) K V]
     {U : Submodule K V} {N : Submodule (𝓞 K) V} (hN : N.FG)
     (hU : Submodule.span K (N : Set V) = U) : Submodule.IsFullLattice K (latIn U N) := by
-  letI := isLattice_latIn_span hN hU
+  let := isLattice_latIn_span hN hU
   refine ⟨?_⟩
   apply Submodule.map_injective_of_injective U.injective_subtype
   rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype]

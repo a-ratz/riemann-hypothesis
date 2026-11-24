@@ -83,7 +83,7 @@ theorem isOpen_subgroupOf_cellUnipotent (e : ℕ) :
     simp only [Subgroup.mem_subgroupOf, unipotentCompactG_eq, Subgroup.mem_inf]
     exact ⟨fun h => h.2, fun h => ⟨cellUnipotent_le_unipotentRadical x.2, h⟩⟩
   rw [this, Subgroup.coe_subgroupOf]
-  exact (isOpen_conj_integralGL _).preimage continuous_subtype_val
+  exact (isOpen_conj_integralGL _).preimage continuous_subtypeVal
 
 theorem coinvariantsKer_mono {G : Type*} [Group G] {V : Type*} [AddCommGroup V] [Module ℂ V]
     {ρ : Representation ℂ G V} {H H' : Subgroup G} (h : H ≤ H') :
@@ -126,7 +126,7 @@ theorem exists_avgOver_cellFun_eq_zero (hσ : IsSmooth σ) {Y : Set (GL (Fin n) 
       cellUnipotent_le_unipotentRadical s) hv
 
   obtain ⟨e₁, he₁⟩ := exists_unipotentCompactG_of_isCompact (γ := γ)
-    (hA'c.image continuous_subtype_val)
+    (hA'c.image continuous_subtypeVal)
     (by rintro _ ⟨x, -, rfl⟩; exact cellUnipotent_le_unipotentRadical x.2)
   set e' := max e e₁
   have hK' := isCellCompact_unipotentCompactG (F := F) (γ := γ) e'

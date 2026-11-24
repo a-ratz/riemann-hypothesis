@@ -174,7 +174,7 @@ private theorem descend {n : ℕ} {A G H : Type} [CommRing A] [Group G] [Group H
     by_cases h : i = j <;> simp [Matrix.charmatrix_apply, Matrix.one_apply, h]
   have rep_trace {T : Type} [Group T] (R : T →* Matrix (Fin n) (Fin n) A) (y : MonoidAlgebra A T) :
       (W.GDet.ofRep (R)).tr y = (W.GDet.repAlg (R) A y).trace := by
-    haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+    have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
     unfold W.GDet.tr W.GDet.lam
     rw [rep_chi R, Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin]
     ring

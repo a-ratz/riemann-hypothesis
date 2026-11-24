@@ -102,7 +102,7 @@ theorem schur_of_fixed {σ : Representation ℂ Γ W} (hσ : σ.IsIrreducible) (
   have hT' : ∀ g x, T (σ g x) = σ g (T x) := fun g x => LinearMap.congr_fun (hT g) x
   have hm : ∀ x ∈ fixed σ U, T x ∈ fixed σ U := fun x hx => mem_fix.2 fun g hg => by
     rw [← hT', mem_fix.1 hx g hg]
-  haveI : Nontrivial (fixed σ U) := Submodule.nontrivial_iff_ne_bot.2 h0
+  have : Nontrivial (fixed σ U) := Submodule.nontrivial_iff_ne_bot.2 h0
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue (T.restrict hm)
   obtain ⟨x, hx⟩ := hc.exists_hasEigenvector
   have hx1 : T x.1 = c • x.1 := congrArg Subtype.val hx.apply_eq_smul
@@ -342,7 +342,7 @@ theorem hasComp_of_surjective {H : Type} [Group H] (ρ : Representation ℂ Γ V
 
 theorem hasComp_of_trivial {τ : Representation ℂ Γ M} (h : τ.IsIrreducible) {e : Γ →* Γ} (hτ : ∀ g, τ (e g) = 1)
     (L : Subgroup Γ) : HasComp τ e L 1 := by
-  haveI := ((GlobalTheory.CuspRep.isIrreducible_iff τ).1 h).1
+  have := ((GlobalTheory.CuspRep.isIrreducible_iff τ).1 h).1
   obtain ⟨m, hm⟩ := exists_ne (0 : M)
   refine ⟨ℂ, inferInstance, inferInstance, 1, (GlobalTheory.CuspRep.isIrreducible_iff _).2 ⟨inferInstance, fun N _ =>
     eq_bot_or_eq_top N⟩, fun T _ => ⟨T 1, LinearMap.ext_ring (by simp)⟩, fun _ => rfl,
@@ -651,10 +651,10 @@ theorem exists_finset_subset (hU : Unr E) (hn : 1 ≤ n) (hS : IsSection S)
     (hK : IsLevelFam (fun w : Pl E => MonoidHom.id (UL n w)) (KL n) K') (O : Set (finU (E := E) (n := n))) (hO : IsOpen O)
     (h1 : 1 ∈ O) : ∃ T : Finset S, ∀ k ∈ globLev S K', (∀ w ∈ T, proj n S (.inr w) k = 1) → k ∈ O := by
   obtain ⟨-, hc, -, hle, -⟩ := globLev_isOpen_isCompact_isLevel E hU n hn S hS K' hK
-  haveI := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
+  have := GlobalTheory.DefU.LocAdm.t2Space_adelicGL_cmField (E := E) (n := n)
   obtain ⟨T, hT⟩ := (hc.diff hO).elim_finite_subfamily_closed
     (fun w : S => {k : finU (E := E) (n := n) | proj n S (.inr w) k = 1})
-    (fun w => isClosed_eq ((continuous_subtype_val.comp (continuous_ret (w := w.1))).comp continuous_subtype_val)
+    (fun w => isClosed_eq ((continuous_subtypeVal.comp (continuous_ret (w := w.1))).comp continuous_subtypeVal)
       continuous_const) (by
       refine Set.disjoint_left.2 fun k hk hk' => hk.2 ?_
       have : k = 1 := by
@@ -704,7 +704,7 @@ theorem hasComp_inr (hU : Unr E) (hn : 1 ≤ n) (hS : IsSection S) (π : AutSub 
   have hpe : ∀ x, p x = e x := fun x => Subtype.ext ((hp x).trans (he x).symm)
   have hq : ∀ g, p (ret w.1 n g) = ⟨cLoc w.1 g, cLoc_mem_UL w.1 g⟩ := fun g =>
     Subtype.ext ((hp _).trans (cLoc_inr_eq w g rfl))
-  haveI := ((GlobalTheory.CuspRep.isIrreducible_iff _).1 σ.irred).1
+  have := ((GlobalTheory.CuspRep.isIrreducible_iff _).1 σ.irred).1
   obtain ⟨x, hx⟩ := exists_ne (0 : σ.V)
   let U : Subgroup (UL n w.1) :=
     { carrier := {g | σ.ρ g x = x}
@@ -712,8 +712,8 @@ theorem hasComp_inr (hU : Unr E) (hn : 1 ≤ n) (hS : IsSection S) (π : AutSub 
       mul_mem' := fun {a b} (ha : σ.ρ a x = x) (hb : σ.ρ b x = x) => show σ.ρ (a * b) x = x by rw [← rep_mul, hb, ha]
       inv_mem' := fun {a} (ha : σ.ρ a x = x) => show σ.ρ a⁻¹ x = x by
         conv_lhs => rw [← ha, rep_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
-  haveI := hadm U (σ.smooth x)
-  haveI : FiniteDimensional ℂ (fixed σ.ρ U) := by
+  have := hadm U (σ.smooth x)
+  have : FiniteDimensional ℂ (fixed σ.ρ U) := by
     refine FiniteDimensional.of_injective (T.toLinearEquiv.toLinearMap.restrict (q := fixed σ₀.ρ U) fun y hy =>
       mem_fix.2 fun g hg => ?_) fun a b hab => Subtype.ext (T.toLinearEquiv.injective (congrArg Subtype.val hab))
     have := LinearMap.congr_fun (T.isIntertwining' g) y

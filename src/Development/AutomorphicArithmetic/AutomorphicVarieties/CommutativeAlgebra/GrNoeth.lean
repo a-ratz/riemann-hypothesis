@@ -57,9 +57,9 @@ theorem UpperTheory.V.Alg.gr_noeth :
     ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] [IsAdicComplete (maximalIdeal O) O] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] [DecidableEq X] (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (W : WPres O X R), (∀ s, W.z s ∈ maximalIdeal R) → IsNoetherianRing W.A ∧ Algebra.FiniteType (W.gr 0) W.A ∧ ∀ j, ∃ s : Finset W.A, (∀ a ∈ s, a ∈ W.gr j) ∧ W.gr j = W.gr 0 * Submodule.span O (s : Set W.A) := by
   intro O _ _ _ _ X _ _ _ _ R _ _ _ W hz
   classical
-  haveI := W.fin
-  haveI hco : IsCO O (W.gr 0) := wPres_gr_zero_isCO_of_mem_maximalIdeal O X R W hz
-  haveI : IsNoetherianRing (W.gr 0) := IsCO.toIsNoetherian O
+  have := W.fin
+  have hco : IsCO O (W.gr 0) := wPres_gr_zero_isCO_of_mem_maximalIdeal O X R W hz
+  have : IsNoetherianRing (W.gr 0) := IsCO.toIsNoetherian O
   have hgen : Algebra.adjoin (W.gr 0) (Set.range W.zA) = ⊤ := by
     rw [eq_top_iff]
     rintro a -
@@ -80,13 +80,13 @@ theorem UpperTheory.V.Alg.gr_noeth :
       exact Subalgebra.algebraMap_mem _ _
     | add x y _ _ hx hy => exact Subalgebra.add_mem _ hx hy
     | mul x y _ _ hx hy => exact Subalgebra.mul_mem _ hx hy
-  haveI hft : Algebra.FiniteType (W.gr 0) W.A :=
+  have hft : Algebra.FiniteType (W.gr 0) W.A :=
     ⟨⟨Finset.univ.image W.zA, by rw [Finset.coe_image, Finset.coe_univ, Set.image_univ, hgen]⟩⟩
   refine ⟨Algebra.FiniteType.isNoetherianRing (W.gr 0) W.A, hft, ?_⟩
   intro j
   have hmono : ∀ m : W.σ →₀ ℕ, monomial m (1 : O) ∈ wtPart O W.wt (Finsupp.weight W.wt m) := by
     intro m n hn
-    rw [coeff_monomial, if_neg]
+    rw [coeff_monomial, ite_eq_right]
     rintro rfl
     exact hn rfl
   obtain ⟨μ, hμS, hμ⟩ := part_span O R X W {n | Finsupp.weight W.wt n = j} j (fun n hn => hn)

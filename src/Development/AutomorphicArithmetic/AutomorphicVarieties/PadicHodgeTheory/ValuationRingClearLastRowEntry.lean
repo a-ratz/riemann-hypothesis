@@ -105,7 +105,7 @@ private theorem triangular_form_borel_change {φ : A →+* C} {h : GL (Fin 3) C}
   obtain rfl : k = b * h⁻¹ := by rw [hb, mul_inv_cancel_right]
   have hi : ((b⁻¹ : GL (Fin 3) C) : Matrix (Fin 3) (Fin 3) C).BlockTriangular id := by
     rw [Matrix.coe_units_inv]
-    haveI := b.invertible
+    have := b.invertible
     exact Matrix.blockTriangular_inv_of_blockTriangular hk
   have e : ∀ X : Matrix (Fin 3) (Fin 3) C, (((b * h⁻¹)⁻¹⁻¹ : GL (Fin 3) C) : Matrix (Fin 3) (Fin 3) C) * X *
       ((b * h⁻¹)⁻¹ : GL (Fin 3) C) = b * (((h⁻¹ : GL (Fin 3) C) : Matrix (Fin 3) (Fin 3) C) * X * h) *
@@ -170,8 +170,8 @@ private theorem iwasawa_triangularization {F : Type} [Field F] (V : ValuationSub
 private theorem exists_common_ring_same_kernel {A K L : Type} [CommRing A] [Field K] [Field L] (f : A →+* K) (g : A →+* L)
     (h : RingHom.ker f = RingHom.ker g) :
     ∃ (T : Type) (_ : CommRing T) (_ : Nontrivial T) (i : K →+* T) (j : L →+* T), i.comp f = j.comp g := by
-  letI : Algebra (A ⧸ RingHom.ker f) K := (RingHom.kerLift f).toAlgebra
-  letI : Algebra (A ⧸ RingHom.ker f) L := (Ideal.Quotient.lift _ g fun a ha => by rwa [h] at ha).toAlgebra
+  let : Algebra (A ⧸ RingHom.ker f) K := (RingHom.kerLift f).toAlgebra
+  let : Algebra (A ⧸ RingHom.ker f) L := (Ideal.Quotient.lift _ g fun a ha => by rwa [h] at ha).toAlgebra
   have h2 : Function.Injective (algebraMap (A ⧸ RingHom.ker f) L) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro a ha
@@ -192,12 +192,12 @@ private theorem triangular_form_finite_extension {ι A K B : Type} [CommRing A] 
     ∃ (K' : Type) (_ : Field K') (_ : Algebra K K') (_ : FiniteDimensional K K') (h' : GL (Fin 3) K'),
       TriangularForm M d S T ((algebraMap K K').comp f) h' := by
   classical
-  letI := i.toAlgebra
+  let := i.toAlgebra
   let s : Set B := Set.range (fun p : Fin 3 × Fin 3 => (h : Matrix (Fin 3) (Fin 3) B) p.1 p.2) ∪
     Set.range (fun p : Fin 3 × Fin 3 => ((h⁻¹ : GL (Fin 3) B) : Matrix (Fin 3) (Fin 3) B) p.1 p.2)
   have hs : s.Finite := (Set.finite_range _).union (Set.finite_range _)
   let B₀ := Algebra.adjoin K s
-  haveI : Algebra.FiniteType K B₀ := (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_def.2 ⟨s, hs, rfl⟩)
+  have : Algebra.FiniteType K B₀ := (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_def.2 ⟨s, hs, rfl⟩)
   let X : Matrix (Fin 3) (Fin 3) B₀ := fun a b => ⟨_, Algebra.subset_adjoin (Or.inl ⟨(a, b), rfl⟩)⟩
   let Y : Matrix (Fin 3) (Fin 3) B₀ := fun a b => ⟨_, Algebra.subset_adjoin (Or.inr ⟨(a, b), rfl⟩)⟩
   have hXY : X * Y = 1 := by
@@ -209,7 +209,7 @@ private theorem triangular_form_finite_extension {ι A K B : Type} [CommRing A] 
   have H0 : TriangularForm M d S T ((algebraMap K B₀).comp f) h₀ :=
     triangular_form_of_injective_map B₀.val.toRingHom Subtype.val_injective H
   obtain ⟨m, hm⟩ := Ideal.exists_maximal B₀
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   exact ⟨B₀ ⧸ m, inferInstance, inferInstance, finite_of_finite_type_of_isJacobsonRing K (B₀ ⧸ m), _,
     triangular_form_map (Ideal.Quotient.mk m) H0⟩
 
@@ -218,12 +218,12 @@ private theorem triangular_form_specialization {ι A F K : Type} [CommRing A] [F
     (hf : RingHom.ker φ ≤ RingHom.ker f) (h : GL (Fin 3) F) (H : TriangularForm M d S T φ h) :
     ∃ (K' : Type) (_ : Field K') (_ : Algebra K K') (_ : FiniteDimensional K K') (h' : GL (Fin 3) K'),
       TriangularForm M d S T ((algebraMap K K').comp f) h' := by
-  haveI := RingHom.ker_isPrime f
+  have := RingHom.ker_isPrime f
   have hu : ∀ y : (RingHom.ker f).primeCompl, IsUnit (φ y) := fun y => Ne.isUnit fun e => y.2 (hf e)
   obtain ⟨V, hV, hl⟩ := IsLocalRing.exists_factor_valuationRing
     (IsLocalization.lift (S := Localization.AtPrime (RingHom.ker f)) hu)
   let g₀ : Localization.AtPrime (RingHom.ker f) →+* V := (IsLocalization.lift hu).codRestrict V.toSubring hV
-  haveI : IsLocalHom g₀ := hl
+  have : IsLocalHom g₀ := hl
   let g : A →+* V := g₀.comp (algebraMap _ _)
   have hg : V.subtype.comp g = φ := RingHom.ext fun a => IsLocalization.lift_eq hu a
   have hk : RingHom.ker f = RingHom.ker ((residue V).comp g) := by
@@ -274,7 +274,7 @@ theorem UpperTheory.V.Loc.lemma2c :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)) (K : Type) [Field K] [Algebra O K] (r : GQ l →* GG (m := 3) (R := K)), D.On U r → ∃ (K' : Type) (_ : Field K') (_ : Algebra K K') (_ : Algebra O K') (_ : IsScalarTower O K K') (_ : FiniteDimensional K K') (h : GL (Fin 3) K'), UpperTheory.V.UnitaryThreeInertia.TriIn D.η D.Ψ (Iq l) ((GG.map (algebraMap K K')).comp r) h := by
   intro hP l _ O _ _ _ _ _ _ _ D U K _ _ r ⟨f, hr, hf⟩
   obtain ⟨-, hp, hl, -⟩ := UpperTheory.V.Loc.rtBasic hP D U
-  haveI : IsDomain (D.Rt U) := Ideal.Quotient.isDomain _
+  have : IsDomain (D.Rt U) := Ideal.Quotient.isDomain _
   let φ : U.R →ₐ[O] FractionRing (D.Rt U) :=
     (IsScalarTower.toAlgHom O (D.Rt U) (FractionRing (D.Rt U))).comp (Ideal.Quotient.mkₐ O _)
   have hφ : RingHom.ker φ = D.It U := by
@@ -282,7 +282,7 @@ theorem UpperTheory.V.Loc.lemma2c :
     rw [RingHom.mem_ker, ← Ideal.Quotient.eq_zero_iff_mem]
     exact map_eq_zero_iff _ (IsFractionRing.injective (D.Rt U) (FractionRing (D.Rt U)))
   have hl0 : ((l : ℕ) : FractionRing (D.Rt U)) ≠ 0 := fun e => hl (by rw [← hφ, RingHom.mem_ker, map_natCast, e])
-  haveI : CharZero (FractionRing (D.Rt U)) := by
+  have : CharZero (FractionRing (D.Rt U)) := by
     refine charZero_of_inj_zero fun n hn => ?_
     by_contra h0
     have h1 : (n : ℤ_[l]) ≠ 0 := Nat.cast_ne_zero.2 h0
@@ -295,8 +295,8 @@ theorem UpperTheory.V.Loc.lemma2c :
   have hT : {g : GQ l | g ∈ Iq l ∧ D.η g = 1} ⊆ {g | D.η g = 1} := fun _ hg => hg.2
   obtain ⟨K', _, _, _, h', H'⟩ :=
     UpperTheory.V.Loc.triangular_form_specialization hT _ (f : U.R →+* K) (hφ.le.trans hf) h H
-  letI : Algebra O K' := ((algebraMap K K').comp (algebraMap O K)).toAlgebra
-  haveI : IsScalarTower O K K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra O K' := ((algebraMap K K').comp (algebraMap O K)).toAlgebra
+  have : IsScalarTower O K K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   refine ⟨K', inferInstance, inferInstance, inferInstance, inferInstance, inferInstance, h', ?_⟩
   subst hr
   exact (UpperTheory.V.Loc.triangular_in_iff_triangular_form _ _ _ _ U.r.hasMult ((IsScalarTower.toAlgHom O K K').comp f) h').2 H'

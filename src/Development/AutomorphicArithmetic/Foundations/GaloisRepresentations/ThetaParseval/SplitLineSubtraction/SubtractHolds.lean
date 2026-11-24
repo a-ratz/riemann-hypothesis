@@ -118,8 +118,8 @@ theorem UpperTheory.Gal.TP.Sub.clTw_holds :
     simp [Formalism.MainNotions.SumRepresentations.At.twGL, UpperTheory.V.Af.tw_val, Algebra.algebraMap_eq_smul_one, Matrix.smul_apply]
   rw [e1] at c1 d1 j1 p1
   rw [e2]
-  have cs : Continuous (s.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hs.comp continuous_subtype_val
-  have cμ : Continuous (μ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hμ.comp continuous_subtype_val
+  have cs : Continuous (s.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hs.comp continuous_subtypeVal
+  have cμ : Continuous (μ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hμ.comp continuous_subtypeVal
   have ck := (hC _ (Qbar l) 1 1).2.2.2 _ cμ
   have ct := (hC _ (Qbar l) a 1).2.2.1 _ _ cs cμ
   obtain ⟨l1, l2⟩ := hL l P AI hT E Ω A O Bw a (s.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) (μ.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype)
@@ -166,7 +166,7 @@ theorem UpperTheory.Gal.TP.Sub.charAbove_holds :
   have hξ := GlobalTheory.Published.ParamAboveModel.isComp_loc (w := w) χ
   have d := hD E Ω l P AI hT ι art ha χ n μ h1 h2 h3 w A h O Bw hj
   have hc : Continuous ((rk1 μ).comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) :=
-    ((hC (Formalism.ConjugateSelfDual.G E Ω) (Qbar l) 0 0).2.2.2 μ h2).comp continuous_subtype_val
+    ((hC (Formalism.ConjugateSelfDual.G E Ω) (Qbar l) 0 0).2.2.2 μ h2).comp continuous_subtypeVal
   have hr := hP l P AI hT E Ω A O Bw 1 _ hc d.1
   have e := hW E Ω l P AI hT ι art ha χ n μ h1 h2 h3 w A h O Bw hj _ hξ a ha'
   have hun := (GlobalTheory.Published.CharCrysModel.isUnram_iff χ w).2 hu
@@ -223,7 +223,7 @@ theorem UpperTheory.Gal.TP.Sub.charEx_holds :
   have hspec : ∀ (χ : HChar E) (n : (E →+* ℂ) → ℤ), IsAlgPos χ n →
       Continuous (L χ n) ∧ IsLAdicOf art ι χ n (L χ n) := by
     intro χ n h
-    have e : L χ n = (hL χ n h).choose := dif_pos h
+    have e : L χ n = (hL χ n h).choose := dite_eq_left h
     rw [e]
     exact (hL χ n h).choose_spec
   refine ⟨L, fun χ n h => ⟨(hspec χ n h).1, fun w hw => ⟨fun hl => ?_, ?_⟩⟩, fun χ n χ' n' h h' e => ?_⟩
@@ -317,7 +317,7 @@ private theorem exists_finExt_gl {l n : ℕ} [Fact l.Prime] (A : GL (Fin n) (Qba
   let s : Set (Qbar l) := Set.range (fun p : Fin n × Fin n => (A : Matrix (Fin n) (Fin n) (Qbar l)) p.1 p.2) ∪
     Set.range (fun p : Fin n × Fin n => ((A⁻¹ : GL (Fin n) (Qbar l)) : Matrix (Fin n) (Fin n) (Qbar l)) p.1 p.2)
   have hs : s.Finite := (Set.finite_range _).union (Set.finite_range _)
-  haveI : Finite s := hs.to_subtype
+  have : Finite s := hs.to_subtype
   refine ⟨⟨IntermediateField.adjoin ℚ_[l] s,
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x⟩, fun i j => ⟨?_, ?_⟩⟩
   · exact IntermediateField.subset_adjoin _ _ (Or.inl ⟨(i, j), rfl⟩)
@@ -358,8 +358,8 @@ theorem UpperTheory.Gal.TP.Sub.clConj_holds :
       ext1 x
       simp [hg, MulAut.conj_apply]
     have hc' : Continuous r' := (hCont (Formalism.ConjugateSelfDual.G E Ω) (Qbar l) a a).2.1 r r' hiso hr
-    have cρ : Continuous (r.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hr.comp continuous_subtype_val
-    have cρ' : Continuous (r'.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hc'.comp continuous_subtype_val
+    have cρ : Continuous (r.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hr.comp continuous_subtypeVal
+    have cρ' : Continuous (r'.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := hc'.comp continuous_subtypeVal
     have d' : IsdRAt P Bw (r'.comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) := by
       rw [e]
       exact isdRAt_conj _ K hK c2
@@ -417,7 +417,7 @@ theorem UpperTheory.Gal.TP.Sub.clSub_holds :
   intro P AI hT A h O _ _ _ Bw hj
   obtain ⟨-, d1, j1, p1⟩ := hc.2 P AI hT A h O Bw hj
   obtain ⟨c2, d2, j2, p2⟩ := hsum.2 P AI hT A h O Bw hj
-  have ci : Continuous (ReciprocityTheory.Gal.Dec (F := E) A).subtype := continuous_subtype_val
+  have ci : Continuous (ReciprocityTheory.Gal.Dec (F := E) A).subtype := continuous_subtypeVal
   have cμ : Continuous (rk1 μ) := (contLeft_holds (Formalism.ConjugateSelfDual.G E Ω) (Qbar l) a 1).2.2.2 μ hμ
   have cS : Continuous ((sumRep s (rk1 μ)).comp (ReciprocityTheory.Gal.Dec (F := E) A).subtype) :=
     (cont_sum s (rk1 μ) hs cμ).comp ci
@@ -916,7 +916,7 @@ theorem UpperTheory.Gal.TP.Sub.splitLine_holds : SplitLine := by
   let b : Module.Basis (Fin m) k W' := Module.finBasisOfFinrankEq k W' hfr
   let Q : Matrix (Fin (m + 1)) (Fin (m + 1)) k := (colM b v).submatrix id finSumFinEquiv.symm
   have hQ : IsUnit Q := by
-    rw [← Matrix.linearIndependent_cols_iff_isUnit]
+    rw [← Matrix.linearIndependent_col_iff_isUnit]
     have := (col_indep b hv0 hc).comp finSumFinEquiv.symm finSumFinEquiv.symm.injective
     convert this using 1
     ext j i

@@ -86,8 +86,8 @@ theorem exists_mean (π : G →* (H →L[ℂ] H)) (hπ : ∀ g x, ‖π g x‖ =
       exact (hmem _).2 ⟨⟨k, hk⟩ * k', by simp⟩
     · obtain ⟨k', rfl⟩ := (hmem z).1 hz
       exact (hmem _).2 ⟨⟨k, hk⟩⁻¹ * k', by simp⟩
-    · simp [← ContinuousLinearMap.mul_apply, ← map_mul]
-    · simp [← ContinuousLinearMap.mul_apply, ← map_mul]
+    · simp [← mul_apply_eq_comp, ← map_mul]
+    · simp [← mul_apply_eq_comp, ← map_mul]
   · have h1 : ∀ z ∈ O, ⟪u, z⟫_ℂ = ⟪u, w⟫_ℂ := fun z hz => by
       obtain ⟨k, rfl⟩ := (hmem z).1 hz
       rw [← inner_map_map_of_norm hπ k u w, hu k k.2]
@@ -104,14 +104,14 @@ theorem exists_compactOpen_subset [NonarchimedeanGroup G] [LocallyCompactSpace G
 
 theorem finite_orbit (π : G →* (H →L[ℂ] H)) {K : Subgroup G} (hK : IsCompact (K : Set G)) {w : H}
     (hw : IsOpen (stab π w : Set G)) : (Set.range fun k : K => π (k : G) w).Finite := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  haveI := Subgroup.quotient_finite_of_isOpen ((stab π w).subgroupOf K) (hw.preimage continuous_subtype_val)
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have := Subgroup.quotient_finite_of_isOpen ((stab π w).subgroupOf K) (hw.preimage continuous_subtypeVal)
   refine (Set.finite_range (fun q : K ⧸ (stab π w).subgroupOf K => π ((q.out : K) : G) w)).subset ?_
   rintro _ ⟨k, rfl⟩
   refine ⟨QuotientGroup.mk k, ?_⟩
   obtain ⟨s, hs⟩ := QuotientGroup.mk_out_eq_mul ((stab π w).subgroupOf K) k
   have h2 : π ((s : K) : G) w = w := Subgroup.mem_subgroupOf.1 s.2
-  simp only [hs, Subgroup.coe_mul, map_mul, ContinuousLinearMap.mul_apply, h2]
+  simp only [hs, Subgroup.coe_mul, map_mul, mul_apply_eq_comp, h2]
 
 end
 
@@ -119,7 +119,7 @@ theorem exists_fixed_ne_zero : ∀ (G : Type) [Group G] (H : Type) [NormedAddCom
     [CompleteSpace H] (π : G →* (H →L[ℂ] H)), (∀ g x, ‖π g x‖ = ‖x‖) → ∀ (K : Subgroup G) (x : H), x ≠ 0 →
       (∀ k ∈ K, ‖π k x - x‖ ≤ ‖x‖ / 2) → ∃ y : H, y ≠ 0 ∧ ∀ k ∈ K, π k y = y := by
   intro G _ H _ _ _ π hπ K x hx hK
-  letI : InnerProductSpace ℝ H := InnerProductSpace.rclikeToReal ℂ H
+  let : InnerProductSpace ℝ H := InnerProductSpace.rclikeToReal ℂ H
   set O : Set H := Set.range fun k : K => π (k : G) x
   set C : Set H := closure (convexHull ℝ O)
   have hconv : Convex ℝ C := (convex_convexHull ℝ O).closure
@@ -182,7 +182,7 @@ theorem isIrreducible_isAdmissible_smRep : ∀ (G : Type) [Group G] [Topological
   have memV : ∀ v : H, v ∈ smoothPart (toRep π) ↔ IsOpen (stab π v : Set G) := fun v => Iff.rfl
   refine ⟨?_, isSmooth_smoothRep (toRep π), fun K hKo hKc => ?_⟩
   swap
-  · haveI := hfin K hKo hKc
+  · have := hfin K hKo hKc
     let f : fixed (smRep π) K →ₗ[ℂ] fixed (toRep π) K :=
       { toFun := fun v => ⟨(v : smoothPart (toRep π)).1, (memF K _).2 fun k hk => by
             have h : smRep π k (v : smoothPart (toRep π)) = v := by simpa using v.2 ⟨k, hk⟩
@@ -231,9 +231,9 @@ theorem isIrreducible_isAdmissible_smRep : ∀ (G : Type) [Group G] [Topological
   have key : ∀ v ∈ V, v ∈ W' := by
     intro v hv
     obtain ⟨K, hKo, hKc, hKv⟩ := exists_compactOpen_subset (((memV v).1 hv).mem_nhds (one_mem (stab π v)))
-    haveI := hfin K hKo hKc
+    have := hfin K hKo hKc
     let M : Submodule ℂ H := W' ⊓ fixed (toRep π) K
-    haveI : FiniteDimensional ℂ M := Submodule.finiteDimensional_of_le inf_le_right
+    have : FiniteDimensional ℂ M := Submodule.finiteDimensional_of_le inf_le_right
     have hvF : v ∈ fixed (toRep π) K := (memF K v).2 fun k hk => hKv hk
     have huF : v - M.starProjection v ∈ fixed (toRep π) K :=
       Submodule.sub_mem _ hvF (Submodule.mem_inf.1 (M.starProjection_apply_mem v)).2

@@ -93,9 +93,9 @@ theorem UpperTheory.V.Pa.Lev.wdChar :
     have htτ : t τ = 1 := (GlobalTheory.TameQuot.eq_one_iff_mem_ineKer E Ω l Bq w hB hl t ht.1 ht.2 τ).mpr hσ
     have hval : tval t τ = 0 := by simp [tval, htτ]
     obtain ⟨-, U, hU, hUr⟩ := hmon
-    haveI := compactSpace_Ine (E := E) Bq
-    haveI : Finite (Ine Bq ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
-    haveI : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have := compactSpace_Ine (E := E) Bq
+    have : Finite (Ine Bq ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
+    have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     have hd : U.normalCore.index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero
     have hpow : τ ^ U.normalCore.index ∈ U := U.normalCore_le (U.normalCore.pow_index_mem τ)
     have hr : (r σ : Matrix (Fin n) (Fin n) (Qbar l)) ^ U.normalCore.index = 1 := by

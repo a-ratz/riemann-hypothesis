@@ -77,11 +77,11 @@ theorem lift_layer (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hVfd : FiniteDimen
       ∀ F ∈ ncV ε V (k + 1), phi E (k + 1) F ∈ layer ε E V k → inner ℂ F P = 0 := by
   classical
   set Lk := layer ε E V k with hLk
-  haveI : FiniteDimensional ℂ Lk := finiteDimensional_layer (ε := ε) (E := E) hVfd k
+  have : FiniteDimensional ℂ Lk := finiteDimensional_layer (ε := ε) (E := E) hVfd k
   set N := ncV ε V (k + 1) with hN
-  haveI : FiniteDimensional ℂ N := finiteDimensional_ncV (ε := ε) hVfd (k + 1)
+  have : FiniteDimensional ℂ N := finiteDimensional_ncV (ε := ε) hVfd (k + 1)
   set U : Submodule ℂ (Big n (k + 1) M) := N ⊓ Lk.comap (phi E (k + 1)) with hUdef
-  haveI : FiniteDimensional ℂ U := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ U := Submodule.finiteDimensional_of_le inf_le_left
 
   have hKu : ∀ a b, ε a = ε b → ∀ x y : M, inner ℂ x (E a b y) = inner ℂ (E b a x) y := by
     intro a b hab x y

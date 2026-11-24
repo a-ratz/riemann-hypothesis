@@ -336,7 +336,7 @@ theorem exists_finset_separating {Y : Type} (Ψ : Submodule ℂ (Y → ℂ)) [Fi
       smul_mem' := fun c a ha =>
         ⟨Ψ.smul_mem c ha.1, fun y hy => by simp [ha.2 y hy]⟩ }
   have hKle : ∀ t, K t ≤ Ψ := fun t _ h => h.1
-  haveI : ∀ t, FiniteDimensional ℂ (K t) := fun t => Submodule.finiteDimensional_of_le (hKle t)
+  have : ∀ t, FiniteDimensional ℂ (K t) := fun t => Submodule.finiteDimensional_of_le (hKle t)
   let f : Finset Y → ℕ := fun t => Module.finrank ℂ (K t)
   refine ⟨Function.argmin f, fun ψ hψ h0 => ?_⟩
   by_contra hne
@@ -385,10 +385,10 @@ theorem bound_of_injective {Y : Type} [MeasurableSpace Y] (μ : Measure Y)
   have hb : ‖ψ y₀‖₊ ≤ ‖L‖₊ * ‖T p‖₊ := by
     rw [← hL]
     exact L.le_opNNNorm _
-  have hen : ‖T p‖ₑ = eLpNorm ψ 2 μ := Lp.enorm_toLp (hm ψ hψ)
+  have hen : ‖T p‖ₑ = eLpNorm ψ 2 μ := Lp.eNorm_toLp (hm ψ hψ)
   have hb' : ‖ψ y₀‖ₑ ≤ (‖L‖₊ : ENNReal) * eLpNorm ψ 2 μ := by
     rw [← hen]
-    simp only [enorm_eq_nnnorm]
+    simp only [eNorm_eq_nnNorm]
     exact_mod_cast hb
   have hsq : eLpNorm ψ 2 μ ^ 2 = ∫⁻ y, ‖ψ y‖ₑ ^ 2 ∂μ := by
     have := eLpNorm_nnreal_pow_eq_lintegral (f := ψ) (μ := μ) (p := 2) (by norm_num)
@@ -401,7 +401,7 @@ theorem bound_of_injective {Y : Type} [MeasurableSpace Y] (μ : Measure Y)
 theorem interpolation_local_L2_bound : PositivityTheory.Rg.BcB.E.E3.InterpolationL2Bound := by
   intro X Y _ _ _ _ _ ν _ _ F hF hfin
   set Ψ : Submodule ℂ (Y → ℂ) := Submodule.span ℂ (Set.range F) with hΨ
-  haveI : FiniteDimensional ℂ Ψ := hfin
+  have : FiniteDimensional ℂ Ψ := hfin
   have hc : ∀ ψ ∈ Ψ, Continuous ψ := by
     intro ψ hψ
     induction hψ using Submodule.span_induction with
@@ -414,7 +414,7 @@ theorem interpolation_local_L2_bound : PositivityTheory.Rg.BcB.E.E3.Interpolatio
   have hΩ : IsCompact (⋃ y ∈ t, N y) := t.isCompact_biUnion fun y _ => hNc y
   set Ω : Set Y := ⋃ y ∈ t, N y with hΩdef
   refine ⟨Ω, hΩ, fun y₀ => ?_⟩
-  haveI : IsFiniteMeasure (ν.restrict Ω) := ⟨by simpa using hΩ.measure_lt_top⟩
+  have : IsFiniteMeasure (ν.restrict Ω) := ⟨by simpa using hΩ.measure_lt_top⟩
   have hm : ∀ ψ ∈ Ψ, MemLp ψ 2 (ν.restrict Ω) := by
     intro ψ hψ
     obtain ⟨B, hB⟩ := hΩ.exists_bound_of_continuousOn (hc ψ hψ).continuousOn
@@ -717,7 +717,7 @@ theorem lintegral_compact_le {G : Type} [Group G] [TopologicalSpace G] [IsTopolo
     obtain ⟨δ, p, hp, rfl⟩ := Set.mem_iUnion.1 hx
     exact Set.mem_iUnion.2 ⟨⟨γ, hγ⟩ * δ, p, hp, by simp [mul_assoc]⟩
   let h : G → ℝ≥0∞ := T.indicator fun x => ‖f x‖ₑ ^ 2
-  have hh : Measurable h := (hf.measurable.enorm.pow_const 2).indicator hTm
+  have hh : Measurable h := (hf.measurable.eNorm.pow_const 2).indicator hTm
   have hhinv : ∀ γ ∈ Γ, ∀ x, h (γ * x) = h x := by
     intro γ hγ x
     by_cases hx : x ∈ T
@@ -733,7 +733,7 @@ theorem lintegral_compact_le {G : Type} [Group G] [TopologicalSpace G] [IsTopolo
   rw [h1]
   refine h2.trans ?_
   gcongr
-  rw [Set.diff_empty, ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+  rw [Set.sdiff_empty, ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
   refine lintegral_mono fun x => ?_
   by_cases hx : x ∈ T
   · obtain ⟨δ, p, hp, rfl⟩ := Set.mem_iUnion.1 hx
@@ -777,15 +777,15 @@ theorem pair_bound {X Y : Type} [Group X] [Group Y] [TopologicalSpace X] [Topolo
         @lintegral _ m (@Measure.restrict _ m μ Fd)
           fun x => ENNReal.ofReal (w x ^ (-(2 * K : ℤ))) * ‖f x‖ₑ ^ 2))) := by
   subst e
-  haveI : SigmaFinite μ₁ := sigmaFinite_of_locallyFinite
-  haveI : SigmaFinite μ₂ := sigmaFinite_of_locallyFinite
-  haveI := hL
-  haveI := hO
-  haveI := hLF
-  haveI : μ.IsHaarMeasure := {}
+  have : SigmaFinite μ₁ := sigmaFinite_of_locallyFinite
+  have : SigmaFinite μ₂ := sigmaFinite_of_locallyFinite
+  have := hL
+  have := hO
+  have := hLF
+  have : μ.IsHaarMeasure := {}
   obtain ⟨c, hc⟩ : ∃ c : NNReal, μ₁.prod μ₂ = c • μ := ⟨_, Measure.isMulLeftInvariant_eq_smul _ _⟩
   refine ⟨c, fun A B W N hA hB hw hN => ?_⟩
-  have hmeas : Measurable fun p : X × Y => ‖f p‖ₑ ^ 2 := hf.measurable.enorm.pow_const 2
+  have hmeas : Measurable fun p : X × Y => ‖f p‖ₑ ^ 2 := hf.measurable.eNorm.pow_const 2
   have h1 : ∫⁻ x in A, ∫⁻ y in B, ‖f (x, y)‖ₑ ^ 2 ∂μ₂ ∂μ₁ =
       c * ∫⁻ p in A ×ˢ B, ‖f p‖ₑ ^ 2 ∂μ := by
     have e1 : ∫⁻ x in A, ∫⁻ y in B, ‖f (x, y)‖ₑ ^ 2 ∂μ₂ ∂μ₁ =
@@ -890,8 +890,8 @@ theorem countable_ratH (E : Type) [Field E] [NumberField E] [IsCMField E] (a b :
   have hM : ∀ m : ℕ, Countable (GL (Fin m) E) := fun m =>
     haveI : Countable (Matrix (Fin m) (Fin m) E) := inferInstanceAs (Countable (Fin m → Fin m → E))
     (Units.val_injective (α := Matrix (Fin m) (Fin m) E)).countable
-  haveI := hM a
-  haveI := hM b
+  have := hM a
+  have := hM b
   exact ((ratGL E a).prodMap (ratGL E b)).rangeRestrict_surjective.countable
 
 theorem loc_first (hT : SizeT) (hM : MultC) (hI : InterpolationL2Bound) (D : Dom E a b) (K : ℕ) (F : H E a b → ℂ)
@@ -901,8 +901,8 @@ theorem loc_first (hT : SizeT) (hM : MultC) (hI : InterpolationL2Bound) (D : Dom
     ∃ (C : ℝ) (M : ℕ), ∀ S : Set (GA E a), IsCompact S → ∀ (n : ℕ) (R : ℝ), 0 ≤ R →
       Mult S n → (∀ g ∈ S, logSize g ≤ R) →
       ∫⁻ g in S, ‖F (g, y₀)‖ₑ ^ 2 ∂μ ≤ ENNReal.ofReal (C * n * (1 + R) ^ M) := by
-  haveI := hμ
-  haveI := countable_ratH E a b
+  have := hμ
+  have := countable_ratH E a b
   obtain ⟨Ω, hΩ, hC⟩ := hI (GA E a) (GA E b) (Measure.haar : Measure (GA E b)) (fun x y => F (x, y))
     (fun x => hF.comp (Continuous.prodMk_right x)) hfd
   obtain ⟨Cy, hCy⟩ := hC y₀
@@ -932,8 +932,8 @@ theorem loc_second (hT : SizeT) (hM : MultC) (hI : InterpolationL2Bound) (D : Do
     ∃ (C : ℝ) (M : ℕ), ∀ S : Set (GA E b), IsCompact S → ∀ (n : ℕ) (R : ℝ), 0 ≤ R →
       Mult S n → (∀ g ∈ S, logSize g ≤ R) →
       ∫⁻ g in S, ‖F (x₀, g)‖ₑ ^ 2 ∂μ ≤ ENNReal.ofReal (C * n * (1 + R) ^ M) := by
-  haveI := hμ
-  haveI := countable_ratH E a b
+  have := hμ
+  have := countable_ratH E a b
   obtain ⟨Ω, hΩ, hC⟩ := hI (GA E b) (GA E a) (Measure.haar : Measure (GA E a)) (fun y x => F (x, y))
     (fun y => hF.comp (Continuous.prodMk_left y)) hfd
   obtain ⟨Cy, hCy⟩ := hC x₀
@@ -1016,9 +1016,9 @@ theorem lintegral_translate [MeasurableSpace (GA E N)] [BorelSpace (GA E N)] (μ
     (measurableEmbedding_mulLeft _) (fun g => ‖φ g‖ₑ ^ 2) Q,
     ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
   refine lintegral_congr fun g => ?_
-  rw [hz, enorm_mul, mul_pow]
+  rw [hz, eNorm_mul, mul_pow]
   congr 1
-  rw [← ofReal_norm_eq_enorm, Complex.norm_exp, ← ENNReal.ofReal_pow (Real.exp_pos _).le, ← Real.exp_nat_mul]
+  rw [← ofReal_norm, Complex.norm_exp, ← ENNReal.ofReal_pow (Real.exp_pos _).le, ← Real.exp_natCast_mul]
   congr 2
   simp
   ring
@@ -1026,8 +1026,8 @@ theorem lintegral_translate [MeasurableSpace (GA E N)] [BorelSpace (GA E N)] (μ
 theorem centReGlue_holds : CentReGlue := by
   set_option synthInstance.maxHeartbeats 200000 in
   intro hS hM E _ _ _ N φ z hφ hne hL hz
-  letI : MeasurableSpace (GA E N) := borel _
-  haveI : BorelSpace (GA E N) := ⟨rfl⟩
+  let : MeasurableSpace (GA E N) := borel _
+  have : BorelSpace (GA E N) := ⟨rfl⟩
   obtain ⟨C, M, hC⟩ := hL Measure.haar inferInstance
   by_contra ha
   obtain ⟨x₀, hx₀⟩ : ∃ x, φ x ≠ 0 := by
@@ -1052,7 +1052,7 @@ theorem centReGlue_holds : CentReGlue := by
         (pi_norm_le_iff_of_nonneg (abs_nonneg t)).2 fun _ => (Real.norm_eq_abs t).le
       linarith
   have hIpos : 0 < I := by
-    rw [hI, setLIntegral_pos_iff (hφ.measurable.enorm.pow_const 2)]
+    rw [hI, setLIntegral_pos_iff (hφ.measurable.eNorm.pow_const 2)]
     have hV : IsOpen (interior Q ∩ {x | φ x ≠ 0}) :=
       isOpen_interior.inter (isOpen_ne_fun hφ continuous_const)
     have hVne : (interior Q ∩ {x | φ x ≠ 0}).Nonempty :=
@@ -1121,7 +1121,7 @@ theorem finite_range_inter (C : Set (GA E N)) (hC : IsCompact C) :
   have : T1Space (GA E N) := T2Space.t1Space
   have hd : DiscreteTopology ((ratGL E N).range) := GlobalTheory.MirTower.discrete_of_le_range le_rfl
   have hcl : IsClosed (((ratGL E N).range : Subgroup (GA E N)) : Set (GA E N)) :=
-    Subgroup.isClosed_of_discrete
+    Subgroup.isClosed_of_discreteTopology
   have hK : IsCompact (C ∩ ((ratGL E N).range : Set (GA E N))) := hC.inter_right hcl
   have hds : DiscreteTopology ↥(C ∩ ((ratGL E N).range : Set (GA E N))) :=
     DiscreteTopology.of_subset hd Set.inter_subset_right

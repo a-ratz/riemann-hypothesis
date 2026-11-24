@@ -163,7 +163,7 @@ theorem main : ∀ (g n : ℕ), n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j, j�
   intro g n hn hodd
   obtain ⟨j₀, hcore⟩ := GlobalTheory.T.normalised_thetaConstants_eq_scalar_mul_root n hn hodd
   refine ⟨j₀, fun j hj V₁ _ _ _ hV hunit D hg X C _ e u mo hmo hT K _ _ ev k₀ hk₀ hrat o _ J b s t π₁ hp hL v hv a a' hne => ?_⟩
-  haveI : IsAlgClosed k₀ := hk₀
+  have : IsAlgClosed k₀ := hk₀
   have := t.ab.comm
   obtain ⟨ρ₀, hρ₀⟩ := D.P.rigid
   obtain ⟨w, hw⟩ := hL
@@ -175,7 +175,7 @@ theorem main : ∀ (g n : ℕ), n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j, j�
     rw [← MonObj.comp_pow, GlobalTheory.ThetaPtUp.lab_pow t i, MonObj.comp_one]
   obtain ⟨thP, hg, hth⟩ := GlobalTheory.T.exists_generator_thetaPoint_normalised_thetaConstants K t.pol ρ hρ (n ^ j) _ x v hx hv
   let τ : (baseOver (Sp K)).left ⟶ (Over.mk (spMap ev)).left := 𝟙 (Sp K)
-  haveI : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
+  have : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
   have hτ : τ ≫ (Over.mk (spMap ev)).hom = (baseOver (Sp K)).hom ≫ spMap ev := rfl
   have hi : inv τ = 𝟙 (Sp K) := IsIso.inv_eq_of_hom_inv_id (Category.id_comp _)
   obtain ⟨th, hrel⟩ := GlobalTheory.ThetaPtMove.exists_secRel_up hp τ hτ hw D.P.isLB t.isLB thP
@@ -243,7 +243,7 @@ namespace GlobalTheory.USep.DescentBaseChange
 theorem unitS_subfield {K : Type} [Field K] (k₀ : Subfield K) (u : k₀ˣ) :
     ZM.unitS (spMap k₀.subtype ≫ spMap (RingHom.id k₀)) u = unitOn (Units.map k₀.subtype.toMonoidHom u) := by
   ext
-  simp only [ZM.unitS, unitOn, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [ZM.unitS, unitOn, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   rw [spMap, spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
   have := Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (k₀.subtype.comp (RingHom.id k₀)))
   exact (congrArg (fun f => f.hom (u : k₀)) this).symm
@@ -271,7 +271,7 @@ theorem tObj_of_baseChange : ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] (
   exact key _ hg
 
 theorem tBase_of_isAlgClosed (k₀ : Type) [Field k₀] [IsAlgClosed k₀] [CharZero k₀] (N : ℕ) (hN : N ≠ 0) : Nonempty (ZM.TBase k₀ N) := by
-  haveI : NeZero (N : k₀) := ⟨Nat.cast_ne_zero.2 hN⟩
+  have : NeZero (N : k₀) := ⟨Nat.cast_ne_zero.2 hN⟩
   obtain ⟨z, hz⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic N k₀)
     (Polynomial.degree_cyclotomic_pos N k₀ (Nat.pos_of_ne_zero hN)).ne'
   have hp : IsPrimitiveRoot z N := (Polynomial.isRoot_cyclotomic_iff).1 hz
@@ -290,7 +290,7 @@ theorem polarised_part_model : ∀ (g n : ℕ), n.Prime → Odd n → ∃ j₀ :
   have hj3 : 1 ≤ j := le_trans (le_max_right _ _) hj
   have hK : ∀ m : ℕ, m ≠ 0 → (m : K) ≠ 0 := fun m hm => by
     rw [← map_natCast ev]; exact ((hunit m hm).map ev).ne_zero
-  haveI : CharZero k₀ := charZero_of_inj_zero fun m hm => by
+  have : CharZero k₀ := charZero_of_inj_zero fun m hm => by
     by_contra h
     exact hK m h (by simpa using congrArg k₀.subtype hm)
   have hN0 : (n ^ j) ^ 2 ≠ 0 := pow_ne_zero _ (pow_ne_zero _ hn.ne_zero)
@@ -707,8 +707,8 @@ open NumberField ReciprocityTheory.AnForm.R GlobalTheory.Toroidal GlobalTheory.L
 theorem GlobalTheory.USep.coords_scalar_mul_rational : ∀ (g n : ℕ), n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j, j₀ ≤ j → ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], IsCN V₁ → (∀ m : ℕ, m ≠ 0 → IsUnit (m : V₁)) → ∀ (D : DegPre V₁), D.P.g = g → ∀ (X C : Type) [AddCommGroup X] (e : X ≃+ D.X) (u : X → C → V₁) (mo : X → V₁), (∀ mu, mo mu ≠ 0 ∧ ∃ c, IsUnit (u mu c)) → GlobalTheory.Poinc.Sep.IsThetaTerms D ((n ^ j) ^ 2) e (fun mu c => u mu c * mo mu) → ∀ (K : Type) [Field K] [IsAlgClosed K] (ev : V₁ →+* K) (k₀ : Subfield K), IsAlgClosed k₀ → (∀ mu c c', IsUnit (u mu c') → ∃ r ∈ k₀, ev (u mu c) = r * ev (u mu c')) → ∀ (I : Type) (y : I → (Over.mk (spMap ev) ⟶ D.P.A)), (∀ i, y i ^ (n ^ j) ^ 2 = 1) → ∀ (a : D.X) (z : Over.mk (spMap ev) ⟶ D.P.A), z.left = spMap ev ≫ (D.c a).left → ∃ (v : I → K) (l : K) (r : I → K), GlobalTheory.Ex.IsCoordPt D.P (n ^ j) y z (fun i => GlobalTheory.Ex.fnOf (v i)) ∧ (∀ i, r i ∈ k₀) ∧ ∀ i, v i = l * r i := by
   intro g n hn hodd
   refine ⟨0, fun j _ V₁ _ _ _ hV hunit D _ X C _ e u mo hu hT K _ _ ev k₀ hk₀ hr I y hy a z hz => ?_⟩
-  haveI : IsNoetherianRing V₁ := hV.1
-  haveI : IsIntegrallyClosed V₁ := hV.2.1
+  have : IsNoetherianRing V₁ := hV.1
+  have : IsIntegrallyClosed V₁ := hV.2.1
   have hm : 1 ≤ n ^ j := Nat.one_le_pow _ _ hn.pos
   have hK : ((n ^ j : ℕ) : K) ≠ 0 := by
     have := ((hunit (n ^ j) (by omega)).map ev).ne_zero
@@ -777,9 +777,9 @@ theorem points_defOver : ∀ (g n : ℕ), n.Prime → Odd n → ∃ j₀ : ℕ, 
     have h := (hunit (n ^ j) (by positivity)).map ev
     rw [map_natCast] at h
     exact h.ne_zero
-  haveI : IsNoetherianRing V₁ := hCN.1
-  haveI : IsCommMonObj D.P.A := D.P.isAb.comm
-  haveI : IsCommMonObj B' := GlobalTheory.PolPull.isCommMonObj_of_isGrpPullback h₁
+  have : IsNoetherianRing V₁ := hCN.1
+  have : IsCommMonObj D.P.A := D.P.isAb.comm
+  have : IsCommMonObj B' := GlobalTheory.PolPull.isCommMonObj_of_isGrpPullback h₁
   let P' : PolAV (Sp K) :=
     { A := B'
       isAb :=
@@ -794,7 +794,7 @@ theorem points_defOver : ∀ (g n : ℕ), n.Prime → Odd n → ∃ j₀ : ℕ, 
       rigid := GlobalTheory.PolBaseChange.rigidified_pull h₁ D.P.rigid
       sym := GlobalTheory.PolBaseChange.sym_pull h₁ D.P.sym
       ample := by
-        haveI := D.P.isAb.proper
+        have := D.P.isAb.proper
         exact GlobalTheory.AmpleBaseChange.relAmple_of_isPullback D.P.isLB D.P.ample h₁.1
       ktriv := kTriv_pull h₁ D.P.isLB (pull_isLB D.P.isLB _)
         ((isGen_iff _).1 (GlobalTheory.TorsionTauCompare.isGen_refl (pull_isLB D.P.isLB π₁))) D.P.ktriv }
@@ -1057,7 +1057,7 @@ theorem mem_of_zpow_mem {K : Type} [Field K] (k₀ : Subfield K) (hk : IsAlgClos
       have : x ^ m = x ^ m.natAbs := by rw [← zpow_natCast]; congr 1; omega
       rwa [this] at h
   obtain ⟨n, hn, h⟩ := hn
-  letI : Algebra k₀ K := k₀.subtype.toAlgebra
+  let : Algebra k₀ K := k₀.subtype.toAlgebra
   have hi : IsIntegral k₀ x := by
     refine ⟨Polynomial.X ^ n - Polynomial.C ⟨x ^ n, h⟩, Polynomial.monic_X_pow_sub_C _ hn.ne', ?_⟩
     simp only [Polynomial.eval₂_sub, Polynomial.eval₂_X_pow, Polynomial.eval₂_C]
@@ -1244,7 +1244,7 @@ theorem GlobalTheory.USep.sepB_of_normBl : ∀ (E : Type) [Field E] [NumberField
       have e2 := hlam ⟨pull e.toLinearMap ((l.M' : ℤ) • ε (.inl (h k)) : balForms (H.bar : 𝓞 E → 𝓞 E) _),
         pull_mem _ ((l.M' : ℤ) • ε (.inl (h k))).2⟩
       rw [hF] at e2
-      rw [e1, e2, map_zsmul, Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply, if_neg (by simp)]
+      rw [e1, e2, map_zsmul, Module.Basis.coord_apply, Module.Basis.repr_self, Finsupp.single_apply, ite_eq_right (by simp)]
       simp
     obtain ⟨l₁, l₂, MM, a, a', c₁, c₂, hMM, hu₁, hu₂, hlin, r, hr, hre⟩ := V3 lam hlam0
     obtain ⟨R₁, hR₁, hR₁e⟩ := hT a c₁
@@ -1266,7 +1266,7 @@ theorem GlobalTheory.USep.sepB_of_normBl : ∀ (E : Type) [Field E] [NumberField
         rw [← hlam1, ← hlin _ (hβ' k)]; ring
       simp only [this, zpow_add, Finset.prod_mul_distrib]
       congr 1
-      rw [Finset.prod_eq_single i (fun k _ hk => by rw [if_neg (Ne.symm hk)]; simp) (by simp)]
+      rw [Finset.prod_eq_single i (fun k _ hk => by rw [ite_eq_right (Ne.symm hk)]; simp) (by simp)]
       simp
     have hne : ev₁ (Φ.coefT y a c₁) ^ 2 ≠ 0 := pow_ne_zero _ (hu₁.map ev₁).ne_zero
     have hR₁ne : R₁ ≠ 0 := fun h0 => hne (by rw [hR₁e, h0, zero_mul])

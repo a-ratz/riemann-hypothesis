@@ -133,7 +133,7 @@ theorem val_lt_one_of_mem (he : Formalism.L2.NTheta.IsIdemAt e PP) (hπ : Chart 
       exact fun h => h0 (Subtype.ext h)
     rw [he.2 x h0, hπ.2.2.2, isInt_Ov] at hx
     have hx' : ¬ Valued.v ((π.comp (incA D)) (x : D.host.E)⁻¹) ≤ 1 := hx
-    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)] at hx'
+    rw [map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 hx0)] at hx'
     exact hx'
 
 theorem exists_chart_levels (he : Formalism.L2.NTheta.IsIdemAt e PP) (hπ : Chart e v π) :
@@ -183,7 +183,7 @@ theorem val_row_lt {K Γ : Type} [Field K] [LinearOrderedCommGroupWithZero Γ] (
   refine Valuation.map_sum_lt _ h0 fun i _ => ?_
   rw [Valuation.map_mul]
   calc _ ≤ w (u i - if j = i then 1 else 0) * w (d j) := mul_le_mul_right (hd i) _
-    _ < w (d j) := mul_lt_of_lt_one_left (zero_lt_iff.2 h0) (hu i)
+    _ < w (d j) := mul_lt_of_lt_one_left (pos_iff_ne_zero.2 h0) (hu i)
 
 def adj (S T : HSp D) (t : WO S T) : Matrix (Fin S.rank) (Fin T.rank) (AE D) :=
   HMul.hMul (HMul.hMul ((S.gram⁻¹).map (incA D)) ((t : Matrix (Fin T.rank) (Fin S.rank) (AE D)).map (cA D)).transpose)
@@ -211,12 +211,12 @@ theorem val_sub_lt (φ : Datum.EAf D →+* Fv D.host.F v)
   have h1 := congrFun (congrFun hU' j) i
   rw [topL, dite_eq_left ⟨(Fin.castLE hr j).2, i.2⟩, redM, dite_eq_left (hU _ _), Matrix.one_apply] at h1
   by_cases h : j = i
-  · rw [if_pos h] at h1 ⊢
+  · rw [ite_eq_left h] at h1 ⊢
     have h2 := hres (⟨_, hU (Fin.castLE hr j) i⟩ - 1) (by
       rw [RingHom.map_sub, sub_eq_zero, RingHom.map_one]
       exact h1)
     rwa [AddSubgroupClass.coe_sub, RingHom.map_sub, Subring.coe_one, RingHom.map_one] at h2
-  · rw [if_neg h] at h1 ⊢
+  · rw [ite_eq_right h] at h1 ⊢
     rw [sub_zero]
     exact hres ⟨_, hU (Fin.castLE hr j) i⟩ h1
 
@@ -241,7 +241,7 @@ theorem exists_const {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F �
   have hj0 : d j ≠ 0 := fun h => by
     have h0 : d = 0 := funext fun i => by
       have := hj i (Finset.mem_univ _)
-      rwa [h, map_zero, le_zero_iff, map_eq_zero] at this
+      rwa [h, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
     rw [h0, Matrix.mulVec_zero] at hd
     exact hi₀ ((hπ.2.1 _).1 (congrFun hd i₀).symm)
   have hξ : π (incA D D.host.xi0) ≠ 0 :=
@@ -263,7 +263,7 @@ theorem exists_const {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F �
       map_natCast (algebraMap (𝓞 D.host.E) D.host.E) _
     rw [e1, map_natCast, map_natCast] at this
     rw [Valuation.map_mul]
-    exact mul_lt_of_lt_one_left (zero_lt_iff.2 hx0) this
+    exact mul_lt_of_lt_one_left (pos_iff_ne_zero.2 hx0) this
   · have hU : (frMapAdj S T βS βT t).map φ = (βS⁻¹).val.map φ * (adj S T t).map π * βT.val.map φ := by
       have : (adj S T t).map π = ((adj S T t).map (toEAf D)).map φ := by
         exact Matrix.ext fun a b => (hφ _).symm
@@ -286,8 +286,8 @@ theorem exists_const {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F �
       ring
     rw [h5, psiV_add ψ hv, hx' (x * _), mul_one]
     rw [Valuation.map_mul, map_div₀]
-    exact mul_lt_of_lt_one_right (zero_lt_iff.2 hx0)
-      ((div_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hj0))).2 hrow)
+    exact mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hx0)
+      ((div_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hj0))).2 hrow)
 
 
 
@@ -337,7 +337,7 @@ theorem exists_eigen {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp
         topL T.rank (redM PP (frMapAdj S T βS βT t)) = 1
     · rw [← hconst t ht.2 (hK PP hPP).2, hk, ← GlobalTheory.LatVac.symplHom_apply, map_nsmul, AddChar.map_nsmul_eq_pow]
       rfl
-    · rw [omegaK, if_neg hK, zero_mul, mul_zero, mul_zero]
+    · rw [omegaK, ite_eq_right hK, zero_mul, mul_zero, mul_zero]
   · rw [mul_zero, mul_zero]
 
 theorem exists_mem_Pg {T : Type} {L : LevCh D T} {μ0 : T} (h : L.Is μ0) : ∃ PP, PP ∈ L.Pg := by

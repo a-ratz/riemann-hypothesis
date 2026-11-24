@@ -278,7 +278,7 @@ theorem approx_id {K : Type} [Group K] [TopologicalSpace K] [CompactSpace K] [T2
   have hbU : ∀ k, k ∉ U → b k = 0 := fun k hk => by simp only [b]; rw [hf1 hk]; simp
   have hbcs : HasCompactSupport b := isCompact_univ.of_isClosed_subset (isClosed_tsupport _) (subset_univ _)
   have hcpos : 0 < ∫ k, b k ∂μ :=
-    hbc.integral_pos_of_hasCompactSupport_nonneg_nonzero hbcs hb0 (by rw [hb1]; exact one_ne_zero)
+    hbc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hbcs hb0 (by rw [hb1]; exact one_ne_zero)
   set c := ∫ k, b k ∂μ
   have hbint : Integrable b μ := integrableOn_univ.mp (hbc.continuousOn.integrableOn_compact isCompact_univ)
   set β : C(K, ℂ) := ⟨fun k => ((b k / c : ℝ) : ℂ), Complex.continuous_ofReal.comp (hbc.div_const c)⟩
@@ -421,7 +421,7 @@ theorem exists_kfin_near {ε : Fin n → Bool} {lam : Fin n → ℝ} {T : S7.KTy
   unfold nuJ
   calc (Ws.map fun w => ‖dSW (sigLam ε Ψ v₀) w (u - x)‖).sum
       ≤ (Ws.map fun w => ‖dSW (sigLam ε Ψ v₀) w (u - x)‖).length • (e / (Ws.length + 1)) :=
-        List.sum_le_card_nsmul _ _ fun r hr => by
+        List.sum_le_length_nsmul _ _ fun r hr => by
           obtain ⟨w, hw, rfl⟩ := List.mem_map.1 hr
           exact hterm w hw
     _ = (Ws.length : ℝ) * (e / (Ws.length + 1)) := by rw [List.length_map, nsmul_eq_mul]
@@ -768,7 +768,7 @@ theorem bridge_smooth {ε : Fin (2 * r + k + 1) → Bool} {P : Matrix (Fin (2 * 
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.mul_nonsing_inv P hPd, Matrix.one_mul, Matrix.mul_assoc,
       Matrix.mul_nonsing_inv P hPd, Matrix.mul_one]
   have hmem : ∀ g, Formalism.QuantumDeterminants.inUH (Formalism.QuantumDeterminants.Hpk k r) g ↔ inUJ ε (P * g * P⁻¹) := fun g => bridge_group hP g
-  simp only [Formalism.MainNotions.S.smoothVecs, Set.mem_setOf_eq, Formalism.MainNotions.S.IsSmoothVec, IsSmoothVecU]
+  simp only [Formalism.MainNotions.S.smoothVecs, Set.mem_ofPred_eq, Formalism.MainNotions.S.IsSmoothVec, IsSmoothVecU]
   constructor
   · intro hv g₀ hg₀
     have hg₁ : Formalism.QuantumDeterminants.inUH (Formalism.QuantumDeterminants.Hpk k r) (P⁻¹ * g₀ * P) := (hmem _).2 (by rw [hBA]; exact hg₀)

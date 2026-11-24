@@ -111,7 +111,7 @@ theorem exists_homogeneous_coeff_mem {σ R : Type} [CommRing R] (J : Ideal R) (i
     · have := (isHomogeneous_monomial (R := R) c (rfl : v.degree = v.degree)).mul (isHomogeneous_X_pow i (d - v.degree))
       rwa [Nat.add_sub_cancel' hd] at this
     · classical
-      rw [X_pow_eq_monomial, monomial_mul, coeff_monomial, _root_.mul_one]
+      rw [X_pow_eq_monomial, monomial_mul_monomial, coeff_monomial, _root_.mul_one]
       split_ifs
       · exact hc
       · exact J.zero_mem
@@ -228,11 +228,11 @@ theorem weightedHomogeneousComponent_one_int {σ A : Type*} [CommRing A] (F : Mv
   ext a
   rw [coeff_weightedHomogeneousComponent, weight_one_int]
   by_cases hm : 0 ≤ m
-  · rw [if_pos hm, coeff_homogeneousComponent]
+  · rw [ite_eq_left hm, coeff_homogeneousComponent]
     by_cases h : (a.degree : ℤ) = m
-    · rw [if_pos h, if_pos (by omega)]
-    · rw [if_neg h, if_neg (by omega)]
-  · rw [if_neg hm, if_neg (by omega)]
+    · rw [ite_eq_left h, ite_eq_left (by omega)]
+    · rw [ite_eq_right h, ite_eq_right (by omega)]
+  · rw [ite_eq_right hm, ite_eq_right (by omega)]
     simp
 
 theorem isHomogeneous_polyGrading_of_component {ι A : Type} [CommRing A]
@@ -283,7 +283,7 @@ theorem sum_cubeSign_pair {ι : Type} [LinearOrder ι] {t : Finset ι} (ht : t.c
 
 theorem exists_form_of_compatible_fractions : ∀ (A : Type) [CommRing A] [IsNoetherianRing A] (n : ℕ) (J : Ideal (MvPolynomial (Fin (n + 1)) A)), (∀ F ∈ J, ∀ d, homogeneousComponent d F ∈ J) → ∃ d₀ : ℕ, ∀ d, d₀ ≤ d → ∀ (N : ℕ) (F : Fin (n + 1) → MvPolynomial (Fin (n + 1)) A), (∀ i, (F i).IsHomogeneous (d + N)) → (∀ i j, ∃ L : ℕ, ((X i : MvPolynomial (Fin (n + 1)) A) * X j) ^ L * (X j ^ N * F i - X i ^ N * F j) ∈ J) → ∃ G : MvPolynomial (Fin (n + 1)) A, G.IsHomogeneous d ∧ ∀ i, ∃ L : ℕ, (X i : MvPolynomial (Fin (n + 1)) A) ^ L * (F i - X i ^ N * G) ∈ J := by
   intro A _ _ n J hJ
-  letI : Decomposition (grQuot (polyGrading (Fin (n + 1)) A) J) :=
+  let : Decomposition (grQuot (polyGrading (Fin (n + 1)) A) J) :=
     grQuotDecomposition _ (isHomogeneous_polyGrading_of_component J hJ)
   obtain ⟨n₀, hn₀⟩ := cubeComplex_grCube_exactAt_of_finite (Fin (n + 1)) A (MvPolynomial (Fin (n + 1)) A ⧸ J)
     (grQuot (polyGrading (Fin (n + 1)) A) J) inferInstance
@@ -509,7 +509,7 @@ theorem GlobalTheory.uniform_serre_sections : ∀ (R : Type) [CommRing R] [IsNoe
       (isHomogeneous_sub' (isHomogeneous_lift (I := I) (e := e) (hFh i))
         (by rw [show d + N = 1 * N + d by ring]; exact ((isHomogeneous_X _ i).pow N).mul hG'h))
     have := (hmemiff _ _ hhom).1 hL e
-    rwa [comp_X_pow_mul, comp_sub, comp_X_pow_mul, comp_lift _ _ _ (hFc i), if_pos rfl] at this
+    rwa [comp_X_pow_mul, comp_sub, comp_X_pow_mul, comp_lift _ _ _ (hFc i), ite_eq_left rfl] at this
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformSerreSections =====

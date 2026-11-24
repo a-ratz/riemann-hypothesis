@@ -87,7 +87,7 @@ def embA (e : E) : Ainf F →+ AEF F E where
     exact Prod.ext rfl (add_zero _).symm
 
 theorem continuous_embA (e : E) : Continuous (embA (F := F) e) := by
-  haveI := isModuleTopology_AE F E
+  have := isModuleTopology_AE F E
   have h1 : Continuous fun a : Ainf F => pairA F a 0 :=
     Continuous.prodMk continuous_id continuous_const
   have h2 : Continuous fun a : AF F => a • ((1 : AF F) ⊗ₜ[F] e : AEF F E) :=
@@ -164,7 +164,7 @@ def sndC {I : Type} (c : I → ℂ) : (I → ℂ) →+ (I → ℝ) where
 theorem exists_chart_of_cm {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (tau : InfinitePlace F → (E →+* ℂ))
     (htau : ∀ w, plF (F := F) (tau w) = w) (θ : InfinitePlace F → (Ainf F ⊗[F] E →+* ℂ)) (hθ : IsInfFamF tau θ) :
     ∃ ι : (InfinitePlace F → ℂ) →+ AEF F E, IsChartF θ ι := by
-  haveI : IsTotallyReal F := h.1
+  have : IsTotallyReal F := h.1
   obtain ⟨δ, hδ, hsp⟩ := exists_gen h
   have hθ' : ∀ w (a : Ainf F) (x : E), θ w (a ⊗ₜ[F] x) = (rc w (a w) : ℝ) * tau w x := by
     intro w a x

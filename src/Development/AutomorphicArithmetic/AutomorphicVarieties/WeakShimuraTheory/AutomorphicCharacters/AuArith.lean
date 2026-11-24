@@ -109,8 +109,8 @@ theorem UpperTheory.V.Ws.auArith :
     GlobalTheory.Published.GlobalArtinReciprocity → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (T : Tower D) (c' : Coef l) (h : c.O ≤ c'.O) (K : Link T c' h) (X : Space (T.fr ∅) (inc h)) (B : W.UniversalOrdinaryDeterminantRing K.r) (φ : B.B →ₐ[c'.O] X.B), K.IsPhi X 0 B φ → ∀ (y : X.A →ₐ[c'.O] PadicAlgCl l) (x : B.Pt), (∀ b, x b = y (algebraMap X.B X.A (φ b))) → (∀ (v : W.Vl l T.L) (i : Fin 4), Continuous (x.psi v i)) → ∀ m : Fin 4 → ℤ, StrictAnti m → T.Wts (fun i => 2 * m i) (X.P.map (y : X.A →+* PadicAlgCl l)) → ∃ w : K.s.Wt 4, x.Arith w := by
   intro hGAR Ω _ _ _ l _ c D T c' h K X B φ hφ y x hx hcont m hm hW
   obtain ⟨U, hUo, hU⟩ := hW
-  haveI : Finite (G T.F Ω ⧸ U) := Subgroup.quotient_finite_of_isOpen U hUo
-  haveI : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (G T.F Ω ⧸ U) := Subgroup.quotient_finite_of_isOpen U hUo
+  have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hpowU : ∀ g : G T.F Ω, g ^ U.normalCore.index ∈ U :=
     fun g => Subgroup.normalCore_le U (U.normalCore.pow_index_mem g)
   have hN0 : U.normalCore.index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero

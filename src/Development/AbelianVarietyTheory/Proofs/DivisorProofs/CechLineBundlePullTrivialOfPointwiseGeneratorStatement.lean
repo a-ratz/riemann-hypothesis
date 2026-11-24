@@ -100,7 +100,7 @@ theorem ext_of_evU (R : Type) [CommRing R] (Y : Over (Sp R)) (U : Y.left.Opens) 
       evU z.left U a = evU z.left U a') : a = a' := by
   refine TopCat.Presheaf.section_ext Y.left.sheaf U a a' fun y hy ↦ ?_
   let S : CommRingCat.{0} := Y.left.presheaf.stalk y
-  letI al : Algebra R S := (Spec.preimage (R := CommRingCat.of R) (Y.left.fromSpecStalk y ≫ Y.hom)).hom.toAlgebra
+  let al : Algebra R S := (Spec.preimage (R := CommRingCat.of R) (Y.left.fromSpecStalk y ≫ Y.hom)).hom.toAlgebra
   let z : Pt Y S := Over.homMk (Y.left.fromSpecStalk y)
     (Spec.map_preimage (R := CommRingCat.of R) (Y.left.fromSpecStalk y ≫ Y.hom)).symm
   have hz : ⊤ ≤ z.left ⁻¹ᵁ U := fromSpecStalk_top y U hy

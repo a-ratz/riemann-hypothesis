@@ -76,7 +76,7 @@ theorem UpperTheory.V.Cj.S.hkRel :
   intro hSl hS hL hB E _ _ _ r s ψ hN w hψ ϖ hu j hj
   have hϖ : ϖ ∈ Ov E w := mem_Ov_of_isUnifV hu
   have := satake_res_finite w hϖ hu
-  letI : Fintype (satakeRes (Ov E w) ⟨ϖ, hϖ⟩) := Fintype.ofFinite _
+  let : Fintype (satakeRes (Ov E w) ⟨ϖ, hϖ⟩) := Fintype.ofFinite _
   obtain ⟨b1, b2, b3, b4⟩ := hB E w r s
   have hfix : ∀ k ∈ KGL w (n := (r + s)), ∀ g, ψ.1 (g * finGL E _ (locGL E _ w k)) = ψ.1 g := fun k hk g =>
     congrFun (congrArg Subtype.val (mem_fixed'.1 hψ k hk)) g

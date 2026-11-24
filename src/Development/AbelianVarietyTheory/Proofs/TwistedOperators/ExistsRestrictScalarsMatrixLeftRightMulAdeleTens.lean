@@ -68,8 +68,8 @@ theorem addEquivAddHaarChar_transport {A B : Type} [AddCommGroup A] [Topological
     addEquivAddHaarChar ((e.symm.trans φ).trans e) = addEquivAddHaarChar φ := by
   set ν : Measure A := Measure.addHaar
   set μ : Measure B := ν.map e
-  haveI : μ.IsAddHaarMeasure := e.isAddHaarMeasure_map ν
-  haveI : μ.Regular := Measure.Regular.map e.toHomeomorph
+  have : μ.IsAddHaarMeasure := e.isAddHaarMeasure_map ν
+  have : μ.Regular := Measure.Regular.map e.toHomeomorph
   set ψ : B ≃ₜ+ B := (e.symm.trans φ).trans e
   have he : Measurable e := e.continuous.measurable
   have hφ : Measurable φ := φ.continuous.measurable
@@ -82,14 +82,14 @@ theorem addEquivAddHaarChar_transport {A B : Type} [AddCommGroup A] [Topological
     funext x
     simp [ψ]
   have h3 : addEquivAddHaarChar φ • μ.map ψ = μ := by rw [hm, ← Measure.map_smul _ he.aemeasurable, h1]
-  haveI : (μ.map ψ).IsAddHaarMeasure := ψ.isAddHaarMeasure_map μ
+  have : (μ.map ψ).IsAddHaarMeasure := ψ.isAddHaarMeasure_map μ
   obtain ⟨K, hK, hKn⟩ := exists_compact_mem_nhds (0 : B)
   have hpos : (μ.map ψ) K ≠ 0 := (Measure.measure_pos_of_mem_nhds (μ := μ.map ψ) hKn).ne'
   have htop : (μ.map ψ) K ≠ ⊤ := (hK.measure_lt_top).ne
   have h4 : (addEquivAddHaarChar ψ : ℝ≥0∞) * (μ.map ψ) K = (addEquivAddHaarChar φ : ℝ≥0∞) * (μ.map ψ) K := by
     have a2 := congrArg (fun m : Measure B => m K) h2
     have a3 := congrArg (fun m : Measure B => m K) h3
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at a2 a3
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at a2 a3
     rw [a2, a3]
   exact_mod_cast (ENNReal.mul_left_inj hpos htop).1 h4
 
@@ -150,14 +150,14 @@ def matCoord (m n : ℕ) :
   map_smul' c u := by funext p; simp
 
 theorem continuous_matCoord (m n : ℕ) : Continuous (matCoord F E m n) := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   have hb : Continuous (tensBasis F E).equivFun :=
     IsModuleTopology.continuous_of_linearMap (tensBasis F E).equivFun.toLinearMap
   exact continuous_pi fun p => (continuous_apply p.2.2).comp
     (hb.comp ((continuous_apply p.2.1).comp (continuous_apply p.1)))
 
 theorem continuous_matCoord_symm (m n : ℕ) : Continuous (matCoord F E m n).symm := by
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   have hb : Continuous (tensBasis F E).equivFun.symm :=
     IsModuleTopology.continuous_of_linearMap (tensBasis F E).equivFun.symm.toLinearMap
   exact continuous_pi fun i => continuous_pi fun j =>
@@ -177,9 +177,9 @@ namespace GlobalTheory.ModuLR
 
 theorem exists_matrix_restrictScalars_lrCE : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (m n : ℕ) [LocallyCompactSpace (Matrix (Fin m) (Fin n) (AF F ⊗[F] E))] [SecondCountableTopology (Matrix (Fin m) (Fin n) (AF F ⊗[F] E))] [MeasurableSpace (Matrix (Fin m) (Fin n) (AF F ⊗[F] E))] [BorelSpace (Matrix (Fin m) (Fin n) (AF F ⊗[F] E))] (g : GL (Fin m) (AF F ⊗[F] E)) (a : GL (Fin n) (AF F ⊗[F] E)), ∃ (κ : Type) (_ : Fintype κ) (_ : DecidableEq κ) (Λ : Matrix κ κ (AF F)) (hΛ : IsUnit Λ.det), Λ.det = Algebra.norm (AF F) ((Matrix.GeneralLinearGroup.det g ^ n * Matrix.GeneralLinearGroup.det a ^ m : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E) ∧ addEquivAddHaarChar (lrCE g a) = addEquivAddHaarChar (mulVecCE Λ hΛ) := by
   intro F E _ _ _ _ _ m n _ _ _ _ g a
-  haveI : IsScalarTower (AF F) (AF F ⊗[F] E) (Matrix (Fin m) (Fin n) (AF F ⊗[F] E)) := inferInstance
-  haveI : Module.Free (AF F) (AF F ⊗[F] E) := Module.Free.of_basis (tensBasis F E)
-  haveI : Module.Finite (AF F) (AF F ⊗[F] E) := Module.Finite.of_basis (tensBasis F E)
+  have : IsScalarTower (AF F) (AF F ⊗[F] E) (Matrix (Fin m) (Fin n) (AF F ⊗[F] E)) := inferInstance
+  have : Module.Free (AF F) (AF F ⊗[F] E) := Module.Free.of_basis (tensBasis F E)
+  have : Module.Finite (AF F) (AF F ⊗[F] E) := Module.Finite.of_basis (tensBasis F E)
   set Φ := matCoord F E m n
   set f : Matrix (Fin m) (Fin n) (AF F ⊗[F] E) →ₗ[AF F ⊗[F] E] Matrix (Fin m) (Fin n) (AF F ⊗[F] E) :=
     lrLin (g : Matrix (Fin m) (Fin m) (AF F ⊗[F] E)) (a : Matrix (Fin n) (Fin n) (AF F ⊗[F] E))

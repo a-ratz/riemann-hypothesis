@@ -252,9 +252,9 @@ theorem latagree_le (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRing
   obtain ⟨U, hU, b, hb, hbq⟩ := hL p hp
   obtain ⟨U', hU', b', hb', hbq'⟩ := hL' p hp
   obtain ⟨hfr, hno, hic⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RegAtRing.regAt_ring X Ω ξ hξ p
-  haveI := hfr
-  haveI := hno inferInstance
-  haveI := hic (hn p hp)
+  have := hfr
+  have := hno inferInstance
+  have := hic (hn p hp)
   have key := GlobalTheory.CompanionTheory.HeightOneFrame.integral_of_integral_at_height_one (regAt ξ p) Ω E r b b'
     (hbq p hp hU).1 ?_ ?_
   · rw [(hbq' p hp hU').2, (hbq p hp hU).2, Submodule.span_le]
@@ -267,8 +267,8 @@ theorem latagree_le (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRing
     have hqT := hT p hp q hqp
     have hle : regAt ξ p ≤ regAt ξ q := fun a ha =>
       (hq a).2 ⟨1, (Ideal.ne_top_iff_one _).1 P.isPrime.ne_top, by simpa using ha⟩
-    letI : Algebra (regAt ξ p) (regAt ξ q) := (Subring.inclusion hle).toAlgebra
-    haveI : IsLocalization.AtPrime (regAt ξ q) P.asIdeal := by
+    let : Algebra (regAt ξ p) (regAt ξ q) := (Subring.inclusion hle).toAlgebra
+    have : IsLocalization.AtPrime (regAt ξ q) P.asIdeal := by
       refine (isLocalization_iff _ _).2 ⟨?_, ?_, ?_⟩
       · rintro ⟨s, hs⟩
         have hs0 : (s : Ω) ≠ 0 := fun h => hs (by

@@ -63,7 +63,7 @@ theorem exists_small_lattices (v : Pl F) :
       (∀ V ∈ 𝓝 (0 : AE F E), ∃ n, (Λ n : Set (AE F E)) ⊆ V) ∧ (∀ n, ∀ z ∈ Λ n, At (evFin F v) z) ∧
       ∀ n, ∃ V ∈ 𝓝 (0 : AE F E), ∀ z ∈ V, At (evFin F v) z → z ∈ Λ n := by
   classical
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
   let b := Algebra.TensorProduct.basis (AF F) (Module.finBasis F E)
   let c : AE F E → Fin (Module.finrank F E) → Fv F v := fun z i => evFin F v (b.repr z i)
   have hc : Continuous c := continuous_pi fun i =>
@@ -138,7 +138,7 @@ theorem exists_small_subgroups (σ : E →ₐ[F] E) {d : ℕ} (W : Spc F E d) (v
       (∀ n, (K n : Set (UA σ W.J)) ⊆ UAt σ W (evFin F v)) ∧
       ∀ n, ∃ U ∈ 𝓝 (1 : UA σ W.J), ∀ h ∈ U, h ∈ UAt σ W (evFin F v) → h ∈ K n := by
   classical
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) (AE F E)
   obtain ⟨Λ, hanti, hmul, hbas, hat, hop⟩ := exists_small_lattices E v
   have mm : ∀ g h : UA σ W.J, mat (g * h) = mat g * mat h := fun _ _ => rfl
   have m1 : mat (1 : UA σ W.J) = 1 := rfl
@@ -183,8 +183,8 @@ theorem exists_small_subgroups (σ : E →ₐ[F] E) {d : ℕ} (W : Spc F E d) (v
         simp only [Matrix.sub_apply, sub_eq_add_neg]
         exact (hf.matrix_elem i j).add continuous_const
       exact hc.continuousAt.preimage_mem_nhds (by simpa [h1] using hV)
-    have h1 := ent mat (Units.continuous_val.comp continuous_subtype_val) m1
-    have h2 := ent (fun h => mat h⁻¹) (Units.continuous_coe_inv.comp continuous_subtype_val) (by rw [inv_one, m1])
+    have h1 := ent mat (Units.continuous_val.comp continuous_subtypeVal) m1
+    have h2 := ent (fun h => mat h⁻¹) (Units.continuous_coe_inv.comp continuous_subtypeVal) (by rw [inv_one, m1])
     refine ⟨_, h1.and h2, fun h hh ha => ⟨fun i j => hVn _ (hh.1 i j) fun u hu => congrFun (congrFun (ha u hu) i) j,
       fun i j => hVn _ (hh.2 i j) fun u hu => ?_⟩⟩
     have e : mat h⁻¹ - 1 = -(mat h⁻¹ * (mat h - 1)) := by

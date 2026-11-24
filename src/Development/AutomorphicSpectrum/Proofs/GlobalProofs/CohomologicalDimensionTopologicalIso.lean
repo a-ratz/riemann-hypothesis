@@ -91,7 +91,7 @@ theorem isUnramifiedIn_transport {R R' A A' : Type*} [CommRing R] [CommRing R'] 
     (H : Algebra.IsUnramifiedIn A p) : Algebra.IsUnramifiedIn A' (p.comap f.symm) := by
   intro P' hP' hlie
   let P : Ideal A := P'.comap g
-  haveI : P.IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := Ideal.comap_isPrime _ _
   have hP : P.LiesOver p := ⟨by
     ext r
     have h1 := hlie.over
@@ -101,10 +101,10 @@ theorem isUnramifiedIn_transport {R R' A A' : Type*} [CommRing R] [CommRing R'] 
     change _ ↔ g (algebraMap R A r) ∈ P'
     rw [h]⟩
   have hU : Algebra.FormallyUnramified R (Localization.AtPrime P) := H P this hP
-  letI : Algebra R R' := f.toRingHom.toAlgebra
-  letI : Algebra R (Localization.AtPrime P') :=
+  let : Algebra R R' := f.toRingHom.toAlgebra
+  let : Algebra R (Localization.AtPrime P') :=
     ((algebraMap R' (Localization.AtPrime P')).comp f.toRingHom).toAlgebra
-  haveI : IsScalarTower R R' (Localization.AtPrime P') :=
+  have : IsScalarTower R R' (Localization.AtPrime P') :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hM : Submonoid.map g.toMonoidHom P.primeCompl = P'.primeCompl := by
     ext y
@@ -125,7 +125,7 @@ theorem isUnramifiedIn_transport {R R' A A' : Type*} [CommRing R] [CommRing R'] 
       simp only [E]
       rw [IsLocalization.ringEquivOfRingEquiv_eq, h]
       exact (IsScalarTower.algebraMap_apply R' A' (Localization.AtPrime P') (f r)).symm)
-  haveI := Algebra.FormallyUnramified.of_equiv Ea
+  have := Algebra.FormallyUnramified.of_equiv Ea
   exact Algebra.FormallyUnramified.of_restrictScalars R R' _
 
 section Fields
@@ -295,10 +295,10 @@ end NumberFields
 theorem exists_embedded (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] : ∃ (K : FiniteSubfield) (ψ : F ≃+* K.1) (e : Ω ≃+* AlgebraicClosure ℚ),
       ∀ x, e (algebraMap F Ω x) = algebraMap K.1 (AlgebraicClosure ℚ) (ψ x) := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, Algebra.IsAlgebraic.trans ℚ F Ω⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, Algebra.IsAlgebraic.trans ℚ F Ω⟩
   let e : Ω ≃ₐ[ℚ] AlgebraicClosure ℚ := IsAlgClosure.equiv ℚ (AlgebraicClosure ℚ) Ω |>.symm
   let φ : F →ₐ[ℚ] AlgebraicClosure ℚ := e.toAlgHom.comp (IsScalarTower.toAlgHom ℚ F Ω)
   let ψ0 : F →+* φ.fieldRange :=
@@ -317,7 +317,7 @@ theorem exists_embedded (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Alge
 
 theorem exists_gs_transport : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) (S : Finset (HeightOneSpectrum (𝓞 F))), ContainsAbove S l → ∃ (K : FiniteSubfield) (S' : Finset (HeightOneSpectrum (𝓞 K.1))), ContainsAbove S' l ∧ Nonempty (galUnramifiedOutside F Ω (S : Set (HeightOneSpectrum (𝓞 F))) ≃ₜ* Gs K S') := by
   intro F Ω _ _ _ _ _ l S hS
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
   obtain ⟨K, ψ, e, he⟩ := exists_embedded F Ω
   classical
   refine ⟨K, S.map (placeEquiv (RingOfIntegers.mapRingEquiv ψ)).toEmbedding, ?_,

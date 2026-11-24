@@ -122,8 +122,8 @@ theorem isCylProd_of_large (hK' : ∀ v, MeasurableSet (K' v)) (S₀ : Finset V)
   rw [cyl_eq_of_subset (K := K) (T := S ∪ S₀) Finset.subset_union_left
     (fun v hv => hK v fun h' => hv (Finset.mem_union_right _ h')), h _ Finset.subset_union_right _ _ hA fun v _ => ?_]
   · congr 1
-    rw [← Finset.prod_subset Finset.subset_union_left fun v _ hv => by simp only [if_neg hv, hS v hv]]
-    exact Finset.prod_congr rfl fun v hv => by simp only [if_pos hv]
+    rw [← Finset.prod_subset Finset.subset_union_left fun v _ hv => by simp only [ite_eq_right hv, hS v hv]]
+    exact Finset.prod_congr rfl fun v hv => by simp only [ite_eq_left hv]
   · by_cases hvS : v ∈ S
     · simpa [hvS] using hB v hvS
     · simpa [hvS] using hK' v
@@ -194,8 +194,8 @@ theorem IsRestrGroup.subgroup [∀ w, T1Space (Ya w)] [∀ v, T1Space (Yf v)] (h
     by_cases hv : v ∈ range j
     · obtain ⟨u, rfl⟩ := hv; exact hx u
     · rw [((hH x).1 x.2).2 v hv]; exact one_mem _, fun hx v => hx _⟩
-  refine ⟨fun w => (h.continuous_pa _).comp continuous_subtype_val,
-    fun v => (h.continuous_pf _).comp continuous_subtype_val, fun v => h.isOpen_K _, fun v => h.isCompact_K _,
+  refine ⟨fun w => (h.continuous_pa _).comp continuous_subtypeVal,
+    fun v => (h.continuous_pf _).comp continuous_subtypeVal, fun v => h.isOpen_K _, fun v => h.isCompact_K _,
     fun x y ha hf => Subtype.ext (h.ext _ _ (fun w => ?_) fun v => ?_),
     fun x => hj.tendsto_cofinite.eventually (h.eventually_mem x), fun a y hy => ?_, ?_, fun C hC => ?_⟩
   · by_cases hw : w ∈ range i
@@ -213,7 +213,7 @@ theorem IsRestrGroup.subgroup [∀ w, T1Space (Ya w)] [∀ v, T1Space (Yf v)] (h
       · exact absurd (show y' v ∈ K v by rw [hy2 v hr]; exact one_mem _) hv)
     exact ⟨⟨x, (hH x).2 ⟨fun w hw => (hx1 w).trans (ha2 w hw), fun v hv => (hx2 v).trans (hy2 v hv)⟩⟩,
       fun w => (hx1 _).trans (ha1 w), fun v => (hx2 _).trans (hy1 v)⟩
-  · convert h.isOpen_level.preimage (continuous_subtype_val (p := (· ∈ H))) using 1
+  · convert h.isOpen_level.preimage (continuous_subtypeVal (p := (· ∈ H))) using 1
     exact Set.ext hl
   · have hc : IsClosed (H : Set X) := by
       have : (H : Set X) = (⋂ w ∉ range i, pa w ⁻¹' {1}) ∩ ⋂ v ∉ range j, pf v ⁻¹' {1} :=
@@ -314,7 +314,7 @@ theorem IsHaarProd.unique (hK : ∀ v, IsOpen (K v : Set (Yf v))) (hK' : ∀ v, 
     ENNReal.mul_ne_top (ENNReal.prod_ne_top fun w _ => (C w).isCompact.measure_lt_top.ne)
       (ENNReal.prod_ne_top fun v _ => (hK' v).measure_lt_top.ne)
   have hm := isMulLeftInvariant_eq_smul μ μ'
-  rw [hm, Measure.smul_apply, e', ENNReal.smul_def, smul_eq_mul] at e
+  rw [hm, smul_apply, e', ENNReal.smul_def, smul_eq_mul] at e
   have : (haarScalarFactor μ μ' : ℝ≥0∞) = 1 := (ENNReal.mul_left_inj h0 ht).1 (e.trans (one_mul _).symm)
   rw [hm, ENNReal.coe_eq_one.1 this, one_smul]
 
@@ -343,7 +343,7 @@ theorem IsRestrGroup.exists_factor (h : IsRestrGroup pa pf K) (μa : ∀ w, Meas
     refine congrArg ν (Set.ext fun t => ?_)
     simp only [mem_inter_iff, mem_preimage, mem_prod, mem_univ_pi, mem_cyl, SetLike.mem_coe, mem_levelAway, and_assoc]
     exact and_congr_right fun _ => and_congr_left fun _ => Subtype.forall
-  haveI : m.IsMulLeftInvariant := (forall_measure_preimage_mul_iff m).1 fun y s hs => by
+  have : m.IsMulLeftInvariant := (forall_measure_preimage_mul_iff m).1 fun y s hs => by
     obtain ⟨z, hz1, hz2⟩ := exists_extend_one (j := fun v : S => v.1) Subtype.val_injective y.2
     have hz3 : ∀ v ∉ S, z v ∈ K v := fun v hv => by rw [hz2 v (by simpa using hv)]; exact one_mem _
     obtain ⟨x, hx1, hx2⟩ := h.exists_eq y.1 z (eventually_of_finset S hz3)
@@ -353,7 +353,7 @@ theorem IsRestrGroup.exists_factor (h : IsRestrGroup pa pf K) (μa : ∀ w, Meas
     refine congrArg ν (Set.ext fun t => ?_)
     simp [hx, Subgroup.mul_mem_cancel_left _ hxU]
   let C : ∀ w, TopologicalSpace.PositiveCompacts (Ya w) := fun w => Classical.arbitrary _
-  haveI : IsFiniteMeasureOnCompacts m := ⟨fun s hs => by
+  have : IsFiniteMeasureOnCompacts m := ⟨fun s hs => by
     refine measure_lt_top_of_isCompact_of_isMulLeftInvariant
       (univ.pi (fun w => interior (C w)) ×ˢ univ.pi fun v : S => (K v : Set (Yf v)))
       ((isOpen_set_pi finite_univ fun w _ => isOpen_interior).prod (isOpen_set_pi finite_univ fun v _ => h.isOpen_K v))
@@ -365,7 +365,7 @@ theorem IsRestrGroup.exists_factor (h : IsRestrGroup pa pf K) (μa : ∀ w, Meas
   refine ⟨haarScalarFactor m ((Measure.pi μa).prod (Measure.pi fun v : S => μf v)), fun A B hA hB => ?_⟩
   rw [← hc A B hA hB]
   conv_lhs => rw [isMulLeftInvariant_eq_smul m ((Measure.pi μa).prod (Measure.pi fun v : S => μf v))]
-  rw [Measure.smul_apply, Measure.prod_prod, Measure.pi_pi, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul,
+  rw [smul_apply, Measure.prod_prod, Measure.pi_pi, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul,
     Finset.prod_coe_sort S fun v => μf v (B v)]
 
 theorem IsRestrGroup.existsUnique_isHaarProd (h : IsRestrGroup pa pf K) (μa : ∀ w, Measure (Ya w))
@@ -400,7 +400,7 @@ theorem IsRestrGroup.existsUnique_isHaarProd (h : IsRestrGroup pa pf K) (μa : �
   rw [cyl_self, ← Finset.prod_subset hs fun v _ hv => hS v hv] at e
   have e' : k / t * c = 1 := by
     rw [div_eq_mul_inv, mul_right_comm, mul_comm k, ← show t = c * k from e, ENNReal.mul_inv_cancel t0 tt]
-  rw [Measure.smul_apply, hc A B hA hB, smul_eq_mul, ← mul_assoc, e', one_mul]
+  rw [smul_apply, hc A B hA hB, smul_eq_mul, ← mul_assoc, e', one_mul]
 
 
 omit [∀ w, SecondCountableTopology (Ya w)] [∀ v, LocallyCompactSpace (Yf v)] [∀ v, SecondCountableTopology (Yf v)] in
@@ -433,7 +433,7 @@ theorem IsHaarProdFin.prod_arch {pf' : ∀ v, X' →* Yf v} {ν : Measure X'} (h
     (ea : ∀ w p, pa w (e p) = p.1 w) (ef : ∀ v p, pf v (e p) = pf' v p.2) :
     IsHaarProd pa pf K μa μf (((Measure.pi μa).prod ν).map e) := by
   obtain ⟨h2, h3, h4, h5⟩ := isHaarProdFin_iff.1 h
-  letI := h3
+  let := h3
   refine ⟨ha, h2, e.isHaarMeasure_map _, h4, fun S hS A B hA hB => ?_⟩
   have e2 : e ⁻¹' cyl (fun w => pa w) (fun v => pf v) (fun v => (K v : Set (Yf v))) S A B =
       univ.pi A ×ˢ {x | (∀ v ∈ S, pf' v x ∈ B v) ∧ ∀ v ∉ S, pf' v x ∈ K v} := by

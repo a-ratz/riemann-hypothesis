@@ -238,11 +238,11 @@ theorem exists_decomp : ∃ (n : ℕ) (b : Fin n → ↥L₂.1) (π : Fin n → 
     (∀ j (M : Matrix (Fin m) (Fin m) ↥L₁.1) v,
       π j ((M.map (IntermediateField.inclusion hL)).mulVec v) = M.mulVec (π j v)) ∧
     ∀ v, ∑ j, b j • incV hL m (π j v) = v := by
-  letI : Algebra ↥L₁.1 ↥L₂.1 := (IntermediateField.inclusion hL).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ_[l] ↥L₁.1 ↥L₂.1 :=
+  let : Algebra ↥L₁.1 ↥L₂.1 := (IntermediateField.inclusion hL).toRingHom.toAlgebra
+  have : IsScalarTower ℚ_[l] ↥L₁.1 ↥L₂.1 :=
     IsScalarTower.of_algebraMap_eq fun c => ((IntermediateField.inclusion hL).commutes c).symm
-  haveI := L₂.2
-  haveI : Module.Finite ↥L₁.1 ↥L₂.1 := Module.Finite.of_restrictScalars_finite ℚ_[l] ↥L₁.1 ↥L₂.1
+  have := L₂.2
+  have : Module.Finite ↥L₁.1 ↥L₂.1 := Module.Finite.of_restrictScalars_finite ℚ_[l] ↥L₁.1 ↥L₂.1
   set_option synthInstance.maxHeartbeats 400000 in
   let B := Module.finBasis ↥L₁.1 ↥L₂.1
   have hsm : ∀ (a : ↥L₁.1) (y : ↥L₂.1), IntermediateField.inclusion hL a * y = a • y := fun a y => rfl
@@ -309,8 +309,8 @@ theorem charpoly_wdRho_eq (s : ↥L₁.1 →+* ↥L₂.1) (hs : ∀ a, (s a : Om
   set_option synthInstance.maxHeartbeats 400000 in
   have hT : ∀ (a : ↥L₁.1) (x : ↥(Dpst P ρ₁)), dQ P hf (a • x) = s a • dQ P hf x := fun a x =>
     Subtype.ext (tensQ_smul P s hfs a x.1)
-  letI := algC ι L₁
-  letI := algC ι L₂
+  let := algC ι L₁
+  let := algC ι L₂
   let Φ := chg (mulD P ρ₁) (mulD P ρ₂) ℂ (urC ι) s (fun a => congrArg ι (hs a)) (dQ P hf) hT (dQ_mulD P hf)
   have hΦ : ∀ y, Φ (wdRho P ι Bw h hj ρ₁ σ y) = wdRho P ι Bw h hj ρ₂ σ (Φ y) :=
     chg_letterMap _ _ _ _ _ _ _ _ _ _ (weilD_mulD Bw h P ρ₁ hj σ) _ (weilD_mulD Bw h P ρ₂ hj σ)
@@ -351,8 +351,8 @@ theorem charPol_wdPst_enlarge {l : ℕ} [Fact l.Prime] (P : LocPrime l) (ι : Om
     ∀ σ : ↥(Weil h), WD.charPol (wdPst P ι Bw h hj (Bw.repE L₂ (mapRep (IntermediateField.inclusion hL).toRingHom r₁))) σ =
       WD.charPol (wdPst P ι Bw h hj (Bw.repE L₁ r₁)) σ := by
   intro hV₁ hV₂ σ
-  haveI := hV₁.finite
-  haveI := hV₂.finite
+  have := hV₁.finite
+  have := hV₂.finite
   obtain ⟨n, b, π, hπ, hsum⟩ := exists_decomp hL (m := m)
   have hf : ∀ g v, incV hL m (Bw.repE L₁ r₁ g v) =
       Bw.repE L₂ (mapRep (IntermediateField.inclusion hL).toRingHom r₁) g (incV hL m v) :=

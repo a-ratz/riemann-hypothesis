@@ -283,7 +283,7 @@ theorem isCompact_setOf_trHom_mem (hH : IsUnit H.det) {C : Set (GL (Fin 𝒩') �
   set Ω : Set (unitaryPoints K E H 𝔸[K]) := {v | trHom b 𝔸[K] (v : GL ι (𝔸[K] ⊗[K] E)) ∈ C} with hΩ
   have hΩcl : IsClosed Ω := by
     set_option synthInstance.maxHeartbeats 200000 in
-    exact hC.isClosed.preimage ((continuous_trHom b 𝔸[K]).comp continuous_subtype_val)
+    exact hC.isClosed.preimage ((continuous_trHom b 𝔸[K]).comp continuous_subtypeVal)
   let Fc : Matrix (Fin 𝒩') (Fin 𝒩') 𝔸[K] → ι × ι × Fin (Module.finrank K E) → 𝔸[K] :=
     fun A p =>
     coords b 𝔸[K] ((readoff (ι := ι) b 𝔸[K] A)ᵀ p.1 p.2.1) p.2.2
@@ -347,7 +347,7 @@ theorem exists_isCompact_rational_centralizer (hH : IsUnit H.det) {m : Type} [Fi
 theorem isCompact_mem_unitary_trHom (hH : IsUnit H.det) {C : Set (GL (Fin 𝒩') 𝔸[K])} (hC : IsCompact C) :
     IsCompact {w : GL ι (𝔸[K] ⊗[K] E) | w ∈ unitaryPoints K E H 𝔸[K] ∧
       trHom (Module.finBasis K E) 𝔸[K] w ∈ C} := by
-  have h := (isCompact_setOf_trHom_mem H hH hC).image continuous_subtype_val
+  have h := (isCompact_setOf_trHom_mem H hH hC).image continuous_subtypeVal
   convert h using 1
   ext w
   constructor
@@ -694,7 +694,7 @@ theorem min_le_of_one_le_mul_sq {D t : ℝ} (hD : 0 < D) (ht : 0 ≤ t) (h : 1 �
 theorem exists_pos_le_hgt_of_forms : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (M : Type) [Finite M] (H : M → Matrix (Fin n) (Fin n) E) (L : Set (GAd σ J)), (∀ ξ : Fin n → E, (∀ j, hE σ (H j) ξ ξ = 0) → ξ = 0) → (∀ g ∈ L, ∀ j, ∃ s : GroundTheory.Global.IdeleGroup F, 1 ≤ (GroundTheory.Global.IdeleGroup.ideleModule F s : ℝ) ∧ ∀ ξ : Fin n → E, hR (AF F) σ (H j) ((matHom _ σ J g⁻¹).1 *ᵥ ratV F ξ) ((matHom _ σ J g⁻¹).1 *ᵥ ratV F ξ) = algebraMap (AF F) (AF F ⊗[F] E) (s : AF F) * inclR (F := F) (AF F) (hE σ (H j) ξ ξ)) → ∃ ε : ℝ, 0 < ε ∧ ∀ g ∈ L, ∀ ξ : Fin n → E, ξ ≠ 0 → ε ≤ hgt σ J g ξ := by
   intro F E _ _ _ _ _ σ hCM n J _ M _ H L hzero hL
   obtain ⟨hF, hEc, h2, hc⟩ := hCM
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
   obtain rfl : σ = (conj F E).toAlgHom := AlgHom.ext fun x =>
     τ.injective ((hc τ x).trans (GroundTheory.Heights₂.Heights.FiniteCovolume.embedding_conj τ x).symm)
@@ -1343,7 +1343,7 @@ theorem leviMin_eq (hF : PFr (Formalism.MainNotions.GlobalTheoryTheory.GenusMass
       rw [Bm_eq hF e, Matrix.diagonal_apply_eq]
     have a2 : (fun i => Bm σ J Y X m i i) = d' := funext fun i => by
       rw [Bm_eq (pfr_swap hF) e', Matrix.diagonal_apply_eq]
-    exact ⟨by simpa only [Set.mem_setOf_eq, a1] using e, by simpa only [Set.mem_setOf_eq, a2] using e'⟩
+    exact ⟨by simpa only [Set.mem_ofPred_eq, a1] using e, by simpa only [Set.mem_ofPred_eq, a2] using e'⟩
   · rintro ⟨e, e'⟩
     exact ⟨_, _, e, e'⟩
 
@@ -1351,8 +1351,8 @@ theorem isClosed_leviMin (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittF
     IsClosed (leviMin σ J X Y) := by
   have hF := pfrA h hJ hW
   have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : T2Space (AF F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : T2Space (AF F ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
   have hc : ∀ {X' Y' : Matrix (Fin n) (Fin r) E}, Continuous fun m : GAd σ J =>
       adMat F X' * diagonal (fun i => Bm σ J X' Y' m i i) := fun {X' Y'} => by
     have hd : Continuous fun m : GAd σ J => diagonal (fun i => Bm σ J X' Y' m i i) :=

@@ -197,7 +197,7 @@ namespace ReciprocityTheory.ChartRestriction.G.H1
 
 theorem qkActExists_of (hG : Out.GlobalFnsSt) : QkActExistsStatement := by
   intro E _ _ _ H V _ _ _ t P
-  letI := H.starRing
+  let := H.starRing
   intro F _ _ _ k a p
   exact Geo.Tor.qkAct_exists hG P.D.tau_bimult P.oD a p
 
@@ -226,7 +226,7 @@ open ReciprocityTheory.ChartRestriction.G.Out ReciprocityTheory.ChartRestriction
 
 theorem canonLiftFix_of_laws (hL : Out.Laws) : CanonLiftFixStatement := by
   intro E _ _ _ H V _ _ _ t P hT
-  letI := H.starRing
+  let := H.starRing
   intro α N hN hαN _hco _hNu F _ _ _ θ θα hpull p x hx hxα
   have hQ : QkActExistsStatement := qkActExists_of hL.globalFns
   have hUnpack : ∃ (z : P.D.toPre.X) (q : QkPt P.D.toPre F (1 * N))
@@ -253,13 +253,13 @@ theorem canonLiftFix_of_laws (hL : Out.Laws) : CanonLiftFixStatement := by
     have key : ∀ w : P.D.toPre.X, (1 * N) • w = N • w := fun w => by rw [Nat.one_mul]
     rw [smul_comm (star α) (1 * N) z, _root_.mul_comm (star α) α, hαN', Nat.cast_smul_eq_nsmul,
       ← key p.y, ← smul_add] at e'
-    haveI : Module.Free ℤ P.D.toPre.X := P.D.toPre.freeX
+    have : Module.Free ℤ P.D.toPre.X := P.D.toPre.freeX
     rw [← Nat.cast_smul_eq_nsmul ℤ] at e'
     have e3 : p.y + star α • z = 0 := (smul_eq_zero.1 e').resolve_left (by omega)
     exact eq_neg_of_add_eq_zero_left e3
   obtain ⟨z, q, h, g0, hy, hgt, hι, hadd, hz⟩ := hUnpack
-  haveI := P.oD.onB.hom (star α)
-  haveI := P.oD.onB.hom α
+  have := P.oD.onB.hom (star α)
+  have := P.oD.onB.hom α
   obtain ⟨r, hr, hr0⟩ := Geo.Tor.exists_ros (A := P.D.toPre.P.A) (L := P.D.toPre.P.L)
     hL.globalFns P.D.toPre.P.isAb P.D.toPre.P.isLB (P.oD.onB.act (star α)) (P.oD.onB.act α)
     (by have hR := P.oD.onB.rosati (star α); rwa [star_star] at hR)
@@ -277,7 +277,7 @@ theorem canonLiftFix_of_laws (hL : Out.Laws) : CanonLiftFixStatement := by
     have h1 := hcpow (fun i => (Φ ^ (i : ℕ)) s) (by
       intro i
       rw [hΦ]
-      simp only [Fin.val_succ, Fin.coe_castSucc, pow_succ']
+      simp only [Fin.val_succ, Fin.val_castSucc, pow_succ']
       rfl)
     rw [isSmul_iff] at h1
     simpa using h1
@@ -362,7 +362,7 @@ theorem card_killSub_le (hW : WeilSt) (A : PolAV (Sp (FractionRing R))) {O : Typ
         WeilIs A.A A.L N z x c ∧ WeilIs A.A A.L N z x' c' ∧ c ≠ c') :
     Nat.card (killSub F A ρ ga) ≤ Nat.card (killSub F A ρ gb) := by
   classical
-  haveI : IsLocallyNoetherian (Sp (FractionRing R)) := by
+  have : IsLocallyNoetherian (Sp (FractionRing R)) := by
     first
       | infer_instance
       | (unfold Sp; infer_instance)
@@ -389,14 +389,14 @@ theorem card_killSub_le (hW : WeilSt) (A : PolAV (Sp (FractionRing R))) {O : Typ
     apply hinj
     refine MonoidHom.ext fun z => Units.ext ?_
     exact congrArg (fun f => f z) h
-  haveI : IsDomain Γ((TFK (R := R) F).left, ⊤) := by
+  have : IsDomain Γ((TFK (R := R) F).left, ⊤) := by
     first
       | infer_instance
       | exact Function.Injective.isDomain (Scheme.ΓSpecIso (CommRingCat.of F)).hom.hom
           (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of F)).hom).1
   have hli := (linearIndependent_monoidHom (killSub F A ρ gb) Γ((TFK (R := R) F).left, ⊤)).comp ψ hψ
-  haveI := Fintype.ofFinite (killSub F A ρ ga)
-  haveI := Fintype.ofFinite (killSub F A ρ gb)
+  have := Fintype.ofFinite (killSub F A ρ ga)
+  have := Fintype.ofFinite (killSub F A ρ gb)
   have hcard := hli.fintype_card_le_finrank
   rw [Module.finrank_fintype_fun_eq_card] at hcard
   rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
@@ -446,10 +446,10 @@ end Count
 
 theorem alphaBarEnum_holds (hW : WeilSt) (hM : MulNSt) : AlphaBarEnumStatement := by
   intro E _ _ _ H V _ _ _ t P hTor α N hN1 hαN huu hNV F _ _ _ Dw hI
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨u, u', huu⟩ := huu
   classical
-  haveI : IsLocallyNoetherian (Sp (FractionRing V)) := by
+  have : IsLocallyNoetherian (Sp (FractionRing V)) := by
     first
       | infer_instance
       | (unfold Sp; infer_instance)
@@ -470,10 +470,10 @@ theorem alphaBarEnum_holds (hW : WeilSt) (hM : MulNSt) : AlphaBarEnumStatement :
   have hpos : Nat.card {y : TFK (R := V) F ⟶ P.A.A // y ^ N = 1} ≠ 0 := by
     rw [hcardN]
     exact pow_ne_zero _ (by omega)
-  haveI hfin : Finite {y : TFK (R := V) F ⟶ P.A.A // y ^ N = 1} := Nat.finite_of_card_ne_zero hpos
-  haveI : Finite (killSub F P.A ρ α × killSub F P.A ρ (star α)) := Finite.of_equiv _ eqv
-  haveI : Finite (killSub F P.A ρ α) := Finite.prod_left (killSub F P.A ρ (star α))
-  haveI : Finite (killSub F P.A ρ (star α)) := Finite.prod_right (killSub F P.A ρ α)
+  have hfin : Finite {y : TFK (R := V) F ⟶ P.A.A // y ^ N = 1} := Nat.finite_of_card_ne_zero hpos
+  have : Finite (killSub F P.A ρ α × killSub F P.A ρ (star α)) := Finite.of_equiv _ eqv
+  have : Finite (killSub F P.A ρ α) := Finite.prod_left (killSub F P.A ρ (star α))
+  have : Finite (killSub F P.A ρ (star α)) := Finite.prod_right (killSub F P.A ρ α)
   have sep1 : ∀ x ∈ killSub F P.A ρ (star α), ∀ x' ∈ killSub F P.A ρ (star α), x ≠ x' →
       ∃ z ∈ killSub F P.A ρ α, ∃ c c' : Γ((TFK (R := V) F).left, ⊤)ˣ,
         WeilIs P.A.A P.A.L N z x c ∧ WeilIs P.A.A P.A.L N z x' c' ∧ c ≠ c' := by
@@ -772,7 +772,7 @@ theorem span_of_eigen (UU Pos : W → Prop) (hb : LinearIndependent F b)
     intro s hs
     obtain ⟨c, -, rfl⟩ := (hUU s).1 hs
     exact Submodule.sum_mem _ (fun j _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩))
-  haveI : FiniteDimensional F (Submodule.span F (Set.range b)) :=
+  have : FiniteDimensional F (Submodule.span F (Set.range b)) :=
     FiniteDimensional.span_of_finite F (Set.finite_range b)
   have hspan : Submodule.span F (Set.range sv) = Submodule.span F (Set.range b) := by
     apply Submodule.eq_of_le_of_finrank_eq
@@ -871,7 +871,7 @@ theorem oneC_of (hL : Laws) (hΦ : PhiFunStatement) (h1c : PositiveValuationMaxi
     (hC : CanonLiftFixStatement) (hD : AlphaPairStatement) (hdim : DimSplitStatement) :
     OneCStatement := by
   intro E _ _ _ H V _ _ _ t P hT α N hN hαN hcop hNu ϖ hϖ Q hQ F _ _ _ v hv Dw I θ hθ hprim θα hpull s hs
-  letI := H.starRing
+  let := H.starRing
   have hk : 1 ≤ 1 * N := by omega
   have hαN' : star α * α = (N : 𝓞 E) := by rw [_root_.mul_comm]; exact hαN
 

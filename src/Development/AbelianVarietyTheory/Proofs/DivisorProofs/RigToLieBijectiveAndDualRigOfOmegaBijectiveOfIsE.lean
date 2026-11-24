@@ -70,7 +70,7 @@ theorem subsingleton_omega_of_isEt : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Fi
   have h1 : Subsingleton G.omega := by
     refine ⟨fun v w => ?_⟩
     have hz : ∀ u : G.omega, u = 0 := fun u => Subtype.ext (funext fun n => by
-      haveI := hG n
+      have := hG n
       obtain ⟨a, ha⟩ := AugCot.d_surjective _ (u.1 n)
       obtain ⟨b, rfl⟩ := _root_.GlobalTheory.exists_pow_char_eq_of_isReduced_finite p k (G.A n) a
       rw [← ha]

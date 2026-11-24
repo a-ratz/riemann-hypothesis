@@ -125,7 +125,7 @@ theorem isClosed_singleton_of_finite [LocallyOfFiniteType f] (I : X.IdealSheafDa
 
 theorem residueDegree_of_isClosedImmersion {Y : Scheme.{0}} (i : Y ⟶ X) [IsClosedImmersion i] (y : Y) :
     i.residueDegree y = 1 := by
-  letI := (i.residueFieldMap y).hom.toAlgebra
+  let := (i.residueFieldMap y).hom.toAlgebra
   refine Module.finrank_of_bijective_algebraMap ⟨(i.residueFieldMap y).hom.injective, fun a => ?_⟩
   obtain ⟨b, rfl⟩ := Y.residue_surjective y a
   obtain ⟨c, rfl⟩ := i.stalkMap_surjective y b
@@ -148,8 +148,8 @@ theorem topSelf_eq_length {D : ℕ} (hf : IsProjOver f) {L : LB X} (hL : L.IsLB)
     Module.Finite k Γ((cutIdeal hL s).subscheme, ⊤) ∧
     topSelfIntersection k L D = Module.finrank k Γ((cutIdeal hL s).subscheme, ⊤) := by
   classical
-  letI := algebraΓOfHom f
-  letI := algebraΓOfHom ((cutIdeal hL s).subschemeι ≫ f)
+  let := algebraΓOfHom f
+  let := algebraΓOfHom ((cutIdeal hL s).subschemeι ≫ f)
   have := isNoetherian_of_isProjOver hf
   have := ((isProjOver_iff_isProper_and_exists_isAmpleLB f).1 hf).1
   have hker : ∀ (z : (cutIdeal hL s).subscheme) (c : L.ι) (hc : (cutIdeal hL s).subschemeι z ∈ L.U c),
@@ -159,7 +159,7 @@ theorem topSelf_eq_length {D : ℕ} (hf : IsProjOver f) {L : LB X} (hL : L.IsLB)
   have hmem := mem_support_cutIdeal hL s
   generalize cutIdeal hL s = I at *
   obtain ⟨_, _⟩ := discreteTopology_subscheme f I hfin
-  letI := Fintype.ofFinite I.subscheme
+  let := Fintype.ofFinite I.subscheme
   have hV : topologicalKrullDim I.subscheme ≤ 0 := topologicalKrullDim_zero_of_discreteTopology _
   have : IsLocallyNoetherian I.subscheme := LocallyOfFiniteType.isLocallyNoetherian I.subschemeι
   have : IsLocallyArtinian I.subscheme := .of_topologicalKrullDim_le_zero hV
@@ -193,7 +193,7 @@ theorem topSelf_eq_length {D : ℕ} (hf : IsProjOver f) {L : LB X} (hL : L.IsLB)
       rw [CurveDegreesCompare.residueDegree_comp, residueDegree_of_isClosedImmersion I.subschemeι, mul_one,
         mul_comm, List.map_ofFn]
       refine congrArg (_ * ENat.toNat ·) ?_
-      letI := (I.subschemeι.stalkMap z).hom.toAlgebra
+      let := (I.subschemeι.stalkMap z).hom.toAlgebra
       rw [← Module.length_eq_of_surjective (S := X.presheaf.stalk (I.subschemeι z))
         (I.subschemeι.stalkMap_surjective z)]
       refine (Submodule.Quotient.equiv _ (LinearMap.ker (Algebra.linearMap _ (I.subscheme.presheaf.stalk z)))

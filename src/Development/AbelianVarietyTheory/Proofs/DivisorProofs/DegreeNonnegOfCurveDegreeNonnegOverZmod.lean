@@ -77,7 +77,7 @@ theorem interNum_one_nonneg {k : Type} [Field k] {V : Scheme.{0}} [Algebra k Γ(
       (finiteCohTwists_of_isProjOver (algebraMap_eq_strHom k V) _ hp)]
     exact add_nonneg p₁ p₃
   · have := isIntegral_red hZ
-    letI := algebraΓAlong k (redι Z)
+    let := algebraΓAlong k (redι Z)
     have hi := appTop_algebraMap_along k (redι Z)
     have hpZ : IsProjOver (strHom k (X := (Scheme.IdealSheafData.vanishingIdeal Z).subscheme)) := by
       rw [← comp_strHom hi]

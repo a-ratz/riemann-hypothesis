@@ -182,8 +182,8 @@ theorem eq_of_geometric {f g : Rul Xo c}
     f = g := by
   funext p y
   by_contra hne
-  haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
-  haveI : IsJacobsonRing p.R := inferInstance
+  have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  have : IsJacobsonRing p.R := inferInstance
   have hJ : (⊥ : Ideal p.R).jacobson = ⊥ :=
     IsJacobsonRing.out ‹_› (fun x ⟨m, hm⟩ => Ideal.mem_bot.2 (IsNilpotent.eq_zero ⟨m, Ideal.mem_bot.1 hm⟩))
   have hn : f p y - g p y ∉ (⊥ : Ideal p.R).jacobson := by
@@ -192,8 +192,8 @@ theorem eq_of_geometric {f g : Rul Xo c}
   rw [Ideal.jacobson, Ideal.mem_sInf] at hn
   push Not at hn
   obtain ⟨m, ⟨-, hm⟩, ha⟩ := hn
-  haveI := hm
-  letI := Ideal.Quotient.field m
+  have := hm
+  let := Ideal.Quotient.field m
   let χ : p.R →ₐ[c.F] AlgebraicClosure (p.R ⧸ m) :=
     (IsScalarTower.toAlgHom c.F (p.R ⧸ m) (AlgebraicClosure (p.R ⧸ m))).comp (Ideal.Quotient.mkₐ c.F m)
   obtain ⟨z, hz⟩ := GlobalTheory.TransferCompare.frBC_framed Xo c _ _ χ y
@@ -234,10 +234,10 @@ def ruleUp (d : DeltaDat Xo c n) (f : Rul Xo c) : Rul d.Xo₂ d.c₂ := fun p y�
 theorem ruleUp_eq (d : DeltaDat Xo c n) (f : Rul Xo c) (p : TRing d.c₂.F) (y₂ : FrPt d.Xo₂ d.c₂ p.R) :
     letI := algBelow d p.R
     ∀ y : FrPt Xo c p.R, FrOver d y₂ y → ruleUp d f p y₂ = evR Xo c f y := by
-  letI := algBelow d p.R
+  let := algBelow d p.R
   intro y h
   have hx : ∃ y : FrPt Xo c p.R, FrOver d y₂ y := ⟨y, h⟩
-  have e : ruleUp d f p y₂ = evR Xo c f hx.choose := dif_pos hx
+  have e : ruleUp d f p y₂ = evR Xo c f hx.choose := dite_eq_left hx
   rw [e, frOver_unique d GlobalTheory.abelianSchemeLaws_all.1.globalFns hx.choose_spec h]
 
 theorem wtRed (Xo : Moduli Dw l) (c : Coeff l) : ReciprocityTheory.ChartRestriction.G.PullbackSections.WtRed Xo c :=
@@ -248,9 +248,9 @@ theorem wtRed (Xo : Moduli Dw l) (c : Coeff l) : ReciprocityTheory.ChartRestrict
 theorem ruleUp_mem (d : DeltaDat Xo c n) (hO : AllOver d) {a : (E →+* ℂ) × ℕ → ℕ} {m : ℕ} {f : Rul Xo c}
     (hf : f ∈ sec Xo c a m) : ruleUp d f ∈ sec d.Xo₂ d.c₂ a m := by
   refine ⟨fun p q φ y₂ z₂ hz₂ => ?_, fun p t y₂ y₂' hb => ?_⟩
-  · letI := algBelow d p.R
-    letI := algBelow d q.R
-    haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  · let := algBelow d p.R
+    let := algBelow d q.R
+    have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
     let φ' : p.R →ₐ[c.F] q.R := { φ.toRingHom with commutes' := fun t => φ.commutes _ }
     obtain ⟨y, hy⟩ := exists_frOver_below d (fun _ => rfl) y₂ (hO p.R (fun _ => rfl) y₂)
     obtain ⟨z, hz⟩ := GlobalTheory.TransferCompare.frBC_framed Xo c _ _ φ' y
@@ -258,8 +258,8 @@ theorem ruleUp_mem (d : DeltaDat Xo c n) (hO : AllOver d) {a : (E →+* ℂ) × 
     rw [ruleUp_eq d f p y₂ y hy, ruleUp_eq d f q z₂ z ho]
     exact ReciprocityTheory.ChartRestriction.G.PullbackSections.evNat_of Xo c (GlobalTheory.TransferCompare.evalWD_framed Xo c)
       (GlobalTheory.TransferCompare.allTest_framed Xo c) f hf.1 p.R q.R φ' y z hz
-  · letI := algBelow d p.R
-    haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  · let := algBelow d p.R
+    have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
     obtain ⟨y, hy⟩ := exists_frOver_below d (fun _ => rfl) y₂ (hO p.R (fun _ => rfl) y₂)
     obtain ⟨y', hy'⟩ := exists_frOver_below d (fun _ => rfl) y₂' (hO p.R (fun _ => rfl) y₂')
     rw [ruleUp_eq d f p y₂ y hy, ruleUp_eq d f p y₂' y' hy']
@@ -270,8 +270,8 @@ theorem ruleUp_pull (d : DeltaDat Xo c 0) (hO : AllOver d) {a : (E →+* ℂ) ×
   intro k _ _ _ _ hk y₂ y ho
   obtain ⟨p, φ, w₂, hw₂⟩ := GlobalTheory.TransferCompare.allTest_framed d.Xo₂ d.c₂ k y₂
   rw [GlobalTheory.FlatLine.evR_of_frMap_test (ruleUp_mem d hO hf).1 hw₂]
-  letI := algBelow d p.R
-  haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  let := algBelow d p.R
+  have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
   let φ' : p.R →ₐ[c.F] k := { φ.toRingHom with commutes' := fun t => (φ.commutes _).trans (hk t) }
   obtain ⟨w, hw⟩ := exists_frOver_below d (fun _ => rfl) w₂ (hO p.R (fun _ => rfl) w₂)
   obtain ⟨z, hz⟩ := GlobalTheory.TransferCompare.frBC_framed Xo c _ _ φ' w
@@ -298,11 +298,11 @@ theorem section_pullback_existsUnique :
     · exact h)
   refine ⟨fun f hf => ⟨ruleUp d f, ⟨ruleUp_mem d hO hf, ruleUp_pull d hO hf⟩, fun g hg => ?_⟩, fun f hf h0 => ?_⟩
   · refine eq_of_geometric hg.1.1 (ruleUp_mem d hO hf).1 fun k _ _ _ y₂ => ?_
-    letI := algBelow d k
+    let := algBelow d k
     obtain ⟨y, hy⟩ := exists_frOver_below d (fun _ => rfl) y₂ (hO k (fun _ => rfl) y₂)
     rw [hg.2 k (fun _ => rfl) y₂ y hy, ruleUp_pull d hO hf k (fun _ => rfl) y₂ y hy]
   · refine eq_of_geometric hf.1 (sec Xo c a n).zero_mem.1 fun k _ _ _ y => ?_
-    letI : Algebra d.c₂.F k := ((algebraMap c.F k).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+    let : Algebra d.c₂.F k := ((algebraMap c.F k).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
     have hk : ∀ t : c.F, algebraMap d.c₂.F k (d.eF t) = algebraMap c.F k t := fun t =>
       congrArg (algebraMap c.F k) (d.eF.symm_apply_apply t)
     obtain ⟨y₂, hy⟩ := hlift k hk y

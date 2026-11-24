@@ -115,22 +115,22 @@ theorem prod_fac_coeff (k : Fin 2) (t : Tup D k) (g : G0g D.nd) :
         intro v
         rw [fac_ne k t ⟨k', v⟩ hk, MonoidAlgebra.one_def, MonoidAlgebra.coeff_single_apply]
         by_cases hg : g ⟨k', v⟩ = 1
-        · rw [if_pos hg.symm, if_pos hg]
-        · rw [if_neg (Ne.symm hg), if_neg hg]
+        · rw [ite_eq_left hg.symm, ite_eq_left hg]
+        · rw [ite_eq_right (Ne.symm hg), ite_eq_right hg]
       simp only [hv]
       by_cases hc : ∀ v : D.nd.PlG k', g ⟨k', v⟩ = 1
-      · rw [if_pos hc]
-        exact Finset.prod_eq_one fun v _ => if_pos (hc v)
-      · rw [if_neg hc]
+      · rw [ite_eq_left hc]
+        exact Finset.prod_eq_one fun v _ => ite_eq_left (hc v)
+      · rw [ite_eq_right hc]
         push_neg at hc
         obtain ⟨v, hv'⟩ := hc
-        exact Finset.prod_eq_zero (Finset.mem_univ v) (if_neg hv')
+        exact Finset.prod_eq_zero (Finset.mem_univ v) (ite_eq_right hv')
     rw [Finset.prod_congr rfl e, Finset.prod_boole]
     by_cases hc : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), kv.1 ≠ k → g kv = 1
-    · rw [if_pos hc, if_pos]
+    · rw [ite_eq_left hc, ite_eq_left]
       intro k' hk' v
       exact hc ⟨k', v⟩ (by simpa using hk')
-    · rw [if_neg hc, if_neg]
+    · rw [ite_eq_right hc, ite_eq_right]
       intro h
       apply hc
       rintro ⟨k', v⟩ hk
@@ -229,7 +229,7 @@ theorem spec_of_eps (L : Lev g N) (χ : GG g N → ℂ) (hp : IsProj (eps L.Mem 
   · rw [ha] at hq
     have hm : L.Mem q := by
       by_contra hc
-      exact hq (if_neg hc)
+      exact hq (ite_eq_right hc)
     exact unitri_sub_one_pow _ hm.1.1 hm.1.2
 
 theorem spec_eDat (P : Matrix (Fin N) (Fin N) (ZMod g) → Prop) (φ : Matrix (Fin N) (Fin N) (ZMod g) → ZMod g)
@@ -244,7 +244,7 @@ theorem spec_eDat (P : Matrix (Fin N) (Fin N) (ZMod g) → Prop) (φ : Matrix (F
   subst hψ
   have h0 : (ZMod.stdAddChar (N := g)) ≠ 1 := (levStandard g N b s k h).hψ
   set L := levOfChar ZMod.stdAddChar h0 N b s k h with hL
-  haveI : Nonempty {u // L.Mem u} := ⟨⟨1, mem_one L⟩⟩
+  have : Nonempty {u // L.Mem u} := ⟨⟨1, mem_one L⟩⟩
   have hc : (Nat.card {u // L.Mem u} : ℂ) ≠ 0 := by exact_mod_cast Nat.card_pos.ne'
   have hP : (fun u : GG g N => P u.val) = L.Mem := by
     funext x
@@ -253,16 +253,16 @@ theorem spec_eDat (P : Matrix (Fin N) (Fin N) (ZMod g) → Prop) (φ : Matrix (F
     unfold eps at hx
     refine propext ⟨fun h1 => ?_, fun h1 => ?_⟩
     · by_contra h2
-      haveI : Nonempty {u : GG g N // P u.val} := ⟨⟨x, h1⟩⟩
+      have : Nonempty {u : GG g N // P u.val} := ⟨⟨x, h1⟩⟩
       have hc' : (Nat.card {u : GG g N // P u.val} : ℂ) ≠ 0 := by exact_mod_cast Nat.card_pos.ne'
-      rw [if_pos h1, if_neg h2] at hx
+      rw [ite_eq_left h1, ite_eq_right h2] at hx
       refine div_ne_zero (inv_ne_zero fun h3 => ?_) hc' hx
       have := AddChar.norm_apply (ZMod.stdAddChar (N := g)) (φ x.val)
       beta_reduce at h3
       rw [h3] at this
       simp at this
     · by_contra h2
-      rw [if_neg h2, if_pos h1] at hx
+      rw [ite_eq_right h2, ite_eq_left h1] at hx
       exact div_ne_zero (inv_ne_zero (chi_ne L x)) hc hx.symm
   refine spec_of_eps L (fun _ => 1) (GlobalTheory.BadShare.EpsProj.isProj_eps (mem_one L) (fun _ _ => mem_mul L) rfl (fun _ _ _ _ => by simp)) _
     fun x => ?_
@@ -271,7 +271,7 @@ theorem spec_eDat (P : Matrix (Fin N) (Fin N) (ZMod g) → Prop) (φ : Matrix (F
 
 theorem eUk_eJk_spec : ∀ (D : D7) (k : Fin 2) (ψ₀ : AddChar (ZMod (D.host.g k)) ℂ) (a : MonoidAlgebra ℂ (GL (Fin D.R.r) (ZMod (D.host.g k)))), a = eUk D k ψ₀ ∨ a = eJk D k ψ₀ → a * a = a ∧ IsSA a ∧ ∀ q, a.coeff q ≠ 0 → ((q : Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (D.host.g k))) - 1) ^ D.R.r = 0 := by
   intro D k ψ a ha
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hN : D.R.r = D.R.k + 2 * (D.R.m / 2 - 1) + 1 := by
     have := dimS_eq D.R
     unfold Ranks.rS at this
@@ -439,7 +439,7 @@ def cardU (k : Fin 2) : ℂ :=
 
 theorem cardU_ne_zero (k : Fin 2) : cardU D k ≠ 0 := by
   classical
-  haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
+  have : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
   unfold cardU
   refine Nat.cast_ne_zero.mpr (Finset.card_ne_zero.mpr ⟨1, ?_⟩)
   simp only [Finset.mem_filter, Finset.mem_univ, true_and, Units.val_one]
@@ -450,7 +450,7 @@ theorem coeff_eUk (k : Fin 2) (ψ₀ : AddChar (ZMod (D.host.g k)) ℂ) (x : GL 
     (eUk D k ψ₀).coeff x = if IsUniUp (x : Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (D.host.g k))) then
       (cardU D k)⁻¹ * (ψ₀ (sdg (x : Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (D.host.g k)))))⁻¹ else 0 := by
   classical
-  haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
+  have : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
   unfold eUk cardU
   rw [coeff_eU]
 
@@ -474,9 +474,9 @@ theorem eUk_mul_eSer_idem (k : Fin 2) (ψ₀ : AddChar (ZMod (D.host.g k)) ℂ) 
 theorem wtOf_eUk (k : Fin 2) (ψ₀ : AddChar (ZMod (D.host.g k)) ℂ) (f : (ZMod (D.host.g k))[X]) :
     ((wtOf D k (eUk D k ψ₀) f : ℝ) : ℂ) = cardU D k * (eUk D k ψ₀ * D.ntypes.eSer k f).coeff 1 := by
   classical
-  haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
+  have : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
   have h1 : (eUk D k ψ₀).coeff 1 = (cardU D k)⁻¹ := by
-    rw [coeff_eUk, if_pos (by simpa using isUniUp_one), Units.val_one, sdg, sd_one, AddChar.map_zero_eq_one, inv_one,
+    rw [coeff_eUk, ite_eq_left (by simpa using isUniUp_one), Units.val_one, sdg, sd_one, AddChar.map_zero_eq_one, inv_one,
       mul_one]
   have hr := coeff_one_real_of_idem _ (eUk_mul_eSer_idem D k ψ₀ f)
   obtain ⟨n, hn, -⟩ : ∃ n : ℕ, cardU D k = n ∧ n ≠ 0 := ⟨_, rfl, fun h => cardU_ne_zero D k (by
@@ -507,7 +507,7 @@ theorem term_eq [Fintype (G0g D.nd)] (P : Subgroup (G0g D.nd)) (lam : P →* ℂ
     simp only [mul_one, Pi.inv_apply, inv_eq_one]
   rw [coeff_badElt]
   by_cases hT : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), kv.1 ≠ k → y kv = 1
-  · rw [if_pos hT, if_pos (hTi.2 hT), coeff_lvlIdem_eq]
+  · rw [ite_eq_left hT, ite_eq_left (hTi.2 hT), coeff_lvlIdem_eq]
     split_ifs with hP
     · have hu : ∀ v : D.nd.PlG k, IsUniUp ((y ⟨k, v⟩ : GL (Fin D.R.r) (ZMod (D.host.g k))) :
           Matrix (Fin D.R.r) (Fin D.R.r) (ZMod (D.host.g k))) := fun v => (hW.2.1 y).1 hP ⟨k, v⟩
@@ -525,7 +525,7 @@ theorem term_eq [Fintype (G0g D.nd)] (P : Subgroup (G0g D.nd)) (lam : P →* ℂ
       refine Finset.sum_congr rfl fun t _ => ?_
       rw [← Finset.prod_mul_distrib]
       refine Finset.prod_congr rfl fun v _ => ?_
-      rw [phiAt, if_pos (hu v)]
+      rw [phiAt, ite_eq_left (hu v)]
       simp only [mul_one, Pi.inv_apply]
     · rw [zero_mul]
       obtain ⟨v, hv⟩ : ∃ v : D.nd.PlG k, ¬ IsUniUp ((y ⟨k, v⟩ : GL (Fin D.R.r) (ZMod (D.host.g k))) :
@@ -542,13 +542,13 @@ theorem term_eq [Fintype (G0g D.nd)] (P : Subgroup (G0g D.nd)) (lam : P →* ℂ
           exact isUniUp_one
       refine (mul_eq_zero_of_right _ (Finset.sum_eq_zero fun t _ => ?_)).symm
       refine Finset.prod_eq_zero (Finset.mem_univ v) ?_
-      rw [phiAt, if_neg hv]
-  · rw [if_neg hT, if_neg (fun h => hT (hTi.1 h)), mul_zero]
+      rw [phiAt, ite_eq_right hv]
+  · rw [ite_eq_right hT, ite_eq_right (fun h => hT (hTi.1 h)), mul_zero]
 
 theorem badElt_mul_lvlIdem : ∀ (D : D7) [Fintype (G0g D.nd)] (P : Subgroup (G0g D.nd)) (lam : P →* ℂˣ) (ψ : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), AddChar (ZMod (D.host.g kv.1)) ℂ), IsWhit D P lam ψ → ∀ (k : Fin 2) (S : Finset (Tup D k)) (H : Subgroup (G0g D.nd)), IsHalf D k H → (∀ g, (badElt D k S * Formalism.L2.DIV.lvlIdem P lam).coeff g ≠ 0 → g ∈ H) ∧ (badElt D k S * Formalism.L2.DIV.lvlIdem P lam).coeff 1 = ((locShare D (fun k' v => eUk D k' (ψ ⟨k', v⟩)) k S : ℝ) : ℂ) / (Nat.card P : ℂ) := by
   intro D _ P lam ψ hW k S H hH
   classical
-  haveI : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
+  have : NeZero (D.host.g k) := ⟨(D.host.g_prime k).ne_zero⟩
   refine ⟨fun g hg => ?_, ?_⟩
   · rw [Formalism.L2.DIV.coeff_mul_fin] at hg
     obtain ⟨s, -, hs⟩ := Finset.exists_ne_zero_of_sum_ne_zero hg
@@ -801,7 +801,7 @@ theorem coeff_map_mul_eR {π : Γ →* G} {ι : G →* Γ} (h : IsSplit π ι) (
       x.coeff (π γ) * (Nat.card π.ker : ℂ)⁻¹ := by
   unfold eR
   rw [Finset.mul_sum, MonoidAlgebra.coeff_sum, Finsupp.finsetSum_apply]
-  simp_rw [MonoidAlgebra.mul_single_apply]
+  simp_rw [MonoidAlgebra.coeff_mul_single_apply]
   let r0 : π.ker := ⟨(ι (π γ))⁻¹ * γ, inv_mul_mem_ker h γ⟩
   have key : ∀ r : π.ker, (MonoidAlgebra.mapDomainAlgHom ℂ ℂ ι x).coeff (γ * (r : Γ)⁻¹) =
       if r = r0 then x.coeff (π γ) else 0 := by
@@ -812,7 +812,7 @@ theorem coeff_map_mul_eR {π : Γ →* G} {ι : G →* Γ} (h : IsSplit π ι) (
         subst hr
         simp [r0]
       rw [this, Finsupp.mapDomain_apply_of_injective (isSplit_injective h)]
-    · apply Finsupp.mapDomain_notin_range
+    · apply Finsupp.mapDomain_of_notMem_range
       rintro ⟨g, hg⟩
       apply hr
       have hr1 : π (r : Γ) = 1 := r.2
@@ -824,7 +824,7 @@ theorem coeff_map_mul_eR {π : Γ →* G} {ι : G →* Γ} (h : IsSplit π ι) (
       show (r : Γ) = (ι (π γ))⁻¹ * γ
       rw [hg]
       group
-  simp_rw [key, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp_rw [key, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 def comapEquiv {π : Γ →* G} {ι : G →* Γ} (h : IsSplit π ι) (P : Subgroup G) :
     P × π.ker ≃ P.comap π where
@@ -989,13 +989,13 @@ theorem badElt_all (k : Fin 2) : badElt D k (allTup D k) = 1 := by
   simp only [MonoidAlgebra.coeff_single, Finsupp.single_apply]
   by_cases h1 : g = 1
   · subst h1; simp
-  · rw [if_neg (Ne.symm h1)]
+  · rw [ite_eq_right (Ne.symm h1)]
     split_ifs with hs
     · obtain ⟨kv, hkv⟩ := Function.ne_iff.1 h1
       obtain ⟨k', v⟩ := kv
       by_cases hk : k' = k
       · subst hk
-        exact Finset.prod_eq_zero (Finset.mem_univ v) (if_neg fun h => hkv h.symm)
+        exact Finset.prod_eq_zero (Finset.mem_univ v) (ite_eq_right fun h => hkv h.symm)
       · exact absurd (hs ⟨k', v⟩ hk) hkv
     · rfl
 
@@ -1014,7 +1014,7 @@ theorem badElt_good_add_bad (k : Fin 2) : badElt D k (goodSet D k) + badElt D k 
 
 theorem badElt_coeff_off (k : Fin 2) (S : Finset (Tup D k)) (h : G0g D.nd)
     (hh : ∃ kv : (Σ k : Fin 2, D.nd.PlG k), kv.1 ≠ k ∧ h kv ≠ 1) : (badElt D k S).coeff h = 0 := by
-  rw [badElt_coeff, if_neg]
+  rw [badElt_coeff, ite_eq_right]
   obtain ⟨kv, h1, h2⟩ := hh
   exact fun hs => h2 (hs kv h1)
 
@@ -1041,7 +1041,7 @@ theorem coeff_mul_factors (x y : MonoidAlgebra ℂ (G0g D.nd))
     · rw [hy _ ⟨kv, by rw [h0]; decide, ?_⟩, mul_zero]
       intro hc
       apply hkv
-      simp only [h0, if_true]
+      simp only [h0, ite_true]
       have : (b⁻¹ * g) kv = 1 := hc
       rw [Pi.mul_apply, Pi.inv_apply, inv_mul_eq_one] at this
       exact this
@@ -1053,7 +1053,7 @@ theorem e0_eq : D.ntypes.e0 = badElt D 0 (goodSet D 0) * badElt D 1 (goodSet D 1
   apply MonoidAlgebra.coeff_injective
   ext g
   rw [coeff_mul_factors D _ _ (fun h hh => badElt_coeff_off D 0 _ h hh) (fun h hh => badElt_coeff_off D 1 _ h hh),
-    badElt_coeff, badElt_coeff, if_pos, if_pos]
+    badElt_coeff, badElt_coeff, ite_eq_left, ite_eq_left]
   rotate_left
   · rintro ⟨k, v⟩ hk
     fin_cases k
@@ -1185,7 +1185,7 @@ open Formalism.L2.SG.Pf.AllRowsWt Formalism.L2.SG.Pf.AllRowsTr GlobalTheory.BadC
 theorem wtOf_eUk_indep : ∀ (D : D7) (k : Fin 2) (ψ ψ' : AddChar (ZMod (D.host.g k)) ℂ), ψ ≠ 1 → ψ' ≠ 1 →
     ∀ f, wtOf D k (eUk D k ψ) f = wtOf D k (eUk D k ψ') f := by
   intro D k ψ ψ' h h' f
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   obtain ⟨c, hc0, rfl⟩ := exists_shift ψ ψ' h h'
   have hconj : eUk D k (ψ.mulShift c) =
       MonoidAlgebra.single (T 0 D.R.r c hc0) 1 * eUk D k ψ * MonoidAlgebra.single (T 0 D.R.r c hc0)⁻¹ 1 := by
@@ -1222,10 +1222,10 @@ namespace GlobalTheory.BadCount
 theorem bad_part_le_locShare : ∀ (D : D7) (Γ V : Type) [Group Γ] [Finite Γ] [AddCommGroup V] [Module ℂ V] [FiniteDimensional ℂ V] (π : Γ →* G0g D.nd) (ι : G0g D.nd →* Γ), IsSplit π ι → ∀ (ρ : Representation ℂ Γ V) (P : Subgroup (G0g D.nd)) (lam : P →* ℂˣ) (ψ : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), AddChar (ZMod (D.host.g kv.1)) ℂ), IsWhit D P lam ψ → ∀ (lamb : P.comap π →* ℂˣ), (∀ γ : P.comap π, lamb γ = lam ⟨π γ, γ.2⟩) → ∀ (H : Fin 2 → Subgroup (G0g D.nd)), (∀ k, IsHalf D k (H k)) → ∀ (n : Fin 2 → ℕ) (c : ℝ), (∀ k, EmbReg ρ ((H k).comap π) (n k)) → (∀ k, (n k : ℝ) * Nat.card ((H k).comap π) ≤ c * Nat.card (P.comap π) * finrank ℂ (eig ρ (P.comap π) lamb)) → ∀ ψ₀ : ∀ k : Fin 2, AddChar (ZMod (D.host.g k)) ℂ, (∀ k, ψ₀ k ≠ 1) → ∃ S : ∀ k : Fin 2, Finset (Tup D k), (∀ k, ∀ t ∈ S k, ¬ goodAt D k t) ∧ (finrank ℂ (eig ρ (P.comap π) lamb ⊓ LinearMap.ker (Representation.asAlgebraHom (ρ.comp ι : Representation ℂ (G0g D.nd) V) D.ntypes.e0) : Submodule ℂ V) : ℝ) ≤ c * (locShare D (fun k _ => eUk D k (ψ₀ k)) 0 (S 0) + locShare D (fun k _ => eUk D k (ψ₀ k)) 1 (S 1)) * finrank ℂ (eig ρ (P.comap π) lamb) := by
   intro D Γ V _ _ _ _ _ π ι hs ρ P lam ψ hW lamb hlamb H hH n c hemb hn ψ₀ hψ₀
   classical
-  haveI : Fintype Γ := Fintype.ofFinite Γ
-  haveI : Finite (G0g D.nd) := Finite.of_injective ι (fun a b h => by
+  have : Fintype Γ := Fintype.ofFinite Γ
+  have : Finite (G0g D.nd) := Finite.of_injective ι (fun a b h => by
     have := congrArg π h; rwa [hs.1, hs.1] at this)
-  letI : Fintype (G0g D.nd) := Fintype.ofFinite _
+  let : Fintype (G0g D.nd) := Fintype.ofFinite _
   obtain ⟨S, hbad, hsplit⟩ := GlobalTheory.T.one_sub_goodIdempotent_eq_badTupleSums D
   have hloc : ∀ k, locShare D (fun k' v => eUk D k' (ψ ⟨k', v⟩)) k (S k) =
       locShare D (fun k _ => eUk D k (ψ₀ k)) k (S k) := by

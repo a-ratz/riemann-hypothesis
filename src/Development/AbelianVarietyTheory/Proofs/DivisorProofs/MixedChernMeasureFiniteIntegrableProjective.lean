@@ -61,14 +61,14 @@ namespace GlobalTheory.MixFin
 
 theorem finite_and_intg : GlobalTheory.Published.Principalisation → ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp F) (σ : F →+* ℂ) (D : ℕ), IsProjOver p → topologicalKrullDim X = (D : ℕ) → ∀ (L : Fin D → MLine p σ), (∀ ε : ℤˣ, IsFiniteMeasure (part L ε)) ∧ ∀ f : CxPts p σ → ℝ, Continuous f → Intg L f := by
   intro hP F _ X _ _ p σ D hX hdim L
-  haveI : CharZero F := RingHom.charZero σ
+  have : CharZero F := RingHom.charZero σ
   obtain ⟨Y, hY, π, hsm, hproj, -, hgen, hdeg, -⟩ :=
     _root_.GlobalTheory.LogResProj.exists_logResolution hP F X p D hX hdim ⊥ (fun h => by rwa [← SetLike.mem_coe, Closeds.coe_bot] at h)
-  haveI := hY
-  haveI : SmoothOfRelativeDimension D (π ≫ p) := hsm
-  haveI := CxPts.compactSpace (p := π ≫ p) σ hproj
-  haveI := CxPts.t2Space_cxPts_of_isProjOver (p := π ≫ p) σ hproj
-  haveI := CxPts.secondCountableTopology_of_isProjOver (p := π ≫ p) σ hproj
+  have := hY
+  have : SmoothOfRelativeDimension D (π ≫ p) := hsm
+  have := CxPts.compactSpace (p := π ≫ p) σ hproj
+  have := CxPts.t2Space_cxPts_of_isProjOver (p := π ≫ p) σ hproj
+  have := CxPts.secondCountableTopology_of_isProjOver (p := π ≫ p) σ hproj
   let R := AnRead.all (π ≫ p) σ D
   have key : ∀ f : CxPts p σ → ℝ, Continuous f → Intg L f := by
     intro f hf

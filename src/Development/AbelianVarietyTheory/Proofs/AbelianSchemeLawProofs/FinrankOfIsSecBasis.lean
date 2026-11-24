@@ -398,7 +398,7 @@ theorem geometric_fibre (hBC : PolBaseChangeSt)
     have := (IsPullback.of_hasPullback T'.hom P'.A.hom).flip.paste_horiz hG
     refine (congrArg₂ (fun a b => IsPullback a (fst T' P'.A).left P.A.hom b) j₂ (Category.id_comp _).symm).mpr this
   let τ := (translT P'.A d⁻¹).left
-  haveI : IsIso τ := isIso_translT_left P'.A d⁻¹
+  have : IsIso τ := isIso_translT_left P'.A d⁻¹
   have τ₁ : τ ≫ (fst T' P'.A).left = (fst T' P'.A).left :=
     congrArg (fun q => q.left) (lift_fst _ _ : translT P'.A d⁻¹ ≫ _ = _)
   have τ₂ : (snd T' P'.A).left = τ ≫ (translPt P'.A d).left := by
@@ -450,7 +450,7 @@ theorem secTwist_of_perf : (∀ (R : Type) [CommRing R] (X : Scheme.{0}) (f : X 
   have hn : n = q ^ P.g := by
     obtain ⟨b, hb⟩ := perf_bas Q g₀ hπ B hB (hu K g₀ (hru.map _))
     obtain ⟨b', hb'⟩ := hb.of_iso hMπ hL H.symm
-    haveI : Nontrivial Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤) :=
+    have : Nontrivial Γ((baseOver (Spec (CommRingCat.of K))).left, ⊤) :=
       (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.toEquiv.nontrivial
     rw [← finrank_of_isSecBasis P'.A P'.L q _ b' hb'.exists_unique, ← hdim]
     exact hH0 _ P' K (𝟙 _) q hq

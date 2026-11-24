@@ -175,13 +175,13 @@ theorem isHaarOn_smul {k r : ℕ} {S : Set (Matrix (Fin (2 * r + k + 1)) (Fin (2
   · intro h
     apply h0
     exact (smul_eq_zero.1 h).resolve_left hc.ne'
-  · rw [Measure.smul_apply, hconc, smul_zero]
+  · rw [smul_apply, hconc, smul_zero]
   · have hmeas := (Formalism.FourierDecayAlt.P.B2x1.lmulM_cont (k := k) (r := r) s).measurable
     rw [Measure.map_smul c hmeas.aemeasurable, hl s hs]
 
 theorem toReal_smul_apply {α : Type*} [MeasurableSpace α] (c : NNReal) (ν : Measure α) (A : Set α) :
     ((c • ν) A).toReal = (c : ℝ) * (ν A).toReal := by
-  rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.toReal_mul, ENNReal.coe_toReal]
+  rw [smul_apply, ENNReal.smul_def, smul_eq_mul, ENNReal.toReal_mul, ENNReal.coe_toReal]
 
 theorem gaugeWb_of (hRW : RhsWHaar) (hD : WbDataEx) (hU : ExistsGaugeMeasureForEachRank) (hSW : GaugeShiftW) (hLW : RhsWLim) :
     ∀ k r : ℕ, ∃ μ : Measure (Mt k r), IsGaugeOn (Formalism.FourierDecayAlt.B2.UWb k r) μ := by

@@ -881,7 +881,7 @@ theorem gq_count (hA : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hmaps : ∀ γ ∈ {γ : GQ V | GlobalTheory.Grow.height V (γ : GA D V) ≤ T},
       φ γ ∈ {δ : GL (Fin V.rank) D.host.E | (heightGL D.host.F (bc (inclR (F := D.host.F) (AF D.host.F)) δ) : ℝ) ≤ T} := by
     intro γ hγ
-    simp only [Set.mem_setOf_eq] at hγ ⊢
+    simp only [mem_ofPred_eq] at hγ ⊢
     rw [hφ]
     exact hγ
   have hinj : Set.InjOn φ {γ : GQ V | GlobalTheory.Grow.height V (γ : GA D V) ≤ T} := by
@@ -994,8 +994,8 @@ theorem lintegral_sq_le {G : Type*} [Group G] [TopologicalSpace G] [IsTopologica
   have hm : AEStronglyMeasurable (lift Γ F) μ :=
     aestronglyMeasurable_quotMeasure_iff_lift.1 (Lp.aestronglyMeasurable F)
   rw [← lintegral_indicator hS,
-    lintegral_eq_lintegral_tsum (Γ := Γ) ((hm.enorm.pow_const _).indicator hS),
-    ← lintegral_const_mul'' _ ((Lp.aestronglyMeasurable F).enorm.pow_const _)]
+    lintegral_eq_lintegral_tsum (Γ := Γ) ((hm.eNorm.pow_const _).indicator hS),
+    ← lintegral_const_mul'' _ ((Lp.aestronglyMeasurable F).eNorm.pow_const _)]
   refine lintegral_mono fun q => ?_
   have e : ∀ γ : Γ, S.indicator (fun z => ‖lift Γ F z‖ₑ ^ (2 : ℝ)) ((γ : G) * q.out) =
       {γ : Γ | (γ : G) * q.out ∈ S}.indicator (fun _ => ‖F q‖ₑ ^ (2 : ℝ)) γ := by
@@ -1040,11 +1040,11 @@ theorem norm_convR_le_height : ∀ {D : D7} {V : HSp D} (μ : Measure (GA D V)) 
     hm.restrict.comp_measurePreserving hmp
 
   have h1 : ‖GlobalTheory.AutomorphicL2Unitary.convR μ f' φ g‖ₑ ≤ ENNReal.ofReal M * eLpNorm (φ ∘ (g * ·)) 1 (μ.restrict Ω) := by
-    rw [eLpNorm_one_eq_lintegral_enorm, ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
+    rw [eLpNorm_one_eq_lintegral_eNorm, ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
       ← lintegral_indicator hΩ.measurableSet]
-    refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun y => ?_)
+    refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun y => ?_)
     by_cases hy : y ∈ Ω
-    · rw [Set.indicator_of_mem hy, enorm_mul]
+    · rw [Set.indicator_of_mem hy, eNorm_mul]
       refine mul_le_mul_of_nonneg_right ?_ (zero_le)
       rw [← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hM y)
@@ -1058,8 +1058,8 @@ theorem norm_convR_le_height : ∀ {D : D7} {V : HSp D} (μ : Measure (GA D V)) 
     norm_num
 
   have h3 : eLpNorm φ 2 (μ.restrict S) ≤ ENNReal.ofReal b * eLpNorm F 2 (quotMeasure (GQ V) μ) := by
-    rw [eLpNorm_eq_lintegral_rpow_enorm_toReal two_ne_zero ENNReal.ofNat_ne_top,
-      eLpNorm_eq_lintegral_rpow_enorm_toReal two_ne_zero ENNReal.ofNat_ne_top]
+    rw [eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero ENNReal.ofNat_ne_top,
+      eLpNorm_eq_lintegral_rpow_eNorm_toReal two_ne_zero ENNReal.ofNat_ne_top]
     simp only [ENNReal.toReal_ofNat]
     calc (∫⁻ z in S, ‖φ z‖ₑ ^ (2 : ℝ) ∂μ) ^ (1 / 2 : ℝ)
         ≤ (ENNReal.ofReal b ^ 2 * ∫⁻ q, ‖F q‖ₑ ^ (2 : ℝ) ∂quotMeasure (GQ V) μ) ^ (1 / 2 : ℝ) :=
@@ -1077,7 +1077,7 @@ theorem norm_convR_le_height : ∀ {D : D7} {V : HSp D} (μ : Measure (GA D V)) 
     ENNReal.mul_ne_top ENNReal.ofReal_ne_top
       (ENNReal.mul_ne_top (ENNReal.mul_ne_top ENNReal.ofReal_ne_top (Lp.eLpNorm_ne_top F)) hμ)
   have := ENNReal.toReal_mono hfin hE
-  rw [toReal_enorm] at this
+  rw [toReal_eNorm] at this
   refine this.trans (le_of_eq ?_)
   rw [ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_ofReal hM0,
     ENNReal.toReal_ofReal hb0, ← Lp.norm_def, hb]

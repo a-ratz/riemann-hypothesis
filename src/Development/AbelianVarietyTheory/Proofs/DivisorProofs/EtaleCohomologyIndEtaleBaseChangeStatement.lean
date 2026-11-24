@@ -90,7 +90,7 @@ theorem idem_of_domain {A : Type} [CommRing A] [IsDomain A] (e : A) (he : IsIdem
 attribute [local instance] Algebra.TensorProduct.rightAlgebra in
 theorem isDomain_tensor_fractionRing (T O : Type) [CommRing T] [IsDomain T] [CommRing O] [IsDomain O]
     [Algebra T O] (hinj : Function.Injective (algebraMap T O)) : IsDomain (O ⊗[T] FractionRing T) := by
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))
+  have : IsLocalization (Algebra.algebraMapSubmonoid O (nonZeroDivisors T))
       (O ⊗[T] FractionRing T) := by
     rw [Algebra.isLocalization_iff_isPushout (nonZeroDivisors T) (FractionRing T)]
     infer_instance
@@ -124,7 +124,7 @@ theorem eqv_local : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T
         apply (GlobalTheory.T.etaleCochainEvalOnSimplex_basic_properties (ZMod q)).2.2.1 α 0
         intro p s h U x
         have hs : s < 0 := by omega
-        haveI := ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness
+        have := ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness
           (ZMod q) (tw q i) U).2.2.2 s hs)
         exact Subsingleton.elim _ _
       refine ⟨fun a b => ?_⟩
@@ -132,20 +132,20 @@ theorem eqv_local : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T
       obtain ⟨b, rfl⟩ := b.mk_surjective
       have : a = b := CochainComplex.HomComplex.Cocycle.ext (by rw [hz a.1, hz b.1])
       rw [this]
-    haveI := h1 (sp O) n hn
-    haveI := h1 (sp (TensorProduct T (FractionRing T) O)) n hn
+    have := h1 (sp O) n hn
+    have := h1 (sp (TensorProduct T (FractionRing T) O)) n hn
     exact bijective_of_subsingleton _ 0
-  · haveI : IsIntegrallyClosed T := GlobalTheory.AICStalk.isIntegrallyClosed_of_aic hT
+  · have : IsIntegrallyClosed T := GlobalTheory.AICStalk.isIntegrallyClosed_of_aic hT
     obtain ⟨hH, -⟩ := hSH
-    haveI : IsLocalRing O := hH.toIsLocalRing
-    haveI : IsDomain O := GlobalTheory.AICStalk.isDomain_of_indEt hInd
+    have : IsLocalRing O := hH.toIsLocalRing
+    have : IsDomain O := GlobalTheory.AICStalk.isDomain_of_indEt hInd
     have hinjX : Function.Injective (algebraMap (Polynomial T) O) :=
       GlobalTheory.AICStalk.algebraMap_injective_of_indEt hInd
     have hinj : Function.Injective (algebraMap T O) := by
       rw [IsScalarTower.algebraMap_eq T (Polynomial T) O]
       exact hinjX.comp (Polynomial.C_injective)
-    haveI : IsDomain (O ⊗[T] FractionRing T) := isDomain_tensor_fractionRing T O hinj
-    haveI : IsDomain (TensorProduct T (FractionRing T) O) :=
+    have : IsDomain (O ⊗[T] FractionRing T) := isDomain_tensor_fractionRing T O hinj
+    have : IsDomain (TensorProduct T (FractionRing T) O) :=
       MulEquiv.isDomain _ (Algebra.TensorProduct.comm T (FractionRing T) O).toRingEquiv.toMulEquiv
     have hqO : IsUnit (q : O) := by
       have := hq.map (algebraMap T O)
@@ -158,8 +158,8 @@ theorem eqv_local : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T
     exact GlobalTheory.T.h_zero_pullback_twist_bijective q O (TensorProduct T (FractionRing T) O)
       (Algebra.TensorProduct.includeRight (R := T) (A := FractionRing T) (B := O)).toRingHom hqO
       ⟨_, hζ⟩ inferInstance (idem_of_domain) (idem_of_domain) i
-  · haveI : Subsingleton (H (ZMod q) (sp O) (tw q i) n) := GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) O hSH (tw q i) n hn
-    haveI : Subsingleton (H (ZMod q) (sp (TensorProduct T (FractionRing T) O)) (tw q i) n) := by
+  · have : Subsingleton (H (ZMod q) (sp O) (tw q i) n) := GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) O hSH (tw q i) n hn
+    have : Subsingleton (H (ZMod q) (sp (TensorProduct T (FractionRing T) O)) (tw q i) n) := by
       rcases (show n = 1 ∨ 2 ≤ n by omega) with rfl | h2
       · exact GlobalTheory.T.subsingleton_ht_one_genericFibre_of_sh_etale_cover q T hT hq O hSH hfac i
       · exact GlobalTheory.T.subsingleton_etaleCohomology_genericFibre_henselianLine q T hT hq O hSH hInd n i h2
@@ -253,12 +253,12 @@ theorem affineLine_localAcyclicity_of_strictHenselian_points (core : ∀ (q : �
   · ext b
     simp [Algebra.TensorProduct.algebraMap_apply]
   intro O _ _ hO hOi
-  letI : Algebra (Polynomial T) O := ((algebraMap B O).comp (algebraMap (Polynomial T) B)).toAlgebra
-  letI : Algebra T O := ((algebraMap B O).comp (algebraMap T B)).toAlgebra
-  haveI : IsScalarTower T (Polynomial T) O := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra (Polynomial T) O := ((algebraMap B O).comp (algebraMap (Polynomial T) B)).toAlgebra
+  let : Algebra T O := ((algebraMap B O).comp (algebraMap T B)).toAlgebra
+  have : IsScalarTower T (Polynomial T) O := IsScalarTower.of_algebraMap_eq fun x => by
     show algebraMap B O (algebraMap T B x) = algebraMap B O (algebraMap (Polynomial T) B (algebraMap T (Polynomial T) x))
     rw [IsScalarTower.algebraMap_apply T (Polynomial T) B x]
-  haveI : IsScalarTower T B O := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have : IsScalarTower T B O := IsScalarTower.of_algebraMap_eq fun x => rfl
   have hOi' : IndEt (Polynomial T) O :=
     isIndEtale_comp_etale (algebraMap (Polynomial T) B) (RingHom.etale_algebraMap.2 inferInstance)
       (algebraMap B O) hOi

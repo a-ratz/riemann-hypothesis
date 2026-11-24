@@ -66,7 +66,7 @@ theorem isOpen_farSet {Z Y : Scheme.{0}} (β : Z ⟶ Y) (hβ : IsClosedMap β) {
     IsOpen (farSet β s) := by
   have : farSet β s = (β '' (secNz s : Set Z)ᶜ)ᶜ := by
     ext v
-    simp only [farSet, Set.mem_setOf_eq, Set.mem_compl_iff, Set.mem_image, not_exists, not_and]
+    simp only [farSet, Set.mem_ofPred_eq, Set.mem_compl_iff, Set.mem_image, not_exists, not_and]
     constructor
     · intro h g hg hgv; exact hg (h g hgv)
     · intro h g hgv; by_contra hg; exact h g hg hgv

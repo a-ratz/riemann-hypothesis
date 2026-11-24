@@ -192,7 +192,7 @@ theorem form_of_rat_values : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.O
     congr 1
     funext τ' r'
     exact h1 τ' r'
-  haveI hLL : Infinite B.LL := Infinite.of_injective (fun n : ℕ => (n : B.LL)) (fun a b h => by
+  have hLL : Infinite B.LL := Infinite.of_injective (fun n : ℕ => (n : B.LL)) (fun a b h => by
     have := congrArg B.embLL h; simp only [map_natCast] at this; exact_mod_cast this)
   have hVV : Formalism.L2.DIV.VV B.LL (lamT (B.hcW u) (i + 1)) = polV (I.rec7 l Z) u (i + 1) := by
     rw [GlobalTheory.PdvKm.VV_eq_WtPol, hnat]; rfl
@@ -378,7 +378,7 @@ open GlobalTheory.LocW in
 theorem GlobalTheory.Mem.Col2.GStep.locW_latOf_iff : ∀ {E K ι : Type} [Field E] [NumberField E] [StarRing E] [Field K] [NumberField K] [StarRing K] [Fintype ι] {n : ℕ} (S : GStep E K n) (emb : ι → E →+* K) (lam : ι → DomWeight n) (h : (S.fam emb lam).Ok) (Pl : Rows.Places K) (w : Pl.Pl) (p : ℕ) [Fact p.Prime] (iL : K →+* ℂ_[p]), (∀ x, x ∈ intW Pl w ↔ ‖iL x‖ ≤ 1) → ∀ x : S.FormsK emb lam h, x ∈ locW Pl w (S.latOf emb lam h fun c => delAtr emb lam (S.Lsh c.1 (S.rep c))) ↔ ∀ c, x.1 c ∈ locW Pl w (delAtr emb lam (S.Lsh c.1 (S.rep c))) := by
   intro E K ι _ _ _ _ _ _ _ n S emb lam h Pl w p _ iL _ x
   classical
-  letI : Fintype S.Cl := h.fintypeCl
+  let : Fintype S.Cl := h.fintypeCl
   have smulK : ∀ (b : 𝓞 K) (v : VV K lam), b • v = (b : K) • v := fun b v =>
     (algebraMap_smul K b v).symm
   constructor
@@ -1140,7 +1140,7 @@ theorem detTwisted_polyEval_mul_factor_eq_of_eq {S T LL : Type} [Field S] [CommR
 theorem mem_locW_iff_delW : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (l0 : I.Law0 l) (Y : DivX (I.rec7 l Z)) (O : ∀ u a, GL3Theta.LiftObj (I.rec7 l Z) ((I.rec7 l Z).chTw u a)) (Pl : Examples₂.EntPl (I.rec7 l Z)) (Bs : PlaceMatrixFamily (I.rec7 l Z)), I.QpIs Y.Qp → I.StdO l Z Y.Qp O → BasOk Pl O Bs → (∀ u a w, LevFree Y u a w → ∀ i, i ≤ B.R.m → ∀ c τ j k, ∃ x : (I.rec7 l Z).what₂.LL, Bs u a w i c τ j k = Pl.iL w x) → (∀ u a i, i < B.R.m → UnfIsAll (O u a) i) → ColIn.JetsIn I → ∀ (u : B.Word) (μ : I.ι) (w : (I.rec7 l Z).what₂.places.Pl), LevFree Y u μ w → ∀ i, i < (I.rec7 l Z).R.m → ∀ (c' : (I.stp u μ (i + 1)).Cl) (z : VV B.LL (lamT (B.hcW u) (i + 1))), (z ∈ locW B.places w (delAtr B.fields.emb (lamT (B.hcW u) (i + 1)) ((I.stp u μ (i + 1)).Lsh c'.1 ((I.stp u μ (i + 1)).rep c'))) ↔ (fun y => (∏ τ, (Bs u μ w (i + 1) c' τ).det ^ (-((I.rec7 l Z).chTw u μ).sDiv i τ)) * atBas Pl w (Bs u μ w (i + 1) c') (show MvPolynomial (GL3Theta.FrV (I.rec7 l Z) ((I.rec7 l Z).R.N (i + 1))) (I.rec7 l Z).what₂.LL from z.1) y) ∈ WeylLatticeDuality.DelW ((I.rec7 l Z).what₂.places.resChar w) (I.rec7 l Z).what₂.Tau ((I.rec7 l Z).R.N (i + 1)) (extNu ((I.rec7 l Z).R.N (i + 1)) (nuT (I.rec7 l Z) u i))) := by
   intro B X I hOk hPins l Z l0 Y O Pl Bs hQp hStd hBas hEnt hUnf hJets u μ w hLF i hi c' z
   obtain ⟨hlat, hloc⟩ := GlobalTheory.T.dualLattice_class_localization_eq_unimodularCompanion I hOk hPins l Z Y u μ w hLF (i + 1) hi c'
-  haveI : Fact (B.places.resChar w).Prime := ⟨B.places.resChar_prime w⟩
+  have : Fact (B.places.resChar w).Prime := ⟨B.places.resChar_prime w⟩
   have hspanN : Submodule.span B.fields.E
       (((I.stp u μ (i + 1)).rep c').1.1.deco.1.N : Set (Fin (B.R.N (i + 1)) → B.fields.E)) = ⊤ := by
     open Formalism.HermitianLatticesTheory Module in
@@ -1177,7 +1177,7 @@ theorem mem_locW_iff_delW : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok
       (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 B.fields.E) B.fields.E) (Field.toIsField B.fields.E))
   have hfull : Submodule.IsFullLattice B.fields.E
       ((I.stp u μ (i + 1)).Lsh c'.1 ((I.stp u μ (i + 1)).rep c')) := by
-    letI := hlat
+    let := hlat
     refine ⟨?_⟩
     apply top_unique
     rw [← hspanN]
@@ -1303,7 +1303,7 @@ theorem shiftOf_lamT_succ {R : Ranks} {ι : Type} [Fintype ι] {hc : ι → HCPa
   obtain ⟨c, hc'⟩ := R.t_odd
   have hcq : (R.t : ℚ) = 2 * c + 1 := by exact_mod_cast hc'
   have e2 : (R.t + 1) / 2 = c + 1 := by omega
-  simp only [shiftOf, DomWeight.detShift, dif_pos hpos, Col2.lamT, Col2.shW, Examples₂.lamOf, dif_pos (show i + 1 ≤ R.m by omega), Examples₂.wtQ, dif_neg hk]
+  simp only [shiftOf, DomWeight.detShift, dite_eq_left hpos, Col2.lamT, Col2.shW, Examples₂.lamOf, dite_eq_left (show i + 1 ≤ R.m by omega), Examples₂.wtQ, dite_eq_right hk]
   simp only [hq, e2]
   have hw : -wG R ((hc τ).e ⟨i, hi⟩) (i + 1) = ((-C.sDiv i τ + ((i + 1) * (c + 1) : ℕ) : ℤ) : ℚ) := by
     push_cast

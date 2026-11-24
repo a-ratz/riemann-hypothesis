@@ -64,7 +64,7 @@ theorem globalIntegralMatrix_mem_stdThetaLattice (D : D7) (δ : ℂ) {a d : ℕ}
     pt D (tor0 D ⊤ δ) δ x ∈ La0 D (tor0 D ⊤ δ) a d := by
   refine AddSubgroup.subset_closure ⟨δ, AddSubgroup.subset_closure ⟨1, trivial, by simp⟩, _, ?_, rfl⟩
   refine Submodule.subset_span ⟨1, ?_, _, Submodule.subset_span fun v hv i _ => ?_, (one_smul _ _).symm⟩
-  · refine FractionalIdeal.one_mem_inv_coe_ideal fun h => ?_
+  · refine FractionalIdeal.one_mem_inv_coeIdeal fun h => ?_
     have h2 := D.host.𝔟_spec.2
     rw [h, Ideal.smul_bot, sup_bot_eq] at h2
     exact bot_ne_top h2
@@ -86,8 +86,8 @@ theorem unitBlock_mul_int (D : D7) {a d : ℕ} (r : GA D a) (hr : r ∈ intG D a
   refine sum_mem fun l _ => mul_mem ?_ ?_
   · rw [Matrix.map_apply]
     by_cases h : i.1 = 0 + l.1
-    · simp only [unitBlock, Matrix.of_apply, h, if_true, map_one]; exact one_mem _
-    · simp only [unitBlock, Matrix.of_apply, h, if_false, map_zero]; exact zero_mem _
+    · simp only [unitBlock, Matrix.of_apply, h, ite_true, map_one]; exact one_mem _
+    · simp only [unitBlock, Matrix.of_apply, h, ite_false, map_zero]; exact zero_mem _
   · rw [Subgroup.coe_inv]
     exact ((mem_intG r).1 hr l j).2
 

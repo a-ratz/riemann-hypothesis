@@ -96,7 +96,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.locIdem :
     ∀ (A M ι : Type) [CommRing A] [IsCNL A] [AddCommGroup M] [Module A M] (Y : Submodule A M) [Module.Finite A Y] (op : ι → Module.End A M) (a : ι → A), CommOn Y op → ∃ e ∈ heckeAlg Y op, IsIdempotentElem e ∧ (∀ y : Y, (y : M) ∈ locPart Y op a ↔ e y = y) ∧ ∀ φ : Module.End A Y, (∀ i t, Restr t (op i) → φ * t = t * φ) → φ * e = e * φ := by
   intro A M ι _ _ _ _ Y _ op a h
   obtain ⟨T, _, _, j, t, -, hr, ht, htop, hfin⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeModel A M ι Y op h
-  haveI : Module.Finite A T := hfin inferInstance inferInstance
+  have : Module.Finite A T := hfin inferInstance inferInstance
   obtain ⟨e, he, h1, h2, -, -⟩ := _root_.UpperTheory.Reformulated.B.Qe2.locAbs A T ι t a htop
   have hI : ∀ μ ∈ (maximalIdeal A).map (algebraMap A T), ∀ x,
       (j : T →+* Module.End A Y) μ x ∈ maximalIdeal A • (⊤ : Submodule A Y) := by

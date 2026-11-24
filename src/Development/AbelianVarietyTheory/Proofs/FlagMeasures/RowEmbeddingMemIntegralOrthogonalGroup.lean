@@ -92,7 +92,7 @@ theorem rowE_mulVec (e y : Fin n → E) (t : E) (x : Fin n → E) :
     rowE σ J e y t *ᵥ x = x + form σ J x e • (y + t • e) - form σ J x y • e := by
   ext i
   simp only [rowE, mulVec, dotProduct, form, vecMul, add_mul, sub_mul, Finset.sum_add_distrib,
-    Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+    Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
     Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Finset.mul_sum, Finset.sum_mul, mul_assoc]
   rw [Finset.sum_comm (f := fun (a b : Fin n) => y i * (σ (e b) * (J b a * x a))),
     Finset.sum_comm (f := fun (a b : Fin n) => t * (e i * (σ (e b) * (J b a * x a)))),
@@ -111,7 +111,7 @@ theorem isUn_of_form (g : Matrix (Fin n) (Fin n) E)
   ext i j
   have := h (Pi.single j 1) (Pi.single i 1)
   simp only [form, dotProduct, mulVec, Pi.single_apply, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, apply_ite σ, map_one, map_zero, ite_mul, one_mul, zero_mul] at this
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, apply_ite σ, map_one, map_zero, ite_mul, one_mul, zero_mul] at this
   rw [← this]
   simp only [IsUn, cT, Matrix.mul_apply, Matrix.transpose_apply, Matrix.map_apply, Finset.sum_mul, Finset.mul_sum]
   rw [Finset.sum_comm]
@@ -260,7 +260,7 @@ theorem rowE_mem_GN : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
         ((if i = j then 1 else 0) - (if i = a then form σ' J (fun l => P l j.castSucc) y else 0))
       rw [rowE_mulVec, heb j a]
       simp only [Matrix.of_apply, eOf, Matrix.submatrix_apply, id, mul_sub, Finset.sum_sub_distrib, mul_ite, mul_one, mul_zero,
-        Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true, Pi.add_apply, Pi.sub_apply,
+        Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true, Pi.add_apply, Pi.sub_apply,
         Pi.smul_apply, smul_eq_mul, zero_mul, add_zero, he_def]
       ring
   · intro v hv

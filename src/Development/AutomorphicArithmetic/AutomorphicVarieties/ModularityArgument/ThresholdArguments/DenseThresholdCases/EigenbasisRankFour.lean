@@ -174,7 +174,7 @@ private theorem exists_coboundary_on_h_of_vanish_on_finiteIndex {K : Type*} [Fie
     ∃ X, ∀ g ∈ H, z g = R g X - X := by
   classical
   have hQ : Finite (H ⧸ N.subgroupOf H) := inferInstance
-  letI : Fintype (H ⧸ N.subgroupOf H) := Fintype.ofFinite _
+  let : Fintype (H ⧸ N.subgroupOf H) := Fintype.ofFinite _
   have hzout : ∀ (g : H) (q : H ⧸ N.subgroupOf H),
       z (((g • q).out : H) : Γ) = z g + R g (z ((q.out : H) : Γ)) := by
     intro g q
@@ -243,7 +243,7 @@ theorem UpperTheory.V.Ws.Eb.bkAw :
   · exact absurd hl hw
   · let N : Subgroup V.frame.Γ := (⨅ i, (r.chib i).ker).map V.frame.η.ker.subtype
     let H : Subgroup V.frame.Γ := (V.frame.Iu ⟨w, hSt⟩).map V.frame.η.ker.subtype
-    haveI : N.FiniteIndex := by
+    have : N.FiniteIndex := by
       have h1 : Finite (V.frame.G₀ ⧸ (⨅ i, (r.chib i).ker)) :=
         Subgroup.quotient_finite_of_isOpen' V.frame.η.ker _ V.frame.η_open (by
           rw [Subgroup.coe_iInf]
@@ -287,9 +287,9 @@ private theorem bkAb_emb {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Cha
     (τ : F →+* Formalism.BasicNotions.Loc.Om l) :
     ∃ (j : Ω →+* Formalism.BasicNotions.Loc.Om l) (w : HeightOneSpectrum (𝓞 F)), j.comp (algebraMap F Ω) = τ ∧
       ((l : ℕ) : 𝓞 F) ∈ w.asIdeal ∧ Loc.placeJ j = A w := by
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   obtain ⟨j₀, hj₀⟩ : ∃ j : Ω →+* Formalism.BasicNotions.Loc.Om l, j.comp (algebraMap F Ω) = τ := by
-    letI : Algebra F (Formalism.BasicNotions.Loc.Om l) := τ.toAlgebra
+    let : Algebra F (Formalism.BasicNotions.Loc.Om l) := τ.toAlgebra
     exact ⟨(IsAlgClosed.lift (R := F) (S := Ω) (M := Formalism.BasicNotions.Loc.Om l)).toRingHom,
       (IsAlgClosed.lift (R := F) (S := Ω) (M := Formalism.BasicNotions.Loc.Om l)).comp_algebraMap⟩
   obtain ⟨w, hw, hl⟩ := ((Loc.decEmb (F := F) (Ω := Ω) (v := l)).2 j₀).1
@@ -307,7 +307,7 @@ theorem UpperTheory.V.Ws.Eb.bkAb :
         (∀ w : HeightOneSpectrum (𝓞 (W.Lp L)), ((l : ℕ) : 𝓞 (W.Lp L)) ∉ w.asIdeal → ∃ X, ∀ g ∈ Ine (F := W.Lp L) (s.A w), z (toGS Ω V.S' g) = R (toGS Ω V.S' g) X - X) →
         Af.IsBK l (R.comp (toGS Ω V.S') : Representation (PadicAlgCl l) (G (W.Lp L) Ω) (Matrix (Fin n) (Fin n) (PadicAlgCl l))) (fun g => z (toGS Ω V.S' g)) := by
   intro l _ L Ω _ _ _ _ _ _ s V n R z hz h1 h2
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
   refine ⟨fun w hw => ⟨s.A w, s.hA w, h2 w hw⟩, fun τ => ?_⟩
   obtain ⟨j, w, hj, hl, hA⟩ := bkAb_emb s.A s.hA τ
   refine ⟨j, hj, ?_⟩
@@ -455,16 +455,16 @@ theorem UpperTheory.V.Ws.Eb.inertia_trivial_of_charpoly_roots_near_character :
     ∀ {p l : ℕ} [Fact p.Prime] [Fact l.Prime], p ≠ l → ∀ {H : Type} [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [CompactSpace H] (φ : H →* Formalism.BasicNotions.Loc.GQ p), Topology.IsOpenEmbedding φ → ∀ (c : Coef l) (κ : H →* (ResidueField c.O)ˣ), (∀ g, φ g ∈ Loc.Iq p → κ g = 1) → (∃ g, residue c.O (Loc.cycA p l c.O (φ g) : c.O) ≠ 1) →
         ∀ {n : ℕ} (ρ : H →* GL (Fin n) (PadicAlgCl l)), Continuous ρ → (∀ g (a : c.O), residue c.O a = κ g → ∀ t ∈ (W.mat ρ g).charpoly.roots, ‖t - (a : PadicAlgCl l)‖ < 1) → ∀ g, φ g ∈ Loc.Iq p → ρ g = 1 := by
   intro p l _ hl hpl H _ _ _ _ φ hφ c κ hκ hω n ρ hρ hroot
-  haveI : T2Space H := hφ.isEmbedding.t2Space
+  have : T2Space H := hφ.isEmbedding.t2Space
   obtain ⟨c', Q, r₀, hle, hQ, hcont⟩ := UpperTheory.V.Ws.Eb.intModel c ρ hρ
   obtain ⟨hcpl, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c'.O
-  haveI : Finite (ResidueField c'.O) := hfin
-  haveI : CharP (ResidueField c'.O) l := by
+  have : Finite (ResidueField c'.O) := hfin
+  have : CharP (ResidueField c'.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c'.O), residue_eq_zero_iff]
     exact hlm
   let y : c.O →+* c'.O := (Subalgebra.inclusion hle : c.O →+* c'.O)
-  haveI : IsLocalHom y := ⟨fun x hx => by
+  have : IsLocalHom y := ⟨fun x hx => by
     by_contra hn
     have h3 : y x ∈ maximalIdeal c'.O :=
       (UpperTheory.V.Fr.sc_norm l c' (y x)).2.2 ((UpperTheory.V.Fr.sc_norm l c x).2.1 hn)
@@ -581,7 +581,7 @@ theorem UpperTheory.V.Ws.Eb.rootsNear :
   have hpQ : p = Q'.map (x : B.B →+* PadicAlgCl l) := by
     rw [hp, hQ', hx, Polynomial.map_comp]
     simp
-  haveI : IsLocalRing B.B := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := c.O)
+  have : IsLocalRing B.B := UpperTheory.V.Alg.IsCO.toIsLocalRing (O := c.O)
   have hQm : ∀ i < n, Q'.coeff i ∈ maximalIdeal B.B := by
     intro i hi
     rw [← res_eq_zero_iff c.O B.B, ← RingHom.coe_coe (res c.O B.B), ← Polynomial.coeff_map, hQ',
@@ -629,8 +629,8 @@ theorem UpperTheory.V.Ws.Eb.cocycle_vanishes_on_inertia_of_point_pseudodeformati
   rcases Nat.eq_zero_or_pos n with hn | hn
   · subst hn
     exact Subsingleton.elim _ _
-  haveI : Fact s.p.Prime := ⟨s.p_prime⟩
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : Fact s.p.Prime := ⟨s.p_prime⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
   obtain ⟨hI0, hD0, g0, hg0D, hg0e⟩ := hok
   have hpv : ((s.p : ℕ) : 𝓞 (W.Lp L)) ∈ s.v0.asIdeal := by
     have h := Ideal.absNorm_mem s.v0.asIdeal
@@ -648,8 +648,8 @@ theorem UpperTheory.V.Ws.Eb.cocycle_vanishes_on_inertia_of_point_pseudodeformati
   rw [← hj] at hg hI0 hD0 hg0D
   obtain ⟨ρ₂, hρ₂c, hρ₂p, hρ₂y⟩ := dblRep ρ hρ y hy
   let ψ : ↥(Dec (Loc.placeJ j)) →* V.frame.G₀ := V.pr.comp (Dec (Loc.placeJ j)).subtype
-  have hψc : Continuous ψ := (V.pr_cont W.continuous_resP).comp continuous_subtype_val
-  haveI : CompactSpace ↥(Dec (Loc.placeJ j)) := isCompact_iff_compactSpace.mp (isClosed_Dec (F := L) (Loc.placeJ j)).isCompact
+  have hψc : Continuous ψ := (V.pr_cont W.continuous_resP).comp continuous_subtypeVal
+  have : CompactSpace ↥(Dec (Loc.placeJ j)) := isCompact_iff_compactSpace.mp (isClosed_Dec (F := L) (Loc.placeJ j)).isCompact
   let κ : ↥(Dec (Loc.placeJ j)) →* (ResidueField c.O)ˣ := (r.chib ⟨0, hn⟩).comp ψ
   have main := inertia_trivial_of_charpoly_roots_near_character s.p_ne φ hφo c κ ?_ ?_ (ρ₂.comp ψ) (hρ₂c.comp hψc) ?_
   · obtain ⟨h, hh, rfl⟩ := hg
@@ -861,7 +861,7 @@ theorem UpperTheory.V.AlgebraTools.flag_chars_unique :
   refine ⟨?_, hV⟩
   have hdet : IsUnit (((g * g'⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R)).det :=
     (Matrix.isUnit_iff_isUnit_det _).1 (Units.isUnit _)
-  rw [Matrix.det_of_upperTriangular (fun i j h => hV i j h)] at hdet
+  rw [det_of_isUpperTriangular (fun i j h => hV i j h)] at hdet
   funext i
   ext s
   have hu : IsUnit (((g * g'⁻¹ : GL (Fin n) R) : Matrix (Fin n) (Fin n) R) i i) :=
@@ -921,8 +921,8 @@ theorem UpperTheory.V.Ws.Eb.constOf :
         (∀ v, W.HasFlag (ρ'.comp (F.φ v)) fun i => W.pushCh (x' : B.B →+* DualNumber (PadicAlgCl l)) (B.u.ψ v i)) → ∀ b, (x' b).snd = 0 := by
   intro l hl F c n r B x' ρ ρ' Q hD hQ hinj h0 h1
   obtain ⟨-, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : Finite (ResidueField c.O) := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have : Finite (ResidueField c.O) := hfin
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm
@@ -997,7 +997,7 @@ private theorem factor_abs {n : ℕ} {A G H : Type} [CommRing A] [Group G] [Grou
     by_cases h : i = j <;> simp [Matrix.charmatrix_apply, Matrix.one_apply, h]
   have tr_eq (y : MonoidAlgebra A H) :
       (W.GDet.ofRep (W.mat ρ)).tr y = (W.GDet.repAlg (W.mat ρ) A y).trace := by
-    haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+    have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
     unfold W.GDet.tr W.GDet.lam
     rw [chi_eq, Matrix.trace_eq_neg_charpoly_coeff, Fintype.card_fin]
     ring
@@ -1150,7 +1150,7 @@ theorem UpperTheory.V.Ws.Eb.flagDual :
   set φ : K →+* ResidueField (DualNumber K) := (residue (DualNumber K)).comp (algebraMap K (DualNumber K)) with hφ
   have hres : residue (DualNumber K) = φ.comp (dF K) := RingHom.ext fun x => UpperTheory.V.Ws.Eb.residue_dual x
   have hcard : (n : Cardinal) ≤ Cardinal.mk (ResidueField (DualNumber K)) := by
-    haveI : Infinite (ResidueField (DualNumber K)) := Infinite.of_injective φ φ.injective
+    have : Infinite (ResidueField (DualNumber K)) := Infinite.of_injective φ φ.injective
     exact (Cardinal.natCast_lt_aleph0 (n := n)).le.trans (Cardinal.infinite_iff.mp inferInstance)
   have hinj' : Function.Injective fun i => ((residue (DualNumber K) : DualNumber K →* ResidueField (DualNumber K))).comp ((Units.coeHom (DualNumber K)).comp (κ i)) := by
     intro i j hij
@@ -1226,8 +1226,8 @@ theorem UpperTheory.V.AlgebraTools.regOfDim :
     le_antisymm (hdim.trans hq) hR
   have hJeq : ringKrullDim (R ⧸ J) = ((IsLocalRing.maximalIdeal R).spanFinrank : WithBot ℕ∞) :=
     le_antisymm (hq.trans hR) hdim
-  haveI : IsRegularLocalRing R := ⟨heq⟩
-  haveI := PI.UnitaryGroupMassFormula.RLRS.IsRegularLocalRing.isDomain R
+  have : IsRegularLocalRing R := ⟨heq⟩
+  have := PI.UnitaryGroupMassFormula.RLRS.IsRegularLocalRing.isDomain R
   by_contra hne
   obtain ⟨r, hrJ, hr0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   have hnz : r ∈ nonZeroDivisors R := mem_nonZeroDivisors_of_ne_zero hr0
@@ -1305,7 +1305,7 @@ private theorem ptDer_eq_zero_of_vanish_on_X {l : ℕ} [Fact l.Prime] (c : Coef 
             smul_zero]
           show (0 : PadicAlgCl l) = r • (0 : PadicAlgCl l)
           rw [smul_zero] }
-  haveI := co_mvps c.O c.O (Fin N)
+  have := co_mvps c.O c.O (Fin N)
   have key := derZero c (MvPowerSeries (Fin N) c.O) y (Set.range MvPowerSeries.X)
     (fun n b => derLam_dense n b) (by rintro _ ⟨i, rfl⟩; simp [y, h0]) a
   simpa [y] using key
@@ -1345,26 +1345,26 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 private theorem dim_le_of_int (R A : Type) [CommRing R] [CommRing A] [Algebra R A] [Algebra.IsIntegral R A] :
     ringKrullDim A ≤ ringKrullDim R :=
   Order.krullDim_le_of_strictMono (PrimeSpectrum.comap (algebraMap R A)) fun _ _ h =>
-    Ideal.IsIntegral.comap_lt_comap (R := R) h
+    Ideal.IsIntegral.under_lt_under (R := R) h
 
 theorem UpperTheory.V.Ws.Eb.htLow :
     ∀ {l : ℕ} [Fact l.Prime] (c : Coef l) (N : ℕ) (T : Type) [CommRing T] [IsDomain T] [Algebra c.O T] [IsCO c.O T] (f : MvPowerSeries (Fin N) c.O →ₐ[c.O] T), Function.Injective f → (f : MvPowerSeries (Fin N) c.O →+* T).Finite → ∀ x : T →ₐ[c.O] PadicAlgCl l, (N : ℕ∞) ≤ (RingHom.ker x).height := by
   intro l _ c N T _ _ _ _ f hinj hfin x
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
-  haveI : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) :=
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
+  have : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) :=
     (IsFractionRing.comap_isAlgebraic_iff (A := ℤ_[l]) (K := ℚ_[l])).2 inferInstance
-  haveI : Algebra.IsAlgebraic c.O (PadicAlgCl l) :=
+  have : Algebra.IsAlgebraic c.O (PadicAlgCl l) :=
     Algebra.IsAlgebraic.extendScalars (R := ℤ_[l]) (UpperTheory.V.Base.dvrFacts l c.O).1
-  haveI : FaithfulSMul c.O (PadicAlgCl l) :=
+  have : FaithfulSMul c.O (PadicAlgCl l) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 Subtype.val_injective
-  haveI := UpperTheory.V.W.exists_algebraicPoint_of_groupDeterminant c.O T (PadicAlgCl l) x
-  haveI : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
+  have := UpperTheory.V.W.exists_algebraicPoint_of_groupDeterminant c.O T (PadicAlgCl l) x
+  have : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
   have h1 := UpperTheory.V.Alg.co_caten c.O T (RingHom.ker x)
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible c.O
   have h2 := (UpperTheory.V.AlgebraTools.mvPowerSeries_cotInd c.O ϖ hϖ (Fin N)).2.1
   have h3 : ringKrullDim T = ringKrullDim (MvPowerSeries (Fin N) c.O) := by
-    letI : Algebra (MvPowerSeries (Fin N) c.O) T := (f : MvPowerSeries (Fin N) c.O →+* T).toAlgebra
-    haveI : Module.Finite (MvPowerSeries (Fin N) c.O) T := hfin
+    let : Algebra (MvPowerSeries (Fin N) c.O) T := (f : MvPowerSeries (Fin N) c.O →+* T).toAlgebra
+    have : Module.Finite (MvPowerSeries (Fin N) c.O) T := hfin
     exact ReciprocityTheory.CA.ringKrullDim_eq_of_isIntegral_of_injective hinj
   have h4 : ringKrullDim (T ⧸ RingHom.ker x) ≤ 1 := by
     rw [ringKrullDim_eq_of_ringEquiv (Ideal.quotientKerEquivRange x).toRingEquiv,
@@ -1391,9 +1391,9 @@ theorem UpperTheory.V.Ws.Eb.dimLow :
         ∀ (x : B →ₐ[c.O] PadicAlgCl l) (p : Ideal B) [p.IsPrime], p = RingHom.ker x → J ≤ p → (N : WithBot ℕ∞) ≤ ringKrullDim (Localization.AtPrime p ⧸ J.map (algebraMap B (Localization.AtPrime p))) := by
   intro l _ c N B _ _ _ f J hfin hreg x p _ hpx hJp
   obtain ⟨P, hP, hPp⟩ := Ideal.exists_minimalPrimes_le hJp
-  haveI hPprime : P.IsPrime := hP.1.1
+  have hPprime : P.IsPrime := hP.1.1
   have hJP : J ≤ P := hP.1.2
-  haveI : IsCO c.O (B ⧸ P) :=
+  have : IsCO c.O (B ⧸ P) :=
     co_quot c.O B (B ⧸ P) (Ideal.Quotient.mkₐ c.O P) Ideal.Quotient.mk_surjective
   set g : MvPowerSeries (Fin N) c.O →ₐ[c.O] B ⧸ P := (Ideal.Quotient.mkₐ c.O P).comp f with hg
   have hinj : Function.Injective g := by
@@ -1416,7 +1416,7 @@ theorem UpperTheory.V.Ws.Eb.dimLow :
   have hxbmk : ∀ b, xb (Ideal.Quotient.mk P b) = x b := fun b => rfl
   have hht := htLow c N (B ⧸ P) g hinj hfinP xb
   set q : Ideal (B ⧸ P) := RingHom.ker xb with hq
-  haveI : q.IsPrime := RingHom.ker_isPrime _
+  have : q.IsPrime := RingHom.ker_isPrime _
   have hpq : p = Ideal.comap (Ideal.Quotient.mk P) q := by
     ext b
     rw [hpx, Ideal.mem_comap, hq, RingHom.mem_ker, RingHom.mem_ker, hxbmk]
@@ -1465,15 +1465,15 @@ theorem UpperTheory.V.Ws.Eb.cotDer :
     ∀ (O R : Type) [CommRing O] [IsDomain O] [CharZero O] [CommRing R] [IsLocalRing R] [Algebra O R], Function.Injective (algebraMap O (ResidueField R)) → Algebra.IsAlgebraic O (ResidueField R) →
         ∃ d : Derivation O R (CotangentSpace R), ∀ a : maximalIdeal R, d a = (maximalIdeal R).toCotangent a := by
   intro O R _ _ _ _ _ _ hinj halg
-  haveI : FaithfulSMul O (ResidueField R) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
-  letI : Algebra (FractionRing O) (ResidueField R) := FractionRing.liftAlgebra O _
-  haveI := FractionRing.isScalarTower_liftAlgebra O (ResidueField R)
-  haveI := halg
-  haveI : Algebra.IsAlgebraic (FractionRing O) (ResidueField R) :=
+  have : FaithfulSMul O (ResidueField R) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
+  let : Algebra (FractionRing O) (ResidueField R) := FractionRing.liftAlgebra O _
+  have := FractionRing.isScalarTower_liftAlgebra O (ResidueField R)
+  have := halg
+  have : Algebra.IsAlgebraic (FractionRing O) (ResidueField R) :=
     Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective O (FractionRing O))
-  haveI : Algebra.FormallyEtale (FractionRing O) (ResidueField R) := Algebra.FormallyEtale.of_isSeparable _ _
-  haveI : Algebra.FormallyEtale O (FractionRing O) := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors O)
-  haveI : Algebra.FormallyEtale O (ResidueField R) := Algebra.FormallyEtale.comp O (FractionRing O) _
+  have : Algebra.FormallyEtale (FractionRing O) (ResidueField R) := Algebra.FormallyEtale.of_isSeparable _ _
+  have : Algebra.FormallyEtale O (FractionRing O) := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors O)
+  have : Algebra.FormallyEtale O (ResidueField R) := Algebra.FormallyEtale.comp O (FractionRing O) _
   have hle : maximalIdeal R ^ 2 ≤ maximalIdeal R := Ideal.pow_le_self two_ne_zero
   let g : R ⧸ maximalIdeal R ^ 2 →ₐ[O] ResidueField R := Ideal.Quotient.factorₐ O hle
   have hgmk : ∀ a : R, g (Ideal.Quotient.mk _ a) = residue R a := fun a => rfl
@@ -1710,13 +1710,13 @@ theorem UpperTheory.V.Ws.Eb.regOfTan :
     ∀ {l : ℕ} [Fact l.Prime] (c : Coef l) (N : ℕ) (B : Type) [CommRing B] [Algebra c.O B] [IsCO c.O B] (f : MvPowerSeries (Fin N) c.O →ₐ[c.O] B) (J : Ideal B), ((Ideal.Quotient.mk J).comp (f : MvPowerSeries (Fin N) c.O →+* B)).Finite → (∀ a, a ≠ 0 → ∀ b, f a * b ∈ J → b ∈ J) →
         ∀ x : B →ₐ[c.O] PadicAlgCl l, J ≤ RingHom.ker x → (∀ x' : B →ₐ[c.O] DualNumber (PadicAlgCl l), (∀ b, (x' b).fst = x b) → (∀ a, (x' (f a)).snd = 0) → ∀ b, (x' b).snd = 0) → ∀ q : Ideal B, q.IsPrime → q ≤ RingHom.ker x → J ≤ q := by
   intro l _ c N B _ _ _ f J hfin hreg x hJ htan q hq hqx
-  haveI : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) :=
+  have : Algebra.IsAlgebraic ℤ_[l] (PadicAlgCl l) :=
     (IsFractionRing.comap_isAlgebraic_iff (A := ℤ_[l]) (K := ℚ_[l])).2 inferInstance
-  haveI : Algebra.IsAlgebraic c.O (PadicAlgCl l) :=
+  have : Algebra.IsAlgebraic c.O (PadicAlgCl l) :=
     Algebra.IsAlgebraic.extendScalars (R := ℤ_[l]) (UpperTheory.V.Base.dvrFacts l c.O).1
-  haveI : FaithfulSMul c.O (PadicAlgCl l) :=
+  have : FaithfulSMul c.O (PadicAlgCl l) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 Subtype.val_injective
-  haveI hp : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
+  have hp : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
   have h1 := tanEmb c.O B (PadicAlgCl l) x (RingHom.ker x) rfl N
     ((rank_le_res f x htan).trans (derLam c N (x.comp f)))
   have h2 := dimLow c N B f J hfin hreg x (RingHom.ker x) rfl hJ

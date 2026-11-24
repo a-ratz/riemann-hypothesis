@@ -64,7 +64,7 @@ variable [IsCMField E] {X : PT E} {DF : ℕ} {P : Par X DF} {I : Submodule ℤ (
 theorem IK_discrete (hI : IsSplit P I) : DiscreteTopology (IK I) := by
   let f : IK I → X.L := fun x => ⟨((x : IR I) : Vsp X.dim), hI.le (mem_IK.1 x.2)⟩
   have hc : Continuous f :=
-    (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
+    (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
   have hinj : Function.Injective f := by
     intro x y hxy
     have h := congrArg Subtype.val hxy

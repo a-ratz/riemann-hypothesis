@@ -68,7 +68,7 @@ theorem qth_ext_close (g : Sp E n ≃ₗ[E] Sp E n) (N : ℕ) (hg : lqPrinc P N 
     intro W
     simp only [toGLm, Matrix.GeneralLinearGroup.toLin, LinearMap.GeneralLinearGroup.generalLinearEquiv,
       MulEquiv.trans_apply, MulEquiv.symm_symm, MulEquiv.symm_mk, MulEquiv.coe_mk, Equiv.coe_fn_symm_mk,
-      Units.coe_map, MonoidHom.coe_coe]
+      Units.coe_map, MonoidHom.coe_ofClass]
     rfl
   set u : Fin (n + c) → E := Pi.single l 1 with hu0
   have hpi : ∀ y : Fin n → E, (Loc.inX E n c y) i = if h : (i : ℕ) < n then y ⟨i, h⟩ else 0 := by
@@ -100,7 +100,7 @@ theorem qth_ext_close (g : Sp E n ≃ₗ[E] Sp E n) (N : ℕ) (hg : lqPrinc P N 
     · have hu' : LinearMap.funLeft E E (Fin.castAdd c) u = 0 := by
         ext j
         simp only [hu0, LinearMap.funLeft_apply, Pi.single_apply, Pi.zero_apply, Function.comp_apply]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         apply hl
         rw [← h]
@@ -112,12 +112,12 @@ theorem qth_ext_close (g : Sp E n ≃ₗ[E] Sp E n) (N : ℕ) (hg : lqPrinc P N 
         rw [← h]
         exact hi
       rw [hu', map_zero, Pi.zero_apply, h1, sub_zero, map_zero]
-      exact zero_le'
+      exact zero_le
   · rw [dite_eq_right hi, dite_eq_right hi, zero_add, sub_zero]
     have h3 : u i - (1 : Matrix (Fin (n + c)) (Fin (n + c)) E) i l = 0 := by
       simp [hu0, Pi.single_apply, Matrix.one_apply]
     rw [h3, map_zero]
-    exact zero_le'
+    exact zero_le
 
 theorem qth_princ_inv {N : ℕ} (g : ↥(GLint E n P)) (hg : lqPrinc P N (g : Sp E n ≃ₗ[E] Sp E n)) :
     lqPrinc P N ((g⁻¹ : ↥(GLint E n P)) : Sp E n ≃ₗ[E] Sp E n) := by

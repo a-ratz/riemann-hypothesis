@@ -84,7 +84,7 @@ theorem units_modSq_finite_of_fields : ∀ (k : Type) [Field k] [CharZero k],
       Finite (Aˣ ⧸ (powMonoidHom 2 : Aˣ →* Aˣ).range) := by
   intro k _ _ hL A _ _ _
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
   have hc : (2 : A) * algebraMap k A (1 / 2) = 1 := by
     have h2 : (2 : A) * algebraMap k A (1 / 2) = algebraMap k A (2 * (1 / 2)) := by
       rw [map_mul, map_ofNat]
@@ -92,10 +92,10 @@ theorem units_modSq_finite_of_fields : ∀ (k : Type) [Field k] [CharZero k],
     norm_num
   let Q : MaximalSpectrum A → Type := fun I =>
     (A ⧸ I.asIdeal)ˣ ⧸ (powMonoidHom 2 : (A ⧸ I.asIdeal)ˣ →* (A ⧸ I.asIdeal)ˣ).range
-  haveI hQ : ∀ I, Finite (Q I) := by
+  have hQ : ∀ I, Finite (Q I) := by
     intro I
     have := I.isMaximal
-    letI := Ideal.Quotient.field I.asIdeal
+    let := Ideal.Quotient.field I.asIdeal
     exact hL (A ⧸ I.asIdeal)
   let φ : Aˣ →* ((I : MaximalSpectrum A) → Q I) := MonoidHom.pi fun I =>
     (QuotientGroup.mk' _).comp (Units.map (Ideal.Quotient.mk I.asIdeal).toMonoidHom)

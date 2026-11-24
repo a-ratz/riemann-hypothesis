@@ -108,7 +108,7 @@ private theorem map_diagonal_mulVec_pi (D : κ → F) (hD : ∀ i, D i ≠ 0) :
       = (∏ i, distribHaarChar F (Units.mk0 (D i) (hD i))⁻¹) • Measure.pi fun _ : κ => ν := by
   have hfun : (diagonal D).mulVec = fun x i => (fun y => D i * y) (x i) := by
     funext x i; simp [mulVec_diagonal]
-  haveI : ∀ i, SigmaFinite (Measure.map (fun y => D i * y) ν) := fun i => by
+  have : ∀ i, SigmaFinite (Measure.map (fun y => D i * y) ν) := fun i => by
     rw [map_mul_left_eq_smul' ν (D i) (hD i)]; infer_instance
   rw [hfun, Measure.pi_map_pi (f := fun i y => D i * y)
     (fun i => (continuous_const.mul continuous_id).aemeasurable)]
@@ -207,7 +207,7 @@ theorem _root_.GlobalTheory.UnipChange.smul_map_mulVec_pi (M : Matrix κ κ F) (
         mul_comm]
   rw [key u hu]
   ext s hs
-  rw [Measure.smul_apply, Measure.coe_nnreal_smul_apply, smul_eq_mul, ← mul_assoc,
+  rw [smul_apply, Measure.coe_nnreal_smul_apply, smul_eq_mul, ← mul_assoc,
     ← ENNReal.coe_mul, ← map_mul, mul_inv_cancel, map_one, ENNReal.coe_one, one_mul]
 
 end Linear
@@ -251,8 +251,8 @@ theorem setIntegral_inv_mulVec {k : Type} [Field k] [ValuativeRel k] [Topologica
     ∫ x in M, F (((g⁻¹ : GL (Fin m) k) : Matrix (Fin m) (Fin m) k) *ᵥ x) ∂(piHaar ν m) =
       ((nabs k (Matrix.GeneralLinearGroup.det g) : ℝ) : ℂ) *
         ∫ y in {y | (g : Matrix (Fin m) (Fin m) k) *ᵥ y ∈ M}, F y ∂(piHaar ν m) := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
-  haveI := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
   have hinv : ((g⁻¹ : GL (Fin m) k) : Matrix (Fin m) (Fin m) k) * (g : Matrix (Fin m) (Fin m) k) = 1 :=
     Units.inv_mul g
   have hinv' : (g : Matrix (Fin m) (Fin m) k) * ((g⁻¹ : GL (Fin m) k) : Matrix (Fin m) (Fin m) k) = 1 :=

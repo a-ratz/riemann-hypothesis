@@ -297,11 +297,11 @@ theorem sum_ker_eq_card_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     (hv Z r z J hJ).trans (Finset.sum_congr rfl fun i _ => by
       simp only [Φ]; rw [hβ'.val_unique hG hA hβ _ z hJ])
   have : Finite (transKer Xo.univ.t.G Ψ) := Finite.of_equiv _ e
-  letI := Fintype.ofFinite (transKer Xo.univ.t.G Ψ)
+  let := Fintype.ofFinite (transKer Xo.univ.t.G Ψ)
   let T := {a : Over.mk x ⟶ Xo.univ.t.G // a ∈ transKer Xo.univ.t.G Ψ ∧ a ^ p = 1}
   have : Finite T := Finite.of_injective (fun q : T => (⟨q.1, q.2.1⟩ : transKer Xo.univ.t.G Ψ))
     (fun a b h => Subtype.ext (congrArg (fun q : transKer Xo.univ.t.G Ψ => q.1) h))
-  letI := Fintype.ofFinite T
+  let := Fintype.ofFinite T
   have bij : Function.Bijective fun q : T × Fin n' =>
       (⟨q.1.1 * c q.2, (transKer Xo.univ.t.G Ψ).mul_mem q.1.2.1 (hc.1 _)⟩ : transKer Xo.univ.t.G Ψ) := by
     constructor
@@ -701,8 +701,8 @@ end GlobalTheory.GlobalSectionsBijection
 open GlobalTheory.GlobalSectionsBijection in
 theorem GlobalTheory.ratio_descends : ∀ (T : Type) [CommRing T] [IsReduced T] (Y : Scheme.{0}) (q : Y ⟶ Sp T) (I₀ : Type) (U : I₀ → Y.Opens) (t t₀ : ∀ j, Γ(Y, U j)), Smooth q → (∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (χ : T →+* Ω), ∃ α : Ω, (∀ (j : I₀) (w : Sp Ω ⟶ Y) (h : ⊤ ≤ w ⁻¹ᵁ U j), w ≫ q = spMap χ → (w.appLE (U j) ⊤ h).hom (t j) = toΓ Ω α * (w.appLE (U j) ⊤ h).hom (t₀ j)) ∧ ∃ (j : I₀) (w : Sp Ω ⟶ Y) (h : ⊤ ≤ w ⁻¹ᵁ U j), w ≫ q = spMap χ ∧ (w.appLE (U j) ⊤ h).hom (t₀ j) ≠ 0) → ∃ a : T, ∀ j, t j = (q.appLE ⊤ (U j) le_top).hom (toΓ T a) * t₀ j := by
   intro T _ _ Y q I₀ U t t₀ hq H
-  haveI := hq
-  haveI : IsReduced Y := GlobalTheory.isReduced_of_smooth_of_isReduced q
+  have := hq
+  have : IsReduced Y := GlobalTheory.isReduced_of_smooth_of_isReduced q
   let F : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra ℤ Ω], (T →ₐ[ℤ] Ω) → Ω :=
     fun Ω _ _ _ χ => Classical.choose (H Ω χ.toRingHom)
   have hF : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra ℤ Ω] (χ : T →ₐ[ℤ] Ω) (j : I₀) (w : Sp Ω ⟶ Y)
@@ -719,7 +719,7 @@ theorem GlobalTheory.ratio_descends : ∀ (T : Type) [CommRing T] [IsReduced T] 
     obtain ⟨V, hV, hyV, hVD⟩ := exists_isAffineOpen_mem_and_subset hyD
     have hVU : V ≤ U j := hVD.trans (Y.basicOpen_le _)
     let φ : T →+* Γ(Y, V) := (q.appLE ⊤ V le_top).hom.comp (toΓ T)
-    letI := φ.toAlgebra
+    let := φ.toAlgebra
     have hu : IsUnit ((Y.presheaf.map (homOfLE hVU).op).hom (t₀ j)) := by
       have h0 := Y.toRingedSpace.isUnit_res_basicOpen (t₀ j)
       have h1 := h0.map (Y.presheaf.map (homOfLE hVD).op).hom
@@ -945,7 +945,7 @@ theorem exists_sums {T : Type} [CommRing T] {x x' : Sp T ⟶ Xo.X} {Ψ : Gx x �
 theorem card_tors_mul {Ω : Type} [Field Ω] [IsAlgClosed Ω] {x₁ : Sp Ω ⟶ Xo.X} {P : Ideal (𝓞 E)} {p i n : ℕ}
     {C : Subgroup (Over.mk x₁ ⟶ Xo.univ.t.G)} (hp : 0 < p) (hC : Xo.univ.t.HeckeKer (Over.mk x₁) Dw P p i C)
     (e : Fin n ≃ C) : Nat.card {a // a ∈ C ∧ a ^ p = 1} * Ideal.absNorm P ^ i = n := by
-  haveI : Finite C := Finite.of_equiv _ e
+  have : Finite C := Finite.of_equiv _ e
   obtain ⟨k, r, hr⟩ := exists_isRepsModTors C p
   have h1 := hr.card
   have h2 := card_reps hp hC hr
@@ -954,7 +954,7 @@ theorem card_tors_mul {Ω : Type} [Field Ω] [IsAlgClosed Ω] {x₁ : Sp Ω ⟶ 
 
 theorem card_tors_pos {Ω : Type} [Field Ω] [IsAlgClosed Ω] {x₁ : Sp Ω ⟶ Xo.X} {p : ℕ}
     {C : Subgroup (Over.mk x₁ ⟶ Xo.univ.t.G)} [Finite C] : 0 < Nat.card {a // a ∈ C ∧ a ^ p = 1} := by
-  haveI : Finite {a // a ∈ C ∧ a ^ p = 1} :=
+  have : Finite {a // a ∈ C ∧ a ^ p = 1} :=
     Finite.of_injective (fun a => (⟨a.1, a.2.1⟩ : C)) (by intro a b h; apply Subtype.ext; simpa using congrArg Subtype.val h)
   exact Nat.card_pos_iff.2 ⟨⟨⟨1, C.one_mem, one_pow p⟩⟩, inferInstance⟩
 
@@ -1029,7 +1029,7 @@ theorem fibre {c : Coeff l} {P : Ideal (𝓞 E)} {p i n : ℕ} {T : Type} [CommR
   obtain ⟨β₁, hβ₁, hvβ⟩ := rigIso_baseChange χ.toRingHom hpm hpm' hc hf hβ
   obtain ⟨s₁₁, hs₁₁, hvs⟩ := mulPull_baseChange χ.toRingHom hpm hsy hs₁
   have heps := _root_.GlobalTheory.KernelSum.sum_ker_eq_card_mul E H Dw l Xo Ω y₁.x x₁' Ψ₁ p n y₁.s s' β₁ s₁₁ e hisog hth htr hβ₁ hs₁₁
-  haveI : Finite (transKer Xo.univ.t.G Ψ₁) := Finite.of_equiv _ e
+  have : Finite (transKer Xo.univ.t.G Ψ₁) := Finite.of_equiv _ e
   have hm := card_tors_mul hp hker e
   have hmpos := card_tors_pos (C := transKer Xo.univ.t.G Ψ₁) (p := p)
   have hmeq : Nat.card {a // a ∈ transKer Xo.univ.t.G Ψ₁ ∧ a ^ p = 1} = n / Ideal.absNorm P ^ i := by
@@ -1123,7 +1123,7 @@ theorem GlobalTheory.HeckeScal.exists_scal_of_family : ∀ (E : Type) [Field E] 
     infer_instance
   obtain ⟨a', ha'⟩ := _root_.GlobalTheory.ratio_descends T (Gx y.x) (fst (Over.mk y.x) Xo.univ.t.G).left _
     (LPow Xo.univ.t.G Xo.univ.t.PP.L ((p : ℤ) ^ 2) (Over.mk y.x)).U t.f t₀.f hsm fun Ω _ _ χ => by
-      letI : Algebra c.F Ω := (χ.comp (algebraMap c.F T)).toAlgebra
+      let : Algebra c.F Ω := (χ.comp (algebraMap c.F T)).toAlgebra
       let χ' : T →ₐ[c.F] Ω := { χ with commutes' := fun _ => rfl }
       obtain ⟨y₁, hy₁⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c T Ω χ' y
       obtain ⟨Ψ₁, hΨ₁⟩ := exists_isFib (Xo := Xo) χ hy₁.1 rfl Ψ hlin.1

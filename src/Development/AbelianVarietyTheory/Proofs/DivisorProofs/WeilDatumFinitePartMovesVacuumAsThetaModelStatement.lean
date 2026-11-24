@@ -212,11 +212,11 @@ theorem phase_eq : ∀ D : D7, ∃ w : 𝓞 D.host.E, w + GlobalTheory.FinWeil.s
     have hR : GlobalTheory.LatVac.hRat S T X X = n := by
       rw [GlobalTheory.LatVac.hRat, hset.gS, hset.gT, inv_one]
       simp only [Matrix.one_apply, ite_mul, one_mul, zero_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-        Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       have e : ∀ x, (∑ x_1, ∑ x_2, if x = x_1 then star (X x_2 x_1) * X x_2 x else 0) =
           ∑ x_2, star (X x_2 x) * X x_2 x := fun x => by
         rw [Finset.sum_comm]
-        simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rw [Finset.sum_congr rfl fun x _ => e x, Finset.sum_comm]
     have hs : symplOH S T (GlobalTheory.FinWeilO.intA D b • finPt (S := S) (T := T) rfl rfl r z)
         (finPt (S := S) (T := T) rfl rfl r z) = pairA D.host.F 0
@@ -449,11 +449,11 @@ theorem proj_of_real {g : GA D V} (hg : g ∈ GinfC V) : proj hε V g = 1 := by
 
 omit hε in
 theorem continuous_mt (V : HSp D) : Continuous fun g : GA D V => mt V g :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_proj : Continuous (proj hε V) := by
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
-  haveI : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
+  have : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
   have c1 : Continuous fun g => mt V (proj hε V g) := by
     simp only [mt_proj]
     exact ((continuous_mt V).const_smul (spl ε)).add continuous_const

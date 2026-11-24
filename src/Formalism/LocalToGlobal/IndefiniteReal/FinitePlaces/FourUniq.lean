@@ -247,7 +247,7 @@ theorem indk_eq {k : ℕ} (hk : 0 < k) (t : W) :
   have hcard : (Nat.card (Gk L Y k) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
   unfold indk
   by_cases htLX : t ∈ L ∧ t ∈ X
-  · rw [if_pos htLX]
+  · rw [ite_eq_left htLX]
     simp only [mul_one]
     rw [chi_sum hχl hχr hχ0 hLL hdX hdivX hdivY hfinY htf hk (AddSubgroup.mem_inf.mpr htLX)]
     split_ifs
@@ -259,7 +259,7 @@ theorem indk_eq {k : ℕ} (hk : 0 < k) (t : W) :
       apply htLX
       rw [← hst]
       exact AddSubgroup.mem_inf.mp (nsmul_mem hs k)
-    rw [if_neg hnot, if_neg htLX]
+    rw [ite_eq_right hnot, ite_eq_right htLX]
     simp
 
 open Classical in
@@ -279,8 +279,8 @@ theorem isSB_indk {k : ℕ} (hk : 0 < k) : IsSB L X (indk L X k) := by
     (smulSub k (L ⊓ X)).add_mem_cancel_right hku
   unfold indk
   by_cases h : t ∈ smulSub k (L ⊓ X)
-  · rw [if_pos (hiff.mpr h), if_pos h]
-  · rw [if_neg (mt hiff.mp h), if_neg h]
+  · rw [ite_eq_left (hiff.mpr h), ite_eq_left h]
+  · rw [ite_eq_right (mt hiff.mp h), ite_eq_right h]
 
 include hχl hχr hχ0 hLL hdX hdivX hdivY hfinY htf in
 open Classical in
@@ -293,18 +293,18 @@ theorem T_indk (T : (W → ℂ) →ₗ[ℂ] V)
   have h1 : IsSB L X (fun t => if t ∈ L ∧ t ∈ X then (1 : ℂ) else 0) := by
     refine ⟨fun t ht => ?_, 1, one_pos, fun u hu t => ?_, fun t ht => ?_⟩
     · by_contra h
-      exact ht (if_neg (fun h' => h h'.2))
+      exact ht (ite_eq_right (fun h' => h h'.2))
     · have hu' := AddSubgroup.mem_inf.mp hu
       have hiff : (t + u ∈ L ∧ t + u ∈ X) ↔ (t ∈ L ∧ t ∈ X) :=
         and_congr (L.add_mem_cancel_right hu'.1) (X.add_mem_cancel_right hu'.2)
       show (if t + 1 • u ∈ L ∧ t + 1 • u ∈ X then (1 : ℂ) else 0) = if t ∈ L ∧ t ∈ X then 1 else 0
       rw [one_smul]
       by_cases h : t ∈ L ∧ t ∈ X
-      · rw [if_pos (hiff.mpr h), if_pos h]
-      · rw [if_neg (mt hiff.mp h), if_neg h]
+      · rw [ite_eq_left (hiff.mpr h), ite_eq_left h]
+      · rw [ite_eq_right (mt hiff.mp h), ite_eq_right h]
     · rw [one_smul]
       by_contra h
-      exact ht (if_neg (fun h' => h h'.1))
+      exact ht (ite_eq_right (fun h' => h h'.1))
   have hfun : indk L X k = ∑ g : Gk L Y k, ((Nat.card (Gk L Y k) : ℂ)⁻¹ •
       (fun t => χ t (g : QY L Y).out * (if t ∈ L ∧ t ∈ X then (1 : ℂ) else 0))) := by
     funext t
@@ -364,7 +364,7 @@ theorem T_formula (T : (W → ℂ) →ₗ[ℂ] V)
     obtain ⟨l, hl', he⟩ := mk_out_sub (smulSub k (L ⊓ X)) t
     rw [he]
     unfold indk
-    apply if_pos
+    apply ite_eq_left
     have h3 : t + -(t + l) = -l := by abel
     rw [h3]
     exact neg_mem hl'
@@ -372,7 +372,7 @@ theorem T_formula (T : (W → ℂ) →ₗ[ℂ] V)
       indk L X k (t + -q.out) = 0 := by
     intro t q hq
     unfold indk
-    apply if_neg
+    apply ite_eq_right
     intro hm
     apply hq
     rw [← QuotientAddGroup.out_eq' q]
@@ -391,7 +391,7 @@ theorem T_formula (T : (W → ℂ) →ₗ[ℂ] V)
       rw [hone, mul_one, hinv]
       by_contra h0
       apply hn
-      rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, hinv]
+      rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, hinv]
       exact h0
   have hX : ∀ q ∈ hfin.toFinset, -q.out ∈ X := by
     intro q hq
@@ -399,7 +399,7 @@ theorem T_formula (T : (W → ℂ) →ₗ[ℂ] V)
   have hsub : (Function.support fun q : W ⧸ smulSub k (L ⊓ X) =>
       Φ q.out • ρ (-q.out) (Pk ρ L Y f₀ k)) ⊆ ↑hfin.toFinset := by
     intro q hq
-    rw [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    rw [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     intro h0
     apply hq
     simp only [h0, zero_smul]

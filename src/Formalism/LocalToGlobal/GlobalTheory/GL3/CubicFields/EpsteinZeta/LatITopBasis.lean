@@ -230,7 +230,7 @@ lemma covA_span (K : Type) [Field K] [NumberField K] (d : ℕ) [Fact d.Prime] (h
         rw [h] at h2
         have h4 := Nat.le_of_dvd hd.pos h2
         nlinarith [hd.two_le]
-    exact ⟨r.num, Rat.coe_int_num_of_den_eq_one hden⟩
+    exact ⟨r.num, Rat.intCast_num_of_den_eq_one hden⟩
   obtain ⟨B, hB⟩ := sqint (2 * b) (4 * N - A ^ 2) (by push_cast; rw [hN, hA]; ring)
   have e4 : 4 * N = A ^ 2 + (4 * (k : ℤ) + 3) * B ^ 2 := by
     have : (4 * N : ℚ) = A ^ 2 + d * B ^ 2 := by

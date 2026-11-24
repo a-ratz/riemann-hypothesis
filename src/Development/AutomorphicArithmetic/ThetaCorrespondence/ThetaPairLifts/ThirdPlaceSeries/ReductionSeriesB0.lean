@@ -449,7 +449,7 @@ theorem read_of_isGal_side : ∀ {D : D7} {N : NData D.R D.host D.what₂} {T : 
   classical
   have hfin := Formalism.L2.NC.finite_placesOver (E := D.host.E) (T.l i)
   refine ⟨hfin.toFinset ∪ S, fun P hP => ?_⟩
-  simp only [Finset.mem_union, not_or, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hP
+  simp only [Finset.mem_union, not_or, Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hP
   obtain ⟨hu, y, hy⟩ := hS P hP.2
   have hAt := (GlobalTheory.HeckeUnifVal.at_val_and_unr_iff χ H (MonoidHom.ext hH) P).1 hu
   have hyC : D.what₂.embLL ((y : D.LL0) : D.what₂.LL) = ((χ.val P : ℂˣ) : ℂ) := hy
@@ -553,7 +553,7 @@ theorem exists_reading {D : D7} {N : NData D.R D.host D.what₂} (T : TwR D.LL0 
       (∀ z : ℤ_[T.l i], κ (algebraMap (T.O0 i) _ (algebraMap ℤ_[T.l i] (T.O0 i) z)) =
         algebraMap ℚ_[T.l i] (Qbar (T.l i)) (z : ℚ_[T.l i])) ∧
       ∀ x : D.LL0, ι (κ (T.emb0 i x)) = D.what₂.embLL (x : D.what₂.LL) := by
-  haveI : CharZero (FractionRing (T.O0 i)) := (T.emb0 i).charZero_iff (T.emb0 i).injective |>.1 inferInstance
+  have : CharZero (FractionRing (T.O0 i)) := (T.emb0 i).charZero_iff (T.emb0 i).injective |>.1 inferInstance
   let f : ℤ_[T.l i] →+* FractionRing (T.O0 i) :=
     (algebraMap (T.O0 i) (FractionRing (T.O0 i))).comp (algebraMap ℤ_[T.l i] (T.O0 i))
   have hf : Function.Injective f := by
@@ -566,8 +566,8 @@ theorem exists_reading {D : D7} {N : NData D.R D.host D.what₂} (T : TwR D.LL0 
     · exact (pow_ne_zero _ (Nat.cast_ne_zero.2 (T.lPrime i).out.ne_zero)) h
   have hf0 : Function.Injective (algebraMap ℤ_[T.l i] (T.O0 i)) :=
     Function.Injective.of_comp (f := algebraMap (T.O0 i) (FractionRing (T.O0 i))) hf
-  haveI : Module.IsTorsionFree ℤ_[T.l i] (T.O0 i) := Module.isTorsionFree_iff_algebraMap_injective.2 hf0
-  haveI : Module.IsTorsionFree ℤ_[T.l i] (Qbar (T.l i)) := Module.isTorsionFree_iff_algebraMap_injective.2
+  have : Module.IsTorsionFree ℤ_[T.l i] (T.O0 i) := Module.isTorsionFree_iff_algebraMap_injective.2 hf0
+  have : Module.IsTorsionFree ℤ_[T.l i] (Qbar (T.l i)) := Module.isTorsionFree_iff_algebraMap_injective.2
     (by rw [IsScalarTower.algebraMap_eq ℤ_[T.l i] ℚ_[T.l i] (Qbar (T.l i))]
         exact (algebraMap ℚ_[T.l i] (Qbar (T.l i))).injective.comp Subtype.val_injective)
   let g : T.O0 i →ₐ[ℤ_[T.l i]] Qbar (T.l i) := (by
@@ -576,12 +576,12 @@ theorem exists_reading {D : D7} {N : NData D.R D.host D.what₂} (T : TwR D.LL0 
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hg : Function.Injective g := by
-    refine (RingHom.injective_iff_ker_eq_bot g.toRingHom).2 (Ideal.eq_bot_of_comap_eq_bot (R := ℤ_[T.l i]) ?_)
+    refine (RingHom.injective_iff_ker_eq_bot g.toRingHom).2 (Ideal.eq_bot_of_under_eq_bot (R := ℤ_[T.l i]) ?_)
     rw [eq_bot_iff]
     intro z hz
     have h1 : algebraMap ℤ_[T.l i] (Qbar (T.l i)) z = 0 := (g.commutes z).symm.trans hz
     exact (map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective _ _)).1 h1
-  haveI : Countable ↥D.LL0 := (Module.finBasis ℚ ↥D.LL0).equivFun.injective.countable
+  have : Countable ↥D.LL0 := (Module.finBasis ℚ ↥D.LL0).equivFun.injective.countable
   let κ : FractionRing (T.O0 i) →+* Qbar (T.l i) := IsFractionRing.lift (g := g.toRingHom) hg
   obtain ⟨ι, hι⟩ := GlobalTheory.exists_padicAlgCl_ringEquiv_complex_comp_eq_of_countable (T.l i) ↥D.LL0
     (κ.comp (T.emb0 i)) (embLL0 D)
@@ -910,8 +910,8 @@ theorem exists_nth_of_fg_full : ∀ (D : D7) (tw : NTw D.R D.host D.what₂ D.LL
     iC := iC
     iC_int := hiC
     aL := fun i => if ∃ k, tw.l i = D.host.g k then 1 else 0
-    aL_g := fun i k h => if_pos ⟨k, h⟩
-    aL_off := fun i h => if_neg (not_exists.2 h)
+    aL_g := fun i k h => ite_eq_left ⟨k, h⟩
+    aL_off := fun i h => ite_eq_right (not_exists.2 h)
     Pt := fun i j => Σ b, Fin (n i j b)
     ev := fun i j b => sideEv (iC i) (e i j) b
     ev_smul := fun i j b a f y => sideEv_smul _ _ b a f y
@@ -1314,8 +1314,8 @@ theorem exists_field_uniform : ∀ (cDep b : ℝ) (B₀ : Pre), ∃ M : Intermed
     obtain ⟨Mv, h1, h2⟩ := exists_fieldHas G
     exact ⟨Mv, h1, s, hs, T, L, G, hv, h2⟩
   choose Mv hMv hW using hex
-  haveI := hfin.to_subtype
-  haveI : ∀ v, FiniteDimensional ℚ (Mv v) := hMv
+  have := hfin.to_subtype
+  have : ∀ v, FiniteDimensional ℚ (Mv v) := hMv
   refine ⟨⨆ v, Mv v, IntermediateField.finiteDimensional_iSup_of_finite, ?_⟩
   intro s hs _ T L G
   obtain ⟨s', hs', T', L', G', hv', hF⟩ := hW ⟨toPl hs (vPre s G.pl.v0), s, hs, T, L, G, rfl⟩
@@ -1673,7 +1673,7 @@ theorem pointwise_alt_alt (hPr : _root_.GlobalTheory.HeightCounting.Up.Published
   obtain ⟨c0r, hr⟩ := _root_.GlobalTheory.TwRing.exists_ringSpec hPr.what₂.art (Dof x) (cfOf x) (fun p _ v hv => (hJ p v hv).choose)
     (fun p _ v hv y => (hJ p v hv).choose_spec y) l.a.val l.a.elem.star l.a.elem.int
   let b0 : Big (Dof x) := fun p _ j =>
-    ⟨(c0f p j).1 ⊔ (c0r p j).1, by haveI := (c0f p j).2; haveI := (c0r p j).2; infer_instance⟩
+    ⟨(c0f p j).1 ⊔ (c0r p j).1, by have := (c0f p j).2; have := (c0r p j).2; infer_instance⟩
   obtain ⟨Sx, hSx1, hSx2, hSx3⟩ := exists_Sx (Dof x)
   obtain ⟨T', Sp, -⟩ := hr b0 b0 Sx (fun p _ j => le_sup_right)
   have hSbSx : l.rat.In.Sb ⊆ Sx := l.rat.rat.Sb_le.subset hSx1

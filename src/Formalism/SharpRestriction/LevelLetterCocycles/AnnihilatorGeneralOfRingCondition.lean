@@ -105,7 +105,7 @@ end CoreW
 theorem finrank_K0_eq_one_of_le_Kur {l : ℕ} [Fact l.Prime] {K : FinExt l} (hK : K.1 ≤ MaximalUnramifiedExtension l) :
     Module.finrank ↥(K0 K) ↥K.1 = 1 := by
   unfold K0
-  rw [finrank_eq_one_iff_of_nonzero' (1 : ↥K.1) one_ne_zero]
+  rw [finrank_eq_one_iff_of_ne_zero' (1 : ↥K.1) one_ne_zero]
   intro x
   refine ⟨⟨(x : Om l), IntermediateField.mem_inf.mpr ⟨x.2, hK x.2⟩⟩, ?_⟩
   first
@@ -117,7 +117,7 @@ theorem ring_condition_uniformizer_polynomial (D : D7) (HW : HWOf D.loc) (F : Fo
     (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (h : CaseA K LL) :
     Formalism.MainNotions.DeltaInvariantLattices.wachRingRelations ((HW l).W K 1 LL h.2.2) 1 (((D.loc l).PD K).p - 1) ((HW l).W K 1 LL h.2.2).π₀
       (fun _ => Polynomial.X + Polynomial.C ((((D.loc l).PD K).p : ℕ) : ↥(OL LL))) := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have h9W := h9 l K 1 LL h.2.2
   have hp := h9W _ (Formalism.MainNotions.LiftingTheory.gen_one_crys ((HW l).W K 1 LL h.2.2))
   refine ((hp ?_ ?_).2.2 ?_).1

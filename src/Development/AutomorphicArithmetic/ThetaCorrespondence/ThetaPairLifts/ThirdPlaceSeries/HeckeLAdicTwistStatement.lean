@@ -80,7 +80,7 @@ theorem cg_eq_ofChar_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → �
     (π : D.naut.CG 1), haveI := GlobalTheory.CuspRep.host_isCMField D.host;
     ((P.cg.e 1 π).1 : GlobalTheory.CuspRep.CG D.host.E 1) = GlobalTheory.CuspRep.CG.ofChar (P.chr.e1 π).1 := by
   intro _ hL D P π
-  haveI := host_isCMField D.host
+  have := host_isCMField D.host
   set χ' := (CGu.equivChar D.host.E (P.cg.e 1 π)).1 with hχ'
   set χ := (P.chr.e1 π).1 with hχ
   have hloc : ∀ v, P.T.e v (D.naut.locG π v) = _root_.GlobalTheory.CuspRep.ParLawsT.locParT hL (CG.ofChar χ') (D.nd.plOm.2 v) := fun v => by

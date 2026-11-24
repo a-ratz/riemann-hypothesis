@@ -147,7 +147,7 @@ theorem stalkPt_of (hN : LeafSHSys) (hC : LeafSHCont) : LeafStalkPt := by
   have hu : IsUnit (q : S.c.pt) := by
     have g := Spec.preimage (S.t ≫ U.hom ≫ s)
     simpa using hq.map g.hom
-  haveI : IsLocalRing S.c.pt := S.sh.1.toIsLocalRing
+  have : IsLocalRing S.c.pt := S.sh.1.toIsLocalRing
   have h0 := hc S.c.pt S.t S.sh hu
   obtain ⟨j, hj⟩ := hC hy q k hq i s ι U m c x S h0
   exact ⟨S.V j, S.a j, S.hx j, hj⟩

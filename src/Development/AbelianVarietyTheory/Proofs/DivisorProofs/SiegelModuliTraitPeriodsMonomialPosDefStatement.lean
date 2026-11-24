@@ -123,7 +123,7 @@ theorem isMonomialTau_ofDeg {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R]
   have h₂ := hu u₂
   have h₃ := hu u₃
   generalize ∏ i, algebraMap R (FractionRing R) (t i) ^ β i a b = P at e ⊢
-  rw [Units.val_mul, Units.coe_map, MonoidHom.coe_coe]
+  rw [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass]
   simp only [Units.val_mul, map_mul, map_units_inv]
   field_simp
   linear_combination e
@@ -131,7 +131,7 @@ theorem isMonomialTau_ofDeg {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R]
 theorem finrank_le {g n : ℕ} {o : Type} [CommRing o] {ζ : o} {F : SFam g n ζ} (T : Trait F) (hn : 2 ≤ n) (hζ : IsUnit ζ) :
     Module.finrank ℤ T.D.toPre.X ≤ g := by
   let K := AlgebraicClosure (FractionRing T.V)
-  haveI : CharZero (FractionRing T.V) :=
+  have : CharZero (FractionRing T.V) :=
     (RingHom.charZero_iff (IsFractionRing.injective T.V (FractionRing T.V))).1 inferInstance
   have hK : (n : K) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
   let κ : Sp K ⟶ Sp (FractionRing T.V) := spMap (algebraMap _ K)

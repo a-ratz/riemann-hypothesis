@@ -129,7 +129,7 @@ private theorem et_of {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRin
       obtain ⟨i, hi⟩ := exists_id hT hN hNp ms₀
       obtain ⟨i', hi'⟩ := exists_id hT hN hNp m₁y
       exact ⟨i, i', by rw [hi, hi', Category.id_comp, Category.comp_id]⟩
-  haveI : IsIso v := ⟨⟨u, hvu, huv⟩⟩
+  have : IsIso v := ⟨⟨u, hvu, huv⟩⟩
   rw [← hvg]
   infer_instance
 

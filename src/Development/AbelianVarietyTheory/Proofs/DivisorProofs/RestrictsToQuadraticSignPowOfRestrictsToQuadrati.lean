@@ -87,7 +87,7 @@ theorem _root_.GlobalTheory.LFun.resEtaPow_of_resEta : ∀ (F E : Type) [Field F
     ∀ (χ : (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F ⊗[F] E)ˣ →* Circle) (n : ℕ), _root_.GlobalTheory.LFun.ResEta F E χ n →
       _root_.GlobalTheory.WeilM.ResEtaPow (Units.map (algebraMap F (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.AF F)).toMonoidHom).range χ n := by
   intro F E _ _ _ _ _ h2 χ n hχ
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h2⟩
   obtain ⟨⟨η, hη⟩, hall⟩ := hχ
   have hηe := hη.eq_normSign
   intro a

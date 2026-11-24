@@ -231,8 +231,8 @@ theorem term_inv (hI : Inp D) (P : Pair D cc δ t0 Q) (hF : P.F ∈ TT D (tor0 D
 
 theorem sq_inv (hI : Inp D) (P : Pair D cc δ t0 Q) (hF : P.F ∈ TT D (tor0 D cc δ) P.a P.d) {γ j : GA D P.d}
     (hγ : γ ∈ ratG D P.d) (hj : j ∈ P.J) (h : GA D P.d) : P.sq (γ * h * j) = P.sq h := by
-  haveI := (_root_.GlobalTheory.NormSum.cls_finite_card_le D P.a).1
-  haveI := Fintype.ofFinite (Cls D P.a (intG D P.a))
+  have := (_root_.GlobalTheory.NormSum.cls_finite_card_le D P.a).1
+  have := Fintype.ofFinite (Cls D P.a (intG D P.a))
   obtain ⟨c, u, hc, hu, hO⟩ := om_rat_right hI P hγ
   obtain ⟨c', hc', hE⟩ := P.eig j hj
   set f : VC D P.a P.d → VC D P.a P.d := fun z τ => (u τ * Matrix.of (z τ) : Matrix _ _ ℂ) with hf
@@ -280,8 +280,8 @@ theorem rep_indep : ∀ (D : D7), Inp D → ∀ (cc : Ideal (𝓞 D.host.K)) (δ
     obtain ⟨γ, hγ, k, hk, e⟩ := (@DoubleCoset.eq _ _ _ _ _ _).1 ((hs q).trans (DoubleCoset.out_eq' q).symm)
     rw [e, sq_inv hI P hF hγ hk, (_root_.GlobalTheory.StabOrder.gam_ne_zero_dvd_invariant D _ _ P.J_le (s q)).2.2 γ hγ k hk]
   · rintro ⟨h, T, hT⟩
-    haveI := ((_root_.GlobalTheory.NormSum.cls_finite_card_le D P.d).2.2 P.J P.J_le P.idx_ne).1
-    haveI := Fintype.ofFinite (Cls D P.d P.J)
+    have := ((_root_.GlobalTheory.NormSum.cls_finite_card_le D P.d).2.2 P.J P.J_le P.idx_ne).1
+    have := Fintype.ofFinite (Cls D P.d P.J)
     have h0 : 0 < P.sq h :=
       Finset.sum_pos' (fun _ _ => by positivity) ⟨T, Finset.mem_univ _, by positivity⟩
     have h1 : ∀ g, 0 ≤ P.sq g := fun g => Finset.sum_nonneg fun _ _ => by positivity

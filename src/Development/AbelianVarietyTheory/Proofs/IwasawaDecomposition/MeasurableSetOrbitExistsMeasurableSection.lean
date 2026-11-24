@@ -65,7 +65,7 @@ theorem exists_section_real {X : Type} [TopologicalSpace X] [T2Space X] [Measura
     by_cases hy : y ∈ Set.range f
     · have hc : IsCompact (f ⁻¹' {y}) := (isClosed_singleton.preimage hf).isCompact
       obtain ⟨c, hc1, hc2⟩ := hc.exists_isMinOn (f := fun c : C => (c : ℝ)) hy
-        continuous_subtype_val.continuousOn
+        continuous_subtypeVal.continuousOn
       exact ⟨c, fun _ => ⟨hc1, fun c' h' => hc2 h'⟩, fun h => absurd hy h⟩
     · exact ⟨c₀, fun h => absurd h hy, fun _ => rfl⟩
   choose τ h1 h2 using h
@@ -76,7 +76,7 @@ theorem exists_section_real {X : Type} [TopologicalSpace X] [T2Space X] [Measura
         f '' {c : C | (c : ℝ) ≤ a} ∪ ((Set.range f)ᶜ ∩ {_y | (c₀ : ℝ) ≤ a}) := by
       ext y
       simp only [Set.mem_preimage, Set.mem_Iic, Set.mem_union, Set.mem_inter_iff,
-        Set.mem_compl_iff, Set.mem_setOf_eq]
+        Set.mem_compl_iff, Set.mem_ofPred_eq]
       by_cases hy : y ∈ Set.range f
       · constructor
         · intro h
@@ -93,7 +93,7 @@ theorem exists_section_real {X : Type} [TopologicalSpace X] [T2Space X] [Measura
           · exact h.2
     rw [he]
     refine MeasurableSet.union ?_ (MeasurableSet.inter ?_ (MeasurableSet.const _))
-    · exact ((isClosed_le continuous_subtype_val continuous_const).isCompact.image
+    · exact ((isClosed_le continuous_subtypeVal continuous_const).isCompact.image
         hf).isClosed.measurableSet
     · exact (isCompact_range hf).isClosed.measurableSet.compl
   exact hm.subtype_mk (h := fun y => (τ y).2)
@@ -103,7 +103,7 @@ theorem exists_section_compact {K X : Type} [TopologicalSpace K] [CompactSpace K
     [TopologicalSpace X] [T2Space X] [MeasurableSpace X] [BorelSpace X]
     (f : K → X) (hf : Continuous f) :
     ∃ τ : X → K, Measurable τ ∧ ∀ y ∈ Set.range f, f (τ y) = y := by
-  letI := TopologicalSpace.metrizableSpaceMetric K
+  let := TopologicalSpace.metrizableSpaceMetric K
   obtain ⟨p, hp, hps⟩ := exists_nat_bool_continuous_surjective_of_compact K
   have : CompactSpace cantorSet := isCompact_iff_compactSpace.1 isCompact_cantorSet
   let q : cantorSet → K := p ∘ cantorSetHomeomorphNatToBool
@@ -128,7 +128,7 @@ theorem measurableSet_orbit_and_exists_section : ∀ (G X : Type) [Group G] [Top
   have hO : MeasurableSet {y : X | ∃ g : G, g • x₀ = y} := by
     have : {y : X | ∃ g : G, g • x₀ = y} = ⋃ n, A n := by
       ext y
-      simp only [Set.mem_setOf_eq, Set.mem_iUnion]
+      simp only [Set.mem_ofPred_eq, Set.mem_iUnion]
       constructor
       · rintro ⟨g, hg⟩
         obtain ⟨n, hn⟩ := hKU g
@@ -142,8 +142,8 @@ theorem measurableSet_orbit_and_exists_section : ∀ (G X : Type) [Group G] [Top
     have : CompactSpace (K n) := isCompact_iff_compactSpace.1 (hK n)
     have : Nonempty (K n) := ⟨⟨1, Or.inl rfl⟩⟩
     obtain ⟨τ, h1, h2⟩ := exists_section_compact (fun g : K n => (g : G) • x₀)
-      (hπ.comp continuous_subtype_val)
-    refine ⟨fun y => τ y, measurable_subtype_coe.comp h1, ?_⟩
+      (hπ.comp continuous_subtypeVal)
+    refine ⟨fun y => τ y, measurable_subtypeVal.comp h1, ?_⟩
     rintro y ⟨g, hg, hgy⟩
     exact h2 y ⟨⟨g, hg⟩, hgy⟩
   choose s hs1 hs2 using hs

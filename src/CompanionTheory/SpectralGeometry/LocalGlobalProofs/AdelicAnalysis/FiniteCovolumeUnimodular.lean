@@ -73,7 +73,7 @@ theorem unimodular_of_isFundamentalDomain :
       (MeasurableEquiv.mulRight g).map_apply 𝓕
     have e2 : ((Measure.haarScalarFactor (μ.map (· * g)) μ : ℝ≥0) : ℝ≥0∞) * μ 𝓕 = 1 * μ 𝓕 := by
       have e3 := congrArg (fun m : Measure G => m 𝓕) hc
-      simp only [Measure.smul_apply] at e3
+      simp only [smul_apply] at e3
       rw [e1, hm] at e3
       rw [one_mul]
       exact e3.symm
@@ -81,7 +81,7 @@ theorem unimodular_of_isFundamentalDomain :
     have e5 : Measure.haarScalarFactor (μ.map (· * g)) μ = 1 := ENNReal.coe_eq_one.1 e4
     rw [e5, one_smul] at hc
     exact hc
-  haveI hR : μ.IsMulRightInvariant := ⟨hmap⟩
+  have hR : μ.IsMulRightInvariant := ⟨hmap⟩
   refine ⟨h0, hR, ⟨?_⟩⟩
   let c : ℝ≥0∞ := Measure.haarScalarFactor μ.inv μ
   have hc : μ.inv = c • μ := Measure.isMulLeftInvariant_eq_smul μ.inv μ

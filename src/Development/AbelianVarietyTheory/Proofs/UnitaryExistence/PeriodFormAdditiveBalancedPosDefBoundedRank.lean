@@ -200,7 +200,7 @@ theorem betaAt_pos : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [C
     intro χ
     obtain ⟨r, hr, -⟩ := (hco χ).1
     have h : ∃ r, PsiCoord Dg.toPre χ r := ⟨r, hr⟩
-    exact ⟨h.choose, h.choose_spec, by simp only [vPsiAt, dif_pos h]⟩
+    exact ⟨h.choose, h.choose_spec, by simp only [vPsiAt, dite_eq_left h]⟩
   have hvn : ∀ χ, ∃ n : ℕ, vPsiAt Dg.toPre f p χ = (-Real.logb p ‖f ϖ‖) * n := by
     intro χ
     obtain ⟨r, hr, hvr⟩ := hv χ

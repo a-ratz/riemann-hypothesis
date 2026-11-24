@@ -108,7 +108,7 @@ theorem cont_ev (y : Sm E N) (g : GA E N) : Continuous fun k : Kinf E N => y.1 (
   have h1 : (fun k : Kinf E N => y.1 (g * infGL E N (Unitary.toUnits k))) = fun k => chart y.1 g (toL k.1) :=
     funext fun k => (chart_val y.1 g (Unitary.toUnits k)).symm
   rw [h1]
-  exact (y.2 g).continuousOn.comp_continuous continuous_subtype_val fun k => val_mem_invSet (Unitary.toUnits k)
+  exact (y.2 g).continuousOn.comp_continuous continuous_subtypeVal fun k => val_mem_invSet (Unitary.toUnits k)
 
 theorem coeff_mem (W : Submodule ℂ (Kinf E N → ℂ)) (φ : Sm E N)
     (hφ : ∀ x, (fun k : Kinf E N => φ.1 (x * infGL E N (Unitary.toUnits k))) ∈ W) (g : GA E N) :

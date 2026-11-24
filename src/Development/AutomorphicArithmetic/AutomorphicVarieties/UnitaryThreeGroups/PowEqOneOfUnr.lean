@@ -145,8 +145,8 @@ theorem UpperTheory.V.U3.char_eq_one :
       Continuous (fun g => (κ g : PadicAlgCl l)) → (∀ g, ‖(κ g : PadicAlgCl l) - 1‖ < 1) →
       (∀ (A : ValuationSubring Ω) (g : D.η.ker), (g : G ℚ Ω) ∈ Ine (F := ℚ) A → κ g = 1) → κ = 1 := by
   intro Ω _ _ _ K _ _ _ l _ c N _ e ψ D κ hc h1 hI
-  haveI : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
-  haveI := D.gd.imag
+  have : IsAlgClosure K Ω := ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
+  have := D.gd.imag
   let ι : G K Ω →* D.η.ker := (galEmb ℚ K Ω).codRestrict D.η.ker fun s => D.η_ker ▸ galEmb_mem ℚ K Ω s
   have hι : Continuous ι := (galEmbTop ℚ K Ω).1.continuous.subtype_mk _
   have hp := pow_eq_one_of_unr (κ.comp ι) (hc.comp hι) fun A g hg =>

@@ -170,7 +170,7 @@ theorem growth_spherical_bound : Formalism.FourierDecayAlt.ThreeDimData.GrowthS 
     have hU : {x : Mt k r | Matrix.of x ∈ UH (Hpk k r)} =
         ⋃ n : ℕ, {x : Mt k r | Matrix.of x ∈ UH (Hpk k r) ∧ Formalism.FourierDecayAlt.B.gN (Matrix.of x) ≤ (n : ℝ) + 1} := by
       ext x
-      simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+      simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
       constructor
       · intro hx
         obtain ⟨n, hn⟩ := exists_nat_ge (Formalism.FourierDecayAlt.B.gN (Matrix.of x))

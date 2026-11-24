@@ -148,7 +148,7 @@ theorem comap_cj_comap (I : Ideal (𝓞 E)) : (I.comap (cj E)).comap (cj E) = I 
   simp only [Ideal.mem_comap, cj_cj]
 
 theorem isMaximal_comap_cj {Q : Ideal (𝓞 E)} (hQ : Q.IsMaximal) : (Q.comap (cj E)).IsMaximal := by
-  haveI := hQ
+  have := hQ
   exact Ideal.comap_isMaximal_of_surjective (cj E) cj_surj
 
 theorem cj_mem_pow {I : Ideal (𝓞 E)} {K : ℕ} {x : 𝓞 E} (h : x ∈ (I.comap (cj E)) ^ K) :
@@ -274,7 +274,7 @@ theorem glue_two (hP : PowLoc) {L' L'' : Submodule (𝓞 E) (Fin N → E)} (h' :
   refine ⟨e₁ + (a : E) • (e₂ - e₁), pres_add p₁' (pres_smul a (pres_sub p₂' p₁')),
     pres_add p₁'' (pres_smul a (pres_sub p₂'' p₁'')), fun P hPU => ?_⟩
   by_cases hPA : P ∈ A
-  · haveI := (hAm P hPA).isPrime
+  · have := (hAm P hPA).isPrime
     exact good_pert h' h'' (g₁ P hPA) p₁' p₁'' (pres_sub p₂' p₁') (pres_sub p₂'' p₁'')
       (hK P (Finset.mem_union_left _ hPA) a (memA P hPA))
       (hK P (Finset.mem_union_left _ hPA) _ (cj_mem_pow (memA _ (hA P hPA))))
@@ -284,7 +284,7 @@ theorem glue_two (hP : PowLoc) {L' L'' : Submodule (𝓞 E) (Fin N → E)} (h' :
       refine Finset.mem_sdiff.mpr ⟨hB P hPB, fun h => hPA ?_⟩
       have h2 := hA _ h
       rwa [comap_cj_comap] at h2
-    haveI := (hBm P hPB).isPrime
+    have := (hBm P hPB).isPrime
     rw [heq]
     exact good_pert h' h'' (g₂ P hPB) p₂' p₂'' (pres_sub p₂' p₁') (pres_sub p₂'' p₁'')
       (hK P (Finset.mem_union_right _ hPB) _ (neg_mem (memB P hPBA)))

@@ -57,8 +57,8 @@ theorem finD {Γ G V : Type} [Group Γ] [Group G] [AddCommGroup V] [Module ℂ V
   classical
   set L : Subgroup Γ :=
     Subgroup.comap B.ι (Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj g')) B.U) with hL
-  haveI hfi : (B.Γ₀.subgroupOf L).FiniteIndex := ⟨hB.stab g'⟩
-  haveI : Finite (L ⧸ B.Γ₀.subgroupOf L) := Subgroup.finite_quotient_of_finiteIndex
+  have hfi : (B.Γ₀.subgroupOf L).FiniteIndex := ⟨hB.stab g'⟩
+  have : Finite (L ⧸ B.Γ₀.subgroupOf L) := Subgroup.finite_quotient_of_finiteIndex
   have hcomm' : ∀ γ, s.θ.symm (B.ι γ) = B.ι (s.θΓ.symm γ) := by
     intro γ
     apply s.θ.injective

@@ -100,10 +100,10 @@ theorem UpperTheory.V.Ws.barFacts :
       unfold Raw.Psi UpperTheory.V.Chr.Psi
       rfl
     rw [e1, bar_mul_frobenius_fields, bar_pow', hD.om_bar g]
-  haveI : Finite (ResidueField c.O) := by
+  have : Finite (ResidueField c.O) := by
     rw [Set.range_eq_univ.mpr residue_surjective] at hfin
     exact Set.finite_univ_iff.mp hfin
-  haveI := Fintype.ofFinite (ResidueField c.O)
+  have := Fintype.ofFinite (ResidueField c.O)
   have hneg : (-1 : ResidueField c.O) ≠ 1 := by
     apply Ring.neg_one_ne_one_of_char_ne_two
     rw [ringChar.eq (ResidueField c.O) l]
@@ -164,7 +164,7 @@ theorem UpperTheory.V.Ws.barFacts :
     let H : Subgroup (G ℚ Ω) := ((Units.map (residue c.O : c.O →* ResidueField c.O)).comp D.Psi).ker
     have hset : {g | Raw.bar D.Psi g = 1} = (H : Set (G ℚ Ω)) := by
       ext g
-      simp only [Set.mem_setOf_eq, SetLike.mem_coe, H, MonoidHom.mem_ker, MonoidHom.coe_comp, Function.comp_apply, Units.ext_iff, Units.coe_map, Units.val_one]
+      simp only [Set.mem_ofPred_eq, SetLike.mem_coe, H, MonoidHom.mem_ker, MonoidHom.coe_comp, Function.comp_apply, Units.ext_iff, Units.coe_map, Units.val_one]
       rfl
     rw [hset]
     refine Subgroup.isOpen_mono (H₁ := D.om.ker ⊓ D.ψ.ker) ?_ (hom.inter hD.psi_open)

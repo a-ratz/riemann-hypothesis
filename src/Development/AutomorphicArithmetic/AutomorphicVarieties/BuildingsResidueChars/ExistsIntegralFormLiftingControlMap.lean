@@ -98,7 +98,7 @@ theorem UpperTheory.exists_integral_form_lifting_controlMap :
       apply hinj
 
       rw [map_sub, hs y 1 (by rw [one_smul]; exact hE.2.1 y hyc) g i, hf0, one_mul, map_sum]
-      simp only [hae, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, map_mul]
+      simp only [hae, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_mul]
       ring
     show f (g * (1, y)) i - f g i ∈ maximalIdeal O ^ k
     rw [h1]
@@ -115,7 +115,7 @@ theorem UpperTheory.exists_integral_form_lifting_controlMap :
       apply hinj
       show algebraMap O Ω (f (g * (1, u)) i) = algebraMap O Ω (f g i)
       rw [hs u 1 (by rw [one_smul]; exact hE.1 u hu') g i, hf0, one_mul]
-      simp only [W.row_N _ (X.I.N_le (inv_mem hu')), ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [W.row_N _ (X.I.N_le (inv_mem hu')), ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     · intro t
       funext g i
       apply hinj
@@ -127,9 +127,9 @@ theorem UpperTheory.exists_integral_form_lifting_controlMap :
         rw [← Units.val_inv_eq_inv_val, ← map_inv]
         rfl
       have hθ' : algebraMap O Ω (((θ t)⁻¹ : Oˣ) : O) = (algebraMap O Ω (θ t))⁻¹ := map_units_inv (algebraMap O Ω) (θ t)
-      simp only [hr, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      simp only [hr, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       rw [hχ, hθ', hθ t]
-      simp only [MonoidHom.comp_apply, Units.coe_map, Units.val_inv_eq_inv_val, MonoidHom.coe_coe]
+      simp only [MonoidHom.comp_apply, Units.coe_map, Units.val_inv_eq_inv_val, MonoidHom.coe_ofClass]
       rw [mul_inv, mul_assoc]
       rfl
     · intro k

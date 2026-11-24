@@ -390,7 +390,7 @@ variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 theorem relIndex_ne_zero_of_isCompact_of_isOpen {K L : Subgroup G} (hK : IsCompact (K : Set G))
     (hL : IsOpen (L : Set G)) : L.relIndex K ≠ 0 := by
   have : CompactSpace K := isCompact_iff_compactSpace.1 hK
-  have hopen : IsOpen ((L.subgroupOf K : Subgroup K) : Set K) := hL.preimage continuous_subtype_val
+  have hopen : IsOpen ((L.subgroupOf K : Subgroup K) : Set K) := hL.preimage continuous_subtypeVal
   have := Subgroup.quotient_finite_of_isOpen (L.subgroupOf K) hopen
   exact Subgroup.index_ne_zero_of_finite
 

@@ -162,11 +162,11 @@ theorem UpperTheory.V.AlgebraTools.IsCplAt.quotient :
       Function.Surjective (algebraMap B C) →
       RingHom.ker (algebraMap B C) = (RingHom.ker (algebraMap R S)).map (algebraMap R B) → IsCplAt S q C := by
   intro R _ _ p B _ _ _ S _ _ q C _ _ _ _ _ _ _ h hRS hq hBC hker
-  haveI := h.noeth
-  haveI := h.complete
+  have := h.noeth
+  have := h.complete
   have hp := h.isPrime
   have hN : IsNoetherianRing C := isNoetherianRing_of_surjective B C (algebraMap B C) hBC
-  haveI hloc : IsLocalHom (algebraMap B C) := IsLocalHom.of_surjective _ hBC
+  have hloc : IsLocalHom (algebraMap B C) := IsLocalHom.of_surjective _ hBC
   have hm : (maximalIdeal B).map (algebraMap B C) = maximalIdeal C :=
     IsLocalRing.map_maximalIdeal_of_surjective _ hBC
   have hsq : ∀ r : R, algebraMap S C (algebraMap R S r) = algebraMap B C (algebraMap R B r) := by
@@ -236,7 +236,7 @@ private theorem dim_quot {B : Type} [CommRing B] (I S : Ideal B) (h : I ≤ S.ra
   have hmin : P' ∈ S.minimalPrimes := by
     refine ⟨⟨hP'.1.1, le_sup_left.trans hP'.1.2⟩, ?_⟩
     intro Q hQ hQP
-    haveI := hQ.1
+    have := hQ.1
     exact hP'.2 ⟨hQ.1, sup_le hQ.2 (h.trans ((Ideal.IsPrime.radical_le_iff hQ.1).mpr hQ.2))⟩ hQP
   rw [ringKrullDim_eq_of_ringEquiv (DoubleQuot.quotQuotEquivQuotSup I P'), sup_eq_right.mpr hIP]
   exact hd P' hmin
@@ -250,8 +250,8 @@ theorem UpperTheory.V.Pa.Core.outOfNil :
     rw [Ideal.map_le_iff_le_comap, (hcpl i).comap_eq]
     exact hq i
   have hJne : ∀ i, J i ≠ ⊤ := fun i h => (IsLocalRing.maximalIdeal.isMaximal (B i)).ne_top (top_le_iff.mp (h ▸ hJmax i))
-  haveI : ∀ i, Nontrivial (B i ⧸ J i) := fun i => Ideal.Quotient.nontrivial_iff.mpr (hJne i)
-  haveI : ∀ i, IsLocalRing (B i ⧸ J i) := fun i => .of_surjective' _ Ideal.Quotient.mk_surjective
+  have : ∀ i, Nontrivial (B i ⧸ J i) := fun i => Ideal.Quotient.nontrivial_iff.mpr (hJne i)
+  have : ∀ i, IsLocalRing (B i ⧸ J i) := fun i => .of_surjective' _ Ideal.Quotient.mk_surjective
   have hker : ∀ i, J i ≤ RingHom.ker (Ideal.Quotient.mk (J i)) := fun i => by rw [Ideal.mk_ker]
   have hcomap : ∀ i (Z : Ideal (B i ⧸ J i)),
       (Z.comap (algebraMap (R ⧸ ii) (B i ⧸ J i))).comap (Ideal.Quotient.mk ii) =
@@ -281,11 +281,11 @@ theorem UpperTheory.V.Pa.Core.outOfNil :
         rw [Ideal.mk_ker, Ideal.mk_ker])
   · intro P hP
     exact dim_quot (J i) (S i) (Ideal.map_le_iff_le_comap.mpr (hrad i)) d (hdim i) P hP
-  · haveI := hQ
+  · have := hQ
     rw [Ideal.map_le_iff_le_comap, hcomap]
     exact hfib i _ (Ideal.comap_isPrime _ Q) (hJle i Q) ((hgen i Q).mp hgQ)
-  · haveI := hZ
-    haveI := hQ
+  · have := hZ
+    have := hQ
     rw [hcomap] at hQq
     obtain ⟨Z'', hZ''p, hSZ'', hZ''⟩ := hmove i i' (Z.comap (Ideal.Quotient.mk (J i)))
       (Q.comap (Ideal.Quotient.mk (J i))) (Ideal.comap_isPrime _ Z) (Ideal.comap_isPrime _ Q)
@@ -371,12 +371,12 @@ theorem UpperTheory.V.AlgebraTools.supportDim_le_of_finite :
     refine Module.mem_annihilator.mpr (fun n => ?_)
     have h := LinearMap.congr_fun hq n
     exact h
-  haveI : Algebra.IsIntegral L (B ⧸ Module.annihilator B N) :=
+  have : Algebra.IsIntegral L (B ⧸ Module.annihilator B N) :=
     ⟨fun q => (isIntegral_algHom_iff g hinj).mp (Algebra.IsIntegral.isIntegral _)⟩
   exact Order.krullDim_le_of_strictMono
     (fun P => (⟨Ideal.comap (algebraMap L (B ⧸ Module.annihilator B N)) P.asIdeal, inferInstance⟩ :
       PrimeSpectrum L))
-    (fun P Q h => Ideal.IsIntegral.comap_lt_comap h)
+    (fun P Q h => Ideal.IsIntegral.under_lt_under h)
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.CaDimFin =====
@@ -526,8 +526,8 @@ private lemma flat_of_isCplAt {R : Type} [CommRing R] [IsNoetherianRing R] {q : 
     have : (s : R) ∈ (maximalIdeal B).comap (algebraMap R B) := hn
     rwa [h.comap_eq] at this
   let S := Localization.AtPrime q
-  letI : Algebra S B := (IsLocalization.lift (M := q.primeCompl) hu).toAlgebra
-  haveI : IsScalarTower R S B := IsScalarTower.of_algebraMap_eq fun x =>
+  let : Algebra S B := (IsLocalization.lift (M := q.primeCompl) hu).toAlgebra
+  have : IsScalarTower R S B := IsScalarTower.of_algebraMap_eq fun x =>
     (IsLocalization.lift_eq (M := q.primeCompl) hu x).symm
   have hm : (maximalIdeal S).map (algebraMap S B) = maximalIdeal B := by
     rw [← Localization.AtPrime.map_eq_maximalIdeal, Ideal.map_map, ← IsScalarTower.algebraMap_eq,
@@ -536,7 +536,7 @@ private lemma flat_of_isCplAt {R : Type} [CommRing R] [IsNoetherianRing R] {q : 
       b ∈ (maximalIdeal S ^ n • ⊤ : Submodule S B) ↔ b ∈ maximalIdeal B ^ n := by
     intro n b
     rw [Ideal.smul_top_eq_map, Submodule.restrictScalars_mem, Ideal.map_pow, hm]
-  haveI : IsAdicComplete (maximalIdeal S) B :=
+  have : IsAdicComplete (maximalIdeal S) B :=
     { toIsHausdorff := (IsHausdorff.map_algebraMap_iff (S := B)).1 (by rw [hm]; infer_instance)
       toIsPrecomplete := (IsPrecomplete.map_algebraMap_iff (S := B)).1 (by rw [hm]; infer_instance) }
   have hsurj : Function.Surjective
@@ -579,8 +579,8 @@ private lemma flat_of_isCplAt {R : Type} [CommRing R] [IsNoetherianRing R] {q : 
   let e : AdicCompletion (maximalIdeal S) S ≃ₗ[S] B :=
     ((LinearEquiv.ofBijective _ ⟨hinj, hsurj⟩).restrictScalars S).trans
       (AdicCompletion.ofLinearEquiv (maximalIdeal S) B).symm
-  haveI : Module.Flat S B := Module.Flat.of_linearEquiv e.symm
-  haveI : Module.Flat R S := IsLocalization.flat S q.primeCompl
+  have : Module.Flat S B := Module.Flat.of_linearEquiv e.symm
+  have : Module.Flat R S := IsLocalization.flat S q.primeCompl
   exact Module.Flat.trans R S B
 
 private lemma smul_mem_of_dense {L R B W : Type} [CommRing L] [CommRing R] [CommRing B]
@@ -638,8 +638,8 @@ private lemma finite_of_dense {L R B N : Type} [CommRing L] [IsLocalRing L] [Com
     (hspan : Submodule.span B (U : Set N) = ⊤) : Module.Finite L N := by
   obtain ⟨n, f, hf⟩ : ∃ (n : ℕ) (f : (Fin n → L) →ₗ[L] N), LinearMap.range f = U :=
     (Submodule.fg_iff_exists_fin_linearMap L N).1 hfg
-  haveI := precomplete_pi (maximalIdeal L) n
-  haveI : IsHausdorff (maximalIdeal L) N := IsHausdorff.of_map hloc
+  have := precomplete_pi (maximalIdeal L) n
+  have : IsHausdorff (maximalIdeal L) N := IsHausdorff.of_map hloc
   refine Module.Finite.of_surjective f (surjective_of_mkQ_comp_surjective (I := maximalIdeal L) ?_)
   let P : Submodule B N := (maximalIdeal L).map (algebraMap L B) • ⊤
   have hP : ∀ x, x ∈ P ↔ x ∈ (maximalIdeal L • ⊤ : Submodule L N) := by
@@ -657,9 +657,9 @@ private lemma finite_of_dense {L R B N : Type} [CommRing L] [IsLocalRing L] [Com
       rw [Submodule.map_smul''] at this
       exact Submodule.smul_mono le_rfl le_top this
     exact (Submodule.Quotient.mk_eq_zero P).2 this
-  haveI : IsArtinian L (F ⧸ Q) := by
-    letI : Field (L ⧸ maximalIdeal L) := Ideal.Quotient.field _
-    haveI : Module.Finite (L ⧸ maximalIdeal L) (F ⧸ Q) :=
+  have : IsArtinian L (F ⧸ Q) := by
+    let : Field (L ⧸ maximalIdeal L) := Ideal.Quotient.field _
+    have : Module.Finite (L ⧸ maximalIdeal L) (F ⧸ Q) :=
       Module.Finite.of_restrictScalars_finite L _ _
     exact isArtinian_of_surjective_algebraMap (R := L ⧸ maximalIdeal L)
       Ideal.Quotient.mk_surjective
@@ -723,7 +723,7 @@ private lemma free_of_flat {Λ L N : Type} [CommRing Λ] [CommRing L] [IsLocalRi
     [IsNoetherianRing L] [Algebra Λ L] [AddCommGroup N] [Module Λ N] [Module L N]
     [IsScalarTower Λ L N] [Module.Flat Λ N] [Module.Finite L N] (p : Ideal Λ)
     (hp : p.map (algebraMap Λ L) = maximalIdeal L) : Module.Free L N := by
-  haveI : Module.FinitePresentation L N := Module.finitePresentation_of_finite L N
+  have : Module.FinitePresentation L N := Module.finitePresentation_of_finite L N
   apply Module.free_of_maximalIdeal_rTensor_injective
   have hmem : ∀ x : p, algebraMap Λ L x ∈ maximalIdeal L := fun x =>
     hp ▸ Ideal.mem_map_of_mem _ x.2
@@ -799,9 +799,9 @@ theorem UpperTheory.Reformulated.B.FlatnessPrecompleteProducts.finite_free_baseC
   have := hL.noeth
   have := hB.noeth
   have := hL.complete
-  haveI : Module.Finite R M := Module.Finite.of_restrictScalars_finite Λ R M
-  haveI : Module.Flat R B := flat_of_isCplAt hB
-  haveI : Module.Flat Λ (B ⊗[R] M) := flat_tensor
+  have : Module.Finite R M := Module.Finite.of_restrictScalars_finite Λ R M
+  have : Module.Flat R B := flat_of_isCplAt hB
+  have : Module.Flat Λ (B ⊗[R] M) := flat_tensor
   have hloc : (maximalIdeal L).map (algebraMap L B) ≤ maximalIdeal B := by
     rw [← map_eq_max hL, Ideal.map_map, ← IsScalarTower.algebraMap_eq, Ideal.map_le_iff_le_comap,
       IsScalarTower.algebraMap_eq Λ R B, ← Ideal.comap_comap, hB.comap_eq, hpq]
@@ -815,7 +815,7 @@ theorem UpperTheory.Reformulated.B.FlatnessPrecompleteProducts.finite_free_baseC
     rw [← hB.comap_eq]
     exact hn
   let φ : M →ₗ[Λ] B ⊗[R] M := (TensorProduct.mk R B M 1).restrictScalars Λ
-  haveI : Module.Finite L (B ⊗[R] M) := by
+  have : Module.Finite L (B ⊗[R] M) := by
     refine finite_of_dense hloc hd (Submodule.span L (Set.range φ)) ?_ ?_ ?_
     · obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := Λ) (M := M)
       rw [← LinearMap.coe_range, LinearMap.range_eq_map, ← hs, Submodule.map_span,
@@ -971,8 +971,8 @@ private theorem pmDim_step {L B σ M N : Type} [CommRing L] [IsRegularLocalRing 
   · have htop : Module.annihilator B M = ⊤ := Module.annihilator_eq_top_iff.mpr hM
     rw [htop] at hZ
     exact absurd (top_le_iff.mp hZ.1.2) hZ.1.1.ne_top
-  · letI : Module L M := Module.compHom M (algebraMap L B)
-    haveI : IsScalarTower L B M := ⟨fun a b m => by
+  · let : Module L M := Module.compHom M (algebraMap L B)
+    have : IsScalarTower L B M := ⟨fun a b m => by
       show (a • b) • m = algebraMap L B a • (b • m)
       rw [Algebra.smul_def, mul_smul]⟩
     let eσ : Fin (Fintype.card σ) ≃ σ := (Fintype.equivFin σ).symm
@@ -994,38 +994,38 @@ theorem UpperTheory.V.Pa.Core.pmDim :
   intro Λ R σ _ _ _ _ _ c y f ii X _ _ _ _ _ P q d La B _ _ _ _ _ _ hc hq hf hy hLa hreg hdim hB
   classical
   have hYP := UpperTheory.V.Pa.Core.yPrime R σ y f P.BB P.cpl q hq hf hy
-  haveI : IsNoetherianRing P.BB := P.cpl.noeth
-  haveI : IsNoetherianRing B := hB.noeth
-  haveI : Module.Finite P.BB P.MM := P.fin
-  haveI : IsAdicComplete (maximalIdeal B) B := hB.complete
-  letI : Algebra R B := ((algebraMap P.BB B).comp (algebraMap R P.BB)).toAlgebra
-  haveI : IsScalarTower R P.BB B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsNoetherianRing P.BB := P.cpl.noeth
+  have : IsNoetherianRing B := hB.noeth
+  have : Module.Finite P.BB P.MM := P.fin
+  have : IsAdicComplete (maximalIdeal B) B := hB.complete
+  let : Algebra R B := ((algebraMap P.BB B).comp (algebraMap R P.BB)).toAlgebra
+  have : IsScalarTower R P.BB B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hRB : IsCplAt R q B := hYP.2.2.2 B hB
-  haveI : Module.Flat P.BB B := UpperTheory.V.AlgebraTools.IsCplAt.flat P.BB _ B hB
+  have : Module.Flat P.BB B := UpperTheory.V.AlgebraTools.IsCplAt.flat P.BB _ B hB
   let φ : Λ →+* B := (algebraMap R B).comp c
   have hφ : Ideal.comap φ (maximalIdeal B) = q.comap c := by
     show Ideal.comap ((algebraMap P.BB B).comp ((algebraMap R P.BB).comp c)) (maximalIdeal B) = q.comap c
     rw [← Ideal.comap_comap, ← Ideal.comap_comap, hB.comap_eq, hYP.2.1]
   obtain ⟨ψ, hψ, -⟩ := UpperTheory.V.AlgebraTools.IsCplAt.existsUnique_lift Λ (q.comap c) La hLa B φ hφ
-  letI : Algebra La B := ψ.toAlgebra
-  haveI : IsLocalHom (algebraMap La B) := by
+  let : Algebra La B := ψ.toAlgebra
+  have : IsLocalHom (algebraMap La B) := by
     show IsLocalHom ψ
     refine ((IsLocalRing.local_hom_tfae ψ).out 1 4).mpr ?_
     have hm : maximalIdeal La = (q.comap c).map (algebraMap Λ La) := by
       simpa using (UpperTheory.V.AlgebraTools.IsCplAt.map_pow_eq Λ (q.comap c) La hLa 1).symm
     rw [hm, Ideal.map_le_iff_le_comap, Ideal.comap_comap, hψ, hφ]
-  letI : Algebra Λ R := c.toAlgebra
-  letI : Algebra Λ B := φ.toAlgebra
-  haveI : IsScalarTower Λ R B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower Λ La B :=
+  let : Algebra Λ R := c.toAlgebra
+  let : Algebra Λ B := φ.toAlgebra
+  have : IsScalarTower Λ R B := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower Λ La B :=
     IsScalarTower.of_algebraMap_eq (fun x => (RingHom.congr_fun hψ x).symm)
-  haveI : IsScalarTower Λ R X := ⟨fun a r x => by
+  have : IsScalarTower Λ R X := ⟨fun a r x => by
     show (c a * r) • x = a • (r • x)
     rw [mul_smul, hc]⟩
   obtain ⟨hfin, hfree⟩ :=
     UpperTheory.V.AlgebraTools.IsCplAt.finite_free_baseChange Λ R (q.comap c) q La B X hLa hRB rfl
-  haveI := hfin
-  haveI := hfree
+  have := hfin
+  have := hfree
   let y' : σ → B := fun i => algebraMap P.BB B (algebraMap R P.BB (y i))
   obtain ⟨e1⟩ := pmDim_quot (A := P.BB) (B := B) (M := P.MM) (fun a => algebraMap R P.BB (y a))
   let e : ((B ⊗[P.BB] P.MM) ⧸ (Ideal.span (Set.range y') • ⊤ : Submodule B (B ⊗[P.BB] P.MM))) ≃ₗ[B]
@@ -1055,7 +1055,7 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.Core.pmFib :
     ∀ (R σ : Type) [CommRing R] [IsNoetherianRing R] [Fintype σ] (y : σ → R) (f : R) (ii : Ideal R) (X : Type) [AddCommGroup X] [Module R X] [Module.Finite R X] (P : PMod y f ii X) (B : Type) [CommRing B] [Algebra P.BB B] (Q : Ideal B), Q.IsPrime → (∀ a, algebraMap P.BB B (algebraMap R P.BB (y a)) ∈ Q) → (Module.annihilator B (B ⊗[P.BB] P.MM) ≤ Q ↔ Module.annihilator R X ≤ (Q.comap (algebraMap P.BB B)).comap (algebraMap R P.BB)) := by
   intro R σ _ _ _ y f ii X _ _ _ P B _ _ Q hQ hy
-  haveI := P.fin
+  have := P.fin
   let Qp : PrimeSpectrum B := ⟨Q, hQ⟩
   let q := PrimeSpectrum.comap (algebraMap P.BB B) Qp
   have h1 := Module.mem_support_iff_of_finite (R := B) (M := B ⊗[P.BB] P.MM) (p := Qp)
@@ -1092,7 +1092,7 @@ open scoped TensorProduct
 theorem UpperTheory.V.Pa.Core.pmMove :
     ∀ (BB MM B B' : Type) [CommRing BB] [IsNoetherianRing BB] [AddCommGroup MM] [Module BB MM] [Module.Finite BB MM] [CommRing B] [Algebra BB B] [CommRing B'] [IsLocalRing B'] [Algebra BB B'] (p' : Ideal BB) (Z : Ideal B), IsCplAt BB p' B' → Z.IsPrime → Module.annihilator B (B ⊗[BB] MM) ≤ Z → Z.comap (algebraMap BB B) ≤ p' → ∃ Z' : Ideal B', Z'.IsPrime ∧ Module.annihilator B' (B' ⊗[BB] MM) ≤ Z' ∧ Z'.comap (algebraMap BB B') = Z.comap (algebraMap BB B) := by
   intro BB MM B B' _ _ _ _ _ _ _ _ _ _ p' Z hB' hZ hann hle
-  haveI := hZ
+  have := hZ
   obtain ⟨Q, hQ, hQc⟩ := (IsCplAt.exists_prime_over BB p' B' hB').1 _ (Ideal.IsPrime.comap _) hle
   refine ⟨Q, hQ, ?_, hQc⟩
   let zP : PrimeSpectrum B := ⟨Z, hZ⟩
@@ -1141,11 +1141,11 @@ private theorem s5_lemma {Λ R σ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoet
     (B : ι → Type) [∀ i, CommRing (B i)] [∀ i, IsLocalRing (B i)] [∀ i, Algebra P.BB (B i)]
     (hcpl : ∀ i, IsCplAt P.BB (Ideal.map (algebraMap R P.BB) (q i)) (B i)) :
     Nonempty (PatchedSupportCompletions s ii (Module.annihilator R X) q (d + Fintype.card σ)) := by
-  haveI := P.fin
+  have := P.fin
   have hyp := fun i => yPrime R σ (fun a => s (MvPowerSeries.X a)) f P.BB P.cpl (q i) (hq i).1 (hq i).2.2.1
     (hq i).2.2.2
-  letI iAlgR : ∀ i, Algebra R (B i) := fun i => ((algebraMap P.BB (B i)).comp (algebraMap R P.BB)).toAlgebra
-  haveI iTow : ∀ i, IsScalarTower R P.BB (B i) := fun i => IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let iAlgR : ∀ i, Algebra R (B i) := fun i => ((algebraMap P.BB (B i)).comp (algebraMap R P.BB)).toAlgebra
+  have iTow : ∀ i, IsScalarTower R P.BB (B i) := fun i => IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   refine outOfNil Λ R σ s ii (Module.annihilator R X) ι q (d + Fintype.card σ) B
     (fun i => Module.annihilator (B i) (B i ⊗[P.BB] P.MM))
     (fun i => (hq i).2.1) (fun i => (hyp i).2.2.2 (B i) (hcpl i)) ?_ ?_ ?_ ?_
@@ -1177,10 +1177,10 @@ private theorem s5_lemma {Λ R σ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoet
 theorem s5 : S5 := by
   intro Λ R σ _ _ _ _ _ _ _ _ _ s U f ii M _ _ X _ _ _ _ _ hU hC hX hM1 hM2 hG ι q d hq hLa
   obtain ⟨P⟩ := pmodEx Λ R σ s U f ii M X hU hC hX hM1 hM2 hG
-  haveI : IsNoetherianRing P.BB := P.cpl.noeth
-  haveI hfinR : Module.Finite R X := by
-    letI : Algebra Λ R := (s.comp MvPowerSeries.C).toAlgebra
-    haveI : IsScalarTower Λ R X := ⟨fun a r x => by
+  have : IsNoetherianRing P.BB := P.cpl.noeth
+  have hfinR : Module.Finite R X := by
+    let : Algebra Λ R := (s.comp MvPowerSeries.C).toAlgebra
+    have : IsScalarTower Λ R X := ⟨fun a r x => by
       rw [Algebra.smul_def, mul_smul, hC]
       rfl⟩
     exact Module.Finite.of_restrictScalars_finite Λ R X
@@ -1189,7 +1189,7 @@ theorem s5 : S5 := by
   exact s5_lemma s f ii X hC P ι q d hq hLa
     (fun i => @CplAt P.BB _ (Ideal.map (algebraMap R P.BB) (q i)) (hp i))
     (fun i => by
-      haveI := hp i
+      have := hp i
       exact isCplAt_cplAt P.BB _)
 
 end UpperTheory.V.Pa

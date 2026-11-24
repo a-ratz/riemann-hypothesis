@@ -172,8 +172,8 @@ theorem exists_dvd_mul {w w' : HeightOneSpectrum (𝓞 K)} (hw : w' ≠ w) {d : 
     intro h
     rw [sup_eq_left.mpr h] at hQ
     exact w'.isPrime.ne_top hQ
-  obtain ⟨s, hs, hs'⟩ := SetLike.not_le_iff_exists.mp h1
-  obtain ⟨u, hu, hu'⟩ := SetLike.not_le_iff_exists.mp h2
+  obtain ⟨s, hs, hs'⟩ := IsConcreteLE.not_le_iff_exists.mp h1
+  obtain ⟨u, hu, hu'⟩ := IsConcreteLE.not_le_iff_exists.mp h2
   refine ⟨s, hs', u, hu', ?_⟩
   rw [← Ideal.mem_span_singleton, hdQ, mul_comm u]
   exact Ideal.mul_mem_mul hs hu
@@ -192,7 +192,7 @@ theorem span_colLat_one : Submodule.span K (colLat (1 : GL (Fin n) K) : Set (Fin
 
 theorem exists_isBasisAt_one (M : Submodule (𝓞 K) (Fin n → K)) (hM : Submodule.IsFullLattice K M) :
     ∃ a : 𝓞 K, a ≠ 0 ∧ ∀ w : HeightOneSpectrum (𝓞 K), a ∉ w.asIdeal → IsBasisAt w M 1 := by
-  letI : Submodule.IsFullLattice K M := hM
+  let : Submodule.IsFullLattice K M := hM
   obtain ⟨a, ha0, ha⟩ := exists_smul_le_of_fg (colLat (1 : GL (Fin n) K)) M hM.fg
     (fun x _ => by rw [span_colLat_one]; trivial)
   obtain ⟨b, hb0, hb⟩ := exists_smul_le_of_fg M (colLat (1 : GL (Fin n) K))

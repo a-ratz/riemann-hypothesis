@@ -214,7 +214,7 @@ theorem Tj_eq (h0 : ϖ ≠ 0) (j : ℕ) :
   congr 1
   ext g
   rw [mem_doset, e]
-  simp only [Set.mem_setOf_eq, ← Units.val_mul, Units.val_inj]
+  simp only [Set.mem_ofPred_eq, ← Units.val_mul, Units.val_inj]
 
 theorem cartan (h0 : ϖ ≠ 0) (hu : IsUnifV E P ϖ) (g : GL (Fin n) (P.adicCompletion E)) :
     ∃ a : Fin n → ℤ, Antitone a ∧ ∃ c ∈ GLint (Fin n) (Ov E P), ∃ d ∈ GLint (Fin n) (Ov E P), g = c * tor h0 a * d := by
@@ -292,7 +292,7 @@ theorem gen_nat (h0 : ϖ ≠ 0) (hu : IsUnifV E P ϖ) (A : Submodule ℂ (GL (Fi
   · convert ha using 3
     funext i
     have := hdk i
-    rw [if_neg (by rw [← this, hz i]; simp), hz i]; rfl
+    rw [ite_eq_right (by rw [← this, hz i]; simp), hz i]; rfl
   push_neg at hz
   obtain ⟨i₀, hi₀⟩ := hz
   have hlt : ∑ i, (d i - 1) < s := by

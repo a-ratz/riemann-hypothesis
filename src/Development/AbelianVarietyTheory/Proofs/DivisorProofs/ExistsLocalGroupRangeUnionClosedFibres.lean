@@ -118,10 +118,10 @@ theorem _root_.GlobalTheory.SS.NeutralPart.geometricallyConnected_of_section {X 
     (h : ∀ s : S, _root_.IsConnected (f ⁻¹' {s})) : GeometricallyConnected f := by
   rw [GeometricallyConnected.iff_geometricallyConnected_fiber]
   intro s
-  haveI : ConnectedSpace (f ⁻¹' {s}) := isConnected_iff_connectedSpace.mp (h s)
-  haveI : ConnectedSpace (f.fiber s) :=
+  have : ConnectedSpace (f ⁻¹' {s}) := isConnected_iff_connectedSpace.mp (h s)
+  have : ConnectedSpace (f.fiber s) :=
     (f.fiberHomeo s).symm.surjective.connectedSpace (f.fiberHomeo s).symm.continuous
-  haveI : LocallyOfFiniteType (f.fiberToSpecResidueField s) :=
+  have : LocallyOfFiniteType (f.fiberToSpecResidueField s) :=
     instLocallyOfFiniteTypeSndScheme f (S.fromSpecResidueField s)
   exact _root_.GlobalTheory.RatPointConn.of_section (k := S.residueField s)
     (f.fiberToSpecResidueField s)
@@ -393,7 +393,7 @@ theorem exists_faithfullyFlat_factor_localScheme :
     (HasRingHomProperty.Spec_iff (P := @Flat)).2 hflat, ⟨?_⟩, inferInstance⟩
   set φ := (Scheme.stalkClosedPointTo (R := CommRingCat.of R₁) ξ).hom with hφ
   have hl : IsLocalHom φ := by rw [hφ]; infer_instance
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have : Module.Flat (S.presheaf.stalk (ξ (closedPoint R₁))) R₁ := hflat
   have : IsLocalHom (algebraMap (S.presheaf.stalk (ξ (closedPoint R₁))) R₁) := hl
   have := Module.FaithfullyFlat.of_flat_of_isLocalHom
@@ -523,7 +523,7 @@ theorem exists_spread_basicOpen_agree : ∀ (R : Type) [CommRing R] [IsDomain R]
       ∃ u' : Y ⟶ Z, u' ≫ pZ = a ≫ pB ∧ ∀ (T : Scheme.{0}) (t₀ : T ⟶ B₀) (t : T ⟶ Y),
         t₀ ≫ φ₀ = t ≫ a → t₀ ≫ u₀ = t ≫ u' := by
   intro R _ _ x B Z B₀ pB pZ hfl hqc hqs hsep hlfp φ₀ u₀ hφfl hu₀ u hu hagree
-  haveI := hfl; haveI := hqc; haveI := hqs; haveI := hsep; haveI := hlfp; haveI := hφfl
+  have := hfl; have := hqc; have := hqs; have := hsep; have := hlfp; have := hφfl
   obtain ⟨V, hxV, -, w, g₀, hw, hwg, hg₀⟩ :=
     GlobalTheory.StalkLimit.exists_spread (IsPullback.of_hasPullback pB ((Sp R).fromSpecStalk x)) pZ u hu
   obtain ⟨_, ⟨g, rfl⟩, hxg, hgV⟩ :=
@@ -531,16 +531,16 @@ theorem exists_spread_basicOpen_agree : ∀ (R : Type) [CommRing R] [IsDomain R]
 
   have key : pullback.fst φ₀ (pullback.fst pB V.ι) ≫ u₀ = pullback.snd φ₀ (pullback.fst pB V.ι) ≫ g₀ := by
     let qN : pullback φ₀ (pullback.fst pB V.ι) ⟶ Sp R := pullback.fst _ _ ≫ φ₀ ≫ pB
-    haveI : Flat qN := inferInstance
-    haveI : IsDominant ((Sp R).fromSpecStalk x) := by
+    have : Flat qN := inferInstance
+    have : IsDominant ((Sp R).fromSpecStalk x) := by
       refine ⟨Dense.mono (s₁ := {genericPoint (Sp R)}) ?_ ?_⟩
       · rw [Set.singleton_subset_iff, Scheme.range_fromSpecStalk]
         exact genericPoint_specializes x
       · rw [dense_iff_closure_eq]
         exact (genericPoint_spec (Sp R)).trans (by simp)
-    haveI : IsSchemeTheoreticallyDominant ((Sp R).fromSpecStalk x) := .of_isDominant _
+    have : IsSchemeTheoreticallyDominant ((Sp R).fromSpecStalk x) := .of_isDominant _
     have hPB := IsPullback.of_hasPullback qN ((Sp R).fromSpecStalk x)
-    haveI : IsSchemeTheoreticallyDominant (pullback.fst qN ((Sp R).fromSpecStalk x)) :=
+    have : IsSchemeTheoreticallyDominant (pullback.fst qN ((Sp R).fromSpecStalk x)) :=
       .of_isPullback hPB.flip
     refine ext_of_schDom pZ ?_ (pullback.fst qN ((Sp R).fromSpecStalk x)) ?_
     · simp only [Category.assoc, hu₀, hg₀]
@@ -624,7 +624,7 @@ theorem grpObj_of_agree : ∀ (R : Type) [CommRing R] [IsDomain R] (f g : R), f 
       t₁ ≫ awayMap g = t₀ ≫ awayMap f → (toUnit (Over.mk t₁) ≫ o).left ≫ h = (1 : Over.mk t₀ ⟶ A).left ≫ i := by
     intro T t₁ t₀ e
     simpa using ho T t₁ t₀ e
-  letI : MonObj H :=
+  let : MonObj H :=
     { one := o
       mul := m
       one_mul := SpreadAb.hom_ext_of_points j fun T t => by
@@ -659,7 +659,7 @@ theorem grpObj_of_agree : ∀ (R : Type) [CommRing R] [IsDomain R] (f g : R), f 
         apply inj
         rw [hm _ _ _ _ _ _ _ (hm _ _ _ _ _ _ _ hx' hy') hz', hm _ _ _ _ _ _ _ hx' (hm _ _ _ _ _ _ _ hy' hz'),
           _root_.mul_assoc] }
-  letI : GrpObj H :=
+  let : GrpObj H :=
     { inv := n
       left_inv := SpreadAb.hom_ext_of_points j fun T t => by
         obtain ⟨x', hx'⟩ := key (w T) t
@@ -1025,7 +1025,7 @@ theorem exists_to_stalk (R : Type) [CommRing R] (x : Sp R) [x.asIdeal.IsPrime] :
       t ≫ (Sp R).fromSpecStalk x =
         Spec.map (CommRingCat.ofHom (algebraMap R (Localization.AtPrime x.asIdeal))) := by
   let y : PrimeSpectrum R := x
-  haveI := StructureSheaf.IsLocalization.to_stalk R y
+  have := StructureSheaf.IsLocalization.to_stalk R y
   let e := IsLocalization.algEquiv (R := R) y.asIdeal.primeCompl
     ((Spec.structureSheaf R).presheaf.stalk y) (Localization.AtPrime y.asIdeal)
   refine ⟨Spec.map (CommRingCat.ofHom e.toRingEquiv.toRingHom), ?_⟩
@@ -1049,19 +1049,19 @@ theorem away_finiteType (R : Type) [CommRing R] (f : R) (P A : Scheme.{0})
   have hψ : ψ.comp (algebraMap R (Localization.Away f)) = algebraMap R D :=
     IsLocalization.Away.lift_comp f hu
   let k : Sp D ⟶ Sp C := Spec.map (CommRingCat.ofHom (algebraMap C D))
-  haveI : IsOpenImmersion k := IsOpenImmersion.of_isLocalization (algebraMap R C f)
+  have : IsOpenImmersion k := IsOpenImmersion.of_isLocalization (algebraMap R C f)
   have hψ' : Spec.map (CommRingCat.ofHom ψ) ≫ GlobalTheory.Desc.awayMap f =
       Spec.map (CommRingCat.ofHom (algebraMap R D)) := by
     rw [← hψ, CommRingCat.ofHom_comp, Spec.map_comp]
   have w : (k ≫ j) ≫ p = Spec.map (CommRingCat.ofHom ψ) ≫ GlobalTheory.Desc.awayMap f := by
     rw [hψ', Category.assoc, hj, IsScalarTower.algebraMap_eq R C D, CommRingCat.ofHom_comp,
       Spec.map_comp]
-  haveI : IsOpenImmersion (GlobalTheory.Desc.awayMap f) := IsOpenImmersion.of_isLocalization f
-  haveI : IsOpenImmersion ιA := MorphismProperty.of_isPullback h.flip ‹_›
+  have : IsOpenImmersion (GlobalTheory.Desc.awayMap f) := IsOpenImmersion.of_isLocalization f
+  have : IsOpenImmersion ιA := MorphismProperty.of_isPullback h.flip ‹_›
   let l := h.lift _ _ w
   have hl : l ≫ ιA = k ≫ j := h.lift_fst _ _ w
-  haveI : IsOpenImmersion (l ≫ ιA) := by rw [hl]; infer_instance
-  haveI : IsOpenImmersion l := IsOpenImmersion.of_comp l ιA
+  have : IsOpenImmersion (l ≫ ιA) := by rw [hl]; infer_instance
+  have : IsOpenImmersion l := IsOpenImmersion.of_comp l ιA
   have : LocallyOfFiniteType (Spec.map (CommRingCat.ofHom (algebraMap R D))) := by
     rw [← hψ', ← h.lift_snd _ _ w]
     change LocallyOfFiniteType ((l ≫ a) ≫ _)
@@ -1076,8 +1076,8 @@ theorem ne_zero (R : Type) [CommRing R] (f : R) (P A : Scheme.{0}) [IsIntegral P
     (hj : j ≫ p = Spec.map (CommRingCat.ofHom (algebraMap R C))) :
     algebraMap R C f ≠ 0 := by
   intro h0
-  haveI : IsOpenImmersion (GlobalTheory.Desc.awayMap f) := IsOpenImmersion.of_isLocalization f
-  haveI : IsOpenImmersion ιA := MorphismProperty.of_isPullback h.flip ‹_›
+  have : IsOpenImmersion (GlobalTheory.Desc.awayMap f) := IsOpenImmersion.of_isLocalization f
+  have : IsOpenImmersion ιA := MorphismProperty.of_isPullback h.flip ‹_›
   obtain ⟨y, ⟨c, hc⟩, ⟨t, ht⟩⟩ := nonempty_preirreducible_inter
     j.isOpenEmbedding.isOpen_range ιA.isOpenEmbedding.isOpen_range
     (Set.range_nonempty _) (Set.range_nonempty _)
@@ -1102,8 +1102,8 @@ theorem affine_case (R : Type) [CommRing R] [IsNoetherianRing R] (f : R) (P A : 
     (hj : (j ≫ V.ι) ≫ p = Spec.map (CommRingCat.ofHom (algebraMap R C)))
     (c : Sp C) (hc : (p ((j ≫ V.ι) c)).asIdeal ≤ x.asIdeal) :
     ∃ W : P.Opens, (j ≫ V.ι) c ∈ W ∧ W ≤ V ∧ LocallyOfFiniteType (W.ι ≫ p) := by
-  haveI : Nonempty (Sp C) := ⟨c⟩
-  haveI := x.isPrime
+  have : Nonempty (Sp C) := ⟨c⟩
+  have := x.isPrime
   have h1 := ne_zero R f P A p ιA a h C (j ≫ V.ι) hj
   have h2 := away_finiteType R f P A p ιA a h C (j ≫ V.ι) hj
   obtain ⟨t, ht⟩ := exists_to_stalk R x
@@ -1117,7 +1117,7 @@ theorem affine_case (R : Type) [CommRing R] [IsNoetherianRing R] (f : R) (P A : 
   obtain ⟨g, hg, hft⟩ := _root_.GlobalTheory.Desc.exists_finiteType_away_of_atPrime R C f x.asIdeal h1 h2 h4
   let D := Localization.Away (algebraMap R C g)
   let k : Sp D ⟶ Sp C := Spec.map (CommRingCat.ofHom (algebraMap C D))
-  haveI : IsOpenImmersion k := IsOpenImmersion.of_isLocalization (algebraMap R C g)
+  have : IsOpenImmersion k := IsOpenImmersion.of_isLocalization (algebraMap R C g)
   have h5 : p ((j ≫ V.ι) c) = PrimeSpectrum.comap (algebraMap R C) c := by
     rw [← Scheme.Hom.comp_apply, hj]; rfl
   refine ⟨(k ≫ j ≫ V.ι).opensRange, ?_, ?_, ?_⟩
@@ -1147,15 +1147,15 @@ theorem locally_finiteType_near : ∀ (R : Type) [CommRing R] [IsNoetherianRing 
   obtain ⟨_, ⟨W₀, hW₀, rfl⟩, hzW, hWV⟩ :=
     P.isBasis_affineOpens.exists_subset_of_mem_open hz V.isOpen
   replace hW₀ : IsAffineOpen W₀ := hW₀
-  haveI : Nonempty W₀ := ⟨⟨z, hzW⟩⟩
+  have : Nonempty W₀ := ⟨⟨z, hzW⟩⟩
   have hr : Set.range hW₀.fromSpec ⊆ Set.range V.ι := by
     rw [hW₀.range_fromSpec, Scheme.Opens.range_ι]; exact hWV
   let j := IsOpenImmersion.lift V.ι hW₀.fromSpec hr
   have hj : j ≫ V.ι = hW₀.fromSpec := IsOpenImmersion.lift_fac _ _ _
-  haveI : IsOpenImmersion (j ≫ V.ι) := by rw [hj]; infer_instance
-  haveI : IsOpenImmersion j := IsOpenImmersion.of_comp j V.ι
+  have : IsOpenImmersion (j ≫ V.ι) := by rw [hj]; infer_instance
+  have : IsOpenImmersion j := IsOpenImmersion.of_comp j V.ι
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (hW₀.fromSpec ≫ p)
-  letI : Algebra R Γ(P, W₀) := φ.hom.toAlgebra
+  let : Algebra R Γ(P, W₀) := φ.hom.toAlgebra
   obtain ⟨c, hc⟩ : z ∈ Set.range hW₀.fromSpec := by rw [hW₀.range_fromSpec]; exact hzW
   have hc' : (j ≫ V.ι) c = z := by rw [hj]; exact hc
   have := affine_case R f P A p ιA a h x V Γ(P, W₀) j (by rw [hj, ← hφ]; rfl) c

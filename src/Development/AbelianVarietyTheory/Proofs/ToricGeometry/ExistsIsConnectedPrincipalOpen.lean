@@ -173,10 +173,10 @@ theorem exists_isConnected_principalOpen :
   obtain ⟨d, j, a, p, q, -, hinj, hfin, hmon, hirr, hp, hq, hspan, hr⟩ := H1 A
   choose r hr using hr
   obtain ⟨q', hq', f', hf'⟩ : ∃ q' : MvPolynomial (Fin d) ℂ, q' ≠ 0 ∧ f ∣ j q' := by
-    letI : Algebra (MvPolynomial (Fin d) ℂ) A := j.toRingHom.toAlgebra
-    haveI : Module.Finite (MvPolynomial (Fin d) ℂ) A := hfin
+    let : Algebra (MvPolynomial (Fin d) ℂ) A := j.toRingHom.toAlgebra
+    have : Module.Finite (MvPolynomial (Fin d) ℂ) A := hfin
     have hint : IsIntegral (MvPolynomial (Fin d) ℂ) f := Algebra.IsIntegral.isIntegral f
-    exact hint.isAlgebraic.exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero hf)
+    exact hint.isAlgebraic.exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero hf)
   have hmul : j q * f' * f = j (q * q') := by rw [map_mul, hf']; ring
   have hqq : q * q' ≠ 0 := mul_ne_zero hq hq'
   refine ⟨j q * f', ?_, ?_⟩

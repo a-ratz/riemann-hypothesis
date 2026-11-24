@@ -124,7 +124,7 @@ theorem thetaValue_natural_field : ∀ (E : Type) [Field E] [NumberField E] [IsC
   obtain ⟨U, iU, jU, ψ₁, ψ₂, hcomm, -, hinj⟩ :=
     exists_faithfullyFlat_pushout c.F S T₁ S₁ (κ.comp φ) φ₁ hff₁
   have hκ : Function.Injective κ := hff₂.injective
-  haveI : Nontrivial U := (hinj.comp hκ).nontrivial
+  have : Nontrivial U := (hinj.comp hκ).nontrivial
   obtain ⟨K, iK, jK, ⟨π⟩⟩ := exists_algHom_field c.F U
   have hψ : (π.comp ψ₁).comp (κ.comp φ) = (π.comp ψ₂).comp φ₁ := by
     rw [AlgHom.comp_assoc, hcomm, AlgHom.comp_assoc]
@@ -163,9 +163,9 @@ namespace GlobalTheory.PtTie
 
 theorem evI_eq_thExpr_ext : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), letI := H.starRing; ∀ (nab : NabV Xo c), IsNab Xo c nab → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (F : Type) [Field F] [Algebra T.Fr F], letI := io.toAlgebra; letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra; ∀ (φ : T.Fr →ₐ[c.F] F), φ.toRingHom = algebraMap T.Fr F → ∀ (yF : FrPt Xo c F), FrMap φ y.1 yF → ∀ (a : ((E →+* ℂ) × ℕ → ℕ)) (n : ℕ) (xx : Fin n → Dw.La) (Pp : MvPolynomial (LtN Dw n) c.F), Pp ∈ harmA c a n → ∀ Fs : Fin n → LB.Sec (LPow Xo.univ.t.G Xo.univ.t.PP.L ((l.M : ℤ) ^ 2) (ptO Xo yF.x)), (∀ i, IsVtOver Xo.univ.t.G Xo.univ.t.PP l.M (KilledBy Xo (l.Mb ^ 2)) yF.s (levPt Xo yF.x (xx i)) (Fs i)) → ∀ f, IsThRule Xo c nab xx Pp f → algebraMap T.Fr F (evI y f) = thExpr Xo c nab yF Pp Fs := by
   intro E _ _ _ H Dw l Xo c nab hnab T io y F _ _ φ hφ yF hm a n xx Pp hP Fs hFs f hf
-  letI := H.starRing
-  letI := io.toAlgebra
-  letI : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
+  let := H.starRing
+  let := io.toAlgebra
+  let : Algebra c.F F := ((algebraMap T.Fr F).comp io).toAlgebra
   have hyT := y.2.1
   unfold evI evR evalAt
   rw [dite_eq_left hyT]

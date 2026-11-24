@@ -70,9 +70,9 @@ theorem exists_mem_Ine_lift_int {F Ω : Type*} [Field F] [NumberField F] [Field 
     [Algebra M Ω] [IsScalarTower F M Ω] [FiniteDimensional F M] [IsGalois F M] (τ : M ≃ₐ[F] M)
     (h : ∀ x : 𝓞 M, A.valuation (algebraMap M Ω (τ (x : M)) - algebraMap M Ω (x : M)) < 1) :
     ∃ σ ∈ Ine (F := F) A, ∀ x : M, σ (algebraMap M Ω x) = algebraMap M Ω (τ x) := by
-  haveI : NumberField M := NumberField.of_module_finite F M
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : IsAlgClosure M Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) M⟩
+  have : NumberField M := NumberField.of_module_finite F M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosure M Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) M⟩
   let σ₁ : Ω ≃ₐ[F] Ω := τ.liftNormal Ω
   have h₁ : ∀ x : M, σ₁ (algebraMap M Ω x) = algebraMap M Ω (τ x) := fun x => τ.liftNormal_commutes Ω x
   obtain ⟨g, hg⟩ := GlobalTheory.InertiaLift.exists_smul_eq (F := M) (A := A) (A' := σ₁⁻¹ • A) (by
@@ -128,12 +128,12 @@ theorem ramificationIdx_eq_one {K Ω L : Type} [Field K] [NumberField K] [Field 
     w.asIdeal.LiesOver v.asIdeal ∧ w.asIdeal.ramificationIdx (𝓞 K) = 1 := by
   let N : IntermediateField K Ω := IntermediateField.normalClosure K L Ω
   let M : Type := N
-  haveI : FiniteDimensional K M := inferInstance
-  haveI : NumberField M := NumberField.of_module_finite K M
-  haveI : IsGalois K M := IsGalois.normalClosure K L Ω
-  haveI : IsGalois L M := IsGalois.tower_top_of_isGalois K L M
+  have : FiniteDimensional K M := inferInstance
+  have : NumberField M := NumberField.of_module_finite K M
+  have : IsGalois K M := IsGalois.normalClosure K L Ω
+  have : IsGalois L M := IsGalois.tower_top_of_isGalois K L M
   let P : Ideal (𝓞 M) := primeUnder A M
-  haveI : P.IsPrime := Ideal.comap_isPrime _ _
+  have : P.IsPrime := Ideal.comap_isPrime _ _
   have hPv : P.under (𝓞 K) = v.asIdeal := by
     ext x
     rw [Ideal.mem_comap, mem_primeUnder, ← hv x]
@@ -142,9 +142,9 @@ theorem ramificationIdx_eq_one {K Ω L : Type} [Field K] [NumberField K] [Field 
     ext x
     rw [Ideal.mem_comap, mem_primeUnder, ← hw x]
     congr! 2
-  haveI hPv' : P.LiesOver v.asIdeal := ⟨hPv.symm⟩
-  haveI hPw' : P.LiesOver w.asIdeal := ⟨hPw.symm⟩
-  haveI hwv : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hPw, Ideal.under_under, hPv]⟩
+  have hPv' : P.LiesOver v.asIdeal := ⟨hPv.symm⟩
+  have hPw' : P.LiesOver w.asIdeal := ⟨hPw.symm⟩
+  have hwv : w.asIdeal.LiesOver v.asIdeal := ⟨by rw [← hPw, Ideal.under_under, hPv]⟩
   refine ⟨hwv, ?_⟩
   have hv0 := v.ne_bot
   have hw0 := w.ne_bot

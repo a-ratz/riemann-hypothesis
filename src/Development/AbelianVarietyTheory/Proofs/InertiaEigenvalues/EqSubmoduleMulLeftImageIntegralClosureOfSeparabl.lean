@@ -87,12 +87,12 @@ theorem isPrincipalIdealRing_integralClosure_field {O E L : Type} [CommRing O] [
     [IsDiscreteValuationRing O] [Field E] [Algebra O E] [IsFractionRing O E] [Field L]
     [Algebra E L] [Algebra O L] [IsScalarTower O E L] [FiniteDimensional E L] :
     IsPrincipalIdealRing (integralClosure O L) := by
-  haveI : IsDedekindDomain (integralClosure O L) :=
+  have : IsDedekindDomain (integralClosure O L) :=
     GlobalTheory.isDedekindDomain_integralClosure_of_dimensionLEOne E
   have hinj : Function.Injective (algebraMap O L) := by
     rw [IsScalarTower.algebraMap_eq O E L]
     exact (algebraMap E L).injective.comp (IsFractionRing.injective O E)
-  haveI : Module.IsTorsionFree O (integralClosure O L) :=
+  have : Module.IsTorsionFree O (integralClosure O L) :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr fun x y h => hinj (congrArg Subtype.val h)
   apply IsPrincipalIdealRing.of_finite_primes
   have hfin := IsDedekindDomain.primesOver_finite (IsLocalRing.maximalIdeal O) (integralClosure O L)
@@ -101,8 +101,8 @@ theorem isPrincipalIdealRing_integralClosure_field {O E L : Type} [CommRing O] [
   by_cases h : P = ⊥
   · exact Or.inl h
   · right
-    haveI : P.IsPrime := hP
-    have hne : P.comap (algebraMap O (integralClosure O L)) ≠ ⊥ := fun h0 => h (Ideal.eq_bot_of_comap_eq_bot h0)
+    have : P.IsPrime := hP
+    have hne : P.comap (algebraMap O (integralClosure O L)) ≠ ⊥ := fun h0 => h (Ideal.eq_bot_of_under_eq_bot h0)
     have hmax : (P.comap (algebraMap O (integralClosure O L))).IsMaximal :=
       Ring.DimensionLEOne.maximalOfPrime hne inferInstance
     refine ⟨hP, ⟨?_⟩⟩
@@ -113,14 +113,14 @@ theorem isPrincipalIdealRing_integralClosure {O E A : Type} [CommRing O] [IsDoma
     [Algebra E A] [Algebra O A] [IsScalarTower O E A] [Module.Finite E A] [IsReduced A] :
     IsPrincipalIdealRing (integralClosure O A) := by
   classical
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite E A
+  have : IsArtinianRing A := IsArtinianRing.of_finite E A
   let ψ : A ≃ₐ[O] (∀ I : MaximalSpectrum A, A ⧸ I.asIdeal) :=
     (IsArtinianRing.equivPi A).restrictScalars O
-  haveI hpir : ∀ I : MaximalSpectrum A, IsPrincipalIdealRing (integralClosure O (A ⧸ I.asIdeal)) := by
+  have hpir : ∀ I : MaximalSpectrum A, IsPrincipalIdealRing (integralClosure O (A ⧸ I.asIdeal)) := by
     intro I
-    haveI := I.isMaximal
-    letI : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
-    haveI : FiniteDimensional E (A ⧸ I.asIdeal) :=
+    have := I.isMaximal
+    let : Field (A ⧸ I.asIdeal) := Ideal.Quotient.field I.asIdeal
+    have : FiniteDimensional E (A ⧸ I.asIdeal) :=
       Module.Finite.of_surjective (Ideal.Quotient.mkₐ E I.asIdeal).toLinearMap
         Ideal.Quotient.mk_surjective
     exact isPrincipalIdealRing_integralClosure_field (E := E)
@@ -144,8 +144,8 @@ theorem eq_mulLat_integralClosure_of_separable : ∀ (O E A : Type) [CommRing O]
     (∀ x ∈ integralClosure O A, ∀ y ∈ N, x * y ∈ N) →
     ∃ t : Aˣ, N = mulLat O (t : A) (Subalgebra.toSubmodule (integralClosure O A)) := by
   intro O E A _ _ _ _ _ _ _ _ _ _ _ g hsep N hN hst
-  haveI := isReduced_of_charpoly_separable g hsep
-  haveI := isPrincipalIdealRing_integralClosure (O := O) (E := E) (A := A)
+  have := isReduced_of_charpoly_separable g hsep
+  have := isPrincipalIdealRing_integralClosure (O := O) (E := E) (A := A)
   exact PrincipalLat.eq_mulLat_of_isPrincipalIdealRing N hN hst
 
 end GlobalTheory.UnitLemma.PrincipalLatDVR

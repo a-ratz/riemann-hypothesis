@@ -260,13 +260,13 @@ theorem growthSize_lift_le_decayIntegral : _root_.GlobalTheory.FunPr.ThetaLocalI
     exact (GlobalTheory.Grow.norm_le_quotHeight_pow (hinv h) h1 g).trans_eq (by ring)
   refine ⟨(K * 2 ^ N).toNNReal, fun f => iSup_le fun h => ?_⟩
   have hg := pow_pos (GlobalTheory.Grow.height_pos (G.P i).V h) N
-  rw [ENNReal.ofReal_div_of_pos hg, ofReal_norm_eq_enorm]
-  refine ENNReal.div_le_of_le_mul ((enorm_integral_le_lintegral_enorm _).trans ?_)
+  rw [ENNReal.ofReal_div_of_pos hg, ofReal_norm]
+  refine ENNReal.div_le_of_le_mul ((eNorm_integral_le_lintegral_eNorm _).trans ?_)
   rw [mul_right_comm, GlobalTheory.IndefiniteRowSideFullHecke.RapidDecayLift.decayInt]
   refine (lintegral_mono fun g => ?_).trans_eq
     (lintegral_const_mul' _ _ (ENNReal.mul_ne_top ENNReal.coe_ne_top ENNReal.ofReal_ne_top))
   have hq := (pow_pos (GlobalTheory.Grow.quotHeight_pos (G.P (i + 1)).V g) N).le
-  rw [← ofReal_norm_eq_enorm]
+  rw [← ofReal_norm]
   change ENNReal.ofReal _ ≤ ENNReal.ofReal (K * 2 ^ N) * _ * _
   rw [← ENNReal.ofReal_mul (by positivity), ← ENNReal.ofReal_mul (by positivity)]
   refine ENNReal.ofReal_le_ofReal ?_
@@ -488,8 +488,8 @@ theorem downward_growth_approximation : _root_.GlobalTheory.FunPr.ThetaLocalInpu
   obtain ⟨μ, 𝓓, hμ⟩ := GlobalTheory.Size.exists_isCovolOne (neg (G.P (i + 1)).V) (G.P i).V
   obtain ⟨U, hU, hΦU, happ⟩ := GlobalTheory.FockDensity.fockDense D _ _ (negFr (G.P (i + 1))) (Fr.ofModel (G.P i).M) R.θ R.ψ
     hω.std hθ μ 𝓓 hμ Φ hΦ
-  haveI : BorelSpace (GA D (G.P (i + 1)).V) := ⟨rfl⟩
-  haveI hfin : IsFiniteMeasure ((G.mP (i + 1)).ν.restrict (G.mP (i + 1)).fd) :=
+  have : BorelSpace (GA D (G.P (i + 1)).V) := ⟨rfl⟩
+  have hfin : IsFiniteMeasure ((G.mP (i + 1)).ν.restrict (G.mP (i + 1)).fd) :=
     isFiniteMeasure_restrict.2 (GlobalTheory.Chain.LiftReg.vol_ne_top hν hfd)
   have hker : ∀ U' : AddSubgroup (WO (neg (G.P (i + 1)).V) (G.P i).V), IsOpen (U' : Set (WO (neg (G.P (i + 1)).V) (G.P i).V)) →
       ∃ Kc : ℝ, 0 ≤ Kc ∧ ∀ f ∈ GlobalTheory.Size.thetaLevel R.ψ (neg (G.P (i + 1)).V) (G.P i).V U', ∀ g h,
@@ -561,7 +561,7 @@ theorem downward_growth_approximation : _root_.GlobalTheory.FunPr.ThetaLocalInpu
   let p' : ℕ → GlobalTheory.Grid.Pol (G.P (i + 1)) (G.P i) := fun j => if hj : j < n then p ⟨j, hj⟩ else 0
   refine ⟨Finset.range n, f', p', fun j hj => ?_, ?_⟩
   · have hj' := Finset.mem_range.1 hj
-    simp only [f', dif_pos hj']
+    simp only [f', dite_eq_left hj']
     exact (isVacF_negFr _ _ _).1 (hf _)
   have hpt : ∀ l, ptF R.ψ R.θ (negFr (G.P (i + 1))) (Fr.ofModel (G.P i).M) (f l) (p l) =
       fock R.ψ R.θ true (G.P (i + 1)) (G.P i) (f l) (p l) := fun l => ptF_negFr _ _ (f l) (p l)
@@ -598,7 +598,7 @@ theorem downward_growth_approximation : _root_.GlobalTheory.FunPr.ThetaLocalInpu
     rw [← Fin.sum_univ_eq_sum_range (fun j => ∫ g in (G.mP (i + 1)).fd, thetaKO (G.dn i).ω g h
         (fock R.ψ R.θ true (G.P (i + 1)) (G.P i) (f' j) (p' j)) * Fm k (v k) g ∂(G.mP (i + 1)).ν) n]
     refine Finset.sum_congr rfl fun l _ => ?_
-    simp only [f', p', dif_pos l.isLt, Fin.eta]
+    simp only [f', p', dite_eq_left l.isLt, Fin.eta]
   set s := (GlobalTheory.Size.sobO R.ψ R.θ μ 𝓓 d
     (Φ - ∑ l, ptF R.ψ R.θ (negFr (G.P (i + 1))) (Fr.ofModel (G.P i).M) (f l) (p l))).toReal with hsdef
   have hs0 : 0 ≤ s := ENNReal.toReal_nonneg

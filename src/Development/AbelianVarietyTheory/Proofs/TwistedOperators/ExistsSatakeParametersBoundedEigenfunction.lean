@@ -508,7 +508,7 @@ theorem exists_param_at (D : D7) (V : HSp D) (J : Set (GA D V)) (χ : GA D V →
     rw [heq, ← Submodule.map_span, hfull, Submodule.map_top, LinearEquiv.range]
   have hd := GlobalTheory.AdelicU.SelfDual.isSelfDualAt_frameLat D V v
   have hun : Formalism.MainNotions.SchurIrreducible.IsUnram (E := D.host.E) v := fun P _ => by
-    haveI := GlobalTheory.BaseChangeExistsCompare.unram_of_cm D D.sp.cm P
+    have := GlobalTheory.BaseChangeExistsCompare.unram_of_cm D D.sp.cm P
     exact Ideal.ramificationIdx_eq_one_of_isUnramifiedAt
   rcases (exists_isInertChart _ (isCMExt_host D) v).1 hun with hs | ⟨w', hw'⟩
   · obtain ⟨e, he, -, -⟩ := SplitChart.exists_isSplitChart (isCMExt_host D) hH hL.fg hspan h hs hd
@@ -547,7 +547,7 @@ theorem exists_param_bounded : ∀ (D : D7) (V : HSp D) (J : Set (GA D V)) (χ :
       (h : w.under (𝓞 D.host.F) = v) => exists_param_at D V J χ Sb hJ f hfm hf0 hlev c hc v hv w h
   let B : Fam D.host.E := fun w =>
     if hw : w.under (𝓞 D.host.F) ∉ Sb then (key _ hw w rfl).choose else 0
-  have hB : ∀ w (hw : w.under (𝓞 D.host.F) ∉ Sb), B w = (key _ hw w rfl).choose := fun w hw => dif_pos hw
+  have hB : ∀ w (hw : w.under (𝓞 D.host.F) ∉ Sb), B w = (key _ hw w rfl).choose := fun w hw => dite_eq_left hw
   refine ⟨B, ?_, ?_⟩
   · intro v hv w h
     subst h

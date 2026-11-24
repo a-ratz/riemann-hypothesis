@@ -310,7 +310,7 @@ theorem numPull : NumPull := by
       exact h2
   obtain ⟨hP'm, hrel, -⟩ := ptDim k Ω K' ι' y d hy
   obtain ⟨hPzm, hrelz, -⟩ := ptDim k Ω K (fun b => ι' (j b)) z d hzPt
-  haveI : (pointIdeal k y).IsPrime := hP'm.isPrime
+  have : (pointIdeal k y).IsPrime := hP'm.isPrime
   have hcon : contractPrime j (pointIdeal k y) = pointIdeal k z :=
     (pointIdeal_comp y κ hκ (blockIncl j ι') (fun p => rfl)).symm
   have hPF := (ProjectionFormulaDegree.of_divPushForward
@@ -319,7 +319,7 @@ theorem numPull : NumPull := by
   rw [hcon] at hPF
   have hrd := relDeg_pointIdeal (k := k) j y hy.1
   have hle : fnField k z ≤ fnField k y := fnField_comp_le y κ (blockIncl j ι') (fun p => rfl)
-  haveI : FiniteDimensional (fnField k y) Ω := hy.2.1
+  have : FiniteDimensional (fnField k y) Ω := hy.2.1
   unfold num
   rw [hinum, hF1, ← IntermediateField.relfinrank_mul_finrank_top hle]
   unfold inum

@@ -903,7 +903,7 @@ theorem limRatAssemble : LimRatAssemble := by
     | of a t =>
       change DirectSum.lof ℚ_[l] ℤ T a t ∈ _
       by_cases ha0 : a < 0
-      · haveI := hl_sub hA9 l (sch.obj X) a i ha0
+      · have := hl_sub hA9 l (sch.obj X) a i ha0
         have : t = 0 := by
           induction t using TensorProduct.induction_on with
           | zero => rfl
@@ -917,7 +917,7 @@ theorem limRatAssemble : LimRatAssemble := by
             rw [this, TensorProduct.zero_tmul]
         rw [this, map_zero]; exact Submodule.zero_mem _
       by_cases haM : (M : ℤ) < a
-      · haveI := hl_sub hA9 l (sch.obj Y) (n - a) 0 (by omega)
+      · have := hl_sub hA9 l (sch.obj Y) (n - a) 0 (by omega)
         have : t = 0 := by
           induction t using TensorProduct.induction_on with
           | zero => rfl
@@ -1550,7 +1550,7 @@ theorem stalk_neg (h9 : A9) (q : ℕ) [NeZero q] {X : Scheme.{0}} {R : CommRingC
     (A : CommRingCat.{0}) (s : R ⟶ A) (i : ℤ) (r : ℕ → ℕ) (c : ∀ a : ℕ, Fin (r a) → Ht q (sch.obj X) a i) (M N : ℕ)
     (n : ℤ) (hn : n < 0) : IsoUpTo N (lh q p (Spec.map s) i r c M n) := by
   have : Subsingleton (Ht q (sch.obj (pullback p (Spec.map s))) n i) := (h9 (ZMod q) (tw q i)).1 _ n hn
-  haveI : ∀ a : Fin (M + 1), Subsingleton (Ht q (sch.obj (Spec A)) (n - ((a : ℕ) : ℤ)) 0) :=
+  have : ∀ a : Fin (M + 1), Subsingleton (Ht q (sch.obj (Spec A)) (n - ((a : ℕ) : ℤ)) 0) :=
     fun a => (h9 (ZMod q) (tw q 0)).1 _ _ (by omega)
   refine ⟨fun y _ => ?_, fun b => ⟨0, Subsingleton.elim _ _⟩⟩
   funext a t
@@ -1652,7 +1652,7 @@ theorem stalkTop_pf : StalkTop := by
       rw [hy u, pull_zsmul]
       exact hE h6n h6r q p s hqA n i (c n u) (t u)
     · intro b hb
-      haveI := hsub b hb
+      have := hsub b hb
       refine Finset.sum_eq_zero fun u _ => ?_
       rw [Subsingleton.elim (y b u) 0, ext_zero]
   have hbij := he (n : ℤ)
@@ -1668,7 +1668,7 @@ theorem stalkTop_pf : StalkTop := by
       rw [ht u]
       have e1 : N • t u = 0 := by simpa using congrFun hNt u
       rw [← cast_nsmul', ← smul_assoc, e1, zero_smul, cast_zero']
-    · haveI := hsub b hb
+    · have := hsub b hb
       exact Subsingleton.elim _ _
   · obtain ⟨w, rfl⟩ := hbij.2 b
     obtain ⟨t, ht⟩ := (hc n hnM').2 w

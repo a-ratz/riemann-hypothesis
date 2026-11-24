@@ -135,7 +135,7 @@ theorem integral_mu {V : HSp D} (hV : V.SigOK) {μ 𝓕} (h : IsVolPair D V μ �
   obtain ⟨i1, i2, i3, i4, i5, -, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   have h0 : IsVolPair D V (mu V) (dom V) := (exists_pair V).choose_spec.2 hV
   obtain rfl : μ = mu V := (GlobalTheory.T.existsUnique_normalizedHaarMeasure_adelicUnitary D V hV).unique h.1 h0.1
-  haveI := h.1.1
+  have := h.1.1
   exact h0.2.setIntegral_eq h.2 fun γ g => hf γ γ.2 g
 
 variable {θ : InfF D}
@@ -229,10 +229,10 @@ theorem isClosed_NFlag (B : HSp D) {ρ : ℕ} {e : Matrix (Fin B.rank) (Fin ρ) 
     IsClosed (NFlag B e : Set (GA D B)) := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B
   obtain ⟨K, hK, h⟩ := (GlobalTheory.T.isotropic_unipotentRadicals_rational_cocompact D B ρ e he).1
-  haveI : DiscreteTopology (GQ B ⊓ NFlag B e : Subgroup (GA D B)) :=
+  have : DiscreteTopology (GQ B ⊓ NFlag B e : Subgroup (GA D B)) :=
     DiscreteTopology.of_subset (s := (GQ B : Set (GA D B))) i6 (fun x hx => hx.1)
-  have h1 : IsClosed ((GQ B ⊓ NFlag B e : Subgroup (GA D B)) : Set (GA D B)) := Subgroup.isClosed_of_discrete
-  have h2 := h1.mul_right_of_isCompact (hK.image continuous_subtype_val)
+  have h1 : IsClosed ((GQ B ⊓ NFlag B e : Subgroup (GA D B)) : Set (GA D B)) := Subgroup.isClosed_of_discreteTopology
+  have h2 := h1.mul_right_of_isCompact (hK.image continuous_subtypeVal)
   convert h2 using 1
   ext x
   constructor

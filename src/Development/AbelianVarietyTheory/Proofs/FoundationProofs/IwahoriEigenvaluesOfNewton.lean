@@ -336,7 +336,7 @@ theorem isUnit_diag {r : ℕ} (g : GL (Fin r) (Int F)) (hg : g ∈ iwahoriInt F 
     id := hg
   have h2 := (Matrix.isUnit_iff_isUnit_det _).1
     (Matrix.GeneralLinearGroup.map (Ideal.Quotient.mk (maxId F)) g).isUnit
-  rw [Matrix.det_of_upperTriangular h1] at h2
+  rw [Matrix.det_of_isUpperTriangular h1] at h2
   have h3 := isUnit_of_dvd_unit (Finset.dvd_prod_of_mem _ (Finset.mem_univ i)) h2
   have : Nontrivial (Int F ⧸ maxId F) := Ideal.Quotient.nontrivial_iff.2 (by
     rw [Ideal.ne_top_iff_one]

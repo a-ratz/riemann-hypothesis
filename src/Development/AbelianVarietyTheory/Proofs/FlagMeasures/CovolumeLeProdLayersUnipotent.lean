@@ -268,21 +268,21 @@ theorem measurePreserving_triangular_shear (d : ℕ) (deg : Fin d → ℕ)
     funext x i
     by_cases hin : deg i = n
     · have hfx : f (U (n + 1) x) i = f x i :=
-        h _ _ i (fun k hk => by simp only [U]; rw [if_neg (by omega)])
+        h _ _ i (fun k hk => by simp only [U]; rw [ite_eq_right (by omega)])
       simp only [Function.comp_apply, hfx]
       simp only [U]
-      rw [if_pos (by omega), if_neg (by omega), if_neg (by omega)]
+      rw [ite_eq_left (by omega), ite_eq_right (by omega), ite_eq_right (by omega)]
     · simp only [Function.comp_apply, U]
-      rw [if_pos hin]
+      rw [ite_eq_left hin]
       by_cases h2 : n ≤ deg i
-      · rw [if_pos h2, if_pos (by omega)]
-      · rw [if_neg h2, if_neg (by omega)]
+      · rw [ite_eq_left h2, ite_eq_left (by omega)]
+      · rw [ite_eq_right h2, ite_eq_right (by omega)]
   have hN : ∀ n, Finset.univ.sup deg < n → U n = id := by
     intro n hn
     funext x i
     have hi : deg i ≤ Finset.univ.sup deg := Finset.le_sup (Finset.mem_univ i)
     simp only [U, id]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   have hU : ∀ k n, Finset.univ.sup deg < n + k → MeasurePreserving (U n) volume volume := by
     intro k
     induction k with
@@ -320,7 +320,7 @@ theorem volume_sum_sq_le_sq (d : ℕ) {s : ℝ} (hs : 0 ≤ s) :
   have h1 : {x : Fin d → ℝ | ∑ i, x i ^ 2 ≤ s ^ 2}
       = (WithLp.toLp 2 : (Fin d → ℝ) → EuclideanSpace ℝ (Fin d)) ⁻¹' Metric.closedBall 0 s := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, mem_closedBall_zero_iff,
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, mem_closedBall_zero_iff,
       EuclideanSpace.norm_eq, Real.norm_eq_abs, sq_abs]
     rw [Real.sqrt_le_left hs]
   rw [h1, (PiLp.volume_preserving_toLp (Fin d)).measure_preimage
@@ -366,7 +366,7 @@ theorem tendsto_volume_sublevel_div_pow (d : ℕ) (N : (Fin d → ℝ) → ℝ) 
       ring
     rw [e]
     refine measure_mono fun x hx => ?_
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     have htr : t * r < η := by nlinarith
     have hx' : dist x 0 < η := by
       rw [dist_zero_right]
@@ -391,7 +391,7 @@ theorem tendsto_volume_sublevel_div_pow (d : ℕ) (N : (Fin d → ℝ) → ℝ) 
     refine ENNReal.div_le_of_le_mul ?_
     rw [mul_comm, ← volume_sum_sq_le_sq d hr0.le]
     refine measure_mono fun x hx => ?_
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     rw [Real.sqrt_le_left hr0.le] at hx
     exact (hl x).trans hx
 
@@ -614,7 +614,7 @@ namespace GlobalTheory.NilCov
 variable {n : ℕ} {ε : Fin n → Bool} {d : ℕ}
 
 theorem continuous_uMat_sub_one : Continuous fun g : UJ ε => uMat g - 1 :=
-  (Units.continuous_val.comp continuous_subtype_val).sub continuous_const
+  (Units.continuous_val.comp continuous_subtypeVal).sub continuous_const
 
 theorem continuous_coord (E : Fin d → Matrix (Fin n) (Fin n) ℂ) :
     Continuous fun (g : UJ ε) (i : Fin d) => ipL (E i) (uMat g - 1) :=
@@ -652,7 +652,7 @@ theorem measurePreserving_coord {m : ℕ} {A : ℕ → Submodule ℝ (Matrix (Fi
     rw [hm, Submodule.mem_bot, sub_eq_zero] at this
     exact Subtype.ext (Units.ext this)
   have hS : MeasurableSet {g : UJ ε | uMat g - 1 ∈ A 0} :=
-    ((A 0).closed_of_finiteDimensional.preimage continuous_uMat_sub_one).measurableSet
+    ((A 0).isClosed_of_finiteDimensional.preimage continuous_uMat_sub_one).measurableSet
   have hμ : IsGaugeSub {g | uMat g - 1 ∈ A 0} d ((volume : Measure (Fin d → ℝ)).map σ) := by
     refine ⟨?_, fun s hs => ?_, ?_⟩
     · rw [Measure.map_apply hσc.measurable hS.compl]
@@ -721,7 +721,7 @@ theorem covol_le_prod_layers : ∀ (ι : Type) [Fintype ι] (n d m : ℕ) (ε : 
     measurePreserving_coord (hle v) (hm v) (hmul v) (hinv v) (hE v) (hsp v) (hν v)
   have hB : MeasurableSet {x : ι → Fin d → ℝ |
       ∀ c < m, (fun v (i : {i : Fin d // deg i = c}) => x v i.1) ∈ D c} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine MeasurableSet.iInter fun c => MeasurableSet.iInter fun _ => ?_
     exact (show Measurable fun (x : ι → Fin d → ℝ) v (i : {i : Fin d // deg i = c}) => x v i.1 by
       fun_prop) (hD c)

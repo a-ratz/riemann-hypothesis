@@ -77,12 +77,12 @@ private theorem relIndex_ne_zero_of_finite_cover {A B : AddSubgroup V} {ι : Typ
     show ((⟨φ i, hφ i⟩ : B) : B ⧸ A.addSubgroupOf B) = (b : B ⧸ A.addSubgroupOf B)
     rw [QuotientAddGroup.eq, AddSubgroup.mem_addSubgroupOf]
     simpa [neg_add_eq_sub] using hi
-  haveI : Finite (B ⧸ A.addSubgroupOf B) := Finite.of_surjective _ hsurj
+  have : Finite (B ⧸ A.addSubgroupOf B) := Finite.of_surjective _ hsurj
   exact AddSubgroup.index_ne_zero_of_finite
 
 lemma relIdx_ne_zero_of_le_left {A A' B : AddSubgroup V} (h : A ≤ A') (hA : A.relIndex B ≠ 0) :
     A'.relIndex B ≠ 0 := by
-  haveI : Finite (B ⧸ A.addSubgroupOf B) :=
+  have : Finite (B ⧸ A.addSubgroupOf B) :=
     Nat.finite_of_card_ne_zero (α := B ⧸ A.addSubgroupOf B) hA
   refine relIndex_ne_zero_of_finite_cover (ι := B ⧸ A.addSubgroupOf B) (fun q => ((q.out : B) : V))
     (fun q => q.out.2) ?_
@@ -101,8 +101,8 @@ lemma relIdx_map_smul {w : ℂ} (hw : w ≠ 0) (A B : AddSubgroup V) :
 lemma not_dvd_relIndex {A B : AddSubgroup V} {l n : ℕ} (hl : l.Prime) (hAB : A.relIndex B ≠ 0)
     (hn : ∀ y ∈ B, n • y ∈ A) (hln : ¬ l ∣ n) : ¬ l ∣ A.relIndex B := by
   intro hdvd
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI : Finite (B ⧸ A.addSubgroupOf B) :=
+  have : Fact l.Prime := ⟨hl⟩
+  have : Finite (B ⧸ A.addSubgroupOf B) :=
     Nat.finite_of_card_ne_zero (α := B ⧸ A.addSubgroupOf B) hAB
   have hcard : l ∣ Nat.card (B ⧸ A.addSubgroupOf B) := hdvd
   obtain ⟨q, hq⟩ : ∃ q : B ⧸ A.addSubgroupOf B, addOrderOf q = l := by

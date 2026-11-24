@@ -169,7 +169,7 @@ theorem exists_eq_of_invariant {G V : Type} [Group G] [TopologicalSpace G] [IsTo
     (hinv : ∀ g v w, Bf (σ g v) (σ g w) = Bf v w) (L : V →ₗ⋆[ℂ] ℂ)
     (K : Subgroup G) (hKo : IsOpen (K : Set G)) (hKc : IsCompact (K : Set G))
     (hL : ∀ s ∈ K, ∀ w, L (σ s w) = L w) : ∃ u : V, ∀ w, L w = Bf u w := by
-  haveI : FiniteDimensional ℂ (fixed σ K) := hadm.2 K hKo hKc
+  have : FiniteDimensional ℂ (fixed σ K) := hadm.2 K hKo hKc
   obtain ⟨u, huK, hu⟩ := exists_mem_eq_on_of_finiteDimensional Bf hpos L (fixed σ K)
   have hfix : ∀ k ∈ K, σ k u = u := fun k hk => by
     simpa using huK ⟨k, hk⟩

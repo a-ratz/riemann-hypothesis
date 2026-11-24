@@ -61,10 +61,10 @@ theorem eq_span_monomial_of_forall_cdvr (k : Type) [Field k] [CharZero k] (m e :
       Function.Injective ψ → IsLocalHom ψ → I.map ψ = Ideal.span {ψ (∏ i, bdParam k m e i ^ a i)}) :
     I = Ideal.span {∏ i, bdParam k m e i ^ a i} := by
   set q : ChartRing k m e := ∏ i, bdParam k m e i ^ a i with hqdef
-  haveI : CharZero (ChartRing k m e) := (MvPowerSeries.constantCoeff : ChartRing k m e →+* k).charZero
+  have : CharZero (ChartRing k m e) := (MvPowerSeries.constantCoeff : ChartRing k m e →+* k).charZero
   obtain ⟨hN, hIC, -, -⟩ := GlobalTheory.ChartCone.isCN_chartRing k m e
-  haveI := hN
-  haveI := hIC
+  have := hN
+  have := hIC
   have hX : ∀ j : Fin m ⊕ Fin e, (MvPowerSeries.X j : ChartRing k m e) ≠ 0 := by
     intro j hj
     have := congrArg (MvPowerSeries.coeff (Finsupp.single j 1)) hj

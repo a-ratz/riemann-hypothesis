@@ -109,8 +109,8 @@ theorem dvr_matrix_proj_preimage (O K : Type) [CommRing O] [IsDomain O] [IsDiscr
       intro h; exact hc ((IsFractionRing.injective O K) (by rw [h, map_zero]))
     have := S.smul_mem (algebraMap O K c)⁻¹ hcx
     rwa [smul_smul, inv_mul_cancel₀ hc', one_smul] at this
-  haveI : Module.Free O ((n → O) ⧸ U) := Module.free_of_finite_type_torsion_free'
-  haveI : Module.Projective O ((n → O) ⧸ U) := Module.Projective.of_free
+  have : Module.Free O ((n → O) ⧸ U) := Module.free_of_finite_type_torsion_free'
+  have : Module.Projective O ((n → O) ⧸ U) := Module.Projective.of_free
   obtain ⟨s, hs⟩ := Module.projective_lifting_property U.mkQ LinearMap.id (Submodule.mkQ_surjective U)
   let π : (n → O) →ₗ[O] (n → O) := LinearMap.id - s ∘ₗ U.mkQ
   have hπU : ∀ v, π v ∈ U := by
@@ -531,7 +531,7 @@ theorem parahoric_schwartz_mem_span_translates : ∀ (O K : Type) [CommRing O] [
     if h : Φ y ≠ 0 then (hΩ y h).choose else 1
   have hgs : ∀ y, Φ y ≠ 0 → y ∈ S (gs y) := by
     intro y hy
-    simp only [gs, dif_pos hy]
+    simp only [gs, dite_eq_left hy]
     exact (hΩ y hy).choose_spec
   let F : Finset (Set (Matrix (Fin r ⊕ Fin t) (Fin r) K)) :=
     (T.filter (fun y => Φ y ≠ 0)).image (fun y => S (gs y))
@@ -552,7 +552,7 @@ theorem parahoric_schwartz_mem_span_translates : ∀ (O K : Type) [CommRing O] [
     intro A hA x hx
     obtain ⟨g, rfl⟩ := hF A hA
     have hne : (S g).Nonempty := ⟨x, hx⟩
-    simp only [c, dif_pos hne]
+    simp only [c, dite_eq_left hne]
     exact hconst g _ _ hne.some_mem hx
   have heq : Φ = ∑ A ∈ F, c A • A.indicator (fun _ => (1 : ℂ)) := by
     funext x
@@ -567,9 +567,9 @@ theorem parahoric_schwartz_mem_span_translates : ∀ (O K : Type) [CommRing O] [
       · rfl
     · obtain ⟨A, hA, hxA⟩ := hcover x hx
       rw [Finset.sum_eq_single A]
-      · rw [if_pos hxA, hc A hA x hxA]
+      · rw [ite_eq_left hxA, hc A hA x hxA]
       · intro B hB hBA
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hxB
         obtain ⟨g, rfl⟩ := hF A hA
         obtain ⟨g', rfl⟩ := hF B hB

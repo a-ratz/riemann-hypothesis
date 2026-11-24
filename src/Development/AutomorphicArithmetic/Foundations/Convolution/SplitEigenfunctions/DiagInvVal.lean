@@ -51,8 +51,8 @@ open scoped Classical ENNReal NNReal
 
 private theorem cd_meas {E : Type} [Field E] [NumberField E] (N : MeasE E) (t : (A E)ˣ) :
     MeasurePreserving (cD t) N.μ N.μ := by
-  haveI := N.haar
-  haveI := N.right
+  have := N.haar
+  have := N.right
   have hm : ∀ s : (A E)ˣ, Measurable (cD s : G1 E → G1 E) := fun s => (M.continuous_cD s).measurable
   let e : G1 E ≃ₜ* G1 E :=
     { toFun := cD t
@@ -62,7 +62,7 @@ private theorem cd_meas {E : Type} [Field E] [NumberField E] (N : MeasE E) (t : 
       map_mul' := M.cD_mul t
       continuous_toFun := M.continuous_cD t
       continuous_invFun := M.continuous_cD t⁻¹ }
-  haveI : (N.μ.map (cD t)).IsHaarMeasure := e.isHaarMeasure_map N.μ
+  have : (N.μ.map (cD t)).IsHaarMeasure := e.isHaarMeasure_map N.μ
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, N.μ.map (cD t) = c • N.μ :=
     ⟨_, Measure.isMulLeftInvariant_eq_smul (N.μ.map (cD t)) N.μ⟩
   have h2 : N.μ.map (cD (t * t)) = N.μ := by
@@ -96,8 +96,8 @@ private theorem cd_meas {E : Type} [Field E] [NumberField E] (N : MeasE E) (t : 
 private theorem right_tr {E : Type} [Field E] [NumberField E] (N : MeasE E) (u : G1 E → ℂ)
     (hu : ∀ γ g, u (ratS E γ * g) = u g) (k : G1 E) :
     ∫ g in N.D, u (g * k) ∂N.μ = ∫ g in N.D, u g ∂N.μ := by
-  haveI := N.haar
-  haveI := N.right
+  have := N.haar
+  have := N.right
   have hmp : MeasurePreserving (· * k) N.μ N.μ := measurePreserving_mul_right N.μ k
   have hemb : MeasurableEmbedding (· * k : G1 E → G1 E) := (MeasurableEquiv.mulRight k).measurableEmbedding
   have hfd : IsFundamentalDomain (Gam E) ((Equiv.mulRight k) '' N.D) N.μ := by
@@ -151,7 +151,7 @@ private theorem cD_mem {E : Type} [Field E] [NumberField E] (t : Eˣ) {x : G1 E}
 private theorem conj_int {E : Type} [Field E] [NumberField E] (N : MeasE E) (u : G1 E → ℂ)
     (hu : ∀ γ g, u (ratS E γ * g) = u g) (t : Eˣ) :
     ∫ g in N.D, u (cD (IdeleGroup.diagonal E t) g) ∂N.μ = ∫ g in N.D, u g ∂N.μ := by
-  haveI := N.haar
+  have := N.haar
   set T : (A E)ˣ := IdeleGroup.diagonal E t with hT
   have hTi : T⁻¹ = IdeleGroup.diagonal E t⁻¹ := by rw [hT, map_inv]
   let e : G1 E ≃ₜ G1 E :=

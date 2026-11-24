@@ -88,7 +88,7 @@ theorem le_preimage_of_fst {X : Scheme.{0}} {U : X.Opens} {C : Type} [CommRing C
     have h2 : a ^ 2 = 0 := by
       ext <;> simp [pow_two, TrivSqZeroExt.fst_mul, TrivSqZeroExt.snd_mul, h0]
     exact p.isPrime.mem_of_pow_mem 2 (by rw [h2]; exact zero_mem _)
-  haveI := p.isPrime
+  have := p.isPrime
   have hprime := Ideal.map_isPrime_of_surjective hs hker
   let p₀ : ↥(Sp C) := (⟨p.asIdeal.map (TrivSqZeroExt.fstHom C C C).toRingHom, hprime⟩ : PrimeSpectrum C)
   have hp : (spMap (TrivSqZeroExt.fstHom C C C).toRingHom).base p₀ = p := by

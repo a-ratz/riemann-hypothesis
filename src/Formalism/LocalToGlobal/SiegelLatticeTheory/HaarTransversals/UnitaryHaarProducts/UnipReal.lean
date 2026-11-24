@@ -85,7 +85,7 @@ theorem Bv'_mulVec_supp (S : Set (Fin D.R.rS)) {y : Fin X.B.I.n → ℂ}
     obtain ⟨b, hb, rfl⟩ := hx
     intro k hk
     show (Bv' X v *ᵥ rv X.B.I v (bv X (Sum.inl b))) k = 0
-    rw [Bv'_rv, Pi.single_apply, if_neg]
+    rw [Bv'_rv, Pi.single_apply, ite_eq_right]
     rintro rfl
     exact hk ⟨b, hb, rfl⟩
   | zero => intro k _; simp
@@ -191,7 +191,7 @@ theorem half_of_inN {g : Matrix (Fin X.B.I.n) (Fin X.B.I.n) ℂ}
   rcases j with a | w | a
   · refine Bv'_mulVec_supp X v {b | b.1 < a.1} (hg.1.1 a) i ?_
     rintro ⟨b, hb, rfl⟩
-    simp only [lvk, Sum.elim_inl, Set.mem_setOf_eq] at hij hb
+    simp only [lvk, Sum.elim_inl, Set.mem_ofPred_eq] at hij hb
     omega
   · have h := hg.2 _ fun a => hJ_rv_e_w X v a w
     refine Bv'_mulVec_supp X v {b | b.1 < D.R.rS} h i ?_

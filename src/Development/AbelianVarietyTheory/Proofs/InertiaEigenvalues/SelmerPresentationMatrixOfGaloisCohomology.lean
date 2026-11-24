@@ -128,8 +128,8 @@ theorem isPrecomplete_of_pow_le {S : Type} [CommRing S] {I J : Ideal S} (hIJ : I
 theorem isAdicComplete_of_finite (R S : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     [IsAdicComplete (IsLocalRing.maximalIdeal R) R] [CommRing S] [IsLocalRing S] [Algebra R S]
     [Module.Finite R S] : IsAdicComplete (IsLocalRing.maximalIdeal S) S := by
-  haveI : IsNoetherianRing S := IsNoetherianRing.of_finite R S
-  haveI : Algebra.IsIntegral R S := Algebra.IsIntegral.of_finite R S
+  have : IsNoetherianRing S := IsNoetherianRing.of_finite R S
+  have : Algebra.IsIntegral R S := Algebra.IsIntegral.of_finite R S
   have hcomap : (maximalIdeal S).comap (algebraMap R S) = maximalIdeal R :=
     eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal S))
   have hle : (maximalIdeal R).map (algebraMap R S) ≤ maximalIdeal S :=
@@ -147,10 +147,10 @@ theorem isAdicComplete_of_finite (R S : Type) [CommRing R] [IsLocalRing R] [IsNo
         (h2 ▸ maximalIdeal.isMaximal R)
     exact (eq_maximalIdeal h3).ge
   obtain ⟨k, hk⟩ := Ideal.exists_pow_le_of_le_radical_of_fg hrad (IsNoetherian.noetherian _)
-  haveI : IsPrecomplete (maximalIdeal R) S := isPrecomplete_of_finite _
-  haveI : IsPrecomplete ((maximalIdeal R).map (algebraMap R S)) S :=
+  have : IsPrecomplete (maximalIdeal R) S := isPrecomplete_of_finite _
+  have : IsPrecomplete ((maximalIdeal R).map (algebraMap R S)) S :=
     IsPrecomplete.map_algebraMap_iff.mpr this
-  haveI : IsPrecomplete (maximalIdeal S) S := isPrecomplete_of_pow_le hle hk
+  have : IsPrecomplete (maximalIdeal S) S := isPrecomplete_of_pow_le hle hk
   exact {}
 
 end GlobalTheory.AdicCompleteFinite
@@ -886,7 +886,7 @@ theorem exists_min (F : ModuleCat.{0} Λ ⥤ ModuleCat.{0} Λ) (hF : LeftEx F) (
     ⟨_, A, 𝟙 A, x, Function.injective_id, by rw [F.map_id]; rfl, rfl⟩
   obtain ⟨C, f, z, hf, hz, hm⟩ := Nat.find_spec hex
   refine ⟨C, f, z, hf, hz, fun B hB φ hφ => ?_⟩
-  haveI : Finite C := Finite.of_injective _ hf
+  have : Finite C := Finite.of_injective _ hf
   have hC : Tors Λ C := fun c => by
     obtain ⟨n, hn⟩ := hA (f.hom c)
     exact ⟨n, fun r hr => hf (by rw [map_smul, hn r hr, map_zero])⟩
@@ -911,8 +911,8 @@ theorem card_le_of_min [IsNoetherianRing Λ] [Finite (IsLocalRing.ResidueField �
     ∃ N : ℕ, ∀ (A : ModuleCat.{0} Λ) (x : F.obj A), Finite A →
       (∀ r ∈ IsLocalRing.maximalIdeal Λ ^ n, ∀ y : A, r • y = 0) → IsMin F A x → Nat.card A ≤ N := by
   set c := Nat.card (F.obj (ModuleCat.of Λ (IsLocalRing.ResidueField Λ))) with hc
-  haveI : Finite (Λ ⧸ IsLocalRing.maximalIdeal Λ) := ‹Finite (IsLocalRing.ResidueField Λ)›
-  haveI : Finite (Λ ⧸ IsLocalRing.maximalIdeal Λ ^ n) :=
+  have : Finite (Λ ⧸ IsLocalRing.maximalIdeal Λ) := ‹Finite (IsLocalRing.ResidueField Λ)›
+  have : Finite (Λ ⧸ IsLocalRing.maximalIdeal Λ ^ n) :=
     Ideal.finite_quotient_pow (IsNoetherian.noetherian _) n
   refine ⟨Nat.card (Fin c → Λ ⧸ IsLocalRing.maximalIdeal Λ ^ n), fun A x hA hn hmin => ?_⟩
   have hk : Tors Λ (IsLocalRing.ResidueField Λ) := fun b => ⟨1, fun r hr => by
@@ -963,7 +963,7 @@ theorem level : ∀ (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing
   obtain ⟨M, ξ, hM, hMn, hmin, hcard⟩ : P (Nat.findGreatest P N) := Nat.findGreatest_spec (hle _ h0) h0
   refine ⟨M, ξ, hM, hMn, hmin, fun B hB hBn η => ?_⟩
   let A : ModuleCat.{0} Λ := ModuleCat.of Λ (M × B)
-  haveI : Finite A := inferInstanceAs (Finite (M × B))
+  have : Finite A := inferInstanceAs (Finite (M × B))
   have hAn : ∀ x ∈ IsLocalRing.maximalIdeal Λ ^ n, ∀ y : A, x • y = 0 := fun r hr y =>
     Prod.ext (hMn r hr y.1) (hBn r hr y.2)
   let i1 : M ⟶ A := ModuleCat.ofHom (LinearMap.inl Λ M B)
@@ -982,7 +982,7 @@ theorem level : ∀ (Λ : Type) [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing
   have hz2 : (F.map (f ≫ q2)).hom z = η := by
     rw [← map_map, hz, map_add (f := _), map_map, map_map, e12, e22, F.map_id, F.map_zero]
     exact zero_add _
-  haveI hCf : Finite C := Finite.of_injective _ hf
+  have hCf : Finite C := Finite.of_injective _ hf
   set g := f ≫ q1 with hg
   have hsurj : Function.Surjective g.hom := by
     have := hmin (ModuleCat.of Λ (M ⧸ LinearMap.range g.hom)) (fun b => ⟨n, fun r hr => by

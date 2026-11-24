@@ -91,7 +91,7 @@ private theorem go_conj {K : Type} [Field K] (m : GL (Fin 3) K) (hm : m.val.Bloc
     ((m⁻¹).val * Y * m.val).BlockTriangular id ∧ ∀ a, ((m⁻¹).val * Y * m.val) a a = Y a a := by
   have hi : (m⁻¹).val.BlockTriangular id := by
     rw [Matrix.coe_units_inv]
-    haveI := m.invertible
+    have := m.invertible
     exact Matrix.blockTriangular_inv_of_blockTriangular hm
   refine ⟨(hi.mul hY).mul hm, fun a => ?_⟩
   rw [go_diag (hi.mul hY) hm, go_diag hi hY, mul_right_comm, ← go_diag hi hm, Units.inv_mul, Matrix.one_apply_eq,

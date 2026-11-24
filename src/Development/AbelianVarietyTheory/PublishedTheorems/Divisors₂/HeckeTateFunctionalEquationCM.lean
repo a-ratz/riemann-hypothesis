@@ -108,7 +108,7 @@ theorem psiAt_conductor (w : HeightOneSpectrum (𝓞 E)) (t : w.adicCompletion E
   have h := GlobalTheory.StdDual.mem_dualV_iff_valued (isStdChar_stdChar E) w t
   have hD := coeIdeal_differentIdeal ℤ ℚ E (𝓞 E)
   have h2 : -FractionalIdeal.count E w (GlobalTheory.StdDual.codiff E) = (diffExp w : ℤ) := by
-    rw [← FractionalIdeal.count_inv, ← hD, FractionalIdeal.count_coe E w differentIdeal_ne_bot, diffExp,
+    rw [← FractionalIdeal.count_inv, ← hD, FractionalIdeal.count_coeIdeal E w differentIdeal_ne_bot, diffExp,
       ← w.count_normalizedFactors_eq_multiplicity differentIdeal_ne_bot,
       Ideal.count_associates_factors_eq differentIdeal_ne_bot w.isPrime w.ne_bot]
   rw [← h2]
@@ -141,7 +141,7 @@ theorem gaussTerm_congr' {χ : HChar E} {w : HeightOneSpectrum (𝓞 E)} {a : �
     exact congrArg (fun u : ℂˣ => ((u⁻¹ : ℂˣ) : ℂ)) h1
   · have e : y / c = y' / c + (y - y') / c := by ring
     rw [e, map_add (f := _), psiAt_add, psiAt_eq_one (t := algebraMap E _ ((y - y') / c)), mul_one]
-    rw [hval, map_div₀, hc, div_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
+    rw [hval, map_div₀, hc, div_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
     convert hd using 2
     push_cast
     ring
@@ -185,7 +185,7 @@ theorem finite_mulSupport_locEps (χ : HChar E) (a : HeightOneSpectrum (𝓞 E) 
     (Function.mulSupport fun w => locEps χ w (a w) s).Finite := by
   refine ((Ideal.finite_factors (differentIdeal_ne_bot (A := ℤ) (B := 𝓞 E))).union a.support.finite_toSet).subset fun w hw => ?_
   by_contra hn
-  simp only [Set.mem_union, Set.mem_setOf_eq, Finset.mem_coe, Finsupp.mem_support_iff, not_or, not_not] at hn
+  simp only [Set.mem_union, Set.mem_ofPred_eq, Finset.mem_coe, Finsupp.mem_support_iff, not_or, not_not] at hn
   exact hw (by simp only [hn.2]; exact locEps_eq_one χ (multiplicity_eq_zero_of_not_dvd hn.1) s)
 
 theorem archEps_two_mul {I : Type} [Fintype I] (m : I → ℤ) :

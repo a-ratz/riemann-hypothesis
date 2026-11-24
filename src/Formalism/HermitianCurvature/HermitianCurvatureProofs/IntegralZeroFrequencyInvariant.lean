@@ -203,7 +203,7 @@ theorem fatou : FatouParam := by
   have hpt : ∀ᵐ q ∂μ, Tendsto (fun n => ‖J (σ n) q‖ₑ ^ 2) atTop (𝓝 (‖J τ q‖ₑ ^ 2)) := by
     filter_upwards [hJc] with q hq
     have h2 := ((hq τ hτ).tendsto).comp hσW
-    exact ((ENNReal.continuous_pow 2).tendsto _).comp ((continuous_enorm.tendsto _).comp h2)
+    exact ((ENNReal.continuous_pow 2).tendsto _).comp ((continuous_eNorm.tendsto _).comp h2)
   have hcT : Tendsto (fun n => ENNReal.ofReal (c (σ n))) atTop (𝓝 (ENNReal.ofReal (c τ))) :=
     (ENNReal.continuous_ofReal.tendsto _).comp ((hc τ hτ).tendsto.comp hσW)
   calc ∫⁻ q, ‖J τ q‖ₑ ^ 2 ∂μ = ∫⁻ q, liminf (fun n => ‖J (σ n) q‖ₑ ^ 2) atTop ∂μ := by
@@ -213,7 +213,7 @@ theorem fatou : FatouParam := by
     _ ≤ liminf (fun n => ∫⁻ q, ‖J (σ n) q‖ₑ ^ 2 ∂μ) atTop := by
         apply lintegral_liminf_le'
         intro n
-        exact ((hJm (σ n) (hσ n).2).enorm).pow_const 2
+        exact ((hJm (σ n) (hσ n).2).eNorm).pow_const 2
     _ = liminf (fun n => ENNReal.ofReal (c (σ n))) atTop := by
         simp only [hσeq]
     _ = ENNReal.ofReal (c τ) := hcT.liminf_eq
@@ -325,9 +325,9 @@ theorem intZero : IntRdZeroInv := by
   intro n μ _ X h hinv hC1 hI hRI
   set E : ℝ → Matrix (Fin n) (Fin n) ℂ := fun t => NormedSpace.exp ((t : ℂ) • X) with hE
   have hEcont : Continuous E := by
-    letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-    letI : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
+    let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+    let : NormedAlgebra ℚ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
     have h1 : Continuous fun t : ℝ => ((t : ℂ) • X) := by fun_prop
     exact NormedSpace.exp_continuous.comp h1
   have hEadd : ∀ s t : ℝ, E (s + t) = E s * E t := by

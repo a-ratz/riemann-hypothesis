@@ -212,7 +212,7 @@ theorem lie_eq_zero : ∀ (p : ℕ) [Fact p.Prime] (O E : Type) [CommRing O] [Co
     ∀ (f : MvPowerSeries (Fin d) E) (l : G.dual.Lie), c.IsLie f l →
     (In (⊤ : Ideal O) f → constantCoeff f = 0 → l = 0) ∧ (cob1 (up E c.μ) f = 0 → l = 0) := by
   intro p _ O E _ _ _ hF G d c f l hl
-  haveI : IsAdicComplete (Ideal.span {(p : O)}) O := hF.complete
+  have : IsAdicComplete (Ideal.span {(p : O)}) O := hF.complete
   unfold Chart.IsLie at hl
   have key : (∀ n, ∃ s : MvPowerSeries (Fin d) O, MvPowerSeries.map (algebraMap O E) s =
       defect c.μ (p ^ n) f ∧ ∃ z, c.ev n s = (p : O) ^ n • z) → l = 0 := by
@@ -356,7 +356,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C]
   have h1 : ∀ i', coeff (Finsupp.single i 1) (e0 (Sum.inl i')) = (Pi.single i' (1 : C) : Fin d → C) i :=
     fun i' => congrFun (hA i').2 i
   simp only [h2, h1, Finset.sum_const_zero, add_zero, Pi.single_apply, mul_ite, mul_one, mul_zero,
-    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 end GlobalTheory.QLog.RedO
 end -- clump:auto

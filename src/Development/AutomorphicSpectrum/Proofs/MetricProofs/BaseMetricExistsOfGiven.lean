@@ -144,8 +144,8 @@ variable {m m' : Type} [Fintype m] [DecidableEq m] [Fintype m'] [DecidableEq m']
 theorem inv_anti {X Y : Matrix m m ℂ} (hX : X.PosDef) (hY : Y.PosDef) (h : (Y - X).PosSemidef) :
     (X⁻¹ - Y⁻¹).PosSemidef := by
   have hXi : X⁻¹.PosDef := hX.inv
-  haveI : Invertible Y := hY.isUnit.invertible
-  haveI : Invertible X⁻¹ := hXi.isUnit.invertible
+  have : Invertible Y := hY.isUnit.invertible
+  have : Invertible X⁻¹ := hXi.isUnit.invertible
   have hii : X⁻¹⁻¹ = X := Matrix.nonsing_inv_nonsing_inv X ((Matrix.isUnit_iff_isUnit_det X).1 hX.isUnit)
   have h1 := (Matrix.PosDef.fromBlocks₂₂ Y (1 : Matrix m m ℂ) hXi).2 (by
     simpa [hii] using h)
@@ -644,8 +644,8 @@ theorem PositivityTheory.Xgp.t_c_bm_exists_period : Given → ∀ (E : Type) [Fi
   obtain ⟨j, r, p, hr, hj, hw, hp⟩ := exists_family (𝔐 := 𝔐) Rb hcl hx
   have hhol : IsHolTo (Metric.ball 0 1) p := _root_.GlobalTheory.CompanionTheory.Ar.PeriodsHol.isHolTo_of_coordsAt_family 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie 𝔐.all n _ _ p
     Metric.isOpen_ball hw fun u hu => (hp u hu).2.1
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := ⟨⟩
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := ⟨⟩
   obtain ⟨τ₀, hτ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ConstEmbedding.exists_embedding c.F 𝔐.X (𝔐.f ≫ Y.s) n p hhol
   have hint : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, 𝔐.Interior (p u) := fun u hu =>
     (hInt _ _ (hp u hu).2.2).1 (hp u hu).1
@@ -771,10 +771,10 @@ open PositivityTheory.Xgp.c_bm_exists_period FramePeriods in
 theorem PositivityTheory.Xgp.t_c_bm_exists_immersion : Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (Xo : ∀ l : Level H, Moduli D l) (l : Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Φ : Type) [Field Φ] (y : (Σ k, ι k) → Φ) (M : FlagModel y (CMType H) (D.p + D.q) D.p) (𝔐 : HodgeCpt Y S M.x) (tie : FlagTie M 𝔐), 1 ≤ D.p → 1 ≤ D.q → ∀ (d : ℕ), 𝔐.IsCover d → ∀ (Rb : AnLogRes (mCoordIdeal M.x) ⊤ (Fintype.card (CMType H) * D.p * D.q)) (s : Rb.X → Rb.X → ℂ), (∀ (x : Rb.X) (z : Spec (CommRingCat.of ℂ) ⟶ 𝔐.X), CoordsAt 𝔐.ξ M.x z (Rb.lift x x) → (x ∉ bdry s ↔ 𝔐.Interior z)) → IsClosed (bdry s) → ∀ (q : ℕ) (O : Fin q → Set Rb.X) (F : Fin q → FrameData ι (CMType H) (D.p + D.q) M.Ω M.blk), (∀ l, IsOpen (O l)) → (∀ x, ∃ l, x ∈ O l) → (∀ l, M.IsFrame (F l)) → (∀ l, ∀ x ∈ O l, M.GoodAt (F l) (mCoordIdeal (Rb.lift x x))) → ∃ l, ∃ x ∈ O l \ bdry s, ∃ (V : Set Rb.X) (Pi : CMType H → Rb.X → Matrix (Fin (D.p + D.q)) (Fin (D.p + D.q)) ℂ), x ∈ V ∧ IsPeriodOn Rb.A D.p V Pi (fun τ x' => blockG (baseGram tie (F l) τ Rb x')) ∧ ∀ k, x ∈ (Rb.A.chart k).source → ∀ v : Fin (Fintype.card (CMType H) * D.p * D.q) → ℂ, (∀ τ (a b : Fin (D.p + D.q)), D.p + D.q - D.p ≤ (a : ℕ) → (b : ℕ) < D.p + D.q - D.p → ((Pi τ x)⁻¹ * Matrix.of fun a b => fderiv ℂ (fun w => Pi τ ((Rb.A.chart k).symm w) a b) (Rb.A.chart k x) v) a b = 0) → v = 0 := by
   intro hG E _ _ _ H D Xo l c Y S K _ ι _ Φ _ y M 𝔐 tie hp1 _ d hd Rb s hInt hcl q O F hO hcov hF hgood
   have hpq : 1 ≤ D.p + D.q := by omega
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := ⟨⟩
-  haveI : Countable M.Ω := countable_of_tie 𝔐.tie
-  haveI : Countable c.F := 𝔐.cst.injective.countable
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := ⟨⟩
+  have : Countable M.Ω := countable_of_tie 𝔐.tie
+  have : Countable c.F := 𝔐.cst.injective.countable
   obtain ⟨φ, hφ⟩ := exists_embedding c.F M.Ω 𝔐.cst c.F.val.toRingHom
   have tp := _root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie ℂ
   obtain ⟨w, hw⟩ := tp.2.1 (spMap φ ≫ 𝔐.ξ) (𝔐.all _)
@@ -991,7 +991,7 @@ theorem change_gen {F F' : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) (hF'
     rw [minorIJ_mul]; simp [hh]
   simp only [e3] at e1
   rw [eT, detFac_mul _ bR, Matrix.mul_assoc] at e2
-  simp only [hh, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at e2
+  simp only [hh, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at e2
   linear_combination e2 - detFac j p.2 R * e1
 
 theorem change_base {F F' : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) (hF' : M.IsFrame F') {p : Ψ × Fin N}
@@ -1031,10 +1031,10 @@ theorem left_inv_val {F : FrameData ι Ψ N M.Ω M.blk} (hF : M.IsFrame F) {w : 
   rw [Finset.sum_comm]
   simp only [← Finset.sum_mul]
   rw [Finset.sum_eq_single I]
-  · rw [rel I hI, if_pos rfl, one_mul]
+  · rw [rel I hI, ite_eq_left rfl, one_mul]
   · intro I' _ hne
     by_cases h : IsStepRows N j p.2 I'
-    · rw [rel I' h, if_neg hne.symm, zero_mul]
+    · rw [rel I' h, ite_eq_right hne.symm, zero_mul]
     · rw [minor_stepCols_eq_zero M.j_le f I' bf h, mul_zero]
   · simp
 
@@ -1181,7 +1181,7 @@ theorem sum_dy (p : Ψ × Fin N) (L : K → ℝ) :
   have e1 : ∑ k' : NonPluckerBlocks M.blk, (M.b p k' : ℝ) * L k'.1 =
       ∑ k, if h : ∀ p', M.blk p' ≠ some k then (M.b p ⟨k, h⟩ : ℝ) * L k else 0 :=
     Fintype.sum_of_injective Subtype.val Subtype.val_injective _ _
-      (fun k hk => dif_neg fun h => hk ⟨⟨k, h⟩, rfl⟩) (fun k => by rw [dif_pos k.2])
+      (fun k hk => dite_eq_right fun h => hk ⟨⟨k, h⟩, rfl⟩) (fun k => by rw [dite_eq_left k.2])
   have e2 : (M.blk p).elim 0 L = ∑ k, if M.blk p = some k then L k else 0 := by
     cases M.blk p with
     | none => simp
@@ -1190,8 +1190,8 @@ theorem sum_dy (p : Ψ × Fin N) (L : K → ℝ) :
   refine Finset.sum_congr rfl fun k _ => ?_
   unfold FlagModel.dy
   by_cases h : ∀ p', M.blk p' ≠ some k
-  · rw [dif_pos h, dif_pos h, if_neg (h p)]; simp
-  · rw [dif_neg h, dif_neg h]; split_ifs <;> simp
+  · rw [dite_eq_left h, dite_eq_left h, ite_eq_right (h p)]; simp
+  · rw [dite_eq_right h, dite_eq_right h]; split_ifs <;> simp
 
 theorem Rel.smul
     (hgood : ∀ F τ w G, Gr F τ w G → M.IsFrame F ∧ w ∈ mcPts (mCoordIdeal M.x) ∧ M.GoodAt F (mCoordIdeal w) ∧
@@ -1262,7 +1262,7 @@ theorem exists_hom
     if h : ∃ r, Rel M Gr p z r then Real.exp h.choose else refNorm (M.dy p) z
   have fr : ∀ z r, Rel M Gr p z r → f z = Real.exp r := fun z r h => by
     have hex : ∃ r, Rel M Gr p z r := ⟨r, h⟩
-    simp only [f, dif_pos hex]
+    simp only [f, dite_eq_left hex]
     rw [Rel.unique hgood hcomp hex.choose_spec h]
   refine ⟨⟨M.dy p, f, fun z hz => ?_, fun c z hc => ?_⟩, rfl, fun F w G hG z hz ho hn h bh dh => ?_, fun z => ?_⟩
   · simp only [f]
@@ -1282,7 +1282,7 @@ theorem exists_hom
           funext q; simp [torusSmul, hc]
         rw [e] at this
         exact h ⟨_, this⟩
-      simp only [f, dif_neg h, dif_neg h']
+      simp only [f, dite_eq_right h, dite_eq_right h']
       exact refNorm_smul _ _ _
   · obtain ⟨c, hc, e⟩ := ho
     have hG' : Gr F p.1 (basePart M.blk z) G := by
@@ -1307,7 +1307,7 @@ theorem exists_hom
           funext q; simp [conjVec]
         rw [e] at this
         exact h ⟨_, this⟩
-      simp only [f, dif_neg h, dif_neg h']
+      simp only [f, dite_eq_right h, dite_eq_right h']
       simp [refNorm, conjVec]
 
 end PositivityTheory.Xgp.c_bm_exists_hom

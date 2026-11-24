@@ -225,7 +225,7 @@ theorem exists_complete_discreteValuationRing_of_isNormDiscrete :
     by_cases h0 : (⟨a, ha⟩ : R) = 0
     · have h1 : a = 0 := congrArg Subtype.val h0
       rw [h0, map_zero, IsDiscreteValuationRing.addVal_zero, h1, AddValuation.map_zero]
-      exact ⟨fun h => absurd h (ENat.top_ne_coe n), fun h => absurd h WithTop.top_ne_coe⟩
+      exact ⟨fun h => absurd h (ENat.top_ne_natCast n), fun h => absurd h WithTop.top_ne_coe⟩
     · obtain ⟨π, hπ⟩ := hv.2
       have hπm : π ∈ vRing v := by
         rw [normDiscrete_mem_vRing_iff, hπ]
@@ -277,7 +277,7 @@ theorem vV_algebraMap {V K : Type} [CommRing V] [IsDomain V] [IsDiscreteValuatio
   have hx0 : x ≠ 0 := by
     rintro rfl
     rw [IsDiscreteValuationRing.addVal_zero] at hx
-    exact ENat.top_ne_coe n hx
+    exact ENat.top_ne_natCast n hx
   obtain ⟨m, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hx0 hϖ
   rw [IsDiscreteValuationRing.addVal_def' u hϖ m] at hx
   obtain rfl : m = n := by exact_mod_cast hx
@@ -294,8 +294,8 @@ theorem exists_cdvr (Ω : Type) [Field Ω] [CharZero Ω] (v : AddValuation Ω (W
       ∀ a : Ω, a ≠ 0 → ((vV T.V (ψ a) : ℤ) : WithTop ℤ) = v a := by
   obtain ⟨V, K', _, _, _, _, _, _, f, hc, hmem, hval, -⟩ :=
     GlobalTheory.exists_complete_discreteValuationRing_of_isNormDiscrete Ω v hv
-  haveI : CharZero K' := (RingHom.charZero_iff f.injective).1 inferInstance
-  haveI : CharZero V := (algebraMap V K').charZero
+  have : CharZero K' := (RingHom.charZero_iff f.injective).1 inferInstance
+  have : CharZero V := (algebraMap V K').charZero
   let T : CDVR := CDVR.mk V
   let e : FractionRing V ≃ₐ[V] K' := FractionRing.algEquiv V K'
   let ψ : Ω →+* FractionRing V := e.symm.toAlgHom.toRingHom.comp f
@@ -390,11 +390,11 @@ theorem exists_valued_point (hIF : IntFramesSt Xo c) (hbc : FrBC Xo c) (hM : ∀
       (∀ a : Om Z, a ≠ 0 → ((vV T.V (ψ a) : ℤ) : WithTop ℤ) = v a) ∧
       letI := (ψ.comp (algebraMap c.F (Om Z))).toAlgebra
       ∃ z : FrPt Xo c T.Fr, FrMap (algOf ψ) (genFr h Z) z ∧ FrBor t z y.1 := by
-  haveI : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
+  have : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
   obtain ⟨T, ψ, hmem, hval⟩ := exists_cdvr (Om Z) v hv
   obtain ⟨la, hla⟩ := exists_place_nonneg v ho
   obtain ⟨Y, hY⟩ := hM la
-  letI := (ψ.comp (algebraMap c.F (Om Z))).toAlgebra
+  let := (ψ.comp (algebraMap c.F (Om Z))).toAlgebra
   obtain ⟨z, hz⟩ := hbc _ _ (algOf ψ) (genFr h Z)
   have hinj := IsFractionRing.injective T.V T.Fr
   let g : (la.valuation c.F).valuationSubring →+* T.Fr :=
@@ -423,7 +423,7 @@ theorem exists_frameShift_of_valued_points : ReciprocityTheory.ChartRestriction.
     vV (T Z v hh.1 hh.2).V ((t Z v hh.1 hh.2 i : (T Z v hh.1 hh.2).Frˣ) : (T Z v hh.1 hh.2).Fr) else 0, ?_, ?_⟩
   · intro Z v hv ho
     refine ⟨T Z v hv ho, ψ Z v hv ho, y Z v hv ho, hval Z v hv ho, fun a n f hf => ?_⟩
-    letI := ((ψ Z v hv ho).comp (algebraMap c.F (Om Z))).toAlgebra
+    let := ((ψ Z v hv ho).comp (algebraMap c.F (Om Z))).toAlgebra
     have h1 : evI (y Z v hv ho) f = wchar (ex Dw a n) (t Z v hv ho) * evR Xo c f (z Z v hv ho) :=
       hL.wt a n f hf _ (t Z v hv ho) (z Z v hv ho) (y Z v hv ho).1 (hL.test _ _) (y Z v hv ho).2.1 (hb Z v hv ho)
     have h2 : evR Xo c f (z Z v hv ho) = ψ Z v hv ho (evC h Z f) :=
@@ -441,7 +441,7 @@ theorem exists_frameShift_of_valued_points : ReciprocityTheory.ChartRestriction.
   · intro Z
     obtain ⟨S, hS0, hS⟩ := _root_.GlobalTheory.Reg.GenInt.genFr_integral hT E H Dw l Xo c hL.bc Y h Z
     refine ⟨S, hS0, fun v hv ho hs => ?_⟩
-    letI := ((ψ Z v hv ho).comp (algebraMap c.F (Om Z))).toAlgebra
+    let := ((ψ Z v hv ho).comp (algebraMap c.F (Om Z))).toAlgebra
     have hint := hS (T Z v hv ho) _ (algOf (ψ Z v hv ho)) (fun s hs' => by
       have := hval Z v hv ho s (hS0 s hs')
       rw [hs s hs'] at this

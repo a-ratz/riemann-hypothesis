@@ -56,7 +56,7 @@ private theorem UpperTheory.V.KT.fe_lift {X : Type} (s : Set X) (c : X →₀ �
     (hc : c ∈ Finsupp.supported ℤ ℤ s) :
     ∃ f : {t // t ∈ s} →₀ ℤ, Finsupp.mapDomain Subtype.val f = c := by
   have h := Finsupp.lmapDomain_supported ℤ ℤ (Subtype.val : {t // t ∈ s} → X) Set.univ
-  rw [Set.image_univ, Subtype.range_coe_subtype, Set.setOf_mem_eq] at h
+  rw [Set.image_univ, Subtype.range_coe_subtype, Set.ofPred_mem_eq] at h
   rw [← h] at hc
   obtain ⟨f, -, hf⟩ := hc
   exact ⟨f, hf⟩

@@ -133,11 +133,11 @@ theorem exists_min {V L : Type} [CommRing V] [IsDomain V] [ValuationRing V] [Fie
   refine ⟨i, fun j => ?_⟩
   by_cases h0 : c i = 0
   · have := hi j
-    simp only [h0, map_zero, le_zero_iff, Valuation.zero_iff] at this
+    simp only [h0, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at this
     exact ⟨0, by simp [this]⟩
   · have : c j / c i ∈ (ValuationRing.valuation V L).integer := by
       rw [Valuation.mem_integer_iff, map_div₀]
-      exact div_le_one_of_le₀ (hi j) zero_le'
+      exact div_le_one_of_le₀ (hi j) zero_le
     obtain ⟨t, ht⟩ := (ValuationRing.mem_integer_iff V L _).1 this
     exact ⟨t, by rw [ht, div_mul_cancel₀ _ h0]⟩
 
@@ -197,7 +197,7 @@ omit [IsDomain R] [IsDiscreteValuationRing R] in
 theorem gen_injective (B : Subalgebra R D) : Function.Injective (gen R K B) := by
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro x hx
-  letI : Algebra B (TensorProduct R K B) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra B (TensorProduct R K B) := Algebra.TensorProduct.rightAlgebra
   have hl : IsLocalization (Algebra.algebraMapSubmonoid B (nonZeroDivisors R)) (TensorProduct R K B) :=
     IsLocalization.tensorRight K (nonZeroDivisors R)
   obtain ⟨⟨b, c⟩, e⟩ := IsLocalization.surj (Algebra.algebraMapSubmonoid B (nonZeroDivisors R)) x
@@ -229,11 +229,11 @@ theorem smooth_away {π : R} (hπ : Irreducible π) (B : Type) [CommRing B] [Alg
   have := away_of_irreducible R K hπ
   have h₁ : Algebra.Smooth R K := Algebra.Smooth.of_isLocalization_Away π
   have h₂ : Algebra.Smooth R (TensorProduct R K B) := Algebra.Smooth.comp R K _
-  letI : Algebra B (TensorProduct R K B) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra B (TensorProduct R K B) := Algebra.TensorProduct.rightAlgebra
   have hl : IsLocalization (Algebra.algebraMapSubmonoid B (Submonoid.powers π)) (TensorProduct R K B) :=
     IsLocalization.tensorRight K (Submonoid.powers π)
   rw [Algebra.algebraMapSubmonoid_powers] at hl
-  haveI : IsScalarTower R B (TensorProduct R K B) := Algebra.TensorProduct.right_isScalarTower
+  have : IsScalarTower R B (TensorProduct R K B) := Algebra.TensorProduct.right_isScalarTower
   exact Algebra.Smooth.of_equiv ((IsLocalization.algEquiv (Submonoid.powers (algebraMap R B π))
     (TensorProduct R K B) (Localization.Away (algebraMap R B π))).restrictScalars R)
 end Alg
@@ -251,15 +251,15 @@ theorem exists_affine (R K : Type) [CommRing R] [IsDomain R] [IsDiscreteValuatio
           ∀ x, ψ (1 ⊗ₜ x) = algebraMap V L (b x) := by
   obtain ⟨H, -, m, s, hc, hs⟩ := hf
   choose haff r hr hsurj using hs
-  letI : ∀ i, Algebra K Γ(X, nonzeroLocus (s i)) := fun i => (cst f _).toAlgebra
-  letI : ∀ i, Algebra R Γ(X, nonzeroLocus (s i)) := fun i => ((cst f _).comp (algebraMap R K)).toAlgebra
-  haveI : ∀ i, IsScalarTower R K Γ(X, nonzeroLocus (s i)) := fun i => IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : ∀ i, Algebra K Γ(X, nonzeroLocus (s i)) := fun i => (cst f _).toAlgebra
+  let : ∀ i, Algebra R Γ(X, nonzeroLocus (s i)) := fun i => ((cst f _).comp (algebraMap R K)).toAlgebra
+  have : ∀ i, IsScalarTower R K Γ(X, nonzeroLocus (s i)) := fun i => IsScalarTower.of_algebraMap_eq fun _ => rfl
   let e : ∀ i, TensorProduct R K (Algebra.adjoin R (Set.range (r i))) ≃ₐ[K] Γ(X, nonzeroLocus (s i)) := fun i =>
     AlgEquiv.ofBijective (gen R K _) ⟨gen_injective R K _, gen_surjective R K _ (hsurj i)⟩
   refine ⟨m + 1, fun i => Algebra.adjoin R (Set.range (r i)), inferInstance, inferInstance,
     fun i => spMap (e i).symm.toAlgHom.toRingHom ≫ (haff i).fromSpec, fun i => ⟨?_, flat_sub R K _, ?_, ?_⟩, ?_⟩
   · exact Algebra.FiniteType.adjoin_of_finite (Set.finite_range _)
-  · haveI : IsIso (spMap (e i).symm.toAlgHom.toRingHom) :=
+  · have : IsIso (spMap (e i).symm.toAlgHom.toRingHom) :=
       inferInstanceAs (IsIso (Spec.map (e i).symm.toRingEquiv.toCommRingCatIso.hom))
     infer_instance
   · rw [Category.assoc, fromSpec_hom, sp_comp]
@@ -273,8 +273,8 @@ theorem exists_affine (R K : Type) [CommRing R] [IsDomain R] [IsDiscreteValuatio
         rw [← sp_comp, ← fromSpec_hom f (haff i), reassoc_of% h₁]
       rw [← ha, reassoc_of% h₀, sp_comp]
       rfl
-    letI : Algebra R L := ((algebraMap V L).comp (algebraMap R V)).toAlgebra
-    haveI : IsScalarTower R V L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    let : Algebra R L := ((algebraMap V L).comp (algebraMap R V)).toAlgebra
+    have : IsScalarTower R V L := IsScalarTower.of_algebraMap_eq fun _ => rfl
     let φ : Γ(X, nonzeroLocus (s i)) →ₐ[R] L := ⟨ev a _ h, fun c => congrArg (fun q => q c) h₂⟩
     have hle : Algebra.adjoin R (Set.range (r i)) ≤ (IsScalarTower.toAlgHom R V L).range.comap φ := by
       rw [Algebra.adjoin_le_iff]
@@ -307,7 +307,7 @@ theorem exists_weakNeron : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscret
     obtain ⟨-, -, h₃, h₄⟩ := hB i
     have h₅ : Smooth (spMap (algebraMap K (TensorProduct R K (B i)))) := by rw [← h₄]; infer_instance
     rw [HasRingHomProperty.Spec_iff (P := @Smooth)] at h₅
-    haveI := RingHom.smooth_algebraMap.mp h₅
+    have := RingHom.smooth_algebraMap.mp h₅
     exact smooth_away R K hπ (B i)
   have h₁ := fun i => by
     haveI := (hB i).1
@@ -316,7 +316,7 @@ theorem exists_weakNeron : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscret
   choose n C instR instA φ hC hlift using h₁
   have h₂ := fun i k => _root_.GlobalTheory.ChartModel.exists_model_of_chart R K A hsm inferInstance inferInstance (C i k) (hC i k).1
     (spMap (Algebra.TensorProduct.map (AlgHom.id K K) (φ i k)).toRingHom ≫ u i)
-    (by haveI := (hC i k).2; haveI := (hB i).2.2.1; infer_instance)
+    (by have := (hC i k).2; have := (hB i).2.2.1; infer_instance)
     (by
       rw [Category.assoc, (hB i).2.2.2, sp_comp]
       exact congrArg spMap (AlgHom.comp_algebraMap (Algebra.TensorProduct.map (AlgHom.id K K) (φ i k))))
@@ -342,8 +342,8 @@ theorem exists_weakNeron : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscret
     rw [Category.assoc, hg₂, sp_comp]
     exact congrArg spMap (AlgHom.comp_algebraMap c)
   have hgen : spMap (algebraMap V L) ≫ spMap c.toRingHom ≫ g i k = a ≫ (M i k).j := by
-    letI : Algebra R L := ((algebraMap V L).comp (algebraMap R V)).toAlgebra
-    haveI : IsScalarTower R V L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    let : Algebra R L := ((algebraMap V L).comp (algebraMap R V)).toAlgebra
+    have : IsScalarTower R V L := IsScalarTower.of_algebraMap_eq fun _ => rfl
     let ψ₀ : TensorProduct R K (B i) →ₐ[R] L := ⟨ψ, fun x => by
       have := hb (algebraMap R _ x)
       rw [AlgHom.commutes] at this
@@ -373,7 +373,7 @@ theorem exists_weakNeron : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscret
   have hsp : (spMap c.toRingHom ≫ g i k) (IsLocalRing.closedPoint V) ∈ (M i k).sp := by
     show (M i k).Y.hom ((spMap c.toRingHom ≫ g i k) _) = _
     rw [← Scheme.Hom.comp_apply, hb₀]
-    haveI : IsLocalHom (algebraMap R V) := by
+    have : IsLocalHom (algebraMap R V) := by
       apply ((IsLocalRing.local_hom_tfae (algebraMap R V)).out 1 3).2
       exact hmax.le
     exact IsLocalRing.comap_closedPoint (algebraMap R V)

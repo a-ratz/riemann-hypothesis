@@ -86,7 +86,7 @@ theorem exists_derivation_eq_one_of_pow_mem : ∀ (p : ℕ) [Fact p.Prime] (K : 
     rw [hq, map_sub, map_pow, aeval_X, aeval_C]
     exact sub_eq_zero.mpr rfl
   have hirr : Irreducible q := by
-    apply X_pow_sub_C_irreducible_of_prime hpp
+    apply irreducible_X_pow_sub_C_of_prime hpp
     intro b hb
     apply hfL
     have h1 : (b : K) ^ p = f ^ p := by
@@ -154,7 +154,7 @@ theorem cfmax_finrank (p : ℕ) [hp : Fact p.Prime] (K : Type) [Field K] [CharP 
     (L : Subfield K) (z : K) (hz : z ∉ L) (hzp : z ^ p ∈ L) :
     IsIntegral L z ∧ Module.finrank L (IntermediateField.adjoin L ({z} : Set K)) = p := by
   have hirr : Irreducible (X ^ p - C (⟨z ^ p, hzp⟩ : L)) := by
-    apply X_pow_sub_C_irreducible_of_prime hp.out
+    apply irreducible_X_pow_sub_C_of_prime hp.out
     intro b hb
     apply hz
     have hb' : (b : K) ^ p = z ^ p := by
@@ -200,7 +200,7 @@ theorem cfmax_main : ∀ (p : ℕ) [Fact p.Prime] (K : Type) [Field K] [CharP K 
       exact hy (hmax.le_of_ge hM hLM (IntermediateField.mem_adjoin_simple_self L y))
     have hle : IntermediateField.adjoin L ({f} : Set K) ≤ IntermediateField.adjoin L ({y} : Set K) :=
       IntermediateField.adjoin_simple_le_iff.mpr hfy
-    haveI : FiniteDimensional L (IntermediateField.adjoin L ({y} : Set K)) :=
+    have : FiniteDimensional L (IntermediateField.adjoin L ({y} : Set K)) :=
       IntermediateField.adjoin.finiteDimensional hiy
     have heq := IntermediateField.eq_of_le_of_finrank_eq hle (hdf.trans hdy.symm)
     rw [heq]
@@ -226,7 +226,7 @@ theorem exists_pow_eq_of_kaehler_D_eq_zero : ∀ (p : ℕ) [Fact p.Prime] (k : T
   have hK : (p : K) = 0 := by
     have := congrArg (algebraMap k K) hk
     simpa using this
-  haveI : CharP K p := (CharP.charP_iff_prime_eq_zero hp.out).2 hK
+  have : CharP K p := (CharP.charP_iff_prime_eq_zero hp.out).2 hK
   let F : Subfield K := (frobenius K p).fieldRange
   have hF : ∀ y : K, y ^ p ∈ F := fun y => ⟨y, by simp [frobenius_def]⟩
   have hfF : f ∉ F := by

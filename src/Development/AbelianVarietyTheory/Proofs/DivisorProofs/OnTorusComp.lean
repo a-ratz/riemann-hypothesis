@@ -85,11 +85,11 @@ noncomputable section
 namespace GlobalTheory.TorsRigid
 
 theorem epi_spMap_field {k Ω : Type} [Field k] [Field Ω] (σ : k →+* Ω) : Epi (spMap σ) := by
-  letI := σ.toAlgebra
-  haveI : Flat (spMap σ) := by
+  let := σ.toAlgebra
+  have : Flat (spMap σ) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact RingHom.flat_algebraMap_iff.2 inferInstance
-  haveI : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
+  have : Surjective (spMap σ) := ⟨fun p => ⟨IsLocalRing.closedPoint Ω, Subsingleton.elim _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
 
 theorem torsion_rigid : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), ∀ (K L : Type) [Field K] [Field L] (y : Sp K ⟶ Xo.XF c) (x : Over.mk (y ≫ pullback.fst _ _) ⟶ Xo.univ.t.G), x ^ l.M' = 1 → ∀ κ₁ κ₂ : Sp L ⟶ Sp K, κ₁ ≫ y = κ₂ ≫ y → κ₁ ≫ x.left = κ₂ ≫ x.left := by
@@ -101,7 +101,7 @@ theorem torsion_rigid : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {
   have hy : y = spMap φ' ≫ y₀ := hyp.symm
   let K' := AlgebraicClosure K
   let ιK : K →+* K' := algebraMap K K'
-  haveI := epi_spMap_field ιK
+  have := epi_spMap_field ιK
   let j : Over.mk (spMap (ιK.comp φ') ≫ y₀ ≫ pullback.fst _ _) ⟶
       Over.mk (y ≫ pullback.fst _ _) :=
     Over.homMk (spMap ιK) (by
@@ -192,7 +192,7 @@ theorem OverU.cancel {X X' S : Scheme.{0}} {u : SAB H X} {u' : SAB H X'} {A : Po
 
 theorem overU_gen {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {t : SAB H (Sp R)} (P : PELUnif I t) :
     OverU t P.A P.oA (jK R) (P.U.gen.inv.left ≫ pullback.fst t.G.hom (jK R)) := by
-  letI := H.starRing
+  let := H.starRing
   have := P.U.gen_hom
   refine ⟨?_, fun x => ?_, ?_⟩
   · have : IsMonHom P.U.gen.symm.hom := by show IsMonHom P.U.gen.inv; infer_instance
@@ -244,7 +244,7 @@ theorem two_match {X : Scheme.{0}} (u : SAB H X) (V : Type) [CommRing V] [IsDoma
         QkToAkU P₁.U.toUnifPre (AlgebraicClosure (FractionRing V)) k p₁ x₁ →
         QkToAkU P₂.U.toUnifPre (AlgebraicClosure (FractionRing V)) k p₂ x₂ → x₁.left ≫ α₁ = x₂.left ≫ α₂ →
         QImg b φ p₁ p₂ := by
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨D₁, o₁, A₁, oA₁, U₁, bu₁, l₁, ww₁⟩ := P₁
   obtain ⟨D₂, o₂, A₂, oA₂, U₂, bu₂, l₂, ww₂⟩ := P₂
   dsimp only at *
@@ -252,11 +252,11 @@ theorem two_match {X : Scheme.{0}} (u : SAB H X) (V : Type) [CommRing V] [IsDoma
   have hG₂ := t₂.semi
   have hA : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hc⟩
   obtain ⟨cA, hcA, hα⟩ := grpPullback_iso hO₁.1 hO₂.1
-  haveI := U₁.gen_hom
-  haveI := U₂.gen_hom
-  haveI := hcA
+  have := U₁.gen_hom
+  have := U₂.gen_hom
+  have := hcA
   let e : (Over.pullback (jK V)).obj t₁.G ≅ (Over.pullback (jK V)).obj t₂.G := U₁.gen ≪≫ cA ≪≫ U₂.gen.symm
-  haveI : IsMonHom e.hom := by
+  have : IsMonHom e.hom := by
     show IsMonHom (U₁.gen.hom ≫ cA.hom ≫ U₂.gen.inv)
     infer_instance
   obtain ⟨a, ⟨ha, hae⟩, -⟩ :=
@@ -362,7 +362,7 @@ theorem pull_tors {R V : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [CharZe
     h4.unifBaseChange h5 hR hV t P f hf hI
   refine ⟨t', m, P', hD, xl, el, ?_⟩
   intro F₀ _ _ _ F _ _ _ j hj k hk p₀ x₀ hx₀
-  letI : Algebra (FractionRing R) F := (j.comp (algebraMap (FractionRing R) F₀)).toAlgebra
+  let : Algebra (FractionRing R) F := (j.comp (algebraMap (FractionRing R) F₀)).toAlgebra
   let σ : F₀ →ₐ[FractionRing R] F := { j with commutes' := fun _ => rfl }
   have hB := P.D.tau_bimult
   have hF : ∀ r : R, algebraMap (FractionRing R) F (algebraMap R _ r) =

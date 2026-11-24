@@ -68,15 +68,15 @@ theorem vol_ratio : ∀ {G : Type} [Group G] [TopologicalSpace G] [IsTopological
   intro G _ _ _ _ _ μ _ A B hC hA hB
   have hCA : A ⊓ B ≤ A := inf_le_left
   have hCB : A ⊓ B ≤ B := inf_le_right
-  haveI : CompactSpace A := isCompact_iff_compactSpace.mp hA
-  haveI : CompactSpace B := isCompact_iff_compactSpace.mp hB
-  haveI : ((A ⊓ B).subgroupOf A).FiniteIndex := by
-    haveI := Subgroup.quotient_finite_of_isOpen ((A ⊓ B).subgroupOf A)
-      (hC.preimage continuous_subtype_val)
+  have : CompactSpace A := isCompact_iff_compactSpace.mp hA
+  have : CompactSpace B := isCompact_iff_compactSpace.mp hB
+  have : ((A ⊓ B).subgroupOf A).FiniteIndex := by
+    have := Subgroup.quotient_finite_of_isOpen ((A ⊓ B).subgroupOf A)
+      (hC.preimage continuous_subtypeVal)
     exact Subgroup.finiteIndex_of_finite_quotient
-  haveI : ((A ⊓ B).subgroupOf B).FiniteIndex := by
-    haveI := Subgroup.quotient_finite_of_isOpen ((A ⊓ B).subgroupOf B)
-      (hC.preimage continuous_subtype_val)
+  have : ((A ⊓ B).subgroupOf B).FiniteIndex := by
+    have := Subgroup.quotient_finite_of_isOpen ((A ⊓ B).subgroupOf B)
+      (hC.preimage continuous_subtypeVal)
     exact Subgroup.finiteIndex_of_finite_quotient
   have hCm : MeasurableSet ((A ⊓ B : Subgroup G) : Set G) := hC.measurableSet
   have h1 := relIndex_mul_measure_sub (A ⊓ B) A hCA hCm μ

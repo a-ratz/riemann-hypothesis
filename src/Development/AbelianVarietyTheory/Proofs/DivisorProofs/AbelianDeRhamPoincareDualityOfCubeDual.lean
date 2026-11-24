@@ -100,7 +100,7 @@ theorem evc_lam {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left} (hL : L
 
 theorem isAdditive_lam (hC : GlobalTheory.Published.CubeTheorem) {S : Scheme.{0}} {A : Over S} [GrpObj A] (hA : IsAbelianScheme A)
     {L : LB A.left} (hL : L.IsLB) (hP : (abelian₂ A L).IsLB) : IsAdditive (abelian₂ A L) ∧ IsAdditive (swap (abelian₂ A L)) := by
-  haveI := hA.comm
+  have := hA.comm
   have hs : (swap (abelian₂ A L)).IsLB := pull_isLB hP _
   refine ⟨(isAdditive_iff hP).2 fun Y a a' t ↦ ?_, (isAdditive_iff hs).2 fun Y a a' t ↦ ?_⟩
   · rw [evc_lam hL, evc_lam hL, evc_lam hL]
@@ -127,13 +127,13 @@ theorem mono_of_isPerfect' {S : Scheme.{0}} {A B B' : Over S} [GrpObj A] [GrpObj
 theorem abelianDeRham_duality : GlobalTheory.Published.CubeTheorem → GlobalTheory.Published.DualAbelianScheme →
     GlobalTheory.Published.PoincareDeRhamDuality → GlobalTheory.Published.AbelianDeRham.Free → GlobalTheory.Published.AbelianDeRham.Duality := by
   intro hC hD hPD hF R _ A _ g hA hg L hL ψ hψ
-  haveI := hA.comm
+  have := hA.comm
   have hP : (abelian₂ A L).IsLB := LB.isLB_linComb hL _ _
   obtain ⟨haddL, haddS⟩ := isAdditive_lam hC hA hL hP
   obtain ⟨B, _, P, hB, hdim, h1, h2⟩ := hD (Sp R) A hA
   have hgB := hdim g hg
   obtain ⟨x, hx, -⟩ := h1.univ A (abelian₂ A L) hP haddL
-  haveI hmx : IsMonHom x := GlobalTheory.AbDual.isMonHom_of_classifying (Sp R) A A B (abelian₂ A L) P h1 h2.additive hP haddS x hx
+  have hmx : IsMonHom x := GlobalTheory.AbDual.isMonHom_of_classifying (Sp R) A A B (abelian₂ A L) P h1 h2.additive hP haddS x hx
   have perf := h1.isPerfect h2
   obtain ⟨φ, hφ⟩ := exists_isCorrForm (cupSquare_of_free hF (AbelianSchemeGerms.isAbelianScheme_tensor A B hA hB) (smooth_prod hg hgB))
     perf.isLB perf.zero_left perf.zero_right

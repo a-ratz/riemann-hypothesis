@@ -67,7 +67,7 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor TopologicalSpace Polynomial
 theorem exists_pow_mul_eq_zero {k R : Type} [CommRing k] [CommRing R] (hk : IsField k) (φ : k →+* R)
     (a : R) (ha : φ.IsIntegralElem a) :
     ∃ (m : ℕ) (c b : R), IsUnit c ∧ a ^ m * (c + a * b) = 0 := by
-  letI := hk.toField
+  let := hk.toField
   obtain ⟨p, hp, h0⟩ := ha
   obtain ⟨q, hq, hnd⟩ := exists_eq_pow_rootMultiplicity_mul_and_not_dvd p hp.ne_zero 0
   rw [map_zero, sub_zero] at hq hnd

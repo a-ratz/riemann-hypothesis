@@ -206,9 +206,9 @@ theorem coeff_chosenRed_eq_redHom : ∀ (D : D7) (X : HidaSetting D) (red : X.B.
   intro D X red hred a ha x
   by_cases hx : x ∈ X.B.I.Kset
   · have hc : x ∈ X.B.I.Kset ∧ ∃ γ : G0g D.nd, GoodAt X x γ := ⟨hx, red x, hred.1 x hx⟩
-    rw [dite_eq_left hc, if_pos hx,
+    rw [dite_eq_left hc, ite_eq_left hx,
       coeff_goodAt_eq D X a ha x (red x) (Classical.choose hc.2) (hred.1 x hx) (Classical.choose_spec hc.2)]
-  · rw [dite_eq_right (fun h => hx h.1), if_neg hx]
+  · rw [dite_eq_right (fun h => hx h.1), ite_eq_right hx]
 
 end GlobalTheory
 end -- clump:auto
@@ -285,7 +285,7 @@ theorem exists_weakIntegral_of_stronglyContinuous {X H : Type*} [TopologicalSpac
 theorem AutInst_exists_isRConvF_and_isRConv : ∀ (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure] [SigmaFinite μf] (fund : Set I.GA), I.IsFundDom (I.muA μf) fund → ∀ R : I.GA → (I.L2 μf fund →L[ℂ] I.L2 μf fund), I.IsRightReg μf fund R → (∀ e : I.Gf → ℂ, Integrable e μf → ∃ T, I.IsRConvF μf fund R e T) ∧ ∀ φ : I.GA → ℂ, Integrable φ (I.muA μf) → ∃ T, I.IsRConv μf fund R φ T := by
   intro I μf _ _ fund hfund R hR
   obtain ⟨-, -, hn, hc⟩ := _root_.GlobalTheory.RightRegProps.rightReg_unitary_mul_continuous I μf fund hfund R hR
-  haveI := _root_.GlobalTheory.CongTop.secondCountable_finiteAdelicPoints I
+  have := _root_.GlobalTheory.CongTop.secondCountable_finiteAdelicPoints I
   refine ⟨fun e he => ?_, fun φ hφ => ?_⟩
   · obtain ⟨T, hT⟩ := exists_weakIntegral_of_stronglyContinuous μf (fun g => R (1, g))
       (fun g F => hn _ F) (fun F => (hc F).comp (by fun_prop)) e he
@@ -376,12 +376,12 @@ theorem integral_inflate [Fintype Q] (μf : Measure I.Gf) [μf.IsHaarMeasure] (h
       fun x => ∑ q, {x | x ∈ I.Kset ∧ ρ.toFun x = q}.indicator (fun _ => F q) x := by
     funext x
     by_cases hx : x ∈ I.Kset
-    · rw [if_pos hx, Finset.sum_eq_single (ρ.toFun x)]
+    · rw [ite_eq_left hx, Finset.sum_eq_single (ρ.toFun x)]
       · rw [Set.indicator_of_mem]
         exact ⟨hx, rfl⟩
       · exact fun q _ hq => Set.indicator_of_notMem (by exact fun h => hq h.2.symm) _
       · exact fun h => absurd (Finset.mem_univ _) h
-    · rw [if_neg hx]
+    · rw [ite_eq_right hx]
       exact (Finset.sum_eq_zero fun q _ => Set.indicator_of_notMem (by exact fun h => hx h.1) _).symm
   have hi : ∀ q, Integrable ({x | x ∈ I.Kset ∧ ρ.toFun x = q}.indicator (fun _ => F q)) μf := fun q =>
     (integrable_indicator_iff (hm q).1).2 (integrableOn_const ((hm q).2 ▸ hfin))
@@ -393,7 +393,7 @@ theorem integral_inflate [Fintype Q] (μf : Measure I.Gf) [μf.IsHaarMeasure] (h
 
 theorem integrable_lift [Finite Q] (μf : Measure I.Gf) [μf.IsHaarMeasure] (hg : 1 ≤ g) (a : MonoidAlgebra ℂ Q) :
     Integrable (ρ.lift μf a) μf := by
-  letI := Fintype.ofFinite Q
+  let := Fintype.ofFinite Q
   exact (integral_inflate ρ μf hg fun q => a.coeff q / ((μf (I.Kg g)).toReal : ℂ)).1
 
 theorem lift_biinv (μf : Measure I.Gf) (a : MonoidAlgebra ℂ Q) (x : I.Gf) (k : I.Gf) (hk : k ∈ I.Kg g)
@@ -708,14 +708,14 @@ theorem rightConv_unique_add_smul_mul_comm : ∀ (I : AutInst) (μf : Measure I.
     refine ⟨h.1.add h'.1, fun z y => ?_⟩
     have i1 := integrable_mul_coeff (μ := μf) (π := fun g : I.Gf => R (1, g)) hn' hc' h.1 z y
     have i2 := integrable_mul_coeff (μ := μf) (π := fun g : I.Gf => R (1, g)) hn' hc' h'.1 z y
-    rw [ContinuousLinearMap.add_apply, inner_add_right, h.2, h'.2, ← integral_add i1 i2]
+    rw [add_apply, inner_add_right, h.2, h'.2, ← integral_add i1 i2]
     congr 1
     ext g
     simp only [Pi.add_apply]
     ring
   · intro c e T h
     refine ⟨h.1.smul c, fun z y => ?_⟩
-    rw [ContinuousLinearMap.smul_apply, inner_smul_right, h.2, ← integral_const_mul]
+    rw [smul_apply, inner_smul_right, h.2, ← integral_const_mul]
     congr 1
     ext g
     simp only [Pi.smul_apply, smul_eq_mul]
@@ -767,14 +767,14 @@ theorem mem_VT_of_sum_fixed : ∀ (D : D7) (X : HidaSetting D) (red : X.B.I.Gf �
     · unfold egA
       convert GlobalTheory.coeff_chosenRed_eq_redHom D X red hred (ES {t}) hcent x using 2
     by_cases hx : x ∈ X.B.I.Kset
-    · rw [if_pos hx, GlobalTheory.RowLev.Red.lift_of_mem ρ _ _ hx]
-    · rw [if_neg hx, GlobalTheory.RowLev.Red.lift_of_notMem ρ _ _ hx]
+    · rw [ite_eq_left hx, GlobalTheory.RowLev.Red.lift_of_mem ρ _ _ hx]
+    · rw [ite_eq_right hx, GlobalTheory.RowLev.Red.lift_of_notMem ρ _ _ hx]
   obtain ⟨h1R, hm, hn, -⟩ := GlobalTheory.RightRegProps.rightReg_unitary_mul_continuous X.B.I X.B.μf X.B.fund
     X.B.fund_spec X.B.R X.B.R_spec
   obtain ⟨huniq, -, -, hprod, -⟩ := GlobalTheory.WeakConv.rightConv_unique_add_smul_mul_comm X.B.I X.B.μf X.B.fund X.B.R
     X.B.fund_spec X.B.R_spec
   obtain ⟨hQ, -, -, -, -, hinfl, -, -, -⟩ := GlobalTheory.InflBasic.inflation_basic X.B.I X.B.g (G0g D.nd) ρ X.B.μf hg
-  letI : Fintype (G0g D.nd) := Fintype.ofFinite _
+  let : Fintype (G0g D.nd) := Fintype.ofFinite _
   obtain ⟨hlint, hlloc, -⟩ := hinfl (ES {t})
   obtain ⟨Ta, hTa⟩ := (GlobalTheory.AutInst_exists_isRConvF_and_isRConv X.B.I X.B.μf X.B.fund X.B.fund_spec X.B.R
     X.B.R_spec).1 _ hlint
@@ -808,7 +808,7 @@ theorem mem_VT_of_sum_fixed : ∀ (D : D7) (X : HidaSetting D) (red : X.B.I.Gf �
     refine ⟨(Formalism.UG.stabGL X.B.I.Lf).one_mem, fun y _ => ⟨0, X.B.I.Lf.zero_mem, ?_⟩⟩
     have : X.B.I.fmat 1 = 1 := rfl
     simp [this]
-  haveI : SecondCountableTopology X.B.I.Gf := GlobalTheory.CongTop.secondCountable_finiteAdelicPoints X.B.I
+  have : SecondCountableTopology X.B.I.Gf := GlobalTheory.CongTop.secondCountable_finiteAdelicPoints X.B.I
   have hfix : ∀ k ∈ X.B.I.Kg X.B.g, X.B.R (1, k) f = f := by
     intro k hk
     have h := GlobalTheory.IdemProj.op_fixed X.B.μf (fun g => X.B.R (1, g)) p1 pm pn X.B.e X.B.Re X.B.Re_spec.2 k
@@ -972,7 +972,7 @@ theorem rt_one (f : GAf L n → ℂ) : Formalism.L2.NG.rt L n 1 f = f := by
 theorem exists_lifts (n : ℕ) (s : SplitPlace L) (g : ℕ) (hg : g.Prime) :
     ∃ ℓ : GL (Fin n) (ZMod g) → GAf L n, ∀ γ, IsLift s (ℓ γ) γ := by
   classical
-  haveI : Fact g.Prime := ⟨hg⟩
+  have : Fact g.Prime := ⟨hg⟩
   have key : ∀ γ : GL (Fin n) (ZMod g), ∃ x : GAf L n, IsLift s x γ := by
     intro γ
     let A : Matrix (Fin n) (Fin n) ℤ := fun i j => (((γ : Matrix (Fin n) (Fin n) (ZMod g)) i j).val : ℤ)
@@ -1010,7 +1010,7 @@ theorem sum_serCoef_rt : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formalism
   classical
   obtain ⟨hred, hex, hlift⟩ := hFR
   obtain ⟨-, hmul, -, hker⟩ := hred
-  haveI : ∀ k : Fin 2, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
+  have : ∀ k : Fin 2, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
   have kap_mul : ∀ k k' : X.B.I.Gf, kap X h t (k * k') = kap X h t k * kap X h t k' := by
     intro k k'
     have e : ((1, k * k') : X.B.I.GA) = (1, k) * (1, k') := by rw [Prod.mk_mul_mk, one_mul]
@@ -1028,15 +1028,15 @@ theorem sum_serCoef_rt : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formalism
     rw [e, map_inv]
     exact ci _
   have K_one : (1 : X.B.I.Gf) ∈ X.B.I.Kset := by
-    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq, OneMemClass.coe_one]
+    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq, OneMemClass.coe_one]
     exact one_mem _
   have K_mul : ∀ a b : X.B.I.Gf, a ∈ X.B.I.Kset → b ∈ X.B.I.Kset → a * b ∈ X.B.I.Kset := by
     intro a b ha hb
-    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq, Subgroup.coe_mul] at *
+    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq, Subgroup.coe_mul] at *
     exact mul_mem ha hb
   have K_inv : ∀ a : X.B.I.Gf, a ∈ X.B.I.Kset → a⁻¹ ∈ X.B.I.Kset := by
     intro a ha
-    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq, InvMemClass.coe_inv] at *
+    simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq, InvMemClass.coe_inv] at *
     exact inv_mem ha
   have red_one : red 1 = 1 := by
     have e := hmul 1 K_one 1 K_one
@@ -1307,12 +1307,12 @@ theorem mult_lev_left {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : D.
   | zero => exact ⟨fun v k _ g => by simp, fun v γ _ g => by simp⟩
   | add x y _ _ hx hy =>
     refine ⟨fun v k hk g => ?_, fun v γ hγ g => ?_⟩
-    · simp only [MultilinearMap.add_apply, Pi.add_apply, hx.1 v k hk g, hy.1 v k hk g]; ring
-    · simp only [MultilinearMap.add_apply, Pi.add_apply, hx.2 v γ hγ g, hy.2 v γ hγ g]
+    · simp only [add_apply, Pi.add_apply, hx.1 v k hk g, hy.1 v k hk g]; ring
+    · simp only [add_apply, Pi.add_apply, hx.2 v γ hγ g, hy.2 v γ hγ g]
   | smul c x _ hx =>
     refine ⟨fun v k hk g => ?_, fun v γ hγ g => ?_⟩
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, hx.1 v k hk g]; ring
-    · simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, hx.2 v γ hγ g]
+    · simp only [smul_apply, Pi.smul_apply, smul_eq_mul, hx.1 v k hk g]; ring
+    · simp only [smul_apply, Pi.smul_apply, smul_eq_mul, hx.2 v γ hγ g]
 
 end GlobalTheory.LabPinAt
 

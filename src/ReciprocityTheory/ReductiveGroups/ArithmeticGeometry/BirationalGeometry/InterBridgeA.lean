@@ -127,7 +127,7 @@ theorem pushForward_null' [CompactSpace X] [T2Space X] (A : FinHolAtlas e X)
     apply setIntegral_congr_set
     rw [ae_eq_set]
     refine ⟨measure_mono_null (target_diff_goodT_subset A q S hq j) (hS j), ?_⟩
-    rw [diff_eq_empty.2 (show goodT A q j ⊆ (A.chart j).target from fun u hu => hu.1)]
+    rw [sdiff_eq_empty.2 (show goodT A q j ⊆ (A.chart j).target from fun u hu => hu.1)]
     exact measure_empty
   have hj : ∀ j y, y ∉ (q ∘ (A.chart j).symm) '' (goodT A q j ∩ (A.chart j).symm ⁻¹' S) →
       fibSum (goodT A q j) (q ∘ (A.chart j).symm) (fun u => Pt.χ j ((A.chart j).symm u) * g ((A.chart j).symm u) * locDens A Φ j u) y =
@@ -241,7 +241,7 @@ theorem exists_monic_rel (Ψ : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (e 
   let φw : MvPolynomial ((k : K) → ι k) ℂ →+* (Z → ℂ) :=
     Pi.ringHom fun z : Z => MvPolynomial.eval (segre z.1)
   let φy : R →+* (Z → ℂ) := Pi.ringHom fun z : Z => MvPolynomial.eval (Ψ (segre z.1))
-  letI : Algebra R (Z → ℂ) := φy.toAlgebra
+  let : Algebra R (Z → ℂ) := φy.toAlgebra
   have hsmul : ∀ (c : R) (x : Z → ℂ), c • x = φy c * x := fun c x => Algebra.smul_def c x
   let T : Finset (((k : K) → ι k) →₀ ℕ) :=
     (Fintype.piFinset fun i => Finset.range (r i)).image Finsupp.equivFunOnFinite.symm
@@ -555,11 +555,11 @@ theorem normPoly_of (hM : PCMinContractStatement) : NormPolyStatement := by
     rw [hSdef, Finset.sum_filter]
     refine Finset.sum_congr rfl fun j _ => ?_
     by_cases hj : k0 ≤ j
-    · rw [if_pos hj]
+    · rw [ite_eq_left hj]
       rw [show j = k0 + (j - k0) from (Nat.add_sub_cancel' hj).symm]
       rw [Nat.add_sub_cancel_left, pow_add]
       ring
-    · rw [if_neg hj, hlt j (not_le.mp hj), map_zero, zero_mul]
+    · rw [ite_eq_right hj, hlt j (not_le.mp hj), map_zero, zero_mul]
   have hH := eval_eq_zero_of_mul hM hP (u := f' ^ k0) (fun h' => hf'P (hPp.mem_of_pow_mem _ h'))
     hmul
   set T : Set (Fin (e + 1) → ℂ) :=

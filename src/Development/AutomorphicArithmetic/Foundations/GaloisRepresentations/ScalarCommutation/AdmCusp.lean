@@ -190,7 +190,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem val_eq_one_of_pow_eq_one (hN : N ≠ 0) {x : ValueGroupWithZero k} (h : x ^ N = 1) : x = 1 := by
   rcases lt_trichotomy x 1 with h1 | h1 | h1
-  · exact absurd h (pow_lt_one₀ zero_le' h1 hN).ne
+  · exact absurd h (pow_lt_one₀ zero_le h1 hN).ne
   · exact h1
   · exact absurd h (one_lt_pow₀ h1 hN).ne'
 
@@ -260,7 +260,7 @@ theorem exists_compact_center_mul : ∀ (k : Type) [Field k] [ValuativeRel k] [T
     calc vdet k N (z * i) = vdet k N (z * i) * vdet k N κ := by rw [hvκ, mul_one]
       _ = 1 := by rw [← map_mul, mul_assoc, hzc]
   have hex : ∃ z ∈ Subgroup.center (GL (Fin N) k), vdet k N (z * i) = 1 := ⟨z, hz, hzi⟩
-  have hfi : f i = hex.choose * i := dif_pos hex
+  have hfi : f i = hex.choose * i := dite_eq_left hex
   obtain ⟨hzc', hv'⟩ := hex.choose_spec
   set zi := hex.choose
   set w := z * zi⁻¹ with hw
@@ -404,7 +404,7 @@ theorem exists_mem_box {a b : ℕ} (X : Fin a → Fin b → k) : ∃ s : kˣ, X 
   set γ : ValueGroupWithZero k := ∏ pq : Fin a × Fin b, max 1 (valuation k (X pq.1 pq.2)) with hγ
   have h1 : ∀ pq ∈ (Finset.univ : Finset (Fin a × Fin b)), 1 ≤ max 1 (valuation k (X pq.1 pq.2)) :=
     fun _ _ => le_max_left _ _
-  have hγ1 : 1 ≤ γ := Finset.one_le_prod' h1
+  have hγ1 : 1 ≤ γ := Finset.one_le_prod h1
   obtain ⟨y, hy⟩ := ValuativeRel.valuation_surjective γ
   have hy0 : y ≠ 0 := by
     rintro rfl
@@ -413,7 +413,7 @@ theorem exists_mem_box {a b : ℕ} (X : Fin a → Fin b → k) : ∃ s : kˣ, X 
   refine ⟨Units.mk0 y hy0, mem_box.mpr fun p q => ?_⟩
   show valuation k (X p q) ≤ valuation k y
   rw [hy]
-  exact (le_max_right _ _).trans (Finset.single_le_prod' h1 (Finset.mem_univ (p, q)))
+  exact (le_max_right _ _).trans (Finset.single_le_prod h1 (Finset.mem_univ (p, q)))
 
 theorem directed_box (a b : ℕ) : Directed (· ⊆ ·) (box (k := k) a b) := by
   intro s t
@@ -431,10 +431,10 @@ variable [MeasurableSpace k] [BorelSpace k]
 
 theorem main : ∀ (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V), GlobalTheory.PRep.IsSmooth π → ∀ (a b : ℕ) (μ : Measure (Fin a → Fin b → k)), μ.IsAddHaarMeasure → ∀ u : (Fin a → Fin b → k) → GL (Fin N) k, Continuous u → (∀ X Y, u (X + Y) = u X * u Y) → ∀ (l : Module.Dual ℂ V) (w : V), w ∈ Submodule.span ℂ {x | ∃ (Y : Fin a → Fin b → k) (y : V), x = π (u Y) y - y} → ∀ F : (Fin a → Fin b → k) → ℂ, HasCompactSupport F → (∀ X, F X = l (π (u X) w)) → ∫ X, F X ∂μ = 0 := by
   intro N V _ _ π hπ a b μ hμ u hu hadd l w hw F hF hFw
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI : OpensMeasurableSpace (Fin b → k) := inferInstance
-  haveI : OpensMeasurableSpace (Fin a → Fin b → k) := inferInstance
+  have := secondCountable k
+  have := t2Space k
+  have : OpensMeasurableSpace (Fin b → k) := inferInstance
+  have : OpensMeasurableSpace (Fin a → Fin b → k) := inferInstance
   have hu0 : u 0 = 1 := by
     have h := hadd 0 0
     rw [add_zero] at h
@@ -605,11 +605,11 @@ theorem isCuspFn_cutCoef : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
     have hd : ValuativeRel.valuation k ((g * (h⁻¹ * u X * h) : GL (Fin N) k) : Matrix (Fin N) (Fin N) k).det = 1 := by
       simp only [Units.val_mul, Matrix.det_mul, hud X, map_mul, hg, one_mul, mul_one]
       rw [← map_mul, ← Matrix.det_mul, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.det_one, map_one]
-    rw [hf, if_pos hd]
+    rw [hf, ite_eq_left hd]
     simp only [LinearMap.comp_apply, map_mul, Module.End.mul_apply]
   · have : (fun X => f (g * (h⁻¹ * u X * h))) = fun _ => 0 := by
       funext X
-      rw [hf, if_neg]
+      rw [hf, ite_eq_right]
       intro hd
       apply hg
       simp only [Units.val_mul, Matrix.det_mul, hud X, map_mul, mul_one] at hd
@@ -668,7 +668,7 @@ private theorem finsum_shift {G : Type} [Group G] (K : Subgroup G) (Φ : G → �
 private theorem finite_cosets {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (K : Subgroup G)
     (hK : IsOpen (K : Set G)) (F : G → ℂ) (hF : HasCompactSupport F) :
     (Function.support fun q : G ⧸ K => F q.out).Finite := by
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
   have hcomp : IsCompact ((QuotientGroup.mk : G → G ⧸ K) '' tsupport F) :=
     hF.isCompact.image QuotientGroup.continuous_mk
   refine hcomp.finite_of_discrete.subset ?_
@@ -782,7 +782,7 @@ private theorem core (μ : Measure A) (U : A → G)
   classical
   have hKo : IsOpen ((χ.ker.map J.subtype : Subgroup G) : Set G) := by
     rw [Subgroup.coe_map]
-    exact hJo.isOpenMap_subtype_val _ hχ
+    exact hJo.isOpenMap_subtypeVal _ hχ
   have hR : ∀ g, ∀ k ∈ χ.ker.map J.subtype, e (g * k) = e g := by
     rintro g _ ⟨y, hy, rfl⟩
     have h1 : χ y = 1 := hy
@@ -849,7 +849,7 @@ private theorem core (μ : Measure A) (U : A → G)
     refine eq_top_iff.2 fun x _ => ?_
     obtain ⟨⟨F, hF⟩, rfl⟩ := Submodule.Quotient.mk_surjective _ x
     exact hall F hF
-  haveI : Nontrivial (S.toSubmodule ⧸ T.toSubmodule.comap S.toSubmodule.subtype) := ⟨⟨w, 0, hw⟩⟩
+  have : Nontrivial (S.toSubmodule ⧸ T.toSubmodule.comap S.toSubmodule.subtype) := ⟨⟨w, 0, hw⟩⟩
   have exists_quot : ∀ (G V : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [AddCommGroup V] [Module ℂ V] (π : Representation ℂ G V), GlobalTheory.PRep.IsSmooth π → Nontrivial V → ∀ s : Finset V, Submodule.span ℂ (Set.range fun p : G × s => π p.1 (p.2 : V)) = ⊤ → ∃ (σ : IrrRep G) (p : V →ₗ[ℂ] σ.V), Function.Surjective p ∧ ∀ g v, p (π g v) = σ.ρ g (p v) := by
     intro G V _ _ _ _ _ π hπ hV s hs
     classical
@@ -1043,9 +1043,9 @@ theorem typeSlice : TypeSlice := by
   push_neg at hcon
   classical
   borelize k
-  haveI : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
+  have : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
   let μ : Measure (Fin a → Fin b → k) := Measure.addHaar
-  haveI : μ.IsAddHaarMeasure := inferInstanceAs (Measure.addHaar).IsAddHaarMeasure
+  have : μ.IsAddHaarMeasure := inferInstanceAs (Measure.addHaar).IsAddHaarMeasure
   let U : (Fin a → Fin b → k) → GL (Fin n) k := fun X => h⁻¹ * u X * h
   have hUc : Continuous U := (continuous_const.mul (u_cont ε u hu)).mul continuous_const
   have hint : ∀ F : GL (Fin n) k → ℂ, Continuous F → HasCompactSupport F → ∀ z w : GL (Fin n) k,
@@ -1057,8 +1057,8 @@ theorem typeSlice : TypeSlice := by
     refine hc.integrable_of_hasCompactSupport (HasCompactSupport.intro hD fun X hX => ?_)
     exact image_eq_zero_of_notMem_tsupport fun hm => hX (hDX X hm)
   let e : GL (Fin n) k → ℂ := fun g => if hg : g ∈ J then (((χ ⟨g, hg⟩)⁻¹ : ℂˣ) : ℂ) else 0
-  have he1 : ∀ g (hg : g ∈ J), e g = (((χ ⟨g, hg⟩)⁻¹ : ℂˣ) : ℂ) := fun g hg => dif_pos hg
-  have he0 : ∀ g, g ∉ J → e g = 0 := fun g hg => dif_neg hg
+  have he1 : ∀ g (hg : g ∈ J), e g = (((χ ⟨g, hg⟩)⁻¹ : ℂˣ) : ℂ) := fun g hg => dite_eq_left hg
+  have he0 : ∀ g, g ∉ J → e g = 0 := fun g hg => dite_eq_right hg
   have hne : ∫ X, e (1 * U X * 1) ∂μ ≠ 0 := by
     let W : Set (Fin a → Fin b → k) := U ⁻¹' (J : Set (GL (Fin n) k))
     have hWo : IsOpen W := hJo.preimage hUc
@@ -1094,7 +1094,7 @@ theorem typeSlice : TypeSlice := by
   have hc : GlobalTheory.SmGL.IsCuspidal σ.ρ := hcusp σ' v hv0 hχv
   have hKo : IsOpen ((χ.ker.map J.subtype : Subgroup (GL (Fin n) k)) : Set (GL (Fin n) k)) := by
     rw [Subgroup.coe_map]
-    exact hJo.isOpenMap_subtype_val _ hχ
+    exact hJo.isOpenMap_subtypeVal _ hχ
   have hKc : IsCompact ((χ.ker.map J.subtype : Subgroup (GL (Fin n) k)) : Set (GL (Fin n) k)) := by
     refine hJc.of_isClosed_subset (Subgroup.isClosed_of_isOpen _ hKo) ?_
     rintro _ ⟨y, -, rfl⟩
@@ -1151,12 +1151,12 @@ theorem typeSlice : TypeSlice := by
   have hterm : ∀ q : GL (Fin n) k ⧸ K₂, f q.out * l (σ.ρ q.out v) = ((‖c q.out‖ ^ 2 : ℝ) : ℂ) := by
     intro q
     by_cases hd : ValuativeRel.valuation k ((q.out : GL (Fin n) k) : Matrix (Fin n) (Fin n) k).det = 1
-    · have hcq : c q.out = l (σ.ρ q.out v) := if_pos hd
+    · have hcq : c q.out = l (σ.ρ q.out v) := ite_eq_left hd
       simp only [f]
       rw [hcq, Complex.conj_mul']
       push_cast
       rfl
-    · have hcq : c q.out = 0 := if_neg hd
+    · have hcq : c q.out = 0 := ite_eq_right hd
       simp only [f]
       rw [hcq]
       simp

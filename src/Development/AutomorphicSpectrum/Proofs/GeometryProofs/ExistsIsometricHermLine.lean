@@ -334,7 +334,7 @@ theorem comp_mem : ∀ (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type) 
   intro K _ _ ι _ P hP f hf b
   obtain ⟨S, hS, rfl⟩ := hP
   classical
-  letI := weightedGradedAlgebra ℤ (GroundTheory.Heights₂.Heights.NumbersDVR.blockWeight ι)
+  let := weightedGradedAlgebra ℤ (GroundTheory.Heights₂.Heights.NumbersDVR.blockWeight ι)
   refine weightedHomogeneousComponent_mem_of_mem ℤ _ ?_ hf b
   refine Ideal.homogeneous_span _ S fun g hg => ?_
   obtain ⟨a, ha⟩ := hS g hg

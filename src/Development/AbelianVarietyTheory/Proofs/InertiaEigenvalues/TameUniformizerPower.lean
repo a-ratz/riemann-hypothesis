@@ -163,8 +163,8 @@ theorem residue_of_cong {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Alge
     (hv : A.valuation (σ π / π - algebraMap E Ω (u : E)) < 1) :
     ∃ a : ℕ, a.Coprime g ∧ u - (a : 𝓞 E) ∈ P.asIdeal ∧
       algebraMap (ZMod g) (Formalism.CyclotomicNorms.Fbar g) (a : ZMod g) = ζ 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have hgp : g.Prime := Fact.out
   have hg2 : 2 ≤ g := hgp.two_le
   have hgΩ : ((g : ℕ) : Ω) ≠ 0 := Nat.cast_ne_zero.mpr hgp.ne_zero

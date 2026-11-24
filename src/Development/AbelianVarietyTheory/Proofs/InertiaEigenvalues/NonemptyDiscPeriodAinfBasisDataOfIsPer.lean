@@ -334,7 +334,7 @@ theorem exists_cols_det_ne_zero {R : Type} [CommRing R] [IsDomain R] {d : ℕ} {
   let e : κ' ≃ Fin d := B.indexEquiv (Pi.basisFun F (Fin d))
   refine ⟨a ∘ e.symm, fun h0 => ?_⟩
   have hu : IsUnit ((Matrix.of fun x y => col (a (e.symm y)) x).map (algebraMap R F)) :=
-    Matrix.linearIndependent_cols_iff_isUnit.1 (hli.comp e.symm e.symm.injective)
+    linearIndependent_col_iff_isUnit.1 (hli.comp e.symm e.symm.injective)
   have h4 := (Matrix.isUnit_iff_isUnit_det _).1 hu
   rw [← RingHom.mapMatrix_apply, ← RingHom.map_det] at h4
   exact h4.ne_zero ((congrArg (algebraMap R F) h0).trans (map_zero _))
@@ -367,7 +367,7 @@ theorem exists_cols (hinj : Function.Injective bk.iA) {d : ℕ} {ι : Type}
 
   simp only [← map_mul, ← map_sum] at h4
   have h5 := hinj (h4.trans (map_zero _).symm)
-  simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h5
+  simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at h5
   exact (mul_eq_zero.1 h5).resolve_right hc
 
 theorem mem_lattice (hev : Function.Injective bk.ev) {d : ℕ} (Y1 : Matrix (Fin d) (Fin d) (Ainf l)) (m : ℕ)
@@ -380,7 +380,7 @@ theorem mem_lattice (hev : Function.Injective bk.ev) {d : ℕ} (Y1 : Matrix (Fin
   have h0 : bk.evW δ ≠ 0 := fun h0 =>
     hδ (hev (inclW_injective (h0.trans (by rw [map_zero, map_zero]))))
   obtain ⟨n, u, u', -, hu', huu, he⟩ := (_root_.GlobalTheory.OEDvr.main l K bk).2.2.2.1 _ (evW_mem bk δ) h0
-  have hl0 : (l : WCb l) ≠ 0 := WittVector.p_nonzero l (Cb l)
+  have hl0 : (l : WCb l) ≠ 0 := WittVector.p_ne_zero l (Cb l)
   have h1 : Y1.map (inclW l) *ᵥ (u' • fun a => bk.evW (c a)) = (l : WCb l) ^ n • fun a => inclW l (y a) := by
     rw [Matrix.mulVec_smul]
     funext a
@@ -403,7 +403,7 @@ theorem nonempty_height : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
   have hinj : Function.Injective bk.iA := (_root_.GlobalTheory.BSP.toDisc_injective_of_topBasis l K bk _ bk.ev ι TB _ hρ0 hρ1).1
   have hev := injective_of_topBasis TB
   have hτ0 : τ ≠ 0 := (_root_.GlobalTheory.BSP.isUnit_inclW_of_isPer l K bk τ hτ).2.2.1
-  have hl0 : (l : Ainf l) ≠ 0 := WittVector.p_nonzero l (OCb l)
+  have hl0 : (l : Ainf l) ≠ 0 := WittVector.p_ne_zero l (OCb l)
   obtain ⟨j₀, hj₀⟩ : ∃ j : bk.DS bk.ρ₀ →+* bk.DA bk.ρ₀, IsDiscMap (l := _) (u := _) (ρ := _) bk.ev j :=
     GlobalTheory.BSP.exists_discMap_of_pow_dvd l _ _ bk.ev X (bk.ev X) _ _ 1 hρ0 (by rw [pow_one]) (by rw [pow_one])
   obtain ⟨σ, hσ⟩ := exists_cols bk hinj v TB.b _ (mul_ne_zero (pow_ne_zero k hl0) (pow_ne_zero _ hτ0)) hsum

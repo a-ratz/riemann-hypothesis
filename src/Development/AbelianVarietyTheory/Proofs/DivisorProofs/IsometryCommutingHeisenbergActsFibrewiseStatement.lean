@@ -639,7 +639,7 @@ theorem exists_offV_indicator_poly : ∀ {F : Type} [Field F] [NumberField F] {�
     (hK.image hPc).inter_right (GlobalTheory.FinTrig.isOpen_lev d (offV v (fun i => (y i).2))).isClosed_compl
   obtain ⟨t, htC, hcov⟩ := hC.elim_nhds_subcover (fun a => {z | GlobalTheory.FinTrig.Lev d (z - a)})
     (fun a _ => (GlobalTheory.FinTrig.isOpen_lev d a).mem_nhds
-      (by simp only [Set.mem_setOf_eq, sub_self]; exact GlobalTheory.FinTrig.lev_zero d))
+      (by simp only [Set.mem_ofPred_eq, sub_self]; exact GlobalTheory.FinTrig.lev_zero d))
   have hsep : ∀ a ∈ C, ∃ q ∈ (GlobalTheory.FinTrig.Q0 : Set (κ → AF F)),
       ψ (GlobalTheory.FinTrig.vecFin (a - offV v (fun i => (y i).2)) ⬝ᵥ q) ≠ 1 ∧
       ∀ u, GlobalTheory.FinTrig.Lev d u → ψ (GlobalTheory.FinTrig.vecFin u ⬝ᵥ q) = 1 :=
@@ -774,10 +774,10 @@ theorem sq_lintegral_lt_top : ∀ {F : Type} [Field F] [NumberField F] {κ : Typ
     ∀ μ : @Measure (κ → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
     ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ < ⊤ := by
   intro F _ _ κ _ Φ hΦ μ hμ
-  letI : MeasurableSpace (κ → AF F) := borel _
+  let : MeasurableSpace (κ → AF F) := borel _
   have h := (GlobalTheory.WeilM.schA_memLp_two F κ μ hμ Φ hΦ).integrable_norm_pow two_ne_zero
   have h2 := h.2
-  simp only [HasFiniteIntegral, enorm_pow, enorm_norm] at h2
+  simp only [HasFiniteIntegral, eNorm_pow, eNorm_norm] at h2
   exact h2
 
 theorem continuous_and_compact_finite_support : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ], ∀ Φ ∈ GlobalTheory.WeilM.schA F κ,
@@ -875,11 +875,11 @@ theorem lintegral_weight_eq_of_approx : ∀ {X : Type} [MeasurableSpace X] (μ :
       Filter.Tendsto (fun n => ∫⁻ x, ‖m n x‖ₑ ^ 2 * u x ∂μ) Filter.atTop (nhds (∫⁻ x, h x * u x ∂μ)) := by
     intro u hu hui hsupp
     refine tendsto_lintegral_of_dominated_convergence (fun x => ENNReal.ofReal C ^ 2 * u x)
-      (fun n => ((hm n).enorm.pow_const 2).mul hu) (fun n => Filter.Eventually.of_forall fun x => ?_) ?_ ?_
+      (fun n => ((hm n).eNorm.pow_const 2).mul hu) (fun n => Filter.Eventually.of_forall fun x => ?_) ?_ ?_
     · by_cases hx : u x = 0
       · simp [hx]
       · have h1 : ‖m n x‖ₑ ≤ ENNReal.ofReal C := by
-          rw [← ofReal_norm_eq_enorm]
+          rw [← ofReal_norm]
           exact ENNReal.ofReal_le_ofReal (hb n x (hsupp x hx))
         show ‖m n x‖ₑ ^ 2 * u x ≤ ENNReal.ofReal C ^ 2 * u x
         gcongr
@@ -911,8 +911,8 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
       ∫⁻ x, h x * ‖Ψ x‖ₑ ^ 2 ∂μ = ∫⁻ x, h x * ‖Φ x‖ₑ ^ 2 ∂μ := by
   intro F _ _ κ _ v ψ hψ hnt μ hμ Φ hΦ Ψ hΨ hyp y O hO hyO
   classical
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
   obtain ⟨hΦc, KΦ, hKΦ, hΦK⟩ := continuous_and_compact_finite_support Φ hΦ
   obtain ⟨hΨc, KΨ, hKΨ, hΨK⟩ := continuous_and_compact_finite_support Ψ hΨ
   obtain ⟨U, V, hU, hV, hyU, hyV, hbox⟩ := exists_box_nhds O y hO hyO
@@ -927,7 +927,7 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
   have hinfc : Continuous (fun x : κ → AF F => fun i => (x i).1) :=
     continuous_pi fun i => continuous_fst.comp (continuous_apply i)
   have hgc : Continuous (fun x : κ → AF F => ‖((β (fun i => (x i).1) : ℝ) : ℂ)‖ₑ ^ 2) :=
-    (ENNReal.continuous_pow 2).comp (continuous_enorm.comp (Complex.continuous_ofReal.comp (hβc.comp hinfc)))
+    (ENNReal.continuous_pow 2).comp (continuous_eNorm.comp (Complex.continuous_ofReal.comp (hβc.comp hinfc)))
   have hz1 : ∀ z : κ → AF F, GlobalTheory.LatVac.liftV v 1 • z = z → ∀ i, (z i).1 = 0 := by
     intro z hz i
     have := congrArg Prod.fst (congrFun hz i)
@@ -935,8 +935,8 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
     exact liftV_mul_fst v (z i)
   have hβle : ∀ u, ‖((β u : ℝ) : ℂ)‖ₑ ^ 2 ≤ 1 := by
     intro u
-    refine pow_le_one₀ zero_le' ?_
-    rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (hβ01 u).1]
+    refine pow_le_one₀ zero_le ?_
+    rw [← ofReal_norm, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg (hβ01 u).1]
     exact ENNReal.ofReal_le_one.2 (hβ01 u).2
   refine ⟨fun x => if (fun i => (x i).2) ∈ A then ‖((β (fun i => (x i).1) : ℝ) : ℂ)‖ₑ ^ 2 else 0,
     ?_, ?_, ?_, ?_, ?_, ?_⟩
@@ -946,7 +946,7 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
     dsimp only
     split_ifs
     · exact hβle _
-    · exact zero_le'
+    · exact zero_le
   · intro x z hz
     dsimp only
     have h1 : (fun i => ((x + z) i).1) = fun i => (x i).1 := by
@@ -957,7 +957,7 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
   · intro x hx
     dsimp only at hx
     by_cases hxA : (fun i => (x i).2) ∈ A
-    · rw [if_pos hxA] at hx
+    · rw [ite_eq_left hxA] at hx
       have hβ0 : β (fun i => (x i).1) ≠ 0 := by
         intro h0
         rw [h0] at hx
@@ -971,7 +971,7 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
         rw [h1]
         exact hβU _ hβ0
       · exact hAV x hxA
-    · rw [if_neg hxA] at hx
+    · rw [ite_eq_right hxA] at hx
       exact absurd rfl hx
   · refine ⟨{x | (fun i => (x i).2) ∈ A} ∩ {x | 1 / 2 < ‖((β (fun i => (x i).1) : ℝ) : ℂ)‖ₑ ^ 2},
       (hA.preimage hfinc).inter (isOpen_lt continuous_const hgc), ⟨hyA, ?_⟩, ?_⟩
@@ -980,7 +980,7 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
       simpa using ENNReal.half_lt_self one_ne_zero ENNReal.one_ne_top
     · rintro x ⟨hxA, hx⟩ -
       show 1 / 2 ≤ (if (fun i => (x i).2) ∈ A then ‖((β (fun i => (x i).1) : ℝ) : ℂ)‖ₑ ^ 2 else 0)
-      rw [if_pos (show (fun i => (x i).2) ∈ A from hxA)]
+      rw [ite_eq_left (show (fun i => (x i).2) ∈ A from hxA)]
       exact le_of_lt hx
   · have hK : ∀ x : κ → AF F, (‖Ψ x‖ₑ ^ 2 ≠ 0 ∨ ‖Φ x‖ₑ ^ 2 ≠ 0) → (fun i => (x i).2) ∈ KΦ ∪ KΨ := by
       intro x hx
@@ -991,7 +991,7 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
         rw [h0]; simp
     have hC0 : 0 ≤ C := (norm_nonneg _).trans (hCb 0 0)
     refine lintegral_weight_eq_of_approx μ (fun x => ‖Ψ x‖ₑ ^ 2) (fun x => ‖Φ x‖ₑ ^ 2) _ (fun n x => ∑ b ∈ s n, c n b * ψ (x ⬝ᵥ b)) C
-      (hΨc.measurable.enorm.pow_const 2) (hΦc.measurable.enorm.pow_const 2) ?_ (sq_lintegral_lt_top Ψ hΨ μ hμ) (sq_lintegral_lt_top Φ hΦ μ hμ)
+      (hΨc.measurable.eNorm.pow_const 2) (hΦc.measurable.eNorm.pow_const 2) ?_ (sq_lintegral_lt_top Ψ hΨ μ hμ) (sq_lintegral_lt_top Φ hΦ μ hμ)
       ?_ ?_ ?_
     · intro n
       refine Continuous.measurable (continuous_finsetSum _ fun b _ => continuous_const.mul (hψ.1.comp ?_))
@@ -1002,7 +1002,7 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
         obtain ⟨b₁, hb₁, b₂, hb₂, rfl⟩ := hs n b hb
         rw [smul_add, hsf b₁ hb₁, hsa n b₂ hb₂ v, add_zero]
       have := hyp (s n) (c n) hoff
-      simpa only [enorm_mul, mul_pow] using this
+      simpa only [eNorm_mul, mul_pow] using this
     · intro n x hx
       rw [hsc n x, hfK x (hK x hx)]
       by_cases hxA : (fun i => (x i).2) ∈ A
@@ -1013,9 +1013,9 @@ theorem exists_localizing_weight : ∀ {F : Type} [Field F] [NumberField F] {κ 
     · intro x hx
       simp only [hsc _ x, hfK x (hK x hx)]
       by_cases hxA : (fun i => (x i).2) ∈ A
-      · simp only [Set.indicator_of_mem hxA, one_mul, if_pos hxA]
-        exact ((ENNReal.continuous_pow 2).tendsto _).comp ((continuous_enorm.tendsto _).comp (hlim x))
-      · simp only [Set.indicator_of_notMem hxA, zero_mul, if_neg hxA, enorm_zero]
+      · simp only [Set.indicator_of_mem hxA, one_mul, ite_eq_left hxA]
+        exact ((ENNReal.continuous_pow 2).tendsto _).comp ((continuous_eNorm.tendsto _).comp (hlim x))
+      · simp only [Set.indicator_of_notMem hxA, zero_mul, ite_eq_right hxA, eNorm_zero]
         simpa using tendsto_const_nhds
 
 end GlobalTheory.OffVLocalWeights
@@ -1094,11 +1094,11 @@ theorem vanish_at_point : ∀ {X : Type} [AddCommGroup X] [TopologicalSpace X] [
   intro X _ _ _ _ _ _ μ _ P hPc hPP Φ Ψ hΦ hΨ K hK hΦK y hΦy hyp
   by_contra hne
   set δ : NNReal := ‖Ψ y‖₊ / 2 with hδ
-  have hΨpos : 0 < ‖Ψ y‖₊ := nnnorm_pos.mpr hne
+  have hΨpos : 0 < ‖Ψ y‖₊ := nnNorm_pos.mpr hne
   have hδpos : 0 < δ := by positivity
   have hδlt : δ < ‖Ψ y‖₊ := NNReal.half_lt_self hΨpos.ne'
   let V : Set X := {x | δ < ‖Ψ x‖₊}
-  have hVo : IsOpen V := isOpen_lt continuous_const hΨ.nnnorm
+  have hVo : IsOpen V := isOpen_lt continuous_const hΨ.nnNorm
   have hyV : y ∈ V := hδlt
   have hsum : P y + (y - P y) = y := by abel
   have hpre : (fun p : X × X => p.1 + p.2) ⁻¹' V ∈ 𝓝 (P y, y - P y) := by
@@ -1140,7 +1140,7 @@ theorem vanish_at_point : ∀ {X : Type} [AddCommGroup X] [TopologicalSpace X] [
       have := hΦy (a - P y) (by rw [map_sub, hPKfix a ha, hPP])
       rwa [show y + (a - P y) = a + (y - P y) by abel] at this
     have hcont : Continuous fun p : X × X => ‖Φ (p.2 + p.1)‖₊ :=
-      (hΦ.comp (continuous_snd.add continuous_fst)).nnnorm
+      (hΦ.comp (continuous_snd.add continuous_fst)).nnNorm
     have hmem : {p : X × X | ‖Φ (p.2 + p.1)‖₊ < ε} ∈ 𝓝 (y - P y, a) :=
       (isOpen_lt hcont continuous_const).mem_nhds (by simp [h0, hεpos])
     exact hmem
@@ -1152,7 +1152,7 @@ theorem vanish_at_point : ∀ {X : Type} [AddCommGroup X] [TopologicalSpace X] [
   have hsupp' : ∀ x, h x ≠ 0 → x - P x ∈ O2 ∧ x - P x ∈ O3 := by
     intro x hx
     have := hsupp x hx
-    simp only [O, Set.mem_setOf_eq] at this
+    simp only [O, Set.mem_ofPred_eq] at this
     rwa [show x + (P y - P x) - P y = x - P x by abel] at this
   have hdec : ∀ x : X, P x + (x - P x) = x := fun x => by abel
   set A : Set X := {x | P x ∈ U1} with hA
@@ -1171,7 +1171,7 @@ theorem vanish_at_point : ∀ {X : Type} [AddCommGroup X] [TopologicalSpace X] [
           rwa [hdec] at this
         rw [mul_comm]
         gcongr
-        rw [enorm_eq_nnnorm]
+        rw [eNorm_eq_nnNorm]
         exact ENNReal.coe_le_coe.mpr hxV.le
     · simp [hxA]
   have hup : ∫⁻ x, h x * ‖Φ x‖ₑ ^ 2 ∂μ ≤ (ε:ENNReal) ^ 2 * (N * I) := by
@@ -1193,7 +1193,7 @@ theorem vanish_at_point : ∀ {X : Type} [AddCommGroup X] [TopologicalSpace X] [
         rwa [hdec] at this
       calc h x * ‖Φ x‖ₑ ^ 2 ≤ h x * (ε:ENNReal) ^ 2 := by
             gcongr
-            rw [enorm_eq_nnnorm]
+            rw [eNorm_eq_nnNorm]
             exact ENNReal.coe_le_coe.mpr hsmall.le
         _ = (ε:ENNReal) ^ 2 * Set.indicator {x | P x - (a - P y) ∈ U1} h x := by
             rw [Set.indicator_of_mem (show x ∈ {x | P x - (a - P y) ∈ U1} from hxa), mul_comm]
@@ -1226,7 +1226,7 @@ theorem vanish_at_point : ∀ {X : Type} [AddCommGroup X] [TopologicalSpace X] [
       · simp [hxW]
     intro h0
     rw [h0] at hle
-    exact (mul_ne_zero (by simp) hWpos.ne') (le_zero_iff.mp hle)
+    exact (mul_ne_zero (by simp) hWpos.ne') (nonpos_iff_eq_zero.mp hle)
   have hIfin : I ≠ ⊤ := by
     have hC : IsCompact ((fun p : X × X => p.1 + p.2) '' (s1 ×ˢ s2)) :=
       (hs1c.prod hs2c).image continuous_add
@@ -1381,8 +1381,8 @@ theorem eq_zero_of_vanish_fibre : ∀ {F : Type} [Field F] [NumberField F] {κ :
       T (GlobalTheory.WeilM.schr ψ (u • p, u • q) Φ) = GlobalTheory.WeilM.schr ψ (u • p, u • q) (T Φ)) →
     ∀ Φ ∈ GlobalTheory.WeilM.schA F κ, ∀ y : κ → AF F, (∀ z, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.At (evFin F v) z → Φ (y + z) = 0) → T Φ y = 0 := by
   intro F _ _ κ _ v ψ T hstd hnt hpres hiso hcomm Φ hΦ y hy
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
   set e := GlobalTheory.LatVac.liftV v (1 : Fv F v) with he_def
   have he0 : evFin F v (1 - e) = 0 := by rw [map_sub, he_def, GlobalTheory.LatVac.evFin_liftV, map_one, sub_self]
   let P : (κ → AF F) →+ (κ → AF F) := DistribSMul.toAddMonoidHom _ e

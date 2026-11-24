@@ -64,12 +64,12 @@ theorem fockSubst_eq_fsub {D : D7} {m n : ℕ} (p : D.what₂.Tau → ℕ) (u : 
   refine MvPolynomial.algHom_ext fun v => ?_
   rw [fockSubst, fsub, MvPolynomial.aeval_X, MvPolynomial.aeval_X]
   by_cases h : v.2.1.val < p v.1
-  · rw [if_pos h, Finset.sum_eq_single v.2.1]
+  · rw [ite_eq_left h, Finset.sum_eq_single v.2.1]
     · simp [sgnOf, h, Matrix.coe_units_inv]
     · intro a _ ha
       simp [sgnOf, h, Matrix.one_apply_ne ha]
     · simp
-  · rw [if_neg h, Finset.sum_eq_single v.2.1]
+  · rw [ite_eq_right h, Finset.sum_eq_single v.2.1]
     · simp [sgnOf, h]
     · intro a _ ha
       simp [sgnOf, h, Matrix.one_apply_ne (Ne.symm ha)]
@@ -429,7 +429,7 @@ theorem ev_det {ι : Type} [Fintype ι] [DecidableEq ι] (X Y : Matrix ι ι ℂ
     have := hQ 1
     rw [h] at this
     simpa using this.symm)
-  have hfin : ({t | Q.IsRoot t} \ {0}).Finite := (Polynomial.finite_setOf_isRoot hQ0).subset Set.diff_subset
+  have hfin : ({t | Q.IsRoot t} \ {0}).Finite := (Polynomial.finite_setOfPred_isRoot hQ0).subset Set.sdiff_subset
   filter_upwards [nhdsWithin_le_nhds (hfin.isClosed.isOpen_compl.mem_nhds (by simp)), self_mem_nhdsWithin] with t h1 h2
   rw [← hQ]
   intro h3

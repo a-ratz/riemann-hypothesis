@@ -75,7 +75,7 @@ theorem nabs_lt_of_valuation_lt {x y : kˣ} (h : valuation k (x : k) < valuation
     nabs k x < nabs k y := by
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[k]
   have h0 : (ϖ : k) ≠ 0 := by simpa using hϖ.ne_zero
-  have hy0 : 0 < valuation k (y : k) := by simp [zero_lt_iff]
+  have hy0 : 0 < valuation k (y : k) := by simp [pos_iff_ne_zero]
   have hlt : valuation k ((x : k) * (y : k)⁻¹) < 1 := by
     rw [map_mul, map_inv₀, mul_inv_lt_iff₀ hy0, one_mul]; exact h
   let z : 𝒪[k] := ⟨(x : k) * (y : k)⁻¹, (Valuation.mem_integer_iff _ _).mpr hlt.le⟩
@@ -115,7 +115,7 @@ theorem isLocallyConstant_nabs : IsLocallyConstant (nabs k) := by
   have h2 : valuation k ((z : k) - x) ≤ valuation k (r * x) := hz
   refine Valuation.map_eq_of_sub_lt _ (h2.trans_lt ?_)
   rw [map_mul]
-  exact mul_lt_of_lt_one_left (by simp [zero_lt_iff]) hr1
+  exact mul_lt_of_lt_one_left (by simp [pos_iff_ne_zero]) hr1
 
 theorem nabs_properties : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k], (∀ x y : kˣ, nabs k (x * y) = nabs k x * nabs k y) ∧ (∀ x : kˣ, 0 < nabs k x) ∧ (∀ x y : kˣ, nabs k x ≤ nabs k y ↔ valuation k (x : k) ≤ valuation k (y : k)) ∧ (∀ x : kˣ, nabs k x = 1 ↔ valuation k (x : k) = 1) ∧ (∀ (ϖ : 𝒪[k]) (x : kˣ), Irreducible ϖ → (x : k) = (ϖ : k) → nabs k x = (resCard k : ℝ)⁻¹) ∧ IsLocallyConstant (nabs k) ∧ 1 < resCard k :=
   fun k _ _ _ _ => ⟨nabs_mul k, nabs_pos k, nabs_le_iff, nabs_eq_one_iff,

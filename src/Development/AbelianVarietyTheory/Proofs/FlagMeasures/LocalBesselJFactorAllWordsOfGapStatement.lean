@@ -189,7 +189,7 @@ theorem muGB_rinv (C : Choice X θ) (τ : D.what₂.Tau) :
           simp only [Matrix.conjTranspose_mul, Matrix.mul_assoc]
       _ = Formalism.REAL.Jm (X.B.I.ε (vOf X τ)) := by rw [hg, hy', Formalism.L2.SG.Pf.Choice.qiHqi _ h2 hg]
   set γy := Formalism.L2.SG.Pf.GoodS.toUJn (C.Q τ * C.y τ * C.Qi τ) hJ
-  haveI : (Formalism.REAL.muG (X.B.I.ε (vOf X τ))).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular _ _ g⟩
+  have : (Formalism.REAL.muG (X.B.I.ε (vOf X τ))).IsMulRightInvariant := ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular _ _ g⟩
   have he := eT_emb C τ (vOf X τ)
   have hcomm : (Ry C τ) ∘ eT C τ (vOf X τ) = eT C τ (vOf X τ) ∘ (fun γ => γ * γy) := by
     funext γ
@@ -329,9 +329,9 @@ theorem muH_eq_pi : ∀ (D : D7) (X : HidaSetting D) (θ : ℝ) (C : Choice X θ
       rintro τ _ rfl; exact invOn_muHl C u τ
     intro v
     exact h (X.pl v) v (X.pl.symm_apply_apply v)
-  haveI : ∀ v, SigmaFinite (muHl C u (X.pl v) v) := fun v => (hloc v).1
+  have : ∀ v, SigmaFinite (muHl C u (X.pl v) v) := fun v => (hloc v).1
   obtain ⟨hσ, h0, hc, hi⟩ := X.muH_haar u
-  haveI := hσ
+  have := hσ
   rw [← Formalism.L2.SG.RealObj.InfCut.ProductExactness.HinfG_coe] at hc hi
   refine Formalism.L2.SG.RealObj.InfCut.ProductExactness.PiM.uniq_on_closed (Formalism.L2.SG.RealObj.InfCut.ProductExactness.HinfG X u)
     (Formalism.L2.SG.RealObj.InfCut.ProductExactness.HinfG_closed X u) _ _ hc ?_ hi ?_ h0 ?_
@@ -386,9 +386,9 @@ theorem muN_eq_pi_muNl : ∀ (D : D7) (X : HidaSetting D) (θ : ℝ) (C : Choice
       rintro τ _ rfl
       exact invOn_muNl C u τ
     exact fun v => h (X.pl v) v (X.pl.symm_apply_apply v)
-  haveI : ∀ v, SigmaFinite (muNl C (X.pl v) v) := fun v => (hloc v).1
+  have : ∀ v, SigmaFinite (muNl C (X.pl v) v) := fun v => (hloc v).1
   obtain ⟨hσ, h0, hc, hi⟩ := X.muN_haar u
-  haveI := hσ
+  have := hσ
   rw [← NinfG_coe] at hc hi
   refine PiM.uniq_on_closed (NinfG X u) (NinfG_closed X u) _ _ hc ?_ hi ?_ h0 ?_
   · rw [NinfG, Subgroup.coe_pi]
@@ -450,7 +450,7 @@ theorem muNH_prod_pi : ∀ (D : D7) (X : HidaSetting D) (θ : ℝ) (C : Choice X
   have mp := Formalism.L2.SG.RealObj.InfCut.ProductExactness.measurePreserving_piProd (fun v => muNl C (X.pl v) v) (fun v => muHl C u (X.pl v) v)
   rw [← mp.map_eq, Measure.map_map (measurable_mul : Measurable fun p : X.B.I.Ginf × X.B.I.Ginf => p.1 * p.2)
     mp.measurable]
-  haveI : ∀ v, SigmaFinite (((muNl C (X.pl v) v).prod (muHl C u (X.pl v) v)).map
+  have : ∀ v, SigmaFinite (((muNl C (X.pl v) v).prod (muHl C u (X.pl v) v)).map
       (fun q : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v) => q.1 * q.2)) := hsM
   exact Measure.pi_map_pi (f := fun v (q : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v)) => q.1 * q.2)
     (fun v => measurable_mul.aemeasurable)
@@ -491,11 +491,11 @@ namespace GlobalTheory
 
 theorem weil_bruhatProd_normSq : ∀ (D : D7) (X : HidaSetting D) (u : D.what₂.Word) (κ : ℝ≥0∞) (M : ∀ v : InfinitePlace X.B.I.F, Measure (Formalism.REAL.UJ (X.B.I.ε v))), (∀ v, SigmaFinite (M v)) → ((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2) = κ • Measure.pi M → ∀ (β : ∀ v : InfinitePlace X.B.I.F, Formalism.REAL.UJ (X.B.I.ε v) → ℝ≥0∞), (∀ v, Measurable (β v)) → (∀ v x, ∫⁻ s, β v (s * x) ∂(M v) = 1) → ∫⁻ x, (∏ v, β v (x v)) * ‖X.Wu u x‖ₑ ^ 2 ∂(Formalism.L2.SG.ProjRows.muInf X.B.I) = κ := by
   intro D X u κ M hMs hS β hβm hβ1
-  haveI := hMs
+  have := hMs
   obtain ⟨hNsf, -, hN0, -⟩ := X.muN_haar u
   obtain ⟨hHsf, -, hH0, -⟩ := X.muH_haar u
-  haveI := hNsf
-  haveI := hHsf
+  have := hNsf
+  have := hHsf
   have hmul : Measurable (fun p : X.B.I.Ginf × X.B.I.Ginf => p.1 * p.2) := measurable_fst.mul measurable_snd
   have hSmeas : MeasurableSet (X.SinfU u) := (Formalism.L2.SG.WuDecayPf.isClosed_sinfU X u).measurableSet
   have hae : ∀ᵐ s ∂(((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2)), s ∈ X.SinfU u := by
@@ -514,7 +514,7 @@ theorem weil_bruhatProd_normSq : ∀ (D : D7) (X : HidaSetting D) (u : D.what₂
   have hβprod : Measurable (fun x : X.B.I.Ginf => ∏ v, β v (x v)) :=
     Finset.measurable_prod _ fun v _ => (hβm v).comp (measurable_pi_apply v)
   have hWm : Measurable (fun x : X.B.I.Ginf => ‖X.Wu u x‖ₑ ^ 2) :=
-    (X.Wu_spec u).2.2.1.enorm.measurable.pow_const 2
+    (X.Wu_spec u).2.2.1.eNorm.measurable.pow_const 2
   have hfm : Measurable (fun x : X.B.I.Ginf => (∏ v, β v (x v)) * ‖X.Wu u x‖ₑ ^ 2) := hβprod.mul hWm
   rw [X.nuQ_weil u _ hfm]
   have hin : ∀ x : X.B.I.Ginf, ∫⁻ s, (∏ v, β v ((s * x) v)) * ‖X.Wu u (s * x)‖ₑ ^ 2
@@ -526,7 +526,7 @@ theorem weil_bruhatProd_normSq : ∀ (D : D7) (X : HidaSetting D) (u : D.what₂
           ∂(((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2)) := by
       refine lintegral_congr_ae ?_
       filter_upwards [hae] with s hs
-      rw [← enorm_norm (X.Wu u (s * x)), Formalism.L2.SG.Pf.WuDec.norm_Wu_inv X u s hs x, enorm_norm]
+      rw [← eNorm_norm (X.Wu u (s * x)), Formalism.L2.SG.Pf.WuDec.norm_Wu_inv X u s hs x, eNorm_norm]
     rw [e1, lintegral_mul_const _ (show Measurable (fun s : X.B.I.Ginf => ∏ v, β v ((s * x) v)) from
       hβprod.comp (measurable_mul_const x)), hS, lintegral_smul_measure]
     have e2 : ∫⁻ s, ∏ v, β v ((s * x) v) ∂(Measure.pi M) = 1 := by
@@ -578,18 +578,18 @@ theorem prod_lint (D : D7) (X : HidaSetting D) (u : D.what₂.Word)
   have hW : ∀ x : X.B.I.Ginf, ‖X.Wu u x‖ₑ ^ 2 = ∏ v, ‖X.Wloc u v (x v)‖ₑ ^ 2 := by
     intro x
     have : ‖X.Wu u x‖ₑ = ∏ v, ‖X.Wloc u v (x v)‖ₑ := by
-      rw [← ofReal_norm_eq_enorm, Formalism.L2.SG.Pf.WuDec.norm_Wu,
+      rw [← ofReal_norm, Formalism.L2.SG.Pf.WuDec.norm_Wu,
         ENNReal.ofReal_prod_of_nonneg (fun v _ => norm_nonneg _)]
-      simp only [ofReal_norm_eq_enorm]
+      simp only [ofReal_norm]
     rw [this, Finset.prod_pow]
   simp_rw [hW, ← Finset.prod_mul_distrib]
   have : ∀ v, SigmaFinite (Formalism.REAL.muG (X.B.I.ε v)) := fun v => inferInstance
   exact QPK.lintegral_fintype_prod (μ := fun v => Formalism.REAL.muG (X.B.I.ε v)) (fun v y => β v y * ‖X.Wloc u v y‖ₑ ^ 2)
-    (fun v => (hβm v).mul ((X.Wloc_cont u v).enorm.measurable.pow_const 2))
+    (fun v => (hβm v).mul ((X.Wloc_cont u v).eNorm.measurable.pow_const 2))
 
 theorem muH_univ (D : D7) (X : HidaSetting D) (θ : ℝ) (C : Choice X θ) (u : D.what₂.Word) :
     Measure.pi (fun v => muHl C u (X.pl v) v) Set.univ = 1 := by
-  haveI : ∀ v, SigmaFinite (muHl C u (X.pl v) v) := fun v => by
+  have : ∀ v, SigmaFinite (muHl C u (X.pl v) v) := fun v => by
     have h : ∀ τ w, vOf X τ = w → SigmaFinite (muHl C u τ w) := by
       rintro τ _ rfl; exact sf_muHl C u τ
     exact h _ _ (X.pl.symm_apply_apply v)
@@ -643,7 +643,7 @@ theorem l2prod : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (θ : ℝ) (C : C
     exact ENNReal.top_mul (Finset.prod_ne_zero_iff.2 fun τ' _ => hne0 τ')
   refine ⟨fun τ => ENNReal.toReal_pos (hne0 τ) (hnet τ), ?_⟩
   rw [← ENNReal.toReal_prod, hP, ← GlobalTheory.T.pi_pulledBack_unipotentMeasure_eq_besselImage D X θ C (Y.FN u) hθ (Y.FN_fund u).1, hN, hH,
-    Measure.smul_apply, Measure.smul_apply, muH_univ D X θ C u]
+    smul_apply, smul_apply, muH_univ D X θ C u]
   simp only [smul_eq_mul, mul_one, ENNReal.toReal_mul]
   ring
 
@@ -778,7 +778,7 @@ theorem equiv_N {k r : ℕ} {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpa
     {x : Mat k r} (hx : x ∈ GG k r) : Φ (n * x) = ψ n • Φ x := by
   have h1 : (1 : Mat k r) ∈ UWset k r z := (isClosedSub_UWset (k := k) (r := r) z).2.2.1
   have e := hΦ 1 h1 n hn x hx
-  rw [hπ.1.1, one_mul, ContinuousLinearMap.one_apply] at e
+  rw [hπ.1.1, one_mul, one_apply_eq_self] at e
   exact e
 
 theorem amp_uniq : ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] [CompleteSpace Wp] (Wq : Type) [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] [CompleteSpace Wq] (z z' : Fin (2 * r + k + 1) → ℂ) (ψ ψ' : Mat k r → ℂ) (π : Mat k r → (Wp →L[ℂ] Wp)) (π' : Mat k r → (Wq →L[ℂ] Wq)) (Φ : Mat k r → Wp) (Φ' : Mat k r → Wq) (cN : ℝ), inWb k r z → inWb k r z' → 0 < Tz k r z → 0 < Tz k r z' → IsURepOn (UWset k r z) π → IsURepOn (UWset k r z') π' → (∀ n ∈ Nset k r, ‖ψ n‖ = 1 ∧ ‖ψ' n‖ = 1) → IsSPsiEquiv z ψ π Φ → IsSPsiEquiv z' ψ' π' Φ' → ContinuousOn Φ (GG k r) → ContinuousOn Φ' (GG k r) → ∀ (γ : Mat k r) (μG μR ν ν' : Measure (Mt k r)) (t : ℝ), γ ∈ GG k r → (∀ ρ ∈ Rset k r γ, ψ (γ * ρ * γ⁻¹) = ψ' ρ) → IsHaarOn (GG k r) μG → IsHaarOn (Rset k r γ) μR → 0 < t → IsQuotMeas μG μR ν → IsQuotMeas μG (ENNReal.ofReal t • μR) ν' → ampJ ν cN Φ Φ' γ = (t : ℂ) • ampJ ν' cN Φ Φ' γ := by
@@ -1290,7 +1290,7 @@ namespace GlobalTheory
 open GlobalTheory.QuotTransport in
 theorem quotMeas_besselModel_of_quotLoc : ∀ (D : D7) (X : HidaSetting D) (θ : ℝ) (C : Choice X θ) (τ : D.what₂.Tau) (γ : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) (μ ν : Measure (Formalism.REAL.UJ (X.B.I.ε (vOf X τ)))), SFinite μ → Formalism.L2.SG.RealObj.IsQuotLoc μ ν → IsQuotMeas (muGB X (C.Q τ) (C.Qi τ) τ) (μ.map (fun y => Matrix.of.symm (Formalism.L2.SG.RealObj.trG (C.Q τ) (C.Qi τ) (γ⁻¹ * y * γ)))) (ν.map (fun z => Matrix.of.symm (C.Qi τ * uMat (γ⁻¹ * z) * C.Q τ * (C.y τ)⁻¹))) := by
   intro D X θ C τ γ μ ν hμ hq f hf
-  haveI : (Formalism.REAL.muG (X.B.I.ε (vOf X τ))).IsMulRightInvariant :=
+  have : (Formalism.REAL.muG (X.B.I.ε (vOf X τ))).IsMulRightInvariant :=
     ⟨fun g => Formalism.REAL.indefinite_unitary_unimodular _ _ g⟩
   obtain ⟨h1, h2, h3, -⟩ := C.isT τ
   obtain ⟨g, hg⟩ := exists_unit _ _ (C.Q τ) (C.Qi τ) h1 h2 h3 (C.y τ) (C.y_mem τ)
@@ -1304,7 +1304,7 @@ theorem quotMeas_besselModel_of_quotLoc : ∀ (D : D7) (X : HidaSetting D) (θ :
     rw [← Matrix.mul_assoc, ← Units.val_mul, ← Subgroup.coe_mul, mul_inv_cancel, Subgroup.coe_one, Units.val_one,
       Matrix.one_mul]
   have hc : Continuous (fun w : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) => uMat w) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hcM : ∀ {h : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) → Formalism.REAL.UJ (X.B.I.ε (vOf X τ))}, Continuous h →
       ∀ (A : Matrix (Fin (2 * D.R.rS + D.R.k + 1)) (Fin X.B.I.n) ℂ)
         (B : Matrix (Fin X.B.I.n) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ),

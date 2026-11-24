@@ -66,7 +66,7 @@ open Formalism.MainNotions.N
 private theorem unr_of {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω]
     [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (w : HeightOneSpectrum (𝓞 L)) :
     Algebra.IsUnramifiedAt (𝓞 (maximalRealSubfield L)) w.asIdeal := by
-  haveI : IsGalois (Lp L) L := inferInstance
+  have : IsGalois (Lp L) L := inferInstance
   have h := GlobalTheory.RayFromArtin.unramIn_of_ine (K := Lp L) (Ω := Ω) L (v := w.under (𝓞 (Lp L))) fun A hA σ hσ => by
     obtain ⟨g, rfl⟩ := s.unr A _ hA hσ
     ext x
@@ -78,9 +78,9 @@ private theorem unr_of {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [NumberF
     exact h τ ⟨w.asIdeal, w.isPrime, ⟨rfl⟩, hτ⟩
   have h1 := UpperTheory.V.CF.ineCard.1 (Lp L) L w
   rw [hb, Subgroup.card_bot] at h1
-  haveI := w.isPrime
-  haveI := w.isMaximal
-  haveI : (w.asIdeal.under (𝓞 (Lp L))).IsMaximal := Ideal.IsMaximal.under _ _
+  have := w.isPrime
+  have := w.isMaximal
+  have : (w.asIdeal.under (𝓞 (Lp L))).IsMaximal := Ideal.IsMaximal.under _ _
   exact Ideal.ramificationIdx_eq_one_iff.1 h1.symm
 
 variable {Γ Γ' k : Type} [Group Γ] [Group Γ'] [Field k] {n : ℕ}

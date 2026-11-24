@@ -159,7 +159,7 @@ def FormAllC : Prop :=
 
 theorem formAllC_holds : FormAllC := by
   intro D X Y u u' t μR ν K hchi hH hQ hKm hKu
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
 
   have hFE : ∃ Ω, IsSFund X.B.I (ROinf t) Ω := fundExistsC_holds D X Y u u' t
   have hFO : IsSFund X.B.I (ROinf t) (FundOf t) := by
@@ -199,15 +199,15 @@ theorem formAllC_holds : FormAllC := by
     rw [wu_N X u hr.1 x, show t.pt.1⁻¹ * (r * x) = (t.pt.1⁻¹ * r * t.pt.1) * (t.pt.1⁻¹ * x) by group,
       wu_N X u' hr.2 _, ← hchi r hr]
     exact rankOneInnerOperator_smul_smul_eq_mul_conj_smul _ (Formalism.L2.SG.RealObj.InfCut.norm_psiInfU X u r) _ _
-  letI : MeasurableSpace (X.Vpi u' →L[ℂ] X.Vpi u) := borel _
-  haveI : BorelSpace (X.Vpi u' →L[ℂ] X.Vpi u) := ⟨rfl⟩
-  haveI : SecondCountableTopology (X.Vpi u' →L[ℂ] X.Vpi u) := inferInstance
+  let : MeasurableSpace (X.Vpi u' →L[ℂ] X.Vpi u) := borel _
+  have : BorelSpace (X.Vpi u' →L[ℂ] X.Vpi u) := ⟨rfl⟩
+  have : SecondCountableTopology (X.Vpi u' →L[ℂ] X.Vpi u) := inferInstance
   have hfm : Measurable f := hfc.measurable
 
   have hB : ∀ B, MeasurableSet B → (∀ r ∈ Rset t, (fun x => r * x) ⁻¹' B = B) →
       ((Formalism.L2.SG.ProjRows.muInf X.B.I).restrict (FundOf t)) B = ((μR K) • ν) B := by
     intro B hBm hBi
-    rw [Measure.restrict_apply hBm, Measure.smul_apply, smul_eq_mul]
+    rw [Measure.restrict_apply hBm, smul_apply, smul_eq_mul]
     have hq := hQ ((B ∩ FundOf t).indicator 1) ((measurable_const).indicator (hBm.inter hFO.1))
     rw [lintegral_indicator_one (hBm.inter hFO.1)] at hq
     rw [hq, ← lintegral_indicator_const hBm]

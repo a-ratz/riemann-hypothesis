@@ -65,8 +65,8 @@ namespace GlobalTheory.BSP
 theorem ff_descent_elem_pushout : ∀ (A B D : Type) [CommRing A] [CommRing B] [CommRing D] (f : A →+* B) (p q : B →+* D), f.FaithfullyFlat → CategoryTheory.IsPushout (CommRingCat.ofHom f) (CommRingCat.ofHom f) (CommRingCat.ofHom p) (CommRingCat.ofHom q) → Function.Injective f ∧ ∀ b, p b = q b → b ∈ f.range := by
   intro A B D _ _ _ f p q hf hpo
   refine ⟨hf.injective, fun b hb => ?_⟩
-  letI : Algebra A B := f.toAlgebra
-  haveI : Module.FaithfullyFlat A B := hf
+  let : Algebra A B := f.toAlgebra
+  have : Module.FaithfullyFlat A B := hf
 
   have hw : CategoryTheory.CategoryStruct.comp (CommRingCat.ofHom f)
         (CommRingCat.ofHom (Algebra.TensorProduct.includeLeftRingHom (R := A) (A := B) (B := B))) =

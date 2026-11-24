@@ -120,7 +120,7 @@ theorem hasSum_geom_poly {β : ℂ} (hβ : β ≠ 0) (e : ℕ) {P : ℤ → ℂ[
     · convert hg using 1
       funext k
       simp only [Function.comp_apply, f]
-      rw [if_neg (by omega), h1 _ (by omega), zpow_add₀ hz, zpow_natCast]
+      rw [ite_eq_right (by omega), h1 _ (by omega), zpow_add₀ hz, zpow_natCast]
       ring
     · split_ifs with h
       · rfl
@@ -367,7 +367,7 @@ theorem IsCentralCoeff.lintegral_zeta_lt_top (hc : IsCentralCoeff m α c)
     (ENNReal.ofReal_lt_one.2 hs) (fun j hj => ?_) (fun k => ?_)
   · refine (setLIntegral_congr_fun (measurableSet_tile 0) fun g hg => ?_).trans (lintegral_zero)
     show ‖_‖ₑ = 0
-    rw [enorm_eq_zero]
+    rw [eNorm_eq_zero]
     by_contra hne
     have hΦne : Φ ((centralUnif F m ^ j * g : GL (Fin m) F) : Matrix (Fin m) (Fin m) F) ≠ 0 := by
       intro h; apply hne; rw [h]; ring
@@ -383,7 +383,7 @@ theorem IsCentralCoeff.lintegral_zeta_lt_top (hc : IsCentralCoeff m α c)
         ≤ ∫⁻ g in tile F m 0, (ENNReal.ofReal (BΦ * ρ ^ (-(A : ℤ))) * ENNReal.ofReal ρ ^ k) *
             ‖c g * detPow g s‖ₑ ∂μ := by
           refine lintegral_mono fun g => ?_
-          rw [hval, enorm_mul, enorm_mul, ← ofReal_norm, ← ofReal_norm,
+          rw [hval, eNorm_mul, eNorm_mul, ← ofReal_norm, ← ofReal_norm,
             norm_zpow, ← hρdef, zpow_add₀ hρ0.ne', zpow_natCast]
           refine mul_le_mul_left ?_ _
           rw [← ENNReal.ofReal_mul (norm_nonneg _), ← ENNReal.ofReal_pow hρ0.le,
@@ -488,7 +488,7 @@ theorem IsCentralCoeff.exists_eq_div_zeta (hc : IsCentralCoeff m α c)
     refine ⟨hc.continuous.norm.aestronglyMeasurable, ?_⟩
     have h0 := hc.lintegral_tile_lt_top μ 0
     have he : ∀ g : GL (Fin m) F, ‖c g * detPow g 0‖ₑ = ‖‖c g‖‖ₑ := fun g => by
-      rw [detPow, Complex.cpow_zero, mul_one, enorm_norm]
+      rw [detPow, Complex.cpow_zero, mul_one, eNorm_norm]
     simp only [he] at h0
     exact h0
   have hpiece : ∀ k : ℕ, IntegrableOn (fun g => if ordDet g = (k : ℤ) then
@@ -518,8 +518,8 @@ theorem IsCentralCoeff.exists_eq_div_zeta (hc : IsCentralCoeff m α c)
     simp only [zero_mul, zero_add] at hg0 hg1
     have hk : (ordDet g).toNat ∈ Finset.range m := Finset.mem_range.2 (by omega)
     rw [Finset.sum_eq_single_of_mem _ hk (fun k _ hk' => by
-      rw [if_neg (by omega), mul_zero])]
-    rw [if_pos (Int.toNat_of_nonneg hg0).symm, detPow_centralUnif_zpow_mul,
+      rw [ite_eq_right (by omega), mul_zero])]
+    rw [ite_eq_left (Int.toNat_of_nonneg hg0).symm, detPow_centralUnif_zpow_mul,
       IsCentralCoeff.zpow_mul hc, detPow_eq_qs_zpow, ← hx, mul_zpow, mul_comm j, _root_.zpow_mul,
       zpow_natCast, ← Int.toNat_of_nonneg hg0, zpow_natCast]
     simp only [Int.toNat_natCast]
@@ -577,7 +577,7 @@ theorem IsCentralCoeff.lintegral_weight_lt_top (hc : IsCentralCoeff m α c)
             J (centralUnif F m ^ ((k : ℕ) : ℤ) * g) ∂μ
         ≤ ∫⁻ g in tile F m 0, (B * ENNReal.ofReal ρ ^ k) * ‖c g * detPow g s‖ₑ ∂μ := by
           refine setLIntegral_mono' (measurableSet_tile 0) fun g hg => ?_
-          rw [hval, enorm_mul, ← ofReal_norm, norm_zpow, ← hρdef, zpow_natCast,
+          rw [hval, eNorm_mul, ← ofReal_norm, norm_zpow, ← hρdef, zpow_natCast,
             ENNReal.ofReal_pow hρ0.le]
           have hJg := hJ (centralUnif F m ^ ((k : ℕ) : ℤ) * g)
           have hmin : ENNReal.ofReal (min 1 ((q ^ m) ^ ordDet (centralUnif F m ^ ((k : ℕ) : ℤ) * g)))
@@ -606,7 +606,7 @@ theorem IsCentralCoeff.lintegral_weight_lt_top (hc : IsCentralCoeff m α c)
         ≤ ∫⁻ g in tile F m 0, (B * ENNReal.ofReal (ρ⁻¹ * ((q ^ m) ^ (-(m : ℤ)) / ρ) ^ k)) *
             ‖c g * detPow g s‖ₑ ∂μ := by
           refine setLIntegral_mono' (measurableSet_tile 0) fun g hg => ?_
-          rw [hval, enorm_mul, ← ofReal_norm, norm_zpow, ← hρdef, ← hj]
+          rw [hval, eNorm_mul, ← ofReal_norm, norm_zpow, ← hρdef, ← hj]
           have hJg := hJ (centralUnif F m ^ j * g)
           have hmin := ENNReal.ofReal_le_ofReal ((hw j g hg).trans (min_le_right _ _))
           rw [hr] at hmin

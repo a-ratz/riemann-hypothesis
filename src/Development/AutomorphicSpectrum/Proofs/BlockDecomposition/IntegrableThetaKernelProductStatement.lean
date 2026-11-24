@@ -107,7 +107,7 @@ theorem lintegral_bl {a r t n : ℕ} (hn : r + t = n) (y : Mx D r t) (ν : Measu
     (hν : ν.IsAddHaarMeasure) (g : Mx D a n → ℝ≥0∞) :
     ∫⁻ U, g (mm U (bl hn 1 y 0 1)) ∂ν = ∫⁻ U, g U ∂ν := by
   obtain ⟨i1, i2, i3, i4, i5⟩ := top_mx (D := D) a n
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
   let φ := GlobalTheory.ModuLR.lrCE (1 : GL (Fin a) (AE D)) (blU hn y)
   have hc : addEquivAddHaarChar φ = 1 := by
     have h := GlobalTheory.ResidueEisenstein.ModMat.addEquivAddHaarChar_lrCE D.host.F D.host.E D.sp.cm.sig (isCMExt_host D) a n
@@ -175,7 +175,7 @@ theorem continuous_pt {d : HypDec B W t} (hn : W.rank + t = n) (I : IkD d n)
   have hX : Continuous fun p : I.l.K × Par D n t W => XU d hn x₀ p.2.1 p.2.2.1 :=
     (continuous_const.matrix_mul hU).add (continuous_const.matrix_mul
       ((continuous_jn hn).comp (((continuous_ww x₀).comp hh).prodMk continuous_const)))
-  exact ((continuous_mt B).comp (continuous_subtype_val.comp continuous_fst).inv).matrix_mul
+  exact ((continuous_mt B).comp (continuous_subtypeVal.comp continuous_fst).inv).matrix_mul
     (hX.matrix_mul ((continuous_bl hn).comp hy))
 
 end Integ
@@ -217,29 +217,29 @@ theorem integrable_core : IkSch → Dom → OrbFin → Shift → IkLint → Fub4
   set F : I.l.K × GA D W × Mx D t n × Mx D W.rank t → ℝ≥0∞ := fun p =>
     ‖M (mm (mt B ((p.1 : GA D B)⁻¹)) (mm (XU d hn x₀ p.2.1 p.2.2.1) (bl hn 1 p.2.2.2 0 1)))‖ₑ * ‖η p.2.2.2‖ₑ with hF
   have hFm : Measurable F :=
-    (hcM.comp hpt).measurable.enorm.mul (hcη.comp hy).measurable.enorm
+    (hcM.comp hpt).measurable.eNorm.mul (hcη.comp hy).measurable.eNorm
   have hle : ∀ p, ‖core hn I x₀ Φ η p‖ₑ ≤ F p := fun p => by
-    simp only [core, hF, enorm_mul, RCLike.enorm_conj]
+    simp only [core, hF, eNorm_mul, RCLike.eNorm_conj]
     gcongr
-    rw [enorm_le_iff_norm_le]
+    rw [eNorm_le_iff_norm_le]
     refine (hMd _).trans ?_
     simpa using Complex.re_le_norm _
   have hη' : ∫⁻ y, ‖η y‖ₑ ∂μ < ⊤ :=
-    hasFiniteIntegral_iff_enorm.1 (GlobalTheory.CompanionTheory.WSum.integrable_schwartzA_haar D θ hθ W.rank t μ η hη).2
+    hasFiniteIntegral_iff_eNorm.1 (GlobalTheory.CompanionTheory.WSum.integrable_schwartzA_haar D θ hθ W.rank t μ η hη).2
   have hN' : ∫⁻ h, ‖N (ww W x₀ h)‖ₑ ∂I.m < ⊤ := hOrb D θ hθ W I.m I.haar x₀ hx₀ N hN
   have hin : ∀ y h, ∫⁻ U, ∫⁻ k : I.l.K, F (k, h, U, y) ∂I.νK ∂I.μ₁ ≤ ‖N (ww W x₀ h)‖ₑ * ‖η y‖ₑ := fun y h => by
     simp only [hF]
     have e : ∀ U, ∫⁻ k : I.l.K, ‖M (mm (mt B ((k : GA D B)⁻¹)) (mm (XU d hn x₀ h U) (bl hn 1 y 0 1)))‖ₑ * ‖η y‖ₑ ∂I.νK =
         (∫⁻ k : I.l.K, ‖M (mm (mt B ((k : GA D B)⁻¹)) (mm (XU d hn x₀ h U) (bl hn 1 y 0 1)))‖ₑ ∂I.νK) * ‖η y‖ₑ := fun U =>
-      lintegral_mul_const' _ _ enorm_ne_top
+      lintegral_mul_const' _ _ eNorm_ne_top
     simp only [e]
-    rw [lintegral_mul_const' _ _ enorm_ne_top, inner_eq hIkL hJn hn I hθ hM hM0 x₀ h y]
+    rw [lintegral_mul_const' _ _ eNorm_ne_top, inner_eq hIkL hJn hn I hθ hM hM0 x₀ h y]
     gcongr
-    rw [enorm_le_iff_norm_le]
+    rw [eNorm_le_iff_norm_le]
     have h3 := hNd (jn hn (ww W x₀ h) (mm (ww W x₀ h) y + 0))
     rw [jn_first] at h3
     exact h3.trans (Complex.re_le_norm _)
-  rw [hasFiniteIntegral_iff_enorm]
+  rw [hasFiniteIntegral_iff_eNorm]
   calc ∫⁻ p, ‖core hn I x₀ Φ η p‖ₑ ∂(I.νK.prod (Q0 I μ))
       ≤ ∫⁻ p, F p ∂(I.νK.prod (Q0 I μ)) := lintegral_mono hle
     _ = ∫⁻ y, ∫⁻ h, ∫⁻ U, ∫⁻ k : I.l.K, F (k, h, U, y) ∂I.νK ∂I.μ₁ ∂I.m ∂μ :=
@@ -247,7 +247,7 @@ theorem integrable_core : IkSch → Dom → OrbFin → Shift → IkLint → Fub4
     _ ≤ ∫⁻ y, ∫⁻ h, ‖N (ww W x₀ h)‖ₑ * ‖η y‖ₑ ∂I.m ∂μ :=
         lintegral_mono fun y => lintegral_mono fun h => hin y h
     _ = (∫⁻ h, ‖N (ww W x₀ h)‖ₑ ∂I.m) * ∫⁻ y, ‖η y‖ₑ ∂μ := by
-        simp only [lintegral_mul_const' _ _ enorm_ne_top]
+        simp only [lintegral_mul_const' _ _ eNorm_ne_top]
         rw [lintegral_const_mul' _ _ hN'.ne]
     _ < ⊤ := ENNReal.mul_lt_top hN' hη'
 

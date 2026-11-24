@@ -86,7 +86,7 @@ theorem skoda_open (hU : IsOpen U) (S : EtaleStein n U) (hz : S.z = Subtype.val)
           ∫⁻ y in U, ENNReal.ofReal (‖f y‖ ^ 2 * (∑ i, ‖g i y‖ ^ 2) ^ (-(t + 1)) * Real.exp (-ph0 y)) := by
   classical
   have hzl : IsLocalHomeomorph (Subtype.val : U → V n) := hz ▸ S.isLocalHomeomorph
-  have hemb : MeasurableEmbedding (Subtype.val : U → V n) := MeasurableEmbedding.subtype_coe hU.measurableSet
+  have hemb : MeasurableEmbedding (Subtype.val : U → V n) := MeasurableEmbedding.subtypeVal hU.measurableSet
   have hvol : vol n (Subtype.val : U → V n) = (volume : Measure (V n)).comap Subtype.val := by
     ext A hA
     rw [vol_image n Subtype.val hzl Set.univ isOpen_univ Subtype.val_injective.injOn A hA (Set.subset_univ _),

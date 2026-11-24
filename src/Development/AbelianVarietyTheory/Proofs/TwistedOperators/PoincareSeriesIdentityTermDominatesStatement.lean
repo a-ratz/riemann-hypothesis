@@ -355,7 +355,7 @@ lemma integral_inv_one_add_norm_pow_le (n : ℕ) (hn : 1 ≤ n) :
       ∫ x : EuclideanSpace ℂ (Fin n), ((1 + ‖x‖) ^ (2 * n + 4))⁻¹ ≤
         ((n : ℝ) / 2 * 4 ^ n) * (volume : Measure (EuclideanSpace ℂ (Fin n))).real (ball 0 (1 / 2)) := by
   have hfr := finrank_complexSpace n
-  haveI : Nontrivial (EuclideanSpace ℂ (Fin n)) :=
+  have : Nontrivial (EuclideanSpace ℂ (Fin n)) :=
     Module.nontrivial_of_finrank_pos (R := ℝ) (by rw [hfr]; omega)
   refine ⟨?_, ?_⟩
   · have h := integrable_one_add_norm (E := EuclideanSpace ℂ (Fin n))
@@ -580,7 +580,7 @@ theorem lattice_sum_le : ∀ (ι : Type) [Fintype ι] [Nonempty ι] (n : ℕ)
       gcongr
       exact const_le_exp n
     _ = Real.exp ((6 * n + 9) * Fintype.card ι) / R := by
-      rw [div_eq_mul_inv, mul_comm (6 * (n : ℝ) + 9), Real.exp_nat_mul]
+      rw [div_eq_mul_inv, mul_comm (6 * (n : ℝ) + 9), Real.exp_natCast_mul]
 
 end GlobalTheory.ProdNormSum
 end -- clump:auto
@@ -642,7 +642,7 @@ theorem latSum_le : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (B : Fr V) (g : GA 
     subst hs0
     rw [Finset.sum_empty]
     exact div_nonneg (Real.exp_pos _).le (by linarith)
-  · haveI : Nonempty D.what₂.Tau := not_isEmpty_iff.mp hι
+  · have : Nonempty D.what₂.Tau := not_isEmpty_iff.mp hι
     have hzero : ∀ w, compVec θ V B g w = 0 → ∏ τ, nrm θ B g τ w = 0 := by
       intro w h0
       refine Finset.prod_eq_zero (Finset.mem_univ (Classical.arbitrary _)) ?_
@@ -1171,7 +1171,7 @@ theorem sqrt_absNorm_le_prod_tauE : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)) 
   have hnorm : ∏ τ, ‖tauE D τ (u : D.host.E)‖ ^ 2 = |((Algebra.norm ℚ (u : D.host.E) : ℚ) : ℝ)| := by
     rw [← Rat.cast_abs, ← NumberField.InfinitePlace.prod_eq_abs_norm]
     refine (Fintype.prod_bijective _ (GlobalTheory.LevelSeries.mk_tauE_bij D) _ _ (fun τ => ?_))
-    rw [NumberField.InfinitePlace.mult, if_neg (GlobalTheory.LevelSeries.mk_tauE_complex D τ)]
+    rw [NumberField.InfinitePlace.mult, ite_eq_right (GlobalTheory.LevelSeries.mk_tauE_complex D τ)]
     rfl
   have hspan : Ideal.span {u} ≤ 𝔪 := (Ideal.span_singleton_le_iff_mem _).2 hu
   have hne : Ideal.absNorm (Ideal.span {u}) ≠ 0 := by
@@ -1329,8 +1329,8 @@ theorem identity_dominates : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (
   intro D θ hθ Y V d S S' M₀ M p Q hbase Λ 𝔪 hΛ h𝔪 v φ c b s x hφ hbnd hx hs0 hs1 hlong had hR2 hR1
   classical
   obtain ⟨ι, hι, hιc, hιi, hιQ, -, -, hιr, -, -⟩ := GlobalTheory.T.exists_unitary_embedding_stabilizer D θ hθ Y V 1 1 one_ne_zero d
-  haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
-  haveI := v.haar
+  have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
+  have := v.haar
   set K := congLev D.sp.cm V.gram (d.lat Λ fun _ => 1) 𝔪 with hK
   set f : GA D V → ℂ := fun g => coef θ M K (p.v θ) (p.v θ) (stabilizerEmbedding d x⁻¹ * g) with hf
   have hcoef : Measurable (coef θ M K (p.v θ) (p.v θ)) := by
@@ -1398,7 +1398,7 @@ theorem identity_dominates : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (
     rw [← integral_const_mul, ofReal_integral_eq_lintegral_ofReal ((hterm q).1.norm.const_mul b)
       (Filter.Eventually.of_forall fun h => mul_nonneg hb0 (norm_nonneg _))]
     refine lintegral_mono fun h => ?_
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     refine ENNReal.ofReal_le_ofReal ?_
     rw [norm_mul, mul_comm b]
     exact mul_le_mul_of_nonneg_left (hbnd h) (norm_nonneg _)
@@ -1509,7 +1509,7 @@ theorem identity_dominates : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (
   have hnorm := hH'.norm_le_of_bounded hβ's.hasSum (fun q => by
     by_cases hq : q = q₁
     · subst hq; simp
-    · simp only [Function.update_apply, hq, if_false]; exact hTle q)
+    · simp only [Function.update_apply, hq, ite_false]; exact hTle q)
   have hts : ∑' q, Function.update β q₁ 0 q ≤ Bt := by
     refine hβ's.tsum_le_of_sum_le fun t => ?_
     rw [← Finset.sum_erase t (a := q₁) (by simp)]

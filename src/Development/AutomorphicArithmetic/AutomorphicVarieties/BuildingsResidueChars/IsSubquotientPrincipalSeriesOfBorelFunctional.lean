@@ -62,7 +62,7 @@ private theorem sep_of_irred {G V : Type} [Group G] [AddCommGroup V] [Module ℂ
        smul_mem' := fun c a ha g => by simp [ha g] }, fun x a ha g => by
       have := ha (g * x)
       simpa using this⟩
-  haveI := hρ
+  have := hρ
   rcases eq_bot_or_eq_top S with h | h
   · have : v ∈ S.toSubmodule := hv
     rw [h] at this

@@ -573,9 +573,9 @@ theorem valR_ne_zero_sec {X : Scheme.{0}} (L : LB X) {F : Type} [Field F] (ξ : 
 
 theorem symb_regular : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.PolAV (Sp K)) (n : ℕ) (v : Module.Basis (Fin n) K (TanM (𝟙 (Sp K)) P₀.A)) (dd : Fin n → Fld P₀.A.left), (∀ a, IsInv P₀.A (v a) (dd a)) → ∀ (F : Type) [Field F] (ψ : K →+* F) (ξ : Sp F ⟶ P₀.A.left), ξ ≫ P₀.A.hom = spMap ψ → (∀ O (f : Γ(P₀.A.left, O)), ⊤ ≤ ξ ⁻¹ᵁ O → valR ξ O f = 0 → f = 0) → ∀ (δ : Fin n → Derivation ℤ F F), (∀ a O f, ⊤ ≤ ξ ⁻¹ᵁ O → valR ξ O (dd a O f) = δ a (valR ξ O f)) → ∀ (j₀ : P₀.L.ι), ⊤ ≤ ξ ⁻¹ᵁ P₀.L.U j₀ → ∀ (δ₀ : Derivation ℤ F F) (Λ : Matrix (Fin n) (Fin n) F), (∀ (k : ℕ), 1 ≤ k → ∀ σ τ : SecM (𝟙 P₀.A.left) P₀.L k, ∃ ρ : SecM (𝟙 P₀.A.left) P₀.L (3 * k), ∀ b c : F, b = valR ξ _ (σ.f fun _ => j₀) → c = valR ξ _ (τ.f fun _ => j₀) → (k : F) * b * (b * δ₀ c - c * δ₀ b) - ∑ a, ∑ e, Λ a e * δ a b * (b * δ e c - c * δ e b) = valR ξ _ (ρ.f fun _ => j₀)) → ∀ (k : ℕ), 1 ≤ k → ∀ s : SecM (𝟙 P₀.A.left) P₀.L k, ⊤ ≤ ξ ⁻¹ᵁ (Out.nonzeroLocus s) → (∀ f f' : Γ(P₀.A.left, (Out.nonzeroLocus s)), ∃ h : Γ(P₀.A.left, (Out.nonzeroLocus s)), valR ξ _ h = ∑ a, ∑ e, Λ a e * δ a (valR ξ _ f) * δ e (valR ξ _ f')) ∧ (∀ f : Γ(P₀.A.left, (Out.nonzeroLocus s)), ∃ f' : Γ(P₀.A.left, (Out.nonzeroLocus s)), valR ξ _ f' = (k : F) * δ₀ (valR ξ _ f) - ∑ a, ∑ e, Λ a e * (δ a (valR ξ _ (s.f fun _ => j₀)) / valR ξ _ (s.f fun _ => j₀)) * δ e (valR ξ _ f)) := by
   intro K _ _ P₀ n v dd hdd F _ ψ ξ hξ hinj δ hδ j₀ hj₀ δ₀ Λ hyp k hk s hs
-  haveI := P₀.isAb.proper
-  haveI : CompactSpace P₀.A.left := QuasiCompact.compactSpace_of_compactSpace P₀.A.hom
-  haveI : QuasiSeparatedSpace P₀.A.left := quasiSeparatedSpace_of_quasiSeparated P₀.A.hom
+  have := P₀.isAb.proper
+  have : CompactSpace P₀.A.left := QuasiCompact.compactSpace_of_compactSpace P₀.A.hom
+  have : QuasiSeparatedSpace P₀.A.left := quasiSeparatedSpace_of_quasiSeparated P₀.A.hom
   obtain ⟨G₁, G₂⟩ := GlobalTheory.T.pointValue_eq_quotient_section_by_power_at_field P₀.A.left P₀.L P₀.isLB F ξ j₀ hj₀ k s hs
   have hβ := valR_ne_zero_sec P₀.L ξ j₀ hj₀ k s hs
   set β := valR ξ _ (s.f fun _ => j₀) with hβdef
@@ -683,11 +683,11 @@ namespace GlobalTheory.InvDerBridge
 
 theorem valR_add_of {B : Type} [CommRing B] {Z : Scheme.{0}} (a : Sp B ⟶ Z) {O : Z.Opens} (ha : ⊤ ≤ a ⁻¹ᵁ O)
     (f g : Γ(Z, O)) : valR a O (f + g) = valR a O f + valR a O g := by
-  simp only [valR, dif_pos ha, map_add (f := _)]
+  simp only [valR, dite_eq_left ha, map_add (f := _)]
 
 theorem valR_mul_of {B : Type} [CommRing B] {Z : Scheme.{0}} (a : Sp B ⟶ Z) {O : Z.Opens} (ha : ⊤ ≤ a ⁻¹ᵁ O)
     (f g : Γ(Z, O)) : valR a O (f * g) = valR a O f * valR a O g := by
-  simp only [valR, dif_pos ha, map_mul]
+  simp only [valR, dite_eq_left ha, map_mul]
 
 theorem isInvDer_of_isInv : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A] [IsCommMonObj A] (v : TanM (𝟙 (Sp K)) A) (u : epsR K ⟶ A) (dd : Fld A.left), u.left = (tv v).left → IsTangent u → IsInv A v dd → GlobalTheory.KS.IsInvDer u dd := by
   intro K _ A _ _ v u dd hu ht hd W f
@@ -696,7 +696,7 @@ theorem isInvDer_of_isInv : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A
   refine GlobalTheory.LogKSBal.ext_valR _ _ fun B _ x hx => ?_
   obtain ⟨β, hβ⟩ : ∃ β : DualNumber K →+* B, x ≫ (fst (epsR K) A).left = spMap β :=
     ⟨(Spec.preimage (x ≫ (fst (epsR K) A).left)).hom, (Spec.map_preimage _).symm⟩
-  letI : Algebra K B := (β.comp (algebraMap K (DualNumber K))).toAlgebra
+  let : Algebra K B := (β.comp (algebraMap K (DualNumber K))).toAlgebra
   set e : B := β DualNumber.eps with he_def
   have he : e * e = 0 := by rw [he_def, ← map_mul, DualNumber.eps_mul_eps, map_zero]
   let βa : DualNumber K →ₐ[K] B := { β with commutes' := fun _ => rfl }
@@ -806,7 +806,7 @@ theorem dlg_eq {K : Type} [Field K] {A : Over (Sp K)} [GrpObj A] (L : LB A.left)
 
 theorem main : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.PolAV (Sp K)) (n : ℕ) (v : Module.Basis (Fin n) K (TanM (𝟙 (Sp K)) P₀.A)) (dd : Fin n → Fld P₀.A.left), (∀ a, IsInv P₀.A (v a) (dd a)) → ∀ M : Matrix (Fin n) (Fin n) K, KSRel P₀.A (𝟙 P₀.A.left) P₀.L dd (fun _ => 0) M → M = 0 := by
   intro K _ _ P₀ n v dd hdd M hM
-  haveI : IsCommMonObj P₀.A := P₀.isAb.comm
+  have : IsCommMonObj P₀.A := P₀.isAb.comm
   obtain ⟨u, hu, hul⟩ := GlobalTheory.Heat.DlogIndep.exists_isLieBasis v
   have hinv : ∀ a, GlobalTheory.KS.IsInvDer (u a) (dd a) := fun a => isInvDer_of_isInv (hul a) (hu.1 a) (hdd a)
   have hiso := GlobalTheory.SiegLower.lbIso_pull_id P₀.isLB
@@ -992,7 +992,7 @@ noncomputable section
 namespace GlobalTheory.CocVal
 
 theorem valR_pos {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
-    (f : Γ(X, U)) : valR x U f = (Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ h).hom f) := dif_pos h
+    (f : Γ(X, U)) : valR x U f = (Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ h).hom f) := dite_eq_left h
 
 theorem valR_map_le {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) {U V : X.Opens} (hVU : V ≤ U)
     (h : ⊤ ≤ x ⁻¹ᵁ V) (f : Γ(X, U)) :
@@ -1019,7 +1019,7 @@ theorem valR_cocycle : ∀ (X : Scheme.{0}) (L : LB X), L.IsLB → ∀ (F : Type
   have e := congrArg (fun u : Γ(X, L.U j ⊓ L.U j' ⊓ L.U j'')ˣ => valR ξ _ u.val) (hL.cocycle j j' j'')
   simp only [Units.val_mul] at e
   rw [valR_mul_pos ξ _ h123] at e
-  simp only [res, Units.coe_map, MonoidHom.coe_coe] at e
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass] at e
   rw [valR_map_le ξ _ h123, valR_map_le ξ _ h123, valR_map_le ξ _ h123] at e
   exact e
 
@@ -1071,7 +1071,7 @@ noncomputable section
 namespace GlobalTheory.LocVal
 
 theorem valR_eq {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
-    (f : Γ(X, U)) : valR x U f = (Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ h).hom f) := dif_pos h
+    (f : Γ(X, U)) : valR x U f = (Scheme.ΓSpecIso (CommRingCat.of A)).hom.hom ((x.appLE U ⊤ h).hom f) := dite_eq_left h
 
 theorem valR_mul {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U : X.Opens) (h : ⊤ ≤ x ⁻¹ᵁ U)
     (f g : Γ(X, U)) : valR x U (f * g) = valR x U f * valR x U g := by
@@ -1466,9 +1466,9 @@ theorem coeffs_zero {K : Type} [Field K] (P₀ : Out.PolAV (Sp K)) (n : ℕ)
     (hd : ∀ a, IsInv P₀.A (v a) (dd a)) (W : P₀.A.left.Opens) (hW : IsAffineOpen W)
     {C : Type} [CommRing C] (ψ : Γ(P₀.A.left, W) →+* C) (c : Fin n → C)
     (hc : ∀ f, ∑ a, c a * ψ (dd a W f) = 0) : c = 0 := by
-  haveI := P₀.smoothDim
-  haveI : Smooth P₀.A.hom := SmoothOfRelativeDimension.smooth P₀.g _
-  letI : Algebra K C := (ψ.comp (cHom P₀.A.hom W)).toAlgebra
+  have := P₀.smoothDim
+  have : Smooth P₀.A.hom := SmoothOfRelativeDimension.smooth P₀.g _
+  let : Algebra K C := (ψ.comp (cHom P₀.A.hom W)).toAlgebra
   obtain ⟨x, hx, ex⟩ := exists_evalPt_eq hW ψ
   have hxp : x ≫ P₀.A.hom = (ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := K) C).hom := by
     refine (eq_spMap_of_evalPt _ (algebraMap K C) fun a => ?_).trans rfl
@@ -1547,8 +1547,8 @@ theorem span_eq_top {K : Type} [Field K] (P₀ : Out.PolAV (Sp K)) (n : ℕ)
     Submodule.span Γ(P₀.A.left, W) (Set.range fun f : Γ(P₀.A.left, W) => fun b => dd b W f) = ⊤ := by
   set M := Submodule.span Γ(P₀.A.left, W) (Set.range fun f : Γ(P₀.A.left, W) => fun b => dd b W f) with hM
   refine eq_top_of_forall_maximal M fun m hm x => ?_
-  haveI := hm
-  letI : Field (Γ(P₀.A.left, W) ⧸ m) := Ideal.Quotient.field m
+  have := hm
+  let : Field (Γ(P₀.A.left, W) ⧸ m) := Ideal.Quotient.field m
   let π : Γ(P₀.A.left, W) →+* Γ(P₀.A.left, W) ⧸ m := Ideal.Quotient.mk m
   let S : Submodule (Γ(P₀.A.left, W) ⧸ m) (Fin n → Γ(P₀.A.left, W) ⧸ m) :=
     Submodule.span _ (Set.range fun f : Γ(P₀.A.left, W) => fun b => π (dd b W f))
@@ -1605,7 +1605,7 @@ theorem exists_dual_forms : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.Po
   rw [h, Pi.single_apply]
   by_cases hab : a = b
   · subst hab; simp
-  · rw [if_neg (Ne.symm hab), if_neg hab]
+  · rw [ite_eq_right (Ne.symm hab), ite_eq_right hab]
 
 end GlobalTheory.GcDual
 end -- clump:auto
@@ -1699,7 +1699,7 @@ theorem entry_regular : ∀ (K : Type) [Field K] [CharZero K] (P₀ : Out.PolAV 
   simp only [map_sum, map_mul, hh']
   rw [sum_sum_bilin_regroup (fun i => φ (g i)) (fun j => φ (g' j)) Λ (fun a' i => δ a' (φ (f i)))
     (fun e' j => δ e' (φ (f' j)))]
-  simp only [key, key', mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [key, key', mul_ite, _root_.mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 end GlobalTheory.Heat.SymReg
 end -- clump:auto

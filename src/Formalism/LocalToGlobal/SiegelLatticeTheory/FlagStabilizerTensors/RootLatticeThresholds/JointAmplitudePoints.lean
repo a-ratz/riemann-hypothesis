@@ -102,7 +102,7 @@ variable {D : D7} {X : HidaSetting D}
 
 theorem card_pos' (D : D7) : 0 < Fintype.card D.what₂.Tau := by
   first
-  | (haveI : Nonempty D.what₂.Tau := ⟨D.eTau.symm 1⟩; exact Fintype.card_pos)
+  | (have : Nonempty D.what₂.Tau := ⟨D.eTau.symm 1⟩; exact Fintype.card_pos)
   | (haveI : Nonempty D.what₂.Tau := ⟨D.eTau.symm ⟨1, one_mem _⟩⟩; exact Fintype.card_pos)
 
 def ofPts {K : Type} {i : ℕ} (s : Σ c : Composition (i + 1), (Fin c.length → K)) : List (K × ℕ) :=

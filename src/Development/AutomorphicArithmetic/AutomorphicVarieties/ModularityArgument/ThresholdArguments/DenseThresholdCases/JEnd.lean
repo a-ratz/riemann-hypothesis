@@ -501,7 +501,7 @@ private theorem mem_range_of_sum [CharZero k] (a b : Fin n → H →* kˣ) (h : 
   have hv : L (c (a i)) = 0 := by rw [hL]; rfl
   have h2 : ∑ j, (Finsupp.single (c (b j)) (1 : k)) (c (a i)) = 0 :=
     Finset.sum_eq_zero fun j _ => by
-      rw [Finsupp.single_apply, if_neg fun e => hne j (hc e).symm]
+      rw [Finsupp.single_apply, ite_eq_right fun e => hne j (hc e).symm]
   have h1 : ∑ j, (Finsupp.single (c (a j)) (1 : k)) (c (a i)) = ((Finset.univ.filter fun j => a j = a i).card : k) := by
     simp only [Finsupp.single_apply, hc.eq_iff, Finset.sum_boole]
   have h3 : (Finset.univ.filter fun j => a j = a i).card ≠ 0 :=
@@ -762,7 +762,7 @@ theorem UpperTheory.V.Z.Ord.conj_unlinked_of_printed_results :
     have e := CG.HasSat.unique hB ((UpperTheory.satake_parameters_complex_conjugate E v).1 n π hcsd B' hB')
     rw [← e]
     exact hF
-  haveI : IsAlgClosure (maximalRealSubfield E) Ω :=
+  have : IsAlgClosure (maximalRealSubfield E) Ω :=
     ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans (maximalRealSubfield E) E Ω⟩
   have key : ∀ A' : ValuationSubring Ω, IsPlaceOver A' w' → ∃ κ : Fin n → Dec (F := E) A' →* (Qbar l)ˣ,
       W.HasFlag (ρ.comp (Dec (F := E) A').subtype) κ ∧ ∀ m : ℕ,
@@ -834,14 +834,14 @@ variable {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAl
   {w : Plc L} {A : ValuationSubring Ω} {h : IsPlaceOver A w} {a : Weil h →* (w.adicCompletion L)ˣ}
 private theorem algPow_add' (d e : (L →+* Qbar l) → ℤ) (x : (w.adicCompletion L)ˣ) :
     algPow w (d + e) (x : w.adicCompletion L) = algPow w d (x : w.adicCompletion L) * algPow w e (x : w.adicCompletion L) := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
   unfold algPow
   rw [← finprod_mul_distrib (Set.toFinite _) (Set.toFinite _)]
   exact finprod_congr fun j => by rw [Pi.add_apply, zpow_add₀ ((map_ne_zero j.1).2 x.ne_zero)]
 private theorem algPow_ne (d : (L →+* Qbar l) → ℤ) (x : (w.adicCompletion L)ˣ) :
     algPow w d (x : w.adicCompletion L) ≠ 0 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
   unfold algPow
   rw [show (∏ᶠ j : {j : w.adicCompletion L →+* Qbar l // Continuous j}, j.1 (x : w.adicCompletion L) ^ d (j.1.comp (algebraMap L (w.adicCompletion L)))) = _ from finprod_eq_prod_of_fintype _]
   exact Finset.prod_ne_zero_iff.2 fun j _ => zpow_ne_zero _ ((map_ne_zero j.1).2 x.ne_zero)
@@ -858,8 +858,8 @@ private theorem sum_eq_zero [Fintype (W.Emb l w)] (ha : IsLocalArtin h a) (d : (
     (χ : Dec (F := L) A →* (Qbar l)ˣ) (hχ : Continuous χ)
     (hv : ∀ s : Weil h, (χ (Subgroup.inclusion (Weil_le_Dec h) s) : Qbar l) = algPow w d (a s : w.adicCompletion L)) :
     ∑ j : W.Emb l w, d (j.1.comp (algebraMap L _)) = 0 := by
-  haveI : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CompactSpace (Dec (F := L) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
   obtain ⟨s, hs⟩ := ha.surj (Units.mk0 (l : w.adicCompletion L) (Nat.cast_ne_zero.2 hl0))
   have h1 := unit_norm χ (Units.continuous_val.comp hχ) (Subgroup.inclusion (Weil_le_Dec h) s)
@@ -897,7 +897,7 @@ private theorem pow_tendsto (x : w.adicCompletion L) (hx : Valued.v x < 1) :
 private theorem near_one (hw : ((l : ℕ) : 𝓞 L) ∈ w.asIdeal) {U : Set (w.adicCompletion L)ˣ} (hU : IsOpen U) (h1 : (1 : (w.adicCompletion L)ˣ) ∈ U) :
     ∃ (N : ℕ) (u : (w.adicCompletion L)ˣ), 2 ≤ N ∧ (u : w.adicCompletion L) = (N : w.adicCompletion L) ∧ u ∈ U ∧
       ord (w.adicCompletion L) u = 0 := by
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hv : Valued.v (l : w.adicCompletion L) < 1 := by
     have h4 : Valued.v (algebraMap L (w.adicCompletion L) (((l : ℕ) : 𝓞 L) : L)) < 1 := by
       rw [show Valued.v (algebraMap L (w.adicCompletion L) (((l : ℕ) : 𝓞 L) : L)) =
@@ -914,7 +914,7 @@ private theorem near_one (hw : ((l : ℕ) : 𝓞 L) ∈ w.asIdeal) {U : Set (w.a
   refine ⟨1 + l ^ M, _, by omega, rfl, hMU, ?_⟩
   have hvM : Valued.v ((l : w.adicCompletion L) ^ M) < 1 := by
     rw [map_pow]
-    exact pow_lt_one₀ zero_le' hv (by omega)
+    exact pow_lt_one₀ zero_le hv (by omega)
   rw [SphCompletion.ord_completion, Units.val_mk0]
   push_cast
   rw [Valuation.map_one_add_of_lt _ hvM]
@@ -956,15 +956,15 @@ private theorem abs_val (ι : Qbar l ≃+* ℂ) (ha : IsLocalArtin h a) (s : Wei
   simp
 private theorem cyc_cont' : Continuous ((cycBar L Ω l).comp (Dec (F := L) A).subtype) :=
   ((Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ L Ω l)).comp continuous_subtype_val
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ L Ω l)).comp continuous_subtypeVal
 private theorem q_ne : ((normV w : ℕ) : Qbar l) ≠ 0 := Nat.cast_ne_zero.mpr (one_lt_normV w).ne_bot
 private theorem link (H : GlobalTheory.Published.GlobalArtinReciprocity) (ι : Qbar l ≃+* ℂ) {n : ℕ}
     (hw : ((l : ℕ) : 𝓞 L) ∈ w.asIdeal) (ha : IsLocalArtin h a) {hh : Fin n → (L →+* Qbar l) → ℤ}
     (hm : ∀ τ, StrictMono fun j => hh j τ) {ω : Fin n → (w.adicCompletion L)ˣ →* ℂˣ}
     {ψ : Fin n → Dec (F := L) A →* (Qbar l)ˣ} (hO : ∀ j, OrdChar ι a (ω j) (hh j) (ψ j)) (i j : Fin n)
     (e : ω i = ω j * absPow (w.adicCompletion L) 1) : ψ i = ψ j * (cycBar L Ω l).comp (Dec (F := L) A).subtype := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
   have hc : Continuous (ψ i * (ψ j * (cycBar L Ω l).comp (Dec (F := L) A).subtype)⁻¹) :=
     (hO i).cont.mul ((hO j).cont.mul cyc_cont').inv
   have hx : ∀ s : Weil h, (((ψ i * (ψ j * (cycBar L Ω l).comp (Dec (F := L) A).subtype)⁻¹) (Subgroup.inclusion (Weil_le_Dec h) s) : (Qbar l)ˣ) : Qbar l) =
@@ -984,8 +984,8 @@ private theorem tors (H : GlobalTheory.Published.GlobalArtinReciprocity) (ι : Q
     {ψ : Fin n → Dec (F := L) A →* (Qbar l)ˣ} (hO : ∀ j, OrdChar ι a (ω j) (hh j) (ψ j)) (i j : Fin n) (m : ℕ) (hm1 : 1 ≤ m)
     (e : ψ i ^ m = (ψ j * (cycBar L Ω l).comp (Dec (F := L) A).subtype) ^ m) :
     ‖((ω j (ImaginaryQuadraticEtaCharacter.unif (w.adicCompletion L)) : ℂˣ) : ℂ)‖ = (normV w : ℝ) * ‖((ω i (ImaginaryQuadraticEtaCharacter.unif (w.adicCompletion L)) : ℂˣ) : ℂ)‖ := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
   obtain ⟨ρ, hρ⟩ : ∃ ρ, ρ = ψ i * (ψ j * (cycBar L Ω l).comp (Dec (F := L) A).subtype)⁻¹ := ⟨_, rfl⟩
   have hρm : ∀ g, ((ρ g : (Qbar l)ˣ) : Qbar l) ^ m = 1 := fun g => by
     have h1 : ρ ^ m = 1 := by rw [hρ, mul_pow, inv_pow, e, mul_inv_cancel]
@@ -1046,7 +1046,7 @@ private theorem supp_ps [_root_.NumberField.IsTotallyComplex F] {n : ℕ} (hn : 
     (hs : ∀ i, IsSmoothChar (ω i)) (hσ : ∀ σ, π.IsLocComp w σ → IsSubquotient σ.ρ (PS ω)) :
     Gam.TorAt π w ∧ ∀ s, Gam.SuppAt π w s → (∀ i, ω i * absPow (w.adicCompletion F) (((n : ℂ) - 1) / 2) ∈ ImaginaryQuadraticEtaCharacter.chars s) ∧
       ∀ ξ ∈ ImaginaryQuadraticEtaCharacter.chars s, ∃ i, ξ = ω i * absPow (w.adicCompletion F) (((n : ℂ) - 1) / 2) := by
-  haveI : CharZero (w.adicCompletion F) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion F) := algebraRat.charZero _
   have hμ : ∀ i, IsSmoothChar (ω i * absPow (w.adicCompletion F) (((n : ℂ) - 1) / 2)) :=
     fun i => (hs i).mul (isSmoothChar_absPow _)
   have key : ∀ σ, π.IsLocComp w σ → HasSupport σ.ρ (Finset.univ.val.map fun i => IrrGL.ofChar _ (hμ i)) := fun σ h1 =>

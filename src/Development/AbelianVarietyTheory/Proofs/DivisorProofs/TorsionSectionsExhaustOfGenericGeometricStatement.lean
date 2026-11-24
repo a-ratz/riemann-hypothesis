@@ -150,11 +150,11 @@ theorem exhausts_of_generic : ∀ (V : Type) [CommRing V] [IsDomain V] [IsNoethe
   intro V _ _ _ P N hN C b hb H K _ _ x p hp
   obtain ⟨h1, h2, -⟩ := GlobalTheory.abelianSchemeLaws_all.1.mulN (Sp V) P N hN
   rw [Out.mulA, ← GrpTangent.mulN_eq_pow] at h1 h2
-  haveI : IsFinite (torsion P.A N).hom :=
+  have : IsFinite (torsion P.A N).hom :=
     MorphismProperty.of_isPullback (P := @IsFinite) (GrpTangent.isPullback_torsion P.A N) h1
-  haveI : Flat (torsion P.A N).hom :=
+  have : Flat (torsion P.A N).hom :=
     MorphismProperty.of_isPullback (P := @Flat) (GrpTangent.isPullback_torsion P.A N) h2
-  haveI : Mono (torsion.ι P.A N) := inferInstanceAs (Mono (pullback.fst _ _))
+  have : Mono (torsion.ι P.A N) := inferInstanceAs (Mono (pullback.fst _ _))
   obtain ⟨hι, hu⟩ := GlobalTheory.LamF.torsion_universal P.A N
   choose σ hσ using fun c => hu _ (b c) (hb c)
   obtain ⟨t, ht⟩ := hu _ p hp

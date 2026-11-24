@@ -78,7 +78,7 @@ theorem continuous_unipCoord (h : HermitianForm F E W) (v : Basis ι E W) (x₀ 
   have hc : Continuous fun n : unipRadical h v x₀ =>
       (((n : archUnitary h v) : InfinitePlace E → GL ι ℂ) w : Matrix ι ι ℂ) :=
     Units.continuous_val.comp ((continuous_apply w).comp
-      (continuous_subtype_val.comp continuous_subtype_val))
+      (continuous_subtypeVal.comp continuous_subtypeVal))
   exact (hc.matrix_mulVec continuous_const).sub continuous_const
 
 def UnipotentCoordProper.Statement [NumberField F] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E]

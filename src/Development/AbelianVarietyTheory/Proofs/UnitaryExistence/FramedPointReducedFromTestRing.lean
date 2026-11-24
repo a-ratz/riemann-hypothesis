@@ -626,7 +626,7 @@ theorem algHom_eq_of_spec {K S T : Type} [Field K] [CommRing S] [CommRing T] [Al
     [Algebra K T] (φ ψ : S →ₐ[K] T) (h : spMap φ.toRingHom = spMap ψ.toRingHom) : φ = ψ := by
   have h1 := Spec.map_injective h
   have h2 : φ.toRingHom = ψ.toRingHom := congrArg CommRingCat.Hom.hom h1
-  exact AlgHom.coe_ringHom_injective h2
+  exact AlgHom.toRingHom_injective h2
 
 theorem eq_of_away {S : Type} [CommRing S] {n : ℕ} (h : Fin n → S) (hs : Ideal.span (Set.range h) = ⊤)
     (a b : S) (hab : ∀ i, algebraMap S (Localization.Away (h i)) a = algebraMap S (Localization.Away (h i)) b) :
@@ -650,7 +650,7 @@ theorem exists_lift_away {K S T : Type} [Field K] [CommRing S] [CommRing T] [Alg
 theorem away_algHom_ext {K S T : Type} [Field K] [CommRing S] [CommRing T] [Algebra K S] [Algebra K T]
     (x : S) (f g : Localization.Away x →ₐ[K] T)
     (h : ∀ s, f (algebraMap S _ s) = g (algebraMap S _ s)) : f = g := by
-  apply AlgHom.coe_ringHom_injective
+  apply AlgHom.toRingHom_injective
   exact IsLocalization.ringHom_ext (Submonoid.powers x) (RingHom.ext h)
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
@@ -798,7 +798,7 @@ theorem x_of_descended {R A S₀ T₁ T : Type} [CommRing R] [CommRing A] [CommR
     (π : R →ₐ[c.F] A) (a' : A →ₐ[c.F] T₁) (ha : (κ.comp a').comp π = ψ)
     (u : FrPt Xo c A) (hu : u.x = spMap π.toRingHom ≫ y₀.x) (v : FrPt Xo c T₁) (hv : FrMap a' u v) :
     v.x = spMap lam₁.toRingHom ≫ xF ≫ pullback.fst _ _ := by
-  haveI := hj.1
+  have := hj.1
   have e2 : κ.comp ψ₁ = ψ := by
     apply algHom_eq_of_spec
     refine (cancel_mono j).1 ?_

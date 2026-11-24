@@ -77,7 +77,7 @@ theorem UpperTheory.V.AlgebraTools.Conn.clComp :
       [CommRing R] [IsLocalRing R] [Algebra O R] [IrreducibleSpace (PrimeSpectrum R)], UpperTheory.V.CA.IsCL O R → ∀ (a q : Ideal R) (h : ℕ),
       ReciprocityTheory.CA.AraLE a h → q ∈ a.minimalPrimes → ringKrullDim R ≤ ringKrullDim (R ⧸ q) + h := by
   intro O R _ _ _ _ _ _ _ _ hR a q h ha hq
-  haveI := hR.noeth
+  have := hR.noeth
   obtain ⟨s, hs, hrad⟩ := ha
   have hnil : (nilradical R).IsPrime := by
     have hirr : IsIrreducible (PrimeSpectrum.zeroLocus ((⊥ : Ideal R) : Set R)) := by
@@ -126,7 +126,7 @@ theorem UpperTheory.V.Fr.c1ch :
     ∀ (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [IsAdicComplete (maximalIdeal R) R] (h D : ℕ) (f : Fin h → R), (nilradical R).IsPrime → (∃ (O : Type) (_ : CommRing O) (_ : IsDomain O) (_ : IsDiscreteValuationRing O) (_ : IsAdicComplete (maximalIdeal O) O) (_ : Algebra O R), IsCO O R) → (∀ i, f i ∈ maximalIdeal R) → ((D + 1 + h : ℕ) : WithBot ℕ∞) ≤ ringKrullDim R → Chained (Ideal.span (Set.range f)) D := by
   intro R _ _ _ _ h D f hnil hO hf hdim
   obtain ⟨O, _, _, _, _, _, hCO⟩ := hO
-  haveI : IrreducibleSpace (PrimeSpectrum R) :=
+  have : IrreducibleSpace (PrimeSpectrum R) :=
     (PrimeSpectrum.irreducibleSpace_iff_isPrime_nilradical).2 hnil
   have hCL : UpperTheory.V.CA.IsCL O R := UpperTheory.V.CA.IsCL.of_isCO O R
   set a : Ideal R := Ideal.span (Set.range f) with ha_def

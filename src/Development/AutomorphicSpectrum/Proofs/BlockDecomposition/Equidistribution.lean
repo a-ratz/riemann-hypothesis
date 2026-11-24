@@ -214,7 +214,7 @@ theorem locMem_v_iff {I : Ideal (𝓞 F)} {v : HeightOneSpectrum (𝓞 F)} (hI :
     rw [h3]
     exact h1
   · intro ht
-    obtain ⟨s0, hs0I, hs0v⟩ := SetLike.not_le_iff_exists.mp hI
+    obtain ⟨s0, hs0I, hs0v⟩ := IsConcreteLE.not_le_iff_exists.mp hI
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 F) t
     have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
     have hbF : algebraMap (𝓞 F) F b ≠ 0 :=
@@ -222,7 +222,7 @@ theorem locMem_v_iff {I : Ideal (𝓞 F)} {v : HeightOneSpectrum (𝓞 F)} (hI :
     have hspan : Ideal.span {b} ≠ ⊥ := by
       rwa [Ne, Ideal.span_singleton_eq_bot]
     obtain ⟨m, B, hbB, hBv⟩ := exists_pow_mul v hspan
-    obtain ⟨c, hcB, hcv⟩ := SetLike.not_le_iff_exists.mp hBv
+    obtain ⟨c, hcB, hcv⟩ := IsConcreteLE.not_le_iff_exists.mp hBv
     have hbm : b ∈ v.asIdeal ^ m := by
       have hb' : b ∈ Ideal.span {b} := Ideal.subset_span rfl
       rw [hbB] at hb'
@@ -317,7 +317,7 @@ theorem exists_approx {I : Ideal (𝓞 F)} (hI : I ≠ ⊥) (v : HeightOneSpectr
   obtain ⟨m, B, hIB, hBv⟩ := exists_pow_mul v hI
   have hCv : ¬ B' * B ≤ v.asIdeal := fun hle => (v.isPrime.mul_le.mp hle).elim hB'v hBv
   obtain ⟨e, he, f, hf, hef⟩ := exists_add_eq_one_lemma hCv (k + r)
-  obtain ⟨g, hgB', hgv⟩ := SetLike.not_le_iff_exists.mp hB'v
+  obtain ⟨g, hgB', hgv⟩ := IsConcreteLE.not_le_iff_exists.mp hB'v
   have hgF : algebraMap (𝓞 F) F g ≠ 0 := by
     intro h0
     apply hgv
@@ -459,7 +459,7 @@ theorem cosetOff_empty_eq_latCoset (F : Type) [Field F] [NumberField F] (ι : Ty
     (I : Ideal (𝓞 F)) (x0 : ι → F) :
     cosetOff (∅ : Finset (HeightOneSpectrum (𝓞 F))) I x0 = latCoset I x0 := by
   ext x
-  simp only [GlobalTheory.CompanionTheory.Equi.cosetOff, GlobalTheory.CompanionTheory.Equi.latCoset, Set.mem_setOf_eq]
+  simp only [GlobalTheory.CompanionTheory.Equi.cosetOff, GlobalTheory.CompanionTheory.Equi.latCoset, Set.mem_ofPred_eq]
   constructor
   · intro h i
     exact (forall_locMem_iff_exists_mem_ideal I (x i - x0 i)).mp fun v => h v (by simp) i
@@ -523,7 +523,7 @@ theorem locMem_top_iff (v : HeightOneSpectrum (𝓞 F)) (z : F) :
 theorem cosetOff_top : ∀ (F : Type) [Field F] [NumberField F] (ι : Type) (S : Finset (HeightOneSpectrum (𝓞 F))), cosetOff S (⊤ : Ideal (𝓞 F)) (0 : ι → F) = {x : ι → F | ∀ v, v ∉ S → ∀ i, algebraMap F (Fv F v) (x i) ∈ v.adicCompletionIntegers F} := by
   intro F _ _ ι S
   ext x
-  simp only [cosetOff, Set.mem_setOf_eq, Pi.zero_apply, sub_zero, locMem_top_iff, algebraMap_mem_iff]
+  simp only [cosetOff, Set.mem_ofPred_eq, Pi.zero_apply, sub_zero, locMem_top_iff, algebraMap_mem_iff]
 
 end GlobalTheory.CompanionTheory.Equi.CosetTop
 end
@@ -622,13 +622,13 @@ theorem measure_infDomain (li : Measure (Ainf F)) (hl : IsStdInf li) : li (infDo
   have hv : volume (ZSpan.fundamentalDomain (mixedEmbedding.latticeBasis F)) =
       ENNReal.ofReal (Real.sqrt |(discr F : ℝ)|) := by
     rw [mixedEmbedding.volume_fundamentalDomain_latticeBasis, IsTotallyReal.nrComplexPlaces_eq_zero, pow_zero,
-      one_mul, ← ENNReal.ofReal_coe_nnreal, Real.coe_sqrt, coe_nnnorm, Int.norm_eq_abs]
+      one_mul, ← ENNReal.ofReal_coe_nnreal, Real.coe_sqrt, coe_nnNorm, Int.norm_eq_abs]
   calc li (infDomain F)
       = (li.map (coord F)) (toMixed F ⁻¹' ZSpan.fundamentalDomain (mixedEmbedding.latticeBasis F)) :=
         (Measure.map_apply (coord_measurable F) hmeas).symm
     _ = ENNReal.ofReal (Real.sqrt |(discr F : ℝ)|)⁻¹ *
           volume (toMixed F ⁻¹' ZSpan.fundamentalDomain (mixedEmbedding.latticeBasis F)) := by
-        rw [map_coord_eq F li hl, Measure.smul_apply, smul_eq_mul]
+        rw [map_coord_eq F li hl, smul_apply, smul_eq_mul]
     _ = ENNReal.ofReal (Real.sqrt |(discr F : ℝ)|)⁻¹ *
           volume (ZSpan.fundamentalDomain (mixedEmbedding.latticeBasis F)) := by
         rw [(measurePreserving_toMixed F).measure_preimage hfd.nullMeasurableSet]
@@ -697,8 +697,8 @@ variable {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup
 
 theorem exists_nhds_close (φ : G → ℝ) (hc : Continuous φ) (hs : HasCompactSupport φ)
     {δ : ℝ} (hδ : 0 < δ) : ∃ V ∈ 𝓝 (0 : G), ∀ a b, a - b ∈ V → |φ a - φ b| < δ := by
-  letI : UniformSpace G := IsTopologicalAddGroup.rightUniformSpace G
-  haveI : IsUniformAddGroup G := isUniformAddGroup_of_addCommGroup
+  let : UniformSpace G := IsTopologicalAddGroup.rightUniformSpace G
+  have : IsUniformAddGroup G := isUniformAddGroup_of_addCommGroup
   have huc : UniformContinuous φ := hs.uniformContinuous_of_continuous hc
   have hmem := huc (Metric.dist_mem_uniformity hδ)
   rw [uniformity_eq_comap_nhds_zero G] at hmem
@@ -706,7 +706,7 @@ theorem exists_nhds_close (φ : G → ℝ) (hc : Continuous φ) (hs : HasCompact
   refine ⟨V, hV, fun a b hab => ?_⟩
   have h1 : (b, a) ∈ (fun p : G × G => p.2 - p.1) ⁻¹' V := hab
   have h2 := hsub h1
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, Real.dist_eq] at h2
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, Real.dist_eq] at h2
   rwa [abs_sub_comm]
 
 variable [T2Space G] [LocallyCompactSpace G] [SecondCountableTopology G] [MeasurableSpace G]
@@ -921,7 +921,7 @@ theorem eInf_theta {F : Type} [Field F] [NumberField F] (h : IsTotallyReal F) (�
 
 theorem finrank_fun_places (F : Type) [Field F] [NumberField F] (h : IsTotallyReal F) :
     Module.finrank ℝ (InfinitePlace F → ℝ) = Module.finrank ℚ F := by
-  haveI := h
+  have := h
   rw [Module.finrank_fintype_fun_eq_card, InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces,
     IsTotallyReal.nrComplexPlaces_eq_zero, add_zero, IsTotallyReal.finrank]
 
@@ -929,7 +929,7 @@ theorem map_theta_mul {F : Type} [Field F] [NumberField F] (h : IsTotallyReal F)
     (li : Measure (Ainf F)) [li.IsAddHaarMeasure] {ε : ℝ} (hε : 0 < ε) :
     Measure.map (fun y : Ainf F => θ ε * y) li =
       ENNReal.ofReal ((ε ^ Module.finrank ℚ F)⁻¹) • li := by
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have hc : Continuous (eInf F h) := continuous_eInf F h
   have hcs : Continuous (eInf F h).symm := continuous_eInf_symm F h
   have hm : Measurable (eInf F h) := hc.measurable
@@ -941,7 +941,7 @@ theorem map_theta_mul {F : Type} [Field F] [NumberField F] (h : IsTotallyReal F)
     simp only [Function.comp_apply, RingEquiv.apply_symm_apply, map_mul]
     funext w
     rw [Pi.mul_apply, Pi.smul_apply, eInf_theta h θ ε w, smul_eq_mul]
-  haveI : (Measure.map (eInf F h) li).IsAddHaarMeasure :=
+  have : (Measure.map (eInf F h) li).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map li (eInf F h).toAddEquiv hc hcs
   have hdet : LinearMap.det (ε • (LinearMap.id : (InfinitePlace F → ℝ) →ₗ[ℝ] (InfinitePlace F → ℝ))) ≠ 0 := by
     rw [LinearMap.det_smul, LinearMap.det_id, mul_one]
@@ -964,7 +964,7 @@ theorem pi_const_smul {X : Type} [MeasurableSpace X] (ι : Type) [Fintype ι] (�
     (c : ENNReal) [SigmaFinite (c • μ)] :
     (Measure.pi fun _ : ι => c • μ) = c ^ Fintype.card ι • Measure.pi fun _ : ι => μ := by
   refine Measure.pi_eq fun s _ => ?_
-  simp only [Measure.smul_apply, smul_eq_mul, Measure.pi_pi, Finset.prod_mul_distrib, Finset.prod_const,
+  simp only [smul_apply, smul_eq_mul, Measure.pi_pi, Finset.prod_mul_distrib, Finset.prod_const,
     Finset.card_univ]
 
 theorem map_theta_mul_pi : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ θ : ℝ →+* Ainf F, Continuous θ →
@@ -972,15 +972,15 @@ theorem map_theta_mul_pi : ∀ (F : Type) [Field F] [NumberField F], IsTotallyRe
     Measure.map (fun (y : ι → Ainf F) (i : ι) => θ ε * y i) (Measure.pi fun _ => li) =
       ENNReal.ofReal ((ε ^ (Module.finrank ℚ F * Fintype.card ι))⁻¹) • Measure.pi fun _ => li := by
   intro F _ _ h θ _ li _ ι _ ε hε
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have h1 := map_theta_mul h θ li hε
   have hc : Continuous (eInf F h) := continuous_eInf F h
   have hcs : Continuous (eInf F h).symm := continuous_eInf_symm F h
   have hm : Measurable (eInf F h) := hc.measurable
   have hms : Measurable (eInf F h).symm := hcs.measurable
-  haveI : (Measure.map (eInf F h) li).IsAddHaarMeasure :=
+  have : (Measure.map (eInf F h) li).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map li (eInf F h).toAddEquiv hc hcs
-  haveI : SigmaFinite (Measure.map (eInf F h) li) := Measure.IsAddHaarMeasure.sigmaFinite _
+  have : SigmaFinite (Measure.map (eInf F h) li) := Measure.IsAddHaarMeasure.sigmaFinite _
   let me : (InfinitePlace F → ℝ) ≃ᵐ Ainf F :=
     { toEquiv := (eInf F h).symm.toEquiv
       measurable_toFun := hms
@@ -992,10 +992,10 @@ theorem map_theta_mul_pi : ∀ (F : Type) [Field F] [NumberField F], IsTotallyRe
       funext x
       simp
     rw [hid, Measure.map_id]
-  haveI : SigmaFinite li := by
+  have : SigmaFinite li := by
     rw [← hli]
     exact MeasurableEquiv.sigmaFinite_map me
-  haveI hsf : SigmaFinite (ENNReal.ofReal ((ε ^ Module.finrank ℚ F)⁻¹) • li) := by
+  have hsf : SigmaFinite (ENNReal.ofReal ((ε ^ Module.finrank ℚ F)⁻¹) • li) := by
     have hle : ENNReal.ofReal ((ε ^ Module.finrank ℚ F)⁻¹) • li =
         ((ε ^ Module.finrank ℚ F)⁻¹).toNNReal • li := rfl
     rw [hle]
@@ -1107,29 +1107,29 @@ end GlobalTheory.CompanionTheory.Equi.LatSum
 open GlobalTheory.CompanionTheory.Equi.LatSum in
 theorem GlobalTheory.CompanionTheory.Equi.lat_sum : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ θ : ℝ →+* Ainf F, Continuous θ → ∀ li : Measure (Ainf F), IsStdInf li → ∀ (ι : Type) [Fintype ι] (I : Ideal (𝓞 F)), I ≠ ⊥ → ∀ (x0 : ι → F) (φ : (ι → Ainf F) → ℝ), Continuous φ → HasCompactSupport φ → (∀ ε : ℝ, 0 < ε → Summable fun x : latCoset I x0 => φ (fun i => θ ε * algebraMap F (Ainf F) (x.1 i))) ∧ Tendsto (fun ε : ℝ => ε ^ (Module.finrank ℚ F * Fintype.card ι) * ∑' x : latCoset I x0, φ (fun i => θ ε * algebraMap F (Ainf F) (x.1 i))) (𝓝[>] 0) (𝓝 (((Ideal.absNorm I : ℝ) ^ Fintype.card ι)⁻¹ * ∫ y, φ y ∂(Measure.pi fun _ => li))) := by
   intro F _ _ hF θ hθ li hli ι _ I hI x0 φ hφ hφs
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
-  haveI : li.IsAddHaarMeasure := hli.1
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
+  have : li.IsAddHaarMeasure := hli.1
   obtain ⟨D₀, K₀, hDm, hK, hDK, hD1, htile⟩ := _root_.GlobalTheory.CompanionTheory.Equi.exists_bounded_infDomain F hF li hli
   have hg : Function.Injective (algebraMap F (Ainf F)) := (algebraMap F (Ainf F)).injective
   let j : 𝓞 F →+ Ainf F := ((algebraMap F (Ainf F)).comp (algebraMap (𝓞 F) F)).toAddMonoidHom
   have hj : Function.Injective j := hg.comp (IsFractionRing.injective (𝓞 F) F)
   let H : AddSubgroup (𝓞 F) := I.toAddSubgroup
-  haveI hfin : Finite (𝓞 F ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
-  letI : Fintype (𝓞 F ⧸ I) := Fintype.ofFinite _
+  have hfin : Finite (𝓞 F ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI
+  let : Fintype (𝓞 F ⧸ I) := Fintype.ofFinite _
   let rep : 𝓞 F ⧸ I → 𝓞 F := Function.surjInv Ideal.Quotient.mk_surjective
   have hrep : ∀ c, Ideal.Quotient.mk I (rep c) = c := Function.surjInv_eq _
   have hq : ∀ a b, Ideal.Quotient.mk I a = Ideal.Quotient.mk I b ↔ a - b ∈ H := fun a b => Ideal.Quotient.eq
   let Λ : AddSubgroup (ι → Ainf F) := AddSubgroup.pi Set.univ (fun _ : ι => H.map j)
-  haveI : Countable (𝓞 F) := (RingOfIntegers.basis F).equivFun.toEquiv.injective.countable
-  haveI : Countable (H.map j) := by
+  have : Countable (𝓞 F) := (RingOfIntegers.basis F).equivFun.toEquiv.injective.countable
+  have : Countable (H.map j) := by
     have : (↑(H.map j) : Set (Ainf F)).Countable := (Set.to_countable (H : Set (𝓞 F))).image j
     exact this.to_subtype
-  haveI : Countable Λ := by
+  have : Countable Λ := by
     refine Function.Injective.countable (f := fun (l : Λ) (i : ι) => (⟨l.1 i, l.2 i (Set.mem_univ i)⟩ : H.map j)) ?_
     intro l l' h
     exact Subtype.ext (funext fun i => congrArg Subtype.val (congrFun h i))
@@ -1267,9 +1267,9 @@ namespace GlobalTheory.CompanionTheory.Equi.BallVol
 theorem measure_translate_ballV : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → ∀ (k : ℕ) (a : Fv F v), lam ((fun z => z - a) ⁻¹' ballV v k) = ENNReal.ofReal (((Ideal.absNorm v.asIdeal : ℝ) ^ k)⁻¹) := by
   intro F _ _ v lam hlam k a
   obtain ⟨hHaar, h1⟩ := hlam
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : ProperSpace (Fv F v) := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
-  haveI : lam.Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure lam
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : ProperSpace (Fv F v) := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have : lam.Regular := Measure.Regular.of_sigmaCompactSpace_of_isLocallyFiniteMeasure lam
   have htr : (fun z => z - a) ⁻¹' ballV v k = (fun z => z + -a) ⁻¹' ballV v k := by
     simp only [sub_eq_add_neg]
   rw [htr, measure_preimage_add_right]
@@ -1289,7 +1289,7 @@ theorem measure_translate_ballV : ∀ (F : Type) [Field F] [NumberField F] (v : 
       smul_eq_mul, map_mul, map_inv₀, map_pow, hvϖ]
     have hk : (WithZero.exp (-1 : ℤ)) ^ k = WithZero.exp (-(k : ℤ)) := by
       rw [← WithZero.exp_nsmul]; simp
-    rw [hk, inv_mul_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), mul_one]
+    rw [hk, inv_mul_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), mul_one]
   rw [hball]
   have hu : IsUnit (ϖ ^ k) := (pow_ne_zero k hϖ0).isUnit
   open Pointwise in
@@ -1335,7 +1335,7 @@ theorem measure_translate_ballV : ∀ (F : Type) [Field F] [NumberField F] (v : 
       ext y
       rw [Set.mem_smul_set_iff_inv_smul_mem, WithZero.exp_log hv, SetLike.mem_coe,
         HeightOneSpectrum.mem_adicCompletionIntegers, Units.smul_def, smul_eq_mul, map_mul,
-        Units.val_inv_eq_inv_val, map_inv₀, IsUnit.unit_spec, inv_mul_le_iff₀ (zero_lt_iff.2 hv), mul_one]
+        Units.val_inv_eq_inv_val, map_inv₀, IsUnit.unit_spec, inv_mul_le_iff₀ (pos_iff_ne_zero.2 hv), mul_one]
       simp
     have e2 : {y : Fv F v | ∀ i, (ContinuousLinearEquiv.funUnique Unit (Fv F v) (Fv F v)).symm y i ∈
         v.adicCompletionIntegers F} = (v.adicCompletionIntegers F : Set (Fv F v)) := by
@@ -1488,8 +1488,8 @@ theorem pointwise (v : HeightOneSpectrum (𝓞 F)) (ι : Type) [Fintype ι] (k :
       by_cases hne : c' = c
       · subst hne
         simp [boxInd, hcy]
-      · rw [if_neg hne]
-        refine if_neg fun h' => hne (hdisj c' hc' c hc fun i => ?_)
+      · rw [ite_eq_right hne]
+        refine ite_eq_right fun h' => hne (hdisj c' hc' c hc fun i => ?_)
         simpa using add_mem_ball v k (hcy i) (neg_mem_ball v k (h' i))
     have s1 : ∑ c' ∈ C, ψ c' * boxInd v k c' y = ψ c := by
       rw [Finset.sum_congr rfl fun c' hc' => by rw [key c' hc']]
@@ -1501,7 +1501,7 @@ theorem pointwise (v : HeightOneSpectrum (𝓞 F)) (ι : Type) [Fintype ι] (k :
     exact hunif y c hcy
   · have hz : ∀ c ∈ C, boxInd v k c y = 0 := by
       intro c hc
-      exact if_neg fun h' => h ⟨c, hc, h'⟩
+      exact ite_eq_right fun h' => h ⟨c, hc, h'⟩
     have hy : ψ y = 0 := by
       by_contra h0
       exact h (hcov y h0)
@@ -1511,8 +1511,8 @@ theorem pointwise (v : HeightOneSpectrum (𝓞 F)) (ι : Type) [Fintype ι] (k :
 
 theorem sigmaFinite_lam {v : HeightOneSpectrum (𝓞 F)} {lam : Measure (Fv F v)} (hstd : IsStdV v lam) :
     SigmaFinite lam := by
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := hstd.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := hstd.1
   obtain ⟨-, h1, h2, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   infer_instance
 
@@ -1530,13 +1530,13 @@ theorem boxInd_eq (v : HeightOneSpectrum (𝓞 F)) {ι : Type} (k : ℕ) (c : ι
   · rw [Set.indicator_of_mem ((mem_boxS v k c y).2 h)]
     simp [boxInd, h]
   · rw [Set.indicator_of_notMem (fun h' => h ((mem_boxS v k c y).1 h'))]
-    exact if_neg h
+    exact ite_eq_right h
 
 theorem real_boxS {v : HeightOneSpectrum (𝓞 F)} {lam : Measure (Fv F v)} (hstd : IsStdV v lam)
     {ι : Type} [Fintype ι] (k : ℕ) (c : ι → Fv F v) :
     (Measure.pi fun _ : ι => lam).real (boxS v k c) =
       (((Ideal.absNorm v.asIdeal : ℝ) ^ k) ^ Fintype.card ι)⁻¹ := by
-  haveI := sigmaFinite_lam hstd
+  have := sigmaFinite_lam hstd
   have hq : (0 : ℝ) ≤ ((Ideal.absNorm v.asIdeal : ℝ) ^ k)⁻¹ := by positivity
   rw [Measure.real, boxS, Measure.pi_pi]
   simp only [_root_.GlobalTheory.CompanionTheory.Equi.BallVol.measure_translate_ballV F v lam hstd k, Finset.prod_const, Finset.card_univ]
@@ -1544,12 +1544,12 @@ theorem real_boxS {v : HeightOneSpectrum (𝓞 F)} {lam : Measure (Fv F v)} (hst
 
 theorem loc_approx : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → ∀ (ι : Type) [Fintype ι] (ψ : (ι → Fv F v) → ℝ), Continuous ψ → HasCompactSupport ψ → ∃ B : ℝ, 0 ≤ B ∧ ∀ δ : ℝ, 0 < δ → ∃ (k : ℕ) (C : Finset (ι → Fv F v)), (∀ y, |ψ y - ∑ c ∈ C, ψ c * boxInd v k c y| ≤ δ * ∑ c ∈ C, boxInd v k c y) ∧ (C.card : ℝ) * (((Ideal.absNorm v.asIdeal : ℝ) ^ k) ^ Fintype.card ι)⁻¹ ≤ B ∧ |(∫ y, ψ y ∂(Measure.pi fun _ => lam)) - ∑ c ∈ C, ψ c * (((Ideal.absNorm v.asIdeal : ℝ) ^ k) ^ Fintype.card ι)⁻¹| ≤ δ * B := by
   intro F _ _ v lam hstd ι _ ψ hψ hc
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := hstd.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := hstd.1
   obtain ⟨-, h1, h2, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := sigmaFinite_lam hstd
+  have := sigmaFinite_lam hstd
   obtain ⟨μ, hμ⟩ : ∃ μ : Measure (ι → Fv F v), μ = Measure.pi fun _ => lam := ⟨_, rfl⟩
-  haveI : μ.IsAddHaarMeasure := hμ ▸ inferInstance
+  have : μ.IsAddHaarMeasure := hμ ▸ inferInstance
   rw [← hμ]
   have hreal : ∀ k c, μ.real (boxS v k c) =
       (((Ideal.absNorm v.asIdeal : ℝ) ^ k) ^ Fintype.card ι)⁻¹ := fun k c => by
@@ -1744,7 +1744,7 @@ theorem indicator_box {ι : Type} {A A' : Set (ι → F)} {v : HeightOneSpectrum
     · have hA' : x ∉ A' := fun e => hA ((h x).2 e).1
       simp [Set.indicator, hA, hA']
   · have hA' : x ∉ A' := fun e => hb ((h x).2 e).2
-    have hz : boxInd v k c (yV v x) = 0 := by simp only [boxInd, yV]; rw [if_neg hb]
+    have hz : boxInd v k c (yV v x) = 0 := by simp only [boxInd, yV]; rw [ite_eq_right hb]
     simp [Set.indicator, hA', hz]
 
 theorem est {ι : Type} (θ : ℝ →+* Ainf F) {S : Finset (HeightOneSpectrum (𝓞 F))} {v : HeightOneSpectrum (𝓞 F)} (hv : v ∉ S)

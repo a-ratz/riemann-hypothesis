@@ -269,7 +269,7 @@ theorem coe_ballSubgroup (n : ℕ) (γ : ValueGroupWithZero k) :
     (ballSubgroup k n γ : Set (Fin n → k)) =
       Set.univ.pi fun _ => {x : k | valuation k x ≤ γ} := by
   ext x
-  simp only [Set.mem_univ_pi, Set.mem_setOf_eq]
+  simp only [Set.mem_univ_pi, Set.mem_ofPred_eq]
   rfl
 
 theorem isCompact_ballSubgroup (n : ℕ) (γ : ValueGroupWithZero k) :
@@ -327,7 +327,7 @@ theorem exists_ne_zero_valuation_lt (k : Type) [Field k] [ValuativeRel k] [Valua
     · exact ⟨γ₀, h0, h⟩
     · exact ⟨γ₀⁻¹, inv_ne_zero h0, inv_lt_one_of_one_lt₀ h⟩
   obtain ⟨t, ht⟩ := valuation_surjective (K := k) (ε * γ)
-  have hpos : 0 < γ := zero_lt_iff.mpr hγ
+  have hpos : 0 < γ := pos_iff_ne_zero.mpr hγ
   refine ⟨t, ?_, ?_⟩
   · rw [← (valuation k).ne_zero_iff, ht]
     exact mul_ne_zero hε0 hγ
@@ -397,7 +397,7 @@ theorem exists_compact_open_annihilator_subset :
   refine lt_of_lt_of_le ?_ (hγ i)
   by_contra hlt
   have hle : γ ≤ valuation k (ξ i) := not_lt.mp hlt
-  have hvξ : valuation k (ξ i) ≠ 0 := (lt_of_lt_of_le (zero_lt_iff.mpr hγ0) hle).ne'
+  have hvξ : valuation k (ξ i) ≠ 0 := (lt_of_lt_of_le (pos_iff_ne_zero.mpr hγ0) hle).ne'
   have hξi : ξ i ≠ 0 := (Valuation.ne_zero_iff _).1 hvξ
   have hmem : (Pi.single i (y₀ / ξ i) : Fin n → k) ∈ box n (y₀ / t) := by
     intro j
@@ -407,7 +407,7 @@ theorem exists_compact_open_annihilator_subset :
       rw [Pi.single_eq_same, he, map_mul]
       refine mul_le_of_le_one_right' ?_
       rw [map_div₀]
-      exact (div_le_one₀ (zero_lt_iff.mpr hvξ)).2 (ht.le.trans hle)
+      exact (div_le_one₀ (pos_iff_ne_zero.mpr hvξ)).2 (ht.le.trans hle)
     · simp [Pi.single_eq_of_ne h]
   have h1 := hξ _ hmem
   rw [dotProduct_single, mul_div_cancel₀ _ hξi] at h1
@@ -501,10 +501,10 @@ theorem continuousOn_orbitSection (j : Fin n) (ζ : Fin n → k) (h0 : ζ j ≠ 
     ContinuousOn (orbitSection j ζ) {ξ | ξ j ≠ 0} := by
   have hinv : ContinuousOn (fun ξ : Fin n → k => -(ξ j)⁻¹) {ξ | ξ j ≠ 0} :=
     (((continuous_apply j).continuousOn).inv₀ fun ξ h => h).neg
-  rw [continuousOn_iff_continuous_restrict, Units.continuous_iff]
-  refine ⟨(continuousOn_iff_continuous_restrict.1
+  rw [continuousOn_iff_continuous_domRestrict, Units.continuous_iff]
+  refine ⟨(continuousOn_iff_continuous_domRestrict.1
       (continuousOn_shear j ζ (c := fun _ => (ζ j)⁻¹) continuousOn_const)).congr fun ξ => ?_,
-    (continuousOn_iff_continuous_restrict.1 (continuousOn_shear j ζ hinv)).congr fun ξ => ?_⟩
+    (continuousOn_iff_continuous_domRestrict.1 (continuousOn_shear j ζ hinv)).congr fun ξ => ?_⟩
   · exact (coe_orbitSection j ζ ξ.1 h0 ξ.2).symm
   · exact (coe_orbitSection_inv j ζ ξ.1 h0 ξ.2).symm
 
@@ -512,9 +512,9 @@ end Top
 
 theorem exists_local_section : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) (ζ : Fin n → k), ζ ≠ 0 → ∃ N : Set (Fin n → k), IsOpen N ∧ ζ ∈ N ∧ ∃ f : (Fin n → k) → GL (Fin n) k, ContinuousOn f N ∧ f ζ = 1 ∧ ∀ ξ ∈ N, ζ ᵥ* (f ξ : Matrix (Fin n) (Fin n) k) = ξ := by
   intro k _ _ _ _ n ζ hζ
-  haveI : T2Space k := by
-    letI := IsTopologicalAddGroup.rightUniformSpace k
-    haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  have : T2Space k := by
+    let := IsTopologicalAddGroup.rightUniformSpace k
+    have := isUniformAddGroup_of_addCommGroup (G := k)
     infer_instance
   obtain ⟨j, hj⟩ := Function.ne_iff.mp hζ
   have hj' : ζ j ≠ 0 := hj
@@ -678,9 +678,9 @@ theorem perp_relIndex (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) {A₀ A : AddSubgr
   _root_.GlobalTheory.CompanionTheory.IndexDuality.relIndex_annihilator_eq k ψ hψ hψ1 n A₀ A (perp ψ A₀) (perp ψ A) h₀.1 h₀.2 h.1 h.2 hle (fun _ => Iff.rfl) (fun _ => Iff.rfl)
 
 theorem relIndex_ne_zero_of_lat {A₀ A : AddSubgroup (Fin n → k)} (h₀ : Lat A₀) (h : Lat A) : A₀.relIndex A ≠ 0 := by
-  haveI : CompactSpace A := isCompact_iff_compactSpace.mp h.1
-  have ho : IsOpen ((A₀.addSubgroupOf A : AddSubgroup A) : Set A) := h₀.2.preimage continuous_subtype_val
-  haveI := AddSubgroup.quotient_finite_of_isOpen (A₀.addSubgroupOf A) ho
+  have : CompactSpace A := isCompact_iff_compactSpace.mp h.1
+  have ho : IsOpen ((A₀.addSubgroupOf A : AddSubgroup A) : Set A) := h₀.2.preimage continuous_subtypeVal
+  have := AddSubgroup.quotient_finite_of_isOpen (A₀.addSubgroupOf A) ho
   exact AddSubgroup.index_ne_zero_of_finite
 
 theorem lat_over {K : Set (Fin n → k)} (hK : IsCompact K) : ∃ A : AddSubgroup (Fin n → k), Lat A ∧ K ⊆ A := by
@@ -767,7 +767,7 @@ theorem Df_eq (hC : ∀ p ∈ Mir k m, ∀ v w, C (gl p v) (gl p w) = ((md p ^ (
     {ξ : Fin (m + 1) → k} (hξ : ξ ≠ 0) {g : GL (Fin (m + 1)) k}
     (hg : xz m ᵥ* ((g⁻¹ : GL (Fin (m + 1)) k) : Matrix (Fin (m + 1)) (Fin (m + 1)) k) = ξ) :
     Df gl s C ξ = Ct gl s C g := by
-  rw [Df, if_neg hξ]
+  rw [Df, ite_eq_right hξ]
   exact Ct_congr hC ((sect_spec hξ).trans hg.symm)
 
 theorem Df_xz (hC : ∀ p ∈ Mir k m, ∀ v w, C (gl p v) (gl p w) = ((md p ^ (s + 1) : ℝ) : ℂ) * C v w) (v w : V) :
@@ -803,14 +803,14 @@ theorem Df_herm (hCp : Psd C) (ξ : Fin (m + 1) → k) (v w : V) :
   by_cases h : ξ = 0
   · subst h
     simp [Df_zero]
-  · simp only [Df, if_neg h]
+  · simp only [Df, ite_eq_right h]
     exact Ct_herm hCp _ _ _
 
 theorem Df_re_nonneg (hCp : Psd C) (ξ : Fin (m + 1) → k) (v : V) : 0 ≤ (Df gl s C ξ v v).re := by
   by_cases h : ξ = 0
   · subst h
     simp [Df_zero]
-  · simp only [Df, if_neg h]
+  · simp only [Df, ite_eq_right h]
     exact Ct_re_nonneg hCp _ _
 
 theorem Ct_col (hS : Setup col gl) (hCc : ∀ x v w, C (col x v) w = ((ψ (xz m ⬝ᵥ x) : Circle) : ℂ) * C v w)
@@ -866,7 +866,7 @@ theorem Df_ker (Y : Submodule ℂ V) (hY : ∀ g, ∀ y ∈ Y, gl g y ∈ Y) (hC
   by_cases h : ξ = 0
   · subst h
     simp [Df_zero]
-  · simp only [Df, if_neg h]
+  · simp only [Df, ite_eq_right h]
     rw [Ct_apply, hCY _ (hY _ _ hy), mul_zero]
 
 

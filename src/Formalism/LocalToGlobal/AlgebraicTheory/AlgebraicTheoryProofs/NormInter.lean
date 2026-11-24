@@ -205,7 +205,7 @@ theorem relative_index_fourth_power {Λ₁ Λ₂ : AddSubgroup (n → ℂ)} (h12
     relIdx (pow4 Λ₁) (pow4 Λ₂) = relIdx Λ₁ Λ₂ ^ 4 := by
   classical
   have hfin : Finite (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂) := Nat.finite_of_card_ne_zero h12
-  letI := Fintype.ofFinite (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂)
+  let := Fintype.ofFinite (Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂)
   let S : Finset (n → ℂ) := Finset.univ.image fun q : Λ₂ ⧸ Λ₁.addSubgroupOf Λ₂ => ((Quotient.out q : Λ₂) : n → ℂ)
   have hS : IsReps Λ₁ Λ₂ S := by
     refine ⟨?_, ?_, ?_⟩

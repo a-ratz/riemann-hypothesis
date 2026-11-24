@@ -80,10 +80,10 @@ namespace GlobalTheory
 theorem relIndex_ne_zero_of_isOpen_le_isCompact {H : Type} [Group H] [TopologicalSpace H]
     [IsTopologicalGroup H] (K U : Subgroup H) (hK : IsCompact (K : Set H))
     (hU : IsOpen (U : Set H)) (_hUK : U ≤ K) : U.relIndex K ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   have hO : IsOpen ((U.subgroupOf K : Subgroup K) : Set K) :=
-    hU.preimage continuous_subtype_val
-  haveI : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hO
+    hU.preimage continuous_subtypeVal
+  have : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hO
   exact Subgroup.index_ne_zero_of_finite
 
 end GlobalTheory
@@ -161,7 +161,7 @@ theorem idem_fix_iff (K L : Subgroup P) (hLK : L ≤ K) (hfin : L.relIndex K ≠
       have := QuotientGroup.eq.1 (QuotientGroup.out_eq' ((1 : P) : P ⧸ L))
       simpa using this
     rw [finsum_eq_single _ ((1 : P) : P ⧸ L)]
-    · simp only [Set.indicator_apply, SetLike.mem_coe, hone, if_true]
+    · simp only [Set.indicator_apply, SetLike.mem_coe, hone, ite_true]
       have hc : ((L.relIndex K : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hfin
       rw [← mul_assoc, inv_mul_cancel₀ hc, one_mul]
     · intro q hq
@@ -289,7 +289,7 @@ theorem locM_iter_diag (w : Pl E) {k : Type} [Fintype k] (q : k → GLw a w × G
     rw [Finset.sum_eq_single x]
     · simp
     · intro y _ hy
-      rw [if_neg (Ne.symm hy), actP_zero]
+      rw [ite_eq_right (Ne.symm hy), actP_zero]
     · intro h
       exact absurd (Finset.mem_univ x) h
   induction m with

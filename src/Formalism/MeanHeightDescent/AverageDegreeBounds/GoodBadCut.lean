@@ -225,7 +225,7 @@ theorem rk_add (b : Basis ι K V) (e : V →ₗ[K] V) (g : ℕ) (N : Submodule (
     (hee : e ∘ₗ e = e) (hint : ∀ x ∈ N, (g : K) • e x ∈ N) :
     rkK (N ⊓ (LinearMap.range e).restrictScalars (𝓞 K)) +
       rkK (N ⊓ (LinearMap.ker e).restrictScalars (𝓞 K)) = rkK N := by
-  haveI : FiniteDimensional K V := Module.Finite.of_basis b
+  have : FiniteDimensional K V := Module.Finite.of_basis b
   have hg0 : (g : K) ≠ 0 := Nat.cast_ne_zero.mpr (by omega)
   have hinv : ∀ y : V, (g : K)⁻¹ • ((g : K) • y) = y := fun y => by
     rw [smul_smul, inv_mul_cancel₀ hg0, one_smul]
@@ -357,7 +357,7 @@ theorem rk_map_cut (e : V →ₗ[K] V) (g : ℕ) (N : Submodule (𝓞 K) V) (hg 
 
 theorem rkK_ne_zero (b : Basis ι K V) (A : Submodule (𝓞 K) V) (hA : A ≠ ⊥) :
     rkK (K := K) A ≠ 0 := by
-  haveI : FiniteDimensional K V := Module.Finite.of_basis b
+  have : FiniteDimensional K V := Module.Finite.of_basis b
   unfold rkK
   intro h
   apply hA

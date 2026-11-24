@@ -100,10 +100,10 @@ theorem sset_col {z : Fin (2 * r + k + 1) → ℂ} {M : Matrix (Fin (2 * r + k +
     ((M - 1) *ᵥ bvec (eI k r a)) i = 0 := by
   have ha := a.isLt
   delta Sset at hM
-  simp only [Set.mem_setOf_eq] at hM
+  simp only [Set.mem_ofPred_eq] at hM
   obtain ⟨h, hh, m, hm, rfl⟩ := hM
   delta Nset at hm
-  simp only [Set.mem_setOf_eq] at hm
+  simp only [Set.mem_ofPred_eq] at hm
   obtain ⟨-, hm1, -⟩ := hm
   have hfix : h *ᵥ (m *ᵥ bvec (eI k r a)) = m *ᵥ bvec (eI k r a) := by
     apply uw_fix hh
@@ -124,10 +124,10 @@ theorem sub_one_mulVec_apply_eq_zero_of_mem_Sset {z : Fin (2 * r + k + 1) → �
     (hi : r ≤ i.val) : ((M - 1) *ᵥ z) i = 0 := by
   delta inWb at hz
   delta Sset at hM
-  simp only [Set.mem_setOf_eq] at hM
+  simp only [Set.mem_ofPred_eq] at hM
   obtain ⟨h, hh, m, hm, rfl⟩ := hM
   delta Nset at hm
-  simp only [Set.mem_setOf_eq] at hm
+  simp only [Set.mem_ofPred_eq] at hm
   obtain ⟨-, -, hm2⟩ := hm
   obtain ⟨-, -, hz'⟩ := id hh
   have hmz : ∀ i : Fin (2 * r + k + 1), r ≤ i.val → (m *ᵥ z) i = z i := by
@@ -237,7 +237,7 @@ theorem bvec_supSub (a : ℕ) (b : Fin D.R.rS) (hb : b.val < a) :
     change i.val = b.val at this
     omega
   show (Pi.single (eI D.R.k D.R.rS b) (1:ℂ) : Fin (2 * D.R.rS + D.R.k + 1) → ℂ) i = 0
-  simp only [Pi.single_apply, hne, if_false]
+  simp only [Pi.single_apply, hne, ite_false]
 
 theorem qics_span (C : Choice X θ) (τ : D.what₂.Tau) (a : ℕ) (w : Fin X.B.I.n → ℂ)
     (hw : w ∈ spanLt (fun b => rv X.B.I (vOf X τ) (X.eR b)) a) :

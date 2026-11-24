@@ -273,7 +273,7 @@ theorem exists_const {σ : c.F →+* ℂ} (U : Formalism.L2.PjFree.Unf Xo c σ r
     ∃ C : ℂ, ∀ x : (U.X k).dom, (U.X k).IsOrtho x.1 → letI : Algebra c.F ℂ := σ.toAlgebra
       ∀ (A : AnFib (U.X k) bas idx e x.1 (U.X k).Λ (unC U k x)) (ϑ : (Fin g → ℂ) → ℂ), A.Reads 1 (unC U k x).s ϑ →
         ∀ z : Fin n → Fin g → ℂ, ∏ b, ϑ (z b) = C * thA (U.X k) bas idx v x.1 z := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have hC := GlobalTheory.ChartFree.chartIndep
   obtain ⟨W⟩ := nonempty_uw hU
   obtain rfl : g = W.g := Fin.equiv_iff_eq.1 ⟨e.trans W.e.symm⟩
@@ -355,7 +355,7 @@ theorem exists_const {σ : c.F →+* ℂ} (U : Formalism.L2.PjFree.Unf Xo c σ r
         exact ⟨⟨a', ha', (Submodule.Quotient.eq _).1
           (hq.trans (Classical.choose_spec (Submodule.Quotient.mk_surjective _ (q b))).symm), hy⟩, hj⟩) 0 1 hP _
       (ThRead.thValAt_evR hC Xo c nab hnab _ hP hf ℂ (unC U k ⟨x', hx'⟩))
-    exact Eq.trans (dif_pos hx') this
+    exact Eq.trans (dite_eq_left hx') this
   have h4 := hCe _ _ hS.1 hhol.1 (fun x hx b hb => ⟨hS.2.1 x hx b hb, hhol.2.1 x hx b hb⟩)
     (fun x' hx' hu' => by
       obtain ⟨A', ϑ', hA', hϑ', -, -, hprod'⟩ := hpt x' hx' hu'
@@ -529,7 +529,7 @@ theorem norm_periodic (hs : IsSympl X bas) (hx' : x ∈ X.dom) {w : E} {L : Lt E
   generalize pv X idx x u = p at hp
   simp only [Pi.smul_apply, smul_eq_mul, fock] at hp
   rw [← hp, add_comm p z, norm_mul, norm_mul, hε, _root_.one_mul, mul_pow, Complex.norm_exp,
-    ← Real.exp_nat_mul, mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
+    ← Real.exp_natCast_mul, mul_comm (Real.exp _), _root_.mul_assoc, ← Real.exp_add]
   congr 2
   have e1 : (hx X bas idx x (z + p) (z + p)).re =
       (hx X bas idx x z z).re + 2 * (hx X bas idx x z p).re + (hx X bas idx x p p).re := by
@@ -548,7 +548,7 @@ theorem norm_sq_gauss_prod (th : (Fin g → ℂ) → ℂ) (z : Fin n → Fin g �
     ‖Ker.gaussR X bas idx x z * ∏ b, th (z b)‖ ^ 2 =
       ∏ b, ‖th (z b)‖ ^ 2 * Real.exp (-Real.pi * (hx X bas idx x (z b) (z b)).re) := by
   rw [Finset.prod_mul_distrib, ← Real.exp_sum, norm_mul, mul_pow, norm_prod, Finset.prod_pow, mul_comm, Ker.gaussR,
-    Complex.norm_exp, ← Real.exp_nat_mul, ← Finset.mul_sum]
+    Complex.norm_exp, ← Real.exp_natCast_mul, ← Finset.mul_sum]
   congr 2
   have : ((Real.pi : ℂ) / 2) = ((Real.pi / 2 : ℝ) : ℂ) := by push_cast; ring
   rw [this, Complex.neg_re, Complex.re_ofReal_mul, Complex.re_sum]
@@ -1468,7 +1468,7 @@ theorem exists_frConst {hr : T.rank = r} {ψ : AddChar (AF D.host.F) ℂ} {θ : 
     (ht : ∀ k τ, (U.X k).c τ = t) (dict : GA D T → Σ k, Frame (U.X k).Ψ r)
     (hpt : ∀ h, IsPt ψ θ S hr U q Z₀ (dict h).1 (dict h).2 h) :
     ∃ cc : U.Comp → ℂ, CUnit cc ∧ FrConst ψ θ S hr om f₀ U dict mu Z₀ cc := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have key : ∀ k : U.Comp, ∃ a : ℂ, ‖a‖ = 1 ∧ ∀ (x : Frame (U.X k).Ψ r) (h : GA D T), IsPt ψ θ S hr U q Z₀ k x h →
       ∀ γ ∈ GQ T, ∀ (g : ℕ) (eT : D.what₂.Tau ≃ (U.X k).Ψ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] (U.X k).Λ)
         (idx : Fin g ≃ (U.X k).Ψ × Fin r) (e : Fin g ≃ Lt1 Dw), IsSet ψ θ S T hr (U.X k) eT bas →

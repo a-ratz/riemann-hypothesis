@@ -68,7 +68,7 @@ variable {X Y Z : Scheme.{0}} {L : LB X} {K K' K₂ K₂' : Type} [Fintype K] [F
 private lemma res_res_lemma {A : Scheme.{0}} {U V W : A.Opens} (h1 : V ≤ U) (h2 : W ≤ V)
     (a : Γ(A, U)ˣ) : res h2 (res h1 a) = res (h2.trans h1) a := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← RingHom.comp_apply, ← CommRingCat.hom_comp, ← Functor.map_comp]
   try rfl
 
@@ -82,7 +82,7 @@ private lemma pullU_res_eq_res_pullU' {A B : Scheme.{0}} (g : B ⟶ A) {U V : A.
     (a : Γ(A, U)ˣ) :
     pullU g V (res h a) = res (fun _ hy => h hy : g ⁻¹ᵁ V ≤ g ⁻¹ᵁ U) (pullU g U a) := by
   ext
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← RingHom.comp_apply, ← CommRingCat.hom_comp, ← RingHom.comp_apply, ← CommRingCat.hom_comp]
   exact congrArg (fun φ => φ.hom (a : Γ(A, U))) (g.naturality (homOfLE h).op)
 
@@ -90,13 +90,13 @@ private lemma pullU_comp_lemma {A B C : Scheme.{0}} (g : B ⟶ A) (g' : C ⟶ B)
     {O : C.Opens} (p : O ≤ g' ⁻¹ᵁ (g ⁻¹ᵁ U)) (q : O ≤ (g' ≫ g) ⁻¹ᵁ U) (x : Γ(A, U)ˣ) :
     res p (pullU g' _ (pullU g U x)) = res q (pullU (g' ≫ g) U x) := by
   ext
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   rfl
 
 private lemma res_pullU_id' {A : Scheme.{0}} {U V : A.Opens} (h : V ≤ (𝟙 A) ⁻¹ᵁ U) (h' : V ≤ U)
     (x : Γ(A, U)ˣ) : res h (pullU (𝟙 A) U x) = res h' x := by
   ext
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   rfl
 
 private lemma res_pullU_eq_of_res_eq {A B : Scheme.{0}} (g : B ⟶ A) {U V V0 : A.Opens} {a : Γ(A, U)ˣ}
@@ -172,7 +172,7 @@ lemma corr_trans (hL : L.IsLB) {t : LB.Gen (LB.LinComb L φ ε)} {t₂ : LB.Gen 
   let ρ : ((Y ⟶ X) → L.ι) → (Y ⟶ X) → L.ι := fun ρ₀ ψ =>
     if h₁ : ∃ k, φ k = ψ then j h₁.choose else if h₃ : ∃ k', φ' k' = ψ then j' h₃.choose else ρ₀ ψ
   have hρ1 : ∀ ρ₀ k, ρ ρ₀ (φ k) = j k := fun ρ₀ k => by
-    simp only [ρ, dif_pos (⟨k, rfl⟩ : ∃ k₀, φ k₀ = φ k)]
+    simp only [ρ, dite_eq_left (⟨k, rfl⟩ : ∃ k₀, φ k₀ = φ k)]
     exact hj _ _ (⟨k, rfl⟩ : ∃ k₀, φ k₀ = φ k).choose_spec
   have hρ3 : ∀ ρ₀ k', ρ ρ₀ (φ' k') = j' k' := fun ρ₀ k' => by
     simp only [ρ]

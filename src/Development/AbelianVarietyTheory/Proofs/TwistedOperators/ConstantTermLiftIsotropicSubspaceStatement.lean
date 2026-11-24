@@ -140,8 +140,8 @@ theorem topology_NI (V : HSp D) {r : ℕ} (C : Matrix (Fin V.rank) (Fin r) D.hos
   have hcl : IsClosed (NI V C : Set (GA D V)) := by
     have : DiscreteTopology (GQ V ⊓ NI V C : Subgroup (GA D V)) :=
       DiscreteTopology.of_subset (s := (GQ V : Set (GA D V))) i6 (fun x hx => hx.1)
-    have h1 : IsClosed ((GQ V ⊓ NI V C : Subgroup (GA D V)) : Set (GA D V)) := Subgroup.isClosed_of_discrete
-    have h2 := h1.mul_right_of_isCompact (hK.image continuous_subtype_val)
+    have h1 : IsClosed ((GQ V ⊓ NI V C : Subgroup (GA D V)) : Set (GA D V)) := Subgroup.isClosed_of_discreteTopology
+    have h2 := h1.mul_right_of_isCompact (hK.image continuous_subtypeVal)
     convert h2 using 1
     ext x
     constructor
@@ -164,8 +164,8 @@ theorem mean_of_hom {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGrou
     (φ : Mx D s k → ℂ) (hφc : Continuous φ) (hφ : ∀ γ ∈ ratMx D s k, ∀ a, φ (γ + a) = φ a) :
     ∫ n in 𝓝, φ (f n) ∂κ = ((κ 𝓝).toReal : ℂ) * ∫ a in 𝓐, φ a ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.MixModel.lattice_Mx D s k
-  haveI : BorelSpace (Mx D s k) := ⟨rfl⟩
-  haveI := hμ.1
+  have : BorelSpace (Mx D s k) := ⟨rfl⟩
+  have := hμ.1
   have h0 : κ 𝓝 ≠ 0 := h𝓝.measure_ne_zero (NeZero.ne κ)
   obtain ⟨M, hM⟩ := hK.exists_bound_of_continuousOn hφc.continuousOn
   have hb : ∀ a, ‖φ a‖ ≤ M := fun a => by
@@ -190,8 +190,8 @@ theorem mean_of_hom {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGrou
     rw [this]
     exact hF'.setIntegral_eq h𝓝 fun γ x => by
       rw [Subgroup.smul_def, smul_eq_mul, hf, hφ _ (hfΓ _ γ.2)]
-  haveI : IsFiniteMeasure (κ.restrict 𝓝) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin.lt_top⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓐) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (κ.restrict 𝓝) := ⟨by rw [Measure.restrict_apply_univ]; exact hfin.lt_top⟩
+  have : IsFiniteMeasure (μ.restrict 𝓐) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
   have hint : Integrable (Function.uncurry fun n a => φ (f n + a)) ((κ.restrict 𝓝).prod (μ.restrict 𝓐)) :=
     Integrable.of_bound (hφc.comp ((hfc.comp continuous_fst).add continuous_snd)).aestronglyMeasurable M
       (Filter.Eventually.of_forall fun p => hb _)
@@ -292,7 +292,7 @@ theorem coord_rat (V : HSp D) {r s k : ℕ} (C : Matrix (Fin V.rank) (Fin r) D.h
 theorem continuous_coord (V : HSp D) {s k : ℕ} (M : Matrix (Fin s) (Fin V.rank) D.host.E)
     (B : Matrix (Fin V.rank) (Fin k) D.host.E) : Continuous (coord V M B) := by
   obtain ⟨i1, -⟩ := GlobalTheory.MixModel.lattice_Mx D V.rank V.rank
-  haveI : ContinuousSub (Mx D V.rank V.rank) := IsTopologicalAddGroup.to_continuousSub
+  have : ContinuousSub (Mx D V.rank V.rank) := IsTopologicalAddGroup.to_continuousSub
   exact (continuous_const.matrix_mul ((GlobalTheory.MixModel.continuous_mt V).sub continuous_const)).matrix_mul continuous_const
 
 theorem exists_right_inv {K : Type*} [Field K] {s r : ℕ} (m : Matrix (Fin s) (Fin r) K) (hm : m.rank = s) :
@@ -467,7 +467,7 @@ theorem mean_eq_volume_mul : ∀ (D : D7) (V V' : HSp D) (r : ℕ) (C C' : Matri
     exact (hle.trans_lt hK.measure_lt_top).ne
   refine ⟨μ, 𝓐, hμ, fun φ hφc hφ => ?_⟩
   exact mean_of_hom (NIQ V C) (fun n : NI V C => coord V (m * adj D C' * V.gram) B n)
-    (coord_mul V C _ B hs.orth) ((continuous_coord V _ B).comp continuous_subtype_val)
+    (coord_mul V C _ B hs.orth) ((continuous_coord V _ B).comp continuous_subtypeVal)
     (fun X => coord_surj V V' C C' B hs h1 h3 m hm X) (fun γ hγ => coord_rat V C _ B γ hγ) κ 𝓝 h𝓝 hfin hμ φ hφc hφ
 
 end GlobalTheory.UnipMean
@@ -996,7 +996,7 @@ theorem lintegral_ne_top : ∀ (D : D7) (V W : HSp D) (r : ℕ) (C : Matrix (Fin
     have hb := bound_mul c M (GlobalTheory.Grow.quotHeight W h) ‖F h‖ C' A (by linarith) (by linarith) (norm_nonneg _) (hC' h)
     calc Sg ((k : GA D V) * g, γ' * h) * ‖F h‖ₑ
         ≤ ENNReal.ofReal (max c 0 * (M * (2 * GlobalTheory.Grow.quotHeight W h)) ^ A) * ENNReal.ofReal ‖F h‖ := by
-          rw [ofReal_norm_eq_enorm]
+          rw [ofReal_norm]
           exact mul_le_mul' ((hc _ _).trans (ENNReal.ofReal_le_ofReal hc1)) le_rfl
       _ = ENNReal.ofReal (max c 0 * (M * (2 * GlobalTheory.Grow.quotHeight W h)) ^ A * ‖F h‖) :=
           (ENNReal.ofReal_mul (mul_nonneg (le_max_right c 0)
@@ -1412,7 +1412,7 @@ theorem GlobalTheory.TowerCT.towerConstTermOfCompatible_holds : ∀ D : D7, Glob
           rfl
 
   have hvanish : ∑' y : {y : Matrix (Fin W.rank) (Fin r) D.host.E // y ≠ 0}, a y.1 = 0 := by
-    letI := ratAct W r
+    let := ratAct W r
     refine _root_.GlobalTheory.OrbitUnfold.tsum_setIntegral_eq_zero (GA D W) ν (GQ W) {y : Matrix (Fin W.rank) (Fin r) D.host.E // y ≠ 0} 𝓕 h𝓕
       (fun y h => (∫ n in 𝓝, tm y.1 (ω ((n : GA D V) * g, h) f) ∂κ) * F h)
       (fun y => (hKm y.1).mul hFd.2.1.measurable) ?_ ?_ ?_

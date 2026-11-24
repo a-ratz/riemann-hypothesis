@@ -143,8 +143,8 @@ theorem spMap_id (R : Type) [CommRing R] : spMap (RingHom.id R) = 𝟙 (Sp R) :=
 
 theorem exists_retraction {K R' : Type} [Field K] [CommRing R'] (φ : K →+* R') (hφ : IsOpenImmersion (spMap φ))
     (p : Sp K) (hp : p ∈ Set.range (spMap φ)) : ∃ ψ : R' →+* K, ψ.comp φ = RingHom.id K := by
-  haveI : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
-  haveI : IsIso (spMap φ) := isIso_of_isOpenImmersion_of_opensRange_eq_top _ (by
+  have : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : IsIso (spMap φ) := isIso_of_isOpenImmersion_of_opensRange_eq_top _ (by
     rw [eq_top_iff]
     intro q _
     rw [Subsingleton.elim q p]
@@ -218,7 +218,7 @@ theorem pt_unitInv (z : Over.mk (𝟙 S) ⟶ A) : z.left ≫ (unitInv A).left = 
   exact CartesianMonoidalCategory.hom_ext _ _ (to_base_ext _ _) (by simp [unitInv])
 
 theorem isPullback_unitInv : IsPullback (unitInv A).left A.hom (fst (Over.mk (𝟙 S)) A).left (𝟙 S) := by
-  haveI : IsIso (unitInv A).left := ⟨_, unitInv_snd A, snd_unitInv A⟩
+  have : IsIso (unitInv A).left := ⟨_, unitInv_snd A, snd_unitInv A⟩
   exact IsPullback.of_horiz_isIso ⟨by rw [unitInv_fst, Category.comp_id]⟩
 
 def chartPullUnit (L : LB A.left) (k : ℕ) (a : ℤ) (ha : a = k) :
@@ -315,7 +315,7 @@ theorem exists_scheme_sections_fibres : Out.Laws → Out.Laws2 → ∀ (g : ℕ)
   have hdiv : (n ^ 2) ^ 2 ∣ n ^ j := by rw [← pow_mul]; exact pow_dvd_pow n hj4
   have hnd : n ∣ n ^ j := dvd_pow_self n (by omega)
   have h2 : 2 ≤ n ^ 2 := hn.two_le.trans (Nat.le_self_pow two_ne_zero n)
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero 2 (pow_ne_zero j hn.ne_zero)⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero 2 (pow_ne_zero j hn.ne_zero)⟩
   obtain ⟨Hh, _, hh, Q, d, hcut⟩ := hj₀ j (le_of_max_le_left hj) o b
   obtain ⟨e, idx, hco⟩ := _root_.GlobalTheory.torsion_secCoord l1 l2 g (n ^ 2) (n ^ j) hodd.pow hdiv
   obtain ⟨p, hp⟩ : ∃ p : Ix g ((n ^ j) ^ 2) → Ix g ((n ^ j) ^ 2) → R,

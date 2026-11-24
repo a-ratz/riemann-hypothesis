@@ -187,7 +187,7 @@ theorem phiA_transport_split_place : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc
   have hjj := isLocIso_complEquiv τ hv
   have hO := GivenAdm.givenLevel_open (G := G) hL hw ((i : ℕ), (j : ℕ))
   have hO' := isOpen_map_invT hO.1 hO.2
-  haveI := isHaarMeasure_haarVol hO'.1 hO'.2
+  have := isHaarMeasure_haarVol hO'.1 hO'.2
   have hϖv : IsUnif (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.unifAt v) := (GlobalTheory.SplitFlip.exists_isUnif (k := Fv D.host.F v)).choose_spec
   have hc := corr_blockLat_of hjj (GlobalTheory.SquareFlipReach.colE t (splitPrime τ) e) hϖv (isUnif_unifAt _) n (blockV e)
       (Assignment.one.block _ _) (mem_one_block_iff t _ e)

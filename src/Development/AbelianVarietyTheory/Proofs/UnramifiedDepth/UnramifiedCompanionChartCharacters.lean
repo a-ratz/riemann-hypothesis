@@ -419,7 +419,7 @@ private theorem frob_ext {p : ℕ} [Fact p.Prime] {O OE : Type} [CommRing O] [Is
   have hp0 : (p : IsLocalRing.ResidueField O) = 0 := by
     have : IsLocalRing.residue O (p : O) = 0 := (IsLocalRing.residue_eq_zero_iff _).2 hp
     simpa using this
-  haveI : CharP (IsLocalRing.ResidueField O) p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hp0
+  have : CharP (IsLocalRing.ResidueField O) p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hp0
   have key : ∀ y z : O, y - z ^ p ∈ IsLocalRing.maximalIdeal O ↔
       IsLocalRing.residue O y = frobenius _ p (IsLocalRing.residue O z) := by
     intro y z
@@ -451,11 +451,11 @@ private theorem exists_eigB {O OE : Type} [CommRing O] [IsLocalRing O] [CommRing
   set N := LinearMap.range (Matrix.mulVecLin (e i)) with hN
   have hid : ∀ w ∈ N, e i *ᵥ w = w := by
     rintro _ ⟨u, rfl⟩
-    rw [Matrix.mulVecLin_apply, Matrix.mulVec_mulVec, h1, if_pos rfl]
-  haveI : Module.Projective O N :=
+    rw [Matrix.mulVecLin_apply, Matrix.mulVec_mulVec, h1, ite_eq_left rfl]
+  have : Module.Projective O N :=
     Module.Projective.of_split N.subtype (Matrix.mulVecLin (e i)).rangeRestrict
       (by ext1 w; exact Subtype.ext (hid w w.2))
-  haveI : Module.Free O N := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O N := Module.free_of_flat_of_isLocalRing
   let b := Module.finBasis O N
   have hcomm : ∀ a j, e j * ρ a = t j a • e j := by
     intro a j
@@ -465,9 +465,9 @@ private theorem exists_eigB {O OE : Type} [CommRing O] [IsLocalRing O] [CommRing
         exact Finset.sum_congr rfl fun k _ => by rw [h3, mul_smul_comm]
       _ = t j a • e j := by
         rw [Finset.sum_eq_single j]
-        · rw [h1, if_pos rfl]
+        · rw [h1, ite_eq_left rfl]
         · intro k _ hk
-          rw [h1, if_neg (Ne.symm hk), smul_zero]
+          rw [h1, ite_eq_right (Ne.symm hk), smul_zero]
         · simp
   refine ⟨_, fun k => (b k : Fin g → O), ⟨fun k a => ?_, fun w hw => ?_⟩, ⟨b.equivFun⟩⟩
   · have := hid _ (b k).2

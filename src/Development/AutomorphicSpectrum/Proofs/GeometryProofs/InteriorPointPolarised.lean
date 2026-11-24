@@ -58,7 +58,7 @@ namespace GlobalTheory.CompanionTheory.Ar.HodgeMetric
 theorem injective_ringOfIntegers_toComplex {F : Type} [Field F] [NumberField F] (g : 𝓞 F →+* ℂ) :
     Function.Injective g := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   have h : Ideal.comap (algebraMap ℤ (𝓞 F)) (RingHom.ker g) = RingHom.ker (g.comp (algebraMap ℤ (𝓞 F))) :=
     RingHom.comap_ker _ _
   change Ideal.comap (algebraMap ℤ (𝓞 F)) (RingHom.ker g) = ⊥
@@ -85,8 +85,8 @@ theorem polarisedAt_of_interior : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     [Field Ω] [CharZero Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω)
     (𝔐 : HodgeCpt Y S y) (z : Spec (CommRingCat.of ℂ) ⟶ 𝔐.X), 𝔐.Interior z → HodgeMetric.PolarisedAt 𝔐.t z := by
   intro E _ _ _ H D l Xo c Y S Ω _ _ K _ J _ y 𝔐 z hz
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   let p : Sp ℂ := IsLocalRing.closedPoint ℂ
   have hsub : Subsingleton (Sp ℂ) := inferInstanceAs (Subsingleton (PrimeSpectrum ℂ))
   have h₁ : (z ≫ 𝔐.f) p ∈ abLocus Y.t.G := by
@@ -107,7 +107,7 @@ theorem polarisedAt_of_interior : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   have h₃ : Set.range w ⊆ Set.range Y.jQ := by
     rintro _ ⟨q, rfl⟩
     rwa [Subsingleton.elim q p]
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   let v : Sp ℂ ⟶ Xo.XF c := IsOpenImmersion.lift Y.jQ w h₃
   have hv : v ≫ Y.jQ ≫ pullback.fst _ _ = z ≫ 𝔐.f := by
     rw [← Category.assoc, IsOpenImmersion.lift_fac, hw]

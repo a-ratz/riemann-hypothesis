@@ -75,10 +75,10 @@ theorem eventually_invariant {X : Type} [AddCommGroup X] [TopologicalSpace X] [I
 
 theorem four_mem_SB : ∀ (X : Type) [AddCommGroup X] [TopologicalSpace X] [MeasurableSpace X] [BorelSpace X] (_ : Good X) (μ : Measure X) [μ.IsAddHaarMeasure] (e : X → X → ℂ), IsPair e → ∀ φ ∈ SB X, four μ e φ ∈ SB X := by
   intro X _ _ _ _ h μ _ e he φ hφ
-  haveI := h.grp
-  haveI := h.t2
-  haveI := h.lc
-  haveI := h.sc
+  have := h.grp
+  have := h.t2
+  have := h.lc
+  have := h.sc
   obtain ⟨K, hK, hKm⟩ := he.big _ (eventually_invariant hφ)
   refine ⟨(IsLocallyConstant.iff_eventually_eq _).mpr fun y => ?_, HasCompactSupport.intro hK fun y hy => ?_⟩
   · have h1 : ∀ᶠ z in 𝓝 y, ∀ x ∈ tsupport φ, e z x = e y x := by

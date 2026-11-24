@@ -88,7 +88,7 @@ theorem expAlg : ExpAlg := by
       (fun n => p.coeff n * Complex.exp (n * (t * z))) _ fun s => ?_
     rw [eval_eq_sum_range]
     refine Finset.sum_congr rfl fun n _ => ?_
-    rw [← Complex.exp_nat_mul, mul_assoc, ← Complex.exp_add]
+    rw [← Complex.exp_natCast_mul, mul_assoc, ← Complex.exp_add]
     congr 2
     push_cast
     ring

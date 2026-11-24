@@ -52,8 +52,8 @@ theorem UpperTheory.V.X.So.cobIndex :
     ∀ (O Γ : Type) [CommRing O] [IsDomain O] [CharZero O] [Group Γ] (θ : Γ →* Oˣ) (z : Γ → O), Coc θ z → ∀ U D : Subgroup Γ, U.relIndex D ≠ 0 → CobOn θ z (U ⊓ D) → CobOn θ z D := by
   intro O Γ _ _ _ _ θ z hz U D hUD hcob
   obtain ⟨a, ha, m, hm⟩ := hcob
-  haveI : (U.subgroupOf D).FiniteIndex := ⟨hUD⟩
-  haveI : Fintype (D ⧸ U.subgroupOf D) := Fintype.ofFinite _
+  have : (U.subgroupOf D).FiniteIndex := ⟨hUD⟩
+  have : Fintype (D ⧸ U.subgroupOf D) := Fintype.ofFinite _
   let T : D ⧸ U.subgroupOf D → O := fun q => a * z ((q.out : D) : Γ) - (θ ((q.out : D) : Γ) : O) * m
   have key : ∀ (g : D) (q : D ⧸ U.subgroupOf D), T (g • q) = a * z (g : Γ) + (θ (g : Γ) : O) * T q := by
     intro g q

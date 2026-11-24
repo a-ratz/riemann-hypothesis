@@ -71,9 +71,9 @@ private theorem polar_push {l : ℕ} [Fact l.Prime] {n : ℕ} (F : GFrame l) {O 
     (hp : F.IsPolar O (GDet.ofRep (diagRep χ))) :
     F.IsPolar O' (GDet.ofRep (diagRep fun j => pushCh f (χ j))) := by
   intro B _ _ _ _ y
-  letI : Algebra k B := ((algebraMap k' B).comp f).toAlgebra
-  letI : Algebra O B := ((algebraMap O' B).comp i).toAlgebra
-  haveI : IsScalarTower O k B := IsScalarTower.of_algebraMap_eq fun a => by
+  let : Algebra k B := ((algebraMap k' B).comp f).toAlgebra
+  let : Algebra O B := ((algebraMap O' B).comp i).toAlgebra
+  have : IsScalarTower O k B := IsScalarTower.of_algebraMap_eq fun a => by
     change algebraMap O' B (i a) = algebraMap k' B (f (algebraMap O k a))
     rw [hf, ← IsScalarTower.algebraMap_apply]
   have he : F.eps O' B = F.eps O B := by
@@ -103,7 +103,7 @@ private theorem polar_push {l : ℕ} [Fact l.Prime] {n : ℕ} (F : GFrame l) {O 
 theorem UpperTheory.V.Th.Nm.residPush :
     ∀ {l : ℕ} [Fact l.Prime] {n : ℕ} (F : GFrame l) (c c' : Coef l) (h : c.O ≤ c'.O) (r : Resid F c.O n), ∃ r' : Resid F c'.O n, RPush h r r' ∧ (∀ u, r'.Ip u = r.Ip u) ∧ (r.V0ok → r'.V0ok) := by
   intro l _ n F c c' h r
-  haveI := inc_local h
+  have := inc_local h
   let f : ResidueField c.O →+* ResidueField c'.O := ResidueField.map (inc h)
   have hfi : Function.Injective f := f.injective
   have hf : ∀ a, f (residue c.O a) = residue c'.O (inc h a) := fun a => ResidueField.map_residue _ a

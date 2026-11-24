@@ -92,7 +92,7 @@ theorem near_of_finset (Λ : Submodule ℤ E) (s : Finset E) (hs : ∀ x ∈ s, 
 theorem finite_norm_le (Λ : Submodule ℤ E) [DiscreteTopology Λ] (r : ℝ) :
     {x : E | x ∈ Λ ∧ ‖x‖ ≤ r}.Finite := by
   have hd : DiscreteTopology Λ.toAddSubgroup := ‹_›
-  have hc : IsClosed (Λ.toAddSubgroup : Set E) := AddSubgroup.isClosed_of_discrete
+  have hc : IsClosed (Λ.toAddSubgroup : Set E) := AddSubgroup.isClosed_of_discreteTopology
   have := Metric.finite_isBounded_inter_isClosed (s := (Λ.toAddSubgroup : Set E))
     (K := Metric.closedBall (0 : E) r) (isDiscrete_iff_discreteTopology.2 hd) Metric.isBounded_closedBall hc
   refine this.subset fun x hx => ⟨by simpa using hx.2, hx.1⟩
@@ -104,7 +104,7 @@ theorem separated (Λ : Submodule ℤ E) [DiscreteTopology Λ] (W : Submodule �
   set C := ∑ x ∈ s, ‖x‖ with hC
   have hfin : ({x : E | x ∈ Λ ∧ ‖x‖ ≤ C + 1} \ (W : Set E)).Finite :=
     (finite_norm_le Λ (C + 1)).sdiff
-  have hcl : IsClosed (W : Set E) := W.closed_of_finiteDimensional
+  have hcl : IsClosed (W : Set E) := W.isClosed_of_finiteDimensional
   obtain ⟨δ, hδ, hd⟩ : ∃ δ > 0, ∀ x ∈ ({x : E | x ∈ Λ ∧ ‖x‖ ≤ C + 1} \ (W : Set E)),
       δ ≤ Metric.infDist x W := by
     by_cases hne : ({x : E | x ∈ Λ ∧ ‖x‖ ≤ C + 1} \ (W : Set E)).Nonempty
@@ -1000,9 +1000,9 @@ theorem fund_sub {E : Type} [AddCommGroup E] [MeasurableSpace E] [MeasurableAdd 
     intro c₁ c₂ h
     rw [← Quotient.out_eq c₁, ← Quotient.out_eq c₂]
     exact Quotient.sound (hf _ _ h)
-  haveI : Finite (Quotient s) := Finite.of_injective _ hinj
-  letI : Fintype (Quotient s) := Fintype.ofFinite _
-  letI : Fintype Q := Fintype.ofFinite _
+  have : Finite (Quotient s) := Finite.of_injective _ hinj
+  let : Fintype (Quotient s) := Fintype.ofFinite _
+  let : Fintype Q := Fintype.ofFinite _
   have hmeas : MeasurableSet (⋃ c : Quotient s, (fun x => ((c.out : Λ) : E) + x) ⁻¹' Ω) :=
     MeasurableSet.iUnion fun c => measurable_const_add _ hm
   refine ⟨_, hmeas, ⟨hmeas.nullMeasurableSet, ?_, ?_⟩, ?_⟩
@@ -1268,7 +1268,7 @@ theorem discrete_lattice {K : Type} [Field K] [NumberField K] {ι : Type} [Finty
     · intro h
       exact Subtype.ext (key c hc h)
   rw [hset]
-  exact Metric.isOpen_ball.preimage continuous_subtype_val
+  exact Metric.isOpen_ball.preimage continuous_subtypeVal
 
 theorem covolume_congruence_stabiliser : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (ι : Type) [Fintype ι] (τ : ι → (K →+* ℂ)) (N : ℕ) (L U : Matrix (Fin N) (Fin N) K) (p : Point K N) (I : Ideal (𝓞 K)) (B : ℝ) (Bv : ι → ℝ), (∀ v a, τ v (star a) = starRingEnd ℂ (τ v a)) → (∀ w : InfinitePlace K, ∃! v, InfinitePlace.mk (τ v) = w) → finrank ℚ K = 2 * Fintype.card ι → IsLoUni L → IsUpUni U → EntIn ⊤ (L * ptMat p * U) → I ≠ ⊥ → 1 ≤ B → (∀ (t : ℕ) (A A' : Fin t → Fin N) (v : ι), ‖τ v (((L * ptMat p * U).submatrix A A').det)‖ ≤ Bv v) → ∏ v, max 1 (Bv v) ≤ B → ∃ Ω : Set (ι → roots (ptMat p) → ℂ), MeasurableSet Ω ∧ MeasureTheory.volume Ω ≤ ENNReal.ofReal ((|(discr K : ℝ)| ^ (1 / 2 : ℝ) * (4 * (N : ℝ) ^ 2) ^ (Fintype.card ι) * B ^ 4 * (Ideal.absNorm I : ℝ) * (N.factorial : ℝ) ^ (2 * Fintype.card ι)) ^ (N ^ 2)) ∧ ∀ c : ι → roots (ptMat p) → ℂ, ∃ a ∈ stabU (L * ptMat p * U), EntIn I (a - 1) ∧ (fun v (q : roots (ptMat p)) => ((U * a * U⁻¹).map (τ v) * ofRoots (roots (ptMat p)) (c v) : Matrix (Fin N) (Fin N) ℂ) q.1.1 q.1.2) ∈ Ω := by
   classical
@@ -1296,13 +1296,13 @@ theorem covolume_congruence_stabiliser : ∀ (K : Type) [Field K] [NumberField K
     refine (hΛ₀ c).2 ⟨x, hx, fun i j => ?_, hxc⟩
     obtain ⟨o, -, e⟩ := hxJ i j
     exact ⟨o, Submodule.mem_top, e⟩
-  haveI hd₀ : DiscreteTopology Λ₀ := discrete_lattice τ hτ' U hUdet _ hRlt ⊤ Λ₀ (fun c hc => by
+  have hd₀ : DiscreteTopology Λ₀ := discrete_lattice τ hτ' U hUdet _ hRlt ⊤ Λ₀ (fun c hc => by
     obtain ⟨x, hx, hxT, hxc⟩ := (hΛ₀ c).1 hc
     exact ⟨x, hsupp x hx, hxT, hxc⟩)
   have hd' : DiscreteTopology Λ' := discrete_lattice τ hτ' U hUdet _ hRlt _ Λ' (fun c hc => by
     obtain ⟨x, hx, hxT, hxc⟩ := (hΛ' c).1 hc
     exact ⟨x, hsupp x hx, hxT, hxc⟩)
-  haveI : Countable Λ₀ := GlobalTheory.LoopV.Cover.countable_of_discrete Λ₀
+  have : Countable Λ₀ := GlobalTheory.LoopV.Cover.countable_of_discrete Λ₀
 
   have hJnorm : Ideal.absNorm (Ideal.span {(N.factorial : 𝓞 K)} * I) =
       N.factorial ^ (2 * Fintype.card ι) * Ideal.absNorm I := by
@@ -1314,7 +1314,7 @@ theorem covolume_congruence_stabiliser : ∀ (K : Type) [Field K] [NumberField K
   have hcardJ : Nat.card (𝓞 K ⧸ (Ideal.span {(N.factorial : 𝓞 K)} * I)) =
       N.factorial ^ (2 * Fintype.card ι) * Ideal.absNorm I := by
     rw [← hJnorm, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 K ⧸ (Ideal.span {(N.factorial : 𝓞 K)} * I)) := Nat.finite_of_card_ne_zero (by
+  have : Finite (𝓞 K ⧸ (Ideal.span {(N.factorial : 𝓞 K)} * I)) := Nat.finite_of_card_ne_zero (by
     rw [hcardJ]
     exact mul_ne_zero (pow_ne_zero _ (Nat.factorial_ne_zero N))
       (Ideal.absNorm_eq_zero_iff.not.2 hI))

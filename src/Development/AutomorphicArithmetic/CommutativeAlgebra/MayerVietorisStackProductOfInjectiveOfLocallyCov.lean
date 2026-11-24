@@ -88,7 +88,7 @@ private theorem epi_desc (R : Type) [CommRing R] {A B C : PSh} (a : A ⟶ C) (b 
     (h : ∀ (T : Scheme.{0}) (y : C.obj (op T)), Loc T fun W k =>
       (∃ x, a.app (op W) x = C.map k.op y) ∨ (∃ x, b.app (op W) x = C.map k.op y)) :
     Epi (biprod.desc ((free R).map a) ((free R).map b)) := by
-  haveI : Epi ((free R).map (sumD a b)) := by
+  have : Epi ((free R).map (sumD a b)) := by
     refine (GlobalTheory.T.freeEtaleModuleSheaf_map_mono_epi_iso R (sumD a b)).2.1 fun T y => ?_
     obtain ⟨S, hS, hP⟩ := h T y
     refine ⟨S, hS, fun W k hk => ?_⟩
@@ -217,7 +217,7 @@ private theorem mono_sp (E : Spc) {a b : Act} (φ : Act.Hom a b) (hi : ∀ A, Fu
   intro k T x y h
   simp only [sp_map_eq] at h
   obtain ⟨h1, h2⟩ := Prod.mk.inj h
-  haveI := fn_faithful φ hb Γ(T, ⊤)
+  have := fn_faithful φ hb Γ(T, ⊤)
   have h2' : (show ComposableArrows (Ob a Γ(T, ⊤)) k from x.2) ⋙ φ.fn Γ(T, ⊤) =
       (show ComposableArrows (Ob a Γ(T, ⊤)) k from y.2) ⋙ φ.fn Γ(T, ⊤) := h2
   exact Prod.ext h1 (cancel_comp (φ.fn Γ(T, ⊤)) (fn_obj_inj φ hi _) _ _ h2')
@@ -242,8 +242,8 @@ private theorem lift_sp (E : Spc) {a₁ a : Act} (φ : Act.Hom a₁ a) (hi : ∀
       erw [e, hg', h0', hu, ← a.mul_smul, inv_mul_cancel, a.one_smul]
     exact congrArg Ob.mk key.symm
   choose l hl' using hl
-  haveI := fn_full φ hi hb Γ(W, ⊤)
-  haveI := fn_faithful φ hb Γ(W, ⊤)
+  have := fn_full φ hi hb Γ(W, ⊤)
+  have := fn_faithful φ hb Γ(W, ⊤)
   obtain ⟨c', hc'⟩ := lift_comp (φ.fn Γ(W, ⊤)) c l hl'
   refine ⟨((y.1, show Sx (spc a₁) k W from c') : Sx (Sp E a₁) k W), ?_⟩
   refine (sp_map_eq φ _).trans ?_

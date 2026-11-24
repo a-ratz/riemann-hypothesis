@@ -80,7 +80,7 @@ theorem isFrob_iff_of_lifts (h : IsPlaceOver A w) {ι : Ω →ₐ[E] Kbar w} {g 
     (hσ : σ ∈ Dec (F := E) A) (H : Lifts ι g σ) :
     IsFrob (F := E) A (normV w) σ ↔
       ∀ (ζ : Kbar w) (m : ℕ), 0 < m → ζ ^ normV w ^ m = ζ → g ζ = ζ ^ normV w := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   rw [GlobalTheory.FrobTeich.isFrob_iff_teichmuller E Ω A w h σ]
   constructor
   · rintro ⟨-, hT⟩ ζ m hm hζ

@@ -170,7 +170,7 @@ variable {D : D7}
 private theorem selfDual_isFullLattice {D : D7} : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
     IsSelfDualC V Λ → Submodule.IsFullLattice D.host.E Λ := by
   intro V Λ hΛ
-  haveI : Submodule.IsLattice D.host.E Λ := hΛ.1
+  have : Submodule.IsLattice D.host.E Λ := hΛ.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hΛ.1.fg
   apply eq_top_iff.mpr
@@ -290,7 +290,7 @@ theorem vac_eq_smul {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     intro g hg hl v hv z
     have hv' : finRat S T (-v) ∈ Λ := (Λ.comap (finRat S T)).neg_mem hv
     rw [apply_add_infRat h hψ hg v (hε2 _ hv' g hl) z, ← j2]
-    simp only [c, dif_pos hv']
+    simp only [c, dite_eq_left hv']
   have hli := _root_.GlobalTheory.VacuumLine.not_linearIndependent (RW T S) (jO S T sS sT) (omO S T) j1 j2 j3 j4 (Matrix (Fin T.rank) (Fin S.rank) D.host.E)
     (infRat S T) (infRat_injective S T) hsp (Λ.comap (finRat S T))
     (fun x => by

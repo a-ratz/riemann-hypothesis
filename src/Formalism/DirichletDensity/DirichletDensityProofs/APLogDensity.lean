@@ -101,7 +101,7 @@ lemma residue_class_l_function_tendsto (a : ZMod q) :
     have h1 : ContinuousWithinAt (LFunctionResidueClassAux a) {s : ℂ | 1 ≤ s.re} ((1 : ℝ) : ℂ) :=
       continuousOn_LFunctionResidueClassAux a _ (by simp)
     exact h1.comp Complex.continuous_ofReal.continuousWithinAt
-      (fun x hx => by simp only [Set.mem_setOf_eq, Complex.ofReal_re]; exact le_of_lt hx)
+      (fun x hx => by simp only [Set.mem_ofPred_eq, Complex.ofReal_re]; exact le_of_lt hx)
   have hre : Tendsto (fun x : ℝ ↦ (LFunctionResidueClassAux a x).re) (𝓝[>] 1)
       (𝓝 (LFunctionResidueClassAux a ((1 : ℝ) : ℂ)).re) :=
     (Complex.continuous_re.tendsto _).comp hc.tendsto
@@ -135,13 +135,13 @@ lemma apld_prime_part_eq (a : ZMod q) (x : ℝ) (n : ℕ) :
   by_cases hp : n.Prime
   · by_cases hn : (n : ZMod q) = a
     · have hmem : n ∈ {p : ℕ | p.Prime ∧ p ∈ {p : ℕ | (p : ZMod q) = a}} := ⟨hp, hn⟩
-      rw [if_pos hp, Set.indicator_of_mem hmem]
+      rw [ite_eq_left hp, Set.indicator_of_mem hmem]
       simp [residueClass, Set.indicator, hn, vonMangoldt_apply_prime hp]
     · have hmem : n ∉ {p : ℕ | p.Prime ∧ p ∈ {p : ℕ | (p : ZMod q) = a}} := fun h => hn h.2
-      rw [if_pos hp, Set.indicator_of_notMem hmem]
+      rw [ite_eq_left hp, Set.indicator_of_notMem hmem]
       simp [residueClass, Set.indicator, hn]
   · have hmem : n ∉ {p : ℕ | p.Prime ∧ p ∈ {p : ℕ | (p : ZMod q) = a}} := fun h => hp h.1
-    rw [if_neg hp, Set.indicator_of_notMem hmem, zero_div]
+    rw [ite_eq_right hp, Set.indicator_of_notMem hmem, zero_div]
 
 end Formalism.HF.P
 

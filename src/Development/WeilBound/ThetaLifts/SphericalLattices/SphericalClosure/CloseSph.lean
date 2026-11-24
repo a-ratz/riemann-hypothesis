@@ -267,7 +267,7 @@ theorem archimedean_matched_maps_compare (hH : PositivityTheory.ThKR.JoinTri) (h
       res_div m.triple.chars.resα m.triple.chars.resβ (add_comm _ _), m.triple.weil'⟩
   choose A hA using exists_linop hO hL hQ p1
   choose A' hA' using exists_linop hO hL hQ p2
-  haveI := m₂.real.nontriv
+  have := m₂.real.nontriv
   have eqv : ∀ {R : RealMaps F a a'}, IsRealMaps B G om om' R → ∀ i (x : G.M.Pol B.ψ B.emb) (x' : G.M'.Pol B.ψ B.emb),
       R.p x = R.p' x' → R.p (A i x) = R.p' (A' i x') := fun h i x x' => by
     have x1 := ((hA i x).2 _).2 rfl
@@ -327,8 +327,8 @@ theorem cmp_finT (hM : MaxFinT) {R R₂ : RealMaps F a a'} {Rf Rf₂ : FinMaps F
       Acts (evFin F v) (om (1, i.1)) x (ω (1, i.1) x) := fun i x => (hω.acts 1 (one_at _) i i.2 x x.2 _).2 rfl
   have pr : ∀ (i : UAt σ G.W (evFin F v)) (x : SB (Fin a × Fin (a + a') → Fv F v)), ω (1, i.1) x ∈ SB _ :=
     fun i x => hω.pres 1 (one_at _) i i.2 x x.2
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
-  haveI : SecondCountableTopology (Fv F v) := inferInstance
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have : SecondCountableTopology (Fv F v) := inferInstance
   exact schur_match (SB _) (SB _) (Rf.p v) (Rf.p' v) (Rf₂.p v) (Rf₂.p' v) (m.fin.onto v) (m.fin.onto' v) o o'
     (fun x hx => (ker_of_eq ((hM F E σ B _ _ G X om om' m.triple v trivial).1 _ _ (maxFinP m v).1 x₁) x hx).1)
     (ker_of_eq ((hM F E σ B _ _ G X om om' m.triple v trivial).2 _ _ (maxFinP m v).2 x₂))
@@ -428,7 +428,7 @@ theorem exists_enlarge {α : Type} {Q : α → Type} [∀ v, AddCommGroup (Q v)]
     intro _ ψ i x
     funext v
     by_cases hv : v = ⟨i.1, h i.2⟩
-    · subst hv; simp only [e, dif_pos i.2, Function.update_self]
+    · subst hv; simp only [e, dite_eq_left i.2, Function.update_self]
     · rw [Function.update_of_ne hv]
       simp only [e]
       split_ifs with hT
@@ -658,7 +658,7 @@ theorem locA_of (H : Hyp) (J : Hyp2) (hC : ConeFacA) (hS : StdA) : LocA' := by
       (hasExp_div m.triple.chars.expβ m.triple.chars.expα) (hasExp_div m'.triple.chars.expβ m'.triple.chars.expα))
       (nu_eq m.triple.chars m'.triple.chars) a₁ a₂
   · rintro ⟨X, om, om', Rf, om₁, om₁', Rf₁⟩ ⟨m, m₁, -⟩ L c c' r r'
-    haveI := m₁.real.nontriv
+    have := m₁.real.nontriv
     obtain ⟨f₁, hf₁, n₁⟩ := ex_p_ne m₁.real.quot'.onto
     obtain ⟨f, hf, rfl⟩ := (ev_pol hl' m.triple.geo.hM' m₁.triple.geo.hM' ((H.ev0 F E σ B _ _ _ _ G.M' _ _ om' _ _ _ _ (pairV' m.triple) _
       G₁.V' G₁.W H' _ _ G₁.M' cfg.eV cfg.hH' m₁.triple.geo.hM').2 e' he')).2 f₁ hf₁
@@ -708,7 +708,7 @@ theorem locA_of (H : Hyp) (J : Hyp2) (hC : ConeFacA) (hS : StdA) : LocA' := by
       Rf₁.p v (Λ v φ) = wT B X s (1 - (((b + 2 - a') / 2 : ℕ) : ℤ)) v • Rf₁.p' v (ev' v φ') := fun v hv => by
     obtain ⟨φ, hφ, φ', hφ', x, y, z⟩ := std v hv
     exact ⟨φ, hφ, φ', hφ', x, y, by rw [(hΛ v _ hφ).1, wT, dite_eq_left (t.chars.sub hv)]; exact z⟩
-  haveI := m₁.real.nontriv
+  have := m₁.real.nontriv
   have pt₁ : Pt B G.M' (fun _ => SB _) R₁.p' Rf₁.p' ei' ev' := by
     refine pt_of ?_ X.T (fun v hv => ?_) fun v hv => ⟨vac_sb t.geo.hM' v, by
       rw [(h2' v).1, ← (m₁.fin.sph v hv).1]; exact (m₁.fin.sph v hv).2⟩
@@ -758,7 +758,7 @@ theorem locA_of (H : Hyp) (J : Hyp2) (hC : ConeFacA) (hS : StdA) : LocA' := by
     set K₀ := κ * c * stepFac B X e₁ e₂ s H₀.𝔟 H'.𝔟 (1 - (((b + 2 - a') / 2 : ℕ) : ℤ)) * charL X.ν (X.S₀ : Set (Pl F)) ((((b + 2 - a') / 2) : ℕ) : ℂ) with hK₀
     refine ⟨T, hT, n, n', fun j => ((∏ v ∈ T \ X.T, u v)⁻¹ * k₀) • L (f j),
       fun j v => if v ∈ T then Λ v (φ j v) else G₁.M.vac v, fun i => K₀ • ei' (f' i), fun i v => ev' v (φ' i v),
-      fun j => ⟨Submodule.smul_mem _ _ (Lpol _ (a1 j).1), fun v => ?_, fun v hv => if_neg hv⟩,
+      fun j => ⟨Submodule.smul_mem _ _ (Lpol _ (a1 j).1), fun v => ?_, fun v hv => ite_eq_right hv⟩,
       fun i => ⟨Submodule.smul_mem _ _ (ep.1 _ (a2 i).1), fun v => evS v _ ((a2 i).2.1 v), fun v hv => by beta_reduce; rw [(a2 i).2.2 v hv, (h2' v).1]⟩,
       ?_, ?_, ?_⟩
     · beta_reduce
@@ -780,7 +780,7 @@ theorem locA_of (H : Hyp) (J : Hyp2) (hC : ConeFacA) (hS : StdA) : LocA' := by
       · rw [map_smul, ← e1' _ (a1 i).1, hc, LinearMap.smul_apply]
         congr 2; funext v
         beta_reduce
-        rw [if_pos v.2, ← e3 v _ ((a1 i).2.1 v), hw v, LinearMap.smul_apply]
+        rw [ite_eq_left v.2, ← e3 v _ ((a1 i).2.1 v), hw v, LinearMap.smul_apply]
       · rw [map_smul, e1 _ (a2 j).1]
         congr 2; funext v; exact e2 v _ ((a2 j).2.1 v)
 
@@ -844,7 +844,7 @@ theorem locB_of (H : Hyp) (J : Hyp2) (hC : ConeFacB) (hS : StdB) : LocB' := by
       (hasExp_div m.triple.chars.expα m.triple.chars.expβ) (hasExp_div m'.triple.chars.expα m'.triple.chars.expβ))
       (nu_eq m.triple.chars m'.triple.chars) a₁ a₂
   · rintro ⟨X, om, om', Rf, om₁, om₁', Rf₁⟩ ⟨m, m₁, -⟩ L c c' r r'
-    haveI := m₁.real.nontriv
+    have := m₁.real.nontriv
     obtain ⟨f₁, hf₁, n₁⟩ := ex_p_ne m₁.real.quot.onto
     obtain ⟨f, hf, rfl⟩ := (ev_pol hl m.triple.geo.hM m₁.triple.geo.hM ((H.ev0 F E σ B _ _ _ _ G.M _ _ om _ _ _ _ (pairV m.triple) _ G₁.V G₁.W
       H' _ _ G₁.M cfg.eV cfg.hH' m₁.triple.geo.hM).2 e he)).2 f₁ hf₁
@@ -925,7 +925,7 @@ theorem locB_of (H : Hyp) (J : Hyp2) (hC : ConeFacB) (hS : StdB) : LocB' := by
       Rf₁.p' v (Λ v φ') = wT B X s (-(((a - (b + 2)) / 2 : ℕ) : ℤ)) v • Rf₁.p v (ev v φ) := fun v hv => by
     obtain ⟨φ, hφ, φ', hφ', x, y, z⟩ := std v hv
     exact ⟨φ, hφ, φ', hφ', x, y, by rw [(hΛ v _ hφ').1, wT, dite_eq_left (t.chars.sub hv)]; exact z⟩
-  haveI := m₁.real.nontriv
+  have := m₁.real.nontriv
   have pt₁ : Pt B G.M (fun _ => SB _) R₁.p Rf₁.p ei ev := by
     refine pt_of ?_ X.T (fun v hv => ?_) fun v hv => ⟨vac_sb t.geo.hM v, by rw [(h2 v).1]; exact (m₁.fin.sph v hv).2⟩
     · obtain ⟨f₁, hf₁, n₁⟩ := ex_p_ne m₁.real.quot.onto
@@ -1019,7 +1019,7 @@ theorem locB_of (H : Hyp) (J : Hyp2) (hC : ConeFacB) (hS : StdB) : LocB' := by
     refine ⟨T, hT, n, n', fun i => K₀ • ei (f i), fun i v => ev v (φ i v), fun j => ((∏ v ∈ T \ X.T, u v)⁻¹ * k₀) • L (f' j),
       fun j v => if v ∈ T then Λ v (φ' j v) else G₁.M'.vac v,
       fun i => ⟨Submodule.smul_mem _ _ (ep.1 _ (a1 i).1), fun v => evS v _ ((a1 i).2.1 v), fun v hv => by beta_reduce; rw [(a1 i).2.2 v hv, (h2 v).1]⟩,
-      fun j => ⟨Submodule.smul_mem _ _ (Lpol _ (a2 j).1), fun v => ?_, fun v hv => if_neg hv⟩, ?_, ?_, ?_⟩
+      fun j => ⟨Submodule.smul_mem _ _ (Lpol _ (a2 j).1), fun v => ?_, fun v hv => ite_eq_right hv⟩, ?_, ?_, ?_⟩
     · beta_reduce
       split_ifs
       exacts [(hΛ v _ ((a2 j).2.1 v)).2, vac_sb t₁.geo.hM' v]
@@ -1043,7 +1043,7 @@ theorem locB_of (H : Hyp) (J : Hyp2) (hC : ConeFacB) (hS : StdB) : LocB' := by
       · rw [map_smul, ← e1' _ (a2 j).1, hc, LinearMap.smul_apply]
         congr 2; funext v
         beta_reduce
-        rw [if_pos v.2, ← e3 v _ ((a2 j).2.1 v), hw v, LinearMap.smul_apply]
+        rw [ite_eq_left v.2, ← e3 v _ ((a2 j).2.1 v), hw v, LinearMap.smul_apply]
 
 end PositivityTheory.ThKG.Loc
 
@@ -1246,7 +1246,7 @@ theorem exists_rot {ι : Type} [Fintype ι] {n : ℕ} (G : ι → Matrix (Fin n)
     norm_num at this
     exact pow_ne_zero n two_ne_zero this.symm
   obtain ⟨_, ⟨k, rfl⟩, hk⟩ := (Set.infinite_range_of_injective (Nat.cast_injective (R := ℂ))).exists_notMem_finite
-    (finite_setOf_isRoot q0)
+    (finite_setOfPred_isRoot q0)
   have hk' : ∀ w, (q w).eval (k : ℂ) ≠ 0 := fun w e => hk (by
     change (∏ w, q w).eval _ = 0
     rw [eval_prod]; exact Finset.prod_eq_zero (Finset.mem_univ w) e)

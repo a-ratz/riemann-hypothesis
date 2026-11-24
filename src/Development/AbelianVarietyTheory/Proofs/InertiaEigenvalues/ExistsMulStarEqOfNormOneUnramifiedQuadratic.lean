@@ -112,13 +112,13 @@ instance maxIdeal_isMaximal : (maxIdeal K).IsMaximal := by
   rw [← hyx]; exact J.mul_mem_left y hxJ
 
 theorem finite_res [LocallyCompactSpace K] : Finite (intRing K ⧸ maxIdeal K) := by
-  haveI : ProperSpace K := ProperSpace.of_locallyCompactSpace K
-  haveI : CompactSpace (intRing K) :=
+  have : ProperSpace K := ProperSpace.of_locallyCompactSpace K
+  have : CompactSpace (intRing K) :=
     isCompact_iff_compactSpace.mp (isCompact_closedBall (0 : K) 1)
   have hopen : IsOpen ((maxIdeal K : Set (intRing K))) := by
     have e : ((maxIdeal K : Set (intRing K))) = Subtype.val ⁻¹' Metric.ball (0 : K) 1 := by
       ext x; simp [mem_maxIdeal]
-    rw [e]; exact Metric.isOpen_ball.preimage continuous_subtype_val
+    rw [e]; exact Metric.isOpen_ball.preimage continuous_subtypeVal
   exact AddSubgroup.quotient_finite_of_isOpen (maxIdeal K).toAddSubgroup hopen
 
 end GlobalTheory.NormUnits
@@ -143,15 +143,15 @@ theorem exists_point_mod [LocallyCompactSpace K] (s t c : K) (hs : ‖s‖ ≤ 1
     ∃ a b z : K, ‖a‖ ≤ 1 ∧ ‖b‖ ≤ 1 ∧ ‖z‖ ≤ 1 ∧ (‖a‖ = 1 ∨ ‖b‖ = 1 ∨ ‖z‖ = 1) ∧
       ‖a ^ 2 + s * a * b + t * b ^ 2 - c * z ^ 2‖ < 1 := by
   classical
-  haveI := finite_res K
-  letI : Fintype (Res K) := Fintype.ofFinite _
+  have := finite_res K
+  let : Fintype (Res K) := Fintype.ofFinite _
   let k := Res K
   let π : intRing K →+* k := Ideal.Quotient.mk _
   let S : intRing K := ⟨s, mem_closedBall_zero_iff.2 hs⟩
   let T : intRing K := ⟨t, mem_closedBall_zero_iff.2 ht⟩
   let Cc : intRing K := ⟨c, mem_closedBall_zero_iff.2 hc⟩
   set p := ringChar k
-  haveI : CharP k p := ringChar.charP k
+  have : CharP k p := ringChar.charP k
   obtain ⟨n, hpp, -⟩ := FiniteField.card (K := k) p
   let f : MvPolynomial (Fin 3) k := C 1 * (X 0 * X 0) + C (π S) * (X 0 * X 1) + C (π T) * (X 1 * X 1) +
     C (-π Cc) * (X 2 * X 2)
@@ -202,8 +202,8 @@ variable (K : Type) [NontriviallyNormedField K] [IsUltrametricDist K]
 theorem exists_sqrt_mod [LocallyCompactSpace K] (t : K) (ht : ‖t‖ ≤ 1) (h2 : ‖(2 : K)‖ < 1) :
     ∃ r : K, ‖r‖ ≤ 1 ∧ ‖r ^ 2 - t‖ < 1 := by
   classical
-  haveI := finite_res K
-  letI : Fintype (Res K) := Fintype.ofFinite _
+  have := finite_res K
+  let : Fintype (Res K) := Fintype.ofFinite _
   let T : intRing K := ⟨t, mem_closedBall_zero_iff.2 ht⟩
   have h2k : (2 : Res K) = 0 := by
     have h11 : (((1 + 1 : intRing K)) : K) = 2 := by
@@ -261,9 +261,9 @@ theorem norm_eq_of_norm_sub_lt {K : Type} [NormedField K] [IsUltrametricDist K] 
 theorem exists_far_unit (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [hU : Unram F E] :
     ∃ ζ : E, ‖ζ‖ = 1 ∧ ∀ b : F, 1 ≤ ‖ζ - algebraMap F E b‖ := by
-  haveI : IsUltrametricDist E := hU.ultraE
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : IsUltrametricDist E := hU.ultraE
+  have : LocallyCompactSpace F := hU.lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   obtain ⟨y, hy⟩ := hU.star_ne
   have hyF : ∀ b : F, algebraMap F E b ≠ y := fun b hb => hy (by rw [← hb, hU.star_fix])
   let g : F → ℝ := fun b => ‖y - algebraMap F E b‖
@@ -347,9 +347,9 @@ theorem exists_trace_one (F E : Type) [NontriviallyNormedField F] [NontriviallyN
     [StarRing E] [hU : Unram F E] (ζ : E) (hζ1 : ‖ζ‖ = 1) (hζ : ∀ b : F, 1 ≤ ‖ζ - algebraMap F E b‖)
     (s t : F) (hs : algebraMap F E s = ζ + star ζ) (ht : algebraMap F E t = ζ * star ζ) :
     ∃ e : E, ‖e‖ ≤ 1 ∧ e + star e = 1 := by
-  haveI : IsUltrametricDist E := hU.ultraE
-  haveI : IsUltrametricDist F := hU.ultraF
-  haveI : LocallyCompactSpace F := hU.lcF
+  have : IsUltrametricDist E := hU.ultraE
+  have : IsUltrametricDist F := hU.ultraF
+  have : LocallyCompactSpace F := hU.lcF
   have hns : ‖star ζ‖ = 1 := by rw [hU.norm_star, hζ1]
   have hdiff : ‖ζ - star ζ‖ = 1 := by
     refine le_antisymm ((norm_sub_le_max' _ _).trans (by rw [hns, hζ1, max_self])) (not_lt.1 fun hlt => ?_)
@@ -397,12 +397,12 @@ namespace GlobalTheory.NormUnits
 theorem norm_onto_units : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (u : F), ‖u‖ = 1 → ∃ v : E, v * star v = algebraMap F E u := by
   intro F E _ _ _ _ hU u hu
-  haveI : IsUltrametricDist E := hU.ultraE
-  haveI : IsUltrametricDist F := hU.ultraF
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : LocallyCompactSpace E := hU.lcE
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : CharZero F := hU.charZero
+  have : IsUltrametricDist E := hU.ultraE
+  have : IsUltrametricDist F := hU.ultraF
+  have : LocallyCompactSpace F := hU.lcF
+  have : LocallyCompactSpace E := hU.lcE
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : CharZero F := hU.charZero
   have hN : ∀ v : E, ‖v * star v‖ = ‖v‖ ^ 2 := fun v => by rw [norm_mul, hU.norm_star, sq]
   have hsc : Continuous (fun y : E => star y) := by
     have : LipschitzWith 1 (fun y : E => star y) := LipschitzWith.of_dist_le_mul fun x y => by

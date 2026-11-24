@@ -116,7 +116,7 @@ theorem isClosed_range_iota : IsClosed (Set.range (iotaOQ N A i)) := by
   have hf : Continuous f := by
     refine continuous_finsetSum _ fun y _ => ?_
     exact ((continuous_algebraMap ℚ_[N.l i] (Qbar (N.l i))).comp
-      ((continuous_subtype_val : Continuous fun x : ℤ_[N.l i] => (x : ℚ_[N.l i])).comp
+      ((continuous_subtypeVal : Continuous fun x : ℤ_[N.l i] => (x : ℚ_[N.l i])).comp
         (continuous_apply y))).mul continuous_const
   have hr : Set.range (iotaOQ N A i) = Set.range f := by
     ext x

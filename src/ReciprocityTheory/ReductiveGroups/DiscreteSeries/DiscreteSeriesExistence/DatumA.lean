@@ -322,7 +322,7 @@ theorem pdA_eab_compact {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : S7.KType
   simp only [Formalism.REAL.Eab, Formalism.REAL.Ec]
   rw [e1, e2]
   conv_rhs => rw [hZ]
-  simp only [map_add (f := _), map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [map_add (f := _), map_smul, add_apply, smul_apply,
     inner_add_right, inner_smul_right]
 
 

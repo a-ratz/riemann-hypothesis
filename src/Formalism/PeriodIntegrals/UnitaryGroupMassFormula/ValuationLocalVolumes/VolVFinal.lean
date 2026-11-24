@@ -253,21 +253,21 @@ theorem meas_image (ι : Type) [Fintype ι] [DecidableEq ι] (μ : Measure (ι �
     [μ.IsAddHaarMeasure] (f : (ι → Fv F v ⊗[F] E) →ₗ[Fv F v] (ι → Fv F v ⊗[F] E))
     (hf : LinearMap.det f ≠ 0) (S : Set (ι → Fv F v ⊗[F] E)) (hS : MeasurableSet S) :
     μ (f '' S) = ENNReal.ofReal (absV v (LinearMap.det f)) * μ S := by
-  haveI := PI.UnitaryGroupMassFormula.LocJacTyp.BM.locallyCompact_Fv v
-  haveI := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-  haveI : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+  have := PI.UnitaryGroupMassFormula.LocJacTyp.BM.locallyCompact_Fv v
+  have := PI.UnitaryGroupMassFormula.LocJacTyp.BM.secondCountable_Fv v
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+  have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   let b := Module.finBasis (Fv F v) (Fv F v ⊗[F] E)
   let eR : (Fv F v ⊗[F] E) ≃L[Fv F v] (Fin (Module.finrank (Fv F v) (Fv F v ⊗[F] E)) → Fv F v) :=
     { b.equivFun with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap
       continuous_invFun := IsModuleTopology.continuous_of_linearMap b.equivFun.symm.toLinearMap }
-  haveI : SecondCountableTopology (Fv F v ⊗[F] E) := eR.toHomeomorph.secondCountableTopology
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (ι → Fv F v ⊗[F] E) := Pi.borelSpace
+  have : SecondCountableTopology (Fv F v ⊗[F] E) := eR.toHomeomorph.secondCountableTopology
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (ι → Fv F v ⊗[F] E) := Pi.borelSpace
   let e0 : (ι → Fv F v ⊗[F] E) ≃ₗ[Fv F v]
       (ι × Fin (Module.finrank (Fv F v) (Fv F v ⊗[F] E)) → Fv F v) :=
     (LinearEquiv.piCongrRight fun _ : ι => b.equivFun).trans
@@ -309,17 +309,17 @@ theorem det_famL_mul (hfin : Module.finrank F E = 2) (g : Fv F v) (θ Δ : Fv F 
   rcases lt_trichotomy i j with h | h | h
   · have h1 : ¬ j < i := not_lt.2 h.le
     have h2 : j ≠ i := h.ne'
-    simp only [famL, if_pos h, if_neg h1, if_neg h2, hs, LinearMap.det_id, mul_one]
+    simp only [famL, ite_eq_left h, ite_eq_right h1, ite_eq_right h2, hs, LinearMap.det_id, mul_one]
   · subst h
-    simp only [famL, lt_irrefl, if_false, if_true, ha, sq]
+    simp only [famL, lt_irrefl, ite_false, ite_true, ha, sq]
   · have h1 : ¬ i < j := not_lt.2 h.le
     have h2 : i ≠ j := h.ne'
-    simp only [famL, if_pos h, if_neg h1, if_neg h2, hs, LinearMap.det_id, one_mul]
+    simp only [famL, ite_eq_left h, ite_eq_right h1, ite_eq_right h2, hs, LinearMap.det_id, one_mul]
 
 theorem det_bigL_sq (hfin : Module.finrank F E = 2) (g : Fv F v) (θ Δ : Fv F v ⊗[F] E)
     (hθ : Algebra.trace (Fv F v) (Fv F v ⊗[F] E) θ = 1) (hΔ : Algebra.trace (Fv F v) (Fv F v ⊗[F] E) Δ = 0)
     (hΔ0 : Δ ≠ 0) : LinearMap.det (bigL v r g θ) ^ 2 = (g ^ 2) ^ ((r + 1) ^ 2) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   rw [bigL, LinearMap.det_pi, sq]
   have e : ∏ p : Fin (r + 1) × Fin (r + 1), LinearMap.det (famL v r g θ p.swap) =
       ∏ p : Fin (r + 1) × Fin (r + 1), LinearMap.det (famL v r g θ p) :=
@@ -391,7 +391,7 @@ theorem famL_image
   have hgv : (g : Fv F v) ≠ 0 := VolTU.natCast_ne_zero v hg0
   unfold famL pSet
   split_ifs with h1 h2
-  · simp only [Set.mem_setOf_eq, Set.mem_image, LinearMap.smul_apply, LinearMap.id_apply]
+  · simp only [Set.mem_ofPred_eq, Set.mem_image, LinearMap.smul_apply, LinearMap.id_apply]
     constructor
     · rintro ⟨z, hz, rfl⟩
       rw [← VolTU.sc_mul_eq_smul, mul_comm, ← mul_assoc, ← VolTU.sc_mul, inv_mul_cancel₀ hgv, VolTU.sc_one,
@@ -417,7 +417,7 @@ theorem box_meas (hfin : Module.finrank F E = 2)
   have himg : bigL v r (g : Fv F v) θ '' VolTO (E := E) v (Fin (r + 1) × Fin (r + 1)) =
       {Y | ∀ p, Y p ∈ pSet σ v r g p} := by
     ext Y
-    simp only [Set.mem_image, Set.mem_setOf_eq, VolTO]
+    simp only [Set.mem_image, Set.mem_ofPred_eq, VolTO]
     constructor
     · rintro ⟨Z, hZ, rfl⟩ p
       exact (famL_image σ v r htr hg0 hθO hθ p _).1 ⟨Z p, hZ p, rfl⟩
@@ -456,27 +456,27 @@ theorem hermBox_eq
         ∀ p, Y p ∈ pSet σ v r g p}} := by
   have hgO : sc (E := E) v (g : Fv F v) ∈ OEv (E := E) v := VolUTr.TrW.alg_mem v (VolTU.natCast_memO v g)
   ext Y
-  simp only [VolUHm.hermBox, Set.mem_setOf_eq]
+  simp only [VolUHm.hermBox, Set.mem_ofPred_eq]
   constructor
   · intro h p
     obtain ⟨i, j⟩ := p
     obtain ⟨hO, hup, hdg⟩ := h i j
     rcases lt_trichotomy i j with hij | hij | hij
-    · simp only [ctr, pSet, if_pos hij, Set.mem_setOf_eq]
+    · simp only [ctr, pSet, ite_eq_left hij, Set.mem_ofPred_eq]
       exact hup hij
     · subst hij
-      simp only [ctr, pSet, lt_irrefl, if_false, if_true, Set.mem_setOf_eq]
+      simp only [ctr, pSet, lt_irrefl, ite_false, ite_true, Set.mem_ofPred_eq]
       refine ⟨Submodule.sub_mem _ hO (VolUTr.TrW.mul_mem v (hc.2 i i) hθO), ?_⟩
       rw [diag_key σ v htr hθ _ _ (hc.1 i i).symm]
       exact hdg rfl
     · have h1 : ¬ i < j := not_lt.2 hij.le
       have h2 : i ≠ j := hij.ne'
-      simp only [ctr, pSet, if_neg h1, if_neg h2, sub_zero]
+      simp only [ctr, pSet, ite_eq_right h1, ite_eq_right h2, sub_zero]
       exact hO
   · intro h i j
     have hp := h (i, j)
     rcases lt_trichotomy i j with hij | hij | hij
-    · simp only [ctr, pSet, if_pos hij, Set.mem_setOf_eq] at hp
+    · simp only [ctr, pSet, ite_eq_left hij, Set.mem_ofPred_eq] at hp
       have hO : Y (i, j) ∈ OEv (E := E) v := by
         have e : Y (i, j) = sc (E := E) v (g : Fv F v) * ((Y (i, j) - c i j) * sc (E := E) v (g : Fv F v)⁻¹) +
             c i j := by
@@ -486,7 +486,7 @@ theorem hermBox_eq
         exact Submodule.add_mem _ (VolUTr.TrW.mul_mem v hgO hp) (hc.2 i j)
       exact ⟨hO, fun _ => hp, fun h => absurd h hij.ne⟩
     · subst hij
-      simp only [ctr, pSet, lt_irrefl, if_false, if_true, Set.mem_setOf_eq] at hp
+      simp only [ctr, pSet, lt_irrefl, ite_false, ite_true, Set.mem_ofPred_eq] at hp
       have hO : Y (i, i) ∈ OEv (E := E) v := by
         rw [← sub_add_cancel (Y (i, i)) (c i i * θ)]
         exact Submodule.add_mem _ hp.1 (VolUTr.TrW.mul_mem v (hc.2 i i) hθO)
@@ -495,7 +495,7 @@ theorem hermBox_eq
       exact hp.2
     · have h1 : ¬ i < j := not_lt.2 hij.le
       have h2 : i ≠ j := hij.ne'
-      simp only [ctr, pSet, if_neg h1, if_neg h2, sub_zero] at hp
+      simp only [ctr, pSet, ite_eq_right h1, ite_eq_right h2, sub_zero] at hp
       exact ⟨hp, fun h => absurd h h1, fun h => absurd h h2⟩
 
 theorem hermBox_meas (hfin : Module.finrank F E = 2)
@@ -581,7 +581,7 @@ theorem volUHermBox_holds {D : D7} (X : HidaSetting D) (ψ : AddChar (AF X.B.I.F
   have hann := VolUTr.annX_of X ψ Formalism.L2.SG.Pf.conductor_inverse_different hψ hs v
   have hfin := X.B.I.cm.deg2
   obtain ⟨hH, -, hO⟩ := VolUL.sd_facts ψ v hψ hfin hann hd (Fin (D.R.rS + 1) × Fin (D.R.rS + 1))
-  haveI := hH
+  have := hH
   have hmax : v.asIdeal.IsMaximal := v.isMaximal
   obtain ⟨P, hPmax, hPv⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := 𝓞 X.B.I.E) v.asIdeal
     (by

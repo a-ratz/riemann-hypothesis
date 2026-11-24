@@ -53,15 +53,15 @@ theorem UpperTheory.V.AlgebraTools.IsCplAt.exists_prime_over :
       (∀ q : Ideal R, q.IsPrime → q ≤ p → ∃ Q : Ideal B, Q.IsPrime ∧ Q.comap (algebraMap R B) = q) ∧
       (∀ a : R, algebraMap R B a = 0 → ∃ s : R, s ∉ p ∧ s * a = 0) := by
   intro R _ _ p B _ _ _ h
-  haveI := h.isPrime
-  haveI := IsCplAt.flat R p B h
+  have := h.isPrime
+  have := IsCplAt.flat R p B h
   refine ⟨fun q hq hqp => ?_, fun a ha => ?_⟩
-  · haveI := hq
-    haveI : (maximalIdeal B).LiesOver p := ⟨h.comap_eq.symm⟩
+  · have := hq
+    have : (maximalIdeal B).LiesOver p := ⟨h.comap_eq.symm⟩
     obtain ⟨P, -, hP, hlo⟩ := Ideal.exists_ideal_le_liesOver_of_le (maximalIdeal B) hqp
     exact ⟨P, hP, hlo.over.symm⟩
   · let Rp := Localization.AtPrime p
-    haveI : IsNoetherianRing Rp := IsLocalization.isNoetherianRing p.primeCompl Rp inferInstance
+    have : IsNoetherianRing Rp := IsLocalization.isNoetherianRing p.primeCompl Rp inferInstance
     have hmem : ∀ n : ℕ, algebraMap R Rp a ∈ (maximalIdeal Rp) ^ n := by
       intro n
       obtain ⟨s, hs, hsa⟩ := h.strict n a (by rw [ha]; exact zero_mem _)

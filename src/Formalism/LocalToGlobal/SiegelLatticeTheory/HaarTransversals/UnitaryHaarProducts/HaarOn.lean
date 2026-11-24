@@ -57,7 +57,7 @@ variable {G : Type*} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Loca
 
 theorem map_comap_subgroup (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Measure G)
     (hc : μ (H : Set G)ᶜ = 0) : (μ.comap ((↑) : H → G)).map ((↑) : H → G) = μ := by
-  have he : MeasurableEmbedding ((↑) : H → G) := MeasurableEmbedding.subtype_coe hH.measurableSet
+  have he : MeasurableEmbedding ((↑) : H → G) := MeasurableEmbedding.subtypeVal hH.measurableSet
   rw [he.map_comap]
   refine Measure.restrict_eq_self_of_ae_mem ?_
   rw [ae_iff]
@@ -69,18 +69,18 @@ theorem haarOnSet_isHaar (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Meas
     (h0 : μ ≠ 0) (hc : μ (H : Set G)ᶜ = 0) (hinv : ∀ s ∈ H, μ.map (fun x => s * x) = μ) :
     (μ.comap ((↑) : H → G)).IsHaarMeasure ∧ (∀ K : Set G, IsCompact K → μ K < ⊤) ∧
       ∀ U : Set G, IsOpen U → (U ∩ (H : Set G)).Nonempty → 0 < μ U := by
-  have he : MeasurableEmbedding ((↑) : H → G) := MeasurableEmbedding.subtype_coe hH.measurableSet
+  have he : MeasurableEmbedding ((↑) : H → G) := MeasurableEmbedding.subtypeVal hH.measurableSet
   have hmap : (μ.comap ((↑) : H → G)).map ((↑) : H → G) = μ := map_comap_subgroup H hH μ hc
   have hce : Topology.IsClosedEmbedding ((↑) : H → G) := by
     first
       | exact hH.isClosedEmbedding_subtypeVal
       | exact hH.closedEmbedding_subtype_val
-  haveI : LocallyCompactSpace H := hce.locallyCompactSpace
-  haveI : SigmaFinite (μ.comap ((↑) : H → G)) := by
+  have : LocallyCompactSpace H := hce.locallyCompactSpace
+  have : SigmaFinite (μ.comap ((↑) : H → G)) := by
     refine SigmaFinite.of_map _ he.measurable.aemeasurable ?_
     rw [hmap]
     exact hσ
-  haveI : IsMulLeftInvariant (μ.comap ((↑) : H → G)) := by
+  have : IsMulLeftInvariant (μ.comap ((↑) : H → G)) := by
     constructor
     intro g
     have hm1 : Measurable (fun x : H => g * x) := measurable_const_mul g
@@ -111,19 +111,19 @@ theorem haarOnSet_isHaar (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Meas
     (lt_of_le_of_lt (measure_mono Set.inter_subset_left) hKfin).ne
   have hνfin : (μ.comap ((↑) : H → G)) (K ∩ spanningSets (μ.comap ((↑) : H → G)) n) ≠ ⊤ :=
     (lt_of_le_of_lt (measure_mono Set.inter_subset_right) (measure_spanningSets_lt_top _ n)).ne
-  haveI : BorelSpace H := by
+  have : BorelSpace H := by
     first
       | infer_instance
       | exact Subtype.borelSpace _
-  haveI : SecondCountableTopology H := by
+  have : SecondCountableTopology H := by
     first
       | infer_instance
       | exact TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : MeasurableMul₂ H := by
+  have : MeasurableMul₂ H := by
     first
       | infer_instance
       | exact ContinuousMul.measurableMul₂
-  haveI : MeasurableInv H := by
+  have : MeasurableInv H := by
     first
       | infer_instance
       | exact ContinuousInv.measurableInv
@@ -143,13 +143,13 @@ theorem haarOnSet_isHaar (H : Subgroup G) (hH : IsClosed (H : Set G)) (μ : Meas
       | exact Measure.isHaarMeasure_smul _ hc0 hctop
       | exact IsHaarMeasure.smul _ hc0 hctop
       | exact isHaarMeasure_smul _ hc0 hctop
-  haveI := hHaar
+  have := hHaar
   refine ⟨hHaar, fun K' hK' => ?_, fun U hU hne => ?_⟩
   · rw [← hmap, he.map_apply]
     exact (hce.isCompact_preimage hK').measure_lt_top
   · obtain ⟨x, hxU, hxH⟩ := hne
     rw [← hmap, he.map_apply]
-    exact (hU.preimage continuous_subtype_val).measure_pos _ ⟨⟨x, hxH⟩, hxU⟩
+    exact (hU.preimage continuous_subtypeVal).measure_pos _ ⟨⟨x, hxH⟩, hxU⟩
 
 end Abs
 

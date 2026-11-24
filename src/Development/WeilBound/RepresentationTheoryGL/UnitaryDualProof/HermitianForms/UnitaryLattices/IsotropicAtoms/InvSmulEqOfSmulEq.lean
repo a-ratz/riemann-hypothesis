@@ -311,8 +311,8 @@ theorem avg_avg (hψ : Continuous ψ) (hπ : IsSmooth π) (ξ η : Fin (m + 1) �
     rw [avg_smul h π ψ hψ hπ η hA', avg_colEl h π ψ hψ hπ η hA' (hAA' (hp.2.2.2.2.1 t ht)), smul_smul]
   rw [Finset.sum_congr rfl e, ← Finset.sum_smul, smul_smul, hs]
   by_cases hc : ∀ a ∈ A, ψ (ξ ⬝ᵥ a) = ψ (η ⬝ᵥ a)
-  · rw [if_pos hc, if_pos (fun a ha => (hc a ha).symm), one_smul]
-  · rw [if_neg hc, if_neg (fun H => hc (fun a ha => (H a ha).symm)), zero_smul]
+  · rw [ite_eq_left hc, ite_eq_left (fun a ha => (hc a ha).symm), one_smul]
+  · rw [ite_eq_right hc, ite_eq_right (fun H => hc (fun a ha => (H a ha).symm)), zero_smul]
 
 theorem form_avg (hψ : Continuous ψ) (hπ : IsSmooth π) (B : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ)
     (hB : ∀ x v w, B (π (colEl k m N h x) v) (π (colEl k m N h x) w) = B v w) (ξ : Fin (m + 1) → k)

@@ -59,8 +59,8 @@ namespace GlobalTheory.EtaleComplexPoints
 
 theorem encard_complexPoints_eq_rank : ∀ {A B : Type} [CommRing A] [CommRing B] (f : A →+* B) (δ : ℕ), f.Etale → f.Finite → (letI := f.toAlgebra; Module.Free A B ∧ Module.finrank A B = δ) → ∀ φ : A →+* ℂ, {ψ : B →+* ℂ | ψ.comp f = φ}.encard = (δ : ℕ∞) := by
   intro A B _ _ f δ hf hfin hfree φ
-  letI := f.toAlgebra
-  letI := φ.toAlgebra
+  let := f.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨hF, hrk⟩ := hfree
   have hEt : Algebra.Etale A B := RingHom.etale_algebraMap.1 hf
   have hMF : Module.Finite A B := hfin

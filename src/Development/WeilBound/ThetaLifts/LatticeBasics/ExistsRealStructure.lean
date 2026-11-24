@@ -299,7 +299,7 @@ open scoped Classical in
 theorem dOp_apply {κ : Type} [Fintype κ] (A B : κ → mixedEmbedding.mixedSpace F) (f : SInf F κ) (y) :
     dOp A B f y = fderiv ℝ f y A + (-(2 * Real.pi * Complex.I)) * ((linForm B y : ℝ) : ℂ) * f y := by
   have hT := (linForm B).hasTemperateGrowth
-  simp only [dOp, SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
+  simp only [dOp, add_apply, smul_apply, SchwartzMap.smulLeftCLM_apply_apply hT,
     SchwartzMap.lineDerivOp_apply_eq_fderiv]
   simp [mul_assoc]
 
@@ -408,7 +408,7 @@ theorem fock_mul_linear : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     rw [key]
     refine (hasDerivAt_line f _ _ _ _ (r x)).congr_deriv ?_
     show _ = (c • f₁) (fun i => evI F (x i)) * r x
-    rw [SchwartzMap.smul_apply, h₁, hBe, ← hB, map_zero, zero_add, smul_eq_mul]
+    rw [smul_apply, h₁, hBe, ← hB, map_zero, zero_add, smul_eq_mul]
     simp only [c]
     ring
   have hmem : c • f₁ ∈ Mo.Pol ψ τ := by

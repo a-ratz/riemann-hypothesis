@@ -127,7 +127,7 @@ open GlobalTheory.ActFin.QHypPull in
 theorem GlobalTheory.ActFin.qHyp_pull_of_isGrpPullback : ∀ (S S' : Scheme.{0}) (f : S' ⟶ S) (A : Over S) [GrpObj A] [IsCommMonObj A] (A' : Over S') [GrpObj A'] (φ : A'.left ⟶ A.left) (φ₂ : (A' ⊗ A').left ⟶ (A ⊗ A).left) (Q : LB (A ⊗ A).left), IsGrpPullback A' A f φ → IsSquare φ φ₂ → QHyp A Q → QHyp A' (Q.pull φ₂) := by
   intro S S' f A _ _ A' _ φ φ₂ Q h hs hQ
   obtain ⟨hA, hL, ⟨t₁, ht₁⟩, ⟨t₂, ht₂⟩, hsym, hD⟩ := hQ
-  haveI : IsCommMonObj A' := GlobalTheory.isCommMonObj_of_grpPullback S S' A A' f φ h
+  have : IsCommMonObj A' := GlobalTheory.isCommMonObj_of_grpPullback S S' A A' f φ h
   have hone : (1 : A' ⟶ A').left ≫ φ = φ ≫ (1 : A ⟶ A).left := by
     rw [GlobalTheory.FlatModel.LiftW.one_left_comp_of_isGrpPullback h A', GlobalTheory.FlatModel.LiftW.one_left_eq,
       GlobalTheory.FlatModel.LiftW.one_left_eq, ← Category.assoc, h.1.w]
@@ -149,7 +149,7 @@ theorem GlobalTheory.ActFin.qHyp_pull_of_isGrpPullback : ∀ (S S' : Scheme.{0})
   have e₃ : (lift (snd A' A') (fst A' A')).left ≫ φ₂ = φ₂ ≫ (lift (snd A A) (fst A A)).left :=
     sq_comm hs _ _ (by rw [← Category.assoc, fl, Category.assoc, fl', hs.2])
       (by rw [← Category.assoc, sl, Category.assoc, sl', hs.1])
-  haveI := hA.proper
+  have := hA.proper
   refine ⟨⟨inferInstance, MorphismProperty.of_isPullback (P := @Smooth) h.1 hA.smooth,
     MorphismProperty.of_isPullback (P := @IsProper) h.1 hA.proper,
     MorphismProperty.of_isPullback (P := @GeometricallyConnected) h.1 hA.geomConnected⟩,

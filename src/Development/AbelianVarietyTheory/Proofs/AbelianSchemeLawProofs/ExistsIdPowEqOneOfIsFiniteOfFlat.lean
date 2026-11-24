@@ -94,7 +94,7 @@ theorem pow_card_eq_one {ι : Type*} [Fintype ι] (b : Module.Basis ι C F) (τ 
       x * postcomp B (IsScalarTower.toAlgHom R C F) u) :
     u ^ Fintype.card ι = 1 := by
   classical
-  letI : Algebra (WithConv (B →ₗ[R] C)) (WithConv (B →ₗ[R] F)) :=
+  let : Algebra (WithConv (B →ₗ[R] C)) (WithConv (B →ₗ[R] F)) :=
     (postcomp B (IsScalarTower.toAlgHom R C F)).toAlgebra
   have hsmul : ∀ (g : WithConv (B →ₗ[R] C)) (f : WithConv (B →ₗ[R] F)),
       g • f = postcomp B (IsScalarTower.toAlgHom R C F) g * f := fun _ _ => rfl
@@ -208,10 +208,10 @@ theorem exists_id_pow_eq_one [Module.Finite R B] [Module.Flat R B] :
     (fun P _ => Algebra.linearMap B (Localization.AtPrime P)) _ _ (fun m hm => ?_)
   let C := Localization.AtPrime m
   let u : B →ₐ[R] C := IsScalarTower.toAlgHom R B C
-  haveI : Module.Free C (C ⊗[R] B) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free C (C ⊗[R] B) := Module.free_of_flat_of_isLocalRing
   have h1 := point_pow_card (Module.finBasis C (C ⊗[R] B)) u
   rw [Fintype.card_fin] at h1
-  haveI : Nontrivial (C ⊗[R] B) :=
+  have : Nontrivial (C ⊗[R] B) :=
     (Algebra.TensorProduct.lift (AlgHom.id C C) u fun _ _ => Commute.all _ _).toRingHom.domain_nontrivial
   have hpos : 0 < Module.finrank C (C ⊗[R] B) :=
     (Module.finrank_pos_iff_of_free C (C ⊗[R] B)).2 inferInstance
@@ -258,26 +258,26 @@ theorem exists_id_pow_eq_one_of_isFinite_of_flat (R : Type) [CommRing R]
   have haff : IsAffine H.left := isAffine_of_isAffineHom H.hom
   obtain ⟨A, ⟨e⟩⟩ := (essImage_hopfSpec (G := Grp.mk H)).2 haff
   let B : Type := A.unop
-  letI : HopfAlgebra R B := A.unop.hopfAlgebra
+  let : HopfAlgebra R B := A.unop.hopfAlgebra
   let G : Over (Spec (CommRingCat.of R)) :=
     (Spec (CommRingCat.of B)).asOver (Spec (CommRingCat.of R))
-  letI : GrpObj G := instGrpObjSpecAsOverSpec (R := CommRingCat.of R) (A := CommRingCat.of B)
+  let : GrpObj G := instGrpObjSpecAsOverSpec (R := CommRingCat.of R) (A := CommRingCat.of B)
   let i : G ≅ H := (Grp.forget _).mapIso e
-  haveI : IsMonHom i.hom := e.hom.hom.isMonHom_hom
+  have : IsMonHom i.hom := e.hom.hom.isMonHom_hom
   obtain ⟨j, hj, hw⟩ : ∃ j : Spec (CommRingCat.of B) ⟶ H.left, IsIso j ∧
       Spec.map (CommRingCat.ofHom (algebraMap R B)) = j ≫ H.hom :=
     ⟨i.hom.left, inferInstanceAs (IsIso ((Over.forget _).map i.hom)), (Over.w i.hom).symm⟩
-  haveI : Module.Finite R B := by
+  have : Module.Finite R B := by
     have h1 : IsFinite (Spec.map (CommRingCat.ofHom (algebraMap R B))) := by
       rw [hw]; infer_instance
     rw [IsFinite.SpecMap_iff] at h1
     exact RingHom.finite_algebraMap.1 h1
-  haveI : Module.Flat R B := by
+  have : Module.Flat R B := by
     have h1 : Flat (Spec.map (CommRingCat.ofHom (algebraMap R B))) := by
       rw [hw]; infer_instance
     rw [Flat.SpecMap_iff] at h1
     exact RingHom.flat_algebraMap_iff.1 h1
-  haveI : Coalgebra.IsCocomm R B := isCocomm_of_mul_comm fun f g => by
+  have : Coalgebra.IsCocomm R B := isCocomm_of_mul_comm fun f g => by
     let φ := (Spec.mapMulEquiv (R := R) (S := B) (T := B ⊗[R] B)).trans
       (Hom.mulEquivCongrRight i _)
     apply φ.injective

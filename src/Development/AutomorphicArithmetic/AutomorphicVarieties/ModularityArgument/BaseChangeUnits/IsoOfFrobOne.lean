@@ -133,7 +133,7 @@ theorem UpperTheory.V.Z.Bc.downQuadS :
       (l : ℕ) [Fact l.Prime] (ι : Qbar l ≃+* ℂ) (r : G ℚ Ω →* GL (Fin 2) (Qbar l)) (hr : Continuous r)
       (hirr : IsIrr (r.comp (resG ℚ M Ω))) (hfin : ∃ N : ℕ, 0 < N ∧ ∀ s, Matrix.GeneralLinearGroup.det (r s) ^ N = 1), IsAut ι (r.comp (resG ℚ M Ω)) → IsAut ι r := by
   intro H cyc hG hR M Ω _ _ _ _ _ _ _ _ hp hM l _ ι r hr hirr hfin
-  haveI : Algebra.IsQuadraticExtension ℚ M := ⟨hp⟩
+  have : Algebra.IsQuadraticExtension ℚ M := ⟨hp⟩
   have hK : IsTotallyReal ℚ := inferInstance
   have hdown := cyc M hp inferInstance
   have hss : IsSSRep (r.comp (resG ℚ M Ω)) := (Bc.irrBasic.1 _ Unit _ 2 _).2.1 hirr

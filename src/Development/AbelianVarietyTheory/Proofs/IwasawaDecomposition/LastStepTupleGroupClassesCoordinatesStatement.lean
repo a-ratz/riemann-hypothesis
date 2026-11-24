@@ -97,7 +97,7 @@ theorem stpTop_groupClasses : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (u 
     obtain ⟨g, hg⟩ := S.exists_mv b pt
     refine ⟨S.cl b pt, g.1, g.2.1, g.2.2, ?_⟩
     exact (congrArg (fun x : PtAt (Pr := B.primes X) B.R I.sel (I.tup a) (I.cst a) u B.R.m => x.1.1) hg).trans hpt'
-  · haveI : NeZero (B.R.N B.R.m) := ⟨by have := N_m_succ B.R; omega⟩
+  · have : NeZero (B.R.N B.R.m) := ⟨by have := N_m_succ B.R; omega⟩
     obtain ⟨pt, -⟩ := exists_ptAt I.sel (I.tup a) (I.cst a) (R := B.R) (u := u) (j := B.R.m)
       (DecoF.base _ _ _ _ _)
     exact ⟨S.cl (Idx.top I.sel (I.tup a) (I.idx a) le_rfl) pt⟩

@@ -123,7 +123,7 @@ theorem normal_spec (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] 
     IsIntegrallyClosed ((Sp R).presheaf.stalk p) := by
   let q : PrimeSpectrum R := p
   have : IsIntegrallyClosed ((AlgebraicGeometry.Spec.structureSheaf R).presheaf.stalk q) := by
-    haveI : q.asIdeal.IsPrime := q.isPrime
+    have : q.asIdeal.IsPrime := q.isPrime
     exact isIntegrallyClosed_of_isLocalization (R := R) _ q.asIdeal.primeCompl
       (fun x hx => mem_nonZeroDivisors_of_ne_zero (fun h => hx (h ▸ q.asIdeal.zero_mem)))
   exact this
@@ -134,11 +134,11 @@ theorem normal_of_openImm {X Y : Scheme.{0}} (f : X ⟶ Y) [IsOpenImmersion f] (
 
 theorem glued_affine_curve_stalks_integrally_closed : LeafGlueNormal := by
   intro Ω L _ _ _ A B u h G y
-  haveI := G.hiA; haveI := G.hiB
+  have := G.hiA; have := G.hiB
   have hy : y ∈ Set.range G.iA.base ∪ Set.range G.iB.base := G.cover ▸ Set.mem_univ y
   rcases hy with ⟨z, rfl⟩ | ⟨z, rfl⟩
-  · haveI := h.2.2.2.2.2.1; exact normal_of_openImm G.iA z (normal_spec A z)
-  · haveI := h.2.2.2.2.2.2.1; exact normal_of_openImm G.iB z (normal_spec B z)
+  · have := h.2.2.2.2.2.1; exact normal_of_openImm G.iA z (normal_spec A z)
+  · have := h.2.2.2.2.2.2.1; exact normal_of_openImm G.iB z (normal_spec B z)
 
 theorem irr_union {X : Type} [TopologicalSpace X] {U V : Set X} (hU : IsIrreducible U) (hV : IsIrreducible V)
     (hVo : IsOpen U) (hi : (U ∩ V).Nonempty) (hc : U ∪ V = Set.univ) : IrreducibleSpace X := by
@@ -154,14 +154,14 @@ theorem irr_union {X : Type} [TopologicalSpace X] {U V : Set X} (hU : IsIrreduci
 
 theorem glued_affine_curve_is_integral_scheme : LeafGlueIntegral := by
   intro Ω L _ _ _ A B u h G
-  haveI := G.hiA; haveI := G.hiB
-  haveI : IrreducibleSpace G.C0 := by
+  have := G.hiA; have := G.hiB
+  have : IrreducibleSpace G.C0 := by
     have hA := (IrreducibleSpace.isIrreducible_univ (Sp A)).image G.iA.base G.iA.base.hom.continuous.continuousOn
     have hB := (IrreducibleSpace.isIrreducible_univ (Sp B)).image G.iB.base G.iB.base.hom.continuous.continuousOn
     rw [Set.image_univ] at hA hB
     refine irr_union hA hB G.iA.isOpenEmbedding.isOpen_range ?_ G.cover
     rw [G.inter]; exact Set.range_nonempty _
-  haveI : ∀ y : G.C0, _root_.IsReduced (G.C0.presheaf.stalk y) := by
+  have : ∀ y : G.C0, _root_.IsReduced (G.C0.presheaf.stalk y) := by
     intro y
     have hy : y ∈ Set.range G.iA.base ∪ Set.range G.iB.base := G.cover ▸ Set.mem_univ y
     rcases hy with ⟨z, rfl⟩ | ⟨z, rfl⟩
@@ -169,5 +169,5 @@ theorem glued_affine_curve_is_integral_scheme : LeafGlueIntegral := by
         (asIso (G.iA.stalkMap z)).commRingCatIsoToRingEquiv.injective
     · exact isReduced_of_injective (asIso (G.iB.stalkMap z)).commRingCatIsoToRingEquiv.toRingHom
         (asIso (G.iB.stalkMap z)).commRingCatIsoToRingEquiv.injective
-  haveI : IsReduced G.C0 := isReduced_of_isReduced_stalk _
+  have : IsReduced G.C0 := isReduced_of_isReduced_stalk _
   exact isIntegral_of_irreducibleSpace_of_isReduced _

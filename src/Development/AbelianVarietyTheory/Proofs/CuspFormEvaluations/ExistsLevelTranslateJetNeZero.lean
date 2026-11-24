@@ -146,7 +146,7 @@ theorem exists_jet_of_periods {ι A : Type} [Fintype ι] [AddCommGroup A] (p : A
     rw [hsup]
   obtain ⟨G, hG, hlaw, hG0⟩ := exists_section_jet_ne_zero Y θ hθ h0 _ q hq P' hne hdeg
   refine ⟨G, hG, fun a v => ?_, by rw [hP']; exact hG0⟩
-  rw [hlaw (p a) ((hb _).2 ⟨a, rfl⟩) v, hka, ← Complex.exp_nat_mul]
+  rw [hlaw (p a) ((hb _).2 ⟨a, rfl⟩) v, hka, ← exp_natCast_mul]
   congr 3
   push_cast
   ring

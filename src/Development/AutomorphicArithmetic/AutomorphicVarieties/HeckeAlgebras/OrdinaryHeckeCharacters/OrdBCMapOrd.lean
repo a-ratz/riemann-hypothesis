@@ -112,8 +112,8 @@ private theorem ordBC_valU (k n : ℕ) (f : X.Fn A m) (hf : f ∈ X.valIn A m k)
   | succ n ih =>
     rw [pow_succ', Module.End.mul_apply]
     generalize (X.U A m X.I.z ^ n) f = f' at ih
-    haveI : ((X.I.Nconj X.I.z).subgroupOf X.I.N).FiniteIndex := ⟨X.I.fin_N _ X.I.z_mem⟩
-    haveI : Fintype (X.I.N ⧸ (X.I.Nconj X.I.z).subgroupOf X.I.N) := Fintype.ofFinite _
+    have : ((X.I.Nconj X.I.z).subgroupOf X.I.N).FiniteIndex := ⟨X.I.fin_N _ X.I.z_mem⟩
+    have : Fintype (X.I.N ⧸ (X.I.Nconj X.I.z).subgroupOf X.I.N) := Fintype.ofFinite _
     unfold Frame.U Iwa.uOp
     rw [finsum_eq_sum_of_fintype, LinearMap.sum_apply]
     refine Submodule.sum_mem _ fun i _ => ?_
@@ -268,7 +268,7 @@ theorem UpperTheory.V.Hi.ordBC :
       map_smul' := fun c f => Subtype.ext (map_smul _ _ _) }
   refine ⟨j, fun _ => rfl, ?_⟩
   obtain ⟨h1, -, -, -, e, -, he⟩ := ordStruct X τ θ hθc U hU hF
-  haveI := (ordStruct X τ' θ' (fun k => (hθc k).imp fun c hc => ordBC_cont X hθ hc) U hU (ordBC_free X hτ hθ U hF)).1
+  have := (ordStruct X τ' θ' (fun k => (hθc k).imp fun c hc => ordBC_cont X hθ hc) U hU (ordBC_free X hτ hθ U hF)).1
   obtain ⟨c, hc⟩ := hθc 1
   obtain ⟨N, x, hx1, hx2⟩ := UpperTheory.exists_finite_iwahori_doubleCoset_representatives Γ Ga Gp X U hU c
   obtain ⟨s, hs⟩ := UpperTheory.exists_section_automorphicSpace_with_prescribed_values Γ Ga Gp X A m τ θ hθc U hF c N x hx1 hx2
@@ -276,7 +276,7 @@ theorem UpperTheory.V.Hi.ordBC :
   have hs2 : ∀ p i j, s (Pi.single p 1) (x i) j = if p = (i, j) then 1 else 0 := fun p i j => by
     rw [(hs _).2.1, Pi.single_apply]
     simp only [eq_comm]
-  haveI : IsLocalHom (algebraMap A A) := isLocalHom_id A
+  have : IsLocalHom (algebraMap A A) := isLocalHom_id A
   refine ordBC_abs j w
     (fun p => { toFun := fun f => (f : X.Fn A m) (x p.1) p.2, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl })
     (fun p => { toFun := fun f => (f : X.Fn B m) (x p.1) p.2, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl })

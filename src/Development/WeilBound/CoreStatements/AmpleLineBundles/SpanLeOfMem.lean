@@ -149,7 +149,7 @@ theorem rank_map (E E' : HermitianBundle.{0} K) (φ : E.carrier →ₗ[𝓞 K] E
 theorem rank_pos (E : HermitianBundle.{0} K) {F : Submodule (𝓞 K) E.carrier} (hF : F ≠ ⊥) :
     0 < E.rank F := by
   unfold HermitianBundle.rank
-  haveI : Nontrivial F := Submodule.nontrivial_iff_ne_bot.mpr hF
+  have : Nontrivial F := Submodule.nontrivial_iff_ne_bot.mpr hF
   exact Module.finrank_pos
 
 end CoverDenseAlt

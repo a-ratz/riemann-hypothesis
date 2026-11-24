@@ -87,7 +87,7 @@ private lemma mul_apply_subdiag_of_isLoUni {A B : Matrix (Fin N) (Fin N) K} (hA 
     · rw [(hB x a).1 hx, mul_zero]
     · have hbx : b < x := by
         have h1 : x.val ≠ a.val + 1 := fun e => hxb (Fin.ext e)
-        rw [Fin.lt_iff_val_lt_val] at hx ⊢
+        rw [Fin.lt_def] at hx ⊢
         simp only [b]; omega
       rw [(hA b x).1 hbx, zero_mul]
 
@@ -112,7 +112,7 @@ private lemma mul_apply_superdiag_of_isUpUni {A B : Matrix (Fin N) (Fin N) K} (h
     · rw [(hA a x).1 hx, zero_mul]
     · have hbx : b < x := by
         have h1 : x.val ≠ a.val + 1 := fun e => hxb (Fin.ext e)
-        rw [Fin.lt_iff_val_lt_val] at hx ⊢
+        rw [Fin.lt_def] at hx ⊢
         simp only [b]; omega
       rw [(hB x b).1 hbx, mul_zero]
 
@@ -139,9 +139,9 @@ private theorem pv_psigma_eq_pv : ∀ (bs : List (K × ℕ)) (i : ℕ), i < (bs.
     simp only [List.map_cons, List.sum_cons] at h
     by_cases hi : i < s
     · have h1 : s - 1 - i < s := by omega
-      simp only [pσ, pv, hi, h1, if_true]
+      simp only [pσ, pv, hi, h1, ite_true]
     · have h1 : ¬ s + pσ bs (i - s) < s := by omega
-      simp only [pσ, pv, hi, h1, if_false, Nat.add_sub_cancel_left]
+      simp only [pσ, pv, hi, h1, ite_false, Nat.add_sub_cancel_left]
       exact ih (i - s) (by omega)
 
 theorem same_phiF (p : Point K N) {a : ℕ} (hs : sameBF p.1 N a) :
@@ -282,7 +282,7 @@ theorem simple_eqF (p : Point K N) {n m : Matrix (Fin N) (Fin N) K} (hn : IsLoUn
       · rcases hadj p.1 a.val with hsame | hgt
         · exact absurd ⟨ha, hsame.1, hsame.2⟩ hS
         · have e : m ⟨pσ p.1 (a.val + 1), hlt _ ha⟩ ⟨pσ p.1 a.val, hlt _ a.isLt⟩ = 0 :=
-            (hm _ _).1 (by rw [Fin.lt_iff_val_lt_val]; exact hgt)
+            (hm _ _).1 (by rw [Fin.lt_def]; exact hgt)
           rw [e, mul_zero] at K1
           exact (mul_eq_zero.1 K1).resolve_right (hv _ a.isLt)
     · rw [dite_eq_right ha, dite_eq_right (fun hS => ha hS.1)]
@@ -298,7 +298,7 @@ theorem simple_eqF (p : Point K N) {n m : Matrix (Fin N) (Fin N) K} (hn : IsLoUn
         · have K1 := key ⟨pσ p.1 b.val, hlt _ b.isLt⟩ ⟨b.val + 1, hb⟩ ⟨pσ p.1 (b.val + 1), hlt _ hb⟩ b
             rfl (hinv _ b.isLt).symm
           have e : n ⟨pσ p.1 b.val, hlt _ b.isLt⟩ ⟨pσ p.1 (b.val + 1), hlt _ hb⟩ = 0 :=
-            (hn _ _).1 (by rw [Fin.lt_iff_val_lt_val]; exact hgt)
+            (hn _ _).1 (by rw [Fin.lt_def]; exact hgt)
           rw [e, zero_mul] at K1
           exact (mul_eq_zero.1 K1.symm).resolve_left (hv _ (hlt _ b.isLt))
     · rw [dite_eq_right hb, dite_eq_right (fun hS => hb hS.1)]
@@ -385,8 +385,8 @@ theorem expand_e (e fd : Fin r → Fin n → ℂ) (hfe : ∀ a b, hJ ε (fd a) (
   | mem x hx =>
     obtain ⟨b0, hb0, rfl⟩ := hx
     refine ⟨fun b hb => ?_, ?_⟩
-    · rw [hfe, if_neg]
-      intro h; subst h; exact absurd hb0 (by simp only [Set.mem_setOf_eq]; omega)
+    · rw [hfe, ite_eq_right]
+      intro h; subst h; exact absurd hb0 (by simp only [Set.mem_ofPred_eq]; omega)
     · simp only [hfe, ite_smul, one_smul, zero_smul]
       simp
   | zero => refine ⟨fun b _ => ?_, ?_⟩ <;> simp [hJ]
@@ -417,13 +417,13 @@ theorem frameMat_spec (e fd : Fin r → Fin n → ℂ) (z : Fin n → ℂ)
     | last =>
       refine ⟨fun hij => ?_, fun hij => ?_⟩
       · simp only [frameMat, Fin.lastCases_last]
-        rw [if_neg (ne_of_lt hij)]
+        rw [ite_eq_right (ne_of_lt hij)]
       · subst hij
         simp [frameMat]
     | cast b =>
       refine ⟨fun hij => ?_, fun hij => ?_⟩
       · simp only [frameMat, Fin.lastCases_castSucc]
-        rw [if_neg (ne_of_lt hij)]
+        rw [ite_eq_right (ne_of_lt hij)]
         have hi : i ≠ Fin.last r := fun h => by
           rw [h] at hij; exact absurd hij (not_lt.2 (Fin.le_last _))
         obtain ⟨a', rfl⟩ := Fin.exists_castSucc_eq.2 hi
@@ -441,16 +441,16 @@ theorem frameMat_spec (e fd : Fin r → Fin n → ℂ) (z : Fin n → ℂ)
     induction a using Fin.lastCases with
     | last =>
       have hx := (expand_e ε e fd hfe hsp_l).2
-      simp only [fam, Fin.snoc_castSucc, Fin.snoc_last, if_pos rfl] at hx ⊢
+      simp only [fam, Fin.snoc_castSucc, Fin.snoc_last, ite_eq_left rfl] at hx ⊢
       have h0 : ∀ b : Fin r, (if Fin.last r = b.castSucc then e b else 0) = 0 := fun b => by
-        rw [if_neg (Fin.castSucc_lt_last b).ne']
+        rw [ite_eq_right (Fin.castSucc_lt_last b).ne']
       simp only [h0, Finset.sum_const_zero, zero_add]
       rw [← hx]
       simp [add_comm]
     | cast b0 =>
       have hx := (expand_e ε e fd hfe (hsp_cs b0)).2
       simp only [fam, Fin.snoc_castSucc, Fin.snoc_last] at hx ⊢
-      rw [if_neg (Fin.castSucc_lt_last b0).ne, add_zero]
+      rw [ite_eq_right (Fin.castSucc_lt_last b0).ne, add_zero]
       have h0 : ∑ b : Fin r, (if b0.castSucc = b.castSucc then e b else 0) = e b0 := by
         simp [Fin.castSucc_inj]
       rw [h0, ← hx]

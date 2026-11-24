@@ -146,10 +146,10 @@ theorem e_ne_zero (x : ℂ) : eTwoPi x ≠ 0 := Complex.exp_ne_zero _
   rw [eTwoPi, mul_comm]; exact Complex.exp_int_mul_two_pi_mul_I n
 
 theorem e_nat_mul (n : ℕ) (x : ℂ) : eTwoPi (n * x) = eTwoPi x ^ n := by
-  rw [eTwoPi, eTwoPi, ← Complex.exp_nat_mul]; congr 1; ring
+  rw [eTwoPi, eTwoPi, ← Complex.exp_natCast_mul]; congr 1; ring
 
 theorem e_mul_intCast (x : ℂ) (n : ℤ) : eTwoPi (x * n) = eTwoPi x ^ n := by
-  rw [eTwoPi, eTwoPi, ← Complex.exp_int_mul]; congr 1; ring
+  rw [eTwoPi, eTwoPi, ← Complex.exp_intCast_mul]; congr 1; ring
 
 theorem e_neg_div (x : ℂ) : eTwoPi (-(x / (2 * Complex.I))) = Complex.exp (-(Real.pi * x)) := by
   rw [eTwoPi]; congr 1
@@ -513,7 +513,7 @@ theorem translate_mem_Theta {j : ℕ} {α : A.X} {th : (Fin A.gB → ℂ) → �
     have h1 : A.H (A.ct (α + j • μ)) l = A.H (A.ct α) l + j * A.H (A.ct μ) l := by
       rw [map_add (f := _), map_nsmul, H_add_left, ← Nat.cast_smul_eq_nsmul ℂ, H_smul_left]
     show th (z + l + A.ct μ) = _ * _ * th (z + A.ct μ)
-    rw [add_right_comm, h.2, ah_add, h1, mul_pow, ← Complex.exp_nat_mul, mul_add, Complex.exp_add,
+    rw [add_right_comm, h.2, ah_add, h1, mul_pow, ← Complex.exp_natCast_mul, mul_add, Complex.exp_add,
       mul_left_comm (Real.pi : ℂ) (j : ℂ)]
     ring⟩
 

@@ -73,8 +73,8 @@ theorem idem_mul_eq_zero {Z Z' : Comp Xo c} (h : Z ≠ Z') {G : WTZ D.host.E} {f
     _ = 0 := by rw [← mul_assoc, idem_mul_idem_of_ne h, zero_mul]
 
 theorem finsum_parts (f : Rul Xo c) : ∑ᶠ Z : Comp Xo c, idem Z * f = f := by
-  haveI := CompFin.finite_comp Xo c
-  haveI := Fintype.ofFinite (Comp Xo c)
+  have := CompFin.finite_comp Xo c
+  have := Fintype.ofFinite (Comp Xo c)
   rw [finsum_eq_sum_of_fintype, sum_idem_mul]
 
 theorem mem_latOn_part (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ)) {G : WTZ D.host.E} (F : cuspW Xo c U G)
@@ -88,8 +88,8 @@ theorem mem_latOn_part (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ)) {G : WTZ D.h
 
 theorem mem_latW_of_parts (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ)) {G : WTZ D.host.E} (F : cuspW Xo c U G)
     (h : ∀ Z, (⟨_, idem_mul_mem_cuspOn hU Z F⟩ : cuspOn U Z G) ∈ latOn U Z G) : F ∈ latW U G := by
-  haveI := CompFin.finite_comp Xo c
-  haveI := Fintype.ofFinite (Comp Xo c)
+  have := CompFin.finite_comp Xo c
+  have := Fintype.ofFinite (Comp Xo c)
   refine mem_supLat.2 ?_
   intro la v hv
   have hval := isVal_valSet la v hv
@@ -114,8 +114,8 @@ theorem cuspOn_indep (G : WTZ D.host.E) : iSupIndep (fun Z : Comp Xo c => cuspOn
 theorem iSup_cuspOn (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ)) (G : WTZ D.host.E) :
     ⨆ Z : Comp Xo c, cuspOn U Z G = cuspW Xo c U G := by
   refine le_antisymm (iSup_le fun Z => cuspOn_le U Z G) fun F hF => ?_
-  haveI := CompFin.finite_comp Xo c
-  haveI := Fintype.ofFinite (Comp Xo c)
+  have := CompFin.finite_comp Xo c
+  have := Fintype.ofFinite (Comp Xo c)
   rw [← sum_idem_mul F]
   exact Submodule.sum_mem _ fun Z _ => Submodule.mem_iSup_of_mem Z (idem_mul_mem_cuspOn hU Z ⟨F, hF⟩)
 
@@ -144,8 +144,8 @@ theorem partLat_indep (G : WTZ D.host.E) : iSupIndep (fun Z : Comp Xo c => partL
 theorem iSup_partLat (hU : ∀ σ, GoodEmb c σ → IsUnf (U σ)) (G : WTZ D.host.E) :
     ⨆ Z : Comp Xo c, partLat U Z G = latW U G := by
   refine le_antisymm (iSup_le fun Z => partLat_le U Z G) fun F hF => ?_
-  haveI := CompFin.finite_comp Xo c
-  haveI := Fintype.ofFinite (Comp Xo c)
+  have := CompFin.finite_comp Xo c
+  have := Fintype.ofFinite (Comp Xo c)
   have hF' : F = ∑ Z : Comp Xo c,
       (⟨idem Z * (F : Rul Xo c), GlobalTheory.CompRestr.idem_mul_mem_cuspW hU Z F.2⟩ : cuspW Xo c U G) := by
     apply Subtype.ext

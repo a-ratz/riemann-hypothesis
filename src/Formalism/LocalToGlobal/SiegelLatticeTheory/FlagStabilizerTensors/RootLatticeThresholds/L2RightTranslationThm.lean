@@ -102,8 +102,8 @@ theorem ineq (h : QuotientSetting G S μG μS ν) {F : MtM m → ℝ≥0∞} (hF
     {g : MtM m} (hg : Matrix.of g ∈ G) :
     ∫⁻ x, F (mm x g) ∂ν ≤ ∫⁻ x, F x ∂ν := by
   have hGg := h.1
-  haveI : SigmaFinite μG := h.2.2.2.1.1
-  haveI : SigmaFinite μS := h.2.2.2.2.1.1
+  have : SigmaFinite μG := h.2.2.2.1.1
+  have : SigmaFinite μS := h.2.2.2.2.1.1
   obtain ⟨f0, hf0pos, hf0m, hf0int⟩ := exists_pos_lintegral_lt_of_sigmaFinite μG (ε := 1) one_ne_zero
   set f : MtM m → ℝ≥0∞ := fun x => (f0 x : ℝ≥0∞) with hfdef
   have hfm : Measurable f := measurable_coe_nnreal_ennreal.comp hf0m
@@ -240,7 +240,7 @@ theorem l2RightTranslation_thm : L2RightTranslation := by
   have hcont : ContinuousOn F G := by
     have hW' : ContinuousOn (fun x : Formalism.QuantumDeterminants.Mt k r => W (Matrix.of x)) G :=
       hWc.comp continuous_id.continuousOn (fun x hx => hx)
-    exact (ENNReal.continuous_pow 2).comp_continuousOn (ENNReal.continuous_coe.comp_continuousOn hW'.nnnorm)
+    exact (ENNReal.continuous_pow 2).comp_continuousOn (ENNReal.continuous_coe.comp_continuousOn hW'.nnNorm)
   have hmeas : Measurable F := by
     rw [hFG]
     exact hcont.measurable_piecewise continuousOn_const hGc.measurableSet

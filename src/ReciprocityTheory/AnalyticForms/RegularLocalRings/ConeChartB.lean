@@ -55,7 +55,7 @@ noncomputable def jacSpanAt {σ : Type} (I : Ideal (MvPolynomial σ ℂ)) (z : �
 theorem locAt_isLocalRing_isNoetherian {σ : Type} [Finite σ] (I : Ideal (MvPolynomial σ ℂ))
     (z : σ → ℂ) (hz : ∀ h ∈ I, eval z h = 0) :
     IsLocalRing (locAt I z) ∧ IsNoetherianRing (locAt I z) := by
-  haveI := Fintype.ofFinite σ
+  have := Fintype.ofFinite σ
   have hle : I ≤ ptIdealOf z := fun h hh => by
     show h ∈ RingHom.ker (MvPolynomial.eval z : MvPolynomial σ ℂ →+* ℂ)
     exact hz h hh
@@ -65,7 +65,7 @@ theorem locAt_isLocalRing_isNoetherian {σ : Type} [Finite σ] (I : Ideal (MvPol
         (ptIdealOf z) = ⊤ := top_unique (htop ▸ Ideal.map_mono hle)
     rw [Localization.AtPrime.map_eq_maximalIdeal] at h1
     exact (IsLocalRing.maximalIdeal.isMaximal _).ne_top h1
-  haveI : Nontrivial (locAt I z) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : Nontrivial (locAt I z) := Ideal.Quotient.nontrivial_iff.2 hne
   exact ⟨IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective, inferInstance⟩
 
 theorem grad_renC {σ : Type} [Fintype σ] (z : σ → ℂ) (h : MvPolynomial σ ℂ) :
@@ -108,7 +108,7 @@ theorem finrank_cotangentSpace_locAt {σ : Type} [Fintype σ] (I : Ideal (MvPoly
     (z : σ → ℂ) [IsLocalRing (locAt I z)] :
     Module.finrank (ResidueField (locAt I z)) (CotangentSpace (locAt I z))
       + Module.finrank ℂ (jacSpanAt I z) = Fintype.card σ := by
-  haveI : IsNoetherianRing (locAt I z) := inferInstance
+  have : IsNoetherianRing (locAt I z) := inferInstance
   haveI : Nontrivial (locRing (I.map (renR σ : MvPolynomial σ ℂ →+* _)) (renPt z)) :=
     (locAtEquiv I z).symm.toEquiv.nontrivial
   haveI : IsLocalRing (locRing (I.map (renR σ : MvPolynomial σ ℂ →+* _)) (renPt z)) :=

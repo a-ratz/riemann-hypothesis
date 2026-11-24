@@ -124,7 +124,7 @@ theorem exp_apply_mem_topologicalClosure (hσ : IsURepOn (UJset ε) σ) (hD : Is
     | zero =>
       intro w hw
       simp only [Nat.cast_zero, zero_div, Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero]
-      rw [hσ.1.1, ContinuousLinearMap.one_apply]
+      rw [hσ.1.1, one_apply_eq_self]
       exact hsub w hw
     | succ j ih =>
       intro w hw

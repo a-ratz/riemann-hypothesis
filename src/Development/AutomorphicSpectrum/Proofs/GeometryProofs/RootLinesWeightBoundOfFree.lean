@@ -529,10 +529,10 @@ theorem rootModel_nefAt_of_hodgeCpt : FarguesHodgeTate → ∀ (E : Type) [Field
     cases j with
     | none => simp [Top.RootModel.coef]
     | some r => exact absurd r.2.2 (by omega)
-  · haveI : Fact p.Prime := ⟨𝔐.S_prime p hpS⟩
-    haveI : CharZero M.Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
+  · have : Fact p.Prime := ⟨𝔐.S_prime p hpS⟩
+    have : CharZero M.Ω := (RingHom.charZero_iff 𝔐.cst.injective).1 inferInstance
     let o := zpLocSubring M.Ω p
-    letI : Algebra o M.Ω := o.subtype.toAlgebra
+    let : Algebra o M.Ω := o.subtype.toAlgebra
     have ho : ∀ x : M.Ω, x ∈ (algebraMap o M.Ω).range ↔
         ∃ (a : ℤ) (b : ℕ), ¬ p ∣ b ∧ x = (a : M.Ω) / (b : M.Ω) := by
       intro x

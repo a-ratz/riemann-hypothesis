@@ -104,9 +104,9 @@ theorem UpperTheory.V.Br.potMove :
       right_inv := fun t => Subtype.ext (by dsimp only; group)
       map_mul' := fun s t => Subtype.ext (by simp only [Subgroup.coe_mul]; group) }
   have hφ : Continuous φ :=
-    ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
+    ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
   have hφs : Continuous φ.symm :=
-    ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
+    ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
   have hjE : ∀ x : F, Bw.j (g (algebraMap F Ω x)) = Bw.j (algebraMap F Ω x) := fun x => by
     rw [AlgEquiv.commutes]
   let Bw' : LocBridge l F Ω (Dec (F := F) A') O :=
@@ -275,7 +275,7 @@ end Alg
 private theorem res_cont {l : ℕ} {Γ E V : Type} [Group Γ] [TopologicalSpace Γ] [CommRing E] [AddCommGroup V]
     [Module E V] [TopologicalSpace V] (H : Subgroup Γ) (π : Representation E Γ V) (hπ : ContAction π) :
     ContAction (π.comp H.subtype : Representation E H V) :=
-  hπ.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
+  hπ.comp ((continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd)
 
 private theorem key (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime] {Γ : Type} [Group Γ] [TopologicalSpace Γ]
     [IsTopologicalGroup Γ] (φ : Γ →* GQ l) (hφ : IsOpenEmbedding φ) {E : Type} [Field E] [Algebra ℚ_[l] E]
@@ -435,13 +435,13 @@ private theorem cr_descend (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime
   classical
   let t : Set (Om l) := Set.range (fun p : Fin n × Fin n => (P : Matrix (Fin n) (Fin n) (Om l)) p.1 p.2) ∪
     Set.range (fun p : Fin n × Fin n => ((P⁻¹ : GL (Fin n) (Om l)) : Matrix (Fin n) (Fin n) (Om l)) p.1 p.2)
-  haveI : Finite t := ((Set.finite_range _).union (Set.finite_range _)).to_subtype
+  have : Finite t := ((Set.finite_range _).union (Set.finite_range _)).to_subtype
   let L₀ : FinExt l := ⟨IntermediateField.adjoin ℚ_[l] t,
     IntermediateField.finiteDimensional_adjoin fun z _ => (Algebra.IsAlgebraic.isAlgebraic z).isIntegral⟩
   obtain ⟨L, hL, hent⟩ := GlobalTheory.CompactRepField.exists_finExt_entries_mem l Γ n r₀ hr L₀
   obtain ⟨s, hs⟩ := GlobalTheory.CompactRepField.exists_hom_of_entries_mem r₀ L.1 hent
   have := L.2
-  haveI : IsModuleTopology ℚ_[l] ↥L.1 := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology ℚ_[l] ↥L.1 := isModuleTopologyOfFiniteDimensional
   have hPm : ∀ a b, (P : Matrix (Fin n) (Fin n) (Om l)) a b ∈ L.1 := fun a b =>
     hL (IntermediateField.subset_adjoin _ _ (Or.inl ⟨(a, b), rfl⟩))
   have hPi : ∀ a b, ((P⁻¹ : GL (Fin n) (Om l)) : Matrix (Fin n) (Fin n) (Om l)) a b ∈ L.1 := fun a b =>
@@ -498,7 +498,7 @@ private theorem cr_descend (hP : LocalPublishedTheorems) {l : ℕ} [Fact l.Prime
   have cu : ContAction ((colRep u).comp H.subtype : Representation ↥L.1 H (Fin n → ↥L.1)) :=
     res_cont (l := l) H _ (((continuous_matrix huc).comp continuous_fst).matrix_mulVec continuous_snd)
   have cs : ContAction (colRep (s.comp H.subtype)) :=
-    ((hsc.comp continuous_subtype_val).comp continuous_fst).matrix_mulVec continuous_snd
+    ((hsc.comp continuous_subtypeVal).comp continuous_fst).matrix_mulVec continuous_snd
   let f : (Fin n → ↥L.1) →ₗ[ℚ_[l]] (Fin n → ↥L.1) := (Matrix.toLin' Pv).restrictScalars ℚ_[l]
   refine ⟨L, s.comp H.subtype, fun h a b => hs h a b, ?_⟩
   refine ((isCrys_isDR_sub_quot _ hφH _ _ cu cs f (fun g x => ?_)).2 fun y => ⟨Matrix.toLin' Pm y, ?_⟩).1 hcr
@@ -558,9 +558,9 @@ private theorem muFix_open (F Ω : Type) [Field F] [Field Ω] [Algebra F Ω] [Is
     IsOpen (muFix F Ω M : Set (G F Ω)) := by
   have hfin : {ζ : Ω | ζ ^ M = 1}.Finite :=
     (Multiset.finite_toSet (Polynomial.nthRoots M (1 : Ω))).subset fun z hz => (Polynomial.mem_nthRoots hM).2 hz
-  haveI : Finite ↥{ζ : Ω | ζ ^ M = 1} := hfin.to_subtype
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : FiniteDimensional F (IntermediateField.adjoin F {ζ : Ω | ζ ^ M = 1}) :=
+  have : Finite ↥{ζ : Ω | ζ ^ M = 1} := hfin.to_subtype
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : FiniteDimensional F (IntermediateField.adjoin F {ζ : Ω | ζ ^ M = 1}) :=
     IntermediateField.finiteDimensional_adjoin fun z _ => (Algebra.IsAlgebraic.isAlgebraic z).isIntegral
   refine Subgroup.isOpen_mono (H₁ := (IntermediateField.adjoin F {ζ : Ω | ζ ^ M = 1}).fixingSubgroup) ?_
     (IntermediateField.fixingSubgroup_isOpen _)
@@ -575,19 +575,19 @@ theorem UpperTheory.V.Z.Keep.potOfUnl :
   obtain ⟨j, rfl⟩ := (Loc.decEmb (F := F) (Ω := Ω) (v := l)).1 A w hAw hw
   obtain ⟨-, φ, hφ, hφj, -, hIq, hcyc, -⟩ := (Loc.decEmb (F := F) (Ω := Ω) (v := l)).2 j
   have hcl : IsClosed (φ.range : Set (Loc.GQ l)) := φ.range.isClosed_of_isOpen hφ.isOpen_range
-  haveI : CompactSpace ↥(Dec (F := F) (Loc.placeJ j)) :=
+  have : CompactSpace ↥(Dec (F := F) (Loc.placeJ j)) :=
     (Topology.IsClosedEmbedding.mk hφ.isEmbedding hcl).compactSpace
-  haveI : T2Space ↥(Dec (F := F) (Loc.placeJ j)) := hφ.isEmbedding.t2Space
+  have : T2Space ↥(Dec (F := F) (Loc.placeJ j)) := hφ.isEmbedding.t2Space
   let H : Subgroup ↥(Dec (F := F) (Loc.placeJ j)) := (muFix F Ω M).subgroupOf _
-  haveI : (muFix F Ω M).Normal := muFix_normal F Ω M
-  haveI : H.Normal := Subgroup.Normal.subgroupOf inferInstance _
-  have hH : IsOpen (H : Set ↥(Dec (F := F) (Loc.placeJ j))) := (muFix_open F Ω hM).preimage continuous_subtype_val
+  have : (muFix F Ω M).Normal := muFix_normal F Ω M
+  have : H.Normal := Subgroup.Normal.subgroupOf inferInstance _
+  have hH : IsOpen (H : Set ↥(Dec (F := F) (Loc.placeJ j))) := (muFix_open F Ω hM).preimage continuous_subtypeVal
   have hcb : ∀ g : ↥(Dec (F := F) (Loc.placeJ j)), Loc.cycA l l (Loc.Om l) (φ g) = cycBar F Ω l (g : G F Ω) := fun g => by
     change Units.map _ (Loc.cyc l l (φ g)) = _
     rw [hcyc]
     rfl
   obtain ⟨E', r', hr', hcr⟩ := UpperTheory.V.Z.Keep.crDescend hP φ hφ H hH (r.comp (Dec (F := F) (Loc.placeJ j)).subtype)
-    (Units.continuous_val.comp (hr.comp continuous_subtype_val)) P κ m hPt hm
+    (Units.continuous_val.comp (hr.comp continuous_subtypeVal)) P κ m hPt hm
     (fun i g hg hg' => by
       have h1 := hIn i g ((hIq g).1 hg')
       rw [hχ i g.1 hg, mul_one] at h1
@@ -743,7 +743,7 @@ open UpperTheory.V.Th.End3
 private theorem theta_upper {k : Type} [Field k] (b : GL (Fin 3) k) (hb : b.val.BlockTriangular id) :
     (theta b).val.BlockTriangular id ∧ ∀ i, (theta b).val i i = (b.val i.rev i.rev)⁻¹ := by
   have hc : ((b⁻¹ : GL (Fin 3) k)).val.BlockTriangular id := by
-    haveI : Invertible b.val := ⟨(b⁻¹ : GL (Fin 3) k).val, Units.inv_mul b, Units.mul_inv b⟩
+    have : Invertible b.val := ⟨(b⁻¹ : GL (Fin 3) k).val, Units.inv_mul b, Units.mul_inv b⟩
     rw [Matrix.coe_units_inv]
     exact Matrix.blockTriangular_inv_of_blockTriangular hb
   have hd : ∀ i, ((b⁻¹ : GL (Fin 3) k)).val i i = (b.val i i)⁻¹ := fun i => by
@@ -834,7 +834,7 @@ private theorem move_link (ρ : G K Ω →* GL (Fin 3) (Qbar l)) (R : G ℚ Ω �
     Af.PotCrysAt ρ P' ∧ ∃ κ' : Fin 3 → ↥(Dec (F := K) P') →* (Qbar l)ˣ, Af.IsFlagOn ρ (Dec (F := K) P') κ' ∧
       ∃ i' j', ∀ s : ↥(Dec (F := K) P'), galEmb ℚ K Ω s ∈ T → κ' i' s = κ' j' s * cycBar K Ω l s := by
   have hinj : Function.Injective (galEmb ℚ K Ω) := (galEmbTop ℚ K Ω).1.injective
-  haveI hNr : (galEmb ℚ K Ω).range.Normal := by rw [range_galEmb]; exact hN
+  have hNr : (galEmb ℚ K Ω).range.Normal := by rw [range_galEmb]; exact hN
   let e := MonoidHom.ofInjective hinj
   let c : G K Ω ≃* G K Ω := (e.trans (MulAut.conjNormal u)).trans e.symm
   have hc : ∀ s, galEmb ℚ K Ω (c s) = u * galEmb ℚ K Ω s * u⁻¹ := fun s =>
@@ -1139,8 +1139,8 @@ private theorem UpperTheory.V.Z.Keep.KatoThreePlus.main :
     exact e3
   obtain ⟨pot, κ', ⟨Q', fl⟩, i', j', hl'⟩ := KatoThreePlus.move_link ρ (UnitaryThreeInertia.push A.val r) hρ' hK
     (by rw [← hker]; exact η.normal_ker) (galOf ℚ L Ω) u hTu Q (k.pl v) hAv κ hf hpotQ i j hlink
-  haveI hpir : IsPrincipalIdealRing A := IsDiscreteValuationRing.toIsPrincipalIdealRing
-  haveI hnoe : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
+  have hpir : IsPrincipalIdealRing A := IsDiscreteValuationRing.toIsPrincipalIdealRing
+  have hnoe : IsNoetherianRing A := PrincipalIdealRing.isNoetherianRing
   obtain ⟨ν, n1, n2, n3⟩ := Pr.exists_nrep3 k hok hl hσ r hr
   have key := hU
   have n4 : ∀ s, (ρ.comp (galEmb K L Ω) s).val = (ν.r (k.p0 s)).map A.val := fun s => by
@@ -1148,7 +1148,7 @@ private theorem UpperTheory.V.Z.Keep.KatoThreePlus.main :
     rfl
   have n5 : ∀ v i, ∀ g ∈ Φ.Iv v, (ν.ψ v i g).val =
       algebraMap c.O A (Chr.Psi l e (Chr.dirG ℚ Ω ψ) (k.j v g) ^ Fr.w 3 i).val := fun v i g hg => by
-    rw [n3 v i g hg, Fr.w, if_pos rfl]
+    rw [n3 v i g hg, Fr.w, ite_eq_left rfl]
     rfl
   have irr : ∀ U : Subgroup (G L Ω), IsOpen (U : Set (G L Ω)) → Af.IsIrr ((ρ.comp (galEmb K L Ω)).comp U.subtype) := by
     intro U hUo

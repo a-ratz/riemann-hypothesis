@@ -71,7 +71,7 @@ variable {k : Type} [Field k]
 
 theorem laurent_ext {F : Type} [CommRing F] [Algebra k F] {a b : FractionRing (PowerSeries k) →ₐ[k] F}
     (h : ∀ x : PowerSeries k, a (algebraMap _ _ x) = b (algebraMap _ _ x)) : a = b := by
-  apply AlgHom.coe_ringHom_injective
+  apply AlgHom.toRingHom_injective
   apply IsLocalization.ringHom_ext (nonZeroDivisors (PowerSeries k))
   exact RingHom.ext h
 

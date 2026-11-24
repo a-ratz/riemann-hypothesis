@@ -171,7 +171,7 @@ theorem stdBlocks_lt {s r : ℕ} (d : Fin s → ℕ) (hd : ∑ i, d i = r) {a b 
     rw [← Fin.sum_univ_eq_sum_range]
     refine Finset.sum_congr rfl fun x _ => ?_
     have hx : (x : ℕ) < s := x.2.trans c.2
-    simp only [f, hx, dif_pos]
+    simp only [f, hx, dite_eq_left]
     rfl
   rw [Fin.lt_def, stdBlocks_val, stdBlocks_val, key, key]
   have h1 : ∑ x ∈ Finset.range (b + 1), f x ≤ ∑ x ∈ Finset.range a, f x :=
@@ -251,7 +251,7 @@ theorem exists_lift_unipRad (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   refine ⟨GlobalTheory.LocGL.toKO k n u, CuspMax.mem_unipRad_iff_entries.2 fun i j hij => ?_, Units.ext ?_⟩
   · change algebraMap 𝒪[k] k ((u : Matrix n n 𝒪[k]) i j) = _
     rw [hu]
-    simp only [B, Matrix.of_apply, if_neg hij, Matrix.one_apply]
+    simp only [B, Matrix.of_apply, ite_eq_right hij, Matrix.one_apply]
     split_ifs <;> simp
   · simp only [GlobalTheory.LocGL.redK, MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, MulEquiv.symm_apply_apply]
     rw [← h1, ← hu]; rfl
@@ -301,9 +301,9 @@ theorem isClosed_of_isParabRad : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
     (P N : Subgroup (GL (Fin r) k)), IsParabRad P N → IsClosed (N : Set (GL (Fin r) k)) := by
   intro k _ _ _ _ r P N hPN
   obtain ⟨s, d, hd, g, -, rfl⟩ := hPN
-  haveI : T2Space k := by
-    letI := IsTopologicalAddGroup.rightUniformSpace k
-    haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  have : T2Space k := by
+    let := IsTopologicalAddGroup.rightUniformSpace k
+    have := isUniformAddGroup_of_addCommGroup (G := k)
     infer_instance
   have hU : IsClosed (unipRad k (stdBlocks d hd) : Set (GL (Fin r) k)) := by
     have : (unipRad k (stdBlocks d hd) : Set (GL (Fin r) k)) =
@@ -332,7 +332,7 @@ theorem integral_swap_of_support : ∀ (G : Type) [Group G] [TopologicalSpace G]
     ∫ u : N, (∫ z, Φ z u ∂μ) ∂ν = ∫ z, (∫ u : N, Φ z u ∂ν) ∂μ := by
   intro G _ _ _ _ _ _ μ _ N hN ν _ Φ hΦ C D hC hD hsupp
   refine (integral_integral_swap_of_hasCompactSupport (f := fun (z : G) (u : N) => Φ z u) (μ := μ) (ν := ν)
-    (hΦ.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd))) ?_).symm
+    (hΦ.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd))) ?_).symm
   refine HasCompactSupport.intro (hC.prod (hN.isClosedEmbedding_subtypeVal.isCompact_preimage hD)) fun p hp => ?_
   by_contra hne
   obtain ⟨h1, h2⟩ := hsupp _ _ hne
@@ -377,9 +377,9 @@ theorem conj_stdMaxRad_le (F : Type) [Field F] {r a b : ℕ} (h : a + b = r) (P 
 theorem typeConstTermVanish : TypeConstTermVanish := by
   intro k _ _ _ _ r a b h _ _ W _ _ _ τ _ hfix _ _ μ _ φ hφ f hf P N hPN hP ν _ x y
   obtain ⟨g₀, hP⟩ := hP
-  haveI : T2Space k := by
-    letI := IsTopologicalAddGroup.rightUniformSpace k
-    haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  have : T2Space k := by
+    let := IsTopologicalAddGroup.rightUniformSpace k
+    have := isUniformAddGroup_of_addCommGroup (G := k)
     infer_instance
   have hNa := conj_stdMaxRad_le k h P N hPN g₀ hP
   have hNc := isClosed_of_isParabRad k P N hPN
@@ -412,7 +412,7 @@ theorem typeConstTermVanish : TypeConstTermVanish := by
       (by
         have : ((GlobalTheory.LocGL.redK k (Fin r)).ker : Set (KO k (Fin r))) = Subtype.val ⁻¹' (KOne k (Fin r) : Set _) := by
           ext g; exact GlobalTheory.LocGL.redK_eq_one_iff g
-        rw [this]; exact GlobalTheory.StepData.isOpen_KOne.preimage continuous_subtype_val)
+        rw [this]; exact GlobalTheory.StepData.isOpen_KOne.preimage continuous_subtypeVal)
   have hfSB : f ∈ SB (GL (Fin r) k) := by
     rcases hf with rfl | rfl
     · exact GlobalTheory.Orb.conv_mem_SB heSB hφ

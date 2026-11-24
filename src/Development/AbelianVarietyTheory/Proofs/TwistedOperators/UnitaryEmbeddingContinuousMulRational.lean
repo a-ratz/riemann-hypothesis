@@ -157,15 +157,15 @@ theorem unitaryEmbedding_rational (d : HermitianOrthogonalExtensionData A B c ε
 
 set_option synthInstance.maxHeartbeats 400000 in
 theorem continuous_unitaryEmbedding (d : HermitianOrthogonalExtensionData A B c ε) : Continuous (stabilizerEmbedding d) := by
-  haveI : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (AF D.host.F) _
   have hf : ∀ {f : GA D A → Matrix (Fin A.rank) (Fin A.rank) (AF D.host.F ⊗[D.host.F] D.host.E)}, Continuous f →
       Continuous fun h => ex ((frameMat B A d.ι).map (incA D)) ((qM d).map (incA D)) (f h) := fun hc =>
     continuous_const.add ((continuous_const.matrix_mul (hc.sub continuous_const)).matrix_mul continuous_const)
   have hv : Continuous fun h : GA D A => (matHom A h).1 :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hi : Continuous fun h : GA D A => (matHom A h⁻¹).1 :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   let φ : GA D A →* GA D B := MonoidHom.mk' (stabilizerEmbedding d) (unitaryEmbedding_mul d)
   have hc : Continuous fun h => matHom B (stabilizerEmbedding d h) := by
     refine Units.continuous_iff.2 ⟨(hf hv).congr fun h => (unitaryEmbedding_matrix_formula d h).symm, (hf hi).congr fun h => ?_⟩

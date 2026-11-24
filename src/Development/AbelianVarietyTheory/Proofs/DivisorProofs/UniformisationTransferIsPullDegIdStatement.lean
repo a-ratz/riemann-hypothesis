@@ -398,7 +398,7 @@ theorem exists_unif_of_isPullDeg_id {R : Type} [CommRing R] [IsDomain R] {I : Id
     ∃ U' : Unif I D' A G, U'.LG = U.LG ∧ U'.gen = U.gen := by
   have hs := specOf_id R
   let ε : G ≅ G := Iso.refl G
-  haveI hε : IsMonHom ε.hom := show IsMonHom (𝟙 G) from inferInstance
+  have hε : IsMonHom ε.hom := show IsMonHom (𝟙 G) from inferInstance
   have gp₁ : IsGrpPullback G G (specOf (RingHom.id R)) ε.hom.left :=
     (isGrpPullback_of_iso ε).congr hs.symm rfl
   obtain ⟨bc, mbc, hbc⟩ := grpPullback_iso gp₁ (isGrpPullback_pullback G (specOf (RingHom.id R)))

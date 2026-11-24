@@ -136,7 +136,7 @@ theorem socle_ne_zero {O : Type} [CommRing O] [IsDomain O] {ϖ : O} (hϖ : Irred
 
 theorem exists_generating_character : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (ϖ : O), Irreducible ϖ → ∀ (r N : ℕ), 0 < N → Finite (O ⧸ Ideal.span {ϖ ^ r}) → ((N : O) ∈ Ideal.span {ϖ ^ r}) → ∃ ψ₀ : (O ⧸ Ideal.span {ϖ ^ r}) →+ ZMod N, (∀ x, (∀ o, ψ₀ (o * x) = 0) → x = 0) ∧ ∀ ψ : (O ⧸ Ideal.span {ϖ ^ r}) →+ ZMod N, ∃ o, ∀ x, ψ x = ψ₀ (o * x) := by
   intro O _ _ _ ϖ hϖ r N hN hfin hNmem
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   have htors : ∀ a : O ⧸ Ideal.span {ϖ ^ r}, N • a = 0 := by
     intro a
     have hN0 : ((N : O ⧸ Ideal.span {ϖ ^ r})) = 0 := by
@@ -171,7 +171,7 @@ theorem exists_generating_character : ∀ (O : Type) [CommRing O] [IsDomain O] [
       rw [sub_mul, map_sub, h6, sub_self]
     have h7 : a - b = 0 := hψ₀ (a - b) (fun o => by rw [mul_comm]; exact h0 o)
     exact sub_eq_zero.1 h7
-  haveI : Finite ((O ⧸ Ideal.span {ϖ ^ r}) →+ ZMod N) :=
+  have : Finite ((O ⧸ Ideal.span {ϖ ^ r}) →+ ZMod N) :=
     Finite.of_injective (fun f : (O ⧸ Ideal.span {ϖ ^ r}) →+ ZMod N =>
       (f : (O ⧸ Ideal.span {ϖ ^ r}) → ZMod N)) DFunLike.coe_injective
   have hbij := hinj.bijective_of_nat_card_le (GlobalTheory.natCard_addMonoidHom_zmod_le N _)

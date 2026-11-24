@@ -266,7 +266,7 @@ theorem T_add (a : Q p d) (k : Fin d) : T t (a + u p k 0) = T t a * t k := by
     intro j
     by_cases hj : j = k
     · subst hj
-      simp only [Pi.add_apply, AddSubmonoid.coe_add, u_zero_apply_self, if_true]
+      simp only [Pi.add_apply, AddSubmonoid.coe_add, u_zero_apply_self, ite_true]
       rw [Nat.floor_add_one (a j).2.1, pow_succ]
     · simp [u_zero_apply_ne hj, hj]
   simp only [T, h, Finset.prod_mul_distrib]
@@ -475,7 +475,7 @@ noncomputable def rootExt : RootExt p D t where
 theorem nonempty_rootExt : ∀ (p : ℕ), p.Prime → ∀ (D : Type) [CommRing D] {d : ℕ} (t : Fin d → D),
     Nonempty (RootExt p D t) := by
   intro p hp D _ d t
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   exact ⟨rootExt t⟩
 
 end GlobalTheory.CompanionTheory.RootAdjoin

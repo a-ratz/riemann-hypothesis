@@ -137,7 +137,7 @@ private theorem avg_const {H : Type} [Group H] (c : ℂ) : avg (fun _ : H => c) 
     simp [rStab]
   unfold avg
   rw [hs, Subgroup.index_top]
-  haveI : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
+  have : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
   rw [finsum_eq_single _ (1 : H ⧸ (⊤ : Subgroup H)) (fun x hx => absurd (Subsingleton.elim _ _) hx)]
   simp
 

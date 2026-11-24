@@ -116,20 +116,20 @@ theorem _root_.PositivityTheory.SiegelWeilFormula.SD_k.chiW_cont_pf (w : Infinit
   have hU : Continuous U := by
     rw [Units.continuous_iff]
     constructor
-    · exact (_root_.PositivityTheory.SiegelWeilFormula.KC.uW_cont_k d w).comp continuous_subtype_val
+    · exact (_root_.PositivityTheory.SiegelWeilFormula.KC.uW_cont_k d w).comp continuous_subtypeVal
     · have e : ∀ z : {z : ℂ // z ≠ 0}, ((U z)⁻¹ : (AE F E)ˣ).1 = d.uW w (z.1)⁻¹ := fun z =>
         Units.inv_eq_of_mul_eq_one_right (by
           show d.uW w z.1 * d.uW w (z.1)⁻¹ = 1
           rw [← _root_.PositivityTheory.SiegelWeilFormula.KC.uW_mul_k, mul_inv_cancel₀ z.2, _root_.PositivityTheory.SiegelWeilFormula.KC.uW_one_k])
       simp only [e]
-      exact (_root_.PositivityTheory.SiegelWeilFormula.KC.uW_cont_k d w).comp (continuous_subtype_val.inv₀ fun z => z.2)
+      exact (_root_.PositivityTheory.SiegelWeilFormula.KC.uW_cont_k d w).comp (continuous_subtypeVal.inv₀ fun z => z.2)
   have e : Set.domRestrict {z : ℂ | z ≠ 0} (d.chiW w) = fun z => ((d.χ (U z) : Circle) : ℂ) := by
     funext z
     rw [Set.domRestrict_apply]
     unfold _root_.PositivityTheory.SiegelWeilFormula.SD_k.chiW
     rw [dite_eq_left (_root_.PositivityTheory.SiegelWeilFormula.KC.uW_isUnit_k d w z.2)]
   rw [e]
-  exact continuous_subtype_val.comp (d.ok.hecke.1.comp hU)
+  exact continuous_subtypeVal.comp (d.ok.hecke.1.comp hU)
 theorem _root_.PositivityTheory.SiegelWeilFormula.SD_k.chiW_pos_pf (w : InfinitePlace F) : ∀ r : ℝ, 0 < r → d.chiW w (r : ℂ) = 1 := by
   intro r hr
   set t := Real.sqrt r with ht
@@ -157,7 +157,7 @@ theorem _root_.PositivityTheory.SiegelWeilFormula.SD_k.chiW_pos_pf (w : Infinite
       show algebraMap (AF F) (AE F E) (Algebra.norm (AF F) (d.uW w t)) = d.uW w (r : ℂ)
       rw [hn, huw])
   have hres := d.ok.res a
-  rw [if_pos (Subgroup.mem_sup_right (MonoidHom.mem_range.mpr ⟨u, rfl⟩))] at hres
+  rw [ite_eq_left (Subgroup.mem_sup_right (MonoidHom.mem_range.mpr ⟨u, rfl⟩))] at hres
   unfold _root_.PositivityTheory.SiegelWeilFormula.SD_k.chiW
   rw [dite_eq_left (_root_.PositivityTheory.SiegelWeilFormula.KC.uW_isUnit_k d w hr0), ← ha]
   exact hres

@@ -69,8 +69,8 @@ theorem adjoin_ratios_of_span_eq_top :
       simp only [← mul_div_assoc, ← Finset.sum_div, h2, one_div]
     rw [h3]
     exact R'.sum_mem fun i _ => R'.mul_mem (h (a i).2) (hrat i)
-  letI : Algebra R R' := (Subalgebra.inclusion h).toRingHom.toAlgebra
-  haveI : IsScalarTower K R R' := IsScalarTower.of_algebraMap_eq fun x => rfl
+  let : Algebra R R' := (Subalgebra.inclusion h).toRingHom.toAlgebra
+  have : IsScalarTower K R R' := IsScalarTower.of_algebraMap_eq fun x => rfl
   have halg : ∀ x : R, ((algebraMap R R' x : R') : Ω) = x := fun x => rfl
   have hsurj : ∀ z : Ω, z ∈ R' → ∃ (n : ℕ) (a : R), z * (w k : Ω) ^ n = a := by
     intro z hz
@@ -93,7 +93,7 @@ theorem adjoin_ratios_of_span_eq_top :
       refine ⟨n + n', a * b, ?_⟩
       push_cast
       rw [← ha, ← hb]; ring
-  haveI hloc : IsLocalization.Away (w k) R' := by
+  have hloc : IsLocalization.Away (w k) R' := by
     refine IsLocalization.Away.mk (w k) ?_ ?_ ?_
     · refine IsUnit.of_mul_eq_one ⟨_, hinv⟩ ?_
       apply Subtype.ext
@@ -107,7 +107,7 @@ theorem adjoin_ratios_of_span_eq_top :
       have : (a : Ω) = b := by rw [← halg a, ← halg b, hab]
       rw [Subtype.ext this]
   refine ⟨h, hinv, fun hs => ?_, fun L _ _ ψ hψ => ?_⟩
-  · haveI : Algebra.Smooth R R' := Algebra.Smooth.of_isLocalization_Away (w k)
+  · have : Algebra.Smooth R R' := Algebra.Smooth.of_isLocalization_Away (w k)
     exact Algebra.Smooth.comp K R R'
   · have hu : IsUnit ((ψ : R →+* L) (w k)) := isUnit_iff_ne_zero.2 hψ
     let φ : R' →+* L := IsLocalization.Away.lift (w k) hu

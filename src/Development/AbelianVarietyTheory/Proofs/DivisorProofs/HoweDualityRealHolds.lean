@@ -380,7 +380,7 @@ theorem ccrM_comm [Fintype W] (H : (∀ w : W, Matrix (Ix (P w) (Q w)) (Ix (R w)
   rw [sum_unitAtS] at h11 h1i hi1 hii
   by_cases hjk : j = k
   · rw [hjk]
-  · simp only [if_neg hjk, Complex.zero_im, Complex.ofReal_zero, mul_zero, zero_smul, sub_eq_zero] at h11 h1i hi1 hii
+  · simp only [ite_eq_right hjk, Complex.zero_im, Complex.ofReal_zero, mul_zero, zero_smul, sub_eq_zero] at h11 h1i hi1 hii
     unfold ccrM
     have c : Commute (H (unitAtS j 1) - (lineSign j.2.1 j.2.2 * Complex.I) • H (unitAtS j Complex.I))
         (H (unitAtS k 1) - (lineSign k.2.1 k.2.2 * Complex.I) • H (unitAtS k Complex.I)) :=
@@ -399,7 +399,7 @@ theorem ccrD_ccrM_comm [Fintype W] (H : (∀ w : W, Matrix (Ix (P w) (Q w)) (Ix 
   have hpi : (Real.pi : ℂ) ≠ 0 := by exact_mod_cast Real.pi_ne_zero
   by_cases h : j = k
   · subst h
-    simp only [if_true, smul_smul, ← sub_smul, ← add_smul, ← neg_smul]
+    simp only [ite_true, smul_smul, ← sub_smul, ← add_smul, ← neg_smul]
     conv_rhs => rw [← one_smul ℂ (1 : Module.End ℂ V)]
     congr 1
     rcases lineSign_cases j.2.1 j.2.2 with h | h
@@ -501,7 +501,7 @@ theorem polMapD_index_injective (W : Type) [Fintype W] (Λ : W → Type) :
     rw [Finsupp.finsetSum_apply, Finset.sum_eq_single w]
     · exact Finsupp.mapDomain_apply_of_injective sigma_mk_injective _ _
     · intro v _ hv
-      apply Finsupp.mapDomain_notin_range
+      apply Finsupp.mapDomain_of_notMem_range
       rintro ⟨x, hx⟩
       exact hv (congrArg Sigma.fst hx)
     · intro h
@@ -1101,9 +1101,9 @@ theorem exists_bridgeD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       congr 2
       generalize Ψl y w = X
       rcases Int.units_eq_one_or (ε w) with h1 | h1
-      · rw [h1, if_neg (by decide)]
+      · rw [h1, ite_eq_right (by decide)]
         simp
-      · rw [h1, if_pos rfl, one_smul, two_smul, sub_add_cancel_left]
+      · rw [h1, ite_eq_left rfl, one_smul, two_smul, sub_add_cancel_left]
         simp [Matrix.mul_neg, Matrix.neg_mul]
     · rw [← hΨl, hΨJ]
       rfl
@@ -1192,7 +1192,7 @@ theorem vacLineD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     obtain ⟨u, u', u₁, c, hu, hu', -, hc, hc', -, h0, h', -⟩ := hy y
     have key := hyp u u' hu hu' c hc hc' (D u f₀) (D u' f₀) (hDu u hu f₀).1 (hDu u' hu' f₀).1
     have := congrArg (fun g : SInf F κ => g x) key
-    simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
+    simp only [smul_apply, smul_eq_mul] at this
     rw [hDx u hu, hDx u' hu', h0, h'] at this
     exact this
   set g₀ := Φ (PiTensorProduct.tprod ℂ fun _ => 1) with hg₀
@@ -1205,7 +1205,7 @@ theorem vacLineD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     have e1 := _root_.GlobalTheory.SDUnique.sd_unique (hDu u₁ hu₁ g₀).1 (hΦ.2 u₁ hu₁ _ hc₁ _)
     rw [_root_.GlobalTheory.FockVacD.sumPl_heisOp_vacuum_dep, map_smul, ← e0] at e1
     have := congrArg (fun g : SInf F κ => g x) e1
-    simp only [SchwartzMap.smul_apply, smul_eq_mul] at this
+    simp only [smul_apply, smul_eq_mul] at this
     rw [hDx u hu, hDx u₁ hu₁, h0, h1] at this
     exact this
   obtain ⟨z, hz⟩ := _root_.GlobalTheory.VacCore.schwartz_vacuum_eq_smul (trPair F κ) (fun y h => _root_.GlobalTheory.VacLn.trPair_nondeg y h) J e e' hJ he hJe he1 he2 f₀ g₀ hg0 hg hf

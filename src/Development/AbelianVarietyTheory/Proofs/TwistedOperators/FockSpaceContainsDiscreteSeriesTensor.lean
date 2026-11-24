@@ -113,7 +113,7 @@ theorem inner_orbit_eq_zero {p q : ℕ} {T : GrpData p q} (D : DSRep T) {Y : Mat
   have h0 : ∀ k, g k 0 = 0 := by
     intro k
     subst hg
-    simp only [zero_smul, T.expt_zero, map_one, ContinuousLinearMap.one_apply]
+    simp only [zero_smul, T.expt_zero, map_one, one_apply_eq_self]
     exact hw _
   have key := GlobalTheory.FactorialJet.eq_zero_of_factorial_bound ℂ g (‖w‖ * C) ρ
     (mul_nonneg (norm_nonneg w) hC) hρ hd hb' h0 0 t
@@ -177,14 +177,14 @@ theorem dense_range_of_factorial_bound : ∀ (p q : ℕ), 1 ≤ p + q → ∀ (T
     | mem a ha => exact hgen a ha
     | one =>
       intro x hx
-      rw [inv_one, map_one, ContinuousLinearMap.one_apply]
+      rw [inv_one, map_one, one_apply_eq_self]
       exact ⟨hx, hx⟩
     | mul a b _ _ ha hb' =>
       intro x hx
       refine ⟨?_, ?_⟩
-      · rw [map_mul, ContinuousLinearMap.mul_apply]
+      · rw [map_mul, mul_apply_eq_comp]
         exact (ha _ (hb' x hx).1).1
-      · rw [mul_inv_rev, map_mul, ContinuousLinearMap.mul_apply]
+      · rw [mul_inv_rev, map_mul, mul_apply_eq_comp]
         exact (hb' _ (ha x hx).2).2
     | inv a _ ha =>
       intro x hx
@@ -235,7 +235,7 @@ theorem derived_adjoint_and_casimir (p q : ℕ) (T : GrpData p q) (πU : URep T)
     have h := (h₁ Y hY x).inner ℂ (h₂ Y hY y)
     simp only [inner_pi_pi] at h
     have h0 := h.unique (hasDerivAt_const (0 : ℝ) _)
-    simp only [zero_smul, T.expt_zero, map_one, ContinuousLinearMap.one_apply] at h0
+    simp only [zero_smul, T.expt_zero, map_one, one_apply_eq_self] at h0
     linear_combination h0
   have hZ : ∀ Z x y, inner ℂ (E₁ (a₁ Z x)) (E₂ y) = inner ℂ (E₁ x) (E₂ (a₂ (adjZ Z) y)) := by
     intro Z x y
@@ -306,7 +306,7 @@ private theorem J_pi_expt_iota_eq {p q : ℕ} {T : GrpData p q} (D : DSRep T) (�
         _ ≤ 2 * (C * ρ ^ k * (k.factorial : ℝ)) := by gcongr; exact hk k
         _ = 2 * C * ρ ^ k * (k.factorial : ℝ) := by ring
     · intro k
-      simp only [g, zero_smul, T.expt_zero, map_one, ContinuousLinearMap.one_apply, hJ, sub_self]
+      simp only [g, zero_smul, T.expt_zero, map_one, one_apply_eq_self, hJ, sub_self]
   have h0 := key 0 t
   simp only [g, pow_zero, Module.End.one_apply] at h0
   exact (sub_eq_zero.mp h0).symm
@@ -339,24 +339,24 @@ theorem exists_isometry_intertwiner_of_derived :
     exact fun x => congrFun hfun x
   have cancelU : ∀ (a : T.G) (z : πU.H), πU.π a⁻¹ (πU.π a z) = z := by
     intro a z
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one,
+      one_apply_eq_self]
   have cancelD : ∀ (a : T.G) (z : D.U.H), D.U.π a (D.U.π a⁻¹ z) = z := by
     intro a z
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one,
-      ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one,
+      one_apply_eq_self]
   let S : Subgroup T.G :=
     { carrier := {a | ∀ x, J (D.U.π a x) = πU.π a (J x)}
       one_mem' := by
-        simp only [Set.mem_setOf_eq, map_one, ContinuousLinearMap.one_apply, implies_true]
+        simp only [Set.mem_ofPred_eq, map_one, one_apply_eq_self, implies_true]
       mul_mem' := by
         intro a b ha hb' x
-        simp only [Set.mem_setOf_eq] at ha hb'
-        simp only [map_mul, ContinuousLinearMap.mul_apply]
+        simp only [Set.mem_ofPred_eq] at ha hb'
+        simp only [map_mul, mul_apply_eq_comp]
         rw [ha, hb']
       inv_mem' := by
         intro a ha x
-        simp only [Set.mem_setOf_eq] at ha
+        simp only [Set.mem_ofPred_eq] at ha
         have h1 := ha (D.U.π a⁻¹ x)
         rw [cancelD] at h1
         rw [h1, cancelU] }
@@ -390,8 +390,8 @@ theorem exists_repr_on_finiteDimensional {V H : Type} [AddCommGroup V] [Module �
     ∃ a ∈ W, ∀ x ∈ W, inner ℂ (E a) (E x) = f x := by
   classical
   let e : W ≃ₗ[ℂ] W.map E := Submodule.equivMapOfInjective E hE W
-  haveI : FiniteDimensional ℂ (W.map E) := LinearEquiv.finiteDimensional e
-  haveI : CompleteSpace (W.map E) := FiniteDimensional.complete ℂ (W.map E)
+  have : FiniteDimensional ℂ (W.map E) := LinearEquiv.finiteDimensional e
+  have : CompleteSpace (W.map E) := FiniteDimensional.completeSpace ℂ (W.map E)
   let g : W.map E →ₗ[ℂ] ℂ := (f.comp W.subtype).comp e.symm.toLinearMap
   let v : W.map E := (InnerProductSpace.toDual ℂ (W.map E)).symm (LinearMap.toContinuousLinearMap g)
   refine ⟨(e.symm v : V), (e.symm v).2, fun x hx => ?_⟩
@@ -453,9 +453,9 @@ theorem norm_proportional_of_irreducible (p q : ℕ) (M : GKMod p q) (Λ : Ix p 
     intro y
     obtain ⟨W₁, hW₁f, hyW₁, hW₁K⟩ := M.kfin y
     obtain ⟨W₀, hW₀f, hv₀W₀, hW₀K⟩ := M.kfin v₀
-    haveI := hW₁f
-    haveI := hW₀f
-    haveI : FiniteDimensional ℂ ↥(W₁ ⊔ W₀) := Submodule.finiteDimensional_sup W₁ W₀
+    have := hW₁f
+    have := hW₀f
+    have : FiniteDimensional ℂ ↥(W₁ ⊔ W₀) := Submodule.finiteDimensional_sup W₁ W₀
     have hWK : ∀ X, IsKC X → ∀ w ∈ W₁ ⊔ W₀, M.act X w ∈ W₁ ⊔ W₀ := by
       intro X hX w hw
       obtain ⟨w₁, hw₁, w₀, hw₀, rfl⟩ := Submodule.mem_sup.mp hw
@@ -613,7 +613,7 @@ variable {p q r s : ℕ} {T0 : GrpData (p * r + q * s) (p * s + q * r)} {T1 : Gr
 
 theorem fock_comm (F : FockData T0 T1 T2) (g : T1.G) (h : T2.G) (x : F.H) :
     F.π (1, h) (F.π (g, 1) x) = F.π (g, 1) (F.π (1, h) x) := by
-  rw [← ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, ← map_mul, ← map_mul]
+  rw [← mul_apply_eq_comp, ← mul_apply_eq_comp, ← map_mul, ← map_mul]
   simp
 
 theorem opE_comm (F : FockData T0 T1 T2) (e : T1.G → ℂ) (h : T2.G) (x : F.H) :
@@ -826,7 +826,7 @@ theorem arii_of (X : ProvA) (hD1 : DiscreteSeriesBlattner X) (hD3 : DiscreteSeri
   · rw [← hT3, ← hT4 (F.π (1, h)) (D'.U.π h) (fun g z => fock_comm F g h z)
       (fun y => (hj1 h y).symm)]
     show _ = F.π (g, 1) (F.π (1, h) _)
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one, one_mul]
+    rw [← mul_apply_eq_comp, ← map_mul, Prod.mk_mul_mk, mul_one, one_mul]
   · rw [hT2, hy₀, ← hid, hsa]
     exact inner_self_ne_zero.2 h0
 

@@ -70,16 +70,16 @@ open GlobalTheory.LocFlat.CFac
 
 theorem contrFactor : ContrFactor := by
   intro k _ _ _ _ _ _ ψ ν hψc hψ1 hν n n' n'' _ _ _ _ _ _ M _ _ B h1 h2
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
-  haveI : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
-  haveI : NonarchimedeanAddGroup k := ⟨fun V hV => by
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
+  have : NonarchimedeanAddGroup k := ⟨fun V hV => by
     obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hV
     exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
       GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
-  haveI : TotallyDisconnectedSpace k := inferInstance
-  haveI hTD : ∀ (a b : Type) [Fintype a] [Fintype b], TotallyDisconnectedSpace (Matrix a b k) :=
+  have : TotallyDisconnectedSpace k := inferInstance
+  have hTD : ∀ (a b : Type) [Fintype a] [Fintype b], TotallyDisconnectedSpace (Matrix a b k) :=
     fun a b _ _ => inferInstanceAs (TotallyDisconnectedSpace (a → b → k))
-  haveI hLC : ∀ (a b : Type) [Fintype a] [Fintype b], LocallyCompactSpace (Matrix a b k) :=
+  have hLC : ∀ (a b : Type) [Fintype a] [Fintype b], LocallyCompactSpace (Matrix a b k) :=
     fun a b _ _ => inferInstanceAs (LocallyCompactSpace (a → b → k))
   have hψlc := GlobalTheory.RootEx.OpenKernel.isLocallyConstant_coe_addChar ψ hψc
   obtain ⟨l, hl⟩ := _root_.GlobalTheory.LocFlat.CFac.exists_linear_of_bilinear_prodSB _ _ M B

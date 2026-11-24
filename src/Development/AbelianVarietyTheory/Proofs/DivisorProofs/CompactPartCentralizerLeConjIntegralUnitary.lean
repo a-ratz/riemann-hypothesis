@@ -97,7 +97,7 @@ theorem nilp_eq_zero_of_commute_sep_alg {K : Type} [Field K] [IsAlgClosed K] {n 
     · simp [h0]
     have h2 : Module.finrank K (Module.End.maxGenEigenspace f μ) = 1 := le_antisymm h1
         (Module.finrank_pos_iff_exists_ne_zero.2 ⟨⟨v, hv⟩, fun h => h0 (congrArg Subtype.val h)⟩)
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (⟨v, hv⟩ : Module.End.maxGenEigenspace f μ)
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨v, hv⟩ : Module.End.maxGenEigenspace f μ)
         fun h => h0 (congrArg Subtype.val h)).1 h2 ⟨_, Module.End.mapsTo_maxGenEigenspace_of_comm hfg μ hv⟩
     have hc' : Matrix.toLin' N v = c • v := (congrArg Subtype.val hc).symm
     have hpow : ∀ m : ℕ, (Matrix.toLin' N ^ m) v = c ^ m • v := by
@@ -131,7 +131,7 @@ theorem exists_lt_pow (x B : WithZero (Multiplicative ℤ)) (hx : 1 < x) : ∃ m
   refine ⟨k + 1, hk.trans_lt ?_⟩
   have h0 : x ^ k ≠ 0 := pow_ne_zero _ (ne_of_gt (zero_lt_one.trans hx))
   rw [pow_succ]
-  simpa using mul_lt_mul_of_pos_left hx (zero_lt_iff.2 h0)
+  simpa using mul_lt_mul_of_pos_left hx (pos_iff_ne_zero.2 h0)
 
 theorem integral_of_commute_sep : ∀ (E : Type) [Field E] [NumberField E] (w : Pl E) (n : ℕ) (P₀ : (w.adicCompletionIntegers E)[X]),
     IsCoprime P₀ (derivative P₀) →
@@ -144,7 +144,7 @@ theorem integral_of_commute_sep : ∀ (E : Type) [Field E] [NumberField E] (w : 
   have memO : ∀ x : w.adicCompletion E, x ∈ w.adicCompletionIntegers E ↔ Valued.v x ≤ 1 :=
     fun x => HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 E) E w
   by_contra hij
-  haveI : Nonempty (Fin n × Fin n) := ⟨(i, j)⟩
+  have : Nonempty (Fin n × Fin n) := ⟨(i, j)⟩
   obtain ⟨⟨i₀, j₀⟩, hmax⟩ := Finite.exists_max (fun p : Fin n × Fin n => Valued.v (s p.1 p.2))
   have hc1 : 1 < Valued.v (s i₀ j₀) := by
     have : 1 < Valued.v (s i j) := not_le.1 (fun h => hij ((memO _).2 h))
@@ -157,7 +157,7 @@ theorem integral_of_commute_sep : ∀ (E : Type) [Field E] [NumberField E] (w : 
     intro k l
     rw [memO]
     simp only [u, Matrix.smul_apply, smul_eq_mul, map_mul, map_inv₀]
-    rw [inv_mul_le_iff₀ (zero_lt_iff.2 hvc), mul_one]
+    rw [inv_mul_le_iff₀ (pos_iff_ne_zero.2 hvc), mul_one]
     exact hmax (k, l)
   let A₀ : Matrix (Fin n) (Fin n) (w.adicCompletionIntegers E) := fun k l => ⟨A k l, hA k l⟩
   let u₀ : Matrix (Fin n) (Fin n) (w.adicCompletionIntegers E) := fun k l => ⟨u k l, hu k l⟩
@@ -179,7 +179,7 @@ theorem integral_of_commute_sep : ∀ (E : Type) [Field E] [NumberField E] (w : 
   have hsmall : ∀ k l, Valued.v ((u ^ m) k l) < 1 := by
     intro k l
     rw [hudef, _root_.smul_pow, Matrix.smul_apply, smul_eq_mul, map_mul, map_pow, map_inv₀, inv_pow,
-      inv_mul_lt_iff₀ (pow_pos (zero_lt_iff.2 hvc) _), mul_one]
+      inv_mul_lt_iff₀ (pow_pos (pos_iff_ne_zero.2 hvc) _), mul_one]
     exact (hB m k l).trans_lt hm
   have hnil : IsNilpotent (u₀.map (IsLocalRing.residue (w.adicCompletionIntegers E))) := by
     refine ⟨m, ?_⟩

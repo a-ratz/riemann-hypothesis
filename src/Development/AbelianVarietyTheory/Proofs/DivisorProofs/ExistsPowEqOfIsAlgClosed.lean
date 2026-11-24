@@ -64,9 +64,9 @@ theorem exists_pow_eq_of_isAlgClosed : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj
   have hc := hA.comm
   obtain ⟨hfin, -, hsurj⟩ := GlobalTheory.KthRoot.finite_flat_surjective_mulN_any S A hA n hn
   have : IsFinite (pullback.snd (mulN A n).left g.left) := by
-    haveI := hfin; infer_instance
+    have := hfin; infer_instance
   have : Surjective (pullback.snd (mulN A n).left g.left) := by
-    haveI := hsurj; infer_instance
+    have := hsurj; infer_instance
   obtain ⟨t, ht⟩ := ReciprocityTheory.ChartRestriction.G.H1.SectionDivision.exists_section (pullback.snd (mulN A n).left g.left)
   have hb' : (t ≫ pullback.fst (mulN A n).left g.left) ≫ (mulN A n).left = g.left := by
     rw [Category.assoc, pullback.condition, ← Category.assoc, ht, Category.id_comp]

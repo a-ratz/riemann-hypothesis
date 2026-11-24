@@ -146,7 +146,7 @@ theorem exists_nat_comb_of_infinite : ∀ (φ : InvFun ℤ) (r m : ℕ) (γ : Fi
     set_option synthInstance.maxHeartbeats 100000 in
       simp only [map_nsmul, map_add (f := _), map_sum, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.add_apply,
       Finsupp.coe_finsetSum, Finset.sum_apply, Finsupp.single_apply, nsmul_eq_mul] at this
-    rw [Finset.sum_eq_zero fun j _ => by rw [if_neg (ho j).symm]; simp] at this
+    rw [Finset.sum_eq_zero fun j _ => by rw [ite_eq_right (ho j).symm]; simp] at this
     have hk' : (k : ℤ) ≠ 0 := by exact_mod_cast hk0.ne'
     push_cast at this
     exact (mul_eq_zero.1 this).resolve_left hk'
@@ -158,7 +158,7 @@ theorem exists_nat_comb_of_infinite : ∀ (φ : InvFun ℤ) (r m : ℕ) (γ : Fi
     set_option synthInstance.maxHeartbeats 100000 in
       simp only [map_nsmul, map_add (f := _), map_sum, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.add_apply,
       Finsupp.coe_finsetSum, Finset.sum_apply, Finsupp.single_apply, nsmul_eq_mul, Sum.inl.injEq] at this
-    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at this
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true] at this
     have hk' : (0 : ℤ) < k := by exact_mod_cast hk0
     have h2 : (0 : ℤ) ≤ k * ((n : ℤ) * bb.repr B' (Sum.inl j) + bb.repr B₀ (Sum.inl j)) := by
       push_cast at this ⊢; rw [this]; positivity

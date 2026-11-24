@@ -109,10 +109,10 @@ theorem rhoL_rhoL {R : Type} [CommRing R] (bs : List (Rˣ × ℕ+)) (a : ℕ)
     rw [sum_cons'] at ha
     by_cases h : a < (s : ℕ)
     · have e : rhoL ((t, s) :: bs) a = (s : ℕ) - 1 - a := by simp [rhoL, h]
-      rw [e]; simp only [rhoL]; rw [if_pos (by omega)]; omega
+      rw [e]; simp only [rhoL]; rw [ite_eq_left (by omega)]; omega
     · have e : rhoL ((t, s) :: bs) a = (s : ℕ) + rhoL bs (a - s) := by simp [rhoL, h]
       rw [e]; simp only [rhoL]
-      rw [if_neg (by omega), Nat.add_sub_cancel_left, ih (a - s) (by omega)]; omega
+      rw [ite_eq_right (by omega), Nat.add_sub_cancel_left, ih (a - s) (by omega)]; omega
 
 theorem entry_ne_zero_iff {R : Type} [CommRing R] [Nontrivial R] (bs : List (Rˣ × ℕ+)) (a b : ℕ)
     (ha : a < (bs.map (fun b => (b.2 : ℕ))).sum) :
@@ -124,19 +124,19 @@ theorem entry_ne_zero_iff {R : Type} [CommRing R] [Nontrivial R] (bs : List (Rˣ
     rw [sum_cons'] at ha
     simp only [ptEntryL, rhoL]
     by_cases h1 : a < (s : ℕ)
-    · rw [if_pos h1]
+    · rw [ite_eq_left h1]
       by_cases h2 : b < (s : ℕ)
-      · rw [if_pos ⟨h1, h2⟩]
+      · rw [ite_eq_left ⟨h1, h2⟩]
         split_ifs with h3
         · simp only [ne_eq, Units.ne_zero, not_false_eq_true, true_iff]; omega
         · simp only [ne_eq, not_true_eq_false, false_iff]; omega
-      · rw [if_neg (fun h => h2 h.2), if_neg (fun h => by omega)]
+      · rw [ite_eq_right (fun h => h2 h.2), ite_eq_right (fun h => by omega)]
         simp only [ne_eq, not_true_eq_false, false_iff]; omega
-    · rw [if_neg h1, if_neg (fun h => h1 h.1)]
+    · rw [ite_eq_right h1, ite_eq_right (fun h => h1 h.1)]
       by_cases h2 : (s : ℕ) ≤ b
-      · rw [if_pos ⟨by omega, h2⟩, ih (a - s) (b - s) (by omega)]
+      · rw [ite_eq_left ⟨by omega, h2⟩, ih (a - s) (b - s) (by omega)]
         omega
-      · rw [if_neg (fun h => h2 h.2)]
+      · rw [ite_eq_right (fun h => h2 h.2)]
         simp only [ne_eq, not_true_eq_false, false_iff]; omega
 
 theorem rhoL_rev {R : Type} [CommRing R] (bs : List (Rˣ × ℕ+)) (x y : ℕ) (hxy : x < y)
@@ -149,17 +149,17 @@ theorem rhoL_rev {R : Type} [CommRing R] (bs : List (Rˣ × ℕ+)) (x y : ℕ) (
     rw [sum_cons'] at hy
     simp only [rhoL] at hB ⊢
     by_cases h1 : y < (s : ℕ)
-    · rw [if_pos h1, if_pos (by omega)]; omega
+    · rw [ite_eq_left h1, ite_eq_left (by omega)]; omega
     · by_cases h2 : x < (s : ℕ)
       · exfalso
         refine hB s h2 (by omega) fun a ha => ?_
-        rw [if_pos ha]; omega
-      · rw [if_neg h1, if_neg h2]
+        rw [ite_eq_left ha]; omega
+      · rw [ite_eq_right h1, ite_eq_right h2]
         have := ih (x - s) (y - s) (by omega) (by omega) fun l hl1 hl2 hcl => by
           refine hB (s + l) (by omega) (by omega) fun a ha => ?_
           by_cases h : a < (s : ℕ)
-          · rw [if_pos h]; omega
-          · rw [if_neg h]; have := hcl (a - s) (by omega); omega
+          · rw [ite_eq_left h]; omega
+          · rw [ite_eq_right h]; have := hcl (a - s) (by omega); omega
         omega
 
 theorem pt_shape {R : Type} [CommRing R] [Nontrivial R] {n : ℕ} (w : Pt R n) :
@@ -225,7 +225,7 @@ theorem exists_upper {K : Type} [Field K] {n : ℕ} (Z u : Matrix (Fin n) (Fin n
     show u (ρ i) (ρ i) * Z (ρ i) i / Z (ρ i) i = 1
     rw [hu1, one_mul, div_self (hZd' i)]
   have hdet : M.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hMup]
+    rw [Matrix.det_of_isUpperTriangular hMup]
     simp [hMd]
   have hZM : Z * M = u * Z := by
     ext a b
@@ -246,7 +246,7 @@ theorem exists_upper {K : Type} [Field K] {n : ℕ} (Z u : Matrix (Fin n) (Fin n
         exact hc ((hZ a c).1 h)
       rw [this, zero_mul]
     · simp
-  haveI : Invertible M := Matrix.invertibleOfIsUnitDet M (by rw [hdet]; exact isUnit_one)
+  have : Invertible M := Matrix.invertibleOfIsUnitDet M (by rw [hdet]; exact isUnit_one)
   refine ⟨M⁻¹, ⟨fun i j hij => Matrix.blockTriangular_inv_of_blockTriangular hMup hij, fun i => ?_⟩, ?_⟩
   · have h1 : (M⁻¹ * M) i i = 1 := by rw [Matrix.inv_mul_of_invertible]; simp
     rw [Matrix.mul_apply, Finset.sum_eq_single i] at h1
@@ -282,7 +282,7 @@ theorem main : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     ∃ g ∈ G.St, ∀ j, g (G.f j) = ∑ i, t i j • G.f i := by
   intro F E _ _ _ _ _ sig A r k G t ht
   obtain ⟨p⟩ := nonempty_places F
-  haveI : Nontrivial (A.loc p).Ep :=
+  have : Nontrivial (A.loc p).Ep :=
     Module.nontrivial_of_finrank_pos (R := (A.loc p).Fp) (by rw [(A.loc p).rank]; norm_num)
   have hinj : Function.Injective (A.loc p).ιE := (A.loc p).ιE.injective
 
@@ -327,10 +327,10 @@ theorem main : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     (fun a => by simp [ht a a (fun h => lt_irrefl _ h.1)])
     (fun a b hab hB => by
       simp only [Matrix.transpose_apply, Matrix.map_apply]
-      rw [ht b a hB, if_neg (Ne.symm hab), map_zero])
+      rw [ht b a hB, ite_eq_right (Ne.symm hab), map_zero])
   have htup : (∀ i j, j < i → t i j = 0) ∧ ∀ i, t i i = 1 :=
-    ⟨fun i j hij => by rw [ht i j (fun h => lt_asymm h.1 hij), if_neg (ne_of_gt hij)],
-      fun i => by rw [ht i i (fun h => lt_irrefl _ h.1), if_pos rfl]⟩
+    ⟨fun i j hij => by rw [ht i j (fun h => lt_asymm h.1 hij), ite_eq_right (ne_of_gt hij)],
+      fun i => by rw [ht i i (fun h => lt_irrefl _ h.1), ite_eq_left rfl]⟩
   obtain ⟨h, hh, hf1, -⟩ := (_root_.GlobalTheory.HL.RatStab.stab_rat A r k G t s' htup hs'up).1 hs'
   exact ⟨h, hh, hf1⟩
 
@@ -428,8 +428,8 @@ end
 
 theorem close_on_lattice : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig) (r k : ℕ) (G : GFrames A r k) (Λ : G.Lt) (D : ℤ) (p : HeightOneSpectrum (𝓞 F)) (h : (G.S p).GLV) (M M' : Matrix (Fin (r + 1)) (Fin (r + 1)) (A.loc p).Ep) (t : (A.loc p).Fp), (Matrix.of fun k l : Fin (r + 1) ⊕ Fin (r + 1) => ∑ i, ∑ j, Sum.elim G.f G.f' k i * G.Hm i j * sig (Sum.elim G.f G.f' l j))⁻¹ * (Matrix.of fun k l : Fin (r + 1) ⊕ Fin (r + 1) => ∑ i, ∑ j, Sum.elim G.f G.f' k i * G.Hm i j * sig (Sum.elim G.f G.f' l j)) = 1 → (∀ k l, ∃ o : 𝓞 E, (D : E) * (Matrix.of fun k l : Fin (r + 1) ⊕ Fin (r + 1) => ∑ i, ∑ j, Sum.elim G.f G.f' k i * G.Hm i j * sig (Sum.elim G.f G.f' l j))⁻¹ k l = o) → (∀ x ∈ Λ, ∀ l, ∃ o : 𝓞 E, (D : E) * ∑ a, ∑ b, x a * G.Hm a b * sig (Sum.elim G.f G.f' l b) = o) → (∀ l, (D : 𝓞 E) • Sum.elim G.f G.f' l ∈ Λ) → h ∈ (G.S p).St → (∀ j, h (A.bc p (G.f j)) = ∑ i, M i j • A.bc p (G.f i)) → (∀ j, h (A.bc p (G.f' j)) = ∑ i, M' i j • A.bc p (G.f' i)) → (∀ i j, ∃ o ∈ (A.L p).O, (M - 1) i j = algebraMap (A.loc p).Fp (A.loc p).Ep (t * (D : (A.loc p).Fp) ^ 3) * o) → (∀ i j, ∃ o ∈ (A.L p).O, (M' - 1) i j = algebraMap (A.loc p).Fp (A.loc p).Ep (t * (D : (A.loc p).Fp) ^ 3) * o) → ∀ x ∈ A.lat p Λ, ∃ y ∈ A.lat p Λ, h x - x = algebraMap (A.loc p).Fp (A.loc p).Ep t • y := by
   intro F E _ _ _ _ _ sig A r k G Λ D p h M M' t hΓ hΓD hb hDu hh hM hM' hM1 hM1'
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
+  have := (A.loc p).lf
+  have := (A.loc p).char0
   have key : ∀ l ∈ Λ, ∃ y ∈ A.lat p Λ,
       h (A.bc p l) - A.bc p l = algebraMap (A.loc p).Fp (A.loc p).Ep t • y := by
     intro l hl
@@ -708,8 +708,8 @@ theorem main : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
   let p : HeightOneSpectrum (𝓞 F) :=
     ⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (RingOfIntegers.not_isField F)⟩
   obtain ⟨hinj, -, -, -, hform, hind⟩ := GlobalTheory.HL.RatExt.rational_extend A (k + 2 * r + 1) p
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
+  have := (A.loc p).lf
+  have := (A.loc p).char0
   obtain ⟨hli, hco, -⟩ := GlobalTheory.FrameBasic.main (A.L p) r k (G.S p)
   set S := G.S p with hS
   set Ep := (A.loc p).Ep
@@ -718,9 +718,9 @@ theorem main : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
   have hu : ∀ q, A.bc p (g q) = ((s q : Epˣ) : Ep) • Sum.elim S.f S.f' q := by
     intro q
     rcases q with a | a
-    · simp only [hg, Sum.elim_inl, s, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_pow_eq_pow_val]
+    · simp only [hg, Sum.elim_inl, s, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Units.val_pow_eq_pow_val]
       exact (G.f_eq p a).symm
-    · simp only [hg, Sum.elim_inr, s, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Units.val_pow_eq_pow_val]
+    · simp only [hg, Sum.elim_inr, s, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Units.val_pow_eq_pow_val]
       exact (G.f'_eq p a).symm
   have hgli : LinearIndependent E g := by
     let e := (finSumFinEquiv (m := r + 1) (n := r + 1))
@@ -736,7 +736,7 @@ theorem main : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
       unfold Frames.spanTo
       congr 1
       ext y
-      simp only [Set.mem_image, Set.mem_setOf_eq, Set.mem_range]
+      simp only [Set.mem_image, Set.mem_ofPred_eq, Set.mem_range]
       exact ⟨fun ⟨a, _, h⟩ => ⟨a, h⟩, fun ⟨a, h⟩ => ⟨a, a.isLt, h⟩⟩
     rw [Frames.ME, h1, h1, Set.Sum.elim_range, Submodule.span_union]
   set Γ : Matrix (Fin (r + 1) ⊕ Fin (r + 1)) (Fin (r + 1) ⊕ Fin (r + 1)) E :=
@@ -953,9 +953,9 @@ theorem Zh_inv_mul {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
   obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 F)
   let p : HeightOneSpectrum (𝓞 F) := ⟨P, hP.isPrime,
     Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField F)⟩
-  haveI := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
+  have := GlobalTheory.HL.PlacesInt.nontrivial_Ep (A.loc p)
+  have := (A.loc p).lf
+  have := (A.loc p).char0
   have hS : IsUnit ((G.S p).Zh.det) := by
     have := (GlobalTheory.FrameBasic.main (A.L p) r k (G.S p)).2.2.2.1
     rwa [Frames.D, lead_last_eq_det] at this
@@ -1006,7 +1006,7 @@ theorem unitriangular_inv_close {F : Type} [Field F] [ValuativeRel F] [Topologic
     apply Subtype.ext
     have h1 : f M'.det = (f.mapMatrix M').det := RingHom.map_det f M'
     have h2 : M.det = 1 := by
-      rw [Matrix.det_of_upperTriangular (M := M) (fun i j hij => hlow i j hij)]
+      rw [Matrix.det_of_isUpperTriangular (M := M) (fun i j hij => hlow i j hij)]
       simp [hdiag]
     change f M'.det = f 1
     rw [h1, hM', h2, map_one]
@@ -1257,30 +1257,30 @@ theorem close_lattice : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
   have ha : ∀ p, a p ∈ 𝒪[(A.loc p).Fp] ∧ a p * G.c p ∈ 𝒪[(A.loc p).Fp] ∧ a p ≠ 0 := by
     intro p
     by_cases hc : ((G.c p : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp])
-    · simp only [a, if_pos hc, one_mul]
+    · simp only [a, ite_eq_left hc, one_mul]
       exact ⟨one_mem _, hc, one_ne_zero⟩
-    · simp only [a, if_neg hc]
+    · simp only [a, ite_eq_right hc]
       exact ⟨inv_mem hc, by rw [inv_mul_cancel₀ (Units.ne_zero _)]; exact one_mem _,
         inv_ne_zero (Units.ne_zero _)⟩
   refine ⟨fun p => (D : (A.loc p).Fp) ^ 5 * a p ^ r, fun p => ?_, ?_, ?_⟩
   · have : (D : (A.loc p).Fp) ≠ 0 := by
-      haveI := (A.loc p).char0
+      have := (A.loc p).char0
       exact_mod_cast hD0
     exact mul_ne_zero (pow_ne_zero _ this) (pow_ne_zero _ (ha p).2.2)
   · refine ((_root_.GlobalTheory.HL.PlacesInt.intCast_isUnit_almost_all A D hD0).union G.c_unit).subset fun p hp => ?_
     by_contra hq
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hq
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hq
     obtain ⟨⟨u, hu⟩, ⟨v, hv⟩⟩ := hq
     apply hp
     have hcO : ((G.c p : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp]) := hv ▸ (v : 𝒪[(A.loc p).Fp]).2
     refine ⟨u ^ 5, ?_⟩
-    simp only [a, if_pos hcO, one_pow, mul_one]
+    simp only [a, ite_eq_left hcO, one_pow, mul_one]
     rw [← hu]
     push_cast
     rfl
   · intro p c0 h M hc0 hc0O hh hM hcl
-    haveI := (A.loc p).lf
-    haveI := (A.loc p).char0
+    have := (A.loc p).lf
+    have := (A.loc p).char0
     obtain ⟨haO, hacO, ha0⟩ := ha p
     have hform := (GlobalTheory.HL.RatExt.rational_extend A (k + 2 * r + 1) p).2.2.2.2.1
     have hZloc : ∀ i j : Fin (r + 1), hf (A.L p) (G.S p).Hm (A.bc p (G.f' j)) (A.bc p (G.f i)) =
@@ -1378,7 +1378,7 @@ theorem zh_split (l : Fin (r + 2)) (hl : S.D l ≠ 0) (x y : Fin (r + 1))
     have hj := j.2
     have : ((Fin.castLE (Nat.lt_succ_iff.mp l.2) j : Fin (r + 1)) : ℕ) ≠
         GlobalTheory.FrameBasic.sig S.w.blocks (Fin.castLE (Nat.lt_succ_iff.mp l.2) (⟨a, ha⟩ : Fin l) : Fin (r + 1)) := by
-      simp only [Fin.coe_castLE]; omega
+      simp only [Fin.val_castLE]; omega
     rw [GlobalTheory.FrameBasic.entry_zero _ _ _ this, zero_mul]
   rw [hZ]
   rcases hxy with ⟨h1, h2⟩ | ⟨h1, h2⟩
@@ -1399,8 +1399,8 @@ theorem m_zero [IsNonarchimedeanLocalField F] [CharZero F]
   have hbt : m'.BlockTriangular id := by
     intro i j hij; exact hm'.1 i j hij
   have hdet : IsUnit m'.det := by
-    rw [Matrix.det_of_upperTriangular hbt]; simp [hm'.2]
-  letI := Matrix.invertibleOfIsUnitDet m' hdet
+    rw [Matrix.det_of_isUpperTriangular hbt]; simp [hm'.2]
+  let := Matrix.invertibleOfIsUnitDet m' hdet
   have hN : (m'⁻¹).BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hbt
   have h1 : cT L m * S.Zh = S.Zh * m'⁻¹ := by
     calc cT L m * S.Zh = cT L m * S.Zh * m' * m'⁻¹ := by
@@ -1432,7 +1432,7 @@ theorem m_zero [IsNonarchimedeanLocalField F] [CharZero F]
   have hv0 : v = 0 := Matrix.vecMul_injective_of_isUnit ((Matrix.isUnit_iff_isUnit_det _).2 hU')
     (hv.trans (Matrix.zero_vecMul _).symm)
   have := congrFun hv0 a
-  simp only [v, if_pos ha, Pi.zero_apply] at this
+  simp only [v, ite_eq_left ha, Pi.zero_apply] at this
   exact (map_eq_zero_iff L.cj L.cj.injective).1 this
 
 end Local
@@ -1473,7 +1473,7 @@ theorem zh_loc (a b : Fin (r + 1)) : (G.S p).Zh a b =
   ring
 
 theorem D_ne (l : Fin (r + 2)) (h : G.D l ≠ 0) : (G.S p).D l ≠ 0 := by
-  haveI : Nontrivial (A.loc p).Ep :=
+  have : Nontrivial (A.loc p).Ep :=
     Module.nontrivial_of_finrank_pos (R := (A.loc p).Fp) (by rw [(A.loc p).rank]; norm_num)
   set e : Fin l → Fin (r + 1) := Fin.castLE (Nat.lt_succ_iff.mp l.2) with he
   let d : Fin l → (A.loc p).Ep := fun i =>
@@ -1501,8 +1501,8 @@ end Global
 
 theorem local_pattern : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig), ∀ (r k : ℕ) (G : GFrames A r k), ∀ (p : HeightOneSpectrum (𝓞 F)) (h : (G.S p).GLV), h ∈ (G.S p).St → ∃ s : Matrix (Fin (r + 1)) (Fin (r + 1)) (A.loc p).Ep, (∀ i j, ¬ (i < j ∧ ∀ l : Fin (r + 2), ((i : Fin (r + 1)) : ℕ) < l → (l : ℕ) ≤ ((j : Fin (r + 1)) : ℕ) → G.D l = 0) → s i j = if i = j then 1 else 0) ∧ (∀ j, h (A.bc p (G.f j)) = ∑ i, s i j • A.bc p (G.f i)) ∧ ((∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = G.c p) → h ∈ (G.S p).K0 → IsIntM (A.L p) s) := by
   intro F E _ _ _ _ _ sig A r k G p h hh
-  haveI := (A.loc p).lf
-  haveI := (A.loc p).char0
+  have := (A.loc p).lf
+  have := (A.loc p).char0
   obtain ⟨hN1, hN2, -⟩ := GlobalTheory.HL.FrameOnto.unipotent_onto (A.L p) r k (G.S p)
   obtain ⟨m, hm, hmf⟩ := hN1 h hh.1
   obtain ⟨m', hm', hmf'⟩ := hN2 h hh.2
@@ -1519,10 +1519,10 @@ theorem local_pattern : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
         push_neg at hc
         exact hij ⟨hlt, fun l h1 h2 => hc l h1 h2⟩
       obtain ⟨l, h1, h2, h3⟩ := hex
-      rw [if_neg hlt.ne, m_zero (G.S p) m m' hm' heq l (D_ne G p l h3) i j h1 h2]
+      rw [ite_eq_right hlt.ne, m_zero (G.S p) m m' hm' heq l (D_ne G p l h3) i j h1 h2]
       simp
-    · rw [if_pos rfl, hm.2, mul_one, ab_one]
-    · rw [if_neg hgt.ne', hm.1 i j hgt]
+    · rw [ite_eq_left rfl, hm.2, mul_one, ab_one]
+    · rw [ite_eq_right hgt.ne', hm.1 i j hgt]
       simp
   · intro j
     beta_reduce
@@ -1620,9 +1620,9 @@ theorem unit_of_pat {K : Type} [CommRing K] {m : ℕ} (P : Fin m → Fin m → P
   have hup : s.BlockTriangular id := by
     intro i j hij
     have := hs i j (fun h => absurd (hP i j h) (not_lt.mpr (le_of_lt hij)))
-    rw [this, if_neg (ne_of_gt (show j < i from hij))]
-  rw [Matrix.det_of_upperTriangular hup]
-  have : ∀ i, s i i = 1 := fun i => by rw [hs i i (fun h => absurd (hP i i h) (lt_irrefl _)), if_pos rfl]
+    rw [this, ite_eq_right (ne_of_gt (show j < i from hij))]
+  rw [Matrix.det_of_isUpperTriangular hup]
+  have : ∀ i, s i i = 1 := fun i => by rw [hs i i (fun h => absurd (hP i i h) (lt_irrefl _)), ite_eq_left rfl]
   simp [this]
 
 end GlobalTheory.HL.StrongSt
@@ -1635,18 +1635,18 @@ theorem strong_approx_stab : ∀ {F E : Type} [Field F] [NumberField F] [Field E
   have hcO : ∀ p, ((c p : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp]) := by
     intro p
     by_cases h : ((c₁ p : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp])
-    · simp only [c, if_pos h]; exact h
-    · simp only [c, if_neg h]; exact one_mem _
+    · simp only [c, ite_eq_left h]; exact h
+    · simp only [c, ite_eq_right h]; exact one_mem _
   have hc : {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = c p}.Finite := by
     refine hc₁.subset fun p hp => ?_
     rintro ⟨u, hu⟩
     have h : ((c₁ p : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp]) := hu ▸ (u : 𝒪[(A.loc p).Fp]).2
-    exact hp ⟨u, by simp only [c, if_pos h]; exact hu⟩
+    exact hp ⟨u, by simp only [c, ite_eq_left h]; exact hu⟩
   have hq : ∀ p, ∃ a ∈ 𝒪[(A.loc p).Fp], (c p : (A.loc p).Fp) = c₁ p * a := by
     intro p
     by_cases h : ((c₁ p : (A.loc p).Fp) ∈ 𝒪[(A.loc p).Fp])
-    · exact ⟨1, one_mem _, by simp only [c, if_pos h, mul_one]⟩
-    · refine ⟨(c₁ p : (A.loc p).Fp)⁻¹, ?_, by simp only [c, if_neg h]; simp⟩
+    · exact ⟨1, one_mem _, by simp only [c, ite_eq_left h, mul_one]⟩
+    · refine ⟨(c₁ p : (A.loc p).Fp)⁻¹, ?_, by simp only [c, ite_eq_right h]; simp⟩
       have h' : ¬ valuation (A.loc p).Fp (c₁ p : (A.loc p).Fp) ≤ 1 := h
       show valuation (A.loc p).Fp (c₁ p : (A.loc p).Fp)⁻¹ ≤ 1
       rw [map_inv₀]
@@ -1661,13 +1661,13 @@ theorem strong_approx_stab : ∀ {F E : Type} [Field F] [NumberField F] [Field E
   have hc' : {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = c' p}.Finite := by
     refine (hc.union hdfin).subset fun p hp => ?_
     by_contra hq
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hq
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hq
     obtain ⟨⟨u, hu⟩, ⟨v, hv⟩⟩ := hq
     exact hp ⟨u * v, by simp [c', hu, hv]⟩
   have hsI' : {p | ¬ IsIntM (A.L p) (s p)}.Finite := by
     refine (hnK.union G.c_unit).subset fun p hp => ?_
     by_contra hq
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hq
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hq
     exact hp (hsI p hq.2 hq.1)
   obtain ⟨t, htP, htc⟩ := _root_.GlobalTheory.HL.pattern_strong_approx A (r + 1) _ (fun i j h => h.1)
     (fun i j l hij hjl => ⟨hij.1.trans hjl.1, fun m h1 h2 => by

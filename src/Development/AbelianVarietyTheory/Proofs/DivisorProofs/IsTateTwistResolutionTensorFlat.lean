@@ -319,8 +319,8 @@ theorem twGen_res (q : ℕ) (i : ℤ) {V U : Scheme.{0}} (g : V ⟶ U) (ζ : Pri
 
 theorem step_point (q : ℕ) [NeZero q] (i j : ℤ) (V : Scheme.{0}) [Nonempty V] (ζ : Prim q Γ(V, ⊤)) (c : ℕ)
     (h : c • (pgen q j ζ ⊗ₜ[ULift.{1} (ZMod q)] pgen q i ζ) = 0) : q ∣ c := by
-  haveI : Nonempty (⊤ : V.Opens) := ⟨⟨Classical.arbitrary V, trivial⟩⟩
-  haveI : Nontrivial Γ(V, ⊤) := Scheme.component_nontrivial V ⊤
+  have : Nonempty (⊤ : V.Opens) := ⟨⟨Classical.arbitrary V, trivial⟩⟩
+  have : Nontrivial Γ(V, ⊤) := Scheme.component_nontrivial V ⊤
   obtain ⟨fj, hfj⟩ := (GlobalTheory.TwFree.twist_free q j Γ(V, ⊤)).2 ζ
   obtain ⟨fi, hfi⟩ := (GlobalTheory.TwFree.twist_free q i Γ(V, ⊤)).2 ζ
   let fj' : (Scheme.Γ ⋙ twF q j).obj (op V) →ₗ[ULift.{1} (ZMod q)] ULift.{1} (ZMod q) := fj
@@ -745,17 +745,17 @@ theorem tw_mul_isTensor : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → 
   have hsurj := GlobalTheory.T.tateTwist_mul_degreeZero_locally_surjective q i j k hk τ hτ φ hφ
   have hinj := GlobalTheory.T.tateTwist_mul_degreeZero_locally_injective q i j k hk (GlobalTheory.T.tateTwistGenerator_tmul_order_locally q i j) τ hτ φ hφ
   have hM := GlobalTheory.T.bigEtaleModuleSheaf_mono_epi_iff_sections (ZMod q) φ
-  haveI : Mono φ := hM.2.1.2 hinj
-  haveI : Epi φ := hM.2.2.1.2 hsurj
-  haveI : IsIso φ := isIso_of_mono_of_epi φ
+  have : Mono φ := hM.2.1.2 hinj
+  have : Epi φ := hM.2.2.1.2 hsurj
+  have : IsIso φ := isIso_of_mono_of_epi φ
   let u : K ⟶ sgl (tw q k) := HomologicalComplex.mkHomToSingle (inv φ) (fun a ha => (hzK a (by simp at ha; omega)).eq_of_src _ _)
   have hu0 : u.f 0 = inv φ ≫ sglι (tw q k) := HomologicalComplex.mkHomToSingle_f _ _
-  haveI : ∀ w, IsIso (u.f w) := by
+  have : ∀ w, IsIso (u.f w) := by
     intro w
     by_cases hw : w = 0
     · subst hw; rw [hu0]; unfold sglι; exact IsIso.comp_isIso' inferInstance (Iso.isIso_inv _)
     · exact ⟨⟨0, (hzK w hw).eq_of_src _ _, (HomologicalComplex.isZero_single_obj_X _ _ _ _ hw).eq_of_src _ _⟩⟩
-  haveI : IsIso u := HomologicalComplex.Hom.isIso_of_components u
+  have : IsIso u := HomologicalComplex.Hom.isIso_of_components u
   obtain ⟨ν, hν⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ hτ).2.2 u
   refine ⟨ν, GlobalTheory.T.isTensor_of_compat_isIso_target (ZMod q) τ ν u inferInstance hν hτ, fun U ζ => ?_⟩
   have h := hν U 0 0 0 (add_zero 0) (Sec.map (sglι _) (twGen i ζ)) (Sec.map (sglι _) (twGen j ζ))
@@ -874,7 +874,7 @@ theorem tensor_flat_loc_exact : ∀ (R : Type) [CommRing R] (M : Shv R), FlatS M
       (TensorProduct.map (B.obj.map m.op).hom (P.map m.op).hom x') = 0 := by
     rw [← tres_rTensor]; exact hm
   by_cases hW : Nonempty W
-  · haveI := hflat W hW
+  · have := hflat W hW
     have hexact := Module.Flat.rTensor_exact (P.obj (op W))
       (LinearMap.exact_subtype_ker_map (g.hom.app (op W)).hom)
     obtain ⟨z, hzx⟩ := (hexact _).mp hg0
@@ -882,7 +882,7 @@ theorem tensor_flat_loc_exact : ∀ (R : Type) [CommRing R] (M : Shv R), FlatS M
     rintro W' n ⟨y, hy⟩
     refine ⟨LinearMap.lTensor _ (φ.app (op W')).hom y, ?_⟩
     rw [rl_comm, hy, hzx, tres_comp, tres_comp, ← hx', tres_lTensor, tres_lTensor]
-  · haveI : IsEmpty W := not_nonempty_iff.mp hW
+  · have : IsEmpty W := not_nonempty_iff.mp hW
     exact loc_of_isEmpty W _
 
 end GlobalTheory.EtC
@@ -1112,7 +1112,7 @@ theorem Tens.d_upper_edge (I J : Cx R) (U : Scheme.{0}) (w n s : ℤ) (h : s + n
     rw [Tens.upper_of]
     by_cases hab : a = s ∧ b = n
     · obtain ⟨rfl, rfl⟩ := hab
-      rw [if_pos le_rfl, Tens.d_of, DFinsupp.add_apply, DFinsupp.smul_apply, DirectSum.of_eq_same, DirectSum.of_eq_of_ne,
+      rw [ite_eq_left le_rfl, Tens.d_of, DFinsupp.add_apply, DFinsupp.smul_apply, DirectSum.of_eq_same, DirectSum.of_eq_of_ne,
         smul_zero, add_zero, DirectSum.of_eq_same]
       intro e; simp at e
     · rw [DirectSum.of_eq_of_ne]
@@ -1212,7 +1212,7 @@ theorem Tens.cycle_loc_boundary {C J : Cx R} (a b : ℤ) [C.IsStrictlyGE a] [J.I
       Sec (C.X q.1.1) V ⊗[ULift.{1} R] Sec (J.X q.1.2) V) ⟨(w - n, n), by simp only; omega⟩ y0
     have hyu : Tens.upper n y = y := by
       simp only [y]
-      rw [Tens.upper_of, if_pos le_rfl]
+      rw [Tens.upper_of, ite_eq_left le_rfl]
     let x' : Tens C J V (w + 1) := Tens.res k (w + 1) x - Tens.d C J V w y
     have hx'd : Tens.d C J V (w + 1) x' = 0 := by
       simp only [x', map_sub, ← Tens.res_d, hdx, map_zero, Tens.d_d, sub_zero]
@@ -1225,7 +1225,7 @@ theorem Tens.cycle_loc_boundary {C J : Cx R} (a b : ℤ) [C.IsStrictlyGE a] [J.I
       show (Tens.res k (w + 1) x - Tens.d C J V w y) q = 0
       rw [DFinsupp.sub_apply]
       rcases lt_or_eq_of_le (Int.lt_add_one_iff.mp (not_le.mp hq)) with hlt | heq
-      · rw [Tens.res_apply, ← hu, Tens.upper_apply, if_neg (by omega), map_zero, ← hyu,
+      · rw [Tens.res_apply, ← hu, Tens.upper_apply, ite_eq_right (by omega), map_zero, ← hyu,
           Tens.d_upper_low C J V w n _ q hlt, sub_zero]
       · obtain ⟨⟨s', t'⟩, hq'⟩ := q
         simp only at heq hq'
@@ -1563,7 +1563,7 @@ theorem tensor_quasiIso : ∀ (R : Type) [CommRing R] {I I' J T T' : Cx R} [I.Is
     [J.IsStrictlyGE 0] (τ : Pair I J T) (τ' : Pair I' J T'), τ.IsTensor → τ'.IsTensor → (∀ t, FlatS (J.X t)) →
     ∀ (f : I ⟶ I') [QuasiIso f] (u : T ⟶ T'), τ.Compat τ' f (𝟙 J) u → QuasiIso u := by
   intro R _ I I' J T T' _ _ _ τ τ' hτ hτ' hJ f _ u hc
-  haveI : (mappingCone f).IsStrictlyGE (-1) := CochainComplex.isStrictlyGE_mappingCone f 0 0 (-1)
+  have : (mappingCone f).IsStrictlyGE (-1) := CochainComplex.isStrictlyGE_mappingCone f 0 0 (-1)
   have hC := GlobalTheory.mappingCone_acyclic_of_quasiIso f
   exact TensQis.quasiIso_of_cone_acyclic u (GlobalTheory.T.acyclic_tensor_acyclic_flatEtaleComplex R (-1) 0 (TensQis.conePair τ τ' f u hc)
     (TensQis.conePair_isTensor τ τ' f u hc hτ hτ') hJ hC)
@@ -1632,7 +1632,7 @@ theorem flatS_of_isZero {M : Shv R} (h : IsZero M) : FlatS M := by
     exact ModuleCat.subsingleton_of_isZero (((evaluation _ _).obj (op U)).map_isZero h1)
   refine ⟨M.obj, 𝟙 _, fun U y => ⟨⊤, Scheme.etaleTopology.top_mem U, fun V g _ => ⟨Sec.res g y, rfl⟩⟩,
     fun U x _ => ⟨⊤, Scheme.etaleTopology.top_mem U, fun V g _ => (hsub V).elim _ _⟩, fun U _ => ?_⟩
-  haveI := hsub U
+  have := hsub U
   change Module.Flat _ (Sec M U)
   infer_instance
 
@@ -1658,10 +1658,10 @@ theorem isTwRes_tensor : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → �
   have hflati : ∀ t, FlatS ((sgl (tw q i)).X t) := flatS_sgl (flatS_tw q i)
   have hid : ∀ {K : Cx (ZMod q)} (t : ℤ) {U : Scheme.{0}} (x : Sec (K.X t) U), Sec.map (HomologicalComplex.Hom.f (𝟙 K) t) x = x :=
     fun _ _ _ => rfl
-  haveI := hIge
-  haveI := hJge
-  haveI := hεI
-  haveI := hεJ
+  have := hIge
+  have := hJge
+  have := hεI
+  have := hεJ
   have hc : ν.Compat ν₁ εJ (𝟙 _) u₁ := by
     intro U s t w h a b
     rw [hμν U t s w (by omega) b a, hid, hν₁ U t s w (by omega) b (Sec.map (εJ.f s) a), Units.smul_def,

@@ -74,14 +74,14 @@ theorem exists_isTie : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     have k1 := congrArg CommRingCat.Hom.hom (Spec.map_injective k0)
     simp only [CommRingCat.hom_ofHom] at k1
     exact IsLocalization.ringHom_ext (nonZeroDivisors (𝓞 c.F)) k1
-  letI := CategoryTheory.Over.cartesianMonoidalCategory 𝔐.X
-  letI := CategoryTheory.Over.cartesianMonoidalCategory Y.X
-  letI : CategoryTheory.GrpObj 𝔐.t.G := 𝔐.t.grp
-  letI : CategoryTheory.GrpObj Y.t.G := Y.t.grp
-  letI : Group (Over.mk 𝔐.ξ ⟶ 𝔐.t.G) := CategoryTheory.Hom.group
-  letI : Group (Over.mk (𝔐.ξ ≫ 𝔐.f) ⟶ Y.t.G) := CategoryTheory.Hom.group
-  letI : Group (GlobalTheory.CompanionTheory.Ar.epsAt (𝔐.ξ ≫ 𝔐.f) ⟶ Y.t.G) := CategoryTheory.Hom.group
-  letI : Group (Over.mk ((GlobalTheory.CompanionTheory.Ar.epsAt 𝔐.ξ).hom ≫ 𝔐.f) ⟶ Y.t.G) := CategoryTheory.Hom.group
+  let := CategoryTheory.Over.cartesianMonoidalCategory 𝔐.X
+  let := CategoryTheory.Over.cartesianMonoidalCategory Y.X
+  let : CategoryTheory.GrpObj 𝔐.t.G := 𝔐.t.grp
+  let : CategoryTheory.GrpObj Y.t.G := Y.t.grp
+  let : Group (Over.mk 𝔐.ξ ⟶ 𝔐.t.G) := CategoryTheory.Hom.group
+  let : Group (Over.mk (𝔐.ξ ≫ 𝔐.f) ⟶ Y.t.G) := CategoryTheory.Hom.group
+  let : Group (GlobalTheory.CompanionTheory.Ar.epsAt (𝔐.ξ ≫ 𝔐.f) ⟶ Y.t.G) := CategoryTheory.Hom.group
+  let : Group (Over.mk ((GlobalTheory.CompanionTheory.Ar.epsAt 𝔐.ξ).hom ≫ 𝔐.f) ⟶ Y.t.G) := CategoryTheory.Hom.group
   have hpb : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsGrpPullback 𝔐.t.G Y.t.G 𝔐.f 𝔐.m.φ := 𝔐.m.cart
   have hone : (1 : Over.mk 𝔐.ξ ⟶ 𝔐.t.G).left ≫ 𝔐.m.φ = (1 : Over.mk (𝔐.ξ ≫ 𝔐.f) ⟶ Y.t.G).left := by
     obtain ⟨o, ho⟩ : ∃ o : Over.mk (𝔐.ξ ≫ 𝔐.f) ⟶ Y.t.G, o.left = (1 : Over.mk 𝔐.ξ ⟶ 𝔐.t.G).left ≫ 𝔐.m.φ :=

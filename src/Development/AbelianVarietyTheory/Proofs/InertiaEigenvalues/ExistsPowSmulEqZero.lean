@@ -918,7 +918,7 @@ end Lat
 theorem pow_mul_mem_nhds {l : ℕ} [Fact l.Prime] (LL : FinExt l) (lam : ↥(OL LL)) (hi : Irreducible lam)
     (U : Set ↥LL.1) (hU : U ∈ 𝓝 (0 : ↥LL.1)) : ∃ a : ℕ, ∀ x : ↥(OL LL), algebraMap ↥(OL LL) ↥LL.1 (lam ^ a * x) ∈ U := by
   obtain ⟨_, -, hA, -⟩ := GlobalTheory.CoefInt.integers_laws l LL
-  have hc : Continuous (algebraMap ↥(OL LL) ↥LL.1) := continuous_subtype_val
+  have hc : Continuous (algebraMap ↥(OL LL) ↥LL.1) := continuous_subtypeVal
   obtain ⟨a, ha⟩ := (isAdic_iff.mp hA).2 _ (hc.continuousAt.preimage_mem_nhds (by rw [map_zero]; exact hU))
   refine ⟨a, fun x => ha (Ideal.mul_mem_right _ _ (Ideal.pow_mem_pow ?_ a))⟩
   exact hi.not_isUnit
@@ -939,7 +939,7 @@ theorem free_and_tensIso_gal {G Qp LL O : Type} [Group G] [TopologicalSpace G] [
       Module.finrank O (GlobalTheory.IndefiniteRowSideFullHecke.InvariantsVanishing.HH Γ) = r * n) ∧
     ∀ (X : Type) [AddCommGroup X] [Module O X] [Finite X], TensIso Γ.T₀.L Γ.χ₁ X := by
   subst hr' hn
-  have : IsTopologicalAddGroup Γ.T₀.V := IsModuleTopology.topologicalAddGroup LL Γ.T₀.V
+  have : IsTopologicalAddGroup Γ.T₀.V := IsModuleTopology.isTopologicalAddGroup LL Γ.T₀.V
   have : ContinuousSMul LL Γ.T₀.V := IsModuleTopology.toContinuousSMul LL Γ.T₀.V
   have hl0 : algebraMap O LL Γ.lam ≠ 0 := fun h =>
     hi.ne_zero (IsFractionRing.injective O LL (h.trans (map_zero _).symm))

@@ -187,9 +187,9 @@ theorem finrank_fieldPt {S : Scheme.{0}} (G : Over S) [GrpObj G] [Smooth G.hom] 
     (MA : LieModel G i₀ E) (φ : A →+* F) (M : LieModel G (spMap φ ≫ i₀) Li) :
     Module.finrank F Li = Module.rankAtStalk E (PrimeSpectrum.comap φ (IsLocalRing.closedPoint F)) := by
   obtain ⟨hf, hp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective S G A i₀ E MA
-  letI : Algebra A F := φ.toAlgebra
-  letI : Module A Li := Module.compHom Li φ
-  haveI : IsScalarTower A F Li := ⟨fun a b c => by
+  let : Algebra A F := φ.toAlgebra
+  let : Module A Li := Module.compHom Li φ
+  have : IsScalarTower A F Li := ⟨fun a b c => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
   obtain ⟨j, hj⟩ := exists_lift G i₀ MA M
@@ -207,7 +207,7 @@ theorem finrank_eq_of_specializes {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsCo
   obtain ⟨φ₂, rfl⟩ := exists_factor (A := Γ(X, U)) hU.fromSpec y₂ (by rw [hr]; exact hqU)
   obtain ⟨E, _, _, ⟨MA⟩⟩ := lieModel_exists X G Γ(X, U) hU.fromSpec
   obtain ⟨hf, hp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective X G Γ(X, U) hU.fromSpec E MA
-  haveI := Module.finitePresentation_of_projective Γ(X, U) E
+  have := Module.finitePresentation_of_projective Γ(X, U) E
   rw [finrank_fieldPt G _ MA φ₁ M₁, finrank_fieldPt G _ MA φ₂ M₂]
   rw [genPt_comp, genPt_comp] at h
   have hs := (hU.fromSpec.isOpenEmbedding.isInducing.specializes_iff).1 h
@@ -220,8 +220,8 @@ namespace GlobalTheory.CompanionTheory.Ar
 theorem lieModel_finrank_eq : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X), (∀ q : X, genPt ξ ⤳ q) → ∀ (G : Over X) [GrpObj G] [IsCommMonObj G] [Smooth G.hom] (Li : Type) [AddCommGroup Li] [Module Ω Li] (M : LieModel G ξ Li) (L : Type) [Field L] [NumberField L] (z : Sp (𝓞 L) ⟶ X) (V : Type) [AddCommGroup V] [Module (𝓞 L) V] (MB : LieModel G z V), Module.finrank (𝓞 L) V = Module.finrank Ω Li := by
   intro X Ω _ ξ hsp G _ _ _ Li _ _ M L _ _ z V _ _ MB
   obtain ⟨V', _, _, ⟨M'⟩⟩ := lieModel_exists X G L (spMap (algebraMap (𝓞 L) L) ≫ z)
-  letI : Module (𝓞 L) V' := Module.compHom V' (algebraMap (𝓞 L) L)
-  haveI : IsScalarTower (𝓞 L) L V' := ⟨fun a b c => by
+  let : Module (𝓞 L) V' := Module.compHom V' (algebraMap (𝓞 L) L)
+  have : IsScalarTower (𝓞 L) L V' := ⟨fun a b c => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
   obtain ⟨j, hj⟩ := LieRank.exists_lift G z MB M'

@@ -77,7 +77,7 @@ theorem isArithVar (k : Type) [CommRing k] [IsDomain k] [CharZero k] [Module.Fin
 
 theorem injective_ringHom {k : Type} [CommRing k] [IsDomain k] [CharZero k] [Module.Finite ℤ k]
     (ψ : k →+* ℂ) : Function.Injective ψ := by
-  refine (RingHom.injective_iff_ker_eq_bot ψ).2 (Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_)
+  refine (RingHom.injective_iff_ker_eq_bot ψ).2 (Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_)
   change Ideal.comap (algebraMap ℤ k) (RingHom.ker ψ) = ⊥
   rw [RingHom.comap_ker]
   exact (RingHom.injective_iff_ker_eq_bot _).1 (RingHom.injective_int _)
@@ -102,10 +102,10 @@ namespace GlobalTheory.PSpaceDeg
 theorem finrank_fractionRing (k K : Type) [CommRing k] [IsDomain k] [CharZero k] [Module.Finite ℤ k]
     [Field K] [Algebra k K] [IsFractionRing k K] [CharZero K] :
     Module.finrank ℚ K = Module.finrank ℤ k ∧ FiniteDimensional ℚ K := by
-  haveI : Module.Free ℤ k := Module.free_of_finite_type_torsion_free'
-  haveI : @IsScalarTower ℤ ℚ K Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
+  have : Module.Free ℤ k := Module.free_of_finite_type_torsion_free'
+  have : @IsScalarTower ℤ ℚ K Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
     IsScalarTower.of_algebraMap_eq' (RingHom.ext_int _ _)
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid k (nonZeroDivisors ℤ)) K := inferInstance
+  have : IsLocalization (Algebra.algebraMapSubmonoid k (nonZeroDivisors ℤ)) K := inferInstance
   let b := Module.Free.chooseBasis ℤ k
   let b' := b.localizationLocalization ℚ (nonZeroDivisors ℤ) K
   exact ⟨(Module.finrank_eq_card_basis b').trans (Module.finrank_eq_card_basis b).symm,
@@ -117,10 +117,10 @@ namespace GlobalTheory.PSpaceDeg
 
 theorem card_ringHom (k : Type) [CommRing k] [IsDomain k] [CharZero k] [Module.Finite ℤ k] :
     Nat.card (k →+* ℂ) = Module.finrank ℤ k := by
-  haveI : CharZero (FractionRing k) :=
+  have : CharZero (FractionRing k) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective k (FractionRing k))
   obtain ⟨h1, h2⟩ := finrank_fractionRing k (FractionRing k)
-  haveI : NumberField (FractionRing k) := ⟨⟩
+  have : NumberField (FractionRing k) := ⟨⟩
   rw [Nat.card_congr (ringHomEquiv k (FractionRing k)), Nat.card_eq_fintype_card,
     NumberField.Embeddings.card, h1]
 
@@ -165,8 +165,8 @@ theorem chern_mass_hermitian_O_one_projective (k : Type) [CommRing k] [IsDomain 
       ((ProjSpace.hermitianTwistingSheaf k N).φ σ).chernPart N (-1) Set.univ = 0 := by
   have hA := isArithVar k N
   have hproj : IsProjOver (PSpace.str k N) := hA.isProjOver
-  haveI : IsIntegral (PSpace k N) := ProjSpace.isIntegral_of_isDomain k N
-  haveI := CxPts.secondCountableTopology_of_isProjOver (σ := σ) hproj
+  have : IsIntegral (PSpace k N) := ProjSpace.isIntegral_of_isDomain k N
+  have := CxPts.secondCountableTopology_of_isProjOver (σ := σ) hproj
   have hC : ((ProjSpace.hermitianTwistingSheaf k N).φ σ).IsCInf := (ProjSpace.hermitianTwistingSheaf k N).cInf _
   have hSP : ((ProjSpace.hermitianTwistingSheaf k N).φ σ).SemiPosReg N :=
     (HermLB.semiPos_fs _ _ _ _ _ _ : (ProjSpace.hermitianTwistingSheaf k N).SemiPos N) _
@@ -208,13 +208,13 @@ theorem degree_hermitian_O_one_projective (k : Type) [CommRing k] [IsDomain k] [
     obtain ⟨h1, h0⟩ := chern_mass_hermitian_O_one_projective k D σ
     rw [GdegPullProof.chernInt_one, h1, h0]
     simp
-  haveI : Finite (k →+* ℂ) := by
-    haveI : CharZero (FractionRing k) :=
+  have : Finite (k →+* ℂ) := by
+    have : CharZero (FractionRing k) :=
       charZero_of_injective_algebraMap (IsFractionRing.injective k (FractionRing k))
-    haveI : FiniteDimensional ℚ (FractionRing k) := (finrank_fractionRing k (FractionRing k)).2
-    haveI : NumberField (FractionRing k) := ⟨⟩
+    have : FiniteDimensional ℚ (FractionRing k) := (finrank_fractionRing k (FractionRing k)).2
+    have : NumberField (FractionRing k) := ⟨⟩
     exact Finite.of_equiv _ (ringHomEquiv k (FractionRing k)).symm
-  haveI := Fintype.ofFinite (k →+* ℂ)
+  have := Fintype.ofFinite (k →+* ℂ)
   simp only [gdeg, chInt, hσ]
   rw [finsum_eq_sum_of_fintype, Finset.sum_const, Finset.card_univ, Nat.card_eq_fintype_card,
     nsmul_eq_mul, mul_one]

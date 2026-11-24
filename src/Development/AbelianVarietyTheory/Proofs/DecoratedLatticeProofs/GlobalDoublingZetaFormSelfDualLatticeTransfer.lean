@@ -199,9 +199,9 @@ theorem globalFormAt_move : ∀ (D : D7) (A : HSp D) (L L' : Lat A), IsSelfDualC
   intro D A L L' hL hL' hG
   obtain ⟨k, hk, hh⟩ := GlobalTheory.T.doubledLatticeHeight_selfDual_lattices_eq_conj D A L L' hL hL'
   intro ψ θ B χA χB sA sB t cA a om ν 𝓕 hP hw m mH hm hmH Φ₁ Φ₂ hΦ₁ hΦ₂ u₁ hu₁ u₂ hu₂
-  haveI := hm
-  haveI := hmH
-  haveI : m.IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds A m hm
+  have := hm
+  have := hmH
+  have : m.IsMulRightInvariant := Formalism.IndefR.Eqv.unimodGA_holds A m hm
   have hW := hP.weil
   have hθ : IsInfFam θ := hP.setting.2.2.2.1
   have hki : k⁻¹ ∈ GfC A := inv_mem hk

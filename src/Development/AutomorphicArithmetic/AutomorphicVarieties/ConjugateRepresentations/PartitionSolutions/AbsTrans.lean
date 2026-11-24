@@ -99,11 +99,11 @@ theorem absTrans_of (h1 : HdFacts) (h2 : ZigFwd) (h3 : ZigBwd) (h4 : BwdLast) (h
   obtain ⟨o1, o2, o3, -⟩ := h11 Γ V S d G T (interior K1)
   obtain ⟨-, -, -, f4⟩ := h11 Γ V S d G T K1
   obtain ⟨C, φ, hC, hφ, hCA, hCO⟩ := h9 Γ V S d G hp (fun s => G.Y \ sat G T K s) (sat G T (interior K1))
-    (fun s => ⟨h10 Γ V S d G hp hcone l hl T K hT hK hKY s, Set.diff_subset, o2 isOpen_interior s, fun p hp' => by
+    (fun s => ⟨h10 Γ V S d G hp hcone l hl T K hT hK hKY s, Set.sdiff_subset, o2 isOpen_interior s, fun p hp' => by
       by_cases h : p ∈ sat G T K s
       · exact Or.inr (s3 _ hKK s h)
       · exact Or.inl ⟨hp', h⟩⟩)
-    (fun γ s p => by simp only [Set.mem_diff, G.ρ_mem_iff, s1 γ s p]) o1
+    (fun γ s p => by simp only [Set.mem_sdiff, G.ρ_mem_iff, s1 γ s p]) o1
   obtain ⟨c, z1, z2, z3, z4⟩ := h2 Γ V S (Idx Γ V) d G hc hn Idx.g (fun _ _ => rfl) C hC q 0 q (zero_add q) (fun _ => w)
     (fun γ _ _ => (hw γ).symm) (fun _ _ => hdw) (fun x hx => by simp [hd, hx, Finset.sum_range_succ])
     (fun x hx s p _ h => by
@@ -345,11 +345,11 @@ namespace UpperTheory.V.Cj.A
 theorem partBase : PartBase := by
   intro V _ _ _ Y hY D hD hDp
   let Y' : TopologicalSpace.Opens V := ⟨Y, hY⟩
-  haveI : ProperSpace V := FiniteDimensional.proper_real V
-  haveI : LocallyCompactSpace Y' := Y'.isOpen.locallyCompactSpace
-  haveI : SecondCountableTopology V := inferInstance
+  have : ProperSpace V := FiniteDimensional.proper_real V
+  have : LocallyCompactSpace Y' := Y'.isOpen.locallyCompactSpace
+  have : SecondCountableTopology V := inferInstance
   obtain ⟨f, hf⟩ := SmoothPartitionOfUnity.exists_isSubordinate 𝓘(ℝ, V) (M := Y') isClosed_univ
-    (fun j => ((↑) : Y' → V) ⁻¹' D j) (fun j => (hD j).preimage continuous_subtype_val)
+    (fun j => ((↑) : Y' → V) ⁻¹' D j) (fun j => (hD j).preimage continuous_subtypeVal)
     (fun x _ => Set.mem_iUnion.2 ⟨(x : V), hDp x x.2⟩)
   classical
   refine ⟨fun j p => if h : p ∈ Y then f j ⟨p, h⟩ else 0, ?_, ?_, ?_, ?_⟩
@@ -358,7 +358,7 @@ theorem partBase : PartBase := by
     have h1 : ContMDiffAt 𝓘(ℝ, V) 𝓘(ℝ) ∞ (fun y : Y' => g (y : V)) ⟨x, hx⟩ := by
       have e : (fun y : Y' => g (y : V)) = f j := by
         funext y
-        exact dif_pos y.2
+        exact dite_eq_left y.2
       rw [e]
       exact (f j).contMDiff.contMDiffAt
     have h2 : ContMDiffAt 𝓘(ℝ, V) 𝓘(ℝ) ∞ g x :=
@@ -372,15 +372,15 @@ theorem partBase : PartBase := by
     by_cases hxY : x ∈ Y
     · have h : f j ⟨x, hxY⟩ ≠ 0 := by simpa [hxY] using hne
       exact ⟨⟨x, hxY⟩, h, hNt hxN⟩
-    · exact (hne (dif_neg hxY)).elim
+    · exact (hne (dite_eq_right hxY)).elim
   · intro p hp
     refine Eq.trans ?_ (f.sum_eq_one (x := ⟨p, hp⟩) (Set.mem_univ _))
-    exact finsum_congr fun j => dif_pos hp
+    exact finsum_congr fun j => dite_eq_left hp
   · intro j p hne
     by_cases hpY : p ∈ Y
     · have h : f j ⟨p, hpY⟩ ≠ 0 := by simpa [hpY] using hne
       exact hf j (subset_tsupport _ h)
-    · exact (hne (dif_neg hpY)).elim
+    · exact (hne (dite_eq_right hpY)).elim
 
 end UpperTheory.V.Cj.A
 end -- clump:auto
@@ -455,10 +455,10 @@ theorem UpperTheory.V.Cj.A.partProd :
     have h1 : (G.σ γ⁻¹) ((G.σ γ) s) = s := by
       rw [← Equiv.Perm.mul_apply, ← map_mul, inv_mul_cancel, map_one, Equiv.Perm.one_apply]
     have h2 : (G.ρ γ⁻¹) ((G.ρ γ) p) = p := by
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one, ContinuousLinearMap.one_apply]
+      rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one, one_apply_eq_self]
     show u ((G.σ (γ * i.g)⁻¹) ((G.σ γ) s)) ((G.ρ (γ * i.g)⁻¹) ((G.ρ γ) p)) *
       ψ ((G.σ (γ * i.g)⁻¹) ((G.σ γ) s)) i.j ((G.ρ (γ * i.g)⁻¹) ((G.ρ γ) p)) = _
-    rw [mul_inv_rev, map_mul, map_mul, Equiv.Perm.mul_apply, ContinuousLinearMap.mul_apply, h1, h2]
+    rw [mul_inv_rev, map_mul, map_mul, Equiv.Perm.mul_apply, mul_apply_eq_comp, h1, h2]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ConjugateRepresentations.PartitionSolutions.PartProd =====
@@ -506,7 +506,7 @@ theorem UpperTheory.V.Cj.A.coverEx :
     exact (hsub i s).trans (hAO s).2.1
   · intro γ i s p
     have e1 : G.ρ (γ * i.g)⁻¹ (G.ρ γ p) = G.ρ i.g⁻¹ p := by
-      rw [mul_inv_rev, map_mul, ContinuousLinearMap.mul_apply, G.ρ_inv_apply]
+      rw [mul_inv_rev, map_mul, mul_apply_eq_comp, G.ρ_inv_apply]
     have e2 : G.σ (γ * i.g)⁻¹ (G.σ γ s) = G.σ i.g⁻¹ s := by
       rw [mul_inv_rev, map_mul, Equiv.Perm.mul_apply]; simp
     simp only [Set.mem_preimage, Idx.smul_g, Idx.smul_j, e1, e2]
@@ -514,9 +514,9 @@ theorem UpperTheory.V.Cj.A.coverEx :
     have h5 := h4 _ _ _ (right_ne_zero_of_mul hne)
     have h6 : G.ρ i.g⁻¹ p ∉ O (G.σ i.g⁻¹ s) := fun h => hp ((hO i.g⁻¹ s p).1 h)
     by_cases hj : i.j ∈ O (G.σ i.g⁻¹ s)
-    · rw [if_pos hj] at h5
+    · rw [ite_eq_left hj] at h5
       exact absurd h5 h6
-    · rw [if_neg hj] at h5
+    · rw [ite_eq_right hj] at h5
       exact h5
 end -- clump:auto
 end -- clump:auto
@@ -571,10 +571,10 @@ theorem UpperTheory.V.Cj.A.pullAct :
   intro Γ V S _ _ _ d G _hcone l hl q P hP γ w
   have hinv : ∀ x : V, G.ρ γ (G.ρ γ⁻¹ x) = x := by
     intro x
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one, ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]
   have hinv' : ∀ x : V, G.ρ γ⁻¹ (G.ρ γ x) = x := by
     intro x
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel, map_one, ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one, one_apply_eq_self]
   have hinvS : ∀ s : S, G.σ γ (G.σ γ⁻¹ s) = s := by
     intro s
     rw [← Equiv.Perm.mul_apply, ← map_mul, mul_inv_cancel, map_one, Equiv.Perm.one_apply]
@@ -602,7 +602,7 @@ theorem UpperTheory.V.Cj.A.pullAct :
         = G.ρ γ⁻¹ (fderiv ℝ (fun x => l s x • x) p u) := by
       intro u
       rw [(hcomp.congr_of_eventuallyEq heq).fderiv]
-      simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, hinv]
+      simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, hinv]
     ext v
     rw [G.act_apply, hP w _ _ hp', hP _ s p hp]
     simp only [pull, ContinuousAlternatingMap.compContinuousLinearMap_apply, G.act_apply]
@@ -761,7 +761,7 @@ theorem UpperTheory.V.Cj.A.satClosed :
   have hopen := (hcont s).isOpen_inter_preimage G.isOpen (hT.isOpen_biInter fun s' _ => horb s')
   convert hopen using 1
   ext p
-  simp only [Set.mem_diff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_iInter, Set.mem_setOf_eq]
+  simp only [Set.mem_sdiff, Set.mem_inter_iff, Set.mem_preimage, Set.mem_iInter, Set.mem_ofPred_eq]
   refine and_congr_right fun hp => ⟨fun h s' hs' => ⟨hmem s p hp, ?_⟩, fun h => ?_⟩
   · rintro ⟨γ, rfl, k, hk, hk'⟩
     have h1 := (hl.1 (G.σ γ s)).2.1 k (hKY hk)
@@ -792,19 +792,19 @@ theorem UpperTheory.V.Cj.A.satFacts :
   intro Γ V S _ _ _ d G T K
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro γ s p
-    simp only [UpperTheory.V.Cj.A.sat, Set.mem_setOf_eq]
+    simp only [UpperTheory.V.Cj.A.sat, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨δ, t, ht, hT, hK⟩
       refine ⟨δ * γ, t, ht, ?_, ?_⟩
       · rw [map_mul, Equiv.Perm.mul_apply]
         exact hT
-      · rw [map_mul, ContinuousLinearMap.mul_apply]
+      · rw [map_mul, mul_apply_eq_comp]
         exact hK
     · rintro ⟨δ, t, ht, hT, hK⟩
       refine ⟨δ * γ⁻¹, t, ht, ?_, ?_⟩
       · rw [← Equiv.Perm.mul_apply, ← map_mul, inv_mul_cancel_right]
         exact hT
-      · rw [← ContinuousLinearMap.mul_apply, ← map_mul, inv_mul_cancel_right]
+      · rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel_right]
         exact hK
   · intro hK s
     rw [isOpen_iff_mem_nhds]
@@ -816,7 +816,7 @@ theorem UpperTheory.V.Cj.A.satFacts :
   · rintro K' hKK' s p ⟨γ, t, ht, hT, hp⟩
     exact ⟨γ, t, ht, hT, hKK' hp⟩
   · intro s p t ht
-    simp only [UpperTheory.V.Cj.A.sat, Set.mem_setOf_eq, map_smul, smul_smul]
+    simp only [UpperTheory.V.Cj.A.sat, Set.mem_ofPred_eq, map_smul, smul_smul]
     constructor
     · rintro ⟨γ, u, hu, hT, hK⟩
       exact ⟨γ, u * t, mul_pos hu ht, hT, hK⟩
@@ -870,7 +870,7 @@ theorem UpperTheory.V.Cj.A.suppBwd :
         GeneralLinearGroup.map (pFin E) (ratGL E a γ.1 * GlobalTheory.UnitaryBC.splitCentre E a t * g)), ⟨?_, ?_⟩,
         infGL_mul_finGL _⟩
       · rw [geo_ρ, ← map_smul, ← ht] at hρ
-        simp only [Set.mem_setOf_eq, map_mul, ContinuousLinearMap.mul_apply]
+        simp only [Set.mem_ofPred_eq, map_mul, mul_apply_eq_comp]
         exact hρ
       · simp only [map_mul, h1, mul_one]
         refine Set.mem_biUnion hσ ?_
@@ -912,7 +912,7 @@ theorem UpperTheory.V.Cj.A.suppFwd :
     Continuous.units_map _ (continuous_id.matrix_map h1)
   have hf : Continuous fun g : GA E a => GeneralLinearGroup.map (pFin E) g :=
     Continuous.units_map _ (continuous_id.matrix_map h2)
-  haveI : DiscreteTopology (GL (Fin a) (Af E) ⧸ U) := QuotientGroup.discreteTopology hU
+  have : DiscreteTopology (GL (Fin a) (Af E) ⧸ U) := QuotientGroup.discreteTopology hU
   refine ⟨(fun g : GA E a => ((GeneralLinearGroup.map (pFin E) g : GL (Fin a) (Af E)) : GL (Fin a) (Af E) ⧸ U)) '' C,
     (fun g : GA E a => sand (GeneralLinearGroup.map (pInf E) g) (hOne E a)) '' C,
     (hC.image (QuotientGroup.continuous_mk.comp hf)).finite_of_discrete,
@@ -928,11 +928,11 @@ theorem UpperTheory.V.Cj.A.suppFwd :
       refine hp ⟨⟨γ, Subgroup.mem_top γ⟩, r, hr, ⟨_, hm, ?_⟩, ⟨_, hm, ?_⟩⟩
       · simp only [map_mul, e1, pFin_infGL, pFin_finGL, one_mul, mul_one]
         rfl
-      · simp only [map_mul, pInf_infGL, pInf_finGL, mul_one, ContinuousLinearMap.mul_apply, e2, map_smul, geo_ρ]
+      · simp only [map_mul, pInf_infGL, pInf_finGL, mul_one, mul_apply_eq_comp, e2, map_smul, geo_ρ]
     refine ContinuousAlternatingMap.ext fun v => ?_
     have hv' : v = fun i => (2 : ℝ) • sand g (hv (hv.symm ((2 : ℝ)⁻¹ • sand g⁻¹ (v i)))) := by
       funext i
-      rw [LinearEquiv.apply_symm_apply, map_smul, smul_smul, ← ContinuousLinearMap.mul_apply, ← map_mul,
+      rw [LinearEquiv.apply_symm_apply, map_smul, smul_smul, ← mul_apply_eq_comp, ← map_mul,
         mul_inv_cancel, map_one]
       simp
     rw [hv', h, hR _ _ hlt, Matrix.mulVec_zero]
@@ -1014,7 +1014,7 @@ theorem UpperTheory.V.Cj.A.bwdStep :
       rw [← Equiv.Perm.mul_apply, ← map_mul, mul_inv_cancel, map_one, Equiv.Perm.one_apply]
     have hρ : ∀ v, G.ρ γ (G.ρ γ⁻¹ v) = v := by
       intro v
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one, ContinuousLinearMap.one_apply]
+      rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one, one_apply_eq_self]
     apply Subtype.ext
     funext s p
     show _ = G.tr q γ (((Sm fun i => u (i :: x)) : S → V → V [⋀^Fin q]→L[ℝ] (Fin d → ℂ)) (G.σ γ⁻¹ s) (G.ρ γ⁻¹ p))
@@ -1294,7 +1294,7 @@ theorem UpperTheory.V.Cj.A.fwdStep :
     have hne : x ≠ [] := by
       rintro rfl
       simp at hx
-    simp only [dif_pos hx, dif_pos hx']
+    simp only [dite_eq_left hx, dite_eq_left hx']
     have hn : (x.map (γ • ·)).map ((g (x.map (γ • ·)))⁻¹ • ·) = x.map ((g x)⁻¹ • ·) := by
       rw [hg γ x hne, List.map_map]
       congr 1
@@ -1303,12 +1303,12 @@ theorem UpperTheory.V.Cj.A.fwdStep :
     rw [hηc _ _ _ ((hlen x).trans hx) hn, hg γ x hne, map_mul]
     rfl
   · intro x hx
-    simp only [dif_pos hx]
+    simp only [dite_eq_left hx]
     rw [UpperTheory.V.Lit.Dr.dEquiv Γ V S d G q, (hη _ _).1, ← hu (g x) _ ((hlen x).trans hx)]
     congr 1
     simp [List.map_map, Function.comp_def, smul_smul]
   · intro x hx s p _ hp
-    simp only [dif_pos hx]
+    simp only [dite_eq_left hx]
     have hp' : G.ρ (g x)⁻¹ p ∈ {p | ∀ i ∈ x.map ((g x)⁻¹ • ·), p ∈ C i ((G.σ (g x)⁻¹) s)} := by
       intro i hi
       obtain ⟨j, hj, rfl⟩ := List.mem_map.1 hi

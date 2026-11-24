@@ -159,7 +159,7 @@ theorem Tw.smul (h : Tw ψ d d₁ e) {c : ℂ} (hc : c ≠ 0) : Tw ψ d d₁ (c 
   · intro l hl g hg
     obtain ⟨T, hT⟩ := h.adm l hl g hg
     refine ⟨c • T, fun f => ?_⟩
-    rw [LinearMap.comp_smul, LinearMap.smul_apply, hT, ContinuousLinearMap.smul_apply]
+    rw [LinearMap.comp_smul, LinearMap.smul_apply, hT, smul_apply]
   ·
     obtain ⟨Φ, hΦ, h0⟩ := h.ne
     exact ⟨Φ, hΦ, smul_ne_zero hc h0⟩

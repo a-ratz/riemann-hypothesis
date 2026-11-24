@@ -149,7 +149,7 @@ theorem cg_conj_bound (k : GL (Fin n) K) (N : ℕ) : ∃ N' : ℕ, ∀ X : GL (F
   have hb : ∀ w : WithZero (Multiplicative ℤ), ∃ c : ℕ, w ≤ exp (c : ℤ) := by
     intro w
     by_cases hw : w = 0
-    · exact ⟨0, by rw [hw]; exact zero_le'⟩
+    · exact ⟨0, by rw [hw]; exact zero_le⟩
     · refine ⟨(WithZero.log w).toNat, ?_⟩
       calc w = exp (WithZero.log w) := (WithZero.exp_log hw).symm
         _ ≤ exp ((WithZero.log w).toNat : ℤ) := exp_le_exp.2 (Int.self_le_toNat _)

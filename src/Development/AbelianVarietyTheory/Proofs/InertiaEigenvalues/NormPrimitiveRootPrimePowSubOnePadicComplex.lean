@@ -66,7 +66,7 @@ theorem _root_.GlobalTheory.Cyc.norm_sub_one_le_of_isPrimitiveRoot {K : Type*} [
     [IsUltrametricDist K]
     {n : ℕ} (hn : n ≠ 0) {ζ μ : K} (hζ : IsPrimitiveRoot ζ n) (hμ : μ ^ n = 1) :
     ‖μ - 1‖ ≤ ‖ζ - 1‖ := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   obtain ⟨k, -, rfl⟩ := hζ.eq_pow_of_pow_eq_one hμ
   have hnorm : ‖ζ‖ = 1 := by
     have h := congrArg norm hζ.pow_eq_one

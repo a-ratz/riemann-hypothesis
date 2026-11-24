@@ -253,7 +253,7 @@ theorem lg_agree (G : LogFGL v d) {p : ℕ} (hp : p.Prime) {γ : Fin d → Fin d
         omega
       apply Finset.sum_eq_zero
       intro b _
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hd
       have hle : s ≤ m := by
         first
@@ -266,7 +266,7 @@ theorem lg_agree (G : LogFGL v d) {p : ℕ} (hp : p.Prime) {γ : Fin d → Fin d
     have hsm : s ≤ m := Nat.lt_succ_iff.mp (Finset.mem_range.mp hs)
     apply Finset.sum_congr rfl
     intro b _
-    rw [if_pos (pow_dvd_pow p hsm), Nat.pow_div hsm hp.pos]
+    rw [ite_eq_left (pow_dvd_pow p hsm), Nat.pow_div hsm hp.pos]
     rfl
   · push_neg at hpow
     rw [hga a j hpow]
@@ -298,13 +298,13 @@ theorem coeff_lg_pcurve_top (G : LogFGL v d) {p : ℕ} (hp : p.Prime)
   have hsn : s ≤ n := (Finset.mem_range.mp hs).le
   apply Finset.sum_congr rfl
   intro b _
-  rw [if_pos (pow_dvd_pow p hsn), Nat.pow_div hsn hp.pos]
+  rw [ite_eq_left (pow_dvd_pow p hsn), Nat.pow_div hsn hp.pos]
   rfl
 
 private theorem exists_subring_mem_iff_isIntV : ∃ S : Subring C, ∀ x, x ∈ S ↔ IsIntV v x :=
   ⟨{ carrier := {x | 0 ≤ v x}
      mul_mem' := fun {a b} ha hb => by
-       simp only [Set.mem_setOf_eq, AddValuation.map_mul] at *
+       simp only [Set.mem_ofPred_eq, AddValuation.map_mul] at *
        exact add_nonneg ha hb
      one_mem' := by simp
      add_mem' := fun {a b} ha hb => le_trans (le_min ha hb) (AddValuation.map_add v a b)
@@ -535,7 +535,7 @@ theorem exists_average (G : LogFGL v d) {p : ℕ} (hp : p.Prime) {ζ : C}
   have h1 := lgCurve_expC G hp0 (fun b => (hδ b).1) c
   rw [hεδ] at h1
   have h2 := congrArg (PowerSeries.coeff (p * j)) h1
-  rw [hlgε, if_pos (dvd_mul_right p j), hexpand, if_pos (dvd_mul_right p j),
+  rw [hlgε, ite_eq_left (dvd_mul_right p j), hexpand, ite_eq_left (dvd_mul_right p j),
     Nat.mul_div_cancel_left j hp.pos] at h2
   exact h2.symm
 
@@ -594,7 +594,7 @@ theorem pt5' : TypicalCurveStructureConstants := by
   obtain ⟨hγ, hγty, hdet⟩ := hB
   have hdet' : v (tmat γ).det = 0 := hdet
   have : NeZero (p : C) := ⟨Nat.cast_ne_zero.2 hp.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C p
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C p
   choose δ hδc hδlg using fun a => exists_average G hp hζ (hγ a)
   have hlcδ : ∀ a n, G.lc p (δ a) n = (p : C) • G.lc p (γ a) (n + 1) := by
     intro a n

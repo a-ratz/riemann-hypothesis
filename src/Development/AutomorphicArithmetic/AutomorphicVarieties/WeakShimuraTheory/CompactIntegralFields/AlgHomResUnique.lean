@@ -113,7 +113,7 @@ theorem UpperTheory.V.Ws.conn :
   obtain ⟨f, hf, -⟩ := X.line Q hQ
   have k0 : RingHom.ker f ≤ RingHom.ker x := ker_le_of_eval X x f 0 (by rw [hf, h0])
   have k1 : RingHom.ker f ≤ RingHom.ker x' := ker_le_of_eval X x' f 1 (by rw [hf, h1])
-  haveI : (RingHom.ker f).IsPrime := RingHom.ker_isPrime f
+  have : (RingHom.ker f).IsPrime := RingHom.ker_isPrime f
   obtain ⟨q, hq, hqf⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal X.A)) (J := RingHom.ker f) bot_le
   exact ⟨fun hA => ⟨q, hq, hqf.trans k1, hA q hq (hqf.trans k0)⟩,
     fun hA => ⟨q, hq, hqf.trans k0, hA q hq (hqf.trans k1)⟩⟩

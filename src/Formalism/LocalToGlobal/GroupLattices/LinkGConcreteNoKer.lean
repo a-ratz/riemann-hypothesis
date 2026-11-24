@@ -536,7 +536,7 @@ theorem bc_Vsp {n' m : ℕ} (lam0 : Fin n' → Fin (m + 1) → ℤ) (hd : IsDomi
   intro s
   have hanti := kp_lamAt_antitone lam0 hd s
   beta_reduce
-  rw [if_pos hanti, if_pos hanti]
+  rw [ite_eq_left hanti, ite_eq_left hanti]
   exact bc_dualWeyl φK _ _ _
 
 end Lat
@@ -561,7 +561,7 @@ theorem Vsp_bot (K : Type) [Field K] {n' m : ℕ} (lam0 : Fin n' → Fin (m + 1)
   rintro _ ⟨F, hF, rfl⟩
   have h2 := hF s
   beta_reduce at h2
-  rw [if_neg hs'] at h2
+  rw [ite_eq_right hs'] at h2
   apply Finset.prod_eq_zero (Finset.mem_univ s)
   rw [(Submodule.mem_bot _).1 h2, map_zero]
 
@@ -868,7 +868,7 @@ theorem geo_chain (hV : Fr.Valid L₁ N₁) (hT : TieS Fr Dt) (j : ZMod J) (i : 
           exact Formalism.MainNotions.Proposition5Numerics.llPos_lt (Fr := Fr) (segZ j) l.val i.val hlt (by rw [← hcard]; exact hi')
         · have he : posU Fr (Dt.nL j) (segZ j) i.val = Fr.fr (segZ j) 0 := by
             unfold posU
-            rw [if_neg hi', show i.val - Dt.nL j = 0 by omega]
+            rw [ite_eq_right hi', show i.val - Dt.nL j = 0 by omega]
           rw [he]
           exact (Formalism.MainNotions.NormalSetCounting.ll_between (Fr := Fr) (nL := Dt.nL) hT.2.1 j l).2
     · show Dt.sgn j l = decide (Even (llPos Fr (segZ j) l.val))
@@ -920,10 +920,10 @@ theorem val_chi (hVA : ValAeval) (hV : Fr.Valid L₁ N₁) (hT : TieS Fr Dt) (j 
   · intro v hvL hvS
     have hvL' : v.1 ∈ Fr.letters (segZ j) := hvL
     have hg := geo_chain Dt hV hT j i v.1 hvL'
-    exact ⟨if_pos hvL', hg.1.1 hvS, hg.2⟩
+    exact ⟨ite_eq_left hvL', hg.1.1 hvS, hg.2⟩
   · intro v hvL hvS
     have hvL' : v.1 ∈ Fr.letters (segZ j) := hvL
-    rw [if_pos hvL']
+    rw [ite_eq_left hvL']
     exact X_mem_supported.2 (fun h => hvS ((geo_chain Dt hV hT j i v.1 hvL').1.2 h))
 
 end Geo
@@ -980,7 +980,7 @@ theorem chain_core (hNN : ValNN) (hPM : PhMon) (hFP : FdigPh) (hFS : FdigSum) (h
       | wc j' m => trivial
       | tp j' m h => exact absurd rfl (htp j' m h)
     · exact absurd rfl hν
-  rw [hPM, ← mul_assoc, monomial_mul, one_mul, hFP p O r J Dt hP rho _ _ _ hsM]
+  rw [hPM, ← mul_assoc, monomial_mul_monomial, one_mul, hFP p O r J Dt hP rho _ _ _ hsM]
   split_ifs with hd
   · refine le_trans ?_ (flt_valS_mul_ge _ _ _ _)
     have h0 : (0 : WithTop ℤ) ≤
@@ -1144,7 +1144,7 @@ variable {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing
 theorem ph_monomial_mul (β : TL J Dt.nL r × Fin r →₀ ℕ) (c : KK O) (M : ML J Dt.nL r × Fin r →₀ ℕ) (a : KK O) :
     monomial β c * Dt.ph (monomial M a) = monomial (β + phExp Dt M) (c * a) := by
   have h := phMon p O r J Dt M a
-  rw [h, monomial_mul]
+  rw [h, monomial_mul_monomial]
 
 theorem multideg_add' {ι : Type} {n : ℕ} (a b : ι × Fin n →₀ ℕ) (x : ι) :
     multideg (a + b) x = multideg a x + multideg b x := by
@@ -1271,7 +1271,7 @@ theorem digOK_phExp (hP : ∀ j m, 0 < Dt.P j m) (rho : (ZMod J × Fin r) × Fin
 
 theorem liftMon_notin (mo : TL J Dt.nL r × Fin r →₀ ℕ) (w : ML J Dt.nL r × Fin r)
     (hw : w ∉ Set.range Dt.liftVar) : liftMon Dt mo w = 0 :=
-  Finsupp.mapDomain_notin_range _ _ hw
+  Finsupp.mapDomain_of_notMem_range _ _ hw
 
 private theorem liftVar_injective' {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     {r J : ℕ} (Dt : SignedChainData p O r J) : Function.Injective Dt.liftVar := by
@@ -1313,9 +1313,9 @@ private theorem fdig_monomial {p : ℕ} {O : Type} [CommRing O] [IsDomain O] [Is
   by_cases hb : b = 0
   · simp [hb, SignedChainData.Fdig]
   unfold SignedChainData.Fdig
-  rw [support_monomial, if_neg hb]
+  rw [support_monomial, ite_eq_right hb]
   by_cases hd : Dt.digOK rho γ
-  · simp only [Finset.filter_singleton, hd, if_true, Finset.sum_singleton, coeff_monomial]
+  · simp only [Finset.filter_singleton, hd, ite_true, Finset.sum_singleton, coeff_monomial]
     rw [liftMon, ← rename_monomial, monomial_eq, map_mul, rename_C, Finsupp.prod, map_prod]
     congr 1
     simp only [map_pow, rename_X, liftE_apply_eq_liftExp]
@@ -1339,14 +1339,14 @@ theorem fdigPh : FdigPh := by
   rw [map_sum, Finset.mul_sum, hs]
   simp only [ph_monomial_mul, fdig_monomial]
   by_cases hd : Dt.digOK rho β
-  · rw [if_pos hd]
+  · rw [ite_eq_left hd]
     conv_rhs => rw [F.as_sum, Finset.mul_sum]
     refine Finset.sum_congr rfl (fun mo hmo => ?_)
-    rw [if_pos ((digOK_phExp Dt hP rho β mo (hsupp mo hmo)).2 hd),
-      liftMon_phExp Dt hP β mo (hsupp mo hmo), monomial_mul]
-  · rw [if_neg hd]
+    rw [ite_eq_left ((digOK_phExp Dt hP rho β mo (hsupp mo hmo)).2 hd),
+      liftMon_phExp Dt hP β mo (hsupp mo hmo), monomial_mul_monomial]
+  · rw [ite_eq_right hd]
     refine Finset.sum_eq_zero (fun mo hmo => ?_)
-    rw [if_neg (fun h => hd ((digOK_phExp Dt hP rho β mo (hsupp mo hmo)).1 h))]
+    rw [ite_eq_right (fun h => hd ((digOK_phExp Dt hP rho β mo (hsupp mo hmo)).1 h))]
 
 end Formalism.MainNotions.LetterSubstitution
 end -- clump:auto

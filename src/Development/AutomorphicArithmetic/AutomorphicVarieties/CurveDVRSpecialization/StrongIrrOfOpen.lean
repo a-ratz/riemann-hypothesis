@@ -53,7 +53,7 @@ theorem UpperTheory.V.Pr.strongIrrOfOpen :
   have hset : (S : Set G) = ⋂ v ∈ W, ⋂ φ ∈ W.dualAnnihilator,
       {g | φ (UpperTheory.V.Pr.gm r g *ᵥ v) = 0} := by
     ext g
-    simp only [SetLike.mem_coe, hiff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, hiff, Set.mem_iInter, Set.mem_ofPred_eq]
     constructor
     · intro h v hv φ hφ
       exact (Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iff W _).mpr (h v hv) φ hφ

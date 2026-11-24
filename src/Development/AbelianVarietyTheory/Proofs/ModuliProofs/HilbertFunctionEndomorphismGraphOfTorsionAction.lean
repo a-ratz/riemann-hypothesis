@@ -299,7 +299,7 @@ theorem eq_prod (hG : GlobalFnsSt) (hA : IsAbelianScheme A) {L : RigLB A} (cb : 
   have hE : ∀ i, (diff₂ (fun q : T ⊗ A ⟶ A => fr q.left) ((snd T A ^ n) ≫ φ i) (fst T A ≫ y ≫ φ i), (c i)⁻¹) ∈
       charSums L.L L.isLB x := by
     intro i
-    haveI := hφ i
+    have := hφ i
     have hb : (y ≫ φ i) ^ n = 1 := by
       rw [← show postHom (φ i) T y = y ≫ φ i from rfl, ← map_pow, hy, map_one]
     exact diff_mem x hG hA cb p₀ hT n hx (φ i) (y ≫ φ i) hb (c i)⁻¹ (weilIs_swap L.isLB (hc i))
@@ -380,7 +380,7 @@ open PairingOfForm in
 theorem weilIs_of_formIs_linComb : Out.Laws → Out.Laws2 → ∀ (K : Type) [Field K] [IsAlgClosed K] (P : Out.PolAV (Sp K)) (I : Type) [Fintype I] (φ : I → (P.A ⟶ P.A)) (ε : I → ℤ) (s : P.A ⟶ P.A) (k : ℕ) (x y : Out.baseOver (Sp K) ⟶ P.A) (c : I → Kˣ), (k : K) ≠ 0 → (∀ i, IsMonHom (φ i)) → FormIs P (LB.LinComb P.L (fun i => (φ i).left) ε) s → x ^ k = 1 → y ^ k = 1 → (∀ i, Out.WeilIs P.A P.L k (x ≫ φ i) (y ≫ φ i) (unitOn (c i))) → Out.WeilIs P.A P.L k x (y ≫ s) (unitOn (∏ i, c i ^ ε i)) := by
   intro hl hl2 K _ _ P I _ φ ε s k x y c hk hφ hF hx hy hc
   obtain ⟨t, ht⟩ := P.rigid
-  letI := P.isAb.comm
+  let := P.isAb.comm
   have := hF.1
   obtain ⟨cb⟩ := (hl.cube (Sp K) P (RigLB.mk P.L t P.isLB ht) rfl).1
   obtain ⟨d, hd, -⟩ := (hl.weil (Sp K) P k (Out.baseOver (Sp K))).1 x (y ≫ s) hx (by
@@ -484,8 +484,8 @@ theorem exists_matrix_form : Out.Laws → Out.Laws2 → ∀ (g N k : ℕ) (Mat :
       (∑ i, Mat i a * -(∑ l, Mat l j * ((Out.stdSymp g l i : ℤ) : ZMod k))) * N)) i, ?_⟩
   intro K _ _ P pt ζ f s hk hζ hB hpt hf hM hs
   refine ⟨hB.pos, fun j => ?_⟩
-  haveI : NeZero k := ⟨fun e => hk (by simp [e])⟩
-  haveI := hs.isMonHom
+  have : NeZero k := ⟨fun e => hk (by simp [e])⟩
+  have := hs.isMonHom
   have tors : ∀ (u : P.A ⟶ P.A) [IsMonHom u] i, (pt i ≫ u) ^ k = 1 := fun u _ i => by
     have := congrArg (IsMonHom.monoidHom u _) (hB.pow_eq_one i)
     rw [map_pow, map_one] at this

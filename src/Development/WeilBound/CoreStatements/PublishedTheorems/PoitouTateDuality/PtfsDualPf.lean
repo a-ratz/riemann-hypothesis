@@ -239,7 +239,7 @@ theorem dualCmp' (Kf : FiniteSubfield) [NumberField Kf.1] [IsAlgClosure Kf.1 (Al
   have hN0 : l ^ r ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
   have hmem : ζ ∈ maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1))) :=
     mem_maxUnramifiedOutside_of_pow_eq_one _ hN0 (natCast_pow_not_mem Kf S hS) hζ.pow_eq_one
-  haveI : NeZero (l ^ r) := ⟨hN0⟩
+  have : NeZero (l ^ r) := ⟨hN0⟩
   have hζL : IsPrimitiveRoot (⟨ζ, hmem⟩ : maxUnramifiedOutside Kf.1 (AlgebraicClosure ℚ) (S : Set (HeightOneSpectrum (𝓞 Kf.1)))) (l ^ r) := by
     rw [← IsPrimitiveRoot.coe_submonoidClass_iff]
     exact hζ

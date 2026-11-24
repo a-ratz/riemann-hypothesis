@@ -831,7 +831,7 @@ theorem pointwise_absorption_twisted :
   have hA0 := Real.sqrt_nonneg (t ^ 2 * g ^ 2 / k2)
   have hB0 := Real.sqrt_nonneg (k1 ^ 2 / k2)
   by_cases h : (-T - 1 ≤ x ∧ x ≤ -T + 1)
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     obtain ⟨h1, h2⟩ := hwin h
     have ht2 : t ^ 2 ≤ 9 / 16 := by
       have h0 : 0 ≤ |t| := abs_nonneg t
@@ -851,7 +851,7 @@ theorem pointwise_absorption_twisted :
     have k1' := mul_le_mul_of_nonneg_right key hE.le
     have k2' := mul_le_mul_of_nonneg_left h2 (sq_nonneg u)
     nlinarith
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     have t0 := hoff h
     subst t0
     have z : Real.sqrt ((0:ℝ) ^ 2 * g ^ 2 / k2) = 0 := by simp
@@ -1032,12 +1032,12 @@ theorem twistedExtension_sqInt : ∀ (n : ℕ) (M : Type) [TopologicalSpace M] [
           ← ENNReal.ofReal_add (by positivity) (by positivity),
           ← ENNReal.ofReal_add (by positivity) (by positivity)]
         apply ENNReal.ofReal_le_ofReal
-        rw [if_pos hx] at hreal
+        rw [ite_eq_left hx] at hreal
         linear_combination hreal
       · rw [Set.indicator_of_notMem (show x ∉ {x | -T - 1 ≤ δ * ψ x ∧ δ * ψ x ≤ -T + 1} from hx),
           ← ENNReal.ofReal_add (by positivity) (by positivity), add_zero]
         apply ENNReal.ofReal_le_ofReal
-        rw [if_neg hx] at hreal
+        rw [ite_eq_right hx] at hreal
         linear_combination hreal)
     hB hfin
   have hLHS : ∫⁻ x, ENNReal.ofReal (‖(θ (δ * ψ x) : ℂ) * G x - F x‖ ^ 2 *

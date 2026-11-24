@@ -54,7 +54,7 @@ theorem UpperTheory.V.Odd.chiFacts :
     have hb := congrArg (fun χ : DirichletCharacter (PadicAlgCl l) N => χ (b : ZMod N)) h
     simp only [chiOf_unit] at hb
     exact Units.ext (Subtype.ext hb)
-  · simp only [charSet, parE, Set.mem_setOf_eq, Set.mem_inter_iff]
+  · simp only [charSet, parE, Set.mem_ofPred_eq, Set.mem_inter_iff]
     refine ⟨?_, (b_parity k _).1.2 hk⟩
     intro b hb
     rw [MonoidHom.mem_ker] at hb ⊢

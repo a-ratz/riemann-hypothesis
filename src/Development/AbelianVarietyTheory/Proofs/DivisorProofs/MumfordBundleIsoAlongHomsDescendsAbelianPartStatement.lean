@@ -395,8 +395,8 @@ theorem exists_gen_mul_level : ∀ {R : Type} [CommRing R] [IsDomain R] {I : Ide
   intro R _ _ I D₁ D₂ A₁ A₂ G₁ G₂ _ _ _ _ U₁ U₂ e f g _ _ fB gB _ _ hf hg W hW hW₁ hW₂ u hu hadd
   let f' := (Over.pullback (thick R I e)).map f
   let g' := (Over.pullback (thick R I e)).map g
-  haveI : Nonempty G₁.left := ⟨eSec G₁ (⊥ : PrimeSpectrum R)⟩
-  haveI : Nonempty G₂.left := ⟨eSec G₂ (⊥ : PrimeSpectrum R)⟩
+  have : Nonempty G₁.left := ⟨eSec G₁ (⊥ : PrimeSpectrum R)⟩
+  have : Nonempty G₂.left := ⟨eSec G₂ (⊥ : PrimeSpectrum R)⟩
   have hL : (join U₁.LG.L U₂.LG.L).IsLB := join_isLB U₁.LG.isLB U₂.LG.isLB
   obtain ⟨u', hu', vu⟩ := exists_gen hL
     (φ' := fun k => mφ (thickObj R I e G₁) (thickObj R I e G₂) f' g' k ≫
@@ -1104,8 +1104,8 @@ theorem GlobalTheory.HomMum.lbIso_descends : ∀ (R : Type) [CommRing R] [IsDoma
   have hGF := GlobalTheory.firstFiveLaws.1.globalFns
   obtain ⟨-, -, -, hC⟩ := hR
   have := hG₁.geomConnected
-  haveI : Nonempty G₁.left := ⟨eSec G₁ (⊥ : PrimeSpectrum R)⟩
-  haveI : Nonempty G₂.left := ⟨eSec G₂ (⊥ : PrimeSpectrum R)⟩
+  have : Nonempty G₁.left := ⟨eSec G₁ (⊥ : PrimeSpectrum R)⟩
+  have : Nonempty G₂.left := ⟨eSec G₂ (⊥ : PrimeSpectrum R)⟩
   obtain ⟨w, hw⟩ := H
   obtain ⟨t, ht, -⟩ := exists_gen_of_iso (isPart_inr U₁.LG.L U₂.LG.L) (isPart_inl U₁.LG.L U₂.LG.L) w hw
   have hN := join_isLB U₁.LG.isLB U₂.LG.isLB

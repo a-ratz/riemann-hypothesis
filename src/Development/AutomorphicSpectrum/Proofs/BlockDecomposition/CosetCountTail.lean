@@ -136,7 +136,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 
 theorem finite_cosets {I : Subgroup G} (ho : IsOpen (I : Set G)) {D : Set G} (hD : IsCompact D) :
     {q : G ⧸ I | q.out ∈ D}.Finite := by
-  haveI : DiscreteTopology (G ⧸ I) := QuotientGroup.discreteTopology ho
+  have : DiscreteTopology (G ⧸ I) := QuotientGroup.discreteTopology ho
   have h : IsCompact ((QuotientGroup.mk : G → G ⧸ I) '' D) := hD.image QuotientGroup.continuous_mk
   exact h.finite_of_discrete.subset fun q hq => ⟨q.out, hq, QuotientGroup.out_eq' q⟩
 
@@ -166,9 +166,9 @@ theorem card_cosets {t : Fin n → kˣ} (ht : Contracts t) (S : Finset (GL (Fin 
     (hS : ∀ q, q ∈ S ↔ q.out ∈ iwahoriCoset t) : (S.card : ℝ) = (deltaB t)⁻¹ := by
   have ho := IwahoriOnto.isOpen_iwahori k (Fin n)
   have hc := IwahoriOnto.isCompact_iwahori k (Fin n)
-  letI : MeasurableSpace (GL (Fin n) k) := _root_.borel _
-  haveI : BorelSpace (GL (Fin n) k) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (GL (Fin n) k) :=
+  let : MeasurableSpace (GL (Fin n) k) := _root_.borel _
+  have : BorelSpace (GL (Fin n) k) := ⟨rfl⟩
+  have : LocallyCompactSpace (GL (Fin n) k) :=
     hc.locallyCompactSpace_of_mem_nhds_of_group (ho.mem_nhds (one_mem _))
   let μ : Measure (GL (Fin n) k) := Measure.haar
   have h1 := measure_iwahoriCoset μ ht

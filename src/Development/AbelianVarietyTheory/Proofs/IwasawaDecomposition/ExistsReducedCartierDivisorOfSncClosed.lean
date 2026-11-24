@@ -171,8 +171,8 @@ private lemma exists_eq_mul_of_pow_eq_mul_germ (T : Closeds X) (U : X.affineOpen
     (hx : x ∈ (U : X.Opens)) (a b : X.presheaf.stalk x) (n : ℕ)
     (hab : a ^ n = b * X.presheaf.germ U x hx h) :
     ∃ c, a = c * X.presheaf.germ U x hx h := by
-  obtain ⟨V₁, hx₁, s, rfl⟩ := X.presheaf.germ_exist a
-  obtain ⟨V₂, hx₂, t, rfl⟩ := X.presheaf.germ_exist b
+  obtain ⟨V₁, hx₁, s, rfl⟩ := X.presheaf.exists_germ_eq a
+  obtain ⟨V₂, hx₂, t, rfl⟩ := X.presheaf.exists_germ_eq b
   have hx₂U : x ∈ V₂ ⊓ (U : X.Opens) := ⟨hx₂, hx⟩
   have key : X.presheaf.germ V₁ x hx₁ (s ^ n) = X.presheaf.germ (V₂ ⊓ (U : X.Opens)) x hx₂U
       (X.presheaf.map (homOfLE (inf_le_left : V₂ ⊓ (U : X.Opens) ≤ V₂)).op t *

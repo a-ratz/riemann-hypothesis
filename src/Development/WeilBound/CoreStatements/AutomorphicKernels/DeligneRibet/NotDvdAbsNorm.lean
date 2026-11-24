@@ -218,7 +218,7 @@ theorem finite_excluded (𝔣 : Ideal (𝓞 F)) (hf : 𝔣 ≠ ⊥) (W : Finset 
           ⋃ n ∈ Finset.range (B + 1), {I : Ideal (𝓞 F) | Ideal.absNorm I = n} := by
         ext I; simp [Nat.lt_succ_iff]
       rw [this]
-      exact Set.Finite.biUnion (Finset.finite_toSet _) fun n _ => Ideal.finite_setOfPred_absNorm_eq n
+      exact Set.Finite.biUnion (Finset.finite_toSet _) fun n _ => Ring.HasFiniteQuotients.finite_absNorm_eq n
     exact (h.preimage (f := fun v : HeightOneSpectrum (𝓞 F) => v.asIdeal)
       (fun v _ w _ e => HeightOneSpectrum.ext e))
   have h3 : {v : HeightOneSpectrum (𝓞 F) | ∃ x ∈ W, x ∈ v.asIdeal}.Finite := by
@@ -273,7 +273,7 @@ theorem exists_degOne_prime_in_rayClass : ∀ (F : Type) [Field F] [NumberField 
   have hc : IsCoprime 𝔞 𝔣 := Ideal.isCoprime_iff_sup_eq.2 hac
   obtain ⟨J, hJ⟩ := GlobalTheory.RayFieldCompare.exists_integral 𝔣 𝔞 ha0 hc
   obtain ⟨v, hv, hd, hfr⟩ := exists_degOne_isFrob (Art (QuotientGroup.mk J)) _ (finite_excluded 𝔣 hf W B hW)
-  simp only [Set.mem_setOf_eq, not_or, not_exists, not_and] at hv
+  simp only [Set.mem_ofPred_eq, not_or, not_exists, not_and] at hv
   obtain ⟨hv1, hv2, hv3⟩ := hv
   have heq : (QuotientGroup.mk J : GlobalTheory.IndefiniteRowSideFullHecke.RayPrincipalIdeals.RayClassGroup 𝔣) = GlobalTheory.IndefiniteRowSideFullHecke.RayPrincipalIdeals.primeClass 𝔣 v hv1 :=
     Art.injective (GlobalTheory.RayFieldCompare.isFrob_unique L (hArt v hv1).1 hfr (hArt v hv1).2)
@@ -337,8 +337,8 @@ theorem absNorm_not_dvd_of_sup_span_eq_top :
     rcases Nat.pow_eq_one.mp hnorm.symm with h' | h'
     · exact hl.one_lt.ne' h'
     · omega
-  · haveI := Ideal.finiteQuotientOfFreeOfNeBot 𝔟 h𝔟
-    haveI := Fact.mk hl
+  · have := Ideal.finiteQuotientOfFreeOfNeBot 𝔟 h𝔟
+    have := Fact.mk hl
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hdvd
     obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' l hdvd
     have hlx : (l : 𝓞 F ⧸ 𝔟) * x = 0 := by
@@ -738,9 +738,9 @@ theorem eq_at_neg_of_eq_right (k p : ℕ) (hp : p < k) (T G : ℂ → ℂ)
     hAT₂.eqOn_of_preconnected_of_eventuallyEq hAG₂ hV₂.isPreconnected hz₂ hev₂
   refine hE₂ ?_
   refine ⟨?_, ?_⟩
-  · simp only [Set.mem_setOf_eq, Complex.neg_re, Complex.natCast_re]
+  · simp only [Set.mem_ofPred_eq, Complex.neg_re, Complex.natCast_re]
     linarith
-  · simp only [Set.mem_setOf_eq, Complex.neg_re, Complex.natCast_re]
+  · simp only [Set.mem_ofPred_eq, Complex.neg_re, Complex.natCast_re]
     linarith
 
 theorem abelValue_mem_zInv (ι : Type) [Fintype ι] (r l : ℕ) (a : ι → Fin r → ℝ) (b : ι → ℝ)
@@ -826,13 +826,13 @@ theorem padicValRat_int_div_nonneg (l : ℕ) [Fact l.Prime] (Z : ℤ) (D : ℕ) 
   · simp
   have hZ' : (Z : ℚ) ≠ 0 := Int.cast_ne_zero.mpr hZ
   have hD' : (D : ℚ) ≠ 0 := Nat.cast_ne_zero.mpr hD
-  rw [padicValRat.div hZ' hD', padicValRat.of_int, padicValRat.of_nat, padicValNat.eq_zero_of_not_dvd h]
+  rw [padicValRat.div hZ' hD', padicValRat.of_int, padicValRat.of_nat, multiplicity_eq_zero_of_not_dvd h]
   simp
 
 theorem classTwist_value_int : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (𝔣 𝔞 𝔟 𝔠 : Ideal (𝓞 F)) (J : Type) [Fintype J] (r : J → ℕ) (y : J → 𝓞 F) (v : ∀ j, Fin (r j) → 𝓞 F), ClassParam 𝔣 𝔞 𝔟 r y v → 𝔠.IsPrime → (Ideal.absNorm 𝔠).Prime → (∀ j i, v j i ∉ 𝔠 * 𝔟) → ∀ T : ℂ → ℂ, DifferentiableOn ℂ T {1}ᶜ → (∀ s : ℂ, 1 < s.re → HasSum (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I 𝔞} => (classWeight (Ideal.absNorm 𝔠) 𝔠 I.1 : ℂ) * ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)) (T s)) → ∀ k : ℕ, 1 ≤ k → ∃ q : ℚ, T (1 - (k : ℂ)) = (q : ℂ) ∧ ∀ l : ℕ, l.Prime → l ≠ Ideal.absNorm 𝔠 → ¬ l ∣ Ideal.absNorm 𝔟 → 0 ≤ padicValRat l q := by
   intro F _ _ _ 𝔣 𝔞 𝔟 𝔠 J _ r y v hP h𝔠 hN hv T hT hS k hk
   obtain ⟨hb, hy, hvv, hr, e, he⟩ := hP
-  letI : Fintype (F →+* ℝ) := Fintype.ofEquiv (F →+* ℂ) (realEmbeddingsEquiv F).symm
+  let : Fintype (F →+* ℝ) := Fintype.ofEquiv (F →+* ℂ) (realEmbeddingsEquiv F).symm
   set l := Ideal.absNorm 𝔠 with hl_def
   have hl0 : 0 < l := hN.pos
   have hcard : Fintype.card (F →+* ℝ) = Module.finrank ℚ F := by
@@ -925,7 +925,7 @@ theorem classTwist_value_int : ∀ (F : Type) [Field F] [NumberField F] [IsTotal
     push_cast
     ring
   · intro l' hl' hne hndvd
-    haveI := Fact.mk hl'
+    have := Fact.mk hl'
     apply padicValRat_int_div_nonneg l' Z _ hD
     intro hdvd
     rcases (Nat.Prime.dvd_mul hl').mp hdvd with h | h
@@ -1087,12 +1087,12 @@ theorem smoothed_of
       · have e : f ∘ m = fun I' => ((Ideal.absNorm 𝔠 : ℕ) : ℂ) ^ (-s) * ((Ideal.absNorm I'.1 : ℕ) : ℂ) ^ (-s) := by
           funext I'
           simp only [Function.comp, f, m]
-          rw [if_pos Ideal.mul_le_left, map_mul, Nat.cast_mul, Complex.natCast_mul_natCast_cpow]
+          rw [ite_eq_left Ideal.mul_le_left, map_mul, Nat.cast_mul, Complex.natCast_mul_natCast_cpow]
         rw [e]
         exact hB.mul_left _
       · intro I hI
         simp only [f]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro hle
         apply hI
         obtain ⟨I', hI'⟩ := Ideal.dvd_iff_le.2 hle
@@ -1321,7 +1321,7 @@ theorem deligneRibet : GlobalTheory.Published.DeligneRibet := by
     have hl0 : (l : ℚ) ≠ 0 := by exact_mod_cast hl.ne_zero
     have ht0' : (t : ℚ) ≠ 0 := by exact_mod_cast ht0
     have hlm : padicValRat l ((l : ℚ) ^ m) = m := by
-      rw [show ((l : ℚ) ^ m) = ((l ^ m : ℕ) : ℚ) by push_cast; rfl, padicValRat.of_nat, padicValNat.prime_pow]
+      rw [show ((l : ℚ) ^ m) = ((l ^ m : ℕ) : ℚ) by push_cast; rfl, padicValRat.of_nat, Nat.multiplicity_prime_pow]
     rw [mul_assoc, padicValRat.mul (pow_ne_zero _ hl0) (mul_ne_zero ht0' hr0), padicValRat.mul ht0' hr0, hlm]
     have hv : 0 ≤ padicValRat l (t : ℚ) := by
       rw [padicValRat.of_int]

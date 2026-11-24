@@ -144,7 +144,7 @@ private theorem continuous_moduleTopology_of_semilinear {R S M N : Type*} [CommR
     [ContinuousSMul S N] [ContinuousAdd N] (g : R → S) (hg : Continuous g) (f : M →+ N)
     (hf : ∀ (a : R) (x : M), f (a • x) = g a • f x) :
     @Continuous M N (moduleTopology R M) tN f := by
-  letI t : TopologicalSpace M := TopologicalSpace.induced f tN
+  let t : TopologicalSpace M := TopologicalSpace.induced f tN
   have h1 : @ContinuousSMul R M _ _ t := by
     constructor
     rw [continuous_induced_rng]

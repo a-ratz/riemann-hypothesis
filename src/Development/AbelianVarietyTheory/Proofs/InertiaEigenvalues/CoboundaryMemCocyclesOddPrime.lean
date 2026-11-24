@@ -350,7 +350,7 @@ theorem exists_pow_smul_mem_lattice {l : ℕ} [Fact (Nat.Prime l)] (LL : FinExt 
   have hl : algebraMap ↥(OL LL) ↥LL.1 (l : ↥(OL LL)) = (l : ↥LL.1) := map_natCast _ l
   rw [← hl]
   refine exists_pow_smul_mem (l : ↥(OL LL)) (fun c => ?_) T.L.T v hv
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   obtain ⟨n, hn⟩ := exists_pow_mul_isIntegral (l := l) (Algebra.IsAlgebraic.isAlgebraic (R := ℚ_[l]) c)
   exact ⟨n, ⟨(l : ↥LL.1) ^ n * c, hn⟩, by rw [hl]; rfl⟩
 
@@ -411,7 +411,7 @@ variable {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [Algebra ℤ_[l] O]
 
 theorem cc_one : WittVector.constantCoeff (1 : Ainf l) ≠ 0 := by
   obtain ⟨e, -, hne⟩ := GlobalTheory.CrisLoc.exists_root_ne_one l
-  haveI : Nontrivial (Per.Fl l) := ⟨e, 1, hne⟩
+  have : Nontrivial (Per.Fl l) := ⟨e, 1, hne⟩
   rw [map_one]
   exact one_ne_zero
 
@@ -508,8 +508,8 @@ theorem sub_mem_pow_smul_lattice_eventually :
     rw [h1, ne_eq, map_eq_zero_iff _ (algebraMap ℚ_[l] ↥LL.1).injective]
     exact_mod_cast (Fact.out : l.Prime).ne_zero
   have hU : IsOpen (((l : ↥LL.1) ^ m) • (T.L.T : Set T.V)) := hT.smul₀ hc
-  haveI := hO.2.2.2.1
-  haveI := IsModuleTopology.topologicalAddGroup (↥LL.1) T.V
+  have := hO.2.2.2.1
+  have := IsModuleTopology.isTopologicalAddGroup (↥LL.1) T.V
   have hf : Continuous fun g : Gl l => T.ρ g t - t := (T.cont t).sub continuous_const
   have h0 : (fun g : Gl l => T.ρ g t - t) 1 ∈ ((l : ↥LL.1) ^ m) • (T.L.T : Set T.V) := by
     simp only [map_one, Module.End.one_apply, sub_self]
@@ -549,7 +549,7 @@ namespace GlobalTheory.InertiaEigenvalues
 
 theorem mem_pow_smul_of_coord_dvd : ∀ {l : ℕ} [Fact l.Prime] {O K : Type} [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [Field K] [Algebra ℚ_[l] K] [Algebra O K] [TopologicalSpace K] {G : Type} [Group G] [TopologicalSpace G] (T : LocLat G ℚ_[l] K O) (x : ↥T.L.T) (k : ℕ), (∀ φ : ↥T.L.T →+ ℤ_[l], (∀ (z : ℤ_[l]) (t : ↥T.L.T), φ (algebraMap ℤ_[l] O z • t) = z * φ t) → (l : ℤ_[l]) ^ k ∣ φ x) → ∃ y ∈ T.L.T, (x : T.V) = ((l : O) ^ k) • y := by
   intro l _ O K _ _ _ _ _ _ _ _ G _ _ T x k h
-  haveI : Module.Free O ↥T.L.T := T.L.free
+  have : Module.Free O ↥T.L.T := T.L.free
   let b := Module.Free.chooseBasis O ↥T.L.T
   let f := Module.Free.chooseBasis ℤ_[l] O
   have hφ : ∀ i j, (l : ℤ_[l]) ^ k ∣ f.repr (b.repr x i) j := by
@@ -795,7 +795,7 @@ theorem cont_at_one : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (LL : FinExt
   have hK : (l : ↥LL.1) ≠ 0 := by
     rw [← map_natCast (algebraMap ℚ_[l] ↥LL.1)]
     exact (map_ne_zero _).2 (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
-  refine (main_gen (sQ l) continuous_subtype_val T hK (GlobalTheory.T.twistedAction_acrisTensor_sub_eventually_lpow (sQ l) continuous_subtype_val T ?hT) ?hD
+  refine (main_gen (sQ l) continuous_subtypeVal T hK (GlobalTheory.T.twistedAction_acrisTensor_sub_eventually_lpow (sQ l) continuous_subtypeVal T ?hT) ?hD
     (_root_.GlobalTheory.InertiaEigenvalues.mem_pow_smul_of_coord_dvd T) b c hc m).mono ?fin
   case fin =>
     rintro g ⟨x, hx, e⟩
@@ -920,11 +920,11 @@ namespace GlobalTheory.TContInj
 theorem bcris_nontrivial (l : ℕ) [Fact l.Prime] : Nontrivial (Per.Bcris l) := by
   obtain ⟨j, hj⟩ := GlobalTheory.MemLoc.exists_isCrisP l
   obtain ⟨ι, -, -⟩ := GlobalTheory.MemLoc.exists_iota_cris_dR l j hj
-  haveI : Nontrivial (Per.BdR l) := ⟨(_root_.GlobalTheory.MemLoc.BdRField.bdR_isField l).2.2.1.exists_pair_ne⟩
+  have : Nontrivial (Per.BdR l) := ⟨(_root_.GlobalTheory.MemLoc.BdRField.bdR_isField l).2.2.1.exists_pair_ne⟩
   exact ι.domain_nontrivial
 
 theorem zl_bcris_injective (l : ℕ) [Fact l.Prime] : Function.Injective (algebraMap ℤ_[l] (Per.Bcris l)) := by
-  haveI := bcris_nontrivial l
+  have := bcris_nontrivial l
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro z hz
   by_contra h0
@@ -956,7 +956,7 @@ end GlobalTheory.TContInj
 
 theorem GlobalTheory.TContInj.main : ∀ (l : ℕ) [Fact l.Prime] (LL : FinExt l) (T : QLat LL), Function.Injective (fun x : ↥T.L.T => (1 : OB l ↥(OL LL)) ⊗ₜ[↥(OL LL)] x) := by
   intro l _ LL T
-  haveI : Module.Free (↥(OL LL)) ↥T.L.T := T.L.free
+  have : Module.Free (↥(OL LL)) ↥T.L.T := T.L.free
   exact GlobalTheory.TContInj.one_tmul_injective l ↥(OL LL) ↥T.L.T
 end -- clump:auto
 end -- clump:auto

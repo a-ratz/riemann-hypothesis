@@ -53,7 +53,7 @@ private theorem finite_family_of_compact {X T V : Type} [TopologicalSpace X] [Ad
     (U : Submodule ℂ T) [FiniteDimensional ℂ U] (K : Set X) (hK : IsCompact K) (f : X → T)
     (hf : ∀ k ∈ K, f k ∈ U) (hc : ∀ v, ContinuousOn (fun k => ev v (f k)) K) :
     ∃ (n : ℕ) (e : Fin n → T), ∀ k ∈ K, ∃ c : Fin n → ℂ, (∀ i, ‖c i‖ ≤ 1) ∧ f k = ∑ i, c i • e i := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   let r : V → Module.Dual ℂ U := fun v => (ev v).domRestrict U
   let S : Submodule ℂ (Module.Dual ℂ U) := Submodule.span ℂ (Set.range r)
   have hS : S = ⊤ := by
@@ -74,7 +74,7 @@ private theorem finite_family_of_compact {X T V : Type} [TopologicalSpace X] [Ad
     induction hl using Submodule.span_induction with
     | mem x hx =>
       obtain ⟨v, rfl⟩ := hx
-      exact continuousOn_iff_continuous_restrict.mp (hc v)
+      exact continuousOn_iff_continuous_domRestrict.mp (hc v)
     | zero => simpa using continuous_const
     | add x y _ _ hx hy =>
       change Continuous fun k : K => x (g k) + y (g k)

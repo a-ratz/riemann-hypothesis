@@ -76,7 +76,7 @@ theorem coe_inv_val (g : G) : (((g⁻¹ : G) : 𝔸ˣ) : 𝔸) = ↑((g : 𝔸ˣ
 variable (h : IsExpLieAlgebra G 𝔤)
 include h
 
-theorem isClosed_lie : IsClosed (𝔤 : Set 𝔸) := 𝔤.closed_of_finiteDimensional
+theorem isClosed_lie : IsClosed (𝔤 : Set 𝔸) := 𝔤.isClosed_of_finiteDimensional
 
 theorem conj_mem (g : G) {Y : 𝔸} (hY : Y ∈ 𝔤) :
     ((g : 𝔸ˣ) : 𝔸) * Y * (((g⁻¹ : G) : 𝔸ˣ) : 𝔸) ∈ 𝔤 := by

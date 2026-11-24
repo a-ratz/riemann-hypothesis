@@ -108,7 +108,7 @@ theorem exists_local_quot {Ω : Type} [Field Ω] [CharZero Ω] {X X' : Scheme.{0
     (h₀ : ⊤ ≤ ξ ⁻¹ᵁ W₀) :
     ∃ l, x' l ≠ 0 ∧ ∃ b : Γ(X, W₀), t ∈ X.basicOpen b ∧
       ∀ i, ∃ a : Γ(X, W₀), x' i / x' l * valR ξ W₀ b = valR ξ W₀ a := by
-  haveI : IsOpenImmersion ((f ⁻¹ᵁ U).ι ≫ f) := by
+  have : IsOpenImmersion ((f ⁻¹ᵁ U).ι ≫ f) := by
     rw [← morphismRestrict_ι]
     infer_instance
   have hr : Set.range ζ ⊆ Set.range (f ⁻¹ᵁ U).ι := by
@@ -813,7 +813,7 @@ theorem homog_rename_inl {f : MRing ι} {d : K → ℕ} (hf : IsMultiHomog f d) 
     rw [Sum.elim_inl, ← hf m' hm' k]
     exact Finset.sum_congr rfl fun i _ => Finsupp.mapDomain_apply_of_injective joinInl_injective m' ⟨k, i⟩
   | inr k =>
-    refine Finset.sum_eq_zero fun i _ => Finsupp.mapDomain_notin_range _ _ ?_
+    refine Finset.sum_eq_zero fun i _ => Finsupp.mapDomain_of_notMem_range _ _ ?_
     rintro ⟨q, hq⟩
     exact Sum.inl_ne_inr (congrArg Sigma.fst hq)
 
@@ -980,7 +980,7 @@ open ResTop in
 theorem resExists_of_resK : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement → ResExistsStatement := by
   intro hRes K _ ι _ P J e hP hJ hJP
   obtain ⟨Ω, _, y, rfl, -⟩ := GroundTheory.Heights₂.Heights.HilbertSamuel.BirationalModelExists.proof K ι P (e + 1) hP
-  haveI : CharZero Ω := charZero_of_horizontal y hP.2.2.1
+  have : CharZero Ω := charZero_of_horizontal y hP.2.2.1
   have hprime : (mCoordIdeal y).IsPrime := hP.2.1.1
   obtain ⟨β, hβJ, ⟨b, hβ⟩, hβP⟩ : ∃ β ∈ J, (∃ b, IsMultiHomog β b) ∧ β ∉ mCoordIdeal y := by
     obtain ⟨S, hS, rfl⟩ := hJ

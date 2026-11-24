@@ -417,7 +417,7 @@ theorem exists_reps {L M : AddSubgroup K} (hL : IsCompact (L : Set K)) (hM : IsO
   classical
   have : CompactSpace L := isCompact_iff_compactSpace.1 hL
   have ho : IsOpen ((M.addSubgroupOf L : AddSubgroup L) : Set L) :=
-    hM.preimage continuous_subtype_val
+    hM.preimage continuous_subtypeVal
   have : Finite (L ⧸ M.addSubgroupOf L) := AddSubgroup.quotient_finite_of_isOpen _ ho
   have : Fintype (L ⧸ M.addSubgroupOf L) := Fintype.ofFinite _
   refine ⟨Finset.univ.image fun y : L ⧸ M.addSubgroupOf L => ((Quotient.out y : L) : K), ?_, ?_⟩
@@ -457,7 +457,7 @@ theorem dual_exists (hD : LocalDatum K R ψ) {a b : K} (hab : a * b = 1) (ha : a
   by_contra hcon
   push Not at hcon
   let X : K → ℂ := fun x => if h : x ∈ R then χ ⟨x, h⟩ else 0
-  have hX : ∀ (x : K) (h : x ∈ R), X x = χ ⟨x, h⟩ := fun x h => dif_pos h
+  have hX : ∀ (x : K) (h : x ∈ R), X x = χ ⟨x, h⟩ := fun x h => dite_eq_left h
   have hSR : ∀ s ∈ S, s ∈ R := fun s hs => hS.1 s hs
 
   have h1 : ∀ s ∈ S, ∑ r ∈ S, X r * ψ (b * s * r) = 0 := by

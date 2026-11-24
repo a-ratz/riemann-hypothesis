@@ -135,12 +135,12 @@ private theorem eqs_iff (s : ℤˣ) (X : Matrix (Fin m ⊕ Fin m) (Fin m ⊕ Fin
       obtain ⟨a, ha, hb⟩ := ex_theta _ _ (sub_eq_zero.1 h1)
       refine ⟨⟨a, s⟩, rfl, ?_⟩
       rw [← Matrix.fromBlocks_toBlocks X, h2, h3, ← ha, ← hb]
-      exact if_pos hs
+      exact ite_eq_left hs
     · obtain ⟨h1, h2, h3, -⟩ := Matrix.fromBlocks_inj.1 h
       obtain ⟨a, ha, hb⟩ := ex_theta _ _ (sub_eq_zero.1 h1)
       refine ⟨⟨a, s⟩, rfl, ?_⟩
       rw [← Matrix.fromBlocks_toBlocks X, h2, h3, ← ha, ← hb]
-      exact if_neg hs
+      exact ite_eq_right hs
   · rintro ⟨x, rfl, rfl⟩
     rw [emb_def]
     unfold eqs
@@ -196,7 +196,7 @@ private theorem le_ker {G : Type*} [Group G] (φ : Γ →* G) (h : IsLocallyCons
 private theorem kills_closure (hη : IsLocallyConstant η) {R : Type} [CommRing R] [Algebra O R] [IsCO O R]
     (s : GLift O η Ψ R) (N : Set Γ) (hN : Kills N R s) :
     (Subgroup.normalClosure N).topologicalClosure ≤ s.hom.ker := by
-  haveI : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal R) R := IsCO.complete (O := O)
   intro g hg
   rw [MonoidHom.mem_ker]
   have hn : ∀ n : ℕ, GG.map (Ideal.Quotient.mk (maximalIdeal R ^ n)) (s.hom g) = 1 := by
@@ -331,7 +331,7 @@ end Desc
 private theorem totDisc_quot {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [CompactSpace G]
     [TotallyDisconnectedSpace G] (N : Subgroup G) [N.Normal] (hN : IsClosed (N : Set G)) :
     TotallyDisconnectedSpace (G ⧸ N) := by
-  haveI : IsClosed (N : Set G) := hN
+  have : IsClosed (N : Set G) := hN
   rw [totallyDisconnectedSpace_iff_connectedComponent_one]
   refine Set.eq_singleton_iff_unique_mem.mpr ⟨mem_connectedComponent, fun q hq => ?_⟩
   induction q using QuotientGroup.induction_on with
@@ -367,8 +367,8 @@ private theorem rep_quot {Q : Cond O rb} {R : Type} [CommRing R] [Algebra O R] [
     (hJ : ∀ (R' : Type) [CommRing R'] [Algebra O R'] [IsCO O R'] (f : R →ₐ[O] R'),
       Q R' (r.map f) ↔ J ≤ RingHom.ker f) (hne : J ≠ ⊤) :
     ∃ (S : Type) (_ : CommRing S) (_ : Algebra O S) (_ : IsCO O S) (s : Lift O rb S), Represents Q s := by
-  haveI : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hne
-  haveI hco : IsCO O (R ⧸ J) :=
+  have : Nontrivial (R ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr hne
+  have hco : IsCO O (R ⧸ J) :=
     co_quot O R (R ⧸ J) (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
   have hcomp : ∀ {R' : Type} [CommRing R'] [Algebra O R'] [IsCO O R'] (f : R ⧸ J →ₐ[O] R'),
       Lift.map f (Lift.map (Ideal.Quotient.mkₐ O J) r) = Lift.map (f.comp (Ideal.Quotient.mkₐ O J)) r :=
@@ -406,8 +406,8 @@ theorem UpperTheory.V.U3.exists_univ :
   have hMc : IsClosed (M : Set Γ) := by
     rw [hMeq]
     exact Subgroup.isClosed_topologicalClosure _
-  haveI : IsClosed (M : Set Γ) := hMc
-  haveI : TotallyDisconnectedSpace (Γ ⧸ M) := totDisc_quot M hMc
+  have : IsClosed (M : Set Γ) := hMc
+  have : TotallyDisconnectedSpace (Γ ⧸ M) := totDisc_quot M hMc
   have hNM : N ⊆ M := fun g hg => by
     rw [hMeq]
     exact Subgroup.le_topologicalClosure _ (Subgroup.subset_normalClosure hg)

@@ -77,10 +77,10 @@ theorem exists_finite_ext_numberField_sqrt (Qq E K : Type) [Field Qq] [Field E] 
         ∀ x : E, eK (e x) = algebraMap Qq Kf (i x) := by
   classical
   let Ω := AlgebraicClosure Qq
-  letI : Algebra E K := e.toAlgebra
-  letI : Algebra E Ω := ((algebraMap Qq Ω).comp i).toAlgebra
-  haveI : CharZero E := RingHom.charZero e
-  haveI : Module.Finite E K := Module.Finite.of_restrictScalars_finite ℚ E K
+  let : Algebra E K := e.toAlgebra
+  let : Algebra E Ω := ((algebraMap Qq Ω).comp i).toAlgebra
+  have : CharZero E := RingHom.charZero e
+  have : Module.Finite E K := Module.Finite.of_restrictScalars_finite ℚ E K
   let f : K →ₐ[E] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -89,7 +89,7 @@ theorem exists_finite_ext_numberField_sqrt (Qq E K : Type) [Field Qq] [Field E] 
   obtain ⟨s, hs⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap Qq Ω a) (n := 2) two_pos
   obtain ⟨T, hT⟩ := Module.Finite.fg_top (R := E) (M := K)
   let S : Set Ω := insert s (f '' (T : Set K))
-  haveI : Finite S := ((T.finite_toSet.image f).insert s).to_subtype
+  have : Finite S := ((T.finite_toSet.image f).insert s).to_subtype
   let Kf : IntermediateField Qq Ω := IntermediateField.adjoin Qq S
   have hfin : FiniteDimensional Qq Kf :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
@@ -112,10 +112,10 @@ theorem exists_complete_dvr_ext_numberField_sqrt : ∀ (W Qq E K : Type) [CommRi
   intro W Qq E K _ _ _ _ _ _ _ _ _ _ i e a
   obtain ⟨Kf, s, eK, hfin, hs, he⟩ :=
     exists_finite_ext_numberField_sqrt Qq E K i e (algebraMap W Qq a)
-  letI : Algebra W Kf := ((algebraMap Qq Kf).comp (algebraMap W Qq)).toAlgebra
-  haveI : IsScalarTower W Qq Kf := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI h1 := FormalIsogeny.finite_integralClosure W Qq Kf
-  haveI h2 := FormalIsogeny.isDiscreteValuationRing_integralClosure W Qq Kf
+  let : Algebra W Kf := ((algebraMap Qq Kf).comp (algebraMap W Qq)).toAlgebra
+  have : IsScalarTower W Qq Kf := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have h1 := FormalIsogeny.finite_integralClosure W Qq Kf
+  have h2 := FormalIsogeny.isDiscreteValuationRing_integralClosure W Qq Kf
   have h3 := FormalIsogeny.isAdicComplete_maximalIdeal_of_finite W (integralClosure W Kf)
   have h4 := integralClosure.isFractionRing_of_finite_extension (A := W) Qq Kf
   have hs' : s ^ 2 = algebraMap W Kf a := hs

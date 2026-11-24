@@ -71,7 +71,7 @@ theorem finite_quot_of_map {k U : Type} [Field k] [AddCommGroup U] [Module k U] 
     rw [LinearMap.ker_comp, Submodule.ker_mkQ]; rfl
   have hr : LinearMap.range (S.mkQ ∘ₗ P.subtype) = P.map S.mkQ := by
     rw [LinearMap.range_comp, Submodule.range_subtype]
-  haveI : FiniteDimensional k (LinearMap.range (S.mkQ ∘ₗ P.subtype)) := by rw [hr]; exact h
+  have : FiniteDimensional k (LinearMap.range (S.mkQ ∘ₗ P.subtype)) := by rw [hr]; exact h
   rw [← hker]
   exact LinearEquiv.finiteDimensional (LinearMap.quotKerEquivRange _).symm
 
@@ -80,7 +80,7 @@ theorem gmult_self {k U : Type} [Field k] [AddCommGroup U] [Module k U] (T : Mod
   unfold gmult
   set P' := P ⊓ ⨆ m : ℕ, P.comap ((T - algebraMap k (Module.End k U) x) ^ m)
   have h : P.submoduleOf P' = ⊤ := eq_top_iff.mpr fun y _ => y.2.1
-  haveI : Subsingleton (↥P' ⧸ P.submoduleOf P') := Submodule.Quotient.subsingleton_iff.mpr h
+  have : Subsingleton (↥P' ⧸ P.submoduleOf P') := Submodule.Quotient.subsingleton_iff.mpr h
   exact Module.finrank_zero_of_subsingleton
 
 theorem finite_sh {k : Type} [Field k] {V : Type} [AddCommGroup V] [Module k⸨X⸩ V] [Module k⟦X⟧ V] [Module k V]

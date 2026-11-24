@@ -69,7 +69,7 @@ def intF (F : Type) [Field F] [NumberField F] : Subring (FiniteAdeleRing (𝓞 F
 theorem finite_intF_quot (M : ℕ) (hM : 0 < M) :
     Finite (intF F ⧸ Ideal.span {(M : intF F)}) := by
   obtain ⟨ho, hc⟩ := PI.IntAdCpctOpenWork.main F
-  haveI : CompactSpace (intF F) := isCompact_iff_compactSpace.mp hc
+  have : CompactSpace (intF F) := isCompact_iff_compactSpace.mp hc
   have hM0 : (M : F) ≠ 0 := by exact_mod_cast hM.ne'
   let c : FiniteAdeleRing (𝓞 F) F := algebraMap F _ (M : F)⁻¹
   have hcM : c * (M : FiniteAdeleRing (𝓞 F) F) = 1 := by
@@ -77,10 +77,10 @@ theorem finite_intF_quot (M : ℕ) (hM : 0 < M) :
     rw [this, ← map_mul, inv_mul_cancel₀ hM0, map_one]
   have hopen : IsOpen (((Ideal.span {(M : intF F)}).toAddSubgroup : AddSubgroup (intF F)) : Set (intF F)) := by
     have h1 : IsOpen {x : intF F | c * (x : FiniteAdeleRing (𝓞 F) F) ∈ (intF F : Set _)} :=
-      ho.preimage (continuous_const.mul continuous_subtype_val)
+      ho.preimage (continuous_const.mul continuous_subtypeVal)
     convert h1 using 1
     ext x
-    simp only [SetLike.mem_coe, Set.mem_setOf_eq, Submodule.mem_toAddSubgroup, Ideal.mem_span_singleton']
+    simp only [SetLike.mem_coe, Set.mem_ofPred_eq, Submodule.mem_toAddSubgroup, Ideal.mem_span_singleton']
     constructor
     · rintro ⟨a, rfl⟩
       have : c * (((a * (M : intF F) : intF F)) : FiniteAdeleRing (𝓞 F) F) = a := by
@@ -116,7 +116,7 @@ def gT : 𝓞 E →+* intT F E where
 theorem exists_finite_class (M : ℕ) (hM : 0 < M) :
     ∃ (Q : Type) (_ : Finite Q) (c : intT F E → Q), ∀ a b, c a = c b →
       ∃ y : intT F E, a - b = (M : intT F E) * y := by
-  letI : Algebra (intF F) (intT F E) := (jT (F := F) (E := E)).toAlgebra
+  let : Algebra (intF F) (intT F E) := (jT (F := F) (E := E)).toAlgebra
   have hsmul : ∀ (a : intF F) (x : intT F E), a • x = jT a * x := fun a x => Algebra.smul_def a x
   obtain ⟨t, ht⟩ : (⊤ : Submodule ℤ (𝓞 E)).FG := Module.Finite.fg_top
   let s : Set (intT F E) := gT '' (t : Set (𝓞 E))
@@ -153,8 +153,8 @@ theorem exists_finite_class (M : ℕ) (hM : 0 < M) :
       eq_top_iff.2 fun x _ => htop x.1 x.2
     rwa [this] at hfg
   set I : Ideal (intF F) := Ideal.span {(M : intF F)} with hI
-  haveI : Finite (intF F ⧸ I) := finite_intF_quot M hM
-  haveI : Finite (intT F E ⧸ I • (⊤ : Submodule (intF F) (intT F E))) := Module.finite_of_finite (intF F ⧸ I)
+  have : Finite (intF F ⧸ I) := finite_intF_quot M hM
+  have : Finite (intT F E ⧸ I • (⊤ : Submodule (intF F) (intT F E))) := Module.finite_of_finite (intF F ⧸ I)
   refine ⟨_, this, Submodule.Quotient.mk, fun a b hab => ?_⟩
   have h := (Submodule.Quotient.eq _).1 hab
   rw [hI, Submodule.ideal_span_singleton_smul, Submodule.mem_smul_pointwise_iff_exists] at h
@@ -255,7 +255,7 @@ theorem exists_proj (ρ : G →* Module.End ℂ V) (hunit : ∀ g x y, inner ℂ
     (hmemW : ∀ w ∈ U, (∀ k ∈ K, ρ k w = w) → w ∈ Wf)
     (horb : ∀ y ∈ U, ((fun k : G => ρ k y) '' (K : Set G)).Finite) (x : V) (hx : ∀ k ∈ K, ρ k x = x) :
     ∃ u ∈ U, ∀ y ∈ U, inner ℂ (x - u) y = 0 := by
-  haveI : CompleteSpace Wf := FiniteDimensional.complete ℂ Wf
+  have : CompleteSpace Wf := FiniteDimensional.completeSpace ℂ Wf
   have hu : Wf.starProjection x ∈ Wf := Wf.starProjection_apply_mem x
   refine ⟨Wf.starProjection x, hWU hu, ?_⟩
   set z := x - Wf.starProjection x with hz
@@ -267,8 +267,8 @@ theorem exists_proj (ρ : G →* Module.End ℂ V) (hunit : ∀ g x y, inner ℂ
   set O : Set V := (fun k : G => ρ k y) '' (K : Set G) with hOdef
   have hO : O.Finite := horb y hy
   set Y : Submodule ℂ V := Submodule.span ℂ O with hY
-  haveI : FiniteDimensional ℂ Y := FiniteDimensional.span_of_finite ℂ hO
-  haveI : CompleteSpace Y := FiniteDimensional.complete ℂ Y
+  have : FiniteDimensional ℂ Y := FiniteDimensional.span_of_finite ℂ hO
+  have : CompleteSpace Y := FiniteDimensional.completeSpace ℂ Y
   have hYU : Y ≤ U := Submodule.span_le.2 (by rintro _ ⟨k, _, rfl⟩; exact hU k y hy)
   have hYst : ∀ k ∈ K, ∀ v ∈ Y, ρ k v ∈ Y := by
     intro k hk v hv
@@ -472,8 +472,8 @@ theorem orth_pair {A : Type} [AddCommGroup A] [Module ℂ A] (ρ : GAf L n →* 
     (Φ' : π'.S →ₗ[ℂ] A) (hΦ' : IsEqvA ρ π' Φ') (hΦC' : LinearMap.range Φ' ≤ C) (f : π.S) (f' : π'.S) :
     B (Φ f) (Φ' f') = 0 := by
   let core := coreOf C B h1 h2 h3
-  letI : NormedAddCommGroup C := core.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ C := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup C := core.toNormedAddCommGroup
+  let : InnerProductSpace ℂ C := InnerProductSpace.ofCore core.toCore
   let ρC := rhoC ρ C h4
   have hunit : ∀ g (x y : C), inner ℂ (ρC g x) (ρC g y) = inner ℂ x y := fun g x y => h5 g x x.2 y y.2
   let Ψ : π.S →ₗ[ℂ] C := Φ.codRestrict C (fun f => hΦC ⟨f, rfl⟩)
@@ -485,7 +485,7 @@ theorem orth_pair {A : Type} [AddCommGroup A] [Module ℂ A] (ρ : GAf L n →* 
     obtain ⟨N, hN, hf⟩ := π.smooth f f.2
     set U := LinearMap.range Ψ' with hU
     set Wf : Submodule ℂ C := U ⊓ fixN ρC N with hWf
-    haveI := h6 N hN
+    have := h6 N hN
     let ι : Wf →ₗ[ℂ] ↥(Submodule.span ℂ {x | x ∈ C ∧ ∀ κ, Cong L n N κ → ρ κ x = x}) :=
       (C.subtype.comp Wf.subtype).codRestrict _ (fun w => Submodule.subset_span ⟨w.1.2, fun κ hκ => by
         have := congrArg Subtype.val (w.2.2 κ hκ)
@@ -493,7 +493,7 @@ theorem orth_pair {A : Type} [AddCommGroup A] [Module ℂ A] (ρ : GAf L n →* 
     have hι : Function.Injective ι := fun a b h => by
       have h' := congrArg Subtype.val h
       exact Subtype.ext (Subtype.ext h')
-    haveI : FiniteDimensional ℂ Wf := FiniteDimensional.of_injective ι hι
+    have : FiniteDimensional ℂ Wf := FiniteDimensional.of_injective ι hι
     obtain ⟨u, ⟨a, rfl⟩, hu⟩ := exists_proj ρC hunit (congSub L n N) U Wf
       (by rintro g _ ⟨a, rfl⟩; exact ⟨sg π' g a, hΨ' g a⟩)
       inf_le_left (fun w hw k hk => hw.2 k hk) (fun w hw hfix => ⟨hw, fun κ hκ => hfix κ hκ⟩)

@@ -66,7 +66,7 @@ variable {n : ℕ}
 theorem isClosed_nilrad (W₁ W₂ : Submodule ℂ (Fin n → ℂ)) :
     IsClosed (nilrad W₁ W₂ : Set (Matrix (Fin n) (Fin n) ℂ)) := by
   have hW : ∀ W : Submodule ℂ (Fin n → ℂ), IsClosed (W : Set (Fin n → ℂ)) := fun W =>
-    W.closed_of_finiteDimensional
+    W.isClosed_of_finiteDimensional
   have hc : ∀ y : Fin n → ℂ, Continuous fun X : Matrix (Fin n) (Fin n) ℂ => X *ᵥ y := fun y =>
     continuous_id.matrix_mulVec continuous_const
   have e : (nilrad W₁ W₂ : Set (Matrix (Fin n) (Fin n) ℂ)) =
@@ -88,7 +88,7 @@ theorem integrable_nil {f : GL (Fin n) ℂ → ℂ} (hf : Continuous f) (hfc : H
   have hu' : u = fun X => ((PVC.eH W₁ W₂ X : PVC.nilSub W₁ W₂) : GL (Fin n) ℂ) :=
     funext fun X => Units.ext (by rw [hu X]; rfl)
   have hcu : Continuous u := by
-    rw [hu']; exact continuous_subtype_val.comp (PVC.eH W₁ W₂).continuous
+    rw [hu']; exact continuous_subtypeVal.comp (PVC.eH W₁ W₂).continuous
   have hF : Continuous fun X => f (u X * d) := hf.comp (hcu.mul continuous_const)
   refine hF.integrable_of_hasCompactSupport ?_
   have hL : IsCompact ((fun k : GL (Fin n) ℂ => (k * d⁻¹).val - 1) '' tsupport f) :=

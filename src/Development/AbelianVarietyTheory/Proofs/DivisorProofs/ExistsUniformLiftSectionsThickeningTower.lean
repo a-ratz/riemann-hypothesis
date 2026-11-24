@@ -259,7 +259,7 @@ theorem exists_lifts {e : ℕ} (hsq : IsPullback (β e) (Y e).hom (Y (e + 1)).ho
     (Ideal.Quotient.factor hle) hsurj (isNilpotent_ker_factor e hle) _ _ (Y (e + 1)).hom (Y e).hom
     (β e) hsq (q.1.1 i) (q.2 i)
   choose D' hD' hpre using hD
-  haveI : IsClosedImmersion (β e) :=
+  have : IsClosedImmersion (β e) :=
     MorphismProperty.of_isPullback (P := @IsClosedImmersion) hsq.flip
       (IsClosedImmersion.spec_of_surjective _ hsurj)
   have hs : ∀ i, Function.Surjective ((β e).appLE (D' i) (q.1.1 i) (hpre i).ge).hom := by
@@ -751,7 +751,7 @@ theorem exists_coboundary_of_cocycle_homogeneous : ∀ (A : Type) [CommRing A] [
     exact isHomogeneous_span_gr _ (by
       rintro _ ⟨F, _, k, rfl⟩
       exact ⟨k, mem_polyGrading_natCast.2 (homogeneousComponent_isHomogeneous k F)⟩)
-  letI := grQuotDecomposition (polyGrading (Fin (n + 1)) A) hJh
+  let := grQuotDecomposition (polyGrading (Fin (n + 1)) A) hJh
   obtain ⟨n₀, h₀⟩ := cubeComplex_grCube_exactAt_of_finite (Fin (n + 1)) A
     (MvPolynomial (Fin (n + 1)) A ⧸ J) (grQuot (polyGrading (Fin (n + 1)) A) J) inferInstance
   refine ⟨n₀.toNat, fun d hd N F hF hcoc => ?_⟩
@@ -1617,7 +1617,7 @@ theorem GlobalTheory.FormalAlg.lift_cech : ∀ (R : Type) [CommRing R] (I : Idea
       have h := hmem I (inf_le_left : C.D (e + 1) i ⊓ C.D (e + 1) j ⊓ C.D (e + 1) l ≤ C.D (e + 1) i ⊓ C.D (e + 1) j) (hgρ i j)
       rwa [map_sub, map_pow, rs_rs] at h
     have hco := congrArg Units.val (hg.cocycle i j l)
-    simp only [res, Units.val_mul, Units.coe_map, MonoidHom.coe_coe] at hco
+    simp only [res, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass] at hco
     rw [← h1, hcdef, hcdef, hcdef]
     simp only [map_sub, map_mul, rs_rs]
     linear_combination (-(rs (Y (e + 1)).left (inf_le_right : C.D (e + 1) i ⊓ C.D (e + 1) j ⊓ C.D (e + 1) l ≤ C.D (e + 1) l) (τ l))) * hco

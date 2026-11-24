@@ -67,7 +67,7 @@ theorem mem_OF_of_loc (D : Formalism.BasicNotions.D7) (s : D.host.F)
   have hnt : Nontrivial (D.s.atP p).Ep :=
     Module.nontrivial_of_finrank_pos (R := (D.s.atP p).Fp) (by rw [(D.s.atP p).rank]; norm_num)
   have hinj : Function.Injective (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep) := by
-    haveI := hnt; exact (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).injective
+    have := hnt; exact (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep).injective
   have h2 : (D.s.atP p).ιF s ∈ 𝒪[(D.s.atP p).Fp] :=
     PI.IntegralDiscriminantMembership.mem_integer_of_isIntegral ((isIntegral_algebraMap_iff ).1 hint)
   rw [mem_integer_iff_vle, ← map_one (D.s.atP p).ιF, (D.s.atP p).val, map_one] at h2

@@ -92,7 +92,7 @@ private theorem rc_chars (hE : GlobalTheory.Published.LanglandsExhaustionGL) (hZ
     (ξ : Fin n → ((w.adicCompletion E)ˣ →* ℂˣ)) (hξ : ∀ j, IsSmoothChar (ξ j)) (hs : HasSupport x.rep (chars ξ hξ))
     (hu : Unlinked (chars ξ hξ)) :
     (rc x).mono0 ∧ ∀ g : Weil h, (rc x).charPol g = ∏ j, (X - C ((ξ j (a g) : ℂˣ) : ℂ)) := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨𝔪, hm⟩ := hE (w.adicCompletion E) x
   have hs' : HasSupport x.rep (msupp 𝔪) := GlobalTheory.LocGL.hasSupport_msupp_of_isL hZ _ 𝔪 x hm
   have he : chars ξ hξ = msupp 𝔪 :=

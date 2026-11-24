@@ -142,7 +142,7 @@ theorem alg_sum (M : DSModel V S) {ι : Type} (s : Finset ι) (κ : ι → GfC V
   refine forall_congr' fun v => ?_
   rw [funext_iff]
   refine forall_congr' fun x => ?_
-  rw [MultilinearMap.sum_apply, Finset.sum_apply]
+  rw [sum_apply, Finset.sum_apply]
   rfl
 
 theorem alg_one (M : DSModel V S) (k : GfC V) (a : ℂ) (T : MMap M) :

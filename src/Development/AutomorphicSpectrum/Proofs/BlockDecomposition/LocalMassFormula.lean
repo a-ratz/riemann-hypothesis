@@ -150,7 +150,7 @@ theorem gauss_scale (hchar : ringChar k ≠ 2) (ψ : AddChar k ℂ) (hψ : ψ �
     ∑ x, ψ (t * quadForm B x) = ∑ x, ψ (quadForm B x) := by
   classical
   have h2 : (2 : k) ≠ 0 := Ring.two_ne_zero hchar
-  haveI : Invertible (2 : k) := invertibleOfNonzero h2
+  have : Invertible (2 : k) := invertibleOfNonzero h2
   let Q : QuadraticForm k (ι → k) := (2 : k)⁻¹ • Matrix.toQuadraticForm' B
   have hQ : ∀ x, Q x = quadForm B x := by
     intro x
@@ -419,14 +419,14 @@ theorem core_unit (lam : Measure (Fv F v)) (hlam : IsStdV v lam) (h2 : Valued.v 
 
   have hs : s ∈ v.adicCompletionIntegers F := mem_int.2 hsu.le
   have hLoc := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : SecondCountableTopology (Fv F v) := hLoc.2.2.1
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : SecondCountableTopology (Fv F v) := hLoc.2.2.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨-, -, -, hcard⟩ := _root_.GlobalTheory.CompanionTheory.SW.Vol.volumes_in_completion F v lam hlam
   have hq0 : Ideal.absNorm v.asIdeal ≠ 0 := by
     rw [Ne, Ideal.absNorm_eq_zero_iff]
     exact v.ne_bot
-  haveI : Finite 𝓴 := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq0)
-  letI : Fintype 𝓴 := Fintype.ofFinite _
+  have : Finite 𝓴 := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq0)
+  let : Fintype 𝓴 := Fintype.ofFinite _
   have hcardk : Fintype.card 𝓴 = Ideal.absNorm v.asIdeal := by
     rw [← Nat.card_eq_fintype_card]; exact hcard
   obtain ⟨BO, rfl⟩ : ∃ BO : Matrix ι ι 𝒪, BO.map phi = B :=
@@ -501,7 +501,7 @@ theorem core_unit (lam : Measure (Fv F v)) (hlam : IsStdV v lam) (h2 : Valued.v 
         (∃ i, Valued.v (x i) = 1) ∧ (2 : Fv F v)⁻¹ * (x ⬝ᵥ ((BO.map phi) *ᵥ x)) ∈ A} =
         ⋃ y ∈ T0, P y := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]
+      simp only [Set.mem_ofPred_eq, Set.mem_iUnion, exists_prop]
       constructor
       · rintro ⟨h1, h3, h4⟩
         obtain ⟨y, hy, h⟩ := (cover x).1 ⟨h1, h3⟩
@@ -908,14 +908,14 @@ theorem locMass : PositivityTheory.Rg.Mass.LocMass := by
     have hfin : m v (hermScal (Fv F v) σ s) (latV b v) ≠ ⊤ := by
       have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
       obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc
-      haveI := hTR
-      haveI := hLC
-      haveI := hSC
-      haveI := hT2
-      haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+      have := hTR
+      have := hLC
+      have := hSC
+      have := hT2
+      have : BorelSpace (Fv F v) := ⟨rfl⟩
       have hh := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b (lam v) (hlam v).1
-      haveI hW := hh.2.1 1 2
-      haveI hH := hh.2.2 1
+      have hW := hh.2.1 1 2
+      have hH := hh.2.2 1
       have hlf := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM 2 J hJ (Fv F v) hloc 1 _ _ (m v) hW hH (hm v)
         (hermScal (Fv F v) σ s)).1
       exact (_root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hCM d b 1 2 v).1.measure_lt_top.ne

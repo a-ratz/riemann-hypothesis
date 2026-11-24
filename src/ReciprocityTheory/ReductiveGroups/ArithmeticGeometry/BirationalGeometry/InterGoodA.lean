@@ -99,8 +99,8 @@ theorem exists_ltSeries_lift {R S : Type*} [CommRing R] [CommRing S] [Algebra R 
 theorem le_ringKrullDim_of_isIntegral {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
     (hf : f.IsIntegral) (hinj : Function.Injective f) (n : ℕ)
     (h : (n : WithBot ℕ∞) ≤ ringKrullDim R) : (n : WithBot ℕ∞) ≤ ringKrullDim S := by
-  letI := f.toAlgebra
-  haveI : Algebra.IsIntegral R S := ⟨hf⟩
+  let := f.toAlgebra
+  have : Algebra.IsIntegral R S := ⟨hf⟩
   obtain ⟨p, hp⟩ := Order.le_krullDim_iff.mp h
   obtain ⟨q, hq, -⟩ := exists_ltSeries_lift hinj n p hp
   exact Order.le_krullDim_iff.mpr ⟨q, hq⟩
@@ -116,17 +116,17 @@ theorem int_isJacobsonRing : IsJacobsonRing ℤ := by
     have h2 := Int.isUnit_iff.mp (hx 2)
     rw [Ideal.mem_bot]
     omega
-  · haveI : P.IsMaximal := hP.isMaximal hb
+  · have : P.IsMaximal := hP.isMaximal hb
     exact Ideal.jacobson_eq_self_of_isMaximal
 
 theorem exists_gt_of_comap_int_eq_bot {σ A : Type*} [Finite σ] [CommRing A]
     (g : MvPolynomial σ ℤ →+* A) (hg : Function.Surjective g) (p : Ideal A) (hp : p.IsPrime)
     (hb : p.comap (g.comp MvPolynomial.C) = ⊥) : ∃ q : Ideal A, q.IsPrime ∧ p < q := by
-  haveI := int_isJacobsonRing
+  have := int_isJacobsonRing
   have hnm : ¬ p.IsMaximal := by
     intro hm
-    haveI := hm
-    letI : Field (A ⧸ p) := Ideal.Quotient.field p
+    have := hm
+    let : Field (A ⧸ p) := Ideal.Quotient.field p
     let f : MvPolynomial σ ℤ →+* A ⧸ p := (Ideal.Quotient.mk p).comp g
     have hf : Function.Surjective f := Ideal.Quotient.mk_surjective.comp hg
     have hint : (f.comp MvPolynomial.C).IsIntegral := by
@@ -143,8 +143,8 @@ theorem exists_gt_of_comap_int_eq_bot {σ A : Type*} [Finite σ] [CommRing A]
         exact Ideal.Quotient.eq_zero_iff_mem.mp hx
       rw [hb] at hx'
       exact hx'
-    letI := (f.comp MvPolynomial.C).toAlgebra
-    haveI : Algebra.IsIntegral ℤ (A ⧸ p) := ⟨hint⟩
+    let := (f.comp MvPolynomial.C).toAlgebra
+    have : Algebra.IsIntegral ℤ (A ⧸ p) := ⟨hint⟩
     have hZ : IsField ℤ := isField_of_isIntegral_of_isField hinj (Field.toIsField (A ⧸ p))
     obtain ⟨y, hy⟩ := hZ.mul_inv_cancel (two_ne_zero : (2 : ℤ) ≠ 0)
     omega

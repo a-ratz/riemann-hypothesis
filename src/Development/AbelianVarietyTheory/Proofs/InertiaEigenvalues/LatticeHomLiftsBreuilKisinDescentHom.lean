@@ -122,8 +122,8 @@ theorem main : GlobalTheory.Published.BhattScholzeCrystallineLattices → ∀ (l
     ⟨f.f, fun _ x => f.equiv _ x, f.cont, f.T_le⟩
   obtain ⟨F, hF⟩ := GlobalTheory.BKReal.Full.main BS l a e _ _ (thetaW a LL) ϖ _ _ P₁.D.toPhiMod P₂.D.toPhiMod
     (resF T₁ (ϖ.field a)) (resF T₂ (ϖ.field a))
-    (P₁.R.I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _))
-    (P₂.R.I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) P₁.isBK P₂.isBK f'
+    (P₁.R.I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _))
+    (P₂.R.I.res (inclG (ϖ.field a)) (continuous_subtypeVal.subtype_mk _)) P₁.isBK P₂.isBK f'
   have hF' : IsMapOf P₁.R.I P₂.R.I f F := hF
   have hcov : ∀ γ : TameGal ↥LL.1 l e a, ∃ g : Gl l, Covers ↥LL.1 (thetaW a LL) ϖ (sQ l g) γ := fun γ => by
     obtain ⟨k, -, hc⟩ := (_root_.GlobalTheory.TameCover.main l a e ϖ LL).2.2.1 γ

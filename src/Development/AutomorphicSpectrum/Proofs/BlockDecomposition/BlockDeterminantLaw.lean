@@ -134,7 +134,7 @@ theorem isClosed_stab [T2Space R] (s : Set ι) : IsClosed (stab R s : Set (GL ι
       ({g : GL ι R | (g : Matrix ι ι R) r c = 0} ∩
         {g : GL ι R | ((g⁻¹ : GL ι R) : Matrix ι ι R) r c = 0}) := by
     ext g
-    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq]
     rfl
   rw [e]
   refine isClosed_iInter fun r => isClosed_iInter fun _ => isClosed_iInter fun c =>
@@ -146,15 +146,15 @@ theorem continuousOn_bdet (s : Set ι) :
     ContinuousOn (bdet s) (stab R s : Set (GL ι R)) := by
   classical
   have hm (p : (stab R s : Set (GL ι R))) : (p : GL ι R) ∈ stab R s := p.2
-  rw [continuousOn_iff_continuous_restrict, Units.continuous_iff]
+  rw [continuousOn_iff_continuous_domRestrict, Units.continuous_iff]
   constructor
   · refine Continuous.congr (f := fun p : (stab R s : Set (GL ι R)) =>
       (((p : GL ι R) : Matrix ι ι R).submatrix (Subtype.val : s → ι) Subtype.val).det)
-      ((Units.continuous_val.comp continuous_subtype_val).matrix_submatrix _ _ |>.matrix_det)
+      ((Units.continuous_val.comp continuous_subtypeVal).matrix_submatrix _ _ |>.matrix_det)
       fun p => (bdet_val s (hm p)).symm
   · refine Continuous.congr (f := fun p : (stab R s : Set (GL ι R)) =>
       ((((p : GL ι R)⁻¹ : GL ι R) : Matrix ι ι R).submatrix (Subtype.val : s → ι) Subtype.val).det)
-      (((Units.continuous_val.comp continuous_inv).comp continuous_subtype_val).matrix_submatrix _ _ |>.matrix_det)
+      (((Units.continuous_val.comp continuous_inv).comp continuous_subtypeVal).matrix_submatrix _ _ |>.matrix_det)
       fun p => ?_
     show _ = (((bdet s (p : GL ι R))⁻¹ : Rˣ) : R)
     rw [bdet_inv s (hm p), bdet_val s (inv_mem (hm p))]

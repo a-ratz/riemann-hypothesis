@@ -418,8 +418,8 @@ theorem upperArrow_approx : GlobalTheory.IndefiniteRowSideFullHecke.CuspAlongSmo
   obtain ⟨μ, 𝓓, hμ⟩ := GlobalTheory.Size.exists_isCovolOne (neg (G.P (i + 1)).V) (G.P i).V
   obtain ⟨U, hU, hΦU, happ⟩ := GlobalTheory.FockDensity.fockDense D _ _ (negFr (G.P (i + 1))) (Fr.ofModel (G.P i).M) R.θ R.ψ
     hω.std hθ μ 𝓓 hμ Φ hΦ
-  haveI : BorelSpace (GA D (G.P (i + 1)).V) := ⟨rfl⟩
-  haveI hfin : IsFiniteMeasure ((G.mP (i + 1)).ν.restrict (G.mP (i + 1)).fd) :=
+  have : BorelSpace (GA D (G.P (i + 1)).V) := ⟨rfl⟩
+  have hfin : IsFiniteMeasure ((G.mP (i + 1)).ν.restrict (G.mP (i + 1)).fd) :=
     isFiniteMeasure_restrict.2 (GlobalTheory.Chain.LiftReg.vol_ne_top hν hfd)
   obtain ⟨H, hH⟩ := GlobalTheory.Grow.exists_height_le_of_isCompact (G.P i).V hC
   have hbound : ∀ U' : AddSubgroup (WO (neg (G.P (i + 1)).V) (G.P i).V), IsOpen (U' : Set (WO (neg (G.P (i + 1)).V) (G.P i).V)) →
@@ -963,7 +963,7 @@ theorem isCuspFun_of_locApprox {f : GA D V → ℂ} (h : LocApprox V f) : IsCusp
   have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
   have : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
   have hcont : Continuous fun n : GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.unipRad D.sp.cm V (AF D.host.F) W => (n : GA D V) * g :=
-    continuous_subtype_val.mul continuous_const
+    continuous_subtypeVal.mul continuous_const
   have hw : Integrable (fun _ : GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.unipRad D.sp.cm V (AF D.host.F) W => (1 : ℝ)) (μ.restrict 𝓕) := by
     simpa using (hint (fun _ => (1 : ℂ)) continuous_const fun _ _ _ => rfl).norm
   refine integral_eq_zero_of_forall_approx (μ := μ.restrict 𝓕) (v := fun n => f (n.1 * g)) hw fun ε hε => ?_
@@ -1158,8 +1158,8 @@ theorem dense_level {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {V
     ∃ g ∈ fockSpan ψ θ A B U, g ∈ GlobalTheory.Size.thetaLevel ψ V W U ∧ sobO ψ θ μ 𝓕 d (f - g) < δ := by
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
   obtain ⟨-, i2, i3, i4, i5, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W V
-  haveI : BorelSpace (WO V W) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, hm.2.2]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (WO V W) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, hm.2.2]; exact ENNReal.one_lt_top⟩
   have e0 : coeL ψ V W (toB hψ f hf.1) = f := coe_toB hψ f hf.1
   have hF : toB hψ f hf.1 ∈ (GlobalTheory.Size.thetaLevel ψ V W U).comap (coeL ψ V W) := by
     rw [Submodule.mem_comap, e0]
@@ -1172,7 +1172,7 @@ theorem dense_level {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {V
       atPl a.1 (Matrix.single a.2.1 a.2.2.1 (if a.2.2.2 then Complex.I else 1))) d hF hδ
   refine ⟨coeL ψ V W g, h1, h2, lt_of_eq_of_lt ?_ h3⟩
   have e1 : ∀ G : BB ψ V W, l2O μ 𝓕 (coeL ψ V W G) = ‖toL2 _ _ (μ.restrict 𝓕) G‖ₑ := fun G =>
-    (eLpNorm_congr_ae (BoundedContinuousFunction.coeFn_toLp 2 (μ.restrict 𝓕) ℂ G.1)).symm.trans (Lp.enorm_def _).symm
+    (eLpNorm_congr_ae (BoundedContinuousFunction.coeFn_toLp 2 (μ.restrict 𝓕) ℂ G.1)).symm.trans (Lp.eNorm_def _).symm
   have e2 : f - coeL ψ V W g = coeL ψ V W (toB hψ f hf.1 - g) := by rw [LinearMap.map_sub, e0]
   simp only [sobO, wordSum, e2, coe_word h hψ hU _ (sub_mem hF h2), e1]
 
@@ -1584,7 +1584,7 @@ theorem isCuspFun_of_approx (D : D7) (V : HSp D) (f : GA D V → ℂ) (hf : Cont
     have : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
     have : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (AF D.host.F) _
     have : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
-    exact continuous_subtype_val.mul continuous_const
+    exact continuous_subtypeVal.mul continuous_const
   have hC : IsCompact ((fun n : GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups.unipRad D.sp.cm V (AF D.host.F) W => (n : GA D V) * g) '' K) :=
     hK.image hcont
   have h1 := hint (fun _ => (1 : ℂ)) continuous_const (fun _ _ _ => rfl) W hW μ hμ 𝓕 h𝓕 g

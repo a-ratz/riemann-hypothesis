@@ -248,37 +248,37 @@ private theorem exists_etale_maxContactIdeal_comparison_of_finite_cover {k : Typ
   refine ⟨∐ (fun i => (c i).W), Sigma.desc (fun i => (c i).f₁), Sigma.desc (fun i => (c i).f₂),
     he₁, he₂, hqc, hlft, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · refine Sigma.hom_ext _ _ fun i => ?_
-    simp only [← Category.assoc, Sigma.ι_desc]
+    simp only [← Category.assoc, Sigma.ι_comp_desc]
     exact (c i).comp_p
   · intro y hy
     obtain ⟨i, hi⟩ := Set.mem_iUnion.mp (hcov hy)
     obtain ⟨w, hw⟩ := hi.1
     refine ⟨(Sigma.ι (fun j => (c j).W) i).base w, ?_⟩
     show (Sigma.ι (fun j => (c j).W) i ≫ Sigma.desc fun j => (c j).f₁).base w = y
-    rw [Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc]
     exact hw
   · intro y hy
     obtain ⟨i, hi⟩ := Set.mem_iUnion.mp (hcov hy)
     obtain ⟨w, hw⟩ := hi.2
     refine ⟨(Sigma.ι (fun j => (c j).W) i).base w, ?_⟩
     show (Sigma.ι (fun j => (c j).W) i ≫ Sigma.desc fun j => (c j).f₂).base w = y
-    rw [Sigma.ι_desc]
+    rw [Sigma.ι_comp_desc]
     exact hw
   · refine idealSheafData_eq_of_forall_comap_eq (fun i => (c i).W)
       (fun i => Sigma.ι (fun j => (c j).W) i) (iUnion_range_sigmaι_base_eq_univ _) _ _ fun i => ?_
     rw [← Scheme.IdealSheafData.comap_comp, ← Scheme.IdealSheafData.comap_comp,
-      Sigma.ι_desc, Sigma.ι_desc]
+      Sigma.ι_comp_desc, Sigma.ι_comp_desc]
     exact (c i).comap_A
   · refine idealSheafData_eq_of_forall_comap_eq (fun i => (c i).W)
       (fun i => Sigma.ι (fun j => (c j).W) i) (iUnion_range_sigmaι_base_eq_univ _) _ _ fun i => ?_
     rw [← Scheme.IdealSheafData.comap_comp, ← Scheme.IdealSheafData.comap_comp,
-      Sigma.ι_desc, Sigma.ι_desc]
+      Sigma.ι_comp_desc, Sigma.ι_comp_desc]
     exact (c i).comap_H
   · refine List.map_congr_left fun J hJ => ?_
     refine idealSheafData_eq_of_forall_comap_eq (fun i => (c i).W)
       (fun i => Sigma.ι (fun j => (c j).W) i) (iUnion_range_sigmaι_base_eq_univ _) _ _ fun i => ?_
     rw [← Scheme.IdealSheafData.comap_comp, ← Scheme.IdealSheafData.comap_comp,
-      Sigma.ι_desc, Sigma.ι_desc]
+      Sigma.ι_comp_desc, Sigma.ι_comp_desc]
     exact (c i).comap_N J hJ
   · have hMc : ∀ i, (@maxContactIdeal k _ _ (∐ fun j => (c j).W)
           ((Sigma.desc fun j => (c j).f₁) ≫ p) hlft
@@ -289,10 +289,10 @@ private theorem exists_etale_maxContactIdeal_comparison_of_finite_cover {k : Typ
         ← derivIdealSheafIterate_comap k ((Sigma.desc fun j => (c j).f₁) ≫ p)
           (Sigma.ι (fun j => (c j).W) i) (μ - 1) (A.comap (Sigma.desc fun j => (c j).f₁))]
       refine derivIdealSheafIterate_congr_of_eq_of_eq k _ _ ?_ (μ - 1) _ _ ?_
-      · rw [← Category.assoc, Sigma.ι_desc]
-      · rw [← Scheme.IdealSheafData.comap_comp, Sigma.ι_desc]
+      · rw [← Category.assoc, Sigma.ι_comp_desc]
+      · rw [← Scheme.IdealSheafData.comap_comp, Sigma.ι_comp_desc]
     refine subschemeι_comp_eq_of_forall_sigmaι_comap _ _ _ _ fun i => ?_
-    rw [hMc i, Sigma.ι_desc, Sigma.ι_desc]
+    rw [hMc i, Sigma.ι_comp_desc, Sigma.ι_comp_desc]
     exact (c i).maxContact_comp
 
 theorem exists_etale_maxContactIdeal_comparison (k : Type u) [Field k] [CharZero k]
@@ -495,8 +495,8 @@ theorem exists_common_charts_of_isMaxContactHypersurface (A : X.IdealSheafData) 
       ∃ γ : ℕ → Option (Fin n'),
         (∀ i : ℕ, i < N.length → γ i = a' (i + 1)) ∧
         (∀ i : ℕ, ¬ i < N.length → γ i = none) :=
-    ⟨fun i => if i < N.length then a' (i + 1) else none, fun i hi => if_pos hi,
-      fun i hi => if_neg hi⟩
+    ⟨fun i => if i < N.length then a' (i + 1) else none, fun i hi => ite_eq_left hi,
+      fun i hi => ite_eq_right hi⟩
   have hγinj : LabelingInjective γ N.length := by
     intro i i' hi hi' j hj hj'
     rw [hγval i hi] at hj

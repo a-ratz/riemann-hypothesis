@@ -107,8 +107,8 @@ theorem read_of_equiv (D : D7) (c : (AE D)ˣ →* Circle) (χ : HChar D.host.E) 
   let u : Ideles D.host.E →* (AE D)ˣ := Units.map Φ.symm.toRingHom.toMonoidHom
   have hu : Continuous u := Continuous.units_map _ hΦ
   have ht : Continuous (Circle.toUnits : Circle →* ℂˣ) :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, by
-      have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtype_val.comp continuous_inv
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, by
+      have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtypeVal.comp continuous_inv
       refine h.congr fun z => ?_
       simp⟩
   let χ' : HChar D.host.E := ⟨Circle.toUnits.comp (MonoidHom.comp c u), ht.comp (h.1.1.comp hu), fun k => by

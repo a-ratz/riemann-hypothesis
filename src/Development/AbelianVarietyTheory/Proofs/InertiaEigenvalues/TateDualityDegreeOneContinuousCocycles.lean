@@ -88,8 +88,8 @@ theorem exists_unitLattice {l : ℕ} [Fact l.Prime] (P : LocPrime l) (K : FinExt
 theorem cocycle_mem_coboundaries_of_tate_orthogonal' : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (m : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDual1 (P.PD K) A.ρ A'.ρ m → ∀ b ∈ continuousCocycles A'.ρ, (∀ a ∈ continuousCocycles A.ρ, CobL (P.PD K) (cupL A'.ρ m a b)) → b ∈ B1 A'.ρ := by
   intro hT l _ P K LL _ _ _ O _ _ hO A A' m hm b hb horth
   obtain ⟨⟨hDom, hDVR, hFrac⟩, hfd, hmt, htr, hopen⟩ := id hO
-  haveI := hDom; haveI := hDVR; haveI := hFrac; haveI := htr
-  haveI : IsTopologicalAddGroup A'.V := IsModuleTopology.topologicalAddGroup LL A'.V
+  have := hDom; have := hDVR; have := hFrac; have := htr
+  have : IsTopologicalAddGroup A'.V := IsModuleTopology.isTopologicalAddGroup LL A'.V
   obtain ⟨L1, hL1⟩ := exists_unitLattice P K LL O hO
   obtain ⟨LA, LA', hLL', -⟩ := _root_.GlobalTheory.StableDual.stable_dual_lattices l P K LL O hO A A' m hm
   have hT'open : IsOpen (LA'.T : Set A'.V) := Formalism.MainNotions.BlochKatoDuality.Br.lat_open hopen LA'.T LA'.fg LA'.span
@@ -180,13 +180,13 @@ theorem cocycle_mem_coboundaries_of_tate_orthogonal' : Formalism.GaloisCohomolog
     apply hl
     intro hmem
     exact hmem (Ideal.span_singleton_eq_top.1 htop)
-  haveI hfinH : Module.Finite O (LatticeCohomology LA') :=
+  have hfinH : Module.Finite O (LatticeCohomology LA') :=
     GlobalTheory.TateFiniteH1.tate_finH1 hT l P K LL O hO A' LA'
   let S : Submodule O ↥(latticeCocycles LA') := ((B1 A'.ρ).restrictScalars O).comap (latticeCocycles LA').subtype
   have hBS : (latticeCoboundaries LA').comap (latticeCocycles LA').subtype ≤ S := by
     rintro z ⟨y, -, hy⟩
     exact ⟨y, hy⟩
-  haveI : Module.Finite O (↥(latticeCocycles LA') ⧸ S) := by
+  have : Module.Finite O (↥(latticeCocycles LA') ⧸ S) := by
     refine Module.Finite.of_surjective (Submodule.factor hBS) ?_
     intro q
     obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ q
@@ -276,7 +276,7 @@ end General
 
 theorem cupL_anticomm_cobL : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (m : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDual1 (P.PD K) A.ρ A'.ρ m → ∀ a ∈ continuousCocycles A.ρ, ∀ b ∈ continuousCocycles A'.ρ, (CobL (P.PD K) (cupL A'.ρ m a b) ↔ CobL (P.PD K) (cupL A.ρ m.flip b a)) ∧ (a ∈ B1 A.ρ ∨ b ∈ B1 A'.ρ → CobL (P.PD K) (cupL A'.ρ m a b)) := by
   intro l _ P K LL _ _ _ O _ _ hO A A' m hm a ha b hb
-  haveI : IsTopologicalRing LL := hO.2.2.2.1
+  have : IsTopologicalRing LL := hO.2.2.2.1
   have hc : Continuous fun p : A.V × A'.V => m p.1 p.2 :=
     IsModuleTopology.continuous_bilinear_of_finite_left m
   have hc' : Continuous fun p : A'.V × A.V => m.flip p.1 p.2 :=
@@ -321,7 +321,7 @@ theorem span_cocycles_ext {G F E : Type} [Group G] [TopologicalSpace G] [Field F
         ∃ x : E, ∃ f : G → E, Continuous f ∧
           ∀ g h, algebraMap F E (χ g) * f h - f (g * h) + f g = z (g, h) - x * z0 (g, h) := by
   obtain ⟨z0, ⟨hc0, hz0⟩, H⟩ := H
-  haveI : ContinuousSMul F E := IsModuleTopology.toContinuousSMul F E
+  have : ContinuousSMul F E := IsModuleTopology.toContinuousSMul F E
   have hA : Continuous (algebraMap F E) := by
     have : (algebraMap F E : F → E) = fun a => a • (1 : E) := by
       funext a; rw [Algebra.algebraMap_eq_smul_one]
@@ -487,8 +487,8 @@ theorem cont_form {V : Type} [AddCommGroup V] [Module LL V] [FiniteDimensional L
 theorem cont_act {V : Type} [AddCommGroup V] [Module LL V] [FiniteDimensional LL V]
     [TopologicalSpace V] [IsModuleTopology LL V] (ρ : Representation LL G V)
     (hρ : ∀ x, Continuous fun g => ρ g x) : Continuous fun p : G × V => ρ p.1 p.2 := by
-  haveI : ContinuousSMul LL V := IsModuleTopology.toContinuousSMul LL V
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd LL V
+  have : ContinuousSMul LL V := IsModuleTopology.toContinuousSMul LL V
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd LL V
   let b := Module.finBasis LL V
   have h : (fun p : G × V => ρ p.1 p.2) = fun p => ∑ i, b.repr p.2 i • ρ p.1 (b i) := by
     funext p
@@ -521,7 +521,7 @@ end Cont
 theorem exists_pair : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (m : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDual1 (P.PD K) A.ρ A'.ρ m → ∃ β : ↥(continuousCocycles A.ρ) →ₗ[LL] ↥(continuousCocycles A'.ρ) →ₗ[LL] LL, ∀ a b, β a b = 0 ↔ CobL (P.PD K) (cupL A'.ρ m a.1 b.1) := by
   intro hT l _ P K LL _ _ _ O _ _ hO A A' m hm
   obtain ⟨Z, inv, hZ, hinv⟩ := GlobalTheory.InvLine.exists_inv hT l P K LL O hO
-  haveI : IsTopologicalRing LL := hO.2.2.2.1
+  have : IsTopologicalRing LL := hO.2.2.2.1
   have hmem : ∀ (a : ↥(continuousCocycles A.ρ)) (b : ↥(continuousCocycles A'.ρ)), cupL A'.ρ m a.1 b.1 ∈ Z := by
     intro a b
     obtain ⟨ha, ha'⟩ : Continuous a.1 ∧ ∀ g h, a.1 (g * h) = a.1 g + A.ρ g (a.1 h) := a.2

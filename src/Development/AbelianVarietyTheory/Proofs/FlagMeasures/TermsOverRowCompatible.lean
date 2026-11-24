@@ -77,7 +77,7 @@ theorem compatC : CompatC := by
   unfold NgX at h2
   rw [sup_assoc, sup_idem] at h2
   rw [fixedFrameOfWord_isotropic_eq_flag]
-  refine SetLike.le_def.1 (sup_le_sup ?_ le_rfl) h2
+  refine IsConcreteLE.le_iff.1 (sup_le_sup ?_ le_rfl) h2
   rw [Submodule.ideal_span_singleton_smul]
   rintro _ ⟨y, hy, rfl⟩
   exact ⟨y, hy, rfl⟩

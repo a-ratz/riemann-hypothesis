@@ -144,7 +144,7 @@ theorem riemann_lattice_isometry_transport : ∀ (E : Type) [Field E] [NumberFie
   · unfold RiemLat.lam1 RiemLat.normSq
     congr 1
     ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [α.surjective.exists]
     simp only [hα, h2, ne_eq, α.map_eq_zero_iff]
   · have h4 : eigSp R'.B (σ τ) = (eigSp R.B (σ τ)).map φ.toLinearMap := by

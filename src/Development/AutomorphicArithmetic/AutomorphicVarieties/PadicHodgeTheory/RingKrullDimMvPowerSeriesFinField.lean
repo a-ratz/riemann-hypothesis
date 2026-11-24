@@ -96,13 +96,13 @@ theorem UpperTheory.ringKrullDim_mvPowerSeries_fin_field :
     ∀ (O E : Type) [CommRing O] [IsDomain O] [Field E] [Algebra O E] [IsFractionRing O E] (S : Type) [CommRing S] [Algebra O S] [IsNoetherianRing S] (x : S →ₐ[O] O) (n : ℕ) (φ : S →ₐ[O] MvPowerSeries (Fin n) E) (t : Fin n → S) (c : O), c ≠ 0 → (∀ a, MvPowerSeries.constantCoeff (φ a) = algebraMap O E (x a)) → (∀ i, φ (t i) - c • MvPowerSeries.X i ∈ maximalIdeal (MvPowerSeries (Fin n) E) ^ 2) → (n : ℕ∞) ≤ (RingHom.ker x).height := by
   intro O E _ _ _ _ _ S _ _ _ x n φ t c hc hx ht
   have hinj := IsFractionRing.injective O E
-  letI : Algebra S (MvPowerSeries (Fin n) E) := φ.toRingHom.toAlgebra
+  let : Algebra S (MvPowerSeries (Fin n) E) := φ.toRingHom.toAlgebra
   have halg : ∀ a, algebraMap S (MvPowerSeries (Fin n) E) a = φ a := fun _ => rfl
   set m := maximalIdeal (MvPowerSeries (Fin n) E) with hm
   have hker : ∀ a, a ∈ RingHom.ker x ↔ φ a ∈ m := fun a => by
     rw [hm, mem_max_iff, hx, RingHom.mem_ker, map_eq_zero_iff _ hinj]
-  haveI : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
-  haveI : m.LiesOver (RingHom.ker x) := ⟨by
+  have : (RingHom.ker x).IsPrime := RingHom.ker_isPrime _
+  have : m.LiesOver (RingHom.ker x) := ⟨by
     ext a
     rw [hker, Ideal.under_def, Ideal.mem_comap, halg]⟩
   have hX : ∀ i, (MvPowerSeries.X i : MvPowerSeries (Fin n) E) ∈ m := fun i => by
@@ -138,7 +138,7 @@ theorem UpperTheory.ringKrullDim_mvPowerSeries_fin_field :
     rw [hJ, Ideal.map_le_iff_le_comap]
     intro a ha
     exact (hker a).1 ha
-  haveI : Nontrivial (MvPowerSeries (Fin n) E ⧸ J) :=
+  have : Nontrivial (MvPowerSeries (Fin n) E ⧸ J) :=
     Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (maximalIdeal.isMaximal _).ne_top hJm)
   rw [← hJ, h0, Ideal.height_bot, add_zero] at h
   refine le_trans ?_ h

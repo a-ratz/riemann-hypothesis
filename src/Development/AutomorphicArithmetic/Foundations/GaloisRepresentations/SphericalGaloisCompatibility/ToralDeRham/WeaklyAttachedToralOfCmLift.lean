@@ -129,7 +129,7 @@ theorem exists_open_trace_ne_zero (Ω : Type) [Field Ω] (K : Type) [Field K] [N
   set U : Set (G K Ω) := {g | (r g).val.trace ≠ 0} with hU
   have hUo : IsOpen U := isOpen_ne_fun hc continuous_const
   have h1 : (1 : G K Ω) ∈ U := by
-    simp only [hU, Set.mem_setOf_eq, map_one, Units.val_one, Matrix.trace_one, Fintype.card_fin]
+    simp only [hU, Set.mem_ofPred_eq, map_one, Units.val_one, Matrix.trace_one, Fintype.card_fin]
     exact_mod_cast (by omega : a ≠ 0)
   obtain ⟨E, hE, hEU⟩ := (krullTopology_mem_nhds_one_iff K Ω U).mp (hUo.mem_nhds h1)
   exact ⟨E.fixingSubgroup, E.fixingSubgroup_isOpen, fun n hn => hEU hn⟩
@@ -190,8 +190,8 @@ namespace GlobalTheory.AboveL.AbSub
 
 theorem exists_open_sub : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K] [Algebra K Ω] [IsAlgClosure K Ω] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 K)) (h : IsPlaceOver A v) (y : WD h), AbW y → ∀ σ : Weil h, deg σ ≠ 0 → ∃ V : Subgroup (Dec (F := K) A), IsOpen (V : Set (Dec (F := K) A)) ∧ commutator (Dec (F := K) A) ≤ V ∧ (⟨(σ : G K Ω), Weil_le_Dec h σ.2⟩ : Dec (F := K) A) ∈ V ∧ ∀ τ : Ine (F := K) A, ∀ g ∈ V, (g : G K Ω) = τ → y.charPol (ineIncl h τ) = (Polynomial.X - 1) ^ y.lpDim := by
   intro K Ω _ _ _ _ _ A v h y hy σ hσ
-  haveI : IsGalois K Ω := IsAlgClosure.isGalois K Ω
-  haveI : CompactSpace (Dec (F := K) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : IsGalois K Ω := IsAlgClosure.isGalois K Ω
+  have : CompactSpace (Dec (F := K) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
   obtain ⟨n0, a, rfl⟩ := WD.exists_rep y
   have hcomm : ∀ g g' : Weil h, a.ρ (g * g' * g⁻¹ * g'⁻¹) = 1 := fun g g' => by
     have := hy g g'
@@ -231,9 +231,9 @@ theorem exists_open_sub : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K]
     have : (⟨(d : G K Ω), hI⟩ : Ine (F := K) A) ∈ Subtype.val ⁻¹' O := hd
     rw [hOS] at this
     exact this
-  have hW0 : IsOpen (Subtype.val ⁻¹' O : Set (Dec (F := K) A)) := hO.preimage continuous_subtype_val
+  have hW0 : IsOpen (Subtype.val ⁻¹' O : Set (Dec (F := K) A)) := hO.preimage continuous_subtypeVal
   obtain ⟨U0, hU0⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hW0 hO1
-  haveI := U0.toSubgroup.quotient_finite_of_isOpen U0.isOpen
+  have := U0.toSubgroup.quotient_finite_of_isOpen U0.isOpen
   let ι : Weil h →* Dec (F := K) A := Subgroup.inclusion (Weil_le_Dec h)
   obtain ⟨n, hn, -, hσn⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
     (Subgroup.index_ne_zero_of_finite (H := U0.toSubgroup)) (ι σ)
@@ -242,13 +242,13 @@ theorem exists_open_sub : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K]
   have hW1 : IsOpen ((U0 : Set (Dec (F := K) A)) ∩ {d | (d : G K Ω) ζ = ζ}) := by
     refine U0.isOpen.inter ?_
     have := (stabilizer_isOpen_of_isIntegral (K := K) ζ).preimage
-      (continuous_subtype_val (p := fun x => x ∈ Dec (F := K) A))
+      (continuous_subtypeVal (p := fun x => x ∈ Dec (F := K) A))
     convert this using 1
     ext d
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, MulAction.mem_stabilizer_iff, AlgEquiv.smul_def]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, MulAction.mem_stabilizer_iff, AlgEquiv.smul_def]
   obtain ⟨U, hU⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one hW1
     ⟨U0.toSubgroup.one_mem, AlgEquiv.one_apply ζ⟩
-  haveI : U.toSubgroup.Normal := U.isNormal'
+  have : U.toSubgroup.Normal := U.isNormal'
 
   have hdense : ∀ d : Dec (F := K) A, ∃ w : Weil h, ∃ u ∈ U.toSubgroup, d = ι w * u := by
     intro d
@@ -275,7 +275,7 @@ theorem exists_open_sub : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K]
   have hUU0 : ∀ d : Dec (F := K) A, d ∈ U.toSubgroup → d ∈ U0.toSubgroup := fun d hd => (hU hd).1
   have hUζ : ∀ d : Dec (F := K) A, d ∈ U.toSubgroup → (d : G K Ω) ζ = ζ := fun d hd => (hU hd).2
   have hJI : ∀ j ∈ J, (j : G K Ω) ∈ Ine (F := K) A := fun j hj => hj.1
-  haveI hJn : J.Normal := ⟨fun j hj d => by
+  have hJn : J.Normal := ⟨fun j hj d => by
     obtain ⟨w, u, hu, rfl⟩ := hdense d
     have h1 : u * j * u⁻¹ ∈ J := by
       have hc : u * j * u⁻¹ * j⁻¹ ∈ J := by
@@ -299,7 +299,7 @@ theorem exists_open_sub : ∀ (K Ω : Type) [Field Ω] [Field K] [NumberField K]
     rw [Subgroup.mul_normal] at h1
     obtain ⟨j, hj, u, hu, e⟩ := h1
     exact ⟨j, hj, u, hu, e⟩
-  haveI hNn : N.Normal := Subgroup.sup_normal J U.toSubgroup
+  have hNn : N.Normal := Subgroup.sup_normal J U.toSubgroup
   have hk : ∀ x ∈ N, QuotientGroup.mk' N x = 1 := fun x hx => by
     rwa [← MonoidHom.mem_ker, QuotientGroup.ker_mk']
   have hcN : commutator (Dec (F := K) A) ≤ N := by
@@ -544,7 +544,7 @@ theorem exists_normal_prime_index (Γ : Type) [Group Γ] [Finite Γ] [Nontrivial
     simpa using H.mul_mem h1 hn⟩
   refine ⟨H, hn, ?_⟩
   obtain ⟨p, hp, hd⟩ := Nat.exists_prime_and_dvd (n := Nat.card (Γ ⧸ H)) (mt Subgroup.index_eq_one.1 hH.1)
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨g, hg⟩ := exists_prime_orderOf_dvd_card' p hd
   have h1 : (Subgroup.zpowers g).comap (QuotientGroup.mk' H) = ⊤ := by
     refine hH.2 _ (lt_of_le_of_ne (fun x hx => ?_) fun e => ?_)
@@ -561,13 +561,13 @@ theorem exists_normal_prime_index (Γ : Type) [Group Γ] [Finite Γ] [Nontrivial
 
 theorem isCMField_of_ringEquiv {A B : Type} [Field A] [NumberField A] [Field B] [NumberField B] [IsCMField A]
     (e : A ≃+* B) : IsCMField B := by
-  letI : Algebra A B := e.toRingHom.toAlgebra
-  haveI : IsTotallyComplex B := isTotallyComplex_of_algebra A B
-  letI : Algebra (maximalRealSubfield A) B :=
+  let : Algebra A B := e.toRingHom.toAlgebra
+  have : IsTotallyComplex B := isTotallyComplex_of_algebra A B
+  let : Algebra (maximalRealSubfield A) B :=
     ((e : A →+* B).comp (algebraMap (maximalRealSubfield A) A)).toAlgebra
   let f : A ≃ₐ[maximalRealSubfield A] B := { e with commutes' := fun _ => rfl }
-  haveI : Module.Free (maximalRealSubfield A) B := Module.Free.of_equiv f.toLinearEquiv
-  haveI : Algebra.IsQuadraticExtension (maximalRealSubfield A) B :=
+  have : Module.Free (maximalRealSubfield A) B := Module.Free.of_equiv f.toLinearEquiv
+  have : Algebra.IsQuadraticExtension (maximalRealSubfield A) B :=
     ⟨by rw [← f.toLinearEquiv.finrank_eq]; exact Algebra.IsQuadraticExtension.finrank_eq_two _ _⟩
   exact IsCMField.ofCMExtension (maximalRealSubfield A) B
 
@@ -579,14 +579,14 @@ theorem isCMField_intermediate (Ω : Type) [Field Ω] (K : Type) [Field K] [Numb
     [IsAlgClosure K Ω] (M : Type) [Field M] [NumberField M] [IsCMField M] [Algebra M Ω] [Algebra K M]
     [IsScalarTower K M Ω] (L : IntermediateField K M) : IsCMField L := by
   let f := IsScalarTower.toAlgHom K M Ω
-  haveI : NumberField f.fieldRange := NumberField.of_ringEquiv M _ (AlgEquiv.ofInjectiveField f).toRingEquiv
-  haveI : NumberField (L.map f) := NumberField.of_ringEquiv L _ (IntermediateField.equivMap L f).toRingEquiv
-  haveI : IsCMField f.fieldRange := isCMField_of_ringEquiv (AlgEquiv.ofInjectiveField f).toRingEquiv
+  have : NumberField f.fieldRange := NumberField.of_ringEquiv M _ (AlgEquiv.ofInjectiveField f).toRingEquiv
+  have : NumberField (L.map f) := NumberField.of_ringEquiv L _ (IntermediateField.equivMap L f).toRingEquiv
+  have : IsCMField f.fieldRange := isCMField_of_ringEquiv (AlgEquiv.ofInjectiveField f).toRingEquiv
   have hle : L.map f ≤ f.fieldRange := by
     intro y hy
     obtain ⟨x, -, rfl⟩ := (IntermediateField.mem_map L).1 hy
     exact AlgHom.mem_fieldRange.2 ⟨x, rfl⟩
-  haveI : IsCMField (L.map f) := (GlobalTheory.T.cm_subfields_compositum_closed Ω K).2.1 f.fieldRange (L.map f) hle inferInstance
+  have : IsCMField (L.map f) := (GlobalTheory.T.cm_subfields_compositum_closed Ω K).2.1 f.fieldRange (L.map f) hle inferInstance
   exact isCMField_of_ringEquiv (IntermediateField.equivMap L f).symm.toRingEquiv
 
 end GlobalTheory.SolvUp
@@ -760,7 +760,7 @@ theorem trivial_on_ext_of_frob_eq_normChar : ∀ (Ω : Type) [Field Ω] (K : Typ
     have hp : (Ideal.absNorm w.asIdeal).Prime :=
       ((GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramified M).1 w).2 hd
     have hn : Ideal.absNorm (u w).asIdeal = Ideal.absNorm w.asIdeal := by
-      haveI := hu w
+      have := hu w
       have h := Ideal.absNorm_pow_inertiaDeg (u w).asIdeal w.asIdeal
       have h1 := Nat.Prime.eq_one_of_pow (h ▸ hp)
       rw [h1, pow_one] at h
@@ -861,7 +861,7 @@ theorem ne_one_of_moves (Ω : Type) [Field Ω] (K : Type) [Field K] [Algebra K �
     rw [← this]
     change algebraMap M Ω (ρ k x) = _
     rw [hk]; rfl
-  haveI : Fact (Nat.card (M ≃ₐ[K] M)).Prime := ⟨by
+  have : Fact (Nat.card (M ≃ₐ[K] M)).Prime := ⟨by
     first
       | (rw [IsGalois.card_aut_eq_finrank]; exact hp)
       | (convert hp using 1; rw [Nat.card_eq_fintype_card]; convert IsGalois.card_aut_eq_finrank K M)⟩
@@ -910,7 +910,7 @@ theorem trace_eq_zero_of_selfTw : ∀ (Ω : Type) [Field Ω] (K : Type) [Field K
   have key : (r g⁻¹⁻¹).val.trace = 0 := by
     refine closure_minimal ?_ hZ hsub
     rintro σ ⟨hσU, v, hv, A, hA, hσ⟩
-    simp only [Set.mem_setOf_eq, not_not] at hv
+    simp only [Set.mem_ofPred_eq, not_not] at hv
     have e1 := hv.1 A σ hA hσ
     have e2 := hv.2 A σ hA hσ
     have hv1 : (η.val v : ℂ) ≠ 1 := by
@@ -975,18 +975,18 @@ theorem isWeaklyAttached_of_cmBaseChange_of_finrank (hI : UpperTheory.Gal.ToralG
   · obtain ⟨P, hP⟩ := GlobalTheory.T.exists_characterSupportBaseChangeLift_degreeOne K M h1 a ha π
     obtain ⟨⟨χ', hχ'⟩, -⟩ := GlobalTheory.T.polarizedPair_baseChange_polarized_same_weight GlobalTheory.automorphicFormsFiniteGL hI.js hI.gk K M l a ha π χ P hP.1 hsc
     exact ⟨P, χ', hχ', hP⟩
-  haveI : Group.IsSolvable (M ≃ₐ[K] M) := hsol
-  haveI : Nontrivial (M ≃ₐ[K] M) := by
+  have : Group.IsSolvable (M ≃ₐ[K] M) := hsol
+  have : Nontrivial (M ≃ₐ[K] M) := by
     rw [← Finite.one_lt_card_iff_nontrivial, IsGalois.card_aut_eq_finrank]
     have := Module.finrank_pos (R := K) (M := M)
     omega
   obtain ⟨H, hH, hp⟩ := GlobalTheory.SolvUp.exists_normal_prime_index (M ≃ₐ[K] M)
   let K₁ := IntermediateField.fixedField H
-  haveI : IsGalois K K₁ := IsGalois.of_fixedField_normal_subgroup H
-  haveI : IsCMField K₁ := GlobalTheory.SolvUp.isCMField_intermediate Ω K M K₁
-  haveI : Module.IsTorsionFree K₁ Ω := DivisionSemiring.to_moduleIsTorsionFree
-  haveI : IsAlgClosure K₁ Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) K₁⟩
-  haveI : Group.IsSolvable (M ≃ₐ[K₁] M) :=
+  have : IsGalois K K₁ := IsGalois.of_fixedField_normal_subgroup H
+  have : IsCMField K₁ := GlobalTheory.SolvUp.isCMField_intermediate Ω K M K₁
+  have : Module.IsTorsionFree K₁ Ω := DivisionSemiring.to_moduleIsTorsionFree
+  have : IsAlgClosure K₁ Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) K₁⟩
+  have : Group.IsSolvable (M ≃ₐ[K₁] M) :=
     Group.isSolvable_of_isSolvable_injective (f := AlgEquiv.restrictScalarsHom K) (AlgEquiv.restrictScalars_injective K)
   have hdeg : Module.finrank K K₁ = H.index := by
     have h2 := Module.finrank_mul_finrank K K₁ M
@@ -1113,7 +1113,7 @@ theorem exists_cm_lift_fix_charKer : UpperTheory.Gal.ToralGalois.Inq → ∀ (Ω
   obtain ⟨M₀, _, _, _, _, _, _, _, hsd₀, hfix₀, hfixR₀⟩ := GlobalTheory.T.exists_solvable_cm_extension_split_place Ω E A w h N₀ hN₀o
   obtain ⟨π₀, χ₀, hπ₀, hl₀⟩ := GlobalTheory.T.exists_cuspidal_charLift_of_solvable_cmExtension hI Ω E M₀ l ι n hn π χ hπ r hr N₀ hN₀ hsd₀
   obtain ⟨v₀, h₀, -⟩ := GlobalTheory.T.exists_isPlaceOver_finiteExtension_of_isPlaceOver E M₀ Ω A w h
-  haveI : v₀.asIdeal.LiesOver w.asIdeal := lies h h₀
+  have : v₀.asIdeal.LiesOver w.asIdeal := lies h h₀
   obtain ⟨a₀, ha₀⟩ := GlobalTheory.localArtinExists_holds M₀ Ω A v₀ h₀
   have hgfix : ∀ z : M₀, (g : G E Ω) (algebraMap M₀ Ω z) = algebraMap M₀ Ω z := hfix₀ g (Weil_le_Dec h g.2)
   have hg₀ : (AlgEquiv.ofRingEquiv (f := (g : G E Ω).toRingEquiv) hgfix : G M₀ Ω) ∈ Weil h₀ :=
@@ -1130,9 +1130,9 @@ theorem exists_cm_lift_fix_charKer : UpperTheory.Gal.ToralGalois.Inq → ∀ (Ω
   obtain ⟨N₁, hN₁o, hN₁⟩ := GlobalTheory.T.exists_open_galoisSubgroup_trace_ne_zero Ω M₀ l n hn _ hr₀.1
   obtain ⟨M₁, _, _, _, _, _, _, _, hsd₁, hV₁⟩ := GlobalTheory.T.exists_solvable_cm_extension_abelianCompletion Ω M₀ A v₀ h₀ hfixR₀ V hVo hVc N₁ hN₁o
   obtain ⟨P, χ₁, hP, hl₁⟩ := GlobalTheory.T.exists_cuspidal_charLift_of_solvable_cmExtension hI Ω M₀ M₁ l ι n hn π₀ χ₀ hπ₀ _ hr₀ N₁ hN₁ hsd₁
-  letI : Algebra E M₁ := ((algebraMap M₀ M₁).comp (algebraMap E M₀)).toAlgebra
-  haveI : IsScalarTower E M₀ M₁ := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower E M₁ Ω := IsScalarTower.of_algebraMap_eq fun z => by
+  let : Algebra E M₁ := ((algebraMap M₀ M₁).comp (algebraMap E M₀)).toAlgebra
+  have : IsScalarTower E M₀ M₁ := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower E M₁ Ω := IsScalarTower.of_algebraMap_eq fun z => by
     rw [RingHom.algebraMap_toAlgebra, RingHom.comp_apply, ← IsScalarTower.algebraMap_apply M₀ M₁ Ω,
       ← IsScalarTower.algebraMap_apply E M₀ Ω]
   have hl : CharLift π P := GlobalTheory.T.cuspRep_characterSupportLift_trans_tower E M₀ M₁ n π π₀ P hl₀ hl₁

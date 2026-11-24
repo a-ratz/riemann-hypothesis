@@ -136,15 +136,15 @@ theorem colEl_zero' {m N : ℕ} (h : m + 2 ≤ N) : colEl k m N h 0 = 1 := by
 
 theorem det_unip' (n : ℕ) (x : Multiplicative (Fin n → k)) : Matrix.GeneralLinearGroup.det (unip k n x) = 1 := by
   ext
-  rw [Matrix.GeneralLinearGroup.val_det_apply, Units.val_one, Matrix.det_of_upperTriangular]
+  rw [Matrix.GeneralLinearGroup.val_det_apply, Units.val_one, det_of_isUpperTriangular]
   · refine Finset.prod_eq_one (fun i _ => ?_)
     rw [unip_apply]
     simp only [Matrix.one_apply_eq, add_eq_left]
-    rw [dif_neg]
+    rw [dite_eq_right]
     omega
   · intro i j hij
     have hij' : j < i := hij
-    rw [unip_apply, Matrix.one_apply_ne (ne_of_lt hij').symm, zero_add, dif_neg]
+    rw [unip_apply, Matrix.one_apply_ne (ne_of_lt hij').symm, zero_add, dite_eq_right]
     intro hc
     have := Fin.lt_def.mp hij'
     omega
@@ -180,15 +180,15 @@ theorem padV_neg {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) : padV h 
 theorem padV_of_ge {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) (i : Fin N) (hi : m + 1 ≤ (i : ℕ)) :
     padV h x i = 0 := by
   simp only [padV]
-  rw [dif_neg (by omega)]
+  rw [dite_eq_right (by omega)]
 
 theorem continuous_blkAt_apply (n N : ℕ) (h : n ≤ N) (i j : Fin N) :
     Continuous fun g : GL (Fin n) k => (blkAt k n N h g : Matrix (Fin N) (Fin N) k) i j := by
   simp only [blkAt_apply]
   by_cases hij : (i : ℕ) < n ∧ (j : ℕ) < n
-  · simp only [dif_pos hij]
+  · simp only [dite_eq_left hij]
     exact Units.continuous_val.matrix_elem _ _
-  · simp only [dif_neg hij]
+  · simp only [dite_eq_right hij]
     exact continuous_const
 
 theorem continuous_blkAt' (n N : ℕ) (h : n ≤ N) : Continuous (blkAt k n N h) := by
@@ -208,13 +208,13 @@ theorem continuous_colEl_apply {m N : ℕ} (h : m + 2 ≤ N) (i j : Fin N) :
   simp only [colEl_apply]
   refine continuous_const.add ?_
   by_cases hj : j = cIdx h
-  · simp only [hj, if_true, padV]
+  · simp only [hj, ite_true, padV]
     by_cases hi : (i : ℕ) < m + 1
-    · simp only [dif_pos hi]
+    · simp only [dite_eq_left hi]
       exact continuous_apply _
-    · simp only [dif_neg hi]
+    · simp only [dite_eq_right hi]
       exact continuous_const
-  · simp only [hj, if_false]
+  · simp only [hj, ite_false]
     exact continuous_const
 
 theorem continuous_colEl' {m N : ℕ} (h : m + 2 ≤ N) : Continuous (colEl k m N h) := by
@@ -329,7 +329,7 @@ theorem scalAt_comm_blkAt' {m N : ℕ} (h : m + 1 ≤ N) (z : kˣ) (g : GL (Fin 
   rw [← map_mul, ← map_mul]
   congr 1
   apply Units.ext
-  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass]
   exact Algebra.commutes _ _
 
 theorem colEl_mul_apply {m N : ℕ} (h : m + 2 ≤ N) (x : Fin (m + 1) → k) (M : Matrix (Fin N) (Fin N) k)
@@ -384,7 +384,7 @@ theorem derUnip_decomp' (ψ : AddChar k Circle) {m N : ℕ} (h : m + 2 ≤ N) (u
       by_cases hi : (i : ℕ) < m + 1
       · have hne : i ≠ cIdx h := fun e => by rw [e] at hi; simp [cIdx] at hi
         rw [Matrix.one_apply_ne hne]
-        simp only [padV, dif_pos hi, Pi.neg_apply, hxd]
+        simp only [padV, dite_eq_left hi, Pi.neg_apply, hxd]
         simp
       · rw [padV_of_ge h _ i (by omega), add_zero]
         by_cases hie : (i : ℕ) = m + 1
@@ -450,8 +450,8 @@ theorem colEl_conj_derUnip' (ψ : AddChar k Circle) {m N : ℕ} (h : m + 2 ≤ N
     rw [hv i j, hA i j hj]
     by_cases hjc : j = cIdx h
     · subst hjc
-      rw [if_pos rfl, Matrix.one_apply_eq, mul_one, padV_neg, Pi.neg_apply, add_neg_cancel_right]
-    · rw [if_neg hjc, Matrix.one_apply_ne (fun e => hjc e.symm), mul_zero, add_zero, add_zero]
+      rw [ite_eq_left rfl, Matrix.one_apply_eq, mul_one, padV_neg, Pi.neg_apply, add_neg_cancel_right]
+    · rw [ite_eq_right hjc, Matrix.one_apply_ne (fun e => hjc e.symm), mul_zero, add_zero, add_zero]
   refine ⟨hmem, ?_⟩
   rw [lvlChar_apply, lvlChar_apply]
   congr 2
@@ -464,7 +464,7 @@ theorem colEl_conj_derUnip' (ψ : AddChar k Circle) {m N : ℕ} (h : m + 2 ≤ N
     have := congrArg Fin.val e
     simp only [cIdx] at this
     omega
-  rw [hv, if_neg hpc, add_zero, Units.val_mul, colEl_mul_apply, padV_of_ge h _ _ (by omega), zero_mul,
+  rw [hv, ite_eq_right hpc, add_zero, Units.val_mul, colEl_mul_apply, padV_of_ge h _ _ (by omega), zero_mul,
     add_zero]
 
 end Glue

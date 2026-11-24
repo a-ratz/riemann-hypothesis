@@ -342,12 +342,12 @@ theorem serMul_zero (f : L⟦X⟧) : serMul f (0 : ℤ → M) = 0 := by
 theorem serMul_C (c : L) (u : ℤ → M) : serMul (C c) u = c • u := by
   funext k
   unfold serMul
-  rw [finsum_eq_single _ 0 fun j hj => by rw [coeff_C, if_neg hj, zero_smul]]
+  rw [finsum_eq_single _ 0 fun j hj => by rw [coeff_C, ite_eq_right hj, zero_smul]]
   simp
 
 theorem serMul_X_pow (m : ℕ) (u : ℤ → M) (k : ℤ) : serMul ((X : L⟦X⟧) ^ m) u k = u (k - m) := by
   unfold serMul
-  rw [finsum_eq_single _ m fun j hj => by rw [coeff_X_pow, if_neg hj, zero_smul]]
+  rw [finsum_eq_single _ m fun j hj => by rw [coeff_X_pow, ite_eq_right hj, zero_smul]]
   simp
 
 theorem serMul_low (f : L⟦X⟧) {u : ℤ → M} {m : ℤ} (hu : ∀ k < m, u k = 0) :
@@ -456,7 +456,7 @@ theorem spanIsLines_of_graded_onto {N : Type} (E : N → ℤ → M) {r : ℕ} (u
     have h3 := congrFun h0 k
     rw [Matrix.mulVec, dotProduct, Finset.sum_eq_single k] at h3
     · change constantCoeff (Mx k k) * v k = 0 at h3
-      rw [heq k k rfl, if_pos rfl, one_mul] at h3
+      rw [heq k k rfl, ite_eq_left rfl, one_mul] at h3
       exact (Finset.mem_filter.1 hk).2 h3
     · intro s _ hs
       change constantCoeff (Mx k s) * v s = 0
@@ -464,7 +464,7 @@ theorem spanIsLines_of_graded_onto {N : Type} (E : N → ℤ → M) {r : ℕ} (u
       · rw [hvs, mul_zero]
       rcases (hmax s (by simpa using hvs)).lt_or_eq with h | h
       · rw [hlt k s h, zero_mul]
-      · rw [heq k s h, if_neg (Ne.symm hs), zero_mul]
+      · rw [heq k s h, ite_eq_right (Ne.symm hs), zero_mul]
     · simp
   intro y
   constructor
@@ -529,10 +529,10 @@ theorem serSpan_eq_std_iff (D : Submodule L M) [FiniteDimensional L D] (S : Set 
         · simp [A, hb, hab.trans hb]
         · simp [A, hb]
       · by_cases hk : -k ≤ 0
-        · simpa only [A, if_pos hk] using (h1 y hy).2 k
+        · simpa only [A, ite_eq_left hk] using (h1 y hy).2 k
         · rw [(h1 y hy).1 k (by omega)]; exact zero_mem _
       · rcases lt_trichotomy k 0 with hk | rfl | hk
-        · have : w = 0 := by simpa only [A, if_neg (show ¬ -k ≤ 0 by omega), Submodule.mem_bot] using hw
+        · have : w = 0 := by simpa only [A, ite_eq_right (show ¬ -k ≤ 0 by omega), Submodule.mem_bot] using hw
           exact ⟨0, zero_mem _, fun _ _ => zero_mem _, by simp [this]⟩
         · have h3 : D ≤ (serSpan L S).map (LinearMap.proj (0 : ℤ)) := by
             rw [← h2, Submodule.span_le]
@@ -541,7 +541,7 @@ theorem serSpan_eq_std_iff (D : Submodule L M) [FiniteDimensional L D] (S : Set 
           obtain ⟨y, hy, rfl⟩ := h3 (hAD _ hw)
           exact ⟨y, hy, fun j hj => by rw [(hle hy).1 j (by omega)]; exact zero_mem _, by simp⟩
         · refine ⟨0, zero_mem _, fun _ _ => zero_mem _, ?_⟩
-          simpa only [A, if_pos (show -k + 1 ≤ 0 by omega), Pi.zero_apply, zero_sub, neg_mem_iff] using hAD _ hw
+          simpa only [A, ite_eq_left (show -k + 1 ≤ 0 by omega), Pi.zero_apply, zero_sub, neg_mem_iff] using hAD _ hw
     refine le_antisymm hle (le_trans ?_ e.ge)
     exact le_iSup_of_le (f := fun a => shiftSer a (A a)) 0 (by simp [A])
 
@@ -620,7 +620,7 @@ theorem map_shiftSer {c : L} (hc : c ≠ 0) (g : M →ₗ[L] M') (a : ℤ) (F : 
       fun k => Submodule.smul_mem _ _ (Submodule.mem_map_of_mem (hu.2 k))⟩
   · rintro y ⟨h0, h1⟩
     choose f hf hfy using h1
-    refine ⟨fun k => if k < -a then 0 else (c ^ k)⁻¹ • f k, ⟨fun k hk => if_pos hk, fun k => ?_⟩, funext fun k => ?_⟩
+    refine ⟨fun k => if k < -a then 0 else (c ^ k)⁻¹ • f k, ⟨fun k hk => ite_eq_left hk, fun k => ?_⟩, funext fun k => ?_⟩
     · dsimp only
       split_ifs
       · exact zero_mem _
@@ -832,7 +832,7 @@ theorem spanAt_iff [CharZero LL] [IsDomain O] [IsFractionRing O LL] (hT : IsCrys
     (c3 : ∀ w ∈ DdRE PD T.ρ τ, ∃ d ∈ DcrisL PD T.ρ (W.emb i),
       ιV PD (LL := LL) (V := T.V) d - w ∈ GlobalTheory.NL.CompD.others PD T τ) :
     SpanAt W T i ζ τ ↔ CoeffAt W T i ζ τ := by
-  haveI := finite_ιDi W T i hT
+  have := finite_ιDi W T i hT
   obtain ⟨w, hw, hQ⟩ := ((GlobalTheory.NL.LevPt.lev_values W i ζ ⟨_, hζ⟩).2.2.1 hζ).1
   refine and_congr (pull_iff W T i ζ hw hQ) (fil_iff W T i ζ τ ?_ ?_ fun w hw => ?_)
   · obtain ⟨μ, rfl⟩ := hO
@@ -1040,11 +1040,11 @@ theorem pt_iff (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1) :
 theorem mid_iff (ht : LocTied l P AI) (hT : IsCrys (P.PD K) T.ρ) (τ : ↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
     (hpt : GlobalTheory.NL.Pt H h i ζ τ) : SpanAt (H.W K s LL h) T i ζ τ ↔ CoeffAt (H.W K s LL h) T i ζ τ := by
   have hl : l.Prime := Fact.out
-  haveI : CharZero ↥LL.1 := algebraRat.charZero _
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
-  haveI : IsFractionRing ↥(OL LL) ↥LL.1 := integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
+  have : CharZero ↥LL.1 := algebraRat.charZero _
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := (P.PD K).finK₀
+  have : IsFractionRing ↥(OL LL) ↥LL.1 := integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
   obtain ⟨hζ, hτ, ι, hι⟩ := GlobalTheory.NL.Points.pt_props H h i ζ τ hpt
   obtain ⟨c1, -, c3, -⟩ := GlobalTheory.NL.CompD.component_tied ht K LL T (GlobalTheory.NL.Points.card_emb h K.1 h.2.2.1)
     (GlobalTheory.NL.Points.card_emb h (K0 K) (GlobalTheory.NL.Points.unramifiedSubfield_le_cyclotomicExt K s)) hT τ ι hι.2.2 _ hτ
@@ -1061,7 +1061,7 @@ def UpToLevel : Prop :=
 
 theorem upToLevel_iff (ht : LocTied l P AI) (hT : IsCrys (P.PD K) T.ρ) :
     p4 (H.W K s LL h) (GlobalTheory.NL.Pt H h) T ↔ UpToLevel H h T := by
-  haveI : CharZero ↥LL.1 := algebraRat.charZero _
+  have : CharZero ↥LL.1 := algebraRat.charZero _
   refine (coeffForm_iff_spans _ T hT _ fun i ζ τ => mid_iff H h T i ζ ht hT τ).trans ?_
   rw [P.PD_p, H.W_s]
   refine forall₂_congr fun i ζ => and_congr_right' ⟨fun g τ hτ => g _ ((pt_iff H h i ζ _).2 ⟨τ, hτ, rfl⟩), ?_⟩
@@ -1076,7 +1076,7 @@ theorem latticeAtLevels_iff_upToLevel {F : LocFon l P AI H} (C : LocCmpT l P AI 
       (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)), IsCrys (P.PD K) T.ρ → UpToLevel H h T := by
   refine ⟨fun g K s LL h T hT i ζ => ⟨(g K s LL h T hT i ζ).1, (g K s LL h T hT i ζ).2.1⟩,
     fun g K s LL h T hT i ζ => ⟨(g K s LL h T hT i ζ).1, (g K s LL h T hT i ζ).2, fun j _ hζ => ?_⟩⟩
-  haveI : CharZero ↥LL.1 := algebraRat.charZero _
+  have : CharZero ↥LL.1 := algebraRat.charZero _
   have h1 := high T i ζ (C.C K s LL h).tie hT j (by rwa [P.PD_p, H.W_s])
   have e : ζ ^ (P.PD K).p ^ j = ζ ^ l ^ j := by rw [P.PD_p]
   rw [e] at h1
@@ -1121,7 +1121,7 @@ theorem zc_X_pow_mul (c : F⟦X⟧) (m : ℕ) (j : ℤ) : zc (X ^ m * c) (j + m)
   · rw [zc_neg c h]
     unfold zc
     split_ifs with h'
-    · rw [coeff_X_pow_mul', if_neg (by omega)]
+    · rw [coeff_X_pow_mul', ite_eq_right (by omega)]
     · rfl
   · obtain ⟨j, rfl⟩ := Int.eq_ofNat_of_zero_le h
     rw [← Nat.cast_add, zc_nat, zc_nat, coeff_X_pow_mul]
@@ -1438,7 +1438,7 @@ variable {l : ℕ} [Fact l.Prime] {P : LocPrime l} {K LL : FinExt l} {f : ℕ}
 
 theorem lev_eq_exp (i : ZMod f) (ζ : ↥(OL LL)) (hζ : IsPrimitiveRoot (ζ : ↥LL.1) l) (jj : (↥(OL LL))⟦X⟧ →+* (↥LL.1)⟦X⟧)
     (hj : IsExpAt (OL LL).val.toRingHom ζ jj) (a : LetA ↥(OL LL) f) : W.lev i (ζ : ↥LL.1) a = jj (a i) := by
-  haveI : CharZero ↥LL.1 := algebraRat.charZero _
+  have : CharZero ↥LL.1 := algebraRat.charZero _
   obtain ⟨E, h0, h1, hE⟩ := W.lev_π i (ζ : ↥LL.1) ⟨1, by rwa [P.PD_p, pow_one]⟩
   rw [eq_exp E h0 h1] at hE
   obtain ⟨ψ, g1, g2, g3⟩ := exists_levOne W i (ζ : ↥LL.1)
@@ -1455,7 +1455,7 @@ open NumberField Formalism.CohomologicalDescent Formalism.CohomologicalDescent.H
 
 theorem frame_at_root : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (hA : CaseA K LL) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (n : ℕ) (U : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → Fin n → ℤ) (γ : ((HW l).W K 1 LL hA.2.2).Gam) (b : Module.Basis (Fin n) (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) ↥(((HW l).W K 1 LL hA.2.2).N T)) (N : Lat (ZMod (Module.finrank ℚ_[l] ↥(K0 K))) n ↥(OL LL)) (u c : ℤ_[l]) (ζ : ↥(OL LL)) (jj : PowerSeries ↥(OL LL) →+* PowerSeries ↥LL.1), GlobalTheory.AdmLoc.CrysWith ((D.loc l).PD K) ((HW l).W K 1 LL hA.2.2).emb T.ρ (fun i => Finset.univ.val.map (U i)) → (∀ i a, 0 ≤ U i a) → IsFrame ((HW l).W K 1 LL hA.2.2) T γ b N → (((HW l).W K 1 LL hA.2.2).χΓ γ : ↥(OL LL)) = algebraMap ℤ_[l] ↥(OL LL) u → u = 1 + (l : ℤ_[l]) * c → IsPrimitiveRoot ζ l → IsExpAt (OL LL).val.toRingHom ζ jj → ∀ i, ∃ G H : (Mx (PowerSeries ↥LL.1) n n)ˣ, (N.P i).map (fun y => jj (inc l ↥(OL LL) y)) = (G : Mx (PowerSeries ↥LL.1) n n) * Matrix.diagonal (fun a => (X : PowerSeries ↥LL.1) ^ (U i a).toNat) * (H : Mx (PowerSeries ↥LL.1) n n) ∧ ((1 + (X : PowerSeries ↥(OL LL)) • N.D i).map (fun y => jj (inc l ↥(OL LL) y))) * ((G : Mx (PowerSeries ↥LL.1) n n) * Matrix.diagonal (fun a => (X : PowerSeries ↥LL.1) ^ (U i a).toNat)).map (rescale ((OL LL).val.toRingHom (algebraMap ℤ_[l] ↥(OL LL) u))) = (G : Mx (PowerSeries ↥LL.1) n n) * Matrix.diagonal (fun a => (X : PowerSeries ↥LL.1) ^ (U i a).toNat) := by
   intro D HW F Cm l _ K LL hA T n U γ b N u c ζ jj hc hU hfr hχ hu hζ hj i
-  haveI : CharZero ↥LL.1 := algebraRat.charZero _
+  have : CharZero ↥LL.1 := algebraRat.charZero _
   have hζ' : IsPrimitiveRoot (ζ : ↥LL.1) l := hζ.map_of_injective (f := (OL LL).val) Subtype.val_injective
   obtain ⟨d, hd, hS, hS'⟩ := exists_lines (D.locT l)
     ((LevelCompare.coeffForm_iff_latticeAtLevels D HW F Cm).1 (GlobalTheory.NL.LatLevel.lattice_at_level D HW F Cm) l)

@@ -216,11 +216,11 @@ theorem exists_ringHom_avoid {F : Type} [Field F] [NumberField F] [IsCMField F] 
   have hcard : T.card = Tc.card := by
     refine Finset.card_nbij' (fun τ => τ.comp cj) (fun τ => τ.comp cj) ?_ ?_ ?_ ?_
     · intro τ hτ
-      simp only [T, Tc, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hτ ⊢
+      simp only [T, Tc, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hτ ⊢
       rw [hconj, hτ]
       exact fun h => hne h.symm
     · intro τ hτ
-      simp only [T, Tc, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hτ ⊢
+      simp only [T, Tc, Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hτ ⊢
       rw [hconj, hside τ hτ]; ring
     · intro τ _; ext z; simp [hcc]
     · intro τ _; ext z; simp [hcc]
@@ -415,7 +415,7 @@ open GlobalTheory.LieCoordFibre ReciprocityTheory.ChartRestriction.G.Chart in
 theorem GlobalTheory.exists_lie_coordinates_fibres : ∀ (R : Type) [CommRing R] [IsLocalRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], Smooth G.hom → ∃ (n : ℕ) (M : (G ⟶ G) → Matrix (Fin n) (Fin n) R), (∀ g : ℕ, SmoothOfRelativeDimension g G.hom → n = g) ∧ ∀ (k : Type) [Field k] (f : R →+* k), ∃ T : (Fin n → k) → (epsPt (spMap f) ⟶ G), Function.Injective T ∧ (∀ v : epsPt (spMap f) ⟶ G, spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ (v).left = (1 : Over.mk (spMap f) ⟶ G).left ↔ v ∈ Set.range T) ∧ (∀ c c', T (c + c') = T c * T c') ∧ (∀ (t : k) c, (T (t • c)).left = spMap (epsScale t) ≫ (T c).left) ∧ ∀ u : G ⟶ G, IsMonHom u → ∀ c, T c ≫ u = T (((M u).map f).mulVec c) := by
   intro R _ _ G _ _ hs
   have hlocal : ∃ (n : ℕ) (y : Fin n → (epsR R ⟶ G)), IsLieBasis y := by
-    haveI := hs
+    have := hs
     obtain ⟨C⟩ := ReciprocityTheory.ChartRestriction.G.Chart.exists_chart G
     obtain ⟨g, hg, n, v, hv⟩ := ReciprocityTheory.ChartRestriction.G.Chart.exists_lieBasis_away C (IsLocalRing.maximalIdeal R)
     have hu : IsUnit g := by
@@ -434,7 +434,7 @@ theorem GlobalTheory.exists_lie_coordinates_fibres : ∀ (R : Type) [CommRing R]
     let φ' : G.left ⟶ G'.left := pullback.lift (𝟙 _) (G.hom ≫ spMap f') (by rw [Category.assoc, hcomp]; simp)
     have hφ : φ' ≫ pullback.fst _ _ = 𝟙 _ := pullback.lift_fst _ _ _
     have hw : φ' ≫ G'.hom = G.hom ≫ spMap f' := pullback.lift_snd _ _ _
-    haveI : IsMonHom (Iso.refl G).hom := inferInstanceAs (IsMonHom (𝟙 G))
+    have : IsMonHom (Iso.refl G).hom := inferInstanceAs (IsMonHom (𝟙 G))
     have hid : IsGrpPullback G G (𝟙 (Sp R)) (𝟙 G.left) := (isGrpPullback_of_iso (Iso.refl G)).congr rfl rfl
     have hn : IsGrpPullback G G (spMap f' ≫ ReciprocityTheory.ChartRestriction.G.Chart.fB R L) (φ' ≫ pullback.fst _ _) :=
       hid.congr hcomp.symm hφ.symm
@@ -465,7 +465,7 @@ theorem GlobalTheory.exists_lie_coordinates_fibres : ∀ (R : Type) [CommRing R]
   · show (prodPts (t • c) v').left ≫ _ = _ ≫ (prodPts c v').left ≫ _
     rw [LieEigen.prodPts_smul, Over.comp_left, Category.assoc]
     rfl
-  haveI := hu
+  have := hu
   let col : Fin n → Fin n → R := fun j i => lieMat hv u i j
   have hz : ∀ j, P (v' j) ≫ u = P (prodPts (f ∘ col j) v') := fun j => Over.OverMorphism.ext (by
     rw [Over.comp_left, push_left, push_left, e j, Category.assoc, ← Over.comp_left,
@@ -598,7 +598,7 @@ namespace GlobalTheory.PrimAnnih
 theorem exists_extend (F Ω : Type) [Field F] [NumberField F] [Field Ω] [CharZero Ω]
     (σ : 𝓞 F →+* Ω) : ∃ σ' : F →ₐ[ℚ] Ω, ∀ a : 𝓞 F, σ' (algebraMap (𝓞 F) F a) = σ a := by
   have hk : RingHom.ker σ = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     rw [Ideal.under_def, RingHom.comap_ker, show σ.comp (algebraMap ℤ (𝓞 F)) = Int.castRingHom Ω from
       RingHom.ext_int _ _]
     exact (RingHom.injective_iff_ker_eq_bot _).1 Int.cast_injective
@@ -702,7 +702,7 @@ theorem exists_primitive_annihilator : ∀ (F : Type) [Field F] [NumberField F] 
     have := congrFun (congrFun hN0 p.1) p.2
     simpa [Matrix.vecMul, dotProduct, A, N, hΦ, Matrix.sum_apply, mul_comm] using this
   obtain ⟨w, hw0, hwA⟩ := exists_vecMul_eq_zero f hf A x hx0 hxA
-  haveI : NoZeroSMulDivisors W (Matrix (Fin n) (Fin n) W) :=
+  have : NoZeroSMulDivisors W (Matrix (Fin n) (Fin n) W) :=
     inferInstanceAs (NoZeroSMulDivisors W (Fin n → Fin n → W))
   refine exists_unit_coeff (fun i => M (b i)) w hw0 ?_
   ext j k
@@ -802,7 +802,7 @@ theorem finrank_eq_zero_of_dual_killed : ∀ (F : Type) [Field F] [NumberField F
   intro F _ _ X _ _ _ ρ k _ ι _ b w hw hyp
   classical
   by_contra hX
-  haveI : Nontrivial X := Module.finrank_pos_iff.mp (Nat.pos_of_ne_zero hX)
+  have : Nontrivial X := Module.finrank_pos_iff.mp (Nat.pos_of_ne_zero hX)
   obtain ⟨i0, hi0⟩ : ∃ i, w i ≠ 0 := by
     by_contra hc; push_neg at hc; exact hw (funext hc)
   set B := Module.Free.chooseBasis ℤ X
@@ -820,9 +820,9 @@ theorem finrank_eq_zero_of_dual_killed : ∀ (F : Type) [Field F] [NumberField F
     simp [map_sum, map_zsmul, LinearMap.sum_apply, Finsupp.finsetSum_apply]
   rcases CharP.char_is_prime_or_zero k (ringChar k) with hp | hp
   · set p := ringChar k with hpdef
-    haveI : Fact p.Prime := ⟨hp⟩
-    haveI : CharP k p := ringChar.charP k
-    letI : Algebra (ZMod p) k := ZMod.algebra k p
+    have : Fact p.Prime := ⟨hp⟩
+    have : CharP k p := ringChar.charP k
+    let : Algebra (ZMod p) k := ZMod.algebra k p
     obtain ⟨π, hπ⟩ : ∃ π : Module.Dual (ZMod p) k, π (w i0) ≠ 0 := by
       by_contra hc; push_neg at hc
       exact hi0 ((Module.forall_dual_apply_eq_zero_iff (ZMod p) (w i0)).mp hc)
@@ -845,9 +845,9 @@ theorem finrank_eq_zero_of_dual_killed : ∀ (F : Type) [Field F] [NumberField F
     rw [← ZMod.natCast_zmod_val (π (w i0))]
     have h' : ((((π (w i0)).val : ℕ) : ℤ) : ZMod p) = 0 := (ZMod.intCast_zmod_eq_zero_iff_dvd _ _).mpr h
     exact_mod_cast h'
-  · haveI : CharZero k := by
+  · have : CharZero k := by
       have := ringChar.charP k; rw [hp] at this; exact CharP.charP_to_charZero k
-    letI : Algebra ℚ k := DivisionRing.toRatAlgebra
+    let : Algebra ℚ k := DivisionRing.toRatAlgebra
     obtain ⟨π, hπ⟩ : ∃ π : Module.Dual ℚ k, π (w i0) ≠ 0 := by
       by_contra hc; push_neg at hc
       exact hi0 ((Module.forall_dual_apply_eq_zero_iff ℚ (w i0)).mp hc)
@@ -1068,8 +1068,8 @@ end GlobalTheory.TorLie
 open GlobalTheory.TorLie in
 theorem GlobalTheory.torus_part_lie : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (O : Type) [Ring O] (act : O → (G ⟶ G)), (∀ a, IsMonHom (act a)) → act 1 = 𝟙 G → (∀ a b, act (a * b) = act a ≫ act b) → (∀ a b, act (a + b) = act a * act b) → ∀ (k : Type) [Field k] (x : Sp k ⟶ S) (E : TorusExtension ((Over.pullback x).obj G)), letI := E.addCommGroup; ∃ (ρ : O →+* Module.End ℤ E.X) (U : (E.X →+ k) → (epsPt x ⟶ G)), Function.Injective U ∧ (∀ l, spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ (U l).left = (1 : Over.mk x ⟶ G).left) ∧ (∀ l l', U (l + l') = U l * U l') ∧ (∀ (t : k) l, (U ((AddMonoidHom.mulLeft t).comp l)).left = spMap (epsScale t) ≫ (U l).left) ∧ ∀ a l, U l ≫ act a = U (l.comp (ρ a).toAddMonoidHom) := by
   intro S G _ _ O _ act hhom h1 hmul hadd k _ x E
-  letI := E.addCommGroup
-  haveI := E.i_hom
+  let := E.addCommGroup
+  have := E.i_hom
   set Gx := (Over.pullback x).obj G with hGx
   have hGP := isGrpPullback_pullback G x
   obtain ⟨act', ⟨hhom', h1', hmul', hadd'⟩, hact'⟩ :=
@@ -1086,7 +1086,7 @@ theorem GlobalTheory.torus_part_lie : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj 
   let U : (E.X →+ k) → (epsPt x ⟶ G) := fun l => Over.homMk _ (hw l)
   have hUl : ∀ l, (U l).left = (U₀ l).left ≫ E.i.left ≫ pullback.fst G.hom x := by
     intro l; simp [U]
-  haveI : Mono E.i := E.isKernel.mono_fst_of_mono (IsTerminal.mono_from isTerminalTensorUnit _)
+  have : Mono E.i := E.isKernel.mono_fst_of_mono (IsTerminal.mono_from isTerminalTensorUnit _)
   refine ⟨ρ, U, ?_, ?_, ?_, ?_, ?_⟩
   · intro l l' h
     have hl := congrArg Over.Hom.left h
@@ -1167,7 +1167,7 @@ theorem lift_ext (V K W L Ω : Type) [CommRing V] [Field K] [CommRing W] [IsDoma
     [IsAlgClosed Ω] [Algebra V K] [Algebra V W] [Algebra W L] [Algebra K L] [IsFractionRing W L]
     (hc : (algebraMap W L).comp (algebraMap V W) = (algebraMap K L).comp (algebraMap V K))
     (hfin : Module.Finite V W) (g : K →+* Ω) : ∃ g' : L →+* Ω, g'.comp (algebraMap K L) = g := by
-  letI := g.toAlgebra
+  let := g.toAlgebra
   have hint : Algebra.IsIntegral V W := Algebra.IsIntegral.of_finite V W
   have halg : ∀ w : W, IsAlgebraic K (algebraMap W L w) := by
     intro w
@@ -1176,7 +1176,7 @@ theorem lift_ext (V K W L Ω : Type) [CommRing V] [Field K] [CommRing W] [IsDoma
     have := congrArg (algebraMap W L) hpw
     rw [map_zero, Polynomial.hom_eval₂] at this
     rw [Polynomial.aeval_def, Polynomial.eval₂_map, ← this, hc]
-  haveI : Algebra.IsAlgebraic K L := by
+  have : Algebra.IsAlgebraic K L := by
     refine ⟨fun x => ?_⟩
     obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := W) x
     rw [div_eq_mul_inv]
@@ -1223,10 +1223,10 @@ theorem finrank_zero (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRi
     [IsAlgClosed Ω] (f : W →+* Ω) (hf : Function.Injective f) (σ : 𝓞 F →+* Ω) (h0 : LieMult a (spMap f) σ 0)
     (E : TorusExtension (GlobalTheory.SS.spFibre G)) : (letI := E.addCommGroup; Module.finrank ℤ E.X) = 0 := by
   classical
-  letI := E.addCommGroup
-  haveI := E.free
-  haveI := E.finite
-  haveI : IsCommMonObj G := hG.comm
+  let := E.addCommGroup
+  have := E.free
+  have := E.finite
+  have : IsCommMonObj G := hG.comm
   obtain ⟨n, M, -, hT⟩ := _root_.GlobalTheory.exists_lie_coordinates_fibres W G hG.smooth
   obtain ⟨T, Tinj, Trange, Tadd, Tsc, Tact⟩ := hT Ω f
   obtain ⟨Mr, hMr⟩ := exists_ringHom a M f hf T Tinj Tadd Tact
@@ -1287,7 +1287,7 @@ theorem potGood_of_lieMult_zero : ∀ (V K : Type) [CommRing V] [IsDomain V] [Is
   have hG0 : LieMult aG (spMap (g'.comp (algebraMap W L))) σ 0 := by
     rw [spMap_comp]
     exact e2.1 (e1.2 (hx ▸ hL))
-  haveI : CharZero Ω := charZero_of_injective_ringHom g.injective
+  have : CharZero Ω := charZero_of_injective_ringHom g.injective
   have hinj : Function.Injective (g'.comp (algebraMap W L)) :=
     g'.injective.comp (IsFractionRing.injective W L)
   exact _root_.GlobalTheory.ToricRankZero.isAbelianScheme_of_finrank_eq_zero W L G hsemi (proper_pull A G hM hA) E
@@ -1412,11 +1412,11 @@ namespace GlobalTheory
 
 theorem finrank_torusExtension_le : ∀ (k : Type) [Field k] (G : Over (Sp k)) [GrpObj G] (E : TorusExtension G) (g : ℕ), SmoothOfRelativeDimension g G.hom → (letI := E.addCommGroup; Module.finrank ℤ E.X) ≤ g := by
   intro k _ G _ E g hG
-  letI := E.addCommGroup
-  haveI := E.free
-  haveI := E.finite
-  letI := E.grpB
-  haveI : IsSeparated E.B.hom := E.isAbelian.proper.toIsSeparated
+  let := E.addCommGroup
+  have := E.free
+  have := E.finite
+  let := E.grpB
+  have : IsSeparated E.B.hom := E.isAbelian.proper.toIsSeparated
   have hη : IsClosedImmersion (η : 𝟙_ (Over (Sp k)) ⟶ E.B).left := isClosedImmersion_of_comp_eq_id (Y := Sp k) E.B.hom _ (Over.w _)
   have hpb : IsPullback E.i.left (toUnit (splitTorus (Sp k) E.X)).left E.q.left (η : 𝟙_ (Over (Sp k)) ⟶ E.B).left :=
     E.isKernel.map (Over.forget _)
@@ -1460,13 +1460,13 @@ theorem potGood_of_divisionAlgebra_action : ∀ (V K : Type) [CommRing V] [IsDom
     isGrpPullback_pullback G _
   obtain ⟨act₃, ⟨h3a, h3b, h3c, h3d⟩, -⟩ :=
     _root_.GlobalTheory.ActPull.exists_act_pull _ _ (spMap (IsLocalRing.residue W)) G (GlobalTheory.SS.spFibre G) _ hres O act₂ h2a h2b h2c h2d
-  haveI : IsCommMonObj (GlobalTheory.SS.spFibre G) := by
-    haveI := hsa.comm
+  have : IsCommMonObj (GlobalTheory.SS.spFibre G) := by
+    have := hsa.comm
     infer_instance
   obtain ⟨ρ, -⟩ := _root_.GlobalTheory.ringHom_charEnd_of_torusExtension _ (GlobalTheory.SS.spFibre G) E O act₃ h3a h3b h3c h3d
 
   obtain ⟨e, -⟩ := hmod
-  haveI : IsIso e.hom.left := inferInstanceAs (IsIso ((Over.forget _).map e.hom))
+  have : IsIso e.hom.left := inferInstanceAs (IsIso ((Over.forget _).map e.hom))
   have hA'g : SmoothOfRelativeDimension g A'.hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback (IsPullback.of_hasPullback A.hom f) hg
   have hGLg : SmoothOfRelativeDimension g ((Over.pullback (spMap (algebraMap W L))).obj G).hom := by
@@ -1476,14 +1476,14 @@ theorem potGood_of_divisionAlgebra_action : ∀ (V K : Type) [CommRing V] [IsDom
   have hsc : GlobalTheory.SS.SmConn G := ⟨hsa.comm, hsa.smooth, hsa.separated, hsa.quasiCompact, hsa.geomConnected⟩
   have hsp : SmoothOfRelativeDimension g (GlobalTheory.SS.spFibre G).hom := GlobalTheory.IsogRed.relDim_spFibre (K := L) G hsc g hGLg
   have hle := _root_.GlobalTheory.finrank_torusExtension_le _ (GlobalTheory.SS.spFibre G) E g hsp
-  letI := E.addCommGroup
-  haveI := E.free
-  haveI := E.finite
+  let := E.addCommGroup
+  have := E.free
+  have := E.finite
   have h0 : Module.finrank ℤ E.X = 0 := _root_.GlobalTheory.divAlg_order_no_small_lattice B O jj hdiv hinj hspan E.X ρ (lt_of_le_of_lt hle hgB)
 
   have hprop : IsProper ((Over.pullback (spMap (algebraMap W L))).obj G).hom := by
-    haveI : IsProper A.hom := hA.proper
-    haveI : IsProper A'.hom := inferInstanceAs (IsProper (pullback.snd A.hom f))
+    have : IsProper A.hom := hA.proper
+    have : IsProper A'.hom := inferInstanceAs (IsProper (pullback.snd A.hom f))
     rw [← Over.w e.hom]
     infer_instance
   exact _root_.GlobalTheory.ToricRankZero.isAbelianScheme_of_finrank_eq_zero W L G hsa hprop E h0
@@ -1506,7 +1506,7 @@ namespace GlobalTheory
 
 theorem potModel_of_divAlg_leftAction : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [Field K] [CharZero K] [Algebra V K] [IsFractionRing V K] (A : Over (Sp K)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (O : Type) [Ring O] (act : O → (A ⟶ A)), (∀ a, IsMonHom (act a)) → act 1 = 𝟙 A → (∀ a b, act (a * b) = act b ≫ act a) → (∀ a b, act (a + b) = act a * act b) → ∀ (B : Type) [Ring B] [Algebra ℚ B] [Module.Finite ℚ B] (jj : O →+* B), (∀ x : B, x ≠ 0 → IsUnit x) → Function.Injective jj → Submodule.span ℚ (Set.range jj) = ⊤ → g < Module.finrank ℚ B → GlobalTheory.SS.PotModel V K A (fun _ _ _ G _ => IsAbelianScheme G) := by
   intro V K _ _ _ _ _ _ _ _ A _ g hA hg O _ act hmon h1 hmul hadd B _ _ _ jj hunit hinj hspan hdim
-  haveI : Module.Finite ℚ Bᵐᵒᵖ :=
+  have : Module.Finite ℚ Bᵐᵒᵖ :=
     Module.Finite.equiv (MulOpposite.opLinearEquiv ℚ (M := B))
   refine _root_.GlobalTheory.DivPotGood.potGood_of_divisionAlgebra_action V K A g hA hg Oᵐᵒᵖ (fun a => act a.unop) (fun a => hmon a.unop) h1
     (fun a b => hmul b.unop a.unop) (fun a b => hadd a.unop b.unop) Bᵐᵒᵖ (RingHom.op jj)
@@ -1657,8 +1657,8 @@ namespace GlobalTheory.UPel.HT
 
 theorem two_mul_relDim_eq_finrank : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (K : Type) [Field K] (β : R →+* K) (o : Obj b N (spMap β)) (g : ℕ), SmoothOfRelativeDimension g o.A.hom → 2 * g = Module.finrank ℤ D.La := by
   intro p _ D R _ b N K _ β o g hg
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   obtain ⟨ℓ, hℓp, hℓ⟩ := Nat.exists_infinite_primes (p + 1)
   have hcop : ℓ.Coprime p := (Nat.coprime_primes hℓ (Fact.out)).2 (by omega)
   have hℓ0 : 0 < ℓ := hℓ.pos
@@ -1716,8 +1716,8 @@ theorem potGood : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRin
   · obtain ⟨g, hg⟩ := GlobalTheory.AbVarRelDim.exists_relDim K o.A o.ab
     have h2g := _root_.GlobalTheory.UPel.HT.two_mul_relDim_eq_finrank p D R b N K β o g hg
     rw [D.rankLa] at h2g
-    haveI := D.freeO
-    haveI := D.finO
+    have := D.freeO
+    have := D.finO
     have hd : 0 < Module.finrank ℚ D.F := Module.finrank_pos
     have hm := D.m_pos
     have hlt : g < Module.finrank ℤ D.O := by
@@ -1925,8 +1925,8 @@ lemma specMap_contravariant_comp_ringHom {A B C : Type} [CommRing A] [CommRing B
 theorem isProper_model_of_compact (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] [IsDomain R]
     [CharZero R] [IsNoetherianRing R] (b : Base D R) (N : ℕ) (M : Model b N)
     (hc : 2 * D.a < Module.finrank ℚ D.F ∨ (D.IsDivision ∧ D.n < 2 * D.m)) : IsProper M.s := by
-  haveI := M.smooth
-  haveI : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
+  have := M.smooth
+  have : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
   refine _root_.GlobalTheory.ValuativeFlat.isProper_of_lift_dominating R M.X M.s M.qproj inferInstance ?_
   intro V K _ _ _ _ _ _ _ _ β x hx
 

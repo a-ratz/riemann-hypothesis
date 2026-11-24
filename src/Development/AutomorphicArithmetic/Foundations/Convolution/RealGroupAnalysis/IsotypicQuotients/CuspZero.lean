@@ -77,7 +77,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Pp.cuspZero :
     change f.1 (g * TR.infGL F 2 _ * finGL F 2 _) = _
     rw [mul_assoc, TR.infGL_mul_finGL, mul_inv_cancel_left]
   refine ⟨⟨hc, (π.cusp f hf).1.left⟩, fun g => ?_⟩
-  letI : Unique (BlockIx 2 1) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
+  let : Unique (BlockIx 2 1) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
   rw [← int_one (ι := BlockIx 2 1)]
   have hz := (π.cusp f hf).2 1 one_pos one_lt_two (FourierWhittaker.vecMeasure F (BlockIx 2 1)) (FourierWhittaker.vecDomain F (BlockIx 2 1)) inferInstance (by exact FourierWhittaker.isAddFundamentalDomain_vecDomain) g
   rw [← hz]

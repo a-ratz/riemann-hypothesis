@@ -83,7 +83,7 @@ theorem absNorm_eq (h2 : Module.finrank F E = 2) (hw : IsInertAt F E v w) :
     Ideal.absNorm w.asIdeal = Ideal.absNorm v.asIdeal ^ 2 := by
   rw [← show Ideal.map _ v.asIdeal = w.asIdeal from hw, Ideal.absNorm_algebraMap, ← h2]
   congr 1
-  exact (Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E).symm
+  exact (IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E).symm
 
 theorem not_map_le_sq (hw : IsInertAt F E v w) :
     ¬ Ideal.map (algebraMap (𝓞 F) (𝓞 E)) v.asIdeal ≤ w.asIdeal ^ 2 := by
@@ -223,9 +223,9 @@ def complEquiv (hw : IsInertAt F E v w) (h : w.under (𝓞 F) = v) : Fv F v ⊗[
 
 theorem continuous_complEquiv (hw : IsInertAt F E v w) (h : w.under (𝓞 F) = v) :
     Continuous (complEquiv hw h) ∧ Continuous (complEquiv hw h).symm := by
-  letI : Algebra (Fv F v) (w.adicCompletion E) := (complMap h).toAlgebra
-  haveI : ContinuousSMul (Fv F v) (w.adicCompletion E) := continuousSMul_of_algebraMap _ _ (continuous_complMap h)
-  letI : NontriviallyNormedField (Fv F v) := Valued.toNontriviallyNormedField _ _
+  let : Algebra (Fv F v) (w.adicCompletion E) := (complMap h).toAlgebra
+  have : ContinuousSMul (Fv F v) (w.adicCompletion E) := continuousSMul_of_algebraMap _ _ (continuous_complMap h)
+  let : NontriviallyNormedField (Fv F v) := Valued.toNontriviallyNormedField _ _
   have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
   let f : (Fv F v ⊗[F] E) ≃ₐ[Fv F v] w.adicCompletion E :=
@@ -260,7 +260,7 @@ theorem exists_isUnramInv (hσ : IsCMExt F E σ) (hw : IsInertAt F E v w) (hc : 
     ∃ ϖ, IsUnramInv ϖ c (qV F v) := by
   have hval : ∀ a : E, Valued.v (algebraMap E (w.adicCompletion E) a) = w.valuation E a := fun a =>
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w _
-  obtain ⟨s, hs, hs2⟩ := SetLike.not_le_iff_exists.1 (mt Ideal.map_le_iff_le_comap.2 (not_map_le_sq hw))
+  obtain ⟨s, hs, hs2⟩ := IsConcreteLE.not_le_iff_exists.1 (mt Ideal.map_le_iff_le_comap.2 (not_map_le_sq hw))
   have hs1 : algebraMap (𝓞 F) (𝓞 E) s ∈ w.asIdeal := hw ▸ Ideal.mem_map_of_mem _ hs
   set ϖ : w.adicCompletion E := algebraMap E _ (algebraMap (𝓞 F) (𝓞 E) s : E) with hϖ
   have h1 : c ϖ = ϖ := (conj_algebraMap hc _).trans (congrArg _ (σ.commutes (s : F)))
@@ -527,8 +527,8 @@ theorem continuous_chart (hw : IsInertAt F E v w) (hc : IsConjAt σ h c) {a : GL
     Continuous.units_map _ (continuous_id.matrix_map (continuous_complEquiv hw h).1)
   have h2 : Continuous (bc (n := Fin n) (complEquiv hw h).symm.toRingHom) :=
     Continuous.units_map _ (continuous_id.matrix_map (continuous_complEquiv hw h).2)
-  exact ⟨((continuous_const.mul (h1.comp continuous_subtype_val)).mul continuous_const).subtype_mk _,
-    (h2.comp ((continuous_const.mul continuous_subtype_val).mul continuous_const)).subtype_mk _⟩
+  exact ⟨((continuous_const.mul (h1.comp continuous_subtypeVal)).mul continuous_const).subtype_mk _,
+    (h2.comp ((continuous_const.mul continuous_subtypeVal).mul continuous_const)).subtype_mk _⟩
 
 theorem isInertChart_chart (hw : IsInertAt F E v w) (hc : IsConjAt σ h c) {a : GL (Fin n) (w.adicCompletion E)}
     (ha' : IsFrameAt w L a) (ha : cT c a.1 * J.map (algebraMap E _) * a.1 = antiJ _ n) :

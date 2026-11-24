@@ -64,7 +64,7 @@ private theorem prj {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] 
   have pa : ∀ h, P h = J (cut V (Ioi T) (ContinuousLinearMap.adjoint J.toContinuousLinearMap h)) := fun _ => rfl
   refine ⟨?_, ?_, fun h => ⟨_, ?_, pa h⟩, fun u hu => ?_⟩
   · ext h
-    rw [ContinuousLinearMap.mul_apply, pa h, pa, jj, cc]
+    rw [mul_apply_eq_comp, pa h, pa, jj, cc]
   · show ContinuousLinearMap.adjoint P = P
     simp only [P, ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.adjoint_adjoint, c2.adjoint_eq, ContinuousLinearMap.comp_assoc]
   · exact ((c8 _).1 (cc _)).mono fun x hx h => hx (by simpa using h)
@@ -83,7 +83,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.truncEq :
   have o1 : P * P' = 0 := by
     ext h
     refine ext_inner_left ℂ fun y => ?_
-    rw [ContinuousLinearMap.mul_apply, ← a2.isSymmetric.apply_clm, ContinuousLinearMap.zero_apply, inner_zero_right]
+    rw [mul_apply_eq_comp, ← a2.isSymmetric.apply_clm, zero_apply, inner_zero_right]
     exact ho _ _
   have o2 : P' * P = 0 := by
     have := congrArg star o1
@@ -96,7 +96,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.truncEq :
       obtain ⟨v, hv, ev⟩ := b3 h
       refine ⟨u, v, hu, hv, ?_⟩
       rw [← eu, ← ev]
-      simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.one_apply] at hh
+      simp only [sub_apply, one_apply_eq_self] at hh
       rw [sub_sub, sub_eq_zero] at hh
       exact hh
     · rintro ⟨u, v, hu, hv, rfl⟩

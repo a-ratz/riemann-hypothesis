@@ -62,7 +62,7 @@ theorem uj_neg_eq {A : Type} [CommRing A] {n : ℕ} (σ : A →+* A) (J : Matrix
 
 theorem uh_neg_eq {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) : Formalism.QuantumDeterminants.UH (-H) = Formalism.QuantumDeterminants.UH H := by
   ext g
-  simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq, Matrix.mul_neg, Matrix.neg_mul, neg_inj]
+  simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq, Matrix.mul_neg, Matrix.neg_mul, neg_inj]
 
 theorem gramAt_neg_eq (V : HSp D) (τ : D.what₂.Tau) : gramAt D (neg V) τ = -gramAt D V τ := by
   ext i j; simp [gramAt, neg_gram]

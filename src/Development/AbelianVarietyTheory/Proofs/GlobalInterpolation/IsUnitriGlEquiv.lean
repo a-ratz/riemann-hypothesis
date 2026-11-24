@@ -105,8 +105,8 @@ theorem isUnitri_glEquiv (k : ℕ) {A B : Type} [CommRing A] [CommRing B] (e : A
 theorem index_upperUni : ∀ (κ : Type) [CommRing κ] (g k : ℕ), g.Prime → Nat.card κ = g →
     (((Subgroup.closure (upperUni k κ)).index : ℕ) : ℝ) = idxColLoc g k := by
   intro κ _ g k hg hc
-  haveI : Finite κ := Nat.finite_of_card_ne_zero (hc ▸ hg.ne_zero)
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Nat.finite_of_card_ne_zero (hc ▸ hg.ne_zero)
+  let : Fintype κ := Fintype.ofFinite κ
   have e : ZMod g ≃+* κ := ZMod.ringEquivOfPrime κ hg (by rw [← Nat.card_eq_fintype_card, hc])
   have h1 : Nat.card (GL (Fin k) (ZMod g)) = Nat.card (GL (Fin k) κ) :=
     Nat.card_congr (glEquiv k e).toEquiv

@@ -239,7 +239,7 @@ theorem psUnitE_of [NeZero n] (W : LocWach PD LL O v n) (hR : RingP W) (hT : Too
   refine (hu.map _).mul ?_
   obtain ⟨ub, hub⟩ := hb
   rw [← hub, Polynomial.aeval_eq_sum_range, Finset.sum_range_succ, hm.coeff_natDegree, one_smul]
-  haveI := W.EE_complete
+  have := W.EE_complete
   have hz : (∑ i ∈ Finset.range P.natDegree, P.coeff i • (ub : W.EE) ^ i) ∈
       Ideal.span {((PD.p : ℕ) : W.EE)} := by
     refine Ideal.sum_mem _ (fun i hi => ?_)

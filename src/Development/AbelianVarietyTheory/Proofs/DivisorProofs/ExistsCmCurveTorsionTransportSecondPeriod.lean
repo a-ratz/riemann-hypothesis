@@ -90,7 +90,7 @@ theorem exists_curve_torsTransport : ∀ {K : Type} [Field K] [NumberField K] [_
         GlobalTheory.EllipticCM.Transports σ t one_ne_zero ξ →
         ∃ (Λ₁ : PeriodPair) (Ω₁ : ℂ), TorsTransport ι σ.toRingEquiv t Λ₀ Λ₁ Ω₀ Ω₁ := by
   intro K _ _ _ _ ι Λ₀ Ω₀ hΛ₀ hΩ₀
-  letI : Algebra K ℂ := ι.toAlgebra
+  let : Algebra K ℂ := ι.toAlgebra
   have hAlg : ∀ y : K, algebraMap K ℂ y = ι y := fun _ => rfl
   have hsubIff : ∀ {𝔞 : FractionalIdeal (𝓞 K)⁰ K} {Λ : PeriodPair},
       (IsLatOf ι 𝔞 Λ ↔ ∀ z, z ∈ idealSub 𝔞 ↔ z ∈ Λ.lattice) := fun {𝔞 Λ} => by
@@ -134,7 +134,7 @@ theorem exists_curve_torsTransport : ∀ {K : Type} [Field K] [NumberField K] [_
     · rw [div_eq_inv_mul, ← hM.weierstrassP_mul, div_eq_inv_mul, ← hΛ₁'.weierstrassP_mul]
       exact e1
     · rw [div_eq_inv_mul, ← hM.derivWeierstrassP_mul, div_eq_inv_mul, ← hΛ₁'.derivWeierstrassP_mul]
-      rw [map_ofNat σ 2, div_left_inj' two_ne_zero] at e2
+      rw [map_ofNat σ 2, div_left_inj₀ two_ne_zero] at e2
       exact e2
 
 end GlobalTheory.LatVal.CurveTransport

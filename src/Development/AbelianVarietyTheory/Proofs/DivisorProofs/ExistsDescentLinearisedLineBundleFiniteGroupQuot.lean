@@ -133,7 +133,7 @@ theorem isInvariantSection_of_fnOf [Finite Γ] {ρ : Γ →* Aut X} {q : X ⟶ Y
     (h : IsAffineQuotient ρ q) {V : Y.Opens} {x : X} (hx : x ∈ q ⁻¹ᵁ V) (c : Γ(X, q ⁻¹ᵁ V))
     (b : Y.functionField) (hc : GlobalTheory.Cartier.fnOf _ (GlobalTheory.Cartier.gen_mem hx) c = functionFieldMap q b) :
     IsInvariantSection ρ _ c := fun g ↦ by
-  haveI : IsIso (ρ g).asIso.hom := Iso.isIso_hom _
+  have : IsIso (ρ g).asIso.hom := Iso.isIso_hom _
   refine ⟨h.preimage_le V g, GlobalTheory.Cartier.fnOf_injective _ (GlobalTheory.Cartier.gen_mem hx) ?_⟩
   rw [fnOf_appLE (ρ g).asIso.hom (h.preimage_le V g) hx, hc,
     functionFieldMap_act ρ q h.comp_eq h.surjective.surj g]
@@ -147,7 +147,7 @@ theorem unitAt_of_forall_unitAt_fibre : ∀ (X W : Scheme.{0}) [IsIntegral X] [I
     (∀ x, q x = y → UnitAt x (functionFieldMap q b)) → UnitAt y b := by
   intro X W _ _ Γ _ _ ρ q _ h y b hb
   have hsurj : Function.Surjective q := h.surjective.surj
-  haveI := h.isIntegralHom
+  have := h.isIntegralHom
   let O : Set X := {x | GlobalTheory.Cartier.UnitAt x (functionFieldMap q b)}
   have hOo : IsOpen O := isOpen_iff_forall_mem_open.2 fun x hx ↦ by
     obtain ⟨U, hxU, hU⟩ := GlobalTheory.Cartier.UnitAt.exists_nhds hx
@@ -231,14 +231,14 @@ theorem exists_cartierDiv_descent : ∀ (X W : Scheme.{0}) [IsIntegral X] [IsInt
         by_contra hn
         exact hy' ⟨x, hn, hx⟩
       have h2 := (h1 : D.IsEqn x _).iff_unitAt.1 (hb y' x hx)
-      simpa only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, map_div₀] using h2
+      simpa only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, map_div₀] using h2
   let E : CartierDiv W := show cartierGroup W from ⟨fun y => germOf y (b y), hloc⟩
   refine ⟨E, fun y b' hE x hx => ?_⟩
   have hu : UnitAt y ((b' : W.functionField) / b y) := germOf_eq_iff.1 hE
   subst hx
   refine (hb (q x) x rfl).iff_unitAt.2 ?_
   have := unitAt_functionFieldMap q x hu
-  simpa only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, map_div₀] using this
+  simpa only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, map_div₀] using this
 
 end GlobalTheory.Cartier.Descent
 end -- clump:auto
@@ -289,13 +289,13 @@ theorem exists_functionFieldMap_eq_of_invariant (X W : Scheme.{0}) [IsIntegral X
   have := h.isAffineHom
   obtain ⟨_, ⟨V, hV, rfl⟩, hyV, -⟩ := W.isBasis_affineOpens.exists_subset_of_mem_open
     (Set.mem_univ (genericPoint W)) isOpen_univ
-  haveI : Nonempty V := ⟨⟨_, hyV⟩⟩
+  have : Nonempty V := ⟨⟨_, hyV⟩⟩
   have hU : IsAffineOpen (q ⁻¹ᵁ V) := (show IsAffineOpen V from hV).preimage q
   obtain ⟨x, hx⟩ := q.denseRange.exists_mem_open V.isOpen ⟨_, hyV⟩
-  haveI : Nonempty (q ⁻¹ᵁ V) := ⟨⟨x, hx⟩⟩
+  have : Nonempty (q ⁻¹ᵁ V) := ⟨⟨x, hx⟩⟩
   have hst := h.preimage_le V
-  haveI (γ : Γ) : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
-  haveI := functionField_isFractionRing_of_isAffineOpen X _ hU
+  have (γ : Γ) : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
+  have := functionField_isFractionRing_of_isAffineOpen X _ hU
   let σ : Γ → Γ(X, q ⁻¹ᵁ V) →+* Γ(X, q ⁻¹ᵁ V) := fun γ ↦ ((ρ γ).asIso.hom.appLE _ _ (hst γ)).hom
   have hσ (γ : Γ) (s : Γ(X, q ⁻¹ᵁ V)) :
       functionFieldMap (ρ γ).asIso.hom (algebraMap Γ(X, q ⁻¹ᵁ V) X.functionField s) =
@@ -356,7 +356,7 @@ theorem exists_functionFieldMap_eq_of_invariant (X W : Scheme.{0}) [IsIntegral X
     rw [← hc, ← hbc, ← hq, h0, map_zero]
   refine ⟨Units.mk0 (W.germToFunctionField V bc / W.germToFunctionField V bN)
     (div_ne_zero hbc0 hbN0), Units.ext ?_⟩
-  simp only [Units.coe_map, Units.val_mk0, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe,
+  simp only [Units.coe_map, Units.val_mk0, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass,
     map_div₀, hq, hbc, hbN, hc]
   field_simp
 
@@ -447,7 +447,7 @@ theorem GlobalTheory.CharIndepAt.main : ∀ (X : Scheme.{0}) [IsIntegral X] (U :
   let ψ : ι → (R →+* IsLocalRing.ResidueField R) := fun i => res.comp (liftStalk (σ i) (h1 i))
   let χ : ι → (Γ(X, U) →* IsLocalRing.ResidueField R) := fun i => ((ψ i).comp g : Γ(X, U) →+* _)
   let χ₀ : Γ(X, U) →* IsLocalRing.ResidueField R := (res.comp g : Γ(X, U) →+* _)
-  letI : Algebra Γ(X, U) R := X.presheaf.algebra_section_stalk ⟨x, hx⟩
+  let : Algebra Γ(X, U) R := X.presheaf.algebra_section_stalk ⟨x, hx⟩
   have hl : IsLocalization.AtPrime R (hU.primeIdealOf ⟨x, hx⟩).asIdeal := hU.isLocalization_stalk ⟨x, hx⟩
   have hext : ∀ i, χ i = χ₀ → ψ i = res := by
     intro i e
@@ -733,9 +733,9 @@ theorem zeroAt_sig (ρ : Γ →* Aut X) (γ : Γ) {x : X} {f : X.functionField}
 
 theorem sig_sig (ρ : Γ →* Aut X) (γ δ : Γ) (f : X.functionField) :
     sig ρ γ (sig ρ δ f) = sig ρ (δ * γ) f := by
-  haveI : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
-  haveI : IsIso (ρ δ).asIso.hom := Iso.isIso_hom (ρ δ).asIso
-  haveI : IsIso (ρ (δ * γ)).asIso.hom := Iso.isIso_hom (ρ (δ * γ)).asIso
+  have : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
+  have : IsIso (ρ δ).asIso.hom := Iso.isIso_hom (ρ δ).asIso
+  have : IsIso (ρ (δ * γ)).asIso.hom := Iso.isIso_hom (ρ (δ * γ)).asIso
   have e : (ρ (δ * γ)).asIso.hom = (ρ γ).asIso.hom ≫ (ρ δ).asIso.hom := by rw [map_mul]; rfl
   have key : ∀ (φ : X ⟶ X) (h : φ = (ρ γ).asIso.hom ≫ (ρ δ).asIso.hom) [IsDominant φ],
       GlobalTheory.functionFieldMap φ f = GlobalTheory.functionFieldMap (ρ γ).asIso.hom (GlobalTheory.functionFieldMap (ρ δ).asIso.hom f) := by
@@ -785,7 +785,7 @@ theorem exists_invariant_isEqn : ∀ (F : Type) [Field F] [CharZero F] (X W : Sc
     ∀ x : X, ∃ g : X.functionFieldˣ, (∀ γ, fnAct ρ γ g = g) ∧ D.IsEqn x g := by
   intro F _ _ X W _ s Γ _ _ ρ q hq D hinv hin x
   classical
-  haveI := Fintype.ofFinite Γ
+  have := Fintype.ofFinite Γ
   obtain ⟨_, ⟨V, hV, rfl⟩, hxV, -⟩ :=
     W.isBasis_affineOpens.exists_subset_of_mem_open (Set.mem_univ (q x)) isOpen_univ
   have := hq.isAffineHom
@@ -827,7 +827,7 @@ theorem exists_invariant_isEqn : ∀ (F : Type) [Field F] [CharZero F] (X W : Sc
     (fun i => (hu i).regAt)
     (fun i hi => by
       have hfr : X.fromSpecResidueField x ≫ (ρ i.1).asIso.hom = X.fromSpecResidueField x := by
-        haveI : IsIso (ρ i.1).asIso.hom := Iso.isIso_hom (ρ i.1).asIso
+        have : IsIso (ρ i.1).asIso.hom := Iso.isIso_hom (ρ i.1).asIso
         set φ := (ρ i.1).asIso.hom
         have key : (X.residueFieldCongr i.2.symm).hom ≫ φ.residueFieldMap x = 𝟙 _ := by
           rw [← cancel_epi (X.residue x), Category.comp_id, X.residue_residueFieldCongr_assoc,
@@ -967,7 +967,7 @@ private theorem descent_fromSpecResidueField_comp_eq_of_fixes (X : Scheme.{0}) [
     (ρ : Γ →* Aut X) (γ : Γ) (x : X) (hx : (ρ γ).asIso.hom x = x)
     (h : ∀ u : X.functionFieldˣ, RegAt x u → ZeroAt x ((fnAct ρ γ u : X.functionField) - u)) :
     X.fromSpecResidueField x ≫ (ρ γ).asIso.hom = X.fromSpecResidueField x := by
-  haveI : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
+  have : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
   set φ := (ρ γ).asIso.hom with hφ
   have key : (X.residueFieldCongr hx.symm).hom ≫ φ.residueFieldMap x = 𝟙 _ := by
     rw [← cancel_epi (X.residue x), Category.comp_id, X.residue_residueFieldCongr_assoc,
@@ -1005,16 +1005,16 @@ theorem functionFieldMap_comp {X Y Z : Scheme.{0}} [IsIntegral X] [IsIntegral Y]
         genericFieldPoint Z := by
     rw [specMap_functionFieldMap, CommRingCat.ofHom_comp, Spec.map_comp, Category.assoc,
       specMap_functionFieldMap, ← Category.assoc, ← Category.assoc, specMap_functionFieldMap]
-  haveI : Mono (genericFieldPoint Z) := inferInstanceAs (Mono (Z.fromSpecStalk _))
+  have : Mono (genericFieldPoint Z) := inferInstanceAs (Mono (Z.fromSpecStalk _))
   have := Spec.map_injective ((cancel_mono _).mp e)
   exact congrArg CommRingCat.Hom.hom this
 
 theorem fnAct_mul : ∀ (X : Scheme.{0}) [IsIntegral X] (Γ : Type) [Group Γ] (ρ : Γ →* Aut X) (γ δ : Γ)
     (u : X.functionFieldˣ), fnAct ρ (γ * δ) u = fnAct ρ δ (fnAct ρ γ u) := by
   intro X _ Γ _ ρ γ δ u
-  haveI : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
-  haveI : IsIso (ρ δ).asIso.hom := Iso.isIso_hom (ρ δ).asIso
-  haveI : IsIso (ρ (γ * δ)).asIso.hom := Iso.isIso_hom (ρ (γ * δ)).asIso
+  have : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
+  have : IsIso (ρ δ).asIso.hom := Iso.isIso_hom (ρ δ).asIso
+  have : IsIso (ρ (γ * δ)).asIso.hom := Iso.isIso_hom (ρ (γ * δ)).asIso
   have hc : (ρ (γ * δ)).asIso.hom = (ρ δ).asIso.hom ≫ (ρ γ).asIso.hom := by
     rw [map_mul, Aut.mul_asIso]; rfl
   apply Units.ext
@@ -1031,9 +1031,9 @@ theorem fnAct_mul : ∀ (X : Scheme.{0}) [IsIntegral X] (Γ : Type) [Group Γ] (
 theorem descent : ∀ (F : Type) [Field F] [NumberField F] (X W : Scheme.{0}) [IsIntegral X] (q : X ⟶ W) (sW : W ⟶ Sp F) (Γ : Type) [Group Γ] [Finite Γ] (ρ : Γ →* Aut X) (L : LB X) (hL : L.IsLB), IsProjOver (q ≫ sW) → IsAffineQuotient ρ q → RatLin ρ L hL → ∃ (N : LB W) (hN : N.IsLB), CechPic.pull q (cls N hN) = cls L hL := by
   intro F _ _ X W _ q sW Γ _ _ ρ L hL _ hq hR
   obtain ⟨D, c, hcls, hcoc, heq, hin⟩ := hR
-  haveI : IsIntegral W := hq.isIntegral
-  haveI : Surjective q := hq.surjective
-  haveI : CharZero X.functionField :=
+  have : IsIntegral W := hq.isIntegral
+  have : Surjective q := hq.surjective
+  have : CharZero X.functionField :=
     charZero_of_injective_ringHom (toFunctionField (q ≫ sW)).injective
   let σ : Γ → X.functionField →+* X.functionField := fun γ =>
     haveI : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso; functionFieldMap (ρ γ).asIso.hom
@@ -1050,7 +1050,7 @@ theorem descent : ∀ (F : Type) [Field F] [NumberField F] (X W : Scheme.{0}) [I
   have htriv : ∀ γ, (∀ a, σ γ a = a) → c γ = 1 := by
     intro γ hγ
     have hη : (ρ γ).asIso.hom (genericPoint X) = genericPoint X := by
-      haveI : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
+      have : IsIso (ρ γ).asIso.hom := Iso.isIso_hom (ρ γ).asIso
       have h1 := (genericPoint_spec X).image (ρ γ).asIso.hom.continuous
       have hs : Function.Surjective (ρ γ).asIso.hom.base := (ρ γ).asIso.hom.surjective
       simp only [Set.top_eq_univ, Set.image_univ, hs.range_eq, closure_univ] at h1

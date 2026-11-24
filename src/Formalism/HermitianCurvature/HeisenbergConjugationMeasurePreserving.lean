@@ -270,7 +270,7 @@ theorem loc_integrable (Λ : Submodule ℤ V) [DiscreteTopology Λ] [IsZLattice 
   have hDb := ZSpan.fundamentalDomain_isBounded (b.ofZLatticeBasis ℝ Λ)
   have hDm := ZSpan.fundamentalDomain_measurableSet (b.ofZLatticeBasis ℝ Λ)
   obtain ⟨c, hcs, hcb⟩ := h (closure (ZSpan.fundamentalDomain (b.ofZLatticeBasis ℝ Λ))) hDb.isCompact_closure
-  haveI : VAddInvariantMeasure Λ V (volume : Measure V) := ⟨fun c s _ => measure_preimage_add volume (c : V) s⟩
+  have : VAddInvariantMeasure Λ V (volume : Measure V) := ⟨fun c s _ => measure_preimage_add volume (c : V) s⟩
   refine ⟨hc.aestronglyMeasurable, ?_⟩
   unfold HasFiniteIntegral
   rw [hD.lintegral_eq_tsum'']
@@ -279,7 +279,7 @@ theorem loc_integrable (Λ : Submodule ℤ V) [DiscreteTopology Λ] [IsZLattice 
     intro l
     rw [← setLIntegral_const]
     refine setLIntegral_mono' hDm fun x hx => ?_
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal ((hcb l x (subset_closure hx)).trans (le_abs_self _))
   calc ∑' l : Λ, ∫⁻ x in ZSpan.fundamentalDomain (b.ofZLatticeBasis ℝ Λ), ‖φ (l +ᵥ x)‖ₑ
       ≤ ∑' l : Λ, ENNReal.ofReal |c l| * volume (ZSpan.fundamentalDomain (b.ofZLatticeBasis ℝ Λ)) :=
@@ -360,7 +360,7 @@ theorem gP_integrable [MeasurableSpace V] [BorelSpace V] (π : ι → V →L[ℝ
     norm_cast
   have hg : Integrable (fun z : ι → ℂ => ∏ v, ((1 + ‖z v‖) ^ 3)⁻¹) :=
     Integrable.fintype_prod (f := fun _ w => ((1 + ‖w‖) ^ 3)⁻¹) (μ := fun _ => volume) fun _ => h1
-  haveI : (Measure.map T (volume : Measure V)).IsAddHaarMeasure := T.isAddHaarMeasure_map _
+  have : (Measure.map T (volume : Measure V)).IsAddHaarMeasure := T.isAddHaarMeasure_map _
   have hmap := Measure.isAddLeftInvariant_eq_smul (Measure.map T (volume : Measure V)) (volume : Measure (ι → ℂ))
   have hg' : Integrable (fun z : ι → ℂ => ∏ v, ((1 + ‖z v‖) ^ 3)⁻¹) (Measure.map T (volume : Measure V)) := by
     rw [hmap]
@@ -385,7 +385,7 @@ theorem gP_summable [MeasurableSpace V] [BorelSpace V] (π : ι → V →L[ℝ] 
     have h2 := ZLattice.covolume_pos Λ volume
     rw [h1, Measure.real, h0, ENNReal.toReal_zero] at h2
     exact lt_irrefl _ h2
-  haveI : VAddInvariantMeasure Λ V (volume : Measure V) := ⟨fun c s _ => measure_preimage_add volume (c : V) s⟩
+  have : VAddInvariantMeasure Λ V (volume : Measure V) := ⟨fun c s _ => measure_preimage_add volume (c : V) s⟩
   have hint := (gP_integrable π hπ).lintegral_lt_top
   rw [hD.lintegral_eq_tsum''] at hint
   have hge : ∀ l : Λ, ENNReal.ofReal (gP π l) *
@@ -458,8 +458,8 @@ private theorem locSummable_of_norm_le_mul_gP {V : Type} [NormedAddCommGroup V] 
 
 theorem productDecay : ProductDecaySummable := by
   intro V _ _ _ ι _ π hπ Λ _ _ φ C hφ
-  letI : MeasurableSpace V := borel V
-  haveI : BorelSpace V := ⟨rfl⟩
+  let : MeasurableSpace V := borel V
+  have : BorelSpace V := ⟨rfl⟩
   exact locSummable_of_norm_le_mul_gP π hπ Λ φ C hφ
 
 theorem stepText (h : PoissonStep) (h2 : PoissonSummable) (h3 : ProductDecaySummable) :
@@ -1302,7 +1302,7 @@ theorem interlacing : Formalism.FourierDecayAlt.Sz.Interlacing := by
     · have h1 : i + 1 ≠ 1 := by omega
       by_cases hlast : i + 1 = c.k
       · have : c.u de (i + 1) = c.ulast := by
-          unfold Cfg.u; rw [if_neg h1, if_pos hlast]
+          unfold Cfg.u; rw [ite_eq_right h1, ite_eq_left hlast]
         rw [this]
         have hiR : (i : ℝ) + 1 = c.k := by exact_mod_cast hlast
         have hvi : c.v i = c.vlast := by unfold Cfg.v; rw [← hiR]; ring
@@ -1311,7 +1311,7 @@ theorem interlacing : Formalism.FourierDecayAlt.Sz.Interlacing := by
         · have := htop ht; simp [ht]; linarith [this.1]
         · simp [ht]
       · have : c.u de (i + 1) = c.v i - 1 / 2 - de i * c.Del := by
-          unfold Cfg.u; rw [if_neg h1, if_neg hlast]; simp
+          unfold Cfg.u; rw [ite_eq_right h1, ite_eq_right hlast]; simp
         rw [this]
         rcases hw.1 i with h | h <;> rw [h] <;> nlinarith
   · have hl : c.lam c.k = -c.b 1 := by simp [Cfg.lam]

@@ -237,7 +237,7 @@ theorem exists_prime_not_mem (K : Type) [Field K] [NumberField K] {n : ℕ} (hn 
   obtain ⟨q, hqn, hq⟩ := Nat.exists_infinite_primes (n + 1)
   have hqZ : Prime (q : ℤ) := Nat.prime_iff_prime_int.1 hq
   have hq0 : (q : ℤ) ≠ 0 := by exact_mod_cast hq.ne_zero
-  haveI hP : (Ideal.span {(q : ℤ)}).IsPrime := (Ideal.span_singleton_prime hq0).2 hqZ
+  have hP : (Ideal.span {(q : ℤ)}).IsPrime := (Ideal.span_singleton_prime hq0).2 hqZ
   have hinj : Function.Injective (algebraMap ℤ (𝓞 K)) := by
     intro a b hab
     simpa using hab
@@ -319,7 +319,7 @@ theorem exists_selfDual_core : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D}
           _ = 1 := by rw [Fintype.card_fin, hl.1]
       have hr0 : a.Lz.rank ≠ 0 := by
         intro h0
-        haveI : IsEmpty (Fin a.Lz.rank) := ⟨fun i => by have := i.2; omega⟩
+        have : IsEmpty (Fin a.Lz.rank) := ⟨fun i => by have := i.2; omega⟩
         have : star a.ζ₀ ⬝ᵥ (a.Lz.gram *ᵥ a.ζ₀) = 0 := by simp [dotProduct]
         rw [hζ] at this
         exact hT0 (by exact_mod_cast this)

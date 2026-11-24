@@ -91,7 +91,7 @@ theorem readAt_exists_m_alt (hAF : GlobalTheory.Published.AutomorphicFormsFinite
       (∀ j : Fin D.R.m, j.1 + 1 = D.nd.j i → IsComp (P.tp.tup (D.nd.mu i) j) s.w X.mu) ∧
       IsComp P.cf.eta s.w X.eta := by
   classical
-  haveI := GlobalTheory.CuspRep.host_isCMField D.host
+  have := GlobalTheory.CuspRep.host_isCMField D.host
   have HR := _root_.GlobalTheory.CuspRep.ParLawsT.isRecT_locRecT hL (D.nd.plOm.2 s.w)
   have hlaws : _root_.UpperTheory.One.M.RecLawsH (_root_.GlobalTheory.NPin.weilDeligneOfLocalIrrep hL D s.w) := HR.recLaws
   have hrow : ∀ σ, ∃ τ : Irr (s.w.adicCompletion D.host.E) D.R.r,
@@ -174,7 +174,7 @@ theorem exists_true_reading_alt : GlobalTheory.Published.AutomorphicFormsFiniteG
     ∃ S : Reading P.T, _root_.GlobalTheory.NPin.IsFaithfulReading P S ∧ _root_.GlobalTheory.SplitRead.LawsAlt S ∧ SuppLaws S := by
   intro hAF hL D P hR
   classical
-  haveI := GlobalTheory.CuspRep.host_isCMField D.host
+  have := GlobalTheory.CuspRep.host_isCMField D.host
   have hex : ∀ w : PlE D.host, IsSplitPl D.host w → ∃ s : SplitPlace D.host.E, s.w = w := by
     intro w hw
     obtain ⟨w', hw'⟩ := GlobalTheory.ToricFactor.exists_isConjPl w

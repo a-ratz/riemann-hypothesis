@@ -177,7 +177,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.adMeas :
         rw [map_mul, map_pow, map_pow, ← map_inv (detModule K 2)]
         rfl
       rw [e1, Positive.val_mul, Positive.val_pow, Positive.val_pow, Positive.coe_inv, hm, hm,
-        ← Real.exp_neg, ← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_neg]
+        ← Real.exp_neg, ← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_neg]
       congr 1
       push_cast
       ring

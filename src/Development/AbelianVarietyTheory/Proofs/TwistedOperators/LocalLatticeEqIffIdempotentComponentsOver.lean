@@ -57,7 +57,7 @@ variable {D : D7} {n : ℕ}
 theorem mem_hat_iff_locL {Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.E)} (h : Λ.FG) (y : Fin n → EAf D) :
     y ∈ hat Λ ↔ ∀ v : HeightOneSpectrum (𝓞 D.host.F),
       (fun i => Formalism.UG.prV (E := D.host.E) v (y i)) ∈ Formalism.L2.Herm.locL v Λ := by
-  haveI : Module.Finite (𝓞 D.host.E) Λ := Module.Finite.iff_fg.mpr h
+  have : Module.Finite (𝓞 D.host.E) Λ := Module.Finite.iff_fg.mpr h
   rw [mem_hat]
   exact GlobalTheory.LatticeStabLocal.mem_latS_adele_iff Λ y
 

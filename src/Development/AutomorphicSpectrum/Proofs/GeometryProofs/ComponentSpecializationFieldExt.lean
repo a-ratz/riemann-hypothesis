@@ -57,7 +57,7 @@ theorem lieValAt_spMap {X : Scheme.{0}} {Ω : Type} [Field Ω] {G : Over X} [Grp
     [Field F'] (f : F →+* F') {z : Sp F ⟶ X} {z' : Sp F' ⟶ X} (hz : spMap f ≫ z = z') {e : V}
     {w : epsAt z ⟶ G} {w' : epsAt z' ⟶ G} (hw : w'.left = spMap (dualMap f) ≫ w.left) (h : M.ValAt z e w) :
     M.ValAt z' e w' := by
-  letI : Algebra F F' := f.toAlgebra
+  let : Algebra F F' := f.toAlgebra
   subst hz
   obtain ⟨hc, v, hext, hw0⟩ := h
   have hbot : ∀ x : PrimeSpectrum F, x.asIdeal = ⊥ := fun x =>

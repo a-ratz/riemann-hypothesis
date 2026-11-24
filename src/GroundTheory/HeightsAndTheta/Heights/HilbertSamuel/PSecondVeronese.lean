@@ -109,7 +109,7 @@ theorem x_linearIndependent (D : ℕ) : LinearIndependent ℤ (x D) := by
         ⇑(basisMonomials (Fin (D + 1)) ℤ) ∘ fun q : Ix (Idx D) =>
           (Finsupp.single q.2.1.1 1 + Finsupp.single q.2.1.2 1 : Fin (D + 1) →₀ ℕ) := by
       funext q
-      simp only [Function.comp_apply, coe_basisMonomials, X, monomial_mul, mul_one]
+      simp only [Function.comp_apply, coe_basisMonomials, X, monomial_mul_monomial, mul_one]
     rw [e]
     exact h
   have h2 := hmono.map' (polyMap D).toAddMonoidHom.toIntLinearMap

@@ -65,9 +65,9 @@ variable (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAl
 
 include F in
 theorem natCard_roots : Nat.card (rootsOfUnity N Ω) = N := by
-  haveI := IsAlgClosure.isAlgClosed F (K := Ω)
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have := IsAlgClosure.isAlgClosed F (K := Ω)
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   exact hζ.card_rootsOfUnity
 
 def cycN : G F Ω →* (ZMod N)ˣ :=

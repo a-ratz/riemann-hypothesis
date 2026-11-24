@@ -252,7 +252,7 @@ theorem GlobalTheory.Degen.sections_pw_are_forms_of_closed_fibre : ∀ (A : Type
       (fun k => by simp [apply_ite])
     exact (congrFun this j).trans (Matrix.one_apply).symm
   have hu : IsUnit (Matrix.of c).det := by
-    haveI := IsLocalHom.of_surjective g₀ hg₀
+    have := IsLocalHom.of_surjective g₀ hg₀
     apply IsUnit.of_map g₀
     rw [RingHom.map_det, hC, Matrix.det_one]
     exact isUnit_one
@@ -830,7 +830,7 @@ theorem mem_vanIdeal_pull {H : LB X} {H' : LB X'} (hH : H.IsLB) {β : X' ⟶ X} 
 theorem component_mem_span (S : Set (MvPolynomial σ R)) (hS : ∀ F ∈ S, ∃ t, F.IsHomogeneous t) :
     ∀ F ∈ Ideal.span S, ∀ t, homogeneousComponent t F ∈ Ideal.span S := by
   intro F hF t
-  letI := MvPolynomial.gradedAlgebra (σ := σ) (R := R)
+  let := MvPolynomial.gradedAlgebra (σ := σ) (R := R)
   have h := Ideal.homogeneous_span (homogeneousSubmodule σ R) S (fun F hF => hS F hF) t hF
   rwa [show (DirectSum.decompose (homogeneousSubmodule σ R) F t : MvPolynomial σ R) = homogeneousComponent t F from
     decomposition.decompose'_apply F t] at h

@@ -138,7 +138,7 @@ theorem aUnit_locPl : GBig fun {D} T _ _ G _ _ _ _ => ∀ (t : T) (v : HeightOne
   have hcc : D.host.ccK = ⊤ := hR.size.2.2.2.2.2.2.2.2.2.2.2.2.2
   have h1 : ((D.host.QS * D.host.q : ℕ) : 𝓞 D.host.E) ∉ (splitPrime τ).asIdeal := fun h =>
     cond_notMem hR hL G t _ hw (by rw [Nat.cast_mul]; exact Ideal.mul_mem_right _ _ h)
-  haveI := (splitPrime τ).isPrime
+  have := (splitPrime τ).isPrime
   obtain ⟨z, hz, hzP⟩ := Set.not_subset.1 (UpperTheory.Ram.half_not_le D.host _ h1)
   have hB : ((D.host.𝔟 : Ideal (𝓞 D.host.E)) : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) ≠ 0 :=
     FractionalIdeal.coeIdeal_ne_zero.2 (UpperTheory.Ram.half_ne_bot D.host)

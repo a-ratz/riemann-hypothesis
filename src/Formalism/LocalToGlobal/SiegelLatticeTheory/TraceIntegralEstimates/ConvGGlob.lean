@@ -112,7 +112,7 @@ theorem phiGG_eq (u u' : D.what₂.Word) (γ x y : X.B.I.Ginf) :
     PhiGG X.B.σs (X.B.tens X.B.w) (X.Wu u) (X.Wu u') γ x y = ∏ v, phiV X u u' γ v (x v) (y v) := by
   obtain ⟨hin, hσ, -⟩ := X.B.tens_spec
   unfold PhiGG phiV
-  simp only [hσ, hin, X.Wu_tens, enorm_eq_nnnorm, nnnorm_prod, nnnorm_tensU_eq_prod, ENNReal.ofNNReal_finsetProd,
+  simp only [hσ, hin, X.Wu_tens, eNorm_eq_nnNorm, nnNorm_prod, nnnorm_tensU_eq_prod, ENNReal.ofNNReal_finsetProd,
     ← Finset.prod_mul_distrib]
 
 theorem measurable_phiV (u u' : D.what₂.Word) (γ : X.B.I.Ginf) (v : InfinitePlace X.B.I.F) :
@@ -122,11 +122,11 @@ theorem measurable_phiV (u u' : D.what₂.Word) (γ : X.B.I.Ginf) (v : InfiniteP
   have h1 : Measurable (fun p : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v) =>
       ‖⟪X.B.σ v (uMat p.1) (X.B.w v), X.B.σ v (uMat (γ v)) (X.B.σ v (uMat p.2) (X.B.w v))⟫_ℂ‖ₑ) :=
     (((hc _).comp continuous_fst).inner
-      ((X.B.σ v (uMat (γ v))).continuous.comp ((hc _).comp continuous_snd))).enorm.measurable
+      ((X.B.σ v (uMat (γ v))).continuous.comp ((hc _).comp continuous_snd))).eNorm.measurable
   have h2 : Measurable (fun p : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v) => ‖X.Wloc u v p.1‖ₑ) :=
-    ((X.Wloc_cont u v).comp continuous_fst).enorm.measurable
+    ((X.Wloc_cont u v).comp continuous_fst).eNorm.measurable
   have h3 : Measurable (fun p : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v) => ‖X.Wloc u' v p.2‖ₑ) :=
-    ((X.Wloc_cont u' v).comp continuous_snd).enorm.measurable
+    ((X.Wloc_cont u' v).comp continuous_snd).eNorm.measurable
   unfold phiV
   exact (h1.mul h2).mul h3
 

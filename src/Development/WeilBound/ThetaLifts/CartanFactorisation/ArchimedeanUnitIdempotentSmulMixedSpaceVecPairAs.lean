@@ -134,17 +134,17 @@ theorem exists_schwartz_slice {κ : Type} [Fintype κ] (Φ : (κ → AdeleRing (
     obtain ⟨f, g, -, rfl⟩ := hΨ
     refine ⟨g y • f, fun z => ?_⟩
     have hz : (fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (z i))) = z := funext fun i => RingEquiv.apply_symm_apply _ _
-    rw [SchwartzMap.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
     show g y * f z = f (fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F ((InfiniteAdeleRing.ringEquiv_mixedSpace F).symm (z i))) * g (fun i => y i)
     rw [hz, mul_comm]
   | zero => exact ⟨0, fun z => rfl⟩
   | add Ψ Ψ' _ _ hΨ hΨ' =>
     obtain ⟨s, hs⟩ := hΨ
     obtain ⟨s', hs'⟩ := hΨ'
-    exact ⟨s + s', fun z => by rw [SchwartzMap.add_apply, hs z, hs' z]; rfl⟩
+    exact ⟨s + s', fun z => by rw [add_apply, hs z, hs' z]; rfl⟩
   | smul c Ψ _ hΨ =>
     obtain ⟨s, hs⟩ := hΨ
-    exact ⟨c • s, fun z => by rw [SchwartzMap.smul_apply, hs z]; rfl⟩
+    exact ⟨c • s, fun z => by rw [smul_apply, hs z]; rfl⟩
 
 end One
 
@@ -317,9 +317,9 @@ theorem pureA_splitE (f : (κ → mixedEmbedding.mixedSpace F) → ℂ) (g : (κ
   simp only [RingEquiv.apply_symm_apply]
 
 theorem volume_isAddHaar [Fintype κ] : (volume : Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := by
-  haveI : MeasurableAdd (mixedEmbedding.mixedSpace F) := inferInstance
-  haveI : (volume : Measure (mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := inferInstance
-  haveI : SigmaFinite (volume : Measure (mixedEmbedding.mixedSpace F)) := inferInstance
+  have : MeasurableAdd (mixedEmbedding.mixedSpace F) := inferInstance
+  have : (volume : Measure (mixedEmbedding.mixedSpace F)).IsAddHaarMeasure := inferInstance
+  have : SigmaFinite (volume : Measure (mixedEmbedding.mixedSpace F)) := inferInstance
   exact MeasureTheory.Measure.pi.isAddHaarMeasure (fun _ => volume)
 
 end HaarSplit

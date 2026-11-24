@@ -424,8 +424,8 @@ namespace GlobalTheory.KaFiniteUnit
 
 theorem exists_common_field {L F E : Type} [Field L] [Field F] [Field E] (σ : L →+* F) (τ : L →+* E) :
     ∃ (Ω : Type) (_ : Field Ω) (i : F →+* Ω) (g : E →+* Ω), g.comp τ = i.comp σ := by
-  letI := σ.toAlgebra
-  letI := τ.toAlgebra
+  let := σ.toAlgebra
+  let := τ.toAlgebra
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (TensorProduct L F E)
   exact ⟨TensorProduct L F E ⧸ M, Ideal.Quotient.field M,
     (Ideal.Quotient.mk M).comp Algebra.TensorProduct.includeLeftRingHom,
@@ -440,15 +440,15 @@ theorem exists_complete_extension {O F : Type} [CommRing O] [IsDomain O] [IsDisc
       (c : V →+* O') (Ω : Type) (_ : Field Ω) (i : F →+* Ω) (g : O' →+* Ω),
       (∀ a ∈ S, a ∈ Set.range σ) ∧ σ.comp ((algebraMap V L).comp j₀) = f ∧ IsLocalHom (c.comp j₀) ∧
       Function.Injective g ∧ g.comp c = i.comp (σ.comp (algebraMap V L)) := by
-  letI := f.toAlgebra
-  haveI : FaithfulSMul O F := (faithfulSMul_iff_algebraMap_injective O F).2 hf
-  letI := FractionRing.liftAlgebra O F
+  let := f.toAlgebra
+  have : FaithfulSMul O F := (faithfulSMul_iff_algebraMap_injective O F).2 hf
+  let := FractionRing.liftAlgebra O F
   let L := IntermediateField.adjoin (FractionRing O) (S : Set F)
-  haveI : Algebra.EssFiniteType (FractionRing O) L :=
+  have : Algebra.EssFiniteType (FractionRing O) L :=
     IntermediateField.essFiniteType_iff.mpr (IntermediateField.fg_adjoin_of_finite S.finite_toSet)
-  haveI : Algebra.EssFiniteType O (FractionRing O) := Algebra.EssFiniteType.of_isLocalization _ (nonZeroDivisors O)
-  haveI : Algebra.EssFiniteType O L := Algebra.EssFiniteType.comp O (FractionRing O) L
-  haveI : FaithfulSMul O L := (faithfulSMul_iff_algebraMap_injective O L).2 fun a b h => hf (congrArg Subtype.val h)
+  have : Algebra.EssFiniteType O (FractionRing O) := Algebra.EssFiniteType.of_isLocalization _ (nonZeroDivisors O)
+  have : Algebra.EssFiniteType O L := Algebra.EssFiniteType.comp O (FractionRing O) L
+  have : FaithfulSMul O L := (faithfulSMul_iff_algebraMap_injective O L).2 fun a b h => hf (congrArg Subtype.val h)
   obtain ⟨V, hV, hle⟩ := exists_discreteValuationSubring_dominating_of_essFiniteType (R := O) (L := L)
     (IsDiscreteValuationRing.not_isField O)
   obtain ⟨hm, hloc⟩ := (localSubring_range_le_valuationSubring_iff_isLocalHom _ V).1 hle
@@ -477,7 +477,7 @@ theorem exists_points_extension {O F : Type} [CommRing O] [IsDomain O] [IsDiscre
       (g : O' →+* Ω), IsLocalHom j ∧ Function.Injective g ∧ g.comp j = i.comp f ∧
       ∀ a, ∃ q : Sp O' ⟶ X, q ≫ π = spMap j ∧ spMap g ≫ q = spMap i ≫ p a := by
   classical
-  haveI := Fintype.ofFinite T
+  have := Fintype.ofFinite T
   choose S hS using fun a => KaLift.exists_finset_descend π f (p a) (hp a)
   obtain ⟨L, _, σ, V, j₀, O', _, _, _, _, c, Ω, _, i, g, h₁, h₂, h₃, h₄, h₅⟩ :=
     exists_complete_extension f hf (Finset.univ.biUnion S)
@@ -496,15 +496,15 @@ theorem finite_preimage_fibre {X X' S S' : Scheme.{0}} {φ : X' ⟶ X} {π' : X'
   let I := Scheme.IdealSheafData.vanishingIdeal (X := X) ⟨Z, hZ⟩
   have hr : Set.range I.subschemeι = Z := by
     rw [Scheme.IdealSheafData.range_subschemeι, Scheme.IdealSheafData.coe_support_vanishingIdeal]; rfl
-  haveI : Finite I.subscheme := by
-    haveI := hfin.to_subtype
+  have : Finite I.subscheme := by
+    have := hfin.to_subtype
     exact Finite.of_injective (fun y => (⟨I.subschemeι y, hr.le ⟨y, rfl⟩⟩ : Z))
       fun a b e => I.subschemeι.isClosedEmbedding.injective (congrArg Subtype.val e)
-  haveI : LocallyQuasiFinite (I.subschemeι ≫ π) := .of_finite_preimage_singleton _ fun _ => Set.toFinite _
+  have : LocallyQuasiFinite (I.subschemeι ≫ π) := .of_finite_preimage_singleton _ fun _ => Set.toFinite _
   have hp := (IsPullback.of_hasPullback I.subschemeι φ).paste_vert h
-  haveI : LocallyQuasiFinite (pullback.snd I.subschemeι φ ≫ π') :=
+  have : LocallyQuasiFinite (pullback.snd I.subschemeι φ ≫ π') :=
     MorphismProperty.of_isPullback (P := @LocallyQuasiFinite) hp ‹_›
-  haveI : QuasiCompact (pullback.snd I.subschemeι φ ≫ π') :=
+  have : QuasiCompact (pullback.snd I.subschemeι φ ≫ π') :=
     MorphismProperty.of_isPullback (P := @QuasiCompact) hp inferInstance
   refine (((pullback.snd I.subschemeι φ ≫ π').finite_preimage_singleton p).image
     (pullback.snd I.subschemeι φ)).subset fun y hy => ?_
@@ -560,8 +560,8 @@ theorem exists_pull_hom {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] {x
     rw [← MonObj.comp_mul] at e
     exact e.symm
   · have e' : h a = h b := e
-    haveI := x.P.isAb.proper
-    haveI : IsDominant (spMap f) := ⟨by
+    have := x.P.isAb.proper
+    have : IsDominant (spMap f) := ⟨by
       have := (PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical f).2 (by
         rw [(RingHom.injective_iff_ker_eq_bot f).1 hf]; exact bot_le)
       exact this⟩
@@ -573,10 +573,10 @@ theorem eq_of_pow_eq_one (laws : Out.Laws) {R : Type} [CommRing R] [IsLocalRing 
     (hN1 : 1 ≤ N) (hN : IsUnit (N : R)) {a b : Pt x} (ha : a ^ N = 1) (hb : b ^ N = 1) (p : Sp R) (h : a.left p = b.left p) :
     a = b := by
   obtain ⟨-, -, -, het, -⟩ := laws.mulN (Sp R) x.P _ hN1
-  haveI := het (by
+  have := het (by
     have := hN.map (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom
     rwa [map_natCast] at this)
-  haveI := x.P.isAb.proper
+  have := x.P.isAb.proper
   have e₁ := KaLift.apply_closedPoint_eq x.P.A.hom a.left b.left (Over.w _) (Over.w _) p h
   have e₂ : spMap (IsLocalRing.residue R) (IsLocalRing.closedPoint _) = IsLocalRing.closedPoint R :=
     IsLocalRing.comap_closedPoint (IsLocalRing.residue R)
@@ -778,7 +778,7 @@ theorem exists_unit_kaVal (laws : Out.Laws) {O : Type} [CommRing O] [IsDomain O]
       by_cases hj : j ≤ x.P.g
       · obtain ⟨b, hb⟩ := (T.basis_powerSections_local_baseChange laws O x (k - j * n) (hpos j hj)).1
         obtain ⟨ξ, h₁, h₂⟩ := hξ k hk j hj
-        haveI := x.P.isAb.comm
+        have := x.P.isAb.comm
         have h₃ : ∀ I r, ξ I r ^ (k - j * n) = 1 := fun I r =>
           pow_eq_one_of_ker (hpos j hj) (hadm.2.2.2 _) (ξ I) (fun c => (List.prod_ofFn).symm.trans (h₂ I c)) r
         obtain ⟨lam, hlam⟩ := T.exists_l2Val_field_or_dvr_split_kernel laws O x _ _ b ξ (hO _ (hpos j hj)) (hadm.2.2.2 _) hb (fun I I' hI p => by
@@ -863,9 +863,9 @@ theorem isUnit_of_finite_zeros : Out.Laws → ∀ (O : Type) [CommRing O] [IsDom
     · exact ⟨∅, Set.finite_empty, fun h₁ h₂ => absurd ⟨h₁, h₂⟩ h⟩
   choose S hS hS' using h₀
   let A : Set (Pt xF) := Set.range z ∪ ⋃ j ∈ Set.Iic xF.P.g, (S l j ∪ S l' j)
-  haveI : Finite A := ((Set.finite_range z).union
+  have : Finite A := ((Set.finite_range z).union
     ((Set.finite_Iic _).biUnion fun j _ => (hS l j).union (hS l' j))).to_subtype
-  haveI := x.P.isAb.proper
+  have := x.P.isAb.proper
   have hp : IsPullback φ xF.P.A.hom x.P.A.hom (spMap f) := hx.choose_spec.choose_spec.choose_spec.1.1
   obtain ⟨O', _, _, _, _, j, Ω, _, i, g, hj, hgi, hsq, hq⟩ := exists_points_extension f hf x.P.A.hom
     (fun p : A => p.1.left ≫ φ) (fun p => by
@@ -902,14 +902,14 @@ theorem isUnit_of_finite_zeros : Out.Laws → ∀ (O : Type) [CommRing O] [IsDom
   have hO : ∀ m : ℕ, 1 ≤ m → IsUnit (m : O') := fun m hm => by
     have := (isUnit_iff_ne_zero.2 (by exact_mod_cast (by omega : m ≠ 0) : (m : ℚ) ≠ 0)).map (j.comp (algebraMap ℚ O))
     rwa [map_natCast] at this
-  haveI : CharZero Ω := (RingHom.charZero_iff ((i.comp f).comp (algebraMap ℚ O)).injective).1 inferInstance
+  have : CharZero Ω := (RingHom.charZero_iff ((i.comp f).comp (algebraMap ℚ O)).injective).1 inferInstance
   obtain ⟨u, hu⟩ : ∃ u : O'ˣ, KaVal y n l l' al s₁ (Units.map g.toMonoidHom u) := by
     refine exists_unit_kaVal laws hg₃ (s := s') (s' := s₁) (by rw [hg₁]) z' hO hgi (hg'.symm ▸ hadm) H₃
       (fun a => sec₃ n _ _ _ (hs' (a.cast hg₃)) (sec₂ n _ _ _ (hs (a.cast hg₁)) (hs₁ a))) ?_ E₁
       (fun a => (hu₃' _ _).1 (hz' a).symm) ?_
     · have hcl : IsClosed {t : x.P.A.left | x.P.A.hom t = IsLocalRing.closedPoint O ∧ ∀ a, t ∉ Out.nonzeroLocus (s a)} := by
         have hzero : IsClosed {t : x.P.A.left | ∀ a, t ∉ Out.nonzeroLocus (s a)} := by
-          rw [Set.setOf_forall]
+          rw [Set.ofPred_forall]
           exact isClosed_iInter fun a => (Out.nonzeroLocus (s a)).isOpen.isClosed_compl
         convert ((IsLocalRing.isClosed_singleton_closedPoint O).preimage x.P.A.hom.continuous).inter hzero using 1
         ext t
@@ -976,10 +976,10 @@ namespace GlobalTheory.KeyLine
 
 theorem exists_common_field {F L₁ L₂ : Type} [Field F] [Field L₁] [Field L₂] (a : F →+* L₁) (b : F →+* L₂) :
     ∃ (L : Type) (_ : Field L) (i : L₁ →+* L) (j : L₂ →+* L), i.comp a = j.comp b := by
-  letI := a.toAlgebra
-  letI := b.toAlgebra
+  let := a.toAlgebra
+  let := b.toAlgebra
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (L₁ ⊗[F] L₂)
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   refine ⟨L₁ ⊗[F] L₂ ⧸ m, inferInstance, (Ideal.Quotient.mk m).comp Algebra.TensorProduct.includeLeftRingHom,
     (Ideal.Quotient.mk m).comp (Algebra.TensorProduct.includeRight (R := F) (A := L₁) (B := L₂)).toRingHom, ?_⟩
   rw [RingHom.comp_assoc, RingHom.comp_assoc]
@@ -988,7 +988,7 @@ theorem exists_common_field {F L₁ L₂ : Type} [Field F] [Field L₁] [Field L
 
 theorem mem_range_of_forall_eq {F E : Type} [Field F] [CharZero F] [Field E] (i : F →+* E) (κ : E)
     (h : ∀ (L : Type) [Field L] (g₁ g₂ : E →+* L), g₁.comp i = g₂.comp i → g₁ κ = g₂ κ) : ∃ c, i c = κ := by
-  letI := i.toAlgebra
+  let := i.toAlgebra
   let D : IntermediateField F E := IntermediateField.adjoin F {κ}
   have key : ∀ (L : Type) [Field L] [Algebra F L] (f₁ f₂ : D →ₐ[F] L), f₁ = f₂ := by
     intro L _ _ f₁ f₂
@@ -1011,10 +1011,10 @@ theorem mem_range_of_forall_eq {F E : Type} [Field F] [CharZero F] [Field E] (i 
   have key' : ∀ (L : Type) [Field L] (f₁ f₂ : D →+* L),
       f₁.comp (algebraMap F D) = f₂.comp (algebraMap F D) → f₁ = f₂ := by
     intro L _ f₁ f₂ hf
-    letI := (f₁.comp (algebraMap F D)).toAlgebra
+    let := (f₁.comp (algebraMap F D)).toAlgebra
     exact congrArg AlgHom.toRingHom (key L ⟨f₁, fun _ => rfl⟩ ⟨f₂, fun c => (RingHom.congr_fun hf c).symm⟩)
-  haveI : IsPurelyInseparable F D := by
-    haveI : Nonempty (D →+* AlgebraicClosure E) := ⟨(algebraMap E _).comp D.val.toRingHom⟩
+  have : IsPurelyInseparable F D := by
+    have : Nonempty (D →+* AlgebraicClosure E) := ⟨(algebraMap E _).comp D.val.toRingHom⟩
     refine IsPurelyInseparable.of_injective_comp_algebraMap F D (AlgebraicClosure E) fun f₁ f₂ hf => ?_
     exact key' _ f₁ f₂ hf
   obtain ⟨c, hc⟩ := IsPurelyInseparable.surjective_algebraMap_of_isSeparable F D
@@ -1038,14 +1038,14 @@ theorem exists_localRing (K : Type) [Field K] (a : K) :
       (g : O →+* RatFunc K), r.comp ψ = evalRingHom a ∧ RingHom.ker r = IsLocalRing.maximalIdeal O ∧
       g.comp ψ = algebraMap K[X] (RatFunc K) ∧ Function.Injective g := by
   let P : Ideal K[X] := RingHom.ker (evalRingHom a)
-  haveI hP : P.IsPrime := RingHom.ker_isPrime _
+  have hP : P.IsPrime := RingHom.ker_isPrime _
   have h0 : P ≠ ⊥ := fun h => by
     have : X - C a ∈ P := by simp [P, RingHom.mem_ker]
     rw [h] at this
     exact X_sub_C_ne_zero a this
   let O := Localization.AtPrime P
-  haveI : IsDomain O := IsLocalization.isDomain_localization P.primeCompl_le_nonZeroDivisors
-  haveI : IsDiscreteValuationRing O := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain K[X] h0 O
+  have : IsDomain O := IsLocalization.isDomain_localization P.primeCompl_le_nonZeroDivisors
+  have : IsDiscreteValuationRing O := IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain K[X] h0 O
   have hr : ∀ y : P.primeCompl, IsUnit (evalRingHom a y) := fun y => Ne.isUnit y.2
   have hg : ∀ y : P.primeCompl, IsUnit (algebraMap K[X] (RatFunc K) y) := fun y =>
     Ne.isUnit fun h => y.2 (by
@@ -1122,7 +1122,7 @@ theorem eq_of_line {K : Type} [Field K] [CharZero K] [IsAlgClosed K]
     {a₀ a₁ : K} {κ₀ κ₁ : Kˣ} (h₀ : V K (evalRingHom a₀) κ₀) (h₁ : V K (evalRingHom a₁) κ₁) : κ₀ = κ₁ := by
   let χ : K[X] →+* RatFunc K := algebraMap _ _
   have hχ : Function.Injective χ := IsFractionRing.injective _ _
-  haveI : CharZero (RatFunc K) := (RingHom.charZero_iff (χ.comp C).injective).1 inferInstance
+  have : CharZero (RatFunc K) := (RingHom.charZero_iff (χ.comp C).injective).1 inferInstance
 
   have gen : ∀ (a : K) (κ : Kˣ), V K (evalRingHom a) κ → ∃ (E : Type) (_ : Field E) (i : RatFunc K →+* E) (μ : Eˣ),
       V E (i.comp χ) μ ∧ ∀ k : K, (μ : E) = i (χ (C k)) → (κ : K) = k := by
@@ -1299,11 +1299,11 @@ theorem finZ_of_via_id {z : KeyIn K} {φ w} (hg : z.P.g = x.P.g) (H : KeyVia z x
     {r : Fin x.P.g → RR x n} {r' : Fin z.P.g → RR z n} (hs : ∀ i, SecVia z x φ w (r' i) (r (i.cast hg)))
     (h : FinZ x r) : FinZ z r' := by
   have hp := keyVia_isPullback H
-  haveI : IsIso (spMap (RingHom.id K)) := by
+  have : IsIso (spMap (RingHom.id K)) := by
     have : spMap (RingHom.id K) = 𝟙 _ := Spec.map_id _
     rw [this]
     infer_instance
-  haveI : IsIso φ := hp.isIso_fst_of_isIso
+  have : IsIso φ := hp.isIso_fst_of_isIso
   refine Set.Finite.of_finite_image (f := φ) (h.subset ?_) φ.homeomorph.injective.injOn
   rintro _ ⟨p, hp, rfl⟩ i hi
   exact hp (i.cast hg.symm) (EtBaseChange.mem_nonzeroLocus_via (hs _) p hi)
@@ -1347,7 +1347,7 @@ theorem kaVal_eq_of_line : Out.Laws → ∀ (K : Type) [Field K] [CharZero K] [I
     obtain ⟨φ, w, hg, H, hs⟩ := hy.cancel hy'
     exact ⟨y', s', hy', GlobalTheory.T.keyInvariant_baseChange hL R R' y y' g φ w n l l' al hg s s' κ (adm hy) H hs hκ⟩
   · rintro L _ ψ κ κ' ⟨y, s, hy, hκ⟩ ⟨y', s', hy', hκ'⟩
-    haveI : CharZero L := (RingHom.charZero_iff (ψ.comp C).injective).1 inferInstance
+    have : CharZero L := (RingHom.charZero_iff (ψ.comp C).injective).1 inferInstance
     obtain ⟨φ, w, hg, H, hs⟩ := hy.cancel (g := RingHom.id L) hy'
     exact GlobalTheory.T.keyInvariantFromIntersection_unique hL L y' n l l' al s' _ _ (adm hy')
       (GlobalTheory.T.keyInvariant_baseChange hL L L y y' _ φ w n l l' al hg s s' κ (adm hy) H hs hκ) hκ'
@@ -1365,7 +1365,7 @@ theorem kaVal_eq_of_line : Out.Laws → ∀ (K : Type) [Field K] [CharZero K] [I
       GlobalTheory.T.exists_keyInvariant_after_dvr_extension hL O K r y yk φ w n l l' al _ hg s sk zk chk hr (adm hy) hu H hs hE
     exact ⟨O', inferInstance, inferInstance, inferInstance, j, r', u, hj, hr', y', s', hy.trans hg' H' hs', hu'⟩
   · rintro a O _ _ _ ψ r L _ g κ u e hψ hr hgi ⟨yL, sL, hyL, hκ⟩ hu he
-    letI : Algebra ℚ O := ((ψ.comp C).comp (algebraMap ℚ K)).toAlgebra
+    let : Algebra ℚ O := ((ψ.comp C).comp (algebraMap ℚ K)).toAlgebra
     obtain ⟨y, s, hy⟩ := exists_isLinePt s₀ s₁ (ψ.comp C) (ψ X)
     obtain ⟨φ, w, hg, H, hs⟩ := hy.cancel (g := g) hyL
     obtain ⟨yk, sk, hyk⟩ := exists_isLinePt s₀ s₁ (RingHom.id K) a
@@ -1501,7 +1501,7 @@ theorem exists_coords {R : Type} [CommRing R] (x : KeyIn R) {l N : ℕ} (b : Fin
 
 theorem finZ_of_etZ {K : Type} [Field K] {x : KeyIn K} {n d : ℕ} {s : Fin x.P.g → RR x n} {z : Fin d → Pt x}
     {ch : Fin d → x.P.L.ι} (h : EtZ x s z ch) : FinZ x s := by
-  haveI : Finite (Sp K) := inferInstanceAs (Finite (PrimeSpectrum K))
+  have : Finite (Sp K) := inferInstanceAs (Finite (PrimeSpectrum K))
   refine (Set.finite_range fun q : Fin d × Sp K => (z q.1).left q.2).subset fun y hy => ?_
   obtain ⟨a, p, e⟩ := h.2.2.2.2 y hy
   exact ⟨(a, p), e⟩
@@ -1587,7 +1587,7 @@ theorem finZ_line (hL : Out.Laws) {k K : Type} [Field k] [Field K] [IsAlgClosed 
 theorem kaVal_eq_of_generic : Out.Laws → ∀ (k K : Type) [Field k] [CharZero k] [Field K] [IsAlgClosed K] [Algebra k K] (x : KeyIn k) (x' : KeyIn K) φ w (n l l' : ℕ) (al : ℕ → Matrix (Fin 4) (Fin 4) ℤ) (b : Fin (n ^ x.P.g) → RR x n) (b' : Fin (n ^ x.P.g) → RR x' n) (T T' : Fin x'.P.g × Fin (n ^ x.P.g) → K) (s s' : Fin x'.P.g → RR x' n) (κ κ' : Kˣ), admitted x.P.g n l l' al → KeyVia x' x (algebraMap k K) φ w → IsBasis x b → (∀ j, SecVia x' x φ w (b' j) (b j)) → AlgebraicIndependent k (Sum.elim T T') → (∀ i, Coords x' b' (fun j => T (i, j)) (s i).f) → (∀ i, Coords x' b' (fun j => T' (i, j)) (s' i).f) → KaVal x' n l l' al s κ → KaVal x' n l l' al s' κ' → κ = κ' := by
   intro hL k K _ _ _ _ _ x x' φ w n l l' al b b' T T' s s' κ κ' hA h hb hb' hT hs hs' hκ hκ'
   classical
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap k K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap k K).injective
   have hg : x'.P.g = x.P.g := h.2.1
   have hA' : admitted x'.P.g n l l' al := by rw [hg]; exact hA
   have hn : 4 ≤ n := hA.1
@@ -1844,7 +1844,7 @@ theorem valAt_lift [CharZero K] (hL : Out.Laws) (hA : admitted x.P.g n l l' al) 
     rwa [map_natCast] at this
   obtain ⟨O', i1, i2, i3, j, r', x', φ', w', hg', s', u, hj, -, hr', H', hs', hu'⟩ :=
     GlobalTheory.T.exists_keyInvariant_after_dvr_extension hL O Ω (r : O →+* Ω) xO xΩ φ w n l l' al _ hg sO sΩ z ch hr hAO hu H hs hz
-  letI : Algebra K O' := (j.comp (algebraMap K O)).toAlgebra
+  let : Algebra K O' := (j.comp (algebraMap K O)).toAlgebra
   let jA : O →ₐ[K] O' := { toRingHom := j, commutes' := fun c => rfl }
   let rA : O' →ₐ[K] Ω :=
     { toRingHom := r', commutes' := fun c => by
@@ -1887,7 +1887,7 @@ theorem kaVal_independent : Out.Laws → ∀ (K : Type) [Field K] [CharZero K] [
     exact κG.ne_zero hG.symm
   refine ⟨Units.mk0 κ0 hκ0, ?_, ?_⟩
   · intro K' _ _ f x' s' κ' hx' hk'
-    letI : Algebra K K' := f.toAlgebra
+    let : Algebra K K' := f.toAlgebra
     obtain ⟨φ, w, H⟩ := (GlobalTheory.KeyVia.main K K' x x' f).1.1 hx'
     obtain ⟨_, hg, _⟩ := id H
     have M := (GlobalTheory.KeyVia.main K K' x x' f).2 φ w H

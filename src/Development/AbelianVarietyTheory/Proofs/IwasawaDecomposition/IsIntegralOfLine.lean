@@ -75,7 +75,7 @@ theorem isIntegral_of_line {V : Type} [AddCommGroup V] [Module K V] [Module (�
     (h : ∀ a : K, a • v ∈ N → l • a • v ∈ N) : IsIntegral (𝓞 K) l := by
   let M : Submodule (𝓞 K) V := N ⊓ (Submodule.span K {v}).restrictScalars (𝓞 K)
   have hM : M.FG := by
-    haveI : Module.Finite (𝓞 K) N := Module.Finite.iff_fg.2 hN.toIsLattice.fg
+    have : Module.Finite (𝓞 K) N := Module.Finite.iff_fg.2 hN.toIsLattice.fg
     exact Submodule.FG.of_le_of_isNoetherian (inf_le_left : M ≤ N)
   have hne : M ≠ ⊥ := by
     have hv' : v ∈ Submodule.span K (N : Set V) := hN.span_eq_top ▸ Submodule.mem_top
@@ -132,7 +132,7 @@ theorem exists_unit (S : GSD K) (hG : S.Good 1) (hR : S.Rat) (hp : ∀ x, S.pair
       (S.Nab d).map ((e0 : S.V →ₗ[K] V').restrictScalars (𝓞 K))) :
     ∃ u : (𝓞 K)ˣ, σ ((u : 𝓞 K) : K) = μ ∧ ((u : 𝓞 K) : K) ∈ cmMax K ∧ star ((u : 𝓞 K) : K) * ((u : 𝓞 K) : K) = 1 := by
   classical
-  letI := hG.ok.fintypeStab (S.outSec.rep c)
+  let := hG.ok.fintypeStab (S.outSec.rep c)
   obtain ⟨v, v0, vi, vr⟩ := exists_inv_rat S.bV (S.ρ.comp (MulAction.stabilizer S.G (S.outSec.rep c)).subtype)
     (fun g => hR.act_rat g) hφ ((S.res hG.ok φ).2 c)
   have hc0 : ∀ x, c0 x = 0 → x = 0 := fun x hx => b'.repr.injective (Finsupp.ext fun j => σ.injective (by
@@ -180,7 +180,7 @@ theorem exists_unit (S : GSD K) (hG : S.Good 1) (hR : S.Rat) (hp : ∀ x, S.pair
     exact this
   rw [hG.ok.nab_smul] at le
   have hnab : Submodule.IsFullLattice K (S.Nab (S.outSec.rep c)) := by
-    letI : Module.Finite K S.V := Module.Finite.of_basis S.bV
+    let : Module.Finite K S.V := Module.Finite.of_basis S.bV
     have hlat := hG.nab_lat (S.outSec.rep c)
     refine { toIsLattice := hlat, span_eq_top := top_le_iff.mp ?_ }
     rw [← GlobalTheory.Mass.RowPerp.span_dual_eq_top hG.nondeg _ hlat.fg]
@@ -245,8 +245,8 @@ variable {D : D7}
 
 theorem scalar_of_comm_rat {V : HSp D} (c : CoefA V) (hc : c.Is) (T : Module.End ℂ c.W)
     (hT : ∀ (γ : GQ V) x, T (c.ρ γ x) = c.ρ γ (T x)) : ∃ μ : ℂ, ∀ x, T x = μ • x := by
-  haveI := hc.2.2.2.1
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
+  have := hc.2.2.2.1
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hall : ∀ h x, T (c.ρ h x) = c.ρ h (T x) := fun h x => by
     obtain ⟨u, hu, k, hk, rfl⟩ := (GlobalTheory.UnitarySplit.real_finite_split D V).1 h
     rw [map_mul, hc.1 k hk, mul_one]

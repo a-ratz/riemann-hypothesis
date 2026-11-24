@@ -178,7 +178,7 @@ theorem UpperTheory.V.Chr.placesQ :
   intro Ω _ _ _
   refine ⟨fun p hp => exists_place p hp, fun A n hn => val_lt_one_iff A n hn, ?_⟩
   intro p A A' hp hA hA'
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨σ, hσ⟩ := exists_smul_eq_of_isPlaceOver (isPlaceOver_vQ A hA) (isPlaceOver_vQ A' hA')
   have hL : IsLift (RingEquiv.refl ℚ) (σ⁻¹ : G ℚ Ω).toRingEquiv := fun x =>
     AlgEquiv.commutes _ x

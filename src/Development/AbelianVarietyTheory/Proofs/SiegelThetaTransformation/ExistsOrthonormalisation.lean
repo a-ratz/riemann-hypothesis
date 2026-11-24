@@ -75,7 +75,7 @@ private lemma continuous_bOf :
     Continuous fun p : X.dom => _root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X p.1 := by
   have hG : ∀ τ : X.Ψ, Continuous fun p : X.dom => _root_.ReciprocityTheory.ChartRestriction.G.FD.gram (↑τ) X.Gm (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat p.1 τ) := fun τ =>
     continuous_pi fun a => continuous_pi fun b =>
-      (_root_.GlobalTheory.SW.Slab.continuous_gram X τ a b).comp continuous_subtype_val
+      (_root_.GlobalTheory.SW.Slab.continuous_gram X τ a b).comp continuous_subtypeVal
   have hU : ∀ τ : X.Ψ, Continuous fun p : X.dom => _root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.uOf X p.1 τ := by
     intro τ
     unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.uOf _root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.uMat
@@ -97,7 +97,7 @@ private lemma continuous_bOf :
       exact ((continuous_apply _).comp (hrow.matrix_vecMul hinv)).neg
     · exact continuous_const
   have hM : ∀ τ : X.Ψ, Continuous fun p : X.dom => _root_.ReciprocityTheory.ChartRestriction.G.FD.mat p.1 τ := fun τ =>
-    (continuous_apply τ).comp continuous_subtype_val
+    (continuous_apply τ).comp continuous_subtypeVal
   refine continuous_pi fun τ => ?_
   have hMU := (hM τ).matrix_mul (hU τ)
   have hent : ∀ a b, Continuous fun p : X.dom => (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat p.1 τ * _root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.uOf X p.1 τ) a b :=
@@ -144,7 +144,7 @@ theorem _root_.GlobalTheory.Ker.exists_orthonormalisation : ∀ (E : Type) [Fiel
     simp only [Set.mem_ofPred_eq]
     intro τ
     have hu := hdetB x hx τ
-    haveI := Matrix.invertibleOfIsUnitDet _ hu
+    have := Matrix.invertibleOfIsUnitDet _ hu
     refine ⟨left_ne_zero_of_mul_eq_one (Matrix.det_nonsing_inv_mul_det _ hu), fun a c hca => ?_⟩
     exact Matrix.blockTriangular_inv_of_blockTriangular (_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.upper_of_bor X (hBor x hx) τ) hca
   have hsgn : ∀ i : Fin (r + 1), ‖_root_.ReciprocityTheory.ChartRestriction.G.FD.lminor (_root_.GlobalTheory.SW.sgnM X) i‖ = 1 := by
@@ -211,15 +211,15 @@ theorem _root_.GlobalTheory.Ker.exists_orthonormalisation : ∀ (E : Type) [Fiel
         u τ * (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat x τ * _root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X x) τ)
       rw [show _root_.ReciprocityTheory.ChartRestriction.G.FD.mat (X.lmulC u x) τ = u τ * _root_.ReciprocityTheory.ChartRestriction.G.FD.mat x τ from rfl, Matrix.mul_assoc]
   have hM : ∀ τ : X.Ψ, Continuous fun p : X.dom => _root_.ReciprocityTheory.ChartRestriction.G.FD.mat p.1 τ := fun τ =>
-    (continuous_apply τ).comp continuous_subtype_val
+    (continuous_apply τ).comp continuous_subtypeVal
   have hBτ : ∀ τ : X.Ψ, Continuous fun p : X.dom => _root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X p.1) τ := fun τ =>
     (continuous_apply τ).comp hcontB
   refine ⟨fun x => _root_.ReciprocityTheory.ChartRestriction.G.FD.rmul x (_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X x), _root_.GlobalTheory.Ker.Ortho.tri X, ?_, ?_,
     fun x hx => ⟨hON x hx, hTri x hx, hfac x hx, hdiag x hx, fun u hu => hequiv x hx u hu⟩, ?_⟩
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     refine continuous_pi fun τ => ?_
     exact (hM τ).matrix_mul (hBτ τ)
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     refine continuous_pi fun τ => ?_
     show Continuous fun p : X.dom => (_root_.ReciprocityTheory.ChartRestriction.G.FD.mat (_root_.ReciprocityTheory.ChartRestriction.G.FD.FrameDegreeData.bOf X p.1) τ)⁻¹
     refine continuous_iff_continuousAt.2 fun p => ?_

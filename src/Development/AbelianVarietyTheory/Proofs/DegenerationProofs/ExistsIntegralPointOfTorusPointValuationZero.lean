@@ -289,7 +289,7 @@ theorem exists_factor {V O : Type} [CommRing V] [CommRing O] [IsLocalRing O] {X 
     infer_instance
   have hj : ρ ≫ φ = CommRingCat.ofHom j := Spec.map_injective (by
     rw [Spec.map_comp, hρ, ← Category.assoc, hφ, hy])
-  letI := ρ.hom.toAlgebra
+  let := ρ.hom.toAlgebra
   obtain ⟨s, hs⟩ := (hft : Algebra.FiniteType V Γ(X, U)).out
   refine ⟨s.image φ.hom, fun W _ f κ hκ hf hs' => ?_⟩
   have hmem : ∀ a, φ.hom a ∈ κ.range := by

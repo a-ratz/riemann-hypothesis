@@ -195,7 +195,7 @@ lemma windowSum_count (a : ℤ) (L : ℕ) (r : ℤ) (hr : 0 < r) :
   have hinj : Set.InjOn (fun x => (x - a) / r)
       ((Finset.Ico a (a + L)).filter (fun x => r ∣ x) : Set ℤ) := by
     intro x hx y hy hxy
-    simp only [Finset.coe_filter, Set.mem_setOf_eq] at hx hy
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hx hy
     obtain ⟨k, rfl⟩ := hx.2
     obtain ⟨m, rfl⟩ := hy.2
     simp only at hxy

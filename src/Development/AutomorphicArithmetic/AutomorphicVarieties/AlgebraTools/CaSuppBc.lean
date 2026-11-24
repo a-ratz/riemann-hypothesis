@@ -59,8 +59,8 @@ theorem UpperTheory.V.AlgebraTools.mem_support_baseChange :
   intro R B _ _ _ M _ _ _ Q
   let p := PrimeSpectrum.comap (algebraMap R B) Q
   let φ := Ideal.ResidueField.mapₐ p.asIdeal Q.asIdeal (Algebra.ofId R B) rfl
-  letI : Algebra p.asIdeal.ResidueField Q.asIdeal.ResidueField := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower R p.asIdeal.ResidueField Q.asIdeal.ResidueField :=
+  let : Algebra p.asIdeal.ResidueField Q.asIdeal.ResidueField := φ.toRingHom.toAlgebra
+  have : IsScalarTower R p.asIdeal.ResidueField Q.asIdeal.ResidueField :=
     IsScalarTower.of_algebraMap_eq' φ.comp_algebraMap.symm
   rw [Module.mem_support_iff_nontrivial_residueField_tensorProduct,
     Module.mem_support_iff_nontrivial_residueField_tensorProduct,

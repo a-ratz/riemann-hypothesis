@@ -204,7 +204,7 @@ theorem UpperTheory.V.Z.Win.T2.fixedUnr_alt :
     _root_.UpperTheory.V.Lev.fixedUnr_s_ty := by
   intro P F Ω _ _ _ _ _ n w A h rc hrc σ μ hp hu
   obtain ⟨a, ha, ε, H⟩ := _root_.UpperTheory.V.Z.Win.toV' hrc
-  haveI : CharZero (w.adicCompletion F) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion F) := algebraRat.charZero _
   have hine : ∀ t : Ine (F := F) A, (rc (algNorm σ)).charPol (ineIncl h t) = (X - C 1) ^ n := fun t => by
     rw [hp]
     simp [hu]
@@ -343,14 +343,14 @@ theorem UpperTheory.V.Z.Win.T2.fixedDvd' :
   have hlt : ∀ x : ValueGroupWithZero (w.adicCompletion F),
       x < γ ↔ x ≤ valuation _ (M : w.adicCompletion F) := fun x => by
     show x < _ / _ ↔ _
-    rw [lt_div_iff₀ (zero_lt_iff.2 hu0)]
+    rw [lt_div_iff₀ (pos_iff_ne_zero.2 hu0)]
     refine ⟨fun h1 => not_lt.1 fun h2 => h1.not_ge ?_, fun h1 => (mul_le_mul_left h1 _).trans_lt
-      (mul_lt_of_lt_one_right (zero_lt_iff.2 hv0) uniformizer_lt_one)⟩
-    have hx : 0 < x := (zero_lt_iff.2 hv0).trans h2
+      (mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hv0) uniformizer_lt_one)⟩
+    have hx : 0 < x := (pos_iff_ne_zero.2 hv0).trans h2
     rwa [← div_le_iff₀' hx, le_uniformizer_iff, div_lt_one₀ hx]
   have hγ : γ ≤ 1 := by
     show _ / _ ≤ (1 : ValueGroupWithZero (w.adicCompletion F))
-    rw [div_le_one₀ (zero_lt_iff.2 hu0), le_uniformizer_iff]
+    rw [div_le_one₀ (pos_iff_ne_zero.2 hu0), le_uniformizer_iff]
     exact hv
   obtain ⟨s, hs⟩ := GlobalTheory.LocGL.SupportRing.exists_hasSupport P.litN.loc.zel (algNorm σ)
   have hch : ∀ y ∈ s, ∃ χ hχ, y = IrrGL.ofChar χ hχ ∧ ∀ u : (w.adicCompletion F)ˣ,

@@ -129,8 +129,8 @@ theorem deriv_om (hψ : IsStdChar D ψ (-1)) {om : GA D S × GA D T →* Module.
       exact (thetaSub ψ S T).sub_mem ((thetaSub ψ S T).sub_mem (hut t) (hut 0)) ((thetaSub ψ S T).smul_mem _ hA)
     exact hk _ _ h3 e2
   have h4 := lintegral_norm_sq_eq_toL2 (μ.restrict 𝓕) (G - A')
-  rw [map_sub, key, sub_self, enorm_zero, zero_pow two_ne_zero,
-    lintegral_eq_zero_iff ((G - A').1.continuous.measurable.enorm.pow_const 2)] at h4
+  rw [map_sub, key, sub_self, eNorm_zero, zero_pow two_ne_zero,
+    lintegral_eq_zero_iff ((G - A').1.continuous.measurable.eNorm.pow_const 2)] at h4
   have h5 := GlobalTheory.WeilVacMove.eq_zero_of_ae_fundamentalDomain (ratL T S) μ 𝓕 h𝓕 _ (G - A').1.continuous
     (BB_norm_periodic hψ _) (by filter_upwards [h4] with x hx; simpa using hx)
   rw [← hA']

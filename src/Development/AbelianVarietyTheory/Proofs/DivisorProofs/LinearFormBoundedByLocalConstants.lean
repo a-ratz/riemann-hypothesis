@@ -101,7 +101,7 @@ theorem exists_bound {n m : ℕ} (f : Matrix (Fin n) (Fin m) (AF F ⊗[F] E) →
 
     rw [hdec X, map_sum]
     refine nnnorm_sum_le v _ _ fun q _ => ?_
-    rw [map_mul, nnnorm_mul, mul_comm]
+    rw [map_mul, nnNorm_mul, mul_comm]
     refine mul_le_mul' ?_ ?_
     · exact (Finset.le_sup (f := fun q => ‖evFin F v (y q)‖₊) (Finset.mem_univ q)).trans (le_max_right _ _)
     · rw [← HeightProper.repr_map b.traceDual (evFin F v) (X q.1 q.2.1) q.2.2]

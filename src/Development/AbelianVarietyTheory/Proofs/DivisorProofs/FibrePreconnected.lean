@@ -84,7 +84,7 @@ theorem bijective_of_finite_of_fractionRing {A B K : Type} [CommRing A] [IsDomai
     (φ : A →+* B) (hφ : φ.Finite) (θ : B →+* K) (hθ : Function.Injective θ)
     (h : ∀ a, θ (φ a) = algebraMap A K a) : Function.Bijective φ := by
   refine ⟨fun a a' e => IsFractionRing.injective A K (by rw [← h, ← h, e]), fun b => ?_⟩
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have : Module.Finite A B := hφ
   have hb : _root_.IsIntegral A b := Algebra.IsIntegral.isIntegral b
   let θ' : B →ₐ[A] K := { θ with commutes' := fun a => h a }
@@ -95,17 +95,17 @@ theorem finite_appTop_restrict {Y Z : Scheme.{0}} (π : Y ⟶ Z) [IsProper π] [
     {V : Z.Opens} (hV : IsAffineOpen V) : (π ∣_ V).appTop.hom.Finite := by
   let f : (π ⁻¹ᵁ V).toScheme ⟶ Spec (.of Γ(Z, V)) := (π ∣_ V) ≫ hV.isoSpec.hom
   have : IsNoetherianRing Γ(Z, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
-  letI := GlobalTheory.algebraΓOfHom f
+  let := GlobalTheory.algebraΓOfHom f
   have h1 := GlobalTheory.ProperFinite.finite_coh_of_isProper f (GlobalTheory.structureModule _) 0
   have h2 : Module.Finite Γ(Z, V) Γ((π ⁻¹ᵁ V).toScheme, ⊤) :=
     Module.Finite.equiv ((GlobalTheory.coh.zeroUnitEquiv _).restrictScalars Γ(Z, V))
   let e := (Scheme.ΓSpecIso (.of Γ(Z, V))).inv ≫ hV.isoSpec.hom.appTop
-  haveI : IsIso hV.isoSpec.hom.appTop := by
+  have : IsIso hV.isoSpec.hom.appTop := by
     first
     | exact (inferInstance : IsIso (Scheme.Γ.map hV.isoSpec.hom.op))
     | exact Scheme.Hom.isIso_app _ ⊤ (by simp)
     | exact Scheme.Hom.isIso_app _ ⊤ (fun x _ => (ConcreteCategory.bijective_of_isIso hV.isoSpec.hom.base).2 x)
-  haveI he' : IsIso e := by dsimp only [e]; infer_instance
+  have he' : IsIso e := by dsimp only [e]; infer_instance
   have h3 : (e ≫ (π ∣_ V).appTop).hom.Finite := by
     have he : e ≫ (π ∣_ V).appTop = (Scheme.ΓSpecIso (.of Γ(Z, V))).inv ≫ f.appTop := by
       simp only [e, f, Scheme.Hom.comp_appTop, Category.assoc]
@@ -145,15 +145,15 @@ theorem bijective_appTop_restrict : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsPro
   have hy : π y = η := by
     have := congrArg Subtype.val hy'
     simpa [morphismRestrict_base_coe] using this
-  haveI : IsIso (π.stalkMap y) :=
+  have : IsIso (π.stalkMap y) :=
     (MorphismProperty.isomorphisms _).arrow_mk_iso_iff (morphismRestrictStalkMap π U y') |>.mp
       (inferInstance : IsIso ((π ∣_ U).stalkMap y'))
   have hyO : y ∈ (π ⁻¹ᵁ V).ι ''ᵁ ⊤ := by rw [hO]; show π y ∈ V; rw [hy]; exact hηV
-  haveI : Nonempty (V.ι ''ᵁ ⊤) := ⟨⟨η, hV0.symm ▸ hηV⟩⟩
-  haveI := GlobalTheory.IsNormalScheme.of_pred hN
+  have : Nonempty (V.ι ''ᵁ ⊤) := ⟨⟨η, hV0.symm ▸ hηV⟩⟩
+  have := GlobalTheory.IsNormalScheme.of_pred hN
   have hA : IsAffineOpen (V.ι ''ᵁ ⊤) := hV0.symm ▸ hV
-  haveI := functionField_isFractionRing_of_isAffineOpen Z _ hA
-  haveI := GlobalTheory.IsNormalScheme.isIntegrallyClosed_of_isAffineOpen hA
+  have := functionField_isFractionRing_of_isAffineOpen Z _ hA
+  have := GlobalTheory.IsNormalScheme.isIntegrallyClosed_of_isAffineOpen hA
   let θ : Γ(Y, (π ⁻¹ᵁ V).ι ''ᵁ ⊤) ⟶ Z.functionField :=
     Y.presheaf.germ _ y hyO ≫ inv (π.stalkMap y) ≫ (Z.presheaf.stalkCongr (Inseparable.of_eq hy)).hom
   have hθ : Function.Injective θ.hom := by
@@ -211,7 +211,7 @@ theorem preconnectedSpace_of_isLocalRing (Y : Scheme.{0}) [IsLocalRing Γ(Y, ⊤
 
 theorem range_thick (O : Type) [CommRing O] [IsLocalRing O] (n : ℕ) :
     Set.range (thick O (maximalIdeal O) n) = {closedPoint O} := by
-  haveI : Nontrivial (O ⧸ maximalIdeal O ^ (n + 1)) :=
+  have : Nontrivial (O ⧸ maximalIdeal O ^ (n + 1)) :=
     Ideal.Quotient.nontrivial_iff.2 (ne_top_of_le_ne_top (maximalIdeal.isMaximal O).ne_top
       (Ideal.pow_le_self (Nat.succ_ne_zero n)))
   have key : ∀ Q : PrimeSpectrum (O ⧸ maximalIdeal O ^ (n + 1)),
@@ -254,8 +254,8 @@ theorem isPreconnected_closedFibre (O : Type) [CommRing O] [IsNoetherianRing O] 
       by rw [← isClosed_compl_iff, hAB n]; exact hB.preimage (ι n).continuous⟩
   choose h hhp hhU using fun n => GlobalTheory.exists_hom_spec_prod_self_preimage_eq_clopen O _
     (ι n ≫ f) _ (hclo n)
-  haveI : IsProper (Over.mk f).hom := hP
-  haveI : IsProper (Over.mk (twoπ O)).hom := isProper_twoπ O
+  have : IsProper (Over.mk f).hom := hP
+  have : IsProper (Over.mk (twoπ O)).hom := isProper_twoπ O
   have htr : ∀ n, thickMap O (maximalIdeal O) n (Over.mk f) ≫ ι (n + 1) = ι n := fun n =>
     (pullback.lift_fst _ _ _).trans (Category.comp_id _)
   have hc : ∀ n, thickMap O (maximalIdeal O) n (Over.mk f) ≫ h (n + 1) = h n := by
@@ -297,13 +297,13 @@ theorem exists_complete_flat (X : Scheme.{0}) [IsAffine X] [IsLocallyNoetherian 
       IsAdicComplete (maximalIdeal O) O ∧ ∃ g : Spec (.of O) ⟶ X, Flat g ∧ g (closedPoint O) = x := by
   let B : Type := X.presheaf.stalk x
   let O : Type := AdicCompletion (maximalIdeal B) B
-  haveI : IsNoetherianRing O := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion B _
+  have : IsNoetherianRing O := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion B _
   let φ : X.presheaf.stalk x ⟶ CommRingCat.of O := CommRingCat.ofHom (algebraMap B O)
-  haveI : IsLocalHom φ.hom := inferInstanceAs (IsLocalHom (algebraMap B O))
-  haveI : Flat (Spec.map φ) := by
+  have : IsLocalHom φ.hom := inferInstanceAs (IsLocalHom (algebraMap B O))
+  have : Flat (Spec.map φ) := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact RingHom.flat_algebraMap_iff.2 (AdicCompletion.flat_of_isNoetherian _)
-  haveI : Flat (X.fromSpecStalk x) := GlobalTheory.LocalRingGeneralisation.flat_fromSpecStalk X x
+  have : Flat (X.fromSpecStalk x) := GlobalTheory.LocalRingGeneralisation.flat_fromSpecStalk X x
   refine ⟨O, inferInstance, inferInstance, inferInstance, inferInstance,
     Spec.map φ ≫ X.fromSpecStalk x, inferInstance, ?_⟩
   refine (Scheme.Hom.comp_apply _ _ _).trans ?_
@@ -314,12 +314,12 @@ theorem isPreconnected_fibre : ∀ (X Y : Scheme.{0}) (f : Y ⟶ X) [IsProper f]
     ∀ x : X, _root_.IsPreconnected (f.base ⁻¹' {x}) := by
   intro X Y f _ _ _ hf x
   obtain ⟨O, _, _, _, hO, g, hg, hx⟩ := exists_complete_flat X x
-  haveI : IsIso f.appTop := (ConcreteCategory.isIso_iff_bijective _).2 hf
+  have : IsIso f.appTop := (ConcreteCategory.isIso_iff_bijective _).2 hf
   have H := IsPullback.of_hasPullback f g
-  haveI : IsIso (pullback.snd f g).appTop := GlobalTheory.ProperFunctions.isIso_appTop_of_isPullback H
-  haveI : IsLocalRing Γ(pullback f g, ⊤) :=
+  have : IsIso (pullback.snd f g).appTop := GlobalTheory.ProperFunctions.isIso_appTop_of_isPullback H
+  have : IsLocalRing Γ(pullback f g, ⊤) :=
     ((Scheme.ΓSpecIso (.of O)).symm ≪≫ asIso (pullback.snd f g).appTop).commRingCatIsoToRingEquiv.isLocalRing
-  haveI := preconnectedSpace_of_isLocalRing (pullback f g)
+  have := preconnectedSpace_of_isLocalRing (pullback f g)
   have hc := isPreconnected_closedFibre O hO _ (pullback.snd f g)
   have hw : ∀ y, f (pullback.fst f g y) = g (pullback.snd f g y) := fun y => by
     rw [← Scheme.Hom.comp_apply, pullback.condition, Scheme.Hom.comp_apply]
@@ -360,7 +360,7 @@ theorem fibre_preconnected : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsProper π]
   intro Y Z π _ _ _ _ hN U hU hiso z
   obtain ⟨V, hV, hzV, -⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := z) trivial
   have hS := _root_.GlobalTheory.ZariskiSections.bijective_appTop_restrict Y Z π hN U hU hiso V hV
-  haveI : IsAffine (V : Scheme) := hV
+  have : IsAffine (V : Scheme) := hV
   have hC := _root_.GlobalTheory.ZariskiConn.isPreconnected_fibre (V : Scheme) (π ⁻¹ᵁ V) (π ∣_ V) hS ⟨z, hzV⟩
   have key : π.base ⁻¹' {z} = (π ⁻¹ᵁ V).ι.base '' ((π ∣_ V).base ⁻¹' {⟨z, hzV⟩}) := by
     ext y

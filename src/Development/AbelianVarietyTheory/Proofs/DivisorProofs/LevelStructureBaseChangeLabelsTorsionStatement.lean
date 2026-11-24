@@ -125,7 +125,7 @@ theorem GlobalTheory.levelPoint_baseChange_label : ∀ (K C : Type) [Field K] [F
     exact (congrArg (linComb lev.pt) (funext fun i => ZMod.val_natCast_of_lt (c i).isLt)).trans
       ((E _).symm.trans hc)
   · intro i j
-    haveI : Fact (1 < k) := ⟨by omega⟩
+    have : Fact (1 < k) := ⟨by omega⟩
     have hs : ∀ i, levelPoint lev rfl (Pi.single i 1) = lev.pt i := fun i => by
       rw [LP, Finset.prod_eq_single i]
       · rw [Pi.single_eq_same, ZMod.val_one, pow_one]

@@ -220,7 +220,7 @@ theorem integrable_fY {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) {μ μ
   have hWc : Continuous W := hW.2.2.2.2.1
   have hWi : Integrable (fun z => ‖W z‖) ν := by
     refine ⟨hWc.norm.aestronglyMeasurable, ?_⟩
-    simpa [HasFiniteIntegral, enorm_norm] using hW.2.2.2.2.2.2.1
+    simpa [HasFiniteIntegral, eNorm_norm] using hW.2.2.2.2.2.2.1
   have hg : Integrable (fun p : G × G => ‖W p.1‖ * (‖e‖ * ‖w‖)) (ν.prod (μS.restrict A)) :=
     hWi.mul_prod (integrable_const (‖e‖ * ‖w‖))
   refine hg.mono' (continuous_fY hσ w hWc e).aestronglyMeasurable ?_
@@ -269,7 +269,7 @@ private theorem inner_kG_apply_eq (σ : G → (HH →L[ℂ] HH)) (d : ℝ) (w : 
     ⟪a, kG σ d w W W' γ (φinv p, φinv p') b⟫_ℂ =
       (d : ℂ) * ⟪fY σ w W a p, σ γ (fY σ w W' b p')⟫_ℂ := by
   unfold kG fY φinv
-  simp only [ContinuousLinearMap.smul_apply, rk1A_apply, inner_smul_right, inner_smul_left,
+  simp only [smul_apply, rk1A_apply, inner_smul_right, inner_smul_left,
     map_smul, inner_conj_symm]
   ring
 
@@ -306,7 +306,7 @@ theorem Xop_eq_integral {σ : G → (HH →L[ℂ] HH)} (hσ : IsUnitRep σ) {μ 
       ∫ p, ∫ p', (d : ℂ) * ⟪fY σ w W (stdOrthonormalBasis ℂ V i) p,
         σ γ (fY σ w W' (stdOrthonormalBasis ℂ V' j) p')⟫_ℂ
           ∂(ν'.prod (μS'.restrict A')) ∂(ν.prod (μS.restrict A)) := by
-    rw [Xop, ContinuousLinearMap.smul_apply, inner_smul_right, inner_sand,
+    rw [Xop, smul_apply, inner_smul_right, inner_sand,
       Yop_apply_basis, Yop_apply_basis,
       yv_eq_integral hσ hW hinv hA hAS hAf,
       yv_eq_integral hσ hW' hinv' hA' hAS' hAf',

@@ -215,7 +215,7 @@ theorem fixLat_isFullLattice {H : HermSpace K V} {g : 𝓞 K} (hg : g ≠ 0)
     {L' L : Submodule (𝓞 K) V} {Γ : Submodule (𝓞 K) (V × V)}
     (hL' : Submodule.IsFullLattice K L') (hL : Submodule.IsFullLattice K L)
     (hΓ : IsModIso H g L' L Γ) : Submodule.IsFullLattice K (fixLat Γ) := by
-  letI : Submodule.IsLattice K (fixLat Γ) :=
+  let : Submodule.IsLattice K (fixLat Γ) :=
     fixLat_isLattice hg hL'.toIsLattice hL.toIsLattice hΓ
   obtain ⟨d, hd, hdL⟩ := Formalism.HermitianLatticesTheory.indexBasic_denom
     (nonZeroDivisors (𝓞 K)) L L' hL.fg (by

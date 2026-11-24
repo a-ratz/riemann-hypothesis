@@ -394,7 +394,7 @@ theorem zCusp_of_rapidDecay : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.wh
       congr 1
       funext τ
       exact (hL v hv).2 τ
-    · exact (haut.cont.comp ((continuous_subtype_val.mul continuous_const).mul continuous_const)).measurable.aestronglyMeasurable
+    · exact (haut.cont.comp ((continuous_subtypeVal.mul continuous_const).mul continuous_const)).measurable.aestronglyMeasurable
   have key := holFn_eq_zero hx (iso_tau hξ) hf (fun m hm v hv => ?_) (fun k => ?_) _ (hUG u)
   · simp only [hLa u hu, mul_assoc] at key
     exact key

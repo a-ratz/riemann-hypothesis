@@ -53,7 +53,7 @@ theorem tie_trace {F E : Type} [Field F] [NumberField F] [Field E] [NumberField 
 
   have hfix : ∀ c : F, star (algebraMap F E c) = algebraMap F E c :=
     fun c => (hc.fixed _).2 ⟨c, rfl⟩
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hc.deg2]; norm_num)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hc.deg2]; norm_num)
   let s : E ≃ₐ[F] E :=
     { toFun := star
       invFun := star
@@ -82,7 +82,7 @@ theorem tie_trace {F E : Type} [Field F] [NumberField F] [Field E] [NumberField 
       Finset.card_le_univ _
     rw [hc.deg2] at hle
     omega
-  haveI : IsGalois F E := by
+  have : IsGalois F E := by
     first
       | exact IsGalois.of_card_aut_eq_finrank F E (by rw [Nat.card_eq_fintype_card, hcard, hc.deg2])
       | exact IsGalois.of_card_aut_eq_finrank F E (by rw [hcard, hc.deg2])

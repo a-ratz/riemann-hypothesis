@@ -137,8 +137,8 @@ private theorem trace_range {V U : Type} [AddCommGroup V] [Module ℂ V] [AddCom
   have hle : LinearMap.range B ≤ F := by
     rintro _ ⟨v, rfl⟩
     exact hB v
-  haveI : FiniteDimensional ℂ (LinearMap.range B) := Submodule.finiteDimensional_of_le hle
-  haveI hfin : FiniteDimensional ℂ (LinearMap.range (i ∘ₗ B)) := by
+  have : FiniteDimensional ℂ (LinearMap.range B) := Submodule.finiteDimensional_of_le hle
+  have hfin : FiniteDimensional ℂ (LinearMap.range (i ∘ₗ B)) := by
     rw [LinearMap.range_comp]
     infer_instance
   refine ⟨hfin, ?_⟩
@@ -158,7 +158,7 @@ private theorem trace_range {V U : Type} [AddCommGroup V] [Module ℂ V] [AddCom
   have e3 : b ∘ₗ a = (i ∘ₗ B).restrict fun x _ => LinearMap.mem_range_self (i ∘ₗ B) x := by
     ext x
     rfl
-  rw [trOn, dif_pos h0, e1, LinearMap.trace_comp_comm', e2, LinearMap.trace_comp_comm', e3]
+  rw [trOn, dite_eq_left h0, e1, LinearMap.trace_comp_comm', e2, LinearMap.trace_comp_comm', e3]
 
 private theorem trOn_smul {U : Type} [AddCommGroup U] [Module ℂ U] (F : Submodule ℂ U) (c : ℂ) (f : U →ₗ[ℂ] U)
     (hf : ∀ x ∈ F, f x ∈ F) : trOn F (c • f) = c * trOn F f := by
@@ -166,7 +166,7 @@ private theorem trOn_smul {U : Type} [AddCommGroup U] [Module ℂ U] (F : Submod
   have e : (c • f).restrict h = c • f.restrict hf := by
     ext x
     rfl
-  rw [trOn, trOn, dif_pos h, dif_pos hf, e, map_smul, smul_eq_mul]
+  rw [trOn, trOn, dite_eq_left h, dite_eq_left hf, e, map_smul, smul_eq_mul]
 
 section Conc
 
@@ -256,8 +256,8 @@ theorem UpperTheory.V.Z.Mult.Pi.twisted_trace_global_bound_of_archimedean :
     refine nontrivial_of_ne u 0 fun h0 => hψ0 ?_
     rw [h0, map_zero] at hu
     exact (congrArg Subtype.val hu).symm
-  letI : MeasurableSpace (Un n) := borel _
-  haveI : BorelSpace (Un n) := ⟨rfl⟩
+  let : MeasurableSpace (Un n) := borel _
+  have : BorelSpace (Un n) := ⟨rfl⟩
   let ν : Measure (Un n) := Measure.haarMeasure ⊤
   have hν : ν Set.univ = 1 := Measure.haarMeasure_self (K₀ := ⊤)
   have hloc : ∀ w, IsLoc (infOf (lam w)) (D.E1 w) (D.E2 w) (D.σ w) D.Θ := fun w =>
@@ -275,7 +275,7 @@ theorem UpperTheory.V.Z.Mult.Pi.twisted_trace_global_bound_of_archimedean :
   have he : ∀ y : Y, ((e y : Y.map j) : Sm E n) = (D.i y).1 := fun _ => rfl
   let ρ : (GL (Fin n) (Af E) → ℂ) → Module.End ℂ (Y.map j) := fun h =>
     if hh : IsHeckeF K h then e.conj ((D.R ⟨h, hh⟩).restrict (hYR ⟨h, hh⟩)) else 0
-  have hρ : ∀ h (hh : IsHeckeF K h), ρ h = e.conj ((D.R ⟨h, hh⟩).restrict (hYR ⟨h, hh⟩)) := fun h hh => dif_pos hh
+  have hρ : ∀ h (hh : IsHeckeF K h), ρ h = e.conj ((D.R ⟨h, hh⟩).restrict (hYR ⟨h, hh⟩)) := fun h hh => dite_eq_left hh
   have hmul : ∀ f g : Module.End ℂ Y, e.conj f * e.conj g = e.conj (f * g) := fun f g => (e.conj_comp g f).symm
   refine ⟨Y.map j, ρ, e.conj (D.Θ.restrict hYΘ), c₂ * c₁, ?_, inferInstance, ?_, ?_, ?_, ?_, ?_, ?_,
     by rw [norm_mul, hc₁], ?_⟩
@@ -320,7 +320,7 @@ theorem UpperTheory.V.Z.Mult.Pi.twisted_trace_global_bound_of_archimedean :
     obtain ⟨S, hS⟩ := exists_hecke hM π hKo hKc μf D hh
     set Q : Module.End ℂ D.U := ((univ : Finset (InfinitePlace E)).toList.map P).prod with hQ
     set a : ℂ := c₂ * ∏ w, val w (infOf (lam w)) with ha
-    haveI := hFin
+    have := hFin
     obtain ⟨hf, htrL⟩ := trace_range D.i (a • (Q ∘ₗ S ∘ₗ t)) (⨅ w, isoSp (D.σ w) (lefE n (lam w)))
       fun v => Submodule.smul_mem _ _ (hPF _)
     refine ⟨D.i ∘ₗ (a • (Q ∘ₗ S ∘ₗ t)), fun ψ x => ?_, hf, ?_⟩
@@ -335,7 +335,7 @@ theorem UpperTheory.V.Z.Mult.Pi.twisted_trace_global_bound_of_archimedean :
         simp only [LinearMap.comp_apply, LinearMap.smul_apply, Module.End.mul_apply, h3, h4]
       have h5 : ∀ y ∈ Y, (D.R ⟨h, hh⟩ * D.Θ) y ∈ Y := fun y hy => hYR _ _ (hYΘ y hy)
       have h6 : LinearMap.trace ℂ (Y.map j) (ρ h * e.conj (D.Θ.restrict hYΘ)) = trOn Y (D.R ⟨h, hh⟩ * D.Θ) := by
-        rw [hρ h hh, hmul, LinearMap.trace_conj', trOn, dif_pos h5]
+        rw [hρ h hh, hmul, LinearMap.trace_conj', trOn, dite_eq_left h5]
         rfl
       rw [← htrL, h2, trOn_smul _ a (Q * D.R ⟨h, hh⟩ * D.Θ) (fun x _ => hPF _), htr, h6, ha]
       ring
@@ -492,7 +492,7 @@ theorem UpperTheory.V.Z.Mult.Pi.toYdA :
     rw [this]
     exact (continuous_const.mul hcont).mul continuous_const
   have hv : (μf (Lev S N : Set (GF E n))).toReal ≠ 0 := by
-    haveI := hμ
+    have := hμ
     exact (ENNReal.toReal_pos (hO.measure_pos μf ⟨1, (Lev S N).one_mem⟩).ne' hC.measure_lt_top.ne).ne'
   obtain ⟨v, hvdef⟩ : ∃ v : ℂ, v = (((μf (Lev S N : Set (GF E n))).toReal : ℝ) : ℂ) := ⟨_, rfl⟩
   have hv0 : v ≠ 0 := by
@@ -628,7 +628,7 @@ theorem _root_.UpperTheory.V.Z.Mult.Pi.levelTrA : UpperTheory.V.Z.Tf.GlobalTrace
     refine ⟨φ₀, fun w _ N' hN' b => ?_, Finset.prod_ne_zero_iff.2 fun w hw h0 => ?_⟩
     · rw [h2]
       exact ind_hecke w (N w) N' (hG w).1 (hG w).2.1 hN'
-    · haveI : FiniteDimensional ℂ (fixed (τ w).ρ (N w)) := hAdm E n w (τ w) (N w) (hG w).1
+    · have : FiniteDimensional ℂ (fixed (τ w).ρ (N w)) := hAdm E n w (τ w) (N w) (hG w).1
       have e := hc w hw φ₀ φ₀ fun b => by
         rw [h2]
         exact ind_hecke w (N w) (N w) (hG w).1 (hG w).2.1 le_rfl
@@ -785,9 +785,9 @@ theorem UpperTheory.V.Z.Mult.Pi.zTrA :
       rw [hbot, Submodule.mem_bot] at hv
       simp [hv]) x (y.le hx) (hfixY w hw false x hx)
     simpa using this
-  haveI : FiniteDimensional ℂ y.Y := y.fd
-  haveI : Nontrivial y.Y := Submodule.nontrivial_iff_ne_bot.2 y.ne
-  haveI : ∀ w : ↥Z, FiniteDimensional ℂ (fixed (τ w.1).ρ (N w.1)) := fun w =>
+  have : FiniteDimensional ℂ y.Y := y.fd
+  have : Nontrivial y.Y := Submodule.nontrivial_iff_ne_bot.2 y.ne
+  have : ∀ w : ↥Z, FiniteDimensional ℂ (fixed (τ w.1).ρ (N w.1)) := fun w =>
     hAdm E n w.1 (τ w.1) (N w.1) (hNo _)
   have hαinv : ∀ (w : ↥Z) (f : {f : GLw n w.1 → ℂ // IsHecke (N w.1) f}), ∀ x ∈ fixed (τ w.1).ρ (N w.1),
       Lv (τ w.1).ρ (N w.1) f.1 x ∈ fixed (τ w.1).ρ (N w.1) := fun w f x hx =>
@@ -992,9 +992,9 @@ private theorem split_two {X Y K : Type} [Group X] [TopologicalSpace X] [IsTopol
     ∃ c : ℂ, c ≠ 0 ∧ ∀ f : K → ℂ, Continuous f → HasCompactSupport f →
       ∫ g, f g ∂μ = c * ∫ x, ∫ y, f (e (x, y)) ∂mY ∂mX := by
   let em : X × Y ≃ᵐ K := e.toHomeomorph.toMeasurableEquiv
-  haveI : IsHaarMeasure ((mX.prod mY).map e) := ContinuousMulEquiv.isHaarMeasure_map _ e
-  haveI : LocallyCompactSpace K := e.symm.toHomeomorph.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology K := e.symm.toHomeomorph.isEmbedding.secondCountableTopology
+  have : IsHaarMeasure ((mX.prod mY).map e) := ContinuousMulEquiv.isHaarMeasure_map _ e
+  have : LocallyCompactSpace K := e.symm.toHomeomorph.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology K := e.symm.toHomeomorph.isEmbedding.secondCountableTopology
   have h := isMulLeftInvariant_eq_smul μ ((mX.prod mY).map e)
   have hpos := haarScalarFactor_pos_of_isHaarMeasure μ ((mX.prod mY).map e)
   generalize haarScalarFactor μ ((mX.prod mY).map e) = c at h hpos
@@ -1078,7 +1078,7 @@ theorem UpperTheory.V.Z.Mult.Pi.opFormA :
     intro y
     have e1 : (l.map fun v => (Pi.mulSingle v (y v) : InfinitePlace E → G n)).prod = y := by
       funext w
-      rw [prod_single y l (Finset.nodup_toList _), if_pos (Finset.mem_toList.2 (Finset.mem_univ w))]
+      rw [prod_single y l (Finset.nodup_toList _), ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ w))]
     conv_rhs => rw [← e1]
     refine Eq.trans ?_ (map_list_prod ih _).symm
     rw [List.map_map]
@@ -1209,7 +1209,7 @@ theorem UpperTheory.V.Z.Mult.Pi.absCoreA_pf :
       FreeAlgebra.lift ℂ (a i) p * FreeAlgebra.lift ℂ (a i) p = FreeAlgebra.lift ℂ (a i) p ∧
       ∀ q, ∃ c : ℂ, FreeAlgebra.lift ℂ (a i) p * FreeAlgebra.lift ℂ (a i) q *
         FreeAlgebra.lift ℂ (a i) p = c • FreeAlgebra.lift ℂ (a i) p := fun i => by
-    haveI := hnt i
+    have := hnt i
     exact hI (J i) (M i) Y (α i) (a i) (hM i) (hrel i)
   choose p hp1 hp2 hp3 using hex
   have hAq : ∀ i q, A * FreeAlgebra.lift ℂ (a i) q = FreeAlgebra.lift ℂ (b i) q * A :=
@@ -1634,7 +1634,7 @@ private theorem haar_measure_rel_index {Γ : Type} [Group Γ] [TopologicalSpace 
     | H x =>
       obtain ⟨k, hk, hx⟩ := Set.mem_iUnion₂.1 (ht x.2)
       exact ⟨⟨k, hk⟩, (hmem k x).1 hx⟩
-  haveI := Fintype.ofFinite (K ⧸ K'.subgroupOf K)
+  have := Fintype.ofFinite (K ⧸ K'.subgroupOf K)
   let s : K ⧸ K'.subgroupOf K → K := Quotient.out
   have hs : ∀ q, (QuotientGroup.mk (s q) : K ⧸ K'.subgroupOf K) = q := fun q =>
     QuotientGroup.out_eq' q
@@ -1716,7 +1716,7 @@ theorem piTermA_of (h1 : GlobalTwistedTraceBound) (hθ : ThetaFixOf) (h2 : WtEx)
       rw [hFo.interior_eq]
       exact ⟨1, (Kf E n).one_mem⟩⟩
   let μf : Measure (GF E n) := Measure.haarMeasure K₀
-  haveI : μf.IsHaarMeasure := inferInstance
+  have : μf.IsHaarMeasure := inferInstance
   have hμ1 : μf (Kf E n : Set (GF E n)) = 1 := Measure.haarMeasure_self (K₀ := K₀)
   obtain ⟨c₀, hc₀, hG⟩ := h1 E n μC μf μ
   refine ⟨c₀, hc₀, fun π hreg hd hl S hS Z hZ B τ hB hτ => ?_⟩
@@ -1925,7 +1925,7 @@ theorem UpperTheory.V.Z.Mult.Pi.seenTrA :
   obtain ⟨-, -, hKo, hKc, -⟩ := UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.unitHecke E n 0 0 w
   have hNc : IsCompact (N : Set (GLw n w)) :=
     hKc.of_isClosed_subset (Subgroup.isClosed_of_isOpen N hNo) hNK
-  haveI : Finite ((KGL w (n := n) : Subgroup (GLw n w)) ⧸ N.subgroupOf (KGL w (n := n))) :=
+  have : Finite ((KGL w (n := n) : Subgroup (GLw n w)) ⧸ N.subgroupOf (KGL w (n := n))) :=
     GlobalTheory.TwTrLevel.finite_quot (KGL w (n := n)) (KGL w (n := n)) N hKc hKo hNo le_rfl
   have hi : N.relIndex (KGL w (n := n)) ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hiC : ((N.relIndex (KGL w (n := n)) : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hi
@@ -1948,7 +1948,7 @@ theorem UpperTheory.V.Z.Mult.Pi.seenTrA :
     Prod.ext rfl (Subsingleton.elim _ _)
   rw [hcv]
   unfold PositivityTheory.Rg.BcB.G8.seen
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
   rw [hint_fst (KGL w (n := n)) N (KGL w (n := 0)) _ hNK ?_ hi]
   · congr 1
     refine finsum_congr fun q => ?_

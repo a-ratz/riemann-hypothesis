@@ -210,9 +210,9 @@ theorem integrableOn_unip (hc : Continuous φ) (hl : ∀ γ g, φ (ratGL E a γ 
     [MeasurableSpace (BlockIx a r → Ad E)] [BorelSpace (BlockIx a r → Ad E)] (ν : Measure (BlockIx a r → Ad E))
     [ν.IsAddHaarMeasure] {𝓕 : Set (BlockIx a r → Ad E)} (h𝓕 : IsAddFundamentalDomain (ratN E a r) 𝓕 ν) (g : GA E a) :
     IntegrableOn (fun x => φ (unip x * g)) 𝓕 ν := by
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI := GlobalTheory.ConstNotCusp.discreteTopology_ratN E a r
-  haveI : Countable (ratN E a r) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have := GlobalTheory.ConstNotCusp.discreteTopology_ratN E a r
+  have : Countable (ratN E a r) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨K, hK, hcov⟩ := GlobalTheory.ConstNotCusp.exists_compact_ratN E a r
   have hf : Continuous fun x : BlockIx a r → Ad E => φ (unip x * g) := hc.comp (continuous_unip.mul continuous_const)
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hf.continuousOn

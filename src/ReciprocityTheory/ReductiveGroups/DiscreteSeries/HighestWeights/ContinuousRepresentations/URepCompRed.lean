@@ -230,9 +230,9 @@ theorem entry_eq_zero_of_comm {ε : Fin n → Bool} {Y : Matrix (Fin n) (Fin n) 
   simp only [Jm, Matrix.mul_diagonal, Matrix.diagonal_mul] at h
   cases ha : ε a <;> cases hb : ε b
   · exact absurd (ha.trans hb.symm) hab
-  · rw [ha, hb] at h; simp only [Bool.false_eq_true, if_false, if_true] at h
+  · rw [ha, hb] at h; simp only [Bool.false_eq_true, ite_false, ite_true] at h
     linear_combination h / 2
-  · rw [ha, hb] at h; simp only [Bool.false_eq_true, if_false, if_true] at h
+  · rw [ha, hb] at h; simp only [Bool.false_eq_true, ite_false, ite_true] at h
     linear_combination -h / 2
   · exact absurd (ha.trans hb.symm) hab
 
@@ -350,7 +350,7 @@ theorem tauW_coe (k : KG ε) : ((tauW R hτ k : unitary (W →L[ℂ] W)) : W →
 
 theorem tauW_cont : Continuous (tauW R hτ) := by
   have h : Continuous fun k : KG ε => cut W (R.op k) :=
-    (cut W).continuous.comp (continuous_subtype_val.comp R.cont)
+    (cut W).continuous.comp (continuous_subtypeVal.comp R.cont)
   exact h.subtype_mk _
 
 end Piece
@@ -552,7 +552,7 @@ theorem KRep.dτ_stable_of_stable {ε : Fin n → Bool} (R : KRep ε)
     let L : (R.V →L[ℂ] R.V) →L[ℝ] R.V := (ContinuousLinearMap.apply ℂ R.V v).restrictScalars ℝ
     have hdv : HasDerivAt (fun t => R.op (γ t) v) (R.dτ X v) 0 :=
       L.hasFDerivAt.comp_hasDerivAt 0 hd
-    have hclosed : IsClosed (W : Set R.V) := W.closed_of_finiteDimensional
+    have hclosed : IsClosed (W : Set R.V) := W.isClosed_of_finiteDimensional
     refine hclosed.mem_of_tendsto hdv.tendsto_slope_zero (Filter.Eventually.of_forall fun t => ?_)
     exact W.smul_of_tower_mem _ (W.sub_mem (hW _ v hv) (hW _ v hv))
   intro a b hab v hv
@@ -629,7 +629,7 @@ open ReciprocityTheory.ChartRestriction.DS ReciprocityTheory.ChartRestriction.DS
 variable {n : ℕ}
 
 lemma inUJ_of_mem_K (ε : Fin n → Bool) {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ Kset ε) : inUJ ε g := by
-  simp only [Kset, inUJ, Set.mem_setOf_eq] at *
+  simp only [Kset, inUJ, Set.mem_ofPred_eq] at *
   obtain ⟨hu, hc⟩ := hg
   have h1 : star g * g = 1 := Matrix.mem_unitaryGroup_iff'.mp hu
   rw [Matrix.mul_assoc, ← hc, ← Matrix.mul_assoc, ← Matrix.star_eq_conjTranspose, h1, Matrix.one_mul]
@@ -646,7 +646,7 @@ lemma KRep.actM_units {ε : Fin n → Bool} (R : KRep ε) (X : Matrix (Fin n) (F
     intro a b; rw [Matrix.smul_single, smul_eq_mul, mul_one]
 
   simp only [h, map_sum, map_smul]
-  simp [LinearMap.sum_apply, ContinuousLinearMap.sum_apply]
+  simp [LinearMap.sum_apply, sum_apply]
 
 def compactRepOfUnitaryDifferential (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     [FiniteDimensional ℂ H] (τ : KG ε →* unitary (H →L[ℂ] H)) (hτ : Continuous τ)

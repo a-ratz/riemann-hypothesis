@@ -122,8 +122,8 @@ theorem exists_field_point_polarised : ∀ (R : Type) [CommRing R] [IsDomain R] 
   let O := Localization.AtPrime y.asIdeal
   have hiO : Function.Injective (algebraMap R O) :=
     IsLocalization.injective O y.asIdeal.primeCompl_le_nonZeroDivisors
-  haveI : IsDomain O := IsLocalization.isDomain_localization y.asIdeal.primeCompl_le_nonZeroDivisors
-  haveI : IsNoetherianRing O := IsLocalization.isNoetherianRing y.asIdeal.primeCompl O hN
+  have : IsDomain O := IsLocalization.isDomain_localization y.asIdeal.primeCompl_le_nonZeroDivisors
+  have : IsNoetherianRing O := IsLocalization.isNoetherianRing y.asIdeal.primeCompl O hN
   have hf : ¬ IsField O := by
     intro hfO
     apply hy
@@ -270,7 +270,7 @@ theorem GlobalTheory.FibreTransfer.relAmple_kTriv_of_same_point : ∀ (S : Schem
   obtain ⟨θ, rfl⟩ := exists_residueField_factor S y K x hx
   clear hy
   subst hz
-  haveI := hqc; haveI := hsep; haveI := hsm
+  have := hqc; have := hsep; have := hsm
   have hLy := pull_isLB hL (pullback.fst G.hom (S.fromSpecResidueField y))
   have i₁ : QuasiCompact ((Over.pullback (S.fromSpecResidueField y)).obj G).hom :=
     show QuasiCompact (pullback.snd G.hom _) from inferInstance

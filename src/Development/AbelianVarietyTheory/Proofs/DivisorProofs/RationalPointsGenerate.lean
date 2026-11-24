@@ -188,7 +188,7 @@ open NumberField Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.Main
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem preconnected_infAdele (F : Type) [Field F] [NumberField F] : PreconnectedSpace (Ainf F) := by
-  haveI : ∀ w : InfinitePlace F, PreconnectedSpace w.Completion := fun w => by
+  have : ∀ w : InfinitePlace F, PreconnectedSpace w.Completion := fun w => by
     rcases w.isReal_or_isComplex with hw | hw
     · let e := (InfinitePlace.Completion.isometryEquivRealOfIsReal hw).symm
       exact (e.surjective.connectedSpace e.continuous).toPreconnectedSpace
@@ -208,12 +208,12 @@ theorem exists_conj_ne (D : D7) : ∃ z, D.sp.cm.sig z ≠ z := by
 theorem preconnected_inf {D : D7} (V : HSp D) (hp : V.IsPosDef) (hs : V.SigOK) :
     PreconnectedSpace (HA (Ainf D.host.F) D.sp.cm.sig V.gram) := by
   classical
-  haveI : IsArtinianRing (Ainf D.host.F) :=
+  have : IsArtinianRing (Ainf D.host.F) :=
     inferInstanceAs (IsArtinianRing (∀ v : InfinitePlace D.host.F, v.Completion))
-  haveI : IsArtinianRing (Ainf D.host.F ⊗[D.host.F] D.host.E) := IsArtinianRing.of_finite (Ainf D.host.F) _
-  haveI : IsTopologicalRing (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
+  have : IsArtinianRing (Ainf D.host.F ⊗[D.host.F] D.host.E) := IsArtinianRing.of_finite (Ainf D.host.F) _
+  have : IsTopologicalRing (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
     IsModuleTopology.isTopologicalRing (Ainf D.host.F) _
-  haveI := preconnected_infAdele D.host.F
+  have := preconnected_infAdele D.host.F
   have a1 : IsOpen {x : (∀ v : InfinitePlace D.host.F, v.Completion) | IsUnit x} := Units.isOpen
   have a2 : ∀ x : (∀ v : InfinitePlace D.host.F, v.Completion), IsUnit x → ContinuousAt Ring.inverse x := by
     rintro _ ⟨x, rfl⟩
@@ -261,10 +261,10 @@ theorem rational_points_generate : ∀ (D : D7) (V : HSp D) (c : CoefA V), V.IsP
     obtain ⟨γ, hγ, k, hk, h1, h2⟩ := GlobalTheory.RealApprox.weak_approx_real V u hu U hU huU
     exact ⟨γ, hγ, k, hk, hUN h1, h2⟩
   refine ⟨?_, fun U hU => hirr U fun h => ?_, h3⟩
-  · haveI := preconnected_inf V hp hs
-    haveI : IsTopologicalRing (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
+  · have := preconnected_inf V hp hs
+    have : IsTopologicalRing (Ainf D.host.F ⊗[D.host.F] D.host.E) :=
       IsModuleTopology.isTopologicalRing (Ainf D.host.F) _
-    haveI : IsTopologicalGroup (HA (Ainf D.host.F) D.sp.cm.sig V.gram) :=
+    have : IsTopologicalGroup (HA (Ainf D.host.F) D.sp.cm.sig V.gram) :=
       inferInstanceAs (IsTopologicalGroup (HR (Ainf D.host.F) D.sp.cm.sig V.gram))
     obtain ⟨e, he⟩ := GlobalTheory.Mem.VolSplit.exists_adelic_split D.host.F D.host.E D.sp.cm.sig V.rank V.gram
     have hGi : ∀ h : GA D V, (e h).2 = 1 → h ∈ GinfC V := fun h H =>
@@ -283,7 +283,7 @@ theorem rational_points_generate : ∀ (D : D7) (V : HSp D) (c : CoefA V), V.IsP
           change (e (e.symm (x, 1))).1 ∈ O
           rwa [e.apply_symm_apply]))
       refine ⟨_, ?_, ⟨γ, hγ⟩, rfl⟩
-      rwa [Set.mem_setOf_eq, map_mul, Prod.fst_mul, (hGf k).1 hk, mul_one] at h1
+      rwa [Set.mem_ofPred_eq, map_mul, Prod.fst_mul, (hGf k).1 hk, mul_one] at h1
     have htr : Continuous fun h : GA D V => LinearMap.trace ℂ c.W (c.ρ h) := by
       let b := Module.finBasis ℂ c.W
       simp only [LinearMap.trace_eq_matrix_trace ℂ b, Matrix.trace, Matrix.diag, LinearMap.toMatrix_apply]
@@ -302,15 +302,15 @@ theorem rational_points_generate : ∀ (D : D7) (V : HSp D) (c : CoefA V), V.IsP
       have hk : (γ : GA D V)⁻¹ * e.symm (φ γ, 1) ∈ GfC V := (hGf _).2 (by
         rw [map_mul, map_inv, e.apply_symm_apply, Prod.fst_mul, Prod.fst_inv, hφ, inv_mul_cancel])
       rw [← mul_inv_cancel_left (γ : GA D V) (e.symm (φ γ, 1)), map_mul, hfin _ hk, mul_one]
-    rw [Set.mem_setOf_eq, e1]
+    rw [Set.mem_ofPred_eq, e1]
     rfl
   · rintro _ ⟨x, hx, rfl⟩
     obtain ⟨a, ha, k, hk, rfl⟩ := (GlobalTheory.UnitarySplit.real_finite_split D V).1 h
     rw [map_mul, hfin k hk, mul_one]
     by_contra hn
     obtain ⟨γ, hγ, k', hk', h1, -⟩ := h3 a ha {g | c.ρ g x ∉ U}
-      ((U.closed_of_finiteDimensional.isOpen_compl.preimage (hcont x)).mem_nhds hn)
-    rw [Set.mem_setOf_eq, map_mul, hfin k' hk', mul_one] at h1
+      ((U.isClosed_of_finiteDimensional.isOpen_compl.preimage (hcont x)).mem_nhds hn)
+    rw [Set.mem_ofPred_eq, map_mul, hfin k' hk', mul_one] at h1
     exact h1 (hU ⟨γ, hγ⟩ ⟨x, hx, rfl⟩)
 
 end GlobalTheory.RatGen

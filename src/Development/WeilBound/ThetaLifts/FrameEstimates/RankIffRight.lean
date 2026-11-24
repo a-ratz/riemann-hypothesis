@@ -154,7 +154,7 @@ theorem exists_dual (O : ValuationSubring k) (hO : IsCompact (O : Set k)) (hne :
   classical
   have hM : IsCompact {Y : Matrix (Fin n) (Fin d) k | ∀ i j, Y i j ∈ O} := by
     have := isCompact_univ_pi fun _ : Fin n => isCompact_univ_pi fun _ : Fin d => hO
-    simp only [Set.pi, Set.mem_univ, true_imp_iff, Set.mem_setOf_eq] at this
+    simp only [Set.pi, Set.mem_univ, true_imp_iff, Set.mem_ofPred_eq] at this
     exact this
   have h1 : ∀ᶠ a in 𝓝 (0 : k), ∀ Y ∈ {Y : Matrix (Fin n) (Fin d) k | ∀ i j, Y i j ∈ O}, a • Y ∈ V :=
     hM.eventually_forall_of_forall_eventually fun Y _ =>
@@ -207,7 +207,7 @@ theorem exists_cut [CharZero k] (O : ValuationSubring k) (hO : IsCompact (O : Se
       rw [Matrix.mul_smul, Matrix.add_mul, hC, ← two_smul k, smul_smul, inv_mul_cancel₀ two_ne_zero, one_smul])
   obtain ⟨K, Λ, hΛ, hΛV⟩ := exists_dual O hO hne ψ hψ hb hV
   let Q := Matrix (Fin n) (Fin d) k ⧸ Λ.toAddSubgroup
-  haveI : DiscreteTopology Q := QuotientAddGroup.discreteTopology Λ.isOpen
+  have : DiscreteTopology Q := QuotientAddGroup.discreteTopology Λ.isOpen
   let p : Matrix (Fin n) (Fin d) k → Q := QuotientAddGroup.mk
   have hp : Continuous p := QuotientAddGroup.continuous_mk
   have hT : (p '' {Y | f Y ≠ 0}).Finite := (hS.image hp).finite_of_discrete
@@ -232,7 +232,7 @@ theorem exists_cut [CharZero k] (O : ValuationSubring k) (hO : IsCompact (O : Se
     refine ⟨U, fun Y hY => ?_, h⟩
     have h1 : p Y₀ = p Y := by
       by_contra h'
-      exact hY (if_neg fun h'' => h' (e.trans h''.symm))
+      exact hY (ite_eq_right fun h'' => h' (e.trans h''.symm))
     have h2 := (hΛ _).1 (QuotientAddGroup.eq.1 h1) U hU
     rw [show Y = Y₀ + (-Y₀ + Y) by abel, Matrix.add_mul, trace_add, AddChar.map_add_eq_mul, h2, mul_one]
 

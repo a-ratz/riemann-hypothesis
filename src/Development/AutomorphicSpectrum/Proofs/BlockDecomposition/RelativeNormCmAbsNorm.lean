@@ -59,7 +59,7 @@ theorem norm_eq_mul_conj_and_absNorm : ∀ (F E : Type) [Field F] [NumberField F
   intro F E _ _ _ _ _ σ hσ t
   classical
   obtain ⟨_, hE, hdeg, hconj⟩ := hσ
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hdeg]; norm_num)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hdeg]; norm_num)
   refine ⟨?_, ?_⟩
   · set σ' : E ≃ₐ[F] E := AlgEquiv.ofBijective σ (AlgHom.bijective σ) with hσ'
     have hne : σ' ≠ 1 := by
@@ -83,7 +83,7 @@ theorem norm_eq_mul_conj_and_absNorm : ∀ (F E : Type) [Field F] [NumberField F
       apply Finset.eq_of_subset_of_card_le (Finset.subset_univ _)
       rw [Finset.card_univ, Finset.card_pair hne.symm]
       exact hcard_le
-    haveI : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by
+    have : IsGalois F E := IsGalois.of_card_aut_eq_finrank F E (by
       rw [hdeg, Nat.card_eq_fintype_card]
       apply le_antisymm hcard_le
       rw [← Finset.card_univ, huniv, Finset.card_pair hne.symm])

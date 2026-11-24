@@ -215,7 +215,7 @@ variable {D : D7}
 theorem isSmModOn_mul_right (V : HSp D) {Γ : Set (GA D V)} {φ : GA D V → ℂ}
     (h : IsSmModOn D.sp.cm.sig V.gram Γ φ) (b : GA D V) :
     IsSmModOn D.sp.cm.sig V.gram Γ (fun x => φ (x * b)) := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hN : (GfC V).Normal := MonoidHom.normal_ker _
   refine ⟨fun γ hγ x => ?_, ?_, h.cont.comp (continuous_id.mul continuous_const), ?_, ?_⟩
   · show φ (γ * x * b) = φ (x * b)
@@ -575,7 +575,7 @@ def res0 (s : Bool) (v : Fin n → ℂ) : EuclideanSpace ℂ {i : Fin n // ε i 
 
 lemma extendByZero_apply_of_ne {s : Bool} (x : EuclideanSpace ℂ {i : Fin n // ε i = s}) {a : Fin n}
     (h : ε a ≠ s) : ext0 ε s x a = 0 := by
-  simp only [ext0, LinearMap.coe_mk, AddHom.coe_mk, dif_neg h]
+  simp only [ext0, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_right h]
 
 lemma extendByZero_restrict_eigen_projection (s : Bool) (v : Fin n → ℂ) :
     ext0 ε s (res0 ε s v) =
@@ -603,7 +603,7 @@ lemma sum_extendByZero_fin_eq_sum_of_eq (s : Bool) (x y : EuclideanSpace ℂ {i 
   refine Finset.sum_congr rfl (fun i _ => ?_)
   have hx : ∀ z : EuclideanSpace ℂ {i : Fin n // ε i = s}, ext0 ε s z i.1 = z i := by
     intro z
-    simp only [ext0, LinearMap.coe_mk, AddHom.coe_mk, dif_pos i.2]
+    simp only [ext0, LinearMap.coe_mk, AddHom.coe_mk, dite_eq_left i.2]
   rw [hx x, hx y]
   simp [mul_comm]
 
@@ -643,7 +643,7 @@ theorem exists_KG_coordinate (W : Submodule ℂ (Fin n → ℂ))
       rw [sum_extendByZero_fin_eq_sum_of_eq, orthonormal_iff_ite.1 (b (ε j)).orthonormal]
       simp only [Subtype.mk.injEq]
     · have hne : j ≠ l := fun h => hjl (h ▸ rfl)
-      rw [if_neg hne]
+      rw [ite_eq_right hne]
       refine Finset.sum_eq_zero (fun i _ => ?_)
       by_cases hi : ε i = ε j
       · rw [hM i l, extendByZero_apply_of_ne ε _ (fun h => hjl (hi.symm.trans h)), mul_zero]
@@ -1409,7 +1409,7 @@ theorem finite_slices_uPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.
           _ = (t : GA D V) * mH * (y * mo) * b₀ := by group
       change φ ((t : GA D V) * mH * (y * mo) * b₀) = φ ((t : GA D V) * y * (n * (mH * mo) * b₀))
       rw [← e1, hleft, e2]
-  haveI := hfin
+  have := hfin
   exact Submodule.finiteDimensional_of_le (Submodule.span_le.2 hsub)
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.LeviPart.UCore.Rg

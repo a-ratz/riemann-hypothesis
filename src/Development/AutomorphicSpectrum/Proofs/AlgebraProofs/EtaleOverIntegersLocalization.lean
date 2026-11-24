@@ -70,15 +70,15 @@ theorem formallyUnramified_fractionRing (k K : Type) [CommRing k] [IsDomain k] [
     [Module.Finite ℤ k] [Field K] [Algebra k K] [IsFractionRing k K] [Algebra ℤ K] :
     Algebra.FormallyUnramified ℤ K := by
   have hinj : Function.Injective (algebraMap k K) := IsFractionRing.injective k K
-  haveI : CharZero K := charZero_of_injective_algebraMap hinj
-  letI : Algebra ℚ K := DivisionRing.toRatAlgebra
-  haveI := IsScalarTower.of_algebraMap_eq' (R := ℤ) (S := ℚ) (A := K) (RingHom.ext_int _ _)
-  haveI := IsScalarTower.of_algebraMap_eq' (R := ℤ) (S := k) (A := K) (RingHom.ext_int _ _)
-  haveI : Algebra.IsIntegral ℤ k := Algebra.IsIntegral.of_finite ℤ k
+  have : CharZero K := charZero_of_injective_algebraMap hinj
+  let : Algebra ℚ K := DivisionRing.toRatAlgebra
+  have := IsScalarTower.of_algebraMap_eq' (R := ℤ) (S := ℚ) (A := K) (RingHom.ext_int _ _)
+  have := IsScalarTower.of_algebraMap_eq' (R := ℤ) (S := k) (A := K) (RingHom.ext_int _ _)
+  have : Algebra.IsIntegral ℤ k := Algebra.IsIntegral.of_finite ℤ k
   have hint : ∀ a : k, IsIntegral ℚ (algebraMap k K a) := fun a =>
     IsIntegral.tower_top (A := ℚ)
       ((Algebra.IsIntegral.isIntegral (R := ℤ) a).algebraMap (B := K))
-  haveI : Algebra.IsAlgebraic ℚ K := by
+  have : Algebra.IsAlgebraic ℚ K := by
     constructor
     intro x
     obtain ⟨a, b, _, rfl⟩ := IsFractionRing.div_surjective (A := k) x
@@ -86,8 +86,8 @@ theorem formallyUnramified_fractionRing (k K : Type) [CommRing k] [IsDomain k] [
     have hb : IsIntegral ℚ (algebraMap k K b)⁻¹ :=
       (IsAlgebraic.inv_iff.mpr (hint b).isAlgebraic).isIntegral
     exact ((hint a).mul hb).isAlgebraic
-  haveI : Algebra.FormallyUnramified ℚ K := Algebra.FormallyUnramified.of_isSeparable ℚ K
-  haveI : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
+  have : Algebra.FormallyUnramified ℚ K := Algebra.FormallyUnramified.of_isSeparable ℚ K
+  have : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
   exact Algebra.FormallyUnramified.comp ℤ ℚ K
 
 theorem isUnramifiedAt_bot (k : Type) [CommRing k] [IsDomain k] [CharZero k]
@@ -95,11 +95,11 @@ theorem isUnramifiedAt_bot (k : Type) [CommRing k] [IsDomain k] [CharZero k]
   have hM : (⊥ : Ideal k).primeCompl = nonZeroDivisors k := by
     ext x
     simp [Ideal.mem_primeCompl_iff, mem_nonZeroDivisors_iff_ne_zero]
-  haveI : IsFractionRing k (Localization.AtPrime (⊥ : Ideal k)) := by
+  have : IsFractionRing k (Localization.AtPrime (⊥ : Ideal k)) := by
     unfold IsFractionRing
     rw [← hM]
     infer_instance
-  letI : Field (Localization.AtPrime (⊥ : Ideal k)) := IsFractionRing.toField k
+  let : Field (Localization.AtPrime (⊥ : Ideal k)) := IsFractionRing.toField k
   exact formallyUnramified_fractionRing k (Localization.AtPrime (⊥ : Ideal k))
 
 theorem exists_etale_away (k : Type) [CommRing k] [IsDomain k] [CharZero k] [Module.Finite ℤ k] :
@@ -114,7 +114,7 @@ theorem exists_etale_away (k : Type) [CommRing k] [IsDomain k] [CharZero k] [Mod
     simp [h] at hfV
   have hint : Algebra.IsIntegral ℤ k := Algebra.IsIntegral.of_finite ℤ k
   have hne : Ideal.comap (algebraMap ℤ k) (Ideal.span {f}) ≠ ⊥ :=
-    Ideal.comap_ne_bot_of_integral_mem hf0 (Ideal.subset_span rfl) (Algebra.IsIntegral.isIntegral f)
+    Ideal.under_ne_bot_of_integral_mem hf0 (Ideal.subset_span rfl) (Algebra.IsIntegral.isIntegral f)
   obtain ⟨m, hm, hm0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   rw [Ideal.mem_comap, Ideal.mem_span_singleton, eq_intCast] at hm
   have hmN : (m : k) ∣ ((m.natAbs : ℤ) : k) := map_dvd (Int.castRingHom k) (Int.dvd_natAbs.mpr dvd_rfl)

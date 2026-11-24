@@ -118,7 +118,7 @@ theorem exists_reps_congruenceSubgroup (m : ℕ) :
   have hQ : Finite (K₀ ⧸ K.subgroupOf K₀) := by
     refine Subgroup.quotient_finite_of_isOpen _ ?_
     rw [Subgroup.coe_subgroupOf]
-    exact (isOpen_congruenceSubgroup F n m).preimage continuous_subtype_val
+    exact (isOpen_congruenceSubgroup F n m).preimage continuous_subtypeVal
   have := Fintype.ofFinite (K₀ ⧸ K.subgroupOf K₀)
   refine ⟨Finset.univ.image fun q : K₀ ⧸ K.subgroupOf K₀ => ((Quotient.out q : K₀) : GL (Fin n) F),
     ?_, fun k hk => ?_⟩

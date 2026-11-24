@@ -72,7 +72,7 @@ theorem charZero_wittVector_of_field (p : ℕ) [hp : Fact p.Prime] (K : Type) [F
     have h3 : p ∣ l := (CharP.cast_eq_zero_iff K p l).1 h2
     have h4 : p = l := (Nat.prime_dvd_prime_iff_eq hp.out h).1 h3
     subst h4
-    exact WittVector.p_nonzero p K h1
+    exact WittVector.p_ne_zero p K h1
   · subst h
     exact CharP.charP_to_charZero _
 
@@ -94,7 +94,7 @@ namespace GlobalTheory.BSP
 theorem bezout_Ep_derivative : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K), ∃ (c : ℕ) (a b : Polynomial (Wq l bk.a)),
     a * bk.Ep + b * Polynomial.derivative bk.Ep = Polynomial.C ((l : Wq l bk.a) ^ c) := by
   intro l _ K bk
-  haveI : CharZero (Wq l bk.a) := GlobalTheory.charZero_wittVector_of_field l (Fq l bk.a)
+  have : CharZero (Wq l bk.a) := GlobalTheory.charZero_wittVector_of_field l (Fq l bk.a)
   have hirr : Irreducible (l : Wq l bk.a) := WittVector.irreducible l (k := Fq l bk.a)
   have hprime : Prime (l : Wq l bk.a) := hirr.prime
   have hP : (Ideal.span {(l : Wq l bk.a)}).IsPrime := (Ideal.span_singleton_prime hprime.ne_zero).2 hprime
@@ -111,7 +111,7 @@ theorem bezout_Ep_derivative : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk :
       exact hirr.not_isUnit (isUnit_of_dvd_unit h2 w.isUnit)
   have hirrE : Irreducible bk.Ep := hE.irreducible hP bk.monic.isPrimitive bk.deg_pos
   let F := FractionRing (Wq l bk.a)
-  haveI : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective (Wq l bk.a) F)
+  have : CharZero F := charZero_of_injective_algebraMap (IsFractionRing.injective (Wq l bk.a) F)
   have hirrF : Irreducible (bk.Ep.map (algebraMap (Wq l bk.a) F)) :=
     (bk.monic.irreducible_iff_irreducible_map_fraction_map).1 hirrE
   obtain ⟨a, b, hab⟩ := hirrF.separable

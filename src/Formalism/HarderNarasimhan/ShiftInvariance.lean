@@ -131,10 +131,10 @@ variable [FiniteDimensional ℝ E]
 
 theorem hnSum_isLat_mono {L N : Submodule R V} (hL : IsLat ρ L) (h : N ≤ L) : IsLat ρ N := by
   refine ⟨hL.1.mono h, ?_⟩
-  haveI := hL.2
+  have := hL.2
   exact DiscreteTopology.of_continuous_injective
     (f := fun y : zl ρ N => (⟨y.1, hnSum_zl_mono ρ h y.2⟩ : zl ρ L))
-    (continuous_subtype_val.subtype_mk _)
+    (continuous_subtypeVal.subtype_mk _)
     (by
       intro a b hab
       simp only [Subtype.mk.injEq] at hab

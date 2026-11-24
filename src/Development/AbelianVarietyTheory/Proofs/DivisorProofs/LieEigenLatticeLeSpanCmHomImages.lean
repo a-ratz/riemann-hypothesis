@@ -145,7 +145,7 @@ theorem phiP_independent : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hne : (FA true).eigLat (X.A true).t.act τ ≠ ⊥ := by
     intro h0
     have h1 := hrank (Sum.inl a, τ)
-    rw [if_pos (by simpa using hτ)] at h1
+    rw [ite_eq_left (by simpa using hτ)] at h1
     change latRank K (((FA true).eigLat (X.A true).t.act τ).map ((M (Sum.inl a)).restrictScalars (𝓞 K))) = 1 at h1
     rw [h0] at h1
     have hb : Submodule.span K (((⊥ : Submodule (𝓞 K) (Fin (FA true).P₀.g → K)).map
@@ -433,9 +433,9 @@ theorem lieLat_eq_span (hB : Out.PolBaseChangeSt) (hξ : IsPolFibre (RingOfInteg
   obtain ⟨e, he, hx⟩ := hloc i R G.A κ ζ
     (IsLocalization.map_units R (⟨r i, Submonoid.mem_powers _⟩ : Submonoid.powers (r i))) hκ.2.1 hζ.2.1 hζκ
   choose x hx hxM using hx
-  haveI := G.isAb.comm
-  haveI := G'.isAb.comm
-  haveI := G.smoothDim
+  have := G.isAb.comm
+  have := G'.isAb.comm
+  have := G.smoothDim
   obtain ⟨e', he', hee'⟩ := exists_isLieBasis_baseChange R R' θ G.A G'.A χ hχ.2.1
     (SmoothOfRelativeDimension.smooth G.g _) _ e he
   choose x' hx' using fun k => (existsUnique_isVecOver hζ'.2.1.1 (e' k)).exists
@@ -484,7 +484,7 @@ theorem eigLat_eq_span (hB : Out.PolBaseChangeSt) (hξ : IsPolFibre (RingOfInteg
   have hs : (F.eigLat act τ : Set (Fin F.P₀.g → K)) =
       {c | c ∈ F.lieLat ∧ ∀ a, (LinearMap.toMatrix' (r a)).mulVec c = algebraMap (𝓞 K) K (τ a) • c} := by
     ext c
-    simp only [SetLike.mem_coe, Set.mem_setOf_eq, (he τ c).1, LinearMap.toMatrix'_mulVec, algebraMap_smul]
+    simp only [SetLike.mem_coe, Set.mem_ofPred_eq, (he τ c).1, LinearMap.toMatrix'_mulVec, algebraMap_smul]
   ext c'
   rw [hs, _root_.GlobalTheory.CM.eigenLattice_baseChange K K' O j F.P₀.g F.lieLat _ _ c' (_root_.GlobalTheory.CM.LieLattice.lieLat_fg_and_span_eq_top K P F).1, ← hL, (he' _ c').1]
   refine and_congr_right fun hc' => forall_congr' fun a => ?_
@@ -654,15 +654,15 @@ namespace GlobalTheory
 
 theorem flat_surjective_spMap_ringOfIntegers (K K' : Type) [Field K] [NumberField K] [Field K'] [NumberField K'] (j : K →+* K') :
     Flat (spMap (RingOfIntegers.mapRingHom j)) ∧ Surjective (spMap (RingOfIntegers.mapRingHom j)) := by
-  letI : Algebra (𝓞 K) (𝓞 K') := (RingOfIntegers.mapRingHom j).toAlgebra
+  let : Algebra (𝓞 K) (𝓞 K') := (RingOfIntegers.mapRingHom j).toAlgebra
   have hinj : Function.Injective (algebraMap (𝓞 K) (𝓞 K')) := by
     intro a b h
     apply RingOfIntegers.coe_injective
     apply j.injective
     exact congrArg ((↑) : 𝓞 K' → K') h
-  haveI : FaithfulSMul (𝓞 K) (𝓞 K') := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : Module.Flat (𝓞 K) (𝓞 K') := inferInstance
-  haveI : Algebra.IsIntegral (𝓞 K) (𝓞 K') := by
+  have : FaithfulSMul (𝓞 K) (𝓞 K') := (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
+  have : Module.Flat (𝓞 K) (𝓞 K') := inferInstance
+  have : Algebra.IsIntegral (𝓞 K) (𝓞 K') := by
     constructor
     intro x
     exact IsIntegral.tower_top (R := ℤ) (Algebra.IsIntegral.isIntegral (R := ℤ) x)
@@ -693,7 +693,7 @@ theorem eq_pow_of_baseChange_eq_pow : ∀ (E : Type) [Field E] [NumberField E] [
       (P.t.PP.L.pull (fst P.t.G P.t.G).left) P.ab P.t.PP.isLB P.ample (LB.isLB_pull P.t.PP.isLB _)).2 n hn
   have hepi : ∀ {S : Scheme.{0}} {X Y : Over S} (u : X ⟶ Y), Flat u.left → Surjective u.left → Epi u := by
     intro S X Y u h1 h2
-    haveI : Epi ((Over.forget S).map u) := Flat.epi_of_flat_of_surjective u.left
+    have : Epi ((Over.forget S).map u) := Flat.epi_of_flat_of_surjective u.left
     exact (Over.forget S).epi_of_epi_map this
   obtain ⟨hAfin, hAfl, hAsu⟩ := hffs A
   obtain ⟨-, hA'fl, hA'su⟩ := hffs A'
@@ -709,15 +709,15 @@ theorem eq_pow_of_baseChange_eq_pow : ∀ (E : Type) [Field E] [NumberField E] [
     let prO : Over.mk (pullback.fst T.hom (spMap (RingOfIntegers.mapRingHom j)) ≫ T.hom) ⟶ T :=
       Over.homMk (pullback.fst T.hom (spMap (RingOfIntegers.mapRingHom j))) rfl
     have hE : Epi prO := by
-      haveI := hflatj
-      haveI := hsurj
+      have := hflatj
+      have := hsurj
       exact hepi prO (inferInstanceAs (Flat (pullback.fst _ _))) (inferInstanceAs (Surjective (pullback.fst _ _)))
     have hxn : x ^ n = 1 := by rw [← hx, MonObj.comp_pow, Category.comp_id]
     have hx' : eA.symm (prO ≫ x) ^ n = 1 := by
       apply eA.injective
       rw [map_pow, map_one, MulEquiv.apply_symm_apply, ← MonObj.comp_pow, hxn, MonObj.comp_one]
     have e2 : eA.symm (prO ≫ x) ≫ (f' ^ n) = 1 := by
-      haveI := hf'.isMonHom
+      have := hf'.isMonHom
       rw [MonObj.comp_pow, ← MonObj.pow_comp, hx', MonObj.one_comp]
     have e1 : eB (eA.symm (prO ≫ x) ≫ (f' ^ n)) = prO ≫ x ≫ g := by
       apply Over.OverMorphism.ext
@@ -725,23 +725,23 @@ theorem eq_pow_of_baseChange_eq_pow : ∀ (E : Type) [Field E] [NumberField E] [
       simp only [Over.comp_left, Category.assoc]
     have : prO ≫ (x ≫ g) = prO ≫ 1 := by rw [← e1, e2, map_one, MonObj.comp_one]
     exact (cancel_epi prO).1 this
-  haveI := hg.isMonHom
-  haveI := hpow A.t.G n
+  have := hg.isMonHom
+  have := hpow A.t.G n
   obtain ⟨⟨ψ, hψ, hψg⟩, hEpiA⟩ := exists_monHom_factor_of_flat_surjective _ A.t.G A.t.G B.t.G (𝟙 A.t.G ^ n) g
     (hpow _ n) hg.isMonHom hAfl hAsu hq hker
-  haveI := hψ
+  have := hψ
   have hψn : ψ ^ n = g := by rw [← hψg, MonObj.pow_comp, Category.id_comp]
   have hlin : Serre.IsLinearHom A.t.act B.t.act ψ := by
     refine ⟨hψ, fun c => ?_⟩
-    haveI := A.t.act.hom c
+    have := A.t.act.hom c
     rw [← cancel_epi (𝟙 A.t.G ^ n)]
     have hc : (𝟙 A.t.G ^ n) ≫ A.t.act.act c = A.t.act.act c ≫ (𝟙 A.t.G ^ n) := by
       rw [MonObj.pow_comp, MonObj.comp_pow, Category.id_comp, Category.comp_id]
     rw [reassoc_of% hc, hψg, reassoc_of% hψg]
     exact hg.comm c
   obtain ⟨w, hw, hwc⟩ := PairingFibre.exists_hom mA.cart mB.cart ψ
-  haveI := hw
-  haveI := hf'.isMonHom
+  have := hw
+  have := hf'.isMonHom
   have hφ : mA.φ ≫ A.t.G.hom = A'.t.G.hom ≫ spMap (RingOfIntegers.mapRingHom j) := mA.cart.1.w
   have hpw : ∀ m : ℕ, (w ^ (m + 1)).left ≫ mB.φ = mA.φ ≫ (ψ ^ (m + 1)).left := by
     intro m
@@ -757,7 +757,7 @@ theorem eq_pow_of_baseChange_eq_pow : ∀ (E : Type) [Field E] [NumberField E] [
     · rw [hpw m, hψn, hfg]
     · rw [Over.w, Over.w]
   have hwf : w = f' := by
-    haveI := hepi (𝟙 A'.t.G ^ n) hA'fl hA'su
+    have := hepi (𝟙 A'.t.G ^ n) hA'fl hA'su
     rw [← cancel_epi (𝟙 A'.t.G ^ n), MonObj.pow_comp, MonObj.pow_comp, Category.id_comp, Category.id_comp, hwn]
   refine ⟨ψ, hlin, hψn, ?_⟩
   rw [← hwf]
@@ -802,7 +802,7 @@ theorem exists_isTen_pair : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hE : HomExtDvr := GlobalTheory.homExtension_semiAbelian_dvr_unconditional
   have hC : CMCurve := GlobalTheory.cmCurve_closed
   have hPB : Out.PolBaseChangeSt := hL.polBaseChange
-  haveI : NeZero H.d := ⟨H.d_prime.ne_zero⟩
+  have : NeZero H.d := ⟨H.d_prime.ne_zero⟩
   obtain ⟨χ, hχ⟩ := GlobalTheory.exists_isKroneckerChar (d := H.d) H.d_prime.ne_zero (Or.inr (by have := H.d_mod; omega))
   obtain ⟨σ⟩ : Nonempty (K →+* ℂ) := inferInstance
   have hρ₀ : (σ (ρ : K)) ^ 2 = -(H.d : ℂ) := by
@@ -961,8 +961,8 @@ theorem exists_prod_act_comp_eq_one_of_pure : ∀ (E : Type) [Field E] [NumberFi
     simpa using congrArg FB e'
   have hcomm : ∀ i s z, Ψ i (GA s z) = GB s (Ψ i z) := by
     intro i s z
-    haveI := (hψ i).isMonHom
-    haveI := A.t.act.hom s
+    have := (hψ i).isMonHom
+    have := A.t.act.hom s
     have e := linear_lift_unique uA uB hA2 hB1 (A.t.act.act s ≫ ψ i) (F := Ψ i ∘ₗ GA s) (F' := GB s ∘ₗ Ψ i)
       (fun z => by rw [LinearMap.comp_apply, hΨ, hGA, Category.assoc])
       (fun z => by rw [LinearMap.comp_apply, hGB, hΨ, (hψ i).comm, Category.assoc])
@@ -972,7 +972,7 @@ theorem exists_prod_act_comp_eq_one_of_pure : ∀ (E : Type) [Field E] [NumberFi
   have := DB.fin
   have := DB.proj
   have hrkA : Module.finrank (𝓞 E) DA.La = 1 := by rw [DA.rank, hpA, hqA, hpqA]
-  haveI : Nontrivial DA.La := Module.nontrivial_of_finrank_pos (R := 𝓞 E) (by rw [hrkA]; exact one_pos)
+  have : Nontrivial DA.La := Module.nontrivial_of_finrank_pos (R := 𝓞 E) (by rw [hrkA]; exact one_pos)
   obtain ⟨a, ha⟩ := exists_ne (0 : DA.La)
   have hb : ∀ i, ∃ b : DB.La, Ψ i (FA (PeA a)) = FB (PeB b) := fun i => by
     have hm : Ψ i (FA (PeA a)) ∈ uB.Λ := hΨΛ i _ ((hFA _).2 ⟨a, rfl⟩)
@@ -1074,8 +1074,8 @@ theorem mem_of_mem_span_map :
     (N : Submodule (𝓞 K) (Fin n → K)) (w : Fin n → K),
     (fun i => j (w i)) ∈ Submodule.span (𝓞 K') ((fun (c : Fin n → K) i => j (c i)) '' (N : Set (Fin n → K))) → w ∈ N := by
   intro K K' _ _ _ _ j n N w hw
-  letI := j.toAlgebra
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 K') (nonZeroDivisors (𝓞 K))) K' :=
+  let := j.toAlgebra
+  have : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 K') (nonZeroDivisors (𝓞 K))) K' :=
     IsIntegralClosure.isLocalization (𝓞 K) K K' (𝓞 K')
   have hP : Algebra.IsPushout (𝓞 K) (𝓞 K') K K' :=
     Algebra.isPushout_of_isLocalization (nonZeroDivisors (𝓞 K)) K (𝓞 K') K'
@@ -1135,7 +1135,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {R R' :
 
 theorem exists_linear_over {f : A.t.G ⟶ B.t.G} (hf : Serre.IsLinearHom A.t.act B.t.act f) :
     ∃ f' : A'.t.G ⟶ B'.t.G, Serre.IsLinearHom A'.t.act B'.t.act f' ∧ f'.left ≫ mB.φ = mA.φ ≫ f.left := by
-  haveI := hf.isMonHom
+  have := hf.isMonHom
   obtain ⟨f', hm, e⟩ := PairingFibre.exists_hom mA.cart mB.cart f
   refine ⟨f', ⟨hm, fun c => ?_⟩, e⟩
   apply Over.OverMorphism.ext
@@ -1280,7 +1280,7 @@ theorem eigLat_le_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     rw [Fin.prod_univ_succ] at h
     simp only [Fin.cons_zero, Fin.cons_succ] at h
     have h₀ : x 0 ≠ 0 := fun h₀ => by
-      haveI := (hf' i).isMonHom
+      have := (hf' i).isMonHom
       rw [h₀, Serre.act_zero, MonObj.one_comp, _root_.one_mul] at h
       have hs := _root_.GlobalTheory.FlatCM.HomIndep.phiP_independent E H K ρ σ₁ p 0 X _ (rel_descend mA mB hj eφ _ h)
       exact hx (funext (Fin.cases h₀ fun a => congrFun hs a))

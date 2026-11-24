@@ -99,7 +99,7 @@ theorem eigA : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (g : G.C) (v : Infin
     (minpoly G.F g).natDegree = G.n → (minpoly G.F g).eval₂ v.embedding z = 0 →
     ∃ x : Fin G.n → ℂ, x ≠ 0 ∧ G.psi v g *ᵥ x = z • x := by
   intro p _ G g v z hdeg hz
-  letI alg : Algebra G.F ℂ := v.embedding.toAlgebra
+  let alg : Algebra G.F ℂ := v.embedding.toAlgebra
   have halg : ∀ a : G.F, algebraMap G.F ℂ a = v.embedding a := fun a => rfl
   let ψF : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) ℂ :=
     { G.psi v with
@@ -112,7 +112,7 @@ theorem eigA : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (g : G.C) (v : Infin
     Algebra.TensorProduct.lift (Algebra.ofId ℂ _) ψF (fun a _ => Algebra.commute_algebraMap_left a _)
   have hinj : Function.Injective Θ :=
     (IsSimpleRing.injective_ringHom_or_subsingleton_codomain Θ.toRingHom).resolve_right
-      (by haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩; exact not_subsingleton _)
+      (by have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩; exact not_subsingleton _)
   set x : ℂ ⊗[G.F] G.C := (1 : ℂ) ⊗ₜ[G.F] g with hx
   have hxi : IsIntegral ℂ x := IsIntegral.of_finite ℂ x
   have hge := natDegree_minpoly_le_tmul ℂ g hxi
@@ -167,7 +167,7 @@ theorem normSq_of_eigenvector {p : ℕ} [Fact p.Prime] (G : HTGroup p) (P : Pair
     have hv : v = v0 := by
       have hcard : Fintype.card {v : InfinitePlace G.F // sigPosH (G.gram_herm v) = 1} ≤ 1 := by
         have := ha; unfold HTGroup.a at this; omega
-      haveI := Fintype.card_le_one_iff_subsingleton.mp hcard
+      have := Fintype.card_le_one_iff_subsingleton.mp hcard
       exact congrArg Subtype.val (Subsingleton.elim (⟨v, h1⟩ : {v : InfinitePlace G.F // sigPosH (G.gram_herm v) = 1})
         ⟨v0, hv0⟩)
     subst hv

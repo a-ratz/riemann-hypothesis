@@ -61,7 +61,7 @@ theorem measure_image_cosets {V : Type} [AddCommGroup V] [MeasurableSpace V] [Me
       (Nat.card (QuotientAddGroup.mk '' S : Set (L ⧸ H.addSubgroupOf L)) : ENNReal) * μ H := by
   classical
   set H' := H.addSubgroupOf L with hH'
-  haveI : H'.FiniteIndex := ⟨hfin⟩
+  have : H'.FiniteIndex := ⟨hfin⟩
   set T : Set (L ⧸ H') := QuotientAddGroup.mk '' S with hT
   have hTfin : T.Finite := Set.toFinite T
   have hr : ∀ t ∈ T, ∃ x ∈ S, (QuotientAddGroup.mk x : L ⧸ H') = t := fun t ht => ht

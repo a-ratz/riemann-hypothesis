@@ -163,7 +163,7 @@ theorem self_adj (hL : LgFacts) (hU : Unimod) (hR : RCalc) (hS : WaveSpeed) (hE 
     (k : Mat n → (E.V →L[ℂ] E.V)) (hb : IsBump g T) (hk : IsKer μ E [] g k) :
     haveI := FiniteDimensional.complete ℂ E.V
     ∀ y ∈ GLs n, ContinuousLinearMap.adjoint (k y⁻¹) = k y := by
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨c, hc⟩ : ∃ c : Fin 1 → ℂ, c = fun _ => 1 := ⟨_, rfl⟩
   obtain ⟨K, hKk⟩ : ∃ K : Fin 1 → Mat n → (E.V →L[ℂ] E.V), K = fun _ => k := ⟨_, rfl⟩
   have hK : ∀ i : Fin 1, IsKer μ E ((fun _ => []) i) g (K i) := fun i => by rw [hKk]; exact hk
@@ -241,8 +241,8 @@ attribute [local instance] borelG
 
 theorem adjKer₀ : AdjKer0 := by
   intro n μ hμ M g T k hb hk
-  haveI : BorelSpace (G n) := ⟨rfl⟩
-  haveI := FiniteDimensional.complete ℂ M.V
+  have : BorelSpace (G n) := ⟨rfl⟩
+  have := FiniteDimensional.completeSpace ℂ M.V
   have h := SelfK.self_adj _root_.GlobalTheory.CompanionTheory.LengthGL.lgFacts _root_.GlobalTheory.CompanionTheory.GLUnimod.unimod _root_.GlobalTheory.CompanionTheory.RCalc.rcalc wave_existence_speed_multiplicity.2.1 wave_existence_speed_multiplicity.1 _root_.GlobalTheory.CompanionTheory.KerUniq.main n μ M g T k hb hk
   refine ⟨hk.1.congr h, ?_, fun y hy k₁ k₂ => ?_, fun u hu x hx => ?_⟩
   · obtain ⟨R, hR⟩ := hk.2.1

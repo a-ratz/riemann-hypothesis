@@ -164,7 +164,7 @@ theorem exists_exchange {E : Type} [Field E] {a d : ℕ} (γ : Matrix (Fin d) (F
     rw [h3]
     exact h2
   have hdet : (γ.submatrix s id).det ≠ 0 := by
-    have := Matrix.linearIndependent_rows_iff_isUnit.1 hli'
+    have := linearIndependent_row_iff_isUnit.1 hli'
     exact ((Matrix.isUnit_iff_isUnit_det _).1 this).ne_zero
   refine ⟨s, ?_⟩
   by_contra hcon
@@ -364,7 +364,7 @@ theorem tsum_schwartz_fullRank_le (E : Type) [Field E] (R : Subring E) (ι : Typ
     obtain ⟨j, hj1, hj2⟩ := exists_nat_pow_near (x := 1 + ‖y‖) (y := (2 : ℝ))
       (by linarith [norm_nonneg y]) one_lt_two
     refine le_trans ?_ (ENNReal.le_tsum j)
-    rw [if_pos]
+    rw [ite_eq_left]
     · rw [← ofReal_norm]
       refine ENNReal.ofReal_le_ofReal ?_
       show ‖φ y‖ ≤ Cφ / (2 ^ j) ^ (M + 1)
@@ -445,7 +445,7 @@ theorem fullRank_col (D : D7) (a n n₀ : ℕ) (hn₀ : 0 < n₀) (f : SchwartzM
     ∃ C : ℝ, ∀ B : D.what₂.Tau → Matrix (Fin a) (Fin a) ℂ, (∀ τ, ‖(B τ).det‖ = 1) →
       ∑' ξ : {ξ : Matrix (Fin a) (Fin n) D.host.E // ξ.rank = a ∧ ∀ i j, (n₀ : D.host.E) * ξ i j ∈ GlobalTheory.CompanionTheory.Ipf.Bdd.intR D},
         ‖f (fun τ => B τ * ξ.1.map (tauE D τ))‖ₑ ≤ ENNReal.ofReal C := by
-  haveI := GlobalTheory.CompanionTheory.Ipf.Bdd.nonempty_tau D
+  have := GlobalTheory.CompanionTheory.Ipf.Bdd.nonempty_tau D
   obtain ⟨e, he⟩ : ∃ e : (D.what₂.Tau → Fin n → Fin a → ℂ) ≃ₗ[ℝ] (D.what₂.Tau → Fin a → Fin n → ℂ),
       ∀ x τ i j, e x τ i j = x τ j i :=
     ⟨{ toFun := fun x τ i j => x τ j i
@@ -635,12 +635,12 @@ theorem gen_bound_col {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (n : ℕ) 
     by_cases h1 : x ∈ S₁
     · rw [Set.indicator_of_mem h1]
       by_cases h0 : g (fun i j => finPart D ((mm (mt V (k * a * y)) (rat x)) i j)) = 0
-      · have : F x = 0 := by simp only [hF, h0, mul_zero, enorm_zero]
+      · have : F x = 0 := by simp only [hF, h0, mul_zero, eNorm_zero]
         rw [this]; exact zero_le
       · have h2 : x ∈ S₂ := ⟨h1, hden x h0⟩
         rw [Set.indicator_of_mem h2]
         simp only [hF, hG]
-        rw [hinf x, enorm_mul]
+        rw [hinf x, eNorm_mul]
         gcongr
         rw [← ofReal_norm]
         exact ENNReal.ofReal_le_ofReal (hMg _)
@@ -803,14 +803,14 @@ theorem latBound : LatBound := by
     refine ⟨C₁ + C₂, ENNReal.add_lt_top.2 ⟨h₁, h₂⟩, fun h => ?_⟩
     calc _ ≤ ∑' x : {x : Matrix (Fin V.rank) (Fin n) D.host.E // x.rank = V.rank},
           (‖f (mm (mt V h⁻¹) (rat x.1))‖ₑ + ‖g (mm (mt V h⁻¹) (rat x.1))‖ₑ) :=
-          ENNReal.tsum_le_tsum fun x => enorm_add_le _ _
+          ENNReal.tsum_le_tsum fun x => eNorm_add_le _ _
       _ = _ := ENNReal.tsum_add
       _ ≤ _ := add_le_add (hf h) (hg h)
   | smul c f _ hf =>
     obtain ⟨C₁, h₁, hf⟩ := hf
-    refine ⟨‖c‖ₑ * C₁, ENNReal.mul_lt_top enorm_lt_top h₁, fun h => ?_⟩
+    refine ⟨‖c‖ₑ * C₁, ENNReal.mul_lt_top eNorm_lt_top h₁, fun h => ?_⟩
     calc _ = ∑' x : {x : Matrix (Fin V.rank) (Fin n) D.host.E // x.rank = V.rank}, ‖c‖ₑ * ‖f (mm (mt V h⁻¹) (rat x.1))‖ₑ :=
-          tsum_congr fun x => by simp [enorm_mul]
+          tsum_congr fun x => by simp [eNorm_mul]
       _ = _ := ENNReal.tsum_mul_left
       _ ≤ _ := by gcongr; exact hf h
 

@@ -118,7 +118,7 @@ theorem exists_isLatOf (d : ℕ) (δ : K) (ι : K →+* ℂ) (h2 : Module.finran
     exact ⟨by exact_mod_cast hs, by exact_mod_cast ht⟩
   refine ⟨⟨ι (B 0), ι (B 1), hind⟩, ?_⟩
   ext z
-  simp only [SetLike.mem_coe, PeriodPair.mem_lattice, Set.mem_image, FractionalIdeal.mem_coe, FractionalIdeal.mem_one_iff]
+  simp only [SetLike.mem_coe, PeriodPair.mem_lattice, Set.mem_image, FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_one_iff]
   constructor
   · rintro ⟨m, n, rfl⟩
     exact ⟨_, ⟨m * b 0 + n * b 1, rfl⟩, by simp [hB]⟩
@@ -319,7 +319,7 @@ namespace GlobalTheory.TwistedTransportProof
 
 theorem twistedTransport_of_latClaims (hP : PeriodEx) (hA : LatAlg) (hC : LatConj) : TwistedTransport := by
   intro K _ _ d δ ι h2 hd hδ
-  haveI : IsTotallyComplex K := GlobalTheory.Published.isTotallyComplex_of_sq_eq_neg hd hδ
+  have : IsTotallyComplex K := GlobalTheory.Published.isTotallyComplex_of_sq_eq_neg hd hδ
   obtain ⟨Λ₀, hΛ₀⟩ := GlobalTheory.LatVal.Model.exists_isLatOf d δ ι h2 hd hδ
   obtain ⟨Ω₀, hΩ₀⟩ := IsAlgClosed.exists_pow_nat_eq (latDisc Λ₀) (by norm_num : 0 < 12)
   have hΩ₀0 : Ω₀ ≠ 0 := by

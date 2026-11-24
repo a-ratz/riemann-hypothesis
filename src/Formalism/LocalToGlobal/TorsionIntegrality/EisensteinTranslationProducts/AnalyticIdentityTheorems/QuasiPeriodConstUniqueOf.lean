@@ -214,7 +214,7 @@ lemma exp_pi_int (k : ℤ) :
     Complex.exp ((Real.pi : ℂ) * Complex.I * ((k : ℝ) : ℂ)) = if Even k then 1 else -1 := by
   have : (Real.pi : ℂ) * Complex.I * ((k : ℝ) : ℂ) = (k : ℂ) * ((Real.pi : ℂ) * Complex.I) := by
     push_cast; ring
-  rw [this, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [this, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
   split_ifs with h
   · exact h.neg_one_zpow
   · exact (Int.not_even_iff_odd.mp h).neg_one_zpow

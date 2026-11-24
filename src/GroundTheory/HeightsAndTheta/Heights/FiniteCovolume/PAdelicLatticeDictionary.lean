@@ -266,7 +266,7 @@ theorem isClosed_coreStabilizer :
       ⋂ x ∈ (integralCore ι b : Set (ι → FinAdele K ⊗[K] E)),
         ({g | unitaryMat g *ᵥ x ∈ integralCore ι b} ∩ {g | unitaryMat g⁻¹ *ᵥ x ∈ integralCore ι b}) := by
     ext g
-    simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq]
     exact Iff.rfl
   rw [this]
   refine isClosed_biInter fun x _ => IsClosed.inter ?_ ?_
@@ -805,7 +805,7 @@ theorem relIndex_ne_zero_and_le_of_nsmul_mem {W : Type*} [AddCommGroup W]
     [Module.IsTorsionFree ℤ W] {L P : AddSubgroup W} {Q : Submodule ℤ W} [Module.Finite ℤ Q]
     (hLP : L ≤ P) (hPQ : P.toIntSubmodule ≤ Q) {n : ℕ} (hn : n ≠ 0) (hnL : ∀ y ∈ P, n • y ∈ L) :
     L.relIndex P ≠ 0 ∧ L.relIndex P ≤ n ^ finrank ℤ Q := by
-  haveI : Module.Finite ℤ P.toIntSubmodule :=
+  have : Module.Finite ℤ P.toIntSubmodule :=
     Module.Finite.of_injective (Submodule.inclusion hPQ) (Submodule.inclusion_injective hPQ)
   have key := AddSubgroup.relIndex_map_nsmul n P
   have hle : P.map (nsmulAddMonoidHom (α := W) n) ≤ L := by
@@ -1039,7 +1039,7 @@ theorem isDIntegral_dictLattice {d : ℤ} (hd0 : d ≠ 0)
     (g : unitaryPoints F E (gram h.toSesq v) (FinAdele F)) :
     IsDIntegral h ((m * d * d).natAbs ^ finrank ℤ (ι × κ → 𝓞 F)) (dictLattice b h v d g) := by
   classical
-  haveI : Module.IsTorsionFree ℤ W := isTorsionFree_int_of_module E W
+  have : Module.IsTorsionFree ℤ W := isTorsionFree_int_of_module E W
   have hdE : (d : E) ≠ 0 := by exact_mod_cast hd0
   have hdF : (d : F) ≠ 0 := by exact_mod_cast hd0
   have hsmulL : ∀ (c : E) (x y : W), h.toSesq (c • x) y = conj F E c * h.toSesq x y := by
@@ -1121,7 +1121,7 @@ theorem isDIntegral_dictLattice {d : ℤ} (hd0 : d ≠ 0)
     rw [mem_dictLattice, smul_comm, coordEquiv_smul]
     exact smul_mem_coreLattice b hx a
   ·
-    haveI : Module.Finite ℤ (dictLattice b h v d g).toIntSubmodule :=
+    have : Module.Finite ℤ (dictLattice b h v d g).toIntSubmodule :=
       Module.Finite.of_injective (Submodule.inclusion hLQ) (Submodule.inclusion_injective hLQ)
     have := Module.Finite.iff_fg.1 (inferInstance : Module.Finite ℤ (dictLattice b h v d g).toIntSubmodule)
     exact (Submodule.fg_iff_addSubgroup_fg _).1 this
@@ -1142,7 +1142,7 @@ theorem isDIntegral_dictLattice {d : ℤ} (hd0 : d ≠ 0)
         by_cases hij : i = j
         · subst hij
           simp [Algebra.TensorProduct.one_def]
-        · rw [if_neg hij, if_neg (Ne.symm hij), TensorProduct.tmul_zero]
+        · rw [ite_eq_right hij, ite_eq_right (Ne.symm hij), TensorProduct.tmul_zero]
       rw [e1, map_zsmul, e2, ← Int.cast_smul_eq_zsmul F]
       exact hn
     have hvi : v i = ((d * n : ℤ) : E)⁻¹ • ((d * n) • v i) := by

@@ -77,7 +77,7 @@ theorem mem_span_of_coord {O Kf V : Type} [CommRing O] [Field Kf] [Algebra O Kf]
     [Module O V] [IsScalarTower O Kf V] {I : Type} [Finite I] (x : Module.Basis I Kf V) (a : I → Kf)
     (ha : ∀ i, a i ≠ 0) (F : V) (hF : ∀ i, (a i)⁻¹ * x.coord i F ∈ Set.range (algebraMap O Kf)) :
     F ∈ Submodule.span O (Set.range fun i => a i • x i) := by
-  haveI := Fintype.ofFinite I
+  have := Fintype.ofFinite I
   rw [← x.sum_repr F]
   refine Submodule.sum_mem _ fun i _ => ?_
   obtain ⟨o, ho⟩ := hF i

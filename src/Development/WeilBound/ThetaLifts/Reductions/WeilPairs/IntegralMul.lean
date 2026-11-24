@@ -125,7 +125,7 @@ theorem integral_mul (ν : Measure (WOF F E nS nT)) (hν : ν.IsAddHaarMeasure) 
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := _root_.GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
   have := GlobalTheory.HeisThetaF.isTopologicalRing_AEF (F := F) (E := E)
   have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  letI : MeasurableSpace (Fin (nT * nS) → AF F ⊗[F] E) := borel _
+  let : MeasurableSpace (Fin (nT * nS) → AF F ⊗[F] E) := borel _
   have : BorelSpace (Fin (nT * nS) → AF F ⊗[F] E) := ⟨rfl⟩
   have c1 : Continuous (vecE F E nS nT) :=
     continuous_pi fun k => (continuous_apply (finProdFinEquiv.symm k).2).comp (continuous_apply (finProdFinEquiv.symm k).1)

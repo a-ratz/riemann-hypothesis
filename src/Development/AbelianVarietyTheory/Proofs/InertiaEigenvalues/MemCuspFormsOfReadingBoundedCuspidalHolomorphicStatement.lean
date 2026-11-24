@@ -71,8 +71,8 @@ theorem mem_cuspA_of_rdU_mem_holSub0 : ∀ (D : D7) (T : CoreJ D), LawsJ T → �
   intro D T h j hj w hw hn f hf hfh
   classical
   set S := T.cuspA j (wtA w) w.n with hS
-  haveI : FiniteDimensional T.Q.c.F S := h.toLawsM.cuspFD j hj (wtA w) w.n (dom_wtA w)
-  haveI : Module.Free T.Q.c.F S := Module.Free.of_divisionRing _ _
+  have : FiniteDimensional T.Q.c.F S := h.toLawsM.cuspFD j hj (wtA w) w.n (dom_wtA w)
+  have : Module.Free T.Q.c.F S := Module.Free.of_divisionRing _ _
   let b := Module.finBasis T.Q.c.F S
   let b' : Fin (Module.finrank T.Q.c.F S) → T.R j := fun i => (b i : T.R j)
   have hb'S : Submodule.span T.Q.c.F (Set.range b') ≤ S := by

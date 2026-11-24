@@ -67,6 +67,6 @@ theorem integrable_thetaKO : GlobalTheory.Published.WeilThetaConvergence → ∀
   · refine lt_of_le_of_lt (lintegral_mono fun q => ?_) hfin
     simp only [GlobalTheory.AutomorphicL2Unitary.descend, GlobalTheory.SiegelFormula.absTheta]
     rw [GlobalTheory.StdUnn.thetaKO_eq_tsum_sch D ψ A B χ ω hW ν 𝓨 hν f hf g]
-    exact enorm_tsum_le_tsum_enorm
+    exact eNorm_tsum_le_tsum_eNorm
 
 end GlobalTheory.WeilThetaInt

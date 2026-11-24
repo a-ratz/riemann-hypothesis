@@ -276,17 +276,17 @@ theorem barE_eq_piBarO {D : D7} (EX : ErrX D) (i : Fin 2) : barE D (EX.piG i) = 
 theorem cP_of_mem_small (D : D7) (Tn : ℕ+) (N p : ℕ) (hp : p ∈ D.host.small) :
     (depPageOf D Tn (GlobalTheory.RunDepth.vdOf D)).cP N p = ⌈(padicValNat p D.host.QS : ℝ) * (N : ℝ)⌉.toNat := by
   unfold DepPage.cP
-  rw [if_pos (show (depPageOf D Tn (GlobalTheory.RunDepth.vdOf D)).IsRam p from Or.inl hp)]
+  rw [ite_eq_left (show (depPageOf D Tn (GlobalTheory.RunDepth.vdOf D)).IsRam p from Or.inl hp)]
   show ⌈GlobalTheory.RunDepth.vdOf D p * _⌉.toNat = _
-  rw [GlobalTheory.RunDepth.vdOf, if_pos hp]
+  rw [GlobalTheory.RunDepth.vdOf, ite_eq_left hp]
 
 theorem cP_of_isRam_of_notMem_small (D : D7) (Tn : ℕ+) {j : ℕ} (w : WeightFamilies.Wt D j) (p : ℕ) (hp : p ∉ D.host.small)
     (hr : (depPageOf D Tn (GlobalTheory.RunDepth.vdOf D)).IsRam p) :
     (depPageOf D Tn (GlobalTheory.RunDepth.vdOf D)).cP (WeightAlgebra.DF w) p = Formalism.MainNotions.DIV.Cons.cHalf w := by
   unfold DepPage.cP
-  rw [if_pos hr, ceil_toNat]
+  rw [ite_eq_left hr, ceil_toNat]
   show ⌈GlobalTheory.RunDepth.vdOf D p * _⌉₊ = _
-  rw [GlobalTheory.RunDepth.vdOf, if_neg hp, Formalism.MainNotions.DIV.Cons.cHalf]
+  rw [GlobalTheory.RunDepth.vdOf, ite_eq_right hp, Formalism.MainNotions.DIV.Cons.cHalf]
   congr 1; ring
 
 theorem depth_page_first_zeta_factor_eq_prime_power (D : D7) (Tn : ℕ+) {j : ℕ} (wL wF : WeightFamilies.Wt D j) :
@@ -315,7 +315,7 @@ theorem sigAt_eq_sigRec : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice
   let Tn : ℕ+ := ⟨Tp.TO, GlobalTheory.RunDepth.TO_pos Tp⟩
   have hnn : nnKAt (H := T.Q.H) (LL := K) (GlobalTheory.RunDepth.depOf T.toCore EX Tp hK) j =
       ψ (nnW (recB h.toLawsCore) hinj EX (kaR Tp hK j)) := by
-    letI : StarRing (𝓞 D.host.E) := starRingOfComm
+    let : StarRing (𝓞 D.host.E) := starRingOfComm
     refine (nnKAt_depDataOf T.toCore EX _ _ _ _ _ _ _ hM hE j).trans ?_
     refine Eq.trans ?_ (map_prod ψ _ _).symm
     refine Finset.prod_congr rfl fun i _ => ?_
@@ -412,9 +412,9 @@ theorem exists_isRec : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : T
     (hinj := hinj) (EX := EX) (p := ownAt D) (wL := fun _ i => lR Tp hK ((i : ℕ) + 1))
     (wF := fun _ i => fR Tp hK ((i : ℕ) + 1)) (nT := Tp.TO) (ℓ := r.lev) (ph := fun _ => 1) (c := c) (mirIncl R)
     (blankObj D _ (Mir R) c fun i => R.nW i) ok.action ρ (fun _ i => hρ i)
-  letI st : StarRing (𝓞 D.host.E) := J.Q.H.starRing
-  letI := hostAlg D
-  letI : ∀ s : GlobalTheory.RealIndexBound.RunData J, Algebra s.full.J.Q.c.F D.what₂.LL := fun _ => inst
+  let st : StarRing (𝓞 D.host.E) := J.Q.H.starRing
+  let := hostAlg D
+  let : ∀ s : GlobalTheory.RealIndexBound.RunData J, Algebra s.full.J.Q.c.F D.what₂.LL := fun _ => inst
   have hφ : ∀ x : 𝓞 D.host.E, algebraMap (𝓞 D.host.E) D.what₂.LL x =
       algebraMap J.Q.c.F D.what₂.LL ((iE D hinj (recB hc) x : 𝓞 J.Q.c.F) : J.Q.c.F) := fun x => by
     refine Eq.trans ?_ (fw.alg_eq _).symm
@@ -422,7 +422,7 @@ theorem exists_isRec : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : T
     exact (J.Q.eO.apply_symm_apply _).symm
   have hσ : ∀ v (i : Fin D.R.m), O.σ v i =
       sigAt (Dw := J.Q.Dw ((i : ℕ) + 1)) (H := J.Q.H) (LL := D.what₂.LL) (depOf J.toCore EX Tp hK) ((i : ℕ) + 1) := fun v i => by
-    letI : Algebra (recB (ok.laws v).p.toLawsCore).KO D.what₂.LL := inst
+    let : Algebra (recB (ok.laws v).p.toLawsCore).KO D.what₂.LL := inst
     refine (ht v i).1.toFormTieK.σ_eq.trans ?_
     rw [hκ i]
     exact (GlobalTheory.ScalarOfRun.sigAt_eq_sigRec D L Pm Tp hK (r.used v).full.toTop (ok.laws v).p hinj EX _ (inR_succ i) hE

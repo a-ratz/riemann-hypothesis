@@ -129,13 +129,13 @@ theorem tau_pW (c : Fin k) : tau k r (pW k r c) = pW k r c := by
   apply Fin.ext
   show (if (pW k r c).val < r ∨ r + k < (pW k r c).val then 2 * r + k - (pW k r c).val
     else (pW k r c).val) = (pW k r c).val
-  rw [if_neg (by rw [hv]; omega)]
+  rw [ite_eq_right (by rw [hv]; omega)]
 
 theorem sgn_pW (c : Fin k) : sgn k r (pW k r c) = 1 := by
   have := c.isLt
   have hv : (pW k r c).val = r + c.val := rfl
   show (if (pW k r c).val = r + k then (-1 : ℂ) else 1) = 1
-  rw [if_neg (by rw [hv]; omega)]
+  rw [ite_eq_right (by rw [hv]; omega)]
 
 private lemma hpk_apply_of_outer_index (i j : Fin (2 * r + k + 1)) :
     Hpk k r i j = if j = tau k r i then sgn k r i else 0 := by
@@ -147,9 +147,9 @@ private lemma hpk_apply_of_outer_index (i j : Fin (2 * r + k + 1)) :
 theorem hpk_mul_apply' {X : Type*} (A : Matrix (Fin (2 * r + k + 1)) X ℂ) (i : Fin (2 * r + k + 1)) (j : X) :
     (Hpk k r * A) i j = sgn k r i * A (tau k r i) j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (tau k r i)]
-  · rw [hpk_apply_of_outer_index, if_pos rfl]
+  · rw [hpk_apply_of_outer_index, ite_eq_left rfl]
   · intro b _ hb
-    rw [hpk_apply_of_outer_index, if_neg hb, zero_mul]
+    rw [hpk_apply_of_outer_index, ite_eq_right hb, zero_mul]
   · intro h
     exact absurd (Finset.mem_univ _) h
 
@@ -173,7 +173,7 @@ theorem EwT_bvec (j : Fin (2 * r + k + 1)) (hj : ∀ c, j ≠ pW k r c) : (Ew k 
   intro i _
   split_ifs with h
   · subst h
-    rw [Pi.single_apply, if_neg (hj c).symm, mul_zero]
+    rw [Pi.single_apply, ite_eq_right (hj c).symm, mul_zero]
   · rw [zero_mul]
 
 theorem iota_fix (A : Matrix (Fin k) (Fin k) ℂ) (j : Fin (2 * r + k + 1)) (hj : ∀ c, j ≠ pW k r c) :
@@ -231,12 +231,12 @@ theorem wEmbeddingConj_apply_wPositions (M : Matrix (Fin k) (Fin k) ℂ) (c d : 
 
 theorem EMET_out_row (M : Matrix (Fin k) (Fin k) ℂ) (i j : Fin (2 * r + k + 1)) (hi : ∀ c, i ≠ pW k r c) :
     (Ew k r * M * (Ew k r)ᵀ) i j = 0 := by
-  have h0 : ∀ x, Ew k r i x = 0 := fun x => if_neg (hi x)
+  have h0 : ∀ x, Ew k r i x = 0 := fun x => ite_eq_right (hi x)
   simp [Matrix.mul_apply, h0]
 
 theorem EMET_out_col (M : Matrix (Fin k) (Fin k) ℂ) (i j : Fin (2 * r + k + 1)) (hj : ∀ c, j ≠ pW k r c) :
     (Ew k r * M * (Ew k r)ᵀ) i j = 0 := by
-  have h0 : ∀ x, Ew k r j x = 0 := fun x => if_neg (hj x)
+  have h0 : ∀ x, Ew k r j x = 0 := fun x => ite_eq_right (hj x)
   simp [Matrix.mul_apply, Matrix.transpose_apply, h0]
 
 theorem nonW (i : Fin (2 * r + k + 1)) (hi : ∀ c, i ≠ pW k r c) :
@@ -292,10 +292,10 @@ theorem iota_surj {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (
   have hEEcol : ∀ l d, (Ew k r * (Ew k r)ᵀ) l (pW k r d) = if l = pW k r d then 1 else 0 := by
     intro l d
     rw [Matrix.mul_apply, Finset.sum_eq_single d]
-    · rw [Matrix.transpose_apply, Ew_pW, if_pos rfl, mul_one]
+    · rw [Matrix.transpose_apply, Ew_pW, ite_eq_left rfl, mul_one]
       rfl
     · intro b _ hb
-      rw [Matrix.transpose_apply, Ew_pW, if_neg (Ne.symm hb), mul_zero]
+      rw [Matrix.transpose_apply, Ew_pW, ite_eq_right (Ne.symm hb), mul_zero]
     · intro h
       exact absurd (Finset.mem_univ _) h
   have hgQ : g * (1 - Ew k r * (Ew k r)ᵀ) = 1 - Ew k r * (Ew k r)ᵀ := by
@@ -313,9 +313,9 @@ theorem iota_surj {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (
       obtain ⟨d, rfl⟩ := hj
       have hz : (g * (Ew k r * (Ew k r)ᵀ)) i (pW k r d) = g i (pW k r d) := by
         rw [Matrix.mul_apply, Finset.sum_eq_single (pW k r d)]
-        · rw [hEEcol, if_pos rfl, mul_one]
+        · rw [hEEcol, ite_eq_left rfl, mul_one]
         · intro b _ hb
-          rw [hEEcol, if_neg hb, mul_zero]
+          rw [hEEcol, ite_eq_right hb, mul_zero]
         · intro h
           exact absurd (Finset.mem_univ _) h
       simp only [Matrix.mul_sub, Matrix.mul_one, Matrix.sub_apply]
@@ -472,10 +472,10 @@ theorem lieOf_S : lieOf (UWset k r (wLastV k r)) = cE k r '' (skewH k : Set (Mat
       intro c d
       rw [hY, Matrix.mul_apply, Finset.sum_eq_single (pW k r d)]
       · rw [Matrix.mul_apply, Finset.sum_eq_single (pW k r c)]
-        · rw [Matrix.transpose_apply, Ew_pW, if_pos rfl, one_mul, Ew_pW, if_pos rfl, mul_one]
-        · intro b _ hb; rw [Matrix.transpose_apply, Ew, if_neg hb, zero_mul]
+        · rw [Matrix.transpose_apply, Ew_pW, ite_eq_left rfl, one_mul, Ew_pW, ite_eq_left rfl, mul_one]
+        · intro b _ hb; rw [Matrix.transpose_apply, Ew, ite_eq_right hb, zero_mul]
         · intro h; exact absurd (Finset.mem_univ _) h
-      · intro b _ hb; rw [Ew, if_neg hb, mul_zero]
+      · intro b _ hb; rw [Ew, ite_eq_right hb, mul_zero]
       · intro h; exact absurd (Finset.mem_univ _) h
     have hXY : cE k r Y = X := by
       ext i j
@@ -534,7 +534,7 @@ theorem cE_pow (Y : Matrix (Fin k) (Fin k) ℂ) (m : ℕ) :
   induction m with
   | zero => simp [cE_apply]
   | succ m ih =>
-    rw [pow_succ, ih, cE_apply, if_neg (Nat.succ_ne_zero m), add_zero]
+    rw [pow_succ, ih, cE_apply, ite_eq_right (Nat.succ_ne_zero m), add_zero]
     have h := EwT_Ew (k := k) (r := r)
     have h1 : ∀ X : Matrix (Fin k) (Fin (2 * r + k + 1)) ℂ, (Ew k r)ᵀ * (Ew k r * X) = X := fun X => by
       rw [← Matrix.mul_assoc, h, Matrix.one_mul]
@@ -546,12 +546,12 @@ theorem cE_pow (Y : Matrix (Fin k) (Fin k) ℂ) (m : ℕ) :
     · simp only [add_zero, pow_succ, Matrix.mul_assoc, h1]
 
 theorem exp_cE (Y : Matrix (Fin k) (Fin k) ℂ) : NormedSpace.exp (cE k r Y) = iota (r := r) (NormedSpace.exp Y) := by
-  letI : SeminormedRing (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpSemiNormedRing
-  letI : NormedRing (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : SeminormedRing (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpSemiNormedRing
-  letI : NormedRing (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : SeminormedRing (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpSemiNormedRing
+  let : NormedRing (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin k) (Fin k) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : SeminormedRing (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpSemiNormedRing
+  let : NormedRing (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := Matrix.linftyOpNormedAlgebra
   let L0 : Matrix (Fin k) (Fin k) ℂ →ₗ[ℂ] Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ :=
     { toFun := fun M => Ew k r * M * (Ew k r)ᵀ
       map_add' := fun M N => by rw [Matrix.mul_add, Matrix.add_mul]
@@ -569,12 +569,12 @@ theorem exp_cE (Y : Matrix (Fin k) (Fin k) ℂ) : NormedSpace.exp (cE k r Y) = i
   have hs2 : Summable fun m : ℕ => ((m.factorial : ℂ)⁻¹) • (if m = 0 then Q else 0) := by
     refine summable_of_ne_finset_zero (s := {0}) fun m hm => ?_
     rw [Finset.mem_singleton] at hm
-    rw [if_neg hm, smul_zero]
+    rw [ite_eq_right hm, smul_zero]
   rw [hs1.tsum_add hs2]
   have t2 : ∑' m : ℕ, ((m.factorial : ℂ)⁻¹) • (if m = 0 then Q else 0) = Q := by
     rw [tsum_eq_single 0]
     · simp
-    · intro m hm; rw [if_neg hm, smul_zero]
+    · intro m hm; rw [ite_eq_right hm, smul_zero]
   have t1 : ∑' m : ℕ, ((m.factorial : ℂ)⁻¹) • (Ew k r * Y ^ m * (Ew k r)ᵀ) =
       Ew k r * (∑' m : ℕ, ((m.factorial : ℂ)⁻¹) • Y ^ m) * (Ew k r)ᵀ := by
     rw [← hL, L.map_tsum hs]
@@ -622,7 +622,7 @@ theorem cont_phi : Continuous (phi k r) := by
   show Continuous fun g : ↥(Formalism.REAL.UJ (εT k)) =>
     (1 - Ew k r * (Ew k r)ᵀ + Ew k r * uMat g * (Ew k r)ᵀ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)
   exact continuous_const.add ((continuous_const.matrix_mul
-    (Units.continuous_val.comp continuous_subtype_val)).matrix_mul continuous_const)
+    (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul continuous_const)
 
 theorem phi_surj {s : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hs : s ∈ UWset k r (wLastV k r)) :
     ∃ g : ↥(Formalism.REAL.UJ (εT k)), Matrix.of (phi k r g) = s := by
@@ -663,7 +663,7 @@ theorem mem_gLie (Y0 : Matrix (Fin k) (Fin k) ℂ) (hY : Y0 ∈ skewH k) : RLk Y
 theorem phi_preimage (ρ : ℝ) :
     phi k r ⁻¹' expBall (k := k) (r := r) (SW k r) ρ = Gauge.expSet (εT k) (Metric.ball 0 ρ) := by
   ext g
-  simp only [Set.mem_preimage, expBall, Set.mem_image, Gauge.expSet, Metric.mem_ball, dist_zero_right, Set.mem_setOf_eq]
+  simp only [Set.mem_preimage, expBall, Set.mem_image, Gauge.expSet, Metric.mem_ball, dist_zero_right, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨Y, hY, hYg⟩
     have hY2 : (Y : EuclideanSpace ℝ _) ∈ (skewH k).map (Formalism.MainNotions.BridgeCSB.RL ∘ₗ cE k r) := by rw [← lieE_S]; exact Y.2
@@ -770,7 +770,7 @@ theorem gauge_measure_is_haar : IsHaarOn (SW k r) (nu0 k r) := by
         ((⋂ a : Fin r, ({g | g *ᵥ bvec (eI k r a) = bvec (eI k r a)} ∩
           {g | g *ᵥ bvec (esI k r a) = bvec (esI k r a)})) ∩ {g | g *ᵥ wLastV k r = wLastV k r}) := by
       ext g
-      simp only [SW, UWset, UH, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SW, UWset, UH, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [e]
     exact (isClosed_eq c1 continuous_const).inter ((isClosed_iInter fun a =>
       (isClosed_eq (c2 _) continuous_const).inter (isClosed_eq (c2 _) continuous_const)).inter
@@ -778,7 +778,7 @@ theorem gauge_measure_is_haar : IsHaarOn (SW k r) (nu0 k r) := by
   have hmeas : MeasurableSet {x : Mt k r | Matrix.of x ∉ SW k r} := by
     have : IsOpen {x : Mt k r | Matrix.of x ∉ SW k r} := hclosed.isOpen_compl
     exact this.measurableSet
-  haveI : IsFiniteMeasure (nu0 k r) := by
+  have : IsFiniteMeasure (nu0 k r) := by
     unfold nu0
     infer_instance
   have hpos : 0 < ENNReal.ofReal (Formalism.MainNotions.S.UnitaryVolumeMass.volU k) := ENNReal.ofReal_pos.mpr (volU_pos k)
@@ -786,12 +786,12 @@ theorem gauge_measure_is_haar : IsHaarOn (SW k r) (nu0 k r) := by
   · intro h
     have hu := gauge_measure_univ (k := k) (r := r)
     rw [h] at hu
-    simp only [Measure.coe_zero, Pi.zero_apply] at hu
+    simp only [FunLike.coe_zero, Pi.zero_apply] at hu
     exact hpos.ne' hu.symm
   · rw [nu0, Measure.map_apply cont_phi.measurable hmeas]
     convert measure_empty (μ := Gauge.muGauge (εT k))
     ext g
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_not]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false, not_not]
     exact phi_mem g
   · intro s hs
     obtain ⟨g0, rfl⟩ := phi_surj hs
@@ -821,7 +821,7 @@ theorem gauge_measure_ball_ratio : Tendsto (fun ρ : ℝ => (nu0 k r (expBall (k
       (Gauge.gaugeU (εT k))⁻¹ * Gauge.ratioAt (εT k) ρ := by
     intro ρ hρ
     rw [nu0, Measure.map_apply cont_phi.measurable (Formalism.L2.SG.Pf.BH.measurableSet_expBall _ ρ hρ),
-      phi_preimage, vol_ball_eq, Gauge.muGauge, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul,
+      phi_preimage, vol_ball_eq, Gauge.muGauge, smul_apply, smul_eq_mul, ENNReal.toReal_mul,
       ENNReal.toReal_ofReal (inv_nonneg.mpr hpos.le), Gauge.ratioAt, mul_div_assoc]
   have hlim : Tendsto (fun ρ => (Gauge.gaugeU (εT k))⁻¹ * Gauge.ratioAt (εT k) ρ) (𝓝[>] 0)
       (𝓝 ((Gauge.gaugeU (εT k))⁻¹ * Gauge.gaugeU (εT k))) := tendsto_const_nhds.mul hdens

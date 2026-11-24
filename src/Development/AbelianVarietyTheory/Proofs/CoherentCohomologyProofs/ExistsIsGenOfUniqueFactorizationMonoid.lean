@@ -600,7 +600,7 @@ theorem subsingleton_pic_iff : Subsingleton (CommRing.Pic R) ↔
   refine ⟨fun _ _ => exists_isGen_of_subsingleton_pic, fun h =>
     CommRing.Pic.subsingleton_iff.2 fun N _ _ _ => ?_⟩
   obtain ⟨L, hL, ⟨ψ⟩⟩ := exists_sec_linearEquiv R N
-  haveI := (exists_isGen_iff_free hL).1 (h L hL)
+  have := (exists_isGen_iff_free hL).1 (h L hL)
   exact .of_equiv ψ
 
 theorem exists_isGen_of_isLocalRing [IsLocalRing R] (hL : L.IsLB) : ∃ t : LB.Gen L, t.IsGen :=

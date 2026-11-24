@@ -97,7 +97,7 @@ theorem exists_isClosedEmbedding_of_affine [T1Space C] {A : CommRingCat.{0}} (q 
     [LocallyOfFiniteType q] : ∃ (n : ℕ) (c : Pts q → (Fin n → C)), IsClosedEmbedding c := by
   obtain ⟨φ, rfl⟩ := Spec.map_surjective q
   have hφ : φ.hom.FiniteType := (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1 inferInstance
-  letI := φ.hom.toAlgebra
+  let := φ.hom.toAlgebra
   have : Algebra.FiniteType C A := hφ
   obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 this
   refine ⟨n, _, isClosedEmbedding_coord (A := A) (id_eq_spMap_algebraMap C) (fun i => f (MvPolynomial.X i)) ?_⟩
@@ -212,7 +212,7 @@ theorem continuous_projPt (c : R →+* C) : Continuous (projPt (N := N) c) := by
   have hset : {b : Unimodular C N | ⊤ ≤ (projPt c b).1 ⁻¹ᵁ chart R N i} = {b | IsUnit (b.1 i)} :=
     Set.ext fun b => le_pt_preimage_chart_iff c b.1 b.2 i
   have hcont : ∀ j, Continuous fun b : Unimodular C N => b.1 j := fun j =>
-    (continuous_apply j).comp continuous_subtype_val
+    (continuous_apply j).comp continuous_subtypeVal
   rw [hset]
   refine ⟨(IsOpenUnits.isOpenEmbedding_unitsVal (M := C)).isOpen_range.preimage (hcont i), ?_⟩
   rintro _ ⟨j, rfl⟩
@@ -232,7 +232,7 @@ def supSpherePt (c : R →+* F) (N : ℕ) (v : Metric.sphere (0 : Fin (N + 1) �
   projPt c ⟨v.1, span_range_eq_top_iff_ne_zero.2 (ne_zero_of_mem_unit_sphere v)⟩
 
 theorem continuous_supSpherePt (c : R →+* F) : Continuous (supSpherePt c N) :=
-  (continuous_projPt c).comp (continuous_subtype_val.subtype_mk _)
+  (continuous_projPt c).comp (continuous_subtypeVal.subtype_mk _)
 
 theorem supSpherePt_surjective (c : R →+* F) : Function.Surjective (supSpherePt c N) := by
   intro x

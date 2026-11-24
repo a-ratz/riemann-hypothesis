@@ -119,7 +119,7 @@ theorem length_le {C S : Type} [AddCommGroup C] [Module O C] [Module ℤ_[l] C] 
     (h : ∀ x, Ψ x = 0 → x ∈ B) :
     Module.length O C ≤ Module.length O B +
       Module.length O (O ⧸ Ideal.span {(l : O)}) * Module.length ℤ_[l] S := by
-  haveI : IsLocalHom (algebraMap ℤ_[l] O) := inferInstance
+  have : IsLocalHom (algebraMap ℤ_[l] O) := inferInstance
   rw [Module.length_eq_add_of_exact B.subtype B.mkQ B.subtype_injective B.mkQ_surjective
     (LinearMap.exact_subtype_mkQ B)]
   refine add_le_add le_rfl ?_
@@ -138,7 +138,7 @@ theorem length_le {C S : Type} [AddCommGroup C] [Module O C] [Module ℤ_[l] C] 
   have h3 := h1.trans h2
   rw [← length_quot O, IsLocalRing.length_restrictScalars ℤ_[l] O (C ⧸ B),
     IsLocalRing.length_restrictScalars ℤ_[l] O (O ⧸ Ideal.span {(l : O)}), mul_right_comm] at h3
-  haveI : Module.Finite (IsLocalRing.ResidueField ℤ_[l]) (IsLocalRing.ResidueField O) := inferInstance
+  have : Module.Finite (IsLocalRing.ResidueField ℤ_[l]) (IsLocalRing.ResidueField O) := inferInstance
   refine (ENat.mul_le_mul_right_iff ?_ ?_).1 h3
   · exact Module.length_pos.ne'
   · exact Module.length_ne_top
@@ -149,8 +149,8 @@ theorem exists_coord : ∃ p : KOG O 1 →+ (Fin (finrank ℤ_[l] O) → QZ l), 
   have hi : Function.Injective (algebraMap ℤ_[l] K) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] O K]
     exact (IsFractionRing.injective O K).comp (algebraMap_inj O)
-  letI : Algebra ℚ_[l] K := (IsFractionRing.lift (K := ℚ_[l]) hi).toAlgebra
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] K := IsScalarTower.of_algebraMap_eq fun z =>
+  let : Algebra ℚ_[l] K := (IsFractionRing.lift (K := ℚ_[l]) hi).toAlgebra
+  have : IsScalarTower ℤ_[l] ℚ_[l] K := IsScalarTower.of_algebraMap_eq fun z =>
     (IsFractionRing.lift_algebraMap hi z).symm
   let b := Module.finBasis ℤ_[l] O
   let B := b.localizationLocalization ℚ_[l] (nonZeroDivisors ℤ_[l]) K
@@ -275,7 +275,7 @@ theorem LocTriv.vanish {f : G F Ω → QZ l} (hf : LocTriv Dd e A f) (n : G F Ω
         have := hf.1.2 a⁻¹ a
         rw [inv_mul_cancel, h1, ha.2, map_zero, add_zero] at this
         exact this.symm⟩ }
-  haveI hN : N.Normal := ⟨fun a ha g => by
+  have hN : N.Normal := ⟨fun a ha g => by
     have hc := (normal_NS (Ω := Ω) (Dd.S : Set (HeightOneSpectrum (𝓞 F)))).conj_mem a ha.1 g
     refine ⟨hc, ?_⟩
     rw [coc_conj _ f hf.1.2 g a 0 (by rw [ha.2, map_zero, sub_zero]), htriv _ hc, sub_self]⟩

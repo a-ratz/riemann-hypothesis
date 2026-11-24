@@ -138,8 +138,8 @@ theorem RiemLat.form_sq_le (R : RiemLat E g Λ) (x y : Λ) :
   apply GlobalTheory.CompanionTheory.Ar.Cusp.RiemLat.integral_form_sq_le_mul_normSq <;> assumption
 
 theorem RiemLat.finite_normSq_le (R : RiemLat E g Λ) (c : ℝ) : {x | R.normSq x ≤ c}.Finite := by
-  haveI := R.free
-  haveI := R.fin
+  have := R.free
+  have := R.fin
   let b := Module.Free.chooseBasis ℤ Λ
   let ι := Module.Free.ChooseBasisIndex ℤ Λ
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ i : ι, c * R.normSq (b i) ≤ (N : ℝ) ^ 2 := by
@@ -253,7 +253,7 @@ theorem RiemLat.riemann_rel (R : RiemLat E g Λ) {ι : Type} [Fintype ι] [Decid
 theorem continuousOn_normSq_of_holomorphic_family {n : ℕ} {U : Set (Fin n → ℂ)} {R : (Fin n → ℂ) → RiemLat E g Λ}
     (hR : IsHolFam U R) (x : Λ) {t₀ : Fin n → ℂ} (ht₀ : t₀ ∈ U) {ι : Type} [Fintype ι] [DecidableEq ι]
     (b : Module.Basis ι ℤ Λ) : ContinuousOn (fun t => (R t).normSq x) U := by
-  haveI := (R t₀).fin
+  have := (R t₀).fin
   obtain ⟨Y, hY⟩ := (R t₀).left_inv_gram b
   have hc : Fintype.card ι = Fintype.card (Fin g ⊕ Fin g) := by
     have := (R t₀).rank
@@ -261,7 +261,7 @@ theorem continuousOn_normSq_of_holomorphic_family {n : ℕ} {U : Set (Fin n → 
     simp only [Fintype.card_sum, Fintype.card_fin]
     omega
   have hPc : ∀ y, Continuous fun t : U => (R t).P y := fun y =>
-    continuousOn_iff_continuous_restrict.1 (hR.2 y).continuousOn
+    continuousOn_iff_continuous_domRestrict.1 (hR.2 y).continuousOn
   have hrel : ∀ t : U, ((R t).perMat b * Y * ((R t).perMat b)ᴴ) * (R t).Hmᵀ =
       (-2 * Complex.I) • (1 : Matrix (Fin g) (Fin g) ℂ) := by
     intro t
@@ -296,7 +296,7 @@ theorem continuousOn_normSq_of_holomorphic_family {n : ℕ} {U : Set (Fin n → 
     have : (fun t : U => (R t).Hm) = fun t => (c • (N t)⁻¹)ᵀ := funext hinv
     rw [this]
     exact (hNi.const_smul c).matrix_transpose
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   change Continuous fun t : U => ((R t).P x ⬝ᵥ (R t).Hm *ᵥ star ((R t).P x)).re
   exact Complex.continuous_re.comp ((hPc x).dotProduct (hHc.matrix_mulVec (hPc x).star))
 
@@ -304,8 +304,8 @@ theorem continuousOn_normSq {n : ℕ} {U : Set (Fin n → ℂ)} {R : (Fin n → 
     (hR : IsHolFam U R) (x : Λ) : ContinuousOn (fun t => (R t).normSq x) U := by
   rcases U.eq_empty_or_nonempty with rfl | ⟨t₀, ht₀⟩
   · simp
-  haveI := (R t₀).free
-  haveI := (R t₀).fin
+  have := (R t₀).free
+  have := (R t₀).fin
   classical
   exact continuousOn_normSq_of_holomorphic_family hR x ht₀ (Module.Free.chooseBasis ℤ Λ)
 
@@ -341,19 +341,19 @@ theorem exists_isFundSet : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   classical
   have hXo : IsOpen (ballDom F.q) := isOpen_ballDom F.q
   have hXm : MeasurableSet (ballDom F.q) := hXo.measurableSet
-  haveI := (F.R (Δ.π 1)).free
-  haveI := (F.R (Δ.π 1)).fin
+  have := (F.R (Δ.π 1)).free
+  have := (F.R (Δ.π 1)).fin
   let b := Module.Free.chooseBasis ℤ Λ
   let u : (Fin n → ℂ) → ℝ := fun t => ∑ i, (F.R t).normSq (b i)
   have huc : ContinuousOn u (ballDom F.q) :=
     continuousOn_finsetSum _ fun i _ => continuousOn_normSq F.hol (b i)
-  haveI : Countable Λ := b.repr.toEquiv.injective.countable
+  have : Countable Λ := b.repr.toEquiv.injective.countable
   have hext : ∀ γ γ' : Λ ≃ₗ[𝓞 E] Λ, (∀ i, γ (b i) = γ' (b i)) → γ = γ' := by
     intro γ γ' h
     have h1 := b.ext (f₁ := (γ : Λ →ₗ[𝓞 E] Λ).toAddMonoidHom.toIntLinearMap)
       (f₂ := (γ' : Λ →ₗ[𝓞 E] Λ).toAddMonoidHom.toIntLinearMap) h
     exact LinearEquiv.ext fun x => LinearMap.congr_fun h1 x
-  haveI : Countable (Λ ≃ₗ[𝓞 E] Λ) :=
+  have : Countable (Λ ≃ₗ[𝓞 E] Λ) :=
     Function.Injective.countable (f := fun (γ : Λ ≃ₗ[𝓞 E] Λ) i => γ (b i))
       fun γ γ' h => hext γ γ' fun i => congrFun h i
   let δ : Γ → latticeStab Δ.h Δ.e.range := fun γ => Δ.α.symm ⟨γ.1, hΓ.1 γ.2⟩

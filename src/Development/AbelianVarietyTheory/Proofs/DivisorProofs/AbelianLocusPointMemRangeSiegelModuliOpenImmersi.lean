@@ -528,18 +528,18 @@ theorem lift_finite [IsIntegrallyClosed R] {X S : Scheme.{0}} (f : X ⟶ S) [IsF
 
 theorem ext_frac {S : Scheme.{0}} {G : Over S} [IsSeparated G.hom] {y : Sp R ⟶ S} {u v : Over.mk y ⟶ G}
     (h : spMap (algebraMap R K) ≫ u.left = spMap (algebraMap R K) ≫ v.left) : u = v := by
-  haveI : IsDominant (spMap (algebraMap R K)) := by
+  have : IsDominant (spMap (algebraMap R K)) := by
     refine ⟨?_⟩
     exact (PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical (algebraMap R K)).2 (by
       rw [(RingHom.injective_iff_ker_eq_bot _).1 (IsFractionRing.injective R K)]; exact bot_le)
-  haveI : IsReduced (Over.mk y).left := inferInstanceAs (IsReduced (Spec (CommRingCat.of R)))
+  have : IsReduced (Over.mk y).left := inferInstanceAs (IsReduced (Spec (CommRingCat.of R)))
   ext1
   exact ext_of_isDominant_of_isSeparated G.hom (by rw [Over.w u, Over.w v]) (spMap (algebraMap R K)) h
 
 theorem lift_tors [IsIntegrallyClosed R] {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : IsAbelianScheme G) {q : ℕ}
     (hq : q ≠ 0) {y : Sp R ⟶ S} {y' : Sp K ⟶ S} (hy : spMap (algebraMap R K) ≫ y = y') (w : Over.mk y' ⟶ G)
     (hw : w ^ q = 1) : ∃ v : Over.mk y ⟶ G, spMap (algebraMap R K) ≫ v.left = w.left := by
-  haveI := (AbTorsionAnyBase.isFinite_and_flat_torsion S G hG q (Nat.one_le_iff_ne_zero.2 hq)).1
+  have := (AbTorsionAnyBase.isFinite_and_flat_torsion S G hG q (Nat.one_le_iff_ne_zero.2 hq)).1
   have e : w ≫ mulN G q = CartesianMonoidalCategory.toUnit _ ≫ η[G] := by
     rw [GrpTangent.mulN_eq_pow, MonObj.comp_pow, Category.comp_id, hw]; rfl
   let w₁ : Over.mk y' ⟶ torsion G q := Limits.pullback.lift w _ e
@@ -576,7 +576,7 @@ namespace GlobalTheory.FibreTorsion
 theorem card_torsion_of_proper_fibre : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ g : ℕ, SmoothOfRelativeDimension g G.hom → ∀ (F : Type) [Field F] [IsAlgClosed F] (p : Sp F ⟶ S), IsProper (pullback.snd G.hom p) → ∀ N : ℕ, (N : F) ≠ 0 → Nat.card {x : Over.mk p ⟶ G // x ^ N = 1} = N ^ (2 * g) := by
   intro S G _ _ hG g hg F _ _ p hprop N hN
   let B := (Over.pullback p).obj G
-  haveI : IsProper B.hom := hprop
+  have : IsProper B.hom := hprop
   have hB : IsAbelianScheme B :=
     AbelianSchemeGerms.isAbelianScheme_of_proper B (IsSemiAbelian.pullback p G hG)
   have hg' : SmoothOfRelativeDimension g B.hom :=
@@ -623,15 +623,15 @@ theorem eq_one_of_point (O : Type) [CommRing O] [IsLocalRing O] (A : Over (Sp O)
     (hA : IsAbelianScheme A) (n : ℕ) (hn : IsUnit (n : O)) (s : 𝟙_ (Over (Sp O)) ⟶ A)
     (hs : s ^ n = 1) (k : Type) [Field k] (x : Sp k ⟶ Sp O) (hx : toUnit (Over.mk x) ≫ s = 1) :
     s = 1 := by
-  haveI := GlobalTheory.AbelianDim.connectedSpace_spec_of_isLocalRing O
+  have := GlobalTheory.AbelianDim.connectedSpace_spec_of_isLocalRing O
   have hn' : IsUnit (n : Γ(Sp O, ⊤)) := by
     have := hn.map (Scheme.ΓSpecIso (CommRingCat.of O)).inv.hom
     simpa using this
   obtain ⟨⟨-, het⟩, -⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion (hG := hA) A hn'
-  haveI := hA.proper
-  haveI : IsSeparated ((mulN A n).left ≫ A.hom) := by
+  have := hA.proper
+  have : IsSeparated ((mulN A n).left ≫ A.hom) := by
     rw [Over.w (mulN A n)]; infer_instance
-  haveI : IsSeparated (mulN A n).left := IsSeparated.of_comp _ A.hom
+  have : IsSeparated (mulN A n).left := IsSeparated.of_comp _ A.hom
   have hab : s ≫ mulN A n = (1 : 𝟙_ (Over (Sp O)) ⟶ A) ≫ mulN A n := by
     rw [GlobalTheory.GrpTangent.mulN_eq_pow, MonObj.comp_pow, MonObj.comp_pow, Category.comp_id,
       Category.comp_id, hs, one_pow]
@@ -648,7 +648,7 @@ theorem card_of_basis {I G : Type} [Fintype I] [Group G] {n : ℕ} (hn : n ≠ 0
     (add : ∀ a b, f (a + b) = f a * f b) (tors : ∀ a, f a ^ n = 1)
     (ker : ∀ a, f a = 1 ↔ ∃ b, a = n • b) (onto : ∀ u : G, u ^ n = 1 → ∃ a, f a = u) :
     Nat.card {u : G // u ^ n = 1} = n ^ Fintype.card I := by
-  haveI : NeZero n := ⟨hn⟩
+  have : NeZero n := ⟨hn⟩
   let F : (I → ZMod n) → {u : G // u ^ n = 1} := fun c => ⟨f fun i => (c i).val, tors _⟩
   have hF : Function.Injective F := fun c c' e => by
     have e₁ : f (fun i => (c i).val) = f fun i => (c' i).val := congrArg Subtype.val e
@@ -696,7 +696,7 @@ theorem basis_at_every_point : ∀ (O : Type) [CommRing O] [IsLocalRing O] [IsNo
     · rintro ⟨b, rfl⟩
       rw [pw, tors, MonObj.comp_one]
   refine ⟨ker, fun u hu => ?_⟩
-  haveI := hA.proper
+  have := hA.proper
   obtain ⟨d, hd⟩ := GlobalTheory.AbelianDim.exists_relDim O A hA
   have hsa : IsSemiAbelian A := by
     refine ⟨hA.comm, hA.smooth, inferInstance, inferInstance, hA.geomConnected, ?_⟩
@@ -847,8 +847,8 @@ theorem exists_extension [IsRegularRing O] (X : Over (Sp O)) [Smooth X.hom] [IsP
   have hY : ∀ y, IsRegularLocalRing ((Sp O).presheaf.stalk y) := fun y => by
     have := y.isPrime
     have := isRegularRing_iff.1 ‹IsRegularRing O› y.asIdeal
-    letI : Algebra O ((Sp O).presheaf.stalk y) := StructureSheaf.stalkAlgebra O y
-    haveI : IsLocalization.AtPrime ((Sp O).presheaf.stalk y) y.asIdeal := StructureSheaf.IsLocalization.to_stalk O y
+    let : Algebra O ((Sp O).presheaf.stalk y) := StructureSheaf.stalkAlgebra O y
+    have : IsLocalization.AtPrime ((Sp O).presheaf.stalk y) y.asIdeal := StructureSheaf.IsLocalization.to_stalk O y
     exact IsRegularLocalRing.of_ringEquiv
       (IsLocalization.algEquiv y.asIdeal.primeCompl (Localization.AtPrime y.asIdeal) ((Sp O).presheaf.stalk y)).toRingEquiv
   exact exists_lineBundle_extension_of_generalizing X.left X' ψ (Flat.generalizingMap ψ)
@@ -1074,13 +1074,13 @@ theorem exists_principal_extension : ∀ (g n : ℕ) (F : SFam g n (zetaAway n))
   obtain ⟨κ₀, rfl⟩ := Models.RankZero.exists_spMap κ
   have hκ₀ : κ₀.comp (algebraMap R O) = algebraMap R (FractionRing R) :=
     spMap_inj ((Models.RankZero.spMap_comp _ _).symm.trans hκ)
-  letI : Algebra O (FractionRing R) := κ₀.toAlgebra
-  haveI : IsScalarTower R O (FractionRing R) :=
+  let : Algebra O (FractionRing R) := κ₀.toAlgebra
+  have : IsScalarTower R O (FractionRing R) :=
     IsScalarTower.of_algebraMap_eq fun r => (RingHom.congr_fun hκ₀ r).symm
-  haveI : IsFractionRing O (FractionRing R) :=
+  have : IsFractionRing O (FractionRing R) :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization p.asIdeal.primeCompl O (FractionRing R)
   have hAp := isGrpPullback_pullback G₁ (spMap (algebraMap R O))
-  haveI : IsCommMonObj ((Over.pullback (spMap (algebraMap R O))).obj G₁) :=
+  have : IsCommMonObj ((Over.pullback (spMap (algebraMap R O))).obj G₁) :=
     GlobalTheory.TorusPart.isCommMonObj_of_isGrpPullback hAp
   obtain ⟨φ', hφ', -⟩ := GlobalTheory.PlaceModel.exists_factor_pullback hAp hp1 (spMap κ₀) hκ
   obtain ⟨⟨c'₀, hpb⟩, hprin⟩ := siegPre_pullback g n (cycAway n) (zetaAway n) F.X (Sp (FractionRing R)) F.s
@@ -1148,10 +1148,10 @@ namespace GlobalTheory.AbLocusAtPrime
 
 theorem isAbelianScheme_localization : ∀ (R : Type) [CommRing R] [IsRegularLocalRing R] [IsDomain R] (G₁ : Over (Sp R)) [GrpObj G₁] [IsCommMonObj G₁], IsSemiAbelian G₁ → ∀ (p : Sp R) [p.asIdeal.IsPrime], p ∈ abLocus G₁ → IsAbelianScheme ((Over.pullback (spMap (algebraMap R (Localization.AtPrime p.asIdeal)))).obj G₁) := by
   intro R _ _ _ G₁ _ _ hG p _ hp
-  haveI : IsNoetherianRing R := inferInstance
-  haveI : IsDomain (Localization.AtPrime p.asIdeal) :=
+  have : IsNoetherianRing R := inferInstance
+  have : IsDomain (Localization.AtPrime p.asIdeal) :=
     IsLocalization.isDomain_localization p.asIdeal.primeCompl_le_nonZeroDivisors
-  haveI : IsNoetherianRing (Localization.AtPrime p.asIdeal) :=
+  have : IsNoetherianRing (Localization.AtPrime p.asIdeal) :=
     IsLocalization.isNoetherianRing p.asIdeal.primeCompl _ inferInstance
   set f := spMap (algebraMap R (Localization.AtPrime p.asIdeal)) with hf
   have hG' : IsSemiAbelian ((Over.pullback f).obj G₁) := IsSemiAbelian.pullback f G₁ hG
@@ -1293,7 +1293,7 @@ theorem asIdeal_eq_bot_of_charZero : ∀ (n : ℕ) (K : Type) [Field K] [CharZer
     have h1 : IsAlgebraic ℚ (a : ℂ) := (hC a a.2).isAlgebraic
     have h2 : IsAlgebraic ℤ (a : ℂ) := (IsFractionRing.isAlgebraic_iff ℤ ℚ ℂ).2 h1
     exact (isAlgebraic_algHom_iff ((cycAway n).subtype.toIntAlgHom) Subtype.val_injective).1 h2
-  have := Ideal.comap_ne_bot_of_algebraic_mem ha0 ha halg
+  have := Ideal.under_ne_bot_of_algebraic_mem ha0 ha halg
   apply this
   rw [eq_bot_iff]
   intro m hm
@@ -1302,7 +1302,7 @@ theorem asIdeal_eq_bot_of_charZero : ∀ (n : ℕ) (K : Type) [Field K] [CharZer
 
 theorem mem_range_of_mem_abLocus : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (S : Scheme.{0}) [S.IsSeparated] (j : F.X ⟶ S) [IsOpenImmersion j] (R : Type) [CommRing R] [IsRegularLocalRing R] [IsDomain R] [CharZero R] (b : cycAway n →+* R) (ξ : Sp R ⟶ S) (G₁ : Over (Sp R)) [GrpObj G₁] [IsCommMonObj G₁] (y : Sp (FractionRing R) ⟶ F.X) (A₁ : Over (Sp (FractionRing R))) [GrpObj A₁] (i₁ : A₁.left ⟶ G₁.left) (β : A₁.left ⟶ F.univ.A.left), IsSemiAbelian G₁ → IsGrpPullback A₁ G₁ (jK R) i₁ → IsGrpPullback A₁ F.univ.A y β → y ≫ j = jK R ≫ ξ → ∀ p : Sp R, p ∈ abLocus G₁ → ξ p ∈ Set.range j := by
   intro g n F S _ j _ R _ _ _ _ b ξ G₁ _ _ y A₁ _ i₁ β hG h₁ h₂ hy p hp
-  haveI : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
+  have : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
   have hu : ∀ x : p.asIdeal.primeCompl, IsUnit (algebraMap R (FractionRing R) x) := fun x =>
     IsLocalization.map_units (FractionRing R)
       (⟨x.1, mem_nonZeroDivisors_of_ne_zero (fun h => x.2 (h ▸ p.asIdeal.zero_mem))⟩ : nonZeroDivisors R)
@@ -1320,7 +1320,7 @@ theorem mem_range_of_mem_abLocus : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (
     refine (IsLocalization.lift_injective_iff hu).2 fun x x' => ?_
     rw [(IsLocalization.injective (Localization.AtPrime p.asIdeal) (Ideal.primeCompl_le_nonZeroDivisors p.asIdeal)).eq_iff,
       (IsFractionRing.injective R (FractionRing R)).eq_iff]
-  haveI hdom : IsDominant κ := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical lf).2 (by
+  have hdom : IsDominant κ := ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical lf).2 (by
     rw [(RingHom.injective_iff_ker_eq_bot lf).1 hinj]; exact bot_le)⟩
   have hdense : Dense {x : Sp (Localization.AtPrime p.asIdeal) | ((ιp ≫ s) x).asIdeal = ⊥} := by
     refine Dense.mono ?_ hdom.denseRange

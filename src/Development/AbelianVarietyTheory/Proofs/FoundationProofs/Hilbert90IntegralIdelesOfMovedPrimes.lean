@@ -78,8 +78,8 @@ theorem moves_all [IsGalois ℚ E] (c : E ≃ₐ[ℚ] E) (hc : ∀ g : E ≃ₐ[
     rw [Ideal.span_le, Set.singleton_subset_iff]
     show algebraMap ℤ (𝓞 E) (q : ℤ) ∈ R
     simpa using hqR
-  haveI := hov P hP hqP
-  haveI := hov Q hQ hqQ
+  have := hov P hP hqP
+  have := hov Q hQ hqQ
   obtain ⟨g, rfl⟩ := Ideal.exists_smul_eq_of_isGaloisGroup (Ideal.span {(q : ℤ)}) P Q (E ≃ₐ[ℚ] E)
   intro h'
   rw [smul_smul, hc, mul_smul] at h'
@@ -122,13 +122,13 @@ theorem exists_half (c : E ≃ₐ[ℚ] E) (hcc : c * c = 1) {q : ℕ} (hq : q �
     rw [hinvI, ← hmem, smul_sub] at h2
     rcases @lt_trichotomy _ o P (c • P) with hl | hl | hl
     · left
-      rw [if_pos hl] at h1
-      rw [if_neg (@not_lt_of_gt _ o.toPreorder _ _ hl), smul_zero, sub_zero] at h2
+      rw [ite_eq_left hl] at h1
+      rw [ite_eq_right (@not_lt_of_gt _ o.toPreorder _ _ hl), smul_zero, sub_zero] at h2
       exact ⟨h1, h2⟩
     · exact absurd hl.symm (h P hP hqP)
     · right
-      rw [if_neg (@not_lt_of_gt _ o.toPreorder _ _ hl), sub_zero] at h1
-      rw [if_pos hl, smul_one] at h2
+      rw [ite_eq_right (@not_lt_of_gt _ o.toPreorder _ _ hl), sub_zero] at h1
+      rw [ite_eq_left hl, smul_one] at h2
       exact ⟨h1, h2⟩
   have hrad : a * c • a ∈ (Ideal.span {(q : 𝓞 E)}).radical := by
     rw [Ideal.radical_eq_sInf, Submodule.mem_sInf]
@@ -236,7 +236,7 @@ theorem exists_inv_one_add {s : 𝒜} (hs : s ∈ 𝒮) : ∃ t ∈ 𝒮, (1 + (
     (intAd ℚ).subtype).codRestrict _ fun y => one_tmul_mem y.2
   let ψ : 𝓞 E →+* 𝒮 := ((inclE (F := ℚ) 𝔸).comp (algebraMap (𝓞 E) E)).codRestrict _ fun y => adelstab_incl_int y
   have hint : φ.IsIntegral := by
-    letI := φ.toAlgebra
+    let := φ.toAlgebra
     rintro ⟨x, hx⟩
     obtain ⟨r, hr, rfl⟩ := levelaf_decomp (fun j => Module.finBasis ℤ (𝓞 E) j) (Module.Basis.span_eq _) hx
     have e : (⟨_, hx⟩ : 𝒮) = ∑ j, (φ ⟨r j, hr j⟩ * ψ (Module.finBasis ℤ (𝓞 E) j) : 𝒮) := by
@@ -256,7 +256,7 @@ theorem exists_inv_one_add {s : 𝒜} (hs : s ∈ 𝒮) : ∃ t ∈ 𝒮, (1 + (
   have hj' : φ ⟨unif, mkInt_mem _ _⟩ ∈ Ideal.jacobson (⊥ : Ideal 𝒮) := by
     rw [Ideal.jacobson, Ideal.mem_sInf] at hj ⊢
     rintro M ⟨-, hM⟩
-    exact hj (I := M.comap φ) ⟨bot_le, Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' φ hint M⟩
+    exact hj (I := M.comap φ) ⟨bot_le, Ideal.isMaximal_comap_of_isIntegral_of_isMaximal φ hint M⟩
   obtain ⟨t, ht⟩ := (Ideal.mem_jacobson_bot.1 hj' ⟨s, hs⟩).exists_right_inv
   refine ⟨t, t.2, ?_⟩
   rw [add_comm]
@@ -327,7 +327,7 @@ theorem exists_half_adele (c : E ≃ₐ[ℚ] E) (hcc : c * c = 1) (P : ℕ → P
     intro v
     by_cases hv : P (pr v)
     · obtain ⟨a, r, s, h1, h2⟩ := exists_half c hcc (pr_prime v).ne_zero (h _ (pr_prime v) hv)
-      exact ⟨a, r, s, fun h => absurd hv h, h1, by rw [if_pos hv, h2]⟩
+      exact ⟨a, r, s, fun h => absurd hv h, h1, by rw [ite_eq_left hv, h2]⟩
     · exact ⟨0, 0, 0, fun _ => rfl, by simp, by simp [hv]⟩
   choose a r s h0 h1 h2 using loc
   obtain ⟨a', ha', ha⟩ := exists_asm a
@@ -455,7 +455,7 @@ end Cut
 open Classical Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.TaylorLogMetric Formalism.MainNotions.StandardLatticesGL3
 
 theorem conj_comm (D : D7) (g : D.host.E ≃ₐ[ℚ] D.host.E) : D.host.conj * g = g * D.host.conj := by
-  letI := D.host.isCMField_hostE
+  let := D.host.isCMField_hostE
   have h : ∀ x, D.host.conj x = IsCMField.complexConj D.host.E x := fun x => D.host.φ₀.injective (by
     rw [NumberField.IsCMField.complexEmbedding_complexConj, D.host.toHostAx.conjE_apply])
   ext1 x
@@ -473,7 +473,7 @@ theorem conj_mul_self (D : D7) : D.host.conj * D.host.conj = 1 := by
 
 theorem conj_smul_ne (D : D7) {q : ℕ} (hq : q.Prime) (h : ¬ InertQ D q) (I : Ideal (𝓞 D.host.E)) (hI : I.IsPrime)
     (hqI : (q : 𝓞 D.host.E) ∈ I) : D.host.conj • I ≠ I := by
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   unfold InertQ at h
   push Not at h
   obtain ⟨P, hP, -, hqP, hne⟩ := h
@@ -585,9 +585,9 @@ theorem iop_self (D : D7) (T : Tor D) {N N' : ℕ} (A : AddSubgroup (VC D N N'))
     (hG : G ∈ ThSp D T A) : Iop D T A A G = G := by
   funext z
   have ht : A.addSubgroupOf A = ⊤ := AddSubgroup.addSubgroupOf_self A
-  haveI : Subsingleton (A ⧸ A.addSubgroupOf A) := by
+  have : Subsingleton (A ⧸ A.addSubgroupOf A) := by
     rw [ht]; exact QuotientAddGroup.subsingleton_quotient_top
-  haveI : Unique (A ⧸ A.addSubgroupOf A) := ⟨⟨((0 : A) : A ⧸ A.addSubgroupOf A)⟩, fun _ => Subsingleton.elim _ _⟩
+  have : Unique (A ⧸ A.addSubgroupOf A) := ⟨⟨((0 : A) : A ⧸ A.addSubgroupOf A)⟩, fun _ => Subsingleton.elim _ _⟩
   unfold Iop
   rw [finsum_unique, hG.2 _ (Subtype.prop _), ht]
   simp

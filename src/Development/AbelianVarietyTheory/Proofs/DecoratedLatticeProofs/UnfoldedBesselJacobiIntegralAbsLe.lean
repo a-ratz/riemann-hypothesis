@@ -82,28 +82,28 @@ theorem base_term_norm_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V
   obtain ⟨b1, b2, b3, b4, b5, b6, b7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   obtain ⟨c1, c2, c3, c4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag V (GlobalTheory.MixPer.isIsoSub_e d)
   obtain ⟨hN1, hN2, hN3⟩ := vN.unit
-  haveI := vW.haar
-  haveI : SFinite vN.ν := inferInstance
-  haveI : SFinite vW.μ := inferInstance
+  have := vW.haar
+  have : SFinite vN.ν := inferInstance
+  have : SFinite vW.μ := inferInstance
   have hTL := GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hω hω' vS
   have hsplit : ∀ (n : GA D V) (h : GA D W), om (n * g, h) Φ = om (n, 1) (om (g, h) Φ) := by
     intro n h
     rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, one_mul]
   have hψn : ∀ x, ‖ψ x‖ₑ = 1 := fun x => by
-    rw [← ofReal_norm_eq_enorm, hω.std.1.2.1 x, ENNReal.ofReal_one]
+    rw [← ofReal_norm, hω.std.1.2.1 x, ENNReal.ofReal_one]
   have hFm : Measurable (fun p : flagN d × GA D W =>
       ‖G p.2 * term ψ d W vS (om (p.1.1 * g, p.2) Φ) x₀‖ₑ) := by
     refine Continuous.measurable ?_
-    refine ((hG.2.1.comp continuous_snd).mul ?_).enorm
+    refine ((hG.2.1.comp continuous_snd).mul ?_).eNorm
     exact ((hTL Φ hΦ).2.2.2.1 x₀).comp
-      (((continuous_subtype_val.comp continuous_fst).mul continuous_const).prodMk continuous_snd)
+      (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).prodMk continuous_snd)
   have hfib : ∀ h : GA D W, ‖G h‖ₑ * ∫⁻ u, ∫⁻ b in vb.𝓕,
       ‖d.mixS W ψ vS.μ vS.𝓕 (om (g, h) Φ) (rat x₀ ⬝ u.1.1) (rat x₀ ⬝ b)‖ₑ ∂vb.μ ∂vU.ν =
       ∫⁻ n in 𝓐, ‖G h * term ψ d W vS (om (n.1 * g, h) Φ) x₀‖ₑ ∂vN.ν := by
     intro h
     have hΨ : IsThetaFunO ψ V W (om (g, h) Φ) := hω.om_pres (g, h) Φ hΦ
     have hfm : Measurable (fun m : GA D V => ‖term ψ d W vS (om (m, 1) (om (g, h) Φ)) x₀‖ₑ) :=
-      (((hTL _ hΨ).2.2.2.1 x₀).comp (continuous_id.prodMk continuous_const)).enorm.measurable
+      (((hTL _ hΨ).2.2.2.1 x₀).comp (continuous_id.prodMk continuous_const)).eNorm.measurable
     have hinv : ∀ c, ∀ n ∈ flagN d,
         (fun m : GA D V => ‖term ψ d W vS (om (m, 1) (om (g, h) Φ)) x₀‖ₑ) (d.nC c * n) =
         (fun m : GA D V => ‖term ψ d W vS (om (m, 1) (om (g, h) Φ)) x₀‖ₑ) n := by
@@ -114,7 +114,7 @@ theorem base_term_norm_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V
         Prod.mk_mul_mk, one_mul] at t1
       show ‖term ψ d W vS (om (d.nC c * n, 1) (om (g, h) Φ)) x₀‖ₑ =
         ‖term ψ d W vS (om (n, 1) (om (g, h) Φ)) x₀‖ₑ
-      rw [t1, enorm_mul, hψn, one_mul]
+      rw [t1, eNorm_mul, hψn, one_mul]
       simp [term]
     have hval : ∀ (u : UX D ρ) (b : Mx D ρ V₀.rank),
         ‖term ψ d W vS (om (d.nB b * d.levi u.1, 1) (om (g, h) Φ)) x₀‖ₑ =
@@ -122,7 +122,7 @@ theorem base_term_norm_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V
       intro u b
       have t1 := (hTL _ hΨ).1 x₀ b u 0
       rw [d.nC_zero, one_mul] at t1
-      rw [t1, enorm_mul, hψn, one_mul]
+      rw [t1, eNorm_mul, hψn, one_mul]
       rfl
     have hl := hlay _ hfm hinv
     calc ‖G h‖ₑ * ∫⁻ u, ∫⁻ b in vb.𝓕,
@@ -131,9 +131,9 @@ theorem base_term_norm_coords : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V
           rw [hl]
           simp only [hval]
       _ = ∫⁻ n in 𝓐, ‖G h * term ψ d W vS (om (n.1 * g, h) Φ) x₀‖ₑ ∂vN.ν := by
-          rw [← lintegral_const_mul' _ _ enorm_ne_top]
+          rw [← lintegral_const_mul' _ _ eNorm_ne_top]
           refine lintegral_congr fun n => ?_
-          rw [enorm_mul, hsplit]
+          rw [eNorm_mul, hsplit]
   rw [← Measure.prod_restrict, lintegral_prod_symm _ hFm.aemeasurable]
   refine lintegral_congr fun h => ?_
   exact hfib h
@@ -165,8 +165,8 @@ theorem orbit_sum_moderate_growth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
   intro D ψ V V₀ W ρ d χV χW om om' hw hw' vS vN vW x₀ G Φ hG hΦ
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   obtain ⟨j1, j2, j3, j4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag V (isIsoSub_e d)
-  haveI := vN.unit.1
-  haveI := vW.haar
+  have := vN.unit.1
+  have := vW.haar
   obtain ⟨C, A, hC⟩ := GlobalTheory.T.thetaTermSeries_summable_moderateGrowth_uniform D ψ V V₀ W ρ d χV χW om om' hw hw' vS Φ hΦ
   obtain ⟨B, hBd⟩ := hG.2.2 A
   have hB0 : 0 ≤ B := (mul_nonneg (norm_nonneg _) (pow_nonneg (quotHeight_pos W 1).le _)).trans (hBd 1)
@@ -183,7 +183,7 @@ theorem orbit_sum_moderate_growth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
     intro n h
     have h1 : ∑' y : Orb W x₀, ‖G h * term ψ d W vS (om (n.1 * g, h) Φ) y.1‖ₑ =
         ‖G h‖ₑ * ∑' y : Orb W x₀, ‖term ψ d W vS (om (n.1 * g, h) Φ) y.1‖ₑ := by
-      simp_rw [enorm_mul]
+      simp_rw [eNorm_mul]
       exact ENNReal.tsum_mul_left
     have h2 : ∑' y : Orb W x₀, ‖term ψ d W vS (om (n.1 * g, h) Φ) y.1‖ₑ ≤
         ∑' x : Matrix (Fin W.rank) (Fin ρ) D.host.E, ‖term ψ d W vS (om (n.1 * g, h) Φ) x‖ₑ :=
@@ -202,7 +202,7 @@ theorem orbit_sum_moderate_growth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ
       exact mul_le_mul_of_nonneg_left (hBd h) (mul_nonneg (le_max_right _ _) hg0)
     rw [h1]
     refine (mul_le_mul' le_rfl (h2.trans h3)).trans ?_
-    rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (norm_nonneg _)]
+    rw [← ofReal_norm, ← ENNReal.ofReal_mul (norm_nonneg _)]
     exact ENNReal.ofReal_le_ofReal h4
   calc ∫⁻ p in vN.𝓝 ×ˢ vW.𝓕, ∑' y : Orb W x₀, ‖G p.2 * term ψ d W vS (om (p.1.1 * g, p.2) Φ) y.1‖ₑ ∂(vN.ν.prod vW.μ)
       ≤ ∫⁻ p in vN.𝓝 ×ˢ vW.𝓕, ENNReal.ofReal (max C 0 * B * height V g ^ A) ∂(vN.ν.prod vW.μ) :=
@@ -246,14 +246,14 @@ theorem unfold_norm_base_term_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.
   obtain ⟨b1, b2, b3, b4, b5, b6, b7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   obtain ⟨c1, c2, c3, c4⟩ := GlobalTheory.Mem.TrueRecord.top_NFlag V (GlobalTheory.MixPer.isIsoSub_e d)
   obtain ⟨hN1, hN2, hN3⟩ := vN.unit
-  haveI := vW.haar
-  haveI : SFinite vN.ν := inferInstance
-  haveI : SFinite vW.μ := inferInstance
+  have := vW.haar
+  have : SFinite vN.ν := inferInstance
+  have : SFinite vW.μ := inferInstance
   obtain ⟨act, y₀, hy₀, hrel, htrans, hstab1, hstab2⟩ := GlobalTheory.T.flagUnitaryOrbitAction_transitive_with_stabilizer D V V₀ W ρ d x₀ hx
-  letI := act
-  haveI : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin W.rank) (Fin ρ) D.host.E) := inferInstanceAs (Countable (Fin _ → Fin _ → _))
-  haveI hΓc : Countable ((NFlagQ V d.e).prod (GQ W)) := Function.Injective.countable
+  let := act
+  have : Countable D.host.E := (Module.finBasis ℚ D.host.E).equivFun.injective.countable
+  have : Countable (Matrix (Fin W.rank) (Fin ρ) D.host.E) := inferInstanceAs (Countable (Fin _ → Fin _ → _))
+  have hΓc : Countable ((NFlagQ V d.e).prod (GQ W)) := Function.Injective.countable
     (f := fun γ : (NFlagQ V d.e).prod (GQ W) => ((⟨γ.1.1, (Subgroup.mem_prod.1 γ.2).1⟩ : NFlagQ V d.e),
       (⟨γ.1.2, (Subgroup.mem_prod.1 γ.2).2⟩ : GQ W)))
     fun a b h => by
@@ -286,7 +286,7 @@ theorem unfold_norm_base_term_translate : ∀ (D : D7) (ψ : AddChar (AF D.host.
     have t4 := (GlobalTheory.T.mixedThetaSeries_terms_laws_unipotent_rational D ψ V V₀ W ρ d χV χW om om' hω hω' vS Φ hΦ).2.2.2.1 y.1
     refine Continuous.measurable ?_
     refine (hG.2.1.comp continuous_snd).mul ?_
-    exact t4.comp (((continuous_subtype_val.comp continuous_fst).mul continuous_const).prodMk continuous_snd)
+    exact t4.comp (((continuous_subtypeVal.comp continuous_fst).mul continuous_const).prodMk continuous_snd)
   have hinv : ∀ (γ : (NFlagQ V d.e).prod (GQ W)) (y : Orb W x₀) (p : flagN d × GA D W),
       G ((γ : flagN d × GA D W) * p).2 *
         term ψ d W vS (om (((γ : flagN d × GA D W) * p).1.1 * g, ((γ : flagN d × GA D W) * p).2) Φ) (γ • y).1 =

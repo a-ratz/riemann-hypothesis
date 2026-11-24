@@ -87,7 +87,7 @@ theorem exists_fg_tmul_eq_zero {A : Type} [CommRing A] (B : Type) [CommRing B] [
       ((LinearMap.rTensor B ((Module.fgSystem.equiv A Q).symm : Q →ₗ[A] _)) (z ⊗ₜ[A] (1 : B))) = 0 := by
     rw [h', map_zero, map_zero]
   rw [LinearMap.rTensor_tmul, LinearEquiv.coe_coe, he, TensorProduct.directLimitLeft_tmul_of] at h2
-  haveI : DirectedSystem (fun i : {N : Submodule A Q // N.FG} => TensorProduct A (↥(i : Submodule A Q)) B)
+  have : DirectedSystem (fun i : {N : Submodule A Q // N.FG} => TensorProduct A (↥(i : Submodule A Q)) B)
       (fun i j h => ⇑(LinearMap.rTensor B (Module.fgSystem A Q i j h))) :=
     DirectedSystem.rTensor A B (f := fun ⦃i j⦄ h => Module.fgSystem A Q i j h) inferInstance
   obtain ⟨j, hij, hj⟩ := Module.DirectLimit.of.zero_exact h2
@@ -104,7 +104,7 @@ theorem exists_system {A : Type} [CommRing A] (B : Type) [CommRing B] [Algebra A
           (1 : B₁) ⊗ₜ[A] z = 0 := by
   classical
   obtain ⟨Q', hz, hfg, hzero⟩ := exists_fg_tmul_eq_zero B z h
-  haveI : Module.Finite A Q' := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite A Q' := Module.Finite.iff_fg.mpr hfg
   obtain ⟨n, π, hπ⟩ := Module.Finite.exists_fin' A Q'
   obtain ⟨w, hw⟩ := hπ ⟨z, hz⟩
   have hex := lTensor_exact B (LinearMap.exact_subtype_ker_map π) hπ

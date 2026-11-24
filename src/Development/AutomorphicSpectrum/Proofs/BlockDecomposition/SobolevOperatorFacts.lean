@@ -214,7 +214,7 @@ variable [BorelSpace (G n)] [μ.IsHaarMeasure]
 
 theorem memLp_translate (hU : Unimod) (h : G n) {F : Mat n → V} (hF : MemLp (fun y : G n => F y.val) 2 μ) :
     MemLp (fun y : G n => F (y.val * h.val)) 2 μ := by
-  haveI := (hU n μ).1
+  have := (hU n μ).1
   exact hF.comp_measurePreserving (measurePreserving_mul_right μ h)
 
 theorem translate_memLp (hU : Unimod) (h : G n) (w : List (Bool × Fin n × Fin n)) :

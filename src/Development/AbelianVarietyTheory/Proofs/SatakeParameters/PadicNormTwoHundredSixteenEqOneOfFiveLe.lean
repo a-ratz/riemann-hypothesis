@@ -186,7 +186,7 @@ theorem flog_scale (W : WeierstrassCurve ℂ_[p]) (wq : PowerSeries ℂ_[p]) :
   rw [PowerSeries.coeff_mk, PowerSeries.coeff_mk, omegaW_scale]
   rcases n with _ | n
   · simp
-  · simp only [Nat.add_one_ne_zero, if_false, Nat.add_sub_cancel, PowerSeries.coeff_rescale]
+  · simp only [Nat.add_one_ne_zero, ite_false, Nat.add_sub_cancel, PowerSeries.coeff_rescale]
     have h1 : ν * ν⁻¹ = 1 := mul_inv_cancel₀ hν
     rw [pow_succ]
     linear_combination (-(ν⁻¹ ^ n * PowerSeries.coeff n (omegaW W wq) / ((n + 1 : ℕ) : ℂ_[p]))) * h1
@@ -304,7 +304,7 @@ theorem dict_core (hp2 : p ≠ 2) (D : D7) {N N' r : ℕ} (lam : Qbar →+* ℂ_
       ∏ i, PowerSeries.subst (MvPowerSeries.X i : MvPowerSeries (Fin r) ℂ_[p])
         (PowerSeries.subst h (ePhi1 lam Λ C wq))⁻¹ := by
     unfold ePh
-    rw [if_neg hp2, ← MvPowerSeries.coe_substAlgHom hSs, map_prod]
+    rw [ite_eq_right hp2, ← MvPowerSeries.coe_substAlgHom hSs, map_prod]
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [MvPowerSeries.coe_substAlgHom, ← subst_inv _ (MvPowerSeries.constantCoeff_X i), subst_single_var S hSs, hS]
     dsimp only
@@ -512,7 +512,7 @@ theorem cmLatticeInvariants_algebraic_of_goodReduction (hGood : Formalism.L2.Th1
       unfold Formalism.L2.Th1.CM.omegaK Formalism.L2.Th1.F.cmTheta; push_cast; ring
     rw [e]; exact h1
   obtain ⟨p, hp5, hpp⟩ := Nat.exists_infinite_primes (D.host.d + 5)
-  haveI : Fact p.Prime := ⟨hpp⟩
+  have : Fact p.Prime := ⟨hpp⟩
   have hpd : ¬ p ∣ D.host.d := fun h => by have := Nat.le_of_dvd hdp.pos h; omega
   have hg2 : L.g₂ ∈ Formalism.MainNotions.TaylorLogMetric.Qbar :=
     mem_algebraicClosure_iff.2

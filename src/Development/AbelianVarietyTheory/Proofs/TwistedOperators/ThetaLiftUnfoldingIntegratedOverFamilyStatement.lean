@@ -170,8 +170,8 @@ theorem covolOne_lintegral_mul_right {m n : ℕ} {μ : Measure (Mx D m n)} {𝓕
     (hφ : ∀ γ ∈ ratMx D m n, ∀ a, φ (γ + a) = φ a) :
     ∫⁻ a in 𝓕, φ (a ⬝ M) ∂μ = ∫⁻ a in 𝓕, φ a ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : Countable (ratMx D m n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   let e : Mx D m n ≃+ Mx D m n :=
     { toFun := fun a => a ⬝ M
       invFun := fun a => a ⬝ M'
@@ -188,7 +188,7 @@ theorem covolOne_lintegral_mul_right {m n : ℕ} {μ : Measure (Mx D m n)} {𝓕
      fun h => GlobalTheory.MixModel.ratMx_mul h hM⟩
   obtain ⟨h1, hemb⟩ := GlobalTheory.Unf.ParCont.isCovolOne_map hμ e he he' hr
   have hmeq : Measure.map e μ = μ := GlobalTheory.MixModel.covolOne_measure_eq hμ h1
-  haveI := hμ.1
+  have := hμ.1
   have h1' := h1
   rw [hmeq] at h1'
   have hfd : ∫⁻ a in e '' 𝓕, φ a ∂μ = ∫⁻ a in 𝓕, φ a ∂μ :=
@@ -210,7 +210,7 @@ theorem enorm_periodic {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-
     congr 1
     show (x₀.map (incA D)) ⬝ (β.map (incA D)) = (x₀ ⬝ β).map (incA D)
     rw [Matrix.map_mul]
-  rw [e1, hF.quasi, enorm_mul, GlobalTheory.Unf.FlatForm.enorm_psi hψ, one_mul]
+  rw [e1, hF.quasi, eNorm_mul, GlobalTheory.Unf.FlatForm.enorm_psi hψ, one_mul]
 
 theorem inner_inv {ψ : AddChar (AF D.host.F) ℂ} {V V₀ W : HSp D} {ρ : ℕ} (d : HypDec V V₀ ρ)
     {χV χW : (AE D)ˣ →* Circle} {om : Om V W} {om' : Om V₀ W} (hW : IsWeilDatumO ψ V W χV χW om)
@@ -349,7 +349,7 @@ theorem tot_continuous (a : Gen ψ V V₀ W ρ Y) (ha : a.Is) (G : GA D W → �
   have hpos : Continuous fun p : (GA D W × Y) × UX D ρ × Mx D ρ V₀.rank =>
       (⟨a.d.nB p.2.2 * a.d.levi p.2.1.1, mul_mem (a.d.nB_mem_NFlag _) (a.d.levi_mem_NFlag p.2.1.2)⟩ : flagN a.d) :=
     ((a.d.continuous_nB.comp continuous_snd.snd).mul
-      ((a.d.continuous_levi.comp continuous_subtype_val).comp continuous_snd.fst)).subtype_mk _
+      ((a.d.continuous_levi.comp continuous_subtypeVal).comp continuous_snd.fst)).subtype_mk _
   have hTh : Continuous fun p : (GA D W × Y) × UX D ρ × Mx D ρ V₀.rank =>
       a.Th p.1.2 (a.d.nB p.2.2 * a.d.levi p.2.1.1) :=
     ha.cont.comp (continuous_fst.snd.prodMk hpos)
@@ -360,7 +360,7 @@ theorem tot_continuous (a : Gen ψ V V₀ W ρ Y) (ha : a.Is) (G : GA D W → �
       a.d.continuous_embed.comp (ha.g.comp continuous_fst.snd)
     have h2 : Continuous fun p : (GA D W × Y) × UX D ρ × Mx D ρ V₀.rank =>
         ((rat a.x₀ : Mx D W.rank ρ) ⬝ p.2.1.1.1 : Mx D W.rank ρ) :=
-      continuous_const.matrix_mul (Units.continuous_val.comp (continuous_subtype_val.comp continuous_snd.fst))
+      continuous_const.matrix_mul (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_snd.fst))
     have h3 : Continuous fun p : (GA D W × Y) × UX D ρ × Mx D ρ V₀.rank =>
         ((rat a.x₀ : Mx D W.rank ρ) ⬝ p.2.2 : WO V₀ W) :=
       continuous_const.matrix_mul continuous_snd.snd
@@ -414,11 +414,11 @@ theorem tot_integrable [SecondCountableTopology Y] [BorelSpace Y] (a : Gen ψ V 
     Integrable (a.tot G Φ) (a.totMeas 𝓑) := by
   obtain ⟨b1, b2, b3, b4, b5, b6, b7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   obtain ⟨-, -, i3, -⟩ := lattice_Mx D ρ V₀.rank
-  haveI : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
-  haveI : BorelSpace (UX D ρ) := ⟨rfl⟩
-  haveI := a.vW.haar
-  haveI : SFinite a.vW.μ := inferInstance
-  haveI := ha.sfin
+  have : BorelSpace (Mx D ρ V₀.rank) := ⟨rfl⟩
+  have : BorelSpace (UX D ρ) := ⟨rfl⟩
+  have := a.vW.haar
+  have : SFinite a.vW.μ := inferInstance
+  have := ha.sfin
   obtain ⟨sb, sU⟩ := GlobalTheory.Unf.sFinite_vol D ρ V₀.rank a.vb a.vU
   obtain ⟨C, A, hCA⟩ := GlobalTheory.T.wittUnfoldedIntegral_le_coreQuotientHeight D ψ V V₀ W ρ a.d a.χV a.χW a.om ha.weil a.vS a.vb a.vU a.vW a.x₀ ha.base G Φ
     hG hΦ 𝓑 h𝓑
@@ -428,19 +428,19 @@ theorem tot_integrable [SecondCountableTopology Y] [BorelSpace Y] (a : Gen ψ V 
     ‖a.d.mixS W ψ a.vS.μ a.vS.𝓕 (a.om (a.d.emb0 g, h) Φ) ((rat a.x₀ : Mx D W.rank ρ) ⬝ u.1.1)
       ((rat a.x₀ : Mx D W.rank ρ) ⬝ b)‖ₑ ∂a.vb.μ ∂a.vU.ν with hBd
   set F : GA D W × Y → ENNReal := fun q => ENNReal.ofReal (M q.2) * (‖G q.1‖ₑ * Bd (a.g q.2) q.1) with hF
-  haveI : SecondCountableTopology (GA D W × Y) := inferInstance
-  haveI : OpensMeasurableSpace (GA D W × Y) := Prod.opensMeasurableSpace
-  haveI : SecondCountableTopologyEither (UX D ρ) (Mx D ρ V₀.rank) := secondCountableTopologyEither_of_right _ _
-  haveI : OpensMeasurableSpace (UX D ρ × Mx D ρ V₀.rank) := Prod.opensMeasurableSpace
-  haveI : SecondCountableTopologyEither (GA D W × Y) (UX D ρ × Mx D ρ V₀.rank) :=
+  have : SecondCountableTopology (GA D W × Y) := inferInstance
+  have : OpensMeasurableSpace (GA D W × Y) := Prod.opensMeasurableSpace
+  have : SecondCountableTopologyEither (UX D ρ) (Mx D ρ V₀.rank) := secondCountableTopologyEither_of_right _ _
+  have : OpensMeasurableSpace (UX D ρ × Mx D ρ V₀.rank) := Prod.opensMeasurableSpace
+  have : SecondCountableTopologyEither (GA D W × Y) (UX D ρ × Mx D ρ V₀.rank) :=
     secondCountableTopologyEither_of_left _ _
-  haveI : OpensMeasurableSpace ((GA D W × Y) × UX D ρ × Mx D ρ V₀.rank) := Prod.opensMeasurableSpace
+  have : OpensMeasurableSpace ((GA D W × Y) × UX D ρ × Mx D ρ V₀.rank) := Prod.opensMeasurableSpace
   have hmeas : Measurable (a.tot G Φ) := (tot_continuous a ha G Φ hG hΦ).measurable
   refine ⟨hmeas.aestronglyMeasurable, ?_⟩
   show ∫⁻ p, ‖a.tot G Φ p‖ₑ ∂(((a.vW.μ.restrict 𝓑).prod a.m).prod (a.vU.ν.prod (a.vb.μ.restrict a.vb.𝓕))) < ⊤
   have hpt : ∀ q : GA D W × Y, ∫⁻ r, ‖a.tot G Φ (q, r)‖ₑ ∂(a.vU.ν.prod (a.vb.μ.restrict a.vb.𝓕)) ≤ F q := by
     intro q
-    have hc : ENNReal.ofReal (M q.2) * ‖G q.1‖ₑ ≠ ⊤ := ENNReal.mul_ne_top ENNReal.ofReal_ne_top enorm_ne_top
+    have hc : ENNReal.ofReal (M q.2) * ‖G q.1‖ₑ ≠ ⊤ := ENNReal.mul_ne_top ENNReal.ofReal_ne_top eNorm_ne_top
     calc ∫⁻ r, ‖a.tot G Φ (q, r)‖ₑ ∂(a.vU.ν.prod (a.vb.μ.restrict a.vb.𝓕))
         ≤ ∫⁻ u, ∫⁻ b, ‖a.tot G Φ (q, (u, b))‖ₑ ∂(a.vb.μ.restrict a.vb.𝓕) ∂a.vU.ν := lintegral_prod_le _
       _ ≤ ∫⁻ u, ∫⁻ b, ENNReal.ofReal (M q.2) * ‖G q.1‖ₑ *
@@ -449,11 +449,11 @@ theorem tot_integrable [SecondCountableTopology Y] [BorelSpace Y] (a : Gen ψ V 
           refine lintegral_mono fun u => lintegral_mono fun b => ?_
           have hmem : a.d.nB b * a.d.levi u.1 ∈ flagN a.d := mul_mem (a.d.nB_mem_NFlag b) (a.d.levi_mem_NFlag u.2)
           have hth : ‖a.Th q.2 (a.d.nB b * a.d.levi u.1)‖ₑ ≤ ENNReal.ofReal (M q.2) := by
-            rw [← ofReal_norm_eq_enorm]; exact ENNReal.ofReal_le_ofReal (hMb _ _ hmem)
+            rw [← ofReal_norm]; exact ENNReal.ofReal_le_ofReal (hMb _ _ hmem)
           show ‖G q.1 * (a.Th q.2 (a.d.nB b * a.d.levi u.1) * a.d.mixS W ψ a.vS.μ a.vS.𝓕
             (a.om (a.d.emb0 (a.g q.2), q.1) Φ) ((rat a.x₀ : Mx D W.rank ρ) ⬝ u.1.1)
               ((rat a.x₀ : Mx D W.rank ρ) ⬝ b))‖ₑ ≤ _
-          rw [enorm_mul, enorm_mul, ← mul_assoc, mul_comm (‖G q.1‖ₑ), mul_assoc, mul_assoc]
+          rw [eNorm_mul, eNorm_mul, ← mul_assoc, mul_comm (‖G q.1‖ₑ), mul_assoc, mul_assoc]
           gcongr
       _ = ENNReal.ofReal (M q.2) * ‖G q.1‖ₑ * Bd (a.g q.2) q.1 := by
           simp only [hBd]
@@ -485,9 +485,9 @@ theorem fubini_tot (a : Gen ψ V V₀ W ρ Y) (ha : a.Is) (G : GA D W → ℂ) (
     ∫ p, a.tot G Φ p ∂(a.totMeas B₀) = ∫ y, ∫ h in B₀,
       G h * fl ψ a.d W a.vS a.vb a.vU (a.Th y) (rat a.x₀) (a.om (a.d.emb0 (a.g y), h) Φ) ∂a.vW.μ ∂a.m := by
   obtain ⟨b1, b2, b3, b4, b5, b6, b7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
-  haveI := a.vW.haar
-  haveI : SFinite a.vW.μ := inferInstance
-  haveI := ha.sfin
+  have := a.vW.haar
+  have : SFinite a.vW.μ := inferInstance
+  have := ha.sfin
   obtain ⟨sb, sU⟩ := GlobalTheory.Unf.sFinite_vol D ρ V₀.rank a.vb a.vU
   have hI' : Integrable (a.tot G Φ) (((a.vW.μ.restrict B₀).prod a.m).prod (a.vU.ν.prod (a.vb.μ.restrict a.vb.𝓕))) :=
     hI
@@ -523,9 +523,9 @@ namespace GlobalTheory.Asc
 theorem unfold_family : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V V₀ W : HSp D) (ρ : ℕ) (Y : Type) [TopologicalSpace Y] [SecondCountableTopology Y] [MeasurableSpace Y] [BorelSpace Y] (a : Gen ψ V V₀ W ρ Y), a.Is → ∀ (G : GA D W → ℂ) (Φ : WO V W → ℂ), RapidDec W G → IsThetaFunO ψ V W Φ → ∀ 𝓑 : Set (GA D W), IsFundamentalDomain (GQ W ⊓ Rgrp W (rat a.x₀) : Subgroup (GA D W)) 𝓑 a.vW.μ → Integrable (a.tot G Φ) (a.totMeas 𝓑) ∧ IntegrableOn (a.ker G Φ) 𝓑 a.vW.μ ∧ a.lhs G Φ = ∫ p, a.tot G Φ p ∂(a.totMeas 𝓑) ∧ ∀ S : Set (GA D W), MeasurableSet S → ∫ h in 𝓑 ∩ S, a.ker G Φ h ∂a.vW.μ = ∫ p in {p | p.1.1 ∈ S}, a.tot G Φ p ∂(a.totMeas 𝓑) := by
   intro D ψ V V₀ W ρ Y _ _ _ _ a ha G Φ hG hΦ 𝓑 h𝓑
   obtain ⟨b1, b2, b3, b4, b5, b6, b7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
-  haveI := a.vW.haar
-  haveI : SFinite a.vW.μ := inferInstance
-  haveI := ha.sfin
+  have := a.vW.haar
+  have : SFinite a.vW.μ := inferInstance
+  have := ha.sfin
   obtain ⟨sb, sU⟩ := GlobalTheory.Unf.sFinite_vol D ρ V₀.rank a.vb a.vU
   have hI := Gen.tot_integrable a ha G Φ hG hΦ 𝓑 h𝓑
   obtain ⟨hker, -, hE⟩ := Gen.fubini_tot a ha G Φ 𝓑 hI

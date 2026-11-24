@@ -634,7 +634,7 @@ theorem exists_level : ∀ {D : D7} (V : HSp D) (n : ℕ) (ι : Formalism.MainNo
       (mul_mem (inv_mem (hGf y)) (hGf x))
     exact hinj (inv_mul_eq_one.1 h2).symm
   have hstd : Submodule.IsFullLattice D.host.E (Formalism.L2.Col.stdLat D.host.E V.rank) := by
-    letI := Formalism.L2.Col.stdLat_lattice (E := D.host.E) (n := V.rank)
+    let := Formalism.L2.Col.stdLat_lattice (E := D.host.E) (n := V.rank)
     constructor
     apply eq_top_iff.mpr
     intro v _
@@ -678,7 +678,7 @@ theorem exists_level : ∀ {D : D7} (V : HSp D) (n : ℕ) (ι : Formalism.MainNo
     rw [Subgroup.comap_inf, Subgroup.coe_inf]
     refine hK₀o.inter (Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_)
     obtain ⟨π, hπ, -⟩ := GlobalTheory.Mass.existsUnique_isFinProj D.sp.cm.sig V.gram
-    have hc : Continuous (finHom V) := (continuous_subtype_val.comp hπ.continuous).congr fun κ => hπ κ
+    have hc : Continuous (finHom V) := (continuous_subtypeVal.comp hπ.continuous).congr fun κ => hπ κ
     have hmN : m ≠ 0 := hm.ne'
     have hev1 : ∀ᶠ κ in nhds (1 : GA D V), ∃ z : Matrix (Fin V.rank) (Fin V.rank) (Lev.EAf D),
         (∀ i j, z i j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E) ∧ (Lev.finE V κ).val - 1 = m • z := by
@@ -979,7 +979,7 @@ theorem finAdEquiv_one_tmul (D : D7) (k : D.host.E) :
   intro w
   rw [GlobalTheory.LFun.finAdEquiv_tmul]
   simp only [GlobalTheory.BotFormula.toFinE, Formalism.MainNotions.StandardLatticesGL3.inc, Formalism.UG.inclE, RingEquiv.trans_apply,
-    AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_ringEquiv, Algebra.TensorProduct.includeLeftRingHom_apply,
+    AlgEquiv.coe_toRingEquiv, AlgEquiv.coe_toRingEquiv, Algebra.TensorProduct.includeLeftRingHom_apply,
     Algebra.TensorProduct.comm_tmul]
   rw [GlobalTheory.LFun.finAdEquiv_tmul]
   simp
@@ -1016,7 +1016,7 @@ theorem hasInfExp_of_hasFinPart : ∀ {D : D7} {N : ℕ} (c : HeckeU D N) (e : �
   obtain ⟨ρ, hρ, r1, r0⟩ := exists_real_chart D θ hθ (GlobalTheory.CMTypePlaces.places_bijective D)
   obtain ⟨s, hs⟩ := RealChart.exists_chart D θ hθ ρ hρ r1 r0
   obtain ⟨-, a, b, -, -, hab, ha, hb⟩ := GlobalTheory.IdeleParts.congr_open_and_parts D
-  haveI : Nonempty D.what₂.Tau := ⟨τ₀⟩
+  have : Nonempty D.what₂.Tau := ⟨τ₀⟩
   have ext : ∀ a b : AE D, finPart D a = finPart D b → (∀ τ, θ τ (infPart D a) = θ τ (infPart D b)) → a = b := by
     intro a b h1 h2
     rw [← sub_eq_zero]
@@ -1048,7 +1048,7 @@ theorem hasInfExp_of_hasFinPart : ∀ {D : D7} {N : ℕ} (c : HeckeU D N) (e : �
       ((χ (T.toHomUnits z) : Circle) : ℂ) = ∏ τ, ((z τ : ℂ) / ((‖(z τ : ℂ)‖ : ℝ) : ℂ)) ^ (e * c.n τ) := by
     intro z
     refine (denseRange_units (tauE D) hd).induction_on z (isClosed_eq
-      (continuous_subtype_val.comp (hχ.1.comp Tc)) (continuous_finsetProd _ fun τ _ => ?_)) fun k => ?_
+      (continuous_subtypeVal.comp (hχ.1.comp Tc)) (continuous_finsetProd _ fun τ _ => ?_)) fun k => ?_
     · have h1 : Continuous fun z : D.what₂.Tau → ℂˣ => (z τ : ℂ) := Units.continuous_val.comp (continuous_apply τ)
       have h2 : ∀ z : D.what₂.Tau → ℂˣ, ((‖(z τ : ℂ)‖ : ℝ) : ℂ) ≠ 0 := fun z =>
         Complex.ofReal_ne_zero.2 (norm_ne_zero_iff.2 (z τ).ne_zero)
@@ -1120,9 +1120,9 @@ theorem measure_eq_relIndex_smul : ∀ {D : D7} (V : HSp D) (n : ℕ) (ι : Form
   Lev.IsMeasLevDef V K μ → Lev.IsMeasLevDef V K₀ μ₀ → μ = (J.relIndex J₀ : ENNReal) • μ₀ := by
   intro D V n ι J J₀ K K₀ μ μ₀ hι hJ hJi hK hK₀ hJK hJK₀ hμ hμ₀
   obtain ⟨hLC, hSC, hT2, hB, hTG, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hLC; haveI := hSC; haveI := hT2; haveI := hB; haveI := hTG
-  haveI : μ.IsHaarMeasure := hμ.1
-  haveI : μ₀.IsHaarMeasure := hμ₀.1
+  have := hLC; have := hSC; have := hT2; have := hB; have := hTG
+  have : μ.IsHaarMeasure := hμ.1
+  have : μ₀.IsHaarMeasure := hμ₀.1
 
   have hfin : ∀ g : GA D V, ∃ x, Lev.finE V (ι x) = Lev.finE V g := by
     intro g
@@ -1156,17 +1156,17 @@ theorem measure_eq_relIndex_smul : ∀ {D : D7} (V : HSp D) (n : ℕ) (ι : Form
       exact hg
   have hidx : (K.comap (Lev.finE V)).relIndex (K₀.comap (Lev.finE V)) = J.relIndex J₀ := by
     rw [e1, Subgroup.relIndex_comap, Subgroup.relIndex_comap, ← Subgroup.map_map, e2]
-  haveI : ((K.comap (Lev.finE V)).subgroupOf (K₀.comap (Lev.finE V))).FiniteIndex := ⟨hidx.trans_ne hJi⟩
+  have : ((K.comap (Lev.finE V)).subgroupOf (K₀.comap (Lev.finE V))).FiniteIndex := ⟨hidx.trans_ne hJi⟩
   have hm := Formalism.DoubleCosetMeasures.P.GLRed.relIndex_mul_measure _ _ hHH hK.1.measurableSet μ
   rw [hidx, GlobalTheory.Mass.Levels.measure_comap_finE hμ, mul_one] at hm
   have h0 : μ₀ (K₀.comap (Lev.finE V)) = 1 := GlobalTheory.Mass.Levels.measure_comap_finE hμ₀
   have heq := Measure.isMulLeftInvariant_eq_smul μ μ₀
   have hc : ((Measure.haarScalarFactor μ μ₀ : NNReal) : ENNReal) = (J.relIndex J₀ : ENNReal) := by
     have := congrArg (fun m : Measure (GA D V) => m ((K₀.comap (Lev.finE V) : Subgroup (GA D V)) : Set (GA D V))) heq
-    simp only [Measure.smul_apply, h0, ← hm] at this
+    simp only [smul_apply, h0, ← hm] at this
     rw [this, ENNReal.smul_def, smul_eq_mul, mul_one]
   ext s hs
-  rw [heq, Measure.smul_apply, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, smul_eq_mul, hc]
+  rw [heq, smul_apply, smul_apply, ENNReal.smul_def, smul_eq_mul, smul_eq_mul, hc]
 
 end GlobalTheory.LevelIndexMeasure
 end -- clump:auto
@@ -1220,7 +1220,7 @@ theorem memL2_of_continuous_definite : ∀ {D : D7} (V : HSp D) (K : Subgroup (G
     ∀ u : GA D V → ℂ, Continuous u → (∀ γ ∈ GQ V, ∀ h, u (γ * h) = u h) → GlobalTheory.AutomorphicL2Unitary.MemL2Quotient (GQ V) μ u := by
   intro D V K μ 𝓕 hV _ hμ u hu hinv
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.2.2.2.2.2.2
+  have := hT.2.2.2.2.2.2
   have := hμ.1.1
   obtain ⟨C, hC, hcov⟩ := GlobalTheory.Mem.AnisoQuotient.exists_compact D V
     (GlobalTheory.BesselConvDefinite.isAniso_of_isDefinite V hV.1 hV.2)
@@ -1417,7 +1417,7 @@ theorem pi_prod_rows_orthonormal {K : Type} [Fintype K] [DecidableEq K] {κ : K 
   rw [Finset.prod_congr rfl (fun k _ => hA k (T k) (T'' k)), Finset.prod_boole]
   by_cases hT : T = T''
   · subst hT; simp
-  · rw [if_neg hT, if_neg]
+  · rw [ite_eq_right hT, ite_eq_right]
     intro hall
     exact hT (funext fun k => hall k (Finset.mem_univ k))
 
@@ -1657,8 +1657,8 @@ theorem finite_cls_A (hX : IsDictWt P X) (T : Tup D P.a P.d P.n) : Finite (Cls D
     hX.1.1.levA_iff h𝓕 _ (classFun_A hX 1 T)).1
 
 theorem continuous_lift (hX : IsDictWt P X) (T : Tup D P.a P.d P.n) : Continuous (X.lift T) := by
-  haveI := finite_cls_A hX T
-  haveI := Fintype.ofFinite (Cls D P.a (intG D P.a))
+  have := finite_cls_A hX T
+  have := Fintype.ofFinite (Cls D P.a (intG D P.a))
   have e : X.lift T = fun h => ∑ x : Cls D P.a (intG D P.a), ((gam D (intG D P.a) x.out : ℂ))⁻¹ *
       thetaKO X.om (X.ιA x.out) h (X.fock T) := by
     funext h

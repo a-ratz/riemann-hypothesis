@@ -79,7 +79,7 @@ theorem absNorm_eq_relIndex_mul (J J' : FractionalIdeal (𝓞 K)⁰ K) (hJ' : J'
       Q.toAddSubgroup.map φ := by
     intro Q
     ext x
-    simp only [Submodule.mem_toAddSubgroup, FractionalIdeal.coe_mul, FractionalIdeal.coe_spanSingleton,
+    simp only [Submodule.mem_toAddSubgroup, FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_spanSingleton,
       Submodule.mem_span_singleton_mul, AddSubgroup.mem_map]
     constructor
     · rintro ⟨z, hz, rfl⟩

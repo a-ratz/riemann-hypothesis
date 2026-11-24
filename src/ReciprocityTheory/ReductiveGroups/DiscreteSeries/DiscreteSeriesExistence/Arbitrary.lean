@@ -69,7 +69,7 @@ theorem exists_datum_of_isKTypeOf (hσ : IsURepOn (UJset ε) σ) {Λ : Fin n →
     ∃ V : Submodule ℂ (smD ε σ), IsKIrrHW ε (smE ε σ) Λ V ∧ V ≠ ⊥ ∧
       (∀ k ∈ Kset ε, ∀ v ∈ V, ∃ w ∈ V, (w : H) = σ k v) ∧
       V.map (smD ε σ).subtype ≤ sSup {S' : Submodule ℂ H | Formalism.MainNotions.S.IsKTypeOf ε σ Λ S'} := by
-  haveI : FiniteDimensional ℂ S := hS.1
+  have : FiniteDimensional ℂ S := hS.1
   obtain ⟨α, hadd, hsmul, hαK, hαsm, hαS⟩ := exists_moll_data hσ S
   let A : H →ₗ[ℂ] H := { toFun := opConv ε σ α, map_add' := hadd, map_smul' := hsmul }
   have hAv : ∀ v, A v = opConv ε σ α v := fun v => rfl
@@ -128,7 +128,7 @@ theorem exists_datum_of_isKTypeOf (hσ : IsURepOn (UJset ε) σ) {Λ : Fin n →
   have hVmap : V.map (smD ε σ).subtype = S₁ := by
     rw [Submodule.map_comap_subtype]
     exact inf_eq_right.2 hS₁D
-  haveI hVfin : FiniteDimensional ℂ V :=
+  have hVfin : FiniteDimensional ℂ V :=
     LinearEquiv.finiteDimensional (Submodule.comapSubtypeEquivOfLe hS₁D).symm
   have hVK : ∀ k ∈ Kset ε, ∀ v ∈ V, ∃ w ∈ V, (w : H) = σ k v := by
     intro k hk v hv
@@ -139,7 +139,7 @@ theorem exists_datum_of_isKTypeOf (hσ : IsURepOn (UJset ε) σ) {Λ : Fin n →
   obtain ⟨w₀, hw₀S, hw₀, hw₀HW⟩ := exists_isKHWVec_of_isKTypeOf hσ hD hS₁K hS₁D
   refine ⟨V, ⟨hVfin, hKsub, ?_, w₀, hw₀S, hw₀, hw₀HW⟩, ?_, hVK, ?_⟩
   · intro S' hS'V hS'k
-    haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'V
+    have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hS'V
     have hK' := kStable_of_isKStableSub hσ hD S' inferInstance hS'k
     rcases hirr (S'.map (smD ε σ).subtype) ((Submodule.map_mono hS'V).trans hVmap.le) (by
         rintro g hg _ ⟨x, hx, rfl⟩

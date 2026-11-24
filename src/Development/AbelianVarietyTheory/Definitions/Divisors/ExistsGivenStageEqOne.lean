@@ -96,9 +96,9 @@ theorem canFlip_col {m i : ℕ} (hi : i < m) : ∀ j, j ≤ m →
     refine ⟨canFlip_append h1 (h2 ▸ .cons ?_ (.nil _)), ?_⟩
     · have := infix_map_range (midEdge m i j) (p := i + m - j - 1) (n := m + m) (by omega)
       have e1 : midEdge m i j (i + m - j - 1) = .theta i j := by
-        rw [midEdge, if_neg (by omega), if_pos (by omega)]; congr 1; omega
+        rw [midEdge, ite_eq_right (by omega), ite_eq_left (by omega)]; congr 1; omega
       have e2 : midEdge m i j (i + m - j - 1 + 1) = .ex i j := by
-        rw [midEdge, if_neg (by omega), if_neg (by omega), if_pos (by omega)]
+        rw [midEdge, ite_eq_right (by omega), ite_eq_right (by omega), ite_eq_left (by omega)]
       rwa [e1, e2] at this
     · simp only [List.map_cons, List.map_nil, List.foldl_cons, List.foldl_nil, flipPath, List.map_map]
       refine List.map_congr_left fun p _ => ?_
@@ -151,7 +151,7 @@ attribute [local instance] borelSpaceKw
 def unifAt (w : Pl D.host.E) : (Kw w)ˣ := atFin w (unif w)
 
 theorem isUnif_unifAt (w : Pl D.host.E) : IsUnif (unifAt w) := by
-  haveI : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have e := ValuativeRel.isEquiv (valuation (Kw w)) (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ)))
   have h : Valued.v (unifAt w : Kw w) = WithZero.exp (-1 : ℤ) := unif_spec w
   refine le_antisymm (le_uniformizer_iff.2 (e.lt_one_iff_lt_one.2 (by rw [h, ← WithZero.exp_zero, WithZero.exp_lt_exp]; omega))) ?_
@@ -175,7 +175,7 @@ theorem depthAt_w (G : GridData L sc) {v : Pl D.host.F} (hv : v ∈ G.pl.S0) :
     cosExp G (G.pl.w v) = G.pl.depth sc v ∧ depthAt G (G.pl.w v) = G.pl.depth sc v := by
   classical
   have h : cosExp G (G.pl.w v) = G.pl.depth sc v := by
-    rw [cosExp, if_pos (by unfold Places.W0; convert Finset.mem_image_of_mem _ hv), G.pl.under_w hv]
+    rw [cosExp, ite_eq_left (by unfold Places.W0; convert Finset.mem_image_of_mem _ hv), G.pl.under_w hv]
   exact ⟨h, by rw [depthAt, h, max_eq_left (G.pl.depth_pos sc v)]⟩
 
 theorem depthAt_of_notMem (G : GridData L sc) {w : Pl D.host.E} (hw : w ∉ G.pl.W0) : cosExp G w = 0 ∧ depthAt G w = 1 := by
@@ -209,7 +209,7 @@ theorem rank_vertex (G : GridData L sc) (t : T) (w : Pl D.host.E) {X : ℕ × �
 
 theorem isTame_loc {χ : HChar D.host.E} {w : Pl D.host.E} (h : χ.TameAt w) : IsTame (χ.loc w) := by
   intro x hx
-  haveI : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have h1 : Valued.v ((x : Kw w) - 1) < 1 :=
     (ValuativeRel.isEquiv (valuation (Kw w)) (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ)))).lt_one_iff_lt_one.1 hx
   refine h x ?_ ?_
@@ -266,7 +266,7 @@ def colFrame (L : LevCh D T) : ∀ j, GL (Fin (columnBlock L j).sp.rank) (Formal
 theorem colFrame_lt (L : LevCh D T) {j : ℕ} (h : j < D.R.m) : HEq (colFrame L j) (L.βY j) := by
   cases j with
   | zero => rfl
-  | succ j => rw [colFrame, dif_pos h]; exact cast_heq _ _
+  | succ j => rw [colFrame, dite_eq_left h]; exact cast_heq _ _
 
 theorem colFrame_m (L : LevCh D T) : HEq (colFrame L D.R.m) L.βX := by
   obtain ⟨j, hj⟩ : ∃ j, D.R.m = j + 1 := ⟨D.R.m - 1, by have := D.R.two_le_m; omega⟩

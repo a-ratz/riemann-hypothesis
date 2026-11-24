@@ -106,7 +106,7 @@ theorem frame_mem {D : Formalism.BasicNotions.D7} {T : D.host.E} (Λ : Submodule
     exact Λ.smul_mem o hz
   | cast b =>
     have e1 : (-((D.R.rS - (Fin.castSucc b).val : ℕ) : ℤ)) = -((D.R.rS : ℤ) - ((b : ℕ) : ℤ)) := by
-      rw [Fin.coe_castSucc, Nat.cast_sub b.isLt.le]
+      rw [Fin.val_castSucc, Nat.cast_sub b.isLt.le]
     rw [e1] at hx
     have hmem : x • F.fl.e b ∈ XS D F.fl := by
       unfold XS

@@ -48,15 +48,15 @@ namespace GlobalTheory.TwLat
 theorem exists_GLw_lat_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (K : GlobalTheory.UnitLemma.UQ) (e : K.E ≃+* w.adicCompletion E), (∀ x, e (K.c x) = cj w (e x)) → (∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) → (∀ x, GlobalTheory.UnitLemma.val K.O x = ordL (e x)) → ∀ (B : GlobalTheory.UnitLemma.InvAlg K) (m : ℕ) (b : Module.Basis (Fin m) K.E B.A), ∀ L : Submodule K.O B.A, GlobalTheory.UnitLemma.IsLat K.O K.E L → ∃ g : GLw m w, GlobalTheory.TwLat.lat e b g = L := by
   intro E _ _ _ _ w _ K e _ _ _ B m b L hL
   obtain ⟨hfg, hsp⟩ := hL
-  haveI : Module.Finite K.O L := Module.Finite.iff_fg.mpr hfg
-  haveI : NoZeroSMulDivisors K.O B.A := by
+  have : Module.Finite K.O L := Module.Finite.iff_fg.mpr hfg
+  have : NoZeroSMulDivisors K.O B.A := by
     constructor
     intro c x h
     rw [← algebraMap_smul K.E c x, smul_eq_zero] at h
     rcases h with h | h
     · left; exact (IsFractionRing.injective K.O K.E) (by simpa using h)
     · right; exact h
-  haveI : Module.Free K.O L := Module.free_of_finite_type_torsion_free'
+  have : Module.Free K.O L := Module.free_of_finite_type_torsion_free'
   set n := Module.finrank K.O L
   let bL := Module.finBasis K.O L
   let v : Fin n → B.A := fun i => (bL i : B.A)
@@ -81,7 +81,7 @@ theorem exists_GLw_lat_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     intro j; simp [bE', v', bE, Module.Basis.mk_apply]
   let M : Matrix (Fin m) (Fin m) K.E := b.toMatrix bE'
   have hM : IsUnit M := by
-    haveI := b.invertibleToMatrix bE'
+    have := b.invertibleToMatrix bE'
     exact isUnit_of_invertible M
   have hMe : IsUnit (M.map e) := hM.map e.mapMatrix
   refine ⟨hMe.unit, ?_⟩

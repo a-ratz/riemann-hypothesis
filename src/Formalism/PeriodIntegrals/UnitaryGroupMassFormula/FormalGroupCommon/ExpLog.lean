@@ -244,14 +244,14 @@ theorem eq_one_add_X_of_deriv {g : PowerSeries K}
     _ = 1 + PowerSeries.X := by rw [h1, one_mul]
 
 theorem derivative_log_eq : PowerSeries.derivative (R := K) (PowerSeries.log K) = (1 + PowerSeries.X)⁻¹ := by
-  rw [PowerSeries.deriv_log, PowerSeries.eq_inv_iff_mul_eq_one (by simp)]
+  rw [PowerSeries.derivative_log, PowerSeries.eq_inv_iff_mul_eq_one (by simp)]
   ext n
   rcases n with _ | n
   · rw [mul_add, mul_one, map_add (f := _), PowerSeries.coeff_zero_mul_X, add_zero, PowerSeries.coeff_mk,
-      PowerSeries.coeff_one, if_pos rfl]
+      PowerSeries.coeff_one, ite_eq_left rfl]
     simp
   · rw [mul_add, mul_one, map_add (f := _), PowerSeries.coeff_succ_mul_X, PowerSeries.coeff_mk,
-      PowerSeries.coeff_mk, PowerSeries.coeff_one, if_neg (Nat.succ_ne_zero n)]
+      PowerSeries.coeff_mk, PowerSeries.coeff_one, ite_eq_right (Nat.succ_ne_zero n)]
     simp [pow_succ]
 
 theorem exp_subst_log :
@@ -297,7 +297,7 @@ theorem logS_eq_subst {σ : Type} {F : MvPowerSeries σ ℂ_[p]} (hF : constantC
   · refine Finset.sum_congr rfl fun n _ => ?_
     rcases Nat.eq_zero_or_pos n with rfl | hn
     · simp
-    · rw [if_neg hn.ne', PowerSeries.coeff_log, if_neg hn.ne', smul_eq_mul]
+    · rw [ite_eq_right hn.ne', PowerSeries.coeff_log, ite_eq_right hn.ne', smul_eq_mul]
       simp only [map_div₀, map_pow, map_neg, map_one, map_natCast]
       ring
   · intro n hn

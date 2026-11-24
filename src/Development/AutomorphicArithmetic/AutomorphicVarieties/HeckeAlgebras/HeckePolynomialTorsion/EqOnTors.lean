@@ -73,8 +73,8 @@ theorem char_triv {a : Weil h →* (w.adicCompletion F)ˣ} (ha : IsLocalArtin h 
   have hdeg : deg s⁻¹ = 1 := by
     rw [deg_inv, ← ha.ord_eq, hs]
     exact ord_eq_one GlAx.unif_spec
-  letI : TopologicalSpace B := ⊥
-  haveI : DiscreteTopology B := ⟨rfl⟩
+  let : TopologicalSpace B := ⊥
+  have : DiscreteTopology B := ⟨rfl⟩
   have := hd.equalizer hχ.continuous (continuous_const (y := (1 : B))) (funext fun t => by
     obtain ⟨τ, hτ⟩ := exists_eq_zpow_mul hdeg t
     change χ (Subgroup.inclusion (Weil_le_Dec h) t) = 1
@@ -159,20 +159,20 @@ theorem char_tors {B : Type} [Group B] [Finite B] (χ : Dec (F := F) A →* B) (
   have hnpos : 0 < Nat.card B := Nat.card_pos
   have hkpos : 0 < M * Nat.card B := Nat.mul_pos hM hnpos
   obtain ⟨ζ, hζ⟩ := _root_.GlobalTheory.exists_fixed_dvd_deg F Ω A w h (M * Nat.card B) hkpos
-  haveI : FiniteDimensional F (IntermediateField.adjoin F {ζ}) :=
+  have : FiniteDimensional F (IntermediateField.adjoin F {ζ}) :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral ζ)
   obtain ⟨H, hH⟩ := ProfiniteGrp.exist_openNormalSubgroup_sub_open_nhds_of_one
     (IntermediateField.fixingSubgroup_isOpen (IntermediateField.adjoin F {ζ})) (Subgroup.one_mem _)
   let Hs : Subgroup (G F Ω) := (H.toOpenSubgroup : Subgroup (G F Ω))
-  haveI hHn : Hs.Normal := H.isNormal'
+  have hHn : Hs.Normal := H.isNormal'
   have hHo : IsOpen (Hs : Set (G F Ω)) := H.toOpenSubgroup.isOpen
   have hHfix : ∀ x : G F Ω, x ∈ Hs → x ζ = ζ := by
     intro x hx
     exact ((IntermediateField.mem_fixingSubgroup_iff _ x).mp (hH hx)) ζ
       (IntermediateField.mem_adjoin_simple_self F ζ)
   let V : Subgroup (Dec (F := F) A) := Hs.subgroupOf (Dec (F := F) A)
-  haveI : V.Normal := hHn.subgroupOf _
-  have hVo : IsOpen (V : Set (Dec (F := F) A)) := hHo.preimage continuous_subtype_val
+  have : V.Normal := hHn.subgroupOf _
+  have hVo : IsOpen (V : Set (Dec (F := F) A)) := hHo.preimage continuous_subtypeVal
   have hi : DenseRange (Subgroup.inclusion (Weil_le_Dec h)) := weil_group_dense_in_galois_group F Ω w A h
   let χd : Weil h →* Multiplicative (ZMod (M * Nat.card B)) :=
     (AddMonoidHom.toMultiplicative (Int.castAddHom (ZMod (M * Nat.card B)))).comp (degHom h)
@@ -227,11 +227,11 @@ theorem eq_on_tors {R : Type} [CommRing R] [IsLocalRing R] [IsNoetherianRing R] 
     (hI : ∀ g : Dec (F := F) A, (g : G F Ω) ∈ Ine (F := F) A → ψ g = ψ' g) (g : Dec (F := F) A) (M : ℕ) (hM : 0 < M)
     (hg : g ^ M ∈ (commutator (Dec (F := F) A)).topologicalClosure) : ψ g = ψ' g := by
   have hfg : (IsLocalRing.maximalIdeal R).FG := IsNoetherian.noetherian _
-  haveI : Finite (R ⧸ IsLocalRing.maximalIdeal R) := ‹Finite (IsLocalRing.ResidueField R)›
+  have : Finite (R ⧸ IsLocalRing.maximalIdeal R) := ‹Finite (IsLocalRing.ResidueField R)›
   have hN : ∀ N : ℕ, Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ N) (ψ g : R) =
       Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ N) (ψ' g : R) := by
     intro N
-    haveI : Finite (R ⧸ IsLocalRing.maximalIdeal R ^ N) := Ideal.finite_quotient_pow hfg N
+    have : Finite (R ⧸ IsLocalRing.maximalIdeal R ^ N) := Ideal.finite_quotient_pow hfg N
     let mkN : R →* R ⧸ IsLocalRing.maximalIdeal R ^ N :=
       (Ideal.Quotient.mk (IsLocalRing.maximalIdeal R ^ N)).toMonoidHom
     let u : Dec (F := F) A →* (R ⧸ IsLocalRing.maximalIdeal R ^ N)ˣ := (Units.map mkN).comp ψ

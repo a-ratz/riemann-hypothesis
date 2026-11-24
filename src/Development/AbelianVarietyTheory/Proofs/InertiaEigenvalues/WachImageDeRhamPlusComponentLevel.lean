@@ -458,9 +458,9 @@ theorem image : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf
   have hι : ∀ c, ι c ∈ ((D.loc l).PD K).Fil 0 := by
     intro c
     let tied := D.locT l
-    haveI : IsDomain (D.loc l).R.BdR :=
+    have : IsDomain (D.loc l).R.BdR :=
       (GlobalTheory.Per.TiedField.tied_field l (D.loc l) (D.locA l) tied).1.isDomain
-    haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+    have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
     obtain ⟨a, ha⟩ := GlobalTheory.ExpImage.EmbFil.mem_range_of_isIntegral
       (Ω := Om l) ι (IsIntegral.of_finite ℚ_[l] c)
     obtain ⟨y, hy, -⟩ := tied.om a

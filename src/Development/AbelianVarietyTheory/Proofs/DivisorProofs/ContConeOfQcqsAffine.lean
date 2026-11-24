@@ -80,14 +80,14 @@ private theorem eqv_of_isIso' (R : Type) [CommRing R] (F : Shv R) {E E' : Spc} (
 
 theorem contCone_bc_affine : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary F → ∀ (S : Scheme.{0}) (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffineHom (G.obj i).hom) → ∀ (W : Scheme.{0}) (r : W ⟶ S), IsAffine W → ContCone R F ((bc (sch.map r)).mapCone c) := by
   intro R _ F hF S I _ _ G c hc hG W r hW
-  haveI : IsConnected I := IsCofiltered.isConnected I
+  have : IsConnected I := IsCofiltered.isConnected I
   obtain ⟨e, -⟩ := bc_sch_iso S W r
   let P : Over S ⥤ Scheme.{0} := Over.pullback r ⋙ Over.forget W
   have hlim : IsLimit (P.mapCone c) := isLimitOfPreserves P hc
   have haff : ∀ i, IsAffine ((G ⋙ P).obj i) := by
     intro i
     change IsAffine (pullback (G.obj i).hom r)
-    haveI := hG i
+    have := hG i
     exact isAffine_of_isAffineHom (pullback.snd (G.obj i).hom r)
   have h1 : ContCone R F (sch.mapCone (P.mapCone c)) := _root_.GlobalTheory.EtC.contCone_of_affine_limit R F hF I (G ⋙ P) (P.mapCone c) hlim haff
   let α : (G ⋙ P) ⋙ sch ⟶ G ⋙ bc (sch.map r) :=
@@ -236,9 +236,9 @@ theorem contCone_bc_of_qcqs : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary 
     have : IsSeparated (f ≫ terminal.from W) := by
       rw [Subsingleton.elim (f ≫ terminal.from W) (terminal.from V)]; infer_instance
     exact IsSeparated.of_comp f (terminal.from W)
-  haveI : (@QuasiCompact ⊓ @IsSeparated : MorphismProperty Scheme.{0}).IsStableUnderBaseChange :=
+  have : (@QuasiCompact ⊓ @IsSeparated : MorphismProperty Scheme.{0}).IsStableUnderBaseChange :=
     MorphismProperty.IsStableUnderBaseChange.inf
-  haveI : (@QuasiCompact ⊓ @IsSeparated : MorphismProperty Scheme.{0}).IsMultiplicative :=
+  have : (@QuasiCompact ⊓ @IsSeparated : MorphismProperty Scheme.{0}).IsMultiplicative :=
     { id_mem := fun X => ⟨inferInstance, inferInstance⟩
       comp_mem := fun f g hf hg => by
         obtain ⟨hf1, hf2⟩ := hf
@@ -314,12 +314,12 @@ theorem contCone_of_qcqs_affine : ∀ (R : Type) [CommRing R] (F : Shv R), Finit
   intro R _ F hF I _ _ G c hc hcp hqs haff
   obtain ⟨i₀⟩ : Nonempty I := IsCofiltered.nonempty
   have hc' : IsLimit ((Over.conePost G i₀).obj c) := Over.isLimitConePost i₀ hc
-  haveI := hcp i₀
-  haveI := hqs i₀
+  have := hcp i₀
+  have := hqs i₀
   have hcore := _root_.GlobalTheory.contCone_bc_of_qcqs R F hF (G.obj i₀) (Over i₀) (Over.post G) ((Over.conePost G i₀).obj c) hc'
     (fun j => haff _ _ j.hom) (G.obj i₀) (𝟙 _)
   have hb := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties R F
-  haveI : IsIso (sch.map (𝟙 (G.obj i₀))) := inferInstance
+  have : IsIso (sch.map (𝟙 (G.obj i₀))) := inferInstance
   apply GlobalTheory.T.cohomologyContinuousOnCone_of_whisker R F I (Over i₀) (Over.forget i₀) (G ⋙ sch) (sch.mapCone c)
   · intro i
     exact ⟨Over.mk (IsCofiltered.minToRight i i₀), ⟨IsCofiltered.minToLeft i i₀⟩⟩

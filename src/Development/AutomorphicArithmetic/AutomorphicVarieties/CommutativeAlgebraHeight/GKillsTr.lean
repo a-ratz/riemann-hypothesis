@@ -131,7 +131,7 @@ theorem UpperTheory.V.CA.finE_gma :
   have hchiE : ∀ x, (DE.chi x).map (residue B) = ∏ i, (X - C (π x i)) := fun x => by
     obtain ⟨y, rfl⟩ := hsurj x
     rw [hπ, hchi]
-  haveI : IsLocalHom (algebraMap B (ResidueField B)) := inferInstanceAs (IsLocalHom (residue B))
+  have : IsLocalHom (algebraMap B (ResidueField B)) := inferInstanceAs (IsLocalHom (residue B))
   obtain ⟨hj, e, he, hπe⟩ := f_gma DE π hCH hπs hchiE
   refine ⟨DE, π, e, hDE, he, hπs, fun g i => ?_, hj, hπe, hchiE⟩
   rw [hπ, hρ, MonoidAlgebra.mapRingHom_single, map_one, hg0]

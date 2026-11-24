@@ -60,7 +60,7 @@ theorem places_dvd_iff (D : Formalism.BasicNotions.D7) (π π' : 𝓞 D.host.E) 
       FaithfulSMul.algebraMap_injective (𝓞 D.host.F) (𝓞 D.host.E)
     have hker : RingHom.ker (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ x.asIdeal := by
       rw [(RingHom.injective_iff_ker_eq_bot _).1 hinj]; exact bot_le
-    haveI := x.isPrime
+    have := x.isPrime
     obtain ⟨Q, -, hQp, hQ⟩ := Ideal.exists_ideal_over_prime_of_isIntegral x.asIdeal (⊥ : Ideal (𝓞 D.host.E))
       (by rw [Ideal.under_def, ← RingHom.ker_eq_comap_bot]; exact hker)
     have hQb : Q ≠ ⊥ := by

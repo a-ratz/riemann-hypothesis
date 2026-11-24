@@ -63,7 +63,7 @@ namespace GlobalTheory.TorsionFinite
 theorem finite_torsion_semiAbelian_of_abelian :
     (∀ (K : Type) [Field K] [IsAlgClosed K] (B : Over (Sp K)) [GrpObj B], IsAbelianScheme B → ∀ n : ℕ, 1 ≤ n → Finite {x : 𝟙_ (Over (Sp K)) ⟶ B // x ^ n = 1}) → ∀ (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpObj G], IsSemiAbelian G → ∀ n : ℕ, 0 < n → Finite {x : 𝟙_ (Over (Sp k)) ⟶ G // x ^ n = 1} := by
   intro hB k _ _ G _ hG n hn
-  haveI := hG.comm
+  have := hG.comm
   let t : Sp k ⟶ Sp k := 𝟙 _
   have h := (semiAbelian_torsion_finite_and_closedPoint_finiteOrder hB).1 k
     ((Over.pullback t).obj G) (hG.fibres k t) n hn

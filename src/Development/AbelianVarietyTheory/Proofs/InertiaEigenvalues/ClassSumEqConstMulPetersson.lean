@@ -88,12 +88,12 @@ theorem GlobalTheory.UnimodMass.umax_relIndex_conj : ∀ (L : Type) [Field L] [N
   intro L _ _ _ n h
   set U := Umax L n with hUdef
   set V := U.map (MulAut.conj h).toMonoidHom with hVdef
-  haveI hW : Finite (DC (GQ L n) (U ⊓ V)) := finite_dc_of_cover (_root_.GlobalTheory.ClassFinConj.exists_finset_double_cosets_conj L n h)
+  have hW : Finite (DC (GQ L n) (U ⊓ V)) := finite_dc_of_cover (_root_.GlobalTheory.ClassFinConj.exists_finset_double_cosets_conj L n h)
   have hb : IsBounded U := ⟨{1}, fun κ hκ => ⟨1, by simp, by simpa using hκ⟩⟩
   have hU : ∀ t : GAf L n, Finite {γ : GQ L n // t⁻¹ * (γ : GAf L n) * t ∈ U} := fun t => _root_.GlobalTheory.StabFin.finite_conj_mem L n U hb t
   have hV : ∀ t : GAf L n, Finite {γ : GQ L n // t⁻¹ * (γ : GAf L n) * t ∈ V} := by
     intro t
-    haveI := hU (t * h)
+    have := hU (t * h)
     refine Finite.of_injective (fun x : {γ : GQ L n // t⁻¹ * (γ : GAf L n) * t ∈ V} =>
       (⟨x.1, ?_⟩ : {γ : GQ L n // (t * h)⁻¹ * (γ : GAf L n) * (t * h) ∈ U})) ?_
     · have hx : t⁻¹ * ((x.1 : GQ L n) : GAf L n) * t ∈ U.map (MulAut.conj h).toMonoidHom := x.2
@@ -104,7 +104,7 @@ theorem GlobalTheory.UnimodMass.umax_relIndex_conj : ∀ (L : Type) [Field L] [N
   obtain ⟨h1, e1⟩ := GlobalTheory.T.doubleCosetMass_eq_relIndex_mul_mass (GAf L n) (GQ L n) (U ⊓ V) U inf_le_left hW hU
   obtain ⟨h2, e2⟩ := GlobalTheory.T.doubleCosetMass_eq_relIndex_mul_mass (GAf L n) (GQ L n) (U ⊓ V) V inf_le_right hW hV
   have e3 : mass (GQ L n) V = mass (GQ L n) U := mass_conj (GQ L n) U h
-  haveI : Finite (DC (GQ L n) U) := finite_dc_of_le (Γ := GQ L n) (W := U ⊓ V) inf_le_left
+  have : Finite (DC (GQ L n) U) := finite_dc_of_le (Γ := GQ L n) (W := U ⊓ V) inf_le_left
   have hpos := mass_pos (Γ := GQ L n) (K := U) hU
   rw [Subgroup.inf_relIndex_left] at h1 e1
   rw [Subgroup.inf_relIndex_right] at h2 e2
@@ -266,7 +266,7 @@ theorem projAF_mem {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representati
 
 theorem projAF_of_mem {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ (GQ L n) W) {x : GAf L n → W}
     (hx : x ∈ NG.AFall L n ρ) : projAF L n ρ x = x := by
-  have := Submodule.linearProjOfIsCompl_apply_left (Submodule.exists_isCompl (NG.AFall L n ρ)).choose_spec ⟨x, hx⟩
+  have := Submodule.projectionOnto_apply_left (Submodule.exists_isCompl (NG.AFall L n ρ)).choose_spec ⟨x, hx⟩
   exact congrArg Subtype.val this
 
 def petFun (x y : GAf L n → a.W) : ℂ := normalizedClassPairing a β (projAF L n a.ρ x) (projAF L n a.ρ y)
@@ -358,8 +358,8 @@ theorem petN_pos (hβ : IsInvForm a β) {N : ℕ} (hN : 0 < N) {f : GAf L n → 
     rw [Pi.zero_apply, hfN κ hκ, hf.1 γ t, h0, map_zero]
   have hcard : ∀ s : GAf L n, 0 < Nat.card {γ : GQ L n // s⁻¹ * (γ : GAf L n) * s ∈ congSub L n N} := by
     intro s
-    haveI := GlobalTheory.StabFin.finite_conj_mem L n (congSub L n N) (congSub_bounded N) s
-    haveI : Nonempty {γ : GQ L n // s⁻¹ * (γ : GAf L n) * s ∈ congSub L n N} :=
+    have := GlobalTheory.StabFin.finite_conj_mem L n (congSub L n N) (congSub_bounded N) s
+    have : Nonempty {γ : GQ L n // s⁻¹ * (γ : GAf L n) * s ∈ congSub L n N} :=
       ⟨⟨1, by simp only [OneMemClass.coe_one, mul_one, inv_mul_cancel]; exact Subgroup.one_mem _⟩⟩
     exact Nat.card_pos
   have hterm : ∀ s : GAf L n, 0 ≤ (β (f s) (f s)).re := by

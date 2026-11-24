@@ -298,7 +298,7 @@ theorem exists_gl {K S : Type} [Field K] [CommRing S] (s : S →+* S) (hs : ∀ 
   have hXY' : Yᵀ * Jᵀ * Y.map s = Xᵀ * Jᵀ * X.map s := by rw [key, key, hXY]
   have : ∃ γ : Matrix (Fin n) (Fin n) S, γᵀ * Jᵀ * γ.map s = Jᵀ ∧ γ * X = Y := by
     rcases hS with hF | ⟨φ, hφ⟩
-    · letI := hF.toField
+    · let := hF.toField
       obtain ⟨γ, h1, h3⟩ := GlobalTheory.HermWitt.exists_gl_isometry_mul_eq_of_det_ne_zero (c := s)
         h2 hs (G := Jᵀ) (fun i j => hJ i j) (X := X) (Y := Y) hX'.ne_zero hXY'
       exact ⟨γ, h1, h3⟩
@@ -539,7 +539,7 @@ theorem extend_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     simp only [gramE, tupH, Fin.append_left, Fin.append_right, F0]
     refine Fin.lastCases ?_ (fun a => ?_) i
     · rw [Fin.snoc_last, ← hE_swap hinv hJ.1 P.z (P.f b), hfz, map_zero]
-      exact (if_neg (Fin.castSucc_ne_last b).symm).symm
+      exact (ite_eq_right (Fin.castSucc_ne_last b).symm).symm
     · rw [Fin.snoc_castSucc, hef]
       simp only [Fin.castSucc_inj]
   funext i j
@@ -664,13 +664,13 @@ theorem map_lin_eq_of_stableRankOne (F E : Type) [Field F] [NumberField F] [Fiel
     μ.map (lin R σ J g) = μ := by
   classical
   have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hCM.2.2.1
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (R ⊗[F] E) := IsModuleTopology.isTopologicalRing R _
   obtain ⟨eh⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) R
-  haveI : LocallyCompactSpace (R ⊗[F] E) := eh.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (R ⊗[F] E) := eh.secondCountableTopology
-  haveI : T2Space (R ⊗[F] E) := eh.isEmbedding.t2Space
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : LocallyCompactSpace (R ⊗[F] E) := eh.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (R ⊗[F] E) := eh.secondCountableTopology
+  have : T2Space (R ⊗[F] E) := eh.isEmbedding.t2Space
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   set k := Fintype.card (Σ _ : Fin M, Fin (Module.finrank F E))
   set b := bV F E M
   set bR := bVR F E M R
@@ -734,15 +734,15 @@ theorem map_lin_eq_of_stableRankOne (F E : Type) [Field F] [NumberField F] [Fiel
 theorem haar_tuple_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (v : HeightOneSpectrum (𝓞 F)), ∀ (a : ℕ) (μ : Measure (Fin a → Fin n → Fv F v ⊗[F] E)), μ.IsAddHaarMeasure → ∀ g : HA (Fv F v) σ J, μ.map (fun X => g • X) = μ := by
   intro F E _ _ _ _ _ σ hCM n J hJ v a μ hμ g
   have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hCM.2.2.1
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
   obtain ⟨eh⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (Fv F v)
-  haveI : LocallyCompactSpace (Fv F v ⊗[F] E) := eh.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (Fv F v ⊗[F] E) := eh.secondCountableTopology
-  haveI : T2Space (Fv F v ⊗[F] E) := eh.isEmbedding.t2Space
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : LocallyCompactSpace (Fv F v ⊗[F] E) := eh.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (Fv F v ⊗[F] E) := eh.secondCountableTopology
+  have : T2Space (Fv F v ⊗[F] E) := eh.isEmbedding.t2Space
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   let ν : Measure (Fin n → Fv F v ⊗[F] E) := addHaar
   have hmeas : Measurable (lin (Fv F v) σ J g : (Fin n → Fv F v ⊗[F] E) → _) :=
     (continuous_const.matrix_mulVec continuous_id).measurable
@@ -776,8 +776,8 @@ theorem fibre_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   intro F E _ _ _ _ _ σ hCM n J hJ v a μ ν hμ hν fib hfib S g
   obtain ⟨-, -, -, h4, -, -, -, -, ha⟩ := GlobalTheory.LocalUnitaryTop.top_facts F E σ hCM n J hJ v
   obtain ⟨-, hact⟩ := ha a
-  haveI := h4
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have := h4
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   have hc : ∀ k : HA (Fv F v) σ J,
       Continuous (fun X : Fin a → Fin n → Fv F v ⊗[F] E => k • X) :=
     fun k => hact.comp (Continuous.prodMk continuous_const continuous_id)
@@ -806,14 +806,14 @@ theorem fibre_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
         gramR (Fv F v) σ J ⁻¹' {Subtype.val b} ∩ {X | LinearIndependent (Fv F v ⊗[F] E) X} := by
     intro b
     ext X
-    simp only [Set.mem_preimage, Set.mem_inter_iff, Set.mem_singleton_iff, Set.mem_setOf_eq, hTm, hgram]
+    simp only [Set.mem_preimage, Set.mem_inter_iff, Set.mem_singleton_iff, Set.mem_ofPred_eq, hTm, hgram]
     refine and_congr_right fun _ => ⟨fun h => ?_, hli g X⟩
     have := hli g⁻¹ _ h
     rwa [inv_smul_smul] at this
   have hU : Tm ⁻¹' {X | LinearIndependent (Fv F v ⊗[F] E) X} =
       {X | LinearIndependent (Fv F v ⊗[F] E) X} := by
     ext X
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, hTm]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, hTm]
     refine ⟨fun h => ?_, hli g X⟩
     have := hli g⁻¹ _ h
     rwa [inv_smul_smul] at this
@@ -876,11 +876,11 @@ theorem measurableEmbedding_of_sigmaCompact {Y X : Type} [TopologicalSpace Y] [T
       exact ⟨y, hy, rfl⟩
   rw [h]
   refine MeasurableSet.iUnion fun n => ?_
-  haveI : CompactSpace (compactCovering Y n) :=
+  have : CompactSpace (compactCovering Y n) :=
     isCompact_iff_compactSpace.mp (isCompact_compactCovering Y n)
   have hce : Topology.IsClosedEmbedding (fun y : compactCovering Y n => φ y) :=
-    (hc.comp continuous_subtype_val).isClosedEmbedding (hi.comp Subtype.val_injective)
-  exact hce.measurableEmbedding.measurableSet_image.mpr (measurable_subtype_coe hs)
+    (hc.comp continuous_subtypeVal).isClosedEmbedding (hi.comp Subtype.val_injective)
+  exact hce.measurableEmbedding.measurableSet_image.mpr (measurable_subtypeVal hs)
 
 theorem exists_compact_cover {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [LocallyCompactSpace G] (H : Subgroup G) {C : Set (G ⧸ H)} (hC : IsCompact C) :
@@ -915,11 +915,11 @@ theorem weil_formula : ∀ (G X : Type) [Group G] [TopologicalSpace G] [IsTopolo
   have hc0 : Continuous (fun g : G => g • x0) :=
     hcont.comp (continuous_id.prodMk continuous_const)
   have hH : IsClosed (H : Set G) := isClosed_eq hc0 continuous_const
-  haveI := hH
-  letI : MeasurableSpace (G ⧸ H) := borel _
-  haveI : BorelSpace (G ⧸ H) := ⟨rfl⟩
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SigmaCompactSpace (G ⧸ H) := inferInstance
+  have := hH
+  let : MeasurableSpace (G ⧸ H) := borel _
+  have : BorelSpace (G ⧸ H) := ⟨rfl⟩
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SigmaCompactSpace (G ⧸ H) := inferInstance
   let φ : G ⧸ H → X := orbitMap G x0
   have hφc : Continuous φ := (QuotientGroup.isQuotientMap_mk H).continuous_iff.mpr hc0
   have hφ : MeasurableEmbedding φ :=
@@ -1016,16 +1016,16 @@ theorem linearIndependent_smul {F E : Type} [Field F] [Field E] [Algebra F E] (R
 theorem exists_haar_stabiliser : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (v : HeightOneSpectrum (𝓞 F)), ∀ (r : ℕ) (P : Frame E n r) (T : F), P.IsStd σ J T → ∀ (hT : ∀ i j, σ (gramE σ J (F0 P) j i) = gramE σ J (F0 P) i j), ∀ (μ : Measure (Fin (r + 1) → Fin n → Fv F v ⊗[F] E)) (ν : Measure (HermR (Fv F v) σ (r + 1))), μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → ∀ fib : HermR (Fv F v) σ (r + 1) → Measure (Fin (r + 1) → Fin n → Fv F v ⊗[F] E), IsFibreFamily μ (gramR (Fv F v) σ J) Subtype.val {X | LinearIndependent (Fv F v ⊗[F] E) X} ν Set.univ fib → ∀ μG : Measure (HA (Fv F v) σ J), μG.IsHaarMeasure → ∃ μ0 : Measure (S0 (Fv F v) σ J P), μ0.IsHaarMeasure ∧ ((fib (hermOf (Fv F v) σ (gramE σ J (F0 P)) hT)) {y | ¬ ∃ g : HA (Fv F v) σ J, g • ratTup (Fv F v) (F0 P) = y} = 0 ∧ ∀ f : HA (Fv F v) σ J → ℝ≥0∞, Measurable f → ∀ s : (Fin (r + 1) → Fin n → Fv F v ⊗[F] E) → HA (Fv F v) σ J, (∀ y, (∃ g : HA (Fv F v) σ J, g • ratTup (Fv F v) (F0 P) = y) → s y • ratTup (Fv F v) (F0 P) = y) → ∫⁻ g, f g ∂μG = ∫⁻ y, ∫⁻ h', f (s y * (h' : HA (Fv F v) σ J)) ∂μ0 ∂(fib (hermOf (Fv F v) σ (gramE σ J (F0 P)) hT))) := by
   intro F E _ _ _ _ _ σ hCM n J hJ v r P T hP hT μ ν hμ hν fib hfib μG hμG
   obtain ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩ := _root_.GlobalTheory.LocalUnitaryTop.top_facts F E σ hCM n J hJ v
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI := h5
-  haveI := h6
-  haveI := h7
-  haveI := h8
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (HA (Fv F v) σ J) := ⟨rfl⟩
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have := h5
+  have := h6
+  have := h7
+  have := h8
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (HA (Fv F v) σ J) := ⟨rfl⟩
   obtain ⟨-, -, -, -, hfree⟩ := _root_.GlobalTheory.FrameGram.std_frame_gram F E σ hCM n J hJ r P T hP
   have hx0 := hfree v
   set x0 := ratTup (F := F) (Fv F v) (F0 P) with hx0def

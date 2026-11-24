@@ -91,7 +91,7 @@ theorem cls_lam_pull {S : Scheme.{0}} {B : Over S} [GrpObj B] [IsCommMonObj B] {
 
 theorem lbIso_lam_of_quotient : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [CommRing R₀] [Nontrivial R₀] (π : R →+* R₀), Function.Surjective π → ∀ (B : Over (Sp R)) [GrpObj B] [IsCommMonObj B] (B₀ : Over (Sp R₀)) [GrpObj B₀] [IsCommMonObj B₀] (i : B₀.left ⟶ B.left) (i₂ : (G2 B₀).left ⟶ (G2 B).left), IsAbelianScheme B → IsGrpPullback B₀ B (spMap π) i → IsSquare i i₂ → ∀ (P : LB (G2 B).left), P.IsLB → (∃ t : (P.pull (lift (1 : B ⟶ B) (𝟙 B)).left).Gen, t.IsGen) → (∃ t : (P.pull (lift (𝟙 B) (1 : B ⟶ B)).left).Gen, t.IsGen) → ∀ (L : LB B.left) (L₀ : LB B₀.left), L.IsLB → L₀.IsLB → LBIso (L.pull i) L₀ → LBIso (abelian₂ B₀ L₀) (P.pull i₂) → LBIso (abelian₂ B L) P := by
   intro R R₀ _ _ _ _ π hπ B _ _ B₀ _ _ i i₂ hA hpb hsq P hP hP₁ hP₂ L L₀ hL hL₀ e₀ e
-  haveI : IsLocalRing R₀ := IsLocalRing.of_surjective' π hπ
+  have : IsLocalRing R₀ := IsLocalRing.of_surjective' π hπ
   have hlam : (abelian₂ B L).IsLB := LB.isLB_linComb hL _ _
   have hlam₀ : (abelian₂ B₀ L₀).IsLB := LB.isLB_linComb hL₀ _ _
   have hD : (LB.div (abelian₂ B L) P).IsLB := LB.isLB_div hlam hP
@@ -126,8 +126,8 @@ theorem lbIso_lam_of_quotient : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R]
     triv_of _ (by rw [pull_comp, pull_comp, hsq₀])
   have hPf : GlobalTheory.SpreadingModels.PerfAll :=
     _root_.GlobalTheory.CompanionTheory.SpreadingModels.perfAll_of_hasModel (_root_.GlobalTheory.CompanionTheory.CubeModels.hasModel_of_spreads _root_.GlobalTheory.CompanionTheory.NoethApprox.schemeModels _root_.GlobalTheory.CompanionTheory.SmoothSpread.smooth_spreads _root_.GlobalTheory.CompanionTheory.SpreadingModels.properSpreads _root_.GlobalTheory.CompanionTheory.LBLimit.lbSpreads)
-  haveI := hA.smooth
-  haveI := hA.proper
+  have := hA.smooth
+  have := hA.proper
   have sm : Smooth (B ⊗ B).hom := by
     change Smooth (pullback.fst B.hom B.hom ≫ B.hom); infer_instance
   have pr : IsProper (B ⊗ B).hom := by

@@ -186,7 +186,7 @@ theorem exists_norm_repr_le {ι : Type} [Fintype ι] [DecidableEq ι] (b : Modul
     (w : InfinitePlace F) (i : ι) : ∃ B : ℝ, 0 ≤ B ∧ ∀ (c : ℝ) (y : w.Completion ⊗[F] E),
       (∀ τ : EmbOver E w, ‖infEmb τ y‖ ≤ c) →
       ‖(Algebra.TensorProduct.basis w.Completion b.traceDual).repr y i‖ ≤ B * c := by
-  letI : Algebra F ℂ := w.embedding.toAlgebra
+  let : Algebra F ℂ := w.embedding.toAlgebra
   let t : (E →ₐ[F] ℂ) → EmbOver E w := fun τ => ⟨τ, RingHom.ext τ.commutes⟩
   have key : ∀ y : w.Completion ⊗[F] E, InfinitePlace.Completion.extensionEmbedding w
       ((Algebra.TensorProduct.basis w.Completion b.traceDual).repr y i) =
@@ -225,7 +225,7 @@ theorem exists_entries : ∃ (ι : Type) (_ : Fintype ι) (β : Module.Basis ι 
     (fun v => one_le_htOf _ _) (finite_mulSupport_htFin F g)
   refine ⟨d, hd, ?_, fun i j k => ⟨norm_evH_le (mul_nonneg (Finset.sum_nonneg fun p _ => hB0 p) (NNReal.coe_nonneg _))
     fun w => ?_, fun v => ?_⟩⟩
-  · exact_mod_cast hdc.trans (le_mul_of_one_le_left' (Finset.one_le_prod' fun _ _ => one_le_htOf _ _))
+  · exact_mod_cast hdc.trans (le_mul_of_one_le_left' (Finset.one_le_prod fun _ _ => one_le_htOf _ _))
   · refine (congrArg norm (HeightProper.repr_map b.traceDual (evInf F w) (g.1 i j) k)).symm.trans_le
       ((hB (k, w) (heightGL F g) _ fun τ => ?_).trans (mul_le_mul_of_nonneg_right
         (Finset.single_le_sum (fun p _ => hB0 p) (Finset.mem_univ _)) (NNReal.coe_nonneg _)))

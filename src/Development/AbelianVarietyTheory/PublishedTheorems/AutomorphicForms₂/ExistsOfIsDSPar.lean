@@ -73,13 +73,13 @@ theorem exists_of_isDSPar (T : GrpData p q)
     (P : SignedPar n) {e : Ix p q ≃ Fin n} (h : BlockOrd e P.sgn) {H : Type} [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ : IsDSPar P σ) :
     ∃ R : DSRep T, HasParam R (blockPar P e) := by
-  haveI : CompleteSpace H := hσ.1
+  have : CompleteSpace H := hσ.1
   have hU := hσ.2.2.1
   have hirr : Formalism.MainNotions.SchurIrreducible.IrrU (pull h T hU) := ⟨hσ.2.1, fun S hS hst => hσ.2.2.2.1 S hS fun g hg v hv => by
     obtain ⟨x, rfl⟩ := h.cov_surj T hg
     exact hst x v hv⟩
   obtain ⟨M, io, m1, m2, m3⟩ := hM _ hirr
-  haveI := SqInt.isHaarMeasure_map_covU h T
+  have := SqInt.isHaarMeasure_map_covU h T
   have hμ := Measure.isMulLeftInvariant_eq_smul (T.haar.map (SqInt.covU h T)) (Formalism.REAL.muG P.sgn)
   obtain ⟨d, hd, hI⟩ := GlobalTheory.Mem.Vol.exists_isFdeg_smul_of_isDS n P.sgn P.lam H σ hσ _
     (Measure.haarScalarFactor_pos_of_isHaarMeasure (T.haar.map (SqInt.covU h T)) (Formalism.REAL.muG P.sgn))

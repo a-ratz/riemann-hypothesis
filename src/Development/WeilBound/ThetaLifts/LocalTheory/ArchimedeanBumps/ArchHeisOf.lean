@@ -76,7 +76,7 @@ def lf : (κ → mixedEmbedding.mixedSpace F) →ₗ[ℝ] Module.Dual ℝ (κ �
     (fun b x y => by rw [add_dotProduct, map_add (f := _), mul_add]) (fun c b y => by rw [smul_dotProduct, map_smul, smul_eq_mul, smul_eq_mul]; ring)
 
 theorem lf_surj [IsTotallyReal F] : Function.Surjective (lf (F := F) (κ := κ)) := by
-  haveI : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
+  have : IsEmpty {w : InfinitePlace F // w.IsComplex} :=
     ⟨fun w => InfinitePlace.not_isReal_iff_isComplex.2 w.2 (IsTotallyReal.isReal w.1)⟩
   rw [← LinearMap.injective_iff_surjective_of_finrank_eq_finrank Subspace.dual_finrank_eq.symm, injective_iff_map_eq_zero]
   intro b hb
@@ -102,7 +102,7 @@ theorem schr_acts {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) (a b : κ → AF F)
   have e2 : (fun i => evI F ((x + a) i)) = (fun i => evI F (x i)) - -fun i => evI F (a i) := by
     funext i
     simp [evR_eq]
-  simp only [schr, tens, SchwartzMap.smul_apply, SchwartzMap.smulLeftCLM_apply_apply (ex_temp _), SchwartzMap.compSubConstCLM_apply,
+  simp only [schr, tens, smul_apply, SchwartzMap.smulLeftCLM_apply_apply (ex_temp _), SchwartzMap.compSubConstCLM_apply,
     smul_eq_mul]
   rw [AddChar.map_add_eq_mul, hψ.2.2 _ hz, e1, e2, hr.1 x a ha]
   have e3 : ex (LinearMap.toContinuousLinearMap (lf fun i => evI F (b i))) (fun i => evI F (x i)) =
@@ -163,7 +163,7 @@ theorem eiDense_of (hS : WeakInt) : EiDense := by
   intro F E _ _ _ _ _ σ B n d n₁ d₁ X W X₁ W₁ M M₁ H H' e u ei ev hc hl l hne
   by_contra hn
   push Not at hn
-  haveI := hc.base.cm.1
+  have := hc.base.cm.1
   obtain ⟨f₀, hf₀⟩ : ∃ f, ei f ≠ 0 := by
     by_contra h
     push Not at h

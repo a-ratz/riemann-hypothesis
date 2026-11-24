@@ -59,10 +59,10 @@ open ReciprocityTheory.ChartRestriction.G.Semi
 attribute [local instance] MvPolynomial.gradedAlgebra
 
 theorem isProper_str (R : Type) [CommRing R] (N : ℕ) : IsProper (PSpace.str R N) := by
-  haveI : IsScalarTower R ↥(MvPolynomial.homogeneousSubmodule (Fin (N + 1)) R 0)
+  have : IsScalarTower R ↥(MvPolynomial.homogeneousSubmodule (Fin (N + 1)) R 0)
       (MvPolynomial (Fin (N + 1)) R) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI hf : Algebra.FiniteType ↥(MvPolynomial.homogeneousSubmodule (Fin (N + 1)) R 0)
+  have hf : Algebra.FiniteType ↥(MvPolynomial.homogeneousSubmodule (Fin (N + 1)) R 0)
       (MvPolynomial (Fin (N + 1)) R) :=
     Algebra.FiniteType.of_restrictScalars_finiteType R _ _
   have hP : IsProper (Proj.toSpecZero (MvPolynomial.homogeneousSubmodule (Fin (N + 1)) R)) := by
@@ -79,7 +79,7 @@ theorem isProper_str (R : Type) [CommRing R] (N : ℕ) : IsProper (PSpace.str R 
       have ht : p.totalDegree = 0 := Nat.le_zero.mp hp.totalDegree_le
       refine ⟨AddMonoidAlgebra.coeff p 0, Subtype.ext ?_⟩
       exact ((MvPolynomial.totalDegree_eq_zero_iff_eq_C).mp ht).symm
-  haveI : IsIso (CommRingCat.ofHom
+  have : IsIso (CommRingCat.ofHom
       (algebraMap R ↥(MvPolynomial.homogeneousSubmodule (Fin (N + 1)) R 0))) :=
     (RingEquiv.ofBijective _ hbij).toCommRingCatIso.isIso_hom
   unfold PSpace.str
@@ -88,8 +88,8 @@ theorem isProper_str (R : Type) [CommRing R] (N : ℕ) : IsProper (PSpace.str R 
 theorem projProper : ProjProperSt := by
   intro R _ X f hf
   obtain ⟨N, i, hi, rfl⟩ := hf
-  haveI := hi
-  haveI := isProper_str R N
+  have := hi
+  have := isProper_str R N
   infer_instance
 
 theorem abLocusOne : AbLocusOneSt := by

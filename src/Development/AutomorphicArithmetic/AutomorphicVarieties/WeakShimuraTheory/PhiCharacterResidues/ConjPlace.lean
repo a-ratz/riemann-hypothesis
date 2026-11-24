@@ -86,8 +86,8 @@ theorem UpperTheory.V.Ws.phiKer :
     obtain ⟨g, rfl⟩ := (V.hη g').1 hy
     exact ⟨g, rfl⟩
   have hcont : Continuous V.pr := V.pr_cont W.continuous_resP
-  haveI : IsClosed ((NS Ω V.S' : Subgroup (G (W.Lp L) Ω)) : Set (G (W.Lp L) Ω)) := isClosed_NS Ω V.S'
-  haveI : T2Space (GS Ω V.S') := by
+  have : IsClosed ((NS Ω V.S' : Subgroup (G (W.Lp L) Ω)) : Set (G (W.Lp L) Ω)) := isClosed_NS Ω V.S'
+  have : T2Space (GS Ω V.S') := by
     unfold GS
     infer_instance
   refine ⟨hsurj, (hcont.isClosedMap).isQuotientMap hcont hsurj, fun U hU hI g hg => ?_⟩
@@ -109,7 +109,7 @@ theorem UpperTheory.V.Ws.phiKer :
     rw [Group.mem_conjugatesOfSet_iff] at hc
     obtain ⟨a, ha, hac⟩ := hc
     obtain ⟨d, rfl⟩ := isConj_iff.1 hac
-    simp only [Set.mem_iUnion, Set.mem_compl_iff, Set.mem_setOf_eq, exists_prop] at ha
+    simp only [Set.mem_iUnion, Set.mem_compl_iff, Set.mem_ofPred_eq, exists_prop] at ha
     obtain ⟨v, hv, A, hA, haA⟩ := ha
     have key := conj_place hA d⁻¹
     simp only [inv_inv] at key

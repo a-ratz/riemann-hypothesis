@@ -66,9 +66,9 @@ private theorem isAddTorsion_quotient_of_nsmul_mem {G : Type} [AddCommGroup G] (
 
 theorem relIndex_ne_zero_of_fg {G : Type} [AddCommGroup G] (A B : AddSubgroup G) [AddGroup.FG B] (m : ℕ) (hm : m ≠ 0)
     (h : ∀ b ∈ B, m • b ∈ A) : A.relIndex B ≠ 0 := by
-  haveI : AddGroup.FG (B ⧸ A.addSubgroupOf B) :=
+  have : AddGroup.FG (B ⧸ A.addSubgroupOf B) :=
     AddGroup.fg_of_surjective (QuotientAddGroup.mk'_surjective (A.addSubgroupOf B))
-  haveI := AddCommGroup.finite_of_fg_isAddTorsion _ (isAddTorsion_quotient_of_nsmul_mem A B m hm h)
+  have := AddCommGroup.finite_of_fg_isAddTorsion _ (isAddTorsion_quotient_of_nsmul_mem A B m hm h)
   exact AddSubgroup.index_ne_zero_of_finite
 
 section
@@ -94,7 +94,7 @@ theorem fg_of_nsmul_mem (A : Submodule (𝓞 E) (Fin n → E)) {k : ℕ} (hk : k
   have hT : T.FG := by
     simp only [T, LinearMap.range_eq_map]
     exact Module.Finite.fg_top.map _
-  haveI := isNoetherian_of_fg_of_noetherian T hT
+  have := isNoetherian_of_fg_of_noetherian T hT
   have hle : (A.restrictScalars ℤ).map f ≤ T := by
     rintro _ ⟨v, hv, rfl⟩
     obtain ⟨u, hu⟩ := GlobalTheory.LatticeIndex.mem_std.1 (h v hv)
@@ -117,8 +117,8 @@ theorem index_part (Λ : GenLat E n) (N M ℓ k : ℕ) (hL : Λ.LevOK N M) (hl :
     exact Submodule.mem_inf
   have hS : (Ideal.span {(N : 𝓞 E)} • stdLat E n).toAddSubgroup ≤ Λ.Ln.toAddSubgroup := fun x hx => hNle hx
   have hLn : Λ.Ln.toAddSubgroup ≤ Λ.La.toAddSubgroup := fun x hx => ((memLn x).1 hx).1
-  haveI := fg_of_nsmul_mem Λ.La hk0 h1
-  haveI := fg_of_nsmul_mem Λ.Ln one_ne_zero (fun v hv => by rw [one_smul]; exact ((memLn v).1 hv).2)
+  have := fg_of_nsmul_mem Λ.La hk0 h1
+  have := fg_of_nsmul_mem Λ.Ln one_ne_zero (fun v hv => by rw [one_smul]; exact ((memLn v).1 hv).2)
   have hkLn : ∀ b ∈ Λ.La.toAddSubgroup, k • b ∈ Λ.Ln.toAddSubgroup := fun b hb =>
     (memLn _).2 ⟨nsmul_mem hb k, h1 b hb⟩
   have ha : Λ.Ln.toAddSubgroup.relIndex Λ.La.toAddSubgroup ≠ 0 :=

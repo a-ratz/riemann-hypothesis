@@ -60,7 +60,7 @@ theorem isRegularLocalRing_adicCompletion :
     ∀ (T : Type) [CommRing T] [IsRegularLocalRing T],
       IsRegularLocalRing (AdicCompletion (maximalIdeal T) T) := by
   intro T _ _
-  haveI : IsNoetherianRing (AdicCompletion (maximalIdeal T) T) :=
+  have : IsNoetherianRing (AdicCompletion (maximalIdeal T) T) :=
     GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion T (maximalIdeal T)
   set S := AdicCompletion (maximalIdeal T) T
 

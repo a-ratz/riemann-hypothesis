@@ -158,7 +158,7 @@ theorem fix_of_lifts_comp {D : D7} {s : ∀ k : Fin 2, D.nd.PlG k → SplitPlace
   have h1 : (∑ g : G, c g • actL V β L (eG g)) (Tm v) h = Tm v h :=
     congrFun (congrArg (fun U : Mult.MMap M => U v) hfix) h
   rw [LinearMap.sum_apply, Finset.sum_apply] at h1
-  rw [MultilinearMap.sum_apply, Finset.sum_apply]
+  rw [sum_apply, Finset.sum_apply]
   refine Eq.trans (Finset.sum_congr rfl fun g _ => ?_) h1
   obtain ⟨x, hx, hx'⟩ := key (cG (eG g))
   rw [MulEquiv.symm_apply_apply] at hx

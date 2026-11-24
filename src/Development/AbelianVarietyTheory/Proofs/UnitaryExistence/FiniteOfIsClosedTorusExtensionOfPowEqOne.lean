@@ -82,13 +82,13 @@ open RationalPoint in
 theorem finite_of_isClosed_torusExtension_of_pow_eq_one :
     (∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp k)) [GrpObj B] (n : ℕ), IsAbelianScheme B → n.Prime → (n : k) ≠ 0 → ∀ (C : Subgroup (𝟙_ (Over (Sp k)) ⟶ B)) (Z : Set B.left), IsClosed Z → (∀ x, x ∈ C ↔ Set.range x.left ⊆ Z) → (∀ x ∈ C, x ^ n = 1 → x = 1) → Finite C) → ∀ (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpObj G] [IsCommMonObj G] (n : ℕ), LocallyOfFiniteType G.hom → QuasiCompact G.hom → Nonempty (TorusExtension G) → n.Prime → (n : k) ≠ 0 → ∀ (C : Subgroup (𝟙_ (Over (Sp k)) ⟶ G)) (Z : Set G.left), IsClosed Z → (∀ x, x ∈ C ↔ Set.range x.left ⊆ Z) → (∀ x ∈ C, x ^ n = 1 → x = 1) → Finite C := by
   intro hab k _ _ G _ _ n _ _ ⟨E⟩ hp hn C Z hZ hC htors
-  letI := E.addCommGroup
-  letI := E.free
-  letI := E.finite
-  letI := E.grpB
-  haveI := E.q_hom
-  haveI := E.i_hom
-  haveI := E.isAbelian.proper
+  let := E.addCommGroup
+  let := E.free
+  let := E.finite
+  let := E.grpB
+  have := E.q_hom
+  have := E.i_hom
+  have := E.isAbelian.proper
   let φ : (𝟙_ (Over (Sp k)) ⟶ G) →* (𝟙_ (Over (Sp k)) ⟶ E.B) :=
     MonoidHom.mk' (fun x => x ≫ E.q) fun x y => MonObj.mul_comp x y E.q
   let j : (𝟙_ (Over (Sp k)) ⟶ splitTorus (Sp k) E.X) →* (𝟙_ (Over (Sp k)) ⟶ G) :=

@@ -120,7 +120,7 @@ theorem norm_eq_of_ball {Ω : Type} [Field Ω] (i j : Ω →+* PadicAlgCl l) (h 
 
 theorem exists_aut {Ω : Type} [Field Ω] (i j : Ω →+* PadicAlgCl l) (hj : DenseRange j) (h : ∀ x, ‖i x‖ = ‖j x‖) :
     ∃ σ : PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l, ∀ x, σ (j x) = i x := by
-  letI : NormedField Ω := NormedField.induced Ω (PadicAlgCl l) j j.injective
+  let : NormedField Ω := NormedField.induced Ω (PadicAlgCl l) j j.injective
   have hn : ∀ x : Ω, ‖x‖ = ‖j x‖ := fun _ => rfl
   have hji : Isometry j := AddMonoidHomClass.isometry_of_norm j fun x => (hn x).symm
   let f : Ω →+* ℂ_[l] := (algebraMap (PadicAlgCl l) ℂ_[l]).comp i
@@ -231,9 +231,9 @@ theorem mem_dec (j : Ω →+* PadicAlgCl l) (g : Ω ≃ₐ[E] Ω) :
 omit [NumberField E] in
 theorem exists_res [Normal E Ω] (j : Ω →+* PadicAlgCl l) (σ : PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l)
     (h : ∀ x : E, σ (j (algebraMap E Ω x)) = j (algebraMap E Ω x)) : ∃ g : Ω ≃ₐ[E] Ω, ∀ x, σ (j x) = j (g x) := by
-  letI : Algebra Ω (PadicAlgCl l) := j.toAlgebra
-  letI : Algebra E (PadicAlgCl l) := (j.comp (algebraMap E Ω)).toAlgebra
-  haveI : IsScalarTower E Ω (PadicAlgCl l) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra Ω (PadicAlgCl l) := j.toAlgebra
+  let : Algebra E (PadicAlgCl l) := (j.comp (algebraMap E Ω)).toAlgebra
+  have : IsScalarTower E Ω (PadicAlgCl l) := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let ψ : PadicAlgCl l →ₐ[E] PadicAlgCl l := { (σ : PadicAlgCl l →+* PadicAlgCl l) with commutes' := h }
   exact ⟨ψ.restrictNormal' Ω, fun x => (ψ.restrictNormal_commutes Ω x).symm⟩
 
@@ -241,9 +241,9 @@ theorem exists_equiv [IsAlgClosure E Ω] (j : Ω →+* PadicAlgCl l) :
     ∃ e : ↥(compl (j.comp (algebraMap E Ω))).fixingSubgroup ≃* ↥(ReciprocityTheory.Gal.Dec (F := E) (ring j)),
       Continuous e ∧ Continuous e.symm ∧
       ∀ σ x, (σ.1 : PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l) (j x) = j (((e σ).1 : Ω ≃ₐ[E] Ω) x) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
-  haveI := compl_fin (j.comp (algebraMap E Ω))
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have := compl_fin (j.comp (algebraMap E Ω))
   have hd := denseRange_of_isAlgClosed j
   set K := compl (j.comp (algebraMap E Ω)) with hK
   choose r hr using fun σ : ↥K.fixingSubgroup => exists_res (E := E) j σ ((mem_fix _ _).1 σ.2)
@@ -257,7 +257,7 @@ theorem exists_equiv [IsAlgClosure E Ω] (j : Ω →+* PadicAlgCl l) :
     let b := Module.finBasis E F
     have ho : ∀ᶠ σ : ↥K.fixingSubgroup in nhds 1, ∀ i, (σ : PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l) (j (b i)) = j (b i) := by
       refine Filter.eventually_all.2 fun i => ?_
-      exact ((stabilizer_isOpen_of_isIntegral (K := ℚ_[l]) (j (b i))).preimage continuous_subtype_val).mem_nhds
+      exact ((stabilizer_isOpen_of_isIntegral (K := ℚ_[l]) (j (b i))).preimage continuous_subtypeVal).mem_nhds
         (show (1 : PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l) ∈ MulAction.stabilizer _ (j (b i)) from one_mem _)
     refine Filter.mem_map.2 (Filter.mem_of_superset ho fun σ hσ => hs ?_)
     refine (IntermediateField.mem_fixingSubgroup_iff _ _).2 fun y hy => ?_
@@ -279,7 +279,7 @@ theorem exists_equiv [IsAlgClosure E Ω] (j : Ω →+* PadicAlgCl l) :
         Subtype.ext (AlgEquiv.ext fun x => j.injective ?_)⟩
       exact (hr _ x).symm.trans (hσ x)
   have hc : Continuous (MulEquiv.ofBijective R' hbij) := hRc.subtype_mk _
-  haveI : CompactSpace ↥K.fixingSubgroup :=
+  have : CompactSpace ↥K.fixingSubgroup :=
     isCompact_iff_compactSpace.1 (IntermediateField.fixingSubgroup_isClosed K).isCompact
   exact ⟨MulEquiv.ofBijective R' hbij, hc,
     Continuous.continuous_symm_of_equiv_compact_to_t2 (f := (MulEquiv.ofBijective R' hbij).toEquiv) hc, hr⟩
@@ -292,8 +292,8 @@ theorem exists_bridge {E : Type} (Ω : Type) [Field E] [NumberField E] [Field Ω
       (Bw : Formalism.BasicNotions.LocBridge l E Ω (ReciprocityTheory.Gal.Dec A) ↥(Formalism.BasicNotions.Loc.OL LL)),
       GlobalTheory.Pst.Induces Bw ∧ GlobalTheory.Pst.IsInduced Bw τ (AlgHom.id ℚ_[l] ↥Bw.Kw.1) := by
   obtain ⟨j, hj⟩ : ∃ j : Ω →+* PadicAlgCl l, j.comp (algebraMap E Ω) = τ := by
-    letI : Algebra E (PadicAlgCl l) := τ.toAlgebra
-    haveI : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
+    let : Algebra E (PadicAlgCl l) := τ.toAlgebra
+    have : Algebra.IsAlgebraic E Ω := IsAlgClosure.isAlgebraic
     let j : Ω →ₐ[E] PadicAlgCl l := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -302,7 +302,7 @@ theorem exists_bridge {E : Type} (Ω : Type) [Field E] [NumberField E] [Field Ω
     exact ⟨j, RingHom.ext fun x => j.commutes x⟩
   subst hj
   obtain ⟨e, h1, h2, h3⟩ := exists_equiv (E := E) j
-  haveI := compl_fin (j.comp (algebraMap E Ω))
+  have := compl_fin (j.comp (algebraMap E Ω))
   let LL : Formalism.BasicNotions.Loc.FinExt l :=
     ⟨IntermediateField.normalClosure ℚ_[l] (compl (j.comp (algebraMap E Ω))) (PadicAlgCl l), inferInstance⟩
   refine ⟨place (j.comp (algebraMap E Ω)), ring j, fun x => ?_, LL,

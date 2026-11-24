@@ -196,7 +196,7 @@ theorem subsingleton_cohomology_of_subsingleton_group [Subsingleton H] (A : Rep.
     exact Subgroup.one_mem _
   have : Nat.card (H ⧸ (U : Subgroup H)) = 1 := by
     rw [htop]
-    letI := QuotientGroup.subsingleton_quotient_top (G := H)
+    let := QuotientGroup.subsingleton_quotient_top (G := H)
     exact Nat.card_unique
   rwa [this, one_smul] at hU
 

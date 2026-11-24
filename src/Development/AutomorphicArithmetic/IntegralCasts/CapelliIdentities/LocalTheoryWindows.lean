@@ -55,7 +55,7 @@ theorem UpperTheory.Reformulated.B.LocalTheoryWindows.lat_mult :
   obtain ⟨⟨t, ht⟩, hv⟩ := multiple_mem_span_of_mem_localization_span
     (nonZeroDivisors (NumberField.RingOfIntegers D.host.E)) D.host.E (Λ : Set (Formalism.MainNotions.S.VS D).V) v
     (h.span_eq_top ▸ Submodule.mem_top)
-  obtain ⟨n, hn, c, hc⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) t).exists_nonzero_dvd ht
+  obtain ⟨n, hn, c, hc⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) t).exists_ne_zero_dvd ht
   refine ⟨n, hn, ?_⟩
   have hc' : (n : NumberField.RingOfIntegers D.host.E) = c * t := by rw [mul_comm]; simpa using hc
   have e : (n : D.host.E) • v = c • t • v := by

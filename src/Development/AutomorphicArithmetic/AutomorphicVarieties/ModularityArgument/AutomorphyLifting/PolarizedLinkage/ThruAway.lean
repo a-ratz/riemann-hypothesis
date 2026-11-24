@@ -106,10 +106,10 @@ theorem isSmooth_of_ine [FiniteDimensional K L] {aL : Weil hL →* (w.adicComple
       simp
     exact h1
   obtain ⟨E, hE, hEW⟩ := (krullTopology_mem_nhds_one_iff L Ω W).1 (hW.mem_nhds h1W)
-  haveI := hE
+  have := hE
   have hN : IsOpen ((Subgroup.map (AlgEquiv.restrictScalarsHom K) E.fixingSubgroup : Subgroup (G K Ω)) :
       Set (G K Ω)) := GlobalTheory.KLift.isOpen_map_restrictScalars _ E.fixingSubgroup_isOpen
-  refine IsSmooth.of_open (hN.preimage continuous_subtype_val) ?_ ?_
+  refine IsSmooth.of_open (hN.preimage continuous_subtypeVal) ?_ ?_
   · show ((1 : Ine (F := K) A) : G K Ω) ∈ Subgroup.map (AlgEquiv.restrictScalarsHom K) E.fixingSubgroup
     exact Subgroup.one_mem _
   · intro σ hσ
@@ -169,8 +169,8 @@ namespace UpperTheory.V.Z.Win
 private theorem exists_eq_of_prod {M : Type} [Monoid M] {n : ℕ} (f g : Fin n → (M →* ℂ))
     (h : ∀ x, ∏ j, (X - C (f j x)) = ∏ j, (X - C (g j x))) (j : Fin n) : ∃ i, g i = f j := by
   have hc := GlobalTheory.CharDeg.card_fiber_eq_of_sum_eq f g (fun x => GlobalTheory.CharDeg.sum_eq_of_prod_eq _ _ (h x)) (f j)
-  haveI : Nonempty {i // f i = f j} := ⟨⟨j, rfl⟩⟩
-  haveI : Finite {i // g i = f j} := inferInstance
+  have : Nonempty {i // f i = f j} := ⟨⟨j, rfl⟩⟩
+  have : Finite {i // g i = f j} := inferInstance
   have hpos : 0 < Nat.card {i // g i = f j} := hc ▸ Nat.card_pos
   obtain ⟨⟨i, hi⟩⟩ := (Nat.card_pos_iff.1 hpos).1
   exact ⟨i, hi⟩
@@ -186,10 +186,10 @@ private theorem isPlaceOver_of_over {K L Ω : Type} [Field K] [NumberField K] [F
 theorem _root_.UpperTheory.V.Z.Win.thruAway : ThruAway := by
   intro hPR hRow K L Ω _ _ _ _ _ _ _ _ _ _ _ _ l _ ι n hn r hc hIne P hreg hpol hatt v hv _ w t hwin s hs ζ hζ hmem
   obtain ⟨σ, hσ, hsup⟩ := hs
-  haveI : FiniteDimensional K L := Module.Finite.of_restrictScalars_finite ℚ K L
-  haveI : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := K) L
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed K, inferInstance⟩
-  haveI : CharZero (w.1.adicCompletion L) := charZero_of_injective_algebraMap (algebraMap L _).injective
+  have : FiniteDimensional K L := Module.Finite.of_restrictScalars_finite ℚ K L
+  have : Algebra.IsAlgebraic L Ω := Algebra.IsAlgebraic.tower_top (K := K) L
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed K, inferInstance⟩
+  have : CharZero (w.1.adicCompletion L) := charZero_of_injective_algebraMap (algebraMap L _).injective
   obtain ⟨A, hA⟩ := exists_isPlaceOver Ω w.1
   have hAv : IsPlaceOver A v := isPlaceOver_of_over w hA
   have hlv : ((l : ℕ) : 𝓞 K) ∉ v.asIdeal := fun k => by simpa using hv.1 k

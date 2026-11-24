@@ -374,7 +374,7 @@ theorem actQ_locallyConstant {G Qp : Type} [Group G] [TopologicalSpace G] [Field
     (y : L.T ⧸ (Ideal.span {ϖ ^ r} • ⊤ : Submodule O L.T)) :
     IsLocallyConstant fun g => actQ L _ hI g y := by
   obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ y
-  have : IsTopologicalAddGroup A.V := IsModuleTopology.topologicalAddGroup LL A.V
+  have : IsTopologicalAddGroup A.V := IsModuleTopology.isTopologicalAddGroup LL A.V
   rw [IsLocallyConstant.iff_exists_open]
   intro g₀
   refine ⟨(fun g => (algebraMap O LL ϖ)⁻¹ ^ r • (A.ρ g y - A.ρ g₀ y)) ⁻¹' (L.T : Set A.V),
@@ -400,7 +400,7 @@ theorem tate_pairing_nondegenerate : Formalism.GaloisCohomology.LocalTateDuality
   have hχc : Continuous fun g => (χZ g : ℤ_[l]) := by
     rw [continuous_iff_coe]
     simp only [hχZ]
-    exact hcyc.continuous.comp (continuous_subtype_val.comp hΦ1)
+    exact hcyc.continuous.comp (continuous_subtypeVal.comp hΦ1)
   have hcpt : CompactSpace (GK K) := Φ.symm.surjective.compactSpace hΦ1
   let χ : ↥(GK K) →* ℤ_[l]ˣ := χZ.comp Φ.toMonoidHom
   let e : Formalism.GaloisCohomology.GK l K.1 ≃ₜ* ↥(GK K) :=

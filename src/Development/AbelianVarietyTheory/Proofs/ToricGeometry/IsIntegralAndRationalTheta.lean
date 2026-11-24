@@ -82,8 +82,8 @@ variable {E W : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] [FiniteDimensi
 theorem exists_analytic_leftInverse {Θ : E → W} (hΘ : Differentiable ℂ Θ) {e : E}
     (hinj : Function.Injective (fderiv ℂ Θ e)) :
     ∃ L : W → E, AnalyticAt ℂ L (Θ e) ∧ ∀ᶠ x in 𝓝 e, L (Θ x) = x := by
-  have : CompleteSpace E := FiniteDimensional.complete ℂ E
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace E := FiniteDimensional.completeSpace ℂ E
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   obtain ⟨P, hP⟩ := (fderiv ℂ Θ e : E →ₗ[ℂ] W).exists_leftInverse_of_injective
     (LinearMap.ker_eq_bot.2 hinj)
   set P' : W →L[ℂ] E := LinearMap.toContinuousLinearMap P with hP'
@@ -99,7 +99,7 @@ theorem exists_analytic_leftInverse {Θ : E → W} (hΘ : Differentiable ℂ Θ)
   refine ⟨fun y => hc.localInverse hd hn (P' y), ?_, ?_⟩
   · exact AnalyticAt.comp (g := hc.localInverse hd hn) (f := P')
       (hc.to_localInverse hd hn).analyticAt (P'.analyticAt _)
-  · exact (hc.hasStrictFDerivAt' hd hn).eventually_left_inverse
+  · exact (hc.hasStrictFDerivAt hd hn).eventually_left_inverse
 
 
 omit [FiniteDimensional ℂ W] [NormedAddCommGroup W] [NormedSpace ℂ W] in
@@ -447,8 +447,8 @@ theorem isIntegral_and_rational
   have hint : ∀ b : A, j.toRingHom.IsIntegralElem b := hfin.to_isIntegral
 
   obtain ⟨q₁, hq₁, b₁, hb₁⟩ : ∃ q₁ : MvPolynomial (Fin n) ℂ, q₁ ≠ 0 ∧ ∃ b₁, j q₁ = b₁ * g c₀ := by
-    letI := j.toRingHom.toAlgebra
-    have h1 := Ideal.comap_ne_bot_of_integral_mem (R := MvPolynomial (Fin n) ℂ) (x := g c₀)
+    let := j.toRingHom.toAlgebra
+    have h1 := Ideal.under_ne_bot_of_integral_mem (R := MvPolynomial (Fin n) ℂ) (x := g c₀)
       (I := Ideal.span {g c₀}) (fun h => hc₀ (congrArg Subtype.val h))
       (Ideal.mem_span_singleton_self _) (hint _)
     obtain ⟨q₁, h2, h3⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h1
@@ -759,7 +759,7 @@ theorem isIntegral_and_rational_theta :
     · rw [← add_assoc, hf.2 n n' z]
       congr 1
       simp only [eC]
-      rw [← Complex.exp_nat_mul]
+      rw [← exp_natCast_mul]
       congr 1
       push_cast
       ring

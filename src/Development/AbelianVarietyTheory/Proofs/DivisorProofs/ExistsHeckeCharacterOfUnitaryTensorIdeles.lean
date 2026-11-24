@@ -96,17 +96,17 @@ theorem continuous_finite_equiv (D : D7)
     (ι : (Af D.host.F ⊗[D.host.F] D.host.E) ≃+* FiniteAdeleRing (𝓞 D.host.E) D.host.E)
     (hint : ∀ y, y ∈ intAE D ↔ ∀ P : HeightOneSpectrum (𝓞 D.host.E), Valued.v (ι y P) ≤ 1) :
     Continuous ι ∧ Continuous ι.symm := by
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele D.host.E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField D.host.F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField D.host.E
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (Af D.host.F ⊗[D.host.F] D.host.E) := IsModuleTopology.isTopologicalRing (Af D.host.F) _
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele D.host.E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField D.host.F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField D.host.E
   obtain ⟨e0⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (Af D.host.F)
-  haveI : LocallyCompactSpace (Af D.host.F ⊗[D.host.F] D.host.E) := e0.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (Af D.host.F ⊗[D.host.F] D.host.E) := e0.secondCountableTopology
+  have : LocallyCompactSpace (Af D.host.F ⊗[D.host.F] D.host.E) := e0.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (Af D.host.F ⊗[D.host.F] D.host.E) := e0.secondCountableTopology
   have hc : Continuous ι := by
     refine IsModuleTopology.continuous_of_ringHom (R := Af D.host.F) ι.toRingHom ?_
     refine continuous_of_map_integral _ fun a ha P => ?_
@@ -119,8 +119,8 @@ theorem exists_infinite_equiv (F E : Type) [Field F] [NumberField F] [Field E] [
     (σ : E →ₐ[F] E) (h : IsCMExt F E σ) :
     ∃ j : (Ainf F ⊗[F] E) ≃+* InfiniteAdeleRing E, Continuous j ∧ Continuous j.symm ∧
       ∀ x : E, j ((1 : Ainf F) ⊗ₜ[F] x) = algebraMap E (InfiniteAdeleRing E) x := by
-  haveI := h.1
-  haveI := h.2.1
+  have := h.1
+  have := h.2.1
   choose θ h1 h2 using fun w : InfinitePlace E => GlobalTheory.InfAdeleCM.exists_hom (F := F) w.embedding
   obtain ⟨e, he, hc, hc', -⟩ := GlobalTheory.Mem.VolInfIso.exists_infAdele_equiv F E σ (InfinitePlace E) (fun w => w.embedding) θ h
     (by
@@ -241,8 +241,8 @@ theorem exists_hchar_chrEq : ∀ (D : D7) (c : (AE D)ˣ →* Circle), IsHeckeCha
   let u : Ideles D.host.E →* (AE D)ˣ := Units.map Φ.symm.toRingHom.toMonoidHom
   have hu : Continuous u := Continuous.units_map _ hΦ
   have ht : Continuous (Circle.toUnits : Circle →* ℂˣ) :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, by
-      have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtype_val.comp continuous_inv
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, by
+      have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtypeVal.comp continuous_inv
       refine h.congr fun z => ?_
       simp⟩
   refine ⟨⟨Circle.toUnits.comp (c.comp u), ht.comp (hc.1.comp hu), fun k => ?_⟩, hc, fun P e he k x hx => ?_⟩

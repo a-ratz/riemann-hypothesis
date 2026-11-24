@@ -70,8 +70,8 @@ theorem length_localizedModule_quotient {A : Type*} [CommRing A] (K W : Ideal A)
 
 theorem length_self_eq_of_ringEquiv {Q Q' : Type*} [CommRing Q] [CommRing Q'] (τ : Q ≃+* Q') :
     Module.length Q Q = Module.length Q' Q' := by
-  letI := RingHomInvPair.of_ringEquiv τ
-  letI := RingHomInvPair.symm (↑τ : Q →+* Q') (τ.symm : Q' →+* Q)
+  let := RingHomInvPair.of_ringEquiv τ
+  let := RingHomInvPair.symm (↑τ : Q →+* Q') (τ.symm : Q' →+* Q)
   apply WithBot.coe_injective
   rw [Module.coe_length, Module.coe_length,
     Order.krullDim_eq_of_orderIso (Submodule.orderIsoMapComap τ.toSemilinearEquiv)]

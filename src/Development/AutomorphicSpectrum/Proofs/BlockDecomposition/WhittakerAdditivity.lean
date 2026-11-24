@@ -205,7 +205,7 @@ theorem sb_of_pure {m d : ℕ} {bs : Module.Basis (Fin d) D.host.F D.host.E}
       (Fin n → Fin m → HeckeCharacterZeroLocus.SiegelWeilU.Fv D.host.F v ⊗[D.host.F] D.host.E) → ℂ}
     (h : HeckeCharacterZeroLocus.SiegelWeilU.IsPureFin bs (fun X => g fun i j => X j i) gv) :
     g ∈ GlobalTheory.WeilM.SB (Fin m → Fin n → Af D.host.F ⊗[D.host.F] D.host.E) := by
-  haveI : FiniteDimensional D.host.F D.host.E := Module.Finite.of_basis bs
+  have : FiniteDimensional D.host.F D.host.E := Module.Finite.of_basis bs
   obtain ⟨hSB, hae, hprod⟩ := h
   let f : (Fin n → Fin m → Af D.host.F ⊗[D.host.F] D.host.E) → ℂ := fun X => ∏ᶠ v, gv v (projV v X)
   have hlc : IsLocallyConstant f := isLocallyConstant_finprod bs gv hSB hae
@@ -238,7 +238,7 @@ theorem mem_of_mono {V : HSp D} {ψ : AddChar (AF D.host.F) ℂ} {χ : (AE D)ˣ 
   rfl
 
 theorem continuous_height {H : G D n → ℝ≥0} (hH : IsHeight H) : Continuous H := by
-  haveI := t2Space_adeleRing' (F := D.host.F)
+  have := t2Space_adeleRing' (F := D.host.F)
   rw [PolesModel.height_eq hH]
   exact PolesModel.isIwasawa.continuous_iwAbs GlobalTheory.StdUnn.Model.isClosed_P PolesModel.continuous_modP
     GlobalTheory.StdUnn.Model.isCompact_K

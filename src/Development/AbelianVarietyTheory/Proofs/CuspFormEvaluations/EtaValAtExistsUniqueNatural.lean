@@ -85,8 +85,8 @@ namespace GlobalTheory.EtaForm
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H}
 
 theorem finite_latMod (Dw : Datum H) {k : ℕ} (hk : 0 < k) : Finite (LatMod Dw k) := by
-  haveI := Dw.fin
-  haveI : Module.Finite ℤ (LatMod Dw k) := Module.Finite.trans (𝓞 E) _
+  have := Dw.fin
+  have : Module.Finite ℤ (LatMod Dw k) := Module.Finite.trans (𝓞 E) _
   refine Module.finite_of_fg_torsion (M := LatMod Dw k) fun x => ?_
   obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective _ x
   refine ⟨⟨(k : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hk.ne')⟩, ?_⟩
@@ -97,14 +97,14 @@ theorem finite_latMod (Dw : Datum H) {k : ℕ} (hk : 0 < k) : Finite (LatMod Dw 
   exact Submodule.smul_mem_smul (Ideal.mem_span_singleton_self _) Submodule.mem_top
 
 theorem finite_levGrp (Dw : Datum H) {k : ℕ} (hk : 0 < k) : Finite (LevGrp Dw k) := by
-  haveI := finite_latMod Dw hk
+  have := finite_latMod Dw hk
   exact Finite.of_injective (fun g : LevGrp Dw k => (g : LatMod Dw k → LatMod Dw k)) DFunLike.coe_injective
 
 theorem map_etaExpr {S T : Type} [CommRing S] [CommRing T] (φ : S →+* T) {k : ℕ} (hk : 0 < k) {J : Type} [Fintype J]
     {n : ℕ} (cf : J → ℤ) (x : J → Fin n → LatMod Dw k) (w : LatMod Dw k → S) :
     φ (etaExpr k cf x w) = etaExpr k cf x (fun q => φ (w q)) := by
-  haveI := finite_levGrp Dw hk
-  haveI := Fintype.ofFinite (LevGrp Dw k)
+  have := finite_levGrp Dw hk
+  have := Fintype.ofFinite (LevGrp Dw k)
 
   simp only [etaExpr, finprod_eq_prod_of_fintype, map_prod, map_sum, map_mul, map_intCast]
 
@@ -195,7 +195,7 @@ theorem exists_etaValAt (hL : Laws) {R : ℕ} (hR : Odd R) {J : Type} [Fintype J
     ∃ v, EtaValAt Xo c R cf x y v := by
   have hk : 0 < R ^ 4 := pow_pos hR.pos _
   obtain ⟨B, _, φ₀, ev₀, hφ, hev₀⟩ := (GlobalTheory.T.fullLinearLevel_cover_baseChange_torsor hL E H Dw l Xo _ hk).1 S y.x
-  letI : Algebra c.F B := (φ₀.comp (algebraMap c.F S)).toAlgebra
+  let : Algebra c.F B := (φ₀.comp (algebraMap c.F S)).toAlgebra
   let φ : S →ₐ[c.F] B := { φ₀ with commutes' := fun _ => rfl }
   obtain ⟨y', hm⟩ := GlobalTheory.T.exists_framedPoint_baseChange_algHom hL E H Dw l Xo c S B φ y
   obtain ⟨ev, hev⟩ : ∃ ev, IsFullLev Xo (R ^ 4) y'.x ev := by

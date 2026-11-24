@@ -84,7 +84,7 @@ theorem charpoly_mulLeft_eq_map_of_spanning_lattice (R F A S : Type) [CommRing R
       ((LinearMap.toMatrix b b (LinearMap.mulLeft R x)).charpoly).map (algebraMap R F) := by
   classical
   have hRF : Function.Injective (algebraMap R F) := IsFractionRing.injective R F
-  haveI : Module.IsTorsionFree R S := by
+  have : Module.IsTorsionFree R S := by
     refine Module.IsTorsionFree.of_smul_eq_zero ?_
     intro r x h
     by_cases hr : r = 0
@@ -96,7 +96,7 @@ theorem charpoly_mulLeft_eq_map_of_spanning_lattice (R F A S : Type) [CommRing R
       have h2 : algebraMap R F r ≠ 0 := fun h0 => hr (hRF (by simpa using h0))
       rw [map_zero]
       exact (smul_eq_zero.mp h1).resolve_left h2
-  haveI : Module.Free R S := Module.free_of_finite_type_torsion_free'
+  have : Module.Free R S := Module.free_of_finite_type_torsion_free'
   let b : Module.Basis (Fin (Module.finrank R S)) R S := Module.finBasis R S
   refine ⟨_, b, fun x => ?_⟩
   have hexp : ∀ y : S, ι y = ∑ i, algebraMap R F (b.repr y i) • ι (b i) := by
@@ -324,16 +324,16 @@ open GlobalTheory.UnitLemma Polynomial
 theorem charpoly_overExt_integral_reduction : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K' d φ → ∀ (B : InvAlg K) (ψ : K'.E →+* B.A) (hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e) (hσ : ∀ e, B.σ (ψ e) = ψ (K'.c e)) (hO : ∀ y : K'.O, ψ (algebraMap K'.O K'.E y) ∈ Algebra.adjoin K.O ({B.g} : Set B.A)) (hl : IsLocalRing (Algebra.adjoin K.O ({B.g} : Set B.A))), B.P.Separable → IsIntegral K.O B.g → ∀ s : K'.O, @IsLocalRing.residue _ _ hl ⟨B.g, Algebra.self_mem_adjoin_singleton K.O B.g⟩ = @IsLocalRing.residue _ _ hl ⟨ψ (algebraMap K'.O K'.E s), hO s⟩ → ∃ Q : K'.O[X], Q.map (algebraMap K'.O K'.E) = (overExt φ B ψ hψ hσ).P ∧ Q.map (IsLocalRing.residue K'.O) = (X - C (IsLocalRing.residue K'.O s)) ^ Q.natDegree := by
   intro K K' d φ hU B ψ hψ hσ hO hl hsep hint s hres
   set S := Algebra.adjoin K.O ({B.g} : Set B.A) with hSdef
-  letI : Algebra K'.E B.A := ψ.toAlgebra
-  letI : Algebra K'.O B.A := (ψ.comp (algebraMap K'.O K'.E)).toAlgebra
-  haveI : IsScalarTower K'.O K'.E B.A := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Finite K'.E B.A := (overExt φ B ψ hψ hσ).fd
+  let : Algebra K'.E B.A := ψ.toAlgebra
+  let : Algebra K'.O B.A := (ψ.comp (algebraMap K'.O K'.E)).toAlgebra
+  have : IsScalarTower K'.O K'.E B.A := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Finite K'.E B.A := (overExt φ B ψ hψ hσ).fd
   let f0 : K'.O →+* S := (ψ.comp (algebraMap K'.O K'.E)).codRestrict S hO
-  letI : Algebra K'.O S := f0.toAlgebra
+  let : Algebra K'.O S := f0.toAlgebra
   let ι : S →ₐ[K'.O] B.A := { S.val.toRingHom with commutes' := fun _ => rfl }
   have hinj : Function.Injective ι := Subtype.val_injective
-  haveI : Module.Finite K.O S := Algebra.finite_adjoin_simple_of_isIntegral hint
-  haveI : Module.Finite K'.O S := by
+  have : Module.Finite K.O S := Algebra.finite_adjoin_simple_of_isIntegral hint
+  have : Module.Finite K'.O S := by
     obtain ⟨T, hT⟩ := (inferInstance : Module.Finite K.O S).fg_top
     refine ⟨⟨T, eq_top_iff.2 fun y hy0 => ?_⟩⟩
     clear hy0
@@ -364,7 +364,7 @@ theorem charpoly_overExt_integral_reduction : ∀ (K K' : UQ) (d : ℕ) (φ : K.
       have h : e • x = (φ e) • x := by
         rw [Algebra.smul_def, Algebra.smul_def, ← hψ e]; rfl
       rw [h]; exact Submodule.smul_mem _ _ hx
-  haveI : IsLocalRing S := hl
+  have : IsLocalRing S := hl
   obtain ⟨n, b, hb⟩ := _root_.GlobalTheory.charpoly_mulLeft_eq_map_of_spanning_lattice K'.O K'.E B.A S ι hinj hspan
   let x0 : S := ⟨B.g, Algebra.self_mem_adjoin_singleton K.O B.g⟩
   refine ⟨(LinearMap.toMatrix b b (LinearMap.mulLeft K'.O x0)).charpoly, (hb x0).symm, ?_⟩

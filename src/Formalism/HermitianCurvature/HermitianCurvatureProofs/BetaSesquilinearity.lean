@@ -583,7 +583,7 @@ lemma nrm_unit {X : Mat k r} (hX : inLie k r X) : unitLie k r (nrm X) := by
   unfold unitLie
   refine ⟨lie_rsmul hX _, fun i j => ?_⟩
   have hp := nz_pos X
-  have h1 : ‖X i j‖ ≤ ‖X‖ := Matrix.norm_entry_le_entrywise_sup_norm X
+  have h1 : ‖X i j‖ ≤ ‖X‖ := norm_apply_le_norm X
   have h2 : ‖X‖ ≤ nz X := le_max_right _ _
   have h3 : ‖(((nz X)⁻¹ : ℝ) : ℂ)‖ = (nz X)⁻¹ := by
     rw [Complex.norm_real, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hp)]
@@ -1189,7 +1189,7 @@ lemma normSqTau_eq (D : RealPlaceData k r Wp Wq) (τ : ℝ × ℝ) (F : Mat k r 
   unfold normSqTau jNormSq
   refine lintegral_congr fun q => ?_
   rw [ENNReal.ofReal_mul (show 0 ≤ bcWeight k r (Tz k r D.z) (Tz k r D.z') q from wt_nonneg D q),
-    ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   rfl
 
 lemma int_μQ (D : RealPlaceData k r Wp Wq) (f : (Fin r → ℂ) × ℂ → ℂ) :
@@ -1271,13 +1271,13 @@ lemma Jv_memLp (hJ : JCont D A) (hDD : DiagDom D A) {F : Mat k r → (Wq →L[�
     {τ : ℝ × ℝ} (hτ : τ ∈ Quad) : MemLp (Jv D τ F) 2 (μQ D) := by
   rw [memLp_two_iff_integrable_sq_norm (Jv_aesm hJ hF hτ)]
   refine ⟨(Jv_aesm hJ hF hτ).norm.pow 2, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
+  rw [hasFiniteIntegral_iff_eNorm]
   have h := (hDD F hF τ hτ).2
   rw [normSqTau_eq] at h
   refine lt_of_le_of_lt (le_of_eq ?_) (lt_of_le_of_lt h ENNReal.ofReal_lt_top)
   congr 1
   funext q
-  rw [enorm_pow, enorm_norm]
+  rw [eNorm_pow, eNorm_norm]
 
 lemma int_inner (hJ : JCont D A) (hDD : DiagDom D A) {F G : Mat k r → (Wq →L[ℂ] Wp)} (hF : InCC A 4 F)
     (hG : InCC A 4 G) {τ : ℝ × ℝ} (hτ : τ ∈ Quad) :
@@ -1488,7 +1488,7 @@ lemma core (hC : FormCoreC) (hAe : AeFromTests) (hFa : FatouParam) (hL : CCLin) 
     have hmem : ∀ t, t ∈ box → InCC A 4 (dilF t x.1) := fun t h =>
       InCC_mono (by norm_num) ⟨_, (hCd t h x.1 c5 hc5).1⟩
     let Φ : ℝ × ℝ → V := fun t => if h : t ∈ box then ⟨dilF t x.1, hmem t h⟩ else x
-    have hΦ : ∀ t, t ∈ box → (Φ t).1 = dilF t x.1 := fun t h => by simp only [Φ, dif_pos h]
+    have hΦ : ∀ t, t ∈ box → (Φ t).1 = dilF t x.1 := fun t h => by simp only [Φ, dite_eq_left h]
     refine ⟨Φ, fun t => (((t.1 * t.2) ^ kap k r : ℝ) : ℂ) * betaInfTau D (τ₀.1 * t.1, τ₀.2 * t.2) x.1 x.1,
       (1, 1), ?_, ?_, ?_, ?_, ?_⟩
     · apply Subtype.ext

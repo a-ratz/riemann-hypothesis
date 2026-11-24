@@ -95,7 +95,7 @@ theorem char_of_image (μ : Measure A) [μ.IsAddHaarMeasure] (φ : A ≃ₜ+ A) 
   have hφ : Measurable (φ : A → A) := φ.continuous.measurable
   have e : μ.map φ (φ '' interior K0) = μ (interior K0) := by
     rw [Measure.map_apply hφ hS, Set.preimage_image_eq _ φ.injective]
-  rw [map_char' μ φ, Measure.smul_apply, h _, ENNReal.smul_def, smul_eq_mul, ← mul_assoc] at e
+  rw [map_char' μ φ, smul_apply, h _, ENNReal.smul_def, smul_eq_mul, ← mul_assoc] at e
   have e2 : (((addEquivAddHaarChar φ)⁻¹ : ℝ≥0) : ℝ≥0∞) * θ = 1 := by
     have := (ENNReal.mul_left_inj hU0 hUt).1 (e.trans (one_mul _).symm)
     simpa using this
@@ -176,17 +176,17 @@ theorem card_pairs {n : ℕ} (l : Fin n) :
     simp only at e
     apply Subtype.ext
     by_cases hi : i = l <;> by_cases hi' : i' = l
-    · simp only [hi, hi', if_true] at e
+    · simp only [hi, hi', ite_true] at e
       simp [hi, hi', e]
-    · simp only [hi, hi', if_true, if_false] at e
+    · simp only [hi, hi', ite_true, ite_false] at e
       have hj' : j' = l := hq.resolve_left hi'
       subst hi hj' e
       exact absurd (h1.trans h2) (lt_irrefl _)
-    · simp only [hi, hi', if_true, if_false] at e
+    · simp only [hi, hi', ite_true, ite_false] at e
       have hj : j = l := hp.resolve_left hi
       subst hi' hj e
       exact absurd (h1.trans h2) (lt_irrefl _)
-    · simp only [hi, hi', if_false] at e
+    · simp only [hi, hi', ite_false] at e
       have hj : j = l := hp.resolve_left hi
       have hj' : j' = l := hq.resolve_left hi'
       simp [e, hj, hj']
@@ -365,14 +365,14 @@ theorem scale_ring (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Type) [CommR
       (coordHerm R σ b lam n) (cjPre R σ (dMat R l (s : R ⊗[F] E)) Y) =
         ((θ : ℝ≥0∞) ^ n)⁻¹ * (coordHerm R σ b lam n) Y := by
   obtain ⟨t1, t2, t3, t4, t5, t6, t7, -, -, -⟩ := TopK.topTens_props F E σ hσ R
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (HermR R σ n) := ⟨rfl⟩
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (HermR R σ n) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hσ
   have h2 : Module.finrank F E = 2 := hσ.2.2.1
   have hd : d = 2 := by
@@ -380,8 +380,8 @@ theorem scale_ring (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Type) [CommR
     simp
   have hI := HaarCoord.sigR_sigR (F := F) (E := E) (σ := σ) R hinv
   obtain ⟨hK, -, -⟩ := coord_measures_haar F E σ hσ R d b lam hlam
-  haveI := hK
-  haveI := hlam
+  have := hK
+  have := hlam
 
   obtain ⟨r, hr⟩ := exists_norm R hinv h2 hδ hσδ s
   set t : (R ⊗[F] E)ˣ := Units.map (sigR R σ : R ⊗[F] E →* R ⊗[F] E) s with ht
@@ -435,7 +435,7 @@ theorem scale_ring (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Type) [CommR
       (Measure.pi fun _ : {p : Fin n × Fin n // p.1 < p.2} => coordK R b lam)) Ψ
     have hch : addEquivAddHaarChar Ψ = θ ^ n := char_total r s t θ c3 c1 c2 l
     rw [hc, hemb.comap_apply, hemb.comap_apply, hpre, Set.image_preimage_eq _ hom.surjective,
-      ← Measure.map_apply hΨ hS, hm, hch, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul,
+      ← Measure.map_apply hΨ hS, hm, hch, smul_apply, ENNReal.smul_def, smul_eq_mul,
       ENNReal.coe_inv (pow_ne_zero _ hθ0), ENNReal.coe_pow]
 
 end Main
@@ -447,9 +447,9 @@ open GlobalTheory.CompanionTheory.AvgFree.HD in
 theorem GlobalTheory.CompanionTheory.AvgFree.cjPre_dMat_scale : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F)) (lv : Measure (Fv F v)), GlobalTheory.CompanionTheory.SW.IsStdV v lv → ∀ (s : (Fv F v ⊗[F] E)ˣ) (θ : ℝ≥0), (∀ Y : Set (Fv F v ⊗[F] E), (GlobalTheory.CompanionTheory.SW.coordK (Fv F v) b lv) ((fun x => (s : (Fv F v ⊗[F] E)) * x) '' Y) = θ * (GlobalTheory.CompanionTheory.SW.coordK (Fv F v) b lv) Y) → ∀ (n : ℕ) (l : Fin n) (Y : Set (HermR (Fv F v) σ n)), MeasurableSet Y → MeasurableSet (cjPre (Fv F v) σ (dMat (Fv F v) l (s : (Fv F v ⊗[F] E))) Y) ∧ (GlobalTheory.CompanionTheory.SW.coordHerm (Fv F v) σ b lv n) (cjPre (Fv F v) σ (dMat (Fv F v) l (s : (Fv F v ⊗[F] E))) Y) = ((θ : ℝ≥0∞) ^ n)⁻¹ * (GlobalTheory.CompanionTheory.SW.coordHerm (Fv F v) σ b lv n) Y := by
   intro F E _ _ _ _ _ σ hσ d b v lv hlv s θ hθ n l Y hY
   obtain ⟨r1, r2, r3, r4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := r1
-  haveI := r2
-  haveI := r3
-  haveI := r4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := r1
+  have := r2
+  have := r3
+  have := r4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   exact GlobalTheory.CompanionTheory.AvgFree.HD.scale_ring σ hσ (Fv F v) b lv hlv.1 s θ hθ n l Y hY

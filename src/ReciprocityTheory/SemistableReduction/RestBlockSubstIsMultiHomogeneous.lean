@@ -63,7 +63,7 @@ namespace ReciprocityTheory.MultiplicativeHeights
 open MeasureTheory MvPolynomial
 
 theorem sphereMeasure_isProbability {n : ℕ} (hn : 0 < n) : IsProbabilityMeasure (sphereProb n) := by
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   unfold sphereProb
   apply ProbabilityTheory.cond_isProbabilityMeasure_of_finite
   · rw [Measure.toSphere_apply_univ]
@@ -74,7 +74,7 @@ theorem sphereMeasure_isProbability {n : ℕ} (hn : 0 < n) : IsProbabilityMeasur
 
 theorem blockSphereMeasure_isProbability {B n : ℕ} (hn : 0 < n) :
     IsProbabilityMeasure (blockSphereProb B n) := by
-  haveI := sphereMeasure_isProbability hn
+  have := sphereMeasure_isProbability hn
   unfold blockSphereProb
   infer_instance
 
@@ -89,7 +89,7 @@ theorem measurable_eval_blockCoords {B n : ℕ} (g : MvPolynomial (Fin B × Fin 
     Measurable fun z : BlockSphere B n => eval (blockPoint z) g := by
   have hc : Continuous fun z : BlockSphere B n => blockPoint z :=
     continuous_pi fun p => (continuous_apply p.2).comp ((PiLp.continuous_ofLp 2 _).comp
-      (continuous_subtype_val.comp (continuous_apply p.1)))
+      (continuous_subtypeVal.comp (continuous_apply p.1)))
   exact ((MvPolynomial.continuous_eval g).comp hc).measurable
 
 theorem isMultiHomogeneous_C_mul {B n : ℕ} {a : Fin B → ℕ} {g : MvPolynomial (Fin B × Fin n) ℂ}
@@ -107,7 +107,7 @@ theorem null_of_logBound {B n : ℕ} (hn : 0 < n) (hInt : SphereLogIntegrableSta
     (hg : IsMultiHomogeneous a g) (hu : eval (blockPoint u) g ≠ 0) :
     blockSphereProb B n {z | eval (blockPoint z) g = 0} = 0 := by
   classical
-  haveI := blockSphereMeasure_isProbability (B := B) hn
+  have := blockSphereMeasure_isProbability (B := B) hn
   have hZm : MeasurableSet {z : BlockSphere B n | eval (blockPoint z) g = 0} :=
     measurableSet_eq_fun (measurable_eval_blockCoords g) measurable_const
   have hg0 : g ≠ 0 := by rintro rfl; exact hu (by simp)
@@ -260,7 +260,7 @@ theorem blockSphere_logMean_bound (hSJ : SJStatement) (hInt : SphereLogIntegrabl
       (u : BlockSphere B n), IsMultiHomogeneous a g → eval (blockPoint u) g ≠ 0 →
       Real.log ‖eval (blockPoint u) g‖ - (∑ b, (a b : ℝ)) / 2 * (harmonic (n - 1) : ℝ) ≤
         blockSphereMean B n g := by
-  haveI hP1 : IsProbabilityMeasure (sphereProb n) := sphereMeasure_isProbability hn
+  have hP1 : IsProbabilityMeasure (sphereProb n) := sphereMeasure_isProbability hn
   intro B
   induction B with
   | zero =>
@@ -272,7 +272,7 @@ theorem blockSphere_logMean_bound (hSJ : SJStatement) (hInt : SphereLogIntegrabl
     simp
   | succ B ih =>
     intro a g u hg hu
-    haveI hP2 : IsProbabilityMeasure (blockSphereProb B n) := by
+    have hP2 : IsProbabilityMeasure (blockSphereProb B n) := by
       unfold blockSphereProb; infer_instance
     have hu_split : (lh0Split B n).symm (u 0, fun b => u b.succ) = u := blockSplitEquiv_self u
     have hg0 : g ≠ 0 := by rintro rfl; exact hu (by simp)
@@ -306,7 +306,7 @@ theorem blockSphere_logMean_bound (hSJ : SJStatement) (hInt : SphereLogIntegrabl
       have hset : {y | ¬ eval (blockPoint ((lh0Split B n).symm (u 0, y))) g ≠ 0} =
           {z | eval (blockPoint z) (aeval (lh0Rest (spherePoint (u 0))) g) = 0} := by
         ext y
-        simp only [Set.mem_setOf_eq, not_not, hrest]
+        simp only [Set.mem_ofPred_eq, not_not, hrest]
       rw [ae_iff, hset]
       exact hnull
     have hh0 : aeval (lh0Rest (spherePoint (u 0))) g ≠ 0 := by

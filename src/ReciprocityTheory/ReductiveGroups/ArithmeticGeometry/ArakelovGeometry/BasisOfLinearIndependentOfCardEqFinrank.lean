@@ -343,7 +343,7 @@ theorem exists_indep_sections' [Fintype κ] (x : κ → Ω) (e : Fin (D + 1) →
       LinearIndependent (fnField (x ∘ e)) ε := by
   classical
   obtain ⟨hint, heq⟩ := gens_lemma_2 x e h
-  haveI := finrat_lemma x e h
+  have := finrat_lemma x e h
   have hne : x (e 0) ≠ 0 := by
     intro hi
     have hk : MvPolynomial.X 0 ∈ coordIdeal ℤ (x ∘ e) := by
@@ -402,8 +402,8 @@ theorem exists_indep_sections' [Fintype κ] (x : κ → Ω) (e : Fin (D + 1) →
       | rw [Subtype.range_coe, hbspan, hspan]
       | rw [Subtype.range_val, hbspan, hspan]
   let B := Basis.mk hbli hbtop
-  haveI : Finite b := Module.Finite.finite_basis B
-  haveI : Fintype b := Fintype.ofFinite b
+  have : Finite b := Module.Finite.finite_basis B
+  have : Fintype b := Fintype.ofFinite b
   have hpd : projDeg x e = Module.finrank (fnField (x ∘ e))
       (IntermediateField.extendScalars (fnField_comp_le' x e)) := by
     unfold projDeg
@@ -458,7 +458,7 @@ theorem eq_zero_of_trace [Fintype κ] (x : κ → Ω) (e : Fin (D + 1) → κ) (
     (h0 : ∀ l, Algebra.trace (fnField (x ∘ e)) (IntermediateField.extendScalars (fnField_comp_le' x e))
       (t * ⟨ε l / x (e 0) ^ k, sec_div_mem x (e 0) (hε l)⟩) = 0) : t = 0 := by
   classical
-  haveI := finrat_lemma x e h
+  have := finrat_lemma x e h
   have hne : x (e 0) ≠ 0 := by
     intro hi
     have hk : MvPolynomial.X 0 ∈ coordIdeal ℤ (x ∘ e) := by
@@ -487,7 +487,7 @@ theorem eq_zero_of_trace [Fintype κ] (x : κ → Ω) (e : Fin (D + 1) → κ) (
     first
       | exact IntermediateField.relfinrank_eq_finrank_of_le (fnField_comp_le' x e)
       | rfl
-  haveI : Nonempty (Fin (projDeg x e)) := ⟨⟨0, by
+  have : Nonempty (Fin (projDeg x e)) := ⟨⟨0, by
     have h4 := hrank
     rw [Fintype.card_fin] at h4
     rw [h4]
@@ -649,7 +649,7 @@ theorem chartGen_indep (x : κ → Ω) (e : Fin (D + 1) → κ) (hfree : coordId
 theorem chartRing_closed (x : κ → Ω) (e : Fin (D + 1) → κ) (hfree : coordIdeal ℤ (x ∘ e) = ⊥)
     (l : Fin (D + 1)) : IsIntegrallyClosed (chartRing x e l) := by
   unfold chartRing
-  haveI : UniqueFactorizationMonoid (Algebra.adjoin ℤ (Set.range (chartGen x e l))) :=
+  have : UniqueFactorizationMonoid (Algebra.adjoin ℤ (Set.range (chartGen x e l))) :=
     (chartGen_indep x e hfree l).aevalEquiv.toMulEquiv.uniqueFactorizationMonoid inferInstance
   exact UniqueFactorizationMonoid.instIsIntegrallyClosed
 
@@ -836,11 +836,11 @@ theorem trace_mem_chart [Fintype κ] (x : κ → Ω) (e : Fin (D + 1) → κ) (h
     Algebra.trace (fnField (x ∘ e)) (IntermediateField.extendScalars (fnField_comp_le' x e))
       ⟨s / x (e l) ^ n, sec_div_mem x (e l) hs⟩ ∈ chartRing x e l := by
   have hi := sec_div_isIntegral x e h l n hs
-  haveI := chartRing_frac x e h.free l
-  haveI := chartRing_closed x e h.free l
+  have := chartRing_frac x e h.free l
+  have := chartRing_closed x e h.free l
   by_cases hfd : FiniteDimensional (fnField (x ∘ e))
       (IntermediateField.extendScalars (fnField_comp_le' x e))
-  · haveI := hfd
+  · have := hfd
     have ht := Algebra.isIntegral_trace (L := fnField (x ∘ e)) hi
     obtain ⟨y, hy⟩ := (IsIntegrallyClosed.isIntegral_iff (K := fnField (x ∘ e))).1 ht
     rw [← hy]

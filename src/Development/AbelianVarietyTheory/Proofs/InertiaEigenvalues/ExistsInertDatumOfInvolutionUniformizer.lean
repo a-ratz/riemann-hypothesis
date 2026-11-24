@@ -64,7 +64,7 @@ theorem continuous_of_valued_eq {K : Type} [Field K] {Γ₀ : Type} [LinearOrder
     rw [(Valued.hasBasis_nhds_zero K Γ₀).tendsto_iff (Valued.hasBasis_nhds_zero K Γ₀)]
     intro γ _
     refine ⟨γ, trivial, fun x hx => ?_⟩
-    simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding] at hx ⊢
+    simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding] at hx ⊢
     rwa [hs]
   exact continuous_of_continuousAt_zero s (by simpa [ContinuousAt] using h)
 

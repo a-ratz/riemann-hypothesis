@@ -106,7 +106,7 @@ theorem vw_pow (w : HeightOneSpectrum (𝓞 K)) (a : K) (m : ℕ) :
 theorem vw_int_nonneg (w : HeightOneSpectrum (𝓞 K)) (r : 𝓞 K) : 0 ≤ vw w (r : K) := by
   unfold vw
   rw [show (r : K) = algebraMap (𝓞 K) K r from rfl, ← FractionalIdeal.coeIdeal_span_singleton]
-  exact FractionalIdeal.count_coe_nonneg K w _
+  exact FractionalIdeal.count_coeIdeal_nonneg K w _
 
 theorem vw_unit (w : HeightOneSpectrum (𝓞 K)) (r : 𝓞 K) (hr : r ∉ w.asIdeal) :
     vw w (r : K) = 0 := by
@@ -116,7 +116,7 @@ theorem vw_unit (w : HeightOneSpectrum (𝓞 K)) (r : 𝓞 K) (hr : r ∉ w.asId
     rw [Ne, Submodule.zero_eq_bot, Ideal.span_singleton_eq_bot]; exact hr0
   unfold vw
   rw [show (r : K) = algebraMap (𝓞 K) K r from rfl, ← FractionalIdeal.coeIdeal_span_singleton,
-    FractionalIdeal.count_coe K w hJ]
+    FractionalIdeal.count_coeIdeal K w hJ]
   have h2 : ¬ w.asIdeal ∣ Ideal.span {r} := by
     rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]; exact hr
   have h3 := mt (Associates.count_ne_zero_iff_dvd hJ w.irreducible).1 h2

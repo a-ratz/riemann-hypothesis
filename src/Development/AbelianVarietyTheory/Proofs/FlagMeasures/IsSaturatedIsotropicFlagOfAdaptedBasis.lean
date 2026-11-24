@@ -126,7 +126,7 @@ theorem isSatFlag_of_isAdapted (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf : I
             rw [Fin.castSucc_lt_succ_iff] at h
             exact Fin.castSucc_lt_castSucc_iff.2 (lt_of_le_of_ne h hki)
       · refine sup_le (Submodule.span_mono (hmono (Fin.castSucc_lt_succ).le)) ?_
-        letI : Submodule.IsFullLattice I.E (Λ i) := hΛ i
+        let : Submodule.IsFullLattice I.E (Λ i) := hΛ i
         rw [LinearMap.range_eq_map, ← Submodule.IsFullLattice.span_eq_top (A := I.E) (M := Λ i), Submodule.map_span]
         refine Submodule.span_mono ?_
         rintro _ ⟨x, hx, rfl⟩

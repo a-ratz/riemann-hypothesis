@@ -110,7 +110,7 @@ theorem intAt_inv_pow_mul {P : HeightOneSpectrum (𝓞 E)} {q B c : ℕ} (hq : (
     rw [Nat.cast_mul, Nat.cast_pow, map_mul]
     exact mul_le_of_le_one_right' hc
   have h0 : P.valuation E ((q : E) ^ B) ≠ 0 := (Valuation.ne_zero_iff _).2 (pow_ne_zero _ hq)
-  exact (inv_mul_le_one₀ (zero_lt_iff.2 h0)).2 h1
+  exact (inv_mul_le_one₀ (pos_iff_ne_zero.2 h0)).2 h1
 
 end GlobalTheory.Transport.TwistCpl
 
@@ -162,11 +162,11 @@ theorem GlobalTheory.Transport.TwistCpl.psiAt_transport_tw : ∀ {B : Base} {X :
     have h1 : y₁ ∈ cosetIn p' P := ⟨_, p'.repY_mem hm', by simp [hy₁]⟩
     rw [← hc] at h1
     obtain ⟨z, hz, h2⟩ := h1
-    rw [if_neg hP] at h2
+    rw [ite_eq_right hP] at h2
     have h3 := add_mem h2 ((GlobalTheory.TopLaw.coset_sub q'.1.1 (q'.mem_ybSet hm') hz (q'.repY_mem hm') P).2 hP)
     rw [← smul_add, sub_add_sub_cancel] at h3
     have h4 := hL.psiInv al P x₂ y₂ (y₁ - y₂) fun j => by
-      rw [if_neg hP]
+      rw [ite_eq_right hP]
       open Formalism.L2.Col Formalism.L2.DIV GlobalTheory.TopStep in exact mem_stdAt.1 h3 j
     rwa [add_sub_cancel] at h4
 end -- clump:auto
@@ -255,7 +255,7 @@ theorem mle_of_fix {Z W : Matrix (Fin a) (Fin b) L} {D : Matrix (Fin a) (Fin a) 
   refine (hZ i j).trans ?_
   by_contra hlt
   rw [not_le] at hlt
-  have h0 : 0 < v (Z p.1 p.2) := lt_of_le_of_lt zero_le' hlt
+  have h0 : 0 < v (Z p.1 p.2) := lt_of_le_of_lt zero_le hlt
   have h1 : v ((D * Z) p.1 p.2) < v (Z p.1 p.2) := ((hD.mul hZ) p.1 p.2).trans_lt (mul_lt_of_lt_one_left h0 hδ)
   have h2 := Valuation.map_add_lt v ((hW p.1 p.2).trans_lt hlt) h1
   rw [← Matrix.add_apply, ← e] at h2
@@ -337,7 +337,7 @@ theorem mle_map_iff {A : Matrix (Fin a) (Fin b) E} {γ : WithZero (Multiplicativ
 
 theorem intAt_inv_mul {c z : E} (hc : c ≠ 0) (h : P.valuation E z ≤ P.valuation E c) : IntAt P (c⁻¹ * z) := by
   rw [qth_intAt_iff, map_mul, map_inv₀]
-  exact inv_mul_le_one_of_le₀ h zero_le'
+  exact inv_mul_le_one_of_le₀ h zero_le
 
 theorem eq_of_near {K : Type} (Ξ : HomE E a b → K) {c d : E} (hc0 : c ≠ 0) (hc : P.valuation E c < 1) (hd0 : d ≠ 0)
     (hcong : ∀ (k : Sp E a ≃ₗ[E] Sp E a) (k' : Sp E b ≃ₗ[E] Sp E b),
@@ -358,9 +358,9 @@ theorem eq_of_near {K : Type} (Ξ : HomE E a b → K) {c d : E} (hc0 : c ≠ 0) 
   have vc : P.valuation E c ≠ 0 := (Valuation.ne_zero_iff _).2 hc0
   have vd : P.valuation E d ≠ 0 := (Valuation.ne_zero_iff _).2 hd0
   obtain ⟨u, hu⟩ := exists_approx P U (δ := min (P.valuation E c) (m⁻¹ * P.valuation E d))
-    (lt_min (zero_lt_iff.2 vc) (zero_lt_iff.2 (mul_ne_zero (inv_ne_zero m0) vd))).ne'
+    (lt_min (pos_iff_ne_zero.2 vc) (pos_iff_ne_zero.2 (mul_ne_zero (inv_ne_zero m0) vd))).ne'
   obtain ⟨u', hu'⟩ := exists_approx P U' (δ := min (P.valuation E c) (P.valuation E d * m'⁻¹))
-    (lt_min (zero_lt_iff.2 vc) (zero_lt_iff.2 (mul_ne_zero vd (inv_ne_zero m0')))).ne'
+    (lt_min (pos_iff_ne_zero.2 vc) (pos_iff_ne_zero.2 (mul_ne_zero vd (inv_ne_zero m0')))).ne'
   have near : ∀ {n : ℕ} {w : Matrix (Fin n) (Fin n) E} {V : Matrix (Fin n) (Fin n) (P.adicCompletion E)},
       MLe Valued.v (V - 1) (P.valuation E c) → MLe Valued.v (w.map ι - V) (P.valuation E c) →
       MLe (P.valuation E) (w - 1) (P.valuation E c) := fun {n w V} h1 h2 => by
@@ -555,7 +555,7 @@ theorem exp_le_val_qOf {E : Type} [Field E] [NumberField E] {P : HeightOneSpectr
   have h1 : ¬ P.valuation E ((qOf P : ℕ) : E) ≤ WithZero.exp (-((2 : ℕ) : ℤ)) := fun h1 => h.2 <| by
     rw [← P.intValuation_le_pow_iff_mem, ← HeightOneSpectrum.valuation_of_algebraMap (K := E)]
     simpa using h1
-  have h0 : P.valuation E ((qOf P : ℕ) : E) ≠ 0 := fun h0 => h1 (h0 ▸ zero_le')
+  have h0 : P.valuation E ((qOf P : ℕ) : E) ≠ 0 := fun h0 => h1 (h0 ▸ zero_le)
   rw [← WithZero.exp_log h0, WithZero.exp_le_exp] at h1 ⊢
   omega
 
@@ -613,7 +613,7 @@ theorem entry_transport_any : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (hI
     obtain ⟨U, U', hU, hU', h⟩ := H M₀ hM₀ x x₀ hx
     have hu := exp_le_val_qOf (GlobalTheory.UnfoldTwoSided.degOne_bad hX.ok l.pr hI.sel_ok P)
     unfold Formalism.L2.Col.frsF
-    simp only [dif_pos hP]
+    simp only [dite_eq_left hP]
     refine (eq_of_near (P := P.1) _ hq0 (val_qOf_lt_one P.1) (pow_ne_zero (I.cst a).B hq0) (fun κ κ' hκ hκ' z => ?_)
       (hL.xiInv i (by omega) al be P) _ _ U U' (hU.mono hu) (hU'.mono hu) h).symm
     refine xiAt_inFr hX l.pr hI.ch_ok hI.sel_ok hL (by omega) al be P κ κ' ?_ ?_ z
@@ -958,7 +958,7 @@ theorem locTop_shift (hc : cst.Ok) {P : rowSG Pr sel mu} (hP : P.1 ∈ Pr.vGs)
   congr 1
   generalize atNL X.E (R.N R.m) (R.N R.m - 1) ∘ₗ y = η
   unfold ftY
-  rw [if_pos hP, if_pos hP]
+  rw [ite_eq_left hP, ite_eq_left hP]
   split_ifs with h
   · have ev : ∀ z : Sp X.E (R.N (m2 + 1)), η z = ∑ j, z j * η (Pi.single j 1) := fun z => by
       conv_lhs => rw [pi_eq_sum_univ' z]
@@ -987,12 +987,12 @@ theorem rep_sub_int {u : Pr.Word} {j : ℕ} (h : j + 1 = R.m) (p q : PtAt R sel 
     ⟨_, p.repY_mem h, by rw [sub_self, smul_zero]; exact zero_mem _⟩
   rw [← e] at h1
   obtain ⟨z, hz1, h2⟩ := h1
-  rw [if_pos hP, pow_zero, inv_one, one_smul] at h2
+  rw [ite_eq_left hP, pow_zero, inv_one, one_smul] at h2
   have h3 := q.repY_mem h
   obtain ⟨y, -, hY⟩ := q.mem_ybSet h
   have h4 := (mem_locLat _ _ _ _).1 ((Set.ext_iff.1 hY _).1 hz1) P
   have h5 := (mem_locLat _ _ _ _).1 ((Set.ext_iff.1 hY _).1 h3) P
-  simp only [if_pos hP, zpow_zero, inv_one, one_smul] at h4 h5
+  simp only [ite_eq_left hP, zpow_zero, inv_one, one_smul] at h4 h5
   have h6 : z - repY q.1.2 ∈ q.1.1.deco.1.at P.1 := by
     have := sub_mem h4 h5
     rwa [sub_sub_sub_cancel_right] at this
@@ -1063,7 +1063,7 @@ theorem locTop_shiftQ (hc : cst.Ok) {P : rowSG Pr sel mu} (hP : P.1 ∉ Pr.vGs) 
   congr 1
   generalize atNL X.E (R.N R.m) (R.N R.m - 1) ∘ₗ y = η
   unfold ftY
-  rw [if_neg hP, if_neg hP]
+  rw [ite_eq_right hP, ite_eq_right hP]
   split_ifs with h
   · congr 1
     have ev : ∀ z : Sp X.E (R.N (m2 + 1)), η z = ∑ j, z j * η (Pi.single j 1) := fun z => by
@@ -1138,7 +1138,7 @@ theorem locTop_congQ (hm : R.m = m2 + 2) (hc : cst.Ok) {P : rowSG Pr sel mu} (hP
         ring
       · exact congQ_zero
     unfold PhiTop
-    rw [if_neg hP]
+    rw [ite_eq_right hP]
     unfold LocE.PhiQ
     refine @if_congr _ _ _ (_) (_) _ _ _ _ ?_ ?_ rfl
     · simp only [(he _ _).1, (he _ _).2.1, (he _ _).div_iff]
@@ -1148,8 +1148,8 @@ theorem locTop_congQ (hm : R.m = m2 + 2) (hc : cst.Ok) {P : rowSG Pr sel mu} (hP
         ∑ j, a j * w (Pi.single j 1) (Br.iL (N_m_succ R)) := fun w => by
       rw [LinearMap.comp_apply, atNL_last, apply_eq_sum]
     have he : IntAt P.1 ((epsSg : ℤ) : X.E) := intCast_mem (intRing P.1) _
-    rw [if_neg hP, if_neg hP, if_pos (fun i => by rw [LinearMap.comp_apply, atNL_last]; exact (hy _).2),
-      if_pos (fun i => by rw [LinearMap.comp_apply, atNL_last]; exact (hz _).2), ev, ev]
+    rw [ite_eq_right hP, ite_eq_right hP, ite_eq_left (fun i => by rw [LinearMap.comp_apply, atNL_last]; exact (hy _).2),
+      ite_eq_left (fun i => by rw [LinearMap.comp_apply, atNL_last]; exact (hz _).2), ev, ev]
     congr 1
     have hd : IntAt P.1 ((epsSg : X.E) * ∑ j, ((qOf P.1 : X.E) ^ cst.M * a j) * ((qOf P.1 : X.E) * t j (Br.iL (N_m_succ R)))) :=
       he.mul (intAt_sum _ fun j _ => (ha j).mul ((intAt_nat _).mul (ht _ _)))
@@ -1178,12 +1178,12 @@ theorem rep_sub_intQ {u : Pr.Word} {j : ℕ} (h : j + 1 = R.m) (p q : PtAt R sel
     ⟨_, p.repY_mem h, by rw [sub_self, smul_zero]; exact zero_mem _⟩
   rw [← e] at h1
   obtain ⟨z, hz1, h2⟩ := h1
-  rw [if_neg hP] at h2
+  rw [ite_eq_right hP] at h2
   have h3 := q.repY_mem h
   obtain ⟨y, -, hY⟩ := q.mem_ybSet h
   have h4 := (mem_locLat _ _ _ _).1 ((Set.ext_iff.1 hY _).1 hz1) P
   have h5 := (mem_locLat _ _ _ _).1 ((Set.ext_iff.1 hY _).1 h3) P
-  simp only [if_neg hP, zpow_natCast] at h4 h5
+  simp only [ite_eq_right hP, zpow_natCast] at h4 h5
   have h6 : ((qOf P.1 : X.E) ^ cst.M)⁻¹ • (z - repY q.1.2) ∈ q.1.1.deco.1.at P.1 := by
     have := sub_mem h4 h5
     rwa [← smul_sub, sub_sub_sub_cancel_right] at this
@@ -1225,7 +1225,7 @@ theorem locTop_transport_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (l 
       simp only [GlobalTheory.Transport.Last.locM, GlobalTheory.Transport.Last.ratM, Matrix.sub_apply, Matrix.mul_apply, Matrix.map_apply, map_sub,
       map_sum, map_mul, adAt_inclE])
     have f1 : ∀ {j : ℕ} (r : Formalism.L2.Col.ChPt (R := B.R) I.sel (I.tup a) u j),
-        Formalism.L2.Col.frsF I.sel (I.tup a) r P = r.deco.1.liftFr ⟨P.1, hP⟩ := fun r => dif_pos hP
+        Formalism.L2.Col.frsF I.sel (I.tup a) r P = r.deco.1.liftFr ⟨P.1, hP⟩ := fun r => dite_eq_left hP
     rw [← f1, ← f1, ← f1, ← f1] at H
     have hq1 := GlobalTheory.TopStep.repY_int q.1.1 (q.mem_ybSet h) hP
     rw [GlobalTheory.Transport.Last.locTop_shift hc hP _ hq1 (GlobalTheory.Transport.Last.rep_sub_int h p q e hP)]

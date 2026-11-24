@@ -124,7 +124,7 @@ theorem fg_of_smul_mem {A : Submodule (𝓞 E) (Fin n → E)} {o : 𝓞 E} (ho :
     simp only [LinearMap.lsmul_apply, Pi.smul_apply, Algebra.smul_def] at this
     exact mul_left_cancel₀ (by simpa using ho) this
   refine Submodule.fg_of_fg_map_injective _ hinj ?_
-  haveI : IsNoetherian (𝓞 E) (stdMod E n) := isNoetherian_of_fg_of_noetherian _ (Lat.std E n).fg
+  have : IsNoetherian (𝓞 E) (stdMod E n) := isNoetherian_of_fg_of_noetherian _ (Lat.std E n).fg
   refine Submodule.FG.of_le_of_isNoetherian (T := stdMod E n) ?_
   rintro _ ⟨x, hx, rfl⟩
   exact h x hx

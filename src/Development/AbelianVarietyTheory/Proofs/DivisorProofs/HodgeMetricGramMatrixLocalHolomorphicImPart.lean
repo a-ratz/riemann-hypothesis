@@ -72,8 +72,8 @@ theorem del_im_of_differentiableAt {F : E → ℂ} {z : E} (hF : DifferentiableA
     (conjCLE : ℂ →L[ℝ] ℂ).differentiableAt.comp z hR
   have e : (fun x => ((F x).im : ℂ)) = fun x => (1 / (2 * I)) • (F x - conj (F x)) := by
     funext x; rw [im_eq_sub_conj, smul_eq_mul]; ring
-  rw [e, del_const_smul _ (hR.fun_sub hc), ContinuousLinearMap.smul_apply, del_sub hR hc,
-    ContinuousLinearMap.sub_apply, del_conj, dbar_eq_zero hF, del_eq_fderiv hF]
+  rw [e, del_const_smul _ (hR.fun_sub hc), smul_apply, del_sub hR hc,
+    sub_apply, del_conj, dbar_eq_zero hF, del_eq_fderiv hF]
   simp
 
 theorem ddbar_im_of_contDiffAt {F : E → ℂ} {z : E} (hF : ContDiffAt ℂ 2 F z) :
@@ -129,7 +129,7 @@ theorem hodgeGram_local (n a g rk : ℕ) (ha : a ≤ n) (τ₀ : (Fin n → ℂ)
   have hVo : IsOpen V := by
     have h2 : IsOpen {x : Fin n → ℂ |
         ∀ i : Fin a, x (Fin.castLE ha i) / z (Fin.castLE ha i) ∈ slitPlane} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_slitPlane.preimage (by fun_prop)
     exact (isOpen_polydisc n).inter h2
   have hzV : z ∈ V := ⟨hz.1, fun i => by rw [div_self (hz.2 i)]; exact one_mem_slitPlane⟩

@@ -136,7 +136,7 @@ theorem antisym_shift_sum {A : Type*} [CommRing A] (m d : ℕ) (h : ℕ → A) (
     rw [← Finset.prod_mul_distrib, ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun j _ => ?_
     have e : (((k + μ) j : ℕ) : ℤ) - μ j = k j := by simp
-    rw [e, antisymHExt, if_neg (not_lt.2 (Int.natCast_nonneg _)), Int.toNat_natCast, Pi.add_apply, pow_add]
+    rw [e, antisymHExt, ite_eq_right (not_lt.2 (Int.natCast_nonneg _)), Int.toNat_natCast, Pi.add_apply, pow_add]
     ring
   rw [Finset.mul_sum, Finset.sum_congr rfl fun k _ => key k]
   rw [← Finset.sum_image (g := fun k => k + μ) (by intro a _ b _ hab; exact add_right_cancel hab)]
@@ -161,7 +161,7 @@ theorem antisym_shift_sum {A : Type*} [CommRing A] (m d : ℕ) (h : ℕ → A) (
       obtain ⟨j, hj⟩ := hle
       simp only [hF]
       rw [Finset.prod_eq_zero (Finset.mem_univ j), zero_mul]
-      rw [antisymHExt, if_pos (by omega), map_zero]
+      rw [antisymHExt, ite_eq_left (by omega), map_zero]
 
 theorem antisym_lhs_eq {A : Type*} [CommRing A] (m d : ℕ) (h : ℕ → A) :
     alternant A m (staircase m) *
@@ -628,7 +628,7 @@ theorem prod_map_X_eq_monomial_toFinsupp {n : ℕ} (s : Multiset (Fin n)) :
   | empty => simp
   | cons a s ih =>
     rw [Multiset.map_cons, Multiset.prod_cons, ih, ← Multiset.singleton_add, map_add (f := _),
-      Multiset.toFinsupp_singleton, MvPolynomial.X, MvPolynomial.monomial_mul, one_mul]
+      Multiset.toFinsupp_singleton, MvPolynomial.X, MvPolynomial.monomial_mul_monomial, one_mul]
 
 theorem sum_toFinsupp_fin {n : ℕ} (s : Multiset (Fin n)) :
     ∑ i, Multiset.toFinsupp s i = Multiset.card s := by

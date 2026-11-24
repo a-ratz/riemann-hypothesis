@@ -206,20 +206,20 @@ def subElem (k : ℕ) (L : Lat O K r) : Set (Lat O K r) :=
 
 theorem subIdx_finite (n : ℕ) (L : Lat O K r) :
     (subIdx n L).Finite := by
-  haveI := L.2
+  have := L.2
   have := Submodule.IsLattice.finite K L.1
   have hq : qRes O ^ n ≠ 0 := (pow_pos (lt_of_lt_of_le two_pos two_le_qRes) _).ne'
   set I := IsLocalRing.maximalIdeal O ^ (qRes O ^ n)
-  haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) := ‹Finite (IsLocalRing.ResidueField O)›
-  haveI : Finite (O ⧸ I) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) _
+  have : Finite (O ⧸ IsLocalRing.maximalIdeal O) := ‹Finite (IsLocalRing.ResidueField O)›
+  have : Finite (O ⧸ I) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) _
   set N : Submodule O L.1 := I • ⊤
-  haveI hfin : Finite (L.1 ⧸ N) := Submodule.finite_quotient_smul I Module.Finite.fg_top
-  haveI : Finite (Submodule O (L.1 ⧸ N)) :=
+  have hfin : Finite (L.1 ⧸ N) := Submodule.finite_quotient_smul I Module.Finite.fg_top
+  have : Finite (Submodule O (L.1 ⧸ N)) :=
     Finite.of_injective (fun S : Submodule O (L.1 ⧸ N) => (S : Set (L.1 ⧸ N))) SetLike.coe_injective
   have key : ∀ M ∈ subIdx n L, N ≤ M.1.comap L.1.subtype := by
     rintro M ⟨-, h2⟩
     have h1 : Nat.card (L.1 ⧸ M.1.comap L.1.subtype) = qRes O ^ n := h2
-    haveI : Finite (L.1 ⧸ M.1.comap L.1.subtype) := Nat.finite_of_card_ne_zero (h1 ▸ hq)
+    have : Finite (L.1 ⧸ M.1.comap L.1.subtype) := Nat.finite_of_card_ne_zero (h1 ▸ hq)
     have h3 := pow_smul_eq_bot (O := O) (qRes O ^ n) (⊤ : Submodule O (L.1 ⧸ M.1.comap L.1.subtype))
       (by rw [Nat.card_congr Submodule.topEquiv.toEquiv, h1]; omega)
     rw [← Submodule.ker_mkQ (M.1.comap L.1.subtype), ← Submodule.comap_bot,
@@ -242,7 +242,7 @@ theorem subElem_finite (k : ℕ) (L : Lat O K r) : (subElem k L).Finite :=
 
 theorem subIdx_zero (L : Lat O K r) : subIdx 0 L = {L} := by
   ext M
-  simp only [subIdx, pow_zero, Set.mem_setOf_eq, Set.mem_singleton_iff,
+  simp only [subIdx, pow_zero, Set.mem_ofPred_eq, Set.mem_singleton_iff,
     AddSubgroup.relIndex_eq_one, Submodule.toAddSubgroup_le]
   constructor
   · rintro ⟨h1, h2⟩; exact Subtype.ext (le_antisymm h1 h2)
@@ -250,15 +250,15 @@ theorem subIdx_zero (L : Lat O K r) : subIdx 0 L = {L} := by
 
 theorem subElem_zero (L : Lat O K r) : subElem 0 L = {L} := by
   ext M
-  simp only [subElem, subIdx_zero, Set.mem_setOf_eq, Set.mem_singleton_iff]
+  simp only [subElem, subIdx_zero, Set.mem_ofPred_eq, Set.mem_singleton_iff]
   constructor
   · exact fun h => h.1
   · rintro rfl; exact ⟨rfl, Submodule.smul_le_right⟩
 
 theorem relIndex_maxMul (L : Lat O K r) :
     (maxMul L).1.toAddSubgroup.relIndex L.1.toAddSubgroup = qRes O ^ r := by
-  haveI := L.2
-  haveI : Module.Free O L.1 := Submodule.IsLattice.free K L.1
+  have := L.2
+  have : Module.Free O L.1 := Submodule.IsLattice.free K L.1
   have := Submodule.IsLattice.finite K L.1
   have hc : (IsLocalRing.maximalIdeal O • L.1).comap L.1.subtype
       = IsLocalRing.maximalIdeal O • (⊤ : Submodule O L.1) := by
@@ -277,7 +277,7 @@ theorem relIndex_maxMul (L : Lat O K r) :
 theorem subElem_top (L : Lat O K r) :
     subElem r L = {maxMul L} := by
   ext M
-  simp only [subElem, subIdx, Set.mem_setOf_eq, Set.mem_singleton_iff]
+  simp only [subElem, subIdx, Set.mem_ofPred_eq, Set.mem_singleton_iff]
   constructor
   · rintro ⟨⟨h1, h2⟩, h3⟩
     have h := AddSubgroup.relIndex_mul_relIndex (maxMul L).1.toAddSubgroup M.1.toAddSubgroup
@@ -293,7 +293,7 @@ theorem subElem_top (L : Lat O K r) :
 theorem subElem_eq_empty {k : ℕ} (hk : r < k)
     (L : Lat O K r) : subElem k L = ∅ := by
   ext M
-  simp only [subElem, subIdx, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+  simp only [subElem, subIdx, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
   rintro ⟨⟨h1, h2⟩, h3⟩
   have h := AddSubgroup.relIndex_mul_relIndex (maxMul L).1.toAddSubgroup M.1.toAddSubgroup
       L.1.toAddSubgroup h3 h1
@@ -311,12 +311,12 @@ theorem maxMul_ne (hr : 0 < r) (L : Lat O K r) : maxMul L ≠ L := by
 
 theorem smul_mem_subIdx_iff (g : GL (Fin r) K) (n : ℕ) (M L : Lat O K r) :
     g • M ∈ subIdx n (g • L) ↔ M ∈ subIdx n L := by
-  simp only [subIdx, Set.mem_setOf_eq, smul_def, glLat_val, glMap_le_glMap_iff, relIndex_glMap]
+  simp only [subIdx, Set.mem_ofPred_eq, smul_def, glLat_val, glMap_le_glMap_iff, relIndex_glMap]
 
 theorem smul_mem_subElem_iff (g : GL (Fin r) K) (k : ℕ) (M L : Lat O K r) :
     g • M ∈ subElem k (g • L) ↔ M ∈ subElem k L := by
   have h := smul_mem_subIdx_iff g k M L
-  simp only [subElem, Set.mem_setOf_eq, h]
+  simp only [subElem, Set.mem_ofPred_eq, h]
   simp only [smul_def, glLat_val, ← glMap_smul, glMap_le_glMap_iff]
 
 variable {E : Type} [AddCommMonoid E]

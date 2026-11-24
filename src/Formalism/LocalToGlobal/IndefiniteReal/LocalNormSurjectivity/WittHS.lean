@@ -64,7 +64,7 @@ def newtonSq (u : L) : ℕ → L
 theorem pow_small {γ : WithZero (Multiplicative ℤ)} (hγ : γ < 1) (δ : (WithZero (Multiplicative ℤ))ˣ) :
     ∃ N : ℕ, γ ^ N < δ := by
   rcases eq_or_ne γ 0 with h0 | h0
-  · exact ⟨1, by rw [h0, pow_one]; exact zero_lt_iff.mpr δ.ne_zero⟩
+  · exact ⟨1, by rw [h0, pow_one]; exact pos_iff_ne_zero.mpr δ.ne_zero⟩
   obtain ⟨g, rfl⟩ := WithZero.ne_zero_iff_exists.mp h0
   obtain ⟨d, hd⟩ := WithZero.ne_zero_iff_exists.mp δ.ne_zero
   rw [← hd]
@@ -125,7 +125,7 @@ theorem newton_bound (h2 : vv (2 : L) = 1) (hu : vv (u - 1) < 1) (k : ℕ) :
         show (4 : L) = 2 * 2 by norm_num, Valuation.map_mul, h2, one_mul]
     have hlt : vv (u - 1) ^ (k + 1) < 1 := by
       first
-      | exact pow_lt_one₀ zero_le' hu (Nat.succ_ne_zero k)
+      | exact pow_lt_one₀ zero_le hu (Nat.succ_ne_zero k)
       | exact pow_lt_one' hu (Nat.succ_ne_zero k)
     constructor
     · have he : newtonSq u (k + 1) - 1 = (newtonSq u (k + 1) - newtonSq u k) + (newtonSq u k - 1) := by
@@ -211,7 +211,7 @@ theorem henselSqrt : HenselSqrt := by
     obtain ⟨m, hm1, hm2⟩ := (h1.and (Filter.eventually_ge_atTop N)).exists
     have hm1' : Valued.v (newtonSq u m * newtonSq u m - s * s) < Valued.v (s * s - u) := by
       have h5 := hm1
-      simp only [Set.mem_setOf_eq, Units.val_mk0] at h5
+      simp only [Set.mem_ofPred_eq, Units.val_mk0] at h5
       exact (Valuation.restrict_lt_iff _).mp h5
     have hb := (newton_bound u h2 hu m).2
     have h3 : Valued.v (newtonSq u m * newtonSq u m - u) < Valued.v (s * s - u) :=
@@ -229,7 +229,7 @@ theorem henselSqrt : HenselSqrt := by
     obtain ⟨m, hm⟩ := h1.exists
     have hm' : Valued.v (newtonSq u m - s) < 1 := by
       have h5 := hm
-      simp only [Set.mem_setOf_eq, Units.val_one] at h5
+      simp only [Set.mem_ofPred_eq, Units.val_one] at h5
       exact (Valuation.restrict_lt_one_iff _).mp h5
     have hb := (newton_bound u h2 hu m).1
     have he : s - 1 = -(newtonSq u m - s) + (newtonSq u m - 1) := by ring

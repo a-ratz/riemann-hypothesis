@@ -103,7 +103,7 @@ theorem mod_rat [MeasurableSpace (A F)] [BorelSpace (A F)] {lf : Measure (A F)} 
   have h2 := (_root_.GlobalTheory.CompanionTheory.SW.Core.PiScale.pi_scale F lf hlf h1 ι).2 (uA a) s hs
   have h3 := (_root_.GlobalTheory.CompanionTheory.SW.Core.Scale.lf_scale F lf hlf h1).1 a a.ne_zero _ (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.1.measurableSet
   rw [h1, mul_one] at h3
-  rw [muF, Measure.smul_apply, Measure.smul_apply, h2, smul_eq_mul, smul_eq_mul, mul_left_comm, ← pow_mul,
+  rw [muF, smul_apply, smul_apply, h2, smul_eq_mul, smul_eq_mul, mul_left_comm, ← pow_mul,
     ENNReal.ofReal_pow (by positivity), hc, mul_comm M 2]
   exact congrArg (fun t => t ^ (2 * M) * _) h3
 

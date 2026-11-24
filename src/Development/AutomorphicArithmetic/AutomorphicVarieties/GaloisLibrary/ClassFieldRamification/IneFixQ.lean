@@ -65,7 +65,7 @@ open scoped Pointwise
 theorem UpperTheory.V.CF.ineMap :
     ∀ (k K H : Type) [Field k] [NumberField k] [Field K] [NumberField K] [Field H] [NumberField H] [Algebra k K] [Algebra K H] [Algebra k H] [IsScalarTower k K H] [IsGalois k K] [IsGalois k H] (w : HeightOneSpectrum (𝓞 H)), (w.asIdeal.inertia Gal(H/k)).map (resTo k K H) = (w.asIdeal.under (𝓞 K)).inertia Gal(K/k) := by
   intro k K H _ _ _ _ _ _ _ _ _ _ _ _ w
-  haveI : IsGalois K H := IsGalois.tower_top_of_isGalois k K H
+  have : IsGalois K H := IsGalois.tower_top_of_isGalois k K H
   have comm : ∀ (σ : Gal(H/k)) (x : 𝓞 K),
       algebraMap (𝓞 K) (𝓞 H) (resTo k K H σ • x) = σ • algebraMap (𝓞 K) (𝓞 H) x := by
     intro σ x
@@ -88,7 +88,7 @@ theorem UpperTheory.V.CF.ineMap :
   set P := w.asIdeal with hP
   set Q := P.under (𝓞 K) with hQ
   set p := P.under (𝓞 k) with hp
-  haveI : Nonempty (Q.primesOver (𝓞 H)) := ⟨⟨P, inferInstance, inferInstance⟩⟩
+  have : Nonempty (Q.primesOver (𝓞 H)) := ⟨⟨P, inferInstance, inferInstance⟩⟩
   have hle : (P.inertia Gal(H/k)).map (resTo k K H) ≤ Q.inertia Gal(K/k) := by
     rintro _ ⟨σ, hσ, rfl⟩
     intro x

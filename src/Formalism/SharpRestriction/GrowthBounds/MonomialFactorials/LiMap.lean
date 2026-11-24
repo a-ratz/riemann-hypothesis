@@ -58,7 +58,7 @@ open MvPolynomial
 theorem li_map {k L : Type*} [Field k] [Field L] (ι : k →+* L) {σ κ : Type*} (f : κ → MvPolynomial σ k)
     (hf : LinearIndependent k f) : LinearIndependent L (fun i => MvPolynomial.map ι (f i)) := by
   classical
-  letI := ι.toAlgebra
+  let := ι.toAlgebra
   have hs : LinearIndepOn k id (Set.range f) := (linearIndepOn_id_range_iff hf.injective).2 hf
   let b := Module.Basis.extend hs
   let B := (Algebra.TensorProduct.basis L b).map

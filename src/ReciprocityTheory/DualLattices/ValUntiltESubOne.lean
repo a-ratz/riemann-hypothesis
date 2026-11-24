@@ -173,7 +173,7 @@ private lemma val_untilt_e_sub_one (hv : v.Integers O) (e : PreTilt O p)
     (hζ : IsPrimitiveRoot e.untilt p) :
     v (algebraMap O C (e - 1).untilt) ^ (p - 1) = v (p : C) := by
   have hpl : v (p : C) < 1 := val_p_lt_one hv
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
   have hpow : ∀ (x : PreTilt O p) (n : ℕ), (x ^ n).untilt = x.untilt ^ n := by
     intro x n
     first
@@ -253,7 +253,7 @@ theorem xiNu (p : ℕ) [hp : Fact p.Prime] (C : Type) [Field C] (v : Valuation C
     [IsAdicComplete (span {(p : O)}) O] (hK : KerThetaStatement p O) :
     XiNuStatement p C v O := by
   intro ε hv hζ
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
   set e := (frobeniusEquiv (PreTilt O p) p).symm ε with he
   have hep : e ^ p = ε := by
     first

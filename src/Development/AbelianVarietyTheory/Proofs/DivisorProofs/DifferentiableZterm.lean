@@ -88,8 +88,8 @@ theorem QSum.eq_zero (hF : ∀ g, ∀ u ∈ H, F (g * u) = F g) (h : QSum H F a)
 theorem qsum_index (hle : H ≤ H') (hn : H.relIndex H' ≠ 0) (hF : ∀ g, ∀ u ∈ H', F (g * u) = F g) :
     QSum H' F a ↔ QSum H F (H.relIndex H' * a) := by
   unfold QSum
-  haveI : (H.subgroupOf H').FiniteIndex := ⟨hn⟩
-  haveI := Fintype.ofFinite (H' ⧸ H.subgroupOf H')
+  have : (H.subgroupOf H').FiniteIndex := ⟨hn⟩
+  have := Fintype.ofFinite (H' ⧸ H.subgroupOf H')
   have hc : (Fintype.card (H' ⧸ H.subgroupOf H') : ℂ) = H.relIndex H' := by
     rw [Subgroup.relIndex, Subgroup.index, Nat.card_eq_fintype_card]
   have hn' : (H.relIndex H' : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hn
@@ -193,7 +193,7 @@ theorem mem_hatO_of_sub {c : Ideal (OF E)} {n : ℕ} (hn : 0 < n) (hc : (n : OF 
       simp) (algebraMap E (Af E) (n : E)⁻¹ * (z - a)) fun P => by
       have h0 := GlobalTheory.AdLat.valued_natCast_ne_zero P hn
       show Valued.v (algebraMap E (P.adicCompletion E) (n : E)⁻¹ * (z P - a P)) ≤ 1
-      rw [map_mul, map_inv₀, map_inv₀, map_natCast, inv_mul_le_iff₀ (zero_lt_iff.2 h0), mul_one]
+      rw [map_mul, map_inv₀, map_inv₀, map_natCast, inv_mul_le_iff₀ (pos_iff_ne_zero.2 h0), mul_one]
       exact hz P
   have e : z = algebraMap E (Af E) n * (algebraMap E (Af E) (n : E)⁻¹ * (z - a)) + a := by
     rw [← mul_assoc, ← map_mul, mul_inv_cancel₀ hn0, map_one, one_mul, sub_add_cancel]

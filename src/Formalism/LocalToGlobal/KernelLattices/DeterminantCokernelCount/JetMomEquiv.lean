@@ -118,7 +118,7 @@ theorem wPh_of_int (T : Tor D) {N N' : ℕ} (x : VC D N N') (m : ℤ) (h : qH D 
     wPh D T q x = Complex.exp ((Real.pi : ℂ) * Complex.I * (qH D T x : ℂ)) := by
   have hE : Complex.exp ((Real.pi : ℂ) * Complex.I * (qH D T x : ℂ)) = (-1 : ℂ) ^ m := by
     rw [h, show (Real.pi : ℂ) * Complex.I * ((m : ℝ) : ℂ) = (m : ℂ) * (Real.pi * Complex.I) by
-      push_cast; ring, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+      push_cast; ring, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
   unfold wPh
   split_ifs with hq
   · rfl

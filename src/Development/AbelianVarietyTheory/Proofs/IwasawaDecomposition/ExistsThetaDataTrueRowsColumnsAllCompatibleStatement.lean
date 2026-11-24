@@ -173,11 +173,11 @@ theorem exists_isWeilOn_swap : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), Is
     exact heis_transpose ψ hne.symm _ _
   · exact H.aut γ' hγ' γ hγ ((trEquiv ψ hne).symm Φ)
   · exact (H.cont ((trEquiv ψ hne).symm Φ) w.transpose).comp continuous_swap
-  · haveI : IsTopologicalAddGroup (AE D) := IsTopologicalRing.to_topologicalAddGroup
-    haveI : IsTopologicalAddGroup (WA V W) := Pi.topologicalAddGroup
-    haveI : IsTopologicalAddGroup (WA W V) := Pi.topologicalAddGroup
-    haveI : BorelSpace (WA V W) := ⟨rfl⟩
-    haveI : BorelSpace (WA W V) := ⟨rfl⟩
+  · have : IsTopologicalAddGroup (AE D) := IsTopologicalRing.isTopologicalAddGroup
+    have : IsTopologicalAddGroup (WA V W) := Pi.isTopologicalAddGroup
+    have : IsTopologicalAddGroup (WA W V) := Pi.isTopologicalAddGroup
+    have : BorelSpace (WA V W) := ⟨rfl⟩
+    have : BorelSpace (WA W V) := ⟨rfl⟩
     obtain ⟨ν, h1, h2, h3⟩ := GlobalTheory.exists_isAddHaarMeasure_isAddFundamentalDomain_preimage (WA V W) (WA W V)
       (Matrix.transposeAddEquiv _ _ _) continuous_id.matrix_transpose continuous_id.matrix_transpose
       (ratL V W) (ratL W V) (fun x => ⟨fun ⟨γ, hγ⟩ => ⟨γ.transpose, congrArg Matrix.transpose hγ⟩,
@@ -410,8 +410,8 @@ theorem twist (hψ : IsStdChar D ψ (-1)) {V W : HSp D} {χ χ' ν ν' : IdC D} 
     (H' : IsWeilOn ψ V W (χ * ν) (χ' * ν') om') {g h x y} (hx : IsDetRoot V g x) (hy : IsDetRoot W h y) :
     om' (g, h) = (((if V.rank < W.rank then (ν' x)⁻¹ * ν y else (ν y)⁻¹ * ν' x : Circle) : ℂ)) • om (g, h) := by
   rcases ha.1.lt_or_gt with hr | hr
-  · rw [if_pos hr]; exact twist_small hψ ha hr h1 h2 r1 r2 H H' hx hy
-  · rw [if_neg hr.not_gt]
+  · rw [ite_eq_left hr]; exact twist_small hψ ha hr h1 h2 r1 r2 H H' hx hy
+  · rw [ite_eq_right hr.not_gt]
     obtain ⟨o, ho, e⟩ := exists_swap hψ ha.1 H
     obtain ⟨o', ho', e'⟩ := exists_swap hψ ha.1 H'
     refine LinearMap.ext fun Φ => (WeilSwap.trEquiv ψ ha.1).injective ?_
@@ -539,8 +539,8 @@ theorem transpose_mem_latVWS {V W : HSp D} (hne : V.rank ≠ W.rank) (Z : Finset
     change _ ⊗ₜ _ = _ ⊗ₜ _
     congr 1
     rcases hne.lt_or_gt with hr | hr
-    · rw [if_pos hr.le, if_neg hr.not_ge]; ring
-    · rw [if_neg hr.not_ge, if_pos hr.le]; ring
+    · rw [ite_eq_left hr.le, ite_eq_right hr.not_ge]; ring
+    · rw [ite_eq_right hr.not_ge, ite_eq_left hr.le]; ring
   exact this hu
 
 theorem weilRules : ∀ D : D7, WeilRules D := by
@@ -823,7 +823,7 @@ theorem besInt : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, BesInt D 
   have hc : Continuous fun p : GA D A × NFlag B d.e => star (φ p.1) * F ((p.2 : GA D B) * s p.1 * (d.y : GA D B)) *
       star (besChar ψ d (p.2 : GA D B)) :=
     ((hφ.cont.comp continuous_fst).star.mul (hF.1.cont.comp
-      (((continuous_subtype_val.comp continuous_snd).mul (hsc.comp continuous_fst)).mul continuous_const))).mul
+      (((continuous_subtypeVal.comp continuous_snd).mul (hsc.comp continuous_fst)).mul continuous_const))).mul
       (hχ.comp continuous_snd).star
   refine ⟨fun h => Measure.integrableOn_of_bounded (M := ‖φ h‖ * C) hfin.ne
     (hc.comp (Continuous.prodMk_right h)).measurable.aestronglyMeasurable (.of_forall (hb h)), ?_⟩
@@ -1057,7 +1057,7 @@ theorem weilOnEqEx_of_weilRepresentation : GlobalTheory.Published.WeilRepresenta
     (fun g h x => (GlobalTheory.OrientedSmall.bridgeSmall D V W hr.le).2 g h x) (fun _ a _ b => ⟨a, b⟩)
     fun e g h hg hh x y hx hy => ⟨x, y, hg, hh, hx, hy, ?_⟩
   unfold splitFacO splitFac
-  rw [if_pos hr.le]
+  rw [ite_eq_left hr.le]
 
 end GlobalTheory.Mem.WeilEqRank
 
@@ -1167,7 +1167,7 @@ variable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.w
 theorem mem_cc (b : Bool) (μ : D.what₂.Tup) {k : ℕ} (hk : k < D.R.m) (x : SmT (R.MY k) →ₗ[ℂ] GA D (Yc D k) → ℂ) :
     x ∈ (toChainReal R F tupT hm hTop).CC b μ k ↔ x ∈ R.CC (tupT μ) k := by
   show x ∈ MultT R.θ (R.MY k) (if k < D.R.m then _ else Set.univ) (if k < D.R.m then _ else 0) ↔ _
-  rw [if_pos hk, if_pos hk]
+  rw [ite_eq_left hk, ite_eq_left hk]
 
 theorem ioC_coe (b : Bool) (μ : D.what₂.Tup) (k : ℕ) (hk : k + 1 < D.R.m)
     (z : (toChainReal R F tupT hm hTop).CC b μ (k + 1)) :
@@ -1175,7 +1175,7 @@ theorem ioC_coe (b : Bool) (μ : D.what₂.Tup) (k : ℕ) (hk : k + 1 < D.R.m)
         SmT (R.MY k) →ₗ[ℂ] GA D (Yc D k) → ℂ) =
       (((R.ioY (tupT μ) k ⟨(z.1 : SmT (R.MY (k + 1)) →ₗ[ℂ] GA D (Yc D (k + 1)) → ℂ),
         (mem_cc R F tupT hm hTop b μ hk _).1 z.2⟩).1 : _)) := by
-  simp only [toChainReal, dif_pos hk]
+  simp only [toChainReal, dite_eq_left hk]
   rfl
 
 theorem ioOK (hC : R.IsChain) (b : Bool) (μ : D.what₂.Tup) : (toChainReal R F tupT hm hTop).IoOK b μ := by
@@ -1224,7 +1224,7 @@ def eXW (μ : D.what₂.Tup) (hμ : Used0 D μ) :
 theorem eW_pos (μ : D.what₂.Tup) (hμ : Used0 D μ) (j : ℕ) (h1 : 1 ≤ j) (h2 : j ≤ D.R.m - 1) (x : D.what₂.Mult μ j) :
     ((eW R F tupT hm hTop I μ hμ j x).1 : SmT (R.MY j) →ₗ[ℂ] GA D (Yc D j) → ℂ) = (I.jM μ hμ j h1 h2 x).1 := by
   obtain ⟨j, rfl⟩ : ∃ i, j = i + 1 := ⟨j - 1, by omega⟩
-  simp only [eW, dif_pos h2]
+  simp only [eW, dite_eq_left h2]
   rfl
 
 theorem nuW_pos (t : T) (j : ℕ) (h1 : 1 ≤ j) : nuW R F t j = R.νY t j := by
@@ -1528,7 +1528,7 @@ theorem recFun_of_rows (hR : GlobalTheory.Published.CuspRapidDecay) {K : Ctx} {B
     ∀ θ : InfF (w.D Z), IsInfFam θ → ∀ ψ, IsStdChar (w.D Z) ψ (-1) → ∀ Wf : WeilFun (w.D Z) ψ,
       ∃ Rc : RecFun (w.D Z) θ ψ, Rc.ChrIs (TC.cf w.I w.l Z) n.tp.xi ∧ Rc.IoTie Wf ∧ ∀ μ ∈ {μ | Formalism.IndefR.RecTie.Used0 (w.D Z) μ}, ∀ j, j ≤ (w.D Z).R.m → ∀ x y : (w.D Z).what₂.Mult μ j, GlobalTheory.IndefiniteRowSideFullHecke.SplittingKernelQuotients.IsQuotInt ((w.D Z).sp.Y j) (Rc.mY μ j * Rc.petC ((w.D Z).sp.Y j)) (fun h => star ((Rc.row μ j x).1 h) * (Rc.row μ j y).1 h) (inner ℂ x y) := by
   intro θ hθ ψ hψ Wf
-  letI : Algebra what₂.r.z.core.Q.c.F (w.D Z).what₂.LL := what₂.r.z.alg
+  let : Algebra what₂.r.z.core.Q.c.F (w.D Z).what₂.LL := what₂.r.z.alg
   have h3 := Formalism.IndefR.Links.RealDat3.characterisation_of_weak what₂.r.z.pins.char what₂.exAt
   have hC : what₂.r.z.R.toRealDat.C = TC.cf w.I w.l Z := what₂.r.z.lev.C
   obtain ⟨Rc, h1, h2, h4⟩ := GlobalTheory.T.functionLevelData_of_equal_tuples_zero_intertwiners hR (w.D Z) _ _ _ _ _ what₂.r.z.R.toRealDat h3.lev h3.models h3.chain n.tp.xi

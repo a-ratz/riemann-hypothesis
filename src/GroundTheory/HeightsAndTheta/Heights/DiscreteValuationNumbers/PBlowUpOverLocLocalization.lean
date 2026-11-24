@@ -164,7 +164,7 @@ theorem BlowUpOverLocLocalization.proof (hfam : BlowUpOverLocFamilyFinite.Statem
     (IsLocalRing.maximalIdeal (blowUpLocRing P u W')).comap (Subring.inclusion hBR)
   have h𝔭 : 𝔭.IsPrime := Ideal.comap_isPrime _ _
   refine ⟨hBR, 𝔭, h𝔭, ?_⟩
-  letI := (Subring.inclusion hBR).toAlgebra
+  let := (Subring.inclusion hBR).toAlgebra
   refine (isLocalization_iff _ _).mpr ⟨?_, ?_, ?_⟩
   · rintro ⟨s, hs⟩
     by_contra h

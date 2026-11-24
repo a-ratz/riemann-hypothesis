@@ -1404,7 +1404,7 @@ open Formalism.MainNotions.BridgeLemma
 theorem tFrame_of_dsig (hM : Formalism.HermitianLatticesTheory.SiegelMassRatio) (hDs : Formalism.L2.SG.Pf.SzHypFD.DsigHC)
     {eps : ℝ} (Fm : FamP eps) (h40 : 40 ≤ sCl Fm) {C0 Cg cb Cu cT CT : ℝ}
     (hR : PX.RanksF Fm C0 Cg cb Cu cT CT) : PX.TFrame Fm Cg cb Cu cT CT C0 := by
-  haveI : Fact Formalism.L2.SG.Pf.SzHypFD.DsigHC := ⟨hDs⟩
+  have : Fact Formalism.L2.SG.Pf.SzHypFD.DsigHC := ⟨hDs⟩
   exact level_frame_of_sizes Fm Cg cb Cu cT CT C0 1 (by linarith)
     (level_formula_family Fm C0 Cg cb Cu cT CT (fun x i => mass_ratio_of_siegel_cm_unramified hM (Fm.D x i)) (mass_two_bound_family_holds Fm) hR)
     (Formalism.L2.SG.Pf.SzHypFam.localSplitExponents_of_forty_le_sCl Fm h40 C0 Cg cb Cu cT CT)
@@ -1601,7 +1601,7 @@ theorem tcrit_low_of_dsig (hDs : Formalism.L2.SG.Pf.SzHypFD.DsigHC) (D : D7) (la
     (C' Cl Cg cb Cu cT CT C0 : ℝ) (hCl : 40 ≤ Cl) (hT : Ties D) (hb' : Real.sqrt large₂.sc.b ≤ large₂.sc.b')
     (hx : large₂.sc.x ≤ D.R.k) : UnitaryVolumeMass.stTcritLow D large₂ C' Cl Cg cb Cu cT CT C0 := by
   intro hH
-  haveI : Fact Formalism.L2.SG.Pf.SzHypFD.DsigHC := ⟨hDs⟩
+  have : Fact Formalism.L2.SG.Pf.SzHypFD.DsigHC := ⟨hDs⟩
   have hL : 1 ≤ large₂.sc.L := Real.one_le_rpow large₂.sc.one_lt_alt.le large₂.sc.eps_pos.le
   have hCL : 1 ≤ Cl * large₂.sc.L := by nlinarith
   have hVV : ∀ τ, VV D τ = vand (lamSH D.R (D.hc τ)) := fun τ =>
@@ -1799,10 +1799,10 @@ theorem loop_rows_closed_gap : GlobalTheory.GapIn.Hyp → Formalism.L2.SG.LocWSO
     (Closed 𝒞 fun Fm _ => PX.RanksF Fm 3 (Fm.CYL + 1) (1 / 4) 3 (1 / 2) Fm.CTu) → LoopRowS 3 𝒞 sel := by
   intro hH hBW hBp hWu hRF 𝒞 sel hT hRk
   have hGap := Formalism.L2.SG.GapClosed.gapEv_closed_of 𝒞 hT
-  haveI : Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram := ⟨GlobalTheory.hermRepUnram⟩
-  haveI : Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc := ⟨GlobalTheory.Sloc.CoefWeighted.coefWeightedLoc_uncond⟩
-  haveI : Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow := ⟨hH.1.1.1⟩
-  haveI : Fact Formalism.FourierDecayAlt.ThreeDimData.DecInf := ⟨hH.1.1.2.1⟩
+  have : Fact Formalism.HermitianLattices.Ext.L3.HermRepUnram := ⟨GlobalTheory.hermRepUnram⟩
+  have : Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc := ⟨GlobalTheory.Sloc.CoefWeighted.coefWeightedLoc_uncond⟩
+  have : Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow := ⟨hH.1.1.1⟩
+  have : Fact Formalism.FourierDecayAlt.ThreeDimData.DecInf := ⟨hH.1.1.2.1⟩
   have hFX : Formalism.L2.SG.PoincareAmplitudeLowerBounds.FinXC := Formalism.L2.SG.Pf.finXC_of hWu hRF
   have hRM : RMeasExAll := GlobalTheory.RMeasAll.rMeasEx_all
   have hJF : JFactNAll := GlobalTheory.T.localBesselJFactor_all_words_of_gap

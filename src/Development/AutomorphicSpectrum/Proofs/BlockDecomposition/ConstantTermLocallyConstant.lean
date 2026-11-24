@@ -186,7 +186,7 @@ theorem constant_term_locally_constant : ∀ (E : Type) [Field E] [NumberField E
   have hL : IsOpen (leviOf h w K') := by
     have e : leviOf h w K' = (CtLevel.dgM h w) ⁻¹' (K' : Set (GLw n w)) := by
       ext m
-      simp only [leviOf, Set.mem_setOf_eq, Set.mem_preimage, blk_zero_eq, SetLike.mem_coe]
+      simp only [leviOf, Set.mem_ofPred_eq, Set.mem_preimage, blk_zero_eq, SetLike.mem_coe]
     rw [e]
     exact hKo.preimage (continuous_dgM h w)
   have h1 : (1 : GLw a w × GLw b w) ∈ leviOf h w K' := by

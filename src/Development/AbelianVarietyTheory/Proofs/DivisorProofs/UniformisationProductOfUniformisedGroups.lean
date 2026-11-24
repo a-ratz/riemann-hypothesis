@@ -328,14 +328,14 @@ theorem cls_extLB {X X₁ X₂ : Scheme.{0}} {L : LB X} {L₁ : LB X₁} {L₂ :
 open GlobalTheory.CechPic in
 theorem exists_gen_prod : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (D₁ : DegData R I) (A₁ : PolAV (Sp (FractionRing R))) (G₁ : Over (Sp R)) [GrpObj G₁] [IsCommMonObj G₁] (U₁ : UnifPre I D₁ A₁ G₁) (D₂ : DegData R I) (A₂ : PolAV (Sp (FractionRing R))) (G₂ : Over (Sp R)) [GrpObj G₂] [IsCommMonObj G₂] (U₂ : UnifPre I D₂ A₂ G₂) (A : PolAV (Sp (FractionRing R))) (a₁ : A.A ⟶ A₁.A) (a₂ : A.A ⟶ A₂.A), IsSumPolAV A A₁ A₂ a₁ a₂ → ∃ gen : (Over.pullback (jK R)).obj (G₁ ⊗ G₂) ≅ A.A, IsMonHom gen.hom ∧ gen.hom ≫ a₁ = (Over.pullback (jK R)).map (fst G₁ G₂) ≫ U₁.gen.hom ∧ gen.hom ≫ a₂ = (Over.pullback (jK R)).map (snd G₁ G₂) ≫ U₂.gen.hom ∧ ∀ (L : LB (G₁ ⊗ G₂).left) (wL : LB.Iso L (extLB U₁.LG.L U₂.LG.L (fst G₁ G₂).left (snd G₁ G₂).left)), L.IsLB → wL.IsGen → ∃ w : LB.Iso (A.L.pull gen.hom.left) (L.pull (pullback.fst (G₁ ⊗ G₂).hom (jK R))), w.IsGen := by
   intro R _ _ I D₁ A₁ G₁ _ _ U₁ D₂ A₂ G₂ _ _ U₂ A a₁ a₂ hA
-  haveI := hA.hom₁
-  haveI := hA.hom₂
-  haveI := hA.lim
-  haveI := U₁.gen_hom
-  haveI := U₂.gen_hom
+  have := hA.hom₁
+  have := hA.hom₂
+  have := hA.lim
+  have := U₁.gen_hom
+  have := U₂.gen_hom
   obtain ⟨e, e₁, e₂⟩ := exists_iso_prod (jK R) G₁ G₂ a₁ a₂ U₁.gen U₂.gen
-  haveI : IsMonHom (e.hom ≫ a₁) := by rw [e₁]; infer_instance
-  haveI : IsMonHom (e.hom ≫ a₂) := by rw [e₂]; infer_instance
+  have : IsMonHom (e.hom ≫ a₁) := by rw [e₁]; infer_instance
+  have : IsMonHom (e.hom ≫ a₂) := by rw [e₂]; infer_instance
   refine ⟨e, isMonHom_of_lift a₁ a₂ e.hom, e₁, e₂, fun L wL hL hwL => ?_⟩
   obtain ⟨wA, hwA⟩ := hA.w
   have cA := cls_extLB A.isLB A₁.isLB A₂.isLB wA hwA
@@ -427,14 +427,14 @@ theorem torusMap_id' : GlobalTheory.SplitTorusPow.torusMap S (AddMonoidHom.id X)
 theorem isIso_lift_torusMap {X₁ X₂ : Type} [AddCommGroup X₁] [AddCommGroup X₂] (E : X ≃+ X₁ × X₂) :
     IsIso (lift (GlobalTheory.SplitTorusPow.torusMap S (E.symm.toAddMonoidHom.comp (AddMonoidHom.inl X₁ X₂)))
       (GlobalTheory.SplitTorusPow.torusMap S (E.symm.toAddMonoidHom.comp (AddMonoidHom.inr X₁ X₂)))) := by
-  haveI := GlobalTheory.SemiProd.torus_prod_iso S X₁ X₂
+  have := GlobalTheory.SemiProd.torus_prod_iso S X₁ X₂
   have e : lift (GlobalTheory.SplitTorusPow.torusMap S (E.symm.toAddMonoidHom.comp (AddMonoidHom.inl X₁ X₂)))
       (GlobalTheory.SplitTorusPow.torusMap S (E.symm.toAddMonoidHom.comp (AddMonoidHom.inr X₁ X₂))) =
       GlobalTheory.SplitTorusPow.torusMap S E.symm.toAddMonoidHom ≫
         lift (GlobalTheory.SplitTorusPow.torusMap S (AddMonoidHom.inl X₁ X₂))
           (GlobalTheory.SplitTorusPow.torusMap S (AddMonoidHom.inr X₁ X₂)) := by
     rw [comp_lift, torusMap_comp', torusMap_comp']
-  haveI : IsIso (GlobalTheory.SplitTorusPow.torusMap S E.symm.toAddMonoidHom) :=
+  have : IsIso (GlobalTheory.SplitTorusPow.torusMap S E.symm.toAddMonoidHom) :=
     ⟨GlobalTheory.SplitTorusPow.torusMap S E.toAddMonoidHom, by
       rw [torusMap_comp', show E.symm.toAddMonoidHom.comp E.toAddMonoidHom = AddMonoidHom.id X from by ext; simp,
         torusMap_id'], by
@@ -453,12 +453,12 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (e : ℕ) 
   intro R _ _ I e D D₁ D₂ p₁ p₂ q₁ q₂ G₁ G₂ _ _ _ _ g₁ g₂ hD
   let F := Over.pullback (thick R I e)
   let S₀ := Sp (R ⧸ I ^ (e + 1))
-  haveI := hD.hom₁
-  haveI := hD.hom₂
-  haveI := g₁.q_hom
-  haveI := g₂.q_hom
-  haveI := g₁.i_hom
-  haveI := g₂.i_hom
+  have := hD.hom₁
+  have := hD.hom₂
+  have := g₁.q_hom
+  have := g₂.q_hom
+  have := g₁.i_hom
+  have := g₂.i_hom
   let E : D.X ≃+ D₁.X × D₂.X := AddEquiv.ofBijective (q₁.prod q₂) hD.xsum
   let j₁ : D₁.X →+ D.X := E.symm.toAddMonoidHom.comp (AddMonoidHom.inl D₁.X D₂.X)
   let j₂ : D₂.X →+ D.X := E.symm.toAddMonoidHom.comp (AddMonoidHom.inr D₁.X D₂.X)
@@ -482,28 +482,28 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] (I : Ideal R) (e : ℕ) 
           GlobalTheory.SplitTorusPow.points_comp_torusMap, map_mul, MonoidHom.mul_comp]
       simpa only [Hom.mul_def, lift_fst_snd, Category.id_comp, lift_fst_comp_snd_comp] using
         h (fst (splitTorus S₀ X') (splitTorus S₀ X')) (snd _ _)
-  haveI : IsMonHom τ₁ := hτmon j₁
-  haveI : IsMonHom τ₂ := hτmon j₂
-  haveI hτ : IsIso (lift τ₁ τ₂) := isIso_lift_torusMap E
+  have : IsMonHom τ₁ := hτmon j₁
+  have : IsMonHom τ₂ := hτmon j₂
+  have hτ : IsIso (lift τ₁ τ₂) := isIso_lift_torusMap E
 
-  haveI hG : IsIso (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂))) :=
+  have hG : IsIso (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂))) :=
     isIso_prodComparison_of_preservesLimit_pair F G₁ G₂
-  haveI := hD.lim
+  have := hD.lim
   have eB : lift (F.map p₁) (F.map p₂) = F.map (lift p₁ p₂) ≫ Functor.OplaxMonoidal.δ F D₁.P.A D₂.P.A :=
     (Functor.OplaxMonoidal.lift_δ F p₁ p₂).symm
-  haveI hB : IsIso (lift (F.map p₁) (F.map p₂)) := by rw [eB]; infer_instance
-  haveI : IsMonHom (inv (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂)))) :=
+  have hB : IsIso (lift (F.map p₁) (F.map p₂)) := by rw [eB]; infer_instance
+  have : IsMonHom (inv (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂)))) :=
     inferInstanceAs (IsMonHom (asIso (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂)))).inv)
-  haveI : IsMonHom (inv (lift (F.map p₁) (F.map p₂))) :=
+  have : IsMonHom (inv (lift (F.map p₁) (F.map p₂))) :=
     inferInstanceAs (IsMonHom (asIso (lift (F.map p₁) (F.map p₂))).inv)
   let q := lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂)) ≫ (g₁.q ⊗ₘ g₂.q) ≫ inv (lift (F.map p₁) (F.map p₂))
   let i := lift τ₁ τ₂ ≫ (g₁.i ⊗ₘ g₂.i) ≫ inv (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂)))
   have hP : ∀ (P : MorphismProperty Scheme.{0}) [P.IsMultiplicative] [P.IsStableUnderBaseChange],
       P g₁.q.left → P g₂.q.left → P q.left := by
     intro P _ _ h₁ h₂
-    haveI : IsIso (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂))).left :=
+    have : IsIso (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂))).left :=
       inferInstanceAs (IsIso ((Over.forget _).map (lift (F.map (fst G₁ G₂)) (F.map (snd G₁ G₂)))))
-    haveI : IsIso (inv (lift (F.map p₁) (F.map p₂))).left :=
+    have : IsIso (inv (lift (F.map p₁) (F.map p₂))).left :=
       inferInstanceAs (IsIso ((Over.forget _).map (inv (lift (F.map p₁) (F.map p₂)))))
     rw [Over.comp_left, Over.comp_left]
     exact P.comp_mem _ _ (P.of_isIso _)
@@ -601,8 +601,8 @@ open ReciprocityTheory.ChartRestriction.G.DVR GlobalTheory.SumDeg
 
 theorem tMul_of_box : ∀ (R : Type) [CommRing R] [IsDomain R] (D D₁ D₂ : DegPre R) (p₁ : D.P.A ⟶ D₁.P.A) (p₂ : D.P.A ⟶ D₂.P.A) (q₁ : D.X →+ D₁.X) (q₂ : D.X →+ D₂.X), IsSumDeg D D₁ D₂ p₁ p₂ q₁ q₂ → ∀ (w : LB.Iso D.P.L (extLB D₁.P.L D₂.P.L p₁.left p₂.left)), IsBoxGen (φ := thφ D.P.A (x3 D.P.A)) (φ₁ := thφ D₁.P.A (x3 D₁.P.A)) (φ₂ := thφ D₂.P.A (x3 D₂.P.A)) (ε := thε) w (p₁ ⊗ₘ p₁ ⊗ₘ p₁).left (p₂ ⊗ₘ p₂ ⊗ₘ p₂).left D.cub.t D₁.cub.t D₂.cub.t → ∀ (T T₁ T₂ : Over (Sp R)) (P : T ⟶ D.P.A) (P₁ : T₁ ⟶ D₁.P.A) (P₂ : T₂ ⟶ D₂.P.A) (ρ₁ : T ⟶ T₁) (ρ₂ : T ⟶ T₂), P ≫ p₁ = ρ₁ ≫ P₁ → P ≫ p₂ = ρ₂ ≫ P₂ → ∀ (t : ∀ χ : D.X, LB.Gen (LB.LinComb D.P.L (D.Oφ P χ) Oinvε)) (t₁ : ∀ χ : D₁.X, LB.Gen (LB.LinComb D₁.P.L (D₁.Oφ P₁ χ) Oinvε)) (t₂ : ∀ χ : D₂.X, LB.Gen (LB.LinComb D₂.P.L (D₂.Oφ P₂ χ) Oinvε)), (∀ x, IsBoxGen w ρ₁.left ρ₂.left (t x) (t₁ (q₁ x)) (t₂ (q₂ x))) → TMul D₁ P₁ t₁ → TMul D₂ P₂ t₂ → TMul D P t := by
   intro R _ _ D D₁ D₂ p₁ p₂ q₁ q₂ hS w hc T T₁ T₂ P P₁ P₂ ρ₁ ρ₂ e₁ e₂ t t₁ t₂ hb h₁ h₂ χ χ'
-  haveI := hS.hom₁
-  haveI := hS.hom₂
+  have := hS.hom₁
+  have := hS.hom₂
   refine corr_of_val D.P.isLB fun y J hJ => ?_
   obtain ⟨J₁, hJ₁⟩ := GlobalTheory.BoxFamily.exists_good_at D₁.P.isLB y
   obtain ⟨J₂, hJ₂⟩ := GlobalTheory.BoxFamily.exists_good_at D₂.P.isLB y
@@ -1527,7 +1527,7 @@ theorem g_eq_add : ∀ (S : Scheme.{0}) (P P₁ P₂ : PolAV S) (a₁ : P.A ⟶ 
     Nonempty S → IsIso (lift a₁ a₂) → P.g = P₁.g + P₂.g := by
   intro S P P₁ P₂ a₁ a₂ ⟨s⟩ hi
   have h := smoothDim_tensor P₁.smoothDim P₂.smoothDim
-  haveI : IsIso (lift a₁ a₂).left := inferInstanceAs (IsIso ((Over.forget S).map (lift a₁ a₂)))
+  have : IsIso (lift a₁ a₂).left := inferInstanceAs (IsIso ((Over.forget S).map (lift a₁ a₂)))
   have hw : (lift a₁ a₂).left ≫ (P₁.A ⊗ P₂.A).hom = P.A.hom := Over.w _
   have h2 : SmoothOfRelativeDimension (0 + (P₂.g + P₁.g)) P.A.hom := by
     rw [← hw]
@@ -1968,7 +1968,7 @@ theorem exists_unif (hR : AdmBase R I) (hD : IsSumDeg D.toPre D₁.toPre D₂.to
   have hcard : Fintype.card (Fin (k ^ A₁.g) × Fin (k ^ A₂.g)) =
       Module.finrank (FractionRing R) (Fam D.toPre (FractionRing R) k) := by
     rw [hc, ← n₁, ← n₂, hd, hd₁, hd₂, hr, hg, ← pow_add, add_add_add_comm]
-  haveI : Nonempty (Fin (k ^ A₁.g) × Fin (k ^ A₂.g)) := ⟨⟨0, pow_pos hk _⟩, ⟨0, pow_pos hk _⟩⟩
+  have : Nonempty (Fin (k ^ A₁.g) × Fin (k ^ A₂.g)) := ⟨⟨0, pow_pos hk _⟩, ⟨0, pow_pos hk _⟩⟩
   refine GlobalTheory.ProdUnif.expBij_of_basis_card R I D A _ U k hR hk _ (basisOfLinearIndependentOfCardEqFinrank hli hcard) σ
     (by rw [hc, hg', pow_add]) (fun a => ?_)
   rw [coe_basisOfLinearIndependentOfCardEqFinrank]

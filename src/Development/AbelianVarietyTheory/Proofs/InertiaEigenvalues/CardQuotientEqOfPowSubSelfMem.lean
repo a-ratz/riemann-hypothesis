@@ -67,7 +67,7 @@ theorem card_quotient_eq_of_pow_sub_self_mem : ∀ {R : Type} [CommRing R] (P : 
     (∀ j : ℕ, 0 < j → j < q - 1 → ζ ^ j - 1 ∉ P) → (∀ y : R, y ^ q - y ∈ P) → Nat.card (R ⧸ P) = q := by
   intro R _ P _ q ζ hq hζ hprim hall
   classical
-  letI : Field (R ⧸ P) := Ideal.Quotient.field P
+  let : Field (R ⧸ P) := Ideal.Quotient.field P
   have hfix : ∀ x : R ⧸ P, x ^ q = x := by
     intro x
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -82,10 +82,10 @@ theorem card_quotient_eq_of_pow_sub_self_mem : ∀ {R : Type} [CommRing R] (P : 
     intro x
     rw [Multiset.mem_toFinset, mem_roots hf0]
     simp [hf, hfix x]
-  haveI : Finite (R ⧸ P) := by
+  have : Finite (R ⧸ P) := by
     apply Finite.of_injective (fun x : R ⧸ P => (⟨x, hmem x⟩ : f.roots.toFinset))
     intro a b h; simpa using congrArg Subtype.val h
-  letI : Fintype (R ⧸ P) := Fintype.ofFinite _
+  let : Fintype (R ⧸ P) := Fintype.ofFinite _
   apply le_antisymm
   · rw [Nat.card_eq_fintype_card]
     calc Fintype.card (R ⧸ P) = (Finset.univ : Finset (R ⧸ P)).card := rfl
@@ -108,7 +108,7 @@ theorem card_quotient_eq_of_pow_sub_self_mem : ∀ {R : Type} [CommRing R] (P : 
       intro a b hab
       simp only [g] at hab
       apply Fin.ext
-      by_cases ha : (a : ℕ) = 0 <;> by_cases hb : (b : ℕ) = 0 <;> simp only [ha, hb, if_true, if_false] at hab
+      by_cases ha : (a : ℕ) = 0 <;> by_cases hb : (b : ℕ) = 0 <;> simp only [ha, hb, ite_true, ite_false] at hab
       · omega
       · exact absurd hab.symm (pow_ne_zero _ hz0)
       · exact absurd hab (pow_ne_zero _ hz0)

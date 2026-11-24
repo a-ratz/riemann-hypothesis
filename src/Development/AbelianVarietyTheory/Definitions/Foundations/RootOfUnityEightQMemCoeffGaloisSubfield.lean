@@ -195,7 +195,7 @@ theorem T_cond : ∀ u, B.T u % (B.host.QS * B.host.q * B.host.d) = 1 :=
   fun u => (B.level_cond _ (B.T_level u)).2
 
 theorem V_posDef : letI := B.host.cmStar; ∀ j, 1 ≤ j → j ≤ B.R.m → (B.sp.V j).IsPosDef := by
-  letI := B.host.cmStar
+  let := B.host.cmStar
   intro j h1 h2 τ
   rw [factVSig B.R B.host.F B.sp j h1 h2 τ, B.V_pos j h1 h2, B.sp.V_rank j h1 h2]
   rfl

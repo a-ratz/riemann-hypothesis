@@ -68,7 +68,7 @@ theorem UpperTheory.V.Stick.teich :
     rw [mul_zero] at hMd
     have := hpp.two_le
     omega
-  haveI : NeZero M := ⟨hM⟩
+  have : NeZero M := ⟨hM⟩
   have U : ∀ r s : R, r ^ M = 1 → s ^ M = 1 → π r = π s → r = s := by
     intro r s hr hs h
     obtain ⟨i, hi, rfl⟩ := hζ.eq_pow_of_pow_eq_one hr
@@ -88,7 +88,7 @@ theorem UpperTheory.V.Stick.teich :
   let L : ZMod p → R := fun x => if h : x = 0 then 0 else (E _ (P x h)).choose
   have L1 : ∀ x (h : x ≠ 0), L x ^ M = 1 ∧ π (L x) = x ^ d := by
     intro x h
-    simp only [L, dif_neg h]
+    simp only [L, dite_eq_right h]
     exact (E _ (P x h)).choose_spec
   have L0 : L 0 = 0 := by simp [L]
   let χ : MulChar (ZMod p) R :=

@@ -84,18 +84,18 @@ theorem exists_clm_integral {S Ω : Type} [AddCommGroup S] [Module ℂ S] [Topol
     intro y y₀ hy hlim
     have hc : 0 ≤ c := le_trans (apply_nonneg _ _) (hy 0)
     show q y₀ ≤ c
-    rw [hq, integral_norm_eq_lintegral_enorm (hint y₀).aestronglyMeasurable]
+    rw [hq, integral_norm_eq_lintegral_eNorm (hint y₀).aestronglyMeasurable]
     apply ENNReal.toReal_le_of_le_ofReal hc
     have hpt : ∀ x, Tendsto (fun n => ‖T x (y n)‖ₑ) atTop (𝓝 ‖T x y₀‖ₑ) := fun x =>
-      ((T x).continuous.enorm.continuousAt.tendsto).comp hlim
+      ((T x).continuous.eNorm.continuousAt.tendsto).comp hlim
     calc ∫⁻ x, ‖T x y₀‖ₑ ∂μ = ∫⁻ x, liminf (fun n => ‖T x (y n)‖ₑ) atTop ∂μ := by
           congr 1; funext x; exact (hpt x).liminf_eq.symm
       _ ≤ liminf (fun n => ∫⁻ x, ‖T x (y n)‖ₑ ∂μ) atTop :=
-          lintegral_liminf_le' fun n => (hint (y n)).aestronglyMeasurable.enorm
+          lintegral_liminf_le' fun n => (hint (y n)).aestronglyMeasurable.eNorm
       _ ≤ liminf (fun _ : ℕ => ENNReal.ofReal c) atTop := by
           refine liminf_le_liminf (Eventually.of_forall fun n => ?_)
           show ∫⁻ x, ‖T x (y n)‖ₑ ∂μ ≤ ENNReal.ofReal c
-          rw [← ofReal_integral_norm_eq_lintegral_enorm (hint (y n))]
+          rw [← ofReal_integral_norm_eq_lintegral_eNorm (hint (y n))]
           exact ENNReal.ofReal_le_ofReal (hy n)
       _ = ENNReal.ofReal c := liminf_const _
   have hqc : Continuous q := Seminorm.continuous_of_lowerSemicontinuous _ hlsc
@@ -157,7 +157,7 @@ theorem GlobalTheory.ThetaIntAdm.exists_admissible_form_convergent_thetaIntegral
     funext x
     rw [← hT x f, th _ (mem f)]
     rfl
-  haveI := GlobalTheory.T.schwartzMap_barrelledSpace' (Fin n × Fin d → mixedEmbedding.mixedSpace F)
+  have := GlobalTheory.T.schwartzMap_barrelledSpace' (Fin n × Fin d → mixedEmbedding.mixedSpace F)
   obtain ⟨L, hL⟩ := GlobalTheory.ThetaIntAdm.exists_clm_integral (M.μ.restrict M.dom) T
     (fun f => by rw [eT f]; exact hC _ (mem f) 1)
   refine ⟨L, fun f => ?_⟩

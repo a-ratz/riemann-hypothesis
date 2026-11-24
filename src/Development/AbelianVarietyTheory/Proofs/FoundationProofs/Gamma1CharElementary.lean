@@ -57,7 +57,7 @@ theorem qs_coef_of_mfc {k M : ℕ} [NeZero M] {F : Type*} [FunLike F ℍ ℂ]
   rw [qs, ← h.tsum_eq]
   congr 1
   funext n
-  rw [coef, Function.Periodic.qParam, ← Complex.exp_nat_mul]
+  rw [coef, Function.Periodic.qParam, ← exp_natCast_mul]
   congr 2
   push_cast
   ring
@@ -116,7 +116,7 @@ theorem gamma1_char_elementary : ∀ (k M : ℕ) (χ : DirichletCharacter ℂ M)
     (∀ f : ModularForm (Gamma1 M) (k : ℤ), HasChar k χ f → qs (coef f) = ⇑f ∧ MF k M (ch χ) (coef f)) ∧
     ∀ f : CuspForm (Gamma1 M) (k : ℤ), HasChar k χ f → qs (coef f) = ⇑f ∧ CF k M (ch χ) (coef f) := by
   intro k M χ hM
-  haveI : NeZero M := ⟨hM.ne'⟩
+  have : NeZero M := ⟨hM.ne'⟩
   refine ⟨fun f hf => mf_of_mfc χ f hf, fun f hf => ?_⟩
   obtain ⟨hq, hmf⟩ := mf_of_mfc χ f hf
   refine ⟨hq, hmf, ?_⟩

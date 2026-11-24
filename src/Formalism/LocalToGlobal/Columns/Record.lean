@@ -589,7 +589,7 @@ theorem fv_ne (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P : ST) : d
   obtain ⟨e, he, hf1, -⟩ := d.2.exists_dualBasis
   have h1 : d.fv P (modP.mk P.1 d.1.N ⟨e P, he P⟩) = 1 := (d.fv_mk P _).trans (hf1 P)
   rw [h, LinearMap.zero_apply] at h1
-  haveI := P.1.isPrime
+  have := P.1.isPrime
   exact zero_ne_one h1
 
 def upL (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P : ST) (q : 𝓞 E) (x : d.lv P) : DecoSet (E := E) (n := n) (ST := ST) (SG := SG) := d.up P q (modP.rep x)
@@ -606,7 +606,7 @@ theorem kerAt_lattice (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P :
 
 theorem kerAt_full_lattice (d : DecoSet (E := E) (n := n) (ST := ST) (SG := SG)) (P : ST) :
     Submodule.IsFullLattice E (d.1.kerAt P) := by
-  letI := d.kerAt_lattice P
+  let := d.kerAt_lattice P
   obtain ⟨p, hp, hp0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot P.1.ne_bot
   refine { span_eq_top := top_unique ?_ }
   rw [← (rec_deco_full_lattice d).span_eq_top, Submodule.span_le]
@@ -673,8 +673,8 @@ theorem modP.ext_spec (P : HeightOneSpectrum (𝓞 E)) (M : Submodule (𝓞 E) (
     rw [← modP.mk_osmul, ← modP.mk_osmul]
     congr 2
     exact Subtype.ext (smul_comm hex.choose s y)
-  haveI := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   have hu : IsUnit (Ideal.Quotient.mk P.asIdeal hex.choose) :=
     isUnit_iff_ne_zero.mpr fun h0 => htP (Ideal.Quotient.eq_zero_iff_mem.mp h0)
   calc Ideal.Quotient.mk P.asIdeal s * (Ring.inverse (Ideal.Quotient.mk P.asIdeal hex.choose) *

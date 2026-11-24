@@ -86,7 +86,7 @@ theorem probMeasure_eq (μ : Measure N) [μ.IsHaarMeasure] :
   have h0 : ((Measure.haarScalarFactor μ Measure.haar : NNReal) : ℝ≥0∞) ≠ 0 :=
     ENNReal.coe_ne_zero.2 (Measure.haarScalarFactor_pos_of_isHaarMeasure μ Measure.haar).ne'
   conv_rhs => rw [Measure.isMulLeftInvariant_eq_smul μ Measure.haar]
-  rw [ENNReal.smul_def, quotMeasure_smul, smul_smul, Measure.smul_apply, smul_eq_mul,
+  rw [ENNReal.smul_def, quotMeasure_smul, smul_smul, smul_apply, smul_eq_mul,
     ENNReal.mul_inv (Or.inl h0) (Or.inl ENNReal.coe_ne_top), mul_right_comm, ENNReal.inv_mul_cancel h0 ENNReal.coe_ne_top,
     one_mul, probMeasure]
 
@@ -184,7 +184,7 @@ theorem isMulRightInvariant (μ : Measure N) [μ.IsHaarMeasure] : μ.IsMulRightI
     h.preimage_of_equiv ⟨(measurable_mul_const g).aemeasurable, e ▸ Measure.smul_absolutelyContinuous⟩ Function.bijective_id
       fun γ x => mul_assoc _ _ _
   have h1 := h'.measure_eq h
-  rw [← Measure.map_apply (measurable_mul_const g) (measurableSet_stdDom _), e, Measure.smul_apply, ENNReal.smul_def,
+  rw [← Measure.map_apply (measurable_mul_const g) (measurableSet_stdDom _), e, smul_apply, ENNReal.smul_def,
     smul_eq_mul, ENNReal.mul_eq_right (h.measure_ne_zero (NeZero.ne μ)) (hc.measure_ne_top h), ENNReal.coe_eq_one] at h1
   rw [e, h1, one_smul]⟩
 

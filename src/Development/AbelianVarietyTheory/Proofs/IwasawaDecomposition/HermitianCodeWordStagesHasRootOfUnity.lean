@@ -55,7 +55,7 @@ theorem exp_div_mul_eq_zpow_mul_zpow {p q : ℕ} (hp : 2 ≤ p) (hq : 2 ≤ q) (
   obtain ⟨p', rfl⟩ : ∃ p', p = p' + 1 := ⟨p - 1, by omega⟩
   obtain ⟨q', rfl⟩ : ∃ q', q = q' + 1 := ⟨q - 1, by omega⟩
   refine ⟨v * p', u * q', ?_⟩
-  rw [← Complex.exp_int_mul, ← Complex.exp_int_mul, ← Complex.exp_add]
+  rw [← Complex.exp_intCast_mul, ← Complex.exp_intCast_mul, ← Complex.exp_add]
   congr 1
   have h1 : (p' : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
   have h2 : (q' : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by omega)

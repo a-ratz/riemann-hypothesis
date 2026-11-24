@@ -195,7 +195,7 @@ theorem core (F : Type) [Field F] [NumberField F] [IsTotallyReal F] : ∃ C : �
     have e1 : volume ((Phi F) ⁻¹' S) =
         Measure.map (Phi F).toContinuousLinearEquiv (volume : Measure (Ix F ⊕ Ix F → ℝ)) S := by
       rw [Measure.map_apply (Phi F).toContinuousLinearEquiv.continuous.measurable hSm]; rfl
-    rw [e1, map_eq, Measure.smul_apply, hvS, ENNReal.smul_def, smul_eq_mul,
+    rw [e1, map_eq, smul_apply, hvS, ENNReal.smul_def, smul_eq_mul,
       ENNReal.ofReal_mul hc.le, hc_def, ENNReal.ofReal_coe_nnreal]
   have hsymm : ∀ y ∈ (Phi F) ⁻¹' S, -y ∈ (Phi F) ⁻¹' S := by
     intro y hy

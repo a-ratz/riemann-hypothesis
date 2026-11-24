@@ -73,7 +73,7 @@ private theorem dirG_frob {O : Type} [CommRing O] {N : ℕ} [NeZero N] (χ : Dir
 
 private theorem pow_cond {O : Type} [CommRing O] {N : ℕ} [NeZero N] (χ : DirichletCharacter O N) {k : ℕ}
     (h : χ.conductor = 2 ^ k) : χ ^ 2 ^ k = 1 := by
-  haveI : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
+  have : NeZero χ.conductor := ⟨χ.conductor_ne_zero⟩
   have h1 : χ.primitiveCharacter ^ Nat.totient χ.conductor = 1 := by
     ext u
     rw [MulChar.pow_apply_coe, ← map_pow, ← Units.val_pow_eq_pow_val, ZMod.pow_totient, Units.val_one, map_one,

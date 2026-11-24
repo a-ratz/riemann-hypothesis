@@ -66,7 +66,7 @@ theorem res_unique {χ : Formalism.L2.Host.HChar D.host.E} {P : Pl D.host.E} {c 
     (h : IsRes χ P c) (h' : IsRes χ P c') : c = c' := by
   refine MonoidHom.ext fun u => ?_
   obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective (u : kP P)
-  haveI : Nontrivial (kP P) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
+  have : Nontrivial (kP P) := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
   have ha0 : (a : D.host.E) ≠ 0 := by
     intro h0
     have h1 : a = 0 := RingOfIntegers.coe_eq_zero_iff.1 h0

@@ -153,7 +153,7 @@ private theorem ind_sum {G : Type*} [Group G] (J : Subgroup G) (x : G) (t : Fins
     refine exists_congr fun a => and_congr_right fun _ => ⟨fun e => ⟨(a * x)⁻¹ * g, QuotientGroup.eq.1 e.symm, by group⟩, ?_⟩
     rintro ⟨b, hb, rfl⟩
     exact QuotientGroup.mk_mul_of_mem _ hb
-  simp only [h1, Finset.sum_ite_eq, h2, Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply]
+  simp only [h1, Finset.sum_ite_eq, h2, Set.indicator_apply, Set.mem_ofPred_eq, Pi.one_apply]
 
 private theorem conj_ind {G : Type*} (A B : Set G) (g g' : G) (h : g ∈ A ↔ g' ∈ B) :
     conj (A.indicator (1 : G → ℂ) g) = B.indicator 1 g' := by
@@ -234,7 +234,7 @@ open scoped ComplexConjugate
 private theorem conj_smooth {K : Type} [Field K] [NumberField K] {n : ℕ} {f : archGroup K n → ℂ}
     (hf : (isExpLieAlgebra K n).IsSmoothFun f) :
     (isExpLieAlgebra K n).IsSmoothFun fun g => conj (f g) := by
-  letI := (isExpLieAlgebra K n).chartedSpace
+  let := (isExpLieAlgebra K n).chartedSpace
   have hc : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun z : ℂ => conj z) := Complex.conjCLE.contDiff
   exact hc.comp_contMDiff hf
 
@@ -369,7 +369,7 @@ private theorem iwFn_zero {q : Pl F} (w₀ : PlacesOver E q) :
   · rw [Set.indicator_of_mem hg, Pi.one_apply]
     exact Finset.prod_eq_one fun w _ => by rw [Set.indicator_of_mem (hg w), Pi.one_apply]
   · rw [Set.indicator_of_notMem hg]
-    simp only [iwSet, Set.mem_setOf_eq, not_forall] at hg
+    simp only [iwSet, Set.mem_ofPred_eq, not_forall] at hg
     obtain ⟨w, hw⟩ := hg
     exact Finset.prod_eq_zero (Finset.mem_univ w) (Set.indicator_of_notMem hw _)
 
@@ -382,12 +382,12 @@ private theorem isCompact_iwSet (q : Pl F) : IsCompact (iwSet E n q) :=
     fun w => GLnLocal.isCompact_iwahori _ n
 
 private theorem isOpen_iwSet (q : Pl F) : IsOpen (iwSet E n q) := by
-  simp only [iwSet, Set.setOf_forall]
+  simp only [iwSet, Set.ofPred_forall]
   exact isOpen_iInter_of_finite fun w =>
     (GLnLocal.isOpen_iwahori (w.1.adicCompletion E) n).preimage (continuous_cmp' w)
 
 private theorem isClosed_iwSet (q : Pl F) : IsClosed (iwSet E n q) := by
-  simp only [iwSet, Set.setOf_forall]
+  simp only [iwSet, Set.ofPred_forall]
   exact isClosed_iInter fun w =>
     (GLnLocal.isCompact_iwahori (w.1.adicCompletion E) n).isClosed.preimage (continuous_cmp' w)
 
@@ -417,7 +417,7 @@ private theorem mulSupport_finite (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fi
       refine hv ?_
       change φ v (pv v x) = 1
       rw [hφ v hvS, Set.indicator_of_mem h, Pi.one_apply]
-    simp only [unitSet, Set.mem_setOf_eq, not_forall] at hnot
+    simp only [unitSet, Set.mem_ofPred_eq, not_forall] at hnot
     obtain ⟨w', hw'⟩ := hnot
     refine ⟨w'.1, ?_, under_eq w'⟩
     intro h
@@ -525,7 +525,7 @@ theorem UpperTheory.ConvolutionTheory.GM.sideE :
   obtain ⟨hsm, hlf, hpos, hnorm⟩ := hA
   obtain ⟨hFinS, hOpen, hCpt, hLe, hMax, hIw⟩ := UpperTheory.baseChangeLevel_isOpen_isCompact_contains_iwahori F E σ n hn q w₀ L
   obtain ⟨m, hm, hcompat⟩ := (UpperTheory.ConvolutionTheory.Tf.compatEx E n hn).2.1 μ νE
-  haveI := hm
+  have := hm
   obtain ⟨eU, heU, hOU⟩ := UpperTheory.ConvolutionTheory.Tf.prjFix E n μ m (levE L.UE) hOpen hCpt
   obtain ⟨e, hg, hU', hfac⟩ := UpperTheory.exists_iwahori_factorizable_finite_vector_of_average F E σ n hn q w₀ L aE
   have hrr := UpperTheory.ConvolutionTheory.Tf.rrTens E n hn μ νE m hcompat
@@ -545,7 +545,7 @@ theorem UpperTheory.ConvolutionTheory.GM.sideE :
   let pl : ZMod (Module.finrank F E) → PlacesOver E q := fun i => (σ ^ i.val) • w₀
   have hpl : ∀ i, pl (i + 1) = σ • pl i := by
     intro i
-    haveI : Fact (1 < Module.finrank F E) := ⟨hprime.one_lt⟩
+    have : Fact (1 < Module.finrank F E) := ⟨hprime.one_lt⟩
     have h1 : σ ^ (i + 1).val = σ ^ (i.val + 1) := by
       rw [ZMod.val_add, ZMod.val_one]
       conv_rhs => rw [← Nat.div_add_mod (i.val + 1) (Module.finrank F E), pow_add, pow_mul, hσl, one_pow, one_mul]

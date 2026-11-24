@@ -168,7 +168,7 @@ theorem finrank_quot_add_dimDeg [Finite σ] (K : Type) [Field K] [Algebra R K] (
     (hI : ∀ F ∈ I, ∀ e, homogeneousComponent e F ∈ I) (e : ℕ) :
     finrank K (K ⊗[R] (homogeneousSubmodule σ R e ⧸ formsIn I e)) + dimDeg (I.map (map (algebraMap R K))) e =
       Nat.card {m : σ →₀ ℕ | m.degree = e} := by
-  haveI := forms_finite (R := R) (σ := σ) e
+  have := forms_finite (R := R) (σ := σ) e
   rw [(baseChangeQuotEquiv K _).finrank_eq, dimDeg, ← map_cmp_formsIn K I hI e,
     ← (Submodule.equivMapOfInjective _ (cmp_injective K e) _).finrank_eq, Submodule.finrank_quotient_add_finrank,
     finrank_tensor_forms]
@@ -188,7 +188,7 @@ theorem eval_eq_zero_of_mem_vanIdeal {d : ℕ} {p : Hh → σ → R} {F : MvPoly
 theorem component_mem_vanIdeal (d : ℕ) (p : Hh → σ → R)
     (F : MvPolynomial σ R) (hF : F ∈ vanIdeal d p) (e : ℕ) : homogeneousComponent e F ∈ vanIdeal d p := by
   classical
-  letI := (MvPolynomial.gradedAlgebra : GradedAlgebra (homogeneousSubmodule σ R))
+  let := (MvPolynomial.gradedAlgebra : GradedAlgebra (homogeneousSubmodule σ R))
   have h : (vanIdeal d p).IsHomogeneous (homogeneousSubmodule σ R) :=
     Ideal.homogeneous_span _ _ fun x hx => ⟨d, hx.1⟩
   have := h e hF
@@ -205,7 +205,7 @@ theorem map_cmp_ker_ev [Finite Hh] (B : Type) [CommRing B] [Algebra R B] (d : �
     (LinearMap.ker ((ev d p).baseChange B)).map (cmp B d) =
       homogeneousSubmodule σ B d ⊓ (vanIdeal d fun h i => algebraMap R B (p h i)).restrictScalars B := by
   classical
-  letI := Fintype.ofFinite Hh
+  let := Fintype.ofFinite Hh
   have key : ∀ z h, TensorProduct.piScalarRight R B B Hh ((ev d p).baseChange B z) h =
       eval (fun i => algebraMap R B (p h i)) (cmp B d z) := by
     intro z h
@@ -252,7 +252,7 @@ theorem finrank_range_ev_add_dimDeg [Finite σ] [Finite Hh] (K : Type) [Field K]
     (p : Hh → σ → R) :
     finrank K (LinearMap.range ((ev d p).baseChange K)) + dimDeg (vanIdeal d fun h i => algebraMap R K (p h i)) d =
       Nat.card {m : σ →₀ ℕ | m.degree = d} := by
-  haveI := forms_finite (R := R) (σ := σ) d
+  have := forms_finite (R := R) (σ := σ) d
   rw [dimDeg, ← map_cmp_ker_ev K d p,
     ← (Submodule.equivMapOfInjective _ (cmp_injective K d) _).finrank_eq,
     LinearMap.finrank_range_add_finrank_ker, finrank_tensor_forms]
@@ -273,11 +273,11 @@ theorem exists_dimDeg_map_le [Finite σ] (I : Ideal (MvPolynomial σ R))
     (hI : ∀ F ∈ I, ∀ e, homogeneousComponent e F ∈ I) (e : ℕ) (K : Type) [Field K] (x : R →+* K) :
     ∃ f : R, x f ≠ 0 ∧ ∀ (L : Type) [Field L] (y : R →+* L), y f ≠ 0 →
       dimDeg (I.map (map x)) e ≤ dimDeg (I.map (map y)) e := by
-  haveI := forms_finite (R := R) (σ := σ) e
-  letI := x.toAlgebra
+  have := forms_finite (R := R) (σ := σ) e
+  let := x.toAlgebra
   obtain ⟨f, hf, h⟩ := exists_finrank_le (R := R) (homogeneousSubmodule σ R e ⧸ formsIn I e) K
   refine ⟨f, hf, fun L _ y hy => ?_⟩
-  letI := y.toAlgebra
+  let := y.toAlgebra
   have h1 := h L hy
   have h2 := finrank_quot_add_dimDeg K I hI e
   have h3 := finrank_quot_add_dimDeg L I hI e
@@ -289,11 +289,11 @@ theorem exists_dimDeg_vanIdeal_le [Finite σ] [Finite Hh] (d : ℕ) (p : Hh → 
     (K : Type) [Field K] (x : R →+* K) :
     ∃ f : R, x f ≠ 0 ∧ ∀ (L : Type) [Field L] (y : R →+* L), y f ≠ 0 →
       dimDeg (vanIdeal d fun h i => y (p h i)) d ≤ dimDeg (vanIdeal d fun h i => x (p h i)) d := by
-  letI := Fintype.ofFinite Hh
-  letI := x.toAlgebra
+  let := Fintype.ofFinite Hh
+  let := x.toAlgebra
   obtain ⟨f, hf, h⟩ := exists_finrank_le (R := R) ((Hh → R) ⧸ LinearMap.range (ev d p)) K
   refine ⟨f, hf, fun L _ y hy => ?_⟩
-  letI := y.toAlgebra
+  let := y.toAlgebra
   have h1 := h L hy
   have h2 := finrank_range_ev_add_dimDeg K d p
   have h3 := finrank_range_ev_add_dimDeg L d p
@@ -309,8 +309,8 @@ theorem map_vanIdeal_of_const [IsReduced R] [Finite σ] [Finite Hh] (d : ℕ) (p
     (h : ∀ (K : Type) [Field K] (x : R →+* K), (dimDeg (vanIdeal d fun h i => x (p h i)) d : ℚ) = ρ)
     (B : Type) [CommRing B] (x : R →+* B) :
     (vanIdeal d p).map (map x) = vanIdeal d fun h i => x (p h i) := by
-  haveI := forms_finite (R := R) (σ := σ) d
-  letI := x.toAlgebra
+  have := forms_finite (R := R) (σ := σ) d
+  let := x.toAlgebra
   obtain ⟨s, hs⟩ := exists_comp_comp_eq_of_isLocallyConstant_finrank_range (ev d p)
     (IsLocallyConstant.of_constant _ fun q q' => by
       have h1 := finrank_range_ev_add_dimDeg q.asIdeal.ResidueField d p
@@ -329,7 +329,7 @@ theorem projective_of_const [IsReduced R] [Finite σ] (I : Ideal (MvPolynomial �
     (hI : ∀ F ∈ I, ∀ e, homogeneousComponent e F ∈ I) (e : ℕ) (ρ : ℚ)
     (h : ∀ (K : Type) [Field K] (x : R →+* K), (dimDeg (I.map (map x)) e : ℚ) = ρ) :
     Module.Projective R (homogeneousSubmodule σ R e ⧸ formsIn I e) := by
-  haveI := forms_finite (R := R) (σ := σ) e
+  have := forms_finite (R := R) (σ := σ) e
   refine projective_of_finite_of_isLocallyConstant_finrank_fiber
     (IsLocallyConstant.of_constant _ fun q q' => ?_)
   have h1 := finrank_quot_add_dimDeg q.asIdeal.ResidueField I hI e
@@ -343,8 +343,8 @@ theorem map_vanIdeal_of_const_away [IsReduced R] [Finite σ] [Finite Hh] (d : �
     (K : Type) [Field K] (x : R →+* K) (hx : x f ≠ 0) :
     (vanIdeal d p).map (map x) = vanIdeal d fun h i => x (p h i) := by
   let A := Localization.Away f
-  haveI : Module.Flat R A := IsLocalization.flat A (Submonoid.powers f)
-  haveI : IsReduced A := isReduced_localizationPreserves (Submonoid.powers f) A inferInstance
+  have : Module.Flat R A := IsLocalization.flat A (Submonoid.powers f)
+  have : IsReduced A := isReduced_localizationPreserves (Submonoid.powers f) A inferInstance
   let x' : A →+* K := IsLocalization.Away.lift f (IsUnit.mk0 _ hx)
   have hx' : x'.comp (algebraMap R A) = x := IsLocalization.Away.lift_comp f _
   have h1 := map_vanIdeal_of_const d (fun h i => algebraMap R A (p h i)) ρ (fun L _ y =>
@@ -672,7 +672,7 @@ theorem exists_away_projective_vanIdeal : ∀ (R : Type) [CommRing R] [IsNoether
   have hf : f ∉ RingHom.ker x₀ := by
     rw [RingHom.mem_ker, map_mul, map_prod]
     exact mul_ne_zero hf₁ (Finset.prod_ne_zero_iff.2 fun φ _ => hg φ)
-  haveI : IsReduced (Localization.Away f) :=
+  have : IsReduced (Localization.Away f) :=
     isReduced_localizationPreserves (Submonoid.powers f) _ inferInstance
   have h₇ : ∀ (L : Type) [Field L] (y : Localization.Away f →+* L), ∀ e ≥ d,
       (dimDeg (vanIdeal d fun h i => y (algebraMap R (Localization.Away f) (p h i))) e : ℚ) = Q.eval (e : ℚ) :=

@@ -69,7 +69,7 @@ theorem lowerUnitriangular_mul_upperTriangular_of_isUnit_leadingMinors :
       ext i j; rfl
     obtain ⟨L', U', hL'0, hL'1, hU't, hU'd, hLU'⟩ := ih M' hM'min
     have hL'det : L'.det = 1 := by
-      rw [Matrix.det_of_lowerTriangular L' (fun i j hij => hL'0 i j hij)]
+      rw [det_of_isLowerTriangular L' (fun i j hij => hL'0 i j hij)]
       simp [hL'1]
     have hL'u : IsUnit L'.det := by rw [hL'det]; exact isUnit_one
     have hM'u : IsUnit M'.det := by
@@ -140,14 +140,14 @@ theorem lowerUnitriangular_mul_upperTriangular_of_isUnit_leadingMinors :
             Fin.lastCases_last, Fin.lastCases_castSucc, hij]
           ring
     have hdetL : L.det = 1 := by
-      rw [Matrix.det_of_lowerTriangular L (fun i j hij => hL0 i j hij)]
+      rw [det_of_isLowerTriangular L (fun i j hij => hL0 i j hij)]
       simp [hL1]
     have hMu : IsUnit M.det := by
       have := hM (n+1) le_rfl
       convert this using 2
       ext i j; rfl
     have he : IsUnit e := by
-      rw [hLU, det_mul, hdetL, one_mul, Matrix.det_of_upperTriangular hUt,
+      rw [hLU, det_mul, hdetL, one_mul, det_of_isUpperTriangular hUt,
         Fin.prod_univ_castSucc] at hMu
       have := isUnit_of_mul_isUnit_right hMu
       simpa [U] using this

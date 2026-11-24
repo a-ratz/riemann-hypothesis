@@ -155,7 +155,7 @@ theorem isEnum_unique {n : ℕ} {S : SPar} {l l' : Fin n → ℝ} {e e' : Fin n 
     obtain ⟨b, -, hb⟩ := Finset.mem_image.1 this
     exact ⟨b, congrArg Prod.fst hb⟩
   have hl : l = l' := by
-    refine (StrictAnti.range_inj ha ha').1 ?_
+    refine (StrictAnti.range_inj_of_wellFoundedGT ha ha').1 ?_
     ext x
     constructor
     · rintro ⟨a, rfl⟩
@@ -393,9 +393,9 @@ theorem exists_equiv_of_holFn {n : ℕ} {ι : Type} [Fintype ι] {Hm : ι → Mt
   have hgu : ∀ τ, IsUnit (g τ).det := fun τ => uh_det_isUnit (hH τ) (hg τ)
   have hgi : ∀ τ, (g τ)⁻¹ ∈ Formalism.QuantumDeterminants.UH (Hm τ) := fun τ => uh_inv (hH τ) (hg τ)
   have one : ∀ τ, ⟪v τ, σ τ 1 (v τ)⟫_ℂ = 1 := fun τ => by
-    rw [(h τ).1.1, ContinuousLinearMap.one_apply, inner_self_eq_norm_sq_to_K, hv]; simp
+    rw [(h τ).1.1, one_apply_eq_self, inner_self_eq_norm_sq_to_K, hv]; simp
   have one' : ∀ τ, ⟪v' τ, σ' τ (g τ * 1 * (g τ)⁻¹) (v' τ)⟫_ℂ = 1 := fun τ => by
-    rw [Matrix.mul_one, Matrix.mul_nonsing_inv _ (hgu τ), (h' τ).1.1, ContinuousLinearMap.one_apply,
+    rw [Matrix.mul_one, Matrix.mul_nonsing_inv _ (hgu τ), (h' τ).1.1, one_apply_eq_self,
       inner_self_eq_norm_sq_to_K, hv']; simp
   have key := GlobalTheory.T.holomorphicType_eq_zero_of_torus_law_at_one n ι Hm q x w ho _ (hf.sub (hf'.conj hH hg hx)) (by
     intro u hu s
@@ -444,8 +444,8 @@ theorem holModel_unique : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what�
   obtain ⟨f2, t2⟩ := GlobalTheory.T.extremalVector_matrixCoeff_holomorphicType D θ V S M' w v' hθ hs' hw' hv'
   have m1 := GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M
   have m2 := GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M'
-  haveI := fun τ => (m1 τ).1
-  haveI := fun τ => (m2 τ).1
+  have := fun τ => (m1 τ).1
+  have := fun τ => (m2 τ).1
   simp only [he] at f2
   have := exists_equiv_of_holFn (fun τ => (m1 τ).2.1) (fun τ => (m2 τ).2.1) (fun τ => (m1 τ).2.2.1) (fun τ => (m2 τ).2.2.1)
     (fun τ => ((m1 τ).2.2.2 hs).1) (fun τ => he τ ▸ ((m2 τ).2.2.2 hs').1) (fun τ => (hv τ).1) (fun τ => (hv' τ).1) f1 f2 t1 t2

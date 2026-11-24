@@ -108,7 +108,7 @@ theorem exists_root (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum 
       r * r - algebraMap (𝓞 F) (v.adicCompletionIntegers F) t * r +
         algebraMap (𝓞 F) (v.adicCompletionIntegers F) n = 0 ∧
       u * (algebraMap (𝓞 F) (v.adicCompletionIntegers F) t - 2 * r) = 1 := by
-  haveI := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
   have hm : algebraMap (𝓞 F) (v.adicCompletionIntegers F) n ∈
       IsLocalRing.maximalIdeal (v.adicCompletionIntegers F) := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff, GlobalTheory.SelfDualGenus.isUnit_algebraMap_iff]

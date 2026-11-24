@@ -77,7 +77,7 @@ theorem isCrys_matrix_ext (f : LL →ₐ[Qp] LL') {k : ℕ} (b : Module.Basis (F
     IsCrys PD (CJ.rep ((f.mapMatrix : Matrix (Fin k) (Fin k) LL →ₐ[Qp]
       Matrix (Fin k) (Fin k) LL').toRingHom.toMonoidHom.comp
         ((LinearMap.toMatrixAlgEquiv b).toMonoidHom.comp ρ))) := by
-  letI : TopologicalSpace G := ⊥
+  let : TopologicalSpace G := ⊥
   have h1 : IsCrys PD (CJ.rep ((LinearMap.toMatrixAlgEquiv b).toMonoidHom.comp ρ)) := by
     refine isCrys_transport PD b.equivFun (fun g v => ?_) h
     change _ = (LinearMap.toMatrix b b (ρ g)).mulVec (b.repr v)

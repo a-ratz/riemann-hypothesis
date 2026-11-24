@@ -129,7 +129,7 @@ theorem thetaVector_eq_sum_heisenberg_core : ∀ (D : D7) (G : Type) [Group G] [
   by_cases hw : w ∈ latO (Vc D i) (Wc D i) (R.ΛV i : Set (Fin (Vc D i).rank → D.host.E))
       (R.ΛW i : Set (Fin (Wc D i).rank → D.host.E)) (fun _ => True) ∧ IsHalf (cA D e) w
   swap
-  · rw [halfInd, if_neg hw, zero_mul, if_neg]
+  · rw [halfInd, ite_eq_right hw, zero_mul, ite_eq_right]
     rintro ⟨h1, h2⟩
     have hN : ∀ PP ∈ R.Pg ∪ R.Q t, ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal := fun PP hPP h =>
       (hP PP (Finset.mem_union.1 hPP)).2 (by rw [Nat.cast_mul]; exact Ideal.mul_mem_left _ _ h)
@@ -150,7 +150,7 @@ theorem thetaVector_eq_sum_heisenberg_core : ∀ (D : D7) (G : Type) [Group G] [
     rw [hfr]
     have : Ideal.span {(l.M : 𝓞 D.host.E)} ≤ l.Mb := l.prod ▸ Ideal.mul_le_left
     exact GlobalTheory.PlaceVec.redM_add_nsmul PP ((hP PP hPP).1 (this (Ideal.subset_span rfl))) (hφ x).1 (hint u hu)
-  rw [halfInd, if_pos hw, one_mul, if_pos ⟨hw.2, hw' ▸ hint w hw.1⟩,
+  rw [halfInd, ite_eq_left hw, one_mul, ite_eq_left ⟨hw.2, hw' ▸ hint w hw.1⟩,
     GlobalTheory.PlaceVec.omegaK_congr _ fun PP h => hred PP (Or.inl h),
     GlobalTheory.PlaceVec.omegaQ_congr _ _ _ _ fun PP h => hred PP (Or.inr h), ← (hφ x).2, RingHom.id_apply, ← inversion l φ x]
   refine Finset.sum_congr rfl fun q _ => congrArg _ ?_
@@ -159,7 +159,7 @@ theorem thetaVector_eq_sum_heisenberg_core : ∀ (D : D7) (G : Type) [Group G] [
     Matrix.ext fun a b => by simp only [Matrix.of_apply]; ring
   refine Eq.trans ?_ (char_eq (Y := Matrix.of fun a b => ((ε : ℤ) : D.host.E) * ι (cSep l • levRep (q b)) a / (l.M : D.host.E))
     hvac.1 hS hT (GlobalTheory.PlaceVec.idemSum_infPart he) hw.2 hu hwM ((hlat _).2 fun b => ?_)).symm
-  · rw [hY, hRat_std hV.1 _ _ _ (by rw [star_div₀, star_intCast, star_natCast]), ← Complex.exp_int_mul]
+  · rw [hY, hRat_std hV.1 _ _ _ (by rw [star_div₀, star_intCast, star_natCast]), ← exp_intCast_mul]
     congr 1
     have h1 : ∀ c : ℚ, ∀ z : D.host.E, Algebra.trace ℚ D.host.E (D.host.xi0 * ((c : D.host.E) * z)) =
         c * Algebra.trace ℚ D.host.E (D.host.xi0 * z) := fun c z => by
@@ -216,7 +216,7 @@ theorem moved_datum_core : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0
   rw [hδ t l φ hφ hP e he, map_smul]
   by_cases hfin : Finite (Fin (Vc D i).rank → LevQ Dw l)
   swap
-  · haveI := not_finite_iff_infinite.1 hfin
+  · have := not_finite_iff_infinite.1 hfin
     rw [Nat.card_eq_zero_of_infinite, Nat.cast_zero, _root_.inv_zero, zero_smul, zero_smul]
   rw [map_finsum _ (Set.toFinite _)]
   congr 1
@@ -297,8 +297,8 @@ theorem thetaKO_eq_short_series_core : ∀ (D : D7) (G : Type) [Group G] [Fintyp
   choose p hp using fun q => exists_finOf (Vc D i) (Wc D i) (rank_Wc i) ((δ : ℤ) • Y q)
   have hdat := hδ t l₂ φ hφ hl bad N h k Λ mk hbad ⟨hh, e, Ps, he, hPs, hsupp⟩ hΛ htriv hlev hmk Y (fun q => (p q).1)
     (fun q => (p q).2) hY hp
-  haveI := finite_levQ Dw l₂
-  letI : Fintype (Fin (Vc D i).rank → LevQ Dw l₂) := Fintype.ofFinite _
+  have := finite_levQ Dw l₂
+  let : Fintype (Fin (Vc D i).rank → LevQ Dw l₂) := Fintype.ofFinite _
   obtain ⟨hhs, hks, -, hlat, hV1, -⟩ := GlobalTheory.MovedLat.moved_lattices D _ _ _ _ hV0 hW0 hVs hWs h k
   obtain ⟨-, -, hmv, -⟩ := GlobalTheory.MovedLat.moved_lattices D _ _ _ _ hV0 hW0 hVs hWs 1 k
   rw [show fin (Vc D i) 1 = 1 from map_one _, hV1] at hmv

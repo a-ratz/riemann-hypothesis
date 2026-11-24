@@ -90,10 +90,10 @@ theorem bchar_zsmul_modelFlat {Ψ : Finset (E →+* ℂ)} (τ : Ψ) (m : ℤ) {b
     bchar (m • modelFlat r τ) b = horizGen τ b ^ m := by
   classical
   have hd : (mat b τ).det = ∏ i, b τ i i :=
-    Matrix.det_of_upperTriangular (M := mat b τ) fun a c h => (hb τ).2 a c h
+    Matrix.det_of_isUpperTriangular (M := mat b τ) fun a c h => (hb τ).2 a c h
   unfold bchar
   rw [Finset.prod_eq_single τ (fun τ' _ h => by simp [modelFlat, h]) (by simp)]
-  simp only [Pi.smul_apply, modelFlat, if_true, smul_eq_mul, mul_neg, mul_one]
+  simp only [Pi.smul_apply, modelFlat, ite_true, smul_eq_mul, mul_neg, mul_one]
   rw [Finset.prod_zpow, horizGen, hd, inv_zpow', zpow_neg]
 
 theorem isBddSec_horizGen_zpow (X : Data E r) (τ : X.Ψ) (m : ℤ)

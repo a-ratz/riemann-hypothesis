@@ -144,8 +144,8 @@ theorem LevelPush_of : LevelPush := by
 
 theorem integral_surjective_ring_cech_augmentation_etale_eqv : IntegralSurjectiveRingCechAugmentationEtaleEqv := by
   intro hB4 q i C D g hgi hgs hq
-  haveI : IsIntegralHom (Spec.map g) := IsIntegralHom.SpecMap_iff.mpr hgi
-  haveI : Surjective (Spec.map g) := ⟨fun x => by
+  have : IsIntegralHom (Spec.map g) := IsIntegralHom.SpecMap_iff.mpr hgi
+  have : Surjective (Spec.map g) := ⟨fun x => by
     obtain ⟨Q, hQ, hQc⟩ := hgs x.asIdeal x.isPrime
     refine ⟨⟨Q, hQ⟩, ?_⟩
     rw [Spec.map_base]

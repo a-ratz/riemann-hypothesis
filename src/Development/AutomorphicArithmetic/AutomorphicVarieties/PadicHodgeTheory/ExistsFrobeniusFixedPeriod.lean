@@ -59,7 +59,7 @@ private theorem exists_trace {k U D : Type} [Field k] [Field U] [AddCommGroup D]
   have h1 : ∃ j : ℕ, (∑ i ∈ Finset.range n, φ ^ i * m (t 0 ^ j)) x ≠ 0 := by
     by_contra hc
     push Not at hc
-    letI : Module U D := Module.compHom D m
+    let : Module U D := Module.compHom D m
     refine hx ((Module.forall_dual_apply_eq_zero_iff U x).mp fun f => ?_)
     have h2 := Matrix.eq_zero_of_forall_pow_sum_mul_pow_eq_zero (f := fun i : Fin n => t i)
       (v := fun i : Fin n => f ((φ ^ (i : ℕ)) x)) ht (fun j => by
@@ -97,8 +97,8 @@ private theorem exists_orbit (l : ℕ) [hl : Fact l.Prime] (n : ℕ) (hn : 2 ≤
   have h0 : 0 < l ^ n - 1 := lt_of_le_of_lt (Nat.zero_le _) (hlt 0 (by omega))
   have hd : ¬ l ∣ l ^ n - 1 := fun h => hl.out.one_lt.ne' (Nat.dvd_one.mp
     ((Nat.dvd_sub_iff_right (by omega) (dvd_pow_self l (by omega))).mp h))
-  haveI : NeZero (l ^ n - 1) := ⟨h0.ne'⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ n - 1)
+  have : NeZero (l ^ n - 1) := ⟨h0.ne'⟩
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ n - 1)
   have hmem : z ∈ MaximalUnramifiedExtension l := IntermediateField.subset_adjoin _ _ ⟨_, h0, hd, hz.pow_eq_one⟩
   have h1 : (⟨z, hmem⟩ : ↥(MaximalUnramifiedExtension l)) ^ (l ^ n - 1) = 1 := Subtype.ext hz.pow_eq_one
   refine ⟨⟨z, hmem⟩, ?_, fun i j hij => ?_⟩
@@ -141,12 +141,12 @@ variable (ρ : Representation LL ↥(GK Bw.Kw) V)
 private theorem fix_of_weil (z : ↥(Dpst P ρ)) (hz : ∀ σ, actD P ρ (weilToGK Bw h σ) z = z)
     (g : ↥(GK Bw.Kw)) : actD P ρ g z = z := by
   obtain ⟨K', hK'⟩ := exists_stab P ρ z
-  haveI := K'.2
+  have := K'.2
   let S := (GlobalTheory.PstLaws.vecStab (actD P ρ) z).comap Bw.e.toMonoidHom
   have hS : IsOpen (S : Set ↥(Dec (F := F) A)) := by
     refine Subgroup.isOpen_mono (H₁ := ((GK K').subgroupOf (GK Bw.Kw)).comap Bw.e.toMonoidHom)
       (fun τ hτ => hK' _ hτ) ?_
-    exact (IntermediateField.fixingSubgroup_isOpen K'.1).preimage (continuous_subtype_val.comp Bw.e_cont)
+    exact (IntermediateField.fixingSubgroup_isOpen K'.1).preimage (continuous_subtypeVal.comp Bw.e_cont)
   have hd := UpperTheory.weil_group_dense_in_galois_group F Ω w A h
   obtain ⟨τ, rfl⟩ := Bw.e.surjective g
   exact hd.induction_on (p := fun τ => τ ∈ S) τ (S.isClosed_of_isOpen hS) hz
@@ -162,8 +162,8 @@ private theorem exists_period (x : ↥(Dpst P ρ)) (hx : ∀ σ, weilD Bw h P ρ
     rw [normV_eq_pow (hj.mem_placesOver h), h0, pow_zero] at hq1
     exact lt_irrefl _ hq1
   obtain ⟨K', hK'⟩ := exists_stab P ρ x
-  haveI := GlobalTheory.PstLaws.finite_quotient K' _ hK'
-  haveI : (GlobalTheory.PstLaws.vecStab (actD P ρ) x).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have := GlobalTheory.PstLaws.finite_quotient K' _ hK'
+  have : (GlobalTheory.PstLaws.vecStab (actD P ρ) x).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨r, hr0, -, hr⟩ := Subgroup.exists_pow_mem_of_index_ne_zero
     (Subgroup.FiniteIndex.index_ne_zero (H := GlobalTheory.PstLaws.vecStab (actD P ρ) x)) (weilToGK Bw h (frob h)⁻¹)
   have hr2 : weilToGK Bw h ((frob h)⁻¹ ^ (r * 2)) ∈ GlobalTheory.PstLaws.vecStab (actD P ρ) x := by

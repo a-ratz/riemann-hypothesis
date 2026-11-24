@@ -320,7 +320,7 @@ theorem exists_prime_mem' {K : Type} [Field K] [NumberField K] (w : Formalism.Pa
     ∃ l : ℕ, l.Prime ∧ (l : 𝓞 K) ∈ w.asIdeal := by
   have := w.isMaximal
   have : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Ideal.Quotient.field w.asIdeal
+  let := Ideal.Quotient.field w.asIdeal
   refine ⟨ringChar (𝓞 K ⧸ w.asIdeal), CharP.char_is_prime (𝓞 K ⧸ w.asIdeal) _, ?_⟩
   exact Ideal.Quotient.eq_zero_iff_mem.1 (by simpa using CharP.cast_eq_zero (𝓞 K ⧸ w.asIdeal) (ringChar _))
 
@@ -394,9 +394,9 @@ theorem exists_ratios : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (�
   refine ⟨fun s => if 1 ≤ s then zψ s / zT s else Ep s * (zψ (1 - s) / zT (1 - s)), ?_, ?_, ?_⟩
   · intro s h1 h2
     by_cases hs : 1 ≤ s
-    · simp only [hs, if_true]
+    · simp only [hs, ite_true]
       exact (key s hs h2).2
-    · simp only [hs, if_false]
+    · simp only [hs, ite_false]
       obtain ⟨hu, hrel⟩ := hneg s h1 (by omega)
       obtain ⟨-, hne, hk⟩ := key (1 - s) (by omega) (by omega)
       refine ⟨mul_ne_zero (away hQ hu).1 hne, ?_⟩
@@ -405,7 +405,7 @@ theorem exists_ratios : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (�
       rw [hrel, map_mul, ← hk]
       ring
   · intro s h1 h2
-    simp only [h1, if_true]
+    simp only [h1, ite_true]
     obtain ⟨hT, -, -, hb1, hb2⟩ := hpos s h1 h2
     have hψ := (key s h1 h2).1
     have hv : vw w (zψ s / zT s) = vw w (zψ s) - vw w (zT s) := by
@@ -421,7 +421,7 @@ theorem exists_ratios : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (�
   · intro s h1 h2
     have hs : ¬ 1 ≤ s := by omega
     have hs' : 1 ≤ 1 - s := by omega
-    simp only [hs, hs', if_true, if_false]
+    simp only [hs, hs', ite_true, ite_false]
     obtain ⟨hu, -⟩ := hneg s h1 h2
     obtain ⟨hE, hv⟩ := away hQ hu
     rw [vw_mul w _ _ hE (key (1 - s) hs' (by omega)).2.1, hv, zero_add]
@@ -504,7 +504,7 @@ theorem stepRatio_vw_bound : ∀ (K : Type) [Field K] [NumberField K] [StarRing 
       rintro rfl
       exact ha w.asIdeal.zero_mem
     unfold vw
-    rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K _ ha0]
+    rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K _ ha0]
     by_contra h
     have h' : (Associates.mk w.asIdeal).count (Associates.mk (Ideal.span {a})).factors ≠ 0 := by
       intro h0

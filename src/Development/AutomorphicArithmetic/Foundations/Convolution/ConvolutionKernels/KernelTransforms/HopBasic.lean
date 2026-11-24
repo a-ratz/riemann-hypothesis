@@ -75,7 +75,7 @@ private theorem orbit_finite {G : Type*} [Group G] [TopologicalSpace G] [IsTopol
   have hS : {c : G ⧸ J | ∃ k ∈ J, c = QuotientGroup.mk (k * x)} =
       (fun k => (QuotientGroup.mk (k * x) : G ⧸ J)) '' (J : Set G) := by
     ext c
-    simp only [Set.mem_setOf_eq, Set.mem_image, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, Set.mem_image, SetLike.mem_coe]
     exact ⟨fun ⟨k, hk, e⟩ => ⟨k, hk, e.symm⟩, fun ⟨k, hk, e⟩ => ⟨k, hk, e.symm⟩⟩
   rw [hS]
   exact (hc.image ((QuotientGroup.continuous_mk).comp (continuous_id.mul continuous_const))).finite_of_discrete
@@ -124,7 +124,7 @@ private theorem hop_abs {G H : Type*} [Group G] [NormedAddCommGroup H] [InnerPro
     rintro k hk _ ⟨k', hk', rfl⟩
     exact ⟨k * k', J.mul_mem hk hk', by rw [mul_assoc]; rfl⟩
   have hApply : ∀ v, A v = ∑ c ∈ hS.toFinset, ρ c.out (prj V v) := fun v => by
-    rw [hA, ContinuousLinearMap.comp_apply, ContinuousLinearMap.sum_apply]
+    rw [hA, ContinuousLinearMap.comp_apply, sum_apply]
   have hinv : ∀ v, A v ∈ V := by
     intro v
     rw [hfix]

@@ -159,7 +159,7 @@ theorem GlobalTheory.EisM.lattice_sum_gcd_out (j L : ℕ) (s : ℝ) (φ : Dirich
     rintro ⟨δ, ⟨⟨a, b⟩, hab, ha⟩⟩
     have hδ : 0 < (δ : ℕ) := δ.pos
     simp only [F, f, g, scl, latF]
-    rw [if_pos (dvd_mul_of_dvd_right ha _), LSeries.term_of_ne_zero hδ.ne', cpow_split j s _ hδ]
+    rw [ite_eq_left (dvd_mul_of_dvd_right ha _), LSeries.term_of_ne_zero hδ.ne', cpow_split j s _ hδ]
     have e : ((((δ : ℕ) : ℤ) * a : ℤ) : ℂ) * (τ : ℂ) + ((((δ : ℕ) : ℤ) * b : ℤ) : ℂ)
         = ((δ : ℕ) : ℂ) * ((a : ℂ) * τ + b) := by push_cast; ring
     rw [e, trm_smul]
@@ -176,7 +176,7 @@ theorem GlobalTheory.EisM.lattice_sum_gcd_out (j L : ℕ) (s : ℝ) (φ : Dirich
     by_cases hL1 : (L : ℤ) ∣ x1
     swap
     · simp [hL1] at hx
-    rw [if_pos hL1, one_mul] at hx
+    rw [ite_eq_left hL1, one_mul] at hx
     have hφ : φ (x2 : ZMod L) ≠ 0 := left_ne_zero_of_mul hx
     have ht : trm j s ((x1 : ℂ) * τ + x2) ≠ 0 := right_ne_zero_of_mul hx
     have hgpos : 0 < Int.gcd x1 x2 := by
@@ -266,7 +266,7 @@ theorem integrableOn_im_rpow_mul_exp_strip_one_le :
     ext τ; simp [and_comm]
   show ∫⁻ τ in {τ : ℍ | τ ∈ strip ∧ 1 ≤ τ.im}, ‖τ.im ^ r * Real.exp (-c * τ.im)‖ₑ < ⊤
   rw [hS, ← Measure.restrict_restrict hmT, ← lintegral_indicator hmT,
-    (_root_.GlobalTheory.EisM.strip_iterated).1 _ ((hmeas.enorm).indicator hmT)]
+    (_root_.GlobalTheory.EisM.strip_iterated).1 _ ((hmeas.eNorm).indicator hmT)]
   have hinner : Set.EqOn
       (fun y : ℝ => (∫⁻ x in Set.Ico (0 : ℝ) 1, {τ : ℍ | 1 ≤ τ.im}.indicator
         (fun τ => ‖τ.im ^ r * Real.exp (-c * τ.im)‖ₑ) (ofComplex (x + y * Complex.I))) *
@@ -283,7 +283,7 @@ theorem integrableOn_im_rpow_mul_exp_strip_one_le :
       by_cases h1 : (1 : ℝ) ≤ y
       · rw [Set.indicator_of_mem (by simpa [im_ofComplex_xy x y hy0] using h1),
           Set.indicator_of_mem (by simpa using h1), im_ofComplex_xy x y hy0,
-          Real.enorm_eq_ofReal (mul_nonneg (Real.rpow_nonneg hy0.le _) (Real.exp_pos _).le)]
+          Real.eNorm_eq_ofReal (mul_nonneg (Real.rpow_nonneg hy0.le _) (Real.exp_pos _).le)]
       · rw [Set.indicator_of_notMem (by simpa [im_ofComplex_xy x y hy0] using h1),
           Set.indicator_of_notMem (by simpa using h1)]
     simp only [hpt]
@@ -301,7 +301,7 @@ theorem integrableOn_im_rpow_mul_exp_strip_one_le :
     Set.inter_eq_left.2 (Set.Ici_subset_Ioi.2 one_pos)]
   have hfin := ((integrableOn_Ici_iff_integrableOn_Ioi).2
     (integrableOn_rpow_sub_two_mul_exp_Ioi_one r c hc)).hasFiniteIntegral
-  exact lt_of_le_of_lt (lintegral_ofReal_le_lintegral_enorm _) hfin
+  exact lt_of_le_of_lt (lintegral_ofReal_le_lintegral_eNorm _) hfin
 
 end GlobalTheory.EisM
 end -- clump:auto
@@ -325,9 +325,9 @@ theorem stripLow_integrableOn_im_rpow : ∀ (s : ℝ), 0 < s →
   have hf : Measurable (fun τ : ℍ => τ.im ^ (s + 1)) := hmeasIm.pow_const _
   have hT : MeasurableSet {τ : ℍ | τ.im < 1} := measurableSet_lt hmeasIm measurable_const
   refine ⟨hf.aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_enorm]
+  rw [hasFiniteIntegral_iff_eNorm]
   set F : ℍ → ENNReal := Set.indicator {τ : ℍ | τ.im < 1} (fun τ => ‖τ.im ^ (s + 1)‖ₑ) with hFdef
-  have hFm : Measurable F := hf.enorm.indicator hT
+  have hFm : Measurable F := hf.eNorm.indicator hT
   have h1 : ∫⁻ τ in {τ | τ ∈ strip ∧ τ.im < 1}, ‖τ.im ^ (s + 1)‖ₑ = ∫⁻ τ in strip, F τ := by
     rw [hFdef, lintegral_indicator hT, Measure.restrict_restrict hT]
     congr 2
@@ -345,15 +345,15 @@ theorem stripLow_integrableOn_im_rpow : ∀ (s : ℝ), 0 < s →
     have hin : ∀ x : ℝ, F (ofComplex ((x:ℂ) + y * Complex.I)) =
         Set.indicator (Set.Iio 1) (fun y : ℝ => ENNReal.ofReal (y ^ (s + 1))) y := by
       intro x
-      simp only [hFdef, Set.indicator, Set.mem_setOf_eq, him, Set.mem_Iio]
+      simp only [hFdef, Set.indicator, Set.mem_ofPred_eq, him, Set.mem_Iio]
       split_ifs
-      · exact Real.enorm_eq_ofReal (Real.rpow_nonneg hy0.le _)
+      · exact Real.eNorm_eq_ofReal (Real.rpow_nonneg hy0.le _)
       · rfl
     simp_rw [hin]
     rw [lintegral_const, Measure.restrict_apply_univ, Real.volume_Ico]
     simp only [sub_zero, ENNReal.ofReal_one, mul_one]
     by_cases h : y < 1
-    · simp only [Set.indicator, Set.mem_Iio, h, if_true]
+    · simp only [Set.indicator, Set.mem_Iio, h, ite_true]
       rw [← ENNReal.ofReal_mul (Real.rpow_nonneg hy0.le _)]
       congr 1
       have : y ^ (s + 1) = y ^ (s - 1) * y ^ 2 := by
@@ -476,8 +476,8 @@ theorem integrableOn_sq_qs_low : ∀ (e : ℕ) (b : ℕ → ℂ) (s : ℝ), 1 �
     rw [this]
     refine lintegral_congr fun τ => ?_
     have := τ.im_pos
-    exact Real.enorm_of_nonneg (by positivity)
-  rw [hasFiniteIntegral_iff_enorm, e1, _root_.GlobalTheory.EisM.strip_iterated.1 _ (hGm.indicator hmeas)]
+    exact Real.eNorm_of_nonneg (by positivity)
+  rw [hasFiniteIntegral_iff_eNorm, e1, _root_.GlobalTheory.EisM.strip_iterated.1 _ (hGm.indicator hmeas)]
   set T : ℕ → ℝ → ENNReal := fun n y =>
     ENNReal.ofReal (‖b n‖ ^ 2) * ENNReal.ofReal (y ^ (a - 1) * Real.exp (-(4 * π * n * y))) with hT
   have hTm : ∀ n : ℕ, Measurable fun y : ℝ => ENNReal.ofReal (y ^ (a - 1) * Real.exp (-(4 * π * n * y))) := fun n => by
@@ -591,7 +591,7 @@ theorem strip_integrable_rankin : ∀ (k e L N : ℕ) (ε : DirichletCharacter �
     intro τ
     rw [norm_mul, norm_mul, Complex.norm_conj, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (Real.rpow_pos_of_pos τ.im_pos _)]
   have hsplit : strip = {τ | τ ∈ strip ∧ τ.im < 1} ∪ {τ | τ ∈ strip ∧ 1 ≤ τ.im} := by
-    ext τ; simp only [Set.mem_union, Set.mem_setOf_eq]; constructor
+    ext τ; simp only [Set.mem_union, Set.mem_ofPred_eq]; constructor
     · intro h; rcases lt_or_ge τ.im 1 with h' | h'
       · exact Or.inl ⟨h, h'⟩
       · exact Or.inr ⟨h, h'⟩
@@ -679,9 +679,9 @@ namespace GlobalTheory.EisM
 theorem unfold_strip : ∀ (L : ℕ) (ρ : ℍ → ℝ) (Ψ : ℍ → ℂ) (W : ℤ × ℤ → ℍ → ℂ), Wt L ρ → IntegrableOn Ψ strip → AEStronglyMeasurable Ψ → (∀ γ : SL(2, ℤ), (L : ℤ) ∣ γ 1 0 → ∀ τ, Ψ (γ • τ) = W (γ 1 0, γ 1 1) τ) → ∫ τ : ℍ, (ρ τ : ℂ) * ∑' x : {x : ℤ × ℤ // IsCoprime x.1 x.2 ∧ (L : ℤ) ∣ x.1}, W x.1 τ = ∫ τ in strip, Ψ τ := by
   intro L ρ Ψ W hρ hΨ hΨm hW
   classical
-  haveI : Countable (Matrix (Fin 2) (Fin 2) ℤ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℤ))
-  haveI : Countable SL(2, ℤ) := inferInstanceAs (Countable {A : Matrix (Fin 2) (Fin 2) ℤ // A.det = 1})
-  haveI : Countable (Gamma0 L) := Subtype.countable
+  have : Countable (Matrix (Fin 2) (Fin 2) ℤ) := inferInstanceAs (Countable (Fin 2 → Fin 2 → ℤ))
+  have : Countable SL(2, ℤ) := inferInstanceAs (Countable {A : Matrix (Fin 2) (Fin 2) ℤ // A.det = 1})
+  have : Countable (Gamma0 L) := Subtype.countable
   have memΓ : ∀ γ : SL(2, ℤ), γ ∈ Gamma0 L ↔ (L : ℤ) ∣ γ 1 0 := by
     intro γ
     rw [Gamma0_mem]
@@ -752,15 +752,15 @@ theorem unfold_strip : ∀ (L : ℕ) (ρ : ℍ → ℝ) (Ψ : ℍ → ℂ) (W : 
     exact (Gm γ).comp_measurePreserving (mp γ)
   have tot : ∀ τ, ∑' γ : Gamma0 L, ‖G γ τ‖ₑ = ‖f τ‖ₑ := by
     intro τ
-    simp only [hG, enorm_mul]
+    simp only [hG, eNorm_mul]
     rw [ENNReal.tsum_mul_right]
     have : ∑' γ : Gamma0 L, ‖((ρ ((γ : SL(2, ℤ))⁻¹ • τ) : ℝ) : ℂ)‖ₑ = 1 := by
-      simp_rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_of_nonneg (hρ.nonneg _)]
+      simp_rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg (hρ.nonneg _)]
       rw [← ENNReal.ofReal_tsum_of_nonneg (fun _ => hρ.nonneg _) (hsum τ).summable, (hsum τ).tsum_eq,
         ENNReal.ofReal_one]
     rw [this, one_mul]
   have finG : ∑' γ, ∫⁻ τ, ‖G γ τ‖ₑ ≠ ⊤ := by
-    rw [← lintegral_tsum (fun γ => (Gm γ).enorm)]
+    rw [← lintegral_tsum (fun γ => (Gm γ).eNorm)]
     simp_rw [tot]
     exact hfi.hasFiniteIntegral.ne
   have finF : ∑' γ, ∫⁻ τ, ‖F γ τ‖ₑ ≠ ⊤ := by
@@ -841,7 +841,7 @@ theorem strip_eq_LSeries : ∀ (h b : ℕ → ℂ) (w : ℝ), 0 < w → PolyB h 
     rw [LSeries.norm_term_eq, Complex.ofReal_re]
     rcases Nat.eq_zero_or_pos n with rfl | hn
     · simp [ha0]
-    · rw [if_neg hn.ne', Real.mul_rpow h4.le (Nat.cast_nonneg n), div_div, mul_comm ((n : ℝ) ^ w)]
+    · rw [ite_eq_right hn.ne', Real.mul_rpow h4.le (Nat.cast_nonneg n), div_div, mul_comm ((n : ℝ) ^ w)]
   have h2 := hasSum_mellin (a := a) (p := fun n : ℕ => 4 * π * n) (F := P) (s := (w : ℂ))
     (fun n => by
       rcases Nat.eq_zero_or_pos n with rfl | hn
@@ -943,7 +943,7 @@ theorem latF_kills (L : ℕ) (φ : DirichletCharacter ℂ L) (hφ : φ ≠ 1) :
   have e1 : ∀ r : ℕ, (x - (r : ℤ) • ((0 : ℤ), (1 : ℤ))).1 = x.1 := by intro r; simp
   by_cases hx : ((n + 1 : ℕ) : ℤ) ∣ x.1
   · have e2 : ∀ r : ℕ, (x - (r : ℤ) • ((0 : ℤ), (1 : ℤ))).2 = x.2 - r := by intro r; simp
-    simp only [e1, e2, hx, if_true, one_mul]
+    simp only [e1, e2, hx, ite_true, one_mul]
     rw [← h0]
     refine Finset.sum_nbij' (fun r : ℕ => (((x.2 - r : ℤ)) : ZMod (n + 1)))
       (fun z => ((x.2 : ZMod (n + 1)) - z).val) (fun _ _ => Finset.mem_univ _)
@@ -953,7 +953,7 @@ theorem latF_kills (L : ℕ) (φ : DirichletCharacter ℂ L) (hφ : φ ≠ 1) :
       simp [ZMod.val_cast_of_lt hr']
     · intro z _
       simp
-  · simp only [e1, hx, if_false, Finset.sum_const_zero]
+  · simp only [e1, hx, ite_false, Finset.sum_const_zero]
 
 theorem rankin_summ (e : ℕ) (h b : ℕ → ℂ) (s : ℝ) (he : 1 ≤ e) (hs : 0 < s)
     (hb : ∃ C : ℝ, ∀ n, n ≠ 0 → ‖b n‖ ≤ C * n.divisors.card * (n : ℝ) ^ (e - 1))

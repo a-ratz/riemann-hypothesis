@@ -138,9 +138,9 @@ theorem cube_dilate_bound_at (hψ : IsStdChar D ψ (-1)) (hc : Chart θ σ) {N :
     congr 1
     exact Finset.sum_congr rfl fun i _ => by rw [smul_comm]
   have en : ∀ z : ℂ, ENNReal.ofReal (‖z‖ ^ 2) = ‖z‖ₑ ^ 2 := fun z => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   have hmeas : Measurable fun w : WA T S => ‖φ (y + e w)‖ₑ ^ 2 :=
-    (hφ.cont.comp (continuous_const.add e.continuous)).measurable.enorm.pow_const 2
+    (hφ.cont.comp (continuous_const.add e.continuous)).measurable.eNorm.pow_const 2
   have a1 := hreal _ hmeas fun w hw => by
     have hinf : (w - ι (π w)).map (infPart D) = 0 := by
       have hp : piW θ T S (w - ι (π w)) = 0 := by rw [hιπ, AddMonoidHom.map_sub, hc.pi_iota, sub_self]
@@ -283,7 +283,7 @@ theorem pointwise (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {K₀ : Set (W
         ring_nf
       rw [e]
       gcongr
-    rw [hs, enorm_eq_nnnorm]
+    rw [hs, eNorm_eq_nnNorm]
     have e2 : ENNReal.ofReal (((NNReal.sqrt (4 ^ N * c) * Q ^ N : ℝ≥0) : ℝ) * (n : ℝ) ^ N) =
         ((NNReal.sqrt (4 ^ N * c) * Q ^ N * (n : ℝ≥0) ^ N : ℝ≥0) : ℝ≥0∞) := by
       rw [← ENNReal.ofReal_coe_nnreal]
@@ -297,7 +297,7 @@ theorem pointwise (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {K₀ : Set (W
       · exact h2 u hu
       · rw [List.mem_singleton.1 hu]
         refine norm_nsmul_le.trans ?_
-        simp only [ρ, NNReal.coe_mul, NNReal.coe_natCast, coe_nnnorm]
+        simp only [ρ, NNReal.coe_mul, NNReal.coe_natCast, coe_nnNorm]
         exact mul_le_mul_of_nonneg_left (norm_le_pi_norm (fun i => b i) i) (Nat.cast_nonneg n)
     · simp only [wd, List.foldl_append]
       rfl

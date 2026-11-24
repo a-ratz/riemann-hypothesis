@@ -204,7 +204,7 @@ theorem letter_length_le : Known → ∀ (E : Type) [Field E] [NumberField E] [I
   intro hK E _ _ _ H Dw l Xo c K₁ _ _ _ a e th jj n' La c₁ s em _ _ σ r U Uw O _ β Y aC p χ W Ha k ξ' x x'' sf w₁ L gm
     ep Hm hσ hG hU hBC hLa hep hξ hw hP hEF ⟨t, ht, htξ⟩ hx htt hH τ i eC z hL hz
   classical
-  letI := H.starRing
+  let := H.starRing
   have hGl : Out.GlobalFnsSt := hK.laws.globalFns
   obtain ⟨hlin, -, -, -, Hm₀, hH₀⟩ := Uw.period k x
   obtain ⟨hlin', -, -, hspan', -⟩ := Ha.period w₁ hw
@@ -322,7 +322,7 @@ theorem letter_length_le : Known → ∀ (E : Type) [Field E] [NumberField E] [I
         rw [← e₂]
         refine Eq.trans ?_ (e₁.symm.trans (by simp))
         congr 1
-        simp only [cc, AlgEquiv.coe_restrictScalars', map_mul, IsCMField.complexConj_apply_apply]
+        simp only [cc, AlgEquiv.coe_restrictScalars, map_mul, IsCMField.complexConj_apply_apply]
         ring
       exact (mul_eq_zero.1 this).resolve_left
         ((map_ne_zero (IsCMField.complexConj E)).2 (neg_ne_zero.2 (U.X k).ξ0_ne))

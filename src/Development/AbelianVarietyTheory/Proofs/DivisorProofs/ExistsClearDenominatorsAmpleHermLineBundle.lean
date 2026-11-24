@@ -100,12 +100,12 @@ theorem exists_den_one : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegra
     IsArithVar p D → ∀ (P : Pair p), IsAmpleLB P.A.B → ∀ (f : X.functionField),
     ∃ (c : ℕ) (g : X.functionField), 0 < c ∧ g ≠ 0 ∧ g ∈ P.H 0 c ∧ g * f ∈ P.H 0 c := by
   intro k _ X _ p D _ P hA f
-  haveI := hA.compactSpace
-  haveI := hA.quasiSeparatedSpace
+  have := hA.compactSpace
+  have := hA.quasiSeparatedSpace
   have hL := hA.isLB
   obtain ⟨n, hn, s, hgs, haff⟩ := hA.exists_affine (genericPoint X)
-  haveI : Nonempty (nonzeroLocus s) := ⟨⟨_, hgs⟩⟩
-  haveI := functionField_isFractionRing_of_isAffineOpen X (nonzeroLocus s) haff
+  have : Nonempty (nonzeroLocus s) := ⟨⟨_, hgs⟩⟩
+  have := functionField_isFractionRing_of_isAffineOpen X (nonzeroLocus s) haff
   obtain ⟨a, b, hb, hf⟩ := IsFractionRing.div_surjective (A := Γ(X, nonzeroLocus s)) f
   change fnOf _ hgs a / fnOf _ hgs b = f at hf
   have hβ : fnOf _ hgs b ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hb

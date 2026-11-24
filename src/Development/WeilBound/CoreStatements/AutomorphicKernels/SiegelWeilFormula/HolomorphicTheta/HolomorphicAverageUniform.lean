@@ -114,7 +114,7 @@ theorem bmap_local (q : ℕ) (W₀ : Fin n → Fin n → ℂ) (hW₀ : W₀ ∈ 
     obtain ⟨y, hy, hyW⟩ := hcov W hW
     refine ⟨y, hy, ?_⟩
     unfold bmap
-    rw [if_pos hq]
+    rw [ite_eq_left hq]
     exact hyW
   · obtain ⟨r, hr, hsub, S, hS, hcov⟩ := zOf_surj_bdd' (negConj W₀) (negConj_mem hW₀)
     have key : ∀ W ∈ closedBall W₀ r, negConj W ∈ closedBall (negConj W₀) r := by
@@ -127,7 +127,7 @@ theorem bmap_local (q : ℕ) (W₀ : Fin n → Fin n → ℂ) (hW₀ : W₀ ∈ 
     · obtain ⟨y, hy, hyW⟩ := hcov (negConj W) (key W hW)
       refine ⟨y, hy, ?_⟩
       unfold bmap
-      rw [if_neg hq, hyW]
+      rw [ite_eq_right hq, hyW]
       funext i j
       show -star (negConj W j i) = W i j
       simp [negConj]
@@ -137,18 +137,18 @@ theorem bmap_surj (q : ℕ) {W : Fin n → Fin n → ℂ} (hW : W ∈ Dom n) : �
   · obtain ⟨y, hy⟩ := zOf_surj' hW
     refine ⟨y, ?_⟩
     unfold bmap
-    rw [if_pos hq]
+    rw [ite_eq_left hq]
     exact hy
   · obtain ⟨y, hy⟩ := zOf_surj' (negConj_mem hW)
     refine ⟨y, ?_⟩
     unfold bmap
-    rw [if_neg hq, hy]
+    rw [ite_eq_right hq, hy]
     funext i j
     show -star (negConj W j i) = W i j
     simp [negConj]
 
 theorem continuous_mR : Continuous (mR : GR n → M2 n) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_toBlocks₂₁ : Continuous fun M : M2 n => M.toBlocks₂₁ :=
   continuous_pi fun i => continuous_pi fun j => (continuous_apply (Sum.inl j)).comp (continuous_apply (Sum.inr i))

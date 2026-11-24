@@ -215,7 +215,7 @@ theorem nilradical_rational_lattice : NRatLam := by
     rw [Submodule.mem_comap, hL]
     refine Submodule.span_mono (Set.image_mono fun b hb => ?_)
       (hdesc {b | b.1 < i.1} (X.eX i) fun v => (h1 v).1.1 i)
-    simp only [Set.mem_setOf_eq] at hb hi ⊢
+    simp only [Set.mem_ofPred_eq] at hb hi ⊢
     omega
   · intro x hx
     simp only [orth, Submodule.mem_iInf, LinearMap.mem_ker] at hx

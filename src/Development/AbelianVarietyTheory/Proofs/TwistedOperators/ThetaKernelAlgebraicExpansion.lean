@@ -172,7 +172,7 @@ theorem ind_nsmul_mem (h : IsBichar χ) (hχ : ∀ x ∈ X, ∀ y ∈ Y, χ x y 
   funext t
   by_cases ht : t ∈ K
   · simp [ind, ht, h1 t ht]
-  · rw [ind, if_neg ht]
+  · rw [ind, ite_eq_right ht]
     by_cases htL : t ∈ L
     · obtain ⟨r, hr, u, hu, rfl⟩ := hfin t htL
       have huK : k • u ∈ K := ⟨u, hu, rfl⟩

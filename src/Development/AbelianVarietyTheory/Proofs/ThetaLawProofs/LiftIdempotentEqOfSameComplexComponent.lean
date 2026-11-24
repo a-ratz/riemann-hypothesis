@@ -98,7 +98,7 @@ theorem lift_eq_of_sameComp_of_isIdempotentElem :
     (pullbackSpecIso K ℂ R).inv ≫ (pullbackSymmetry _ _).hom ≫
     pullback.map (spMap (algebraMap K R)) (spMap (algebraMap K ℂ)) s (spMap (algebraMap K ℂ)) i (𝟙 _) (𝟙 _)
       (by rw [his, Category.comp_id]) (by rw [Category.comp_id, Category.id_comp])
-  haveI : IsOpenImmersion j := by
+  have : IsOpenImmersion j := by
     dsimp only [j]
     infer_instance
   let iL : ℂ →+* T := Algebra.TensorProduct.includeLeftRingHom

@@ -55,14 +55,14 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem card_pi_of_unique {ι : Type*} {α : ι → Type*} (T : Finset ι) (h : ∀ i ∉ T, Nonempty (Unique (α i))) :
     Nat.card (∀ i, α i) = ∏ᶠ i, Nat.card (α i) := by
-  haveI : ∀ i : {i // i ∉ T}, Unique (α i) := fun i => (h i.1 i.2).some
+  have : ∀ i : {i // i ∉ T}, Unique (α i) := fun i => (h i.1 i.2).some
   rw [Nat.card_congr (Equiv.piEquivPiSubtypeProd (fun i => i ∈ T) α), Nat.card_prod,
     Nat.card_unique (α := ∀ i : {i // i ∉ T}, α i), mul_one, Nat.card_pi]
   rw [finprod_eq_prod_of_mulSupport_subset (s := T)]
   · exact (Finset.prod_coe_sort T (fun i => Nat.card (α i)))
   · intro i hi
     by_contra hT
-    haveI := (h i hT).some
+    have := (h i hT).some
     exact hi Nat.card_unique
 
 variable {D : Formalism.BasicNotions.D7} (Zd : LocDat D) (u u' : D.what₂.Word) (F0 : FlagG (VS D) D.R.rS (CntLocal.Tn u))

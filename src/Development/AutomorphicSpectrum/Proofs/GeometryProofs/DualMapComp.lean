@@ -156,7 +156,7 @@ theorem exists_eigen_op_uniform : ∀ (E : Type) [Field E] [NumberField E], ∃ 
   obtain ⟨S, hS⟩ := (Module.Finite.fg_top : (⊤ : Submodule ℤ (𝓞 E)).FG)
   obtain ⟨x, hx, hT⟩ := exists_uniform_product S
   have hint : IsIntegral ℤ x := Algebra.IsIntegral.isIntegral x
-  have hbot := Ideal.comap_ne_bot_of_integral_mem hx (Ideal.mem_span_singleton_self x) hint
+  have hbot := Ideal.under_ne_bot_of_integral_mem hx (Ideal.mem_span_singleton_self x) hint
   obtain ⟨c, hcmem, hc0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hbot
   rw [Ideal.mem_comap, Ideal.mem_span_singleton, algebraMap_int_eq, eq_intCast] at hcmem
   obtain ⟨y0, hy0⟩ := hcmem
@@ -289,7 +289,7 @@ theorem hodge_loc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], ∃ 
   generalize Ideal.absNorm (differentIdeal ℤ (𝓞 E)) = D₂ at hD₂ hmem
   refine ⟨D₁ * D₂, Nat.mul_pos hD₁ hD₂, ?_⟩
   intro H D l Xo c Y S Ω _ K _ J _ y 𝔐 s
-  haveI := Sandwich.charZero_of_hodgeCpt 𝔐
+  have := Sandwich.charZero_of_hodgeCpt 𝔐
   obtain ⟨T₁, hT₁, hTe, hTD⟩ := hop Ω 𝔐.Li 𝔐.ρ (𝔐.emb s)
   have hreg : ∀ (q : Cpt 𝔐.ξ) (n : ℕ) {e : 𝔐.Li}, e ∈ 𝔐.M.lat q → (n : Ω) • e ∈ 𝔐.M.lat q := fun q n _ he =>
     Submodule.smul_mem _ (⟨_, natCast_mem _ n⟩ : regAt 𝔐.ξ q) he

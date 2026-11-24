@@ -95,7 +95,7 @@ theorem exists_gen : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolog
     rw [← FractionalIdeal.coeToSubmodule_eq_bot, ← hs, Submodule.span_eq_bot]
     intro i hi
     have h1 := hmax i hi
-    rw [h0, map_zero, le_zero_iff, Valuation.zero_iff] at h1
+    rw [h0, map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at h1
     exact hinj (h1.trans π.map_zero.symm)
   refine ⟨j, hjmem, hj0, ?_⟩
   intro a ha
@@ -105,7 +105,7 @@ theorem exists_gen : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolog
   induction ha' using Submodule.span_induction with
   | mem x hx =>
     rw [Valuation.mem_integer_iff, map_div₀]
-    exact div_le_one_of_le₀ (hmax x hx) zero_le'
+    exact div_le_one_of_le₀ (hmax x hx) zero_le
   | zero => simp
   | add x y _ _ hx hy => rw [map_add (f := _), add_div]; exact add_mem hx hy
   | smul r x _ hx =>

@@ -151,7 +151,7 @@ theorem gs_jK_toOpen (s : R) (hs : algebraMap R (FractionRing R) s ≠ 0) (x : S
   refine h2.symm.trans (congrArg _ ?_)
   have e := congrArg (fun g => g.hom s) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (algebraMap R (FractionRing R))))
   simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at e
-  simp only [unitOn, Units.val_mk0, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, Units.coe_map]
+  simp only [unitOn, Units.val_mk0, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, Units.coe_map]
   exact e.symm
 
 theorem coord_of_val [IsLocalRing R] (D : DegPre R) (χ : D.X) (s : R) (hs : algebraMap R (FractionRing R) s ≠ 0)
@@ -176,7 +176,7 @@ theorem exists_good_local [IsLocalRing R] {X : Scheme.{0}} [X.IsSeparated] (L : 
   refine ⟨fun f => if h : ∃ g : Sp R ⟶ X, f = jK R ≫ g then d (h.choose (closedPoint R)) else d (f x), fun f => ?_,
     fun g => ?_⟩
   · by_cases h : ∃ g : Sp R ⟶ X, f = jK R ≫ g
-    · simp only [dif_pos h]
+    · simp only [dite_eq_left h]
       have htop : (⊤ : (Sp R).Opens) ≤ h.choose ⁻¹ᵁ L.U (d (h.choose (closedPoint R))) :=
         ((IsLocalRing.closedPoint_mem_iff _).1 (hd _)).ge
       have e : f x = h.choose (jK R x) := by
@@ -184,10 +184,10 @@ theorem exists_good_local [IsLocalRing R] {X : Scheme.{0}} [X.IsSeparated] (L : 
         rfl
       rw [e]
       exact htop (show jK R x ∈ (⊤ : (Sp R).Opens) from trivial)
-    · simp only [dif_neg h]
+    · simp only [dite_eq_right h]
       exact hd _
   · have h : ∃ g' : Sp R ⟶ X, jK R ≫ g = jK R ≫ g' := ⟨g, rfl⟩
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     rw [← jK_cancel h.choose_spec]
     exact hd _
 
@@ -210,7 +210,7 @@ theorem psi_unit_mono : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), PosW W → ∀ (V 
   intro W hW V V₁ _ _ _ _ _ Q ρ hρ m t δ hsym hnn ht hmono D e hS mu
   classical
   obtain ⟨pr, w, -, -, -, -, hw⟩ := hS
-  haveI := data_sep Q
+  have := data_sep Q
   have hL : Q.M.L.IsLB := Q.M.isLB
   obtain ⟨j₀, hj₀⟩ := GlobalTheory.PsiCoordLocal.exists_chart_top.{1} D (e mu)
   choose k hk hcoord using hmono
@@ -276,7 +276,7 @@ theorem psi_unit_mono : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), PosW W → ∀ (V 
       algebraMap V₁ _ v₀ * ∏ a, ∏ b, algebraMap V₁ (FractionRing V₁) (v (mu a) (mu b)) ^ W a b := by
     show ((Units.map (algebraMap V₁ (FractionRing V₁)).toMonoidHom U₁ : (FractionRing V₁)ˣ) : FractionRing V₁) = _
     simp only [U₁, map_mul, map_prod, map_zpow, Units.val_mul, Units.coe_prod, Units.val_zpow_eq_zpow_val,
-      Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+      Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   have hx0 : algebraMap V₁ (FractionRing V₁) ((U₁ : V₁) * mono W (fun k => ρ (t k)) δ mu) ≠ 0 := by
     rw [map_mul, hB]
     exact mul_ne_zero ((U₁.isUnit.map (algebraMap V₁ (FractionRing V₁))).ne_zero)
@@ -294,10 +294,10 @@ theorem psi_unit_mono : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), PosW W → ∀ (V 
   show Ψ _ = Ψ _
   congr 1
   ext
-  simp only [Units.val_mul, Units.coe_prod, Units.val_zpow_eq_zpow_val, Units.coe_map, MonoidHom.coe_coe,
+  simp only [Units.val_mul, Units.coe_prod, Units.val_zpow_eq_zpow_val, Units.coe_map, MonoidHom.coe_ofClass,
     Units.val_mk0, mul_zpow, Finset.prod_mul_distrib, RingHom.toMonoidHom_eq_coe]
   rw [map_mul, hC, hB, ← hA]
-  simp only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   rw [_root_.mul_comm (∏ a, ∏ b, _ ^ W a b) (∏ a, ∏ b, _ ^ W a b), _root_.mul_assoc]
 end GlobalTheory.Poinc.Sep
 
@@ -357,13 +357,13 @@ theorem valPt_lies_over : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (Z : Schem
   have hK : (RatModel.valHom yw w (RatModel.range_eq_singleton yw _)).comp (Subalgebra.inclusion hle).toRingHom =
       φ.comp ψ :=
     RingHom.ext fun a => (RatModel.valLoc_eq_val yw hsp (Subalgebra.inclusion hle a)).symm
-  haveI := X₁.imm
-  haveI : IsProper X₁.z := X₁.isProper_compactificationMap
-  haveI : Z.IsSeparated := by
+  have := X₁.imm
+  have : IsProper X₁.z := X₁.isProper_compactificationMap
+  have : Z.IsSeparated := by
     constructor
     rw [← terminal.comp_from X₁.z]
     infer_instance
-  haveI : IsDominant (spMap (X₁.M.stalkHom w)) := by
+  have : IsDominant (spMap (X₁.M.stalkHom w)) := by
     refine ⟨?_⟩
     change DenseRange (PrimeSpectrum.comap (X₁.M.stalkHom w))
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical,
@@ -453,11 +453,11 @@ theorem main : ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V�
   have hscm : ∀ u, IsMonHom (sc u) := fun u => isMonHom_of_mul _ fun T a b => by
     refine (huniv T (fun v => (a * b) ≫ y u v)).unique (fun v => ?_) (fun v => ?_)
     · rw [Category.assoc, hsc]
-    · haveI := hq v
+    · have := hq v
       rw [MonObj.mul_comp, Category.assoc, Category.assoc, hsc]
       by_cases h : v = u
-      · simp only [y, h, if_true, Category.comp_id]
-      · simp only [y, h, if_false, comp_one, _root_.mul_one]
+      · simp only [y, h, ite_true, Category.comp_id]
+      · simp only [y, h, ite_false, comp_one, _root_.mul_one]
   choose d hd using fun u => GlobalTheory.Poinc.HomTor.exists_torMatch V₁ hB G hG D P U G₀ hG₀ D₀ A₀ U₀ (sc u) (hscm u)
   obtain ⟨hid₀, hone₀, -⟩ := torMatch_id_one_mul V₁ hB G₀ hG₀ D₀ A₀ U₀ G₀ hG₀ D₀ A₀ U₀
   obtain ⟨hid, hone, hmul⟩ := torMatch_id_one_mul V₁ hB G hG D P U G hG D P U
@@ -468,9 +468,9 @@ theorem main : ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V�
       (RingHom.id V₁) (sc u).left Function.injective_id (fun k hk => hk) (c v) (d u) (hc v) (hd u)
     rw [RingHom.id_comp, ← Over.comp_left, hsc] at h
     by_cases huv : v = u
-    · simp only [y, huv, if_true, Over.id_left] at h ⊢
+    · simp only [y, huv, ite_true, Over.id_left] at h ⊢
       exact torMatch_unique V₁ hB G₀ hG₀ D₀ A₀ U₀ V₁ hB G₀ hG₀ D₀ A₀ U₀ (RingHom.id V₁) _ Function.injective_id _ _ h hid₀
-    · simp only [y, huv, if_false] at h ⊢
+    · simp only [y, huv, ite_false] at h ⊢
       exact torMatch_unique V₁ hB G₀ hG₀ D₀ A₀ U₀ V₁ hB G₀ hG₀ D₀ A₀ U₀ (RingHom.id V₁) _ Function.injective_id _ _ h hone₀
   have dsum : ∀ (χ : Fin 8 → D₀.toPre.X) w, d w (∑ u, c u (χ u)) = χ w := by
     intro χ w
@@ -485,12 +485,12 @@ theorem main : ∀ (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V�
 
   have hprod : (∏ v, q v ≫ sc v) = 𝟙 G := by
     refine (huniv G q).unique (fun w => ?_) (fun w => Category.id_comp _)
-    haveI := hq w
+    have := hq w
     rw [prod_comp, Finset.prod_eq_single w]
-    · rw [Category.assoc, hsc]; simp only [y, if_true, Category.comp_id]
+    · rw [Category.assoc, hsc]; simp only [y, ite_true, Category.comp_id]
     · intro b _ hb
       rw [Category.assoc, hsc]
-      simp only [y, Ne.symm hb, if_false, comp_one]
+      simp only [y, Ne.symm hb, ite_false, comp_one]
     · intro h; exact absurd (Finset.mem_univ w) h
   have hs : ∀ s : Finset (Fin 8), TorMatch U U (RingHom.id V₁) (∏ v ∈ s, q v ≫ sc v).left
       (∑ v ∈ s, (c v).comp (d v)) := by
@@ -721,17 +721,17 @@ end GlobalTheory.Poinc.Sep.PowModel
 open GlobalTheory.Poinc.Sep.PowModel in
 theorem GlobalTheory.Poinc.Sep.unif_pow_isPow_model : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : SFam g n ζ) (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V₁], IsCN V₁ → ∀ (D₀ : DegData V₁ (maximalIdeal V₁)) (G₀ : Over (Sp V₁)) [GrpObj G₀] [IsCommMonObj G₀] (A₀ : PolAV (Sp (FractionRing V₁))) (U₀ : Unif (maximalIdeal V₁) D₀ A₀ G₀) (y : Sp (FractionRing V₁) ⟶ F.X) (α : A₀.A.left ⟶ F.univ.A.left), IsSemiAbelian G₀ → IsGrpPullback A₀.A F.univ.A y α → ∀ (P : PolAV (Sp (FractionRing V₁))) (c : SiegPre g n ζ (y ≫ F.s)) (φc : c.A.left ⟶ F.univ.A.left), IsGrpPullback c.A F.univ.A y φc → ∀ pr : Fin 8 → (P.A ⟶ c.A), (∀ a, IsMonHom (pr a)) → (∀ (T' : Over (Sp (FractionRing V₁))) (y' : Fin 8 → (T' ⟶ c.A)), ∃! x : T' ⟶ P.A, ∀ a, x ≫ pr a = y' a) → ∀ (G : Over (Sp V₁)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData V₁ (maximalIdeal V₁)) (U : Unif (maximalIdeal V₁) D P G), ∃ q : Fin 8 → (G ⟶ G₀), (∀ u, IsMonHom (q u)) ∧ (∀ (T' : Over (Sp V₁)) (y' : Fin 8 → (T' ⟶ G₀)), ∃! x : T' ⟶ G, ∀ u, x ≫ q u = y' u) ∧ ∀ u, ((Over.pullback (jK V₁)).map (q u) ≫ U₀.gen.hom).left ≫ α = (U.gen.hom ≫ pr u).left ≫ φc := by
   intro g n o _ ζ F V₁ _ _ _ hCN D₀ G₀ _ _ A₀ U₀ y α hsa hα P c φc hφc pr hpr hP G _ _ hG D U
-  haveI : IsNoetherianRing V₁ := hCN.1
-  haveI : IsIntegrallyClosed V₁ := hCN.2.1
+  have : IsNoetherianRing V₁ := hCN.1
+  have : IsIntegrallyClosed V₁ := hCN.2.1
   obtain ⟨κ, hκ, hκα⟩ := grpPullback_iso hφc hα
-  haveI := U.gen_hom
-  haveI := U₀.gen_hom
+  have := U.gen_hom
+  have := U₀.gen_hom
   have hf : ∀ u, IsMonHom (U.gen.hom ≫ pr u ≫ κ.hom ≫ U₀.gen.inv) := fun u => by
-    haveI := hpr u
+    have := hpr u
     infer_instance
   have hext : ∀ u, ∃ F : G ⟶ G₀, IsMonHom F ∧
       (Over.pullback (jK V₁)).map F = U.gen.hom ≫ pr u ≫ κ.hom ≫ U₀.gen.inv := fun u => by
-    haveI := hf u
+    have := hf u
     exact (GlobalTheory.Published.SemiAbelianHomExtension.fractionField GlobalTheory.semiAbelianHomExtension_holds V₁
       (FractionRing V₁) G G₀ hG hsa (U.gen.hom ≫ pr u ≫ κ.hom ≫ U₀.gen.inv)).exists
   choose q hq hq' using hext
@@ -747,9 +747,9 @@ theorem GlobalTheory.Poinc.Sep.unif_pow_isPow_model : ∀ (g n : ℕ) (o : Type)
   obtain ⟨Q, hQ, -⟩ := hPi G q
   have hmul : ∀ (T : Over (Sp V₁)) (x y : T ⟶ G), (x * y) ≫ Q = (x ≫ Q) * (y ≫ Q) := fun T x y =>
     (hPi T fun u => (x * y) ≫ q u).unique (fun u => by rw [Category.assoc, hQ u]) (fun u => by
-      haveI := hq u
+      have := hq u
       rw [MonObj.mul_comp, Category.assoc, Category.assoc, hQ u, MonObj.mul_comp])
-  haveI hQm : IsMonHom Q := by
+  have hQm : IsMonHom Q := by
     constructor
     · have h := hmul _ (1 : 𝟙_ (Over (Sp V₁)) ⟶ G) 1
       rw [_root_.mul_one] at h
@@ -760,7 +760,7 @@ theorem GlobalTheory.Poinc.Sep.unif_pow_isPow_model : ∀ (g n : ℕ) (o : Type)
       rw [h]; congr 1
   have hGK := prod_postcomp (κ ≪≫ U₀.gen.symm) (prod_precomp U.gen hP)
   have hPiK := prod_pullback (jK V₁) hPi
-  haveI : IsIso ((Over.pullback (jK V₁)).map Q) :=
+  have : IsIso ((Over.pullback (jK V₁)).map Q) :=
     isIso_of_prod hGK hPiK _ (fun u => by
       rw [← Functor.map_comp, hQ u, hq' u]
       simp only [Iso.trans_hom, Iso.symm_hom, Category.assoc])
@@ -841,8 +841,8 @@ theorem endU_exists (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V
     (hG : IsSemiAbelian G) (U : Unif (maximalIdeal V₁) D P G) (aA : P.A ⟶ P.A) (haA : IsMonHom aA) :
     ∃ E : EndU U.toUnifPre, E.aA = aA := by
   have hadm : AdmBase V₁ (maximalIdeal V₁) := ⟨hCN.1, inferInstance, hCN.2.1, hCN.2.2.1⟩
-  haveI := hCN.1
-  haveI := hCN.2.1
+  have := hCN.1
+  have := hCN.2.1
   have := U.gen_hom
   have hinv : IsMonHom U.gen.inv := inferInstance
   obtain ⟨F, ⟨hF, hF'⟩, -⟩ := GlobalTheory.Published.SemiAbelianHomExtension.fractionField GlobalTheory.semiAbelianHomExtension_holds V₁
@@ -853,7 +853,7 @@ theorem endU_exists (V₁ : Type) [CommRing V₁] [IsDomain V₁] [IsLocalRing V
 
 theorem isMonHom_of_matrix : ∀ (S : Scheme.{0}) (X Y : Over S) [GrpObj X] [GrpObj Y] [IsCommMonObj Y] (pr : Fin 8 → (X ⟶ Y)), (∀ a, IsMonHom (pr a)) → (∀ (T' : Over S) (y' : Fin 8 → (T' ⟶ Y)), ∃! x : T' ⟶ X, ∀ a, x ≫ pr a = y' a) → ∀ (f : X ⟶ X) (a : Matrix (Fin 8) (Fin 8) ℤ), (∀ u, f ≫ pr u = (List.ofFn fun v => pr v ^ a u v).prod) → IsMonHom f := by
   intro S X Y _ _ _ pr hpr hu f a hf
-  haveI : ∀ v, IsMonHom (pr v) := hpr
+  have : ∀ v, IsMonHom (pr v) := hpr
   refine ReciprocityTheory.ChartRestriction.G.Geo.Tor.isMonHom_of_mul f fun T x y => ?_
   have hz : ∀ (z : T ⟶ X) (u : Fin 8), z ≫ f ≫ pr u = ∏ v, (z ≫ pr v) ^ a u v := by
     intro z u

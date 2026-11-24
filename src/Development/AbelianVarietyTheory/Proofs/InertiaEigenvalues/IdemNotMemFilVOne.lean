@@ -303,7 +303,7 @@ theorem isJumpV_iff (a : ℤ) : IsJumpV PD ρ τ a ↔ ∃ i, k i = a := by
     congr 2
     ext i
     have := hn i
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     omega
   · have h1 := h.multV_eq a
     rw [multV, hj, sub_self] at h1

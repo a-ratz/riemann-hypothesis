@@ -91,7 +91,7 @@ theorem _root_.GlobalTheory.WeilM.exists_nat_mul_integral_of_isCompact {κ : Typ
         ((m + 1 : ℕ) : FiniteAdeleRing (𝓞 F) F) * x i) ⁻¹'
           {a : FiniteAdeleRing (𝓞 F) F | ∀ v, a v ∈ HeightOneSpectrum.adicCompletionIntegers F v}) :=
       isOpen_iInter_of_finite fun i => hW.preimage (continuous_const.mul (continuous_apply i))
-    simpa only [Set.preimage_setOf_eq, Set.iInter_setOf] using hopen'
+    simpa only [Set.preimage_ofPred_eq, Set.iInter_ofPred] using hopen'
   have hcover : K ⊆ ⋃ m : ℕ, {x : κ → FiniteAdeleRing (𝓞 F) F | ∀ i v,
       (((m + 1 : ℕ) : FiniteAdeleRing (𝓞 F) F) * x i) v ∈
         HeightOneSpectrum.adicCompletionIntegers F v} := by
@@ -132,7 +132,7 @@ theorem _root_.GlobalTheory.WeilM.discreteTopology_denomLattice (κ : Type) [Fin
       (⟨(N : ℝ) • (z : κ → mixedEmbedding.mixedSpace F) i, z.2 i⟩ : mixedEmbedding.integerLattice F)
     exact Continuous.subtype_mk ((continuous_const (y := (N : ℝ))).smul
       ((continuous_apply (A := fun _ : κ => mixedEmbedding.mixedSpace F) i).comp
-        continuous_subtype_val)) _
+        continuous_subtypeVal)) _
   · intro z w hzw
     refine Subtype.ext (funext fun i => smul_right_injective _ hN' ?_)
     exact congrArg (fun p => ((p i : mixedEmbedding.integerLattice F) :
@@ -198,7 +198,7 @@ theorem _root_.GlobalTheory.WeilM.summable_pureA {κ : Type} [Fintype κ]
   obtain ⟨hloc, hcpt⟩ := hg'
   obtain ⟨B, hB⟩ := hcpt.exists_bound_of_continuous hloc.continuous
   obtain ⟨N, hN, hNK⟩ := _root_.GlobalTheory.WeilM.exists_nat_mul_integral_of_isCompact F (K := tsupport g) hcpt
-  haveI := _root_.GlobalTheory.WeilM.discreteTopology_denomLattice F κ hN
+  have := _root_.GlobalTheory.WeilM.discreteTopology_denomLattice F κ hN
   have hL : Summable (((_root_.GlobalTheory.WeilM.denomLattice F κ N : Submodule ℤ _) :
       Set (κ → mixedEmbedding.mixedSpace F)).indicator fun z => ‖f z‖) :=
     summable_subtype_iff_indicator.mp

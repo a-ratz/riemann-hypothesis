@@ -104,8 +104,8 @@ theorem weil_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
   have hs : ∀ Y, (∃ g : HA (Fv F v) σ J, g • X0r = Y) → s Y • X0r = Y := by
     intro Y hY
     by_cases hA : Y ∈ A
-    · simp only [s, dif_pos hA]; exact hA.choose_spec.2
-    · simp only [s, dif_neg hA, dif_pos hY]; exact hY.choose_spec
+    · simp only [s, dite_eq_left hA]; exact hA.choose_spec.2
+    · simp only [s, dite_eq_right hA, dite_eq_left hY]; exact hY.choose_spec
   have hf : Measurable (C.indicator (1 : HA (Fv F v) σ J → ENNReal)) := measurable_one.indicator hCm
   have key := hc.2 _ hf s hs
   have hL : ∫⁻ g, C.indicator (1 : HA (Fv F v) σ J → ENNReal) g ∂μG = μG C := lintegral_indicator_one hCm
@@ -116,7 +116,7 @@ theorem weil_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
     by_cases hA : Y ∈ A
     · rw [Set.indicator_of_mem hA]
       have hk : hA.choose ∈ C := hA.choose_spec.1
-      have hsY : s Y = hA.choose := by simp only [s, dif_pos hA]
+      have hsY : s Y = hA.choose := by simp only [s, dite_eq_left hA]
       rw [← lintegral_indicator_one hDm]
       congr 1
       funext h'
@@ -162,8 +162,8 @@ theorem stepOm_ofK (hW : StepW) (hM : OmMeas) (hRK : RightK) (hO : LocMassOrdW.O
   set a := μS0 (stabilizerCompact σ J v Λ P) with hadef
   set a' := μS0' (stabilizerCompact σ J v Λ P') with ha'def
   have hcg : CongL (Λ := Λ) g X0r (κ • X0r') := hκc
-  have hS0Km : MeasurableSet (stabilizerCompact σ J v Λ P) := measurable_subtype_coe hKm
-  have hS0Km' : MeasurableSet (stabilizerCompact σ J v Λ P') := measurable_subtype_coe hKm
+  have hS0Km : MeasurableSet (stabilizerCompact σ J v Λ P) := measurable_subtypeVal hKm
+  have hS0Km' : MeasurableSet (stabilizerCompact σ J v Λ P') := measurable_subtypeVal hKm
 
   have hWK : ν ((fun c : HA (Fv F v) σ J => c • X0r) '' K) * a = μG K := by
     refine weil_gen σ J v (F0 P) μG μS0 ν hC K hKm (stabilizerCompact σ J v Λ P) hS0Km ?_ hAm
@@ -208,7 +208,7 @@ theorem stepOm_ofK (hW : StepW) (hM : OmMeas) (hRK : RightK) (hO : LocMassOrdW.O
       obtain ⟨k, hk, hkx⟩ := hx
       rw [← hWC' k]
       apply measure_congr
-      rw [Filter.eventuallyEq_set]
+      rw [Filter.eventuallyEqSet_iff]
       filter_upwards [hae'] with x' hx'
       obtain ⟨g2, hg2⟩ := hx'
       simp only [Set.mem_preimage, Set.mem_image, Set.mem_ofPred_eq]

@@ -157,7 +157,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.gaussian_field_range_eq_ker_quartic_ch
           subst hy
           exact h
         exact congrArg (fun φ : K →ₐ[ℚ] Ω => φ x) hφ
-    · haveI : IsCyclotomicExtension {2 ^ 2} ℚ K := by
+    · have : IsCyclotomicExtension {2 ^ 2} ℚ K := by
         rw [IsCyclotomicExtension.iff_singleton]
         refine ⟨⟨i, prim4 hi⟩, ?_⟩
         intro x

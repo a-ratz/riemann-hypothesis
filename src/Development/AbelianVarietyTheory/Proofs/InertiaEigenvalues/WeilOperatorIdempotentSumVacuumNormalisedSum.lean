@@ -360,7 +360,7 @@ theorem om_eq_sum_iso {χS χT : (AE D)ˣ →* Circle} {om : GA D S × GA D T �
     rwa [GlobalTheory.DualPairCheck.cA_cA] at this
   obtain ⟨r, hr, hom⟩ := om_eq_smul_sum_iso hW he (fun u hu => (hdual u (hfin hu)).1 hu) hd hd' hz hR hRu hle
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨⟨μ, 𝓕, hμ⟩, c, hc⟩ := GlobalTheory.exists_normalise_meanSquare_of_cocompact (WO S T) (ratL T S) K hK hKc f hf.cont hf0
     (by
       rintro _ ⟨γ, rfl⟩ w

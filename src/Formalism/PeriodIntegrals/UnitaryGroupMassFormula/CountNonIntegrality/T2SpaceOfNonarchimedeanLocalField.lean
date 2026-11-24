@@ -69,7 +69,7 @@ theorem tensorLiftSurjective : PiSurj := by
     rw [h]
     exact (hcont.comp continuous_fst).mul continuous_snd
   let S : Submodule ℚ_[ℓ] Fp := LinearMap.range (piMap K ℓ Fp ι).toLinearMap
-  have hS : IsClosed (S : Set Fp) := S.closed_of_finiteDimensional
+  have hS : IsClosed (S : Set Fp) := S.isClosed_of_finiteDimensional
   have hsub : Set.range ι ⊆ (S : Set Fp) := by
     rintro _ ⟨y, rfl⟩
     exact ⟨1 ⊗ₜ y, piMap_one_tmul K ℓ Fp ι y⟩

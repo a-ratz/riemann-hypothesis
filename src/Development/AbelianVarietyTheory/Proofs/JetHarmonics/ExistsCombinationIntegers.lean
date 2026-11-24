@@ -131,12 +131,12 @@ theorem exists_combination_integers (K : Type) [Field K] [NumberField K] (T : CD
   classical
   obtain ⟨φ, hφ⟩ := exists_lift_integers K T.V T.Fr io
   let p : Ideal (𝓞 K) := (IsLocalRing.maximalIdeal T.V).comap φ
-  haveI hp : p.IsPrime := Ideal.comap_isPrime _ _
+  have hp : p.IsPrime := Ideal.comap_isPrime _ _
   have hS : p.primeCompl ≤ nonZeroDivisors (𝓞 K) := p.primeCompl_le_nonZeroDivisors
   let V := Localization.subalgebra.ofField K p.primeCompl hS
-  haveI : IsLocalRing V := IsLocalization.AtPrime.isLocalRing V p
-  haveI : IsDedekindDomain V := IsLocalization.isDedekindDomain (𝓞 K) hS V
-  haveI : IsPrincipalIdealRing V :=
+  have : IsLocalRing V := IsLocalization.AtPrime.isLocalRing V p
+  have : IsDedekindDomain V := IsLocalization.isDedekindDomain (𝓞 K) hS V
+  have : IsPrincipalIdealRing V :=
     ((tfae_of_isNoetherianRing_of_isLocalRing_of_isDomain V).out 3 1).1 ‹IsDedekindDomain V›
   have hu : ∀ s : p.primeCompl, IsUnit (φ s) := fun s => by
     by_contra hn

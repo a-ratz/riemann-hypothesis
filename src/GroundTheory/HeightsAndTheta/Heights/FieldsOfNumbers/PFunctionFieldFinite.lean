@@ -108,7 +108,7 @@ theorem trdeg_homFracDegZero (hD : MChartDehomog.Statement.{u}) (hT : MChartTrde
     [∀ k, Fintype (ι k)] (P : Ideal (MRing ι F)) [P.IsPrime] (hP : IsMultiHomogIdeal P)
     (u : ∀ k, ι k) (hu : ∀ k, (X ⟨k, u k⟩ : MRing ι F) ∉ P) :
     Algebra.trdeg F (homFracDegZero P) + Fintype.card K = Algebra.trdeg F (MRing ι F ⧸ P) := by
-  haveI : Algebra.FiniteType F (Algebra.adjoin F (chartGens P u)) :=
+  have : Algebra.FiniteType F (Algebra.adjoin F (chartGens P u)) :=
     Algebra.FiniteType.adjoin_of_finite (Set.finite_range _)
   rw [← hT F K ι P hP u hu, homFracDegZero_eq hD P u hu,
     GroundTheory.Arith.Abelian.Jacobian.trdeg_eq_of_isFractionRing (k := F)

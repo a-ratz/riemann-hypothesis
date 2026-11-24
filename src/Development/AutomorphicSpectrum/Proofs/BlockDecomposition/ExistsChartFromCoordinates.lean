@@ -190,7 +190,7 @@ theorem dividedPowerFiltration_anti {a b : ℕ} (h : a ≤ b) : pdP δ b ≤ pdP
   Ideal.span_mono fun _ ⟨l, hl, hr, e⟩ => ⟨l, hl, h.trans hr, e⟩
 
 theorem dividedPowerFiltration_mul (a b : ℕ) : pdP δ a * pdP δ b ≤ pdP δ (a + b) := by
-  rw [pdP, pdP, Ideal.span_mul_span']
+  rw [pdP, pdP, Ideal.span_mul_span]
   refine Ideal.span_le.2 ?_
   rintro _ ⟨_, ⟨l, hl, hr, rfl⟩, _, ⟨l', hl', hr', rfl⟩, rfl⟩
   refine Ideal.subset_span ⟨l ++ l', ?_, ?_, ?_⟩
@@ -314,29 +314,29 @@ theorem etale_tensor {d : ℕ} (t : Fin d → G)
   let f : MvPolynomial (Fin d) O →+* G := MvPolynomial.eval₂Hom (algebraMap O G) t
   let g : MvPolynomial (Fin d) R →+* R ⊗[O] G :=
     MvPolynomial.eval₂Hom Algebra.TensorProduct.includeLeftRingHom (fun i => (1 : R) ⊗ₜ[O] t i)
-  letI a1 : Algebra (MvPolynomial (Fin d) O) G := f.toAlgebra
-  letI a2 : Algebra (MvPolynomial (Fin d) R) (R ⊗[O] G) := g.toAlgebra
-  letI a3 : Algebra (MvPolynomial (Fin d) O) (R ⊗[O] G) :=
+  let a1 : Algebra (MvPolynomial (Fin d) O) G := f.toAlgebra
+  let a2 : Algebra (MvPolynomial (Fin d) R) (R ⊗[O] G) := g.toAlgebra
+  let a3 : Algebra (MvPolynomial (Fin d) O) (R ⊗[O] G) :=
     (g.comp (MvPolynomial.map (algebraMap O R))).toAlgebra
-  letI a4 : Algebra G (R ⊗[O] G) := Algebra.TensorProduct.rightAlgebra
-  letI a5 : Algebra (MvPolynomial (Fin d) O) (MvPolynomial (Fin d) R) := MvPolynomial.algebraMvPolynomial
-  haveI t1 : IsScalarTower O (MvPolynomial (Fin d) O) G := .of_algebraMap_eq' (by
+  let a4 : Algebra G (R ⊗[O] G) := Algebra.TensorProduct.rightAlgebra
+  let a5 : Algebra (MvPolynomial (Fin d) O) (MvPolynomial (Fin d) R) := MvPolynomial.algebraMvPolynomial
+  have t1 : IsScalarTower O (MvPolynomial (Fin d) O) G := .of_algebraMap_eq' (by
     ext a
     simp [RingHom.algebraMap_toAlgebra, f, MvPolynomial.algebraMap_eq])
-  haveI t2 : IsScalarTower O (MvPolynomial (Fin d) O) (MvPolynomial (Fin d) R) := .of_algebraMap_eq' (by
+  have t2 : IsScalarTower O (MvPolynomial (Fin d) O) (MvPolynomial (Fin d) R) := .of_algebraMap_eq' (by
     ext a
     simp [MvPolynomial.algebraMap_eq, MvPolynomial.algebraMap_apply])
-  haveI t3 : IsScalarTower R (MvPolynomial (Fin d) R) (R ⊗[O] G) := .of_algebraMap_eq' (by
+  have t3 : IsScalarTower R (MvPolynomial (Fin d) R) (R ⊗[O] G) := .of_algebraMap_eq' (by
     ext a
     simp [RingHom.algebraMap_toAlgebra, g, MvPolynomial.algebraMap_eq])
-  haveI t4 : IsScalarTower O (MvPolynomial (Fin d) R) (R ⊗[O] G) := .of_algebraMap_eq' (by
+  have t4 : IsScalarTower O (MvPolynomial (Fin d) R) (R ⊗[O] G) := .of_algebraMap_eq' (by
     refine RingHom.ext fun a => ?_
     change _ = g (algebraMap O (MvPolynomial (Fin d) R) a)
     rw [MvPolynomial.algebraMap_apply]
     simp only [g, MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_C]
     rfl)
-  haveI t5 : IsScalarTower (MvPolynomial (Fin d) O) (MvPolynomial (Fin d) R) (R ⊗[O] G) := .of_algebraMap_eq' rfl
-  haveI t6 : IsScalarTower (MvPolynomial (Fin d) O) G (R ⊗[O] G) := .of_algebraMap_eq' (by
+  have t5 : IsScalarTower (MvPolynomial (Fin d) O) (MvPolynomial (Fin d) R) (R ⊗[O] G) := .of_algebraMap_eq' rfl
+  have t6 : IsScalarTower (MvPolynomial (Fin d) O) G (R ⊗[O] G) := .of_algebraMap_eq' (by
     refine MvPolynomial.ringHom_ext (fun a => ?_) fun i => ?_
     · change g (MvPolynomial.map _ (MvPolynomial.C a)) = (1 : R) ⊗ₜ[O] f (MvPolynomial.C a)
       simp only [g, f, MvPolynomial.map_C, MvPolynomial.coe_eval₂Hom, MvPolynomial.eval₂_C]
@@ -344,7 +344,7 @@ theorem etale_tensor {d : ℕ} (t : Fin d → G)
       rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one, TensorProduct.smul_tmul]
     · change g (MvPolynomial.map _ (MvPolynomial.X i)) = (1 : R) ⊗ₜ[O] f (MvPolynomial.X i)
       simp [g, f])
-  haveI t7 : IsScalarTower O G (R ⊗[O] G) := inferInstance
+  have t7 : IsScalarTower O G (R ⊗[O] G) := inferInstance
   have p1 : Algebra.IsPushout O (MvPolynomial (Fin d) O) R (MvPolynomial (Fin d) R) := inferInstance
   have p2 : Algebra.IsPushout O G R (R ⊗[O] G) := inferInstance
   have p3 := (Algebra.IsPushout.comp_iff O (MvPolynomial (Fin d) O) R (MvPolynomial (Fin d) R)
@@ -432,7 +432,7 @@ theorem rep_tensor (hstr : algebraMap O Γ(X, V) = strV q V)
   have hcomp : ∀ a, e' (algebraMap O Γ(X, V) a) = ψ' (κ a) := fun a => by
     rw [hstr]
     exact evalAt_base q κ ψ' y'.1.2 y'.2 hy' a
-  letI : Algebra O B' := (ψ'.comp κ).toAlgebra
+  let : Algebra O B' := (ψ'.comp κ).toAlgebra
   let f1 : R →ₐ[O] B' :=
     { ψ'.comp (Ideal.Quotient.mk I) with
       commutes' := fun a => by
@@ -491,10 +491,10 @@ theorem chart_exists : ∀ {O R : Type} [CommRing O] [CommRing R] [Algebra O R] 
     ∃ (c' : Chart γ 0 q κ V d) (e : R ⊗[O] Γ(X, V) ≃+* c'.D.B), TF l s c'.D ∧ (∀ r, e (r ⊗ₜ 1) = c'.D.i r) ∧
       (∀ i, e (1 ⊗ₜ c.t i) = c'.t i) ∧ ∀ f, ev c'.D c'.inV f = Ideal.Quotient.mk _ (e (1 ⊗ₜ f)) := by
   intro O R _ _ _ I γ l s hb X q κ hκ V d c
-  letI a0 : Algebra O Γ(X, V) := (strV q V).toAlgebra
+  let a0 : Algebra O Γ(X, V) := (strV q V).toAlgebra
   have hstr : algebraMap O Γ(X, V) = strV q V := rfl
   have hE : (MvPolynomial.eval₂Hom (algebraMap O Γ(X, V)) c.t : MvPolynomial (Fin d) O →+* Γ(X, V)).Etale := c.etale
-  haveI hF : Module.Flat O Γ(X, V) := flat_of_etale c.t hE
+  have hF : Module.Flat O Γ(X, V) := flat_of_etale c.t hE
   let iL : R →+* R ⊗[O] Γ(X, V) := Algebra.TensorProduct.includeLeftRingHom
   have hl : ∀ x : R ⊗[O] Γ(X, V), (l : R ⊗[O] Γ(X, V)) * x = 0 → x = 0 := fun x h => by
     have := tf_tensor (G := Γ(X, V)) (O := O) (pdP γ s) l (hb.tf s) x (by rw [h]; exact zero_mem _)

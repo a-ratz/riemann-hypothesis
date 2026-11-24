@@ -244,7 +244,7 @@ theorem eq_bot_or_eq_top : ∀ (K : Type) [Field K] (ι : Type) [Fintype ι] (n 
       · intro a S ha ih
         obtain ⟨T, hTW, hT⟩ := exists_elem lam H W hW a (i a) (j a)
         have h1 := hTW _ ih
-        rw [hT, if_pos (by simp [ha])] at h1
+        rw [hT, ite_eq_left (by simp [ha])] at h1
         convert h1 using 2
         funext τ
         by_cases h : τ = a
@@ -314,7 +314,7 @@ theorem GlobalTheory.cmType_family_extend : ∀ (L : Type) [Field L] [NumberFiel
   have v1 : ∀ τ, cmExtend emb g (emb τ) = g τ := by
     intro τ
     have h : ∃ τ', emb τ = emb τ' := ⟨τ, rfl⟩
-    simp only [cmExtend, dif_pos h]
+    simp only [cmExtend, dite_eq_left h]
     rw [hd.1 h.choose_spec.symm]
   have v2 : ∀ τ, cmExtend emb g ((emb τ).comp (IsCMField.complexConj L : L →+* L)) = tinv (g τ) := by
     intro τ
@@ -322,11 +322,11 @@ theorem GlobalTheory.cmType_family_extend : ∀ (L : Type) [Field L] [NumberFiel
       rintro ⟨τ', h⟩
       exact hd.2 τ' τ h.symm
     have h' : ∃ τ', (emb τ).comp (IsCMField.complexConj L : L →+* L) = (emb τ').comp (IsCMField.complexConj L : L →+* L) := ⟨τ, rfl⟩
-    simp only [cmExtend, dif_neg h, dif_pos h']
+    simp only [cmExtend, dite_eq_right h, dite_eq_left h']
     rw [hinj2 _ _ h'.choose_spec.symm]
   have v3 : ∀ σ, (¬ ∃ τ, σ = emb τ) → (¬ ∃ τ, σ = (emb τ).comp (IsCMField.complexConj L : L →+* L)) → cmExtend emb g σ = 1 := by
     intro σ h h'
-    simp only [cmExtend, dif_neg h, dif_neg h']
+    simp only [cmExtend, dite_eq_right h, dite_eq_right h']
   refine ⟨cmExtend emb g, ?_, v1⟩
   intro σ
   by_cases h : ∃ τ, σ = emb τ
@@ -536,7 +536,7 @@ theorem nontrivial : Nontrivial (nablaSq k N lam) :=
 theorem simple (hS : ∀ M : Submodule k (MvPolynomial (Fin N × Fin N) k), M ≤ nablaSq k N lam →
       (∀ g : GL (Fin N) k, ∀ f ∈ M, sqAct k N lam g f ∈ M) → M = ⊥ ∨ M = nablaSq k N lam) :
     IsSimpleModule (spanAlg k N lam) (nablaSq k N lam) := by
-  haveI := nontrivial k N lam
+  have := nontrivial k N lam
   refine { eq_bot_or_eq_top := fun S => ?_ }
   let M : Submodule k (MvPolynomial (Fin N × Fin N) k) :=
     (S.restrictScalars k).map (nablaSq k N lam).subtype
@@ -587,12 +587,12 @@ theorem schur [CharZero k] (hS : ∀ M : Submodule k (MvPolynomial (Fin N × Fin
     { carrier := {w | ψ w = c • w}
       add_mem' := by
         intro a b ha hb
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_add (f := _), ha, hb, smul_add]
       zero_mem' := by simp
       smul_mem' := by
         intro a x hx
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_smul, hx, spanAlg_smul, spanAlg_smul, map_smul] }
   have hK0 : h0 ∈ K := Subtype.ext hc
   have hK : K = ⊤ := by
@@ -608,8 +608,8 @@ theorem schur [CharZero k] (hS : ∀ M : Submodule k (MvPolynomial (Fin N × Fin
 theorem mem_spanAlg [CharZero k] (hS : ∀ M : Submodule k (MvPolynomial (Fin N × Fin N) k), M ≤ nablaSq k N lam →
       (∀ g : GL (Fin N) k, ∀ f ∈ M, sqAct k N lam g f ∈ M) → M = ⊥ ∨ M = nablaSq k N lam)
     (φ : Module.End k (nablaSq k N lam)) : φ ∈ spanAlg k N lam := by
-  haveI := simple k N lam hS
-  haveI := GlobalTheory.WeylDimGL.finiteDimensional_nablaSq k N lam
+  have := simple k N lam hS
+  have := GlobalTheory.WeylDimGL.finiteDimensional_nablaSq k N lam
   let F : Module.End (Module.End (spanAlg k N lam) (nablaSq k N lam)) (nablaSq k N lam) :=
     { toFun := φ
       map_add' := φ.map_add
@@ -863,8 +863,8 @@ theorem GlobalTheory.AlgWtF.tenRepF_isIrreducible : ∀ (L : Type) [Field L] [Nu
   have hsimple : ∀ W : Submodule K (Formalism.L2.DIV.VV K lam),
       (∀ g : ι → GL (Fin n) K, ∀ w ∈ W, Formalism.L2.DIV.rhoK lam g w ∈ W) → W = ⊥ ∨ W = ⊤ :=
     _root_.GlobalTheory.TensorIrr.eq_bot_or_eq_top K ι n lam (fun τ => _root_.GlobalTheory.NablaDensity.endo_eq_sum_sqAct K n (lam τ) (_root_.GlobalTheory.AlcZero.nablaSq_simple_charZero K n (lam τ)))
-  haveI hnt : Nontrivial (Formalism.L2.DIV.VV K lam) := _root_.GlobalTheory.CoeffSpace.nontrivial_VV K ι n lam
-  haveI : Nontrivial (Subrepresentation (GlobalTheory.AlgWtF.tenRepF emb lam)) := by
+  have hnt : Nontrivial (Formalism.L2.DIV.VV K lam) := _root_.GlobalTheory.CoeffSpace.nontrivial_VV K ι n lam
+  have : Nontrivial (Subrepresentation (GlobalTheory.AlgWtF.tenRepF emb lam)) := by
     refine ⟨⟨⊥, ⊤, fun h => ?_⟩⟩
     have h' := congrArg Subrepresentation.toSubmodule h
     obtain ⟨x, hx⟩ := exists_ne (0 : Formalism.L2.DIV.VV K lam)

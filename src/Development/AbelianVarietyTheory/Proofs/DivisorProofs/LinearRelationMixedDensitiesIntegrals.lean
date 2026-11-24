@@ -95,7 +95,7 @@ theorem GlobalTheory.Mix.sum_int_eq_zero_of_dens : ∀ (k : Type) [CommRing k] (
         ENNReal.ofReal (w j) * ENNReal.ofReal (-1 * dens (N j) c (c.e.symm v))) (volume.restrict (c.e '' A)) :=
       fun j _ => ((hm j 1).const_mul _).add ((hm j (-1)).const_mul _)
     rw [lintegral_finsetSum' _ hm2]
-    simp only [μ, Measure.coe_finsetSum, Finset.sum_apply, Measure.add_apply, Measure.smul_apply, smul_eq_mul]
+    simp only [μ, FunLike.coe_sum, Finset.sum_apply, add_apply, smul_apply, smul_eq_mul]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [lintegral_add_left' ((hm j 1).const_mul _), lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
       lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, hP, hP]
@@ -108,7 +108,7 @@ theorem GlobalTheory.Mix.sum_int_eq_zero_of_dens : ∀ (k : Type) [CommRing k] (
     have h0 : ∀ j (ε : ℤˣ), P j ε Uᶜ = 0 := fun j ε =>
       GlobalTheory.Mix.part_eq_zero_off_charts (N j) ε hUo.measurableSet.compl fun c =>
         Set.disjoint_compl_right_iff_subset.2 (Set.subset_iUnion (fun c : AlgChart p σ D => c.e.source) c)
-    simp [μ, Measure.coe_finsetSum, Finset.sum_apply, Measure.add_apply, Measure.smul_apply, h0]
+    simp [μ, FunLike.coe_sum, Finset.sum_apply, add_apply, smul_apply, h0]
 
   have hbal : μ ap an = μ an ap := by
     obtain ⟨T, hTc, hT⟩ := TopologicalSpace.isOpen_iUnion_countable (fun c : AlgChart p σ D => c.e.source)

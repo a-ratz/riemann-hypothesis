@@ -126,17 +126,17 @@ theorem cntI_nonzero_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   intro F E _ _ _ _ _ σ hCM M J hJ hM μ 𝓕 hH hFD Ω hΩ
   classical
   obtain ⟨⟨hAlc, hAsc, hAt2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := hAlc
-  haveI := hAsc
-  haveI := hAt2
+  have := hAlc
+  have := hAsc
+  have := hAt2
   obtain ⟨hTG, -, -, -, hBor, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
-  haveI := hTG
-  haveI := hBor
+  have := hTG
+  have := hBor
   obtain ⟨-, -, -, hKt2, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := hKt2
-  haveI : Countable E :=
+  have := hKt2
+  have : Countable E :=
     ((Module.finBasis ℚ E).equivFun.toEquiv).injective.countable
-  haveI : FiniteDimensional F E :=
+  have : FiniteDimensional F E :=
     Module.finite_of_finrank_pos (by rw [hCM.2.2.1]; norm_num)
   have hcl : IsClosed Ω := hΩ.isClosed
   set Φ : (Fin 1 → Fin M → AF F ⊗[F] E) → ℝ≥0∞ := Set.indicator Ω (fun _ => (1 : ℝ≥0∞)) with hΦ
@@ -373,7 +373,7 @@ theorem small_length : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     rw [hc, gramR_smul, h1, hsq, hc]
     rfl
   have hle := hcount (-(2 * x))
-  rw [if_pos hx] at hle
+  rw [ite_eq_left hx] at hle
   have h1 := (ENNReal.le_tsum X₀).trans hle
   rw [Set.indicator_of_mem hmem] at h1
   simp at h1
@@ -431,12 +431,12 @@ theorem real_bound {C₁ C₂ x y z : ℝ} (hx : 0 ≤ x) (hy : 0 ≤ y) (hz : 0
 theorem mean_count_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 3 ≤ M → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (μ : Measure (HA (AF F) σ J)) (𝓕 : Set (HA (AF F) σ J)), IsHaarH F E σ M J μ → IsFDH F E σ M J μ 𝓕 → ∀ N : ℕ, 0 < N → ∃ C : ℝ, ∀ r : ℝ, 0 < r → thetaMeas σ J μ 𝓕 {X : Fin 1 → Fin M → E | X ≠ 0} {X | (∀ v, (fun a i => (N : Fv F v ⊗[F] E) * projV v (projFin X) a i) ∈ latV b v) ∧ sizeTup b (projInf X) ≤ r} ≤ ENNReal.ofReal (C * (r ^ (Module.finrank ℚ F * M) + r ^ (2 * Module.finrank ℚ F * M))) := by
   intro F E _ _ _ _ _ σ hCM M J hJ hM d b μ 𝓕 hμ h𝓕 N hN
   obtain ⟨⟨lcA, scA, t2A⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI := lcA
-  haveI := scA
-  haveI := t2A
+  have := lcA
+  have := scA
+  have := t2A
   obtain ⟨-, -, -, t2K, -, -, -, borelK, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := t2K
-  haveI := borelK 1 M
+  have := t2K
+  have := borelK 1 M
   have hact := (_root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F))
   have hgram : ∀ (h : HA (AF F) σ J) (X : Fin 1 → Fin M → AF F ⊗[F] E),
       gramR (AF F) σ J (actW (AF F) σ J h X) = gramR (AF F) σ J X :=
@@ -505,7 +505,7 @@ theorem mean_count_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
           · rw [Set.indicator_of_notMem (show X ∉ {X : Fin 1 → Fin M → E | X ≠ 0} from hX),
               Set.indicator_of_notMem
                 (show X ∉ {X : Fin 1 → Fin M → E | X ≠ 0 ∧ gramE σ J X = 0} from fun h' => hX h'.1)]
-        · simp only [Set.indicator, hB, if_false, ite_self]
+        · simp only [Set.indicator, hB, ite_false, ite_self]
       rw [heq]
       refine (hC₁ r hr).trans (ENNReal.ofReal_le_ofReal ?_)
       have hexp : Module.finrank ℚ F * M ≤ 2 * Module.finrank ℚ F * (M - 1) := by

@@ -179,9 +179,9 @@ theorem UpperTheory.V.Z.GSp4Splitting.rlFin :
   intro E _ _ _ n _ π _ K hK _ _ _ _ μf _ D M
   choose c hc using cap_scalar π
   let W := box fun w => LinearMap.range (coef (M w))
-  haveI : FiniteDimensional ℂ W := box_fin _
-  haveI := wl_fin W
-  haveI := PositivityTheory.Rg.HF.GL.automorphicFormsFiniteGL E n K hK _ (sig W) (sig_cont W) c
+  have : FiniteDimensional ℂ W := box_fin _
+  have := wl_fin W
+  have := PositivityTheory.Rg.HF.GL.automorphicFormsFiniteGL E n K hK _ (sig W) (sig_cont W) c
   let j : D.U →ₗ[ℂ] Sm E n := π.V.subtype ∘ₗ D.i
   have hj : Function.Injective j := π.V.injective_subtype.comp D.inj
   have hm : ∀ u ∈ (⨅ w, isoSp (D.σ w) (M w) : Submodule ℂ D.U),

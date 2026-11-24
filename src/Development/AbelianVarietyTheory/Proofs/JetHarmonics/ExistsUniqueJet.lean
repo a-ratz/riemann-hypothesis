@@ -130,8 +130,8 @@ theorem exists_lie_coordinates (hJ : JetAlgSt) (hD : DLinSt) {V O : Type} [CommR
       ∀ (u : G ⟶ G) [IsMonHom u] (ut : Gt ⟶ Gt) (α : Pt V 1 d), IsMapOf x x u α → (∀ w, J (w ≫ ut) = J w ≫ u) →
         ∀ (b : Fin d → O) (a : O), ((dLin α).map f).mulVec b = a • b →
           (tv b).1 ≫ ut = ptMap (dualScale a) ≫ (tv b).1 := by
-  letI : Algebra V O := f.toAlgebra
-  letI alg : Algebra V (DualNumber O) := ((algebraMap O (DualNumber O)).comp f).toAlgebra
+  let : Algebra V O := f.toAlgebra
+  let alg : Algebra V (DualNumber O) := ((algebraMap O (DualNumber O)).comp f).toAlgebra
   haveI tow : @IsScalarTower V O (DualNumber O) _ _ alg.toSMul :=
     IsScalarTower.of_algebraMap_eq (R := V) (S := O) (A := DualNumber O) fun _ => rfl
   let j := Spec.map (CommRingCat.ofHom (algebraMap V O))

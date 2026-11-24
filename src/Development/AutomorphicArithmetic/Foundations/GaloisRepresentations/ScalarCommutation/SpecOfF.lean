@@ -440,7 +440,7 @@ private theorem abs_main (hK : IsCommensurated K₁) :
   classical
   let T : (H₁ → ℂ) → Module.End ℂ (HeckeTraceForms.forms ι (K₁.prod K₂) ξ) := fun f =>
     if h : f ∈ Hecke ℂ K₁ then act ι K₁ K₂ ξ hK h else 0
-  have hT : ∀ f (h : f ∈ Hecke ℂ K₁), T f = act ι K₁ K₂ ξ hK h := fun f h => dif_pos h
+  have hT : ∀ f (h : f ∈ Hecke ℂ K₁), T f = act ι K₁ K₂ ξ hK h := fun f h => dite_eq_left h
   have hTa : ∀ f (h : f ∈ Hecke ℂ K₁) Φ, (T f Φ : H₁ × H₂ → V) = hActK K₁ f Φ := fun f h Φ => by rw [hT f h]; rfl
   refine ⟨T, ?_, fun f hf => ⟨hTa f hf, ?_, fun f' hf' => ⟨?_, fun c => ?_⟩⟩⟩
   · apply LinearMap.ext
@@ -452,7 +452,7 @@ private theorem abs_main (hK : IsCommensurated K₁) :
   · have hI := act_isHecke (ι := ι) (K₂ := K₂) (ξ := ξ) hK hf
     have hex : ∃ T', HeckeTraceForms.IsHecke ι (K₁.prod K₂) ξ
         (fun h => f h.1 * Set.indicator (K₂ : Set H₂) (1 : H₂ → ℂ) h.2) T' := ⟨_, hI⟩
-    rw [HeckeTraceForms.heckeTrace, dif_pos hex, hT f hf]
+    rw [HeckeTraceForms.heckeTrace, dite_eq_left hex, hT f hf]
     congr 1
     apply LinearMap.ext
     intro Φ
@@ -499,7 +499,7 @@ private theorem comm_of_open {H : Type} [Group H] [TopologicalSpace H] [IsTopolo
     rw [Subgroup.coe_map]
     exact ((Homeomorph.mulLeft g).trans (Homeomorph.mulRight g⁻¹)).isOpenMap _ ho
   have h2 : IsOpen (((K.map (MulAut.conj g).toMonoidHom).subgroupOf K : Subgroup K) : Set K) :=
-    h1.preimage continuous_subtype_val
+    h1.preimage continuous_subtypeVal
   have := Subgroup.quotient_finite_of_isOpen _ h2
   exact Subgroup.index_ne_zero_iff_finite.2 this
 
@@ -557,7 +557,7 @@ private theorem finite_cosets (hK : K.map e.toMonoidHom = K₀.prod K') (o₀ : 
   have oU : IsOpen ((K₀.prod K' : Subgroup (A × H)) : Set (A × H)) := by
     rw [Subgroup.coe_prod]
     exact o₀.prod o'
-  haveI := QuotientGroup.discreteTopology oU
+  have := QuotientGroup.discreteTopology oU
   obtain ⟨D, hD, hsupp⟩ := compact_hull e hK c₀ c' ha
   have hT : (((↑) : A × H → (A × H) ⧸ K₀.prod K') '' D).Finite :=
     (hD.image QuotientGroup.continuous_mk).finite_of_discrete
@@ -685,7 +685,7 @@ private theorem noConst_lin (hK : K.map e.toMonoidHom = K₀.prod K') (o₀ : Is
     (Cf : ∀ h : H, NoConst fun g => f (e.symm (g, h))) (Cf' : ∀ h : H, NoConst fun g => f' (e.symm (g, h)))
     (h' : H) : NoConst fun g => (c • f + f') (e.symm (g, h')) := by
   intro a b ε ha hb μ hμ u hu g h
-  haveI := hμ
+  have := hμ
   have i1 := hecke_integrable e hK o₀ c₀ c' hf h' ε μ u hu g h
   have i2 := hecke_integrable e hK o₀ c₀ c' hf' h' ε μ u hu g h
   simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
@@ -699,7 +699,7 @@ private theorem noConst_conv (hK : K.map e.toMonoidHom = K₀.prod K') (o₀ : I
     (Cf : ∀ h : H, NoConst fun g => f (e.symm (g, h))) (h' : H) :
     NoConst fun g => Formalism.UG.conv K α f (e.symm (g, h')) := by
   intro a b ε ha hb μ hμ u hu g h
-  haveI := hμ
+  have := hμ
   have hS := finite_cosets e hK o₀ o' c₀ c' hα
   have key : ∀ y : GL (Fin n) k, Formalism.UG.conv K α f (e.symm (y, h')) =
       ∑ q ∈ hS.toFinset, α q.out * f (e.symm ((e q.out⁻¹).1 * y, (e q.out⁻¹).2 * h')) := by
@@ -709,7 +709,7 @@ private theorem noConst_conv (hK : K.map e.toMonoidHom = K₀.prod K') (o₀ : I
     · refine Finset.sum_congr rfl fun q _ => ?_
       rw [left_mul e]
     · intro q hq
-      simp only [Function.mem_support, Set.Finite.coe_toFinset, Set.mem_setOf_eq] at hq ⊢
+      simp only [Function.mem_support, Set.Finite.coe_toFinset, Set.mem_ofPred_eq] at hq ⊢
       exact left_ne_zero_of_mul hq
   simp only [key]
   rw [integral_finsetSum]
@@ -727,7 +727,7 @@ end Main
 
 theorem cuspIdeal : CuspIdeal := by
   intro p _ G _ Lv k _ _ _ _ _ _ _ P H _ _ _ _ S k₁ _ _ P₁
-  haveI : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
+  have : SecondCountableTopology k := GlobalTheory.SplitWeil.secondCountable k
   refine ⟨fun a ha f hf Cf h' => ?_, fun h' => ?_, fun f hf f' hf' c Cf Cf' h' => ?_⟩
   · exact noConst_conv S.e S.map_eq S.open₀ S.open' S.cpt₀ S.cpt' ha hf Cf h'
   · intro a b ε ha hb μ hμ u hu g h
@@ -1300,7 +1300,7 @@ private theorem twisted_centralizer_commutative {G : HTGroup p} (β : G.Cˣ) (y 
     ∀ b ∈ twCent (MonoidHom.id (Gr G 1)) (toP1 G β y), a * b = b * a := by
   have hrho : ∀ w, (G.rho w ((y.1.1 : G.Cˣ) : G.C)).charpoly.Separable := by
     intro w
-    letI : Algebra G.F (G.Fw w) := (G.embW w).toAlgebra
+    let : Algebra G.F (G.Fw w) := (G.embW w).toAlgebra
     have hg : ∀ a, G.rho w (algebraMap G.F G.C a) = algebraMap G.F (Matrix (Fin G.n) (Fin G.n) (G.Fw w)) a :=
       fun a => by rw [G.rho_F, Matrix.algebraMap_eq_diagonal]; rfl
     let g : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) (G.Fw w) := { G.rho w with commutes' := hg }
@@ -1535,7 +1535,7 @@ private theorem forms_fin {Γ H V : Type} [Group Γ] [Group H] [AddCommGroup V] 
     (ι : Γ →* H) (K : Subgroup H) (ξ : Representation ℂ Γ V)
     (hf : Finite (DoubleCoset.Quotient (ι.range : Set H) (K : Set H))) :
     FiniteDimensional ℂ (HeckeTraceForms.forms ι K ξ) := by
-  haveI := hf
+  have := hf
   obtain ⟨r, hr⟩ : ∃ r : DoubleCoset.Quotient (ι.range : Set H) (K : Set H) → H, ∀ g : H,
       ∃ γ : Γ, ∃ k ∈ K, g = ι γ * r (DoubleCoset.mk ι.range K g) * k := by
     refine ⟨fun q => Quotient.out q, fun g => ?_⟩
@@ -1581,10 +1581,10 @@ theorem UpperTheory.Gal.Spc.specOfF :
     fun n => (hW n).2.1
   obtain ⟨hCi, hC0, hCl⟩ := cuspIdeal p G hGa Lv k P H S k₁ P₁
   obtain ⟨q₀, Φ₀, hΦ₀, hne, hΦe, hΦψ⟩ := clsMove p G V ξ Lv.K.toSubgroup J ψ θ e hEig
-  letI : Fintype (DFCls G) := Fintype.ofFinite _
+  let : Fintype (DFCls G) := Fintype.ofFinite _
   have hop := fun q : DFCls G => opAlg p G Lv V ξ (Quot.out q)
   choose T hT0 hT using hop
-  haveI hfd' : ∀ q : DFCls G, FiniteDimensional ℂ (HeckeTraceForms.forms (Quot.out q).emb (Lv.K.toSubgroup.prod (Kp G))
+  have hfd' : ∀ q : DFCls G, FiniteDimensional ℂ (HeckeTraceForms.forms (Quot.out q).emb (Lv.K.toSubgroup.prod (Kp G))
       (ξ.comp (grp G (Quot.out q).β).subtype)) := fun q =>
     forms_fin (Quot.out q).emb _ _ (GlobalTheory.T.finite_doubleCoset_definiteHermitianForm_level p G hGa Lv (Kp G) (Subgroup.Commensurable.refl _) (Quot.out q))
   have hmul : ∀ q, ∀ f ∈ Hecke ℂ Lv.K.toSubgroup, ∀ f' ∈ Hecke ℂ Lv.K.toSubgroup,

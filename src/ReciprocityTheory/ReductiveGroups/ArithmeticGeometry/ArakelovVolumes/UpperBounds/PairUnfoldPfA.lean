@@ -116,7 +116,7 @@ theorem lact_mem_dom_iff {γ : GL (Fin r) E} (hγ : γ ∈ X.Γ) (x : Frame X.Ψ
     lact γ x ∈ X.dom ↔ x ∈ X.dom := by
   have hd : ∀ τ : X.Ψ, τ.1 (γ : Matrix (Fin r) (Fin r) E).det ≠ 0 := fun τ =>
     (map_ne_zero τ.1).mpr (Matrix.isUnits_det_units γ).ne_zero
-  simp only [GG, Set.mem_setOf_eq]
+  simp only [GG, Set.mem_ofPred_eq]
   refine forall_congr' fun τ => and_congr ?_ (forall_congr' fun i => by rw [dmin_lact X hγ])
   rw [det_lact]
   exact ⟨fun h => right_ne_zero_of_mul h, fun h => mul_ne_zero (hd τ) h⟩
@@ -176,7 +176,7 @@ theorem bchar_ne {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (la : Wt X.Ψ r) : b
   refine Finset.prod_ne_zero_iff.mpr fun τ _ => Finset.prod_ne_zero_iff.mpr fun i _ => zpow_ne_zero _ ?_
   obtain ⟨hdet, htri⟩ := hb' τ
   have hbt : (mat b τ).BlockTriangular id := fun a c hca => htri a c hca
-  rw [Matrix.det_of_upperTriangular hbt] at hdet
+  rw [Matrix.det_of_isUpperTriangular hbt] at hdet
   exact (Finset.prod_ne_zero_iff.mp hdet) i (Finset.mem_univ _)
 
 variable {X} {x0 : Frame X.Ψ r} (D : ExtFPf.LUData X x0) (FF : Set (V (nd X)))
@@ -209,7 +209,7 @@ theorem T_meas (hFF : MeasurableSet FF) : MeasurableSet (T D FF) := by
     D.hz.continuousOn.measurable_piecewise continuousOn_const hU.measurableSet
   have hT : T D FF = U ∩ (U.piecewise D.zOf fun _ => 0) ⁻¹' FF := by
     ext x
-    simp only [T, U, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage]
+    simp only [T, U, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage]
     constructor
     · rintro ⟨h1, h2, h3⟩
       exact ⟨⟨h1, h2⟩, by rw [Set.piecewise_eq_of_mem _ _ _ (show x ∈ U from ⟨h1, h2⟩)]; exact h3⟩
@@ -241,7 +241,7 @@ private lemma inv_mat_apply_mem_bor {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
     ∀ a c : Fin r, c < a → ((mat b τ)⁻¹ : Matrix (Fin r) (Fin r) ℂ) a c = 0
   intro τ
   obtain ⟨d1, t1⟩ := h1' τ
-  haveI := (mat b τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.mpr d1)
+  have := (mat b τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.mpr d1)
   have ht : ((mat b τ)⁻¹).BlockTriangular id :=
     Matrix.blockTriangular_inv_of_blockTriangular (fun a c h => t1 a c h)
   refine ⟨?_, fun a c h => ht h⟩
@@ -261,7 +261,7 @@ private lemma rmul_rmul_inv_mat {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (x : 
 
 theorem T_rmul {x b : Frame X.Ψ r} (hx : x ∈ X.dom) (hb : b ∈ Bor X.Ψ r) :
     rmul x b ∈ T D FF ↔ x ∈ T D FF := by
-  simp only [T, Set.mem_setOf_eq]
+  simp only [T, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hd, hΔ, hF⟩
     obtain ⟨hzO, hbO, hs⟩ := D.split _ hd hΔ
@@ -293,7 +293,7 @@ theorem T_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) : cpt X x0 z ∈ T D FF ↔ z
     exact Matrix.mul_one _
   obtain ⟨hΔ, hzO, -⟩ := D.uniq z hz _ h1
   rw [hr] at hΔ hzO
-  simp only [T, Set.mem_setOf_eq, hzO]
+  simp only [T, Set.mem_ofPred_eq, hzO]
   exact ⟨fun h => h.2.2, fun h => ⟨hz, hΔ, h⟩⟩
 
 theorem T_rmul_cpt {z : V (nd X)} (hz : z ∈ OmF X x0) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :

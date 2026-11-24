@@ -147,16 +147,16 @@ theorem eigen_kill_set (h : IsCMExt F E σ) (hψ : IsStd ψ) (hX : X.J.det ≠ 0
   · obtain ⟨φ', h', e⟩ := key
     rw [← hb.2.1 h'.1 hφ e]
     exact h'.2
-  simp only [Set.mem_setOf_eq, not_forall] at hY
+  simp only [Set.mem_ofPred_eq, not_forall] at hY
   obtain ⟨⟨u, c⟩, ha, hne⟩ := hY
   obtain ⟨hu, h1⟩ := hA _ ha
   let m : Matrix (Fin n) (Fin d) (Fv F v) → ℂ := fun y => ψ (sy σ X W (xo y) u)
   have hm : ∀ φ ∈ SB (Fin n × Fin d → Fv F v), ι (locRho M ψ v u φ) = fun y => m y * ι φ y := fun φ hφ => funext fun y => by
     have := mult' M hψ hι hu h1 (a1 y) (a2 y) hφ
     rwa [a3] at this
-  haveI : T2Space (Matrix (Fin n) (Fin d) (Fv F v)) := inferInstanceAs (T2Space (Fin n → Fin d → Fv F v))
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin d) (Fv F v)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → Fv F v))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
+  have : T2Space (Matrix (Fin n) (Fin d) (Fv F v)) := inferInstanceAs (T2Space (Fin n → Fin d → Fv F v))
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin d) (Fv F v)) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → Fv F v))
+  have : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin d → Fv F v))
   refine ⟨m, c, lc_of_mul m fun Φ hΦ => ?_, hne, fun Φ hΦ => ?_⟩
   · obtain ⟨φ', h', rfl⟩ := hb.2.2 hΦ

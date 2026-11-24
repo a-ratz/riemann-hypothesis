@@ -89,11 +89,11 @@ theorem exists_bound {l : ℕ} [Fact l.Prime] {O K : Type} [CommRing O] [Algebra
   let m : Ideal O :=
     { carrier := {c | ‖algebraMap O K c‖ < 1}
       add_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at *
         exact (IsUltrametricDist.norm_add_le_max _ _).trans_lt (max_lt hx hy)
       zero_mem' := by simp
       smul_mem' := fun r x hx => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul, norm_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul, norm_mul] at *
         exact (mul_le_of_le_one_left (norm_nonneg _) (norm_algebraMap_le r)).trans_lt hx }
   obtain ⟨s, hs⟩ := (IsNoetherian.noetherian m : m.FG)
   refine ⟨(s.sup fun g => ‖algebraMap O K g‖₊ : NNReal), NNReal.coe_nonneg _, ?_, fun c hc => ?_⟩
@@ -241,7 +241,7 @@ theorem phiModuleHom_shortExact_split_wittTilt {l : ℕ} [Fact l.Prime] {a : ℕ
     rintro ⟨y, hy⟩
     obtain ⟨x, hx, hxy⟩ := hS.2.2.1 y hy
     exact ⟨⟨x, hx⟩, Subtype.ext hxy⟩
-  haveI : Module.Free O ↥T₂.L.T := T₂.L.free
+  have : Module.Free O ↥T₂.L.T := T₂.L.free
   obtain ⟨s, hs⟩ := Module.projective_lifting_property g₁ LinearMap.id hg₁s
   have hs' : ∀ y, g₁ (s y) = y := fun y => LinearMap.congr_fun hs y
   have hf₁i : Function.Injective f₁ := fun x y h => Subtype.ext (hS.1 (congrArg Subtype.val h))
@@ -533,7 +533,7 @@ theorem isExactTriple_of_isSESLat_gen {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero
         have := congrFun (hW (Pi.single j 1)) i
         rw [homW_apply, homW_apply, Matrix.mulVec_mulVec] at this
         simp only [Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-          Finset.sum_ite_eq', Finset.mem_univ, if_true, Pi.zero_apply] at this
+          Finset.sum_ite_eq', Finset.mem_univ, ite_true, Pi.zero_apply] at this
         rw [Matrix.map_mul]
         exact this
       have hz : Ht * Ft = 0 := Matrix.map_injective hφ (hM.trans (Matrix.map_zero _ (map_zero φ)).symm)

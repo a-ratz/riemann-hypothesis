@@ -103,7 +103,7 @@ theorem comb_single (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (z : WO S T) 
     comb ψ S T (Finsupp.single z c) f = c • heisO ψ S T z f := by
   by_cases hc : c = 0
   · subst hc; simp [comb]
-  · simp [comb, Finsupp.support_single_ne_zero _ hc]
+  · simp [comb, Finsupp.support_single _ hc]
 
 theorem symplOH_zero_right (S T : HSp D) (w : WO S T) : symplOH S T w 0 = 0 := by
   simp [symplOH, symplO, hO]
@@ -143,7 +143,7 @@ theorem mul_invLine {L L'' : HSp D} (τ : Matrix (Fin L.rank) (Fin L''.rank) D.h
     have hg : L''.gram = 0 := by
       have := hτ.symm
       rwa [smul_eq_zero, or_iff_right hc] at this
-    haveI : Nonempty (Fin L''.rank) := ⟨k0⟩
+    have : Nonempty (Fin L''.rank) := ⟨k0⟩
     exact Formalism.L2.Theta.gram_det_ne L'' (by rw [hg, Matrix.det_zero])
   funext i j
   rw [hsub j i, Matrix.one_apply_eq, Matrix.mul_apply, Finset.sum_eq_single k0 (fun b _ hb => absurd (hsub'' b k0) hb)

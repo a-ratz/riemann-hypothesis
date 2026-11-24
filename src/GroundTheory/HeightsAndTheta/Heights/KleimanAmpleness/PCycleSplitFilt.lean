@@ -254,16 +254,16 @@ theorem CycleSplit.proof (hF : CycleSplit.Filt.Statement.{u, w}) (hCu : CycleSpl
     · rw [← hGe]; exact hG
     · exfalso
       have : G.IsPrime := hG.1.1
-      obtain ⟨f, hfp, hfG⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hGle hGe)
+      obtain ⟨f, hfp, hfG⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hGle hGe)
       exact withBot_not_succ_le hsv.dim (ringKrullDim_quot_succ_le hGle hfp hfG) (hdim G hG)
 
   have hpiece : ∀ j, ∀ᶠ c : ℕ in atTop, interSum (pp j) ![M.toSubSystem] c = v (pp j) := by
     intro j
     obtain ⟨hjp, hjh, hJj⟩ := hpp j
     by_cases hsv : IsSubvar x (pp j) 1
-    · simp only [v, if_pos hsv]
+    · simp only [v, ite_eq_left hsv]
       exact hCu S Ω N x M 𝔪 h𝔪 (pp j) hsv (hJm.trans hJj)
-    · simp only [v, if_neg hsv]
+    · simp only [v, ite_eq_right hsv]
       by_cases hrel : ∃ i, (X i : Poly S N) ∉ pp j
       · refine hSm S Ω N x M 𝔪 h𝔪 (pp j) hjp hjh (hJle.trans hJj) (hJm.trans hJj) ?_
         exact withBot_le_one_of_le_two (hdimj j) fun h => hsv ⟨hjp, hjh, hJle.trans hJj, hrel, h⟩
@@ -298,10 +298,10 @@ theorem CycleSplit.proof (hF : CycleSplit.Filt.Statement.{u, w}) (hCu : CycleSpl
     · have hm := hmin j hsv
       have : (pp j).IsPrime := (hpp j).1
       rw [dite_eq_left ⟨hm, hsv⟩, nsmul_eq_mul]
-      simp only [v, if_pos hsv]
+      simp only [v, ite_eq_left hsv]
       rw [← hcount (pp j) hm, ENat.toNat_natCast]
     · rw [dite_eq_right fun h => hsv h.2]
-      simp only [v, if_neg hsv, smul_zero]
+      simp only [v, ite_eq_right hsv, smul_zero]
   · intro G hG
     rw [Function.mem_support] at hG
     split_ifs at hG with h

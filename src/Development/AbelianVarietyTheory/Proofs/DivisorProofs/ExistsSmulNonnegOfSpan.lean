@@ -105,8 +105,8 @@ theorem mem_span_of_smul_mem {S : Set R} {t : K} (ht : t ≠ 0) {f : R} (hf : t 
   rwa [smul_smul, inv_mul_cancel₀ ht, one_smul] at this
 
 theorem exists_prime_mem (la : HeightOneSpectrum (𝓞 K)) : ∃ ℓ : ℕ, ℓ.Prime ∧ (ℓ : 𝓞 K) ∈ la.asIdeal := by
-  haveI : Finite (𝓞 K ⧸ la.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ la.ne_bot
-  haveI := la.isPrime
+  have : Finite (𝓞 K ⧸ la.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ la.ne_bot
+  have := la.isPrime
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 K ⧸ la.asIdeal)
   refine ⟨p, (CharP.char_is_prime_or_zero (𝓞 K ⧸ la.asIdeal) p).resolve_right
     (CharP.char_ne_zero_of_finite (𝓞 K ⧸ la.asIdeal) p), ?_⟩
@@ -289,7 +289,7 @@ theorem exists_smul_nonneg_large (D : D7) (T : Core D) (h : LawsM T) (j : ℕ) (
     refine GlobalTheory.mem_span_of_map_mem_span_image (Formalism.L2.PjFree.rdU (Formalism.L2.PjFree.Unf.ofPj (T.U j T.σ₀)))
       (sec (T.Q.Xo j) T.Q.c a n) hind (shortGen (T.Q.Xo j) T.Q.c nab b 0 a n d)
       (fun g hg => hg.1) hf'.1 (hsp ?_)
-    exact ⟨hf'.2 _ T.good_σ₀, fun k x hx => dif_neg hx⟩
+    exact ⟨hf'.2 _ T.good_σ₀, fun k x hx => dite_eq_right hx⟩
   · obtain ⟨hsec, Λ, N, x0, P, hUn, hTb, hTM, hN, -, hPl, hR⟩ := hg
     obtain ⟨inst, hnab⟩ := hnab
     obtain ⟨t, ht, hb'⟩ := exists_smul_nonneg_of_shortRule D _ _ _ (T.Q.Xo j) T.Q.c n d hlev hnab

@@ -144,7 +144,7 @@ theorem levJ_open_compact (G : GridData L sc) {μ0 : T} (hL : L.Is μ0) (t : T) 
   any_goals first | exact hc | exact hm
   by_cases hj : j + 1 < D.R.m
   · exact key _ _ _ _ _ _ (colY_lt L hj) (levCol_lt L t hj)
-  · exact key _ _ _ _ _ _ (if_neg hj) (levCol_top L t hj)
+  · exact key _ _ _ _ _ _ (ite_eq_right hj) (levCol_top L t hj)
 
 theorem exists_vol (G : GridData L sc) {μ0 : T} (hL : L.Is μ0) (t : T) : ∃ M : Vol G, M.Is t := by
   have H : ∀ X : Node, ∃ μ 𝓕, X.InRange D.R.m → if X.neg D.R.m = 0 then IsMeasDef (G.V X) (levJ G t X) μ 𝓕

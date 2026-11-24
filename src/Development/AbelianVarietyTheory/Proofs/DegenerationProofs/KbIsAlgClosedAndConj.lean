@@ -87,16 +87,16 @@ theorem charP_kb : CharP (kb p) p :=
   (CharP.charP_iff_prime_eq_zero Fact.out).2 GlobalTheory.ZH.natCast_residueField_OO
 
 theorem exists_pow_eq_one_kb (x : kb p) (hx : x ≠ 0) : ∃ n : ℕ, 1 ≤ n ∧ x ^ n = 1 := by
-  haveI := charP_kb (p := p)
-  letI := ZMod.algebra (kb p) p
+  have := charP_kb (p := p)
+  let := ZMod.algebra (kb p) p
   have h : (algebraMap (ZMod p) (kb p)).IsIntegral := by
     refine RingHom.IsIntegral.tower_top (Int.castRingHom (ZMod p)) _ ?_
     rw [RingHom.ext_int (RingHom.comp _ _) (Int.castRingHom _)]
     exact GlobalTheory.ZH.isIntegral_int_residueField_OO
   have h' : IsIntegral (ZMod p) x := h x
   let K := IntermediateField.adjoin (ZMod p) {x}
-  haveI : FiniteDimensional (ZMod p) K := IntermediateField.adjoin.finiteDimensional h'
-  haveI : Finite K := Module.finite_of_finite (ZMod p)
+  have : FiniteDimensional (ZMod p) K := IntermediateField.adjoin.finiteDimensional h'
+  have : Finite K := Module.finite_of_finite (ZMod p)
   let y : K := ⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩
   have hy : y ≠ 0 := fun h0 => hx (congrArg Subtype.val h0)
   obtain ⟨n, hn, e⟩ := (isOfFinOrder_of_finite (Units.mk0 y hy)).exists_pow_eq_one

@@ -81,7 +81,7 @@ namespace Formalism.IncomingBounds
 
 theorem padicValFactorialBounds : FactValBounds := by
   intro l hl N hN
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have key := Nat.Prime.sub_one_mul_multiplicity_factorial (n := N) hl
   rw [← Nat.padicValNat_def] at key
   have hsN : (l.digits N).sum ≤ N := Nat.digit_sum_le l N
@@ -93,7 +93,7 @@ theorem padicValFactorialBounds : FactValBounds := by
     omega
   have hdig : (l.digits N).sum ≤ (Nat.log l N + 1) * (l - 1) := by
     have hlen := Nat.length_digits l N hl.one_lt (by omega)
-    have := List.sum_le_card_nsmul (l.digits N) (l - 1)
+    have := List.sum_le_length_nsmul (l.digits N) (l - 1)
       (fun x hx => by have := Nat.digits_lt_base hl.one_lt hx; omega)
     rwa [smul_eq_mul, hlen] at this
   have hl2 : (2 : ℝ) ≤ l := by exact_mod_cast hl.two_le

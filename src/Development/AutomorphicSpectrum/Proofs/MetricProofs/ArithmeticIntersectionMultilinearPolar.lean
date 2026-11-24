@@ -168,7 +168,7 @@ private theorem II_combLine_eq_polar (hML : MetricLocalStatement) (II : Intersec
       funext r
       exact r.elim0
     · obtain ⟨j⟩ : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
-      haveI : IsEmpty (Fin n → σ) := ⟨fun w => hσ.elim (w j)⟩
+      have : IsEmpty (Fin n → σ) := ⟨fun w => hσ.elim (w j)⟩
       have e : (fun r => combLine A (c r)) =
           Function.update (fun r => combLine A (c r)) j (combLine A (c j)) := by simp
       rw [e, II_update_combLine hML II hII K ι σ P n A hA hP _ (fun r => isSmoothHerm_combLine' A hA (c r)) j (c j)]

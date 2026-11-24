@@ -140,7 +140,7 @@ theorem sections_finite_of_perf
       ∀ i, ∑ k, (P.A.hom.appLE ⊤ (M.U i) le_top).hom (c k) * (s k).f i = 0 := by
   obtain ⟨N, -, m, σ, hLB, hσ⟩ := hva _ P K (𝟙 _) P.A.left (𝟙 _) P.A.hom (IsPullback.id_horiz _)
   have hsm : Smooth P.A.hom := by
-    haveI := P.smoothDim
+    have := P.smoothDim
     exact SmoothOfRelativeDimension.smooth P.g _
   obtain ⟨Q⟩ := hperf K P.A.left P.A.hom hsm ⟨_, hLB, m, σ, hσ⟩ M hM
   refine ⟨Q.a + 1, fun s => ?_⟩

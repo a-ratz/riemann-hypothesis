@@ -483,7 +483,7 @@ theorem act_sum (hL : LgFacts) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : 
   have hfun : (fun y : G n => (k ↑y) (F (x * ↑y))) = fun (y : G n) => ∑ i, c i • (ks i ↑y) (F (x * ↑y)) := by
     funext y
     rw [hsum _ (mem_GLs_of y)]
-    simp [ContinuousLinearMap.sum_apply]
+    simp [sum_apply]
   rw [hfun, integral_finsetSum _ hint']
   refine Finset.sum_congr rfl (fun i _ => ?_)
   rw [integral_smul]
@@ -496,7 +496,7 @@ theorem dc_sum {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] (ε : Mat n
     HasFDerivAt.fun_sum fun i _ => (hd i).hasFDerivAt.const_smul (c i)
   simp only [DC, Rd, hsd.fderiv]
 
-  simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul', Pi.smul_apply, map_sum,
+  simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul, Pi.smul_apply, map_sum,
   map_smul, Finset.smul_sum, smul_add]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun p _ => ?_
@@ -732,7 +732,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 theorem chainOf'_of (hDC : DCinCE) (hP : ParamInt) (hA : ActDer) (hI : IBPAct) (hK : KapEquiv) (hU : Unimod)
     (hR : RCalc) (hL : LgFacts) : ChainOf' := by
   intro hWE _hWS hG hKZ n lam E Fr ε ι S Γ T hC _ _ μ _ k val τ hk
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   have hDW : DCwave := PositivityTheory.RgBcC.LfSt.ChainOf2.dCwave_of hDC
   have hZ : ZopDC := PositivityTheory.RgBcC.LfSt.ChainOf2.zopDC
   obtain ⟨m, c, w, g, ks, hks, hsum, -⟩ := hk
@@ -763,8 +763,8 @@ theorem chainOf'_of (hDC : DCinCE) (hP : ParamInt) (hA : ActDer) (hI : IBPAct) (
   have h1 : (1 : Mat n) ∈ GLs n := by simp [GLs]
 
   let ΓE : E.V ≃L[ℂ] E.V := ContinuousLinearEquiv.equivOfInverse Γ Γ
-    (fun v => by rw [← ContinuousLinearMap.mul_apply, hC.Γsq]; rfl)
-    (fun v => by rw [← ContinuousLinearMap.mul_apply, hC.Γsq]; rfl)
+    (fun v => by rw [← mul_apply_eq_comp, hC.Γsq]; rfl)
+    (fun v => by rw [← mul_apply_eq_comp, hC.Γsq]; rfl)
   have hΓρ : ∀ k₀ : Matrix.unitaryGroup (Fin n) ℂ, Γ * E.ρ k₀ = E.ρ k₀ * Γ := by
     intro k₀
     have := hC.ΓFr k₀.1 (unitary_mem_GLs k₀)
@@ -772,7 +772,7 @@ theorem chainOf'_of (hDC : DCinCE) (hP : ParamInt) (hA : ActDer) (hI : IBPAct) (
   have hA' : ∀ (k₀ : Matrix.unitaryGroup (Fin n) ℂ) v, ΓE (E.ρ k₀ v) = E.ρ k₀ (ΓE v) := by
     intro k₀ v
     show Γ (E.ρ k₀ v) = E.ρ k₀ (Γ v)
-    rw [← ContinuousLinearMap.mul_apply, hΓρ]
+    rw [← mul_apply_eq_comp, hΓρ]
     rfl
   have hΓc : ∀ f ∈ CE E, act μ E k (fun x => Γ (f x)) 1 = Γ (act μ E k f 1) := by
     intro f hf

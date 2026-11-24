@@ -117,10 +117,10 @@ theorem card_mul_phiC_le_valuation : ∀ (E : Type) [Field E] [NumberField E] [I
   have hL : Laws := hLL.1
   have hA : AdmBase V (maximalIdeal V) := ⟨inferInstance, inferInstance, inferInstance, hcpl⟩
   have htors := GlobalTheory.UT.torsionIso_of_pelUnif hLL h2 h3 h4 h5 E H V _ hA G P
-  haveI hfin : Finite (LevGrp Dw (R ^ 4)) := (GlobalTheory.EtaCard.card_levGrp_and_span E H Dw R hR1).1
+  have hfin : Finite (LevGrp Dw (R ^ 4)) := (GlobalTheory.EtaCard.card_levGrp_and_span E H Dw R hR1).1
   obtain ⟨v, hv, hvv⟩ := GlobalTheory.T.exists_valuation_algebraicClosure_extending_vV V ϖ hϖ
   let F := AlgebraicClosure (FractionRing V)
-  letI : Algebra c.F F := ((algebraMap (FractionRing V) F).comp (algebraMap c.F (FractionRing V))).toAlgebra
+  let : Algebra c.F F := ((algebraMap (FractionRing V) F).comp (algebraMap c.F (FractionRing V))).toAlgebra
   let ψ : FractionRing V →ₐ[c.F] F := { algebraMap (FractionRing V) F with commutes' := fun _ => rfl }
   have hψ : ψ.toRingHom = algebraMap (FractionRing V) F := rfl
   obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap hL E H Dw l Xo c _ F ψ y
@@ -162,7 +162,7 @@ theorem card_mul_phiC_le_valuation : ∀ (E : Type) [Field E] [NumberField E] [I
       (hevt a) (htr _) (hw a)
     exact GlobalTheory.T.le_valuation_oddLevel_thetaConstant_integralExpansion V hcpl ϖ hϖ P.D Q hQ F v hv P.A G.G G.semi P.U w₀ Φ.ρ hN th ϑ hϑ hν (R ^ 2) hR2 (pt a)
       (tr (ev a)) t (w a) (hpt a) ht q hq
-  haveI : Module.Finite ℤ P.D.toPre.X := P.D.toPre.finX
+  have : Module.Finite ℤ P.D.toPre.X := P.D.toPre.finX
   have hcj1 : ∀ a : 𝓞 E, ∃ a' : 𝓞 E, (a' : E) = cj a := fun a => ⟨H.bar a, by rw [H.bar_eq, hcj]⟩
   have hcj2 : (H.w0 : E) + cj H.w0 = 1 := by
     rw [hcj, ← H.bar_eq, GlobalTheory.HostModel.cmHost_bar_halfIntegerGenerator]; simp

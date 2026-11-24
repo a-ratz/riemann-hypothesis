@@ -158,14 +158,14 @@ def openRatModel {k : Type} [Field k] {X : Scheme.{0}} (s : X ⟶ Sp k) (U : X.O
 
 theorem lbIso_of_ratModels : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) (s : X ⟶ Sp k) (A B : LB X), Geo.Tor.IsNormalScheme X → IsSeparated s → LocallyOfFiniteType s → QuasiCompact s → A.IsLB → B.IsLB → (∀ (Ω : Type) [Field Ω] [Algebra k Ω] (M : RatModel k Ω) (io : M.Z ⟶ X), IsOpenImmersion io → io ≫ s = M.s → LBIso (A.pull io) (B.pull io)) → LBIso A B := by
   intro k _ _ X s A B hN hsep hlft hqc hA hB hM
-  haveI : GlobalTheory.IsNormalScheme X := GlobalTheory.IsNormalScheme.of_pred hN
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : GlobalTheory.IsNormalScheme X := GlobalTheory.IsNormalScheme.of_pred hN
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
   refine GlobalTheory.DisjointCoverLB.lbIso_of_disjoint_cover X (irreducibleComponents X) GlobalTheory.IsNormalScheme.component
     (fun a b y ha hb => Subtype.ext (GlobalTheory.IsNormalScheme.eq_of_mem_irreducibleComponents a.2 b.2 ha hb))
     (fun y => ⟨⟨_, irreducibleComponent_mem_irreducibleComponents y⟩, mem_irreducibleComponent⟩) A B hA hB ?_
   intro Z
   let U := GlobalTheory.IsNormalScheme.component Z
-  letI : Algebra k U.toScheme.functionField :=
+  let : Algebra k U.toScheme.functionField :=
     (Spec.preimage (U.toScheme.fromSpecStalk (genericPoint U.toScheme) ≫ U.ι ≫ s)).hom.toAlgebra
   have hio : IsOpenImmersion U.ι := by infer_instance
   exact hM _ (openRatModel s U hsep hlft inferInstance) U.ι hio rfl
@@ -214,7 +214,7 @@ variable {X : Scheme.{0}} [IsIntegral X] {L : Type} [Field L] (φ : X.presheaf.s
 abbrev fieldPt : Spec (.of L) ⟶ X := Spec.map φ ≫ X.fromSpecStalk (genericPoint X)
 
 theorem fieldPt_apply (x : Spec (.of L)) : fieldPt φ x = genericPoint X := by
-  letI : Field (X.presheaf.stalk (genericPoint X)) := inferInstanceAs (Field X.functionField)
+  let : Field (X.presheaf.stalk (genericPoint X)) := inferInstanceAs (Field X.functionField)
   have : Spec.map φ x = closedPoint (X.presheaf.stalk (genericPoint X)) :=
     Subsingleton.elim (α := PrimeSpectrum (X.presheaf.stalk (genericPoint X))) _ _
   change X.fromSpecStalk _ (Spec.map φ x) = _
@@ -228,7 +228,7 @@ theorem top_le_fieldPt {U : X.Opens} (hU : genericPoint X ∈ U) : ⊤ ≤ field
 theorem fieldPt_appLE {U : X.Opens} (hU : genericPoint X ∈ U) :
     (fieldPt φ).appLE U ⊤ (top_le_fieldPt φ hU) ≫ (Scheme.ΓSpecIso (.of L)).hom = X.presheaf.germ U _ hU ≫ φ := by
   have h1 : ⊤ ≤ X.fromSpecStalk (genericPoint X) ⁻¹ᵁ U := fun x _ => by
-    letI : Field (X.presheaf.stalk (genericPoint X)) := inferInstanceAs (Field X.functionField)
+    let : Field (X.presheaf.stalk (genericPoint X)) := inferInstanceAs (Field X.functionField)
     have : x = closedPoint (X.presheaf.stalk (genericPoint X)) :=
       Subsingleton.elim (α := PrimeSpectrum (X.presheaf.stalk (genericPoint X))) _ _
     change X.fromSpecStalk _ x ∈ U
@@ -265,12 +265,12 @@ theorem normFun_spec {U : X.Opens} (hU : genericPoint X ∈ U) (hA : IsAffineOpe
     Function.Injective (normFun φ hU).hom ∧
       ∀ x : L, x ∈ (normFun φ hU).hom.range ↔ (X.presheaf.germ U _ hU ≫ φ).hom.IsIntegralElem x := by
   let u := fieldPt φ
-  letI := (u.app U).hom.toAlgebra
+  let := (u.app U).hom.toAlgebra
   let ε : Γ(Spec (.of L), u ⁻¹ᵁ U) ⟶ .of L :=
     (Spec (.of L)).presheaf.map (homOfLE (top_le_fieldPt φ hU)).op ≫ (Scheme.ΓSpecIso (.of L)).hom
   have hε : Function.Bijective ε.hom := by
     have : homOfLE (top_le_fieldPt φ hU) = eqToHom (top_le_iff.1 (top_le_fieldPt φ hU)).symm := Subsingleton.elim _ _
-    haveI : IsIso ε := by
+    have : IsIso ε := by
       simp only [ε, this]
       infer_instance
     exact ConcreteCategory.bijective_of_isIso ε
@@ -335,28 +335,28 @@ theorem isFinite_fromNormalization_fieldPt {X : Scheme.{0}} [IsIntegral X] [Glob
   refine ⟨fun U hU => ?_⟩
   by_cases hne : (U : Set X).Nonempty
   · have hη := genericPoint_mem hne
-    haveI : Nonempty U := hne.to_subtype
-    letI : Algebra Γ(X, U) Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) :=
+    have : Nonempty U := hne.to_subtype
+    let : Algebra Γ(X, U) Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) :=
       ((fieldPt ψ).fromNormalization.app U).hom.toAlgebra
-    letI : Algebra Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) L :=
+    let : Algebra Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) L :=
       (normFun ψ hη).hom.toAlgebra
-    letI : Algebra Γ(X, U) L := (X.presheaf.germ U _ hη ≫ ψ).hom.toAlgebra
-    letI : Algebra X.functionField L := ψ.hom.toAlgebra
-    haveI : IsScalarTower Γ(X, U) Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) L :=
+    let : Algebra Γ(X, U) L := (X.presheaf.germ U _ hη ≫ ψ).hom.toAlgebra
+    let : Algebra X.functionField L := ψ.hom.toAlgebra
+    have : IsScalarTower Γ(X, U) Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) L :=
       .of_algebraMap_eq' (congrArg CommRingCat.Hom.hom (app_normFun ψ hη)).symm
-    haveI := functionField_isFractionRing_of_isAffineOpen X U hU
-    haveI : IsScalarTower Γ(X, U) X.functionField L := .of_algebraMap_eq' rfl
-    haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-    haveI : FiniteDimensional X.functionField L := hψ
-    haveI : CharZero X.functionField := ψ.hom.charZero
-    haveI : IsIntegralClosure Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) Γ(X, U) L :=
+    have := functionField_isFractionRing_of_isAffineOpen X U hU
+    have : IsScalarTower Γ(X, U) X.functionField L := .of_algebraMap_eq' rfl
+    have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+    have : FiniteDimensional X.functionField L := hψ
+    have : CharZero X.functionField := ψ.hom.charZero
+    have : IsIntegralClosure Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) Γ(X, U) L :=
       ⟨(normFun_spec ψ hη hU).1, fun {x} => ((normFun_spec ψ hη hU).2 x).symm⟩
     exact IsIntegralClosure.finite Γ(X, U) X.functionField L _
-  · haveI : Subsingleton Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) := by
+  · have : Subsingleton Γ((fieldPt ψ).normalization, (fieldPt ψ).fromNormalization ⁻¹ᵁ U) := by
       refine subsingleton_of_forall_eq 0 fun s => ?_
       rw [← basicOpen_eq_bot_iff]
       exact eq_bot_iff.2 fun z hz => (hne ⟨_, ((fieldPt ψ).normalization.basicOpen_le s hz :)⟩).elim
-    letI := ((fieldPt ψ).fromNormalization.app U).hom.toAlgebra
+    let := ((fieldPt ψ).fromNormalization.app U).hom.toAlgebra
     change Module.Finite _ _
     infer_instance
 
@@ -371,12 +371,12 @@ theorem exists_normalization_model : ∀ (k Ω : Type) [CommRing k] [IsNoetheria
     [FiniteDimensional Ω Ω'], Geo.Tor.IsNormalScheme M.Z → ∃ (M' : RatModel k Ω') (π : M'.Z ⟶ M.Z),
       Geo.Tor.IsNormalScheme M'.Z ∧ IsFinite π ∧ M'.pt ≫ π = spMap (algebraMap Ω Ω') ≫ M.pt := by
   intro k Ω _ _ _ _ _ M Ω' _ _ _ _ _ hN
-  haveI : GlobalTheory.IsNormalScheme M.Z := GlobalTheory.IsNormalScheme.of_pred hN
-  haveI := M.lft
-  haveI := M.sep
-  haveI := M.qc
-  haveI : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
-  haveI : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω Ω').injective
+  have : GlobalTheory.IsNormalScheme M.Z := GlobalTheory.IsNormalScheme.of_pred hN
+  have := M.lft
+  have := M.sep
+  have := M.qc
+  have : IsLocallyNoetherian M.Z := LocallyOfFiniteType.isLocallyNoetherian M.s
+  have : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω Ω').injective
   let ρ : M.Z.presheaf.stalk (genericPoint M.Z) ⟶ .of Ω :=
     M.Z.presheaf.stalkSpecializes (M.pt_specializes (IsLocalRing.closedPoint Ω) (genericPoint M.Z)) ≫
       Scheme.stalkClosedPointTo M.pt
@@ -401,7 +401,7 @@ theorem exists_normalization_model : ∀ (k Ω : Type) [CommRing k] [IsNoetheria
     exact (congrArg (fun g => g.hom f) (key M.pt hρ e)).symm
   have hψfin : ψ.hom.Finite :=
     RingHom.Finite.comp (RingHom.finite_algebraMap.2 inferInstance) (RingHom.Finite.of_surjective ρ.hom hρs)
-  haveI hfin : IsFinite (fieldPt ψ).fromNormalization := isFinite_fromNormalization_fieldPt ψ hψfin
+  have hfin : IsFinite (fieldPt ψ).fromNormalization := isFinite_fromNormalization_fieldPt ψ hψfin
 
   have hgen : Set.range (fieldPt ψ).toNormalization = {genericPoint (fieldPt ψ).normalization} := by
     have hc : ∀ w : Sp Ω', w = IsLocalRing.closedPoint Ω' := fun w =>
@@ -425,12 +425,12 @@ theorem exists_normalization_model : ∀ (k Ω : Type) [CommRing k] [IsNoetheria
       valF (fieldPt ψ).toNormalization U f = x := by
     intro x
     obtain ⟨U, hU, hηU, -⟩ := exists_isAffineOpen_mem_and_subset (x := genericPoint M.Z) (U := ⊤) trivial
-    haveI : Nonempty U := ⟨⟨_, hηU⟩⟩
-    letI : Algebra Γ(M.Z, U) Ω' := (M.Z.presheaf.germ U _ hηU ≫ ψ).hom.toAlgebra
-    letI : Algebra M.Z.functionField Ω' := ψ.hom.toAlgebra
-    haveI := functionField_isFractionRing_of_isAffineOpen M.Z U hU
-    haveI : IsScalarTower Γ(M.Z, U) M.Z.functionField Ω' := .of_algebraMap_eq' rfl
-    haveI : FiniteDimensional M.Z.functionField Ω' := hψfin
+    have : Nonempty U := ⟨⟨_, hηU⟩⟩
+    let : Algebra Γ(M.Z, U) Ω' := (M.Z.presheaf.germ U _ hηU ≫ ψ).hom.toAlgebra
+    let : Algebra M.Z.functionField Ω' := ψ.hom.toAlgebra
+    have := functionField_isFractionRing_of_isAffineOpen M.Z U hU
+    have : IsScalarTower Γ(M.Z, U) M.Z.functionField Ω' := .of_algebraMap_eq' rfl
+    have : FiniteDimensional M.Z.functionField Ω' := hψfin
     obtain ⟨⟨a, ha⟩, hax⟩ := IsIntegral.exists_multiple_integral_of_isLocalization (nonZeroDivisors Γ(M.Z, U)) x
       (Algebra.IsIntegral.isIntegral (R := M.Z.functionField) x)
     have ha0 : a ≠ 0 := nonZeroDivisors.ne_zero ha
@@ -440,9 +440,9 @@ theorem exists_normalization_model : ∀ (k Ω : Type) [CommRing k] [IsNoetheria
       exact fun h => ha0 ((basicOpen_eq_bot_iff a).1 (SetLike.coe_injective h))
     have hV : IsAffineOpen (M.Z.basicOpen a) := hU.basicOpen a
     let r := M.Z.presheaf.map (homOfLE (M.Z.basicOpen_le a)).op
-    letI : Algebra Γ(M.Z, U) Γ(M.Z, M.Z.basicOpen a) := r.hom.toAlgebra
-    letI : Algebra Γ(M.Z, M.Z.basicOpen a) Ω' := (M.Z.presheaf.germ _ _ hηV ≫ ψ).hom.toAlgebra
-    haveI : IsScalarTower Γ(M.Z, U) Γ(M.Z, M.Z.basicOpen a) Ω' := .of_algebraMap_eq' (by
+    let : Algebra Γ(M.Z, U) Γ(M.Z, M.Z.basicOpen a) := r.hom.toAlgebra
+    let : Algebra Γ(M.Z, M.Z.basicOpen a) Ω' := (M.Z.presheaf.germ _ _ hηV ≫ ψ).hom.toAlgebra
+    have : IsScalarTower Γ(M.Z, U) Γ(M.Z, M.Z.basicOpen a) Ω' := .of_algebraMap_eq' (by
       have e : r ≫ M.Z.presheaf.germ _ _ hηV = M.Z.presheaf.germ U _ hηU := TopCat.Presheaf.germ_res _ _ _ _
       change (M.Z.presheaf.germ U _ hηU ≫ ψ).hom = (r ≫ M.Z.presheaf.germ _ _ hηV ≫ ψ).hom
       simp only [← e, Category.assoc])
@@ -720,7 +720,7 @@ theorem exists_pt_eq {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
       rw [show CommRingCat.ofHom (RingHom.id c.F) = 𝟙 _ from rfl]
       infer_instance
     infer_instance
-  haveI := Y.jQ_open
+  have := Y.jQ_open
   obtain ⟨y, hy⟩ := exists_lift_of_dense Y.jQ Y.jQ_dense M (io ≫ inv (pullback.fst Y.s (spMap (RingHom.id c.F))))
   refine ⟨y, ?_⟩
   rw [Model.j, ← Category.assoc, hy, Category.assoc, Category.assoc, IsIso.inv_hom_id, Category.comp_id]
@@ -751,17 +751,17 @@ end GlobalTheory.UMin.KeyOne
 
 theorem GlobalTheory.UMin.KeyOne.lbIso_pull_O1_hodge : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (o : Type) [CommRing o] (m n : ℕ) (f : Xo.XF c ⟶ PSpace o n), Odd m → 3 ≤ m → IsUnit (m : o) → n + 1 = m ^ (4 * (Module.finrank ℚ E / 2 * (Dw.p + Dw.q))) → ThMap Xo.univ.t.G Xo.univ.t.PP.L Xo.univ.t.PP.rig m (pullback.fst _ _ : Xo.XF c ⟶ Xo.X) f → ∀ (Y : Model Xo c (RingHom.id c.F)) (g : Y.X ⟶ PSpace o n), Y.j ≫ g = f → ∀ (Ω : Type) [Field Ω] [Algebra c.F Ω] (M : RatModel c.F Ω) (io : M.Z ⟶ Y.X), IsOpenImmersion io → io ≫ Y.s = M.s → LBIso ((lbPow ((ProjSpace.O1 o n).pull g) (8 * (n + 1).factorial)).pull io) ((lbPow (GlobalTheory.SiegelTor.hodge Y.t.G (Module.finrank ℚ E / 2 * (Dw.p + Dw.q))) (4 * (n + 1).factorial * (n + 1).factorial)).pull io) := by
   intro E _ _ _ H Dw l Xo c o _ m n f hm hm3 hmu hn hf Y g hg Ω _ _ M io hio hs
-  haveI := hio
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap c.F Ω).injective
+  have := hio
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap c.F Ω).injective
   have hMn : Geo.Tor.IsNormalScheme M.Z := GlobalTheory.UMin.KeyOne.isNormalScheme_of_isOpenImmersion io Y.normal
   obtain ⟨y, hy⟩ := GlobalTheory.UMin.KeyOne.exists_pt_eq Y M io
   have hpol := GlobalTheory.T.universalTriple_fibre_principallyPolarised_dimension E H Dw l Xo c Ω (y ≫ pullback.fst _ _)
   obtain ⟨⟨θ, hθ⟩, hθup⟩ := GlobalTheory.T.principallyPolarisedFibre_exists_generator_stable Xo.X Xo.univ.t.G Xo.univ.t.PP.L Xo.univ.t.PP.isLB _ Ω _ hpol
   obtain ⟨Ω', _, _, pt, cc, hfd, -, hdeg, hlist, -⟩ := GlobalTheory.T.theta_constants_listed_finite_galois_extension Xo.X Xo.univ.t.G Xo.univ.t.PP.L
     Xo.univ.t.PP.rig Xo.univ.t.PP.isLB Xo.univ.t.PP.rigGen _ m (n + 1) Ω _ θ hm hn hpol
-  letI : Algebra c.F Ω' := ((algebraMap Ω Ω').comp (algebraMap c.F Ω)).toAlgebra
-  haveI : IsScalarTower c.F Ω Ω' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω Ω').injective
+  let : Algebra c.F Ω' := ((algebraMap Ω Ω').comp (algebraMap c.F Ω)).toAlgebra
+  have : IsScalarTower c.F Ω Ω' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω Ω').injective
   obtain ⟨M', π, hM'n, hπf, hπ⟩ := GlobalTheory.T.exists_normalization_model_finiteExtension c.F Ω M Ω' hMn
   have hup := GlobalTheory.T.thetaKeyFormula_normalCover_rational_thetaConstants E H Dw l Xo c o m n f hm hm3 hmu hn hf Y g hg Ω' M' (π ≫ io)
     (spMap (algebraMap Ω Ω') ≫ y) cc hM'n
@@ -813,8 +813,8 @@ namespace GlobalTheory.ThetaPullback
 theorem theta_pull_O1_pow : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (o : Type) [CommRing o] (m n : ℕ) (f : Xo.XF c ⟶ PSpace o n), Odd m → 3 ≤ m → IsUnit (m : o) → n + 1 = m ^ (4 * (Module.finrank ℚ E / 2 * (Dw.p + Dw.q))) → ThMap Xo.univ.t.G Xo.univ.t.PP.L Xo.univ.t.PP.rig m (pullback.fst _ _ : Xo.XF c ⟶ Xo.X) f → ∀ (Y : Model Xo c (RingHom.id c.F)) (g : Y.X ⟶ PSpace o n), Y.j ≫ g = f → (GlobalTheory.FlagMod.detOm Y).IsLB → LBIso (lbPow ((ProjSpace.O1 o n).pull g) (8 * (n + 1).factorial)) (lbPow (GlobalTheory.FlagMod.detOm Y) (4 * (n + 1).factorial * (n + 1).factorial)) := by
   intro E _ _ _ H Dw l Xo c o _ m n f hodd hm hunit hn hth Y g hg hdet
   obtain ⟨N, i, hi, hs⟩ := Y.proj
-  haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str (↥c.F) N
-  haveI : IsProper Y.s := by rw [← hs]; infer_instance
+  have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str (↥c.F) N
+  have : IsProper Y.s := by rw [← hs]; infer_instance
   have hvb := (GlobalTheory.T.modelSemiAbelian_relDim_cotangent_vectorBundle E H Dw l Xo c Y).2
   have hO : ((ProjSpace.O1 o n).pull g).IsLB := LB.isLB_pull (ProjSpace.O1_isLB o n) g
   have hA : (lbPow ((ProjSpace.O1 o n).pull g) (8 * (n + 1).factorial)).IsLB := LB.isLB_linComb hO _ _

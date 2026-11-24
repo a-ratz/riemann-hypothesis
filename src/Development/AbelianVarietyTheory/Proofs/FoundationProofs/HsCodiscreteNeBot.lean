@@ -89,7 +89,7 @@ theorem btZ_zero (X : Tower Ω ε) (N l : ℕ) [Fact l.Prime] : BtZ X N l 0 0 :=
   refine ⟨0, ⟨1, fun _ => 1, fun _ => 1, 1, one_pos, ?_, ?_, ?_⟩, 1, one_pos, fun δ _ => by simp⟩
   · simp [Tower.cls]
   · apply H3.isRoot_one
-    haveI := hs_codiscrete_neBot
+    have := hs_codiscrete_neBot
     exact one_ne_zero
   · intro δ _ z _; simp
 

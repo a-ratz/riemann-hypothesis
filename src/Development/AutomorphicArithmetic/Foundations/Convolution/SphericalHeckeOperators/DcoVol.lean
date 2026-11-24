@@ -97,7 +97,7 @@ private theorem index_modular {B : Type*} [Group B] [TopologicalSpace B] [IsTopo
     rw [hJs]; exact (hAo.preimage (by fun_prop)).preimage (by fun_prop)
   have : CompactSpace A := isCompact_iff_compactSpace.1 hAc
   have : Finite (A ⧸ J.subgroupOf A) :=
-    Subgroup.quotient_finite_of_isOpen _ (hJo.preimage continuous_subtype_val)
+    Subgroup.quotient_finite_of_isOpen _ (hJo.preimage continuous_subtypeVal)
   have h1 := meas_union ν A J J 1 (by simp) hJo.measurableSet
   have h2 : {g | ∃ x ∈ A, ∃ y ∈ J, g = x * 1 * y} = (A : Set B) := by
     ext g
@@ -133,7 +133,7 @@ private theorem meas_dcoset {G : Type*} [Group G] [TopologicalSpace G] [IsTopolo
   have hAc : IsCompact ((I ⊓ B : Subgroup G) : Set G) := hIc.inter_right hB
   have : CompactSpace (I ⊓ B : Subgroup G) := isCompact_iff_compactSpace.1 hAc
   have : Finite ((I ⊓ B : Subgroup G) ⧸ J.subgroupOf (I ⊓ B)) :=
-    Subgroup.quotient_finite_of_isOpen _ (hJo.preimage continuous_subtype_val)
+    Subgroup.quotient_finite_of_isOpen _ (hJo.preimage continuous_subtypeVal)
   have e1 := meas_union μ (I ⊓ B) I J t hJ hIo.measurableSet
   have e2 : {g | ∃ x ∈ I, ∃ y ∈ I, g = x * t * y} = {g | ∃ x ∈ I ⊓ B, ∃ y ∈ I, g = x * t * y} := by
     ext g
@@ -144,7 +144,7 @@ private theorem meas_dcoset {G : Type*} [Group G] [TopologicalSpace G] [IsTopolo
     · rintro ⟨x, hx, y, hy, rfl⟩
       exact ⟨x, hx.1, y, hy, rfl⟩
   have e3 := index_modular (I.subgroupOf B) (J.subgroupOf B) t
-    (hB.isClosedEmbedding_subtypeVal.isCompact_preimage hIc) (hIo.preimage continuous_subtype_val)
+    (hB.isClosedEmbedding_subtypeVal.isCompact_preimage hIc) (hIo.preimage continuous_subtypeVal)
     (fun x => by rw [Subgroup.mem_subgroupOf, Subgroup.mem_subgroupOf, hJ]; rfl)
     (fun x hx => by
       rw [Subgroup.mem_subgroupOf, hJ] at hx

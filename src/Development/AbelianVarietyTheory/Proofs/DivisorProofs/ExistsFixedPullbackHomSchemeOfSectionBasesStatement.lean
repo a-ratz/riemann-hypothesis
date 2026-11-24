@@ -121,7 +121,7 @@ theorem ratio_unit_eq_one : ∀ (Rg : Type) [CommRing Rg] (A B : Over (Sp Rg)) [
       TopologicalSpace.Opens.mem_iSup.1 (by rw [hN.cover]; trivial)
     obtain ⟨iL, hiL⟩ := hc L hL ((eSec A) (t x))
     obtain ⟨iM, hiM⟩ := hc M hM ((eSec B) (t x))
-    haveI := hT.2.2.1
+    have := hT.2.2.1
     have eA' : zeroPt A' ≫ ψA ≫ (snd (topS Rg) A).left = t ≫ eSec A := by
       rw [hψA]; exact GlobalTheory.UU.eSec_comp_of_isGrpPullback hT.1
     have eB' : zeroPt A' ≫ (Φ'.left ≫ ψB) ≫ (snd (topS Rg) B).left = t ≫ eSec B := by
@@ -458,7 +458,7 @@ theorem eq_of_germs {X Y Z : Scheme.{0}} (π : Y ⟶ Z) {N : LB Y} {κ : Type} (
       ext a
       obtain ⟨P, rfl⟩ := hsurj a
       exact congrArg (fun φ : MvPolynomial κ Γ(Z, ⊤) →+* _ => φ P) hcomp
-    haveI : IsAffine (nonzeroLocus (s l)) := haff
+    have : IsAffine (nonzeroLocus (s l)) := haff
     have hres : f₁.resLE (nonzeroLocus (s l)) (f₁ ⁻¹ᵁ nonzeroLocus (s l)) le_rfl =
         f₂.resLE (nonzeroLocus (s l)) (f₁ ⁻¹ᵁ nonzeroLocus (s l)) hV := by
       refine ext_of_isAffine ?_
@@ -769,7 +769,7 @@ namespace GlobalTheory.HomFixMat
 theorem isTest_pullback : ∀ (Rg : Type) [CommRing Rg] (A B : Over (Sp Rg)) [GrpObj A] [GrpObj B] (L : LB A.left) (M : LB B.left) (T T' : Scheme.{0}) (t : T ⟶ Sp Rg) (h : T' ⟶ T) (A₁ B₁ : Over T) [GrpObj A₁] [GrpObj B₁] (φA₁ : A₁.left ⟶ A.left) (φB₁ : B₁.left ⟶ B.left) (Φ₁ : A₁ ⟶ B₁), IsTest A B L M t A₁ B₁ φA₁ φB₁ Φ₁ → ∃ (A₂ : Over T') (_ : GrpObj A₂) (B₂ : Over T') (_ : GrpObj B₂) (φA₂ : A₂.left ⟶ A.left) (φB₂ : B₂.left ⟶ B.left) (Φ₂ : A₂ ⟶ B₂), IsTest A B L M (h ≫ t) A₂ B₂ φA₂ φB₂ Φ₂ ∧ IsPullD φA₁ φB₁ Φ₁ φA₂ φB₂ Φ₂ h := by
   intro Rg _ A B _ _ L M T T' t h A₁ B₁ _ _ φA₁ φB₁ Φ₁ hT
   obtain ⟨hA, hB, hm, hl⟩ := hT
-  haveI : IsMonHom Φ₁ := hm
+  have : IsMonHom Φ₁ := hm
   have eΦ : ((Over.pullback h).map Φ₁).left ≫ pullback.fst B₁.hom h = pullback.fst A₁.hom h ≫ Φ₁.left :=
     pullback.lift_fst _ _ _
   have gA := isGrpPullback_pullback A₁ h
@@ -872,7 +872,7 @@ theorem exists_coeff_of_isBCBasis : ∀ (Rg : Type) [CommRing Rg] (A : Over (Sp 
     have hs : (e.inv ≫ (homAt t' ▷ A).left) ≫ (snd (topS Rg) A).left = ψA ≫ (snd (topS Rg) A).left := by
       rw [Category.assoc, eH 0, e2, hψ]
     refine hTop.hom_ext hs ?_
-    haveI : Mono (topS Rg).hom := by dsimp [topS]; infer_instance
+    have : Mono (topS Rg).hom := by dsimp [topS]; infer_instance
     rw [← cancel_mono (topS Rg).hom]
     simp only [Category.assoc, ← hTop.w]
     simp only [← Category.assoc]
@@ -959,7 +959,7 @@ namespace GlobalTheory.PowIsoRe
 theorem res_res {X : Scheme.{0}} {U V W : X.Opens} (e1 : W ≤ V) (e2 : V ≤ U) (x : Γ(X, U)ˣ) :
     res e1 (res e2 x) = res (e1.trans e2) x := by
   ext1
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -976,7 +976,7 @@ theorem pullU_res_pullU {X Y Z : Scheme.{0}} (h : X ⟶ Y) (φ : Y ⟶ Z) {W : Z
     rw [Scheme.Hom.naturality, Scheme.Hom.comp_app]
     rfl
   ext1
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← CommRingCat.comp_apply, ← CommRingCat.comp_apply, key]
 
 end GlobalTheory.PowIsoRe
@@ -1353,7 +1353,7 @@ theorem exists_isMat : ∀ (Rg : Type) [CommRing Rg] [IsNoetherianRing Rg] (A B 
       (powPull L (ψA ≫ (snd (topS Rg) A).left) (k : ℤ))), α₀.IsGen
     rw [eg, hψA]; exact this
   have hΦ0 : zeroPt A' ≫ Φ'.left = zeroPt B' := by
-    haveI := hΦ
+    have := hΦ
     exact congrArg Over.Hom.left (IsMonHom.one_hom (f := Φ'))
   have hz1 : zeroPt A' ≫ (ψA ≫ (snd (topS Rg) A).left) = t ≫ eSec A := by
     rw [hψA]; exact zero_comp Rg A R t A' φA' hpA

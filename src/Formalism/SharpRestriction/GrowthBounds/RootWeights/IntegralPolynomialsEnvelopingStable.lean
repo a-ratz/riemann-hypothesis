@@ -134,13 +134,13 @@ theorem sum_single_apply_section {ι : Type} {n : ℕ} (g : ι → ι × Fin n) 
   · rw [Finset.sum_eq_single v.1]
     · rw [← hv, Finsupp.single_eq_same]
     · intro l _ hl
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       exact fun h => hl (key l h).1
     · intro hnot
       simp only [Finsupp.mem_support_iff, not_not] at hnot
       simp [hnot]
   · refine Finset.sum_eq_zero fun l _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     exact fun h => hv (key l h).2
 
 theorem exponent_factorial_eq_prod {ι : Type} [Fintype ι] {n : ℕ} (m : ι × Fin n →₀ ℕ) :
@@ -304,7 +304,7 @@ theorem divided_power_monomial_expansion {K : Type} [CommRing K] {ι : Type} [Fi
 
 theorem integral_formula_stability_holds {p : ℕ} (hp : p.Prime) (hV : ValuationProperties p O) : PolynomialIntegralFormPreservesLattices p O := by
   classical
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   intro n ι _ LL S
   refine ⟨?_, ?_⟩
   · intro u hu x hx
@@ -459,7 +459,7 @@ theorem divided_powers_preserve_polarization (p : ℕ) [Fact p.Prime] (Q : MvPol
       show X v * pderiv w (monomial (mj j) (c * ((m w).descFactorial j : K))) = _
       rw [MvPolynomial.pderiv_monomial, hmjw,
         show (X v : MvPolynomial σ K) = monomial (Finsupp.single v 1) 1 from rfl,
-        MvPolynomial.monomial_mul, one_mul]
+        monomial_mul_monomial, one_mul]
       by_cases hj : j < m w
       · have hexp : Finsupp.single v 1 + (mj j - Finsupp.single w 1) = mj (j + 1) := by
           ext i
@@ -596,19 +596,19 @@ theorem letter_polarization_commute (LL : Letters ι) (S : Set ι) (a b : Fin n)
   unfold letterPolarization
   by_cases h1 : l ∈ S
   · by_cases h2 : l' ∈ S
-    · rw [if_pos h1, if_pos h2]
+    · rw [ite_eq_left h1, ite_eq_left h2]
       by_cases v1 : LL.vec l = true <;> by_cases v2 : LL.vec l' = true
-      · rw [if_pos v1, if_pos v2]
+      · rw [ite_eq_left v1, ite_eq_left v2]
         exact hc _ _ _ _
-      · rw [if_pos v1, if_neg v2]
+      · rw [ite_eq_left v1, ite_eq_right v2]
         exact (hc _ _ _ _).neg_right
-      · rw [if_neg v1, if_pos v2]
+      · rw [ite_eq_right v1, ite_eq_left v2]
         exact (hc _ _ _ _).neg_left
-      · rw [if_neg v1, if_neg v2]
+      · rw [ite_eq_right v1, ite_eq_right v2]
         exact (hc _ _ _ _).neg_left.neg_right
-    · rw [if_neg h2]
+    · rw [ite_eq_right h2]
       exact Commute.zero_right _
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
     exact Commute.zero_left _
 
 theorem divided_powers_preserve_letter (p : ℕ) [Fact p.Prime] (Q : MvPolynomial (ι × Fin n) K → Prop) (hQ : MonomialGradedLattice p Q)
@@ -686,8 +686,8 @@ end
 theorem char_zero_stability_of_closure {p : ℕ} (hp : p.Prime) {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
     (hchar : CharZero (KK O)) (h : FockLatticeClosure p O) : IntegralFormGeneratorsPreserveLattices p O := by
   classical
-  haveI := hchar
-  haveI : Fact p.Prime := ⟨hp⟩
+  have := hchar
+  have : Fact p.Prime := ⟨hp⟩
   intro n ι _ LL S u hu
   obtain ⟨h0, hadd, _, _, _, hlin, hstep, hint, hmono, hiff⟩ := h (ι × Fin n)
   refine ⟨fun F hF => ?_, fun F hF => ?_⟩
@@ -711,7 +711,7 @@ theorem char_zero_stability_of_closure {p : ℕ} (hp : p.Prime) {O : Type} [Comm
       · intro m m' c z hmc _
         rw [hiff] at hmc ⊢
         obtain ⟨o, ho⟩ := hmc m
-        rw [MvPolynomial.coeff_monomial, if_pos rfl] at ho
+        rw [MvPolynomial.coeff_monomial, ite_eq_left rfl] at ho
         intro m''
         rw [MvPolynomial.coeff_monomial]
         split_ifs
@@ -802,7 +802,7 @@ theorem multidegree_part_finitely_generated {p : ℕ} (hp0 : (p : KK O) ≠ 0) {
   have hW : (LinearMap.range g).FG := by
     rw [LinearMap.range_eq_map]
     exact (Module.Finite.fg_top).map g
-  haveI : IsNoetherian O (LinearMap.range g) := isNoetherian_of_fg_of_noetherian _ hW
+  have : IsNoetherian O (LinearMap.range g) := isNoetherian_of_fg_of_noetherian _ hW
   have h1 : (((latticeMultidegreePart L d).map f).comap (LinearMap.range g).subtype).FG := IsNoetherian.noetherian _
   have h2 := h1.map (LinearMap.range g).subtype
   rw [Submodule.map_comap_subtype, inf_eq_right.2 hle] at h2
@@ -875,7 +875,7 @@ theorem fock_lattice_finite_spanning_holds {p : ℕ} (hp : p.Prime) (S0 : Unifor
     have h0 := (mem_fock_lattice_iff_coeff hV F).1 hF' m
     unfold halfFactorialValuation at h0
     apply (hV.2.2.2.2.2 _).1
-    haveI := Fact.mk hp
+    have := Fact.mk hp
     rw [hV.2.1, ← Nat.cast_pow, hV.2.2.2.1 _ (pow_ne_zero _ hp.ne_zero), Nat.padicValNat_def, Nat.multiplicity_prime_pow]
     refine key _ _ _ h0 ?_
     have hmS : m ∈ (multidegree_monomials_finite (ι := ι) (n := n) d).toFinset := (Set.Finite.mem_toFinset _).2 hm

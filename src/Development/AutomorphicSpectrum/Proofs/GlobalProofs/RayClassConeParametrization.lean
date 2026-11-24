@@ -89,7 +89,7 @@ theorem exists_complement {𝔣 𝔞 : Ideal (𝓞 F)} (h𝔣 : 𝔣 ≠ ⊥) (h
   have hco : IsCoprime 𝔞 𝔣 := Ideal.isCoprime_iff_sup_eq.2 h𝔞.2
   have hsup : Ideal.span {α} ⊔ 𝔣 = ⊤ := by rw [← hα']; exact Ideal.isCoprime_iff_sup_eq.1 hco.pow_left
   obtain ⟨a, b, hb, hab⟩ := Ideal.mem_span_singleton_sup.1 (hsup ▸ Submodule.mem_top : (1 : 𝓞 F) ∈ Ideal.span {α} ⊔ 𝔣)
-  haveI : Finite (𝓞 F ⧸ 𝔣) := Ideal.finiteQuotientOfFreeOfNeBot 𝔣 h𝔣
+  have : Finite (𝓞 F ⧸ 𝔣) := Ideal.finiteQuotientOfFreeOfNeBot 𝔣 h𝔣
   have hu : IsUnit (Ideal.Quotient.mk 𝔣 α) := by
     refine IsUnit.of_mul_eq_one (Ideal.Quotient.mk 𝔣 a) ?_
     have : Ideal.Quotient.mk 𝔣 b = 0 := Ideal.Quotient.eq_zero_iff_mem.2 hb
@@ -259,7 +259,7 @@ theorem exists_frac {t : ℚ} (h : 0 < t) : ∃ (m : ℕ) (s : ℚ), 0 < s ∧ s
 
 theorem totPos_sum {r : ℕ} (hr : 0 < r) {u : Fin r → F} (hu : ∀ i, TotPos F (u i)) {t : Fin r → ℚ} (ht : ∀ i, 0 < t i) :
     TotPos F (∑ i, (t i : F) * u i) := fun σ => by
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
 
   rw [map_sum]
   refine Finset.sum_pos (fun i _ => ?_) Finset.univ_nonempty
@@ -299,7 +299,7 @@ theorem classParam_of_scaled [IsTotallyReal F] {𝔣 𝔞 𝔟 : Ideal (𝓞 F)}
     ∃ (J : Type) (_ : Fintype J) (r' : J → ℕ) (y : J → 𝓞 F) (v' : ∀ j, Fin (r' j) → 𝓞 F), ClassParam 𝔣 𝔞 𝔟 r' y v' := by
   classical
   obtain ⟨hr, hli, hpos, hun⟩ := hdom
-  haveI : ∀ c, Fintype (coneBox 𝔣 𝔟 (w c)) := fun c => (coneBox_finite 𝔣 𝔟 (w c)).fintype
+  have : ∀ c, Fintype (coneBox 𝔣 𝔟 (w c)) := fun c => (coneBox_finite 𝔣 𝔟 (w c)).fintype
   let J : Type := Σ c, coneBox 𝔣 𝔟 (w c)
   let r' : J → ℕ := fun j => r j.1
   let y : J → 𝓞 F := fun j => j.2.1

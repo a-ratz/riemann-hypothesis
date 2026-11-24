@@ -184,7 +184,7 @@ private theorem exists_pow_le [IsLocalRing O] [Finite (ResidueField O)] [IsLocal
     have h2 := I.sub_mem h1 hab
     rw [sub_sub_sub_cancel_right] at h2
     exact Ideal.Quotient.eq.2 h2
-  haveI : IsArtinianRing (R ⧸ I) := isArtinian_of_finite
+  have : IsArtinianRing (R ⧸ I) := isArtinian_of_finite
   obtain ⟨j, hj⟩ := IsArtinianRing.isNilpotent_jacobson_bot (R := R ⧸ I)
   refine ⟨j, ?_⟩
   have hm : (maximalIdeal R).map (Ideal.Quotient.mk I) ≤ Ideal.jacobson ⊥ := by

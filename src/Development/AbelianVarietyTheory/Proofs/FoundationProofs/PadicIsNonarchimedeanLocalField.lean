@@ -81,7 +81,7 @@ theorem padic_valuation_lt_iff (x y : ℚ_[p]) :
   by_cases hy : y = 0
   · simp [hy]
   by_cases hx : x = 0
-  · simp [hx, hy, zero_lt_iff]
+  · simp [hx, hy, pos_iff_ne_zero]
   rw [Padic.norm_eq_zpow_log_mulValuation hx, Padic.norm_eq_zpow_log_mulValuation hy,
     zpow_lt_zpow_iff_right₀ hp, WithZero.log_lt_log (by simpa using hx) (by simpa using hy)]
 
@@ -112,19 +112,19 @@ end Padic
 variable (k : Type*) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem secondCountable : SecondCountableTopology k := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
   open scoped Valued in
-  haveI : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
+  have : ProperSpace k := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace k
   exact secondCountable_of_proper
 
 theorem t2Space : T2Space k := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
   infer_instance
 
 theorem isOpen_int : IsOpen (𝒪[k] : Set k) := Valuation.isOpen_integer
@@ -145,9 +145,9 @@ def cball (s : kˣ) : Set k := {x | valuation k x ≤ valuation k (s : k)}
 theorem cball_eq_smul (s : kˣ) : cball s = s • (𝒪[k] : Set k) := by
   ext x
   rw [Set.mem_smul_set_iff_inv_smul_mem]
-  simp only [cball, Set.mem_setOf_eq, SetLike.mem_coe, Valuation.mem_integer_iff, Units.smul_def,
+  simp only [cball, Set.mem_ofPred_eq, SetLike.mem_coe, Valuation.mem_integer_iff, Units.smul_def,
     smul_eq_mul, map_mul, Units.val_inv_eq_inv_val, map_inv₀]
-  rw [inv_mul_le_iff₀ (by simp [zero_lt_iff]), mul_one]
+  rw [inv_mul_le_iff₀ (by simp [pos_iff_ne_zero]), mul_one]
 
 theorem isOpen_cball (s : kˣ) : IsOpen (cball s) := by
   rw [cball_eq_smul]; exact (isOpen_int k).smul s
@@ -170,7 +170,7 @@ theorem exists_cball_subset {U : Set k} (hU : U ∈ 𝓝 (0 : k)) : ∃ s : kˣ,
   have hz' : valuation k z ≤ valuation k (r * y) := hz
   refine lt_of_le_of_lt hz' ?_
   rw [map_mul, hy]
-  exact mul_lt_of_lt_one_left (by simp [zero_lt_iff]) hr1
+  exact mul_lt_of_lt_one_left (by simp [pos_iff_ne_zero]) hr1
 
 section Meas
 variable [MeasurableSpace k] [BorelSpace k]
@@ -185,8 +185,8 @@ theorem exists_isUnitVol : ∃ ν : Measure k, IsUnitVol ν := by
 
 theorem measure_cball (ν : Measure k) [ν.IsAddHaarMeasure] (s : kˣ) :
     ν (cball s) = distribHaarChar k s * ν (𝒪[k] : Set k) := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   rw [cball_eq_smul, distribHaarChar_mul]
 
 theorem measureReal_cball (ν : Measure k) [ν.IsAddHaarMeasure] (s : kˣ) :
@@ -206,7 +206,7 @@ theorem nabs_eq_one_of_valuation_eq_one {x : kˣ} (hx : valuation k (x : k) = 1)
 
 theorem mem_cball_uniformiser {ϖ : 𝒪[k]} (hϖ : Irreducible ϖ) {x : kˣ} (hx : (x : k) = ϖ) (y : 𝒪[k]) :
     (y : k) ∈ cball x ↔ y ∈ 𝓂[k] := by
-  rw [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton, cball, Set.mem_setOf_eq, hx]
+  rw [hϖ.maximalIdeal_eq, Ideal.mem_span_singleton, cball, Set.mem_ofPred_eq, hx]
   exact (Valuation.Integers.le_iff_dvd (Valuation.integer.integers (valuation k)))
 
 theorem nabs_uniformiser {ϖ : 𝒪[k]} (hϖ : Irreducible ϖ) {x : kˣ} (hx : (x : k) = ϖ) :
@@ -241,7 +241,7 @@ theorem nabs_uniformiser {ϖ : 𝒪[k]} (hϖ : Irreducible ϖ) {x : kˣ} (hx : (
     intro r
     simp only [S]
     rw [measure_preimage_add, measure_cball, h1, mul_one]
-  haveI := Fintype.ofFinite 𝓀[k]
+  have := Fintype.ofFinite 𝓀[k]
   simp only [h3, h1, tsum_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at h2
   have h4 := congrArg ENNReal.toReal h2
   simp only [ENNReal.toReal_one, ENNReal.toReal_mul, ENNReal.toReal_natCast, ENNReal.coe_toReal] at h4
@@ -312,8 +312,8 @@ theorem HasConductor.ne_one (h : HasConductor ψ c) : ψ ≠ 1 := by
   obtain ⟨r, hr, hr1⟩ := Valuation.IsNontrivial.exists_lt_one (v := valuation k)
   have hr0 : r ≠ 0 := by simpa using hr
   have h1 := (h (r⁻¹ * c)).mp fun y _ => by simp
-  rw [map_mul, map_inv₀, inv_mul_le_iff₀ (by simp [zero_lt_iff, hr0])] at h1
-  exact absurd (mul_lt_of_lt_one_left (by simp [zero_lt_iff]) hr1) (not_lt.mpr h1)
+  rw [map_mul, map_inv₀, inv_mul_le_iff₀ (by simp [pos_iff_ne_zero, hr0])] at h1
+  exact absurd (mul_lt_of_lt_one_left (by simp [pos_iff_ne_zero]) hr1) (not_lt.mpr h1)
 
 theorem HasConductor.isLocallyConstant (h : HasConductor ψ c) : IsLocallyConstant ψ := by
   refine (IsLocallyConstant.iff_eventually_eq _).mpr fun x => ?_
@@ -336,15 +336,15 @@ theorem HasConductor.exists_ne_one (h : HasConductor ψ c) (s : kˣ) {x : k} (hx
   apply hx
   have h1 := (h (s * x)).mp fun y hy => by
     have := hne (y * x⁻¹) (by
-      rw [cball, Set.mem_setOf_eq, map_mul, map_inv₀, mul_inv_le_iff₀ (by simp [zero_lt_iff, hx0]), ← map_mul]
+      rw [cball, Set.mem_ofPred_eq, map_mul, map_inv₀, mul_inv_le_iff₀ (by simp [pos_iff_ne_zero, hx0]), ← map_mul]
       exact hy)
     rwa [inv_mul_cancel_right₀ hx0] at this
-  rw [cball, Set.mem_setOf_eq, Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀,
-    le_mul_inv_iff₀ (by simp [zero_lt_iff]), mul_comm, ← map_mul]
+  rw [cball, Set.mem_ofPred_eq, Units.val_mul, Units.val_inv_eq_inv_val, map_mul, map_inv₀,
+    le_mul_inv_iff₀ (by simp [pos_iff_ne_zero]), mul_comm, ← map_mul]
   exact h1
 
 theorem add_mem_cball {s : kˣ} {x y : k} (hx : x ∈ cball s) (hy : y ∈ cball s) : x + y ∈ cball s := by
-  rw [cball, Set.mem_setOf_eq] at *
+  rw [cball, Set.mem_ofPred_eq] at *
   exact Valuation.map_add_le _ hx hy
 
 theorem neg_mem_cball {s : kˣ} {x : k} (hx : x ∈ cball s) : -x ∈ cball s := by
@@ -413,8 +413,8 @@ theorem fourier_indicator (h : HasConductor ψ c) (s : kˣ) (x : k) :
 theorem fourier_inversion (h : HasConductor ψ c) {f : k → ℂ} (hf : f ∈ SB k) :
     ∫ y, (∫ x, f x * (ψ (x * y) : ℂ) ∂ν) ∂ν =
       ((ν.real (𝒪[k] : Set k) ^ 2 * nabs k c : ℝ) : ℂ) * f 0 := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   obtain ⟨s, hs⟩ := exists_cball_invariant hf
   set e : k → ℂ := (cball (c * s⁻¹)).indicator (fun _ => (1 : ℂ)) with he
   have h1 : ∀ y, ∫ x, f x * (ψ (x * y) : ℂ) ∂ν = ∫ x, f x * (e y * (ψ (y * x) : ℂ)) ∂ν := by
@@ -429,7 +429,7 @@ theorem fourier_inversion (h : HasConductor ψ c) {f : k → ℂ} (hf : f ∈ SB
   have hint : Integrable (Function.uncurry fun y x => f x * (e y * (ψ (y * x) : ℂ))) (ν.prod ν) := by
     have h2 := (hei.mul_prod hfi).mul_bdd (c := 1) (g := fun q : k × k => (ψ (q.1 * q.2) : ℂ))
       (Continuous.aestronglyMeasurable
-        (continuous_subtype_val.comp (h.continuous.comp (by fun_prop))))
+        (continuous_subtypeVal.comp (h.continuous.comp (by fun_prop))))
       (Filter.Eventually.of_forall fun q => (Circle.norm_coe _).le)
     refine h2.congr (Filter.Eventually.of_forall fun q => ?_)
     simp only [Function.uncurry]
@@ -456,7 +456,7 @@ theorem fourier_inversion (h : HasConductor ψ c) {f : k → ℂ} (hf : f ∈ SB
 
 omit [ν.IsAddHaarMeasure] in
 theorem isSelfDual_of_isUnitVol (h : HasConductor ψ 1) (hν : IsUnitVol ν) : IsSelfDual ψ ν := by
-  haveI := hν.1
+  have := hν.1
   refine ⟨hν.1, fun f hf => ?_⟩
   rw [fourier_inversion ν h hf, Measure.real, hν.2, nabs_one]
   simp

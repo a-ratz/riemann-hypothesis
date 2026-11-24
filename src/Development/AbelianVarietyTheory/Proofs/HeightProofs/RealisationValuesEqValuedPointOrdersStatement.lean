@@ -152,7 +152,7 @@ theorem evI_eq_unit_mul (hL : EvLaws Xo c) (hU : IntDiagUnit Xo c) {L : Type} [F
     ∀ (ψ : L →ₐ[c.F] T.Fr), (∃ (z : FrPt Xo c T.Fr) (t : Ix Dw → T.Frˣ), FrMap ψ y₀ z ∧ FrBor t z y.1) →
       (∀ w' : FrPt Xo c T.Fr, FrMap ψ w w' → Integral T io w') →
       ∀ a n, ∀ f ∈ sec Xo c a n, ∃ u : T.Fr, valV T.V u = 1 ∧ evI y f = u * ψ (evR Xo c f w) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   rintro ψ ⟨z, t, hz, ht⟩ hint a n f hf
   obtain ⟨w', hw'⟩ := hL.bc _ _ ψ w
   obtain ⟨-, hmul, hinv, -⟩ := _root_.GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c T.Fr
@@ -168,12 +168,12 @@ theorem exists_integral_change (hL : EvLaws Xo c) (hM : ∀ la, ModelAt Xo c la)
         ∀ w' : FrPt Xo c T.Fr, FrMap ψ w w' → Integral T io w' := by
   obtain ⟨la, hla⟩ := exists_place_le (W.comap (algebraMap c.F L))
   obtain ⟨Y, hY⟩ := hM la
-  haveI : IsDiscreteValuationRing (la.valuation c.F).valuationSubring := inferInstance
+  have : IsDiscreteValuationRing (la.valuation c.F).valuationSubring := inferInstance
   obtain ⟨J, -, P, hP⟩ := exists_finite_pchart_cover GlobalTheory.abelianSchemeLaws_all.2.secTwist E H Dw l Xo c hL.bc
     (la.valuation c.F).valuationSubring Y hY
   obtain ⟨j, e, he, χ, w, t₀, hg, hw, h₀⟩ := hP L W (fun a => hla a.2) y₀
   refine ⟨w, t₀, h₀, fun T io => ?_⟩
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro ψ hψ w' hw'
   refine (P j).int e he T io (ψ.comp χ) (fun a => ?_) (fun g hg' => hψ _ (hg g hg')) w'
     (frMap_trans _ _ _ χ ψ _ _ _ hw hw')
@@ -335,7 +335,7 @@ theorem generic_of_ne_zero (h : GenFrEx Xo c) (Z : Comp Xo c) (L : Type) [Field 
     have : evR Xo c f C.y = r * evR Xo c g C.y := Subtype.ext (by
       rw [Subalgebra.coe_mul, e1 a n f hf, e1 a n g hg, h1]; ring)
     rw [e2 a n f hf, this, map_mul, hr, zero_mul, mul_zero]
-  haveI : IsFractionRing C.R (Om C.Z) := IsFractionRing.of_field _ _ fun x => by
+  have : IsFractionRing C.R (Om C.Z) := IsFractionRing.of_field _ _ fun x => by
     obtain ⟨a, ha, b, hb, hb0, hx⟩ := C.frac x
     exact ⟨⟨a, ha⟩, ⟨b, hb⟩, (eq_div_iff hb0).2 hx⟩
   let ψ : Om C.Z →ₐ[c.F] L := IsFractionRing.liftAlgHom hinj
@@ -366,7 +366,7 @@ theorem generic_int (h : GenFrEx Xo c) (Z : Comp Xo c) (T : CDVR) (io : c.F →+
         FrMap ({ ψ with commutes' := fun a => RingHom.congr_fun hψ a } : Om Z →ₐ[c.F] T.Fr) (genFr h Z) z ∧
           FrBor t z y.1) ∧
       ∀ a n, ∀ f ∈ sec Xo c a n, ∀ g ∈ sec Xo c a n, ∀ r, evC h Z f = r * evC h Z g → evI y f = ψ r * evI y g := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨ψ, z, t, hz, hb⟩ := generic_of_ne_zero h Z T.Fr y.1 hZ hR
   exact ⟨ψ.toRingHom, RingHom.ext ψ.commutes, ⟨z, t, hz, hb⟩,
     fun a n f hf g hg r hr => ratio_of_generic h Z T.Fr hz hb hf hg hr⟩

@@ -102,18 +102,18 @@ theorem GlobalTheory.ArchFactorPair.exists_archOperator_pair :
   choose Tf hTf using hB
   have htens_add : ∀ f g : SInf F (Fin n × Fin d),
       tens (evI F) (⇑(f + g)) R = tens (evI F) (⇑f) R + tens (evI F) (⇑g) R := by
-    intro f g; funext x; simp only [tens, SchwartzMap.add_apply, Pi.add_apply]; ring
+    intro f g; funext x; simp only [tens, add_apply, Pi.add_apply]; ring
   have htens_smul : ∀ (c : ℂ) (f : SInf F (Fin n × Fin d)),
       tens (evI F) (⇑(c • f)) R = c • tens (evI F) (⇑f) R := by
-    intro c f; funext x; simp only [tens, SchwartzMap.smul_apply, Pi.smul_apply, smul_eq_mul]; ring
+    intro c f; funext x; simp only [tens, smul_apply, Pi.smul_apply, smul_eq_mul]; ring
   let T : SInf F (Fin n × Fin d) →ₗ[ℂ] SInf F (Fin n × Fin d) :=
     { toFun := Tf
       map_add' := fun f g => by
         ext t
-        rw [SchwartzMap.add_apply, hTf, hTf, hTf, htens_add, map_add (f := _), Pi.add_apply]; ring
+        rw [add_apply, hTf, hTf, hTf, htens_add, map_add (f := _), Pi.add_apply]; ring
       map_smul' := fun c f => by
         ext t
-        rw [SchwartzMap.smul_apply, hTf, hTf, htens_smul, map_smul, Pi.smul_apply, smul_eq_mul, smul_eq_mul,
+        rw [smul_apply, hTf, hTf, htens_smul, map_smul, Pi.smul_apply, smul_eq_mul, smul_eq_mul,
           RingHom.id_apply]; ring }
   refine ⟨T, fun f r hr => ?_⟩
   funext y
@@ -254,7 +254,7 @@ theorem orbit_heis_real : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have h4 := GlobalTheory.HeisOrbit.DOpDeriv.dOp_hasDerivAt (fun t => T t f) (fun t => (archCo M.co (u * (mat (γ (Multiplicative.ofAdd t)))ᵀ)).1)
     (fun t => (archCo M.co (u * (mat (γ (Multiplicative.ofAdd t)))ᵀ)).2) f' _ _ hsm hf'd hP hQ x
   simp only [hφ0, hT0] at h4
-  rw [SchwartzMap.add_apply, hg₁, hg₂]
+  rw [add_apply, hg₁, hg₂]
   exact h4.congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => hrel t x)
 
 end GlobalTheory.HeisOrbitReal
@@ -296,10 +296,10 @@ theorem GlobalTheory.ArchLineAct.intertwine_pair : ∀ (F E : Type) [Field F] [N
   have hmat1 : mat (1 : UA σ W.J) = 1 := rfl
   refine ⟨fun t => GlobalTheory.ArchLineAct.archMap M.co (L t), fun w => ?_, fun s t => ?_, ?_, fun t p q f g hg => ?_⟩
   · have hm : Continuous fun t : ℝ => (mat (γ (Multiplicative.ofAdd t)))ᵀ :=
-      (Units.continuous_val.comp (continuous_subtype_val.comp (hγ.1.comp continuous_ofAdd))).matrix_transpose
+      (Units.continuous_val.comp (continuous_subtypeVal.comp (hγ.1.comp continuous_ofAdd))).matrix_transpose
     set u := M.co.e.symm (GlobalTheory.ArchLineAct.archLift w.1, GlobalTheory.ArchLineAct.archLift w.2) with hu
     let K := M.co.e.toLinearMap ∘ₗ (GlobalTheory.ArchLineAct.lmulL (k := d) u)
-    haveI : IsModuleTopology (AF F) (Matrix (Fin d) (Fin d) (AE F E)) :=
+    have : IsModuleTopology (AF F) (Matrix (Fin d) (Fin d) (AE F E)) :=
       inferInstanceAs (IsModuleTopology (AF F) (Fin d → Fin d → AE F E))
     have hK : Continuous K := IsModuleTopology.continuous_of_linearMap K
     have hc : Continuous fun t : ℝ => M.co.e (L t u) := hK.comp hm
@@ -404,7 +404,7 @@ theorem continuous_apply : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     refine ⟨g (fun i => (xh i).2) • ((BoundedContinuousFunction.evalCLM ℂ x).comp
       (SchwartzMap.toBoundedContinuousFunctionCLM ℂ _ ℂ)), fun h => ?_⟩
     show pureA F (⇑h) g xh = _
-    simp only [pureA, hxh, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+    simp only [pureA, hxh, smul_apply, ContinuousLinearMap.comp_apply,
       BoundedContinuousFunction.evalCLM_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply, smul_eq_mul]
     exact mul_comm _ _
   have hφ : pureA F (⇑f) g₀ ∈ (adeleClass F).sp κ := Submodule.subset_span ⟨f, g₀, hg₀, rfl⟩
@@ -507,7 +507,7 @@ theorem integral_norm_sq_eq_pair : ∀ (F E : Type) [Field F] [NumberField F] [F
   change ∫⁻ x, ‖om (1, γ (Multiplicative.ofAdd t)) (tens (evI F) f r) x‖ₑ ^ 2 ∂μA = _ at hU
   rw [hAct] at hU
   have h1 := ((hc (T t f)).symm.trans hU).trans (hc f)
-  haveI := opensMeasurable F (Fin n × Fin d)
+  have := opensMeasurable F (Fin n × Fin d)
   rw [integral_sq_eq μ (T t f).continuous, integral_sq_eq μ f.continuous, (ENNReal.mul_right_inj hc0 hct).1 h1]
 
 end GlobalTheory.ArchimedeanUnitaryL2
@@ -548,7 +548,7 @@ theorem smooth_vacuum_line : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   obtain ⟨A, hAc, hAadd, hA0, hAint⟩ := _root_.GlobalTheory.ArchLineAct.intertwine_pair F E σ hcm n d X W M ψ χX χW om hstd hXh hXd hWs hWd hrX hrW hhX hhW hwe γ hγ T hTa
   have hC := _root_.GlobalTheory.ArchLineContPair.continuous_apply F E σ hcm n d X W M ψ χX χW om hstd hXh hXd hWs hWd hrX hrW hhX hhW hwe γ hγ T hTa
   obtain ⟨J₀, hJ, hvac⟩ := _root_.GlobalTheory.FockPair.exists_fock_cx F E σ hcm n d X W M ψ χX χW om hstd hXh hXd hWs hWd hrX hrW hhX hhW hwe τ hcX hcW f₀ hf₀
-  haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   obtain ⟨hsm, k, qs, qs', cs, c, hd⟩ := GlobalTheory.T.weilOneParam_moves_fockVacuum_smoothly (V := Fin n × Fin d → mixedEmbedding.mixedSpace F)
     MeasureTheory.Measure.addHaar (GlobalTheory.GaussLine.pairInf F (Fin n × Fin d))
     (GlobalTheory.GaussLine.pairInf_nondeg F _) T h1 h0 hU A hAc hAadd hA0 hAint hC J₀ hJ f₀ hvac
@@ -559,7 +559,7 @@ theorem smooth_vacuum_line : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   refine ⟨(∑ i, cs i • m (qs i) (m (qs' i) f₀ hf₀P) (hmP _ _ _)) + c • f₀,
     add_mem (sum_mem fun i _ => Submodule.smul_mem _ _ (hmP _ _ _)) (Submodule.smul_mem _ _ hf₀P), fun x => ?_⟩
   convert hd x using 1
-  simp only [SchwartzMap.add_apply, SchwartzMap.sum_apply, SchwartzMap.smul_apply, smul_eq_mul, hmE]
+  simp only [add_apply, sum_apply, smul_apply, smul_eq_mul, hmE]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   ring
@@ -611,7 +611,7 @@ theorem lie_deriv_pol : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
         rintro f g ⟨hf, hf1, f', hf', hf2⟩ ⟨hg, hg1, g', hg', hg2⟩
         refine ⟨add_mem hf hg, by simpa using hf1.add hg1, f' + g', add_mem hf' hg', fun x => ?_⟩
         show HasDerivAt (fun t => T t (f + g) x) ((f' + g') x) 0
-        simp only [map_add (f := _), SchwartzMap.add_apply]
+        simp only [map_add (f := _), add_apply]
         exact (hf2 x).add (hg2 x)
       smul_mem' := by
         rintro c f ⟨hf, hf1, f', hf', hf2⟩

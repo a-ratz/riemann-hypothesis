@@ -436,14 +436,14 @@ theorem rholW_eq {G : (Mt × Mt) × Mt → ℂ} (hG : AnalyticOnNhd ℂ G (Om3 n
 
 def pk {ε : Fin n → Bool} (k : KG ε) : Mt × Mt := ((toMK k)⁻¹, toMK k)
 
-theorem continuous_toMK (ε : Fin n → Bool) : Continuous (fun k : KG ε => toMK k) := (Units.continuous_val.comp continuous_subtype_val).comp continuous_subtype_val
+theorem continuous_toMK (ε : Fin n → Bool) : Continuous (fun k : KG ε => toMK k) := (Units.continuous_val.comp continuous_subtypeVal).comp continuous_subtypeVal
 
 theorem continuous_pk (ε : Fin n → Bool) : Continuous (pk (ε := ε)) := by
   have e : (pk (ε := ε)) = fun k : KG ε =>
       (((((k : UJ ε) : (Matrix (Fin n) (Fin n) ℂ)ˣ)⁻¹ : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Mt), toMK k) := by
     funext k; simp [pk, Matrix.coe_units_inv]
   rw [e]
-  exact (Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_subtype_val)).prodMk (continuous_toMK ε)
+  exact (Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_subtypeVal)).prodMk (continuous_toMK ε)
 
 theorem pk_mem {ε : Fin n → Bool} {z : Mt} (hz : z ∈ U1 ε) (k : KG ε) : (pk k, z) ∈ Om3 n := hz _ ((Formalism.REAL.mem_KG ε _).1 k.2)
 

@@ -242,8 +242,8 @@ theorem orth_of_disjoint : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : 
         rw [this]
         exact neg_mem (memL u hu hue)
       rw [Finset.sum_eq_single_of_mem (mkL c) (Finset.mem_image_of_mem _ hc) fun q _ hq' => by
-        simp only [P, hq, if_neg (Ne.symm hq')]]
-      simp only [P, hq, if_true]
+        simp only [P, hq, ite_eq_right (Ne.symm hq')]]
+      simp only [P, hq, ite_true]
   have hSB : ∀ Φ : WO S T → ℂ, (∀ t, Φ t ≠ 0 → IsHalf (cA D ea) t ∧ k • t ∈ Λ) →
       (∀ u ∈ Λ, IsHalf (cA D ea) u → ∀ t, Φ (t + k • u) = Φ t) → ∀ q, IsSBHalf (cA D ea) Λ (P Φ q) := by
     intro Φ hsup hinv q
@@ -261,8 +261,8 @@ theorem orth_of_disjoint : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : 
   have hPne : ∀ Φ q t, P Φ q t ≠ 0 → mkL (cA D e • t) = q ∧ Φ t ≠ 0 := fun Φ q t h => by
     by_cases hq : mkL (cA D e • t) = q
     · refine ⟨hq, fun h0 => h ?_⟩
-      simp only [P, hq, h0, if_true]
-    · exact absurd (by simp only [P, hq, if_false]) h
+      simp only [P, hq, h0, ite_true]
+    · exact absurd (by simp only [P, hq, ite_false]) h
 
   have hhalf_ce : ∀ t, IsHalf (cA D ea) t → (e + cA D e) • t = cA D e • t := fun t ht => by
     have h0 : e • t = 0 := by rw [← half'.1 ht, smul_smul, hecea, zero_smul]
@@ -301,7 +301,7 @@ theorem orth_of_disjoint : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : 
       have h1 : symplO S T t y = symplO S T (cA D e • t) y := by rw [symplO_smul S T, cA_cA, half'.1 hy]
       have h2 : cA D e • t = c + k • -w := by rw [smul_neg, ← hwk]; abel
       rw [h1, h2, symplO_add_left S T, AddChar.map_add_eq_mul, hyL _ (neg_mem hw), mul_one]
-    · simp only [P, hq, if_false, mul_zero]
+    · simp only [P, hq, ite_false, mul_zero]
 
   have hsep : ∀ q ∈ Q, ∀ q' ∈ Q, q ≠ q' → ∃ y, IsHalf e y ∧ ∃ a b : ℂ, ‖a‖ = 1 ∧ a ≠ b ∧
       (∀ Φ, (fun t => ψ (symplO S T t y) * P Φ q t) = a • P Φ q) ∧

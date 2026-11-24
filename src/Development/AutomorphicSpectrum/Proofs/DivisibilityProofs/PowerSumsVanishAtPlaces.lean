@@ -61,8 +61,8 @@ theorem mem_minimalPrimes_map_iff_comap {K : Type} {ι : K → Type} {R R' : Typ
     [Algebra R R'] (Mo : Submonoid R) [IsLocalization Mo R'] (J : Ideal (MRing ι R)) (W' : Ideal (MRing ι R')) :
     W' ∈ (J.map (MvPolynomial.map (algebraMap R R') : MRing ι R →+* MRing ι R')).minimalPrimes ↔
       W'.comap (MvPolynomial.map (algebraMap R R') : MRing ι R →+* MRing ι R') ∈ J.minimalPrimes := by
-  letI := MvPolynomial.algebraMvPolynomial (σ := (Σ k, ι k)) (R := R) (S := R')
-  haveI : IsLocalization (Mo.map (C (σ := (Σ k, ι k)) (R := R))) (MRing ι R') :=
+  let := MvPolynomial.algebraMvPolynomial (σ := (Σ k, ι k)) (R := R) (S := R')
+  have : IsLocalization (Mo.map (C (σ := (Σ k, ι k)) (R := R))) (MRing ι R') :=
     MvPolynomial.isLocalization Mo R'
   have h := IsLocalization.minimalPrimes_map (Mo.map (C (σ := (Σ k, ι k)) (R := R))) (MRing ι R') J
   have e : algebraMap (MRing ι R) (MRing ι R') = MvPolynomial.map (algebraMap R R') := rfl
@@ -91,7 +91,7 @@ theorem mem_minimalPrimes_of_unique_contraction {S T : Type} [CommRing S] [CommR
     (hc : Wa.comap ψ = W₀) (hJ : J₀ ≤ Ja.comap ψ) (hP : Pa ≤ Ja)
     (hu : ∀ Q : Ideal T, Q.IsPrime → Pa ≤ Q → Q.comap ψ = W₀ → Q = Wa) : Wa ∈ Ja.minimalPrimes := by
   refine ⟨⟨hWa, hJa⟩, fun Q hQ hQW => ?_⟩
-  haveI := hQ.1
+  have := hQ.1
   have h1 : Q.comap ψ ≤ W₀ := hc ▸ Ideal.comap_mono hQW
   have h2 : W₀ ≤ Q.comap ψ :=
     hW₀.2 ⟨Ideal.comap_isPrime _ _, hJ.trans (Ideal.comap_mono hQ.2)⟩ h1
@@ -132,7 +132,7 @@ theorem exists_algebra_of_injective (A Ω : Type) [CommRing A] [Field Ω] [Algeb
     have h1 : (s : A) = 0 := hinj (by rw [h0, map_zero])
     exact s.2 (h1 ▸ m.zero_mem)
   refine ⟨(IsLocalization.lift hu (S := O)).toAlgebra, ?_⟩
-  letI : Algebra O Ω := (IsLocalization.lift hu (S := O)).toAlgebra
+  let : Algebra O Ω := (IsLocalization.lift hu (S := O)).toAlgebra
   exact IsScalarTower.of_algebraMap_eq fun a => (IsLocalization.lift_eq hu a).symm
 
 def coneWt (K : Type) [DecidableEq K] : K → K → ℕ := fun k => Pi.single k 1
@@ -180,8 +180,8 @@ theorem isPrime_map_and_comap_map {K : Type} {ι : K → Type} {A O : Type} [Com
     (Wa.map (MvPolynomial.map (algebraMap A O) : MRing ι A →+* MRing ι O)).IsPrime ∧
       (Wa.map (MvPolynomial.map (algebraMap A O) : MRing ι A →+* MRing ι O)).comap
         (MvPolynomial.map (algebraMap A O) : MRing ι A →+* MRing ι O) = Wa := by
-  letI := MvPolynomial.algebraMvPolynomial (σ := (Σ k, ι k)) (R := A) (S := O)
-  haveI : IsLocalization (Mo.map (C (σ := (Σ k, ι k)) (R := A))) (MRing ι O) :=
+  let := MvPolynomial.algebraMvPolynomial (σ := (Σ k, ι k)) (R := A) (S := O)
+  have : IsLocalization (Mo.map (C (σ := (Σ k, ι k)) (R := A))) (MRing ι O) :=
     MvPolynomial.isLocalization Mo O
   have hdisj : Disjoint ((Mo.map (C (σ := (Σ k, ι k)) (R := A)) : Submonoid (MRing ι A)) : Set (MRing ι A))
       (Wa : Set (MRing ι A)) := by
@@ -193,19 +193,19 @@ theorem isPrime_map_and_comap_map {K : Type} {ι : K → Type} {A O : Type} [Com
 
 theorem exists_card_quotient_eq_pow {A : Type} [CommRing A] [Module.Finite ℤ A] (p : ℕ) [Fact p.Prime]
     (m : Ideal A) [m.IsMaximal] (hpm : (p : A) ∈ m) : ∃ fd : ℕ, Nat.card (A ⧸ m) = p ^ fd := by
-  letI : Field (A ⧸ m) := Ideal.Quotient.field m
+  let : Field (A ⧸ m) := Ideal.Quotient.field m
   have hp0 : ((p : ℕ) : A ⧸ m) = 0 := by
     have h := Ideal.Quotient.eq_zero_iff_mem.2 hpm
     simpa using h
-  haveI hchar : CharP (A ⧸ m) p := by
+  have hchar : CharP (A ⧸ m) p := by
     rcases (Nat.dvd_prime (Fact.out : p.Prime)).1 (ringChar.dvd hp0) with h | h
     · exact absurd h CharP.ringChar_ne_one
     · exact h ▸ ringChar.charP _
-  letI : Algebra (ZMod p) (A ⧸ m) := ZMod.algebra _ p
-  haveI : Module.Finite ℤ (A ⧸ m) :=
+  let : Algebra (ZMod p) (A ⧸ m) := ZMod.algebra _ p
+  have : Module.Finite ℤ (A ⧸ m) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ ℤ m).toLinearMap Ideal.Quotient.mk_surjective
-  haveI : Module.Finite (ZMod p) (A ⧸ m) := Module.Finite.of_restrictScalars_finite ℤ (ZMod p) (A ⧸ m)
-  haveI : Finite (A ⧸ m) := Module.finite_of_finite (ZMod p)
+  have : Module.Finite (ZMod p) (A ⧸ m) := Module.Finite.of_restrictScalars_finite ℤ (ZMod p) (A ⧸ m)
+  have : Finite (A ⧸ m) := Module.finite_of_finite (ZMod p)
   refine ⟨Module.finrank (ZMod p) (A ⧸ m), ?_⟩
   rw [Module.natCard_eq_pow_finrank (K := ZMod p), Nat.card_zmod]
 
@@ -238,7 +238,7 @@ theorem classNum_eq_zero_of_vNumL_eq {K : Type} [DecidableEq K] {ι : K → Type
 
 theorem powerSumsVanish_extTo_of_atPlacesOver : ∀ (K : Type) [Fintype K] [DecidableEq K] (ι : K → Type) [∀ k, Fintype (ι k)] (Ω : Type) [Field Ω] (y : (Σ k, ι k) → Ω) (A : Type) [CommRing A] [Algebra A Ω] [IsDedekindDomain A] [Module.Finite ℤ A], Function.Injective (algebraMap A Ω) → HasConstants ℤ A y → ∀ D : ℕ, IsArithVar (mCoordIdeal y) (D + 1) → ∀ (p : Nat.Primes) (N : ℕ) (x : Fin N → K → ℤ), (AtPlacesOver A Ω p fun O _ _ _ _ => PowerSumsVanish (pointIdeal O y) D x) → PowerSumsVanish (extTo (ZP p) (mCoordIdeal y)) D x := by
   intro K _ _ ι _ Ω _ y A _ _ _ _ hinj hconst D harith p N x hpl
-  haveI : Fact (p : ℕ).Prime := ⟨p.2⟩
+  have : Fact (p : ℕ).Prime := ⟨p.2⟩
   have hint := intCast_injective_of_isArithVar harith
   have hinjZ : Function.Injective (algebraMap ℤ Ω) := by
     have h : algebraMap ℤ Ω = Int.castRingHom Ω := RingHom.ext_int _ _
@@ -277,7 +277,7 @@ theorem powerSumsVanish_extTo_of_atPlacesOver : ∀ (K : Type) [Fintype K] [Deci
   obtain ⟨hcomp, hex, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.pl_corr K ι Ω y A hconst
   obtain ⟨Wa, ⟨hWap, hWapt, hWac⟩, hu⟩ := hex W₀ hW0p hW0rel hle
   obtain ⟨m, hm⟩ : ∃ m, m = Wa.comap (C : A →+* MRing ι A) := ⟨_, rfl⟩
-  haveI hmp : m.IsPrime := hm ▸ Ideal.comap_isPrime _ _
+  have hmp : m.IsPrime := hm ▸ Ideal.comap_isPrime _ _
   have hCp : (C ((p : ℕ) : ℤ) : MRing ι ℤ) ∈ W₀ :=
     (le_sup_right.trans hW0min.1.2) (Ideal.mem_map_of_mem _ (Ideal.mem_span_singleton_self _))
   have hmapC : ∀ n : ℤ, (MvPolynomial.map (Int.castRingHom A) (C n : MRing ι ℤ)) = C (n : A) := by
@@ -296,9 +296,9 @@ theorem powerSumsVanish_extTo_of_atPlacesOver : ∀ (K : Type) [Fintype K] [Deci
     have h3 : ((p : ℕ) : ℤ) = 0 := hint (by rw [h2, map_zero])
     exact p.2.ne_zero (by exact_mod_cast h3)
   have hmne : m ≠ ⊥ := fun h => hp0 ((Submodule.mem_bot _).1 (h ▸ hpm))
-  haveI hmax : m.IsMaximal := Ideal.IsPrime.isMaximal hmp hmne
+  have hmax : m.IsMaximal := Ideal.IsPrime.isMaximal hmp hmne
   obtain ⟨fd, hfd⟩ := exists_card_quotient_eq_pow (p : ℕ) m hpm
-  haveI hdvr : IsDiscreteValuationRing (Localization.AtPrime m) :=
+  have hdvr : IsDiscreteValuationRing (Localization.AtPrime m) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain A hmne (Localization.AtPrime m)
   obtain ⟨algO, towO⟩ := exists_algebra_of_injective A Ω hinj m (Localization.AtPrime m)
   have hO := (_root_.GlobalTheory.CompanionTheory.Ar.Num.pl_model K ι Ω y A hinj hconst D harith m (Localization.AtPrime m)).1

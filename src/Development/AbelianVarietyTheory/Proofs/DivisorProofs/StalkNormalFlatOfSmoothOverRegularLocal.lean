@@ -99,14 +99,14 @@ theorem stalk_of_smooth_over_regular :
         (Spec.preimage (X.fromSpecStalk x ≫ p)).hom.Flat ∧
         Function.Injective (Spec.preimage (X.fromSpecStalk x ≫ p)).hom := by
   intro R _ _ X p hp x
-  haveI : Smooth p := hp
-  haveI : IsRegularRing (CommRingCat.of R) := GlobalTheory.isRegularRing_of_isRegularLocalRing R
+  have : Smooth p := hp
+  have : IsRegularRing (CommRingCat.of R) := GlobalTheory.isRegularRing_of_isRegularLocalRing R
   have hreg : IsRegularLocalRing (X.presheaf.stalk x) :=
     GroundTheory.Arith.SchemeCoh.isRegularLocalRing_stalk_of_smooth p x
   obtain ⟨hdom, hint⟩ := GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing (X.presheaf.stalk x)
   have hRdom : IsDomain R := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing R).1
   have hfl : (Spec.preimage (X.fromSpecStalk x ≫ p)).hom.Flat := by
-    haveI := flat_fromSpecStalk' X x
+    have := flat_fromSpecStalk' X x
     have h : Flat (Spec.map (Spec.preimage (X.fromSpecStalk x ≫ p))) := by
       rw [Spec.map_preimage]; infer_instance
     exact (HasRingHomProperty.Spec_iff (P := @Flat)).1 h

@@ -349,8 +349,8 @@ theorem nerve_zero {Γ : Type} [Group Γ] {m : ℕ} (g : Fin (m + 1) → Γ) :
 theorem val_succAbove {n : ℕ} (j : Fin (n + 1)) (i : Fin n) : (j.succAbove i).val = if i.val < j.val then i.val else i.val + 1 := by
   unfold Fin.succAbove
   by_cases h : i.val < j.val
-  · rw [if_pos h, if_pos (show i.castSucc < j from h)]; rfl
-  · rw [if_neg h, if_neg (show ¬ i.castSucc < j from h)]; rfl
+  · rw [ite_eq_left h, ite_eq_left (show i.castSucc < j from h)]; rfl
+  · rw [ite_eq_right h, ite_eq_right (show ¬ i.castSucc < j from h)]; rfl
 
 theorem nerve_succ {Γ : Type} [Group Γ] {m : ℕ} (g : Fin (m + 1) → Γ) (j : Fin (m + 1)) :
     (nerve (SingleObj Γ)).δ j.succ (grpSimplex g) = grpSimplex (j.contractNth (· * ·) g) := by
@@ -360,11 +360,11 @@ theorem nerve_succ {Γ : Type} [Group Γ] {m : ℕ} (g : Fin (m + 1) → Γ) (j 
   simp only [Fin.val_succ, Fin.val_castSucc] at a b
   rcases lt_trichotomy i.val j.val with h | h | h
   · rw [Fin.contractNth_apply_of_lt _ _ _ _ h]
-    exact gmap1 g _ _ f _ (by rw [a, if_pos (by omega)]; rfl) (by rw [b, if_pos (by omega)]; rfl)
+    exact gmap1 g _ _ f _ (by rw [a, ite_eq_left (by omega)]; rfl) (by rw [b, ite_eq_left (by omega)]; rfl)
   · rw [Fin.contractNth_apply_of_eq _ _ _ _ h]
-    exact gmap2 g _ _ f _ _ (by rw [a, if_pos (by omega)]; rfl) rfl (by rw [b, if_neg (by omega)]; rfl)
+    exact gmap2 g _ _ f _ _ (by rw [a, ite_eq_left (by omega)]; rfl) rfl (by rw [b, ite_eq_right (by omega)]; rfl)
   · rw [Fin.contractNth_apply_of_gt _ _ _ _ h]
-    exact gmap1 g _ _ f _ (by rw [a, if_neg (by omega)]; rfl) (by rw [b, if_neg (by omega)]; rfl)
+    exact gmap1 g _ _ f _ (by rw [a, ite_eq_right (by omega)]; rfl) (by rw [b, ite_eq_right (by omega)]; rfl)
 
 theorem ev_pres (P Q : Spc) (n : SimplexCategoryᵒᵖ) : PreservesLimit (pair P Q) ((evaluation SimplexCategoryᵒᵖ PSh).obj n) :=
   (evaluation_preservesLimitsOfShape (J := Discrete WalkingPair) _).preservesLimit
@@ -375,7 +375,7 @@ theorem lift_fst {P Q : Spc} {n : SimplexCategoryᵒᵖ} {W : PSh} (u : W ⟶ P.
       (prod.fst : P ⨯ Q ⟶ P).app n = u ∧
     (prod.lift u v ≫ (PreservesLimitPair.iso ((evaluation SimplexCategoryᵒᵖ PSh).obj n) P Q).inv) ≫
       (prod.snd : P ⨯ Q ⟶ Q).app n = v := by
-  haveI := ev_pres P Q n
+  have := ev_pres P Q n
   constructor
   · erw [Category.assoc, PreservesLimitPair.iso_inv_fst, prod.lift_fst]
   · erw [Category.assoc, PreservesLimitPair.iso_inv_snd, prod.lift_snd]
@@ -383,7 +383,7 @@ theorem lift_fst {P Q : Spc} {n : SimplexCategoryᵒᵖ} {W : PSh} (u : W ⟶ P.
 theorem prod_ext {P Q : Spc} {n : SimplexCategoryᵒᵖ} {W : PSh} (u v : W ⟶ (P ⨯ Q).obj n)
     (h1 : u ≫ (prod.fst : P ⨯ Q ⟶ P).app n = v ≫ (prod.fst : P ⨯ Q ⟶ P).app n)
     (h2 : u ≫ (prod.snd : P ⨯ Q ⟶ Q).app n = v ≫ (prod.snd : P ⨯ Q ⟶ Q).app n) : u = v := by
-  haveI := ev_pres P Q n
+  have := ev_pres P Q n
   exact BinaryFan.IsLimit.hom_ext
     (isLimitOfHasBinaryProductOfPreservesLimit ((evaluation SimplexCategoryᵒᵖ PSh).obj n) P Q) h1 h2
 

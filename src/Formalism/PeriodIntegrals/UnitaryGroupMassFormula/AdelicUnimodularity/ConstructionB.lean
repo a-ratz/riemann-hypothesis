@@ -102,7 +102,7 @@ theorem half (hm : ∀ i, m i ∈ I.L) (hgen : ∀ l ∈ I.L, ∃ z : Fin k → 
   have hTy : N • (I.fmat y *ᵥ ivec (F := I.F) (m j)) ∈ Tset (F := I.F) m :=
     lam_sub_alt hm hgen (hyj j).1
   have hej := congrFun he j
-  simp only [fN, dif_pos hTx, dif_pos hTy] at hej
+  simp only [fN, dite_eq_left hTx, dite_eq_left hTy] at hej
   obtain ⟨haI, haE⟩ := hTx.choose_spec
   obtain ⟨ha'I, ha'E⟩ := hTy.choose_spec
 
@@ -182,7 +182,7 @@ theorem compact_countable : KCountable := by
   have hcov : ∀ N : ℕ, ∃ s : Set I.Gf, s.Countable ∧
       ∀ x, PN I m N x → ∃ y ∈ s, y⁻¹ * x ∈ I.Kset := by
     intro N
-    haveI : Countable (Bad I.F (N * N) → I.F) := countable_cls (N * N)
+    have : Countable (Bad I.F (N * N) → I.F) := countable_cls (N * N)
     exact cover_of I.Kset (PN I m N) (fN I m N) fun x y hx hy he => step I m hm hgen hx hy he
   choose s hs hsK using hcov
   refine ⟨⋃ N, s N, Set.countable_iUnion hs, fun x => ?_⟩

@@ -78,7 +78,7 @@ theorem exists_lift {E : Type} [Field E] [NumberField E] {K : Type} [Field K] [C
     ∃ σ : E →+* K, ∀ a : 𝓞 E, σ (a : E) = χ a := by
   have hinj : Function.Injective χ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [eq_bot_iff]
     intro n hn
     have : (n : K) = 0 := by simpa using hn
@@ -154,8 +154,8 @@ theorem alg_main {E : Type} [Field E] [NumberField E] {Ω C R A A' : Type} [Fiel
         (GlobalTheory.CompanionTheory.Ar.eigSp ρC ((algebraMap R C).comp σ)).restrictScalars R) ∧
       (Submodule.span R {x | ∃ e ∈ W, Val e x}).FG := by
   classical
-  haveI : CharZero A' := ψ.charZero
-  haveI : CharZero Ω := charZero_of_injective_ringHom hg
+  have : CharZero A' := ψ.charZero
+  have : CharZero Ω := charZero_of_injective_ringHom hg
   have vuniq : ∀ e x x', Val e x → Val e x' → x = x' := by
     intro e x x' h h'
     obtain ⟨c, h1, rfl⟩ := (hVal _ _).1 h
@@ -337,7 +337,7 @@ theorem hodge_tate_free_sandwich : ∀ (E : Type) [Field E] [NumberField E] [IsC
   intro E _ _ _ H D l Xo c O _ β Y S Ω _ K _ J _ y 𝔐 p hp hpS κ hfree hsand C _ _ v O' _ _ _ hv hvp z EC _ _ _ _ MC
     ρC s σ κz hact hσ hκ
   have hξ := 𝔐.tie.gen
-  haveI := 𝔐.t.semi.smooth
+  have := 𝔐.t.semi.smooth
   have h : genPt 𝔐.ξ ⤳ centre z := 𝔐.all _
   have h' : genPt 𝔐.ξ ⤳ centre (Spec.map (CommRingCat.ofHom (algebraMap O' C)) ≫ z) := 𝔐.all _
   have hsp := centre_specializes (algebraMap O' C) z
@@ -361,7 +361,7 @@ theorem hodge_tate_free_sandwich : ∀ (E : Type) [Field E] [NumberField E] [IsC
     obtain ⟨_, t, ht, -⟩ := hσ a
     exact ⟨t, ht⟩
   obtain ⟨n, βb, gm, hβ, hVal⟩ := exists_frame 𝔐.M z MC h h'
-  haveI : FiniteDimensional Ω 𝔐.Li := Module.Finite.of_basis βb
+  have : FiniteDimensional Ω 𝔐.Li := Module.Finite.of_basis βb
   obtain ⟨U, hU, b, hbs, hb⟩ := hfree.2 s ⟨centre z, h⟩ hq
   obtain ⟨hli, hbq⟩ := hb _ hq hU
   obtain ⟨f, hf1, hf2⟩ := exists_predual b hli hbs
@@ -405,7 +405,7 @@ theorem hodge_tate_free_sandwich : ∀ (E : Type) [Field E] [NumberField E] [IsC
     obtain ⟨_, t, h1, h2⟩ := hσ a
     exact ⟨t, (hgk t).trans h1, h2⟩
   · intro a e x hx
-    haveI := 𝔐.t.act.hom a
+    have := 𝔐.t.act.hom a
     exact valAt_act 𝔐.M MC _ _ _ (𝔐.act a) (hact a) hx
   · intro j e he
     obtain ⟨t, ht⟩ := 𝔐.M.htOm_le _ _ _ (hw1 j) e he

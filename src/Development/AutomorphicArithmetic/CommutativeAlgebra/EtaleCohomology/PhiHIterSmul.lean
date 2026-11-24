@@ -376,7 +376,7 @@ private theorem disj_of_splitOn {X Y Z : Scheme.{0}} (p : Z ⟶ Y) (x : X ⟶ Y)
   have e : (t ≫ Sigma.ι (fun _ : Fin m => X) a) = t ≫ Sigma.ι (fun _ : Fin m => X) b := by
     rw [← cancel_mono (Sigma.desc (fun i => pullback.lift (z i) (𝟙 X) (by rw [h i, Category.id_comp])) :
       ∐ (fun _ : Fin m => X) ⟶ pullback p x)]
-    simp only [Category.assoc, Sigma.ι_desc]
+    simp only [Category.assoc, Sigma.ι_comp_desc]
     apply pullback.hom_ext
     · simp only [Category.assoc, pullback.lift_fst]; exact ht
     · simp only [Category.assoc, pullback.lift_snd]
@@ -723,7 +723,7 @@ private theorem splitOn_of_disj (l : ℕ) (Y : Scheme.{0}) (T : Corr l Y) (X : S
       rw [hσq, Category.comp_id]
   refine ⟨Sigma.ι (fun _ : Fin T.d => X) i (e pt), ?_⟩
   rw [← hg, hgi]
-  have : Sigma.ι (fun _ : Fin T.d => X) i ≫ Sigma.desc σ = σ i := Sigma.ι_desc _ _
+  have : Sigma.ι (fun _ : Fin T.d => X) i ≫ Sigma.desc σ = σ i := Sigma.ι_comp_desc _ _
   simp only [Scheme.Hom.comp_apply]
   rw [← Scheme.Hom.comp_apply, this]
 

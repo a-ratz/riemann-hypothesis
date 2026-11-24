@@ -96,11 +96,11 @@ theorem P_cont (m : ℕ) : Continuous (P V m) :=
 def sc {Z : Type} [AddCommGroup Z] [Module ℂ Z] (C : ℝ) (p : Seminorm ℂ Z) : Seminorm ℂ Z := C.toNNReal • p
 
 theorem sc_apply {Z : Type} [AddCommGroup Z] [Module ℂ Z] {C : ℝ} (h : 0 ≤ C) (p : Seminorm ℂ Z) (f : Z) : sc C p f = C * p f := by
-  rw [sc, Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul, Real.coe_toNNReal _ h]
+  rw [sc, smul_apply, NNReal.smul_def, smul_eq_mul, Real.coe_toNNReal _ h]
 
 theorem sc_cont {Z : Type} [AddCommGroup Z] [Module ℂ Z] [TopologicalSpace Z] (C : ℝ) {p : Seminorm ℂ Z} (h : Continuous p) :
     Continuous (sc C p) := ((continuous_const (y := (C.toNNReal : ℝ))).mul h).congr fun f => by
-  rw [sc, Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]; rfl
+  rw [sc, smul_apply, NNReal.smul_def, smul_eq_mul]; rfl
 
 theorem bd_P (m : ℕ) (f : SchwartzMap V ℂ) : Bd m f (2 ^ m * P V m f) := fun j hj x =>
   SchwartzMap.one_add_le_sup_seminorm_apply (𝕜 := ℂ) (m := (m, m)) le_rfl hj f x
@@ -123,7 +123,7 @@ theorem P_le {m : ℕ} {f : SchwartzMap V ℂ} {C : ℝ} (h : Bd m f C) : P V m 
 theorem exists_P (q : Seminorm ℂ (SchwartzMap V ℂ)) (hq : Continuous q) : ∃ (m : ℕ) (C : ℝ), 0 ≤ C ∧ ∀ f, q f ≤ C * P V m f := by
   obtain ⟨s, C, -, h⟩ := Seminorm.bound_of_continuous (schwartz_withSeminorms ℂ V ℂ) q hq
   refine ⟨s.sup fun i => max i.1 i.2, C, C.2, fun f => (h f).trans ?_⟩
-  rw [Seminorm.smul_apply, NNReal.smul_def, smul_eq_mul]
+  rw [smul_apply, NNReal.smul_def, smul_eq_mul]
   refine mul_le_mul_of_nonneg_left (Seminorm.finset_sup_apply_le (apply_nonneg _ _) fun i hi => ?_) C.2
   have := Finset.le_sup (f := fun i : ℕ × ℕ => max i.1 i.2) hi
   exact Seminorm.le_finset_sup_apply (Finset.mem_Iic.2 ⟨(le_max_left _ _).trans this, (le_max_right _ _).trans this⟩)
@@ -147,7 +147,7 @@ theorem Bd.shift_sub {m : ℕ} {f : V → ℂ} (hf : ContDiff ℝ ∞ f) {C : �
   have e : iteratedFDeriv ℝ j (fun x => f (x + t) - f x) x = iteratedFDeriv ℝ j f (x + t) - iteratedFDeriv ℝ j f x := by
     rw [← iteratedFDeriv_comp_add_right]
     exact iteratedFDeriv_sub_apply (f := fun x => f (x + t)) (hj'.comp (contDiff_id.add contDiff_const)).contDiffAt hj'.contDiffAt
-  have hd : Differentiable ℝ (iteratedFDeriv ℝ j f) := hf.differentiable_iteratedFDeriv (by exact_mod_cast ENat.coe_lt_top j)
+  have hd : Differentiable ℝ (iteratedFDeriv ℝ j f) := hf.differentiable_iteratedFDeriv (by exact_mod_cast ENat.natCast_lt_top j)
   have hp : 0 < (1 + ‖x‖) ^ m := by positivity
   have := (convex_closedBall x ‖t‖).norm_image_sub_le_of_norm_fderiv_le (f := iteratedFDeriv ℝ j f)
     (C := (1 + ‖t‖) ^ m * C / (1 + ‖x‖) ^ m) (fun y _ => hd y) (fun y hy => by
@@ -281,7 +281,7 @@ theorem lip (q : Seminorm ℂ (SchwartzMap V ℂ)) (hq : Continuous q) : ∃ p :
     ((shift_smooth f w.1).sub (f.smooth ⊤)) ((bd_P (m + 1) f).shift_sub (f.smooth ⊤) w.1)
   have h5 := P_le (f := S w f - f) (by
     rw [show ((S w f - f : SchwartzMap V ℂ) : V → ℂ) = _ from funext fun x => show _ =
-      (ph w.2 (w.2 w.1 / 2) x - 1) * f (x + w.1) + (f (x + w.1) - f x) by rw [SchwartzMap.sub_apply, S_apply]; ring]
+      (ph w.2 (w.2 w.1 / 2) x - 1) * f (x + w.1) + (f (x + w.1) - f x) by rw [sub_apply, S_apply]; ring]
     exact h2)
   rw [sc_apply (by positivity)]
   have h4 := apply_nonneg (P V (m + 1)) f
@@ -298,10 +298,10 @@ theorem S_zero (f : SchwartzMap V ℂ) : S 0 f = f := by
 theorem S_add (w h : V × (V →L[ℝ] ℝ)) (f : SchwartzMap V ℂ) :
     S (w + h) f = cexp (I * ((w.2 h.1 - h.2 w.1) / 2 : ℝ)) • S w (S h f) := by
   ext x
-  rw [SchwartzMap.smul_apply, S_apply, S_apply, S_apply, ph, ph, ph, smul_eq_mul, ← mul_assoc, ← mul_assoc, ← Complex.exp_add,
+  rw [smul_apply, S_apply, S_apply, S_apply, ph, ph, ph, smul_eq_mul, ← mul_assoc, ← mul_assoc, ← Complex.exp_add,
     ← Complex.exp_add, Prod.fst_add, add_assoc x]
   congr 2
-  simp only [Prod.snd_add, ContinuousLinearMap.add_apply, map_add (f := _)]
+  simp only [Prod.snd_add, add_apply, map_add (f := _)]
   push_cast
   ring
 
@@ -324,7 +324,7 @@ theorem continuous_S (f : SchwartzMap V ℂ) : Continuous fun w => S w f := by
   have h1 : Tendsto (fun u => u - w) (𝓝 w) (𝓝 0) := by simpa using (continuous_sub_right w).tendsto w
   have h2 : Continuous fun h : V × (V →L[ℝ] ℝ) => cexp (I * ((w.2 h.1 - h.2 w.1) / 2 : ℝ)) := by fun_prop
   have h3 := ((h2.tendsto 0).smul (((S w).continuous.tendsto f).comp (tendsto_S f))).comp h1
-  simp only [Prod.fst_zero, Prod.snd_zero, map_zero, ContinuousLinearMap.zero_apply, sub_self, zero_div, ofReal_zero, mul_zero,
+  simp only [Prod.fst_zero, Prod.snd_zero, map_zero, zero_apply, sub_self, zero_div, ofReal_zero, mul_zero,
     Complex.exp_zero, one_smul] at h3
   refine h3.congr fun u => ?_
   simp only [Function.comp_apply]
@@ -351,7 +351,7 @@ theorem decay {Y Z : Type} [AddCommGroup Z] [Module ℂ Z] (A : Y → SchwartzMa
   have hR1 : 1 ≤ R := le_max_right _ _
   refine ⟨sc ((1 + R) ^ (M + N)) p + sc ((2 * R) ^ (M + N)) p₁,
     (sc_cont _ hp).add (sc_cont _ hp₁), fun y f => ?_⟩
-  rw [Seminorm.add_apply, sc_apply (by positivity), sc_apply (by positivity)]
+  rw [add_apply, sc_apply (by positivity), sc_apply (by positivity)]
   have a1 := apply_nonneg p f
   have a2 := apply_nonneg p₁ f
   have a3 := hs y
@@ -534,8 +534,8 @@ theorem schr_comm {R : Type} [CommRing R] [Invertible (2 : R)] (ψ : AddChar R �
 
 theorem fw_lc {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) {g : (κ → Af F) → ℂ} (hg : g ∈ SB _) :
     IsLocallyConstant fun b => fw ψ b g := by
-  haveI := nonarch_finiteAdeleRing (F := F)
-  haveI := nonarch_pi (G := fun _ : κ => Af F)
+  have := nonarch_finiteAdeleRing (F := F)
+  have := nonarch_pi (G := fun _ : κ => Af F)
   obtain ⟨U, hU⟩ := GlobalTheory.WeilM.HaarUniq.exists_invariant hg
   refine (IsLocallyConstant.iff_eventually_eq _).2 fun b₀ => ?_
   have hc : IsLocallyConstant fun z : ((κ → Af F) × (κ → Af F)) × (κ → Af F) =>

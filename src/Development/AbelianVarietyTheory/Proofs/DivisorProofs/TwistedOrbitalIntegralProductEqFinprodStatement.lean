@@ -107,7 +107,7 @@ theorem cLoc_fin_continuous {E : Type} [Field E] [NumberField E] [IsCMField E] {
     exact (RestrictedProduct.continuous_eval w).comp continuous_snd
   have hm : Continuous (((pLoc E w).comp (pFin E)).mapMatrix : Matrix (Fin n) (Fin n) (Ad E) →+* _) :=
     continuous_id.matrix_map hf
-  exact (Continuous.units_map _ hm).comp (continuous_subtype_val.comp continuous_subtype_val)
+  exact (Continuous.units_map _ hm).comp (continuous_subtypeVal.comp continuous_subtypeVal)
 
 theorem continuous_toSub {X G : Type} [TopologicalSpace X] [Group G] [TopologicalSpace G] (H : Subgroup G) {f : X → G}
     (hf : Continuous f) (hH : ∀ x, f x ∈ H) : Continuous (fun x => toSub H (f x)) := by
@@ -323,12 +323,12 @@ theorem finsum_doubleCoset_trivial_eq_one (H : Type) [Group H] (TH KH : Subgroup
   have h1 : ∀ q : DoubleCoset.Quotient (TH : Set H) (KH : Set H), q ≠ DoubleCoset.mk TH KH 1 →
       f (Quotient.out q) = 0 := by
     intro q hq
-    rw [hf, if_neg]
+    rw [hf, ite_eq_right]
     rintro ⟨t, ht, k, hk, he⟩
     apply hq
     rw [← DoubleCoset.out_eq' q, DoubleCoset.eq]
     exact ⟨t⁻¹, inv_mem ht, k⁻¹, inv_mem hk, by rw [he]; group⟩
-  rw [finsum_eq_single _ (DoubleCoset.mk TH KH 1) h1, hf, if_pos]
+  rw [finsum_eq_single _ (DoubleCoset.mk TH KH 1) h1, hf, ite_eq_left]
   obtain ⟨a, ha, b, hb, he⟩ := DoubleCoset.mk_out_eq_mul TH KH (1 : H)
   exact ⟨a, ha, b, hb, by rw [he, mul_one]⟩
 
@@ -357,22 +357,22 @@ theorem eval_eq_ite_prod_of_finprod (ι G : Type) [Group G] (H : ι → Type) [�
   set B : Finset ι := S0 ∪ hfin.toFinset with hB
   have hone : ∀ i ∉ B, s' i (p i g) = 1 := by
     intro i hi
-    simp only [B, Finset.mem_union, not_or, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hi
-    rw [hS0 i hi.1, if_pos ⟨1, (TH i).one_mem, p i g, hi.2, (one_mul _).symm⟩]
+    simp only [B, Finset.mem_union, not_or, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hi
+    rw [hS0 i hi.1, ite_eq_left ⟨1, (TH i).one_mem, p i g, hi.2, (one_mul _).symm⟩]
   rw [finprod_eq_prod_of_mulSupport_subset (f := fun i => s' i (p i g)) (s := B) (fun i hi => by by_contra h; exact hi (hone i h))]
   split_ifs with hgood
   · symm
     apply Finset.prod_subset Finset.subset_union_left
     intro i _ hi
-    rw [hS0 i hi, if_pos (hgood i hi)]
+    rw [hS0 i hi, ite_eq_left (hgood i hi)]
   · push_neg at hgood
     obtain ⟨i, hi, hbad⟩ := hgood
     apply Finset.prod_eq_zero (i := i)
     · refine Finset.mem_union_right _ ?_
-      simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+      simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
       intro hk
       exact hbad 1 (TH i).one_mem (p i g) hk (one_mul _).symm
-    · rw [hS0 i hi, if_neg (by push_neg; exact hbad)]
+    · rw [hS0 i hi, ite_eq_right (by push_neg; exact hbad)]
 
 theorem doubleCoset_mk_eq_of_local (ι G : Type) [Group G] (H : ι → Type) [∀ i, Group (H i)] (p : ∀ i, G →* H i)
     (T K : Subgroup G) (TH KH : ∀ i, Subgroup (H i)) (S0 : Finset ι)
@@ -439,9 +439,9 @@ theorem finsum_doubleCoset_eq_finprod_local : ∀ (ι G : Type) [Group G] (H : �
     intro q
     rw [finsum_eq_if, eval_eq_ite_prod_of_finprod ι G H p TH KH s s' S0 hcof hS0 hprod (Quotient.out q)]
     by_cases hq : ∀ i ∉ S0, ∃ t ∈ TH i, ∃ k ∈ KH i, p i (Quotient.out q) = t * k
-    · rw [if_pos hq, if_pos ((hAdef q).2 hq), ← Finset.prod_coe_sort S0]
+    · rw [ite_eq_left hq, ite_eq_left ((hAdef q).2 hq), ← Finset.prod_coe_sort S0]
       simp only [hΦ, hloc]
-    · rw [if_neg hq, if_neg (fun h => hq ((hAdef q).1 h))]
+    · rw [ite_eq_right hq, ite_eq_right (fun h => hq ((hAdef q).1 h))]
   refine (finsum_congr hLHS).trans ?_
   refine (finsum_mem_eq_of_bijOn (t := Set.univ)
     (g := fun y : (∀ i : S0, DoubleCoset.Quotient (TH i.1 : Set (H i.1)) (KH i.1 : Set (H i.1))) =>
@@ -567,8 +567,8 @@ theorem avg_pi {J : Type} [Fintype J] (M : J → Type) [∀ j, Group (M j)] (v :
     (hv : ∀ j, (rStab (v j)).index ≠ 0) :
     avg (fun x : (∀ j, M j) => ∏ j, v j (x j)) = ∏ j, avg (v j) := by
   classical
-  haveI : ∀ j, (rStab (v j)).FiniteIndex := fun j => ⟨hv j⟩
-  haveI : ∀ j, Fintype (M j ⧸ rStab (v j)) := fun j => Fintype.ofFinite _
+  have : ∀ j, (rStab (v j)).FiniteIndex := fun j => ⟨hv j⟩
+  have : ∀ j, Fintype (M j ⧸ rStab (v j)) := fun j => Fintype.ofFinite _
   let S : Subgroup (∀ j, M j) := Subgroup.pi Set.univ (fun j => rStab (v j))
   have hS : S ≤ rStab (fun x : (∀ j, M j) => ∏ j, v j (x j)) := by
     intro k hk
@@ -626,7 +626,7 @@ theorem avg_restrProd : ∀ (ι G : Type) [Group G] (H : ι → Type) [∀ i, Gr
     rw [Function.comp_apply, finprod_eq_prod_of_mulSupport_subset _ (s := T)]
     · exact (Finset.prod_coe_sort T (fun i => u i ⟨p i k, (hK k).1 k.2 i⟩)).symm
     · intro i hi
-      simp only [Finset.mem_coe, T, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+      simp only [Finset.mem_coe, T, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
       intro hall
       exact (Function.mem_mulSupport.mp hi) (hall _)
   rw [hfun, avg_comp_surj π hπ]
@@ -634,7 +634,7 @@ theorem avg_restrProd : ∀ (ι G : Type) [Group G] (H : ι → Type) [∀ i, Gr
   rw [finprod_eq_prod_of_mulSupport_subset _ (s := T)]
   · exact Finset.prod_coe_sort T (fun i => avg (u i))
   · intro i hi
-    simp only [Finset.mem_coe, T, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+    simp only [Finset.mem_coe, T, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
     intro hall
     apply Function.mem_mulSupport.mp hi
     have hc : u i = fun _ => 1 := funext hall
@@ -857,8 +857,8 @@ theorem twOrb_restrProd : ∀ (ι G : Type) [Group G] [TopologicalSpace G] [IsTo
       simp [GlobalTheory.TwOrbConj.mem_rStab]
     unfold avg
     rw [hR, Subgroup.index_top]
-    haveI : Subsingleton (M ⧸ (⊤ : Subgroup M)) := QuotientGroup.subsingleton_quotient_top
-    haveI : Unique (M ⧸ (⊤ : Subgroup M)) := uniqueOfSubsingleton (QuotientGroup.mk 1)
+    have : Subsingleton (M ⧸ (⊤ : Subgroup M)) := QuotientGroup.subsingleton_quotient_top
+    have : Unique (M ⧸ (⊤ : Subgroup M)) := uniqueOfSubsingleton (QuotientGroup.mk 1)
     simp [finsum_unique]
   have hs : ∀ g, GlobalTheory.TwOrbConj.summand (MonoidHom.id G) K δ (fun x => ∏ᶠ i, f i (p i x)) g =
       ∏ᶠ i, GlobalTheory.TwOrbConj.summand (MonoidHom.id (H i)) (KH i) (p i δ) (f i) (p i g) := by
@@ -959,8 +959,8 @@ theorem rStab_conj_index_ne_zero : ∀ (G : Type) [Group G] [TopologicalSpace G]
     (∀ k ∈ K', ∀ x, f (k * x) = f x ∧ f (x * k) = f x) → ∀ x : G,
     (rStab fun k : K => f ((x * k)⁻¹ * δ * (x * k))).index ≠ 0 := by
   intro G _ _ _ K K' f δ hK hK' _ hf x
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
-  have hopen : IsOpen ((K'.subgroupOf K : Subgroup K) : Set K) := hK'.preimage continuous_subtype_val
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have hopen : IsOpen ((K'.subgroupOf K : Subgroup K) : Set K) := hK'.preimage continuous_subtypeVal
   have hfin : Finite (K ⧸ K'.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hopen
   have h0 : (K'.subgroupOf K).index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hle : K'.subgroupOf K ≤ rStab fun k : K => f ((x * k)⁻¹ * δ * (x * k)) := by
@@ -1033,7 +1033,7 @@ theorem twOrb_globFn_eq_finprod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   have hp : ∀ (i : S) (x : finU (E := E) (n := n)), p i x = toSub (UL n i.1) (cLoc i.1 (x : UA E n)) := by
     intro i x
     unfold toSub
-    rw [dif_pos (GlobalTheory.T.finiteAdelicUnitaryPoint_localComponent_mem_localUnitary E hU n i.1 x)]
+    rw [dite_eq_left (GlobalTheory.T.finiteAdelicUnitaryPoint_localComponent_mem_localUnitary E hU n i.1 x)]
     rfl
   have hδ : ∀ i : S, p i (finPt γ) = locPt i.1 γ := fun i => (hp i _).trans (GlobalTheory.T.localComponent_definiteUnitaryFinitePart_eq_localPoint E hU n γ i.1)
   have hsep : ∀ w : Pl E, (locPt w γ).1.val.charpoly.Separable := by
@@ -1076,7 +1076,7 @@ theorem twOrb_globFn_eq_finprod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
         intro w hw
         by_cases hwS : w ∈ S
         · exact ⟨⟨w, hwS⟩, by simpa [y', hwS] using hw, rfl⟩
-        · exact absurd (by simp only [y', dif_neg hwS]; exact one_mem _) hw
+        · exact absurd (by simp only [y', dite_eq_right hwS]; exact one_mem _) hw
       obtain ⟨x, hx⟩ := GlobalTheory.T.exists_finiteAdelicUnitaryPoint_of_local_family E hU n S hS y' hy'
       exact ⟨x, fun i => by rw [hp, hx i.1 i.2]; simp [y', i.2]⟩)
     (fun x => by
@@ -1084,7 +1084,7 @@ theorem twOrb_globFn_eq_finprod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       rw [Filter.eventually_cofinite] at h ⊢
       refine (h.preimage Subtype.val_injective.injOn).subset ?_
       intro i hi
-      simp only [Set.mem_preimage, Set.mem_setOf_eq] at hi ⊢
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hi ⊢
       rwa [← hp])
     hK
     (fun C hC hCK => by
@@ -1095,14 +1095,14 @@ theorem twOrb_globFn_eq_finprod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
         intro w hw
         by_cases hwS : w ∈ S
         · exact ⟨⟨w, hwS⟩, by simpa [C', hwS] using hw, rfl⟩
-        · exact absurd (by simp only [C', dif_neg hwS]) hw
+        · exact absurd (by simp only [C', dite_eq_right hwS]) hw
       have h := GlobalTheory.T.isCompact_definiteUnitary_restricted_product E hU n S hS C' (fun w => by
         by_cases hw : w ∈ S
-        · simp only [C', dif_pos hw]; exact hC _
-        · simp only [C', dif_neg hw]; exact hKc w) hC'
+        · simp only [C', dite_eq_left hw]; exact hC _
+        · simp only [C', dite_eq_right hw]; exact hKc w) hC'
       convert h using 1
       ext x
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       constructor
       · intro hx w hw
         have := hx ⟨w, hw⟩
@@ -1126,7 +1126,7 @@ theorem twOrb_globFn_eq_finprod : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       rw [Filter.eventually_cofinite] at hgood ⊢
       refine (hgood.preimage Subtype.val_injective.injOn).subset ?_
       intro i hi
-      simp only [Set.mem_preimage, Set.mem_setOf_eq] at hi ⊢
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hi ⊢
       intro h
       apply hi
       rw [hδ]

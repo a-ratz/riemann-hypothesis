@@ -218,7 +218,7 @@ theorem finCpt_of_integrable (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M : �
     simp [e1]
   calc ν K ≤ ν {X | 1 ≤ ‖GlobalTheory.CompanionTheory.SiegelND.Coef.pureN φ A X‖ₑ} := measure_mono h1
     _ = 1 * ν {X | 1 ≤ ‖GlobalTheory.CompanionTheory.SiegelND.Coef.pureN φ A X‖ₑ} := (one_mul _).symm
-    _ ≤ ∫⁻ X, ‖GlobalTheory.CompanionTheory.SiegelND.Coef.pureN φ A X‖ₑ ∂ν := mul_meas_ge_le_lintegral₀ hint.1.enorm 1
+    _ ≤ ∫⁻ X, ‖GlobalTheory.CompanionTheory.SiegelND.Coef.pureN φ A X‖ₑ ∂ν := mul_meas_ge_le_lintegral₀ hint.1.eNorm 1
     _ < ⊤ := hint.2
 
 end PositivityTheory.Rg.Rsw.L.LatticeFibreBump
@@ -378,7 +378,7 @@ theorem coefN_finset_sum_all : ∀ (F E : Type) [Field F] [NumberField F] [Field
   intro F E _ _ _ _ _ σ hCM M J hJ n hM ψ hψ dx hdx db hdb T N Φ hΦ
   obtain ⟨⟨_, _, _⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨_, _, _, _, -, ht, -, hB, -, hG⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := hB n M
+  have := hB n M
   obtain ⟨hψc, hψn, -⟩ := id hψ
   have hstar : ∀ b, starN σ J ψ dx (fun X => ∑ i, Φ i X) b = ∑ i, starN σ J ψ dx (Φ i) b := by
     intro b
@@ -401,8 +401,8 @@ theorem coefN_finset_sum_all : ∀ (F E : Type) [Field F] [NumberField F] [Field
       ψ (-(algebraMap F (AF F) (1 / 2) * Algebra.trace (AF F) (AF F ⊗[F] E)
         (Matrix.trace (T.map (inclR (AF F)) * (b : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)))))) :=
     hψc.comp (continuous_const.mul
-      (ht.comp (continuous_const.matrix_mul continuous_subtype_val).matrix_trace)).neg
-  haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
+      (ht.comp (continuous_const.matrix_mul continuous_subtypeVal).matrix_trace)).neg
+  have : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
   refine hI.norm.mono' (hI.1.mul hc.aestronglyMeasurable) ?_
   refine Filter.Eventually.of_forall fun b => ?_
   rw [norm_mul, hψn, mul_one]
@@ -463,7 +463,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
       hermOf (Fv F v) σ T hT - gramH hCM hJ (Fv F v) X ∈ latH σ b v n := by
     intro v hv
     by_contra hc
-    exact hv (hS (by simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq]; exact Or.inr hc))
+    exact hv (hS (by simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]; exact Or.inr hc))
   obtain ⟨ρ, U, hρ, hρs, hU, hUs, hI, hc, hbd, hlim⟩ := hS₁ S hS1
   have hΦSB : IsSchwartzBruhat (pureN φ A) := _root_.GlobalTheory.CompanionTheory.SiegelND.Coef.pureN_isSchwartzBruhat F E σ hCM M J hJ n h2n d b S φ A hφ hA hAl
   have hΦdx : Integrable (pureN φ A) dx := _root_.GlobalTheory.CompanionTheory.SiegelND.Coef.sb_integrable_selfDual F E σ hCM M J hJ n h2n ψ hψ dx hdx _ hΦSB
@@ -515,8 +515,8 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
     let A' : ∀ v : HeightOneSpectrum (𝓞 F), Set (Fin n → Fin M → Fv F v ⊗[F] E) := fun v =>
       if v ∈ S then A v ∩ {X | hermOf (Fv F v) σ T hT - gramH hCM hJ (Fv F v) X ∈ U k v} else A v
     have hA'S : ∀ v ∈ S, A' v = A v ∩ {X | hermOf (Fv F v) σ T hT - gramH hCM hJ (Fv F v) X ∈ U k v} :=
-      fun v hv => if_pos hv
-    have hA'n : ∀ v, v ∉ S → A' v = latV b v := fun v hv => (if_neg hv).trans (hAl v hv)
+      fun v hv => ite_eq_left hv
+    have hA'n : ∀ v, v ∉ S → A' v = latV b v := fun v hv => (ite_eq_right hv).trans (hAl v hv)
     have hmem : ∀ x : Fin n → Fin M → AF F ⊗[F] E,
         (projFin x ∈ boxFN A ∧ hermFin σ (hermOf (AF F) σ T hT - gramH hCM hJ (AF F) x) ∈ boxH σ b n S (U k)) ↔
           projFin x ∈ boxFN A' := by
@@ -529,7 +529,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
           show _ ∈ U k v
           rw [← h3 x v]
           exact h'.1 v hv
-        · rw [show A' v = A v from if_neg hv]
+        · rw [show A' v = A v from ite_eq_right hv]
           exact h v
       · intro h
         refine ⟨fun v => ?_, fun v hv => ?_, fun v hv => ?_⟩
@@ -538,7 +538,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
             rw [hA'S v hv] at this
             exact this.1
           · have := h v
-            rwa [show A' v = A v from if_neg hv] at this
+            rwa [show A' v = A v from ite_eq_right hv] at this
         · have := h v
           rw [hA'S v hv] at this
           rw [h3 x v]
@@ -568,7 +568,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
       intro v
       by_cases hv : v ∈ S
       · rw [hA'S v hv]; exact ((hV v).1 k).1
-      · rw [show A' v = A v from if_neg hv]
+      · rw [show A' v = A v from ite_eq_right hv]
         exact (_root_.GlobalTheory.CompanionTheory.SiegelND.Coef.finV_compactOpenN F E σ hCM M J hJ n h2n d b v (lam v) (hlam v) (m v) (hm v) _ (hu _) (A v) (hA v).1 (hA v).2).1
     have hfinA' : ∀ v, GlobalTheory.CompanionTheory.SW.coordW (Fv F v) b (lam v) n M (A' v) ≠ ⊤ := by
       intro v
@@ -707,8 +707,8 @@ theorem GlobalTheory.CompanionTheory.SiegelND.Coef.coefN_eq_theta : ∀ (F E : T
   let b := Module.finBasis F E
   obtain ⟨laminf, hinf⟩ := GlobalTheory.CompanionTheory.SW.StdEx.exists_isStdInf F
   choose lam hlam using GlobalTheory.CompanionTheory.SW.StdEx.exists_isStdV F
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   obtain ⟨minf, hminf⟩ := GlobalTheory.CompanionTheory.SW.Step.loc_families σ hCM J hJ (Ainf F) (GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1) b laminf hinf.1 n
   choose m hm using fun v => GlobalTheory.CompanionTheory.SW.Step.loc_families σ hCM J hJ (Fv F v) (GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v) b (lam v) (hlam v).1 n
   have hEu : GlobalTheory.CompanionTheory.SW.IsEulerProd b (GlobalTheory.CompanionTheory.SW.thetaMeas σ J μ 𝓕 {X | HeckeCharacterZeroLocus.SiegelWeilU.gramE σ J X = T}) 1

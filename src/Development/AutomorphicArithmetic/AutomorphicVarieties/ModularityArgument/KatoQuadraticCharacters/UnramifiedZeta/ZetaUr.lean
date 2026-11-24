@@ -254,8 +254,8 @@ theorem exists_admissible_hecke_projection_nonvanishing_alt : ∀ {Ω : Type} [F
   obtain ⟨c1, hc1⟩ := hNf.int
   obtain ⟨c0, hcc0, hc10⟩ := (UpperTheory.V.HV.coefSup l).1 c c1
   have hfree := GlobalTheory.KZ.B_free_finite ε X hinj hφ' N l (2 * e - 1) hl2 hN5 hcop hodd
-  haveI := hfree.1
-  haveI := hfree.2
+  have := hfree.1
+  have := hfree.2
   let bs := Module.Free.chooseBasis ℤ_[l] (X.B N l (2 * e - 1))
   obtain ⟨a, ha⟩ := exists_le_l_pow l
     (∑ p : Module.Free.ChooseBasisIndex ℤ_[l] (X.B N l (2 * e - 1)) × Fin 2, ‖pr0 (bs p.1) p.2‖)
@@ -464,7 +464,7 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact l.Prime]
 theorem kumVal_int {n : ℕ} {ζ u v : Ω} {s : G ℚ Ω} {j : ℤ} (hζ : ζ ^ (l ^ n) = 1) (hv : v ^ (l ^ n) = u)
     (hs : s v = ζ ^ j * v) : GlobalTheory.Col.KumVal (l := l) n ζ u s (j : ZMod (l ^ n)) := by
   have hpos : 0 < l ^ n := pow_pos (Fact.out : l.Prime).pos n
-  haveI : NeZero (l ^ n) := ⟨hpos.ne'⟩
+  have : NeZero (l ^ n) := ⟨hpos.ne'⟩
   have h0 : ζ ≠ 0 := by rintro rfl; rw [zero_pow hpos.ne'] at hζ; exact zero_ne_one hζ
   refine ⟨v, hv, ?_⟩
   rw [hs, ← zpow_natCast, ZMod.val_intCast]
@@ -474,7 +474,7 @@ theorem kumVal_int {n : ℕ} {ζ u v : Ω} {s : G ℚ Ω} {j : ℤ} (hζ : ζ ^ 
 
 theorem cg_intCast (n : ℕ) (j : ℤ) : Cg (l := l) n (((j : ZMod (l ^ n)).val : ℕ) : Qbar l) (j : Qbar l) := by
   have hpos : 0 < l ^ n := pow_pos (Fact.out : l.Prime).pos n
-  haveI : NeZero (l ^ n) := ⟨hpos.ne'⟩
+  have : NeZero (l ^ n) := ⟨hpos.ne'⟩
   have h1 : (((j : ZMod (l ^ n)).val : ℕ) : ℤ) - j = ((l ^ n : ℕ) : ℤ) * (-(j / ((l ^ n : ℕ) : ℤ))) := by
     rw [ZMod.val_intCast, Int.emod_def]; ring
   have e : (((j : ZMod (l ^ n)).val : ℕ) : Qbar l) - (j : Qbar l) =
@@ -552,13 +552,13 @@ theorem smoothed_pres [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω) (hA : Over
         ζ P o := by
   classical
   have hlp : l.Prime := Fact.out
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i =>
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i =>
     haveI : NeZero ((l ^ i : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 (pow_pos hlp.pos i).ne'⟩
     inferInstance
   have hpos : 0 < l ^ m := pow_pos hlp.pos _
-  haveI : NeZero (l ^ m) := ⟨hpos.ne'⟩
+  have : NeZero (l ^ m) := ⟨hpos.ne'⟩
   have hz := hL m
   set z := Z m with hzdef
   set uu := ZMod.unitOfCoprime d₀ (Nat.Coprime.pow_right m hd₀) with huu
@@ -693,7 +693,7 @@ theorem smoothed_pres_of_shCoc [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω) (
     if h : (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) 1 1 ≠ 0 then Units.mk0 _ h else 1
   have hν : ∀ s ∈ Dec (F := ℚ) A, (ν s : Qbar l) = (ρ s : Matrix (Fin 2) (Fin 2) (Qbar l)) 1 1 := by
     intro s hs
-    simp only [ν, dif_pos (hnz s hs), Units.val_mk0]
+    simp only [ν, dite_eq_left (hnz s hs), Units.val_mk0]
   refine smoothed_pres A hA c ν (fun r s y => Y r s y 1) (fun r => ⟨hO r, fun s hs u _ x => ?_⟩)
     (fun r => GlobalTheory.LambdaValuationPowers.AllRoots.continuous_of_cg _ fun n => ?_) (fun s hs => ?_) d₀ hd₀ m ζ hζ
   · have := congrFun (hY r s u x) 1
@@ -1062,7 +1062,7 @@ theorem _root_.UpperTheory.V.Z.Kato.K5.hco : ∀ (Ω : Type) [Field Ω] [Algebra
             (eOm ε (1 / ((N : ℚ) * (l : ℚ) ^ m)) ^ β)
             ((GlobalTheory.KummerEisensteinGalois.unitSet l m).filter fun γ => (γ : Matrix (Fin 2) (Fin 2) (ZMod (l ^ m))).det = 1)) i))) := by
   intro Ω _ _ _ ε X l _ hl2 hφ A j hA hj N _ hlN c d e gm he ι gN W pr ψ cf α hadm hIne χ hχu hχmul hχper lam hlam c₀
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have halg : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   obtain ⟨h5, hlcop, hgm, hα, hU⟩ := hadm
   obtain ⟨hdχ, hfin, hfixL, cL, per, hper, hLF⟩ := hlam
@@ -1393,8 +1393,8 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {l : ℕ} [Fact l.Prime]
 
 theorem fix_mu [IsAlgClosure ℚ Ω] (s : G ℚ Ω) (hs : cycBar ℚ Ω l s = 1) (ζ : Ω) (hζ : ζ ^ l = 1) :
     s ζ = ζ := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hinj : Function.Injective ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom) :=
     (algebraMap ℚ_[l] (Qbar l)).injective.comp (fun a b h => Subtype.ext h)
   have hz : cycZ ℚ Ω l s = 1 := by
@@ -1425,7 +1425,7 @@ theorem fix_sqrt_unit (hl : l ≠ 2) {A : ValuationSubring Ω} (hA : OverL l A) 
   have h3 : A.valuation (((4 * N : ℤ) : Ω)) < 1 := by
     have e : ((4 * N : ℤ) : Ω) = (-β - β) ^ 2 := by push_cast; rw [← hβ]; ring
     rw [e, map_pow]
-    exact pow_lt_one₀ zero_le' h2 two_ne_zero
+    exact pow_lt_one₀ zero_le h2 two_ne_zero
   obtain ⟨v, hv, hlv⟩ := hA
   have h4 : ((4 * N : ℤ) : 𝓞 ℚ) ∈ v.asIdeal := by
     rw [← hv]
@@ -1449,10 +1449,10 @@ theorem fix_sqrt_unit (hl : l ≠ 2) {A : ValuationSubring Ω} (hA : OverL l A) 
 
 theorem gauss_fix [IsAlgClosure ℚ Ω] (hl : l ≠ 2) (s : G ℚ Ω) (hs : ∀ ζ : Ω, ζ ^ l = 1 → s ζ = ζ) :
     ∃ (Gs : Ω) (c : ℤ), c ^ 2 = 1 ∧ Gs ^ 2 = ((c * l : ℤ) : Ω) ∧ s Gs = Gs := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   have hF : ringChar (ZMod l) ≠ 2 := by rw [ZMod.ringChar_zmod_n]; exact hl
   set ψ : AddChar (ZMod l) Ω := AddChar.zmodChar l hζ.pow_eq_one with hψdef
   have hψ : ψ.IsPrimitive := AddChar.zmodChar_primitive_of_primitive_root l hζ
@@ -1473,7 +1473,7 @@ theorem gauss_fix [IsAlgClosure ℚ Ω] (hl : l ≠ 2) (s : G ℚ Ω) (hs : ∀ 
 theorem fix_sqrt_int [IsAlgClosure ℚ Ω] (hl : l ≠ 2) {A : ValuationSubring Ω} (hA : OverL l A) {s : G ℚ Ω}
     (hs : s ∈ Ine (F := ℚ) A) (hmu : ∀ ζ : Ω, ζ ^ l = 1 → s ζ = ζ) :
     ∀ (N : ℤ) (α : Ω), α ^ 2 = N → s α = α := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   intro N
   induction hn : N.natAbs using Nat.strong_induction_on generalizing N with
   | _ n ih =>
@@ -1520,7 +1520,7 @@ theorem fix_sqrt_int [IsAlgClosure ℚ Ω] (hl : l ≠ 2) {A : ValuationSubring 
 theorem fix_sqrt_rat [IsAlgClosure ℚ Ω] (hl : l ≠ 2) {A : ValuationSubring Ω} (hA : OverL l A) {s : G ℚ Ω}
     (hs : s ∈ Ine (F := ℚ) A) (hmu : ∀ ζ : Ω, ζ ^ l = 1 → s ζ = ζ) (α : Ω) (q : ℚ)
     (hα : α ^ 2 = algebraMap ℚ Ω q) : s α = α := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hden : (q.den : Ω) ≠ 0 := Nat.cast_ne_zero.2 q.den_nz
   have hq : algebraMap ℚ Ω q * (q.den : Ω) = (q.num : Ω) := by
     rw [← map_natCast (algebraMap ℚ Ω), ← map_mul, Rat.mul_den_eq_num, map_intCast]
@@ -1534,8 +1534,8 @@ theorem fix_sqrt_rat [IsAlgClosure ℚ Ω] (hl : l ≠ 2) {A : ValuationSubring 
 
 theorem dt_eq_one [IsAlgClosure ℚ Ω] {W : R2 Ω l} (hcont : Continuous W) (hdet2 : dt W ^ 2 = 1) (s : G ℚ Ω)
     (hfix : ∀ (α : Ω) (q : ℚ), α ^ 2 = algebraMap ℚ Ω q → s α = α) : dt W s = 1 := by
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hval : ∀ g, ((dt W g : (Qbar l)ˣ) : Qbar l) = ((W g : GL (Fin 2) (Qbar l)) : Matrix (Fin 2) (Fin 2) (Qbar l)).det :=
     fun g => Matrix.GeneralLinearGroup.val_det_apply _
   have hc : Continuous fun g : G ℚ Ω => ((dt W g : (Qbar l)ˣ) : Qbar l) := by
@@ -1686,7 +1686,7 @@ variable {Ω : Type} [Field Ω] [Algebra ℚ Ω]
 private theorem cycMod_eq_one {s : G ℚ Ω} (h : cycBar ℚ Ω l s = 1) (m : ℕ) : cycMod ℚ Ω l m s = 1 := by
   have h1 : cycZ ℚ Ω l s = 1 := by
     have h2 := congrArg (fun u : (Qbar l)ˣ => (u : Qbar l)) h
-    simp only [cycBar, MonoidHom.comp_apply, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe,
+    simp only [cycBar, MonoidHom.comp_apply, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass,
       RingHom.comp_apply, Units.val_one] at h2
     have h3 : PadicInt.Coe.ringHom ((cycZ ℚ Ω l s : ℤ_[l]ˣ) : ℤ_[l]) = (1 : ℚ_[l]) :=
       (algebraMap ℚ_[l] (Qbar l)).injective (by rw [h2, map_one])

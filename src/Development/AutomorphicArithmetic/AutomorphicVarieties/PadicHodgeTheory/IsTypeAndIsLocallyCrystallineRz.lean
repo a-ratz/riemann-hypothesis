@@ -303,7 +303,7 @@ private theorem cont_prod {G V V' : Type} [Group G] [TopologicalSpace G] [AddCom
 
 private theorem isCr_char (H : Subgroup (GQ l)) (hH : IsOpen (H : Set (GQ l))) (κ : GQ l →* Eˣ) (hκ : Continuous κ)
     (w : ℤ) (hw : ∀ g ∈ H, g ∈ Iq l → κ g = cycA l l E g ^ w) : IsCr H.subtype (chRep (κ.comp H.subtype)) :=
-  crUnr H.subtype hH.isOpenEmbedding_subtypeVal _ (cont_ch (hκ.comp continuous_subtype_val)) w fun g hg x => by
+  crUnr H.subtype hH.isOpenEmbedding_subtypeVal _ (cont_ch (hκ.comp continuous_subtypeVal)) w fun g hg x => by
     rw [Subgroup.subtype_apply, ← hw g g.2 hg]
     rfl
 
@@ -314,7 +314,7 @@ private theorem isCr_diag (H : Subgroup (GQ l)) (hH : IsOpen (H : Set (GQ l))) (
     IsCr H.subtype (colRep ρ) := by
   have hφ : IsOpenEmbedding H.subtype := hH.isOpenEmbedding_subtypeVal
   have hc : ∀ a, ContAction (chRep ((κ a).comp H.subtype)) := fun a =>
-    cont_ch ((hκ a).comp continuous_subtype_val)
+    cont_ch ((hκ a).comp continuous_subtypeVal)
   have hcr := fun a => isCr_char H hH (κ a) (hκ a) (w a) (hw a)
   have hp := fun a g x => proj_diag (κ := fun a => (κ a).comp H.subtype) hρ a g x
   have h0 : ContAction (colRep ρ) := continuous_pi fun a => by
@@ -343,8 +343,8 @@ private theorem fil_char (K : FinExt l) (H : Subgroup (GQ l)) (hH : IsOpen (H : 
         Ddr (GK K).subtype (chRep (κ.comp (GK K).subtype))) ∧
       (-w < i → FilD (GK K).subtype (chRep (κ.comp (GK K).subtype)) i = ⊥) :=
   charFil (GK K).subtype (open_GK K).isOpenEmbedding_subtypeVal _
-    (Units.continuous_val.comp (hκ.comp continuous_subtype_val)) w
-    ⟨H.comap (GK K).subtype, hH.preimage continuous_subtype_val, fun g hg hI => hw g hg hI⟩
+    (Units.continuous_val.comp (hκ.comp continuous_subtypeVal)) w
+    ⟨H.comap (GK K).subtype, hH.preimage continuous_subtypeVal, fun g hg hI => hw g hg hI⟩
 
 private theorem cr_char {K L : FinExt l} (h : K.1 ≤ L.1) (κ τ : GQ l →* Eˣ) (hκ : Continuous κ) (hτ : Continuous τ)
     (w : ℤ) (hw : ∀ g ∈ Iq l, κ g = cycA l l E g ^ w * τ g) (hL : ∀ g ∈ GK L, τ g = 1) :
@@ -375,9 +375,9 @@ end UpperTheory.V.Loc.R0
 theorem UpperTheory.V.Loc.isType_and_isLocallyCrystalline_rz :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (E : Type) [Field E] [Algebra ℚ_[l] E] [Module.Finite ℚ_[l] E] [Algebra O E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] O E] [IsScalarTower ℤ_[l] ℚ_[l] E], D.IsType (D.rz E) ∧ D.IsLCr (D.rz E) := by
   intro l _ O _ _ _ _ _ _ _ D E _ _ _ _ _ _ _
-  letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+  let : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
   let j : Oˣ →* Eˣ := Units.map (algebraMap O E : O →* E)
   let κ : Fin 3 → GQ l →* Eˣ := fun a => (zpowGroupHom (wt1 a)).comp (j.comp D.Ψ)
   let τ : Fin 3 → GQ l →* Eˣ := fun a => (zpowGroupHom (wt1 a)).comp (j.comp D.τ)
@@ -427,7 +427,7 @@ theorem UpperTheory.V.Loc.isType_and_isLocallyCrystalline_rz :
       have h1 := hi 1
       have h2 := hi 2
       simp [w, wt1] at h0 h1 h2
-      rw [hodge0, if_neg (by omega)]
+      rw [hodge0, ite_eq_right (by omega)]
     · obtain ⟨x, hx, hb⟩ := R0.char_dr (κ a) (R0.fil_char _ _ hH _ (hκ a) _ (hw' a)).1
       exact ⟨x, (R0.mem_Ddr _ _ _).2 fun g => hx g, hb D.Kv⟩
   · obtain ⟨L, -, -, -, -, hL, -, -⟩ := openField D.HL.subtype hH.isOpenEmbedding_subtypeVal

@@ -216,8 +216,8 @@ theorem integrable_star_mul (hψ : IsStdChar D ψ (-1)) {μ : Measure (WO S T)} 
     {f g q : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) (hg : IsThetaFunO ψ S T g) (hq : Continuous q)
     {Cq : ℝ} (hCq : ∀ x, ‖q x‖ ≤ Cq) :
     Integrable (fun x => star (f x) * (q x * g x)) (μ.restrict 𝓕) := by
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
   obtain ⟨Cf, hCf⟩ := GlobalTheory.ThetaSchurBdd.exists_bound hψ hf
   obtain ⟨Cg, hCg⟩ := GlobalTheory.ThetaSchurBdd.exists_bound hψ hg
   refine Integrable.of_bound (hf.cont.star.mul (hq.mul hg.cont)).aestronglyMeasurable (Cf * (Cq * Cg))
@@ -233,8 +233,8 @@ theorem orth_periodic (hψ : IsStdChar D ψ (-1)) {μ : Measure (WO S T)} {𝓕 
     {q : WO S T → ℂ} (hq : Continuous q) (hqp : ∀ γ ∈ ratL T S, ∀ x, q (γ + x) = q x)
     {Cq : ℝ} (hCq : ∀ x, ‖q x‖ ≤ Cq) :
     ∫ x in 𝓕, star (h x) * (q x * k x) ∂μ = 0 := by
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
   have hth := (GlobalTheory.HeisThetaLaws.heis_theta_laws D ψ hψ S T).1
   obtain ⟨Ch, hCh⟩ := GlobalTheory.ThetaSchurBdd.exists_bound hψ hh
   obtain ⟨Ck, hCk⟩ := GlobalTheory.ThetaSchurBdd.exists_bound hψ hk
@@ -300,7 +300,7 @@ theorem pointwise (hψ : IsStdChar D ψ (-1)) {μ : Measure (WO S T)} {𝓕 : Se
     (horth : ∀ γ ∈ ratL T S, thetaIP μ 𝓕 h (heisO ψ S T γ k) = 0) (x : WO S T) :
     h x = 0 ∨ k x = 0 := by
   have h1 : μ 𝓕 = 1 := hcv.2.2
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨Ch, hCh⟩ := GlobalTheory.ThetaSchurBdd.exists_bound hψ hh
   obtain ⟨Ck, hCk⟩ := GlobalTheory.ThetaSchurBdd.exists_bound hψ hk
   have ch0 : 0 ≤ Ch := (norm_nonneg _).trans (hCh 0)
@@ -575,7 +575,7 @@ theorem fd_vacSub (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ)
     (sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ) (sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ)
     (hcS : ∀ τ, IsCartanInv (gramAt D S τ) (sS τ)) (hcT : ∀ τ, IsCartanInv (gramAt D T τ) (sT τ))
     (U : AddSubgroup (WO S T)) (hU : IsOpen (U : Set (WO S T))) : FiniteDimensional ℂ (vacSub hψ hθ sS sT U) := by
-  haveI := GlobalTheory.FockLevelDim.finiteDimensional_level_degree D ψ θ S T sS sT hψ hθ hcS hcT U hU 1
+  have := GlobalTheory.FockLevelDim.finiteDimensional_level_degree D ψ θ S T sS sT hψ hθ hcS hcT U hU 1
   have hle : vacSub hψ hθ sS sT U ≤ Submodule.span ℂ {f : WO S T → ℂ | IsThetaFunO ψ S T f ∧
       (∀ u ∈ U, u.map (infPart D) = 0 → heisO ψ S T u f = f) ∧
       ∀ l : List (D.what₂.Tau × Matrix (Fin T.rank) (Fin S.rank) ℂ), l.length = 1 →
@@ -648,7 +648,7 @@ theorem lev (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ)
     (U : AddSubgroup (WO S T)) (hU : IsOpen (U : Set (WO S T))) {f₀ : WO S T → ℂ}
     (h₀ : f₀ ∈ vacSub hψ hθ sS sT U) (hne : f₀ ≠ 0) (f g : WO S T → ℂ) (hf : f ∈ vacSub hψ hθ sS sT U)
     (hg : g ∈ vacSub hψ hθ sS sT U) : Φ f g = Φ f₀ f₀ / thetaIP μ 𝓕 f₀ f₀ * thetaIP μ 𝓕 f g := by
-  haveI := fd_vacSub hψ hθ sS sT hcS hcT U hU
+  have := fd_vacSub hψ hθ sS sT hcS hcT U hU
   set C := vacSub hψ hθ sS sT U with hC
   have ipl : ∀ (a : ℂ) (f f' g : WO S T → ℂ), f ∈ C → f' ∈ C → g ∈ C →
       thetaIP μ 𝓕 (a • f + f') g = star a * thetaIP μ 𝓕 f g + thetaIP μ 𝓕 f' g :=

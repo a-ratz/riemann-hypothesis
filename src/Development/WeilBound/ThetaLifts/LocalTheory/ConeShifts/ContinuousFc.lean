@@ -91,15 +91,15 @@ theorem cw_eq {v : Pl F} {w : HeightOneSpectrum (𝓞 E)} (h : w.under (𝓞 F) 
   rfl
 
 theorem continuous_fc : Continuous (fc F E) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele E
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  haveI : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele E
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : IsModuleTopology (Af F) (Af F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af F ⊗[F] E) := IsModuleTopology.isTopologicalRing (Af F) _
   obtain ⟨e0⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (Af F)
-  haveI : LocallyCompactSpace (Af F ⊗[F] E) := e0.isClosedEmbedding.locallyCompactSpace
-  haveI : T2Space (Af F ⊗[F] E) := e0.isEmbedding.t2Space
+  have : LocallyCompactSpace (Af F ⊗[F] E) := e0.isClosedEmbedding.locallyCompactSpace
+  have : T2Space (Af F ⊗[F] E) := e0.isEmbedding.t2Space
   have ho : IsOpenMap (finAdEquiv F E).symm :=
     AddMonoidHom.isOpenMap_of_sigmaCompact (finAdEquiv F E).symm.toAddEquiv.toAddMonoidHom (finAdEquiv F E).symm.surjective
       continuous_finAdEquiv_symm
@@ -246,9 +246,9 @@ theorem cpt_I {a : AE F E} (ha : a * a = a) (h0 : infTens F E a = 0) :
       ⟨Subgroup.inv_mem _ hl.1, (UI F E).inv_mem hl.2⟩, rfl⟩
 
 theorem co_I {a : AE F E} (ha : a * a = a) (h0 : infTens F E a = 0) : CO PI ⊤ (UI F E : Set (AE F E)ˣ) a := by
-  refine ⟨?_, isOpen_UI.preimage continuous_subtype_val⟩
+  refine ⟨?_, isOpen_UI.preimage continuous_subtypeVal⟩
   have := (sysI.closed ha).isClosedEmbedding_subtypeVal.isCompact_preimage (cpt_I ha h0)
-  exact this.of_isClosed_subset (((UI F E).isClosed_of_isOpen isOpen_UI).preimage continuous_subtype_val) fun x hx => ⟨x.2, hx⟩
+  exact this.of_isClosed_subset (((UI F E).isClosed_of_isOpen isOpen_UI).preimage continuous_subtypeVal) fun x hx => ⟨x.2, hx⟩
 
 theorem coe_PI_io {a : AF F} (h : a * a = a) (l : (AE F E)ˣ) :
     (PI (io a) l : AE F E) = a • (l : AE F E) + (1 - a) • (1 : AE F E) := by
@@ -271,15 +271,15 @@ theorem units_eq (v : Pl F) : {l : idAt E (evFin F v) | IsCompact (closure (Subg
       subset_closure (Subgroup.npow_mem_zpowers l n)
     have h1 : vw w (l.1 ^ k) = 1 := hm w
     rw [vw, Units.val_pow_eq_pow_val, map_pow, map_pow] at h1
-    exact (pow_eq_one_iff_of_nonneg zero_le' hk.ne').1 h1
+    exact (pow_eq_one_iff_of_nonneg zero_le hk.ne').1 h1
   · rintro _ ⟨n, rfl⟩
     exact (UI F E).zpow_mem hl n
 
 theorem measEx_of (hS : StabEx) : MeasEx := by
   intro F E _ _ _ _ _ σ B n X r s hB hX K hK
-  haveI := (ua_top (σ := σ) X.J).1
-  haveI := (ua_top (σ := σ) X.J).2
-  haveI := borelUA (σ := σ) X.J
+  have := (ua_top (σ := σ) X.J).1
+  have := (ua_top (σ := σ) X.J).2
+  have := borelUA (σ := σ) X.J
   have hc := stab_compact hS hB hX hK
   have ei := kAt_eq K (evI F) real_idem fun _ => at_inf_iff
   have ef := fun v => kAt_eq K (evFin F v) (idem_idem v) fun _ => at_fin_iff
@@ -288,7 +288,7 @@ theorem measEx_of (hS : StabEx) : MeasEx := by
   have h1 : ∀ {a}, Gd a → ∀ S, S = part (PU σ X.J) K a → ∃ μ : Measure S, μ.IsHaarMeasure ∧ μ Set.univ = 1 := by
     rintro a ha S rfl
     have hp : Continuous (PU σ X.J a) :=
-      ((unitInvariant_continuous ha.1).comp continuous_subtype_val).subtype_mk _
+      ((unitInvariant_continuous ha.1).comp continuous_subtypeVal).subtype_mk _
     have hclosed : IsClosed (part (PU σ X.J) K a : Set (UA σ X.J)) :=
       hc.isClosed.inter (isClosed_eq hp continuous_id)
     have : CompactSpace (part (PU σ X.J) K a) :=
@@ -307,11 +307,11 @@ theorem measEx_of (hS : StabEx) : MeasEx := by
     rw [← df v] at hcl
     exact exists_haar _ hcl _ (UI F E).one_mem h.1 h.2
   choose xf hxf using fun v => h2 _ _ (h3 v)
-  haveI : LocallyCompactSpace (idAt E (evI F)) := by
+  have : LocallyCompactSpace (idAt E (evI F)) := by
     have hcl := sysI.closed (io_idem (E := E) (real_idem (F := F)))
     rw [← di] at hcl; exact hcl.locallyCompactSpace
-  letI : MeasurableSpace (idAt E (evI F)) := borel _
-  haveI : BorelSpace (idAt E (evI F)) := ⟨rfl⟩
+  let : MeasurableSpace (idAt E (evI F)) := borel _
+  have : BorelSpace (idAt E (evI F)) := ⟨rfl⟩
   exact ⟨⟨kf, xf, ki, Measure.haar⟩, hkf, fun v => ⟨(hxf v).1, by rw [units_eq]; exact (hxf v).2⟩, hki.1, inferInstance⟩
 
 end PositivityTheory.ThKG.Loc.Cone

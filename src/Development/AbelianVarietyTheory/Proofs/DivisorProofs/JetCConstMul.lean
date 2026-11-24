@@ -335,7 +335,7 @@ theorem GlobalTheory.ColNorms.jetC_sum_mul : ∀ (ι : Type) [Fintype ι] (a b :
       GlobalTheory.SCV.contDiff_of_differentiable (hF i hi) _
     have h1 := iteratedFDeriv_sum (𝕜 := ℂ) (f := fun i w => c i * F i w) (u := R) (i := k)
       (fun i hi => contDiff_const.mul (hC i hi))
-    rw [h1, Finset.sum_apply, ContinuousMultilinearMap.sum_apply]
+    rw [h1, Finset.sum_apply, sum_apply]
     refine Finset.sum_congr rfl fun i hi => ?_
     have h2 := iteratedFDeriv_const_smul_apply' (𝕜 := ℂ) (a := c i) (f := F i) (i := k) (x := 0)
       (hC i hi).contDiffAt
@@ -369,11 +369,11 @@ theorem jetInVV_of_stepWeights : ∀ (K : Type) [Field K] [CharZero K] (ι : Typ
     ⟨fun τ i => ?_, fun τ j hj => ?_, fun τ => ?_⟩ ap _ hP
   · have h := hs τ (Fin.castLE hlt.le i)
     have h0 := hs' τ i
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.padZero, Fin.val_castLE, i.2, dif_pos, Fin.eta] at h
-    simp only [Fin.pos i, if_true]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.padZero, Fin.val_castLE, i.2, dite_eq_left, Fin.eta] at h
+    simp only [Fin.pos i, ite_true]
     omega
   · have h := hs τ j
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.padZero, dif_neg (not_lt.2 hj)] at h
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.padZero, dite_eq_right (not_lt.2 hj)] at h
     omega
   · unfold GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.lastEntry DomWeight.detShift
     split_ifs with h
@@ -436,12 +436,12 @@ theorem latSum_tower_reps (E : Type) [Field E] [NumberField E] (W : Type) [AddCo
       rw [← hs' j, ← hs' j', key]
       simpa using h1
     rw [h3]
-  haveI hprod : Finite ((↥G ⧸ C.comap G.subtype) × (↥C ⧸ B.comap C.subtype)) := Finite.of_injective φ hinj
-  haveI : Finite (↥G ⧸ C.comap G.subtype) := Finite.prod_left (↥C ⧸ B.comap C.subtype)
-  haveI : Finite (↥C ⧸ B.comap C.subtype) := Finite.prod_right (↥G ⧸ C.comap G.subtype)
-  letI := Fintype.ofFinite (↥G ⧸ C.comap G.subtype)
-  letI := Fintype.ofFinite (↥C ⧸ B.comap C.subtype)
-  letI := Fintype.ofFinite (↥D ⧸ B.comap D.subtype)
+  have hprod : Finite ((↥G ⧸ C.comap G.subtype) × (↥C ⧸ B.comap C.subtype)) := Finite.of_injective φ hinj
+  have : Finite (↥G ⧸ C.comap G.subtype) := Finite.prod_left (↥C ⧸ B.comap C.subtype)
+  have : Finite (↥C ⧸ B.comap C.subtype) := Finite.prod_right (↥G ⧸ C.comap G.subtype)
+  let := Fintype.ofFinite (↥G ⧸ C.comap G.subtype)
+  let := Fintype.ofFinite (↥C ⧸ B.comap C.subtype)
+  let := Fintype.ofFinite (↥D ⧸ B.comap D.subtype)
   have hrinj : Function.Injective fun z => (r z : W) := by
     intro z w h
     rw [← hr' z, ← hr' w, Subtype.ext h]
@@ -665,7 +665,7 @@ theorem jetC_const_mul {ι : Type} [Fintype ι] {a b : ℕ} (cD : ι → ℂ) (�
 
 theorem cj_coe (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ) (x : M) : StandardLatticesGL3.cj M ρ (x : ℂ) = ρ x := by
   unfold StandardLatticesGL3.cj TaylorLogMetric.liftM
-  rw [dif_pos x.2]
+  rw [dite_eq_left x.2]
 
 theorem toHost_back {D : D7} {X : Fields} (s : Seam D X) {a b : ℕ} (F : VCx X.Tau a b → ℂ) :
     (fun z : VCx X.Tau a b => toHost s F fun τ => z (s.iT.symm τ)) = F := by
@@ -697,9 +697,9 @@ theorem block : GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.BlockBou
     have h3 := diff_back s _ h2
     rwa [toHost_back] at h3
 
-  haveI := (_root_.GlobalTheory.SemilocalClasses.finite_card_classes X.E a b S L L' cA (c * c') hL.1 hL'.1 hcA (Nat.mul_pos hc hc')).1
+  have := (_root_.GlobalTheory.SemilocalClasses.finite_card_classes X.E a b S L L' cA (c * c') hL.1 hL'.1 hcA (Nat.mul_pos hc hc')).1
   let Qt := ↥(divLat cA (homAt S L L')) ⧸ (mulLat (c * c') (homAt S L L')).comap (divLat cA (homAt S L L')).subtype
-  letI : Fintype Qt := Fintype.ofFinite Qt
+  let : Fintype Qt := Fintype.ofFinite Qt
   let rep : Qt → ↥(divLat cA (homAt S L L')) := Function.surjInv (Submodule.Quotient.mk_surjective _)
   have hsum : ∀ {Y : Type} [AddCommMonoid Y] (f : HomE X.E a b → Y),
       latSum (divLat cA (homAt S L L')) (mulLat (c * c') (homAt S L L')) f = ∑ q : Qt, f (rep q) := fun f =>
@@ -718,7 +718,7 @@ theorem block : GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.BlockBou
     rw [hsum, jetOp_sum, Finset.smul_sum]
     refine Finset.sum_congr rfl fun q _ => ?_
     unfold thDistC
-    rw [if_pos ⟨Dvd.intro_left _ rfl, hrep q⟩, smul_comm]
+    rw [ite_eq_left ⟨Dvd.intro_left _ rfl, hrep q⟩, smul_comm]
 
   let F : VCx X.Tau a b → ℂ := fun z => ∑ q : Qt, s.σ₀ (Ξ (rep q)) * (κ * A.thInd S L L' (c * c') (rep q) z)
   have hJF : ∀ e, (∀ τ, ((degAt e τ : ℕ) : ℤ) = ∑ i, (nu τ).w i) → s.σ₀ (J e) = jetC A.cD F e := by
@@ -733,7 +733,7 @@ theorem block : GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.BlockBou
       unfold degAt
       congr)
     unfold Amb.jetK desc
-    rw [dif_pos h1]
+    rw [dite_eq_left h1]
     exact h1.choose_spec
   obtain ⟨R, hRc, hR⟩ := _root_.GlobalTheory.latSum_thInd_regroup X A a b S L L' cA c c' (fun x => s.σ₀ (Ξ x)) hInd hL hL' hcA hc hc'
     (fun x hx => hΞ.1 x fun h => hx (by rw [h, map_zero])) (fun x y hy => by rw [hΞ.2.1 x y hy])
@@ -757,7 +757,7 @@ theorem block : GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.BlockBou
   set ar := TaylorLogMetric.area (TaylorLogMetric.lamConj M ρ (TaylorLogMetric.lamOf D cc dl)) with har
   let cD' : X.Tau → ℂ := fun τ => ρ (TaylorLogMetric.liftM M (cD (s.iT τ)))
   have hcD' : ∀ τ, cD' τ ≠ 0 := fun τ => by
-    have h1 : TaylorLogMetric.liftM M (cD (s.iT τ)) = ⟨cD (s.iT τ), hcM _⟩ := dif_pos (hcM _)
+    have h1 : TaylorLogMetric.liftM M (cD (s.iT τ)) = ⟨cD (s.iT τ), hcM _⟩ := dite_eq_left (hcM _)
     show ρ _ ≠ 0
     rw [h1, map_ne_zero]
     exact fun h => hc0 _ (congrArg Subtype.val h)
@@ -803,7 +803,7 @@ theorem block : GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.BlockBou
         simp only [norm_mul, mul_pow, Complex.norm_real, Real.norm_eq_abs, sq_abs, Real.sq_sqrt hr.le, ← Finset.mul_sum]
         ring
       have e2 : ∀ y : ℝ, Real.exp (y / 2) ^ 2 = Real.exp y := fun y => by
-        rw [← Real.exp_nat_mul]
+        rw [← Real.exp_natCast_mul]
         congr 1
         push_cast
         ring

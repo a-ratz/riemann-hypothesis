@@ -76,14 +76,14 @@ theorem exists_point {K : Type} [Field K] (σ : K →+* ℂ) {X : Scheme.{0}} (s
       RingHom.FiniteType.of_surjective _
         (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of K)).inv).2
     exact h1.comp h2
-  letI : Algebra K Γ(X, V) := ρ.toAlgebra
-  haveI : Algebra.FiniteType K Γ(X, V) := hρ
-  letI : Algebra K ℂ := σ.toAlgebra
-  haveI : Nonempty V := ⟨⟨q, hqV⟩⟩
+  let : Algebra K Γ(X, V) := ρ.toAlgebra
+  have : Algebra.FiniteType K Γ(X, V) := hρ
+  let : Algebra K ℂ := σ.toAlgebra
+  have : Nonempty V := ⟨⟨q, hqV⟩⟩
   obtain ⟨M, hM⟩ := Ideal.exists_maximal Γ(X, V)
-  haveI : IsJacobsonRing Γ(X, V) := isJacobsonRing_of_finiteType (A := K)
-  letI := Ideal.Quotient.field M
-  haveI : Module.Finite K (Γ(X, V) ⧸ M) := finite_of_finite_type_of_isJacobsonRing K (Γ(X, V) ⧸ M)
+  have : IsJacobsonRing Γ(X, V) := isJacobsonRing_of_finiteType (A := K)
+  let := Ideal.Quotient.field M
+  have : Module.Finite K (Γ(X, V) ⧸ M) := finite_of_finite_type_of_isJacobsonRing K (Γ(X, V) ⧸ M)
   let e : (Γ(X, V) ⧸ M) →ₐ[K] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

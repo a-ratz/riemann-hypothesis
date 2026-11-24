@@ -180,7 +180,7 @@ theorem jacobi_of_class (D : D7) (p : ℕ) [Fact p.Prime] (h : IsResidueClassZer
       exact ⟨h3, h4⟩
     · obtain ⟨-, -, h3, h4, -⟩ := (primeClass_eq_signal_iff _).1 h'
       exact ⟨h3, h4⟩
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   rcases jacobiSym.trichotomy (-(D.host.d : ℤ)) p with h0 | h1 | h1
   · exfalso
     rw [jacobiSym.eq_zero_iff_not_coprime] at h0
@@ -721,15 +721,15 @@ theorem term_jets (hIn : GlobalTheory.ThLoc.Inputs) (hcc : TaylorLogMetric.IsCur
   have hA : ∀ j x, ‖A j x‖ ≤ 1 := by
     intro j x
     by_cases h : j = x
-    · simp only [A, if_pos h, norm_inv, hn1, inv_one, le_refl]
-    · simp only [A, if_neg h, norm_zero, zero_le_one]
+    · simp only [A, ite_eq_left h, norm_inv, hn1, inv_one, le_refl]
+    · simp only [A, ite_eq_right h, norm_zero, zero_le_one]
   have hfr : (fun (i : DVar X.Tau N N') x => (fun (k : D.what₂.Tau × Fin N' × Fin N) (j : Fin n) =>
       TaylorLogMetric.tauEmb D lm k.1 (y j k.2.1 k.2.2)) (s.iT i.1, i.2) x) = frameM (ι : ℂ →+* ℂ_[p]) v A := by
     funext i x
     have e : v x i = ((s₁ * s₂ : ℕ) : ℂ) * TaylorLogMetric.embT D (s.iT i.1) (y x i.2.1 i.2.2) := by
       show TaylorLogMetric.embT D (s.iT i.1) ((((s₁ * s₂ : ℕ) : D.host.E) • y x) i.2.1 i.2.2) = _
       rw [Matrix.smul_apply, smul_eq_mul, map_mul, map_natCast]
-    simp only [frameM, A, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [frameM, A, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [tauEmb_eq hι, e]
     simp only [RingHom.coe_coe, map_mul, map_natCast]
     field_simp
@@ -914,7 +914,7 @@ theorem tauEmb_ringHom (D : D7) {p : ℕ} [Fact p.Prime] (lm : Qbar →+* ℂ_[p
     ∃ g : D.host.E →+* ℂ_[p], ∀ x, tauEmb D lm τ x = g x := by
   have hm : ∀ x, embT D τ x ∈ Qbar := fun x =>
     mem_algebraicClosure_iff.2 ((Algebra.IsAlgebraic.isAlgebraic (R := ℚ) x).algHom (embT D τ).toRatAlgHom)
-  exact ⟨lm.comp ((embT D τ).codRestrict Qbar hm), fun x => dif_pos (hm x)⟩
+  exact ⟨lm.comp ((embT D τ).codRestrict Qbar hm), fun x => dite_eq_left (hm x)⟩
 
 theorem jetsIntegral_basR : ∀ (D : D7) (cD : D.what₂.Tau → ℂ), Formalism.L2.Ker.IsDgen D cD → ∀ (N N' : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)), admitted D N N' L L' → ∀ (p : ℕ) [Fact p.Prime] (lm : TaylorLogMetric.Qbar →+* ℂ_[p]), ∀ (B : D.what₂.Tau → Matrix (Fin N) (Fin N) ℂ_[p]) (B' : D.what₂.Tau → Matrix (Fin N') (Fin N') ℂ_[p]) (κ : D.what₂.Tau → ℂ_[p]), (∀ τ, GL3Columns.BasR D lm τ L (B τ)) → (∀ τ, GL3Columns.BasR D lm τ L' (B' τ)) → (∀ τ, ‖κ τ‖ ≤ ‖lamC lm (cD τ)‖) → ∀ F : MvPowerSeries (D.what₂.Tau × Fin N' × Fin N) ℂ_[p], JetsInt D lm (YYl D L L') F → JetsIntegral (atLin (fun (k : D.what₂.Tau × Fin N' × Fin N) (j : (Bool × HH D) × Fin N × Fin N') => if tauPl D j.1 = k.1 then κ k.1 * B' k.1 k.2.1 j.2.2 * (B k.1)⁻¹ j.2.1 k.2.2 else 0) (fun j => MvPowerSeries.X j) F) := by
   intro D cD hD N N' L L' hA p _ lm B B' κ hB hB' hκ F hF
@@ -1474,7 +1474,7 @@ theorem nrmId_pow (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (
     nrmId D lam τ 𝔞 ^ h = ‖lamC lam (embT D τ z)‖ := by
   unfold nrmId
   simp only [lamC_embT]
-  haveI := isUltra p
+  have := isUltra p
   exact nu_pow (psiT D lam τ) 𝔞 h h0 z e
 
 theorem nrmId_nonneg (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (τ : D.what₂.Tau) (𝔞 : IdE D) :
@@ -1553,7 +1553,7 @@ theorem mtType_of_frame_mul {D : D7} {C : CharFrame D} (Dt : DtTied D C) (ξ : H
     (hord : ξ.OrderDvd n) (mt : ℕ → D.Dt →* ℂˣ)
     (h : ∀ (j : Fin D.R.m) a, IsFinIdele a → mt (j.1 + 1) (Dt.eDt a) = (C.mu0 j * ξ).1 a) (u : D.what₂.Word) :
     MtType u mt := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hcm : IsCMField D.host.E := D.host.isCMField_hostE
   intro i hi
   have hun : (C.mu0 ⟨i, hi⟩ * ξ).IsUnitary := fun x => by
@@ -1615,7 +1615,7 @@ theorem mtType_stdO {B : Base} {X : PreX B.toPre} (I : TC B X) (hok : I.Ok) (hp 
   have hm : 1 ≤ j.1 + 1 ∧ j.1 + 1 ≤ B.R.m := ⟨by omega, j.2⟩
   have e1 : (O u a).mt (j.1 + 1) = (I.rec7 l Z).muTil (j.1 + 1) * (show (I.rec7 l Z).Dt →* ℂˣ from tildeQ B.host I.SQ (I.xi a)) := by
     rw [hO.mt u a]
-    exact if_pos hm
+    exact ite_eq_left hm
   rw [e1, MonoidHom.mul_apply, T.muTil_eq j x hx, hT x]
   have e2 : (tildeQ B.host I.SQ (I.xi a)) (QuotientGroup.mk x) = (I.xi a).1 x :=
     (tildeQ_mk B.host I.SQ hk x).trans (congrArg _ (finPartI_eq_self hx))
@@ -1721,13 +1721,13 @@ theorem stepRep_eq_one_at_typePrimes {X : Fields} {Pr : Primes X} {R : Ranks} (C
       rw [show twSt Ch sel mu cst m2 (i+1) = twNext Ch sel mu cst (twSt Ch sel mu cst m2 i) by simp [twSt, h1]]
       intro b
       have hq : P.1 ∉ twQOff (Pr := Pr) sel mu := fun hq => (Finset.mem_sdiff.1 hq).2 hP
-      simp only [twNext, hq, dif_neg, not_false_eq_true]
+      simp only [twNext, hq, dite_eq_right, not_false_eq_true]
     · by_cases h2 : i + 1 = m2 + 1
       · revert b
         rw [show twSt Ch sel mu cst m2 (i+1) = twUnitSt _ (i+1) by simp [twSt, h1, h2]]
         intro b; rfl
       · revert b
-        rw [show twSt Ch sel mu cst m2 (i+1) = twEmptySt _ (i+1) by simp only [twSt, if_neg h1, if_neg h2]]
+        rw [show twSt Ch sel mu cst m2 (i+1) = twEmptySt _ (i+1) by simp only [twSt, ite_eq_right h1, ite_eq_right h2]]
         intro b; exact b.elim
 
 theorem colNorm_of_tw : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), (∀ a, I.cst a = twCst I.Ch I.sel (I.tup a) I.glob ∧ I.idx a = twIdx I.Ch I.sel (I.tup a) (I.cst a) (B.R.m - 2)) → GlobalTheory.Pdv.ColNorm I := by

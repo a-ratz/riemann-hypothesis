@@ -163,7 +163,7 @@ theorem map_thetaT_eq_self {F : Type*} [Field F] [ValuativeRel F] [TopologicalSp
   have hfin : μ K ≠ ⊤ := hK.measure_lt_top.ne
   have hcc : c * c = 1 := by
     have := congrArg (fun ν : Measure (GL (Fin n) F) => ν K) hsq
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at this
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at this
     have h' : ((c * c : NNReal) : ENNReal) * μ K = 1 * μ K := by rw [one_mul]; exact this
     have := (ENNReal.mul_left_inj hpos.ne' hfin).1 h'
     exact_mod_cast this

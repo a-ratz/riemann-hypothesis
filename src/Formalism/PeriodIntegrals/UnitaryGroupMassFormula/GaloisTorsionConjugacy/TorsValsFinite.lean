@@ -237,14 +237,14 @@ open Polynomial
 
 theorem extRho : ExtRho := by
   intro M M₁ h halg ρ
-  letI iA : Algebra M M₁ := (IntermediateField.inclusion h).toRingHom.toAlgebra
-  haveI hA : Algebra.IsAlgebraic M M₁ := by
+  let iA : Algebra M M₁ := (IntermediateField.inclusion h).toRingHom.toAlgebra
+  have hA : Algebra.IsAlgebraic M M₁ := by
     refine ⟨fun x => ?_⟩
     let f : M₁ →ₐ[M] ℂ :=
       { toRingHom := (M₁.val : M₁ →+* ℂ)
         commutes' := fun _ => rfl }
     exact (isAlgebraic_algHom_iff f M₁.val.injective).mp (halg x x.2)
-  letI iC : Algebra M ℂ := ρ.toRingHom.toAlgebra
+  let iC : Algebra M ℂ := ρ.toRingHom.toAlgebra
   let φ : M₁ →ₐ[M] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,

@@ -227,7 +227,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordFinLen :
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordLimProj :
     ∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] {I : Ideal R}, OrdAdm (M := M) I → ∀ (U : Module.End R M), ∃ e : Module.End R M, ∀ k : ℕ, ∃ (Uk ek : Module.End R (M ⧸ (I ^ k • ⊤ : Submodule R M))) (n : ℕ), (∀ x, Uk (Submodule.Quotient.mk x) = Submodule.Quotient.mk (U x)) ∧ IsOrdProj ⊥ Uk ek ∧ (∀ y, (Uk ^ n) (y - ek y) = 0) ∧ ∀ x, ek (Submodule.Quotient.mk x) = Submodule.Quotient.mk (e x) := by
   intro R _ M _ _ I h U
-  haveI := h.complete
+  have := h.complete
   let Uk : ∀ k : ℕ, Module.End R (M ⧸ (I ^ k • ⊤ : Submodule R M)) := fun k =>
     Submodule.mapQ _ _ U fun x hx => map_mem_smul_top U _ hx
   choose ek n h1 h2 using fun k => UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordFinLen (h.finLen k) (Uk k)
@@ -280,7 +280,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordLimBij :
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordExists :
     ∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] {I : Ideal R}, OrdAdm (M := M) I → ∀ (U : Module.End R M), IsOrdProj I U (ordProj I U) ∧ LinearMap.range (ordProj I U) = ordPart U ∧ IsCompl (ordPart U) (nilPart I U) ∧ Set.BijOn U (ordPart U) (ordPart U) := by
   intro R _ M _ _ I h U
-  haveI := h.complete
+  have := h.complete
   obtain ⟨e, he⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordLimProj h U
   have h1 := isOrdProj_ordProj ⟨e, UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordLimBij U e he⟩
   obtain ⟨h2, -, h3⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordRange h1
@@ -289,7 +289,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordExists :
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordFactFin :
     ∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] [Finite M] (U : Module.End R M), ∃ N : ℕ, ∀ j, N ≤ j → ∀ I : Ideal R, IsOrdProj I U (U ^ j.factorial) := by
   intro R _ M _ _ _ U
-  haveI : Finite (Module.End R M) := Finite.of_injective _ (DFunLike.coe_injective (F := M →ₗ[R] M))
+  have : Finite (Module.End R M) := Finite.of_injective _ (DFunLike.coe_injective (F := M →ₗ[R] M))
   obtain ⟨N, hN, h⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.factIdem U
   refine ⟨N, fun j hj I => ?_⟩
   rw [h j hj]
@@ -314,13 +314,13 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordFactFin :
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordFactLim :
     ∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] {I : Ideal R}, OrdAdm (M := M) I → (∀ k : ℕ, Finite (M ⧸ (I ^ k • ⊤ : Submodule R M))) → ∀ (U e : Module.End R M), IsFactLim I U e ↔ e = ordProj I U := by
   intro R _ M _ _ I h hf U e
-  haveI := h.complete
+  have := h.complete
   have h1 : IsFactLim I U (ordProj I U) := by
     intro k
-    haveI := hf k
+    have := hf k
     let Uk : Module.End R (M ⧸ (I ^ k • ⊤ : Submodule R M)) :=
       Submodule.mapQ _ _ U fun x hx => map_mem_smul_top U _ hx
-    haveI : IsHausdorff I (M ⧸ (I ^ k • ⊤ : Submodule R M)) := ⟨fun x hx => by
+    have : IsHausdorff I (M ⧸ (I ^ k • ⊤ : Submodule R M)) := ⟨fun x hx => by
       have h0 := hx k
       rw [SModEq.zero, ← Submodule.range_mkQ, LinearMap.range_eq_map, ← Submodule.map_smul''] at h0
       obtain ⟨y, hy, rfl⟩ := h0
@@ -358,7 +358,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordProjective :
 theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordPer :
     ∀ {R : Type*} [CommRing R] {M : Type*} [AddCommGroup M] [Module R M] {I : Ideal R}, OrdAdm (M := M) I → (∀ k : ℕ, Finite (M ⧸ (I ^ k • ⊤ : Submodule R M))) → ∀ (U : Module.End R M) (x : M), x ∈ ordPart U ↔ ∀ k : ℕ, ∃ n : ℕ, (U ^ (n + 1)) x - x ∈ (I ^ k • ⊤ : Submodule R M) := by
   intro R _ M _ _ I h hf U x
-  haveI := h.complete
+  have := h.complete
   have h1 := (UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordFactLim h hf U _).2 rfl
   obtain ⟨a1, a2, -, -⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.ordExists h U
   constructor

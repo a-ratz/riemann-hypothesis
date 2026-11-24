@@ -132,7 +132,7 @@ private theorem isDom_OmP_levTower_base {E : Type} [Field E] [NumberField E] [Is
       exact (Complex.continuous_normSq.comp (hD _)).sub
         (continuous_const.mul (Complex.continuous_normSq.comp (hD _)))
     unfold OmP
-    rw [Set.setOf_and, Set.setOf_forall]
+    rw [Set.ofPred_and, Set.ofPred_forall]
     exact (isOpen_lt continuous_const hG).inter
       (isOpen_iInter_of_finite fun a => isOpen_ne_fun (hD _) continuous_const)
   · rintro g ⟨-, hgD⟩ s ⟨h, hh, m, hm, rfl⟩ s' ⟨h', hh', m', hm', rfl⟩
@@ -192,7 +192,7 @@ private theorem w1_mem_UH_Hpk_of_ne_zero {k r : ℕ} (l : Fin r) (x : ℂ) (hx :
   show (Q.w1 k r l x)ᴴ * Hpk k r * Q.w1 k r l x = Hpk k r
   ext p q
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, hcol, apply_ite star, star_zero, ite_mul, mul_ite,
-    zero_mul, mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    zero_mul, mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   by_cases hp1 : p = eI k r l <;> by_cases hp2 : p = esI k r l <;>
     by_cases hq1 : q = eI k r l <;> by_cases hq2 : q = esI k r l <;>
     first

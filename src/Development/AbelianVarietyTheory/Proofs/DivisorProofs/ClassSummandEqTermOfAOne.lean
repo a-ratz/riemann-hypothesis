@@ -325,7 +325,7 @@ theorem classes_finite : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a = 1 �
   obtain ⟨a', ha', b, hD⟩ := key y hy a.1.1 (left_ne_zero_of_mul ha)
   have hex : ∃ y, D (a', b) y := ⟨y, hD⟩
   refine ⟨ρ (a', b), Finset.mem_image_of_mem _ (Finset.mem_product.2 ⟨ha', Finset.mem_univ _⟩), ?_⟩
-  have hρ : ρ (a', b) = hex.choose := dif_pos hex
+  have hρ : ρ (a', b) = hex.choose := dite_eq_left hex
   rw [hρ]
   obtain ⟨c', r', e', hc', he', hb', hre'⟩ := hex.choose_spec
   dsimp only at hb' hre'
@@ -673,10 +673,10 @@ theorem GlobalTheory.charpoly_coeff_continuous_GAf : ∀ (p : ℕ) [Fact p.Prime
     (LinearMap.charpoly (LinearMap.mulLeft (AfP p) (((g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1 : (AfP p ⊗[ℚ] G.C)ˣ) :
       AfP p ⊗[ℚ] G.C))).coeff k := by
   intro p _ G k
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) _
-  haveI : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) _
+  have : IsModuleTopology (AfP p) (AfP p ⊗[ℚ] G.C) := ⟨rfl⟩
   exact (continuous_charpoly_coeff_mulLeft (R := AfP p) (A := AfP p ⊗[ℚ] G.C) k).comp
-    (Units.continuous_val.comp (continuous_fst.comp continuous_subtype_val))
+    (Units.continuous_val.comp (continuous_fst.comp continuous_subtypeVal))
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -741,7 +741,7 @@ theorem ratint_away : ∀ (p : ℕ) [Fact p.Prime] (q : ℚ),
       have hc : IsCoprime q.num (q.den : ℤ) := by
         rw [Int.isCoprime_iff_gcd_eq_one]
         exact_mod_cast q.reduced
-      exact hlI.not_unit (hc.isUnit_of_dvd' hn' hd')
+      exact hlI.not_isUnit (hc.isUnit_of_dvd' hn' hd')
     have e : q = ((algebraMap ℤ ℚ q.num) / (algebraMap ℤ ℚ (q.den : ℤ))) := by
       simp [Rat.num_div_den]
     rw [e, v.valuation_div_le_one_iff ℚ q.num hb hcop] at hq2
@@ -1139,14 +1139,14 @@ theorem eq_one_of_units (p : ℕ) [Fact p.Prime] {r : ℚ} (hr : 0 < r)
 theorem valued_snd_eq_one {p : ℕ} [Fact p.Prime] (G : HTGroup p) (K : Subgroup G.GAf)
     (hK : IsCompact (K : Set G.GAf)) (w : AwayP p) {k : G.GAf} (hk : k ∈ K) :
     Valued.v (AfP.eval w (((k : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).2 : (AfP p)ˣ) : AfP p)) = 1 := by
-  letI : NontriviallyNormedField (w.1.adicCompletion ℚ) := Valued.toNontriviallyNormedField _ _
+  let : NontriviallyNormedField (w.1.adicCompletion ℚ) := Valued.toNontriviallyNormedField _ _
   let F : G.GAf → ℝ := fun g => ‖AfP.eval w (((g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).2 : (AfP p)ˣ) : AfP p)‖
   have hev : Continuous (fun x : AfP p => AfP.eval w x) :=
     RestrictedProduct.continuous_eval (R := fun v : AwayP p => v.1.adicCompletion ℚ)
       (A := fun v : AwayP p => (v.1.adicCompletionIntegers ℚ : Set (v.1.adicCompletion ℚ))) w
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
   have hF : Continuous F :=
-    continuous_norm.comp (hev.comp (Units.continuous_val.comp (continuous_snd.comp continuous_subtype_val)))
+    continuous_norm.comp (hev.comp (Units.continuous_val.comp (continuous_snd.comp continuous_subtypeVal)))
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hF.continuousOn
   have hmul : ∀ a b : G.GAf, F (a * b) = F a * F b := fun a b => by
     simp only [F, Subgroup.coe_mul, Prod.snd_mul, Units.val_mul, map_mul, norm_mul]
@@ -1290,7 +1290,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (f : G
     eq_of_valuations hM.1 hex.choose_spec.1 (fun w => by rw [hM.2.1 w, hex.choose_spec.2.1 w])
       (by exact_mod_cast hM.2.2.trans hex.choose_spec.2.2.symm)
   have hg : ((((y : G.Cˣ × ℚˣ).2 : ℚˣ) : ℚ) : ℝ) = g σ σ' := by
-    simp only [g, dif_pos hex, heq]
+    simp only [g, dite_eq_left hex, heq]
   rw [hg]
   calc g σ σ' ≤ ∑ σ'' ∈ T', g σ σ'' :=
         Finset.single_le_sum (f := fun σ'' => g σ σ'') (fun i _ => g_nonneg σ i) hσ'
@@ -1482,7 +1482,7 @@ theorem class_summand_eq_term_of_a_one : ∀ (p : ℕ) [Fact p.Prime] (G : HTGro
   intro p _ G hG v hv wt Kf f K' f' hf hf' P x t hx r hr
   have hiff := fix_iff_mark G hG v hv P r hr
   by_cases hm : ∃ μ, P.Mark μ
-  · rw [if_pos (hiff.2 hm), if_pos hm]
+  · rw [ite_eq_left (hiff.2 hm), ite_eq_left hm]
     obtain ⟨μ, hμ⟩ := hm
     have hpos := cent_sim_pos p G P μ hG hμ
     set e := centEquiv G P hpos r hr with he
@@ -1504,7 +1504,7 @@ theorem class_summand_eq_term_of_a_one : ∀ (p : ℕ) [Fact p.Prime] (G : HTGro
     have h5 : minpoly G.F (((r : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C) = P.pol := by
       rw [hr]; rfl
     rw [h1, h2, h3, h4, h5, GlobalTheory.pointSum_comp_mulEquiv, GlobalTheory.T.orbital_term_point_sum p G P Kf f K' f' hf hf' x t hx]
-  · rw [if_neg (fun h => hm (hiff.1 h)), if_neg hm]
+  · rw [ite_eq_right (fun h => hm (hiff.1 h)), ite_eq_right hm]
 
 end GlobalTheory.LKCx.CxReg
 

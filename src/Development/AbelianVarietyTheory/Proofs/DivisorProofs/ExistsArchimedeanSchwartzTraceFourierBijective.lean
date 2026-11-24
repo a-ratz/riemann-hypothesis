@@ -78,7 +78,7 @@ theorem exists_schwartz_fourier_form {V : Type} [NormedAddCommGroup V] [NormedSp
   refine ⟨(a : ℂ) • (CR.comp (Fo.comp CT)), ?_, fun f y => ?_⟩
   · rw [Function.bijective_iff_has_inverse]
     refine ⟨fun g => (a : ℂ)⁻¹ • CTi (𝓕⁻ (CRi g)), fun f => ?_, fun g => ?_⟩
-    · simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, map_smul, h1, h5, h3,
+    · simp only [smul_apply, ContinuousLinearMap.comp_apply, map_smul, h1, h5, h3,
         FourierTransform.fourierInv_smul, smul_smul, inv_mul_cancel₀ ha', one_smul]
     · change (a : ℂ) • CR (Fo (CT ((a : ℂ)⁻¹ • CTi (𝓕⁻ (CRi g))))) = g
       rw [map_smul, map_smul, map_smul, h4, h6, h2, smul_smul, mul_inv_cancel₀ ha', one_smul]

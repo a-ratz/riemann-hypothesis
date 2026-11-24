@@ -112,7 +112,7 @@ theorem UpperTheory.Gal.W2.Seed.pKNOpen :
   intro hI E _ _ _ A n p _ S T N hN
   have hO : IsOpen ((sg {w : Plc E | (p : 𝓞 E) ∉ w.asIdeal} N : AddSubgroup (Af E)) : Set (Af E)) :=
     AddSubgroup.isOpen_mono (H₁ := sg Set.univ N) (fun x hx w _ => hx w trivial) (isOpen_sg_univ hN)
-  have hm : Continuous (fun g : GUf E n => mat g) := continuous_fst.comp continuous_subtype_val
+  have hm : Continuous (fun g : GUf E n => mat g) := continuous_fst.comp continuous_subtypeVal
   have hc1 : Continuous (fun g : GUf E n => (T.a * mat g * T.a⁻¹ : GL (Fin n) (Af E)).val) :=
     Units.continuous_val.comp ((continuous_const.mul hm).mul continuous_const)
   have hc2 : Continuous (fun g : GUf E n => (T.a * mat g⁻¹ * T.a⁻¹ : GL (Fin n) (Af E)).val) := by

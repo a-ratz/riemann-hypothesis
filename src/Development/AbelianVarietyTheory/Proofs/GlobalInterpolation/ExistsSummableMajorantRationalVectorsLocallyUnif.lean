@@ -133,9 +133,9 @@ theorem finrank_le_of_discrete {E : Type} [NormedAddCommGroup E] [NormedSpace �
     (L : Submodule ℤ E) [DiscreteTopology L] : Module.finrank ℤ L ≤ Module.finrank ℝ E := by
   let E' := Submodule.span ℝ (L : Set E)
   let L' : Submodule ℤ E' := ZLattice.comap ℝ L E'.subtype
-  haveI : DiscreteTopology L' :=
+  have : DiscreteTopology L' :=
     ZLattice.comap_discreteTopology _ _ (by fun_prop) Subtype.val_injective
-  haveI : IsZLattice ℝ L' :=
+  have : IsZLattice ℝ L' :=
     ⟨Submodule.map_injective_of_injective E'.subtype_injective (by simp [E', L'])⟩
   let e : L' ≃ₗ[ℤ] L := Submodule.comapSubtypeEquivOfLe (p := L) (q := E'.restrictScalars ℤ)
     Submodule.subset_span
@@ -169,7 +169,7 @@ theorem summable_majorant : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ), 
     Set.indicator_nonneg (fun ξ _ => div_nonneg (pow_nonneg (by linarith) _)
       (pow_nonneg (by linarith [sz_nonneg (rat ξ)]) _)) ξ
   refine ⟨c, ?_, hc0, fun ξ y hy hξ => ?_⟩
-  · haveI := GlobalTheory.WeilM.discreteTopology_denomLattice F (Fin N) hM0
+  · have := GlobalTheory.WeilM.discreteTopology_denomLattice F (Fin N) hM0
     set L := GlobalTheory.WeilM.denomLattice F (Fin N) M with hL
     have memL : ∀ ξ ∈ S, (fun i => mixedEmbedding F (ξ i)) ∈ L := by
       intro ξ hξ i

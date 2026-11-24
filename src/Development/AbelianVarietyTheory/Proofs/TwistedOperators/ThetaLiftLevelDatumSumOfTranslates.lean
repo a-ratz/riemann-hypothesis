@@ -434,7 +434,7 @@ theorem tens_quot_finite {E : Type} [Field E] [NumberField E] {n r : ℕ} (Λ : 
     exact hsub hx
   have hAfg : A.toIntSubmodule.FG :=
     (isNoetherian_submodule.mp (isNoetherian_of_fg_of_noetherian _ hMZ)) _ hle
-  haveI : AddGroup.FG A := by
+  have : AddGroup.FG A := by
     have : Module.Finite ℤ A.toIntSubmodule := Module.Finite.iff_fg.mpr hAfg
     exact (Module.Finite.iff_addGroup_fg).mp this
   set N := Ideal.absNorm 𝔪 with hN
@@ -453,8 +453,8 @@ theorem tens_quot_finite {E : Type} [Field E] [NumberField E] {n r : ℕ} (Λ : 
     | zero => simp
     | add x y _ _ hx hy => rw [smul_add]; exact add_mem hx hy
     | neg x _ hx => rw [smul_neg]; exact neg_mem hx
-  haveI : AddGroup.FG (A ⧸ B.addSubgroupOf A) := AddGroup.fg_of_surjective (QuotientAddGroup.mk'_surjective _)
-  apply AddCommGroup.finite_of_fg_torsion
+  have : AddGroup.FG (A ⧸ B.addSubgroupOf A) := AddGroup.fg_of_surjective (QuotientAddGroup.mk'_surjective _)
+  apply AddCommGroup.finite_of_fg_isAddTorsion
   intro q
   induction q using QuotientAddGroup.induction_on with
   | H x =>
@@ -640,7 +640,7 @@ theorem intAE_eq_clos : intAE D = clos D ⊤ := by
   unfold intAE clos
   congr 1
   ext y
-  simp only [Set.mem_setOf_eq, Submodule.mem_top, true_and]
+  simp only [Set.mem_ofPred_eq, Submodule.mem_top, true_and]
 
 theorem one_mem_clos : (1 : Af D.host.F ⊗[D.host.F] D.host.E) ∈ clos D ⊤ := by
   have h := tmul_mem_clos (D := D) (I := ⊤) one_mem_intAf' (Submodule.mem_top (x := (1 : 𝓞 D.host.E)))
@@ -1001,8 +1001,8 @@ theorem omegaK_congr {a b : ℕ} (Pg : Finset (Formalism.L2.DIV.Pl D.host.E))
   have hc : (∀ PP ∈ Pg, LowZero a (y PP) ∧ topL a (y PP) = 1) ↔
       (∀ PP ∈ Pg, LowZero a (y' PP) ∧ topL a (y' PP) = 1) := forall₂_congr fun PP hP => by rw [h PP hP]
   by_cases h1 : ∀ PP ∈ Pg, LowZero a (y PP) ∧ topL a (y PP) = 1
-  · rw [if_pos h1, if_pos (hc.1 h1)]
-  · rw [if_neg h1, if_neg (fun h2 => h1 (hc.2 h2))]
+  · rw [ite_eq_left h1, ite_eq_left (hc.1 h1)]
+  · rw [ite_eq_right h1, ite_eq_right (fun h2 => h1 (hc.2 h2))]
 
 theorem omegaQ_congr {a b : ℕ} (Q : Finset (Formalism.L2.DIV.Pl D.host.E)) (r : ℕ)
     (ξ : ∀ PP : Formalism.L2.DIV.Pl D.host.E, (Formalism.L2.DIV.kP PP)ˣ →* ℂˣ) (k : ℤ)
@@ -1161,12 +1161,12 @@ theorem thPDatum_eq_levelSum : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.
         have := add_mem hyL (hIn2 _ hm)
         rwa [tr_sub, add_add_sub_cancel] at this
     rw [finsum_eq_single _ (QuotientAddGroup.mk ⟨y, hy⟩ : LvCls C Lv) (fun c hc' => by
-      rw [indL, if_neg (fun h => hc' ((hiff c).1 h)), mul_zero])]
+      rw [indL, ite_eq_right (fun h => hc' ((hiff c).1 h)), mul_zero])]
     set c₀ : LvCls C Lv := QuotientAddGroup.mk ⟨y, hy⟩ with hc₀
     have hw : x + tr S T e k₀ (c₀.out : Matrix (Fin S.rank) (Fin T.rank) D.host.E) ∈ liftL S T βS βT Pg Q e :=
       (hiff c₀).2 rfl
     change _ = _ * indL (liftL S T βS βT Pg Q e) (x + tr S T e k₀ (c₀.out : Matrix (Fin S.rank) (Fin T.rank) D.host.E))
-    rw [indL, if_pos hw, mul_one, hdat _ (neg_mem c₀.out.2), thPDatum, if_pos hx]
+    rw [indL, ite_eq_left hw, mul_one, hdat _ (neg_mem c₀.out.2), thPDatum, ite_eq_left hx]
     have hwI := hInt _ c₀.out.2
     have hnI : IsIntM (frMapAdj S T βS βT (-tr S T e k₀ (c₀.out : Matrix (Fin S.rank) (Fin T.rank) D.host.E))) := by
       rw [frMapAdj_neg]; exact fun i j => by rw [Matrix.neg_apply]; exact neg_mem (hwI i j)
@@ -1180,9 +1180,9 @@ theorem thPDatum_eq_levelSum : ∀ (D : D7) (S T : HSp D) (C : Ctx S T) (hn : T.
       rw [tr_neg, eq_neg_of_add_eq_zero_right h3.symm, eq_neg_of_add_eq_zero_left h1.symm]
     refine congrArg₂ (· * ·) (omegaK_congr Pg (fun PP hPP => (hred PP (Finset.mem_union_left _ hPP)).symm))
       (omegaQ_congr Q T.rank ξ (-1) (fun PP hPP => (hred PP (Finset.mem_union_right _ hPP)).symm))
-  · rw [thPDatum, if_neg hx]
+  · rw [thPDatum, ite_eq_right hx]
     refine (finsum_eq_zero_of_forall_eq_zero fun c => ?_).symm
-    rw [indL, if_neg, mul_zero]
+    rw [indL, ite_eq_right, mul_zero]
     intro h
     have hwI := hInt _ (c.out : _).2
     have hnI : IsIntM (frMapAdj S T βS βT (-tr S T e k₀ (c.out : Matrix (Fin S.rank) (Fin T.rank) D.host.E))) := by
@@ -1788,7 +1788,7 @@ theorem red_nsmul {b a : ℕ} (PP : Formalism.L2.DIV.Pl D.host.E) {N : Matrix (F
     rw [Matrix.smul_apply, nsmul_eq_mul]; exact mul_mem (natCast_mem _ m) (hN i j)
   refine ⟨hI, ?_⟩
   ext i j
-  simp only [redM, dif_pos (hI i j), Matrix.zero_apply]
+  simp only [redM, dite_eq_left (hI i j), Matrix.zero_apply]
   have e : (⟨(m • N) i j, hI i j⟩ : Formalism.L2.Herm.intAf D.host.F D.host.E) =
       (m : Formalism.L2.Herm.intAf D.host.F D.host.E) * ⟨N i j, hN i j⟩ := by
     apply Subtype.ext; simp [Matrix.smul_apply, nsmul_eq_mul]
@@ -1907,7 +1907,7 @@ theorem isLattice_stdL (E : Type) [Field E] [NumberField E] (n : ℕ) :
   exact (LinearIndependent.iff_fractionRing _ _).mp hli
 theorem isFullLattice_stdL (E : Type) [Field E] [NumberField E] (n : ℕ) :
     Submodule.IsFullLattice E (stdL E n) := by
-  letI := isLattice_stdL E n
+  let := isLattice_stdL E n
   refine ⟨?_⟩
   rw [stdL, Submodule.span_span_of_tower, ← (Pi.basisFun E (Fin n)).span_eq]
   congr 2

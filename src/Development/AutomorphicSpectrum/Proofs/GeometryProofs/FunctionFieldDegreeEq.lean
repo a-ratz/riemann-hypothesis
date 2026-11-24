@@ -213,7 +213,7 @@ theorem isMaximal_of_ne_bot (A : Type) [CommRing A] [Algebra k A] [Algebra A K]
     have h0 : algebraMap A K a ≠ 0 := (map_ne_zero_iff _ hinj).2 ha0
     have h2 := ((⊤ : ValuationSubring K).valuation_le_one_iff (algebraMap A K a)⁻¹).2
       (ValuationSubring.mem_top _)
-    rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h0))] at h2
+    rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h0))] at h2
     exact absurd h1 (not_lt.2 h2)
   let v : Place k K := ⟨V, hne, fun c => by
     rw [IsScalarTower.algebraMap_apply k A K]
@@ -240,11 +240,11 @@ theorem inertiaDeg_mul (k A B : Type) [Field k] [CommRing A] [IsLocalRing A] [Co
     𝔫.inertiaDeg A * Module.finrank k (ResidueField A) = Module.finrank k (B ⧸ 𝔫) := by
   have hmax : (𝔫.under A).IsMaximal := Ideal.IsMaximal.under A 𝔫
   have hu : 𝔫.under A = maximalIdeal A := IsLocalRing.eq_maximalIdeal hmax
-  haveI : 𝔫.LiesOver (maximalIdeal A) := ⟨hu.symm⟩
+  have : 𝔫.LiesOver (maximalIdeal A) := ⟨hu.symm⟩
   rw [Ideal.inertiaDeg_eq_of_isMaximal (maximalIdeal A) 𝔫]
-  letI : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field _
-  letI : Field (B ⧸ 𝔫) := Ideal.Quotient.field _
-  haveI : IsScalarTower k (A ⧸ maximalIdeal A) (B ⧸ 𝔫) := by
+  let : Field (A ⧸ maximalIdeal A) := Ideal.Quotient.field _
+  let : Field (B ⧸ 𝔫) := Ideal.Quotient.field _
+  have : IsScalarTower k (A ⧸ maximalIdeal A) (B ⧸ 𝔫) := by
     refine IsScalarTower.of_algebraMap_eq (fun x => ?_)
     rw [IsScalarTower.algebraMap_apply k B (B ⧸ 𝔫), IsScalarTower.algebraMap_apply k A B]
     rfl
@@ -270,7 +270,7 @@ theorem deg_ofHeightOneSpectrum (B : Type) [CommRing B] [IsDedekindDomain B] [Al
     [IsFractionRing B K] [Algebra k B] [IsScalarTower k B K]
     (hk : ∀ c : k, algebraMap k K c ∈ (algebraMap B K).range) (P : HeightOneSpectrum B) :
     (Place.ofHeightOneSpectrum B hk P).deg = Module.finrank k (B ⧸ P.asIdeal) := by
-  haveI : P.asIdeal.IsMaximal := P.isMaximal
+  have : P.asIdeal.IsMaximal := P.isMaximal
   have hv : ∀ b : B, algebraMap B K b ∈ (Place.ofHeightOneSpectrum B hk P).ring :=
     Place.algebraMap_mem_ofHeightOneSpectrum B hk P
   have hres : ∀ b : B, resHom B (Place.ofHeightOneSpectrum B hk P) hv b =
@@ -418,7 +418,7 @@ private theorem place_valuation_valuationSubring_eq_ring {k K : Type} [Field k] 
   ext x
   rw [Valuation.mem_valuationSubring_iff]
   by_cases hx : x = 0
-  · simp only [hx, map_zero, zero_le', true_iff]
+  · simp only [hx, map_zero, zero_le, true_iff]
     exact v.ring.zero_mem
   · rw [← v.ord_nonneg_iff hx, Place.ord]
     have hne : v.valuation x ≠ 0 := (Valuation.ne_zero_iff _).mpr hx
@@ -475,7 +475,7 @@ private theorem length_quotient_eq_sum_count_mul_inertiaDeg {A B : Type} [CommRi
   rw [ψ.length_eq, Module.length_pi_of_fintype]
   push_cast
   refine Finset.sum_congr rfl (fun P _ => ?_)
-  haveI : P.asIdeal.IsMaximal := P.isMaximal
+  have : P.asIdeal.IsMaximal := P.isMaximal
   rw [length_quotient_pow_eq_mul_inertiaDeg P.asIdeal P.ne_bot]
 
 private theorem length_quotient_span_eq_of_finite_length_coker {A B : Type} [CommRing A] [CommRing B] [IsDomain B]
@@ -614,14 +614,14 @@ theorem length_places (A B : Type) [CommRing A] [IsDomain A] [Algebra k A] [Alge
     rw [IsScalarTower.algebraMap_apply A B K x, IsScalarTower.algebraMap_apply A B K y, h]
   have hk : ∀ c : k, algebraMap k K c ∈ (algebraMap B K).range :=
     fun c => ⟨algebraMap k B c, (IsScalarTower.algebraMap_apply k B K c).symm⟩
-  haveI : Algebra.IsIntegral A B := Algebra.IsIntegral.of_finite A B
+  have : Algebra.IsIntegral A B := Algebra.IsIntegral.of_finite A B
   have hg0 : algebraMap A B f ≠ 0 := fun h => hf (hAB (by rw [h, map_zero]))
   have hm : maximalIdeal A ≠ ⊥ := fun h => hA ((IsLocalRing.isField_iff_maximalIdeal_eq).mpr h)
   obtain ⟨a0, ha0m, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hm
   have hover : ∀ P : HeightOneSpectrum B,
       P.asIdeal.comap (algebraMap A B) = maximalIdeal A := by
     intro P
-    haveI := P.isMaximal
+    have := P.isMaximal
     exact IsLocalRing.eq_maximalIdeal (Ideal.IsMaximal.under A P.asIdeal)
   have hfinH : Finite (HeightOneSpectrum B) := by
     have h0 : Ideal.span {algebraMap A B a0} ≠ 0 := by
@@ -635,11 +635,11 @@ theorem length_places (A B : Type) [CommRing A] [IsDomain A] [Algebra k A] [Alge
       rw [hover P]
       exact ha0m
     exact h1
-  haveI : Fintype (HeightOneSpectrum B) := Fintype.ofFinite _
+  have : Fintype (HeightOneSpectrum B) := Fintype.ofFinite _
   have hlenfin : ∀ I : Ideal B, I ≠ ⊥ → Module.length A (B ⧸ I) ≠ ⊤ := by
     intro I hI
     rw [length_quotient_eq_sum_count_mul_inertiaDeg I hI, ← Nat.cast_sum]
-    exact ENat.coe_ne_top _
+    exact ENat.natCast_ne_top _
   have hfin : Module.length A (B ⧸ LinearMap.range (Algebra.linearMap A B)) ≠ ⊤ := by
     obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := A) (M := B)
     obtain ⟨⟨c, hc⟩, hcint⟩ :=
@@ -678,7 +678,7 @@ theorem length_places (A B : Type) [CommRing A] [IsDomain A] [Algebra k A] [Alge
     rw [Ne, Ideal.span_singleton_eq_bot]
     exact hg0
   have hY := length_quotient_eq_sum_count_mul_inertiaDeg (A := A) (Ideal.span {algebraMap A B f}) hspan
-  rw [hX, hY, ← Nat.cast_sum, ENat.toNat_coe]
+  rw [hX, hY, ← Nat.cast_sum, ENat.toNat_natCast]
   set φ : HeightOneSpectrum B → Place k K := fun P => Place.ofHeightOneSpectrum B hk P with hφ
   have hφinj : Function.Injective φ := by
     have key : ∀ (v w : Place k K) (hv : ∀ b : B, algebraMap B K b ∈ v.ring)
@@ -717,7 +717,7 @@ theorem length_places (A B : Type) [CommRing A] [IsDomain A] [Algebra k A] [Alge
   rw [Finset.sum_mul]
   refine Finset.sum_congr rfl (fun P _ => ?_)
   simp only [φ]
-  haveI := P.isMaximal
+  have := P.isMaximal
   rw [deg_ofHeightOneSpectrum B hk P, IsScalarTower.algebraMap_apply A B K f,
     ofHeightOneSpectrum_ord_eq_count hk P _ hg0, ← inertiaDeg_mul k A B P.asIdeal]
   push_cast
@@ -725,15 +725,15 @@ theorem length_places (A B : Type) [CommRing A] [IsDomain A] [Algebra k A] [Alge
 
 theorem len_places : ∀ (k K A : Type) [Field k] [Field K] [Algebra k K] [GroundTheory.FunctionField.IsFunctionField k K] [CommRing A] [IsDomain A] [Algebra k A] [Algebra A K] [IsScalarTower k A K] [IsLocalRing A] [IsNoetherianRing A] [IsFractionRing A K] [Algebra.EssFiniteType k A], ¬ IsField A → ∀ f : A, f ≠ 0 → (((Module.length A (A ⧸ Ideal.span {f})).toNat * Module.finrank k (IsLocalRing.ResidueField A) : ℕ) : ℤ) = ∑ᶠ v ∈ {v : GroundTheory.FunctionField.Place k K | (∀ a : A, v.valuation (algebraMap A K a) ≤ 1) ∧ ∀ a ∈ IsLocalRing.maximalIdeal A, v.valuation (algebraMap A K a) < 1}, (v.deg : ℤ) * v.ord (algebraMap A K f) := by
   intro k K A _ _ _ _ _ _ _ _ _ _ _ _ _ hA f hf
-  haveI : Module.Finite A (integralClosure A K) := finite_closure k K A
-  haveI : IsFractionRing (integralClosure A K) K :=
+  have : Module.Finite A (integralClosure A K) := finite_closure k K A
+  have : IsFractionRing (integralClosure A K) K :=
     integralClosure.isFractionRing_of_finite_extension K K
-  haveI : IsScalarTower k A (integralClosure A K) :=
+  have : IsScalarTower k A (integralClosure A K) :=
     IsScalarTower.of_algebraMap_eq (fun x => Subtype.ext (IsScalarTower.algebraMap_apply k A K x))
-  haveI : IsScalarTower k (integralClosure A K) K :=
+  have : IsScalarTower k (integralClosure A K) K :=
     IsScalarTower.of_algebraMap_eq (fun x => rfl)
-  haveI : IsNoetherianRing (integralClosure A K) := isNoetherian_of_tower A inferInstance
-  haveI : IsDedekindDomain (integralClosure A K) := by
+  have : IsNoetherianRing (integralClosure A K) := isNoetherian_of_tower A inferInstance
+  have : IsDedekindDomain (integralClosure A K) := by
     rw [isDedekindDomain_iff (integralClosure A K) K]
     refine ⟨inferInstance, inferInstance, ⟨fun {p} hp0 hp =>
       isMaximal_of_ne_bot (k := k) (K := K) (integralClosure A K)
@@ -818,7 +818,7 @@ theorem valuation_prod (e : B → ℕ) :
 include hc in
 theorem prod_valuation_pos (e : B → ℕ) : 0 < ∏ k, v.valuation (w ⟨k, c k⟩) ^ e k := by
   rw [← valuation_prod]
-  exact zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (prod_ne_zero hc e))
+  exact pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (prod_ne_zero hc e))
 
 
 include hc hle in
@@ -1074,7 +1074,7 @@ theorem ker_theta_isMaximal {p : ℕ} [Fact p.Prime] {K : Type} [Field K] [Algeb
   have hle : RingHom.ker (chartHom w c) ≤ RingHom.ker (theta hPW c hc) := by
     rw [hker]
     exact ker_chartHom_le hPW hwc
-  haveI : (RingHom.ker (theta hPW c hc)).IsPrime := RingHom.ker_isPrime _
+  have : (RingHom.ker (theta hPW c hc)).IsPrime := RingHom.ker_isPrime _
   have hq : (Ideal.map (chartHom w c) (RingHom.ker (theta hPW c hc))).IsPrime :=
     Ideal.map_isPrime_of_surjective hs hle
   have h0 : Ideal.map (chartHom w c) (RingHom.ker (theta hPW c hc)) ≠ ⊥ := by
@@ -1087,7 +1087,7 @@ theorem ker_theta_isMaximal {p : ℕ} [Fact p.Prime] {K : Type} [Field K] [Algeb
     have h2 := congrArg Subtype.val h1
     rw [coe_chartHom, aeval_X] at h2
     exact div_ne_zero hw (hwc k) h2
-  haveI := chart_prime_isMaximal (p := p) w hbir c hwc _ hq h0
+  have := chart_prime_isMaximal (p := p) w hbir c hwc _ hq h0
   have h3 := Ideal.comap_isMaximal_of_surjective (chartHom w c) hs
     (K := Ideal.map (chartHom w c) (RingHom.ker (theta hPW c hc)))
   have hle' : Ideal.comap (chartHom w c) ⊥ ≤ RingHom.ker (theta hPW c hc) := hle
@@ -1097,8 +1097,8 @@ theorem geoNum_zero_eq_finrank : ∀ (B : Type) [Fintype B] (J : B → Type) [�
   intro B _ J _ p _ K _ _ _ w hbir k i hw W hW b _ _
   classical
   obtain ⟨hmin, hrel⟩ := hW
-  haveI hWp : W.IsPrime := hmin.1.1
-  haveI hPp : (mCoordIdeal w).IsPrime := RingHom.ker_isPrime _
+  have hWp : W.IsPrime := hmin.1.1
+  have hPp : (mCoordIdeal w).IsPrime := RingHom.ker_isPrime _
   have hPW : mCoordIdeal w ≤ W := le_sup_left.trans hmin.1.2
   have hX : (X ⟨k, i⟩ : MRing J) ∈ W := hmin.1.2 (Ideal.mem_sup_right (Ideal.subset_span rfl))
   have hWh : IsMultiHomogIdeal W :=
@@ -1170,8 +1170,8 @@ theorem essFiniteType_locRing : ∀ (B : Type) [Fintype B] (J : B → Type) [∀
       Algebra.EssFiniteType (ZMod p) (locRing (mCoordIdeal w) W) := by
   intro B _ J _ p _ K _ w W c hP hW hle hcW _
   classical
-  haveI : (mCoordIdeal w).IsPrime := hP
-  haveI : W.IsPrime := hW
+  have : (mCoordIdeal w).IsPrime := hP
+  have : W.IsPrime := hW
   have hXP : ∀ k, fracHom (mCoordIdeal w) (X ⟨k, c k⟩) ≠ 0 := fun k h =>
     hcW k (hle (fracHom_eq_zero_iff.1 h))
   have hchartP : ∀ a : B → ℕ, fracHom (mCoordIdeal w) (chartMono c a) ≠ 0 := fun a h =>
@@ -1366,13 +1366,13 @@ theorem exists_centre (w : (Σ k, J k) → K) (hbir : Birational w) (hw : ∀ k,
   have hch : ∀ k', ∃ c' : J k', w ⟨k', c'⟩ ≠ 0 ∧ ∀ i, v.valuation (w ⟨k', i⟩) ≤ v.valuation (w ⟨k', c'⟩) := by
     intro k'
     obtain ⟨c0, h0⟩ := hw k'
-    haveI : Nonempty (J k') := ⟨c0⟩
+    have : Nonempty (J k') := ⟨c0⟩
     obtain ⟨m, -, hm⟩ := Finset.exists_max_image Finset.univ (fun i => v.valuation (w ⟨k', i⟩)) Finset.univ_nonempty
     refine ⟨m, ?_, fun i => hm i (Finset.mem_univ i)⟩
     intro h
     have h1 := hm c0 (Finset.mem_univ _)
     simp only [h, map_zero] at h1
-    exact ((Valuation.ne_zero_iff _).2 h0) (le_zero_iff.1 h1)
+    exact ((Valuation.ne_zero_iff _).2 h0) (nonpos_iff_eq_zero.1 h1)
   choose c' hc1 hc2 using hch
   obtain ⟨W, hWp, hWh, hVW, hcW, hD, hiff⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GeoDeg.Centre.exists_centre B J p K w v c' hc1 hc2
   have hx : (X ⟨k, c⟩ : MRing J) ∈ W := by
@@ -1396,23 +1396,23 @@ theorem local_term (w : (Σ k, J k) → K) (hbir : Birational w) (k : B) (c : J 
   have hVh : IsMultiHomogIdeal (mCoordIdeal w) := GroundTheory.Heights₂.Heights.CoordinateConeArithVar.isMultiHomogIdeal w
   have hVW : mCoordIdeal w ≤ W := le_trans le_sup_left hWd.1.1.2
   have hWp : W.IsPrime := hWd.1.1.1
-  haveI := hV
-  haveI := hWp
+  have := hV
+  have := hWp
   obtain ⟨ρ, hρ⟩ := exists_rho w W hV hWp hVW
-  haveI hloc : IsLocalRing (locRing (mCoordIdeal w) W) := isLocalRing hVW
-  letI : Algebra (locRing (mCoordIdeal w) W) K := ρ.toAlgebra
-  haveI hfr : IsFractionRing (locRing (mCoordIdeal w) W) K := hρ.isFractionRing hbir hV hWp hVW hc'
+  have hloc : IsLocalRing (locRing (mCoordIdeal w) W) := isLocalRing hVW
+  let : Algebra (locRing (mCoordIdeal w) W) K := ρ.toAlgebra
+  have hfr : IsFractionRing (locRing (mCoordIdeal w) W) K := hρ.isFractionRing hbir hV hWp hVW hc'
   have hpK : CharP K p := charP_of_injective_algebraMap (algebraMap (ZMod p) K).injective p
   have hpA : CharP (locRing (mCoordIdeal w) W) p :=
     (RingHom.charP_iff (algebraMap (locRing (mCoordIdeal w) W) K) (IsFractionRing.injective _ _) p).2 hpK
-  letI : Algebra (ZMod p) (locRing (mCoordIdeal w) W) := ZMod.algebra _ p
-  haveI : IsScalarTower (ZMod p) (locRing (mCoordIdeal w) W) K :=
+  let : Algebra (ZMod p) (locRing (mCoordIdeal w) W) := ZMod.algebra _ p
+  have : IsScalarTower (ZMod p) (locRing (mCoordIdeal w) W) K :=
     IsScalarTower.of_algebraMap_eq fun x =>
       DFunLike.congr_fun (Subsingleton.elim (algebraMap (ZMod p) K)
         ((algebraMap (locRing (mCoordIdeal w) W) K).comp (algebraMap (ZMod p) (locRing (mCoordIdeal w) W)))) x
-  haveI hE : Algebra.EssFiniteType (ZMod p) (locRing (mCoordIdeal w) W) :=
+  have hE : Algebra.EssFiniteType (ZMod p) (locRing (mCoordIdeal w) W) :=
     _root_.GlobalTheory.CompanionTheory.Ar.GeoDeg.essFiniteType_locRing B J p K w W c' hV hWp hVW hc'
-  haveI hN : IsNoetherianRing (locRing (mCoordIdeal w) W) := Algebra.EssFiniteType.isNoetherianRing (ZMod p) _
+  have hN : IsNoetherianRing (locRing (mCoordIdeal w) W) := Algebra.EssFiniteType.isNoetherianRing (ZMod p) _
   have hs : IsMultiHomog (X ⟨k, c⟩ : MRing J) (Pi.single k 1) := homog_X k c
   have ht : IsMultiHomog (X ⟨k, c' k⟩ : MRing J) (Pi.single k 1) := homog_X k (c' k)
   have hsV : (X ⟨k, c⟩ : MRing J) ∉ mCoordIdeal w := fun h => hc ((X_mem_iff w k c).1 h)

@@ -122,14 +122,14 @@ theorem isBig_pull : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) [IsIntegral X] 
     topologicalKrullDim X = topologicalKrullDim Y → DenseRange σ → ∀ L : LB Y,
     (letI := algebraΓOfHom p; IsBig k L) → (letI := algebraΓOfHom (σ ≫ p); IsBig k (L.pull σ)) := by
   intro k _ X Y _ _ p σ hp hq hdim hσ L hL
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom (σ ≫ p)
+  let := algebraΓOfHom p
+  let := algebraΓOfHom (σ ≫ p)
   obtain ⟨D, hD, c, hc, hm⟩ := hL.growth
   have hL' := LB.isLB_pull hL.isLB σ
   have key (m : ℕ) : lbH0 k (lbPow L m) ≤ lbH0 k (lbPow (L.pull σ) m) := by
     have hLm := isLB_lbPow hL.isLB m
     have hP := LB.isLB_pull hLm σ
-    haveI := finite_top hq hP
+    have := finite_top hq hP
     calc lbH0 k (lbPow L m) = Module.finrank k (H0 p (lbPow L m) ⊤) := (H0.finrank_top p _).symm
       _ ≤ Module.finrank k (H0 (σ ≫ p) ((lbPow L m).pull σ) ⊤) :=
         LinearMap.finrank_le_finrank_of_injective (pull_top_injective σ hσ _)

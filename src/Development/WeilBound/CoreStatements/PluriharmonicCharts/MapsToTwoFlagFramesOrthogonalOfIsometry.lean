@@ -405,10 +405,10 @@ theorem polyVal_of_rep (hv : IsBlockMap κ v) (x' : (Σ k, ι' k) → Ω) {P : P
   have hc : (valPoly n g h (z ∘ v)).coeff e = if e < n then fr (g e) (h e) (z ∘ v) else 0 := by
     simp [valPoly, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul, Polynomial.coeff_X_pow]
   by_cases he : e < n
-  · rw [hc, if_pos he]
+  · rw [hc, ite_eq_left he]
     obtain ⟨a, b, c, f⟩ := hr.2 e
     exact isValueAt_of_rep hv x' a b c f (hz e he)
-  · rw [hc, if_neg he, Polynomial.coeff_eq_zero_of_natDegree_lt (by have := hr.1; omega)]
+  · rw [hc, ite_eq_right he, Polynomial.coeff_eq_zero_of_natDegree_lt (by have := hr.1; omega)]
     exact ValRing.isValueAt_zero_self _ _
 
 omit [Fintype K] [∀ k, Fintype (ι k)] in
@@ -502,7 +502,7 @@ theorem exists_form_local_inverse [CharZero Ω] (hv : IsBlockMap κ v) (x' : (Σ
   have hmem : ∀ r : Pr, x' r.1.1 / x' r.1.2 ∈ blockFnField x' := fun r =>
     IntermediateField.subset_adjoin _ _ ⟨_, _, r.2.1, rfl⟩
   choose E a hEa hE0 hE1 using fun r : Pr => exists_good_form hv x' hle hpos (hmem r)
-  haveI : Fintype Pr := Fintype.ofFinite _
+  have : Fintype Pr := Fintype.ofFinite _
   refine ⟨∏ r, E r, ∑ r, a r, isMultiHomog_finset_prod _ _ _ fun r _ => hEa r, ?_, ?_⟩
   · rw [map_prod]
     exact Finset.prod_ne_zero_iff.2 fun r _ => hE0 r
@@ -606,7 +606,7 @@ theorem isMultiHomog_rename_incl [Fintype K] [∀ k, Fintype (ι k)] (S : K → 
     exact Finsupp.mapDomain_apply_of_injective (incl_injective S) m₀ ⟨⟨k, hk⟩, i⟩
   · rw [Function.extend_apply' _ _ _ (by rintro ⟨c, rfl⟩; exact hk c.2), Pi.zero_apply]
     refine Finset.sum_eq_zero fun i _ => ?_
-    refine Finsupp.mapDomain_notin_range _ _ ?_
+    refine Finsupp.mapDomain_of_notMem_range _ _ ?_
     rintro ⟨q, hq⟩
     exact hk ((Sigma.mk.inj_iff.mp hq).1 ▸ q.1.2)
 

@@ -104,8 +104,8 @@ theorem lemma_c_twist_ramified : LemmaC_twist_ram := by
     ((S ⊓ P).comap S.subtype)
   let eN : ((S ⊓ P).comap S.subtype) ≃ₗ[R] (S ⊓ P : Submodule R M) :=
     Submodule.comapSubtypeEquivOfLe inf_le_left
-  haveI : Module.Free R (S ⊓ P : Submodule R M) := Module.Free.of_basis (bN.map eN)
-  haveI : Module.Finite R (S ⊓ P : Submodule R M) := Module.Finite.of_basis (bN.map eN)
+  have : Module.Free R (S ⊓ P : Submodule R M) := Module.Free.of_basis (bN.map eN)
+  have : Module.Finite R (S ⊓ P : Submodule R M) := Module.Finite.of_basis (bN.map eN)
   have key := lemma_c_under_twist
   unfold LemmaC_twist at key
   have key' := key R ϖ hϖ M (S ⊓ P) (B ⊓ P) U D e b h1 h2 h3 hUD inferInstance inferInstance
@@ -176,7 +176,7 @@ lemma sum_eps (a t : H) (ha : a ≠ 1) : ∑ c : H, (eps a (c * t) : K) = 0 := b
     · simp [h1]
   rw [show (∑ c : H, (eps a (c * t) : K)) = ∑ h : H, (eps a h : K) from
     Equiv.sum_comp (Equiv.mulRight t) (fun h => (eps a h : K))]
-  simp only [key, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [key, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 lemma sum_bas (a : ι → {c : H // c ≠ 1}) (v : ι) (h : ι → H) :
@@ -197,11 +197,11 @@ lemma bas_avoid (a b : ι → {c : H // c ≠ 1}) :
   unfold bas
   by_cases hab : a = b
   · subst hab
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     refine Finset.prod_eq_one fun w _ => ?_
     unfold eps
     simp
-  · rw [if_neg hab]
+  · rw [ite_eq_right hab]
     have hw : ∃ w, a w ≠ b w := by
       by_contra hcon
       simp only [not_exists, not_not] at hcon
@@ -312,7 +312,7 @@ theorem exists_equiv (ι H X : Type) [Fintype ι] [DecidableEq ι] [Group H] [Fi
       ∀ (m : ι → H) (ω : Q) (g : ι → H), e (ω, m * g) = m • e (ω, g) := by
   classical
   let Q := MulAction.orbitRel.Quotient (ι → H) X
-  letI : Fintype Q := Fintype.ofFinite Q
+  let : Fintype Q := Fintype.ofFinite Q
   let rep : Q → X := fun ω => Quotient.out ω
   have hrep : ∀ ω : Q, Quotient.mk (MulAction.orbitRel (ι → H) X) (rep ω) = ω :=
     fun ω => Quotient.out_eq ω
@@ -1113,7 +1113,7 @@ lemma entry_le (τ : D.what₂.Tau) (a : Fin (D.R.N 0)) (ha : a.1 ≠ 0) :
       else (((D.fm u).lam 0 τ).w a - ((0 * (D.R.t + 1) / 2 : ℕ) : ℤ)).natAbs)
     (Finset.mem_univ a)
   have h3 := le_trans h2 h1
-  rw [if_neg (fun h => ha h.1)] at h3
+  rw [ite_eq_right (fun h => ha h.1)] at h3
   have e0 : ((0 * (D.R.t + 1) / 2 : ℕ) : ℤ) = 0 := by simp
   rw [e0, sub_zero] at h3
   exact h3

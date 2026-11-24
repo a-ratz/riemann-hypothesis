@@ -166,12 +166,12 @@ theorem perpSet_baseChange : ∀ (E A : Type) [Field E] [CommRing A] (σ : E →
     intro w y
 
     simp only [formRight_apply, Formalism.UG.hform, Matrix.map_apply, hs, Pi.single_apply, mul_ite, mul_one,
-    mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true, map_sum, map_mul,
+    mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true, map_sum, map_mul,
     Finset.sum_mul]
     rw [Finset.sum_comm]
   have hset : {z : Fin n → E | ∀ φ ∈ formRight σ J '' (W : Set (Fin n → E)), φ z = 0} = perpSet σ J W := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_image, forall_exists_index, and_imp,
+    simp only [Set.mem_ofPred_eq, Set.mem_image, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂, perpSet, formRight_apply, SetLike.mem_coe]
   ext y
   constructor
@@ -192,7 +192,7 @@ theorem perpSet_baseChange : ∀ (E A : Type) [Field E] [CommRing A] (σ : E →
       | zero => simp [Formalism.UG.hform]
       | add x x' _ _ hx hx' => rw [hform_add_right_flag_measures, hx, hx', add_zero]
       | smul c x _ hx => rw [hform_smul_right_flag_measures, hx, mul_zero]
-    simp only [perpSet, Set.mem_setOf_eq]
+    simp only [perpSet, Set.mem_ofPred_eq]
     intro x hx
     induction hx using Submodule.span_induction with
     | mem x hx =>

@@ -52,7 +52,7 @@ theorem UpperTheory.V.Loc.memIK :
   refine ⟨fun hg => (Subgroup.closure_le ((MaximalUnramifiedExtension l).fixingSubgroup.comap (GK K).subtype)).2 (fun σ hσ => ?_) hg,
     fun hg => Subgroup.subset_closure (GlobalTheory.FrobGen.norm_sub_lt hg)⟩
   change (σ : GQ l) ∈ (MaximalUnramifiedExtension l).fixingSubgroup
-  rw [← Subgroup.zpowers_le, ← IntermediateField.le_iff_le, MaximalUnramifiedExtension, IntermediateField.adjoin_le_iff]
+  rw [← Subgroup.zpowers_le, ← IntermediateField.le_fixedField_iff_le_fixingSubgroup, MaximalUnramifiedExtension, IntermediateField.adjoin_le_iff]
   rintro x ⟨n, hn, hln, hx⟩
   have key : (σ : GQ l) x = x := GlobalTheory.Pst.eq_of_pow_eq_one_of_norm_sub_lt hln (by rw [← map_pow, hx, map_one]) hx
     (hσ x (GlobalTheory.Pst.norm_eq_one_of_pow_eq_one hn hx).le)

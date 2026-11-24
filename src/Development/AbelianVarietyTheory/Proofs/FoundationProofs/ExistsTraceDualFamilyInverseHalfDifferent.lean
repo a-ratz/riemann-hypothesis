@@ -73,7 +73,7 @@ lemma mem_range_iff (x : K) : x ∈ (algebraMap (𝓞 K) K).range ↔ IsIntegral
 lemma isIntegral_trace_conj (c : E ≃ₐ[ℚ] E) (φ₀ : E →+* ℂ)
     (hc : ∀ (φ : E →+* ℂ) (x : E), φ (c x) = starRingEnd ℂ (φ x)) (z : E)
     (hz : IsIntegral ℤ (Algebra.trace K E z)) : IsIntegral ℤ (Algebra.trace K E (c z)) := by
-  letI : Algebra K ℂ := (φ₀.comp (algebraMap K E)).toAlgebra
+  let : Algebra K ℂ := (φ₀.comp (algebraMap K E)).toAlgebra
   have h1 : algebraMap K ℂ (Algebra.trace K E (c z)) =
       starRingEnd ℂ (algebraMap K ℂ (Algebra.trace K E z)) := by
 

@@ -293,7 +293,7 @@ theorem dxOpen_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
   have : IsReduced (Fv F v ⊗[F] E) := isReduced_tens_field F E (Fv F v)
   have hss : IsSemisimpleRing (Fv F v ⊗[F] E) := IsArtinianRing.isSemisimpleRing_of_isReduced _
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   obtain ⟨q, hq⟩ := secGram_holds F E σ hσ M J hJ hdet (Fv F v) hss a x hx
   set T : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E) → (Fin a → Fin M → Fv F v ⊗[F] E) :=
     fun S j k => ∑ i', (algebraMap F (Fv F v ⊗[F] E) (1 / 2) * S i' j) * q k i' with hT
@@ -327,7 +327,7 @@ theorem dxOpen_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
   rintro _ ⟨l, hl, rfl⟩
   have hU : IsOpen {S : HermR (Fv F v) σ a | T ((S - Dx l : HermR (Fv F v) σ a) :
       Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) ∈ L} :=
-    hLo.preimage (hTc.comp (continuous_subtype_val.comp (continuous_id.sub continuous_const)))
+    hLo.preimage (hTc.comp (continuous_subtypeVal.comp (continuous_id.sub continuous_const)))
   refine Filter.mem_of_superset (hU.mem_nhds ?_) ?_
   · show T ((Dx l - Dx l : HermR (Fv F v) σ a) : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) ∈ L
     rw [sub_self, AddSubgroup.coe_zero, hT0]
@@ -348,7 +348,7 @@ theorem gramFilt_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
   have := locallyCompact_Fv F v
   have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   have : T2Space (Fv F v ⊗[F] E) := by
     obtain ⟨ι, _, ⟨h⟩⟩ := PI.AdicCompletionValuation.exists_homeomorph_tens (F := F) (E := E) (Fv F v)
     exact h.isEmbedding.t2Space
@@ -360,7 +360,7 @@ theorem gramFilt_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
     refine ⟨continuous_induced_rng.2 ?_⟩
     show Continuous fun p : Fv F v × HermR (Fv F v) σ a =>
       p.1 • (p.2 : Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E))
-    exact continuous_fst.smul (continuous_subtype_val.comp continuous_snd)
+    exact continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)
   obtain ⟨π, hπ0, hπ, hπO⟩ := exists_unif_Fv v
   set L := latSub b v a M with hLdef
   have hLo : IsOpen (L : Set (Fin a → Fin M → Fv F v ⊗[F] E)) :=
@@ -455,11 +455,11 @@ theorem gramFilt_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
     intro i j k
     show PositiveNearLattice.crd b (Fv F v) (e0 i j) k ∈ v.adicCompletionIntegers F
     by_cases hij : i = i0 ∧ j = j0
-    · simp only [e0, if_pos hij, PositiveNearLattice.crd_incl, b.repr_self, Finsupp.single_apply]
+    · simp only [e0, ite_eq_left hij, PositiveNearLattice.crd_incl, b.repr_self, Finsupp.single_apply]
       split_ifs
       · simp
       · simp
-    · simp only [e0, if_neg hij, PositiveNearLattice.crd, map_zero, Finsupp.zero_apply]
+    · simp only [e0, ite_eq_right hij, PositiveNearLattice.crd, map_zero, Finsupp.zero_apply]
       exact zero_mem _
   have hφe : φ e0 = 1 := by
     show PositiveNearLattice.crd b (Fv F v) (e0 i0 j0) k0 = 1
@@ -488,7 +488,7 @@ theorem gramFilt_gen {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
       exact hφc.continuousAt.preimage_mem_nhds (by rw [h0]; exact hT)
     · intro c hc w hw
       have h := hc e0 he0L
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, hφs, hφe, mul_one] at h
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, hφs, hφe, mul_one] at h
       exact h w hw
   exact filt_abstract π hπ0 hπ L hLo hLc hπL β hβc hβ1 hβ2 hβs G hG hGs x hxo hsmall
 
@@ -497,7 +497,7 @@ theorem gramFilt_zero {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     (hJ : ∀ i j, σ (J j i) = J i j) (v : HeightOneSpectrum (𝓞 F)) (d : ℕ)
     (b : Module.Basis (Fin d) F E) (x : Fin 0 → Fin M → Fv F v ⊗[F] E) :
     FiltConcl σ hσ M J hJ 0 v d b x := by
-  haveI hH : Subsingleton (HermR (Fv F v) σ 0) := by
+  have hH : Subsingleton (HermR (Fv F v) σ 0) := by
     unfold HermR
     infer_instance
   have hsub : ∀ S : AddSubgroup (Fin 0 → Fin M → Fv F v ⊗[F] E), S = ⊤ := fun S => by

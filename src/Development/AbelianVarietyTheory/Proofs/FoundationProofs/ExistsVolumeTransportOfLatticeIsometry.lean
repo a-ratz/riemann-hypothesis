@@ -121,7 +121,7 @@ theorem conjU_continuous [TopologicalSpace A] [IsTopologicalRing A] (h : IsoPair
   apply Continuous.subtype_mk
   have hc : Continuous (conjM h) :=
     (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
-  exact (Continuous.units_map (conjM h) hc).comp continuous_subtype_val
+  exact (Continuous.units_map (conjM h) hc).comp continuous_subtypeVal
 
 end Ring
 
@@ -151,7 +151,7 @@ theorem conjA_mat (h : IsoPair (σ : E →+* E) J J' T T') (g : HA (AF F) σ J) 
         T'.map (inclR (F := F) (AF F)) := rfl
 
 theorem conjA_continuous (h : IsoPair (σ : E →+* E) J J' T T') : Continuous (conjA h) := by
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := F) (E := E)
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := F) (E := E)
   exact conjU_continuous h.adelic
 
 omit [NumberField E] in

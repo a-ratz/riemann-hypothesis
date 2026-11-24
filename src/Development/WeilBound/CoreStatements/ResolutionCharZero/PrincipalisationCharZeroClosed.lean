@@ -314,8 +314,8 @@ theorem exists_coords_containing (k : Type*) [CommRing k] (ι : Type*) [Fintype 
       (∀ x : {j : ι // ¬ (j ∈ Jst)}, w (x : ι) = s (e x)) := by
     refine ⟨fun j => if hj : j ∈ Jst then EtaleCoordinates.coord k ι S j else s (e ⟨j, hj⟩),
       fun j hj => ?_, fun x => ?_⟩
-    · exact dif_pos hj
-    · exact dif_neg x.2
+    · exact dite_eq_left hj
+    · exact dite_eq_right x.2
   have hbasisApply : ∀ x : Fin h ⊕ {j : ι // j ∈ Jst},
       B x = (1 : IsLocalRing.ResidueField A) ⊗ₜ[A]
         KaehlerDifferential.D k A (algebraMap S A (w (τ x))) := by
@@ -589,7 +589,7 @@ theorem exists_open_isIrreducible_zero {X : Scheme.{0}} {k : Type} [Field k] {p 
   have hxs : xt ∈ (D.support : Set V.toScheme) := (mem_support_coordIdeal_singleton c t xt).mpr hxt
   obtain ⟨K, hK, hxK⟩ := exists_isIrreducibleComponentOfSupport D xt hxs
   obtain ⟨V', -, hxV', n, c', j, -, hV'K, -⟩ := hK.exists_affineOpen_etaleChart_coordIdeal (V.ι ≫ p) hloc xt hxK
-  let N : X.Opens := ⟨Subtype.val '' (V' : Set V.toScheme), V.isOpen.isOpenMap_subtype_val _ V'.isOpen⟩
+  let N : X.Opens := ⟨Subtype.val '' (V' : Set V.toScheme), V.isOpen.isOpenMap_subtypeVal _ V'.isOpen⟩
   refine ⟨N, ?_, ⟨xt, hxV', rfl⟩, ?_⟩
   · rintro y ⟨z, -, rfl⟩
     exact z.2
@@ -603,7 +603,7 @@ theorem exists_open_isIrreducible_zero {X : Scheme.{0}} {k : Type} [Field k] {p 
         exact ⟨⟨z, hzV', rfl⟩, (mem_support_coordIdeal_singleton c t z).mp (hK.subset_support hzK)⟩
     rw [hS]
     exact (isIrreducible_inter_open' hK.isIrreducible V'.isOpen ⟨xt, hxK, hxV'⟩).image _
-      continuous_subtype_val.continuousOn
+      continuous_subtypeVal.continuousOn
 
 theorem exists_labels {X : Scheme.{0}} {k : Type} [Field k] [CharZero k] {p : X ⟶ Spec (CommRingCat.of k)}
     [Smooth p] [IsNoetherian X] (E : Closeds X) (𝒞 : Finset (Closeds X))
@@ -629,7 +629,7 @@ theorem exists_labels {X : Scheme.{0}} {k : Type} [Field k] [CharZero k] {p : X 
       refine ⟨N, hNV, hxN, fun _ => ?_, fun h => absurd ⟨hx, hxt⟩ h⟩
       convert hirr using 1
       ext y
-      simp only [Z, Set.mem_inter_iff, Set.mem_compl_iff, SetLike.mem_coe, Set.mem_setOf_eq]
+      simp only [Z, Set.mem_inter_iff, Set.mem_compl_iff, SetLike.mem_coe, Set.mem_ofPred_eq]
       constructor
       · rintro ⟨⟨-, h1⟩, h2⟩; exact ⟨h2, h1⟩
       · rintro ⟨h2, h1⟩; exact ⟨⟨hNV h2, h1⟩, h2⟩
@@ -678,7 +678,7 @@ theorem exists_labels {X : Scheme.{0}} {k : Type} [Field k] [CharZero k] {p : X 
         (fun t => ((X.basicOpen (c.coord t) : X.Opens) : Set X)ᶜ)) := by
       rintro y ⟨hyC, hyW⟩
       obtain ⟨t, ht, hxt, hyt⟩ := (hEW y hyW).1 (hCc.2.1 hyC)
-      simp only [Finset.coe_image, Finset.coe_filter, Set.sUnion_image, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+      simp only [Finset.coe_image, Finset.coe_filter, Set.sUnion_image, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
       exact ⟨t, ⟨ht, hxt⟩, hyt.2⟩
     obtain ⟨z, hz, hsub⟩ := isIrreducible_iff_sUnion_isClosed.mp hCW _ (by
       intro z hz
@@ -731,7 +731,7 @@ theorem exists_labels {X : Scheme.{0}} {k : Type} [Field k] [CharZero k] {p : X 
       exact hyC
     have hxC : x ∉ (C : Set X) := by
       intro hxC
-      have h' : lab C = some (Classical.choose (hcomp C hC hxC)) := dif_pos ⟨hC, hxC⟩
+      have h' : lab C = some (Classical.choose (hcomp C hC hxC)) := dite_eq_left ⟨hC, hxC⟩
       rw [h'] at hnone
       cases hnone
     apply hyW.2
@@ -849,20 +849,20 @@ theorem gBoundary : PositivityTheory.ResPlug.WeightsCompactStabilizer.GBoundary 
     · intro i hi i' hi' s hs hs'
       simp only [List.length_map] at hi hi'
       dsimp only at hs hs'
-      rw [dif_pos hi] at hs
-      rw [dif_pos hi'] at hs'
+      rw [dite_eq_left hi] at hs
+      rw [dite_eq_left hi'] at hs'
       have := h1 _ (Finset.mem_toList.mp (List.getElem_mem hi)) _
         (Finset.mem_toList.mp (List.getElem_mem hi')) s hs hs'
       exact (hnd.getElem_inj_iff).mp this
     · intro i hi hnone
       simp only [List.length_map] at hi
       dsimp only at hnone
-      rw [dif_pos hi] at hnone
+      rw [dite_eq_left hi] at hnone
       simpa using h2 _ (Finset.mem_toList.mp (List.getElem_mem hi)) hnone
     · intro i hi s hs
       simp only [List.length_map] at hi
       dsimp only at hs
-      rw [dif_pos hi] at hs
+      rw [dite_eq_left hi] at hs
       simpa using h3 _ (Finset.mem_toList.mp (List.getElem_mem hi)) s hs
   · rw [← hcov]
     ext y

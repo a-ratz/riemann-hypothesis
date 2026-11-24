@@ -106,7 +106,7 @@ def cellMat (U : Y.X.affineOpens) (σ : E →+* ℂ) : Matrix (Fin (Dw.mult σ))
   Matrix.of (cell MvPolynomial.X σ)
 
 theorem det_cellMat (U : Y.X.affineOpens) (σ : E →+* ℂ) : (cellMat (Dw := Dw) U σ).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
     simp [cellMat, cell]
   · intro i j hij

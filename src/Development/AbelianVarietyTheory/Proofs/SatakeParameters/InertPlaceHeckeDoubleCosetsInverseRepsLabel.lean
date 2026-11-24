@@ -514,7 +514,7 @@ theorem inert_double_cosets : ∀ {D : D7} (V : HSp D) (P : HeightOneSpectrum (�
     have he := GlobalTheory.PlaceComp.isIdemOf_algebraMap (E := D.host.E) a1 a2
     obtain ⟨c0, c1, ⟨R, r1, r2, r3⟩, c3⟩ :=
       core (E := D.host.E) D.sp.cm V he (inert_of_idem (E := D.host.E) he hP hu) g hg
-    simp only [IsCosetRep, Set.mem_setOf_eq, mem_KsphC_iff]
+    simp only [IsCosetRep, Set.mem_ofPred_eq, mem_KsphC_iff]
     exact ⟨c1, ⟨R, r1, fun γ hγ => ⟨c0 γ (r1 γ hγ), r2 γ hγ⟩, r3⟩,
       fun ϖ ϖ' d g' h1 h2 h1' h2' _ hg' hd hd' =>
         c3 ϖ ϖ' (fun i => d.getD i.1 0) g' h1 h2 h1' h2' hg' hd.2 hd'.2⟩

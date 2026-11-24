@@ -63,7 +63,7 @@ theorem isUnit_natCast_stalk (X : Scheme.{0}) (L : Type) [Field L] [CharZero L] 
     simpa using hL.map φ
   have h3 : IsUnit ((z.stalkMap x).hom (n : X.presheaf.stalk (z x))) := by
     simpa using h2
-  haveI : IsLocalHom (z.stalkMap x).hom := z.prop x
+  have : IsLocalHom (z.stalkMap x).hom := z.prop x
   exact (isUnit_map_iff (z.stalkMap x).hom _).mp h3
 
 end GlobalTheory.CompanionTheory.Ar.FlagFib

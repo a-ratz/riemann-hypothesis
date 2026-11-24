@@ -86,10 +86,10 @@ theorem fam_of_triv_mod_eps : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A], IsAb
     (s : Sp (DualNumber k) ⟶ S) (D : LB (A ⊗ Over.mk s).left) (hD : D.IsLB),
     GlobalTheory.CechPic.pull (A ◁ ptMap s (dnFst k)).left (cls D hD) = 0 → Fam A D := by
   intro S A _ hA k _ s D hD h0
-  haveI := isLocalRing_dualNumber_field k
-  haveI : Module.Finite k (DualNumber k) := inferInstanceAs (Module.Finite k (k × k))
-  haveI : IsNoetherianRing (DualNumber k) := IsNoetherianRing.of_finite k (DualNumber k)
-  haveI : IsLocallyNoetherian (Over.mk s).left := (inferInstance : IsLocallyNoetherian (Sp (DualNumber k)))
+  have := isLocalRing_dualNumber_field k
+  have : Module.Finite k (DualNumber k) := inferInstanceAs (Module.Finite k (k × k))
+  have : IsNoetherianRing (DualNumber k) := IsNoetherianRing.of_finite k (DualNumber k)
+  have : IsLocallyNoetherian (Over.mk s).left := (inferInstance : IsLocallyNoetherian (Sp (DualNumber k)))
   refine ⟨hD, GlobalTheory.T.isAdditive_lineBundleFamily_of_geometricFibres S A (Over.mk s) hA D hD ?_ ?_⟩
   · rw [triv_ev_iff hD]
     exact pic_sp_local_eq_zero _ _

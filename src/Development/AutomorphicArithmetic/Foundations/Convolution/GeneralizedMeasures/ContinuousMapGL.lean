@@ -165,7 +165,7 @@ private def U (S : Finset (Pl F)) : Set (AdelicGLn.FiniteAdelicGL E n) :=
 
 private theorem isClopen_U (S : Finset (Pl F)) : IsClopen (U (E := E) (n := n) S) := by
   constructor
-  · simp only [U, Set.setOf_forall]
+  · simp only [U, Set.ofPred_forall]
     refine isClosed_iInter fun w => isClosed_iInter fun _ => ?_
     exact (GLnLocal.isCompact_integralGL (w.adicCompletion E) n).isClosed.preimage
       ((RestrictedProduct.continuous_eval w).comp (AdelicGLn.finiteRestrictedEquiv E n).continuous)
@@ -192,7 +192,7 @@ private theorem e_formula (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fin n) (Co
     rw [← cmp_pv] at this
     exact this
   · rw [Set.indicator_of_notMem hx, mul_zero]
-    simp only [U, Set.mem_setOf_eq, not_forall] at hx
+    simp only [U, Set.mem_ofPred_eq, not_forall] at hx
     obtain ⟨w, hwS, hw⟩ := hx
     have hB : {w : Pl E | AdelicGLn.finiteRestrictedEquiv E n x w ∉
         GLnLocal.integralGL (w.adicCompletion E) n}.Finite :=
@@ -214,7 +214,7 @@ private theorem e_formula (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fin n) (Co
           refine hv ?_
           change φ v (pv v x) = 1
           rw [hφ v hvS, Set.indicator_of_mem h, Pi.one_apply]
-        simp only [unitSet, Set.mem_setOf_eq, not_forall] at hnot
+        simp only [unitSet, Set.mem_ofPred_eq, not_forall] at hnot
         obtain ⟨w', hw'⟩ := hnot
         refine ⟨w'.1, ?_, under_eq w'⟩
         intro h
@@ -235,23 +235,23 @@ private theorem e_compact (S : Finset (Pl F)) (φ : ∀ v : Pl F, GL (Fin n) (Co
     else (GLnLocal.integralGL (w.adicCompletion E) n : Set _)
   have hD : ∀ w, IsCompact (D w) := fun w => by
     by_cases h : w.under (𝓞 F) ∈ S
-    · simp only [D, if_pos h]
+    · simp only [D, ite_eq_left h]
       exact (hS _ h).isCompact.image (continuous_cmp _)
-    · simp only [D, if_neg h]
+    · simp only [D, ite_eq_right h]
       exact GLnLocal.isCompact_integralGL _ n
   have hK := rp_compact (A := fun w : Pl E => (GLnLocal.integralGL (w.adicCompletion E) n : Set _)) D hD
     {w : Pl E | w.under (𝓞 F) ∈ S} (finite_under _ S.finite_toSet) (fun w hw => by
       have h : w.under (𝓞 F) ∉ S := hw
-      simp only [D, if_neg h]
+      simp only [D, ite_eq_right h]
       exact subset_rfl)
   refine ⟨_, (AdelicGLn.finiteRestrictedEquiv E n).toHomeomorph.isCompact_preimage.2 hK, ?_⟩
   intro x hx hne w
   by_cases h : w.under (𝓞 F) ∈ S
   · change _ ∈ D w
-    simp only [D, if_pos h]
+    simp only [D, ite_eq_left h]
     exact ⟨pv _ x, subset_tsupport _ (hne _ h), cmp_pv _ x⟩
   · change _ ∈ D w
-    simp only [D, if_neg h]
+    simp only [D, ite_eq_right h]
     exact hx w h
 
 private theorem pv_finPart (v : Pl F) (g : AdelicGLn.AdelicGL E n) :

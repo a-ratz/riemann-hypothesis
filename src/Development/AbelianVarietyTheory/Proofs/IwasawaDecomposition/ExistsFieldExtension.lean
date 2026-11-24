@@ -52,9 +52,9 @@ theorem exists_field_extension {R R' K : Type} [CommRing R] [CommRing R'] [Field
     (ρ : R →+* R') (hinj : Function.Injective ρ) (hfin : ρ.Finite) (φ : R →+* K) :
     ∃ (L : Type) (_ : Field L) (_ : Algebra K L) (_ : FiniteDimensional K L) (χ : R' →+* L),
       χ.comp ρ = (algebraMap K L).comp φ := by
-  letI : Algebra R R' := ρ.toAlgebra
-  haveI : Algebra.IsIntegral R R' := ⟨fun x => hfin.to_isIntegral x⟩
-  haveI : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  let : Algebra R R' := ρ.toAlgebra
+  have : Algebra.IsIntegral R R' := ⟨fun x => hfin.to_isIntegral x⟩
+  have : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   obtain ⟨q, -, hq, hqc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (RingHom.ker φ) (⊥ : Ideal R') (by
     intro x hx
     have : ρ x = 0 := hx
@@ -69,10 +69,10 @@ theorem exists_field_extension {R R' K : Type} [CommRing R] [CommRing R'] [Field
       ext x; simp [j]
     rw [this]
     exact (RingHom.Finite.of_surjective _ Ideal.Quotient.mk_surjective).comp hfin
-  letI : Algebra (R ⧸ RingHom.ker φ) (R' ⧸ q) := j.toAlgebra
-  letI : Algebra (R ⧸ RingHom.ker φ) K := (RingHom.kerLift φ).toAlgebra
-  haveI : Module.Finite (R ⧸ RingHom.ker φ) (R' ⧸ q) := hjf
-  haveI : Nontrivial (K ⊗[R ⧸ RingHom.ker φ] (R' ⧸ q)) :=
+  let : Algebra (R ⧸ RingHom.ker φ) (R' ⧸ q) := j.toAlgebra
+  let : Algebra (R ⧸ RingHom.ker φ) K := (RingHom.kerLift φ).toAlgebra
+  have : Module.Finite (R ⧸ RingHom.ker φ) (R' ⧸ q) := hjf
+  have : Nontrivial (K ⊗[R ⧸ RingHom.ker φ] (R' ⧸ q)) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain _ _ _
       (RingHom.kerLift_injective φ) hj
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (K ⊗[R ⧸ RingHom.ker φ] (R' ⧸ q))
@@ -94,7 +94,7 @@ theorem exists_extension : ∀ (R R' : Type) [CommRing R] [IsLocalRing R] [CommR
       ψ'.comp ρ = f.comp ψ := by
   intro R R' _ _ _ _ ρ hinj hfin V _ _ _ hV ψ hψ
   obtain ⟨h1, h2, h3⟩ := hV
-  haveI : CharZero (FractionRing V) :=
+  have : CharZero (FractionRing V) :=
     charZero_of_injective_algebraMap (IsFractionRing.injective V (FractionRing V))
   obtain ⟨L, _, _, _, χ, hχ⟩ := exists_field_extension ρ hinj hfin ((algebraMap V (FractionRing V)).comp ψ)
   obtain ⟨W, _, _, hW1, hW2, _, _, _, hc, -, hf, hl, hint, -⟩ :=
@@ -122,7 +122,7 @@ theorem exists_extension : ∀ (R R' : Type) [CommRing R] [IsLocalRing R] [CommR
     exact hg _
   have hloc : IsLocalHom (ψ'.comp ρ) := by rw [hcomp]; infer_instance
   have hmax : ((IsLocalRing.maximalIdeal W).comap ψ').IsMaximal := by
-    apply Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' ρ hfin.to_isIntegral
+    apply Ideal.isMaximal_of_isIntegral_of_isMaximal_comap ρ hfin.to_isIntegral
     have e : (IsLocalRing.maximalIdeal W).comap (ψ'.comp ρ) = IsLocalRing.maximalIdeal R :=
       ((IsLocalRing.local_hom_tfae (ψ'.comp ρ)).out 1 5).1 hloc
     rw [Ideal.comap_comap, e]

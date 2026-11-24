@@ -292,13 +292,13 @@ theorem fvec_eq (F : FlagG S r (T : E)) (F' : FlagG S r (T' : E)) (b : Fin (r + 
   induction b using Fin.lastCases with
   | last =>
     rw [Fin.sum_univ_castSucc]
-    simp only [Um, Matrix.of_apply, if_pos rfl, Fin.snoc_castSucc, Fin.snoc_last, gv, FlagG.fvec,
+    simp only [Um, Matrix.of_apply, ite_eq_left rfl, Fin.snoc_castSucc, Fin.snoc_last, gv, FlagG.fvec,
       one_smul]
     rw [zp_eq F F', add_comm]
     simp [kk]
   | cast b =>
-    simp only [Um, Matrix.of_apply, FlagG.fvec, Fin.snoc_castSucc, if_neg (Fin.castSucc_ne_last b),
-      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, gv]
+    simp only [Um, Matrix.of_apply, FlagG.fvec, Fin.snoc_castSucc, ite_eq_right (Fin.castSucc_ne_last b),
+      ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, gv]
 
 theorem zhat_eq_mul (F : FlagG S r (T : E)) (F' : FlagG S r (T' : E)) :
     Zhat F F' = (Matrix.of fun a b => S.hT (F.fvec a) (gv F F' b)) * Um F F' := by
@@ -401,7 +401,7 @@ theorem gflag_pos (F : FlagG S r (T : E)) (F' : FlagG S r (T' : E)) (τ : E →+
       intro i j hij
       rcases i with a | bi <;> rcases j with b | bj
       · have hab : a ≠ b := fun h => hij (by rw [h])
-        simp only [w, Sum.elim_inl, h_v_v F F' hP, if_neg hab]
+        simp only [w, Sum.elim_inl, h_v_v F F' hP, ite_eq_right hab]
       · cases bj
         · simp only [w, Sum.elim_inl, Sum.elim_inr]; exact h_v_zt F F' hP a
         · simp only [w, Sum.elim_inl, Sum.elim_inr]; exact hermForm_vector_orth_second F F' hP a
@@ -465,7 +465,7 @@ theorem totPos_of_flags (D : Formalism.BasicNotions.D7) {T T' : ℕ} (F : FlagG 
     (F' : FlagG (VS D) D.R.rS (T' : D.host.E)) (hG : Gflag F F' ≠ 0) : TotPos (Gflag F F') := by
   unfold TotPos
   intro τ
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   refine gflag_pos (p' := ((VS D).sig (embS D τ)).1) (q' := ((VS D).sig (embS D τ)).2) F F' (embS D τ)
     (fun a => NumberField.IsCMField.complexEmbedding_complexConj _ (embS D τ) a) (D.sp.Y_sig 0 (embS D τ)) ?_ hG
   rw [D.sp.baseSpace_signature_eq]
@@ -582,8 +582,8 @@ theorem qP_lt_three_finite (D : Formalism.BasicNotions.D7) : {p : PlF D | qP p <
     have := hc m t fun p hp => ht hp
     omega
   refine ((Set.finite_le_nat 2).biUnion fun m _ => hfin m).subset fun p hp => ?_
-  simp only [Set.mem_setOf_eq] at hp
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+  simp only [Set.mem_ofPred_eq] at hp
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
   refine ⟨Loc.resChar p, ?_, rfl⟩
   have h1 := hl p
   have h2 : ((Loc.resChar p : ℕ) : ℝ) < 3 := lt_of_le_of_lt h1 hp
@@ -660,7 +660,7 @@ theorem densLocBound_at {D : Formalism.BasicNotions.D7} (h5 : DensAllAt D) : Den
       _ = Real.exp (4 * y) * Real.exp (-(2 * y)) := by rw [← Real.exp_add]; ring_nf
       _ ≤ Real.exp (4 * y) * alpD u u' p := mul_le_mul_of_nonneg_left hαl (Real.exp_pos _).le
   · refine (qP_lt_three_finite D).subset fun p hp => ?_
-    simp only [Set.mem_setOf_eq] at hp ⊢
+    simp only [Set.mem_ofPred_eq] at hp ⊢
     by_contra h3
     push_neg at h3
     obtain ⟨-, -, hlo⟩ := key p

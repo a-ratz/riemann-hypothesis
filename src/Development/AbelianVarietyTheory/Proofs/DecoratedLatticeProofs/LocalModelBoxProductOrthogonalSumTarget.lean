@@ -185,17 +185,17 @@ open GlobalTheory.LocFlat.CFac
 
 theorem isModel_boxT : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (p : Place D k) (ψ : AddChar (AF D.host.F) ℂ) (S X T L'' : HSp D) (o'' : OrthDec X T L'') (n Z : Type) [Fintype n] [DecidableEq n] [Fintype Z] [DecidableEq Z] (FS : Frame k S.rank n) (FT : Frame k T.rank Z) (FL : Frame k L''.rank Unit) (FX : Frame k X.rank (Z ⊕ Unit)), FX.β = fromCols (o''.iA.map p.pr * FT.β) (o''.iB.map p.pr * FL.β) → ∀ T₂ TL, p.IsModel ψ FS FT T₂ → p.IsModel ψ FS FL TL → ∀ TX : SB (Matrix (Z ⊕ Unit) n k) →ₗ[ℂ] (WO S X → ℂ), (∀ (a : SB (Matrix Z n k)) (b : SB (Matrix Unit n k)) (Φ : SB (Matrix (Z ⊕ Unit) n k)), (∀ x, Φ.1 x = a.1 x.toRows₁ * b.1 x.toRows₂) → TX Φ = o''.boxT S (T₂ a) (TL b)) → p.IsModel ψ FS FX TX := by
   intro D k _ _ _ _ p ψ S X T L'' o'' n Z _ _ _ _ FS FT FL FX hβ T₂ TL h₂ hL TX hTX
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
-  haveI : NonarchimedeanAddGroup k := ⟨fun V hV => by
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : NonarchimedeanAddGroup k := ⟨fun V hV => by
     obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hV
     exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
       GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
-  haveI : TotallyDisconnectedSpace k := inferInstance
-  haveI hTD : ∀ (a b : Type) [Fintype a] [Fintype b], TotallyDisconnectedSpace (Matrix a b k) :=
+  have : TotallyDisconnectedSpace k := inferInstance
+  have hTD : ∀ (a b : Type) [Fintype a] [Fintype b], TotallyDisconnectedSpace (Matrix a b k) :=
     fun a b _ _ => inferInstanceAs (TotallyDisconnectedSpace (a → b → k))
-  haveI hLC : ∀ (a b : Type) [Fintype a] [Fintype b], LocallyCompactSpace (Matrix a b k) :=
+  have hLC : ∀ (a b : Type) [Fintype a] [Fintype b], LocallyCompactSpace (Matrix a b k) :=
     fun a b _ _ => inferInstanceAs (LocallyCompactSpace (a → b → k))
-  haveI hT2 : ∀ (a b : Type), T2Space (Matrix a b k) := fun a b => inferInstanceAs (T2Space (a → b → k))
+  have hT2 : ∀ (a b : Type), T2Space (Matrix a b k) := fun a b => inferInstanceAs (T2Space (a → b → k))
   let e : Matrix (Z ⊕ Unit) n k ≃ₜ Matrix Z n k × Matrix Unit n k := Homeomorph.sumArrowHomeomorphProdArrow
   let P : SB (Matrix Z n k) → SB (Matrix Unit n k) → SB (Matrix (Z ⊕ Unit) n k) := fun a b => comapH e (prodSB a b)
   have hP : ∀ a b x, (P a b).1 x = a.1 x.toRows₁ * b.1 x.toRows₂ := fun _ _ _ => rfl

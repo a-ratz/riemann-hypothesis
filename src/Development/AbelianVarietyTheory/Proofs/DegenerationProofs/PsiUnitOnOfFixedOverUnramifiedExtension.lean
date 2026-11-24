@@ -266,7 +266,7 @@ theorem exists_extend (W : ValuationSubring F) (φ : R →+* W) (ρ : TF (R := R
 theorem eq_unit_mul_zpow_of_fixed {F : Type} [Field F] [IsAlgClosed F] [CharZero F] (T : Subring F)
     [IsDiscreteValuationRing T] {ϖ : T} (hϖ : Irreducible ϖ) (x : F) (hx : x ≠ 0)
     (h : ∀ σ : F ≃+* F, (∀ t ∈ T, σ t = t) → σ x = x) : ∃ (v : ℤ) (u : Tˣ), x = ((u : T) : F) * (ϖ : F) ^ v := by
-  letI : Algebra (FractionRing T) F := FractionRing.liftAlgebra T F
+  let : Algebra (FractionRing T) F := FractionRing.liftAlgebra T F
   have : IsScalarTower T (FractionRing T) F := FractionRing.isScalarTower_liftAlgebra T F
   have : CharZero (FractionRing T) := (algebraMap (FractionRing T) F).charZero
   obtain ⟨y, rfl⟩ := GlobalTheory.GaloisDescent.mem_range_algebraMap_of_forall_algEquiv (K := FractionRing T) x fun σ =>
@@ -318,7 +318,7 @@ theorem level_step (hM : MulNSt) [IsNoetherianRing R] [IsAlgClosed F] [CharZero 
   have inj : ∀ a b : ℤ, t ^ a = t ^ b → a = b := fun a b e => by
     have e' := congrArg Units.val e
     rw [Units.val_zpow_eq_zpow_val, Units.val_zpow_eq_zpow_val] at e'
-    exact zpow_right_injective₀ (zero_lt_iff.2 ϖ0) ϖ1 e'
+    exact zpow_right_injective₀ (pos_iff_ne_zero.2 ϖ0) ϖ1 e'
   have hv : ∀ s (u : Tˣ) (v : ℤ), (sig F s : F) = ((u : T) : F) * (ϖ : F) ^ v → w s = t ^ v := fun s u v e => by
     apply Units.ext
     rw [hw, e, map_mul, map_zpow₀, Units.val_zpow_eq_zpow_val]

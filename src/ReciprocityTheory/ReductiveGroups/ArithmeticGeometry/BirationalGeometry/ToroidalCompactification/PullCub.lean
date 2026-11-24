@@ -70,7 +70,7 @@ theorem gm_res (f : Y ⟶ X) (y : Y) {U V : X.Opens} (hle : V ≤ U) (h : f y �
     gm f y V (res hle a) = gm f y U a := by
   apply Units.ext
   rw [gm_val f y V h, gm_val f y U (hle h)]
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   have e1 := Scheme.Hom.naturality f (homOfLE hle).op
   rw [← Y.presheaf.germ_res (homOfLE (Scheme.Hom.preimage_mono f hle)) y h]
   rw [CommRingCat.comp_apply]
@@ -82,7 +82,7 @@ theorem gm_pull (f : Z ⟶ Y) (g : Y ⟶ X) (z : Z) (U : X.Opens) (h : g (f z) �
     gm f z (g ⁻¹ᵁ U) (pullU g U a) = gm (f ≫ g) z U a := by
   apply Units.ext
   rw [gm_val f z _ h, gm_val (f ≫ g) z U h]
-  simp only [pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [pullU, Units.coe_map, MonoidHom.coe_ofClass]
   rfl
 
 theorem unit_ext {V : X.Opens} {a b : Γ(X, V)ˣ} (h : ∀ x ∈ V, gm (𝟙 X) x V a = gm (𝟙 X) x V b) : a = b := by

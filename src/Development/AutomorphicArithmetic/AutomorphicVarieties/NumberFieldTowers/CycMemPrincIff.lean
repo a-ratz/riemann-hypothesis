@@ -51,10 +51,10 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 private theorem cyc_mem_princ_iff (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
     (l : ℕ) [Fact l.Prime] (n : ℕ) (g : G F Ω) :
     cycZ F Ω l g ∈ KStar.TotallyRealRoots.princ l n ↔ ∀ t : Ω, t ^ l ^ n = 1 → g t = t := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  haveI hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have hE : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
   have e : cycZ F Ω l g = cyclotomicCharacter Ω l g.toRingEquiv := rfl
   have h1 : cycZ F Ω l g ∈ KStar.TotallyRealRoots.princ l n ↔
       (cyclotomicCharacter Ω l g.toRingEquiv).val.toZModPow n = 1 := by
@@ -105,13 +105,13 @@ private theorem ex_iff (L : Type) [Field L] [NumberField L] (l : ℕ) [Fact l.Pr
 private theorem all_iff (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω]
     (l : ℕ) [Fact l.Prime] (c : ℕ) :
     (∀ g, cycZ L Ω l g ∈ KStar.TotallyRealRoots.princ l c) ↔ ∃ ζ : L, IsPrimitiveRoot ζ (l ^ c) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
-  haveI : IsGalois L Ω := IsGalois.mk
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : IsGalois L Ω := IsGalois.mk
   constructor
   · intro h
-    obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ c)
+    obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ c)
     obtain ⟨ζ, rfl⟩ : ξ ∈ Set.range (algebraMap L Ω) :=
       (InfiniteGalois.mem_range_algebraMap_iff_fixed ξ).2 fun g =>
         (cyc_mem_princ_iff L Ω l c g).1 (h g) ξ hξ.pow_eq_one
@@ -134,7 +134,7 @@ theorem UpperTheory.V.Tower.muQ :
     · rw [pow_one]
   have hP : Procyc L Ω l ↔ l ≠ 2 ∨ HasMuQ l L := by
     by_cases h : l = 2
-    · have h2 : qExp l = 2 := if_pos h
+    · have h2 : qExp l = 2 := ite_eq_left h
       rw [Procyc, HasMuQ, hq, h2, ← all_iff L Ω l 2]
       rfl
     · exact ⟨fun _ => Or.inl h, fun _ => Or.inl h⟩

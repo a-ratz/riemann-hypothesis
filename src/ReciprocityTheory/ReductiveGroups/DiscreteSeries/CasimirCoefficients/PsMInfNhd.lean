@@ -103,7 +103,7 @@ namespace IdB
 lemma quad_norm_le (H : Matrix (Fin n) (Fin n) ℂ) (v : Fin n → ℂ) :
     ‖star v ⬝ᵥ (H *ᵥ v)‖ ≤ (n : ℝ) * n * (‖v‖ * ‖H‖ * ‖v‖) := by
   have hvi : ∀ i, ‖v i‖ ≤ ‖v‖ := fun i => norm_le_pi_norm v i
-  have hH : ∀ i j, ‖H i j‖ ≤ ‖H‖ := fun i j => norm_entry_le_entrywise_sup_norm H
+  have hH : ∀ i j, ‖H i j‖ ≤ ‖H‖ := fun i j => norm_apply_le_norm H
   have key : ∀ i, ‖star (v i) * ∑ j, H i j * v j‖ ≤ ∑ _j : Fin n, ‖v‖ * ‖H‖ * ‖v‖ := by
     intro i
     rw [norm_mul, norm_star]
@@ -250,7 +250,7 @@ variable {n : ℕ} {ε : Fin n → Bool} {Λ : Fin n → ℝ}
 
 lemma infR_hasFDerivAt (T : KType ε Λ) (μ : Fin n → ℤ) {x : Matrix (Fin n) (Fin n) ℂ} (hx : x.PosDef) :
     HasFDerivAt (psM T μ) (fderiv ℂ (psM T μ) x) x := by
-  haveI : CompactSpace (KG ε) := compactSpace_KG ε
+  have : CompactSpace (KG ε) := compactSpace_KG ε
   have hU : x ∈ Ps1.Uset ε := by
     intro k
     have hk : toMK k⁻¹ = (toMK k)ᴴ := Ps1.toMK_inv_eq k
@@ -341,8 +341,8 @@ theorem kByParts {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [Complete
     (hγ : ∀ t, toMK (γ t) = NormedSpace.exp ((t : ℂ) • Z)) (hF : Continuous F) (hD : Continuous D)
     (hder : ∀ k, HasDerivAt (fun t => F (k * γ t)) (D k) 0) :
     ∫ k, D k ∂(muK ε) = 0 := by
-  haveI := muK_rightInvariant ε
-  haveI := compactSpace_KG ε
+  have := muK_rightInvariant ε
+  have := compactSpace_KG ε
   obtain ⟨γ', -, hγ', hadd'⟩ := exists_oneParam ε hZ
   have hinj : ∀ a b : KG ε, toMK a = toMK b → a = b := by
     intro a b h
@@ -560,9 +560,9 @@ lemma contDiff_lead (i : ℕ) : ContDiff ℂ 1 (fun z : Matrix (Fin n) (Fin n) �
     | fun_prop
   unfold lead
   by_cases h : i ≤ n
-  · simp only [dif_pos h, Matrix.det_apply, Matrix.submatrix_apply, Units.smul_def, zsmul_eq_mul]
+  · simp only [dite_eq_left h, Matrix.det_apply, Matrix.submatrix_apply, Units.smul_def, zsmul_eq_mul]
     exact ContDiff.sum fun σ _ => contDiff_const.mul (contDiff_prod fun j _ => he _ _)
-  · simp only [dif_neg h]
+  · simp only [dite_eq_right h]
     exact contDiff_const
 
 lemma contDiffAt_phiM (μ : Fin n → ℤ) {z : Matrix (Fin n) (Fin n) ℂ} (hz : z ∈ OmegaSet n) :
@@ -595,7 +595,7 @@ lemma continuous_toMK_inv : Continuous fun k : KG ε => toMK k⁻¹ := by
   exact continuous_toMK'.comp continuous_inv
 
 lemma continuous_P (T : KType ε Λ) : Continuous fun k : KG ε => T.op k * projW T * T.op k⁻¹ := by
-  have hop : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have hop : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   exact (hop.mul continuous_const).mul (hop.comp continuous_inv)
 
 private lemma toMK_conjTranspose_mul_self (k : KG ε) : (toMK k)ᴴ * toMK k = 1 := by
@@ -626,7 +626,7 @@ lemma conj_mem_omega {x : Matrix (Fin n) (Fin n) ℂ} (hx : x.PosDef) (k : KG ε
   show ∀ i : Fin n, lead ((i : ℕ) + 1) ((toMK k)ᴴ * x * toMK k) ≠ 0
   intro i
   unfold lead
-  rw [dif_pos (show (i : ℕ) + 1 ≤ n from i.isLt)]
+  rw [dite_eq_left (show (i : ℕ) + 1 ≤ n from i.isLt)]
   first
   | exact (hP.submatrix (Fin.castLE_injective _)).det_pos.ne'
 
@@ -677,7 +677,7 @@ lemma continuous_DkL (T : KType ε Λ) (μ : Fin n → ℤ) {x : Matrix (Fin n) 
     (Y : Matrix (Fin n) (Fin n) ℂ) : Continuous fun k => DkL T μ x k Y := by
   have hB : Continuous fun k : KG ε => toMK k⁻¹ * x * toMK k := continuous_B x
   have hmem : ∀ k : KG ε, toMK k⁻¹ * x * toMK k ∈ OmegaSet n := fun k => conj_mem_omega hx k
-  have hop : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have hop : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   have hphi : Continuous fun k : KG ε => PhiM μ (toMK k⁻¹ * x * toMK k) :=
     (continuousOn_phiM μ).comp_continuous hB hmem
   have hd : Continuous fun k : KG ε => fderiv ℂ (PhiM μ) (toMK k⁻¹ * x * toMK k) :=
@@ -821,14 +821,14 @@ private theorem contDiff_lead_casimir_coefficients (j : ℕ) :
     ContDiff ℂ 1 (fun w : Matrix (Fin n) (Fin n) ℂ => lead j w) := by
   by_cases h : j ≤ n
   · have e : (fun w : Matrix (Fin n) (Fin n) ℂ => lead j w) =
-        fun w => (w.submatrix (Fin.castLE h) (Fin.castLE h)).det := funext fun w => dif_pos h
+        fun w => (w.submatrix (Fin.castLE h) (Fin.castLE h)).det := funext fun w => dite_eq_left h
     rw [e]
     simp only [Matrix.det_apply, Matrix.submatrix_apply, Units.smul_def, zsmul_eq_mul]
     refine ContDiff.sum fun σ _ => contDiff_const.mul ?_
     refine contDiff_prod fun p _ => ?_
     exact contDiff_pi.1 (contDiff_pi.1 (contDiff_id (𝕜 := ℂ) (E := Matrix (Fin n) (Fin n) ℂ))
       (Fin.castLE h (σ p))) (Fin.castLE h p)
-  · have e : (fun w : Matrix (Fin n) (Fin n) ℂ => lead j w) = fun _ => 0 := funext fun w => dif_neg h
+  · have e : (fun w : Matrix (Fin n) (Fin n) ℂ => lead j w) = fun _ => 0 := funext fun w => dite_eq_right h
     rw [e]
     exact contDiff_const
 
@@ -957,14 +957,14 @@ private theorem lead_add_smul_mul_of_isLowerTri {X z : Matrix (Fin n) (Fin n) �
       show (p : ℕ) < q
       exact hpq'
     exact hzero _ _ hlt
-  simp only [lead, dif_pos hi]
-  rw [hAz, hsub, Matrix.det_mul, Matrix.det_of_lowerTriangular _ htri]
+  simp only [lead, dite_eq_left hi]
+  rw [hAz, hsub, Matrix.det_mul, det_of_isLowerTriangular _ htri]
   congr 1
   rw [← Fin.prod_univ_eq_prod_range (fun a => 1 + t * (if h : a < n then X ⟨a, h⟩ ⟨a, h⟩ else 0))]
   refine Finset.prod_congr rfl fun p _ => ?_
   have hp : (p : ℕ) < n := lt_of_lt_of_le p.2 hi
   have hep : (⟨(p : ℕ), hp⟩ : Fin n) = e p := Fin.ext rfl
-  simp only [dif_pos hp, hep, Matrix.submatrix_apply, hA, Matrix.add_apply, Matrix.one_apply_eq,
+  simp only [dite_eq_left hp, hep, Matrix.submatrix_apply, hA, Matrix.add_apply, Matrix.one_apply_eq,
     Matrix.smul_apply, smul_eq_mul]
 
 private theorem lead_add_smul_mul_of_isUpperTri {X z : Matrix (Fin n) (Fin n) ℂ} (hX : IsUpperTri X) (t : ℂ)
@@ -1000,14 +1000,14 @@ private theorem lead_add_smul_mul_of_isUpperTri {X z : Matrix (Fin n) (Fin n) �
       show (q : ℕ) < p
       exact hpq
     exact hzero _ _ hlt
-  simp only [lead, dif_pos hi]
-  rw [hAz, hsub, Matrix.det_mul, Matrix.det_of_upperTriangular htri, mul_comm]
+  simp only [lead, dite_eq_left hi]
+  rw [hAz, hsub, Matrix.det_mul, det_of_isUpperTriangular htri, mul_comm]
   congr 1
   rw [← Fin.prod_univ_eq_prod_range (fun a => 1 + t * (if h : a < n then X ⟨a, h⟩ ⟨a, h⟩ else 0))]
   refine Finset.prod_congr rfl fun p _ => ?_
   have hp : (p : ℕ) < n := lt_of_lt_of_le p.2 hi
   have hep : (⟨(p : ℕ), hp⟩ : Fin n) = e p := Fin.ext rfl
-  simp only [dif_pos hp, hep, Matrix.submatrix_apply, hA, Matrix.add_apply, Matrix.one_apply_eq,
+  simp only [dite_eq_left hp, hep, Matrix.submatrix_apply, hA, Matrix.add_apply, Matrix.one_apply_eq,
     Matrix.smul_apply, smul_eq_mul]
 
 lemma fderiv_phiM_lower (μ : Fin n → ℤ) {z X : Matrix (Fin n) (Fin n) ℂ} (hz : z ∈ OmegaSet n)
@@ -1099,10 +1099,10 @@ lemma decomp_up (B : Matrix (Fin n) (Fin n) ℂ) :
   simp only [Matrix.add_apply, Matrix.smul_apply, lowMinusUp, upPart, diagPart, Matrix.of_apply,
     Matrix.diagonal_apply, smul_eq_mul]
   rcases lt_trichotomy a b with h | rfl | h
-  · rw [if_neg (lt_asymm h), if_pos h, if_pos h, if_neg h.ne]
+  · rw [ite_eq_right (lt_asymm h), ite_eq_left h, ite_eq_left h, ite_eq_right h.ne]
     ring
   · simp
-  · rw [if_pos h, if_neg (lt_asymm h), if_neg h.ne']
+  · rw [ite_eq_left h, ite_eq_right (lt_asymm h), ite_eq_right h.ne']
     ring
 
 lemma decomp_low (B : Matrix (Fin n) (Fin n) ℂ) :
@@ -1111,10 +1111,10 @@ lemma decomp_low (B : Matrix (Fin n) (Fin n) ℂ) :
   simp only [Matrix.add_apply, Matrix.neg_apply, Matrix.smul_apply, lowMinusUp, lowPart, diagPart,
     Matrix.of_apply, Matrix.diagonal_apply, smul_eq_mul]
   rcases lt_trichotomy a b with h | rfl | h
-  · rw [if_neg (lt_asymm h), if_pos h, if_neg (lt_asymm h), if_neg h.ne]
+  · rw [ite_eq_right (lt_asymm h), ite_eq_left h, ite_eq_right (lt_asymm h), ite_eq_right h.ne]
     ring
   · simp
-  · rw [if_pos h, if_pos h, if_neg h.ne']
+  · rw [ite_eq_left h, ite_eq_left h, ite_eq_right h.ne']
     ring
 
 lemma single_eq_smul (a b : Fin n) (c : ℂ) :
@@ -1131,7 +1131,7 @@ lemma dtau_upPart_w (T : KType ε Λ) {B : Matrix (Fin n) (Fin n) ℂ} (hB : IsB
 
   rw [map_sum, _root_.sum_apply]
   refine Finset.sum_eq_zero (fun b _ => ?_)
-  rw [single_eq_smul, map_smul, ContinuousLinearMap.smul_apply]
+  rw [single_eq_smul, map_smul, smul_apply]
   simp only [upPart, Matrix.of_apply]
   split_ifs with h
   · by_cases he : ε a = ε b
@@ -1146,11 +1146,11 @@ lemma dtau_diagPart_w (T : KType ε Λ) (B : Matrix (Fin n) (Fin n) ℂ) :
   refine Finset.sum_congr rfl (fun a _ => ?_)
 
   rw [map_sum, _root_.sum_apply, Finset.sum_eq_single a]
-  · rw [single_eq_smul, map_smul, ContinuousLinearMap.smul_apply, T.w_wt, smul_smul]
+  · rw [single_eq_smul, map_smul, smul_apply, T.w_wt, smul_smul]
     simp only [diagPart, Matrix.diagonal_apply_eq]
     rw [mul_comm]
   · intro b _ hb
-    rw [single_eq_smul, map_smul, ContinuousLinearMap.smul_apply]
+    rw [single_eq_smul, map_smul, smul_apply]
     simp only [diagPart, Matrix.diagonal_apply_ne _ (Ne.symm hb)]
     rw [zero_smul]
   · intro h
@@ -1210,22 +1210,22 @@ theorem tau_part {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) {B
     simp only [map_sum, map_mul, Complex.conj_ofReal, hBaa]
   have h1 : T.dτ (upPart B) * projW T = 0 := by
     ext v
-    rw [ContinuousLinearMap.mul_apply, hP, map_smul, dtau_upPart_w T hB, smul_zero,
-      ContinuousLinearMap.zero_apply]
+    rw [mul_apply_eq_comp, hP, map_smul, dtau_upPart_w T hB, smul_zero,
+      zero_apply]
   have h2 : T.dτ (diagPart B) * projW T = (∑ a, ((Λ a : ℝ) : ℂ) * B a a) • projW T := by
     ext v
-    rw [ContinuousLinearMap.mul_apply, hP, map_smul, dtau_diagPart_w, ContinuousLinearMap.smul_apply,
+    rw [mul_apply_eq_comp, hP, map_smul, dtau_diagPart_w, smul_apply,
       hP, smul_comm]
   have h3 : projW T * T.dτ (lowPart B) = 0 := by
     ext v
-    rw [ContinuousLinearMap.mul_apply, hP, ← ContinuousLinearMap.adjoint_inner_left,
+    rw [mul_apply_eq_comp, hP, ← ContinuousLinearMap.adjoint_inner_left,
       dtau_adj T (isBlock_lowPart hB), lowPart_conjTranspose hBh, dtau_upPart_w T hB, inner_zero_left,
-      zero_smul, ContinuousLinearMap.zero_apply]
+      zero_smul, zero_apply]
   have h4 : projW T * T.dτ (diagPart B) = (∑ a, ((Λ a : ℝ) : ℂ) * B a a) • projW T := by
     ext v
-    rw [ContinuousLinearMap.mul_apply, hP, ← ContinuousLinearMap.adjoint_inner_left,
+    rw [mul_apply_eq_comp, hP, ← ContinuousLinearMap.adjoint_inner_left,
       dtau_adj T (isBlock_diagPart B), diagPart_conjTranspose hBh, dtau_diagPart_w, inner_smul_left, hc,
-      ContinuousLinearMap.smul_apply, hP, mul_smul]
+      smul_apply, hP, mul_smul]
   have eB1 : T.dτ B = T.dτ (lowMinusUp B) + (2 : ℂ) • T.dτ (upPart B) + T.dτ (diagPart B) := by
     conv_lhs => rw [decomp_up B]
     rw [map_add (f := _), map_add (f := _), map_smul]
@@ -1283,18 +1283,18 @@ lemma lowMinusUp_expand {B : Matrix (Fin n) (Fin n) ℂ} (hB : IsBlock ε B) :
     | simp only [Matrix.sum_apply, Matrix.smul_apply, Matrix.single_apply, smul_eq_mul, mul_ite,
         mul_one, mul_zero]
   rw [hsum]
-  rw [Finset.sum_eq_single i (fun a _ ha => Finset.sum_eq_zero fun b _ => if_neg fun h => ha h.1)
+  rw [Finset.sum_eq_single i (fun a _ ha => Finset.sum_eq_zero fun b _ => ite_eq_right fun h => ha h.1)
     (fun h => absurd (Finset.mem_univ i) h)]
   by_cases hj : ε j = ε i ∧ j ≠ i
-  · rw [Finset.sum_eq_single j (fun b _ hb => if_neg fun h => hb h.2)
+  · rw [Finset.sum_eq_single j (fun b _ hb => ite_eq_right fun h => hb h.2)
       (fun h => (h (Finset.mem_filter.2 ⟨Finset.mem_univ _, hj⟩)).elim)]
-    rw [if_pos ⟨rfl, rfl⟩]
+    rw [ite_eq_left ⟨rfl, rfl⟩]
     simp only [lowMinusUp, Matrix.of_apply]
     rcases lt_trichotomy j i with h | h | h
     · simp [h]
     · exact absurd h hj.2
     · simp [h, not_lt.2 h.le]
-  · rw [Finset.sum_eq_zero fun b hb => if_neg fun h => hj (by
+  · rw [Finset.sum_eq_zero fun b hb => ite_eq_right fun h => hj (by
       obtain ⟨-, rfl⟩ := h
       exact (Finset.mem_filter.1 hb).2)]
     simp only [lowMinusUp, Matrix.of_apply]
@@ -1310,7 +1310,7 @@ lemma isBlock_single {a b : Fin n} (h : ε b = ε a) : IsBlock ε (Matrix.single
   · obtain ⟨rfl, rfl⟩ := h'
     exact absurd h.symm hne
   · first
-    | rw [Matrix.single_apply, if_neg h']
+    | rw [Matrix.single_apply, ite_eq_right h']
 
 lemma scal (μ : Fin n → ℤ) (hμ : IsMu lam μ) (B : Matrix (Fin n) (Fin n) ℂ) :
     2 * ∑ a, (μ a : ℂ) * B a a =
@@ -1414,14 +1414,14 @@ lemma Ssum_eq (T : KType ε Λ) (μ : Fin n → ℤ) (x A : Matrix (Fin n) (Fin 
       intro a b
       by_cases h : ε b = ε a ∧ b ≠ a
       · have h' : ε a = ε b ∧ a ≠ b := ⟨h.1.symm, Ne.symm h.2⟩
-        rw [if_pos h, if_pos h, if_pos h']
+        rw [ite_eq_left h, ite_eq_left h, ite_eq_left h']
         rcases lt_or_gt_of_ne h.2 with hab | hab
-        · simp only [if_pos hab, if_neg (not_lt.2 hab.le)]
+        · simp only [ite_eq_left hab, ite_eq_right (not_lt.2 hab.le)]
           ring
-        · simp only [if_pos hab, if_neg (not_lt.2 hab.le)]
+        · simp only [ite_eq_left hab, ite_eq_right (not_lt.2 hab.le)]
           ring
       · have h' : ¬ (ε a = ε b ∧ a ≠ b) := fun h' => h ⟨h'.1.symm, Ne.symm h'.2⟩
-        rw [if_neg h, if_neg h, if_neg h', add_zero]
+        rw [ite_eq_right h, ite_eq_right h, ite_eq_right h', add_zero]
     simp only [hsplit, Finset.sum_add_distrib]
     conv_lhs => arg 2; rw [Finset.sum_comm]
     rw [← two_mul]

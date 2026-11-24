@@ -700,7 +700,7 @@ theorem kAt_mul (hθ : IsInfFam (D := D) θ) (τ : D.what₂.Tau) (a b : Formali
 theorem continuous_kAt (hθ : IsInfFam (D := D) θ) (τ : D.what₂.Tau) :
     Continuous fun k => kAt θ V τ (M.ε τ) (M.fr τ) k := by
   have hK : Continuous fun k : Formalism.REAL.KG (M.ε τ) => Formalism.REAL.toMK k :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hconj : Continuous fun k : Formalism.REAL.KG (M.ε τ) => (M.fr τ)⁻¹ * Formalism.REAL.toMK k * M.fr τ :=
     (continuous_const.matrix_mul hK).matrix_mul continuous_const
   exact (GlobalTheory.PointAtPlaceHom.continuousOn_atTau hθ V τ).comp_continuous hconj fun k => conj_UH M τ k
@@ -736,7 +736,7 @@ theorem GlobalTheory.KTypeRep.exists_contRep_types : ∀ {D : D7} (θ : D.what�
         (∀ i, ∀ w ∈ Y, T (GlobalTheory.KTypeProj.rhoK θ M i w) = GlobalTheory.KTypeProj.rhoK θ M i (T w)) →
         ∀ w : Y, GlobalTheory.Published.AutFin.HasTypeAt θ V τ (M.ε τ) (M.fr τ) ρ (T w) := by
   intro D θ V S M hθ Y hfin hY hc τ
-  haveI := hfin
+  have := hfin
   refine ⟨GlobalTheory.KTypeRep.kRep M hθ Y hY τ, GlobalTheory.KTypeRep.isContRep_kRep M hθ Y hY hc τ, ?_⟩
   intro T hT w
   refine GlobalTheory.Published.AutFin.hasTypeAt_of_map θ V τ (M.ε τ) (M.fr τ) _ (T ∘ₗ Y.subtype) (fun k u => ?_) w
@@ -816,8 +816,8 @@ theorem exists_finset_joint_eigen : ∀ {E ι : Type} [AddCommGroup E] [Module �
         have h2 : b (x : E) x = 0 := hx
         rw [h2] at h1
         simp at h1 }
-  letI : NormedAddCommGroup Z := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ) (cd := core)
-  letI : InnerProductSpace ℂ Z := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup Z := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ) (cd := core)
+  let : InnerProductSpace ℂ Z := InnerProductSpace.ofCore core.toCore
   have hT : ∀ i, (T i).IsSymmetric := fun i x y => (hadj i x x.2 y y.2).symm
   have hC : Pairwise (Function.onFun Commute T) := fun i j _ =>
     LinearMap.ext fun x => Subtype.ext (hcomm i j x x.2)
@@ -1530,7 +1530,7 @@ theorem GlobalTheory.KTypeAdm.finiteDimensional_span_of_admissible_KType : _root
   obtain ⟨U, hU, hlev⟩ := GlobalTheory.KTypeAdm.level_gkGen θ M hψ
   have hY : GlobalTheory.KTypeProj.KStable θ M (W ⊓ G) :=
     GlobalTheory.KTypeProj.kStable_inf θ M hWK (GlobalTheory.KTypeProj.kStable_gkGen θ M ψ)
-  haveI hYf : FiniteDimensional ℂ ↥(W ⊓ G) := Submodule.finiteDimensional_of_le inf_le_left
+  have hYf : FiniteDimensional ℂ ↥(W ⊓ G) := Submodule.finiteDimensional_of_le inf_le_left
   have hcont : ∀ f ∈ W ⊓ G, Continuous f := fun f hf => (hsm f hf.2).cont
   choose ρ hρc hρT using GlobalTheory.T.exists_continuousRep_rightTranslation_maxCompactStable θ V S M hθ (W ⊓ G) hYf hY hcont
   have hGK := GlobalTheory.CuspGK.isGKSub_gkGen θ M ψ
@@ -1550,8 +1550,8 @@ theorem GlobalTheory.KTypeAdm.finiteDimensional_span_of_admissible_KType : _root
     GlobalTheory.CentreComm.comm_gelf (GlobalTheory.Mem.AutSpace.linOnSm_gelf (θ := θ) (V := V) i.1 i.2)
       (fun Z => GlobalTheory.CentreComm.gelf_RderC hθ i.1 j.1 i.2 Z) j.2 x (hGsm hx)
   obtain ⟨Wz, hWz, hψz, hWzst⟩ := hψ.zfin
-  haveI := hWz
-  haveI : FiniteDimensional ℂ ↥(Wz ⊓ G) := Submodule.finiteDimensional_of_le inf_le_left
+  have := hWz
+  have : FiniteDimensional ℂ ↥(Wz ⊓ G) := Submodule.finiteDimensional_of_le inf_le_left
   obtain ⟨C, hC⟩ := GlobalTheory.T.exists_jointEigenDecomposition_commuting_symmetricOps F (Wz ⊓ G) inferInstance
     (fun i x hx => ⟨hWzst i.1 i.2 x hx.1, hFG i x hx.2⟩) (fun i x hx y hy => hFadd i x hx.2 y hy.2)
     (fun i a x hx => hFsmul i a x hx.2) (fun i j x hx => hFcomm i j x hx.2) b (fun x hx => hpos x hx.2)
@@ -1594,7 +1594,7 @@ theorem GlobalTheory.KTypeAdm.finiteDimensional_span_of_admissible_KType : _root
         exact ⟨hsm h (hPG hP'), fun u hu hu' g => hlev h (hPG hP') u hu hu' g, fun τ => htype τ h hP',
           fun τ k => hc (τ, k)⟩)
     exact Finset.sup_mono_fun (fun c _ => key c) this
-  haveI : ∀ c : D.what₂.Tau × ℕ → ℂ, FiniteDimensional ℂ
+  have : ∀ c : D.what₂.Tau × ℕ → ℂ, FiniteDimensional ℂ
       (Submodule.span ℂ (GlobalTheory.Published.AutFin.forms θ V U M.ε M.fr ρ (fun τ k => c (τ, k)))) := hfin
   exact Submodule.finiteDimensional_of_le hle
 end
@@ -1661,7 +1661,7 @@ theorem kType_projection_mem : _root_.GlobalTheory.FunPr.ThetaLocalInputs → �
   have hWK' : KStable θ M W := fun τ g hg f hf => hWK τ g hg.1 hg.2 f hf
   set G := GlobalTheory.CuspGK.gkGen θ M ψ with hGdef
   set F := typeSpan (rhoK θ M) (W ⊓ G) G with hFdef
-  haveI hFfd : FiniteDimensional ℂ F := _root_.GlobalTheory.T.admissible_KType_span_finiteDimensional hP θ V S M hθ ψ hψ hcusp W hWfd hψW hWK' b hpos hherm hKadj hLie
+  have hFfd : FiniteDimensional ℂ F := _root_.GlobalTheory.T.admissible_KType_span_finiteDimensional hP θ V S M hθ ψ hψ hcusp W hWfd hψW hWK' b hpos hherm hKadj hLie
   have hFG : F ≤ G := typeSpan_le _ _ _
   have hprojG : ∀ F' : Submodule ℂ (GA D V → ℂ), F' ≤ G → FiniteDimensional ℂ F' →
       ∃ π : (GA D V → ℂ) →ₗ[ℂ] (GA D V → ℂ), (∀ x, π x ∈ F') ∧ ∀ x, ∀ f ∈ F', b (π x) f = b x f :=
@@ -1688,7 +1688,7 @@ theorem kType_projection_mem : _root_.GlobalTheory.FunPr.ThetaLocalInputs → �
   refine ⟨e, hfix ψ hψF, ?_, fun x _ => hfix _ (heF x), ?_, ?_⟩
   · intro A hAG hA x hx
     obtain ⟨Y, hYfd, hxY, hYK⟩ := GlobalTheory.T.kFinite_of_mem_gKModuleGeneratedBy θ M hθ ψ hψ ⟨W, hWfd, hψW, hWK'⟩ x (hAG hx)
-    haveI := hYfd
+    have := hYfd
     have hst := (kStable_iff θ M (Y ⊓ A)).1 (kStable_inf θ M hYK (kStable_of_isGKSub θ M hA))
     have := GlobalTheory.T.typeSpanProjection_preserves_finiteDim_invariant_subspace b G (rhoK θ M) inv hpos hherm hρG hadj hprojG (W ⊓ G) e heF hechar (Y ⊓ A)
       inferInstance (inf_le_right.trans hAG) hst x ⟨hxY, hx⟩

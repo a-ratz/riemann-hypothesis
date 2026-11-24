@@ -608,7 +608,7 @@ theorem lifts_left {S : Scheme.{0}} {R R' : Type} [CommRing R] [CommRing R'] {G 
 open GroundTheory.Heights₂.Heights in
 theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (L : Type) [Field L] [NumberField L] (t' : SAB H (Sp (𝓞 L))) (tB : SAB H (Sp L)) (tC : SAB H (Sp ℂ)) (e : L →+* ℂ) (m' : SABMap tB t' (spMap (algebraMap (𝓞 L) L))) (mB : SABMap tC tB (spMap e)) (B : GroundTheory.Heights₂.Heights.HermitianBundle.{0} L) (MB : LieModel t'.G (𝟙 _) B.carrier), IsFibre (HodgeIP t'.G t'.PP.L) (𝟙 _) B MB → ∀ (V' : Type) (Tn : V' → (epsAt (𝟙 (Sp ℂ)) ⟶ tC.G)), (∀ x, IsTanAt tC.G (𝟙 _) (Tn x)) → ∃ hb : V' → V' → ℂ, (∀ x x', HodgeIP tC.G tC.PP.L (𝟙 _) (Tn x) (Tn x') (hb x x')) ∧ ∀ (x x' : V') (y y' : B.carrier), (Tn x).left ≫ mB.φ ≫ m'.φ = spMap (dualMap (e.comp (algebraMap (𝓞 L) L))) ≫ (MB.pt y).left → (Tn x').left ≫ mB.φ ≫ m'.φ = spMap (dualMap (e.comp (algebraMap (𝓞 L) L))) ≫ (MB.pt y').left → hb x x' = (B.metric.form e).inner ((1 : GroundTheory.Heights₂.Heights.ComplexAt e) ⊗ₜ[𝓞 L] y) ((1 : GroundTheory.Heights₂.Heights.ComplexAt e) ⊗ₜ[𝓞 L] y') := by
   intro E _ _ _ H L _ _ t' tB tC e m' mB B MB hF V' Tn hT
-  haveI : Smooth t'.G.hom := @ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian.smooth _ _ _ t'.semi
+  have : Smooth t'.G.hom := @ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian.smooth _ _ _ t'.semi
   obtain ⟨Mσ, hMσ⟩ := LieSigma.lieModel_fibre (Sp (𝓞 L)) t'.G L (𝟙 _) B.carrier MB e
   have hp : spMap (e.comp (algebraMap (𝓞 L) L)) ≫ 𝟙 (Sp (𝓞 L))
       = (𝟙 (Sp ℂ) ≫ spMap e) ≫ spMap (algebraMap (𝓞 L) L) := by
@@ -704,7 +704,7 @@ end GlobalTheory.CompanionTheory.Ar.LieBc
 
 theorem GlobalTheory.CompanionTheory.Ar.LieBc.main : ∀ (L L' : Type) [Field L] [Field L'] (e : L →+* L') (G : Over (Sp L)) (G' : Over (Sp L')) [GrpObj G] [IsCommMonObj G] [Smooth G.hom] [GrpObj G'] (φ : G'.left ⟶ G.left), IsGrpPullback G' G (spMap e) φ → ∀ (V : Type) [AddCommGroup V] [Module L V] (MV : LieModel G (𝟙 (Sp L)) V), ∃ (V' : Type) (_ : AddCommGroup V') (_ : Module L' V') (MV' : LieModel G' (𝟙 (Sp L')) V') (j : V →+ V'), (∀ (c : L) x, j (c • x) = e c • j x) ∧ Function.Injective j ∧ (∀ x, (MV'.pt (j x)).left ≫ φ = spMap (dualMap e) ≫ (MV.pt x).left) ∧ Submodule.span L' (Set.range j) = ⊤ := by
   intro L L' _ _ e G G' _ _ _ _ φ h V _ _ MV
-  letI : Algebra L L' := e.toAlgebra
+  let : Algebra L L' := e.toAlgebra
   obtain ⟨T, iT, mT, mR, tower, M', j, hl, hbc⟩ :=
     GlobalTheory.CompanionTheory.Ar.FlagFib.lieModel_liftBaseChange (Sp L) G L L' (𝟙 _) V MV
   have hx : spMap (algebraMap L L') ≫ 𝟙 (Sp L) = 𝟙 (Sp L') ≫ spMap e := by
@@ -868,8 +868,8 @@ theorem push_eq {L L' : Type} [Field L] [Field L'] (e : L →+* L') {G : Over (S
 
 theorem cochars_baseChange : ∀ (L L' : Type) [Field L] [Field L'] (e : L →+* L') (G : Over (Sp L)) (G' : Over (Sp L')) [GrpObj G] [GrpObj G'] (φ : G'.left ⟶ G.left) (τ : TorusExtension G) (τ' : TorusExtension G'), IsGrpPullback G' G (spMap e) φ → GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.Arch.TorusOver e τ τ' φ → ∀ (V V' : Type) [AddCommGroup V] [Module L V] [AddCommGroup V'] [Module L' V'] (MV : LieModel G (𝟙 (Sp L)) V) (MV' : LieModel G' (𝟙 (Sp L')) V') (j : V →+ V'), (∀ x, (MV'.pt (j x)).left ≫ φ = spMap (dualMap e) ≫ (MV.pt x).left) → ∀ I : AddSubgroup V, (letI := τ.addCommGroup; ∃ MT : LieModel (splitTorus (Sp L) τ.X) (𝟙 _) (τ.X →+ L), IsCocharLie MT ∧ ∀ x, x ∈ I ↔ ∃ δ : τ.X →+ ℤ, MV.pt x = MT.pt ((Int.castAddHom L).comp δ) ≫ τ.i) → (letI := τ'.addCommGroup; ∃ MT : LieModel (splitTorus (Sp L') τ'.X) (𝟙 _) (τ'.X →+ L'), IsCocharLie MT ∧ ∀ x, x ∈ I.map j ↔ ∃ δ : τ'.X →+ ℤ, MV'.pt x = MT.pt ((Int.castAddHom L').comp δ) ≫ τ'.i) := by
   intro L L' _ _ e G G' _ _ φ τ τ' hP hTO V V' _ _ _ _ MV MV' j hj I hI
-  letI := τ.addCommGroup
-  letI := τ'.addCommGroup
+  let := τ.addCommGroup
+  let := τ'.addCommGroup
   obtain ⟨κ, hκ⟩ := hTO
   obtain ⟨MT, hMT, hI⟩ := hI
   have hM' := isCocharLie_lieModel (X := τ'.X) (𝟙 (Sp L'))
@@ -930,15 +930,15 @@ theorem geo_height_arch : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     _root_.GlobalTheory.CompanionTheory.Ar.Cusp.gramDet_pos_of_adapted E L _ V A (lab τ) r k v (q τ) hv (hq τ).1 (hq τ).2 e
   refine ⟨hgram, ?_⟩
   obtain ⟨P', mK, mB, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.Arch.AbPartBC.exists_abPart_baseChange E H _ 𝔐.t L ℂ (spMap (algebraMap (𝓞 L) L) ≫ z) P e
-  haveI := P.tK.semi.smooth
+  have := P.tK.semi.smooth
   obtain ⟨V', _, _, MV', j, hjs, hji, hjpt, hjspan⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBc.main L ℂ e P.tK.G P'.tK.G mK.φ mK.cart V MV
   obtain ⟨ρ', hρa, hρ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ActBC.exists_act_extends L ℂ e _ _ mK.φ mK.cart (𝓞 E) P.tK.act P'.tK.act mK.act V V' MV MV' j hjpt hjspan
     A.ρ hact
   have hcoch' : P'.IsCochars MV' (A.I.map j) :=
     _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.Arch.CocharsBC.cochars_baseChange L ℂ e _ _ mK.φ P.τ P'.τ mK.cart h3 V V' MV MV' j hjpt A.I hcoch
-  letI := P'.τ.grpB
-  haveI := P'.τ.q_hom
-  haveI := P'.e_hom
+  let := P'.τ.grpB
+  have := P'.τ.q_hom
+  have := P'.e_hom
   obtain ⟨hbF, hbI, hbv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeBC.main E H L t' P.tB P'.tB e m' mB A.Bq MB hfib V'
     (fun x => MV'.pt x ≫ P'.τ.q ≫ P'.e.hom) (fun x => isTan_comp _ (MV'.tan x))
   have hover : ∀ x : A.Λ, (MV'.pt (j x) ≫ P'.τ.q ≫ P'.e.hom).left ≫ mB.φ ≫ m'.φ =

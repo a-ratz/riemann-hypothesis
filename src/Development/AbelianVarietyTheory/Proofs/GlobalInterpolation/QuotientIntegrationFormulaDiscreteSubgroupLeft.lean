@@ -89,11 +89,11 @@ theorem _root_.GlobalTheory.QuotDiscrete.existsUnique_subgroupOf {G : Type} [Gro
     ∃! γ : Γ.subgroupOf H, γ • h ∈ {h : H | (h : G) * g ∈ F} := by
   obtain ⟨γ, hγ, huniq⟩ := hF (h * g)
   refine ⟨⟨⟨γ, hΓ γ.2⟩, Subgroup.mem_subgroupOf.2 γ.2⟩, ?_, ?_⟩
-  · simp only [Set.mem_setOf_eq, Subgroup.smul_def, smul_eq_mul, Subgroup.coe_mul] at hγ ⊢
+  · simp only [Set.mem_ofPred_eq, Subgroup.smul_def, smul_eq_mul, Subgroup.coe_mul] at hγ ⊢
     simpa [mul_assoc] using hγ
   · intro δ hδ
     have hδ' : (⟨((δ : H) : G), Subgroup.mem_subgroupOf.1 δ.2⟩ : Γ) • ((h : G) * g) ∈ F := by
-      simp only [Set.mem_setOf_eq, Subgroup.smul_def, smul_eq_mul, Subgroup.coe_mul] at hδ ⊢
+      simp only [Set.mem_ofPred_eq, Subgroup.smul_def, smul_eq_mul, Subgroup.coe_mul] at hδ ⊢
       simpa [mul_assoc] using hδ
     have := huniq _ hδ'
     have h2 : ((δ : H) : G) = (γ : G) := congrArg Subtype.val this
@@ -105,18 +105,18 @@ open scoped ENNReal in
 theorem _root_.GlobalTheory.QuotDiscrete.discreteClause : _root_.GlobalTheory.IndefiniteRowSideFullHecke.InvariantRadonFibre.DiscreteClause := by
   unfold _root_.GlobalTheory.IndefiniteRowSideFullHecke.InvariantRadonFibre.DiscreteClause
   intro G _ _ _ _ _ _ _ _ H _ _ _ _ hH hG hHu dg _ ν _ μ hμ hQ Γ hΓ hd
-  haveI : Countable Γ := (TopologicalSpace.separableSpace_iff_countable).1 inferInstance
-  haveI : Countable (Γ.subgroupOf H) :=
+  have : Countable Γ := (TopologicalSpace.separableSpace_iff_countable).1 inferInstance
+  have : Countable (Γ.subgroupOf H) :=
     Countable.of_equiv _ (Subgroup.subgroupOfEquivOfLe hΓ).toEquiv.symm
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : ν.IsMulRightInvariant := hHu ν inferInstance
-  haveI : ν.IsInvInvariant := _root_.GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant ν
-  haveI : dg.IsMulRightInvariant := hG dg inferInstance
-  haveI : dg.IsInvInvariant := _root_.GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant dg
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology _
+  have : ν.IsMulRightInvariant := hHu ν inferInstance
+  have : ν.IsInvInvariant := _root_.GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant ν
+  have : dg.IsMulRightInvariant := hG dg inferInstance
+  have : dg.IsInvInvariant := _root_.GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant dg
   obtain ⟨F, hFm, hF⟩ := _root_.GlobalTheory.FundDomDiscrete.exists_measurable_section Γ
   have hFg : ∀ g : G, MeasurableSet {h : H | (h : G) * g ∈ F} := fun g =>
-    hFm.preimage (measurable_subtype_coe.mul_const g)
+    hFm.preimage (measurable_subtypeVal.mul_const g)
   have hFD : IsFundamentalDomain Γ F dg := IsFundamentalDomain.mk' hFm.nullMeasurableSet hF
   have hFD' : ∀ g : G, IsFundamentalDomain (Γ.subgroupOf H) {h : H | (h : G) * g ∈ F} ν :=
     fun g => IsFundamentalDomain.mk' (hFg g).nullMeasurableSet

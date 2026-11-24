@@ -101,7 +101,7 @@ theorem discreteTopology_subgroup_of_nhds_one {G : Type*} [Group G] [Topological
     · intro hγ
       exact Subtype.ext (h _ (hVU hγ) ⟨γ, by simp [Subgroup.smul_def]⟩)
   rw [e]
-  exact hV.preimage continuous_subtype_val
+  exact hV.preimage continuous_subtypeVal
 
 theorem fundamentalDomain_exists_measure_eq_of_discrete {G : Type*} [Group G] [TopologicalSpace G]
     [IsTopologicalGroup G] [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G]

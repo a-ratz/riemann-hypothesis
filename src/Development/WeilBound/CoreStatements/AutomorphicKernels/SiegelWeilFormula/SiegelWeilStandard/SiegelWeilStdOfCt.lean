@@ -217,7 +217,7 @@ theorem tUnit : TUnit := by
     intro y
     simp only [map_add (f := _), map_smul, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
     ring
-  simp_rw [e1, e2, enorm_mul, mul_pow]
+  simp_rw [e1, e2, eNorm_mul, mul_pow]
   have hC : ‖C‖ₑ ^ 2 ≠ ⊤ := by simp
   rw [lintegral_const_mul' _ _ hC, lintegral_const_mul' _ _ hC, hN _ hmem]
 
@@ -275,7 +275,7 @@ theorem jEx : JEx := by
     simp only [← Matrix.mul_assoc, incM_inv_mul, Matrix.one_mul]
     rw [Matrix.mul_assoc, incM_inv_mul, Matrix.mul_one]
   refine ⟨j, ?_, fun g => by rw [hfr]; exact blk_sub h _ _, fun g => by rw [hfr]; exact blk_out h _⟩
-  have h1 : Continuous fun g : G2 σ Y => g.1.1 := Units.continuous_val.comp continuous_subtype_val
+  have h1 : Continuous fun g : G2 σ Y => g.1.1 := Units.continuous_val.comp continuous_subtypeVal
   have hv : Continuous fun g : G2 σ Y => (jHom d h b g).1 := by
     simp only [jHom_val, inFrame_eq]
     exact (continuous_const.matrix_mul ((((continuous_const.matrix_mul h1).matrix_mul continuous_const).matrix_fromBlocks
@@ -562,7 +562,7 @@ variable {d : SD σ}
 theorem exists_poly {Φ : d.Fn} (hΦ : d.KFin Φ) {k : d.G} (hk : k ∈ d.K) :
     ∃ q : Polynomial ℂ, q ≠ 0 ∧ ∑ i ∈ Finset.range (q.natDegree + 1), q.coeff i • d.om (k ^ i) Φ = 0 := by
   set W := Submodule.span ℂ (Set.range fun k' : d.K => d.om k'.1 Φ) with hW
-  haveI : FiniteDimensional ℂ W := hΦ.2
+  have : FiniteDimensional ℂ W := hΦ.2
   set φ := Polynomial.lsum (R := ℂ) (fun n => LinearMap.toSpanSingleton ℂ _ (d.om (k ^ n) Φ)) with hφ
   have hmem : ∀ p, φ p ∈ W := by
     intro p
@@ -573,7 +573,7 @@ theorem exists_poly {Φ : d.Fn} (hΦ : d.KFin Φ) {k : d.G} (hk : k ∈ d.K) :
   have hni : ¬ Function.Injective φ := by
     intro hinj
     have hinj' : Function.Injective (φ.codRestrict W hmem) := fun a b h => hinj (congrArg Subtype.val h)
-    haveI : Module.Finite ℂ (Polynomial ℂ) := Module.Finite.of_injective _ hinj'
+    have : Module.Finite ℂ (Polynomial ℂ) := Module.Finite.of_injective _ hinj'
     have hfin : Finite ℕ := (Polynomial.basisMonomials ℂ).linearIndependent.finite
     exact not_finite ℕ
   rw [injective_iff_map_eq_zero] at hni
@@ -632,7 +632,7 @@ theorem line_data (hT : TAll) (hU : TUnit) (hH : THeis) (hA : AuxiliaryPrimeFunc
   · rw [Complex.norm_exp]
     simp
   · intro j hj h
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff] at h
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff] at h
     obtain ⟨k, hk⟩ := h
     have h3 : -(j : ℝ) = 2 * Real.pi * k := by
       have := congrArg Complex.im hk
@@ -906,7 +906,7 @@ theorem mZ_place (R : RD d) (w : InfinitePlace F) (tA : Matrix (Fin d.n) (Fin d.
     have hVb : (V' * (b1 d)ᵀ).map (piInf (d.B.emb w)) = V * ((d.b.1.map (d.B.emb w).1).toCols₁)ᵀ := by
       rw [map_mul_incM_transpose_eq]
       have := hV w
-      rw [if_pos rfl] at this
+      rw [ite_eq_left rfl] at this
       rw [show V'.map (piInf (d.B.emb w)) = d.cw w V' from rfl, this]
       rfl
     rw [hX, hVb]
@@ -915,7 +915,7 @@ theorem mZ_place (R : RD d) (w : InfinitePlace F) (tA : Matrix (Fin d.n) (Fin d.
     have hVb : (V' * (b1 d)ᵀ).map (piInf (d.B.emb w')) = 0 := by
       rw [map_mul_incM_transpose_eq]
       have := hV w'
-      rw [if_neg hw'] at this
+      rw [ite_eq_right hw'] at this
       rw [show V'.map (piInf (d.B.emb w')) = d.cw w' V' from rfl, this, Matrix.zero_mul]
     rw [hVb]
     simp
@@ -972,9 +972,9 @@ theorem var_span' (R : RD d) (w : InfinitePlace F) (k : Fin d.m × Fin d.n × Bo
     change (∑ j, ∑ b, x b j * (if j = k.2.1 then c * fi k.1 b else 0)) =
       c * ∑ b, fi k.1 b * x b k.2.1
     simp only [mul_ite, mul_zero]
-    rw [Finset.sum_eq_single k.2.1 (fun j _ hj => by simp only [if_neg hj, mul_zero, Finset.sum_const_zero]) (by simp)]
-    simp only [if_pos rfl, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun b _ => by simp only [if_true]; ring
+    rw [Finset.sum_eq_single k.2.1 (fun j _ hj => by simp only [ite_eq_right hj, mul_zero, Finset.sum_const_zero]) (by simp)]
+    simp only [ite_eq_left rfl, Finset.mul_sum]
+    exact Finset.sum_congr rfl fun b _ => by simp only [ite_true]; ring
   obtain ⟨Z₁, h1, e1⟩ := key (Matrix.of fun b j => if j = k.2.1 then 1 * fi k.1 b else 0)
   obtain ⟨Z₂, h2, e2⟩ := key (Matrix.of fun b j => if j = k.2.1 then (-Complex.I) * fi k.1 b else 0)
   have hl : ∀ X, evX (MvPolynomial.X k) (R.loc w X) =
@@ -1373,7 +1373,7 @@ theorem uniq : Uniq := by
     have hm : d.dd.rho d.B.ψ w (S0' φ) ∈ schA F d.κ :=
       GlobalTheory.HeisSchA.schr_mem_schA d.B.ψ hψ _ _ (hop.pres' φ hφ)
     rw [← h1, hop.left _ hm]
-  letI : MeasurableSpace (d.κ → AF F) := borel _
+  let : MeasurableSpace (d.κ → AF F) := borel _
   obtain ⟨hμ, hint⟩ := map_haar d τ ν hν
   obtain ⟨c, hc⟩ := translation_invariant_functional_haar d.B.ψ hψ d.κ (ν.map (cmap d τ)) hμ (Λ ∘ₗ S0') (hop.adm' Λ hΛ) (by
     intro a φ hφ

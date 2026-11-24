@@ -131,15 +131,15 @@ instance compact_haar_probability_inst (n : ℕ) (ε : Fin n → Bool) : IsProba
 
 lemma compact_haar_unique_left {n : ℕ} {ε : Fin n → Bool} (ν : Measure (KG ε)) [IsMulLeftInvariant ν]
     [IsProbabilityMeasure ν] : ν = muK ε := by
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
     TopologicalSpace.secondCountableTopology_induced _ _ MulOpposite.unop
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ˣ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ˣ :=
     TopologicalSpace.secondCountableTopology_induced _ _ (Units.embedProduct _)
-  haveI : SecondCountableTopology (UJ ε) :=
+  have : SecondCountableTopology (UJ ε) :=
     TopologicalSpace.Subtype.secondCountableTopology (UJ ε : Set (Matrix (Fin n) (Fin n) ℂ)ˣ)
-  haveI : SecondCountableTopology (KG ε) :=
+  have : SecondCountableTopology (KG ε) :=
     TopologicalSpace.Subtype.secondCountableTopology (KG ε : Set (UJ ε))
   have h := MeasureTheory.Measure.haarMeasure_unique ν (⊤ : TopologicalSpace.PositiveCompacts (KG ε))
   rw [h, TopologicalSpace.PositiveCompacts.coe_top, measure_univ, one_smul]
@@ -147,13 +147,13 @@ lemma compact_haar_unique_left {n : ℕ} {ε : Fin n → Bool} (ν : Measure (KG
 
 lemma compact_haar_right_invariant (n : ℕ) (ε : Fin n → Bool) (k : KG ε) :
     Measure.map (fun x => x * k) (muK ε) = muK ε := by
-  haveI : IsMulLeftInvariant (muK ε) := by
+  have : IsMulLeftInvariant (muK ε) := by
     unfold muK
     infer_instance
   have hm : Measurable (fun x : KG ε => x * k) := measurable_mul_const k
-  haveI : IsProbabilityMeasure (Measure.map (fun x => x * k) (muK ε)) :=
+  have : IsProbabilityMeasure (Measure.map (fun x => x * k) (muK ε)) :=
     inferInstance
-  haveI : IsMulLeftInvariant (Measure.map (fun x => x * k) (muK ε)) := by
+  have : IsMulLeftInvariant (Measure.map (fun x => x * k) (muK ε)) := by
     constructor
     intro g
     rw [Measure.map_map (measurable_const_mul g) hm]
@@ -168,13 +168,13 @@ instance compact_haar_right_invariant_inst (n : ℕ) (ε : Fin n → Bool) : IsM
 
 theorem compact_haar_holds : KHaar := by
   intro n ε
-  haveI : IsMulLeftInvariant (muK ε) := by
+  have : IsMulLeftInvariant (muK ε) := by
     unfold muK
     infer_instance
   refine ⟨compact_haar_probability n ε, fun k => map_mul_left_eq_self _ k, fun k => compact_haar_right_invariant n ε k, ?_⟩
-  haveI : IsProbabilityMeasure (Measure.map (fun x : KG ε => x⁻¹) (muK ε)) :=
+  have : IsProbabilityMeasure (Measure.map (fun x : KG ε => x⁻¹) (muK ε)) :=
     inferInstance
-  haveI : IsMulLeftInvariant (Measure.map (fun x : KG ε => x⁻¹) (muK ε)) := by
+  have : IsMulLeftInvariant (Measure.map (fun x : KG ε => x⁻¹) (muK ε)) := by
     constructor
     intro g
     rw [Measure.map_map (measurable_const_mul g) measurable_inv]
@@ -186,17 +186,17 @@ theorem compact_haar_holds : KHaar := by
 
 theorem compact_integration_by_parts : KByParts := by
   intro n ε E _ _ _ F D Z hZ hF hD hder
-  haveI : IsMulRightInvariant (muK ε) := ⟨fun g => compact_haar_right_invariant n ε g⟩
-  haveI : IsProbabilityMeasure (muK ε) := compact_haar_probability n ε
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : IsMulRightInvariant (muK ε) := ⟨fun g => compact_haar_right_invariant n ε g⟩
+  have : IsProbabilityMeasure (muK ε) := compact_haar_probability n ε
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ᵐᵒᵖ :=
     TopologicalSpace.secondCountableTopology_induced _ _ MulOpposite.unop
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ˣ :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ)ˣ :=
     TopologicalSpace.secondCountableTopology_induced _ _ (Units.embedProduct _)
-  haveI : SecondCountableTopology (UJ ε) :=
+  have : SecondCountableTopology (UJ ε) :=
     TopologicalSpace.Subtype.secondCountableTopology (UJ ε : Set (Matrix (Fin n) (Fin n) ℂ)ˣ)
-  haveI : SecondCountableTopology (KG ε) :=
+  have : SecondCountableTopology (KG ε) :=
     TopologicalSpace.Subtype.secondCountableTopology (KG ε : Set (UJ ε))
   obtain ⟨h0, hadd, -, hKf⟩ := group_exponential_facts n ε Z hZ.1
   obtain ⟨hk, -⟩ := hKf hZ

@@ -56,14 +56,14 @@ theorem sepEtale (R A : Type) [CommRing R] [CommRing A] [Algebra R A] [Algebra.E
     [IsScalarTower R Q.ResidueField L] (f : A →ₐ[R] L) (a : A) :
     IsSeparable Q.ResidueField (f a) := by
   let P : Ideal A := RingHom.ker f
-  haveI : P.IsPrime := RingHom.ker_isPrime f
+  have : P.IsPrime := RingHom.ker_isPrime f
   have hPQ : Q = P.comap (algebraMap R A) := by
     ext r
     simp only [P, Ideal.mem_comap, RingHom.mem_ker, AlgHom.commutes]
     rw [IsScalarTower.algebraMap_apply R Q.ResidueField L]
     simp
-  haveI : P.LiesOver Q := ⟨hPQ⟩
-  letI := Localization.AtPrime.algebraOfLiesOver Q P
+  have : P.LiesOver Q := ⟨hPQ⟩
+  let := Localization.AtPrime.algebraOfLiesOver Q P
   have hsep : Algebra.IsSeparable Q.ResidueField P.ResidueField := inferInstance
   let g : P.ResidueField →ₐ[R] L := Ideal.ResidueField.liftₐ P f le_rfl (fun x hx => by
     simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff]
@@ -94,14 +94,14 @@ theorem specialisation_exists : ∀ (R S O : Type) [CommRing R] [CommRing S] [Is
     (IsLocalRing.maximalIdeal O).comap (algebraMap R O) = Q →
     Module.Flat R S → GlobalTheory.LocAcyc.LocPiecesEtale R S → Nonempty (S →ₐ[R] O) := by
   intro R S O _ _ _ _ _ _ _ _ Q y _ _ hQy hy hQ _ hpieces
-  haveI : Algebra.HasGoingDown R S := Algebra.HasGoingDown.of_flat
-  haveI : (maximalIdeal S).LiesOver y := ⟨hy.symm⟩
+  have : Algebra.HasGoingDown R S := Algebra.HasGoingDown.of_flat
+  have : (maximalIdeal S).LiesOver y := ⟨hy.symm⟩
   obtain ⟨Q₂, -, hQ₂p, hQ₂o⟩ :=
     Ideal.exists_ideal_le_liesOver_of_le (p := Q) (q := y) (maximalIdeal S) hQy
-  haveI := hQ₂p
-  letI : Algebra Q.ResidueField Q₂.ResidueField :=
+  have := hQ₂p
+  let : Algebra Q.ResidueField Q₂.ResidueField :=
     (Ideal.ResidueField.map Q Q₂ (algebraMap R S) hQ₂o.over).toAlgebra
-  haveI : IsScalarTower R Q.ResidueField Q₂.ResidueField := .of_algebraMap_eq fun r => by
+  have : IsScalarTower R Q.ResidueField Q₂.ResidueField := .of_algebraMap_eq fun r => by
     rw [RingHom.algebraMap_toAlgebra, Ideal.ResidueField.map_algebraMap,
       ← IsScalarTower.algebraMap_apply]
 
@@ -130,7 +130,7 @@ theorem specialisation_exists : ∀ (R S O : Type) [CommRing R] [CommRing S] [Is
     rw [hx, ← mem_separableClosure_iff]
     refine mul_mem ?_ (inv_mem ?_) <;> rw [mem_separableClosure_iff] <;>
       exact sepEtale R A Q _ f _
-  haveI : Algebra.IsSeparable Q.ResidueField Q₂.ResidueField := ⟨fun x => by
+  have : Algebra.IsSeparable Q.ResidueField Q₂.ResidueField := ⟨fun x => by
     obtain ⟨u, v, -, rfl⟩ := IsFractionRing.div_surjective (A := S ⧸ Q₂) x
     obtain ⟨u, rfl⟩ := Ideal.Quotient.mk_surjective u
     obtain ⟨v, rfl⟩ := Ideal.Quotient.mk_surjective v
@@ -142,12 +142,12 @@ theorem specialisation_exists : ∀ (R S O : Type) [CommRing R] [CommRing S] [Is
     intro r
     rw [IsScalarTower.algebraMap_apply R O (ResidueField O), ResidueField.algebraMap_eq,
       residue_eq_zero_iff, ← hQ, Ideal.mem_comap]
-  letI : Algebra Q.ResidueField (ResidueField O) :=
+  let : Algebra Q.ResidueField (ResidueField O) :=
     (Ideal.ResidueField.lift Q (algebraMap R (ResidueField O)) (fun r hr => (hker r).2 hr)
       (fun r hr => by
         simp only [Submonoid.mem_comap, IsUnit.mem_submonoid_iff]
         exact isUnit_iff_ne_zero.mpr (fun h => hr ((hker r).1 h)))).toAlgebra
-  haveI : IsScalarTower R Q.ResidueField (ResidueField O) := .of_algebraMap_eq fun r => by
+  have : IsScalarTower R Q.ResidueField (ResidueField O) := .of_algebraMap_eq fun r => by
     rw [RingHom.algebraMap_toAlgebra]
     exact (Ideal.ResidueField.lift_algebraMap Q _ _ _ r).symm
   let φ₀ : Q₂.ResidueField →ₐ[Q.ResidueField] ResidueField O := IsSepClosed.lift

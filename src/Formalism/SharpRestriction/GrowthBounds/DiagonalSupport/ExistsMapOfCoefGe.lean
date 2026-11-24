@@ -183,7 +183,7 @@ private theorem mem_range_algebraMap_of_vK_nonneg {p : ℕ} {O : Type} [CommRing
     unfold ramE
     rcases ENat.ne_top_iff_exists.mp hpt with ⟨k, hk⟩
     rw [← hk] at hp0 ⊢
-    simp only [ENat.toNat_coe]
+    simp only [ENat.toNat_natCast]
     exact Nat.pos_of_ne_zero (by exact_mod_cast hp0)
   have hq := h ((((Formalism.MainNotions.G.Joints.nv a : ℤ) - (Formalism.MainNotions.G.Joints.nv (b : O) : ℤ) : ℤ) : ℚ) / (ramE p O : ℚ))
     (by rw [vK, hord, WithTop.map_coe])
@@ -200,7 +200,7 @@ private theorem mem_range_algebraMap_of_vK_nonneg {p : ℕ} {O : Type} [CommRing
   have hbt : IsDiscreteValuationRing.addVal O (b : O) ≠ ⊤ := by
     rw [Ne, IsDiscreteValuationRing.addVal_eq_top_iff]; exact hb
   have hvle : IsDiscreteValuationRing.addVal O (b : O) ≤ IsDiscreteValuationRing.addVal O a := by
-    rw [← ENat.coe_toNat hat, ← ENat.coe_toNat hbt]
+    rw [← ENat.natCast_toNat hat, ← ENat.natCast_toNat hbt]
     exact_mod_cast hle
   obtain ⟨c, hc⟩ := IsDiscreteValuationRing.addVal_le_iff_dvd.mp hvle
   refine ⟨c, ?_⟩

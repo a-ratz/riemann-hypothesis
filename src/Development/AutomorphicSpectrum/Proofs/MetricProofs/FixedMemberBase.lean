@@ -117,7 +117,7 @@ private theorem levi_add_mul {ι : Type} [Fintype ι] (F G : (ι → ℂ) → �
     exact (hF2.hasFDerivAt.add (hG2.hasFDerivAt.const_smul k)).fderiv
   unfold levi
   rw [h2]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [add_apply, smul_apply, smul_eq_mul]
   ring
 
 theorem levi_split {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X) (Θ th : LocPot X)

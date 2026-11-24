@@ -120,8 +120,8 @@ private lemma chart_norm {l Q n : ℕ} {Y : Scheme.{0}} (T : Fin (n + 1) → Cor
   have hz : ∀ j i, ⊤ ≤ z j i ⁻¹ᵁ ((T j).p ⁻¹ᵁ U) := fun j i => by
     rw [← Scheme.Hom.comp_preimage, hzy]
     exact hy
-  letI := fun j => (T j).alg U
-  letI : Algebra Γ(Y, U) B := ((y.appLE U ⊤ hy ≫ (Scheme.ΓSpecIso (CommRingCat.of B)).hom).hom).toAlgebra
+  let := fun j => (T j).alg U
+  let : Algebra Γ(Y, U) B := ((y.appLE U ⊤ hy ≫ (Scheme.ΓSpecIso (CommRingCat.of B)).hom).hom).toAlgebra
   have H := fun j => splitRules.2 l Y (T j) U hU B y hy (z j) (hz j) (hzy j) (hs j)
   choose ζ hζ hζe using H
   have hres : ψ (algebraMap Γ(Y, U) B (Y.presheaf.map (homOfLE le_top).op π)) = 0 := by
@@ -134,7 +134,7 @@ private lemma chart_norm {l Q n : ℕ} {Y : Scheme.{0}} (T : Fin (n + 1) → Cor
       rfl
     rw [e', hψ]
   refine ⟨fun j i => (ζ j i).toRingHom.comp ((T j).r.appLE V _ (h j)).hom, fun j i => ?_, fun ι _ x => ?_⟩
-  · haveI := (T j).fin
+  · have := (T j).fin
     have hS : IsAffineOpen ((T j).p ⁻¹ᵁ U) := hU.preimage (T j).p
     have e1 := spec_chart (z j i) hS (hz j i)
     have e2 : (z j i).appLE ((T j).p ⁻¹ᵁ U) ⊤ (hz j i) ≫ (Scheme.ΓSpecIso (CommRingCat.of B)).hom =
@@ -212,7 +212,7 @@ theorem UpperTheory.exists_finite_sections_determining_ringHom_of_smooth :
     (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of O)).inv).2
   let φ : O →+* Γ(Y, V) := (q.appLE ⊤ V hle).hom.comp ι
   have hφ : φ.FiniteType := hψ.comp (RingHom.FiniteType.of_surjective ι hι)
-  letI : Algebra O Γ(Y, V) := φ.toAlgebra
+  let : Algebra O Γ(Y, V) := φ.toAlgebra
   have hft : Algebra.FiniteType O Γ(Y, V) := hφ
   obtain ⟨s, hs⟩ := hft.out
   refine ⟨s.card, fun i => (s.equivFin.symm i : Γ(Y, V)), ?_⟩
@@ -337,13 +337,13 @@ private lemma key {R : Type} [CommRing R]
       exact hk
     obtain ⟨q, rfl⟩ := hp
     refine ⟨(Sigma.ι (fun k => Spec (A k)) k) q, ?_⟩
-    have : Sigma.ι (fun k => Spec (A k)) k ≫ g = m k := Sigma.ι_desc _ _
+    have : Sigma.ι (fun k => Spec (A k)) k ≫ g = m k := Sigma.ι_comp_desc _ _
     rw [← Scheme.Hom.comp_apply, this]
     rfl
   obtain ⟨s, hs⟩ := hsec _ g hEt hSu
   have hg : g = sigmaSpec A ≫ Spec.map (CommRingCat.ofHom (algebraMap R (Π k, Localization.Away (f k)))) := by
     refine Sigma.hom_ext _ _ fun k => ?_
-    rw [Sigma.ι_desc, ι_sigmaSpec_assoc, ← Spec.map_comp]
+    rw [Sigma.ι_comp_desc, ι_sigmaSpec_assoc, ← Spec.map_comp]
     rfl
   let r' := Spec.preimage (s ≫ sigmaSpec A)
   have hr' : Spec.map r' = s ≫ sigmaSpec A := Spec.map_preimage _
@@ -419,8 +419,8 @@ theorem UpperTheory.Gal.crystallineComparison.baseChart_of :
     refine RingHom.Smooth.comp (RingHom.Smooth.of_bijective ?_) ?_
     · exact (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of O)).inv)
     · exact HasRingHomProperty.appLE @Smooth g hg ⟨⊤, isAffineOpen_top _⟩ ⟨U, hU⟩ (by simp)
-  letI : Algebra O Γ(Y, U) := φ.toAlgebra
-  haveI : Algebra.Smooth O Γ(Y, U) := hsm
+  let : Algebra O Γ(Y, U) := φ.toAlgebra
+  have : Algebra.Smooth O Γ(Y, U) := hsm
   have hb := h l O Γ(Y, U) ϖ hϖ hl hlu
   have hϖφ : (algebraMap O Γ(Y, U)) ϖ = (Y.presheaf.map (homOfLE le_top).op).hom (fn g ϖ) := hφ ϖ
   rw [hϖφ] at hb
@@ -462,11 +462,11 @@ theorem UpperTheory.Gal.crystallineComparison.baseSmooth_of :
     have hspan : Ideal.span {(algebraMap O R) ϖ} = (IsLocalRing.maximalIdeal O).map (algebraMap O R) := by
       rw [(IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).mp hϖ, Ideal.map_span, Set.image_singleton]
     rw [hspan]
-    haveI : Algebra.Smooth (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField O ⊗[O] R) :=
+    have : Algebra.Smooth (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField O ⊗[O] R) :=
       Algebra.Smooth.baseChange O R (IsLocalRing.ResidueField O)
     have hred : IsReduced (IsLocalRing.ResidueField O ⊗[O] R) :=
       hR (IsLocalRing.ResidueField O) (IsLocalRing.ResidueField O ⊗[O] R)
-    haveI : IsReduced ((O ⧸ IsLocalRing.maximalIdeal O) ⊗[O] R) := hred
+    have : IsReduced ((O ⧸ IsLocalRing.maximalIdeal O) ⊗[O] R) := hred
     let e := ((Algebra.TensorProduct.quotIdealMapEquivTensorQuot R (IsLocalRing.maximalIdeal O)).restrictScalars O).trans
       (Algebra.TensorProduct.comm O R (O ⧸ IsLocalRing.maximalIdeal O))
     exact isReduced_of_injective e.toRingHom e.injective
@@ -485,7 +485,7 @@ open UpperTheory.Gal.crystallineComparison
 theorem UpperTheory.Gal.crystallineComparison.charts_of :
     ChartsExist := by
   intro l Y hY J _ T y
-  haveI : ∀ j, IsFinite (T j).p := fun j => (T j).fin
+  have : ∀ j, IsFinite (T j).p := fun j => (T j).fin
   let S : Set Y := {y} ∪ ⋃ j, (T j).r '' ((T j).p ⁻¹' {y})
   have hS : S.Finite := (Set.finite_singleton y).union
     (Set.finite_iUnion fun j => ((T j).p.finite_preimage_singleton y).image _)
@@ -601,7 +601,7 @@ theorem UpperTheory.Gal.crystallineComparison.etAway_of :
   intro hsec het l Y T U hU
   obtain ⟨hZ, hpts⟩ := hsec l Y T U hU
   have hfin := @IsFinite.finite_app _ _ _ T.fin U hU
-  letI : Algebra Γ(Y, U) Γ(T.Z, T.p ⁻¹ᵁ U) := (T.p.app U).hom.toAlgebra
+  let : Algebra Γ(Y, U) Γ(T.Z, T.p ⁻¹ᵁ U) := (T.p.app U).hom.toAlgebra
   refine EtAway.mk hfin (het l Y T U hU) ?_
   intro K _ _ _ hl
   obtain ⟨e, -⟩ := hpts K
@@ -625,15 +625,15 @@ private theorem ring_step {R S R' S' : Type} [CommRing R] [CommRing S] [CommRing
     (hg : letI := g.toAlgebra; IsLocalization.Away (algebraMap R S a) S') (het : h.Etale) :
     Algebra.Etale (Localization.Away a) (Localization.Away a ⊗[R] S) := by
   classical
-  letI : Algebra R R' := f.toAlgebra
-  letI : Algebra S S' := g.toAlgebra
-  letI : Algebra S (Localization.Away a ⊗[R] S) := Algebra.TensorProduct.rightAlgebra
+  let : Algebra R R' := f.toAlgebra
+  let : Algebra S S' := g.toAlgebra
+  let : Algebra S (Localization.Away a ⊗[R] S) := Algebra.TensorProduct.rightAlgebra
   have hM : Algebra.algebraMapSubmonoid S (Submonoid.powers a) =
       Submonoid.powers (algebraMap R S a) := by
     simp [Algebra.algebraMapSubmonoid, Submonoid.map_powers]
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid S (Submonoid.powers a)) S' := by
+  have : IsLocalization (Algebra.algebraMapSubmonoid S (Submonoid.powers a)) S' := by
     rw [hM]; exact hg
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid S (Submonoid.powers a))
+  have : IsLocalization (Algebra.algebraMapSubmonoid S (Submonoid.powers a))
       (Localization.Away a ⊗[R] S) := IsLocalization.tensorRight _ (Submonoid.powers a)
   let e1 := IsLocalization.algEquiv (Submonoid.powers a) (Localization.Away a) R'
   let e2 := IsLocalization.algEquiv (Algebra.algebraMapSubmonoid S (Submonoid.powers a))
@@ -650,7 +650,7 @@ private theorem ring_step {R S R' S' : Type} [CommRing R] [CommRing S] [CommRing
         algebraMap S (Localization.Away a ⊗[R] S) (algebraMap R S r) := by
       rw [← AlgEquiv.commutes e2.symm]; rfl
     simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
-      AlgEquiv.coe_ringEquiv]
+      AlgEquiv.coe_toRingEquiv]
     rw [h1, h2, h3]
     simp [Algebra.TensorProduct.algebraMap_apply, RingHom.algebraMap_toAlgebra,
       Algebra.TensorProduct.tmul_one_eq_one_tmul]
@@ -686,9 +686,9 @@ theorem UpperTheory.Gal.crystallineComparison.etChart_of :
     EtChart := by
   unfold EtChart
   intro l Y T U hU
-  letI := T.alg U
-  haveI := T.fin
-  haveI := T.et
+  let := T.alg U
+  have := T.fin
+  have := T.et
   have hZU : IsAffineOpen (T.p ⁻¹ᵁ U) := hU.preimage T.p
   have e0 : T.Z.basicOpen ((T.p.app U).hom (l : Γ(Y, U))) ≤
       T.p ⁻¹ᵁ Y.basicOpen (l : Γ(Y, U)) := (Scheme.preimage_basicOpen T.p _).ge
@@ -723,9 +723,9 @@ theorem UpperTheory.Gal.crystallineComparison.etUnit_of :
     EtOfUnit := by
   intro l R S B _ _ _ _ _ h hl
   have hl' : IsUnit (algebraMap R B (l : R)) := by simpa using hl
-  letI : Algebra (Localization.Away (l : R)) B :=
+  let : Algebra (Localization.Away (l : R)) B :=
     (IsLocalization.Away.lift (S := Localization.Away (l : R)) (l : R) hl').toAlgebra
-  haveI : IsScalarTower R (Localization.Away (l : R)) B :=
+  have : IsScalarTower R (Localization.Away (l : R)) B :=
     IsScalarTower.of_algebraMap_eq fun r =>
       (IsLocalization.Away.lift_eq (S := Localization.Away (l : R)) (l : R) hl' r).symm
   exact Algebra.Etale.of_equiv
@@ -807,14 +807,14 @@ private def baseChangePts {R A S K : Type} [CommRing R] [CommRing A] [CommRing S
 theorem UpperTheory.Gal.crystallineComparison.injSplit_of :
     RankOfDeg → SplitsOfEquiv → InjSplit := by
   intro hRank hSplitEq l d R S _ _ _ hE
-  haveI := hE.fin
-  haveI := hE.et
+  have := hE.fin
+  have := hE.et
   have hdeg : ∀ (K : Type) [Field K] [IsAlgClosed K] [Algebra (Localization.Away (l : R)) K],
       Nat.card (Localization.Away (l : R) ⊗[R] S →ₐ[Localization.Away (l : R)] K) = d := by
     intro K _ _ _
-    letI : Algebra R K := ((algebraMap (Localization.Away (l : R)) K).comp
+    let : Algebra R K := ((algebraMap (Localization.Away (l : R)) K).comp
       (algebraMap R (Localization.Away (l : R)))).toAlgebra
-    haveI : IsScalarTower R (Localization.Away (l : R)) K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : IsScalarTower R (Localization.Away (l : R)) K := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have hl : (l : K) ≠ 0 := by
       have hu : IsUnit (algebraMap R (Localization.Away (l : R)) (l : R)) :=
         IsLocalization.Away.algebraMap_isUnit (l : R)
@@ -1016,21 +1016,21 @@ open UpperTheory.Gal.crystallineComparison
 theorem UpperTheory.Gal.crystallineComparison.normInt_of :
     NormEx → SplitsBC → InjSplit → CoeffInt → LiftP → NormInt := by
   intro hNE hBC hIS hCI hLP l d R S _ _ _ h hcl ι _ s
-  haveI hfin : Module.Finite R S := h.fin
-  haveI het := h.et
-  haveI : Module.Finite (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) := inferInstance
-  haveI : Algebra.FinitePresentation (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) := inferInstance
-  haveI : Module.FinitePresentation (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) :=
+  have hfin : Module.Finite R S := h.fin
+  have het := h.et
+  have : Module.Finite (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) := inferInstance
+  have : Algebra.FinitePresentation (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) := inferInstance
+  have : Module.FinitePresentation (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) :=
     Module.FinitePresentation.of_finite_of_finitePresentation _ _
-  haveI : Module.Flat (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) := inferInstance
-  haveI : Module.Projective (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) :=
+  have : Module.Flat (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) := inferInstance
+  have : Module.Projective (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) :=
     Module.Flat.projective_of_finitePresentation
   obtain ⟨N', hN'⟩ := hNE (Localization.Away (l : R)) (Localization.Away (l : R) ⊗[R] S) ι (fun k => 1 ⊗ₜ s k)
   obtain ⟨T, _, _, m, z, hinj, hz⟩ := hIS l d R S h
-  haveI : FaithfulSMul (Localization.Away (l : R)) T :=
+  have : FaithfulSMul (Localization.Away (l : R)) T :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  letI : Algebra R T := ((algebraMap (Localization.Away (l : R)) T).comp (algebraMap R (Localization.Away (l : R)))).toAlgebra
-  haveI : IsScalarTower R (Localization.Away (l : R)) T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R T := ((algebraMap (Localization.Away (l : R)) T).comp (algebraMap R (Localization.Away (l : R)))).toAlgebra
+  have : IsScalarTower R (Localization.Away (l : R)) T := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hNz := hN' T (Fin m) z hz
   have hint : ∀ i k, IsIntegral R (z i (1 ⊗ₜ s k)) := by
     intro i k
@@ -1047,9 +1047,9 @@ theorem UpperTheory.Gal.crystallineComparison.normInt_of :
   obtain ⟨N, hN⟩ := hLP R (Localization.Away (l : R)) ι (algebraMap R (Localization.Away (l : R))) N' hco
   refine ⟨N, ?_⟩
   intro B _ _ hl I _ zB hzB
-  letI : Algebra (Localization.Away (l : R)) B :=
+  let : Algebra (Localization.Away (l : R)) B :=
     (IsLocalization.Away.lift (S := Localization.Away (l : R)) (l : R) (g := algebraMap R B) (by simpa using hl)).toAlgebra
-  haveI : IsScalarTower R (Localization.Away (l : R)) B := IsScalarTower.of_algebraMap_eq fun r =>
+  have : IsScalarTower R (Localization.Away (l : R)) B := IsScalarTower.of_algebraMap_eq fun r =>
     (IsLocalization.Away.lift_eq (S := Localization.Away (l : R)) (l : R) (g := algebraMap R B) (by simpa using hl) r).symm
   obtain ⟨z', hz', hzz⟩ := hBC R (Localization.Away (l : R)) S B I zB hzB
   have h2 := hN' B I z' hz'
@@ -1079,7 +1079,7 @@ theorem UpperTheory.Gal.crystallineComparison.normPt_of :
   intro B _ _ hlB I _ z hs B' _ ρ hρπ ι _ x
   set q := l ^ f with hq
   set πU := Y.presheaf.map (homOfLE le_top).op (fn g ϖ) with hπU
-  letI : ∀ j, Algebra Γ(Y, U) Γ((T j).Z, (T j).p ⁻¹ᵁ U) := fun j => (T j).alg U
+  let : ∀ j, Algebra Γ(Y, U) Γ((T j).Z, (T j).p ⁻¹ᵁ U) := fun j => (T j).alg U
   obtain ⟨hBase, m, hm⟩ := hBOC l O ϖ hϖ hl0 hlu Y g hg U hU
   let s : (j : Fin (n + 1)) → ι → Γ((T j).Z, (T j).p ⁻¹ᵁ U) := fun j k =>
     ((T j).r.appLE V ((T j).p ⁻¹ᵁ U) (h j)).hom (x k) ^ (q ^ (n - (j : ℕ)))
@@ -1101,8 +1101,8 @@ theorem UpperTheory.Gal.crystallineComparison.normPt_of :
   have hlκ : ((l : IsLocalRing.ResidueField W)) = 0 := by
     rw [← map_natCast (IsLocalRing.residue W), IsLocalRing.residue_eq_zero_iff]
     exact hlm
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI : CharP (IsLocalRing.ResidueField W) l := (CharP.charP_iff_prime_eq_zero hl).mpr hlκ
+  have : Fact l.Prime := ⟨hl⟩
+  have : CharP (IsLocalRing.ResidueField W) l := (CharP.charP_iff_prime_eq_zero hl).mpr hlκ
   let φ := iterateFrobenius (IsLocalRing.ResidueField W) l f
   have hφ : ∀ a, φ a = a ^ q := fun a => rfl
   have hφm : ∀ (k : ℕ) a, (φ ^ k) a = a ^ (q ^ k) := by
@@ -1136,7 +1136,7 @@ theorem UpperTheory.Gal.crystallineComparison.normPt_of :
     intro F
     funext k
     have hP : ∃ F', ptOf hV (IsLocalRing.ResidueField W) F' = ptOf hV (IsLocalRing.ResidueField W) F := ⟨F, rfl⟩
-    simp only [G, dif_pos hP]
+    simp only [G, dite_eq_left hP]
     rw [(hPtC Y V hV (IsLocalRing.ResidueField W)).1 (Classical.choose_spec hP)]
   have alt2 := congrArg (Multiset.map G) alt
   rw [pts_map, pts_map] at alt2
@@ -1204,11 +1204,11 @@ theorem UpperTheory.Gal.crystallineComparison.normRead_of :
     have hu : IsUnit ((l : ℕ) : FractionRing V) := hlK.isUnit
     have het : Algebra.Etale (FractionRing V) (FractionRing V ⊗[R] S) := hEt l R S _ hE.et hu
     obtain ⟨hfin, hsp⟩ := hSF R S (FractionRing V) het
-    haveI := hE.fin
+    have := hE.fin
     have hb := hVP R S V
     have hfinV : Finite (S →ₐ[R] V) := Finite.of_injective _ hb.1
     refine ⟨hfinV, fun I _ z hz => ?_⟩
-    letI := Fintype.ofFinite (S →ₐ[R] FractionRing V)
+    let := Fintype.ofFinite (S →ₐ[R] FractionRing V)
     have h1 := hN (FractionRing V) hu (S →ₐ[R] FractionRing V) (fun z => z) hsp
     refine descend (IsScalarTower.toAlgHom R V (FractionRing V)) hinj N s z ?_
     rw [h1]
@@ -1265,7 +1265,7 @@ theorem UpperTheory.Gal.crystallineComparison.rankDeg_of :
     SplitsField → RankOfDeg := by
   intro hSF A S _ _ _ _ _ d hd
   funext p
-  letI : Algebra A (AlgebraicClosure p.asIdeal.ResidueField) :=
+  let : Algebra A (AlgebraicClosure p.asIdeal.ResidueField) :=
     ((algebraMap p.asIdeal.ResidueField (AlgebraicClosure p.asIdeal.ResidueField)).comp
       (algebraMap A p.asIdeal.ResidueField)).toAlgebra
   let q : PrimeSpectrum (AlgebraicClosure p.asIdeal.ResidueField) := ⟨⊥, Ideal.isPrime_bot⟩
@@ -1279,7 +1279,7 @@ theorem UpperTheory.Gal.crystallineComparison.rankDeg_of :
       Ideal.algebraMap_residueField_eq_zero]
   rw [← hq, ← Module.rankAtStalk_baseChange q, Module.rankAtStalk_eq_finrank_of_free]
   obtain ⟨hfin, hsp⟩ := hSF A S (AlgebraicClosure p.asIdeal.ResidueField) inferInstance
-  haveI := Fintype.ofFinite (S →ₐ[A] AlgebraicClosure p.asIdeal.ResidueField)
+  have := Fintype.ofFinite (S →ₐ[A] AlgebraicClosure p.asIdeal.ResidueField)
   have e := AlgEquiv.ofBijective (splitMap fun z => z) hsp
   have h1 := e.toLinearEquiv.finrank_eq
   rw [Module.finrank_fintype_fun_eq_card, ← Nat.card_eq_fintype_card,
@@ -1324,13 +1324,13 @@ theorem UpperTheory.Gal.crystallineComparison.sameNormRing_of :
   have key : mapP (ρ.comp (algebraMap R B)) (∏ j, N j ^ a j) = mapP (ρ.comp (algebraMap R B)) (∏ j, N j ^ b j) := by
     refine hCR R 𝔞 hB.rad ι _ _ ?_ B' _ hρ
     intro 𝔭 hp
-    haveI : 𝔭.IsPrime := hp.1.1
+    have : 𝔭.IsPrime := hp.1.1
     obtain ⟨V, _, _, _, _, _, hl', hc⟩ := hVL R (l : R) hB.nzd 𝔭
     have hl0 : (l : V) ≠ 0 := by simpa using hl'
     refine ⟨IsLocalRing.ResidueField V, inferInstance, (IsLocalRing.residue V).comp (algebraMap R V), ?_, ?_⟩
     · rw [← RingHom.comap_ker, IsLocalRing.ker_residue, hc]
     · have hfin : ∀ j, Finite (S j →ₐ[R] V) := fun j => ((hN j).2 V hl0).1
-      letI : ∀ j, Fintype (S j →ₐ[R] V) := fun j => @Fintype.ofFinite _ (hfin j)
+      let : ∀ j, Fintype (S j →ₐ[R] V) := fun j => @Fintype.ofFinite _ (hfin j)
       have hV1 : ∀ j, mapP (algebraMap R V) (N j) = ∏ i : S j →ₐ[R] V, form fun k => i (s j k) :=
         fun j => ((hN j).2 V hl0).2 (S j →ₐ[R] V) id Function.bijective_id
       have hm := hV V hl0 (by rw [hc]; exact hp) (fun j => S j →ₐ[R] V) (fun j i => i) (fun j => Function.bijective_id)
@@ -1353,8 +1353,8 @@ open UpperTheory.Gal.crystallineComparison
 theorem UpperTheory.Gal.crystallineComparison.secChart_of :
     SecChart := by
   intro l Y T U hU
-  haveI := T.fin
-  letI := T.alg U
+  have := T.fin
+  let := T.alg U
   have hZ : IsAffineOpen (T.p ⁻¹ᵁ U) := hU.preimage T.p
   have hsq : Spec.map (T.p.app U) ≫ hU.fromSpec = hZ.fromSpec ≫ T.p := by
     rw [Scheme.Hom.app_eq_appLE]
@@ -1391,7 +1391,7 @@ theorem UpperTheory.Gal.crystallineComparison.secChart_of :
     congr 2
     ext r
     exact g.commutes r
-  · apply AlgHom.coe_ringHom_injective
+  · apply AlgHom.toRingHom_injective
     show (Spec.preimage _).hom = (CommRingCat.ofHom g.toRingHom).hom
     congr 1
     apply Spec.map_injective
@@ -1441,7 +1441,7 @@ theorem UpperTheory.Gal.crystallineComparison.smoothClosed_of :
   classical
   have hM : Algebra.algebraMapSubmonoid R (Submonoid.powers (l : O)) = Submonoid.powers (l : R) := by
     rw [Algebra.algebraMapSubmonoid, Submonoid.map_powers, map_natCast]
-  haveI : IsLocalization (Submonoid.powers (l : R)) (R ⊗[O] Localization.Away (l : O)) := by
+  have : IsLocalization (Submonoid.powers (l : R)) (R ⊗[O] Localization.Away (l : O)) := by
     rw [← hM]
     infer_instance
   let e : (R ⊗[O] Localization.Away (l : O)) ≃ₐ[R] Localization.Away (l : R) :=
@@ -1581,7 +1581,7 @@ theorem valLift_of : ValLift := by
   obtain ⟨q, hq, hq𝔭⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal R)) (J := 𝔭) bot_le
   have hlq : l ∉ q := fun h =>
     Set.disjoint_left.mp (Ideal.disjoint_nonZeroDivisors_of_mem_minimalPrimes hq) h hl
-  haveI : q.IsPrime := hq.1.1
+  have : q.IsPrime := hq.1.1
   let K := AlgebraicClosure (FractionRing (R ⧸ q))
   let ι : R →+* K := (algebraMap (FractionRing (R ⧸ q)) K).comp
     ((algebraMap (R ⧸ q) (FractionRing (R ⧸ q))).comp (Ideal.Quotient.mk q))
@@ -1604,7 +1604,7 @@ theorem valLift_of : ValLift := by
   let ψ' : Localization.AtPrime 𝔭 →+* B := φ.codRestrict B (fun x => hsub (hmemL x))
   let ψ : R →+* B := ψ'.comp (algebraMap R (Localization.AtPrime 𝔭))
   have hψ : ∀ r, (ψ r : K) = ι r := fun r => hφ r
-  haveI : IsAlgClosed (FractionRing B) :=
+  have : IsAlgClosed (FractionRing B) :=
     IsAlgClosed.of_ringEquiv K _ (FractionRing.algEquiv B K).symm.toRingEquiv
   refine ⟨B, inferInstance, inferInstance, inferInstance, inferInstance, ψ.toAlgebra, ?_, ?_⟩
   · intro h

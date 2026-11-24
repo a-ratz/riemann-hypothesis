@@ -111,7 +111,7 @@ theorem exists_split {T : D.host.E} (G : LFlag (D.sp.Y 0) D.R.rS T) (Λ : LV D)
   let W := Submodule.span D.host.E (Q : Set (Fin D.R.rS → D.host.E))
   let f : Q →ₗ[𝓞 D.host.E] W := Q.subtype.codRestrict (W.restrictScalars (𝓞 D.host.E))
     (fun x => Submodule.subset_span x.2)
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 D.host.E)) f := by
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 D.host.E)) f := by
     refine ⟨?_, ?_, ?_⟩
     · intro a
       have := isLocalizedModule_id (nonZeroDivisors (𝓞 D.host.E)) W D.host.E

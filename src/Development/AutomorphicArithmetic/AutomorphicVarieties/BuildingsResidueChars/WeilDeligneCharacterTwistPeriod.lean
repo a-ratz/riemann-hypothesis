@@ -190,7 +190,7 @@ theorem UpperTheory.crystalline_frobenius_algebraic_elements :
   obtain ⟨Ti⟩ := tiedP l
   have := compactSpace_GK K
   obtain ⟨W, hW, hWg⟩ := exists_alg (p := l) ((AIP l).actT.comp (GK K).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (eventually_actT_eq (AIP l) y m hm hy)) M hM
     (fun g hg => hMI g ((hI g).2 (norm_sub_lt_one_of_fix (AIP l) g hg)))
   have key : ∀ (g : ↥(GK K)) (f : OCb l →+* OCb l) (F : Bcr l → Bcr l),
@@ -345,7 +345,7 @@ theorem UpperTheory.galois_representation_integral_lattice :
     rw [h1, h2, h3, extendOfIsLattice_repr_eq_repr]
   refine ⟨_, e, M, ?_, key⟩
   refine continuous_pi fun i => continuous_pi fun j => ?_
-  refine (isometry_subtype_coe.isEmbedding.continuous_iff).2 ?_
+  refine (isometry_subtypeVal.isEmbedding.continuous_iff).2 ?_
   have : (fun g => ((M g i j : ℤ_[l]) : ℚ_[l])) = fun g => e.coord i (ρ g (e j)) := by
     funext g
     rw [key]
@@ -397,9 +397,9 @@ private theorem phiV_pow {l : ℕ} [Fact l.Prime] (P : LocPrime l)
 theorem UpperTheory.weilDeligne_unramified_period :
     UpperTheory.V.Af.Wd.UnrPer := by
   intro l _ K L η hη hI
-  haveI := GlobalTheory.UnramifiedCrys.compactSpace_GK K
-  haveI : FiniteDimensional ℚ_[l] ↥L.1 := L.2
-  haveI : IsModuleTopology ℚ_[l] ↥L.1 := isModuleTopologyOfFiniteDimensional
+  have := GlobalTheory.UnramifiedCrys.compactSpace_GK K
+  have : FiniteDimensional ℚ_[l] ↥L.1 := L.2
+  have : IsModuleTopology ℚ_[l] ↥L.1 := isModuleTopologyOfFiniteDimensional
   have hη' : Continuous fun g => (η g : ↥L.1) := continuous_induced_rng.2 hη
   obtain ⟨n, e, M, hMc, hM⟩ := UpperTheory.galois_representation_integral_lattice l ↥(GK K) ↥L.1 (V.Loc.resCoef ℚ_[l] (V.Loc.chRep η))
     (fun x => hη'.mul continuous_const)
@@ -410,8 +410,8 @@ theorem UpperTheory.weilDeligne_unramified_period :
     congr 2
     change (η g : ↥L.1) * e j = e j
     rw [hI g hg, Units.val_one, one_mul])
-  haveI := nontrivial_B (V.Loc.PP l)
-  haveI : Nonempty (Fin n) := e.index_nonempty
+  have := nontrivial_B (V.Loc.PP l)
+  have : Nonempty (Fin n) := e.index_nonempty
   let j₀ : Fin n := Classical.arbitrary _
   let c : V.Loc.Bcr l →ₗ[ℚ_[l]] Bst (V.Loc.PP l) := (CAlgHom : V.Loc.Bcr l →ₐ[ℚ_[l]] Bst (V.Loc.PP l)).toLinearMap
   have hk : ∀ (g : ↥(GK K)) (f : V.Loc.Bcr l → V.Loc.Bcr l),

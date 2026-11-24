@@ -128,7 +128,7 @@ def qf (R : Type) [CommRing R] (m : ℕ) (vec : Bool) : MvPolynomial (Fin (m + 1
   if vec then 1 else X (Fin.last m) ^ (m - 1)
 
 theorem psiM_det (R : Type) [CommRing R] (m : ℕ) : (psiM R m).det = X (Fin.last m) ^ (m + 1) := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · simp [psiM_apply, Finset.prod_const]
   · intro i j h
     have hij : i < j := OrderDual.toDual_lt_toDual.mp h

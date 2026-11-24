@@ -258,31 +258,31 @@ theorem handP₂ : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J :
     IsThetaFunO ψ J.W₀ B.L Φ₀ → Tame ψ J.W₀ B.V₀ fun Ξ => B.per ψ (handP s vL omz φ Φ₀ Ξ) G := by
   intro D ψ σ J B s vL χ χz omz homz φ G Φ₀ hφ hG hΦ
   have hψ := homz.std
-  haveI : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
-  haveI : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
+  have : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
+  have : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
   obtain ⟨-, -, i3, -, -, -⟩ := GlobalTheory.MixModel.lattice_Mx D B.L.rank J.W₀.rank
-  haveI : SecondCountableTopology (WO J.W₀ B.L) := i3
-  haveI : BorelSpace (WO J.W₀ B.L) := ⟨rfl⟩
-  haveI : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.2
+  have : SecondCountableTopology (WO J.W₀ B.L) := i3
+  have : BorelSpace (WO J.W₀ B.L) := ⟨rfl⟩
+  have : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.2
     (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol B.A _ _ B.vA.haar B.vA.fund).ne
-  haveI : IsFiniteMeasure (J.v0.μ.restrict J.v0.𝓕) := isFiniteMeasure_restrict.2
+  have : IsFiniteMeasure (J.v0.μ.restrict J.v0.𝓕) := isFiniteMeasure_restrict.2
     (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol J.W₀ _ _ J.v0.haar J.v0.fund).ne
-  haveI : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 (by rw [B.vN.unit.2.2]; exact ENNReal.one_ne_top)
-  haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) := isFiniteMeasure_restrict.2 (by rw [vL.covol.2.2]; exact ENNReal.one_ne_top)
+  have : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 (by rw [B.vN.unit.2.2]; exact ENNReal.one_ne_top)
+  have : IsFiniteMeasure (vL.μ.restrict vL.𝓕) := isFiniteMeasure_restrict.2 (by rw [vL.covol.2.2]; exact ENNReal.one_ne_top)
   let Y : Type := GA D B.A × flagN B.d × GA D J.W₀ × WO J.W₀ B.L
   let m : Measure Y := (B.vA.μ.restrict B.vA.𝓕).prod ((B.vN.ν.restrict B.vN.𝓝).prod
     ((J.v0.μ.restrict J.v0.𝓕).prod (vL.μ.restrict vL.𝓕)))
-  haveI : IsFiniteMeasure m := by dsimp only [m]; infer_instance
-  haveI : SFinite m := sfinite_of_finite m
+  have : IsFiniteMeasure m := by dsimp only [m]; infer_instance
+  have : SFinite m := sfinite_of_finite m
   let c : Y → ℂ := fun y => G (y.2.1.1 * embA B.d B.o y.1) * star (psiBes ψ B.d 1 (vecB B.o B.ζ) y.2.1.1) *
     (φ y.2.2.1 * star (omz (y.2.2.1, 1) Φ₀ y.2.2.2))
-  have hn : Continuous fun y : Y => (y.2.1.1 : GA D B.V) := continuous_subtype_val.comp (continuous_fst.comp continuous_snd)
+  have hn : Continuous fun y : Y => (y.2.1.1 : GA D B.V) := continuous_subtypeVal.comp (continuous_fst.comp continuous_snd)
   have h0 : Continuous fun y : Y => y.2.2.1 := continuous_fst.comp (continuous_snd.comp continuous_snd)
   have hv : Continuous fun y : Y => y.2.2.2 := continuous_snd.comp (continuous_snd.comp continuous_snd)
   have he : Continuous fun y : Y => B.o.emb (y.1, 1) := B.o.continuous_emb.comp (continuous_fst.prodMk continuous_const)
   have hw : Continuous fun y : Y => (B.o.resT J.W₀).symm (0, y.2.2.2) :=
     (B.o.continuous_resT_symm J.W₀).comp (continuous_const.prodMk hv)
-  haveI := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.V).2.2.2.2.1
+  have := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.V).2.2.2.2.1
   have hJ : Continuous fun p : (GA D J.W₀ × GA D B.L) × WO J.W₀ B.L => omz p.1 Φ₀ p.2 :=
     (@GlobalTheory.Unf.jointCont_all D) ψ _ _ χ χz omz homz Φ₀ hΦ
   have hc : Continuous c :=
@@ -723,10 +723,10 @@ theorem handP_law : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J 
     (∃ (C : ℝ) (a : ℕ), ∀ h h₁, ‖handP s vL omz φ Φ₀ (flFB s (s.om (1, h) Φ)) h₁‖ ≤ C * (quotHeight B.A h₁ * height B.V h) ^ a) ∧
     Continuous fun q : GA D B.V × GA D B.A => handP s vL omz φ Φ₀ (flFB s (s.om (1, q.1) Φ)) q.2 := by
   intro D ψ σ J B s vL χ χz omz homz φ Φ₀ Φ hφ hΦ₀ hΦ
-  haveI : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
-  haveI : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
+  have : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
+  have : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
   have hfin : J.v0.μ J.v0.𝓕 < ⊤ := GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol J.W₀ _ _ J.v0.haar J.v0.fund
-  haveI : IsFiniteMeasure (J.v0.μ.restrict J.v0.𝓕) := isFiniteMeasure_restrict.2 hfin.ne
+  have : IsFiniteMeasure (J.v0.μ.restrict J.v0.𝓕) := isFiniteMeasure_restrict.2 hfin.ne
   obtain ⟨K, hK⟩ : ∃ K : GA D B.V → GA D J.W₀ → GA D B.A → ℂ, K = fun h h₀ h₁ => contractT B.o J.W₀ vL.μ vL.𝓕 (s.om₀ (h₀, B.o.emb (h₁, 1)) (flFB s (s.om (1, h) Φ))) (omz (h₀, 1) Φ₀) 0 := ⟨_, rfl⟩
   have hKc : Continuous fun q : GA D B.V × GA D J.W₀ × GA D B.A => K q.1 q.2.1 q.2.2 := by
     subst hK; exact GlobalTheory.T.continuous_pairedKernel_flatMap_weilTranslate D ψ σ J B s vL χ χz omz homz Φ₀ Φ hΦ₀ hΦ
@@ -790,11 +790,11 @@ theorem handP_law : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J 
 theorem conclusion₂ : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ) (J : JacL D (σ + 1)) (B : BesL D σ) (s : StFB ψ J B), ∀ (vL : VolM D B.L.rank J.W₀.rank) (χ χz : (AE D)ˣ →* Circle) (omz : Om J.W₀ B.L), IsWeilDatumO ψ J.W₀ B.L χ χz omz → ∀ (φ : GA D J.W₀ → ℂ) (G : GA D B.V → ℂ) (Φ₀ : WO J.W₀ B.L → ℂ) (Φ : WO J.W B.V → ℂ), RapidDec J.W₀ φ → RapidDec B.V G → IsThetaFunO ψ J.W₀ B.L Φ₀ → IsThetaFunO ψ J.W B.V Φ → (∀ h, AbsConv B.vA.μ B.vA.𝓕 B.vN.ν B.vN.𝓝 (besFun ψ 1 B.d B.o B.ζ (handP s vL omz φ Φ₀ (flFB s (s.om (1, h) Φ))) (rTrans h G))) ∧ Continuous fun h => B.per ψ (handP s vL omz φ Φ₀ (flFB s (s.om (1, h) Φ))) (rTrans h G) := by
   intro D ψ σ J B s vL χ χz omz homz φ G Φ₀ Φ hφ hG hΦ₀ hΦ
   have hψ := homz.std
-  haveI : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
-  haveI : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
-  haveI : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.2
+  have : ∀ V : HSp D, SecondCountableTopology (GA D V) := fun V => (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V).2.1
+  have : ∀ V : HSp D, BorelSpace (GA D V) := fun V => ⟨rfl⟩
+  have : IsFiniteMeasure (B.vA.μ.restrict B.vA.𝓕) := isFiniteMeasure_restrict.2
     (GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol B.A _ _ B.vA.haar B.vA.fund).ne
-  haveI : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 (by rw [B.vN.unit.2.2]; exact ENNReal.one_ne_top)
+  have : IsFiniteMeasure (B.vN.ν.restrict B.vN.𝓝) := isFiniteMeasure_restrict.2 (by rw [B.vN.unit.2.2]; exact ENNReal.one_ne_top)
   obtain ⟨⟨C, a, hP⟩, hPc⟩ := GlobalTheory.JacMean.handP_law D ψ σ J B s vL χ χz omz homz φ Φ₀ Φ hφ hΦ₀ hΦ
   set P : GA D B.V → GA D B.A → ℂ := fun h h₁ => handP s vL omz φ Φ₀ (flFB s (s.om (1, h) Φ)) h₁ with hPdef
   obtain ⟨C1, a1, h1⟩ := GlobalTheory.T.unitaryQuotientHeight_comparable_wittDecomposition D B.V B.V₀ σ B.d
@@ -838,7 +838,7 @@ theorem conclusion₂ : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ : ℕ)
             (pow_pos ht _).le)) (by positivity)) (mul_nonneg (abs_nonneg _) (pow_pos ht a).le)
   have hcont : Continuous fun q : GA D B.V × (GA D B.A × flagN B.d) => besFun ψ 1 B.d B.o B.ζ (P q.1) (rTrans q.1 G) q.2.1 q.2.2 := by
     have hn : Continuous fun q : GA D B.V × (GA D B.A × flagN B.d) => (q.2.2 : GA D B.V) :=
-      continuous_subtype_val.comp (continuous_snd.comp continuous_snd)
+      continuous_subtypeVal.comp (continuous_snd.comp continuous_snd)
     exact ((hPc.comp (continuous_fst.prodMk (continuous_fst.comp continuous_snd))).mul
       (hG.continuous.comp ((hn.mul (B.d.continuous_embed.comp (B.o.continuous_emb.comp ((continuous_fst.comp continuous_snd).prodMk continuous_const)))).mul continuous_fst))).mul
       (continuous_star.comp ((GlobalTheory.CharLaws.continuous_psiBes ψ B.d hψ.1.1 1 _).comp hn))
@@ -922,7 +922,7 @@ theorem GlobalTheory.th_isTh_lev : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
   beta_reduce at hcen hleft
   obtain ⟨x₁, hx₁, -, -, hlast, hq⟩ := GlobalTheory.T.besselBasePoint_isUnfoldingBasePoint_spec D σ B
   have e : x₁ = x₀ := rat_injective (hx₁.trans hx₀.symm)
-  refine ⟨hcont.comp continuous_subtype_val, fun γ hγQ hγN n hn => hleft γ hγN hγQ n hn, fun c n hn => ?_, ?_⟩
+  refine ⟨hcont.comp continuous_subtypeVal, fun γ hγQ hγN n hn => hleft γ hγN hγQ n hn, fun c n hn => ?_, ?_⟩
   · rw [hcen c n hn, hx₀, hq]
   intro j a ha1 ha0 hg
   have hl : a (Fin.last σ) = 0 := hlast a (by rw [e]; exact hg)
@@ -936,7 +936,7 @@ theorem GlobalTheory.th_isTh_lev : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
   obtain ⟨t, ht⟩ := exists_psiE_ne_one hψ
   let A : Fin (σ + 1) → AE D := GlobalTheory.IndefiniteRowSideFullHecke.TransvectionAction.ratVec a
   let Bv : Fin (σ + 1) → AE D := fun k => if k = j' then cA D t else 0
-  have hB0 : ∀ k, k ≠ j' → Bv k = 0 := fun k hk => if_neg hk
+  have hB0 : ∀ k, k ≠ j' → Bv k = 0 := fun k hk => ite_eq_right hk
   have hA0 : ∀ i, j < i → A i = 0 := fun i hi => by
     show incA D (a i) = 0
     rw [ha0 i hi, map_zero]
@@ -960,7 +960,7 @@ theorem GlobalTheory.th_isTh_lev : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
   have hup : upSum (tvN A Bv) = t := by
     unfold upSum
     rw [Finset.sum_eq_single j, Finset.sum_eq_single j']
-    · rw [if_pos (by simp [j']), tvN_apply, show Bv j' = cA D t from if_pos rfl, cA_cA']
+    · rw [ite_eq_left (by simp [j']), tvN_apply, show Bv j' = cA D t from ite_eq_left rfl, cA_cA']
       show incA D (a j) * t = t
       rw [ha1, map_one, one_mul]
     · intro k _ hk
@@ -969,7 +969,7 @@ theorem GlobalTheory.th_isTh_lev : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
     · intro i _ hi
       refine Finset.sum_eq_zero fun k _ => ?_
       by_cases hk : k = j'
-      · rw [if_neg]
+      · rw [ite_eq_right]
         intro h
         apply hi
         rw [hk] at h
@@ -988,7 +988,7 @@ theorem GlobalTheory.th_isTh_lev : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
     have h1 := congrFun (congrFun (J.d.levi_jX (tvGL A Bv hAB)) k) i.1
     simp only [Matrix.mul_apply, Matrix.submatrix_apply, id] at h1 ⊢
     rw [h1]
-    simp only [hcol, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hcol, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   · intro h1
     apply ht
     rw [← star_star (psiE ψ t), h1, star_one]
@@ -1103,13 +1103,13 @@ theorem heis_baseL : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D 
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D (σ + 1) S.rank
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := lattice_Mx D σ S.rank
   obtain ⟨k1, k2, k3, k4, k5, -⟩ := lattice_Mx D B.L.rank S.rank
-  haveI : BorelSpace (Mx D (σ + 1) S.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D σ S.rank) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D B.L.rank S.rank) := ⟨rfl⟩
-  haveI : Countable (ratMx D (σ + 1) S.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := vT.covol.1
-  haveI := vL.covol.1
-  haveI := vB.covol.1
+  have : BorelSpace (Mx D (σ + 1) S.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D σ S.rank) := ⟨rfl⟩
+  have : BorelSpace (Mx D B.L.rank S.rank) := ⟨rfl⟩
+  have : Countable (ratMx D (σ + 1) S.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have := vT.covol.1
+  have := vL.covol.1
+  have := vB.covol.1
 
   have hx : ∀ b : Mx D (σ + 1) S.rank, xLast B.d (vecB B.o B.ζ) ⬝ b = B.d.incX S (e b).1 + B.d.inc0 S ((B.o.resT S).symm (0, (e b).2)) := fun b => mixedModelBasePointWithLast_mul B S b
 
@@ -1212,11 +1212,11 @@ theorem heis_baseL : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D 
         congr 1
         funext v
         rw [hmix, ← integral_mul_const]
-  · have hψe : ∀ a, ‖ψ a‖ₑ = 1 := fun a => by rw [← ofReal_norm_eq_enorm, hψn, ENNReal.ofReal_one]
+  · have hψe : ∀ a, ‖ψ a‖ₑ = 1 := fun a => by rw [← ofReal_norm, hψn, ENNReal.ofReal_one]
     set K : Mx D σ S.rank × Mx D B.L.rank S.rank → ENNReal :=
       fun p => ‖f (B.d.incX S p.1 + B.d.inc0 S ((B.o.resT S).symm (0, p.2)))‖ₑ with hK
     have hKc : Continuous K := by
-      refine (hf.2.comp ?_).enorm
+      refine (hf.2.comp ?_).eNorm
       simp only [HypDec.incX_apply, HypDec.wittDecomp_inclAnisotropicHom_apply, OrthDec.resT_symm_apply]
       exact (continuous_const.matrix_mul continuous_fst).add (continuous_const.matrix_mul
         (continuous_const.add (continuous_const.matrix_mul continuous_snd)))
@@ -1224,13 +1224,13 @@ theorem heis_baseL : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D 
     have hper' : ∀ (γ : ratMx D (σ + 1) S.rank) (b : Mx D (σ + 1) S.rank),
         ‖f (xLast B.d (vecB B.o B.ζ) ⬝ (γ +ᵥ b))‖ₑ = ‖f (xLast B.d (vecB B.o B.ζ) ⬝ b)‖ₑ := by
       intro γ b
-      rw [AddSubgroup.vadd_def, vadd_eq_add, hfx γ γ.2 b, enorm_mul, hψe, one_mul]
+      rw [AddSubgroup.vadd_def, vadd_eq_add, hfx γ γ.2 b, eNorm_mul, hψe, one_mul]
     have hF'' : IsAddFundamentalDomain (ratMx D (σ + 1) S.rank) (e ⁻¹' s) vB.μ := hμeq ▸ hF'
     calc ∫⁻ v in vL.𝓕, ‖B.d.mixT S ψ vT.μ vT.𝓕 f 0 ((B.o.resT S).symm (0, v))‖ₑ ∂vL.μ
         ≤ ∫⁻ v in vL.𝓕, ∫⁻ ξ in vT.𝓕, K (ξ, v) ∂vT.μ ∂vL.μ := by
           refine lintegral_mono fun v => ?_
           rw [hmix]
-          exact enorm_integral_le_lintegral_enorm _
+          exact eNorm_integral_le_lintegral_eNorm _
       _ = ∫⁻ p in s, K p ∂P := by
         rw [hP, ← Measure.prod_restrict, lintegral_prod_symm _ hKc.measurable.aemeasurable]
       _ = ∫⁻ b in e ⁻¹' s, K (e b) ∂(P.map e.symm) :=
@@ -1315,7 +1315,7 @@ theorem fl_base_eq_contract : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ 
       evalAt ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 Ψ (xLast B.d (vecB B.o B.ζ) ⬝ p.1.1.1) 0 ((B.o.resT J.W₀).symm (0, p.2)) := by
     have hmc := (GlobalTheory.MixCont.mixed_coords_continuous D ψ J.W J.W₀ B.V B.V₀ (σ + 1) σ J.d B.d s.vS s.vT s.χV s.χW s.om s.weil Ψ hΨ).2
     have hc : Continuous fun p : UX D (σ + 1) × WO J.W₀ B.L => (p.1.1.1 : Mx D (σ + 1) (σ + 1)) :=
-      (Units.continuous_val.comp continuous_subtype_val).comp continuous_fst
+      (Units.continuous_val.comp continuous_subtypeVal).comp continuous_fst
     have hin : Continuous fun p : UX D (σ + 1) × WO J.W₀ B.L =>
         ((1 : GA D J.W × GA D B.V), xLast B.d (vecB B.o B.ζ) ⬝ p.1.1.1, (0 : Mx D J.W₀.rank σ), (B.o.resT J.W₀).symm (0, p.2)) :=
       continuous_const.prodMk ((continuous_const.matrix_mul hc).prodMk (continuous_const.prodMk
@@ -1326,7 +1326,7 @@ theorem fl_base_eq_contract : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ 
       flatFun ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 (xLast B.d (vecB B.o B.ζ)) 0 Ψ ((B.o.resT J.W₀).symm (0, v)) u * star (y v)) :=
     ((continuous_star.comp ((continuous_psiUni hchar.1 (σ + 1)).comp continuous_fst)).mul hE).mul
       (continuous_star.comp (hy.2.comp continuous_snd))
-  haveI : IsFiniteMeasure (vL.μ.restrict vL.𝓕) := isFiniteMeasure_restrict.2 (by rw [vL.covol.2.2]; simp)
+  have : IsFiniteMeasure (vL.μ.restrict vL.𝓕) := isFiniteMeasure_restrict.2 (by rw [vL.covol.2.2]; simp)
   have hswap := integral_swap_of_majorant s.vU.ν (vL.μ.restrict vL.𝓕) (fun u v =>
       flatFun ψ J.d B.d s.vS.μ s.vS.𝓕 s.vT.μ s.vT.𝓕 (xLast B.d (vecB B.o B.ζ)) 0 Ψ ((B.o.resT J.W₀).symm (0, v)) u * star (y v))
     hK.stronglyMeasurable M hMi My hbound
@@ -1353,14 +1353,14 @@ theorem fl_base_eq_contract : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (σ 
   unfold fl
   calc ‖∫ u, ∫ b in vb.𝓕, flFun ψ J.d B.V s.vS (fun n => star (jacS ψ J.d B.L (zEll B.L (σ + 1) B.ζ) n y 0) * star (psiFlag ψ J.d n)) (xLast B.d (vecB B.o B.ζ)) Ψ u b ∂vb.μ ∂s.vU.ν‖ₑ
       ≤ ∫⁻ u, ‖∫ b in vb.𝓕, flFun ψ J.d B.V s.vS (fun n => star (jacS ψ J.d B.L (zEll B.L (σ + 1) B.ζ) n y 0) * star (psiFlag ψ J.d n)) (xLast B.d (vecB B.o B.ζ)) Ψ u b ∂vb.μ‖ₑ ∂s.vU.ν :=
-        enorm_integral_le_lintegral_enorm _
+        eNorm_integral_le_lintegral_eNorm _
     _ ≤ ∫⁻ u, ∫⁻ b in vb.𝓕, ‖flFun ψ J.d B.V s.vS (fun n => star (jacS ψ J.d B.L (zEll B.L (σ + 1) B.ζ) n y 0) * star (psiFlag ψ J.d n)) (xLast B.d (vecB B.o B.ζ)) Ψ u b‖ₑ ∂vb.μ ∂s.vU.ν :=
-        lintegral_mono fun u => enorm_integral_le_lintegral_enorm _
+        lintegral_mono fun u => eNorm_integral_le_lintegral_eNorm _
     _ ≤ ∫⁻ u, ∫⁻ b in vb.𝓕, ENNReal.ofReal Mb *
           ‖J.d.mixS B.V ψ s.vS.μ s.vS.𝓕 Ψ (xLast B.d (vecB B.o B.ζ) ⬝ u.1.1) (xLast B.d (vecB B.o B.ζ) ⬝ b)‖ₑ ∂vb.μ ∂s.vU.ν := by
         refine lintegral_mono fun u => lintegral_mono fun b => ?_
         simp only [flFun]
-        rw [enorm_mul]
+        rw [eNorm_mul]
         gcongr
         · rw [hlaw b u.1 u.2, ← ofReal_norm, norm_mul, norm_star, norm_star, hnorm u, one_mul]
           exact ENNReal.ofReal_le_ofReal (hMb' _)
@@ -1471,7 +1471,7 @@ theorem fl_const_mul {V V₀ W : HSp D} {ρ : ℕ} (d : HypDec V V₀ ρ) (v : V
 theorem integrable_rapid {V : HSp D} (v : GlobalTheory.Unf.Vol V) {φ : GA D V → ℂ} (hφ : RapidDec V φ) (N : ℕ) :
     Integrable (fun y => ‖φ y‖ * quotHeight V y ^ N) (v.μ.restrict v.𝓕) := by
   have hfin : v.μ v.𝓕 < ⊤ := GlobalTheory.CuspDecay.measure_lt_top GlobalTheory.Mem.VolFin.finVol V v.μ _ v.haar v.fund
-  haveI : IsFiniteMeasure (v.μ.restrict v.𝓕) := isFiniteMeasure_restrict.2 hfin.ne
+  have : IsFiniteMeasure (v.μ.restrict v.𝓕) := isFiniteMeasure_restrict.2 hfin.ne
   obtain ⟨C, hC⟩ := hφ.decay N
   refine Integrable.of_bound (hφ.continuous.norm.mul ((continuous_quotHeight V).pow N)).aestronglyMeasurable C
     (.of_forall fun y => ?_)
@@ -1512,12 +1512,12 @@ theorem gen_is (s : StFB ψ J B) (vb : VolM D (σ + 1) J.W₀.rank) {x₀ : Matr
       y (ptS J.d B.L (zEll B.L (σ + 1) B.ζ) n)) * star (psiFlag ψ J.d n) := fun y n => by
     rw [thJ, GlobalTheory.Unf.FB.ThLaws.jacS_zero_apply]
   obtain ⟨b1, b2, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D J.W₀
-  haveI := J.v0.haar
+  have := J.v0.haar
   refine ⟨s.weil, hb, (inferInstance : SFinite (J.v0.μ.restrict J.v0.𝓕)), continuous_id,
     fun y => isTh_const_mul (hth _ (quasi_om hz h₀ y)) _, ?_, ?_⟩
   · change Continuous fun p : GA D J.W₀ × flagN J.d => φ p.1 * thJ ψ J B (omz (p.1, 1) Φ₀) p.2.1
     simp only [hval]
-    have hn : Continuous fun p : GA D J.W₀ × flagN J.d => p.2.1 := continuous_subtype_val.comp continuous_snd
+    have hn : Continuous fun p : GA D J.W₀ × flagN J.d => p.2.1 := continuous_subtypeVal.comp continuous_snd
     have hj := (GlobalTheory.T.weilDatum_theta_jointlyContinuous D ψ _ _ χ χz omz hz Φ₀ h₀).comp
       ((continuous_fst.prodMk (continuous_const (y := (1 : GA D B.L)))).prodMk
         ((GlobalTheory.Unf.FB.ThLaws.continuous_ptS J.d B.L (zEll B.L (σ + 1) B.ζ)).comp hn))
@@ -1611,8 +1611,8 @@ theorem unf_measurable (s : StFB ψ J B) (vL : VolM D B.L.rank J.W₀.rank)
   obtain ⟨b1, b2, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D J.W₀
   obtain ⟨vU⟩ := (GlobalTheory.T.unfoldingLevelsAndSteps_haarMeasures_exist D).2.2.2 B.L.rank
   obtain ⟨sL, -⟩ := GlobalTheory.Unf.sFinite_vol D B.L.rank J.W₀.rank vL vU
-  haveI := J.v0.haar
-  haveI : BorelSpace (Mx D B.L.rank J.W₀.rank) := ⟨rfl⟩
+  have := J.v0.haar
+  have : BorelSpace (Mx D B.L.rank J.W₀.rank) := ⟨rfl⟩
   have hfl := GlobalTheory.T.continuous_flatMap_weilRepresentation_joint D ψ J.W J.W₀ B.V B.V₀ (σ + 1) σ J.d B.d s.vS s.vT s.χV s.χW s.om s.weil s.vU x₀ hli Φ hΦ
   rw [hx] at hfl
   let f : (GA D B.V × GA D J.W₀) × Mx D B.L.rank J.W₀.rank →
@@ -1629,11 +1629,11 @@ theorem unf_measurable (s : StFB ψ J B) (vL : VolM D B.L.rank J.W₀.rank)
   let K : (GA D B.V × GA D J.W₀) × Mx D B.L.rank J.W₀.rank → ℂ := fun q =>
     flFB s (s.om (J.d.emb0 q.1.2, q.1.1) Φ) ((B.o.resT J.W₀).symm (0, q.2)) * star (omz (q.1.2, 1) Φ₀ q.2)
   have hK : Continuous K := h1.mul h2
-  haveI : SecondCountableTopology (GA D B.V × GA D J.W₀) := inferInstance
-  haveI : OpensMeasurableSpace (GA D B.V × GA D J.W₀) := Prod.opensMeasurableSpace
-  haveI : SecondCountableTopologyEither (GA D B.V × GA D J.W₀) (Mx D B.L.rank J.W₀.rank) :=
+  have : SecondCountableTopology (GA D B.V × GA D J.W₀) := inferInstance
+  have : OpensMeasurableSpace (GA D B.V × GA D J.W₀) := Prod.opensMeasurableSpace
+  have : SecondCountableTopologyEither (GA D B.V × GA D J.W₀) (Mx D B.L.rank J.W₀.rank) :=
     secondCountableTopologyEither_of_left _ _
-  haveI : OpensMeasurableSpace ((GA D B.V × GA D J.W₀) × Mx D B.L.rank J.W₀.rank) := Prod.opensMeasurableSpace
+  have : OpensMeasurableSpace ((GA D B.V × GA D J.W₀) × Mx D B.L.rank J.W₀.rank) := Prod.opensMeasurableSpace
   have m1 : StronglyMeasurable fun p : GA D B.V × GA D J.W₀ => ∫ v in vL.𝓕, K (p, v) ∂vL.μ :=
     hK.measurable.stronglyMeasurable.integral_prod_right'
   have m2 : StronglyMeasurable fun p : GA D B.V × GA D J.W₀ => φ p.2 * ∫ v in vL.𝓕, K (p, v) ∂vL.μ :=
@@ -1784,12 +1784,12 @@ theorem pair_self_ne_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ
     (v : VolM D T.rank S.rank) {f₀ : WO S T → ℂ} (hf : IsThetaFunO ψ S T f₀) (hne : f₀ ≠ 0) :
     thPair v.μ v.𝓕 f₀ f₀ ≠ 0 := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D T.rank S.rank
-  haveI : BorelSpace (Mx D T.rank S.rank) := ⟨rfl⟩
-  haveI : DiscreteTopology (ratMx D T.rank S.rank) := i5
-  haveI : Countable (ratMx D T.rank S.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : BorelSpace (Mx D T.rank S.rank) := ⟨rfl⟩
+  have : DiscreteTopology (ratMx D T.rank S.rank) := i5
+  have : Countable (ratMx D T.rank S.rank) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨hμ, hF, h1⟩ := v.covol
-  haveI := hμ
-  haveI : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
+  have := hμ
+  have : IsFiniteMeasure (v.μ.restrict v.𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
   obtain ⟨C, hC⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ hf
   have e : ∀ w, f₀ w * star (f₀ w) = ((‖f₀ w‖ ^ 2 : ℝ) : ℂ) := fun w => by
@@ -1809,7 +1809,7 @@ theorem pair_self_ne_zero {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ
     exact_mod_cast h0
   have h3 : ∫⁻ w in v.𝓕, ‖f₀ w‖ₑ ^ 2 ∂v.μ = 0 := by
     have en : ∀ z : ℂ, ‖z‖ₑ ^ 2 = ENNReal.ofReal (‖z‖ ^ 2) := fun z => by
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     simp_rw [en]
     rw [← ofReal_integral_eq_lintegral_ofReal hint (Filter.Eventually.of_forall fun w => by positivity), h2,
       ENNReal.ofReal_zero]

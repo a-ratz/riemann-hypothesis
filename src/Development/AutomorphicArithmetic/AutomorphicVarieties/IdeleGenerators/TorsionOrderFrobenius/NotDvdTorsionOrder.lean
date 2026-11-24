@@ -93,7 +93,7 @@ private theorem all_torsion (K : Type) [Field K] [NumberField K] [_root_.NumberF
     have := IsTotallyComplex.finrank K
     rw [InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces, IsTotallyComplex.nrRealPlaces_eq_zero]
     omega
-  haveI : Subsingleton (InfinitePlace K) := Fintype.card_le_one_iff_subsingleton.1 hc.le
+  have : Subsingleton (InfinitePlace K) := Fintype.card_le_one_iff_subsingleton.1 hc.le
   rw [← Units.dirichletUnitTheorem.logEmbedding_eq_zero_iff]
   funext w
   exact absurd (Subsingleton.elim _ _) w.2
@@ -101,7 +101,7 @@ private theorem all_torsion (K : Type) [Field K] [NumberField K] [_root_.NumberF
 private theorem not_dvd_torsionOrder (K : Type) [Field K] [NumberField K] (l : ℕ) (hl : l.Prime) (hl2 : l ≠ 2)
     (hd : ¬ (l : ℤ) ∣ discr K) : ¬ l ∣ Units.torsionOrder K := by
   intro h
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   obtain ⟨x, hx⟩ := exists_prime_orderOf_dvd_card' (G := Units.torsion K) l h
   have h1 : IsPrimitiveRoot x l := hx ▸ IsPrimitiveRoot.orderOf x
   have h2 : IsPrimitiveRoot (algebraMap (𝓞 K) K ((x : (𝓞 K)ˣ) : 𝓞 K)) l :=
@@ -117,8 +117,8 @@ private theorem not_dvd_torsionOrder (K : Type) [Field K] [NumberField K] (l : �
 private theorem unit_eq (K : Type) [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K]
     (h2 : Module.finrank ℚ K = 2) {N : ℕ} (hN : 3 ≤ N) (u : (𝓞 K)ˣ) (n : ℕ)
     (h : (N : 𝓞 K) ∣ (u : 𝓞 K) - n) : u = 1 ∨ u = -1 := by
-  haveI : Algebra.IsQuadraticExtension ℚ K := { finrank_eq_two' := h2 }
-  haveI : IsCMField K := IsCMField.ofCMExtension ℚ K
+  have : Algebra.IsQuadraticExtension ℚ K := { finrank_eq_two' := h2 }
+  have : IsCMField K := IsCMField.ofCMExtension ℚ K
   have hu := all_torsion K h2 u
   obtain ⟨y, hy⟩ := h
   have hyK : ((u : 𝓞 K) : K) - n = N * (y : K) := by
@@ -175,11 +175,11 @@ theorem UpperTheory.V.Sd.Tw.fin :
           ∀ (x : (𝓞 K ⧸ Ideal.span {(N : 𝓞 K)})ˣ) (n : ℕ) (h : n.Coprime N),
             (x : 𝓞 K ⧸ Ideal.span {(N : 𝓞 K)}) = (n : 𝓞 K ⧸ Ideal.span {(N : 𝓞 K)}) → e x = χ (ZMod.unitOfCoprime n h) := by
   intro K _ _ _ h2 l hl hl2 hd N hN χ hχ hχ1 τ
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   have hN0 : (N : 𝓞 K ⧸ Ideal.span {(N : 𝓞 K)}) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk (Ideal.span {(N : 𝓞 K)})), Ideal.Quotient.eq_zero_iff_mem]
     exact Ideal.mem_span_singleton_self _
-  haveI := ringChar.charP (𝓞 K ⧸ Ideal.span {(N : 𝓞 K)})
+  have := ringChar.charP (𝓞 K ⧸ Ideal.span {(N : 𝓞 K)})
   let j : ZMod N →+* 𝓞 K ⧸ Ideal.span {(N : 𝓞 K)} := ZMod.castHom (ringChar.dvd hN0) _
   have hj : Function.Injective j := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
@@ -213,7 +213,7 @@ theorem UpperTheory.V.Sd.Tw.fin :
         have ht : t (-1) = -1 := Units.ext (by simp [t])
         rw [this, hχ1, ht]
         simp)
-  haveI : Finite (𝓞 K ⧸ Ideal.span {(N : 𝓞 K)}) :=
+  have : Finite (𝓞 K ⧸ Ideal.span {(N : 𝓞 K)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by
       rw [Ne, Ideal.span_singleton_eq_bot]
       exact Nat.cast_ne_zero.2 (by omega))

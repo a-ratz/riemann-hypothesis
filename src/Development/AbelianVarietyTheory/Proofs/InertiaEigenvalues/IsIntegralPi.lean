@@ -55,7 +55,7 @@ theorem isIntegral_pi {O : Type} [CommRing O] {ι : Type} [Finite ι] {R : ι �
     [∀ i, CommRing (R i)] [∀ i, Algebra O (R i)] (x : ∀ i, R i)
     (hx : ∀ i, IsIntegral O (x i)) : IsIntegral O x := by
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   choose p hpm hp using hx
   refine ⟨∏ i, p i, monic_prod_of_monic _ _ (fun i _ => hpm i), ?_⟩
   rw [← aeval_def]

@@ -197,9 +197,9 @@ theorem bijective_ofSec_top : Function.Bijective (ofSec p (B := B) ⊤) :=
 theorem finrank_top {E : Type} [Field E] (p : Y ⟶ Sp E) (B : LB Y) :
     letI := algebraΓOfHom p
     Module.finrank E (H0 p B ⊤) = lbH0 E B := by
-  letI := algebraΓOfHom p
-  letI : Module E B.Sec := Module.compHom _ (algebraMap E Γ(Y, ⊤))
-  haveI : IsScalarTower E Γ(Y, ⊤) B.Sec := IsScalarTower.of_compHom _ _ _
+  let := algebraΓOfHom p
+  let : Module E B.Sec := Module.compHom _ (algebraMap E Γ(Y, ⊤))
+  have : IsScalarTower E Γ(Y, ⊤) B.Sec := IsScalarTower.of_compHom _ _ _
   have e (c : E) : algebraMap E Γ(Y, ⊤) c = algX p ⊤ c := by
     change p.appTop _ = _
     rw [Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE]

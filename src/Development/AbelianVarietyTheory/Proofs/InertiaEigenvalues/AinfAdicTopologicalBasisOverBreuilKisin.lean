@@ -156,7 +156,7 @@ theorem Approx.eq_zero (hH : IsHausdorff I S)
     · rw [Finsupp.onFinset_sum _ (fun j => by simp)]
       have e : ∑ j ∈ F, s (if j ∈ F then h j else 0) * b j = -(0 - ∑ j ∈ F, s (h j) * b j) := by
         rw [zero_sub, neg_neg]
-        exact Finset.sum_congr rfl fun j hj => by rw [if_pos hj]
+        exact Finset.sum_congr rfl fun j hj => by rw [ite_eq_left hj]
       rw [e]
       exact neg_mem (Ideal.map_mono (Ideal.pow_le_pow_right (le_max_right n m)) hs)
   · exact Ideal.pow_le_pow_right (le_max_left n m) (hF i hi)
@@ -367,11 +367,11 @@ theorem main {R A : Type} [CommRing R] [CommRing A] (f : R →+* A) (m : Ideal R
       ∀ a : ι →₀ R, (Finsupp.sum a fun (i : ι) (y : R) ↦ (f : R → A) y * b i) ∈ Ideal.map f m →
         ∀ i : ι, (a : ι → R) i ∈ m := by
   classical
-  letI : Algebra R A := f.toAlgebra
-  letI : Field (R ⧸ m) := Ideal.Quotient.field m
+  let : Algebra R A := f.toAlgebra
+  let : Field (R ⧸ m) := Ideal.Quotient.field m
   have hf : algebraMap R A = f := rfl
   rw [← hf] at hne ⊢
-  haveI : Nontrivial (A ⧸ Ideal.map (algebraMap R A) m) := Ideal.Quotient.nontrivial_iff.mpr hne
+  have : Nontrivial (A ⧸ Ideal.map (algebraMap R A) m) := Ideal.Quotient.nontrivial_iff.mpr hne
   have hli : LinearIndepOn (R ⧸ m) id ({1} : Set (A ⧸ Ideal.map (algebraMap R A) m)) :=
     (linearIndepOn_singleton_iff (R ⧸ m)).mpr one_ne_zero
   let v := Basis.extend hli
@@ -471,9 +471,9 @@ theorem isMaximal_span_l_sup_span_X (l a : ℕ) [Fact l.Prime] [NeZero a] :
 theorem BK.map_span_l_sup_span_X_ne_top {l : ℕ} [Fact l.Prime] {K : FinExt l} (bk : BK K) :
     (Ideal.span {(l : bk.S)} ⊔ Ideal.span {(X : bk.S)}).map bk.ev ≠ ⊤ := by
   let M : Ideal (Ainf l) := (IsLocalRing.maximalIdeal (OC l)).comap (Per.θ l)
-  haveI hM : M.IsPrime := Ideal.comap_isPrime _ _
+  have hM : M.IsPrime := Ideal.comap_isPrime _ _
   let N : Ideal bk.S := M.comap bk.ev
-  haveI hN : N.IsPrime := Ideal.comap_isPrime _ _
+  have hN : N.IsPrime := Ideal.comap_isPrime _ _
   have hl : (l : bk.S) ∈ N := by
     change Per.θ l (bk.ev l) ∈ IsLocalRing.maximalIdeal (OC l)
     rw [map_natCast, map_natCast]
@@ -511,7 +511,7 @@ theorem BK.exists_residue_basis : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (b
         (Ideal.span {(l : bk.S)} ⊔ Ideal.span {(X : bk.S)}).map bk.ev →
         ∀ i, a i ∈ Ideal.span {(l : bk.S)} ⊔ Ideal.span {(X : bk.S)} := by
   intro l _ K bk
-  haveI := isMaximal_span_l_sup_span_X l bk.a
+  have := isMaximal_span_l_sup_span_X l bk.a
   exact exists_residue_basis_of_isMaximal bk.ev _ bk.map_span_l_sup_span_X_ne_top
 
 end GlobalTheory.BSP

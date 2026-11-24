@@ -82,7 +82,7 @@ theorem trace_eq_finrank_mul_sum (E : Type) [Field E] [NumberField E] (X : Type)
     intro x
     rw [Module.finrank_eq_zero_iff] at h0
     obtain ⟨c, hc, hx⟩ := h0 (Submodule.Quotient.mk x)
-    obtain ⟨n, hn, b, hb⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_nonzero_dvd
+    obtain ⟨n, hn, b, hb⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := ℤ) c).exists_ne_zero_dvd
       (mem_nonZeroDivisors_of_ne_zero hc)
     refine ⟨n, hn, ?_⟩
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at hx

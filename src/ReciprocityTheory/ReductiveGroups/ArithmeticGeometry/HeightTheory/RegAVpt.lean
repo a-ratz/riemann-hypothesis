@@ -127,7 +127,7 @@ private theorem isLocalization_fractionRing_of_isIntegral {O T : Type} [CommRing
     dsimp only at hab
     have hb0 : (b : T) ≠ 0 := nonZeroDivisors.ne_zero b.2
     have hc : (Ideal.span {(b : T)}).comap (algebraMap O T) ≠ ⊥ := by
-      exact Ideal.comap_ne_bot_of_integral_mem hb0 (Ideal.mem_span_singleton_self (b : T))
+      exact Ideal.under_ne_bot_of_integral_mem hb0 (Ideal.mem_span_singleton_self (b : T))
         (Algebra.IsIntegral.isIntegral (b : T))
     obtain ⟨c, hcmem, hc0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hc
     rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at hcmem
@@ -144,28 +144,28 @@ private theorem exists_dedekind_embedding_of_finite {O T : Type} [CommRing O] [I
     ∃ (C : Type) (_ : CommRing C) (_ : IsDomain C) (_ : IsDedekindDomain C) (_ : Algebra O C)
       (_ : Module.Finite O C) (ψ : T →ₐ[O] C), Function.Injective ψ := by
   classical
-  haveI : NoZeroSMulDivisors O (FractionRing T) := by
+  have : NoZeroSMulDivisors O (FractionRing T) := by
     have hi : Function.Injective (algebraMap O (FractionRing T)) := by
       rw [IsScalarTower.algebraMap_eq O T (FractionRing T)]
       exact (IsFractionRing.injective T (FractionRing T)).comp hinj
     exact ⟨fun {c x} h => by
       rw [Algebra.smul_def, mul_eq_zero] at h
       exact h.imp_left (fun h' => hi (h'.trans (map_zero _).symm))⟩
-  letI : Algebra (FractionRing O) (FractionRing T) := FractionRing.liftAlgebra O (FractionRing T)
-  haveI : IsScalarTower O (FractionRing O) (FractionRing T) :=
+  let : Algebra (FractionRing O) (FractionRing T) := FractionRing.liftAlgebra O (FractionRing T)
+  have : IsScalarTower O (FractionRing O) (FractionRing T) :=
     FractionRing.isScalarTower_liftAlgebra O (FractionRing T)
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid T (nonZeroDivisors O)) (FractionRing T) :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid T (nonZeroDivisors O)) (FractionRing T) :=
     isLocalization_fractionRing_of_isIntegral hinj
-  haveI : FiniteDimensional (FractionRing O) (FractionRing T) :=
+  have : FiniteDimensional (FractionRing O) (FractionRing T) :=
     Module.Finite.of_isLocalization O T (Rₚ := FractionRing O) (Sₚ := FractionRing T)
       (nonZeroDivisors O)
-  haveI : CharZero (FractionRing O) := by
+  have : CharZero (FractionRing O) := by
     infer_instance
-  haveI : Algebra.IsSeparable (FractionRing O) (FractionRing T) := by
+  have : Algebra.IsSeparable (FractionRing O) (FractionRing T) := by
     infer_instance
-  haveI : IsDedekindDomain (integralClosure O (FractionRing T)) := by
+  have : IsDedekindDomain (integralClosure O (FractionRing T)) := by
     infer_instance
-  haveI : Module.Finite O (integralClosure O (FractionRing T)) := by
+  have : Module.Finite O (integralClosure O (FractionRing T)) := by
     exact IsIntegralClosure.finite O (FractionRing O) (FractionRing T)
       (integralClosure O (FractionRing T))
   refine ⟨integralClosure O (FractionRing T), inferInstance, inferInstance, inferInstance,
@@ -187,7 +187,7 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
   have hϖm : ϖ ∈ maximalIdeal O := irreducible_mem_maximalIdeal hϖ
   have hϖ0 : algebraMap O C ϖ ≠ 0 := fun h => hϖ.ne_zero (hinj (h.trans (map_zero _).symm))
   obtain ⟨N, hNmax⟩ := Ideal.exists_maximal C
-  haveI := hNmax
+  have := hNmax
   have hϖN : algebraMap O C ϖ ∈ N := by
     have hc : (N.comap (algebraMap O C)).IsMaximal := by
       exact Ideal.isMaximal_under_of_isIntegral_of_isMaximal N
@@ -199,7 +199,7 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
     exact (Ideal.IsPrime.isMaximal hP hP0).eq_of_le hNmax.ne_top hPN
   obtain ⟨s, hsN, hs⟩ := ReciprocityTheory.ChartRestriction.G.T0.PrimeAvoidanceFibre.avoid N ⊥ (algebraMap O C ϖ) hch
   have hs0 : s ≠ 0 := fun h => hsN (h ▸ N.zero_mem)
-  haveI : Algebra.FiniteType O C := by
+  have : Algebra.FiniteType O C := by
     infer_instance
   obtain ⟨hVd, hVn, hVf, hVi⟩ := localization_away_domain_noetherian_finiteType (O := O) s hs0
   have hϖV : algebraMap O (Localization.Away s) ϖ =
@@ -209,7 +209,7 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
       algebraMap O (Localization.Away s) ϖ ∈ P →
       P = Ideal.map (algebraMap C (Localization.Away s)) N := by
     intro P hP hϖP
-    haveI := hP
+    have := hP
     have hQ : P.comap (algebraMap C (Localization.Away s)) = N := by
       apply hs
       · infer_instance
@@ -230,7 +230,7 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
   have hϖmem : algebraMap O (Localization.Away s) ϖ ∈ Ideal.map (algebraMap C (Localization.Away s)) N := by
     rw [hϖV]
     exact Ideal.mem_map_of_mem _ hϖN
-  haveI : Module.Finite O (Localization.Away s) := by
+  have : Module.Finite O (Localization.Away s) := by
     refine ReciprocityTheory.ChartRestriction.G.T0.PrimeAvoidanceFibre.finite_of_fibre ϖ hϖ ⟨_, hP0, hϖmem⟩ ?_
     intro P P' hP hP' h1 h2
     rw [key P hP h1, key P' hP' h2]
@@ -240,15 +240,15 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
   have hnz : ∀ P : Ideal (Localization.Away s), P.IsPrime → P ≠ ⊥ →
       algebraMap O (Localization.Away s) ϖ ∈ P := by
     intro P hP hP0'
-    haveI := hP
+    have := hP
     have hc : P.comap (algebraMap O (Localization.Away s)) ≠ ⊥ := by
       obtain ⟨x, hxP, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP0'
-      exact Ideal.comap_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
+      exact Ideal.under_ne_bot_of_integral_mem hx0 hxP (Algebra.IsIntegral.isIntegral x)
     have hm := IsLocalRing.eq_maximalIdeal (Ideal.IsPrime.isMaximal inferInstance hc)
     rw [← Ideal.mem_comap, hm]
     exact hϖm
   have hdvr : IsDiscreteValuationRing (Localization.Away s) := by
-    haveI : IsDedekindDomain (Localization.Away s) := by
+    have : IsDedekindDomain (Localization.Away s) := by
       exact IsLocalization.isDedekindDomain C (powers_le_nonZeroDivisors_of_noZeroDivisors hs0) _
     have hfin : {I : Ideal (Localization.Away s) | I.IsPrime}.Finite := by
       apply ((Set.finite_singleton (Ideal.map (algebraMap C (Localization.Away s)) N)).insert ⊥).subset
@@ -256,7 +256,7 @@ private theorem exists_dvr_embedding_of_dedekind {O C : Type} [CommRing O] [IsDo
       by_cases h : P = ⊥
       · exact Or.inl h
       · exact Or.inr (key P hP (hnz P hP h))
-    haveI : IsPrincipalIdealRing (Localization.Away s) := IsPrincipalIdealRing.of_finite_primes hfin
+    have : IsPrincipalIdealRing (Localization.Away s) := IsPrincipalIdealRing.of_finite_primes hfin
     rw [IsDiscreteValuationRing.iff_pid_with_one_nonzero_prime]
     refine ⟨inferInstance, _, ⟨?_, hP0⟩, ?_⟩
     · intro h
@@ -274,20 +274,20 @@ private theorem exists_finite_domain_quotient_ne_zero {O B : Type} [CommRing O] 
     ∃ (T : Type) (_ : CommRing T) (_ : IsDomain T) (_ : Algebra O T) (_ : Module.Finite O T)
       (g : B →ₐ[O] T), Function.Injective (algebraMap O T) ∧ g e ≠ 0 := by
   classical
-  haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing O B
+  have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing O B
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hϖm : ϖ ∈ maximalIdeal O := irreducible_mem_maximalIdeal hϖ
   have hw0 : algebraMap O B ϖ ≠ 0 := algebraMap_ne_zero_of_flat' hϖ.ne_zero
   obtain ⟨M, hMmax, hMle⟩ := Ideal.exists_le_maximal _ hsp
-  haveI := hMmax
+  have := hMmax
   have hwM : algebraMap O B ϖ ∈ M := hMle (Ideal.mem_map_of_mem _ hϖm)
   obtain ⟨q, hqp, hqM, heq, hwq, hch⟩ :=
     ReciprocityTheory.ChartRestriction.G.T0.DimensionQuotientBound.local_step M (algebraMap O B ϖ) e hwM hw0 he
   obtain ⟨s, hsM, hs⟩ := ReciprocityTheory.ChartRestriction.G.T0.PrimeAvoidanceFibre.avoid M q (algebraMap O B ϖ) hch
-  haveI := hqp
+  have := hqp
   have hsq : s ∉ q := fun h => hsM (hqM h)
   have hsb : Ideal.Quotient.mk q s ≠ 0 := fun h => hsq (Ideal.Quotient.eq_zero_iff_mem.1 h)
-  haveI : Algebra.FiniteType O (B ⧸ q) := by
+  have : Algebra.FiniteType O (B ⧸ q) := by
     infer_instance
   obtain ⟨hTd, hTn, hTf, hTi⟩ := localization_away_domain_noetherian_finiteType (O := O) (Ideal.Quotient.mk q s) hsb
   have hϖT : algebraMap O (Localization.Away (Ideal.Quotient.mk q s)) ϖ =
@@ -300,7 +300,7 @@ private theorem exists_finite_domain_quotient_ne_zero {O B : Type} [CommRing O] 
       P = Ideal.map (algebraMap (B ⧸ q) (Localization.Away (Ideal.Quotient.mk q s)))
         (Ideal.map (Ideal.Quotient.mk q) M) := by
     intro P hP hϖP
-    haveI := hP
+    have := hP
     have hQ : (P.comap (algebraMap (B ⧸ q) (Localization.Away (Ideal.Quotient.mk q s)))).comap
         (Ideal.Quotient.mk q) = M := by
       apply hs
@@ -331,7 +331,7 @@ private theorem exists_finite_domain_quotient_ne_zero {O B : Type} [CommRing O] 
       (Ideal.map (Ideal.Quotient.mk q) M)).IsPrime := by
     exact IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers (Ideal.Quotient.mk q s))
       _ _ hMq hdisj
-  haveI : Module.Finite O (Localization.Away (Ideal.Quotient.mk q s)) := by
+  have : Module.Finite O (Localization.Away (Ideal.Quotient.mk q s)) := by
     refine ReciprocityTheory.ChartRestriction.G.T0.PrimeAvoidanceFibre.finite_of_fibre ϖ hϖ ⟨_, hP0, ?_⟩ ?_
     · rw [hϖT]
       exact Ideal.mem_map_of_mem _ (Ideal.mem_map_of_mem _ hwM)

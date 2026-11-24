@@ -335,7 +335,7 @@ open MinorBundle
 
 theorem exists_isEE_of_hasDiv_minors : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (M : RatModel o Ω) (U₀ : M.Z.Opens) (R' : Subalgebra o Ω) (hR : S.R ≤ R') (n a : ℕ) (GG : Fin n → S.J → R'), S.Over₀ M U₀ → R' ≤ M.ringOn U₀ → ((∀ U₁ : M.Z.Opens, U₁ ≤ U₀ → (U₁ : Set M.Z).Nonempty → ∀ z : M.Z, IsClosed ({z} : Set M.Z) → (∃ (p : ℕ) (_ : Fact p.Prime) (y : Sp (OO p) ⟶ M.Z), M.Cen U₁ z y) ∧ ∀ φ ∈ M.ringOn U₁, (∀ (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ M.Z), M.Cen U₁ z y → ‖M.val (gPt p ≫ y) φ‖ ≤ 1) → φ ∈ M.O z) ∧ JacobsonSpace M.Z) → (∀ (z : M.Z) (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ M.Z), M.Cen U₀ z y → ∃ y₀ : S.R →+* PadicAlgCl p, S.At M y y₀ ∧ (∀ a : o, ‖y₀ (algebraMap o S.R a)‖ ≤ 1) ∧ Nonempty (S.Test p y₀)) → (∀ (z : M.Z) (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ M.Z) (y₀ : S.R →+* PadicAlgCl p) (τ : S.Test p y₀), M.Cen U₀ z y → S.At M y y₀ → (∀ x, x ∈ S.supI M z ↔ ‖M.val (gPt p ≫ y) (S.th x)‖ = τ.δ) ∧ S.HH M z = τ.yy.ker) → (∀ (p : ℕ) [Fact p.Prime] (y' : R' →+* PadicAlgCl p) (τ : S.Test p (y'.comp (Subalgebra.inclusion hR).toRingHom)), (∀ b : o, ‖y' (algebraMap o R' b)‖ ≤ 1) → ∀ w : S.J → PadicAlgCl p, w ∈ Submodule.span (OO p) (Set.range fun k j => y' (GG k j)) ↔ ∀ v ∈ τ.E, ‖w ⬝ᵥ v‖ ≤ τ.δ ^ a) → M.HasDiv (fun k : S.J → Fin n => Matrix.det (Matrix.of fun i j => (GG (k i) j : Ω))) → ∃ EE : M.Lat S.J, S.IsEE M U₀ EE ∧ ∀ z : M.Z, ∀ x₀ ∈ S.supI M z, ∀ w : S.J → Ω, w ∈ Submodule.span (M.O z) (Set.range fun k j => (GG k j : Ω) / S.th x₀ ^ a) ↔ ∀ v ∈ EE.E z, w ⬝ᵥ v ∈ M.O z := by
   intro o Ω _ _ _ _ S M U₀ R' hR n a GG hO hR' hLL hT hS hgen hd
-  haveI : NeZero (S.r * S.N) := ⟨by nlinarith [S.N_ge, S.r_pos]⟩
+  have : NeZero (S.r * S.N) := ⟨by nlinarith [S.N_ge, S.r_pos]⟩
   choose x₀ hx₀ using hO.div
   choose k hk using id hd
   have hpow : ∀ {z : M.Z} {x x' : S.Gam}, M.Div S.th x z → S.th x' ^ a / S.th x ^ a ∈ M.O z := fun h => by
@@ -407,7 +407,7 @@ theorem exists_isEE_of_hasDiv_minors : ∀ (o Ω : Type) [CommRing o] [Field Ω]
     exact ((RatModel.isUnit_O_iff _).1
       ((RatModel.norm_val_eq_one_iff hc.1 (det_mem _ hG)).1 (le_antisymm h2 h3))).2
   refine ⟨EE, ⟨fun z hz => ?_, fun z p _ y y₀ τ hc hat => ?_⟩, fun z x hx w => ?_⟩
-  · haveI := hLL.2
+  · have := hLL.2
     obtain ⟨z', ⟨hz'U, hz'⟩, hcl⟩ := nonempty_inter_closedPoints (Z := (U₀ : Set M.Z) ∩ closure {z})
       ⟨z, hz, subset_closure rfl⟩ (U₀.isOpen.isLocallyClosed.inter isClosed_closure.isLocallyClosed)
     have hs : z ⤳ z' := specializes_iff_mem_closure.2 hz'
@@ -769,7 +769,7 @@ theorem pos_of_tendsto {X : Type} [AddCommGroup X] [Module.Free ℤ X] (q : Quad
     have := smul_left_injective ℤ hx0 hab
     omega
   refine Set.infinite_of_injective_forall_mem hinj (fun n => ?_) hfin
-  simp only [Set.mem_setOf_eq, not_lt, QuadraticMap.map_smul, zsmul_eq_mul]
+  simp only [Set.mem_ofPred_eq, not_lt, QuadraticMap.map_smul, zsmul_eq_mul]
   refine mul_nonpos_of_nonneg_of_nonpos ?_ hx
   positivity
 
@@ -792,9 +792,9 @@ variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {S : ThetaSys o Ω
 
 theorem subsingleton_of_perp_eq_bot (τ : S.Test p y₀) (h : S.perp τ.yy.ker = ⊥) (x : τ.X) : x = 0 := by
   have h2 : 2 ≤ S.r * S.N := le_trans S.N_ge (Nat.le_mul_of_pos_left _ S.r_pos)
-  haveI : Fact (1 < S.r * S.N) := ⟨h2⟩
+  have : Fact (1 < S.r * S.N) := ⟨h2⟩
   let b := Module.Free.chooseBasis ℤ τ.X
-  haveI : IsEmpty (Module.Free.ChooseBasisIndex ℤ τ.X) := by
+  have : IsEmpty (Module.Free.ChooseBasisIndex ℤ τ.X) := by
     refine ⟨fun i => ?_⟩
     let f : τ.X →+ ZMod (S.r * S.N) := (Int.castAddHom _).comp (b.coord i).toAddMonoidHom
     let f' : τ.X ⧸ (nsmulAddMonoidHom (S.r * S.N) : τ.X →+ τ.X).range →+ ZMod (S.r * S.N) :=
@@ -815,13 +815,13 @@ theorem subsingleton_of_perp_eq_bot (τ : S.Test p y₀) (h : S.perp τ.yy.ker =
 theorem eq_bot_of_char {T : AddSubgroup S.Gam} (hT : S.IsoFree T) (h : ∀ c : T →+ ZMod S.N, c = 0) :
     T = ⊥ := by
   obtain ⟨-, d, ⟨e⟩⟩ := hT
-  haveI : Fact (1 < S.N) := ⟨S.N_ge⟩
-  haveI : IsEmpty (Fin d) := by
+  have : Fact (1 < S.N) := ⟨S.N_ge⟩
+  have : IsEmpty (Fin d) := by
     refine ⟨fun i => ?_⟩
     have := DFunLike.congr_fun (h ((ZMod.castHom (dvd_mul_left S.N S.r) (ZMod S.N)).toAddMonoidHom.comp
       ((Pi.evalAddMonoidHom (fun _ : Fin d => ZMod (S.r * S.N)) i).comp e.toAddMonoidHom)))
       (e.symm (fun _ => 1))
-    simp only [AddMonoidHom.comp_apply, AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe,
+    simp only [AddMonoidHom.comp_apply, AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass,
       AddEquiv.apply_symm_apply, Pi.evalAddMonoidHom_apply, RingHom.toAddMonoidHom_eq_coe, map_one,
       AddMonoidHom.zero_apply] at this
     exact one_ne_zero this
@@ -1090,8 +1090,8 @@ open CategoryTheory Limits AlgebraicGeometry in
 open Classical in
 private theorem module_finite_of_subfield_le {Ω : Type} [Field Ω] {K K' : Subfield Ω} (h : K ≤ K')
     [Module.Finite K Ω] : Module.Finite K' Ω := by
-  letI : Algebra K K' := (Subfield.inclusion h).toAlgebra
-  haveI : IsScalarTower K K' Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  let : Algebra K K' := (Subfield.inclusion h).toAlgebra
+  have : IsScalarTower K K' Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
   exact Module.Finite.of_restrictScalars_finite K K' Ω
 
 open CategoryTheory Limits AlgebraicGeometry in
@@ -1099,7 +1099,7 @@ open Classical in
 private theorem isProper_of_isProjOver_degeneration {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω]
     (M : _root_.GlobalTheory.ZH.RatModel o Ω) (h : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsProjOver M.s) : IsProper M.s := by
   obtain ⟨N, i, hi, e⟩ := h
-  haveI := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str o N
+  have := _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str o N
   rw [← e]
   infer_instance
 
@@ -1122,9 +1122,9 @@ theorem _root_.GlobalTheory.ZH.exists_minor_model : ∀ (o Ω : Type) [CommRing 
         (S.TT Z z = ⊥ ↔ ∃ k : S.J → Fin n, Matrix.det (Matrix.of fun i j => GG (k i) j) ≠ 0 ∧
           S.th x₀ ^ (a * Fintype.card S.J) / Matrix.det (Matrix.of fun i j => GG (k i) j) ∈ Z.O z) := by
   intro o Ω _ _ _ _ S hT hfin
-  haveI : Algebra.FiniteType ℤ o := _root_.GlobalTheory.ZH.ArithBase.ft (o := o) Ω
-  haveI : CharZero Ω := _root_.GlobalTheory.ZH.ArithBase.char o (Ω := Ω)
-  haveI : IsDedekindDomain o := _root_.GlobalTheory.ZH.ArithBase.ded (o := o) Ω
+  have : Algebra.FiniteType ℤ o := _root_.GlobalTheory.ZH.ArithBase.ft (o := o) Ω
+  have : CharZero Ω := _root_.GlobalTheory.ZH.ArithBase.char o (Ω := Ω)
+  have : IsDedekindDomain o := _root_.GlobalTheory.ZH.ArithBase.ded (o := o) Ω
   have hwt := _root_.GlobalTheory.ZH.test_weights o Ω S
   obtain ⟨M₁, U₁, hAdm₁, hAff₁, -⟩ := _root_.GlobalTheory.ZH.exists_admissible_affine_model_dividing_tuple o Ω S Unit (fun _ => 1) ⟨(), one_ne_zero⟩
     (by
@@ -1160,7 +1160,7 @@ theorem _root_.GlobalTheory.ZH.exists_minor_model : ∀ (o Ω : Type) [CommRing 
     (fun q => S.th q.1 * Matrix.det (Matrix.of fun i j => (GG (q.2 i) j : Ω)))
     ⟨(x₀, k₀), mul_ne_zero hx₀.1 hk₀⟩
     (by
-      haveI := hfin
+      have := hfin
       refine module_finite_of_subfield_le (K := Subfield.closure (Set.range (algebraMap o Ω) ∪
         {x | ∃ i j, x = S.th j / S.th i})) ?_
       refine Subfield.closure_le.2 (Set.union_subset (fun x hx => Subfield.subset_closure (Or.inl hx)) ?_)

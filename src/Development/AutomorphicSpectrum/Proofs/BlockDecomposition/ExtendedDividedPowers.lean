@@ -71,7 +71,7 @@ theorem dpow_mem_fil (δ : DividedPowers J) {x : B} (hx : x ∈ J) (n : ℕ) : �
   refine Ideal.subset_span ⟨[(n, x)], ?_, ?_, ?_⟩ <;> simp [hx]
 
 theorem fil_mul_le (δ : DividedPowers J) (m n : ℕ) : fil δ m * fil δ n ≤ fil δ (m + n) := by
-  rw [fil, fil, Ideal.span_mul_span', Ideal.span_le]
+  rw [fil, fil, Ideal.span_mul_span, Ideal.span_le]
   rintro _ ⟨a, ⟨l, h1, h2, rfl⟩, b, ⟨l', h1', h2', rfl⟩, rfl⟩
   refine Ideal.subset_span ⟨l ++ l', ?_, ?_, ?_⟩
   · intro p hp

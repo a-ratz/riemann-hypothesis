@@ -174,9 +174,9 @@ private theorem exists_dvr {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [Alg
   classical
   obtain ⟨s, hs⟩ := Module.Finite.fg_top (R := ℤ_[l]) (M := O)
   let S : Set (PadicAlgCl l) := Set.range b ∪ algebraMap O _ '' s
-  haveI : Finite S := ((Set.finite_range b).union (s.finite_toSet.image _)).to_subtype
+  have : Finite S := ((Set.finite_range b).union (s.finite_toSet.image _)).to_subtype
   let K : IntermediateField ℚ_[l] (PadicAlgCl l) := IntermediateField.adjoin ℚ_[l] S
-  haveI : FiniteDimensional ℚ_[l] K :=
+  have : FiniteDimensional ℚ_[l] K :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   obtain ⟨h1, h2, -⟩ := UpperTheory.V.abelian₂.dvr_intClosure l K
   let f : K →ₐ[ℤ_[l]] PadicAlgCl l := K.val.restrictScalars ℤ_[l]
@@ -199,7 +199,7 @@ private theorem exists_dvr {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [Alg
   have d1 : IsDiscreteValuationRing B := IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing e
   have d2 : Module.Finite ℤ_[l] B := Module.Finite.equiv e.toLinearEquiv
   refine ⟨A, d1, ?_, fun i => hB _ (Or.inl ⟨i, rfl⟩) ((int_iff_norm _).2 (hb i))⟩
-  haveI : Module.Finite ℤ_[l] A := d2
+  have : Module.Finite ℤ_[l] A := d2
   exact Module.Finite.of_restrictScalars_finite ℤ_[l] O A
 
 private theorem exists_co {O A : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRing O]
@@ -222,10 +222,10 @@ private theorem exists_co {O A : Type} [CommRing O] [IsLocalRing O] [IsNoetheria
         rw [this]
         exact add_mem ha hb
       algebraMap_mem' := fun a => ⟨a, by simp⟩ }
-  haveI : Algebra.IsIntegral B A := Algebra.IsIntegral.tower_top (R := O)
-  haveI hl : IsLocalHom (algebraMap B A) := Algebra.IsIntegral.isLocalHom B A
-  haveI : IsLocalRing B := RingHom.domain_isLocalRing (algebraMap B A)
-  haveI : Module.Finite O B := Module.Finite.of_injective B.val.toLinearMap Subtype.val_injective
+  have : Algebra.IsIntegral B A := Algebra.IsIntegral.tower_top (R := O)
+  have hl : IsLocalHom (algebraMap B A) := Algebra.IsIntegral.isLocalHom B A
+  have : IsLocalRing B := RingHom.domain_isLocalRing (algebraMap B A)
+  have : Module.Finite O B := Module.Finite.of_injective B.val.toLinearMap Subtype.val_injective
   refine ⟨B, co_finite O O B fun x => ?_, ⟨fun a ha => hl.map_nonunit a ha⟩, fun x hx => ⟨0, by simpa using hx⟩⟩
   obtain ⟨a, ha⟩ := x.2
   exact ⟨a, fun hu => ha (hu.map (algebraMap B A))⟩
@@ -303,7 +303,7 @@ private theorem exists_scale {K σ : Type} [NontriviallyNormedField K] [IsAlgClo
 private theorem mono_mem {O σ : Type} [CommRing O] (w : σ → ℤ) (b : σ →₀ ℕ) :
     (MvPowerSeries.monomial b 1 : MvPowerSeries σ O) ∈ wtPart O w (Finsupp.weight w b) := fun n hn => by
   classical
-  rw [MvPowerSeries.coeff_monomial, if_neg]
+  rw [MvPowerSeries.coeff_monomial, ite_eq_right]
   rintro rfl
   exact hn rfl
 
@@ -366,7 +366,7 @@ private theorem ev_eq {O R K : Type} [CommRing O] [CommRing R] [Algebra O R] [No
           rw [map_sub, MvPowerSeries.coeff_C]
           by_cases h0 : n = 0
           · subst h0; simp
-          · rw [if_neg h0, sub_zero]
+          · rw [ite_eq_right h0, sub_zero]
             exact hf n fun h => hn ⟨h0, h⟩)
         have he' : f = algebraMap O _ (MvPowerSeries.constantCoeff f) + ∑ m ∈ μ, b m * MvPowerSeries.monomial m 1 :=
           sub_eq_iff_eq_add'.1 he
@@ -407,9 +407,9 @@ private theorem norm_facts {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [Alg
     [Algebra O (PadicAlgCl l)] [IsScalarTower ℤ_[l] O (PadicAlgCl l)] {T : Type} [CommRing T] [IsLocalRing T]
     [Algebra O T] [Module.Finite O T] (φ : T →ₐ[O] PadicAlgCl l) (x : T) :
     ‖φ x‖ ≤ 1 ∧ (x ∈ maximalIdeal T ↔ ‖φ x‖ < 1) := by
-  letI : Algebra ℤ_[l] T := ((algebraMap O T).comp (algebraMap ℤ_[l] O)).toAlgebra
-  haveI : IsScalarTower ℤ_[l] O T := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Finite ℤ_[l] T := Module.Finite.trans O T
+  let : Algebra ℤ_[l] T := ((algebraMap O T).comp (algebraMap ℤ_[l] O)).toAlgebra
+  have : IsScalarTower ℤ_[l] O T := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Finite ℤ_[l] T := Module.Finite.trans O T
   exact ⟨norm_le_of_int (φ.restrictScalars ℤ_[l]) x, mem_max_iff (φ.restrictScalars ℤ_[l]) x⟩
 
 private theorem zero_facts {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] [Algebra ℤ_[l] O]
@@ -419,8 +419,8 @@ private theorem zero_facts {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsL
     ‖ξ ⟨x, mem_Sring u hx⟩‖ ≤ 1 ∧ (x ∈ maximalIdeal R → ‖ξ ⟨x, mem_Sring u hx⟩‖ < 1) := by
   let T : Subalgebra O R := (wpart (O := O) u 0).toSubalgebra SetLike.GradedOne.one_mem fun x y hx hy => by
     simpa using SetLike.GradedMul.mul_mem hx hy
-  haveI : Module.Finite O T := hfin
-  haveI : IsLocalHom (T.val : T →+* R) := ⟨fun a ha => by
+  have : Module.Finite O T := hfin
+  have : IsLocalHom (T.val : T →+* R) := ⟨fun a ha => by
     obtain ⟨b, hb⟩ := ha.exists_right_inv
     have hb' : (a : R) * b = 1 := hb
     have hbT : b ∈ wpart (O := O) u 0 := fun R' _ _ _ f f' t h => by
@@ -430,7 +430,7 @@ private theorem zero_facts {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsL
         _ = f' ((a : R) * b) * f b := by rw [map_mul, map_mul, h1]; ring
         _ = f b := by rw [hb', map_one, one_mul]
     exact IsUnit.of_mul_eq_one (⟨b, hbT⟩ : T) (Subtype.ext hb')⟩
-  haveI : IsLocalRing T := RingHom.domain_isLocalRing (T.val : T →+* R)
+  have : IsLocalRing T := RingHom.domain_isLocalRing (T.val : T →+* R)
   have := norm_facts (ξ.comp (Subalgebra.inclusion (S := T) fun y hy => mem_Sring u hy)) ⟨x, hx⟩
   exact ⟨this.1, fun hm => this.2.1 fun hu => hm (hu.map T.val)⟩
 
@@ -521,7 +521,7 @@ theorem UpperTheory.V.UnitaryThreeInertia.isCharZeroPt_of_isPtHom :
       exact (zero_facts u hfin ξ _ h1).2
         (Ideal.mul_mem_left _ _ (Ideal.pow_mem_of_mem _ (hzm h) _ (Int.natAbs_pos.2 hi.ne'))))
   obtain ⟨A, hA, hAf, hbA⟩ := exists_dvr (O := O) _ fun i => (ht i).le
-  haveI : IsLocalRing A := hA.toIsLocalRing
+  have : IsLocalRing A := hA.toIsLocalRing
   obtain ⟨Ξ, hΞ, key⟩ := exists_loc u hfin ξ W hW.part hzw A.val Subtype.val_injective t (fun i => ⟨_, hbA i⟩)
     (fun _ => rfl) ht
   refine ⟨A, hA, hAf, t, push Ξ u, isPt_push F _ g₁ u hu.pt, MonoidHom.ext fun g => ?_⟩

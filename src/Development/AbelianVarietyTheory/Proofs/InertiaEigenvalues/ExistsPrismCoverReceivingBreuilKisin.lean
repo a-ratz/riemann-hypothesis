@@ -141,7 +141,7 @@ theorem adI_map {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] {B B' : Obj l R
 
 theorem ff_of_basis {R S : Type} [CommRing R] [CommRing S] (g : R →+* S) (ι : Type) [Nonempty ι]
     (h : letI := g.toAlgebra; Nonempty (Module.Basis ι R S)) : g.FaithfullyFlat := by
-  letI := g.toAlgebra
+  let := g.toAlgebra
   obtain ⟨b⟩ := h
   exact Module.FaithfullyFlat.of_linearEquiv _ _ b.repr
 
@@ -160,7 +160,7 @@ theorem GlobalTheory.BSP.envFF : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
   have h2 : (Ideal.quotEquivOfEq hJ).toRingHom.FaithfullyFlat :=
     RingHom.FaithfullyFlat.of_bijective (Ideal.quotEquivOfEq hJ).bijective
   have h1 : (Ideal.quotientMap ((adI B ^ m).map En.inl.f) En.inl.f Ideal.le_comap_map).FaithfullyFlat := by
-    haveI : Nonempty (Digits l) := ⟨⟨0, fun _ => (Fact.out : l.Prime).pos⟩⟩
+    have : Nonempty (Digits l) := ⟨⟨0, fun _ => (Fact.out : l.Prime).pos⟩⟩
     obtain ⟨b, -⟩ := _root_.GlobalTheory.BSP.TopBasis.basis_mod_pow B.A En.Q.A En.inl.f (adI B) (Digits l) En.tb m
     exact ff_of_basis _ (Digits l) ⟨b⟩
   rw [e]
@@ -185,11 +185,11 @@ theorem isPushout_of_bases {R S R' S' : Type} [CommRing R] [CommRing S] [CommRin
     ∀ (b : Module.Basis ι R S) (b' : Module.Basis ι R' S'), (∀ i, g' (b i) = b' i) →
       CategoryTheory.IsPushout (CommRingCat.ofHom f) (CommRingCat.ofHom g) (CommRingCat.ofHom g')
         (CommRingCat.ofHom f') := by
-  letI := f.toAlgebra; letI := g.toAlgebra; letI := g'.toAlgebra; letI := f'.toAlgebra
-  letI : Algebra R S' := (f'.comp g).toAlgebra
+  let := f.toAlgebra; let := g.toAlgebra; let := g'.toAlgebra; let := f'.toAlgebra
+  let : Algebra R S' := (f'.comp g).toAlgebra
   intro b b' hb
-  haveI : IsScalarTower R R' S' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R S S' := IsScalarTower.of_algebraMap_eq fun x => (RingHom.congr_fun hc x).symm
+  have : IsScalarTower R R' S' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R S S' := IsScalarTower.of_algebraMap_eq fun x => (RingHom.congr_fun hc x).symm
   have hbc : IsBaseChange R' (IsScalarTower.toAlgHom R S S').toLinearMap := by
     refine IsBaseChange.of_equiv ((Algebra.TensorProduct.basis R' b).equiv b' (Equiv.refl _)) fun m => ?_
     have : (((Algebra.TensorProduct.basis R' b).equiv b' (Equiv.refl _)).toLinearMap.restrictScalars R ∘ₗ
@@ -200,8 +200,8 @@ theorem isPushout_of_bases {R S R' S' : Type} [CommRing R] [CommRing S] [CommRin
       rw [← Algebra.TensorProduct.basis_apply, Module.Basis.equiv_apply, Equiv.refl_apply]
       exact (hb i).symm
     exact LinearMap.congr_fun this m
-  haveI : Algebra.IsPushout R R' S S' := ⟨hbc⟩
-  haveI : Algebra.IsPushout R S R' S' := Algebra.IsPushout.symm inferInstance
+  have : Algebra.IsPushout R R' S S' := ⟨hbc⟩
+  have : Algebra.IsPushout R S R' S' := Algebra.IsPushout.symm inferInstance
   exact CommRingCat.isPushout_of_isPushout R S R' S'
 
 end GlobalTheory.BSP
@@ -232,7 +232,7 @@ theorem env_map_tb_b {bk : BK K} {B B' : Obj l ↥(OL K)} {t p : B.A} {k : Hom B
     (h2 : k'.comp En.inr = En'.inr) (α : Digits l) : k'.f (En.tb.b α) = En'.tb.b α := by
   have hreg : En'.inl.f (k.f t) ∈ nonZeroDivisors En'.Q.A :=
     by
-    haveI := En'.Q.inv
+    have := En'.Q.inv
     exact mem_nonZeroDivisors_of_invertible_span_singleton _ _ (Module.Invertible.congr (LinearEquiv.ofEq _ _ En'.I_eq))
   have e1 : ∀ a, k'.f (En.inl.f a) = En'.inl.f (k.f a) := fun a => by
     have := congrArg (fun h => Hom.f h a) h1
@@ -341,7 +341,7 @@ theorem faithfullyFlat_quotientMap_of_map_ne_top {A B : Type} [CommRing A] [Comm
     (𝔞 : Ideal A) (𝔟 : Ideal B) (hle : 𝔞 ≤ 𝔟.comap f) (hJ : 𝔟 ≤ Ideal.jacobson ⊥)
     (hfl : (Ideal.quotientMap 𝔟 f hle).Flat) (hm : ∀ 𝔪 : Ideal A, 𝔪.IsMaximal → 𝔪.map f ≠ ⊤) :
     (Ideal.quotientMap 𝔟 f hle).FaithfullyFlat := by
-  letI : Algebra (A ⧸ 𝔞) (B ⧸ 𝔟) := (Ideal.quotientMap 𝔟 f hle).toAlgebra
+  let : Algebra (A ⧸ 𝔞) (B ⧸ 𝔟) := (Ideal.quotientMap 𝔟 f hle).toAlgebra
   have hfl' : Module.Flat (A ⧸ 𝔞) (B ⧸ 𝔟) := hfl
   show Module.FaithfullyFlat (A ⧸ 𝔞) (B ⧸ 𝔟)
   refine { toFlat := hfl', submodule_ne_top := fun 𝔫 h𝔫 htop => ?_ }
@@ -361,10 +361,10 @@ theorem cover_of_stable_of_map_ne_top : ∀ (l : ℕ) [Fact l.Prime] (R : Type) 
   refine ⟨hs, fun m => ?_⟩
   rcases m with _ | m
   ·
-    haveI : Subsingleton (B.A ⧸ adI B ^ 0) := Ideal.Quotient.subsingleton_iff.2 (by simp)
+    have : Subsingleton (B.A ⧸ adI B ^ 0) := Ideal.Quotient.subsingleton_iff.2 (by simp)
     rw [RingHom.FaithfullyFlat.iff_flat_and_comap_surjective]
     exact ⟨hs.flat 0, fun p => isEmptyElim p⟩
-  · haveI := C.complete
+  · have := C.complete
     have hJ : adI C ^ (m + 1) ≤ Ideal.jacobson ⊥ :=
       (Ideal.pow_le_self (Nat.succ_ne_zero m)).trans (IsAdicComplete.le_jacobson_bot (adI C))
     exact faithfullyFlat_quotientMap_of_map_ne_top h.f _ _ (adI_pow_le h (m + 1)) hJ (hs.flat (m + 1)) hm
@@ -426,19 +426,19 @@ theorem isPushout_of_pi_components : ∀ {A P A' P' : Type} [CommRing A] [CommRi
   have hc : ∀ a, k' (f a) = h' (k a) := fun a => hg'.1 (funext fun i => by
     show g' i (k' (f a)) = g' i (h' (k a))
     rw [hk1, hh1, hw])
-  letI : Algebra A P := f.toAlgebra
-  letI : Algebra A A' := k.toAlgebra
-  letI : Algebra P P' := k'.toAlgebra
-  letI : Algebra A' P' := h'.toAlgebra
-  letI : Algebra A P' := (k'.comp f).toAlgebra
-  haveI : IsScalarTower A P P' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower A A' P' := IsScalarTower.of_algebraMap_eq fun a => hc a
-  letI : ∀ i, Algebra A (Q i) := fun i => ((g i).comp f).toAlgebra
-  letI : ∀ i, Algebra (Q i) (Q' i) := fun i => (kk i).toAlgebra
-  letI : ∀ i, Algebra A' (Q' i) := fun i => (hh i).toAlgebra
-  letI : ∀ i, Algebra A (Q' i) := fun i => ((kk i).comp ((g i).comp f)).toAlgebra
-  haveI : ∀ i, IsScalarTower A (Q i) (Q' i) := fun i => IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : ∀ i, IsScalarTower A A' (Q' i) := fun i => IsScalarTower.of_algebraMap_eq fun a => hw i a
+  let : Algebra A P := f.toAlgebra
+  let : Algebra A A' := k.toAlgebra
+  let : Algebra P P' := k'.toAlgebra
+  let : Algebra A' P' := h'.toAlgebra
+  let : Algebra A P' := (k'.comp f).toAlgebra
+  have : IsScalarTower A P P' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower A A' P' := IsScalarTower.of_algebraMap_eq fun a => hc a
+  let : ∀ i, Algebra A (Q i) := fun i => ((g i).comp f).toAlgebra
+  let : ∀ i, Algebra (Q i) (Q' i) := fun i => (kk i).toAlgebra
+  let : ∀ i, Algebra A' (Q' i) := fun i => (hh i).toAlgebra
+  let : ∀ i, Algebra A (Q' i) := fun i => ((kk i).comp ((g i).comp f)).toAlgebra
+  have : ∀ i, IsScalarTower A (Q i) (Q' i) := fun i => IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : ∀ i, IsScalarTower A A' (Q' i) := fun i => IsScalarTower.of_algebraMap_eq fun a => hw i a
   have H' : ∀ i, Algebra.IsPushout A A' (Q i) (Q' i) := fun i =>
     (CommRingCat.isPushout_iff_isPushout.mp (H i)).symm
   have := isPushout_of_pi_components_alg (A := A) (P := P) (A' := A') (P' := P') (Q := Q) (Q' := Q')
@@ -505,10 +505,10 @@ theorem flat_of_pi {A P : Type} [CommRing A] [CommRing P] {n : ℕ} {Ps : Fin n 
   classical
   let e : P ≃+* ∀ i, Ps i := RingEquiv.ofBijective (Pi.ringHom g) hg
   have hpi : (Pi.ringHom fun i => (g i).comp f).Flat := by
-    letI : ∀ i, Algebra A (Ps i) := fun i => ((g i).comp f).toAlgebra
-    haveI : ∀ i, Module.Flat A (Ps i) := fun i => RingHom.flat_algebraMap_iff.1 (hf i)
-    haveI : Module.Flat A (Π₀ i, Ps i) := inferInstance
-    haveI : Module.Flat A (∀ i, Ps i) :=
+    let : ∀ i, Algebra A (Ps i) := fun i => ((g i).comp f).toAlgebra
+    have : ∀ i, Module.Flat A (Ps i) := fun i => RingHom.flat_algebraMap_iff.1 (hf i)
+    have : Module.Flat A (Π₀ i, Ps i) := inferInstance
+    have : Module.Flat A (∀ i, Ps i) :=
       Module.Flat.of_linearEquiv (DFinsupp.linearEquivFunOnFintype (R := A) (M := Ps)).symm
     exact RingHom.flat_algebraMap_iff.2 this
   have : f = (e.symm : (∀ i, Ps i) →+* P).comp (Pi.ringHom fun i => (g i).comp f) := by
@@ -586,18 +586,18 @@ theorem isPushout_of_away {A C A' C' : Type} [CommRing A] [CommRing C] [CommRing
     (H' : letI := h'.toAlgebra; IsLocalization.Away (k x) C') :
     CategoryTheory.IsPushout (CommRingCat.ofHom h) (CommRingCat.ofHom k) (CommRingCat.ofHom k')
       (CommRingCat.ofHom h') := by
-  letI : Algebra A C := h.toAlgebra
-  letI : Algebra A A' := k.toAlgebra
-  letI : Algebra C C' := k'.toAlgebra
-  letI : Algebra A' C' := h'.toAlgebra
-  letI : Algebra A C' := (h'.comp k).toAlgebra
-  haveI : IsScalarTower A A' C' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower A C C' := IsScalarTower.of_algebraMap_eq fun a => (RingHom.congr_fun e a).symm
-  haveI : IsLocalization (Submonoid.powers x) C := H
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid A' (Submonoid.powers x)) C' := by
+  let : Algebra A C := h.toAlgebra
+  let : Algebra A A' := k.toAlgebra
+  let : Algebra C C' := k'.toAlgebra
+  let : Algebra A' C' := h'.toAlgebra
+  let : Algebra A C' := (h'.comp k).toAlgebra
+  have : IsScalarTower A A' C' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower A C C' := IsScalarTower.of_algebraMap_eq fun a => (RingHom.congr_fun e a).symm
+  have : IsLocalization (Submonoid.powers x) C := H
+  have : IsLocalization (Algebra.algebraMapSubmonoid A' (Submonoid.powers x)) C' := by
     rw [Algebra.algebraMapSubmonoid, Submonoid.map_powers]
     exact H'
-  haveI : Algebra.IsPushout A A' C C' :=
+  have : Algebra.IsPushout A A' C C' :=
     Algebra.isPushout_of_isLocalization (Submonoid.powers x) C A' C'
   exact (CommRingCat.isPushout_iff_isPushout (R := A) (R' := C) (S := A') (S' := C')).2
     (Algebra.IsPushout.symm inferInstance)
@@ -605,23 +605,23 @@ theorem isPushout_of_away {A C A' C' : Type} [CommRing A] [CommRing C] [CommRing
 theorem IsLoc.isUnit_of_complete {l : ℕ} {R : Type} [CommRing R] {B C : Obj l R} {s : B.A} {h : Hom B C}
     (H : IsLoc s h) : IsUnit (h.f s) := by
   have hu : IsUnit (qmap h 1 (Ideal.Quotient.mk (adI B ^ 1) s)) := by
-    letI := (qmap h 1).toAlgebra
-    haveI := H.away 1
+    let := (qmap h 1).toAlgebra
+    have := H.away 1
     exact IsLocalization.Away.algebraMap_isUnit _
   rw [qmap_mk] at hu
-  haveI := C.complete
+  have := C.complete
   have hj : adI C ^ 1 ≤ (⊥ : Ideal C.A).jacobson := by
     rw [pow_one]
     exact IsAdicComplete.le_jacobson_bot _
-  haveI := isLocalHom_of_le_jacobson_bot _ hj
+  have := isLocalHom_of_le_jacobson_bot _ hj
   exact IsUnit.of_map (Ideal.Quotient.mk _) _ hu
 
 theorem stable_of_isLoc : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (B C : Obj l R) (s : B.A) (h : Hom B C),
     (∃ t ∈ B.I, ∀ x ∈ B.I, ∃ k : ℕ, s ^ k * x ∈ Ideal.span {t}) → IsLoc s h → Stable h := by
   rintro l _ R _ B C s h ⟨t, ht, hst⟩ H
   refine ⟨fun m => ?_, fun B' k => ?_⟩
-  · letI := (qmap h m).toAlgebra
-    haveI := H.away m
+  · let := (qmap h m).toAlgebra
+    have := H.away m
     exact IsLocalization.flat _ (Submonoid.powers (Ideal.Quotient.mk (adI B ^ m) s))
   ·
     have hgen : GenAway B' (k.f s) (k.f t) := by
@@ -678,23 +678,23 @@ theorem map_ne_top_of_isLoc_ff {l : ℕ} {R : Type} [CommRing R] {B L C : Obj l 
     (hs : s ∉ 𝔪) : 𝔪.map (e.comp h).f ≠ ⊤ := by
   have hJ : adI B ^ 1 ≤ 𝔪 := by
     rw [pow_one]
-    haveI := B.complete
+    have := B.complete
     exact le_trans (IsAdicComplete.le_jacobson_bot (adI B)) fun x hx => Ideal.mem_sInf.1 hx ⟨bot_le, hm⟩
-  haveI : 𝔪.IsPrime := hm.isPrime
+  have : 𝔪.IsPrime := hm.isPrime
   have hp : (𝔪.map (Ideal.Quotient.mk (adI B ^ 1))).IsPrime :=
     Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective (by rwa [Ideal.mk_ker])
   have hs' : Ideal.Quotient.mk (adI B ^ 1) s ∉ 𝔪.map (Ideal.Quotient.mk (adI B ^ 1)) := by
     rwa [Ideal.mem_quotient_iff_mem hJ]
-  letI := (qmap h 1).toAlgebra
-  haveI := hL.away 1
+  let := (qmap h 1).toAlgebra
+  have := hL.away 1
   have h1 : ((𝔪.map (Ideal.Quotient.mk (adI B ^ 1))).map (qmap h 1)).IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint (Submonoid.powers (Ideal.Quotient.mk (adI B ^ 1) s))
       (L.A ⧸ adI L ^ 1) _ hp ((Ideal.disjoint_powers_iff_notMem_of_isPrime _).2 hs')
   have h2 : ((𝔪.map (Ideal.Quotient.mk (adI B ^ 1))).map (qmap h 1)).map (qmap e 1) ≠ ⊤ := by
     intro htop
     apply h1.ne_top
-    letI := (qmap e 1).toAlgebra
-    haveI : Module.FaithfullyFlat (L.A ⧸ adI L ^ 1) (C.A ⧸ adI C ^ 1) := he
+    let := (qmap e 1).toAlgebra
+    have : Module.FaithfullyFlat (L.A ⧸ adI L ^ 1) (C.A ⧸ adI C ^ 1) := he
     rw [← Ideal.comap_map_eq_self_of_faithfullyFlat (B := C.A ⧸ adI C ^ 1)
       ((𝔪.map (Ideal.Quotient.mk (adI B ^ 1))).map (qmap h 1))]
     change Ideal.comap (qmap e 1) (Ideal.map (qmap e 1) _) = ⊤

@@ -95,7 +95,7 @@ theorem conjPl_ne {D : D7} (s : SplitPlace D.host.E) : Formalism.DivisionValues.
       (p := fun y => φ (c y) = y) y (isClosed_eq (hφc.comp hc) continuous_id) fun a => ?_
     have e1 := s.i.commutes a
     rw [← e1, hci, hφ]
-    simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.coe_comp, Function.comp_apply, AlgEquiv.coe_algHom]
+    simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_coe, AlgHom.coe_comp, Function.comp_apply, AlgEquiv.coe_toAlgHom]
     rw [AlgEquiv.commutes]
   apply IsCMField.complexConj_ne_one D.host.E
   refine AlgEquiv.ext fun x => s.i.toRingHom.injective ?_

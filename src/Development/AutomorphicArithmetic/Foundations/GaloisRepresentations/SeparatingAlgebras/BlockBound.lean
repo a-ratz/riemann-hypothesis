@@ -99,7 +99,7 @@ private lemma coefLe_C_mul_X {c : ℂ} {R : ℝ} (hR : 1 ≤ R) (hc : ‖ι.symm
     CoefLe ι R (MvPolynomial.C c * MvPolynomial.X v) := by
   classical
   intro m
-  rw [MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X']
+  rw [MvPolynomial.coeff_C_mul, MvPolynomial.coeff_X]
   split_ifs
   · simpa using hc
   · simpa using zero_le_one.trans hR

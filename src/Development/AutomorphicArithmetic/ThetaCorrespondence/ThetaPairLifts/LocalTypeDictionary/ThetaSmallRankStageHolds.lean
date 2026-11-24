@@ -466,13 +466,13 @@ theorem smallStage_thetaIntegral_of_ne_zero : _root_.GlobalTheory.FunPr.ThetaLoc
       (X.ω t) (X.ω' t) (hIs.weil t) (hIs.weil' t)
     obtain ⟨Pf, rr, rr', e, -, -, hr, hr'⟩ := hfac _ _ _ _ _ _ _ hm
     have hy := h3 W i j p 0 A A' WW X hX FA FA' FW t hf hf' Pm rf rl pm pm' hm Pr Pf q q' rr rr' e hq hq' hr hr'
-    haveI : Nontrivial Pm := hm.irred.1
+    have : Nontrivial Pm := hm.irred.1
     refine ⟨Pm, rf, rl, pm, pm', hm, nontrivial_left e, fun P' hP' => ?_⟩
     rw [hr' _ hf']
     exact e.map_ne_zero_iff.2 (tmul_ne_zero hP' hy)
   by_cases hT : Nonempty T
   · obtain ⟨t0⟩ := hT
-    haveI : Nontrivial Pr := (key t0).choose_spec.choose_spec.choose_spec.choose_spec.choose_spec.2.1
+    have : Nontrivial Pr := (key t0).choose_spec.choose_spec.choose_spec.choose_spec.choose_spec.2.1
     obtain ⟨x, hx⟩ := exists_ne (0 : Pr)
     obtain ⟨P0, rfl⟩ := hq' x
     refine ⟨P0, fun t h0 => ?_⟩

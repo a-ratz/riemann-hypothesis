@@ -82,7 +82,7 @@ theorem diag_of_upper {r : ℕ} (s : Fin r → ℂ) (hs : ∀ a, s a * s a = 1) 
     rw [Matrix.mul_assoc (diagonal s), Matrix.mul_assoc (diagonal s), h, hss]
   have hc : (b.map (starRingEnd ℂ)).BlockTriangular id := fun a c hca => by
     rw [Matrix.map_apply, hb hca, map_zero]
-  letI : Invertible (b.map (starRingEnd ℂ)) := invertibleOfLeftInverse _ _ h1
+  let : Invertible (b.map (starRingEnd ℂ)) := invertibleOfLeftInverse _ _ h1
   have hinv := Matrix.blockTriangular_inv_of_blockTriangular hc
   rw [Matrix.inv_eq_left_inv h1] at hinv
   have hoff : ∀ a c, a ≠ c → b a c = 0 := by
@@ -147,7 +147,7 @@ theorem gram_schmidt_frames : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     refine ⟨rmul x (FrameDegreeData.bOf X x), FrameDegreeData.ortho_bOf X hx, fun τ => ((mat (FrameDegreeData.bOf X x) τ)⁻¹ : Matrix (Fin r) (Fin r) ℂ),
       fun τ => ?_, ?_⟩
     · have hu : IsUnit (mat (FrameDegreeData.bOf X x) τ).det := isUnit_iff_ne_zero.2 (hb τ).1
-      letI := Matrix.invertibleOfIsUnitDet _ hu
+      let := Matrix.invertibleOfIsUnitDet _ hu
       refine ⟨?_, fun a c hca => Matrix.blockTriangular_inv_of_blockTriangular (FrameDegreeData.upper_of_bor X hb τ) hca⟩
       exact (Matrix.isUnit_nonsing_inv_det _ hu).ne_zero
     · funext τ

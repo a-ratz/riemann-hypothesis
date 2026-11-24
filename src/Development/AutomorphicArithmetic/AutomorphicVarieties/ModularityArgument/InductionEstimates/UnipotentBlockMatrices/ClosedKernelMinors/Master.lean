@@ -59,15 +59,15 @@ private theorem cont_pt {K : Type} [Field K] [NumberField K] : Continuous (pt (K
     have : Continuous fun p : Par K => (p.1, p.2.1, p.2.2.1) := by fun_prop
     simpa only [Function.comp_def] using hc.comp this
   have hN : Continuous fun p : Par K => (nn p.2.2.2.2 : G1 K (2 + 2)) := (continuous_unipOne 2).comp (by fun_prop)
-  exact (hN.mul hL).mul (continuous_subtype_val.comp (by fun_prop))
+  exact (hN.mul hL).mul (continuous_subtypeVal.comp (by fun_prop))
 
 set_option synthInstance.maxHeartbeats 200000 in
 private theorem meas_pt {K : Type} [Field K] [NumberField K] : Measurable (pt (K := K)) := by
-  haveI : BorelSpace (KG K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K])) := Prod.borelSpace
-  haveI : BorelSpace (ℝ × KG K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K])) := Prod.borelSpace
-  haveI : SecondCountableTopology (G1 K 2) := inferInstance
-  haveI : BorelSpace (G1 K 2 × ℝ × KG K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K])) := Prod.borelSpace
-  haveI : BorelSpace (Par K) := Prod.borelSpace
+  have : BorelSpace (KG K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K])) := Prod.borelSpace
+  have : BorelSpace (ℝ × KG K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K])) := Prod.borelSpace
+  have : SecondCountableTopology (G1 K 2) := inferInstance
+  have : BorelSpace (G1 K 2 × ℝ × KG K (2 + 2) × (UPos (2 + 2) 2 → 𝔸[K])) := Prod.borelSpace
+  have : BorelSpace (Par K) := Prod.borelSpace
   exact cont_pt.measurable
 
 private theorem core {K : Type} [Field K] [NumberField K] (μ : Measure (G1 K (2 + 2))) [μ.IsHaarMeasure]
@@ -87,24 +87,24 @@ private theorem core {K : Type} [Field K] [NumberField K] (μ : Measure (G1 K (2
   have hwae : ∀ᵐ y ∂fd μ, (w : RightCosetSpace (Gam K (2 + 2)) → ℂ) (mk (Gam K (2 + 2)) y) = W y := ae_restrict_of_ae hw
   have hvae : ∀ᵐ y ∂fd μ, (v : RightCosetSpace (Gam K (2 + 2)) → ℂ) (mk (Gam K (2 + 2)) y) = th F y := ae_restrict_of_ae hv
   have hW1 : ∫⁻ y, ‖W y‖ₑ ∂fd μ < ⊤ := by
-    haveI := isFiniteMeasure_quotientMeasure μ
+    have := isFiniteMeasure_quotientMeasure μ
     have h1 := ((Lp.memLp w).integrable one_le_two).2
-    rw [hasFiniteIntegral_iff_enorm, lintegral_quotientMeasure] at h1
+    rw [hasFiniteIntegral_iff_eNorm, lintegral_quotientMeasure] at h1
     refine lt_of_eq_of_lt (lintegral_congr_ae ?_) h1
     filter_upwards [hwae] with y hy
     rw [hy]
   have hint : Integrable (fun p => conj (F (pt p)) * W (pt p)) (parM μ₂ κ) := by
     refine ⟨(hm.comp meas_pt).aestronglyMeasurable, ?_⟩
-    have h1 := hU.2.1 (fun g => ‖conj (F g) * W g‖ₑ) hm.enorm fun γ hγ g => by rw [hinv γ hγ]
+    have h1 := hU.2.1 (fun g => ‖conj (F g) * W g‖ₑ) hm.eNorm fun γ hγ g => by rw [hinv γ hγ]
     have h2 : ∫⁻ y, ∑' q : Cos K, ‖conj (F ((q.out : G1 K (2 + 2)) * y)) * W ((q.out : G1 K (2 + 2)) * y)‖ₑ ∂fd μ ≤
         ∫⁻ y, C * ‖W y‖ₑ ∂fd μ := by
       refine lintegral_mono fun y => ?_
-      simp only [enorm_mul, hWi _ (Quotient.out _ : Gam K (2 + 2)).2, RCLike.enorm_conj]
+      simp only [eNorm_mul, hWi _ (Quotient.out _ : Gam K (2 + 2)).2, RCLike.eNorm_conj]
       rw [ENNReal.tsum_mul_right]
       exact mul_le_mul_left (hCb y) _
     rw [lintegral_const_mul' _ _ hC, h1] at h2
     have h3 := h2.trans_lt (ENNReal.mul_lt_top hC.lt_top hW1)
-    rw [hasFiniteIntegral_iff_enorm]
+    rw [hasFiniteIntegral_iff_eNorm]
     by_contra h
     rw [not_lt, top_le_iff] at h
     rw [h, ENNReal.mul_top (by simpa using hU.1)] at h3

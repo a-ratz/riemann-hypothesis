@@ -78,16 +78,16 @@ theorem finite_projective_of_localBasis : ∀ {R M : Type} [CommRing R] [AddComm
     fun g => Module.Free.of_basis g.2.some
   have hfp : ∀ g : t, Module.FinitePresentation (Localization.Away g.1)
       (LocalizedModule (Submonoid.powers g.1) M) := fun g => by
-    haveI := hfree g
-    haveI : Module.Finite (Localization.Away g.1) (LocalizedModule (Submonoid.powers g.1) M) :=
+    have := hfree g
+    have : Module.Finite (Localization.Away g.1) (LocalizedModule (Submonoid.powers g.1) M) :=
       Module.Finite.of_basis g.2.some
     exact Module.finitePresentation_of_projective _ _
-  haveI : Module.FinitePresentation R M := Module.FinitePresentation.of_localizationSpan t ht hfp
-  haveI : Module.Flat R M := by
+  have : Module.FinitePresentation R M := Module.FinitePresentation.of_localizationSpan t ht hfp
+  have : Module.Flat R M := by
     refine Module.flat_of_localized_span R M t ht ?_
     intro g
-    haveI := hfree g
-    haveI : Module.Flat R (Localization.Away g.1) := IsLocalization.flat _ (Submonoid.powers g.1)
+    have := hfree g
+    have : Module.Flat R (Localization.Away g.1) := IsLocalization.flat _ (Submonoid.powers g.1)
     exact Module.Flat.trans R (Localization.Away g.1) _
   refine ⟨inferInstance, Module.Flat.projective_of_finitePresentation, fun p => ?_⟩
   obtain ⟨r, hr, ⟨b⟩⟩ := h p
@@ -95,8 +95,8 @@ theorem finite_projective_of_localBasis : ∀ {R M : Type} [CommRing R] [AddComm
     rw [PrimeSpectrum.localization_away_comap_range (Localization.Away r) r]
     exact hr
   obtain ⟨q, rfl⟩ := hq
-  haveI := Module.Free.of_basis b
-  haveI : Nontrivial (Localization.Away r) := q.nontrivial
+  have := Module.Free.of_basis b
+  have : Nontrivial (Localization.Away r) := q.nontrivial
   rw [← Module.rankAtStalk_isBaseChange
     (LocalizedModule.isBaseChange (Submonoid.powers r) M) q,
     Module.rankAtStalk_eq_finrank_of_free]
@@ -113,7 +113,7 @@ theorem exists_chart_lieBasis : ∀ {R : Type} [CommRing R] (G : Over (Sp R)) [G
   obtain ⟨_, ⟨r, rfl⟩, hr, hsub⟩ :=
     PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open
       (a := p) (u := (e ⁻¹ᵁ j.left.opensRange).1) hmem (e ⁻¹ᵁ j.left.opensRange).2
-  refine ⟨r, hr, ReciprocityTheory.ChartRestriction.G.Chart.chart_away G j.left.opensRange (by haveI : IsAffine (ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := R) S).left := inferInstanceAs (IsAffine (Spec (CommRingCat.of S))); exact isAffineOpen_opensRange j.left) r
+  refine ⟨r, hr, ReciprocityTheory.ChartRestriction.G.Chart.chart_away G j.left.opensRange (by have : IsAffine (ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := R) S).left := inferInstanceAs (IsAffine (Spec (CommRingCat.of S))); exact isAffineOpen_opensRange j.left) r
     (fun x hx => hsub (show x ∈ (PrimeSpectrum.basicOpen r : Set (PrimeSpectrum R)) from hx)), ?_⟩
   obtain ⟨ε, hε⟩ := GlobalTheory.SqZero.exists_chart_pt j
     (1 : ReciprocityTheory.ChartRestriction.G.Chart.sp (R₀ := R) (Localization.Away r) ⟶ G) (by

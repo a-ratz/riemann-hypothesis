@@ -185,7 +185,7 @@ theorem step_ge (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {h : V →�
       have hx' : ∀ k, k ≠ i₀ → x' k ∈ A := by
         intro k hk
         have : x' k = x k - c k • x i₀ := by
-          simp only [x', e, if_neg hk, neg_smul, algebraMap_smul]
+          simp only [x', e, ite_eq_right hk, neg_smul, algebraMap_smul]
           abel
         rw [this]; exact hc k
       have hup : ∀ a : 𝓞 K, b.det (Function.update x' i₀ (a • x i₀)) =
@@ -260,7 +260,7 @@ theorem exists_adjust (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {P : 
       intro hle
       have hPe := hP.eq_of_le hne_top hle
       exact hc (by rw [hPe]; exact hc')
-    obtain ⟨π, hπ, hπ'⟩ := SetLike.not_le_iff_exists.1 hnle
+    obtain ⟨π, hπ, hπ'⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
     refine ⟨π, hπ, hadd π hπ, fun h => hπ' ?_⟩
     have h3 := (Formalism.HermitianLatticesTheory.conjIdeal (K := K) P).sub_mem h hc'
     simpa using h3
@@ -393,7 +393,7 @@ theorem absNorm_discrIdeal_of_le (hK : Formalism.HermitianLatticesTheory.IsCMUnr
     subst this
     rw [AddSubgroup.relIndex_self] at hn
     rw [← hn, one_pow, one_mul]
-  obtain ⟨y₀, hy₀B, hy₀A⟩ := SetLike.not_le_iff_exists.1 hBA
+  obtain ⟨y₀, hy₀B, hy₀A⟩ := IsConcreteLE.not_le_iff_exists.1 hBA
   let J : Ideal (𝓞 K) := A.comap (LinearMap.toSpanSingleton (𝓞 K) V y₀)
   have hJ : ∀ c, c ∈ J ↔ c • y₀ ∈ A := fun c => Iff.rfl
   have hJtop : J ≠ ⊤ := by
@@ -422,7 +422,7 @@ theorem absNorm_discrIdeal_of_le (hK : Formalism.HermitianLatticesTheory.IsCMUnr
       rw [one_mul, ← hJ']
       exact le_antisymm (hJ' ▸ Ideal.mul_le_right) hle
     exact hP.ne_top (by rw [mul_right_cancel₀ hJ'0 h1, Ideal.one_eq_top])
-  obtain ⟨c, hcJ', hcJ⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨c, hcJ', hcJ⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   have S : IsStep P A (A ⊔ Submodule.span (𝓞 K) {c • y₀}) (c • y₀) := by
     refine ⟨le_sup_left, Submodule.mem_sup_right (Submodule.mem_span_singleton_self _), hcJ,
       fun π hπ => ?_, fun x hx => ?_⟩

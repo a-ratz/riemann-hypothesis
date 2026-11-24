@@ -89,7 +89,7 @@ theorem valuation_term_le_sum_of_distinct {Ω Γ : Type} [Field Ω] [LinearOrder
   intro j hj
   by_cases hall : ∀ i ∈ s, f i = 0
   · rw [hall j hj, map_zero]
-    exact zero_le'
+    exact zero_le
   push_neg at hall
   obtain ⟨i0, hi0, hfi0⟩ := hall
   obtain ⟨k, hk, hkmax⟩ := s.exists_max_image (fun i => v (f i)) ⟨i0, hi0⟩
@@ -97,7 +97,7 @@ theorem valuation_term_le_sum_of_distinct {Ω Γ : Type} [Field Ω] [LinearOrder
     intro h0
     have h1 := hkmax i0 hi0
     rw [h0] at h1
-    exact hfi0 ((Valuation.zero_iff v).1 (le_antisymm h1 zero_le'))
+    exact hfi0 ((Valuation.zero_iff v).1 (le_antisymm h1 zero_le))
   have hsum : v (∑ i ∈ s, f i) = v (f k) := by
     apply v.map_sum_eq_of_lt hk
     intro i hi
@@ -135,7 +135,7 @@ theorem exists_integral_poly_of_primitiveRoot_totally_ramified :
     have h1 : 1 ≤ γ ^ e := one_le_pow₀ hc
     rw [hζv] at h1
     exact absurd hl (not_lt.2 h1)
-  have hγpos : 0 < γ := lt_of_le_of_ne zero_le' hγ0.symm
+  have hγpos : 0 < γ := lt_of_le_of_ne zero_le hγ0.symm
   set T : Subring Ω := K.toSubring with hT_def
   have hQT : (↑Q.coeffs : Set Ω) ⊆ T := fun x hx => hQK x hx
   set Q' := Q.toSubring T hQT with hQ'_def
@@ -445,7 +445,7 @@ namespace GlobalTheory.CycIne
 
 theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (A : ValuationSubring Ω), OverL l A → ∀ (m : ℕ) (ζ : Ω), IsPrimitiveRoot ζ (l ^ m) → ∀ u ∈ A, (∀ s ∈ Ine (F := ℚ) A, cycMod ℚ Ω l m s = 1 → s u = u) → ∃ P : Polynomial Ω, (∀ x ∈ P.coeffs, x ∈ A ∧ ∀ s ∈ Ine (F := ℚ) A, s x = x) ∧ P.eval ζ = u := by
   intro l _ Ω _ _ _ A hA m ζ hζ u hu hfix
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   rcases Nat.eq_zero_or_pos m with rfl | hm
   · refine ⟨Polynomial.C u, ?_, by simp⟩
     intro x hx
@@ -457,7 +457,7 @@ theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
       · rfl
       · exact absurd rfl hn
     subst hxu
-    haveI : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
+    have : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
     exact ⟨hu, fun s hs => hfix s hs (Units.ext (Subsingleton.elim _ _))⟩
   · obtain ⟨Q, hQ, hQe⟩ := _root_.GlobalTheory.InertiaCycFixed.exists_poly_of_fixed l Ω A m ζ hζ u hfix
     have hl : A.valuation (l : Ω) < 1 := by

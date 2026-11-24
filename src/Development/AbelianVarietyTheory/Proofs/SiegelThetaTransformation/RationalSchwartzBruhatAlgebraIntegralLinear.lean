@@ -101,7 +101,7 @@ theorem apply_add_of_mem_perSub {R : ℕ} {φ : Matrix κ ι K → ℂ} (h : Has
 
 theorem apply_out_mk {R : ℕ} {φ : Matrix κ ι K → ℂ} (h : HasLevel R φ) (x : Matrix κ ι K) :
     φ (Quotient.out (QuotientAddGroup.mk x : Matrix κ ι K ⧸ perSub K κ ι R)) = φ x := by
-  obtain ⟨p, hp⟩ := QuotientAddGroup.mk_out_eq_mul (perSub K κ ι R) x
+  obtain ⟨p, hp⟩ := QuotientAddGroup.mk_out_eq_add (perSub K κ ι R) x
   rw [hp]
   exact apply_add_of_mem_perSub h p.2 x
 

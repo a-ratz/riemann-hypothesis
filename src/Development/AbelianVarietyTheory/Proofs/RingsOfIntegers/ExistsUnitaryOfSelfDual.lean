@@ -192,7 +192,7 @@ theorem exists_unitary_adapted : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       (∀ v ∈ Λ.La, (k : E) • ga.mulVec v ∈ stdLat E n) ∧
       ∀ v ∈ stdLat E n, ∃ w ∈ Λ.La, (k : E) • v = ga.mulVec w := by
   intro E _ _ _ H n Λ N hU hN hle m hm
-  haveI := H.unram
+  have := H.unram
   obtain ⟨Λ', hΛ', hsd⟩ := exists_lat Λ hU hN hle
   obtain ⟨γ, hγ, h₁, h₂⟩ := exists_unitary_of_selfDual hsd hm.ne'
   have hγ₂ := mul_eq_one_comm.1 hγ

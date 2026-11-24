@@ -146,7 +146,7 @@ theorem cellU_rankOne_shape : ∀ (L : Type) [Field L] [Valued L (WithZero (Mult
   have hab : ((lo k).rev).val = (lo k).val + 1 := by
     obtain ⟨m, rfl⟩ := he
     have hk2 := k.isLt
-    simp only [Fin.val_rev, lo, Fin.coe_castLE]
+    simp only [Fin.val_rev, lo, Fin.val_castLE]
     omega
   rw [cellU, Subgroup.mem_subgroupOf]
   exact mem_cell_swap hab hy (u : GL (Fin n) L)

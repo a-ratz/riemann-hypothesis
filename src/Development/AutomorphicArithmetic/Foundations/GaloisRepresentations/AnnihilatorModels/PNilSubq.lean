@@ -102,10 +102,10 @@ theorem UpperTheory.Gal.crystallineComparison.nilSubq_of :
     AdmExact → NilEmb → NilSubq := by
   intro hA hE F G B _ _ _ _ σ ψ L _ _ e hB V W _ _ _ _ _ _ _ _ _ ρ ρ' hS hAdm
   obtain ⟨U, _, _, ρU, i, p, hi, hinj, hp, hsurj⟩ := hS
-  letI : Module F U := Module.compHom U (algebraMap F L)
-  haveI : IsScalarTower F L U := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : Module.Finite L U := Module.Finite.of_injective i hinj
-  haveI : Module.Finite L W := Module.Finite.of_surjective p hsurj
+  let : Module F U := Module.compHom U (algebraMap F L)
+  have : IsScalarTower F L U := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : Module.Finite L U := Module.Finite.of_injective i hinj
+  have : Module.Finite L W := Module.Finite.of_surjective p hsurj
   have hU : admitted σ e ρU := (hA F G B σ L e hB U V ρU ρ i hi).1 hinj hAdm
   obtain ⟨hW, hmap⟩ := (hA F G B σ L e hB U W ρU ρ' p hp).2 hsurj hU
   refine ⟨hW, fun Q hQ => ?_⟩

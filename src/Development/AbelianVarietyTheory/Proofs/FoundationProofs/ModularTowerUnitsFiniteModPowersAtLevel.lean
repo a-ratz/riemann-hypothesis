@@ -749,7 +749,7 @@ theorem comp_ne_zero {a : ℂ → ℂ} {z₀ : ℂ} (hz₀ : z₀ ∈ Hs) (h : a
 theorem exists_both_ne_zero {a b : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) (hb : DifferentiableOn ℂ b Hs)
     {z₁ z₂ : ℂ} (hz₁ : z₁ ∈ Hs) (hz₂ : z₂ ∈ Hs) (h₁ : a z₁ ≠ 0) (h₂ : b z₂ ≠ 0) :
     ∃ z ∈ Hs, a z ≠ 0 ∧ b z ≠ 0 := by
-  haveI := neBot_Hs
+  have := neBot_Hs
   have hs : ∀ᶠ z in codiscreteWithin Hs, z ∈ Hs := Filter.self_mem_codiscreteWithin Hs
   obtain ⟨z, hz, h1, h2⟩ := (hs.and ((eventually_ne_zero ha hz₁ h₁).and (eventually_ne_zero hb hz₂ h₂))).exists
   exact ⟨z, hz, h1, h2⟩
@@ -904,7 +904,7 @@ theorem quot_pow {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X 
     rw [hψ, ← Filter.Germ.coe_mul, Filter.Germ.coe_eq] at hg₀
     filter_upwards [hg₀] with z hz
     simpa only [Pi.mul_apply] using hz
-  haveI : Nontrivial Mero := _root_.GlobalTheory.FN.germ_main.1
+  have : Nontrivial Mero := _root_.GlobalTheory.FN.germ_main.1
   have hinj : Function.Injective X.an := X.an.injective
   have hpowg : g₀ ^ m = ((f * r⁻¹ : X.Kˣ) : X.K) := by
     apply hinj
@@ -943,9 +943,9 @@ theorem finite_mod_powers : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
           (f : X.K) = r * (g : X.K) ^ m * algebraMap Ω X.K c := by
   intro Ω _ _ _ ε X hε hj M m hM hm
   classical
-  haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : Nontrivial Mero := _root_.GlobalTheory.FN.germ_main.1
-  haveI : Group.FG SL(2, ℤ) :=
+  have : NeZero M := ⟨hM.ne'⟩
+  have : Nontrivial Mero := _root_.GlobalTheory.FN.germ_main.1
+  have : Group.FG SL(2, ℤ) :=
     Group.fg_iff.mpr ⟨{ModularGroup.S, ModularGroup.T}, SpecialLinearGroup.SL2Z_generators, (Set.finite_singleton _).insert _⟩
   obtain ⟨_, S, _, hS⟩ := (Group.fg_iff' (G := CongruenceSubgroup.Gamma M)).1 ((Group.fg_iff_subgroup_fg (CongruenceSubgroup.Gamma M)).2 (Subgroup.fg_of_index_ne_zero _))
   have hSmem : ∀ s ∈ S, (s : SL(2, ℤ)) ∈ CongruenceSubgroup.Gamma M := fun s _ => s.property
@@ -976,7 +976,7 @@ theorem finite_mod_powers : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
   intro f hfU hfinv
   let f' : Sset := ⟨f, hfU, hfinv⟩
   have hex : ∃ g : Sset, sig g = sig f' := ⟨f', rfl⟩
-  have hrep : rep (sig f') = hex.choose.1 := dif_pos hex
+  have hrep : rep (sig f') = hex.choose.1 := dite_eq_left hex
   have hsig : sig hex.choose = sig f' := hex.choose_spec
   have hsame : ∀ s : S, Z hex.choose s = Z f' s := fun s => congrArg Subtype.val (congrFun hsig s)
   let r : Sset := hex.choose

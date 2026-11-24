@@ -151,7 +151,7 @@ theorem GlobalTheory.AdForm.trc_rd_laws : ∀ {B : Base} {X : PreX B.toPre} (I :
   obtain ⟨hLy, hKy, hRy⟩ := rd_laws I hok hpins l Z u a Ch A hA θ hθ j hj φ hφ b y
   have hT' := hT
   obtain ⟨⟨eι, -⟩, -⟩ := hT'
-  haveI : Fintype ι := Fintype.ofEquiv _ eι.symm
+  have : Fintype ι := Fintype.ofEquiv _ eι.symm
   obtain ⟨hstab, hdec⟩ := _root_.GlobalTheory.AdForm.twLev_prime I hok hpins l Z u a Ch A hA K ι p β Q L hT Finset.univ.toList
     (Finset.nodup_toList _) (fun i => Finset.mem_toList.2 (Finset.mem_univ _)) j hj b
   obtain ⟨gs, hgs, κ', hκ'off, hκeq⟩ := hdec κ.1 κ.2
@@ -421,7 +421,7 @@ theorem GlobalTheory.AdForm.trans_stab : ∀ {B : Base} {X : PreX B.toPre} (I : 
 
   clear hF hV he hΨ
   obtain ⟨⟨eι, -⟩, -⟩ := id hT
-  haveI : Fintype ι := Fintype.ofEquiv _ eι.symm
+  have : Fintype ι := Fintype.ofEquiv _ eι.symm
   classical
   have hJnd : (Finset.univ : Finset ι).toList.Nodup := Finset.nodup_toList _
   have hJall : ∀ i, i ∈ (Finset.univ : Finset ι).toList := fun i => Finset.mem_toList.2 (Finset.mem_univ i)
@@ -678,7 +678,7 @@ theorem twS : TwS' := by
   have hram := _root_.GlobalTheory.AdForm.ram_iff_scalar_ram I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj φ hφ.1
   refine ⟨fun b y => ⟨hram.1 b y, fun i => hram.2.1 hφ b y i⟩, fun η => ?_⟩
   have h : j ≤ B.R.m ∧ RamT (I := I) (l := l) (u := u) (a := a) j φ := ⟨hj, hφ⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   exact (key j hj φ hφ η).choose_spec
 
 end GlobalTheory.AdForm.TwSProof
@@ -783,7 +783,7 @@ theorem colOf_readS_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I 
       ∀ (row : ∀ t, RowCh (_root_.GlobalTheory.Fam.pk_z W) (_root_.GlobalTheory.Fam.complexLevelStructure W) u a.g t) (kom : ∀ (_ : W.P.T) j, Om ((I.rec7 l Z).sp.X j) ((I.rec7 l Z).sp.X (j + 1))) (dd : ∀ t j, (J t).Ch j → (J t).Ch (j + 1) → WO ((I.rec7 l Z).sp.X j) ((I.rec7 l Z).sp.X (j + 1)) →₀ ℂ) (s : ∀ t j, (J t).Ch j → ℂ) (cV cK : W.P.T → ℕ → ℂ) (cP : W.P.T → ℂ),
         @ReadS _ _ _ a.fld a.val a.top a.loc _ a.o ((a.fam row (_root_.GlobalTheory.Fam.columnChoiceOfCoefficients a J kom dd (fun t j => S' t j (k.ε j)) s cV cK cP)).t t) k.ε (S' t 0) := by
   intro B X I l Z L hT Gi Gl Kc Yd cX ex W hW u a _ha hat J hJ k
-  letI := a.fld; letI := a.val; letI := a.top; letI := a.loc
+  let := a.fld; let := a.val; let := a.top; let := a.loc
   choose S hS using fun t => _root_.GlobalTheory.AdForm.twS_ramL I hW.tr.ok hW.tr.pins.some l Z u (W.P.I.tup t) _ _ (J t).A (J t).ι (hJ t).is (_root_.GlobalTheory.Fam.pk_z W).θ
     hat.pinX.inf a.k a.ι a.o.p a.o.β a.o.Q (fun j => (a.g.x j).L) hat.std a.o.I a.o.q a.o.χ a.o.hχ
   refine ⟨S, fun t => ⟨fun j hj η φ hφ => ((hS t j hj φ hφ).2 η).1, fun row kom dd s cV cK cP => ?_⟩⟩

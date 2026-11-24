@@ -103,7 +103,7 @@ theorem tensor_coef_smooth (dual : Bool) (η f : Fin n → H) (hf : ∀ d, IsSmo
   apply ReciprocityTheory.ChartRestriction.DS.tensor_coef_smooth <;> assumption
 
 theorem continuous_umat' : Continuous (fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) := by
-  exact Units.continuous_val.comp continuous_subtype_val
+  exact Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_rep_orbit (hσ : IsURepOn (UJset ε) σ) (v : H) :
     Continuous (fun g : Formalism.REAL.UJ ε => σ (Formalism.MainNotions.S.umat g) v) := by

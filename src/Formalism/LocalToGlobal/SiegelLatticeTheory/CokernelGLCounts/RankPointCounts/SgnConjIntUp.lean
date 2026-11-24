@@ -116,7 +116,7 @@ theorem modeL (hs : (Z.M p).split = none) (u u' : D.what₂.Word)
   have hdet : IsUnit K.det := by
     have hb : K.BlockTriangular OrderDual.toDual := fun i j hij => hKlow.2.1 i j hij
     have hd : K.det = 1 := by
-      rw [Matrix.det_of_lowerTriangular K hb]
+      rw [Matrix.det_of_isLowerTriangular K hb]
       simp [hKlow.1]
     rw [hd]
     exact isUnit_one

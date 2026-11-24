@@ -149,7 +149,7 @@ theorem memLp_coef_right [CompleteSpace H] [MeasurableMul G] [μ.IsMulRightInvar
     {w v₀ : H} (hv₀ : v₀ ≠ 0) (h : MemLp (fun g => ⟪w, π g v₀⟫_ℂ) 2 μ) (v : H) :
     MemLp (fun g => ⟪w, π g v⟫_ℂ) 2 μ := by
   set Γ := coefGraph μ π w with hΓ
-  haveI : CompleteSpace Γ := (isClosed_coefGraph (μ := μ) π w).completeSpace_coe
+  have : CompleteSpace Γ := (isClosed_coefGraph (μ := μ) π w).completeSpace_coe
   let ρ : G → (Lp ℂ 2 μ →ₗᵢ[ℂ] Lp ℂ 2 μ) := fun g =>
     Lp.compMeasurePreservingₗᵢ ℂ (fun x => x * g) (measurePreserving_mul_right μ g)
   have hρ : ∀ g (a : H) (f : Lp ℂ 2 μ), WithLp.toLp 2 (a, f) ∈ Γ →
@@ -168,7 +168,7 @@ theorem memLp_coef_right [CompleteSpace H] [MeasurableMul G] [μ.IsMulRightInvar
     have h2 : (f' : G → ℂ) =ᵐ[μ] fun x => ⟪w, π x a⟫_ℂ := hf'
     exact Lp.ext (h1.trans h2.symm)
   have hinv : ∀ g (a : H), π g (π g⁻¹ a) = a := fun g a => by
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]; rfl
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]; rfl
   let ι : H →L[ℂ] WithLp 2 (H × Lp ℂ 2 μ) :=
     (WithLp.prodContinuousLinearEquiv 2 ℂ H (Lp ℂ 2 μ)).symm.toContinuousLinearMap.comp
       (ContinuousLinearMap.inl ℂ H (Lp ℂ 2 μ))
@@ -178,7 +178,7 @@ theorem memLp_coef_right [CompleteSpace H] [MeasurableMul G] [μ.IsMulRightInvar
   have hcomm : ∀ g, π g * A = A * π g := by
     intro g
     ext a
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, hA, hA]
+    rw [mul_apply_eq_comp, mul_apply_eq_comp, hA, hA]
     set p := Γ.starProjection (ι a) with hp
     have hpm : WithLp.toLp 2 (p.fst, p.snd) ∈ Γ := Γ.starProjection_apply_mem _
     have key : Γ.starProjection (ι (π g a)) = WithLp.toLp 2 (π g p.fst, ρ g p.snd) := by
@@ -237,8 +237,8 @@ end SqIntRep
 
 theorem Published.schurOrthogonalitySquareIntegrable' : Published.SchurOrthogonalitySquareIntegrable := by
   intro G _ _ _ _ _ _ _ μ _ _ _ H _ _ _ π hπ hc hirr ⟨v₀, w₀, hv₀, hw₀, h⟩
-  haveI := SqIntRep.isInvInvariant_of_unimodular μ
-  haveI : Nontrivial H := nontrivial_of_ne v₀ 0 hv₀
+  have := SqIntRep.isInvInvariant_of_unimodular μ
+  have : Nontrivial H := nontrivial_of_ne v₀ 0 hv₀
   have hall := SqIntRep.memLp_coef π hπ hirr hv₀ hw₀ h
   exact ⟨hall, SchurOrth.schur_orthogonality π hπ hc hirr hall⟩
 

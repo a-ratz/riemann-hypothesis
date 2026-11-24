@@ -69,9 +69,9 @@ theorem exists_finite_average {G V : Type} [Group G] [AddCommGroup V] [Module �
       ∀ l : L, ρ (l : G) (c • ∑ i, twOrbit ρ L θ x (r i)) =
         (θ l : ℂ) • (c • ∑ i, twOrbit ρ L θ x (r i)) := by
   classical
-  haveI := finiteIndex_stabKer hρ hL θ hθ x
-  haveI : Finite (L ⧸ stabKer ρ L θ x) := Subgroup.finite_quotient_of_finiteIndex
-  letI := Fintype.ofFinite (L ⧸ stabKer ρ L θ x)
+  have := finiteIndex_stabKer hρ hL θ hθ x
+  have : Finite (L ⧸ stabKer ρ L θ x) := Subgroup.finite_quotient_of_finiteIndex
+  let := Fintype.ofFinite (L ⧸ stabKer ρ L θ x)
   have hn : ((Fintype.card (L ⧸ stabKer ρ L θ x) : ℕ) : ℂ) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
   have hF : ∀ a b : L, (QuotientGroup.mk a : L ⧸ stabKer ρ L θ x) = QuotientGroup.mk b →

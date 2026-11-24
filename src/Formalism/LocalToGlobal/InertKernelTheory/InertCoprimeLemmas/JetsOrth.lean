@@ -108,7 +108,7 @@ theorem orthBasisExists_of (hG : GlobONB) (hW : WeakApprox) : OrthBasisExists :=
   have honN := IntTens.orth_bB (IntTens.eTwo n') (IntTens.eTwo n) b hon
   obtain ⟨γ, γ', M, M', -, hM, hM', rfl, rfl⟩ := hW D p hp5 hin _ _ L L' hA
   have hlocM := (pairing_fact D ⊥ 0 p _ _ _ M _ M' hM hM').1 _ _ hlocN
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h1 : (γ : Matrix (Fin (n + n)) (Fin (n + n)) D.host.E) * star (γ : Matrix _ _ D.host.E) = 1 :=
     Matrix.mem_unitaryGroup_iff.1 γ.2
   have h2 : star (γ : Matrix (Fin (n + n)) (Fin (n + n)) D.host.E) * (γ : Matrix _ _ D.host.E) = 1 :=

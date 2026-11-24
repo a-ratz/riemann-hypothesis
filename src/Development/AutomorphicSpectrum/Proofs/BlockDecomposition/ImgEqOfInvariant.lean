@@ -113,8 +113,8 @@ theorem exists_signs (ι : A → A) (hι : ∀ a, ι (ι a) = a) :
       (∀ e e', T (sMeet e e') = T e ∩ T e') ∧ (∀ e e', SLe e e' → T e ⊆ T e') := by
   classical
   obtain ⟨k, ⟨q⟩⟩ := Finite.exists_equiv_fin A
-  letI : Fintype A := Fintype.ofEquiv _ q.symm
-  letI : LinearOrder A := LinearOrder.lift' q q.injective
+  let : Fintype A := Fintype.ofEquiv _ q.symm
+  let : LinearOrder A := LinearOrder.lift' q q.injective
   let R : Finset A := Finset.univ.filter fun a => a < ι a
   let r : Fin R.card → A := fun j => (R.equivFin.symm j : A)
   have hr : ∀ j, r j < ι (r j) := fun j => (Finset.mem_filter.1 (R.equivFin.symm j).2).2
@@ -167,10 +167,10 @@ theorem exists_signs (ι : A → A) (hι : ∀ a, ι (ι a) = a) :
       constructor
       · rintro ⟨j, ⟨rfl, h⟩ | ⟨rfl, h⟩⟩
         · by_contra hc
-          simp only [e, hc, if_false] at h
+          simp only [e, hc, ite_false] at h
           split_ifs at h <;> exact absurd h (by decide)
         · by_contra hc
-          simp only [e, hc, if_false] at h
+          simp only [e, hc, ite_false] at h
           split_ifs at h <;> exact absurd h (by decide)
       · intro ha
         have hna := hI a ha
@@ -367,7 +367,7 @@ theorem exists_atoms [FiniteDimensional K V] (f : Module.End K V) (hs : Squarefr
   have htop : ⨆ P ∈ F, Lk P = ⊤ := by
     rw [← hker F subset_rfl, hprod, LinearMap.aeval_self_charpoly, LinearMap.ker_zero]
   let A := {P : K[X] // P ∈ F ∧ Lk P ≠ ⊥}
-  haveI : Finite A := Finite.of_injective (fun a : A => (⟨a.1, a.2.1⟩ : F))
+  have : Finite A := Finite.of_injective (fun a : A => (⟨a.1, a.2.1⟩ : F))
     (fun a b h => Subtype.ext (congrArg (fun z : {x // x ∈ F} => z.1) h))
   let L : A → Submodule K V := fun a => Lk a.1
   refine ⟨A, inferInstance, L, ?_, fun a => a.2.2, fun a x hx => ?_, fun W hW => ?_⟩

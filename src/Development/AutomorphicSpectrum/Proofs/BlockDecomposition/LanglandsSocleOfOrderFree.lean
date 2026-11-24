@@ -258,10 +258,10 @@ theorem isSmooth_of_surjective {ρ : Representation ℂ G V} {σ : Representatio
     { carrier := {g | σ g (f v) = f v}
       one_mem' := by simp
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have h1 : σ a⁻¹ (σ a (f v)) = f v := by
           rw [← Module.End.mul_apply, ← map_mul]; simp
         rwa [ha] at h1 }
@@ -269,10 +269,10 @@ theorem isSmooth_of_surjective {ρ : Representation ℂ G V} {σ : Representatio
     { carrier := {g | ρ g v = v}
       one_mem' := by simp
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have h1 : ρ a⁻¹ (ρ a v) = v := by
           rw [← Module.End.mul_apply, ← map_mul]; simp
         rwa [ha] at h1 }

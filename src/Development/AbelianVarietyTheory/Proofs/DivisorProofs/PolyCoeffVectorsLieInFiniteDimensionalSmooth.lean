@@ -126,14 +126,14 @@ theorem ev_diag_monomial (θ : Fin n → ℝ) (g : Mat n) (s : (Fin n × Fin n) 
   rw [Finsupp.prod_fintype _ _ (by simp), Finsupp.prod_fintype _ _ (by simp), Complex.ofReal_sum, Finset.sum_mul,
     Complex.exp_sum, ← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun i _ => ?_
-  rw [Complex.ofReal_mul, Complex.ofReal_natCast, mul_assoc, Complex.exp_nat_mul, ← mul_pow]
+  rw [Complex.ofReal_mul, Complex.ofReal_natCast, mul_assoc, Complex.exp_natCast_mul, ← mul_pow]
   congr 1
   rcases i with x | x
   · simp [varWt, Pi.single_apply, ite_mul]
   · simp [varWt, Pi.single_apply, ite_mul, ← Complex.exp_conj]
 
 theorem continuous_toMK (ε : Fin n → Bool) : Continuous fun k : KG ε => toMK k :=
-  (Formalism.REAL.isClosedEmbeddingMatrix n ε).1.continuous.comp continuous_subtype_val
+  (Formalism.REAL.isClosedEmbeddingMatrix n ε).1.continuous.comp continuous_subtypeVal
 
 theorem continuous_ev (P : Poly n) : Continuous fun g : Mat n => ev g P := by
   refine (MvPolynomial.continuous_eval P).comp (continuous_pi ?_)
@@ -255,7 +255,7 @@ def pt (k : KG ε) : ((Fin n × Fin n) ⊕ (Fin n × Fin n)) → ℂ :=
   Sum.elim (fun x => toMK k x.1 x.2) (fun x => star (toMK k x.1 x.2))
 
 theorem continuous_toMK : Continuous fun k : KG ε => toMK k :=
-  Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+  Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
 
 theorem continuous_pt : Continuous (pt ε) := by
   refine continuous_pi fun v => ?_
@@ -641,7 +641,7 @@ theorem uFin_of' : Repro → GlobalTheory.PsCo.PcEF.UF.PolyAvgP → UFin := by
         · have : (fun k : KG ε => σ (toMK k) v) = fun k : KG ε => π (k : UJ ε) v := funext fun k => by
             rw [← hσπ]
           rw [this]
-          exact (hπ.continuous_apply v).comp continuous_subtype_val
+          exact (hπ.continuous_apply v).comp continuous_subtypeVal
       exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
     have key : ∫ k : KG ε, ev (toMK k) Q • σ (toMK k) v ∂(muK ε) = v := by
       refine ext_inner_left ℂ fun l => ?_

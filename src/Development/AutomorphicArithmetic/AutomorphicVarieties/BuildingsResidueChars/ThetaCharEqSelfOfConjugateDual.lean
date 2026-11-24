@@ -105,7 +105,7 @@ theorem UpperTheory.thetaChar_eq_self_of_conjugate_dual :
     refine GlobalTheory.FrobDense.eq_one_of_away _ ((GlobalTheory.ThetaPull.thetaChar κ).2.1.mul κ.2.1.inv) (fun k => ?_) hS.toFinset
       fun v hv => ?_
     · rw [MonoidHom.mul_apply, MonoidHom.inv_apply, κ.2.2, (GlobalTheory.ThetaPull.thetaChar κ).2.2, inv_one, one_mul]
-    · rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+    · rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
       obtain ⟨v, rfl⟩ : ∃ v', conjSrc (IsCMField.complexConj E).toRingEquiv v' = v := ⟨_, GlobalTheory.ThetaPull.conjSrc_conjSrc v⟩
       rw [GlobalTheory.ThetaPull.conjSrc_conjSrc] at hv
       refine GlobalTheory.FrobDense.eq_one_of_unif (((GlobalTheory.ThetaPull.thetaChar κ).1 * κ.1⁻¹).comp (localIdele E _)) fun y hy => ?_

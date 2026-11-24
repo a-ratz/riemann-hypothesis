@@ -82,7 +82,7 @@ theorem sum_restrict_preimage_smul_le (hB : NullMeasurableSet B μ) {m : ℝ≥0
       Measure.restrict_le_self
   rw [Measure.le_iff]
   intro A hA
-  rw [Measure.sum_apply _ hA, Measure.smul_apply, smul_eq_mul]
+  rw [Measure.sum_apply _ hA, smul_apply, smul_eq_mul]
   have h1 : ∀ g : G, ((μ.restrict D).restrict ((fun y => g • y) ⁻¹' B)) A
       = ∫⁻ x in A, ((fun y => g • y) ⁻¹' B).indicator (fun _ => (1 : ℝ≥0∞)) x
           ∂(μ.restrict D) := by

@@ -50,9 +50,9 @@ theorem UpperTheory.V.Ws.Lk.noMu :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c}, D.Good → ∀ (L : IntermediateField ℚ Ω) (g : G L Ω), Raw.bar D.om (resQ L g) ≠ 1 → ¬ ∃ ζ : L, IsPrimitiveRoot ζ l := by
   intro Ω _ _ _ l _ c D hD L g hbar hroot
   obtain ⟨ζ, hζ⟩ := hroot
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
-  haveI := c.fin
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : ∀ i, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => inferInstance
+  have := c.fin
   have hl : 1 < l := (Fact.out : l.Prime).one_lt
   have hζΩ : IsPrimitiveRoot (ζ : Ω) l := hζ.map_of_injective (L.val : L →+* Ω).injective
   set σ : G ℚ Ω := resQ L g with hσ
@@ -62,7 +62,7 @@ theorem UpperTheory.V.Ws.Lk.noMu :
     (MulSemiringAction.toRingAut (G ℚ Ω) Ω σ) (ζ : Ω) (by rw [pow_one]; exact hζΩ.pow_eq_one)
   rw [hfix] at hspec
   have hmod : PadicInt.toZModPow 1 χ = 1 := by
-    haveI : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl⟩
+    have : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl⟩
     apply ZMod.val_injective
     rw [ZMod.val_one]
     have hlt : (PadicInt.toZModPow 1 χ).val < l :=

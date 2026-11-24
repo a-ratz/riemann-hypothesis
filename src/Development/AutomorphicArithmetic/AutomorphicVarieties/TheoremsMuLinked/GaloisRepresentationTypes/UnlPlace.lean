@@ -76,7 +76,7 @@ private theorem unl_place {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ
       exact w.asIdeal.mul_mem_right _ hw'
     · intro _
       rw [Int.cast_mul, map_mul]
-      exact mul_lt_one_of_nonneg_of_lt_one_left zero_le' hA' (hv1 m)
+      exact mul_lt_one_of_nonneg_of_lt_one_left zero_le hA' (hv1 m)
   · have hpr : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
     obtain ⟨a, b, hab⟩ := (hpr.irreducible.coprime_iff_not_dvd).mpr hk
     constructor
@@ -84,10 +84,10 @@ private theorem unl_place {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ
       exfalso
       have h1 : A.valuation ((a : Ω) * ((p : ℤ) : Ω)) < 1 := by
         rw [map_mul]
-        exact mul_lt_one_of_nonneg_of_lt_one_right (hv1 a) zero_le' hA'
+        exact mul_lt_one_of_nonneg_of_lt_one_right (hv1 a) zero_le hA'
       have h2 : A.valuation ((b : Ω) * (k : Ω)) < 1 := by
         rw [map_mul]
-        exact mul_lt_one_of_nonneg_of_lt_one_right (hv1 b) zero_le' hlt
+        exact mul_lt_one_of_nonneg_of_lt_one_right (hv1 b) zero_le hlt
       have h3 := A.valuation.map_add_lt h1 h2
       rw [← Int.cast_mul, ← Int.cast_mul, ← Int.cast_add, hab, Int.cast_one, map_one] at h3
       exact lt_irrefl _ h3

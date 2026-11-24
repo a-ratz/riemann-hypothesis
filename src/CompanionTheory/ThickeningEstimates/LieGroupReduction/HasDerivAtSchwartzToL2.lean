@@ -141,7 +141,7 @@ theorem LD.mul {U W : ℝ → Sch l →L[ℂ] Sch l} {P Q : Sch l → Sch l} {t�
   have h3 := (h1.fun_add h2).fun_add (hU (W t₀ f))
   rw [zero_add, ← map_add (f := _), add_comm (U t₀ (Q f))] at h3
   refine h3.congr_of_eventuallyEq (.of_forall fun t => ?_)
-  simp only [ContinuousLinearMap.mul_apply, map_sub, map_smul]
+  simp only [mul_apply_eq_comp, map_sub, map_smul]
   simp only [csmul]
   abel
 

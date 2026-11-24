@@ -786,7 +786,7 @@ end SlopeTestRemainingChoices
 
 theorem minpoly_separable_of_normal : ∀ (K V H : Type) [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [NormedAddCommGroup H] [InnerProductSpace ℂ H] (φ : K →+* ℂ) (j : V →ₛₗ[φ] H) (T : Module.End K V) (S S' : Module.End ℂ H), (∀ (n : ℕ) (x : Fin n → V), LinearIndependent K x → LinearIndependent ℂ (fun a => j (x a))) → (∀ x, j (T x) = S (j x)) → (∀ u ∈ Submodule.span ℂ (Set.range j), S' u ∈ Submodule.span ℂ (Set.range j)) → (∀ u ∈ Submodule.span ℂ (Set.range j), ∀ v ∈ Submodule.span ℂ (Set.range j), inner ℂ (S u) v = inner ℂ u (S' v)) → (∀ u ∈ Submodule.span ℂ (Set.range j), S (S' u) = S' (S u)) → (minpoly K T).Separable := by
   intro K V H _ _ _ _ _ _ φ j T S S' hlin hT hS' hadj hc
-  haveI : CharZero K := φ.charZero
+  have : CharZero K := φ.charZero
   set U : Submodule ℂ H := Submodule.span ℂ (Set.range j) with hU
   have hjU : ∀ x, j x ∈ U := fun x => Submodule.subset_span ⟨x, rfl⟩
   have hSU : ∀ u ∈ U, S u ∈ U := by
@@ -1069,7 +1069,7 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
     (((Nat.card (Formalism.L2.DIV.kP P') : ℕ) : ℂ) ^ (k * (D.R.nV / 2)))⁻¹ with hc'
   have hc'0 : c' ≠ 0 := by
     have hq : ((Nat.card (Formalism.L2.DIV.kP P') : ℕ) : ℂ) ≠ 0 := by
-      haveI := Ideal.finiteQuotientOfFreeOfNeBot P'.asIdeal P'.ne_bot
+      have := Ideal.finiteQuotientOfFreeOfNeBot P'.asIdeal P'.ne_bot
       exact Nat.cast_ne_zero.2 Nat.card_pos.ne'
     exact mul_ne_zero (pow_ne_zero _ (inv_ne_zero (Units.ne_zero _))) (inv_ne_zero (pow_ne_zero _ hq))
   set T : Module.End ↥D.LL0 ↥V := T0.restrict hVT with hT
@@ -1101,12 +1101,12 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
   have hTT : ∀ z : ↥V, T (T' z) = T' (T z) := fun z => Subtype.ext (LinearMap.congr_fun hPQc z.1)
 
   obtain ⟨nb, bs, hbs, -, hspan, hbLL, -⟩ := _root_.GlobalTheory.isKsForm_of_formsIso _ _ (Y.fi i0) (hI i0).1
-  haveI : IsScalarTower S.Ks ↥D.LL0 D.what₂.LL := IsScalarTower.of_algebraMap_eq fun x => (S.kKs_spec x).symm
-  haveI : Module.Finite S.Ks (FmK S ((i0 : ℕ) + 1)) := by
+  have : IsScalarTower S.Ks ↥D.LL0 D.what₂.LL := IsScalarTower.of_algebraMap_eq fun x => (S.kKs_spec x).symm
+  have : Module.Finite S.Ks (FmK S ((i0 : ℕ) + 1)) := by
     have h := FiniteDimensional.span_of_finite S.Ks (Set.finite_range bs)
     rw [hspan] at h
     exact h
-  haveI : FiniteDimensional ↥D.LL0 ↥V := inferInstance
+  have : FiniteDimensional ↥D.LL0 ↥V := inferInstance
   have hind : ∀ (n : ℕ) (x : Fin n → ↥V), LinearIndependent ↥D.LL0 x → LinearIndependent ℂ (fun a => jm (x a)) := by
     intro n x hx
     have hx1 : LinearIndependent ↥D.LL0 (fun a => (x a : ↥D.LL0 ⊗[S.Ks] FmK S ((i0 : ℕ) + 1))) :=
@@ -1421,7 +1421,7 @@ theorem hkSS_of_rows_guarded {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T
   unfold Eigsp
   refine le_iInf fun k => le_iInf fun P => le_iInf fun h => ?_
   refine (iInf_le _ ⟨(k, P), h⟩).trans ?_
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   exact le_rfl
 
 end GlobalTheory.GoodSpan

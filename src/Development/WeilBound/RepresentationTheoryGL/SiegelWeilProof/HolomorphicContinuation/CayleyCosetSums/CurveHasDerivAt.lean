@@ -90,7 +90,7 @@ theorem curve_deriv (Ψ : M2 n → ℂ) (hΨ : ContDiff ℂ ∞ Ψ) (X x : M2 n)
   exact h
 
 theorem continuous_mR' : Continuous (mR : GR n → M2 n) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem det_mR_ne' (g : GR n) : (mR g).det ≠ 0 := by
   show ((g : GL (Fin n ⊕ Fin n) ℂ) : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) ℂ).det ≠ 0
@@ -116,7 +116,7 @@ private theorem rD_mul_left_eq_of_det_ne_zero (P A X : M2 n) (hP : P.det ≠ 0) 
     simp_rw [Matrix.det_mul]
     exact (hdet A).const_mul P.det
   have h4 := congrArg (fun T => T (A * X)) (h1.unique h2)
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, hL] at h4
+  simp only [ContinuousLinearMap.comp_apply, smul_apply, smul_eq_mul, hL] at h4
   rw [Matrix.mul_assoc, h4, Matrix.det_mul, mul_div_mul_left _ _ hP]
 
 theorem rD_up (X : M2 n) (p k : GR n) : rD X (mR p * mR k) = rD X (mR k) := by
@@ -139,7 +139,7 @@ private theorem rA_mul_left_eq_of_u1_mul (D : Matrix (Fin n) (Fin n) ℂ) (P A X
     simp_rw [hu, Matrix.det_mul]
     exact (hdet A).const_mul D.det
   have h4 := congrArg (fun T => T (A * X)) (h1.unique h2)
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, hL] at h4
+  simp only [ContinuousLinearMap.comp_apply, smul_apply, smul_eq_mul, hL] at h4
   rw [Matrix.mul_assoc, h4, hu, Matrix.det_mul, mul_div_mul_left _ _ hD]
 
 theorem rA_up (X : M2 n) (p k : GR n) (hp : IsUp p) : rA X (mR p * mR k) = rA X (mR k) := by

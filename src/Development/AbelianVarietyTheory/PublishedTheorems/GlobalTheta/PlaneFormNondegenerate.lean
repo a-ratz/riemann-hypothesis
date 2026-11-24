@@ -477,7 +477,7 @@ theorem exists_ne_zero {p : F → Prop} (hp : ∀ᶠ r in 𝓝 (0 : F), p r) : �
   refine ⟨y * r, mul_ne_zero (by simpa using hγ) hr, hs ?_⟩
   show valuation F (y * r) < valuation F y
   rw [map_mul]
-  exact mul_lt_of_lt_one_right (zero_lt_iff.2 hγ) hr1
+  exact mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hγ) hr1
 
 theorem eventually_psi {ψ : AddChar F ℂ} (hψ : Continuous ψ) : ∀ᶠ z in 𝓝 (0 : F), ∀ o ∈ 𝒪[F], ψ (o * z) = 1 := by
   have h1 : ∀ᶠ z in 𝓝 (0 : F), ∀ o ∈ (𝒪[F] : Set F), ‖ψ (o * z) - 1‖ < 1 / 2 := by
@@ -517,7 +517,7 @@ theorem exists_data (h2 : (2 : F) ≠ 0) (hB : B.IsAlt) (hn : B.Nondegenerate) {
       (∀ N ∈ 𝓝 (0 : W), ∃ T, ((alt_psi hB ψ).perp T : Set W) ⊆ N ∧ Finite (A ⧸ ((alt_psi hB ψ).perp T).addSubgroupOf A)) ∧
       ∀ w, ∀ᶠ u in 𝓝 (0 : W), ψ (B u w / 2) ^ 2 = 1 := by
   classical
-  have := IsModuleTopology.topologicalAddGroup F W
+  have := IsModuleTopology.isTopologicalAddGroup F W
   have := IsModuleTopology.toContinuousSMul (R := F) (A := W)
   set h := alt_psi hB ψ
   obtain ⟨t₀, ht₀⟩ : ∃ t, ψ t ≠ 1 := by
@@ -634,7 +634,7 @@ variable [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [F
   [IsModuleTopology F W]
 
 theorem _root_.GlobalTheory.Published.Heisenberg.isTopologicalGroup : IsTopologicalGroup (Heisenberg B) := by
-  have := IsModuleTopology.topologicalAddGroup F W
+  have := IsModuleTopology.isTopologicalAddGroup F W
   have hcB : Continuous fun p : W × W => B p.1 p.2 := IsModuleTopology.continuous_bilinear_of_finite_left B
   have h0 : Continuous fun g : Heisenberg B => (g.vec, g.cen) := continuous_induced_dom
   have h1 : Continuous (Heisenberg.vec : Heisenberg B → W) := h0.fst

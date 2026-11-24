@@ -87,9 +87,9 @@ private theorem isFrob_pow' {F Ω : Type} [Field F] [NumberField F] [Field Ω] [
 
 private theorem one_lt_normV_inertia_quadratic_ramification {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) :
     1 < normV w := by
-  haveI : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  haveI : w.asIdeal.IsMaximal := w.isMaximal
-  letI : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
+  have : Finite (𝓞 E ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
+  have : w.asIdeal.IsMaximal := w.isMaximal
+  let : Field (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
   show 1 < Nat.card (𝓞 E ⧸ w.asIdeal)
   exact Finite.one_lt_card
 
@@ -99,9 +99,9 @@ theorem degOf : DegOf := by
   have hq : 1 < normV v := one_lt_normV_inertia_quadratic_ramification v
   have hw1 : 1 < normV w := one_lt_normV_inertia_quadratic_ramification w
   have hdf : d ∣ f := by
-    haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-    haveI : Algebra.IsAlgebraic M Ω := Algebra.IsAlgebraic.tower_top (K := K) (A := Ω) M
-    haveI : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed K, inferInstance⟩
+    have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+    have : Algebra.IsAlgebraic M Ω := Algebra.IsAlgebraic.tower_top (K := K) (A := Ω) M
+    have : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed K, inferInstance⟩
     obtain ⟨σ, hσ⟩ := exists_isFrob (F := M) hw
     have hφf := isFrob_pow' hφ f
     rw [← hf] at hφf
@@ -152,13 +152,13 @@ theorem degOf : DegOf := by
         ring
       rw [e, Valuation.map_neg]
       exact hφd
-    haveI : w.asIdeal.IsMaximal := w.isMaximal
-    letI : Field (𝓞 M ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
+    have : w.asIdeal.IsMaximal := w.isMaximal
+    let : Field (𝓞 M ⧸ w.asIdeal) := Ideal.Quotient.field w.asIdeal
     have hR : Nat.card (𝓞 M ⧸ w.asIdeal) = normV v ^ f := hf
-    haveI : Finite (𝓞 M ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by
+    have : Finite (𝓞 M ⧸ w.asIdeal) := Nat.finite_of_card_ne_zero (by
       show normV w ≠ 0
       omega)
-    letI := Fintype.ofFinite (𝓞 M ⧸ w.asIdeal)
+    let := Fintype.ofFinite (𝓞 M ⧸ w.asIdeal)
     have hN : 1 < normV v ^ d := Nat.one_lt_pow (Nat.pos_iff_ne_zero.1 hd) hq
     have hp0 : (Polynomial.X ^ (normV v ^ d) - Polynomial.X : Polynomial (𝓞 M ⧸ w.asIdeal)) ≠ 0 :=
       Polynomial.X_pow_sub_X_ne_zero hN

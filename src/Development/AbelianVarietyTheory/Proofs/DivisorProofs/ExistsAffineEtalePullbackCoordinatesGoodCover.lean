@@ -58,8 +58,8 @@ theorem etale_morphismRestrict_of_goodCover {k : Type} [CommRing k] {X Y : Schem
     (p : X ⟶ Sp k) (π : Y ⟶ X) (D δ : ℕ) (U : X.Opens) (hG : GoodCover p π D δ U) :
     Etale (π ∣_ U) := by
   obtain ⟨hU, hπU, -, hét, -⟩ := hG
-  haveI : IsAffine U := hU
-  haveI : IsAffine (π ⁻¹ᵁ U) := hπU
+  have : IsAffine U := hU
+  have : IsAffine (π ⁻¹ᵁ U) := hπU
   rw [HasRingHomProperty.iff_of_isAffine (P := @Etale), Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE,
     morphismRestrict_appLE]
   refine (Scheme.Hom.appLE_congr π _ (Scheme.Opens.ι_image_top U) (V' := π ⁻¹ᵁ U) ?_

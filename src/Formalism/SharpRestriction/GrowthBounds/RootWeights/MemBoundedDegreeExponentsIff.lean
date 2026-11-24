@@ -225,7 +225,7 @@ theorem asm_clause2 (p : ℕ) [Fact p.Prime] (f : ℕ → ℚ) (a : ℕ → ℚ)
 
 theorem mahler_decay_products_of (D : Formalism.BasicNotions.D7) (h1 : ∀ p, p.Prime → HDec p) (h2 : ∀ p, p.Prime → HMul p) : UnitFunctionExpansion D := by
   intro p hp _
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   refine ⟨fun u hu => ?_, fun N m us var hus c => ?_⟩
   · have hd := h1 p hp u hu
     have ha : ∀ j : ℕ, PadicGe p (mah (unitFn p u) j) ((j : ℝ) / 4) := fun j =>
@@ -363,7 +363,7 @@ theorem asm_ratio (p : ℕ) (hp : p.Prime) {σ : Type*} [Fintype σ] (t rho : σ
 theorem unit_function_mahler_decay_of (D : Formalism.BasicNotions.D7) (h1 : ∀ p, p.Prime → HDec p) (h2 : ∀ p, p.Prime → HMul p)
     (h3 : ∀ p, p.Prime → HUnit p) : FactorialUnitDecomposition D := by
   intro p hp _
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   refine ⟨fun t rho e' _ => fact_lemma_2 _ _ _, fun σ _ t rho hr =>
     ⟨fun e' => ?_, fun inv c => ?_, fun inv c => ?_⟩⟩
   · refine asm_unit_prod Finset.univ
@@ -371,7 +371,7 @@ theorem unit_function_mahler_decay_of (D : Formalism.BasicNotions.D7) (h1 : ∀ 
     intro k _
     have hc := h3 p hp ⟨t k, rho k, true, false⟩ (hr k) (e' k)
     have hd := h3 p hp ⟨t k, rho k, false, false⟩ (hr k) (e' k)
-    simp only [unitFn, if_true, if_false, Bool.false_eq_true, ↓reduceIte] at hc hd
+    simp only [unitFn, ite_true, ite_false, Bool.false_eq_true, ↓reduceIte] at hc hd
     refine ⟨mul_ne_zero hc.1 hd.1, ?_⟩
     rw [padicValRat.mul hc.1 hd.1, hc.2, hd.2, add_zero]
   · have hf := fun k => asm_f_dec (h1 p hp) (h2 p hp) t rho hr inv k

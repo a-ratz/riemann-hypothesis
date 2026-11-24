@@ -109,9 +109,9 @@ private theorem tri_of_idem {R : Type} [CommRing R] {n : ℕ} (f : Fin n → Mat
   let V : Matrix (Fin n) (Fin n) R := Matrix.of fun i j => f j i j
   have hV : V.BlockTriangular id := fun i j h => ht j h
   have hVd : ∀ i, V i i = 1 := hd
-  have hdet : V.det = 1 := by rw [Matrix.det_of_upperTriangular hV]; simp [hVd]
+  have hdet : V.det = 1 := by rw [det_of_isUpperTriangular hV]; simp [hVd]
   have hu : IsUnit V.det := by rw [hdet]; exact isUnit_one
-  letI := Matrix.invertibleOfIsUnitDet V hu
+  let := Matrix.invertibleOfIsUnitDet V hu
   have hVi : V⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hV
   have hl : V⁻¹ * V = 1 := Matrix.nonsing_inv_mul V hu
   have hr : V * V⁻¹ = 1 := Matrix.mul_nonsing_inv V hu
@@ -349,9 +349,9 @@ theorem UpperTheory.V.Pa.locLemma :
     rw [map_list_prod, List.map_ofFn]
     refine tri_prod_zero _ (fun k i j h => ?_) (fun k => ?_)
     · simp only [Function.comp, map_sub, AlgHom.commutes, Matrix.sub_apply]
-      rw [htri1 _ h, Matrix.algebraMap_matrix_apply, if_neg h.ne', sub_zero]
+      rw [htri1 _ h, Matrix.algebraMap_matrix_apply, ite_eq_right h.ne', sub_zero]
     · simp only [Function.comp, map_sub, AlgHom.commutes, Matrix.sub_apply]
-      rw [htri2, Matrix.algebraMap_matrix_apply, if_pos rfl]
+      rw [htri2, Matrix.algebraMap_matrix_apply, ite_eq_left rfl]
       simp
   set L₀ := MonoidAlgebra.lift R (Matrix (Fin n) (Fin n) R) H ρ₀ with hL₀
   set L₁ := MonoidAlgebra.lift R (Matrix (Fin n) (Fin n) R) H ρ₁ with hL₁

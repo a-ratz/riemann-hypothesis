@@ -461,7 +461,7 @@ theorem integral_setIntegral_eq (h : Hyp ν u L D Λ E S) {Ψ : G → ℂ} (hΨ 
     refine Complex.measurable_ofReal.comp ?_
     exact (measurable_one.indicator h.measurableSet_E).comp
       (((h.measurable.comp measurable_neg).comp measurable_fst).mul measurable_snd)
-  have hHm : Measurable fun g => ‖Ψ g‖ₑ := hΨ.enorm
+  have hHm : Measurable fun g => ‖Ψ g‖ₑ := hΨ.eNorm
   have hHΛ : ∀ p ∈ Λ, ∀ g, ‖Ψ (p * g)‖ₑ = ‖Ψ g‖ₑ := fun p hp g => by rw [hΛ p hp g]
 
   have hfin : ∫⁻ g, weight ν u D E g * ‖Ψ g‖ₑ ∂μ < ∞ := by
@@ -481,8 +481,8 @@ theorem integral_setIntegral_eq (h : Hyp ν u L D Λ E S) {Ψ : G → ℂ} (hΨ 
   have hm0 : Measurable (uncurry fun X g => ind X g * Ψ g) := hmind.mul (hΨ.comp measurable_snd)
   have hI : Integrable (uncurry fun X g => ind X g * Ψ g) ((ν.restrict D).prod μ) := by
     refine ⟨hm0.aestronglyMeasurable, ?_⟩
-    rw [HasFiniteIntegral, lintegral_prod _ hm0.enorm.aemeasurable]
-    simp only [uncurry_apply_pair, enorm_mul, hind, enorm_indicator_real]
+    rw [HasFiniteIntegral, lintegral_prod _ hm0.eNorm.aemeasurable]
+    simp only [uncurry_apply_pair, eNorm_mul, hind, enorm_indicator_real]
     rw [h.lintegral_indicator_mul hHm]
     exact hfin
   rw [integral_integral_swap hI]
@@ -498,7 +498,7 @@ theorem integral_setIntegral_eq (h : Hyp ν u L D Λ E S) {Ψ : G → ℂ} (hΨ 
     (Complex.measurable_ofReal.comp h.measurable_weight.ennreal_toReal).mul hΨ
   have hen : ∀ g, ‖((weight ν u D E g).toReal : ℂ) * Ψ g‖ₑ = weight ν u D E g * ‖Ψ g‖ₑ := by
     intro g
-    rw [enorm_mul, enorm_toReal_coe (ne_top_of_le_ne_top hDtop (weight_le g))]
+    rw [eNorm_mul, enorm_toReal_coe (ne_top_of_le_ne_top hDtop (weight_le g))]
   have hInt : Integrable (fun g => ((weight ν u D E g).toReal : ℂ) * Ψ g) μ := by
     refine ⟨hwm.aestronglyMeasurable, ?_⟩
     rw [HasFiniteIntegral]
@@ -521,7 +521,7 @@ theorem integral_setIntegral_eq (h : Hyp ν u L D Λ E S) {Ψ : G → ℂ} (hΨ 
         ∫⁻ g in E, weight ν u D E (p * g) * ‖Ψ g‖ₑ ∂μ := by
       intro p
       refine lintegral_congr fun g => ?_
-      rw [enorm_mul, enorm_toReal_coe (ne_top_of_le_ne_top hDtop (weight_le _))]
+      rw [eNorm_mul, enorm_toReal_coe (ne_top_of_le_ne_top hDtop (weight_le _))]
     simp_rw [this]
     rw [← lintegral_tsum]
     · simp_rw [ENNReal.tsum_mul_right, h.tsum_weight]
@@ -541,11 +541,11 @@ theorem setIntegral_mul_eq_zero (h : Hyp ν u L D Λ E S) {ψ F : G → ℂ} (h�
   have hI : Integrable (uncurry fun (X : V) (g : G) => ψ (u X * g) * F g)
       ((ν.restrict D).prod (μ.restrict E)) := by
     refine ⟨hm.aestronglyMeasurable, ?_⟩
-    rw [HasFiniteIntegral, lintegral_prod _ hm.enorm.aemeasurable]
+    rw [HasFiniteIntegral, lintegral_prod _ hm.eNorm.aemeasurable]
     simp only [uncurry_apply_pair]
     have : ∀ X g, ‖ψ (u X * g) * F g‖ₑ = ‖ψ (u X * g) * F (u X * g)‖ₑ := fun X g => by rw [hFu]
     simp_rw [this]
-    rw [h.lintegral_setLIntegral_eq (H := fun g => ‖ψ g * F g‖ₑ) (hψ.mul hF).enorm
+    rw [h.lintegral_setLIntegral_eq (H := fun g => ‖ψ g * F g‖ₑ) (hψ.mul hF).eNorm
       (fun p hp g => by rw [hΛ p hp g])]
     exact ENNReal.mul_lt_top hDtop.lt_top hint
   have hzero : ∫ X in D, ∫ g in E, ψ (u X * g) * F (u X * g) ∂μ ∂ν = 0 := by
@@ -617,7 +617,7 @@ variable {k}
 
 theorem single_mem_U0 {j : Fin n} (hj : (j : ℕ) < k) (c : K) : (Pi.single j c : Fin n → K) ∈ U0 k := by
   intro i hi
-  rw [Pi.single_apply, if_neg (by rintro rfl; omega)]
+  rw [Pi.single_apply, ite_eq_right (by rintro rfl; omega)]
 
 theorem finrank_U0 (hk : k ≤ n) : finrank K (U0 (K := K) (n := n) k) = k := by
   classical
@@ -1389,8 +1389,8 @@ theorem setIntegral_mul_tsum_rank_eq_zero (μ : Measure (normOneGL (K := K) (n :
 
   have hcoe : Continuous fun h : normOneGL (K := K) (n := n) =>
       ((h : AdelicGLn.AdelicGL K n) : Matrix (Fin n) (Fin n) 𝔸[K]) :=
-    Units.continuous_val.comp continuous_subtype_val
-  have hψm : Measurable ψ' := (hψc.comp continuous_subtype_val).measurable
+    Units.continuous_val.comp continuous_subtypeVal
+  have hψm : Measurable ψ' := (hψc.comp continuous_subtypeVal).measurable
   have hFm : Measurable F := by
     refine measurable_tsum_of_summable (fun Z => ?_) (fun h => ?_)
     · exact (hΦ.comp (continuous_const.matrix_mul hcoe)).measurable
@@ -1418,9 +1418,9 @@ theorem setIntegral_mul_tsum_rank_eq_zero (μ : Measure (normOneGL (K := K) (n :
             ((h : AdelicGLn.AdelicGL K n) : Matrix (Fin n) (Fin n) 𝔸[K]))‖ₑ) (ratOne K n γ * g) := by
       intro γ
       by_cases hγ : ratOne K n γ * g ∈ E
-      · rw [hH, indicator_of_mem hγ, indicator_of_mem hγ, enorm_mul, hψΓ]
+      · rw [hH, indicator_of_mem hγ, indicator_of_mem hγ, eNorm_mul, hψΓ]
         gcongr
-        exact enorm_tsum_le_tsum_enorm
+        exact eNorm_tsum_le_tsum_eNorm
       · rw [hH, indicator_of_notMem hγ, indicator_of_notMem hγ]
         simp
     calc ∑' γ : rationalGLOne (K := K) (n := n), ‖H (γ • g)‖ₑ
@@ -1463,7 +1463,7 @@ theorem setIntegral_mul_tsum_rank_eq_zero (μ : Measure (normOneGL (K := K) (n :
         _ = ENNReal.ofReal C * μ FΓ := by rw [setLIntegral_const]
         _ < ∞ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top hFΓfin
     · intro γ
-      exact (hHm.enorm.comp (measurable_const_mul (γ : normOneGL (K := K) (n := n)))).aemeasurable.restrict
+      exact (hHm.eNorm.comp (measurable_const_mul (γ : normOneGL (K := K) (n := n)))).aemeasurable.restrict
   have hHint : Integrable H μ := ⟨hHm.aestronglyMeasurable, hlint⟩
 
   have hunf : ∫ g in FΓ, ∑' γ : rationalGLOne (K := K) (n := n), H (γ • g) ∂μ = ∫ g, H g ∂μ := by
@@ -1477,7 +1477,7 @@ theorem setIntegral_mul_tsum_rank_eq_zero (μ : Measure (normOneGL (K := K) (n :
     have : ∫⁻ g in E, ‖ψ' g * F g‖ₑ ∂μ = ∫⁻ g, ‖H g‖ₑ ∂μ := by
       rw [← lintegral_indicator (measurableSet_fundamentalDomain _)]
       refine lintegral_congr fun g => ?_
-      rw [hH, enorm_indicator_eq_indicator_enorm]
+      rw [hH, eNorm_indicator_eq_indicator_eNorm]
     rw [this]
     exact hlint
   have hzero : ∫ g in E, ψ' g * F g ∂μ = 0 := by
@@ -1558,10 +1558,10 @@ theorem integrableOn_mul_tsum_comp {ψ : AdelicGLn.AdelicGL K n → ℂ} (hψc :
       (fundamentalDomain Γ₁) μ := by
   have hF : μ (fundamentalDomain Γ₁) < ⊤ := measure_fundamentalDomain_rationalGLOne_lt_top μ
   refine Measure.integrableOn_of_bounded (M := C) hF.ne ?_ ?_
-  · refine ((hψc.comp continuous_subtype_val).measurable.mul ?_).aestronglyMeasurable
+  · refine ((hψc.comp continuous_subtypeVal).measurable.mul ?_).aestronglyMeasurable
     refine UnfoldGL.measurable_tsum_of_summable (fun i => ?_) fun g => ?_
     · exact (hΦ.comp (continuous_const.mul (Units.continuous_val.comp
-        continuous_subtype_val))).measurable
+        continuous_subtypeVal))).measurable
     · exact ((hsum g).comp_injective he).of_norm
   · refine Eventually.of_forall fun g => ?_
     rw [norm_mul]

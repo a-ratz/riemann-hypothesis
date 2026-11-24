@@ -103,7 +103,7 @@ private theorem mem_globLat_mul {F E : Type} [Field F] [NumberField F] [Field E]
     rw [hg]
     exact RingHom.map_mulVec _ _ _ i
   unfold Formalism.UG.CS.globLat
-  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
+  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq]
   rw [e, _root_.mul_inv_rev, Matrix.mulVec_mulVec, Units.val_mul, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
 
 private theorem latAt_rat {T : Type} {L : LevCh D T} {sc : Consts} {G : GlobalTheory.ChiGrid.GridData L sc} {W : G.Weil}

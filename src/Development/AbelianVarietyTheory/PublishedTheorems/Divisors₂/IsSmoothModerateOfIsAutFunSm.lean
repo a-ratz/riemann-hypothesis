@@ -342,7 +342,7 @@ theorem exists_cover (hP : GlobalTheory.Published.SiegelSetUnitary) (h : IsCMExt
     ⟨hφ φ h1 h2 N, fun μ h => ?_⟩⟩
   obtain ⟨C, hC⟩ := hφ φ h1 h2 N
   have hc : Continuous fun g => ‖φ g‖ * (height σ J g : ℝ) ^ N :=
-    h1.cont.norm.mul ((NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtype_val)).pow N)
+    h1.cont.norm.mul ((NNReal.continuous_coe.comp ((GlobalTheory.Grow.continuous_heightGL F).comp continuous_subtypeVal)).pow N)
   refine Measure.integrableOn_of_bounded (M := C) (hμ μ h).1.ne hc.aestronglyMeasurable
     ((ae_restrict_iff' hcl.measurableSet).2 (.of_forall fun g hg => ?_))
   rw [Real.norm_of_nonneg (by positivity)]
@@ -374,7 +374,7 @@ theorem ug_eq_hr (hσ : ∀ x, σ (σ x) = x) {c : E} (hc : c ≠ 0) :
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem conj_exp (Z : Matrix (Fin n) (Fin n) ℂ) :
     (starRingEnd ℂ).mapMatrix (NormedSpace.exp Z) = NormedSpace.exp ((starRingEnd ℂ).mapMatrix Z) :=
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   NormedSpace.map_exp _ (continuous_id.matrix_map Complex.continuous_conj) Z
 
 section Record

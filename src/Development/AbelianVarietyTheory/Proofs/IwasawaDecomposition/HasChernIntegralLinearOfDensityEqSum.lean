@@ -237,7 +237,7 @@ theorem glueMeas_const_mul (hS : MeasurableSet S) (c : ℝ≥0∞) (hc : c ≠ �
     glueMeas e (fun i y => c * ρ i y) S = c * glueMeas e ρ S := by
   have := GlobalTheory.ChernScale.glueMeas_restrict_eq e (ρ := fun i y => c * ρ i y) (ρ' := ρ) hc hS
     fun _ _ _ _ => rfl
-  simpa only [Measure.smul_apply, smul_eq_mul, Measure.restrict_apply_self] using
+  simpa only [smul_apply, smul_eq_mul, Measure.restrict_apply_self] using
     congrArg (fun μ : Measure Y => μ S) this
 
 variable [SecondCountableTopology Y]
@@ -284,7 +284,7 @@ theorem aemeasurable_dens (E : Fr (ratOf X) m 0) (O : X.X.Opens) (H : Mat m X.Fn
     exact Set.mem_iUnion.2 ⟨_, hv, (E.nonempty (under (c.e.symm v))).choose_spec⟩
   obtain ⟨T, hTc, hT⟩ := TopologicalSpace.isOpen_iUnion_countable W hWo
   have hUT : U = ⋃ A : T, W A := by rw [← hcov, ← hT, Set.biUnion_eq_iUnion]
-  haveI := hTc.to_subtype
+  have := hTc.to_subtype
   rw [hUT, aemeasurable_iUnion_iff]
   rintro ⟨A, -⟩
   refine ((_root_.GlobalTheory.ChernMeas.measurable_chernTop R fun w => H A (c.e.symm w)).aemeasurable).congr ?_

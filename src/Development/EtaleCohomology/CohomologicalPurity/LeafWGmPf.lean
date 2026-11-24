@@ -52,9 +52,9 @@ open CategoryTheory Limits AlgebraicGeometry Opposite GlobalTheory.EtC
 namespace LateralTheory.CohomologicalPurity.Thom.ExcP.Chart
 
 theorem intPoly_smooth : (algebraMap ℤ (Polynomial ℤ)).Smooth := by
-  haveI : Algebra.FormallySmooth ℤ (Polynomial ℤ) :=
+  have : Algebra.FormallySmooth ℤ (Polynomial ℤ) :=
     inferInstance
-  haveI : Algebra.Smooth ℤ (Polynomial ℤ) := ⟨inferInstance, inferInstance⟩
+  have : Algebra.Smooth ℤ (Polynomial ℤ) := ⟨inferInstance, inferInstance⟩
   exact RingHom.smooth_algebraMap.mpr inferInstance
 
 theorem laurent_smooth : (algebraMap ℤ (LaurentPolynomial ℤ)).Smooth := by

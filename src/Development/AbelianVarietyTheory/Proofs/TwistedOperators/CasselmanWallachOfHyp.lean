@@ -73,8 +73,8 @@ theorem dense_smoothAll_of_irred (hσ : IsURepOn (UJset ε) σ) (hi : IsIrredOn 
     rw [Subsingleton.elim x 0]
     exact subset_closure (smoothAll (Jm ε) σ).zero_mem
   · refine dense_of_irred hi (fun g hg v hv k x hx hxG => ?_) ?_
-    · letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-      letI := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
+    · let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+      let := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin n) (α := ℂ)
       have h1 := hv k (fun t => x t * g) (hx.mul contDiff_const) fun t => mul_mem_UJ (hxG t) hg
       convert h1 using 2 with t
       exact (sigma_mul hσ (hxG t) hg v).symm

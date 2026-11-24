@@ -51,7 +51,7 @@ private theorem idx_GK {l : ℕ} [Fact l.Prime] (K : IntermediateField ℚ_[l] (
 
 private theorem sup_Iq {l : ℕ} [Fact l.Prime] (K : FinExt l) :
     GK K ⊔ Iq l = (K0 K).fixingSubgroup := by
-  haveI := K.2
+  have := K.2
   have ho : IsOpen ((GK K ⊔ Iq l : Subgroup (GQ l)) : Set (GQ l)) :=
     Subgroup.isOpen_mono le_sup_left (IntermediateField.fixingSubgroup_isOpen K.1)
   have hc := Subgroup.isClosed_of_isOpen _ ho
@@ -63,7 +63,7 @@ private theorem sup_Iq {l : ℕ} [Fact l.Prime] (K : FinExt l) :
         exact IntermediateField.fixedField_le le_sup_left
       · rw [← InfiniteGalois.fixedField_fixingSubgroup (MaximalUnramifiedExtension l)]
         exact IntermediateField.fixedField_le le_sup_right
-    · rw [IntermediateField.le_iff_le]
+    · rw [IntermediateField.le_fixedField_iff_le_fixingSubgroup]
       exact sup_le (IntermediateField.fixingSubgroup_le inf_le_left)
         (IntermediateField.fixingSubgroup_le inf_le_right)
   rw [← h2]

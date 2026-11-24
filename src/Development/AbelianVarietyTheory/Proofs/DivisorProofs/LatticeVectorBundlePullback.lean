@@ -140,8 +140,8 @@ namespace GlobalTheory.LKGeo.LatDiv
 theorem eq_nsmul_of_inAf_eq_nsmul : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (x : D.La) (n : ℕ), 0 < n → n.Coprime p →
     ∀ w ∈ LaHat D, inAf D x = n • w → ∃ z, x = n • z := by
   intro p _ D x n hn hnp w hw h
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   let b := Module.Free.chooseBasis ℤ D.La
   have hd : ∀ i, (n : ℤ) ∣ b.coord i x := fun i => int_dvd D (b.coord i) x n hn hnp w hw h
   choose c hc using hd

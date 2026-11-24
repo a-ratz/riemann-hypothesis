@@ -60,8 +60,8 @@ theorem mem_span_smul_top' {G : Type} [Group G] {LL : Type} [Field LL] {O : Type
 theorem redT_mem_Z1Q : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A : GRep ↥(GK K) ℚ_[l] LL O) (LA : Lattice (O := O) A.ρ) (ϖ : O), Irreducible ϖ → ∀ (r : ℕ) (hI : StableSub LA (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥LA.T)) (a : ↥(latticeCocycles LA)), redT LA _ a ∈ quotientCocycles LA _ hI := by
   intro l _ P K LL _ _ _ O _ _ hO A LA ϖ hϖ r hI a
   obtain ⟨⟨hDom, hDVR, hFr⟩, hfd, hmt, htr, hopen⟩ := hO
-  haveI := hDom; haveI := hDVR; haveI := hFr; haveI := htr
-  haveI : IsTopologicalAddGroup A.V := IsModuleTopology.topologicalAddGroup LL A.V
+  have := hDom; have := hDVR; have := hFr; have := htr
+  have : IsTopologicalAddGroup A.V := IsModuleTopology.isTopologicalAddGroup LL A.V
   have hT : IsOpen (LA.T : Set A.V) := Formalism.MainNotions.BlochKatoDuality.Br.lat_open hopen LA.T LA.fg LA.span
   set c : LL := algebraMap O LL (ϖ ^ r) with hcdef
   have hc : c ≠ 0 :=

@@ -343,7 +343,7 @@ theorem triple_tensor_ring_hom_ext {T : Type} [CommRing T] (v w : B ⊗[A] (B �
 theorem tensor3_univ (T : Type) [CommRing T] (g : Fin (2 + 1) → (B →+* T)) (c : A →+* T)
     (hg : ∀ i, (g i).comp (algebraMap A B) = c) :
     ∃! u : B ⊗[A] (B ⊗[A] B) →+* T, u.comp (algebraMap A _) = c ∧ ∀ i, u.comp (l3 A B i) = g i := by
-  letI : Algebra A T := c.toAlgebra
+  let : Algebra A T := c.toAlgebra
   let G : Fin (2 + 1) → (B →ₐ[A] T) := fun i =>
     { g i with
       commutes' := fun a => by
@@ -505,7 +505,7 @@ def gam (R : Type) [CommRing R] (F : Shv R) (u : Z1 F A B) : H R (sp A) F 1 :=
 theorem gam_spec [Algebra.Etale A B] [Module.FaithfullyFlat A B] (R : Type) [CommRing R] (F : Shv R) (u : Z1 F A B) :
     Rel A B R F u (gam A B R F u) := by
   unfold gam
-  rw [if_pos ⟨inferInstance, inferInstance⟩]
+  rw [ite_eq_left ⟨inferInstance, inferInstance⟩]
   exact Classical.epsilon_spec (rel_exists A B R F u)
 
 theorem gam_eq [Algebra.Etale A B] [Module.FaithfullyFlat A B] (R : Type) [CommRing R] (F : Shv R) (u : Z1 F A B)

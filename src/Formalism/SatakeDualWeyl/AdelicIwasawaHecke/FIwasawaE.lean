@@ -86,7 +86,7 @@ theorem fIwasawa_exists_max_pivot (hσv : ∀ x, Valued.v (σ x) = Valued.v x) (
     by_contra hcon
     push_neg at hcon
     have hgram := fIwasawa_gram_un σ M hM (Fin.rev ρ) ρ
-    rw [if_pos (Fin.rev_rev ρ).symm] at hgram
+    rw [ite_eq_left (Fin.rev_rev ρ).symm] at hgram
     have h0 : ∑ j, σ (M (Fin.rev j) (Fin.rev ρ)) * M j ρ = 0 := by
       refine Finset.sum_eq_zero fun j _ => ?_
       by_cases hj1 : j < ρ
@@ -103,7 +103,7 @@ theorem fIwasawa_exists_max_pivot (hσv : ∀ x, Valued.v (σ x) = Valued.v x) (
     intro a _ hamax h0
     have h1 := hamax j₀ hj₀W
     rw [h0] at h1
-    exact hj₀ ((Valuation.zero_iff _).1 (le_antisymm h1 zero_le'))
+    exact hj₀ ((Valuation.zero_iff _).1 (le_antisymm h1 zero_le))
   have hV := hnz a₀ ha₀W ha₀max
   have hWrev : ∀ j ∈ W, Fin.rev j ∈ W := by
     intro j hj
@@ -129,7 +129,7 @@ theorem fIwasawa_exists_max_pivot (hσv : ∀ x, Valued.v (σ x) = Valued.v x) (
       have hbig : Valued.v (σ (M (Fin.rev a₀) ρ) * M a₀ ρ) = Valued.v (M a₀ ρ) * Valued.v (M a₀ ρ) := by
         rw [← h₀, map_mul, hσv]
       have hpos : (0 : WithZero (Multiplicative ℤ)) < Valued.v (M a₀ ρ) * Valued.v (M a₀ ρ) :=
-        zero_lt_iff.2 (mul_ne_zero hV hV)
+        pos_iff_ne_zero.2 (mul_ne_zero hV hV)
       have hsmall : Valued.v (∑ j ∈ Finset.univ.erase a₀, σ (M (Fin.rev j) ρ) * M j ρ)
           < Valued.v (M a₀ ρ) * Valued.v (M a₀ ρ) := by
         apply Valuation.map_sum_lt _ (mul_ne_zero hV hV)
@@ -140,7 +140,7 @@ theorem fIwasawa_exists_max_pivot (hσv : ∀ x, Valued.v (σ x) = Valued.v x) (
         · have hra : Fin.rev j ≠ a₀ := by
             intro h; apply hja; rw [← Fin.rev_rev j, h, ← h₀]
           exact mul_lt_mul_of_le_of_lt_of_nonneg_of_pos (ha₀max _ (hWrev j hjW)) (hlt j hjW hja)
-            zero_le' (zero_lt_iff.2 hV)
+            zero_le (pos_iff_ne_zero.2 hV)
         · rcases hout j hjW with h | h
           · rw [hcz (Fin.rev j) (Fin.rev_lt_rev.2 h), map_zero, zero_mul]; exact hpos
           · rw [hcz j h, map_zero, mul_zero]; exact hpos
@@ -167,7 +167,7 @@ theorem fIwasawa_exists_max_pivot (hσv : ∀ x, Valued.v (σ x) = Valued.v x) (
     rw [permMatrix_mul_apply₂]
     by_cases hiW : i ∈ W
     · have hπi := Finset.mem_filter.1 (hπW i hiW)
-      have hjρ : j < ρ := by rw [Fin.lt_iff_val_lt_val, hρr]; exact hj
+      have hjρ : j < ρ := by rw [Fin.lt_def, hρr]; exact hj
       exact hT (π i) j hj (lt_of_lt_of_le hjρ hπi.2.1)
     · rw [hπfix i (hout i hiW)]
       exact hT i j hj hji
@@ -223,7 +223,7 @@ variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] (σ : L
 private theorem fin_rev_between_of_between (ρ t : Fin n) (h1 : ρ < t) (h2 : t < Fin.rev ρ) :
     ρ < Fin.rev t ∧ Fin.rev t < Fin.rev ρ := by
   have ht := t.isLt
-  simp only [Fin.lt_iff_val_lt_val, Fin.val_rev] at h1 h2 ⊢
+  simp only [Fin.lt_def, Fin.val_rev] at h1 h2 ⊢
   omega
 
 private theorem neg_mul_neg_div_self (a p : L) (hp : p ≠ 0) : -p * (-a / p) = a := by
@@ -246,7 +246,7 @@ theorem fIwasawa_tri_succ_of_max_pivot (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ 
   have hzout : ∀ t, ¬(ρ < t ∧ t < Fin.rev ρ) → z t = 0 := by
     intro t ht
     rw [hzeq]
-    exact if_neg ht
+    exact ite_eq_right ht
   have hzsupp : ∀ t, z t ≠ 0 → ρ < t ∧ t < Fin.rev ρ := by
     intro t ht
     by_contra h
@@ -255,7 +255,7 @@ theorem fIwasawa_tri_succ_of_max_pivot (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ 
     intro t h1 h2
     rw [hzeq]
     dsimp only
-    rw [if_pos (And.intro h1 h2), neg_mul_neg_div_self _ _ hp]
+    rw [ite_eq_left (And.intro h1 h2), neg_mul_neg_div_self _ _ hp]
   have hrevmid : ∀ j, ρ < Fin.rev j ∧ Fin.rev j < Fin.rev ρ → ρ < j ∧ j < Fin.rev ρ := by
     intro j h
     have h' := fin_rev_between_of_between ρ (Fin.rev j) h.1 h.2
@@ -285,20 +285,20 @@ theorem fIwasawa_tri_succ_of_max_pivot (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ 
     intro j
     rcases lt_trichotomy j ρ with h1 | h1 | h1
     · rw [hcz (Fin.rev j) (Fin.rev_lt_rev.mpr h1), map_zero σ, hzout j (fun h => lt_asymm h1 h.1),
-        if_neg (ne_of_lt h1), if_neg (ne_of_lt (lt_trans h1 hρ))]
+        ite_eq_right (ne_of_lt h1), ite_eq_right (ne_of_lt (lt_trans h1 hρ))]
       ring
-    · rw [h1, if_pos (rfl : ρ = ρ), if_neg hne, hzout ρ (fun h => lt_irrefl ρ h.1)]
+    · rw [h1, ite_eq_left (rfl : ρ = ρ), ite_eq_right hne, hzout ρ (fun h => lt_irrefl ρ h.1)]
       ring
     · rcases lt_trichotomy j (Fin.rev ρ) with h2 | h2 | h2
       · have hm := fin_rev_between_of_between ρ j h1 h2
-        rw [hMz j h1 h2, hMz (Fin.rev j) hm.1 hm.2, if_neg (ne_of_gt h1), if_neg (ne_of_lt h2),
+        rw [hMz j h1 h2, hMz (Fin.rev j) hm.1 hm.2, ite_eq_right (ne_of_gt h1), ite_eq_right (ne_of_lt h2),
           map_mul σ, map_neg σ]
         ring
-      · rw [h2, Fin.rev_rev, if_neg hne.symm, if_pos (rfl : Fin.rev ρ = Fin.rev ρ),
+      · rw [h2, Fin.rev_rev, ite_eq_right hne.symm, ite_eq_left (rfl : Fin.rev ρ = Fin.rev ρ),
           hzout (Fin.rev ρ) (fun h => lt_irrefl (Fin.rev ρ) h.2)]
         ring
-      · rw [hcz j h2, hzout j (fun h => lt_asymm h2 h.2), if_neg (ne_of_gt h1),
-          if_neg (ne_of_gt h2)]
+      · rw [hcz j h2, hzout j (fun h => lt_asymm h2 h.2), ite_eq_right (ne_of_gt h1),
+          ite_eq_right (ne_of_gt h2)]
         ring
   have hA : σ (M (Fin.rev ρ) ρ) * M ρ ρ + σ (M ρ ρ) * M (Fin.rev ρ) ρ +
       σ (M ρ ρ) * M ρ ρ * S = 0 := by
@@ -326,7 +326,7 @@ theorem fIwasawa_tri_succ_of_max_pivot (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ 
         _ ≤ (Valued.v (M ρ ρ))⁻¹ * Valued.v (M ρ ρ) := by gcongr
         _ = 1 := inv_mul_cancel₀ hvp
     · rw [hzout i h, Valuation.map_zero]
-      first | exact zero_le' | exact zero_le _ | simp
+      first | exact zero_le | exact zero_le _ | simp
   have hSv : Valued.v S ≤ 1 := by
     rw [hSeq]
     simp only [fIwasawaH]
@@ -354,7 +354,7 @@ theorem fIwasawa_tri_succ_of_max_pivot (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ 
     by_cases h : i = Fin.rev ρ
     · (rw [h, Pi.single_eq_same, Valuation.map_one]) <;> exact le_rfl
     · rw [Pi.single_eq_of_ne h, Valuation.map_zero]
-      first | exact zero_le' | exact zero_le _ | simp
+      first | exact zero_le | exact zero_le _ | simp
   have hee : fIwasawaH σ (Pi.single (Fin.rev ρ) (1 : L)) (Pi.single (Fin.rev ρ) (1 : L)) = 0 := by
     rw [fIwasawa_H_single_left (σ := σ), Fin.rev_rev, Pi.single_eq_of_ne hne]
   have hez : fIwasawaH σ (Pi.single (Fin.rev ρ) (1 : L)) z = 0 := by
@@ -374,7 +374,7 @@ theorem fIwasawa_tri_succ_of_max_pivot (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ 
   rw [hcol]
   by_cases hj' : j.val < r
   · have hjρ : j < ρ := by
-      rw [Fin.lt_iff_val_lt_val, hρr]
+      rw [Fin.lt_def, hρr]
       exact hj'
     rw [fIwasawa_E_fix (σ := σ) ρ z c hzsupp (fun k => M k j) (hT ρ j hj' hjρ)
       (fun t h1 _ => hT t j hj' (lt_trans hjρ h1))]
@@ -409,7 +409,7 @@ theorem fIwasawa_reduce (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ x, Valued.v (σ
     obtain ⟨k, hk, hkT⟩ := ih (by omega)
     have hrn : r < n := by omega
     have hρ : (⟨r, hrn⟩ : Fin n) < Fin.rev ⟨r, hrn⟩ := by
-      rw [Fin.lt_iff_val_lt_val, Fin.val_rev]
+      rw [Fin.lt_def, Fin.val_rev]
       show r < n - (r + 1)
       omega
     have hkM : fIwasawaUn σ (k * M) := fIwasawa_un_mul (σ := σ) k M (And.left hk) hM
@@ -432,7 +432,7 @@ theorem fIwasawa_upper (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ x, Valued.v (σ 
   have hij' : j < i := hij
   by_cases hj : j.val < n / 2
   · exact hT i j hj hij'
-  · have hlt := Fin.lt_iff_val_lt_val.mp hij'
+  · have hlt := Fin.lt_def.mp hij'
     have hi := i.isLt
     have hs : (Fin.rev i).val < n / 2 := by
       rw [Fin.val_rev]

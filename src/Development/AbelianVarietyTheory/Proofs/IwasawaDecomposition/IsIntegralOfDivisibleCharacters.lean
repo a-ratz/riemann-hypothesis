@@ -80,7 +80,7 @@ theorem _root_.GlobalTheory.IntegralOfPointValues.isIntegral_inv_smul_of_closed 
   have hroot : ∀ α ∈ (minpoly C y).roots, ∃ k : O, algebraMap O C k = a * α := by
     intro α hα
     set D := Algebra.adjoin C (Set.range j) with hD
-    haveI : Algebra.IsIntegral C D :=
+    have : Algebra.IsIntegral C D :=
       Algebra.IsIntegral.adjoin (by rintro _ ⟨b, rfl⟩; exact hjint b)
     have hmem : ∀ b, j b ∈ D := fun b => Algebra.subset_adjoin ⟨b, rfl⟩
     let yD : D := ⟨y, hmem x⟩
@@ -99,7 +99,7 @@ theorem _root_.GlobalTheory.IntegralOfPointValues.isIntegral_inv_smul_of_closed 
         rw [← hfac, map_mul] at h0
         simpa using (hu'.mul_right_eq_zero).1 (by simpa using h0)
     obtain ⟨M, hMmax, hMmem⟩ := exists_max_ideal_of_mem_nonunits hnu
-    letI : Field (D ⧸ M) := Ideal.Quotient.field M
+    let : Field (D ⧸ M) := Ideal.Quotient.field M
     have hbij : Function.Bijective (algebraMap C (D ⧸ M)) :=
       IsAlgClosed.algebraMap_bijective_of_isIntegral
     let e : C ≃ₐ[C] D ⧸ M := AlgEquiv.ofBijective (Algebra.ofId C (D ⧸ M)) hbij
@@ -142,7 +142,7 @@ theorem _root_.GlobalTheory.IntegralOfPointValues.isIntegral_inv_smul_of_closed 
   let f : C → O := fun α => if hh : ∃ k : O, algebraMap O C k = a * α then hh.choose else 0
   have hf : ∀ α ∈ s, algebraMap O C (f α) = a * α := fun α hα => by
     have hh := hroot α hα
-    simp only [f, dif_pos hh]
+    simp only [f, dite_eq_left hh]
     exact hh.choose_spec
   have hsplit : minpoly C y = (s.map fun α => X - Polynomial.C α).prod :=
     (IsAlgClosed.splits (minpoly C y)).eq_prod_roots_of_monic (minpoly.monic hyint)

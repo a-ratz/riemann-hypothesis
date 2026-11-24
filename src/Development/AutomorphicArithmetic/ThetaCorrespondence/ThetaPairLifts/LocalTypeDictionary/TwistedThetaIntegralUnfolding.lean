@@ -459,8 +459,8 @@ theorem GlobalTheory.TermScales.exists_scales : Big fun {D} _ _ _ _ _ _ _ _ _ _ 
       · obtain ⟨hd, hne⟩ := hX'
         obtain ⟨i1, i2, i3, i4, i5, -, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (ch.G.V X)
         obtain ⟨K', hK'⟩ := hM'at X hd hne
-        haveI := isHaar_of_isAt M X (hM.vtx X (hdef X hd hne))
-        haveI := isHaar_of_isAt M' X hK'
+        have := isHaar_of_isAt M X (hM.vtx X (hdef X hd hne))
+        have := isHaar_of_isAt M' X hK'
         exact ⟨Measure.haarScalarFactor (M.ν X) (M'.ν X), fun _ _ => Measure.isMulLeftInvariant_eq_smul _ _,
           fun h1 h2 h3 => (hX ⟨h1, h2, h3⟩).elim⟩
       · exact ⟨1, fun h1 h2 => (hX' ⟨h1, h2⟩).elim, fun h1 h2 _ => (hX' ⟨h1, h2⟩).elim⟩
@@ -527,10 +527,10 @@ theorem wtAt_big : Big fun ch => ∀ s, WtAt ch s := by
     exact hf.1
   have hfac : ∀ j ∈ idx D, (if h : b j ∈ GfC _ then cellWt (ρ j) (μ j) ((latGrp ch.G j).subgroupOf _) ⟨b j, h⟩ else 0) *
       ((x (.top j) : ℝ) : ℂ) = cf j * (colCoef ch t β j : ℂ) := fun j hj => by
-    rw [dif_pos (hgf j hj)]
+    rw [dite_eq_left (hgf j hj)]
     have hs := hx (.top j) (show j ≤ D.R.m by have := hlt j hj; omega) (by simp only [ne_eq, Node.top.injEq]; have := hlt j hj; omega)
     have e := (hc j hj).choose_spec t Φ β b hb M M' hM hM' (x (.top j)) hs (hgf j hj)
-    simp only [cf, dif_pos hj]
+    simp only [cf, dite_eq_left hj]
     exact e
   have hsP : sProd D x = ((idx D).map fun j => ((x (.top j) : ℝ) : ℂ)).prod := by
     have h2 : ∏ i ∈ Finset.range (D.R.m + 1), ((x (.grid i D.R.m) : ℝ) : ℂ) = 1 := by
@@ -645,7 +645,7 @@ theorem exists_haar_family {ι : Type} {H : ι → Type} [∀ i, Group (H i)]
     · have : LocallyCompactSpace (B i) := (hS i hi).1.locallyCompactSpace
       have hc : IsClosed (((R i).subgroupOf (B i) : Subgroup (B i)) : Set (B i)) := by
         rw [Subgroup.coe_subgroupOf]
-        exact (hS i hi).2.preimage continuous_subtype_val
+        exact (hS i hi).2.preimage continuous_subtypeVal
       have : LocallyCompactSpace ((R i).subgroupOf (B i)) := hc.locallyCompactSpace
       exact ⟨Measure.haar, fun _ => inferInstance⟩
     · exact ⟨0, fun h => absurd h hi⟩
@@ -1213,12 +1213,12 @@ variable {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} (G : GridData L sc)
 theorem rowGrp_bes (j σ : ℕ) (hj : j + 2 * σ + 2 = D.R.m) :
     rowGrp G j = besGrp (besDecAt G j σ hj) (GlobalTheory.OrthSumExists.orthDecHsum D _ _) := by
   obtain rfl : σ = (D.R.m - 2 - j) / 2 := by omega
-  exact (dif_neg (by omega)).trans (dif_pos hj)
+  exact (dite_eq_right (by omega)).trans (dite_eq_left hj)
 
 theorem rowGrp_jac (j σ : ℕ) (hj : j + 2 * σ + 1 = D.R.m) :
     rowGrp G j = jacGrp (rowJac G j (by omega) σ (by omega)) := by
   obtain rfl : σ = (D.R.m - 1 - j) / 2 := by omega
-  exact dif_pos hj
+  exact dite_eq_left hj
 
 theorem contr_ne_zero {ρ σ : ℕ} {B : GlobalTheory.Unf.BesLev D ρ} {B' : GlobalTheory.Unf.BesLev D σ} {l : GlobalTheory.Unf.Link B B'.L B'.ζ} {S : HSp D}
     {vL : GlobalTheory.Unf.VolM D B'.L.rank S.rank} {Ξ₁ : WO B.V₀ S → ℂ} {Ξ₂ : WO S B'.V₀ → ℂ}
@@ -1302,7 +1302,7 @@ theorem offAt_of_shape (hS : ShapeAt ch) (hB : ∀ t, ∃ b, IsBase t ch.S.B b) 
       omega
     have hc := hne j hje (by omega)
     have hj0 : ¬ j + 2 * 0 + 2 = D.R.m := by omega
-    rw [show conAt ch.W hM (fockD ch.W t d.2 P) h j = _ from (dif_neg hj0).trans (dif_pos hj')] at hc
+    rw [show conAt ch.W hM (fockD ch.W t d.2 P) h j = _ from (dite_eq_right hj0).trans (dite_eq_left hj')] at hc
     obtain ⟨c1, c2⟩ := contr_ne_zero hc
     rw [move] at c1 c2
     rw [hInv, rowGrp_bes ch.G j _ hj'] at hI

@@ -179,24 +179,24 @@ theorem curry_holds : Curry := by
   · intro i
     refine LinearMap.ext fun f => funext fun J => funext fun I => ?_
     have hz : ∀ b : Fin k, ¬ (Fin.natAdd m b < Fin.castAdd k i) := fun b h => by
-      simp only [Fin.lt_def, Fin.coe_castAdd, Fin.coe_natAdd] at h <;> omega
+      simp only [Fin.lt_def, Fin.val_castAdd, Fin.val_natAdd] at h <;> omega
     have hc : ∀ x : Fin m, Fin.castAdd k x < Fin.castAdd k i ↔ x < i := fun x => by
-      simp only [Fin.lt_def, Fin.coe_castAdd, Fin.coe_natAdd] <;> omega
+      simp only [Fin.lt_def, Fin.val_castAdd, Fin.val_natAdd] <;> omega
     simp only [xJ, LinearMap.comp_apply, LinearMap.add_apply, Pi.add_apply, Om_apply, LinearMap.sum_apply,
       Finset.sum_apply, pm_apply, iteApp, ite_apply, Pi.zero_apply, lift_apply, curF_apply, Fin.append_left, upd_castAdd, Finset.sum_filter,
-      Fin.sum_univ_add, swap_castAdd, hz, hc, if_false, Finset.sum_const_zero, add_zero]
+      Fin.sum_univ_add, swap_castAdd, hz, hc, ite_false, Finset.sum_const_zero, add_zero]
   · intro j
     refine LinearMap.ext fun f => funext fun J => funext fun I => ?_
     have hz : ∀ x : Fin m, Fin.castAdd k x < Fin.natAdd m j := fun x => by
-      simp only [Fin.lt_def, Fin.coe_castAdd, Fin.coe_natAdd] <;> omega
+      simp only [Fin.lt_def, Fin.val_castAdd, Fin.val_natAdd] <;> omega
     have hc : ∀ b : Fin k, Fin.natAdd m b < Fin.natAdd m j ↔ b < j := fun b => by
-      simp only [Fin.lt_def, Fin.coe_castAdd, Fin.coe_natAdd] <;> omega
+      simp only [Fin.lt_def, Fin.val_castAdd, Fin.val_natAdd] <;> omega
     simp only [xJ, LinearMap.comp_apply, LinearMap.add_apply, Pi.add_apply, Om_apply, LinearMap.sum_apply,
       Finset.sum_apply, pm_apply, iteApp, ite_apply, Pi.zero_apply, curF_apply, tE_apply, Fin.append_right, upd_natAdd, upd_castAdd,
-      Finset.sum_filter, Fin.sum_univ_add, swap_natAdd, swap_mixed, hz, hc, if_true, Finset.sum_add_distrib]
+      Finset.sum_filter, Fin.sum_univ_add, swap_natAdd, swap_mixed, hz, hc, ite_true, Finset.sum_add_distrib]
     rw [Finset.sum_comm (f := fun x p => if I p = x then
       f (Fin.append (Function.update I p (J j)) (Function.update J j x)) else 0)]
-    simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true, add_assoc]
+    simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true, add_assoc]
   · intro B
     rfl
   · intro i i'
@@ -239,7 +239,7 @@ theorem pm_swap_eq {P : Type} [DecidableEq P] (p j : P) (h : p ≠ j) :
   refine LinearMap.ext fun f => funext fun I => ?_
   rw [pm_apply, comp_swap I p j h]
   simp only [LinearMap.sum_apply, Finset.sum_apply, Module.End.mul_apply, eAt_apply,
-    Function.update_apply, if_neg (Ne.symm h)]
+    Function.update_apply, ite_eq_right (Ne.symm h)]
   simp [Finset.sum_ite_eq, Finset.sum_ite_eq']
 
 theorem xJ_eq {m : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (j : Fin m) :
@@ -328,7 +328,7 @@ theorem xJ_succ (hT : TensorGl) {E : Fin n → Fin n → Module.End ℂ M} (hE :
   have hset : Finset.univ.filter (· < j) = insert i (Finset.univ.filter (· < i)) := by
     ext l
     simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_insert,
-      Fin.lt_iff_val_lt_val, Fin.ext_iff]
+      Fin.lt_def, Fin.ext_iff]
     omega
   show Om E j + ∑ l ∈ Finset.univ.filter (· < j), pm (Equiv.swap l j) =
     pm (Equiv.swap i j) * (Om E i + ∑ l ∈ Finset.univ.filter (· < i), pm (Equiv.swap l i)) *
@@ -402,9 +402,9 @@ theorem piJ_comm_adj (hT : TensorGl) {E : Fin n → Fin n → Module.End ℂ M} 
     rw [List.getElem_ofFn]
     refine Commute.add_left (Algebra.commutes u _) ?_
     refine (swap_comm_xJ hT hE ⟨t, by simpa using ht⟩ i.castSucc i.succ ?_ ?_).symm
-    · simp only [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ]
+    · simp only [Fin.lt_def, Fin.val_castSucc, Fin.val_succ]
       omega
-    · simp only [Fin.lt_iff_val_lt_val, Fin.ext_iff, Fin.coe_castSucc, Fin.val_succ]
+    · simp only [Fin.lt_def, Fin.ext_iff, Fin.val_castSucc, Fin.val_succ]
       omega
   · simp only [List.getElem_ofFn]
     exact pair_comm u _ _ _ (xJ_comm hT hE _ _) (xJ_mul_swap hT hE _ _ hij) (swap_mul_xJ hT hE _ _ hij)
@@ -439,9 +439,9 @@ theorem jmComm_of : TensorGl → JMComm := by
   have e1 := Fin.val_ne_of_ne hk1
   have e2 := Fin.val_ne_of_ne hk2
   refine (JMA.swap_comm_xJ hT hE k i j ?_ ?_).symm
-  · simp only [Fin.lt_iff_val_lt_val]
+  · simp only [Fin.lt_def]
     omega
-  · simp only [Fin.lt_iff_val_lt_val, Fin.ext_iff]
+  · simp only [Fin.lt_def, Fin.ext_iff]
     omega
 
 end PositivityTheory.Rg.Cz
@@ -757,10 +757,10 @@ theorem capelliC_negT {n : ℕ} (E : Fin n → Fin n → A) (x : ℂ) :
     funext j
     simp only [Function.comp_apply, capEntry]
     by_cases hj : σ j = j
-    · rw [if_pos hj, if_pos hj.symm, neg_add, ← map_neg]
+    · rw [ite_eq_left hj, ite_eq_left hj.symm, neg_add, ← map_neg]
       congr 2
       ring
-    · rw [if_neg hj, if_neg (Ne.symm hj), neg_add, neg_zero]
+    · rw [ite_eq_right hj, ite_eq_right (Ne.symm hj), neg_add, neg_zero]
   rw [h, List.prod_map_neg, List.length_ofFn, zsmul_eq_mul, zsmul_eq_mul, ← mul_assoc, ← mul_assoc,
     ((Commute.neg_one_left _).pow_left n).eq]
 
@@ -853,7 +853,7 @@ theorem prod_linear (m : ℕ) (c : Fin m → A) :
 
 theorem tmPoly_diag {n : ℕ} (E : Fin n → Fin n → A) (k : ℕ) (a : Fin n) :
     tmPoly E k a a = X + C (E a a - algebraMap ℂ A (k : ℂ)) := by
-  rw [tmPoly, if_pos rfl, C_sub]
+  rw [tmPoly, ite_eq_left rfl, C_sub]
   abel
 
 theorem sum_fin_cast (n : ℕ) : ∑ k : Fin n, ((k : ℕ) : ℂ) = (n : ℂ) * ((n : ℂ) - 1) / 2 := by
@@ -907,7 +907,7 @@ theorem coeff_eq_zero_of_evU (r : (Module.End ℂ M)[X]) (h : ∀ u : ℂ, evU u
     refine Finset.sum_congr rfl fun e _ => ?_
     rw [eval_monomial, mul_comm]
   have hc := congrArg (fun p : ℂ[X] => p.coeff i) hq0
-  simp only [Polynomial.finsetSum_coeff, coeff_monomial_apply, coeff_zero, Finset.sum_ite_eq', if_pos hi] at hc
+  simp only [Polynomial.finsetSum_coeff, coeff_monomial_apply, coeff_zero, Finset.sum_ite_eq', ite_eq_left hi] at hc
   exact hc
 
 end Op
@@ -1026,7 +1026,7 @@ theorem semiZero_of (hQ : QdetFacts) (_hW : WallAlg) (hL : LieInv) (hWQ : WallQu
     have h2 : (∑ a, E τ a a) (ξ I) - (∑ a, E (bar τ) a a) (ξ I) =
         ((n : ℂ) * ((c τ - c (bar τ) : ℤ) : ℂ)) • ξ I := by
       rw [LinearMap.sum_apply, LinearMap.sum_apply, ← Finset.sum_sub_distrib]
-      simp only [hl, if_true]
+      simp only [hl, ite_true]
       rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul]
     have h3 : ((n : ℂ) * ((c τ - c (bar τ) : ℤ) : ℂ)) • N.mkQ (ξ I) = 0 := by
       rw [← map_smul, ← h2, map_sub, h1, sub_self]

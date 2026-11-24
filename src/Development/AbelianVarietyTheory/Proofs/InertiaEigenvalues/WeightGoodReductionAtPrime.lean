@@ -376,7 +376,7 @@ theorem length_le_of_card (O : Type) [CommRing O] [IsLocalRing O] (M N : Type) [
     intro h0
     rw [h0, zero_pow hm0.ne'] at hM
     exact Nat.card_pos.ne' hM
-  haveI : Finite (IsLocalRing.ResidueField O) := Nat.finite_of_card_ne_zero hq0
+  have : Finite (IsLocalRing.ResidueField O) := Nat.finite_of_card_ne_zero hq0
   have hq : 1 < Nat.card (IsLocalRing.ResidueField O) := Finite.one_lt_card
   rw [hM, hN, ← pow_mul, mul_comm] at h
   exact (Nat.pow_le_pow_iff_right hq).1 h
@@ -424,7 +424,7 @@ theorem len_part [CompactSpace G] (hO : GoodO (Qp := Qp) LL O) (T : LocLat G Qp 
   obtain ⟨⟨hdom, hdvr, hfr⟩, -⟩ := hO
   obtain ⟨-, he⟩ := GlobalTheory.LineLattice.lattice_rank_one T.L h1
   obtain ⟨e⟩ := he _ ha
-  haveI : Finite ↥(Submodule.torsionBy O (T.V ⧸ T.L.T) ((p : O) ^ r)) :=
+  have : Finite ↥(Submodule.torsionBy O (T.V ⧸ T.L.T) ((p : O) ^ r)) :=
     Finite.of_equiv _ e.toEquiv.symm
   obtain ⟨hfin, hcard⟩ := heul _ (actTors T ((p : O) ^ r))
     (fun m => Subtype.ext (actD_one T m.1)) (fun g h m => Subtype.ext (actD_mul T g h m.1))
@@ -434,8 +434,8 @@ theorem len_part [CompactSpace G] (hO : GoodO (Qp := Qp) LL O) (T : LocLat G Qp 
       rw [← Nat.cast_smul_eq_nsmul O, Nat.cast_pow]
       exact this))
     (fun m => lc_sub (lc_act T hT m.1))
-  haveI := hfin.to_subtype
-  haveI : Finite ↥(Submodule.torsionBy O ↥(divisibleCocycles T.L) ((p : O) ^ r)) :=
+  have := hfin.to_subtype
+  have : Finite ↥(Submodule.torsionBy O ↥(divisibleCocycles T.L) ((p : O) ^ r)) :=
     Finite.of_injective _ (toCoc_inj T _)
   let π : ↥(divisibleCocycles T.L) →ₗ[O] (DivisibleCohomology T.L ⧸ divisibleFiniteCohomology PD T.L) :=
     (divisibleFiniteCohomology PD T.L).mkQ ∘ₗ Submodule.mkQ _
@@ -556,8 +556,8 @@ theorem tbe_of (S : Sit) [TopologicalSpace S.Qp] [CompactSpace S.G] [IsTopologic
     rcases Nat.eq_zero_or_pos e with he | he
     · exact (hzero he).1
     · rw [(hpos he).1]; exact (hpos he).2
-  haveI := hfin n
-  haveI : IsDomain S.O := hO.1.1
+  have := hfin n
+  have : IsDomain S.O := hO.1.1
   have key := len_part S.PD hO Ve h1 S.PD.p n (Module.finrank S.Qp S.K) (pow_ne_zero n hp)
     (heul n) hne
   have hord : Module.length S.O (S.O ⧸ Ideal.span {((S.PD.p : ℕ) : S.O) ^ n}) =
@@ -590,17 +590,17 @@ theorem twist_torsion_facts : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.l
   intro D HW F hA hB l _ K s LL h S E
   obtain ⟨-, hA2, -, hA4, hA5, -, hA7, -, -⟩ := hA
   obtain ⟨hO, hfin⟩ := GlobalTheory.LocalIntegers.good_integers l LL
-  haveI := K.2
+  have := K.2
   have hc : CompactSpace ↥(GK K) :=
     isCompact_iff_compactSpace.1 (IntermediateField.fixingSubgroup_isClosed K.1).isCompact
   obtain ⟨φ, hφ⟩ := GlobalTheory.exists_topologicalClosure_zpowers_sup_inertia l K
   obtain ⟨δ, hδ, hδI, hδ0⟩ := exists_unr D l K LL
   have hp : S.PD.p = l := (D.loc l).PD_p K
   have hl0 : ((l : ℕ) : ↥(OL LL)) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
-  letI : TopologicalSpace S.Qp := (inferInstance : TopologicalSpace ℚ_[l])
-  haveI : CompactSpace S.G := hc
-  haveI : IsTopologicalGroup S.G := (inferInstance : IsTopologicalGroup ↥(GK K))
-  haveI : IsTopologicalRing S.LL := hO.2.2.2.1
+  let : TopologicalSpace S.Qp := (inferInstance : TopologicalSpace ℚ_[l])
+  have : CompactSpace S.G := hc
+  have : IsTopologicalGroup S.G := (inferInstance : IsTopologicalGroup ↥(GK K))
+  have : IsTopologicalRing S.LL := hO.2.2.2.1
   refine tbe_of S hO ?_ ?_ (hA5 l K) (hA7 l K) (hB l K).2.1 ?_ ?_ φ hφ δ hδ hδI hδ0
   · rw [hp]; exact hfin
   · rw [hp]; exact hl0

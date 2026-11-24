@@ -94,7 +94,7 @@ theorem lastE_eq (hk : m + 1 < a) (y : UnipotentBlockColumnIndex a (m + 1) (m + 
   rw [Finset.sum_eq_single (t0 hk)]
   · simp [t0]
   · intro t _ ht
-    rw [if_neg]
+    rw [ite_eq_right]
     intro e
     apply ht
     have hc : t.1.2 = ⟨m + 1, hk⟩ := Fin.ext (le_antisymm t.2.2.2 t.2.2.1)
@@ -205,7 +205,7 @@ theorem sM_e (hk : m + 1 < a) : sM hk (Pi.single (t0 hk) (1 : F)) = 1 := by
       congr 1
       simp only [t0, Subtype.ext_iff, Prod.ext_iff, Fin.ext_iff, and_true, eq_iff_iff]
       omega
-    · rw [dite_eq_right hj, if_neg]
+    · rw [dite_eq_right hj, ite_eq_right]
       intro e
       rw [← e] at hj
       simp at hj
@@ -284,10 +284,10 @@ theorem contOn_sM [TopologicalSpace F] [IsTopologicalDivisionRing F] (hk : m + 1
       refine continuousAt_matrix_inv _ ?_
       rw [det_sMat, Ring.inverse_eq_inv']
       exact continuousAt_inv₀ x.2
-    exact (h1.comp hc.continuousAt).comp continuous_subtype_val.continuousAt
+    exact (h1.comp hc.continuousAt).comp continuous_subtypeVal.continuousAt
   rw [continuousOn_iff_continuous_domRestrict]
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
-  · refine (hc.comp continuous_subtype_val).congr fun x => ?_
+  · refine (hc.comp continuous_subtypeVal).congr fun x => ?_
     exact (sM_val hk x.1 x.2).symm
   · refine hi.congr fun x => ?_
     show _ = ((sM hk x.1)⁻¹ : GL (Fin a) F).val
@@ -327,7 +327,7 @@ theorem exists_le_sub {W : Set F} (hW : W ∈ 𝓝 (0 : F)) :
   refine ⟨r0 * π, mul_ne_zero hr0' hπ0, fun x hx => hsub ?_⟩
   have hlt : valuation F (r0 * π) < γ := by
     rw [map_mul, hr0]
-    exact mul_lt_of_lt_one_right (zero_lt_iff.2 hγ) hπ1
+    exact mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hγ) hπ1
   exact lt_of_le_of_lt hx hlt
 
 variable {ι : Type} [Fintype ι]
@@ -372,7 +372,7 @@ theorem finite_quot {γ δ : ValueGroupWithZero F} (hδ : δ ≠ 0) :
     Finite ((lat γ : AddSubgroup (ι → F)) ⧸ (lat δ : AddSubgroup (ι → F)).addSubgroupOf (lat γ)) := by
   have : CompactSpace (lat γ : AddSubgroup (ι → F)) := isCompact_iff_compactSpace.mp (isCompact_lat γ)
   apply AddSubgroup.quotient_finite_of_isOpen
-  exact (isOpen_lat hδ).preimage continuous_subtype_val
+  exact (isOpen_lat hδ).preimage continuous_subtypeVal
 
 theorem ann [DecidableEq ι] (χ : AddChar F ℂ) (x0 : F) (hx0 : χ x0 ≠ 1) (ε : F) (hε : ε ≠ 0)
     (Γ : ValueGroupWithZero F) (hΓ : valuation F (x0 / ε) ≤ Γ) (ζ : ι → F)
@@ -505,12 +505,12 @@ theorem lattice_open_last_entry : MirabolicColumnBlock → S9 := by
   have hc1 : ∀ y, c (blkU y) = χ (-(y (t0 hk))) := by
     intro y; simp only [c]; rw [blkU_apply]
   refine ⟨T, c, η, r, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simp only [η, if_pos (And.intro hblk1 hP1one)]; exact_mod_cast hN
-  · simp only [r, if_pos (And.intro hblk1 hP1one)]; rw [hrow1, he1]; simp
+  · simp only [η, ite_eq_left (And.intro hblk1 hP1one)]; exact_mod_cast hN
+  · simp only [r, ite_eq_left (And.intro hblk1 hP1one)]; rw [hrow1, he1]; simp
   · intro h hh hη
     have hc : GlobalTheory (m + 1) h ∧ P1 (rowOf hk h) := by
       by_contra hc; exact hη (by simp [η, hc])
-    simp only [r, if_pos hc]
+    simp only [r, ite_eq_left hc]
     exact mir_mul hk h hh (hP1 _ hc.2).1
   · intro h
     refine ⟨if GlobalTheory (m + 1) h ∧ P1 (rowOf hk h) then N else 0, ?_, rfl⟩
@@ -530,7 +530,7 @@ theorem lattice_open_last_entry : MirabolicColumnBlock → S9 := by
       refine ⟨sM hk (rowOf hk h), ⟨rowOf hk h - e, (hP1 _ hc.2).2.2, ?_⟩, ?_⟩
       · show sM hk (e + (rowOf hk h - e)) = _
         congr 1; abel
-      · simp only [r, if_pos hc]
+      · simp only [r, ite_eq_left hc]
         exact (inv_mul_cancel_right _ _).symm
   · intro v hv Y hY hvY Λ hΛ h hh
     have hsum : Λ (ρ h (∑ t ∈ T, c t • ρ t v)) =
@@ -552,7 +552,7 @@ theorem lattice_open_last_entry : MirabolicColumnBlock → S9 := by
         conv_lhs => rw [show h = h * (sM hk (rowOf hk h))⁻¹ * sM hk (rowOf hk h) from (inv_mul_cancel_right _ _).symm]
         rw [map_mul, Module.End.mul_apply, hv _ (hP1 _ hc.2).2.1]
       rw [hsum]
-      simp only [hall, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one, η, r, if_pos hc, N]
+      simp only [hall, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one, η, r, ite_eq_left hc, N]
       rw [hfix]
       push_cast
       rfl

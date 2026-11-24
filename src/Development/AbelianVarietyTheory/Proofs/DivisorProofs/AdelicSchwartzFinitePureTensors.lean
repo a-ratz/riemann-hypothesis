@@ -82,7 +82,7 @@ theorem isOpen_intA : IsOpen ((intA F : AddSubgroup _) : Set (FiniteAdeleRing (�
   exact (RestrictedProduct.isOpenEmbedding_structureMap (fun v => Valued.isOpen_integer _)).isOpen_range
 
 theorem isCompact_intA : IsCompact ((intA F : AddSubgroup _) : Set (FiniteAdeleRing (𝓞 F) F)) := by
-  haveI : CompactSpace (∀ v : Pl (F := F), ((v.adicCompletionIntegers F : Set (v.adicCompletion F)))) :=
+  have : CompactSpace (∀ v : Pl (F := F), ((v.adicCompletionIntegers F : Set (v.adicCompletion F)))) :=
     @Pi.compactSpace _ _ _ (fun v => GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v)
   rw [intA_eq_range]
   have hc := (RestrictedProduct.isOpenEmbedding_structureMap (R := fun v : Pl F => v.adicCompletion F)
@@ -149,9 +149,9 @@ theorem exists_open_invariant {X : Type} [AddCommGroup X] [TopologicalSpace X] [
 theorem exists_nsmul_mem (κ : Type) [Fintype κ] (M : AddSubgroup (κ → FiniteAdeleRing (𝓞 F) F))
     (hM : IsOpen (M : Set (κ → FiniteAdeleRing (𝓞 F) F))) :
     ∃ N : ℕ, N ≠ 0 ∧ ∀ a ∈ intP F κ, N • a ∈ M := by
-  haveI : CompactSpace (intP F κ) := isCompact_iff_compactSpace.1 (isCompact_intP κ)
-  have ho : IsOpen ((M.addSubgroupOf (intP F κ)) : Set (intP F κ)) := hM.preimage continuous_subtype_val
-  haveI : Finite (intP F κ ⧸ M.addSubgroupOf (intP F κ)) := AddSubgroup.quotient_finite_of_isOpen _ ho
+  have : CompactSpace (intP F κ) := isCompact_iff_compactSpace.1 (isCompact_intP κ)
+  have ho : IsOpen ((M.addSubgroupOf (intP F κ)) : Set (intP F κ)) := hM.preimage continuous_subtypeVal
+  have : Finite (intP F κ ⧸ M.addSubgroupOf (intP F κ)) := AddSubgroup.quotient_finite_of_isOpen _ ho
   refine ⟨(M.addSubgroupOf (intP F κ)).index, AddSubgroup.index_ne_zero_of_finite, fun a ha => ?_⟩
   have := AddSubgroup.nsmul_index_mem (M.addSubgroupOf (intP F κ)) (⟨a, ha⟩ : intP F κ)
   rw [AddSubgroup.mem_addSubgroupOf] at this
@@ -186,7 +186,7 @@ theorem locInd_std {κ : Type} [Fintype κ] {N : ℕ} {c : FiniteAdeleRing (𝓞
   unfold locInd
   congr 1
   ext x
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · intro h i
     have e : x i = (N : Fv F v) * (c v * (x i - r i v)) + r i v := by
@@ -204,7 +204,7 @@ theorem locInd_mem_SB {κ : Type} [Fintype κ] {N : ℕ} {c : FiniteAdeleRing (�
     (Homeomorph.subRight (fun i => r i v)).trans (Homeomorph.smulOfNeZero (c v) hc0)
   have e : locInd c r v = Set.indicator {x : κ → Fv F v | ∀ j, x j ∈ v.adicCompletionIntegers F} 1 ∘ h := by
     funext x
-    simp only [locInd, Function.comp_apply, Set.indicator_apply, Set.mem_setOf_eq, h, Homeomorph.trans_apply,
+    simp only [locInd, Function.comp_apply, Set.indicator_apply, Set.mem_ofPred_eq, h, Homeomorph.trans_apply,
       Homeomorph.subRight_apply, Homeomorph.smulOfNeZero_apply, Pi.smul_apply, Pi.sub_apply, smul_eq_mul, Pi.one_apply]
   have hs := GlobalTheory.StdVacuum.indicator_mem_SB (κ := κ) v
   rw [e]
@@ -245,8 +245,8 @@ theorem pureA_eq_sum (κ : Type) [Fintype κ] (f : SInf F κ) (g : (κ → Finit
     ∃ (N : ℕ) (c : FiniteAdeleRing (𝓞 F) F) (R : Finset (κ → FiniteAdeleRing (𝓞 F) F)),
       (N : FiniteAdeleRing (𝓞 F) F) * c = 1 ∧
       pureA F f g = ∑ r ∈ R, GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (g r • f) (fun v => locInd c r v) := by
-  haveI := GlobalTheory.HeisSchA.nonarch_finiteAdeleRing (F := F)
-  haveI : NonarchimedeanAddGroup (κ → FiniteAdeleRing (𝓞 F) F) := GlobalTheory.HeisSchA.nonarch_pi
+  have := GlobalTheory.HeisSchA.nonarch_finiteAdeleRing (F := F)
+  have : NonarchimedeanAddGroup (κ → FiniteAdeleRing (𝓞 F) F) := GlobalTheory.HeisSchA.nonarch_pi
   obtain ⟨M, hMo, hMinv⟩ := exists_open_invariant g hg
   obtain ⟨N, hN, hNM⟩ := exists_nsmul_mem κ M hMo
   obtain ⟨c, hcdef⟩ : ∃ c : FiniteAdeleRing (𝓞 F) F, c = algebraMap F _ ((N : F)⁻¹) := ⟨_, rfl⟩
@@ -305,7 +305,7 @@ theorem pureA_eq_sum (κ : Type) [Fintype κ] (f : SInf F κ) (g : (κ → Finit
   show GlobalTheory.WeilAdm.slice F (pureA F f g) r (fun i => InfiniteAdeleRing.ringEquiv_mixedSpace F (x i).1) *
       Set.indicator {y | c • (y - r) ∈ intP F κ} (fun _ => (1 : ℂ)) (fun i => (x i).2) =
     (g r • f) (fun i => evI F (x i)) * ∏ᶠ v, locInd c r v (fun i => evFin F v (x i))
-  rw [e1, e2, SchwartzMap.smul_apply, smul_eq_mul]
+  rw [e1, e2, smul_apply, smul_eq_mul]
 
 end GlobalTheory.SchADecomp
 
@@ -351,5 +351,5 @@ theorem GlobalTheory.SchADecomp.exists_sum_pure : ∀ (F : Type) [Field F] [Numb
     rw [he, Finset.smul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     funext x
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, SchwartzMap.smul_apply, smul_eq_mul]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_apply, smul_eq_mul]
     ring

@@ -636,11 +636,11 @@ theorem value_and_fderiv_at_zero : ∀ {g : ℕ} (x y W : Fin g → ℂ) (fr : t
     (fun (I : thK.{0}) (z : Fin g → ℂ) => fr I (∑ i ∈ I.down, ![x, y, z] i)) _ thε 0
     (fun I _ => hc I) (fun I _ => hn I) hP0
   rw [hF.fderiv_eq (𝕜 := ℂ), hPd.fderiv]
-  rw [ContinuousLinearMap.sum_apply, sum_thK]
+  rw [sum_apply, sum_thK]
   simp only [thI_down, vsum_empty, vsum_0, vsum_1, vsum_2, vsum_01, vsum_02, vsum_12, sum_univ_finThree_vecThree,
       thε_thI_empty, thε_thI_0, thε_thI_1, thε_thI_2, thε_thI_01, thε_thI_02, thε_thI_12,
-      thetaCubeSign_full, add_zero, zero_add, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
-      ContinuousLinearMap.zero_apply, ContinuousLinearMap.id_apply, map_zero, smul_zero,
+      thetaCubeSign_full, add_zero, zero_add, smul_apply, ContinuousLinearMap.comp_apply,
+      zero_apply, ContinuousLinearMap.id_apply, map_zero, smul_zero,
       smul_eq_mul, Int.cast_one, Int.cast_neg]
   ring
 

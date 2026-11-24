@@ -218,7 +218,7 @@ theorem exists_tateIsoQ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
   let ev : ∀ n, D.La → QkPt P.D.toPre C n := fun n v =>
     if hn : 0 < n then Classical.choose (hpt n hn v) else GlobalTheory.TorusExt.qkZero hB C n
   have hev : ∀ n (hn : 0 < n) v, P.ToA C n (ev n v) (X n v) := fun n hn v => by
-    simp only [ev, dif_pos hn]
+    simp only [ev, dite_eq_left hn]
     exact Classical.choose_spec (hpt n hn v)
   refine ⟨⟨J.ζ, J.ζ_prim, J.ζ_pow, ev, ?_, ?_, ?_, ?_, ?_, ?_⟩, rfl, ?_⟩
   · intro n hn a b
@@ -226,7 +226,7 @@ theorem exists_tateIsoQ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : 
     rw [GlobalTheory.TorusExt.qkAdd_iff hB, ← heq, hadd _ _ _ (GlobalTheory.TorusExt.qkAdd_qkAdd hB (ev n a) (ev n b)),
       ← (hf _ _).1 (hev n hn a), ← (hf _ _).1 (hev n hn b), ← (hf _ _).1 (hev n hn (a + b)), Xadd]
   · intro n hn c a
-    letI := H.starRing
+    let := H.starRing
     obtain ⟨f, hf, -, heq, -, hact, -⟩ := hT C n hn
     rw [GlobalTheory.TorusExt.qkAct_iff hB hG P.oD, ← heq, hact _ _ _ (GlobalTheory.TorusExt.qkAct_qkSmul hB hG P.oD c (ev n a)),
       ← (hf _ _).1 (hev n hn a), ← (hf _ _).1 (hev n hn (c • a)), Xlin]

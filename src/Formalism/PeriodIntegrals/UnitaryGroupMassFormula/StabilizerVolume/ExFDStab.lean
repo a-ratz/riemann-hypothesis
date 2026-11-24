@@ -65,7 +65,7 @@ theorem exFDStab_of (h1 : SCHA) (h2 : DiscHF) : ExFDStab := by
   let f : ratIn F E σ M J (stabT (AF F) σ J X0) → HFinIn (AF F) σ J := fun x =>
     ⟨((x : stabT (AF F) σ J X0) : HA (AF F) σ J), (Subgroup.mem_inf.1 (Subgroup.mem_subgroupOf.1 x.2)).1⟩
   have hf : Continuous f :=
-    ((continuous_subtype_val.comp continuous_subtype_val :
+    ((continuous_subtypeVal.comp continuous_subtypeVal :
       Continuous fun x : ratIn F E σ M J (stabT (AF F) σ J X0) => ((x : stabT (AF F) σ J X0) : HA (AF F) σ J))).subtype_mk _
   have hinj : Function.Injective f := by
     intro x y hxy

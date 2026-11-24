@@ -81,7 +81,7 @@ theorem iSup_inf_typeSp {G E C K : Type} [Group G] [Fintype G] [Field K] [AddCom
     (⨆ c, U c) ⊓ (⨅ h : P, LinearMap.ker (ρ (h : G) - (σ ((ψ h : Kˣ) : K)) • LinearMap.id)) =
       ⨆ c, U c ⊓ (⨅ h : P, LinearMap.ker (ρ (h : G) - (σ ((ψ h : Kˣ) : K)) • LinearMap.id)) := by
   have := GlobalTheory.iSup_stable_inf_typeSpace ρ P ((Units.map σ.toMonoidHom).comp ψ) U (fun _ => True) hU
-  simpa only [iSup_pos trivial, MonoidHom.comp_apply, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe] using this
+  simpa only [iSup_pos trivial, MonoidHom.comp_apply, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass] using this
 
 theorem iSup_inf_inf_typeSp {G E C K : Type} [Group G] [Fintype G] [Field K] [AddCommGroup E] [Module ℂ E] (σ : K →+* ℂ)
     (ρ : Representation ℂ G E) (P : Subgroup G) (ψ : P →* Kˣ) (U : C → Submodule ℂ E) (R0 : Submodule ℂ E)

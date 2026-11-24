@@ -292,7 +292,7 @@ theorem ratio_num (x y r : ℕ) (hx : 1 ≤ x) (hxy : x ≤ y) (h : (r : ℝ) * 
   have hq0 : 0 ≤ (y : ℝ) / x := by positivity
   have h2 : ((y : ℝ) / x) ^ r ≤ Real.exp 3 := by
     calc ((y : ℝ) / x) ^ r ≤ Real.exp (((y : ℝ) - x) / x) ^ r := pow_le_pow_left₀ hq0 hq r
-      _ = Real.exp ((r : ℝ) * (((y : ℝ) - x) / x)) := by rw [← Real.exp_nat_mul]
+      _ = Real.exp ((r : ℝ) * (((y : ℝ) - x) / x)) := by rw [← Real.exp_natCast_mul]
       _ ≤ Real.exp 3 := by
           apply Real.exp_le_exp.2
           rw [← mul_div_assoc, div_le_iff₀ hx0]
@@ -574,7 +574,7 @@ theorem nv_irr' {w : O} (hw : Irreducible w) : dvrOrderNat w = 1 := by
 
 theorem vK_int_form (x : KK O) (hx : x ≠ 0) : ∃ k : ℤ, vK p x = (((k : ℚ) / (ramE p O : ℚ) : ℚ) : WithTop ℚ) := by
   unfold vK ordW
-  rw [if_neg hx]
+  rw [ite_eq_right hx]
   exact ⟨_, rfl⟩
 
 theorem vK_le_zero_of_not_int (S : UniformizedDVR p O) (a : KK O)

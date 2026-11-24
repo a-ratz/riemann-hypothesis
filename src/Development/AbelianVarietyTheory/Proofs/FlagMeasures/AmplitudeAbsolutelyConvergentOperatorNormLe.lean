@@ -123,7 +123,7 @@ theorem absArith_shift (r m : ℕ) (hr : 1 ≤ r) (hm : 1 ≤ m) :
       ring
     calc _ ≤ Real.exp (((r + 2 : ℕ) : ℝ) / m) ^ m := by gcongr
       _ = Real.exp 1 ^ (r + 2) := by
-        rw [← Real.exp_nat_mul, ← Real.exp_nat_mul]
+        rw [← Real.exp_natCast_mul, ← Real.exp_natCast_mul]
         congr 1
         field_simp
   have h3 : (((m + r + 2 : ℕ) : ℝ) / m) ^ (r * m) ≤ Real.exp 1 ^ (r * (r + 2)) := by
@@ -661,13 +661,13 @@ theorem hpk_mulVec_e (v : Fin (2 * r + k + 1) → ℂ) (a : Fin r) : (Hpk k r *�
   simp only [Matrix.mulVec, dotProduct]
   rw [Finset.sum_eq_single (esI k r a)]
   · have : Hpk k r (eI k r a) (esI k r a) = 1 := by
-      unfold Hpk; rw [if_pos]; simp only [eI, esI]; omega
+      unfold Hpk; rw [ite_eq_left]; simp only [eI, esI]; omega
     rw [this, one_mul]
   · intro j _ hj
     have hj' : j.val ≠ 2 * r + k - a.val := fun h => hj (Fin.ext h)
     have : Hpk k r (eI k r a) j = 0 := by
       unfold Hpk
-      rw [if_neg, if_neg, if_neg] <;> simp only [eI] <;> omega
+      rw [ite_eq_right, ite_eq_right, ite_eq_right] <;> simp only [eI] <;> omega
     rw [this, zero_mul]
   · simp
 
@@ -694,7 +694,7 @@ theorem semidef (z y : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hT : 0 < 
     (hy : ∀ a, herm (Hpk k r) y (fvec k r z a) = 0) : 0 ≤ (herm (Hpk k r) y y).re := by
   have hy1 : ∀ a, y (esI k r a) = 0 := fun a => by
     have := hy a.castSucc
-    simp only [fvec, Fin.val_castSucc, a.isLt, dif_pos, Fin.eta] at this
+    simp only [fvec, Fin.val_castSucc, a.isLt, dite_eq_left, Fin.eta] at this
     rwa [herm_e] at this
   have hy2 : herm (Hpk k r) y z = 0 := by
     have := hy (Fin.last r)
@@ -1027,7 +1027,7 @@ theorem abs_core : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerPro
   rw [MeasurableEquiv.map_apply] at n2
   have a1 : ∀ᵐ x ∂νR, Matrix.of x ∈ GG k r ∧ Yv k r z z' γ (Matrix.of x) ≠ 0 := by
     filter_upwards [compl_mem_ae_iff.2 n1] with x hx
-    simpa only [Set.mem_compl_iff, Set.mem_setOf_eq, not_or, not_not] using hx
+    simpa only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_or, not_not] using hx
   have a2 : ∀ᵐ x ∂νR, Yv k r z' z γ⁻¹ (γ * Matrix.of x) ≠ 0 := by
     filter_upwards [compl_mem_ae_iff.2 n2] with x hx
     exact fun h => hx (Or.inr h)
@@ -1088,7 +1088,7 @@ theorem abs_core : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerPro
     refine le_trans (le_of_eq ?_) h
     congr 2
     ext x
-    simp only [Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq]
     rw [show lmulEquiv hγ x = lmulM γ x from rfl, lmul_inv_lmul hγ]
 
 end GlobalTheory.Amp.AbsConv

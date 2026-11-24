@@ -80,7 +80,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
     GlobalTheory.Parabolic.isIrreducible_of_equiv
       (p.trans (multiProdEquiv (stdBlocks (fun i => (x i).1) hd)
         fun i => equivRep (IrrRep.det (Fin 1) (ω i) (hω i)))).symm hP
-  letI hInd : Nontrivial (IndSp e₀ (piTensor fun i => detRep (Fin 1) (ω i))) :=
+  let hInd : Nontrivial (IndSp e₀ (piTensor fun i => detRep (Fin 1) (ω i))) :=
     nontrivial_of_irreducible hM
   have nontrivial_sub {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V]
       [AddCommGroup W] [Module ℂ W] {σ : Representation ℂ G W} {ρ : Representation ℂ G V}
@@ -88,7 +88,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
     obtain ⟨S, f, hf⟩ := h
     have := hf.nontrivial
     exact Subtype.val_injective.nontrivial (α := S.toSubmodule)
-  haveI := @nontrivial_sub _ _ _ _ _ _ _ _ _ _
+  have := @nontrivial_sub _ _ _ _ _ _ _ _ _ _
     (GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries e₀ ω) hInd
   have equiv_sub {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V]
       [AddCommGroup W] [Module ℂ W] {σ : Representation ℂ G W} {ρ : Representation ℂ G V}
@@ -96,7 +96,7 @@ private theorem prinSeries_irreducible {n : ℕ} (ω : Fin n → kˣ →* ℂˣ)
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : W)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+    have : IsSimpleOrder (Subrepresentation ρ) := hρ
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : ρ.IntertwiningMap σ := f.comp (topEquiv ρ).symm.toIntertwiningMap
@@ -115,7 +115,7 @@ end Loc
 
 theorem psOf : PsOf := by
   intro _ L _ _ n w τ hT
-  haveI : CharZero (w.adicCompletion L) := charZero_of_injective_algebraMap (algebraMap L _).injective
+  have : CharZero (w.adicCompletion L) := charZero_of_injective_algebraMap (algebraMap L _).injective
   obtain ⟨ξ, hξ, hs, hu⟩ := GlobalTheory.RoadU.plainTor_exists_chars _ _ hT
   have hs' : HasSupport τ.ρ (GlobalTheory.RoadU.chars ξ hξ) := hs.of_equiv (IrrGL.equivOf τ.ρ τ.smooth τ.irred).symm
   have hmem : ∀ i, IrrGL.ofChar (ξ i) (hξ i) ∈ GlobalTheory.RoadU.chars ξ hξ := fun i =>

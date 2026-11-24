@@ -102,8 +102,8 @@ theorem coeffs_iff (h : HidaSetting p n' W Qq O Kf ι σ j w) {τ : Type} (a : O
       exact Finset.sum_ite_eq' _ _ _
     rw [e]
     by_cases hm : m ∈ P.support
-    · rw [if_pos hm, hc m, kapR_alg, map_mul]
-    · rw [if_neg hm, map_zero, mul_zero]
+    · rw [ite_eq_left hm, hc m, kapR_alg, map_mul]
+    · rw [ite_eq_right hm, map_zero, mul_zero]
       rw [MvPolynomial.mem_support_iff, not_not] at hm
       rw [hm, map_zero]
   · rintro ⟨P0, hP0⟩ m
@@ -171,7 +171,7 @@ theorem sig_tw_mat (h : HidaSetting p n' W Qq O Kf ι σ j w) (φ : WF p n' ≃+
 theorem sigMat_det (φ : WF p n' ≃+* W) {k : ℕ} (g : Matrix (Fin k) (Fin k) (WF p n')) (hg : IsGLW g) (s : ℤ) :
     letI : Algebra (WF p n') O := algOfIdent j φ
     IsUnit (sigMat p n' O g s).det := by
-  letI : Algebra (WF p n') O := algOfIdent j φ
+  let : Algebra (WF p n') O := algOfIdent j φ
   have e : sigMat p n' O g s = ((algebraMap O (KK O)).comp ((algebraMap (WF p n') O).comp (sigPow p n' s))).mapMatrix g := by
     ext a b
     rfl
@@ -182,7 +182,7 @@ theorem sig_tw_inv (h : HidaSetting p n' W Qq O Kf ι σ j w) (φ : WF p n' ≃+
     (g : Matrix (Fin k) (Fin k) (WF p n')) (hg : IsGLW g) (s : ℕ) (hs : s < n') (a b : Fin k) :
     letI : Algebra (WF p n') O := algOfIdent j φ
     kapR h ((sigMat p n' O g (s : ℤ))⁻¹ a b) = (la_tw ι σ s (matQ φ g))⁻¹ a b := by
-  letI : Algebra (WF p n') O := algOfIdent j φ
+  let : Algebra (WF p n') O := algOfIdent j φ
   have hdet := sigMat_det (O := O) (j := j) φ g hg (s : ℤ)
   have key : (kapR h).mapMatrix ((sigMat p n' O g (s : ℤ))⁻¹) = (la_tw ι σ s (matQ φ g))⁻¹ := by
     rw [← sig_tw_mat h φ hφ g s hs]
@@ -213,7 +213,7 @@ theorem lift_eq {S : Type} [Fintype S] [DecidableEq S] (h : HidaSetting p n' W Q
     (F : MvPolynomial (S × Fin k) (KK O)) :
     letI : Algebra (WF p n') O := algOfIdent j φ
     map (kapR h) (liftSubst p n' O w r LL g F) = Lin (Bm ι σ w φ r LL.vec pos g) (map (kapR h) F) := by
-  letI : Algebra (WF p n') O := algOfIdent j φ
+  let : Algebra (WF p n') O := algOfIdent j φ
   have hinv : ∀ x b c, kapR h ((sigMat p n' O g (LL.pos x))⁻¹ b c) = (la_tw ι σ (pos x).val (matQ φ g))⁻¹ b c := by
     intro x b c
     rw [hpos x]
@@ -231,11 +231,11 @@ theorem lift_eq {S : Type} [Fintype S] [DecidableEq S] (h : HidaSetting p n' W Q
       obtain ⟨x, c⟩ := v
       simp only [RingHom.comp_apply, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, liftSubst, aeval_X, map_X, Lin]
       by_cases hv : LL.vec x
-      · simp only [hv, if_true, Bm, map_sum, map_mul]
+      · simp only [hv, ite_true, Bm, map_sum, map_mul]
         refine Finset.sum_congr rfl fun b _ => ?_
         rw [map_C, hinv]
         split_ifs <;> simp [map_C, map_X, kapR_alg, C_mul] <;> ring
-      · simp only [hv, Bool.false_eq_true, if_false, Bm, map_sum, map_mul]
+      · simp only [hv, Bool.false_eq_true, ite_false, Bm, map_sum, map_mul]
         refine Finset.sum_congr rfl fun b _ => ?_
         rw [map_C, hmat]
         split_ifs <;> simp [map_C, map_X, kapR_alg, C_mul] <;> ring
@@ -341,7 +341,7 @@ theorem gen_equiv (h : HidaSetting p n' W Qq O Kf ι σ j w) (m : ℕ) (hm : 1 �
 
 theorem pol_of_map (h : HidaSetting p n' W Qq O Kf ι σ j w) {k : ℕ} {d : S → ℕ} (P : MvPolynomial (S × Fin k) O)
     (hP : map (algebraMap O Kf) P ∈ Pol Kf k d) : P ∈ Pol O k d := by
-  haveI := h.frac_O
+  have := h.frac_O
   unfold Pol at hP ⊢
   rw [MvPolynomial.mem_restrictSupport_iff] at hP ⊢
   rwa [MvPolynomial.support_map_of_injective _ (IsFractionRing.injective O Kf)] at hP
@@ -478,7 +478,7 @@ theorem gen_R (h : HidaSetting p n' W Qq O Kf ι σ j w) (φ : WF p n' ≃+* W) 
       ∃ y ∈ tensorLat O Kf (fun s => nablaLTw O Kf m (letterWt m (d s) (LL.vec s)) (Mx ι σ w φ r pos hmat g s)),
         thF h m LL.vec (fun x => la_tw ι σ (pos x).val hmat) F =
           (algebraMap O Kf w ^ ((i : ℤ) - (Avec LL.vec d : ℤ))) • y := by
-  letI : Algebra (WF p n') O := algOfIdent j φ
+  let : Algebra (WF p n') O := algOfIdent j φ
   have hw := w_ne h
   set c := algebraMap O Kf w with hc
   have hF' := (pol_iff h _ _ _).1 hF

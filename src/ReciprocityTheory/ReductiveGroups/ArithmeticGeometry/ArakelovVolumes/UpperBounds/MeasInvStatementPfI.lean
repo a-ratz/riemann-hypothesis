@@ -78,7 +78,7 @@ variable {n : ℕ}
 
 private lemma blockTriangular_inv_of_det_ne_zero {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.BlockTriangular id)
     (hd : M.det ≠ 0) : M⁻¹.BlockTriangular id := by
-  letI := Matrix.invertibleOfIsUnitDet M (isUnit_iff_ne_zero.mpr hd)
+  let := Matrix.invertibleOfIsUnitDet M (isUnit_iff_ne_zero.mpr hd)
   exact Matrix.blockTriangular_inv_of_blockTriangular hM
 
 private lemma eq_of_mul_mul_eq_of_det_ne_zero {P Q X Y : Matrix (Fin n) (Fin n) ℂ} (hP : P.det ≠ 0) (hQ : Q.det ≠ 0)
@@ -197,7 +197,7 @@ lemma sgn_mul_self (p0 a : ℕ) : ((sgn p0 a : ℝ) : ℂ) * ((sgn p0 a : ℝ) :
 
 lemma CmatSet_diag_smul {β : Frame X.Ψ r} (hβ : β ∈ CmatSet X) {D : X.Ψ → Fin r → ℂ}
     (hD : ∀ τ a, ‖D τ a‖ = 1) : (fun τ => (diagonal (D τ) * mat β τ : Matrix (Fin r) (Fin r) ℂ)) ∈ CmatSet X := by
-  simp only [CmatSet, Set.mem_setOf_eq] at hβ ⊢
+  simp only [CmatSet, Set.mem_ofPred_eq] at hβ ⊢
   intro τ a b
   obtain ⟨h1, h2, h3⟩ := hβ τ a b
   simp only [Matrix.diagonal_mul, mat, Matrix.of_apply, norm_mul, hD, one_mul]
@@ -207,7 +207,7 @@ lemma CmatSet_upper {β : Frame X.Ψ r} (hβ : β ∈ CmatSet X) (τ : X.Ψ) :
     (mat β τ).BlockTriangular id := fun a b h => (hβ τ a b).1 h
 
 lemma CmatSet_det {β : Frame X.Ψ r} (hβ : β ∈ CmatSet X) (τ : X.Ψ) : (mat β τ).det ≠ 0 := by
-  rw [Matrix.det_of_upperTriangular (CmatSet_upper X hβ τ)]
+  rw [det_of_isUpperTriangular (CmatSet_upper X hβ τ)]
   refine Finset.prod_ne_zero_iff.2 fun a _ => ?_
   intro h0
   have h1 := ((hβ τ a a).2.1 rfl).1
@@ -224,7 +224,7 @@ lemma mem_CmatSet_iff_Cy (β : X.Ψ → Matrix (Fin r) (Fin r) ℂ) (hβ : ∀ �
     simp only [Umat, Matrix.of_apply]
     rw [dite_eq_right (not_not.2 h')]
   have hP : ∀ τ, (β τ * Umat y τ).BlockTriangular id := fun τ => (hβ τ).mul (hU τ)
-  simp only [Cy, CmatSet, Set.mem_setOf_eq]
+  simp only [Cy, CmatSet, Set.mem_ofPred_eq]
   constructor
   · intro h i
     obtain ⟨⟨τ, a, b⟩, hi⟩ := i
@@ -242,14 +242,14 @@ def β0 (y : Frame X.Ψ r) (τ : X.Ψ) : Matrix (Fin r) (Fin r) ℂ := (mat (bOf
 
 lemma bOf_det {y : Frame X.Ψ r} (hy : y ∈ X.dom) (τ : X.Ψ) : (mat (bOf X y) τ).det ≠ 0 := by
   have h := bOf_mem (X := X) hy
-  simp only [Bor, Set.mem_setOf_eq] at h
+  simp only [Bor, Set.mem_ofPred_eq] at h
   exact (h τ).1
 
 lemma β0_upper {y : Frame X.Ψ r} (hy : y ∈ X.dom) (τ : X.Ψ) : (β0 X y τ).BlockTriangular id := by
   have h := bOf_mem (X := X) hy
-  simp only [Bor, Set.mem_setOf_eq] at h
+  simp only [Bor, Set.mem_ofPred_eq] at h
   have hu : (mat (bOf X y) τ).BlockTriangular id := fun a c hac => (h τ).2 a c hac
-  letI := (mat (bOf X y) τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.2 (bOf_det X hy τ))
+  let := (mat (bOf X y) τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.2 (bOf_det X hy τ))
   exact Matrix.blockTriangular_inv_of_blockTriangular hu
 
 lemma β0_det {y : Frame X.Ψ r} (hy : y ∈ X.dom) (τ : X.Ψ) : (β0 X y τ).det ≠ 0 := by
@@ -276,7 +276,7 @@ lemma gram_rmul_eq {y b : Frame X.Ψ r} (hy : y ∈ X.dom) (τ : X.Ψ) :
   simp only [Matrix.mul_assoc]
 
 lemma UF_mem {y : UpI X.Ψ r → ℂ} (hy : ∀ τ b, y (dI τ b) ≠ 0) : UF X y ∈ Bor X.Ψ r := by
-  simp only [Bor, Set.mem_setOf_eq]
+  simp only [Bor, Set.mem_ofPred_eq]
   intro τ
   have hU : (Umat y τ).BlockTriangular id := by
     intro a b h
@@ -285,7 +285,7 @@ lemma UF_mem {y : UpI X.Ψ r → ℂ} (hy : ∀ τ b, y (dI τ b) ≠ 0) : UF X 
     rw [dite_eq_right (not_not.2 h')]
   refine ⟨?_, fun a c h => hU h⟩
   show (Umat y τ).det ≠ 0
-  rw [Matrix.det_of_upperTriangular hU]
+  rw [det_of_isUpperTriangular hU]
   refine Finset.prod_ne_zero_iff.2 fun a _ => ?_
   have e : Umat y τ a a = y (dI τ a) := by
     unfold Umat dI
@@ -295,15 +295,15 @@ lemma UF_mem {y : UpI X.Ψ r → ℂ} (hy : ∀ τ b, y (dI τ b) ≠ 0) : UF X 
 
 private lemma mem_dom_rmul {y b : Frame X.Ψ r} (hy : y ∈ X.dom) (hb : b ∈ Bor X.Ψ r) :
     rmul y b ∈ X.dom := by
-  simp only [Data.dom, GG, Set.mem_setOf_eq] at hy ⊢
-  simp only [Bor, Set.mem_setOf_eq] at hb
+  simp only [Data.dom, GG, Set.mem_ofPred_eq] at hy ⊢
+  simp only [Bor, Set.mem_ofPred_eq] at hb
   intro τ
   obtain ⟨hdet, hpos⟩ := hy τ
   obtain ⟨hbdet, hbup⟩ := hb τ
   have hup : (mat b τ).BlockTriangular id := fun a c h => hbup a c h
   have hdiag : ∀ a, mat b τ a a ≠ 0 := by
     have h := hbdet
-    rw [Matrix.det_of_upperTriangular hup] at h
+    rw [det_of_isUpperTriangular hup] at h
     exact fun a => Finset.prod_ne_zero_iff.1 h a (Finset.mem_univ a)
   refine ⟨?_, fun i => ?_⟩
   · show (mat y τ * mat b τ).det ≠ 0
@@ -327,7 +327,7 @@ theorem Wf_rmul_UF {y : Frame X.Ψ r} (hy : y ∈ X.dom) {y' : UpI X.Ψ r → �
   have hb := UF_mem X hy'
   have hdom : rmul y (UF X y') ∈ X.dom := mem_dom_rmul X hy hb
   have hb' := hb
-  simp only [Bor, Set.mem_setOf_eq] at hb'
+  simp only [Bor, Set.mem_ofPred_eq] at hb'
   have hβu : ∀ τ, (β0 X y τ).BlockTriangular id := fun τ => β0_upper X hy τ
   have key : rmul y (UF X y') ∈ SW X ↔ Lβ (β0 X y) y' ∈ Cy X.Ψ r := by
     rw [← mem_CmatSet_iff_Cy X (β0 X y) hβu y']
@@ -366,11 +366,11 @@ theorem Wf_rmul_UF {y : Frame X.Ψ r} (hy : y ∈ X.dom) {y' : UpI X.Ψ r → �
 def invF (b : Frame X.Ψ r) : Frame X.Ψ r := fun τ => ((mat b τ)⁻¹ : Matrix (Fin r) (Fin r) ℂ)
 
 lemma invF_mem' {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : invF X b ∈ Bor X.Ψ r := by
-  simp only [Bor, Set.mem_setOf_eq] at hb ⊢
+  simp only [Bor, Set.mem_ofPred_eq] at hb ⊢
   intro τ
   obtain ⟨hd, hup⟩ := hb τ
   have hu : (mat b τ).BlockTriangular id := fun a c h => hup a c h
-  letI := (mat b τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.2 hd)
+  let := (mat b τ).invertibleOfIsUnitDet (isUnit_iff_ne_zero.2 hd)
   have hinv := Matrix.blockTriangular_inv_of_blockTriangular hu
   refine ⟨?_, fun a c h => hinv h⟩
   intro h0
@@ -382,7 +382,7 @@ lemma invF_mem' {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : invF X b ∈ Bor X.
 
 lemma rmul_invF {y b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) : rmul (rmul y b) (invF X b) = y := by
   have hb' := hb
-  simp only [Bor, Set.mem_setOf_eq] at hb'
+  simp only [Bor, Set.mem_ofPred_eq] at hb'
   funext τ
   have hd := (hb' τ).1
   show mat y τ * mat b τ * (mat b τ)⁻¹ = y τ
@@ -409,7 +409,7 @@ lemma isCompact_CmatSet : IsCompact (CmatSet X) := by
   have hS : ∀ a b : Fin r, IsCompact {z : ℂ | (b < a → z = 0) ∧ (a = b → 1 ≤ ‖z‖ ∧ ‖z‖ ≤ 2) ∧ (a < b → ‖z‖ ≤ 1)} := by
     intro a b
     apply Metric.isCompact_of_isClosed_isBounded
-    · rw [Set.setOf_and, Set.setOf_and]
+    · rw [Set.ofPred_and, Set.ofPred_and]
       refine IsClosed.inter (isClosed_imp (S := {0}) isClosed_singleton)
         (IsClosed.inter (isClosed_imp (S := {z : ℂ | 1 ≤ ‖z‖ ∧ ‖z‖ ≤ 2}) ?_) (isClosed_imp (S := {z : ℂ | ‖z‖ ≤ 1}) ?_))
       · exact (isClosed_le continuous_const continuous_norm).inter (isClosed_le continuous_norm continuous_const)
@@ -471,7 +471,7 @@ private lemma isOpen_X_dom : IsOpen X.dom := by
 lemma measurableSet_SW : MeasurableSet (SW X) := by
   have e : SW X = X.dom ∩ gramF X ⁻¹' (gramTF X '' CmatSet X) := by
     ext y
-    simp only [SW, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_image]
+    simp only [SW, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, Set.mem_image]
     constructor
     · rintro ⟨h1, β, hβ, hg⟩
       exact ⟨h1, β, hβ, funext fun τ => (hg τ).symm⟩

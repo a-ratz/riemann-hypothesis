@@ -299,9 +299,9 @@ namespace GlobalTheory.UnitaryBC
 
 theorem rightFinite_mem_poly : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (f : infU E n → ℂ), Continuous f → FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : infU E n => fun x : infU E n => f (x * k))) → f ∈ Algebra.adjoin ℂ {f : infU E n → ℂ | ∃ (τ : E →+* ℂ) (i j : Fin n), f = fun x => (cEmb τ x.1).val i j} := by
   intro E _ _ _ n f hf hfin
-  haveI := _root_.GlobalTheory.InfUCompact.compactSpace_infU E n
+  have := _root_.GlobalTheory.InfUCompact.compactSpace_infU E n
   obtain ⟨hc, hs, hsep, hinv, hcop⟩ := GlobalTheory.T.unitary_coordinate_algebra_dense E n
-  haveI : T2Space (infU E n) := ⟨fun x y hxy => by
+  have : T2Space (infU E n) := ⟨fun x y hxy => by
     obtain ⟨p, hp, hne⟩ := hsep x y hxy
     exact separated_by_continuous (hc p hp) hne⟩
   refine _root_.GlobalTheory.UnitaryBC.mem_of_finiteDimensional_span_rightTranslates (infU E n) (Algebra.adjoin ℂ _) hc hs hsep ?_ f hf hfin
@@ -403,7 +403,7 @@ theorem continuous_coeff {φ : UA E n → ℂ} (hφ : IsAutFormU φ) (l : infSpa
     Continuous fun k : infU E n => l ⟨RU E n k φ, mem_infSpan φ k⟩ := by
   have := hφ.kfin
   refine l.continuous_of_finiteDimensional.comp (Continuous.subtype_mk (continuous_pi fun g => ?_) _)
-  exact hφ.cont.comp (continuous_const.mul continuous_subtype_val)
+  exact hφ.cont.comp (continuous_const.mul continuous_subtypeVal)
 
 theorem finite_coeff {φ : UA E n → ℂ} (hφ : IsAutFormU φ) (l : infSpan φ →ₗ[ℂ] ℂ) :
     FiniteDimensional ℂ (Submodule.span ℂ (Set.range fun k : infU E n => fun x : infU E n =>

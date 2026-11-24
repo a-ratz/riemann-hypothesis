@@ -121,7 +121,7 @@ theorem exists_archimedean_component : _root_.GlobalTheory.FunPr.ThetaLocalInput
   intro hP hDer _ F E _ _ _ _ _ σ α β κ _ _ _ _ _ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
   obtain ⟨n, θ, φ, φ₀, hp, hq, hφ, hφu⟩ := _root_.GlobalTheory.ArchCoords.exists_coords F E σ α β κ P Q R S τ JA JB d a b A C hCM hFr
   obtain ⟨k, hkc, hkC, hkJ, hcan⟩ := _root_.GlobalTheory.RealLiftComp.exists_comp F E σ β R S τ JB b C hCM hFr.2.2
-  haveI : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AE F E) := IsModuleTopology.isTopologicalRing (AF F) _
   obtain ⟨ω, hωc, hωi⟩ := _root_.GlobalTheory.SchrodOsc.exists_osc _ _ P Q R S φ hφ (_root_.GlobalTheory.RealWeil.continuous_rho _) (UG (cA σ) JB) k hkc hkJ
   obtain ⟨s, hsc, hsφ⟩ := _root_.GlobalTheory.ColAction.exists_symplectic_hom_of_unitary _ _ P Q R S φ hφ (UG (cA σ) JB) k hkc hkJ
   obtain ⟨ρ, η, hη1, hη2, hη3, hρi, hρu, hρc, hρd⟩ := realRep hP.realMetaplecticRepresentation s hsc ω hωc fun g w v => by
@@ -143,7 +143,7 @@ theorem exists_archimedean_component : _root_.GlobalTheory.FunPr.ThetaLocalInput
         rw [map_one]
         exact hVE f
       map_mul' := fun g h => ContinuousLinearMap.ext fun f => by
-        simp only [map_mul, ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply, hEV] }
+        simp only [map_mul, mul_apply_eq_comp, ContinuousLinearMap.comp_apply, hEV] }
   have hρ' : ∀ g f, ρ' g f = toV (ρ g (toE f)) := fun _ _ => rfl
   clear_value ρ'
   refine ⟨ρ', fun w => kk w / 2, fun g _ => ⟨fun u hu f f₁ hf h => ?_, fun ν hν f₁ f₂ => ?_⟩, fun L f => ?_,
@@ -174,10 +174,10 @@ theorem exists_archimedean_component : _root_.GlobalTheory.FunPr.ThetaLocalInput
     have e3 := hρi g _ _ _ e2
     rw [hsφ, hφu _ _ hu' hc'] at e3
     rw [_root_.GlobalTheory.ArchRhoPure.rho_pureA_schrF F E σ α β κ ψ JA JB d hψ _ hu', hρ', hρ', htoV, htoV, hS, e3]
-  · haveI : BorelSpace ({w : InfinitePlace F // w.IsReal} → ℝ) := Pi.borelSpace
-    haveI : BorelSpace ({w : InfinitePlace F // w.IsComplex} → ℂ) := Pi.borelSpace
-    haveI : BorelSpace (mixedEmbedding.mixedSpace F) := Prod.borelSpace
-    haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  · have : BorelSpace ({w : InfinitePlace F // w.IsReal} → ℝ) := Pi.borelSpace
+    have : BorelSpace ({w : InfinitePlace F // w.IsComplex} → ℂ) := Pi.borelSpace
+    have : BorelSpace (mixedEmbedding.mixedSpace F) := Prod.borelSpace
+    have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
     obtain ⟨r, hr⟩ := haar_coords ν θ
     rw [hr, hr]
     congr 1
@@ -394,11 +394,11 @@ theorem adelic_schur_lemma : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ 
       ∀ φ ∈ schA F κ, ∫⁻ x, ‖M φ x‖ₑ ^ 2 ∂μ = ∫⁻ x, ‖φ x‖ₑ ^ 2 ∂μ) →
     ∃ z : ℂ, ∀ φ ∈ schA F κ, M φ = z • φ := by
   intro _ F _ _ κ _ ψ hψ M hpres hcomm hiso
-  letI : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  let : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   let μ : Measure (κ → AF F) := Measure.addHaar
-  haveI hμH : μ.IsAddHaarMeasure := by dsimp [μ]; infer_instance
+  have hμH : μ.IsAddHaarMeasure := by dsimp [μ]; infer_instance
   have hL2 : ∀ φ ∈ schA F κ, MemLp φ 2 μ := fun φ hφ =>
     GlobalTheory.WeilM.schA_memLp_two F κ μ hμH φ hφ
   have hint : ∀ φ ∈ schA F κ, Integrable (fun x => ‖φ x‖ ^ 2) μ := fun φ hφ =>
@@ -410,7 +410,7 @@ theorem adelic_schur_lemma : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ 
       rw [ofReal_integral_eq_lintegral_ofReal (hint g hg) (Filter.Eventually.of_forall fun x => by positivity)]
       congr 1
       funext x
-      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+      rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
     rw [e _ (hpres φ hφ), e φ hφ] at h
     exact (ENNReal.ofReal_eq_ofReal_iff (integral_nonneg fun x => by positivity)
       (integral_nonneg fun x => by positivity)).1 h

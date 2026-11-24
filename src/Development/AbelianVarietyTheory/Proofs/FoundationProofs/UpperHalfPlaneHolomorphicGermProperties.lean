@@ -155,7 +155,7 @@ theorem main : (∀ a b : ℂ → ℂ, DifferentiableOn ℂ a Hs → Differentia
     obtain ⟨k, -, hk⟩ := hζ.eq_pow_of_pow_eq_one hξm
     refine ⟨k, fun z hz => ?_⟩
     have e : Complex.exp (2 * Real.pi * Complex.I * (k : ℂ) / (m : ℂ)) = ξ := by
-      rw [← hk, ← Complex.exp_nat_mul]; congr 1; ring
+      rw [← hk, ← Complex.exp_natCast_mul]; congr 1; ring
     rw [e]
     exact sub_eq_zero.mp (hξ' z hz)
 

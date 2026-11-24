@@ -148,11 +148,11 @@ lemma swapHom_rai (i : Fin b) (j : Fin a) (Q : LPol b a) :
   unfold rai
   have hs := C_sg_mul_self (σ := Fin a × Fin b) (ε j)
   by_cases h : ε' i = ε j
-  · rw [if_pos h, if_pos h.symm]
+  · rw [ite_eq_left h, ite_eq_left h.symm]
     simp only [LinearMap.smul_apply, LinearMap.mulLeft_apply, swapHom_smul, swapHom_C, map_mul, swapHom_X, conj_sg,
       swSign, smul_eq_C_mul, Prod.swap_prod_mk]
     linear_combination (C (GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.sgn (ε' i)) * X (j, i) * swapHom ε ε' Q) * hs
-  · rw [if_neg h, if_neg (Ne.symm h)]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
     simp only [LinearMap.smul_apply, LinearMap.neg_apply, Derivation.coeFn_coe, map_neg, swapHom_smul, swapHom_C,
       swapHom_pderiv, map_mul, conj_sg, swSign, smul_eq_C_mul, Prod.swap_prod_mk]
     linear_combination (-(C (GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.sgn (ε' i)) * pderiv (j, i) (swapHom ε ε' Q))) * hs
@@ -162,11 +162,11 @@ lemma swapHom_low (i : Fin b) (j : Fin a) (Q : LPol b a) :
   unfold low
   have hs := C_sg_mul_self (σ := Fin a × Fin b) (ε j)
   by_cases h : ε' i = ε j
-  · rw [if_pos h, if_pos h.symm]
+  · rw [ite_eq_left h, ite_eq_left h.symm]
     simp only [LinearMap.smul_apply, Derivation.coeFn_coe, swapHom_smul, swapHom_C, swapHom_pderiv, map_mul, conj_sg,
       swSign, smul_eq_C_mul, Prod.swap_prod_mk]
     linear_combination (C (GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.sgn (ε' i)) * pderiv (j, i) (swapHom ε ε' Q)) * hs
-  · rw [if_neg h, if_neg (Ne.symm h)]
+  · rw [ite_eq_right h, ite_eq_right (Ne.symm h)]
     simp only [LinearMap.smul_apply, LinearMap.mulLeft_apply, swapHom_smul, swapHom_C, map_mul, swapHom_X, conj_sg,
       swSign, smul_eq_C_mul, Prod.swap_prod_mk]
     linear_combination (C (GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.sgn (ε' i)) * X (j, i) * swapHom ε ε' Q) * hs
@@ -577,8 +577,8 @@ theorem adj_locIt : ∀ (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPar) (
   intro D V W S S' M M' τ aS aT A hA
   obtain ⟨j, hjc, hj⟩ := GlobalTheory.T.fock_sign_transpose_exchanges_local_gl_actions V.rank W.rank (M.ε τ) (M'.ε τ)
   obtain ⟨A', hA'⟩ := exists_adj A j hjc hA.adj
-  haveI := (GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).1
-  haveI := (GlobalTheory.HolDict.ModelRep.model_rep D W S' M' τ).1
+  have := (GlobalTheory.HolDict.ModelRep.model_rep D V S M τ).1
+  have := (GlobalTheory.HolDict.ModelRep.model_rep D W S' M' τ).1
   have hA'r : ∀ Q w y, ⟪y, A' Q w⟫_ℂ = ⟪A (j.symm Q) y, w⟫_ℂ := fun Q w y => by
     rw [← inner_conj_symm, hA' Q w y, inner_conj_symm]
   have hcont : ∀ Q, Continuous (A' Q) := fun Q =>
@@ -627,7 +627,7 @@ theorem adj_locIt : ∀ (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPar) (
       refine h4.congr_deriv ?_
       rw [inner_rep_exp M' τ hY t₀, ← hjP, hA'r, AddEquiv.symm_apply_apply]
     have h5 := weak_deriv (M'.H τ) _ _ hg hw 0
-    simpa only [zero_smul, NormedSpace.exp_zero, SchurOrthogonalityAlt.gp_rep_one, ContinuousLinearMap.one_apply] using h5
+    simpa only [zero_smul, NormedSpace.exp_zero, SchurOrthogonalityAlt.gp_rep_one, one_apply_eq_self] using h5
 
   have htgt : ∀ X ∈ lieAt V τ, ∀ Q w, HasDerivAt (fun t : ℝ => A' Q (M.rep τ (NormedSpace.exp (t • X)) w))
       (-A' (locT (M'.ε τ) (M.ε τ) (M.fr τ * X * (M.fr τ)⁻¹) Q + ((aT : ℂ) * X.trace) • Q) w) 0 := by
@@ -677,7 +677,7 @@ theorem adj_locIt : ∀ (D : D7) (V W : HSp D) (S S' : D.what₂.Tau → SPar) (
       refine h4.congr_deriv ?_
       rw [inner_neg_right, ← hjP, hA'r, AddEquiv.symm_apply_apply, inner_rep_exp M τ hX t₀, map_neg, inner_neg_left]
     have h5 := weak_deriv (M'.H τ) _ _ hg hw 0
-    simpa only [zero_smul, NormedSpace.exp_zero, SchurOrthogonalityAlt.gp_rep_one, ContinuousLinearMap.one_apply] using h5
+    simpa only [zero_smul, NormedSpace.exp_zero, SchurOrthogonalityAlt.gp_rep_one, one_apply_eq_self] using h5
 
   have hsm : ∀ Q w, A' Q w ∈ M'.sm τ := by
     intro Q w

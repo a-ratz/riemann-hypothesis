@@ -92,14 +92,14 @@ theorem mem_fixingSubgroup_adjoin_of {k Ω : Type} [Field k] [Field Ω] [Algebra
     rw [SetLike.mem_coe, IntermediateField.mem_fixedField_iff]
     intro f hf
     exact (mem_fixingSubgroup_iff _).1 hf x hx
-  exact (IntermediateField.le_iff_le _ _).1 hle ((mem_fixingSubgroup_iff _).2 fun x hx => hg x hx)
+  exact (IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).1 hle ((mem_fixingSubgroup_iff _).2 fun x hx => hg x hx)
 
 theorem valuation_lt_one_iff' {Ω : Type} [Field Ω] (B : ValuationSubring Ω) (y : Ω) :
     B.valuation y < 1 ↔ y = 0 ∨ y⁻¹ ∉ B := by
   by_cases hy : y = 0
   · simp [hy]
   · have h0 : B.valuation y ≠ 0 := by simpa using hy
-    rw [← B.valuation_le_one_iff, map_inv₀, inv_le_one₀ (zero_lt_iff.2 h0)]
+    rw [← B.valuation_le_one_iff, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 h0)]
     simp [hy, not_le]
 
 variable (F K Ω : Type) [Field F] [Field K] [Field Ω] [Algebra F K] [Algebra F Ω] [Algebra K Ω]
@@ -124,7 +124,7 @@ theorem continuous_restrict :
   obtain ⟨E, hE, hEU⟩ := (krullTopology_mem_nhds_one_iff F Ω U).1 hU
   obtain ⟨S, hS⟩ : E.FG := IntermediateField.fg_of_fg_toSubalgebra _
     (Subalgebra.fg_of_fg_toSubmodule ((Submodule.fg_iff_finiteDimensional _).2 hE))
-  haveI : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := F) K
+  have : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := F) K
   have hfd : FiniteDimensional K (IntermediateField.adjoin K (S : Set Ω)) :=
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsIntegral.isIntegral x)
   refine Filter.mem_of_superset ((IntermediateField.adjoin K (S : Set Ω)).fixingSubgroup_isOpen.mem_nhds
@@ -252,14 +252,14 @@ theorem thmA_on_open_geo : GlobalTheory.NeedB.ThmA → ∀ (k F Ω : Type) [Fiel
     U.comap ((GlobalTheory.K4.geo F (RatFunc k) Ω).subtype.comp e.toMonoidHom)
   have hU'mem : ∀ g, g ∈ U' ↔ ((e g : GlobalTheory.K4.geo F (RatFunc k) Ω) : Ω ≃ₐ[F] Ω) ∈ U := fun g => Iff.rfl
   have hU'open : IsOpen (U' : Set (Ω ≃ₐ[RatFunc k] Ω)) :=
-    (continuous_subtype_val.comp hec).isOpen_preimage _ hU
+    (continuous_subtypeVal.comp hec).isOpen_preimage _ hU
   let K' : IntermediateField (RatFunc k) Ω := IntermediateField.fixedField U'
-  have hfixle : U' ≤ K'.fixingSubgroup := (IntermediateField.le_iff_le U' K').1 le_rfl
-  haveI : FiniteDimensional (RatFunc k) K' :=
+  have hfixle : U' ≤ K'.fixingSubgroup := (IntermediateField.le_fixedField_iff_le_fixingSubgroup U' K').1 le_rfl
+  have : FiniteDimensional (RatFunc k) K' :=
     (InfiniteGalois.isOpen_iff_finite K').1 (Subgroup.isOpen_mono hfixle hU'open)
-  haveI : IsScalarTower F K' Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower k[X] K' Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsAlgClosure K' Ω :=
+  have : IsScalarTower F K' Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower k[X] K' Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsAlgClosure K' Ω :=
     ⟨IsAlgClosure.isAlgClosed (RatFunc k), Algebra.IsAlgebraic.tower_top (K := RatFunc k) K'⟩
   obtain ⟨-, ⟨e', he', -, hesc'⟩, -, -, -⟩ := _root_.GlobalTheory.K4.geo_facts F K' Ω
   have hφ : ∀ g (hg : g ∈ GlobalTheory.K4.geo F K' Ω) x, (e'.symm ⟨g, hg⟩) x = g x := by
@@ -310,14 +310,14 @@ theorem thmA_on_open_geo : GlobalTheory.NeedB.ThmA → ∀ (k F Ω : Type) [Fiel
       (hint hαK hαi hαi').1 (hint hαK hαi hαi').2 (hint hβK hβi hβi').1 (hint hβK hβi hβi').2 rfl rfl
   obtain ⟨η₀, hη₀⟩ : ∃ η₀ : (Ω ≃ₐ[F] Ω) → ZMod N,
       ∀ g (hg : g ∈ GlobalTheory.K4.geo F K' Ω), η₀ g = η (e'.symm ⟨g, hg⟩) :=
-    ⟨fun g => if hg : g ∈ GlobalTheory.K4.geo F K' Ω then η (e'.symm ⟨g, hg⟩) else 0, fun g hg => dif_pos hg⟩
+    ⟨fun g => if hg : g ∈ GlobalTheory.K4.geo F K' Ω then η (e'.symm ⟨g, hg⟩) else 0, fun g hg => dite_eq_left hg⟩
   refine ⟨η₀, ?_, ?_, ?_⟩
   · have hfun : (fun g : ↥(GlobalTheory.K4.geo F (RatFunc k) Ω ⊓ U) => η₀ g) =
         η ∘ e'.symm ∘ (fun g : ↥(GlobalTheory.K4.geo F (RatFunc k) Ω ⊓ U) => (⟨g.1, hsub _ g.2⟩ : GlobalTheory.K4.geo F K' Ω)) := by
       funext g
       exact hη₀ _ _
     rw [hfun]
-    exact hηlc.comp_continuous (hesc'.comp (continuous_subtype_val.subtype_mk _))
+    exact hηlc.comp_continuous (hesc'.comp (continuous_subtypeVal.subtype_mk _))
   · intro g hg h hh
     have hgh := mul_mem hg hh
     rw [hη₀ _ (hsub _ hg), hη₀ _ (hsub _ hh), hη₀ _ (hsub _ hgh),
@@ -384,7 +384,7 @@ theorem UpperTheory.V.Z.Kato.Sym.PE.alg :
   have hinj0 : Function.Injective (aeval X.jK : Polynomial Ω →ₐ[Ω] X.K).toRingHom := transcendental_iff_injective.1 (jK_transcendental X)
   let ψ : RatFunc Ω →+* X.K := IsFractionRing.lift hinj0
   have hψ : ∀ p : Polynomial Ω, ψ (algebraMap (Polynomial Ω) (RatFunc Ω) p) = aeval X.jK p := fun p => IsFractionRing.lift_algebraMap hinj0 p
-  letI : Algebra (RatFunc Ω) X.K := ψ.toAlgebra
+  let : Algebra (RatFunc Ω) X.K := ψ.toAlgebra
   have hc : φ = algebraMap (RatFunc Ω) (Kb X) := RingHom.ext fun z => by
     change φ z = io X (ψ z)
     rw [← RatFunc.num_div_denom z, map_div₀, map_div₀, map_div₀, hφ, hφ, hψ, hψ]
@@ -392,7 +392,7 @@ theorem UpperTheory.V.Z.Kato.Sym.PE.alg :
   have hle : ∀ y ∈ IntermediateField.adjoin Ω {X.jK}, y ∈ ψ.fieldRange := fun y hy => by
     obtain ⟨r, s, rfl⟩ := (IntermediateField.mem_adjoin_simple_iff Ω y).1 hy
     exact ⟨algebraMap _ _ r / algebraMap _ _ s, by rw [map_div₀, hψ, hψ]⟩
-  haveI : Algebra.IsAlgebraic (RatFunc Ω) X.K := ⟨fun f => by
+  have : Algebra.IsAlgebraic (RatFunc Ω) X.K := ⟨fun f => by
     obtain ⟨p, hp, he⟩ := X.alg_j f
     have hl : p.map (algebraMap _ X.K) ∈ lifts ψ := by
       rw [lifts_iff_coeff_lifts]
@@ -454,11 +454,11 @@ theorem UpperTheory.V.Z.Kato.Sym.PE.integ :
     exact hu0 hz.symm
   have hinv : IsU X u⁻¹ := ⟨inv_ne_zero hu.1, fun W hW => by rw [map_inv₀, hu.2 W hW, inv_one]⟩
   refine ⟨hz0, ?_, ?_⟩
-  · letI := (pj X).toAlgebra
+  · let := (pj X).toAlgebra
     refine IsIntegral.of_pow hm ?_
     rw [hz]
     exact key u hu
-  · letI := (pj X).toAlgebra
+  · let := (pj X).toAlgebra
     refine IsIntegral.of_pow hm ?_
     rw [inv_pow, hz, ← map_inv₀]
     exact key _ hinv
@@ -479,7 +479,7 @@ theorem UpperTheory.V.Z.Kato.Sym.PE.lcFin :
   intro F E A _ _ _ _ U hU η hη
   have hS : ∀ g : U, IsOpen {x : Gal(E/F) | x ∈ U ∧ η x = η g} := by
     intro g
-    have := hU.isOpenMap_subtype_val _ (hη.isOpen_fiber (η g))
+    have := hU.isOpenMap_subtypeVal _ (hη.isOpen_fiber (η g))
     convert this using 1
     ext x
     constructor
@@ -498,14 +498,14 @@ theorem UpperTheory.V.Z.Kato.Sym.PE.lcFin :
   have hfg : ∀ g : U, ∃ s : Finset E,
       Submodule.span F (s : Set E) = Subalgebra.toSubmodule (L g).toSubalgebra := by
     intro g
-    haveI := hLfd g
+    have := hLfd g
     exact (Submodule.fg_iff_finiteDimensional _).2 (inferInstanceAs (FiniteDimensional F (L g)))
   choose s hs using hfg
   have hcpt : IsCompact (U : Set Gal(E/F)) := (Subgroup.isClosed_of_isOpen U hU).isCompact
   obtain ⟨t, ht⟩ := hcpt.elim_finite_subcover
     (fun g : U => {x : Gal(E/F) | (g : Gal(E/F))⁻¹ * x ∈ (L g).fixingSubgroup})
     (fun g => by
-      haveI := hLfd g
+      have := hLfd g
       exact (IntermediateField.fixingSubgroup_isOpen (L g)).preimage
         (continuous_const.mul continuous_id))
     (fun x hx => Set.mem_iUnion.2 ⟨⟨x, hx⟩, by simp [one_mem]⟩)
@@ -563,18 +563,18 @@ private theorem existsUnique_eq_primitiveRoot_pow_mul_of_pow_eq {E : Type} [Fiel
 private theorem etaEx_of (hS : FinalTheorems) (hA : Alg) (hI : Integ) (hL : LcFin) : EtaEx := by
   intro Ω _ _ _ ε X m hm u v a b hu hv ha hb
   obtain ⟨φ, hφ, halg⟩ := hA Ω ε X
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
-  haveI : NeZero m := ⟨hm.ne'⟩
-  letI alg1 : Algebra (RatFunc Ω) (Kb X) := φ.toAlgebra
-  letI alg2 : Algebra (Polynomial Ω) (Kb X) := (pj X).toAlgebra
-  haveI tw : IsScalarTower (Polynomial Ω) (RatFunc Ω) (Kb X) :=
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).mp inferInstance
+  have : NeZero m := ⟨hm.ne'⟩
+  let alg1 : Algebra (RatFunc Ω) (Kb X) := φ.toAlgebra
+  let alg2 : Algebra (Polynomial Ω) (Kb X) := (pj X).toAlgebra
+  have tw : IsScalarTower (Polynomial Ω) (RatFunc Ω) (Kb X) :=
     IsScalarTower.of_algebraMap_eq fun p => (hφ p).symm
-  haveI : IsAlgClosed (Kb X) := by unfold Kb; infer_instance
-  haveI : IsAlgClosure (RatFunc Ω) (Kb X) := ⟨inferInstance, halg⟩
-  haveI : IsGalois (RatFunc Ω) (Kb X) := inferInstance
+  have : IsAlgClosed (Kb X) := by unfold Kb; infer_instance
+  have : IsAlgClosure (RatFunc Ω) (Kb X) := ⟨inferInstance, halg⟩
+  have : IsGalois (RatFunc Ω) (Kb X) := inferInstance
   let L := IntermediateField.adjoin (RatFunc Ω) ({io X u, io X v} : Set (Kb X))
-  haveI : FiniteDimensional (RatFunc Ω) L :=
+  have : FiniteDimensional (RatFunc Ω) L :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => (halg.isAlgebraic x).isIntegral)
   have hU : IsOpen (L.fixingSubgroup : Set (Kb X ≃ₐ[RatFunc Ω] Kb X)) :=
     IntermediateField.fixingSubgroup_isOpen L
@@ -646,7 +646,7 @@ private theorem etaEx_of (hS : FinalTheorems) (hA : Alg) (hI : Integ) (hL : LcFi
     intro g G hG x hx0 hxm
     obtain ⟨i, hi, huniq⟩ := existsUnique_eq_primitiveRoot_pow_mul_of_pow_eq (c := g x) hζ hx0 (by rw [← map_pow, hxm])
     unfold ka lg GlobalTheory.NeedB.kum
-    rw [hG, dif_pos ⟨i, hi⟩]
+    rw [hG, dite_eq_left ⟨i, hi⟩]
     exact (huniq _ (Classical.epsilon_spec (p := fun j : ZMod m => g x = zt X m ^ j.val * x) ⟨i, hi⟩)).trans
       (huniq _ (Exists.choose_spec (⟨i, hi⟩ : ∃ j : ZMod m, g x = zt X m ^ j.val * x))).symm
   classical
@@ -665,7 +665,7 @@ private theorem etaEx_of (hS : FinalTheorems) (hA : Alg) (hI : Integ) (hL : LcFi
         AlgEquiv.ofRingEquiv (f := g) cg * AlgEquiv.ofRingEquiv (f := h) ch := by
       ext x
       rfl
-    simp only [dif_pos cg, dif_pos ch, dif_pos cgh]
+    simp only [dite_eq_left cg, dite_eq_left ch, dite_eq_left cgh]
     rw [hGH, hk g (AlgEquiv.ofRingEquiv (f := g) cg) (fun _ => rfl) a ha0 (by rw [ha]; exact g3),
       hk h (AlgEquiv.ofRingEquiv (f := h) ch) (fun _ => rfl) b hb0 (by rw [hb]; exact h4)]
     exact hcoc _ (hmem _ g3 g4) _ (hmem _ h3 h4)
@@ -675,14 +675,14 @@ private theorem etaEx_of (hS : FinalTheorems) (hA : Alg) (hI : Integ) (hL : LcFi
     unfold InD at hh hh'
     have ch := hcomm h (fun c => hh _) (hh _)
     have ch' := hcomm h' (fun c => hh' _) (hh' _)
-    simp only [dif_pos ch, dif_pos ch']
+    simp only [dite_eq_left ch, dite_eq_left ch']
     exact hB _ (hmem _ (hh u) (hh v)) _ (hmem _ (hh' u) (hh' v)) hBB
   · unfold Unr
     intro B h hY hh hin
     unfold InD at hh
     unfold Tower.OverY at hY
     have ch := hcomm h (fun c => hh _) (hh _)
-    simp only [dif_pos ch]
+    simp only [dite_eq_left ch]
     refine (hunr (AlgEquiv.ofRingEquiv (f := h) ch) (hmem _ (hh u) (hh v)) B ?_ hin).1
     intro p
     show io X (Polynomial.aeval X.jK p) ∈ B
@@ -714,7 +714,7 @@ namespace UpperTheory.V.Z.Kato.Sym.PE
 
 theorem kaU : KaU := by
   intro Ω _ _ _ ε X m hm θ hθ g h hgz hhz hgm hhm
-  haveI : NeZero m := NeZero.of_pos hm
+  have : NeZero m := NeZero.of_pos hm
   obtain ⟨hprim, hrep, hlg, -⟩ := lgB Ω ε X m hm
   have hpow : zt X m ^ m = 1 := hprim.pow_eq_one
   have hgθ : g θ = zt X m ^ (ka X m θ g).val * θ := hrep (g θ) θ hθ (by rw [← map_pow, hgm])
@@ -884,7 +884,7 @@ theorem UpperTheory.V.Z.Kato.Sym.secEx :
   intro Ω _ _ _ ε X m hm
   obtain ⟨r, g, hg, hr⟩ := rep_ex X
   have hA := admB Ω ε X
-  haveI : Nonempty (Pt X m) := ⟨⟨0, 0, fun _ => 0⟩⟩
+  have : Nonempty (Pt X m) := ⟨⟨0, 0, fun _ => 0⟩⟩
   have hUsl : ∀ (γ : SL(2, ℤ)) (a : X.K), IsU X a → IsU X (X.sl (ofSL γ) a) :=
     fun γ a ha => (hA.2.2.2.2.2.1 _ _ (hA.1 (ofSL γ))).1 a ha
   let Good : X.K → X.K → Pt X m → Prop := fun a b P => IsPt X m a b P ∧

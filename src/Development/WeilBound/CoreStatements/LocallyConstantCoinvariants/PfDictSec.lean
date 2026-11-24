@@ -65,8 +65,8 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E} {v : Pl F}
 
 theorem modu_eq (u : (AF F)ˣ) : ((distribHaarChar (AF F) u : NNReal) : ℝ) = GroundTheory.Global.IdeleGroup.ideleModule F u := by
-  letI : MeasurableSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.measurableSpace_adeleRing F
-  haveI : BorelSpace (AdeleRing (𝓞 F) F) := inferInstance
+  let : MeasurableSpace (AdeleRing (𝓞 F) F) := GroundTheory.Global.measurableSpace_adeleRing F
+  have : BorelSpace (AdeleRing (𝓞 F) F) := inferInstance
   have : (GroundTheory.Global.adeleMeasure F).Regular := by
     obtain ⟨K⟩ := (inferInstance : Nonempty (TopologicalSpace.PositiveCompacts (AdeleRing (𝓞 F) F)))
     exact Measure.regular_of_isAddLeftInvariant K.isCompact K.interior_nonempty K.isCompact.measure_lt_top.ne

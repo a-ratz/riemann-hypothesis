@@ -285,7 +285,7 @@ theorem exists_neg_eig {ε : Fin n → Bool} {X : Matrix (Fin n) (Fin n) ℂ} (h
       ∑ i, (if -hX.eigenvalues i = -hX.eigenvalues j then (1 : ℝ) else 0) :=
     Finset.single_le_sum (f := fun i => if -hX.eigenvalues i = -hX.eigenvalues j then (1 : ℝ) else 0)
       (fun i _ => by split_ifs <;> norm_num) (Finset.mem_univ j)
-  rw [if_pos rfl] at h3
+  rw [ite_eq_left rfl] at h3
   linarith
 
 theorem dOp_polar (hn : 1 ≤ n) {k X : Matrix (Fin n) (Fin n) ℂ} (hk : k ∈ Matrix.unitaryGroup (Fin n) ℂ)
@@ -440,9 +440,9 @@ theorem cartan_distances : ∀ (n : ℕ) (ε : Fin n → Bool), (∀ k X : Matri
       simp only [uMat, Subgroup.coe_mul, Units.val_mul]
     rw [hinv, hmul, dHS_eq_log (hmem g)]
     exact ⟨hb.1, dOp_inv (hmem g), dOp_mul_le hn (Units.isUnit _) (Units.isUnit _), hb.2.1, hb.2.2⟩
-  · exact (continuousOn_dHS ε).comp_continuous (Units.continuous_val.comp continuous_subtype_val)
+  · exact (continuousOn_dHS ε).comp_continuous (Units.continuous_val.comp continuous_subtypeVal)
       fun g => hmem g
-  · exact (continuousOn_dOp ε).comp_continuous (Units.continuous_val.comp continuous_subtype_val)
+  · exact (continuousOn_dOp ε).comp_continuous (Units.continuous_val.comp continuous_subtypeVal)
       fun g => hmem g
 
 end GlobalTheory.Count.Cartan

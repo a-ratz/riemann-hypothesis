@@ -455,7 +455,7 @@ theorem block_data_all (hx : Ext.All) (hc : CharStatement) (ht : ColTorusStateme
           (⟨(bs j).τ, Fin.castLE (bs j).hi a⟩ : Idx X.dim) (1 : ℂ)) (y b)).det‖ ∧
       (∀ b, μ b ≠ 0) := by
   rcases Nat.eq_zero_or_pos (bs j).i with h0 | hpos
-  · haveI : IsEmpty (Fin (bs j).i) := by rw [h0]; infer_instance
+  · have : IsEmpty (Fin (bs j).i) := by rw [h0]; infer_instance
     refine ⟨isEmptyElim, isEmptyElim, isEmptyElim, isEmptyElim, fun b => isEmptyElim b,
       isEmptyElim, isEmptyElim, ?_, isEmptyElim⟩
     rw [Matrix.det_isEmpty, norm_one]
@@ -557,7 +557,7 @@ theorem num_bound (r D : ℕ) (hr : 1 ≤ r) (ε : ℝ) (hε0 : 0 ≤ ε)
   have hD0 : (0 : ℝ) ≤ D := Nat.cast_nonneg D
   have h2D : 2 * (D : ℝ) ≤ Real.exp (2 * D) := by linarith [Real.add_one_le_exp (2 * (D : ℝ))]
   have hpow : ((4 : ℝ) * r) ^ D = Real.exp (D * Real.log (4 * r)) := by
-    rw [Real.exp_nat_mul, Real.exp_log (by positivity)]
+    rw [Real.exp_natCast_mul, Real.exp_log (by positivity)]
   have hlog : Real.log (4 * r) = Real.log 4 + Real.log r :=
     Real.log_mul (by norm_num) (by positivity)
   have hP : 2 * (D : ℝ) * (4 * r) ^ D * Real.exp ((r / 2 + 1) * D) ≤
@@ -584,19 +584,19 @@ theorem eps_bound (g d : ℕ) (t K : ℝ) (h : g * Real.log 2 + 2 * d + 3 + K �
     7 * 2 ^ g * (4.3 : ℝ) ^ d * Real.exp (-t) ≤ Real.exp (-K) := by
   have he1 : (2.7182818283 : ℝ) < Real.exp 1 := Real.exp_one_gt_d9
   have h7 : (7 : ℝ) ≤ Real.exp 3 := by
-    have e : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_nat_mul]; norm_num
+    have e : Real.exp 3 = Real.exp 1 ^ 3 := by rw [← Real.exp_natCast_mul]; norm_num
     rw [e]
     calc (7 : ℝ) ≤ 2.7182818283 ^ 3 := by norm_num
       _ ≤ Real.exp 1 ^ 3 := by gcongr
   have h43 : (4.3 : ℝ) ≤ Real.exp 2 := by
-    have e : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_nat_mul]; norm_num
+    have e : Real.exp 2 = Real.exp 1 ^ 2 := by rw [← Real.exp_natCast_mul]; norm_num
     rw [e]
     calc (4.3 : ℝ) ≤ 2.7182818283 ^ 2 := by norm_num
       _ ≤ Real.exp 1 ^ 2 := by gcongr
   have h2g : (2 : ℝ) ^ g = Real.exp (g * Real.log 2) := by
-    rw [Real.exp_nat_mul, Real.exp_log (by norm_num)]
+    rw [Real.exp_natCast_mul, Real.exp_log (by norm_num)]
   have h43d : (4.3 : ℝ) ^ d ≤ Real.exp (d * 2) := by
-    rw [Real.exp_nat_mul]
+    rw [Real.exp_natCast_mul]
     gcongr
   calc 7 * 2 ^ g * (4.3 : ℝ) ^ d * Real.exp (-t)
       ≤ Real.exp 3 * Real.exp (g * Real.log 2) * Real.exp (d * 2) * Real.exp (-t) := by
@@ -633,7 +633,7 @@ theorem eU_props {dim : (E →+* ℂ) → ℕ} {n nb : ℕ} (bs : Fin nb → Blo
     (a : Fin (bs j).i) : InPart (bs j).τ (eU bs j a) ∧ ‖eU bs j a‖ = 1 := by
   refine ⟨fun k hk => ?_, by simp [eU]⟩
   simp only [eU, PiLp.single_apply]
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro rfl
   exact hk rfl
 
@@ -798,7 +798,7 @@ theorem jof_core (hx : Ext.All) (hs : SplitStatement) (hc : CharStatement) (ht :
   have hDt : δ0 ^ DF bs ≤ Dt := by
     rw [hDtdef]
     refine prod_det_ge bs _ δ0 hδ0pos.le hδ01 (fun j hj => hdet j) (fun j hj => ?_)
-    haveI : IsEmpty (Fin (bs j).i) := by rw [hj]; infer_instance
+    have : IsEmpty (Fin (bs j).i) := by rw [hj]; infer_instance
     rw [Matrix.det_isEmpty, norm_one]
   have hδ0exp : Real.exp (-((X.r : ℝ) / 2 + 1)) ≤ δ0 := by
     rw [hδ0def, Real.rpow_def_of_pos (by norm_num)]
@@ -823,7 +823,7 @@ theorem jof_core (hx : Ext.All) (hs : SplitStatement) (hc : CharStatement) (ht :
       rw [hA1def, ← prod_two_pow bs, sub_nonneg]
       exact Finset.prod_le_prod₀ (fun _ _ => by positivity) fun p _ => le_add_of_nonneg_right hε0
     have hexp : Real.exp (-((X.r : ℝ) / 2 + 1)) ^ DF bs = Real.exp (-(((X.r : ℝ) / 2 + 1) * DF bs)) := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       ring
     have hE : 0 < Real.exp ((X.r / 2 + 1) * DF bs) := Real.exp_pos _
@@ -893,7 +893,7 @@ theorem jof_core (hx : Ext.All) (hs : SplitStatement) (hc : CharStatement) (ht :
   have hJ : P.Jbound n = (∏ _k : Fin n, w) * (2 : ℝ)⁻¹ ^ ((X.r + 2) * DF bs) := by
     have hwn : w ^ n = (4 : ℝ)⁻¹ ^ n * P.K6⁻¹ ^ n *
         Real.exp (-(2 * Real.pi * n * Cchi (E := E) P.m * P.ph / P.q)) := by
-      rw [hwdef, mul_pow, mul_pow, ← Real.exp_nat_mul]
+      rw [hwdef, mul_pow, mul_pow, ← Real.exp_natCast_mul]
       congr 2
       rw [hadef]
       ring

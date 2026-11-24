@@ -59,7 +59,7 @@ theorem absNorm_map_ringOfIntegers_hom (E K : Type) [Field E] [NumberField E] [F
       Ideal.absNorm (𝔞.map τ) = Ideal.absNorm 𝔞 ^ (Module.finrank ℚ K / Module.finrank ℚ E) := by
   have hτinj : Function.Injective τ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+    apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
     ext n
     simp only [Ideal.mem_comap, RingHom.mem_ker, Ideal.mem_bot]
     rw [eq_intCast, map_intCast]
@@ -71,7 +71,7 @@ theorem absNorm_map_ringOfIntegers_hom (E K : Type) [Field E] [NumberField E] [F
   have hinj : Function.Injective ((algebraMap (𝓞 K) K).comp τ) :=
     (RingOfIntegers.coe_injective (K := K)).comp hτinj
   let φ : E →+* K := IsFractionRing.lift hinj
-  letI : Algebra E K := φ.toAlgebra
+  let : Algebra E K := φ.toAlgebra
   have hmap : τ = algebraMap (𝓞 E) (𝓞 K) := by
     ext x
     change ((algebraMap (𝓞 K) K).comp τ) x = φ (algebraMap (𝓞 E) E x)

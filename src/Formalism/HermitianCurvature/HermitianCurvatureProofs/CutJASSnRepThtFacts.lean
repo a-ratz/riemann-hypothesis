@@ -99,8 +99,8 @@ theorem herm_wbP {y w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) :
     refine Finset.sum_congr rfl fun j _ => ?_
     unfold SSn.wbP Hpk
     by_cases hj : r ≤ j.val ∧ j.val ≤ r + k
-    · rw [if_pos hj]
-    · rw [if_neg hj]
+    · rw [ite_eq_left hj]
+    · rw [ite_eq_right hj]
       have h1 : ¬ (i.val < r ∧ i.val + j.val = 2 * r + k) := by omega
       have h2 : ¬ (j.val < r ∧ i.val + j.val = 2 * r + k) := by omega
       have h3 : ¬ (r ≤ i.val ∧ i.val ≤ r + k ∧ i = j) := by
@@ -114,7 +114,7 @@ theorem blockProjection_smul (c : ℂ) (x : Fin (2 * r + k + 1) → ℂ) : SSn.w
   funext i; simp only [SSn.wbP, Pi.smul_apply]; split_ifs <;> simp
 
 theorem blockProjection_mem_block (x : Fin (2 * r + k + 1) → ℂ) : inWb k r (SSn.wbP k r x) := by
-  intro i hi; unfold SSn.wbP; rw [if_neg (by omega)]
+  intro i hi; unfold SSn.wbP; rw [ite_eq_right (by omega)]
 
 theorem prWv_add (z x y : Fin (2 * r + k + 1) → ℂ) :
     SSn.prWv k r z (x + y) = SSn.prWv k r z x + SSn.prWv k r z y := by
@@ -537,19 +537,19 @@ theorem hs_sandw_adj (A₁ A₂ : Wp →L[ℂ] Wp) (B₁ B₂ : Wq →L[ℂ] Wq)
 
 theorem hs_sum_left {ι : Type*} (s : Finset ι) (T : ι → Wq →L[ℂ] Wp) (Y : Wq →L[ℂ] Wp) :
     B.hsInner (∑ i ∈ s, T i) Y = ∑ i ∈ s, B.hsInner (T i) Y := by
-  simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, inner_sum]
+  simp only [P.Topx1.hsInner_eq, sum_apply, inner_sum]
   exact Finset.sum_comm
 
 theorem hs_sum_right {ι : Type*} (s : Finset ι) (X : Wq →L[ℂ] Wp) (T : ι → Wq →L[ℂ] Wp) :
     B.hsInner X (∑ i ∈ s, T i) = ∑ i ∈ s, B.hsInner X (T i) := by
-  simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.sum_apply, sum_inner]
+  simp only [P.Topx1.hsInner_eq, sum_apply, sum_inner]
   exact Finset.sum_comm
 
 theorem hs_smul_left (c : ℂ) (T Y : Wq →L[ℂ] Wp) : B.hsInner (c • T) Y = c * B.hsInner T Y := by
-  simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.smul_apply, inner_smul_right, Finset.mul_sum]
+  simp only [P.Topx1.hsInner_eq, smul_apply, inner_smul_right, Finset.mul_sum]
 
 theorem hs_smul_right (c : ℂ) (X T : Wq →L[ℂ] Wp) : B.hsInner X (c • T) = star c * B.hsInner X T := by
-  simp only [P.Topx1.hsInner_eq, ContinuousLinearMap.smul_apply, inner_smul_left, Finset.mul_sum, Complex.star_def]
+  simp only [P.Topx1.hsInner_eq, smul_apply, inner_smul_left, Finset.mul_sum, Complex.star_def]
 
 end hs
 
@@ -665,12 +665,12 @@ theorem tht_eqv (hz : inWb k r z) (hT : 0 < Tz k r z) (hR : Qr.IsRepW k r z π)
   conv_rhs => rw [← sandw_apply (π h) (π' h'⁻¹)]
   unfold tht
 
-  rw [ContinuousLinearMap.sum_apply, ContinuousLinearMap.sum_apply, map_sum]
+  rw [sum_apply, sum_apply, map_sum]
   refine Finset.sum_congr rfl fun p _ => ?_
 
-  rw [ContinuousLinearMap.sum_apply, ContinuousLinearMap.sum_apply, map_sum]
+  rw [sum_apply, sum_apply, map_sum]
   refine Finset.sum_congr rfl fun q _ => ?_
-  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, map_smul]
+  rw [smul_apply, smul_apply, map_smul]
   congr 1
   · rw [mulVec_conj_cancel hh'.1, P.Qx2.herm_uh hh.1]
   rw [prWv_uw hz hT hh, prWv_uw hz' hT' hh', ← ebM_conj hh.1,
@@ -689,12 +689,12 @@ theorem thtA_eqv (hz : inWb k r z) (hT : 0 < Tz k r z) (hR : Qr.IsRepW k r z π)
   conv_rhs => rw [← sandw_apply (π h) (π' h'⁻¹)]
   unfold thtA
 
-  rw [ContinuousLinearMap.sum_apply, ContinuousLinearMap.sum_apply, map_sum]
+  rw [sum_apply, sum_apply, map_sum]
   refine Finset.sum_congr rfl fun p _ => ?_
 
-  rw [ContinuousLinearMap.sum_apply, ContinuousLinearMap.sum_apply, map_sum]
+  rw [sum_apply, sum_apply, map_sum]
   refine Finset.sum_congr rfl fun q _ => ?_
-  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.smul_apply, map_smul]
+  rw [smul_apply, smul_apply, map_smul]
   congr 1
   · rw [mulVec_conj_cancel hh'.1, P.Qx2.herm_uh hh.1]
   rw [prWv_uw hz hT hh, prWv_uw hz' hT' hh', ← ebM_conj hh.1,
@@ -819,7 +819,7 @@ theorem tht_adj (hz : inWb k r z) (hT : 0 < Tz k r z) (hR : Qr.IsRepW k r z π)
     (a a' : Fin (2 * r + k + 1) → ℂ) (ι : B.Mat k r) (A B' : Wq →L[ℂ] Wp) :
     B.hsInner (tht k r z z' π π' F F' a a' ι A) B' = B.hsInner A (thtA k r z z' π π' F F' a a' ι B') := by
   rw [tht_expand hz hT hR hz' hT' hR' hF hF', thtA_expand hz hT hR hz' hT' hR' hF hF']
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply, hs_sum_left, hs_sum_right,
+  simp only [sum_apply, smul_apply, hs_sum_left, hs_sum_right,
     hs_smul_left, hs_smul_right]
   refine Finset.sum_congr rfl fun p _ => Finset.sum_congr rfl fun q _ =>
     Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun t _ => ?_

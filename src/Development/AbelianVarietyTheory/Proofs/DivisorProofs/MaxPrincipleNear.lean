@@ -248,8 +248,8 @@ private lemma natDegree_minpoly_pow_le {A S : Type*} [CommRing A] [IsDomain A]
     (minpoly A (g ^ N)).natDegree ≤ (minpoly A g).natDegree := by
   have hf : (minpoly A g).Monic := minpoly.monic hg
   let pb := AdjoinRoot.powerBasis' hf
-  haveI : Module.Free A (AdjoinRoot (minpoly A g)) := Module.Free.of_basis pb.basis
-  haveI : Module.Finite A (AdjoinRoot (minpoly A g)) := Module.Finite.of_basis pb.basis
+  have : Module.Free A (AdjoinRoot (minpoly A g)) := Module.Free.of_basis pb.basis
+  have : Module.Finite A (AdjoinRoot (minpoly A g)) := Module.Finite.of_basis pb.basis
   let L := Algebra.lmul A (AdjoinRoot (minpoly A g)) (AdjoinRoot.root (minpoly A g) ^ N)
   have hq : aeval (AdjoinRoot.root (minpoly A g) ^ N) L.charpoly = 0 := by
     have h := LinearMap.aeval_self_charpoly L
@@ -277,13 +277,13 @@ private lemma natDegree_minpoly_pow_le {A S : Type*} [CommRing A] [IsDomain A]
 open MvPolynomial in
 theorem _root_.GlobalTheory.maxPrinciple_line_eval₂ : ∀ (d : ℕ) (B : Type) [CommRing B] [IsDomain B] [Algebra (MvPolynomial (Fin d) ℚ) B] [Module.Finite (MvPolynomial (Fin d) ℚ) B], Function.Injective (algebraMap (MvPolynomial (Fin d) ℚ) B) → ∀ (r : ℕ) (G : MvPolynomial (Fin r) B) (c : Fin r → ℂ) (z v : Fin d → ℂ) (R : ℝ), (∀ (x : B →+* ℂ) (w : ℂ), ‖w‖ = 1 → (∀ i, x (algebraMap (MvPolynomial (Fin d) ℚ) B (MvPolynomial.X i)) = z i + w * v i) → ‖MvPolynomial.eval₂ x c G‖ ≤ R) → ∀ x : B →+* ℂ, (∀ i, x (algebraMap (MvPolynomial (Fin d) ℚ) B (MvPolynomial.X i)) = z i) → ‖MvPolynomial.eval₂ x c G‖ ≤ R := by
   intro d B _ _ _ _ hinj r G c z v R hR x hx
-  letI : Algebra (MvPolynomial (Fin r) (MvPolynomial (Fin d) ℚ)) (MvPolynomial (Fin r) B) :=
+  let : Algebra (MvPolynomial (Fin r) (MvPolynomial (Fin d) ℚ)) (MvPolynomial (Fin r) B) :=
     (MvPolynomial.map (algebraMap (MvPolynomial (Fin d) ℚ) B)).toAlgebra
   have hinj' : Function.Injective (algebraMap (MvPolynomial (Fin r) (MvPolynomial (Fin d) ℚ))
       (MvPolynomial (Fin r) B)) := MvPolynomial.map_injective _ hinj
-  haveI : Module.IsTorsionFree (MvPolynomial (Fin r) (MvPolynomial (Fin d) ℚ))
+  have : Module.IsTorsionFree (MvPolynomial (Fin r) (MvPolynomial (Fin d) ℚ))
       (MvPolynomial (Fin r) B) := Module.isTorsionFree_iff_algebraMap_injective.mpr hinj'
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin r) (MvPolynomial (Fin d) ℚ))
+  have : Algebra.IsIntegral (MvPolynomial (Fin r) (MvPolynomial (Fin d) ℚ))
       (MvPolynomial (Fin r) B) := by
     constructor
     intro a
@@ -431,7 +431,7 @@ private lemma norm_le_one_add_sum_norm_coeff_of_isRoot_monic {p : Polynomial ℂ
       (fun _ _ => zero_le) (Finset.mem_range.2 (by have := Finset.mem_range.1 hk; omega))
   have hb : p.cauchyBound ≤ 1 + ∑ k ∈ Finset.range (p.natDegree + 1), ‖p.coeff k‖₊ := by
     unfold Polynomial.cauchyBound
-    rw [hp.leadingCoeff, nnnorm_one, div_one, add_comm]
+    rw [hp.leadingCoeff, nnNorm_one, div_one, add_comm]
     gcongr
   have h2 : ‖t‖₊ ≤ 1 + ∑ k ∈ Finset.range (p.natDegree + 1), ‖p.coeff k‖₊ := h.le.trans hb
   have h3 := NNReal.coe_le_coe.mpr h2
@@ -514,11 +514,11 @@ private lemma isCompact_image_homs_over_isCompact {d : ℕ} {B : Type} [CommRing
        {g : B → ℂ | ∀ a c, g (a * c) = g a * g c}))
     refine IsClosed.inter (isClosed_eq (f := fun g : B → ℂ => g 1) (g := fun _ => (1 : ℂ)) (continuous_apply 1) continuous_const) (IsClosed.inter ?_ ?_)
     · show IsClosed {g : B → ℂ | ∀ a c, g (a + c) = g a + g c}
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isClosed_iInter fun a : B => isClosed_iInter fun c : B =>
         isClosed_eq (f := fun g : B → ℂ => g (a + c)) (g := fun g => g a + g c) (continuous_apply (a + c)) ((continuous_apply a).add (continuous_apply c))
     · show IsClosed {g : B → ℂ | ∀ a c, g (a * c) = g a * g c}
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isClosed_iInter fun a : B => isClosed_iInter fun c : B =>
         isClosed_eq (f := fun g : B → ℂ => g (a * c)) (g := fun g => g a * g c) (continuous_apply (a * c)) ((continuous_apply a).mul (continuous_apply c))
   refine (isCompact_univ_pi fun b => isCompact_closedBall (0 : ℂ) (M b)).of_isClosed_subset hclosed ?_
@@ -575,7 +575,7 @@ private lemma exists_ne_zero_dvd_algebraMap_of_ne_zero {d : ℕ} {B : Type} [Com
     [Algebra (MvPolynomial (Fin d) ℚ) B] [Module.Finite (MvPolynomial (Fin d) ℚ) B]
     {s : B} (hs : s ≠ 0) :
     ∃ a : MvPolynomial (Fin d) ℚ, a ≠ 0 ∧ s ∣ algebraMap (MvPolynomial (Fin d) ℚ) B a := by
-  have h := Ideal.comap_ne_bot_of_integral_mem (R := MvPolynomial (Fin d) ℚ) hs
+  have h := Ideal.under_ne_bot_of_integral_mem (R := MvPolynomial (Fin d) ℚ) hs
     (Ideal.mem_span_singleton_self s) (Algebra.IsIntegral.isIntegral s)
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h
   exact ⟨a, ha0, Ideal.mem_span_singleton.mp ha⟩
@@ -641,7 +641,7 @@ open Polynomial in
 theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_algebra :
     ∀ (d : ℕ) (B : Type) [CommRing B] [IsDomain B] [Algebra (MvPolynomial (Fin d) ℚ) B] [Module.Finite (MvPolynomial (Fin d) ℚ) B], Function.Injective (algebraMap (MvPolynomial (Fin d) ℚ) B) → (letI : TopologicalSpace (B →+* ℂ) := TopologicalSpace.induced (fun x : B →+* ℂ => (x : B → ℂ)) inferInstance; ∀ (ψ : (B →+* ℂ) → ℝ), Continuous ψ → ∀ s : B, s ≠ 0 → ∀ (x₀ : B →+* ℂ) (δ : ℝ), 0 < δ → ∃ (W K : Set (B →+* ℂ)), W ∈ nhds x₀ ∧ IsCompact K ∧ (∀ x ∈ K, x s ≠ 0) ∧ ∀ (N : ℕ) (f : B) (R : ℝ), (∀ x ∈ K, ‖x f‖ * Real.exp (-(N * ψ x)) ≤ R) → ∀ y ∈ W, ‖y f‖ * Real.exp (-(N * ψ y)) ≤ Real.exp (δ * N) * R) := by
   intro d B _ _ _ _ hinj
-  letI : TopologicalSpace (B →+* ℂ) := TopologicalSpace.induced (fun x : B →+* ℂ => (x : B → ℂ)) inferInstance
+  let : TopologicalSpace (B →+* ℂ) := TopologicalSpace.induced (fun x : B →+* ℂ => (x : B → ℂ)) inferInstance
   intro ψ hψ s hs x₀ δ hδ
   classical
   set π : (B →+* ℂ) → (Fin d → ℂ) :=
@@ -654,7 +654,7 @@ theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_a
     fun T hT => hind.isCompact_iff.mpr (isCompact_image_homs_over_isCompact hT)
   set z := π x₀
 
-  obtain ⟨k, e, he⟩ := ((finite_setOf_homs_over_point (B := B) z).diff (t := {x₀})).fin_embedding
+  obtain ⟨k, e, he⟩ := ((finite_setOf_homs_over_point (B := B) z).sdiff (t := {x₀})).fin_embedding
   have hsep : ∀ j, ∃ b : B, e j b ≠ x₀ b := by
     intro j
     by_contra h
@@ -820,7 +820,7 @@ theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_a
         calc ‖x f‖ * ‖Φ (y, x)‖ ^ N ≤ R * Real.exp (N * ψ x) * Real.exp (δ / 3) ^ N :=
               mul_le_mul hxf (pow_le_pow_left₀ (norm_nonneg _) hΦ.le N) (by positivity) (by positivity)
           _ = R * Real.exp (N * ψ x + N * (δ / 3)) := by
-              rw [← Real.exp_nat_mul, mul_assoc, ← Real.exp_add]
+              rw [← Real.exp_natCast_mul, mul_assoc, ← Real.exp_add]
           _ ≤ R' := by
               show _ ≤ R * Real.exp (N * (ψ x₀ + 2 * δ / 3))
               gcongr
@@ -830,7 +830,7 @@ theorem _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_a
         calc ‖x f‖ * ‖Φ (y, x)‖ ^ N ≤ R * Real.exp (N * ψ x) * Real.exp (ψ x₀ - C) ^ N :=
               mul_le_mul hxf (pow_le_pow_left₀ (norm_nonneg _) hΦ.le N) (by positivity) (by positivity)
           _ = R * Real.exp (N * ψ x + N * (ψ x₀ - C)) := by
-              rw [← Real.exp_nat_mul, mul_assoc, ← Real.exp_add]
+              rw [← Real.exp_natCast_mul, mul_assoc, ← Real.exp_add]
           _ ≤ R' := by
               show _ ≤ R * Real.exp (N * (ψ x₀ + 2 * δ / 3))
               gcongr
@@ -871,20 +871,20 @@ theorem ratExtPoint_tmul {B : Type} [CommRing B] (x : B →+* ℂ) (q : ℚ) (b 
 
 theorem local_max_principle_int : ∀ (B : Type) [CommRing B] [IsDomain B] [CharZero B] [Algebra.FiniteType ℤ B], (letI : TopologicalSpace (B →+* ℂ) := TopologicalSpace.induced (fun x : B →+* ℂ => (x : B → ℂ)) inferInstance; ∀ (ψ : (B →+* ℂ) → ℝ), Continuous ψ → ∀ s : B, s ≠ 0 → ∀ (x₀ : B →+* ℂ) (δ : ℝ), 0 < δ → ∃ (W K : Set (B →+* ℂ)), W ∈ nhds x₀ ∧ IsCompact K ∧ (∀ x ∈ K, x s ≠ 0) ∧ ∀ (N : ℕ) (f : B) (R : ℝ), (∀ x ∈ K, ‖x f‖ * Real.exp (-(N * ψ x)) ≤ R) → ∀ y ∈ W, ‖y f‖ * Real.exp (-(N * ψ y)) ≤ Real.exp (δ * N) * R) := by
   intro B _ _ _ _
-  letI tB : TopologicalSpace (B →+* ℂ) :=
+  let tB : TopologicalSpace (B →+* ℂ) :=
     TopologicalSpace.induced (fun x : B →+* ℂ => (x : B → ℂ)) inferInstance
   intro ψ hψ s hs x₀ δ hδ
-  letI := Algebra.TensorProduct.rightAlgebra (R := ℤ) (A := ℚ) (B := B)
-  haveI := isLocalization_rat_tensor B
+  let := Algebra.TensorProduct.rightAlgebra (R := ℤ) (A := ℚ) (B := B)
+  have := isLocalization_rat_tensor B
   have hle := intMap_le_nonZeroDivisors B
-  haveI : IsDomain (ℚ ⊗[ℤ] B) := IsLocalization.isDomain_of_le_nonZeroDivisors (ℚ ⊗[ℤ] B) hle
+  have : IsDomain (ℚ ⊗[ℤ] B) := IsLocalization.isDomain_of_le_nonZeroDivisors (ℚ ⊗[ℤ] B) hle
   have hinj : Function.Injective (algebraMap B (ℚ ⊗[ℤ] B)) := IsLocalization.injective _ hle
   set φ : B →+* ℚ ⊗[ℤ] B := algebraMap B (ℚ ⊗[ℤ] B) with hφ
   have hφ' : ∀ b, φ b = (1 : ℚ) ⊗ₜ[ℤ] b := fun _ => rfl
   obtain ⟨d, g, hg, hfin⟩ := exists_finite_inj_algHom_of_fg ℚ (ℚ ⊗[ℤ] B)
-  letI : Algebra (MvPolynomial (Fin d) ℚ) (ℚ ⊗[ℤ] B) := g.toRingHom.toAlgebra
-  haveI : Module.Finite (MvPolynomial (Fin d) ℚ) (ℚ ⊗[ℤ] B) := hfin
-  letI tB' : TopologicalSpace (ℚ ⊗[ℤ] B →+* ℂ) :=
+  let : Algebra (MvPolynomial (Fin d) ℚ) (ℚ ⊗[ℤ] B) := g.toRingHom.toAlgebra
+  have : Module.Finite (MvPolynomial (Fin d) ℚ) (ℚ ⊗[ℤ] B) := hfin
+  let tB' : TopologicalSpace (ℚ ⊗[ℤ] B →+* ℂ) :=
     TopologicalSpace.induced (fun x : ℚ ⊗[ℤ] B →+* ℂ => (x : ℚ ⊗[ℤ] B → ℂ)) inferInstance
   have hev : ∀ b : B, Continuous fun x : B →+* ℂ => x b := fun b =>
     (continuous_apply b).comp continuous_induced_dom

@@ -83,8 +83,8 @@ theorem mixS_continuous_integrable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (h�
   refine ⟨hc, ?_⟩
   obtain ⟨θ, hθ⟩ := GlobalTheory.DualPairCompare.exists_infFam D
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D T.rank ρ
-  haveI : BorelSpace (Mx D T.rank ρ) := ⟨rfl⟩
-  haveI := v.covol.1
+  have : BorelSpace (Mx D T.rank ρ) := ⟨rfl⟩
+  have := v.covol.1
   obtain ⟨N, hN⟩ := GlobalTheory.Unf.MajInt.maj_integrable D θ hθ T.rank ρ (fun _ _ => True) 0 v.μ inferInstance
     (Filter.Eventually.of_forall fun x i j h => (h trivial).elim)
     (fun t _ => by
@@ -98,7 +98,7 @@ theorem mixS_continuous_integrable {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (h�
   refine ⟨hc.aestronglyMeasurable, ?_⟩
   have hI := (hN K hK).2
   refine lt_of_le_of_lt (lintegral_mono fun x => (hC f hfL x w).trans
-    (mul_le_mul_right (Real.ofReal_le_enorm _) _)) ?_
+    (mul_le_mul_right (Real.ofReal_le_eNorm _) _)) ?_
   rw [lintegral_const_mul' _ _ (ENNReal.mul_ne_top ENNReal.coe_ne_top hfin)]
   exact ENNReal.mul_lt_top (ENNReal.mul_ne_top ENNReal.coe_ne_top hfin).lt_top hI
 

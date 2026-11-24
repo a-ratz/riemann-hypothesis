@@ -63,7 +63,7 @@ theorem continuous_projV_fin (v : HeightOneSpectrum (𝓞 F)) :
     Continuous (fun X : Fin n → Fin M → Af F ⊗[F] E => projV v X) := by
   have h : Continuous (evalV F v) :=
     RestrictedProduct.continuous_eval (R := fun w : HeightOneSpectrum (𝓞 F) => w.adicCompletion F) v
-  haveI : IsTopologicalRing (Af F) := inferInstance
+  have : IsTopologicalRing (Af F) := inferInstance
   have h2 : Continuous (Algebra.TensorProduct.map (evalV F v) (AlgHom.id F E)) :=
     continuous_map_tens b (evalV F v) h
   exact continuous_pi fun a => continuous_pi fun i =>
@@ -191,7 +191,7 @@ theorem isPureFin_continuous_hasCompactSupport : ∀ (F E : Type) [Field F] [Num
     IsPureFin b Φf Φv → Continuous Φf ∧ HasCompactSupport Φf := by
   intro F E _ _ _ _ _ d M n b Φf Φv h
   obtain ⟨hSB, hae, hprod⟩ := h
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have e : Φf = fun X => ∏ᶠ v, Φv v (projV v X) := funext hprod
   subst e
   exact ⟨PureFinite.continuous_finprod b Φv hSB hae, PureFinite.hasCompactSupport_finprod b Φv hSB hae⟩

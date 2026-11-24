@@ -52,7 +52,7 @@ theorem UpperTheory.Reformulated.B.GLRealOpen.glR_open :
     have e : {M : Matrix (Fin n) (Fin n) K | ∀ i j, M i j ∈ R}
         = ⋂ i, ⋂ j, (fun M : Matrix (Fin n) (Fin n) K => M i j) ⁻¹' (R : Set K) := by
       ext M
-      simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, SetLike.mem_coe]
     rw [e]
     refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
     exact hR.preimage (continuous_id.matrix_elem i j)

@@ -419,7 +419,7 @@ private theorem selfDualK_full {K : Type} [Field K] [NumberField K] [StarRing K]
     {n : ℕ} (G : Matrix (Fin n) (Fin n) K) (M : Submodule (𝓞 K) (Fin n → K))
     (hM : IsSelfDualK G M) : Submodule.IsFullLattice K M := by
   classical
-  haveI : Submodule.IsLattice K M := hM.1
+  have : Submodule.IsLattice K M := hM.1
   refine ⟨?_⟩
   obtain ⟨s, hs⟩ := hM.1.fg
   apply eq_top_iff.mpr

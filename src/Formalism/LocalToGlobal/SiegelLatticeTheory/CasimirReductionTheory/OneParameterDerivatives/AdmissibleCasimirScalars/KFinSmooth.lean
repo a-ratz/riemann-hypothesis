@@ -86,8 +86,8 @@ namespace CoordinateExpansion
 theorem exp_localHomeo (n : ℕ) :
     ∃ e : OpenPartialHomeomorph (Matrix (Fin n) (Fin n) ℂ) (Matrix (Fin n) (Fin n) ℂ),
       (0 : Matrix (Fin n) (Fin n) ℂ) ∈ e.source ∧ ∀ Z ∈ e.source, e Z = NormedSpace.exp Z := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   have hf : HasStrictFDerivAt (NormedSpace.exp : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ)
       ((ContinuousLinearEquiv.refl ℂ (Matrix (Fin n) (Fin n) ℂ) :
         Matrix (Fin n) (Fin n) ℂ →L[ℂ] Matrix (Fin n) (Fin n) ℂ)) 0 := by
@@ -118,8 +118,8 @@ theorem entry_of_inG {ε : Fin n → Bool} {Z : Matrix (Fin n) (Fin n) ℂ} (hZ 
 theorem sg_swap (ε : Fin n → Bool) (a b : Fin n) : sg ε (b, a) = sg ε (a, b) := by
   simp only [sg]
   by_cases h : ε a = ε b
-  · rw [if_pos h.symm, if_pos h]
-  · rw [if_neg (fun h' => h h'.symm), if_neg h]
+  · rw [ite_eq_left h.symm, ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h h'.symm), ite_eq_right h]
 
 theorem gen_apply_zero (ε : Fin n → Bool) (p : Fin n × Fin n) (i j : Fin n) (h1 : p ≠ (i, j)) (h2 : p ≠ (j, i)) :
     gen ε p i j = 0 := by
@@ -139,7 +139,7 @@ theorem eq_sum_gen {ε : Fin n → Bool} {Z : Matrix (Fin n) (Fin n) ℂ} (hZ : 
     simp [coord, gen, h, h.ne, h.ne', not_lt.mpr h.le, Matrix.single_apply]
   · rw [Fintype.sum_eq_single (i, i) (fun q hq => by rw [gen_apply_zero ε q i i hq hq, mul_zero])]
     have he := entry_of_inG hZ i i
-    simp only [sg, if_true] at he
+    simp only [sg, ite_true] at he
     have hre : (Z i i).re = 0 := by
       have h2 := congrArg Complex.re he
       simp at h2
@@ -326,7 +326,7 @@ theorem integral_sumCoef {ι : Type} [Fintype ι] [DecidableEq ι] {σ : Matrix 
           refine Finset.sum_congr rfl fun i _ => ?_
           exact integral_finsetSum _ fun j _ => hint i j
       _ = _ := by
-          simp only [hij, Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.sum_const,
+          simp only [hij, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.sum_const,
             Finset.card_univ, nsmul_eq_mul]
           ring
 
@@ -382,7 +382,7 @@ open CoefficientIntegrals in
 theorem c7 : FormalDegreeFiniteDim := by
   intro n ε H _ _ _ σ _ d hd W U hU hUW
   classical
-  haveI : (muG ε).IsHaarMeasure := by unfold muG; infer_instance
+  have : (muG ε).IsHaarMeasure := by unfold muG; infer_instance
   obtain ⟨K, hKn, hKU, hKc⟩ := local_compact_nhds hU
   have hKm : MeasurableSet K := hKc.isClosed.measurableSet
   have hKf : muG ε K ≠ ⊤ := hKc.measure_lt_top.ne
@@ -397,14 +397,14 @@ theorem c7 : FormalDegreeFiniteDim := by
   let bW := Module.Basis.ofVectorSpace ℂ W
   have hI : (Module.Basis.ofVectorSpaceIndex ℂ W).Infinite := by
     intro hfinI
-    haveI : Finite (Module.Basis.ofVectorSpaceIndex ℂ W) := hfinI.to_subtype
+    have : Finite (Module.Basis.ofVectorSpaceIndex ℂ W) := hfinI.to_subtype
     exact hfin (Module.Finite.of_basis bW)
   obtain ⟨t, htsub, htcard⟩ := hI.exists_subset_card_eq m
   let u : t → W := fun x => bW ⟨x.1, htsub x.2⟩
   have hu : LinearIndependent ℂ u :=
     bW.linearIndependent.comp _ (fun a b h => Subtype.ext (by simpa using congrArg Subtype.val h))
   let F : Submodule ℂ W := Submodule.span ℂ (Set.range u)
-  haveI : FiniteDimensional ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range u)
+  have : FiniteDimensional ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range u)
   have hF : Module.finrank ℂ F = m := by
     rw [finrank_span_eq_card hu]
     simp [htcard]
@@ -496,7 +496,7 @@ theorem c0 : SmoothVectorsDense := by
   obtain ⟨e, he, hfix, hrange⟩ := compactProj (KG ε) (muK ε) H (fun k : KG ε => σ (toMK k)) hσ.1.1
     (fun a b => hσ.1.2 _ (umat_mem (a : UJ ε)) _ (umat_mem (b : UJ ε)))
     (fun a v => hσ.2.1 _ (umat_mem (a : UJ ε)) v)
-    (fun v => (cont_orbit hσ v).comp continuous_subtype_val) S hfd (fun a v hv => hst _ a.2 v hv)
+    (fun v => (cont_orbit hσ v).comp continuous_subtypeVal) S hfd (fun a v hv => hst _ a.2 v hv)
   have hfix' : ∀ x ∈ S, kavg hσ he x = x := fun x hx => by
     rw [kavg_apply]
     exact hfix x hx
@@ -623,11 +623,11 @@ theorem gen_inK (p : Fin n × Fin n) (hp : ε p.1 = ε p.2) : inK ε (gen ε p) 
     ext k l
     simp only [Jm, Matrix.mul_diagonal, Matrix.diagonal_mul, Matrix.single_apply]
     by_cases h : i = k ∧ j = l
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       obtain ⟨rfl, rfl⟩ := h
       rw [hij]
       ring
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       ring
   have hI : star Complex.I = -Complex.I := Complex.conj_I
   unfold gen
@@ -662,7 +662,7 @@ theorem U_mem (t : ℝ) : NormedSpace.exp ((t : ℂ) • gen ε p) ∈ UJset ε 
 
 include hσ hp in
 theorem U_zero (v : H) : σ (NormedSpace.exp (((0 : ℝ) : ℂ) • gen ε p)) v = v := by
-  rw [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1, ContinuousLinearMap.one_apply]
+  rw [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, hσ.1.1, one_apply_eq_self]
 
 include hσ hp in
 theorem U_add (s t : ℝ) (v : H) : σ (NormedSpace.exp (((s + t : ℝ) : ℂ) • gen ε p)) v =
@@ -691,7 +691,7 @@ theorem U_cont (v : H) : Continuous fun t : ℝ => σ (NormedSpace.exp ((t : ℂ
       funext t
       rw [Formalism.REAL.toM_expG ε _ t (gen_inK p hp).1]
     rw [e]
-    exact Units.continuous_val.comp (continuous_subtype_val.comp hE)
+    exact Units.continuous_val.comp (continuous_subtypeVal.comp hE)
   exact (hσ.2.2 v).comp_continuous hc (fun t => U_mem σ hσ p hp t)
 
 
@@ -775,7 +775,7 @@ theorem bound_on_sup (Λ : Finset ℝ) (v : H) (hv : v ∈ ⨆ μ ∈ Λ, Ev σ 
 include hσ hp in
 theorem isoK_le (S : Submodule ℂ H) (hfd : FiniteDimensional ℂ S) (hst : IsKStableOn ε σ S) :
     ∃ Λ : Finset ℝ, isoK ε σ S ≤ ⨆ μ ∈ Λ, Ev σ (gen ε p) μ := by
-  haveI := hfd
+  have := hfd
   have hKmem : ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • gen ε p) ∈ Formalism.REAL.Kset ε := exp_mem_Kset p hp
   let φ : ℝ → (S →L[ℂ] S) := fun t =>
     LinearMap.toContinuousLinearMap

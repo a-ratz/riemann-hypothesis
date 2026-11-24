@@ -111,12 +111,12 @@ theorem _root_.GlobalTheory.DegreeOneUniformiser.exists_irreducible_eq : ∀ (F 
     have h1 := (HeightOneSpectrum.mem_adicCompletionIntegers _ _ v).mp
       (not_not.mp (mt (hP x hx0).mpr hx))
     rw [map_inv₀, map_inv₀] at h1
-    exact le_antisymm (hle x) ((inv_le_one₀ (zero_lt_iff.mpr (hne x hx0))).mp h1)
+    exact le_antisymm (hle x) ((inv_le_one₀ (pos_iff_ne_zero.mpr (hne x hx0))).mp h1)
   have hϖ0 : ϖ ≠ 0 := fun h => hϖP2 (h ▸ Ideal.zero_mem _)
   have hlt : Valued.v (ψ (ϖ : E)) < 1 := by
     have h1 := (hP ϖ hϖ0).mp hϖP
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, not_le, map_inv₀, map_inv₀] at h1
-    exact (one_lt_inv₀ (zero_lt_iff.mpr (hne ϖ hϖ0))).mp h1
+    exact (one_lt_inv₀ (pos_iff_ne_zero.mpr (hne ϖ hϖ0))).mp h1
   obtain ⟨u, hu⟩ := v.intValuation_exists_uniformizer
   let f : 𝓞 E := ⟨algebraMap F E (u : F), (RingOfIntegers.isIntegral_coe u).algebraMap⟩
   have hf : Valued.v (ψ (f : E)) = WithZero.exp (-1 : ℤ) := by

@@ -83,7 +83,7 @@ theorem UpperTheory.Gal.Gen.sep_pf :
     UpperTheory.Gal.Gen.LevFacts → UpperTheory.Gal.Gen.LocComm → UpperTheory.Gal.Gen.RatFin → UpperTheory.Gal.Gen.Sep := by
   intro hLev hComm hRat E _ _ _ a w₀ hs K hK J hJ S T hT hinj
   classical
-  haveI := GlobalTheory.InfUCompact.compactSpace_infU E a
+  have := GlobalTheory.InfUCompact.compactSpace_infU E a
   have hI : IsCompact (infU E a : Set (UA E a)) := isCompact_iff_compactSpace.2 inferInstance
   obtain ⟨hL0, hmem0, -, -, -, -⟩ := hLev E a w₀ hs K hK (J 0) (hJ.isOpen 0) (hJ.compact 0)
   have hC0 : IsCompact (lev K w₀ (J 0) : Set (UA E a)) := hL0.compact
@@ -103,7 +103,7 @@ theorem UpperTheory.Gal.Gen.sep_pf :
   let Y : UA E a × UA E a → GL (Fin a) (w₀.adicCompletion E) := fun q => cLoc w₀ (q.1⁻¹ * q.2 * q.1)
   let F : Set (GL (Fin a) (w₀.adicCompletion E)) :=
     Y '' ((S : Set (UA E a)) ×ˢ ((P '' D ∩ (ratU E a : Set (UA E a))) \ {1}))
-  have hF : F.Finite := (S.finite_toSet.prod (hR.subset Set.diff_subset)).image _
+  have hF : F.Finite := (S.finite_toSet.prod (hR.subset Set.sdiff_subset)).image _
   have hne : ∀ y ∈ F, y ≠ 1 := by
     rintro _ ⟨⟨s, γ⟩, ⟨-, ⟨-, hγ⟩, hγ1⟩, rfl⟩ e
     refine hγ1 ((hRat E a).2 w₀ γ hγ ?_)

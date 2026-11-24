@@ -109,7 +109,7 @@ open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology
 open scoped Classical in
 private lemma re_lt_one_of_mem_zerosDisc {q : ℕ} [NeZero q] {χ : DirichletCharacter ℂ q} {c w : ℂ}
     {R : ℝ} (hw : w ∈ _root_.GlobalTheory.Lin.zerosDisc χ c R) : w.re < 1 := by
-  simp only [_root_.GlobalTheory.Lin.zerosDisc, Set.mem_setOf_eq] at hw
+  simp only [_root_.GlobalTheory.Lin.zerosDisc, Set.mem_ofPred_eq] at hw
   obtain ⟨-, h1, h0⟩ := hw
   by_contra h
   exact LFunction_ne_zero_of_one_le_re χ h1 (not_lt.mp h) h0
@@ -131,7 +131,7 @@ private lemma summable_vonMangoldt_mul_rpow_neg {σ : ℝ} (hσ : 1 < σ) :
   rw [LSeries.norm_term_eq]
   rcases eq_or_ne n 0 with rfl | hn
   · simp
-  · rw [if_neg hn, Complex.ofReal_re, Complex.norm_real, Real.norm_of_nonneg vonMangoldt_nonneg,
+  · rw [ite_eq_right hn, Complex.ofReal_re, Complex.norm_real, Real.norm_of_nonneg vonMangoldt_nonneg,
       Real.rpow_neg (Nat.cast_nonneg n), div_eq_mul_inv]
 
 open Complex DirichletCharacter ArithmeticFunction MeasureTheory Filter Topology in
@@ -185,7 +185,7 @@ theorem _root_.GlobalTheory.SmallDiscZeros.few_zeros : ∃ C : ℝ, 0 < C ∧ �
     Real.log_nonneg (by nlinarith [abs_nonneg t])
   have hTS : _root_.GlobalTheory.Lin.zerosDisc χ (1 + t * I) r ⊆ _root_.GlobalTheory.Lin.zerosDisc χ (2 + t * I) 3 := by
     intro w hw
-    simp only [_root_.GlobalTheory.Lin.zerosDisc, Set.mem_setOf_eq] at hw ⊢
+    simp only [_root_.GlobalTheory.Lin.zerosDisc, Set.mem_ofPred_eq] at hw ⊢
     refine ⟨?_, hw.2⟩
     calc ‖w - (2 + t * I)‖ = ‖(w - (1 + t * I)) - 1‖ := by ring_nf
       _ ≤ ‖w - (1 + t * I)‖ + ‖(1 : ℂ)‖ := norm_sub_le _ _
@@ -196,7 +196,7 @@ theorem _root_.GlobalTheory.SmallDiscZeros.few_zeros : ∃ C : ℝ, 0 < C ∧ �
   refine ⟨hTfin, ?_⟩
   set G : ℝ := ∑' n : ℕ, vonMangoldt n * (n : ℝ) ^ (-(1 + r)) with hG
   have hG_le : G ≤ 1 / r + C := by
-    rw [derSeries_one_eq_tsum_vonMangoldt, if_pos rfl] at hbound₁
+    rw [derSeries_one_eq_tsum_vonMangoldt, ite_eq_left rfl] at hbound₁
     have hP : (1 : ℂ) / (((1 + r : ℝ) : ℂ) + (0 : ℝ) * I - 1) ^ (0 + 1) = ((1 / r : ℝ) : ℂ) := by
       push_cast; ring
     rw [hP] at hbound₁
@@ -259,7 +259,7 @@ theorem _root_.GlobalTheory.SmallDiscZeros.few_zeros : ∃ C : ℝ, 0 < C ∧ �
       have hw' := (Set.Finite.mem_toFinset hTfin).mp hw
       refine mul_le_mul_of_nonneg_left (inv_re_ge_of_norm_sub_le hr ?_ (re_lt_one_of_mem_zerosDisc hw'))
         (Nat.cast_nonneg _)
-      simp only [_root_.GlobalTheory.Lin.zerosDisc, Set.mem_setOf_eq] at hw'
+      simp only [_root_.GlobalTheory.Lin.zerosDisc, Set.mem_ofPred_eq] at hw'
       exact hw'.1
     · rw [re_natCast_div_pow_zero_add_one]
       have hw' := re_lt_one_of_mem_zerosDisc ((Set.Finite.mem_toFinset hfin).mp hw)
@@ -657,7 +657,7 @@ theorem _root_.GlobalTheory.Lin.NonPrimeVonMangoldt.summable_nonPrime_vonMangold
     · exact vonMangoldt_nonneg
   · obtain ⟨⟨p, hp⟩, k⟩ := pk
     have hnp : ¬ (p ^ (k + 2)).Prime := Nat.Prime.not_prime_pow (by omega)
-    simp only [Function.comp_apply, hF, hg_def, if_neg hnp]
+    simp only [Function.comp_apply, hF, hg_def, ite_eq_right hnp]
     rw [vonMangoldt_apply_pow (by omega), vonMangoldt_apply_prime hp, Nat.cast_pow]
     exact log_div_pow_add_two_rpow_three_quarters_le _ (by exact_mod_cast hp.two_le) k
 
@@ -703,7 +703,7 @@ lemma pw_small (K k : ℕ) {u δ : ℝ} (hδ : 0 < δ) (hu : 0 ≤ u) (h : u ≤
     nlinarith
   have h3 : Real.exp (u / (δ / 3) - u) ≤ 3 ^ k * Real.exp (-(u / 2)) := by
     have h4 : Real.exp k ≤ 3 ^ k := by
-      rw [← mul_one (k : ℝ), Real.exp_nat_mul]
+      rw [← mul_one (k : ℝ), Real.exp_natCast_mul]
       gcongr
       exact (Real.exp_one_lt_d9.trans (by norm_num)).le
     calc _ ≤ Real.exp (k + -(u / 2)) := by gcongr; linarith
@@ -719,7 +719,7 @@ lemma pw_large (K k : ℕ) {u δ : ℝ} (hδ : 0 < δ) (h : 32 / δ * K ≤ u) (
   have h2 : (4 / δ) ^ k ≤ Real.exp (u / 4) := by
     calc (4 / δ) ^ k ≤ Real.exp (4 / δ) ^ k := by
           gcongr; linarith [Real.add_one_le_exp (4 / δ)]
-      _ = Real.exp (k * (4 / δ)) := by rw [Real.exp_nat_mul]
+      _ = Real.exp (k * (4 / δ)) := by rw [Real.exp_natCast_mul]
       _ ≤ _ := by
           gcongr
           have : k * (4 / δ) ≤ 2 * K * (4 / δ) := by gcongr
@@ -805,7 +805,7 @@ lemma pointwise (c : ℕ → ℂ) (hc : ∀ n, ‖c n‖ ≤ 1) {r δ : ℝ} (hr
     calc _ ≤ Λ n / n * (δ ^ k * Real.exp (-(r * Real.log n / 2))) := by gcongr
       _ = _ := by ring_nf
   by_cases hp : n.Prime
-  · simp only [hp, if_true, zero_div, mul_zero, add_zero]
+  · simp only [hp, ite_true, zero_div, mul_zero, add_zero]
     split_ifs with hm
     · rw [primesIoc, Finset.mem_filter, Finset.mem_Ioc, Nat.le_floor_iff (Real.exp_pos _).le] at hm
       rw [Real.log_exp]
@@ -839,7 +839,7 @@ lemma pointwise (c : ℕ → ℂ) (hc : ∀ n, ‖c n‖ ≤ 1) {r δ : ℝ} (hr
         linarith
   · have hm : n ∉ primesIoc (Real.exp (δ / 3 * K / r)) (Real.exp (32 / δ * K / r)) := by
       rw [primesIoc, Finset.mem_filter]; exact fun h => hp h.2
-    simp only [hp, hm, if_false, sub_zero]
+    simp only [hp, hm, ite_false, sub_zero]
     refine (key _ hpw).trans (le_add_of_nonneg_of_le (by positivity) ?_)
     have e : (3 / 4 : ℝ) = 1 + (-1 / 4) := by norm_num
     rw [e, rpow_form n hn]
@@ -873,11 +873,11 @@ lemma series_le (c : ℕ → ℂ) (hc : ∀ n, ‖c n‖ ≤ 1) {r δ : ℝ} (hr
     (f := fun n : ℕ => if n ∈ primesIoc (Real.exp (δ / 3 * K / r)) (Real.exp (32 / δ * K / r)) then
         (Real.log n : ℂ) * c n / n *
           ((pw k (r * Real.log n) - pw k (r * Real.log (Real.exp (32 / δ * K / r))) : ℝ) : ℂ)
-        else 0) (fun n hn => if_neg hn)
+        else 0) (fun n hn => ite_eq_right hn)
   have h := norm_tsum_le_of_close hP.summable ((hs.mul_left (δ ^ k)).add (hq.mul_left ((4 * r) ^ k)))
     (pointwise c hc hr hδ K k h1 h2)
   rw [hP.tsum_eq, (hs.mul_left _).tsum_add (hq.mul_left _), tsum_mul_left, tsum_mul_left,
-    Finset.sum_congr rfl (fun n hn => if_pos hn)] at h
+    Finset.sum_congr rfl (fun n hn => ite_eq_left hn)] at h
   refine le_of_eq_of_le ?_ h
   simp_rw [← term_eq]
   rw [tsum_mul_left, norm_mul, norm_pow, Complex.norm_real, Real.norm_of_nonneg hr.le, derSeries]
@@ -998,7 +998,7 @@ theorem large_mean_of_large_derivative : ∀ A : ℝ, 1 ≤ A → ∃ a b C r₀
     have h3 : A ^ (2 * (m + 2)) ≤ A ^ (6 * K) := pow_le_pow_right₀ hA (by omega)
     have h4 : A ^ (6 * K) = Real.exp (6 * Real.log A * K) := by
       nth_rewrite 1 [← Real.exp_log hA0]
-      rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+      rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
     rw [add_mul, Real.exp_add, ← h4]
     gcongr
     linarith [Real.add_one_le_exp (4 * (32 / δ) * K)]
@@ -1489,7 +1489,7 @@ theorem zero_density : ∃ A C η : ℝ, 0 < A ∧ 0 < C ∧ 0 < η ∧ ∀ (q :
         _ = _ := by ring
     calc _ ≤ ((q * (T + 3)) ^ 2) ^ 2 := by gcongr
       _ = Real.exp (Real.log (q * (T + 3))) ^ 4 := by rw [Real.exp_log (by positivity)]; ring
-      _ = Real.exp (4 * Real.log (q * (T + 3))) := by rw [← Real.exp_nat_mul]; norm_num
+      _ = Real.exp (4 * Real.log (q * (T + 3))) := by rw [← Real.exp_natCast_mul]; norm_num
       _ ≤ _ := Real.exp_le_exp.2 (by linarith)
   have k4 : C3 * r * L ≤ K := by
     rw [mul_assoc]; exact le_trans (by gcongr; linarith) k1
@@ -1628,7 +1628,7 @@ theorem layers {ι : Type*} (s : Finset ι) (w δ : ι → ℝ) (hw : ∀ i, 0 �
         rw [Finset.mem_range, Nat.floor_lt h0]
         nlinarith
       have := Finset.single_le_sum hnn hm
-      rw [if_pos] at this
+      rw [ite_eq_left] at this
       · have h3 : Real.exp (-(L * δ i)) ≤ Real.exp (-(L * η) - ⌊L * (δ i - η)⌋₊) :=
           Real.exp_le_exp.2 (by linarith)
         nlinarith
@@ -1720,7 +1720,7 @@ theorem sum_rpow_zeros_le : ∃ A C η₀ : ℝ, 0 < A ∧ 0 < C ∧ 0 < η₀ �
       generalize min (η + (j + 1) / L) e = x at hx0 hx1 hx2 ⊢
       have h := H₁ q T (1 - x) hT (by linarith) (by linarith)
       refine (mul_le_mul_of_nonneg_left h (Real.exp_pos _).le).trans ?_
-      rw [Real.rpow_def_of_pos hu0, Real.rpow_def_of_pos (by linarith), ← Real.exp_nat_mul,
+      rw [Real.rpow_def_of_pos hu0, Real.rpow_def_of_pos (by linarith), ← Real.exp_natCast_mul,
         mul_left_comm, mul_assoc, mul_assoc, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
       refine mul_le_mul_of_nonneg_left (Real.exp_le_exp.2 ?_) hC₁.le
       rw [← hLdef, ← hMdef]

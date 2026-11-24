@@ -185,20 +185,20 @@ theorem isReading_ext : ∀ (p : ℕ) [Fact p.Prime] (F : Type) [Field F] [Numbe
   have hc1 : c < 1 := Real.rpow_lt_one hρ0.le hρ1 (by positivity)
   have hcr : c ^ r = ρ := by
     rw [hc, ← Real.rpow_natCast, ← Real.rpow_mul hρ0.le, one_div, inv_mul_cancel₀ hr0.ne', Real.rpow_one]
-  letI NF : NontriviallyNormedField T.Fr :=
+  let NF : NontriviallyNormedField T.Fr :=
     { NormedField.induced T.Fr ℂ_[p] k k.injective with
       non_trivial := ⟨(algebraMap T.V T.Fr π)⁻¹, by
         show 1 < ‖k (algebraMap T.V T.Fr π)⁻¹‖
         rw [map_inv₀, norm_inv]
         exact (one_lt_inv₀ hρ0).2 hρ1⟩ }
   have hnk : ∀ y : T.Fr, ‖y‖ = ‖k y‖ := fun y => rfl
-  haveI : IsUltrametricDist T.Fr :=
+  have : IsUltrametricDist T.Fr :=
     IsUltrametricDist.isUltrametricDist_of_forall_norm_add_le_max_norm fun x y => by
       rw [hnk, hnk, hnk, map_add (f := _)]
       exact IsUltrametricDist.norm_add_le_max _ _
-  haveI : CompleteSpace T.Fr := Formalism.MainNotions.ExistsIdealDenominator.complete_of_adic (O := T.V) (K := T.Fr) (fun y => hk.int y) inferInstance
-  letI := i.toAlgebra
-  haveI : FiniteDimensional T.Fr T'.Fr := hfin
+  have : CompleteSpace T.Fr := Formalism.MainNotions.ExistsIdealDenominator.complete_of_adic (O := T.V) (K := T.Fr) (fun y => hk.int y) inferInstance
+  let := i.toAlgebra
+  have : FiniteDimensional T.Fr T'.Fr := hfin
   have e1 := spectralNorm_unique_field_norm_ext (K := T.Fr) (L := T'.Fr)
     (f := (NormedField.toAbsoluteValue ℂ_[p]).comp j.injective) (fun y => by
       show ‖j (i y)‖ = ‖y‖

@@ -186,7 +186,7 @@ theorem continuous_singleFin (v : HeightOneSpectrum (𝓞 F)) : Continuous (sing
   let f : Fv F v → RestrictedProduct (fun u : HeightOneSpectrum (𝓞 F) => u.adicCompletion F)
       (fun u => (u.adicCompletionIntegers F : Set (u.adicCompletion F))) (Filter.principal {v}ᶜ) :=
     fun a => ⟨Pi.single v a, fun u hu => by
-      rw [Set.mem_setOf_eq, Pi.single_eq_of_ne hu]; exact zero_mem _⟩
+      rw [Set.mem_ofPred_eq, Pi.single_eq_of_ne hu]; exact zero_mem _⟩
   have hf : Continuous f := RestrictedProduct.continuous_rng_of_principal.2 (continuous_single v)
   exact (RestrictedProduct.continuous_inclusion hS).comp hf
 
@@ -623,11 +623,11 @@ theorem infEmb_bijective (h : IsCMExt F E σ) (τ : EmbOver E w) : Function.Bije
     apply Complex.ext
     · simp only [mul_one, Complex.add_re, Complex.ofReal_re, Complex.re_ofReal_mul]; ring
     · simp only [mul_one, Complex.add_im, Complex.ofReal_im, Complex.im_ofReal_mul]; field_simp; ring
-  letI : Algebra w.Completion ℂ := (InfinitePlace.Completion.extensionEmbedding w).toAlgebra
+  let : Algebra w.Completion ℂ := (InfinitePlace.Completion.extensionEmbedding w).toAlgebra
   have hC : Module.finrank w.Completion ℂ = 2 := by
     rw [← Complex.finrank_real_complex]
     exact Algebra.finrank_eq_of_equiv_equiv e (RingEquiv.refl ℂ) (by ext a; exact (he a).symm)
-  haveI : Module.Finite w.Completion ℂ := Module.finite_of_finrank_pos (by rw [hC]; norm_num)
+  have : Module.Finite w.Completion ℂ := Module.finite_of_finrank_pos (by rw [hC]; norm_num)
   let L : w.Completion ⊗[F] E →ₗ[w.Completion] ℂ :=
     { toFun := infEmb τ
       map_add' := map_add _

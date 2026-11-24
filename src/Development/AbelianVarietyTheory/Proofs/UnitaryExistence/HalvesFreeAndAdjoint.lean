@@ -63,10 +63,10 @@ theorem nonempty_equiv_quot {R N : Type} [CommRing R] [IsDomain R] [AddCommGroup
     [Module.Finite R N] [Module.Projective R N] (I : Ideal R) [Finite (R ⧸ I)] (r : ℕ)
     (hr : Module.finrank R N = r) :
     Nonempty ((N ⧸ (I • ⊤ : Submodule R N)) ≃ₗ[R] (Fin r → R ⧸ I)) := by
-  haveI : IsArtinianRing (R ⧸ I) := isArtinian_of_finite
+  have : IsArtinianRing (R ⧸ I) := isArtinian_of_finite
   obtain ⟨b⟩ := Module.nonempty_basis_of_flat_of_finrank_eq (R ⧸ I) ((R ⧸ I) ⊗[R] N) r (fun P => by
-    haveI := P.isMaximal
-    letI : Field ((R ⧸ I) ⧸ P.asIdeal) := Ideal.Quotient.field _
+    have := P.isMaximal
+    let : Field ((R ⧸ I) ⧸ P.asIdeal) := Ideal.Quotient.field _
     rw [(TensorProduct.AlgebraTensorModule.cancelBaseChange R (R ⧸ I) ((R ⧸ I) ⧸ P.asIdeal)
       ((R ⧸ I) ⧸ P.asIdeal) N).finrank_eq]
     have h1 := Module.rankAtStalk_baseChange (R := R) (M := N) (S := (R ⧸ I) ⧸ P.asIdeal) ⊥

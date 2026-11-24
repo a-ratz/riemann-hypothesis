@@ -96,7 +96,7 @@ theorem main : ∀ {R : Type u_1} [inst : Ring R] {ι : Type u_2} [Fintype ι] [
     ∀ (i₀ : ι) (s : (i : ι) → Finset (M i)), ∃ (r : R), ∀ (i : ι), ∀ m ∈ s i,
       r • m = if i = i₀ then m else (0 : M i) := by
   intro R _ ι _ _ M _ _ _ h i₀ s
-  letI : DecidableEq (Π i, M i) := Classical.decEq _
+  let : DecidableEq (Π i, M i) := Classical.decEq _
   obtain ⟨r, hr⟩ := jacobson_density (R := R) (M := Π i, M i) (projOnto M h i₀)
     (Finset.univ.biUnion fun i => (s i).image (Pi.single i))
   refine ⟨r, fun i m hm => ?_⟩

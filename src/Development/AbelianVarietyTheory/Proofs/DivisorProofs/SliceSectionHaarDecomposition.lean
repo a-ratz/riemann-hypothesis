@@ -104,7 +104,7 @@ theorem indicator_slice_orbit_isLocallyConstant : ∀ (k : Type) [Field k] [Valu
     have hn := (valuation k).locally_const hv
     have := (hmc J).continuousAt.preimage_mem_nhds hn
     refine Filter.mem_of_superset this fun Y' hY' => (hrank Y').2 ⟨J, fun h0 => ?_⟩
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, h0, map_zero] at hY'
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, h0, map_zero] at hY'
     exact hv hY'.symm
   have hKc : IsClosed (K : Set (GL (Fin a) k)) := Subgroup.isClosed_of_isOpen K hKo
   have hTeq : T = O ∩ s ⁻¹' (K : Set (GL (Fin a) k)) := by
@@ -134,7 +134,7 @@ theorem indicator_slice_orbit_isLocallyConstant : ∀ (k : Type) [Field k] [Valu
       refine Filter.mem_of_superset hW fun Y' hY' hT' => ?_
       obtain ⟨J, hJ⟩ := hTmin Y' hT'
       have := Set.mem_iInter.1 hY' J
-      simp only [Set.mem_preimage, Set.mem_setOf_eq, hJ] at this
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq, hJ] at this
       exact lt_irrefl _ this
   exact (LocallyConstant.indicator (1 : LocallyConstant _ ℂ) ⟨hTclosed, hTopen⟩).isLocallyConstant
 

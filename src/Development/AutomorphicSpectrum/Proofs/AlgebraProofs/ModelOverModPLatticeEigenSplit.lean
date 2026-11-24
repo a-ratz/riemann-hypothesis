@@ -121,18 +121,18 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
               overlap := ?_ }, ?_⟩
     · intro s a ha e he
       by_cases h : mseg x s = 0
-      · simp only [h, if_true, AddSubgroup.mem_bot] at he ⊢
+      · simp only [h, ite_true, AddSubgroup.mem_bot] at he ⊢
         rw [he, smul_zero]
-      · simp only [h, if_false] at he ⊢
+      · simp only [h, ite_false] at he ⊢
         exact hfam.1 s h a ha e he
     · intro s hs
-      simp only [hs, if_false]
+      simp only [hs, ite_false]
       exact (hloc s hs).2
     · intro s t hs ht e he
-      simp only [hs, ht, if_false] at he ⊢
+      simp only [hs, ht, ite_false] at he ⊢
       exact hfam.2 s t hs ht e he
     · intro s hs
-      simp only [hs, if_false]
+      simp only [hs, ite_false]
   obtain ⟨F, hF⟩ : ∃ F : (∀ k, ι k) → AddSubgroup V,
       F = fun s => (Δ s).comap (AddMonoidHom.inl V V₂) := ⟨_, rfl⟩
   have memF : ∀ s b, b ∈ F s ↔ (b, (0 : V₂)) ∈ Δ s := by
@@ -568,7 +568,7 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Sub
       exact R.mul_mem ha hb
     · intro j hj
       have hne : i ≠ j := ne_of_lt hj
-      simp only [hfix j hj.le, Pi.single_apply, hne, if_false, mul_zero]
+      simp only [hfix j hj.le, Pi.single_apply, hne, ite_false, mul_zero]
     · simp only [hfix i le_rfl, Pi.single_eq_same, mul_one]
 
 end GlobalTheory.CompanionTheory.Ar.Num.HhGraded
@@ -723,7 +723,7 @@ theorem mul_mem_coord (R : Subalgebra o Ω) {n : ℕ} {L : AddSubgroup (Fin n �
     · subst h; simpa using ha
     · simpa [h] using zero_mem R
   · show _ ∈ annSub Ω n i
-    simp only [annSub, Submodule.mem_pi, Set.mem_setOf_eq, Submodule.mem_bot]
+    simp only [annSub, Submodule.mem_pi, Set.mem_ofPred_eq, Submodule.mem_bot]
     intro j hj
     have : j ≠ i := fun h => by subst h; exact lt_irrefl _ hj
     simp [this]

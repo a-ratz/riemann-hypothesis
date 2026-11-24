@@ -147,9 +147,9 @@ theorem exists_normal {s κ : ℕ} (S : SymData k s κ) (ϖ' : kˣ) (h : valuati
     split_ifs
     · exact S₁.tame j
     · exact fun _ _ => rfl
-  have e : ∀ j, 1 ≤ j → j ≤ s + 2 → μ j = S₁.μ j := fun j _ hj => if_pos hj
+  have e : ∀ j, 1 ≤ j → j ≤ s + 2 → μ j = S₁.μ j := fun j _ hj => ite_eq_left hj
   obtain ⟨w1, w2, w3⟩ := withMu_le S₁ μ ht e (Fin τ)
-  refine ⟨withMu S₁ μ ht, h1, h2, fun j hj => (if_pos hj).trans (congrFun h5 j), fun j hj => if_neg (by omega),
+  refine ⟨withMu S₁ μ ht, h1, h2, fun j hj => (ite_eq_left hj).trans (congrFun h5 j), fun j hj => ite_eq_right (by omega),
     fun j c H => ?_, fun x₀ => ?_, ?_⟩
   · rw [← h7]
     funext x₀
@@ -228,8 +228,8 @@ theorem psi_tie (q : GlobalTheory.FinPl.SplitPt D k) {PP : Formalism.L2.DIV.Pl D
   obtain ⟨r, -, hr0, hr⟩ := GlobalTheory.SymTieExists.exists_residue PP ι hi hd
   have hch' : ∀ y, (ψk y : ℂ) = psiE ψ (q.sec (ι D.host.xi0 * y)) := fun y => (hch y).trans (congrArg _ (LevelData.mul_sec q _ y))
   have hx1 : ι D.host.xi0 ∈ 𝒪[k] := (hi _).2 hxi
-  haveI : Finite (𝓞 D.host.E ⧸ PP.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ PP.ne_bot
-  letI := Fintype.ofFinite (𝓞 D.host.E ⧸ PP.asIdeal)
+  have : Finite (𝓞 D.host.E ⧸ PP.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ PP.ne_bot
+  let := Fintype.ofFinite (𝓞 D.host.E ⧸ PP.asIdeal)
   let e := ZMod.ringEquivOfPrime (𝓞 D.host.E ⧸ PP.asIdeal) hp (by
     rw [← Nat.card_eq_fintype_card, qOf, Ideal.absNorm_apply, Submodule.cardQuot_apply])
   obtain ⟨b, hb⟩ := ZMod.intCast_surjective (e.symm (redP PP D.host.xi0 * redP PP a))
@@ -321,7 +321,7 @@ theorem xiAt_tw_eq {X : Fields} {Pr : Primes X} {R : Ranks} (Ch : Chars X Pr R.m
   unfold XiAt E1at
   rw [funext (GlobalTheory.SymBridge.PsiStep.omPhi_one_one Ch sel mu _ _ i), funext (GlobalTheory.SymBridge.PsiStep.omPhi_one_one Ch sel mu' _ _ i)]
   unfold PhiAt twCst
-  simp only [if_pos hP]
+  simp only [ite_eq_left hP]
   rfl
 
 end Tuple
@@ -333,7 +333,7 @@ variable {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {u : B.Word
 theorem frame_cong (hI : I.Ok) {b : I.ι} {j : ℕ} (p : Formalism.L2.Col.ChPt (Pr := B.primes X) (R := B.R) I.sel (I.tup b) u j)
     (hp : TC.PtOf (TC.kStd X u (B.R.N j)) (extTo I.SQ p)) (P : BadPr I b) (hP : P.1 ∈ (B.primes X).vGs) (r s : Fin (B.R.N j)) :
     P.1.valuation B.fields.E (Formalism.L2.Col.frsF I.sel (I.tup b) p P (Pi.single s 1) r - if r = s then 1 else 0) < 1 := by
-  letI := GlobalTheory.Mem.Col2.starE B
+  let := GlobalTheory.Mem.Col2.starE B
   have hT := GlobalTheory.Mem.LevTwist.T_notMem_under_uSG B X I hI u P.1 (Finset.mem_union_left _ hP)
   have hb := (GlobalTheory.Mem.Col2.MemChart.kStd_spec (X := X) (GlobalTheory.BasePrimes.primes_ok B X).1 u (B.R.N j)).2.1 _ hT
   have hb' : Formalism.UG.bc (Formalism.UG.prV (E := B.host.E) (P.1.under (𝓞 B.host.F))) (TC.kStd X u (B.R.N j))⁻¹ = 1 := by
@@ -345,7 +345,7 @@ theorem frame_cong (hI : I.Ok) {b : I.ι} {j : ℕ} (p : Formalism.L2.Col.ChPt (
       (he.trans (by by_cases h : r = s <;> simp [Matrix.one_apply, h]))]
     by_cases h : r = s <;> simp [Matrix.one_apply, h]
   have h2 := AdT.FrameMove.val_sub_lt_of_liftFr hp ⟨P.1, hP⟩ r s
-  have e3 : Formalism.L2.Col.frsF I.sel (I.tup b) p P = p.deco.1.liftFr ⟨P.1, hP⟩ := dif_pos hP
+  have e3 : Formalism.L2.Col.frsF I.sel (I.tup b) p P = p.deco.1.liftFr ⟨P.1, hP⟩ := dite_eq_left hP
   rw [e3, ← HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
   convert h2 using 2
   have e4 : ∀ y : Fin (B.R.N j) → B.host.E, adAt B.host.F P.1 (GlobalTheory.Mem.Col2.pullV (TC.kStd X u (B.R.N j)) y r) =

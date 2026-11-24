@@ -62,7 +62,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
   have hrt : ∀ (h h' : GAf L n) (f : GAf L n → a.W), NG.rt L n h (NG.rt L n h' f) = NG.rt L n (h * h') f := by
     intro h h' f; funext g; simp [NG.rt, mul_assoc]
   have hnt : Nontrivial σ.V := by
-    haveI := σ.irr
+    have := σ.irr
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     apply (bot_ne_top : (⊥ : Subrepresentation σ.ρ) ≠ ⊤)

@@ -302,7 +302,7 @@ theorem modulus_le_one {S : Set (Mat k r)} (hS : IsClosedSub k r S) {μ : Measur
       nlinarith
     have h2 := (ENNReal.toReal_mono (finite_compact hS hμ (isCompact_closedBall _ _)).ne h1).trans
       (hgr _ (by rw [hK]; nlinarith))
-    rw [Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_pow, mul_pow, ← pow_mul,
+    rw [smul_apply, smul_eq_mul, ENNReal.toReal_mul, ENNReal.toReal_pow, mul_pow, ← pow_mul,
       ← mul_assoc] at h2
     exact h2
   by_contra! h1
@@ -338,7 +338,7 @@ theorem isUnimod_of_subset_Nset {S : Set (Mat k r)} (hS : IsClosedSub k r S) (hN
     rw [e]
     ext t -
     have h1 := congrArg (fun m : Measure (Mt k r) => m t) h
-    simp only [Measure.smul_apply, smul_eq_mul] at h1 ⊢
+    simp only [smul_apply, smul_eq_mul] at h1 ⊢
     refine le_antisymm ((mul_le_mul_left c1 _).trans (one_mul _).le) ?_
     calc μ t = c * (c' * μ t) := h1.symm
       _ ≤ c * (1 * μ t) := by gcongr

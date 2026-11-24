@@ -173,7 +173,7 @@ theorem modEq_one_of_dvd (s : 𝓞 E →+* 𝓞 E) {a : 𝓞 E} {T c : ℕ} (ha 
 end General
 
 theorem conjO_conjO (B : Base) (x : 𝓞 B.fields.E) : B.fields.conjO (B.fields.conjO x) = x := by
-  letI := B.fields.starE
+  let := B.fields.starE
   apply RingOfIntegers.ext
   exact star_star (x : B.fields.E)
 

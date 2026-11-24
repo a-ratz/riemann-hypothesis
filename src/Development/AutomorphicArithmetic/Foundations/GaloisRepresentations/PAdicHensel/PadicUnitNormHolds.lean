@@ -491,10 +491,10 @@ theorem UpperTheory.Gal.G1.pDefSign :
       have hme : InfinitePlace.mk v.embedding = v := InfinitePlace.mk_embedding v
       by_cases hv : v = InfinitePlace.mk A.τ₀
       · have h1 := ((S.sig v.embedding).1 (by rw [hme]; exact hv)).1
-        rw [hεdef, if_pos hv, one_mul]
+        rw [hεdef, ite_eq_left hv, one_mul]
         exact hp.1 h1
       · have h0 := ((S.sig v.embedding).2 (by rw [hme]; exact hv)).1
-        rw [hεdef, if_neg hv, neg_one_mul, neg_pos]
+        rw [hεdef, ite_eq_right hv, neg_one_mul, neg_pos]
         exact hp.2 (by rw [h0]; exact zero_ne_one)
     have h1 : (((A.H n).map v.embedding)ᵀ * (mat S ↑(B.β⁻¹)).map v.embedding) *
         (mat S ↑B.β * (A.H n)⁻¹).map v.embedding = 1 := by
@@ -572,7 +572,7 @@ theorem UpperTheory.Gal.G1.pFinCls :
         · intro v hv
           exact hN3 τ v hv)
     exact hR E A n p S B B' s hs P hP hPeq
-  haveI := hI0
+  have := hI0
   let tOf : DForm S.G → (AfP p)ˣ := fun B => B.trivAf.choose_spec.choose
   have htOf : ∀ B : DForm S.G, Triv S.G (AfP p) ↑B.β B.trivAf.choose (tOf B) :=
     fun B => B.trivAf.choose_spec.choose_spec
@@ -675,10 +675,10 @@ theorem UpperTheory.Gal.G1.pHenselV :
     HenselV := by
   intro F _ _ v f a₀ hf h0 h1
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible (v.adicCompletionIntegers F)
-  haveI : IsPrecomplete (IsLocalRing.maximalIdeal (v.adicCompletionIntegers F)) (v.adicCompletionIntegers F) :=
+  have : IsPrecomplete (IsLocalRing.maximalIdeal (v.adicCompletionIntegers F)) (v.adicCompletionIntegers F) :=
     Formalism.L2.GlobalTheoryTheory.LocalLatticeBases.completion_integers_precomplete v hϖ
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal (v.adicCompletionIntegers F)) (v.adicCompletionIntegers F) := {}
-  haveI := IsAdicComplete.henselianRing (v.adicCompletionIntegers F)
+  have : IsAdicComplete (IsLocalRing.maximalIdeal (v.adicCompletionIntegers F)) (v.adicCompletionIntegers F) := {}
+  have := IsAdicComplete.henselianRing (v.adicCompletionIntegers F)
     (IsLocalRing.maximalIdeal (v.adicCompletionIntegers F))
   obtain ⟨a, ha, hm⟩ := HenselianRing.is_henselian (I := IsLocalRing.maximalIdeal (v.adicCompletionIntegers F)) f hf a₀
     (by rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]; exact h0)
@@ -837,7 +837,7 @@ open scoped TensorProduct
 theorem UpperTheory.Gal.G1.pLocFour :
     LocFour := by
   intro F _ _ v tr nm hΔ u hu
-  haveI : CharZero (HeightOneSpectrum.adicCompletion F v) :=
+  have : CharZero (HeightOneSpectrum.adicCompletion F v) :=
     (RingHom.charZero_iff (algebraMap F (HeightOneSpectrum.adicCompletion F v)).injective).mp inferInstance
   have h2 : (2 : HeightOneSpectrum.adicCompletion F v) ≠ 0 := two_ne_zero
   have hD : ((tr : HeightOneSpectrum.adicCompletion F v) ^ 2 - 4 * nm) ≠ 0 := by
@@ -973,7 +973,7 @@ open scoped TensorProduct
 private theorem field_rep (k : Type) [Field k] [Finite k] (h2 : (2 : k) ≠ 0) (d s : k) (hd : d ≠ 0) :
     ∃ a b : k, a ^ 2 - d * b ^ 2 = s := by
   classical
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   have hc : ringChar k ≠ 2 := by
     intro h
     apply h2
@@ -1200,7 +1200,7 @@ theorem UpperTheory.Gal.G1.pPadMap :
   set v : HeightOneSpectrum ℤ := GlobalTheory.NormLevelCompare.primeCorr.symm u with hv
   have hw : HeightOneSpectrum.under (𝓞 ℚ) w = GlobalTheory.NormLevelCompare.primeCorr v := by
     rw [hv, Equiv.apply_symm_apply]
-  haveI : Fact (Nat.Prime (Rat.HeightOneSpectrum.primesEquiv v : ℕ)) :=
+  have : Fact (Nat.Prime (Rat.HeightOneSpectrum.primesEquiv v : ℕ)) :=
     ⟨(Rat.HeightOneSpectrum.primesEquiv v).2⟩
   let f₁ := (Rat.HeightOneSpectrum.adicCompletion.padicEquiv v).toAlgEquiv.toRingEquiv.toRingHom
   let f₂ := (Padic.adicCompletionEquiv (𝓞 ℚ)
@@ -1275,11 +1275,11 @@ private lemma sq_of_close (q : ℕ) [hq : Fact q.Prime] (z : ℤ_[q])
 theorem UpperTheory.Gal.G1.pPadicSqFin :
     PadicSqFin := by
   intro q hq
-  haveI : NeZero (q ^ 3) := ⟨pow_ne_zero 3 hq.out.ne_zero⟩
+  have : NeZero (q ^ 3) := ⟨pow_ne_zero 3 hq.out.ne_zero⟩
   refine ⟨Fintype.card (ZMod (q ^ 3)), fun u => Fintype.equivFin (ZMod (q ^ 3))
     (if h : ‖u‖ ≤ 1 then PadicInt.toZModPow 3 ⟨u, h⟩ else 0), ?_⟩
   intro u u' hu hu' hk
-  simp only [dif_pos hu.le, dif_pos hu'.le, (Fintype.equivFin _).injective.eq_iff] at hk
+  simp only [dite_eq_left hu.le, dite_eq_left hu'.le, (Fintype.equivFin _).injective.eq_iff] at hk
   obtain ⟨a, ha⟩ : ∃ a : ℤ_[q], (a : ℚ_[q]) = u ∧ PadicInt.toZModPow 3 a =
       PadicInt.toZModPow 3 ⟨u, hu.le⟩ := ⟨⟨u, hu.le⟩, rfl, rfl⟩
   obtain ⟨b, hb⟩ : ∃ b : ℤ_[q], (b : ℚ_[q]) = u' ∧ PadicInt.toZModPow 3 b =
@@ -1614,7 +1614,7 @@ theorem UpperTheory.Gal.G1.pTrivMat :
     TrivMat := by
   intro E _ _ _ n H hH hH' hd R _ _ K _ _ ψ β x t hx
   let L := K ⊗[↥(maximalRealSubfield E)] E
-  letI : Algebra ℚ L := ((algebraMap K L).comp (ψ.comp (algebraMap ℚ R))).toAlgebra
+  let : Algebra ℚ L := ((algebraMap K L).comp (ψ.comp (algebraMap ℚ R))).toAlgebra
   let s : R →+* L := (algebraMap K L).comp ψ
   let e : E →+* L := Algebra.TensorProduct.includeRight.toRingHom
   let f : R →ₐ[ℚ] Matrix (Fin n) (Fin n) L := ((algebraMap L (Matrix (Fin n) (Fin n) L)).comp s).toRatAlgHom
@@ -1695,7 +1695,7 @@ theorem UpperTheory.Gal.G1.pUnitCls :
     refine (Ideal.finite_factors h0).subset ?_
     intro v hv
     exact Ideal.dvd_span_singleton.2 hv
-  haveI : Finite {v : HeightOneSpectrum ℤ | (2 * D : ℤ) ∈ v.asIdeal} := hfin.to_subtype
+  have : Finite {v : HeightOneSpectrum ℤ | (2 * D : ℤ) ∈ v.asIdeal} := hfin.to_subtype
   refine ⟨(v : {v : HeightOneSpectrum ℤ | (2 * D : ℤ) ∈ v.asIdeal}) → Option (Fin (m v.1)),
     inferInstance, fun t v => if h : (v.1 : HeightOneSpectrum ℤ).asIdeal ≠ Ideal.span {(p : ℤ)}
       then some (κ v.1 (AfP.eval (⟨v.1, h⟩ : AwayP p) (t : AfP p) /
@@ -1810,7 +1810,7 @@ open scoped TensorProduct
 theorem UpperTheory.Gal.G1.pZUnitNorm :
     PadicUnitNorm → ZUnitNorm := by
   intro hP v D hv u hu
-  haveI : Fact (Rat.HeightOneSpectrum.primesEquiv v : ℕ).Prime :=
+  have : Fact (Rat.HeightOneSpectrum.primesEquiv v : ℕ).Prime :=
     ⟨(Rat.HeightOneSpectrum.primesEquiv v).2⟩
   have hint : ∀ z : v.adicCompletion ℚ, Valued.v z ≤ 1 →
       ‖Rat.HeightOneSpectrum.adicCompletion.padicEquiv v z‖ ≤ 1 := by

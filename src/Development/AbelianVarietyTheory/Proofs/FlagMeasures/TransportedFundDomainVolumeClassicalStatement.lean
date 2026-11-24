@@ -558,7 +558,7 @@ theorem flag_iff {D : D7} (X : HidaSetting D) (u : D.what₂.Word) (n : (VS D).V
     · have hlc := hl2 a
       rw [Finsupp.linearCombination_apply, Finsupp.sum_fintype _ _ (by simp)] at hlc
       simp only [add_smul, Finset.sum_add_distrib, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true, hlc]
+        Finset.mem_univ, ite_true, hlc]
       abel
 
 end GlobalTheory.CovDomGrp
@@ -763,7 +763,7 @@ noncomputable section
 namespace GlobalTheory.CovDom
 
 theorem measPolish_UJ (n : ℕ) (ε : Fin n → Bool) : PolishSpace (Formalism.REAL.UJ ε) := by
-  haveI : PolishSpace (Matrix (Fin n) (Fin n) ℂ) := inferInstanceAs (PolishSpace (Fin n → Fin n → ℂ))
+  have : PolishSpace (Matrix (Fin n) (Fin n) ℂ) := inferInstanceAs (PolishSpace (Fin n → Fin n → ℂ))
   exact (Formalism.REAL.isClosedEmbeddingMatrix n ε).1.polishSpace
 
 variable {D : D7}
@@ -772,7 +772,7 @@ theorem measCont_trX (X : HidaSetting D) {θ : ℝ} (C : Choice X θ) : Continuo
   refine continuous_pi fun τ => ?_
   show Continuous fun x : X.B.I.Ginf => C.Qi τ * Formalism.MainNotions.S.uMat (x (vOf X τ)) * C.Q τ
   refine (continuous_const.matrix_mul ?_).matrix_mul continuous_const
-  exact (Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply _)
+  exact (Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply _)
 
 theorem measInj_trX (X : HidaSetting D) {θ : ℝ} (C : Choice X θ) : Function.Injective (trX X C) := by
   intro x y h
@@ -794,16 +794,16 @@ theorem measInj_cjw (D : D7) (w : InfinitePlace D.host.E) : Function.Injective (
   intro M N h
   by_cases hw : Direct D w
   · simpa [cjw, hw] using h
-  · simp only [cjw, hw, if_false] at h
+  · simp only [cjw, hw, ite_false] at h
     funext i j
     simpa using congrArg star (congrFun (congrFun h i) j)
 
 theorem measCont_Gm (D : D7) : Continuous (Gm D) := by
   refine continuous_pi fun w => ?_
   by_cases hw : Direct D w
-  · simp only [Gm, cjw, hw, if_true]
+  · simp only [Gm, cjw, hw, ite_true]
     exact continuous_apply _
-  · simp only [Gm, cjw, hw, if_false]
+  · simp only [Gm, cjw, hw, ite_false]
     exact continuous_pi fun i => continuous_pi fun j =>
       continuous_star.comp ((continuous_apply j).comp ((continuous_apply i).comp (continuous_apply _)))
 
@@ -817,7 +817,7 @@ theorem measInj_Gm (D : D7) : Function.Injective (Gm D) := by
 theorem measurableSet_Gm_trX_image : ∀ (D : D7) (X : HidaSetting D) (θ : ℝ) (C : Choice X θ) (S : Set X.B.I.Ginf),
     MeasurableSet S → MeasurableSet (Gm D '' (trX X C '' S)) := by
   intro D X θ C S hS
-  haveI : ∀ v, PolishSpace (Formalism.REAL.UJ (X.B.I.ε v)) := fun v => measPolish_UJ _ _
+  have : ∀ v, PolishSpace (Formalism.REAL.UJ (X.B.I.ε v)) := fun v => measPolish_UJ _ _
   rw [Set.image_image]
   exact hS.image_of_continuousOn_injOn ((measCont_Gm D).comp (measCont_trX X C)).continuousOn
     ((measInj_Gm D).comp (measInj_trX X C)).injOn
@@ -994,12 +994,12 @@ theorem haarLie_map_cjm {S : Set (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k +
     have hexp : Continuous (NormedSpace.exp : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ → Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) := by
       open scoped Norms.Operator in exact NormedSpace.exp_continuous
     apply Measurable.aemeasurable
-    apply measurable_pi_lambda
+    apply Measurable.of_eval
     intro i
-    apply measurable_pi_lambda
+    apply Measurable.of_eval
     intro j
     exact ((continuous_apply j).comp ((continuous_apply i).comp
-      (hexp.comp (hu.comp continuous_subtype_val)))).measurable
+      (hexp.comp (hu.comp continuous_subtypeVal)))).measurable
 
 end Conj2
 
@@ -1043,7 +1043,7 @@ theorem cjwE_mp (w : InfinitePlace D.host.E) :
 theorem GmE_mp : MeasurePreserving (GmE D)
     (Measure.pi fun _ : D.what₂.Tau => haarLie (Formalism.QuantumDeterminants.Nset D.R.k D.R.rS) 1)
     (Measure.pi fun _ : InfinitePlace D.host.E => haarLie (Formalism.QuantumDeterminants.Nset D.R.k D.R.rS) 1) := by
-  haveI : SigmaFinite (haarLie (Formalism.QuantumDeterminants.Nset D.R.k D.R.rS) 1) :=
+  have : SigmaFinite (haarLie (Formalism.QuantumDeterminants.Nset D.R.k D.R.rS) 1) :=
     (GlobalTheory.haarLie_isHaarOn_Nset D.R.k D.R.rS 1 one_pos ENNReal.one_lt_top).1
   have h1 := measurePreserving_piCongrLeft (fun _ : InfinitePlace D.host.E => haarLie (Formalism.QuantumDeterminants.Nset D.R.k D.R.rS) 1) (plE D)
   have h2 := measurePreserving_pi (fun _ : InfinitePlace D.host.E => haarLie (Formalism.QuantumDeterminants.Nset D.R.k D.R.rS) 1)
@@ -1156,7 +1156,7 @@ theorem cjw_mem (D : D7) (w : InfinitePlace D.host.E) (M : Formalism.QuantumDete
   unfold cjw
   split_ifs with h
   · exact hM
-  · simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at hM ⊢
+  · simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq] at hM ⊢
     have e : (Matrix.of fun i j => star (M i j))ᴴ * Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS * (Matrix.of fun i j => star (M i j))
         = ((Matrix.of M)ᴴ * Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS * Matrix.of M).map star := by
       ext i j
@@ -1477,7 +1477,7 @@ open Formalism.L2.SG.PoincareInHH.PoincareSetting
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem formallyUnramified_host (D : D7) : Algebra.FormallyUnramified (𝓞 D.host.F) (𝓞 D.host.E) := by
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   have : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.host.E) :=
     Formalism.L2.Pj.unramBridge_holds D.host.E fun P hP => by
       obtain ⟨θ, t, ht, hθ⟩ := D.sp.cm.cmUnram.2.2 P hP

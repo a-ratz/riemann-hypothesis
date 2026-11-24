@@ -84,7 +84,7 @@ theorem exists_away {E : Type} [Field E] [NumberField E] (g : 𝓞 E) (hg : g �
     · exact ⟨1, (Ideal.ne_top_iff_one _).1 Q.isPrime.ne_top, fun h => (h hv).elim⟩
     · have hn : ¬ v.asIdeal ≤ Q.asIdeal := fun hle =>
         hv (HeightOneSpectrum.ext (v.isMaximal.eq_of_le Q.isPrime.ne_top hle))
-      obtain ⟨a, ha, ha'⟩ := SetLike.not_le_iff_exists.1 hn
+      obtain ⟨a, ha, ha'⟩ := IsConcreteLE.not_le_iff_exists.1 hn
       exact ⟨a, ha', fun _ => ha⟩
   choose a ha ha' using hch
   refine ⟨∏ v ∈ hfin.toFinset, a v, ?_, ?_⟩
@@ -94,7 +94,7 @@ theorem exists_away {E : Type} [Field E] [NumberField E] (g : 𝓞 E) (hg : g �
     exact ha v hv
   · intro Q' hQ' hne
     have hm : Q' ∈ hfin.toFinset := by
-      rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton]
+      rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton]
       exact hQ'
     exact Ideal.mem_of_dvd _ (Finset.dvd_prod_of_mem a hm) (ha' Q' hne)
 

@@ -93,9 +93,9 @@ theorem weight_bounds (L f r n d : ℝ) (hL : 2 ≤ L) (hf : 1 ≤ f) (hfr : f �
     Real.log (d + f * n + 1) ≤ 3 * L ∧ Real.log (f * (d + f * n + 1) + 2) ≤ 5 * L ∧
       ∀ s : ℝ, 0 ≤ s → s ≤ d + f * r * n / 2 → Real.log (1 + s) ≤ 3 * L := by
   have hx3 : 3 ≤ Real.exp L := by linarith [Real.add_one_le_exp L]
-  have e2 : Real.exp (2 * L) = Real.exp L ^ 2 := by rw [← Real.exp_nat_mul]; norm_num
-  have e3 : Real.exp (3 * L) = Real.exp L ^ 3 := by rw [← Real.exp_nat_mul]; norm_num
-  have e5 : Real.exp (5 * L) = Real.exp L ^ 5 := by rw [← Real.exp_nat_mul]; norm_num
+  have e2 : Real.exp (2 * L) = Real.exp L ^ 2 := by rw [← Real.exp_natCast_mul]; norm_num
+  have e3 : Real.exp (3 * L) = Real.exp L ^ 3 := by rw [← Real.exp_natCast_mul]; norm_num
+  have e5 : Real.exp (5 * L) = Real.exp L ^ 5 := by rw [← Real.exp_natCast_mul]; norm_num
   set x := Real.exp L with hx
   have hn0 : 0 < n := by linarith
   have hnx : n ≤ x := (Real.log_le_iff_le_exp hn0).1 hn

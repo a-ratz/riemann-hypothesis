@@ -591,7 +591,7 @@ private lemma polCoef_span {R : Type} [CommRing R] {g N : ℕ} (f : MvPolynomial
   intro m hm
   rw [MvPolynomial.coeff_sum]
   refine Finset.sum_eq_zero fun j _ => ?_
-  rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.coeff_mul_monomial', if_neg]
+  rw [MvPolynomial.X_pow_eq_monomial, MvPolynomial.coeff_mul_monomial', ite_eq_right]
   intro h
   have := h j
   simp only [Finsupp.single_eq_same] at this
@@ -681,7 +681,7 @@ theorem _root_.GlobalTheory.evImg_isLat_subring :
   unfold _root_.ReciprocityTheory.PGsh.Be2.EvLatStatement
   intro C _ _ hdom hinj
   classical
-  letI inst : ∀ i, Algebra Tw.O.carrier (D.fin.AAx i).carrier := fun i =>
+  let inst : ∀ i, Algebra Tw.O.carrier (D.fin.AAx i).carrier := fun i =>
     ((D.fin.sO i).1 : Tw.O.carrier →+* (D.fin.AAx i).carrier).toAlgebra
   have hspec : ∀ t, (D.ptMap t).comp (D.fin.sO (D.ptIdx t)) = _root_.ReciprocityTheory.PGsh.LHom.id _ ∧
       B.map (D.ptMap t) (D.fin.y (D.ptIdx t)) = _root_.ReciprocityTheory.PGsh.Be2.ptOf B D.L.τ t := fun t => by
@@ -720,9 +720,9 @@ theorem _root_.GlobalTheory.evImg_isLat_subring :
       rintro j ψ rfl h
       rw [eq_of_heq h]
     exact (key _ _ hi' (hψ0.trans hφ0.symm)).symm.trans (congrFun hF t)
-  haveI : ∀ i, Module.Free Tw.O.carrier (D.fin.AAx i).carrier := fun i => (D.fin.free i).1
-  haveI : ∀ i, Module.Finite Tw.O.carrier (D.fin.AAx i).carrier := fun i => (D.fin.free i).2
-  haveI := hdom
+  have : ∀ i, Module.Free Tw.O.carrier (D.fin.AAx i).carrier := fun i => (D.fin.free i).1
+  have : ∀ i, Module.Finite Tw.O.carrier (D.fin.AAx i).carrier := fun i => (D.fin.free i).2
+  have := hdom
   have hrank : Module.finrank Tw.O.carrier (∀ i, (D.fin.AAx i).carrier) = Fintype.card (_root_.ReciprocityTheory.PGsh.Up.Nb p g) := by
     rw [Module.finrank_pi_fintype, ← Nat.card_eq_fintype_card]
     refine Eq.trans ?_ (D.fin.rank.trans (Nat.card_congr (Equiv.ofBijective _ D.L.τ_basis)).symm)
@@ -1114,7 +1114,7 @@ theorem isLocalRing_tensorProduct_of_finite_of_points :
       refine RingHom.IsIntegral.tower_top (algebraMap O B) _ ?_
       rw [f.comp_algebraMap]
       exact fun x => hint.isIntegral x
-    have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' (f : B →+* A ⊗[O] A') hf M
+    have := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (f : B →+* A ⊗[O] A') hf M
     exact IsLocalRing.eq_maximalIdeal this
   have hA := key (Algebra.TensorProduct.includeLeft : A →ₐ[O] A ⊗[O] A')
   have hA' := key (Algebra.TensorProduct.includeRight : A' →ₐ[O] A ⊗[O] A')
@@ -1305,7 +1305,7 @@ private lemma pSerOf_trunc {R₀ : Type} [CommRing R₀] {g : ℕ} (N : ℕ) (G�
     · by_cases h0 : AddMonoidAlgebra.coeff G₁ m = 0
       · simp [h0]
       · simp [h, h0]
-    · rw [if_neg h, if_neg]
+    · rw [ite_eq_right h, ite_eq_right]
       intro hm
       exact h (Finset.mem_filter.1 hm).2
   · intro S _ _ a ha

@@ -421,8 +421,8 @@ lemma chebyshev_progression_orthogonality (q a : ℕ) [NeZero q] (ha : Nat.Copri
   have hiff : (n ≡ a [MOD q]) ↔ (a : ZMod q) = n := by
     rw [eq_comm, ZMod.natCast_eq_natCast_iff]
   by_cases h : n ≡ a [MOD q]
-  · rw [if_pos h, if_pos (hiff.mp h)]; ring
-  · rw [if_neg h, if_neg (fun h' => h (hiff.mpr h'))]; simp
+  · rw [ite_eq_left h, ite_eq_left (hiff.mp h)]; ring
+  · rw [ite_eq_right h, ite_eq_right (fun h' => h (hiff.mpr h'))]; simp
 
 end Formalism.ZeroFreeDirichlet
 end -- clump:auto
@@ -498,7 +498,7 @@ theorem abs_piAP_sub_le (M b : ℕ) {X : ℝ} (hX : 1 ≤ X) :
         simp [cAP, hp, hm, hm', vonMangoldt_apply_prime hp, hlog]
       · have hm' : ¬ n ≡ b [MOD M] := hm
         simp [cAP, hp, hm, hm']
-    · simp only [hp, false_and, if_false, sub_zero, not_false_eq_true, if_true]
+    · simp only [hp, false_and, ite_false, sub_zero, not_false_eq_true, ite_true]
       rcases Nat.lt_or_ge n 2 with h2 | h2
       · have h0 : Λ n = 0 := by
           interval_cases n <;> simp
@@ -593,7 +593,7 @@ theorem mainPsi_sum_some (M : ℕ) [NeZero M] (b : ℕ) (hb : b.Coprime M) (χ�
   have hre : ((χ₁ (b : ZMod M)).re : ℂ) = χ₁ (b : ZMod M) := by
     rcases hχ with h | h <;> simp [h]
   simp only [mainPsi, mul_sub, Finset.sum_sub_distrib, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-    if_true, h1, h2]
+    ite_true, h1, h2]
   push_cast
   rw [hre, Complex.ofReal_cpow ht]
   ring

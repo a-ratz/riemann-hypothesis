@@ -134,7 +134,7 @@ theorem UpperTheory.V.Fr.st_set :
   refine ⟨hT.toFinset.filter (fun v => ((l : ℕ) : 𝓞 ℚ) ∈ v.asIdeal ∨ v = v₀ ∨
     ∃ A : ValuationSubring Ω, IsPlaceOver A v ∧ ¬ Ine (F := ℚ) A ≤ κ.ker), v₀, hv₀, ?_⟩
   intro v A hA
-  rw [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
+  rw [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨-, h | h | ⟨A', hA', hne⟩⟩
     · exact Or.inl h
@@ -230,7 +230,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 theorem UpperTheory.V.Fr.st_mu :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (M a : ℕ), M ≠ 0 → ∀ (C : Type) [Group C] (χ : G ℚ Ω →* C), Af.KillsMu (M ^ a) χ → IsOpen (χ.ker : Set (G ℚ Ω)) ∧ ∀ A : ValuationSubring Ω, ¬ A.valuation (M : Ω) < 1 → Ine (F := ℚ) A ≤ χ.ker := by
   intro Ω _ _ _ M a hM C _ χ hk
-  haveI : NeZero (M ^ a) := ⟨pow_ne_zero _ hM⟩
+  have : NeZero (M ^ a) := ⟨pow_ne_zero _ hM⟩
   obtain ⟨hopen, -, -, -, hine⟩ := UpperTheory.V.Chr.clsFacts ℚ Ω (M ^ a)
   have hle : (UpperTheory.V.Chr.cls ℚ Ω (M ^ a)).ker ≤ χ.ker := by
     intro s hs
@@ -305,7 +305,7 @@ private theorem dual_nontriv (K V : Type) [Field K] [AddCommGroup V] [Module K V
 theorem UpperTheory.V.Fr.st_loc :
     LocalFiniteness → LocalTateDuality → LocalEulerChar → ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (M : Type) [AddCommGroup M] [Module (ZMod (l ^ 1)) M] [Finite M] [TopologicalSpace M] [DiscreteTopology M] [Nontrivial M] (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 ℚ)), IsPlaceOver A v → ((l : ℕ) : 𝓞 ℚ) ∉ v.asIdeal → (∀ g ∈ Dec (F := ℚ) A, cycMod ℚ Ω l 1 g = 1) → ∀ ρ : Representation (ZMod (l ^ 1)) (Dec (F := ℚ) A) M, (∀ g m, ρ g m = m) → Nat.card (H0 ρ) < Nat.card (H1 ρ) := by
   intro hFin hTate hEuler Ω _ _ _ l hl M _ _ _ _ _ _ A v hv hlv hcyc ρ htriv
-  haveI : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact hl.out⟩
+  have : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact hl.out⟩
   have hcont : ReciprocityTheory.Gal.ContAction ρ := by
     show Continuous fun p : Dec (F := ℚ) A × M => ρ p.1 p.2
     simp only [htriv]
@@ -313,8 +313,8 @@ theorem UpperTheory.V.Fr.st_loc :
   have hF := hFin ℚ Ω l 1 M A ρ v one_pos hv hcont
   have hE := (hEuler ℚ Ω l 1 M A ρ v one_pos hv hcont).2 hlv
   obtain ⟨⟨e⟩, -, -, -, hbij⟩ := hTate ℚ Ω l 1 M A ρ v one_pos hv hcont
-  haveI : Finite (H2 ρ) := hF.2.2.1
-  haveI : Finite (H0 ρ) := hF.1
+  have : Finite (H2 ρ) := hF.2.2.1
+  have : Finite (H0 ρ) := hF.1
   have hinv : ∀ φ : TDual (ZMod (l ^ 1)) M,
       φ ∈ H0 ((twDual ((cycMod ℚ Ω l 1).comp (Dec (F := ℚ) A).subtype) ρ).comp (MonoidHom.id _)) := by
     intro φ g
@@ -323,7 +323,7 @@ theorem UpperTheory.V.Fr.st_loc :
     simp [twDual, hcyc g.1 g.2]
     show φ (ρ g⁻¹ m) = φ m
     rw [htriv]
-  haveI : Nontrivial (TDual (ZMod (l ^ 1)) M) := dual_nontriv (ZMod (l ^ 1)) M
+  have : Nontrivial (TDual (ZMod (l ^ 1)) M) := dual_nontriv (ZMod (l ^ 1)) M
   obtain ⟨φ0, hφ0⟩ := exists_ne (0 : TDual (ZMod (l ^ 1)) M)
   set X := H0 ((twDual ((cycMod ℚ Ω l 1).comp (Dec (F := ℚ) A).subtype) ρ).comp (MonoidHom.id _))
   have hx0 : (⟨φ0, hinv φ0⟩ : X) ≠ 0 := fun h => hφ0 (congrArg Subtype.val h)
@@ -341,7 +341,7 @@ theorem UpperTheory.V.Fr.st_loc :
   have hy0 : y ≠ 0 := by
     rintro rfl
     exact hψ (by rw [← hy, map_zero])
-  haveI : Nontrivial (H2 ρ) := ⟨⟨y, 0, hy0⟩⟩
+  have : Nontrivial (H2 ρ) := ⟨⟨y, 0, hy0⟩⟩
   rw [hE]
   exact lt_mul_of_one_lt_right (Nat.card_pos) Finite.one_lt_card
 end -- clump:auto
@@ -394,9 +394,9 @@ theorem UpperTheory.V.Fr.st_count :
     rw [hH0]
     exact card_bot'
   have e5 : ∏ v, Nat.card (L v) = Nat.card (H1 (ρ.comp (locFam S Av v₀))) := by
-    rw [Finset.prod_eq_single v₀ (fun v _ hv => by rw [hL, if_neg hv]; exact card_bot')
+    rw [Finset.prod_eq_single v₀ (fun v _ hv => by rw [hL, ite_eq_right hv]; exact card_bot')
       (fun h => absurd (Finset.mem_univ _) h)]
-    rw [hL, if_pos rfl]
+    rw [hL, ite_eq_left rfl]
     exact Nat.card_congr Submodule.topEquiv.toEquiv
   rw [e1, e2, e3, e4, e5] at hgw
   have hapos : 0 < Nat.card (Sel ρ (locFam S Av) (continuous_locFam S Av) L) := Nat.card_pos
@@ -411,7 +411,7 @@ theorem UpperTheory.V.Fr.st_count :
       subst ha1
       nlinarith
   have h2 := key _ _ _ _ hgw hlt hapos hcpos
-  haveI := Finite.one_lt_card_iff_nontrivial.1 h2
+  have := Finite.one_lt_card_iff_nontrivial.1 h2
   obtain ⟨x, hx⟩ := exists_ne (0 : Sel ρ (locFam S Av) (continuous_locFam S Av) L)
   obtain ⟨z', hz'⟩ := Submodule.Quotient.mk_surjective _ x.1
   refine ⟨z'.1, z'.2, ?_, ?_⟩
@@ -422,7 +422,7 @@ theorem UpperTheory.V.Fr.st_count :
     exact (Submodule.Quotient.mk_eq_zero _).2 hz
   · intro v hv
     have hm := (mem_Sel ρ (locFam S Av) (continuous_locFam S Av) L x.1).1 x.2 v
-    rw [hL, if_neg hv, Submodule.mem_bot, ← hz'] at hm
+    rw [hL, ite_eq_right hv, Submodule.mem_bot, ← hz'] at hm
     simp only [resH1, Submodule.mapQ_apply] at hm
     obtain ⟨m, hm'⟩ := (mem_coboundaries1 _ _).1 ((Submodule.Quotient.mk_eq_zero _).1 hm)
     exact ⟨m, fun g hg => hm' ⟨g, hg⟩⟩
@@ -513,7 +513,7 @@ private theorem toGS_eq_one_of_mem_inertia_of_notMem (Ω : Type) [Field Ω] [Cha
   unfold ReciprocityTheory.Gal.NS
   apply Subgroup.le_topologicalClosure
   apply Subgroup.subset_normalClosure
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff]
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_compl_iff]
   exact ⟨v, hv, A, hA, hs⟩
 
 private theorem continuous_toGS' (Ω : Type) [Field Ω] [CharZero Ω] (S : Set (HeightOneSpectrum (𝓞 ℚ))) :
@@ -533,10 +533,10 @@ theorem UpperTheory.V.Fr.st_sel :
   obtain ⟨σ, hσ, hσκ⟩ := hCC
   obtain ⟨s0, hs0⟩ := hs0ex
   have hdvd : l ∣ l ^ 1 := by simp
-  haveI : Fact (l ^ 1).Prime := ⟨by simpa using (Fact.out : l.Prime)⟩
-  letI alg : Algebra (ZMod (l ^ 1)) k := (ZMod.castHom hdvd k).toAlgebra
-  letI : TopologicalSpace k := ⊥
-  haveI : DiscreteTopology k := ⟨rfl⟩
+  have : Fact (l ^ 1).Prime := ⟨by simpa using (Fact.out : l.Prime)⟩
+  let alg : Algebra (ZMod (l ^ 1)) k := (ZMod.castHom hdvd k).toAlgebra
+  let : TopologicalSpace k := ⊥
+  have : DiscreteTopology k := ⟨rfl⟩
   obtain ⟨κS, hκS, hκSlc⟩ := st_desc Ω (S : Set (HeightOneSpectrum (𝓞 ℚ))) kˣ κ hκo
     (fun v hv A hA => hIne v hv A hA)
   have hκS' : ∀ g, κS (toGS Ω (S : Set (HeightOneSpectrum (𝓞 ℚ))) g) = κ g := fun g => by
@@ -650,8 +650,8 @@ private theorem exists_char_of_index {Γ : Type} [Group Γ] [TopologicalSpace Γ
   have hM : Nat.card (Multiplicative (ZMod l)) = l := by
     rw [Nat.card_eq_fintype_card]
     simp
-  haveI : IsCyclic (Γ ⧸ H) := isCyclic_of_prime_card hQ
-  haveI : IsCyclic (Multiplicative (ZMod l)) := isCyclic_of_prime_card hM
+  have : IsCyclic (Γ ⧸ H) := isCyclic_of_prime_card hQ
+  have : IsCyclic (Multiplicative (ZMod l)) := isCyclic_of_prime_card hM
   let e : (Γ ⧸ H) ≃* Multiplicative (ZMod l) := mulEquivOfCyclicCardEq (hQ.trans hM.symm)
   let f : Γ →* Multiplicative (ZMod l) := (e : (Γ ⧸ H) →* Multiplicative (ZMod l)).comp (QuotientGroup.mk' H)
   have hadd : ∀ a b, Multiplicative.toAdd (f (a * b)) = Multiplicative.toAdd (f a) + Multiplicative.toAdd (f b) := by
@@ -667,7 +667,7 @@ private theorem exists_char_of_index {Γ : Type} [Group Γ] [TopologicalSpace Γ
         rw [h]
         rfl
     rw [h1]
-    simp only [f, MonoidHom.coe_comp, Function.comp_apply, QuotientGroup.mk'_apply, MonoidHom.coe_coe,
+    simp only [f, MonoidHom.coe_comp, Function.comp_apply, QuotientGroup.mk'_apply, MonoidHom.coe_ofClass,
       MulEquiv.map_eq_one_iff, QuotientGroup.eq_one_iff]
   refine ⟨fun a => Multiplicative.toAdd (f a), ?_, hadd, hker⟩
   rw [IsLocallyConstant.iff_exists_open]
@@ -683,19 +683,19 @@ theorem UpperTheory.V.Fr.st_tame :
   obtain ⟨φ, hφc, hφa, hφk⟩ := exists_char_of_index l H ho hc hi
   obtain ⟨γ, hγ⟩ := UpperTheory.V.Two.tameGen ℚ Ω l A hA
   let φI : ↥(Ine (F := ℚ) A) → ZMod l := fun σ => φ σ
-  have hφIc : IsLocallyConstant φI := hφc.comp_continuous continuous_subtype_val
+  have hφIc : IsLocallyConstant φI := hφc.comp_continuous continuous_subtypeVal
   have hφIa : ∀ a b : ↥(Ine (F := ℚ) A), φI (a * b) = φI a + φI b := fun a b => hφa _ _
   have hγne : φI γ ≠ 0 := by
     intro h0
     apply hIH
     intro σ hσ
     exact (hφk σ).1 (hγ φI hφIc hφIa h0 ⟨σ, hσ⟩)
-  letI : Algebra (ZMod l) k := ZMod.algebra k l
+  let : Algebra (ZMod l) k := ZMod.algebra k l
   rw [← Module.forall_dual_apply_eq_zero_iff (ZMod l)]
   intro μ
   let c : ZMod l := μ (y γ) / φI γ
   let ψ : ↥(Ine (F := ℚ) A) → ZMod l := fun σ => μ (y σ) - c * φI σ
-  have hyI : IsLocallyConstant (fun σ : ↥(Ine (F := ℚ) A) => y σ) := hy.comp_continuous continuous_subtype_val
+  have hyI : IsLocallyConstant (fun σ : ↥(Ine (F := ℚ) A) => y σ) := hy.comp_continuous continuous_subtypeVal
   have hψc : IsLocallyConstant ψ := IsLocallyConstant.comp₂ hyI hφIc (fun u v => μ u - c * v)
   have hψa : ∀ a b : ↥(Ine (F := ℚ) A), ψ (a * b) = ψ a + ψ b := by
     intro a b
@@ -755,7 +755,7 @@ private theorem st_char : GC.Hypotheses₂ → ∀ (Ω : Type) [Field Ω] [CharZ
     rcases (hS v A hA).1 hv with h | h | h
     · exact hdecl A ((hmem A v l hA).2 h)
     · exact absurd h hne'
-    · obtain ⟨s, hs, hs'⟩ := SetLike.not_le_iff_exists.1 h
+    · obtain ⟨s, hs, hs'⟩ := IsConcreteLE.not_le_iff_exists.1 h
       exact ⟨s, Ine_le_Dec A hs, by rwa [MonoidHom.mem_ker] at hs'⟩
   obtain ⟨y, hyc, hyco, hynot, hyout, hyS⟩ :=
     st_sel hP Ω l hl2 k κ hκo hcc hcyc S hCA hout v₀ hv₀S hl_notin hdec0 hother
@@ -792,7 +792,7 @@ theorem UpperTheory.V.Fr.strict :
     GC.Hypotheses₂ → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] {O : Type} [CommRing O] [IsLocalRing O] [CharP (ResidueField O) l] (η : G ℚ Ω →* ℤˣ) (Ψ : G ℚ Ω →* Oˣ) (σ : G ℚ Ω) (B : ValuationSubring Ω) (M : ℕ) (Hb : Subgroup (G ℚ Ω)), Gen l η Ψ σ B M Hb → ∀ (H₀ : Subgroup (G ℚ Ω)) (w : ℕ), FrobeniusSplitPrimeDatum η M H₀ → FrobeniusWitnessPrime l η Ψ M w → ∀ (m : ℕ) (a : ℕ), a = 1 ∨ a = 2 → StrictCl l η Ψ ((barChar O Ψ)⁻¹ ^ a * etaO O η) (Upl l Hb H₀ w m) := by
   intro hP Ω _ _ _ l _ O _ _ _ η Ψ σ B M Hb hG H₀ w h0 hw m a ha
   have hlp : l.Prime := Fact.out
-  haveI : Finite (ResidueField O) := hG.fin
+  have : Finite (ResidueField O) := hG.fin
   have hF := ufacts l η Ψ σ B M Hb hG H₀ w h0 hw m
   set U := Upl l Hb H₀ w m with hU
   set κ : G ℚ Ω →* (ResidueField O)ˣ := (barChar O Ψ)⁻¹ ^ a * etaO O η with hκdef

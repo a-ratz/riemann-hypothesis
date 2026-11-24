@@ -80,7 +80,7 @@ theorem isOpen_isInt_set (R : Subring K) (hR : IsOpen (R : Set K)) (n : ℕ) :
 
 theorem isOpen_intSub (R : Subring K) (hR : IsOpen (R : Set K)) {n : ℕ}
     (H : Subgroup (GL (Fin n) K)) : IsOpen (intSub R H : Set H) := by
-  exact (isOpen_isInt_set R hR n).preimage continuous_subtype_val
+  exact (isOpen_isInt_set R hR n).preimage continuous_subtypeVal
 
 end SlopeTestRemainingChoices
 

@@ -534,7 +534,7 @@ theorem UpperTheory.V.Z.Ord.ordScal : GlobalTheory.Mem.LiteralAutomorphy.LitN �
   let a : ℕ → ℂ := fun m => H.lowVal ι lam v m * (if h : m - 1 < n then b ⟨m - 1, h⟩ else 0)
   have ha : ∀ j : Fin n, a (j + 1) = H.lowVal ι lam v (j + 1) * b j := fun j => by
     have h : (j : ℕ) + 1 - 1 < n := by simpa using j.2
-    simp only [a, dif_pos h]
+    simp only [a, dite_eq_left h]
     congr 2
   obtain ⟨ω, h1, h2, h3, h4⟩ := local_exp (UpperTheory.V.Z.Ord.ordJac hLit) (H.atV d v) (Y.σl v) (Y.isoL v) hF.1 hF0 e
     (fun i y => ι (H.finPart θ x.toRingHom lam v i y)) hN hNm hT
@@ -703,7 +703,7 @@ private theorem ord_parts {L Ω : Type} [Field L] [NumberField L] [Field Ω] [Al
             conv_lhs => rw [← ha]
             rw [← mul_apply_eq_comp, ← map_mul, inv_mul_cancel, map_one]; rfl }
       have : CompactSpace K := isCompact_iff_compactSpace.1 hK
-      have ho : IsOpen (T.subgroupOf K : Set K) := (σ.smooth v).preimage continuous_subtype_val
+      have ho : IsOpen (T.subgroupOf K : Set K) := (σ.smooth v).preimage continuous_subtypeVal
       have := Subgroup.quotient_finite_of_isOpen _ ho
       refine ⟨T, Subgroup.index_ne_zero_of_finite, fun u (hu : σ.ρ u v = v) => ?_⟩
       change ρ u (f v) = f v

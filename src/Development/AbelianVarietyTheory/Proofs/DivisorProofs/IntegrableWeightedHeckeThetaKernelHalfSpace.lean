@@ -117,7 +117,7 @@ theorem norm_dil_sq (y : I → ℝ) (v : I → ℂ) (i : I) :
   unfold dil
   rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _), mul_pow]
   have : Real.exp (y i / 2) ^ 2 = Real.exp (y i) := by
-    rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
   rw [this]
 
 theorem sum_ge (y : I → ℝ) (v : I → ℂ) {τ : ℝ} (hτ : 0 ≤ τ) (hy : ∀ i, τ ≤ Real.exp (y i)) :
@@ -157,7 +157,7 @@ theorem continuous_theta {ι : Type} (e : ι → I → ℂ) (a : ι → ℂ) (n 
       linarith⟩
   let U : Set (I → ℝ) := {y | ∀ i, -L < y i}
   have hU : IsOpen U := by
-    simp only [U, Set.setOf_forall]
+    simp only [U, Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun i => isOpen_lt continuous_const (continuous_apply i)
   have hc : ContinuousOn (theta e a n) U := by
     unfold theta
@@ -222,7 +222,7 @@ theorem integrable_weight_theta : ∀ (I : Type) [Fintype I] {ι : Type} (e : ι
   intro I _ ι e a n q B R hn ha hδ hq hqB hqR
   obtain ⟨δ, hδ0, hδ⟩ := hδ
   obtain ⟨i0, hi0⟩ := hn
-  haveI : Nonempty I := ⟨i0⟩
+  have : Nonempty I := ⟨i0⟩
   have hcont := continuous_theta e a n ha
   have hmeas : AEStronglyMeasurable (fun y => (q y : ℂ) * theta e a n y) volume :=
     ((Complex.measurable_ofReal.comp hq).mul hcont.measurable).aestronglyMeasurable

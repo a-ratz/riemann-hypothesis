@@ -98,7 +98,7 @@ theorem UpperTheory.V.ConeExtensionAcyclic.vert_finite :
     refine ⟨x, hxt, ?_⟩
     by_contra hyS
     have h1 := (hvx : ∀ y ∉ S x.1 x.2, 1 < q y v) y hyS
-    simp only [Set.mem_setOf_eq] at hy
+    simp only [mem_ofPred_eq] at hy
     linarith
   · rintro v ⟨_, hvV⟩ w ⟨_, hwV⟩ hvw
     have key : w - v = 0 := by
@@ -107,7 +107,7 @@ theorem UpperTheory.V.ConeExtensionAcyclic.vert_finite :
         have e : {y : Y | q y v = 1} = {y : Y | q y w = 1} := hvw
         rw [← e]
         exact hy
-      simp only [Set.mem_setOf_eq] at hy'
+      simp only [mem_ofPred_eq] at hy'
       simp [map_sub, hy, hy']
     exact (sub_eq_zero.1 key).symm
 end -- clump:auto
@@ -146,11 +146,11 @@ theorem UpperTheory.V.ConeExtensionAcyclic.cone_finite :
     have hlt : x h0 < x v.1 := by
       by_contra hle
       exact hno x hx ⟨v.2.1, not_lt.mp hle⟩
-    simp only [Set.mem_setOf_eq, map_sub]
+    simp only [mem_ofPred_eq, map_sub]
     linarith
   have hz := convexHull_min hsub hconv hzs
   have hz2 := hzv h0 hh0
-  simp only [Set.mem_setOf_eq, map_sub] at hz
+  simp only [mem_ofPred_eq, map_sub] at hz
   linarith
 end -- clump:auto
 end -- clump:auto
@@ -167,11 +167,11 @@ theorem UpperTheory.V.ConeExtensionAcyclic.dual_convex : ∀ {E Y : Type} [Norme
   intro E Y _ _ q T
   refine ⟨?_, fun h => ⟨?_, ?_⟩⟩
   · intro x hx y hy a b ha hb hab
-    simp only [posDual, Set.mem_setOf_eq] at hx hy ⊢
+    simp only [posDual, mem_ofPred_eq] at hx hy ⊢
     intro k hk hk0
     have h1 := hx k hk hk0
     have h2 := hy k hk hk0
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [add_apply, smul_apply, smul_eq_mul]
     rcases eq_or_lt_of_le ha with ha0 | ha'
     · subst ha0
       have hb1 : b = 1 := by linarith
@@ -185,11 +185,11 @@ theorem UpperTheory.V.ConeExtensionAcyclic.dual_convex : ∀ {E Y : Type} [Norme
     exact isClosed_biInter fun h' _ =>
       isClosed_le (ContinuousLinearMap.apply ℝ ℝ h).continuous (ContinuousLinearMap.apply ℝ ℝ h').continuous
   · intro x hx y hy a b ha hb hab
-    simp only [normalCone, Set.mem_setOf_eq] at hx hy ⊢
+    simp only [normalCone, mem_ofPred_eq] at hx hy ⊢
     intro h' hh'
     have h1 := hx h' hh'
     have h2 := hy h' hh'
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+    simp only [add_apply, smul_apply, smul_eq_mul]
     exact add_le_add (mul_le_mul_of_nonneg_left h1 ha) (mul_le_mul_of_nonneg_left h2 hb)
 end -- clump:auto
 end -- clump:auto
@@ -238,7 +238,7 @@ theorem UpperTheory.V.ConeExtensionAcyclic.exists_vert :
       have := congrArg (fun w => w - e) heq
       simpa using this
     exact (smul_eq_zero.mp hzero).resolve_left hε.ne'
-  · simp only [normalCone, Set.mem_setOf_eq]
+  · simp only [normalCone, mem_ofPred_eq]
     intro h' hh'
     exact le_trans hex (hglob h' hh')
 end -- clump:auto
@@ -426,7 +426,7 @@ theorem UpperTheory.V.ConeExtensionAcyclic.nerve_cut :
   constructor
   · funext n
     ext t
-    simp only [nerve, Set.mem_union, Set.mem_setOf_eq, Set.mem_inter_iff]
+    simp only [nerve, Set.mem_union, mem_ofPred_eq, Set.mem_inter_iff]
     constructor
     · rintro ⟨x, hx, ht⟩
       rcases le_total (f x) u with h | h
@@ -435,7 +435,7 @@ theorem UpperTheory.V.ConeExtensionAcyclic.nerve_cut :
     · rintro (⟨x, ⟨hx, _⟩, ht⟩ | ⟨x, ⟨hx, _⟩, ht⟩) <;> exact ⟨x, hx, ht⟩
   · funext n
     ext t
-    simp only [nerve, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [nerve, Set.mem_inter_iff, mem_ofPred_eq]
     constructor
     · rintro ⟨x, ⟨hx, hfx⟩, ht⟩
       exact ⟨⟨x, ⟨hx, hfx.le⟩, ht⟩, ⟨x, ⟨hx, hfx.ge⟩, ht⟩⟩
@@ -564,7 +564,7 @@ theorem UpperTheory.V.ConeExtensionAcyclic.nerve_compact :
     obtain ⟨a, ha⟩ := hcov x hxX
     apply acyc_cone _ a
     intro m t ht
-    simp only [nerve, Set.mem_setOf_eq] at ht ⊢
+    simp only [nerve, mem_ofPred_eq] at ht ⊢
     obtain ⟨y, hyX, hy⟩ := ht
     refine ⟨x, hxX, ?_⟩
     intro j
@@ -657,7 +657,7 @@ theorem UpperTheory.V.ConeExtensionAcyclic.acyc_simp : ∀ {E Y : Type} [NormedA
   intro E Y _ _ _ q T hG
   refine ⟨UpperTheory.V.ConeExtensionAcyclic.nerve_faceClosed _ _, ?_, ?_⟩
   · ext t
-    simp only [UpperTheory.V.ConeExtensionAcyclic.simp, UpperTheory.V.ConeExtensionAcyclic.nerve, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+    simp only [UpperTheory.V.ConeExtensionAcyclic.simp, UpperTheory.V.ConeExtensionAcyclic.nerve, mem_ofPred_eq, Set.mem_univ, iff_true]
     obtain ⟨x, hx⟩ := hG.pos
     exact ⟨x, hx, fun j => j.elim0⟩
   · exact UpperTheory.V.ConeExtensionAcyclic.nerve_convex _ _ (UpperTheory.V.ConeExtensionAcyclic.dual_convex q T).1 hG.pos

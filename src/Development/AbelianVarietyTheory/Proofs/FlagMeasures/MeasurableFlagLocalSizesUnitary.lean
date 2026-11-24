@@ -68,9 +68,9 @@ theorem _root_.GlobalTheory.FlagMeas.measurable_detOn_comp {X : Type} [Topologic
       (((Finsupp.lapply i).comp b.repr.toLinearMap).comp P).continuous_of_finiteDimensional
     exact hL.comp (hf.matrix_mulVec continuous_const)
   have hS : IsClosed {x | ∀ y ∈ V, f x *ᵥ y ∈ V} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_biInter fun y _ => ?_
-    exact V.closed_of_finiteDimensional.preimage (hf.matrix_mulVec continuous_const)
+    exact V.isClosed_of_finiteDimensional.preimage (hf.matrix_mulVec continuous_const)
   have heq : (fun x => _root_.GlobalTheory.FlagMeas.detOn (f x) V) =
       fun x => if x ∈ {x | ∀ y ∈ V, f x *ᵥ y ∈ V} then ‖g x‖ else 0 := by
     funext x
@@ -78,7 +78,7 @@ theorem _root_.GlobalTheory.FlagMeas.measurable_detOn_comp {X : Type} [Topologic
     by_cases h : ∀ y ∈ V, (toLin' (f x)) y ∈ V
     · have h' : x ∈ {x | ∀ y ∈ V, f x *ᵥ y ∈ V} := fun y hy => by
         simpa [Matrix.toLin'_apply] using h y hy
-      rw [dite_eq_left h, if_pos h', ← LinearMap.det_toMatrix b]
+      rw [dite_eq_left h, ite_eq_left h', ← LinearMap.det_toMatrix b]
       congr 2
       ext i k
       rw [LinearMap.toMatrix_apply, Matrix.of_apply]
@@ -89,7 +89,7 @@ theorem _root_.GlobalTheory.FlagMeas.measurable_detOn_comp {X : Type} [Topologic
       exact (Submodule.projectionOnto_apply_left hW _).symm
     · have h' : x ∉ {x | ∀ y ∈ V, f x *ᵥ y ∈ V} := fun hx => h fun y hy => by
         simpa [Matrix.toLin'_apply] using hx y hy
-      rw [dite_eq_right h, if_neg h']
+      rw [dite_eq_right h, ite_eq_right h']
   rw [heq]
   exact Measurable.ite hS.measurableSet hg.norm.measurable measurable_const
 
@@ -100,7 +100,7 @@ theorem _root_.GlobalTheory.FlagMeas.measurable_locSize_uMat (n : ℕ) (ε : Fin
     Measurable fun g : _root_.Formalism.REAL.UJ ε => _root_.GlobalTheory.FlagMeas.locSize j W (_root_.Formalism.MainNotions.S.uMat g) i := by
   have hc : Continuous fun g : _root_.Formalism.REAL.UJ ε => _root_.Formalism.MainNotions.S.uMat g := by
     unfold _root_.Formalism.MainNotions.S.uMat
-    exact Units.continuous_val.comp continuous_subtype_val
+    exact Units.continuous_val.comp continuous_subtypeVal
   unfold _root_.GlobalTheory.FlagMeas.locSize
   exact ((_root_.GlobalTheory.FlagMeas.measurable_detOn_comp _ hc _).div
     (_root_.GlobalTheory.FlagMeas.measurable_detOn_comp _ hc _)).pow_const _

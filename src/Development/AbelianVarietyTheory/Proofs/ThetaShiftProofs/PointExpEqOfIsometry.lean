@@ -57,7 +57,7 @@ theorem isHolTo_comp_univ {V W : Type} [NormedAddCommGroup V] [NormedSpace ℂ V
   have hset : {b | b ∈ (Set.univ : Set V) ∧ ⊤ ≤ (fun z => y (φ z)) b ⁻¹ᵁ U} =
       φ ⁻¹' {b | b ∈ B ∧ ⊤ ≤ y b ⁻¹ᵁ U} := by
     ext b
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_univ, true_and, hB b]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_univ, true_and, hB b]
   rw [hset]
   exact ⟨ho.preimage hφ.continuous, hd.comp hφ.differentiableOn (fun b hb => hb)⟩
 
@@ -96,7 +96,7 @@ theorem point_exp_eq_of_isometry : Known → ∀ (E : Type) [Field E] [NumberFie
   have hii : i = i' := Fu.disj i i' P P' hP hP' hpt
   subst hii
 
-  letI := H.starRing
+  let := H.starRing
   have hex := GlobalTheory.ArcPts.exp_eq_of_matching_markings E H D l Xo σ g ty Fu i P P' gm L rfl hP hP' hiso hmark
     (fun v => ⟨gm (Fu.t i v) - Fu.t i v, by rw [hA, one_smul]; abel⟩) hPL
   exact ⟨hpt, hex.2⟩

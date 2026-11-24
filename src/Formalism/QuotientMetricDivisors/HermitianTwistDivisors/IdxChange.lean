@@ -86,7 +86,7 @@ theorem idxChange_cnt_one (v : HeightOneSpectrum R) :
 
 theorem idxChange_cnt_ideal_zero (v : HeightOneSpectrum R) (J : Ideal R) (hJ : J ≠ 0)
     (h : ¬ J ≤ v.asIdeal) : FractionalIdeal.count K v (J : FractionalIdeal R⁰ K) = 0 := by
-  rw [FractionalIdeal.count_coe K v hJ]
+  rw [FractionalIdeal.count_coeIdeal K v hJ]
   by_contra hne
   have hne' : (Associates.mk v.asIdeal).count (Associates.mk J).factors ≠ 0 := by
     exact_mod_cast hne
@@ -124,7 +124,7 @@ theorem idxChange_cnt_mem (v : HeightOneSpectrum R) {a : R} (ha : a ≠ 0) (hp :
 theorem idxChange_cnt_nonneg (v : HeightOneSpectrum R) (a : R) :
     0 ≤ FractionalIdeal.count K v (FractionalIdeal.spanSingleton R⁰ (algebraMap R K a)) := by
   rw [idxChange_span_alg]
-  exact FractionalIdeal.count_coe_nonneg K v _
+  exact FractionalIdeal.count_coeIdeal_nonneg K v _
 
 theorem idxChange_unif (v : HeightOneSpectrum R) :
     ∃ ϖ : R, ϖ ∈ v.asIdeal ∧ ϖ ≠ 0 ∧
@@ -434,9 +434,9 @@ theorem indexChange_uniformizer (v : HeightOneSpectrum R) (i : Fin d) {ϖ t : R}
       by_cases hk : k = i
       · subst hk
         refine ⟨1, ?_⟩
-        rw [hupdi, map_smul, hf, if_pos rfl, Algebra.smul_def, mul_one, mul_one]
+        rw [hupdi, map_smul, hf, ite_eq_left rfl, Algebra.smul_def, mul_one, mul_one]
       · refine ⟨0, ?_⟩
-        rw [hupdk k hk, hf, if_neg hk]; simp
+        rw [hupdk k hk, hf, ite_eq_right hk]; simp
     | zero => exact ⟨0, by simp⟩
     | add x y _ _ hx hy =>
       obtain ⟨u, hu⟩ := hx
@@ -457,7 +457,7 @@ theorem indexChange_uniformizer (v : HeightOneSpectrum R) (i : Fin d) {ϖ t : R}
     intro r hr
     obtain ⟨s, hs, hsr⟩ := hr
     obtain ⟨u, hu⟩ := hcoord _ hsr
-    rw [smul_smul, map_smul, hf, if_pos rfl, Algebra.smul_def, mul_one] at hu
+    rw [smul_smul, map_smul, hf, ite_eq_left rfl, Algebra.smul_def, mul_one] at hu
     have h2 : s * r = ϖ * u := IsFractionRing.injective R K hu
     have hmem : s * r ∈ p := by
       rw [h2]

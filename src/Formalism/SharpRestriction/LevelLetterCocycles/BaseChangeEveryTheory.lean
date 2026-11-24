@@ -101,7 +101,7 @@ theorem length_restrict_nat (n : ℕ) : ∀ (M : Type) [AddCommGroup M] [Module 
     have hat : IsAtom N := ⟨hN0, fun I hI => by
       by_contra hI0
       exact hmin I hI0 hI⟩
-    haveI hS : IsSimpleModule O' N := isSimpleModule_iff_isAtom.2 hat
+    have hS : IsSimpleModule O' N := isSimpleModule_iff_isAtom.2 hat
     obtain ⟨I, hI, ⟨e⟩⟩ := isSimpleModule_iff_quot_maximal.1 hS
     have hIm := IsLocalRing.eq_maximalIdeal hI
     subst hIm
@@ -176,12 +176,12 @@ theorem col_arith (n mm' k' : ℕ) (f Lq K : ℕ∞) (x : ℝ) (hn : 0 < n) (hK 
   · have hf : f ≠ ⊤ := by
       intro hft
       rw [hft, ENat.top_mul (by exact_mod_cast hpos.ne')] at B
-      exact ENat.coe_ne_top _ (by exact_mod_cast B.symm)
+      exact ENat.natCast_ne_top _ (by exact_mod_cast B.symm)
     obtain ⟨f0, rfl⟩ := ENat.ne_top_iff_exists.1 hf
     have hL : Lq ≠ ⊤ := by
       intro hLt
       rw [hLt, ENat.mul_top hn0] at A
-      exact ENat.coe_ne_top _ (top_le_iff.1 (by exact_mod_cast A))
+      exact ENat.natCast_ne_top _ (top_le_iff.1 (by exact_mod_cast A))
     obtain ⟨mm, rfl⟩ := ENat.ne_top_iff_exists.1 hL
     have A' : n * mm ≤ f0 * mm' := by exact_mod_cast A
     have B' : f0 * k' = n * k := by exact_mod_cast B
@@ -360,11 +360,11 @@ def jp (T : LocLat G Qp LL O) (c : G → T.V) : G → (bLoc (O' := O') hc hO' T)
 def jv (T : LocLat G Qp LL O) (v : T.V) : (bLoc (O' := O') hc hO' T).V := (1 : LL') ⊗ₜ[LL] v
 
 theorem cont_j (T : LocLat G Qp LL O) : Continuous (jv (O' := O') hc hO' T) := by
-  letI : TopologicalSpace (LL' ⊗[LL] T.V) := bTop (LL := LL) (LL' := LL') T.V
-  haveI : IsModuleTopology LL' (LL' ⊗[LL] T.V) := bIsMod (LL := LL) (LL' := LL') T.V
-  haveI : ContinuousAdd (LL' ⊗[LL] T.V) := IsModuleTopology.toContinuousAdd LL' _
-  haveI : ContinuousSMul LL' (LL' ⊗[LL] T.V) := IsModuleTopology.toContinuousSMul LL' _
-  haveI : ContinuousSMul LL (LL' ⊗[LL] T.V) := contSMul_of hc _
+  let : TopologicalSpace (LL' ⊗[LL] T.V) := bTop (LL := LL) (LL' := LL') T.V
+  have : IsModuleTopology LL' (LL' ⊗[LL] T.V) := bIsMod (LL := LL) (LL' := LL') T.V
+  have : ContinuousAdd (LL' ⊗[LL] T.V) := IsModuleTopology.toContinuousAdd LL' _
+  have : ContinuousSMul LL' (LL' ⊗[LL] T.V) := IsModuleTopology.toContinuousSMul LL' _
+  have : ContinuousSMul LL (LL' ⊗[LL] T.V) := contSMul_of hc _
   exact IsModuleTopology.continuous_of_linearMap (TensorProduct.mk LL LL' T.V 1)
 
 theorem jp_mem (T : LocLat G Qp LL O) (c : G → T.V) (h : c ∈ latticeFiniteCocycles PD T.L) :
@@ -389,9 +389,9 @@ variable {ι : Type} [Fintype ι] (bO : Module.Basis ι O O') (bL : Module.Basis
 include hlin in
 theorem cont_prj (T : LocLat G Qp LL O) (φ : LL' →ₗ[LL] LL) :
     Continuous (fun x : (bLoc (O' := O') hc hO' T).V => prj φ T.V x) := by
-  letI : TopologicalSpace (LL' ⊗[LL] T.V) := bTop (LL := LL) (LL' := LL') T.V
-  haveI : IsModuleTopology LL' (LL' ⊗[LL] T.V) := bIsMod (LL := LL) (LL' := LL') T.V
-  haveI : ContinuousSMul LL T.V := IsModuleTopology.toContinuousSMul LL T.V
+  let : TopologicalSpace (LL' ⊗[LL] T.V) := bTop (LL := LL) (LL' := LL') T.V
+  have : IsModuleTopology LL' (LL' ⊗[LL] T.V) := bIsMod (LL := LL) (LL' := LL') T.V
+  have : ContinuousSMul LL T.V := IsModuleTopology.toContinuousSMul LL T.V
   let e := Module.finBasis LL T.V
   let e' := Algebra.TensorProduct.basis LL' e
   have key : ∀ x : LL' ⊗[LL] T.V, prj φ T.V x = ∑ j, φ (e'.coord j x) • e j := by
@@ -500,7 +500,7 @@ theorem jp_smul (T : LocLat G Qp LL O) (a : O) (c : G → T.V) :
 
 theorem index_nonempty_of (bO : Module.Basis ι O O') (hO' : Function.Injective (algebraMap O' LL')) :
     Nonempty ι := by
-  haveI : Nontrivial O' := by
+  have : Nontrivial O' := by
     refine ⟨⟨0, 1, fun h0 => ?_⟩⟩
     have h1 := congrArg (algebraMap O' LL') h0
     rw [map_zero, map_one] at h1
@@ -516,8 +516,8 @@ theorem descLift (T₁ T₂ : LocLat G Qp LL O) (F : LatHom T₁.L T₂.L) (e : 
   have h1 := h _ (jp_mem PD hc hO' T₂ c hc2)
   have hs : (∑ i, bO i • jp (O' := O') hc hO' T₂ (if i = k then ((PD.p : O) ^ e) • c else 0)) =
       bO k • (((PD.p : O') ^ e) • jp (O' := O') hc hO' T₂ c) := by
-    rw [Finset.sum_eq_single k (fun i _ hik => by rw [if_neg hik, jp_zero, smul_zero])
-      (fun hk => absurd (Finset.mem_univ k) hk), if_pos rfl, jp_smul, map_pow, map_natCast]
+    rw [Finset.sum_eq_single k (fun i _ hik => by rw [ite_eq_right hik, jp_zero, smul_zero])
+      (fun hk => absurd (Finset.mem_univ k) hk), ite_eq_left rfl, jp_smul, map_pow, map_natCast]
   have h2 := core PD hc hO' bO bL hb hlin T₁ T₂ F
     (fun i => if i = k then ((PD.p : O) ^ e) • c else 0) (by rw [hs]; exact Submodule.smul_mem _ _ h1) k
   simpa using h2
@@ -554,8 +554,8 @@ theorem descCol [IsLocalRing O'] (hk : lenOl PD (O := O) ≠ ⊤) (T₁ T₂ : L
   let Z' := latticeFiniteCocycles PD (bLoc (O' := O') hc hO' T₂).L
   let N := (F.ImF PD).comap Z.subtype
   let N' := ((bHom (O' := O') hc hO' F).ImF PD).comap Z'.subtype
-  letI : Module O (Z' ⧸ N') := Module.compHom _ (algebraMap O O')
-  haveI : IsScalarTower O O' (Z' ⧸ N') := ⟨fun a b q => by
+  let : Module O (Z' ⧸ N') := Module.compHom _ (algebraMap O O')
+  have : IsScalarTower O O' (Z' ⧸ N') := ⟨fun a b q => by
     show (a • b) • q = algebraMap O O' a • (b • q)
     rw [Algebra.smul_def, mul_smul]⟩
   have hjZ : ∀ z : Z, jp (O' := O') hc hO' T₂ z ∈ Z' := fun z => jp_mem PD hc hO' T₂ z z.2
@@ -712,40 +712,40 @@ theorem bcAt_fin (hJ : Formalism.MainNotions.N.GlobalTheory.CoefJumpGen) (Th : L
     (hLL : LL.1 ≤ LL'.1) :
     Formalism.MainNotions.WachCoordinates.BCAt ((Th l).PD K) (LL := ↥LL.1) (O := ↥(OL LL)) (O' := ↥(OL LL'))
       (IntermediateField.inclusion hLL) := by
-  letI iA : Algebra ↥LL.1 ↥LL'.1 := (IntermediateField.inclusion hLL).toRingHom.toAlgebra
-  haveI tA : IsScalarTower ℚ_[l] ↥LL.1 ↥LL'.1 :=
+  let iA : Algebra ↥LL.1 ↥LL'.1 := (IntermediateField.inclusion hLL).toRingHom.toAlgebra
+  have tA : IsScalarTower ℚ_[l] ↥LL.1 ↥LL'.1 :=
     IsScalarTower.of_algebraMap_eq fun x => ((IntermediateField.inclusion hLL).commutes x).symm
-  letI iO : Algebra ↥(OL LL) ↥(OL LL') := (jO hLL).toAlgebra
-  letI sO : SMul ↥(OL LL) ↥(OL LL') := iO.toSMul
-  haveI t1 : IsScalarTower ↥(OL LL) ↥(OL LL') ↥LL'.1 := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI := isFrac_OL LL
+  let iO : Algebra ↥(OL LL) ↥(OL LL') := (jO hLL).toAlgebra
+  let sO : SMul ↥(OL LL) ↥(OL LL') := iO.toSMul
+  have t1 : IsScalarTower ↥(OL LL) ↥(OL LL') ↥LL'.1 := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have := isFrac_OL LL
   have hc : Continuous (algebraMap ↥LL.1 ↥LL'.1) := by
     refine continuous_induced_rng.2 ?_
-    exact continuous_subtype_val
+    exact continuous_subtypeVal
   have hO' : Function.Injective (algebraMap ↥(OL LL') ↥LL'.1) := Subtype.val_injective
   have hjO : Function.Injective (algebraMap ↥(OL LL) ↥(OL LL')) := by
     intro a b h
     have h1 := congrArg (fun x : ↥(OL LL') => ((x : ↥LL'.1) : Om l)) h
     exact Subtype.ext (Subtype.ext h1)
 
-  haveI tZ : IsScalarTower ℤ_[l] ↥(OL LL) ↥(OL LL') := IsScalarTower.of_algebraMap_eq fun z => by
+  have tZ : IsScalarTower ℤ_[l] ↥(OL LL) ↥(OL LL') := IsScalarTower.of_algebraMap_eq fun z => by
     apply Subtype.ext; apply Subtype.ext
     show ((algebraMap ℤ_[l] ↥(OL LL') z : ↥LL'.1) : Om l) = ((algebraMap ℤ_[l] ↥(OL LL) z : ↥LL.1) : Om l)
     simp only [SubalgebraClass.coe_algebraMap]
     rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] ↥LL'.1, IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] ↥LL.1]
     rfl
-  haveI : Module.Finite ↥(OL LL) ↥(OL LL') := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
-  haveI : FaithfulSMul ↥(OL LL) ↥(OL LL') := (faithfulSMul_iff_algebraMap_injective _ _).2 hjO
-  haveI : Module.IsTorsionFree ↥(OL LL) ↥(OL LL') := ⟨fun r hr a b hab => by
+  have : Module.Finite ↥(OL LL) ↥(OL LL') := Module.Finite.of_restrictScalars_finite ℤ_[l] _ _
+  have : FaithfulSMul ↥(OL LL) ↥(OL LL') := (faithfulSMul_iff_algebraMap_injective _ _).2 hjO
+  have : Module.IsTorsionFree ↥(OL LL) ↥(OL LL') := ⟨fun r hr a b hab => by
     have hr0 : algebraMap ↥(OL LL) ↥(OL LL') r ≠ 0 := fun h => hr.ne_zero (hjO (h.trans (map_zero _).symm))
     simp only [Algebra.smul_def] at hab
     exact mul_left_cancel₀ hr0 hab⟩
-  haveI : Module.Free ↥(OL LL) ↥(OL LL') := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ↥(OL LL) ↥(OL LL') := Module.free_of_finite_type_torsion_free'
   let bO := Module.Free.chooseBasis ↥(OL LL) ↥(OL LL')
 
-  haveI : FiniteDimensional ℚ_[l] ↥LL'.1 := LL'.2
-  haveI : IsIntegralClosure ↥(OL LL') ℤ_[l] ↥LL'.1 := integralClosure.isIntegralClosure ℤ_[l] ↥LL'.1
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid ↥(OL LL') (nonZeroDivisors ℤ_[l])) ↥LL'.1 :=
+  have : FiniteDimensional ℚ_[l] ↥LL'.1 := LL'.2
+  have : IsIntegralClosure ↥(OL LL') ℤ_[l] ↥LL'.1 := integralClosure.isIntegralClosure ℤ_[l] ↥LL'.1
+  have : IsLocalization (Algebra.algebraMapSubmonoid ↥(OL LL') (nonZeroDivisors ℤ_[l])) ↥LL'.1 :=
     IsIntegralClosure.isLocalization ℤ_[l] ℚ_[l] ↥LL'.1 ↥(OL LL')
   let b : Module.Free.ChooseBasisIndex ↥(OL LL) ↥(OL LL') → ↥LL'.1 :=
     fun i => algebraMap ↥(OL LL') ↥LL'.1 (bO i)

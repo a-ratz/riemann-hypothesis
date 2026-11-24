@@ -162,7 +162,7 @@ theorem le_preimage_of_nil (C : Chart G) {P P₀ : Type} [CommRing P] [Algebra R
     intro a ha
     obtain ⟨k, hk⟩ := hn a ha
     exact (PrimeSpectrum.isPrime p).mem_of_pow_mem k (by rw [hk]; exact Ideal.zero_mem _)
-  haveI := PrimeSpectrum.isPrime p
+  have := PrimeSpectrum.isPrime p
   let p₀ : PrimeSpectrum P₀ :=
     ⟨(PrimeSpectrum.asIdeal p).map q.toRingHom, Ideal.map_isPrime_of_surjective hq hker⟩
   have hp₀ : (Spec.map (CommRingCat.ofHom q.toRingHom)).base p₀ = p := by

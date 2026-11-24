@@ -84,7 +84,7 @@ theorem fourierSum_invFourierSum : ∀ (k : Type) [Field k] [ValuativeRel k] [To
   · let r : A → P → 𝒪[k] := fun i j => ⟨((ϖ ^ n : kˣ) : k) * Y i j, hY i j j.2⟩
     let S₀ : A → P → Res k n := fun i j => Ideal.Quotient.mk _ (r i j)
     set M : Matrix A P k := (ϖ ^ n)⁻¹ • liftRes S₀ with hM
-    have h0 : 0 < valuation k ((ϖ ^ n : kˣ) : k) := zero_lt_iff.2 (by simp)
+    have h0 : 0 < valuation k ((ϖ ^ n : kˣ) : k) := pos_iff_ne_zero.2 (by simp)
     have hdiff : ∀ i (j : P), Y i j - M i j ∈ 𝒪[k] := fun i j => by
       have h1 : ((Quotient.out (S₀ i j) : 𝒪[k]) - r i j) ∈ IsLocalRing.maximalIdeal 𝒪[k] ^ n :=
         Ideal.Quotient.eq.1 (Ideal.Quotient.mk_out _)
@@ -102,7 +102,7 @@ theorem fourierSum_invFourierSum : ∀ (k : Type) [Field k] [ValuativeRel k] [To
         ψ (pairCols P Y (liftRes T)) = ψ (pairCols P (setCols P Y M) (liftRes T)) := fun T => by
       have e2 : pairCols P Y (liftRes T) = pairCols P (setCols P Y M) (liftRes T) +
           ∑ i, ∑ j : P, liftRes T i j * (Y i j - M i j) := by
-        simp only [pairCols, setCols, Matrix.of_apply, Finset.coe_mem, dif_pos, Subtype.coe_eta,
+        simp only [pairCols, setCols, Matrix.of_apply, Finset.coe_mem, dite_eq_left, Subtype.coe_eta,
           ← Finset.sum_add_distrib]
         refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
         ring
@@ -113,7 +113,7 @@ theorem fourierSum_invFourierSum : ∀ (k : Type) [Field k] [ValuativeRel k] [To
         ext i j; by_cases h : j ∈ P <;> simp [setCols, h]
       rw [e3]
       refine hΞ.2 Y _ (GlobalTheory.SplitFlip.FourierDepth.mem_matLat_smul_blockLat.2 ⟨fun i j hj => ?_, fun i j hj => ?_⟩)
-      · simp only [Matrix.of_apply, dif_pos hj]
+      · simp only [Matrix.of_apply, dite_eq_left hj]
         have := neg_mem (hdiff i ⟨j, hj⟩)
         simpa using this
       · simp [hj]

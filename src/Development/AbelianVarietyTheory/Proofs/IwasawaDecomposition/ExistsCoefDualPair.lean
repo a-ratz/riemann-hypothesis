@@ -255,7 +255,7 @@ theorem enum_dual {n : ℕ} {lam : DomWeight n} {S : SPar} (h : Bridge.IsWtOfPar
     rw [Finset.card_image_of_injective _ hq'.injective, Finset.card_image_of_injective _ hc'.injective])
   have hr : Set.range (fun a => -c (Fin.rev a)) = Set.range q := by
     simpa using congrArg (fun s : Finset ℚ => (s : Set ℚ)) heq
-  have := congrFun ((hc'.range_inj hq').1 hr) i
+  have := congrFun ((hc'.range_inj_of_wellFoundedGT hq').1 hr) i
   have h2 : c (Fin.rev i) = lam.w (Fin.rev i) + rhoVec n (Fin.rev i) := by rw [hw]; ring
   rw [hq, ← this, h2]
   push_cast

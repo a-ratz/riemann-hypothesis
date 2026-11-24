@@ -60,7 +60,7 @@ theorem card_le_of_pairing {A B : Type} [AddCommGroup A] [AddCommGroup B] [Finit
     (hr : ∀ x y y', b x (y + y') = b x y * b x y')
     (hk : ∀ x, (∀ y, b x y = 1) → x = 0) : Nat.card A ≤ Nat.card B := by
   classical
-  haveI := Fintype.ofFinite B
+  have := Fintype.ofFinite B
   have hne : ∀ x y, b x y ≠ 0 := fun x y h => by
     have := hn x y
     simp [h] at this
@@ -133,10 +133,10 @@ theorem index_eq_of_pairing {X Y : Type} [AddCommGroup X] [AddCommGroup Y] (c : 
 theorem relIndex_ne_zero_of_isOpen {V : Type} [AddCommGroup V] [TopologicalSpace V]
     [IsTopologicalAddGroup V] (S T : AddSubgroup V) (hS : IsOpen (S : Set V))
     (hT : IsCompact (T : Set V)) : S.relIndex T ≠ 0 := by
-  haveI : CompactSpace T := isCompact_iff_compactSpace.1 hT
+  have : CompactSpace T := isCompact_iff_compactSpace.1 hT
   have ho : IsOpen ((S.addSubgroupOf T : AddSubgroup T) : Set T) :=
-    hS.preimage continuous_subtype_val
-  haveI := AddSubgroup.quotient_finite_of_isOpen _ ho
+    hS.preimage continuous_subtypeVal
+  have := AddSubgroup.quotient_finite_of_isOpen _ ho
   have : (S.addSubgroupOf T).FiniteIndex := AddSubgroup.finiteIndex_of_finite_quotient
   exact this.index_ne_zero
 
@@ -145,8 +145,8 @@ theorem measure_eq_relIndex_mul {V : Type} [AddCommGroup V] [TopologicalSpace V]
     [μ.IsAddLeftInvariant] (S T : AddSubgroup V) (hST : S ≤ T) (hS : IsOpen (S : Set V))
     (hf : S.relIndex T ≠ 0) : μ T = S.relIndex T * μ S := by
   classical
-  haveI : (S.addSubgroupOf T).FiniteIndex := ⟨hf⟩
-  haveI := Fintype.ofFinite (T ⧸ S.addSubgroupOf T)
+  have : (S.addSubgroupOf T).FiniteIndex := ⟨hf⟩
+  have := Fintype.ofFinite (T ⧸ S.addSubgroupOf T)
   let o : T ⧸ S.addSubgroupOf T → T := fun q => Quotient.out q
   have ho : ∀ q, ((o q : T) : T ⧸ S.addSubgroupOf T) = q := fun q => QuotientAddGroup.out_eq' q
   let C : T ⧸ S.addSubgroupOf T → Set V := fun q => (fun v => (-(o q : V)) + v) ⁻¹' (S : Set V)
@@ -219,8 +219,8 @@ theorem relIndex_eq_of_pairing {V : Type} [AddCommGroup V] (χ : V → V → ℂ
     (hX : ∀ x ∈ X, (x ∈ X₀ ↔ ∀ y ∈ Y, χ x y = 1))
     (hY : ∀ y ∈ Y, (y ∈ Y₀ ↔ ∀ x ∈ X, χ x y = 1))
     (fX : X₀.relIndex X ≠ 0) (fY : Y₀.relIndex Y ≠ 0) : X₀.relIndex X = Y₀.relIndex Y := by
-  haveI : (X₀.addSubgroupOf X).FiniteIndex := ⟨fX⟩
-  haveI : (Y₀.addSubgroupOf Y).FiniteIndex := ⟨fY⟩
+  have : (X₀.addSubgroupOf X).FiniteIndex := ⟨fX⟩
+  have : (Y₀.addSubgroupOf Y).FiniteIndex := ⟨fY⟩
   refine index_eq_of_pairing (fun (x : X) (y : Y) => χ x y) (fun x y => hn _ _)
     (fun x x' y => ha _ _ _)
     (fun x y y' => by

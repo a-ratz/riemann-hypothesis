@@ -104,12 +104,12 @@ theorem continuous_freeMat (p : ℕ) :
     Continuous (freeMat (k := k) (n := n) (n' := n') (c := c) p) := by
   refine continuous_matrix fun r s => ?_
   by_cases h : Free p (r, s)
-  · simp only [freeMat, Matrix.of_apply, dif_pos h]; fun_prop
-  · simp only [freeMat, Matrix.of_apply, dif_neg h]; exact continuous_const
+  · simp only [freeMat, Matrix.of_apply, dite_eq_left h]; fun_prop
+  · simp only [freeMat, Matrix.of_apply, dite_eq_right h]; exact continuous_const
 
 theorem isClosedEmbedding_freeMat (p : ℕ) :
     Topology.IsClosedEmbedding (freeMat (k := k) (n := n) (n' := n') (c := c) p) := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   refine Function.LeftInverse.isClosedEmbedding
     (f := fun z : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k =>
       fun rs : {rs : (n ⊕ Fin c) × (n' ⊕ Fin (c + 1)) // Free p rs} => z rs.1.1 rs.1.2)
@@ -120,10 +120,10 @@ theorem exists_clopen_ch_near (ψ : AddChar k Circle) (hψ : Continuous ψ) :
     ∃ W : Set (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), IsClopen W ∧ IsCompact W ∧
       (0 : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) ∈ W ∧
       ∀ z ∈ W, ‖((ψ (-ch z) : Circle) : ℂ) - 1‖ < 1 / 2 := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hU : {y : k | ‖((ψ (-y) : Circle) : ℂ) - 1‖ < 1 / 2} ∈ 𝓝 (0 : k) := by
     refine (isOpen_lt ?_ continuous_const).mem_nhds ?_
-    · exact (continuous_subtype_val.comp (hψ.comp continuous_neg)).sub continuous_const |>.norm
+    · exact (continuous_subtypeVal.comp (hψ.comp continuous_neg)).sub continuous_const |>.norm
     · simp
   obtain ⟨s₀, hs₀⟩ := exists_cball_subset hU
   let W : Set (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) :=
@@ -159,7 +159,7 @@ theorem flatSB_generic {X : Type} [TopologicalSpace X] [T2Space X] (ψ : AddChar
     (hRA : ∀ x e, R (A x e) = x) (hQA : ∀ x e, Q (A x e) = freeMat p e)
     (Φ : Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k → ℂ) (hΦ : Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k)) :
     (fun x => ∫ e, Φ (A x e) * (ψ (-ch (affPt p (0 : Matrix n n' k) e)) : ℂ) ∂(Measure.pi fun _ => ν)) ∈ SB X := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hemb : Topology.IsClosedEmbedding fun q : X × ({rs : (n ⊕ Fin c) × (n' ⊕ Fin (c + 1)) // Free p rs} → k) =>
       A q.1 q.2 := by
     refine Function.LeftInverse.isClosedEmbedding
@@ -185,9 +185,9 @@ theorem flatOnto_generic {X : Type} [TopologicalSpace X] [T2Space X] (ψ : AddCh
     (Ψ : X → ℂ) (hΨ : Ψ ∈ SB X) :
     ∃ Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), ∀ x,
       ∫ e, Φ (A x e) * (ψ (-ch (affPt p (0 : Matrix n n' k) e)) : ℂ) ∂(Measure.pi fun _ => ν) = Ψ x := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := hν
+  have := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := hν
   obtain ⟨W, hWcl, hWc, hW0, hWψ⟩ := exists_clopen_ch_near (n := n) (n' := n') (c := c) ψ hψ
   set μ : Measure ({rs : (n ⊕ Fin c) × (n' ⊕ Fin (c + 1)) // Free p rs} → k) := Measure.pi fun _ => ν
   set f : ({rs : (n ⊕ Fin c) × (n' ⊕ Fin (c + 1)) // Free p rs} → k) → ℂ :=
@@ -195,7 +195,7 @@ theorem flatOnto_generic {X : Type} [TopologicalSpace X] [T2Space X] (ψ : AddCh
   set K := freeMat (k := k) (n := n) (n' := n') (c := c) p ⁻¹' W with hK
   set I : ℂ := ∫ e, W.indicator (fun _ => (1 : ℂ)) (freeMat p e) * f e ∂μ with hI
   have hfc : Continuous f := by
-    refine continuous_subtype_val.comp (hψ.comp (Continuous.neg ?_))
+    refine continuous_subtypeVal.comp (hψ.comp (Continuous.neg ?_))
     exact continuous_finsetSum _ fun i _ =>
       ((continuous_affPt_uncurry p).comp (Continuous.prodMk_right (0 : Matrix n n' k))).matrix_elem _ _
   have hKo : IsOpen K := hWcl.isOpen.preimage (continuous_freeMat p)
@@ -440,9 +440,9 @@ theorem continuous_ptCol (p : ℕ) :
     rcases r with r | r <;> rcases s with s | s
     · simp only [colAt, fromBlocks_apply₁₁, Matrix.zero_apply]; exact continuous_const
     · by_cases h : s.val + 1 = p
-      · simp only [colAt, fromBlocks_apply₁₂, Matrix.of_apply, h, if_true]
+      · simp only [colAt, fromBlocks_apply₁₂, Matrix.of_apply, h, ite_true]
         exact continuous_fst.matrix_elem _ _
-      · simp only [colAt, fromBlocks_apply₁₂, Matrix.of_apply, h, if_false]; exact continuous_const
+      · simp only [colAt, fromBlocks_apply₁₂, Matrix.of_apply, h, ite_false]; exact continuous_const
     · simp only [colAt, fromBlocks_apply₂₁, Matrix.zero_apply]; exact continuous_const
     · simp only [colAt, fromBlocks_apply₂₂, Matrix.zero_apply]; exact continuous_const
 
@@ -456,9 +456,9 @@ theorem continuous_ptRow (p : ℕ) :
     · simp only [rowAt, fromBlocks_apply₁₁, Matrix.zero_apply]; exact continuous_const
     · simp only [rowAt, fromBlocks_apply₁₂, Matrix.zero_apply]; exact continuous_const
     · by_cases h : r.val + 1 = p
-      · simp only [rowAt, fromBlocks_apply₂₁, Matrix.of_apply, h, if_true]
+      · simp only [rowAt, fromBlocks_apply₂₁, Matrix.of_apply, h, ite_true]
         exact continuous_fst.matrix_elem _ _
-      · simp only [rowAt, fromBlocks_apply₂₁, Matrix.of_apply, h, if_false]; exact continuous_const
+      · simp only [rowAt, fromBlocks_apply₂₁, Matrix.of_apply, h, ite_false]; exact continuous_const
     · simp only [rowAt, fromBlocks_apply₂₂, Matrix.zero_apply]; exact continuous_const
 
 variable [MeasurableSpace k] [BorelSpace k]
@@ -479,7 +479,7 @@ end Main
 
 theorem flat_SB_onto : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circle) (ν : Measure k), Continuous ψ → ν.IsAddHaarMeasure → ∀ (n n' : Type) [Fintype n] [DecidableEq n] [Fintype n'] [DecidableEq n'] (c p : ℕ), 1 ≤ p → (p ≤ c + 1 → (∀ Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), GlobalTheory.LocFlat.flCol ψ ν p Φ ∈ SB _) ∧ ∀ Ψ ∈ SB (Matrix n (n' ⊕ Unit) k), ∃ Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), GlobalTheory.LocFlat.flCol ψ ν p Φ = Ψ) ∧ (p ≤ c → (∀ Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), GlobalTheory.LocFlat.flRow ψ ν p Φ ∈ SB _) ∧ ∀ Ψ ∈ SB (Matrix (n ⊕ Unit) n' k), ∃ Φ ∈ SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), GlobalTheory.LocFlat.flRow ψ ν p Φ = Ψ) := by
   intro k _ _ _ _ _ _ ψ ν hψ hν n n' _ _ _ _ c p hp1
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   refine ⟨fun hpc => ?_, fun hpc => ?_⟩
   · have hp : p - 1 < c + 1 := by omega
     refine ⟨fun Φ hΦ => ?_, fun Ψ hΨ => ?_⟩

@@ -91,7 +91,7 @@ private theorem transpose_mul_diagonal_mul_conj_eq_diagonal_iff {r : ℕ} {B : M
   · intro h
     have hunit : IsUnit B.det := isUnit_iff_ne_zero.2 hdet
     have htri : B.BlockTriangular id := fun i j hij => hup i j hij
-    letI := B.invertibleOfIsUnitDet hunit
+    let := B.invertibleOfIsUnitDet hunit
     have hinv : B⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular htri
     have h2 : Matrix.diagonal d * B.map (starRingEnd ℂ) = (B⁻¹)ᵀ * Matrix.diagonal d := by
       have h3 : (B⁻¹)ᵀ * (Bᵀ * Matrix.diagonal d * B.map (starRingEnd ℂ)) =
@@ -138,7 +138,7 @@ theorem _root_.GlobalTheory.isOrth_rmul_iff_unitary_diagonal :
   intro r X x b hx hb
   unfold _root_.ReciprocityTheory.ChartRestriction.G.AR.Up.IsOrth at hx ⊢
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Bor at hb
-  simp only [Set.mem_setOf_eq] at hb
+  simp only [Set.mem_ofPred_eq] at hb
   have hd : ∀ a : Fin r, ((_root_.ReciprocityTheory.ChartRestriction.G.FD.sgn X.p0 (a : ℕ) : ℝ) : ℂ) ≠ 0 := by
     intro a
     unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.sgn

@@ -73,8 +73,8 @@ theorem sum_trace_mul_inv [Fintype P] [CharZero K] [FiniteDimensional K V] (τ :
     ∑ h : P, LinearMap.trace K V (τ h) * (((c h)⁻¹ : Kˣ) : K) =
       (Nat.card P : K) * (finrank K (twistInv τ c).invariants : K) := by
   have hc : (Nat.card P : K) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
-  letI : Invertible (Nat.card P : K) := invertibleOfNonzero hc
-  letI : Invertible (Fintype.card P : K) := invertibleOfNonzero (by rw [← Nat.card_eq_fintype_card]; exact hc)
+  let : Invertible (Nat.card P : K) := invertibleOfNonzero hc
+  let : Invertible (Fintype.card P : K) := invertibleOfNonzero (by rw [← Nat.card_eq_fintype_card]; exact hc)
   have h := Representation.card_inv_mul_sum_char_eq_finrank (twistInv τ c)
   rw [← h, mul_inv_cancel_left₀ hc]
   refine Finset.sum_congr rfl fun x _ => ?_
@@ -115,8 +115,8 @@ theorem genericMultOne (hL : OneGenericVector) : GenericMultOne := by
   classical
   intro E _ _ Pg r K _ _ s ψ hψ χ hχ
   obtain ⟨b, V, i1, i2, i3, σ, hσ, hs⟩ := hχ
-  letI : Fintype (P0 Pg r ψ).H := Fintype.ofFinite _
-  letI : ∀ PP : ↥Pg, Fintype (unip (kP PP.1) r) := fun PP => Fintype.ofFinite _
+  let : Fintype (P0 Pg r ψ).H := Fintype.ofFinite _
+  let : ∀ PP : ↥Pg, Fintype (unip (kP PP.1) r) := fun PP => Fintype.ofFinite _
   apply s.injective
   let ψ' : ∀ PP : ↥Pg, AddChar (kP PP.1) ℂ := fun PP => s.toMonoidHom.compAddChar (ψ PP.1)
   have hψ' : ∀ PP : ↥Pg, ψ' PP ≠ 1 := by
@@ -132,8 +132,8 @@ theorem genericMultOne (hL : OneGenericVector) : GenericMultOne := by
       (((addCharHom (ψ' PP) (supHom (kP PP.1) r) h)⁻¹ : ℂˣ) : ℂ)
   have hf : ∀ PP : ↥Pg, ∑ h, f PP h = (Nat.card (unip (kP PP.1) r) : ℂ) := by
     intro PP
-    letI : Fintype (kP PP.1) := Fintype.ofFinite _
-    haveI := finite_parInd (b PP) (σ PP)
+    let : Fintype (kP PP.1) := Fintype.ofFinite _
+    have := finite_parInd (b PP) (σ PP)
     have h1 := sum_unip_eq (ψ' PP) (parInd (F := kP PP.1) (b PP) (σ PP))
     rw [hL (kP PP.1) (ψ' PP) (hψ' PP) r (V PP) (b PP) (σ PP) (hσ PP), Nat.cast_one, mul_one] at h1
     exact h1

@@ -137,10 +137,10 @@ private theorem recip_up (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] (n : ℕ) (p
 private theorem expo [IsAlgClosure ℚ Ω] (l n M : ℕ) [Fact l.Prime] (hM : 0 < M) (hd : l ^ n ∣ M) (s : Ω ≃ₐ[ℚ] Ω) :
     ∃ (ζ : Ω) (e : ℕ), IsPrimitiveRoot ζ M ∧ s ζ = ζ ^ e ∧ Nat.Coprime e M ∧
       (l : ℤ_[l]) ^ n ∣ (cyclotomicCharacter Ω l s.toRingEquiv : ℤ_[l]) - e := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero M := ⟨hM.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero M := ⟨hM.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   have hs : IsPrimitiveRoot (s ζ) M := hζ.map_of_injective s.injective
   obtain ⟨e, -, he⟩ := hζ.eq_pow_of_pow_eq_one hs.pow_eq_one
   refine ⟨ζ, e, hζ, he.symm, (hζ.pow_iff_coprime hM e).1 (he ▸ hs), ?_⟩
@@ -158,7 +158,7 @@ private theorem expo [IsAlgClosure ℚ Ω] (l n M : ℕ) [Fact l.Prime] (hM : 0 
 
 private theorem sum_perm {Q : Type} [AddCommMonoid Q] (p e : ℕ) (hp : 0 < p) (he : Nat.Coprime e p) (F : ℤ → Q)
     (hF : ∀ k t : ℤ, F (k + t * p) = F k) : ∑ j ∈ Finset.range p, F (j * e) = ∑ j ∈ Finset.range p, F j := by
-  haveI : NeZero p := ⟨hp.ne'⟩
+  have : NeZero p := ⟨hp.ne'⟩
   have h1 : ∀ k : ℤ, F k = F ((k : ZMod p).val) := by
     intro k
     rw [ZMod.val_intCast, ← hF (k % p) (k / p)]

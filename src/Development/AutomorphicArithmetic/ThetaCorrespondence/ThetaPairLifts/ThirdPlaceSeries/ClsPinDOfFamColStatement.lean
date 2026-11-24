@@ -456,7 +456,7 @@ theorem tailTop_eq_of_pin : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (
   have e1 : ∀ {α : Type} (inst : Fintype α), (∀ a b : α, a = b) → α → ∀ x : ℂ,
       @Finset.sum α ℂ _ (@Finset.univ α inst) (fun _ => x) = x := by
     intro α inst hs a x
-    haveI : Unique α := ⟨⟨a⟩, fun b => hs _ _⟩
+    have : Unique α := ⟨⟨a⟩, fun b => hs _ _⟩
     exact Fintype.sum_unique _
   have e0 : ∀ {α : Type} (inst : Fintype α), IsEmpty α → ∀ x : ℂ,
       @Finset.sum α ℂ _ (@Finset.univ α inst) (fun _ => x) = 0 := by
@@ -533,7 +533,7 @@ theorem nontrivial_finAdeles : Nontrivial (FiniteAdeleRing (𝓞 D.host.F) D.hos
 
 theorem inclE_inj : Function.Injective
     (Formalism.UG.inclE (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) := by
-  haveI := nontrivial_finAdeles (D := D)
+  have := nontrivial_finAdeles (D := D)
   exact Formalism.UG.P.inclE_injective D.host.F D.host.E (FiniteAdeleRing (𝓞 D.host.F) D.host.F)
 
 theorem bc_inclE_inj {n : ℕ} : Function.Injective
@@ -594,8 +594,8 @@ theorem isReps_of_level (V : HSp D) {n : ℕ} (hn : V.rank = n) (hV : ∀ τ, (g
       Formalism.UG.bc (Formalism.UG.inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) δ.1 ∈
         S.U.map (MulAut.conj (yc c).1).toMonoidHom} := by
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.2.2.1
-  haveI := hT.2.2.2.2.1
+  have := hT.2.2.1
+  have := hT.2.2.2.2.1
   have hinf : ∀ k ∈ GinfC V, k ∈ GlobalTheory.ClassSumLevel.levG V hn S := fun k hk =>
     ⟨1, (GlobalTheory.ClassSumLevel.finM_eq_one_of_mem_GinfC V hn hk).symm⟩
   have split : ∀ k ∈ GlobalTheory.ClassSumLevel.levG V hn S, ∃ a ∈ GinfC V, ∃ κ ∈ U, k = a * κ := by
@@ -615,7 +615,7 @@ theorem isReps_of_level (V : HSp D) {n : ℕ} (hn : V.rank = n) (hV : ∀ τ, (g
           rw [← hg']
           exact (GlobalTheory.AutMult.toFin V g).2⟩
       rw [e]
-      exact isClosed_eq (continuous_subtype_val.comp (GlobalTheory.AutMult.continuous_toFin V)) continuous_id
+      exact isClosed_eq (continuous_subtypeVal.comp (GlobalTheory.AutMult.continuous_toFin V)) continuous_id
     have e : (U : Set (GA D V)) = (GlobalTheory.ClassSumLevel.levG V hn S : Set (GA D V)) ∩ (GfC V : Set (GA D V)) :=
       Set.ext fun x => (mem x).trans and_comm
     rw [e]
@@ -625,7 +625,7 @@ theorem isReps_of_level (V : HSp D) {n : ℕ} (hn : V.rank = n) (hV : ∀ τ, (g
       Set.ext fun x => ⟨fun hx => ((mem x.1).1 (Subgroup.mem_subgroupOf.1 hx)).2,
         fun hx => Subgroup.mem_subgroupOf.2 ((mem x.1).2 ⟨x.2, hx⟩)⟩
     rw [e]
-    exact (GlobalTheory.ClassSumLevel.isOpen_levG V hn S).preimage continuous_subtype_val
+    exact (GlobalTheory.ClassSumLevel.isOpen_levG V hn S).preimage continuous_subtypeVal
   · obtain ⟨c, ⟨γ, hγ, k, hk, e⟩, -⟩ := hex g
     obtain ⟨a, ha, κ, hκ, rfl⟩ := split k hk
     exact ⟨γ, hγ, c, a, ha, κ, hκ, by rw [e]; simp only [mul_assoc]⟩
@@ -788,9 +788,9 @@ theorem stdPair_world {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X
     by_cases h : a = b
     · subst h
       rw [Matrix.one_apply_eq]
-      exact (if_pos rfl).trans (by simp [Formalism.BasicNotions.Examples₂.sgn]; rfl)
+      exact (ite_eq_left rfl).trans (by simp [Formalism.BasicNotions.Examples₂.sgn]; rfl)
     · rw [Matrix.one_apply_ne h]
-      exact if_neg h
+      exact ite_eq_right h
   have hr : ∀ j, ((I.rec7 l Z).sp.X j).rank = B.R.N j := fun j => by
     have e : (I.rec7 l Z).sp.X j = Formalism.BasicNotions.Examples₂.posSpace hs (B.R.N j) := hX j
     rw [e]; rfl
@@ -847,7 +847,7 @@ theorem exists_jetS : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC
     fun j hj => GlobalTheory.AdForm.JetRead.pureTensorO_zero_eq_jetP (I.rec7 l Z) ψ θ _ _ _ _ (rankN (I.rec7 l Z) j (Nat.le_of_succ_le hj))
       (rankN (I.rec7 l Z) (j + 1) hj) I.A.δ I.A.sc (stdPair_world I hI l Z ψ θ hψ hθ j)
   refine ⟨fun j => if hj : j + 1 ≤ B.R.m then (hstep j hj).choose else 1, fun j hj => ?_⟩
-  simp only [dif_pos hj]
+  simp only [dite_eq_left hj]
   exact (hstep j hj).choose_spec
 
 end GlobalTheory.AdForm.JetScales
@@ -1146,7 +1146,7 @@ theorem reading_stab_inv : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I
     have h0 := e1
     rw [hst] at h0
     exact h0)
-  haveI : Finite ((I.stX a).Stab c) := ((I.fm l u a).stabPFin c : Finite _)
+  have : Finite ((I.stX a).Stab c) := ((I.fm l u a).stabPFin c : Finite _)
   have e3 := star_eq_inv (((I.stX a).chr c.1).comp (Subgroup.subtype _ : (I.stX a).Stab c →* _)) B.embLL s
   obtain ⟨γ, hγ, e4, e5⟩ := exists_ratPt hθ (rankP (I.rec7 l Z)) (K.stabI c s).1 (K.stabI c s).2
   obtain ⟨k, hk⟩ := hasMat_exists (D := I.rec7 l Z) ⟨κ.1, ((K.lev.U_eq _).1 κ.2).1⟩
@@ -1234,9 +1234,9 @@ theorem GlobalTheory.AdForm.exists_readsG_of_level : ∀ {B : GlobalTheory.Mem.B
   have hzo : ∀ c', c' ≠ c → z c' = 0 := fun c' h => by
     rw [hz c']
     exact Pi.single_eq_of_ne h _
-  haveI := (l.per u a).step.fin_stab c.1 ((I.perIn u a).S'.rep c)
+  have := (l.per u a).step.fin_stab c.1 ((I.perIn u a).S'.rep c)
   have hne : ((Nat.card ((I.perIn u a).S'.Stab c) : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
-  letI := (I.perIn u a).clFin (l.per u a)
+  let := (I.perIn u a).clFin (l.per u a)
   show _ = _ * (∑ c' : (I.perIn u a).S'.Cl, (I.perIn u a).wt c' • (Formalism.L2.DIV.pairB (K := ℂ) (I.perIn u a).sgT).compl₁₂
       (Formalism.L2.Col.polOf (GlobalTheory.Mem.Col2.Gr B.fields.emb B.embLL (B.R.N B.R.m - 1)) (Formalism.L2.Forms.shiftOf (I.perIn u a).sgT)
         (GlobalTheory.Mem.Col2.fr0 B.fields.emb B.embLL (B.R.N B.R.m - 1)) ∘ₗ LinearMap.proj c')
@@ -1300,7 +1300,7 @@ theorem jOf_exists : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC 
       IsTr (infM R.θ _ (rankP (I.rec7 l Z)) k) z z' then j v ⟨h.choose.1, h.choose.2⟩ else 0, ?_⟩
   intro v k _ z z' hz
   have h : ∃ z : FrN (I.rec7 l Z) (B.R.N B.R.m - 1), IsTr (infM R.θ _ (rankP (I.rec7 l Z)) k) z z' := ⟨z, hz⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   have e := isTr_unique h.choose_spec hz
   exact congrArg (j v) (Subtype.ext e)
 

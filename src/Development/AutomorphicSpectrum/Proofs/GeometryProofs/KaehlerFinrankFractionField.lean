@@ -62,10 +62,10 @@ theorem finrank_kaehler_fractionRing_eq_of_basis
     (hli : LinearIndependent T (fun i => KaehlerDifferential.D S T (w i)))
     (hspan : Submodule.span T (Set.range fun i => KaehlerDifferential.D S T (w i)) = ⊤) :
     Module.finrank L (KaehlerDifferential K L) = m := by
-  haveI : Algebra.FormallyEtale T L := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors T)
-  haveI : Algebra.FormallyUnramified S K :=
+  have : Algebra.FormallyEtale T L := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors T)
+  have : Algebra.FormallyUnramified S K :=
     Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors S)
-  haveI : Subsingleton (KaehlerDifferential S K) :=
+  have : Subsingleton (KaehlerDifferential S K) :=
     Algebra.FormallyUnramified.subsingleton_kaehlerDifferential
   have hinj : Function.Injective (KaehlerDifferential.map S K L L) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]

@@ -211,7 +211,7 @@ theorem torus_ext {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel
   rw [h3, (hv τ).2.2 (fun a => s τ (e.symm a)) (diagonal_mem_Kset _ _)]
   congr 1
   rw [← e.sum_comp]
-  simp only [← Complex.exp_int_mul, ← Complex.exp_sum, Equiv.symm_apply_apply]
+  simp only [← Complex.exp_intCast_mul, ← Complex.exp_sum, Equiv.symm_apply_apply]
   congr 1
   push_cast
   rw [Finset.sum_mul]

@@ -449,9 +449,9 @@ theorem exists_equiv (ψ : R ≃+* S) (h1 : Continuous ψ) (h2 : Continuous ψ.s
               change N * bc ψ.toRingHom (x.1 * y.1) * N⁻¹ = N * bc ψ.toRingHom x.1 * N⁻¹ * (N * bc ψ.toRingHom y.1 * N⁻¹)
               rw [map_mul]; group)
             continuous_toFun := Continuous.subtype_mk
-              ((continuous_const.mul (c1.comp continuous_subtype_val)).mul continuous_const) _
+              ((continuous_const.mul (c1.comp continuous_subtypeVal)).mul continuous_const) _
             continuous_invFun := Continuous.subtype_mk
-              (c2.comp ((continuous_const.mul continuous_subtype_val).mul continuous_const)) _ }, fun x => rfl⟩
+              (c2.comp ((continuous_const.mul continuous_subtypeVal).mul continuous_const)) _ }, fun x => rfl⟩
 
 end Abstract
 

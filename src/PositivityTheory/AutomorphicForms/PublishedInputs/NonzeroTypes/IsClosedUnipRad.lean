@@ -108,7 +108,7 @@ theorem isOpen_zN (ϖ : kˣ) (m : ℕ) : IsOpen ((G.zN ϖ m : Subgroup ↥G.NO) 
     ext u
     exact mem_zN_iff G ϖ m u
   rw [e]
-  exact GlobalTheory.SplitFlip.isOpen_KO.preimage ((continuous_const.mul continuous_subtype_val).mul continuous_const)
+  exact GlobalTheory.SplitFlip.isOpen_KO.preimage ((continuous_const.mul continuous_subtypeVal).mul continuous_const)
 
 theorem finite_quot (ϖ : kˣ) (m : ℕ) : Finite (↥G.NO ⧸ G.zN ϖ m) := by
   have : CompactSpace ↥G.NO := isCompact_iff_compactSpace.mp (isCompact_NO G)

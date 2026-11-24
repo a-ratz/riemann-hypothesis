@@ -124,7 +124,7 @@ theorem exists_pow_mul_mem {U : X.Opens} (hU : IsAffineOpen U) (hg : genPt ξ �
   let q : U := ⟨hU.fromSpec ⟨P, hP⟩, hU.range_fromSpec.le ⟨⟨P, hP⟩, rfl⟩⟩
   have hq : hU.primeIdealOf q = ⟨P, hP⟩ :=
     hU.fromSpec.isOpenEmbedding.injective (hU.fromSpec_primeIdealOf _)
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf q
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf q
   have hloc := hU.isLocalization_stalk q
   rw [hq] at hloc
   have hunit : ∀ u, u ∉ P → IsUnit (X.presheaf.germ U q.1 q.2 u) := fun u hu =>
@@ -350,7 +350,7 @@ theorem coordTie_int_of_finite : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ
       rw [e]
       exact zsmul_mem ha k
   obtain ⟨c, -⟩ := hT.cover ⟨genPt ξ, specializes_rfl⟩
-  haveI : Nonempty (κ × Option (Fin n)) := ⟨(c, none)⟩
+  have : Nonempty (κ × Option (Fin n)) := ⟨(c, none)⟩
   have hcard : 0 < Nat.card (κ × Option (Fin n)) := Nat.card_pos
   obtain ⟨N, hN⟩ := Nat.exists_eq_succ_of_ne_zero hcard.ne'
   exact ⟨N, _, CoordBase.coordTie_reindex (Finite.equivFinOfCardEq hN).symm

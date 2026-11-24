@@ -92,12 +92,12 @@ theorem exists_finite_point (n : ℕ) {X : Scheme.{0}} (s : X ⟶ Sp (cycAway n)
   have hft : a.hom.FiniteType := by
     rw [← HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType), ha]
     infer_instance
-  letI := a.hom.toAlgebra
+  let := a.hom.toAlgebra
   obtain ⟨T, hT⟩ := Algebra.FiniteType.out (R := cycAway n) (A := Γ(X, U)) (self := hft)
   let S : Set (PadicAlgCl p) := φ.hom '' (T : Set Γ(X, U)) ∪
     {φ.hom (a.hom (zetaAway n)), φ.hom (a.hom ⟨(n : ℂ)⁻¹, Subring.subset_closure (Or.inr rfl)⟩)}
   have hSfin : S.Finite := (T.finite_toSet.image _).union (Set.toFinite _)
-  haveI : Finite S := hSfin.to_subtype
+  have : Finite S := hSfin.to_subtype
   let K := IntermediateField.adjoin ℚ_[p] S
   have hK : FiniteDimensional ℚ_[p] K :=
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral
@@ -124,15 +124,15 @@ theorem exists_ext_emb (p : ℕ) [Fact p.Prime] (V W : Type) [CommRing V] [IsDom
     (hV : ∀ x, ‖κ x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap V (FractionRing V))) :
     ∃ ι : FractionRing W →+* PadicAlgCl p, ι.comp fK = κ ∧
       ∀ x, ‖ι x‖ ≤ 1 ↔ x ∈ Set.range (algebraMap W (FractionRing W)) := by
-  letI : Algebra V W := f.toAlgebra
-  letI : Algebra (FractionRing V) (FractionRing W) := fK.toAlgebra
-  letI : Algebra (FractionRing V) (PadicAlgCl p) := κ.toAlgebra
-  haveI : Algebra.IsIntegral V W := ⟨fun w => hfin.to_isIntegral w⟩
-  haveI : IsLocalHom (algebraMap V W) := hloc
+  let : Algebra V W := f.toAlgebra
+  let : Algebra (FractionRing V) (FractionRing W) := fK.toAlgebra
+  let : Algebra (FractionRing V) (PadicAlgCl p) := κ.toAlgebra
+  have : Algebra.IsIntegral V W := ⟨fun w => hfin.to_isIntegral w⟩
+  have : IsLocalHom (algebraMap V W) := hloc
   have hint : ∀ w : W, IsIntegral (FractionRing V) (algebraMap W (FractionRing W) w) := fun w =>
     IsIntegral.map_of_comp_eq (algebraMap V (FractionRing V)) (algebraMap W (FractionRing W))
       (RingHom.ext fun v => hc v) (Algebra.IsIntegral.isIntegral w)
-  haveI : Algebra.IsAlgebraic (FractionRing V) (FractionRing W) := by
+  have : Algebra.IsAlgebraic (FractionRing V) (FractionRing W) := by
     constructor
     intro z
     obtain ⟨a, b, -, rfl⟩ := IsFractionRing.div_surjective (A := W) z
@@ -153,12 +153,12 @@ theorem exists_cTrait : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix 
   intro g n F W Z i X₁ hg hn hodd hi p _ y hr
   let y₁ : Sp (PadicAlgCl p) ⟶ F.X := IsOpenImmersion.lift i (gPt p ≫ y ≫ X₁.π) hr
   have hy₁ : y₁ ≫ i = gPt p ≫ y ≫ X₁.π := IsOpenImmersion.lift_fac _ _ _
-  haveI := F.smooth
-  haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+  have := F.smooth
+  have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
   obtain ⟨K, hK, x, hx⟩ := exists_finite_point n F.s p y₁
   obtain ⟨hdvr, hcomp, hunit⟩ := GlobalTheory.intRing_complete_dvr p K hK
-  haveI := hdvr
-  haveI : CharZero (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) := inferInstance
+  have := hdvr
+  have : CharZero (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) := inferInstance
   let e : FractionRing (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) ≃ₐ[GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K] K := FractionRing.algEquiv _ K
   let es : K →+* FractionRing (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) := e.symm.toRingEquiv.toRingHom
   have hbase : GlobalTheory.Mum.Base (GlobalTheory.IndefiniteRowSideFullHecke.UniformityLowerBounds.intRing K) := ⟨⟨inferInstance, inferInstance, inferInstance, hcomp⟩, inferInstance⟩

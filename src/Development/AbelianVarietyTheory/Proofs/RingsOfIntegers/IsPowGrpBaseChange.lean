@@ -54,7 +54,7 @@ namespace GlobalTheory
 theorem isPowGrp_baseChange : ∀ (S S' : Scheme.{0}) (f : S' ⟶ S) (G' G : Over S) [GrpObj G'] [GrpObj G] (j : ℕ) (p : IsPowGrp G' G j), ∃ p' : IsPowGrp ((Over.pullback f).obj G') ((Over.pullback f).obj G) j, ∀ i, p'.pr i = (Over.pullback f).map (p.pr i) := by
   intro S S' f G' G _ _ j p
   refine ⟨⟨fun i => (Over.pullback f).map (p.pr i), fun i => ?_, ?_⟩, fun i => rfl⟩
-  · haveI := p.hom i
+  · have := p.hom i
     infer_instance
   · exact isLimitFanMkObjOfIsLimit (Over.pullback f) _ _ p.lim
 

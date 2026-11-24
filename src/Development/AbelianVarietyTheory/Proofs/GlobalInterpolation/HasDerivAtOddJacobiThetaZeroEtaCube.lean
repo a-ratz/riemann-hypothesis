@@ -178,7 +178,7 @@ theorem hasDerivAt_oddTheta_zero :
   have hT1 : tailProd τ 1 = ∏' n : ℕ, (1 - ModularForm.eta_q n (τ : ℂ)) := by
     simp [tailProd]
   have hq : (Function.Periodic.qParam 24 (τ : ℂ)) ^ 3 = cexp (π * I * (τ : ℂ) / 4) := by
-    rw [Function.Periodic.qParam, ← Complex.exp_nat_mul]
+    rw [Function.Periodic.qParam, ← exp_natCast_mul]
     congr 1; push_cast; ring
   have hI : cexp (π * I * (τ : ℂ) / 4 + π * I * (0 + 1 / 2)) = cexp (π * I * (τ : ℂ) / 4) * I := by
     rw [Complex.exp_add]

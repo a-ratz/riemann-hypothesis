@@ -182,14 +182,14 @@ theorem UpperTheory.V.Z.Win.T2.local_fixed_vectors_statement :
     have hlt : ∀ x : ValueGroupWithZero (w.adicCompletion F),
         x < γ ↔ x ≤ valuation _ (M : w.adicCompletion F) := fun x => by
       show x < _ / _ ↔ _
-      rw [lt_div_iff₀ (zero_lt_iff.2 hu0)]
+      rw [lt_div_iff₀ (pos_iff_ne_zero.2 hu0)]
       refine ⟨fun h1 => not_lt.1 fun h2 => h1.not_ge ?_, fun h1 => (mul_le_mul_left h1 _).trans_lt
-        (mul_lt_of_lt_one_right (zero_lt_iff.2 hv0) uniformizer_lt_one)⟩
-      have hx : 0 < x := (zero_lt_iff.2 hv0).trans h2
+        (mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hv0) uniformizer_lt_one)⟩
+      have hx : 0 < x := (pos_iff_ne_zero.2 hv0).trans h2
       rwa [← div_le_iff₀' hx, le_uniformizer_iff, div_lt_one₀ hx]
     have hγ : γ ≤ 1 := by
       show _ / _ ≤ (1 : ValueGroupWithZero (w.adicCompletion F))
-      rw [div_le_one₀ (zero_lt_iff.2 hu0), le_uniformizer_iff]
+      rw [div_le_one₀ (pos_iff_ne_zero.2 hu0), le_uniformizer_iff]
       exact hv
     obtain ⟨s, hs⟩ := GlobalTheory.LocGL.SupportRing.exists_hasSupport P.litN.loc.zel (algNorm σ)
     have hch : ∀ y ∈ s, ∃ χ hχ, y = IrrGL.ofChar χ hχ ∧ ∀ u : (w.adicCompletion F)ˣ,
@@ -333,9 +333,9 @@ private theorem char_mult (K L : FinExt l) (κ : ↥(GK K) →* (↥L.1)ˣ) (hκ
     rw [FildR, le_bot_iff.1 ((inf_le_inf_right _ hle).trans ((h i).2 hi).le), finrank_bot]
   unfold multV
   rcases lt_trichotomy a (-w) with ha | ha | ha
-  · rw [h1 a ha.le, h1 (a + 1) ha, if_neg ha.ne]; simp
-  · rw [h1 a ha.le, h0 (a + 1) (by omega), if_pos ha]; simp
-  · rw [h0 a ha, h0 (a + 1) (by omega), if_neg ha.ne']; simp
+  · rw [h1 a ha.le, h1 (a + 1) ha, ite_eq_right ha.ne]; simp
+  · rw [h1 a ha.le, h0 (a + 1) (by omega), ite_eq_left ha]; simp
+  · rw [h0 a ha, h0 (a + 1) (by omega), ite_eq_right ha.ne']; simp
 private theorem flag_mult (K L : FinExt l) (n : ℕ) : ∀ (ρ : Representation ↥L.1 ↥(GK K) (Fin n → ↥L.1))
     (M : ↥(GK K) → Matrix (Fin n) (Fin n) ↥L.1) (κ : Fin n → ↥(GK K) →* (↥L.1)ˣ),
     (∀ g x, ρ g x = (M g).mulVec x) → (∀ g i j, j < i → M g i j = 0) → (∀ g i, M g i i = κ i g) →
@@ -393,11 +393,11 @@ private theorem flag_mult (K L : FinExt l) (n : ℕ) : ∀ (ρ : Representation 
 private theorem exists_open (K : FinExt l) {M : ℕ} (hM : 1 ≤ M) : ∃ U : Subgroup ↥(GK K), IsOpen (U : Set ↥(GK K)) ∧
     ∀ s ∈ U, ∀ ζ : Om l, ζ ^ M = 1 → (s : GQ l) ζ = ζ := by
   have : NeZero M := ⟨by omega⟩
-  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) M
+  obtain ⟨z, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) M
   have : FiniteDimensional ℚ_[l] ↥(IntermediateField.adjoin ℚ_[l] {z}) :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral z)
   refine ⟨(IntermediateField.adjoin ℚ_[l] {z}).fixingSubgroup.comap (GK K).subtype,
-    (IntermediateField.fixingSubgroup_isOpen _).preimage continuous_subtype_val, fun s hs ζ hζ => ?_⟩
+    (IntermediateField.fixingSubgroup_isOpen _).preimage continuous_subtypeVal, fun s hs ζ hζ => ?_⟩
   obtain ⟨i, -, rfl⟩ := hz.eq_pow_of_pow_eq_one hζ
   have h : (s : GQ l) z = z := (IntermediateField.mem_fixingSubgroup_iff _ _).1 hs z
     (IntermediateField.mem_adjoin_simple_self _ z)
@@ -427,7 +427,7 @@ theorem UpperTheory.V.Af.jumps_above_of_printed_results :
   have key : ∀ i a, multV ((Loc.PP l).PD Bw.Kw) (Formalism.WeaklyAdmissibleFiltrations.charRep (κ' i)) τ' a = if a = -m i then 1 else 0 := fun i a => by
     refine char_mult Bw.Kw L (κ' i) (continuous_induced_rng.2 ?_) (m i) ⟨U, hU, fun s hs hq => ?_⟩ (d i) τ' a
     · have h1 : Continuous fun s : ↥(GK Bw.Kw) => g * r (Bw.e.symm s) * g⁻¹ :=
-        (continuous_const.mul (hr.comp (continuous_subtype_val.comp Bw.e_symm_cont))).mul continuous_const
+        (continuous_const.mul (hr.comp (continuous_subtypeVal.comp Bw.e_symm_cont))).mul continuous_const
       exact ((Units.continuous_val.comp h1).matrix_elem i i).congr fun s => (he _ i i).symm
     · have hine : (Bw.e.symm s : G F Ω) ∈ Ine (F := F) A := by
         refine ⟨(Bw.e.symm s).2, fun x hx => ?_⟩
@@ -483,7 +483,7 @@ theorem UpperTheory.V.Af.weil_deligne_away_of_printed_results :
   have hx' : IsWDOf ι r' x := hx.of_conj hl g fun s => by rw [hr', inv_mul_cancel_right]
   obtain ⟨t, ht, φ, hφ, N, a, hN, ha, rfl⟩ := hx'
   have hs : IsSmooth (r'.comp (Weil h).subtype) := by
-    refine .of_open ((UpperTheory.V.Af.isOpen_fixMu (F := F) (Ω := Ω) hM).preimage continuous_subtype_val)
+    refine .of_open ((UpperTheory.V.Af.isOpen_fixMu (F := F) (Ω := Ω) hM).preimage continuous_subtypeVal)
       (fun ζ _ => rfl) fun σ hσ => Units.ext ?_
     change (r' σ : Matrix (Fin n) (Fin n) (Qbar l)) = 1
     rw [hr', hg σ σ.2]

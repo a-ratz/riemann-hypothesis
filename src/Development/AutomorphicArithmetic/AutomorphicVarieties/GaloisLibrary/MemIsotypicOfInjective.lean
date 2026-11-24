@@ -76,7 +76,7 @@ theorem iso_sub {H S Y V : Type} [Group H] [AddCommGroup S] [Module ℂ S] [AddC
     (h : ∀ y, j y ∈ ⨆ f : {f : S →ₗ[ℂ] V // ∀ g v, f (σ g v) = ρ g (f v)}, LinearMap.range f.1) (y : Y) :
     y ∈ ⨆ f : {f : S →ₗ[ℂ] Y // ∀ g v, f (σ g v) = π g (f v)}, LinearMap.range f.1 := by
   classical
-  haveI : σ.IsIrreducible := hσ
+  have : σ.IsIrreducible := hσ
   let J : Representation.IntertwiningMap π ρ := j.intertwiningMap_of_isIntertwiningMap π ρ he
   let j' := Representation.IntertwiningMap.equivLinearMapAsModule π ρ J
   have hj' : Function.Injective j' := hj

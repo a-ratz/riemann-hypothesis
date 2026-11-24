@@ -284,7 +284,7 @@ theorem back_comm {ξ : E} (hξ : ξ ≠ 0) {k : GAd σ (dblGram finSumFinEquiv 
 
 theorem iwasawa2 {B : Base F E} (hB : B.IsGood σ) {r s : ℕ} (hY : Y.IsHerm σ B r s ∨ Y.IsSkew σ B r s) (x : G2 σ Y) :
     ∃ p : siegelOf (Equiv.refl (Fin n ⊕ Fin n)) (UG (cA σ) (dbl (incM F Y.J))).subtype, ∃ k ∈ stab2 σ Y B, x = p * k := by
-  haveI hL : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
+  have hL : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
   obtain ⟨ξ, hξ, hh, hw⟩ := exists_scal hB hY
   choose M r h1 h2 h3 h4 using hw
   choose b hb hb' using fun w => exists_arch hB.cm (B.emb w) (h1 w) (isUnit_of_cartan (h2 w)) (h2 w) (h3 w) (h4 w)
@@ -313,11 +313,11 @@ theorem hgtEx_core {B : Base F E} (hB : B.IsGood σ) {r s : ℕ} (hY : Y.IsHerm 
   have := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   have := t2Space_adeleRing' (F := F)
   have := t2Space_tensorProduct_finiteExtension (F := F) (E := E) (R := AF F)
-  have hI := iwasawaOf_of_isCompact (ν := absE F E) continuous_subtype_val continuous_absE hK (iwasawa2 hB hY)
+  have hI := iwasawaOf_of_isCompact (ν := absE F E) continuous_subtypeVal continuous_absE hK (iwasawa2 hB hY)
   refine ⟨⟨_, fun x => hgtOf (Equiv.refl _) (UG (cA σ) (dbl (incM F Y.J))).subtype (absE F E) (stab2 σ Y B) x, isStab2_stab2 B,
     ⟨fun x => ?_, fun p t hp k hk => ?_⟩,
-    NNReal.continuous_coe.comp (hI.continuous_hgtOf continuous_subtype_val continuous_absE hK), fun x => hgtOf_pos x⟩,
-    emb2 σ Y, ((continuous_blkGL _).comp (continuous_subtype_val.prodMap continuous_subtype_val)).subtype_mk _, fun _ _ => rfl⟩
+    NNReal.continuous_coe.comp (hI.continuous_hgtOf continuous_subtypeVal continuous_absE hK), fun x => hgtOf_pos x⟩,
+    emb2 σ Y, ((continuous_blkGL _).comp (continuous_subtypeVal.prodMap continuous_subtypeVal)).subtype_mk _, fun _ _ => rfl⟩
   · obtain ⟨p, h⟩ := iwasawa2 hB hY x
     exact ⟨p, leviOf _ _ p, isPar_iff.2 ⟨mem_siegelOf.1 p.2, rfl⟩, h⟩
   · obtain ⟨h1, h2⟩ := isPar_iff.1 hp

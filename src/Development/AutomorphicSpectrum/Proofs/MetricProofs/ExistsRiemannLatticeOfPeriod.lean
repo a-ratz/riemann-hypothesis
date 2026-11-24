@@ -119,14 +119,14 @@ theorem free_of_period {Λ : Type} [AddCommGroup Λ] {g : ℕ} (P : Λ →+ (Fin
     (hd : DiscreteTopology P.range) (hs : Submodule.span ℝ (Set.range P) = ⊤) :
     Module.Free ℤ Λ ∧ Module.Finite ℤ Λ ∧ Module.finrank ℤ Λ = 2 * g := by
   let L : Submodule ℤ (Fin g → ℂ) := P.range.toIntSubmodule
-  haveI : DiscreteTopology L := hd
-  haveI : IsZLattice ℝ L := ⟨by
+  have : DiscreteTopology L := hd
+  have : IsZLattice ℝ L := ⟨by
     have : ((L : Set (Fin g → ℂ))) = Set.range P := by
       ext x; simp [L]
     rw [this, hs]⟩
   let e : Λ ≃ₗ[ℤ] L := (AddMonoidHom.ofInjective hi).toIntLinearEquiv
-  haveI : Module.Free ℤ L := ZLattice.module_free ℝ L
-  haveI : Module.Finite ℤ L := ZLattice.module_finite ℝ L
+  have : Module.Free ℤ L := ZLattice.module_free ℝ L
+  have : Module.Finite ℤ L := ZLattice.module_finite ℝ L
   refine ⟨Module.Free.of_equiv e.symm, Module.Finite.equiv e.symm, ?_⟩
   rw [e.finrank_eq, ZLattice.rank ℝ L, Module.finrank_pi_fintype]
   simp [Complex.finrank_real_complex, mul_comm]
@@ -151,9 +151,9 @@ theorem riemLat_of_period : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   · show Module.finrank ℂ (eigSp (diagAct ty) (s.comp (algebraMap (𝓞 E) E))) = _
     rw [finrank_eigSp_diagAct]
     by_cases h : s (H.rt : E) = H.rt0
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       exact (hty s).1 h
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       exact (hty s).2 h
 
 end GlobalTheory.CompanionTheory.Ar.Cusp

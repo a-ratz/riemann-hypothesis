@@ -442,7 +442,7 @@ theorem chi_locE_congr (δ : Twist D Circle) (hδ : δ.Good) {PP : Pl D.host.E} 
   have he := hδ.split.isIdemAt hPP
   have hee : idemAt PP * idemAt PP = idemAt PP := he.1.1
   obtain ⟨hi, h1⟩ := GlobalTheory.IdemRes.resS_idem_eq_one D _ PP he
-  haveI : PP.asIdeal.IsMaximal := PP.isMaximal
+  have : PP.asIdeal.IsMaximal := PP.isMaximal
   have hma : (Ideal.Quotient.mk PP.asIdeal a : kP PP) ≠ 0 := by
     rw [Ne, Ideal.Quotient.eq_zero_iff_mem]; exact ha
   let u : (kP PP)ˣ := Units.mk0 _ hma
@@ -612,7 +612,7 @@ theorem tameAt_of_good (t : Twist D Circle) (ht : t.Good) (χ : Formalism.L2.Hos
   by_cases hv : v ∈ t.Q
   · have hr := GlobalTheory.TwistResidue.isRes_of_chrEq D t ht χ hχ v hv
     refine GlobalTheory.TameConjPlace.tameAt_of_congr χ v fun a b ka kb hka hkb ha hab => ?_
-    haveI : v.asIdeal.IsMaximal := v.isMaximal
+    have : v.asIdeal.IsMaximal := v.isMaximal
     have hma : (Ideal.Quotient.mk v.asIdeal a : kP v) ≠ 0 := by
       rw [Ne, Ideal.Quotient.eq_zero_iff_mem]; exact ha
     have e1 := hr a ka (Units.mk0 _ hma) hka rfl
@@ -715,7 +715,7 @@ theorem exists_level : ∀ (D : D7) (ρ : Setup D.ntw), ρ.Good → (D.host.cls 
 open Classical in
 theorem exists_field_roots : ∀ (L : IntermediateField ℚ ℂ) (K : Subfield ℂ), FiniteDimensional ℚ L → IsGalois ℚ L → L.toSubfield ≤ K → ∀ n : ℕ, 0 < n → ∃ L' : IntermediateField ℚ ℂ, FiniteDimensional ℚ L' ∧ Normal ℚ L' ∧ L ≤ L' ∧ L'.toSubfield ≤ K ∧ ∀ z ∈ K, z ^ n = 1 → z ∈ L' := by
   intro L K h1 h2 h3 n hn
-  haveI := h2.to_normal
+  have := h2.to_normal
   exact BaseRat.exists_normal_roots L h3 hn.ne'
 
 

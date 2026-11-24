@@ -157,7 +157,7 @@ lemma nuNext_tele (ν : Fin n → ℝ) {a b : Fin n} (hba : b < a) :
     have := a.isLt
     simp only [Finset.mem_filter, Finset.mem_range, Finset.mem_Ico]
     omega
-  rw [hfil, sum_Ico_tele f (b := (b : ℕ)) (a : ℕ) (Fin.lt_iff_val_lt_val.mp hba).le]
+  rw [hfil, sum_Ico_tele f (b := (b : ℕ)) (a : ℕ) (Fin.lt_def.mp hba).le]
   simp [f, b.isLt, a.isLt]
 
 theorem dec_weighted {ε : Fin n → Bool} (ν : Fin n → ℝ) (hν : Antitone ν) {g : ℝ}
@@ -179,9 +179,9 @@ theorem dec_weighted {ε : Fin n → Bool} (ν : Fin n → ℝ) (hν : Antitone 
       refine Finset.sum_congr rfl fun i _ => ?_
       split_ifs <;> ring
     · refine Finset.sum_eq_zero fun i _ => ?_
-      rw [if_neg, mul_zero]
+      rw [ite_eq_right, mul_zero]
       intro h
-      exact hba (Fin.lt_iff_val_lt_val.mpr (lt_of_le_of_lt h.1 h.2))
+      exact hba (Fin.lt_def.mpr (lt_of_le_of_lt h.1 h.2))
   rw [hR]
   have hL : g * (2 * ∑ a : Fin n, ∑ b : Fin n, if b < a then ‖Y a b‖ ^ 2 else 0) / 2 =
       ∑ a : Fin n, ∑ b : Fin n, if b < a then g * ‖Y a b‖ ^ 2 else 0 := by
@@ -249,13 +249,13 @@ private lemma dp_inner_P (T : KType ε Λ) (k : KG ε) (v : T.V) :
   | simp [RCLike.mul_conj]
 
 private lemma dp_cont_P (T : KType ε Λ) : Continuous (dpP T) := by
-  have hop : Continuous fun k : KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have hop : Continuous fun k : KG ε => T.op k := continuous_subtypeVal.comp T.cont
   have hinv : Continuous fun k : KG ε => T.op k⁻¹ := hop.comp continuous_inv
   exact (hop.mul continuous_const).mul hinv
 
 private lemma dp_integrable (T : KType ε Λ) {g : KG ε → ℝ} (hg : Continuous g) :
     Integrable (fun k => ((g k : ℝ) : ℂ) • dpP T k) (muK ε) := by
-  haveI := compactSpace_KG ε
+  have := compactSpace_KG ε
   have hf : Continuous (fun k => ((g k : ℝ) : ℂ) • dpP T k) :=
     (Complex.continuous_ofReal.comp hg).smul (dp_cont_P T)
   exact integrableOn_univ.mp (ContinuousOn.integrableOn_compact isCompact_univ hf.continuousOn)
@@ -272,7 +272,7 @@ private lemma dp_isPositive (T : KType ε Λ) {c : ℝ} (hc : 0 ≤ c) {g : KG �
       (ContinuousLinearMap.apply ℂ T.V v).integrable_comp hI
     rw [ContinuousLinearMap.integral_apply hI, ← integral_inner hIv]
     refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
-    simp only [ContinuousLinearMap.smul_apply, inner_smul_right]
+    simp only [smul_apply, inner_smul_right]
 
   have hsym : ∀ k (u v : T.V), ⟪dpP T k u, v⟫_ℂ = ⟪u, dpP T k v⟫_ℂ := by
     intro k u v
@@ -282,15 +282,15 @@ private lemma dp_isPositive (T : KType ε Λ) {c : ℝ} (hc : 0 ≤ c) {g : KG �
   · intro u v
     change ⟪(((c : ℝ) : ℂ) • ∫ k, ((g k : ℝ) : ℂ) • dpP T k ∂(muK ε)) u, v⟫_ℂ =
       ⟪u, (((c : ℝ) : ℂ) • ∫ k, ((g k : ℝ) : ℂ) • dpP T k ∂(muK ε)) v⟫_ℂ
-    rw [ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.smul_apply, inner_smul_left, inner_smul_right,
+    rw [smul_apply,
+      smul_apply, inner_smul_left, inner_smul_right,
       ← inner_conj_symm _ v, key, key, ← integral_conj, Complex.conj_ofReal]
     congr 1
     refine integral_congr_ae (Filter.Eventually.of_forall fun k => ?_)
     simp only
     rw [map_mul, Complex.conj_ofReal, inner_conj_symm, hsym]
   · intro v
-    rw [ContinuousLinearMap.reApplyInnerSelf_apply, inner_re_symm, ContinuousLinearMap.smul_apply,
+    rw [ContinuousLinearMap.reApplyInnerSelf_apply, inner_re_symm, smul_apply,
       inner_smul_right, key]
     have e : ∫ k, ((g k : ℝ) : ℂ) * ⟪v, dpP T k v⟫_ℂ ∂(muK ε) =
         ((∫ k, g k * ‖⟪T.op k T.w, v⟫_ℂ‖ ^ 2 ∂(muK ε) : ℝ) : ℂ) := by
@@ -441,7 +441,7 @@ theorem phi_decay_core (ν : Fin n → ℝ) (hν : Antitone ν) {g : ℝ}
     subst hY0
     have hl : ∀ i : Fin n, lead ((i : ℕ) + 1) (1 : Matrix (Fin n) (Fin n) ℂ) = 1 := fun i => by
       unfold lead
-      rw [dif_pos (show (i : ℕ) + 1 ≤ n from i.isLt), Matrix.submatrix_one _ (Fin.castLE_injective _),
+      rw [dite_eq_left (show (i : ℕ) + 1 ≤ n from i.isLt), Matrix.submatrix_one _ (Fin.castLE_injective _),
         Matrix.det_one]
     unfold phiReal
     rw [NormedSpace.exp_zero, h0]
@@ -464,14 +464,14 @@ theorem phi_decay_core (ν : Fin n → ℝ) (hν : Antitone ν) {g : ℝ}
     intro i
     by_cases hlast : (i : ℕ) + 1 < n
     · have hnn : 0 ≤ ν i - nuNext ν i := by
-        simp only [nuNext, dif_pos hlast]
+        simp only [nuNext, dite_eq_left hlast]
         exact sub_nonneg.mpr (hν (show i ≤ ⟨(i : ℕ) + 1, hlast⟩ from Fin.le_def.mpr (by simp)))
       apply mul_le_mul_of_nonneg_left _ hnn
       have h := decA_log_lower hY hU hYe hq hpos ((i : ℕ) + 1) i.isLt
       simp only [Nat.lt_add_one_iff, Nat.add_one_le_iff] at h
       exact h
     · have hV : V i = 0 :=
-        Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => if_neg (by have := a.isLt; omega)
+        Finset.sum_eq_zero fun a _ => Finset.sum_eq_zero fun b _ => ite_eq_right (by have := a.isLt; omega)
       have hn : (i : ℕ) + 1 = n := by have := i.isLt; omega
       have hL : c i = 1 := by
         simp only [hcdef, hn]
@@ -526,7 +526,7 @@ private lemma posDef_exp_of_hermitian {Y : Matrix (Fin n) (Fin n) ℂ} (hY : Y�
 private lemma lead_exp_pos_of_hermitian {Y : Matrix (Fin n) (Fin n) ℂ} (hY : Yᴴ = Y) (i : Fin n) :
     0 < lead ((i : ℕ) + 1) (NormedSpace.exp Y) := by
   have hle : (i : ℕ) + 1 ≤ n := i.isLt
-  rw [lead, dif_pos hle]
+  rw [lead, dite_eq_left hle]
   exact ((posDef_exp_of_hermitian hY).submatrix (Fin.castLE_injective hle)).det_pos
 
 theorem phiM_exp_le (μ : Fin n → ℤ) (hμ : IsMu lam μ) (hlam : IsHCParam lam) {h : ℝ}

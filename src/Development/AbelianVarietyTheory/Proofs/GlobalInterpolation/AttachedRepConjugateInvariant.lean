@@ -74,7 +74,7 @@ theorem val_lt_one_smul (A : ValuationSubring Ω) (g : Formalism.ConjugateSelfDu
 
 theorem exists_of_fixed [CharZero K] [IsAlgClosure K Ω] (z : Ω) (hz : ∀ t : Formalism.ConjugateSelfDual.G K Ω, t z = z) :
     ∃ y : K, algebraMap K Ω y = z := by
-  haveI : IsGalois K Ω := IsAlgClosure.isGalois K Ω
+  have : IsGalois K Ω := IsAlgClosure.isGalois K Ω
   have h := InfiniteGalois.fixedField_fixingSubgroup (⊥ : IntermediateField K Ω)
   have hz' : z ∈ IntermediateField.fixedField (⊥ : IntermediateField K Ω).fixingSubgroup := by
     rw [IntermediateField.mem_fixedField_iff]

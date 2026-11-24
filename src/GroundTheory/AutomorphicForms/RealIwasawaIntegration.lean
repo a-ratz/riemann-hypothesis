@@ -96,7 +96,7 @@ theorem isMulRightInvariant_of_compactSpace [CompactSpace G] (μ : Measure G) [�
   set c := haarScalarFactor (map (· * g) μ) μ
   have hu := congrArg (fun ν : Measure G => ν univ) h
   simp only [map_apply (measurable_mul_const g) MeasurableSet.univ, preimage_univ,
-    Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hu
+    smul_apply, ENNReal.smul_def, smul_eq_mul] at hu
   have hpos : μ univ ≠ 0 := IsOpenPosMeasure.open_pos univ isOpen_univ univ_nonempty
   have htop : μ univ ≠ ∞ := isCompact_univ.measure_lt_top.ne
   have hc : (c : ℝ≥0∞) = 1 := by
@@ -128,7 +128,7 @@ theorem continuous_diagConj_inv_left (u' : upperUnipotentSubgroup n 𝕜) :
     Continuous fun a : diagPosSubgroup n 𝕜 => diagConj a⁻¹ u' := by
   refine continuous_induced_rng.2 ?_
   have h1 : Continuous fun a : diagPosSubgroup n 𝕜 => ((a⁻¹ : diagPosSubgroup n 𝕜) : GL n 𝕜) :=
-    continuous_subtype_val.comp continuous_inv
+    continuous_subtypeVal.comp continuous_inv
   exact (h1.mul continuous_const).mul h1.inv
 
 theorem isMulLeftInvariant_map_diagUnipotentMul (μA : Measure (diagPosSubgroup n 𝕜))
@@ -164,8 +164,8 @@ theorem exists_map_diagUnipotentMul_eq_smul (μA : Measure (diagPosSubgroup n �
     [μA.IsHaarMeasure] (μN : Measure (upperUnipotentSubgroup n 𝕜)) [μN.IsHaarMeasure]
     (μB : Measure (upperPosSubgroup n 𝕜)) [μB.IsHaarMeasure] :
     ∃ c : ℝ≥0, c ≠ 0 ∧ map diagUnipotentMul (μA.prod μN) = c • μB := by
-  haveI := isMulLeftInvariant_map_diagUnipotentMul μA μN
-  haveI : IsFiniteMeasureOnCompacts (map diagUnipotentMul (μA.prod μN)) :=
+  have := isMulLeftInvariant_map_diagUnipotentMul μA μN
+  have : IsFiniteMeasureOnCompacts (map diagUnipotentMul (μA.prod μN)) :=
     IsFiniteMeasureOnCompacts.map (μA.prod μN) diagUnipotentHomeomorph
   refine ⟨haarScalarFactor (map diagUnipotentMul (μA.prod μN)) μB, ?_,
     isMulLeftInvariant_eq_smul _ _⟩
@@ -174,7 +174,7 @@ theorem exists_map_diagUnipotentMul_eq_smul (μA : Measure (diagPosSubgroup n �
   rw [h0, zero_smul] at h
   have hu := congrArg (fun ν : Measure (upperPosSubgroup n 𝕜) => ν univ) h
   simp only [map_apply measurable_diagUnipotentMul MeasurableSet.univ, preimage_univ,
-    ← univ_prod_univ, prod_prod, Measure.coe_zero, Pi.zero_apply, mul_eq_zero] at hu
+    ← univ_prod_univ, prod_prod, FunLike.coe_zero, Pi.zero_apply, mul_eq_zero] at hu
   rcases hu with hu | hu
   · exact IsOpenPosMeasure.open_pos (μ := μA) univ isOpen_univ univ_nonempty hu
   · exact IsOpenPosMeasure.open_pos (μ := μN) univ isOpen_univ univ_nonempty hu
@@ -208,7 +208,7 @@ instance secondCountableTopology_unitaryGroup : SecondCountableTopology (unitary
 
 theorem continuous_unitary_toUnits :
     Continuous (fun k : unitaryGroup n 𝕜 => Unitary.toUnits k) :=
-  Units.continuous_iff.2 ⟨continuous_subtype_val, continuous_subtype_val.star⟩
+  Units.continuous_iff.2 ⟨continuous_subtypeVal, continuous_subtypeVal.star⟩
 
 variable [WellFoundedLT n] [LocallyFiniteOrderBot n] [MeasurableSpace (GL n 𝕜)]
   [BorelSpace (GL n 𝕜)]
@@ -228,11 +228,11 @@ theorem lintegral_ANK_of_KB {μG : Measure (GL n 𝕜)} [μG.IsInvInvariant]
   refine ⟨c * c1, mul_ne_zero hc hc1, fun f hf => ?_⟩
   have hmF : Measurable fun p : upperPosSubgroup n 𝕜 × unitaryGroup n 𝕜 =>
       f ((p.1 : GL n 𝕜) * Unitary.toUnits p.2) :=
-    hf.comp ((continuous_subtype_val.comp continuous_fst).mul
+    hf.comp ((continuous_subtypeVal.comp continuous_fst).mul
       (continuous_unitary_toUnits.comp continuous_snd)).measurable
   have hmF' : Measurable fun p : unitaryGroup n 𝕜 × upperPosSubgroup n 𝕜 =>
       f ((p.2 : GL n 𝕜) * (Unitary.toUnits p.1)⁻¹) :=
-    hf.comp ((continuous_subtype_val.comp continuous_snd).mul
+    hf.comp ((continuous_subtypeVal.comp continuous_snd).mul
       (continuous_unitary_toUnits.comp continuous_fst).inv).measurable
   rw [← lintegral_inv_eq_self (μ := μG) f, h (fun g => f g⁻¹) (hf.comp measurable_inv)]
   have step2 : ∀ k : unitaryGroup n 𝕜,
@@ -241,7 +241,7 @@ theorem lintegral_ANK_of_KB {μG : Measure (GL n 𝕜)} [μG.IsInvInvariant]
     intro k
     rw [Measure.inv_def, lintegral_map _ measurable_inv]
     · simp only [Subgroup.coe_inv, _root_.mul_inv_rev, inv_inv]
-    · exact hf.comp (measurable_inv.comp ((measurable_const_mul _).comp measurable_subtype_coe))
+    · exact hf.comp (measurable_inv.comp ((measurable_const_mul _).comp measurable_subtypeVal))
   rw [lintegral_congr step2, lintegral_lintegral_swap hmF'.aemeasurable]
   have step3 : ∀ b : upperPosSubgroup n 𝕜,
       ∫⁻ k, f ((b : GL n 𝕜) * (Unitary.toUnits k)⁻¹) ∂μK =
@@ -270,10 +270,10 @@ theorem lintegral_GLReal_ANK (μG : Measure (GL n ℝ)) [μG.IsHaarMeasure]
     ∃ c : ℝ≥0, c ≠ 0 ∧ ∀ f : GL n ℝ → ℝ≥0∞, Measurable f →
       ∫⁻ g, f g ∂μG = c * ∫⁻ a, ∫⁻ u, ∫⁻ k, f (a * u * Unitary.toUnits k) ∂μK ∂μN ∂μA := by
   obtain ⟨s, hs, hG⟩ := exists_eq_smul_haarGLReal μG
-  haveI : μG.IsMulRightInvariant := by rw [hG]; infer_instance
-  haveI := isInvInvariant_of_isMulRightInvariant μG
-  haveI := isMulRightInvariant_of_compactSpace μK
-  haveI := isInvInvariant_of_isMulRightInvariant μK
+  have : μG.IsMulRightInvariant := by rw [hG]; infer_instance
+  have := isInvInvariant_of_isMulRightInvariant μG
+  have := isMulRightInvariant_of_compactSpace μK
+  have := isInvInvariant_of_isMulRightInvariant μK
   let μB : Measure (upperPosSubgroup n ℝ) := Measure.haar
   obtain ⟨c, hc, h⟩ := lintegral_haarGLReal_iwasawa
     (Measure.addHaar : Measure (Matrix n n ℝ)) μK μB
@@ -297,10 +297,10 @@ theorem lintegral_GLComplex_ANK (μG : Measure (GL n ℂ)) [μG.IsHaarMeasure]
     ∃ c : ℝ≥0, c ≠ 0 ∧ ∀ f : GL n ℂ → ℝ≥0∞, Measurable f →
       ∫⁻ g, f g ∂μG = c * ∫⁻ a, ∫⁻ u, ∫⁻ k, f (a * u * Unitary.toUnits k) ∂μK ∂μN ∂μA := by
   obtain ⟨s, hs, hG⟩ := exists_eq_smul_haarGLComplex μG
-  haveI : μG.IsMulRightInvariant := by rw [hG]; infer_instance
-  haveI := isInvInvariant_of_isMulRightInvariant μG
-  haveI := isMulRightInvariant_of_compactSpace μK
-  haveI := isInvInvariant_of_isMulRightInvariant μK
+  have : μG.IsMulRightInvariant := by rw [hG]; infer_instance
+  have := isInvInvariant_of_isMulRightInvariant μG
+  have := isMulRightInvariant_of_compactSpace μK
+  have := isInvInvariant_of_isMulRightInvariant μK
   let μB : Measure (upperPosSubgroup n ℂ) := Measure.haar
   obtain ⟨c, hc, h⟩ := lintegral_haarGLComplex_iwasawa
     (Measure.addHaar : Measure (Matrix n n ℂ)) μK μB

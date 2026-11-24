@@ -146,14 +146,14 @@ theorem padic_emb_extends_algebraicClosure (p : ℕ) [Fact p.Prime] (LL : Type) 
   let e' : LL →+* algebraicClosure ℚ ℂ :=
     (e.codRestrict (algebraicClosure ℚ ℂ).toSubring
       (fun z => numberField_emb_mem_algebraicClosure e z))
-  letI : Algebra LL (algebraicClosure ℚ ℂ) := e'.toAlgebra
-  letI : Algebra LL ℂ_[p] := i.toAlgebra
-  haveI : IsScalarTower ℚ LL (algebraicClosure ℚ ℂ) :=
+  let : Algebra LL (algebraicClosure ℚ ℂ) := e'.toAlgebra
+  let : Algebra LL ℂ_[p] := i.toAlgebra
+  have : IsScalarTower ℚ LL (algebraicClosure ℚ ℂ) :=
     IsScalarTower.of_algebraMap_eq (fun x =>
       (RingHom.congr_fun (Subsingleton.elim ((algebraMap LL (algebraicClosure ℚ ℂ)).comp
         (algebraMap ℚ LL)) (algebraMap ℚ (algebraicClosure ℚ ℂ))) x).symm)
-  haveI : Algebra.IsAlgebraic ℚ (algebraicClosure ℚ ℂ) := algebraicClosure.isAlgebraic ℚ ℂ
-  haveI : Algebra.IsAlgebraic LL (algebraicClosure ℚ ℂ) :=
+  have : Algebra.IsAlgebraic ℚ (algebraicClosure ℚ ℂ) := algebraicClosure.isAlgebraic ℚ ℂ
+  have : Algebra.IsAlgebraic LL (algebraicClosure ℚ ℂ) :=
     Algebra.IsAlgebraic.tower_top (K := ℚ) LL
   let lamA : algebraicClosure ℚ ℂ →ₐ[LL] ℂ_[p] := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
@@ -332,11 +332,11 @@ theorem nonempty_cEmb_of_pos_nV : ∀ (p : ℕ) [Fact p.Prime] (G : Formalism.Ma
   intro p _ G hV
   let v : Fin G.P.nV := ⟨0, hV⟩
   have S := G.P.setting v
-  haveI := S.frac_alt
-  haveI := S.frac_O
-  haveI : IsAdicComplete (maximalIdeal G.O) G.O := S.complete_O
+  have := S.frac_alt
+  have := S.frac_O
+  have : IsAdicComplete (maximalIdeal G.O) G.O := S.complete_O
 
-  haveI hW0 : CharZero (G.P.W v) := by
+  have hW0 : CharZero (G.P.W v) := by
     obtain ⟨l, hl⟩ := CharP.exists (G.P.W v)
     rcases CharP.char_is_prime_or_zero (G.P.W v) l with hlp | hl0
     · exfalso
@@ -352,12 +352,12 @@ theorem nonempty_cEmb_of_pos_nV : ∀ (p : ℕ) [Fact p.Prime] (G : Formalism.Ma
         exact S.p_unif.not_isUnit (IsUnit.of_mul_eq_one _ h'.symm)
     · subst hl0
       exact CharP.charP_to_charZero _
-  haveI : CharZero (G.P.Qq v) :=
+  have : CharZero (G.P.Qq v) :=
     (RingHom.charZero_iff (IsFractionRing.injective (G.P.W v) (G.P.Qq v))).1 hW0
-  haveI : CharZero G.Kf := (RingHom.charZero_iff (G.P.ι v).injective).1 inferInstance
+  have : CharZero G.Kf := (RingHom.charZero_iff (G.P.ι v).injective).1 inferInstance
 
-  letI : Algebra (G.P.W v) G.O := (G.P.j v).toAlgebra
-  haveI : Module.Finite (G.P.W v) G.O := S.finite
+  let : Algebra (G.P.W v) G.O := (G.P.j v).toAlgebra
+  have : Module.Finite (G.P.W v) G.O := S.finite
   have hcomap : (maximalIdeal G.O).comap (algebraMap (G.P.W v) G.O) = Ideal.span {(p : G.P.W v)} := by
     have hmax : ((maximalIdeal G.O).comap (algebraMap (G.P.W v) G.O)).IsMaximal :=
       Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := G.P.W v) _
@@ -367,13 +367,13 @@ theorem nonempty_cEmb_of_pos_nV : ∀ (p : ℕ) [Fact p.Prime] (G : Formalism.Ma
       hcomap ▸ Ideal.subset_span rfl
     simpa using this
 
-  haveI : Finite (ResidueField (G.P.W v)) := by
+  have : Finite (ResidueField (G.P.W v)) := by
     have h := S.res_card
     rw [← S.p_unif.maximalIdeal_eq] at h
     exact Nat.finite_of_card_ne_zero (h ▸ pow_ne_zero _ (Fact.out : p.Prime).ne_zero)
-  haveI : Finite (ResidueField G.O) := by
-    haveI : Module.Finite (G.P.W v) (ResidueField G.O) := inferInstance
-    haveI : Algebra.IsIntegral (G.P.W v) (ResidueField G.O) := inferInstance
+  have : Finite (ResidueField G.O) := by
+    have : Module.Finite (G.P.W v) (ResidueField G.O) := inferInstance
+    have : Algebra.IsIntegral (G.P.W v) (ResidueField G.O) := inferInstance
     exact Module.finite_of_finite (ResidueField (G.P.W v))
 
   obtain ⟨p', hp', K₀, e, e₀, hfd, he⟩ := exists_ringEquiv_integralClosure_padicInt G.O G.Kf
@@ -484,11 +484,11 @@ variable {p : ℕ} [Fact p.Prime]
 theorem pow_card_sub_dvd {n : ℕ} {W : Type} [CommRing W] [IsDomain W] [IsDiscreteValuationRing W]
     (hirr : Irreducible (p : W)) (hcard : Nat.card (W ⧸ Ideal.span {(p : W)}) = p ^ n) (x : W) :
     (p : W) ∣ x ^ (p ^ n) - x := by
-  haveI : (Ideal.span {(p : W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hirr
-  letI : Field (W ⧸ Ideal.span {(p : W)}) := Ideal.Quotient.field _
-  haveI : Finite (W ⧸ Ideal.span {(p : W)}) :=
+  have : (Ideal.span {(p : W)}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hirr
+  let : Field (W ⧸ Ideal.span {(p : W)}) := Ideal.Quotient.field _
+  have : Finite (W ⧸ Ideal.span {(p : W)}) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero _ (Fact.out : p.Prime).ne_zero)
-  letI := Fintype.ofFinite (W ⧸ Ideal.span {(p : W)})
+  let := Fintype.ofFinite (W ⧸ Ideal.span {(p : W)})
   have h := FiniteField.pow_card (Ideal.Quotient.mk (Ideal.span {(p : W)}) x)
   rw [← Nat.card_eq_fintype_card, hcard, ← map_pow, ← sub_eq_zero, ← map_sub,
     Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at h
@@ -618,7 +618,7 @@ theorem GlobalTheory.TwV.exists_finset_reps_of_cls {T Γ C : Type} [Finite C] (P
   let S : Set C := {x | ∃ L, P L ∧ cls L = x}
   have hS : ∀ x : S, ∃ L, P L ∧ cls L = x.1 := fun x => x.2
   choose f hf using hS
-  haveI : Fintype S := Fintype.ofFinite S
+  have : Fintype S := Fintype.ofFinite S
   refine ⟨Finset.univ.image f, ?_, ?_⟩
   · intro L hL
     obtain ⟨x, -, rfl⟩ := Finset.mem_image.1 hL
@@ -883,7 +883,7 @@ noncomputable section
 namespace GlobalTheory.TwV
 
 theorem star_eq_hostConj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   apply D.host.φ₀.injective
   exact (IsCMField.complexEmbedding_complexConj D.host.E D.host.φ₀ x).trans
     (D.host.conjE_apply D.host.φ₀ x).symm
@@ -1100,7 +1100,7 @@ open Formalism.BasicNotions NumberField IsDedekindDomain Formalism.MainNotions F
 namespace GlobalTheory.DetIdealUnitary
 
 theorem determinantIdeal_normOne_and_char_unitary_smul : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (χ : TaylorLogMetric.IdE D → ℂ), TaylorLogMetric.IsChi D χ → ∀ (N : ℕ) (L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)), Even N → IsSDLat D.host.E N L → TaylorLogMetric.N1 D (TaylorLogMetric.detId D (StandardLatticesGL3.stdL D N) L) ∧ ∀ e : Matrix (Fin N) (Fin N) D.host.E, e * star e = 1 → χ (TaylorLogMetric.detId D (StandardLatticesGL3.stdL D N) (SDLat.smulLat e L)) = (∏ τ : D.what₂.Tau, TaylorLogMetric.embT D τ e.det)⁻¹ * χ (TaylorLogMetric.detId D (StandardLatticesGL3.stdL D N) L) := by
-  letI := fun D : D7 => D.host.cmStar
+  let := fun D : D7 => D.host.cmStar
   intro D χ hχ N L hN hsd
   refine ⟨Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.relative_determinant_norm_one D N _ _ hN (Formalism.MainNotions.GlobalTheoryTheory.Inhab.stdL_isSD D N) hsd, ?_⟩
   intro e he
@@ -1579,7 +1579,7 @@ private theorem admissible_at_each_site : Lt.AdmAtEnt2 → AllSites (fun {D L hT
   have hK1 := _root_.GlobalTheory.TwV.kernelSite_seriesData_below_lastStep S hDict hPair hPos hScal
   obtain ⟨hLaw, hLawIn, hXi⟩ := _root_.GlobalTheory.TwV.site_law_xiIn S hPair hPos hMove hAway
   obtain ⟨ι, hι⟩ := GlobalTheory.ThLoc.place_extends_to_iso _ S.lam
-  haveI := Lt.fracAt Gl u w hg
+  have := Lt.fracAt Gl u w hg
   have key := hA D L hT Gi Gl Kc Dx cX ex t u μ w hg (Gl.Fl u w hg) Lv (chainAt H hT) (kaAt X H hT) std (vpOf (D.gat u w hg)) (vpOf_irreducible (D.gat u w hg))
     (eOOf (D.gat u w hg) (p_ne_zero_of_place (D.gat u w hg) (Gl.vOf u w hg 0)))
     (eOOf_spec (D.gat u w hg) (p_ne_zero_of_place (D.gat u w hg) (Gl.vOf u w hg 0)))
@@ -1618,7 +1618,7 @@ private theorem admissible_at_each_site : Lt.AdmAtEnt2 → AllSites (fun {D L hT
 
 theorem site_cmpLite_siteAdm : Lt.AdmAtEnt2 → Lt.CurveEx → ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : G.Inst D L} {Gl : G.LatInst D} {Kc : G.Consts} {Dx : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Dx cX} (t : KerEntTied ex) {u : D.what₂.Word} {μ : D.what₂.Tup} {w : D.what₂.places.Pl} {hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)} {Lv : Levels (Gl.Fl u w hg)} {I : CmpJIn ex.tw u μ w hg Lv} {H : CmpJHyp ex.cmp I} {X : LabIn I}, Joint t H X → DV.Used D μ → OrbitPlaces.Stab0 D → 2 * rG L.sc ≤ D.R.k → GlobalTheory.TwU.CmpLite D ex.cmp ex.tw u μ w hg (chainAt H hT) ∧ GlobalTheory.TwU.SiteAdm D u w hg (Gl.Fl u w hg) Lv (chainAt H hT) := by
   intro hAdm hCur D L hT Gi Gl Kc Dx cX ex t u μ w hg Lv I H X J hU hS hk
-  haveI : Fact (D.what₂.places.resChar w).Prime := ⟨hg.1⟩
+  have : Fact (D.what₂.places.resChar w).Prime := ⟨hg.1⟩
   refine ⟨⟨(kaAt X H hT).cmp, (kaAt X H hT).cmp_zero, (kaAt X H hT).cmp_K, (kaAt X H hT).rat, (kaAt X H hT).val⟩, ?_⟩
   have std : Lt.StdAtW D Gl u w hg := GlobalTheory.TwU.std_at_served D u w hg L hT Gi Gl J.tied hk
   obtain ⟨S⟩ := _root_.GlobalTheory.TwV.joint_at_nonempty hCur t std J
@@ -1663,7 +1663,7 @@ theorem modelsOK_of_joints : Lt.AdmAtEnt2 → Lt.CurveEx → ∀ {D : D7} {L : S
     exact _root_.GlobalTheory.TwV.site_cmpLite_siteAdm hA hC t
       (Classical.choose_spec (Classical.choose_spec (Classical.choose_spec (Classical.choose_spec (hJ μ hP.1 u w hg hP.2))))).some
       hU hS hk
-  exact key _ (dif_pos hP)
+  exact key _ (dite_eq_left hP)
 
 end GlobalTheory.TwV
 end -- clump:auto

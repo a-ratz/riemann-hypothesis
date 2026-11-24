@@ -237,7 +237,7 @@ theorem gm_unitOn_map {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') 
   rw [gm_val _ z ⊤ trivial, gm_val _ z ⊤ trivial]
   have e := congrArg (fun g => g.hom (u : R)) (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom f))
   simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at e
-  simp only [unitOn, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [unitOn, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   rw [e]
   simp [Scheme.Hom.appTop]
   rfl
@@ -632,7 +632,7 @@ theorem exists_norm {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] {S S₁
 
 theorem exists_const {K : Type} [Field K] (z : Sp K) (s : ((Sp K).presheaf.stalk z)ˣ) :
     ∃ k : Kˣ, gm (𝟙 (Sp K)) z ⊤ (unitOn k) = s := by
-  obtain ⟨U, hU, a, ha⟩ := (Sp K).presheaf.germ_exist s.val
+  obtain ⟨U, hU, a, ha⟩ := (Sp K).presheaf.exists_germ_eq s.val
   have htop : (⊤ : (Sp K).Opens) ≤ U := fun y _ => by
     have : y = z := Subsingleton.elim (α := PrimeSpectrum K) y z
     exact this ▸ hU

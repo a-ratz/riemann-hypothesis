@@ -185,12 +185,12 @@ theorem exists_orbitRep : ∃ o : D.what₂.places.Pl → D.what₂.places.Pl,
   · simp only [D.what₂.places.conj_conj, or_comm]
 
 theorem isLocalHom_phiK (i : D.ntw.Tw) (k : ℕ) : IsLocalHom (BlochKatoReduction.Gen.phiK D.ntw i k) := by
-  haveI := D.ntw.Ok_fin i k
-  haveI : FaithfulSMul (D.ntw.O i) (D.ntw.Ok i k) := (faithfulSMul_iff_algebraMap_injective _ _).2 (D.ntw.Ok_inj i k)
-  haveI : IsLocalHom (algebraMap (D.ntw.O0 i) (D.ntw.O i)) := by
+  have := D.ntw.Ok_fin i k
+  have : FaithfulSMul (D.ntw.O i) (D.ntw.Ok i k) := (faithfulSMul_iff_algebraMap_injective _ _).2 (D.ntw.Ok_inj i k)
+  have : IsLocalHom (algebraMap (D.ntw.O0 i) (D.ntw.O i)) := by
     refine ⟨fun y hy => ?_⟩
     by_contra hu
-    haveI : CharZero (FractionRing (D.ntw.O0 i)) := (RingHom.charZero_iff (D.ntw.emb0 i).injective).1 inferInstance
+    have : CharZero (FractionRing (D.ntw.O0 i)) := (RingHom.charZero_iff (D.ntw.emb0 i).injective).1 inferInstance
     have hl : ((D.ntw.l i : ℕ) : D.ntw.O0 i) ≠ 0 := fun h => by
       have := congrArg (algebraMap _ (FractionRing (D.ntw.O0 i))) h
       rw [map_natCast, map_zero] at this
@@ -228,10 +228,10 @@ attribute [instance] Reading.cr Reading.dom Reading.dvr Reading.alg
 
 theorem ReadsAt.nonempty_reading {i : D.ntw.Tw} {b : Bool} {w : D.what₂.places.Pl} (h : ReadsAt i b w) (k : ℕ) :
     Nonempty (Reading i k b w) := by
-  haveI := D.ntw.Ok_fin i k
-  haveI := D.ntw.O_complete i
-  haveI := FormalIsogeny.isAdicComplete_maximalIdeal_of_finite (D.ntw.O i) (D.ntw.Ok i k)
-  haveI := isLocalHom_phiK i k
+  have := D.ntw.Ok_fin i k
+  have := D.ntw.O_complete i
+  have := FormalIsogeny.isAdicComplete_maximalIdeal_of_finite (D.ntw.O i) (D.ntw.Ok i k)
+  have := isLocalHom_phiK i k
   have hinj : Function.Injective (BlochKatoReduction.Gen.phiK D.ntw i k) := (D.ntw.Ok_inj i k).comp (D.ntw.O_inj i)
   let m : FractionRing (D.ntw.O0 i) →+* FractionRing (D.ntw.Ok i k) := IsFractionRing.map hinj
   have hm : ∀ y, m (algebraMap _ _ y) = algebraMap _ _ (BlochKatoReduction.Gen.phiK D.ntw i k y) := fun y => by

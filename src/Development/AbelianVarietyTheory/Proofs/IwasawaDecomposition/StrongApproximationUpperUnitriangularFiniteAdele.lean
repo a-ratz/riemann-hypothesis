@@ -96,7 +96,7 @@ theorem row_exists (n : ℕ) (u : Matrix (Fin n) (Fin n) (FiniteAdeleRing (𝓞 
                 algebraMap F (FiniteAdeleRing (𝓞 F) F) r * u ⟨m, hm⟩ j := by
           intro j
           simp only [map_add (f := _), add_mul, Finset.sum_add_distrib, apply_ite (algebraMap F _), map_zero,
-            ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+            ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
         refine ⟨fun k => y k + if k = (⟨m, hm⟩ : Fin n) then r else 0, ?_, ?_, ?_⟩
         · simp [hy1, ne_of_lt him]
         · intro k hk
@@ -122,7 +122,7 @@ theorem row_exists (n : ℕ) (u : Matrix (Fin n) (Fin n) (FiniteAdeleRing (𝓞 
 theorem matInt_inv_of_upperUni {n : ℕ} (g : GL (Fin n) (FiniteAdeleRing (𝓞 F) F))
     (hg : IsUpperUni g.val) (hi : MatInt g.val) : MatInt g⁻¹.val := by
   have hdet : g.val.det = 1 := by
-    rw [det_of_upperTriangular (fun i j hij => hg.1 i j hij)]
+    rw [det_of_isUpperTriangular (fun i j hij => hg.1 i j hij)]
     simp [hg.2]
   have h1 : g.val * adjugate g.val = 1 := by rw [mul_adjugate, hdet, one_smul]
   have hinv : g⁻¹.val = adjugate g.val := by
@@ -142,7 +142,7 @@ theorem unipApprox : PIW.ClassFinD.UnipApprox := by
     (fun j => (((τ i)⁻¹ : (FiniteAdeleRing (𝓞 F) F)ˣ) : FiniteAdeleRing (𝓞 F) F) * τ j)
   let Y : Matrix (Fin n) (Fin n) F := fun i k => y i k
   have hdet : Y.det = 1 := by
-    rw [det_of_upperTriangular (fun i k hki => hy0 i k hki)]
+    rw [det_of_isUpperTriangular (fun i k hki => hy0 i k hki)]
     simp [Y, hy1]
   let Yg : GL (Fin n) F :=
     ((Matrix.isUnit_iff_isUnit_det Y).mpr (by rw [hdet]; exact isUnit_one)).unit

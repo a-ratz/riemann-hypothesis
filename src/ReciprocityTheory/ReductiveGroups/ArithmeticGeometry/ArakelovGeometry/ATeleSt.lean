@@ -103,7 +103,7 @@ theorem tele_one_homog {K : Type*} [Fintype K] {ι : K → Type*} [∀ k, Fintyp
   intro m hm k
   have h0 : m = 0 := by
     by_contra hne
-    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, if_neg (Ne.symm hne)] at hm
+    rw [MvPolynomial.mem_support_iff, MvPolynomial.coeff_one, ite_eq_right (Ne.symm hne)] at hm
     exact hm rfl
   subst h0
   simp
@@ -111,7 +111,7 @@ theorem tele_one_homog {K : Type*} [Fintype K] {ι : K → Type*} [∀ k, Fintyp
 theorem tele_divSupp_one {K : Type*} [Fintype K] {ι : K → Type*} [∀ k, Fintype (ι k)]
     (P : Ideal (MRing ι)) : divSupp P 1 = ∅ := by
   ext W
-  simp only [divSupp, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+  simp only [divSupp, Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
   rintro ⟨hW, -⟩
   have h1 := hW.1
   rw [Ideal.span_singleton_one, sup_top_eq] at h1
@@ -127,7 +127,7 @@ theorem fam_degZero (I : AllFam) (hI : I.IsFamily) {P : Ideal (MRing (GlobalTheo
     have htop : P = ⊤ := (Ideal.eq_top_iff_one P).2 h1
     have h4 := hP.2.2.2
     rw [htop] at h4
-    haveI : Subsingleton (MRing (GlobalTheory κ) ⧸ (⊤ : Ideal (MRing (GlobalTheory κ)))) :=
+    have : Subsingleton (MRing (GlobalTheory κ) ⧸ (⊤ : Ideal (MRing (GlobalTheory κ)))) :=
       Ideal.Quotient.subsingleton_iff.2 rfl
     rw [ringKrullDim_eq_bot_of_subsingleton] at h4
     exact WithBot.bot_ne_coe h4

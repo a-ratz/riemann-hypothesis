@@ -73,7 +73,7 @@ theorem exists_cusp_restrict_comp_int : ∀ (E : Type) [Field E] [NumberField E]
     unfold evC at h0' ⊢
     rw [hm, h0', zero_mul]
   · intro T io y
-    letI := io.toAlgebra
+    let := io.toAlgebra
     unfold evI
 
     have hy : IsIdempotentElem (evR Xo c χ y.1) := by

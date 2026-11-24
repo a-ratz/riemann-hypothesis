@@ -199,14 +199,14 @@ theorem transform_integral (hI : GlobalTheory.IndefiniteRowSideFullHecke.UnusedS
     (h0 : ∀ v ∈ valSet Xo c (algCls Xo c) la, 0 ≤ v f) : ∀ v ∈ valSet Xo c (algCls Xo c) la, 0 ≤ v g := by
   rintro _ ⟨⟨q, T, io, e, ho, y, hy, η, hη, rfl⟩, rfl⟩
   show 0 ≤ nval T.V e (evI y g)
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let Ω := AlgebraicClosure T.Fr
-  letI : Algebra c.F Ω := ((algebraMap T.Fr Ω).comp io).toAlgebra
+  let : Algebra c.F Ω := ((algebraMap T.Fr Ω).comp io).toAlgebra
   let k : T.Fr →ₐ[c.F] Ω := ⟨algebraMap T.Fr Ω, fun _ => rfl⟩
   obtain ⟨z, hz⟩ := GlobalTheory.FramedBaseChange.exists_frMap GlobalTheory.abelianSchemeLaws_all.1 E H Dw l Xo c _ _ k y.1
   have e1 : evR Xo c g z = k (evI y g) := evR_frMap hWD g hg.1 k y.1 y.2.1 z hz
   have e2 := hr Ω z
-  haveI := hF Ω z
+  have := hF Ω z
   set x := hkVal (K := c.F) (fun S _ _ => FrPt Xo c S) (fun φ y z => FrMap φ y z)
       (fun Ω _ _ _ y => hkKer (Xo := Xo) P p i Ω y)
       (fun Ω _ _ _ y C z => hkRelFr P p i (GlobalTheory.ThetaTrace.hkTr Xo c p) Ω y C z) f z with hx

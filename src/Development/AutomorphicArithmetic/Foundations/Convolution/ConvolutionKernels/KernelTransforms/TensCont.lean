@@ -73,8 +73,8 @@ theorem UpperTheory.ConvolutionTheory.Tf.tensCont :
       infEmb_infPart_mul_finEmb_finPart, retractOne_coe]
   refine ⟨?_, ?_, key⟩
   · exact ((continuous_kbar hn β.continuous β.hasCompactSupport).comp
-      (continuous_infPart.comp continuous_subtype_val)).mul
-      (e.continuous.comp (continuous_finPart.comp continuous_subtype_val))
+      (continuous_infPart.comp continuous_subtypeVal)).mul
+      (e.continuous.comp (continuous_finPart.comp continuous_subtypeVal))
   · have hC : IsCompact ((fun p : archGroup K n × AdelicGLn.FiniteAdelicGL K n =>
         archP K n p.1 * MultiplicityOne.finProj K n p.2) '' (tsupport β ×ˢ tsupport e)) :=
       (β.hasCompactSupport.isCompact.prod e.hasCompactSupport.isCompact).image

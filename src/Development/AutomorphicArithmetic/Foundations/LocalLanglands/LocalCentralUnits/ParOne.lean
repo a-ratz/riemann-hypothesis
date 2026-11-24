@@ -258,7 +258,7 @@ open UpperTheory.Zero.LLC in
 theorem UpperTheory.Zero.LLC.parOne :
     UpperTheory.Zero.LLC.ParOne := by
   intro E Ω _ _ _ _ _ A w h a ha χ hχ
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   have hdz : DZ (IrrGL.ofChar χ hχ) ↔ TameChar χ := by
     have h1 := twTame _ (IrrGL.ofChar 1 isSmoothChar_one) χ hχ one_pos dz_one
     rwa [IrrGL.tw_ofChar, IrrGL.ofChar_inj.2 (one_mul χ)] at h1

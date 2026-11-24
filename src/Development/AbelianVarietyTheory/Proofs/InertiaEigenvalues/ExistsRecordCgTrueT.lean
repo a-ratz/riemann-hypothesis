@@ -400,13 +400,13 @@ section Host
 variable {R : Ranks} {H : Formalism.BasicNotions.Host R} {a : ℕ}
 
 theorem goodAll_one (χ : HostCGu H 1) : GoodAll χ := fun w => by
-  haveI := host_isCMField H
+  have := host_isCMField H
   have h := good_loc_ofChar χ.1.toChar w
   rwa [CG.ofChar_toChar] at h
 
 theorem goodAll_tw_iff (π : HostCGu H a) (χ : HostCGu H 1) :
     haveI := host_isCMField H; GoodAll (H := H) (π.tw χ) ↔ GoodAll π := by
-  haveI := host_isCMField H
+  have := host_isCMField H
   refine forall_congr' fun w => ?_
   have h := cls_loc_twist π.1 χ.1.toChar w
   have h2 := GlobalTheory.RecT.good_tw_iff (⟨a, ParLaws.toCl (π.1.loc w)⟩ : IrrGL (k := w.adicCompletion H.E)) (χ.1.toChar.loc w)
@@ -527,7 +527,7 @@ theorem etaLawsT (hT : UpperTheory.Zero.LLC.RecTExists) (D : D7) {χ : HChar D.h
       (∀ w w', IsSplitPl D.host w → IsConjPl D.host w w' → ∀ a b : ℂ,
         (ParLawsT.locGT hT D.nd.plOm η w).frobEig = {a} →
         (ParLawsT.locGT hT D.nd.plOm η w').frobEig = {b} → a * b = 1) := by
-  haveI := host_isCMField D.host
+  have := host_isCMField D.host
   have hi : (χ⁻¹).IsUnitary := fun x => by
     have := hχ.unitary x
     change ‖(((χ.1 x)⁻¹ : ℂˣ) : ℂ)‖ = 1

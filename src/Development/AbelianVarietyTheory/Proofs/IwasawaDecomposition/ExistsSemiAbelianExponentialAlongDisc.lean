@@ -179,7 +179,7 @@ theorem exists_relative_exp_of_smooth (X : Scheme.{0}) (G : Over X) [GrpObj G] [
           ∃! w, IsDerivAt0 (fun z => ((e b) z).left) w v.left)) ∧
       ∀ z₀, e b₀ z₀ = 1 → ∃ ζ : (Fin m → ℂ) → (Fin g → ℂ), ζ b₀ = z₀ ∧ AnalyticAt ℂ ζ b₀ ∧
         ∀ᶠ b in 𝓝 b₀, e b (ζ b) = 1 := by
-  haveI := hsm
+  have := hsm
   have hy' : HolAt y b₀ := ⟨B, hB, hb₀, hy⟩
   obtain ⟨g, U, t, n, f, N, O, σ, hN, hO, hU, hO₀, hσ, hσN, hinv, hun⟩ :=
     exists_chart_of_smooth m G.left X G.hom B y b₀ (1 : Over.mk (y b₀) ⟶ G).left hB hb₀ hy
@@ -240,7 +240,7 @@ open scoped CategoryTheory.MonObj
 
 theorem exists_exp_along_disc : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] (y : ℂ → (Sp ℂ ⟶ X)) (r : ℝ), IsSemiAbelian G → 0 < r → IsHolTo (Metric.ball (0 : ℂ) r) y → ∃ (g : ℕ) (ρ : ℝ) (e : ∀ u, (Fin g → ℂ) → (Over.mk (y u) ⟶ G)), 0 < ρ ∧ ρ ≤ r ∧ IsHolTo (Metric.ball (0 : ℂ) ρ ×ˢ Set.univ) (fun q : ℂ × (Fin g → ℂ) => (show Sp ℂ ⟶ G.left from (e q.1 q.2).left)) ∧ (∀ u ∈ Metric.ball (0 : ℂ) ρ, (∀ z w, e u (z + w) = e u z * e u w) ∧ Function.Surjective (e u) ∧ IsHolTo Set.univ (fun z => (show Sp ℂ ⟶ G.left from (e u z).left)) ∧ (∀ w, ∃! v : epsPt (y u) ⟶ G, IsDerivAt0 (fun z => (e u z).left) w v.left) ∧ (∀ v : epsPt (y u) ⟶ G, spMap (TrivSqZeroExt.fstHom ℂ ℂ ℂ).toRingHom ≫ v.left = (e u 0).left → ∃! w, IsDerivAt0 (fun z => (e u z).left) w v.left)) ∧ ∀ z₀, e 0 z₀ = 1 → ∃ ζ : ℂ → (Fin g → ℂ), ζ 0 = z₀ ∧ AnalyticAt ℂ ζ 0 ∧ ∀ᶠ u in 𝓝 (0 : ℂ), e u (ζ u) = 1 := by
   intro X G _ y r hG hr hy
-  haveI := hG.comm
+  have := hG.comm
   let c : ℂ → (Fin 1 → ℂ) := fun u _ => u
   have hcA : ∀ u, AnalyticAt ℂ c u := fun u =>
     (ContinuousLinearMap.pi fun _ : Fin 1 => ContinuousLinearMap.id ℂ ℂ).analyticAt u

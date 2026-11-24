@@ -84,7 +84,7 @@ theorem commutant_eq_sum {F : Type} [Field F] {A : Type} [CommGroup A] [Finite A
     (hφ : ∀ h v, φ (Φ (m h) v) = Φ (m h) (φ v)) : ∃ c : K → F, ∑ k, c k • P k = φ := by
   classical
   have hApos : 0 < Nat.card A := Nat.card_pos
-  haveI : Nontrivial E := by
+  have : Nontrivial E := by
     rw [← Module.finrank_pos_iff (R := F)]
     rcases Nat.eq_zero_or_pos (Module.finrank F E) with h | h
     · rw [h] at hdim; omega
@@ -124,7 +124,7 @@ theorem commutant_eq_sum {F : Type} [Field F] {A : Type} [CommGroup A] [Finite A
     exact mul_inv_eq_one.mp this
   have hli : LinearIndependent F fun a => (Φ a : E →ₗ[F] E) :=
     linearIndependent_of_comm_smul _ _ (fun a => (Φ a).injective) (fun a b v => hcomm a b v) hinj
-  haveI := Fintype.ofFinite A
+  have := Fintype.ofFinite A
   have hspan : Submodule.span F (Set.range fun a => (Φ a : E →ₗ[F] E)) = ⊤ := by
     apply hli.span_eq_top_of_card_eq_finrank'
     rw [Module.finrank_linearMap, ← sq, hdim, Nat.card_eq_fintype_card]
@@ -197,7 +197,7 @@ theorem finrank_le_of_inj {F E Q : Type} [Field F] [AddCommGroup E] [Module F E]
     (W : Submodule F E) (f : E →ₗ[F] Q) (hf : ∀ v ∈ W, f v = 0 → v = 0) {n : ℕ} (b : Fin n → Q)
     (hb : ∀ v, f v ∈ Submodule.span F (Set.range b)) : Module.finrank F W ≤ n ∧
       (n ≤ Module.finrank F W → ∀ q ∈ Submodule.span F (Set.range b), ∃ v ∈ W, f v = q) := by
-  haveI : FiniteDimensional F (Submodule.span F (Set.range b)) :=
+  have : FiniteDimensional F (Submodule.span F (Set.range b)) :=
     FiniteDimensional.span_of_finite F (Set.finite_range b)
   have h1 : Module.finrank F (Submodule.span F (Set.range b)) ≤ n :=
     (finrank_range_le_card b).trans (Fintype.card_fin n).le
@@ -230,10 +230,10 @@ theorem proportional_field {F : Type} [Field F] {A : Type} [CommGroup A] [Finite
     (hb₂ : ∀ v, f₂ v ∈ Submodule.span F (Set.range b))
     (hint : ∀ h v v', f₂ v = f₁ v' → f₂ (Φ (m h) v) = f₁ (Φ (m h) v')) : ∃ a : F, ∀ v, f₂ v = a • f₁ v := by
   classical
-  haveI := Fintype.ofFinite K
+  have := Fintype.ofFinite K
   rw [Nat.card_eq_fintype_card (α := K)] at hc hn
   have hApos : 0 < Nat.card A := Nat.card_pos
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by
     rcases Nat.eq_zero_or_pos (Module.finrank F E) with h | h
     · rw [h] at hdim; omega
     · exact h)
@@ -253,7 +253,7 @@ theorem proportional_field {F : Type} [Field F] {A : Type} [CommGroup A] [Finite
   have hP0 : ∀ k, P k ≠ 0 := fun k h => by
     obtain ⟨β, hβ, v, hv⟩ := hne k
     have := hP k v β
-    rw [h, if_pos hβ] at this
+    rw [h, ite_eq_left hβ] at this
     exact hv (this.symm.trans (map_zero _))
   have hP1 : ∀ k v, P k (P k v) = P k v := fun k v => hext _ _ fun β => by
     rw [hP, hP]; split_ifs <;> rfl
@@ -263,12 +263,12 @@ theorem proportional_field {F : Type} [Field F] {A : Type} [CommGroup A] [Finite
   have hPΦ : ∀ k h v, P k (Φ (m h) v) = Φ (m h) (P k v) := fun k h v => hext _ _ fun β => by
     rw [hP]
     split_ifs with hβ
-    · have := hΦ h β (v - P k v) (by rw [map_sub, hP, if_pos hβ, sub_self])
+    · have := hΦ h β (v - P k v) (by rw [map_sub, hP, ite_eq_left hβ, sub_self])
       rwa [map_sub, map_sub, sub_eq_zero] at this
-    · exact (hΦ h β _ (by rw [hP, if_neg hβ])).symm
+    · exact (hΦ h β _ (by rw [hP, ite_eq_right hβ])).symm
   have hW : ∀ β, (∃ v, ex β v ≠ 0) → ∀ v ∈ LinearMap.range (P (cl β)), ex β v = 0 → v = 0 := by
     rintro β hβ _ ⟨v, rfl⟩
-    exact h3 β hβ _ fun γ hγ => by rw [hP, if_neg hγ]
+    exact h3 β hβ _ fun γ hγ => by rw [hP, ite_eq_right hγ]
   have hle : ∀ k, Module.finrank F (LinearMap.range (P k)) ≤ n := fun k => by
     obtain ⟨β, rfl, hβ⟩ := hne k
     obtain ⟨b, hb⟩ := hb β
@@ -278,7 +278,7 @@ theorem proportional_field {F : Type} [Field F] {A : Type} [CommGroup A] [Finite
       (injective_iff_map_eq_zero _).2 fun v hv => hinj _ fun β => by
         have h1 : P (cl β) v = 0 := congrArg Subtype.val (congrFun hv (cl β))
         have h2 := hP (cl β) v β
-        rw [h1, if_pos rfl] at h2
+        rw [h1, ite_eq_left rfl] at h2
         exact h2.symm.trans (map_zero _)
     have h1 := LinearMap.finrank_le_finrank_of_injective hi
     rw [Module.finrank_pi_fintype] at h1
@@ -305,10 +305,10 @@ theorem proportional_field {F : Type} [Field F] {A : Type} [CommGroup A] [Finite
   show f₁ (φ v) = _
 
   rw [← hc, LinearMap.sum_apply, map_sum, Finset.sum_eq_single (cl α) (fun l _ hl => by
-  rw [LinearMap.smul_apply, map_smul, (hk _).2 (by rw [hP, if_neg hl.symm]), smul_zero]) (by simp),
+  rw [LinearMap.smul_apply, map_smul, (hk _).2 (by rw [hP, ite_eq_right hl.symm]), smul_zero]) (by simp),
   LinearMap.smul_apply, map_smul]
   congr 1
-  have := (hk (P (cl α) v - v)).2 (by rw [map_sub, hP, if_pos rfl, sub_self])
+  have := (hk (P (cl α) v - v)).2 (by rw [map_sub, hP, ite_eq_left rfl, sub_self])
   rwa [map_sub, sub_eq_zero] at this
 
 theorem proportional {F : Type} [CommRing F] (hF : IsField F) {A : Type} [CommGroup A] [Finite A] {E : Type}
@@ -332,8 +332,8 @@ theorem proportional {F : Type} [CommRing F] (hF : IsField F) {A : Type} [CommGr
     (hb₂ : ∀ v, ∃ c : Fin n → F, ex α' v = ∑ i, ι (c i) * b i)
     (hint : ∀ h v v', ex α' v = f₁ v' → ex α' (Φ (m h) v) = f₁ (Φ (m h) v')) :
     ∃ a : F, ∀ v, ex α' v = ι a * f₁ v := by
-  letI := hF.toField
-  letI : Algebra F Q := ι.toAlgebra
+  let := hF.toField
+  let : Algebra F Q := ι.toAlgebra
   have mk : ∀ f : E → Q, (∀ c v v', f (c • v + v') = ι c * f v + f v') → ∃ g : E →ₗ[F] Q, ⇑g = f := fun f hf => by
     have h0 : f 0 = 0 := by
       have := hf 1 0 0

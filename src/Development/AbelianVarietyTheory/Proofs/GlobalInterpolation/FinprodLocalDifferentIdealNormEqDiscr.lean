@@ -114,7 +114,7 @@ private lemma exists_notMem_mul_mem_of_pow_count {I : Ideal (𝓞 K)} (hI : I �
         rw [← Associates.mk_pow]
         exact Associates.mk_le_mk_iff_dvd.mpr h1)
     omega
-  obtain ⟨s, hsJ, hsv⟩ := SetLike.not_le_iff_exists.mp hJv
+  obtain ⟨s, hsJ, hsv⟩ := IsConcreteLE.not_le_iff_exists.mp hJv
   refine ⟨s, hsv, fun a ha => ?_⟩
   rw [hJ]
   exact Ideal.mul_mem_mul ha hsJ
@@ -146,7 +146,7 @@ private lemma mem_map_adicCompletionIntegers_of_valued_le {I : Ideal (𝓞 K)} (
     exact WithZero.zero_ne_coe hval
   have hz : (y : v.adicCompletion K) / i₀ ∈ v.adicCompletionIntegers K := by
     rw [mem_adicCompletionIntegers, map_div₀, hval]
-    exact div_le_one_of_le₀ hy zero_le'
+    exact div_le_one_of_le₀ hy zero_le
   have hy' : y = algebraMap (𝓞 K) (v.adicCompletionIntegers K) (π ^ n * s) * ⟨_, hz⟩ := by
     apply Subtype.ext
     show (y : v.adicCompletion K) = i₀ * ((y : v.adicCompletion K) / i₀)
@@ -172,7 +172,7 @@ private lemma exists_integer_valuation_sub_le_exp_neg (k : K) (hk : v.valuation 
     have hcv : v.intValuation c ≠ 0 := by
       rw [intValuation_if_neg v hc0]
       exact WithZero.exp_ne_zero
-    exact (div_le_one₀ (zero_lt_iff.mpr hcv)).mp hk
+    exact (div_le_one₀ (pos_iff_ne_zero.mpr hcv)).mp hk
   obtain ⟨a', ha'⟩ := Ideal.mem_span_singleton'.mp (hs b hb)
   obtain ⟨y, i, hi, hyi⟩ := Ideal.IsMaximal.exists_inv v.isMaximal hsv
   refine ⟨a' * (y * ∑ j ∈ Finset.range n, i ^ j), ?_⟩
@@ -232,13 +232,13 @@ private lemma exists_integer_valued_sub_le_exp_neg (x : v.adicCompletionIntegers
     refine Filter.mem_of_superset ((ho.preimage hc).mem_nhds ?_) ?_
     · show Valued.v.restrict ((x : v.adicCompletion K) - x) ≤ _
       rw [sub_self, map_zero]
-      exact zero_le'
+      exact zero_le
     · intro y hy
-      rw [Set.mem_setOf_eq, ← hvz]
+      rw [Set.mem_ofPred_eq, ← hvz]
       exact (Valuation.restrict_le_iff Valued.v).mp hy
   obtain ⟨_, hz, ⟨k, rfl⟩⟩ := mem_closure_iff_nhds.mp
     ((denseRange_algebraMap (K := K) v) (x : v.adicCompletion K)) _ hnhds
-  simp only [Set.mem_setOf_eq] at hz
+  simp only [Set.mem_ofPred_eq] at hz
   have hk1 : v.valuation K k ≤ 1 := by
     have hx1 : Valued.v (x : v.adicCompletion K) ≤ 1 := x.2
     have hle : WithZero.exp (-(n : ℤ)) ≤ 1 := by

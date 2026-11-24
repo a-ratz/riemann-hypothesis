@@ -78,14 +78,14 @@ namespace GlobalTheory.KZ
 
 theorem exp_two_pi_rat_mem_range {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (r : ℚ) :
     ∃ a : Ω, ε a = Complex.exp (2 * Real.pi * Complex.I * (r : ℂ)) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := algebraRat.charZero Ω
-  haveI : NeZero r.den := ⟨r.den_nz⟩
-  haveI : NeZero (r.den : Ω) := ⟨Nat.cast_ne_zero.2 r.den_nz⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω r.den
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := algebraRat.charZero Ω
+  have : NeZero r.den := ⟨r.den_nz⟩
+  have : NeZero (r.den : Ω) := ⟨Nat.cast_ne_zero.2 r.den_nz⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω r.den
   have hζ' : IsPrimitiveRoot (ε ζ) r.den := hζ.map_of_injective ε.injective
   have he : Complex.exp (2 * Real.pi * Complex.I * (r : ℂ)) ^ r.den = 1 := by
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨r.num, ?_⟩
     have h1 : ((r.den : ℚ) * r : ℚ) = r.num := Rat.den_mul_eq_num r
     have h2 : (r.den : ℂ) * (r : ℂ) = (r.num : ℂ) := by exact_mod_cast congrArg (fun x : ℚ => (x : ℂ)) h1

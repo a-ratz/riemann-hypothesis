@@ -320,7 +320,7 @@ theorem lambda_pos_of_twisted_mu_alt : _root_.GlobalTheory.HeightCounting.Up.Pub
   refine (e0.inter e1).imp fun K _ _ _ _ H => ?_
   obtain ⟨hK, hH⟩ := H
   refine hK.imp fun B f T hO _ _ w Z Wt p0 t nch n xd c _ _ _ v hTw j hj1 hjm σ hne => ?_
-  letI : Algebra (↥t.r.z.core.Q.c.F) (w.D Z).what₂.LL := t.r.z.alg
+  let : Algebra (↥t.r.z.core.Q.c.F) (w.D Z).what₂.LL := t.r.z.alg
   have host : Formalism.IndefR.Links.HostHyp (w.D Z) := (hH (w.st Z) hO).1
   obtain ⟨p, hp⟩ := GlobalTheory.Mem.LamPosTw.hasLab_exists hP.decay (w.D Z) _ _ _ _ _ _ t.r.z.R t.r.z.F t.r.z.cG p0
     t.r.Y t.r.Z t.r.z.pins t.r.intersectionNumber_baseChange host σ

@@ -183,7 +183,7 @@ theorem inFrame_iota_k {ε : ℤˣ} {ζ : ℂ} (hε : d.b.1ᵀ * dbl d.Y.J * d.b
 theorem continuous_iota_k {ε : ℤˣ} {ζ : ℂ}
     (hε : d.b.1ᵀ * dbl d.Y.J * d.b.1.map σ = Matrix.fromBlocks 0 1 (((ε : ℤ) : E) • 1) 0)
     (hζ : ε = -1 ∧ ζ = 1 ∨ ε = 1 ∧ ζ = Complex.I) (w : InfinitePlace F) : Continuous (_root_.PositivityTheory.SiegelWeilFormula.Krd.iota_k d hε hζ w) := by
-  have hm : Continuous fun y : GR d.n => mR y := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous fun y : GR d.n => mR y := Units.continuous_val.comp continuous_subtypeVal
   have hz : Continuous fun y : GR d.n => _root_.PositivityTheory.SiegelWeilFormula.Krd.Zm_k d ζ y := (continuous_const.matrix_mul hm).matrix_mul continuous_const
   have hM : Continuous fun y : GR d.n => _root_.PositivityTheory.SiegelWeilFormula.Krd.MxI_k d w ζ y :=
     (continuous_const.matrix_mul ((_root_.PositivityTheory.SiegelWeilFormula.Krd.continuous_atM_k d w).comp hz)).matrix_mul continuous_const
@@ -194,10 +194,10 @@ theorem iotaEx_k : _root_.PositivityTheory.SiegelWeilFormula.Krd.IotaEx_k := by
   intro F E _ _ _ _ _ σ d ε ζ hε hζ
   refine ⟨_root_.PositivityTheory.SiegelWeilFormula.Krd.iota_k d hε hζ, _root_.PositivityTheory.SiegelWeilFormula.Krd.continuous_iota_k d hε hζ, fun w y => ?_, fun w w' y hw => ?_, fun w y => ?_⟩
   · rw [_root_.PositivityTheory.SiegelWeilFormula.Krd.inFrame_iota_k, _root_.PositivityTheory.SiegelWeilFormula.Krd.cw_atM_k]
-    simp only [fam, if_true, _root_.PositivityTheory.SiegelWeilFormula.Krd.Zm_k]
+    simp only [fam, ite_true, _root_.PositivityTheory.SiegelWeilFormula.Krd.Zm_k]
     rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, dZ_mul_inv (zeta_ne hζ), Matrix.one_mul]
   · rw [_root_.PositivityTheory.SiegelWeilFormula.Krd.inFrame_iota_k, _root_.PositivityTheory.SiegelWeilFormula.Krd.cw_atM_k]
-    simp only [fam, if_neg hw]
+    simp only [fam, ite_eq_right hw]
   · rw [_root_.PositivityTheory.SiegelWeilFormula.Krd.inFrame_iota_k, _root_.PositivityTheory.SiegelWeilFormula.Krd.fin_atM_k]
 end Iota
 end PositivityTheory.SiegelWeilFormula.Krd

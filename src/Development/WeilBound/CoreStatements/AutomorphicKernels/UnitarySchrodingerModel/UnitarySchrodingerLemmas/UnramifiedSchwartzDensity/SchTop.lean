@@ -101,8 +101,8 @@ theorem coordInf : PositivityTheory.PfSWUS.SchInf.CoordInf := by
   obtain ⟨-, e, -, he, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hσ.1
   let eh : Ainf F ≃ₜ (InfinitePlace F → ℝ) := he.homeomorph _
   have heh : ∀ y, eh y = e y := fun _ => rfl
-  haveI : SecondCountableTopology (Ainf F) := eh.secondCountableTopology
-  haveI : T2Space (Ainf F) := eh.symm.t2Space
+  have : SecondCountableTopology (Ainf F) := eh.secondCountableTopology
+  have : T2Space (Ainf F) := eh.symm.t2Space
   obtain ⟨i1, i2, i3, i4, -, -, hb, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   let d := Module.finrank F E
   let b : Module.Basis (Fin d) F E := Module.finBasis F E
@@ -241,7 +241,7 @@ namespace GlobalTheory.CompanionTheory.PushFam
 
 theorem integrable_continuousAt_of_linear_push : PositivityTheory.PfSWUS.SchInf.FamCont := by
   intro N X _ μ' hμ' n c O hO hcO hfin hL g hg hdecay
-  haveI := hμ'
+  have := hμ'
   set k : ℕ := N + 1 with hk
   set W : (Fin N → ℝ) → ℝ := fun y => (1 + ‖y‖) ^ (-(k : ℝ)) with hWdef
   have hWnonneg : ∀ y, 0 ≤ W y := fun y => by positivity
@@ -308,7 +308,7 @@ theorem map_eq_smul (μ : Measure V) [μ.IsAddHaarMeasure] (T Ti : V → V) (hT 
     (hTi : Continuous Ti) (hadd : ∀ x y, T (x + y) = T x + T y)
     (hl : ∀ x, Ti (T x) = x) (hr : ∀ x, T (Ti x) = x) :
     ∃ c : ℝ≥0, μ.map T = c • μ := by
-  haveI : (μ.map T).IsAddHaarMeasure :=
+  have : (μ.map T).IsAddHaarMeasure :=
     (addEquivOf T Ti hadd hl hr).isAddHaarMeasure_map μ hT hTi
   exact ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
 
@@ -326,7 +326,7 @@ theorem exists_continuous_scale (μ : Measure V) [μ.IsAddHaarMeasure] (T Ti : P
     (s := {0}) (t := ∅) isCompact_singleton isClosed_empty (by simp)
   have hf0 : (0 : V → ℝ) ≤ f := fun x => (hf01 x).1
   have hpos : 0 < ∫ x, f x ∂μ := by
-    refine f.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hfc hf0 (x := 0) ?_
+    refine f.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hfc hf0 (x := 0) ?_
     rw [hf1 (Set.mem_singleton 0)]; exact one_ne_zero
   have hval : ∀ p, (A p : ℝ) = (∫ x, f (T p x) ∂μ) / ∫ x, f x ∂μ := by
     intro p
@@ -362,13 +362,13 @@ variable {K : Type*} [CommRing K] [TopologicalSpace K] [IsTopologicalRing K] {n 
 theorem continuous_inv_unitMat (hu : IsOpenEmbedding (Units.val : Kˣ → K)) :
     Continuous fun g : {g : Matrix (Fin n) (Fin n) K // IsUnit g.det} => (g.1)⁻¹ := by
   have hdet : Continuous fun g : {g : Matrix (Fin n) (Fin n) K // IsUnit g.det} => g.1.det :=
-    Continuous.matrix_det continuous_subtype_val
+    Continuous.matrix_det continuous_subtypeVal
   have hunit : Continuous fun g : {g : Matrix (Fin n) (Fin n) K // IsUnit g.det} => g.2.unit :=
     hu.isEmbedding.continuous_iff.2 (by simpa [Function.comp_def] using hdet)
   have hinv : Continuous fun g : {g : Matrix (Fin n) (Fin n) K // IsUnit g.det} =>
       ((g.2.unit⁻¹ : Kˣ) : K) := Units.continuous_val.comp hunit.inv
   have hadj : Continuous fun g : {g : Matrix (Fin n) (Fin n) K // IsUnit g.det} => g.1.adjugate :=
-    Continuous.matrix_adjugate continuous_subtype_val
+    Continuous.matrix_adjugate continuous_subtypeVal
   refine (hinv.smul hadj).congr fun g => ?_
   have hr : Ring.inverse g.1.det = ((g.2.unit⁻¹ : Kˣ) : K) := by
     have h := Ring.inverse_unit g.2.unit
@@ -378,7 +378,7 @@ theorem continuous_inv_unitMat (hu : IsOpenEmbedding (Units.val : Kˣ → K)) :
 
 theorem locallyCompact_unitMat [LocallyCompactSpace K] (hu : IsOpenEmbedding (Units.val : Kˣ → K)) :
     LocallyCompactSpace {g : Matrix (Fin n) (Fin n) K // IsUnit g.det} := by
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) K) :=
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) K) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → K))
   have hset : {g : Matrix (Fin n) (Fin n) K | IsUnit g.det} =
       (fun g : Matrix (Fin n) (Fin n) K => g.det) ⁻¹' Set.range (Units.val : Kˣ → K) := by
@@ -392,7 +392,7 @@ theorem continuousOn_extend (A : {g : Matrix (Fin n) (Fin n) K // IsUnit g.det} 
     (hA : Continuous A) [∀ g : Matrix (Fin n) (Fin n) K, Decidable (IsUnit g.det)] :
     ContinuousOn (fun g : Matrix (Fin n) (Fin n) K => if h : IsUnit g.det then A ⟨g, h⟩ else 0)
       {g | IsUnit g.det} := by
-  rw [continuousOn_iff_continuous_restrict]
+  rw [continuousOn_iff_continuous_domRestrict]
   refine hA.congr fun g => ?_
   simp [Set.restrict, g.2]
 
@@ -469,18 +469,18 @@ theorem exists_scale_tuples (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Typ
       ∀ g, IsUnit g.det → μ.map (fun X => rmul R X g) = A g • μ := by
   classical
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   have hu : IsOpenEmbedding (Units.val : (R ⊗[F] E)ˣ → R ⊗[F] E) := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ R hR
   obtain ⟨iTR, iLC, iSC, iT2, -, -, -, iB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := iB n M
-  haveI := iTR
-  haveI := iLC
-  haveI := iSC
-  haveI := iT2
-  haveI := locallyCompact_unitMat (n := n) hu
+  have := iB n M
+  have := iTR
+  have := iLC
+  have := iSC
+  have := iT2
+  have := locallyCompact_unitMat (n := n) hu
   have hcont : ∀ {Q : Type} [TopologicalSpace Q] (G : Q → Matrix (Fin n) (Fin n) (R ⊗[F] E)),
       Continuous G → Continuous (Function.uncurry fun (q : Q) (X : Fin n → Fin M → R ⊗[F] E) => rmul R X (G q)) := by
     intro Q _ G hG
@@ -495,7 +495,7 @@ theorem exists_scale_tuples (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Typ
   obtain ⟨A, hA, hform⟩ := exists_continuous_scale μ
     (P := {g : Matrix (Fin n) (Fin n) (R ⊗[F] E) // IsUnit g.det})
     (fun g X => rmul R X g.1) (fun g X => rmul R X (g.1)⁻¹)
-    (hcont _ continuous_subtype_val) (hcont _ (continuous_inv_unitMat hu))
+    (hcont _ continuous_subtypeVal) (hcont _ (continuous_inv_unitMat hu))
     (fun g X Y => rmul_add R X Y g.1)
     (fun g X => by rw [rmul_rmul, Matrix.mul_nonsing_inv _ g.2, rmul_one])
     (fun g X => by rw [rmul_rmul, Matrix.nonsing_inv_mul _ g.2, rmul_one])
@@ -511,22 +511,22 @@ theorem exists_scale_herm (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Type)
           conjT R σ g * (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * g) → ν.map τ = B g • ν := by
   classical
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   have hu : IsOpenEmbedding (Units.val : (R ⊗[F] E)ˣ → R ⊗[F] E) := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ R hR
   obtain ⟨iTR, iLC, iSC, iT2, hsig, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := iTR
-  haveI := iLC
-  haveI := iSC
-  haveI := iT2
+  have := iTR
+  have := iLC
+  have := iSC
+  have := iT2
   obtain ⟨jLC, jSC, jT2, jB, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R n
-  haveI := jLC
-  haveI := jSC
-  haveI := jT2
-  haveI := jB
-  haveI := locallyCompact_unitMat (n := n) hu
+  have := jLC
+  have := jSC
+  have := jT2
+  have := jB
+  have := locallyCompact_unitMat (n := n) hu
   have hs : ∀ x, σ (σ x) = x := GlobalTheory.CompanionTheory.SW.HermTop.sigma_sigma hσ
   have hcont : ∀ {Q : Type} [TopologicalSpace Q] (G : Q → Matrix (Fin n) (Fin n) (R ⊗[F] E)),
       Continuous G → Continuous (Function.uncurry fun (q : Q) (S : HermR R σ n) =>
@@ -536,7 +536,7 @@ theorem exists_scale_herm (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Type)
     have h1 : Continuous fun p : Q × HermR R σ n => conjT R σ (G p.1) :=
       ((hG.comp continuous_fst).matrix_map hsig).matrix_transpose
     have h2 : Continuous fun p : Q × HermR R σ n => (p.2 : Matrix (Fin n) (Fin n) (R ⊗[F] E)) :=
-      continuous_subtype_val.comp continuous_snd
+      continuous_subtypeVal.comp continuous_snd
     exact (h1.matrix_mul h2).matrix_mul (hG.comp continuous_fst)
   have hinvl : ∀ g h : Matrix (Fin n) (Fin n) (R ⊗[F] E), g * h = 1 → ∀ S : Matrix (Fin n) (Fin n) (R ⊗[F] E),
       conjT R σ h * (conjT R σ g * S * g) * h = S := by
@@ -549,7 +549,7 @@ theorem exists_scale_herm (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (R : Type)
     (P := {g : Matrix (Fin n) (Fin n) (R ⊗[F] E) // IsUnit g.det})
     (fun g S => ⟨conjT R σ g.1 * (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * g.1, conj_mem R hs _ S⟩)
     (fun g S => ⟨conjT R σ (g.1)⁻¹ * (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) * (g.1)⁻¹, conj_mem R hs _ S⟩)
-    (hcont _ continuous_subtype_val) (hcont _ (continuous_inv_unitMat hu))
+    (hcont _ continuous_subtypeVal) (hcont _ (continuous_inv_unitMat hu))
     (fun g S T => Subtype.ext (by simp [Matrix.mul_add, Matrix.add_mul]))
     (fun g S => Subtype.ext (hinvl _ _ (Matrix.mul_nonsing_inv _ g.2) _))
     (fun g S => Subtype.ext (hinvl _ _ (Matrix.nonsing_inv_mul _ g.2) _))
@@ -581,21 +581,21 @@ theorem scaleInf : PositivityTheory.PfSWUS.SchInf.ScaleInf := by
   intro F E _ _ _ _ _ σ hσ n M μ ν hμ hν
   classical
   have hR : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨A, hA, hAf⟩ := exists_scale_tuples σ hσ (Ainf F) hR n M μ hμ
   obtain ⟨B, hB, hBf⟩ := exists_scale_herm σ hσ (Ainf F) hR n ν hν
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨iTR, iLC, iSC, iT2, hsig, -, -, iB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
-  haveI := iB n M
-  haveI := iTR
-  haveI := iT2
+  have := iB n M
+  have := iTR
+  have := iT2
   obtain ⟨jLC, jSC, jT2, jB, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ (Ainf F) n
-  haveI := jB
-  haveI := jT2
+  have := jB
+  have := jT2
   have hs : ∀ x, σ (σ x) = x := GlobalTheory.CompanionTheory.SW.HermTop.sigma_sigma hσ
   refine ⟨A, B, hA, hB, fun g hg => ?_⟩
   have hTc : Continuous fun X : Fin n → Fin M → Ainf F ⊗[F] E => rmul (Ainf F) X g := by
@@ -607,7 +607,7 @@ theorem scaleInf : PositivityTheory.PfSWUS.SchInf.ScaleInf := by
     ⟨conjT (Ainf F) σ g * (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) * g, conj_mem (Ainf F) hs _ S⟩
   have hτ₀c : Continuous τ₀ := by
     refine Continuous.subtype_mk ?_ _
-    exact (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+    exact (continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const
   have hcT : ∀ S : HermR (Ainf F) σ n, ((τ₀ S : HermR (Ainf F) σ n) : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) =
       cT (sigR (Ainf F) σ) g * (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)) * g := fun S => rfl
   have hB0 := hBf g hg τ₀ (fun S => rfl)
@@ -765,7 +765,7 @@ set_option synthInstance.maxSize 2000 in
 theorem exists_real_coords : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n M : ℕ),
     ∃ (N : ℕ) (e : (Fin n → Fin M → Ainf F ⊗[F] E) ≃+ (Fin N → ℝ)), Continuous e ∧ Continuous e.symm := by
   intro F E _ _ _ _ _ n M
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let t := GlobalTheory.Core.Rk.RapidInt.tupEquiv F E (Module.finBasis F E) M n
   let L := (Module.finBasis ℝ (Fin n → Fin M → Fin (Module.finrank F E) → mixedEmbedding.mixedSpace F)).equivFun.toContinuousLinearEquiv
   refine ⟨_, t.toAddEquiv.trans L.toLinearEquiv.toAddEquiv, ?_, ?_⟩
@@ -1043,16 +1043,16 @@ set_option synthInstance.maxSize 2000 in
 theorem secInf : PositivityTheory.PfSWUS.SchInf.SecInf := by
   intro F E _ _ _ _ _ σ hσ n c hc
   have hR : GlobalTheory.CompanionTheory.SW.IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have hunits : IsOpenEmbedding (Units.val : (Ainf F ⊗[F] E)ˣ → Ainf F ⊗[F] E) :=
     _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ (Ainf F) hR
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨iTR, -, -, -, hsig, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
-  haveI := iTR
+  have := iTR
   obtain ⟨N, e₀, he₀, he₀'⟩ := GlobalTheory.CompanionTheory.SW.SchwartzFib.exists_real_coords F E n n
   have hinvol : ∀ b : Ainf F ⊗[F] E, sigR (Ainf F) σ (sigR (Ainf F) σ b) = b := by
     have hσσ : ∀ x, σ (σ x) = x := by
@@ -1072,7 +1072,7 @@ theorem secInf : PositivityTheory.PfSWUS.SchInf.SecInf := by
   have hst : sigR (Ainf F) σ (algebraMap F (Ainf F ⊗[F] E) (1 / 2)) = algebraMap F (Ainf F ⊗[F] E) (1 / 2) :=
     (Algebra.TensorProduct.map (AlgHom.id F (Ainf F)) σ).commutes (1 / 2)
   exact exists_section_matrix (X := HermR (Ainf F) σ n) hunits e₀ he₀ he₀' (sigR (Ainf F) σ) hsig hinvol _ ht2 hst
-    (fun S => (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E))) continuous_subtype_val
+    (fun S => (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E))) continuous_subtypeVal
     (fun S i j => S.2 i j) c hc
 
 end GlobalTheory.CompanionTheory.SecInf
@@ -1142,7 +1142,7 @@ theorem density_limit {V X Y : Type} [TopologicalSpace V] [LocallyCompactSpace V
       (𝓝 (∫ b in K, (∫ x, φ x ∂(m b)) ∂ν)) := by
     refine tendsto_integral_of_dominated_convergence (fun _ => C) (fun k => ?_) ?_ (fun k => ?_) ?_
     · exact ((H _ (hψc k) (hψs k)).1.1.mono hKB).aestronglyMeasurable hKm
-    · haveI : IsFiniteMeasure (ν.restrict K) := ⟨by simpa using hK.measure_lt_top (μ := ν)⟩
+    · have : IsFiniteMeasure (ν.restrict K) := ⟨by simpa using hK.measure_lt_top (μ := ν)⟩
       exact integrable_const _
     · refine (ae_restrict_iff' hKm).2 (Filter.Eventually.of_forall fun S hS => ?_)
       calc ‖∫ x, ψ k x ∂(m S)‖ ≤ ∫ x, ‖ψ k x‖ ∂(m S) := norm_integral_le_integral_norm _
@@ -1161,23 +1161,23 @@ theorem density_limit {V X Y : Type} [TopologicalSpace V] [LocallyCompactSpace V
 theorem density_identity_inf : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (n : ℕ) (μ : Measure (Fin n → Fin M → Ainf F ⊗[F] E)) (ν : Measure (HermR (Ainf F) σ n)) (m : HermR (Ainf F) σ n → Measure (Fin n → Fin M → Ainf F ⊗[F] E)), μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → IsGramFib (Ainf F) σ J n μ ν m → ∀ φ : (Fin n → Fin M → Ainf F ⊗[F] E) → ℂ, Continuous φ → Integrable φ μ → (∀ S : HermR (Ainf F) σ n, IsUnit (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).det → Integrable φ (m S)) → ContinuousOn (fun S => ∫ X, ‖φ X‖ ∂(m S)) {S : HermR (Ainf F) σ n | IsUnit (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).det} → ∀ K : Set (HermR (Ainf F) σ n), IsCompact K → K ⊆ {S | IsUnit (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).det} → ∫ X in gramR (Ainf F) σ J ⁻¹' (Subtype.val '' K), φ X ∂μ = ∫ S in K, (∫ X, φ X ∂(m S)) ∂ν := by
   intro F E _ _ _ _ _ σ hσ M J hJ n μ ν m hμ hν hfib φ hφc hφ hφS hD K hK hKB
   have hR : IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨iTR, iLC, iSC, iT2, -, -, -, iB, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
-  haveI := iB n M
-  haveI := iTR
-  haveI := iLC
-  haveI := iSC
-  haveI := iT2
+  have := iB n M
+  have := iTR
+  have := iLC
+  have := iSC
+  have := iT2
   obtain ⟨jLC, jSC, jT2, jB, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ (Ainf F) n
-  haveI := jLC
-  haveI := jSC
-  haveI := jT2
-  haveI := jB
+  have := jLC
+  have := jSC
+  have := jT2
+  have := jB
   exact density_limit μ ν (gramR (Ainf F) σ J) Subtype.val _ m
     (fun ψ h1 h2 => GlobalTheory.CompanionTheory.SW.GramDensity.isContDensityOn_gram F E σ hσ M J hJ (Ainf F) hR n μ ν m hμ hν hfib ψ h1 h2)
     φ hφc hφ hφS hD K hK hKB
@@ -1267,7 +1267,7 @@ theorem schwartz_decay {N : ℕ} (g : SchwartzMap (Fin N → ℝ) ℂ) (k : ℕ)
 theorem schwartzDensInf_of (hA : FamCont) (hB : SecInf) (hC : CoordInf) (hD : ScaleInf) (hE : FinOpen)
     (hF : DensInt) : PositivityTheory.PfSWUS.HMass.SchwartzDensInf := by
   intro F E _ _ _ _ _ σ hσ M J hJ n μ ν m hμ hν hm φ hφ
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   have hloc : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
   obtain ⟨i1, i2, i3, i4, -, -, -, hBor, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   have := i1

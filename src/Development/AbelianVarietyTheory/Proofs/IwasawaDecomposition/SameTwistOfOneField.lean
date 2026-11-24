@@ -247,7 +247,7 @@ theorem exists_common {l : ℕ} [Fact l.Prime] {A B L : Type} [CommRing A] [IsDo
   have hcond : ∀ x, ‖e x‖ ≤ 1 ↔ ‖e' x‖ ≤ 1 := by
     intro x
     rw [← he x, mem_range_iff ι hB, ← RingHom.comp_apply ι eB, ← he' x, ← PadicComplex.coe_eq,
-      PadicComplex.valuation_extends, PadicAlgCl.valuation_def, ← NNReal.coe_le_coe, coe_nnnorm,
+      PadicComplex.valuation_extends, PadicAlgCl.valuation_def, ← NNReal.coe_le_coe, coe_nnNorm,
       NNReal.coe_one]
   obtain ⟨σ, hσ⟩ := GlobalTheory.EmbUnitBallConj.exists_conj l L e e' hcond
   refine ⟨σ, ι, hι, fun x => ?_⟩
@@ -294,7 +294,7 @@ theorem exists_reads (D : D7) (C : NChoice D) (F : TwFrameC D) {low : Finset ℕ
       ∀ (z : ℤ_[D.ntw.l (C.twI w)]) (z' : ℤ_[l]), HEq z z' →
         φ (algebraMap _ (D.ntw.O0 (C.twI w)) z) = algebraMap ℚ_[l] (PadicAlgCl l) (z' : ℚ_[l]) := by
   subst hl
-  haveI := C.Oe_fin w
+  have := C.Oe_fin w
   obtain ⟨σ, ι, h1, h2⟩ := GlobalTheory.CommonReading.exists_common (C.Oe_inj w)
     ((Subring.subtype _).comp (F.eOk (C.twI w) (C.k' w)).toRingHom)
     (Subtype.val_injective.comp (F.eOk (C.twI w) (C.k' w)).injective)
@@ -307,7 +307,7 @@ theorem exists_reads (D : D7) (C : NChoice D) (F : TwFrameC D) {low : Finset ℕ
     refine Eq.trans ?_ ((hF.eOk_alg _ _ _).trans (hF.eO_alg _ y)).symm
     simp
   · exact GlobalTheory.CommonReading.norm_aut_le σ.symm _ (F.eO0 (C.twI w) y)
-  · haveI := (F.K0 (C.twI w)).2
+  · have := (F.K0 (C.twI w)).2
     exact LinearEquiv.finiteDimensional (IntermediateField.equivMap _ σ.symm.toAlgHom).toLinearEquiv
   · rintro z _ ⟨⟩
     change σ.symm (F.eO0 (C.twI w) _ : PadicAlgCl _) = _

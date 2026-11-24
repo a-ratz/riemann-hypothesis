@@ -64,7 +64,7 @@ private theorem tri (d : ℕ) : ∀ (V : Type) [AddCommGroup V] [Module ℂ V] [
   | zero => exact fun V _ _ _ f h => ⟨Module.finBasisOfFinrankEq ℂ V h, fun i => i.elim0⟩
   | succ d ih =>
     intro V _ _ _ f h
-    haveI : Nontrivial V := Module.nontrivial_of_finrank_eq_succ h
+    have : Nontrivial V := Module.nontrivial_of_finrank_eq_succ h
     obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue f
     have h1 : LinearMap.range (f - μ • (1 : Module.End ℂ V)) < ⊤ := by
       rw [lt_top_iff_ne_top, Ne, ← LinearMap.ker_eq_bot_iff_range_eq_top]
@@ -110,7 +110,7 @@ private theorem tri_mat {d : ℕ} (g : GL (Fin d) ℂ) : ∃ Q : GL (Fin d) ℂ,
   rw [this, LinearMap.toMatrix_apply, hb i j h]
 
 private theorem homogeneous_trace_conj {d : ℕ} (n : ℕ) (g Q : GL (Fin d) ℂ) : tr1 d n (Q⁻¹ * g * Q) = tr1 d n g := by
-  haveI := finMH Unit d fun _ => n
+  have := finMH Unit d fun _ => n
   have e : ∀ a b : GL (Fin d) ℂ, mRep d (fun _ : Unit => n) (fun _ => a * b) = mRep d _ (fun _ => a) * mRep d _ fun _ => b :=
     fun a b => by rw [← map_mul]; rfl
   unfold tr1
@@ -139,7 +139,7 @@ private theorem homogeneous_trace_diagonal {d : ℕ} (n : ℕ) (g : GL (Fin d) �
       rw [eval_sbs, a, MvPolynomial.eval_monomial, MvPolynomial.eval_monomial, Finsupp.prod_fintype _ _ (by simp),
         Finsupp.prod_fintype _ _ (by simp)]
       simp [Fintype.prod_prod_type, mul_pow, Finset.prod_mul_distrib, mul_comm]
-    rw [this, MvPolynomial.coeff_monomial, if_pos rfl]
+    rw [this, MvPolynomial.coeff_monomial, ite_eq_left rfl]
 
   rw [symPowTrace_eq_sum_coeff, hsymm, map_sum]
   simp only [e]
@@ -161,8 +161,8 @@ private theorem homogeneous_trace_triangular {d : ℕ} (n : ℕ) (g : GL (Fin d)
   classical
   let A : ℂ → Matrix (Fin d) (Fin d) ℂ := fun t => Matrix.of fun i j => t ^ ((i : ℕ) - j) * g i j
   have hd : ∀ t, (A t).det ≠ 0 := fun t => by
-    have h1 := Matrix.det_of_lowerTriangular (A t) fun i j hij => by simp [A, h i j hij]
-    have h2 := Matrix.det_of_lowerTriangular (g : Matrix (Fin d) (Fin d) ℂ) fun i j hij => h i j hij
+    have h1 := Matrix.det_of_isLowerTriangular (A t) fun i j hij => by simp [A, h i j hij]
+    have h2 := Matrix.det_of_isLowerTriangular (g : Matrix (Fin d) (Fin d) ℂ) fun i j hij => h i j hij
     rw [h1]
     simpa [A, ← h2] using g.det_ne_zero
   let γ : ℂ → GL (Fin d) ℂ := fun t => Matrix.GeneralLinearGroup.mkOfDetNeZero _ (hd t)
@@ -217,7 +217,7 @@ theorem UpperTheory.V.Z.Sym.Wt.trOne :
   obtain ⟨β, hβ⟩ : ∃ β : Fin d → ℂ, β = fun i => u i i := ⟨_, rfl⟩
   rw [← hβ]
   have h1 : ∏ i, (X - C (β i)) = ∏ i, (X - C (α i)) := by
-    rw [← h0, ← Matrix.charpoly_transpose, Matrix.charpoly_of_upperTriangular (u : Matrix (Fin d) (Fin d) ℂ).transpose fun i j hij => hQ j i hij, hβ]
+    rw [← h0, ← Matrix.charpoly_transpose, Matrix.charpoly_of_isUpperTriangular (u : Matrix (Fin d) (Fin d) ℂ).transpose fun i j hij => hQ j i hij, hβ]
     rfl
   have h2 : Finset.univ.val.map β = Finset.univ.val.map α := by
     rw [← roots_multiset_prod_X_sub_C (Finset.univ.val.map β), ← roots_multiset_prod_X_sub_C (Finset.univ.val.map α),

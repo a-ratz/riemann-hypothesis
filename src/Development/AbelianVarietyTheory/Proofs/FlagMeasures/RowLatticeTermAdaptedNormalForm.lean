@@ -77,7 +77,7 @@ theorem val_of_split {T : E} (F : Formalism.MainNotions.S.FlagG S r T) (𝔡 : I
       rw [map_smul, hfe, smul_eq_mul]
       by_cases h : c = a
       · subst h; simpa using hx
-      · rw [if_neg h, mul_zero]; exact Submodule.zero_mem _
+      · rw [ite_eq_right h, mul_zero]; exact Submodule.zero_mem _
     · intro x hx
       show S.hT (f c) x ∈ (aaI 𝔡 c : Submodule (𝓞 E) E)
       rw [hLf x hx c]; exact Submodule.zero_mem _
@@ -102,7 +102,7 @@ theorem fe_swap {e f : Fin r → S.V} (hef : ∀ a b, S.hT (e a) (f b) = if a = 
   rw [← S.herm.eq, hef b a]
   by_cases h : a = b
   · subst h; simp
-  · rw [if_neg (Ne.symm h), if_neg h, map_zero]
+  · rw [ite_eq_right (Ne.symm h), ite_eq_right h, map_zero]
 
 theorem frF_Xa {T : E} (F : Formalism.MainNotions.S.FlagG S r T) (hT : T ≠ 0) (a : ℕ) :
     (GlobalTheory.TypeAsm.frF F hT).Xa a = F.Xa a := by
@@ -130,7 +130,7 @@ theorem frame_gen {T : E} (G : Formalism.MainNotions.S.Lat.LFlag S r T) (hT : T 
       refine Submodule.span_le.2 ?_
       rintro _ ⟨i, hi, rfl⟩
       show S.hT (f a) (G.fl.e i) = 0
-      rw [hfe, if_neg]
+      rw [hfe, ite_eq_right]
       rintro rfl; exact lt_irrefl _ (show a.val < a.val from hi)
     exact hle hx
   have hXiso : ∀ x ∈ G.fl.X, ∀ y ∈ G.fl.X, S.hT x y = 0 := by
@@ -156,7 +156,7 @@ theorem frame_gen {T : E} (G : Formalism.MainNotions.S.Lat.LFlag S r T) (hT : T 
     constructor
     · intro ht
       obtain ⟨y, hy, x, hx, hxy⟩ := Submodule.mem_sup.1 ht
-      have h1 : S.hT (f a) (t • G.fl.e a) = t := by rw [map_smul, hfe, if_pos rfl, smul_eq_mul, mul_one]
+      have h1 : S.hT (f a) (t • G.fl.e a) = t := by rw [map_smul, hfe, ite_eq_left rfl, smul_eq_mul, mul_one]
       rw [← hxy, map_add (f := _), hXa0 a x hx, add_zero] at h1
       rw [← h1]; exact hval a y hy
     · intro ht
@@ -221,9 +221,9 @@ theorem admissibleFrame_congruent_mod_unitriangular {T T' : E} (G : Formalism.Ma
     rw [hp]; exact h1 ((FractionalIdeal.mem_one_iff _).2 ⟨o, rfl⟩)
   have hsmulI : ∀ i : Fin r, ∀ s ∈ aaI 𝔡 i, ∀ o : 𝓞 E, s * (o : E) ∈ aaI 𝔡 i := by
     intro i s hs o
-    have := (aaI 𝔡 i : Submodule (𝓞 E) E).smul_mem o (FractionalIdeal.mem_coe.2 hs)
+    have := (aaI 𝔡 i : Submodule (𝓞 E) E).smul_mem o (FractionalIdeal.mem_coeToSubmodule.2 hs)
     rw [Algebra.smul_def, mul_comm] at this
-    exact FractionalIdeal.mem_coe.1 this
+    exact FractionalIdeal.mem_coeToSubmodule.1 this
 
   have hcs : ∀ i : Fin r, G.fl.fvec i.castSucc = G.fl.e i := GlobalTheory.TypeAsm.fv_cast G.fl
   have hls : G.fl.fvec (Fin.last r) = G.fl.z := GlobalTheory.TypeAsm.fv_last G.fl
@@ -284,7 +284,7 @@ theorem admissibleFrame_congruent_mod_unitriangular {T T' : E} (G : Formalism.Ma
       refine Submodule.span_le.2 ?_
       rintro _ ⟨i, hi, rfl⟩
       show S.hT (f' b) (G'.fl.e i) = 0
-      rw [hfe', if_neg]
+      rw [hfe', ite_eq_right]
       rintro rfl
       have : b.val < n := hi
       omega
@@ -332,13 +332,13 @@ theorem admissibleFrame_congruent_mod_unitriangular {T T' : E} (G : Formalism.Ma
       rw [h'ls, algebraMap_smul]; exact Λ.smul_mem o hz'
     · intro t hl
       rw [hframe'.1 a0] at hl
-      have h : t ∈ aaI 𝔡 a0 := FractionalIdeal.mem_coe.1 hl
+      have h : t ∈ aaI 𝔡 a0 := FractionalIdeal.mem_coeToSubmodule.1 hl
       have hm : t • G'.fl.e a0 ∈ Λ := hmem' a0 t h
       refine ⟨by rw [h'cs]; exact hm, hftE a0 t h, fun P hg => ?_⟩
       obtain ⟨s, hs, ho⟩ := hloc P hg _ hm (Submodule.smul_mem _ _ (Submodule.subset_span ⟨a0, rfl⟩))
       obtain ⟨o, ho⟩ := ho a0
       refine ⟨s, hs, o, ?_⟩
-      rw [ho, map_smul, hfe', if_pos rfl, smul_eq_mul, mul_one]
+      rw [ho, map_smul, hfe', ite_eq_left rfl, smul_eq_mul, mul_one]
   intro a t x' hx' hxa
   change x' - t • G'.fl.fvec a ∈ (GlobalTheory.TypeAsm.frF G'.fl hT').Xa a.val at hxa
   rw [frF_Xa] at hxa
@@ -356,7 +356,7 @@ theorem admissibleFrame_congruent_mod_unitriangular {T T' : E} (G : Formalism.Ma
   have hwexp := hcoord' w hwX
   set x := t • ft a + ∑ b, S.hT (f' b) w • ft b.castSucc with hx
   have hxΛ : x ∈ Λ := Λ.add_mem htft (Submodule.sum_mem _ fun b _ =>
-    hftE b _ (FractionalIdeal.mem_coe.1 (hval' b w hwΛ)))
+    hftE b _ (FractionalIdeal.mem_coeToSubmodule.1 (hval' b w hwΛ)))
   refine ⟨x, hxΛ, ?_, ?_⟩
   · change x - t • G.fl.fvec a ∈ (GlobalTheory.TypeAsm.frF G.fl hT).Xa a.val
     rw [frF_Xa]

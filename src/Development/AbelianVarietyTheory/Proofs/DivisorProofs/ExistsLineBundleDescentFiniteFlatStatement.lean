@@ -387,10 +387,10 @@ theorem exists_smul_mem_span_away {R S M : Type} [CommRing R] [CommRing S] [Alge
   classical
   let Q : Submonoid S := Algebra.algebraMapSubmonoid S p.primeCompl
   let T := Localization Q
-  letI : Algebra (Localization.AtPrime p) T := localizationAlgebra p.primeCompl S
-  haveI : Module.Finite (Localization.AtPrime p) T :=
+  let : Algebra (Localization.AtPrime p) T := localizationAlgebra p.primeCompl S
+  have : Module.Finite (Localization.AtPrime p) T :=
     Module.Finite.of_isLocalization R S p.primeCompl
-  haveI : Finite (MaximalSpectrum T) :=
+  have : Finite (MaximalSpectrum T) :=
     GlobalTheory.finite_maximalSpectrum_of_finite (Localization.AtPrime p) T
   obtain ⟨z, hz⟩ :=
     GlobalTheory.exists_bijective_toSpanSingleton_of_finite_maximalSpectrum T (LocalizedModule Q M)
@@ -436,9 +436,9 @@ theorem isFrame_res_of_smul_mem {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) {U : X
     (hU : IsAffineOpen U) (h : Γ(X, U)) (m : Γ(GlobalTheory.LB.toMod L, U))
     (hm : ∀ x : Γ(GlobalTheory.LB.toMod L, U), ∃ a : Γ(X, U), h • x = a • m) :
     GlobalTheory.LB.IsFrame ((GlobalTheory.LB.toMod L).presheaf.map (homOfLE (X.basicOpen_le h)).op m) := by
-  haveI := GlobalTheory.LB.isQuasicoherent_toMod hL
+  have := GlobalTheory.LB.isQuasicoherent_toMod hL
   have hD : IsAffineOpen (X.basicOpen h) := hU.basicOpen h
-  haveI := GlobalTheory.LB.invertible_sections hL hD
+  have := GlobalTheory.LB.invertible_sections hL hD
   rw [GlobalTheory.LB.isFrame_iff_bijective hD]
   have h₁ := ((GlobalTheory.QCoh.isLocalizedModule_resBasicOpen_iff (GlobalTheory.LB.toMod L) h).1
     (GlobalTheory.QCoh.isLocalizedModule_resBasicOpen (GlobalTheory.LB.toMod L) hU h)).1
@@ -468,11 +468,11 @@ theorem exists_trivial_near_fibre : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [IsFini
     (show y ∈ (⊤ : Y.Opens) from trivial)
   let p : Ideal Γ(Y, W) :=
     (IsLocalRing.maximalIdeal (Y.presheaf.stalk y)).comap (Y.presheaf.germ W y hyW).hom
-  letI : Algebra Γ(Y, W) Γ(X, f ⁻¹ᵁ W) := (f.app W).hom.toAlgebra
-  haveI : Module.Finite Γ(Y, W) Γ(X, f ⁻¹ᵁ W) := f.finite_app W hW
+  let : Algebra Γ(Y, W) Γ(X, f ⁻¹ᵁ W) := (f.app W).hom.toAlgebra
+  have : Module.Finite Γ(Y, W) Γ(X, f ⁻¹ᵁ W) := f.finite_app W hW
   have hW : IsAffineOpen W := hW
   have hU : IsAffineOpen (f ⁻¹ᵁ W) := hW.preimage f
-  haveI := GlobalTheory.LB.invertible_sections hL hU
+  have := GlobalTheory.LB.invertible_sections hL hU
   obtain ⟨r, hr, m, hm⟩ := exists_smul_mem_span_away (R := Γ(Y, W)) (S := Γ(X, f ⁻¹ᵁ W))
     (M := Γ(GlobalTheory.LB.toMod L, f ⁻¹ᵁ W)) p
   have he := isFrame_res_of_smul_mem hL hU (f.app W r) m hm
@@ -563,7 +563,7 @@ theorem exists_tensorSquare_equiv_sections {X Y : Scheme.{0}} (f : X ⟶ Y) [IsF
     ∃ e : Γ(X, f ⁻¹ᵁ V₀) ⊗[Γ(Y, V₀)] Γ(X, f ⁻¹ᵁ V₀) ≃+* Γ(pullback f f, pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V₀),
       ∀ a b : Γ(X, f ⁻¹ᵁ V₀), e (a ⊗ₜ b) =
         ((pullback.fst f f).app (f ⁻¹ᵁ V₀)).hom a * ((pullback.snd f f).appLE (f ⁻¹ᵁ V₀) _ h).hom b := by
-  letI : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
+  let : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
   have hV' : IsAffineOpen (f ⁻¹ᵁ V₀) := hV₀.preimage f
   have P := ReciprocityTheory.ChartRestriction.G.Out.GtBCPf.isPushout_appLE (IsPullback.of_hasPullback f f).flip
     inferInstance hV₀ hV' le_rfl h
@@ -679,7 +679,7 @@ theorem coboundary_unit_basicOpen : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) (V V₀
     exact TopCat.Presheaf.germ_res_apply _ _ _ _ _
   have k3 : ((pullback f f).presheaf.germ (pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V₀) z hz0).hom ((res hle c).val) =
       ((pullback f f).presheaf.germ (pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V) z hzV).hom c.val := by
-    simp only [res, Units.coe_map, MonoidHom.coe_coe]
+    simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
     exact TopCat.Presheaf.germ_res_apply _ _ _ _ _
   have hm' := congrArg ((pullback f f).presheaf.germ (pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V₀) z hz0).hom hm
   rw [map_mul, k3, k4] at hm'
@@ -734,14 +734,14 @@ theorem finiteFlatSurj_affine_algebra : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [Is
     letI : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
     IsNoetherianRing Γ(Y, V₀) ∧ Module.Finite Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) ∧ Module.FaithfullyFlat Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := by
   intro X Y f _ _ _ _ V₀ hV₀
-  letI : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
+  let : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
   have hV : IsAffineOpen (f ⁻¹ᵁ V₀) := hV₀.preimage f
   refine ⟨IsLocallyNoetherian.component_noetherian ⟨V₀, hV₀⟩, ?_, ?_⟩
   · exact IsFinite.finite_app f V₀ hV₀
   · have hflat : (f.app V₀).hom.Flat := by
       have := Flat.flat_appLE f hV₀ hV le_rfl
       rwa [Scheme.Hom.appLE_eq_app] at this
-    haveI : Module.Flat Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := hflat
+    have : Module.Flat Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := hflat
     apply Module.FaithfullyFlat.of_comap_surjective
     intro p
     have hsq := IsAffineOpen.SpecMap_appLE_fromSpec f hV₀ hV le_rfl
@@ -891,7 +891,7 @@ theorem hilbert90_local_of_cocycle : ∀ (R S : Type) [CommRing R] [CommRing S] 
     have hθ' : θ n = n • (c : S ⊗[R] S) := rfl
     rw [hθ', hsmul, hsmul, hL, hR, hc]
   have hD : IsDescentDatum θ := ⟨hcounit, hcoassoc⟩
-  haveI : Module.Invertible R (invariants θ) := hD.invertible_invariants
+  have : Module.Invertible R (invariants θ) := hD.invertible_invariants
 
   obtain ⟨f, m, hfm⟩ : ∃ (f : Module.Dual R (invariants θ)) (m : invariants θ), f m ∉ p := by
     by_contra hcon
@@ -968,7 +968,7 @@ theorem cocycle_tensor_of_pointwise : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [IsFi
           Algebra.TensorProduct.map (Algebra.TensorProduct.includeRight (R := Γ(Y, V₀)) (A := Γ(X, f ⁻¹ᵁ V₀)) (B := Γ(X, f ⁻¹ᵁ V₀))) (AlgHom.id Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀)) (e.symm (res hle c).val) =
         Algebra.TensorProduct.map (Algebra.TensorProduct.includeLeft (R := Γ(Y, V₀)) (S := Γ(Y, V₀)) (A := Γ(X, f ⁻¹ᵁ V₀)) (B := Γ(X, f ⁻¹ᵁ V₀))) (AlgHom.id Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀)) (e.symm (res hle c).val) := by
   intro X Y f _ V V₀ hV₀ h hle c hc e he
-  letI : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
+  let : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
   have hcond : ∀ z : ↥(pullback f f), f ((pullback.fst f f) z) = f ((pullback.snd f f) z) := fun z => by
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, pullback.condition]
   have hq : ∀ w : ↥(Triple f), (pullback.snd f f) ((pullback.fst (pullback.snd f f) (pullback.fst f f)) w) = (pullback.fst f f) ((pullback.snd (pullback.snd f f) (pullback.fst f f)) w) := fun w => by
@@ -1124,7 +1124,7 @@ theorem coboundary_locally_of_cocycle : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [Is
     rw [← Scheme.Hom.comp_apply, ← pullback.condition, Scheme.Hom.comp_apply]
     exact hz
   have hle : pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V₀ ≤ pullback.fst f f ⁻¹ᵁ f ⁻¹ᵁ V := fun z hz => hV₀V hz
-  letI : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
+  let : Algebra Γ(Y, V₀) Γ(X, f ⁻¹ᵁ V₀) := (f.app V₀).hom.toAlgebra
   obtain ⟨hN, hF, hFF⟩ := GlobalTheory.T.finite_faithfullyFlat_algebra_over_affine_open f V₀ hV₀
   obtain ⟨e, he⟩ := GlobalTheory.T.exists_tensorSquare_equiv_fibreSquare_sections f V₀ hV₀ h
   have hcoc := GlobalTheory.T.unit_cocycle_descends_on_triple_overlaps f V V₀ hV₀ h hle c hc e he

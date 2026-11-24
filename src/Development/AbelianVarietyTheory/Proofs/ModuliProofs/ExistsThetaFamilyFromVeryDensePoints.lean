@@ -172,7 +172,7 @@ theorem exists_polAV_of_veryDense_fibres :
   refine ⟨2, fun j hj o _ b R _ _ _ β v Z I M th sc p m F hVD ⟨hrep, hsm, hgc, _⟩ hfib hm hF => ?_⟩
   have hn0 : n ≠ 0 := hn.ne_zero
   have hN0 : n ^ j ≠ 0 := pow_ne_zero _ hn0
-  haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ hN0⟩
+  have : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero _ hN0⟩
   have hun : IsUnit (n : R) := by
     have := b.unit.map β
     rw [map_natCast, Nat.cast_pow, Nat.cast_pow, isUnit_pow_iff two_ne_zero, isUnit_pow_iff (by omega)] at this

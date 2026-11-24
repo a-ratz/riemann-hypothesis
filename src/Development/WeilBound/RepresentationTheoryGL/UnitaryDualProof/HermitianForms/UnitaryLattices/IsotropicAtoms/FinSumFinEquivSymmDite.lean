@@ -147,7 +147,7 @@ theorem continuous_colEl (m N : ℕ) (h : m + 2 ≤ N) : Continuous (colEl k m N
     refine continuous_matrix fun i j => ?_
     simp only [colEl_val_apply]
     by_cases hi : (i : ℕ) < m + 1 <;> by_cases hj : (j : ℕ) = m + 1 <;> simp only [hi, hj, dite_true, dite_false,
-      if_true, if_false] <;> fun_prop
+      ite_true, ite_false] <;> fun_prop
   have hinv : ∀ x, ((colEl k m N h x)⁻¹ : GL (Fin N) k) = colEl k m N h (-x) := fun x => by
     rw [eq_comm, eq_inv_iff_mul_eq_one, ← colEl_add, neg_add_cancel, colEl_zero]
   rw [Units.continuous_iff]
@@ -228,10 +228,10 @@ theorem derUnip_decomp (ψ : AddChar k Circle) (m N : ℕ) (h : m + 2 ≤ N) (u 
     intro i j
     rw [hu'def, Units.val_mul, Matrix.mul_apply]
     simp only [colEl_val_apply, add_mul, Finset.sum_add_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq,
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
     by_cases hi : (i : ℕ) < m + 1
     · simp only [hi, dite_true, ite_mul, zero_mul]
-      rw [Finset.sum_eq_single r (fun b _ hb => if_neg (fun e => hb (Fin.ext e))) (by simp)]
+      rw [Finset.sum_eq_single r (fun b _ hb => ite_eq_right (fun e => hb (Fin.ext e))) (by simp)]
       simp [hr, sub_eq_add_neg]
     · simp [hi]
   have hu' : u' ∈ derUnip k N (m + 2) := by

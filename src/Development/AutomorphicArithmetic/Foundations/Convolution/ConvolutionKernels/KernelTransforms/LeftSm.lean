@@ -146,7 +146,7 @@ theorem UpperTheory.ConvolutionTheory.Tf.leftSm :
         smul_eq_mul, mul_comm]
     rw [e1]
     exact ((isExpLieAlgebra K n).smoothFuns (F := ℂ)).smul_mem _ (UpperTheory.ConvolutionTheory.Tf.leftSm_kbar hn β hβ _)
-  · refine ⟨U.comap (AdelicGLn.integralFiniteGL K n).subtype, hUo.preimage continuous_subtype_val,
+  · refine ⟨U.comap (AdelicGLn.integralFiniteGL K n).subtype, hUo.preimage continuous_subtypeVal,
       fun u hu x => ?_⟩
     rw [hT, hT, tensFun, tensFun, Subgroup.coe_mul, coe_finOne, map_mul, map_mul, infPart_finEmb,
       finPart_finEmb, one_mul, hU (u : AdelicGLn.FiniteAdelicGL K n) hu]

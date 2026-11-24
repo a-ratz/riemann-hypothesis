@@ -84,7 +84,7 @@ end SmoothStabiliserSubgroup
 theorem smoothVectorsFixed_holds : SmoothVectorsFixedByCongruence := by
   intro k _ _ _ _ n G hKC h1 φ hφ
   have hU : IsOpen ((Subtype.val : ↥(KO k (Fin n)) → GL (Fin n) k) ⁻¹' KC k n G.lev) :=
-    hKC.preimage continuous_subtype_val
+    hKC.preimage continuous_subtypeVal
   have hsub : (Subtype.val : ↥(KO k (Fin n)) → GL (Fin n) k) ⁻¹' KC k n G.lev ⊆
       (SmoothStabiliserSubgroup.stab φ : Set ↥(KO k (Fin n))) := by
     intro u hu

@@ -190,15 +190,15 @@ theorem conj_of_charpoly_inert : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   obtain ⟨-, hcc, hv, h4, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
   obtain ⟨ϖ, q, ⟨-, -, -, -, ⟨x₀, hx₀, hx₁⟩, hq2, hcard⟩, -⟩ := (h4 hw).2.1
   have hcard' : Nat.card (O ⧸ IsLocalRing.maximalIdeal O) = q ^ 2 := hcard
-  haveI := GlobalTheory.HenselSquare.isAdicComplete_integers E w
-  haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
+  have := GlobalTheory.HenselSquare.isAdicComplete_integers E w
+  have : Finite (O ⧸ IsLocalRing.maximalIdeal O) :=
     Nat.finite_of_card_ne_zero (by rw [hcard']; positivity)
   let c : O →+* O := (cj w).restrict _ _ (ThBasic.cj_mem_integers hU w)
   have hc : ∀ x, c (c x) = x := fun x => Subtype.ext (hcc _)
   have hmapc : ∀ M : Matrix (Fin n) (Fin n) O, (cT c M).map ι = cT (cj w) (M.map ι) := fun M => by
     ext i j; rfl
   have hUL : ∀ x : GLw n w, x ∈ UL n w ↔ cT (cj w) x.val * x.val = 1 := fun x => by
-    rw [UL, if_neg hw]
+    rw [UL, ite_eq_right hw]
     change cT (cj w) x.val * 1 * x.val = 1 ↔ _
     rw [mul_one]
   have hmv : ∀ x : GL (Fin n) O, (GeneralLinearGroup.map ι x).val = x.val.map ι := fun x => by

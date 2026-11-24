@@ -418,7 +418,7 @@ theorem term_bound (N U b : ℕ) (hb : 1 ≤ b) (hbU : b ≤ U) (hUN : U * U ≤
   have hHk : hH (N / b) = ((harmonic (N / b) : ℚ) : ℝ) := hH_eq_harmonic' (N / b)
   have hA1 := Real.eulerMascheroniConstant_lt_eulerMascheroniSeq' (N / b)
   have hA2 := Real.eulerMascheroniSeq_lt_eulerMascheroniConstant (N / b)
-  simp only [Real.eulerMascheroniSeq', Real.eulerMascheroniSeq, hk0, if_false] at hA1 hA2
+  simp only [Real.eulerMascheroniSeq', Real.eulerMascheroniSeq, hk0, ite_false] at hA1 hA2
   rw [← hHk] at hA1 hA2
   set K : ℝ := ((N / b : ℕ) : ℝ) with hK
   have hlog1 : Real.log (K + 1) - Real.log K ≤ 1 / K := by
@@ -889,13 +889,13 @@ theorem dhAssemble {β : Type*} [AddCommGroup β] (F1 F2 F3 F4 : Multiset ℂ) (
     abel
   simp only [Multiset.map_add (f := _), Multiset.sum_add, e _ _ h2]
   by_cases hc3 : c3 <;> by_cases hc4 : c4
-  · simp only [if_pos hc3, if_pos hc4, e _ _ (h3 hc3), e _ _ (h4 hc4)]
+  · simp only [ite_eq_left hc3, ite_eq_left hc4, e _ _ (h3 hc3), e _ _ (h4 hc4)]
     abel
-  · simp only [if_pos hc3, if_neg hc4, e _ _ (h3 hc3)]
+  · simp only [ite_eq_left hc3, ite_eq_right hc4, e _ _ (h3 hc3)]
     abel
-  · simp only [if_neg hc3, if_pos hc4, e _ _ (h4 hc4)]
+  · simp only [ite_eq_right hc3, ite_eq_left hc4, e _ _ (h4 hc4)]
     abel
-  · simp only [if_neg hc3, if_neg hc4]
+  · simp only [ite_eq_right hc3, ite_eq_right hc4]
     abel
 
 theorem dhFam_re (Z : Finset ℂ) (m : ℂ → ℕ) (s x : ℂ) (η : ℝ) (hZ : ∀ ρ ∈ Z, ρ.re < 1)
@@ -1067,18 +1067,18 @@ theorem dhfPoles {M : ℕ} (χ₁ χ : DirichletCharacter ℂ M) (hχ₁2 : χ�
       rw [h1, one_mul]
       exact hχ₁1
     have h3n : ¬ c3 := fun h => hχ₁1 ((h3' h).symm.trans h1)
-    simp only [if_pos h1, if_neg h2, if_neg h3n, add_zero, sub_zero]
+    simp only [ite_eq_left h1, ite_eq_right h2, ite_eq_right h3n, add_zero, sub_zero]
     exact dhfShiftPoleN η γ β₁ hη hβ2 k c4 (fun h => one_eighth_le_abs_of_not_mem_pole_disc γ β₁ hβ1 hβ2 (h4 h1 h)) s hs
   · by_cases h2 : χ * χ₁ = 1
     · have hχ : χ = χ₁ := by
         have e : χ = χ * χ₁ * χ₁ := by rw [mul_assoc, ← sq, hχ₁2, mul_one]
         rw [e, h2, one_mul]
       have h4n : ¬ c4 := fun h => h1 (h4' h)
-      simp only [if_neg h1, if_pos h2, if_neg h4n, zero_add, sub_zero]
+      simp only [ite_eq_right h1, ite_eq_left h2, ite_eq_right h4n, zero_add, sub_zero]
       exact dhfShiftPoleN η γ β₁ hη hβ2 k c3 (fun h => one_eighth_le_abs_of_not_mem_pole_disc γ β₁ hβ1 hβ2 (h3 hχ h)) s hs
     · have h3n : ¬ c3 := fun h => h2 (by rw [h3' h, ← sq, hχ₁2])
       have h4n : ¬ c4 := fun h => h1 (h4' h)
-      simp only [if_neg h1, if_neg h2, if_neg h3n, if_neg h4n, add_zero, sub_zero, norm_zero]
+      simp only [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3n, ite_eq_right h4n, add_zero, sub_zero, norm_zero]
       exact hpos
 
 theorem dhfReNonneg (S : Multiset ℂ) (h : ∀ x ∈ S, 0 < x.re) :
@@ -1212,8 +1212,8 @@ theorem deuring_heilbronn_inequality : DHIneqFOf := by
     have l2 := dhReBound _ _ _ _ (hE2 k s₀ h1s₀ hd₀)
     have l3 := dhReBound _ _ _ _ (hE3 k s₁ h1s₁ hd₁)
     have l4 := dhReBound _ _ _ _ (hE4 k s₁ h1s₁ hd₁)
-    rw [if_pos rfl] at l1
-    rw [if_neg hχ₁1, Complex.zero_re] at l2
+    rw [ite_eq_left rfl] at l1
+    rw [ite_eq_right hχ₁1, Complex.zero_re] at l2
     have hp := hPos M χ₁ χ ρ.im (1 + η) k hχ₁2 (by linarith)
     rw [← hs₁, ← hs₀] at hp
     have hA : 0 ≤ ((-1 : ℂ) ^ k / (k.factorial : ℂ) * iteratedDeriv k (negLD (1 : DirichletCharacter ℂ M)) s₀).re
@@ -1503,7 +1503,7 @@ lemma dhl_nontriv (hCau : DHCauchy) (C0 K : ℝ)
       ((hZ ρ).mp hρ).2
   · intro k s hs1 hs
     have h := hexp k s hs (DirichletCharacter.LFunction_ne_zero_of_one_le_re ψ (Or.inl hψ) hs1.le)
-    rw [if_neg hψ, sub_zero]
+    rw [ite_eq_right hψ, sub_zero]
     exact h
 
 end Formalism.HermitianLattices.Ext.PrimesInProgressions
@@ -1678,7 +1678,7 @@ lemma dhl_triv (hCau : DHCauchy) (K : ℝ) (hK : 10400 ≤ K) (M : ℕ) [NeZero 
       exact mul_ne_zero (sub_ne_zero.mpr hs1)
         (DirichletCharacter.LFunction_ne_zero_of_one_le_re _ (Or.inr hs1) hs.le)
     have hb := hbd k s hsd hfs
-    rw [if_pos rfl, ← dhl_triv_iter M s hs k]
+    rw [ite_eq_left rfl, ← dhl_triv_iter M s hs k]
     exact hb
 
 theorem deuring_heilbronn_local : DHLocalOf := by

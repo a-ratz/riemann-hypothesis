@@ -107,7 +107,7 @@ private lemma avg_mem (π : UnitaryRep G H) {J : Subgroup G} {χ : G → ℂ} (h
       rw [Set.indicator_of_mem (show y * g ∈ (J : Set G) from hyg),
         Set.indicator_of_mem (show g ∈ (J : Set G) from hg)]
       simp only [hf, hχ.2.2 y hy g hg, map_mul, UnitaryRep.map_mul_apply,
-        ContinuousLinearMap.smul_apply, map_smul, smul_smul]
+        smul_apply, map_smul, smul_smul]
       rw [mul_comm]
     · have hyg : y * g ∉ J := fun h => hg (by simpa using J.mul_mem (J.inv_mem hy) h)
       rw [Set.indicator_of_notMem (show y * g ∉ (J : Set G) from hyg),
@@ -163,7 +163,7 @@ private lemma commute_prj (π : UnitaryRep G H) {J : Subgroup G} {χ : G → ℂ
     ← B.integral_comp_comm (integrableOn_avg π hJ hχ m v)]
   refine setIntegral_congr_fun hmeas fun g hg => ?_
   have := congrArg (fun T : H →L[ℂ] H => T v) (hB g hg).eq
-  simp only [ContinuousLinearMap.mul_apply] at this
+  simp only [mul_apply_eq_comp] at this
   simp [this]
 
 private lemma oloc_abs (π : UnitaryRep G H) {J : Subgroup G} {χ : G → ℂ} (hJ : CO J) (hχ : IsChr J χ)
@@ -205,8 +205,8 @@ theorem UpperTheory.ConvolutionTheory.L1.eigBasic :
   · intro _ _ m _ hm u v
     exact oloc_abs π hJ hχ m hm u v
   · intro B hB
-    letI : MeasurableSpace (Gw n w) := borel _
-    haveI : BorelSpace (Gw n w) := ⟨rfl⟩
+    let : MeasurableSpace (Gw n w) := borel _
+    have : BorelSpace (Gw n w) := ⟨rfl⟩
     let K₀ : TopologicalSpace.PositiveCompacts (Gw n w) :=
       ⟨⟨J, hJ.1⟩, ⟨1, mem_interior_iff_mem_nhds.2 (hJ.2.mem_nhds J.one_mem)⟩⟩
     rw [hE]

@@ -143,7 +143,7 @@ theorem goal1 :
         refine hsm _ ?_ _ _ (Submodule.subset_span ⟨x, Finset.mem_coe.2 hx, rfl⟩)
         rw [map_mul, Valuation.map_neg, map_inv₀]
         have hpos : w.valuation K (lam x0) ≠ 0 := (Valuation.ne_zero_iff _).2 hl0
-        rw [inv_mul_le_one₀ (zero_lt_iff.2 hpos)]
+        rw [inv_mul_le_one₀ (pos_iff_ne_zero.2 hpos)]
         exact hmax x (Finset.mem_of_mem_erase hx)
       have hv' : cmp v ∈ Submodule.span O (cmp '' (S.erase x0 : Set V)) := by
         refine (Submodule.span_le.2 ?_) hv

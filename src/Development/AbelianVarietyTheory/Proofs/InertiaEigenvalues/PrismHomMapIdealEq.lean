@@ -141,7 +141,7 @@ theorem map_I_eq (l : ℕ) [hl : Fact l.Prime] (R : Type) [CommRing R] (B B' : O
   intro m hm hN
 
   have hjac : Ideal.span {(l : B'.A)} ⊔ B'.I ≤ m := by
-    haveI := B'.complete
+    have := B'.complete
     refine le_trans (IsAdicComplete.le_jacobson_bot (Ideal.span {(l : B'.A)} ⊔ B'.I)) ?_
     exact sInf_le ⟨bot_le, hm⟩
   have hlm : (l : B'.A) ∈ m := hjac (Ideal.mem_sup_left (Ideal.mem_span_singleton_self _))

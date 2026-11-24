@@ -853,7 +853,7 @@ private lemma t1 (hR : Ring l) {E Z : Scheme.{0}} (r : E ⟶ Z) (hE : IsUnit (l 
 private lemma tneg (hneg : ∀ (X : Scheme.{0}) (n : ℤ), n < 0 → Subsingleton (V l X n)) {E Z : Scheme.{0}} (r : E ⟶ Z)
     {a m n : ℤ} (ha : a < 0) (h : a + m = n) (u : V l Z a) (w : V l E m) :
     cupV l E h (pb l r a u) w = 0 := by
-  haveI := hneg Z a ha
+  have := hneg Z a ha
   rw [Subsingleton.elim u 0, map_zero, map_zero, LinearMap.zero_apply]
 
 private lemma sum2 {A : Type*} [AddCommMonoid A] (M : ℕ) (f : Fin (M + 2) → A)
@@ -1030,7 +1030,7 @@ open ReciprocityTheory.ChartRestriction.G.Geo.Tor (IsProjOver PSpace Sp)
 private theorem proper_of_projOver {R : Type} [CommRing R] {X : Scheme.{0}} {p : X ⟶ Sp R} (h : IsProjOver p) :
     IsProper p := by
   obtain ⟨N, i, hi, rfl⟩ := h
-  haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N
+  have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str R N
   infer_instance
 
 private theorem gen_proj {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)} (M : Model l K)
@@ -1046,16 +1046,16 @@ theorem UpperTheory.Gal.KunnethLefschetz.Di.geoM_holds :
   intro l _ K
   refine ⟨?_, ?_, ?_⟩
   · intro M d hM hd
-    haveI := gen_proper M hM
+    have := gen_proper M hM
     have stab := smoothOfRelativeDimension_isStableUnderBaseChange (n := d)
     have hq : SmoothOfRelativeDimension d M.q :=
       stab.of_isPullback (IsPullback.of_hasPullback _ _) hd
     refine ⟨⟨inferInstance, stab.of_isPullback (IsPullback.of_hasPullback _ _) hq⟩, ?_⟩
     exact GlobalTheory.ProjSpace.isProjOver_pullback_snd (algebraMap (↥K) (PadicAlgCl l)) (gen_proj M hM)
   · intro M N u hu hM hN
-    haveI := gen_proper M hM
-    haveI := gen_proper N hN
-    haveI : IsProper (Model.genMap u hu ≫ N.q) := by
+    have := gen_proper M hM
+    have := gen_proper N hN
+    have : IsProper (Model.genMap u hu ≫ N.q) := by
       rw [Model.genMap_q u hu]
       infer_instance
     exact IsProper.of_comp _ N.q
@@ -1289,8 +1289,8 @@ private theorem etale_chart {A E B : Type} [CommRing A] [CommRing E] [CommRing B
   have gXj : g (X j) = ψ (s j) := by rw [hgd, eval₂Hom_X', Function.update_self]
   have σC : ∀ x, σ (MvPolynomial.C x) = MvPolynomial.C x := fun x => by rw [hσd, eval₂Hom_C]
   have σX : ∀ k, k ≠ j → σ (X k) = X k * X j := fun k hk => by
-    rw [hσd, eval₂Hom_X', if_neg hk]
-  have σXj : σ (X j) = X j := by rw [hσd, eval₂Hom_X', if_pos rfl]
+    rw [hσd, eval₂Hom_X', ite_eq_right hk]
+  have σXj : σ (X j) = X j := by rw [hσd, eval₂Hom_X', ite_eq_left rfl]
   have mem1 : (X j - 1 : MvPolynomial (Fin D) E) ∈ RingHom.ker f := by
     rw [ker]; exact Ideal.subset_span (Set.mem_insert _ _)
   have mem2 : ∀ k, (MvPolynomial.C (s k) - MvPolynomial.C (s j) * X k : MvPolynomial (Fin D) E) ∈
@@ -1407,7 +1407,7 @@ private theorem dim_unique {X Y : Scheme.{0}} (f : X ⟶ Y) {a b : ℕ} (x : X)
   have hl : RingHom.Locally (RingHom.IsStandardSmoothOfRelativeDimension b) (f.appLE U V e).hom :=
     HasRingHomProperty.appLE (@SmoothOfRelativeDimension b) f hb ⟨U, hU⟩ ⟨V, hV⟩ e
   obtain ⟨s, hs, hl⟩ := hl
-  haveI : Nonempty V := ⟨⟨x, hx⟩⟩
+  have : Nonempty V := ⟨⟨x, hx⟩⟩
   obtain ⟨m, hm⟩ := Ideal.exists_maximal Γ(X, V)
   obtain ⟨t, ht, htm⟩ : ∃ t ∈ s, t ∉ m := by
     by_contra hc
@@ -1418,14 +1418,14 @@ private theorem dim_unique {X Y : Scheme.{0}} (f : X ⟶ Y) {a b : ℕ} (x : X)
     RingHom.isStandardSmoothOfRelativeDimension_holdsForLocalizationAway _ t
   have h2 := h0.comp h
   rw [Nat.zero_add] at h2
-  haveI : Nontrivial (Localization.Away t) := by
-    letI := Ideal.Quotient.field m
+  have : Nontrivial (Localization.Away t) := by
+    let := Ideal.Quotient.field m
     have hu : IsUnit (Ideal.Quotient.mk m t) :=
       isUnit_iff_ne_zero.2 (by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem])
     exact RingHom.domain_nontrivial (IsLocalization.Away.lift (S := Localization.Away t) t hu)
-  letI := ((algebraMap Γ(X, V) (Localization.Away t)).comp (f.appLE U V e).hom).toAlgebra
-  haveI ia : Algebra.IsStandardSmoothOfRelativeDimension a Γ(Y, U) (Localization.Away t) := h2
-  haveI ib : Algebra.IsStandardSmoothOfRelativeDimension b Γ(Y, U) (Localization.Away t) := h1
+  let := ((algebraMap Γ(X, V) (Localization.Away t)).comp (f.appLE U V e).hom).toAlgebra
+  have ia : Algebra.IsStandardSmoothOfRelativeDimension a Γ(Y, U) (Localization.Away t) := h2
+  have ib : Algebra.IsStandardSmoothOfRelativeDimension b Γ(Y, U) (Localization.Away t) := h1
   have ra := Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (R := Γ(Y, U)) (S := Localization.Away t) a
   have rb := Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (R := Γ(Y, U)) (S := Localization.Away t) b
   exact Nat.cast_injective (R := Cardinal) (ra.symm.trans rb)
@@ -1515,7 +1515,7 @@ end Charts
 theorem blowE : BlowE := by
   intro K _ W Z Y T p i π D d e hB hsm hpr j r hpb
   obtain ⟨B⟩ := hB
-  haveI := B.closed
+  have := B.closed
   have hcl : IsClosedImmersion j := MorphismProperty.of_isPullback (P := @IsClosedImmersion) hpb.flip B.closed
   have hr : IsProper r := MorphismProperty.of_isPullback (P := @IsProper) hpb hpr
   have find : ∀ y : Y, π y ∈ Set.range i → ∃ (α : B.ι) (k : Fin (d + 1)), y ∈ (B.c α).C k ∧ π y ∈ B.V α := by
@@ -1535,7 +1535,7 @@ theorem blowE : BlowE := by
   · refine ofPts _ _ fun y => ?_
     by_cases hy : π y ∈ B.U
     · refine ⟨π ⁻¹ᵁ B.U, hy, ?_⟩
-      haveI := B.iso
+      have := B.iso
       have h0 : SmoothOfRelativeDimension (0 + (0 + (e + (d + 1)))) ((π ∣_ B.U) ≫ B.U.ι ≫ p) := inferInstance
       rw [Nat.zero_add, Nat.zero_add, ← Category.assoc, morphismRestrict_ι, Category.assoc] at h0
       exact h0

@@ -99,7 +99,7 @@ theorem gr_zero : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] {Φ 
   · cases j with
     | succ n =>
       have hs := H_succ_subsingleton (gr Fil r) hI n
-      haveI : IsEmpty (Idx (n + 1) 0) := ⟨fun I => (I.1 0).elim0⟩
+      have : IsEmpty (Idx (n + 1) 0) := ⟨fun I => (I.1 0).elim0⟩
       refine ⟨fun c => ⟨fun I => isEmptyElim I, fun I => isEmptyElim I, ?_⟩, fun x _ _ I => isEmptyElim I⟩
       unfold CrystallineSemistableComparison.Pb.Rep
       refine ⟨0, map_zero _, Subsingleton.elim _ _, fun s => ?_⟩
@@ -109,7 +109,7 @@ theorem gr_zero : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] {Φ 
     | zero =>
       have hq' : r = q := by simpa using hq
       subst hq'
-      haveI : Unique (Idx 0 0) := ⟨⟨⟨Fin.elim0, fun a => a.elim0⟩⟩, fun I => Subtype.ext (funext fun a => a.elim0)⟩
+      have : Unique (Idx 0 0) := ⟨⟨⟨Fin.elim0, fun a => a.elim0⟩⟩, fun I => Subtype.ext (funext fun a => a.elim0)⟩
       have hform : ∀ (x : Idx 0 0 → Φ.A.obj E.D) (s : ComposableArrows C 0),
           ∑ I : Idx 0 0, E.form σ I.1 (x I) s = (Φ.A.map (σ _)).hom (x default) := by
         intro x s

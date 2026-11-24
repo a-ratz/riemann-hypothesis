@@ -55,7 +55,7 @@ theorem toNat_div_le (A B : ℕ∞) (r c : ℕ) (h : A ≤ (r : ℕ∞) * (c : �
   have h' : A ≤ ((r * c * b : ℕ) : ℕ∞) := by push_cast; exact h
   obtain ⟨a, ha, hle⟩ := ENat.le_natCast_iff.mp h'
   subst ha
-  rw [ENat.toNat_coe, ENat.toNat_coe]
+  rw [ENat.toNat_natCast, ENat.toNat_natCast]
   rcases Nat.eq_zero_or_pos b with rfl | hb
   · rw [Nat.cast_zero, div_zero]; positivity
   rw [div_le_iff₀ (by exact_mod_cast hb)]

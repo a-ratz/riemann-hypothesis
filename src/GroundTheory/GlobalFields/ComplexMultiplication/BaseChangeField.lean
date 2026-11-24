@@ -147,7 +147,7 @@ theorem map_toAlgHom_baseChange (F₁ : IntermediateField F Ω) (W : Weierstrass
 
 theorem isAlgebraic_of_forall_algEquiv {c : Ω}
     (h : ∀ g : Ω ≃ₐ[algebraicClosure F Ω] Ω, g c = c) : IsAlgebraic F c := by
-  haveI : IsAlgClosed (algebraicClosure F Ω) := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosed (algebraicClosure F Ω) := IsAlgClosure.isAlgClosed F
   have hc := (mem_bot_iff_forall_algEquiv_apply_eq (F := algebraicClosure F Ω)).mpr h
   obtain ⟨a, rfl⟩ := IntermediateField.mem_bot.mp hc
   exact mem_algebraicClosure_iff.mp a.2
@@ -221,7 +221,7 @@ theorem _root_.GroundTheory.Arith.Abelian.Isogeny.exists_finiteDimensional_mapOf
       · exact (h2 c hc).isIntegral
     · exact (h3 c hc).isIntegral
   set F₁ := IntermediateField.adjoin F (S : Set Ω)
-  haveI : FiniteDimensional F F₁ := IntermediateField.finiteDimensional_adjoin hSalg
+  have : FiniteDimensional F F₁ := IntermediateField.finiteDimensional_adjoin hSalg
   obtain ⟨n₁, hn₁⟩ := exists_map_eq_of_coeffs (F := F) (S := S) (p := r.num)
     (fun c hc => by simp [hS, hc])
   obtain ⟨d₁, hd₁⟩ := exists_map_eq_of_coeffs (F := F) (S := S) (p := r.denom)

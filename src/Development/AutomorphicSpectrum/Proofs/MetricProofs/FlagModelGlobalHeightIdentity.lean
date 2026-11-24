@@ -115,7 +115,7 @@ theorem exists_isFramePeriods_noGlobal : ∀ (E : Type) [Field E] [NumberField E
   have hall := 𝔐.all
   have hex : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, ∃ z : Sp ℂ ⟶ 𝔐.X, genPt 𝔐.ξ ⤳ centre z ∧ CoordsAt 𝔐.ξ y z (w u) := fun u hu =>
     (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X Ω 𝔐.ξ K J y htie (w u)).1 (χ.mem _ (hgeo ρ₀ hρ₀ le_rfl u hu).1)
-  haveI : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨(hex 0 (by simp)).choose⟩
+  have : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨(hex 0 (by simp)).choose⟩
   choose! p hp₀ hp using hex
   have huniq : ∀ (z z' : Sp ℂ ⟶ 𝔐.X) (w' : (Σ k, J k) → ℂ), CoordsAt 𝔐.ξ y z w' → CoordsAt 𝔐.ξ y z' w' → z = z' := fun z z' w' h h' => by
     obtain ⟨e1, -, e3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X Ω 𝔐.ξ K J y htie ℂ
@@ -150,17 +150,17 @@ theorem exists_isFramePeriods_noGlobal : ∀ (E : Type) [Field E] [NumberField E
       rw [e, Submodule.span_empty] at hb'
       exact hb'.symm
     have hli := hfr0.1
-    haveI : Subsingleton ↥(𝔐.Vgen a ⊔ 𝔐.Vgen b) := by
+    have : Subsingleton ↥(𝔐.Vgen a ⊔ 𝔐.Vgen b) := by
       rw [hV a, hV b, sup_bot_eq]
       infer_instance
-    haveI : IsEmpty (Fin N) := ⟨fun k => hli.ne_zero k (Subsingleton.elim _ _)⟩
+    have : IsEmpty (Fin N) := ⟨fun k => hli.ne_zero k (Subsingleton.elim _ _)⟩
     obtain ⟨Λ, _, ⟨L⟩⟩ := zeroPeriods n a₀ ha
     exact fin 0 Λ _ L 1 (fun _ _ => 0) one_pos le_rfl (fun k => isEmptyElim k) linearIndependent_empty_type
       fun u _ z _ => ⟨fun k => isEmptyElim k, fun k => isEmptyElim k, fun k => isEmptyElim k⟩
   have hpq' : 1 ≤ D.p + D.q := Nat.one_le_iff_ne_zero.2 hpq
   have hhol : IsHolTo (Metric.ball 0 1) p := _root_.GlobalTheory.CompanionTheory.Ar.PeriodsHol.isHolTo_of_coordsAt_family 𝔐.X Ω 𝔐.ξ K J y htie hall n _ w p Metric.isOpen_ball hw hp
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := ⟨⟩
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := ⟨⟩
   obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ConstEmbedding.exists_embedding c.F 𝔐.X (𝔐.f ≫ Y.s) n p hhol
   have hint : ∀ u ∈ Flat.punct n a₀ 1, 𝔐.Interior (p u) := fun u hu => by
     have h1 := (hgeo ρ₀ hρ₀ le_rfl u hu.1).2.2
@@ -317,7 +317,7 @@ theorem imm_chart {P : Ideal (MRing ι)} {D : ℕ} (R : AnLogRes P ⊤ D) (x : R
         fderiv ℂ (fun z => R.lift x ((R.A.chart j).symm z) q) y := hprod.fderiv_eq
     rw [fderiv_mul hg hbd] at e
     have e2 := congrArg (fun T => T w) e
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, hcq, hcr] at e2
+    simp only [add_apply, smul_apply, smul_eq_mul, hcq, hcr] at e2
     have h3 : R.lift x ((R.A.chart j).symm y) q / R.lift x ((R.A.chart j).symm y) ⟨q.1, p q.1⟩ *
         (c q.1 * R.lift x ((R.A.chart j).symm y) ⟨q.1, p q.1⟩) = c q.1 * R.lift x ((R.A.chart j).symm y) q := by
       field_simp
@@ -590,7 +590,7 @@ theorem HoldsOff.and (hQ : Q₀.IsPrime) {G G' : Ideal (MRing J) → Prop} (h : 
 theorem holdsOff_forall (hQ : Q₀.IsPrime) {α : Type} [Finite α] {G : α → Ideal (MRing J) → Prop}
     (h : ∀ a, HoldsOff Q₀ (G a)) : HoldsOff Q₀ fun Q => ∀ a, G a Q := by
   classical
-  haveI := Fintype.ofFinite α
+  have := Fintype.ofFinite α
   have key : ∀ s : Finset α, HoldsOff Q₀ fun Q => ∀ a ∈ s, G a Q := by
     intro s
     induction s using Finset.induction_on with

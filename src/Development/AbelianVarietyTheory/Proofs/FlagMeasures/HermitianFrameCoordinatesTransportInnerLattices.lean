@@ -73,8 +73,8 @@ theorem _root_.GlobalTheory.HL.CoordInnerFst.transport : ∀ {F : Type} [Field F
       S.stdLat S.f S.es
         (c.inn P.A.f L) := by
   intro F _ _ _ E _ _ _ _ M hM V _ _ H r k P S c
-  haveI := hM.loc
-  haveI := hM.char0
+  have := hM.loc
+  have := hM.char0
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[F]
   have hPID : IsPrincipalIdealRing M.L.O :=
     (_root_.GlobalTheory.UnramOrder.order_facts M.L ϖ hϖ).2.2.2.1

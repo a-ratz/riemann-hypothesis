@@ -76,8 +76,8 @@ theorem continuous_restrictScalarsHom (F E Ω : Type) [Field F] [Field E] [Field
     rintro x ⟨i, rfl⟩
     have : IsIntegral F (b i) := IsIntegral.of_finite F _
     exact (IsIntegral.map (IsScalarTower.toAlgHom F M Ω) this).tower_top
-  haveI : Finite t := Set.finite_range _
-  haveI : FiniteDimensional E (IntermediateField.adjoin E t) :=
+  have : Finite t := Set.finite_range _
+  have : FiniteDimensional E (IntermediateField.adjoin E t) :=
     IntermediateField.finiteDimensional_adjoin hint
   rw [Filter.mem_map, krullTopology_mem_nhds_one_iff]
   refine ⟨IntermediateField.adjoin E t, inferInstance, fun σ hσ => hMs ?_⟩
@@ -91,7 +91,7 @@ theorem continuous_restrictScalarsHom (F E Ω : Type) [Field F] [Field E] [Field
     exact (IntermediateField.mem_fixingSubgroup_iff _ _).1 hτ x
       (IntermediateField.subset_adjoin E _ hx)
   exact IntermediateField.fixingSubgroup_antitone hMt
-    ((IntermediateField.le_iff_le _ _).1 hH ⟨σ, hσ, rfl⟩)
+    ((IntermediateField.le_fixedField_iff_le_fixingSubgroup _ _).1 hH ⟨σ, hσ, rfl⟩)
 
 section Iso
 

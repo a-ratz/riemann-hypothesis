@@ -208,7 +208,7 @@ theorem IsRayField.isRayFieldIn_restrictScalars {K : IntermediateField ℚ ℂ} 
     exact M.algebraMap_mem x
   have : NumberField (M.restrictScalars ℚ) := hM
   refine ⟨hmem, inferInstance, ?_⟩
-  letI := algOf (K.val : K →+* ℂ) (M.restrictScalars ℚ) hmem
+  let := algOf (K.val : K →+* ℂ) (M.restrictScalars ℚ) hmem
   exact h.of_algEquiv
     { toFun := fun y => ⟨y.1, y.2⟩
       invFun := fun y => ⟨y.1, y.2⟩

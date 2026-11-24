@@ -197,7 +197,7 @@ theorem _root_.GlobalTheory.HL.UnimodTerm.mem_iff_graph {d : S.Datum} {Λ : Subm
   have hworth : ∀ y ∈ S.ME, _root_.GlobalTheory.HL.hf L S.Hm w y = 0 := hw
   rw [hgraph]
   unfold _root_.GlobalTheory.HL.Frames.graphOf
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · intro hwΛ
     exact ⟨w, hwΛ, w, hwΛ, fun y hy => hworth y (hX'ME hy), fun y hy => hworth y (hXME hy),

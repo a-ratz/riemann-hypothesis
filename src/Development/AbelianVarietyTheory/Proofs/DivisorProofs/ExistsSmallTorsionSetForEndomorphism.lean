@@ -145,8 +145,8 @@ namespace GlobalTheory.SemiAbAct
 
 theorem exists_torus_quotient_act : ∀ (O : Type) [CommRing O] (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpObj G] (act : OAct O G), IsSemiAbelian G → ∀ (T : TorusExtension G), letI := T.addCommGroup; letI := T.grpB; ∃ (actB : OAct O T.B) (actT : OAct O (splitTorus (Sp k) T.X)), (∀ a, T.q ≫ actB.act a = act.act a ≫ T.q) ∧ (∀ a, actT.act a ≫ T.i = T.i ≫ act.act a) := by
   intro O _ k _ _ G _ act _ T
-  letI := T.addCommGroup
-  letI := T.grpB
+  let := T.addCommGroup
+  let := T.grpB
   have := T.free
   have := T.finite
   have := T.i_hom
@@ -435,12 +435,12 @@ open GlobalTheory.CechPic GlobalTheory.EffBound
 
 theorem exists_effective_bound : ∀ (E : Type) [Field E] [NumberField E] (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (A : Over (Sp k)) [GrpObj A] (act : OAct (𝓞 E) A) (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (d : ℕ) (a : Fin d → 𝓞 E), ∃ (H : LB A.left) (m : ℕ) (s : Fin (m + 1) → LB.Sec H) (c : ℕ), H.IsLB ∧ GlobalTheory.AbLaw.VeryAmpleBy A.hom H s ∧ 1 ≤ c ∧ ∀ (n : Fin d → ℤ) (K : ℕ), 1 ≤ K → (∀ i, (n i).natAbs ≤ K) → ∃ (σ : LB.Sec (LB.div (GlobalTheory.AbLaw.pw H ((c * K ^ 2 : ℕ) : ℤ)) (H.pull (act.act (∑ i, n i • a i)).left))) (j : (LB.div (GlobalTheory.AbLaw.pw H ((c * K ^ 2 : ℕ) : ℤ)) (H.pull (act.act (∑ i, n i • a i)).left)).ι), σ.f j ≠ 0 := by
   intro E _ _ k _ _ _ A _ act g hB hg d a
-  haveI := hB.comm
-  haveI := hB.smooth
-  haveI := hB.proper
-  haveI : GeometricallyIntegral A.hom :=
+  have := hB.comm
+  have := hB.smooth
+  have := hB.proper
+  have : GeometricallyIntegral A.hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hB.smooth hB.geomConnected
-  haveI : IsIntegral A.left := GeometricallyIntegral.isIntegral_of_subsingleton A.hom
+  have : IsIntegral A.left := GeometricallyIntegral.isIntegral_of_subsingleton A.hom
   have hproj := GlobalTheory.T.isProjectiveOverRingByCharts_abelian_variety k A hB
   obtain ⟨H, m, s, hH, hs, hsym⟩ := GlobalTheory.SymVeryAmple.exists_symmetric_veryAmpleBy k A hB hproj
   obtain ⟨r, hr⟩ : ∃ r : LB.Gen (H.pull (eSec A)), r.IsGen :=
@@ -561,35 +561,35 @@ theorem finite_etale_act (E : Type) [Field E] [NumberField E] (k : Type) [Field 
       IsFinite (act.act b).left ∧ Etale (act.act b).left ∧
         Finite {x : 𝟙_ (Over (Sp k)) ⟶ A // x ≫ act.act b = 1} := by
   intro hA hg b hb
-  haveI := hA.comm
-  haveI := hA.smooth
-  haveI := hA.proper
+  have := hA.comm
+  have := hA.smooth
+  have := hA.proper
   obtain ⟨n, hn0, b', hb'⟩ := exists_natCast_dvd b hb
   have hnk : (n : k) ≠ 0 := Nat.cast_ne_zero.2 hn0
   have hu : IsUnit (n : Γ(Sp k, ⊤)) := by
     simpa using (Ne.isUnit hnk).map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom
   have h1 : act.act b ≫ act.act b' = 𝟙 A ^ n := by rw [← act.mul, ← hb', act_natCast]
   have h2 : act.act b' ≫ act.act b = 𝟙 A ^ n := by rw [← act.mul, mul_comm, ← hb', act_natCast]
-  haveI := act.hom b
-  haveI := act.hom b'
-  haveI hF : IsFinite (𝟙 A ^ n).left := GrpTangent.isFinite_id_pow A hu
-  haveI hE : Etale (𝟙 A ^ n).left := GrpTangent.etale_id_pow A hu
-  haveI : IsSeparated A.hom := inferInstance
+  have := act.hom b
+  have := act.hom b'
+  have hF : IsFinite (𝟙 A ^ n).left := GrpTangent.isFinite_id_pow A hu
+  have hE : Etale (𝟙 A ^ n).left := GrpTangent.etale_id_pow A hu
+  have : IsSeparated A.hom := inferInstance
   have hsep : ∀ f : A ⟶ A, IsSeparated f.left := fun f => by
     have : IsSeparated (f.left ≫ A.hom) := by rw [Over.w f]; infer_instance
     exact IsSeparated.of_comp f.left A.hom
-  haveI := hsep (act.act b')
-  haveI : IsFinite ((act.act b).left ≫ (act.act b').left) := by rw [← Over.comp_left, h1]; exact hF
-  haveI hfin : IsFinite (act.act b).left := IsFinite.of_comp _ (act.act b').left
-  haveI : FormallyUnramified ((act.act b).left ≫ (act.act b').left) := by
+  have := hsep (act.act b')
+  have : IsFinite ((act.act b).left ≫ (act.act b').left) := by rw [← Over.comp_left, h1]; exact hF
+  have hfin : IsFinite (act.act b).left := IsFinite.of_comp _ (act.act b').left
+  have : FormallyUnramified ((act.act b).left ≫ (act.act b').left) := by
     rw [← Over.comp_left, h1]; infer_instance
-  haveI : FormallyUnramified (act.act b).left := FormallyUnramified.of_comp _ (act.act b').left
-  haveI : Flat (act.act b).left :=
+  have : FormallyUnramified (act.act b).left := FormallyUnramified.of_comp _ (act.act b').left
+  have : Flat (act.act b).left :=
     (GlobalTheory.flat_and_surjective_of_isFinite_abelianEnd
       GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected k A hA _ inferInstance
       hfin).1
-  haveI : LocallyOfFinitePresentation ((act.act b).left ≫ A.hom) := by rw [Over.w]; infer_instance
-  haveI : LocallyOfFinitePresentation (act.act b).left :=
+  have : LocallyOfFinitePresentation ((act.act b).left ≫ A.hom) := by rw [Over.w]; infer_instance
+  have : LocallyOfFinitePresentation (act.act b).left :=
     GlobalTheory.TangentCrit.locallyOfFinitePresentation_of_comp _ A.hom
   refine ⟨hfin, Etale.of_formallyUnramified_of_flat _, ?_⟩
   have hfinN := GlobalTheory.Published.AbMulNSt.finite GlobalTheory.abMulN_holds hA hg hnk
@@ -633,10 +633,10 @@ namespace GlobalTheory.OEndDegree
 
 theorem card_ker_le : ∀ (E : Type) [Field E] [NumberField E] (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (A : Over (Sp k)) [GrpObj A] (act : OAct (𝓞 E) A) (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (d : ℕ) (a : Fin d → 𝓞 E), ∃ C : ℕ, ∀ (n : Fin d → ℤ) (K : ℕ), (∀ i, (n i).natAbs ≤ K) → ∑ i, n i • a i ≠ 0 → Finite {x : 𝟙_ (Over (Sp k)) ⟶ A // x ≫ act.act (∑ i, n i • a i) = 1} ∧ Nat.card {x : 𝟙_ (Over (Sp k)) ⟶ A // x ≫ act.act (∑ i, n i • a i) = 1} ≤ C * K ^ (2 * g) := by
   intro E _ _ k _ _ _ A _ act g hB hg d a
-  haveI := hB.comm
-  haveI : GeometricallyIntegral A.hom :=
+  have := hB.comm
+  have : GeometricallyIntegral A.hom :=
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hB.smooth hB.geomConnected
-  haveI : IsIntegral A.left := GeometricallyIntegral.isIntegral_of_subsingleton A.hom
+  have : IsIntegral A.left := GeometricallyIntegral.isIntegral_of_subsingleton A.hom
   obtain ⟨H, m, s, c, hH, hs, hc, hsec⟩ := GlobalTheory.T.exists_veryAmple_bound_ringAction_pullback E k A act g hB hg d a
   obtain ⟨C, hC⟩ := GlobalTheory.T.degree_le_of_pullback_le_pow_finiteEtale k A.left A.hom g hg H m s hH hs
   refine ⟨C * c ^ g, fun n K hn hb => ?_⟩
@@ -690,7 +690,7 @@ theorem exists_small_mem {R : Type} [CommRing R] (I : Ideal R) [Finite (R ⧸ I)
     (ha : LinearIndependent ℤ a) (K : ℕ) (hK : Nat.card (R ⧸ I) < (K + 1) ^ d) :
     ∃ n : Fin d → ℤ, (∀ i, (n i).natAbs ≤ K) ∧ ∑ i, n i • a i ≠ 0 ∧ ∑ i, n i • a i ∈ I := by
   classical
-  letI := Fintype.ofFinite (R ⧸ I)
+  let := Fintype.ofFinite (R ⧸ I)
   let f : (Fin d → Fin (K + 1)) → R ⧸ I := fun v => Ideal.Quotient.mk I (∑ i, ((v i : ℕ) : ℤ) • a i)
   obtain ⟨v, w, hvw, hf⟩ := Fintype.exists_ne_map_eq_of_card_lt f (by
     rw [← Nat.card_eq_fintype_card, Fintype.card_fun, Fintype.card_fin, Fintype.card_fin]; exact hK)
@@ -783,7 +783,7 @@ theorem finite_points : ∀ (E : Type) [Field E] [NumberField E] (k : Type) [Fie
     have hI : Nat.card (𝓞 E ⧸ Ideal.span {π' ^ (d * t)}) = N' ^ (d * t) := by
       rw [← Submodule.cardQuot_apply, ← Ideal.absNorm_apply, Ideal.absNorm_span_singleton, map_pow,
         Int.natAbs_pow]
-    haveI : Finite (𝓞 E ⧸ Ideal.span {π' ^ (d * t)}) :=
+    have : Finite (𝓞 E ⧸ Ideal.span {π' ^ (d * t)}) :=
       Nat.finite_of_card_ne_zero (by rw [hI]; exact pow_ne_zero _ hN'0)
     obtain ⟨n, hnK, hn0, hnI⟩ := exists_small_mem (Ideal.span {π' ^ (d * t)}) a ha (N' ^ t) (by
       rw [hI, mul_comm d t, pow_mul]; exact Nat.pow_lt_pow_left (Nat.lt_succ_self _) hd0.ne')
@@ -872,8 +872,8 @@ theorem restrict : ∀ (k : Type) [Field k] (O : Type) [CommRing O] (B N : Over 
 
 theorem range_comp_subset : ∀ (k : Type) [Field k] (N₀ N : Over (Sp k)) [GrpObj N₀] [GrpObj N] (ν₀ : N₀ ⟶ N) (f : N ⟶ N), IsMonHom ν₀ → IsMonHom f → IsOpenImmersion ν₀.left → IsClosedImmersion ν₀.left → ConnectedSpace N₀.left → Set.range (ν₀ ≫ f).left ⊆ Set.range ν₀.left := by
   intro k _ N₀ N _ _ ν₀ f hν₀ hf ho hc hconn
-  haveI := ho
-  haveI := hc
+  have := ho
+  have := hc
   have hcl : IsClopen (Set.range ν₀.left) :=
     ⟨ν₀.left.isClosedEmbedding.isClosed_range, ν₀.left.isOpenEmbedding.isOpen_range⟩
   have hpre : _root_.IsPreconnected (Set.range (ν₀ ≫ f).left) :=
@@ -1021,7 +1021,7 @@ theorem finite_of_isClosed_torusZariski_of_smul {k : Type} [Field k] [IsAlgClose
   let N : Submodule O X := K ⊔ Ideal.span {π} • ⊤
   have hπN : ∀ x : X, π • x ∈ N := fun x =>
     Submodule.mem_sup_right (Submodule.smul_mem_smul (Ideal.mem_span_singleton_self _) trivial)
-  haveI : Module.Finite O X := Module.Finite.of_restrictScalars_finite ℤ O X
+  have : Module.Finite O X := Module.Finite.of_restrictScalars_finite ℤ O X
   have hN : (⊤ : Submodule O X) ≤ N := by
     intro x _
     by_contra hx
@@ -1038,12 +1038,12 @@ theorem finite_of_isClosed_torusZariski_of_smul {k : Type} [Field k] [IsAlgClose
         · rw [show (m.natAbs : ℤ) = -m by omega, neg_smul, hmQ, neg_zero]
       rw [natCast_zsmul] at h1
       exact congrArg Multiplicative.ofAdd h1
-    haveI : Module.Finite ℤ (X ⧸ N) :=
+    have : Module.Finite ℤ (X ⧸ N) :=
       Module.Finite.of_surjective N.mkQ.toAddMonoidHom.toIntLinearMap N.mkQ_surjective
-    haveI : Finite (X ⧸ N) := Module.finite_of_fg_torsion _ fun q =>
+    have : Finite (X ⧸ N) := Module.finite_of_fg_torsion _ fun q =>
       ⟨⟨m, mem_nonZeroDivisors_of_ne_zero hm0⟩, hmQ q⟩
     have hexp : Monoid.exponent (Multiplicative (X ⧸ N)) ≠ 0 := Monoid.exponent_ne_zero_of_finite
-    haveI : NeZero ((Monoid.exponent (Multiplicative (X ⧸ N)) : ℕ) : k) := ⟨Nat.cast_ne_zero.2 hexp⟩
+    have : NeZero ((Monoid.exponent (Multiplicative (X ⧸ N)) : ℕ) : k) := ⟨Nat.cast_ne_zero.2 hexp⟩
     obtain ⟨φ, hφ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity
       (Multiplicative (X ⧸ N)) k (a := Multiplicative.ofAdd (N.mkQ x))
       (by simpa using hx)
@@ -1107,7 +1107,7 @@ theorem finite_of_isClosed_of_no_pi_torsion :
         Finite C := by
   intro E _ _ k _ _ _ X _ _ _ act π hπ0 hπ C Z hZ hC hstab htors
   have hφ : ∀ a, ∃ φ : X →+ X, act.act a = SplitTorus.torusMap (Sp k) φ := fun a => by
-    haveI := act.hom a
+    have := act.hom a
     exact SplitTorus.exists_eq_torusMap _
   choose φ hφ using hφ
   have hinj : ∀ {ψ ψ' : X →+ X}, SplitTorus.torusMap (Sp k) ψ = SplitTorus.torusMap (Sp k) ψ' →
@@ -1127,7 +1127,7 @@ theorem finite_of_isClosed_of_no_pi_torsion :
         have h' : φ 0 = 0 := by simpa using h.symm
         exact h'
       map_add' := hadd }
-  letI : Module (𝓞 E) X := Module.compHom X ρ
+  let : Module (𝓞 E) X := Module.compHom X ρ
   have hsmul : ∀ (a : 𝓞 E) (x : X), a • x = φ a x := fun a x => rfl
   let e := splitTorusPointEquiv (k := k) (X := X)
   have hpt : ∀ (s : Multiplicative X →* kˣ) (a : 𝓞 E), e s ≫ act.act a =
@@ -1194,15 +1194,15 @@ theorem finite_of_isClosed_of_no_torsion : ∀ (E : Type) [Field E] [NumberField
   have := hG.smooth
   have := hG.quasiCompact
   obtain ⟨T⟩ := GlobalTheory.TorsionDense.nonempty_torusExtension G hG
-  letI := T.addCommGroup
-  letI := T.free
-  letI := T.finite
-  letI := T.grpB
-  haveI := T.q_hom
-  haveI := T.i_hom
-  haveI := T.isAbelian.proper
-  haveI := T.isAbelian.smooth
-  haveI := act.hom π
+  let := T.addCommGroup
+  let := T.free
+  let := T.finite
+  let := T.grpB
+  have := T.q_hom
+  have := T.i_hom
+  have := T.isAbelian.proper
+  have := T.isAbelian.smooth
+  have := act.hom π
   obtain ⟨actB, actT, hB, hT⟩ := GlobalTheory.T.exists_ringAction_torus_and_abelian_quotient (𝓞 E) k G act hG T
   let φ : (𝟙_ (Over (Sp k)) ⟶ G) →* (𝟙_ (Over (Sp k)) ⟶ T.B) :=
     MonoidHom.mk' (fun x => x ≫ T.q) fun x y => MonObj.mul_comp x y T.q
@@ -1254,7 +1254,7 @@ theorem finite_of_isClosed_of_no_torsion : ∀ (E : Type) [Field E] [NumberField
         rw [Category.assoc, ← hB π, ← Category.assoc]
         change ψ z.1 ≫ actB.act π = 1
         rw [MonoidHom.mem_ker.1 z.2]
-        haveI := actB.hom π
+        have := actB.hom π
         exact MonObj.one_comp _
       let f : ψ.ker → ψ.ker := fun z => ⟨⟨m z.1.1, hmC z.1⟩, hmK z⟩
       have hf : Function.Injective f := fun z₁ z₂ h => by
@@ -1338,8 +1338,8 @@ theorem exists_act_pow_stable {k : Type} [Field k] [IsAlgClosed k] {O : Type} [C
     (K : Subgroup (𝟙_ (Over (Sp k)) ⟶ G)) (Z : Set G.left) (hZ : IsClosed Z)
     (hK : ∀ x, x ∈ K ↔ Set.range x.left ⊆ Z) (hKs : ∀ x ∈ K, x ≫ act.act π ∈ K) :
     ∃ a : ℕ, ∀ x ∈ K, ∃ y ∈ K, y ≫ act.act (π ^ (a + 1)) = x ≫ act.act (π ^ a) := by
-  letI := zariski G
-  haveI := noetherianSpace_zariski G
+  let := zariski G
+  have := noetherianSpace_zariski G
   have hcl : ∀ n : ℕ, IsClosed {z : 𝟙_ (Over (Sp k)) ⟶ G | ∃ y ∈ K, y ≫ act.act (π ^ n) = z} :=
     fun n => by
     obtain ⟨Z', hZ', h⟩ := exists_isClosed_image_of_isClosed_subgroup k G G (act.act (π ^ n))
@@ -1353,7 +1353,7 @@ theorem exists_act_pow_stable {k : Type} [Field k] [IsAlgClosed k] {O : Type} [C
     (Set.range F) ⟨_, 0, rfl⟩
   have hle : F (a + 1) ≤ F a := by
     rintro _ ⟨y, hy, rfl⟩
-    haveI := act.hom π
+    have := act.hom π
     refine ⟨y ≫ act.act π, ?_, by rw [Category.assoc, ← act.mul, ← pow_succ']⟩
     exact hKs y hy
   have heq : F (a + 1) = F a := hle.eq_of_not_lt (hmin _ ⟨_, rfl⟩)
@@ -1375,7 +1375,7 @@ theorem eq_one_of_idealTorsion_comp_eq_one : ∀ (E : Type) [Field E] [NumberFie
   have := hG.smooth
   have := hG.quasiCompact
   have := isIntegral_left_of_isSemiAbelian G
-  haveI := hu
+  have := hu
   have hact : ∀ a, IsMonHom (act.act a) := act.hom
   have h0 : act.act 0 = 1 := by
     have h := act.add 0 0
@@ -1621,22 +1621,22 @@ theorem prime_order {g : ℕ} (hg : g.Prime) (hprim : ∀ x : A, ∃ j : ℕ, g 
 theorem nil_index {g r : ℕ} (hg : g.Prime) (T : Finset A) (hT : T.card ≤ g ^ r)
     (hTA : ∀ x : A, g • x = 0 → x ∈ T) (N : AddMonoid.End A) (m : ℕ)
     (hm : ∀ x : A, g • x = 0 → (N ^ m) x = 0) : ∀ x : A, g • x = 0 → (N ^ r) x = 0 := by
-  haveI := Fact.mk hg
+  have := Fact.mk hg
   let S : AddSubgroup A :=
     { carrier := {x | g • x = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [smul_add, ha, hb, add_zero]
       zero_mem' := smul_zero _
       neg_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         rw [smul_neg, ha, neg_zero] }
   have hS : ∀ x : A, x ∈ S ↔ g • x = 0 := fun x => Iff.rfl
   obtain ⟨_⟩ : Nonempty (Module (ZMod g) S) := ⟨AddCommGroup.zmodModule (fun x => Subtype.ext (by
     simpa using (hS x.1).mp x.2))⟩
-  haveI : Finite S := Finite.of_injective (fun x : S => (⟨x.1, hTA x.1 ((hS x.1).mp x.2)⟩ : T))
+  have : Finite S := Finite.of_injective (fun x : S => (⟨x.1, hTA x.1 ((hS x.1).mp x.2)⟩ : T))
     (by intro a b h; apply Subtype.ext; simpa using congrArg Subtype.val h)
-  haveI : Module.Finite (ZMod g) S := Module.Finite.of_finite
+  have : Module.Finite (ZMod g) S := Module.Finite.of_finite
   have hcard : Nat.card S ≤ g ^ r := by
     have := Nat.card_le_card_of_injective (fun x : S => (⟨x.1, hTA x.1 ((hS x.1).mp x.2)⟩ : T))
       (by intro a b h; apply Subtype.ext; simpa using congrArg Subtype.val h)
@@ -1837,9 +1837,9 @@ theorem iter_comp {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (α : G ⟶ 
 theorem finite_order_unipotent_eq_id : ∀ (E : Type) [Field E] [NumberField E] (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (G : Over (Sp k)) [GrpObj G] (act : OAct (𝓞 E) G) (α : G ⟶ G) (n m g r : ℕ) (I : Ideal (𝓞 E)), IsSemiAbelian G → IsMonHom α → (∀ a, act.act a ≫ α = α ≫ act.act a) → 0 < n → (fun f : G ⟶ G => f ≫ α)^[n] (𝟙 G) = 𝟙 G → g.Prime → Ideal.absNorm I = g → (g : 𝓞 E) ∉ I ^ 2 → r + 1 < g → (∃ T : Finset (𝟙_ (Over (Sp k)) ⟶ G), T.card ≤ g ^ r ∧ ∀ x : 𝟙_ (Over (Sp k)) ⟶ G, (∀ a ∈ I, x ≫ act.act a = 1) → x ∈ T) → (∀ x : 𝟙_ (Over (Sp k)) ⟶ G, (∀ a ∈ I, x ≫ act.act a = 1) → (fun z : 𝟙_ (Over (Sp k)) ⟶ G => (z ≫ α) * z⁻¹)^[m] x = 1) → α = 𝟙 G := by
   intro E _ _ k _ _ _ G _ act α n m g r I hG hα hcomm hn hpow hg hI hI2 hr hfin hunip
   classical
-  haveI := hG.comm
-  haveI := hα
-  haveI : ∀ a, IsMonHom (act.act a) := act.hom
+  have := hG.comm
+  have := hα
+  have : ∀ a, IsMonHom (act.act a) := act.hom
   letI cg : CommGroup (𝟙_ (Over (Sp k)) ⟶ G) := Hom.commGroup
   have act0 : act.act 0 = 1 := by
     have h := act.add 0 0

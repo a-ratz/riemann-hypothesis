@@ -148,7 +148,7 @@ theorem automorphy_second_det_ne_zero (g : GR n) : (u2 (mR g)).det ≠ 0 := by
 theorem det_ne (g : GR n) : (mR g).det ≠ 0 :=
   ((Matrix.isUnit_iff_isUnit_det _).mp g.1.isUnit).ne_zero
 
-theorem cont_mR : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtype_val
+theorem cont_mR : Continuous (mR : GR n → M2 n) := Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_vacuum_lower_left_block : Continuous (fun g : GR n => (mR g).toBlocks₂₁) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_

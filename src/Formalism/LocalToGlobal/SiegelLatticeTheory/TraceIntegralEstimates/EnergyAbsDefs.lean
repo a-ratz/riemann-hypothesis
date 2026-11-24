@@ -64,7 +64,7 @@ def Yop (μS ν : Measure G) (σ : G → (HH →L[ℂ] HH)) (w : HH) (W : G → 
 theorem Yop_apply (μS ν : Measure G) (σ : G → (HH →L[ℂ] HH)) (w : HH) (W : G → V) (Ω : Set G) (e : V) :
     Yop μS ν σ w W Ω e =
       ∑ i, ⟪stdOrthonormalBasis ℂ V i, e⟫_ℂ • yv μS ν σ w W Ω (stdOrthonormalBasis ℂ V i) := by
-  simp only [Yop, ContinuousLinearMap.sum_apply,
+  simp only [Yop, sum_apply,
     ContinuousLinearMap.smulRight_apply, innerSL_apply_apply]
 
 theorem Yop_apply_basis (μS ν : Measure G) (σ : G → (HH →L[ℂ] HH)) (w : HH) (W : G → V) (Ω : Set G)
@@ -73,7 +73,7 @@ theorem Yop_apply_basis (μS ν : Measure G) (σ : G → (HH →L[ℂ] HH)) (w :
   rw [Yop_apply, Finset.sum_eq_single j]
   · rw [orthonormal_iff_ite.mp (stdOrthonormalBasis ℂ V).orthonormal]; simp
   · intro i _ hij
-    rw [orthonormal_iff_ite.mp (stdOrthonormalBasis ℂ V).orthonormal, if_neg hij, zero_smul]
+    rw [orthonormal_iff_ite.mp (stdOrthonormalBasis ℂ V).orthonormal, ite_eq_right hij, zero_smul]
   · intro h; exact absurd (Finset.mem_univ j) h
 
 end Formalism.L2.S.Pv.EnergyAbs

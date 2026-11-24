@@ -67,7 +67,7 @@ theorem exists_symE_pCrd : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → �
   intro g n _ _ _ F W _ P rig m N f hT o Ω _ _ _ hA β S ρ u hS
   obtain ⟨hPg, hPs, hrig, hm, -, hmu, hN, -, hf, -⟩ := hT
   obtain ⟨-, -, hSg, hρs, -⟩ := hS
-  haveI : CharZero Ω := hA.char
+  have : CharZero Ω := hA.char
   have hSB : SecBaseChangeAnySt := GlobalTheory.abelianSchemeLaws_all.2.secBaseChangeAny
   let v : S.R →+* Ω := S.R.val.toRingHom
 

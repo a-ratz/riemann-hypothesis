@@ -117,10 +117,10 @@ theorem om_pointwise (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V W : HSp D) (χ
   have fin : ∀ g h, S g h ≠ ⊤ := fun g h => by
     obtain ⟨C, hC⟩ := GlobalTheory.OrientedHeis.theta_bounded hω.std (hF g h)
     refine ne_top_of_le_ne_top (ENNReal.ofReal_ne_top (r := C)) (iSup_le fun w => ?_)
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (hC w)
   have hpt : ∀ g h w, ‖ω (g, h) f w‖ ≤ (S g h).toReal := fun g h w => by
-    rw [← ENNReal.ofReal_le_iff_le_toReal (fin g h), ofReal_norm_eq_enorm]
+    rw [← ENNReal.ofReal_le_iff_le_toReal (fin g h), ofReal_norm]
     exact le_iSup (fun w => ‖ω (g, h) f w‖ₑ) w
   let K : GA D V → GA D W → ℂ := fun g h => ((S g h).toReal : ℂ)
   have hK : ∀ g h, ‖K g h‖ = (S g h).toReal := fun g h => by
@@ -154,7 +154,7 @@ theorem om_pointwise (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V W : HSp D) (χ
     rw [hK]
     have h0 : 0 ≤ C * ((1 + normInf θ V a) * (1 + normInf θ W b)) ^ N0 := (norm_nonneg _).trans (hC a ha b hb 0)
     refine ENNReal.toReal_le_of_le_ofReal h0 (iSup_le fun w => ?_)
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (hC a ha b hb w)
   obtain ⟨C, hC⟩ := hN' K hL hR hG
   refine ⟨|C| * (C1 * C2) ^ N', by positivity, fun g h w => ?_⟩
@@ -329,7 +329,7 @@ theorem sup_words_growth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (V W : 
       (⨆ w, ‖wordAct (heisDer ψ θ) (List.ofFn a) (ω (g, h) f) w‖ₑ) ≤ ENNReal.ofReal (c * H ^ A) := by
     intro k hk a
     refine iSup_le fun w => ?_
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     refine ENNReal.ofReal_le_ofReal (hc g h _ ?_ w)
     simpa using Nat.le_of_lt_succ (Finset.mem_range.1 hk)
   unfold wordSum

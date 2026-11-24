@@ -51,8 +51,8 @@ theorem UpperTheory.V.AlgebraTools.IsCplAt.nonempty_algEquiv :
     ∀ (R : Type) [CommRing R] (p : Ideal R) (B : Type) [CommRing B] [IsLocalRing B] [Algebra R B] (B' : Type) [CommRing B'] [IsLocalRing B'] [Algebra R B'],
       IsCplAt R p B → IsCplAt R p B' → Nonempty (B ≃ₐ[R] B') := by
   intro R _ p B _ _ _ B' _ _ _ hB hB'
-  haveI : IsAdicComplete (maximalIdeal B) B := hB.complete
-  haveI : IsAdicComplete (maximalIdeal B') B' := hB'.complete
+  have : IsAdicComplete (maximalIdeal B) B := hB.complete
+  have : IsAdicComplete (maximalIdeal B') B' := hB'.complete
   obtain ⟨ψ, hψ, -⟩ := IsCplAt.existsUnique_lift R p B hB B' (algebraMap R B') hB'.comap_eq
   obtain ⟨χ, hχ, -⟩ := IsCplAt.existsUnique_lift R p B' hB' B (algebraMap R B) hB.comap_eq
   obtain ⟨_, -, huB⟩ := IsCplAt.existsUnique_lift R p B hB B (algebraMap R B) hB.comap_eq

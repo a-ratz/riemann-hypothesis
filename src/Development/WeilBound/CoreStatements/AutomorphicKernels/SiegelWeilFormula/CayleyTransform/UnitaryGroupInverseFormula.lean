@@ -82,9 +82,9 @@ theorem continuous_Phi {ε : ℤˣ} {ζ : ℂ} (hζ : ε = -1 ∧ ζ = 1 ∨ ε 
     Continuous (Phi (n := n) hζ) := by
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
   · show Continuous fun h : {h : M2 n // InU (Qc n ε)ᵀ h} => phi ζ h.1
-    exact (continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const
+    exact (continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const
   · show Continuous fun h : {h : M2 n // InU (Qc n ε)ᵀ h} => -(JJ n * (phi ζ h.1)ᴴ * JJ n)
-    exact ((continuous_const.matrix_mul (((continuous_const.matrix_mul continuous_subtype_val).matrix_mul
+    exact ((continuous_const.matrix_mul (((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul
       continuous_const).matrix_conjTranspose)).matrix_mul continuous_const).neg
 
 theorem Phi_surj {ε : ℤˣ} {ζ : ℂ} (hζ : ε = -1 ∧ ζ = 1 ∨ ε = 1 ∧ ζ = Complex.I) (y : GR n) :

@@ -146,7 +146,7 @@ theorem pt_of_int (hI : CapAdjInt) {μ : Measure (Mt k r)} (hμ : B.IsHaarOn (B.
     {ψ : B.Mat k r → (Wq →L[ℂ] Wp)} (hψ : ContDiff ℝ ∞ ψ) (hψc : HasCompactSupport ψ) {g₀ : B.Mat k r}
     (hg₀ : g₀ ∈ B.GV k r) :
     B.opAdj (capTh k r Wp Wq s Y) ψ g₀ = conj s • Q.CV k r (conj Y) ψ g₀ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨hμ.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨hμ.finite_compact⟩
   obtain ⟨L, hL, hCV⟩ := Formalism.FourierDecayAlt.P.capelli_word_sum k r (conj Y)
   set Θ := capTh k r Wp Wq s Y
   set Ht : B.Mat k r → (Wq →L[ℂ] Wp) := fun g =>

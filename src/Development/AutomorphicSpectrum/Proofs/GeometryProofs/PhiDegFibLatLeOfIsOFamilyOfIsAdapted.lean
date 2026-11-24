@@ -469,7 +469,7 @@ theorem exists_local_frame {M : Type} [AddCommGroup M] [Module (𝓞 L) M] [Modu
     · exact sub_eq_zero.1 h0
     · simp only [sub_smul, Finset.sum_sub_distrib, Matrix.mul_apply, Matrix.of_apply, Matrix.smul_apply,
         Matrix.one_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, ite_smul, zero_smul, Finset.sum_ite_eq,
-        Finset.mem_univ, if_true, Finset.sum_smul, smul_smul]
+        Finset.mem_univ, ite_true, Finset.sum_smul, smul_smul]
       rw [sub_eq_zero, Finset.sum_comm]
       calc ∑ k, ∑ l, (T i k * v k l) • x l = ∑ k, T0 i k • (c • y k) := by
             simp only [hy, Finset.smul_sum, smul_smul, hTdef, Matrix.of_apply]
@@ -625,7 +625,7 @@ theorem exists_logNorms {L : Type} [Field L] [NumberField L] (B : HermitianBundl
   · refine ((_root_.GlobalTheory.CompanionTheory.Ar.Fl.finite_logIdeal_ne_zero L _ hcn).union (_root_.GlobalTheory.CompanionTheory.Ar.Fl.finite_logIdeal_ne_zero L _ hD)).subset ?_
     rintro p ⟨j, hj⟩
     by_contra hc'
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_exists, not_not] at hc'
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_exists, not_not] at hc'
     exact hj (by show _ - _ = (0 : ℝ); rw [hc'.1, hc'.2, sub_zero])
   · unfold Fl.LogNorms.deg HermitianBundle.normDegree
     rw [hfs, hdeg, hcard]
@@ -644,7 +644,7 @@ theorem finite_finSum {k : Type} [Field k] [NumberField k] {N : Fl.LogNorms k} (
     (Function.support N.finSum).Finite := by
   refine h.subset fun p hp => ?_
   by_contra h0
-  simp only [Set.mem_setOf_eq, not_exists, not_not] at h0
+  simp only [Set.mem_ofPred_eq, not_exists, not_not] at h0
   exact hp (Finset.sum_eq_zero fun j _ => h0 j)
 
 theorem deg_eq_sub {k L L' : Type} [Field k] [NumberField k] [Field L] [NumberField L] [Field L'] [NumberField L']
@@ -1018,7 +1018,7 @@ theorem logOm_bound : ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Type) [Field E] [NumberF
     lt_trans (by norm_num) Real.one_half_lt_eulerMascheroniConstant
   refine ⟨1 + Real.eulerMascheroniConstant + |Real.log (2 * Real.pi)|, by positivity, ?_⟩
   intro E _ _ _ H
-  haveI : Fact (Nat.Prime H.d) := ⟨H.d_prime⟩
+  have : Fact (Nat.Prime H.d) := ⟨H.d_prime⟩
   refine ⟨⟨H.d_prime.ne_zero⟩, (quadraticChar (ZMod H.d)).ringHomComp (Int.castRingHom ℂ),
     GlobalTheory.isKroneckerChar_quadraticChar (by have := H.d_mod; omega), ?_⟩
   have hL : (GlobalTheory.CM.logOm E ((quadraticChar (ZMod H.d)).ringHomComp (Int.castRingHom ℂ))).re =
@@ -1091,10 +1091,10 @@ theorem flat_point_of_principal_sign (hG : _root_.GlobalTheory.CompanionTheory.A
   obtain ⟨l, hA, hg⟩ := GlobalTheory.GlobalModelGuards.exists_good_level H
   obtain ⟨c₀⟩ := GlobalTheory.ModuliProbe.coeff_nonempty l
   obtain ⟨-, c, -, hc⟩ := GlobalTheory.GeomIrr.compNe_and_exists_fnAlgClosed E H D l (Xo l) c₀ h1
-  haveI := c.fin
-  haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
+  have := c.fin
+  have : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   obtain ⟨F, hfin, hF', e, o, he, ⟨m⟩⟩ := SabModel.exists_obj_ext E H D l L t ht hA ρ σ hσ hs I c.F c.fin c.le
-  haveI : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := hfin }
+  have : NumberField F := { to_charZero := inferInstance, to_finiteDimensional := hfin }
   obtain ⟨f, ⟨hf, ⟨mf⟩⟩, -⟩ := (Xo l).rep (Sp F) _ inferInstance o
   let bF : c.F →+* F := (IntermediateField.inclusion hF').toRingHom
   let y : Sp F ⟶ (Xo l).XF c := pullback.lift f (spMap bF) (by

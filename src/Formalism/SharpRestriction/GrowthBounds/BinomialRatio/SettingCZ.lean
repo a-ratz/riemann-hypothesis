@@ -63,7 +63,7 @@ theorem settingCZ : SettingCharZeroAt := by
   have hW : CharZero W := by
     rcases CharP.char_is_prime_or_zero W (ringChar W) with hq | hq
     · exfalso
-      haveI hcp : CharP W (ringChar W) := ringChar.charP W
+      have hcp : CharP W (ringChar W) := ringChar.charP W
       by_cases hqp : ringChar W = p
       · apply hS.p_unif.ne_zero
         rw [← hqp]
@@ -76,11 +76,11 @@ theorem settingCZ : SettingCharZeroAt := by
           exact Units.isUnit _
         have hu' := hu.map (ZMod.castHom (dvd_refl (ringChar W)) W)
         simpa using hu'
-    · haveI : CharP W 0 := by
+    · have : CharP W 0 := by
         rw [← hq]
         exact ringChar.charP W
       exact CharP.charP_to_charZero W
-  haveI := hS.frac_alt
+  have := hS.frac_alt
   have hQ : CharZero Qq := charZero_of_injective_algebraMap (IsFractionRing.injective W Qq)
   have hK : CharZero Kf := (RingHom.charZero_iff ι.injective).mp hQ
 
@@ -88,7 +88,7 @@ theorem settingCZ : SettingCharZeroAt := by
     intro hu
     have hint : jO.IsIntegral := RingHom.IsIntegral.of_finite hS.finite
     have hmax : ((IsLocalRing.maximalIdeal O).comap jO).IsMaximal :=
-      Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' jO hint (IsLocalRing.maximalIdeal O)
+      Ideal.isMaximal_comap_of_isIntegral_of_isMaximal jO hint (IsLocalRing.maximalIdeal O)
     have hle : (IsLocalRing.maximalIdeal O).comap jO = IsLocalRing.maximalIdeal W :=
       IsLocalRing.eq_maximalIdeal hmax
     have hpm : (p : W) ∈ IsLocalRing.maximalIdeal W := (IsLocalRing.mem_maximalIdeal _).mpr hpW

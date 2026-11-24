@@ -289,10 +289,10 @@ theorem volume_mul_norm_det_eq_one :
       ∀ Fd : Set (Fin g → ℂ), IsAddFundamentalDomain Λ Fd volume →
         (volume Fd).toReal * ‖Hm.det‖ = 1 := by
   intro g Λ Hm hd hs _ hpos hint hself Fd hFd
-  haveI := hd
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
-  haveI : Module.Free ℤ Λ := ZLattice.module_free ℝ Λ
-  haveI : Module.Finite ℤ Λ := ZLattice.module_finite ℝ Λ
+  have := hd
+  have : IsZLattice ℝ Λ := ⟨hs⟩
+  have : Module.Free ℤ Λ := ZLattice.module_free ℝ Λ
+  have : Module.Finite ℤ Λ := ZLattice.module_finite ℝ Λ
   let e := stdBasis g
   let b0 := Module.Free.chooseBasis ℤ Λ
   let b : Module.Basis (Σ _ : Fin g, Fin 2) ℤ Λ :=
@@ -557,7 +557,7 @@ theorem norm_key_of_frame : ∀ κ : GlobalTheory.KeyCl.Rule, GlobalTheory.KeyCl
   have g₁ := (isGen_iff w₁).1 hw₁
   obtain ⟨w', gw'⟩ := exists_pgen_cancel hψ hM x.P.isLB w₁ g₁
   have hab := isAb_of_isGrpPullback hc x.P.isAb
-  haveI : IsCommMonObj a.A := hab.comm
+  have : IsCommMonObj a.A := hab.comm
   have hsm : SmoothOfRelativeDimension D.g a.A.hom := by
     have h₀ := (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hc.1 x.P.smoothDim
     rwa [hg] at h₀
@@ -667,7 +667,7 @@ theorem norm_key_of_frame : ∀ κ : GlobalTheory.KeyCl.Rule, GlobalTheory.KeyCl
       ∫ z in Fd, ‖θ z‖ ^ 2 * Real.exp (-Real.pi * (z ⬝ᵥ a.Hm.mulVec (star z)).re) := by
     refine integral_congr_ae (Filter.Eventually.of_forall fun w => ?_)
     show (‖θ w‖ * Real.exp (-(Real.pi * ((1 : ℕ) : ℝ) / 2) * (a.herm w w).re)) ^ 2 = _
-    rw [mul_pow, ← Real.exp_nat_mul]
+    rw [mul_pow, ← Real.exp_natCast_mul]
     congr 2
     simp only [ArchFrame.herm]
     push_cast
@@ -1225,7 +1225,7 @@ theorem log_two_pi_le : Real.log (2 * Real.pi) ≤ 4 := by
     have := Real.add_one_le_exp (1:ℝ)
     linarith
   have h4 : Real.exp 4 = Real.exp 1 ^ 4 := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     norm_num
   have h16 : (2:ℝ) ^ 4 ≤ Real.exp 1 ^ 4 := pow_le_pow_left₀ (by norm_num) h1 4
   have hp := Real.pi_le_four
@@ -1329,7 +1329,7 @@ theorem is_L2_of_gram_det_pos {E : Type} [Field E] [NumberField E] [IsCMField E]
   have hc8 : Real.exp (Real.log ((2 * Real.pi) ^ (2 * D.g) * ‖D.B.gramDet σ e‖ ^ 2 / ‖σ k‖) / 8) ^ 8
       = (2 * Real.pi) ^ (2 * D.g) * ‖D.B.gramDet σ e‖ ^ 2 / ‖σ k‖ := by
     have h8 : ∀ x : ℝ, (8 : ℝ) * (x / 8) = x := fun x => by ring
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     push_cast
     rw [h8, Real.exp_log hX]
   unfold GlobalTheory.CompanionTheory.Ar.Sl.ArchFrame.IsThetaMeanSquareNorm

@@ -231,7 +231,7 @@ theorem locTriv_of_noetherian : (∀ (R : Type) [CommRing R] [IsNoetherianRing R
   have := hab.comm
   have := hab.smooth
   have := hab.geomConnected
-  letI : GrpObj ((Over.pullback t).obj G₀) := Functor.grpObjObj
+  let : GrpObj ((Over.pullback t).obj G₀) := Functor.grpObjObj
   let A₁ : Over (Sp R₁) := (Over.pullback t).obj G₀
   have hab₁ : IsAbelianScheme A₁ :=
     { comm := inferInstance

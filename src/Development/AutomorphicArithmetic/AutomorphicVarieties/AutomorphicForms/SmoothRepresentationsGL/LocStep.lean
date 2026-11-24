@@ -65,9 +65,9 @@ private theorem colM_mul_neg (m : Fin n) (u v : Fin n → R) (huv : u + v = 0) :
     · have : ¬ (i ≤ m ∧ k.val = m.val + 1) := fun h => by
         have := Fin.le_def.1 h1
         omega
-      rw [if_neg this, zero_mul]
+      rw [ite_eq_right this, zero_mul]
     · have : ¬ (k ≤ m ∧ j.val = m.val + 1) := fun h => h1 h.1
-      rw [if_neg this, mul_zero]
+      rw [ite_eq_right this, mul_zero]
   unfold colM
   rw [add_mul, mul_add, mul_add, h0, one_mul, one_mul, mul_one, add_zero, add_assoc, add_eq_left]
   ext i j
@@ -123,7 +123,7 @@ variable {K : Type} [NormedField K] [CompleteSpace K] {n : ℕ}
 
 private theorem img_nhds (U : OpenSubgroup (GL (Fin n) K)) :
     {M : Matrix (Fin n) (Fin n) K | ∃ s ∈ U, s.val = M} ∈ 𝓝 (1 : Matrix (Fin n) (Fin n) K) := by
-  letI I := Matrix.linftyOpNormedRing (n := Fin n) (α := K)
+  let I := Matrix.linftyOpNormedRing (n := Fin n) (α := K)
   have hcs : @CompleteSpace (Matrix (Fin n) (Fin n) K) I.toMetricSpace.toPseudoMetricSpace.toUniformSpace :=
     inferInstanceAs (CompleteSpace (Fin n → Fin n → K))
   have h := (@Units.isOpenMap_val (Matrix (Fin n) (Fin n) K) I
@@ -178,7 +178,7 @@ private theorem row_nhds (m : Fin n) (U : OpenSubgroup (GL (Fin n) K)) :
   simp only [rowM, Matrix.of_apply, Pi.add_apply]
   by_cases h : i = m ∧ j ≤ m
   · simp [h]
-  · rw [if_neg h, if_neg h]
+  · rw [ite_eq_right h, ite_eq_right h]
 
 private theorem step_gen (hA : AvgChar) (ψ : AddChar K ℂ) (hψ : ∀ᶠ x in 𝓝 (0 : K), ψ x = 1)
     (hD : ∀ V ∈ 𝓝 (0 : K), ∃ L : AddSubgroup K, IsOpen (L : Set K) ∧ IsCompact (L : Set K) ∧
@@ -204,8 +204,8 @@ private theorem step_gen (hA : AvgChar) (ψ : AddChar K ℂ) (hψ : ∀ᶠ x in 
   have hL₀ : IsOpen (L₀ : Set (Fin n → K)) :=
     L₀.isOpen_of_mem_nhds (Filter.mem_of_superset hN AddSubgroup.subset_closure)
   have hidx : L₀.relIndex L ≠ 0 := by
-    haveI : CompactSpace L := isCompact_iff_compactSpace.1 hLc
-    have := AddSubgroup.quotient_finite_of_isOpen (L₀.addSubgroupOf L) (hL₀.preimage continuous_subtype_val)
+    have : CompactSpace L := isCompact_iff_compactSpace.1 hLc
+    have := AddSubgroup.quotient_finite_of_isOpen (L₀.addSubgroupOf L) (hL₀.preimage continuous_subtypeVal)
     exact AddSubgroup.index_ne_zero_of_finite
   obtain ⟨T, hT, hTL, hsum⟩ := hA _ L₀ L hle hidx
   have hcard : (T.card : ℂ) ≠ 0 := by exact_mod_cast hT.card_pos.ne'
@@ -214,7 +214,7 @@ private theorem step_gen (hA : AvgChar) (ψ : AddChar K ℂ) (hψ : ∀ᶠ x in 
   · simp [dlt_one]
   · have h1 : ∀ u ∈ L, ψ (dlt m ξ u) = 1 := by
       by_contra h
-      exact hξ (if_neg h)
+      exact hξ (ite_eq_right h)
     refine hrow ξ fun j hj => hL₁ _ fun y hy => ?_
     rw [← dlt_single m ξ j hj]
     refine h1 _ fun k _ => ?_

@@ -221,7 +221,7 @@ theorem lastDatum : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topologi
       rw [dite_eq_left Q.lat.zero_mem]
       exact map_zero Q.fn
     have h0 := congrFun h 0
-    simp only [charInd, vecInd, hev, neg_zero, AddChar.map_zero_eq_one, Q.lat.zero_mem, if_true, mul_one,
+    simp only [charInd, vecInd, hev, neg_zero, AddChar.map_zero_eq_one, Q.lat.zero_mem, ite_true, mul_one,
       Pi.zero_apply] at h0
     exact one_ne_zero h0
   have hA : ∀ y : WO L S, Vac ψ A S LA LS (· = p.v) (comb ψ A S e (fun u => Ξ ((o.resS S).symm (u, y)))) ∧
@@ -1003,7 +1003,7 @@ theorem SmallPl.liftA_contAut {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {V₀ A 
     (hA : CoCpt A) {χV χW : (AE D)ˣ →* Circle} {om : Om V₀ S} (hW : IsWeilDatumO ψ V₀ S χV χW om) (vA : Vol A)
     {φ : GA D A → ℂ} (hφ : IsContAut A φ) {Ξ : WO V₀ S → ℂ} (hΞ : IsThetaFunO ψ V₀ S Ξ) :
     IsContAut S fun h => liftA o om vA φ Ξ h 0 := by
-  haveI : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hlift : (fun h => liftA o om vA φ Ξ h 0) = fun h =>
       ∫ h₀ in vA.𝓕, φ h₀ * om (o.emb (h₀, 1), h) Ξ 0 ∂vA.μ := by
     funext h
@@ -1042,7 +1042,7 @@ theorem SmallPl.integral_sum_translates {D : D7} {ψ : AddChar (AF D.host.F) ℂ
     {G : GA D S → ℂ} (hG : IsContAut S G) (c : ℂ) (h' : GA D T) :
     (∫ h in vS.𝓕, om (h, h') Φ₂ 0 * (c * ∑ i ∈ s, G (h * b i)) ∂vS.μ) =
       c * s.card * ∫ h in vS.𝓕, om (h, h') Φ₂ 0 * G h ∂vS.μ := by
-  haveI : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D S) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hHc : Continuous fun h => om (h, h') Φ₂ 0 :=
     (hW.om_cont Φ₂ hθ 0).comp (continuous_id.prodMk continuous_const)
   have hHa : ∀ γ ∈ GQ S, ∀ h, om (γ * h, h') Φ₂ 0 = om (h, h') Φ₂ 0 := by
@@ -1314,7 +1314,7 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (k : Type) [Field k] [Valu
     (c.X (j + 1 + 1)) c.T c.Lz (c.bes j 0 h).o (c.oT (j + 1 + 1) h) (c.bes j 0 h).ζ o.ζ₀ (c.bes j 0 h).line hS.pre.line
     (v.τ j h) lam hlam (fun i => (hlamv i).1) (hS.pre.tau j h)
   obtain ⟨Λ, hΛ, u, hγ, hrep⟩ := GlobalTheory.SeeSaw.lastKernel_reps D c v k ι o hc hv hS j h
-  haveI : ∀ i, (Λ i).IsFullLattice k := hΛ
+  have : ∀ i, (Λ i).IsFullLattice k := hΛ
   let ε : ι → 𝓀[k]ˣ := fun i => (ε' i)⁻¹ * u i
   let Q : ι → Pair k (Fin (c.X (j + 1)).rank) := fun i => ε i • o.Q (j + 1) i
   obtain ⟨r, e, hr, hSm⟩ := _root_.GlobalTheory.FinPl.SmallAllPf.main D k ι o.p o.I (· ∈ v.tP) hPl (Fin (c.X (j + 1)).rank) (Fin (c.X j).rank) o.q o.χ o.hχ

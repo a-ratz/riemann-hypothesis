@@ -61,8 +61,8 @@ open Classical in
 variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : _root_.GlobalTheory.ZH.RatModel o Ω) in
 theorem _root_.GlobalTheory.ZH.RatModel.locallyOfFiniteType_int [Algebra.FiniteType ℤ o] :
     LocallyOfFiniteType (M.s ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap ℤ o)) := by
-  haveI := M.lft
-  haveI : LocallyOfFiniteType (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap ℤ o)) :=
+  have := M.lft
+  have : LocallyOfFiniteType (_root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap ℤ o)) :=
     HasRingHomProperty.Spec_iff.mpr (RingHom.finiteType_algebraMap.mpr inferInstance)
   infer_instance
 
@@ -74,12 +74,12 @@ variable {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : _root_.Global
 theorem _root_.GlobalTheory.ZH.RatModel.flat_int [CharZero Ω] (π : M.Z ⟶ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp ℤ) : Flat π := by
   rw [Flat.iff_flat_stalkMap]
   intro x
-  haveI : CharZero (M.Z.presheaf.stalk x) :=
+  have : CharZero (M.Z.presheaf.stalk x) :=
     RingHom.charZero ((M.O x).val.toRingHom.comp
       (M.stalkEquiv x).toRingHom)
   let q : PrimeSpectrum ℤ := π x
-  haveI : q.asIdeal.IsPrime := q.isPrime
-  letI : Algebra ((Spec.structureSheaf ℤ).presheaf.stalk q) (M.Z.presheaf.stalk x) :=
+  have : q.asIdeal.IsPrime := q.isPrime
+  let : Algebra ((Spec.structureSheaf ℤ).presheaf.stalk q) (M.Z.presheaf.stalk x) :=
     (π.stalkMap x).hom.toAlgebra
   have hflat : Module.Flat ℤ (M.Z.presheaf.stalk x) := inferInstance
   have hT : @IsScalarTower ℤ ((Spec.structureSheaf ℤ).presheaf.stalk q)
@@ -125,8 +125,8 @@ theorem _root_.GlobalTheory.ZH.classical_points_and_local_regularity :
             ‖M.val (_root_.GlobalTheory.ZH.gPt p ≫ y) φ‖ ≤ 1) →
           φ ∈ M.O z) ∧ JacobsonSpace M.Z) := by
   intro o Ω _ _ _ _ _ M U₀ hN
-  haveI := _root_.GlobalTheory.ZH.RatModel.locallyOfFiniteType_int M
-  haveI : Flat (M.s ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap ℤ o)) := M.flat_int _
+  have := _root_.GlobalTheory.ZH.RatModel.locallyOfFiniteType_int M
+  have : Flat (M.s ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap ℤ o)) := M.flat_int _
   refine ⟨fun U₁ _ hU₁ z hz => ⟨?_, ?_⟩,
     _root_.GlobalTheory.jacobsonSpace_of_locallyOfFiniteType_int (M.s ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap ℤ o))⟩
   · obtain ⟨p, hp, y, h1, h2⟩ := _root_.GlobalTheory.padicAlgCl_integral_points.1 M.Z
@@ -135,8 +135,8 @@ theorem _root_.GlobalTheory.ZH.classical_points_and_local_regularity :
   · intro φ hφ hb
     obtain ⟨f, rfl⟩ :=
       (_root_.GlobalTheory.ZH.RatModel.mem_ringOn_iff_exists hU₁).1 hφ
-    haveI := _root_.GlobalTheory.ZH.RatModel.isIntegrallyClosed_O hN z
-    haveI : IsIntegrallyClosed (M.Z.presheaf.stalk z) :=
+    have := _root_.GlobalTheory.ZH.RatModel.isIntegrallyClosed_O hN z
+    have : IsIntegrallyClosed (M.Z.presheaf.stalk z) :=
       IsIntegrallyClosed.of_equiv (M.stalkEquiv z).symm
     have hbounded : ∀ (p : ℕ) [Fact p.Prime]
         (y : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sp (_root_.GlobalTheory.ZH.OO p) ⟶ M.Z),
@@ -147,13 +147,13 @@ theorem _root_.GlobalTheory.ZH.classical_points_and_local_regularity :
       intro p _ y hy hr
       have hle := hb p y ⟨hy, hr⟩
       rwa [_root_.GlobalTheory.ZH.RatModel.val_valF hr] at hle
-    haveI : Nonempty U₁ := hU₁.to_subtype
+    have : Nonempty U₁ := hU₁.to_subtype
     obtain ⟨p, hp, hpx⟩ := _root_.GlobalTheory.exists_prime_residueField_eq_zero
       (M.s ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap ℤ o)) hz
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     have hm := _root_.GlobalTheory.mem_range_stalk_of_forall_norm_le_one
       (M.s ≫ _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (algebraMap ℤ o)) hz hpx (φ := f) fun K _ y hy hyx => by
-        haveI := isLocalHom_integralClosureToPadicAlgClIntegers K
+        have := isLocalHom_integralClosureToPadicAlgClIntegers K
         have e : gPt p ≫ spMap (integralClosureToPadicAlgClIntegers K) ≫ y =
             spMap K.val.toRingHom ≫
               Spec.map (CommRingCat.ofHom (algebraMap (integralClosure ℤ_[p] K) K)) ≫ y := by
@@ -190,7 +190,7 @@ theorem _root_.GlobalTheory.ZH.classical_points_and_local_regularity :
       _root_.GlobalTheory.exists_germToFunctionField_eq_of_mem_range_stalk hm (W := ⊤) trivial
     have hg : ∀ (W : M.Z.Opens) [Nonempty W], genericPoint M.Z ∈ W := fun W h =>
       ((genericPoint_spec M.Z).mem_open_set_iff W.isOpen).mpr (by simpa using h)
-    haveI : Nonempty (W ⊓ U₁ : M.Z.Opens) := ⟨⟨_, hg W, hg U₁⟩⟩
+    have : Nonempty (W ⊓ U₁ : M.Z.Opens) := ⟨⟨_, hg W, hg U₁⟩⟩
     have h := M.Z.germToFunctionField_injective (W ⊓ U₁)
       ((M.Z.presheaf.germ_res_apply (homOfLE inf_le_left) _ _ ψ).trans
         (hs.trans (M.Z.presheaf.germ_res_apply (homOfLE inf_le_right) _ _ f).symm))

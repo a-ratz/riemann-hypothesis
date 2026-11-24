@@ -279,7 +279,7 @@ theorem hyp_count (P : Ideal R) [P.IsMaximal] [Finite (R ⧸ P)] {X : Type}
     if h : L ∈ hyp P X then Classical.choose (exists_hom_ker P L h.1 h.2) else 0
   have hF : ∀ L ∈ hyp P X, LinearMap.ker (F L) = L := by
     intro L hL
-    simp only [F, dif_pos hL]
+    simp only [F, dite_eq_left hL]
     exact Classical.choose_spec (exists_hom_ker P L hL.1 hL.2)
   have hinj : Set.InjOn F (hyp P X) := by
     intro L₁ h₁ L₂ h₂ h
@@ -454,18 +454,18 @@ theorem LIB.submodule {X : Type} [AddCommGroup X] [Module (𝓞 E) X] {k : ℕ} 
 theorem mem_of_card_dvd {P : Ideal (𝓞 E)} [P.IsMaximal] {p e : ℕ}
     (h : Nat.card (𝓞 E ⧸ P) ∣ p ^ e) : ((p : ℕ) : 𝓞 E) ∈ P := by
   rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
-  letI : Field (𝓞 E ⧸ P) := Ideal.Quotient.field P
+  let : Field (𝓞 E ⧸ P) := Ideal.Quotient.field P
   by_cases hfin : Finite (𝓞 E ⧸ P)
   · obtain ⟨ℓ, hℓ⟩ := CharP.exists (𝓞 E ⧸ P)
-    haveI := hℓ
-    haveI : Fintype (𝓞 E ⧸ P) := Fintype.ofFinite _
+    have := hℓ
+    have : Fintype (𝓞 E ⧸ P) := Fintype.ofFinite _
     obtain ⟨n, hℓp, hn⟩ := FiniteField.card (𝓞 E ⧸ P) ℓ
     have hdvd : ℓ ∣ Nat.card (𝓞 E ⧸ P) := by
       rw [Nat.card_eq_fintype_card, hn]
       exact dvd_pow_self ℓ (PNat.ne_zero n)
     have h2 : ℓ ∣ p := hℓp.dvd_of_dvd_pow (dvd_trans hdvd h)
     exact (CharP.cast_eq_zero_iff (𝓞 E ⧸ P) ℓ p).2 h2
-  · haveI : Infinite (𝓞 E ⧸ P) := not_finite_iff_infinite.1 hfin
+  · have : Infinite (𝓞 E ⧸ P) := not_finite_iff_infinite.1 hfin
     rw [Nat.card_eq_zero_of_infinite] at h
     have h0 : p ^ e = 0 := zero_dvd_iff.1 h
     have hp : p = 0 := by
@@ -541,10 +541,10 @@ theorem count_prime_pow (k p : ℕ) (hp : p.Prime) (e : ℕ) :
     fun P => if h : P ∈ G then (hhyp P h).1.toFinset else ∅
   have hH : ∀ P ∈ G, ∀ L, L ∈ H P ↔ L ∈ hyp P X := by
     intro P hP L
-    simp only [H, dif_pos hP, Set.Finite.mem_toFinset]
+    simp only [H, dite_eq_left hP, Set.Finite.mem_toFinset]
   have hHc : ∀ P ∈ G, (H P).card ≤ (p ^ f P) ^ k := by
     intro P hP
-    simp only [H, dif_pos hP]
+    simp only [H, dite_eq_left hP]
     rw [← Set.ncard_eq_toFinset_card _ (hhyp P hP).1]
     exact (hhyp P hP).2
   have hcover : idxSet (𝓞 E) X (p ^ e) ⊆ ⋃ P ∈ G, ⋃ L ∈ H P, A P L := by

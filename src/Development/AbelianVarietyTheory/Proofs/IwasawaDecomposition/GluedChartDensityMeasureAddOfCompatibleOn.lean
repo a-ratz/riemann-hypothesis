@@ -70,7 +70,7 @@ theorem glueMeas_add_of_compat_on : ∀ {Y : Type} [TopologicalSpace Y] [Measura
     have hm := GlobalTheory.ChernScale.glueMeas_restrict_eq e (ρ := τ) (ρ' := τ') (c := 1) ENNReal.one_ne_top hS
       (fun i y _ hy => by rw [one_mul]; exact h i y hy)
     have := congrArg (fun μ : Measure Y => μ S) hm
-    simpa only [Measure.smul_apply, smul_eq_mul, one_mul, Measure.restrict_apply_self] using this
+    simpa only [smul_apply, smul_eq_mul, one_mul, Measure.restrict_apply_self] using this
 
   have compat : ∀ (τ : κ → Y → ℝ≥0∞), (∀ i j y, y ∈ S → y ∈ (e i).source → y ∈ (e j).source →
       τ i y = ENNReal.ofReal (‖transDet (e i) (e j) y‖ ^ 2) * τ j y) →
@@ -109,7 +109,7 @@ theorem glueMeas_add_of_compat_on : ∀ {Y : Type} [TopologicalSpace Y] [Measura
   have key : glueMeas e (fun i y => S.indicator (ρ i) y + S.indicator (ρ' i) y) =
       glueMeas e (fun i => S.indicator (ρ i)) + glueMeas e (fun i => S.indicator (ρ' i)) := by
     refine ext_of_cover (fun i => (e i).source) (fun i => (e i).open_source) hcov fun i A hA hAi => ?_
-    rw [Measure.add_apply, glueMeas_apply e _ hd cs i hA hAi,
+    rw [add_apply, glueMeas_apply e _ hd cs i hA hAi,
       glueMeas_apply e (fun i => S.indicator (ρ i)) hd cσ i hA hAi,
       glueMeas_apply e (fun i => S.indicator (ρ' i)) hd cσ' i hA hAi,
       chartMeas_apply_of_subset _ _ hA hAi, chartMeas_apply_of_subset _ _ hA hAi,
@@ -119,6 +119,6 @@ theorem glueMeas_add_of_compat_on : ∀ {Y : Type} [TopologicalSpace Y] [Measura
       (fun i y hy => by simp only [Set.indicator_of_mem hy]),
     same ρ (fun i => S.indicator (ρ i)) (fun i y hy => by simp only [Set.indicator_of_mem hy]),
     same ρ' (fun i => S.indicator (ρ' i)) (fun i y hy => by simp only [Set.indicator_of_mem hy]),
-    key, Measure.add_apply]
+    key, add_apply]
 
 end GlobalTheory.ChartGlue

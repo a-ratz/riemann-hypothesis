@@ -66,7 +66,7 @@ theorem exists_base {S : Scheme.{0}} {G : Over S} [GrpObj G] {A R : Type} [CommR
       (Smooth G.hom → ∀ (n : ℕ) (b : Module.Basis (Fin n) A E),
         Submodule.span R (Set.range fun k => j (b k)) = ⊤) := by
   subst hz
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨j, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G A R x E F M N
   exact ⟨j, h1, h2, fun hs n b => (h3 hs n b).2⟩
 

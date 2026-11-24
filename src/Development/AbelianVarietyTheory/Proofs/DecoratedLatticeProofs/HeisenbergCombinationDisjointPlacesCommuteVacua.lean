@@ -107,7 +107,7 @@ theorem mxAt_mono {P Q : Pl D → Prop} (h : ∀ p, P p → Q p) {m n : ℕ} {x 
 theorem comb_single (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (w : WO S T) (f : WO S T → ℂ) :
     comb ψ S T (Finsupp.single w 1) f = heisO ψ S T w f := by
   unfold comb
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
+  rw [Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
 
 theorem mem_congGrp' {V : HSp D} {I : Ideal (AE D)} {g : GA D V} (hg : g ∈ congGrp V I) :
     ∀ i j, mt V g i j - (1 : Matrix (Fin V.rank) (Fin V.rank) (AE D)) i j ∈ I := by
@@ -149,7 +149,7 @@ variable {D : D7}
 theorem compAt_idem {P : Pl D → Prop} {w : Pl D} (hpw : P w) : compAt D w (idem P) = 1 := by
   rw [← compFin_eq_compAt]
   show evalV D.host.F w (indP D.host.F P) ⊗ₜ[D.host.F] (1 : D.host.E) = 1
-  rw [evalV_indP, if_pos hpw]
+  rw [evalV_indP, ite_eq_left hpw]
   rfl
 
 theorem sub_idem_mem {P P' : Pl D → Prop} {a : AE D} (ha : a ∈ idAt D (fun p => P p ∨ P' p)) :
@@ -210,7 +210,7 @@ theorem main : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1
       heisO ψ S T w (comb ψ S T e f) = comb ψ S T e (heisO ψ S T w f) := by
     intro e he w hw f
     have h := HC.2.1 e (Finsupp.single w 1) (fun x hx y hy => by
-      rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hy
+      rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hy
       subst hy
       exact symplO_disj hd (he x hx) hw) f
     simp only [comb_single] at h

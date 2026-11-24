@@ -66,10 +66,10 @@ theorem norm_pow_le_of_eigenvalues_lt (W : Type) [NormedAddCommGroup W] [NormedS
       ext x
       exact Subsingleton.elim _ _
     simp [h0]
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have : Nontrivial (W →L[ℂ] W) :=
     (Module.End.toContinuousLinearMap (𝕜 := ℂ) W).injective.nontrivial
-  obtain ⟨z, hz, hzr⟩ := spectrum.exists_nnnorm_eq_spectralRadius T
+  obtain ⟨z, hz, hzr⟩ := spectrum.exists_eNorm_eq_spectralRadius T
   have hzE : Module.End.HasEigenvalue (T : Module.End ℂ W) z := by
     rw [Module.End.hasEigenvalue_iff_mem_spectrum]
     have hT : (Module.End.toContinuousLinearMap (𝕜 := ℂ) W) (T : Module.End ℂ W) = T := by
@@ -86,7 +86,7 @@ theorem norm_pow_le_of_eigenvalues_lt (W : Type) [NormedAddCommGroup W] [NormedS
       rw [← NNReal.coe_lt_coe]
       exact hlt
     exact_mod_cast this
-  have hev := (spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius T).eventually_lt_const hr
+  have hev := (spectrum.pow_nnNorm_pow_one_div_tendsto_nhds_spectralRadius T).eventually_lt_const hr
   obtain ⟨N, hN⟩ := eventually_atTop.1 (hev.and (eventually_gt_atTop 0))
   have key : ∀ n, N ≤ n → ‖T ^ n‖ ≤ ρ ^ n := by
     intro n hn
@@ -99,7 +99,7 @@ theorem norm_pow_le_of_eigenvalues_lt (W : Type) [NormedAddCommGroup W] [NormedS
       exact h3
     have h4 : ‖T ^ n‖₊ ≤ ρ' ^ n := by exact_mod_cast h2
     have h5 : ((‖T ^ n‖₊ : ℝ≥0) : ℝ) ≤ ((ρ' ^ n : ℝ≥0) : ℝ) := NNReal.coe_le_coe.2 h4
-    rw [NNReal.coe_pow, coe_nnnorm] at h5
+    rw [NNReal.coe_pow, coe_nnNorm] at h5
     exact h5
   refine ⟨1 + ∑ i ∈ Finset.range N, ‖T ^ i‖ / ρ ^ i, fun j => ?_⟩
   have hpow : 0 < ρ ^ j := pow_pos hρ j

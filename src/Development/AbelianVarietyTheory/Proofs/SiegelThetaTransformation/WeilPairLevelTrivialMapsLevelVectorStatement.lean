@@ -396,7 +396,7 @@ private theorem exists_pow_evalV_mul_mem_adicCompletionIntegers {F : Type} [Fiel
     evalV F v (algebraMap F (Af F) (t : F) * β) ∈ v.adicCompletionIntegers F := by
   have hm : ∃ m : ℕ, Valued.v (evalV F v β) ≤ WithZero.exp (m : ℤ) := by
     by_cases h0 : Valued.v (evalV F v β) = 0
-    · exact ⟨0, by rw [h0]; exact zero_le'⟩
+    · exact ⟨0, by rw [h0]; exact zero_le⟩
     · refine ⟨(WithZero.log (Valued.v (evalV F v β))).toNat, ?_⟩
       conv_lhs => rw [← WithZero.exp_log h0]
       exact WithZero.exp_le_exp.mpr (Int.self_le_toNat _)
@@ -722,8 +722,8 @@ theorem exists_idem (I : Ideal (𝓞 D.host.F)) (hI : I ≠ ⊥) : ∃ α ∈ in
     · exact Finset.sum_ite_eq _ _ _
     · intro v _
       by_cases h : w = v
-      · subst h; rw [GlobalTheory.LatVac.evalV_singleV_same, if_pos rfl]
-      · rw [GlobalTheory.LatVac.evalV_singleV_ne _ _ _ h, if_neg h]
+      · subst h; rw [GlobalTheory.LatVac.evalV_singleV_same, ite_eq_left rfl]
+      · rw [GlobalTheory.LatVac.evalV_singleV_ne _ _ _ h, ite_eq_right h]
   refine ⟨∑ v ∈ hfin.toFinset, singleV D.host.F v 1, ?_, ?_, ?_⟩
   · intro w
     rw [hev w]
@@ -731,7 +731,7 @@ theorem exists_idem (I : Ideal (𝓞 D.host.F)) (hI : I ≠ ⊥) : ∃ α ∈ in
     · exact one_mem _
     · exact zero_mem _
   · intro v hv
-    rw [hev v, if_pos (hfin.mem_toFinset.mpr hv)]
+    rw [hev v, ite_eq_left (hfin.mem_toFinset.mpr hv)]
   · intro V J g hJ hg
     have he : (pairA D.host.F 0 (∑ v ∈ hfin.toFinset, singleV D.host.F v 1) ⊗ₜ[D.host.F] (1 : D.host.E) : AE D) =
         ∑ v ∈ hfin.toFinset, algebraMap (AF D.host.F) (AE D) (pairA D.host.F 0 (singleV D.host.F v 1)) := by
@@ -1051,8 +1051,8 @@ theorem om_Th_phi : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ om : GA D S ×
       C.Th (C.xB B) (unitv (projA C.X C.bas Lv.w (tens Λ (Lv.sh L)) (v₀ L))) := by
     rw [show ((h, g) : GA D S × GA D T) = (h, 1) * (1, g) by simp, map_mul, Module.End.mul_apply,
       (hc g L g1 g2 g3 g4).2, map_smul, (hep h Λ h1 h2 h3 h4).2 g L g1 g2 g3 g4, smul_smul, mul_comm]
-  haveI := RecSum.finite_J Lv
-  haveI : Fintype Lv.J := Fintype.ofFinite _
+  have := RecSum.finite_J Lv
+  have : Fintype Lv.J := Fintype.ofFinite _
   obtain ⟨f, f1, f2, f3, -⟩ := RecSum.exists_reps C.idx C.sympl C.even hn hM hSV (RecSum.near_of_mem hX)
   have hu : ∀ i, actO S T h g (finW S T (f i)) ∈ hatA S T (tens Λ ((Ideal.span {2} * conjI Lv.𝔪) • L)) := fun i =>
     (hmov _).2 ⟨_, ((HatLat.hatA_tens D S T C _ _ hS (full_smul hX0 h𝔠)).2.1 _).2 (f1 i), rfl⟩

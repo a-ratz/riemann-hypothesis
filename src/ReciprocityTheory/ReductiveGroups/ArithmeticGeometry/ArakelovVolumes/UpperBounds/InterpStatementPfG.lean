@@ -392,7 +392,7 @@ theorem interp_euclid (hU : IsOpen U) (e : V n → ℝ) (he : ContDiffOn ℝ ∞
             setLIntegral_const]
       _ < ⊤ := by
           refine ENNReal.add_lt_top.2 ⟨ENNReal.mul_lt_top ENNReal.ofReal_lt_top
-            ((measure_mono Set.diff_subset).trans_lt measure_ball_lt_top), ENNReal.mul_lt_top
+            ((measure_mono Set.sdiff_subset).trans_lt measure_ball_lt_top), ENNReal.mul_lt_top
             ENNReal.ofReal_lt_top ?_⟩
           exact ((lintegral_mono_set hSU).trans hest).trans_lt hRHS
   obtain ⟨F, hFd, hFeq⟩ := ext_glue hU (s k0) G (hs k0) hgn hGd hL

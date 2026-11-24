@@ -78,7 +78,7 @@ theorem integrable_row (ψk : AddChar k Circle) (hψ : Continuous ψk) (ν : Mea
   have h1 : Continuous fun η : n → k => Φ (Matrix.of fun _ r => η r) := hΦ.1.continuous.comp e.continuous
   have h2 : HasCompactSupport fun η : n → k => Φ (Matrix.of fun _ r => η r) := hΦ.2.comp_homeomorph e
   refine Continuous.integrable_of_hasCompactSupport (h1.mul ?_) h2.mul_right
-  exact continuous_subtype_val.comp (hψ.comp (by fun_prop))
+  exact continuous_subtypeVal.comp (hψ.comp (by fun_prop))
 
 theorem finv_add (ψk : AddChar k Circle) (hψ : Continuous ψk) (ν : Measure k) [ν.IsAddHaarMeasure] (C : ℂ)
     {Φ Ψ : Matrix Unit n k → ℂ} (hΦ : Φ ∈ SB (Matrix Unit n k)) (hΨ : Ψ ∈ SB (Matrix Unit n k)) :

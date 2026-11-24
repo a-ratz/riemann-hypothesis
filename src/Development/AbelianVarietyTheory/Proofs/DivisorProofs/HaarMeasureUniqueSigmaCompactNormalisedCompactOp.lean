@@ -79,7 +79,7 @@ theorem haar_unique_of_sigmaCompact_normalised :
   have hBU : (⋃ j, B j) = A := by
     simp only [B, ← Set.inter_iUnion, Set.iUnion_accumulate, hcov, Set.inter_univ]
   rw [← hBU, hBmono.measure_iUnion, hBmono.measure_iUnion]
-  simp only [Measure.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   exact iSup_congr fun j => key _ (hBcl j)
 
 end GlobalTheory

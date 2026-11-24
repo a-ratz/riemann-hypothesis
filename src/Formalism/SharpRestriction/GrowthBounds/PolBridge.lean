@@ -159,7 +159,7 @@ theorem mem_ycond_iff (D : Formalism.BasicNotions.D7) (LL : ChainLetters N) (j :
       rw [Finset.nonempty_iff_ne_empty]; intro h; exact hx0 (MvPolynomial.support_eq_empty.1 h)
     obtain ⟨m, hm⟩ := hne
     have h1 := hxR hm
-    simp only [Set.mem_setOf_eq] at h1
+    simp only [Set.mem_ofPred_eq] at h1
     rw [← hxw m hm, ← chWt_eq]
     exact_mod_cast h1
   · intro hw
@@ -175,7 +175,7 @@ theorem mem_ycond_iff (D : Formalism.BasicNotions.D7) (LL : ChainLetters N) (j :
       have hmu := scalarExtension_monomial_weights (⟨LL.vec⟩ : Letters (Fin N)) {i : Fin N | (i : ℕ) < j} (RingHom.id K) W binomial_stable_contains_components
         (fun a k y hy => hgen _ (Or.inr ⟨a, k, rfl⟩) y hy) x hxL m hm
       have := hw _ hmu
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [chWt_eq]
       exact_mod_cast this
     have hS : chStable K LL j W := fun c d x hx => hgen _ (glAct_mem_gens _ _ c d) x hx

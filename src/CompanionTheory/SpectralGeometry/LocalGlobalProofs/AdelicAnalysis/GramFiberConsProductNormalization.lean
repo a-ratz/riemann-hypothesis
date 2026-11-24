@@ -89,11 +89,11 @@ theorem fibS_support : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hker₁ := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramFib_basic F E σ D.hCM (M + 1) 1 _ hJ' R D.hR d b lam D.hlam m₁ D.hm₁
   obtain ⟨-, hlf', -, -, -, hfib'⟩ := hker'
   obtain ⟨-, hlf₁, -⟩ := hker₁
-  haveI := hbor (n + 1) (M + 1)
-  haveI := hbor n M
-  haveI := hbor 1 (M + 1)
-  haveI := hlf₁ (hermScal R σ (algebraMap F R t))
-  haveI := hlf' (schur R σ t a S)
+  have := hbor (n + 1) (M + 1)
+  have := hbor n M
+  have := hbor 1 (M + 1)
+  have := hlf₁ (hermScal R σ (algebraMap F R t))
+  have := hlf' (schur R σ t a S)
   let α : R ⊗[F] E := ((a (s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E))) : Rˣ) : R) ⊗ₜ[F] (1 : E)
   let c := cvec R t a (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E))
   let f : (Fin 1 → Fin (M + 1) → R ⊗[F] E) × (Fin n → Fin M → R ⊗[F] E) → (Fin (n + 1) → Fin (M + 1) → R ⊗[F] E) :=
@@ -126,7 +126,7 @@ theorem fibS_support : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     intro p hp hpS
     exact hp hpS
   unfold fibS
-  rw [Set.indicator_of_mem hS, Measure.smul_apply]
+  rw [Set.indicator_of_mem hS, smul_apply]
   change _ • (((m₁ (hermScal R σ (algebraMap F R t))).prod (m' (schur R σ t a S))).map f) _ = 0
   rw [hmap, smul_zero]
 

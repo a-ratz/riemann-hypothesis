@@ -92,7 +92,7 @@ theorem meanSquare_addFundamentalDomain_of_cocompact : ∀ (G : Type) [AddCommGr
     refine ⟨(Measure.addHaar D)⁻¹ • Measure.addHaar, D,
       Measure.IsAddHaarMeasure.smul _ (ENNReal.inv_ne_zero.2 h1) (ENNReal.inv_ne_top.2 h0),
       hD _, ?_⟩
-    rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1]
+    rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel h0 h1]
   refine ⟨hex, fun f hf hinv => ?_⟩
   obtain ⟨μ₀, F₀, hμ₀, hF₀, h1⟩ := hex
   obtain ⟨C, hC⟩ := hK.exists_bound_of_continuousOn hf.continuousOn
@@ -100,7 +100,7 @@ theorem meanSquare_addFundamentalDomain_of_cocompact : ∀ (G : Type) [AddCommGr
     obtain ⟨γ, hγ, hk⟩ := hcov w
     have := hC _ hk
     rw [hinv γ hγ] at this
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     gcongr
   have hN : ∫⁻ w in F₀, ‖f w‖ₑ ^ 2 ∂μ₀ ≠ ⊤ := by
     refine ne_top_of_le_ne_top ?_ (lintegral_mono hb)
@@ -117,16 +117,16 @@ theorem meanSquare_addFundamentalDomain_of_cocompact : ∀ (G : Type) [AddCommGr
     have e2 : ∫⁻ w in F, ‖f w‖ₑ ^ 2 ∂μ = ∫⁻ w in F₀, ‖f w‖ₑ ^ 2 ∂μ :=
       hF.setLIntegral_eq hF₀' _ fun g x => by
         have := hinv g g.2 x
-        rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← this]
+        rw [← ofReal_norm, ← ofReal_norm, ← this]
         rfl
-    rw [e1, e2, hc, Measure.restrict_smul, lintegral_smul_measure, Measure.smul_apply, h1]
+    rw [e1, e2, hc, Measure.restrict_smul, lintegral_smul_measure, smul_apply, h1]
     simp [ENNReal.smul_def]
   refine ⟨hne μ hF, hfin μ hF, key, ?_⟩
   rw [integral_eq_lintegral_of_nonneg_ae (f := fun w => ‖f w‖ ^ 2)
     (Filter.Eventually.of_forall fun w => by positivity)
     (hf.norm.pow 2).aestronglyMeasurable]
   have : ∀ w, ENNReal.ofReal (‖f w‖ ^ 2) = ‖f w‖ₑ ^ 2 := fun w => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
   simp only [this]
   rw [key, ENNReal.toReal_mul, ENNReal.coe_toReal]
 

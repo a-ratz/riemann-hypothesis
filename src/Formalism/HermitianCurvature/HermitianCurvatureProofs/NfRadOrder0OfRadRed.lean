@@ -106,8 +106,8 @@ theorem jetR_zero (hU : IsOpen U) (h0 : ζ0 ∈ U) {Λ : (ℂ → ℂ) → M} (h
       intro i
       rw [wd_eq hU hsm (w i) h0, wn_cmono, wn_mono]
       by_cases hi : cnt i = c
-      · rw [if_pos hi, if_pos (by rw [← hi]), hy]
-      · rw [if_neg hi, if_neg (by intro h'; exact hi (by rw [h'])), mul_zero, map_zero]
+      · rw [ite_eq_left hi, ite_eq_left (by rw [← hi]), hy]
+      · rw [ite_eq_right hi, ite_eq_right (by intro h'; exact hi (by rw [h'])), mul_zero, map_zero]
     rw [Finset.sum_congr rfl (fun i _ => e1 i), ← Finset.sum_filter] at hc
     exact hc.symm
   intro f hf
@@ -185,7 +185,7 @@ theorem jetR_iter (p : X →L[ℝ] ℂ) {U : Set ℂ} {V : Set X} (hU : IsOpen U
       have hc : HasFDerivAt (fun x => f (p x)) ((fderiv ℝ f (p y)).comp p) y := hfd.comp y p.hasFDerivAt
       rw [(hc.fun_smul hφd).fderiv]
       ext v
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+      simp only [add_apply, smul_apply,
         ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.comp_apply, smulR_apply, fderiv_wirt, add_smul,
         mul_smul, c2]
       simp [add_assoc]
@@ -358,7 +358,7 @@ theorem wirt_add {f g : ℂ → ℂ} {w : ℂ} (hf : DifferentiableAt ℝ f w) (
   apply dZ_dZb_of
   intro v
   rw [(hf.hasFDerivAt.fun_add hg.hasFDerivAt).fderiv]
-  simp only [ContinuousLinearMap.add_apply, fderiv_wirt]
+  simp only [add_apply, fderiv_wirt]
   ring
 
 theorem wirt_mul {f g : ℂ → ℂ} {w : ℂ} (hf : DifferentiableAt ℝ f w) (hg : DifferentiableAt ℝ g w) :
@@ -367,7 +367,7 @@ theorem wirt_mul {f g : ℂ → ℂ} {w : ℂ} (hf : DifferentiableAt ℝ f w) (
   apply dZ_dZb_of
   intro v
   rw [(hf.hasFDerivAt.fun_mul hg.hasFDerivAt).fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul, fderiv_wirt]
+  simp only [add_apply, smul_apply, smul_eq_mul, fderiv_wirt]
   ring
 
 variable (T : Module.End ℂ (RadSp k r z z' π π')) (a b : ℂ)

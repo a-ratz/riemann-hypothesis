@@ -106,18 +106,18 @@ theorem UpperTheory.V.Ws.cmplPt {Λ A : Type} [CommRing Λ] [IsLocalRing Λ] [Co
     obtain ⟨c, rfl⟩ := residue_surjective y
     exact ⟨algebraMap Λ A c, x.commutes c⟩
   set I : Ideal A := RingHom.ker x with hI
-  haveI : I.IsMaximal := RingHom.ker_isMaximal_of_surjective x hs
+  have : I.IsMaximal := RingHom.ker_isMaximal_of_surjective x hs
   have fg : I.FG := I.fg_of_isNoetherianRing
   let R := AdicCompletion I A
-  haveI hmax := AdicCompletion.isMaximal_map_of_le I I le_rfl fg
-  haveI hc := AdicCompletion.isAdicComplete_self I fg
-  haveI : IsLocalRing R := isLocalRing_of_isAdicComplete_maximal (I.map (algebraMap A R))
-  haveI : IsNoetherianRing R := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ _
+  have hmax := AdicCompletion.isMaximal_map_of_le I I le_rfl fg
+  have hc := AdicCompletion.isAdicComplete_self I fg
+  have : IsLocalRing R := isLocalRing_of_isAdicComplete_maximal (I.map (algebraMap A R))
+  have : IsNoetherianRing R := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion _ _
   have hm : maximalIdeal R = I.map (algebraMap A R) := (eq_maximalIdeal hmax).symm
   let f : A →ₐ[Λ] R := IsScalarTower.toAlgHom Λ A R
   have hf : ∀ z, f z = algebraMap A R z := fun _ => rfl
   have hIm : ∀ z ∈ I, f z ∈ maximalIdeal R := fun z hz => hm ▸ Ideal.mem_map_of_mem _ hz
-  haveI hco : IsCO Λ R :=
+  have hco : IsCO Λ R :=
     { complete := hm ▸ hc
       isLocalHom := ⟨fun c hu => by
         by_contra hn
@@ -176,8 +176,8 @@ theorem UpperTheory.V.Ws.cmplEx :
       ∃ (R : Type) (_ : CommRing R) (_ : Algebra Λ R) (_ : IsCO Λ R) (f : X.A →ₐ[Λ] R),
         Φ.IsDef a (X.P.map (x : X.A →+* ResidueField Λ)) (X.P.map (f : X.A →+* R)) ∧ (f : X.A →+* R).Flat ∧ (res Λ R).comp f = x := by
   intro O Γ _ _ _ _ _ _ Φ l _ Λ _ _ _ _ _ a hstd X x hres
-  haveI := X.noeth
-  haveI := (co_res Λ).1
+  have := X.noeth
+  have := (co_res Λ).1
   obtain ⟨R, _, _, _, f, hflat, hfx, huniv⟩ := cmplPt x
   have hmap : ∀ {S T : Type} [CommRing S] [Algebra Λ S] [CommRing T] [Algebra Λ T]
       (u : X.A →ₐ[Λ] S) (h : S →ₐ[Λ] T),

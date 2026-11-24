@@ -475,7 +475,7 @@ end Sig
 
 theorem exists_ext {F E : Type} [Field F] [Field E] [Algebra F E] [Algebra.IsAlgebraic F E]
     (ι' : F →+* ℝ) : ∃ τ : E →+* ℂ, ∀ a, τ (algebraMap F E a) = ((ι' a : ℝ) : ℂ) := by
-  letI : Algebra F ℂ := (Complex.ofRealHom.comp ι').toAlgebra
+  let : Algebra F ℂ := (Complex.ofRealHom.comp ι').toAlgebra
   exact ⟨(IsAlgClosed.lift : E →ₐ[F] ℂ).toRingHom, fun a => (IsAlgClosed.lift : E →ₐ[F] ℂ).commutes a⟩
 
 theorem isDef_of_sig {F E : Type} [Field F] [Field E] [Algebra F E] [Algebra.IsAlgebraic F E] {k : ℕ}
@@ -529,8 +529,8 @@ theorem isDef_of_sig {F E : Type} [Field F] [Field E] [Algebra F E] [Algebra.IsA
     exact h1
 
 theorem _root_.Formalism.MainNotions.GlobalTheoryTheory.gram0Def (D : D7) : Gram0Def D := by
-  letI := D.host.cmStar
-  haveI : FiniteDimensional D.host.F D.host.E :=
+  let := D.host.cmStar
+  have : FiniteDimensional D.host.F D.host.E :=
     Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   refine isDef_of_sig D.sp.cm.sig D.sp.gram0 D.sp.baseGram_isHermitian ?_ ?_ ?_ ?_
   · intro a ha

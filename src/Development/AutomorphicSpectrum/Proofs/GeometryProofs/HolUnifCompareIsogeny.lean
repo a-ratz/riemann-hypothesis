@@ -83,7 +83,7 @@ theorem hermForm_eq_of_pullbacks : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] 
   intro X G _ L z A A' _ _ φ φ' g g' u u' Hm Hm' χ χ' hL hAb hp hp' d₁ d₂ hAH hAH' x y x' y' a b a' b' hx hy hxx hyy
     da db da' db'
   obtain ⟨e, hmon, he⟩ := grpPullback_iso hp' hp
-  haveI := hmon
+  have := hmon
   have hol : IsHolTo (Set.univ : Set (Fin g' → ℂ)) (fun w => (u'.ex w ≫ e.hom).left) := by
     simpa only [Over.comp_left] using GlobalTheory.HolTorsion.isHolTo_comp (isHolTo_ex u') e.hom.left
   obtain ⟨F, hF, -⟩ := GlobalTheory.existsUnique_linear_lift_of_isHolTo A hAb (L.pull φ) g g' u d₁ d₂

@@ -157,7 +157,7 @@ private theorem alg_monomial {R : Type} [CommRing R] (n : ℕ) (x : R) :
 theorem UpperTheory.V.Ws.sxLaur :
     ∀ {Λ : Type} [CommRing Λ] [IsLocalRing Λ] {R : Type} [CommRing R] [Algebra Λ R] [IsCO Λ R], IsNilpotent (maximalIdeal R) → ∀ c : ℕ, ∃ (S : Type) (_ : CommRing S) (_ : Algebra Λ S) (_ : IsCO Λ S) (e : S →+* LaurentSeries R), Laur (Λ := Λ) c e := by
   intro Λ _ _ R _ _ hR hnil c
-  haveI hP : IsCO Λ (PowerSeries R) := co_mvps Λ R Unit
+  have hP : IsCO Λ (PowerSeries R) := co_mvps Λ R Unit
   have hnilx : ∀ x ∈ maximalIdeal R, IsNilpotent x := fun x hx => by
     obtain ⟨k, hk⟩ := hnil
     refine ⟨k, ?_⟩
@@ -175,21 +175,21 @@ theorem UpperTheory.V.Ws.sxLaur :
     rintro _ ⟨x, hx, rfl⟩
     exact hnils _ x (hs ▸ Ideal.subset_span hx)
   let S := Algebra.adjoin (PowerSeries R) G
-  haveI hfin : Module.Finite (PowerSeries R) S :=
+  have hfin : Module.Finite (PowerSeries R) S :=
     Algebra.finite_adjoin_of_finite_of_isIntegral hGfin fun g hg => by
       obtain ⟨k, hk⟩ := hG g hg
       exact ⟨X ^ k, monic_X_pow k, by simp [hk]⟩
   have hnear : ∀ x : S, ∃ p : PowerSeries R, IsNilpotent (x - algebraMap _ S p) := fun x => by
     obtain ⟨p, k, hk⟩ := near_of_adjoin G hG x.1 x.2
     exact ⟨p, k, Subtype.ext hk⟩
-  haveI : IsLocalRing S := local_of_near hnear
-  letI : Algebra Λ S := ((algebraMap (PowerSeries R) S).comp (algebraMap Λ (PowerSeries R))).toAlgebra
-  haveI : IsScalarTower Λ (PowerSeries R) S := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsLocalRing S := local_of_near hnear
+  let : Algebra Λ S := ((algebraMap (PowerSeries R) S).comp (algebraMap Λ (PowerSeries R))).toAlgebra
+  have : IsScalarTower Λ (PowerSeries R) S := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hcomap : (maximalIdeal S).comap (algebraMap (PowerSeries R) S) = maximalIdeal (PowerSeries R) :=
     eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _) (RingHom.Finite.to_isIntegral (RingHom.finite_algebraMap.mpr inferInstance)) (maximalIdeal S))
   have hin : ∀ p ∈ maximalIdeal (PowerSeries R), algebraMap _ S p ∈ maximalIdeal S := fun p hp => by
     rw [← hcomap] at hp; exact hp
-  haveI hS : IsCO Λ S := co_finite Λ (PowerSeries R) S fun x => by
+  have hS : IsCO Λ S := co_finite Λ (PowerSeries R) S fun x => by
     obtain ⟨p, hp⟩ := hnear x
     obtain ⟨a, ha⟩ := IsCO.res_surj (O := Λ) p
     refine ⟨a, ?_⟩

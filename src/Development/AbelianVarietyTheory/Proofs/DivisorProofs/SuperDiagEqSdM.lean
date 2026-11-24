@@ -75,7 +75,7 @@ theorem nu_diag (t : Vp E n) (i : Fin n) : nu t i i = 1 := by
   simp [nu]
 
 theorem det_nu (t : Vp E n) : (nu t).det = 1 := by
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · simp [nu_diag]
   · intro i j h; exact nu_lower t h
 

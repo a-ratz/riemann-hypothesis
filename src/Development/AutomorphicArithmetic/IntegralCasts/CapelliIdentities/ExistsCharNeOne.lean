@@ -129,7 +129,7 @@ private theorem alg_case {C A : Type*} [CommGroup C] [TopologicalSpace C] [CStar
   have hcl : IsClosed (S : Set A) := by
     have : (S : Set A) = ⋂ D ∈ S', {B | D * B = B * D} := by
       ext B
-      simp only [SetLike.mem_coe, mem, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, mem, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [this]
     exact isClosed_biInter fun D _ => isClosed_eq (by fun_prop) (by fun_prop)
   let _ : CommCStarAlgebra S :=
@@ -226,7 +226,7 @@ private theorem hilbert_case {C H : Type*} [CommGroup C] [TopologicalSpace C]
       change _ = f h * (starRingEnd ℂ) (f h)
       rw [Complex.mul_conj, Complex.normSq_eq_norm_sq]
     rw [integral_complex_ofReal, Complex.ofReal_eq_zero] at h2
-    refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := μ) (x := 1)
+    refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := μ) (x := 1)
       (f := fun h => ‖f h‖ ^ 2) (by fun_prop) (HasCompactSupport.of_compactSpace _)
       (fun h => by positivity) ?_).ne' h2
     have : f 1 = inner ℂ w w := by

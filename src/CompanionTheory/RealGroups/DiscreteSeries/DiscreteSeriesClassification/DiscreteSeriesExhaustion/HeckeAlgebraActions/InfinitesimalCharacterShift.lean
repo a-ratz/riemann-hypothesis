@@ -771,8 +771,8 @@ theorem phiB_E (hS : ScalChar X χ) (hB : BackStable) (a b : Fin (m + 1)) (v : X
   dsimp only
   by_cases h : c = b
   · subst h
-    rw [if_pos rfl, ← Pr_tensE, tensE_single, if_pos rfl, map_add (f := _), add_sub_cancel_right]
-  · rw [if_neg h, sub_zero, ← Pr_tensE, tensE_single, if_neg (Ne.symm h), add_zero]
+    rw [ite_eq_left rfl, ← Pr_tensE, tensE_single, ite_eq_left rfl, map_add (f := _), add_sub_cancel_right]
+  · rw [ite_eq_right h, sub_zero, ← Pr_tensE, tensE_single, ite_eq_right (Ne.symm h), add_zero]
 
 theorem unit_of_dualFacts (hDF : DualFacts) : Unit := by
   rintro (_ | m) X χ s hB hS hfree hsimp hom
@@ -1115,7 +1115,7 @@ private theorem apply_mem_of_mem_backSub_of_iso_simple (hD : DualFacts) (X S : G
   obtain ⟨e, he⟩ := hI
   have hZc : HasChar (S.sub Z hZ) χ' :=
     fsb_hasChar_inj (S.sub Z hZ) S Z.subtype (fun a b v => rfl) Z.injective_subtype χ' hS
-  haveI : Nontrivial (S.sub Z hZ).V := Submodule.nontrivial_iff_ne_bot.mpr hZb
+  have : Nontrivial (S.sub Z hZ).V := Submodule.nontrivial_iff_ne_bot.mpr hZb
   have hne := (hD n (S.sub Z hZ) χ' hZc).2.2 s inferInstance (fun r => by rw [hz]; exact h2 r)
   rw [hz] at hne
   obtain ⟨g0, hg0, hg0ne⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
@@ -1168,9 +1168,9 @@ theorem fsb_simple_of_back (hD : DualFacts) (X S : GMod n) (χ' : Fin n → ℂ)
     (hX : IsSimple X) (hS : HasChar S χ') (h1 : ∀ t, t ≠ s → χ' t ≠ z) (h2 : ∀ r, χ' r ≠ z - 1)
     (hB : ∀ a b, ∀ x ∈ backSub S z, (tensD S).E a b x ∈ backSub S z)
     (hI : Iso (back S z hB) X) : IsSimple S := by
-  haveI hnt : Nontrivial ↥(backSub S z) := by
+  have hnt : Nontrivial ↥(backSub S z) := by
     obtain ⟨e, -⟩ := hI
-    haveI := hX.1
+    have := hX.1
     exact e.symm.injective.nontrivial
   refine ⟨?_, fun Z hZ => ?_⟩
   · obtain ⟨⟨g, hg⟩, hne⟩ := exists_ne (0 : ↥(backSub S z))
@@ -1184,8 +1184,8 @@ theorem fsb_simple_of_back (hD : DualFacts) (X S : GMod n) (χ' : Fin n → ℂ)
       have hA := apply_mem_of_mem_backSub_of_iso_simple hD X S χ' s z hz hX hS h2 hB hI Z hZ hZb
       have hQc : HasChar (fsbQuot S Z hZ) χ' :=
         fsb_hasChar_surj S (fsbQuot S Z hZ) Z.mkQ (fun a b v => rfl) (Submodule.mkQ_surjective Z) χ' hS
-      obtain ⟨v, -, hv⟩ := SetLike.exists_of_lt (lt_top_iff_ne_top.mpr hZt)
-      haveI : Nontrivial (fsbQuot S Z hZ).V :=
+      obtain ⟨v, -, hv⟩ := IsConcreteLE.exists_of_lt (lt_top_iff_ne_top.mpr hZt)
+      have : Nontrivial (fsbQuot S Z hZ).V :=
         ⟨⟨Submodule.Quotient.mk v, 0, fun h0 => hv ((Submodule.Quotient.mk_eq_zero Z).mp h0)⟩⟩
       have hne := (hD n (fsbQuot S Z hZ) χ' hQc).2.2 s inferInstance (fun r => by rw [hz]; exact h2 r)
       rw [hz] at hne
@@ -1473,7 +1473,7 @@ theorem qdet_ext {n : ℕ} (E : Fin n → Fin n → Module.End ℂ M) (g : ℂ[X
       (Set.Infinite.mono ?_ (Set.finite_singleton u₀).infinite_compl)
     intro u hu
     have := h u hu
-    simp only [Set.mem_setOf_eq, eval_mul, eval_C]
+    simp only [Set.mem_ofPred_eq, eval_mul, eval_C]
     rw [← hq, this, map_smul, smul_eq_mul]
   rw [map_sub, hq, map_smul, e, eval_mul, eval_C, smul_eq_mul, sub_self]
 

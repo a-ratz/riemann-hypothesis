@@ -270,9 +270,9 @@ theorem exists_basis_integral_coords : ∀ (F : IntermediateField ℚ ℂ) [Numb
   let R := (la.valuation F).integer
   have hsm : ∀ (r : R) (z : ℂ), r • z = (((r : F) : ℂ)) * z := fun r z => rfl
   let N : Submodule R ℂ := Submodule.span R S
-  haveI : Module.Finite R N := Module.Finite.span_of_finite R hS
-  haveI : Module.IsTorsionFree R N := inferInstance
-  haveI : Module.Free R N := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite R N := Module.Finite.span_of_finite R hS
+  have : Module.IsTorsionFree R N := inferInstance
+  have : Module.Free R N := Module.free_of_finite_type_torsion_free'
   let b := (Module.Free.chooseBasis R N).reindex (Fintype.equivFin _)
   let m := Fintype.card (Module.Free.ChooseBasisIndex R N)
   let β : Fin m → ℂ := fun k => ((b k : N) : ℂ)
@@ -309,7 +309,7 @@ theorem exists_basis_integral_coords : ∀ (F : IntermediateField ℚ ℂ) [Numb
     intro k
     set_option synthInstance.maxHeartbeats 100000 in
       rw [hxs, map_sum]
-    simp only [map_smul, key, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [map_smul, key, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   refine ⟨?_, fun k => ?_⟩
   · conv_lhs => rw [hxs]
     refine Finset.sum_congr rfl fun j _ => ?_
@@ -343,7 +343,7 @@ theorem exists_cusp_thetaSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       (fun σ hσ => (Formalism.L2.PjFree.isUnf_ofPj (U σ)).2 (hU σ hσ)) hA hlev hA₂ hnab La N hun hT hO a hD hL cs e he w P hcs hP
       f hf hval
   · refine GlobalTheory.ClassSumUnique.sec_eq_of_geometric hf' hf fun k _ _ _ y => ?_
-    letI : Algebra d.c₂.F k := ((algebraMap c.F k).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+    let : Algebra d.c₂.F k := ((algebraMap c.F k).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
     have hk : ∀ a : c.F, algebraMap d.c₂.F k (d.eF a) = algebraMap c.F k a := fun a => by
       show algebraMap c.F k (d.eF.symm (d.eF a)) = _
       rw [AlgEquiv.symm_apply_apply]
@@ -401,8 +401,8 @@ theorem theta_transSum {D : D7} {H : Geo.Tor.Host D.host.E} {Dw : Datum H} {ψ :
     (hψ : IsStdChar D ψ (-1)) (V W : HSp D) (l : Geo.Tor.Level H) (ι : Dw.La →ₗ[𝓞 D.host.E] (Fin W.rank → D.host.E))
     (e : AE D) {f₀ : WO V W → ℂ} (hf : IsThetaFunO ψ V W f₀) (w : (Fin V.rank → LevQ Dw l) → ℂ) :
     IsThetaFunO ψ V W (transSum ψ V W l ι e f₀ w) := by
-  haveI := GlobalTheory.AdTh.ShortSeries.finite_levQ Dw l
-  letI : Fintype (Fin V.rank → LevQ Dw l) := Fintype.ofFinite _
+  have := GlobalTheory.AdTh.ShortSeries.finite_levQ Dw l
+  let : Fintype (Fin V.rank → LevQ Dw l) := Fintype.ofFinite _
   unfold transSum
   rw [finsum_eq_sum_of_fintype]
   refine GlobalTheory.WeilVacMove.isTheta_smul _ ?_
@@ -497,8 +497,8 @@ theorem thetaKO_transSum_eq_short_series : ∀ (D : D7) (H : Geo.Tor.Host D.host
     (fun q => (p q).2) hY hp w
   obtain ⟨hP, -, hV0, hW0, hVs, hWs, hVstd, -, hvac⟩ := hVP
   have hψ := hP.weil.std
-  haveI := finite_levQ Dw l₂
-  letI : Fintype (Fin V.rank → LevQ Dw l₂) := Fintype.ofFinite _
+  have := finite_levQ Dw l₂
+  let : Fintype (Fin V.rank → LevQ Dw l₂) := Fintype.ofFinite _
   obtain ⟨hhs, hks, -, hlat, hV1, -⟩ := GlobalTheory.MovedLat.moved_lattices D _ _ _ _ hV0 hW0 hVs hWs h k
   obtain ⟨-, -, hmv, -⟩ := GlobalTheory.MovedLat.moved_lattices D _ _ _ _ hV0 hW0 hVs hWs 1 k
   rw [show fin V 1 = 1 from map_one _, hV1] at hmv
@@ -588,9 +588,9 @@ theorem thetaSum_value_emb : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (Dw : Datu
   intro D H Dw l Xo c r σ hrel hσ U hA hodd ψ θ V W χV χW om ΛV ΛW s f₀ hVP hr dict ι x₀ BW mu cc hD hF hcc d hlev hA₂
     hnab e he bad N h Λ e' Ps y hbad he' hPs hh hs hy hΛ hun hT hN lt a hlt hDom T _ w P f hPH hth g
   have := GlobalTheory.AdTh.ShortSeries.finite_levQ Dw d.l₂
-  letI : Fintype (Fin V.rank → LevQ Dw d.l₂) := Fintype.ofFinite _
-  letI : Algebra c.F ℂ := σ.toAlgebra
-  letI : Algebra d.c₂.F ℂ := (σ.comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+  let : Fintype (Fin V.rank → LevQ Dw d.l₂) := Fintype.ofFinite _
+  let : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra d.c₂.F ℂ := (σ.comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
   obtain ⟨hU, hiota, hMod, hX0, g0, e0, F0, ik, φ0, th0, hth0, hDL⟩ := hD
   have hrt : (H.rt : D.host.E) = D.host.sqrtMinusD := hiota.rt
   have h1 : 1 ≤ r := hodd.pos
@@ -625,7 +625,7 @@ theorem thetaSum_value_emb : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (Dw : Datu
   obtain ⟨vt, hvt, hev⟩ := hth ℂ halg _ y₂ hov₂
 
   have hrdU : rdU U f (dict g).1 (dict g).2 =
-      evR Xo c f (unC (Formalism.L2.PjFree.Unf.ofPj U) (dict g).1 ⟨(dict g).2, hx⟩) := dif_pos hx
+      evR Xo c f (unC (Formalism.L2.PjFree.Unf.ofPj U) (dict g).1 ⟨(dict g).2, hx⟩) := dite_eq_left hx
 
   have hcsv : evR d.Xo₂ d.c₂ 1 y₂ = 1 := evalAt_one _ _ y₂
     (GlobalTheory.Frames.allTest_of_secBaseChange GlobalTheory.firstFiveLaws.1.secBaseChange _ H Dw d.l₂ d.Xo₂ d.c₂ ℂ y₂)
@@ -664,7 +664,7 @@ theorem thetaSum_value_emb : ∀ (D : D7) (H : Geo.Tor.Host D.host.E) (Dw : Datu
     have hm' : ∀ τ, τ ∉ (U.X (dict g).1).Ψ →
         Dw.mult τ ≤ (U.X (dict g).1).p0 := fun τ hτ => by
       unfold Datum.mult
-      rw [if_neg fun h => hτ ((hΨ τ).2 h), hp0]
+      rw [ite_eq_right fun h => hτ ((hΨ τ).2 h), hp0]
     obtain ⟨h1', h2'⟩ := GlobalTheory.AdTh.Dic.letter Dc hrel hm' ℓ
     obtain ⟨g1, g2, g3⟩ := hvr (Dc.eL ℓ)
     refine AddValue.fvar_eq (τ := ℓ.1) (i := ℓ.2.1) (p := Dw.p) (j := ℓ.2.2) ⟨g2.trans h1', ?_⟩ (hlt ℓ) hne
@@ -730,7 +730,7 @@ theorem exists_expansion (F : IntermediateField ℚ ℂ) [NumberField F] (σ : F
     ∃ (m : ℕ) (β : Fin m → ℂ) (P : Fin m → I → MvPolynomial (Letter T r n) F), (∀ k, β k ∈ O) ∧
       (∀ k q, P k q ∈ HHa r n F cj isX a ∧ ∀ mo, la.valuation F ((P k q).coeff mo) ≤ 1) ∧
       ∀ q, ∑ k, β k • MvPolynomial.map σ (P k q) = u q • Q := by
-  haveI : Countable F := Countable.of_equiv _ (Module.finBasis ℚ F).equivFun.toEquiv.symm
+  have : Countable F := Countable.of_equiv _ (Module.finBasis ℚ F).equivFun.toEquiv.symm
   obtain ⟨τ, hτ⟩ := GlobalTheory.CompRat.exists_ringEquiv_complex_comp_eq F (algebraMap F ℂ) σ
   obtain ⟨m, β, lam, hβ, hlam⟩ := exists_basis_integral_coords F la (O.comap (τ : ℂ →+* ℂ))
     (fun x hx => by
@@ -785,8 +785,8 @@ theorem exists_family {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Ge
 theorem exists_forms_of_transSum : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : InfFam D) (V W : HSp D) (χV χW : (AE D)ˣ →* Circle) (om : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)) (ΛV : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)) (ΛW : Submodule (𝓞 D.host.E) (Fin W.rank → D.host.E)) (sW : D.what₂.Tau → Matrix (Fin W.rank) (Fin W.rank) ℂ) (f₀ : WO V W → ℂ), VacPair ψ θ V W χV χW om ΛV ΛW sW f₀ → ∀ (H : Geo.Tor.Host D.host.E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (σ : c.F →+* ℂ), (∀ τ, relab c σ τ = τ) → GoodEmb c σ → ∀ (U : Unf Xo c σ r), l.A = 1 → Odd r → ∀ (hr : W.rank = r) (dict : GA D W → Σ k, Frame (U.X k).Ψ r) (ι : Dw.La →ₗ[𝓞 D.host.E] (Fin W.rank → D.host.E)) (x₀ : (D.host.E →+* ℂ) → Matrix (Fin r) (Fin r) ℂ) (BW : D.what₂.Tau → Matrix (Fin W.rank) (Fin W.rank) ℂ) (mu : GA D W → ℂ) (cc : U.Comp → ℂ), IsDict U W hr dict ι x₀ → FrameTie U W hr x₀ sW BW → CcIs θ V W hr U dict mu x₀ om f₀ cc → ∀ e : AE D, IsHalfIdem l e → ∀ (bad N : ℕ) (h : GA D V) (Λ : GenLat D.host.E V.rank) (e' : AE D) (Ps : Finset (Formalism.L2.DIV.Pl D.host.E)) (y : (AE D)ˣ), l.M ∣ bad → IsIdemSum e' Ps → (∀ PP ∈ Ps, ((bad : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal) → h ∈ GfC V → SuppAt e' V h → IsDetAt e' V h y → (∀ v, v ∈ Λ.La ↔ (fun j => star (v j)) ∈ Bridge.hLat V (GlobalTheory.ExportSeries.finPt V h)) → Λ.Unimod → Λ.TrivAt l.M → Λ.LevOK N l.M → ∀ (lt : LtN Dw V.rank ≃ FVar D W.rank V.rank) (wa : (D.host.E →+* ℂ) × ℕ → ℕ), IsLetters Dw lt → Dom wa V.rank → LastPos Dw wa → ∀ (la : HeightOneSpectrum (𝓞 c.F)) (p : ℕ), p.Prime → (p : 𝓞 c.F) ∈ la.asIdeal → l.GoodAt p → ∀ O : Subring ℂ, ValRing σ la O → ∀ u : (Fin V.rank → LevQ Dw l) → ℂ, (∀ q, u q ∈ O) → ∀ Q ∈ HHa Dw.mult V.rank ℂ ComplexEmbedding.conjugate (InPsi H) (fun τ i => wa (τ, i)), (∀ mo, Q.coeff mo ∈ O) → ∃ (m : ℕ) (β : Fin m → ℂ) (f : Fin m → Rul Xo c), (∀ k, β k ∈ O ∧ f k ∈ sec Xo c wa V.rank ∧ rdU U (f k) ∈ Formalism.L2.Pj.holSub0 U.X (laU U wa V.rank) ∧ GlobalTheory.GoodPts.BddAll Xo c la (((Λ.mIdx N (Dw.p + Dw.q) * Nat.card (Fin V.rank → LevQ Dw l) : ℕ) : c.F) * ((2 * NumberField.discr D.host.E * N : ℤ) : c.F) ^ degA Dw wa) (f k)) ∧ ∀ g : GA D W, thetaKO om h g (stdF ψ θ V W sW BW (transSum ψ V W l ι e f₀ u) (MvPolynomial.rename lt Q)) = (-1) ^ degA Dw wa * clsScal χW y Λ r * ∑ k, β k * ((lieFac Dw (xiR D) wa : ℂ) * (cc (dict g).1 * mu g * rdU U (f k) (dict g).1 (dict g).2)) := by
   intro D ψ θ V W χV χW om ΛV ΛW s f₀ hP H Dw l Xo c r σ hrel hσ U hA hodd hr dict ι x₀ BW mu cc hD hF hcc e he bad N h Λ e' Ps y
     hbad he' hPs hh hs hy hΛ hun hT hN lt a hlt hDom hLast la p hp hpl hgood O hO u hu Q hQ hQO
-  haveI := GlobalTheory.AdTh.ShortSeries.finite_levQ Dw l
-  letI : Fintype (Fin V.rank → LevQ Dw l) := Fintype.ofFinite _
+  have := GlobalTheory.AdTh.ShortSeries.finite_levQ Dw l
+  let : Fintype (Fin V.rank → LevQ Dw l) := Fintype.ofFinite _
   obtain ⟨U', rfl, hU'⟩ := exists_family U hD.1 hodd.pos
   obtain ⟨d, -, -, hl, -, -, -, hlev, hnab⟩ := GlobalTheory.LevelCover.exists_deltaDat_isLev _ H Dw l Xo c (hD.1.1 ▸ hodd.pos) V.rank 1 ⊤
     l Xo c rfl ⟨dvd_rfl, le_rfl, dvd_rfl⟩ (Nat.mul_one _).symm (Nat.coprime_one_left _) (Ideal.mul_top _).symm (top_sup_eq _)

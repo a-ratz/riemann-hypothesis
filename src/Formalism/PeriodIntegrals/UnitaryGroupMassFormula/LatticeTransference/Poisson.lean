@@ -163,7 +163,7 @@ private theorem summable_exp_neg_mul_norm_add_sq {E : Type} [NormedAddCommGroup 
         linarith
       simp [hz, h0]
     · have hu : 0 < ‖(z : E) + w‖ := norm_pos_iff.2 hz
-      simp only [hz, if_false, add_zero, sub_neg_eq_add]
+      simp only [hz, ite_false, add_zero, sub_neg_eq_add]
       exact key _ hu
   · refine (hs.mul_left C).add ?_
     apply summable_of_hasFiniteSupport
@@ -249,7 +249,7 @@ private theorem mFourierCoeff_periodization_eq_integral {ι : Type} [Fintype ι]
     exact MeasurableSet.iInter fun i => (measurable_pi_apply i) measurableSet_Ioc
   have hSmem : ∀ k s, s ∈ S k ↔ ∀ i, ⌈s i⌉ = k i + 1 := by
     intro k s
-    simp only [S, Set.mem_setOf_eq, Set.mem_Ioc]
+    simp only [S, Set.mem_ofPred_eq, Set.mem_Ioc]
     refine forall_congr' fun i => ?_
     rw [Int.ceil_eq_iff]
     push_cast
@@ -277,7 +277,7 @@ private theorem mFourierCoeff_periodization_eq_integral {ι : Type} [Fintype ι]
   have htrans : ∀ k : ι → ℤ, (fun s => s + fun i => (k i : ℝ)) ⁻¹' S k = S 0 := by
     intro k
     ext s
-    simp only [S, Set.mem_preimage, Set.mem_setOf_eq, Set.mem_Ioc, Pi.add_apply, Pi.zero_apply,
+    simp only [S, Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_Ioc, Pi.add_apply, Pi.zero_apply,
       Int.cast_zero, zero_add]
     constructor
     · intro hs i
@@ -351,7 +351,7 @@ private theorem integral_fourier_gaussian_eq {E : Type} [NormedAddCommGroup E] [
       ∫ s : ι → ℝ, Complex.exp (-2 * π * Complex.I * (inner ℝ y (φ.symm s) : ℂ)) *
           (Real.exp (-π * t * ‖φ.symm s‖ ^ 2) : ℂ) =
         ((κ * t ^ (-(finrank ℝ E : ℝ) / 2) * Real.exp (-π * ‖y‖ ^ 2 / t) : ℝ) : ℂ) := by
-  haveI : (MeasureTheory.Measure.map φ.symm MeasureTheory.volume).IsAddHaarMeasure :=
+  have : (MeasureTheory.Measure.map φ.symm MeasureTheory.volume).IsAddHaarMeasure :=
     φ.symm.isAddHaarMeasure_map _
   set ν : MeasureTheory.Measure E := MeasureTheory.Measure.map φ.symm MeasureTheory.volume with hνdef
   have hν := MeasureTheory.Measure.isAddLeftInvariant_eq_smul ν (MeasureTheory.volume : MeasureTheory.Measure E)
@@ -517,8 +517,8 @@ private theorem exists_coords_zLattice_dual_basis {E : Type} [NormedAddCommGroup
 
 theorem poissonGauss : PoissonGauss := by
   intro E _ _ _ Λ _ _
-  letI : MeasurableSpace E := borel E
-  haveI : BorelSpace E := ⟨rfl⟩
+  let : MeasurableSpace E := borel E
+  have : BorelSpace E := ⟨rfl⟩
   obtain ⟨ι, _, φ, B, D, hB, hD⟩ := exists_coords_zLattice_dual_basis Λ
   obtain ⟨κ, hκ, hInt, hG⟩ := integral_fourier_gaussian_eq φ
   have sum1 : ∀ t : ℝ, 0 < t → ∀ v : E,
@@ -528,7 +528,7 @@ theorem poissonGauss : PoissonGauss := by
     ring_nf
   have sum2 : ∀ t : ℝ, 0 < t →
       Summable fun y : dualLat Λ => Real.exp (-π * ‖(y : E)‖ ^ 2 / t) := by
-    letI : DiscreteTopology (dualLat Λ) := instDiscreteDualLat Λ
+    let : DiscreteTopology (dualLat Λ) := instDiscreteDualLat Λ
     intro t ht
     refine (summable_exp_neg_mul_norm_add_sq (dualLat Λ) (a := π / t) (by positivity) 0).congr fun z => ?_
     rw [add_zero]

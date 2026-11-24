@@ -83,7 +83,7 @@ private theorem exists_linearIndependent_append_of_codim {r : ℕ} (w : Fin r �
     obtain ⟨j, hj⟩ : ∃ j, w j ∉ Submodule.span ℚ (Set.range u0) := by
       by_contra hcon
       push_neg at hcon
-      haveI : Nonempty (Fin r) := ⟨⟨0, by omega⟩⟩
+      have : Nonempty (Fin r) := ⟨⟨0, by omega⟩⟩
       have htop : Submodule.span ℚ (Set.range w) = ⊤ :=
         hw.span_eq_top_of_card_eq_finrank (by simp)
       have hle : Submodule.span ℚ (Set.range w) ≤ Submodule.span ℚ (Set.range u0) :=
@@ -138,7 +138,7 @@ theorem neg_log_det_le {r' r : ℕ} (hr : r' ≤ r) {G' : Matrix (Fin r') (Fin r
   have hNq : (N.map (Int.cast : ℤ → ℚ)).det ≠ 0 := by
     rw [← Int.cast_det]; exact_mod_cast hN
   have hw : LinearIndependent ℚ (N.map (Int.cast : ℤ → ℚ)).col :=
-    Matrix.linearIndependent_cols_iff_isUnit.mpr ((Matrix.isUnit_iff_isUnit_det _).mpr hNq.isUnit)
+    linearIndependent_col_iff_isUnit.mpr ((Matrix.isUnit_iff_isUnit_det _).mpr hNq.isUnit)
   obtain ⟨m, f, hmr, hLI⟩ := LinearIndependentExtension.exists_append_li _ hu0 _ hw
   subst hmr
   set U : Matrix (Fin (r' + m)) (Fin (r' + m)) ℤ :=
@@ -150,7 +150,7 @@ theorem neg_log_det_le {r' r : ℕ} (hr : r' ≤ r) {G' : Matrix (Fin r') (Fin r
     · rw [Fin.append_left]; simp [U, Matrix.col]
     · rw [Fin.append_right]; simp [U, Matrix.col]; rfl
   have hUdet : U.det ≠ 0 := by
-    rw [← hUq, Matrix.linearIndependent_cols_iff_isUnit, Matrix.isUnit_iff_isUnit_det,
+    rw [← hUq, linearIndependent_col_iff_isUnit, Matrix.isUnit_iff_isUnit_det,
       isUnit_iff_ne_zero, ← Int.cast_det] at hLI
     exact_mod_cast hLI
   set UC := U.map (Int.cast : ℤ → ℂ) with hUC

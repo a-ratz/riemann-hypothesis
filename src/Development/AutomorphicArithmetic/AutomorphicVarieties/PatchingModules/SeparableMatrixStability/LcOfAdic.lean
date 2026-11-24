@@ -95,7 +95,7 @@ private theorem topFG_subgroup_of_finiteIndex_of_isOpen {G : Type} [Group G] [To
     · intro hx
       exact ⟨⟨⟨x, hx⟩, x.2⟩, rfl⟩
   rw [hr]
-  exact hsd.preimage hH.isOpenMap_subtype_val
+  exact hsd.preimage hH.isOpenMap_subtypeVal
 
 private theorem isLocallyConstant_of_comp_surjective_of_compactSpace {X Y Z : Type} [TopologicalSpace X] [TopologicalSpace Y] [CompactSpace X] [T2Space Y]
     (f : X → Y) (hc : Continuous f) (hs : Function.Surjective f) (g : Y → Z)
@@ -117,7 +117,7 @@ private theorem t1_lemma {l : ℕ} [Fact l.Prime] {L : Loc} {G0 G1 G2 : Glob l L
     (hu : ∀ u g, z1 (G1.φu u g) = z2 (G2.φu u g))
     (hm : z2 ∈ SelZ G2.frame t (fun g => ρ (h2.p₀ g)) w wi V) :
     z1 ∈ SelZ G1.frame t (fun g => ρ (h1.p₀ g)) w wi V := by
-  simp only [SelZ, Set.mem_setOf_eq] at hm ⊢
+  simp only [SelZ, Set.mem_ofPred_eq] at hm ⊢
   obtain ⟨hV, hA, hcoc, hconj, hU, hL⟩ := hm
   have hz2 : IsLocallyConstant z2 := isLocallyConstant_matrix_of_adicCont_of_isNilpotent t ht z2 hA
   have hz1 : IsLocallyConstant z1 := by
@@ -186,11 +186,11 @@ theorem UpperTheory.V.Pa.t1 :
       exact y.2
     exact ⟨⟨x, hmem⟩, Subtype.ext hx⟩
   have c0 : ∀ N, Continuous (Λ.π0 N) := fun N =>
-    Continuous.subtype_mk ((Λ.π_cont N).comp continuous_subtype_val) _
+    Continuous.subtype_mk ((Λ.π_cont N).comp continuous_subtypeVal) _
   have co : Continuous Λ.πo0 :=
-    Continuous.subtype_mk (Λ.πo_cont.comp continuous_subtype_val) _
+    Continuous.subtype_mk (Λ.πo_cont.comp continuous_subtypeVal) _
   have ch : ∀ (G : Glob l L) (h : G.Hom G0), Continuous h.p₀ := fun G h =>
-    Continuous.subtype_mk (h.cont.comp continuous_subtype_val) _
+    Continuous.subtype_mk (h.cont.comp continuous_subtypeVal) _
   let κ : Λ.Ph0 → Λ.Ph0 := fun x =>
     ⟨Λ.ct * x * Λ.ct⁻¹, (MonoidHom.normal_ker _).conj_mem _ x.2 _⟩
   have hκN : ∀ N x, Λ.π0 N (κ x) = (T.GN N).frame.conj (Λ.π0 N x) := by
@@ -279,14 +279,14 @@ theorem UpperTheory.V.Pa.t1 :
     intro l _ L G0 T Λ Z c hc
     set K0 : Subgroup Λ.Ph := (Λ.G.η.comp Λ.πo).ker with hK0def
     have hK0 : IsOpen (K0 : Set Λ.Ph) := Λ.Ph0_open
-    haveI : CompactSpace Λ.Ph0 := isCompact_iff_compactSpace.mp (K0.isClosed_of_isOpen hK0).isCompact
+    have : CompactSpace Λ.Ph0 := isCompact_iff_compactSpace.mp (K0.isClosed_of_isOpen hK0).isCompact
     have hS : IsOpen (stabR c : Set Λ.Ph0) := stabR_open c hc
     have hO : IsOpen (((stabR c).map K0.subtype : Subgroup Λ.Ph) : Set Λ.Ph) := by
       rw [Subgroup.coe_map]
-      exact hK0.isOpenMap_subtype_val _ hS
+      exact hK0.isOpenMap_subtypeVal _ hS
     let O : OpenSubgroup Λ.Ph := ⟨(stabR c).map K0.subtype, hO⟩
-    haveI : Finite (Λ.Ph ⧸ O.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ hO
-    haveI : O.toSubgroup.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+    have : Finite (Λ.Ph ⧸ O.toSubgroup) := Subgroup.quotient_finite_of_isOpen _ hO
+    have : O.toSubgroup.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
     let V : OpenNormalSubgroup Λ.Ph :=
       { toSubgroup := O.toSubgroup.normalCore
         isOpen' := Subgroup.isOpen_of_isClosed_of_finiteIndex _ (O.toSubgroup.normalCore_isClosed O.isClosed) }
@@ -306,15 +306,15 @@ theorem UpperTheory.V.Pa.t1 :
       [TotallyDisconnectedSpace P] (K : Subgroup P) (hK : IsOpen (K : Set P)) (c : K → Z) (hc : IsLocallyConstant c) :
       ∃ V : OpenNormalSubgroup P, ∀ g g' : K, (g : P)⁻¹ * g' ∈ V → c g = c g' := by
     have hKc : IsClosed (K : Set P) := Subgroup.isClosed_of_isOpen K hK
-    haveI : CompactSpace K := isCompact_iff_compactSpace.mp hKc.isCompact
+    have : CompactSpace K := isCompact_iff_compactSpace.mp hKc.isCompact
     have hfin : (Set.range c).Finite := hc.range_finite
     have hS : ∀ z, ∃ W ∈ nhds (1 : P), ∀ x ∈ (Subtype.val '' (c ⁻¹' {z}) : Set P), ∀ w ∈ W,
         x * w ∈ (Subtype.val '' (c ⁻¹' {z}) : Set P) := by
       intro z
       have hcpt : IsCompact (Subtype.val '' (c ⁻¹' {z}) : Set P) :=
-        (hc.isClosed_fiber z).isCompact.image continuous_subtype_val
+        (hc.isClosed_fiber z).isCompact.image continuous_subtypeVal
       have ho : IsOpen (Subtype.val '' (c ⁻¹' {z}) : Set P) :=
-        hK.isOpenMap_subtype_val _ (hc.isOpen_fiber z)
+        hK.isOpenMap_subtypeVal _ (hc.isOpen_fiber z)
       open scoped Pointwise in
       obtain ⟨W, hW, hWS⟩ := compact_open_separated_mul_right hcpt ho subset_rfl
       open scoped Pointwise in
@@ -353,15 +353,15 @@ theorem UpperTheory.V.Pa.t1 :
     intro l _ L G0 T Λ Z ρ hρ
     have hKo : IsOpen ((G0.η.ker : Subgroup G0.Γ) : Set G0.Γ) := G0.η_open
     have hKc : IsClosed ((G0.η.ker : Subgroup G0.Γ) : Set G0.Γ) := Subgroup.isClosed_of_isOpen _ hKo
-    haveI : CompactSpace G0.G₀ := isCompact_iff_compactSpace.mp hKc.isCompact
+    have : CompactSpace G0.G₀ := isCompact_iff_compactSpace.mp hKc.isCompact
     have hfin : (Set.range ρ).Finite := hρ.range_finite
     have hS : ∀ z, ∃ V ∈ nhds (1 : G0.Γ), ∀ v ∈ V, ∀ x ∈ (Subtype.val '' (ρ ⁻¹' {z}) : Set G0.Γ),
         v * x ∈ (Subtype.val '' (ρ ⁻¹' {z}) : Set G0.Γ) := by
       intro z
       have hc : IsCompact (Subtype.val '' (ρ ⁻¹' {z}) : Set G0.Γ) :=
-        (hρ.isClosed_fiber z).isCompact.image continuous_subtype_val
+        (hρ.isClosed_fiber z).isCompact.image continuous_subtypeVal
       have ho : IsOpen (Subtype.val '' (ρ ⁻¹' {z}) : Set G0.Γ) :=
-        hKo.isOpenMap_subtype_val _ (hρ.isOpen_fiber z)
+        hKo.isOpenMap_subtypeVal _ (hρ.isOpen_fiber z)
       open scoped Pointwise in
       obtain ⟨V, hV, hVS⟩ := compact_open_separated_mul_left hc ho subset_rfl
       open scoped Pointwise in
@@ -389,12 +389,12 @@ theorem UpperTheory.V.Pa.t1 :
   refine ⟨hact, ?_, ?_⟩
   · intro z hz
     have zlc : IsLocallyConstant z := by
-      simp only [SelZ, Set.mem_setOf_eq] at hz
+      simp only [SelZ, Set.mem_ofPred_eq] at hz
       exact isLocallyConstant_matrix_of_adicCont_of_isNilpotent t ht z hz.2.1
     have hcm : (fun g => z (Λ.πo0 g)) ∈ C := by
       refine ⟨zlc.comp_continuous co, ?_⟩
       intro g h
-      simp only [SelZ, Set.mem_setOf_eq] at hz
+      simp only [SelZ, Set.mem_ofPred_eq] at hz
       show z (Λ.πo0 (g * h)) = z (Λ.πo0 g) + ρ (Λ.h.p₀ (Λ.πo0 g)) * z (Λ.πo0 h) * ρ (Λ.h.p₀ (Λ.πo0 g⁻¹))
       rw [map_mul, hz.2.2.1, map_inv Λ.πo0 g]
     obtain ⟨hd, hl⟩ := hcs _ hcm
@@ -404,12 +404,12 @@ theorem UpperTheory.V.Pa.t1 :
     exact t1_lemma (T.h N) Λ.h (Λ.π0 N) Λ.πo0 (s0 N) (c0 N) co κ (hκN N) hκo t ht ρ hact w wi V zN z hzN hv hu hz
   · intro zN hzN
     have zlc : IsLocallyConstant zN := by
-      simp only [SelZ, Set.mem_setOf_eq] at hzN
+      simp only [SelZ, Set.mem_ofPred_eq] at hzN
       exact isLocallyConstant_matrix_of_adicCont_of_isNilpotent t ht zN hzN.2.1
     have hcm : (fun g => zN (Λ.π0 N g)) ∈ C := by
       refine ⟨zlc.comp_continuous (c0 N), ?_⟩
       intro g h
-      simp only [SelZ, Set.mem_setOf_eq] at hzN
+      simp only [SelZ, Set.mem_ofPred_eq] at hzN
       show zN (Λ.π0 N (g * h)) = zN (Λ.π0 N g) + ρ (Λ.h.p₀ (Λ.πo0 g)) * zN (Λ.π0 N h) * ρ (Λ.h.p₀ (Λ.πo0 g⁻¹))
       rw [map_mul, hzN.2.2.1, ← map_inv (Λ.π0 N) g, hact, hact]
     obtain ⟨hd, hl⟩ := hcs _ hcm

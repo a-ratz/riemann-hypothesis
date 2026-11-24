@@ -76,7 +76,7 @@ theorem away {Ω L : Type} [Field Ω] [Field L] [Algebra Ω L] (C E : Subalgebra
     (hv : v ∈ C) (hv0 : v ≠ 0) (hCE : C ≤ E) (hE : E = Algebra.adjoin Ω ((C : Set L) ∪ {v⁻¹})) :
     letI := (Subalgebra.inclusion hCE).toRingHom.toAlgebra
     IsLocalization.Away (⟨v, hv⟩ : C) E := by
-  letI := (Subalgebra.inclusion hCE).toRingHom.toAlgebra
+  let := (Subalgebra.inclusion hCE).toRingHom.toAlgebra
   have hvi : v⁻¹ ∈ E := hE ▸ Algebra.subset_adjoin (Set.mem_union_right _ rfl)
   refine ⟨?_, ?_, ?_⟩
   · rintro ⟨y, n, rfl⟩
@@ -97,16 +97,16 @@ theorem LeafGlueExists_of : LeafGlueExists := by
   set D := Dr Ω A u
   have hAD : A ≤ D := le_Dr_A A u
   have hBD : B ≤ D := le_Dr_B A B u hadj
-  letI iAD : Algebra A D := (Subalgebra.inclusion hAD).toRingHom.toAlgebra
-  letI iBD : Algebra B D := (Subalgebra.inclusion hBD).toRingHom.toAlgebra
-  haveI : IsLocalization.Away (⟨u, huA⟩ : A) D := away A D u huA hu hAD rfl
-  haveI : IsLocalization.Away (⟨u⁻¹, huB⟩ : B) D :=
+  let iAD : Algebra A D := (Subalgebra.inclusion hAD).toRingHom.toAlgebra
+  let iBD : Algebra B D := (Subalgebra.inclusion hBD).toRingHom.toAlgebra
+  have : IsLocalization.Away (⟨u, huA⟩ : A) D := away A D u huA hu hAD rfl
+  have : IsLocalization.Away (⟨u⁻¹, huB⟩ : B) D :=
     away B D u⁻¹ huB (inv_ne_zero hu) hBD (by rw [inv_inv]; exact hadj)
   let fA : Sp D ⟶ Sp A := Spec.map (CommRingCat.ofHom (Subalgebra.inclusion hAD).toRingHom)
   let fB : Sp D ⟶ Sp B := Spec.map (CommRingCat.ofHom (Subalgebra.inclusion hBD).toRingHom)
-  haveI hfA : IsOpenImmersion fA := IsOpenImmersion.of_isLocalization (S := D) (⟨u, huA⟩ : A)
-  haveI hfB : IsOpenImmersion fB := IsOpenImmersion.of_isLocalization (S := D) (⟨u⁻¹, huB⟩ : B)
-  haveI : ∀ {i j : WalkingSpan} (f : i ⟶ j), IsOpenImmersion ((span fA fB).map f) := by
+  have hfA : IsOpenImmersion fA := IsOpenImmersion.of_isLocalization (S := D) (⟨u, huA⟩ : A)
+  have hfB : IsOpenImmersion fB := IsOpenImmersion.of_isLocalization (S := D) (⟨u⁻¹, huB⟩ : B)
+  have : ∀ {i j : WalkingSpan} (f : i ⟶ j), IsOpenImmersion ((span fA fB).map f) := by
     intro i j f
     rcases f with _ | j
     · exact inferInstanceAs (IsOpenImmersion (𝟙 _))

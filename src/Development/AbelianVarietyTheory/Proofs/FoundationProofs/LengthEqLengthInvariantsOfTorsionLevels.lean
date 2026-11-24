@@ -178,7 +178,7 @@ theorem exists_continuous_div {X : Type*} [TopologicalSpace X] (f : X → ℤ_[l
     rw [hc x, PadicInt.coe_mul, inv_mul_cancel_left₀ ha']
     rfl
   have h2 : Continuous fun x => (a : ℚ_[l])⁻¹ * (f x : ℚ_[l]) :=
-    continuous_const.mul (continuous_subtype_val.comp hf)
+    continuous_const.mul (continuous_subtypeVal.comp hf)
   rw [← e] at h2
   exact h2
 
@@ -699,7 +699,7 @@ theorem qz_torsion_zmod_embedding (l : ℕ) [Fact l.Prime] :
   · have hl : ((l : ℚ_[l]) ^ r) ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.mpr hp.ne_zero)
     set e : QZ l := QZ.mk l (((l : ℚ_[l]) ^ r)⁻¹) with he
     have hs : Function.Surjective (PadicInt.toZModPow (p := l) r) := by
-      haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ hp.ne_zero⟩
+      have : NeZero (l ^ r) := ⟨pow_ne_zero _ hp.ne_zero⟩
       exact ZMod.ringHom_surjective _
     have hwd : ∀ x x' : ℤ_[l], PadicInt.toZModPow r x = PadicInt.toZModPow r x' →
         x • e = x' • e := by

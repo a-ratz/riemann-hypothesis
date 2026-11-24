@@ -158,9 +158,9 @@ theorem cof_step (X : Pt R Ω) (E : Type) [CommRing E] [Algebra X.A E] [Algebra.
     (ψ : E →+* Ω) (h : ψ.comp (algebraMap X.A E) = X.ψ.toRingHom) :
     ∃ (Y : Pt R Ω) (g : X ⟶ Y) (φ : E →+* Y.A),
       φ.comp (algebraMap X.A E) = g.1.toRingHom ∧ Y.ψ.toRingHom.comp φ = ψ := by
-  letI : Algebra R E := ((algebraMap X.A E).comp (algebraMap R X.A)).toAlgebra
-  haveI : IsScalarTower R X.A E := .of_algebraMap_eq' rfl
-  haveI : Algebra.Etale R E := Algebra.Etale.comp R X.A E
+  let : Algebra R E := ((algebraMap X.A E).comp (algebraMap R X.A)).toAlgebra
+  have : IsScalarTower R X.A E := .of_algebraMap_eq' rfl
+  have : Algebra.Etale R E := Algebra.Etale.comp R X.A E
   let ψ' : E →ₐ[R] Ω :=
     { ψ with
       commutes' := fun r => by

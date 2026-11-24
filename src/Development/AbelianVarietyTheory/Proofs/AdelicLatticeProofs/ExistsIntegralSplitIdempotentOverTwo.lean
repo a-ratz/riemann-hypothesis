@@ -136,7 +136,7 @@ theorem singleV_mem_intAf (y : v.adicCompletionIntegers F) : singleV F v (y : Fv
 theorem exists_root (h2 : (2 : 𝓞 F) ∈ v.asIdeal) (k : ℕ) :
     ∃ r u : v.adicCompletionIntegers F, r * r - r + ((2 * k : ℕ) : v.adicCompletionIntegers F) = 0 ∧
       u * (1 - 2 * r) = 1 := by
-  haveI := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
   have hm : (2 : v.adicCompletionIntegers F) ∈ IsLocalRing.maximalIdeal (v.adicCompletionIntegers F) := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff,
       ← map_ofNat (algebraMap (𝓞 F) (v.adicCompletionIntegers F)) 2, GlobalTheory.SelfDualGenus.isUnit_algebraMap_iff]
@@ -175,7 +175,7 @@ theorem star_eq_conj (D : D7) (x : D.host.E) : star x = D.host.conj x := by
   apply D.host.φ₀.injective
   have h1 : D.host.φ₀ (D.host.conj x) = starRingEnd ℂ (D.host.φ₀ x) := D.host.conjE_apply _ _
   rw [h1]
-  haveI := D.host.isCMField_hostE
+  have := D.host.isCMField_hostE
   exact IsCMField.complexEmbedding_complexConj _ _ _
 
 theorem exists_split_idempotent : ∀ (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)), (2 : 𝓞 D.host.F) ∈ v.asIdeal → ∃ e : Formalism.L2.Theta.AE D, e * e = e ∧ e * cA D e = 0 ∧ e + cA D e = algebraMap (AF D.host.F) (Formalism.L2.Theta.AE D) (pairA D.host.F 0 (singleV D.host.F v 1)) ∧ ∃ α ∈ intAf D.host.F, ∃ β ∈ intAf D.host.F, ∃ ω : 𝓞 D.host.E, e = pairA D.host.F 0 α ⊗ₜ[D.host.F] (ω : D.host.E) + pairA D.host.F 0 β ⊗ₜ[D.host.F] (1 : D.host.E) := by

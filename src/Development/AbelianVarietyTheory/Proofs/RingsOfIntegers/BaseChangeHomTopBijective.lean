@@ -108,11 +108,11 @@ theorem baseChangeHom_top_bijective [Module.Flat R R'] [CompactSpace Y] [IsSepar
   have hex' : Function.Exact toC' ((cechLB f' (M.pull π) fun k => π ⁻¹ᵁ D k).d 0 1).hom :=
     CechOne.exact_toCech (M.pull π) f' (D := fun k => π ⁻¹ᵁ D k) (fun _ => le_top) hc'.ge
   have hflat : Function.Injective (toC.baseChange R') := by
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_preserves_injective_linearMap _
       (CechOne.toCech_injective M f (D := D) (fun _ => le_top) hc.ge)
   have hexR : Function.Exact (toC.baseChange R') (((cechLB f M D).d 0 1).hom.baseChange R') := by
-    rw [LinearMap.baseChange_eq_ltensor, LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor, LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_exact R' (CechOne.exact_toCech M f (D := D) (fun _ => le_top) hc.ge)
   have compat : ∀ x, toC' (SecOnR.baseChangeHom M H.w ⊤ ⊤ e0 x) =
       termMap M D H.w 0 (toC.baseChange R' x) := by
@@ -501,8 +501,8 @@ theorem integral_of_frMap (T T' : CDVR) (io : c.F →+* T.Fr) (iT : T.Fr →+* T
     ∀ (ψ : T.Fr →ₐ[c.F] T'.Fr) (y : FrPt Xo c T.Fr) (y' : FrPt Xo c T'.Fr), ψ.toRingHom = iT → FrMap ψ y y' →
       Integral T io y → Integral T' (iT.comp io) y' := by
   intro ψ y y' hψ hm hy
-  letI : Algebra c.F T.Fr := io.toAlgebra
-  letI : Algebra c.F T'.Fr := (iT.comp io).toAlgebra
+  let : Algebra c.F T.Fr := io.toAlgebra
+  let : Algebra c.F T'.Fr := (iT.comp io).toAlgebra
   have isoSec : ∀ {X Y : Scheme.{0}} {L : LB X} {L' : LB Y} {F : Y ⟶ X} (w : LB.Iso L' (L.pull F))
       (hw : w.IsGen) (hA : L'.IsLB) (hB : (L.pull F).IsLB) (s : LB.Sec (L.pull F)),
       IsoMaps w (ReciprocityTheory.ChartRestriction.G.DVR.secOfIso s hw hA hB) s := by
@@ -525,7 +525,7 @@ theorem integral_of_frMap (T T' : CDVR) (io : c.F →+* T.Fr) (iT : T.Fr →+* T
       change (Y.presheaf.map (𝟙 (Opposite.op U))).hom a = a
       rw [CategoryTheory.Functor.map_id]
       rfl
-    simp only [map_mul, Units.coe_map_inv, MonoidHom.coe_coe, hcomp] at e2
+    simp only [map_mul, Units.coe_map_inv, MonoidHom.coe_ofClass, hcomp] at e2
     erw [hid] at e2
     rw [e2]
     exact (Units.mul_inv_cancel_left (w.s (i, k)) _).symm
@@ -554,16 +554,16 @@ theorem integral_of_frMap (T T' : CDVR) (io : c.F →+* T.Fr) (iT : T.Fr →+* T
     apply IsFractionRing.injective T.V T.Fr
     apply iT.injective
     rw [← hφ, ← hφ, h]
-  letI : Algebra T.V T'.V := φ.toAlgebra
-  haveI : Module.IsTorsionFree T.V T'.V := ⟨fun r hr a b hab => by
+  let : Algebra T.V T'.V := φ.toAlgebra
+  have : Module.IsTorsionFree T.V T'.V := ⟨fun r hr a b hab => by
     have hr0 : φ r ≠ 0 := fun h0 => hr.ne_zero (hφinj (by rw [h0, map_zero]))
     exact mul_left_cancel₀ hr0 hab⟩
-  haveI : Module.Flat T.V T'.V := inferInstance
+  have : Module.Flat T.V T'.V := inferInstance
   obtain ⟨_, hsm, hsep, hqc, -, -⟩ := G.semi
   have hχ : ∀ (τ : E →+* ℂ) (a : 𝓞 E), ∃ z : T.V, algebraMap T.V T.Fr z = io (embK c τ a) :=
     fun τ a => int_val (c := c) T io τ a
   choose χ hχ using hχ
-  haveI : ∀ a, IsMonHom (G.act.act a) := G.act.hom
+  have : ∀ a, IsMonHom (G.act.act a) := G.act.hom
   have hLie := fun τ => exists_eigenbasis_pullback (V' := T'.V) G.G (fun a => G.act.act a) (χ τ) (ub τ) (htan τ)
     (fun i a => heig τ i a (χ τ a) (hχ τ a))
     (fun w hw he => hbas τ w hw (fun a z hz => by
@@ -574,7 +574,7 @@ theorem integral_of_frMap (T T' : CDVR) (io : c.F →+* T.Fr) (iT : T.Fr →+* T
   have hpr'' : ∀ τ i, (ub' τ i).left ≫ pullback.fst G.G.hom (spMap φ) = spMap (dualMap φ) ≫ (ub τ i).left :=
     hpr'
   have hmono : Mono (spMap (algebraMap T.V T.Fr)) := by
-    haveI : Epi (CommRingCat.ofHom (algebraMap T.V T.Fr)) := IsLocalization.epi (nonZeroDivisors T.V) T.Fr
+    have : Epi (CommRingCat.ofHom (algebraMap T.V T.Fr)) := IsLocalization.epi (nonZeroDivisors T.V) T.Fr
     exact Scheme.Spec.map_mono (CommRingCat.ofHom (algebraMap T.V T.Fr)).op
   have hlift' : ∀ τ i, ∃ u'' : Sp (DualNumber T'.Fr) ⟶ t''.G.left, u'' ≫ m1'.φ = y'.u τ i ∧
       u'' ≫ m2'.φ = spMap (dualMap (algebraMap T'.V T'.Fr)) ≫ (ub' τ i).left := by
@@ -603,7 +603,7 @@ theorem integral_of_frMap (T T' : CDVR) (io : c.F →+* T.Fr) (iT : T.Fr →+* T
     exact heig' τ i a
   · exact hbas' τ w hw (fun a => he a (φ (χ τ a)) (by rw [hφ, hχ]; rfl))
   · obtain ⟨wn, hwn⟩ := GlobalTheory.Reg.ChartInhab.exists_rigIso n2
-    letI : GrpObj ((Over.pullback (spMap φ)).obj G.G) := G'.grp
+    let : GrpObj ((Over.pullback (spMap φ)).obj G.G) := G'.grp
     have hAlb := G'.PP.isLB
     have hBlb := pull_isLB G.PP.isLB n2.φ
     let θ' := ReciprocityTheory.ChartRestriction.G.DVR.secOfIso (thfPull G.PP.L n2.φ θ) hwn.1 hAlb hBlb
@@ -623,7 +623,7 @@ theorem integral_of_frMap (T T' : CDVR) (io : c.F →+* T.Fr) (iT : T.Fr →+* T
     refine ⟨θ', ?_, (GlobalTheory.ArcQ.FrUniq.tie_iff m1' m2' θ' y'.s).2 ⟨w1, w', σ, hr1, hw', hsec,
       fun Z r z j kk hj hk => GlobalTheory.ArcQ.FrBC.gs_of_isoMaps hi' (fun _ _ => rfl) r z j kk hj hk⟩⟩
     intro σ''
-    haveI : CompactSpace G.G.left := QuasiCompact.compactSpace_of_compactSpace G.G.hom
+    have : CompactSpace G.G.left := QuasiCompact.compactSpace_of_compactSpace G.G.hom
     have hgen := existsUnique_mul_pull (f := G.G.hom) (f' := G'.G.hom) (π := n2.φ) G.PP.isLB n2.cart.1 θ
       (fun σ => hθ σ)
     exact existsUnique_mul_of_isoMaps (f' := G'.G.hom) G.PP.isLB hAlb hwn.1 θ' _ hiso hgen σ''
@@ -643,8 +643,8 @@ open GlobalTheory.PlaceInt
 
 theorem exists_isExt_and_trans : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (T T' : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (iT : T.Fr →+* T'.Fr) (e : ℕ), 0 < e → (∀ a : T.Fr, vV T'.V (iT a) = (e : ℤ) * vV T.V a) → (∃ y' : IntFr Xo c T' (iT.comp io), IsExt y iT e y') ∧ ∀ y' : IntFr Xo c T' (iT.comp io), IsExt y iT e y' → xOf y' = spMap iT ≫ xOf y ∧ ∀ (T'' : CDVR) (iT' : T'.Fr →+* T''.Fr) (e' : ℕ) (y'' : IntFr Xo c T'' (iT'.comp (iT.comp io))), IsExt y' iT' e' y'' → IsExt y (iT'.comp iT) (e' * e) y'' := by
   intro E _ _ _ H Dw l Xo c T T' io y iT e he hv
-  letI : Algebra c.F T.Fr := io.toAlgebra
-  letI : Algebra c.F T'.Fr := (iT.comp io).toAlgebra
+  let : Algebra c.F T.Fr := io.toAlgebra
+  let : Algebra c.F T'.Fr := (iT.comp io).toAlgebra
   let ψ : T.Fr →ₐ[c.F] T'.Fr := { iT with commutes' := fun _ => rfl }
   have hψ : ψ.toRingHom = iT := rfl
   refine ⟨?_, ?_⟩
@@ -659,7 +659,7 @@ theorem exists_isExt_and_trans : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · show y'.1.x = spMap iT ≫ y.1.x
       rw [hm1.1, hφ1]
     · intro T'' iT' e' y'' h2
-      letI : Algebra c.F T''.Fr := (iT'.comp (iT.comp io)).toAlgebra
+      let : Algebra c.F T''.Fr := (iT'.comp (iT.comp io)).toAlgebra
       obtain ⟨he', hv', φ2, hφ2, hm2⟩ := h2
       refine ⟨Nat.mul_pos he' he, fun a => ?_, φ2.comp φ1, ?_, GlobalTheory.FramedBaseChange.trans φ1 φ2 hm1 hm2⟩
       · rw [RingHom.comp_apply, hv', hv a]

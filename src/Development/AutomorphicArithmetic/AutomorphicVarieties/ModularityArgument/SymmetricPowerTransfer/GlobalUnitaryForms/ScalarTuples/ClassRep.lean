@@ -134,7 +134,7 @@ private theorem ex_DX {K : Type} [Field K] (Δ x : K) (hx : x ≠ 0) (a b : Lsq 
 theorem UpperTheory.V.Z.Sym.Glob.normD :
     UpperTheory.V.Z.Sym.Glob.NormD := by
   intro F _ _ Δ D hD x hx
-  haveI := hD.real
+  have := hD.real
   obtain ⟨hx0, a, b, c, d, h⟩ := four_values F Δ x hD.neg hx
   refine ex_DX Δ x hx0 ⟨a, b⟩ ⟨c, d⟩ ?_
   ext
@@ -352,7 +352,7 @@ private theorem loc_open {K : Type} [NontriviallyNormedField K] [CompleteSpace K
     ∀ᶠ x in 𝓝 (qD Δ (mt g⁻¹)), ∃ j ∈ J, mt j = pD Δ x * mt g := by
   classical
   let J' := J.subgroupOf (KD Δ O)
-  haveI : J'.FiniteIndex := ⟨hJ⟩
+  have : J'.FiniteIndex := ⟨hJ⟩
   have hm0 : J'.normalCore.index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero
   have hpowJ : ∀ k ∈ KD Δ O, k ^ J'.normalCore.index ∈ J := by
     intro k hk
@@ -429,8 +429,8 @@ private theorem approx {F : Type} [Field F] [NumberField F] (S : Finset (Pl F)) 
 private theorem loc_v {F : Type} [Field F] [NumberField F] (v : Pl F) (Δ : Kv v) (J : Subgroup (DX Δ))
     (hJ : J.relIndex (KD Δ (Ov v)) ≠ 0) (g : DX Δ) :
     ∀ᶠ x in 𝓝 (qD Δ (mt g⁻¹)), ∃ j ∈ J, mt j = pD Δ x * mt g := by
-  letI : NontriviallyNormedField (Kv v) := Valued.toNontriviallyNormedField (Kv v) (WithZero (Multiplicative ℤ))
-  haveI : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap F (Kv v)).injective
+  let : NontriviallyNormedField (Kv v) := Valued.toNontriviallyNormedField (Kv v) (WithZero (Multiplicative ℤ))
+  have : CharZero (Kv v) := charZero_of_injective_algebraMap (algebraMap F (Kv v)).injective
   have hO : ∀ᶠ s in 𝓝 (0 : Kv v), s ∈ (algebraMap (Ov v) (Kv v)).range := by
     have ho : IsOpen ((HeightOneSpectrum.adicCompletionIntegers F v : Set (Kv v))) := Valued.isOpen_valuationSubring _
     filter_upwards [ho.mem_nhds (HeightOneSpectrum.adicCompletionIntegers F v).zero_mem] with s hs
@@ -447,7 +447,7 @@ theorem UpperTheory.V.Z.Sym.Glob.weakD :
   let gv : ∀ v : Pl F, DX (cv v Δ) := fun v => (g : ∀ v : Pl F, DX (cv v Δ)) v
   have hJ : ∀ v ∈ D.Sg, (D.J2v v).relIndex (KD (cv v Δ) (Ov v)) ≠ 0 := by
     intro v hv
-    rw [Dat.J2v, if_pos hv]
+    rw [Dat.J2v, ite_eq_left hv]
     exact (hD.sig v hv).levelTwoFiniteIndex
   obtain ⟨x, hx⟩ := approx D.Sg (fun v => qD (cv v Δ) (mt (gv v)⁻¹))
     (fun v y => ∃ j ∈ D.J2v v, mt j = pD (cv v Δ) y * mt (gv v))
@@ -485,7 +485,7 @@ theorem UpperTheory.V.Z.Sym.Glob.weakD :
     have hv2 : ¬ uf v ∈ KD (cv v Δ) (Ov v) := hv
     by_contra hv'
     apply hv2
-    have e : uf v = 1 := if_neg hv'
+    have e : uf v = 1 := ite_eq_right hv'
     rw [e]
     exact (KD (cv v Δ) (Ov v)).one_mem
   refine ⟨γ, ⟨uf, huf⟩, ?_, ?_⟩
@@ -494,15 +494,15 @@ theorem UpperTheory.V.Z.Sym.Glob.weakD :
     rw [Subgroup.mem_comap]
     change uf v ∈ D.J2v v
     by_cases hv : v ∈ D.Sg
-    · have e : uf v = ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ := if_pos hv
+    · have e : uf v = ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ := ite_eq_left hv
       rw [e]
       exact inv_mem (hmem v hv)
-    · have e : uf v = 1 := if_neg hv
+    · have e : uf v = 1 := ite_eq_right hv
       rw [e]
       exact (D.J2v v).one_mem
   · intro v hv
     change (ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v * uf v = 1
-    have e : uf v = ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ := if_pos hv
+    have e : uf v = ((ι γ : ∀ v : Pl F, DX (cv v Δ)) v * gv v)⁻¹ := ite_eq_left hv
     rw [e]
     exact mul_inv_cancel _
 end -- clump:auto
@@ -525,7 +525,7 @@ private theorem reps {G Γ A C : Type} [Group G] [Group Γ] [CommGroup A] [Finit
     ∃ Y : Finset G, (∀ y ∈ Y, Off y) ∧ ∀ g, ∃ γ, ∃ s, N s = 1 ∧ ∃ y ∈ Y, ∃ u ∈ U, g = ι γ * s * y * u := by
   classical
   let H : Subgroup G := ((N.comp ι).range ⊔ U.map N).comap N
-  haveI : H.Normal := Subgroup.Normal.comap inferInstance N
+  have : H.Normal := Subgroup.Normal.comap inferInstance N
   have hUH : U ≤ H := fun u hu => Subgroup.mem_sup_right ⟨u, hu, rfl⟩
   have h1 : H.relIndex (H ⊔ K) ≠ 0 := by
     rw [Subgroup.relIndex_sup_left]
@@ -542,7 +542,7 @@ private theorem reps {G Γ A C : Type} [Group G] [Group Γ] [CommGroup A] [Finit
   have h3 : H.index ≠ 0 := by
     rw [← Subgroup.relIndex_mul_index (le_sup_left : H ≤ H ⊔ K)]
     exact mul_ne_zero h1 Subgroup.index_ne_zero_of_finite
-  haveI := Subgroup.fintypeOfIndexNeZero h3
+  have := Subgroup.fintypeOfIndexNeZero h3
   choose γ u hu ho using hw
   refine ⟨Finset.univ.image fun q : G ⧸ H => ι (γ q.out) * q.out * u q.out, ?_, fun g => ?_⟩
   · intro y hy
@@ -712,7 +712,7 @@ private theorem val_one (hN : ∀ g : DX Δ, (Glob.mt g).det = algebraMap _ _ (N
     rw [← hy]
     exact y.2
   have h2 := h _ (inv_mem hg)
-  rw [map_inv, Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 (N g).ne_zero))] at h2
+  rw [map_inv, Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 (N g).ne_zero))] at h2
   exact le_antisymm (h g hg) h2
 
 private theorem of_val_one (hN : ∀ g : DX Δ, (Glob.mt g).det = algebraMap _ _ (N g : Kv v))
@@ -732,11 +732,11 @@ theorem UpperTheory.V.Z.Sym.Glob.classRep :
     UpperTheory.V.Z.Sym.Glob.ClassRep := by
   intro F _ _ Δ D hD ι hι
   have hΔ : Δ ≠ 0 := by
-    haveI := hD.real
+    have := hD.real
     obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
     rintro rfl
     simpa using hD.neg (InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w))
-  haveI : ∀ v : Pl F, CharZero (Kv v) := fun v => charZero_of_injective_algebraMap (cv v).injective
+  have : ∀ v : Pl F, CharZero (Kv v) := fun v => charZero_of_injective_algebraMap (cv v).injective
   choose Nv hNv using fun v : Pl F => nrd_ex (cv v Δ)
   let P := rpg (fun v : Pl F => DX (cv v Δ)) fun v => KD (cv v Δ) (Ov v)
   let N : DA Δ →* ∀ v : Pl F, (Kv v)ˣ := Pi.monoidHom fun v => (Nv v).comp (P.p v)
@@ -750,8 +750,8 @@ theorem UpperTheory.V.Z.Sym.Glob.classRep :
     · exact split_ex (Ov v) ((map_ne_zero _).2 hΔ) (hD.split v hv) u
     · exact normEx _ _ _ (hD.off v hv) u
   have hidx : D.U2.relIndex (P.box fun v => KD (cv v Δ) (Ov v)) ≠ 0 :=
-    box_idx P D.J2v D.Sg (fun v hv => by rw [Dat.J2v, if_pos hv]; exact (hD.sig v hv).levelTwoFiniteIndex)
-      fun v hv => by rw [Dat.J2v, if_neg hv]
+    box_idx P D.J2v D.Sg (fun v hv => by rw [Dat.J2v, ite_eq_left hv]; exact (hD.sig v hv).levelTwoFiniteIndex)
+      fun v hv => by rw [Dat.J2v, ite_eq_right hv]
   obtain ⟨Y, hY, h⟩ := reps ι N D.U2 _ D.Off hidx (fun g => c fun v => WithZero.log (Valued.v (N g v : Kv v)))
     (fun g g' e => by
       obtain ⟨z, hz, hp, e⟩ := hc _ _ (hae g) (hae g') e

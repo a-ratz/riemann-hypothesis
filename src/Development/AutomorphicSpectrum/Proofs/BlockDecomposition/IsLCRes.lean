@@ -121,7 +121,7 @@ theorem isLC_add (hL : LcCover) (hR : RepRoot) {U : Scheme.{0}} {ζ : Prim q Γ(
       (f'.isLocallyConstant.comp_continuous hcont) Prod.mk⟩
   refine sec_ext hL F2 _ _ _ fun V' g' b hb => ?_
   rcases isEmpty_or_nonempty V' with hV | ⟨⟨v⟩⟩
-  · haveI := sec_subsingleton hL (U := V') (tw q i)
+  · have := sec_subsingleton hL (U := V') (tw q i)
     exact Subsingleton.elim _ _
   have hb1 : ∀ v, f ((g' ≫ g) v) = b.1 := fun v => congrArg Prod.fst (hb v)
   have hb2 : ∀ v, f' ((g' ≫ g) v) = b.2 := fun v => congrArg Prod.snd (hb v)

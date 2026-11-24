@@ -435,7 +435,7 @@ theorem gluedLat_one (q : Unif k) (c : ℕ) (L : Submodule 𝒪[k] (n → k)) (f
     gluedLat q c 1 L f = gluedS q c L f := by
   have : {y | ∃ i, 1 ≤ i ∧ i < 1 ∧ i ≤ c ∧ y = avec k n c i} = ∅ := by
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+    simp only [Set.mem_ofPred_eq, Set.mem_empty_iff_false, iff_false]
     rintro ⟨i, h1, h2, -⟩
     omega
   rw [gluedLat, this, Submodule.span_empty, sup_bot_eq]
@@ -514,11 +514,11 @@ theorem mem_gluedLat {q : Unif k} {p : ℕ} {L : Submodule 𝒪[k] (n → k)} {f
     · exact Submodule.mem_sup_left (Submodule.mem_sup_left (Submodule.mem_sup_right
         (Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self _))))
     · rcases lt_trichotomy (i.val + 1) p with hi | hi | hi
-      · rw [if_neg hi.ne]
+      · rw [ite_eq_right hi.ne]
         exact Submodule.mem_sup_left (Submodule.mem_sup_right (Submodule.smul_mem _ (⟨_, (h i).1 hi⟩ : 𝒪[k])
           (Submodule.subset_span ⟨_, by omega, hi, i.2, rfl⟩)))
       · simp [hi]
-      · rw [if_neg hi.ne']
+      · rw [ite_eq_right hi.ne']
         have := Submodule.smul_mem _ (⟨_, (h i).2.2 hi⟩ : 𝒪[k]) (Submodule.subset_span (R := 𝒪[k])
           (s := {y | ∃ i, p < i ∧ i ≤ c ∧ y = q.inv • avec k n c i}) ⟨_, hi, i.2, rfl⟩)
         refine Submodule.mem_sup_right ?_

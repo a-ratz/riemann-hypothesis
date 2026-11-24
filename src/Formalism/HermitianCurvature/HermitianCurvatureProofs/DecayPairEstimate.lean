@@ -279,7 +279,7 @@ end Classes
 theorem decay_pair_estimate : DecayPair1 := by
   intro Wp Wq _ _ _ _ _ _ S _ _ P z z' π π' X μ L st l0 D hD hl0 hl0' hz hz' hπ hπ' w hw l hl x v hx hv c hc n
   have hμ : B.IsHaarOn (Glev P.k P.r (Fin.last P.r)) μ := hD.2.1
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨hμ.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨hμ.finite_compact⟩
   have hr : 0 < P.r := Fin.pos l
   have h0 : l.castSucc = (0 : Fin (P.r + 1)) := Fin.ext (by simp [hl])
   rw [h0] at hx hv ⊢

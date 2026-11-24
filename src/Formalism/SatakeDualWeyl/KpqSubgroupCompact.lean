@@ -481,14 +481,14 @@ theorem csTrace_trace_pos {F : Type} [Field F] [NumberField F] [IsTotallyReal F]
 theorem csTrace_trace_algebraMap_pos {F E : Type} [Field F] [NumberField F] [Field E]
     [NumberField E] [Algebra F E] [IsTotallyReal F] (b : F) (hb : ∀ ι : F →+* ℝ, 0 < ι b) :
     0 < Algebra.trace ℚ E (algebraMap F E b) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   rw [← Algebra.trace_trace (S := F), Algebra.trace_algebraMap, map_nsmul]
   exact nsmul_pos (csTrace_trace_pos b hb) Module.finrank_pos.ne'
 
 theorem trace_form_positive : Formalism.UG.CS.TracePos := by
   intro F E _ _ _ _ _ n _ _ σ J hJ
   obtain ⟨hF, hdef⟩ := hJ
-  haveI : IsTotallyReal F := hF
+  have : IsTotallyReal F := hF
 
   let φ0 : F →+* ℂ := (IsAlgClosed.lift : F →ₐ[ℚ] ℂ).toRingHom
   let ι0 : F →+* ℝ :=
@@ -634,7 +634,7 @@ theorem finsum_mul_eq_sum_over_classes {X Y : Type} (S : Finset X) (g φv : X �
     obtain ⟨x, hxS, hx⟩ := Finset.exists_ne_zero_of_sum_ne_zero hne
     refine Set.mem_biUnion (Finset.mem_coe.mpr hxS) ?_
     by_contra hP
-    exact hx (if_neg hP)
+    exact hx (ite_eq_right hP)
   rw [finsum_eq_sum_of_support_subset _ hsl]
   simp only [hin]
   rw [hout, Finset.sum_mul]
@@ -646,10 +646,10 @@ theorem finsum_mul_eq_sum_over_classes {X Y : Type} (S : Finset X) (g φv : X �
     have hy0T : y0 ∈ hTfin.toFinset := by
       rw [Set.Finite.mem_toFinset]
       exact Set.mem_biUnion (Finset.mem_coe.mpr hxS) hy0
-    rw [Finset.sum_eq_single y0, if_pos hy0, hφ x y0 hy0]
+    rw [Finset.sum_eq_single y0, ite_eq_left hy0, hφ x y0 hy0]
     · ring
     · intro y _ hy
-      rw [if_neg (fun h => hy (huniq x y y0 h hy0))]
+      rw [ite_eq_right (fun h => hy (huniq x y y0 h hy0))]
       ring
     · intro h
       exact absurd hy0T h
@@ -658,7 +658,7 @@ theorem finsum_mul_eq_sum_over_classes {X Y : Type} (S : Finset X) (g φv : X �
     symm
     apply Finset.sum_eq_zero
     intro y _
-    rw [if_neg (hex y)]
+    rw [ite_eq_right (hex y)]
     ring
 
 variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {σ : L →+* L} {n : ℕ}
@@ -1167,7 +1167,7 @@ private theorem Tj_eq_dosetInd_diagJ {L : Type} [Field L] (O : Subring L) (ϖ : 
   unfold Tj dosetInd
   congr 1
   ext g
-  simp only [Set.mem_setOf_eq, DoubleCoset.mem_doubleCoset, SetLike.mem_coe]
+  simp only [Set.mem_ofPred_eq, DoubleCoset.mem_doubleCoset, SetLike.mem_coe]
   constructor
   · rintro ⟨a, ha, b, hb, h⟩
     exact ⟨a, ha, b, hb, Units.ext (by simp [h, hd])⟩
@@ -1235,7 +1235,7 @@ theorem TjIndep : Formalism.UG.TjIndep := by
   unfold Tj
   congr 1
   ext g
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · rintro ⟨a, ha, b, hb, h⟩
     refine ⟨a, ha, Dg * b, (GLint (Fin n) O).mul_mem hDmem hb, ?_⟩

@@ -103,10 +103,10 @@ theorem hasFiniteLength_iff_wellFounded (ρ : Representation F G V) :
     HasFiniteLength ρ ↔
       WellFoundedGT (Subrepresentation ρ) ∧ WellFoundedLT (Subrepresentation ρ) := by
   have φ := Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := ρ)
-  rw [HasFiniteLength, isFiniteLength_iff_isNoetherian_isArtinian, isNoetherian_iff', isArtinian_iff]
+  rw [HasFiniteLength, isFiniteLength_iff_isNoetherian_isArtinian, isNoetherian_iff, isArtinian_iff]
   refine and_congr ⟨fun _ => φ.toOrderEmbedding.wellFoundedGT,
     fun _ => φ.symm.toOrderEmbedding.wellFoundedGT⟩ ⟨fun h => ?_, fun _ => ?_⟩
-  · haveI : WellFoundedLT (Submodule (MonoidAlgebra F G) ρ.asModule) := h
+  · have : WellFoundedLT (Submodule (MonoidAlgebra F G) ρ.asModule) := h
     exact φ.toOrderEmbedding.wellFoundedLT
   · exact φ.symm.toOrderEmbedding.wellFoundedLT
 
@@ -127,8 +127,8 @@ theorem hasFiniteLength_comp_iff (ρ : Representation F G V) (s : H →* G) (hs 
 
 theorem hasFiniteLength_of_isIrreducible {ρ : Representation F G V} (h : ρ.IsIrreducible) :
     HasFiniteLength ρ := by
-  haveI : IsSimpleOrder (Subrepresentation ρ) := h
-  haveI : Finite (Subrepresentation ρ) := IsSimpleOrder.instFinite
+  have : IsSimpleOrder (Subrepresentation ρ) := h
+  have : Finite (Subrepresentation ρ) := IsSimpleOrder.instFinite
   exact (hasFiniteLength_iff_wellFounded ρ).2 ⟨Finite.to_wellFoundedGT, Finite.to_wellFoundedLT⟩
 
 end Transport
@@ -151,7 +151,7 @@ theorem isLocallyConstant_smInd {G : Type} [Group G] [TopologicalSpace G] [IsTop
 theorem InductionContragredient.nonempty_equiv (h : InductionContragredient k) (e : (Σ a, m a) ≃ n)
     {ρ : Representation ℂ (Levi k m) W} (hρ : IsSmooth ρ) :
     Nonempty ((parInd e (contra ρ)).Equiv (contra (parInd e ρ))) := by
-  haveI : LocallyCompactSpace (GL n k) := SplitFlip.locallyCompact_GL
+  have : LocallyCompactSpace (GL n k) := SplitFlip.locallyCompact_GL
   borelize (GL n k)
   obtain ⟨Φ, -⟩ := h _ _ _ e Measure.haar W ρ hρ
   exact ⟨Φ⟩

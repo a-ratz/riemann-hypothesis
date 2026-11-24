@@ -72,7 +72,7 @@ theorem UpperTheory.Reformulated.B.SimultaneousEigenvectorInvariantSubspace.simE
       exact ⟨c, hc v hv⟩
     · rw [not_forall] at h
       obtain ⟨i, hi⟩ := h
-      haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hU
+      have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hU
       obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue ((T i).restrict (hinv i) : Module.End K U)
       obtain ⟨w, hw⟩ := hc.exists_hasEigenvector
       have hw1 : T i (w : M) = c • (w : M) := by

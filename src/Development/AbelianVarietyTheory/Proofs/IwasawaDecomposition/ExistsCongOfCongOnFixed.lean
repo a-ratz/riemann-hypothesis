@@ -127,7 +127,7 @@ theorem cong_on_adjoin (h : IsPlaceOver A w) {l : ℕ} (hl : 2 ≤ l) {ϖ : 𝓞
     exact hϖ0 (by simpa using hx)
   set t := A.valuation x with ht
   have htl : A.valuation (algebraMap E Ω (ϖ : E)) = t ^ l := by rw [← hx, map_pow]
-  have ht0 : 0 < t := zero_lt_iff.mpr (by simpa [ht] using hx0)
+  have ht0 : 0 < t := pos_iff_ne_zero.mpr (by simpa [ht] using hx0)
   have ht1 : t < 1 := by
     have := (h ϖ).mpr h1
     rw [htl] at this
@@ -274,13 +274,13 @@ theorem exists_mem_Ine_apply_ne : ∀ (E Ω : Type) [Field E] [NumberField E] [F
     by_contra hc
     push Not at hc
     exact hx1 ((InfiniteGalois.mem_bot_iff_fixed x).mpr hc)
-  letI : TopologicalSpace (IntCl E Ω) := ⊥
-  haveI : DiscreteTopology (IntCl E Ω) := ⟨rfl⟩
-  haveI := continuousSMul_intCl E Ω
+  let : TopologicalSpace (IntCl E Ω) := ⊥
+  have : DiscreteTopology (IntCl E Ω) := ⟨rfl⟩
+  have := continuousSMul_intCl E Ω
   let H := MulAction.stabilizer (Ω ≃ₐ[E] Ω) x
   have hH : IsClosed (H : Set (Ω ≃ₐ[E] Ω)) :=
     H.isClosed_of_isOpen (stabilizer_isOpen_of_isIntegral (K := E) x)
-  haveI : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
+  have : CompactSpace H := isCompact_iff_compactSpace.mp hH.isCompact
   obtain ⟨k, hk, k', hk', hc⟩ := exists_cong_of_cong_on_fixed (R := 𝓞 E) H (primeBelow (F := E) A) g
     (fun b hb => by
       refine hx2 g b ?_ (valuation_le_one_intCl A b)

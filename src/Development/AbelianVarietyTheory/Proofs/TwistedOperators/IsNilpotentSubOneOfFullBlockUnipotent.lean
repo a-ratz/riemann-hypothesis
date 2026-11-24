@@ -167,7 +167,7 @@ theorem card_mul_finrank_eig (G M : Type) [Group G] [Finite G] [AddCommGroup M] 
     (h : ∀ g ∈ P, g ≠ 1 → LinearMap.trace ℂ M (ρ g) = 0) :
     Nat.card P * Module.finrank ℂ (GlobalTheory.DefFree.eig ρ P fun g => ((χ g : ℂˣ) : ℂ)) = Module.finrank ℂ M := by
   classical
-  haveI : Fintype P := Fintype.ofFinite P
+  have : Fintype P := Fintype.ofFinite P
   have htr := (isProj_eig_average ρ P χ).trace
 
   rw [map_smul, map_sum, smul_eq_mul] at htr
@@ -223,7 +223,7 @@ namespace GlobalTheory.BadShare
 theorem end_eq_one_of_pow_prime {V : Type} [AddCommGroup V] [Module ℚ V] [Module.Finite ℚ V]
     {p : ℕ} (hp : p.Prime) (hV : Module.finrank ℚ V + 1 < p) (f : Module.End ℚ V)
     (hf : f ^ p = 1) : f = 1 := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have h1 : minpoly ℚ f ∣ cyclotomic p ℚ * (X - 1) := by
     rw [cyclotomic_prime_mul_X_sub_one]
     apply minpoly.dvd
@@ -351,9 +351,9 @@ theorem eq_one_of_unipotent_reduction :
   intro E R k _ _ _ _ S ι φ p n hp hchar hlt u x y hu hxy hnil
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · exact Units.ext (Subsingleton.elim _ _)
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Nontrivial k := CharP.nontrivial_of_char_ne_one (R := k) hp.ne_one
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Fact p.Prime := ⟨hp⟩
+  have : Nontrivial k := CharP.nontrivial_of_char_ne_one (R := k) hp.ne_one
   obtain ⟨a, ha⟩ := hnil
   have hpa : (Formalism.UG.bc φ y) ^ (p ^ a) = 1 := by
     apply Units.ext
@@ -431,15 +431,15 @@ theorem isClass_of_isChar {G : Type} [Group G] {χ : G → ℂ} (h : IsChar χ) 
   rw [← hV, ← hV, FDRep.char_conj]
 
 theorem wh_one_zero (ψ : AddChar (ZMod g) ℂ) : wh ψ (fun _ : Gn g 0 => (1 : ℂ)) = 1 := by
-  haveI : Subsingleton (Gn g 0) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
+  have : Subsingleton (Gn g 0) := ⟨fun a b => Units.ext (Subsingleton.elim _ _)⟩
   unfold wh tr
   rw [Fintype.sum_subsingleton _ 1, eU, coeff_eDat, mul_one]
   have hU : ∀ u : Gn g 0, IsUniUp u.val := fun u a => a.elim0
   have hc : Nat.card {u : GG g 0 // IsUniUp u.val} = 1 := by
-    haveI : Nonempty {u : GG g 0 // IsUniUp u.val} := ⟨⟨1, hU 1⟩⟩
+    have : Nonempty {u : GG g 0 // IsUniUp u.val} := ⟨⟨1, hU 1⟩⟩
     exact Nat.card_unique
   unfold eps
-  rw [if_pos (hU 1), hc]
+  rw [ite_eq_left (hU 1), hc]
   simp
 
 theorem wh_const_mul (ψ : AddChar (ZMod g) ℂ) {n : ℕ} (c : ℂ) (χ : Gn g n → ℂ) :
@@ -609,7 +609,7 @@ theorem finrank_eq_card_mul_and_trace_eq_zero_of_free_values :
     ∀ (Y X B W : Type) [Finite X] [AddCommGroup B] [Module ℂ B] [AddCommGroup W] [Module ℂ W] [FiniteDimensional ℂ W] (cls : Y → X) (ev : Y → (B →ₗ[ℂ] W)) (S : Submodule ℂ B), Function.Surjective cls → (∀ T : B, (∀ h, ev h T = 0) → T = 0) → (∀ h h', cls h = cls h' → ∃ φ : Module.End ℂ W, ∀ T ∈ S, ev h' T = φ (ev h T)) → (∀ h (ℓ : W), ∃ T ∈ S, ev h T = ℓ ∧ ∀ h', cls h' ≠ cls h → ev h' T = 0) → FiniteDimensional ℂ S ∧ Module.finrank ℂ S = Nat.card X * Module.finrank ℂ W ∧ ∀ (H : Type) [AddCommGroup H] [Module ℂ H] (e : H →ₗ[ℂ] B), Function.Injective e → LinearMap.range e = S → ∀ (A : Module.End ℂ H) (t : Y → Y), (∀ x h, ev h (e (A x)) = ev (t h) (e x)) → (∀ h, cls (t h) ≠ cls h) → LinearMap.trace ℂ H A = 0 := by
   intro Y X B W _ _ _ _ _ _ cls ev S hcls hinj hcls_eq hfree
   classical
-  haveI : Fintype X := Fintype.ofFinite X
+  have : Fintype X := Fintype.ofFinite X
 
   obtain ⟨s, hs⟩ : ∃ s : X → Y, ∀ x, cls (s x) = x :=
     ⟨fun x => (hcls x).choose, fun x => (hcls x).choose_spec⟩
@@ -654,7 +654,7 @@ theorem finrank_eq_card_mul_and_trace_eq_zero_of_free_values :
     let eS : H ≃ₗ[ℂ] S := (LinearEquiv.ofInjective e he).trans (LinearEquiv.ofEq _ _ hrange)
     let Θ : H ≃ₗ[ℂ] (X → W) := eS.trans Ψ
     have hΘ : ∀ x c, Θ x c = ev (s c) (e x) := fun _ _ => rfl
-    haveI : FiniteDimensional ℂ H := LinearEquiv.finiteDimensional Θ.symm
+    have : FiniteDimensional ℂ H := LinearEquiv.finiteDimensional Θ.symm
     rw [← LinearMap.trace_conj' A Θ]
     choose φ hφ using fun c => hcls_eq (s (cls (t (s c)))) (t (s c)) (hs _)
     refine trace_eq_zero_of_coord_move (fun c => cls (t (s c)))
@@ -715,9 +715,9 @@ theorem monicOf_injective {g N : ℕ} [Fact g.Prime] :
   funext i
   have key := congrArg (fun p : (ZMod g)[X] => p.coeff (i : ℕ)) h
   simp only [Formalism.CyclotomicNorms.monicOf, Polynomial.coeff_add, Polynomial.coeff_X_pow, Polynomial.finsetSum_coeff,
-    Polynomial.coeff_C_mul_X_pow, Nat.ne_of_lt i.isLt, if_false, zero_add] at key
-  rwa [Finset.sum_eq_single i (fun j _ hj => if_neg (fun e => hj (Fin.ext e.symm))) (by simp), if_pos rfl,
-    Finset.sum_eq_single i (fun j _ hj => if_neg (fun e => hj (Fin.ext e.symm))) (by simp), if_pos rfl] at key
+    Polynomial.coeff_C_mul_X_pow, Nat.ne_of_lt i.isLt, ite_false, zero_add] at key
+  rwa [Finset.sum_eq_single i (fun j _ hj => ite_eq_right (fun e => hj (Fin.ext e.symm))) (by simp), ite_eq_left rfl,
+    Finset.sum_eq_single i (fun j _ hj => ite_eq_right (fun e => hj (Fin.ext e.symm))) (by simp), ite_eq_left rfl] at key
 
 
 open Classical in
@@ -1071,8 +1071,8 @@ theorem range_sum_eq_eig {G M : Type} [Group G] [Fintype G] [AddCommGroup M] [Mo
       simp only [LinearMap.sum_apply, LinearMap.smul_apply, Finset.sum_smul]
       refine Finset.sum_congr rfl fun g _ => ?_
       by_cases hg : g ∈ P
-      · rw [if_pos hg, ← h1 ⟨g, hg⟩, mul_smul, ← hx ⟨g, hg⟩]
-      · rw [if_neg hg, h0 g hg, zero_smul, zero_smul]
+      · rw [ite_eq_left hg, ← h1 ⟨g, hg⟩, mul_smul, ← hx ⟨g, hg⟩]
+      · rw [ite_eq_right hg, h0 g hg, zero_smul, zero_smul]
     have hne : (∑ g : G, if g ∈ P then k else 0) ≠ 0 := by
       rw [← Finset.sum_filter, Finset.sum_const, nsmul_eq_mul]
       refine mul_ne_zero ?_ hk
@@ -1108,19 +1108,19 @@ theorem tens_e_mul {g N : ℕ} [Fact g.Prime] {ι : Type} [Fintype ι] (L : ι �
   rw [← Finset.prod_mul_distrib]
   refine Finset.prod_congr rfl fun v _ => ?_
   have := GlobalTheory.BadShare.Basic.chi_ne (L v) (γ v)
-  simp only [GlobalTheory.BadShare.Lev.e, GlobalTheory.BadShare.eps, if_pos (h v)]
+  simp only [GlobalTheory.BadShare.Lev.e, GlobalTheory.BadShare.eps, ite_eq_left (h v)]
   field_simp
 
 theorem tens_e_zero {g N : ℕ} [Fact g.Prime] {ι : Type} [Fintype ι] (L : ι → GlobalTheory.BadShare.Lev g N)
     (γ : ι → GlobalTheory.BadShare.GG g N) (h : ¬ ∀ v, (L v).Mem (γ v)) :
     GlobalTheory.BadShare.tens (fun v => (L v).e) γ = 0 := by
   obtain ⟨v, hv⟩ := not_forall.1 h
-  exact Finset.prod_eq_zero (Finset.mem_univ v) (by simp only [GlobalTheory.BadShare.Lev.e, GlobalTheory.BadShare.eps, if_neg hv])
+  exact Finset.prod_eq_zero (Finset.mem_univ v) (by simp only [GlobalTheory.BadShare.Lev.e, GlobalTheory.BadShare.eps, ite_eq_right hv])
 
 theorem prod_card_ne {g N : ℕ} [Fact g.Prime] {ι : Type} [Fintype ι] (L : ι → GlobalTheory.BadShare.Lev g N) :
     (∏ v, (Nat.card {u // (L v).Mem u} : ℂ)⁻¹) ≠ 0 := by
   refine Finset.prod_ne_zero_iff.2 fun v _ => inv_ne_zero ?_
-  haveI : Nonempty {u // (L v).Mem u} := ⟨⟨1, GlobalTheory.BadShare.Basic.mem_one (L v)⟩⟩
+  have : Nonempty {u // (L v).Mem u} := ⟨⟨1, GlobalTheory.BadShare.Basic.mem_one (L v)⟩⟩
   exact_mod_cast Nat.card_pos.ne'
 
 theorem ranges : ∀ (g₁ g₂ N : ℕ) [Fact g₁.Prime] [Fact g₂.Prime] (ι₁ ι₂ G M : Type) [Fintype ι₁] [Fintype ι₂] [DecidableEq ι₁] [DecidableEq ι₂] [Group G] [Fintype G] [AddCommGroup M] [Module ℂ M] (Φ : G ≃* (ι₁ → GlobalTheory.BadShare.GG g₁ N) × (ι₂ → GlobalTheory.BadShare.GG g₂ N)) (L₁ : ι₁ → GlobalTheory.BadShare.Lev g₁ N) (L₂ : ι₂ → GlobalTheory.BadShare.Lev g₂ N) (P : Subgroup G) (χ : P → ℂ) (ρ : Representation ℂ G M) [Fintype ((ι₁ → GlobalTheory.BadShare.GG g₁ N) × (ι₂ → GlobalTheory.BadShare.GG g₂ N))] (c : (ι₁ → GlobalTheory.BadShare.GG g₁ N) × (ι₂ → GlobalTheory.BadShare.GG g₂ N) → ℂ), (∀ g : G, g ∈ P ↔ (∀ v, (L₁ v).Mem ((Φ g).1 v)) ∧ ∀ v, (L₂ v).Mem ((Φ g).2 v)) → (∀ g : P, χ g = (∏ v, (L₁ v).chi ((Φ g).1 v)) * ∏ v, (L₂ v).chi ((Φ g).2 v)) → GlobalTheory.BadShare.conv c c = c → (∀ a, GlobalTheory.BadShare.conv c a = GlobalTheory.BadShare.conv a c) → LinearMap.range (GlobalTheory.BadShare.op (M := M) (ρ.comp Φ.symm.toMonoidHom) (GlobalTheory.BadShare.tens2 (GlobalTheory.BadShare.tens fun v => (L₁ v).e) (GlobalTheory.BadShare.tens fun v => (L₂ v).e))) = eig ρ P χ ∧ LinearMap.range (GlobalTheory.BadShare.op (M := M) (ρ.comp Φ.symm.toMonoidHom) (GlobalTheory.BadShare.conv c (GlobalTheory.BadShare.tens2 (GlobalTheory.BadShare.tens fun v => (L₁ v).e) (GlobalTheory.BadShare.tens fun v => (L₂ v).e)))) = eig ρ P χ ⊓ LinearMap.ker ((∑ g : G, c (Φ g) • ρ g) - LinearMap.id) := by
@@ -1457,12 +1457,12 @@ theorem central_tens2 {G G' : Type} [Group G] [Fintype G] [Group G'] [Fintype G'
   have key : ∀ {H : Type} [Group H] [Fintype H] {a : H → ℂ}, (∀ x, conv a x = conv x a) → ∀ u v, a (u * v) = a (v * u) := by
     intro H _ _ a ha u v
     have := congrFun (ha fun y => if y = v⁻¹ then 1 else 0) u
-    simp only [conv, mul_ite, mul_one, mul_zero, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, if_true,
+    simp only [conv, mul_ite, mul_one, mul_zero, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ, ite_true,
       inv_inv] at this
     rw [← this, Finset.sum_eq_single (u * v)]
     · simp
     · intro y _ hy
-      rw [if_neg]
+      rw [ite_eq_right]
       intro e
       exact hy (by rw [inv_mul_eq_iff_eq_mul] at e; rw [e, inv_mul_cancel_right])
     · simp
@@ -1543,7 +1543,7 @@ theorem principal_count {θ : InfFam D} {V : HSp D} {S : D.what₂.Tau → SPar}
         (∀ h, clsA V (lev D.sp.cm V.gram β (flag1L L)) (h * κ) ≠ clsA V (lev D.sp.cm V.gram β (flag1L L)) h) →
         LinearMap.trace ℂ H A = 0 := by
   have hfin := GlobalTheory.DefLift.AllPlus.finite_smooth_irreducible D V S M hM
-  haveI : ∀ τ, FiniteDimensional ℂ (M.H τ) := fun τ => (hfin τ).1
+  have : ∀ τ, FiniteDimensional ℂ (M.H τ) := fun τ => (hfin τ).1
   obtain ⟨c, pr, hc, hpr, hsurj⟩ := GlobalTheory.T.exists_coefficientSpace_dual_discreteSeriesModel_posDef D θ V S M hθ hM
   obtain ⟨a1, -, -, -, a5⟩ := GlobalTheory.T.unitaryGroup_adelicClasses_via_finiteAdelicPart D V
   obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.finrank_eq_card_mul_and_trace_eq_zero_of_free_values_alt (GA D V) _ (MMap M) (MultilinearMap (RingHom.id ℂ) (fun τ : D.what₂.Tau => M.sm τ) ℂ) (clsA V (lev D.sp.cm V.gram β (flag1L L))) (evAt M)
@@ -1639,16 +1639,16 @@ theorem principal_last (h : HidaSetting R F) (hbig : ∀ k, Module.finrank ℚ D
     (hi : (i : ℕ) + 1 = D.R.m) : PrincipalCount R i ∧ Module.finrank ℂ (R.HW i (sg0 D A)).H = dK R i ∧
       ∀ g : G, g ≠ 1 → UnipAt R (R.eG g) → LinearMap.trace ℂ _ (R.gW i (sg0 D A) g) = 0 := by
   have hM := allPlus_last h hi
-  haveI hfin : Finite (Cls R i) := class_set_finite _ _ D.sp.cm ℂ _ _ _ _ _ (unimod_last h hi).1 (unimod_last h hi).2
-  haveI : Finite (Cl D.sp.cm (Wc D i).gram (lev D.sp.cm (Wc D i).gram (R.βW i) (flag1L (R.datWp i R.triv)))) := hfin
-  haveI hne : Nonempty (Cls R i) := ⟨clsOf R i 1⟩
+  have hfin : Finite (Cls R i) := class_set_finite _ _ D.sp.cm ℂ _ _ _ _ _ (unimod_last h hi).1 (unimod_last h hi).2
+  have : Finite (Cl D.sp.cm (Wc D i).gram (lev D.sp.cm (Wc D i).gram (R.βW i) (flag1L (R.datWp i R.triv)))) := hfin
+  have hne : Nonempty (Cls R i) := ⟨clsOf R i 1⟩
   obtain ⟨h1, h2, h3⟩ := principal_count (θ := R.θ) (R.MW i (sg0 D A)) (β := R.βW i) (L := R.datWp i R.triv) h.models.inf
     (D.sp.W_sig _) (fun τ => Or.inl (posDef_last hi τ)) hM (fun x => (levFn_eq_one_chainMember_flags_trivial i x).1) (gam_last h hbig hi)
   have hfd := fun τ => (GlobalTheory.DefLift.AllPlus.finite_smooth_irreducible D _ _ _ hM τ).1
   have hρ : 1 ≤ dimRho R i := by
     refine Finset.prod_pos (f := fun ρ => Module.finrank ℂ ((R.MW i (sg0 D A)).H ρ)) fun τ _ => ?_
-    haveI := hfd τ
-    haveI := ((R.MW i (sg0 D A)).ds τ).2.1
+    have := hfd τ
+    have := ((R.MW i (sg0 D A)).ds τ).2.1
     exact Module.finrank_pos
   have hK : dK R i = Nat.card (Cls R i) * dimRho R i := h2
   obtain ⟨e1, e2, -⟩ := h.models.HW i (sg0 D A)
@@ -1811,7 +1811,7 @@ theorem definiteGoodShare (hG : GlobalTheory.Published.GreenCuspidal) : Definite
   have hcz : ∀ a, conv c a = conv a c := central_tens2 p0.2 p1.2
   obtain ⟨r1, r2⟩ := GlobalTheory.T.range_levelIdempotentProduct_and_centralProduct _ _ _ _ _ G _ Φ L₁ L₂ (F.lvl b).P (fun g => ((chiB F b g : ℂˣ) : ℂ)) (R.gW i (sg0 D A)) c l1
     (fun g => by rw [← l2 g, ← sign_at_base_place_eq_embedding R]; rfl) hcc hcz
-  haveI : Nontrivial (R.HW i (sg0 D A)).H := Module.finrank_pos_iff.1 (by rw [hdim]; exact hPC.2.2.2.2.2.2.2)
+  have : Nontrivial (R.HW i (sg0 D A)).H := Module.finrank_pos_iff.1 (by rw [hdim]; exact hPC.2.2.2.2.2.2.2)
   have hcount : CountAt (M := (R.HW i (sg0 D A)).H) ((R.gW i (sg0 D A)).comp Φ.symm.toMonoidHom) 0 := by
     refine Basic.countAt_of_trace_eq_zero _ fun γ hγ hu => ?_
     obtain ⟨g, rfl⟩ := Φ.surjective γ

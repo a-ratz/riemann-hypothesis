@@ -56,17 +56,17 @@ theorem addFD_of_cover {A : Type} [AddGroup A] [TopologicalSpace A] [IsTopologic
     (hcov : ∀ x, ∃ γ ∈ Γ, γ + x ∈ C) :
     ∃ 𝓕 : Set A, MeasurableSet 𝓕 ∧ IsCompact (closure 𝓕) ∧ ∀ x, ∃! γ : Γ, γ +ᵥ x ∈ 𝓕 := by
   classical
-  letI mA : MeasurableSpace (Multiplicative A) := ‹MeasurableSpace A›
-  haveI : BorelSpace (Multiplicative A) := ⟨BorelSpace.measurable_eq (α := A)⟩
-  haveI : LocallyCompactSpace (Multiplicative A) := inferInstanceAs (LocallyCompactSpace A)
+  let mA : MeasurableSpace (Multiplicative A) := ‹MeasurableSpace A›
+  have : BorelSpace (Multiplicative A) := ⟨BorelSpace.measurable_eq (α := A)⟩
+  have : LocallyCompactSpace (Multiplicative A) := inferInstanceAs (LocallyCompactSpace A)
   let Γm : Subgroup (Multiplicative A) := AddSubgroup.toSubgroup Γ
   have memΓm : ∀ x : Multiplicative A, x ∈ Γm ↔ Multiplicative.toAdd x ∈ Γ := fun x => Iff.rfl
   let g : Γm → Γ := fun x => ⟨Multiplicative.toAdd x.1, (memΓm x.1).1 x.2⟩
-  have hg : Continuous g := (continuous_toAdd.comp continuous_subtype_val).subtype_mk _
+  have hg : Continuous g := (continuous_toAdd.comp continuous_subtypeVal).subtype_mk _
   have hgi : Function.Injective g := fun x y h => Subtype.ext (by
     have := congrArg Subtype.val h
     exact Multiplicative.toAdd.injective this)
-  haveI : DiscreteTopology Γm := DiscreteTopology.of_continuous_injective hg hgi
+  have : DiscreteTopology Γm := DiscreteTopology.of_continuous_injective hg hgi
   have hC' : IsCompact (Multiplicative.ofAdd '' C) := hC.image continuous_ofAdd
   have hcov' : ∀ x : Multiplicative A, ∃ γ ∈ Γm, γ * x ∈ Multiplicative.ofAdd '' C := by
     intro x

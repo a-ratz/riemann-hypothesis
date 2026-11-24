@@ -354,7 +354,7 @@ theorem enlarge_step [FiniteDimensional K V] (B : V →ₗ⋆[K] V →ₗ[K] K)
     subst hu0
     rfl
   have hlt : U < LinearMap.range Φ := by
-    rw [SetLike.lt_iff_le_and_exists]
+    rw [IsConcreteLE.lt_iff_le_and_exists]
     refine ⟨fun u hu => ⟨(⟨u, hu⟩, 0), by simp [hΦ]⟩, p, ⟨(0, 1), by simp [hΦ]⟩, hpnot⟩
   set eΦ := LinearEquiv.ofInjective Φ hΦinj with heΦ
   have hval : ∀ x : LinearMap.range Φ, (x : V) = Φ (eΦ.symm x) := fun x =>

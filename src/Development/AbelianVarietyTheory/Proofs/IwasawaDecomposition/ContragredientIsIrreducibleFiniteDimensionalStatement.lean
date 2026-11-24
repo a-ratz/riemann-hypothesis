@@ -76,7 +76,7 @@ namespace GlobalTheory
 theorem contragredient_isIrreducible : ∀ (k : Type) [Field k] (G : Type) [Group G] (V : Type) [AddCommGroup V] [Module k V] [FiniteDimensional k V]
     (ρ : Representation k G V), ρ.IsIrreducible → ρ.dual.IsIrreducible := by
   intro k _ G _ V _ _ _ ρ hρ
-  haveI : Nontrivial V := by
+  have : Nontrivial V := by
     by_contra hV
     rw [not_nontrivial_iff_subsingleton] at hV
     exact (bot_ne_top (α := Subrepresentation ρ))

@@ -529,16 +529,16 @@ theorem sections_eq {X : Scheme.{0}} {G : Over X} [GrpObj G] [IsCommMonObj G] (h
   let f' : fib G x ⟶ fib G (x ≫ ρ) := Over.homMk (pullback.lift (pullback.fst G.hom x ≫ F') (pullback.snd G.hom x) c₂.1.w) (pullback.lift_snd _ _ _)
   have ef : f.left ≫ pullback.fst G.hom (x ≫ ρ) = pullback.fst G.hom x ≫ F := pullback.lift_fst _ _ _
   have ef' : f'.left ≫ pullback.fst G.hom (x ≫ ρ) = pullback.fst G.hom x ≫ F' := pullback.lift_fst _ _ _
-  haveI : IsMonHom f := ReciprocityTheory.ChartRestriction.G.Out.PullGtPf.isMonHom_of_grpPullback c₁ pB (𝟙 G) f (by simpa using ef)
-  haveI : IsMonHom f' := ReciprocityTheory.ChartRestriction.G.Out.PullGtPf.isMonHom_of_grpPullback c₂ pB (𝟙 G) f' (by simpa using ef')
+  have : IsMonHom f := ReciprocityTheory.ChartRestriction.G.Out.PullGtPf.isMonHom_of_grpPullback c₁ pB (𝟙 G) f (by simpa using ef)
+  have : IsMonHom f' := ReciprocityTheory.ChartRestriction.G.Out.PullGtPf.isMonHom_of_grpPullback c₂ pB (𝟙 G) f' (by simpa using ef')
   have hA : IsAbelianScheme (fib G x) := by
-    haveI : IsProper (fib G x).hom := inferInstanceAs (IsProper (pullback.snd G.hom x))
+    have : IsProper (fib G x).hom := inferInstanceAs (IsProper (pullback.snd G.hom x))
     exact AbelianSchemeGerms.isAbelianScheme_of_proper _ (IsSemiAbelian.pullback x G hG)
   have hB : IsAbelianScheme (fib G (x ≫ ρ)) := by
-    haveI : IsProper (fib G (x ≫ ρ)).hom := inferInstanceAs (IsProper (pullback.snd G.hom (x ≫ ρ)))
+    have : IsProper (fib G (x ≫ ρ)).hom := inferInstanceAs (IsProper (pullback.snd G.hom (x ≫ ρ)))
     exact AbelianSchemeGerms.isAbelianScheme_of_proper _ (IsSemiAbelian.pullback (x ≫ ρ) G hG)
-  haveI : IsCommMonObj (fib G x) := hA.comm
-  haveI : IsCommMonObj (fib G (x ≫ ρ)) := hB.comm
+  have : IsCommMonObj (fib G x) := hA.comm
+  have : IsCommMonObj (fib G (x ≫ ρ)) := hB.comm
   have key : f = f' := by
     refine GlobalTheory.T.abelianScheme_hom_eq_of_tangent_eq k _ _ hA hB f f' fun v hv => ?_
     let w : overAt x (DualNumber k) ⟶ G := Over.homMk (v.left ≫ pullback.fst G.hom x) (by
@@ -574,8 +574,8 @@ theorem move_unique : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   intro E _ _ _ H Dw l Xo c _ _ lift hl k _ _ _ y y' g g' h h'
   obtain ⟨ρ, ν, -, hm, hf⟩ := h
   obtain ⟨ρ', ν', -, hm', hf'⟩ := h'
-  haveI : CharZero k := charZero_of_injective_algebraMap (algebraMap c.F k).injective
-  haveI : IsProper Xo.univ.t.G.hom := Xo.univ.proper
+  have : CharZero k := charZero_of_injective_algebraMap (algebraMap c.F k).injective
+  have : IsProper Xo.univ.t.G.hom := Xo.univ.proper
   have hx : y.x ≫ ρ = y.x ≫ ρ' := hf.1.symm.trans hf'.1
   have hu : ∀ τ i, y.u τ i ≫ ν.φ = y.u τ i ≫ ν'.φ := fun τ i => (hf.2.1 τ i).symm.trans (hf'.2.1 τ i)
   have ht : ∀ w : overAt y.x (DualNumber k) ⟶ Xo.univ.t.G, smT y.x 0 w = 1 → w.left ≫ ν.φ = w.left ≫ ν'.φ := by

@@ -78,7 +78,7 @@ theorem UpperTheory.V.KT.stabfin :
       _ = q (g⁻¹ • v.1) y := (q_smul g⁻¹ v.1 y).symm
       _ = q v.1 y := by rw [hgh']
       _ = 1 := hy
-  haveI : Finite S := hSfin.to_subtype
+  have : Finite S := hSfin.to_subtype
   let φ : MulAction.stabilizer (Gm L N) v → (Fin N → S) := fun g a =>
     ⟨(g : Gm L N) • (fun i => A i a), hS _ (hinv g.1 g.2 _ (hAcol a))⟩
   refine Finite.of_injective φ ?_

@@ -70,7 +70,7 @@ theorem qNum_divOfSec : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian
   have hE := eff_divOfSec_of_sec (isLB_lbPow hN l) s hs
   refine ⟨hE, m, _, hm, hE, rfl, fun C hC => ?_⟩
   obtain ⟨-, H, hH⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB p).1 hp
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   have hcls : toPic (divOfSec (isLB_lbPow hN l) s hs) = cls _ (isLB_lbPow hN l) :=
     (presents_divOfRatSec (isLB_lbPow hN l) (isRatSec_ratOfSec s hs)).toPic_eq
   rw [interNumRed_one_congr (isLB_toLB _) (isLB_lbPow hN l) hcls, hC.interNumRed_lbPow hH hN l]

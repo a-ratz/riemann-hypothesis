@@ -149,14 +149,14 @@ theorem UpperTheory.scaling_invariance_of_geometric_functional :
     have := hφ a ha0
     rw [ha] at this
     exact this
-  haveI : DiscreteTopology L := by
+  have : DiscreteTopology L := by
     apply discreteTopology_of_isOpen_singleton_zero
     rw [Metric.isOpen_singleton_iff]
     refine ⟨ε, hε, fun y hy => ?_⟩
     by_contra hne
     rw [dist_zero_right] at hy
     linarith [hnorm y hne]
-  haveI : IsZLattice ℝ L := by
+  have : IsZLattice ℝ L := by
     refine ⟨?_⟩
     have hs : (L : Set W) = ((↑) : W → V) ⁻¹' Set.range φ := rfl
     rw [hs]
@@ -189,7 +189,7 @@ open UpperTheory.V.Lit.Geo NumberField
 theorem UpperTheory.geometry_of_numbers_lattice_estimate :
     LatScale := by
   intro E _ _ _ a ha L hL
-  letI : InnerProductSpace ℝ (EuclideanSpace ℂ (Fin a × InfinitePlace E)) :=
+  let : InnerProductSpace ℝ (EuclideanSpace ℂ (Fin a × InfinitePlace E)) :=
     InnerProductSpace.rclikeToReal ℂ _
   refine ⟨Module.finrank ℝ (EuclideanSpace ℂ (Fin a × InfinitePlace E)), fun g => ?_⟩
   obtain ⟨C, N, hC, hmin⟩ := UpperTheory.global_geometric_estimate_of_local E a ha L hL

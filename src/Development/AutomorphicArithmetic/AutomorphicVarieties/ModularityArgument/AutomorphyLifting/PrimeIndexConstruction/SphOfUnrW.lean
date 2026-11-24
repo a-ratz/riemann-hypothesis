@@ -70,7 +70,7 @@ namespace UpperTheory.V.Z.Win.Birth
 private theorem exists_polarized {K Ω : Type} [Field K] [NumberField K] [IsCMField K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω]
     {l : ℕ} [Fact l.Prime] {n : ℕ} (H : HypothesesH) {ι : Qbar l ≃+* ℂ} (hn : 1 ≤ n) {r : G K Ω →* GL (Fin n) (Qbar l)}
     {π : CuspSub K n} (hp : Sol.Pol ι r) (ha : AttC ι r π) : ∃ χ, GlobalTheory.ContraPair.PolarizedPair π χ := by
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
+  have : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
   obtain ⟨μ, χ, c, P, hμ, hs, hc, hP⟩ := UpperTheory.cyclotomicCharacter_plusPart (algOfCyc H) UpperTheory.cyclotomic_char_conj_invariant K Ω l ι n r hp
   have hdual := selfDualC H K Ω l ι n hn r π ha χ μ hμ c P hc hP

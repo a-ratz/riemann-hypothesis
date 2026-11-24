@@ -179,7 +179,7 @@ theorem exists_coeff_idempotent_functions :
     p (IsLocalRing.closedPoint ℂ) ∈ connectedComponent z ∧ t (p ≫ pr) = i}
   have hUc : ∀ z w, w ∈ connectedComponent z → (w ∈ U ↔ z ∈ U) := by
     intro z w h
-    simp only [U, Set.mem_setOf_eq, connectedComponent_eq h]
+    simp only [U, Set.mem_ofPred_eq, connectedComponent_eq h]
   have hU : IsClopen U := by
     refine ⟨⟨isOpen_iff_forall_mem_open.2 fun z hz => ?_⟩, isOpen_iff_forall_mem_open.2 fun z hz => ?_⟩
     · exact ⟨connectedComponent z, fun w hw h => hz ((hUc z w hw).1 h),

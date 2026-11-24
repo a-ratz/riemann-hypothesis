@@ -158,13 +158,13 @@ theorem fractionalIdeal_mul_smul (a b : FractionalIdeal (𝓞 E)⁰ E)
     (Λ : Submodule (𝓞 E) (Fin r → E)) :
     ((a * b : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) • Λ =
       (a : Submodule (𝓞 E) E) • (b : Submodule (𝓞 E) E) • Λ := by
-  rw [FractionalIdeal.coe_mul]
+  rw [FractionalIdeal.coeToSubmodule_mul]
   exact Submodule.smul_assoc _ _ _
 
 omit [IsCMField E] in
 theorem fractionalIdeal_one_smul (Λ : Submodule (𝓞 E) (Fin r → E)) :
     ((1 : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) • Λ = Λ := by
-  rw [FractionalIdeal.coe_one]
+  rw [FractionalIdeal.coeToSubmodule_one]
   exact Submodule.one_smul _
 
 omit [IsCMField E] in
@@ -386,7 +386,7 @@ omit [IsCMField E] in
 theorem exists_rat_basis_of_isLattice (hΛ : ReciprocityTheory.MultiplicativeHeights.IsLattice Λ) :
     ∃ (n : ℕ) (b : Module.Basis (Fin n) ℚ (Fin r → E)),
       Submodule.span ℤ (Set.range b) = Λ.restrictScalars ℤ := by
-  haveI : (Λ.restrictScalars ℤ).IsLattice ℚ := by
+  have : (Λ.restrictScalars ℤ).IsLattice ℚ := by
     constructor
     · have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hΛ.1
       have : Module.Finite ℤ Λ := Module.Finite.trans (𝓞 E) Λ
@@ -418,15 +418,15 @@ theorem exists_rat_basis_of_isLattice (hΛ : ReciprocityTheory.MultiplicativeHei
     | zero => exact zero_mem _
     | add y z _ _ hy hz => exact add_mem hy hz
     | smul a y _ hy => exact hsmul a hy
-  haveI : (Λ.restrictScalars ℤ).IsFullLattice ℚ := ⟨hspan⟩
-  haveI : Module.Free ℤ (Λ.restrictScalars ℤ) := Submodule.IsLattice.free ℚ _
-  haveI : Module.Finite ℤ (Λ.restrictScalars ℤ) := Submodule.IsLattice.finite ℚ _
+  have : (Λ.restrictScalars ℤ).IsFullLattice ℚ := ⟨hspan⟩
+  have : Module.Free ℤ (Λ.restrictScalars ℤ) := Submodule.IsLattice.free ℚ _
+  have : Module.Finite ℤ (Λ.restrictScalars ℤ) := Submodule.IsLattice.finite ℚ _
   let b := Module.finBasis ℤ (Λ.restrictScalars ℤ)
   refine ⟨_, b.extendOfIsLattice ℚ, ?_⟩
   have h1 : Set.range (b.extendOfIsLattice ℚ) = (Λ.restrictScalars ℤ).subtype '' Set.range b := by
     rw [← Set.range_comp]
     congr 1
-    exact funext fun i => b.extendOfIsLattice_apply ℚ i
+    exact funext fun i => b.extendOfIsFullLattice_apply ℚ i
   rw [h1, ← Submodule.map_span, b.span_eq, Submodule.map_top, Submodule.range_subtype]
 
 theorem exists_traceFormDual_eq {ξ : E} (hξ : ξ ≠ 0) (hG : G.det ≠ 0)

@@ -118,7 +118,7 @@ theorem deep_mem (h1 : KOne k _ ≤ J) (hJ : J ≤ KO k _) {ϖ : kˣ} (hϖ : val
     (hu : ∀ a b, valuation k ((u.val - 1) a b) ≤ valuation k (ϖ : k) ^ D) :
     u ∈ cosStab J (box A (ϖ ^ M)) (Submodule.Quotient.mk y) := by
   rw [mem_stab_iff hJ]
-  refine ⟨h1 (mem_KOne.2 fun a b => (hu a b).trans_lt (pow_lt_one₀ zero_le' hϖ (by omega))), fun a => ?_⟩
+  refine ⟨h1 (mem_KOne.2 fun a b => (hu a b).trans_lt (pow_lt_one₀ zero_le hϖ (by omega))), fun a => ?_⟩
   have e : (u.val.toBlocks₁₁ *ᵥ y - y) a = ∑ b, (u.val - 1) (Sum.inl a) (Sum.inl b) * y b := by
     simp [Matrix.mulVec, dotProduct, Matrix.toBlocks₁₁, _root_.sub_mul, Finset.sum_sub_distrib, Matrix.one_apply]
   rw [e]
@@ -160,7 +160,7 @@ theorem val_le_of_congAt {Y : Type} [Fintype Y] [DecidableEq Y] {P : HeightOneSp
     congr 1
     by_cases hab : a = b <;> simp [Matrix.one_apply, hab]
   rw [map_mul, e1, e2, Valuation.mem_integer_iff, map_mul, map_inv₀, map_pow,
-    inv_mul_le_iff₀ (zero_lt_iff.2 (pow_ne_zero _ (by simp))), mul_one] at h
+    inv_mul_le_iff₀ (pos_iff_ne_zero.2 (pow_ne_zero _ (by simp))), mul_one] at h
   exact h
 
 theorem transfer {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL (A ⊕ Fin 0) k)} (h1 : KOne k _ ≤ J) (hJ : J ≤ KO k _)
@@ -212,7 +212,7 @@ theorem lev_facts {X : Fields} {Pr : Primes X} {R : Ranks} {Ch : Chars X Pr R.m}
     refine ⟨fun i j => ?_, fun i j => ?_⟩
     · simpa [reGL_symm_val] using h.1 (o.symm i) (o.symm j)
     · simpa [reGL_symm_val] using h.2 (o.symm i) (o.symm j)
-  · rw [hJ, hL.last_h, prCat, Jat, if_neg hA.nmem, mem_prX_JQ _ _ _ _ _ hc]
+  · rw [hJ, hL.last_h, prCat, Jat, ite_eq_right hA.nmem, mem_prX_JQ _ _ _ _ _ hc]
     exact mem_par_iff (c := 0) (s := s) hA.compl W.unif rfl hn he' W.tame γ
 
 
@@ -250,7 +250,7 @@ theorem mem_box_inv {E k : Type} [Field E] [NumberField E] [Field k] [ValuativeR
   have h := (mem_box_iff hc e 0 ((q : E) ^ M • v)).2 (by simpa using hv) r
   simp only [Pi.smul_apply, smul_eq_mul, map_mul, map_pow, ← hc.unif, pow_zero, Units.val_one, map_one] at h
   rw [Units.val_inv_eq_inv_val, Units.val_pow_eq_pow_val, map_inv₀, map_pow, ← one_mul (_ ^ M)⁻¹,
-    le_mul_inv_iff₀ (zero_lt_iff.2 (pow_ne_zero _ (by simp))), mul_comm]
+    le_mul_inv_iff₀ (pos_iff_ne_zero.2 (pow_ne_zero _ (by simp))), mul_comm]
   exact h
 
 section Seam
@@ -467,7 +467,7 @@ theorem uloc_iff {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l 
   have hsc : ∀ y y', GlobalTheory.TwU.SameCoset (n := B.R.N (s + 1)) I.sel (I.tup a) (I.cst a) P y y' ↔
       ∀ r, Formalism.L2.Col.IntAt P.1 ((((Formalism.L2.Col.qOf P.1 : ℕ) : B.fields.E) ^ (I.cst a).M)⁻¹ * (y - y') r) := fun y y' => by
     unfold GlobalTheory.TwU.SameCoset
-    rw [if_neg hW.nmem]
+    rw [ite_eq_right hW.nmem]
   constructor
   · intro h
     obtain ⟨g, z, hg, hin⟩ := hle P v (by rw [hseam]; exact hv) κ hκ h

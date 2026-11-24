@@ -376,7 +376,7 @@ theorem J1at_mul (hL : B.LatAll) (hTL : Tr0L D B.tor) {N N' : ℕ} (hN : Even N)
     (h0 : B.ThZeroMem N N') :
     letI := D.host.cmStar
     ∀ γ₁ γ₂ : Matrix.unitaryGroup (Fin N) D.host.E, J1at B N N' γ₁ → J1at B N N' γ₂ → J1at B N N' (γ₁ * γ₂) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ₁ γ₂ j1 j2
   have e1 : ((1 : Matrix.unitaryGroup (Fin N') D.host.E) : Matrix (Fin N') (Fin N') D.host.E) = 1 := rfl
   have em : ((γ₁ * γ₂ : Matrix.unitaryGroup (Fin N) D.host.E) : Matrix (Fin N) (Fin N) D.host.E) =
@@ -403,7 +403,7 @@ theorem J2at_mul (hL : B.LatAll) (hTR : Tr0R D B.tor) {N N' : ℕ} (hN : Even N)
     (h0 : B.ThZeroMem N N') :
     letI := D.host.cmStar
     ∀ γ₁ γ₂ : Matrix.unitaryGroup (Fin N') D.host.E, J2at B N N' γ₁ → J2at B N N' γ₂ → J2at B N N' (γ₁ * γ₂) := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro γ₁ γ₂ j1 j2
   have e1 : ((1 : Matrix.unitaryGroup (Fin N) D.host.E) : Matrix (Fin N) (Fin N) D.host.E) = 1 := rfl
   have em : ((γ₁ * γ₂ : Matrix.unitaryGroup (Fin N') D.host.E) : Matrix (Fin N') (Fin N') D.host.E) =
@@ -471,7 +471,7 @@ theorem Copies.idx (c : Copies e H H₁ α α₁ Λ Λ₁ δ Ae δ₁ Ae₁) (i�
       rw [QuotientAddGroup.eq, AddSubgroup.mem_addSubgroupOf]
       show -(e x i₀) + (y : V₁) ∈ _
       rwa [neg_add_eq_sub]
-  haveI : Finite (Λ₁ ⧸ (latA Λ₁ δ₁ Ae₁).addSubgroupOf Λ₁) := Finite.of_surjective f hf
+  have : Finite (Λ₁ ⧸ (latA Λ₁ δ₁ Ae₁).addSubgroupOf Λ₁) := Finite.of_surjective f hf
   exact AddSubgroup.index_ne_zero_of_finite
 
 end Idx
@@ -496,7 +496,7 @@ theorem const_copies (hLat : IsLat Λ) (hU : UnitaryData H Λ α δ Ae) (hLine :
     pullInv δ θ = LinearMap.det (δ₁ : V₁ →ₗ[ℂ] V₁) ^ (Fintype.card ι / 2) •
       inter H α Λ (imgLat (δ : V →ₗ[ℂ] V) Λ) θ := by
   rcases isEmpty_or_nonempty ι with hι | ⟨⟨i₀⟩⟩
-  · haveI : Subsingleton V := e.injective.subsingleton
+  · have : Subsingleton V := e.injective.subsingleton
     have h1 : imgLat (δ : V →ₗ[ℂ] V) Λ = Λ := by
       ext x
       rw [Subsingleton.elim x 0]

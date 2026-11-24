@@ -102,7 +102,7 @@ theorem exists_sfd {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
   obtain ⟨F, hF, hFm⟩ : ∃ F : Set G, (∀ y, y ∈ F ↔ ∃ n, y * (d n)⁻¹ ∈ U ∧ ∀ m < n, y ∉ S m) ∧
       MeasurableSet F := by
     refine ⟨⋃ n, ((fun x => x * (d n)⁻¹) ⁻¹' U \ ⋃ m, ⋃ (_ : m < n), S m), fun y => ?_, ?_⟩
-    · simp only [Set.mem_iUnion, Set.mem_diff, Set.mem_preimage, not_exists]
+    · simp only [Set.mem_iUnion, Set.mem_sdiff, Set.mem_preimage, not_exists]
     · exact MeasurableSet.iUnion fun n =>
         (hUo.preimage (continuous_id.mul continuous_const)).measurableSet.diff
           (isOpen_iUnion fun m => isOpen_iUnion fun _ => hSo m).measurableSet

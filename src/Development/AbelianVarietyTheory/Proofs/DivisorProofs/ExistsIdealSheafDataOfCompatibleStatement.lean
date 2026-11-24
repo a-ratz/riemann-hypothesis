@@ -96,7 +96,7 @@ lemma glueIdeal_eq {V : X.affineOpens} (hV : V ∈ 𝒜) : glueIdeal 𝒜 k V = 
 lemma exists_pow_mul_mem {B : X.affineOpens} (hB : B ∈ 𝒜) (g x : Γ(X, B))
     (hx : (X.presheaf.map (homOfLE (X.basicOpen_le g)).op).hom x ∈ k (X.affineBasicOpen g)) :
     ∃ n : ℕ, g ^ n * x ∈ k B := by
-  haveI := B.2.isLocalization_basicOpen g
+  have := B.2.isLocalization_basicOpen g
   rw [← hk B hB (X.affineBasicOpen g) (X.affineBasicOpen_le g)] at hx
   change algebraMap Γ(X, B) Γ(X, X.basicOpen g) x ∈
     Ideal.map (algebraMap Γ(X, B) Γ(X, X.basicOpen g)) (k B) at hx
@@ -163,7 +163,7 @@ lemma glueIdeal_basicOpen (h𝒜 : ∀ W ∈ 𝒜, ∀ W' : X.affineOpens, W' �
     (hcov : ∀ x : X, ∃ W ∈ 𝒜, x ∈ W.1) (U : X.affineOpens) (f : Γ(X, U)) :
     (glueIdeal 𝒜 k U).map (X.presheaf.map (homOfLE (X.basicOpen_le f)).op).hom =
       glueIdeal 𝒜 k (X.affineBasicOpen f) := by
-  haveI := U.2.isLocalization_basicOpen f
+  have := U.2.isLocalization_basicOpen f
   have halg : ∀ y, algebraMap Γ(X, U) Γ(X, X.basicOpen f) y =
       (X.presheaf.map (homOfLE (X.basicOpen_le f)).op).hom y := fun _ => rfl
   apply le_antisymm

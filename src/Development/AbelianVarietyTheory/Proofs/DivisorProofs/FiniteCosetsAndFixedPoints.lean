@@ -109,13 +109,13 @@ variable (p : ℕ) [Fact p.Prime]
 theorem exists_basis_OK (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (hK : FiniteDimensional ℚ_[p] K) :
     ∃ (ι : Type) (_ : Fintype ι) (β : Module.Basis ι ℚ_[p] K),
       ∀ x : K, x ∈ OK p K ↔ ∀ i, ‖β.repr x i‖ ≤ 1 := by
-  letI := zpAlgOK p K
-  haveI := isScalarTower_zp_OK p K
-  haveI := isIntegralClosure_OK p K
-  haveI := isTorsionFree_zp_K p K
-  haveI : Module.Free ℤ_[p] (OK p K) := IsIntegralClosure.module_free ℤ_[p] ℚ_[p] K _
-  haveI : Module.Finite ℤ_[p] (OK p K) := IsIntegralClosure.finite ℤ_[p] ℚ_[p] K _
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (OK p K) (nonZeroDivisors ℤ_[p])) K :=
+  let := zpAlgOK p K
+  have := isScalarTower_zp_OK p K
+  have := isIntegralClosure_OK p K
+  have := isTorsionFree_zp_K p K
+  have : Module.Free ℤ_[p] (OK p K) := IsIntegralClosure.module_free ℤ_[p] ℚ_[p] K _
+  have : Module.Finite ℤ_[p] (OK p K) := IsIntegralClosure.finite ℤ_[p] ℚ_[p] K _
+  have : IsLocalization (Algebra.algebraMapSubmonoid (OK p K) (nonZeroDivisors ℤ_[p])) K :=
     IsIntegralClosure.isLocalization ℤ_[p] ℚ_[p] K (OK p K)
   let β₀ := Module.finBasis ℤ_[p] (OK p K)
   let β := β₀.localizationLocalization ℚ_[p] (nonZeroDivisors ℤ_[p]) K
@@ -279,7 +279,7 @@ theorem isOpen_of_padicLattice {p : ℕ} [Fact p.Prime] {V : Type*} [AddCommGrou
     [FiniteDimensional ℚ_[p] V] [TopologicalSpace V] [IsModuleTopology ℚ_[p] V]
     (A : AddSubgroup V) (hA : ∀ c : ℚ_[p], ‖c‖ ≤ 1 → ∀ v ∈ A, c • v ∈ A)
     (hN : ∀ v : V, ∃ N : ℕ, (p : ℚ_[p]) ^ N • v ∈ A) : IsOpen (A : Set V) := by
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd ℚ_[p] V
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd ℚ_[p] V
   let b := Module.finBasis ℚ_[p] V
   choose N hN' using fun i => hN (b i)
   set M := ∑ i, N i with hMdef
@@ -384,10 +384,10 @@ variable (p : ℕ) [Fact p.Prime] (K : IntermediateField ℚ_[p] (PadicAlgCl p))
 
 theorem isOpen_intKQ (hK : FiniteDimensional ℚ_[p] K) (r : ℕ) (hr : 0 < r) :
     IsOpen (intKQ p K r : Set (KQ p K r)) := by
-  haveI : FiniteDimensional ℚ_[p] (Qr p r) := finiteDimensional_Kn p (Q0 p) inferInstance hr
-  haveI : FiniteDimensional ℚ_[p] (KQ p K r) :=
+  have : FiniteDimensional ℚ_[p] (Qr p r) := finiteDimensional_Kn p (Q0 p) inferInstance hr
+  have : FiniteDimensional ℚ_[p] (KQ p K r) :=
     inferInstanceAs (Module.Finite ℚ_[p] (K ⊗[ℚ_[p]] Qr p r))
-  haveI : IsModuleTopology ℚ_[p] (KQ p K r) := ⟨rfl⟩
+  have : IsModuleTopology ℚ_[p] (KQ p K r) := ⟨rfl⟩
   exact isOpen_of_padicLattice (intKQ p K r).toAddSubgroup
     (fun c hc v hv => smul_mem_intKQ p K r c hc v hv) (exists_pow_smul_mem_intKQ p K r)
 
@@ -452,7 +452,7 @@ namespace GlobalTheory.LKMid
 
 theorem t2Space_kq {p : ℕ} [Fact p.Prime] (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (r : ℕ) :
     T2Space (KQ p K r) := by
-  haveI : IsModuleTopology ℚ_[p] (KQ p K r) := ⟨rfl⟩
+  have : IsModuleTopology ℚ_[p] (KQ p K r) := ⟨rfl⟩
   let b := Module.Free.chooseBasis ℚ_[p] (KQ p K r)
   let φ : KQ p K r →ₗ[ℚ_[p]] (Module.Free.ChooseBasisIndex ℚ_[p] (KQ p K r) → ℚ_[p]) :=
     Finsupp.lcoeFun ∘ₗ b.repr.toLinearMap
@@ -489,13 +489,13 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem kq_lc (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K] :
     LocallyCompactSpace (KQ p K 1) ∧ SecondCountableTopology (KQ p K 1) := by
-  haveI : FiniteDimensional ℚ_[p] (Qr p 1) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance one_pos
-  haveI : FiniteDimensional ℚ_[p] (KQ p K 1) :=
+  have : FiniteDimensional ℚ_[p] (Qr p 1) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance one_pos
+  have : FiniteDimensional ℚ_[p] (KQ p K 1) :=
     inferInstanceAs (Module.Finite ℚ_[p] (K ⊗[ℚ_[p]] Qr p 1))
-  haveI : IsModuleTopology ℚ_[p] (KQ p K 1) := ⟨rfl⟩
-  haveI : IsTopologicalRing (KQ p K 1) := IsModuleTopology.isTopologicalRing ℚ_[p] _
-  haveI : ContinuousSMul ℚ_[p] (KQ p K 1) := IsModuleTopology.toContinuousSMul ℚ_[p] _
-  haveI : T2Space (KQ p K 1) := GlobalTheory.LKMid.t2Space_kq K 1
+  have : IsModuleTopology ℚ_[p] (KQ p K 1) := ⟨rfl⟩
+  have : IsTopologicalRing (KQ p K 1) := IsModuleTopology.isTopologicalRing ℚ_[p] _
+  have : ContinuousSMul ℚ_[p] (KQ p K 1) := IsModuleTopology.toContinuousSMul ℚ_[p] _
+  have : T2Space (KQ p K 1) := GlobalTheory.LKMid.t2Space_kq K 1
   let b := Module.finBasis ℚ_[p] (KQ p K 1)
   let e : KQ p K 1 ≃L[ℚ_[p]] (Fin (Module.finrank ℚ_[p] (KQ p K 1)) → ℚ_[p]) :=
     b.equivFun.toContinuousLinearEquiv
@@ -504,13 +504,13 @@ theorem kq_lc (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional 
 
 theorem isCompact_intKQ (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K] :
     IsCompact (intKQ p K 1 : Set (KQ p K 1)) := by
-  haveI : FiniteDimensional ℚ_[p] (Qr p 1) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance one_pos
-  haveI : FiniteDimensional ℚ_[p] (KQ p K 1) :=
+  have : FiniteDimensional ℚ_[p] (Qr p 1) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance one_pos
+  have : FiniteDimensional ℚ_[p] (KQ p K 1) :=
     inferInstanceAs (Module.Finite ℚ_[p] (K ⊗[ℚ_[p]] Qr p 1))
-  haveI : IsModuleTopology ℚ_[p] (KQ p K 1) := ⟨rfl⟩
-  haveI : IsTopologicalRing (KQ p K 1) := IsModuleTopology.isTopologicalRing ℚ_[p] _
-  haveI : ContinuousSMul ℚ_[p] (KQ p K 1) := IsModuleTopology.toContinuousSMul ℚ_[p] _
-  haveI : T2Space (KQ p K 1) := GlobalTheory.LKMid.t2Space_kq K 1
+  have : IsModuleTopology ℚ_[p] (KQ p K 1) := ⟨rfl⟩
+  have : IsTopologicalRing (KQ p K 1) := IsModuleTopology.isTopologicalRing ℚ_[p] _
+  have : ContinuousSMul ℚ_[p] (KQ p K 1) := IsModuleTopology.toContinuousSMul ℚ_[p] _
+  have : T2Space (KQ p K 1) := GlobalTheory.LKMid.t2Space_kq K 1
   obtain ⟨ι, _, b, hb⟩ := GlobalTheory.IntBasisKQ.exists_basis_intKQ p K inferInstance 1 one_pos
   let e : KQ p K 1 ≃L[ℚ_[p]] (ι → ℚ_[p]) := b.equivFun.toContinuousLinearEquiv
   have hset : (intKQ p K 1 : Set (KQ p K 1)) = e ⁻¹' Set.univ.pi fun _ => Metric.closedBall (0 : ℚ_[p]) 1 := by
@@ -522,12 +522,12 @@ theorem isCompact_intKQ (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDi
 
 theorem isCompact_Kres (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K] (n : ℕ) :
     IsCompact (Kres p K n 1 : Set (GL (Fin n) (KQ p K 1))) := by
-  haveI : FiniteDimensional ℚ_[p] (Qr p 1) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance one_pos
-  haveI : FiniteDimensional ℚ_[p] (KQ p K 1) :=
+  have : FiniteDimensional ℚ_[p] (Qr p 1) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance one_pos
+  have : FiniteDimensional ℚ_[p] (KQ p K 1) :=
     inferInstanceAs (Module.Finite ℚ_[p] (K ⊗[ℚ_[p]] Qr p 1))
-  haveI : IsModuleTopology ℚ_[p] (KQ p K 1) := ⟨rfl⟩
-  haveI : IsTopologicalRing (KQ p K 1) := IsModuleTopology.isTopologicalRing ℚ_[p] _
-  haveI : T2Space (KQ p K 1) := GlobalTheory.LKMid.t2Space_kq K 1
+  have : IsModuleTopology ℚ_[p] (KQ p K 1) := ⟨rfl⟩
+  have : IsTopologicalRing (KQ p K 1) := IsModuleTopology.isTopologicalRing ℚ_[p] _
+  have : T2Space (KQ p K 1) := GlobalTheory.LKMid.t2Space_kq K 1
   set B : Set (Matrix (Fin n) (Fin n) (KQ p K 1)) := {M | ∀ i j, M i j ∈ intKQ p K 1} with hB
   have hBc : IsCompact B := by
     have : B = Set.univ.pi fun _ : Fin n => Set.univ.pi fun _ : Fin n => (intKQ p K 1 : Set (KQ p K 1)) := by
@@ -540,7 +540,7 @@ theorem isCompact_Kres (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDim
   have e : (Kres p K n 1 : Set (GL (Fin n) (KQ p K 1))) = Units.embedProduct _ ⁻¹' (B ×ˢ (MulOpposite.unop ⁻¹' B)) := by
     ext g
     simp only [SetLike.mem_coe, mem_Kres_iff, Set.mem_preimage, Set.mem_prod, Units.embedProduct_apply,
-      MulOpposite.unop_op, hB, Set.mem_setOf_eq]
+      MulOpposite.unop_op, hB, Set.mem_ofPred_eq]
     exact ⟨fun h => ⟨fun i j => (h i j).1, fun i j => (h i j).2⟩, fun h i j => ⟨h.1 i j, h.2 i j⟩⟩
   rw [e]
   exact Units.isClosedEmbedding_embedProduct.isCompact_preimage (hBc.prod hB')
@@ -549,9 +549,9 @@ theorem isCompact_Kres (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDim
 open Polynomial in
 theorem rho_charpoly_sep (G : HTGroup p) (w : Fin G.m) (y : G.C) (hdeg : (minpoly G.F y).natDegree = G.n)
     (hsep : (minpoly G.F y).Separable) : (G.rho w y).charpoly.Separable := by
-  letI : Algebra G.F (G.Fw w) := (G.embW w).toAlgebra
-  haveI : Nontrivial (Matrix (Fin G.n) (Fin G.n) (G.Fw w)) := by
-    haveI : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
+  let : Algebra G.F (G.Fw w) := (G.embW w).toAlgebra
+  have : Nontrivial (Matrix (Fin G.n) (Fin G.n) (G.Fw w)) := by
+    have : Nonempty (Fin G.n) := ⟨⟨0, G.n_pos⟩⟩
     infer_instance
   let ρF : G.C →ₐ[G.F] Matrix (Fin G.n) (Fin G.n) (G.Fw w) :=
     { G.rho w with
@@ -578,8 +578,8 @@ theorem rho_charpoly_sep (G : HTGroup p) (w : Fin G.m) (y : G.C) (hdeg : (minpol
     have h := linearIndependent_pow (K := G.F) y
     rw [hdeg] at h
     exact h
-  letI : Module.Free G.F (G.Fw w) := Module.Free.of_divisionRing _ _
-  letI : Module.Flat G.F (G.Fw w) := Module.Flat.of_free
+  let : Module.Free G.F (G.Fw w) := Module.Free.of_divisionRing _ _
+  let : Module.Flat G.F (G.Fw w) := Module.Flat.of_free
   have hliC : LinearIndependent (G.Fw w) (fun i : Fin G.n => z ^ (i : ℕ)) := by
     have h := Module.Flat.linearIndependent_one_tmul (S := G.Fw w) hliF
     convert h using 1
@@ -628,13 +628,13 @@ theorem loc (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional �
       (∃ s ∈ S₂, ∃ k₁ ∈ Kres p K n 1, ∃ k₂ ∈ Kres p K n 1, h⁻¹ * γ * h = k₁ * s * k₂) →
       ∃ a : GL (Fin n) (KQ p K 1), a * γ = γ * a ∧ ∃ s ∈ S, ∃ k ∈ Kres p K n 1, h = a * s * k := by
   obtain ⟨hlc, hsc⟩ := kq_lc K
-  haveI : FiniteDimensional ℚ_[p] (Qr p 1) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance one_pos
-  haveI : FiniteDimensional ℚ_[p] (KQ p K 1) :=
+  have : FiniteDimensional ℚ_[p] (Qr p 1) := ReciprocityTheory.DiscreteGroups.LocalClassField.finiteDimensional_Kn p (Q0 p) inferInstance one_pos
+  have : FiniteDimensional ℚ_[p] (KQ p K 1) :=
     inferInstanceAs (Module.Finite ℚ_[p] (K ⊗[ℚ_[p]] Qr p 1))
-  haveI : IsModuleTopology ℚ_[p] (KQ p K 1) := ⟨rfl⟩
-  haveI : IsTopologicalRing (KQ p K 1) := IsModuleTopology.isTopologicalRing ℚ_[p] _
-  haveI : T2Space (KQ p K 1) := GlobalTheory.LKMid.t2Space_kq K 1
-  haveI : IsArtinianRing (KQ p K 1) := IsArtinianRing.of_finite ℚ_[p] (KQ p K 1)
+  have : IsModuleTopology ℚ_[p] (KQ p K 1) := ⟨rfl⟩
+  have : IsTopologicalRing (KQ p K 1) := IsModuleTopology.isTopologicalRing ℚ_[p] _
+  have : T2Space (KQ p K 1) := GlobalTheory.LKMid.t2Space_kq K 1
+  have : IsArtinianRing (KQ p K 1) := IsArtinianRing.of_finite ℚ_[p] (KQ p K 1)
   have hK := isCompact_Kres K n
   have hO := isOpen_Kres p K inferInstance n 1 one_pos
   set Ω : Set (GL (Fin n) (KQ p K 1)) := ⋃ s ∈ S₂,
@@ -693,9 +693,9 @@ theorem prod_fin (G : HTGroup p) (γ : Gr G 1)
 
 theorem exists_finset_cosets {H : Type} [Group H] (K₀ K : Subgroup H) (hK : K.relIndex K₀ ≠ 0) :
     ∃ T : Finset H, ∀ k ∈ K₀, ∃ t ∈ T, ∃ k' ∈ K, k = t * k' := by
-  haveI : (K.subgroupOf K₀).FiniteIndex := ⟨hK⟩
-  haveI : Finite (K₀ ⧸ K.subgroupOf K₀) := Subgroup.finite_quotient_of_finiteIndex
-  haveI : Fintype (K₀ ⧸ K.subgroupOf K₀) := Fintype.ofFinite _
+  have : (K.subgroupOf K₀).FiniteIndex := ⟨hK⟩
+  have : Finite (K₀ ⧸ K.subgroupOf K₀) := Subgroup.finite_quotient_of_finiteIndex
+  have : Fintype (K₀ ⧸ K.subgroupOf K₀) := Fintype.ofFinite _
   refine ⟨Finset.univ.image fun q : K₀ ⧸ K.subgroupOf K₀ => ((Quotient.out q : K₀) : H), fun k hk => ?_⟩
   set q : K₀ ⧸ K.subgroupOf K₀ := QuotientGroup.mk ⟨k, hk⟩
   have hq : (Quotient.out q)⁻¹ * (⟨k, hk⟩ : K₀) ∈ K.subgroupOf K₀ := by
@@ -734,12 +734,12 @@ theorem continuous_tensorMap {R R' : Type} [CommRing R] [Algebra ℚ R] [Topolog
     letI : TopologicalSpace (R ⊗[ℚ] C) := moduleTopology R (R ⊗[ℚ] C)
     letI : TopologicalSpace (R' ⊗[ℚ] C) := moduleTopology R' (R' ⊗[ℚ] C)
     Continuous (Algebra.TensorProduct.map f (AlgHom.id ℚ C)) := by
-  letI : TopologicalSpace (R ⊗[ℚ] C) := moduleTopology R (R ⊗[ℚ] C)
-  letI : TopologicalSpace (R' ⊗[ℚ] C) := moduleTopology R' (R' ⊗[ℚ] C)
-  haveI : IsModuleTopology R (R ⊗[ℚ] C) := ⟨rfl⟩
-  haveI : IsModuleTopology R' (R' ⊗[ℚ] C) := ⟨rfl⟩
-  haveI : ContinuousAdd (R' ⊗[ℚ] C) := IsModuleTopology.toContinuousAdd R' _
-  haveI : ContinuousSMul R' (R' ⊗[ℚ] C) := IsModuleTopology.toContinuousSMul R' _
+  let : TopologicalSpace (R ⊗[ℚ] C) := moduleTopology R (R ⊗[ℚ] C)
+  let : TopologicalSpace (R' ⊗[ℚ] C) := moduleTopology R' (R' ⊗[ℚ] C)
+  have : IsModuleTopology R (R ⊗[ℚ] C) := ⟨rfl⟩
+  have : IsModuleTopology R' (R' ⊗[ℚ] C) := ⟨rfl⟩
+  have : ContinuousAdd (R' ⊗[ℚ] C) := IsModuleTopology.toContinuousAdd R' _
+  have : ContinuousSMul R' (R' ⊗[ℚ] C) := IsModuleTopology.toContinuousSMul R' _
   let b := Module.finBasis ℚ C
   let bA := Algebra.TensorProduct.basis R b
   let bB := Algebra.TensorProduct.basis R' b
@@ -758,14 +758,14 @@ theorem continuous_tensorMap {R R' : Type} [CommRing R] [Algebra ℚ R] [Topolog
 
 theorem continuous_piV : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p), Continuous (piV G v) := by
   intro p _ G v
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) _
-  letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) _
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) _
+  let : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) _
   have hf : Continuous (AfP.eval v) := RestrictedProduct.continuous_eval v
   have hφ := continuous_tensorMap (C := G.C) (AfP.eval v) hf
   have h1 := Units.continuous_map (f := (Algebra.TensorProduct.map (AfP.eval v) (AlgHom.id ℚ G.C)).toRingHom.toMonoidHom) hφ
   have h2 := Units.continuous_map (f := (AfP.eval v).toRingHom.toMonoidHom) hf
   refine continuous_induced_rng.2 ?_
-  exact (h1.comp (continuous_fst.comp continuous_subtype_val)).prodMk (h2.comp (continuous_snd.comp continuous_subtype_val))
+  exact (h1.comp (continuous_fst.comp continuous_subtypeVal)).prodMk (h2.comp (continuous_snd.comp continuous_subtypeVal))
 
 end GlobalTheory.OrbFinAf
 end -- clump:auto
@@ -1080,9 +1080,9 @@ namespace GlobalTheory.CentCls
 
 theorem exists_finset_cosets {A : Type} [Group A] (U₀ U : Subgroup A) (h : U.relIndex U₀ ≠ 0) :
     ∃ F : Finset A, ∀ u ∈ U₀, ∃ f ∈ F, f ∈ U₀ ∧ ∃ v ∈ U, u = f * v := by
-  haveI : (U.subgroupOf U₀).FiniteIndex := ⟨h⟩
-  haveI : Finite (U₀ ⧸ U.subgroupOf U₀) := Subgroup.finite_quotient_of_finiteIndex
-  haveI := Fintype.ofFinite (U₀ ⧸ U.subgroupOf U₀)
+  have : (U.subgroupOf U₀).FiniteIndex := ⟨h⟩
+  have : Finite (U₀ ⧸ U.subgroupOf U₀) := Subgroup.finite_quotient_of_finiteIndex
+  have := Fintype.ofFinite (U₀ ⧸ U.subgroupOf U₀)
   refine ⟨Finset.univ.image (fun q : U₀ ⧸ U.subgroupOf U₀ => ((q.out : U₀) : A)), ?_⟩
   intro u hu
   set q : U₀ ⧸ U.subgroupOf U₀ := QuotientGroup.mk ⟨u, hu⟩
@@ -1109,8 +1109,8 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (K' : 
   obtain ⟨O₁, hO₁, h1O₁, hO₁K⟩ :=
     exists_open_psiAway_mem_conj_level p G L β x t hx (((y₀ : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C) r₁
   obtain ⟨O₂, hO₂, h1O₂, hO₂K⟩ := GlobalTheory.T.psi_p_neighborhood_in_level_subgroup p G r₂
-  letI : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
-  letI : TopologicalSpace (ℚ_[p] ⊗[ℚ] G.C) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C)
+  let : TopologicalSpace (AfP p ⊗[ℚ] G.C) := moduleTopology (AfP p) (AfP p ⊗[ℚ] G.C)
+  let : TopologicalSpace (ℚ_[p] ⊗[ℚ] G.C) := moduleTopology ℚ_[p] (ℚ_[p] ⊗[ℚ] G.C)
   obtain ⟨S, hS⟩ := GlobalTheory.T.similitudeCentraliser_classNumber_finite_borel G.C G.star (β : G.C) (((y₀ : G.Cˣ × ℚˣ).1 : G.Cˣ) : G.C) p
     (U₁.prod U₂) ⟨O₁ ×ˢ O₂, hO₁.prod hO₂, ⟨h1O₁, h1O₂⟩,
       fun z hz hT1 _ => Subgroup.mem_prod.mpr ⟨by
@@ -1132,7 +1132,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (K' : 
       ((gOf w : G.GAf) : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) = w := by
     intro w g hg
     have h : ∃ g : G.GAf, (g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) = w := ⟨g, hg⟩
-    simp only [gOf, dif_pos h]
+    simp only [gOf, dite_eq_left h]
     exact h.choose_spec
   refine ⟨(S' ×ˢ F₂).image (fun q => (gOf (psiAway G x q.1.1) * r₁, psiP G q.1.2 * r₂ * q.2)), ?_⟩
   intro c hc
@@ -1146,7 +1146,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : G.Level) (K' : 
       ∃ s' ∈ S', dg G.C p γ * s = dg G.C p γ' * s' := by
     rcases lt_or_gt_of_ne (Units.ne_zero γ.2) with hneg | hpos
     · have hex : ∃ e, Pf e ∧ (e.2 : ℚ) < 0 := ⟨γ, ⟨hγf, hγc⟩, hneg⟩
-      have he₀ : e₀ = hex.choose := by simp only [e₀, dif_pos hex]
+      have he₀ : e₀ = hex.choose := by simp only [e₀, dite_eq_left hex]
       obtain ⟨⟨he1, he2⟩, he3⟩ := hex.choose_spec
       refine ⟨γ * e₀⁻¹, ⟨?_, ?_⟩, ?_, dg G.C p e₀ * s,
         Finset.mem_union_right _ (Finset.mem_image_of_mem _ hs), ?_⟩
@@ -1238,9 +1238,9 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem isCompact_isIntV (G : HTGroup p) (v : AwayP p) :
     @IsCompact _ (moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)) {y | IsIntV G v y} := by
-  letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) _
+  let : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
+  have : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) _
   set b := basV G v
   have hc : Continuous b.equivFun.symm :=
     IsModuleTopology.continuous_of_linearMap b.equivFun.symm.toLinearMap
@@ -1251,17 +1251,17 @@ theorem isCompact_isIntV (G : HTGroup p) (v : AwayP p) :
       (v.1.adicCompletionIntegers ℚ : Set (Qv v))) := by
     rw [LinearEquiv.image_symm_eq_preimage]
     ext y
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Set.mem_univ_pi, Module.Basis.equivFun_apply]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_univ_pi, Module.Basis.equivFun_apply]
     rfl
   rw [hset]
   exact hbox.image hc
 
 theorem isCompact_IntV : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (v : AwayP p), IsCompact (IntV G v) := by
   intro p _ G v
-  letI : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
-  haveI : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) _
-  haveI : T2Space (Qv v ⊗[ℚ] G.C) := LevelExists.t2Space_tensor_rat_finite_algebra_moduleTopology (Qv v) G.C
+  let : TopologicalSpace (Qv v ⊗[ℚ] G.C) := moduleTopology (Qv v) (Qv v ⊗[ℚ] G.C)
+  have : IsModuleTopology (Qv v) (Qv v ⊗[ℚ] G.C) := ⟨rfl⟩
+  have : IsTopologicalRing (Qv v ⊗[ℚ] G.C) := IsModuleTopology.isTopologicalRing (Qv v) _
+  have : T2Space (Qv v ⊗[ℚ] G.C) := LevelExists.t2Space_tensor_rat_finite_algebra_moduleTopology (Qv v) G.C
   have hPc := isCompact_isIntV G v
   have hOc := LevelExists.isCompact_intCompl v.1
   set P : Set (Qv v ⊗[ℚ] G.C) := {y | IsIntV G v y}
@@ -1447,11 +1447,11 @@ theorem fin_cosets_away_sep : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : 
   let D' : ∀ v : AwayP p, Set (Gv G v) := fun v => if v ∈ Good then IntV G v else D₁ v
   have hD'c : ∀ v, IsCompact (D' v) := by
     intro v; by_cases hv : v ∈ Good
-    · simp only [D', if_pos hv]; exact GlobalTheory.T.isCompact_integralUnitaryPointsAtPlace p G v
-    · simp only [D', if_neg hv]; exact hD₁ v
+    · simp only [D', ite_eq_left hv]; exact GlobalTheory.T.isCompact_integralUnitaryPointsAtPlace p G v
+    · simp only [D', ite_eq_right hv]; exact hD₁ v
   have hD'i : ∀ᶠ v in (Filter.cofinite : Filter (AwayP p)), D' v ⊆ IntV G v := by
     filter_upwards [hGood] with v hv
-    simp only [D', if_pos hv]; exact le_rfl
+    simp only [D', ite_eq_left hv]; exact le_rfl
   have key : ∀ g : G.GAf, g⁻¹ * γ * g ∈ Ω → ∃ c ∈ T, ∃ d ∈ {g : G.GAf | ∀ v, piV G v g ∈ D' v}, g = c * d := by
     intro g hg
     have hloc : ∀ v, ∃ c ∈ GlobalTheory.BCT.twCent (MonoidHom.id (Gv G v)) (piV G v γ), ∃ d ∈ D' v, piV G v g = c * d := by
@@ -1460,13 +1460,13 @@ theorem fin_cosets_away_sep : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (L : 
         ⟨_, hg, by simp only [map_mul, map_inv]⟩
       by_cases hv : v ∈ Good
       · obtain ⟨c, hc, d, hd, e⟩ := hv.2.1 _ (hv.1 hgv)
-        exact ⟨c, hc, d, by simp only [D', if_pos hv]; exact hd, e⟩
+        exact ⟨c, hc, d, by simp only [D', ite_eq_left hv]; exact hd, e⟩
       · obtain ⟨c, hc, d, hd, e⟩ := hD₁g v _ hgv
-        exact ⟨c, hc, d, by simp only [D', if_neg hv]; exact hd, e⟩
+        exact ⟨c, hc, d, by simp only [D', ite_eq_right hv]; exact hd, e⟩
     choose c hc d hd e using hloc
     have hcint : ∀ᶠ v in (Filter.cofinite : Filter (AwayP p)), c v ∈ IntV G v := by
       filter_upwards [GlobalTheory.T.eventually_compact_unitaryAdelic_image_integral p G {g} isCompact_singleton, hGood] with v h1 h2
-      have hdv : d v ∈ IntV G v := by have := hd v; simp only [D', if_pos h2] at this; exact this
+      have hdv : d v ∈ IntV G v := by have := hd v; simp only [D', ite_eq_left h2] at this; exact this
       have ec : c v = piV G v g * (d v)⁻¹ := by rw [e v]; group
       rw [ec]
       exact h2.2.2 _ (h1 ⟨g, rfl, rfl⟩) _ (inv_mem_IntV G v hdv)

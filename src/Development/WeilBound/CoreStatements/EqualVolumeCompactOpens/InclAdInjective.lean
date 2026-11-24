@@ -89,7 +89,7 @@ theorem relIndex_ne_zero_of_isCompact_of_relOpen :
         rw [hOS] at this
         exact this
     rw [hset]
-    exact hO.preimage continuous_subtype_val
+    exact hO.preimage continuous_subtypeVal
   have := (K.subgroupOf K').quotient_finite_of_isOpen hopen
   exact Subgroup.index_ne_zero_of_finite
 
@@ -137,8 +137,8 @@ theorem coInf : CoInf := by
         simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, Set.mem_preimage]
         exact ⟨fun h => (e.ge h).1, fun h => e.le ⟨h, hx⟩⟩
       rw [this]
-      exact hO.preimage continuous_subtype_val
-    have hc := ((Subgroup.isClosed_of_isOpen _ ho).isCompact).image continuous_subtype_val
+      exact hO.preimage continuous_subtypeVal
+    have hc := ((Subgroup.isClosed_of_isOpen _ ho).isCompact).image continuous_subtypeVal
     convert hc using 1
     ext x
     simp only [Subgroup.coe_inf, Set.mem_inter_iff, SetLike.mem_coe, Set.mem_image, Subgroup.mem_subgroupOf]

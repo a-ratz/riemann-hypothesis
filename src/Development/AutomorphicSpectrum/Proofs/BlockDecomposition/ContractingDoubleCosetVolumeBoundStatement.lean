@@ -97,8 +97,8 @@ theorem sum_modExp {h : ℕ} (d : Fin h → ℕ) (j : Fin h) :
       rw [← Finset.sum_neg_distrib]
       refine Finset.sum_congr rfl fun b _ => ?_
       by_cases hab : a ≤ j ∧ b ≤ j
-      · rw [if_pos hab, if_pos hab.symm]; ring
-      · rw [if_neg hab, if_neg (fun h => hab h.symm)]; simp
+      · rw [ite_eq_left hab, ite_eq_left hab.symm]; ring
+      · rw [ite_eq_right hab, ite_eq_right (fun h => hab h.symm)]; simp
     omega
   have h2 : ∀ a : Fin h, (if a ≤ j then (d a : ℤ) * modExp (fun a => Fin (d a)) a else 0) =
       (∑ b, if a ≤ j ∧ b ≤ j then
@@ -106,14 +106,14 @@ theorem sum_modExp {h : ℕ} (d : Fin h → ℕ) (j : Fin h) :
       (if a ≤ j then (d a : ℤ) else 0) * ∑ b, if j < b then (d b : ℤ) else 0 := by
     intro a
     by_cases ha : a ≤ j
-    · simp only [ha, if_true, true_and]
+    · simp only [ha, ite_true, true_and]
       rw [modExp, Finset.mul_sum, ← Finset.sum_add_distrib, Finset.sum_filter, Finset.sum_filter,
         ← Finset.sum_sub_distrib, Finset.mul_sum]
       refine Finset.sum_congr rfl fun b _ => ?_
       simp only [Fintype.card_fin]
       by_cases hb : b ≤ j
       · have hb' : ¬ j < b := not_lt.2 hb
-        simp only [hb, hb', if_true, if_false]
+        simp only [hb, hb', ite_true, ite_false]
         split_ifs <;> ring
       · have hb' : j < b := not_le.1 hb
         have h3 : a < b := lt_of_le_of_lt ha hb'
@@ -146,7 +146,7 @@ theorem sum_toNat {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a = N) (j : Fin
     · by_cases hl : j < Zl.JC.blockIdx d hd l
       · simp [hi, not_le.2 hl]
       · have hl' := not_lt.1 hl
-        simp only [hi, hl', if_true, if_false, hl]
+        simp only [hi, hl', ite_true, ite_false, hl]
         split_ifs <;> simp
   have h2 : ∀ P : Fin h → Prop, [DecidablePred P] → (∑ i : Fin N, if P (Zl.JC.blockIdx d hd i) then 1 else 0) =
       ∑ a, if P a then d a else 0 := by
@@ -228,10 +228,10 @@ theorem modulus_zj {h : ℕ} (d : Fin h → ℕ) (t : kˣ) (j : Fin h) :
     · have h2 : Matrix.GeneralLinearGroup.det (Zl.JC.zj d t j a) = t ^ d a := by
         ext
         simp [Zl.JC.zj, ha, Matrix.GeneralLinearGroup.scalar, Matrix.GeneralLinearGroup.val_det_apply]
-      rw [h2, nabs_pow', if_pos ha, _root_.zpow_mul, zpow_natCast]
+      rw [h2, nabs_pow', ite_eq_left ha, _root_.zpow_mul, zpow_natCast]
     · have h2 : Matrix.GeneralLinearGroup.det (Zl.JC.zj d t j a) = 1 := by
         simp [Zl.JC.zj, ha]
-      rw [h2, if_neg ha]
+      rw [h2, ite_eq_right ha]
       simp [nabs]
   rw [modulus, Finset.prod_congr rfl fun a _ => h1 a]
   induction (Finset.univ : Finset (Fin h)) using Finset.induction_on with
@@ -317,7 +317,7 @@ theorem scaled_le {ϖ : k} (h0 : ϖ ≠ 0) {c : ℕ} {x : k}
   have hp : valuation k (ϖ ^ c) ≠ 0 := by
     simpa using (pow_ne_zero c h0)
   rw [map_mul, map_inv₀]
-  exact mul_inv_le_one_of_le₀ hx zero_le'
+  exact mul_inv_le_one_of_le₀ hx zero_le
 
 theorem red_of_le {ϖ : k} (h0 : ϖ ≠ 0) {c : ℕ} {x : k}
     (hx : valuation k x ≤ valuation k (ϖ ^ c)) :
@@ -343,7 +343,7 @@ theorem red_eq_zero_iff {ϖ : k} (h0 : ϖ ≠ 0) (h1 : valuation k ϖ < 1)
     (hx : valuation k x ≤ valuation k (ϖ ^ c)) :
     red ϖ c x = 0 ↔ valuation k x ≤ valuation k (ϖ ^ (c + 1)) := by
   have hp : 0 < valuation k (ϖ ^ c) := by
-    rw [zero_lt_iff]; simpa using (pow_ne_zero c h0)
+    rw [pos_iff_ne_zero]; simpa using (pow_ne_zero c h0)
   have key : valuation k x = valuation k (ϖ ^ c) * valuation k (x * (ϖ ^ c)⁻¹) := by
     rw [← map_mul]; congr 1; field_simp
   rw [red_of_le h0 hx, IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal,
@@ -460,7 +460,7 @@ theorem step {ϖ : k} (h0 : ϖ ≠ 0) (h1 : valuation k ϖ < 1)
       · obtain ⟨rfl, rfl⟩ := hab
         simpa using hx
       · have : Matrix.single i j x a b = 0 := by
-          rw [Matrix.single_apply, if_neg]
+          rw [Matrix.single_apply, ite_eq_right]
           tauto
         simp [this]
     refine ⟨⟨t, by rw [← SetLike.mem_coe, hG]; exact ht⟩, ?_⟩
@@ -523,7 +523,7 @@ theorem chainS {ϖ : k} (h0 : ϖ ≠ 0) (h1 : valuation k ϖ < 1)
       (i := p.1) (j := p.2) (hS _ (Finset.mem_insert_self _ _))
       (fun l => by
         have := hb p.1 p.2 l
-        simp only [Prod.mk.eta, hp, if_false]
+        simp only [Prod.mk.eta, hp, ite_false]
         split_ifs <;> omega)
       (by simp [hp])
       (fun a c hac => by
@@ -574,7 +574,7 @@ theorem val_zpow_iff {ϖ : k} (h0 : ϖ ≠ 0) (h1 : valuation k ϖ < 1) (m : ℕ
     (valuation k x ≤ valuation k (ϖ ^ m) ∧ valuation k (ϖ ^ e * x) ≤ valuation k (ϖ ^ m)) ↔
       valuation k x ≤ valuation k (ϖ ^ (m + (-e).toNat)) := by
   have hpos : ∀ t : ℕ, 0 < valuation k (ϖ ^ t) := fun t => by
-    rw [zero_lt_iff]; simpa using pow_ne_zero t h0
+    rw [pos_iff_ne_zero]; simpa using pow_ne_zero t h0
   rcases le_total 0 e with he | he
   · obtain ⟨t, rfl⟩ := Int.eq_ofNat_of_zero_le he
     have : (-(t : ℤ)).toNat = 0 := by omega
@@ -667,7 +667,7 @@ theorem index_main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
     have hmemH : ∀ x, x ∈ H ↔ x ∈ Kset ϖ (fun _ _ => m) := fun x => by
       rw [← hH']; rfl
     rw [SetLike.mem_coe, Subgroup.mem_inf, hmap, hmemH, hmemH]
-    simp only [Kset, Set.mem_setOf_eq, conj_entry h0 hD]
+    simp only [Kset, Set.mem_ofPred_eq, conj_entry h0 hD]
     constructor
     · intro h
       refine ⟨fun i j => ?_, fun i j => ?_⟩
@@ -712,7 +712,7 @@ theorem measure_doubleCoset {Q : Type*} [Group Q] [TopologicalSpace Q] [IsTopolo
   have hidx : C.index ≠ 0 := hfin
   have : C.FiniteIndex := ⟨hidx⟩
   have : Finite (B ⧸ C) := inferInstance
-  letI : Fintype (B ⧸ C) := Fintype.ofFinite _
+  let : Fintype (B ⧸ C) := Fintype.ofFinite _
   have hmemC : ∀ w : B, w ∈ C ↔ ∃ b ∈ B, s * b * s⁻¹ = (w : Q) := by
     intro w
     rw [hC, Subgroup.mem_subgroupOf, Subgroup.mem_map]

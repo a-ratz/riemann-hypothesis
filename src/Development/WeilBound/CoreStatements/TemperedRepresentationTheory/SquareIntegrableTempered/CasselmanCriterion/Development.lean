@@ -401,24 +401,24 @@ theorem leviEmb_zj {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a = N) (t : k�
     · subst hil
       rw [diagonal_apply_eq]
       by_cases hj : a ≤ j
-      · have hz : Zl.JC.zj d t j a = Matrix.GeneralLinearGroup.scalar (Fin (d a)) t := if_pos hj
+      · have hz : Zl.JC.zj d t j a = Matrix.GeneralLinearGroup.scalar (Fin (d a)) t := ite_eq_left hj
         have hD : zjDiag d hd t j (stdBlocks d hd ⟨a, i⟩) = t := by
-          simp only [zjDiag, hb, if_pos hj]
+          simp only [zjDiag, hb, ite_eq_left hj]
         rw [hz, hD]
         simp
-      · have hz : Zl.JC.zj d t j a = 1 := if_neg hj
+      · have hz : Zl.JC.zj d t j a = 1 := ite_eq_right hj
         have hD : zjDiag d hd t j (stdBlocks d hd ⟨a, i⟩) = 1 := by
-          simp only [zjDiag, hb, if_neg hj]
+          simp only [zjDiag, hb, ite_eq_right hj]
         rw [hz, hD]
         simp
     · have hne : stdBlocks d hd ⟨a, i⟩ ≠ stdBlocks d hd ⟨a, l⟩ := fun e =>
         hil (by simpa using (stdBlocks d hd).injective e)
       rw [diagonal_apply_ne _ hne]
       by_cases hj : a ≤ j
-      · have hz : Zl.JC.zj d t j a = Matrix.GeneralLinearGroup.scalar (Fin (d a)) t := if_pos hj
+      · have hz : Zl.JC.zj d t j a = Matrix.GeneralLinearGroup.scalar (Fin (d a)) t := ite_eq_left hj
         rw [hz]
         simp [hil]
-      · have hz : Zl.JC.zj d t j a = 1 := if_neg hj
+      · have hz : Zl.JC.zj d t j a = 1 := ite_eq_right hj
         rw [hz]
         simp [hil]
   · rw [leviEmb_apply_ne k _ _ hab, diagonal_apply_ne]
@@ -432,10 +432,10 @@ theorem zjDiag_ratio {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a = N) {t : 
   unfold zjDiag
   by_cases hi : Zl.JC.blockIdx d hd i ≤ j
   · by_cases hl : Zl.JC.blockIdx d hd l ≤ j
-    · simp [if_pos hi, if_pos hl]
-    · simpa [if_pos hi, if_neg hl] using ht
+    · simp [ite_eq_left hi, ite_eq_left hl]
+    · simpa [ite_eq_left hi, ite_eq_right hl] using ht
   · have hl : ¬ Zl.JC.blockIdx d hd l ≤ j := fun e => hi (hil.le.trans e)
-    simp [if_neg hi, if_neg hl]
+    simp [ite_eq_right hi, ite_eq_right hl]
 
 theorem zjDiag_eq {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a = N) (t : kˣ) (j : Fin h) {i l : Fin N}
     (hil : Zl.JC.blockIdx d hd i = Zl.JC.blockIdx d hd l) :
@@ -524,7 +524,7 @@ theorem isOpen_doubleCoset {G : Type*} [Group G] [TopologicalSpace G] [IsTopolog
   have h : {g | ∃ x ∈ K, ∃ y ∈ K, g = x * A * y} =
       ⋃ x ∈ K, (fun y => x * A * y) '' (K : Set G) := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_image, SetLike.mem_coe, exists_prop]
+    simp only [Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_image, SetLike.mem_coe, exists_prop]
     exact ⟨fun ⟨x, hx, y, hy, e⟩ => ⟨x, hx, y, hy, e.symm⟩,
       fun ⟨x, hx, y, hy, e⟩ => ⟨x, hx, y, hy, e.symm⟩⟩
   rw [h]
@@ -578,7 +578,7 @@ theorem le_of_eq_central_mul {N : ℕ} [TopologicalSpace k] [IsNonarchimedeanLoc
     · exact t.ne_zero
     · exact one_ne_zero
   have hvt0 : valuation k (t : k) ≠ 0 := (Valuation.ne_zero_iff _).2 t.ne_zero
-  have hvt1 : 1 ≤ (valuation k (t : k))⁻¹ := (one_lt_inv₀ (zero_lt_iff.2 hvt0)).2 ht |>.le
+  have hvt1 : 1 ≤ (valuation k (t : k))⁻¹ := (one_lt_inv₀ (pos_iff_ne_zero.2 hvt0)).2 ht |>.le
   obtain ⟨c, hc⟩ := Matrix.GeneralLinearGroup.mem_center_iff_val_mem_range_scalar.1 hz
   obtain ⟨c', hc'⟩ := Matrix.GeneralLinearGroup.mem_center_iff_val_mem_range_scalar.1
     (inv_mem hz)
@@ -594,7 +594,7 @@ theorem le_of_eq_central_mul {N : ℕ} [TopologicalSpace k] [IsNonarchimedeanLoc
     by_cases hij : i = j
     · subst hij
       rw [diagonal_apply_eq, map_pow]
-      refine pow_le_one₀ zero_le' ?_
+      refine pow_le_one₀ zero_le ?_
       rcases hδ i with h | h <;> rw [h]
       · exact ht.le
       · simp
@@ -642,7 +642,7 @@ theorem le_of_eq_central_mul {N : ℕ} [TopologicalSpace k] [IsNonarchimedeanLoc
     rw [e']
     calc _ ≤ (valuation k (t : k))⁻¹ ^ r' * 1 := by gcongr
       _ = _ := mul_one _
-  exact (pow_le_pow_iff_right₀ ((one_lt_inv₀ (zero_lt_iff.2 hvt0)).2 ht)).1 hle
+  exact (pow_le_pow_iff_right₀ ((one_lt_inv₀ (pos_iff_ne_zero.2 hvt0)).2 ht)).1 hle
 
 theorem coe_leviEmb_zj {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a = N) (t : kˣ) (j : Fin h) :
     (leviEmb k (stdBlocks d hd) (Zl.JC.zj d t j) : Matrix (Fin N) (Fin N) k) =
@@ -688,8 +688,8 @@ theorem le_of_mk_eq {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a = N) (hpos 
     (coe_leviEmb_zj d hd t j)
     (mul_mem (inv_mem (hK hx')) (hK hx)) (mul_mem (hK hy) (inv_mem (hK hy'))) hz heq
   · by_cases hi : Zl.JC.blockIdx d hd i ≤ j
-    · exact Or.inl (if_pos hi)
-    · exact Or.inr (if_neg hi)
+    · exact Or.inl (ite_eq_left hi)
+    · exact Or.inr (ite_eq_right hi)
   · simp [Zl.JC.blockIdx]
   · have : ¬ (⟨j.val + 1, hj⟩ : Fin h) ≤ j := by
       rw [Fin.le_def]; simp
@@ -750,8 +750,8 @@ theorem le_of_mk_eq {h N : ℕ} (d : Fin h → ℕ) (hd : ∑ a, d a = N) (hpos 
     (coe_leviEmb_zj d hd t j)
     (mul_mem (inv_mem (hK hx')) (hK hx)) (mul_mem (hK hy) (inv_mem (hK hy'))) hz heq
   · by_cases hi : Zl.JC.blockIdx d hd i ≤ j
-    · exact Or.inl (if_pos hi)
-    · exact Or.inr (if_neg hi)
+    · exact Or.inl (ite_eq_left hi)
+    · exact Or.inr (ite_eq_right hi)
   · simp [Zl.JC.blockIdx]
   · have : ¬ (⟨j.val + 1, hj⟩ : Fin h) ≤ j := by
       rw [Fin.le_def]; simp
@@ -1222,9 +1222,9 @@ theorem modulus_zj_lt_one : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     · have h1 : Matrix.GeneralLinearGroup.det (Zl.JC.zj d t j a) = t ^ d a := by
         apply Units.ext
         simp [Zl.JC.zj, ha, Matrix.GeneralLinearGroup.scalar, Matrix.scalar_apply, Matrix.det_diagonal]
-      rw [h1, hpow, if_pos ha]
+      rw [h1, hpow, ite_eq_left ha]
     · have h1 : Zl.JC.zj d t j a = 1 := by simp [Zl.JC.zj, ha]
-      rw [h1, if_neg ha, map_one]
+      rw [h1, ite_eq_right ha, map_one]
       exact (hone 1).2 (by simp)
   have hE : 0 < (∑ a with a ≤ j, (d a : ℤ)) * ∑ b with j < b, (d b : ℤ) := by
     refine mul_pos (Finset.sum_pos (fun a _ => by exact_mod_cast hpos a) ⟨j, by simp⟩)
@@ -1270,7 +1270,7 @@ theorem mul_rpow_lt_one_of_memLp_geometric {X : Type} [MeasurableSpace X]
     have : D * r ^ p ≤ 0 := mul_nonpos_of_nonpos_of_nonneg (not_le.1 hD).le hrp
     linarith
   have hp0 : ENNReal.ofReal p ≠ 0 := by simpa using hp
-  have hI := (eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top hp0 ENNReal.ofReal_ne_top hf.aestronglyMeasurable).1
+  have hI := (eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top hp0 ENNReal.ofReal_ne_top hf.aestronglyMeasurable).1
     hf.eLpNorm_lt_top
   rw [ENNReal.toReal_ofReal hp.le] at hI
   have ha : 0 < c * B ^ p := mul_pos hc (Real.rpow_pos_of_pos hB p)
@@ -1279,7 +1279,7 @@ theorem mul_rpow_lt_one_of_memLp_geometric {X : Type} [MeasurableSpace X]
     have hBr : 0 ≤ B * r ^ j := mul_nonneg hB.le (pow_nonneg hr j)
     have h1 : ∫⁻ _ in E j, ENNReal.ofReal ((B * r ^ j) ^ p) ∂μ ≤ ∫⁻ x in E j, ‖f x‖ₑ ^ p ∂μ := by
       refine setLIntegral_mono' (hE j) fun x hx => ?_
-      rw [← ENNReal.ofReal_rpow_of_nonneg hBr hp.le, Real.enorm_eq_ofReal_abs]
+      rw [← ENNReal.ofReal_rpow_of_nonneg hBr hp.le, Real.eNorm_eq_ofReal_abs]
       exact ENNReal.rpow_le_rpow (ENNReal.ofReal_le_ofReal (hlow j x hx)) hp.le
     rw [setLIntegral_const] at h1
     refine le_trans ?_ h1
@@ -1327,9 +1327,9 @@ theorem piTensor_zj : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
         = (if a ≤ j then c a else 1) • f a := by
       intro a
       by_cases ha : a ≤ j
-      · simp only [Zl.JC.zj, if_pos ha]
+      · simp only [Zl.JC.zj, ite_eq_left ha]
         exact hc a (f a)
-      · simp [Zl.JC.zj, if_neg ha]
+      · simp [Zl.JC.zj, ite_eq_right ha]
     simp only [hf]
     rw [MultilinearMap.map_smul_univ, Finset.prod_filter]
     simp only [RingHom.id_apply]
@@ -1379,7 +1379,7 @@ theorem exists_mem_not_mem_of_subQuot_equiv :
   by_contra h
   push_neg at h
   have hle : S.toSubmodule ≤ T.toSubmodule := fun s hs => h s hs
-  haveI : Subsingleton (S.toSubmodule ⧸ T.toSubmodule.comap S.toSubmodule.subtype) :=
+  have : Subsingleton (S.toSubmodule ⧸ T.toSubmodule.comap S.toSubmodule.subtype) :=
     Submodule.Quotient.subsingleton_iff.mpr (Submodule.comap_subtype_eq_top.mpr hle)
   exact not_subsingleton X e.toLinearEquiv.symm.injective.subsingleton
 

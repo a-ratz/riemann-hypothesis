@@ -65,8 +65,8 @@ theorem stalkMap_bijective_of_flat_preimmersion {X Y : Scheme.{0}} (f : X ⟶ Y)
 
 theorem spMap_flat_preimmersion {O F : Type} [CommRing O] [Field F] (β : O →+* F) (hi : Function.Injective β)
     (hq : ∀ x : F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) : IsPreimmersion (spMap β) ∧ Flat (spMap β) := by
-  haveI : IsDomain O := hi.isDomain β
-  letI : Algebra O F := β.toAlgebra
+  have : IsDomain O := hi.isDomain β
+  let : Algebra O F := β.toAlgebra
   have hal : ∀ a : O, algebraMap O F a = β a := fun _ => rfl
   have hfr : IsLocalization (nonZeroDivisors O) F :=
     { map_units := fun y => by
@@ -106,7 +106,7 @@ theorem cptOver_isOpen_isDomain : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     rw [Z.closure u, Set.mem_preimage, ← specializes_iff_mem_closure]
     exact (Y.j.isEmbedding.isInducing.specializes_iff).symm
   refine ⟨⟨U, hU ▸ ho.preimage Y.j.continuous⟩, rfl, fun p _ => ?_⟩
-  haveI := (Y.normal (Y.j p)).1
+  have := (Y.normal (Y.j p)).1
   have hb := stalkMap_bijective_of_flat_preimmersion Y.j p
   exact ((RingEquiv.ofBijective _ hb).symm.injective.isDomain (RingEquiv.ofBijective _ hb).symm.toRingHom)
 

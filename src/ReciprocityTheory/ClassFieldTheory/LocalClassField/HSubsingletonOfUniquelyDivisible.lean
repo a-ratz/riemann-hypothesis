@@ -181,17 +181,17 @@ theorem alt_sum_range (m : ℕ) :
       · have h' : ¬ Even (n + 1) := by
           rw [Nat.even_add_one]
           exact not_not.mpr h
-        rw [if_pos h, if_neg h', pow_succ, h.neg_one_pow]
+        rw [ite_eq_left h, ite_eq_right h', pow_succ, h.neg_one_pow]
         ring
       · have h' : Even (n + 1) := by
           rw [Nat.even_add_one]
           exact Nat.not_even_iff_odd.mpr h
-        rw [if_neg (Nat.not_even_iff_odd.mpr h), if_pos h', pow_succ, h.neg_one_pow]
+        rw [ite_eq_right (Nat.not_even_iff_odd.mpr h), ite_eq_left h', pow_succ, h.neg_one_pow]
         ring
   refine ⟨?_, ?_⟩
-  · rw [key, if_neg (by rw [Nat.not_even_iff_odd]; exact ⟨m, rfl⟩)]
+  · rw [key, ite_eq_right (by rw [Nat.not_even_iff_odd]; exact ⟨m, rfl⟩)]
     ring
-  · rw [key, if_pos ⟨m + 1, by ring⟩]
+  · rw [key, ite_eq_left ⟨m + 1, by ring⟩]
     ring
 
 theorem alt_sum_odd (m : ℕ) : (1 + ∑ j : Fin (2 * m + 1 + 1), (-1 : R) ^ ((j : ℕ) + 1)) = 1 := by
@@ -255,7 +255,7 @@ theorem disc_CM {X Y : Type u} [TopologicalSpace X] [CompactSpace X] [Topologica
   have he : ({f} : Set C(X, Y)) =
       ⋂ y ∈ Set.range f, {g : C(X, Y) | Set.MapsTo g (f ⁻¹' {y}) {y}} := by
     ext g
-    simp only [Set.mem_singleton_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [Set.mem_singleton_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     constructor
     · rintro rfl y _ x hx; exact hx
     · intro h; ext x; exact h (f x) ⟨x, rfl⟩ rfl

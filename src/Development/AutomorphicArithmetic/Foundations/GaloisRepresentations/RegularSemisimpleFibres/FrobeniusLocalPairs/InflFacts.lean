@@ -70,7 +70,7 @@ private theorem infl_incl (rd : 𝒪[k] →+* F₀) (fb : GL (Fin n) F₀ → �
 
 private theorem infl_not_mem (rd : 𝒪[k] →+* F₀) (fb : GL (Fin n) F₀ → ℂ) {x : GL (Fin n) k}
     (hx : x ∉ KO k n) : infl rd fb x = 0 :=
-  dif_neg hx
+  dite_eq_right hx
 
 private theorem principal_congruence_le_maximal_compact (rd : 𝒪[k] →+* F₀) : K1 rd n ≤ KO k n := by
   rintro _ ⟨y, -, rfl⟩
@@ -129,8 +129,8 @@ theorem inflFacts :
   obtain ⟨r, hr0, hr1⟩ : ∃ r : ValueGroupWithZero k, 0 < r ∧ r < 1 := by
     obtain ⟨γ, h0, h1⟩ := ValuativeRel.IsNontrivial.condition (R := k)
     rcases lt_or_gt_of_ne h1 with h | h
-    · exact ⟨γ, zero_lt_iff.2 h0, h⟩
-    · exact ⟨γ⁻¹, inv_pos.2 (zero_lt_iff.2 h0), inv_lt_one_of_one_lt₀ h⟩
+    · exact ⟨γ, pos_iff_ne_zero.2 h0, h⟩
+    · exact ⟨γ⁻¹, inv_pos.2 (pos_iff_ne_zero.2 h0), inv_lt_one_of_one_lt₀ h⟩
   obtain ⟨B, hB, hBo, -⟩ := UpperTheory.ConvolutionTheory.Loc.ballSub k n r hr0 hr1
   have hent : ∀ g ∈ B, ∀ i j, valuation k ((g : Matrix (Fin n) (Fin n) k) i j) ≤ 1 := by
     intro g hg i j

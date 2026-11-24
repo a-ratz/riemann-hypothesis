@@ -122,7 +122,7 @@ theorem val_step_conjPl (c : Com D) (hc : c.Is) (k : ℕ) (hk : k < D.R.m) (w : 
   have hw' : Formalism.DivisionValues.conjPl w ∉ GlobalTheory.LFun.above D.host.E (c.S : Set (HeightOneSpectrum (𝓞 D.host.F))) := by
     intro h
     apply hw
-    rw [GlobalTheory.LFun.above, Set.mem_setOf_eq] at h ⊢
+    rw [GlobalTheory.LFun.above, Set.mem_ofPred_eq] at h ⊢
     rwa [under_conjPl] at h
   have hμ : GlobalTheory.LFun.val (F := D.host.F) (c.μ (k + 1)) (Formalism.DivisionValues.conjPl w) =
       (GlobalTheory.LFun.val (F := D.host.F) (c.μ (k + 1)) w)⁻¹ :=

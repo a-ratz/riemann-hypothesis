@@ -146,7 +146,7 @@ theorem family_fibres
     IsNoetherianRing R ∧ Flat f ∧ IsProjBy f := by
   have h := hπ.paste_horiz hpq.flip
   refine ⟨?_, MorphismProperty.of_isPullback (P := @Flat) h inferInstance, hproj _ _ _ _ _ h⟩
-  haveI : IsLocallyNoetherian (Spec (CommRingCat.of R)) :=
+  have : IsLocallyNoetherian (Spec (CommRingCat.of R)) :=
     LocallyOfFiniteType.isLocallyNoetherian (t ≫ g)
   exact (isLocallyNoetherian_Spec (R := CommRingCat.of R)).1 inferInstance
 
@@ -161,8 +161,8 @@ theorem ac_of_slices
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (t ≫ g)
   have hft : φ.hom.FiniteType :=
     (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).mp (by rw [hφ]; infer_instance)
-  letI : Algebra K R := φ.hom.toAlgebra
-  haveI : Algebra.FiniteType K R := hft
+  let : Algebra K R := φ.hom.toAlgebra
+  have : Algebra.FiniteType K R := hft
   obtain ⟨χ, hker⟩ := GlobalTheory.PointSupport.exists_algHom_ker_eq K R P
   have hχ : (Spec.map (CommRingCat.ofHom χ.toRingHom) ≫ t) ≫ g = 𝟙 _ := by
     rw [Category.assoc, ← hφ, ← Spec.map_comp, ← Spec.map_id]

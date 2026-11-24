@@ -60,8 +60,8 @@ theorem charZero_of_irreducible_natCast {W : Type*} [CommRing W] [IsDomain W] {p
     (h : Irreducible (p : W)) : CharZero W := by
   rcases CharP.char_is_prime_or_zero W (ringChar W) with hq | hq
   · exfalso
-    haveI : CharP W (ringChar W) := ringChar.charP W
-    haveI : Fact (ringChar W).Prime := ⟨hq⟩
+    have : CharP W (ringChar W) := ringChar.charP W
+    have : Fact (ringChar W).Prime := ⟨hq⟩
     by_cases hpq : p = ringChar W
     · exact h.ne_zero (by rw [hpq]; exact CharP.cast_eq_zero W _)
     · apply h.not_isUnit
@@ -70,7 +70,7 @@ theorem charZero_of_irreducible_natCast {W : Type*} [CommRing W] [IsDomain W] {p
         exact (Nat.coprime_primes hp hq).mpr hpq
       have hu' := hu.map (ZMod.castHom (dvd_refl _) W)
       simpa using hu'
-  · haveI : CharP W 0 := by
+  · have : CharP W 0 := by
       rw [← hq]
       exact ringChar.charP W
     exact CharP.charP_to_charZero W

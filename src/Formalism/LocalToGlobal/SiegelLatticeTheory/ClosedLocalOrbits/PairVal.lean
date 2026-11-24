@@ -70,7 +70,7 @@ def massRow (Λ : Submodule (𝓞 D.host.E) (VS D).V) : ℝ := wRow D F0 Λ / Cn
 
 theorem one_mem_autLz (Λ : Submodule (𝓞 D.host.E) (VS D).V) : (id : WbQ D F0 → WbQ D F0) ∈ autLz D F0 Λ := by
   unfold autLz
-  rw [Set.mem_setOf_eq]
+  rw [Set.mem_ofPred_eq]
   refine ⟨1, ?_, ?_, fun x hx => rfl⟩
   · first
       | exact Subgroup.one_mem _

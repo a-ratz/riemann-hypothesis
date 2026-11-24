@@ -56,13 +56,13 @@ theorem absNorm_under {E F : Type} [Field F] [NumberField F] [Field E] [NumberFi
     Ideal.absNorm (PP.under (𝓞 F)).asIdeal = p := by
   set v := PP.under (𝓞 F) with hvdef
   have hle : v.asIdeal ≤ PP.asIdeal.comap (algebraMap (𝓞 F) (𝓞 E)) := le_rfl
-  haveI := v.isMaximal
-  haveI := PP.isMaximal
-  letI := Ideal.Quotient.field v.asIdeal
-  letI : Algebra (𝓞 F ⧸ v.asIdeal) (𝓞 E ⧸ PP.asIdeal) := Ideal.Quotient.algebraQuotientOfLEComap hle
+  have := v.isMaximal
+  have := PP.isMaximal
+  let := Ideal.Quotient.field v.asIdeal
+  let : Algebra (𝓞 F ⧸ v.asIdeal) (𝓞 E ⧸ PP.asIdeal) := Ideal.Quotient.algebraQuotientOfLEComap hle
   have hE : Nat.card (𝓞 E ⧸ PP.asIdeal) = p := by rw [← hPP, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 E ⧸ PP.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hE]; exact hp.ne_zero)
-  haveI : Module.Finite (𝓞 F ⧸ v.asIdeal) (𝓞 E ⧸ PP.asIdeal) := Module.Finite.of_finite
+  have : Finite (𝓞 E ⧸ PP.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hE]; exact hp.ne_zero)
+  have : Module.Finite (𝓞 F ⧸ v.asIdeal) (𝓞 E ⧸ PP.asIdeal) := Module.Finite.of_finite
   have h := Module.natCard_eq_pow_finrank (K := 𝓞 F ⧸ v.asIdeal) (V := 𝓞 E ⧸ PP.asIdeal)
   rw [hE] at h
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]

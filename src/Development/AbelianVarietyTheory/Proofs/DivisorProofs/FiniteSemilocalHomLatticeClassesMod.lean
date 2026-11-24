@@ -68,12 +68,12 @@ theorem card_finset_le {V A Q : Type} [AddCommGroup V] [Module ℚ V] [Module.Fi
   classical
   obtain ⟨σ, hσ⟩ := hπ.hasRightInverse
   let F : Submodule ℤ A := Submodule.span ℤ (↑(s.image σ) : Set A)
-  haveI : Module.Finite ℤ F := Module.Finite.span_of_finite ℤ (Finset.finite_toSet _)
+  have : Module.Finite ℤ F := Module.Finite.span_of_finite ℤ (Finset.finite_toSet _)
   let g : F →ₗ[ℤ] V := f.toIntLinearMap ∘ₗ F.subtype
   have hg : Function.Injective g := hf.comp F.subtype_injective
-  haveI : HasUniqueDiv V := HasUniqueDiv.of_module_rat V
-  haveI : Module.IsTorsionFree ℤ F := Function.Injective.moduleIsTorsionFree g hg (by simp)
-  haveI : Module.Free ℤ F := Module.free_of_finite_type_torsion_free'
+  have : HasUniqueDiv V := HasUniqueDiv.of_module_rat V
+  have : Module.IsTorsionFree ℤ F := Function.Injective.moduleIsTorsionFree g hg (by simp)
+  have : Module.Free ℤ F := Module.free_of_finite_type_torsion_free'
   have hr : Module.finrank ℤ F ≤ Module.finrank ℚ V := by
     let b := Module.finBasis ℤ F
     have h1 : LinearIndependent ℤ (g ∘ b) := b.linearIndependent.map' g (LinearMap.ker_eq_bot.2 hg)
@@ -90,7 +90,7 @@ theorem card_finset_le {V A Q : Type} [AddCommGroup V] [Module ℚ V] [Module.Fi
   rw [AddSubgroup.index_ker] at hdvd
   have hne : Nat.card p.range ≠ 0 := fun h => by
     rw [h] at hdvd; exact hpos.ne' (Nat.eq_zero_of_zero_dvd hdvd)
-  haveI : Finite p.range := Nat.finite_of_card_ne_zero hne
+  have : Finite p.range := Nat.finite_of_card_ne_zero hne
   have hsub : (↑s : Set Q) ⊆ (p.range : Set Q) := fun q hq =>
     ⟨⟨σ q, Submodule.subset_span (by simpa using ⟨q, hq, rfl⟩)⟩, hσ q⟩
   calc s.card = Nat.card (↑s : Set Q) := by simp
@@ -104,18 +104,18 @@ theorem finite_card_le {V A Q : Type} [AddCommGroup V] [Module ℚ V] [Module.Fi
   have h := card_finset_le f hf π hπ n hn h0
   have hfin : Finite Q := by
     by_contra hinf
-    haveI : Infinite Q := not_finite_iff_infinite.1 hinf
+    have : Infinite Q := not_finite_iff_infinite.1 hinf
     obtain ⟨s, hs⟩ := Infinite.exists_subset_card_eq Q (n ^ Module.finrank ℚ V + 1)
     have := h s
     omega
   refine ⟨hfin, ?_⟩
-  haveI := Fintype.ofFinite Q
+  have := Fintype.ofFinite Q
   rw [Nat.card_eq_fintype_card]
   exact h Finset.univ
 
 theorem finite_card_classes : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (a b : ℕ) (S : Finset (HeightOneSpectrum (𝓞 E))) (L : Submodule (𝓞 E) (Sp E a)) (L' : Submodule (𝓞 E) (Sp E b)) (cA c : ℕ), Submodule.IsLattice E L → Submodule.IsLattice E L' → 0 < cA → 0 < c → Finite (↥(divLat cA (homAt S L L')) ⧸ (mulLat c (homAt S L L')).comap (divLat cA (homAt S L L')).subtype) ∧ Nat.card (↥(divLat cA (homAt S L L')) ⧸ (mulLat c (homAt S L L')).comap (divLat cA (homAt S L L')).subtype) ≤ (cA * c) ^ (Module.finrank ℚ E * a * b) := by
   intro E _ _ _ a b S L L' cA c _ _ hA hc
-  haveI : Module.Finite ℚ (HomE E a b) := Module.Finite.trans E (HomE E a b)
+  have : Module.Finite ℚ (HomE E a b) := Module.Finite.trans E (HomE E a b)
   have hd : Module.finrank ℚ (HomE E a b) = Module.finrank ℚ E * a * b := by
     rw [← Module.finrank_mul_finrank ℚ E (HomE E a b), Module.finrank_linearMap]
     simp [mul_assoc]

@@ -126,7 +126,7 @@ theorem resMat_low {a n : ℕ} (ha : a ≤ n) (p : GL (Fin n) F) (hp : p ∈ sta
   rw [hs, Matrix.toLin'_apply, Matrix.mulVec_single_one]
   have hi : (i : ℕ) < n := by omega
   have hj : (j : ℕ) < n := by omega
-  simp only [tl, ent, dif_pos (And.intro hi hj), Matrix.transpose_apply]
+  simp only [tl, ent, dite_eq_left (And.intro hi hj), Matrix.transpose_apply]
   rfl
 
 theorem tl_isUnit {a n : ℕ} (ha : a ≤ n) (p : GL (Fin n) F) (hp : InPar a p) :
@@ -138,7 +138,7 @@ theorem tl_isUnit {a n : ℕ} (ha : a ≤ n) (p : GL (Fin n) F) (hp : InPar a p)
 theorem coe_tlG {a n : ℕ} (ha : a ≤ n) (p : GL (Fin n) F) (hp : InPar a p) :
     ((tlG a p : GL (Fin a) F) : Matrix (Fin a) (Fin a) F) = tl a (p : Matrix (Fin n) (Fin n) F) := by
   unfold tlG toG
-  rw [dif_pos (tl_isUnit ha p hp)]
+  rw [dite_eq_left (tl_isUnit ha p hp)]
   rfl
 
 theorem psi_restrict_low (S : F[X] → ℂ) {a n : ℕ} (ha : a ≤ n) (p : GL (Fin n) F)
@@ -156,10 +156,10 @@ theorem finsum_rank_eq_hc [Finite F] (S : F[X] → ℂ) {a n : ℕ} (ha : a ≤ 
     ∑ᶠ W : {W : Submodule F (Fin n → F) // Module.finrank F W = a}, resPsi S x W.1 =
       hc a (n - a) (psiG S a) (fun _ => 1) n x := by
   classical
-  haveI : Finite (Submodule F (Fin n → F)) :=
+  have : Finite (Submodule F (Fin n → F)) :=
     Finite.of_injective (fun W : Submodule F (Fin n → F) => (W : Set (Fin n → F))) SetLike.coe_injective
-  letI := Fintype.ofFinite (GL (Fin n) F)
-  letI := Fintype.ofFinite (Submodule F (Fin n → F))
+  let := Fintype.ofFinite (GL (Fin n) F)
+  let := Fintype.ofFinite (Submodule F (Fin n → F))
   set W₀ := low (F := F) a n with hW₀def
   have hW₀ : Module.finrank F W₀ = a := (lowEquiv ha).finrank_eq.trans (Module.finrank_fin_fun F)
   let π : GL (Fin n) F → {W : Submodule F (Fin n → F) // Module.finrank F W = a} := fun t =>
@@ -190,7 +190,7 @@ theorem finsum_rank_eq_hc [Finite F] (S : F[X] → ℂ) {a n : ℕ} (ha : a ≤ 
     simp only [resPsi, π]
     by_cases h : t⁻¹ * x * t ∈ stab W₀
     · have h' := (conj_mem_stab_iff W₀ x t).1 h
-      rw [dif_pos h', if_pos ((mem_stab_low_iff a n _).1 h), ← psi_restrict_low S ha _ h,
+      rw [dite_eq_left h', ite_eq_left ((mem_stab_low_iff a n _).1 h), ← psi_restrict_low S ha _ h,
         ← psi_conj F S _ _ ((lin t).submoduleMap W₀)]
       congr 1
       refine LinearMap.ext fun v => ?_
@@ -199,8 +199,8 @@ theorem finsum_rank_eq_hc [Finite F] (S : F[X] → ℂ) {a n : ℕ} (ha : a ≤ 
       ext1
       change lin x (lin t w) = lin t (lin (t⁻¹ * x * t) w)
       rw [← lin_mul, ← lin_mul, mul_assoc, mul_inv_cancel_left]
-    · rw [dif_neg (fun h' => h ((conj_mem_stab_iff W₀ x t).2 h')),
-        if_neg (fun h'' => h ((mem_stab_low_iff a n _).2 h''))]
+    · rw [dite_eq_right (fun h' => h ((conj_mem_stab_iff W₀ x t).2 h')),
+        ite_eq_right (fun h'' => h ((mem_stab_low_iff a n _).2 h''))]
   have hcard : Nat.card {p : GL (Fin n) F // InPar a p} = Nat.card (stab W₀) :=
     Nat.card_congr (Equiv.subtypeEquivRight fun p => (mem_stab_low_iff a n p).symm)
   have hc0 : (Nat.card (stab W₀) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
@@ -225,9 +225,9 @@ theorem ne_top_iff_finrank_lt {F : Type} [Field F] {n : ℕ} (W : Submodule F (F
 theorem psiG_eq_chG_sub_hc (F : Type) [Field F] [Finite F] (S : F[X] → ℂ) (n : ℕ) (x : GL (Fin n) F) :
     psiG S n x = chG S n x - ∑ a ∈ Finset.range n, hc a (n - a) (psiG S a) (fun _ => 1) n x := by
   classical
-  haveI : Finite (Submodule F (Fin n → F)) :=
+  have : Finite (Submodule F (Fin n → F)) :=
     Finite.of_injective (fun W : Submodule F (Fin n → F) => (W : Set (Fin n → F))) SetLike.coe_injective
-  letI := Fintype.ofFinite (Submodule F (Fin n → F))
+  let := Fintype.ofFinite (Submodule F (Fin n → F))
   show psi S _ _ = S _ - _
   rw [psi_eq, Matrix.charpoly_toLin']
   congr 1
@@ -243,7 +243,7 @@ theorem psiG_eq_chG_sub_hc (F : Type) [Field F] [Finite F] (S : F[X] → ℂ) (n
   simp only [Finset.sum_ite_eq]
   rw [finsum_eq_sum_of_fintype]
   rw [Finset.sum_congr rfl (g := fun W => resPsi S x W.1) fun W _ => by
-    unfold resPsi; rw [dif_pos (show x ∈ stab W.1 from W.2.2)]]
+    unfold resPsi; rw [dite_eq_left (show x ∈ stab W.1 from W.2.2)]]
   rw [← Finset.sum_subtype (Finset.univ.filter fun W : Submodule F (Fin n → F) => W ≠ ⊤ ∧ ∀ v ∈ W, Matrix.toLin' (x : Matrix (Fin n) (Fin n) F) v ∈ W)
     (fun W => by simp only [Finset.mem_filter, Finset.mem_univ, true_and]) (resPsi S x), Finset.sum_filter]
   refine Finset.sum_congr rfl fun W _ => ?_

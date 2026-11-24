@@ -137,7 +137,7 @@ theorem exists_isUnit_add_mul {K : Type} [Field K] {n : ℕ} (A D : Matrix (Fin 
       ⟨x, by rw [SetLike.mem_coe, LinearMap.mem_ker, Matrix.toLin'_apply]; exact hax,
         Matrix.toLin'_apply D x⟩
     have hproj : proj (D *ᵥ x) = ⟨D *ᵥ x, hDU⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left hU' ⟨_, hDU⟩
+      Submodule.projectionOnto_apply_left hU' ⟨_, hDU⟩
     have hex : e ⟨D *ᵥ x, hDU⟩ = 0 := by
       have h3 : ((e (proj (D *ᵥ x)) : R) : Fin n → K) = 0 := hcx
       rw [hproj] at h3
@@ -243,7 +243,7 @@ private lemma isOpen_vle (r : k) (hr : r ≠ 0) : IsOpen {x : k | valuation k x 
   rw [IsValuativeTopology.mem_nhds_iff']
   refine ⟨Units.mk0 (valuation k r) (by simpa using hr), fun z hz => ?_⟩
   have h : z = (z - x) + x := by ring
-  simp only [Set.mem_setOf_eq, Units.val_mk0] at hz hx ⊢
+  simp only [Set.mem_ofPred_eq, Units.val_mk0] at hz hx ⊢
   rw [h]
   exact (Valuation.map_add _ _ _).trans (max_le hz.le hx)
 
@@ -340,8 +340,8 @@ private lemma scalar_basis : (𝓝 (0 : k)).HasBasis (fun r : k => r ≠ 0)
     have ha : a ≠ 0 := by simpa using hγ
     have hw : w ≠ 0 := by simpa using hw0
     refine ⟨a * w, mul_ne_zero ha hw, fun x hx => ?_⟩
-    simp only [Set.mem_setOf_eq, map_mul] at hx ⊢
-    exact hx.trans_lt (mul_lt_of_lt_one_right (zero_lt_iff.2 hγ) hw1)
+    simp only [Set.mem_ofPred_eq, map_mul] at hx ⊢
+    exact hx.trans_lt (mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hγ) hw1)
   · intro r hr
     exact ⟨valuation k r, by simpa using hr,
       fun x hx => show valuation k x ≤ valuation k r from le_of_lt hx⟩
@@ -365,7 +365,7 @@ theorem sb_bound {m p : Type} [Fintype m] [Fintype p] {Φ : Matrix m p k → ℂ
     ∃ t : k, t ≠ 0 ∧ t ∈ 𝒪[k] ∧ (∀ Y, Φ Y ≠ 0 → IntM (t • Y)) ∧ ∀ Y Z, IntM Z → Φ (Y + t • Z) = Φ Y := by
   classical
   have hKc : IsCompact (tsupport Φ) := h2
-  haveI : Nonempty {s : k // s ≠ 0} := ⟨⟨1, one_ne_zero⟩⟩
+  have : Nonempty {s : k // s ≠ 0} := ⟨⟨1, one_ne_zero⟩⟩
   obtain ⟨s, hs0, hsK⟩ : ∃ s : k, s ≠ 0 ∧ tsupport Φ ⊆ vBall s := by
     obtain ⟨⟨s, hs⟩, h⟩ := hKc.elim_directed_cover (ι := {s : k // s ≠ 0})
       (fun s => (vBall s.1 : Set (Matrix m p k))) (fun s => isOpen_vBall s.1 s.2)
@@ -699,42 +699,42 @@ theorem latSt : LatSt := by
     obtain ⟨h, hh⟩ := below_iff ht0 c.out
     refine Submodule.subset_span ⟨h, funext fun Y => ?_⟩
     by_cases hY : Below t Y c.out
-    · rw [if_pos hY, Set.indicator_of_mem ((hh Y).1 hY)]
-    · rw [if_neg hY, Set.indicator_of_notMem (fun h' => hY ((hh Y).2 h'))]
+    · rw [ite_eq_left hY, Set.indicator_of_mem ((hh Y).1 hY)]
+    · rw [ite_eq_right hY, Set.indicator_of_notMem (fun h' => hY ((hh Y).2 h'))]
   have hdec : ∀ c ∈ T, (fun Y => if Below t Y c.out then (1 : ℂ) else 0) = e c + ∑ c' ∈ F c, e c' := by
     intro c hc
     funext Y
     simp only [Pi.add_apply, Finset.sum_apply]
     by_cases hB : Below t Y c.out
-    · rw [if_pos hB]
+    · rw [ite_eq_left hB]
       have hq : Quotient.mk s Y ∈ T := memT Y (below_int htO hB (outT c hc))
       by_cases hqc : Quotient.mk s Y = c
       · have h0 : ∑ c' ∈ F c, e c' Y = 0 := Finset.sum_eq_zero fun c' hc' => by
           simp only [e]
-          rw [if_neg]
+          rw [ite_eq_right]
           intro h
           exact (Finset.mem_filter.1 hc').2.2 (h.symm.trans hqc)
         rw [h0, add_zero]
         simp only [e]
-        rw [if_pos hqc]
+        rw [ite_eq_left hqc]
       · have h0 : ∑ c' ∈ F c, e c' Y = 1 := by
           simp only [e]
-          rw [Finset.sum_ite_eq, if_pos]
+          rw [Finset.sum_ite_eq, ite_eq_left]
           exact Finset.mem_filter.2 ⟨hq, below_trans (out_rel Y).1 hB, hqc⟩
         rw [h0]
         simp only [e]
-        rw [if_neg hqc, zero_add]
-    · rw [if_neg hB]
+        rw [ite_eq_right hqc, zero_add]
+    · rw [ite_eq_right hB]
       have h1 : e c Y = 0 := by
         simp only [e]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         apply hB
         rw [← h]
         exact (out_rel Y).2
       have h2 : ∑ c' ∈ F c, e c' Y = 0 := Finset.sum_eq_zero fun c' hc' => by
         simp only [e]
-        rw [if_neg]
+        rw [ite_eq_right]
         intro h
         apply hB
         have h3 := (Finset.mem_filter.1 hc').2.1
@@ -771,9 +771,9 @@ theorem latSt : LatSt := by
     simp only [Pi.smul_apply, smul_eq_mul, e, mul_ite, mul_one, mul_zero]
     rw [Finset.sum_ite_eq]
     by_cases hY : IntM (t • Y)
-    · rw [if_pos (memT Y hY)]
+    · rw [ite_eq_left (memT Y hY)]
       exact key _ _ (out_rel Y).2 (out_rel Y).1
-    · rw [if_neg]
+    · rw [ite_eq_right]
       · by_contra h
         exact hY (hsupp Y h)
       · intro hq
@@ -841,7 +841,7 @@ theorem stabL {Φ : Matrix (Fin n) (Fin d) k → ℂ} (hΦ : Φ ∈ GlobalTheory
   have ho := GlobalTheory.SplitWeil.isOpen_stabilizer_om (μ := 1) (by rw [MonoidHom.ker_one]; exact isOpen_univ) hΦ
   refine ⟨(fun g : GlobalTheory.SplitWeil.KO k (Fin n) => ((1 : GL (Fin d) k), (g : GL (Fin n) k))) ⁻¹'
     {gh | GlobalTheory.SplitWeil.om 1 gh.1 gh.2 Φ = Φ},
-    (ho.preimage (continuous_const.prodMk continuous_subtype_val)).mem_nhds (GlobalTheory.SplitWeil.om_one 1 Φ), fun g hg => ?_⟩
+    (ho.preimage (continuous_const.prodMk continuous_subtypeVal)).mem_nhds (GlobalTheory.SplitWeil.om_one 1 Φ), fun g hg => ?_⟩
   have hg' : GlobalTheory.SplitWeil.om 1 (1 : GL (Fin d) k) (g : GL (Fin n) k) Φ = Φ := hg
   have e : actL n d g Φ = GlobalTheory.SplitWeil.om 1 (1 : GL (Fin d) k) (g : GL (Fin n) k) Φ := by
     funext Y
@@ -853,7 +853,7 @@ theorem stabR {Φ : Matrix (Fin n) (Fin d) k → ℂ} (hΦ : Φ ∈ GlobalTheory
   have ho := GlobalTheory.SplitWeil.isOpen_stabilizer_om (μ := 1) (by rw [MonoidHom.ker_one]; exact isOpen_univ) hΦ
   refine ⟨(fun g : GlobalTheory.SplitWeil.KO k (Fin d) => ((g : GL (Fin d) k), (1 : GL (Fin n) k))) ⁻¹'
     {gh | GlobalTheory.SplitWeil.om 1 gh.1 gh.2 Φ = Φ},
-    (ho.preimage (continuous_subtype_val.prodMk continuous_const)).mem_nhds (GlobalTheory.SplitWeil.om_one 1 Φ), fun g hg => ?_⟩
+    (ho.preimage (continuous_subtypeVal.prodMk continuous_const)).mem_nhds (GlobalTheory.SplitWeil.om_one 1 Φ), fun g hg => ?_⟩
   have hg' : GlobalTheory.SplitWeil.om 1 (g : GL (Fin d) k) (1 : GL (Fin n) k) Φ = Φ := hg
   have e : actR n d g Φ = GlobalTheory.SplitWeil.om 1 (g : GL (Fin d) k) (1 : GL (Fin n) k) Φ := by
     funext Y

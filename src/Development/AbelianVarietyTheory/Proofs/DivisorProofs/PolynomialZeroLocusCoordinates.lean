@@ -371,7 +371,7 @@ theorem aeval_cond {R : Type} [CommRing R] [Algebra ℚ R]
 
 theorem mem_zeroLocus_iff {R : Type} [CommRing R] [Algebra ℚ R] (g : GL (Fin (Module.finrank ℚ D + 1)) R) :
     g ∈ HeckeCharacterZeroLocus.zeroLocusGL (locusSet D σ β y) R ↔ ∀ ω, cond σ β y R (g : Matrix _ _ R) ω = 0 := by
-  simp only [HeckeCharacterZeroLocus.zeroLocusGL, locusSet, Set.mem_setOf_eq, Set.forall_mem_range, aeval_cond]
+  simp only [HeckeCharacterZeroLocus.zeroLocusGL, locusSet, Set.mem_ofPred_eq, Set.forall_mem_range, aeval_cond]
 
 
 variable (D) in
@@ -478,7 +478,7 @@ theorem coordA_eq_sum {R : Type} [CommRing R] [Algebra ℚ R]
 
 theorem continuous_coordA {R : Type} [CommRing R] [Algebra ℚ R] [TopologicalSpace R] [IsTopologicalRing R]
     [TopologicalSpace (R ⊗[ℚ] D)] [IsModuleTopology R (R ⊗[ℚ] D)] : Continuous (coordA D R) := by
-  haveI : ContinuousAdd (R ⊗[ℚ] D) := IsModuleTopology.toContinuousAdd R _
+  have : ContinuousAdd (R ⊗[ℚ] D) := IsModuleTopology.toContinuousAdd R _
   have : coordA D R = fun X => ∑ i, (∑ j, X (finSumFinEquiv (Sum.inl i)) (finSumFinEquiv (Sum.inl j)) *
       (basR D R).repr 1 j) • basR D R i := funext coordA_eq_sum
   rw [this]
@@ -496,12 +496,12 @@ theorem continuous_phi (R : Type) [CommRing R] [Algebra ℚ R] [TopologicalSpace
   have hv : Continuous fun g : HeckeCharacterZeroLocus.locusSubgroup (locusSet D σ β y) (isGroupLocus σ β y) R =>
       ((g : GL (Fin (Module.finrank ℚ D + 1)) R) :
         Matrix (Fin (Module.finrank ℚ D + 1)) (Fin (Module.finrank ℚ D + 1)) R) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hi : Continuous fun g : HeckeCharacterZeroLocus.locusSubgroup (locusSet D σ β y) (isGroupLocus σ β y) R =>
       (((g⁻¹ : HeckeCharacterZeroLocus.locusSubgroup (locusSet D σ β y) (isGroupLocus σ β y) R) :
         GL (Fin (Module.finrank ℚ D + 1)) R) :
         Matrix (Fin (Module.finrank ℚ D + 1)) (Fin (Module.finrank ℚ D + 1)) R) :=
-    Units.continuous_coe_inv.comp continuous_subtype_val
+    Units.continuous_coe_inv.comp continuous_subtypeVal
   refine Continuous.prodMk (f := fun g => (phi σ β y R g).1) (g := fun g => (phi σ β y R g).2) ?_ ?_
   · refine Units.continuous_iff.2 ⟨?_, ?_⟩
     · exact (continuous_coordA.comp hv).congr fun g => (phi_fst σ β y R g).symm
@@ -556,8 +556,8 @@ theorem exists_locus :
       refine h1.trans ((coordC_map f _).trans ?_)
       exact congrArg _ (phi_snd σ β y R g).symm
   · intro R _ _ _ _
-    letI : TopologicalSpace (R ⊗[ℚ] D) := moduleTopology R (R ⊗[ℚ] D)
-    haveI : IsModuleTopology R (R ⊗[ℚ] D) := ⟨rfl⟩
+    let : TopologicalSpace (R ⊗[ℚ] D) := moduleTopology R (R ⊗[ℚ] D)
+    have : IsModuleTopology R (R ⊗[ℚ] D) := ⟨rfl⟩
     exact continuous_phi σ β y R
 
 end GlobalTheory.TorLoc

@@ -134,7 +134,7 @@ theorem unif_clauses {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Geo
   have hadm : GlobalTheory.LN.admitted S.V (maximalIdeal S.V) := by
     refine ⟨⟨inferInstance, inferInstance, inferInstance, inferInstance⟩, inferInstance, inferInstance,
       inferInstance, ?_⟩
-    letI := Ideal.Quotient.field (maximalIdeal S.V)
+    let := Ideal.Quotient.field (maximalIdeal S.V)
     infer_instance
   have hop : IsOpen (abLocus G.G) := by
     refine GlobalTheory.UnifAfterExt.isOpen_of_range_generic_subset S.V _ ?_
@@ -240,8 +240,8 @@ theorem exists_reduced_basis_le_phiCy : ∀ (D : D7) (T : Top D) (h : LawsP T) (
  letI := T.Q.H.starRing
  ∀ (C : IntegralChartA3 (T.Q.Xo j) T.Q.c S io y) (P : PELUnif (maximalIdeal S.V) C.I.G) (ϖ : S.V), Irreducible ϖ → ∀ (Q : P.D.toPre.X → ℤ), IsQ P.D.toPre ϖ Q → 0 ≤ (T.G.P.loc (T.G.dat j) (WeightAlgebra.resCh la)).phiCy eta ∧ ∃ (r : ℕ) (b : Module.Basis (Fin r) ℤ P.D.toPre.X), r ≤ 2 * D.R.f * D.R.m ∧ (∀ i, (Q (b i) : ℝ) ≤ (e : ℝ) * (D.host.rdE ^ 2 / (4 * D.R.f) * (r : ℝ) ^ 3 * ((ramOverZ la : ℝ) * (T.G.P.loc (T.G.dat j) (WeightAlgebra.resCh la)).phiCy eta))) ∧ ∀ i z, |((Q (b i + z) - Q (b i) - Q z : ℤ) : ℝ)| ≤ 2 * Real.sqrt ((2 * D.R.f * D.R.m : ℕ) : ℝ) * Q z := by
   intro D T h j hj hm la S io e y ho hy eta heta C P ϖ hϖ Q hQ
-  letI := T.Q.H.starRing
-  letI := io.toAlgebra
+  let := T.Q.H.starRing
+  let := io.toAlgebra
   obtain ⟨z, hrel, hz⟩ := heta hm
   have hl := h.lattice_condition j hj.1 hm la z ⟨S, io, e, y, ho, hy, hz⟩ eta hrel
   obtain ⟨hv, eF, h1, h2, h3, h4, -⟩ := hz
@@ -300,14 +300,14 @@ theorem exists_shortBasis : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj
     have hr' : (r : ℝ) ≤ 2 * D.R.f * D.R.m := by exact_mod_cast hr
     refine ⟨r, _, _, ⟨by positivity, b, h1, h2⟩, hr, by push_cast; exact le_rfl, fun h' => absurd hm (not_lt.2 h'), ?_⟩
     gcongr
-  · letI := io.toAlgebra
-    letI := T.Q.H.starRing
+  · let := io.toAlgebra
+    let := T.Q.H.starRing
     obtain ⟨ρ, hρ, -, hq⟩ := GlobalTheory.ToricRank.rank_le_signature D.host.E T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T'.V C.I.G P
       C.I.t' C.I.m2 z.1.x C.I.m1 inferInstance
     have hq' : ρ ≤ D.R.m - j := hq.trans_eq (h.toLawsCore.pins.2.2.2 j hj).2.1
     have h0 : Module.finrank ℤ P.D.toPre.X = 0 := by
       rw [hρ, show ρ = 0 by omega, mul_zero]
-    have hφ : (recPJ h j hj).phiC la (PtV.mk la ho z hz η hl) = 0 := if_neg hm
+    have hφ : (recPJ h j hj).phiC la (PtV.mk la ho z hz η hl) = 0 := ite_eq_right hm
     refine ⟨0, 0, 0, ⟨le_rfl, Module.finBasisOfFinrankEq ℤ _ h0, fun i => i.elim0, fun i => i.elim0⟩, Nat.zero_le _,
       by positivity, fun _ => ⟨rfl, rfl⟩, ?_⟩
     rw [hφ]; simp

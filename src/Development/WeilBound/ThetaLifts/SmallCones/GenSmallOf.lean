@@ -252,7 +252,7 @@ theorem genSmall_of (hK : CTKernel) (hF : CTFub) (hCB : ConeB) (h2 : TwoExp) (hM
   obtain ⟨f1, f2⟩ := hF F E σ B n d X W M χX χW om _ _ _ _ hp d₁ W₁ H' i₀ i₁ hH' Φ hs
     ⟨Cd * (M.μ M.dom).toReal, kd, fun h => by
       calc _ ≤ ∫⁻ _ in M.dom, ENNReal.ofReal (Cd * (ht h : ℝ) ^ kd) ∂M.μ := lintegral_mono fun g => by
-            rw [← ofReal_norm_eq_enorm]; exact ENNReal.ofReal_le_ofReal (by simpa using hdec g h)
+            rw [← ofReal_norm]; exact ENNReal.ofReal_le_ofReal (by simpa using hdec g h)
         _ = _ := by
             rw [setLIntegral_const, mul_right_comm, ENNReal.ofReal_mul' ENNReal.toReal_nonneg, ENNReal.ofReal_toReal hvol.ne]⟩
     _ fun g => (k1 g).2

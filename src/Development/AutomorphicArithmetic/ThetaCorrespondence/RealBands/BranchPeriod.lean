@@ -145,7 +145,7 @@ theorem leastSplitAuxiliaryPrime_pow_depth_le_absNorm_modulus {D : D7} {T : Type
   calc q0 D ^ depth0 D sc.cDep sc.b ≤ Ideal.absNorm ((P.w P.v0).asIdeal ^ P.depth sc P.v0) := by
         rw [map_pow, hd]; exact Nat.pow_le_pow_left (leastSplitAuxiliaryPrime_le_absNorm_chosenPlace P) _
     _ ≤ ∏ v ∈ P.S0, Ideal.absNorm ((P.w v).asIdeal ^ P.depth sc v) :=
-        Finset.single_le_prod' (f := fun v => Ideal.absNorm ((P.w v).asIdeal ^ P.depth sc v))
+        Finset.single_le_prod (f := fun v => Ideal.absNorm ((P.w v).asIdeal ^ P.depth sc v))
           (fun v _ => Nat.one_le_iff_ne_zero.2
             (Ideal.absNorm_eq_zero_iff.not.2 (pow_ne_zero _ (P.w v).ne_bot))) hv0
 
@@ -450,9 +450,9 @@ private theorem multilinear_translates_zero_local : ∀ (ι : Type) [Fintype ι]
         intro j x
         rw [MultilinearMap.toLinearMap_apply, mul_assoc, ← hnorm]
         exact hL _
-      have hden : DenseRange (Sm a).subtypeL := (hd a).denseRange_val
+      have hden : DenseRange (Sm a).subtypeL := (hd a).denseRange_subtypeVal
       have hui : IsUniformInducing (Sm a).subtypeL :=
-        isUniformEmbedding_subtype_val.isUniformInducing
+        isUniformEmbedding_subtypeVal.isUniformInducing
       let Λ : Fin n → (H a →L[ℂ] ℂ) := fun j =>
         (c j * ∏ i ∈ s, ⟪φ i, (v j i : H i)⟫_ℂ) •
           ((L.toLinearMap (s.piecewise u (w j g)) a).mkContinuous _ (hbd j)).extend
@@ -463,7 +463,7 @@ private theorem multilinear_translates_zero_local : ∀ (ι : Type) [Fintype ι]
         intro j x
         have this := ContinuousLinearMap.extend_eq
           ((L.toLinearMap (s.piecewise u (w j g)) a).mkContinuous _ (hbd j)) hden hui x
-        simp only [Λ, ContinuousLinearMap.smul_apply, smul_eq_mul]
+        simp only [Λ, smul_apply, smul_eq_mul]
         erw [this]
         rw [LinearMap.mkContinuous_apply, MultilinearMap.toLinearMap_apply]
       have hupd : ∀ j (k : G a), s.piecewise u (w j (Function.update g a k)) =
@@ -533,10 +533,10 @@ theorem mult_equiv {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFa
   | zero => funext x; simp [rTr]
   | add T T' _ _ h h' =>
     funext x
-    simp only [MultilinearMap.add_apply, Pi.add_apply, h, h', rTr]
+    simp only [add_apply, Pi.add_apply, h, h', rTr]
   | smul r T _ h =>
     funext x
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, h, rTr]
+    simp only [smul_apply, Pi.smul_apply, h, rTr]
 
 theorem translate : ∀ {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam D) (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ), ∀ T ∈ Mult θ M J χ, ∀ g : ∀ τ, Formalism.IndefR.SchurOrthogonalityAlt.Gt V τ, ∃ P ∈ GinfC V, ∀ (v : M.Vec) (x : GA D V), T (fun τ => ⟨M.rep τ (Formalism.IndefR.SchurOrthogonalityAlt.gm (g τ)) (v τ), GlobalTheory.SmoothStable.rep_mem_sm D V S M τ _ (Formalism.IndefR.SchurOrthogonalityAlt.gm_mem (g τ)) _ (v τ).2⟩) x = T v (x * P) := by
   intro D V S θ M J χ T hT g
@@ -736,7 +736,7 @@ theorem integral_eq_zero_of_translates : GlobalTheory.Published.CuspRapidDecay �
     ∀ w' : SmT M, ∫ g in v.𝓕, F g * t w' g ∂v.μ = 0 := by
   intro hP hV D θ hθ V S M J χ t ht v F hF hFb w hw hh w'
   classical
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (M.ds τ).1
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (M.ds τ).1
   obtain ⟨hint, K, hK⟩ := GlobalTheory.T.period_integrable_bounded_by_product_of_norms hP hV D θ hθ V S M J χ t ht v F hF hFb
   let ℓ : SmT M →ₗ[ℂ] ℂ :=
     { toFun := fun x => ∫ g in v.𝓕, F g * t x g ∂v.μ
@@ -851,7 +851,7 @@ theorem isMultMap_bound (hP : GlobalTheory.Published.CuspRapidDecay) (θ : InfFa
     ∃ (L : List (List (Matrix (Fin V.rank) (Fin V.rank) ℂ))) (C : ℝ), (∀ l ∈ L, ∀ Y ∈ l, Y ∈ lieAt V τ) ∧
       ∀ w : M.sm τ, ∀ g, ‖T (Function.update v τ w) g‖ ≤
         C * (L.map fun l => ‖l.foldr (dRep (M.rep τ)) (w : M.H τ)‖).sum := by
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have hσ : IsURepOn (UJset (M.ε τ)) (M.σ τ) := (M.ds τ).2.2.1
   have hPu := M.fr_unit τ
   have hG := M.fr_gram τ
@@ -901,7 +901,7 @@ theorem mult_bound (hP : GlobalTheory.Published.CuspRapidDecay) (θ : InfFam D) 
         obtain ⟨l, _, rfl⟩ := List.mem_map.1 hx; exact norm_nonneg _
       have hs₂ : 0 ≤ s₂ := List.sum_nonneg fun x hx => by
         obtain ⟨l, _, rfl⟩ := List.mem_map.1 hx; exact norm_nonneg _
-      rw [List.map_append, List.sum_append, MultilinearMap.add_apply, Pi.add_apply]
+      rw [List.map_append, List.sum_append, add_apply, Pi.add_apply]
       calc _ ≤ ‖T₁ (Function.update v τ w) g‖ + ‖T₂ (Function.update v τ w) g‖ := norm_add_le _ _
         _ ≤ C₁ * s₁ + C₂ * s₂ := add_le_add (hb₁ w g) (hb₂ w g)
         _ ≤ max C₁ 0 * s₁ + max C₂ 0 * s₂ :=
@@ -912,7 +912,7 @@ theorem mult_bound (hP : GlobalTheory.Published.CuspRapidDecay) (θ : InfFam D) 
   | smul c T _ h =>
     obtain ⟨L, C, hL, hb⟩ := h
     refine ⟨L, ‖c‖ * C, hL, fun w g => ?_⟩
-    rw [MultilinearMap.smul_apply, Pi.smul_apply, norm_smul, mul_assoc]
+    rw [smul_apply, Pi.smul_apply, norm_smul, mul_assoc]
     exact mul_le_mul_of_nonneg_left (hb w g) (norm_nonneg _)
 
 theorem per_eq_zero_of_kF : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.HarishChandraModules → ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : HSp D) (S : D.what₂.Tau → SPar) (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ), ∀ y ∈ MultT θ M J χ, ∀ (X : Type) [MeasurableSpace X] (ν : Measure X) (e : X → GA D V) (u : X → ℂ), Measurable e → Integrable u ν → (∀ a ∈ KF M, ∫ x, y a (e x) * u x ∂ν = 0) → ∀ a, ∫ x, y a (e x) * u x ∂ν = 0 := by

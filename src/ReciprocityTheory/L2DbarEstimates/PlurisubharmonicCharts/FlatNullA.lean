@@ -197,7 +197,7 @@ theorem fn_mem_Mset_iff (hD : A.D0 L w w0 s) {i : ι} {y : Y} (hy : y ∈ (A.cha
       exact absurd rfl h
   · rw [fn_hom_of_ne De h0]
     have hz := fn_zmap_eq A hD hy
-    simp only [Mset, Set.mem_setOf_eq, hz]
+    simp only [Mset, mem_ofPred_eq, hz]
     constructor
     · rintro ⟨-, h2⟩
       exact mul_ne_zero (pow_ne_zero _ h0) (by simpa using h2)

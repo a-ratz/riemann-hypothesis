@@ -74,7 +74,7 @@ theorem countable_of_numberField (E : Type) [Field E] [NumberField E] : Countabl
 
 theorem countable_matrix (E : Type) [Field E] [NumberField E] (m n : ℕ) :
     Countable (Matrix (Fin m) (Fin n) E) := by
-  haveI := GlobalTheory.CompanionTheory.NumberFieldMatrix.countable_of_numberField E
+  have := GlobalTheory.CompanionTheory.NumberFieldMatrix.countable_of_numberField E
   exact inferInstanceAs (Countable (Fin m → Fin n → E))
 
 theorem matrix_countable :
@@ -209,9 +209,9 @@ theorem dense_bigCell : ∀ n : ℕ, Dense {y : GR n | ((mR y).toBlocks₂₁).d
     apply det_lower_I_ne y
     rw [← eval_detPoly, h, Polynomial.eval_zero]
   have hfin : {t : ℝ | (detPoly (mR y).toBlocks₂₁ (mR y).toBlocks₂₂).eval (t : ℂ) = 0}.Finite :=
-    (Polynomial.finite_setOf_isRoot hP).preimage Complex.ofReal_injective.injOn
+    (Polynomial.finite_setOfPred_isRoot hP).preimage Complex.ofReal_injective.injOn
   have hcl : IsClosed ({t : ℝ | (detPoly (mR y).toBlocks₂₁ (mR y).toBlocks₂₂).eval (t : ℂ) = 0} \ {0}) :=
-    (hfin.subset Set.diff_subset).isClosed
+    (hfin.subset Set.sdiff_subset).isClosed
   have hnh := hcl.isOpen_compl.mem_nhds (x := (0 : ℝ)) (by simp)
   have ht : Tendsto (fun t : ℝ => y * lowG t) (𝓝[≠] 0) (𝓝 y) := by
     have hc : Continuous (fun t : ℝ => y * lowG t) := continuous_const.mul continuous_lowG

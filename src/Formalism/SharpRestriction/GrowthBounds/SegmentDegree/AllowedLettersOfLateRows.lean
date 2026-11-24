@@ -84,7 +84,7 @@ theorem allowed_letters_of_late_rows (D : Formalism.BasicNotions.D7) (hA3 : Form
   intro p n' r K _ _ _ X O _ _ _ S j b e q I' I'' hW
   classical
   have hX := hW.hX
-  haveI : Fact p.Prime := ⟨hX.prime⟩
+  have : Fact p.Prime := ⟨hX.prime⟩
   have hlet : ∀ i : Fin (segN X.F j), segE X.F j i ∈ X.F.letters j := fun i =>
     ((X.F.letters j).orderIsoOfFin rfl i).2
   have hren : ∀ {k : ℕ} (P : MvPolynomial (Fin (segN X.F j) × Fin k) (FF O)) (s : Set (ℤ × Fin k)),
@@ -140,7 +140,7 @@ theorem degAt_one : DegAt x 0 (1 : MvPolynomial (ι × Fin n) R) := by
   intro m hm
   have h0 : m = 0 := by
     by_contra hne
-    exact (MvPolynomial.mem_support_iff.1 hm) (by rw [MvPolynomial.coeff_one, if_neg (Ne.symm hne)])
+    exact (MvPolynomial.mem_support_iff.1 hm) (by rw [MvPolynomial.coeff_one, ite_eq_right (Ne.symm hne)])
   subst h0
   simp [multideg]
 
@@ -163,7 +163,7 @@ theorem degAt_X [DecidableEq ι] (v : ι × Fin n) : DegAt x (if v.1 = x then 1 
   intro m hm
   have h0 : Finsupp.single v 1 = m := by
     by_contra hne
-    exact (MvPolynomial.mem_support_iff.1 hm) (by rw [MvPolynomial.coeff_X', if_neg hne])
+    exact (MvPolynomial.mem_support_iff.1 hm) (by rw [coeff_X, ite_eq_right hne])
   subst h0
   obtain ⟨a, c0⟩ := v
   by_cases ha : a = x
@@ -225,22 +225,22 @@ theorem ordDeg_prod {R : Type} [CommRing R] {r K : ℕ} {x : ℤ} {dA dG : ℕ} 
   split_ifs with hx
   · have h1 : ∀ c : Fin K, (Finsupp.mapDomain (fun v : ℤ × Fin r => (v.1, Fin.castAdd K v.2)) a0)
         (x, Fin.natAdd r c) = 0 := fun c => by
-      refine Finsupp.mapDomain_notin_range _ _ ?_
+      refine Finsupp.mapDomain_of_notMem_range _ _ ?_
       rintro ⟨⟨y, d⟩, h⟩
       simp only [Prod.mk.injEq] at h
       have := congrArg Fin.val h.2
-      simp only [Fin.coe_castAdd, Fin.coe_natAdd] at this
+      simp only [Fin.val_castAdd, Fin.val_natAdd] at this
       omega
     simp only [Finsupp.add_apply, Finset.sum_add_distrib, h1, Finset.sum_const_zero, zero_add]
     rw [← hG hx b0 hb0]
     exact Finset.sum_congr rfl fun c _ => Finsupp.mapDomain_apply_of_injective hi2 b0 (x, c)
   · have h1 : ∀ c : Fin r, (Finsupp.mapDomain (fun v : ℤ × Fin K => (v.1, Fin.natAdd r v.2)) b0)
         (x, Fin.castAdd K c) = 0 := fun c => by
-      refine Finsupp.mapDomain_notin_range _ _ ?_
+      refine Finsupp.mapDomain_of_notMem_range _ _ ?_
       rintro ⟨⟨y, d⟩, h⟩
       simp only [Prod.mk.injEq] at h
       have := congrArg Fin.val h.2
-      simp only [Fin.coe_castAdd, Fin.coe_natAdd] at this
+      simp only [Fin.val_castAdd, Fin.val_natAdd] at this
       omega
     simp only [Finsupp.add_apply, Finset.sum_add_distrib, h1, Finset.sum_const_zero, add_zero]
     rw [← hA hx a0 ha0]

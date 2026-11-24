@@ -82,7 +82,7 @@ theorem mt_one_eq (V : HSp D) : Formalism.L2.Theta.mt V 1 = 1 := by
   unfold Formalism.L2.Theta.mt; rw [map_one]; rfl
 
 theorem continuous_mt_eq (V : HSp D) : Continuous (Formalism.L2.Theta.mt V) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem actO_actO_inv {S T : HSp D} (g : GA D S) (h : GA D T) (x : WO S T) :
     Formalism.IndefR.Datum.actO S T g h (Formalism.IndefR.Datum.actO S T g⁻¹ h⁻¹ x) = x := by
@@ -196,7 +196,7 @@ theorem GlobalTheory.ThetaDens.om_compact_sobCont : ∀ (D : D7) (ψ : AddChar (
   let U' : AddSubgroup (WO S T) :=
     { carrier := {u | ∀ x ∈ K, Formalism.IndefR.Datum.actO S T x.1⁻¹ x.2⁻¹ u ∈ U}
       add_mem' := fun {a b} ha hb x hx => by
-        rw [Set.mem_setOf_eq] at ha hb
+        rw [Set.mem_ofPred_eq] at ha hb
         show Formalism.IndefR.Datum.actO S T x.1⁻¹ x.2⁻¹ (a + b) ∈ U
         rw [actO_add']; exact U.add_mem (ha x hx) (hb x hx)
       zero_mem' := fun x _ => by

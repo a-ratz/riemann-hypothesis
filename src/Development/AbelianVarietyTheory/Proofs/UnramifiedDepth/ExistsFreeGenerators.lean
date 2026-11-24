@@ -111,24 +111,24 @@ private theorem aux {R S M I : Type} [CommRing R] [IsDomain R] [IsPrincipalIdeal
       rw [Ideal.Quotient.eq]
       exact Ideal.mem_span_singleton'.2 ⟨-s, by ring⟩
   let bA : Module.Basis I R (S ⧸ Ideal.span {1 - e}) := b.map (LinearEquiv.ofBijective f hf)
-  haveI : Module.Finite R (S ⧸ Ideal.span {1 - e}) := Module.Finite.of_basis bA
-  haveI : Module.Free R (S ⧸ Ideal.span {1 - e}) := Module.Free.of_basis bA
+  have : Module.Finite R (S ⧸ Ideal.span {1 - e}) := Module.Finite.of_basis bA
+  have : Module.Free R (S ⧸ Ideal.span {1 - e}) := Module.Free.of_basis bA
   let N : Submodule S M := Submodule.torsionBy S M (1 - e)
-  haveI : Module.Finite R N := Module.Finite.of_injective (N.subtype.restrictScalars R) Subtype.val_injective
-  letI : Module (S ⧸ Ideal.span {1 - e}) N := inferInstanceAs (Module (S ⧸ Submodule.span S {1 - e}) (Submodule.torsionBy S M (1 - e)))
+  have : Module.Finite R N := Module.Finite.of_injective (N.subtype.restrictScalars R) Subtype.val_injective
+  let : Module (S ⧸ Ideal.span {1 - e}) N := inferInstanceAs (Module (S ⧸ Submodule.span S {1 - e}) (Submodule.torsionBy S M (1 - e)))
   have hsm : ∀ (s : S) (n : N), (Ideal.Quotient.mk (Ideal.span {1 - e}) s) • n = s • n := fun _ _ => rfl
-  haveI : IsScalarTower R (S ⧸ Ideal.span {1 - e}) N := ⟨fun r a n => by
+  have : IsScalarTower R (S ⧸ Ideal.span {1 - e}) N := ⟨fun r a n => by
     obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective a
     have : r • Ideal.Quotient.mk (Ideal.span {1 - e}) s = Ideal.Quotient.mk (Ideal.span {1 - e}) (r • s) := rfl
     rw [this, hsm, hsm, smul_assoc]⟩
-  haveI : Module.Finite (S ⧸ Ideal.span {1 - e}) N := Module.Finite.of_restrictScalars_finite R _ _
-  haveI : Module.IsTorsionFree (S ⧸ Ideal.span {1 - e}) N := by
+  have : Module.Finite (S ⧸ Ideal.span {1 - e}) N := Module.Finite.of_restrictScalars_finite R _ _
+  have : Module.IsTorsionFree (S ⧸ Ideal.span {1 - e}) N := by
     apply Module.IsTorsionFree.of_smul_eq_zero
     intro a n han
     by_cases ha : a = 0
     · exact Or.inl ha
     right
-    obtain ⟨r, hr, c, hc⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := R) a).exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero ha)
+    obtain ⟨r, hr, c, hc⟩ := (Algebra.IsAlgebraic.isAlgebraic (R := R) a).exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero ha)
     have h1 : r • n = 0 := by
       rw [← algebraMap_smul (S ⧸ Ideal.span {1 - e}) r n, hc, mul_comm, mul_smul, han, smul_zero]
     have h2 : r • (n : M) = 0 := congrArg Subtype.val h1
@@ -157,9 +157,9 @@ private theorem aux2 {R S I κ : Type} [CommRing R] [IsDomain R] [IsPrincipalIde
     ∃ (h : ℕ) (y : Fin h → κ → R), LinearIndependent R (fun q : I × Fin h => ρ (b q.1 : S) *ᵥ y q.2) ∧
       Submodule.span R (Set.range fun q : I × Fin h => ρ (b q.1 : S) *ᵥ y q.2) =
         LinearMap.range (Matrix.mulVecLin (ρ e)) := by
-  letI : Module S (κ → R) := Module.compHom (κ → R) (ρ : S →+* Matrix κ κ R)
+  let : Module S (κ → R) := Module.compHom (κ → R) (ρ : S →+* Matrix κ κ R)
   have hsm : ∀ (s : S) (v : κ → R), s • v = ρ s *ᵥ v := fun _ _ => rfl
-  haveI : IsScalarTower R S (κ → R) := ⟨fun r s v => by
+  have : IsScalarTower R S (κ → R) := ⟨fun r s v => by
     rw [hsm, hsm, map_smul, Matrix.smul_mulVec]⟩
   obtain ⟨h, y, h1, h2⟩ := aux (M := κ → R) e he b
   refine ⟨h, y, h1, ?_⟩

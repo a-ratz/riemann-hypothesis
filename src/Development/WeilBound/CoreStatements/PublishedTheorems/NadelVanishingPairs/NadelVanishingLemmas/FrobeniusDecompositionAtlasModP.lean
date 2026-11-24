@@ -336,7 +336,7 @@ theorem ideal_ne_top {X : Scheme.{0}} [IsIntegral X] {U : X.Opens} [Nonempty U] 
     𝔪.map (algebraMap Γ(X, U) (Algebra.adjoin Γ(X, U) {g⁻¹})) ⊔
       Ideal.span {(⟨g⁻¹, Algebra.subset_adjoin rfl⟩ : Algebra.adjoin Γ(X, U) {g⁻¹})} ≠ ⊤ := by
   intro heq
-  letI := invertibleOfNonzero (inv_ne_zero hg)
+  let := invertibleOfNonzero (inv_ne_zero hg)
   obtain ⟨p, hp, hpx⟩ := Algebra.exists_aeval_invOf_eq_zero_of_idealMap_adjoin_sup_span_eq_top g⁻¹ 𝔪 h𝔪 heq
   rw [invOf_eq_inv, inv_inv] at hpx
   have hlc : p.leadingCoeff ∉ (hU.primeIdealOf ⟨x, hx⟩).asIdeal := fun h =>
@@ -555,13 +555,13 @@ theorem etale_coords_basis : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A
   intro p _ A _ _ _ n t het L _ _ _ ht
   classical
   let P := MvPolynomial (Fin n) (ZMod p)
-  letI : Algebra P A := (MvPolynomial.aeval t).toRingHom.toAlgebra
-  haveI : IsScalarTower (ZMod p) P A :=
+  let : Algebra P A := (MvPolynomial.aeval t).toRingHom.toAlgebra
+  have : IsScalarTower (ZMod p) P A :=
     .of_algebraMap_eq fun r => ((MvPolynomial.aeval t).commutes r).symm
-  haveI : Algebra.Etale P A := het
-  letI : Algebra (ZMod p) L := ((algebraMap A L).comp (algebraMap (ZMod p) A)).toAlgebra
-  haveI : IsScalarTower (ZMod p) A L := .of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FormallyEtale A L := .of_isLocalization (nonZeroDivisors A)
+  have : Algebra.Etale P A := het
+  let : Algebra (ZMod p) L := ((algebraMap A L).comp (algebraMap (ZMod p) A)).toAlgebra
+  have : IsScalarTower (ZMod p) A L := .of_algebraMap_eq fun _ => rfl
+  have : Algebra.FormallyEtale A L := .of_isLocalization (nonZeroDivisors A)
   let bA : Module.Basis (Fin n) A Ω[A⁄ZMod p] :=
     ((mvPolynomialBasis (ZMod p) (Fin n)).baseChange A).map
       (tensorKaehlerEquivOfFormallyEtale (ZMod p) P A)
@@ -642,7 +642,7 @@ theorem prod_X_dvd_of_dvd_X_mul {K : Type} [Field K] {n : ℕ} (k : Fin n) :
     rw [Finset.prod_insert hi] at hd ⊢
     have hik : i ≠ k := fun e => hk (e ▸ Finset.mem_insert_self _ _)
     have hXi : (X i : MvPolynomial (Fin n) K) ∣ h := by
-      rcases (X_prime (R := K) (i := i)).dvd_or_dvd (dvd_trans (dvd_mul_right _ _) hd) with h1 | h1
+      rcases (prime_X (R := K) (i := i)).dvd_or_dvd (dvd_trans (dvd_mul_right _ _) hd) with h1 | h1
       · exact absurd h1 (not_X_dvd_X hik)
       · exact h1
     obtain ⟨h', rfl⟩ := hXi
@@ -676,7 +676,7 @@ theorem prod_X_dvd_of_dvd_pow {K : Type} [Field K] {n : ℕ} :
     · rw [pow_zero] at hd
       exact dvd_trans hd (one_dvd _)
     have hXk : (X k : MvPolynomial (Fin n) K) ∣ f :=
-      (X_prime (R := K) (i := k)).dvd_of_dvd_pow (dvd_trans (dvd_mul_right _ _) hd)
+      (prime_X (R := K) (i := k)).dvd_of_dvd_pow (dvd_trans (dvd_mul_right _ _) hd)
     obtain ⟨f', rfl⟩ := hXk
     have h1 : (∏ j ∈ S, X j) ∣ X k ^ m * f' ^ m := by
       rw [← mul_pow]; exact dvd_trans (dvd_mul_left _ _) hd
@@ -699,8 +699,8 @@ theorem dvd_of_dvd_pow_prod_coords (p : ℕ) [Fact p.Prime] (A : Type) [CommRing
     [Algebra (ZMod p) A] {n : ℕ} (t : Fin n → A)
     (he : (MvPolynomial.aeval (R := ZMod p) t).toRingHom.Etale) (S : Finset (Fin n))
     (z : A) (k : ℕ) (hz : (∏ j ∈ S, t j) ∣ z ^ k) : (∏ j ∈ S, t j) ∣ z := by
-  letI : Algebra (MvPolynomial (Fin n) (ZMod p)) A := (MvPolynomial.aeval t).toRingHom.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin n) (ZMod p)) A := he
+  let : Algebra (MvPolynomial (Fin n) (ZMod p)) A := (MvPolynomial.aeval t).toRingHom.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin n) (ZMod p)) A := he
   have h1 := GlobalTheory.EtaleReducedEq.isRadical_map_of_etale (C := A)
     (Ideal.span {∏ j ∈ S, (X j : MvPolynomial (Fin n) (ZMod p))}) (isRadical_span_prod_X S)
   rw [Ideal.map_span, Set.image_singleton] at h1
@@ -719,21 +719,21 @@ theorem mem_local_of_pow_mem (p : ℕ) [Fact p.Prime] (A : Type) [CommRing A] [I
     (hx : ∃ a b : A, b ∉ P ∧ x ^ m * algebraMap A L b = algebraMap A L a) :
     ∃ a b : A, b ∉ P ∧ x * algebraMap A L b = algebraMap A L a := by
   let Q := MvPolynomial (Fin n) (ZMod p)
-  letI : Algebra Q A := (MvPolynomial.aeval t).toRingHom.toAlgebra
-  haveI : Algebra.Etale Q A := he
+  let : Algebra Q A := (MvPolynomial.aeval t).toRingHom.toAlgebra
+  have : Algebra.Etale Q A := he
   let T := Localization.AtPrime P
-  haveI : Algebra.FormallyEtale Q T := inferInstance
-  haveI : Algebra.EssFiniteType A T := Algebra.EssFiniteType.of_isLocalization T P.primeCompl
-  haveI : Algebra.EssFiniteType Q T := Algebra.EssFiniteType.comp Q A T
-  haveI : IsIntegrallyClosed Q := isIntegrallyClosed_mvPolynomial_fin (ZMod p) n
+  have : Algebra.FormallyEtale Q T := inferInstance
+  have : Algebra.EssFiniteType A T := Algebra.EssFiniteType.of_isLocalization T P.primeCompl
+  have : Algebra.EssFiniteType Q T := Algebra.EssFiniteType.comp Q A T
+  have : IsIntegrallyClosed Q := isIntegrallyClosed_mvPolynomial_fin (ZMod p) n
   obtain ⟨_, hT⟩ := GlobalTheory.EtNormal.isDomain_and_isIntegrallyClosed_of_formallyEtale Q T
   have hunit : ∀ y : P.primeCompl, IsUnit (algebraMap A L y) := fun y => by
     have hy : (y : A) ≠ 0 := fun h => y.2 (h ▸ P.zero_mem)
     exact isUnit_iff_ne_zero.2 ((map_ne_zero_iff _ (IsFractionRing.injective A L)).2 hy)
-  letI : Algebra T L := (IsLocalization.lift (M := P.primeCompl) (S := T) hunit).toAlgebra
-  haveI : IsScalarTower A T L := IsScalarTower.of_algebraMap_eq
+  let : Algebra T L := (IsLocalization.lift (M := P.primeCompl) (S := T) hunit).toAlgebra
+  have : IsScalarTower A T L := IsScalarTower.of_algebraMap_eq
     (fun y => (IsLocalization.lift_eq (M := P.primeCompl) (S := T) hunit y).symm)
-  haveI : IsFractionRing T L :=
+  have : IsFractionRing T L :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization P.primeCompl T L
   have hmk : ∀ (a : A) (b : P.primeCompl),
       algebraMap T L (IsLocalization.mk' T a b) * algebraMap A L b = algebraMap A L a := by
@@ -809,7 +809,7 @@ theorem strip_prime_factors (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRi
       exact hx (by simpa using hxy)
     by_cases hp : Prime (π j)
     · obtain ⟨y', hy', hnd⟩ :=
-        (FiniteMultiplicity.of_not_isUnit hp.not_unit hy0).exists_eq_pow_mul_and_not_dvd
+        (FiniteMultiplicity.of_not_isUnit hp.not_isUnit hy0).exists_eq_pow_mul_and_not_dvd
       refine ⟨Function.update m j (multiplicity (π j) y), y', ?_, ?_⟩
       · rw [Finset.prod_insert hj, Function.update_self]
         have hJ : ∏ i ∈ J, π i ^ Function.update m j (multiplicity (π j) y) i
@@ -897,7 +897,7 @@ theorem isRegularRing_quotient_etaleCoordinate : ∀ (p : ℕ) [Fact p.Prime] (A
     ∀ j : Fin n, IsRegularRing (A ⧸ Ideal.span {t j}) := by
   intro p _ A _ _ n t het j
   let B := MvPolynomial (Fin n) (ZMod p)
-  letI : Algebra B A := (MvPolynomial.aeval (R := ZMod p) t).toRingHom.toAlgebra
+  let : Algebra B A := (MvPolynomial.aeval (R := ZMod p) t).toRingHom.toAlgebra
   have : Algebra.Etale B A := het
   let I : Ideal B := Ideal.span (X '' ({j} : Set (Fin n)))
   have hQ : IsRegularRing (B ⧸ I) :=
@@ -934,7 +934,7 @@ theorem prime_algebraMap_localization_of_isRegularRing_quotient :
   have hJP : RingHom.ker (Ideal.Quotient.mk J) ≤ P := by
     rw [Ideal.mk_ker, hJdef, Ideal.span_le, Set.singleton_subset_iff]; exact hxP
   have hle : J ≤ (J.map (algebraMap A R)).comap (algebraMap A R) := Ideal.le_comap_map
-  letI : Algebra (A ⧸ J) (R ⧸ J.map (algebraMap A R)) := (Ideal.quotientMap _ _ hle).toAlgebra
+  let : Algebra (A ⧸ J) (R ⧸ J.map (algebraMap A R)) := (Ideal.quotientMap _ _ hle).toAlgebra
   have hl := IsLocalization.of_surjective P.primeCompl R (S' := R ⧸ J.map (algebraMap A R))
     (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective rfl
     (by rw [Ideal.mk_ker, Ideal.mk_ker])
@@ -951,7 +951,7 @@ theorem prime_algebraMap_localization_of_isRegularRing_quotient :
     · exact fun hz => ⟨z, fun h => hz (Ideal.mem_map_of_mem _ h), rfl⟩
   rw [e] at hl
   have := IsRegularRing.isRegularLocalRing_localization (P.map (Ideal.Quotient.mk J))
-  haveI : IsRegularLocalRing (R ⧸ J.map (algebraMap A R)) :=
+  have : IsRegularLocalRing (R ⧸ J.map (algebraMap A R)) :=
     IsRegularLocalRing.of_ringEquiv (IsLocalization.algEquiv (P.map (Ideal.Quotient.mk J)).primeCompl
       (Localization.AtPrime (P.map (Ideal.Quotient.mk J))) _).toRingEquiv
   have hdom : IsDomain (R ⧸ J.map (algebraMap A R)) :=
@@ -1035,25 +1035,25 @@ theorem unit_mul_monomial_iff : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRin
   intro p _ A _ _ _ n t het P _ L _ _ _ J ht g
   constructor
   · intro hL
-    letI : Algebra (MvPolynomial (Fin n) (ZMod p)) A :=
+    let : Algebra (MvPolynomial (Fin n) (ZMod p)) A :=
       (MvPolynomial.aeval (R := ZMod p) t).toRingHom.toAlgebra
-    haveI : Algebra.Etale (MvPolynomial (Fin n) (ZMod p)) A := het
-    haveI : IsRegularRing A := GlobalTheory.isRegularRing_of_etale (MvPolynomial (Fin n) (ZMod p)) A
-    haveI : IsRegularLocalRing (Localization.AtPrime P) :=
+    have : Algebra.Etale (MvPolynomial (Fin n) (ZMod p)) A := het
+    have : IsRegularRing A := GlobalTheory.isRegularRing_of_etale (MvPolynomial (Fin n) (ZMod p)) A
+    have : IsRegularLocalRing (Localization.AtPrime P) :=
       IsRegularRing.isRegularLocalRing_localization P
     obtain ⟨hRd, hRi⟩ :=
       GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing (Localization.AtPrime P)
-    haveI : IsNoetherianRing (Localization.AtPrime P) :=
+    have : IsNoetherianRing (Localization.AtPrime P) :=
       IsLocalization.isNoetherianRing P.primeCompl _ inferInstance
     have hunits : ∀ y : P.primeCompl, IsUnit (algebraMap A L y) := fun y => by
       refine IsUnit.mk0 _ ?_
       rw [Ne, IsFractionRing.to_map_eq_zero_iff]
       rintro h0
       exact y.2 (h0 ▸ P.zero_mem)
-    letI : Algebra (Localization.AtPrime P) L := (IsLocalization.lift hunits).toAlgebra
-    haveI : IsScalarTower A (Localization.AtPrime P) L :=
+    let : Algebra (Localization.AtPrime P) L := (IsLocalization.lift hunits).toAlgebra
+    have : IsScalarTower A (Localization.AtPrime P) L :=
       IsScalarTower.of_algebraMap_eq (fun a => (IsLocalization.lift_eq hunits a).symm)
-    haveI : IsFractionRing (Localization.AtPrime P) L :=
+    have : IsFractionRing (Localization.AtPrime P) L :=
       IsFractionRing.isFractionRing_of_isDomain_of_isLocalization P.primeCompl _ L
     have hprime : ∀ j ∈ J, IsUnit (algebraMap A (Localization.AtPrime P) (t j)) ∨
         Prime (algebraMap A (Localization.AtPrime P) (t j)) := by
@@ -1084,11 +1084,11 @@ theorem unit_mul_monomial_iff : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRin
       exact u.isUnit
     refine ⟨Units.map (algebraMap (Localization.AtPrime P) L : Localization.AtPrime P →* L) u, m,
       ⟨a, s, haP, s.2, ?_⟩, ?_⟩
-    · rw [Units.coe_map, MonoidHom.coe_coe, ← has, IsScalarTower.algebraMap_apply A
+    · rw [Units.coe_map, MonoidHom.coe_ofClass, ← has, IsScalarTower.algebraMap_apply A
         (Localization.AtPrime P) L s, IsScalarTower.algebraMap_apply A (Localization.AtPrime P) L a,
         ← map_mul, IsLocalization.mk'_spec]
     · ext
-      rw [hum, Units.val_mul, Units.coe_map, MonoidHom.coe_coe, Units.coe_prod]
+      rw [hum, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, Units.coe_prod]
       congr 1
       refine Finset.prod_congr rfl fun j _ => ?_
       rw [Units.val_zpow_eq_zpow_val, Units.val_mk0, ← IsScalarTower.algebraMap_apply]
@@ -1208,9 +1208,9 @@ theorem isLogChart_of_isEtCoord : ∀ (p : ℕ) [Fact p.Prime] (X : Scheme.{0}) 
     IsEtCoord f U t → (∀ j, (x j : X.functionField) = fnOf U h (t j)) →
     (∀ y ∈ U, y ∈ Z ↔ ∃ j ∈ J, ¬ UnitAt y (x j : X.functionField)) → IsLogChart Z U x J := by
   intro p _ X _ f U h n t x J Z hU hEt hx hZ
-  haveI : Nonempty U := ⟨⟨_, h⟩⟩
-  letI : Algebra (ZMod p) Γ(X, U) := (cstOn f U).toAlgebra
-  haveI : IsFractionRing Γ(X, U) X.functionField := functionField_isFractionRing_of_isAffineOpen X U hU
+  have : Nonempty U := ⟨⟨_, h⟩⟩
+  let : Algebra (ZMod p) Γ(X, U) := (cstOn f U).toAlgebra
+  have : IsFractionRing Γ(X, U) X.functionField := functionField_isFractionRing_of_isAffineOpen X U hU
   have hEt' : (MvPolynomial.aeval (R := ZMod p) t).toRingHom.Etale := hEt
   have hA : ∀ s : Γ(X, U), algebraMap Γ(X, U) X.functionField s = fnOf U h s := fun _ => rfl
   have ht : ∀ j, algebraMap Γ(X, U) X.functionField (t j) ≠ 0 := fun j => by
@@ -1414,12 +1414,12 @@ theorem _root_.GlobalTheory.LogPair.flat_germ_comp_cstOn_of_isEtCoord : ∀ {R :
     infer_instance
   have hE : (MvPolynomial.eval₂Hom (_root_.GlobalTheory.LogPair.cstOn g U) t).Flat := by
     have h : (MvPolynomial.eval₂Hom (_root_.GlobalTheory.LogPair.cstOn g U) t).Etale := ht
-    letI := (MvPolynomial.eval₂Hom (_root_.GlobalTheory.LogPair.cstOn g U) t).toAlgebra
+    let := (MvPolynomial.eval₂Hom (_root_.GlobalTheory.LogPair.cstOn g U) t).toAlgebra
     have : Algebra.Etale (MvPolynomial (Fin n) R) Γ(Y, U) := h
     show Module.Flat _ _
     infer_instance
   have hG : (Y.presheaf.germ U y hy).hom.Flat := by
-    letI := (Y.presheaf.germ U y hy).hom.toAlgebra
+    let := (Y.presheaf.germ U y hy).hom.toAlgebra
     have := hU.isLocalization_stalk ⟨y, hy⟩
     show Module.Flat _ _
     exact IsLocalization.flat _ (hU.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl
@@ -1455,7 +1455,7 @@ theorem zmod_sq_dvd_of_mul_eq_zero (p : ℕ) [hp : Fact p.Prime] (a : ZMod (p ^ 
 theorem flat_zmod_sq_mul_p_eq_zero_iff : ∀ (p : ℕ) [Fact p.Prime] {B : Type} [CommRing B]
     (φ : ZMod (p ^ 2) →+* B), φ.Flat → ∀ w : B, (p : B) * w = 0 ↔ ∃ v, w = p * v := by
   intro p hp B _ φ hφ w
-  letI : Algebra (ZMod (p ^ 2)) B := φ.toAlgebra
+  let : Algebra (ZMod (p ^ 2)) B := φ.toAlgebra
   have hflat : Module.Flat (ZMod (p ^ 2)) B := hφ
   have hsmul : ∀ (r : ZMod (p ^ 2)) (b : B), r • b = φ r * b := fun r b => by
     rw [Algebra.smul_def]; rfl
@@ -1586,16 +1586,16 @@ theorem frobLift_stalk (p : ℕ) [Fact p.Prime] {Y : Scheme.{0}} (U : Y.Opens) (
     ∃ F : Y.presheaf.stalk y →+* Y.presheaf.stalk y,
       (∀ b, F ((Y.presheaf.germ U y hy).hom b) = (Y.presheaf.germ U y hy).hom (F₀ b)) ∧
         ∀ z, ∃ w, F z = z ^ p + p * w := by
-  letI : Algebra Γ(Y, U) (Y.presheaf.stalk y) := Y.presheaf.algebra_section_stalk (⟨y, hy⟩ : U)
-  haveI : IsLocalization.AtPrime (Y.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
+  let : Algebra Γ(Y, U) (Y.presheaf.stalk y) := Y.presheaf.algebra_section_stalk (⟨y, hy⟩ : U)
+  have : IsLocalization.AtPrime (Y.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
     hU.isLocalization_stalk ⟨y, hy⟩
   exact frobLift_localization p (hU.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl F₀ hp2 hF₀
 
 theorem stalk_ringHom_ext {Y : Scheme.{0}} (U : Y.Opens) (hU : IsAffineOpen U) (y : Y) (hy : y ∈ U)
     {C : Type} [CommRing C] (f f' : Y.presheaf.stalk y →+* C)
     (h : ∀ b, f ((Y.presheaf.germ U y hy).hom b) = f' ((Y.presheaf.germ U y hy).hom b)) : f = f' := by
-  letI : Algebra Γ(Y, U) (Y.presheaf.stalk y) := Y.presheaf.algebra_section_stalk (⟨y, hy⟩ : U)
-  haveI : IsLocalization.AtPrime (Y.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
+  let : Algebra Γ(Y, U) (Y.presheaf.stalk y) := Y.presheaf.algebra_section_stalk (⟨y, hy⟩ : U)
+  have : IsLocalization.AtPrime (Y.presheaf.stalk y) (hU.primeIdealOf ⟨y, hy⟩).asIdeal :=
     hU.isLocalization_stalk ⟨y, hy⟩
   exact IsLocalization.ringHom_ext (hU.primeIdealOf ⟨y, hy⟩).asIdeal.primeCompl (RingHom.ext h)
 
@@ -1757,7 +1757,7 @@ theorem isLifted_of_sncCharts : ∀ (p : ℕ) [Fact p.Prime] (Y X : Scheme.{0}) 
   have hpK : (p : X.functionField) = 0 := by
     have h0 := (hflat.ker (p : Y.presheaf.stalk (π (genericPoint X)))).2 ⟨1, by ring⟩
     simpa using h0
-  haveI : CharP X.functionField p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hpK
+  have : CharP X.functionField p := (CharP.charP_iff_prime_eq_zero Fact.out).2 hpK
   have hpp := logLift_pp_zero p πK hflat
   choose F hF1 hF2 hF3 using fun i =>
     _root_.GlobalTheory.DI.exists_frobLift_stalk_of_etCoord p q (C i).U (C i).t (C i).affine (C i).etale (π (genericPoint X)) (hη i)
@@ -1862,7 +1862,7 @@ theorem fnOf_coord_ne_zero {R : Type} [CommRing R] [IsDomain R] {X : Scheme.{0}}
     (ht : IsEtCoord f U t) (j : Fin n) : fnOf U h (t j) ≠ 0 := by
   intro h0
   have h1 : t j = 0 := fnOf_injective U h (h0.trans (map_zero _).symm)
-  letI := (MvPolynomial.eval₂Hom (cstOn f U) t).toAlgebra
+  let := (MvPolynomial.eval₂Hom (cstOn f U) t).toAlgebra
   have : Algebra.Etale (MvPolynomial (Fin n) R) Γ(X, U) := ht
   have : Nonempty U := ⟨⟨_, h⟩⟩
   have h2 := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := Γ(X, U))

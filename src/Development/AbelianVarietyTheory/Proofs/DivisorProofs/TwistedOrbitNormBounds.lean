@@ -172,7 +172,7 @@ theorem norm_root_le {n : ℕ} {M : Matrix (Fin n) (Fin n) (PadicAlgCl p)} {c : 
     rw [← hv]
     ext i
     simp [Matrix.mulVec, dotProduct, Matrix.scalar_apply, Matrix.diagonal_apply]
-  haveI : Nonempty (Fin n) := by
+  have : Nonempty (Fin n) := by
     by_contra h
     rw [not_nonempty_iff] at h
     exact hv0 (funext fun i => (IsEmpty.false i).elim)

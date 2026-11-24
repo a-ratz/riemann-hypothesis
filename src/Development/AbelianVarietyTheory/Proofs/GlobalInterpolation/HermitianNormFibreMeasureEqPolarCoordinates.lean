@@ -69,7 +69,7 @@ theorem restrict_eq {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (h : IsFibreFamily μ f id U (volume : Measure ℝ) Set.univ fib)
     (h' : IsFibreFamily μ f id U' (volume : Measure ℝ) Set.univ fib') :
     (fib β).restrict O = (fib' β).restrict O := by
-  haveI : ProperSpace V := FiniteDimensional.proper_real V
+  have : ProperSpace V := FiniteDimensional.proper_real V
   have hc0 : ∀ n : Measure V, n.restrict O Oᶜ = 0 := fun n => by
     rw [Measure.restrict_apply hO.measurableSet.compl]; simp
   refine measure_eq_of_lintegral_eq_on_compactSupport _ _ O hO (hc0 _) (hc0 _) ?_
@@ -184,7 +184,7 @@ theorem isFibreFamily_fam {e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ Fin Q)}
   refine ⟨fun t => ?_, fun φ hφ => ?_, fun φ hφ hs ht => ?_⟩
   · have hS : MeasurableSet (qf ⁻¹' {id t} ∩ O)ᶜ :=
       ((continuous_qf.measurable (measurableSet_singleton t)).inter hO.measurableSet).compl
-    rw [fam, Measure.smul_apply, Measure.restrict_apply hS,
+    rw [fam, smul_apply, Measure.restrict_apply hS,
       Measure.map_apply (hpt' t).measurable (hS.inter hO.measurableSet)]
     have : (fun p => pt e (t, p)) ⁻¹' ((qf ⁻¹' {id t} ∩ O)ᶜ ∩ O) = ∅ := by
       refine Set.eq_empty_of_forall_notMem fun p hp => hp.1 ⟨?_, hp.2⟩
@@ -277,7 +277,7 @@ theorem fibre_eq_polar : ∀ (P Q P' Q' : ℕ) (e : Option (Fin P' ⊕ Fin Q') �
   have hm : Measurable fun p => pt e (sg (e none), p) :=
     ((continuous_pt e).comp (by fun_prop)).measurable
   rw [← Measure.restrict_eq_self _ hsub, key, Measure.restrict_eq_self _ hsub, fam,
-    Measure.smul_apply, Measure.restrict_eq_self _ hsub, Measure.map_apply hm hS, smul_eq_mul,
+    smul_apply, Measure.restrict_eq_self _ hsub, Measure.map_apply hm hS, smul_eq_mul,
     base, Measure.restrict_prod_eq_prod_univ, Measure.restrict_apply (hm hS),
     ← Measure.volume_eq_prod]
   congr 2

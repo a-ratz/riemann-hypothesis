@@ -97,7 +97,7 @@ theorem presents_pull {X W : Scheme.{0}} [IsIntegral X] [IsIntegral W] (q : X �
     simp only [LB.pull, LB.LinComb, Fintype.prod_unique, zpow_one]
     rfl
   rw [hg, fnOf_res_pullU, fnOf_toLB_g]
-  simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, map_div₀]
+  simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, map_div₀]
   exact (div_mul_cancel₀ _ ((map_ne_zero _).2 (Units.ne_zero _))).symm
 
 theorem pull_cls_toLB : ∀ (X W : Scheme.{0}) [IsIntegral X] [IsIntegral W] (q : X ⟶ W) [IsDominant q]

@@ -123,12 +123,12 @@ theorem NG_closed : IsClosed (NG ε e z : Set (UJ ε)) := by
       ⋂ y ∈ {y : Fin n → ℂ | ∀ a, hJ ε (e a) y = 0},
         (fun g : UJ ε => (Formalism.MainNotions.S.uMat g - 1) *ᵥ y) ⁻¹' (spanLt e r : Set (Fin n → ℂ)) := by
     ext g
-    simp only [coe_NG, NLoc, InN, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage,
+    simp only [coe_NG, NLoc, InN, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage,
       SetLike.mem_coe]
     rfl
   rw [e1]
   exact (UnitaryIsometries.RI.SG_closed ε e z).inter (isClosed_biInter fun y _ =>
-    (Submodule.closed_of_finiteDimensional _).preimage (hc y))
+    (Submodule.isClosed_of_finiteDimensional _).preimage (hc y))
 
 theorem HG_closed : IsClosed (HG ε e p z : Set (UJ ε)) := by
   have hc : ∀ v : Fin n → ℂ, Continuous (fun g : UJ ε => Formalism.MainNotions.S.uMat g *ᵥ v) := fun v =>
@@ -136,7 +136,7 @@ theorem HG_closed : IsClosed (HG ε e p z : Set (UJ ε)) := by
   have e1 : (HG ε e p z : Set (UJ ε)) = (⋂ a, {g : UJ ε | Formalism.MainNotions.S.uMat g *ᵥ e a = e a}) ∩
       ((⋂ a, {g : UJ ε | Formalism.MainNotions.S.uMat g *ᵥ p a = p a}) ∩ {g : UJ ε | Formalism.MainNotions.S.uMat g *ᵥ z = z}) := by
     ext g
-    simp only [coe_HG, HLoc, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [coe_HG, HLoc, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [e1]
   exact (isClosed_iInter fun a => isClosed_eq (hc _) continuous_const).inter
     ((isClosed_iInter fun a => isClosed_eq (hc _) continuous_const).inter (isClosed_eq (hc _) continuous_const))

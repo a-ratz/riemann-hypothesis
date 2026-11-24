@@ -142,10 +142,10 @@ theorem of_coords {LL : Type} [Field LL] [Algebra ℚ_[l] LL] [FiniteDimensional
     [FiniteDimensional LL V] (ρ : Representation LL ↥(GK K) V)
     (hc : ∀ (v : V) (f : Dual ℚ_[l] V), Continuous fun g => f (ρ g v)) (hV : IsDR (P.PD K) ρ) :
     IsPst P ρ := by
-  haveI : FiniteDimensional ℚ_[l] V := Module.Finite.trans LL V
-  letI : TopologicalSpace V := moduleTopology ℚ_[l] V
-  haveI : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd ℚ_[l] V
+  have : FiniteDimensional ℚ_[l] V := Module.Finite.trans LL V
+  let : TopologicalSpace V := moduleTopology ℚ_[l] V
+  have : IsModuleTopology ℚ_[l] V := ⟨rfl⟩
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd ℚ_[l] V
   refine h.coeff T ρ (fun v => ?_) hV
   let b := finBasis ℚ_[l] V
   have e : (fun g => ρ g v) = fun g => ∑ i, b.coord i (ρ g v) • b i :=

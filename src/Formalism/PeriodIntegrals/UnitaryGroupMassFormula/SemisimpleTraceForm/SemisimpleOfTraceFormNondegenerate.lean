@@ -148,7 +148,7 @@ theorem isSemisimple_of_isSSRep {Γ : Type} [Group Γ] (ρ : Γ →* GL (Fin a) 
     IsSemisimpleModule (imAlg ρ) (Fin a → k) := by
   have key : ∀ N : Submodule (imAlg ρ) (Fin a → k), ∃ N', IsCompl N N' :=
     exists_isCompl_of_isSSRep ρ hρ
-  haveI : ComplementedLattice (Submodule (imAlg ρ) (Fin a → k)) := ⟨key⟩
+  have : ComplementedLattice (Submodule (imAlg ρ) (Fin a → k)) := ⟨key⟩
   exact ⟨⟩
 
 theorem isSSRep_of_isSemisimple {Γ : Type} [Group Γ] (ρ : Γ →* GL (Fin a) k)
@@ -256,8 +256,8 @@ private theorem eq_zero_of_trace_mul_eq_zero' {K : Type} [Field K] [CharZero K] 
 
 theorem downStep_of (hT : TraceNilStep) : DownStep := by
   intro K _ _ Γ _ a ρ hρ
-  haveI := isSemisimple_of_isSSRep ρ hρ
-  haveI := isSemisimpleModule_self_of_vectors (imAlg ρ)
+  have := isSemisimple_of_isSSRep ρ hρ
+  have := isSemisimpleModule_self_of_vectors (imAlg ρ)
   intro x hx hxy
   have h := eq_zero_of_trace_mul_eq_zero' hT (imAlg ρ) ⟨x, hx⟩ hxy
   simpa using congrArg Subtype.val h
@@ -273,8 +273,8 @@ private theorem isNilpotent_of_mem_jacobson_of_artinian {R : Type} [Ring R] [IsA
 private theorem isSemisimpleRing_of_trNondeg {k : Type} [Field k] {a : ℕ}
     (A : Subalgebra k (Matrix (Fin a) (Fin a) k)) (h : TrNondeg A) :
     IsSemisimpleRing A := by
-  haveI : Module.Finite k A := Module.Finite.of_injective (A.val.toLinearMap) Subtype.val_injective
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : Module.Finite k A := Module.Finite.of_injective (A.val.toLinearMap) Subtype.val_injective
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
   refine IsArtinianRing.isSemisimpleRing_iff_jacobson.mpr ?_
   refine (Submodule.eq_bot_iff _).mpr fun x hx => ?_
   have hx0 : (x : Matrix (Fin a) (Fin a) k) = 0 := by
@@ -289,7 +289,7 @@ private theorem isSemisimpleRing_of_trNondeg {k : Type} [Field k] {a : ℕ}
 theorem semisimpleOfTraceFormNondegenerate : UpStep := by
   intro k _ Γ _ a ρ h
   apply isSSRep_of_isSemisimple
-  haveI := isSemisimpleRing_of_trNondeg (imAlg ρ) h
+  have := isSemisimpleRing_of_trNondeg (imAlg ρ) h
   infer_instance
 
 end PI.SSAscent.UnitaryGroupMassFormula

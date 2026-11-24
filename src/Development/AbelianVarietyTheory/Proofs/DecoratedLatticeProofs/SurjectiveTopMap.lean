@@ -114,8 +114,8 @@ theorem multT_rel {M : DSModel V S} {J : Set (GA D V)} {χ : GA D V → ℂ} (v 
   induction hm using Submodule.span_induction with
   | mem m hm => exact h m hm
   | zero => simp
-  | add a b _ _ ha hb => simp only [MultilinearMap.add_apply, Pi.add_apply, ha, hb, mul_add]
-  | smul r a _ ha => simp only [MultilinearMap.smul_apply, Pi.smul_apply, ha, smul_eq_mul]; ring
+  | add a b _ _ ha hb => simp only [add_apply, Pi.add_apply, ha, hb, mul_add]
+  | smul r a _ ha => simp only [smul_apply, Pi.smul_apply, ha, smul_eq_mul]; ring
 
 theorem multT_rel' {M : DSModel V S} {J : Set (GA D V)} {χ : GA D V → ℂ} (x x' : GA D V) (c : ℂ)
     (h : ∀ m, IsMultMap θ M J χ m → ∀ v, m v x' = c * m v x) {T} (hT : T ∈ MultT θ M J χ) (v : SmT M) :

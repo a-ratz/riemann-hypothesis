@@ -91,11 +91,11 @@ theorem EB_gl (hD : IsOpen D) : GlRel (EB (E := E) hD) := by
   rw [h]
   congr 1
   · by_cases hbc : b = c
-    · rw [if_pos hbc, if_pos hbc]; rfl
-    · rw [if_neg hbc, if_neg hbc]; rfl
+    · rw [ite_eq_left hbc, ite_eq_left hbc]; rfl
+    · rw [ite_eq_right hbc, ite_eq_right hbc]; rfl
   · by_cases hda : d = a
-    · rw [if_pos hda, if_pos hda]; rfl
-    · rw [if_neg hda, if_neg hda]; rfl
+    · rw [ite_eq_left hda, ite_eq_left hda]; rfl
+    · rw [ite_eq_right hda, ite_eq_right hda]; rfl
 
 theorem map_AAx {A B : Type} [Ring A] [Algebra ℂ A] [Ring B] [Algebra ℂ B] (φ : A →ₐ[ℂ] B)
     (Eu : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → A) (xi : Fin r → Fin (2 * r + k + 1) → ℂ) (m : ℕ)
@@ -114,7 +114,7 @@ theorem dz_const_smul (f : ℂ → E) (c : ℂ) (hc : c ≠ 0) (t : ℂ) :
   unfold PBP.dz
   by_cases hd : DifferentiableAt ℝ f t
   · rw [show (fun τ => c • f τ) = c • f from rfl, fderiv_const_smul hd]
-    simp only [ContinuousLinearMap.smul_apply, smul_sub, smul_comm c Complex.I, smul_comm c (1 / 2 : ℂ)]
+    simp only [smul_apply, smul_sub, smul_comm c Complex.I, smul_comm c (1 / 2 : ℂ)]
   · have hd' : ¬ DifferentiableAt ℝ (fun τ => c • f τ) t := by
       intro h
       apply hd
@@ -140,21 +140,21 @@ theorem eventually_level_point_mem_open (hj : j + 1 ≤ r) {Z : Matrix (Fin j) (
       simp only [zfull_apply]
       split_ifs
       · exact continuous_const
-      · exact continuous_subtype_val
+      · exact continuous_subtypeVal
       · exact continuous_const
     have hfi : Continuous (fun τ' : {τ' : ℂ // τ' ≠ 0} => zfull (Zᴴ)⁻¹ (star τ'.1)⁻¹) := by
       refine continuous_pi fun a => continuous_pi fun b => ?_
       simp only [zfull_apply]
       split_ifs
       · exact continuous_const
-      · exact (continuous_star.comp continuous_subtype_val).inv₀ fun τ' => star_ne_zero.mpr τ'.2
+      · exact (continuous_star.comp continuous_subtypeVal).inv₀ fun τ' => star_ne_zero.mpr τ'.2
       · exact continuous_const
     have hm := LeftFubiniLemmas.mMap_cont (k := k) (ρ := r - (j + 1)) hf hfi
       (fun τ' => (zfull_conjTranspose_inv hZ τ'.2).symm) (continuous_const (y := γ))
     have hc : Continuous (fun τ' : {τ' : ℂ // τ' ≠ 0} => x0 k r j hj Z τ'.1 γ) :=
       (Formalism.FourierDecayAlt.P.PBH.castM_cont _).comp hm
     have hon : ContinuousOn (fun τ' => x0 k r j hj Z τ' γ) {τ' : ℂ | τ' ≠ 0} :=
-      continuousOn_iff_continuous_restrict.mpr hc
+      continuousOn_iff_continuous_domRestrict.mpr hc
     exact hon.continuousAt (isOpen_ne.mem_nhds hτ)
   filter_upwards [hne, hcont.preimage_mem_nhds (hD.mem_nhds hx)] with τ' h1 h2
   exact ⟨h1, h2⟩
@@ -223,16 +223,16 @@ theorem plusPosOfParts : CutHL.PlusPosOfParts := by
     · rw [dite_eq_left (by omega), dite_eq_left hq, zfull_apply, dite_eq_left ⟨a.isLt, hq⟩]
     · rw [dite_eq_right hq]
       split_ifs with h1
-      · rw [zfull_apply, dite_eq_right (by simp; omega), if_neg (by simp; omega)]
+      · rw [zfull_apply, dite_eq_right (by simp; omega), ite_eq_right (by simp; omega)]
       · rfl
   have hxl : ∀ q : Fin (2 * r + k + 1), PBG.xi0 x₁ ⟨m + 1, by omega⟩ q = if q.val = m + 1 then τ else 0 := by
     intro q
     rw [hx₁, upper_minor_of_level_point hj Z τ γ ⟨m + 1, by omega⟩ q (by simp)]
     by_cases hq : q.val = m + 1
-    · rw [dite_eq_left (by omega), if_pos hq, zfull_apply, dite_eq_right (by simp), if_pos ⟨rfl, hq⟩]
-    · rw [if_neg hq]
+    · rw [dite_eq_left (by omega), ite_eq_left hq, zfull_apply, dite_eq_right (by simp), ite_eq_left ⟨rfl, hq⟩]
+    · rw [ite_eq_right hq]
       split_ifs with h1
-      · rw [zfull_apply, dite_eq_right (by simp), if_neg (by simp; omega)]
+      · rw [zfull_apply, dite_eq_right (by simp), ite_eq_right (by simp; omega)]
       · rfl
 
   have hHA := Formalism.FourierDecayAlt.P.head_algebra_relations (SB E hD) E k r m (by omega) z' (EB hD) La' (PBG.xi0 x₁) Z τ u

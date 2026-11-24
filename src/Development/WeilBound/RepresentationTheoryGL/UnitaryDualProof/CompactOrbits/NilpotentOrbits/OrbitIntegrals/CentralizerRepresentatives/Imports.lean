@@ -108,7 +108,7 @@ theorem chain_repr_N {N : W →ₗ[E] W} {ι : Type} {l : ι → ℕ} {B : Modul
           rw [sigma_fin_eq_iff, sigma_fin_eq_iff]
           constructor <;> rintro ⟨h1, h2⟩ <;> exact ⟨h1, by simp only at h2 ⊢; omega⟩
         exact if_congr hiff rfl rfl
-      · rw [dite_eq_right hj, map_zero, Module.Basis.coord_apply, Module.Basis.repr_self_apply, if_neg]
+      · rw [dite_eq_right hj, map_zero, Module.Basis.coord_apply, Module.Basis.repr_self_apply, ite_eq_right]
         intro h
         rw [sigma_fin_eq_iff] at h
         obtain ⟨rfl, h2⟩ := h
@@ -117,7 +117,7 @@ theorem chain_repr_N {N : W →ₗ[E] W} {ι : Type} {l : ι → ℕ} {B : Modul
         omega
     · rw [dite_eq_right hi]
       split_ifs with hj
-      · rw [Module.Basis.coord_apply, Module.Basis.repr_self_apply, if_neg, LinearMap.zero_apply]
+      · rw [Module.Basis.coord_apply, Module.Basis.repr_self_apply, ite_eq_right, LinearMap.zero_apply]
         intro h
         rw [sigma_fin_eq_iff] at h
         obtain ⟨rfl, h2⟩ := h
@@ -467,12 +467,12 @@ theorem cb_single (N : W →ₗ[E] W) (L : ℕ) (u : W) (hu : (N ^ L) u = 0) (c 
         refine Finset.sum_congr rfl fun i _ => ?_
         rcases lt_trichotomy (i : ℕ) s with h1 | h1 | h1
         · have hne : i ≠ ⟨s, hsL⟩ := fun he => by rw [he] at h1; exact lt_irrefl _ h1
-          rw [if_neg (by omega), if_neg hne, if_neg (by omega), map_zero, add_zero]
+          rw [ite_eq_right (by omega), ite_eq_right hne, ite_eq_right (by omega), map_zero, add_zero]
         · have he : i = ⟨s, hsL⟩ := Fin.ext h1
-          rw [if_pos (by omega), if_pos he, if_neg (by omega), map_zero, add_zero, h1, Nat.sub_self,
+          rw [ite_eq_left (by omega), ite_eq_left he, ite_eq_right (by omega), map_zero, add_zero, h1, Nat.sub_self,
             pow_zero, Module.End.one_apply]
         · have hne : i ≠ ⟨s, hsL⟩ := fun he => by rw [he] at h1; exact lt_irrefl _ h1
-          rw [if_pos (by omega), if_neg hne, if_pos h1, zero_add, map_smul, cb_pow_succ,
+          rw [ite_eq_left (by omega), ite_eq_right hne, ite_eq_left h1, zero_add, map_smul, cb_pow_succ,
             show (i : ℕ) - s - 1 + 1 = (i : ℕ) - s by omega]
       have hu_eq : u = (c ⟨s, hsL⟩)⁻¹ • y - N ((c ⟨s, hsL⟩)⁻¹ • z) := by
         rw [hyz, smul_add, smul_smul, inv_mul_cancel₀ hcs, one_smul, map_smul]; abel
@@ -588,12 +588,12 @@ theorem cb_step (N : W →ₗ[E] W) (hN : IsNilpotent N) {ι : Type} [Fintype ι
       ((if c = a then (N ^ (s b + i0)) (y a) else 0) - (if c = b then (N ^ (s b + i0)) (y a) else 0)) := by
     intro c
     by_cases hca : c = a
-    · rw [hca, s'a, y'a, if_pos rfl, if_neg hne, map_add (f := _), cb_pow_pow, show s b + i0 + d = s a by omega]
+    · rw [hca, s'a, y'a, ite_eq_left rfl, ite_eq_right hne, map_add (f := _), cb_pow_pow, show s b + i0 + d = s a by omega]
       abel
     by_cases hcb : c = b
-    · rw [hcb, s'c b (fun h => hne h.symm), y'b, if_neg (fun h => hne h.symm), if_pos rfl, map_sub, cb_pow_pow]
+    · rw [hcb, s'c b (fun h => hne h.symm), y'b, ite_eq_right (fun h => hne h.symm), ite_eq_left rfl, map_sub, cb_pow_pow]
       abel
-    · rw [s'c c hca, y'c c hca hcb, if_neg hca, if_neg hcb, sub_zero, add_zero]
+    · rw [s'c c hca, y'c c hca hcb, ite_eq_right hca, ite_eq_right hcb, sub_zero, add_zero]
   have hv' : v = ∑ c, (N ^ s' c) (y' c) := by
     rw [hv, Finset.sum_congr rfl (fun c _ => hterm c), Finset.sum_add_distrib, Finset.sum_sub_distrib]
     simp
@@ -688,15 +688,15 @@ theorem dex_block_frame (I : Ideal R) [I.IsMaximal] {L : Type} [Fintype L] (b : 
       v = ∑ p, ∑ a, (if h : s a < l a then b.repr 1 p • β (p, ⟨a, ⟨s a, h⟩⟩) else 0) ∧
       ∀ A : W →ₗ[R] W, A ∘ₗ N = N ∘ₗ A → ∀ (p : L) (a : ι) (i : Fin (l a)), (i : ℕ) < s a →
         β.repr (A v) (p, ⟨a, i⟩) = 0 := by
-  letI : Field (R ⧸ I) := Ideal.Quotient.field I
+  let : Field (R ⧸ I) := Ideal.Quotient.field I
   have hT : Module.IsTorsionBySet R W I := fun y z => hW z z.2 y
-  letI : Module (R ⧸ I) W := hT.module
+  let : Module (R ⧸ I) W := hT.module
   have hmk : ∀ (z : R) (y : W), (Ideal.Quotient.mk I z) • y = z • y := fun z y => rfl
-  haveI : IsScalarTower k (R ⧸ I) W := ⟨fun c e y => by
+  have : IsScalarTower k (R ⧸ I) W := ⟨fun c e y => by
     obtain ⟨z, rfl⟩ := Ideal.Quotient.mk_surjective e
     have : c • Ideal.Quotient.mk I z = Ideal.Quotient.mk I (c • z) := (map_smul (Ideal.Quotient.mkₐ k I) c z).symm
     rw [this, hmk, hmk, smul_assoc]⟩
-  haveI : FiniteDimensional (R ⧸ I) W := Module.Finite.of_restrictScalars_finite k (R ⧸ I) W
+  have : FiniteDimensional (R ⧸ I) W := Module.Finite.of_restrictScalars_finite k (R ⧸ I) W
   let toE : (W →ₗ[R] W) → (W →ₗ[R ⧸ I] W) := fun f =>
     { toFun := f
       map_add' := f.map_add
@@ -735,14 +735,14 @@ theorem dex_block_frame (I : Ideal R) [I.IsMaximal] {L : Type} [Fintype L] (b : 
     conv_lhs => rw [hv]
     refine Finset.sum_congr rfl fun a _ => ?_
     by_cases h : s a < l a
-    · simp only [h, dif_pos, Basis.smulTower_apply]
+    · simp only [h, dite_eq_left, Basis.smulTower_apply]
       calc B ⟨a, ⟨s a, h⟩⟩ = (1 : R ⧸ I) • B ⟨a, ⟨s a, h⟩⟩ := (one_smul _ _).symm
         _ = (∑ p, b.repr 1 p • b p) • B ⟨a, ⟨s a, h⟩⟩ := by rw [b.sum_repr]
         _ = ∑ p, b.repr 1 p • (b p • B ⟨a, ⟨s a, h⟩⟩) := by
           rw [Finset.sum_smul]
           refine Finset.sum_congr rfl fun p _ => ?_
           rw [smul_assoc]
-    · simp only [h, dif_neg, not_false_eq_true, Finset.sum_const_zero]
+    · simp only [h, dite_eq_right, not_false_eq_true, Finset.sum_const_zero]
   · intro A hAN p a i hi
     have hc : toE A ∘ₗ toE N = toE N ∘ₗ toE A := by
       refine LinearMap.ext fun y => ?_
@@ -786,10 +786,10 @@ theorem dex_global {R : Type} [CommRing R] [Algebra k R] [FiniteDimensional k R]
           v = ∑ m, ∑ p, ∑ a, (if h : s m a < l m a then o m p • β ⟨m, (p, ⟨a, ⟨s m a, h⟩⟩)⟩ else 0) ∧
           ∀ A : V →ₗ[R] V, A ∘ₗ N = N ∘ₗ A → ∀ m (p : L m) (a : ι m) (i : Fin (l m a)), (i : ℕ) < s m a →
             β.repr (A v) ⟨m, (p, ⟨a, i⟩)⟩ = 0 := by
-  haveI : IsArtinianRing R := IsArtinianRing.of_finite k R
+  have : IsArtinianRing R := IsArtinianRing.of_finite k R
   classical
   let M := MaximalSpectrum R
-  letI : Fintype M := Fintype.ofFinite M
+  let : Fintype M := Fintype.ofFinite M
   have hfin : ∀ m : M, Module.Finite k (R ⧸ m.asIdeal) := fun m =>
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ k m.asIdeal).toLinearMap Ideal.Quotient.mk_surjective
   let L : M → Type := fun m => Fin (finrank k (R ⧸ m.asIdeal))
@@ -797,8 +797,8 @@ theorem dex_global {R : Type} [CommRing R] [Algebra k R] [FiniteDimensional k R]
     haveI := hfin m
     exact Module.finBasis k _
   have hne : ∀ m, Nonempty (L m) := fun m => by
-    haveI := hfin m
-    haveI : Nontrivial (R ⧸ m.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr m.isMaximal.ne_top
+    have := hfin m
+    have : Nontrivial (R ⧸ m.asIdeal) := Ideal.Quotient.nontrivial_iff.mpr m.isMaximal.ne_top
     exact ⟨⟨0, Module.finrank_pos⟩⟩
   refine ⟨M, inferInstance, L, fun m => inferInstance, hne,
     fun z m p q => (b m).repr (Ideal.Quotient.mk _ z * b m p) q, fun m p => (b m).repr 1 p, ?_⟩
@@ -858,7 +858,7 @@ theorem dex_global {R : Type} [CommRing R] [Algebra k R] [FiniteDimensional k R]
     intro m z hz y
     apply Subtype.ext
     rw [Submodule.coe_smul, Submodule.coe_zero, ← hfix m y.1 y.2, smul_smul, hE1 m z hz, zero_smul]
-  haveI hVfin : ∀ m, FiniteDimensional k (Vm m) := fun m =>
+  have hVfin : ∀ m, FiniteDimensional k (Vm m) := fun m =>
     Module.Finite.of_injective ((Vm m).subtype.restrictScalars k) Subtype.val_injective
   have hNm : ∀ m, ∀ y ∈ Vm m, N y ∈ Vm m := by
     rintro m y ⟨w, rfl⟩
@@ -989,13 +989,13 @@ theorem exists_frames (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hc : ∀ a 
       (R : Z → (m : M) → L m → L m → k) (o : (m : M) → L m → k),
       ∀ N : Matrix (Fin n) (Fin n) k, (∀ z ∈ Z, z * N = N * z) → IsNilpotent N → ∀ v : Fin n → k,
         Nonempty (Frame Z M L R o N v) := by
-  letI iCR : CommRing Z :=
+  let iCR : CommRing Z :=
     { (inferInstance : Ring Z) with mul_comm := fun a b => Subtype.ext (hc a a.2 b b.2) }
-  letI iM : Module Z (Fin n → k) := Module.compHom (Fin n → k)
+  let iM : Module Z (Fin n → k) := Module.compHom (Fin n → k)
     ((Matrix.toLinAlgEquiv' : Matrix (Fin n) (Fin n) k ≃ₐ[k] Module.End k (Fin n → k)).toRingHom.comp
       Z.val.toRingHom)
   have hsmul : ∀ (z : Z) (u : Fin n → k), z • u = (z : Matrix (Fin n) (Fin n) k) *ᵥ u := fun z u => rfl
-  haveI iST : IsScalarTower k Z (Fin n → k) := ⟨fun c z u => by
+  have iST : IsScalarTower k Z (Fin n → k) := ⟨fun c z u => by
     rw [hsmul, hsmul, Subalgebra.coe_smul]
     ext i
     simp [mulVec, dotProduct, Finset.mul_sum, mul_assoc]⟩

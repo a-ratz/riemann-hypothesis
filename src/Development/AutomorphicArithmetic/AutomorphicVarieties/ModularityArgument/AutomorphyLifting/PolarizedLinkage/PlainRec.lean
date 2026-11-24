@@ -91,15 +91,15 @@ private theorem isL_chars {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (
   let q := multiProdEquiv (stdBlocks (fun i => (y i).1) hd) fun i => equivRep (IrrRep.det (Fin 1) (ξ i) (hξ i))
   have hM : (multiProd (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) fun i => detRep (Fin 1) (ξ i)).IsIrreducible :=
     GlobalTheory.Parabolic.isIrreducible_of_equiv (p.trans q).symm hP
-  haveI := nontrivial_of_irreducible hM
+  have := nontrivial_of_irreducible hM
   have nt {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
       [Module ℂ W] {σ : Representation ℂ G W} {τ : Representation ℂ G V}
       (h : IsSubquotient σ τ) (hw : Nontrivial W) : Nontrivial V := by
-    haveI := hw
+    have := hw
     obtain ⟨S, f, hf⟩ := h
     have := hf.nontrivial
     exact Subtype.val_injective.nontrivial (α := S.toSubmodule)
-  haveI := nt (GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries
+  have := nt (GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries
     (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) ξ) (nontrivial_of_irreducible hM)
   have eqv {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
       [Module ℂ W] {σ : Representation ℂ G W} {τ : Representation ℂ G V}
@@ -107,7 +107,7 @@ private theorem isL_chars {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] (
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : W)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation τ) := hτ
+    have : IsSimpleOrder (Subrepresentation τ) := hτ
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : τ.IntertwiningMap σ := f.comp (topEquiv τ).symm.toIntertwiningMap
@@ -169,7 +169,7 @@ open UpperTheory.V.Z.Win.MonodromyFreeReciprocity in
 theorem UpperTheory.V.Z.Win.plainRec :
     UpperTheory.V.Z.Win.PlainRec := by
   intro E Ω _ _ _ _ _ _ A w h rc ⟨a, ha, L⟩ n π t hw σ hσ
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   have hq : GroundTheory.LocalField.residueCard (w.adicCompletion E) = Ideal.absNorm w.asIdeal :=
     GroundTheory.Global.residueCard_adicCompletion
   have hP : GlobalTheory.RoadU.PlainTor (IrrGL.of σ.ρ σ.smooth σ.irred) := by

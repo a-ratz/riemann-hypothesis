@@ -275,7 +275,7 @@ theorem interNumRed_pos {K : Type} [Field K] (A : AbVar K) (n : ℕ) (hdim : A.d
     (L : LB A.X.left) (hL : L.IsLB) (hLa : IsAmpleLB L) {w : A.X.left} (hw : Order.coheight w = 1) :
     letI := A.algΓ
     0 < interNumRed K (⟨closure {w}, isClosed_closure⟩ : Closeds A.X.left) (fun _ : Fin n => L) := by
-  letI := A.algΓ
+  let := A.algΓ
   obtain ⟨hint, hnoeth, -⟩ := isIntegral_isLocallyNoetherian_compactSpace K A
   obtain ⟨hstr, hproj⟩ := AbVarProj.strHom_eq_and_isProjOver K A
   have hp : IsProjOver (strHom K (X := A.X.left)) := hstr ▸ hproj
@@ -285,9 +285,9 @@ theorem interNumRed_pos {K : Type} [Field K] (A : AbVar K) (n : ℕ) (hdim : A.d
     obtain ⟨N, j, _, h⟩ := hp
     exact h ▸ inferInstance
   set C : Closeds A.X.left := ⟨closure {w}, isClosed_closure⟩ with hC
-  haveI : IsIntegral (Scheme.IdealSheafData.vanishingIdeal C).subscheme :=
+  have : IsIntegral (Scheme.IdealSheafData.vanishingIdeal C).subscheme :=
     isIntegral_red isIrreducible_singleton.closure
-  letI := algebraΓAlong K (redι C)
+  let := algebraΓAlong K (redι C)
   rw [interNumRed_def, interNumSub_def,
     interNumOn_eq_interNum_pull (k := K) (f := redι C) (fun _ => rfl) (fun _ => hL)]
   have hd : topologicalKrullDim (Scheme.IdealSheafData.vanishingIdeal C).subscheme = (n : WithBot ℕ∞) := by
@@ -300,7 +300,7 @@ theorem inter_cons_pos : ∀ (K : Type) [Field K] (A : AbVar K) (n : ℕ), A.dim
   intro K _ A n hdim c hc M hM s hbot htop
   obtain ⟨L, hL, hrel, rfl⟩ := hc
   have hLa : IsAmpleLB L := (AmpleClsIff.isAmpleCls_cls_iff K A L hL).1 ⟨L, hL, hrel, rfl⟩
-  letI := A.algΓ
+  let := A.algΓ
   obtain ⟨hint, hnoeth, hcpt⟩ := isIntegral_isLocallyNoetherian_compactSpace K A
   obtain ⟨hstr, hproj⟩ := AbVarProj.strHom_eq_and_isProjOver K A
   have hp : IsProjOver (strHom K (X := A.X.left)) := hstr ▸ hproj
@@ -1142,15 +1142,15 @@ theorem rank_le_finrank_of_injective_mod_prime : ∀ (l : ℕ) [Fact l.Prime] (H
         have := congrArg Subtype.val hg
         simpa [w, mul_smul] using this
       exact (mul_eq_zero.1 (hv _ h1 j)).resolve_right (hk j)
-    haveI : Module.Finite ℤ (Submodule.span ℤ (Set.range u)) :=
+    have : Module.Finite ℤ (Submodule.span ℤ (Set.range u)) :=
       Module.Finite.span_of_finite ℤ (Set.finite_range u)
     have := hw.fintype_card_le_finrank
     rw [finrank_span_eq_card hu] at this
     simpa using this
   obtain ⟨hfin, hfree, -⟩ := GlobalTheory.finite_free_of_definite_form_of_rank_le M (fun x => Q x)
     (fun f g => by simpa using hpar f g) (fun f => hnn f) (fun f hf => Subtype.ext (hdef _ hf)) n hbound
-  haveI := hfin
-  haveI := hfree
+  have := hfin
+  have := hfree
   let ψ : M →+ T := φ.comp M.subtype
   have hlne : l ≠ 0 := (Fact.out : l.Prime).ne_zero
   have hψ : ∀ (h : M) (t : T), ψ h = (l : ℤ_[l]) • t → ∃ h' : M, h = l • h' := by
@@ -1234,12 +1234,12 @@ theorem hom_finite_free_rank_le : ∀ (K : Type) [Field K] (A B : AbVar K),
       Module.finrank ℤ (A ⟶ B) ≤ 4 * A.dim * B.dim := by
   intro K _ A B
   by_cases h2 : ((2 : ℕ) : K) = 0
-  · haveI : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
+  · have : Fact (Nat.Prime 3) := ⟨Nat.prime_three⟩
     have h3 : ((3 : ℕ) : K) ≠ 0 := by
       have : ((3 : ℕ) : K) = ((2 : ℕ) : K) + 1 := by push_cast; ring
       rw [this, h2, zero_add]; exact one_ne_zero
     exact hom_finite_free_rank_le_of_prime K 3 h3 A B
-  · haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  · have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
     exact hom_finite_free_rank_le_of_prime K 2 h2 A B
 
 end GlobalTheory.AV.AbVar

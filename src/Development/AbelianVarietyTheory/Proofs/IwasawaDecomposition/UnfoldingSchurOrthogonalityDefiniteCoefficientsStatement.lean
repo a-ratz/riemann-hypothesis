@@ -89,9 +89,9 @@ theorem tsum_indicator_coset_complex {G : Type} [Group G] (Γ K : Subgroup G) (a
     ∑' γ : Γ, ((fun y => a⁻¹ * y) ⁻¹' (K : Set G)).indicator (1 : G → ℂ) (γ • x)
       = ({γ : G | γ ∈ Γ ∧ a⁻¹ * γ * a ∈ K}.ncard : ℂ) *
         {x : G | ∃ γ ∈ Γ, ∃ k ∈ K, x = γ * a * k}.indicator 1 x := by
-  letI : TopologicalSpace G := ⊥
-  letI : DiscreteTopology G := ⟨rfl⟩
-  letI : IsTopologicalGroup G := isTopologicalGroup_of_discreteTopology
+  let : TopologicalSpace G := ⊥
+  let : DiscreteTopology G := ⟨rfl⟩
+  let : IsTopologicalGroup G := isTopologicalGroup_of_discreteTopology
   have h := congrArg ENNReal.toReal (GlobalTheory.Ker.tsum_indicator_coset Γ K a hfin x)
   rw [ENNReal.tsum_toReal_eq (fun γ => by
     by_cases hγ : γ • x ∈ (fun y => a⁻¹ * y) ⁻¹' (K : Set G)
@@ -447,11 +447,11 @@ namespace GlobalTheory.Mem.SchurW
 
 theorem schurW : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A : FamIn D.what₂.LL G Pl0 T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), R.BaseW F → ∀ (t : T) (h h' : (R.HX t).H) (a a' : R.cX.W), IntegrableOn (fun g => star ⟪a, R.cX.ext ((R.HX t).e h) g⟫_ℂ * ⟪a', R.cX.ext ((R.HX t).e h') g⟫_ℂ) (R.fdX t) (R.νX t) ∧ (Module.finrank ℂ R.cX.W : ℂ) * ∫ g in R.fdX t, star ⟪a, R.cX.ext ((R.HX t).e h) g⟫_ℂ * ⟪a', R.cX.ext ((R.HX t).e h') g⟫_ℂ ∂(R.νX t) = ⟪a', a⟫_ℂ * ⟪h, h'⟫_ℂ := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F hB t h h' a a'
-  haveI : IsTopologicalGroup (GA D D.sp.X') := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D D.sp.X') := ⟨rfl⟩
-  haveI : Countable (GQ D.sp.X') := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig D.sp.X'.gram
+  have : IsTopologicalGroup (GA D D.sp.X') := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D D.sp.X') := ⟨rfl⟩
+  have : Countable (GQ D.sp.X') := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig D.sp.X'.gram
   have hμ := hB.models.νX t
-  haveI := hμ.1.1
+  have := hμ.1.1
   have hc := hB.models.cX
   have hH := hB.models.HX t
   let J := (levEnv D.sp.X' R.βX (R.datXt t)).J
@@ -542,7 +542,7 @@ theorem schurW : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A
       Subtype.val '' (Bridge.stab (Bridge.ratF D.sp.X') J ((R.B.R t).pres.y c) : Set (GQ D.sp.X')) := by
     intro c
     ext γ
-    simp only [Set.mem_setOf_eq, Set.mem_image, SetLike.mem_coe, Bridge.mem_stab]
+    simp only [Set.mem_ofPred_eq, Set.mem_image, SetLike.mem_coe, Bridge.mem_stab]
     constructor
     · rintro ⟨h1, h2⟩
       refine ⟨⟨γ, h1⟩, ?_, rfl⟩
@@ -557,7 +557,7 @@ theorem schurW : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A
     Finite.of_equiv _ ((R.B.R t).pres.stabI c).toEquiv
   have hfin : ∀ c, {γ : GA D D.sp.X' | γ ∈ GQ D.sp.X' ∧ (y' c)⁻¹ * γ * y' c ∈ Ω}.Finite := fun c => by
     rw [hSet]
-    haveI := hfinS c
+    have := hfinS c
     exact (Set.toFinite _).image _
   have hcard : ∀ c, ({γ : GA D D.sp.X' | γ ∈ GQ D.sp.X' ∧ (y' c)⁻¹ * γ * y' c ∈ Ω}.ncard : ℂ) =
       (Nat.card (Bridge.stab (Bridge.ratF D.sp.X') J ((R.B.R t).pres.y c)) : ℂ) := fun c => by

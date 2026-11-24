@@ -158,7 +158,7 @@ private lemma exists_mem_D1set_fj_ne_zero {r : ℕ} (X : _root_.ReciprocityTheor
     ext s; exact (hM s).1
   have hU : IsOpen U := by
     rw [hUeq]
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun τ => isOpen_lt continuous_const (by fun_prop)
   set F : (X.Ψ → ℂ) → ℂ := fun s => X.fj la ξ ν P (X.flow ξ s x) *
       Complex.exp (-(4 * Real.pi * I * ∑ τ, (ν τ : ℂ) * s τ)) with hFdef

@@ -662,8 +662,8 @@ theorem nelson_form : ∀ {M : Type} [AddCommGroup M] [Module ℂ M] (Q : M → 
         have h0 : Q x x = 0 := hx
         have := hpos x hne
         simp [h0] at this }
-  letI : NormedAddCommGroup M := core.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ M := InnerProductSpace.ofCore core.toCore
+  let : NormedAddCommGroup M := core.toNormedAddCommGroup
+  let : InnerProductSpace ℂ M := InnerProductSpace.ofCore core.toCore
   exact nelson_inner X c hc A hA hs V hV
 
 end GlobalTheory.CompanionTheory.HCForm
@@ -1132,7 +1132,7 @@ theorem word_bound_of_delta : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ
     { toFun := fun u => ⟨(u : S), u.2⟩
       map_add' := fun _ _ => rfl
       map_smul' := fun _ _ => rfl }
-  haveI : FiniteDimensional ℂ V := FiniteDimensional.of_injective f hinj
+  have : FiniteDimensional ℂ V := FiniteDimensional.of_injective f hinj
   have hV : ∀ u ∈ V, (∑ i, Xf i * Xf i) u ∈ V := by
     intro u hu
     have h1 := hYd (u : H) hu

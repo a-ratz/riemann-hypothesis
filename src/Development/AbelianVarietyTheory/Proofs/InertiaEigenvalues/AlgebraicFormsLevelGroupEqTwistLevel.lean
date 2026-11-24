@@ -108,9 +108,9 @@ theorem inParah_iff (hP : IdFrame hF P) (hn : V.rank = n) {κ : GAf D.host.E n} 
     · obtain ⟨a', rfl⟩ := cast_surj hn a
       obtain ⟨b', rfl⟩ := cast_surj hn b
       refine (loc_zero hP hn hκ s a' b').2 (Formalism.L2.DIV.mem_blockTri.1 h a' b' ?_)
-      simp only [Fin.coe_cast] at ha hb
+      simp only [Fin.val_cast] at ha hb
       unfold Formalism.L2.DIV.blk2
-      rw [if_pos hb, if_neg (by omega)]
+      rw [ite_eq_left hb, ite_eq_right (by omega)]
       exact Nat.zero_lt_one
 
 end GlobalTheory.MtLev

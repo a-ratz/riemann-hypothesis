@@ -92,7 +92,7 @@ theorem rows_fibre_le (Z' Z'' : GramM D) (s : ℕ) (De : ℝ) (Λ : LatV D) (S :
     have hΛ2 : X.abelian₂ (D.s.psnd p) = Λ := (X.16 p).symm.trans hΛ
     have hfl : X.fl (D.s.pfst p) = lf D Y.F0 := Y.fl_eq _
     have hfl2 : X.fl (D.s.psnd p) = lf D Y.F0 := Y.fl_eq _
-    simp only [PairSet, pairToTriple, Set.mem_setOf_eq]
+    simp only [PairSet, pairToTriple, Set.mem_ofPred_eq]
     refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
     · rw [← hΛ]
       exact rows_isTermF Y _ hG1
@@ -282,7 +282,7 @@ theorem rows_countOne {C' Cl Cg cb Cu cT CT C0 A CSW C4 : ℝ} (hH : Cnt.Hyp D l
     obtain ⟨hG1, -, hg1, -, -, hZ1, -, -, -⟩ := hS p hpS
     have hT := rows_isTermF Y _ hG1
     rw [hpΛ] at hT
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     refine ⟨hT.1, hT.2, ?_, ?_⟩
     · rw [← hpΛ, ← Y.fl_eq (D.s.pfst p)]
       exact (X.14 _).mp hg1
@@ -345,7 +345,7 @@ theorem rows_countOne' {C' Cl Cg cb Cu cT CT C0 A CSW C4 : ℝ} (hH : Cnt.Hyp D 
     obtain ⟨-, hG2, -, hg2, -, -, hZ2, -, -⟩ := hS p hpS
     have hT := rows_isTermF Y _ hG2
     rw [← X.16 p, hpΛ] at hT
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     refine ⟨hT.1, hT.2, ?_, ?_⟩
     · rw [← hpΛ, X.16 p, ← Y.fl_eq (D.s.psnd p)]
       exact (X.14 _).mp hg2
@@ -403,7 +403,7 @@ theorem rows_OneFibre_of (hT : wordPairTermInjective X Y) (hU : wordPairBetaUniq
     obtain ⟨-, hG1, hG2, -, hg2, hs0, hZ, -⟩ := hS i.1 i.2
     have hfi := hf i.1 i.2
     rw [← hfi]
-    simp only [Partners, Set.mem_setOf_eq]
+    simp only [Partners, Set.mem_ofPred_eq]
     refine ⟨?_, ?_, ?_, X.beta i.1, ?_, ?_⟩
     · rw [X.16 i.1]
       exact rows_isTermF Y _ hG2
@@ -445,7 +445,7 @@ theorem rows_OneFibre'_of (hT : wordPairTermInjective X Y) (hU : wordPairBetaUni
     obtain ⟨hΛ, hG1, hG2, hg1, -, hs0, hZ, -⟩ := hS i.1 i.2
     obtain ⟨β, hβ, hβs⟩ := hP i.1 hG1 hG2 hs0
     rw [← hf i.1 i.2, ← hΛ]
-    simp only [Partners, Set.mem_setOf_eq]
+    simp only [Partners, Set.mem_ofPred_eq]
     refine ⟨rows_isTermF Y _ hG1, ?_, ?_, β, ?_, ?_⟩
     · rw [← Y.fl_eq (D.s.pfst i.1)]
       exact (X.14 _).mp hg1

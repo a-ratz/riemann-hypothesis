@@ -60,16 +60,16 @@ def extZ : SB (RankIn k (Fin n) (Fin d) {n}) →ₗ[ℂ] (Matrix (Fin n) (Fin d)
   map_smul' c φ := funext fun Y => by by_cases h : Yᵀ.rank = n <;> simp [h, -rank_transpose]
 
 theorem extZ_pos (φ : SB (RankIn k (Fin n) (Fin d) {n})) {Y : Matrix (Fin n) (Fin d) k} (h : Yᵀ.rank = n) :
-    extZ φ Y = φ.1 ⟨Yᵀ, h⟩ := dif_pos h
+    extZ φ Y = φ.1 ⟨Yᵀ, h⟩ := dite_eq_left h
 
 theorem extZ_neg (φ : SB (RankIn k (Fin n) (Fin d) {n})) {Y : Matrix (Fin n) (Fin d) k} (h : Yᵀ.rank ≠ n) :
-    extZ φ Y = 0 := dif_neg h
+    extZ φ Y = 0 := dite_eq_right h
 
 theorem isOpenEmb : IsOpenEmbedding fun x : RankIn k (Fin n) (Fin d) {n} => x.1ᵀ := by
   have hXo : IsOpen {x : Matrix (Fin d) (Fin n) k | x.rank ∈ ({n} : Set ℕ)} := by
     convert isOpen_le_rank (k := k) (a := Fin n) (b := Fin d) n using 1
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     exact ⟨fun h => h.ge, fun h => le_antisymm (Matrix.rank_le_width x) h⟩
   let T : Matrix (Fin d) (Fin n) k ≃ₜ Matrix (Fin n) (Fin d) k :=
     { toFun := transpose, invFun := transpose, left_inv := fun _ => rfl, right_inv := fun _ => rfl,

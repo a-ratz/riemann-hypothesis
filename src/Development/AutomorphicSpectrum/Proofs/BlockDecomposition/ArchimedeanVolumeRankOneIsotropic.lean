@@ -148,14 +148,14 @@ theorem eq_coord {F E R : Type} [Field F] [Field E] [Algebra F E] [CommRing R] [
 theorem linearIndependent_of_xw_ne_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M d : ℕ) (b : Module.Basis (Fin d) F E) (ρ : InfinitePlace F → (F →+* ℝ)) (e : Ainf F ≃+* (InfinitePlace F → ℝ)), (∀ w x, ((ρ w x : ℝ) : ℂ) = w.embedding x) → IsHomeomorph e → (∀ x w, e (algebraMap F (Ainf F) x) w = ρ w x) → ∀ X : Fin 1 → Fin M → Ainf F ⊗[F] E, (∀ w, xw e b X w ≠ 0) → LinearIndependent (Ainf F ⊗[F] E) X := by
   intro F E _ _ _ _ _ σ h M d b ρ e hρ he hx X hX
   classical
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; norm_num)
   obtain rfl : d = 2 := by
     have := Module.finrank_eq_card_basis b
     rw [h.2.2.1] at this
     simpa using this.symm
   have hex : ∀ w : InfinitePlace F, ∃ t : E →+* ℂ, ∀ x, t (algebraMap F E x) = w.embedding x := by
     intro w
-    letI : Algebra F ℂ := w.embedding.toAlgebra
+    let : Algebra F ℂ := w.embedding.toAlgebra
     let t : E →ₐ[F] ℂ := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -286,11 +286,11 @@ theorem exists_haar_map (hF : IsTotallyReal F) (e : Ainf F ≃+* (InfinitePlace 
     ∃ lam : Measure (Ainf F), lam.IsAddHaarMeasure ∧
       lam.map e = ENNReal.ofReal κ • (volume : Measure (InfinitePlace F → ℝ)) := by
   obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
-  haveI := i1
-  haveI := i2
-  haveI := i3
-  haveI := i4
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have := i1
+  have := i2
+  have := i3
+  have := i4
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   let eH : Ainf F ≃ₜ (InfinitePlace F → ℝ) := he.homeomorph e
   let eA : (InfinitePlace F → ℝ) ≃+ Ainf F := (e : Ainf F ≃+ (InfinitePlace F → ℝ)).symm
   have hAc : Continuous eA := by
@@ -299,7 +299,7 @@ theorem exists_haar_map (hF : IsTotallyReal F) (e : Ainf F ≃+* (InfinitePlace 
       exact e.apply_symm_apply y)
     rw [h0]
     exact eH.symm.continuous
-  haveI h1 : ((volume : Measure (InfinitePlace F → ℝ)).map eA).IsAddHaarMeasure :=
+  have h1 : ((volume : Measure (InfinitePlace F → ℝ)).map eA).IsAddHaarMeasure :=
     AddEquiv.isAddHaarMeasure_map _ eA hAc he.continuous
   refine ⟨ENNReal.ofReal κ • (volume : Measure (InfinitePlace F → ℝ)).map eA,
     Measure.IsAddHaarMeasure.smul _ (by simpa using hκ) ENNReal.ofReal_ne_top, ?_⟩
@@ -316,25 +316,25 @@ end SlopeTestRemainingChoices
 theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 3 ≤ M → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (ρ : InfinitePlace F → (F →+* ℝ)) (e : Ainf F ≃+* (InfinitePlace F → ℝ)), (∀ w x, ((ρ w x : ℝ) : ℂ) = w.embedding x) → IsHomeomorph e → (∀ x w, e (algebraMap F (Ainf F) x) w = ρ w x) → (∀ y w, |e y w| = ‖y w‖) → (∀ (A Pm : InfinitePlace F → Matrix (Fin M × Fin d) (Fin M × Fin d) ℝ) (Di : (InfinitePlace F → ℝ) → ℝ), Continuous Di → (∀ U : Set (InfinitePlace F → ℝ), MeasurableSet U → ∫⁻ x in qR0 A ⁻¹' U, ENNReal.ofReal (gaussR Pm x) = ∫⁻ y in U, ENNReal.ofReal (Di y)) → ∀ f : (InfinitePlace F → Fin M × Fin d → ℝ) → ℝ, Measurable f → (∀ x, 0 ≤ f x) → (∀ N : ℕ, ∃ C' : ℝ, ∀ x, f x * (1 + ∑ w, ‖x w‖) ^ N ≤ C') → ∀ ε : ℝ, 0 < ε → ∃ δ R : ℝ, 0 < δ ∧ 0 < R ∧ ∀ U : Set (InfinitePlace F → ℝ), MeasurableSet U → ∫⁻ x in qR0 A ⁻¹' U ∩ (coreR δ R)ᶜ, ENNReal.ofReal (f x) ≤ ENNReal.ofReal ε * volume U) → ∀ (μ : Measure (Fin 1 → Fin M → Ainf F ⊗[F] E)) (ν : Measure (HermR (Ainf F) σ 1)), μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → ∀ φ : (Fin 1 → Fin M → Ainf F ⊗[F] E) → ℝ, Continuous φ → (∀ X, 0 ≤ φ X) → RapidDecay b (fun X => (φ X : ℂ)) → ∀ ε : ℝ, 0 < ε → ∃ δ R : ℝ, 0 < δ ∧ 0 < R ∧ IsCompact {X : Fin 1 → Fin M → Ainf F ⊗[F] E | (fun w => xw e b X w) ∈ coreR δ R} ∧ ∀ A : Set (HermR (Ainf F) σ 1), MeasurableSet A → ∫⁻ X in gramR (Ainf F) σ J ⁻¹' (Subtype.val '' A) ∩ {X | (fun w => xw e b X w) ∈ coreR δ R}ᶜ, ENNReal.ofReal (φ X) ∂μ ≤ ENNReal.ofReal ε * ν A := by
   intro F E _ _ _ _ _ σ hcm M J hJ hM d b ρ e hρ he heρ hen hreal μ ν hμ hν φ hφc hφ0 hφR ε hε
   obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hcm.1
-  haveI := i1
-  haveI := i2
-  haveI := i3
-  haveI := i4
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : BorelSpace (HermR (Ainf F) σ 1) := ⟨rfl⟩
+  have := i1
+  have := i2
+  have := i3
+  have := i4
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (HermR (Ainf F) σ 1) := ⟨rfl⟩
   obtain ⟨t1, t2, t3, t4, -, -, -, t8, t9, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Ainf F)
-  haveI := t1
-  haveI := t2
-  haveI := t3
-  haveI := t4
-  haveI := t8 1 M
-  haveI : LocallyCompactSpace (Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) :=
+  have := t1
+  have := t2
+  have := t3
+  have := t4
+  have := t8 1 M
+  have : LocallyCompactSpace (Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin 1 → Fin 1 → Ainf F ⊗[F] E))
-  haveI : SecondCountableTopology (Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) :=
+  have : SecondCountableTopology (Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) :=
     inferInstanceAs (SecondCountableTopology (Fin 1 → Fin 1 → Ainf F ⊗[F] E))
-  haveI : LocallyCompactSpace (HermR (Ainf F) σ 1) :=
+  have : LocallyCompactSpace (HermR (Ainf F) σ 1) :=
     (t9 1).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (HermR (Ainf F) σ 1) :=
+  have : SecondCountableTopology (HermR (Ainf F) σ 1) :=
     TopologicalSpace.Subtype.secondCountableTopology _
   have hd : d = 2 := by
     have h1 := Module.finrank_eq_card_basis b
@@ -360,10 +360,10 @@ theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have hκ : 0 < κ := inv_pos.2 (Real.sqrt_pos.2 (abs_pos.2 (by
     exact_mod_cast NumberField.discr_ne_zero F)))
   obtain ⟨lam, hlam, hmap⟩ := exists_haar_map (F := F) hcm.1 e he hκ
-  haveI : SigmaFinite lam := inferInstance
+  have : SigmaFinite lam := inferInstance
   obtain ⟨-, hK2, hK3⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm (Ainf F) d b lam hlam
-  haveI := hK2 1 M
-  haveI := hK3 1
+  have := hK2 1 M
+  have := hK3 1
   obtain ⟨c₁, hc₁⟩ : ∃ c : ℝ≥0, μ = (c : ℝ≥0∞) • coordW (Ainf F) b lam 1 M :=
     ⟨_, (Measure.isAddLeftInvariant_eq_smul μ (coordW (Ainf F) b lam 1 M)).trans
       (ENNReal.smul_def _ _)⟩
@@ -456,7 +456,7 @@ theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have hνA : ν A = (c₂ : ℝ≥0∞) * (ENNReal.ofReal κ * volume U') := by
     have h1 : coordHerm (Ainf F) σ b lam 1 A = ((coordHerm (Ainf F) σ b lam 1).map τ) U' := by
       rw [Measure.map_apply τ.measurable hU', hpre]
-    rw [hc₂, Measure.smul_apply, smul_eq_mul, h1, hpush, Measure.smul_apply, smul_eq_mul]
+    rw [hc₂, smul_apply, smul_eq_mul, h1, hpush, smul_apply, smul_eq_mul]
   rw [hL, hνA]
   calc (c₁ : ℝ≥0∞) * (ENNReal.ofReal (κ ^ (M * d)) *
         ∫⁻ x in qR0 A₀ ⁻¹' U' ∩ (coreR δ R)ᶜ, ENNReal.ofReal (f x))
@@ -538,7 +538,7 @@ theorem exists_cutoffs {V : Type} [TopologicalSpace V] [LocallyCompactSpace V] [
   have : LocallyCompactSpace U := hU.locallyCompactSpace
   let Kn : ℕ → Set V := fun n => Subtype.val '' compactCovering U n
   have hKc : ∀ n, IsCompact (Kn n) := fun n =>
-    (isCompact_compactCovering U n).image continuous_subtype_val
+    (isCompact_compactCovering U n).image continuous_subtypeVal
   have hKU : ∀ n, Kn n ⊆ U := by
     rintro n _ ⟨x, -, rfl⟩
     exact x.2
@@ -765,7 +765,7 @@ lemma exists_dyadic_bound (f : (P → ι → ℝ) → ℝ) (N : ℕ) (K : ℝ) (
     · obtain ⟨k, hk⟩ : ∃ k, Nat.find hex = k + 1 := ⟨Nat.find hex - 1, by omega⟩
       have hnot : x ∉ (boxR (fun _ => (2 : ℝ) ^ k) : Set (P → ι → ℝ)) :=
         Nat.find_min hex (by omega)
-      simp only [boxR, Set.mem_setOf_eq, not_forall, not_le] at hnot
+      simp only [boxR, Set.mem_ofPred_eq, not_forall, not_le] at hnot
       obtain ⟨w, hw⟩ := hnot
       have := hle w
       rw [hk, pow_succ]
@@ -967,7 +967,7 @@ theorem tail_small : ∀ (P ι : Type) [Fintype P] [Fintype ι] (a : ℕ), 0 < a
   have hsub : Q ⁻¹' U ∩ (coreR δ R : Set (P → ι → ℝ))ᶜ ⊆
       (⋃ v, Q ⁻¹' U ∩ {x | ‖x v‖ < δ}) ∪ (Q ⁻¹' U ∩ {x | ∃ w, R < ‖x w‖}) := by
     rintro x ⟨hxU, hxc⟩
-    simp only [coreR, Set.mem_compl_iff, Set.mem_setOf_eq, not_forall] at hxc
+    simp only [coreR, Set.mem_compl_iff, Set.mem_ofPred_eq, not_forall] at hxc
     obtain ⟨w, hw⟩ := hxc
     by_cases h : δ ≤ ‖x w‖
     · exact Or.inr ⟨hxU, w, not_le.mp fun h' => hw ⟨h, h'⟩⟩
@@ -1025,9 +1025,9 @@ namespace GlobalTheory.CompanionTheory.WeilSiegel.Inf0.RealBox
 theorem pi_smul_const_family {P : Type} [Fintype P] {X : P → Type} [∀ i, MeasurableSpace (X i)]
     (μ : ∀ i, Measure (X i)) [∀ i, SigmaFinite (μ i)] (c : P → ℝ≥0) :
     Measure.pi (fun i => c i • μ i) = (∏ i, c i) • Measure.pi μ := by
-  haveI : ∀ i, SigmaFinite (c i • μ i) := fun i => inferInstance
+  have : ∀ i, SigmaFinite (c i • μ i) := fun i => inferInstance
   refine Measure.pi_eq fun s _ => ?_
-  simp only [Measure.smul_apply, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul,
+  simp only [smul_apply, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul,
     Finset.prod_mul_distrib, ENNReal.ofNNReal_finsetProd]
 
 theorem map_pi_smul {P : Type} [Fintype P] (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -1039,8 +1039,8 @@ theorem map_pi_smul {P : Type} [Fintype P] (E : Type) [NormedAddCommGroup E] [No
       Real.toNNReal ((r w ^ Module.finrank ℝ E)⁻¹) • (volume : Measure E) := fun w => by
     rw [Measure.map_addHaar_smul _ (hr w).ne', abs_of_pos (inv_pos.mpr (pow_pos (hr w) _))]
     ext s _
-    rw [Measure.smul_apply, Measure.smul_apply, ENNReal.smul_def, ENNReal.ofReal]
-  haveI : ∀ w, SigmaFinite ((volume : Measure E).map (fun y => r w • y)) := fun w => by
+    rw [smul_apply, smul_apply, ENNReal.smul_def, ENNReal.ofReal]
+  have : ∀ w, SigmaFinite ((volume : Measure E).map (fun y => r w • y)) := fun w => by
     rw [hc w]; infer_instance
   have hmap := Measure.pi_map_pi (μ := fun _ : P => (volume : Measure E))
     (f := fun w (y : E) => r w • y)
@@ -1051,7 +1051,7 @@ theorem map_pi_smul {P : Type} [Fintype P] (E : Type) [NormedAddCommGroup E] [No
   rw [GlobalTheory.CompanionTheory.WeilSiegel.Inf0.RealBox.pi_smul_const_family, ← Real.toNNReal_prod_of_nonneg
     (fun w _ => (inv_pos.mpr (pow_pos (hr w) (Module.finrank ℝ E))).le)]
   ext s _
-  rw [Measure.smul_apply, Measure.smul_apply, ENNReal.smul_def, ENNReal.ofReal]
+  rw [smul_apply, smul_apply, ENNReal.smul_def, ENNReal.ofReal]
 
 variable {P ι : Type}
 
@@ -1070,7 +1070,7 @@ theorem continuous_gaussR [Fintype P] [Fintype ι] (Pm : P → Matrix ι ι ℝ)
 theorem boxR_one_eq [Fintype P] [Fintype ι] :
     boxR (fun _ : P => (1 : ℝ)) = Metric.closedBall (0 : P → ι → ℝ) 1 := by
   ext x
-  simp only [boxR, Set.mem_setOf_eq, mem_closedBall_zero_iff]
+  simp only [boxR, Set.mem_ofPred_eq, mem_closedBall_zero_iff]
   exact (pi_norm_le_iff_of_nonneg zero_le_one).symm
 
 theorem unit_box_bound [Fintype P] [Fintype ι] (A Pm : P → Matrix ι ι ℝ) (Di : (P → ℝ) → ℝ)
@@ -1150,7 +1150,7 @@ theorem image_box_bound : ∀ (P ι : Type) [Fintype P] [Fintype ι] (A Pm : P �
     (continuous_pi fun w => (continuous_apply w).const_smul (t w ^ 2)).measurable
   have hBox : IsClosed (GlobalTheory.CompanionTheory.WeilSiegel.Inf0.boxR t : Set (P → ι → ℝ)) := by
     show IsClosed {x : P → ι → ℝ | ∀ w, ‖x w‖ ≤ t w}
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact isClosed_iInter fun w => isClosed_le (continuous_apply w).norm continuous_const
   have hSm : MeasurableSet (GlobalTheory.CompanionTheory.WeilSiegel.Inf0.qR0 A ⁻¹' U ∩ (GlobalTheory.CompanionTheory.WeilSiegel.Inf0.boxR t : Set (P → ι → ℝ))) :=
     (hQc.measurable hU).inter hBox.measurableSet
@@ -1161,7 +1161,7 @@ theorem image_box_bound : ∀ (P ι : Type) [Fintype P] [Fintype ι] (A Pm : P �
     ext y
     simp only [Set.mem_preimage, Set.mem_inter_iff, GlobalTheory.CompanionTheory.WeilSiegel.Inf0.RealBox.qR0_scale]
     refine and_congr_right fun _ => ?_
-    simp only [GlobalTheory.CompanionTheory.WeilSiegel.Inf0.boxR, Set.mem_setOf_eq]
+    simp only [GlobalTheory.CompanionTheory.WeilSiegel.Inf0.boxR, Set.mem_ofPred_eq]
     exact forall_congr' fun w => by
       rw [norm_smul, Real.norm_of_nonneg (ht w).le, mul_le_iff_le_one_right (ht w)]
   have hφ := GlobalTheory.CompanionTheory.WeilSiegel.Inf0.RealBox.map_pi_smul (P := P) (ι → ℝ) t ht
@@ -1172,10 +1172,10 @@ theorem image_box_bound : ∀ (P ι : Type) [Fintype P] [Fintype ι] (A Pm : P �
       (volume : Measure (P → ι → ℝ)) (GlobalTheory.CompanionTheory.WeilSiegel.Inf0.qR0 A ⁻¹' U ∩ GlobalTheory.CompanionTheory.WeilSiegel.Inf0.boxR t) =
       volume (GlobalTheory.CompanionTheory.WeilSiegel.Inf0.qR0 A ⁻¹' ((fun (z : P → ℝ) (w : P) => t w ^ 2 • z w) ⁻¹' U) ∩
         GlobalTheory.CompanionTheory.WeilSiegel.Inf0.boxR (fun _ => (1 : ℝ))) := by
-    rw [← hpre, ← Measure.map_apply hφm hSm, hφ, Measure.smul_apply, smul_eq_mul]
+    rw [← hpre, ← Measure.map_apply hφm hSm, hφ, smul_apply, smul_eq_mul]
   have e2 : ENNReal.ofReal (∏ w, ((t w ^ 2) ^ 1)⁻¹) * (volume : Measure (P → ℝ)) U =
       volume ((fun (z : P → ℝ) (w : P) => t w ^ 2 • z w) ⁻¹' U) := by
-    rw [← Measure.map_apply hψm hU, hψ, Measure.smul_apply, smul_eq_mul]
+    rw [← Measure.map_apply hψm hU, hψ, smul_apply, smul_eq_mul]
   have hprod : ENNReal.ofReal (∏ w, t w ^ Fintype.card ι) *
       ENNReal.ofReal (∏ w, (t w ^ Fintype.card ι)⁻¹) = 1 := by
     rw [← ENNReal.ofReal_mul (Finset.prod_nonneg fun w _ => (pow_pos (ht w) _).le),
@@ -1230,18 +1230,18 @@ theorem fibre_rapid_zero_eq_density : ∀ (F E : Type) [Field F] [NumberField F]
     simpa [hCM.2.2.1] using h.symm
   have hLoc : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hLoc
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨hKr, hKl, hKs, hK2, -, -, -, hVb, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
-  haveI := hKr
-  haveI := hKl
-  haveI := hKs
-  haveI := hK2
-  haveI := hVb 1 M
+  have := hKr
+  have := hKl
+  have := hKs
+  have := hK2
+  have := hVb 1 M
   obtain ⟨hXl, hXs, hX2, hXb, hlift⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM (Ainf F) 1
-  haveI := hXl
-  haveI := hXs
-  haveI := hX2
-  haveI := hXb
+  have := hXl
+  have := hXs
+  have := hX2
+  have := hXb
   obtain ⟨g, hgc, hgf⟩ := hlift M J hJ
   have hreal : ∀ (A Pm : InfinitePlace F → Matrix (Fin M × Fin d) (Fin M × Fin d) ℝ) (Di : (InfinitePlace F → ℝ) → ℝ), Continuous Di → (∀ U : Set (InfinitePlace F → ℝ), MeasurableSet U → ∫⁻ x in qR0 A ⁻¹' U, ENNReal.ofReal (gaussR Pm x) = ∫⁻ y in U, ENNReal.ofReal (Di y)) → ∀ f : (InfinitePlace F → Fin M × Fin d → ℝ) → ℝ, Measurable f → (∀ x, 0 ≤ f x) → (∀ N : ℕ, ∃ C' : ℝ, ∀ x, f x * (1 + ∑ w, ‖x w‖) ^ N ≤ C') → ∀ ε : ℝ, 0 < ε → ∃ δ R : ℝ, 0 < δ ∧ 0 < R ∧ ∀ U : Set (InfinitePlace F → ℝ), MeasurableSet U → ∫⁻ x in qR0 A ⁻¹' U ∩ (coreR δ R)ᶜ, ENNReal.ofReal (f x) ≤ ENNReal.ofReal ε * volume U := by
     intro A Pm Di hDi hdens f hf hf0 hfr ε hε

@@ -238,12 +238,12 @@ theorem potModel_semiAbelian_of_hypS : ∀ (V K : Type) [CommRing V] [IsDomain V
   obtain ⟨o, ze, ded, ft, no, prim, ho⟩ := GlobalTheory.CycAway.exists_base Ω n a np
   obtain ⟨P, α, hg, hα, hL⟩ := exists_polarised_pull (spMap (algebraMap K Ω)) Q
   have hSP : letI := P.isAb.comm; GlobalTheory.ZH.HypS P.A P.L := by
-    letI := Q.isAb.comm
-    letI := P.isAb.comm
+    let := Q.isAb.comm
+    let := P.isAb.comm
     exact GlobalTheory.SymBaseChange.hypS_baseChange _ _ Q.A P.A _ α Q.L P.L Q.isLB P.isLB hα hL hS
   have lev := GlobalTheory.nonempty_level_of_isAlgClosed Ω P (n ^ a) _ (by exact_mod_cast pow_ne_zero a np.ne_zero) prim
   obtain ⟨Ω₀, _, _, j, R₀, Q₀, φ, fg, fr, hg₀, hφ, hS₀, lev₀⟩ := GlobalTheory.SymLevelDescent.descends_to_fg_field o Ω P (n ^ a) ze hSP lev
-  haveI : GlobalTheory.ZH.ArithBase o Ω₀ := ⟨ded, ft, RingHom.charZero j.toRingHom, fun x y h => Subtype.ext (by
+  have : GlobalTheory.ZH.ArithBase o Ω₀ := ⟨ded, ft, RingHom.charZero j.toRingHom, fun x y h => Subtype.ext (by
     have := congrArg j h
     rwa [j.commutes, j.commutes] at this)⟩
   obtain ⟨Z, s, x, G, _, χ, hs, hx, hG, hχ⟩ := fam o Ω₀ R₀ fg fr Q₀ ze (hg₀.trans hg) no hS₀ lev₀
@@ -423,7 +423,7 @@ theorem exists_model_of_isogeny (K R K' : Type) [Field K] [CommRing R] [IsDomain
     ∃ (G : Over (Sp R)) (_ : GrpObj G), SmConn G ∧ IsModel (L := K') A G ∧
       Nonempty (TorusExtension (spFibre G)) := by
   obtain ⟨e, he⟩ := hmod
-  haveI := he
+  have := he
   have hbc : ∀ (X : Over (Sp K)), SmoothOfRelativeDimension g X.hom →
       SmoothOfRelativeDimension g ((Over.pullback (spMap (algebraMap K K'))).obj X).hom := fun X hX =>
     (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback
@@ -438,9 +438,9 @@ theorem exists_model_of_isogeny (K R K' : Type) [Field K] [CommRing R] [IsDomain
     GlobalTheory.AbLaw.isProjBy_baseChange K K' (algebraMap K K') A.left _ A.hom _ _
       (IsPullback.of_hasPullback A.hom (spMap (algebraMap K K'))) hP
   have hgA' : SmoothOfRelativeDimension g ((Over.pullback (spMap (algebraMap K K'))).obj A).hom := hbc A hgA
-  haveI hgB' : SmoothOfRelativeDimension g ((Over.pullback (spMap (algebraMap K K'))).obj B).hom := hbc B hgB
+  have hgB' : SmoothOfRelativeDimension g ((Over.pullback (spMap (algebraMap K K'))).obj B).hom := hbc B hgB
   have hgG : SmoothOfRelativeDimension g ((Over.pullback (spMap (algebraMap R K'))).obj G').hom := by
-    haveI : IsIso e.hom.left := ⟨e.inv.left, by simp [← Over.comp_left], by simp [← Over.comp_left]⟩
+    have : IsIso e.hom.left := ⟨e.inv.left, by simp [← Over.comp_left], by simp [← Over.comp_left]⟩
     have h : SmoothOfRelativeDimension (0 + g) (e.hom.left ≫ ((Over.pullback (spMap (algebraMap K K'))).obj B).hom) := inferInstance
     rw [zero_add, Over.w e.hom] at h
     exact h
@@ -460,14 +460,14 @@ namespace GlobalTheory.SS
 open Isog IsLocalRing in
 theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (IsLocalRing.maximalIdeal V) V] [Field K] [CharZero K] [Algebra V K] [IsFractionRing V K] (A B : Over (Sp K)) [GrpObj A] [GrpObj B] (g m : ℕ), IsAbelianScheme A → GlobalTheory.AbLaw.IsProjBy A.hom → SmoothOfRelativeDimension g A.hom → SmoothOfRelativeDimension g B.hom → ∀ (i : A ⟶ B) (r : B ⟶ A), IsMonHom i → IsMonHom r → 1 ≤ m → r ≫ i = 𝟙 _ ^ m → PotModel V K B (fun _ _ _ G _ => IsSemiAbelian G) → PotModel V K A (fun _ _ _ G _ => IsSemiAbelian G) := by
   intro V K _ _ _ _ _ _ _ _ A B _ _ g m hA hP hgA hgB i r hi hr hm hri hB
-  haveI := hi
-  haveI := hr
+  have := hi
+  have := hr
   obtain ⟨W, L, _, _, _, _, _, _, _, _, hc, hfin, hloc, hcomp, G, _, hmod, hG⟩ := hB
   have hG' : IsSemiAbelian G := hG
-  haveI : IsAdicComplete (maximalIdeal W) W := hcomp
-  haveI : CharZero L := (RingHom.charZero_iff (algebraMap K L).injective).1 inferInstance
-  haveI : CharZero W := (RingHom.charZero_iff (IsFractionRing.injective W L)).2 inferInstance
-  haveI : CharZero V := (RingHom.charZero_iff (IsFractionRing.injective V K)).2 inferInstance
+  have : IsAdicComplete (maximalIdeal W) W := hcomp
+  have : CharZero L := (RingHom.charZero_iff (algebraMap K L).injective).1 inferInstance
+  have : CharZero W := (RingHom.charZero_iff (IsFractionRing.injective W L)).2 inferInstance
+  have : CharZero V := (RingHom.charZero_iff (IsFractionRing.injective V K)).2 inferInstance
   obtain ⟨R, _, _, _, _, hinj, hint, hac⟩ := _root_.GlobalTheory.ClosedResidueExt.exists_integral_ext_isAlgClosed_residueField W
   obtain ⟨-, hhen, -⟩ := _root_.GlobalTheory.henselian_and_union_of_isIntegral_complete W R hinj hint
   have hWK : Function.Injective ((algebraMap R (FractionRing R)).comp (algebraMap W R)) :=
@@ -475,7 +475,7 @@ theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomai
   obtain ⟨b, hbW⟩ : ∃ b : L →+* FractionRing R,
       (algebraMap R (FractionRing R)).comp (algebraMap W R) = b.comp (algebraMap W L) :=
     ⟨IsFractionRing.lift hWK, RingHom.ext fun x => (IsFractionRing.lift_algebraMap (K := L) hWK x).symm⟩
-  letI : Algebra K (FractionRing R) := (b.comp (algebraMap K L)).toAlgebra
+  let : Algebra K (FractionRing R) := (b.comp (algebraMap K L)).toAlgebra
   have hSH : SH R (FractionRing R) := by
     show _ ∧ _ ∧ _ ∧ _
     exact ⟨inferInstance, hhen, hac, inferInstance⟩
@@ -485,7 +485,7 @@ theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomai
     ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsSemiAbelian.pullback (spMap (algebraMap W R)) G hG'
   obtain ⟨GR, _, hsc, hmodA, ht⟩ := exists_model_of_isogeny K R (FractionRing R) hSH A B g m hA hP hgA hgB
     i r hm hri _ hsemiR hmodR
-  letI : Algebra V R := ((algebraMap W R).comp (algebraMap V W)).toAlgebra
+  let : Algebra V R := ((algebraMap W R).comp (algebraMap V W)).toAlgebra
   have hVR : (algebraMap R (FractionRing R)).comp (algebraMap V R) =
       (algebraMap K (FractionRing R)).comp (algebraMap V K) := by
     change (algebraMap R (FractionRing R)).comp ((algebraMap W R).comp (algebraMap V W)) =
@@ -497,7 +497,7 @@ theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomai
       (algebraMap K L).injective.comp (IsFractionRing.injective V K)
     rw [← hc, RingHom.coe_comp] at h2
     exact h2.of_comp
-  haveI : Algebra.IsIntegral V W := Algebra.IsIntegral.of_finite V W
+  have : Algebra.IsIntegral V W := Algebra.IsIntegral.of_finite V W
   have hVRi : (algebraMap V R).IsIntegral :=
     RingHom.IsIntegral.trans (f := algebraMap V W) (g := algebraMap W R)
       (fun x => Algebra.IsIntegral.isIntegral (R := V) x) (fun x => hint.isIntegral x)
@@ -505,7 +505,7 @@ theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomai
   obtain ⟨hlocVR, -, hdescV⟩ := _root_.GlobalTheory.henselian_and_union_of_isIntegral_complete V R hVRinj ⟨fun x => hVRi x⟩
   obtain ⟨W', _, hsW, hcW, hfW, hlW⟩ := hdescV s
   obtain ⟨GW, _, _, ε, hscW, hε, hcompW, hmodW⟩ := hs W' inferInstance hsW hlW
-  haveI := hε
+  have := hε
   have hlVW : IsLocalHom (algebraMap V W') := by
     refine ⟨fun x hx => ?_⟩
     have h1 : IsUnit (W'.val.toRingHom (algebraMap V W' x)) := hx.map _
@@ -522,17 +522,17 @@ theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomai
     have hρ : spMap ρ = spMap (residue R) ≫ spMap W'.val.toRingHom := (Isog.spMap_comp _ _).symm
     rw [hρ]
     let Z := pullCompIso (spMap (residue R)) (spMap W'.val.toRingHom) GW ≪≫ (Over.pullback _).mapIso ε
-    haveI : IsMonHom Z.symm.hom := by
+    have : IsMonHom Z.symm.hom := by
       dsimp only [Z, Iso.symm_hom, Iso.trans_inv, Functor.mapIso_inv]
       infer_instance
     exact ⟨torusExtOfIso Z.symm T⟩
   have hprop : IsProper ((Over.pullback (spMap (algebraMap W' (FractionRing W')))).obj GW).hom := by
     obtain ⟨e, -⟩ := hmodW
-    haveI : IsProper A.hom := hA.proper
-    haveI : IsProper ((Over.pullback (spMap (algebraMap K (FractionRing W')))).obj A).hom :=
+    have : IsProper A.hom := hA.proper
+    have : IsProper ((Over.pullback (spMap (algebraMap K (FractionRing W')))).obj A).hom :=
       MorphismProperty.IsStableUnderBaseChange.of_isPullback (P := @IsProper)
         (IsPullback.of_hasPullback A.hom (spMap (algebraMap K (FractionRing W')))) (inferInstanceAs (IsProper A.hom))
-    haveI : IsIso e.hom.left := ⟨e.inv.left, by simp [← Over.comp_left], by simp [← Over.comp_left]⟩
+    have : IsIso e.hom.left := ⟨e.inv.left, by simp [← Over.comp_left], by simp [← Over.comp_left]⟩
     rw [← Over.w e.hom]
     infer_instance
   have hsemiW : IsSemiAbelian GW :=
@@ -629,8 +629,8 @@ theorem potModel_isSemiAbelian : ∀ (V : Type) [CommRing V] [IsDomain V] [IsDis
   obtain ⟨L, _, _, _, B, _, Q, g, m, i, r, i', r', hp, hs, hsB, hi, hr, hm, hri, hi', hr', hir, hS⟩ :=
     _root_.GlobalTheory.FiniteData.exists_isogenous_retract K A hA
   obtain ⟨W, _, _, _, _, _, _, _, -, -, -, -, -, hup⟩ := _root_.GlobalTheory.SS.exists_complete_dvr_finite_extension V K L
-  haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap K L).injective
-  letI := Q.grp
+  have : CharZero L := charZero_of_injective_algebraMap (algebraMap K L).injective
+  let := Q.grp
   have hQ := _root_.GlobalTheory.SymSemistable.potModel_semiAbelian_of_hypS W L Q hS
   have hB := _root_.GlobalTheory.SS.potModel_semiAbelian_of_retract W L B Q.A i' r' hi' hr' hir hQ
   have hAL : IsAbelianScheme ((Over.pullback (spMap (algebraMap K L))).obj A) := by

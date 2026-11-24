@@ -69,13 +69,13 @@ theorem nmat_entry_le (X : Data E r) (z : V (nd X)) (τ : X.Ψ) (a b : Fin r) :
   unfold nmat
   by_cases h : b < a
   · have hab : a ≠ b := fun e => lt_irrefl b (e ▸ h)
-    rw [dite_eq_left h, if_neg hab, sub_zero]
+    rw [dite_eq_left h, ite_eq_right hab, sub_zero]
     exact PiLp.norm_apply_le z _
   · rw [dite_eq_right h]
     split_ifs <;> simp
 
 theorem det_nmat (X : Data E r) (z : V (nd X)) (τ : X.Ψ) : (mat (nmat X z) τ).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · refine Finset.prod_eq_one fun a _ => ?_
     simp [mat, nmat]
   · intro a b hab
@@ -84,7 +84,7 @@ theorem det_nmat (X : Data E r) (z : V (nd X)) (τ : X.Ψ) : (mat (nmat X z) τ)
     simp [mat, nmat, h1, h2]
 
 theorem norm_dmin_zero (X : Data E r) (y : Frame X.Ψ r) (τ : X.Ψ) : ‖dmin X.Gm y τ 0‖ = 1 := by
-  haveI : IsEmpty (Fin ((0 : Fin (r + 1)) : ℕ)) := ⟨fun i => absurd i.2 (by simp)⟩
+  have : IsEmpty (Fin ((0 : Fin (r + 1)) : ℕ)) := ⟨fun i => absurd i.2 (by simp)⟩
   rw [dmin, lminor, Matrix.det_isEmpty, norm_one]
 
 theorem norm_dmin_last (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (z : V (nd X)) (τ : X.Ψ) :
@@ -214,7 +214,7 @@ theorem chart_near_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
         _ ≤ _ := Finset.prod_le_prod₀ (fun τ _ => by positivity) (fun τ _ =>
             Finset.prod_le_prod₀ (fun i _ => by positivity) (fun i _ => hfac τ i))
     refine le_trans ?_ hprod
-    rw [← Real.exp_nat_mul, QuadraticCoefficientForms.card_Psi X]
+    rw [← Real.exp_natCast_mul, QuadraticCoefficientForms.card_Psi X]
     refine Real.exp_le_exp.2 ?_
     push_cast
     have e1 : (fdeg E : ℝ) * r * -(2 * t) = -(18 * ((r : ℝ) ^ 3 * δ * fdeg E)) := by rw [ht]; ring

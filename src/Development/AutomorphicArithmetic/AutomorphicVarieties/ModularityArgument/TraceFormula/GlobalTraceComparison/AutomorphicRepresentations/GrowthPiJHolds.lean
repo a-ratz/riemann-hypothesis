@@ -422,7 +422,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.finFac_pf :
     have h0 := h ⟨_, hy⟩
     have h1 := s.fix.1 ψ.1 ψ.2 (-ldet ((g, 1) : H E n 0) / (n * Module.finrank ℚ E)) g
     exact h1.symm.trans h0
-  haveI : FiniteDimensional ℂ W := hWf
+  have : FiniteDimensional ℂ W := hWf
   obtain ⟨d, xs, ws, hw, hrep⟩ := hE {x : H E n 0 // ldet x = 0} s.π.V (fun x => evAt s.π x.1) sep
     (LinearMap.range (Submodule.inclusion hWV)) inferInstance
   refine ⟨{ B := Fin d, w := fun b => (ws b).1, x := fun b => (xs b).1, mem := fun b => (ws b).2,
@@ -449,7 +449,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.finFac_pf :
   have hL : ∀ f, L f = inner ℂ (s.k₁ x i) f -
       ∑ b, (ws b).1.1 x.1 * inner ℂ (s.k₁ (ac E n (ldet x) * (xs b).1) i) f := by
     intro f
-    simp [L, ContinuousLinearMap.sum_apply]
+    simp [L, sum_apply]
   have hle : Submodule.span ℂ {f | IsPiVec s.D s.π f} ≤ LinearMap.ker (L : Hs (ι := ι) s.D →ₗ[ℂ] ℂ) :=
     Submodule.span_le.2 fun f hf => by
       have := key f hf x i
@@ -492,7 +492,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.finGen_pf :
   obtain ⟨-, hmul, -, -, -, -, -, -, -, hrat, -, -⟩ := hB E n s.pos
   choose W hWle hWfd hW using s.fin
   have hfd : FiniteDimensional ℂ (⨆ p : ι × ι, W p.1 p.2 : Submodule ℂ (Sm E n)) := by
-    haveI : ∀ p : ι × ι, FiniteDimensional ℂ (W p.1 p.2) := fun p => hWfd _ _
+    have : ∀ p : ι × ι, FiniteDimensional ℂ (W p.1 p.2) := fun p => hWfd _ _
     exact Submodule.finiteDimensional_iSup _
   refine ⟨⨆ p : ι × ι, W p.1 p.2, iSup_le fun p => hWle _ _, hfd, ?_⟩
   intro v hv i t
@@ -674,7 +674,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.gBound_pf :
         cnt (ratH E n 0) Ω y := fun i =>
     enorm_inner_le _ _ _ _ hU _ _ (Real.sqrt_nonneg _) (Real.sqrt_nonneg _) _ (h1 i) (h2 i)
   calc ‖m.G (ac E n t * x₀) y‖ₑ ≤ ∑ i, ‖(inner ℂ (s.k₁ (ac E n t * x₀) i) (m.Uπ (s.k₂ y i)) : ℂ)‖ₑ :=
-        enorm_sum_le _ _
+        eNorm_sum_le _ _
     _ ≤ ∑ _i : ι, ENNReal.ofReal (Real.sqrt (C₀.toReal * (cnt (ratH E n 0) Ω x₀).toReal) * Real.sqrt C₀.toReal * ‖m.U‖) *
         cnt (ratH E n 0) Ω y := Finset.sum_le_sum fun i _ => h3 i
     _ = _ := by
@@ -1217,15 +1217,15 @@ private theorem continuous_ac' : Continuous (ac E n) := by
 private theorem measurable_reduced_size : Measurable (r0 : H E n 0 → ℝ) := by
   have hc : Continuous fun x : H E n 0 => (ac E n (-ldet x) * x).1 :=
     continuous_fst.comp ((continuous_ac'.comp continuous_ldet.neg).mul continuous_id)
-  haveI := borelSpace_H (E := E) (n := n)
-  letI : MeasurableSpace (GA E n) := borel _
-  haveI : BorelSpace (GA E n) := ⟨rfl⟩
+  have := borelSpace_H (E := E) (n := n)
+  let : MeasurableSpace (GA E n) := borel _
+  have : BorelSpace (GA E n) := ⟨rfl⟩
   exact (redBasic E n).2.2.comp hc.measurable
 
 private theorem measurable_cnt {Ω : Set (H E n 0)} (hΩ : IsCompact Ω) :
     Measurable (cnt (ratH E n 0) Ω) := by
-  haveI := borelSpace_H (E := E) (n := n)
-  haveI : Countable (ratH E n 0) := DiscreteGroups.T1.G.Dcy.countable_ratH'
+  have := borelSpace_H (E := E) (n := n)
+  have : Countable (ratH E n 0) := DiscreteGroups.T1.G.Dcy.countable_ratH'
   set_option synthInstance.maxHeartbeats 200000 in
     have hm : MeasurableSet Ω := hΩ.measurableSet
     refine Measurable.tsum fun γ => ?_
@@ -1240,7 +1240,7 @@ end UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.tailInt_of_bounds :
     GFac → GBound → Supp → DomInt → TailInt := by
   intro hF hB hS hD E _ _ _ n ι _ s
-  haveI := borelSpace_H (E := E) (n := n)
+  have := borelSpace_H (E := E) (n := n)
   obtain ⟨p, hp⟩ := hF E n ι s
   obtain ⟨Ω, hΩ, hC⟩ := hB E n ι s
   choose Cb hCb0 hCb using fun b => hC (p.x b)
@@ -1258,7 +1258,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.tailInt_of_bounds :
   have hfm : ∀ b, Measurable (f b) := fun b => by
     refine Measurable.indicator ?_ hSm
     refine Measurable.mul ?_ (measurable_cnt hΩ)
-    exact (((continuous_of_mem s.π (p.mem b)).comp continuous_fst).enorm).measurable
+    exact (((continuous_of_mem s.π (p.mem b)).comp continuous_fst).eNorm).measurable
   have hpt : ∀ x, A.indicator (fun x => ‖m.G x x‖ₑ) x ≤
       ∑ b, ENNReal.ofReal (Cb b * ‖m.U‖) * f b x := by
     intro x
@@ -1267,8 +1267,8 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.tailInt_of_bounds :
       by_cases hx : |ldet x| ≤ R
       · have hxS : x ∈ S := ⟨hx, hA x hxA hx⟩
         rw [hp m x x]
-        refine (enorm_sum_le _ _).trans (Finset.sum_le_sum fun b _ => ?_)
-        rw [enorm_mul, hf]
+        refine (eNorm_sum_le _ _).trans (Finset.sum_le_sum fun b _ => ?_)
+        rw [eNorm_mul, hf]
         simp only [Set.indicator_of_mem hxS]
         calc ‖(p.w b).1 x.1‖ₑ * ‖m.G (ac E n (ldet x) * p.x b) x‖ₑ
             ≤ ‖(p.w b).1 x.1‖ₑ * (ENNReal.ofReal (Cb b * ‖m.U‖) * cnt (ratH E n 0) Ω x) := by
@@ -1427,22 +1427,22 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.thetaInt_pf :
     rintro _ ⟨g, rfl⟩
     exact ⟨(PositivityTheory.Rg.BcB.thetaE E n g.1, PositivityTheory.Rg.BcB.thetaE E 0 g.2),
       Prod.ext ((hb n).2.2 g.1).symm ((hb 0).2.2 g.2).symm⟩
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E n
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E 0
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E n
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E 0
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E n
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E 0
-  haveI := (PositivityTheory.Rg.BcB.E1.ratProper_holds E n).2.1
-  haveI := (PositivityTheory.Rg.BcB.E1.ratProper_holds E 0).2.1
-  letI := PositivityTheory.Rg.BcB.E.borelH E n 0
-  haveI : BorelSpace (PositivityTheory.Rg.BcB.E.H E n 0) := ⟨rfl⟩
-  haveI : D.μ.IsHaarMeasure :=
+  have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E n
+  have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E 0
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E n
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E 0
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E n
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E 0
+  have := (PositivityTheory.Rg.BcB.E1.ratProper_holds E n).2.1
+  have := (PositivityTheory.Rg.BcB.E1.ratProper_holds E 0).2.1
+  let := PositivityTheory.Rg.BcB.E.borelH E n 0
+  have : BorelSpace (PositivityTheory.Rg.BcB.E.H E n 0) := ⟨rfl⟩
+  have : D.μ.IsHaarMeasure :=
     { toIsFiniteMeasureOnCompacts :=
         @isFiniteMeasureOnCompacts_of_isLocallyFiniteMeasure _ _ _ D.μ D.haar.2.2.2
       toIsMulLeftInvariant := D.haar.1
       toIsOpenPosMeasure := D.haar.2.2.1 }
-  haveI : Countable (PositivityTheory.Rg.BcB.E.ratH E n 0) :=
+  have : Countable (PositivityTheory.Rg.BcB.E.ratH E n 0) :=
     (((GlobalTheory.CuspRep.ratGL E n).prodMap (GlobalTheory.CuspRep.ratGL E 0)).rangeRestrict_surjective).countable
   exact twist_general D.μ _ D.fd θ hc hi hΓ f hf hI
 end -- clump:auto
@@ -1473,7 +1473,7 @@ theorem trFin_pf : TrFin := by
     rw [hr r]
     have hz : ∀ b, e b (r : V) = 0 := fun b => congrFun hr0 b
     simp [hz]
-  haveI : FiniteDimensional ℂ (LinearMap.range L) := FiniteDimensional.of_injective A hA
+  have : FiniteDimensional ℂ (LinearMap.range L) := FiniteDimensional.of_injective A hA
   have hL : (L.restrict fun x _ => LinearMap.mem_range_self L x) = c ∘ₗ A := by
     ext r
     have h1 : (c (A r) : V) = L (∑ b, e b (r : V) • w b) := by
@@ -1638,7 +1638,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.rep_pf :
     ring
   refine ⟨tI.congr (Filter.Eventually.of_forall hFth), ?_⟩
   have hμl : s.D.μ.IsMulLeftInvariant := s.D.haar.1
-  haveI hmm : MeasurableMul (H E n 0) :=
+  have hmm : MeasurableMul (H E n 0) :=
     (inferInstance : MeasurableMul (PositivityTheory.Rg.BcB.E1.ctx PositivityTheory.Rg.BcB.E1.ratProper_holds s.D).G)
   have hun := (DiscreteGroups.T1.G.unfold (PositivityTheory.Rg.BcB.E1.ctx PositivityTheory.Rg.BcB.E1.ratProper_holds s.D)
     PositivityTheory.Rg.BcB.E1.kerBasic PositivityTheory.Rg.BcB.E1.kernel_rows_columns_square_integrable (tst_trM s.D m.t s.M) (f := f) hfinv hmem x₀).2
@@ -1835,15 +1835,15 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.zero_pf :
     AeEq → Zero := by
   intro hAe E _ _ _ n D f I hf hinv hI h
   classical
-  haveI := CuspidalL2GL.t2Space_GA E n
-  haveI := CuspidalL2GL.t2Space_GA E 0
-  haveI := CuspidalL2GL.locallyCompactSpace_GA E n
-  haveI := CuspidalL2GL.locallyCompactSpace_GA E 0
-  haveI := CuspidalL2GL.secondCountableTopology_GA E n
-  haveI := CuspidalL2GL.secondCountableTopology_GA E 0
-  haveI : SigmaCompactSpace (H E n 0) := sigmaCompactSpace_of_locallyCompact_secondCountable
-  haveI : BorelSpace (H E n 0) := ⟨rfl⟩
-  haveI : IsLocallyFiniteMeasure D.μ := D.haar.2.2.2
+  have := CuspidalL2GL.t2Space_GA E n
+  have := CuspidalL2GL.t2Space_GA E 0
+  have := CuspidalL2GL.locallyCompactSpace_GA E n
+  have := CuspidalL2GL.locallyCompactSpace_GA E 0
+  have := CuspidalL2GL.secondCountableTopology_GA E n
+  have := CuspidalL2GL.secondCountableTopology_GA E 0
+  have : SigmaCompactSpace (H E n 0) := sigmaCompactSpace_of_locallyCompact_secondCountable
+  have : BorelSpace (H E n 0) := ⟨rfl⟩
+  have : IsLocallyFiniteMeasure D.μ := D.haar.2.2.2
   have key : ∀ K : Set (H E n 0), IsCompact K → ∀ᵐ x ∂D.ν, x ∈ K → ldet x ∈ I → f x = 0 := by
     intro K hK
     set S : Set (H E n 0) := K ∩ ldet ⁻¹' I with hS
@@ -1856,7 +1856,7 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.zero_pf :
     set w : H E n 0 → ℂ := S.indicator fun x => starRingEnd ℂ (f x) with hwdef
     have hw : MemLp w 2 D.ν := by
       rw [hwdef, memLp_indicator_iff_restrict hSm.nullMeasurableSet]
-      haveI : IsFiniteMeasure (D.ν.restrict S) := isFiniteMeasure_restrict.2 hνS.ne
+      have : IsFiniteMeasure (D.ν.restrict S) := isFiniteMeasure_restrict.2 hνS.ne
       refine MemLp.of_bound (Complex.continuous_conj.comp hf).aestronglyMeasurable B
         ((ae_restrict_iff' hSm).2 (Eventually.of_forall fun x hx => ?_))
       simpa using hB x hx.1

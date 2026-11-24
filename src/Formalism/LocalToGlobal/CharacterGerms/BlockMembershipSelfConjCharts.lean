@@ -80,7 +80,7 @@ theorem coS_off (inj : Function.Injective fun x : Orb × ZMod 2 => tau x.1 x.2) 
     coS r tau gm plc (lam r tau plc (α, col)) y = 0 := by
   have e : y = (eW r tau N).symm ((eW r tau N y).1, (eW r tau N y).2) := by
     rw [Prod.mk.eta, Equiv.symm_apply_apply]
-  rw [e, coS_lam plc inj, if_neg]
+  rw [e, coS_lam plc inj, ite_eq_right]
   intro h2
   apply h
   rw [h2]

@@ -113,7 +113,7 @@ theorem UpperTheory.siegelSet_height_bound :
     obtain ⟨M, hM⟩ := CuspidalSpectrum.exists_height_le_of_isCompact hω
     obtain ⟨B₁, B₂, hB₁, -, hB⟩ := Reduction.exists_pos_bounds hω
       (f := fun b => (ideleModule K (AdelicGLn.det K (m + 1) b) : ℝ))
-      (continuous_subtype_val.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det K _)))
+      (continuous_subtypeVal.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det K _)))
       (fun b _ => (ideleModule K (AdelicGLn.det K _ b)).2)
     have hd : Module.finrank ℚ K ≠ 0 := Module.finrank_pos.ne'
     set s : ℝ := min t 1 with hs

@@ -164,9 +164,9 @@ theorem coeff_zero {κ : Type} [Fintype κ] {ψ : AddChar (AF F) ℂ} (hψ : Glo
       ∑' ξ : κ → F, ψ ((fun i => algebraMap F (AF F) (ξ i)) ⬝ᵥ fun i => infAd (mI t i)) * c ξ = 0) :
     c 0 = 0 := by
   classical
-  letI : MeasurableSpace (κ → F) := ⊤
-  haveI : MeasurableSingletonClass (κ → F) := ⟨fun _ => MeasurableSpace.measurableSet_top⟩
-  haveI : Countable F := countable_F
+  let : MeasurableSpace (κ → F) := ⊤
+  have : MeasurableSingletonClass (κ → F) := ⟨fun _ => MeasurableSpace.measurableSet_top⟩
+  have : Countable F := countable_F
   have hint : Integrable c Measure.count := integrable_count_iff.mpr hc
   have hp : Measurable (pI (F := F) (κ := κ)) := fun _ _ => MeasurableSpace.measurableSet_top
   have key := GlobalTheory.FourierPush.setIntegral_preimage_eq_zero (κ → F) Measure.count c hint

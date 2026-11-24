@@ -180,14 +180,14 @@ theorem partL_lintegral_sq : ∀ (F : Type) [Field F] [NumberField F] (κ κ' : 
     ∀ μ : @Measure (κ ⊕ κ' → AF F) (borel _), @Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
       ∃ c : ℝ≥0∞, ∀ Φ ∈ schA F (κ ⊕ κ'), ∫⁻ x, ‖partL (κ' := κ') A Φ x‖ₑ ^ 2 ∂μ = c * ∫⁻ x, ‖Φ x‖ₑ ^ 2 ∂μ := by
   intro F _ _ κ κ' _ _ A hmem hA μ hμ
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  letI mX : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI mY : MeasurableSpace (κ' → AF F) := borel _
-  haveI : BorelSpace (κ' → AF F) := ⟨rfl⟩
-  letI mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
-  haveI : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  let mX : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mY : MeasurableSpace (κ' → AF F) := borel _
+  have : BorelSpace (κ' → AF F) := ⟨rfl⟩
+  let mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
+  have : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
   let μ₁ : Measure (κ → AF F) := Measure.addHaar
   let μ₂ : Measure (κ' → AF F) := Measure.addHaar
   obtain ⟨C₁, hC₁⟩ := hA μ₁ inferInstance
@@ -196,7 +196,7 @@ theorem partL_lintegral_sq : ∀ (F : Type) [Field F] [NumberField F] (κ κ' : 
   let eA : ((κ → AF F) × (κ' → AF F)) ≃ₜ+ (κ ⊕ κ' → AF F) :=
     { e.symm with map_add' := fun a b => by funext i; cases i <;> rfl }
   let ν : Measure (κ ⊕ κ' → AF F) := (μ₁.prod μ₂).map eA
-  haveI : ν.IsAddHaarMeasure := eA.isAddHaarMeasure_map _
+  have : ν.IsAddHaarMeasure := eA.isAddHaarMeasure_map _
   obtain ⟨c, hμν⟩ : ∃ c : NNReal, μ = c • ν := ⟨_, Measure.isAddLeftInvariant_eq_smul μ ν⟩
   have key : ∀ f : (κ ⊕ κ' → AF F) → ℝ≥0∞, Measurable f →
       ∫⁻ z, f z ∂μ = c * ∫⁻ y, ∫⁻ x, f (Sum.elim x y) ∂μ₁ ∂μ₂ := by
@@ -208,7 +208,7 @@ theorem partL_lintegral_sq : ∀ (F : Type) [Field F] [NumberField F] (κ κ' : 
     rfl
   have hc1 := GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F (hmem Φ hΦ)
   have hc2 := GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hΦ
-  rw [key _ (hc1.measurable.enorm.pow_const 2), key _ (hc2.measurable.enorm.pow_const 2)]
+  rw [key _ (hc1.measurable.eNorm.pow_const 2), key _ (hc2.measurable.eNorm.pow_const 2)]
   have inner : ∀ y, ∫⁻ x, ‖partL (κ' := κ') A Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ =
       C₁ * ∫⁻ x, ‖Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ := by
     intro y
@@ -216,7 +216,7 @@ theorem partL_lintegral_sq : ∀ (F : Type) [Field F] [NumberField F] (κ κ' : 
     simpa only [partL_apply, Sum.elim_comp_inl, Sum.elim_comp_inr] using h
   have hm : Measurable fun y => ∫⁻ x, ‖Φ (Sum.elim x y)‖ₑ ^ 2 ∂μ₁ :=
     Measurable.lintegral_prod_left' (f := fun p : (κ → AF F) × (κ' → AF F) => ‖Φ (eA p)‖ₑ ^ 2)
-      ((hc2.comp eA.continuous).measurable.enorm.pow_const 2)
+      ((hc2.comp eA.continuous).measurable.eNorm.pow_const 2)
   simp_rw [inner]
   rw [lintegral_const_mul _ hm]
   ring
@@ -432,7 +432,7 @@ theorem hasDbl_of (ψ : AddChar (AF F) ℂ) (hψ : ∀ x, ‖ψ x‖ = 1) (d d�
     obtain ⟨k, hk⟩ := hunit μ hμ
     refine ⟨k, fun φ hφ => ?_⟩
     have h := hk (star φ) (GlobalTheory.SchAConj.star_mem_schA F κ φ hφ)
-    simp only [conjMap_apply, Pi.star_apply, LinearEquiv.coe_coe, enorm_eq_nnnorm, nnnorm_star] at h ⊢
+    simp only [conjMap_apply, Pi.star_apply, LinearEquiv.coe_coe, eNorm_eq_nnNorm, nnNorm_star] at h ⊢
     exact h
   refine ⟨dblOf d₁ hf, dblEquivFun T, conjEquiv T, isDblCoord_dblOf d₁ hf, ⟨fun φ => ⟨fun h => hTd.mapsTo φ h,
     fun h => ?_⟩, fun w φ hφ => ?_, fun l => ⟨fun hl => hTd.comp_adm hl, fun hl => ?_⟩, fun μ hμ => ?_⟩,
@@ -725,7 +725,7 @@ theorem GlobalTheory.RatCoord.ratEquiv : ∀ (F E : Type) [Field F] [NumberField
     apply M.co.e.injective
     rw [hΦ₀, hΦ₀]
     exact congrArg hat h
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   have hrank : Module.finrank F (Matrix (Fin n) (Fin d) E) =
       Module.finrank F ((Fin n × Fin d → F) × (Fin n × Fin d → F)) := by
     rw [Module.finrank_matrix, Module.finrank_prod, Module.finrank_fintype_fun_eq_card, hE,

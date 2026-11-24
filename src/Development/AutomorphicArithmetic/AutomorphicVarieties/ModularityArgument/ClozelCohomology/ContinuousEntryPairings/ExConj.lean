@@ -65,7 +65,7 @@ private theorem main_lemma_2 (E Ω : Type) [Field E] [Field Ω] [Algebra E Ω] [
     apply modularCyclotomicCharacter.unique
     intro t ht
     have hm : l ^ n ≠ 0 := pow_ne_zero _ (Fact.out : l.Prime).ne_zero
-    haveI : NeZero (l ^ n) := ⟨hm⟩
+    have : NeZero (l ^ n) := ⟨hm⟩
     have ht' : (t : Ω) ^ (l ^ n) = 1 := by
       rw [← Units.val_pow_eq_pow_val, (mem_rootsOfUnity _ _).1 ht, Units.val_one]
     have hd : l ^ n ∣ (-1 : ZMod (l ^ n)).val + 1 := by
@@ -85,19 +85,19 @@ private theorem main_lemma_2 (E Ω : Type) [Field E] [Field Ω] [Algebra E Ω] [
 
 theorem main : ∀ (K Ω : Type) [Field K] [NumberField K] [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω], (∃ c : G (maximalRealSubfield K) Ω, IsConjEl c) ∧ ∀ (l : ℕ) [Fact l.Prime] (c : G (maximalRealSubfield K) Ω), IsConjEl c → haveI : IsAlgClosure (maximalRealSubfield K) Ω := ⟨IsAlgClosure.isAlgClosed K, haveI := IsAlgClosure.isAlgebraic (R := K) (K := Ω); Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩; cycBar (maximalRealSubfield K) Ω l c = -1 := by
   intro K Ω _ _ _ _ _
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
   refine ⟨?_, fun l _ c hc => main_lemma_2 _ Ω l c hc⟩
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ K Ω
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ K Ω
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   let j : Ω →ₐ[ℚ] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra Ω ℂ := j.toRingHom.toAlgebra
+  let : Algebra Ω ℂ := j.toRingHom.toAlgebra
   let cq : ℂ ≃ₐ[ℚ] ℂ := Complex.conjAe.restrictScalars ℚ
   let σ : Ω ≃ₐ[ℚ] Ω := cq.restrictNormal Ω
   have hσ : ∀ x, j (σ x) = starRingEnd ℂ (j x) := fun x => AlgEquiv.restrictNormal_commutes cq Ω x

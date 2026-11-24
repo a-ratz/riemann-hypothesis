@@ -78,6 +78,6 @@ theorem clm_sup_bound {X Y : Type} [NormedAddCommGroup X] [NormedSpace ℝ X] [N
   obtain ⟨s', C, -, hC⟩ := Seminorm.bound_of_continuous (schwartz_withSeminorms ℂ X ℂ) _ hp
   refine ⟨s', C, C.2, fun f => ?_⟩
   have := hC f
-  simpa [Seminorm.smul_apply, NNReal.smul_def] using this
+  simpa [smul_apply, NNReal.smul_def] using this
 
 end GlobalTheory.SliceOp

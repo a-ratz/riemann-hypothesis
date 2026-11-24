@@ -118,7 +118,7 @@ lemma det_ne_zero_of_isOrth {r : ℕ} (X : Data E r) {G : Matrix (Fin r) (Fin r)
 
 lemma isClosed_unitary {r : ℕ} (X : Data E r) (G : Matrix (Fin r) (Fin r) E) :
     IsClosed {g : X.Ψ → GL (Fin r) ℂ | Uni X G fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ)} := by
-  simp only [Uni, Set.setOf_forall]
+  simp only [Uni, Set.ofPred_forall]
   refine isClosed_iInter fun τ => isClosed_iInter fun u => isClosed_iInter fun w => ?_
   refine isClosed_eq ?_ continuous_const
   have hc : Continuous fun g : X.Ψ → GL (Fin r) ℂ => (g τ : Matrix (Fin r) (Fin r) ℂ) :=
@@ -160,7 +160,7 @@ lemma continuous_toGL {r : ℕ} (X : Data E r) (G : Matrix (Fin r) (Fin r) E) (p
     Continuous fun x : {x : Frame X.Ψ r | Orth X G p x} => toGL X x.2 := by
   refine continuous_pi fun τ => ?_
   have hc : Continuous fun x : {x : Frame X.Ψ r | Orth X G p x} => mat x.1 τ :=
-    (continuous_apply τ).comp continuous_subtype_val
+    (continuous_apply τ).comp continuous_subtypeVal
   refine Units.continuous_iff.2 ⟨hc, ?_⟩
   have h : (fun x : {x : Frame X.Ψ r | Orth X G p x} =>
       (((toGL X x.2 τ)⁻¹ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ)) =
@@ -174,8 +174,8 @@ theorem unitary_group_frames :
     (∀ (r : ℕ) (X : Data E r) {G : Matrix (Fin r) (Fin r) E} (p : X.Ψ → ℕ) (H : Subgroup (X.Ψ → GL (Fin r) ℂ)), (∀ g, g ∈ H ↔ Uni X G fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ)) → LocallyCompactSpace H ∧ SecondCountableTopology H ∧ ∀ x0, Orth X G p x0 → (∀ g : H, Orth X G p (X.lmulC (fun τ => ((g : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0)) ∧ ∃ ι : Frame X.Ψ r → H, ContinuousOn ι {x | Orth X G p x} ∧ (∀ x, Orth X G p x → X.lmulC (fun τ => ((ι x : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0 = x) ∧ ∀ g : H, ι (X.lmulC (fun τ => ((g : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0) = g) := by
   classical
   intro r X G p H hH
-  haveI := locallyCompact_GL r
-  haveI := secondCountable_GL r
+  have := locallyCompact_GL r
+  have := secondCountable_GL r
   have hcl : IsClosed (H : Set (X.Ψ → GL (Fin r) ℂ)) := by
     convert isClosed_unitary X G using 1
     ext g
@@ -187,20 +187,20 @@ theorem unitary_group_frames :
     fun g => isOrth_lmulC X ((hH _).1 g.2) hx0
   refine ⟨horth, fun x => if hx : Orth X G p x then
     ⟨toGL X hx * (toGL X hx0)⁻¹, (hH _).2 (quotient_unitary X hx hx0)⟩ else 1, ?_, ?_, ?_⟩
-  · rw [continuousOn_iff_continuous_restrict]
+  · rw [continuousOn_iff_continuous_domRestrict]
     refine continuous_induced_rng.2 ?_
     refine ((continuous_toGL X G p).mul (continuous_const (y := (toGL X hx0)⁻¹))).congr fun x => ?_
     have hx : Orth X G p x.1 := x.2
-    simp only [Function.comp_apply, Set.restrict_apply, dif_pos hx]
+    simp only [Function.comp_apply, Set.domRestrict_apply, dite_eq_left hx]
     rfl
   · intro x hx
-    simp only [dif_pos hx]
+    simp only [dite_eq_left hx]
     funext τ
     change (((toGL X hx τ * (toGL X hx0 τ)⁻¹ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) *
       (toGL X hx0 τ : Matrix (Fin r) (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) = mat x τ
     rw [← Units.val_mul, inv_mul_cancel_right, val_toGL]
   · intro g
-    simp only [dif_pos (horth g)]
+    simp only [dite_eq_left (horth g)]
     apply Subtype.ext
     change toGL X (horth g) * (toGL X hx0)⁻¹ = g
     rw [mul_inv_eq_iff_eq_mul]
@@ -210,7 +210,7 @@ theorem unitary_group_frames :
 theorem isOrth_update_mul_inv :
     (∀ (r : ℕ) (X : Data E r) {G : Matrix (Fin r) (Fin r) E} {p : X.Ψ → ℕ} (τ0 : X.Ψ) (x : Frame X.Ψ r) (a : Matrix (Fin r) (Fin r) ℂ), Orth X G p x → (a)ᵀ * (Matrix.diagonal fun k : Fin r => if (k : ℕ) < p τ0 then (1 : ℂ) else -1) * (a).map (starRingEnd ℂ) = (Matrix.diagonal fun k : Fin r => if (k : ℕ) < p τ0 then (1 : ℂ) else -1) → Orth X G p (@Function.update X.Ψ (fun _ => Fin r → Fin r → ℂ) (Classical.decEq _) x τ0 (mat x τ0 * a⁻¹ : Matrix (Fin r) (Fin r) ℂ))) := by
   intro r X G p τ0 x a hx ha τ
-  letI : DecidableEq X.Ψ := Classical.decEq _
+  let : DecidableEq X.Ψ := Classical.decEq _
   by_cases hτ : τ = τ0
   · subst hτ
     have hm : mat (Function.update x τ (mat x τ * a⁻¹ : Matrix (Fin r) (Fin r) ℂ)) τ
@@ -277,7 +277,7 @@ lemma conj_unitary {r : ℕ} (X : Data E r) {G : Matrix (Fin r) (Fin r) E} {p : 
 theorem step_of_right_mul :
     (∀ (r : ℕ) (X : Data E r) {G : Matrix (Fin r) (Fin r) E} {p : X.Ψ → ℕ} (H : Subgroup (X.Ψ → GL (Fin r) ℂ)), (∀ g, g ∈ H ↔ Uni X G fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ)) → ∀ x0, Orth X G p x0 → ∀ (τ0 : X.Ψ) (a s : Matrix (Fin r) (Fin r) ℂ), (a)ᵀ * (Matrix.diagonal fun k : Fin r => if (k : ℕ) < p τ0 then (1 : ℂ) else -1) * (a).map (starRingEnd ℂ) = (Matrix.diagonal fun k : Fin r => if (k : ℕ) < p τ0 then (1 : ℂ) else -1) → (s)ᵀ * (Matrix.diagonal fun k : Fin r => if (k : ℕ) < p τ0 then (1 : ℂ) else -1) * (s).map (starRingEnd ℂ) = (Matrix.diagonal fun k : Fin r => if (k : ℕ) < p τ0 then (1 : ℂ) else -1) → s * a = a⁻¹ * s → ∃ h k : H, k * h = h⁻¹ * k ∧ ∀ g : H, (X.lmulC (fun τ => (((g * h : H) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0) = (@Function.update X.Ψ (fun _ => Fin r → Fin r → ℂ) (Classical.decEq _) (X.lmulC (fun τ => (((g : H) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0) τ0 (mat (X.lmulC (fun τ => (((g : H) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0) τ0 * a⁻¹ : Matrix (Fin r) (Fin r) ℂ))) := by
   intro r X G p H hH x0 hx0 τ0 a s ha hs hsa
-  letI : DecidableEq X.Ψ := Classical.decEq _
+  let : DecidableEq X.Ψ := Classical.decEq _
   have hda := det_ne_zero_of_diag ha
   let A : GL (Fin r) ℂ := Matrix.GeneralLinearGroup.mkOfDetNeZero a hda
   let S : GL (Fin r) ℂ := Matrix.GeneralLinearGroup.mkOfDetNeZero s (det_ne_zero_of_diag hs)
@@ -333,7 +333,7 @@ theorem isUnitaryC_of_isUStab {r : ℕ} (X : Data E r) {G : Matrix (Fin r) (Fin 
     ext a b
     have h := hγ.1 (Pi.single a 1) (Pi.single b 1)
     simp only [herm, Matrix.mulVec, dotProduct, Pi.single_apply, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq', Finset.mem_univ, if_true, ite_mul, zero_mul, one_mul] at h
+      Finset.sum_ite_eq', Finset.mem_univ, ite_true, ite_mul, zero_mul, one_mul] at h
     have h2 : G a b = ∑ x, ∑ x_1, if x = a then G x x_1 * cc (if x_1 = b then 1 else 0) else 0 := by
       simp [apply_ite cc, cc_one, cc_zero]
     rw [h2, ← h]
@@ -469,7 +469,7 @@ theorem gamDisc : (∀ (r : ℕ) (X : Data E r) {G : Matrix (Fin r) (Fin r) E} (
     exact (hg τ).trans (hg' τ).symm
   have hT : (⋃ γ ∈ S, F γ).Finite := hS.biUnion fun γ _ => hF γ
   have hC : ((⋃ γ ∈ S, F γ) \ {1})ᶜ ∈ 𝓝 (1 : H) :=
-    (hT.subset Set.diff_subset).isClosed.isOpen_compl.mem_nhds (by simp)
+    (hT.subset Set.sdiff_subset).isClosed.isOpen_compl.mem_nhds (by simp)
   have hV : ∀ᶠ g : H in 𝓝 1, ∀ (τ : X.Ψ) (a b : Fin r),
       ‖((((g : H) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) a b‖ < 2 := by
     simp only [Filter.eventually_all]
@@ -477,7 +477,7 @@ theorem gamDisc : (∀ (r : ℕ) (X : Data E r) {G : Matrix (Fin r) (Fin r) E} (
     have hc : Continuous fun g : H =>
         ‖((((g : H) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) a b‖ :=
       ((Units.continuous_val.comp
-        ((continuous_apply τ).comp continuous_subtype_val)).matrix_elem a b).norm
+        ((continuous_apply τ).comp continuous_subtypeVal)).matrix_elem a b).norm
     refine hc.continuousAt.eventually_lt continuousAt_const ?_
     by_cases h : a = b <;> simp [Matrix.one_apply, h]
   refine ⟨_, Filter.inter_mem hC hV, ?_⟩
@@ -607,7 +607,7 @@ theorem exists_pos_le_bot_top : (∀ (r : ℕ) (X : Data E r) (G : Matrix (Fin r
   have hsp : Submodule.span E (Set.range w) = ⊤ := by
     rw [(finCongr hr).surjective.range_comp]; exact hsp0
   have hdet : (Matrix.of w).det ≠ 0 := by
-    have : IsUnit (Matrix.of w) := Matrix.linearIndependent_rows_iff_isUnit.1 hw
+    have : IsUnit (Matrix.of w) := Matrix.linearIndependent_row_iff_isUnit.1 hw
     exact ((Matrix.isUnit_iff_isUnit_det _).1 this).ne_zero
   have hind := GlobalTheory.SpanIndex.relIndex_span_ne_zero r X (Fin r) w hw hΛ
   set n : ℕ := (Submodule.span (𝓞 E) (Set.range w)).toAddSubgroup.relIndex (X.Λ.toAddSubgroup ⊓ (Submodule.span E (Set.range w)).toAddSubgroup) with hn

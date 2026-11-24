@@ -77,7 +77,7 @@ theorem zt_pow {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε
     zt ε p L ^ (p ^ (L - m)) = zt ε p m := by
   apply ε.injective
   unfold zt
-  rw [map_pow, GlobalTheory.Glue.KTExp.map_eOm, GlobalTheory.Glue.KTExp.map_eOm, ← Complex.exp_nat_mul]
+  rw [map_pow, GlobalTheory.Glue.KTExp.map_eOm, GlobalTheory.Glue.KTExp.map_eOm, ← Complex.exp_natCast_mul]
   congr 1
   have hpL : (p : ℂ) ^ L = (p : ℂ) ^ (L - m) * (p : ℂ) ^ m := by rw [← pow_add, Nat.sub_add_cancel hm]
   have hp0 : (p : ℂ) ≠ 0 := by exact_mod_cast hp.ne'
@@ -87,9 +87,9 @@ theorem zt_pow {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε
 
 theorem exists_algEquiv_primitiveRoot_pow_of_isAlgClosed {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosed Ω] [Algebra.IsAlgebraic ℚ Ω] (ζ : Ω) (n : ℕ) (hn : 0 < n)
     (hζ : IsPrimitiveRoot ζ n) (k : ℕ) (hk : k.Coprime n) : ∃ σ : Ω ≃+* Ω, σ ζ = ζ ^ k := by
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
-  haveI : NeZero (n : Ω) := ⟨by exact_mod_cast hn.ne'⟩
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : NeZero (n : Ω) := ⟨by exact_mod_cast hn.ne'⟩
   have hint : IsIntegral ℚ ζ := (hζ.isIntegral hn).tower_top
   have hk' : IsPrimitiveRoot (ζ ^ k) n := hζ.pow_of_coprime k hk
   have hmin : minpoly ℚ ζ = Polynomial.cyclotomic n ℚ := (Polynomial.cyclotomic_eq_minpoly_rat hζ hn).symm
@@ -108,8 +108,8 @@ theorem exists_algEquiv_primitiveRoot_pow_of_isAlgClosed {Ω : Type} [Field Ω] 
 
 theorem exists_aut {Ω : Type} [Field Ω] [iA : Algebra ℚ Ω] [iC : IsAlgClosure ℚ Ω] (ζ : Ω) (n : ℕ) (hn : 0 < n)
     (hζ : IsPrimitiveRoot ζ n) (k : ℕ) (hk : k.Coprime n) : ∃ σ : Ω ≃ₐ[ℚ] Ω, σ ζ = ζ ^ k := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   have e : iA = DivisionRing.toRatAlgebra := Subsingleton.elim _ _
   have i1 : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   haveI i2 : @Algebra.IsAlgebraic ℚ Ω _ _ DivisionRing.toRatAlgebra := by convert i1 using 2; exact e.symm
@@ -231,7 +231,7 @@ open Classical in
 theorem normTrace_exists_unique : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (p : ℕ) [Fact p.Prime] (L m : ℕ), 1 ≤ m → m ≤ L → ∀ F : Ω, InZl ε p L F → ∃ F' : Ω, IsNT ε p L m F F' ∧ InZl ε p m F' ∧ ∀ F'' : Ω, IsNT ε p L m F F'' → F'' = F' := by
   intro Ω _ _ _ ε p hpf L m hm1 hm F hF
   have hp : p.Prime := hpf.out
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hζ := zt_prim ε p L hp.pos
   have hpow := zt_pow ε p L m hp.pos hm
   have hcop : ∀ a : (ZMod (p ^ L))ˣ, ((a : ZMod (p ^ L)).val).Coprime (p ^ L) := fun a => ZMod.val_coe_unit_coprime a

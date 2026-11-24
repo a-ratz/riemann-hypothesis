@@ -95,13 +95,13 @@ theorem closure_adjoin_unitBall_coeff_bound : ∀ (l : ℕ) [Fact l.Prime] (F : 
   have hrnorm : ‖ι (algebraMap ℚ_[l] (PadicAlgCl l) r)‖ = ‖r‖ := by
     rw [← PadicComplex.coe_eq, PadicComplex.norm_extends]
     exact PadicAlgCl.norm_extends l r
-  letI : NontriviallyNormedField F0 :=
+  let : NontriviallyNormedField F0 :=
     { SubfieldClass.toNormedField F0 with
       non_trivial := ⟨⟨_, hrmem⟩, by
         show 1 < ‖ι (algebraMap ℚ_[l] (PadicAlgCl l) r)‖
         rw [hrnorm]; exact hr⟩ }
-  haveI : CompleteSpace F0 := (Subfield.isClosed_topologicalClosure _).completeSpace_coe
-  letI : NormedSpace F0 ℂ_[l] :=
+  have : CompleteSpace F0 := (Subfield.isClosed_topologicalClosure _).completeSpace_coe
+  let : NormedSpace F0 ℂ_[l] :=
     { norm_smul_le := fun a b => by
         show ‖(a : ℂ_[l]) * b‖ ≤ ‖(a : ℂ_[l])‖ * ‖b‖
         exact (norm_mul _ _).le }
@@ -152,7 +152,7 @@ theorem closure_adjoin_unitBall_coeff_bound : ∀ (l : ℕ) [Fact l.Prime] (F : 
         exact Algebra.subset_adjoin rfl
     exact hle hy
   have hclosed : IsClosed ((LinearMap.range φ : Submodule F0 ℂ_[l]) : Set ℂ_[l]) :=
-    Submodule.closed_of_finiteDimensional _
+    Submodule.isClosed_of_finiteDimensional _
   have hcl : closure (ι '' ((F ⊔ IntermediateField.adjoin ℚ_[l] {ζ} :
       IntermediateField ℚ_[l] (PadicAlgCl l)) : Set (PadicAlgCl l))) ⊆ LinearMap.range φ :=
     closure_minimal (by rintro _ ⟨y, hy, rfl⟩; exact hadj _ (hsub y hy)) hclosed
@@ -327,7 +327,7 @@ open Loc
 
 theorem exists_pow_norm (LL : FinExt l) :
     ∃ d : ℕ, 0 < d ∧ ∀ y ∈ LL.1 ⊔ MaximalUnramifiedExtension l, y ≠ 0 → ∃ n : ℤ, ‖y‖ ^ d = (l : ℝ) ^ n := by
-  haveI := LL.2
+  have := LL.2
   obtain ⟨α, hα⟩ := Field.exists_primitive_element ℚ_[l] ↥LL.1
   have hLL : IntermediateField.adjoin ℚ_[l] {(α : Om l)} = LL.1 := by
     have := congrArg (IntermediateField.map LL.1.val) hα
@@ -338,7 +338,7 @@ theorem exists_pow_norm (LL : FinExt l) :
   let E : IntermediateField ↥(MaximalUnramifiedExtension l) (Om l) := IntermediateField.adjoin ↥(MaximalUnramifiedExtension l) {(α : Om l)}
   have hE : E.restrictScalars ℚ_[l] = LL.1 ⊔ MaximalUnramifiedExtension l := by
     rw [IntermediateField.restrictScalars_adjoin_eq_sup, hLL, sup_comm]
-  haveI : FiniteDimensional ↥(MaximalUnramifiedExtension l) ↥E :=
+  have : FiniteDimensional ↥(MaximalUnramifiedExtension l) ↥E :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral _)
   refine ⟨Module.finrank ↥(MaximalUnramifiedExtension l) ↥E, Module.finrank_pos, fun y hy hy0 => ?_⟩
   rw [← hE] at hy
@@ -417,7 +417,7 @@ theorem exists_integers_completion : ∀ (l : ℕ) [Fact l.Prime] (LL : Loc.FinE
       · exact Or.inl (hmax z hz h)
       · exact Or.inr h) hc hy
     exact this.resolve_right (not_le.2 hy1)
-  haveI hdvr : IsDiscreteValuationRing (ints F) := isDVR (π := π') h0' h1' hmax'
+  have hdvr : IsDiscreteValuationRing (ints F) := isDVR (π := π') h0' h1' hmax'
   have had := isAdic (π := π') h0' h1' hmax'
   refine ⟨ints F, hdvr, fun x => mem_ints.2 ⟨hle _ (le_sup_left (a := LL.1) x.1.2), ?_⟩,
     fun x hx => (mem_ints.1 hx).2,
@@ -529,13 +529,13 @@ theorem clC_props (LL : Loc.FinExt l) (F : IntermediateField ℚ_[l] (PadicAlgCl
 theorem muK_spec (k : ℕ) : FiniteDimensional ℚ_[l] ↥(muK l k) ∧
     ∃ ζ : PadicAlgCl l, IsPrimitiveRoot ζ (l ^ k) ∧ muK l k = IntermediateField.adjoin ℚ_[l] {ζ} := by
   have hn : 0 < l ^ k := pow_pos (Fact.out : l.Prime).pos k
-  haveI : NeZero (l ^ k) := ⟨hn.ne'⟩
+  have : NeZero (l ^ k) := ⟨hn.ne'⟩
   classical
   have hfin : ({x | x ^ (l ^ k) = 1} : Set (PadicAlgCl l)).Finite := by
     refine (Polynomial.nthRoots (l ^ k) (1 : PadicAlgCl l)).toFinset.finite_toSet.subset fun x hx => ?_
     simp only [Finset.mem_coe, Multiset.mem_toFinset, Polynomial.mem_nthRoots hn]
     exact hx
-  haveI := hfin.to_subtype
+  have := hfin.to_subtype
   refine ⟨IntermediateField.finiteDimensional_adjoin fun x hx =>
     ⟨X ^ (l ^ k) - C 1, monic_X_pow_sub_C 1 hn.ne', by simp [show x ^ (l ^ k) = 1 from hx]⟩, ?_⟩
   have hdeg : (cyclotomic (l ^ k) (PadicAlgCl l)).degree ≠ 0 := by
@@ -559,10 +559,10 @@ theorem exists_cyclotomic_integers : ∀ (l : ℕ) [Fact l.Prime] (K₀ L : Loc.
   intro l _ K₀ L k
   have hp : l.Prime := Fact.out
   obtain ⟨hfd, ζ, hζ, hmu⟩ := muK_spec (l := l) k
-  let LL : Loc.FinExt l := ⟨K₀.1 ⊔ L.1 ⊔ muK l k, by haveI := K₀.2; haveI := L.2; infer_instance⟩
+  let LL : Loc.FinExt l := ⟨K₀.1 ⊔ L.1 ⊔ muK l k, by have := K₀.2; have := L.2; infer_instance⟩
   have hM : LL.1 ⊔ Loc.MaximalUnramifiedExtension l = Kt l K₀ L ⊔ muK l k := by
     simp only [LL, Kt]; exact sup_right_comm _ _ _
-  let L0 : Loc.FinExt l := ⟨K₀.1 ⊔ L.1, by haveI := K₀.2; haveI := L.2; infer_instance⟩
+  let L0 : Loc.FinExt l := ⟨K₀.1 ⊔ L.1, by have := K₀.2; have := L.2; infer_instance⟩
   obtain ⟨hdvr, hres, hcomp, hadic, hdiv⟩ := clC_props LL _ hM
   obtain ⟨hdvr0, -, -, -, -⟩ := clC_props L0 (Kt l K₀ L) rfl
   have mu0 : muK l 0 = ⊥ := by
@@ -636,7 +636,7 @@ theorem exists_cyclotomic_integers : ∀ (l : ℕ) [Fact l.Prime] (K₀ L : Loc.
       rw [Subring.smul_def, smul_eq_mul]
       change c i * ζ' ^ (i : ℕ) = ((l : ℂ_[l]) ^ N * c i) * (((l : ℂ_[l]) ^ N)⁻¹ * ζ' ^ (i : ℕ))
       field_simp
-    haveI : IsNoetherian ↥(clC l (Kt l K₀ L)) ↥P :=
+    have : IsNoetherian ↥(clC l (Kt l K₀ L)) ↥P :=
       isNoetherian_of_fg_of_noetherian P (Submodule.fg_span (Set.finite_range g))
     have hfg : B'.FG := by
       have h1 : (B'.comap P.subtype).FG := IsNoetherian.noetherian _

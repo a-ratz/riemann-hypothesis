@@ -129,7 +129,7 @@ theorem mulLin_injective [IsIntegral X] {H : LB X} (s : LB.Sec H) {x : X} (hx : 
   obtain ⟨k₀, hk₀⟩ := TopologicalSpace.Opens.mem_iSup.1 hx
   let W : X.Opens := X.basicOpen (s.f k₀)
   have hWU : W ≤ H.U k₀ := X.basicOpen_le _
-  haveI : Nonempty W := ⟨⟨x, hk₀⟩⟩
+  have : Nonempty W := ⟨⟨x, hk₀⟩⟩
   have hu : IsUnit (rs X hWU (s.f k₀)) := X.toRingedSpace.isUnit_res_basicOpen _
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
   intro a ha
@@ -148,7 +148,7 @@ theorem finite_of_polynomial {H : LB X} {m : ℕ} (s : Fin (m + 1) → LB.Sec H)
     (h : ∀ σ : LB.Sec (pw H t), ∃ F : MvPolynomial (Fin (m + 1)) K, F.IsHomogeneous t ∧
       ∀ k : H.ι, σ.f k = MvPolynomial.eval₂Hom (cst f (H.U k)) (fun j => (s j).f k) F) :
     Module.Finite K (SecOnR f (pw H t) ⊤) := by
-  haveI : Module.Finite K (MvPolynomial.homogeneousSubmodule (Fin (m + 1)) K t) :=
+  have : Module.Finite K (MvPolynomial.homogeneousSubmodule (Fin (m + 1)) K t) :=
     Submodule.finiteDimensional_of_le (S₂ := MvPolynomial.restrictTotalDegree (Fin (m + 1)) K t)
       fun F hF => (MvPolynomial.mem_restrictTotalDegree _ _ _).2
         (MvPolynomial.IsHomogeneous.totalDegree_le hF)
@@ -178,7 +178,7 @@ theorem finite_monotone_growth : ∀ (K : Type) [Field K] (X : Scheme.{0}) [IsIn
       | zero => exact fun t ht => finite_of_polynomial f s t (ht₀ t ht)
       | succ d ih =>
         intro t ht
-        haveI := ih (t + 1) (by omega)
+        have := ih (t + 1) (by omega)
         exact Module.Finite.of_injective _ (hinj t)
     exact h t₀ t (Nat.le_add_left _ _)
   refine ⟨hfin, fun t t' h => ?_, ?_⟩

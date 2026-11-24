@@ -142,7 +142,7 @@ theorem level_mul_inf_mem_nhds : ∀ (D : D7) (V : HSp D) (N : ℕ) (Kf : Subgro
     IsLevelK V N Kf → ∀ g₀ : GA D V,
       {g : GA D V | ∃ k ∈ Kf, ∃ h ∈ GinfC V, g = g₀ * k * h} ∈ 𝓝 g₀ := by
   intro D V N Kf hN hK g₀
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hU := GlobalTheory.Member.PrincLevel.finCong_mem_nhds V hN
   have ht : Filter.Tendsto (fun x : GA D V => g₀⁻¹ * x) (𝓝 g₀) (𝓝 1) := by
     have := (continuous_const_mul g₀⁻¹).tendsto g₀

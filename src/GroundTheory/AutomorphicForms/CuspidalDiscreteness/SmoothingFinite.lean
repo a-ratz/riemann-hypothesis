@@ -132,7 +132,7 @@ theorem continuous_finAvgFun (g : CompactlySupportedContinuousMap (normOneGL (K 
   rw [this]
   set_option synthInstance.maxHeartbeats 100000 in
     refine continuous_parametric_integral_of_continuous ?_ isCompact_univ
-    exact g.continuous.comp (((continuous_finOne.comp (continuous_subtype_val.comp
+    exact g.continuous.comp (((continuous_finOne.comp (continuous_subtypeVal.comp
       continuous_snd)).inv).mul continuous_fst)
 
 theorem finAvgFun_eq_zero_of_notMem (g : CompactlySupportedContinuousMap (normOneGL (K := K) (n := n)) ℂ)
@@ -148,7 +148,7 @@ theorem finAvgFun_eq_zero_of_notMem (g : CompactlySupportedContinuousMap (normOn
 include hU in
 theorem isCompact_finOne_image : IsCompact ((fun u : U => finOne K n (u : AdelicGLn.integralFiniteGL K n)) '' univ) :=
   have := compactSpace_of_isOpen U hU
-  isCompact_univ.image (continuous_finOne.comp continuous_subtype_val)
+  isCompact_univ.image (continuous_finOne.comp continuous_subtypeVal)
 
 set_option synthInstance.maxHeartbeats 100000 in
 def finAvg (g : CompactlySupportedContinuousMap (normOneGL (K := K) (n := n)) ℂ) :
@@ -174,7 +174,7 @@ theorem norm_finAvgFun_sub_le (g : CompactlySupportedContinuousMap (normOneGL (K
     ‖finAvgFun U hU g x - g x‖ ≤ ε := by
   have := compactSpace_of_isOpen U hU
   have hi1 : Integrable (fun u : U => g ((finOne K n u)⁻¹ * x)) (haarProb U) :=
-    (g.continuous.comp (((continuous_finOne.comp continuous_subtype_val).inv).mul
+    (g.continuous.comp (((continuous_finOne.comp continuous_subtypeVal).inv).mul
       continuous_const)).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hgx : g x = ∫ _u : U, g x ∂haarProb U := by simp
   rw [hgx, finAvgFun, ← integral_sub hi1 (integrable_const _)]

@@ -181,7 +181,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
       ∃ e : P.D.toPre.X ≃ₗ[𝓞 E] P'.D.toPre.X, ∀ y r r', PsiCoord P.D.toPre y r → PsiCoord P'.D.toPre (e y) r' →
         Associated (r ^ 2) (r' ^ 2) := by
   intro E _ _ _ H W _ _ _ hW t P P'
-  haveI : CharZero W := hW.2
+  have : CharZero W := hW.2
   obtain ⟨m, -⟩ := GlobalTheory.ObjMaps.exists_sab_id t
   obtain ⟨e, he⟩ := GlobalTheory.SameCoord.exists_equiv_psiCoord E H W t t m P P' hW.1.1 hW.1.2.2.1 hW.1.2.2.2
   refine ⟨e, fun y r r' hr hr' => ?_⟩

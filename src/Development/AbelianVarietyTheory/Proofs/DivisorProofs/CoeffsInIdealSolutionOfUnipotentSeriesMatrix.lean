@@ -53,7 +53,7 @@ theorem in_iff_mem {B Q σ : Type} [CommRing B] [CommRing Q] [Algebra B Q] (N : 
     (f : MvPowerSeries σ Q) :
     In N f ↔ ∀ α, coeff α f ∈ N.toAddSubmonoid.map (algebraMap B Q).toAddMonoidHom := by
   simp only [In, AddSubmonoid.mem_map, Submodule.mem_toAddSubmonoid, RingHom.toAddMonoidHom_eq_coe,
-    AddMonoidHom.coe_coe]
+    AddMonoidHom.coe_ofClass]
   constructor
   · intro h α; obtain ⟨b, hb, e⟩ := h α; exact ⟨b, hb, e.symm⟩
   · intro h α; obtain ⟨b, hb, e⟩ := h α; exact ⟨b, hb, e.symm⟩
@@ -68,7 +68,7 @@ theorem in_mul_map {B Q σ : Type} [CommRing B] [CommRing Q] [Algebra B Q] (N : 
   refine AddSubmonoid.sum_mem _ fun x _ => ?_
   obtain ⟨b, hb, e⟩ := AddSubmonoid.mem_map.1 (hf x.1)
   refine AddSubmonoid.mem_map.2 ⟨b * coeff x.2 h, N.mul_mem_right _ hb, ?_⟩
-  simp only [RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe] at e ⊢
+  simp only [RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass] at e ⊢
   rw [map_mul, e, coeff_map]
 
 theorem in_sum {B Q σ ι : Type} [CommRing B] [CommRing Q] [Algebra B Q] (N : Ideal B)

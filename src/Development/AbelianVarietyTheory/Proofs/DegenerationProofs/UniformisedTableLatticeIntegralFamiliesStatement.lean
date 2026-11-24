@@ -178,7 +178,7 @@ variable {V : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] {ϖ : 
 
 theorem genV_torsion {N : ℕ} (hN : N ≠ 0) (g : GtPtF D.toPre F)
     (hg : letI := TorusExt.gtGroup D.toPre F; N • g = 0) (χ : D.toPre.X) : GenV hϖ hv (g.s χ) 0 := by
-  letI := TorusExt.gtGroup D.toPre F
+  let := TorusExt.gtGroup D.toPre F
   choose l hl hu using fun g : GtPtF D.toPre F => CoefVal.exists_gtV (hϖ := hϖ) (hv := hv) g
   let L : GtPtF D.toPre F →+ (D.toPre.X →+ ℚ) := AddMonoidHom.mk' l fun g g' =>
     (hu (g + g') (l g + l g') (CoefVal.gtV_add ((TorusExt.isAdd_iff_eq _ _ _).2 rfl) (hl g) (hl g'))).symm
@@ -305,7 +305,7 @@ theorem exists_torsion_coef_val_zero : LL → TwistBCSpanStatement → TWM.VRati
       Spec.map (CommRingCat.ofHom (residue (Ov v))) ≫ x.left = x₀.left :=
     ExactTerm.exists_torsion_lift (Ov v) D.toPre.P.A (n ^ j) (TO hϖ hv).hom x₀ hx₀
   obtain ⟨G₀, hG₀, c, hc, hval⟩ := exists_value_unit hϖ hv b a x (fun z J hJ => by rw [ex]; exact hu z J hJ)
-  letI := TorusExt.gtGroup D.toPre F
+  let := TorusExt.gtGroup D.toPre F
   obtain ⟨g, hg₁, hg₂⟩ := TorusExt.exists_nsmul_eq_of_pow_eq hN (0 : GtPtF D.toPre F)
     (b := ιS hϖ hv ≫ x) (by rw [← MonObj.comp_pow, hx, MonObj.comp_one, TorusExt.zero_b])
   refine ⟨j, g, 0, (TorusExt.isZero_iff_eq _).2 rfl, (TorusExt.isNsmul_iff_eq _ _ _).2 hg₂.symm, fun w _ hω => ?_⟩
@@ -352,8 +352,8 @@ theorem card_tors (F X : Type) [Field F] [IsAlgClosed F] [CharZero F] [AddCommGr
     [Module.Free ℤ X] [Module.Finite ℤ X] (N : ℕ) (hN : 0 < N) :
     Nat.card {t : Multiplicative X →* Fˣ // t ^ N = 1} = N ^ Module.finrank ℤ X := by
   classical
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero (N : F) := ⟨by exact_mod_cast hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero (N : F) := ⟨by exact_mod_cast hN.ne'⟩
   let b := Module.Free.chooseBasis ℤ X
   let f : {t : Multiplicative X →* Fˣ // t ^ N = 1} →
       (Module.Free.ChooseBasisIndex ℤ X → rootsOfUnity N F) := fun t i =>
@@ -413,8 +413,8 @@ theorem sum_tors (F X : Type) [Field F] [IsAlgClosed F] [CharZero F] [AddCommGro
     ∑ t : {t : Multiplicative X →* Fˣ // t ^ N = 1},
       ((t.1 (Multiplicative.ofAdd β))⁻¹).val * (t.1 (Multiplicative.ofAdd α)).val =
       if ∃ z, α = β + N • z then (N : F) ^ Module.finrank ℤ X else 0 := by
-  haveI : NeZero N := ⟨hN.ne'⟩
-  haveI : NeZero (N : F) := ⟨by exact_mod_cast hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
+  have : NeZero (N : F) := ⟨by exact_mod_cast hN.ne'⟩
   split_ifs with h
   · obtain ⟨z, rfl⟩ := h
     rw [Finset.sum_congr rfl (g := fun _ => (1 : F))]
@@ -423,7 +423,7 @@ theorem sum_tors (F X : Type) [Field F] [IsAlgClosed F] [CharZero F] [AddCommGro
     · intro t _
       rw [ofAdd_add, map_mul, ofAdd_nsmul, map_pow, ← MonoidHom.pow_apply, t.2]
       simp
-  · obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot F N
+  · obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot F N
     have : ∃ t₀ : Multiplicative X →* Fˣ, t₀ ^ N = 1 ∧
         t₀ (Multiplicative.ofAdd α) ≠ t₀ (Multiplicative.ofAdd β) := by
       by_contra hc
@@ -525,10 +525,10 @@ theorem GlobalTheory.coeff_recovery_by_torsion_averages : ∀ (F : Type) [Field 
     by_contra h3
     have h4 : α ∈ (ha q).toFinset := (ha q).mem_toFinset.2 (not_le.1 h3)
     exact hj α h2 (GlobalTheory.TorsRecov.class_mono X n c hc α _ k ((Finset.le_sup h4).trans hk) h1)
-  haveI : Finite {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1} :=
+  have : Finite {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1} :=
     Nat.finite_of_card_ne_zero (by
       rw [GlobalTheory.TorsRecov.card_tors F X _ hN]; exact pow_ne_zero _ hN.ne')
-  letI := Fintype.ofFinite {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1}
+  let := Fintype.ofFinite {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1}
   rw [finsum_eq_sum_of_fintype]
   have hS' := fun t : {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1} => hS t.1 ⟨k, t.2⟩ q
   choose S₀ hS₀ using hS'
@@ -627,10 +627,10 @@ theorem not_all_ne_zero {F : Type} [Field F] [IsAlgClosed F] [CharZero F] {v : A
     (fun _ => ⟨0, by simp⟩) (a α) (Or.inl ⟨α, fun _ => ⟨0, by simp⟩, rfl⟩) 1
   have h1 := hk k le_rfl
   have hN : 0 < n ^ k := pow_pos (by omega) k
-  haveI : Finite {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1} :=
+  have : Finite {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1} :=
     Nat.finite_of_card_ne_zero (by
       rw [GlobalTheory.TorsRecov.card_tors F X _ hN]; exact pow_ne_zero _ hN.ne')
-  letI := Fintype.ofFinite {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1}
+  let := Fintype.ofFinite {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1}
   rw [finsum_eq_sum_of_fintype] at h1
   have h2 : 0 < v (((n : F) ^ (k * Module.finrank ℤ X))⁻¹ * ∑ t : {t : Multiplicative X →* Fˣ // t ^ n ^ k = 1},
       ((t.1 (Multiplicative.ofAdd α))⁻¹).val * S t.1) := by

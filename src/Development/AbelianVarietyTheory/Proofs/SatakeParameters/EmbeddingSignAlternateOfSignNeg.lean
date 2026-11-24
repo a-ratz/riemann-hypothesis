@@ -58,7 +58,7 @@ theorem signs_alternate_inert : ∀ {fr : Formalism.HC.Frame} (ε : ℤˣ) (τ �
   have h1 : ((-1 : ℤˣ)) ^ orderOf φ = 1 := by
     have h : (φ ^ orderOf φ).1.2 = 1 := by rw [pow_orderOf_eq_one]; rfl
     rwa [Prod.pow_fst, Prod.pow_snd, hφ] at h
-  haveI : NeZero (orderOf φ) := ⟨hn.ne'⟩
+  have : NeZero (orderOf φ) := ⟨hn.ne'⟩
   have key : ∀ i : ZMod (orderOf φ), (letter τ φ (i + 1)).1.2 = -(letter τ φ i).1.2 := by
     intro i
     unfold letter

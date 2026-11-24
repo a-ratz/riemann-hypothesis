@@ -74,7 +74,7 @@ lemma weightedIntegral_eq_lintegral (n : ℕ) {M : Type*} [MeasurableSpace M] (z
   refine lintegral_congr fun x => ?_
   simp only [Pi.mul_apply]
   rw [mul_comm (‖f x‖ ^ 2), ENNReal.ofReal_mul (Real.exp_pos _).le, ENNReal.rpow_two,
-    ← ofReal_norm_eq_enorm, ENNReal.ofReal_pow (norm_nonneg _)]
+    ← ofReal_norm, ENNReal.ofReal_pow (norm_nonneg _)]
 
 lemma eLpNorm_two_weighted_eq (n : ℕ) {M : Type*} [MeasurableSpace M] (z : M → V n) {ψ : M → ℝ}
     (hψ : Measurable ψ) (f : M → ℂ) :

@@ -107,7 +107,7 @@ theorem mem_range_of_forall {V K : Type} [CommRing V] [IsDomain V] [IsIntegrally
     (io : FractionRing V →+* K) (z : FractionRing V)
     (h : ∀ W : ValuationSubring K, (∀ v, io (algebraMap V (FractionRing V) v) ∈ W) → io z ∈ W) :
     z ∈ Set.range (algebraMap V (FractionRing V)) := by
-  letI : Algebra V K := (io.comp (algebraMap V (FractionRing V))).toAlgebra
+  let : Algebra V K := (io.comp (algebraMap V (FractionRing V))).toAlgebra
   have hic : IsIntegrallyClosedIn (integralClosure V K).toSubring K :=
     inferInstanceAs (IsIntegrallyClosedIn (integralClosure V K) K)
   have h1 : io z ∈ (integralClosure V K).toSubring := by

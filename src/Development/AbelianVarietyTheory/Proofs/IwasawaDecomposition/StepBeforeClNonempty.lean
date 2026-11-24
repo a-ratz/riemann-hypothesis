@@ -74,7 +74,7 @@ theorem GlobalTheory.Mem.Col2.TC.levJ_herm_level : ∀ {B : Base} {X : PreX B.to
   intro B X I hI hP l Z u Ch0 chOf0 F hF h1
   have hi : B.R.m - 1 ≤ (I.rec7 l Z).R.m := Nat.sub_le _ _
   have hgram : gramN (I.rec7 l Z) (B.R.m - 1) hi = 1 := ((GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 (B.R.m - 1) hi).1
-  haveI : NeZero ((I.rec7 l Z).R.N (B.R.m - 1)) := ⟨by
+  have : NeZero ((I.rec7 l Z).R.N (B.R.m - 1)) := ⟨by
     have := (I.rec7 l Z).R.m_add_three_le_k
     simp only [Ranks.N]; omega⟩
   let s : 𝓞 (I.rec7 l Z).host.E →+* 𝓞 (I.rec7 l Z).host.E := RingOfIntegers.mapRingHom (sigD (I.rec7 l Z) : (I.rec7 l Z).host.E →+* (I.rec7 l Z).host.E)

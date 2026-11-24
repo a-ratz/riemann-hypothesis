@@ -73,7 +73,7 @@ namespace GlobalTheory.OrdPull
 
 theorem ord_ringEquiv {A B : Type} [CommRing A] [CommRing B] (e : A ≃+* B) (a : A) :
     Ring.ord B (e a) = Ring.ord A a := by
-  letI : Algebra A B := e.toRingHom.toAlgebra
+  let : Algebra A B := e.toRingHom.toAlgebra
   let e' : A ≃ₐ[A] B := { e with commutes' := fun _ => rfl }
   unfold Ring.ord
   rw [← Module.length_eq_of_surjective (S := A) (R := B) e.surjective]
@@ -88,9 +88,9 @@ theorem ord_isLocalization {R : Type} [CommRing R] (p : Ideal R) [p.IsPrime] (A 
 
 theorem inertiaDeg_isLocalization {R : Type} [CommRing R] (M : Submonoid R) (A : Type) [CommRing A] [Algebra R A]
     [IsLocalization M A] (Q : Ideal A) [Q.IsPrime] : Q.inertiaDeg R = 1 := by
-  letI := Localization.AtPrime.algebraOfLiesOver (Q.under R) Q
+  let := Localization.AtPrime.algebraOfLiesOver (Q.under R) Q
   rw [Ideal.inertiaDeg_def]
-  haveI : IsLocalization.AtPrime (Localization.AtPrime Q) (Q.under R) :=
+  have : IsLocalization.AtPrime (Localization.AtPrime Q) (Q.under R) :=
     IsLocalization.isLocalization_isLocalization_atPrime_isLocalization M (Localization.AtPrime Q) Q
   have hs : Function.Surjective (algebraMap (Localization.AtPrime (Q.under R)) (Localization.AtPrime Q)) := by
     have h := (IsLocalization.algEquiv (Q.under R).primeCompl (Localization.AtPrime (Q.under R))
@@ -111,8 +111,8 @@ theorem ord_germ_eq (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (V :
     (hV : IsAffineOpen V) (z : X) (hz : z ∈ V) (h1 : Order.coheight z = 1) (a : Γ(X, V)) (ha : a ≠ 0) :
     Scheme.ord (X.germToFunctionField V a) z =
       ((Ring.ord (Localization.AtPrime (hV.primeIdealOf ⟨z, hz⟩).asIdeal) (algebraMap Γ(X, V) _ a)).toNat : ℤ) := by
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨z, hz⟩
-  haveI : IsLocalization.AtPrime (X.presheaf.stalk z) (hV.primeIdealOf ⟨z, hz⟩).asIdeal :=
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨z, hz⟩
+  have : IsLocalization.AtPrime (X.presheaf.stalk z) (hV.primeIdealOf ⟨z, hz⟩).asIdeal :=
     hV.isLocalization_stalk ⟨z, hz⟩
   rw [← Scheme.algebraMap_germ_eq_germToFunctionField X hz a,
     ord_algebraMap h1 ((map_ne_zero_iff _ (germ_injective_of_isIntegral X z hz)).2 ha),
@@ -124,8 +124,8 @@ theorem residueDegree_genericPoint_eq_finrank (X Y : Scheme.{0}) [IsIntegral X] 
     (hf : (g.app V).hom.Finite) (hi : Function.Injective (g.app V).hom) :
     letI : Algebra Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := (g.app V).hom.toAlgebra
     g.residueDegree (genericPoint Y) = Module.finrank Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := by
-  letI : Algebra Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := (g.app V).hom.toAlgebra
-  haveI : Module.Finite Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := hf
+  let : Algebra Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := (g.app V).hom.toAlgebra
+  have : Module.Finite Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := hf
   have h2 : genericPoint Y ∈ g ⁻¹ᵁ V := gen_mem (Classical.arbitrary (g ⁻¹ᵁ V)).2
   rw [_root_.GlobalTheory.ResidueDegreeChart.residueDegree_eq_inertiaDeg X Y g V hV hU _ h2, hU.primeIdealOf_genericPoint, genericPoint_eq_bot_of_affine]
   exact _root_.GlobalTheory.inertiaDeg_bot_eq_finrank _ _ hi
@@ -143,8 +143,8 @@ theorem sum_ord_inertiaDeg (R S : Type) [CommRing R] [IsDomain R] [IsNoetherianR
   have hM : M ≤ nonZeroDivisors S := by
     rintro _ ⟨r, hr, rfl⟩
     exact mem_nonZeroDivisors_of_ne_zero ((map_ne_zero_iff _ hi).2 fun h => hr (h ▸ p.zero_mem))
-  haveI : IsDomain B := IsLocalization.isDomain_localization hM
-  haveI : Module.Finite A B := Module.Finite.of_isLocalization R S p.primeCompl
+  have : IsDomain B := IsLocalization.isDomain_localization hM
+  have : Module.Finite A B := Module.Finite.of_isLocalization R S p.primeCompl
   have hiAB : Function.Injective (algebraMap A B) := localizationAlgebra_injective A B hi
   have hd : ringKrullDim A = 1 := by
     rw [IsLocalization.AtPrime.ringKrullDim_eq_height p A, hp]; rfl
@@ -178,7 +178,7 @@ theorem sum_ord_inertiaDeg (R S : Type) [CommRing R] [IsDomain R] [IsNoetherianR
     refine (IsLocalization.orderEmbedding p.primeCompl A).injective ?_
     exact (hc _).symm.trans (hq'.trans Localization.AtPrime.under_maximalIdeal.symm)
   · intro Q hQ
-    haveI : IsLocalization.AtPrime (Localization.AtPrime Q.asIdeal) (Q.asIdeal.under S) :=
+    have : IsLocalization.AtPrime (Localization.AtPrime Q.asIdeal) (Q.asIdeal.under S) :=
       IsLocalization.isLocalization_isLocalization_atPrime_isLocalization M _ Q.asIdeal
     have e1 := ord_isLocalization (Q.asIdeal.under S) (Localization.AtPrime Q.asIdeal) (algebraMap R S a)
     have e2 : algebraMap B (Localization.AtPrime Q.asIdeal) (algebraMap A B (algebraMap R A a)) =
@@ -206,7 +206,7 @@ theorem comap_primeIdealOf {X Y : Scheme.{0}} (g : Y ⟶ X) {V : X.Opens} (hV : 
 
 theorem finite_app {X Y : Scheme.{0}} (g : Y ⟶ X) {V : X.Opens} (hV : IsAffineOpen V)
     [IsFinite (g ∣_ V)] : IsAffineOpen (g ⁻¹ᵁ V) ∧ (g.app V).hom.Finite := by
-  haveI : IsAffine V := hV
+  have : IsAffine V := hV
   refine ⟨isAffine_of_isAffineHom (g ∣_ V), ?_⟩
   have h1 := IsFinite.finite_app (g ∣_ V) ⊤ (isAffineOpen_top _)
   rw [morphismRestrict_app] at h1
@@ -241,15 +241,15 @@ theorem sum_ord_fnMap {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] [IsLocall
     (hV : IsAffineOpen V) (hzV : z ∈ V) [IsFinite (g ∣_ V)] (f : X.functionField) (hf : f ≠ 0) :
     ∑ᶠ w ∈ g ⁻¹' {z}, Scheme.ord (TrueGeo.SmallSec.fnMap g hsp f) w * (g.residueDegree w : ℤ) =
       (g.residueDegree (genericPoint Y) : ℤ) * Scheme.ord f z := by
-  haveI : Nonempty V := ⟨⟨z, hzV⟩⟩
+  have : Nonempty V := ⟨⟨z, hzV⟩⟩
   obtain ⟨hU, hfinR⟩ := finite_app g hV
   have hηU : genericPoint Y ∈ g ⁻¹ᵁ V := by
     show g (genericPoint Y) ∈ V
     rw [hη]; exact gen_mem hzV
-  haveI : Nonempty (g ⁻¹ᵁ V) := ⟨⟨_, hηU⟩⟩
-  letI : Algebra Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := (g.app V).hom.toAlgebra
-  haveI : Module.Finite Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := hfinR
-  haveI : IsNoetherianRing Γ(X, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
+  have : Nonempty (g ⁻¹ᵁ V) := ⟨⟨_, hηU⟩⟩
+  let : Algebra Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := (g.app V).hom.toAlgebra
+  have : Module.Finite Γ(X, V) Γ(Y, g ⁻¹ᵁ V) := hfinR
+  have : IsNoetherianRing Γ(X, V) := IsLocallyNoetherian.component_noetherian ⟨V, hV⟩
   have hinj : Function.Injective (algebraMap Γ(X, V) Γ(Y, g ⁻¹ᵁ V)) := by
     intro a b h
     apply X.germToFunctionField_injective V
@@ -274,7 +274,7 @@ theorem sum_ord_fnMap {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] [IsLocall
       have hw' : w ∈ g ⁻¹ᵁ V := by
         show g w ∈ V
         rw [show g w = z from hw]; exact hzV
-      simp only [Set.mem_setOf_eq, dif_pos hw']
+      simp only [Set.mem_ofPred_eq, dite_eq_left hw']
       exact (comap_primeIdealOf g hV hU w hw').trans
         (congrArg (fun x => (hV.primeIdealOf x).asIdeal) (Subtype.ext hw))
     · intro w₁ hw₁ w₂ hw₂ h
@@ -284,7 +284,7 @@ theorem sum_ord_fnMap {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] [IsLocall
       have h₂ : w₂ ∈ g ⁻¹ᵁ V := by
         show g w₂ ∈ V
         rw [show g w₂ = z from hw₂]; exact hzV
-      simp only [dif_pos h₁, dif_pos h₂] at h
+      simp only [dite_eq_left h₁, dite_eq_left h₂] at h
       have e₁ := hU.fromSpec_primeIdealOf ⟨w₁, h₁⟩
       have e₂ := hU.fromSpec_primeIdealOf ⟨w₂, h₂⟩
       rw [h] at e₁
@@ -304,19 +304,19 @@ theorem sum_ord_fnMap {X Y : Scheme.{0}} [IsIntegral X] [IsIntegral Y] [IsLocall
         rw [c2] at d1
         exact d1.symm.trans d2
       refine ⟨hU.fromSpec Q, hgw, ?_⟩
-      simp only [dif_pos hQU]
+      simp only [dite_eq_left hQU]
       exact hQ'
     · intro w hw
       have hw' : w ∈ g ⁻¹ᵁ V := by
         show g w ∈ V
         rw [show g w = z from hw]; exact hzV
       have hd : (if hw : w ∈ g ⁻¹ᵁ V then hU.primeIdealOf ⟨w, hw⟩ else hU.primeIdealOf ⟨_, hηU⟩) =
-          hU.primeIdealOf ⟨w, hw'⟩ := dif_pos hw'
+          hU.primeIdealOf ⟨w, hw'⟩ := dite_eq_left hw'
       beta_reduce
       rw [hd, fnMap_germ, ord_germ_eq Y (g ⁻¹ᵁ V) hU w hw' (hcod w hw) _ ha',
         _root_.GlobalTheory.ResidueDegreeChart.residueDegree_eq_inertiaDeg X Y g V hV hU w hw']
       rfl
-  haveI := functionField_isFractionRing_of_isAffineOpen X V hV
+  have := functionField_isFractionRing_of_isAffineOpen X V hV
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := Γ(X, V)) f
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   have hB : algebraMap Γ(X, V) X.functionField b ≠ 0 :=
@@ -489,7 +489,7 @@ theorem fiber_sum (hp : IsAmb p) (hq : IsAmb q) (hg : g ≫ p = q)
     refine (finsum_mem_eq_sum_of_inter_support_eq _ ?_).symm
     ext w
     simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_singleton_iff, Finset.coe_filter,
-      Set.Finite.mem_toFinset, Function.mem_support, Set.mem_setOf_eq]
+      Set.Finite.mem_toFinset, Function.mem_support, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨h1, h2⟩; exact ⟨⟨left_ne_zero_of_mul h2, h1⟩, h2⟩
     · rintro ⟨⟨-, h1⟩, h2⟩; exact ⟨h1, h2⟩
@@ -515,8 +515,8 @@ namespace GlobalTheory.PushDiv
 theorem finsum_mult_pull : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [IsIntegral X] [IsIntegral Y] [IsLocallyNoetherian X] [IsLocallyNoetherian Y] (p : X ⟶ Sp k) (q : Y ⟶ Sp k), IsAmb p → IsAmb q → ∀ (g : Y ⟶ X) (hg : g ≫ p = q) (hη : g (genericPoint Y) = genericPoint X), ∀ (B : LB X) (hB : B.IsLB) (r : B.ι → X.functionFieldˣ) (hr : IsRatSec B r) (φ : X → ℝ), ∑ᶠ w, ((divOfRatSec (LB.isLB_pull hB g) (MultPull.isRatSec_pull_map g (hη ▸ specializes_rfl : g (genericPoint Y) ⤳ genericPoint X) hr)).mult w : ℝ) * ((g.residueDegree w : ℝ) * φ (g w)) = (g.residueDegree (genericPoint Y) : ℝ) * ∑ᶠ z, ((divOfRatSec hB hr).mult z : ℝ) * φ z := by
   intro k _ X Y _ _ _ _ p q hp hq g hg hη B hB r hr φ
   classical
-  haveI := hq.isNoetherian
-  haveI := hp.isNoetherian
+  have := hq.isNoetherian
+  have := hp.isNoetherian
   set D' := divOfRatSec (LB.isLB_pull hB g) (MultPull.isRatSec_pull_map g
     (hη ▸ specializes_rfl : g (genericPoint Y) ⤳ genericPoint X) hr) with hD'
   set D := divOfRatSec hB hr with hD

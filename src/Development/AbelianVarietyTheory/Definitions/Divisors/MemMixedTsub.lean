@@ -76,7 +76,7 @@ theorem mu_ne_zero : mu ε ≠ 0 := by
 
 omit hε [IsAlgClosed C] in
 theorem isDomain_Ainf : IsDomain (Ainf p O) := by
-  haveI : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
+  have : IsDomain (PreTilt O p) := PreTilt.isDomain C v O hv p
   infer_instance
 
 variable {h : ℕ} {Λ : Type} [CommRing Λ] [Algebra ℤ_[p] Λ] (D : Datum ε h Λ)

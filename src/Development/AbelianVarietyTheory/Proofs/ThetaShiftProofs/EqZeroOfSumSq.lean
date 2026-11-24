@@ -70,14 +70,14 @@ theorem trace_mul_pairE (ξ : Module.Dual ℤ X) (b : 𝓞 E) (x : X) :
     rw [Finset.mul_sum, map_sum, Finset.sum_eq_single j]
     · have := LinearMap.BilinForm.apply_dualBasis_left (traceForm_nondegenerate ℚ E)
         (integralBasis E) j j
-      rw [Algebra.traceForm_apply, if_pos rfl, integralBasis_apply] at this
+      rw [Algebra.traceForm_apply, ite_eq_left rfl, integralBasis_apply] at this
       rw [← mul_assoc, mul_comm _ ((_ : ℤ) : E), ← zsmul_eq_mul, map_zsmul, mul_comm]
       erw [this]
       simp
     · intro i _ hij
       have := LinearMap.BilinForm.apply_dualBasis_left (traceForm_nondegenerate ℚ E)
         (integralBasis E) i j
-      rw [Algebra.traceForm_apply, if_neg (Ne.symm hij), integralBasis_apply] at this
+      rw [Algebra.traceForm_apply, ite_eq_right (Ne.symm hij), integralBasis_apply] at this
       rw [← mul_assoc, mul_comm _ ((_ : ℤ) : E), ← zsmul_eq_mul, map_zsmul, mul_comm]
       erw [this]
       simp
@@ -233,7 +233,7 @@ theorem eq_zero_of_sum_sq (X : Data E r) (d : X.Ψ → ℝ)
     ext; simp
   have hD1 : ∀ τ : X.Ψ, D τ.1 = d τ := fun τ => by simp [D]
   have hD2 : ∀ τ : X.Ψ, D (ComplexEmbedding.conjugate τ.1) = d τ := fun τ => by
-    simp only [D, dif_neg ((X.cmType τ.1).1 τ.2), hinv]
+    simp only [D, dite_eq_right ((X.cmType τ.1).1 τ.2), hinv]
   have h2 : ∀ a : 𝓞 E, ∑ τ : E →+* ℂ, D τ * τ (a : E) = 0 := by
     intro a
     rw [sum_cm X]
@@ -254,7 +254,7 @@ theorem eq_zero_of_sum_sq (X : Data E r) (d : X.Ψ → ℝ)
     change _ = D τ * τ (m • z)
     rw [map_zsmul, zsmul_eq_mul]; ring
   have hli : LinearIndependent ℂ (fun τ : E →+* ℂ => (τ : E → ℂ)) :=
-    (linearIndependent_monoidHom E ℂ).comp (fun τ : E →+* ℂ => (τ : E →* ℂ)) RingHom.coe_monoidHom_injective
+    (linearIndependent_monoidHom E ℂ).comp (fun τ : E →+* ℂ => (τ : E →* ℂ)) RingHom.toMonoidHom_injective
   have h4 := Fintype.linearIndependent_iff.1 hli D (by ext z; simpa using h3 z) τ.1
   rw [hD1] at h4
   exact_mod_cast h4

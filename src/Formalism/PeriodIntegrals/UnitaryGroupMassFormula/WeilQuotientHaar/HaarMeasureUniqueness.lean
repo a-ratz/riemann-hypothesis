@@ -65,7 +65,7 @@ variable {G : Type} [TopologicalSpace G] [Group G] [IsTopologicalGroup G] [Local
 
 lemma map_val_mul (K' : Subgroup G) (g : K') (α : Measure K') :
     (α.map (fun x => g * x)).map Subtype.val = (α.map Subtype.val).map (fun x => (g : G) * x) := by
-  have hv : Measurable (Subtype.val : K' → G) := measurable_subtype_coe
+  have hv : Measurable (Subtype.val : K' → G) := measurable_subtypeVal
   have hm : Measurable (fun x : K' => g * x) := by
     have h : Measurable (fun x : K' => (g : G) * (x : G)) := (measurable_const_mul (g : G)).comp hv
     exact h.subtype_mk
@@ -79,8 +79,8 @@ theorem haar_measure_existence : HaarExist := by
   let H : Subgroup G := toSub K hK
   have hHc : IsClosed (H : Set G) := hKc
   have hemb : Topology.IsClosedEmbedding (Subtype.val : H → G) := hHc.isClosedEmbedding_subtypeVal
-  haveI : LocallyCompactSpace H := hemb.locallyCompactSpace
-  have hv : Measurable (Subtype.val : H → G) := measurable_subtype_coe
+  have : LocallyCompactSpace H := hemb.locallyCompactSpace
+  have hv : Measurable (Subtype.val : H → G) := measurable_subtypeVal
   let α : Measure H := Measure.haar
   have hfin : IsFiniteMeasureOnCompacts (α.map Subtype.val) := by
     refine ⟨fun C hC => ?_⟩
@@ -101,16 +101,16 @@ theorem haar_measure_existence : HaarExist := by
     exact h.symm
   · intro U hU ⟨x, hxU, hxK⟩
     rw [Measure.map_apply hv hU.measurableSet]
-    exact (hU.preimage continuous_subtype_val).measure_ne_zero α ⟨⟨x, hxK⟩, hxU⟩
+    exact (hU.preimage continuous_subtypeVal).measure_ne_zero α ⟨⟨x, hxK⟩, hxU⟩
 
 theorem haar_measure_uniqueness : HaarUniq := by
   intro G _ _ _ _ _ _ _ _ K hKc hK μ ν hμ hν
   let H : Subgroup G := toSub K hK
   have hHc : IsClosed (H : Set G) := hKc
-  haveI : LocallyCompactSpace H := hHc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
+  have : LocallyCompactSpace H := hHc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
   have hme : MeasurableEmbedding (Subtype.val : H → G) :=
-    MeasurableEmbedding.subtype_coe hKc.measurableSet
+    MeasurableEmbedding.subtypeVal hKc.measurableSet
   let K₀ : TopologicalSpace.PositiveCompacts H := Classical.arbitrary _
   have key : ∀ ρ : Measure G, InvOn ρ K → ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧
       ρ = c • (Measure.haarMeasure K₀).map Subtype.val := by
@@ -119,9 +119,9 @@ theorem haar_measure_uniqueness : HaarUniq := by
     have hback : ρ'.map Subtype.val = ρ := by
       rw [hme.map_comap, Subtype.range_coe]
       exact Measure.restrict_eq_self_of_ae_mem (ae_iff.2 hc)
-    haveI : SigmaFinite ρ' :=
+    have : SigmaFinite ρ' :=
       SigmaFinite.of_map ρ' hme.measurable.aemeasurable (by rw [hback]; exact hσ)
-    haveI : IsMulLeftInvariant ρ' := by
+    have : IsMulLeftInvariant ρ' := by
       refine ⟨fun g => ?_⟩
       calc ρ'.map (g * ·) = ((ρ'.map (g * ·)).map Subtype.val).comap Subtype.val :=
             (hme.comap_map _).symm
@@ -147,7 +147,7 @@ theorem haar_measure_uniqueness : HaarUniq := by
       have h2 : ρ' (spanningSets ρ' n) = (c • Measure.haarMeasure K₀) (spanningSets ρ' n) :=
         congrArg (fun m : Measure H => m (spanningSets ρ' n)) hK0
       have h3 := measure_spanningSets_lt_top ρ' n
-      rw [h2, Measure.smul_apply, htop, smul_eq_mul, ENNReal.top_mul hn] at h3
+      rw [h2, smul_apply, htop, smul_eq_mul, ENNReal.top_mul hn] at h3
       exact lt_irrefl _ h3
   obtain ⟨a, ha0, hat, hμ'⟩ := key μ hμ
   obtain ⟨b, hb0, hbt, hν'⟩ := key ν hν

@@ -78,11 +78,11 @@ theorem card_filter_lt (j : ℕ) : #{x ∈ antidiagonal j | x.1 < j} ≤ j := by
   calc #{x ∈ antidiagonal j | x.1 < j} ≤ #(range j) :=
         Finset.card_le_card_of_injOn Prod.fst
           (fun x hx => by
-            simp only [Finset.coe_filter, Set.mem_setOf_eq] at hx
+            simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hx
             simp only [Finset.coe_range, Set.mem_Iio]
             exact hx.2)
           (fun x hx y hy hxy => by
-            simp only [Finset.coe_filter, Set.mem_setOf_eq] at hx hy
+            simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hx hy
             have e1 := Finset.HasAntidiagonal.mem_antidiagonal.mp hx.1
             have e2 := Finset.HasAntidiagonal.mem_antidiagonal.mp hy.1
             exact Prod.ext hxy (by omega))

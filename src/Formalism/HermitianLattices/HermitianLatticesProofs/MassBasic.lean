@@ -74,7 +74,7 @@ theorem massBasic_mass_eq (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (Rin
 
 theorem massBasic_self_mem_genus (h : V →ₗ⋆[K] V →ₗ[K] K) (L : Submodule (RingOfIntegers K) V)
     (hL : Submodule.IsFullLattice K L) : L ∈ genus h L := by
-  rw [genus, Set.mem_setOf_eq]
+  rw [genus, Set.mem_ofPred_eq]
   refine ⟨hL, ?_⟩
   intro p _
   refine ⟨1, (isom h).one_mem, ?_⟩

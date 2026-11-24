@@ -91,14 +91,14 @@ theorem exists_tval_resI (h' : IsPlaceOver A v') (hl' : ((l : ℕ) : 𝓞 L) ∉
     have := hc σ
     simpa [h0] using this
   obtain ⟨σ, hσ⟩ := ht.2 (Multiplicative.ofAdd 1)
-  haveI : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
+  have : Module.Finite K L := Module.Finite.of_restrictScalars_finite ℚ K L
   let f : ℕ → (L →ₐ[K] Ω) := fun n => (((σ : G K Ω) ^ n : G K Ω) : Ω →ₐ[K] Ω).comp (IsScalarTower.toAlgHom K L Ω)
   have main : ∀ i j : ℕ, i < j → f i = f j → False := fun i j hij e => by
     set k := j - i with hk
     have hk0 : 0 < k := Nat.sub_pos_of_lt hij
     have hfix : ∀ x : L, ((σ : G K Ω) ^ k).toRingEquiv (algebraMap L Ω x) = algebraMap L Ω x := fun x => by
       have e1 := congrArg (fun g : L →ₐ[K] Ω => g x) e
-      simp only [f, AlgHom.comp_apply, IsScalarTower.coe_toAlgHom', AlgEquiv.coe_algHom] at e1
+      simp only [f, AlgHom.comp_apply, IsScalarTower.coe_toAlgHom', AlgEquiv.coe_toAlgHom] at e1
       have e2 : (σ : G K Ω) ^ j = (σ : G K Ω) ^ i * (σ : G K Ω) ^ k := by
         rw [← pow_add, hk, Nat.add_sub_cancel' hij.le]
       rw [e2, AlgEquiv.mul_apply] at e1

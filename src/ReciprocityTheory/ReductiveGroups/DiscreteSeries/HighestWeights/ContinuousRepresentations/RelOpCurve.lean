@@ -120,7 +120,7 @@ private theorem KRep.rel_op_curve {ε : Fin n → Bool} (R : KRep ε)
   have hg0 : R.op (γ 0) * NormedSpace.exp (((0 : ℝ) : ℂ) • (-A)) = 1 := by
     rw [hγ0, hop_one, Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, one_mul]
   have hEE : NormedSpace.exp ((t : ℂ) • (-A)) * NormedSpace.exp ((t : ℂ) • A) = 1 := by
-    letI : NormedAlgebra ℚ (R.V →L[ℂ] R.V) := by
+    let : NormedAlgebra ℚ (R.V →L[ℂ] R.V) := by
       first
         | exact NormedAlgebra.restrictScalars ℚ ℂ _
         | exact NormedAlgebra.restrictScalars ℚ ℝ _
@@ -188,7 +188,7 @@ private theorem KRep.rel_star_dτ {ε : Fin n → Bool} (R : KRep ε)
   have hf : ∀ s : ℝ, R.op (γ s) = NormedSpace.exp ((s : ℂ) • A) := R.rel_op_curve hX γ hγ
   have hEE : ∀ s : ℝ, NormedSpace.exp ((s : ℂ) • (-A)) * NormedSpace.exp ((s : ℂ) • A) = 1 := by
     intro s
-    letI : NormedAlgebra ℚ (R.V →L[ℂ] R.V) := by
+    let : NormedAlgebra ℚ (R.V →L[ℂ] R.V) := by
       first
         | exact NormedAlgebra.restrictScalars ℚ ℂ _
         | exact NormedAlgebra.restrictScalars ℚ ℝ _
@@ -484,7 +484,7 @@ theorem KRep.kRel_units {ε : Fin n → Bool} (R : KRep ε) : Formalism.REAL.KRe
   have h := R.rel_dτ_bracket_single hab hcd
   have key : Matrix.single a b (1 : ℂ) * Matrix.single c d 1 - Matrix.single c d 1 * Matrix.single a b 1 =
       (if b = c then Matrix.single a d 1 else 0) - (if d = a then Matrix.single c b 1 else 0) := by
-    by_cases hbc : b = c <;> by_cases hda : d = a <;> simp only [hbc, hda, if_true, if_false] <;>
+    by_cases hbc : b = c <;> by_cases hda : d = a <;> simp only [hbc, hda, ite_true, ite_false] <;>
       first
       | simp [Matrix.single_mul_single_same, Matrix.single_mul_single_of_ne, hbc, hda, Ne.symm hda]
       | (subst hbc; subst hda; simp [Matrix.single_mul_single_same])

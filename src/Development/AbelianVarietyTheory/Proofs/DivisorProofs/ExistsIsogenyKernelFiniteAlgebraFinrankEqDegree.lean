@@ -70,15 +70,15 @@ theorem exists_kerPow_zero_finrank_eq_deg : ∀ (k : Type) [Field k] (A B : AbVa
       KerPow f 0 H i ∧ Module.finrank k H = deg f := by
   intro k _ A B f hf
   obtain ⟨-, hflat, -, hrank⟩ := isogeny_flat_finrank k A B f hf
-  haveI : IsFinite f.hom.left := hf.1
-  haveI := hflat
+  have : IsFinite f.hom.left := hf.1
+  have := hflat
   let e : Sp k ⟶ B.X.left := (MonObj.one : 𝟙_ (Over (Sp k)) ⟶ B.X).left
   have he : e ≫ B.X.hom = 𝟙 _ := Over.w (MonObj.one : 𝟙_ (Over (Sp k)) ⟶ B.X)
   let P := pullback f.hom.left e
   let g : P ⟶ Sp k := pullback.snd f.hom.left e
-  haveI : IsAffine P := isAffine_of_isAffineHom g
+  have : IsAffine P := isAffine_of_isAffineHom g
   let H : Type := Γ(P, ⊤)
-  letI : Algebra k H := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ g.appTop).hom.toAlgebra
+  let : Algebra k H := ((Scheme.ΓSpecIso (CommRingCat.of k)).inv ≫ g.appTop).hom.toAlgebra
   have hg : P.isoSpec.hom ≫ spMap (algebraMap k H) = g := isoSpec_hom_comp_spec g
   have hig : P.isoSpec.inv ≫ g = spMap (algebraMap k H) := by rw [← hg, Iso.inv_hom_id_assoc]
   have hw : (P.isoSpec.inv ≫ pullback.fst f.hom.left e) ≫ A.X.hom = spMap (algebraMap k H) := by
@@ -121,9 +121,9 @@ theorem exists_kerPow_zero_finrank_eq_deg : ∀ (k : Type) [Field k] (A B : AbVa
         rw [hφ, ← h1, Category.assoc, Iso.inv_hom_id, Category.comp_id]
       have h3 := Spec.map_injective h2
       exact AlgHom.ext fun a => congrArg (fun u => u.hom a) h3
-  · haveI : IsFinite (spMap (algebraMap k H)) := by rw [← hig]; infer_instance
-    haveI : Flat (spMap (algebraMap k H)) := by rw [← hig]; infer_instance
-    haveI : Module.Finite k H := by
+  · have : IsFinite (spMap (algebraMap k H)) := by rw [← hig]; infer_instance
+    have : Flat (spMap (algebraMap k H)) := by rw [← hig]; infer_instance
+    have : Module.Finite k H := by
       rw [← RingHom.finite_algebraMap]
       exact (IsFinite.SpecMap_iff _).1 ‹_›
     let pt : Sp k := IsLocalRing.closedPoint k

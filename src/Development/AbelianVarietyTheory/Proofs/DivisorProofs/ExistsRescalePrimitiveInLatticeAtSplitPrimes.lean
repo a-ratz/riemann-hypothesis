@@ -186,10 +186,10 @@ theorem exists_max {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.IsFu
   have hbound : ∀ s : E, s • x ∈ L → w.valuation E s ≤ B * (w.valuation E (x j))⁻¹ := fun s hs => by
     have := hB _ hs
     rw [Pi.smul_apply, smul_eq_mul, map_mul] at this
-    exact (le_mul_inv_iff₀ (zero_lt_iff.2 hxj)).2 this
+    exact (le_mul_inv_iff₀ (pos_iff_ne_zero.2 hxj)).2 this
   obtain ⟨K, hK⟩ : ∃ K : ℤ, B * (w.valuation E (x j))⁻¹ ≤ WithZero.exp K := by
     by_cases h0 : B * (w.valuation E (x j))⁻¹ = 0
-    · exact ⟨0, by rw [h0]; exact zero_le'⟩
+    · exact ⟨0, by rw [h0]; exact zero_le⟩
     · exact ⟨_, (WithZero.exp_log h0).ge⟩
   obtain ⟨d, hd, hdx⟩ := exists_smul_mem L hL x
   have hd' : algebraMap (𝓞 E) E d ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective (𝓞 E) E)).2 hd
@@ -202,7 +202,7 @@ theorem exists_max {n : ℕ} (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.IsFu
       (WithZero.exp_log ((map_ne_zero _).2 hd')).symm⟩
   refine ⟨s₀, hs₀, hs₀L, fun s hs => ?_⟩
   by_cases h0 : s = 0
-  · rw [h0, map_zero]; exact zero_le'
+  · rw [h0, map_zero]; exact zero_le
   · have hv := (WithZero.exp_log ((map_ne_zero (w.valuation E)).2 h0)).symm
     rw [hv, hs₀v, WithZero.exp_le_exp]
     exact hmax _ ⟨s, h0, hs, hv⟩
@@ -216,7 +216,7 @@ theorem primAt_smul {w : HeightOneSpectrum (𝓞 E)} {n : ℕ} {L : Submodule (�
     have h1 := hmax _ hs
     rw [map_mul, ← he] at h1
     have h2 : w.valuation E s * w.valuation E c ≤ 1 * w.valuation E c := by rwa [one_mul]
-    have h3 : w.valuation E s ≤ 1 * w.valuation E c * (w.valuation E c)⁻¹ := (le_mul_inv_iff₀ (zero_lt_iff.2 hc')).2 h2
+    have h3 : w.valuation E s ≤ 1 * w.valuation E c * (w.valuation E c)⁻¹ := (le_mul_inv_iff₀ (pos_iff_ne_zero.2 hc')).2 h2
     rwa [one_mul, mul_inv_cancel₀ hc'] at h3
   · rwa [smul_smul, mul_assoc, inv_mul_cancel₀ hc, mul_one]
   · rw [map_mul, map_inv₀, ← he, mul_inv_cancel₀ hc']

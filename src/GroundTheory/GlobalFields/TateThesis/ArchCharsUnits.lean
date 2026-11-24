@@ -157,14 +157,14 @@ theorem existsUnique_circle_zpow (χ : Circle →ₜ* ℂˣ) :
     linear_combination hn
   have hval : ∀ t : ℝ, (χ (Circle.exp t) : ℂ) = (Circle.exp t : ℂ) ^ n := by
     intro t
-    rw [hs', Circle.coe_exp, ← Complex.exp_int_mul, hn]
+    rw [hs', Circle.coe_exp, ← exp_intCast_mul, hn]
     congr 1
     ring
   refine ⟨n, fun z => ?_, fun m hm => ?_⟩
   · rw [← Circle.exp_arg z, hval]
   · have hmn : (m : ℂ) * I = n * I := eq_of_forall_exp_mul_eq fun t => by
       have h1 := hm (Circle.exp t)
-      rw [hval, Circle.coe_exp, ← Complex.exp_int_mul, ← Complex.exp_int_mul] at h1
+      rw [hval, Circle.coe_exp, ← exp_intCast_mul, ← exp_intCast_mul] at h1
       calc Complex.exp (m * I * t) = Complex.exp (m * (t * I)) := by ring_nf
         _ = Complex.exp (n * (t * I)) := h1.symm
         _ = Complex.exp (n * I * t) := by ring_nf

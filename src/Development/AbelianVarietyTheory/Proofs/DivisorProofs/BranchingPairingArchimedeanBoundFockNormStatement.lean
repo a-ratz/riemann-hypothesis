@@ -444,13 +444,13 @@ theorem pairBK_inv (σ : ι → DomWeight n) (g : ι → GL (Fin n) ℂ) (x y : 
 
 theorem pairBK_funEquiv (σ : ι → DomWeight n) (a b : VV ℂ σ) :
     pairBK (fun τ => (σ τ).dual) (funEquiv σ a) (funEquiv σ b) = pairBK σ a b := by
-  haveI : FiniteDimensional ℂ (VV ℂ σ) := Module.Finite.of_basis (bVV ℂ σ)
+  have : FiniteDimensional ℂ (VV ℂ σ) := Module.Finite.of_basis (bVV ℂ σ)
   have hnd := pairingBNondegenerate_holds ℂ ι n σ
   have hne : extVec σ ≠ 0 := fun h => by
     have := pairBK_extVec σ
     rw [h] at this
     simp at this
-  haveI : Nontrivial (VV ℂ σ) := ⟨⟨_, _, hne⟩⟩
+  have : Nontrivial (VV ℂ σ) := ⟨⟨_, _, hne⟩⟩
   let T : VV ℂ σ →ₗ[ℂ] VV ℂ σ :=
     (LinearMap.BilinForm.toDual (pairBK σ) hnd).symm.toLinearMap ∘ₗ
       (pairBK fun τ => (σ τ).dual).compl₁₂ (funEquiv σ).toLinearMap (funEquiv σ).toLinearMap

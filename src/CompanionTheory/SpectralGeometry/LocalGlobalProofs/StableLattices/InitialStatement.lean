@@ -79,7 +79,7 @@ theorem detOn_pos_of_left_inv {f g : Matrix (Fin n) (Fin n) ℂ} (hgf : g * f = 
   unfold detOn
   rw [dite_eq_left h]
   refine norm_pos_iff.mpr fun h0 => ?_
-  obtain ⟨x, hx, hx0⟩ := SetLike.exists_of_lt (LinearMap.bot_lt_ker_of_det_eq_zero h0)
+  obtain ⟨x, hx, hx0⟩ := IsConcreteLE.exists_of_lt (LinearMap.bot_lt_ker_of_det_eq_zero h0)
   have h1 : f *ᵥ (x : Fin n → ℂ) = 0 := by
     have := congrArg Subtype.val (LinearMap.mem_ker.mp hx)
     simpa [Matrix.toLin'_apply] using this
@@ -110,8 +110,8 @@ theorem startOf : StartOf := by
   obtain ⟨F, hFm, hFK, hFint, hFle⟩ := hKMaj n ε H σ D E hK hU hL2 u ξ
   obtain ⟨μN, μM, hN, hM, hMS, hMinv, ⟨κ, hκ0, hκt, hκ⟩, hnull⟩ := hFub n ε A hA
   obtain ⟨a, τ, ha, hτ, haM, hadd, haS, hcent, hmod, htime⟩ := hLine n ε A hA
-  haveI := hN
-  haveI := hM
+  have := hN
+  have := hM
   obtain ⟨⟨Msub, eM⟩, hS, -⟩ := GlobalTheory.FlagLeviGroup.levi_compact_subgroups n ε 1 (W A)
   have hfin : (∫⁻ v, ∫⁻ m, modA A m * F (v * m) ∂μM ∂μN) < ⊤ := by
     have h := hFint

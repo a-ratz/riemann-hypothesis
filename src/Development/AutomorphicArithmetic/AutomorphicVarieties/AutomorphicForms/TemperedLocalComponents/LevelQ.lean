@@ -68,7 +68,7 @@ private theorem exists_over (F : Type) [Field F] [NumberField F] (l : ℕ) [Fact
   have hu : ¬ IsUnit (l : 𝓞 F) := fun hu => by
     have h := hu.map (Algebra.norm ℤ)
     rw [← map_natCast (algebraMap ℤ (𝓞 F)), Algebra.norm_algebraMap, isUnit_pow_iff Module.finrank_pos.ne'] at h
-    exact (Nat.prime_iff_prime_int.1 Fact.out).not_unit h
+    exact (Nat.prime_iff_prime_int.1 Fact.out).not_isUnit h
   obtain ⟨P, hP, hle⟩ := Ideal.exists_le_maximal (Ideal.span {(l : 𝓞 F)}) (by rwa [Ne, Ideal.span_singleton_eq_top])
   have hmem : (l : 𝓞 F) ∈ P := hle (Ideal.mem_span_singleton_self _)
   exact ⟨⟨P, hP.isPrime, fun h0 => hl (by rw [h0] at hmem; exact hmem)⟩, hmem⟩

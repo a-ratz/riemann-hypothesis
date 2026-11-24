@@ -76,7 +76,7 @@ theorem UpperTheory.V.FW.reps :
   classical
   have hev := even_tot l
   have hpos := pos_tot l
-  haveI : NeZero (Nat.totient (l ^ ee l)) := ⟨hpos.ne'⟩
+  have : NeZero (Nat.totient (l ^ ee l)) := ⟨hpos.ne'⟩
   have hfin : (WW l : Set ℤ_[l]ˣ).Finite := by
     have : Finite (rootsOfUnity (Nat.totient (l ^ ee l)) ℤ_[l]) := inferInstance
     exact Set.finite_coe_iff.1 this
@@ -87,7 +87,7 @@ theorem UpperTheory.V.FW.reps :
   have hneg : ∀ w ∈ WW l, -w ∈ WW l := fun w hw => by
     have := (WW l).mul_mem hm1 hw
     simpa using this
-  letI : LinearOrder ℤ_[l]ˣ := linearOrderOfSTO WellOrderingRel
+  let : LinearOrder ℤ_[l]ˣ := linearOrderOfSTO WellOrderingRel
   let R : Finset ℤ_[l]ˣ := hfin.toFinset.filter fun r => r < -r
   have hR : ∀ r, r ∈ R ↔ r ∈ WW l ∧ r < -r := fun r => by simp [R]
   have h4 : ∀ r ∈ R, -r ∉ R := fun r hr hr' => by

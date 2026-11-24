@@ -138,7 +138,7 @@ theorem continuous_polyMat {ι : Type} (P : ι → ι → MvPolynomial ((E →+*
   refine (MvPolynomial.continuous_eval (P i j)).comp (continuous_pi fun p => ?_)
   refine (continuous_coord' p.1).comp (continuous_pInf'.comp
     (f := fun g : UA E n => (g.1 : Matrix (Fin n) (Fin n) (Ad E)) p.2.1 p.2.2) ?_)
-  exact (Units.continuous_val.comp continuous_subtype_val).matrix_elem _ _
+  exact (Units.continuous_val.comp continuous_subtypeVal).matrix_elem _ _
 
 theorem exists_unitaryRationalMatrix_of_mem_definiteUnitaryRational {γ : UA E n} (hγ : γ ∈ ratU E n) : ∃ γ₀ : GQ0 E n, γ.1 = ratGL E n γ₀.1 := by
   obtain ⟨γ₀, hγ₀⟩ := Subgroup.mem_subgroupOf.1 hγ

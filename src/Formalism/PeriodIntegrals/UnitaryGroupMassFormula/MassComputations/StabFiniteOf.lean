@@ -64,7 +64,7 @@ theorem stabFinite_of (hH : HinfCompact) (hK : KCompactOpen) : StabFinite := by
   have hcK := (hK X).1
   have hcI : IsCompact ((Hsub (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u) :
       Set (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J))) := by
-    haveI := hH X u
+    have := hH X u
     exact isCompact_iff_compactSpace.2 this
   have homogComponent_comm_second_action : IsCompact ((fun k => (x : HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) * k *
       (x : HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J)⁻¹) '' (KX X : Set (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J))) :=
@@ -74,7 +74,7 @@ theorem stabFinite_of (hH : HinfCompact) (hK : KCompactOpen) : StabFinite := by
         ((fun k => (x : HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) * k *
           (x : HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J)⁻¹) '' (KX X : Set (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J))))) :=
     e.toHomeomorph.isCompact_preimage.2 (hcI.prod homogComponent_comm_second_action)
-  haveI hdisc : DiscreteTopology ↥(show Subgroup (HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) from
+  have hdisc : DiscreteTopology ↥(show Subgroup (HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) from
       HFinIn (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) := discHF_setting X
   have pullback_fin_relation : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (Γ : Subgroup G)
       [DiscreteTopology Γ] (K : Set G), IsCompact K → Finite ↥((Subtype.val : Γ → G) ⁻¹' K) := by
@@ -112,7 +112,7 @@ theorem stabFinite_of (hH : HinfCompact) (hK : KCompactOpen) : StabFinite := by
     have e1 : ((s1 : Γ)⁻¹ * (s2 : Γ) : Γ) ∈ (Subtype.val : Γ → G) ⁻¹' U := hU'
     rw [hUeq, Set.mem_singleton_iff, inv_mul_eq_one] at e1
     exact Subtype.ext e1
-  haveI := pullback_fin_relation _ (show Subgroup (HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) from
+  have := pullback_fin_relation _ (show Subgroup (HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) from
     HFinIn (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) _ hcK3
   have hsurj : ∀ t : ↥(GamH X u ⊓ (KH X u).map (MulAut.conj x).toMonoidHom),
       ∃ γ : Hsub (AF X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u),

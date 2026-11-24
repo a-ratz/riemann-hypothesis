@@ -642,11 +642,11 @@ theorem ea_finite_bad {E R : Type*} [Field E] [CommRing R] (ι : E →+* R)
   have hfin : {c : R ⧸ m | P.eval c = 0}.Finite := by
     apply (P.roots.toFinset.finite_toSet).subset
     intro c hc
-    simp only [Set.mem_setOf_eq] at hc
+    simp only [Set.mem_ofPred_eq] at hc
     simp [Polynomial.mem_roots hP0, hc]
   apply (hfin.preimage (fun _ _ _ _ h => f.injective h)).subset
   intro μ hμ
-  simp only [Set.mem_setOf_eq, Set.mem_preimage] at hμ ⊢
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage] at hμ ⊢
   rw [hev]
   have h1 : Ideal.Quotient.mk m (1 + ι μ • g).det = 0 := Ideal.Quotient.eq_zero_iff_mem.mpr hμ
   rw [RingHom.map_det] at h1
@@ -656,8 +656,8 @@ theorem ea_finite_bad {E R : Type*} [Field E] [CommRing R] (ι : E →+* R)
 
 theorem ea_artinian {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (v : HeightOneSpectrum (𝓞 F)) : IsArtinianRing (E ⊗[F] v.adicCompletion F) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsArtinianRing (v.adicCompletion F ⊗[F] E) := IsArtinianRing.of_finite (v.adicCompletion F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsArtinianRing (v.adicCompletion F ⊗[F] E) := IsArtinianRing.of_finite (v.adicCompletion F) _
   have hs : Function.Surjective (Algebra.TensorProduct.comm F (v.adicCompletion F) E) :=
     (Algebra.TensorProduct.comm F (v.adicCompletion F) E).surjective
   first
@@ -674,9 +674,9 @@ theorem eigenvalue_avoidance : EigAvoid := by
       {μ : E | (1 + PI.UnitaryApproxDefs.inclE (F := F) (v.adicCompletion F) μ • g v).det ∈ m}
   have hbad : bad.Finite := by
     refine Set.Finite.biUnion T.finite_toSet fun v _ => ?_
-    haveI : IsArtinianRing (E ⊗[F] v.adicCompletion F) := ea_artinian v
+    have : IsArtinianRing (E ⊗[F] v.adicCompletion F) := ea_artinian v
     refine Set.Finite.biUnion (IsArtinianRing.setOfPred_isMaximal_finite _) fun m hm => ?_
-    haveI : m.IsMaximal := hm
+    have : m.IsMaximal := hm
     exact ea_finite_bad _ (g v) m
   have hnz1 : ∀ t : ℕ, (t : E) + θ ≠ 0 := by
     intro t h
@@ -808,8 +808,8 @@ theorem unitary_scalars : UnitS := by
       v.adicCompletion F →ₐ[F] E ⊗[F] v.adicCompletion F).toRingHom.comp O.subtype
   have hψ : ∀ y : O, ψ y = (1 : E) ⊗ₜ[F] (y : v.adicCompletion F) := fun y => rfl
   let φ : O →+* S := ψ.codRestrict S (fun y => by rw [hψ]; exact hgen2 y)
-  letI : Algebra O (E ⊗[F] v.adicCompletion F) := ψ.toAlgebra
-  letI : Algebra O S := φ.toAlgebra
+  let : Algebra O (E ⊗[F] v.adicCompletion F) := ψ.toAlgebra
+  let : Algebra O S := φ.toAlgebra
   let f : S →ₐ[O] E ⊗[F] v.adicCompletion F := { S.subtype with commutes' := fun r => rfl }
   have hle : S ≤ (integralClosure O (E ⊗[F] v.adicCompletion F)).toSubring := by
     refine Subring.closure_le.2 ?_
@@ -860,7 +860,7 @@ theorem unitary_scalars : UnitS := by
     by_contra h
     obtain ⟨M, hM, hxM⟩ := exists_max_ideal_of_mem_nonunits (mem_nonunits_iff.2 h)
     have hP : (M.comap (algebraMap O S)).IsMaximal := by
-      letI := hIntS
+      let := hIntS
       exact Ideal.isMaximal_under_of_isIntegral_of_isMaximal M
     have hπM : algebraMap O S πO ∈ M := by
       have : πO ∈ M.comap (algebraMap O S) := by

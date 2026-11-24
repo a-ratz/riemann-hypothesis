@@ -927,9 +927,9 @@ theorem _root_.GlobalTheory.span_range_algebraMap_eq_top_of_tame :
   classical
   let M : Subalgebra B C := Algebra.adjoin B (Set.range (algebraMap R C))
   have hRM : ∀ r : R, algebraMap R C r ∈ M := fun r => Algebra.subset_adjoin ⟨r, rfl⟩
-  letI : Algebra R M := ((algebraMap R C).codRestrict M hRM).toAlgebra
-  haveI : IsScalarTower R M C := IsScalarTower.of_algebraMap_eq fun r => rfl
-  haveI : Module.Finite M C := Module.Finite.of_restrictScalars_finite R M C
+  let : Algebra R M := ((algebraMap R C).codRestrict M hRM).toAlgebra
+  have : IsScalarTower R M C := IsScalarTower.of_algebraMap_eq fun r => rfl
+  have : Module.Finite M C := Module.Finite.of_restrictScalars_finite R M C
   have hsmulM : ∀ (m : M) (c : C), m • c = (m : C) * c := fun m c => rfl
   have hsmulB : ∀ (b : B) (c : C), b • c = (algebraMap B M b : C) * c := fun b c => by
     rw [Algebra.smul_def]
@@ -950,7 +950,7 @@ theorem _root_.GlobalTheory.span_range_algebraMap_eq_top_of_tame :
   have hloc : ∀ P : Ideal M, P.IsMaximal → (⊤ : Submodule M (C ⧸ P')) ≤ P • ⊤ := by
     intro P hP x _
     obtain ⟨c, rfl⟩ := Submodule.Quotient.mk_surjective P' x
-    haveI : P.IsPrime := hP.isPrime
+    have : P.IsPrime := hP.isPrime
     have hq : (P.comap (algebraMap B M)).IsPrime := Ideal.comap_isPrime _ _
     obtain ⟨s, hs, hsc⟩ := _root_.GlobalTheory.exists_smul_mem_span_invariants_sup Γ B C hcomp _ hq
       (htame _ hq) (hin' _ hq) c
@@ -1078,8 +1078,8 @@ theorem isPushout_of_tame :
     ∀ (Γ : Type) [Group Γ] [Finite Γ] (A B R C : Type) [CommRing A] [CommRing B] [CommRing R] [CommRing C] [MulSemiringAction Γ B] [MulSemiringAction Γ C] [Algebra A B] [Algebra A R] [Algebra B C] [Algebra R C] [Algebra A C] [IsScalarTower A B C] [IsScalarTower A R C] [SMulCommClass Γ A B] [SMulCommClass Γ R C] [Algebra.IsInvariant A B Γ] [Algebra.IsInvariant R C Γ], Function.Injective (algebraMap A B) → Function.Injective (algebraMap R C) → (∀ (g : Γ) (b : B), g • algebraMap B C b = algebraMap B C (g • b)) → IsNoetherianRing R → Module.Finite A B → Module.Finite R C → Module.Flat B C → (∀ q : Ideal B, q.IsPrime → (Nat.card (q.inertia Γ) : B) ∉ q) → (∀ q : Ideal B, q.IsPrime → ∀ g ∈ q.inertia Γ, ∀ c : C, g • c - c ∈ q.map (algebraMap B C)) → Algebra.IsPushout A B R C := by
   intro Γ _ _ A B R C _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hAB hRC heq hnoeth hfAB hfRC hflat hcard hI
   classical
-  haveI := Fintype.ofFinite Γ
-  haveI : SMulCommClass A Γ B := SMulCommClass.symm _ _ _
+  have := Fintype.ofFinite Γ
+  have : SMulCommClass A Γ B := SMulCommClass.symm _ _ _
   let φ : B ⊗[A] R →ₐ[B] C := Algebra.TensorProduct.lift (Algebra.ofId B C)
     (IsScalarTower.toAlgHom A R C) (fun _ _ => Commute.all _ _)
   have hφ : ∀ (b : B) (r : R), φ (b ⊗ₜ r) = algebraMap B C b * algebraMap R C r := by
@@ -1148,13 +1148,13 @@ theorem isPushout_of_tame :
       exact Submodule.add_mem _ hx hy
   let K : Submodule B (B ⊗[A] R) := LinearMap.ker φ.toLinearMap
   have hK : ∀ x, x ∈ K ↔ φ x = 0 := fun x => Iff.rfl
-  letI : SMul Γ K := ⟨fun g x => ⟨g • (x : B ⊗[A] R), by
+  let : SMul Γ K := ⟨fun g x => ⟨g • (x : B ⊗[A] R), by
     rw [hK, hequi, (hK _).1 x.2, smul_zero]⟩⟩
-  letI : DistribMulAction Γ K :=
+  let : DistribMulAction Γ K :=
     Function.Injective.distribMulAction K.subtype.toAddMonoidHom K.injective_subtype
       (fun _ _ => rfl)
-  haveI : IsNoetherianRing (B ⊗[A] R) := by
-    haveI : IsNoetherianRing (R ⊗[A] B) := Algebra.FiniteType.isNoetherianRing R _
+  have : IsNoetherianRing (B ⊗[A] R) := by
+    have : IsNoetherianRing (R ⊗[A] B) := Algebra.FiniteType.isNoetherianRing R _
     exact isNoetherianRing_of_ringEquiv _ (Algebra.TensorProduct.comm A R B).toRingEquiv
   have hker : RingHom.ker φ = ⊥ := by
     refine ideal_eq_bot_of_forall_prime_smul_mem (B := B) _ (IsNoetherian.noetherian _) ?_
@@ -1417,8 +1417,8 @@ theorem exists_smooth_descent_of_tame_quotient :
   intro Γ _ _ R _ X X' _ ρ π G s τ hπ hfin hqp hsm hτ hstab hfib
   have hsepG : G.left.IsSeparated := by
     obtain ⟨N, i, hi, -, hcomp⟩ := hqp
-    haveI := isProper_str R N
-    haveI : IsSeparated (G.hom ≫ s) := by rw [← hcomp]; infer_instance
+    have := isProper_str R N
+    have : IsSeparated (G.hom ≫ s) := by rw [← hcomp]; infer_instance
     constructor
     rw [show terminal.from G.left = (G.hom ≫ s) ≫ terminal.from _ from terminal.hom_ext _ _]
     infer_instance
@@ -1431,7 +1431,7 @@ theorem exists_smooth_descent_of_tame_quotient :
   obtain ⟨hpb, hflat, hlft⟩ := _root_.GlobalTheory.TameDescent.isPullback_flat_of_tame Γ X X' G.left Y' ρ τ π φ G.hom p' hπ hφ hp' hτ hfin
     inferInstance inferInstance hstab hfib
   have hsurj : Surjective π := (quotient_isIntegral_surjective_orbits Γ X X' ρ π hπ).2.1
-  haveI : LocallyOfFinitePresentation p' := inferInstance
+  have : LocallyOfFinitePresentation p' := inferInstance
   exact ⟨Over.mk p', φ, hpb,
     smooth_of_isPullback_of_surjective_of_flat X X' G.left Y' π φ G.hom p' hpb hsurj hflat
       inferInstance hsm, fun g => hφ.2.1 g⟩
@@ -1495,7 +1495,7 @@ theorem finite_separable_of_sum_mem {D k K : Type} [Group D] [Fintype D] [Field 
     refine ⟨c' / c, ?_⟩
     rw [map_div₀, hc', div_eq_iff hcw, hc]
     simp only [map_mul, hy, Finset.mul_sum]
-  letI : MulSemiringAction D K := MulSemiringAction.compHom K φ
+  let : MulSemiringAction D K := MulSemiringAction.compHom K φ
   have hF : ∀ x : FixedPoints.subfield D K, ∃ c' : k, algebraMap k K c' = x :=
     fun x => hfix x fun g => x.2 g
   refine ⟨?_, ?_⟩
@@ -1558,7 +1558,7 @@ theorem exists_not_mem_smul_mem {Γ B : Type} [Group Γ] [Finite Γ] [CommRing B
       rw [Ideal.mem_pointwise_smul_iff_inv_smul_mem]
       exact ⟨fun hx => by simpa using h5 _ hx, h2 x⟩
   choose a ha using hex
-  haveI := Fintype.ofFinite Γ
+  have := Fintype.ofFinite Γ
   refine ⟨∏ g, a g, ?_, fun g hg => ?_⟩
   · exact prod_mem (S := q.primeCompl) fun g _ => (ha g).1
   · rw [Finset.smul_prod']
@@ -1567,11 +1567,11 @@ theorem exists_not_mem_smul_mem {Γ B : Type} [Group Γ] [Finite Γ] [CommRing B
 theorem residue_finite_separable : ∀ (Γ : Type) [Group Γ] [Finite Γ] (A B : Type) [CommRing A] [CommRing B] [Algebra A B] [MulSemiringAction Γ B] [SMulCommClass Γ A B] [Algebra.IsInvariant A B Γ] (q : Ideal B) [q.IsPrime] (k K : Type) [Field k] [Field K] [Algebra (A ⧸ q.under A) k] [IsFractionRing (A ⧸ q.under A) k] [Algebra (B ⧸ q) K] [IsFractionRing (B ⧸ q) K] [Algebra k K], (∀ a : A, algebraMap k K (algebraMap (A ⧸ q.under A) k (Ideal.Quotient.mk _ a)) = algebraMap (B ⧸ q) K (Ideal.Quotient.mk q (algebraMap A B a))) → (Nat.card (q.inertia Γ) : B) ∉ q → FiniteDimensional k K ∧ Algebra.IsSeparable k K := by
   intro Γ _ _ A B _ _ _ _ _ _ q _ k K _ _ _ _ _ _ _ hcomp hin
   classical
-  haveI := Fintype.ofFinite Γ
-  letI : Algebra (A ⧸ q.under A) K :=
+  have := Fintype.ofFinite Γ
+  let : Algebra (A ⧸ q.under A) K :=
     ((algebraMap k K).comp (algebraMap (A ⧸ q.under A) k)).toAlgebra
-  haveI : IsScalarTower (A ⧸ q.under A) k K := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower (A ⧸ q.under A) (B ⧸ q) K := IsScalarTower.of_algebraMap_eq fun x => by
+  have : IsScalarTower (A ⧸ q.under A) k K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (A ⧸ q.under A) (B ⧸ q) K := IsScalarTower.of_algebraMap_eq fun x => by
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact hcomp a
   let ψ := Ideal.Quotient.stabilizerHom q (q.under A) Γ
@@ -1734,8 +1734,8 @@ namespace GlobalTheory
 theorem exists_eq_evaluation_div {X : Scheme.{0}} {U : X.Opens} (hU : IsAffineOpen U) (x : X) (hx : x ∈ U)
     (z : X.residueField x) : ∃ a b : Γ(X, U), z = X.evaluation U x hx a / X.evaluation U x hx b := by
   classical
-  letI : Algebra Γ(X, U) (X.presheaf.stalk x) := (X.presheaf.germ U x hx).hom.toAlgebra
-  haveI : IsLocalization.AtPrime (X.presheaf.stalk x) (hU.primeIdealOf ⟨x, hx⟩).asIdeal :=
+  let : Algebra Γ(X, U) (X.presheaf.stalk x) := (X.presheaf.germ U x hx).hom.toAlgebra
+  have : IsLocalization.AtPrime (X.presheaf.stalk x) (hU.primeIdealOf ⟨x, hx⟩).asIdeal :=
     hU.isLocalization_stalk ⟨x, hx⟩
   have he : ∀ c, X.evaluation U x hx c =
       (X.residue x).hom (algebraMap Γ(X, U) (X.presheaf.stalk x) c) := fun c => rfl
@@ -1753,7 +1753,7 @@ theorem isFractionRing_residueField {X : Scheme.{0}} {U : X.Opens} (hU : IsAffin
     (q : Ideal Γ(X, U)) (hq : ∀ a, a ∈ q ↔ X.evaluation U x hx a = 0) :
     letI := (Ideal.Quotient.lift q (X.evaluation U x hx).hom fun a ha ↦ (hq a).1 ha).toAlgebra
     IsFractionRing (Γ(X, U) ⧸ q) (X.residueField x) := by
-  letI : Algebra (Γ(X, U) ⧸ q) (X.residueField x) :=
+  let : Algebra (Γ(X, U) ⧸ q) (X.residueField x) :=
     (Ideal.Quotient.lift q (X.evaluation U x hx).hom fun a ha ↦ (hq a).1 ha).toAlgebra
   have hmk : ∀ a, algebraMap (Γ(X, U) ⧸ q) (X.residueField x) (Ideal.Quotient.mk q a) =
       X.evaluation U x hx a := fun a => Ideal.Quotient.lift_mk _ _ _
@@ -1763,12 +1763,12 @@ theorem isFractionRing_residueField {X : Scheme.{0}} {U : X.Opens} (hU : IsAffin
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective c
     rw [hmk] at hc
     exact Ideal.Quotient.eq_zero_iff_mem.mpr ((hq a).2 hc)
-  haveI : NoZeroDivisors (Γ(X, U) ⧸ q) :=
+  have : NoZeroDivisors (Γ(X, U) ⧸ q) :=
     hinj.noZeroDivisors _ (map_zero _) (map_mul _)
   refine ⟨?_, ?_, ?_⟩
   · intro y
     refine isUnit_iff_ne_zero.mpr fun h => ?_
-    haveI : Nontrivial (Γ(X, U) ⧸ q) :=
+    have : Nontrivial (Γ(X, U) ⧸ q) :=
       ⟨⟨0, 1, fun h => by simpa using congrArg (algebraMap (Γ(X, U) ⧸ q) (X.residueField x)) h⟩⟩
     exact nonZeroDivisors.ne_zero y.2 (hinj (h.trans (map_zero _).symm))
   · intro z

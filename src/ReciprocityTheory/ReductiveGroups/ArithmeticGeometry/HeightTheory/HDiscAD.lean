@@ -69,15 +69,15 @@ theorem isFractionRing_OT :
     letI := algOTKT (K := K) D N
     IsFractionRing (OT K D N) (KTf K D N) := by
   set_option synthInstance.maxHeartbeats 200000 in
-  letI := algOTKT (K := K) D N
+  let := algOTKT (K := K) D N
   have hinj : Function.Injective (algebraMap (OT K D N) (KTf K D N)) :=
     (IsFractionRing.injective (KTp K D N) (KTf K D N)).comp
       (MvPolynomial.map_injective _ (IsFractionRing.injective (𝓞 K) K))
-  haveI : FaithfulSMul (OT K D N) (KTf K D N) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
+  have : FaithfulSMul (OT K D N) (KTf K D N) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
   refine IsFractionRing.of_field _ _ fun z => ?_
   obtain ⟨p, q, hq, rfl⟩ := IsFractionRing.div_surjective (KTp K D N) z
-  letI : Algebra (OT K D N) (KTp K D N) := MvPolynomial.algebraMvPolynomial
-  haveI := MvPolynomial.isLocalization (σ := TVar D N) (nonZeroDivisors (𝓞 K)) K
+  let : Algebra (OT K D N) (KTp K D N) := MvPolynomial.algebraMvPolynomial
+  have := MvPolynomial.isLocalization (σ := TVar D N) (nonZeroDivisors (𝓞 K)) K
   obtain ⟨⟨P, ⟨_, a, ha, rfl⟩⟩, hP⟩ :=
     IsLocalization.surj ((nonZeroDivisors (𝓞 K)).map (MvPolynomial.C (σ := TVar D N))) p
   obtain ⟨⟨Q, ⟨_, b, hb, rfl⟩⟩, hQ⟩ :=
@@ -104,10 +104,10 @@ theorem isFractionRing_Op (la : HeightOneSpectrum (𝓞 K)) :
     letI := algOpKT (K := K) D N la
     IsFractionRing (Op D N la) (KTf K D N) := by
   set_option synthInstance.maxHeartbeats 200000 in
-  letI := algOTKT (K := K) D N
-  letI := algOpKT (K := K) D N la
-  haveI := isFractionRing_OT (K := K) D N
-  haveI : IsScalarTower (OT K D N) (Op D N la) (KTf K D N) :=
+  let := algOTKT (K := K) D N
+  let := algOpKT (K := K) D N la
+  have := isFractionRing_OT (K := K) D N
+  have : IsScalarTower (OT K D N) (Op D N la) (KTf K D N) :=
     IsScalarTower.of_algebraMap_eq fun x => by
       change _ = OpToKT D N la (algebraMap _ _ x)
       rw [OpToKT, IsLocalization.lift_eq]
@@ -116,8 +116,8 @@ theorem isFractionRing_Op (la : HeightOneSpectrum (𝓞 K)) :
     (Op D N la) (KTf K D N)
 
 theorem OpToKT_injective (la : HeightOneSpectrum (𝓞 K)) : Function.Injective (OpToKT D N la) := by
-  letI := algOpKT (K := K) D N la
-  haveI := isFractionRing_Op (K := K) D N la
+  let := algOpKT (K := K) D N la
+  have := isFractionRing_Op (K := K) D N la
   exact IsFractionRing.injective (Op D N la) (KTf K D N)
 
 omit [NumberField K] in
@@ -138,7 +138,7 @@ noncomputable def unifOp (la : HeightOneSpectrum (𝓞 K)) : Op D N la :=
 
 theorem unifOp_irreducible (la : HeightOneSpectrum (𝓞 K)) : Irreducible (unifOp D N la) := by
   classical
-  haveI := Op_isDVR (K := K) D N la
+  have := Op_isDVR (K := K) D N la
   obtain ⟨hmem, hnot⟩ := unif_mem la
   have hinj : Function.Injective (algebraMap (OT K D N) (Op D N la)) :=
     IsLocalization.injective (Op D N la) (laT D N la).primeCompl_le_nonZeroDivisors

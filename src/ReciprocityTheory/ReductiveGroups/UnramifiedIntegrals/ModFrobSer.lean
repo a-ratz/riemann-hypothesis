@@ -52,14 +52,14 @@ open ModularForm EisensteinSeries ModularFormClass UpperHalfPlane Formalism.L2.T
 namespace ReciprocityTheory.ChartRestriction.L1
 
 theorem xp_zmod {p : ℕ} (hp : p.Prime) (f : PowerSeries (ZMod p)) : xp p f = f ^ p := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   ext n
   have key := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q n) (PowerSeries.trunc_trunc_pow (n := n + 1) f p)
   simp only [PowerSeries.coeff_trunc, Nat.lt_add_one, ↓reduceIte] at key
   rw [← key, ← Polynomial.coe_pow, Polynomial.coeff_coe, ← ZMod.expand_card, Polynomial.coeff_expand hp.pos]
   simp only [xp, PowerSeries.coeff_mk]
   split_ifs with h
-  · rw [PowerSeries.coeff_trunc, if_pos (Nat.lt_succ_of_le (Nat.div_le_self n p))]
+  · rw [PowerSeries.coeff_trunc, ite_eq_left (Nat.lt_succ_of_le (Nat.div_le_self n p))]
   · rfl
 
 theorem exists_C_mul_of_map_eq_zero {p : ℕ} (h : PowerSeries ℤ)
@@ -87,8 +87,8 @@ theorem xp_congr {p : ℕ} (hp : p.Prime) (f : PowerSeries ℤ) :
 
 theorem sub_pow_congr {p : ℕ} (hp : p.Prime) (f g : PowerSeries ℤ) :
     ∃ w : PowerSeries ℤ, (f - g) ^ p = f ^ p - g ^ p + PowerSeries.C (p : ℤ) * w := by
-  haveI := Fact.mk hp
-  haveI : CharP (PowerSeries (ZMod p)) p :=
+  have := Fact.mk hp
+  have : CharP (PowerSeries (ZMod p)) p :=
     charP_of_injective_algebraMap (algebraMap (ZMod p) (PowerSeries (ZMod p))).injective p
   have h0 : ((f - g) ^ p - (f ^ p - g ^ p)).map (Int.castRingHom (ZMod p)) = 0 := by
     rw [map_sub, map_pow, map_sub, map_sub, map_pow, map_pow, sub_pow_char, sub_self]
@@ -113,7 +113,7 @@ theorem rescale_congr {p : ℕ} (hp : 0 < p) (b : ℕ) (f : PowerSeries ℤ) :
 theorem zetaC_isPrimitiveRoot {p : ℕ} (hp : p ≠ 0) : IsPrimitiveRoot (zetaC p) p := Complex.isPrimitiveRoot_exp p hp
 
 theorem p_mem_span {p : ℕ} (hp : p.Prime) : ∃ r ∈ Rm p, (p : ℂ) = (1 - zetaC p) * r := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hζ := zetaC_isPrimitiveRoot hp.ne_zero
   have hmem : ∀ μ ∈ primitiveRoots p ℂ, μ ∈ Rm p := by
     intro μ hμ

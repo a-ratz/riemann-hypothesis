@@ -333,7 +333,7 @@ theorem hostGroup : HostGroup := by
       first
         | rfl
     have hbij : Function.Bijective f := by
-      haveI : NeZero (2 ^ e) := ⟨by positivity⟩
+      have : NeZero (2 ^ e) := ⟨by positivity⟩
       have hc : Nat.card (Multiplicative (ZMod (2 ^ e))) ≤ Nat.card (HGrp e) := by
         change Nat.card (ZMod (2 ^ e)) ≤ Nat.card (HGrp e)
         rw [Nat.card_zmod, card_H]

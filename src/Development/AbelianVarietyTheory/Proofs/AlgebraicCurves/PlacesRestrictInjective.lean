@@ -121,7 +121,7 @@ theorem exists_orders {Ω X : Type} [Field Ω] (S : Set X) (hS : S.Finite)
   classical
   rcases S.eq_empty_or_nonempty with rfl | ⟨w0, hw0⟩
   · exact ⟨1, one_ne_zero, by simp⟩
-  haveI := hS.fintype
+  have := hS.fintype
   let e := (Fintype.equivFin S).symm
   obtain ⟨g, hg⟩ := weak_approx_orders (fun i => v (e i)) (fun i => (hn _ (e i).2).1)
     (fun i => (hn _ (e i).2).2)
@@ -161,7 +161,7 @@ theorem exists_integral_lift {Ω X : Type} [Field Ω] (S : Set X) (hS : S.Finite
       exact_mod_cast (by omega : (0 : ℤ) ≤ m x - 0)
     · have hsx : v x s = ((min (m x) 0 - 1 : ℤ) : WithTop ℤ) := by
         have := hs x hx
-        rwa [if_neg hxw] at this
+        rwa [ite_eq_right hxw] at this
       have h1x : v x (1 + s) = ((min (m x) 0 - 1 : ℤ) : WithTop ℤ) := by
         rw [AddValuation.map_add_eq_of_lt_right _ (by
           rw [AddValuation.map_one, hsx]
@@ -196,7 +196,7 @@ theorem exists_gauss_variables (d : Data K ι Ω WT A) (hd : d.AxH 𝒜)
   have hex : ∀ j, ∃ a : Ω c, d.w j c = a • d.w (d.jc c) c := by
     intro j
     have hb := hd.w_base c
-    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' (⟨d.w (d.jc c) c, hd.w_mem _ c⟩ : 𝒜 c d.wL)
+    obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' (⟨d.w (d.jc c) c, hd.w_mem _ c⟩ : 𝒜 c d.wL)
       (fun h0 => hb (congrArg Subtype.val h0))).mp (hd.finrank_one c d.wL) ⟨d.w j c, hd.w_mem j c⟩
     exact ⟨a, (congrArg Subtype.val ha).symm⟩
   let a : Fin (d.N + 1) → Ω c := fun j => ratio (Ω := Ω c) (d.w j c) (d.w (d.jc c) c)
@@ -286,8 +286,8 @@ theorem exists_gauss_variables (d : Data K ι Ω WT A) (hd : d.AxH 𝒜)
   have hX0 : ∀ p, 0 ≤ w (s p) := fun p => by rw [← hOT]; exact (hpl _).1
   have ht : ∀ x, t x ∈ vRing w := fun x => hX0 _
 
-  letI _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) f
-  letI _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra ((vRing w).comap f) (algebraMap K (Ω c))
+  let _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) f
+  let _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra ((vRing w).comap f) (algebraMap K (Ω c))
   let k₁ : IntermediateField (ResidueField (((vRing w).comap f).comap (algebraMap K (Ω c))))
       (ResidueField ((vRing w).comap f)) :=
     IntermediateField.adjoin _ {z | ∃ j, ∃ h : r j ∈ (vRing w).comap f,
@@ -383,7 +383,7 @@ theorem places_restrict_injective (K : Type) [Field K] [NumberField K] (ι : Typ
   have hn : ∀ w ∈ d.PlOver la c, IsNormDiscrete (d.Wres c w) := fun w hw => (hadm w hw).1
   refine ⟨hfin, hinj, exists_orders _ hfin _ hinj hn, fun G => ?_,
     exists_integral_lift _ hfin _ hinj hn⟩
-  haveI : Nontrivial (𝒜 c G) := Module.nontrivial_of_finrank_pos (R := Ω c)
+  have : Nontrivial (𝒜 c G) := Module.nontrivial_of_finrank_pos (R := Ω c)
     (by rw [hd.finrank_one c G]; exact zero_lt_one)
   obtain ⟨e0, he0⟩ := exists_ne (0 : 𝒜 c G)
   have he0' : (e0 : A c) ≠ 0 := fun h0 => he0 (Subtype.ext h0)

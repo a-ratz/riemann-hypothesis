@@ -54,7 +54,7 @@ private theorem val_le_one_iff {l : ℕ} [Fact l.Prime] {E : Type} [Field E] [Nu
     u.valuation E x ≤ 1 ↔ ‖c x‖ ≤ 1 := by
   by_cases hx : x = 0
   · simp [hx]
-  have h0 : 0 < u.valuation E x := zero_lt_iff.2 ((map_ne_zero _).2 hx)
+  have h0 : 0 < u.valuation E x := pos_iff_ne_zero.2 ((map_ne_zero _).2 hx)
   have h1 : 0 < ‖c x‖ := norm_pos_iff.2 ((map_ne_zero c).2 hx)
   have h := hu x⁻¹
   rw [map_inv₀, map_inv₀, norm_inv, inv_lt_one₀ h0, inv_lt_one₀ h1] at h
@@ -85,7 +85,7 @@ theorem placeHom : PlaceHom := by
           ({y | ‖j y‖ ≤ 1} ∩ {y | Valued.v y ≤ 1}) ∪
             ({y | ‖j y‖ ≤ 1}ᶜ ∩ {y | Valued.v y ≤ 1}ᶜ) := by
         ext y
-        simp only [Set.mem_setOf_eq, Set.mem_union, Set.mem_inter_iff, Set.mem_compl_iff]
+        simp only [Set.mem_ofPred_eq, Set.mem_union, Set.mem_inter_iff, Set.mem_compl_iff]
         tauto
       rw [this]
       exact (hB.isClosed.inter hC.isClosed).union (hB.compl.isClosed.inter hC.compl.isClosed)

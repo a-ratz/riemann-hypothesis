@@ -56,9 +56,9 @@ open scoped TensorProduct Matrix
 theorem contDiff_conj_exp {ι : Type} [Fintype ι] {n : ℕ}
     (L : EuclideanSpace ℝ ι →ₗ[ℝ] Matrix (Fin n) (Fin n) ℂ) (A B : Matrix (Fin n) (Fin n) ℂ) (y : Fin n → ℂ) :
     ContDiff ℝ 1 (fun x => (A * NormedSpace.exp (L x) * B) *ᵥ y) := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   let Lc : EuclideanSpace ℝ ι →L[ℝ] Matrix (Fin n) (Fin n) ℂ := LinearMap.toContinuousLinearMap L
   let H : Matrix (Fin n) (Fin n) ℂ →ₗ[ℝ] (Fin n → ℂ) :=
     { toFun := fun M => (A * M * B) *ᵥ y
@@ -77,7 +77,7 @@ theorem theta_act {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) (hb : AdBri
     (v : InfinitePlace X.B.I.F) (b : Fin (D.R.rS + 1 + D.R.rS)) (i : Fin X.B.I.n) :
     PI.AprimeInfU.thetaInf X v ((X.toInf hb s • Y0 X u') b i) =
       ((X.B.I.P v * uMat (s v) * (X.B.I.P v)⁻¹) *ᵥ fun j => X.B.I.φ v (tupH (frameOf X u') b j)) i := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   have hPu : IsUnit (X.B.I.P v).det := (Matrix.isUnit_iff_isUnit_det _).1 (X.B.I.P_unit v)
   set Mm : Matrix (Fin X.B.I.n) (Fin X.B.I.n) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) :=
     ((HA.mat (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (X.toInf hb s) : GL (Fin X.B.I.n) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) :
@@ -95,7 +95,7 @@ theorem theta_act {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) (hb : AdBri
 
 theorem continuous_thetaInf {D : D7} (X : HidaSetting D) (v : InfinitePlace X.B.I.F) :
     Continuous (PI.AprimeInfU.thetaInf X v) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   let σ : Ainf X.B.I.F →+* ℂ := PI.AprimeInfU.evInf X v
   have hσ : Continuous σ :=
     (InfinitePlace.Completion.isometry_extensionEmbedding v).continuous.comp (continuous_apply v)
@@ -112,8 +112,8 @@ theorem continuous_thetaInf {D : D7} (X : HidaSetting D) (v : InfinitePlace X.B.
 theorem kapSm_holds : KapSm := by
   intro D X u' ψ hT μinf νinf fibInf hP hb c S ι _ L hc hL
   classical
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
   let Φ : TupI X →+ (InfinitePlace X.B.I.F → Fin (D.R.rS + 1 + D.R.rS) → Fin X.B.I.n → ℂ) :=
     { toFun := fun Y v b i => PI.AprimeInfU.thetaInf X v (Y b i)
       map_zero' := by funext v b i; exact map_zero _

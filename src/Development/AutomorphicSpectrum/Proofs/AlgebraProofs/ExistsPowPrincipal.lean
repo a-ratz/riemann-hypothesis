@@ -80,7 +80,7 @@ theorem exists_pow_eq_spanSingleton (K : Type) [Field K] [NumberField K]
     rw [← hJh]
     apply FractionalIdeal.coeToSubmodule_injective
     dsimp only
-    rw [FractionalIdeal.coe_spanSingleton, hx]
+    rw [FractionalIdeal.coeToSubmodule_spanSingleton, hx]
   refine ⟨_, x, hpos, ?_, key⟩
   rintro rfl
   rw [FractionalIdeal.spanSingleton_zero] at key

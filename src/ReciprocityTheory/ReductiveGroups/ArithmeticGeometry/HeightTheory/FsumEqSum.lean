@@ -96,8 +96,8 @@ theorem hh_good_adm (hd : d.AxH 𝒜) (h : d.S1) {c : ι} {p : Ideal (KTp K d.D 
 theorem good_finite (hd : d.AxH 𝒜) (h : d.S1) (c : ι) {p : Ideal (KTp K d.D d.N)}
     (hp : p ∈ d.HtOne) : (d.GoodP c p).Finite :=
   have hOverFinite : (d.OverP c p).Finite := by
-    letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-    haveI : FiniteDimensional (d.KT c) (OmS (Ω c) d.D d.N) :=
+    let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+    have : FiniteDimensional (d.KT c) (OmS (Ω c) d.D d.N) :=
       d.KT_finiteDimensional hd c
     let e : KTf K d.D d.N ≃+* d.KT c :=
       (d.KTtoS h c).rangeRestrictFieldEquiv.trans (RingEquiv.subfieldCongr (d.KTtoS_fieldRange h c))
@@ -106,7 +106,7 @@ theorem good_finite (hd : d.AxH 𝒜) (h : d.S1) (c : ι) {p : Ideal (KTp K d.D 
       refine RingHom.ext fun x => ?_
       change d.KTtoS h c (e.symm x) = (x : OmS (Ω c) d.D d.N)
       exact congrArg (fun u : d.KT c => (u : OmS (Ω c) d.D d.N)) (e.apply_symm_apply x)
-    haveI : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
+    have : FiniteDimensional (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
       Module.Finite.of_equiv_equiv e.symm (RingEquiv.refl _) he
     have hmap : ∀ x : KTp K d.D d.N,
         algebraMap (KTf K d.D d.N) (OmS (Ω c) d.D d.N)
@@ -117,9 +117,9 @@ theorem good_finite (hd : d.AxH 𝒜) (h : d.S1) (c : ι) {p : Ideal (KTp K d.D 
         HNm.OverR (R := KTp K d.D d.N) (F := KTf K d.D d.N)
           (L := OmS (Ω c) d.D d.N) p := by
       ext w
-      simp only [Data.OverP, HNm.OverR, Set.mem_setOf_eq, hmap]
+      simp only [Data.OverP, HNm.OverR, Set.mem_ofPred_eq, hmap]
     obtain ⟨hprime, hh⟩ := hp
-    haveI := hprime
+    have := hprime
     rw [hOver]
     exact (HNm.local_norm (R := KTp K d.D d.N) (F := KTf K d.D d.N)
       (L := OmS (Ω c) d.D d.N) p hh (d.gen p) (d.gen_span ⟨hprime, hh⟩) 1
@@ -132,7 +132,7 @@ theorem w_mem_WW (hd : d.AxH 𝒜) (j : Fin (d.N + 1)) : d.w j ∈ d.WW := by
 
 theorem Emin_nonneg (hd : d.AxH 𝒜) (c : ι) (v : AddValuation (Ω c) (WithTop ℤ)) (hv : d.admitted c v) :
     0 ≤ d.Emin c v := by
-  haveI : Nonempty {j // d.w j c ≠ 0} := ⟨⟨d.jc c, hd.w_base c⟩⟩
+  have : Nonempty {j // d.w j c ≠ 0} := ⟨⟨d.jc c, hd.w_base c⟩⟩
   unfold Emin
   exact le_ciInf fun j => hd.ord_nonneg_WW c v hv (d.w j.1) (w_mem_WW d hd j.1) j.2
 
@@ -180,7 +180,7 @@ theorem Ep_ne (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (f : A c) (hf : f ∈ 𝒜 c
     |>.subset ?_
   rintro p ⟨hp, hE⟩
   by_contra hno
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_and, not_not] at hno
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_and, not_not] at hno
   have := d.nP_split hd h c hp f
   rw [hno.1 hp, hno.2 hp] at this
   omega

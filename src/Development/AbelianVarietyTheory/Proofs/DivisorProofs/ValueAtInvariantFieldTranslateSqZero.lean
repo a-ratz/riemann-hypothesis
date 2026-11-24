@@ -65,7 +65,7 @@ namespace GlobalTheory.VertCoeffRing
 theorem spMap_fstHom_surjective (B : Type) [CommRing B] :
     Function.Surjective (spMap (TrivSqZeroExt.fstHom B B B).toRingHom) := by
   intro p
-  haveI := p.isPrime
+  have := p.isPrime
   refine ⟨(⟨p.asIdeal.comap (algebraMap B (DualNumber B)), Ideal.IsPrime.comap _⟩ : PrimeSpectrum B), ?_⟩
   refine PrimeSpectrum.ext (Ideal.ext fun x => ?_)
   change (algebraMap B (DualNumber B)) x.fst ∈ p.asIdeal ↔ x ∈ p.asIdeal

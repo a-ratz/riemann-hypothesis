@@ -179,7 +179,7 @@ theorem K2aux (D : D7) (T : CoreJ D) (h : LawsJ T) (i : Fin D.R.m) (s : T.Q.c.F 
   set c := lieFacZ (T.Q.Dw ((i : ℕ) + 1)) (xiR D) (GlobalTheory.IndefiniteRowSideFullHecke.OneMeasureSizes.expW D i) with hcdef
   have hc0 : 0 < c := lieFacZ_pos _ _
   unfold petE
-  rw [← Real.enorm_eq_ofReal hc0.le, ← eLpNorm'_const_smul c (by norm_num)]
+  rw [← Real.eNorm_eq_ofReal hc0.le, ← eLpNorm'_const_smul c (by norm_num)]
   refine eLpNorm'_congr_norm_ae (Filter.Eventually.of_forall fun q => ?_)
   simp only [Pi.smul_apply, smul_eq_mul, norm_norm, norm_mul, Complex.norm_real, Real.norm_eq_abs,
     abs_of_pos hc0, adel_muPin]
@@ -233,7 +233,7 @@ theorem quotMeasure_eq_smul (V : HSp D) (hs : V.SigOK) {ν : Measure (GA D V)} {
   have e2 : ν 𝓕 = c * muQ V Set.univ := by
     rw [← GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ h𝓕]
     exact congrArg (fun m : Measure (AutQ V) => m Set.univ) e1
-  rw [e1, e2, muQ1, if_pos (show _ ∧ _ from hV), smul_smul, mul_assoc, ENNReal.mul_inv_cancel hV.1 hV.2, mul_one]
+  rw [e1, e2, muQ1, ite_eq_left (show _ ∧ _ from hV), smul_smul, mul_assoc, ENNReal.mul_inv_cancel hV.1 hV.2, mul_one]
 
 theorem integral_star_mul (V : HSp D) (hs : V.SigOK) {ν : Measure (GA D V)} {𝓕 : Set (GA D V)} (hν : ν.IsHaarMeasure)
     (h𝓕 : IsFundamentalDomain (GQ V) 𝓕 ν) (φ : GA D V → ℂ) (hφ : ∀ γ ∈ GQ V, ∀ g, φ (γ * g) = φ g)
@@ -299,7 +299,7 @@ theorem exact_covolume_ratio : ∀ (hP : _root_.GlobalTheory.CovTop.PublishedHod
   have hK2 := K2 D T hT i _ hs hV f
   have hK3 := K3 D T hT i _ hs f hf
   have hψm : AEStronglyMeasurable ψ (muQ1 (Wc D i)) := by
-    haveI : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
+    have : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
     have hm : Measurable fun q : AutQ (Wc D i) => F v q.out := by
       rw [measurable_from_quotient]
       have e : ((fun q : AutQ (Wc D i) => F v q.out) ∘ Quotient.mk'') = F v := funext fun g => by
@@ -344,7 +344,7 @@ theorem exact_covolume_ratio : ∀ (hP : _root_.GlobalTheory.CovTop.PublishedHod
       rw [eLpNorm_eq_eLpNorm' (by norm_num) (by simp) hadm]
     have ht : (2 : ENNReal).toReal = 2 := by norm_num
     rw [ht, hK2]
-    rw [← mul_assoc, Real.enorm_eq_ofReal (inv_nonneg.2 hc0.le),
+    rw [← mul_assoc, Real.eNorm_eq_ofReal (inv_nonneg.2 hc0.le),
       ← ENNReal.ofReal_mul (inv_nonneg.2 hc0.le), inv_mul_cancel₀ hc0.ne', ENNReal.ofReal_one, one_mul]
   have hψ : MemLp ψ 2 (muQ1 (Wc D i)) := by rw [memLp_iff, hE]; exact lt_top_iff_ne_top.2 hK3
   have hI := GlobalTheory.ReadingNorm.integral_star_mul (Wc D i) (D.sp.W_sig _) hμ hF.2 (F v) haut.left ψ hψ c
@@ -942,7 +942,7 @@ theorem exactAt_of_rows_alt {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : 
     exact this
   have hc : Corr p.T i s hV ((p.R.toRealDat.HW i s).e x) f' := by
     by_cases hgs : GoodEmb p.T.Q.c (res p.T s)
-    · have hgd' : gd p.T s = res p.T s := by show goodOf _ _ = _; rw [goodOf, if_pos hgs]
+    · have hgd' : gd p.T s = res p.T s := by show goodOf _ _ = _; rw [goodOf, ite_eq_left hgs]
       have hV' : p.T.V ((i : ℕ) + 1) (res p.T s) = Wc D i := p.fw.laws.spaceW _ (inR i) _ hgs
       have hpre : ∃ j' : (Fin (p.R.toRealDat.nW i) → D.what₂.LL) →ₛₗ[s] (p.R.toRealDat.HW i s).H,
           ∀ g : p.T.cuspA ((i : ℕ) + 1) (wtA (p.κ i)) (p.κ i).n,
@@ -961,7 +961,7 @@ theorem exactAt_of_rows_alt {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : 
       generalize (f : p.T.R ((i : ℕ) + 1)) = F0
       rw [ha]
       exact phiC_congr hgd'.symm _ _ _ _
-    · have hgd' : gd p.T s = resC p.T s := by show goodOf _ _ = _; rw [goodOf, if_neg hgs]
+    · have hgd' : gd p.T s = resC p.T s := by show goodOf _ _ = _; rw [goodOf, ite_eq_right hgs]
       have hVc : p.T.V ((i : ℕ) + 1) (resC p.T s) = Wc D i := p.fw.laws.spaceW _ (inR i) _ (good_resC p.T hgs)
       obtain ⟨v, hv, hvf⟩ := (p.bar i s hgs hVc).1 (hp.jEvBar i s hgs hVc)
       refine Or.inr ⟨hgs, v, hv, ?_⟩
@@ -1038,7 +1038,7 @@ theorem kapQ_inl (D : D7) (i : Fin D.R.m) (t : D.what₂.Tau) {p q : ℕ} (hp : 
   have e0 : Formalism.L2.NTheta.lamAt (D.hc t) a = DV.sigPar D t a := rfl
   unfold Formalism.L2.NTheta.kapQ GlobalTheory.CovTop.WtShape.ent
   simp only [Sum.elim_inl]
-  rw [if_pos (by omega), e0]
+  rw [ite_eq_left (by omega), e0]
   subst hp hq
   have hr : D.R.r = D.R.k + D.R.m - 1 := rfl
   rw [hr, Nat.cast_sub (by omega : 1 ≤ D.R.k + D.R.m), Nat.cast_sub (by omega : (i : ℕ) + 1 ≤ D.R.m)]
@@ -1055,7 +1055,7 @@ theorem kapQ_inr (D : D7) (i : Fin D.R.m) (t : D.what₂.Tau) {p q : ℕ} (hp : 
   have e0 : Formalism.L2.NTheta.lamAt (D.hc t) (p + c) = DV.sigPar D t (p + c) := rfl
   unfold Formalism.L2.NTheta.kapQ GlobalTheory.CovTop.WtShape.ent
   simp only [Sum.elim_inr]
-  rw [if_neg (by omega), e0]
+  rw [ite_eq_right (by omega), e0]
   subst hp hq
   have hr : D.R.r = D.R.k + D.R.m - 1 := rfl
   rw [hr, Nat.cast_sub (by omega : 1 ≤ D.R.k + D.R.m), Nat.cast_sub (by omega : (i : ℕ) + 1 ≤ D.R.m)]

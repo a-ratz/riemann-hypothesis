@@ -125,7 +125,7 @@ theorem stepExp (D : D7) : StepExp D := by
     | cast i =>
       intro c hc
       rw [frame_castSucc]
-      exact coefX_eq_zero G.fl (hE i) c (by rwa [Fin.coe_castSucc] at hc)
+      exact coefX_eq_zero G.fl (hE i) c (by rwa [Fin.val_castSucc] at hc)
   have hX : ∀ b : Fin (D.R.rS + 1), n (frame G b) - frame G b ∈ G.fl.X := by
     intro b
     induction b using Fin.lastCases with
@@ -141,10 +141,10 @@ theorem stepExp (D : D7) : StepExp D := by
       · rfl
     simp only [fmat, h0, add_zero]
   refine ⟨fun i j => ⟨fun hji => ?_, fun hij => ?_⟩, fun b => ?_⟩
-  · have hv := Fin.lt_iff_val_lt_val.1 hji
-    rw [hfm i j (by omega), if_neg (ne_of_gt hji)]
+  · have hv := Fin.lt_def.1 hji
+    rw [hfm i j (by omega), ite_eq_right (ne_of_gt hji)]
   · subst hij
-    rw [hfm i i le_rfl, if_pos rfl]
+    rw [hfm i i le_rfl, ite_eq_left rfl]
   · have hsum := coefX_sum G.fl (hX b)
     have h1 : ∀ i : Fin D.R.rS, fmat D G n i.castSucc b • frame G i.castSucc =
         (if i.castSucc = b then (1 : D.host.E) else 0) • frame G i.castSucc +

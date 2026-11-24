@@ -288,7 +288,7 @@ theorem lemOdd : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative �
   set V := (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).valuationSubring
   have hcard : Nat.card (IsLocalRing.ResidueField V) = q ^ 2 := hU.2.2.2.2.2.2
   have hq0 : q ≠ 0 := by have := hU.2.2.2.2.2.1; omega
-  haveI : Finite (IsLocalRing.ResidueField V) :=
+  have : Finite (IsLocalRing.ResidueField V) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; exact pow_ne_zero 2 hq0)
   have h20 : (2 : L) ≠ 0 := fun h => by rw [h, map_zero] at h2; exact zero_ne_one h2
   have hu : IsUnit (2 : V) := by
@@ -309,7 +309,7 @@ theorem lemOdd : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative �
   have heven : Even q := Nat.not_odd_iff_even.1 hodd
   have hdvd : 2 ∣ Nat.card (IsLocalRing.ResidueField V) := by
     rw [hcard]; exact dvd_pow (even_iff_two_dvd.1 heven) two_ne_zero
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' 2 hdvd
   have hx0 : x ≠ 0 := by intro h; rw [h, addOrderOf_zero] at hx; norm_num at hx
   have hmul : (2 : IsLocalRing.ResidueField V) * x = 0 := by
@@ -333,7 +333,7 @@ theorem ae_unit {E : Type} [Field E] [NumberField E] {x : E} (hx : x ≠ 0) :
   rw [map_inv₀, map_inv₀] at h2
   have h0 : Valued.v (algebraMap E (w.adicCompletion E) x) ≠ 0 := by
     rw [Valuation.ne_zero_iff]; exact (_root_.map_ne_zero _).2 hx
-  exact le_antisymm h1 ((inv_le_one₀ (zero_lt_iff.2 h0)).1 h2)
+  exact le_antisymm h1 ((inv_le_one₀ (pos_iff_ne_zero.2 h0)).1 h2)
 
 theorem mem_GLint {L : Type} [Field L] {O : Subring L} {n : ℕ} (g : GL (Fin n) L)
     (h1 : ∀ i j, (g : Matrix (Fin n) (Fin n) L) i j ∈ O)
@@ -373,7 +373,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
   have hCwi : ∀ w, (((Cw w)⁻¹ : GLw n w) : Matrix (Fin n) (Fin n) _) = Ci.map (f w) := fun w => rfl
   have hchar : ∀ w, (C.map (f w)).charpoly = atPl w P := fun w => by
     rw [Matrix.charpoly_map, hC]
-  refine ⟨?_, fun w hs => ⟨⟨Cw w, by rw [UL, if_pos hs]; exact Subgroup.mem_top _⟩, hchar w⟩⟩
+  refine ⟨?_, fun w hs => ⟨⟨Cw w, by rw [UL, ite_eq_left hs]; exact Subgroup.mem_top _⟩, hchar w⟩⟩
   have hall : ∀ M : Matrix (Fin n) (Fin n) E, ∀ᶠ w in (cofinite : Filter (Pl E)), ∀ i j, Valued.v (f w (M i j)) ≤ 1 :=
     fun M => Filter.eventually_all.2 fun i => Filter.eventually_all.2 fun j => ae_int (M i j)
   filter_upwards [hall C, hall Ci, hall H, ae_unit hHd, ae_unit (two_ne_zero : (2 : E) ≠ 0)] with w h1 h2 h3 h4 h5
@@ -382,7 +382,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
   have hK : Cw w ∈ GlobalTheory.LFun.KGL w (n := n) :=
     mem_GLint _ (fun i j => hO _ (h1 i j)) (fun i j => hO _ (h2 i j))
   by_cases hs : IsSplitAt w
-  · exact ⟨⟨Cw w, by rw [UL, if_pos hs]; exact Subgroup.mem_top _⟩, Subgroup.mem_subgroupOf.2 hK, hchar w⟩
+  · exact ⟨⟨Cw w, by rw [UL, ite_eq_left hs]; exact Subgroup.mem_top _⟩, Subgroup.mem_subgroupOf.2 hK, hchar w⟩
   · obtain ⟨-, -, -, hns, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
     obtain ⟨hext, ⟨ϖ, q, hUI, -⟩, -, -⟩ := hns hs
     have h2v : Valued.v (2 : w.adicCompletion E) = 1 := by
@@ -406,7 +406,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
         rw [Ov_eq]
       rw [e]; exact hR
     refine ⟨⟨R⁻¹ * Cw w * R, ?_⟩, Subgroup.mem_subgroupOf.2 (mul_mem (mul_mem (inv_mem hRK) hK) hRK), ?_⟩
-    · rw [UL, if_neg hs]
+    · rw [UL, ite_eq_right hs]
       show cT (cj w) ((R⁻¹ * Cw w * R : GLw n w) : Matrix (Fin n) (Fin n) _) * 1 *
         ((R⁻¹ * Cw w * R : GLw n w) : Matrix (Fin n) (Fin n) _) = 1
       rw [Units.val_mul, Units.val_mul, hCwv]

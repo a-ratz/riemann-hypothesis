@@ -72,7 +72,7 @@ theorem eps_mem (c : Coef l) (s : G ℚ Ω) : eps l s ∈ c.O := by
 
 theorem eps_cont : Continuous fun s : G ℚ Ω => eps l s :=
   (continuous_algebraMap ℚ_[l] (Qbar l)).comp
-    (continuous_subtype_val.comp ((Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ ℚ Ω l)))
+    (continuous_subtypeVal.comp ((Units.continuous_val (M := ℤ_[l])).comp (continuous_cycZ ℚ Ω l)))
 
 theorem det_sq (W : R2 Ω l) (h : dt W ^ 2 = 1) (s : G ℚ Ω) : (mat W s).det ^ 2 = 1 := by
   have := congrArg (fun f => ((f s : (Qbar l)ˣ) : Qbar l)) h

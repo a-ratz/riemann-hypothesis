@@ -109,7 +109,7 @@ theorem biVac_sum_fock : ∀ (D : D7), CenFock D → ∀ (ψ : AddChar (AF D.hos
   intro D hF ψ θ hθ A S A' x y z hx hy hz k k' hk hk' χ χ' C hC hχ hχ'
   obtain ⟨W, hW, hWf⟩ := hF ψ θ hθ A S x y hx hy k hk χ
   obtain ⟨W', _, hWf'⟩ := hF ψ θ hθ S A' y z hy hz k' hk' χ'
-  haveI := hW
+  have := hW
   let T := pureTensorO ψ θ A S x.s y.s x.B y.B k.vac
   let T' := pureTensorO ψ θ S A' y.s z.s y.B z.B k'.vac
   have hl : ∀ v, (fun u => C u v) ∈ W.map T := by

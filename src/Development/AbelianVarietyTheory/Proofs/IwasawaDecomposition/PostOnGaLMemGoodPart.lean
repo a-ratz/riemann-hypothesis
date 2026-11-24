@@ -180,7 +180,7 @@ theorem postOn_gaL_mem (hθ : IsInfFam θ) (eG : G ≃* G0 L.Pg L.r) (c : G → 
 
 theorem gaL_gaL (hL : LiftsExist V β L) (eG : G ≃* G0 L.Pg L.r) (c : G → ℂ) (hc : ∀ g, ∑ a, c a * c (a⁻¹ * g) = c g)
     {F : GA D V → ℂ} (hF : HasType V β (flag1L L) F) : gaL V β L eG c (gaL V β L eG c F) = gaL V β L eG c F := by
-  letI : Fintype (G0 L.Pg L.r) := Fintype.ofEquiv G eG.toEquiv
+  let : Fintype (G0 L.Pg L.r) := Fintype.ofEquiv G eG.toEquiv
   have e : ∀ F, gaL V β L eG c F = ∑ g, c (eG.symm g) • actG0 V β L g F := fun F => by
     unfold gaL
     rw [LinearMap.sum_apply]
@@ -222,7 +222,7 @@ theorem eC_conv (hr : R.grp_record) (g : G) :
     ∑ a, RealDat.eC (A := A) D.what₂.embLL a * RealDat.eC (A := A) D.what₂.embLL (a⁻¹ * g) =
       RealDat.eC (A := A) D.what₂.embLL g := by
   obtain ⟨eR, _, _, h, _⟩ := hr
-  letI : Fintype (G0g D.nd) := Fintype.ofEquiv G eR.toEquiv
+  let : Fintype (G0g D.nd) := Fintype.ofEquiv G eR.toEquiv
   unfold RealDat.eC
   simp only [h]
   rw [← conv_of_idem _ (GlobalTheory.GoodLatCompare.goodSeriesIdempotent_central_idempotent D).2 (eR g)]

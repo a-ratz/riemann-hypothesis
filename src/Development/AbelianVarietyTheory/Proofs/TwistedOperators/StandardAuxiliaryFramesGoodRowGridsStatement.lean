@@ -181,7 +181,7 @@ theorem mem_lev_of_inK {T : Type} {L : LevCh D T} {sc : Consts} (G : GridData L 
     rw [GlobalTheory.LevRedTriv.coe_sub_one_apply]
     exact congrFun (congrFun hM a) b
   rw [e0, map_zero]
-  exact zero_le'
+  exact zero_le
 
 theorem idAt_le_idOff_compl (P : GlobalTheory.FinPl.Pl D → Prop) : idAt D (fun v => ¬ P v) ≤ idOff D P := by
   intro a ha
@@ -211,7 +211,7 @@ theorem GlobalTheory.PlaceLevelCosets.levCoset_of_places : All fun {D} _ _ _ {G}
       simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, Set.mem_preimage]
       exact ⟨fun h => h.2, fun h => ⟨x.2, h⟩⟩
     rw [e]
-    exact hoc.1.preimage continuous_subtype_val
+    exact hoc.1.preimage continuous_subtypeVal
   · intro R h hA hB
     have hsd : IsSelfDualC (G.V (.grid i 0)) (G.Λ (.grid i 0)) := hV.sd
     have hoff : ∀ v, (fun v => v ∉ G.pl.S0) v → ∃ hv ∈ grpAt (G.V (.grid i 0)) (· = v), ∃ h' ∈ grpOff (G.V (.grid i 0)) (· = v),
@@ -963,7 +963,7 @@ theorem psi_of_shift (hG : GoodAt dV dW x ψ LV LV₀ LW LW₀ v) (hS : StdAt dV
       simp only [HypDec.extX_apply, Matrix.mul_assoc, Matrix.mul_one])
   have e2 : upSum (u.1 ⬝ (Matrix.single i j s : Mx D ρ ρ)) = s := by
     unfold upSum
-    rw [Finset.sum_eq_single i, Finset.sum_eq_single j, if_pos hij, Matrix.mul_single_apply_same, (hU i i).2, one_mul]
+    rw [Finset.sum_eq_single i, Finset.sum_eq_single j, ite_eq_left hij, Matrix.mul_single_apply_same, (hU i i).2, one_mul]
     · intro l _ hl; rw [Matrix.mul_single_apply_of_ne _ _ _ _ _ hl, ite_self]
     · intro h; exact absurd (Finset.mem_univ _) h
     · intro k _ hk

@@ -99,8 +99,8 @@ theorem omegaDensity_haarProb (μ : Measure (Formalism.BasicNotions.UpqT N 0)) [
 
 theorem omegaDensity_cd (cd : Formalism.BasicNotions.CDHaar) (N : ℕ) :
     Formalism.BasicNotions.OmegaDensity (cd.cd N 0) (ENNReal.ofReal (cOmega N)) := by
-  haveI := cd.haar N 0
-  haveI := cd.prob N
+  have := cd.haar N 0
+  have := cd.prob N
   exact omegaDensity_haarProb (cd.cd N 0)
 
 end ReciprocityTheory.ChartRestriction.DS
@@ -358,12 +358,12 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 
 theorem haar_exp_density {ε : Fin n → Bool} (μ : Measure (UJ ε)) [μ.IsHaarMeasure] :
     ∃ d : ℝ, 0 < d ∧ DensOn (fun S => μ (expSet S)) d := by
-  letI mV : MeasurableSpace (gV ε) := borel _
-  haveI : BorelSpace (gV ε) := ⟨rfl⟩
+  let mV : MeasurableSpace (gV ε) := borel _
+  have : BorelSpace (gV ε) := ⟨rfl⟩
   let eC : GCo ε ≃L[ℝ] gV ε := (gE ε).toContinuousLinearEquiv
   let lam : Measure (gV ε) := Measure.map eC volume
-  haveI : (volume : Measure (KCo ε)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
-  haveI : (volume : Measure (GCo ε)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : (volume : Measure (KCo ε)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
+  have : (volume : Measure (GCo ε)).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure _ _
   have hlamH : lam.IsAddHaarMeasure := eC.isAddHaarMeasure_map volume
   obtain ⟨c, hc0, hct, hup, hdown⟩ := (ujChart ε).exists_density_unif' inferInstance mV ⟨rfl⟩ _
     inferInstance inferInstance μ inferInstance lam (by exact hlamH)
@@ -1046,7 +1046,7 @@ theorem tie_cancel {p q : ℝ} {v : ENNReal} (hv0 : v ≠ 0) (hvt : v ≠ ⊤) (
 
 theorem tie_d_eq (ε : Fin n → Bool) (d : ℝ) (hd0 : 0 < d)
     (hd : DensOn (fun S => muPolar ε (expSet S)) d) : d = 1 / (volU (pOf ε) * volU (qOf ε)) := by
-  haveI := muPolar_isHaar ε
+  have := muPolar_isHaar ε
   obtain ⟨hK, hP, hG⟩ := gco_haar ε
   have hpol := haar_pol_density (muPolar ε) d hd
   set x := volU (pOf ε) * volU (qOf ε) with hx
@@ -1141,15 +1141,15 @@ theorem tie_gToLie_cont (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
 
 theorem tie_ball_open (P Q : ℕ) (r : ℝ) : IsOpen (Formalism.BasicNotions.ballU P Q r) :=
   isOpen_lt (continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ =>
-    continuous_norm.comp (continuous_subtype_val.matrix_elem i j)) continuous_const
+    continuous_norm.comp (continuous_subtypeVal.matrix_elem i j)) continuous_const
 
 end
 
 theorem omegaDensity_muCDtr {P Q : ℕ} (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
     (he1 : ∀ i, ε (e (Sum.inl i)) = true) (he2 : ∀ j, ε (e (Sum.inr j)) = false) :
     Formalism.BasicNotions.OmegaDensity (muCDtr e ε) (ENNReal.ofReal (cOmega n)) := by
-  haveI := muPolar_isHaar ε
-  haveI := lieU_borel P Q
+  have := muPolar_isHaar ε
+  have := lieU_borel P Q
   obtain ⟨hK, hP, hG⟩ := gco_haar ε
   obtain ⟨d, hd0, hd⟩ := haar_exp_density (muPolar ε)
   have hdD := tie_d_eq ε d hd0 hd
@@ -1166,13 +1166,13 @@ theorem omegaDensity_muCDtr {P Q : ℕ} (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fi
     have hE := measurableEmbedding_upqMat e he1 he2
     show Measure.comap (β := Fin n → Fin n → ℂ) (fun g => upqMat e g) (ENNReal.ofReal (cPQ ε) • muPolarMat ε) _ =
       _ * Measure.comap (β := Fin n → Fin n → ℂ) (fun g : UJ ε => toM g) (muPolarMat ε) _
-    rw [hE.comap_apply, (measurableEmbedding_toM ε).comap_apply, Measure.smul_apply, smul_eq_mul]
+    rw [hE.comap_apply, (measurableEmbedding_toM ε).comap_apply, smul_apply, smul_eq_mul]
     congr 2
     exact image_expBall e he1 he2 r
   have hden : ∀ r, (ENNReal.ofReal κ • Measure.map (gToLie e he1 he2) volume) (Formalism.BasicNotions.ballU P Q r) =
       ENNReal.ofReal κ * volume {s : GCo ε | gToLie e he1 he2 s ∈ Formalism.BasicNotions.ballU P Q r} := by
     intro r
-    rw [Measure.smul_apply, smul_eq_mul,
+    rw [smul_apply, smul_eq_mul,
       Measure.map_apply (tie_gToLie_cont e he1 he2).measurable (tie_ball_open P Q r).measurableSet]
     rfl
   have hvn := tie_volU_pos n
@@ -1315,7 +1315,7 @@ lemma psi_cont {P Q : ℕ} (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
   have hre : Continuous (fun M : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ => Matrix.reindex e e M) := by
     exact continuous_id.matrix_reindex e e
   have hc : Continuous (fun g : ↥(Formalism.UG.Upq P Q) => (g : GL (Fin P ⊕ Fin Q) ℂ)) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   apply continuous_induced_rng.2
   rw [Units.continuous_iff]
   constructor
@@ -1328,7 +1328,7 @@ lemma psi_symm_cont {P Q : ℕ} (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → 
   have hre : Continuous (fun M : Matrix (Fin n) (Fin n) ℂ => M.submatrix e e) := by
     exact continuous_id.matrix_submatrix e e
   have hc : Continuous (fun g : ↥(UJ ε) => (g : (Matrix (Fin n) (Fin n) ℂ)ˣ)) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   apply continuous_induced_rng.2
   rw [Units.continuous_iff]
   constructor
@@ -1370,7 +1370,7 @@ private theorem isClosedEmbedding_coe_of_mem_iff_conjTranspose_Jm_mul_eq (ε : F
     intro g
     exact Units.inv_eq_of_mul_eq_one_left (hleft _ ((hH _).1 g.2))
   have hcont : Continuous (fun g : H => ((g : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hct : Continuous (fun M : Matrix (Fin n) (Fin n) ℂ => J * Mᴴ * J) := by
     exact (continuous_const.matrix_mul continuous_id.matrix_conjTranspose).matrix_mul continuous_const
   have hψ : Continuous (fun M : Matrix (Fin n) (Fin n) ℂ => (M, MulOpposite.op (J * Mᴴ * J))) := by
@@ -1438,7 +1438,7 @@ lemma key (cd : Formalism.BasicNotions.CDHaar) {P Q : ℕ} (e : Fin P ⊕ Fin Q 
   have h3 : muCDtr e ε E = ENNReal.ofReal (cPQ ε) *
       muPolarMat ε ((fun g : Formalism.BasicNotions.UpqT P Q => Matrix.reindex e e (Formalism.BasicNotions.UpqT.mat g)) '' E) := by
     unfold muCDtr
-    rw [hemb.comap_apply, Measure.smul_apply, smul_eq_mul]
+    rw [hemb.comap_apply, smul_apply, smul_eq_mul]
   rw [h1, hmap, hs, Measure.coe_nnreal_smul_apply, h2, h3]
   ring
 
@@ -1446,11 +1446,11 @@ lemma isOmegaLeb_unique {P Q : ℕ} (lam lam' : Measure (Formalism.BasicNotions.
     (h' : Formalism.BasicNotions.IsOmegaLeb lam') : lam = lam' := by
   obtain ⟨hH, hv⟩ := h
   obtain ⟨hH', hv'⟩ := h'
-  haveI := hH
-  haveI := hH'
-  haveI : LocallyCompactSpace (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) :=
+  have := hH
+  have := hH'
+  have : LocallyCompactSpace (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) :=
     inferInstanceAs (LocallyCompactSpace ((Fin P ⊕ Fin Q) → (Fin P ⊕ Fin Q) → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) :=
     inferInstanceAs (SecondCountableTopology ((Fin P ⊕ Fin Q) → (Fin P ⊕ Fin Q) → ℂ))
   have hcl : IsClosed (Formalism.BasicNotions.lieU P Q : Set (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)) := by
     have hset : (Formalism.BasicNotions.lieU P Q : Set (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)) =
@@ -1458,15 +1458,15 @@ lemma isOmegaLeb_unique {P Q : ℕ} (lam lam' : Measure (Formalism.BasicNotions.
     rw [hset]
     exact isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).add
       (continuous_const.matrix_mul continuous_id)) continuous_const
-  haveI : LocallyCompactSpace ↥(Formalism.BasicNotions.lieU P Q) := hcl.locallyCompactSpace
-  haveI : SecondCountableTopology ↥(Formalism.BasicNotions.lieU P Q) :=
+  have : LocallyCompactSpace ↥(Formalism.BasicNotions.lieU P Q) := hcl.locallyCompactSpace
+  have : SecondCountableTopology ↥(Formalism.BasicNotions.lieU P Q) :=
     inferInstanceAs (SecondCountableTopology ↥(Formalism.BasicNotions.lieU P Q : Set (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)))
   obtain ⟨c, hsm⟩ : ∃ c : ENNReal, lam = c • lam' := by
     exact ⟨_, MeasureTheory.Measure.isAddLeftInvariant_eq_smul_of_innerRegular lam lam'⟩
   have hvol : (c * c) • (volume : Measure ((Fin P ⊕ Fin Q) × (Fin P ⊕ Fin Q) → ℂ)) = volume := by
-    haveI := lieU_borel P Q
+    have := lieU_borel P Q
     have hcoe : Continuous (fun X : Formalism.BasicNotions.lieU P Q =>
-        (X : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)) := continuous_subtype_val
+        (X : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ)) := continuous_subtypeVal
     have hm : Measurable (fun ab : Formalism.BasicNotions.lieU P Q × Formalism.BasicNotions.lieU P Q =>
         Formalism.BasicNotions.entries ((ab.1 : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) +
           Complex.I • (ab.2 : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ))) := by
@@ -1484,7 +1484,7 @@ lemma isOmegaLeb_unique {P Q : ℕ} (lam lam' : Measure (Formalism.BasicNotions.
   have hcc : c * c = 1 := by
     have h1 := congrArg (fun μ : Measure ((Fin P ⊕ Fin Q) × (Fin P ⊕ Fin Q) → ℂ) =>
       μ (Metric.ball 0 1)) hvol
-    simp only [Measure.smul_apply, smul_eq_mul] at h1
+    simp only [smul_apply, smul_eq_mul] at h1
     generalize hvdef : (volume : Measure ((Fin P ⊕ Fin Q) × (Fin P ⊕ Fin Q) → ℂ))
       (Metric.ball 0 1) = v at h1 hpos hfin
     calc c * c = c * c * (v * v⁻¹) := by rw [ENNReal.mul_inv_cancel hpos.ne' hfin, mul_one]
@@ -1568,10 +1568,10 @@ theorem muCD_eq_cd_vol (cd : Formalism.BasicNotions.CDHaar) {P Q : ℕ} (e : Fin
       exact ⟨(psi e he1 he2).symm ⟨x.1, hx2⟩, ⟨x, hx, hy.symm⟩, hy⟩
   have hL : muCD ε A = ENNReal.ofReal (cPQ ε) *
       muPolarMat ε ((fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g) '' A) :=
-    (Measure.smul_apply _ _ _).trans (congrArg _ ((umat_emb ε).comap_apply _ _))
+    (smul_apply _ _ _).trans (congrArg _ ((umat_emb ε).comap_apply _ _))
   have hR : muCDtr e ε E = ENNReal.ofReal (cPQ ε) *
       muPolarMat ε ((fun g : Formalism.BasicNotions.UpqT P Q => Matrix.reindex e e (Formalism.BasicNotions.UpqT.mat g)) '' E) :=
-    (hemb.comap_apply _ _).trans (Measure.smul_apply _ _ _)
+    (hemb.comap_apply _ _).trans (smul_apply _ _ _)
   rw [hL, hR]
   exact congrArg (fun S => ENNReal.ofReal (cPQ ε) * muPolarMat ε S) himg.symm
 

@@ -76,7 +76,7 @@ theorem integral_comp_linearEquiv_eq_smul {V : Type*} [NormedAddCommGroup V] [No
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
     [MeasurableSpace E] [BorelSpace E] (e : V ≃L[ℝ] E) :
     ∃ c : NNReal, ∀ F : E → ℂ, ∫ v, F (e v) ∂μ = c • ∫ w, F w := by
-  haveI : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
+  have : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ
   obtain ⟨c, hc⟩ : ∃ c : NNReal, μ.map e = c • (volume : Measure E) :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
   refine ⟨c, fun F => ?_⟩
@@ -148,7 +148,7 @@ theorem GlobalTheory.CompanionTheory.FourierMatrix.exists_schwartz_bilinear_tran
     funext v
     simp only [F, hA, e.symm_apply_apply]
   have hL : (((c : ℝ) : ℂ) • h) u = ((c : ℝ) : ℂ) * ∫ w, F w := by
-    rw [SchwartzMap.smul_apply, hh, hF, smul_eq_mul]
+    rw [smul_apply, hh, hF, smul_eq_mul]
     congr 1
     congr 1; ext x
     rw [hg, inner_neg_right, real_inner_comm]
@@ -251,15 +251,15 @@ theorem exists_schwartz_trace_transform :
         Complex.exp (2 * Real.pi * Complex.I *
           ((s * Matrix.trace ((Matrix.of u)ᴴ * Matrix.of v)).re : ℂ)) * φ v := by
   intro m n C s hs φ
-  haveI : Measure.IsAddHaarMeasure (volume : Measure (Fin n → ℂ)) :=
+  have : Measure.IsAddHaarMeasure (volume : Measure (Fin n → ℂ)) :=
     Measure.pi.isAddHaarMeasure _
-  haveI : Measure.IsAddHaarMeasure (volume : Measure (Fin m → Fin n → ℂ)) :=
+  have : Measure.IsAddHaarMeasure (volume : Measure (Fin m → Fin n → ℂ)) :=
     Measure.pi.isAddHaarMeasure _
   obtain ⟨ψ, hψ⟩ := exists_schwartz_bilinear_transform (volume : Measure (Fin m → Fin n → ℂ))
     (traceForm m n s) (traceForm_nondegenerate m n s hs) φ
   refine ⟨C • ψ, ?_⟩
   funext u
-  simp only [SchwartzMap.smul_apply, hψ, smul_eq_mul, traceForm_apply]
+  simp only [smul_apply, hψ, smul_eq_mul, traceForm_apply]
 
 end GlobalTheory.CompanionTheory.FourierMatrix
 end -- clump:auto

@@ -81,7 +81,7 @@ theorem sum_clause_iff (Γ K : Subgroup G) (m : ℝ) :
     simp only [card_cosetGrp]
   · intro h ι _ y hy
     let e : ι ≃ ClassSet Γ K := Equiv.ofBijective _ hy
-    letI : Fintype (ClassSet Γ K) := Fintype.ofEquiv ι e
+    let : Fintype (ClassSet Γ K) := Fintype.ofEquiv ι e
     have hs : ∀ c : ClassSet Γ K, DoubleCoset.mk Γ K (y (e.symm c)) = c := fun c => e.apply_symm_apply c
     rw [← h (fun c => y (e.symm c)) hs, ← e.symm.sum_comp]
     simp only [card_cosetGrp]
@@ -132,14 +132,14 @@ theorem general_iff : CosetGroupMembership.GeneralForm ↔ ClassesDoubleCosets.G
 
 theorem column_iff (D : D7) (Lv : LevelData D) (u : D.what₂.Word) :
     CosetGroupMembership.ColumnForm D ↔ ClassesDoubleCosets.DefiniteSpaceClassStatement D Lv u := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   unfold CosetGroupMembership.ColumnForm ClassesDoubleCosets.DefiniteSpaceClassStatement
   refine forall_congr' fun N => forall_congr' fun _ => forall_congr' fun _ => ?_
   rw [cosetSum_iff, stabHat0_eq]
   rfl
 
 theorem column_of_general (h : CosetGroupMembership.GeneralForm) (D : D7) : CosetGroupMembership.ColumnForm D := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   intro N hN hU
   exact (general_clause_iff D.sp N _).1
     (h D.host.F D.host.E D.sp.cm (D.sp.X 0) (D.sp.X_sig 0) (baseSpace_posDef D.R D.host.F D.sp) N hN hU)

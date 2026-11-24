@@ -65,9 +65,9 @@ theorem UpperTheory.ConvolutionTheory.R2.M.wtEx :
   have hle : N ≤ Gam F := by
     rintro _ ⟨ξ, rfl⟩
     exact M.nU_rt_mem ξ
-  haveI : DiscreteTopology N :=
+  have : DiscreteTopology N :=
     DiscreteTopology.of_continuous_injective (f := Subgroup.inclusion hle)
-      (continuous_subtype_val.subtype_mk _) (Subgroup.inclusion_injective hle)
+      (continuous_subtypeVal.subtype_mk _) (Subgroup.inclusion_injective hle)
   obtain ⟨D, hD, hu, -⟩ := GlobalTheory.exists_isFundamentalDomain_subgroup N
   refine ⟨D.indicator 1, measurable_one.indicator hD, fun g => ?_⟩
   obtain ⟨n, hn, huniq⟩ := hu g

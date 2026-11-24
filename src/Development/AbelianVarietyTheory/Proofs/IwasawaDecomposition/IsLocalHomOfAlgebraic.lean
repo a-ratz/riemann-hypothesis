@@ -126,7 +126,7 @@ theorem exists_matrix {R : Type} [CommRing R] [IsLocalRing R] {φ : c.F →+* R}
   obtain ⟨-, -, h₂⟩ := h₂
   choose T₁ a₁ b₁ c₁ using h₁ τ
   choose T₂ a₂ b₂ c₂ using h₂ τ
-  letI : Algebra R k := ψ.toAlgebra
+  let : Algebra R k := ψ.toAlgebra
   obtain ⟨xc', hx', hv⟩ := vec_bc (S' := k) hx
   change ∀ cc, vec Z.t (spMap ψ ≫ x) xc' (ψ ∘ cc) = spMap (dualMap ψ) ≫ vec Z.t x xc cc at hv
   choose G hG using fun i => vec_exists hx' _ (g.tan τ i)
@@ -197,7 +197,7 @@ end Frames
 
 theorem isLocalHom_of_algebraic {R F k : Type} [CommRing R] [IsLocalRing R] [Field F] [CharZero F] (φ : F →+* R)
     [Field k] [CharZero k] [Algebra.IsAlgebraic ℚ k] (ψ : R →+* k) : IsLocalHom ψ := by
-  letI : Algebra ℚ R := (φ.comp (algebraMap ℚ F)).toAlgebra
+  let : Algebra ℚ R := (φ.comp (algebraMap ℚ F)).toAlgebra
   let ψ' : R →ₐ[ℚ] k := { ψ with commutes' := fun q => by simp }
   refine ⟨fun a ha => ?_⟩
   have h0 : ψ a ≠ 0 := ha.ne_zero

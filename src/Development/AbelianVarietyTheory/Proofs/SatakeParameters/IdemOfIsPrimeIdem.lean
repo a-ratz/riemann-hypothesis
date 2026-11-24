@@ -208,7 +208,7 @@ theorem gelf_rTr {k : GA D V} (hk : k ∈ GfC V) (τ : D.what₂.Tau) (n : ℕ) 
 
 theorem isAutFunSm_rTr {k : GA D V} (hk : k ∈ GfC V) {φ : GA D V → ℂ} (h : IsAutFunSm θ V φ) :
     IsAutFunSm θ V (rTr V k φ) := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   refine { left := fun γ hγ g => ?_, level := ?_, cont := h.cont.comp (continuous_mul_const k),
            smooth := fun n τs Xs hX g => ?_, zfin := ?_, growth := ?_ }
   · unfold rTr
@@ -273,7 +273,7 @@ theorem isMultMap_heckeOn {T : MMap M} (h : IsMultMap θ M J χ T) {R : Finset (
     IsMultMap θ M J χ (heckeOn M R T) := by
   have e : heckeOn M R T = ∑ k ∈ R, heckeOn M {k} T := by
     ext v g
-    simp [heckeOn, postOn_apply, heckeLin_apply, MultilinearMap.sum_apply]
+    simp [heckeOn, postOn_apply, heckeLin_apply, sum_apply]
   have h0 : IsMultMap θ M ∅ χ (heckeOn M R T) := by
     rw [← GlobalTheory.MultMem.mem_mult_iff, e]
     exact sum_mem fun k hk => (GlobalTheory.MultMem.mem_mult_iff ..).2 (isMultMap_single h (hR k hk))
@@ -474,9 +474,9 @@ theorem spherical_ops : ∀ {D : D7} (V : HSp D) {S : D.what₂.Tau → SPar} (�
     exact comm_heckeLin (hu P) h h' (hT.lev v)
   · obtain ⟨R', h', hcard, K, x, hK, hR, hR'⟩ := exists_dual (hu P) h
     refine ⟨R', h', fun μ 𝓕 hμ hr h𝓕 hS T hT T' hT' c => ?_⟩
-    haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-    haveI : BorelSpace (GA D V) := ⟨rfl⟩
-    haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
+    have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+    have : BorelSpace (GA D V) := ⟨rfl⟩
+    have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
     have hS' := hS hθ hμ h𝓕
     obtain ⟨c₁, h₁⟩ := hS' _ (keep P d R h T hT) _ hT'
     obtain ⟨c₂, h₂⟩ := hS' _ hT _ (keep P _ R' h' T' hT')

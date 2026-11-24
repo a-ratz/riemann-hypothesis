@@ -71,7 +71,7 @@ theorem exact_transport {A B C A' B' C' : Type*} [AddCommGroup A] [AddCommGroup 
 
 theorem NatLES_of (hD : DerDict) : NatLES := by
   intro R _ K
-  letI := HasDerivedCategory.standard (Shv R)
+  let := HasDerivedCategory.standard (Shv R)
   obtain ⟨e, he⟩ := hD R K
   let F := preadditiveCoyoneda.obj (op (DerivedCategory.Q.obj K))
   have hpost : ∀ {X Y : Shv R} (φ : X ⟶ Y) (n : ℤ) (x : HK R K X n),

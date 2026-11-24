@@ -67,7 +67,7 @@ theorem theta_mul (s : ℚ) (x y : HahnSeries ℚ Ω) :
   show algebraMap ℚ Ω (s * a) * (x * y).coeff a = _
   rw [HahnSeries.coeff_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl (fun ij hij => ?_)
-  rw [Finset.mem_addAntidiagonal] at hij
+  rw [Finset.mem_antidiagonal] at hij
   obtain ⟨-, -, h⟩ := hij
   show algebraMap ℚ Ω (s * a) * (x.coeff ij.1 * y.coeff ij.2) =
     algebraMap ℚ Ω (s * ij.1) * x.coeff ij.1 * y.coeff ij.2 + x.coeff ij.1 * (algebraMap ℚ Ω (s * ij.2) * y.coeff ij.2)
@@ -113,7 +113,7 @@ theorem unit_iff (A : ValuationSubring Ω) (x : Ω) (hx : x ∈ A) : (x ≠ 0 �
     have hv : A.valuation x ≠ 0 := by simpa using h0
     have : 1 ≤ A.valuation x := by
       by_contra hc; push_neg at hc
-      have := one_lt_inv₀ (zero_lt_iff.2 hv) |>.2 hc
+      have := one_lt_inv₀ (pos_iff_ne_zero.2 hv) |>.2 hc
       exact absurd h2 (not_le.2 this)
     exact le_antisymm h1 this
   · intro h
@@ -135,8 +135,8 @@ theorem prim_mul {A : ValuationSubring Ω} {x y : HahnSeries ℚ Ω} (hx : Prim 
   obtain ⟨hx1, hx2⟩ := hx
   obtain ⟨hy1, hy2⟩ := hy
   set v := A.valuation
-  have sx : {r | v (x.coeff r) = 1} ⊆ x.support := fun r hr h => by simp [Set.mem_setOf_eq, h] at hr
-  have sy : {r | v (y.coeff r) = 1} ⊆ y.support := fun r hr h => by simp [Set.mem_setOf_eq, h] at hr
+  have sx : {r | v (x.coeff r) = 1} ⊆ x.support := fun r hr h => by simp [Set.mem_ofPred_eq, h] at hr
+  have sy : {r | v (y.coeff r) = 1} ⊆ y.support := fun r hr h => by simp [Set.mem_ofPred_eq, h] at hr
   have wx := x.isPWO_support.isWF.mono sx
   have wy := y.isPWO_support.isWF.mono sy
   have nx : {r | v (x.coeff r) = 1}.Nonempty := hx2
@@ -153,14 +153,14 @@ theorem prim_mul {A : ValuationSubring Ω} {x y : HahnSeries ℚ Ω} (hx : Prim 
     intro r; rw [HahnSeries.coeff_mul]
     exact v.map_sum_le (fun ij _ => by rw [map_mul]; exact mul_le_one' (hx1 _) (hy1 _))
   refine ⟨int, r0 + s0, ?_⟩
-  rw [HahnSeries.coeff_mul, ← Finset.add_sum_erase _ _ ((Finset.mem_addAntidiagonal (x := (r0, s0))).2 ⟨sx (show r0 ∈ {r | v (x.coeff r) = 1} from hr0), sy (show s0 ∈ {r | v (y.coeff r) = 1} from hs0), rfl⟩)]
+  rw [HahnSeries.coeff_mul, ← Finset.add_sum_erase _ _ ((Finset.mem_antidiagonal (x := (r0, s0))).2 ⟨sx (show r0 ∈ {r | v (x.coeff r) = 1} from hr0), sy (show s0 ∈ {r | v (y.coeff r) = 1} from hs0), rfl⟩)]
   have hmain : v (x.coeff r0 * y.coeff s0) = 1 := by rw [map_mul, hr0, hs0, one_mul]
   rw [Valuation.map_add_eq_of_lt_left, hmain]
   rw [hmain]
   refine v.map_sum_lt one_ne_zero (fun ij hij => ?_)
   rw [Finset.mem_erase] at hij
   obtain ⟨hne, hij⟩ := hij
-  obtain ⟨-, -, hsum⟩ := Finset.mem_addAntidiagonal.1 hij
+  obtain ⟨-, -, hsum⟩ := Finset.mem_antidiagonal.1 hij
   rw [map_mul]
   rcases lt_trichotomy ij.1 r0 with h | h | h
   · exact lt_of_le_of_lt (mul_le_of_le_one_right' (hy1 _)) (ltx _ h)

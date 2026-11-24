@@ -163,7 +163,7 @@ theorem isRayL_mul_prime_wideInd {F : Type} [Field F] [NumberField F] (𝔪 𝔭
     ⟨h.1, eq_top_iff.mpr (h.2.symm.le.trans (sup_le_sup_left Ideal.mul_le_left _))⟩
   have hsplit : S.indicator (g C) = A.indicator (g C) + B.indicator (g C) := by
     funext I
-    simp only [Pi.add_apply, Set.indicator, hSdef, hAdef, hBdef, Set.mem_setOf_eq]
+    simp only [Pi.add_apply, Set.indicator, hSdef, hAdef, hBdef, Set.mem_ofPred_eq]
     by_cases hA : CoprimeTo F (𝔪 * 𝔭) I
     · simp [hA, hAS I hA]
     · by_cases hS : CoprimeTo F 𝔪 I <;> simp [hA, hS]
@@ -319,7 +319,7 @@ namespace GlobalTheory.MinValClosed
 
 theorem mE_le_padicValNat {l n a : ℕ} (hl : l.Prime) (hn : 2 ≤ n) (he : Even n) (ha : 2 ≤ a)
     (hac : a.Coprime l) : Formalism.PairingDivisionLocalBalance.mE l n ≤ padicValNat l (a ^ n - 1) := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   unfold Formalism.PairingDivisionLocalBalance.mE
   split_ifs with h2 hd
   · subst h2
@@ -328,7 +328,7 @@ theorem mE_le_padicValNat {l n a : ℕ} (hl : l.Prime) (hn : 2 ≤ n) (he : Even
       have := Nat.Coprime.coprime_dvd_left h hac
       norm_num at this
     have ha1 : 1 < a := by omega
-    have := padicValNat.pow_two_sub_one_ge ha1 hodd (by omega) he
+    have := Nat.multiplicity_pow_two_sub_one_ge ha1 hodd (by omega) he
     simp only [← Nat.padicValNat_def] at this
     omega
   · obtain ⟨k, rfl⟩ := hd
@@ -348,7 +348,7 @@ theorem mE_le_padicValNat {l n a : ℕ} (hl : l.Prime) (hn : 2 ≤ n) (he : Even
       exact hl.one_lt.ne' (Nat.dvd_one.mp this)
     have hpow : a ^ ((l - 1) * k) - 1 = b ^ k - 1 ^ k := by rw [pow_mul, one_pow]
     rw [hpow]
-    have hval := padicValNat.pow_sub_pow hodd hb1 (by simpa using hfer) hnd hk
+    have hval := Nat.multiplicity_pow_sub_pow hodd hb1 (by simpa using hfer) hnd hk
     simp only [← Nat.padicValNat_def] at hval
     rw [hval]
     have hv1 : 1 ≤ padicValNat l (b - 1) := by
@@ -406,7 +406,7 @@ theorem sumBound_of_local : ∀ {F : Type} [Field F] [NumberField F], Formalism.
       omega
     have hm : Formalism.PairingDivisionLocalBalance.mE l X = 0 := by
       unfold Formalism.PairingDivisionLocalBalance.mE
-      rw [if_neg hl2, if_neg]
+      rw [ite_eq_right hl2, ite_eq_right]
       intro hd
       have := Nat.le_of_dvd (by omega) hd
       omega
@@ -559,9 +559,9 @@ theorem ceSum_term_le (f X l : ℕ) (hX : X ≠ 0) (hp : l.Prime) :
     have e : ((f * padicValNat 2 2 + mE 2 X : ℕ) : ℝ) * Real.log ((2 : ℕ) : ℝ)
         = (padicValNat 2 X : ℝ) * Real.log ((2 : ℕ) : ℝ) + ((f : ℝ) + 2) * Real.log 2 := by
       rw [hm, h22]; push_cast; ring
-    rw [if_pos rfl, e]
+    rw [ite_eq_left rfl, e]
     linarith
-  · have hA : (if l = 2 then ((f : ℝ) + 2) * Real.log 2 else 0) = 0 := if_neg h2
+  · have hA : (if l = 2 then ((f : ℝ) + 2) * Real.log 2 else 0) = 0 := ite_eq_right h2
     have hv2 : padicValNat l 2 = 0 := by
       rw [Nat.padicValNat_def]
       apply multiplicity_eq_zero_of_not_dvd
@@ -575,11 +575,11 @@ theorem ceSum_term_le (f X l : ℕ) (hX : X ≠ 0) (hp : l.Prime) :
       have key : Real.log (l : ℝ) ≤ (if l = X + 1 then Real.log ((X : ℝ) + 1) else 0)
           + (if l ≤ X / 2 + 1 then Real.log l else 0) := by
         by_cases hXl : l = X + 1
-        · rw [if_pos hXl]
+        · rw [ite_eq_left hXl]
           have : (l : ℝ) = (X : ℝ) + 1 := by exact_mod_cast hXl
           have e : Real.log (l : ℝ) = Real.log ((X : ℝ) + 1) := by rw [this]
           linarith
-        · rw [if_neg hXl]
+        · rw [ite_eq_right hXl]
           have hl3 : 3 ≤ l := by have := hp.two_le; omega
           obtain ⟨k, hk⟩ := hd
           have hk0 : k ≠ 0 := by rintro rfl; simp at hk; exact hX hk
@@ -588,7 +588,7 @@ theorem ceSum_term_le (f X l : ℕ) (hX : X ≠ 0) (hp : l.Prime) :
           have hle : l - 1 ≤ X / 2 := by
             rw [Nat.le_div_iff_mul_le (by norm_num)]
             rw [hk]; exact hk2
-          rw [if_pos (by omega)]
+          rw [ite_eq_left (by omega)]
           linarith
       nlinarith
     · have hm : mE l X = 0 := by simp [mE, h2, hd]
@@ -660,7 +660,7 @@ open Formalism.PairingDivisionLocalBalance
 
 theorem exists_pow_ne_one_mod (l n : ℕ) (hl : l.Prime) (hn : ¬ (l - 1) ∣ n) :
     ∃ a : ℕ, 2 ≤ a ∧ a.Coprime l ∧ ¬ l ∣ a ^ n - 1 := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := (ZMod l)ˣ)
   have hord : orderOf g = l - 1 := by
     rw [orderOf_eq_card_of_forall_mem_zpowers hg, Nat.card_eq_fintype_card, ZMod.card_units_eq_totient,
@@ -688,41 +688,41 @@ theorem exists_pow_ne_one_mod (l n : ℕ) (hl : l.Prime) (hn : ¬ (l - 1) ∣ n)
 
 theorem cmValues_minPadicVal_bound : MinVal := by
   intro l n hl hn2 hne
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have hn0 : n ≠ 0 := by omega
   unfold mE
   simp only [Nat.padicValNat_def]
   by_cases h2 : l = 2
   · subst h2
     refine ⟨3, by norm_num, by norm_num, ?_⟩
-    have h := padicValNat.pow_two_sub_one (x := 3) (n := n) (by norm_num) (by norm_num) hn0 hne
+    have h := Nat.multiplicity_pow_two_sub_one (x := 3) (n := n) (by norm_num) (by norm_num) hn0 hne
     have h4 : multiplicity 2 (3 + 1) = 2 := by
       norm_num
-      rw [show (4:ℕ) = 2 ^ 2 by norm_num, padicValNat.prime_pow]
+      rw [show (4:ℕ) = 2 ^ 2 by norm_num, Nat.multiplicity_prime_pow]
     have h2' : multiplicity 2 (3 - 1) = 1 := by
       norm_num
     rw [h4, h2'] at h
-    simp only [if_true]
+    simp only [ite_true]
     omega
-  · simp only [h2, if_false]
+  · simp only [h2, ite_false]
     have hodd : Odd l := hl.odd_of_ne_two h2
     by_cases hd : (l - 1) ∣ n
-    · simp only [hd, if_true]
+    · simp only [hd, ite_true]
       refine ⟨l + 1, by have := hl.two_le; omega, ?_, ?_⟩
       · first
           | exact (Nat.coprime_succ_self l)
           | exact (Nat.coprime_self_succ l)
           | simp
-      · have h := padicValNat.pow_sub_pow (p := l) (x := l + 1) (y := 1) hodd (by have := hl.one_lt; omega)
+      · have h := Nat.multiplicity_pow_sub_pow (p := l) (x := l + 1) (y := 1) hodd (by have := hl.one_lt; omega)
           (by simp) (by
             intro hdv
             have : l ∣ 1 := (Nat.dvd_add_right (dvd_refl l)).mp hdv
             exact hl.one_lt.ne' (Nat.dvd_one.mp this)) hn0
         rw [one_pow] at h
-        rw [h, show l + 1 - 1 = l by omega, padicValNat_self]
-    · simp only [hd, if_false]
+        rw [h, show l + 1 - 1 = l by omega, Nat.Prime.multiplicity_self]
+    · simp only [hd, ite_false]
       obtain ⟨a, ha2, hac, hnd⟩ := exists_pow_ne_one_mod l n hl hd
-      exact ⟨a, ha2, hac, padicValNat.eq_zero_of_not_dvd hnd⟩
+      exact ⟨a, ha2, hac, multiplicity_eq_zero_of_not_dvd hnd⟩
 
 end GlobalTheory
 end -- clump:auto
@@ -873,7 +873,7 @@ theorem zetaDenominators (h : GlobalTheory.Published.SiegelKlingenDeligneRibet) 
   have hev : Even (finrank ℚ F * (2 * s)) := ⟨finrank ℚ F * s, by ring⟩
   have hloc : ∀ z : ClassGroup (𝓞 F) → ℚ, IsZetaValues (2 * s) z → ∀ l : ℕ, l.Prime → LocalBound (2 * s) z l := by
     intro z hz l hl
-    haveI := Fact.mk hl
+    have := Fact.mk hl
     have hm := mMin_eq_mE _root_.GlobalTheory.cmValues_minPadicVal_bound l _ hl hn2 hev
     obtain ⟨a, ha2, hac, hv⟩ := _root_.GlobalTheory.cmValues_minPadicVal_bound l _ hl hn2 hev
     have hc := cE_le_of_inZl (F := F) z l a _ ha2 (by omega) (inZl_mul_zeta h.2 F l a (2 * s) ha2 hac (by omega) z hz)

@@ -98,7 +98,7 @@ theorem ld_ph {S : ℝ → Eu l →L[ℝ] Eu l} {S' : Eu l →L[ℝ] Eu l} {t₀
     simp only [ph_apply]
     rw [← sub_mul, norm_mul]
     have h1 : |-π * ⟪x, S t x⟫ - -π * ⟪x, S t₀ x⟫| ≤ π * ((1 + ‖x‖) ^ 2 * (K * |t - t₀|)) := by
-      rw [← mul_sub, ← inner_sub_right, abs_mul, abs_neg, abs_of_pos Real.pi_pos, ← ContinuousLinearMap.sub_apply]
+      rw [← mul_sub, ← inner_sub_right, abs_mul, abs_neg, abs_of_pos Real.pi_pos, ← sub_apply]
       refine mul_le_mul_of_nonneg_left ((abs_real_inner_le_norm _ _).trans ?_) Real.pi_pos.le
       have h2 := (S t - S t₀).le_opNorm x
       calc ‖x‖ * ‖(S t - S t₀) x‖ ≤ ‖x‖ * ((K * |t - t₀|) * ‖x‖) := by
@@ -135,8 +135,8 @@ theorem ld_dil_one {H : ℝ → Eu l →L[ℝ] Eu l} {H' : Eu l →L[ℝ] Eu l} 
     rw [← hN, hFt, hF.self_of_nhds, h0]
     have e : ‖H t x - x‖ ≤ ‖H t - H t₀‖ * ‖x‖ := by
       have := (H t - H t₀).le_opNorm x
-      rw [ContinuousLinearMap.sub_apply] at this
-      simpa only [h0, ContinuousLinearMap.one_apply] using this
+      rw [sub_apply] at this
+      simpa only [h0, one_apply_eq_self] using this
     have hm := (convex_closedBall x (‖x‖ / 2)).norm_image_sub_le_of_norm_fderiv_le (𝕜 := ℝ) (f := f)
       (C := 2 ^ (N + 1) * C / (1 + ‖x‖) ^ (N + 1)) (x := x) (y := H t x) (fun y _ => f.differentiableAt) (fun y hy => by
         rw [le_div_iff₀ (by positivity)]
@@ -159,9 +159,9 @@ theorem ld_dil_one {H : ℝ → Eu l →L[ℝ] Eu l} {H' : Eu l →L[ℝ] Eu l} 
 theorem ld_dil {B : ℝ → Eu l →L[ℝ] Eu l} {B' : Eu l →L[ℝ] Eu l} {t₀ : ℝ} (h : HasDerivAt B B' t₀) (h0 : IsUnit (B t₀)) :
     LD (fun t => dil (B t)) (fun f => vf (Ring.inverse (B t₀) * B') (dil (B t₀) f)) t₀ := fun f => by
   refine ld_dil_one (h.const_mul (Ring.inverse (B t₀))) (Ring.inverse_mul_cancel _ h0) _ ?_
-  letI : CompleteSpace (Eu l →L[ℝ] Eu l) := ContinuousLinearMap.instCompleteSpace
+  let : CompleteSpace (Eu l →L[ℝ] Eu l) := ContinuousLinearMap.instCompleteSpace
   filter_upwards [h.continuousAt.eventually (Units.isOpen.mem_nhds h0)] with t ht x
-  rw [dil_apply ht, dil_apply h0, ← ContinuousLinearMap.mul_apply, ← mul_assoc, Ring.mul_inverse_cancel _ h0, one_mul]
+  rw [dil_apply ht, dil_apply h0, ← mul_apply_eq_comp, ← mul_assoc, Ring.mul_inverse_cancel _ h0, one_mul]
 
 theorem ld_big {Ai B C : ℝ → Eu l →L[ℝ] Eu l} {Ai' B' C' : Eu l →L[ℝ] Eu l} {c : ℝ → ℝ} {c' t₀ : ℝ}
     (hA : HasDerivAt Ai Ai' t₀) (hB : HasDerivAt B B' t₀) (hC : HasDerivAt C C' t₀) (hc : HasDerivAt c c' t₀)
@@ -174,7 +174,7 @@ theorem ld_big {Ai B C : ℝ → Eu l →L[ℝ] Eu l} {Ai' B' C' : Eu l →L[ℝ
   have h4 := (ld_ph (hC.mul hA)).mul h3 (.of_forall fun t => iso_ph _)
   refine ⟨_, h4, fun e1 e2 e3 e4 f => ?_⟩
   have e5 : fou l (fouInv l f) = f := by
-    rw [← ContinuousLinearMap.mul_apply, fou_mul_fouInv, ContinuousLinearMap.one_apply]
+    rw [← mul_apply_eq_comp, fou_mul_fouInv, one_apply_eq_self]
   simp [e1, e2, e3, e4, ph_zero, dil_one, e5]
   abel
 

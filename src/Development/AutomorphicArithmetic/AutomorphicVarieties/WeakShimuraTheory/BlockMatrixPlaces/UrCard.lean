@@ -100,7 +100,7 @@ private theorem exists_hom {E : Type} [Group E] [Finite E] {I : Subgroup D} {φ 
       d φ = Multiplicative.ofAdd 1) (e : E) :
     ∃ w : D →* E, IsLocallyConstant w ∧ (∀ s ∈ I, w s = 1) ∧ w φ = e := by
   have hn : 0 < orderOf e := orderOf_pos e
-  haveI : NeZero (orderOf e) := ⟨hn.ne'⟩
+  have : NeZero (orderOf e) := ⟨hn.ne'⟩
   obtain ⟨d, hdl, hdI, hdφ⟩ := hd (orderOf e) hn
   let f : Multiplicative (ZMod (orderOf e)) →* E :=
     MonoidHom.mk' (fun x => e ^ (Multiplicative.toAdd x).val) (by
@@ -141,7 +141,7 @@ private theorem exists_cocycle [Finite M] (ρ : Representation k D M) (hρ : Con
   have hH : ∀ g, g ∈ H := by
     refine all_of_closed hcl H ?_ (fun s hs m m' => ?_) (fun m m' => ?_)
     · change IsClosed {g | ∀ m m' : NI ρ I, ((w g m : NI ρ I) : M) - (w g m' : NI ρ I) = ρ g ((m : M) - m')}
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isClosed_iInter fun m => isClosed_iInter fun m' => isClosed_eq ((hc m).sub (hc m'))
         (Continuous.comp (f := fun g : D => (g, (m : M) - m')) hρ (by fun_prop))
     · rw [hwI s hs, (sub_mem m.2 m'.2 : _ ∈ NI ρ I) s hs]
@@ -225,7 +225,7 @@ theorem UpperTheory.V.Ws.Bl.urCard :
     · obtain ⟨z, hz, hzI, hzφ⟩ := exists_cocycle ρ hρ hcl hd x.2
       exact ⟨⟨⟨z, hz⟩, hzI⟩, Subtype.ext hzφ⟩
   let E := LinearEquiv.ofBijective ev hev
-  haveI : Finite (Z0 ρ I) := Finite.of_equiv _ E.symm.toEquiv
+  have : Finite (Z0 ρ I) := Finite.of_equiv _ E.symm.toEquiv
   let p : Z0 ρ I →ₗ[k] H1 ρ := (Submodule.mkQ _).comp (Z0 ρ I).subtype
   let δ : NI ρ I →ₗ[k] Z0 ρ I :=
     { toFun := fun m => ⟨⟨d0 ρ m, coboundaries_le_cocycles ρ hρ ⟨m, rfl⟩⟩, fun s hs => sub_eq_zero.2 (m.2 s hs)⟩

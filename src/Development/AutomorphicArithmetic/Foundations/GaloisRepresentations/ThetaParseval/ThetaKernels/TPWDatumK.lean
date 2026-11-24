@@ -258,7 +258,7 @@ theorem rat_subst_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ 
       have h7 : ‖f (ratWF y + x)‖ = ‖f x‖ := by
         rw [hf.quasi y x, norm_mul, hψ, one_mul]
       show ‖f (ratWF y + x)‖ₑ ^ 2 = ‖f x‖ₑ ^ 2
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, h7]
+      rw [← ofReal_norm, ← ofReal_norm, h7]
 theorem schur_norm_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ ι) (M : Module.End ℂ (WOF F E nS nT → ℂ))
     (h1 : ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → IsThetaFunOF σ JS JT ξ₀ B.ψ (M f))
     (h2 : ∀ u f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → M (heisOF σ JS JT ξ₀ B.ψ u f) = heisOF σ JS JT ξ₀ B.ψ u (M f))
@@ -273,12 +273,12 @@ theorem schur_norm_k (C : _root_.PositivityTheory.ThKW.Ctx_k σ B JS JT ξ₀ θ
     obtain ⟨μ, 𝓕, hμ, h𝓕, hI0, hIt⟩ := GlobalTheory.ThetaSchurUnitF.exists_fd_pos_fin hψ hf hy
     have h := h3 μ 𝓕 hμ h𝓕 f hf
     rw [hc f hf] at h
-    simp only [Pi.smul_apply, smul_eq_mul, enorm_mul, mul_pow] at h
-    rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top enorm_ne_top)] at h
+    simp only [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow] at h
+    rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top eNorm_ne_top)] at h
     have e1 : ‖c‖ₑ ^ 2 = 1 := by
       have := congrArg (· / ∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ) h
       rwa [ENNReal.mul_div_cancel_right hI0 hIt, ENNReal.div_self hI0 hIt] at this
-    have e2 : (‖c‖₊ : ENNReal) ^ 2 = 1 := by rwa [enorm_eq_nnnorm] at e1
+    have e2 : (‖c‖₊ : ENNReal) ^ 2 = 1 := by rwa [eNorm_eq_nnNorm] at e1
     have e3 : ‖c‖₊ ^ 2 = 1 := by exact_mod_cast e2
     have e4 : ‖c‖ ^ 2 = 1 := by
       have := congrArg (fun t : NNReal => (t : ℝ)) e3
@@ -630,8 +630,8 @@ theorem latRepF_cont_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     | zero => exact Filter.Eventually.of_forall fun p => map_zero _
     | add u v _ _ hu hv => filter_upwards [hu, hv] with p h3 h4 using by rw [map_add (f := _), h3, h4]
     | smul c u _ hu => filter_upwards [hu] with p h3 using by rw [map_smul, h3]
-  haveI : IsTopologicalGroup (GAF σ JS) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : IsTopologicalGroup (GAF σ JT) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GAF σ JS) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GAF σ JT) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   refine continuous_iff_continuousAt.2 fun q => ?_
   have h1 : Filter.Tendsto (fun p => q⁻¹ * p) (𝓝 q) (𝓝 1) :=
     (continuous_const.mul continuous_id).tendsto' q 1 (inv_mul_cancel q)
@@ -814,10 +814,10 @@ theorem exists_invariant_form_k : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   intro F E _ _ _ _ _ σ B hB nS nT JS JT _ _ ξ₀ _ _ M hM μ 𝓕 hμ h𝓕
   have hψ : IsCharAF F B.ψ := GlobalTheory.StdCharFromIsStd.isCharAF hB.std
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLatticeF.lattice F E nS nT
-  haveI : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
-  haveI : Countable (ratLF F E nS nT) := countable_of_discrete_addSubgroup _
-  haveI := hμ
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
+  have : BorelSpace (WOF F E nS nT) := ⟨rfl⟩
+  have : Countable (ratLF F E nS nT) := countable_of_discrete_addSubgroup _
+  have := hμ
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
     rw [Measure.restrict_apply_univ]
     exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WOF F E nS nT) (ratLF F E nS nT) hK hKc μ h𝓕⟩
   have hb : ∀ f ∈ M, ∃ C : ℝ, ∀ w, ‖f w‖ ≤ C := fun f hf => by
@@ -1322,10 +1322,10 @@ theorem existsFinK_k (hI : IdxSign) (C : _root_.PositivityTheory.ThKW.Ctx_k σ B
   · rw [ho p f hf]
     exact (thetaSubF σ JS JT ξ₀ B.ψ).smul_mem _ (Om p ⟨f, hf⟩).2
   · simp only [ho _ f hf, Pi.smul_apply, smul_eq_mul]
-    exact (continuous_subtype_val.comp z3).mul (hcont ⟨f, hf⟩ u)
+    exact (continuous_subtypeVal.comp z3).mul (hcont ⟨f, hf⟩ u)
   · rw [← hunit μ 𝓕 hμ h𝓕 p ⟨f, hf⟩, ho p f hf]
     refine lintegral_congr fun u => ?_
-    rw [Pi.smul_apply, enorm_smul, ← ofReal_norm_eq_enorm (z p : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
+    rw [Pi.smul_apply, eNorm_smul, ← ofReal_norm (z p : ℂ), Circle.norm_coe, ENNReal.ofReal_one, one_mul]
   · rw [ho _ f hf, hreal g hg k hk, show z (g, k) = 1 by
       simp [z, zF, GlobalTheory.SplitDetCharF.cutDet_real ε hε.idem hε.fin g hg, GlobalTheory.SplitDetCharF.cutDet_real ε hε.idem hε.fin k hk],
       Circle.coe_one, one_smul]

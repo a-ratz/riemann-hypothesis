@@ -157,8 +157,8 @@ theorem exists_sq [Module.Free K V] (hr : Module.finrank K V = 2) [IsReduced V] 
     ∃ θ : V, ∃ d : K, θ ∉ (algebraMap K V).range ∧ θ * θ = algebraMap K V d ∧ d ≠ 0 ∧
       d ∈ 𝒪[K] := by
   have hpos : 0 < Module.finrank K V := by rw [hr]; norm_num
-  haveI : Nontrivial V := Module.nontrivial_of_finrank_pos hpos
-  haveI : Module.Finite K V := Module.finite_of_finrank_pos hpos
+  have : Nontrivial V := Module.nontrivial_of_finrank_pos hpos
+  have : Module.Finite K V := Module.finite_of_finrank_pos hpos
   set ι := algebraMap K V with hι
   obtain ⟨θ0, hθ0⟩ : ∃ θ0 : V, θ0 ∉ ι.range := by
     by_contra hall

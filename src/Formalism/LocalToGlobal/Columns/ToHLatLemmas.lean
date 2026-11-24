@@ -185,8 +185,8 @@ theorem intNab_isLattice (h : S.Ok) (hD : ∀ d, Submodule.IsLattice K (S.Nab d)
 theorem intNab_isFullLattice (h : S.Ok) (hD : ∀ d, Submodule.IsFullLattice K (S.Nab d)) :
     Submodule.IsFullLattice K S.intNab := by
   classical
-  letI : Fintype S.Cl := h.fintypeCl
-  letI := S.intNab_isLattice h (fun d => (hD d).toIsLattice)
+  let : Fintype S.Cl := h.fintypeCl
+  let := S.intNab_isLattice h (fun d => (hD d).toIsLattice)
   refine { span_eq_top := top_unique ?_ }
   intro φ _
   have hex (c : S.Cl) : ∃ a : 𝓞 K, a ≠ 0 ∧

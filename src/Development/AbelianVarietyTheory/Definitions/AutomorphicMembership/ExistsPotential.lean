@@ -206,7 +206,7 @@ private theorem prod_sigmaOf (x : H.E) :
   · simp [Host.sigmaOf]
 
 theorem chi_of_integral : letI := H.cmStar; ∀ z : unitary H.E, IsIntegral ℤ (z : H.E) → chi H z = 1 := by
-  letI := H.cmStar
+  let := H.cmStar
   intro z hz
   have := H.isCMField_hostE
   obtain ⟨n, hn, hp⟩ := NumberField.Embeddings.pow_eq_one_of_norm_eq_one H.E ℂ hz (fun φ => by
@@ -227,7 +227,7 @@ theorem exists_pot (N : ℕ) : letI := H.cmStar; ∃ φ : SDLat H.E N → ℂˣ,
     ∀ (γ : Matrix.unitaryGroup (Fin N) H.E) (L L' : SDLat H.E N),
       L'.1 = SDLat.smulLat (γ : Matrix (Fin N) (Fin N) H.E) L.1 →
       (φ L)⁻¹ * φ L' = chi H ⟨(γ : Matrix (Fin N) (Fin N) H.E).det, Matrix.det_of_mem_unitary γ.2⟩ := by
-  letI := H.cmStar
+  let := H.cmStar
   let dt : Matrix.unitaryGroup (Fin N) H.E →* unitary H.E :=
     { toFun := fun γ => ⟨(γ : Matrix (Fin N) (Fin N) H.E).det, Matrix.det_of_mem_unitary γ.2⟩
       map_one' := Subtype.ext (by simp)

@@ -141,7 +141,7 @@ theorem _root_.GlobalTheory.EtaAn.ThetaTorus.theta_section_l2_torus :
     let e : (Fin g → ℂ) ≃L[ℝ] (Fin 1 → _root_.ReciprocityTheory.ChartRestriction.G.I2.Vsp T.dim) :=
       ψR.trans (ContinuousLinearEquiv.funUnique (Fin 1) ℝ (_root_.ReciprocityTheory.ChartRestriction.G.I2.Vsp T.dim)).symm
     have he : ∀ z, e z = fun _ => ψ z := fun z => rfl
-    haveI : (volume : Measure (Fin 1 → _root_.ReciprocityTheory.ChartRestriction.G.I2.Vsp T.dim)).IsAddHaarMeasure :=
+    have : (volume : Measure (Fin 1 → _root_.ReciprocityTheory.ChartRestriction.G.I2.Vsp T.dim)).IsAddHaarMeasure :=
       Measure.pi.isAddHaarMeasure _
     unfold _root_.ReciprocityTheory.ChartRestriction.G.I2.PT.l2
     refine (_root_.GlobalTheory.EtaAn.ThetaTorus.setAverage_equiv volume volume e _ _).trans ?_
@@ -161,7 +161,7 @@ theorem _root_.GlobalTheory.EtaAn.ThetaTorus.theta_section_l2_torus :
         exact Subtype.ext h'
       · obtain ⟨y, a, rfl⟩ := y
         exact ⟨⟨ψ (Pm a), (hL _).2 ⟨a, rfl⟩⟩, Subtype.ext (by simp [emap])⟩
-    haveI : Countable Pm.range := hbij.2.countable
+    have : Countable Pm.range := hbij.2.countable
     have hψm : Measurable (ψ : (Fin g → ℂ) → _root_.ReciprocityTheory.ChartRestriction.G.I2.Vsp T.dim) := ψR.continuous.measurable
     have hFdS : IsAddFundamentalDomain Pm.range (ψ ⁻¹' ZSpan.fundamentalDomain T.b) volume :=
       (ZSpan.isAddFundamentalDomain T.b (Measure.map ψ volume)).preimage_of_equiv

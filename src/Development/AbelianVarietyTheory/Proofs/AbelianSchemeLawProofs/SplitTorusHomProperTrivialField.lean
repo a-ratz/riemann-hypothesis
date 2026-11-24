@@ -231,7 +231,7 @@ lemma torus_ext {Z : Over (Spec (CommRingCat.of K))} {t t' : Z ⟶ splitTorus (S
 
 lemma ptFun_mul (R : Type) [CommRing R] [Algebra K R] (φ ψ : Multiplicative X →* Rˣ) :
     ptFun K X R (φ * ψ) = ptFun K X R φ * ptFun K X R ψ := by
-  letI : Algebra (ULift.{0} ℤ) R := ULift.algebra' ℤ R
+  let : Algebra (ULift.{0} ℤ) R := ULift.algebra' ℤ R
   apply torus_ext
   have h := mul_left_fst (toZ (Spec (CommRingCat.of K))) (splitTorusAff ZU X)
     (ptFun K X R φ) (ptFun K X R ψ)

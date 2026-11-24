@@ -433,8 +433,8 @@ theorem integral_baseChange_chg [StarRing (𝓞 E)] (z : CMPt Xo c) (T T' : CDVR
       iA.toRingHom = i → y.x = spMap iK ≫ z.x → LieInt T io M.m1 M.m2 y.u → SecInt T M.m1 M.m2 y.s →
       FrMap iA y y' → (∀ b, IsUnit (X b).det) → FrChg (fun b => (X b).map (algebraMap T'.V T'.Fr)) 1 y' w →
       Integral T' (i.comp io) w := by
-  letI := io.toAlgebra
-  letI := (i.comp io).toAlgebra
+  let := io.toAlgebra
+  let := (i.comp io).toAlgebra
   intro iA y y' w X hi hy hL hS hm hX hw
   obtain ⟨M', n, n', h1, h2⟩ := (_root_.GlobalTheory.LamT.locMod_exists E H Dw l Xo c z T iK).2 M T' ψ i hψ
   have hx : spMap (i.comp iK) ≫ z.x = spMap i ≫ spMap iK ≫ z.x := by
@@ -492,7 +492,7 @@ theorem step5Loc_cmPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   obtain ⟨T, iK, hT, hiK⟩ := _root_.GlobalTheory.exists_cdvr_completion_integral_iff z.K p
   obtain ⟨M⟩ := (_root_.GlobalTheory.LamT.locMod_exists E H Dw l Xo c z T iK).1 fun a => (hiK _).2 (p.valuation_le_one a)
   let io : c.F →+* T.Fr := iK.comp (algebraMap c.F z.K)
-  letI := io.toAlgebra
+  let := io.toAlgebra
   let φ : z.K →ₐ[c.F] T.Fr := { iK with commutes' := fun _ => rfl }
   obtain ⟨yT, hyT⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ φ z.y
   have hyx : yT.x = spMap iK ≫ z.x := by rw [hyT.1, hz.2.2.2.1]
@@ -511,7 +511,7 @@ theorem step5Loc_cmPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     apply IsFractionRing.injective T.V T.Fr
     apply fW.injective
     rw [hfW, hfW, h]
-  haveI : CharZero W := charZero_of_injective_ringHom hinj
+  have : CharZero W := charZero_of_injective_ringHom hinj
   let T' : CDVR := ⟨W⟩
   let κ : KW →+* T'.Fr := ((FractionRing.algEquiv W KW).symm : KW ≃ₐ[W] FractionRing W).toRingEquiv.toRingHom
   have hκ : ∀ w : W, κ (algebraMap W KW w) = algebraMap T'.V T'.Fr w := fun w =>
@@ -522,7 +522,7 @@ theorem step5Loc_cmPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     show _ = κ (fW _)
     rw [hfW, hκ]
     rfl
-  letI := (i.comp io).toAlgebra
+  let := (i.comp io).toAlgebra
   let iA : T.Fr →ₐ[c.F] T'.Fr := { i with commutes' := fun _ => rfl }
   obtain ⟨yW, hyW⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ iA yT
   obtain ⟨y'', hy''⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c _ _ iA y'

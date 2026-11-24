@@ -81,7 +81,7 @@ theorem famR_places : ∀ (X : Stages) (px : PreX X.B.toPre) (I : Col2.ColIn X.B
   refine ⟨fun t P => ?_, fun PP hPP => ?_, ⟨Subtype.val_injective, fun t Q => ?_⟩, fun PP hPP => ?_⟩
   · show P.1 ∈ Formalism.L2.DIV.offSet ∅ (Formalism.L2.Col.rowSG (X.B.primes px) I.sel t.1) ∅ ↔ _
     unfold Formalism.L2.DIV.offSet Formalism.IndefR.Bridge.SplitOff
-    rw [Set.mem_setOf_eq, hS t]
+    rw [Set.mem_ofPred_eq, hS t]
     exact Iff.rfl
   · obtain ⟨h1, h2, h3⟩ := hPP
     refine ⟨⟨PP, h1, ?_, fun Q hQ => h3 Q ?_⟩, rfl⟩

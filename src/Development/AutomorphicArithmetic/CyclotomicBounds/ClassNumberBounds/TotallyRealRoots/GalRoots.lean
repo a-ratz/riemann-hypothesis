@@ -58,16 +58,16 @@ variable {E : Type*} [Field E]
 
 private theorem gr_enough [CharZero E] (i : ℕ) :
     HasEnoughRootsOfUnity (AlgebraicClosure E) (l ^ i) := by
-  haveI : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : l.Prime).ne_zero⟩
   infer_instance
 
 theorem eps_mem_princ_iff [CharZero E] (g : Gal(AlgebraicClosure E/E)) (n : ℕ) :
     eps l E g ∈ princ l n ↔ ∀ ζ : AlgebraicClosure E, ζ ^ l ^ n = 1 → g ζ = ζ := by
-  haveI := fun i => gr_enough (l := l) (E := E) i
+  have := fun i => gr_enough (l := l) (E := E) i
   set L := AlgebraicClosure E
   set σ : L ≃+* L := MulSemiringAction.toRingAut Gal(L/E) L g with hσ
   have hσg : ∀ x : L, σ x = g x := fun x => rfl
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hn := HasEnoughRootsOfUnity.natCard_rootsOfUnity L (l ^ n)
   have key : eps l E g ∈ princ l n ↔
       (modularCyclotomicCharacter L hn σ : ZMod (l ^ n)) = 1 := by

@@ -55,7 +55,7 @@ theorem UpperTheory.Gal.crystallineComparison.annExt_of :
   intro h F G B _ _ _ _ σ ψ L _ _ V _ _ ρ
   have hD := h F G B σ L V ρ
   have hinj : Function.Injective ((Dinv σ ρ).subtype.baseChange L) := by
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_preserves_injective_linearMap _ (Dinv σ ρ).injective_subtype
   refine ⟨fun e hadm => ?_, fun q n T hA x hx => ?_⟩
   · unfold admitted at hadm ⊢

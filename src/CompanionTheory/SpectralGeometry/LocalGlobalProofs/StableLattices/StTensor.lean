@@ -104,7 +104,7 @@ theorem IsOpFam.commute (hA : IsOpFam δ ρ A) (hi : IsIsotypic δ ρ) {C : H �
   refine ext_of_hom hi fun T hT x => ?_
   have hCT : C ∘L T ∈ homIn δ ρ ⊤ := mem_homIn_top.2 fun g x => by
     have := DFunLike.congr_fun (hC g) (T x)
-    simp only [ContinuousLinearMap.mul_apply] at this
+    simp only [mul_apply_eq_comp] at this
     simp [(mem_homIn_top.1 hT) g x, this]
   have h1 := hA y ξ _ hCT x
   simp only [ContinuousLinearMap.comp_apply] at h1
@@ -216,7 +216,7 @@ theorem pr_insert_apply [DecidableEq ι] {s : Finset ι} {i : ι} (hi : i ∉ s)
     (hw : a i (ξ i) w = w) : pr hc (insert i s) y w = pr hc s y w := by
   have h := commute_pr hc (C := a i (y i)) (s := s) (y := y) fun j hj =>
     hc i j (fun e => hi (e ▸ hj)) _ _
-  rw [pr_insert hc hi, h.eq, ContinuousLinearMap.mul_apply, hy, hw]
+  rw [pr_insert hc hi, h.eq, mul_apply_eq_comp, hy, hw]
 
 theorem pr_union_apply [DecidableEq ι] (hw : ∀ i, a i (ξ i) w = w) (t u : Finset ι) {y : ∀ i, Hs i}
     (hy : ∀ i ∈ u, i ∉ t → y i = ξ i) : pr hc (t ∪ u) y w = pr hc t y w := by
@@ -240,11 +240,11 @@ theorem inner_pr [CompleteSpace H] [DecidableEq ι] (hw : ∀ i, a i (ξ i) w = 
       hc j i (fun e => hj (e ▸ hi)) _ _
     have h2 : a j (ξ j) (pr hc s y w) = pr hc s y w := by
       have := DFunLike.congr_fun h.eq w
-      simp only [ContinuousLinearMap.mul_apply, hw j] at this
+      simp only [mul_apply_eq_comp, hw j] at this
       exact this
-    rw [pr_insert hc hj, pr_insert hc hj, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply,
-      ← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.mul_apply (ContinuousLinearMap.adjoint _), hadj,
-      ContinuousLinearMap.smul_apply, h2, inner_smul_right, ih, Finset.prod_insert hj, mul_assoc]
+    rw [pr_insert hc hj, pr_insert hc hj, mul_apply_eq_comp, mul_apply_eq_comp,
+      ← ContinuousLinearMap.adjoint_inner_right, ← mul_apply_eq_comp (ContinuousLinearMap.adjoint _), hadj,
+      smul_apply, h2, inner_smul_right, ih, Finset.prod_insert hj, mul_assoc]
 
 
 open Classical in
@@ -318,7 +318,7 @@ theorem exists_isRestrTensor [CompleteSpace H] (hπ : IsTopIrreducible π) (hξ 
     rw [pureVec_eq hc hw hy hoff, pureVec_eq hc hw hr (s := s) fun i hi => by
       rw [hoff i hi]; exact h0 i fun h => hi (Finset.mem_union_left _ h)]
     have := DFunLike.congr_fun (hk3 y) w
-    simp only [ContinuousLinearMap.mul_apply] at this
+    simp only [mul_apply_eq_comp] at this
     rw [this, h1 s Finset.subset_union_left k hk1 hk2]
   have hself : pureVec hc ξ w ξ = w := by
     rw [pureVec_eq hc hw (restr_self ξ) (s := ∅) fun _ _ => rfl]
@@ -380,12 +380,12 @@ theorem exists_fixed_of_finset [DecidableEq ι] {A : ∀ i, X i → X i → (H �
     · subst e
       refine ⟨by simpa using hx1, ?_⟩
       simp only [Function.update_self]
-      rw [← ContinuousLinearMap.mul_apply, hproj i x hx1]
+      rw [← mul_apply_eq_comp, hproj i x hx1]
     · have hi' : i ∈ s := (Finset.mem_insert.1 hi).resolve_left e
       simp only [Function.update_of_ne e]
       refine ⟨(hξ i hi').1, ?_⟩
       have := DFunLike.congr_fun (hc i j e (ξ i) (ξ i) x x).eq w
-      simp only [ContinuousLinearMap.mul_apply, (hξ i hi').2] at this
+      simp only [mul_apply_eq_comp, (hξ i hi').2] at this
       exact this
 
 end Select
@@ -444,9 +444,9 @@ theorem commute_embPl {v : Formalism.MainNotions.SchurIrreducible.Pl F} {g : GAd
 theorem exists_levelOff_fixed (hFix : StFixVec) (L : Submodule (𝓞 E) (Fin n → E)) [Submodule.IsFullLattice E L]
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {π : GAd σ J →* (H →L[ℂ] H)} (hπ : IsIrrUnitary π) :
     ∃ (S : Finset (HeightOneSpectrum (𝓞 F))) (w : H), w ≠ 0 ∧ ∀ k ∈ levelOff σ J L S, π k w = w := by
-  haveI := hπ.complete
-  haveI := hπ.irred.1
-  haveI := GlobalTheory.Doubling.nonarchimedeanGroup_GFin σ J
+  have := hπ.complete
+  have := hπ.irred.1
+  have := GlobalTheory.Doubling.nonarchimedeanGroup_GFin σ J
   obtain ⟨U, w, hU, hw, hfix⟩ := hFix (GFin σ J) H (π.comp (ofFin σ J)) (fun g v => hπ.unitary.norm_apply _ _)
     (fun v => (hπ.unitary.continuous_apply v).comp (continuous_ofFin σ J))
   obtain ⟨S, hS⟩ := GlobalTheory.PlaceGen.exists_levelOff_le σ J L (U.comap (projFin σ J)) (hU.preimage (continuous_projFin σ J))
@@ -466,7 +466,7 @@ theorem eventually_line (hAdm : GlobalTheory.Published.UnitaryIrreducibleAdmissi
         ∀ y, (∀ k ∈ stabLoc σ J L v, δ k y = y) → ∃ c : ℂ, y = c • x := by
   filter_upwards [_root_.GlobalTheory.AntiInvLoc.eventually_exists_antiInv F E σ hc n J hJ L hL] with v hθ X _ _ δ hδ x hx0 hx y hy
   obtain ⟨θ, hθ1, hθ2, hθ3⟩ := hθ
-  haveI := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ J v
+  have := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ J v
   have hKo : IsOpen (stabLoc σ J L v : Set (GLoc σ J v)) := isOpen_stabLoc σ J L v
   have hKc : IsCompact (stabLoc σ J L v : Set (GLoc σ J v)) := isCompact_stabLoc σ J L v
   have hirr := _root_.GlobalTheory.SmoothUnitary.isIrreducible_isAdmissible_smRep (GLoc σ J v) X δ hδ
@@ -477,12 +477,12 @@ theorem eventually_line (hAdm : GlobalTheory.Published.UnitaryIrreducibleAdmissi
       { carrier := {g | toRep δ g z = z}
         mul_mem' := by
           intro a b ha hb
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hb, ha]
         one_mem' := by simp
         inv_mem' := by
           intro a ha
-          simp only [Set.mem_setOf_eq] at *
+          simp only [Set.mem_ofPred_eq] at *
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul]
           simp }
@@ -538,8 +538,8 @@ end Adelic
 theorem stTensor : StTensor := by
   intro hOp hFix hAdm F E _ _ _ _ _ σ hc n J hJ H _ _ π hπ R hR
   classical
-  haveI := hπ.complete
-  haveI hL : Submodule.IsFullLattice E (stdLattice E n) := isLattice_stdLattice
+  have := hπ.complete
+  have hL : Submodule.IsFullLattice E (stdLattice E n) := isLattice_stdLattice
   set L := stdLattice E n with hLdef
   let ρ : ∀ v, GPl σ J v →* (H →L[ℂ] H) := fun v => π.comp (embPl σ J v)
   have hρ : ∀ v, IsUnitaryRep (ρ v) := fun v => isUnitaryRep_comp hπ.unitary (continuous_embPl σ J v)
@@ -598,27 +598,27 @@ theorem stTensor : StTensor := by
     (fun i his ξ w hw => ⟨fun k hk => by
         have hc1 := (hcommπ i k (projPl_eq_one_of_mem_levelOff hk (hmems i his)) ξ ξ).eq
         have := DFunLike.congr_fun hc1 w
-        simp only [ContinuousLinearMap.mul_apply] at this
+        simp only [mul_apply_eq_comp] at this
         rw [this, hw.1 k hk],
       fun u hu => by
         have hne : u ≠ i := fun e => hu (e ▸ his)
         have := DFunLike.congr_fun (hAA u i hne (ξg u) (ξg u) ξ ξ).eq w
-        simp only [ContinuousLinearMap.mul_apply] at this
+        simp only [mul_apply_eq_comp] at this
         rw [this, hw.2 u hu]⟩)
     (w₀ := w₀) ⟨fun k hk => hfix₀ k (hoff hk), fun u hu =>
       (hξg u hu).2.2 w₀ fun k hk => hfix₀ _ (hoff (hKlev u hu k hk))⟩ hw₀
   let ξ : ∀ u, (R u).H := fun u => if u ∈ s then ξs u else ξg u
   have hξ : ∀ u, ‖ξ u‖ = 1 := fun u => by
     by_cases hu : u ∈ s
-    · simp only [ξ, if_pos hu]
+    · simp only [ξ, ite_eq_left hu]
       exact (hξs u hu).1
-    · simp only [ξ, if_neg hu]
+    · simp only [ξ, ite_eq_right hu]
       exact (hξg u hu).1
   have hfixall : ∀ u, A u (ξ u) (ξ u) w₁ = w₁ := fun u => by
     by_cases hu : u ∈ s
-    · simp only [ξ, if_pos hu]
+    · simp only [ξ, ite_eq_left hu]
       exact (hξs u hu).2
-    · simp only [ξ, if_neg hu]
+    · simp only [ξ, ite_eq_right hu]
       exact hI.2 u hu
   have hn : (‖w₁‖ : ℂ) ≠ 0 := by exact_mod_cast norm_ne_zero_iff.2 hw₁
   set w := (‖w₁‖ : ℂ)⁻¹ • w₁ with hwdef
@@ -641,7 +641,7 @@ theorem stTensor : StTensor := by
       refine ⟨s ∪ t, fun i hi' => ?_, fun s' hs' k hk1 hk2 => hlev k ?_⟩
       · have h1 : i ∉ s := fun h => hi' (Finset.mem_union_left _ h)
         have h2 : i ∉ t := fun h => hi' (Finset.mem_union_right _ h)
-        simp only [ξ, if_neg h1]
+        simp only [ξ, ite_eq_right h1]
         exact (hξg i h1).2.1 _ (ht i h2)
       · refine mem_levelOff.2 ⟨mem_finPts_iff_forall.2 fun w => hk1 _ (hs' (Finset.mem_union_left _ (hinl w))),
           fun v hv => hk1 _ (hs' (Finset.mem_union_left _ (hinr v hv))), fun v hv => ?_⟩

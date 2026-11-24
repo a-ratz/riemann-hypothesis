@@ -70,16 +70,16 @@ theorem frOver_isLev_ddBC : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hB := (_root_.GlobalTheory.FieldBC.rulBC_sec_val_linear E H Dw d.l₂ d.Xo₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d)).1 0 0 d.cδ h8
   refine ⟨h1, h2, h3, h4, h5, h6, ?_, hB.1, ?_⟩
   · intro k _ _ A A₂ hA y
-    letI A₂' : Algebra (covCoeff hle d).F k := A₂
-    letI B : Algebra c.F k := @resAlg E _ _ _ H l c c' hle k _ A
-    letI B₂ : Algebra d.c₂.F k := @resAlg E _ _ _ H d.l₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d) k _ A₂'
+    let A₂' : Algebra (covCoeff hle d).F k := A₂
+    let B : Algebra c.F k := @resAlg E _ _ _ H l c c' hle k _ A
+    let B₂ : Algebra d.c₂.F k := @resAlg E _ _ _ H d.l₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d) k _ A₂'
     have h : @AlgOver E _ _ _ H l c c' hle k _ B A := fun _ => rfl
     have h₂ : @AlgOver E _ _ _ H d.l₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d) k _ B₂ A₂' := fun _ => rfl
     obtain ⟨z, hz⟩ := @h7 k _ _ B B₂ (fun a => hA (incF c c' hle a)) (@FrPt.res E _ _ _ H Dw l c c' hle Xo k _ B A h y)
     exact ⟨@FrPt.ext E _ _ _ H Dw d.l₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d) d.Xo₂ k _ B₂ A₂' h₂ z, hz⟩
   · intro k _ _ A₂ y₂
-    letI A₂' : Algebra (covCoeff hle d).F k := A₂
-    letI B₂ : Algebra d.c₂.F k := @resAlg E _ _ _ H d.l₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d) k _ A₂'
+    let A₂' : Algebra (covCoeff hle d).F k := A₂
+    let B₂ : Algebra d.c₂.F k := @resAlg E _ _ _ H d.l₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d) k _ A₂'
     have h₂ : @AlgOver E _ _ _ H d.l₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d) k _ B₂ A₂' := fun _ => rfl
     intro h0
     exact @h9 k _ _ B₂ _ ((@hB.2 k _ B₂ A₂' h₂ y₂).symm.trans h0)
@@ -163,13 +163,13 @@ theorem shortValAt_bc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   intro E _ _ _ H Dw l Xo c c' hle nab n w Λ β N P S _ _ _ h y v
   constructor
   · rintro ⟨S', i1, i2, φ, y', z, tp, F, hff, hfr, hz, hg, htp, hF, hv⟩
-    letI i3 : Algebra c.F S' := resAlg hle S'
+    let i3 : Algebra c.F S' := resAlg hle S'
     have h' : AlgOver c c' hle S' := fun _ => rfl
     let φ₀ : S →ₐ[c.F] S' := { φ.toRingHom with commutes' := fun x => (congrArg φ (h x).symm).trans (φ.commutes _) }
     exact ⟨S', i1, i3, φ₀, y'.res hle h', z, tp, F, hff, hfr, hz, hg, htp, hF,
       hv.trans (shortExpr_bc hle nab w β _ _ N P h' y' _ F)⟩
   · rintro ⟨S', i1, i2, φ, y', z, tp, F, hff, hfr, hz, hg, htp, hF, hv⟩
-    letI i3 : Algebra c'.F S' := (φ.toRingHom.comp (algebraMap c'.F S)).toAlgebra
+    let i3 : Algebra c'.F S' := (φ.toRingHom.comp (algebraMap c'.F S)).toAlgebra
     have h' : AlgOver c c' hle S' := fun x => (congrArg φ (h x)).trans (φ.commutes x)
     let φ₀ : S →ₐ[c'.F] S' := { φ.toRingHom with commutes' := fun _ => rfl }
     exact ⟨S', i1, i3, φ₀, y'.ext hle h', z, tp, F, hff, hfr, hz, hg, htp, hF,
@@ -202,11 +202,11 @@ theorem eF_incF (a : c.F) :
 
 theorem exists_algOver (k : Type) [Field k] [IsAlgClosed k] [Algebra c.F k] :
     ∃ _ : Algebra c'.F k, AlgOver c c' hle k := by
-  letI alg : Algebra c.F c'.F := (incF c c' hle).toAlgebra
-  haveI : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun q => by
+  let alg : Algebra c.F c'.F := (incF c c' hle).toAlgebra
+  have : IsScalarTower ℚ c.F c'.F := IsScalarTower.of_algebraMap_eq fun q => by
     rw [eq_ratCast (algebraMap ℚ c'.F), eq_ratCast (algebraMap ℚ c.F), map_ratCast]
-  haveI := c'.fin
-  haveI : FiniteDimensional c.F c'.F := Module.Finite.of_restrictScalars_finite ℚ c.F c'.F
+  have := c'.fin
+  have : FiniteDimensional c.F c'.F := Module.Finite.of_restrictScalars_finite ℚ c.F c'.F
   let φ : c'.F →ₐ[c.F] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -248,7 +248,7 @@ theorem isThClsD_ddBC_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   constructor
   · intro H' k _ _ _ _ hk y y₂ hy
     obtain ⟨A, h⟩ := exists_algOver hle k
-    letI A₂ : Algebra (covCoeff hle d).F k := A
+    let A₂ : Algebra (covCoeff hle d).F k := A
     have h₂ : AlgOver d.c₂ (covCoeff hle d) (le_covCoeff hle d) k := fun b => by
       obtain ⟨b, rfl⟩ := d.eF.surjective b
       rw [hk, ← h b]
@@ -265,9 +265,9 @@ theorem isThClsD_ddBC_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
       rw [e1] at he
       exact he.trans (congrArg (· * _) e2)
   · intro H' k _ _ A A₂ hk y y₂ hy
-    letI A₂' : Algebra (covCoeff hle d).F k := A₂
-    letI := resAlg hle k
-    letI := resAlg (le_covCoeff hle d) k
+    let A₂' : Algebra (covCoeff hle d).F k := A₂
+    let := resAlg hle k
+    let := resAlg (le_covCoeff hle d) k
     have h : AlgOver c c' hle k := fun _ => rfl
     have h₂ : AlgOver d.c₂ (covCoeff hle d) (le_covCoeff hle d) k := fun _ => rfl
     obtain ⟨vc, hv, he⟩ := H' k (fun b => hk (incF c c' hle b)) (y.res hle h)
@@ -413,7 +413,7 @@ theorem isBC_rulBC_trans {c₀ : Coeff l} (h₀ : c₀.F ≤ c.F) (hle : c.F ≤
     {a : (E →+* ℂ) × ℕ → ℕ} {k m : ℕ} {f : Rul Xo c} (hf : f ∈ sec Xo c a k) {as : Fin m → c.F} {fs : Fin m → Rul Xo c₀}
     (h : IsBC h₀ f as fs) : IsBC h₁ (rulBC hle f) (fun i => incF c c' hle (as i)) fs := by
   intro S _ _ _ hS y
-  letI := resAlg hle S
+  let := resAlg hle S
   rw [GlobalTheory.FieldBCModel.evR_rulBC hle hf.1 (fun _ => rfl) y, h S (fun a => hS a) _]
   rfl
 
@@ -458,7 +458,7 @@ theorem thAdIs_thAdOf (hV : R.models_HV) {J' : Subgroup (Bridge.Gf (Vc D i))} (h
   intro y x hy
   have hx : ∃ y, Place R i t h c0' y x := ⟨y, hy⟩
   have e := place_unique R i t h c0' hV hJ hr hx.choose_spec hy
-  exact (dif_pos hx).trans (congrArg (fun y => onQ (Wc D i) (R.thF i t y v₀)) e)
+  exact (dite_eq_left hx).trans (congrArg (fun y => onQ (Wc D i) (R.thF i t y v₀)) e)
 
 end Forms
 

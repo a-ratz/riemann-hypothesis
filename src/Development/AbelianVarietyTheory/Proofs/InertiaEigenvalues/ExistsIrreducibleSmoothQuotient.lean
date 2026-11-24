@@ -51,7 +51,7 @@ theorem exists_irreducible_smooth_quotient : ∀ {G V : Type} [Group G] [Topolog
     ∃ (Y : Type) (_ : AddCommGroup Y) (_ : Module ℂ Y) (τ : Representation ℂ G Y),
       IsSmooth τ ∧ τ.IsIrreducible ∧ ∃ q : ρ.IntertwiningMap τ, Function.Surjective q := by
   intro G V _ _ _ _ _ ρ hsm hfl hnt
-  haveI : WellFoundedGT (Subrepresentation ρ) := ((hasFiniteLength_iff_wellFounded ρ).1 hfl).1
+  have : WellFoundedGT (Subrepresentation ρ) := ((hasFiniteLength_iff_wellFounded ρ).1 hfl).1
   have hbt : (⊥ : Subrepresentation ρ) ≠ ⊤ := by
     intro h
     obtain ⟨x, hx⟩ := exists_ne (0 : V)
@@ -74,12 +74,12 @@ theorem exists_irreducible_smooth_quotient : ∀ {G V : Type} [Group G] [Topolog
         { carrier := {g | σ g y = y}
           mul_mem' := by
             intro a b ha hb
-            simp only [Set.mem_setOf_eq] at ha hb ⊢
+            simp only [Set.mem_ofPred_eq] at ha hb ⊢
             rw [map_mul, Module.End.mul_apply, hb, ha]
           one_mem' := by simp
           inv_mem' := by
             intro a ha
-            simp only [Set.mem_setOf_eq] at ha ⊢
+            simp only [Set.mem_ofPred_eq] at ha ⊢
             conv_lhs => rw [← ha]
             rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
     have hle : stab V ρ v ≤ stab (V ⧸ W) τ (W.mkQ v) := by

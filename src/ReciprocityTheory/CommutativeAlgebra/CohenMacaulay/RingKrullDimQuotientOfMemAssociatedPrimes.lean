@@ -84,7 +84,7 @@ theorem isCM_of_quotient_span_singleton [IsNoetherianRing R] {x : R} (hx : x ∈
 theorem IsCM.quotient_ofList (h : IsCM R) {rs : List R} (hrs : ∀ r ∈ rs, r ∈ maximalIdeal R)
     (reg : IsRegular R rs) [IsLocalRing (R ⧸ Ideal.ofList rs)] :
     IsCM (R ⧸ Ideal.ofList rs) := by
-  haveI : IsNoetherianRing R := h.1
+  have : IsNoetherianRing R := h.1
   have h1 := (isCM_iff_isCMMod.mp h).quotient_ofList hrs reg
   exact (isCM_quotient_iff _).mpr
     ((isCMMod_congr (Submodule.quotEquivOfEq _ _ (smul_top_eq_self' _))).mp h1)

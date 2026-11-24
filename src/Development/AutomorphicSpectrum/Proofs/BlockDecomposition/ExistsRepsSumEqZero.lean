@@ -115,11 +115,11 @@ theorem exists_reps_sum_eq_zero :
         simp
   let H : Subgroup (Multiplicative (Fin n → k)) := polyBall n t
   let N : Subgroup H := (polyBall n t').subgroupOf H
-  haveI : CompactSpace H := isCompact_iff_compactSpace.mp (isCompact_polyBall n t)
-  have hNopen : IsOpen (N : Set H) := (isOpen_polyBall n t').preimage continuous_subtype_val
-  haveI : Finite (H ⧸ N) := Subgroup.quotient_finite_of_isOpen _ hNopen
-  letI : Fintype (H ⧸ N) := Fintype.ofFinite _
-  haveI : N.Normal := ⟨fun a ha b => by
+  have : CompactSpace H := isCompact_iff_compactSpace.mp (isCompact_polyBall n t)
+  have hNopen : IsOpen (N : Set H) := (isOpen_polyBall n t').preimage continuous_subtypeVal
+  have : Finite (H ⧸ N) := Subgroup.quotient_finite_of_isOpen _ hNopen
+  let : Fintype (H ⧸ N) := Fintype.ofFinite _
+  have : N.Normal := ⟨fun a ha b => by
     rw [mul_comm b a, mul_inv_cancel_right]; exact ha⟩
   let rep : H ⧸ N → Fin n → k := fun q => ((q.out : H) : Multiplicative (Fin n → k)).toAdd
   have hinj : Function.Injective rep := fun p q h =>

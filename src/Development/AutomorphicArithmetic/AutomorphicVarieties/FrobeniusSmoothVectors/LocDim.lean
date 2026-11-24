@@ -81,9 +81,9 @@ open IsLocalRing UpperTheory.V.Alg UpperTheory.V.CA ReciprocityTheory.CA
 theorem UpperTheory.V.CA.cpl_cm :
     ∀ (S R : Type) [CommRing S] [IsLocalRing S] [CommRing R] [IsLocalRing R] [Algebra S R], IsCplAt (maximalIdeal S) R → IsCM S → IsCM R ∧ DimFormula R ∧ DimFormula S ∧ ringKrullDim R = ringKrullDim S := by
   intro S R _ _ _ _ _ hR hS
-  haveI : IsNoetherianRing S := hS.1
-  haveI : IsNoetherianRing R := hR.noeth
-  haveI : Module.Flat S R := (c3a (maximalIdeal S) hR).1
+  have : IsNoetherianRing S := hS.1
+  have : IsNoetherianRing R := hR.noeth
+  have : Module.Flat S R := (c3a (maximalIdeal S) hR).1
   have hdim : ringKrullDim R = ringKrullDim S := by
     have h := (c3c (maximalIdeal S) hR).1 ⊥
     rw [Ideal.map_bot] at h
@@ -160,16 +160,16 @@ private theorem precomplete_quot {R : Type} [CommRing R] (I K : Ideal R) [IsPrec
 theorem UpperTheory.V.CA.cpl_quot :
     ∀ {C R : Type} [CommRing C] [IsNoetherianRing C] [CommRing R] [Algebra C R] [IsLocalRing R] (x : Ideal C) [x.IsMaximal], IsCplAt x R → ∀ (C' R' : Type) [CommRing C'] [CommRing R'] [Algebra C' R'] [IsLocalRing R'] (π : C →+* C') (x' : Ideal C'), Function.Surjective π → x'.comap π = x → IsCplAt x' R' → ∃ F : R →+* R', Function.Surjective F ∧ F.comp (algebraMap C R) = (algebraMap C' R').comp π ∧ RingHom.ker F = (RingHom.ker π).map (algebraMap C R) := by
   intro C R _ _ _ _ _ x hx hR C' R' _ _ _ _ π x' hπ hx' hR'
-  haveI : IsNoetherianRing C' := isNoetherianRing_of_surjective C C' π hπ
+  have : IsNoetherianRing C' := isNoetherianRing_of_surjective C C' π hπ
   have hxm : x.map π = x' := by rw [← hx', Ideal.map_comap_of_surjective π hπ]
-  haveI hx'm : x'.IsMaximal := by
+  have hx'm : x'.IsMaximal := by
     rcases Ideal.map_eq_top_or_isMaximal_of_surjective π hπ hx with h | h
     · rw [hxm] at h
       exact absurd (by rw [← hx', h, Ideal.comap_top]) hx.ne_top
     · rwa [hxm] at h
-  haveI := hR.noeth
-  haveI := hR.complete
-  haveI := hR'.complete
+  have := hR.noeth
+  have := hR.complete
+  have := hR'.complete
   obtain ⟨hU, -, hm⟩ := cpl_uniq x hR
   obtain ⟨hU', -, hm'⟩ := cpl_uniq x' hR'
   have hx1 : x' ≤ (maximalIdeal R').comap (algebraMap C' R') := by
@@ -185,9 +185,9 @@ theorem UpperTheory.V.CA.cpl_quot :
     simp only [RingHom.comp_apply, hc, map_zero] at this
     exact this
   set J := (maximalIdeal R).map (Ideal.Quotient.mk K) with hJ
-  haveI : IsAdicComplete J (R ⧸ K) := by
-    haveI := precomplete_quot (maximalIdeal R) K
-    haveI : IsHausdorff (maximalIdeal R) (R ⧸ K) :=
+  have : IsAdicComplete J (R ⧸ K) := by
+    have := precomplete_quot (maximalIdeal R) K
+    have : IsHausdorff (maximalIdeal R) (R ⧸ K) :=
       IsHausdorff.of_le_jacobson _ _ (ringJacobson_eq_maximalIdeal R).ge
     exact (IsAdicComplete.map_algebraMap_iff (S := R ⧸ K) (maximalIdeal R) (R ⧸ K)).2 ⟨⟩
   let g : C' →+* R ⧸ K := π.liftOfSurjective hπ ⟨(Ideal.Quotient.mk K).comp (algebraMap C R), fun c hc => by
@@ -278,7 +278,7 @@ theorem UpperTheory.V.CA.g_ratliff :
       exact absurd e2 WithBot.coe_ne_bot
     | coe b =>
       rw [← WithBot.coe_add, ← WithBot.coe_add, WithBot.coe_inj] at e2
-      rw [WithTop.add_left_cancel (ENat.coe_ne_top k) e2]
+      rw [WithTop.add_left_cancel (ENat.natCast_ne_top k) e2]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.GRatliff =====
@@ -295,7 +295,7 @@ private theorem exists_inverse_mod_maximal_pow {A : Type} [CommRing A] (x : Idea
   have hcop : Ideal.span {w} ⊔ x ^ n = ⊤ := by
     by_contra hne
     obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne
-    haveI := hM.isPrime
+    have := hM.isPrime
     have hxM : x ≤ M := Ideal.IsPrime.le_of_pow_le (le_trans le_sup_right hle)
     have hMx : x = M := Ideal.IsMaximal.eq_of_le ‹x.IsMaximal› hM.ne_top hxM
     apply hw
@@ -388,15 +388,15 @@ private theorem isCplAt_of_localization_atPrime {A R' : Type} [CommRing A] [Comm
 theorem UpperTheory.V.CA.c3d :
     ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsAdicComplete (maximalIdeal O) O] {B C R : Type} [CommRing B] [Algebra O B] [IsLocalRing B] [CommRing C] [Algebra B C] [Algebra.FiniteType B C] [CommRing R] [Algebra C R] [IsLocalRing R] (x : Ideal C) [x.IsMaximal], IsCL O B → x.comap (algebraMap B C) = maximalIdeal B → IsCplAt x R → ∀ (p : Ideal C) [p.IsPrime], p ≤ x → ∀ q ∈ (p.map (algebraMap C R)).minimalPrimes, ringKrullDim (R ⧸ q) = dimAt x p ∧ q.comap (algebraMap C R) = p := by
   intro O _ _ _ _ B C R _ _ _ _ _ _ _ _ _ x _ hB hxB hR p _ hpx q hq
-  haveI : IsNoetherianRing B := hB.noeth
-  haveI : IsNoetherianRing C := Algebra.FiniteType.isNoetherianRing B C
+  have : IsNoetherianRing B := hB.noeth
+  have : IsNoetherianRing C := Algebra.FiniteType.isNoetherianRing B C
   have hcomapq : q.comap (algebraMap C R) = p := by
     have h := (c3a x hR).2.2.2.2 p q hq
     rw [Ideal.minimalPrimes_eq_subsingleton_self] at h
     exact h
   refine ⟨le_antisymm ((c3c x hR).2 p q hcomapq.ge) ?_, hcomapq⟩
   obtain ⟨P0, _, _, f0, hcm, hf0⟩ := cl_cmquot O B hB
-  haveI : IsNoetherianRing P0 := hcm.1
+  have : IsNoetherianRing P0 := hcm.1
   obtain ⟨n, g, hg⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp
     (inferInstance : Algebra.FiniteType B C)
   let π : MvPolynomial (Fin n) P0 →+* C :=
@@ -407,7 +407,7 @@ theorem UpperTheory.V.CA.c3d :
     obtain ⟨b, rfl⟩ := MvPolynomial.map_surjective (f := f0) hf0 a
     exact ⟨b, rfl⟩
   set xt : Ideal (MvPolynomial (Fin n) P0) := Ideal.comap π x with hxt
-  haveI : xt.IsMaximal := Ideal.comap_isMaximal_of_surjective π hπ
+  have : xt.IsMaximal := Ideal.comap_isMaximal_of_surjective π hπ
   have hxtC : Ideal.comap MvPolynomial.C xt = maximalIdeal P0 := by
     have e : π.comp MvPolynomial.C = (algebraMap B C).comp f0 := by
       refine RingHom.ext fun a => ?_
@@ -416,32 +416,32 @@ theorem UpperTheory.V.CA.c3d :
     rw [hxt, Ideal.comap_comap, e, ← Ideal.comap_comap, hxB]
     exact IsLocalRing.eq_maximalIdeal (Ideal.comap_isMaximal_of_surjective f0 hf0)
   obtain ⟨hScm, -⟩ := isCM_localization_mvPolynomial hcm n xt hxtC
-  haveI : IsNoetherianRing (Localization.AtPrime xt) := hScm.1
+  have : IsNoetherianRing (Localization.AtPrime xt) := hScm.1
   obtain ⟨d, hd, -⟩ := hScm.2
   obtain ⟨hloc, hcpl⟩ := cpl_is (Localization.AtPrime xt) (maximalIdeal (Localization.AtPrime xt))
   obtain ⟨-, hDR', hDSx, hdimR'⟩ := cpl_cm (Localization.AtPrime xt)
     (Cpl (maximalIdeal (Localization.AtPrime xt))) hcpl hScm
-  haveI : IsNoetherianRing (Cpl (maximalIdeal (Localization.AtPrime xt))) := hcpl.noeth
-  haveI : Module.Flat (Localization.AtPrime xt) (Cpl (maximalIdeal (Localization.AtPrime xt))) :=
+  have : IsNoetherianRing (Cpl (maximalIdeal (Localization.AtPrime xt))) := hcpl.noeth
+  have : Module.Flat (Localization.AtPrime xt) (Cpl (maximalIdeal (Localization.AtPrime xt))) :=
     (c3a (maximalIdeal (Localization.AtPrime xt)) hcpl).1
-  letI : Algebra (MvPolynomial (Fin n) P0) (Cpl (maximalIdeal (Localization.AtPrime xt))) :=
+  let : Algebra (MvPolynomial (Fin n) P0) (Cpl (maximalIdeal (Localization.AtPrime xt))) :=
     ((algebraMap (Localization.AtPrime xt) (Cpl (maximalIdeal (Localization.AtPrime xt)))).comp
       (algebraMap (MvPolynomial (Fin n) P0) (Localization.AtPrime xt))).toAlgebra
   have hcplS : IsCplAt xt (Cpl (maximalIdeal (Localization.AtPrime xt))) := isCplAt_of_localization_atPrime xt rfl hcpl
   obtain ⟨F, hFs, hFc, hFk⟩ := cpl_quot xt hcplS C R π x hπ hxt.symm hR
   set pt : Ideal (MvPolynomial (Fin n) P0) := Ideal.comap π p with hpt
-  haveI : pt.IsPrime := Ideal.comap_isPrime π p
+  have : pt.IsPrime := Ideal.comap_isPrime π p
   have hptxt : pt ≤ xt := Ideal.comap_mono hpx
   have hdisj : Disjoint (xt.primeCompl : Set (MvPolynomial (Fin n) P0)) (pt : Set _) := by
     rw [Set.disjoint_left]
     intro a ha hb
     exact ha (hptxt hb)
   set ps : Ideal (Localization.AtPrime xt) := pt.map (algebraMap _ (Localization.AtPrime xt)) with hps
-  haveI : ps.IsPrime :=
+  have : ps.IsPrime :=
     IsLocalization.isPrime_of_isPrime_disjoint xt.primeCompl _ pt inferInstance hdisj
-  haveI : q.IsPrime := hq.1.1
+  have : q.IsPrime := hq.1.1
   set Q' : Ideal (Cpl (maximalIdeal (Localization.AtPrime xt))) := Ideal.comap F q with hQ'
-  haveI : Q'.IsPrime := Ideal.comap_isPrime F q
+  have : Q'.IsPrime := Ideal.comap_isPrime F q
   have hkerle : RingHom.ker π ≤ pt := fun a ha => by
     rw [hpt, Ideal.mem_comap, RingHom.mem_ker.mp ha]
     exact p.zero_mem
@@ -458,11 +458,11 @@ theorem UpperTheory.V.CA.c3d :
     refine ⟨⟨inferInstance, ?_⟩, fun Q'' hQ'' hle => ?_⟩
     · exact Ideal.map_le_iff_le_comap.mp (hFmap ▸ hq.1.2)
     · obtain ⟨hQ''p, hQ''le⟩ := hQ''
-      haveI := hQ''p
+      have := hQ''p
       have hkF : RingHom.ker F ≤ Q'' := by
         rw [hFk]
         exact le_trans (Ideal.map_mono hkerle) hQ''le
-      haveI hmp : (Q''.map F).IsPrime := Ideal.map_isPrime_of_surjective hFs hkF
+      have hmp : (Q''.map F).IsPrime := Ideal.map_isPrime_of_surjective hFs hkF
       have h1 : p.map (algebraMap C R) ≤ Q''.map F := by
         rw [← hFmap]
         exact Ideal.map_mono hQ''le
@@ -545,21 +545,21 @@ private theorem td_fin {B A D : Type} [CommRing B] [CommRing A] [CommRing D] [Al
     exact IsScalarTower.algebraMap_apply B A D r
   subst hI
   refine ⟨(Ideal.comap_comap _ _).symm, ?_⟩
-  letI iBD' : Algebra B D := ((algebraMap A D).comp (algebraMap B A)).toAlgebra
-  letI : Algebra (B ⧸ Ideal.comap (algebraMap B A) (Ideal.comap (algebraMap A D) p)) (D ⧸ p) :=
+  let iBD' : Algebra B D := ((algebraMap A D).comp (algebraMap B A)).toAlgebra
+  let : Algebra (B ⧸ Ideal.comap (algebraMap B A) (Ideal.comap (algebraMap A D) p)) (D ⧸ p) :=
     (Ideal.quotientAlgebra : Algebra (B ⧸ Ideal.comap (algebraMap B D) p) (D ⧸ p))
-  haveI : IsScalarTower (B ⧸ Ideal.comap (algebraMap B A) (Ideal.comap (algebraMap A D) p))
+  have : IsScalarTower (B ⧸ Ideal.comap (algebraMap B A) (Ideal.comap (algebraMap A D) p))
       (A ⧸ Ideal.comap (algebraMap A D) p) (D ⧸ p) := by
     apply IsScalarTower.of_algebraMap_eq
     intro x
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
     rfl
-  haveI : FaithfulSMul (B ⧸ Ideal.comap (algebraMap B A) (Ideal.comap (algebraMap A D) p))
+  have : FaithfulSMul (B ⧸ Ideal.comap (algebraMap B A) (Ideal.comap (algebraMap A D) p))
       (A ⧸ Ideal.comap (algebraMap A D) p) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr Ideal.algebraMap_quotient_injective
-  haveI : FaithfulSMul (A ⧸ Ideal.comap (algebraMap A D) p) (D ⧸ p) :=
+  have : FaithfulSMul (A ⧸ Ideal.comap (algebraMap A D) p) (D ⧸ p) :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr Ideal.algebraMap_quotient_injective
-  haveI : Algebra.IsAlgebraic (A ⧸ Ideal.comap (algebraMap A D) p) (D ⧸ p) :=
+  have : Algebra.IsAlgebraic (A ⧸ Ideal.comap (algebraMap A D) p) (D ⧸ p) :=
     Algebra.IsIntegral.isAlgebraic
   have key := trdeg_add_eq (B ⧸ Ideal.comap (algebraMap B A) (Ideal.comap (algebraMap A D) p))
     (A ⧸ Ideal.comap (algebraMap A D) p) (A := D ⧸ p)
@@ -579,20 +579,20 @@ private theorem dim_gen (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
     ∀ η : Ideal A, η.IsPrime → η ≤ x → ∀ t : ℕ, Algebra.trdeg (B ⧸ η.comap (algebraMap B A)) (A ⧸ η) = t →
       ∃ P : Ideal R, P.IsPrime ∧ (P.comap (algebraMap D R)).comap (algebraMap A D) = η ∧
         ringKrullDim (R ⧸ P) = ringKrullDim (B ⧸ η.comap (algebraMap B A)) + t := by
-  haveI : IsNoetherianRing B := hB.noeth
-  haveI : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing B A
-  haveI : IsNoetherianRing D := Algebra.FiniteType.isNoetherianRing A D
-  haveI : IsNoetherianRing R := hR.noeth
-  letI : Algebra B D := ((algebraMap A D).comp (algebraMap B A)).toAlgebra
-  haveI : IsScalarTower B A D := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Algebra.FiniteType B D := Algebra.FiniteType.trans (S := A) inferInstance inferInstance
-  haveI := hx
+  have : IsNoetherianRing B := hB.noeth
+  have : IsNoetherianRing A := Algebra.FiniteType.isNoetherianRing B A
+  have : IsNoetherianRing D := Algebra.FiniteType.isNoetherianRing A D
+  have : IsNoetherianRing R := hR.noeth
+  let : Algebra B D := ((algebraMap A D).comp (algebraMap B A)).toAlgebra
+  have : IsScalarTower B A D := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Algebra.FiniteType B D := Algebra.FiniteType.trans (S := A) inferInstance inferInstance
+  have := hx
   have hyc : Ideal.comap (algebraMap D R) (maximalIdeal R) = y := by
     simpa using hR.comap_pow 1
-  haveI hyP : y.IsPrime := by
+  have hyP : y.IsPrime := by
     rw [← hyc]
     infer_instance
-  haveI hyM : y.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := A) y (by
+  have hyM : y.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := A) y (by
     change (y.comap (algebraMap A D)).IsMaximal
     rw [hy]
     exact hx)
@@ -600,8 +600,8 @@ private theorem dim_gen (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
     rw [IsScalarTower.algebraMap_eq B A D, ← Ideal.comap_comap, hy, hxB]
   constructor
   · intro P hP η hη t ht
-    haveI := hP
-    haveI hpDP : (P.comap (algebraMap D R)).IsPrime := Ideal.comap_isPrime _ _
+    have := hP
+    have hpDP : (P.comap (algebraMap D R)).IsPrime := Ideal.comap_isPrime _ _
     have hpDy : P.comap (algebraMap D R) ≤ y := by
       rw [← hyc]
       exact Ideal.comap_mono (le_maximalIdeal hP.ne_top)
@@ -616,8 +616,8 @@ private theorem dim_gen (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
       exact_mod_cast htt
     exact h1.trans (add_le_add le_rfl hcast)
   · intro η hη hηx t ht
-    haveI := hη
-    haveI : y.LiesOver x := ⟨hy.symm⟩
+    have := hη
+    have : y.LiesOver x := ⟨hy.symm⟩
     obtain ⟨pD, hpDy, hpD, hlo⟩ := Ideal.exists_ideal_le_liesOver_of_le (p := η) (q := x) y hηx
     have hηD : pD.comap (algebraMap A D) = η := (Ideal.over_def pD η).symm
     have hmap : Ideal.map (algebraMap D R) pD ≤ maximalIdeal R := by
@@ -637,11 +637,11 @@ theorem UpperTheory.V.Fr.loc_dim :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ S : Space O F n, ∀ (x : Ideal S.A) (L : S.Loc x), (∀ P : Ideal L.R, P.IsPrime → ∀ t : ℕ, S.td (L.im P) ≤ t → ringKrullDim (L.R ⧸ P) ≤ ringKrullDim (S.B ⧸ L.π P) + t) ∧ ∀ η : Ideal S.A, η.IsPrime → η ≤ x → ∀ t : ℕ, S.td η = t → ∃ P : Ideal L.R, P.IsPrime ∧ L.im P = η ∧ ringKrullDim (L.R ⧸ P) = ringKrullDim (S.B ⧸ S.π η) + t := by
   intro l _ O _ _ _ _ F C₀ n hOk hn S x L
   obtain ⟨hco, hmB⟩ := co_B hOk hn S
-  haveI := hco
-  haveI : IsAdicComplete (maximalIdeal O) O := UpperTheory.V.Fr.IsCoef.complete (l := l)
+  have := hco
+  have : IsAdicComplete (maximalIdeal O) O := UpperTheory.V.Fr.IsCoef.complete (l := l)
   have hB : UpperTheory.V.CA.IsCL O S.B := UpperTheory.V.CA.IsCL.of_isCO O S.B
   obtain ⟨-, -, -, -, hFT, -, -⟩ := gr_A hOk hn S
-  haveI := hFT
+  have := hFT
   obtain ⟨-, hxM, hmx⟩ := loc_flat hOk hn S x L
   have hxB : x.comap (algebraMap S.B S.A) = maximalIdeal S.B := by
     refine le_antisymm (le_maximalIdeal (Ideal.comap_ne_top _ hxM.ne_top)) ?_
@@ -670,21 +670,21 @@ theorem UpperTheory.V.Fr.loc_dim :
     change r • z = 0 at hrz
     rw [Algebra.smul_def] at hrz
     exact (mul_eq_zero.mp hrz).resolve_left hr0
-  haveI : Module.Flat O L.O' := Module.Flat.flat_iff_torsion_eq_bot_of_isBezout.mpr htor
-  letI : Algebra S.A (TensorProduct O L.O' S.A) := Algebra.TensorProduct.rightAlgebra
+  have : Module.Flat O L.O' := Module.Flat.flat_iff_torsion_eq_bot_of_isBezout.mpr htor
+  let : Algebra S.A (TensorProduct O L.O' S.A) := Algebra.TensorProduct.rightAlgebra
   let e : (TensorProduct O S.A L.O') ≃ₐ[S.A] (TensorProduct O L.O' S.A) :=
     AlgEquiv.ofRingEquiv (f := (Algebra.TensorProduct.comm O S.A L.O').toRingEquiv) (fun a => by
       simp [Algebra.TensorProduct.algebraMap_apply]
       rfl)
-  haveI : Module.Finite S.A (TensorProduct O L.O' S.A) := Module.Finite.equiv e.toLinearEquiv
-  haveI : Module.Flat S.A (TensorProduct O L.O' S.A) := Module.Flat.of_linearEquiv e.symm.toLinearEquiv
+  have : Module.Finite S.A (TensorProduct O L.O' S.A) := Module.Finite.equiv e.toLinearEquiv
+  have : Module.Flat S.A (TensorProduct O L.O' S.A) := Module.Flat.of_linearEquiv e.symm.toLinearEquiv
   let ι' : TensorProduct O L.O' S.A →ₐ[L.O'] L.R :=
     Algebra.TensorProduct.lift (Algebra.ofId L.O' L.R) L.ι (fun _ _ => Commute.all _ _)
   have hι' : ∀ a : S.A, ι' (TensorProduct.tmul O (1 : L.O') a) = L.ι a := by
     intro a
     simp [ι']
   have hR := loc_cpl hOk hn S x L ι' hι'
-  letI : Algebra (TensorProduct O L.O' S.A) L.R := ι'.toRingHom.toAlgebra
+  let : Algebra (TensorProduct O L.O' S.A) L.R := ι'.toRingHom.toAlgebra
   have hcm : ∀ Q : Ideal L.R, (Q.comap (algebraMap (TensorProduct O L.O' S.A) L.R)).comap
       (algebraMap S.A (TensorProduct O L.O' S.A)) = L.im Q := by
     intro Q

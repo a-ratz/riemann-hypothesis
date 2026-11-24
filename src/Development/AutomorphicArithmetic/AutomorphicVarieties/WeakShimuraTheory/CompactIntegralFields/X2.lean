@@ -149,7 +149,7 @@ theorem UpperTheory.V.Ws.exists_descent_to_galoisGroupUnramifiedOutside :
     apply hv
     apply hS
     have h1 := (hA (N : 𝓞 F)).1
-    simp only [plDvd, Set.mem_setOf_eq]
+    simp only [plDvd, Set.mem_ofPred_eq]
     apply h1
     simpa using hlt
   have hNS : NS Ω (S : Set (HeightOneSpectrum (𝓞 F))) ≤ ρ.ker := by
@@ -275,10 +275,10 @@ theorem UpperTheory.V.Ws.exists_complexConjugation_at_realPlace :
     have h := congrArg (fun ψ : F →+* ℂ => ψ x)
       (NumberField.ComplexEmbedding.isReal_iff.mp (NumberField.InfinitePlace.isReal_iff.mp hw))
     simpa using h
-  letI : Algebra F ℂ := φ.toAlgebra
+  let : Algebra F ℂ := φ.toAlgebra
   have halg : ∀ x : F, algebraMap F ℂ x = φ x := fun x => rfl
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : Normal F Ω := IsAlgClosure.normal F Ω
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : Normal F Ω := IsAlgClosure.normal F Ω
   let j : Ω →ₐ[F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -286,7 +286,7 @@ theorem UpperTheory.V.Ws.exists_complexConjugation_at_realPlace :
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   let E : IntermediateField F ℂ := j.fieldRange
   let e : Ω ≃ₐ[F] E := AlgEquiv.ofInjectiveField j
-  haveI : Normal F E := Normal.of_algEquiv e
+  have : Normal F E := Normal.of_algEquiv e
   let cj : ℂ →ₐ[F] ℂ :=
     { (starRingEnd ℂ : ℂ →+* ℂ) with
       commutes' := fun x => by
@@ -454,8 +454,8 @@ theorem UpperTheory.V.Ws.greenberg_wiles_count_mod_l :
   obtain ⟨μ, hμ⟩ := GlobalTheory.Published.PoitouTate.exists_lift_cycMod (F := F) (Ω := Ω) (l := l) (r := 1) (S := S) hS
   choose Av hA using fun v : S => (exists_isPlaceOver Ω v.1 : ∃ A : ValuationSubring Ω, IsPlaceOver A v.1)
   have e := P.gw F Ω l 1 M S ρ one_pos hl hS hρ μ hμ Av hA c hc (fun _ => ⊤)
-  haveI : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact hp.out⟩
-  haveI hfd : Finite (TDual (ZMod (l ^ 1)) M) := DFunLike.finite _
+  have : Fact (l ^ 1).Prime := ⟨by rw [pow_one]; exact hp.out⟩
+  have hfd : Finite (TDual (ZMod (l ^ 1)) M) := DFunLike.finite _
   have hf1 : Finite (H1 ρ) := (P.gf F Ω l 1 M S ρ one_pos hS hρ).2.1
   obtain ⟨hZ, eZ⟩ := cocycle_card_euler_formula _ _ M ρ hρ hf1
   refine ⟨hZ, ?_⟩
@@ -481,7 +481,7 @@ theorem UpperTheory.V.Ws.greenberg_wiles_count_mod_l :
   simp only [htop] at e
   have hloc : (∏ v : S, Nat.card (H1 (ρ.comp (locFam S Av v)))) ≤
       (∏ v : S, Nat.card (H0 (ρ.comp (locFam S Av v)))) * Nat.card M ^ (S.card + Module.finrank ℚ F) := by
-    refine (Finset.prod_le_prod' fun v _ => (local_h1_finite_mod_l P.loc.lf P.loc.lt P.loc.le F Ω l M (Av v) v.1
+    refine (Finset.prod_le_prod fun v _ => (local_h1_finite_mod_l P.loc.lf P.loc.lt P.loc.le F Ω l M (Av v) v.1
       (ρ.comp (locFam S Av v)) (hA v) (hρ.comp' (continuous_locFam S Av v))).2).trans ?_
     rw [Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum]
     refine Nat.mul_le_mul_left _ (Nat.pow_le_pow_right hM ?_)
@@ -524,8 +524,8 @@ theorem UpperTheory.V.Ws.card_globalCocycles_le_of_iwasawaRank :
     CohomologyHyp → ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] [Finite M], (∀ m : M, l • m = 0) → ∀ (ρ : Representation R (G F Ω) M) (K : Subgroup (G F Ω)) (N r g : ℕ), l ≠ 2 → N ≠ 0 → l ∣ N → (plDvd F N).ncard ≤ g → (∀ σ ∈ ineOff F Ω N, ∀ m, ρ σ m = m) → K.Normal → IsOpen (K : Set (G F Ω)) → ¬ l ∣ K.index → (∀ σ ∈ K, ∀ m, ρ σ m = m) → K ≤ (cycMod F Ω l 1).ker → XRk l 1 K r → CardLe (cocOff ρ (ineOff F Ω N)) (Nat.card M ^ (r + 2 + g + Module.finrank ℚ F)) ∧ (IsTotallyReal F → (∀ σ : G F Ω, IsCC σ → ∀ m, ρ σ m = m) → CardLe (cocOff ρ (ineOff F Ω N)) (Nat.card M ^ (r + 2 + g))) := by
   intro P F Ω _ _ _ _ _ l _ R M _ _ _ _ hlM ρ K N r g hl hN hlN hg hI hKn hKo hKi hKρ hKc hX
   obtain ⟨inst, ρ', hρ'⟩ := exists_zmod_prime_representation_of_torsion l (G F Ω) R M hlM ρ
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
   have hfin := plDvd_fin F N hN
   have hcard : hfin.toFinset.card ≤ g := by rwa [← Set.ncard_eq_toFinset_card _ hfin]
   have hmem : ∀ v, v ∈ plDvd F N → v ∈ hfin.toFinset := fun v hv => hfin.mem_toFinset.2 hv
@@ -583,8 +583,8 @@ open scoped Classical
 
 private theorem emb_twist {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (i j : Ω →+* ℂ) :
     ∃ g : Ω ≃ₐ[ℚ] Ω, ∀ x, j (g x) = i x := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   let jA : Ω →ₐ[ℚ] ℂ := j.toRatAlgHom
   let iA : Ω →ₐ[ℚ] ℂ := i.toRatAlgHom
   let K : IntermediateField ℚ ℂ := jA.fieldRange
@@ -602,7 +602,7 @@ private theorem emb_twist {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ
     · rintro ⟨z, hz⟩
       obtain ⟨x, rfl⟩ := jA.mem_fieldRange.1 hz
       exact ⟨x, rfl⟩
-  haveI : IsAlgClosed K := IsAlgClosed.of_ringEquiv Ω K (RingEquiv.ofBijective r hr)
+  have : IsAlgClosed K := IsAlgClosed.of_ringEquiv Ω K (RingEquiv.ofBijective r hr)
   have hi : ∀ x, ∃ y, j y = i x := by
     intro x
     have h1 : IsIntegral ℚ (iA x) := (Algebra.IsIntegral.isIntegral x).map iA
@@ -759,7 +759,7 @@ open scoped Classical
 
 private theorem isLocalHom_algebraMap_padicInt_coef_O {l : ℕ} [Fact l.Prime] (c : Coef l) :
     IsLocalHom (algebraMap ℤ_[l] c.O) := by
-  haveI := c.fin
+  have := c.fin
   apply RingHom.IsIntegral.isLocalHom
   · exact (Algebra.IsIntegral.of_finite ℤ_[l] c.O).isIntegral
   · intro a b h
@@ -772,13 +772,13 @@ private theorem isLocalHom_algebraMap_padicInt_coef_O {l : ℕ} [Fact l.Prime] (
 
 private theorem finite_residueField_coef {l : ℕ} [Fact l.Prime] (c : Coef l) :
     Finite (ResidueField c.O) := by
-  haveI := c.fin
-  haveI := isLocalHom_algebraMap_padicInt_coef_O c
+  have := c.fin
+  have := isLocalHom_algebraMap_padicInt_coef_O c
   exact IsLocalRing.ResidueField.finite_of_finite (R := ℤ_[l]) inferInstance
 
 private theorem prime_nsmul_residueField_coef_eq_zero {l : ℕ} [Fact l.Prime] (c : Coef l) (m : ResidueField c.O) :
     l • m = 0 := by
-  haveI := isLocalHom_algebraMap_padicInt_coef_O c
+  have := isLocalHom_algebraMap_padicInt_coef_O c
   have h0 : IsLocalRing.residue c.O (algebraMap ℤ_[l] c.O (l : ℤ_[l])) = 0 := by
     rw [IsLocalRing.residue_eq_zero_iff]
     exact (IsLocalRing.mem_maximalIdeal _).2
@@ -793,7 +793,7 @@ theorem UpperTheory.V.Ws.rank_cocycleSpaces_le_of_towerIwasawaRank :
     CohomologyHyp → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ (T : Tower D) (r g : ℕ), (plDvd T.F (prodS D)).ncard ≤ g → XRk l 1 T.Kr r → (∀ w, Module.rank (ResidueField c.O) ((T.fr ∅).Str (residue c.O) w) ≤ (r + 1 : ℕ)) ∧ (∀ w ∈ [0, wPs, -wPs], Module.rank (ResidueField c.O) ((T.fr ∅).Zgl (residue c.O) w) ≤ (r + 2 + g : ℕ)) ∧ ∀ w, Module.rank (ResidueField c.O) ((T.fr ∅).Zgl (residue c.O) w) ≤ T.d + (r + 2 + g : ℕ) := by
   intro hP Ω _ _ _ l _ c D hD T r g hg hX
   obtain ⟨hN, hO, hI, hC, hK, hU, ⟨hS0, hSl⟩, hIne, -⟩ := residualKernel_properties D hD T
-  haveI := finite_residueField_coef c
+  have := finite_residueField_coef c
   have tor := prime_nsmul_residueField_coef_eq_zero c
   have triv : ∀ (w : ℤ × ℤ), ∀ σ ∈ T.Kr, ∀ m : ResidueField c.O, (charRep (T.rbU w)) σ m = m := by
     intro w σ hσ m
@@ -817,20 +817,20 @@ theorem UpperTheory.V.Ws.rank_cocycleSpaces_le_of_towerIwasawaRank :
     have h := card_cocycles_vanishing_on_inertia_le_pow T.F Ω l (ResidueField c.O) (ResidueField c.O) tor (charRep (T.rbU w)) T.Kr r hI
       (triv w) hX
     refine le_trans (Submodule.rank_mono (str_residue_le_cocycles_vanishing_on_inertia_kernel D hD T w)) ?_
-    haveI := h.1
+    have := h.1
     exact rank_le_of_card_le_pow_card_field _ _ _ h
   · intro w hw
     have h := (card_globalCocycles_le_of_iwasawaRank hP T.F Ω l _ _ tor (charRep (T.rbU w)) T.Kr (prodS D) r g hD.l_odd hS0 hSl hg
       (hinf w) hN hO hI (triv w) hC hX).2 T.realF
       (fun σ hσ m => by simp [charRep, residualCharacter_complexConjugation_eq_one D hD T σ hσ w hw])
     refine le_trans (Submodule.rank_mono (sub w)) ?_
-    haveI := h.1
+    have := h.1
     exact rank_le_of_card_le_pow_card_field _ _ _ h
   · intro w
     have h := (card_globalCocycles_le_of_iwasawaRank hP T.F Ω l _ _ tor (charRep (T.rbU w)) T.Kr (prodS D) r g hD.l_odd hS0 hSl hg
       (hinf w) hN hO hI (triv w) hC hX).1
     refine le_trans (Submodule.rank_mono (sub w)) ?_
-    haveI := h.1
+    have := h.1
     have h2 := rank_le_of_card_le_pow_card_field _ _ _ h
     refine le_trans h2 (le_of_eq ?_)
     simp only [Tower.d]
@@ -892,7 +892,7 @@ private theorem mem_span_image_algebraMap_of_linearForm_comp_mem {X k₀ k : Typ
     (hz : ∀ φ : k →ₗ[k₀] k₀, (fun x => φ (z x)) ∈ W₀) :
     z ∈ Submodule.span k ((fun w : X → k₀ => fun x => algebraMap k₀ k (w x)) '' (W₀ : Set (X → k₀))) := by
   have hr := rank_span_range_le_of_linearForm_comp_mem W₀ n hW₀ z hz
-  haveI : Module.Finite k₀ (Submodule.span k₀ (Set.range z)) :=
+  have : Module.Finite k₀ (Submodule.span k₀ (Set.range z)) :=
     Module.rank_lt_aleph0_iff.1 (hr.trans_lt Cardinal.natCast_lt_aleph0)
   set L := Submodule.span k₀ (Set.range z)
   let e := Module.finBasis k₀ L
@@ -996,7 +996,7 @@ private theorem zgl_phi {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace 
 theorem UpperTheory.V.Ws.cocycleBounds_of_ringHom_comp :
     ∀ {O Γ : Type} [CommRing O] [Group Γ] [TopologicalSpace Γ] (Φ : Fr O Γ) (k₀ k : Type) [Field k₀] [Field k] (a₀ : O →+* k₀) (j : k₀ →+* k) (d C : ℕ), Φ.Bounds a₀ d C → Φ.Bounds (j.comp a₀) d C := by
   intro O Γ _ _ _ Φ k₀ k _ _ a₀ j d C hB
-  letI : Algebra k₀ k := j.toAlgebra
+  let : Algebra k₀ k := j.toAlgebra
   change Φ.Bounds ((algebraMap k₀ k).comp a₀) d C
   refine ⟨hB.card, fun w hw => ?_, fun w hw => ?_, fun w hw => ?_, fun w hw => ?_⟩
   · refine rank_le_of_linearForm_comp_mem_of_rank_le Γ k₀ k _ _ C (hB.str w hw) ?_
@@ -1047,8 +1047,8 @@ theorem UpperTheory.V.Ws.exists_iwasawaRank_bound_of_ferreroWashington :
   have hUc : IsClosed (U : Set (G ℚ Ω)) := Subgroup.isClosed_of_isOpen U hUo
   set K : IntermediateField ℚ Ω := IntermediateField.fixedField U
   have hUK : K.fixingSubgroup = U := InfiniteGalois.fixingSubgroup_fixedField ⟨U, hUc⟩
-  haveI : FiniteDimensional ℚ K := (InfiniteGalois.isOpen_iff_finite K).1 (by rw [hUK]; exact hUo)
-  haveI : NumberField K := ⟨⟩
+  have : FiniteDimensional ℚ K := (InfiniteGalois.isOpen_iff_finite K).1 (by rw [hUK]; exact hUo)
+  have : NumberField K := ⟨⟩
   have hgal : galOf ℚ K Ω = U := by
     rw [← hUK]
     ext σ
@@ -1061,8 +1061,8 @@ theorem UpperTheory.V.Ws.exists_iwasawaRank_bound_of_ferreroWashington :
     have : g * h * g⁻¹ = (g * h * g⁻¹ * h⁻¹) * h := by group
     rw [this]
     exact U.mul_mem hcm hh
-  haveI : IsGalois ℚ K := (InfiniteGalois.normal_iff_isGalois K).1 (by rw [hUK]; exact hnorm)
-  haveI : IsMulCommutative Gal(K/ℚ) := by
+  have : IsGalois ℚ K := (InfiniteGalois.normal_iff_isGalois K).1 (by rw [hUK]; exact hnorm)
+  have : IsMulCommutative Gal(K/ℚ) := by
     constructor
     constructor
     intro a b
@@ -1077,21 +1077,21 @@ theorem UpperTheory.V.Ws.exists_iwasawaRank_bound_of_ferreroWashington :
     have h1 := congrArg (· * (AlgEquiv.restrictNormalHom K τ) * (AlgEquiv.restrictNormalHom K σ)) hmem
     simp only [one_mul, inv_mul_cancel_right] at h1
     exact h1
-  haveI : IsAbelianGalois ℚ K := ⟨⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
-    haveI : NeZero (l ^ i) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : IsAbelianGalois ℚ K := ⟨⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : ∀ i : ℕ, HasEnoughRootsOfUnity Ω (l ^ i) := fun i => by
+    have : NeZero (l ^ i) := ⟨pow_ne_zero _ hl.ne_zero⟩
     infer_instance
   have hchar : ∀ σ : G ℚ Ω, cycMod ℚ Ω l 1 σ = 1 → galChar Ω (l ^ 1) σ = 1 := by
     intro σ h
     unfold ReciprocityTheory.Gal.cycMod ReciprocityTheory.Gal.cycZ at h
     unfold UpperTheory.V.Two.galChar
     rw [Units.ext_iff] at h ⊢
-    simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe] at h
+    simp only [MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass] at h
     erw [cyclotomicCharacter.toZModPow] at h
     exact h
   have hμ : ∃ ζ : K, IsPrimitiveRoot ζ (if l = 2 then 4 else l) := by
-    rw [if_neg hl2]
+    rw [ite_eq_right hl2]
     have := (muIff Ω K (l ^ 1)).2 (by
       rw [hgal]
       intro σ hσ
@@ -1101,9 +1101,9 @@ theorem UpperTheory.V.Ws.exists_iwasawaRank_bound_of_ferreroWashington :
   refine ⟨r, fun n => ?_⟩
   obtain ⟨hcyc, -, -⟩ := UpperTheory.V.Kum.fnCyc K Ω l n
   set K' := UpperTheory.V.Kum.Fn K Ω l n
-  haveI : FiniteDimensional K K' := IsCyclotomicExtension.finiteDimensional {l ^ n} K K'
-  haveI : FiniteDimensional ℚ K' := Module.Finite.trans K K'
-  haveI : NumberField K' := ⟨⟩
+  have : FiniteDimensional K K' := IsCyclotomicExtension.finiteDimensional {l ^ n} K K'
+  have : FiniteDimensional ℚ K' := Module.Finite.trans K K'
+  have : NumberField K' := ⟨⟩
   have hcl := hr n K'
   have hgo := UpperTheory.V.Kum.galOfCyc ℚ Ω l n K K'
   rw [hgal] at hgo
@@ -1171,7 +1171,7 @@ theorem UpperTheory.V.Ws.exists_iwasawaRank_bound_of_ferreroWashington :
       apply hθ
       funext a
       rw [← hΦ p a, ← hΦ q a, h]
-    letI : Module (ZMod l) (Additive (A ⧸ (powMonoidHom l : A →* A).range)) := AddCommGroup.zmodModule hV
+    let : Module (ZMod l) (Additive (A ⧸ (powMonoidHom l : A →* A).range)) := AddCommGroup.zmodModule hV
     exact CardLe.of_injective (cardLe_dual_zmod_card l (Additive (A ⧸ (powMonoidHom l : A →* A).range))) _
       ((AddMonoidHom.toZModLinearMap_injective l (M := Additive (A ⧸ (powMonoidHom l : A →* A).range))
         (M₁ := ZMod l)).comp hinj)
@@ -1233,10 +1233,10 @@ private theorem comm_le_ker {Γ M : Type} [Group Γ] [Monoid M] (f : Γ →* M) 
 theorem UpperTheory.V.Ws.kerOverRationals_open_commutator_layer :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ (F : IntermediateField ℚ Ω) [NumberField F] [IsAbelianGalois ℚ F], IsOpen (kerQ D F : Set (G ℚ Ω)) ∧ commutator (G ℚ Ω) ≤ kerQ D F ∧ ∀ (m : ℕ) (F' : IntermediateField ℚ Ω), IsLayer l m F F' → kerQ D F' = levU l (kerQ D F) (m + 1) ∧ cycU l (kerQ D F) ≤ F'.fixingSubgroup := by
   intro Ω _ _ _ l _ c D hD F hnf hab
-  haveI := hnf
-  haveI := hab
+  have := hnf
+  have := hab
   have hnorm : Normal ℚ F := by
-    haveI : IsGalois ℚ F := IsAbelianGalois.toIsGalois
+    have : IsGalois ℚ F := IsAbelianGalois.toIsGalois
     exact IsGalois.to_normal
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, hrb, -, -⟩ := UpperTheory.V.GradeZeroInterpolatingElement.facts D hD
   have hcm : (cycMod ℚ Ω l 1).ker = Subgroup.comap (cycZ ℚ Ω l) (KStar.TotallyRealRoots.princ l 1) := rfl
@@ -1306,7 +1306,7 @@ private theorem addClosed_index (l : ℕ) [Fact l.Prime] (A : AddSubgroup ℤ_[l
   have hspec := PadicInt.unitCoeff_spec h0
   set w := PadicInt.unitCoeff h0
   set n := a.valuation
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   let f := (PadicInt.toZModPow (p := l) n).toAddMonoidHom
   have hle : f.ker ≤ A := by
     intro x hx
@@ -1359,8 +1359,8 @@ theorem UpperTheory.V.Ws.index_ne_zero_of_isClosed_of_not_isOfFinOrder :
     rw [MonoidHom.mem_ker, hL, padicUnitsLog_eq_one_iff] at hx
     exact hx
   have hcard : Nat.card L.ker ≠ 0 := by
-    haveI : NeZero (torsionExponent l) := ⟨(torsionExponent_pos l).ne'⟩
-    haveI : Finite L.ker := Finite.of_injective (Subgroup.inclusion hker) (Subgroup.inclusion_injective hker)
+    have : NeZero (torsionExponent l) := ⟨(torsionExponent_pos l).ne'⟩
+    have : Finite L.ker := Finite.of_injective (Subgroup.inclusion hker) (Subgroup.inclusion_injective hker)
     exact Nat.card_ne_zero.2 ⟨inferInstance, inferInstance⟩
   have hrel : H.relIndex (H ⊔ L.ker) ≠ 0 := by
     rw [sup_comm, Subgroup.relIndex_sup_right]
@@ -1384,7 +1384,7 @@ open scoped Classical
 theorem UpperTheory.V.Ws.index_cyclotomicKer_sup_decompositionGroup_ne_zero :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (p : ℕ) (A : ValuationSubring Ω), p.Prime → A.valuation (p : Ω) < 1 → ((cycZ ℚ Ω l).ker ⊔ Dec (F := ℚ) A).index ≠ 0 := by
   intro Ω _ _ _ l _ p A hp hA
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
   have hg : ∃ g ∈ Dec (F := ℚ) A, ¬ IsOfFinOrder (cycZ ℚ Ω l g) := by
     by_cases hlp : l = p
     · subst hlp
@@ -1485,7 +1485,7 @@ open scoped Classical
 private theorem plDvd_eq (F : Type) [Field F] (N : ℕ) (hN : N ≠ 0) :
     plDvd F N = ⋃ p ∈ N.primeFactors, plDvd F p := by
   ext v
-  simp only [plDvd, Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]
+  simp only [plDvd, Set.mem_ofPred_eq, Set.mem_iUnion, exists_prop]
   constructor
   · have key : ∀ M : ℕ, M ≠ 0 → ((M : 𝓞 F) ∈ v.asIdeal) →
         ∃ p ∈ M.primeFactors, (p : 𝓞 F) ∈ v.asIdeal := by
@@ -1520,12 +1520,12 @@ private theorem plDvd_eq (F : Type) [Field F] (N : ℕ) (hN : N ≠ 0) :
 theorem UpperTheory.V.Ws.exists_uniform_bound_ncard_placesDividing :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (U : Subgroup (G ℚ Ω)) (N : ℕ), U.Normal → IsOpen (U : Set (G ℚ Ω)) → N ≠ 0 → ∃ g : ℕ, ∀ (F : IntermediateField ℚ Ω) [NumberField F], cycU l U ≤ F.fixingSubgroup → (plDvd F N).ncard ≤ g := by
   intro Ω _ _ _ l _ U N hUn hUo hN
-  haveI := hUn
-  haveI : (cycU l U).Normal := by
+  have := hUn
+  have : (cycU l U).Normal := by
     unfold cycU
     infer_instance
   have hUi : U.index ≠ 0 := by
-    haveI := Subgroup.quotient_finite_of_isOpen U hUo
+    have := Subgroup.quotient_finite_of_isOpen U hUo
     exact Subgroup.index_ne_zero_of_finite
   have hUle : ∀ {X : Type} (s : Finset ℕ) (f : ℕ → Set X),
       (⋃ p ∈ s, f p).ncard ≤ ∑ p ∈ s, (f p).ncard := by
@@ -1566,8 +1566,8 @@ theorem UpperTheory.V.Ws.card_localCocycles_le_of_place_above_prime :
     LocalFiniteness → LocalTateDuality → LocalEulerChar → ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] [Finite M], (∀ m : M, l • m = 0) → ∀ (A : ValuationSubring Ω) (v : HeightOneSpectrum (𝓞 F)) (ρ : Representation R (Dec (F := F) A) M), IsPlaceOver A v → ((l : ℕ) : 𝓞 F) ∈ v.asIdeal → (∀ m, IsLocallyConstant fun g => ρ g m) → CardLe (cocOff ρ ∅) (Nat.card M ^ (2 + locDeg v)) := by
   intro hF hT hE F Ω _ _ _ _ _ l _ R M _ _ _ _ hl A v ρ hA hv hρ
   obtain ⟨inst, ρ', hρ'⟩ := exists_zmod_prime_representation_of_torsion l (Dec (F := F) A) R M hl ρ
-  letI : TopologicalSpace M := ⊥
-  haveI : DiscreteTopology M := ⟨rfl⟩
+  let : TopologicalSpace M := ⊥
+  have : DiscreteTopology M := ⟨rfl⟩
   have hc : ReciprocityTheory.Gal.ContAction ρ' := by
     unfold ReciprocityTheory.Gal.ContAction
     rw [continuous_prod_of_discrete_right]
@@ -1576,10 +1576,10 @@ theorem UpperTheory.V.Ws.card_localCocycles_le_of_place_above_prime :
     exact (hρ m).continuous
   obtain ⟨f1, h1⟩ := local_h1_finite_mod_l hF hT hE F Ω l M A v ρ' hA hc
   obtain ⟨fz, hz⟩ := cocycle_card_euler_formula _ _ M ρ' hc f1
-  rw [if_pos hv] at h1
+  rw [ite_eq_left hv] at h1
   have h0 : 0 < Nat.card (H0 ρ') := by
-    haveI : Finite (H0 ρ') := Subtype.finite
-    haveI : Nonempty (H0 ρ') := ⟨0⟩
+    have : Finite (H0 ρ') := Subtype.finite
+    have : Nonempty (H0 ρ') := ⟨0⟩
     exact Nat.card_pos
   have hZ : CardLe (Z1 ρ') (Nat.card M ^ (2 + locDeg v)) := by
     refine ⟨fz, Nat.le_of_mul_le_mul_right ?_ h0⟩
@@ -1605,11 +1605,11 @@ open scoped Classical Pointwise
 theorem UpperTheory.V.Ws.exists_injective_places_above_l_of_tower :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c) (T : Tower D), ∃ pl : T.ι → HeightOneSpectrum (𝓞 T.F), Function.Injective pl ∧ ∀ v, IsPlaceOver (T.pl v) (pl v) ∧ ((l : ℕ) : 𝓞 T.F) ∈ (pl v).asIdeal := by
   intro Ω _ _ _ l _ c D T
-  haveI := T.nF
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic T.F Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) T.F
-  haveI : IsAlgClosure T.F Ω := ⟨inferInstance, inferInstance⟩
+  have := T.nF
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic T.F Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) T.F
+  have : IsAlgClosure T.F Ω := ⟨inferInstance, inferInstance⟩
   obtain ⟨_, hex, hne, _⟩ := UpperTheory.V.Kum.placeDict T.F Ω
   have hpl : ∀ v, ∃ w : HeightOneSpectrum (𝓞 T.F), IsPlaceOver (T.pl v) w :=
     fun v => hex _ (hne _ l (Fact.out : l.Prime).ne_zero (T.ovl v))
@@ -1678,7 +1678,7 @@ private def scalRep {k Γ : Type} [Field k] [Group Γ] (γ : Γ →* kˣ) : Repr
 theorem UpperTheory.V.Ws.rank_localCocycleSpaces_le :
     CohomologyHyp → ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ (T : Tower D) (g : ℕ), (plDvd T.F (prodS D)).ncard ≤ g → Nat.card T.ι ≤ g ∧ ∀ w, Module.rank (ResidueField c.O) (∀ v, (T.fr ∅).Zloc (residue c.O) ((T.fr ∅).Gv v) w) ≤ T.d + (2 * g : ℕ) := by
   intro P Ω _ _ _ l hl c D hD T g hg
-  haveI : IsAlgClosure T.F Ω :=
+  have : IsAlgClosure T.F Ω :=
     ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) T.F⟩
   obtain ⟨pl, hinj, hpl⟩ := exists_injective_places_above_l_of_tower D T
   obtain ⟨-, hKo, -, -, hK1, hK2, ⟨h0, hlS⟩, -, -⟩ := residualKernel_properties D hD T
@@ -1694,7 +1694,7 @@ theorem UpperTheory.V.Ws.rank_localCocycleSpaces_le :
     rw [hm, Nat.cast_mul]
     exact Ideal.mul_mem_right _ _ (hpl v).2
   have hcard : Nat.card T.ι ≤ g := by
-    haveI := hfin.to_subtype
+    have := hfin.to_subtype
     refine le_trans ?_ hg
     rw [← Nat.card_coe_set_eq]
     exact Nat.card_le_card_of_injective (fun v => (⟨pl v, hmem v⟩ : plDvd T.F (prodS D)))
@@ -1705,7 +1705,7 @@ theorem UpperTheory.V.Ws.rank_localCocycleSpaces_le :
     rw [hval, Ne, IsDiscreteValuationRing.addVal_eq_zero_iff] at h0
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact h0
-  haveI : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
+  have : Finite (ResidueField c.O) := (UpperTheory.V.abelian₂.dvr_finite l c.O).2.1
   have hlc : IsLocallyConstant (T.rbU w) :=
     lc_of_open _ (Subgroup.isOpen_mono (fun x hx => hK2 w x (hK1 x hx)) hKo)
   have hv : ∀ v : T.ι, CardLe ((T.fr ∅).Zloc (residue c.O) ((T.fr ∅).Gv v) w)
@@ -1713,24 +1713,24 @@ theorem UpperTheory.V.Ws.rank_localCocycleSpaces_le :
     have h := card_localCocycles_le_of_place_above_prime P.loc.lf P.loc.lt P.loc.le T.F Ω l (ResidueField c.O) (ResidueField c.O)
       (fun m => by rw [nsmul_eq_mul, hl0, zero_mul]) (T.pl v) (pl v)
       (scalRep ((T.rbU w).comp (Dec (F := T.F) (T.pl v)).subtype)) (hpl v).1 (hpl v).2
-      (fun m => (hlc.comp_continuous continuous_subtype_val).comp fun u => (u : ResidueField c.O) • m)
+      (fun m => (hlc.comp_continuous continuous_subtypeVal).comp fun u => (u : ResidueField c.O) • m)
     exact h.of_injective (fun z => ⟨z.1, z.2.1, z.2.2, fun _ h => h.elim⟩)
       fun a b h => Subtype.ext (Subtype.mk.inj h)
-  haveI : Fintype T.ι := Fintype.ofFinite _
-  haveI : Finite (T.fr ∅).ι := T.fin
+  have : Fintype T.ι := Fintype.ofFinite _
+  have : Finite (T.fr ∅).ι := T.fin
   have hsum : ∑ v : T.ι, (2 + locDeg (pl v)) ≤ T.d + 2 * g := by
     have h1 := sum_local_degree_above_l_le_finrank T.F l (Finset.univ.map ⟨pl, hinj⟩)
     rw [Finset.sum_map] at h1
-    simp only [Function.Embedding.coeFn_mk, (hpl _).2, if_true] at h1
+    simp only [Function.Embedding.coeFn_mk, (hpl _).2, ite_true] at h1
     rw [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, ← Nat.card_eq_fintype_card, smul_eq_mul]
     have : T.d = Module.finrank ℚ T.F := rfl
     omega
   have hC : CardLe (∀ v : T.ι, (T.fr ∅).Zloc (residue c.O) ((T.fr ∅).Gv v) w)
       (Nat.card (ResidueField c.O) ^ (T.d + 2 * g)) := by
-    haveI := fun v => (hv v).1
+    have := fun v => (hv v).1
     refine ⟨inferInstance, ?_⟩
     rw [Nat.card_pi]
-    refine (Finset.prod_le_prod' fun v _ => (hv v).2).trans ?_
+    refine (Finset.prod_le_prod fun v _ => (hv v).2).trans ?_
     rw [Finset.prod_pow_eq_pow_sum]
     exact Nat.pow_le_pow_right Nat.card_pos hsum
   have := rank_le_of_card_le_pow_card_field (ResidueField c.O) _ _ hC

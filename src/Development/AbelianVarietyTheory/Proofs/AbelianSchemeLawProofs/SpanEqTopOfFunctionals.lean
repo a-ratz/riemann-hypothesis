@@ -410,7 +410,7 @@ theorem span_translates_eq_top {k : ℤ} {T : Over S} {I : Type} [Nonempty I]
 theorem exists_geomPoint (X : Scheme.{0}) [IsAffine X] (𝔪 : Ideal Γ(X, ⊤)) (h𝔪 : 𝔪.IsMaximal) :
     ∃ (K : Type) (_ : Field K) (_ : IsAlgClosed K) (u : Spec (CommRingCat.of K) ⟶ X),
       ∀ r, u.appTop.hom r = 0 ↔ r ∈ 𝔪 := by
-  letI := Ideal.Quotient.field 𝔪
+  let := Ideal.Quotient.field 𝔪
   let K := AlgebraicClosure (Γ(X, ⊤) ⧸ 𝔪)
   let f : Γ(X, ⊤) ⟶ CommRingCat.of K :=
     CommRingCat.ofHom ((algebraMap (Γ(X, ⊤) ⧸ 𝔪) K).comp (Ideal.Quotient.mk 𝔪))

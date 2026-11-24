@@ -75,8 +75,8 @@ theorem exists_lowDegree_coords_mod : ∀ (k A : Type) [Field k] [CommRing A] [I
  ∀ w : A, ∃ p : Fin n → k[X], (∀ i, (p i).natDegree ≤ d) ∧ w - ∑ i, p i • b i ∈ Ideal.span {g * algebraMap k[X] A q} := by
   intro k A _ _ _ _ n b g q d hg hq hdeg w
   classical
-  haveI : Module.Free k[X] A := Module.Free.of_basis b
-  haveI : Module.Finite k[X] A := Module.Finite.of_basis b
+  have : Module.Free k[X] A := Module.Free.of_basis b
+  have : Module.Finite k[X] A := Module.Finite.of_basis b
   have hN : Algebra.norm k[X] g ≠ 0 := Algebra.norm_ne_zero_iff.mpr hg
   set p₀ := Algebra.norm k[X] g * q with hp₀
   have hp₀0 : p₀ ≠ 0 := mul_ne_zero hN hq

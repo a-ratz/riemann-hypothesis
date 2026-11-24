@@ -61,7 +61,7 @@ namespace GlobalTheory.MBLow.AbKey
 theorem res_res' {X : Scheme.{0}} {U V W : X.Opens} (h : W ≤ V) (h' : V ≤ U) (u : Γ(X, U)ˣ) :
     res h (res h' u) = res (h.trans h') u := by
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
@@ -86,7 +86,7 @@ theorem exists_unit_sec {X : Scheme.{0}} (L : LB X) (F : X ⟶ X) (hF : F = 𝟙
 
 theorem norm_th_one {V : Type} [CommRing V] [IsDomain V] {D : DegPre V} {C : Type} [NormedField C]
     [Algebra (FractionRing V) C] {N : NumD C} (ν : NumOf D C N) (hν : ν.IntN) (hg : D.P.g = 0) : ‖N.th 1‖ = 1 := by
-  haveI : IsIso D.P.A.hom := GlobalTheory.ZM.Model.isIso_of_dim_zero D.P.A D.P.isAb (hg ▸ D.P.smoothDim)
+  have : IsIso D.P.A.hom := GlobalTheory.ZM.Model.isIso_of_dim_zero D.P.A D.P.isAb (hg ▸ D.P.smoothDim)
   have he : eSec D.P.A ≫ D.P.A.hom = 𝟙 _ := Over.w η[D.P.A]
   have he' : D.P.A.hom ≫ eSec D.P.A = 𝟙 _ := by
     rw [← cancel_mono D.P.A.hom, Category.assoc, Category.id_comp]

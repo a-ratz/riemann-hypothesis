@@ -56,7 +56,7 @@ namespace GlobalTheory.CNorm
 
 theorem IsKum.minpoly_eq {p : ℕ} {F E : Type} [Field F] [Field E] [Algebra F E] {ζ δ : F} {θ : E}
     {σ : E ≃ₐ[F] E} (h : IsKum p ζ δ θ σ) : minpoly F θ = X ^ p - C δ := by
-  have hirr : Irreducible (X ^ p - C δ) := X_pow_sub_C_irreducible_of_prime h.prime h.nonpow
+  have hirr : Irreducible (X ^ p - C δ) := irreducible_X_pow_sub_C_of_prime h.prime h.nonpow
   refine (minpoly.eq_of_irreducible_of_monic hirr ?_ (monic_X_pow_sub_C δ h.prime.ne_zero)).symm
   simp [h.pow]
 
@@ -74,7 +74,7 @@ theorem kummer_galois : ∀ (p : ℕ) (F E : Type) [Field F] [CharZero F] [Field
   have hp := h.prime
   have hp0 : p ≠ 0 := hp.ne_zero
   have : NeZero p := ⟨hp0⟩
-  have hirr : Irreducible (X ^ p - C δ) := X_pow_sub_C_irreducible_of_prime hp h.nonpow
+  have hirr : Irreducible (X ^ p - C δ) := irreducible_X_pow_sub_C_of_prime hp h.nonpow
   have hζ : (primitiveRoots p F).Nonempty := ⟨ζ, (mem_primitiveRoots hp.pos).mpr h.root⟩
   have hinj : Function.Injective (algebraMap F E) := (algebraMap F E).injective
   have hθ0 : θ ≠ 0 := by

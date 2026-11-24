@@ -165,27 +165,27 @@ theorem exists_tq_baseChange : ∀ (S S' : Scheme.{0}) (f : S' ⟶ S) (X : Type)
     (G' : Over S') [GrpObj G'] (F : G'.left ⟶ G.left), IsGrpPullback G' G f F →
     ∀ Q : TQ G X, ∃ Q' : TQ G' X, TorusCompat f F Q'.i Q.i := by
   intro S S' f X _ G _ G' _ F hF Q
-  letI := Q.grp
-  letI := Q.comm
-  haveI := Q.q_hom
-  haveI := Q.i_hom
+  let := Q.grp
+  let := Q.comm
+  have := Q.q_hom
+  have := Q.i_hom
   obtain ⟨i', hi', -⟩ := existsUnique_torusCompat hF.1 Q.i
-  haveI : IsMonHom i' := TorusCompat.isMonHom hF hi'
+  have : IsMonHom i' := TorusCompat.isMonHom hF hi'
   have hB := isGrpPullback_pullback Q.B f
   let q' : G' ⟶ (Over.pullback f).obj Q.B :=
     Over.homMk (pullback.lift (F ≫ Q.q.left) G'.hom (by rw [Category.assoc, Over.w Q.q, hF.1.w]))
       (by exact pullback.lift_snd _ _ _)
   have hq'fst : q'.left ≫ pullback.fst Q.B.hom f = F ≫ Q.q.left := pullback.lift_fst _ _ _
-  haveI : IsMonHom q' := isMonHom_of_over_isMonHom hF hB Q.q q' hq'fst
+  have : IsMonHom q' := isMonHom_of_over_isMonHom hF hB Q.q q' hq'fst
   have hBsq : IsPullback F q'.left Q.q.left (pullback.fst Q.B.hom f) := by
     refine IsPullback.of_bot ?_ hq'fst.symm (IsPullback.of_hasPullback Q.B.hom f)
     have e1 : q'.left ≫ pullback.snd Q.B.hom f = G'.hom := pullback.lift_snd _ _ _
     rw [e1, Over.w Q.q]
     exact hF.1
   have hAb : IsAbelianScheme ((Over.pullback f).obj Q.B) := by
-    haveI := Q.isAb.smooth
-    haveI := Q.isAb.proper
-    haveI := Q.isAb.geomConnected
+    have := Q.isAb.smooth
+    have := Q.isAb.proper
+    have := Q.isAb.geomConnected
     exact ⟨inferInstance, by simp only [Over.pullback_obj_hom]; infer_instance,
       by simp only [Over.pullback_obj_hom]; infer_instance, by simp only [Over.pullback_obj_hom]; infer_instance⟩
   have hη : (η[(Over.pullback f).obj Q.B]).left ≫ pullback.fst Q.B.hom f = f ≫ (η[Q.B]).left :=

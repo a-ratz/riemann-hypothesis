@@ -84,7 +84,7 @@ theorem normV_under_pow (K M : Type) [Field K] [NumberField K] [Field M] [Number
 theorem tendsto_under (K M : Type) [Field K] [NumberField K] [Field M] [NumberField M] [Algebra K M] :
     Filter.Tendsto (fun w : HeightOneSpectrum (𝓞 M) => w.under (𝓞 K)) Filter.cofinite Filter.cofinite := by
   refine Filter.Tendsto.cofinite_of_finite_preimage_singleton fun v => ?_
-  haveI := v.isMaximal
+  have := v.isMaximal
   refine Set.Finite.of_finite_image (f := HeightOneSpectrum.asIdeal)
     ((IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 M)).subset ?_) (fun _ _ _ _ h => HeightOneSpectrum.ext h)
   rintro _ ⟨w, hw, rfl⟩

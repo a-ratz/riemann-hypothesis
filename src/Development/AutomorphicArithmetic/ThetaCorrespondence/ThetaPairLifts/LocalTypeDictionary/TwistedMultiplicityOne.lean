@@ -126,7 +126,7 @@ theorem archTrace : _root_.GlobalTheory.Published.DiscreteSeriesClassification �
     ∃ c, HasTrace (repOp δ (μa (placeOf D ρ)) (fa (placeOf D ρ))) c ∧ (c ≠ 0 → IsUnitEquiv δ (dsRep M ρ)) := by
   intro _ _ _ D V lam S M T U μa μf μ _ _ fa ff hT ρ X _ _ _ δ hδ
   obtain ⟨-, -, -, -, -, harch, -⟩ := hT
-  haveI := (M.ds ρ).1
+  have := (M.ds ρ).1
   have h := harch ρ
   by_cases he : IsUnitEquiv δ (dsRep M ρ)
   · exact ⟨1, he.symm.hasTrace h.trace_self, fun _ => he⟩
@@ -156,7 +156,7 @@ theorem hasTrace_repOp_of_isCopyFinDSX : ∀ (D : D7) (V : HSp D) (lam : D.what�
   intro D V lam S M T U μa μf μ _ _ fa ff hT ν hν H _ _ _ π hπ W _ _ σ hirr hadm hcopy c hc
   obtain ⟨-, -, -, -, hres, harch, hfin⟩ := hT
   have hff := hfin.isFinFamily
-  haveI : ν.IsHaarMeasure := hν.1
+  have : ν.IsHaarMeasure := hν.1
   obtain ⟨Tm, hTm, hinj, hdense⟩ := hcopy
   have hTm' : Tm ∈ homTensorPi (GfC V).subtype (fun τ => embW V (placeOf D τ)) σ (dsRep M) π ⊤ := hTm
   obtain ⟨A, hA, hAtr⟩ := hc
@@ -230,7 +230,7 @@ theorem hasTrace_repOp_of_isCopyFinDSX : ∀ (D : D7) (V : HSp D) (lam : D.what�
     have h3 := LinearMap.congr_fun hAP w
     rw [LinearMap.comp_apply, h0, map_zero, LinearMap.smul_apply] at h3
     exact (smul_eq_zero.1 h3.symm).resolve_left hvol
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (M.ds τ).1
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (M.ds τ).1
   have key := GlobalTheory.TensorTrace.hasTrace_finiteRank_tensor D.what₂.Tau M.H H W Tm (fun w w' => bePi (Tm w) (Tm w')) hinner hinj hdense A c hAtr
     (GlobalTheory.PRep.fixed σ K) hZ hrange hcond (fun τ => repOp (dsRep M τ) (μa (placeOf D τ)) (fa (placeOf D τ)))
     (fun _ => 1) (fun τ => (harch τ).trace_self) (repOp π μ (tensor D.sp.cm.sig V.gram fa ff)) hX
@@ -315,8 +315,8 @@ namespace GlobalTheory.TestFnCusp
 theorem isCuspidalOp_tensorX : (∀ (D : D7) (V : HSp D) (μ : Measure (GA D V)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant], GlobalTheory.IndefiniteRowSideFullHecke.CuspidalNoRadicalFixed.CuspidalOperators V μ) → GlobalTheory.IndefiniteRowSideFullHecke.ConstantTermVanishing.ParabolicAndConstTermX → ∀ (D : D7) (V : HSp D) (lam : D.what₂.Tau → Fin V.rank → ℤ) (S : D.what₂.Tau → SPar) (M : DSModel V S) (T : TypeDataG V) (U : AuxiliaryPlaceHermitianSpace V) (μa : ∀ w, Measure (GArch D.sp.cm.sig V.gram w)) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)) (μ : Measure (GA D V)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (fa : ∀ w, GArch D.sp.cm.sig V.gram w → ℂ) (ff : ∀ v, GLoc D.sp.cm.sig V.gram v → ℂ), IsTestDataX V lam M T U μa μf μ fa ff → GlobalTheory.IndefiniteRowSideFullHecke.CuspidalNoRadicalFixed.IsCuspidalOp V μ (tensor D.sp.cm.sig V.gram fa ff) := by
   intro hCO hPC D V lam S M T U μa μf μ _ _ fa ff hTD
   obtain ⟨hodd, -, -, hnf, hμ, ha, hb⟩ := hTD
-  haveI : ∀ w, (μa w).IsHaarMeasure := hμ.haar_arch
-  haveI : ∀ v, (μf v).IsHaarMeasure := hμ.haar_loc
+  have : ∀ w, (μa w).IsHaarMeasure := hμ.haar_arch
+  have : ∀ v, (μf v).IsHaarMeasure := hμ.haar_loc
   have hT : IsTestFnGX M T U μa μf (tensor D.sp.cm.sig V.gram fa ff) := ⟨fa, ff, ha, hb, rfl⟩
   have hf : tensor D.sp.cm.sig V.gram fa ff ∈ CcGA V := hT.isPureTensor.2
   have hU := hPC.2 D V hodd S M T (hypH_of_noFixed T hnf) U μa μf _ hT
@@ -409,7 +409,7 @@ theorem finiteDimensional_of_compact_bdd {E : Type} [NormedAddCommGroup E] [Inne
     intro y hy
     have hy' : y ∈ closure (X : Set E) := by rwa [← Submodule.topologicalClosure_coe]
     exact closure_minimal (fun x hx => hX x hx) hcl hy'
-  haveI : CompleteSpace Y := X.isClosed_topologicalClosure.completeSpace_coe
+  have : CompleteSpace Y := X.isClosed_topologicalClosure.completeSpace_coe
   let f : Y →L[ℂ] E := T ∘L Y.subtypeL
   have hanti : AntilipschitzWith (Real.toNNReal c⁻¹) f := by
     refine f.antilipschitz_of_bound fun y => ?_
@@ -421,7 +421,7 @@ theorem finiteDimensional_of_compact_bdd {E : Type} [NormedAddCommGroup E] [Inne
   have hball : IsCompact (Metric.closedBall (0 : Y) 1) :=
     hpre.of_isClosed_subset Metric.isClosed_closedBall fun y hy =>
       subset_closure ⟨(y : E), mem_closedBall_zero_iff.2 (mem_closedBall_zero_iff.1 hy), rfl⟩
-  haveI : FiniteDimensional ℂ Y := FiniteDimensional.of_isCompact_closedBall₀ (𝕜 := ℂ) zero_lt_one hball
+  have : FiniteDimensional ℂ Y := FiniteDimensional.of_isCompact_closedBall₀ (𝕜 := ℂ) zero_lt_one hball
   exact Submodule.finiteDimensional_of_le X.le_topologicalClosure
 
 theorem mem_fixed_imp {G X : Type} [Group G] [AddCommGroup X] [Module ℂ X] {ρ : Representation ℂ G X}
@@ -445,7 +445,7 @@ theorem phiDS_one {D : D7} {V : HSp D} {S : D.what₂.Tau → SPar} (M : DSModel
     have h : ∃ x : M.H τ, ‖x‖ = 1 := exists_norm_eq (M.H τ) zero_le_one
     rw [unitVec, dite_eq_left h]
     exact h.choose_spec
-  simp only [map_one, ContinuousLinearMap.one_apply]
+  simp only [map_one, one_apply_eq_self]
   rw [inner_self_eq_norm_sq_to_K, hunit]
   simp
 
@@ -506,7 +506,7 @@ theorem finiteDimensional_of_bump {G E : Type} [Group G] [TopologicalSpace G] [M
     simp [hfdef]
   have hJpos : 0 < J.re := by
     rw [hJre]
-    refine (hbc.mul (Complex.continuous_re.comp hφc)).integral_pos_of_hasCompactSupport_nonneg_nonzero
+    refine (hbc.mul (Complex.continuous_re.comp hφc)).integral_pos_of_hasCompactSupport_nonneg_ne_zero
       (x := 1) ?_ ?_ ?_
     · exact hbcs.mono (Function.support_mul_subset_left _ _)
     · intro g
@@ -615,7 +615,7 @@ theorem compSt : CompSt := by
         refine mem_homIn_top.2 fun h y => ?_
         have hc : Commute (embArch D.sp.cm.sig V.gram w h) g' := commute_embArch _ _ h hg'
         have e1 : π g' (π (embArch D.sp.cm.sig V.gram w h) (T y)) = π (embArch D.sp.cm.sig V.gram w h) (π g' (T y)) := by
-          rw [← ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, ← map_mul, ← map_mul, hc.eq]
+          rw [← mul_apply_eq_comp, ← mul_apply_eq_comp, ← map_mul, ← map_mul, hc.eq]
         simp only [ContinuousLinearMap.comp_apply]
         rw [(mem_homIn_top.1 hT) h y]
         exact e1
@@ -628,7 +628,7 @@ theorem compSt : CompSt := by
     have hg' : projArch D.sp.cm.sig V.gram w g' = 1 := by
       simp [g', x, map_mul, map_inv]
     have hg : g = embArch D.sp.cm.sig V.gram w x * g' := by simp [g']
-    rw [hg, map_mul, ContinuousLinearMap.mul_apply]
+    rw [hg, map_mul, mul_apply_eq_comp]
     exact hP.2 x _ (hcomm g' hg' v hv)
   have hne : P ≠ ⊥ := by
     obtain ⟨y, hyW, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hW.2.1
@@ -874,7 +874,7 @@ theorem exists_irreducible_subrepresentation_bis (hρ : IsUnitaryRep ρ) {a Q : 
         rw [mul_div_assoc', div_lt_iff₀ (by positivity)]
         nlinarith [norm_nonneg a]
       linarith
-    refine h0 (CStarRing.mul_star_self_eq_zero_iff.1 ?_)
+    refine h0 (mul_star_self_eq_zero.1 ?_)
     have e : a * Q * star (a * Q) = a * b * star a := by
       rw [star_mul, hbdef]; simp only [mul_assoc]
     rw [e, hab0, zero_mul]
@@ -974,7 +974,7 @@ theorem hasDSComp (h1 : IrredSt) (h2 : CompSt) : GlobalTheory.Published.Discrete
   have hmem : ∀ w, fa w ∈ CcArch D.sp.cm.sig V.gram w := hTD.2.2.2.2.2.1.mem
   have hfin : IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff := hTD.2.2.2.2.2.2.isFinFamily
   obtain ⟨Q, hQ, hrep⟩ := GlobalTheory.T.pureTensorOperator_split_oneRealPlace D V μa μf μ hRP fa ff hmem hfin H π hπ.unitary (placeOf D τ)
-  haveI : (μa (placeOf D τ)).IsHaarMeasure := hRP.1 _
+  have : (μa (placeOf D τ)).IsHaarMeasure := hRP.1 _
   have hcont := continuous_of_mem_ccSmooth (continuous_archCoord _ _ _) (hmem (placeOf D τ))
   have hint : Integrable (fa (placeOf D τ)) (μa (placeOf D τ)) := hcont.integrable_of_hasCompactSupport (hmem _).1
   have hπw : IsUnitaryRep (π.comp (embArch D.sp.cm.sig V.gram (placeOf D τ))) :=
@@ -988,7 +988,7 @@ theorem hasDSComp (h1 : IrredSt) (h2 : CompSt) : GlobalTheory.Published.Discrete
   obtain ⟨c', hc', himp⟩ := GlobalTheory.PsCo.Plug.archTrace hDS hHC hPC D V lam S M T U μa μf μ fa ff hTD τ δ.H δ.π δ.isIrr
   by_cases hc'0 : c' = 0
   · exfalso
-    haveI := δ.isIrr.complete
+    have := δ.isIrr.complete
     have hc'w : HasTrace (repOp δ.π (μa (placeOf D τ)) (fa (placeOf D τ))) 0 := hc'0 ▸ hc'
     have h0 := GlobalTheory.T.trace_integratedOp_mul_eq_zero_of_isotypic (GArch D.sp.cm.sig V.gram (placeOf D τ)) _ _ hint δ.H H δ.π _ δ.isIrr hπw hδ' Q hQ hc'w htc
     exact hc0 (hc.2.symm.trans (hrep ▸ h0))
@@ -1002,7 +1002,7 @@ theorem copyFinDS (h1 : IrredSt) (h2 : CompSt) (h4 : AdmSt) : GlobalTheory.Publi
   have hcopy := GlobalTheory.T.irreducibleUnitaryRep_eq_finiteSmoothPart_tensor_discreteSeries D V S M H π hπ hcomp hU
   have hadm := h4 D V S M μ H π hπ.unitary hcp hU
   have hirr := GlobalTheory.FinPartIrrAdm.irreducible hπ hcomp hU hadm
-  haveI : ν.IsHaarMeasure := hν.1
+  have : ν.IsHaarMeasure := hν.1
   have hfam : IsFinFamily D.sp.cm.sig V.gram (frameLat V) ff := hTD.2.2.2.2.2.2.isFinFamily
   obtain ⟨⟨c', hc'⟩, -⟩ := GlobalTheory.T.admissibleRep_hasTrace_finiteAdelicPureTensorFunction D V ν ff hfam _ (finPartDSSm M hU) hadm
   have hπc' := GlobalTheory.PsCo.Plug.copyTraceT D V lam S M T U μa μf μ fa ff hTD ν hν H π hπ _ (finPartDSSm M hU) hirr hadm hcopy c' hc'

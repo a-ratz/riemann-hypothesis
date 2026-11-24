@@ -132,7 +132,7 @@ theorem prO_lt {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) (z : �
   rw [h.2 z hz, ← q.sec_pr, ← q.int_iff]
   change (q.pr.comp (incA D)) _ ∉ _ ↔ _
   rw [map_inv₀, Valuation.mem_integer_iff, map_inv₀, not_le]
-  exact one_lt_inv₀ (a := valuation k (prO q z)) (zero_lt_iff.2 ((map_ne_zero _).2 h0))
+  exact one_lt_inv₀ (a := valuation k (prO q z)) (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))
 
 theorem prO_eq_one {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) {z : 𝓞 D.host.E} (hz : z ∉ PP.asIdeal) :
     valuation k (prO q z) = 1 := le_antisymm (prO_le q h z) (not_lt.1 (mt (prO_lt q h z).2 hz))
@@ -145,7 +145,7 @@ theorem xi_unit (hu : q.UnitAA) (h0 : (ofSplit q).xi ≠ 0) : valuation k (ofSpl
   rw [mul_comm, ← q.sec_pr, ← q.int_iff, Valuation.mem_integer_iff] at h3 h4
   change valuation k ((q.pr.comp (incA D)) _) ≤ 1 at h4
   rw [map_inv₀, map_inv₀] at h4
-  exact le_antisymm h3 ((inv_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0))).1 h4)
+  exact le_antisymm h3 ((inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))).1 h4)
 
 theorem sec_mul (x y : k) : q.sec x * q.sec y = q.sec (x * y) := by
   have h := q.sec_pr (q.sec x * q.sec y)
@@ -185,8 +185,8 @@ theorem res_idl {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) {χ : 
     have ha0 : a ≠ 0 := by
       rintro rfl
       exact y.ne_zero (hy.trans (q.pr.comp (incA D)).map_zero)
-    haveI := PP.isMaximal
-    letI := Ideal.Quotient.field PP.asIdeal
+    have := PP.isMaximal
+    let := Ideal.Quotient.field PP.asIdeal
     have hu : Ideal.Quotient.mk PP.asIdeal s ≠ 0 := by rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
     have h1 := hr s (Units.mk0 _ hs0) (Units.mk0 _ hu) rfl rfl
     have h2 := hr r (Units.mk0 _ hs0 * Units.mk0 _ ha0) (Units.mk0 _ hu) e (Ideal.Quotient.eq.2 hrs).symm
@@ -222,7 +222,7 @@ theorem exists_unif {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) {�
     rintro rfl
     exact (uniformizer_pos (R := k)).ne (by simpa using ht)
   have hu : ∀ x : k, valuation k x < 1 ↔ valuation k x ≤ valuation k t := fun x => by rw [ht, le_uniformizer_iff]
-  have tp : 0 < valuation k t := zero_lt_iff.2 ((map_ne_zero _).2 t0)
+  have tp : 0 < valuation k t := pos_iff_ne_zero.2 ((map_ne_zero _).2 t0)
   have triv : ∀ y : k, valuation k y < 1 → ψ (t⁻¹ * y) = 1 := fun y hy =>
     (hψ 1).2 (by simp) _ (by
       rw [map_mul, map_inv₀, map_one, inv_mul_le_one₀ tp]
@@ -239,9 +239,9 @@ theorem exists_unif {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) {�
       map_add_eq_mul' := fun a b => by
         rw [wd _ (l a + l b) (by rw [map_add (f := _), hl, hl, hl]), map_add (f := _), mul_add, AddChar.map_add_eq_mul, Circle.coe_mul] }
   have hα : ∀ z, α (Ideal.Quotient.mk _ z) = ψ (t⁻¹ * prO q z) := fun z => congrArg (fun c : Circle => (c : ℂ)) (wd _ z (hl _))
-  haveI := PP.isMaximal
-  letI := Ideal.Quotient.field PP.asIdeal
-  haveI : Finite (𝓞 D.host.E ⧸ PP.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ PP.ne_bot
+  have := PP.isMaximal
+  let := Ideal.Quotient.field PP.asIdeal
+  have : Finite (𝓞 D.host.E ⧸ PP.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ PP.ne_bot
   have hα1 : α ≠ 1 := by
     intro e
     obtain ⟨-, hi, hd⟩ := place_facts q h
@@ -266,7 +266,7 @@ theorem exists_unif {PP : Formalism.L2.DIV.Pl D.host.E} (h : IsIdemAt q.e PP) {�
       exact Circle.coe_injective h4.symm
     rw [map_inv₀, Units.val_one, map_one, inv_le_one₀ tp] at h1
     exact absurd ((hu t).2 le_rfl) (not_lt.2 h1)
-  letI := Fintype.ofFinite (𝓞 D.host.E ⧸ PP.asIdeal)
+  let := Fintype.ofFinite (𝓞 D.host.E ⧸ PP.asIdeal)
   have hb : Function.Bijective α.mulShift :=
     (Fintype.bijective_iff_injective_and_card _).2
       ⟨AddChar.to_mulShift_inj_of_isPrimitive (AddChar.IsPrimitive.of_ne_one hα1), AddChar.card_eq.symm⟩
@@ -423,7 +423,7 @@ theorem sym_chr (ψ₀ : AddChar (O ⧸ I) ℂ) (hψ : ∀ z, (S.ψ (((S.ϖ⁻¹
   rw [← mul_inv_eq_one, ← AddChar.map_neg_eq_inv, ← AddChar.map_add_eq_mul, ← sub_eq_add_neg, ← mul_sub]
   refine (S.cond 1).2 (by simp) _ ?_
 
-  rw [map_mul, Units.val_inv_eq_inv_val, map_inv₀, map_one, inv_mul_le_one₀ (by simp [zero_lt_iff]), ← S.unif, map_sum,
+  rw [map_mul, Units.val_inv_eq_inv_val, map_inv₀, map_one, inv_mul_le_one₀ (by simp [pos_iff_ne_zero]), ← S.unif, map_sum,
   ← Finset.sum_sub_distrib]
   refine Valuation.map_sum_lt _ one_ne_zero fun a _ => ?_
 

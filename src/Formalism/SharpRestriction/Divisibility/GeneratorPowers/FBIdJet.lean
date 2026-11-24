@@ -89,9 +89,9 @@ theorem psTrunc_eq {ι : Type} [Fintype ι] [DecidableEq ι] (m : ℕ) (f : MvPo
     | exact Finset.sum_ite_eq' (degLE m) e (fun x => MvPowerSeries.coeff x f)
   rw [hL]
   by_cases h : e.degree < m + 1
-  · rw [if_pos (hmem.2 h), MvPowerSeries.coeff_truncTotal]
+  · rw [ite_eq_left (hmem.2 h), MvPowerSeries.coeff_truncTotal]
     exact h
-  · rw [if_neg (fun h' => h (hmem.1 h'))]
+  · rw [ite_eq_right (fun h' => h (hmem.1 h'))]
     first
     | exact (MvPowerSeries.coeff_truncTotal_eq_zero (by omega)).symm
     | exact (MvPowerSeries.coeff_truncTotal_eq_zero _ (by omega)).symm
@@ -220,7 +220,7 @@ theorem psTrunc_mem_orig {τ : Type} [Fintype τ] [DecidableEq τ] (m : ℕ) (g 
         · first
           | (simp only [Finsupp.coe_add, Finsupp.coe_tsub, Pi.add_apply, Pi.sub_apply,
               Finsupp.single_eq_of_ne h, Finsupp.single_eq_of_ne (Ne.symm h)]; omega)
-      rw [MvPolynomial.X, MvPolynomial.monomial_mul, mul_one, hs]
+      rw [MvPolynomial.X, monomial_mul_monomial, mul_one, hs]
     rw [key]
     refine Ideal.mul_mem_left _ _ ?_
     first

@@ -81,7 +81,7 @@ private theorem trace_of_charpoly {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) (c 
     (h : M.charpoly = ∏ i, (X - C (c i))) : M.trace = ∑ i, c i := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · simp [Matrix.trace]
-  · haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  · have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
     rw [Matrix.trace_eq_neg_charpoly_coeff, h, Fintype.card_fin]
     have hc := prod_X_sub_C_coeff_card_pred (Finset.univ : Finset (Fin n)) c (by simp [hn])
     rw [Finset.card_univ, Fintype.card_fin] at hc
@@ -292,11 +292,11 @@ private theorem prod_sub_lam_mul_sub_mu_eq_zero {n : ℕ} (D N : Matrix (Fin n) 
       ∏ j, (Polynomial.X - Polynomial.C (lam j)) := by
     rw [hpdef, List.prod_ofFn,
       ← Finset.mul_prod_erase Finset.univ (fun j => Polynomial.X - Polynomial.C (lam j)) (Finset.mem_univ i),
-      ← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ i), if_pos rfl, one_mul]
+      ← Finset.mul_prod_erase Finset.univ _ (Finset.mem_univ i), ite_eq_left rfl, one_mul]
     congr 1
     apply Finset.prod_congr rfl
     intro j hj
-    rw [if_neg (Finset.ne_of_mem_erase hj)]
+    rw [ite_eq_right (Finset.ne_of_mem_erase hj)]
   have hCH : Polynomial.aeval D (∏ j, (Polynomial.X - Polynomial.C (lam j))) = 0 := by
     rw [← List.prod_ofFn, map_list_prod, ← hD, List.map_ofFn, List.map_ofFn]
     refine congrArg List.prod (congrArg List.ofFn (funext fun j => ?_))
@@ -328,7 +328,7 @@ private theorem prod_sub_lam_mul_sub_mu_eq_zero {n : ℕ} (D N : Matrix (Fin n) 
   have hz : ∀ j, j ≠ i → p.eval (lam j) = 0 := by
     intro j hj
     rw [hpe]
-    exact Finset.prod_eq_zero (Finset.mem_univ j) (by rw [if_neg hj, sub_self])
+    exact Finset.prod_eq_zero (Finset.mem_univ j) (by rw [ite_eq_right hj, sub_self])
   have htrp : ∀ (r : Polynomial ℂ) (a : ℕ),
       (Polynomial.aeval D r * N ^ a).trace = ∑ j, r.eval (lam j) * mu j ^ a := by
     intro r a

@@ -164,18 +164,18 @@ theorem isIso_hom (D : DegPre R) (hg : D.P.g = 0) : IsIso D.P.A.hom :=
   GlobalTheory.ZM.Model.isIso_of_dim_zero D.P.A D.P.isAb (hg ▸ D.P.smoothDim)
 
 theorem hom_subsingleton (D : DegPre R) (hg : D.P.g = 0) (T : Over (Sp R)) : Subsingleton (T ⟶ D.P.A) := by
-  haveI := isIso_hom D hg
+  have := isIso_hom D hg
   refine ⟨fun f f' => Over.OverMorphism.ext ?_⟩
   rw [← cancel_mono D.P.A.hom, Over.w f, Over.w f']
 
 theorem subsingleton_A {F : Type} [Field F] [Algebra (FractionRing R) F] {D : DegPre R} {N : NumD F} (ν : NumOf D F N)
     (hg : D.P.g = 0) : Subsingleton N.A := by
-  haveI := hom_subsingleton D hg (TF (R := R) F)
+  have := hom_subsingleton D hg (TF (R := R) F)
   exact ⟨fun x y => ν.eA.injective (Subsingleton.elim _ _)⟩
 
 theorem th_one_ne_zero {F : Type} [Field F] [Algebra (FractionRing R) F] {D : DegPre R} {N : NumD F} (ν : NumOf D F N)
     (hg : D.P.g = 0) : N.th 1 ≠ 0 := by
-  haveI : IsIso D.P.A.hom := isIso_hom D hg
+  have : IsIso D.P.A.hom := isIso_hom D hg
   have he : eSec D.P.A ≫ D.P.A.hom = 𝟙 _ := Over.w η[D.P.A]
   have he' : D.P.A.hom ≫ eSec D.P.A = 𝟙 _ := by
     rw [← cancel_mono D.P.A.hom, Category.assoc, Category.id_comp]
@@ -288,7 +288,7 @@ theorem frZ_self (ν : NumOf D ℂ N) : frZ ν (ν.J (ν.eA 1).left) = ν.rg := 
   rw [valF_eq_valR, c, _root_.one_mul]
 
 theorem isD_zero (ν : NumOf D ℂ N) (hg : D.P.g = 0) (d : AB N.toNumB g) (b : TE R ℂ ⟶ D.P.A) : IsD ν d 0 b := by
-  haveI := hom_subsingleton D hg (TE R ℂ)
+  have := hom_subsingleton D hg (TE R ℂ)
   intro U f hU
   have hb : b = (Over.homMk (spMap (algebraMap ℂ (DualNumber ℂ))) rfl : TE R ℂ ⟶ TF (R := R) ℂ) ≫ ν.eA (d.ex 0) :=
     Subsingleton.elim _ _
@@ -332,7 +332,7 @@ variable {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} [Algebra (FractionR
 theorem keyOK_zero (κ : Rule) (ν : NumOf D ℂ N) (hg : D.P.g = 0) (d : AB N.toNumB D.P.g) (hc : d.c = N.th 1) :
     KeyOK κ ν d := by
   intro vB b MB k₀ _ _ _ hk
-  haveI : IsEmpty (Fin D.P.g) := hg ▸ inferInstance
+  have : IsEmpty (Fin D.P.g) := hg ▸ inferInstance
   rw [Matrix.det_isEmpty, one_pow, hc, mul_comm]
   exact ⟨one_ne_zero, hk.1 hg⟩
 
@@ -590,7 +590,7 @@ theorem wQ_fr {m t : ℕ} (ht : m ^ 2 = 2 * t + 1) (M Nn : Fin g → ℤ) (p : N
   obtain ⟨nB, hB⟩ := half_int (half_bF d σ) Nn
   have hw : (m : ℂ) ^ 2 * ((m : ℂ) ^ 2)⁻¹ = 1 := mul_inv_cancel₀ (pow_ne_zero _ m0)
   have htc : (m : ℂ) ^ 2 = 2 * t + 1 := by exact_mod_cast ht
-  simp only [autV, ← Complex.exp_add, ← Complex.exp_nat_mul, dotProduct_zero, mul_zero, sub_zero]
+  simp only [autV, ← Complex.exp_add, ← Complex.exp_natCast_mul, dotProduct_zero, mul_zero, sub_zero]
   rw [Complex.exp_eq_exp_iff_exists_int]
   refine ⟨-(nL + nA - nB), ?_⟩
   push_cast
@@ -744,7 +744,7 @@ theorem exists_keyIn_nf :
         (2 * Real.pi * Complex.I : ℂ)⁻¹ • Mx i := by
       funext k
       simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.single_apply, mul_ite, MulZeroClass.mul_zero,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       ring
     rw [e] at h1
     exact h1
@@ -1338,7 +1338,7 @@ theorem main_eq {N : NumD ℂ} {g' r g : ℕ} {bX : Module.Basis (Fin r) ℤ N.X
     have : Complex.exp a * Complex.exp b = Complex.exp a' * Complex.exp b' * Complex.exp f := by
       rw [← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_add, h]
     linear_combination t * this
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   refine key _ _ _ _ _ _ ?_
   simp only [Matrix.add_mulVec, dotProduct_add, dotProduct_smul, smul_eq_mul, add_zero, Matrix.zero_mulVec,
     dotProduct_zero, h1, h2, h3, hK]
@@ -1882,7 +1882,7 @@ theorem arch_of_rule4 : ∀ κ : Rule, Rule4 κ → Arch κ := by
       (fun χ => by
         simp only [(on χ).2, tw χ]
         rw [fderiv_const_mul (hdiff _ _ _ _ _ _), fderiv_mul_const (hdiff _ _ _ _ _ _)]
-        simp only [ContinuousLinearMap.smul_apply, smul_eq_mul, hV]
+        simp only [smul_apply, smul_eq_mul, hV]
         ring)
       (fun α hα => by simp [(off α hα).2])
       (((s2.of_norm.mul_left d.c).add ((s1.of_norm.mul_left d.c).mul_left _)).norm)

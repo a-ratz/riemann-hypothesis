@@ -62,7 +62,7 @@ theorem continuous_lastCol (n : ℕ) : Continuous (lastCol k (n := n)) := by
   refine continuous_pi fun i => ?_
   have h : Continuous fun u : MirUin k n =>
       (((u : Mir k n) : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   exact h.matrix_elem _ _
 
 theorem thetaA_apply (ψ : AddChar k Circle) {n : ℕ} (a : Fin n → k) (u : MirUin k n) :
@@ -102,7 +102,7 @@ theorem thetaOpen : ThetaOpen k := by
   have he : ((thetaA k ψ a).ker : Set (MirUin k n)) =
       (fun u : MirUin k n => a ⬝ᵥ lastCol k u) ⁻¹' {x : k | ψ x = 1} := by
     ext u
-    simp only [SetLike.mem_coe, MonoidHom.mem_ker, thetaA_apply, Set.mem_preimage, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, MonoidHom.mem_ker, thetaA_apply, Set.mem_preimage, Set.mem_ofPred_eq]
     constructor
     · intro h
       apply Circle.ext

@@ -227,7 +227,7 @@ end Gen
 
 theorem isotIn_conjT_fix_sum : ∀ (D : D7) (n : ℕ) (A : Type) [AddCommGroup A] [Module ℂ A] (ρ : GAf D.host.E n →* Module.End ℂ A) (C : Submodule ℂ A) (π : Formalism.L2.NG.FinTyp D.host.E n) (U : Set (GAf D.host.E n)) (ι : Type) [Finite ι] (a : ι → ℂ) (lf : ι → GAf D.host.E n), (∀ φ ∈ π.S, (∀ κ ∈ U, Formalism.L2.NG.rt D.host.E n κ φ = φ) → ∑ᶠ i, a i • Formalism.L2.NG.rt D.host.E n (lf i) φ = φ) → ∀ S ∈ isotIn ρ C (FinTyp.conjT π), (∀ κ ∈ U, ρ κ S = S) → ∑ᶠ i, star (a i) • ρ (lf i) S = S := by
   intro D n A _ _ ρ C π U ι _ a lf hyp S hS hU
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   rw [finsum_eq_sum_of_fintype]
   refine fix_sum_of_mem (σ := FinTyp.conjT π) (fun Φ => LinearMap.range Φ ≤ C) U (fun i => star (a i)) lf ?_ S hS hU
   intro ψ hψ hfix

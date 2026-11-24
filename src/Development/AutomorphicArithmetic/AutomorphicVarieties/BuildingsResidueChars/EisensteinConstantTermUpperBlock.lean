@@ -63,11 +63,11 @@ open NumberField IsDedekindDomain GlobalTheory.CuspRep in
 theorem UpperTheory.eisenstein_constantTerm_upperBlock :
     UpperTheory.V.Sd.Eis.BlockTop := by
   intro F _ _
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   refine ⟨inferInstance, inferInstance, inferInstance, ?_, ?_, ?_, ?_⟩
-  · haveI : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
+  · have : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
     exact (Set.countable_range _).to_subtype
   · obtain ⟨C, hC, hx⟩ := GroundTheory.Global.exists_isCompact_forall_exists_sub_mem F
     have hD : IsCompact (C ×ˢ (GroundTheory.Global.integralFiniteAdeles (𝓞 F) F : Set (FiniteAdeleRing (𝓞 F) F)) :

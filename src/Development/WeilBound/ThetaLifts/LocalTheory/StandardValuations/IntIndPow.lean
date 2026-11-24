@@ -110,7 +110,7 @@ theorem lc_prod {X ι : Type} [TopologicalSpace X] (s : Finset ι) {f : ι → X
     exact (h a (Finset.mem_insert_self _ _)).mul (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
 
 theorem ind_ne {c x : k} (h : ind c x ≠ 0) : valuation k x ≤ valuation k c := by
-  by_contra h'; exact h (if_neg h')
+  by_contra h'; exact h (ite_eq_right h')
 
 theorem one_mem_SB : one κ ∈ GlobalTheory.WeilM.SB (κ → k) := by
   refine ⟨lc_prod _ fun p _ => (lc_ind one_ne_zero).comp_continuous (continuous_apply p), ?_⟩
@@ -122,8 +122,8 @@ theorem one_mem_SB : one κ ∈ GlobalTheory.WeilM.SB (κ → k) := by
 theorem lc_wt (P : Finset κ) : IsLocallyConstant (wt (k := k) P) :=
   lc_prod _ fun p _ => by
     by_cases h : p ∈ P
-    · simp only [h, if_true]; exact IsLocallyConstant.const _
-    · simp only [h, if_false]; exact (lc_ind one_ne_zero).comp_continuous (continuous_apply p)
+    · simp only [h, ite_true]; exact IsLocallyConstant.const _
+    · simp only [h, ite_false]; exact (lc_ind one_ne_zero).comp_continuous (continuous_apply p)
 
 theorem continuous_cut (P : Finset κ) : Continuous (cut (k := k) P) :=
   continuous_pi fun p => by
@@ -143,10 +143,10 @@ theorem cut_mem {P : Finset κ} {Φ : (κ → k) → ℂ} (hΦ : Φ ∈ GlobalTh
     obtain ⟨h1, h2⟩ := mul_ne_zero_iff.1 h
     refine hx fun p _ => ?_
     by_cases hp : p ∈ P
-    · simp only [if_pos hp]; exact ⟨cut P x, subset_tsupport _ h1, by simp [cut, hp]⟩
-    · simp only [if_neg hp]
+    · simp only [ite_eq_left hp]; exact ⟨cut P x, subset_tsupport _ h1, by simp [cut, hp]⟩
+    · simp only [ite_eq_right hp]
       have := Finset.prod_ne_zero_iff.1 h2 p (Finset.mem_univ _)
-      rw [if_neg hp] at this
+      rw [ite_eq_right hp] at this
       exact ind_ne this
 
 variable [SecondCountableTopology k] [MeasurableSpace k] [BorelSpace k]
@@ -157,7 +157,7 @@ structure IsVol (m : Measure k) : Prop where
 
 theorem integrable_SB {m : Measure k} (hm : IsVol m) {Φ : (κ → k) → ℂ} (hΦ : Φ ∈ GlobalTheory.WeilM.SB (κ → k)) :
     Integrable Φ (Measure.pi fun _ : κ => m) := by
-  haveI := hm.haar
+  have := hm.haar
   exact hΦ.1.continuous.integrable_of_hasCompactSupport hΦ.2
 
 theorem int_ind {m : Measure k} {c : k} (hc : c ≠ 0) :
@@ -191,7 +191,7 @@ theorem IsPsi.ne {ψ : AddChar k ℂ} (h : IsPsi ψ) : ψ ≠ 1 := by
   obtain ⟨ϖ, hϖ⟩ := exists_isUnif (k := k)
   have := (h.cond (ϖ⁻¹ : kˣ)).1 fun _ _ => rfl
   have h2 : valuation k (ϖ : k) < 1 := hϖ ▸ uniformizer_lt_one
-  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (zero_lt_iff.2 (by simp))] at this
+  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 (by simp))] at this
   exact absurd this (not_le.2 h2)
 
 omit [SecondCountableTopology k] [MeasurableSpace k] [BorelSpace k] [DecidableEq κ] in
@@ -214,7 +214,7 @@ theorem evInt [Invertible (2 : k)] {m : Measure k} (hm : IsVol m) {ψ : AddChar 
     (hT : ∀ Z : κ → k, (∀ p ∉ P, Z p = 0) → ∀ Φ ∈ GlobalTheory.WeilM.SB (κ → k), l (fun Y => Φ (Y + Z)) = l Φ)
     (hM : ∀ Z : κ → k, (∀ p ∈ P, Z p = 0) → ∀ Φ ∈ GlobalTheory.WeilM.SB (κ → k), l (fun Y => ψ (Y ⬝ᵥ Z) * Φ Y) = l Φ)
     (h1 : l (one κ) = 1) : ∀ Φ ∈ GlobalTheory.WeilM.SB (κ → k), l Φ = ∫ Z, Φ (cut P Z) * wt P Z ∂(Measure.pi fun _ : κ => m) := by
-  haveI := hm.haar
+  have := hm.haar
   let l₀ : GlobalTheory.WeilM.SB (κ → k) →ₗ[ℂ] ℂ :=
     { toFun := fun Φ => ∫ Z, Φ.1 (cut P Z) * wt P Z ∂(Measure.pi fun _ : κ => m)
       map_add' := fun a b => by
@@ -248,7 +248,7 @@ theorem evInt [Invertible (2 : k)] {m : Measure k} (hm : IsVol m) {ψ : AddChar 
     congr 1
     funext Y
     beta_reduce
-    rw [dot0 (cut P Y) Z' (fun p hp => if_neg hp) b, AddChar.map_zero_eq_one, one_mul]
+    rw [dot0 (cut P Y) Z' (fun p hp => ite_eq_right hp) b, AddChar.map_zero_eq_one, one_mul]
     congr 1
     · congr 1
       funext p
@@ -262,9 +262,9 @@ theorem evInt [Invertible (2 : k)] {m : Measure k} (hm : IsVol m) {ψ : AddChar 
   · intro w
     let b1 : κ → k := fun p => if p ∈ P then 0 else w.1 p
     let b2 : κ → k := cut P w.2
-    refine ⟨(cut P w.1, fun p => if p ∈ P then 0 else w.2 p), ⟨fun p hp => if_neg hp, fun p hp => if_pos hp⟩, (b1, b2), ?_, ?_⟩
+    refine ⟨(cut P w.1, fun p => if p ∈ P then 0 else w.2 p), ⟨fun p hp => ite_eq_right hp, fun p hp => ite_eq_left hp⟩, (b1, b2), ?_, ?_⟩
     · refine Prod.ext (funext fun p => ?_) (funext fun p => ?_) <;> by_cases hp : p ∈ P <;> simp [cut, b1, b2, hp]
-    have d12 : b1 ⬝ᵥ b2 = 0 := by rw [dotProduct_comm]; exact dot0 _ _ (fun p hp => if_neg hp) fun p hp => if_pos hp
+    have d12 : b1 ⬝ᵥ b2 = 0 := by rw [dotProduct_comm]; exact dot0 _ _ (fun p hp => ite_eq_right hp) fun p hp => ite_eq_left hp
     by_cases c1 : ∀ p, valuation k (b1 p) ≤ 1
     · by_cases c2 : ∀ p, valuation k (b2 p) ≤ 1
       · refine Or.inl ⟨1, funext fun x => ?_⟩
@@ -332,7 +332,7 @@ variable {ν : kˣ →* ℂˣ} {ϖ : kˣ} {c : ℕ}
 theorem dl_unit (u : kˣ) (hu : valuation k (u : k) = 1) : dl ν u = (((ν u)⁻¹ : ℂˣ) : ℂ) := by
   rw [dl, dite_eq_left ⟨u.ne_zero, hu⟩, Units.mk0_val]
 
-theorem dl_of_ne {x : k} (h : valuation k x ≠ 1) : dl ν x = 0 := dif_neg fun h' => h h'.2
+theorem dl_of_ne {x : k} (h : valuation k x ≠ 1) : dl ν x = 0 := dite_eq_right fun h' => h h'.2
 
 theorem exists_unit {x : k} (h : valuation k x = 1) : ∃ u : kˣ, (u : k) = x :=
   ⟨Units.mk0 x (by rintro rfl; simp at h), rfl⟩
@@ -387,7 +387,7 @@ theorem lc_dl (hϖ : IsUnif ϖ) (hc : 1 ≤ c) (hν : CondLE ϖ c ν) : IsLocall
 variable [SecondCountableTopology k] [MeasurableSpace k] [BorelSpace k] {m : Measure k} {ψ : AddChar k ℂ}
 
 theorem vol_smul (hm : IsVol m) (u : kˣ) (s : Set k) : m (u • s) = ENNReal.ofReal (nabs k u) * m s := by
-  haveI := hm.haar
+  have := hm.haar
   rw [← distribHaarChar_mul m u s, nabs, ENNReal.ofReal_coe_nnreal]
 
 theorem int_scale (hm : IsVol m) (u : kˣ) (hu : valuation k (u : k) = 1) (f : k → ℂ) : ∫ x, f (u * x) ∂m = ∫ x, f x ∂m := by
@@ -405,9 +405,9 @@ theorem int_ind_pow (hm : IsVol m) (hϖ : IsUnif ϖ) (c : ℕ) : ∫ x, ind ((ϖ
   rw [int_ind (pow_ne_zero _ ϖ.ne_zero)]
   have : {x : k | valuation k x ≤ valuation k ((ϖ : k) ^ c)} = (ϖ ^ c) • {x : k | valuation k x ≤ valuation k 1} := by
     ext x
-    have h0 : 0 < valuation k ((ϖ : k) ^ c) := zero_lt_iff.2 (by simp)
+    have h0 : 0 < valuation k ((ϖ : k) ^ c) := pos_iff_ne_zero.2 (by simp)
     rw [Set.mem_smul_set_iff_inv_smul_mem]
-    simp only [Set.mem_setOf_eq, Units.smul_def, smul_eq_mul, Units.val_inv_eq_inv_val, Units.val_pow_eq_pow_val, map_mul,
+    simp only [Set.mem_ofPred_eq, Units.smul_def, smul_eq_mul, Units.val_inv_eq_inv_val, Units.val_pow_eq_pow_val, map_mul,
       map_inv₀, map_one]
     rw [inv_mul_le_iff₀ h0, mul_one]
   have hn : nabs k (ϖ ^ c) = ((resCard k : ℝ) ^ c)⁻¹ := by
@@ -452,7 +452,7 @@ theorem gI_small (hm : IsVol m) (hψ : IsPsi ψ) (hϖ : IsUnif ϖ) (hν' : ¬ Co
 
 theorem gI_big (hm : IsVol m) (hψ : IsPsi ψ) (hϖ : IsUnif ϖ) (hc : 1 ≤ c) (hν : CondLE ϖ c ν) {y : k}
     (hy : ¬ valuation k (y * (ϖ : k) ^ c) ≤ 1) : gI m ψ ν y = 0 := by
-  haveI := hm.haar
+  have := hm.haar
   obtain ⟨s, hs, hne⟩ := hψ.ex hy
   have ht : valuation k ((ϖ : k) ^ c * s) ≤ valuation k ((ϖ : k) ^ c) := by rw [map_mul]; exact mul_le_of_le_one_right' hs
   have : gI m ψ ν y = ψ (y * ϖ ^ c * s) * gI m ψ ν y := by
@@ -471,7 +471,7 @@ theorem gI_zero (hm : IsVol m) (hψ : IsPsi ψ) (hϖ : IsUnif ϖ) (hν : CondLE 
   · refine gI_small hm hψ hϖ hν' ?_
     have h1 := le_uniformizer_iff.2 (lt_of_le_of_ne h hy)
     rw [← hϖ, pow_succ, ← mul_assoc, map_mul] at h1
-    have h0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 (by simp)
+    have h0 : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 (by simp)
     exact (mul_le_iff_le_one_left h0).1 h1
   · exact gI_big hm hψ hϖ (by omega) hν h
 
@@ -485,23 +485,23 @@ theorem res_eq_iff (hϖ : IsUnif ϖ) (c : ℕ) (x y : 𝒪[k]) :
 theorem int_cosets (hm : IsVol m) (hϖ : IsUnif ϖ) (c : ℕ) (f : k → ℂ) (h0 : ∀ x, ¬ valuation k x ≤ 1 → f x = 0)
     (hf : ∀ x t, valuation k t ≤ valuation k ((ϖ : k) ^ c) → f (x + t) = f x) :
     ∫ x, f x ∂m = ((resCard k : ℂ) ^ c)⁻¹ * ∑ᶠ y : Res k c, f ((Quotient.out y : 𝒪[k]) : k) := by
-  haveI := hm.haar
-  haveI := Fintype.ofFinite (Res k c)
+  have := hm.haar
+  have := Fintype.ofFinite (Res k c)
   have e : f = fun x => ∑ y : Res k c, f ((Quotient.out y : 𝒪[k]) : k) * ind ((ϖ : k) ^ c) (x - (Quotient.out y : 𝒪[k])) := by
     funext x
     by_cases hx : valuation k x ≤ 1
     · rw [Finset.sum_eq_single (Ideal.Quotient.mk _ (⟨x, hx⟩ : 𝒪[k]))]
       · have := (res_eq_iff hϖ c ⟨x, hx⟩ _).1 (Ideal.Quotient.mk_out _).symm
-        rw [ind, if_pos this, mul_one]
+        rw [ind, ite_eq_left this, mul_one]
         exact ((hf _ _ this).symm.trans (by rw [add_sub_cancel])).symm
       · intro y _ hy
-        rw [ind, if_neg, mul_zero]
+        rw [ind, ite_eq_right, mul_zero]
         intro h
         exact hy (((res_eq_iff hϖ c ⟨x, hx⟩ _).2 h).trans (Ideal.Quotient.mk_out _)).symm
       · simp
     · rw [h0 x hx]
       refine (Finset.sum_eq_zero fun y _ => ?_).symm
-      rw [ind, if_neg, mul_zero]
+      rw [ind, ite_eq_right, mul_zero]
       intro h
       have := Valuation.map_add_le _ (h.trans (val_pow_le hϖ c)) (Quotient.out y : 𝒪[k]).2
       rw [sub_add_cancel] at this
@@ -509,7 +509,7 @@ theorem int_cosets (hm : IsVol m) (hϖ : IsUnif ϖ) (c : ℕ) (f : k → ℂ) (h
   have hi : Integrable (ind ((ϖ : k) ^ c)) m :=
     (lc_ind (pow_ne_zero _ ϖ.ne_zero)).continuous.integrable_of_hasCompactSupport
       (HasCompactSupport.intro (IsNonarchimedeanLocalField.isCompact_closedBall k (valuation k ((ϖ : k) ^ c)))
-        fun x hx => by unfold ind; exact if_neg hx)
+        fun x hx => by unfold ind; exact ite_eq_right hx)
   conv_lhs => rw [e]
   rw [MeasureTheory.integral_finsetSum _ fun y _ => (hi.comp_sub_right _).const_mul _, finsum_eq_sum_of_fintype, Finset.mul_sum]
   refine Finset.sum_congr rfl fun y _ => ?_
@@ -520,7 +520,7 @@ theorem gI_gauss (hm : IsVol m) (hψ : IsPsi ψ) (hϖ : IsUnif ϖ) (hc : 1 ≤ c
     gI m ψ ν (((ϖ : k) ^ c)⁻¹) = ((resCard k : ℂ) ^ c)⁻¹ * ∑ y : (Res k c)ˣ,
       if h : ((Quotient.out y.1 : 𝒪[k]) : k) = 0 then 0 else
         (((ν (Units.mk0 _ h))⁻¹ : ℂˣ) : ℂ) * ψ (((Quotient.out y.1 : 𝒪[k]) : k) / ϖ ^ c) := by
-  have h0 : 0 < valuation k ((ϖ : k) ^ c) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k ((ϖ : k) ^ c) := pos_iff_ne_zero.2 (by simp)
   rw [gI, int_cosets hm hϖ c _ (fun x hx => by rw [dl_of_ne fun h => hx h.le, zero_mul]) fun x t ht => by
     rw [dl_add hϖ hc hν x ht, mul_add, AddChar.map_add_eq_mul, hψ.triv (x := _ * t), mul_one]
     rwa [map_mul, map_inv₀, inv_mul_le_iff₀ h0, mul_one]]
@@ -554,7 +554,7 @@ theorem gI_gauss (hm : IsVol m) (hψ : IsPsi ψ) (hϖ : IsUnif ϖ) (hc : 1 ≤ c
   · intro u _
     have h1 := (hu u.1).1 u.isUnit
     have h2 : ((Quotient.out u.1 : 𝒪[k]) : k) ≠ 0 := by intro h; simp [h] at h1
-    rw [dif_neg h2, dl, dite_eq_left ⟨h2, h1⟩, div_eq_inv_mul]
+    rw [dite_eq_right h2, dl, dite_eq_left ⟨h2, h1⟩, div_eq_inv_mul]
 
 end PositivityTheory.ThKG.Std
 end -- clump:auto

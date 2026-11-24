@@ -53,10 +53,10 @@ namespace GlobalTheory
 
 theorem IsAmpleLB.tens_of_isNef : GlobalTheory.Published.NefNumerics → ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X ⟶ Sp k), IsProjOver f → ∀ A N : LB X, GlobalTheory.IsAmpleLB A → (letI := GlobalTheory.algebraΓOfHom f; GlobalTheory.IsNef k N) → GlobalTheory.IsAmpleLB (GlobalTheory.CechPic.tens A N) := by
   intro h k _ X f hf A N hA hN
-  letI := GlobalTheory.algebraΓOfHom f
+  let := GlobalTheory.algebraΓOfHom f
   refine IsAmpleLB.tens_of_forall_isPsEff k X f hf A N hA hN.isLB fun Z hZ => ?_
-  haveI := isIntegral_red hZ
-  letI := algebraΓAlong k (redι Z)
+  have := isIntegral_red hZ
+  let := algebraΓAlong k (redι Z)
   have hi := appTop_algebraMap_along k (redι Z)
   have hp : IsProjOver (strHom k (X := X)) := by rwa [strHom_eq (f := f) fun _ => rfl]
   have hp' : IsProjOver (strHom k (X := (Scheme.IdealSheafData.vanishingIdeal Z).subscheme)) := by

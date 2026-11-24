@@ -168,7 +168,7 @@ theorem bessel_lowest_vector_local_mass_eq_transported : ∀ (D : D7) (X : HidaS
     exact Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.piW_unitary hT hc h' hh _
   set A : Set (Formalism.QuantumDeterminants.Mt D.R.k D.R.rS) := {x | Matrix.of x ∈ BranchingSupport.GG D.R.k D.R.rS} with hA
   have hAm : MeasurableSet A := IsClosed.measurableSet (α := Formalism.QuantumDeterminants.Mt D.R.k D.R.rS) hGG.1
-  have hc' : ContinuousOn (fun x : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS => ‖wT C u τ (Matrix.of x)‖₊) A := hcont.nnnorm
+  have hc' : ContinuousOn (fun x : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS => ‖wT C u τ (Matrix.of x)‖₊) A := hcont.nnNorm
   have hm : Measurable (A.piecewise (fun x : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS => ‖wT C u τ (Matrix.of x)‖₊)
       (fun _ => 0)) :=
     hc'.measurable_piecewise continuousOn_const hAm
@@ -296,7 +296,7 @@ theorem trG_mem_UW_iff (C : Choice X 1) (u : D.what₂.Word) (τ : D.what₂.Tau
       (∀ a, Formalism.MainNotions.S.uMat γ *ᵥ rv X.B.I (vOf X τ) (X.fR a) = rv X.B.I (vOf X τ) (X.fR a)) ∧
       Formalism.MainNotions.S.uMat γ *ᵥ rv X.B.I (vOf X τ) (X.zR u) = rv X.B.I (vOf X τ) (X.zR u) := by
   obtain ⟨h1, h2, hg, hef⟩ := C.isT τ
-  simp only [Formalism.QuantumDeterminants.UWset, Set.mem_setOf_eq, zB, Formalism.QuantumDeterminants.bvec]
+  simp only [Formalism.QuantumDeterminants.UWset, Set.mem_ofPred_eq, zB, Formalism.QuantumDeterminants.bvec]
   rw [trG_fix h2]
   constructor
   · rintro ⟨-, ha, hz⟩
@@ -372,7 +372,7 @@ theorem pullH : ∀ (D : D7) (X : HidaSetting D) (C : Choice X 1) (hB : WuBessel
       ∀ A : Set X.B.I.Ginf, MeasurableSet A → X.muH u A = c * Measure.pi (C.muW u) (trI C '' A) := by
   intro D X C _ _ u
   have he : MeasurableEmbedding (trI C) := (trI_closedEmb C).measurableEmbedding
-  haveI : ∀ τ, SigmaFinite (C.muW u τ) := fun τ => (C.muW_haar u τ).1
+  have : ∀ τ, SigmaFinite (C.muW u τ) := fun τ => (C.muW_haar u τ).1
   set μ := Measure.pi (C.muW u) with hμ
   set P : Set (D.what₂.Tau → Formalism.QuantumDeterminants.Mt D.R.k D.R.rS) := Set.univ.pi (fun τ =>
     {m | Matrix.of m ∈ Formalism.QuantumDeterminants.UWset D.R.k D.R.rS (zB X (C.Qi τ) u τ)}) with hP
@@ -389,7 +389,7 @@ theorem pullH : ∀ (D : D7) (X : HidaSetting D) (C : Choice X 1) (hB : WuBessel
     refine le_antisymm (measure_mono (Set.subset_univ _)) ?_
     calc μ Set.univ ≤ μ (Set.range (trI C)) + μ (Set.range (trI C))ᶜ := measure_univ_le_add_compl _
       _ = μ (Set.range (trI C)) := by rw [hrc, add_zero]
-  haveI : IsFiniteMeasure ρ := ⟨by rw [hρ1]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure ρ := ⟨by rw [hρ1]; exact ENNReal.one_lt_top⟩
   have hρ0 : ρ ≠ 0 := fun h => by
     have h1 := hρ1
     rw [h] at h1
@@ -401,9 +401,9 @@ theorem pullH : ∀ (D : D7) (X : HidaSetting D) (C : Choice X 1) (hB : WuBessel
       Set.range (fun a => crdOf X.B.I X.ιE X.bas (X.fY a)) ∪ {crdOf X.B.I X.ιE X.bas (X.zu u)}) := rfl
   have hHclosed : IsClosed (H : Set X.B.I.Ginf) := by
     show IsClosed {s : X.B.I.Ginf | ∀ v, ∀ x ∈ _, Formalism.MainNotions.S.uMat (s v) *ᵥ rv X.B.I v x = rv X.B.I v x}
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_iInter fun v => isClosed_iInter fun x => isClosed_iInter fun _ => isClosed_eq ?_ continuous_const
-    exact Continuous.matrix_mulVec ((Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply v)) continuous_const
+    exact Continuous.matrix_mulVec ((Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply v)) continuous_const
   have hHc : ρ (H : Set X.B.I.Ginf)ᶜ = 0 := by
     rw [hH, hρA]
     refine measure_mono_null ?_ hPc
@@ -425,7 +425,7 @@ theorem pullH : ∀ (D : D7) (X : HidaSetting D) (C : Choice X 1) (hB : WuBessel
         Formalism.QuantumDeterminants.lmulM (Matrix.of (trI C s τ)) (y τ)) :=
       Measurable.of_eval fun τ => (Formalism.L2.SG.Pf.WFL.measurable_lmulM _).comp (measurable_pi_apply τ)
     have hμL : μ.map (fun y τ => Formalism.QuantumDeterminants.lmulM (Matrix.of (trI C s τ)) (y τ)) = μ := by
-      haveI : ∀ τ, SigmaFinite ((C.muW u τ).map (Formalism.QuantumDeterminants.lmulM (Matrix.of (trI C s τ)))) := fun τ => by
+      have : ∀ τ, SigmaFinite ((C.muW u τ).map (Formalism.QuantumDeterminants.lmulM (Matrix.of (trI C s τ)))) := fun τ => by
         rw [(C.muW_haar u τ).2.2.2 _ (hs' τ)]
         infer_instance
       rw [hμ, Measure.pi_map_pi (fun τ => (Formalism.L2.SG.Pf.WFL.measurable_lmulM _).aemeasurable)]
@@ -435,12 +435,12 @@ theorem pullH : ∀ (D : D7) (X : HidaSetting D) (C : Choice X 1) (hB : WuBessel
     rw [← he.comap_map (ρ.map (fun x => s * x)), Measure.map_map he.measurable (measurable_const_mul s), hcomm,
       ← Measure.map_map hLm he.measurable, hmapρ, hμL]
   obtain ⟨hσ, h0, hc, hi⟩ := X.muH_haar u
-  haveI := hσ
+  have := hσ
   rw [← hH] at hc hi
   obtain ⟨κ, hκ0, hκT, hκ⟩ := PiM.uniq_on_closed (H) hHclosed (X.muH u) ρ hc hHc hi hinv h0 hρ0
   refine ⟨κ, hκ0, hκT, ?_, fun A _ => ?_⟩
-  · rw [hκ, Measure.smul_apply, hρ1, smul_eq_mul, mul_one]
-  · rw [hκ, Measure.smul_apply, hρA, smul_eq_mul]
+  · rw [hκ, smul_apply, hρ1, smul_eq_mul, mul_one]
+  · rw [hκ, smul_apply, hρA, smul_eq_mul]
 
 end GlobalTheory.PullHaarW
 end -- clump:auto
@@ -499,7 +499,7 @@ theorem map_trI_H {D : D7} {X : HidaSetting D} (C : Choice X 1) (u : D.what₂.W
       (MeasurableEquiv.piCongrLeft (fun v => Formalism.REAL.UJ (X.B.I.ε v)) X.pl.symm).symm := by
     funext x τ
     rfl
-  haveI : ∀ v, SigmaFinite (Formalism.L2.SG.Pf.AmpWinGlob.muHv C u v) := fun v => by
+  have : ∀ v, SigmaFinite (Formalism.L2.SG.Pf.AmpWinGlob.muHv C u v) := fun v => by
     have key : ∀ (τ : D.what₂.Tau) (w : InfinitePlace X.B.I.F), vOf X τ = w → SigmaFinite (muHl C u τ w) := by
       rintro τ w rfl; exact sf_muHl C u τ
     exact key (X.pl v) v (X.pl.symm_apply_apply v)
@@ -531,10 +531,10 @@ theorem prod_l2SG_eq : ∀ (D : D7) (X : HidaSetting D) (C : Choice X 1) (hB : W
   choose hsN hsH hconc β hβm hβ1 hβl using loc
   set μN : ∀ v, Measure (Formalism.REAL.UJ (X.B.I.ε v)) := fun v => muNl C (X.pl v) v with hμN
   set μH : ∀ v, Measure (Formalism.REAL.UJ (X.B.I.ε v)) := fun v => muHl C u (X.pl v) v with hμH
-  haveI : ∀ v, SigmaFinite (μN v) := hsN
-  haveI : ∀ v, SigmaFinite (μH v) := hsH
-  haveI : SigmaFinite (muNB D 1) := (muNB_haar (D := D) one_pos).1
-  haveI : ∀ τ, SigmaFinite (C.muW u τ) := fun τ => (C.muW_haar u τ).1
+  have : ∀ v, SigmaFinite (μN v) := hsN
+  have : ∀ v, SigmaFinite (μH v) := hsH
+  have : SigmaFinite (muNB D 1) := (muNB_haar (D := D) one_pos).1
+  have : ∀ τ, SigmaFinite (C.muW u τ) := fun τ => (C.muW_haar u τ).1
   obtain ⟨hemb0, hmapN⟩ := Formalism.L2.SG.Pf.AmpWinGlob.map_trInf C (fun v => hsN v) one_pos
   have hemb : MeasurableEmbedding (trI C) := hemb0
   have hmapH := map_trI_H C u
@@ -543,15 +543,15 @@ theorem prod_l2SG_eq : ∀ (D : D7) (X : HidaSetting D) (C : Choice X 1) (hB : W
     have hc : Measure.pi (fun _ : D.what₂.Tau => muNB D 1) (trI C '' A) = Measure.pi μN A := by
       rw [← show (Measure.pi μN).map (trI C) = Measure.pi (fun _ : D.what₂.Tau => muNB D 1) from hmapN,
         hemb.map_apply, Set.preimage_image_eq _ hemb.injective]
-    rw [hN A hA, hc, Measure.smul_apply, smul_eq_mul]
+    rw [hN A hA, hc, smul_apply, smul_eq_mul]
   have eH : X.muH u = cH • Measure.pi μH := by
     ext A hA
     have hc : Measure.pi (C.muW u) (trI C '' A) = Measure.pi μH A := by
       rw [← show (Measure.pi μH).map (trI C) = Measure.pi (C.muW u) from hmapH,
         hemb.map_apply, Set.preimage_image_eq _ hemb.injective]
-    rw [hH A hA, hc, Measure.smul_apply, smul_eq_mul]
+    rw [hH A hA, hc, smul_apply, smul_eq_mul]
   set F : ∀ v, Formalism.REAL.UJ (X.B.I.ε v) → ℝ≥0∞ := fun v y => ‖X.Wloc u v y‖ₑ ^ 2 with hFdef
-  have hFm : ∀ v, Measurable (F v) := fun v => (X.Wloc_cont u v).enorm.measurable.pow_const 2
+  have hFm : ∀ v, Measurable (F v) := fun v => (X.Wloc_cont u v).eNorm.measurable.pow_const 2
   set f : X.B.I.Ginf → ℝ≥0∞ := fun x => ∏ v, β v (x v) * F v (x v) with hfdef
   have hfm : Measurable f :=
     Finset.measurable_prod _ fun v _ =>
@@ -587,7 +587,7 @@ theorem prod_l2SG_eq : ∀ (D : D7) (X : HidaSetting D) (C : Choice X 1) (hB : W
           Formalism.L2.SG.Pf.WuDec.mul_mem_Sloc X u _ (Formalism.L2.SG.Pf.WuDec.Nloc_sub X u _ hm)
             (Formalism.L2.SG.Pf.WuDec.Hloc_sub X u _ hh')
         show β v (m * h * x v) * ‖X.Wloc u v (m * h * x v)‖ₑ ^ 2 = β v (m * h * x v) * ‖X.Wloc u v (x v)‖ₑ ^ 2
-        rw [← enorm_norm (X.Wloc u v (m * h * x v)), Formalism.L2.SG.Pf.WuDec.norm_Wloc_inv X u _ hs, enorm_norm])]
+        rw [← eNorm_norm (X.Wloc u v (m * h * x v)), Formalism.L2.SG.Pf.WuDec.norm_Wloc_inv X u _ hs, eNorm_norm])]
       rw [lintegral_mul_const _ (show Measurable (fun s => β v (s * x v)) from
         (hβm v).comp (measurable_mul_const _)), hβ1 v, one_mul]
     simp_rw [h2]
@@ -652,7 +652,7 @@ theorem muN_eq_const_mul_pi_trI : ∀ (D : D7) (X : HidaSetting D) (C : Choice X
       Measure.pi (fun _ : D.what₂.Tau => muNB D 1) (trI C '' A) := by
     rw [htr, show Measure.pi (fun _ : D.what₂.Tau => muNB D 1) = Formalism.L2.SG.LoopTerm.dnB D 1 from rfl, ← hmapT,
       hemb.map_apply, Set.preimage_image_eq _ hemb.injective]
-  rw [hcN, Measure.smul_apply, smul_eq_mul, hcov]
+  rw [hcN, smul_apply, smul_eq_mul, hcov]
 
 end GlobalTheory
 end -- clump:auto
@@ -804,9 +804,9 @@ theorem hsNormSq_nonneg {V V' : Type*} [NormedAddCommGroup V] [InnerProductSpace
 
 theorem tensC_holds : GlobalTheory.TypeAsm.TensC := by
   intro D X u γ νl hσ
-  haveI := FiniteDimensional.complete ℂ (X.Vpi u)
-  haveI : ∀ v, CompleteSpace (X.Vloc u v) := fun v => FiniteDimensional.complete ℂ (X.Vloc u v)
-  haveI := hσ
+  have := FiniteDimensional.completeSpace ℂ (X.Vpi u)
+  have : ∀ v, CompleteSpace (X.Vloc u v) := fun v => FiniteDimensional.completeSpace ℂ (X.Vloc u v)
+  have := hσ
   have hWc : Continuous (X.Wu u) := (X.Wu_spec u).2.2.1
   have hfac : ∀ y, (Formalism.L2.SG.TermOp.OO (Measure.pi νl) Set.univ (X.Wu u) (X.Wu u) γ) (X.tensU u y) =
       X.tensU u (fun v => (Formalism.L2.SG.RealObj.Jv (νl v) (X.Wloc u v) (X.Wloc u v) (γ v)) (y v)) := by
@@ -852,7 +852,7 @@ theorem factC_of (hP : PullC) (hTn : TensC) (hC : ConstC) : FactC := by
   have hT := hTn D X u t.pt.1 νl hνl
   obtain ⟨hc, hconst⟩ := hC D X Y u C hB hG hcov
   have hloc : ∀ τ, Real.sqrt (hsNormSq ((locS hB u u τ).J (ν τ) (gamT C t τ))) =
-      (cOf hB u τ)⁻¹ * Real.sqrt (hsNormSq (haveI := FiniteDimensional.complete ℂ (X.Vloc u (vOf X τ))
+      (cOf hB u τ)⁻¹ * Real.sqrt (hsNormSq (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u (vOf X τ))
         Formalism.L2.SG.RealObj.Jv (νl (vOf X τ)) (X.Wloc u (vOf X τ)) (X.Wloc u (vOf X τ)) (t.pt.1 (vOf X τ)))) := by
     intro τ
     rw [← hmap τ]
@@ -880,23 +880,23 @@ theorem factC_of (hP : PullC) (hTn : TensC) (hC : ConstC) : FactC := by
     positivity
   have hamp : ‖Formalism.L2.SG.PackageTie.hsEmb (ampN (Y.cs u) (Y.cs u) (Y.FN u) (Y.FN u) t)‖ =
       (scl (Y.FN u) (Y.FN u) (X := X) (u := u) (u' := u) * X.volK2) * ((μR K).toReal *
-        ‖Formalism.L2.SG.PackageTie.hsEmb (haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+        ‖Formalism.L2.SG.PackageTie.hsEmb (haveI := FiniteDimensional.completeSpace ℂ (X.Vpi u)
           OO (Measure.pi νl) Set.univ (X.Wu u) (X.Wu u) t.pt.1)‖) := by
     unfold ampN
     rw [map_smul, map_smul, norm_smul, norm_smul, Formalism.L2.SG.Pf.FibreCounting.norm_chiN, one_mul, Complex.norm_real,
       Real.norm_eq_abs, abs_of_nonneg hs0, hFA, ← Complex.coe_smul, map_smul, norm_smul, Complex.norm_real,
       Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
   have hprod : ∏ τ, Real.sqrt (hsNormSq ((locS hB u u τ).J (ν τ) (gamT C t τ))) =
-      (∏ τ, cOf hB u τ)⁻¹ * ∏ v, Real.sqrt (hsNormSq (haveI := FiniteDimensional.complete ℂ (X.Vloc u v)
+      (∏ τ, cOf hB u τ)⁻¹ * ∏ v, Real.sqrt (hsNormSq (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u v)
         Formalism.L2.SG.RealObj.Jv (νl v) (X.Wloc u v) (X.Wloc u v) (t.pt.1 v))) := by
     rw [Finset.prod_congr rfl fun τ _ => hloc τ, Finset.prod_mul_distrib, Finset.prod_inv_distrib]
     congr 1
     exact Fintype.prod_equiv X.pl.symm _ _ (fun τ => rfl)
   have hPc : 0 < ∏ τ, cOf hB u τ := Finset.prod_pos fun τ _ => (hc τ).1
   rw [hv, hamp, ← hμR K hK.1, hprod]
-  set N := ‖Formalism.L2.SG.PackageTie.hsEmb (haveI := FiniteDimensional.complete ℂ (X.Vpi u)
+  set N := ‖Formalism.L2.SG.PackageTie.hsEmb (haveI := FiniteDimensional.completeSpace ℂ (X.Vpi u)
           OO (Measure.pi νl) Set.univ (X.Wu u) (X.Wu u) t.pt.1)‖ with hN
-  set Pv := ∏ v, Real.sqrt (hsNormSq (haveI := FiniteDimensional.complete ℂ (X.Vloc u v)
+  set Pv := ∏ v, Real.sqrt (hsNormSq (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u v)
         Formalism.L2.SG.RealObj.Jv (νl v) (X.Wloc u v) (X.Wloc u v) (t.pt.1 v))) with hPv
   set Pc := ∏ τ, cOf hB u τ with hPcd
   set s := scl (Y.FN u) (Y.FN u) (X := X) (u := u) (u' := u) * X.volK2 with hsd

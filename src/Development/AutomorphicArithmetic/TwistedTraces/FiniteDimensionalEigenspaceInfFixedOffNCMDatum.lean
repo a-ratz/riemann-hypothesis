@@ -84,9 +84,9 @@ private theorem exists_ext {A ι : Type*} {B : A → Type*} (f : ι → A) (hf :
     intro i j hj
     obtain rfl := hf hj
     rfl
-  refine ⟨fun a => if h : ∃ i, f i = a then h.choose_spec ▸ U h.choose else d a, fun i => ?_, fun a ha => dif_neg ha⟩
+  refine ⟨fun a => if h : ∃ i, f i = a then h.choose_spec ▸ U h.choose else d a, fun i => ?_, fun a ha => dite_eq_right ha⟩
   have h : ∃ j, f j = f i := ⟨i, rfl⟩
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   exact key i _ _
 
 section Two
@@ -114,7 +114,7 @@ private theorem Zv_closed (T : Ty σ n q w₀) (V : Submodule ℂ (LL μ)) (hV :
   have e : (eigIn (V ⊓ offN μ T) O x : Set (LL μ)) = (V : Set (LL μ)) ∩ ((⋂ w, ⋂ (_ : w.under (𝓞 F) ∉ (nsS T : Set (Pl F))),
       (eigL μ w (T.J w) (T.χ w) : Set (LL μ))) ∩ {v | O v = (x : ℂ) • v}) := by
     ext v
-    simp only [SetLike.mem_coe, mem_Zv, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_Zv, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
   rw [e]
   refine hV.inter (IsClosed.inter ?_ (isClosed_eq O.continuous (continuous_const_smul _)))
   exact isClosed_iInter fun w => isClosed_iInter fun _ =>
@@ -172,7 +172,7 @@ theorem UpperTheory.finiteDimensional_eigenspace_inf_fixed_offN_CMDatum :
       refine hw ⟨i, ?_⟩
       have e' : w = (T.mk' (w.under (𝓞 F))).1 := congrArg Subtype.val e
       exact (congrArg (fun v => (T.mk' v).1) hi).trans e'.symm
-    haveI := UpperTheory.ConvolutionTheory.C.eigAdm E n hn μ ν a x hx P U' hU'
+    have := UpperTheory.ConvolutionTheory.C.eigAdm E n hn μ ν a x hx P U' hU'
     refine Submodule.finiteDimensional_of_le (fun v hv => ?_)
       (S₂ := eigIn (cuspidalL2 μ) (Oinf μ ν a) x ⊓ sphOff μ P ⊓ ⨅ w ∈ P, fixL μ w (U' w))
     obtain ⟨hZ, hfx⟩ := Submodule.mem_inf.1 hv

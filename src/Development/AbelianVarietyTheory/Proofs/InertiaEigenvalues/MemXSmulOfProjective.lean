@@ -89,7 +89,7 @@ theorem free_of_regular {O M : Type} [CommRing O] [IsDomain O] [IsDiscreteValuat
     (hX : IsSMulRegular M (X : O⟦X⟧))
     (h : ∀ x y : M, (C c : O⟦X⟧) • x = (X : O⟦X⟧) • y → ∃ z : M, x = (X : O⟦X⟧) • z) :
     Module.Free O⟦X⟧ M := by
-  haveI : Module.FinitePresentation O⟦X⟧ M := Module.finitePresentation_of_finite _ _
+  have : Module.FinitePresentation O⟦X⟧ M := Module.finitePresentation_of_finite _ _
   have hker : Ideal.span {(X : O⟦X⟧)} = RingHom.ker (constantCoeff (R := O)) := by
     ext f
     rw [Ideal.mem_span_singleton, RingHom.mem_ker, X_dvd_iff]
@@ -97,8 +97,8 @@ theorem free_of_regular {O M : Type} [CommRing O] [IsDomain O] [IsDiscreteValuat
     (Ideal.quotEquivOfEq hker).trans
       (RingHom.quotientKerEquivOfSurjective (f := constantCoeff (R := O))
         fun a => ⟨C a, by simp⟩)
-  haveI : IsDomain (O⟦X⟧ ⧸ Ideal.span {(X : O⟦X⟧)}) := e.toMulEquiv.isDomain
-  haveI : IsPrincipalIdealRing (O⟦X⟧ ⧸ Ideal.span {(X : O⟦X⟧)}) :=
+  have : IsDomain (O⟦X⟧ ⧸ Ideal.span {(X : O⟦X⟧)}) := e.toMulEquiv.isDomain
+  have : IsPrincipalIdealRing (O⟦X⟧ ⧸ Ideal.span {(X : O⟦X⟧)}) :=
     IsPrincipalIdealRing.of_surjective e.symm.toRingHom e.symm.surjective
   have hpow : ∀ (k : ℕ) (x y : M), (C (c ^ k) : O⟦X⟧) • x = (X : O⟦X⟧) • y →
       ∃ z : M, x = (X : O⟦X⟧) • z := by
@@ -121,9 +121,9 @@ theorem free_of_regular {O M : Type} [CommRing O] [IsDomain O] [IsDiscreteValuat
     refine ⟨k, ?_⟩
     rw [Units.mul_left_dvd]
     exact pow_dvd_pow_of_dvd (Dvd.dvd.mul_left (dvd_pow_self _ hj) _) _
-  haveI := Module.Finite.of_restrictScalars_finite O⟦X⟧ (O⟦X⟧ ⧸ Ideal.span {(X : O⟦X⟧)})
+  have := Module.Finite.of_restrictScalars_finite O⟦X⟧ (O⟦X⟧ ⧸ Ideal.span {(X : O⟦X⟧)})
     (QuotSMulTop (X : O⟦X⟧) M)
-  haveI : Module.IsTorsionFree (O⟦X⟧ ⧸ Ideal.span {(X : O⟦X⟧)}) (QuotSMulTop (X : O⟦X⟧) M) := by
+  have : Module.IsTorsionFree (O⟦X⟧ ⧸ Ideal.span {(X : O⟦X⟧)}) (QuotSMulTop (X : O⟦X⟧) M) := by
     refine Module.IsTorsionFree.of_smul_eq_zero fun r m hrm => ?_
     obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective r
     obtain ⟨m, rfl⟩ := Submodule.Quotient.mk_surjective _ m
@@ -152,11 +152,11 @@ theorem finrank_fibre {ι R N : Type} [DecidableEq ι] [CommRing R] [IsLocalRing
     [Module (ι → R) N] [Module.Finite (ι → R) N] [Module.Flat (ι → R) N] (i : ι) :
     ∃ r : ℕ, ∀ (S : Type) [CommRing S] [Nontrivial S] [Algebra (ι → R) S],
       algebraMap (ι → R) S (Pi.single i 1) = 1 → Module.finrank S (S ⊗[ι → R] N) = r := by
-  letI : Algebra (ι → R) R := (Pi.evalRingHom (fun _ : ι => R) i).toAlgebra
-  haveI : Module.Free R (R ⊗[ι → R] N) := Module.free_of_flat_of_isLocalRing
+  let : Algebra (ι → R) R := (Pi.evalRingHom (fun _ : ι => R) i).toAlgebra
+  have : Module.Free R (R ⊗[ι → R] N) := Module.free_of_flat_of_isLocalRing
   refine ⟨Module.finrank R (R ⊗[ι → R] N), fun S _ _ _ hS => ?_⟩
-  letI : Algebra R S := ((algebraMap (ι → R) S).comp (Pi.constRingHom ι R)).toAlgebra
-  haveI : IsScalarTower (ι → R) R S := IsScalarTower.of_algebraMap_eq fun a => by
+  let : Algebra R S := ((algebraMap (ι → R) S).comp (Pi.constRingHom ι R)).toAlgebra
+  have : IsScalarTower (ι → R) R S := IsScalarTower.of_algebraMap_eq fun a => by
     change algebraMap (ι → R) S a = algebraMap (ι → R) S (fun _ => a i)
     have : a * Pi.single i 1 = (fun _ => a i) * Pi.single i 1 := by
       funext j
@@ -175,10 +175,10 @@ theorem basis_of_baseChange {ι R N E D : Type} [Finite ι] [CommRing R] [IsLoca
     [Module (ι → R) D] [IsScalarTower (ι → R) E D] [Module.Free E D] (f : N →ₗ[ι → R] D)
     (hf : IsBaseChange E f) : Nonempty (Module.Basis (Fin (Module.finrank E D)) (ι → R) N) := by
   classical
-  haveI := Fintype.ofFinite ι
-  haveI : Module.Flat (ι → R) N := Algebra.FormallyUnramified.flat_of_restrictScalars R (ι → R) N
-  haveI : Finite (MaximalSpectrum (ι → R)) := by
-    haveI := (Algebra.QuasiFinite.finite_primesOver (S := ι → R)
+  have := Fintype.ofFinite ι
+  have : Module.Flat (ι → R) N := Algebra.FormallyUnramified.flat_of_restrictScalars R (ι → R) N
+  have : Finite (MaximalSpectrum (ι → R)) := by
+    have := (Algebra.QuasiFinite.finite_primesOver (S := ι → R)
       (IsLocalRing.maximalIdeal R)).to_subtype
     refine Finite.of_injective (fun n : MaximalSpectrum (ι → R) =>
       (⟨n.asIdeal, n.isMaximal.isPrime, ⟨(IsLocalRing.eq_maximalIdeal
@@ -187,7 +187,7 @@ theorem basis_of_baseChange {ι R N E D : Type} [Finite ι] [CommRing R] [IsLoca
         (IsLocalRing.maximalIdeal R).primesOver (ι → R))) fun a b hab => ?_
     exact MaximalSpectrum.ext (congrArg Subtype.val hab)
   refine Module.nonempty_basis_of_flat_of_finrank_eq _ _ _ fun P => ?_
-  haveI := P.isMaximal
+  have := P.isMaximal
   have hee : ∀ i : ι, (Pi.single i 1 : ι → R) * (Pi.single i 1 - 1) = 0 := by
     intro i
     funext j
@@ -207,7 +207,7 @@ theorem basis_of_baseChange {ι R N E D : Type} [Finite ι] [CommRing R] [IsLoca
     rw [Ideal.Quotient.algebraMap_eq, ← map_one (Ideal.Quotient.mk P.asIdeal), Ideal.Quotient.eq]
     exact hi')]
   let I : Ideal E := Ideal.span {algebraMap (ι → R) E (Pi.single i 1 - 1)}
-  haveI : Nontrivial (E ⧸ I) := by
+  have : Nontrivial (E ⧸ I) := by
     rw [Ideal.Quotient.nontrivial_iff]
     intro hI
     rw [Ideal.span_singleton_eq_top] at hI
@@ -216,7 +216,7 @@ theorem basis_of_baseChange {ι R N E D : Type} [Finite ι] [CommRing R] [IsLoca
       rw [← hI.mul_left_eq_zero, ← map_mul, hee, map_zero]
     rw [hE (this.trans (map_zero _).symm)]
     exact Ideal.zero_mem _
-  haveI : Nontrivial E := (algebraMap E (E ⧸ I)).domain_nontrivial
+  have : Nontrivial E := (algebraMap E (E ⧸ I)).domain_nontrivial
   rw [← hr (E ⧸ I) (by
     rw [IsScalarTower.algebraMap_apply (ι → R) E (E ⧸ I), Ideal.Quotient.algebraMap_eq,
       ← map_one (Ideal.Quotient.mk I), Ideal.Quotient.eq]
@@ -235,10 +235,10 @@ theorem basis_of_regular {ι O N E D : Type} [Finite ι] [CommRing O] [IsDomain 
     (h : ∀ x y : N, (fun _ => C c : ι → O⟦X⟧) • x = (fun _ => X : ι → O⟦X⟧) • y →
       ∃ z : N, x = (fun _ => X : ι → O⟦X⟧) • z) :
     Nonempty (Module.Basis (Fin (Module.finrank E D)) (ι → O⟦X⟧) N) := by
-  letI : Module O⟦X⟧ N := Module.compHom _ (algebraMap O⟦X⟧ (ι → O⟦X⟧))
-  haveI : IsScalarTower O⟦X⟧ (ι → O⟦X⟧) N := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : Module.Finite O⟦X⟧ N := Module.Finite.trans (ι → O⟦X⟧) _
-  haveI : Module.Free O⟦X⟧ N := free_of_regular c hc hc' hX h
+  let : Module O⟦X⟧ N := Module.compHom _ (algebraMap O⟦X⟧ (ι → O⟦X⟧))
+  have : IsScalarTower O⟦X⟧ (ι → O⟦X⟧) N := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : Module.Finite O⟦X⟧ N := Module.Finite.trans (ι → O⟦X⟧) _
+  have : Module.Free O⟦X⟧ N := free_of_regular c hc hc' hX h
   exact basis_of_baseChange hE f hf
 
 
@@ -249,13 +249,13 @@ theorem wach_free {l : ℕ} [Fact l.Prime] (P : LocPrime l) (H : LocHW l P) (K :
     Nonempty (Module.Basis (Fin (Module.finrank ↥(OL LL) ↥T.L.T))
       (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) ↥((H.W K s LL h).N T)) := by
   obtain ⟨_, -, hl⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
-  haveI := (P.PD K).finK₀
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have := (P.PD K).finK₀
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   have hproj := H.W_proj K s LL h T
   generalize H.W K s LL h = W at hproj ⊢
   obtain ⟨hfree, hrk⟩ := W.DD_free T
   rw [← hrk]
-  haveI : Module.Finite (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) ↥(W.N T) :=
+  have : Module.Finite (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) ↥(W.N T) :=
     Module.Finite.iff_fg.mpr (W.N_fg T)
   have hl0 : ((l : ℕ) : ↥(OL LL)) ≠ 0 := by
     intro h0

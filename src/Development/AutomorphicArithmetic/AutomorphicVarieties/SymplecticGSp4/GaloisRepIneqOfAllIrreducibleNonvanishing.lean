@@ -105,8 +105,8 @@ private theorem wcomp_self_eq_of_mem_wtPart {O σ X : Type} [CommRing O] [AddCom
   ext n
   rw [coeff_wcomp]
   by_cases h1 : Finsupp.weight wt n = j
-  · rw [if_pos h1]
-  · rw [if_neg h1]
+  · rw [ite_eq_left h1]
+  · rw [ite_eq_right h1]
     exact (hf' n h1).symm
 
 private theorem wcomp_eq_zero_of_mem_wtPart_of_ne {O σ X : Type} [CommRing O] [AddCommGroup X] {wt : σ → X} {j : X}
@@ -115,9 +115,9 @@ private theorem wcomp_eq_zero_of_mem_wtPart_of_ne {O σ X : Type} [CommRing O] [
   ext n
   rw [coeff_wcomp, map_zero]
   by_cases h1 : Finsupp.weight wt n = j'
-  · rw [if_pos h1]
+  · rw [ite_eq_left h1]
     exact hf' n (by rw [h1]; exact hj)
-  · rw [if_neg h1]
+  · rw [ite_eq_right h1]
 
 private theorem aGraded_internal {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime]
     {c : Coef l} {D : Raw Ω c} (M : Model D) : DirectSum.IsInternal M.gr := by
@@ -761,7 +761,7 @@ private theorem ts_agree (hι : Function.Injective ι)
       obtain ⟨c, hc, hc'⟩ := ts_step W ξ ι t g hg (J ^ N) J {n | Finsupp.weight W.wt n = 0 ∧ n ≠ 0} 0
         (fun n hn => hn.1) (fun n hn => by
           have := GlobalTheory.algHom_sub_constantCoeff_mem g hJ (monomial n 1)
-          rwa [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, if_neg hn.2.symm, map_zero,
+          rwa [← coeff_zero_eq_constantCoeff_apply, coeff_monomial, ite_eq_right hn.2.symm, map_zero,
             sub_zero] at this) ih
         (b - algebraMap O _ (constantCoeff b)) (fun n hn => by
           rw [map_sub, MvPowerSeries.algebraMap_apply, coeff_C]
@@ -804,7 +804,7 @@ private theorem ts_factor [DecidableEq X] (hι : Function.Injective ι)
     intro F
     have : (Ideal.quotientKerAlgEquivOfSurjective W.surj).symm (W.π F) = Ideal.Quotient.mk _ F := by
       rw [AlgEquiv.symm_apply_eq]; rfl
-    simp only [f, AlgHom.comp_apply, AlgEquiv.coe_algHom]
+    simp only [f, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom]
     erw [this]
     rfl
   refine ⟨f, AlgHom.ext fun x => ?_⟩
@@ -882,13 +882,13 @@ private theorem ts_ext {O X R K : Type} [CommRing O] [IsDomain O] [IsDiscreteVal
     · exact hw' _ (hz s).le
     · exact he s
   let B : Subalgebra O (DualNumber K) := Algebra.adjoin O G
-  haveI : Module.Finite O B := Algebra.finite_adjoin_of_finite_of_isIntegral hG hGi
-  haveI : IsNoetherianRing B := IsNoetherianRing.of_finite O B
-  haveI := GlobalTheory.isAdicComplete_map_of_finite (maximalIdeal O) B
+  have : Module.Finite O B := Algebra.finite_adjoin_of_finite_of_isIntegral hG hGi
+  have : IsNoetherianRing B := IsNoetherianRing.of_finite O B
+  have := GlobalTheory.isAdicComplete_map_of_finite (maximalIdeal O) B
   let J : Ideal B := ((maximalIdeal O).map (algebraMap O B)).radical
   obtain ⟨N, hN⟩ := Ideal.exists_radical_pow_le_of_fg ((maximalIdeal O).map (algebraMap O B))
     (IsNoetherian.noetherian _)
-  haveI : IsAdicComplete J B :=
+  have : IsAdicComplete J B :=
     { toIsHausdorff := GlobalTheory.NilpotentEval.isHausdorff_of_pow_le hN
       toIsPrecomplete := GlobalTheory.NilpotentEval.isPrecomplete_of_pow_le hN Ideal.le_radical }
   let yB : W.σ → B := fun s => ⟨y s, Algebra.subset_adjoin (Or.inl (Or.inr ⟨s, rfl⟩))⟩
@@ -978,7 +978,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.tanScale :
   have hle : WS.A ≤ M.SS := fun x hx => iSup_mono (fun w => (hWS w).le) hx
   have hge : M.SS ≤ WS.A := fun x hx => iSup_mono (fun w => (hWS w).ge) hx
   have hfg : (WS.part 0).FG := by
-    haveI := hF M.S M.ru M.pt
+    have := hF M.S M.ru M.pt
     have h1 : (Algebra.adjoin c.O (mono M.ru.hom 0)).toSubmodule.FG := Module.Finite.iff_fg.1 this
     refine h1.of_le ?_
     rw [hWS, hsp, Submodule.span_le]
@@ -1168,7 +1168,7 @@ private theorem exists_lift_of_derivation_on_ideal {Ω : Type} [Field Ω] [CharZ
   have hXu : IsUnit (X a₀) := TrivSqZeroExt.isUnit_iff_isUnit_fst.2 (by rw [(hX a₀).1]; exact hxa.isUnit)
   let 𝒜 : ℤ × ℤ → Submodule c.O M.SS := fun j => (M.sPart j).comap M.SS.val.toLinearMap
   have hint : DirectSum.IsInternal 𝒜 := graded_subalgebra_internal M.sPart (sInternal D hD M).1
-  letI : GradedAlgebra 𝒜 :=
+  let : GradedAlgebra 𝒜 :=
     { toDecomposition := hint.chooseDecomposition
       one_mem := (SetLike.GradedOne.one_mem : (1 : M.S) ∈ M.sPart 0)
       mul_mem := fun _ _ _ _ ha hb => (SetLike.GradedMul.mul_mem ha hb : _ ∈ M.sPart _) }
@@ -1279,7 +1279,7 @@ private theorem fg_map_mk {O A S : Type} [CommRing O] [IsNoetherianRing O] [Comm
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective y
     rw [Ideal.Quotient.eq_zero_iff_mem]
     exact (hI a).mp hy
-  haveI : IsNoetherian O T := isNoetherian_of_fg_of_noetherian T hT
+  have : IsNoetherian O T := isNoetherian_of_fg_of_noetherian T hT
   have hle : (P.map (Ideal.Quotient.mkₐ O I).toLinearMap).map g.toLinearMap ≤ T := by
     rintro _ ⟨_, ⟨a, ha, rfl⟩, rfl⟩
     exact hP a ha
@@ -1318,7 +1318,7 @@ private theorem der_zero {O : Type} [CommRing O] [IsLocalRing O] [IsNoetherianRi
     (hπ : Function.Surjective π) (r : Lift O rbar S) (hr : r.Generates) (x : R →ₐ[O] O) (hx : ∀ f, π f = 0 → x f = 0)
     (I : Ideal O) (d : R →ₗ[O] O) (hd : d ∈ PtDer x O) (h0 : ∀ f, π f = 0 → d f ∈ I)
     (h1 : ∀ g i j, ∃ f, π f = r.hom g i j ∧ d f ∈ I) (f : R) : d f ∈ I := by
-  haveI : IsCO O (TrivSqZeroExt O (O ⧸ I)) := co_sqz O O _ fun _ => rfl
+  have : IsCO O (TrivSqZeroExt O (O ⧸ I)) := co_sqz O O _ fun _ => rfl
   have hd' : I.mkQ ∘ₗ d ∈ PtDer x (O ⧸ I) := fun f g => by
     have := hd f g
     simp only [LinearMap.comp_apply, this, map_add (f := _), map_smul]
@@ -1408,9 +1408,9 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.mPrime :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} (D : Raw Ω c), D.Good → ∀ M : Model D, ∀ [GradedAlgebra M.gr], LemmaM' → SoFin Ω l → D.sha ≤ cotLen M.x0 M.gr (-1) M.eqns.F := by
   intro Ω _ _ _ l _ c D hD M _ hM hS
   obtain ⟨-, a, ha, Z, hZ, hc⟩ := shaCoc D hD hS
-  haveI : Finite (ResidueField c.O) := by
+  have : Finite (ResidueField c.O) := by
     obtain ⟨-, -, h, -⟩ := dvrFacts l c.O
-    haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ PadicInt.residueField.symm.toEquiv
+    have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ PadicInt.residueField.symm.toEquiv
     exact IsLocalRing.ResidueField.finite_of_finite ‹_›
   have hx : ∀ f, M.π f = 0 → M.W.origin M.org f = 0 := fun f hf => by
     obtain ⟨e, -, he⟩ := M.hom 1 0 0
@@ -1710,7 +1710,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.aW :
       map_zero]
   set_option synthInstance.maxHeartbeats 100000 in
     refine ⟨?_, ?_, ?_⟩
-  · haveI := wPres_gr_zero_isCO_of_mem_maximalIdeal c.O (ℤ × ℤ) M.R M.W hz
+  · have := wPres_gr_zero_isCO_of_mem_maximalIdeal c.O (ℤ × ℤ) M.R M.W hz
     let p : M.W.gr 0 →ₐ[c.O] M.gr 0 :=
       { toFun := fun F => ⟨⟨F.1.1, M.aPart_le (n := 0) F.2⟩, F.2⟩
         map_one' := rfl
@@ -1718,7 +1718,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.aW :
         map_zero' := rfl
         map_add' := fun F G => rfl
         commutes' := fun c => rfl }
-    haveI : Nontrivial (M.gr 0) := ⟨⟨0, 1, fun h =>
+    have : Nontrivial (M.gr 0) := ⟨⟨0, 1, fun h =>
       zero_ne_one (α := M.R) (congrArg (fun x : M.gr 0 => ((x : M.A) : M.R)) h)⟩⟩
     refine co_quot c.O (M.W.gr 0) (M.gr 0) p ?_
     rintro ⟨⟨x, hxA⟩, hx⟩
@@ -1903,7 +1903,7 @@ theorem UpperTheory.V.GradeZeroInterpolatingElement.galoisRep_ineq_of_allIrreduc
     rw [← Finset.sum_div, ← Finset.sum_mul] at hs
     obtain ⟨-, -, -, -, -, e0, e1, -⟩ := dvrFacts l c.O
     have he : 0 < (eO l c.O).toNat :=
-      ENat.toNat_pos e0 (ne_top_of_le_ne_top (ENat.coe_ne_top _) e1)
+      ENat.toNat_pos e0 (ne_top_of_le_ne_top (ENat.natCast_ne_top _) e1)
     exact real_ratio_bound _ _ _ _ _ (Nat.cast_pos.2 he) (Real.log_pos (by exact_mod_cast hl.out.one_lt))
       (Nat.cast_le.2 (ENat.toNat_le_toNat (mPrime D hD M hM' hF) hfin)) hs
 end -- clump:auto

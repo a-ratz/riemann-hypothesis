@@ -80,9 +80,9 @@ private theorem UpperTheory.exists_fixed_square_root_odd {Ω : Type} [Field Ω] 
       have hkodd : Odd k := (Nat.odd_mul.mp (hk ▸ hn)).2
       obtain ⟨m', hm'abs, hm'4, s', hs'sq, hgs'⟩ :=
         ih k hkn hkodd (fun ζ hζ => hg ζ (by rw [hk, pow_mul', hζ, one_pow]))
-      haveI : Fact p.Prime := ⟨hp⟩
-      haveI : NeZero (p : Ω) := ⟨Nat.cast_ne_zero.mpr hp.ne_zero⟩
-      obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω p
+      have : Fact p.Prime := ⟨hp⟩
+      have : NeZero (p : Ω) := ⟨Nat.cast_ne_zero.mpr hp.ne_zero⟩
+      obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω p
       obtain ⟨⟨x, hx⟩, hall⟩ := CF.gauss Ω p ζ hp2 hζ
       have hgz : g ζ = ζ ^ 1 := by
         rw [pow_one]
@@ -116,7 +116,7 @@ private theorem UpperTheory.exists_fixed_square_root_odd {Ω : Type} [Field Ω] 
 theorem UpperTheory.mem_galOf_quadratic_of_fixes_discr_roots_of_unity :
     ∀ (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (K : Type) [Field K] [NumberField K] [Algebra K Ω], Module.finrank ℚ K = 2 → Odd (discr K).natAbs → ∀ g : G ℚ Ω, (∀ ζ : Ω, ζ ^ (discr K).natAbs = 1 → g ζ = ζ) → g ∈ galOf ℚ K Ω := by
   intro Ω _ _ _ K _ _ _ hK hodd g hg
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨m, hmabs, hm4, s, hs, hgs⟩ :=
     UpperTheory.exists_fixed_square_root_odd (g : Ω →+* Ω) (discr K).natAbs hodd (fun ζ h => by simpa using hg ζ h)
   have hd4 : discr K % 4 = 1 := by

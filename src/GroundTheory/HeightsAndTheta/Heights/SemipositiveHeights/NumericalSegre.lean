@@ -226,7 +226,7 @@ theorem FlagBundleDim.proof (hspan : TwistedDualGensSpan.Statement)
       rw [hsum]
       · refine Finset.sum_congr rfl fun j _ => ?_
         have hj : ((ι' j : Fin N) : ℕ) < i := by rw [hval]; exact j.isLt
-        simp only [truncCoord, hj, if_true, hG, Function.comp_apply, Pi.basisFun_apply]
+        simp only [truncCoord, hj, ite_true, hG, Function.comp_apply, Pi.basisFun_apply]
         rw [LinearMap.comp_apply, Matrix.mulVecLin_apply, Matrix.mulVec_single_one]
         rfl
       · intro j hj
@@ -1314,7 +1314,7 @@ theorem SpanBundleTrdegGe.proof : SpanBundleTrdegGe.Statement := by
     have hcard : Fintype.card κ = i := by
       rw [← finrank_span_eq_card hli, hsp, ← Matrix.rank_eq_finrank_span_row, hrk]
     let e : Fin i ≃ κ := (Fintype.equivFinOfCardEq hcard).symm
-    refine ⟨a ∘ e, Matrix.linearIndependent_rows_iff_isUnit.1 ?_⟩
+    refine ⟨a ∘ e, Matrix.linearIndependent_row_iff_isUnit.1 ?_⟩
     exact hli.comp e e.injective
   set σ : Fin i → Φ := fun r => ∑ j, s j * algebraMap Ω Φ (G (l r) j) with hσdef
   have hσ : AlgebraicIndependent Ω σ :=

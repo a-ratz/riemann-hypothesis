@@ -174,7 +174,7 @@ lemma isLo_inv {a : (Matrix (Fin n) (Fin n) ℂ)ˣ} (ha : IsLo (a : Matrix (Fin 
     IsLo ((a⁻¹ : (Matrix (Fin n) (Fin n) ℂ)ˣ) : Matrix (Fin n) (Fin n) ℂ) := by
   have hb : Matrix.BlockTriangular (a : Matrix (Fin n) (Fin n) ℂ) (OrderDual.toDual : Fin n → (Fin n)ᵒᵈ) :=
     fun i j h => ha i j h
-  letI : Invertible (a : Matrix (Fin n) (Fin n) ℂ) := a.invertible
+  let : Invertible (a : Matrix (Fin n) (Fin n) ℂ) := a.invertible
   have h2 := Matrix.blockTriangular_inv_of_blockTriangular hb
   rw [Matrix.coe_units_inv]
   exact fun i j h => h2 h
@@ -409,9 +409,9 @@ theorem exists_measure_of_linear_chart : ∀ (Γ ι : Type) [Group Γ] [Topologi
         refine ⟨g' z, ?_, e⟩
         have : g (g' z) = z := hc.injective (by rw [h1, e, hv])
         simpa [this] using hz
-    rw [Measure.map_apply hg hs, Measure.smul_apply, hν, hme.comap_apply, hme.comap_apply, hset,
+    rw [Measure.map_apply hg hs, smul_apply, hν, hme.comap_apply, hme.comap_apply, hset,
       ← Measure.map_apply T.continuous_of_finiteDimensional.measurable (hme.measurableSet_image.2 hs),
-      Real.map_linearMap_volume_pi_eq_smul_volume_pi hT, Measure.smul_apply]
+      Real.map_linearMap_volume_pi_eq_smul_volume_pi hT, smul_apply]
   have hleft : ∀ a, Measure.map (fun x => a * x) ν = ENNReal.ofReal |(LinearMap.det (L a))⁻¹| • ν := fun a =>
     hgen _ (fun x => a⁻¹ * x) (L a) (L a⁻¹) (measurable_const_mul a) (hL0 a) (hL a) (hL a⁻¹) fun v => by
       rw [← LinearMap.comp_apply, ← hLm, inv_mul_cancel, hL1]; rfl
@@ -481,7 +481,7 @@ theorem det_Lc_Rc : ∀ (n : ℕ) (p : Fin n × Fin n × Bool → Prop) [Decidab
     · rw [Matrix.single_apply_of_ne _ _ _ _ _ hac]
       apply Complex.ext <;> simp [emb, Pi.single_apply] <;> grind
   constructor
-  · letI : LinearOrder {t // p t} := LinearOrder.lift'
+  · let : LinearOrder {t // p t} := LinearOrder.lift'
       (fun t => (toLex (t.1.1, toLex (t.1.2.1, t.1.2.2)) : Fin n ×ₗ Fin n ×ₗ Bool))
       (fun s t h => Subtype.ext (by
         have := toLex.injective h
@@ -490,7 +490,7 @@ theorem det_Lc_Rc : ∀ (n : ℕ) (p : Fin n × Fin n × Bool → Prop) [Decidab
     have hent : ∀ t s : {t // p t}, LinearMap.toMatrix' (Lc p b) t s =
         crd p (b * Matrix.single s.1.1 s.1.2.1 (if s.1.2.2 then Complex.I else 1)) t := fun t s => by
       rw [LinearMap.toMatrix'_apply, ← hemb]; rfl
-    rw [← LinearMap.det_toMatrix', Matrix.det_of_lowerTriangular]
+    rw [← LinearMap.det_toMatrix', det_of_isLowerTriangular]
     · refine Finset.prod_congr rfl ?_
       rintro ⟨⟨i, j, s⟩, h⟩ -
       rw [hent]
@@ -506,7 +506,7 @@ theorem det_Lc_Rc : ∀ (n : ℕ) (p : Fin n × Fin n × Bool → Prop) [Decidab
         · exact absurd h1 (lt_irrefl _)
         · cases s <;> cases s' <;> simp [crd, him] at h1 ⊢
       · simp [crd, Matrix.mul_single_apply_of_ne _ _ _ _ _ hj]
-  · letI : LinearOrder {t // p t} := LinearOrder.lift'
+  · let : LinearOrder {t // p t} := LinearOrder.lift'
       (fun t => (toLex (t.1.2.1, toLex (t.1.1, t.1.2.2)) : Fin n ×ₗ Fin n ×ₗ Bool))
       (fun s t h => Subtype.ext (by
         have := toLex.injective h
@@ -515,7 +515,7 @@ theorem det_Lc_Rc : ∀ (n : ℕ) (p : Fin n × Fin n × Bool → Prop) [Decidab
     have hent : ∀ t s : {t // p t}, LinearMap.toMatrix' (Rc p b) t s =
         crd p (Matrix.single s.1.1 s.1.2.1 (if s.1.2.2 then Complex.I else 1) * b) t := fun t s => by
       rw [LinearMap.toMatrix'_apply, ← hemb]; rfl
-    rw [← LinearMap.det_toMatrix', Matrix.det_of_upperTriangular]
+    rw [← LinearMap.det_toMatrix', det_of_isUpperTriangular]
     · refine Finset.prod_congr rfl ?_
       rintro ⟨⟨i, j, s⟩, h⟩ -
       rw [hent]
@@ -664,7 +664,7 @@ lemma haarGC (ε : Fin n → Bool) :
       ext v
       constructor
       · rintro ⟨g, hg⟩
-        rw [Set.mem_setOf_eq, ← hg]
+        rw [Set.mem_ofPred_eq, ← hg]
         exact ((Matrix.isUnit_iff_isUnit_det _).1 g.1.isUnit).ne_zero
       · intro hv
         have hu : IsUnit (emb (pV ε) v) := (Matrix.isUnit_iff_isUnit_det _).2 (Ne.isUnit hv)
@@ -694,7 +694,7 @@ lemma haarBC (ε : Fin n → Bool) :
           (Complex.continuous_re.comp (hce.matrix_elem l l))
       convert this using 1
       ext v
-      simp only [Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [Set.mem_iInter, Set.mem_ofPred_eq]
       constructor
       · rintro ⟨g, hg⟩ l
         rw [← hg]
@@ -703,7 +703,7 @@ lemma haarBC (ε : Fin n → Bool) :
         have hW := (inW_iff ε (emb (pW ε) v)).1 (by rw [crd_emb])
         have hp : ∀ l, 0 < emb (pW ε) v l l := fun l => Complex.pos_iff.2 ⟨hv l, (hW.2.2 l).symm⟩
         have hu : IsUnit (emb (pW ε) v) := by
-          rw [Matrix.isUnit_iff_isUnit_det, Matrix.det_of_lowerTriangular _ (fun i j h => hW.2.1 i j h)]
+          rw [Matrix.isUnit_iff_isUnit_det, det_of_isLowerTriangular _ (fun i j h => hW.2.1 i j h)]
           exact Ne.isUnit (Finset.prod_ne_zero_iff.2 fun l _ => (hp l).ne')
         exact ⟨⟨hu.unit, hW.1, hW.2.1, hp⟩, rfl⟩)
   refine ⟨μ, h1, h2, h3, fun b => ?_⟩
@@ -728,7 +728,7 @@ lemma exists_kappa_beta (hI : IwasawaKC) (ε : Fin n → Bool) :
         x.1.1 = k * b → toMK (κ x) = k ∧ (β x).1.1 = b := by
   obtain ⟨κ₀, β₀, h1, hκ, hβ, h2⟩ := hI n ε
   have hKC : ∀ x : GC ε, x.1.1 ∈ KC ε := fun x => ⟨x.1.isUnit, x.2⟩
-  have hval : Continuous (fun g : GC ε => g.1.1) := Units.continuous_val.comp continuous_subtype_val
+  have hval : Continuous (fun g : GC ε => g.1.1) := Units.continuous_val.comp continuous_subtypeVal
   have hk : ∀ x : GC ε, ∃ k : KG ε, toMK k = κ₀ x.1.1 := fun x => by
     have := (h1 _ (hKC x)).1
     rw [← range_toMK] at this
@@ -776,7 +776,7 @@ theorem iwasawaInt_of (hI : IwasawaKC) : IwasawaInt := by
   have h1 : ∀ k, κ (iK ε k) = k ∧ β (iK ε k) = 1 := fun k => by
     have := hu k 1
     rwa [map_one, mul_one] at this
-  have hvalB : Continuous (fun g : BC ε => g.1.1) := Units.continuous_val.comp continuous_subtype_val
+  have hvalB : Continuous (fun g : BC ε => g.1.1) := Units.continuous_val.comp continuous_subtypeVal
   have hpos : ∀ (b : BC ε) l, 0 < ‖b.1.1 l l‖ := fun b l => norm_pos_iff.2 (b.2.2.2 l).ne'
   set d : BC ε → ℝ := fun b => ∏ l, ‖b.1.1 l l‖ ^ (4 * rhoC ε l) with hd
   have dpos : ∀ b, 0 < d b := fun b => Finset.prod_pos fun t _ => Real.rpow_pos_of_pos (hpos _ _) _
@@ -788,8 +788,8 @@ theorem iwasawaInt_of (hI : IwasawaKC) : IwasawaInt := by
     rw [← Real.mul_rpow (norm_nonneg _) (norm_nonneg _), ← norm_mul, ← isLo_mul_diag a.2.2.1 b.2.2.1]
     rfl
   have done : d 1 = 1 := by simp [hd]
-  have hi : Continuous (iK ε) := (continuous_subtype_val.comp continuous_subtype_val).subtype_mk _
-  have hj : Continuous (jB ε) := continuous_subtype_val.subtype_mk _
+  have hi : Continuous (iK ε) := (continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _
+  have hj : Continuous (jB ε) := continuous_subtypeVal.subtype_mk _
   have Dm : Measurable fun b => ENNReal.ofReal (d b) := dcont.measurable.ennreal_ofReal
   have key := lintegral_equivariant_left_invariant (GC ε) (KG ε) (BC ε) (iK ε) (jB ε) β (muK ε) lam μ (fun b => ENNReal.ofReal (d b))
     hi.measurable hj.measurable hβ.measurable (fun x => ⟨_, hdec x⟩) (fun x b => (hr x b).2) hl
@@ -810,7 +810,7 @@ theorem iwasawaInt_of (hI : IwasawaKC) : IwasawaInt := by
         rw [(hr x b).1, (hr x b).2, dmul, ENNReal.ofReal_mul (dpos _).le]; ring) Y
     simpa [h1, done] using this
   have hFc : Continuous fun k : KG ε => F (toMK k) :=
-    hF.comp_continuous (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val))
+    hF.comp_continuous (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal))
       fun k => k.2
   conv_rhs => rw [← hmap]
   rw [integral_map hm.aemeasurable hFc.aestronglyMeasurable,

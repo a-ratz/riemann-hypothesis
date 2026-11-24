@@ -109,7 +109,7 @@ theorem addHaar_map_smul_of_norm_eq_one (K V : Type) [NontriviallyNormedField K]
   have he : (fun x : V => c • x) = e := by
     ext x
     simp [e]
-  haveI : (Measure.map (fun x : V => c • x) μ).IsAddHaarMeasure := by
+  have : (Measure.map (fun x : V => c • x) μ).IsAddHaarMeasure := by
     rw [he]
     exact e.isAddHaarMeasure_map μ
   have hk := Measure.isAddLeftInvariant_eq_smul (Measure.map (fun x : V => c • x) μ) μ
@@ -140,7 +140,7 @@ theorem addHaar_map_smul_of_norm_eq_one (K V : Type) [NontriviallyNormedField K]
   have hm : Measure.map (fun x : V => c • x) μ S = μ S := by
     rw [Measure.map_apply (continuous_const_smul c).measurable hS.measurableSet, hpre]
   have hk1 : k = 1 := by
-    rw [hk, Measure.smul_apply] at hm
+    rw [hk, smul_apply] at hm
     have h1 : (k : ENNReal) * μ S = 1 * μ S := by
       rw [one_mul]
       simpa [ENNReal.smul_def] using hm
@@ -187,7 +187,7 @@ theorem fibOf_compl_fibre : ∀ (K V : Type) [NontriviallyNormedField K] [IsUltr
     exact h1.smul measurable_id
   have hA : MeasurableSet (q ⁻¹' {t})ᶜ :=
     ((isClosed_singleton.preimage hq).measurableSet).compl
-  rw [fibOf_ne _ _ _ _ _ ht, Measure.smul_apply, Measure.map_apply hm hA,
+  rw [fibOf_ne _ _ _ _ _ ht, smul_apply, Measure.map_apply hm hA,
     Measure.restrict_apply (hm hA)]
   convert smul_zero _
   convert measure_empty (μ := μ)
@@ -413,7 +413,7 @@ theorem exists_map_div_eq_smul {K : Type} [NontriviallyNormedField K] [ProperSpa
       Units.val_mk0, smul_eq_mul, div_eq_inv_mul]
   have hf : Measurable (fun t : K => t / a) := (continuous_id.div_const a).measurable
   rw [Measure.map_apply hf hS, hpre, ← distribHaarChar_mul ν,
-    Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    smul_apply, ENNReal.smul_def, smul_eq_mul]
 
 theorem avg_div_eq {K : Type} [NontriviallyNormedField K] [ProperSpace K]
     [MeasurableSpace K] [BorelSpace K] (ν : Measure K) [ν.IsAddHaarMeasure] {a : K} (ha : a ≠ 0)
@@ -423,7 +423,7 @@ theorem avg_div_eq {K : Type} [NontriviallyNormedField K] [ProperSpace K]
   have hf : Measurable (fun t : K => t / a) := (continuous_id.div_const a).measurable
   have hcU : ν {r | r / a ∈ U} = c * ν U := by
     have h : (Measure.map (fun t : K => t / a) ν) U = (c • ν) U := by rw [hc]
-    rwa [Measure.map_apply hf hU, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+    rwa [Measure.map_apply hf hU, smul_apply, ENNReal.smul_def, smul_eq_mul] at h
   have hcI : ∫⁻ t, g (t / a) ∂ν = c * ∫⁻ u, g u ∂ν := by
     rw [← lintegral_map hg hf, hc, lintegral_smul_measure, ENNReal.smul_def, smul_eq_mul]
   have hc0' : (c : ℝ≥0∞) ≠ 0 := by exact_mod_cast hc0
@@ -900,15 +900,15 @@ theorem topRing : IsTopologicalRing (Fv F v ⊗[F] E) :=
   IsModuleTopology.isTopologicalRing (Fv F v) _
 theorem lcs : LocallyCompactSpace (Fv F v ⊗[F] E) ∧ SecondCountableTopology (Fv F v ⊗[F] E) ∧
     T2Space (Fv F v ⊗[F] E) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (Fv F v)
   exact ⟨e.isClosedEmbedding.locallyCompactSpace, e.secondCountableTopology, e.isEmbedding.t2Space⟩
 
 variable (σ : E →ₐ[F] E) {M : ℕ} (J : Matrix (Fin M) (Fin M) E)
 
 theorem continuous_q : Continuous fun X : Fin 1 → Fin M → Fv F v ⊗[F] E => qR (Fv F v) σ J (X 0) := by
-  haveI := modTop (E := E) v
-  haveI := topRing (E := E) v
+  have := modTop (E := E) v
+  have := topRing (E := E) v
   have h1 : Continuous (Algebra.trace (Fv F v) (Fv F v ⊗[F] E)) :=
     IsModuleTopology.continuous_of_linearMap _
   have h2 := GlobalTheory.AdelicUnitaryTop.continuous_sigR (Fv F v) σ
@@ -931,8 +931,8 @@ theorem lattice_compact_open (hσ : IsCMExt F E σ)
     (L : Submodule (GlobalTheory.IndefiniteRowSideFullHecke.PlaceSplittingTypes.maxOrder F E v) (Fin M → Fv F v ⊗[F] E)) (hfg : L.FG)
     (hsp : Submodule.span (Fv F v ⊗[F] E) (L : Set (Fin M → Fv F v ⊗[F] E)) = ⊤) :
     IsCompact (GlobalTheory.IndefiniteRowSideFullHecke.PlaceSplittingTypes.latTup v L) ∧ IsOpen (GlobalTheory.IndefiniteRowSideFullHecke.PlaceSplittingTypes.latTup v L) := by
-  haveI := modTop (E := E) v
-  haveI := topRing (E := E) v
+  have := modTop (E := E) v
+  have := topRing (E := E) v
   obtain ⟨hc, ho⟩ := _root_.GlobalTheory.CompletedOrder.isCompact_isOpen_integralClosure F E σ hσ v
   obtain ⟨n, x, hx⟩ := Submodule.fg_iff_exists_fin_generating_family.1 hfg
   let f : (Fin n → Fv F v ⊗[F] E) →ₗ[Fv F v ⊗[F] E] (Fin M → Fv F v ⊗[F] E) :=
@@ -966,20 +966,20 @@ theorem null_and_exists (hσ : IsCMExt F E σ) (hM : 1 ≤ M) (hJ : IsHermND σ 
     (ν : Measure (Fv F v)) (hν : ν.IsAddHaarMeasure) :
     μ {X | qR (Fv F v) σ J (X 0) = 0} = 0 ∧
     ∃ fib, IsFibreFamily μ (fun X => qR (Fv F v) σ J (X 0)) id Set.univ ν {c | c ≠ 0} fib := by
-  haveI := modTop (E := E) v
-  haveI := topRing (E := E) v
+  have := modTop (E := E) v
+  have := topRing (E := E) v
   obtain ⟨h1, h2, h3⟩ := lcs (E := E) v
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
-  letI := nontrivNormed v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  let := nontrivNormed v
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   have hq := continuous_q v σ J
   have hnull : μ {X | qR (Fv F v) σ J (X 0) = 0} = 0 := by
     obtain ⟨y, hy⟩ := _root_.GlobalTheory.HermLineZeros.finite_zeros_on_line F E σ hσ M hM J hJ (Fv F v)
     exact _root_.GlobalTheory.measure_eq_zero_of_finite_inter_lines (Fv F v) _ μ _ (isClosed_eq hq continuous_const).measurableSet (fun _ => y)
       fun x => hy (x 0)
   refine ⟨hnull, ?_⟩
-  haveI : CharZero (Fv F v) := charZero_of_injective_ringHom (algebraMap F (Fv F v)).injective
+  have : CharZero (Fv F v) := charZero_of_injective_ringHom (algebraMap F (Fv F v)).injective
   obtain ⟨U, s, hs⟩ := _root_.GlobalTheory.QuadFibre.exists_isSqrtOn (Fv F v) two_ne_zero
   refine ⟨GlobalTheory.QuadFibre.fibOf μ ν (fun X => qR (Fv F v) σ J (X 0)) U s, fun b => ?_,
     fun φ hφ => ?_, fun φ h1 h2 _ => ?_⟩
@@ -1001,13 +1001,13 @@ theorem isEtaAt_iff (h2 : Module.finrank F E = 2) (η : ℤ) :
   unfold GlobalTheory.IndefiniteRowSideFullHecke.SelfDualUnramifiedPlaces.eta
   constructor
   · rintro (⟨h, rfl⟩ | ⟨h, rfl⟩)
-    · exact ⟨(_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).2 (Or.inl h), by rw [if_pos (_root_.GlobalTheory.InertField.isField_of_inert F E h2 v h)]; simp⟩
-    · exact ⟨(_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).2 (Or.inr h), by rw [if_neg (_root_.GlobalTheory.SplitPlace.not_isField_of_split F E h2 v h)]; simp⟩
+    · exact ⟨(_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).2 (Or.inl h), by rw [ite_eq_left (_root_.GlobalTheory.InertField.isField_of_inert F E h2 v h)]; simp⟩
+    · exact ⟨(_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).2 (Or.inr h), by rw [ite_eq_right (_root_.GlobalTheory.SplitPlace.not_isField_of_split F E h2 v h)]; simp⟩
   · rintro ⟨h, hη⟩
     rcases (_root_.GlobalTheory.quadratic_unramified_iff_inert_or_split F E h2 v).1 h with h | h
-    · rw [if_pos (_root_.GlobalTheory.InertField.isField_of_inert F E h2 v h)] at hη
+    · rw [ite_eq_left (_root_.GlobalTheory.InertField.isField_of_inert F E h2 v h)] at hη
       exact Or.inl ⟨h, by exact_mod_cast hη⟩
-    · rw [if_neg (_root_.GlobalTheory.SplitPlace.not_isField_of_split F E h2 v h)] at hη
+    · rw [ite_eq_right (_root_.GlobalTheory.SplitPlace.not_isField_of_split F E h2 v h)] at hη
       exact Or.inr ⟨h, by exact_mod_cast hη⟩
 
 theorem exists_eta : ∃ η : ℤ, (η : ℝ) = GlobalTheory.IndefiniteRowSideFullHecke.SelfDualUnramifiedPlaces.eta F E v := by
@@ -1065,12 +1065,12 @@ theorem localDensity_iff :
     rw [volInt_eq] at a2
     refine ⟨a1, a2, fun β hβ => ?_⟩
     obtain ⟨hnull, fib0, hfib0⟩ := null_and_exists v σ J hσ hM hJ μ hμ.1 ν hν.1
-    haveI := modTop (E := E) v
-    haveI := topRing (E := E) v
+    have := modTop (E := E) v
+    have := topRing (E := E) v
     obtain ⟨h1, h2, h3⟩ := lcs (E := E) v
-    haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-    haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+    have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
+    have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
     have hq := continuous_q v σ J
     have key : ∀ fib, IsFibreFamily μ (fun X => qR (Fv F v) σ J (X 0)) id Set.univ ν
         {c | c ≠ 0} fib → fib β (GlobalTheory.IndefiniteRowSideFullHecke.PlaceSplittingTypes.latTup v L) = ENNReal.ofReal
@@ -1089,7 +1089,7 @@ theorem localDensity_iff :
       rintro rfl
       rw [zero_sub, Valuation.map_neg, hβ] at ht
       exact lt_irrefl _ ht
-    haveI := hν.1
+    have := hν.1
     have hpos : 0 ≤ GlobalTheory.IndefiniteRowSideFullHecke.PlaceSplittingTypes.densityValue (GlobalTheory.IndefiniteRowSideFullHecke.PlaceSplittingTypes.dualIndex F v c)
         (GlobalTheory.IndefiniteRowSideFullHecke.PlaceSplittingTypes.resCard F v) η M := by
       rw [← dens_eq v c M η hη']

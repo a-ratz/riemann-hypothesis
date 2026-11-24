@@ -61,7 +61,7 @@ theorem length_quot_ne_top [IsDiscreteValuationRing O] (a : O) (ha : a ≠ 0) :
   have : Ideal.span {(u : O) * ϖ ^ n} = IsLocalRing.maximalIdeal O ^ n := by
     rw [hϖ.maximalIdeal_eq, Ideal.span_singleton_pow, Ideal.span_singleton_mul_left_unit u.isUnit]
   rw [this, IsDiscreteValuationRing.length_quotient_pow_maximalIdeal]
-  exact ENat.coe_ne_top n
+  exact ENat.natCast_ne_top n
 
 theorem fix_frac_zero {Γ : Type} {r : ℕ} (M : Γ → Matrix (Fin r) (Fin r) O)
     (hker : ∀ v : Fin r → O, (∀ g, (M g).mulVec v = v) → v = 0)
@@ -217,7 +217,7 @@ theorem length_invariants_lt_top [IsDiscreteValuationRing O] {Γ Γ' : Type} [Gr
   refine lt_of_le_of_lt hle ?_
   rw [← hm]
   norm_cast
-  exact ENat.coe_lt_top _
+  exact ENat.natCast_lt_top _
 
 end GlobalTheory.FiniteTwistInvariants
 

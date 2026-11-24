@@ -73,14 +73,14 @@ theorem mul_mem_one {𝔪 : Ideal (𝓞 D.host.E)} (h𝔪 : 𝔪 ≠ ⊥) {y : D
     ((Ideal.absNorm (D.host.conj • 𝔪) : ℕ) : D.host.E) * y ∈ (1 : Submodule (𝓞 D.host.E) D.host.E) := by
   have hJ : ((D.host.conj • 𝔪 : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E) ≠ 0 :=
     FractionalIdeal.coeIdeal_ne_zero.2 (conj_ne_bot h𝔪)
-  rw [FractionalIdeal.coe_div hJ, Submodule.mem_div_iff_forall_mul_mem] at hy
+  rw [FractionalIdeal.coeToSubmodule_div hJ, Submodule.mem_div_iff_forall_mul_mem] at hy
   have hn : ((Ideal.absNorm (D.host.conj • 𝔪) : ℕ) : D.host.E) ∈
       ((((D.host.conj • 𝔪 : Ideal (𝓞 D.host.E)) : FractionalIdeal (𝓞 D.host.E)⁰ D.host.E)) :
         Submodule (𝓞 D.host.E) D.host.E) := by
-    rw [FractionalIdeal.coe_coeIdeal, IsLocalization.mem_coeSubmodule]
+    rw [FractionalIdeal.coeToSubmodule_coeIdeal, IsLocalization.mem_coeSubmodule]
     exact ⟨_, Ideal.absNorm_mem _, by simp⟩
   have h2 := hy _ hn
-  rw [FractionalIdeal.coe_coeIdeal, IsLocalization.mem_coeSubmodule] at h2
+  rw [FractionalIdeal.coeToSubmodule_coeIdeal, IsLocalization.mem_coeSubmodule] at h2
   obtain ⟨z, -, hz⟩ := h2
   rw [Submodule.mem_one]
   exact ⟨z, by rw [hz, mul_comm]⟩
@@ -152,7 +152,7 @@ theorem iop_mem_TT {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) {N
     rw [e]
     exact NormUniq.tt_zero _
   · have : ((La0 D (tor0 D cc δ) N N').addSubgroupOf La₂).FiniteIndex := ⟨h⟩
-    haveI : Fintype (La₂ ⧸ (La0 D (tor0 D cc δ) N N').addSubgroupOf La₂) := Fintype.ofFinite _
+    have : Fintype (La₂ ⧸ (La0 D (tor0 D cc δ) N N').addSubgroupOf La₂) := Fintype.ofFinite _
     have e : Iop D (tor0 D cc δ) (La0 D (tor0 D cc δ) N N') La₂ F =
         ((Real.sqrt (((La0 D (tor0 D cc δ) N N').addSubgroupOf La₂).index : ℝ))⁻¹ : ℂ) •
           ∑ q : La₂ ⧸ (La0 D (tor0 D cc δ) N N').addSubgroupOf La₂,

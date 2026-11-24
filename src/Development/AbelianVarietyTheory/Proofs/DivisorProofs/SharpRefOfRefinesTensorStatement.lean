@@ -555,7 +555,7 @@ theorem sharpRef_of_tens : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ) (V : Type) [Comm
   obtain ⟨β, β₂, wR, hpb, hsq, hwR, hcR, htR⟩ := hR
   obtain ⟨io, hιm, hι⟩ := grpPullback_iso hpb (isGrpPullback_pullback Q.B (spMap ρ))
   have hprI : ∀ a, IsMonHom (T.pr a ≫ io.hom) := fun a => by
-    haveI := T.pr_hom a; haveI := hιm; infer_instance
+    have := T.pr_hom a; have := hιm; infer_instance
   have hpr' : ∀ a, (T.pr a ≫ io.hom).left ≫ pullback.fst Q.B.hom (spMap ρ) = (T.pr a).left ≫ β := fun a => by
     rw [Over.comp_left, Category.assoc, hι]
   let φQ : (Fin 8 × Fin 8) × Fin 4 → (D.P.A.left ⟶ Q.B.left) := fun k =>

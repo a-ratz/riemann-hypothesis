@@ -83,12 +83,12 @@ theorem exists_polAV_sharpOver : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n 
   have hpow : b.ζ ^ n = 1 :=
     Units.ext ((Units.val_pow_eq_pow_val _ _).trans (Subtype.ext (Complex.isPrimitiveRoot_exp n hn0).pow_eq_one))
   obtain ⟨L₁, L₂⟩ := abelianSchemeLaws_all
-  haveI : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
-  haveI : IsLocallyNoetherian (Sp (cycAway n)) :=
+  have : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway _
+  have : IsLocallyNoetherian (Sp (cycAway n)) :=
     inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of _)))
-  haveI := F.smooth
-  haveI : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
-  haveI : IsLocallyNoetherian F.X := LocallyOfFiniteType.isLocallyNoetherian F.s
+  have := F.smooth
+  have : Smooth F.s := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) F.s
+  have : IsLocallyNoetherian F.X := LocallyOfFiniteType.isLocallyNoetherian F.s
   obtain ⟨bas, hb⟩ := exists_isSharpBasis g W hW
   obtain ⟨a, w, w', hw, hw', hs⟩ := EighthPowerFactor.exists_matrices hW.2
   obtain ⟨t, ⟨pr, hpr, hu, hL, -, -⟩, hp⟩ := GlobalTheory.exists_isSharp_and_prim L₁ L₂ Moduli.cube_of_isLB g (8 * g) W _ a w w'

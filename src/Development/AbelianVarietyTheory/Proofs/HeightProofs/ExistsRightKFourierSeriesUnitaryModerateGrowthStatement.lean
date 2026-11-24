@@ -815,9 +815,9 @@ theorem pairing_convolution_swap {n : ℕ} (ε : Fin n → Bool) (e q g : KG ε 
     (he : Continuous e) (hq : Continuous q) (hg : Continuous g) :
     ∫ k', star (q k') * ∫ k, e k * g (k' * k) ∂(muK ε) ∂(muK ε) =
       ∫ y, g y * ∫ x, e x * star (q (y * x⁻¹)) ∂(muK ε) ∂(muK ε) := by
-  haveI : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
-  haveI : (muK ε).IsInvInvariant := ⟨(compact_haar_holds n ε).2.2.2⟩
-  haveI : SecondCountableTopology (KG ε) :=
+  have : IsProbabilityMeasure (muK ε) := (compact_haar_holds n ε).1
+  have : (muK ε).IsInvInvariant := ⟨(compact_haar_holds n ε).2.2.2⟩
+  have : SecondCountableTopology (KG ε) :=
     TopologicalSpace.Subtype.secondCountableTopology (KG ε : Set (UJ ε))
 
   have h1 : ∀ k' : KG ε, ∫ k, e k * g (k' * k) ∂(muK ε) = ∫ y, e (k'⁻¹ * y) * g y ∂(muK ε) := by
@@ -913,7 +913,7 @@ theorem firstCountable_KG (ε : Fin n → Bool) : FirstCountableTopology (KG ε)
 
 theorem continuous_param (ε : Fin n → Bool) {F : KG ε → KG ε → ℂ} (hF : Continuous (Function.uncurry F)) :
     Continuous fun a => ∫ k, F a k ∂(muK ε) := by
-  haveI := firstCountable_KG ε
+  have := firstCountable_KG ε
   have := continuous_parametric_integral_of_continuous (μ := muK ε) hF (s := Set.univ) isCompact_univ
   simpa [Measure.restrict_univ] using this
 

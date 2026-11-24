@@ -416,7 +416,7 @@ theorem sandwichO (D : Formalism.BasicNotions.D7) {p n' : ℕ} (O : Type) [CommR
       ((p : O) ^ (N0 (m + 1) * deF p (m + 1) (ellWt (fun a => (ν a : ℤ))))) • x0 ∈
         weyl O (m + 1) (m + 1) le_rfl ν := by
   intro x0 hx0
-  haveI : CharZero (KK O) := Formalism.MainNotions.G.GLWeightTheory.dvr_fraction_field_char_zero_prime S hG.prime
+  have : CharZero (KK O) := Formalism.MainNotions.G.GLWeightTheory.dvr_fraction_field_char_zero_prime S hG.prime
   have hT := (Formalism.MainNotions.G.GLWeightTheory.nabla_delta_comparison_field D p n' O S hG (m + 1) (fun a => (ν a : ℤ))
     (VK (KK O) (m + 1) ν) (EV (KK O) (m + 1) ν) (hwV (KK O) (m + 1) ν hν) (isIrrHW hν)).1
   have h1 := hT _ (nabla_mem O hν x0 hx0)
@@ -454,7 +454,7 @@ theorem good_ring_of_setting (h : HidaSetting p n' W Qq O Kf ι σ j w) : Admiss
   refine ⟨h.prime, h.five_le, h.two_le, h.even, ?_⟩
   have hmax : (Ideal.span {(p : W)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible h.p_unif
-  letI : Field (W ⧸ Ideal.span {(p : W)}) := Ideal.Quotient.field _
+  let : Field (W ⧸ Ideal.span {(p : W)}) := Ideal.Quotient.field _
   have hker : Ideal.span {(p : W)} ≤ RingHom.ker ((IsLocalRing.residue O).comp j) := by
     rw [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, RingHom.mem_ker,
       RingHom.comp_apply, map_natCast, IsLocalRing.residue_eq_zero_iff]

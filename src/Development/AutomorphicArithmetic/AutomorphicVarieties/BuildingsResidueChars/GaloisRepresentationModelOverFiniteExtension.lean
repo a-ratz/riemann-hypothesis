@@ -106,7 +106,7 @@ theorem UpperTheory.galois_representation_model_over_finite_extension :
   obtain ⟨L₁, r₁, hm₁, hp₁, e₁⟩ := hm
   have hL : ∃ L : FinExt l, L₁.1 ≤ L.1 ∧ ∀ i s, (χ i s : Om l) ∈ L.1 := by
     have hfin : (⋃ i, Units.val '' Set.range (χ i)).Finite := Set.finite_iUnion fun i => (hχ i).image _
-    haveI : Finite ↥(⋃ i, Units.val '' Set.range (χ i)) := hfin
+    have : Finite ↥(⋃ i, Units.val '' Set.range (χ i)) := hfin
     refine ⟨supExt L₁ ⟨IntermediateField.adjoin ℚ_[l] (⋃ i, Units.val '' Set.range (χ i)),
       IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x⟩,
       le_sup_left, fun i s => ?_⟩

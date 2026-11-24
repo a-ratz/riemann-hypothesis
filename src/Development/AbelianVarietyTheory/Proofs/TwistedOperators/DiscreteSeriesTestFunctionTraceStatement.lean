@@ -77,11 +77,11 @@ theorem isIrrAdm_of_irred : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [Norm
   classical
   by_cases hne : ∃ S₀ : Submodule ℂ H, S₀ ≤ ⊤ ∧ IsKTypeOf ε π Λ S₀
   · obtain ⟨S₀, -, hS₀⟩ := hne
-    haveI : FiniteDimensional ℂ S₀ := hS₀.1
+    have : FiniteDimensional ℂ S₀ := hS₀.1
     have hY := (_root_.GlobalTheory.AdmUnitary.admissible_and_kFin_smooth n ε H π hU hI).1 S₀ hS₀.1 hS₀.2.1
     let b := Module.finBasis ℂ S₀
     choose Y hYf hvY hYB using fun i => hY (b i) (b i).2
-    haveI : ∀ i, FiniteDimensional ℂ (Y i) := hYf
+    have : ∀ i, FiniteDimensional ℂ (Y i) := hYf
     refine Submodule.finiteDimensional_of_le (sSup_le fun S hS => ?_) (S₂ := ⨆ i, Y i)
     obtain ⟨B, hB, rfl⟩ := (_root_.GlobalTheory.KTypeHighest.ktype_highest_weight n ε H π hU.1 hU.2.2 hK).2 Λ S₀ S hS₀ hS.2
     rw [Submodule.map_le_iff_le_comap]
@@ -203,13 +203,13 @@ open GlobalTheory.RealInd (IsIrrAdm groupRep)
 theorem trace_pseudoCoeff_arch : GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.HarishChandraCharacters → GlobalTheory.IndefiniteRowSideFullHecke.PseudoCoefficientSeparation.PseudoCoeffSeparation → ∀ (D : D7) (V : HSp D) (lam : D.what₂.Tau → Fin V.rank → ℤ) (S : D.what₂.Tau → SPar) (M : DSModel V S) (T : TypeDataG V) (U : AuxiliaryPlaceHermitianSpace V) (μa : ∀ w, Measure (GArch D.sp.cm.sig V.gram w)) (μf : ∀ v, Measure (GLoc D.sp.cm.sig V.gram v)) (μ : Measure (GA D V)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (fa : ∀ w, GArch D.sp.cm.sig V.gram w → ℂ) (ff : ∀ v, GLoc D.sp.cm.sig V.gram v → ℂ), IsTestData V lam M T U μa μf μ fa ff → ∀ (ρ : D.what₂.Tau) (X : Type) [NormedAddCommGroup X] [InnerProductSpace ℂ X] [CompleteSpace X] (δ : GArch D.sp.cm.sig V.gram (placeOf D ρ) →* (X →L[ℂ] X)), IsIrrUnitary δ → ∃ c, HasTrace (repOp δ (μa (placeOf D ρ)) (fa (placeOf D ρ))) c ∧ (c ≠ 0 → IsUnitEquiv δ (dsRep M ρ)) := by
   intro hDS hHC hSep D V lam S M T U μa μf μ _ _ fa ff hT ρ X _ _ _ δ hδ
   obtain ⟨hodd, hgap, hlam, -, hprod, harch, -⟩ := hT
-  haveI : (μa (placeOf D ρ)).IsHaarMeasure := hprod.1 (placeOf D ρ)
-  haveI := (M.ds ρ).1
-  haveI : Nontrivial X := hδ.irred.1
+  have : (μa (placeOf D ρ)).IsHaarMeasure := hprod.1 (placeOf D ρ)
+  have := (M.ds ρ).1
+  have : Nontrivial X := hδ.irred.1
   have hs : ∀ x ∈ UJset (M.ε ρ), ∃ g, ujMat (M.ε ρ) g = x := fun x hx => by
     obtain ⟨g, hg⟩ := exists_frameMat_eq M ρ hx
     exact ⟨frameEquiv M ρ g, hg⟩
-  haveI : ((μa (placeOf D ρ)).map (frameEquiv M ρ)).IsHaarMeasure :=
+  have : ((μa (placeOf D ρ)).map (frameEquiv M ρ)).IsHaarMeasure :=
     ContinuousMulEquiv.isHaarMeasure_map _ (frameEquiv M ρ)
   have hfe : (fa (placeOf D ρ) ∘ (frameEquiv M ρ).symm) ∘ frameEquiv M ρ = fa (placeOf D ρ) :=
     funext fun g => by simp
@@ -246,7 +246,7 @@ theorem trace_pseudoCoeff_arch : GlobalTheory.Published.DiscreteSeriesClassifica
     refine ⟨A, fun g v => ?_⟩
     have h3 := hA (ujMat (M.ε ρ) (frameEquiv M ρ g)) (ujMat_mem_UJset _ _) v
     rw [matRep_ujMat] at h3
-    simp only [π, MonoidHom.comp_apply, MonoidHom.coe_coe, ContinuousMulEquiv.symm_apply_apply] at h3
+    simp only [π, MonoidHom.comp_apply, MonoidHom.coe_ofClass, ContinuousMulEquiv.symm_apply_apply] at h3
     exact h3
 
 end GlobalTheory.ArchTrace

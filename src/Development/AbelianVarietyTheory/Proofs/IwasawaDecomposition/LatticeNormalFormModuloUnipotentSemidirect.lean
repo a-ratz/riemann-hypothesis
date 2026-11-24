@@ -297,8 +297,8 @@ end Main
 
 theorem latticeNormalFormUnip : LatticeNormalFormUnip := by
   intro O F Y _ _ _ _ _ _ _ _ _ _ q hq c X a hfr Λ hΛ
-  letI : Submodule.IsFullLattice F Λ := hΛ
-  haveI := finiteDimensional_of_isLattice (F := F) Λ
+  let : Submodule.IsFullLattice F Λ := hΛ
+  have := finiteDimensional_of_isLattice (F := F) Λ
   obtain ⟨p, φ, hp, hpa, hX, ha, hy⟩ := exists_coord hfr
   obtain ⟨e, u, hu1, hu0, hΛu⟩ := exists_adapted hq p φ ha hy Λ
   obtain ⟨n, hnX, hnu, hnf⟩ := exists_unip p φ hX ha hy (fun i => if i.1 = 0 then a i else u i)
@@ -342,8 +342,8 @@ theorem latticeNormalFormUnip : LatticeNormalFormUnip := by
 
 theorem latticeNormalForm : LatticeNormalForm := by
   intro O F Y _ _ _ _ _ _ _ _ _ _ q hq c X a hfr L hL Λ hΛ
-  letI : Submodule.IsFullLattice F L := hL
-  letI : Submodule.IsFullLattice F Λ := hΛ
+  let : Submodule.IsFullLattice F L := hL
+  let : Submodule.IsFullLattice F Λ := hΛ
   obtain ⟨n, e, z, hn, hz, hnΛ⟩ := latticeNormalFormUnip O F Y q hq c X a hfr Λ hΛ
   let M : Submodule O X := Λ.comap (X.subtype.restrictScalars O)
   have hM : inY X M = Λ ⊓ X.restrictScalars O := by
@@ -366,7 +366,7 @@ theorem latticeNormalForm : LatticeNormalForm := by
     have h1 : s • x ∈ Submodule.span F (M : Set X) := Submodule.subset_span hsx
     rw [← algebraMap_smul F] at h1
     exact (Submodule.smul_mem_iff _ hs').1 h1
-  haveI : Submodule.IsFullLattice F M :=
+  have : Submodule.IsFullLattice F M :=
     { toIsLattice := Submodule.IsLattice.of_fg F hfg, span_eq_top := hspan }
   obtain ⟨γ, hγ⟩ := exists_equiv_map_eq (F := F) M L
   let P := Submodule.prodEquivOfIsCompl _ _ hfr.2

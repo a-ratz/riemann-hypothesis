@@ -57,7 +57,7 @@ theorem count_span_int (v : HeightOneSpectrum R) {a : R} (ha : a ≠ 0) :
       WithZero.exp (-FractionalIdeal.count K v (FractionalIdeal.spanSingleton R⁰ (algebraMap R K a))) := by
   classical
   have hJ : (Ideal.span {a} : Ideal R) ≠ 0 := by simpa using ha
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe K v hJ,
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal K v hJ,
     HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_if_neg v ha]
 
 theorem valuation_eq_count (v : HeightOneSpectrum R) {x : K} (hx : x ≠ 0) :
@@ -197,13 +197,13 @@ theorem exists_numerator : ∀ (E : Type) [Field E] [NumberField E] (σ : 𝓞 E
         ((cc.map (σ : 𝓞 E →+* 𝓞 E) : Ideal (𝓞 E)) : FractionalIdeal (𝓞 E)⁰ E)⁻¹ :
           FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) := by
       ext x
-      rw [hJ, FractionalIdeal.mem_coe, mem_iff_valuation E (mul_ne_zero f0 (inv_ne_zero f0'))]
+      rw [hJ, FractionalIdeal.mem_coeToSubmodule, mem_iff_valuation E (mul_ne_zero f0 (inv_ne_zero f0'))]
       refine forall_congr' fun Q => ?_
       rw [FractionalIdeal.count_mul E Q f0 (inv_ne_zero f0'), FractionalIdeal.count_inv, hc, hc']
       have : max (δ Q) 0 + -max (-δ Q) 0 = δ Q := by omega
       rw [this]
     have hid : ∀ I : Ideal (𝓞 E),
         idlE I = ((I : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) := fun _ => rfl
-    rw [hJD, hid, hid, ← FractionalIdeal.coe_mul, inv_mul_cancel_right₀ f0']
+    rw [hJD, hid, hid, ← FractionalIdeal.coeToSubmodule_mul, inv_mul_cancel_right₀ f0']
 
 end GlobalTheory.NumeratorIdeal

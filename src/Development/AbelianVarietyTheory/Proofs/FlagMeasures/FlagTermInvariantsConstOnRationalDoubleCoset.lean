@@ -198,7 +198,7 @@ theorem nml_eq (t₀ t : TauC Y u u') {n m : (VS D).V ≃ₗ[D.host.E] (VS D).V}
   have hni : n⁻¹ ∈ NRat (lf D (X.Fu u)) := Formalism.L2.SG.NGCut.NormalVectorPairings.NRat_inv _ hn
   have hmi : m⁻¹ ∈ NRat (lf D (X.Fu u')) := Formalism.L2.SG.NGCut.NormalVectorPairings.NRat_inv _ hm
   ext δ
-  simp only [nmlOf, Set.mem_setOf_eq]
+  simp only [nmlOf, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨a, ha, b, hb, rfl⟩
     refine ⟨a * n⁻¹, Formalism.L2.SG.NGCut.NormalVectorPairings.NRat_mul _ ha hni, m * b,

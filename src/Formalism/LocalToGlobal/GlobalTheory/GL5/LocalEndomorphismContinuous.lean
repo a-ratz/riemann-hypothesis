@@ -124,10 +124,10 @@ theorem isProGrp_of_pow {G : Type} [Group G] [TopologicalSpace G] [IsTopological
     (hp : ∀ x ∈ H, Tendsto (fun m : ℕ => x ^ (g ^ m)) atTop (𝓝 1)) : IsProGrp g H := by
   unfold IsProGrp
   refine ⟨hc, fun N hN hNn => ?_⟩
-  haveI : CompactSpace H := isCompact_iff_compactSpace.mp hc
-  haveI : Fact g.Prime := ⟨hg⟩
-  haveI := hNn
-  haveI : Finite (H ⧸ N) := Subgroup.quotient_finite_of_isOpen N hN
+  have : CompactSpace H := isCompact_iff_compactSpace.mp hc
+  have : Fact g.Prime := ⟨hg⟩
+  have := hNn
+  have : Finite (H ⧸ N) := Subgroup.quotient_finite_of_isOpen N hN
   have hP : IsPGroup g (H ⧸ N) := by
     intro q
     induction q using QuotientGroup.induction_on with
@@ -265,7 +265,7 @@ theorem compactOv (v : HeightOneSpectrum (𝓞 F)) : CompactSpace (v.adicComplet
 
 theorem iwProG : Formalism.L2.G.Triv.IwProG := by
   intro F _ _ k v g hg hgv
-  haveI := compactOv v
+  have := compactOv v
   set O := v.adicCompletionIntegers F
   set 𝔪 := IsLocalRing.maximalIdeal O with h𝔪
   have hmax : (g : O) ∈ 𝔪 := Formalism.L2.G.Triv.natCast_mem_max v g hgv
@@ -300,12 +300,12 @@ theorem iwProG : Formalism.L2.G.Triv.IwProG := by
         ({a : GL (Fin k) O | j < i → (a : Matrix (Fin k) (Fin k) O) i j ∈ 𝔪} ∩
           {a : GL (Fin k) O | (a : Matrix (Fin k) (Fin k) O) i i - 1 ∈ 𝔪}) := by
       ext a
-      simp only [SetLike.mem_coe, hmem, Set.mem_iInter, Set.mem_inter_iff, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, hmem, Set.mem_iInter, Set.mem_inter_iff, Set.mem_ofPred_eq]
     rw [this]
     refine isClosed_iInter fun i => isClosed_iInter fun j => IsClosed.inter ?_ ?_
     · by_cases hji : j < i
       · simp only [hji, true_implies]; exact hmcl.preimage (hent i j)
-      · simp only [hji, false_implies, Set.setOf_true]; exact isClosed_univ
+      · simp only [hji, false_implies, Set.ofPred_true]; exact isClosed_univ
     · exact hmcl.preimage ((hent i i).sub continuous_const)
   have : CompactSpace (Matrix (Fin k) (Fin k) O) := inferInstanceAs (CompactSpace (Fin k → Fin k → O))
   have hcS : IsCompact (S : Set (GL (Fin k) O)) := hScl.isCompact
@@ -347,7 +347,7 @@ theorem iwProG : Formalism.L2.G.Triv.IwProG := by
         rw [hid, Matrix.neg_apply, Ideal.neg_mem_iff, Matrix.mul_apply]
         exact Ideal.sum_mem _ fun l _ => Ideal.mul_mem_left _ _ (hC m l j)
       rwa [Matrix.sub_apply] at this
-  have hφ : Continuous (algebraMap O (v.adicCompletion F)) := continuous_subtype_val
+  have hφ : Continuous (algebraMap O (v.adicCompletion F)) := continuous_subtypeVal
   have hcont : Continuous (bc (n := Fin k) (algebraMap O (v.adicCompletion F))) :=
     Continuous.units_map _ (continuous_id.matrix_map hφ)
   exact isProGrp_map g hg _ hcont S hcS hpow
@@ -370,7 +370,7 @@ theorem isProGrp_transfer {G₁ G₂ : Type} [Group G₁] [TopologicalSpace G₁
       map_mul' := fun x y => Subtype.ext (map_mul θ x.1 y.1) }
   have hec : Continuous (e.symm : P → Uw) := by
     show Continuous (fun p : P => (⟨ψ p, (h2 p p.2).1⟩ : Uw))
-    exact (hψ.comp continuous_subtype_val).subtype_mk _
+    exact (hψ.comp continuous_subtypeVal).subtype_mk _
   refine ⟨?_, fun N hN hNn => ?_⟩
   · have hs : (Uw : Set G₁) = ψ '' (P : Set G₂) := by
       ext x
@@ -459,7 +459,7 @@ theorem proGTransfer_of_cont (F E : Type) [Field F] [NumberField F] [Field E] [N
     letI := tensTopL (F := F) (E := E) (v.adicCompletion F)
     IsProGrp g Uw := by
   set K := v.adicCompletion F
-  letI : TopologicalSpace (E ⊗[F] K) := tensTopL (F := F) (E := E) K
+  let : TopologicalSpace (E ⊗[F] K) := tensTopL (F := F) (E := E) K
   have hsig : ∀ e : E, sigR σ K (inclE (F := F) K e) = inclE (F := F) K (σ e) := by
     intro e
     simp [sigR, inclE, Algebra.TensorProduct.map_tmul]
@@ -548,11 +548,11 @@ theorem split_cont_of_homeo (hE : LocalEndHomeo) (F E : Type) [Field F] [NumberF
     (hs : ∀ x, s (sigR σ (v.adicCompletion F) x) = swapR _ (s x)) :
     letI := tensTopL (F := F) (E := E) (v.adicCompletion F); Continuous s ∧ Continuous s.symm := by
   set K := v.adicCompletion F
-  letI : TopologicalSpace (E ⊗[F] K) := tensTopL (F := F) (E := E) K
-  letI : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
-  haveI : IsModuleTopology K (E ⊗[F] K) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd K (E ⊗[F] K)
-  haveI := IsModuleTopology.toContinuousSMul K (E ⊗[F] K)
+  let : TopologicalSpace (E ⊗[F] K) := tensTopL (F := F) (E := E) K
+  let : Algebra K (E ⊗[F] K) := Algebra.TensorProduct.rightAlgebra
+  have : IsModuleTopology K (E ⊗[F] K) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd K (E ⊗[F] K)
+  have := IsModuleTopology.toContinuousSMul K (E ⊗[F] K)
   let τ : K →+* K := (RingHom.fst K K).comp ((s : E ⊗[F] K →+* K × K).comp (algebraMap K (E ⊗[F] K)))
   have hsig1 : ∀ a : K, sigR σ K (algebraMap K (E ⊗[F] K) a) = algebraMap K (E ⊗[F] K) a := by
     intro a

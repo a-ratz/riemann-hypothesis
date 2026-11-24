@@ -55,7 +55,7 @@ open PositivityTheory.Rg.Sw
 
 theorem factorL : FactorL := by
   intro G _ S l C hC hcont hlin hbd
-  haveI : CompactSpace C := isCompact_iff_compactSpace.mp hC
+  have : CompactSpace C := isCompact_iff_compactSpace.mp hC
   have hl0 : l 0 = 0 := by
     have h := hbd 0 S.zero_mem 0 (by simp)
     simpa using h
@@ -68,7 +68,7 @@ theorem factorL : FactorL := by
         have h := hlin a F.1 F.2 0 S.zero_mem
         simpa [hl0] using h }
   let R : S →ₗ[ℂ] C(C, ℂ) :=
-    { toFun := fun F => ⟨fun x => F.1 x, (hcont F.1 F.2).comp continuous_subtype_val⟩
+    { toFun := fun F => ⟨fun x => F.1 x, (hcont F.1 F.2).comp continuous_subtypeVal⟩
       map_add' := fun F₁ F₂ => by
         ext x
         simp
@@ -124,11 +124,11 @@ theorem kRCpt : KRCpt := by
   have hcpt : IsCompact S :=
     (isCompact_univ_pi (fun _ => isCompact_univ_pi (fun _ => isCompact_closedBall (0 : ℂ) 1))).of_isClosed_subset
       hcl hsub
-  haveI : CompactSpace S := isCompact_iff_compactSpace.mp hcpt
+  have : CompactSpace S := isCompact_iff_compactSpace.mp hcpt
   have hinv : ∀ g : S, g.1 * g.1ᴴ = 1 := fun g => mul_eq_one_comm.mp g.2.2
   let u : S → GL (Fin n ⊕ Fin n) ℂ := fun g => ⟨g.1, g.1ᴴ, hinv g, g.2.2⟩
   have hu : Continuous u :=
-    Units.continuous_iff.mpr ⟨continuous_subtype_val, continuous_subtype_val.matrix_conjTranspose⟩
+    Units.continuous_iff.mpr ⟨continuous_subtypeVal, continuous_subtypeVal.matrix_conjTranspose⟩
   let ψ : S → KR n := fun g => ⟨⟨u g, g.2.1⟩, g.2⟩
   have hψ : Continuous ψ := (hu.subtype_mk _).subtype_mk _
   have hsurj : Function.Surjective ψ := by

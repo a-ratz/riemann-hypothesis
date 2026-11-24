@@ -141,7 +141,7 @@ theorem ab_read_int {P Q : HeightOneSpectrum (𝓞 E)} (h : P ≠ Q) {r : 𝓞 E
   · unfold OneAt
     have e : algebraMap (𝓞 E) E b / algebraMap (𝓞 E) E r - 1 = (algebraMap (𝓞 E) E b - algebraMap (𝓞 E) E r) / algebraMap (𝓞 E) E r := by field_simp
     rw [e, map_div₀]
-    exact (div_lt_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hrE))).2 hv
+    exact (div_lt_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hrE))).2 hv
 
 theorem ab_read {P Q : HeightOneSpectrum (𝓞 E)} (h : P ≠ Q) (a : Eˣ) : ∃ b : Eˣ, OneAt P ((b : E) / (a : E)) ∧ OneAt Q (b : E) := by
   obtain ⟨r, s, hs, hrs⟩ := IsFractionRing.div_surjective (A := 𝓞 E) (a : E)

@@ -65,7 +65,7 @@ theorem _root_.GlobalTheory.fourier_uniqueness_of_openSubgroup : ∀ {H A : Type
     have := hs a s (-s)
     rw [add_neg_cancel, ha0, h, zero_mul] at this
     exact one_ne_zero this
-  haveI : DiscreteTopology (H ⧸ L) := QuotientAddGroup.discreteTopology hL
+  have : DiscreteTopology (H ⧸ L) := QuotientAddGroup.discreteTopology hL
   have hTfin : (QuotientAddGroup.mk '' Kc : Set (H ⧸ L)).Finite :=
     (hK.image QuotientAddGroup.continuous_mk).finite_of_discrete
   let r : H ⧸ L → H := Quotient.out

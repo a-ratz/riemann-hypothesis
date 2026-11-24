@@ -70,14 +70,14 @@ theorem one_left_eq {S : Scheme.{0}} (G : Over S) [GrpObj G] (X : Over S) :
 
 theorem mem_per_of_frequently : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (g n : ℕ) (M : LieModel G (𝟙 (Sp R)) (Fin g → R)) (B : Set (Fin n → ℂ)) (ψ : (Fin n → ℂ) → (R →+* ℂ)) (e : FamExp G M B ψ), IsSeparated G.hom → IsHolPts B ψ → ∀ b₀ ∈ B, ∀ (s : (Fin n → ℂ) → (Fin g → ℂ)), ContinuousAt s b₀ → (∃ᶠ b in 𝓝 b₀, b ∈ B ∧ s b ∈ e.per b) → s b₀ ∈ e.per b₀ := by
   intro R _ G _ _ g n M B ψ e hsep hψ b₀ hb₀ s hs hfr
-  haveI := hsep
+  have := hsep
   by_contra hne
   have hid : η[G].left ≫ G.hom = 𝟙 _ := Over.w _
   have hη : IsClosedImmersion η[G].left := by
     have : IsClosedImmersion (η[G].left ≫ G.hom) := by rw [hid]; infer_instance
     exact IsClosedImmersion.of_comp _ G.hom
   let V : G.left.Opens := ⟨(Set.range η[G].left)ᶜ, by
-    letI := hη
+    let := hη
     exact η[G].left.isClosedEmbedding.isClosed_range.isOpen_compl⟩
   have hV₀ : ⊤ ≤ (e.ex b₀ (s b₀)).left ⁻¹ᵁ V := by
     intro p _

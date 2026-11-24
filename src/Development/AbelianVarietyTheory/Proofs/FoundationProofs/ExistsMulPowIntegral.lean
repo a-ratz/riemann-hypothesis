@@ -142,7 +142,7 @@ private lemma valuation_coe_integer_eq_exp_neg_count (v : HeightOneSpectrum (�
   have hspan : Ideal.span {r} ≠ 0 := by simpa using hr
   rw [show (r : K) = algebraMap (𝓞 K) K r from rfl, HeightOneSpectrum.valuation_of_algebraMap,
     HeightOneSpectrum.intValuation_if_neg _ hr, ← FractionalIdeal.coeIdeal_span_singleton,
-    FractionalIdeal.count_coe K v hspan]
+    FractionalIdeal.count_coeIdeal K v hspan]
 
 open NumberField IsDedekindDomain Finset in
 open scoped nonZeroDivisors in
@@ -215,7 +215,7 @@ private lemma exists_mul_pow_integer_of_count_eq_zero_coprime {m : ℕ} (hm : 0 
         FractionalIdeal.count_pow]
       have hc0 : 0 ≤ FractionalIdeal.count K w (FractionalIdeal.spanSingleton (𝓞 K)⁰ (m : K)) := by
         rw [hmalg, ← FractionalIdeal.coeIdeal_span_singleton]
-        exact FractionalIdeal.count_coe_nonneg K w _
+        exact FractionalIdeal.count_coeIdeal_nonneg K w _
       by_cases hw : (m : 𝓞 K) ∈ w.asIdeal
       · have h1 : 1 ≤ FractionalIdeal.count K w (FractionalIdeal.spanSingleton (𝓞 K)⁰ (m : K)) := by
           rw [hmalg]

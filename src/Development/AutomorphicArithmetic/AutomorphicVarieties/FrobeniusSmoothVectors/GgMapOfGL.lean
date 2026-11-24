@@ -109,7 +109,7 @@ private theorem dual_snd {K : Type} [Field K] {m : ℕ} (X A : Matrix (Fin m) (F
 theorem UpperTheory.V.Fr.pr_tor :
     ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field k] [CharP k l] {F : Frame l k} {C₀ n : ℕ}, F.Ok C₀ → ∀ (O : Type) [CommRing O] [IsLocalRing O], ∀ (R : Type) [CommRing R] [Algebra O R] [IsCO O R] (ρ : NRep F n R) (B : Box F n R), ρ.Univ O → B.Of ρ → B.Cont (maximalIdeal R) → (ρ.bar O).Good → thetaLie (lieT (ResidueField O) n) = lieT (ResidueField O) n → ∃ D ∈ Tan O R, ∀ s, B.tanCo O D s = (B.bar O).ad s (lieT _ n) - lieT _ n := by
   intro l _ k _ _ F C₀ n hF O _ _ R _ _ _ ρ B hU hB hC _ hT
-  haveI := (co_res O).2
+  have := (co_res O).2
   let K := ResidueField O
   let C := DualNumber K
   let μ : K →+ C := (TrivSqZeroExt.inrHom K K).toAddMonoidHom
@@ -165,7 +165,7 @@ theorem UpperTheory.V.Fr.pr_tor :
         rw [(B.bar O).nu, hF.del_c]; decide
       show ((B.bar O).r F.c).adFun T = T
       unfold GG.adFun GG.mat
-      rw [hl, if_neg hd, hT]
+      rw [hl, ite_eq_right hd, hT]
       simp
     rw [hmat, h1, hbar.atc, sub_self, Matrix.map_one _ (map_zero ι) (map_one ι), Matrix.map_zero _ (map_zero μ)]
     simp

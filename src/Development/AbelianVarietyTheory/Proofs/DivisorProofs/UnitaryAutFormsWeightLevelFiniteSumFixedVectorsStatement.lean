@@ -208,10 +208,10 @@ theorem exists_proj {V : Type} [AddCommGroup V] [Module ℂ V] {ι : Type} [Fint
   · simp
   · split_ifs with h
     · subst h
-      exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left (hcompl i) ⟨v, hv⟩)
+      exact congrArg Subtype.val (projectionOnto_apply_left (hcompl i) ⟨v, hv⟩)
     · have hv' : v ∈ (⨆ (k) (_ : k ≠ i), t k) ⊔ C :=
         Submodule.mem_sup_left (Submodule.mem_iSup_of_mem j (Submodule.mem_iSup_of_mem (Ne.symm h) hv))
-      have := Submodule.linearProjOfIsCompl_apply_right (hcompl i) ⟨v, hv'⟩
+      have := projectionOnto_apply_right (hcompl i) ⟨v, hv'⟩
       exact congrArg Subtype.val this
 
 theorem sum_proj {V : Type} [AddCommGroup V] [Module ℂ V] {ι : Type} [Fintype ι]
@@ -379,7 +379,7 @@ theorem GlobalTheory.BCT.forms_decomp : ∀ (E : Type) [Field E] [NumberField E]
       (∀ k ∈ globLev S K', ∀ g, ψ (g * (k : UA E n)) = ψ g) ∧ ∀ g, (fun y : infU E n => ψ (g * (y : UA E n))) ∈ C} := by
     refine iSup₂_le fun π hπ φ hφ => Submodule.subset_span ⟨(hπ.1.aut φ hφ.1).left, fun k hk g => ?_, hC π hπ.1 hπ.2 φ hφ.1⟩
     exact congrFun ((hmemF φ).1 hφ.2 k hk) g
-  haveI : FiniteDimensional ℂ (forms S lam K') := Submodule.finiteDimensional_of_le hle
+  have : FiniteDimensional ℂ (forms S lam K') := Submodule.finiteDimensional_of_le hle
   refine ⟨inferInstance, ?_⟩
   obtain ⟨ι, hι, π, h1, h2, h3, h4⟩ := _root_.GlobalTheory.AbsDec.fixed_decomposition (RU E n) {x | ∃ k ∈ globLev S K', x = ((k : finU (E := E) (n := n)) : UA E n)}
     (fixed (RF E n) (globLev S K')) (fun φ => by

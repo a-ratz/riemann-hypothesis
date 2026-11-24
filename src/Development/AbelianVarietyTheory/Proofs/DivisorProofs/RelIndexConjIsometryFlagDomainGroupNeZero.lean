@@ -147,9 +147,9 @@ theorem mulVec_mem_of_rep_eq_one {Λ Λ' : Submodule (𝓞 E) (Fin r → E)} {n 
 
 theorem exists_relIndex_ne_zero_stab : ∀ {E : Type} [Field E] [NumberField E] {r : ℕ} (Λ Λ' : Submodule (𝓞 E) (Fin r → E)) (n : ℕ), 0 < n → Λ.FG → (∀ v ∈ Λ', (n : E) • v ∈ Λ) → (∀ v ∈ Λ, (n : E) • v ∈ Λ') → ∀ G : Subgroup (GL (Fin r) E), (∀ γ ∈ G, ∀ x, x ∈ Λ ↔ (γ : Matrix (Fin r) (Fin r) E).mulVec x ∈ Λ) → ∃ K : Subgroup (GL (Fin r) E), K.relIndex G ≠ 0 ∧ ∀ γ ∈ K, ∀ x, x ∈ Λ' ↔ (γ : Matrix (Fin r) (Fin r) E).mulVec x ∈ Λ' := by
   intro E _ _ r Λ Λ' n hn hfg h1 h2 G hG
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hfg
-  haveI : Module.Finite ℤ (Λ ⧸ sqSub Λ n) := Module.Finite.trans (𝓞 E) _
-  haveI : Finite (Λ ⧸ sqSub Λ n) := Module.finite_of_fg_torsion _ fun z => by
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite ℤ (Λ ⧸ sqSub Λ n) := Module.Finite.trans (𝓞 E) _
+  have : Finite (Λ ⧸ sqSub Λ n) := Module.finite_of_fg_torsion _ fun z => by
     obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ z
     refine ⟨⟨((n : ℤ) ^ 2), mem_nonZeroDivisors_of_ne_zero (by positivity)⟩, ?_⟩
     change ((n : ℤ) ^ 2) • (Submodule.mkQ (sqSub Λ n) y) = 0
@@ -159,7 +159,7 @@ theorem exists_relIndex_ne_zero_stab : ∀ {E : Type} [Field E] [NumberField E] 
     rw [AddSubgroupClass.coe_zsmul, ← Int.cast_smul_eq_zsmul E]
     push_cast
     rfl
-  haveI : Finite (Module.End (𝓞 E) (Λ ⧸ sqSub Λ n)) :=
+  have : Finite (Module.End (𝓞 E) (Λ ⧸ sqSub Λ n)) :=
     Finite.of_injective _ DFunLike.coe_injective
   set φ := (rep Λ n G hG).toHomUnits with hφ
   have key : ∀ γ ∈ φ.ker.map G.subtype, ∀ x ∈ Λ',

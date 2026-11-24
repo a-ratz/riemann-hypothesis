@@ -410,7 +410,7 @@ theorem UpperTheory.V.Hi.typeConj :
     GlobalTheory.Mem.LiteralAutomorphy.LitN → ∀ (L Ω : Type) [Field L] [NumberField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (n : ℕ) (w : Plc L) (A : ValuationSubring Ω) (h : IsPlaceOver A w) (rc : IrrGL (k := w.adicCompletion L) → WD h), IsRec h rc → ∀ (γ : ℂ ≃+* ℂ) (σ σ' : SmIrr (GLw n w)) (f : σ.V ≃+ σ'.V), (∀ (z : ℂ) v, f (z • v) = γ z • f v) → (∀ g v, f (σ.ρ g v) = σ'.ρ g (f v)) → ∀ χ : Fin n → Dec (F := L) A →* ℂˣ, (∀ i, IsOpen ((χ i).ker : Set (Dec (F := L) A))) → IsTypeWD h (fun i => (χ i).comp (Subgroup.inclusion (Ine_le_Dec A))) (rc (algNorm σ)) → IsTypeWD h (fun i => W.pushCh γ.toRingHom ((χ i).comp (Subgroup.inclusion (Ine_le_Dec A)))) (rc (algNorm σ')) := by
   intro P L Ω _ _ _ _ _ n w A h rc hrc γ σ σ' f hf1 hf2 χ _ ⟨b, hb, hN, hρ⟩
   obtain ⟨a, ha, ε, -, H⟩ := id hrc
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   obtain ⟨B₀, ξ, hξ, hB₀⟩ := exists_chars b χ hρ
   choose ω₀ hω₀ e using fun j => ha.factor (ξ j) (hξ j)
   obtain ⟨p, ho⟩ := exists_order ω₀

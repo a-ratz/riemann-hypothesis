@@ -99,8 +99,8 @@ theorem rrd_stronglyMeasurable {α : Type*} [MeasurableSpace α] {H : Type*} [No
     (hF : ∀ x, StronglyMeasurable fun a => ⟪x, F a⟫_ℂ) : StronglyMeasurable F := by
   classical
   obtain ⟨w, b, -⟩ := exists_hilbertBasis ℂ H
-  haveI : Countable w := rrd_countable b.orthonormal
-  haveI : Encodable w := Encodable.ofCountable w
+  have : Countable w := rrd_countable b.orthonormal
+  have : Encodable w := Encodable.ofCountable w
   have hterm : ∀ i : w, StronglyMeasurable fun a => ⟪b i, F a⟫_ℂ • b i := by
     intro i
     first
@@ -349,7 +349,7 @@ theorem rr_cont_of_meas' [SigmaFinite μ] [IsLocallyFiniteMeasure μ] (hμ : μ 
         first
         | exact Submodule.inner_left_of_mem_orthogonal hw hu
     have hall : ∀ᵐ g ∂μ, ∀ n : ℕ, ⟪u, π g (denseSeq H n)⟫_ℂ = 0 := ae_all_iff.2 fun n => hae _
-    haveI : (ae μ).NeBot := ae_neBot.2 hμ
+    have : (ae μ).NeBot := ae_neBot.2 hμ
     obtain ⟨g, hg⟩ := hall.exists
     have hzero : ∀ y : H, ⟪u, π g y⟫_ℂ = 0 := fun y =>
       (denseRange_denseSeq H).induction_on y

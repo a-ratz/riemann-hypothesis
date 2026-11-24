@@ -83,11 +83,11 @@ theorem fib_sum_smul (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (ζ : ℂ)
   intro p hp
   ext v
 
-  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.sum_apply, map_sum]
+  simp only [ContinuousLinearMap.comp_apply, sum_apply, map_sum]
   refine Finset.sum_congr rfl fun ρ _ => ?_
   have h := congrArg (fun L : Wq →L[ℂ] Wp => L v) (hX ρ p hp)
   simp only [ContinuousLinearMap.comp_apply] at h
-  simp only [ContinuousLinearMap.smul_apply, map_smul, h]
+  simp only [smul_apply, map_smul, h]
 
 theorem wR_pos (P : M.Par) {ζ : ℂ} (hζ : P.TT < Complex.normSq ζ) : 0 < wR P.k P.TT ζ := by
   unfold wR
@@ -174,7 +174,7 @@ theorem exists_tr (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) [FiniteDimens
   have hζ : P.TT < Complex.normSq q.1.2 := q.2.2
   have horth := (he.2 q.1.2 hζ).2.1
   simp only [VLem.hsV_smul, inner_smul_right, horth, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   have hw : ((wR P.k P.TT q.1.2 : ℝ) : ℂ) ≠ 0 := by exact_mod_cast (wR_pos P hζ).ne'
   push_cast
   field_simp

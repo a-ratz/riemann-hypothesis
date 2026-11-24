@@ -80,7 +80,7 @@ namespace PI.BICNZ
 open Formalism.FourierDecayAlt.B Formalism.QuantumDeterminants Formalism.MainNotions.S.Pv.BetaCut
 
 theorem sf_of_haar {k r : ℕ} {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
   infer_instance
 
 theorem itD_const_mul (a : ℂ) (f : ℝ → ℂ) (n : ℕ) :
@@ -168,9 +168,9 @@ theorem hasCompactSupport_right_profile {k r : ℕ} {Wp Wq H : Type} [NormedAddC
 theorem ae_inSS {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
     [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] (D : RealPlaceData k r Wp Wq) :
     ∀ᵐ p ∂((D.μW.prod D.μN).prod (D.μW'.prod D.μN)), D.inSS p := by
-  haveI := sf_of_haar D.haarW
-  haveI := sf_of_haar D.haarN
-  haveI := sf_of_haar D.haarW'
+  have := sf_of_haar D.haarW
+  have := sf_of_haar D.haarN
+  have := sf_of_haar D.haarW'
   have hW : ∀ᵐ x ∂D.μW, Matrix.of x ∈ UWset k r D.z := by
     rw [ae_iff]
     exact D.haarW.conc
@@ -200,9 +200,9 @@ theorem betaFactor_of (hP : PhiAt) (hL : LeftProfileContDiffTwo) (hR : RightProf
   intro k r Wp Wq _ _ _ _ _ _ D ε lm H _ _ _ σ hHC hDS
   obtain ⟨d, hd, hΦ⟩ := hP k r Wp Wq D ε lm H σ hHC hDS
   refine ⟨d, hd, fun v v' ξ ξ' hv hv' => ?_⟩
-  haveI := sf_of_haar D.haarW
-  haveI := sf_of_haar D.haarN
-  haveI := sf_of_haar D.haarW'
+  have := sf_of_haar D.haarW
+  have := sf_of_haar D.haarN
+  have := sf_of_haar D.haarW'
   have hpt : ∀ p : SS k r, D.inSS p →
       ((((1 + (1 : ℝ) ^ 2 * lam k r D.z (Matrix.of p.1.2) ^ 2)⁻¹ *
         (1 + (1 : ℝ) ^ 2 * lam k r D.z' (Matrix.of p.2.2) ^ 2)⁻¹ : ℝ) : ℂ) *
@@ -413,27 +413,27 @@ private theorem aDil_mem_gv {k r : ℕ} {t : ℝ} (ht : 0 < t) : aDil k r t ∈ 
     have hj1 : ¬ j.val < r := by omega
     have hj2 : ¬ j.val ≤ r + k := by omega
     have hne : t ^ (r - i.val) ≠ 0 := pow_ne_zero _ ht.ne'
-    rw [if_pos h1, if_pos h1.1, if_neg hj1, if_neg hj2, hs, e, mul_one, ← Complex.ofReal_mul,
+    rw [ite_eq_left h1, ite_eq_left h1.1, ite_eq_right hj1, ite_eq_right hj2, hs, e, mul_one, ← Complex.ofReal_mul,
       mul_inv_cancel₀ hne, Complex.ofReal_one]
   · by_cases h2 : j.val < r ∧ i.val + j.val = 2 * r + k
     · have e : i.val - (r + k) = r - j.val := by omega
       have hi1 : ¬ i.val < r := by omega
       have hi2 : ¬ i.val ≤ r + k := by omega
       have hne : t ^ (r - j.val) ≠ 0 := pow_ne_zero _ ht.ne'
-      rw [if_neg h1, if_pos h2, if_pos h2.1, if_neg hi1, if_neg hi2, hs, e, mul_one,
+      rw [ite_eq_right h1, ite_eq_left h2, ite_eq_left h2.1, ite_eq_right hi1, ite_eq_right hi2, hs, e, mul_one,
         ← Complex.ofReal_mul, inv_mul_cancel₀ hne, Complex.ofReal_one]
     · by_cases h3 : r ≤ i.val ∧ i.val ≤ r + k ∧ i = j
       · have hij : i = j := h3.2.2
         subst hij
         have hi1 : ¬ i.val < r := by omega
-        rw [if_neg h1, if_neg h2, if_pos h3, if_neg hi1, if_pos h3.2.1]
+        rw [ite_eq_right h1, ite_eq_right h2, ite_eq_left h3, ite_eq_right hi1, ite_eq_left h3.2.1]
         simp
-      · rw [if_neg h1, if_neg h2, if_neg h3, mul_zero, zero_mul]
+      · rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, mul_zero, zero_mul]
 
 theorem phiAt_of (hS : Formalism.FourierDecayAlt.ThreeDimData.SchurH) : PhiAt := by
   intro k r Wp Wq _ _ _ _ _ _ D ε lm H _ _ _ σ hlm hDS
   have hG := D.haarG
-  haveI : IsFiniteMeasureOnCompacts D.μG := ⟨hG.finite_compact⟩
+  have : IsFiniteMeasureOnCompacts D.μG := ⟨hG.finite_compact⟩
   have hHaar : PI.BesselPeriodGGP.IsHaarOn (UH (Hpk k r)) D.μG :=
     ⟨inferInstance, hG.ne_zero, hG.conc, hG.left⟩
   obtain ⟨d, hd, hSch⟩ := hS k r ε lm H σ D.μG hlm hDS hHaar
@@ -726,7 +726,7 @@ theorem lim_dil_mp (μW μN : Measure (Mt k r)) [SigmaFinite μW] [SigmaFinite �
       Prod.map id (conjM (aDil k r t)) ⁻¹' (Prod.mk t ⁻¹' s) := rfl
   simp only [Pi.mul_apply]
   rw [hpre, ← Measure.map_apply hm (measurable_prodMk_left hs), ← Measure.map_prod_map _ _ measurable_id hcm,
-    Measure.map_id, hJ t ht', Measure.prod_smul_right, Measure.smul_apply, smul_eq_mul, ← mul_assoc,
+    Measure.map_id, hJ t ht', Measure.prod_smul_right, smul_apply, smul_eq_mul, ← mul_assoc,
     ← ENNReal.ofReal_mul (by positivity), mul_inv_cancel₀ (by positivity), ENNReal.ofReal_one, one_mul]
 
 theorem lim_dil_fubini (μW μN : Measure (Mt k r)) [SigmaFinite μW] [SigmaFinite μN]
@@ -907,7 +907,7 @@ theorem lim_left_pt {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
     lim_psi_conj D.z_mem hh hm
   have eπ := lim_pi_inner D.π_rep D.π_unitary hh hi hu ξ
   dsimp only [Formalism.FourierDecayAlt.ThreeDimData.beInt, Lf]
-  rw [eM, eψ, ContinuousLinearMap.smul_apply, inner_smul_right, star_mul', star_mul', star_star,
+  rw [eM, eψ, smul_apply, inner_smul_right, star_mul', star_mul', star_star,
     Complex.star_def, inner_conj_symm, inner_conj_symm, eπ]
   ring
 
@@ -930,13 +930,13 @@ theorem lim_right_pt {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
     push_cast
     ring_nf
   dsimp only [Formalism.FourierDecayAlt.ThreeDimData.beInt, Rf]
-  rw [eM, eψ, es, ContinuousLinearMap.smul_apply, inner_smul_right]
+  rw [eM, eψ, es, smul_apply, inner_smul_right]
   ring
 
 theorem lim_leftLimit : LeftLimit := by
   intro k r Wp Wq _ _ _ _ _ _ D ε lm H _ _ _ σ hHC hDS v ξ hv hI
-  haveI := lim_sf D.haarW
-  haveI := lim_sf D.haarN
+  have := lim_sf D.haarW
+  have := lim_sf D.haarN
   set f : Mt k r × Mt k r → ℂ := fun p => star ⟪ξ, Formalism.FourierDecayAlt.ThreeDimData.beInt D.z cStd D.π σ v v p ξ⟫_ℂ with hf
   let L : (Wp →L[ℂ] Wp) →L[ℂ] ℂ := (innerSL ℂ ξ).comp (ContinuousLinearMap.apply ℂ Wp ξ)
   have hLi : Integrable (fun p => L (Formalism.FourierDecayAlt.ThreeDimData.beInt D.z cStd D.π σ v v p)) (D.μW.prod D.μN) :=
@@ -975,8 +975,8 @@ theorem lim_leftLimit : LeftLimit := by
 
 theorem lim_rightLimit : RightLimit := by
   intro k r Wp Wq _ _ _ _ _ _ D ε lm H _ _ _ σ hHC hDS v' ξ' hv' hI
-  haveI := lim_sf D.haarW'
-  haveI := lim_sf D.haarN
+  have := lim_sf D.haarW'
+  have := lim_sf D.haarN
   set f : Mt k r × Mt k r → ℂ := fun p => ⟪ξ', Formalism.FourierDecayAlt.ThreeDimData.beInt D.z' cStd D.π' σ v' v' p ξ'⟫_ℂ with hf
   let L : (Wq →L[ℂ] Wq) →L[ℂ] ℂ := (innerSL ℂ ξ').comp (ContinuousLinearMap.apply ℂ Wq ξ')
   have hfi : Integrable f (D.μW'.prod D.μN) := L.integrable_comp hI

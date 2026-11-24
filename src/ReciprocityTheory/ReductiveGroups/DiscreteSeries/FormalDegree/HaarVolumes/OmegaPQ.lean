@@ -169,8 +169,8 @@ theorem mp_Fmap (ε : Fin n → Bool) : MeasurePreserving (Fmap ε) volume volum
     Measure.pi.sigmaFinite _
   haveI s2 : SigmaFinite (Measure.pi fun _ : PCoord ε => (volume : Measure ℂ)) :=
     Measure.pi.sigmaFinite _
-  haveI s3 : SigmaFinite (volume : Measure (KPair ε → ℂ)) := s1
-  haveI s4 : SigmaFinite (volume : Measure (PCoord ε → ℂ)) := s2
+  have s3 : SigmaFinite (volume : Measure (KPair ε → ℂ)) := s1
+  have s4 : SigmaFinite (volume : Measure (PCoord ε → ℂ)) := s2
   haveI s5 : SigmaFinite (Measure.pi fun _ : KPair ε => (Measure.pi fun _ : Fin 2 => (volume : Measure ℂ))) :=
     Measure.pi.sigmaFinite _
   haveI s6 : SigmaFinite (Measure.pi fun _ : PCoord ε => (Measure.pi fun _ : Fin 2 => (volume : Measure ℂ))) :=
@@ -302,11 +302,11 @@ theorem map_pairMap (ε : Fin n → Bool) :
   have hF := mp_Fmap ε
   have hA := mp_Amap ε
   have hGm : Measurable (Gl ε) := (Gl ε).continuous_of_finiteDimensional.measurable
-  haveI i1 : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := inferInstance
-  haveI i2 : (volume : Measure (Fin 2 → ℂ)).IsAddHaarMeasure := inferInstance
-  haveI i3 : (volume : Measure (Qp ε → Fin 2 → ℂ)).IsAddHaarMeasure :=
+  have i1 : (volume : Measure (Fin n → ℂ)).IsAddHaarMeasure := inferInstance
+  have i2 : (volume : Measure (Fin 2 → ℂ)).IsAddHaarMeasure := inferInstance
+  have i3 : (volume : Measure (Qp ε → Fin 2 → ℂ)).IsAddHaarMeasure :=
     Measure.pi.isAddHaarMeasure (fun _ : Qp ε => (volume : Measure (Fin 2 → ℂ)))
-  haveI i4 : (volume : Measure (XC ε)).IsAddHaarMeasure :=
+  have i4 : (volume : Measure (XC ε)).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure (volume : Measure (Fin n → ℂ))
       (volume : Measure (Qp ε → Fin 2 → ℂ))
   rw [pairMap_eq, ← Measure.map_map hA.measurable (hGm.comp hF.measurable),
@@ -551,7 +551,7 @@ theorem isOmegaLeb_gToLie (e : Fin P ⊕ Fin Q ≃ Fin n) {ε : Fin n → Bool}
       simp [Formalism.BasicNotions.entries, gToLie, gToLieMat, OmegaPQAux.pairMap, Matrix.reindex_apply]
     have hval : ∀ i j, Measurable (fun X : Formalism.BasicNotions.lieU P Q =>
         (X : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) i j) := fun i j =>
-      (continuous_subtype_val.matrix_elem i j).measurable
+      (continuous_subtypeVal.matrix_elem i j).measurable
     have hFm : Measurable (fun ab : Formalism.BasicNotions.lieU P Q × Formalism.BasicNotions.lieU P Q =>
         Formalism.BasicNotions.entries ((ab.1 : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) +
           Complex.I • (ab.2 : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ))) := by

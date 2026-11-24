@@ -117,7 +117,7 @@ theorem exists_notMem_forall_mem_minimalPrimes {B : Type*} [CommRing B] [IsNoeth
     rintro ⟨P, hP, hle⟩
     rw [Set.Finite.mem_toFinset] at hP
     exact hP.2 (hp P hP.1 hle)
-  obtain ⟨s, hs, hsp⟩ := SetLike.not_le_iff_exists.mp this
+  obtain ⟨s, hs, hsp⟩ := IsConcreteLE.not_le_iff_exists.mp this
   refine ⟨s, hsp, fun P hP hne => ?_⟩
   exact (Finset.inf_le (f := id) (hfin.mem_toFinset.mpr ⟨hP, hne⟩) : _ ≤ P) hs
 

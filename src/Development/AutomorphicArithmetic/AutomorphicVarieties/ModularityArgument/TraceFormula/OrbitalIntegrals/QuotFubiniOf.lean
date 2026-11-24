@@ -85,10 +85,10 @@ theorem UpperTheory.V.Z.Tf.Orb.absComm :
   intro hF hR hP G _ _ _ _ _ _ _ _ μG hμG r1 r2 θ hθ l hl hθl δ hD μ hμ hi a b a1 a2 b1 b2
   have hcl : IsClosed (twCent θ δ : Set G) :=
     isClosed_eq ((continuous_inv.mul continuous_const).mul hθ) continuous_const
-  haveI : LocallyCompactSpace (twCent θ δ) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (twCent θ δ) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaCompactSpace (twCent θ δ) := inferInstance
-  haveI : SigmaFinite μ := inferInstance
+  have : LocallyCompactSpace (twCent θ δ) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (twCent θ δ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SigmaCompactSpace (twCent θ δ) := inferInstance
+  have : SigmaFinite μ := inferInstance
   have hmp := hP G μG hμG θ hθ l hl hθl
   have hθθ : ∀ x, (θ ^ (l - 1)) (θ x) = x := fun x => by
     rw [← pow_succ_apply, Nat.sub_add_cancel (Nat.pos_of_ne_zero hl), hθl]; rfl
@@ -265,7 +265,7 @@ open MeasureTheory Topology PositivityTheory.Rg.Tf.Loc UpperTheory.V.Z.Tf.Orb
 theorem UpperTheory.V.Z.Tf.Orb.orbComm :
     UpperTheory.V.Z.Tf.Orb.TwOrbComm → UpperTheory.V.Z.Tf.Orb.Untwist → UpperTheory.V.Z.Tf.Orb.OrbComm := by
   intro hT hU k _ _ _ _ _ n _ _ μk hμk γ hγ μ hμ f f' p1 p2 p3 p4
-  haveI : ValuativeExtension k k := ⟨fun {_ _} => Iff.rfl⟩
+  have : ValuativeExtension k k := ⟨fun {_ _} => Iff.rfl⟩
   obtain ⟨h0, h1, h2, h3⟩ := hU k n μk γ
   obtain ⟨μ', a, b, c⟩ := h3 μ hμ
   have t := hT k k 1 h0 n μk hμk γ (h2 hγ) μ' a f f' p1 p2 p3 p4 fun x => by rw [h1]
@@ -284,7 +284,7 @@ open MeasureTheory Topology PositivityTheory.Rg.Tf.Loc UpperTheory.V.Z.Tf.Orb
 theorem UpperTheory.V.Z.Tf.Orb.orbLin :
     UpperTheory.V.Z.Tf.Orb.TwOrbLin → UpperTheory.V.Z.Tf.Orb.Untwist → UpperTheory.V.Z.Tf.Orb.OrbLin := by
   intro hT hU k _ _ _ _ _ n _ _ μk hμk γ hγ μ hμ
-  haveI : ValuativeExtension k k := ⟨fun {_ _} => Iff.rfl⟩
+  have : ValuativeExtension k k := ⟨fun {_ _} => Iff.rfl⟩
   obtain ⟨h0, h1, h2, h3⟩ := hU k n μk γ
   obtain ⟨μ', a, b, c⟩ := h3 μ hμ
   have t := hT k k 1 h0 n μk hμk γ (h2 hγ) μ' a
@@ -306,8 +306,8 @@ theorem UpperTheory.V.Z.Tf.Orb.quotFubini :
   obtain ⟨Y, C, hY, hC, hsupp⟩ := hsupp
   by_cases hex : ∃ ρ, IsQuotNormaliser H μ ρ
   swap
-  · simp only [quotIntegral, dif_neg hex, integral_zero]
-  simp only [quotIntegral, dif_pos hex]
+  · simp only [quotIntegral, dite_eq_right hex, integral_zero]
+  simp only [quotIntegral, dite_eq_left hex]
   have hρ := hex.choose_spec
   generalize hex.choose = ρ at hρ ⊢
   obtain ⟨hS, hfin⟩ := (hM G μG hμG H hH μ hμ hinv ρ hρ).2 C hC
@@ -402,15 +402,15 @@ private theorem unfold_eq {G : Type} [Group G] [MeasurableSpace G] [MeasurableMu
     {H : Subgroup G} {μ : Measure H} [SFinite μ] [μ.IsInvInvariant]
     {ψ ρ : G → ℝ≥0∞} (hψ : Measurable ψ) (hρ : IsQuotNormaliser H μ ρ) :
     ∫⁻ g, ρ g * ∫⁻ h : H, ψ ((h : G) * g) ∂μ ∂μG = ∫⁻ g, ψ g ∂μG := by
-  have : MeasurableInv H := ⟨(measurable_subtype_coe.inv).subtype_mk⟩
+  have : MeasurableInv H := ⟨(measurable_subtypeVal.inv).subtype_mk⟩
   have hmulH : Measurable fun p : H × G => (p.1 : G) * p.2 :=
-    (measurable_subtype_coe.comp measurable_fst).mul measurable_snd
+    (measurable_subtypeVal.comp measurable_fst).mul measurable_snd
   have e1 : ∫⁻ g, ρ g * ∫⁻ h : H, ψ ((h : G) * g) ∂μ ∂μG
       = ∫⁻ h : H, ∫⁻ g, ρ g * ψ ((h : G) * g) ∂μG ∂μ := by
     rw [lintegral_lintegral_swap]
     · refine lintegral_congr fun g => ?_
       rw [lintegral_const_mul]
-      exact hψ.comp (measurable_subtype_coe.mul_const g)
+      exact hψ.comp (measurable_subtypeVal.mul_const g)
     · exact ((hρ.1.comp measurable_snd).mul (hψ.comp hmulH)).aemeasurable
   have e2 : ∀ h : H, ∫⁻ g, ρ g * ψ ((h : G) * g) ∂μG =
       ∫⁻ g, ψ g * ρ (((h⁻¹ : H) : G) * g) ∂μG := by
@@ -421,18 +421,18 @@ private theorem unfold_eq {G : Type} [Group G] [MeasurableSpace G] [MeasurableMu
   rw [e1, lintegral_congr e2, ← lintegral_lintegral_swap]
   · refine lintegral_congr fun g => ?_
     rw [lintegral_const_mul, lintegral_inv_eq_self (fun h : H => ρ ((h : G) * g)), hρ.2 g, mul_one]
-    exact hρ.1.comp ((measurable_subtype_coe.comp measurable_inv).mul_const g)
+    exact hρ.1.comp ((measurable_subtypeVal.comp measurable_inv).mul_const g)
   · have : Measurable fun p : G × H => ((p.2⁻¹ : H) : G) * p.1 :=
-      (measurable_subtype_coe.comp (measurable_snd.inv)).mul measurable_fst
+      (measurable_subtypeVal.comp (measurable_snd.inv)).mul measurable_fst
     exact ((hψ.comp measurable_fst).mul (hρ.1.comp this)).aemeasurable
 
 theorem quotMass : QuotMass := by
   intro G _ _ _ _ _ _ _ _ μG hμG H hH μ hμ hinv ρ hρ
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
-  haveI : SFinite μ := inferInstance
-  haveI : MeasurableInv H := ⟨(measurable_subtype_coe.inv).subtype_mk⟩
-  haveI : μ.IsMulRightInvariant := by
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
+  have : SFinite μ := inferInstance
+  have : MeasurableInv H := ⟨(measurable_subtypeVal.inv).subtype_mk⟩
+  have : μ.IsMulRightInvariant := by
     have h := (inferInstance : μ.inv.IsMulRightInvariant)
     rwa [Measure.inv_eq_self] at h
   have key : ∀ C : Set G, IsCompact C →
@@ -442,7 +442,7 @@ theorem quotMass : QuotMass := by
     have hcl : IsClosed {g | ∃ h ∈ H, ∃ c ∈ C, g = h * c} := by
       have e : {g | ∃ h ∈ H, ∃ c ∈ C, g = h * c} = (H : Set G) * C := by
         ext g
-        simp only [Set.mem_setOf_eq, Set.mem_mul, SetLike.mem_coe, eq_comm]
+        simp only [Set.mem_ofPred_eq, Set.mem_mul, SetLike.mem_coe, eq_comm]
       rw [e]
       exact hH.mul_right_of_isCompact hC
     refine ⟨hcl, ?_⟩
@@ -450,10 +450,10 @@ theorem quotMass : QuotMass := by
     have hD : IsCompact (V * C) := hV.mul hC
     have hDm : MeasurableSet (V * C) := hD.isClosed.measurableSet
     have hVm : MeasurableSet ((↑) ⁻¹' V : Set H) :=
-      measurable_subtype_coe hV.isClosed.measurableSet
+      measurable_subtypeVal hV.isClosed.measurableSet
     have hm : μ ((↑) ⁻¹' V : Set H) ≠ 0 := by
       refine (Measure.measure_pos_of_mem_nhds μ (x := 1) ?_).ne'
-      exact continuous_subtype_val.continuousAt.preimage_mem_nhds hV1
+      exact continuous_subtypeVal.continuousAt.preimage_mem_nhds hV1
     have hψ : Measurable ((V * C).indicator (1 : G → ℝ≥0∞)) := measurable_one.indicator hDm
     have hE := unfold_eq (μG := μG) hψ hρ
     rw [lintegral_indicator_one hDm] at hE
@@ -513,9 +513,9 @@ theorem UpperTheory.V.Z.Tf.Orb.quotPos :
   generalize hex.choose = ρ at hρ
   have hI := hInt G μG hμG H hH μ hμ hinv F hF hFH hC ρ hρ
   have hfin := (hMass G μG hμG H hH μ hμ hinv ρ hρ).1
-  haveI : LocallyCompactSpace H := hH.locallyCompactSpace
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
-  haveI : SFinite μ := inferInstance
+  have : LocallyCompactSpace H := hH.locallyCompactSpace
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
+  have : SFinite μ := inferInstance
   have hre : (∫ g, F g * ((ρ g).toReal : ℂ) ∂μG).re = ∫ g, (F g).re * (ρ g).toReal ∂μG := by
     have := integral_re hI
     simpa using this.symm
@@ -537,12 +537,12 @@ theorem UpperTheory.V.Z.Tf.Orb.quotPos :
     · right; exact hg
     · exact absurd hg hg'
   have hmul : Measurable fun p : G × H => (p.2 : G) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd).mul measurable_fst
   have h2 : ∫⁻ g, Φ g ∂μG = 0 := by
     calc ∫⁻ g, Φ g ∂μG = ∫⁻ g, ∫⁻ h : H, Φ g * ρ ((h : G) * g) ∂μ ∂μG := by
           refine lintegral_congr fun g => ?_
           rw [lintegral_const_mul, hρ.2 g, mul_one]
-          exact hρ.1.comp (measurable_subtype_coe.mul_const g)
+          exact hρ.1.comp (measurable_subtypeVal.mul_const g)
       _ = ∫⁻ h : H, ∫⁻ g, Φ g * ρ ((h : G) * g) ∂μG ∂μ :=
           lintegral_lintegral_swap ((hΦm.comp measurable_fst).mul (hρ.1.comp hmul)).aemeasurable
       _ = ∫⁻ _h : H, 0 ∂μ := by
@@ -579,7 +579,7 @@ theorem UpperTheory.V.Z.Tf.Orb.quotRight :
       hI G μG hμG H μ hs hinv (fun g => F (g * y)) (hF.comp (measurable_mul_const y))
         (fun h hh g => by rw [mul_assoc, hFH h hh]) _ hρ']
     exact integral_mul_right_eq_self (fun g => F g * ((ρ g).toReal : ℂ)) y
-  · simp only [quotIntegral, dif_neg hex]
+  · simp only [quotIntegral, dite_eq_right hex]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.OrbitalIntegrals.TwistedOrbitalIntegrals.QuotRight =====
@@ -652,7 +652,7 @@ theorem UpperTheory.V.Z.Tf.Orb.twOrbLin :
     · simp
   · obtain ⟨h, p, -⟩ := hT k E σ hσ n μE hμE φ a1 a2 δ hδ μ hμ
     obtain ⟨-, q, -⟩ := hT k E σ hσ n μE hμE ψ b1 b2 δ hδ μ hμ
-    simp only [twOrbIntegralC, quotIntegral, dif_pos h, Pi.add_apply, add_mul]
+    simp only [twOrbIntegralC, quotIntegral, dite_eq_left h, Pi.add_apply, add_mul]
     exact integral_add (p _ h.choose_spec) (q _ h.choose_spec)
 end -- clump:auto
 end -- clump:auto

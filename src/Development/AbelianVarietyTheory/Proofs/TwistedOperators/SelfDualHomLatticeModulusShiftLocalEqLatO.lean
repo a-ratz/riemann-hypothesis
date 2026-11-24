@@ -96,7 +96,7 @@ theorem exists_c {T : Type} {L : LevCh D T} (P : Places L) (sc : Consts) {v : Gl
     rw [hJdef]
     change Ideal.mapHom (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) _ ≤ _
     rw [map_prod]
-    refine Finset.prod_le_prod' fun v' hv' => ?_
+    refine Finset.prod_le_prod fun v' hv' => ?_
     rw [map_pow]
     refine pow_le_pow_left' ?_ _
     refine Ideal.map_le_iff_le_comap.2 (le_of_eq ?_)
@@ -125,7 +125,7 @@ theorem smul_mem_idLat (G : GridData L sc) {n : ℕ} {Λ : Submodule (𝓞 D.hos
   unfold shiftId
   rw [← mul_one ((c : D.host.F) : D.host.E)]
   exact FractionalIdeal.mul_mem_mul ((FractionalIdeal.mem_coeIdeal (𝓞 D.host.E)⁰).2 ⟨_, hc, coe_alg c⟩)
-    (FractionalIdeal.one_mem_inv_coe_ideal hne)
+    (FractionalIdeal.one_mem_inv_coeIdeal hne)
 
 theorem smul_idLat_mem (G : GridData L sc) {n : ℕ} {Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.E)} {c : 𝓞 D.host.F}
     (hcb : algebraMap (𝓞 D.host.F) (𝓞 D.host.E) c ∈ G.pl.modulBar sc) (hne : G.pl.modulBar sc ≠ ⊥)

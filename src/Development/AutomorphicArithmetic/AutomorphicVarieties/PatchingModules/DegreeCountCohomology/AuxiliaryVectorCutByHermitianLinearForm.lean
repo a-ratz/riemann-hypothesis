@@ -120,7 +120,7 @@ theorem UpperTheory.V.AlgebraTools.frob_form_trunc :
         PowerSeries.coeff j f * b := by
       rw [show f * (PowerSeries.C b * PowerSeries.X ^ (m - j)) =
           PowerSeries.C b * (PowerSeries.X ^ (m - j) * f) by ring]
-      rw [PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow_mul', if_pos (Nat.sub_le m j),
+      rw [PowerSeries.coeff_C_mul, PowerSeries.coeff_X_pow_mul', ite_eq_left (Nat.sub_le m j),
         Nat.sub_sub_self hjm, mul_comm]
     rw [hc] at this
     exact this
@@ -168,7 +168,7 @@ private theorem hermOrthExt_gram_entry_eq_single_and_frame_gram_eq_zero (l : ℕ
       rw [pow_zero, Ideal.span_singleton_one]
     exact (Ideal.Quotient.subsingleton_iff.2 htop).elim _ _
   | succ k0 =>
-    letI := ZMod.algebra k l
+    let := ZMod.algebra k l
     obtain ⟨lam, -, hlam, -⟩ := UpperTheory.V.AlgebraTools.frob_form_trunc (k := k) l k0
     exact ⟨lam, hlam⟩
 

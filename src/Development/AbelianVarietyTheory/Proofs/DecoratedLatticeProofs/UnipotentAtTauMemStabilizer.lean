@@ -86,7 +86,7 @@ theorem absE_single (hθ : IsInfFam θ) (x : (AE D)ˣ) (τ : D.what₂.Tau) (hf 
     (hi : ∀ τ', τ' ≠ τ → θ τ' (infPart D (x : AE D)) = 1) :
     absE D.host.F D.host.E x = ‖θ τ (infPart D (x : AE D))‖₊ ^ 2 := by
   have hcm := (GlobalTheory.Mem.Vol.cmData_isCMExt_and_gram_isHermND _ _ D.sp.cm).1
-  haveI := hcm.1
+  have := hcm.1
   have e1 : (∏ᶠ v, absEv D.host.F D.host.E v (unitFin D.host.F D.host.E v x)) = 1 :=
     finprod_eq_one_of_forall_eq_one fun v => by rw [GlobalTheory.HalfModTorus.unitFin_eq_one v _ hf, map_one]
   have hw : ∀ τ : D.what₂.Tau, absEw D.host.F D.host.E
@@ -103,7 +103,7 @@ theorem absE_single (hθ : IsInfFam θ) (x : (AE D)ˣ) (τ : D.what₂.Tau) (hf 
       (fun w => absEw D.host.F D.host.E w (unitInf D.host.F D.host.E w x))]
     simp only [hw]
     refine Finset.prod_eq_single τ (fun τ' _ c => ?_) fun c => absurd (Finset.mem_univ _) c
-    rw [hi τ' c, nnnorm_one, one_pow]
+    rw [hi τ' c, nnNorm_one, one_pow]
   rw [absE_apply, e1, e2, mul_one]
 
 end GlobalTheory.StabAtPlace

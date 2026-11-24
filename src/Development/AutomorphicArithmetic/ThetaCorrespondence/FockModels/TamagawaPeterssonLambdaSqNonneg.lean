@@ -228,9 +228,9 @@ theorem slopeMax_le : GlobalTheory.UCls.MassBound → GlobalTheory.UCls.TorusBou
   have hR := GlobalTheory.LevGeo.RankBd.finrank_cuspW_le hMass hTor D j H Dw l Xo c U dict hL a n hD
   have hS := _root_.GlobalTheory.SlopeMink.slopeMax_sq_le_of_no_short c.F (cuspW Xo c U (wtZ a n)) (normW U (xiR D) (fun _ => D.sp.W j) dict (wtZ a n))
     (latW U (wtZ a n)) _ hG.1 hj hG.2.1 h0 (fun F hF hF0 => (hP F hF hF0).2)
-  haveI := hR.1
+  have := hR.1
   obtain ⟨F, hF, hF0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h0
-  haveI : Nontrivial (cuspW Xo c U (wtZ a n)) := ⟨⟨F, 0, hF0⟩⟩
+  have : Nontrivial (cuspW Xo c U (wtZ a n)) := ⟨⟨F, 0, hF0⟩⟩
   have hpos : (0 : ℝ) < (Module.finrank c.F (cuspW Xo c U (wtZ a n)) : ℝ) := by
     exact_mod_cast Module.finrank_pos
   have hlog := Real.log_le_log hpos hR.2
@@ -673,7 +673,7 @@ theorem _root_.UpperTheory.Lit.Tam.finrank_cuspW_le_supConst2 : True → GlobalT
     let v : Fin s.card → S := fun i => ⟨rdU (U σ) (b i), hS_def ▸ Submodule.subset_span ⟨b i, (e i : Cw).2, rfl⟩⟩
     have hv : LinearIndependent ℂ v := LinearIndependent.of_comp S.subtype hrd
     simpa using hv.fintype_card_le_finrank
-  haveI : Module.Free c.F Cw := Module.Free.of_divisionRing c.F Cw
+  have : Module.Free c.F Cw := Module.Free.of_divisionRing c.F Cw
   have hrank : Module.rank c.F Cw ≤ ((finrank ℂ S : ℕ) : Cardinal) := rank_le hcard
   have hfin : FiniteDimensional c.F Cw :=
     Module.rank_lt_aleph0_iff.1 (lt_of_le_of_lt hrank Cardinal.natCast_lt_aleph0)
@@ -773,9 +773,9 @@ theorem _root_.UpperTheory.Lit.Tam.petersson_norm_local_factor_eq : True → Glo
   have hR := UpperTheory.Lit.Tam.finrank_cuspW_le_supConst2 hMass hTor D j H Dw l Xo c U dict hL a n hD
   have hS := _root_.GlobalTheory.SlopeMink.slopeMax_sq_le_of_no_short c.F (cuspW Xo c U (wtZ a n)) (normW U (xiR D) (fun _ => D.sp.W j) dict (wtZ a n))
     (latW U (wtZ a n)) _ hG.1 hj hG.2.1 h0 (fun F hF hF0 => (hP F hF hF0).2)
-  haveI := hR.1
+  have := hR.1
   obtain ⟨F, hF, hF0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h0
-  haveI : Nontrivial (cuspW Xo c U (wtZ a n)) := ⟨⟨F, 0, hF0⟩⟩
+  have : Nontrivial (cuspW Xo c U (wtZ a n)) := ⟨⟨F, 0, hF0⟩⟩
   have hpos : (0 : ℝ) < (Module.finrank c.F (cuspW Xo c U (wtZ a n)) : ℝ) := by
     exact_mod_cast Module.finrank_pos
   have hlog := Real.log_le_log hpos hR.2
@@ -847,20 +847,20 @@ theorem _root_.UpperTheory.Lit.Tam.tamagawaPeterssonLambdaSq_nonneg : True → �
   have hP'm : P' ∈ Formalism.L2.Pj.holSub (U σ).X la := by
     refine Formalism.L2.Pj.holCusp_mem_holSub _ _ fun k => ?_
     by_cases hk : k ∈ S
-    · simp only [hP', if_pos hk]
+    · simp only [hP', ite_eq_left hk]
       exact Formalism.L2.Pj.holSub_comp_SS _ _ _ hP k
-    · simp only [hP', if_neg hk]
+    · simp only [hP', ite_eq_right hk]
       exact (ReciprocityTheory.ChartRestriction.G.FD.siegelSpaceAlgebra_holds (E := D.host.E) D.R.r ((U σ).X k) (la k) (la k) 0).1.1
   have hpt : ∀ z : Σ k, ReciprocityTheory.ChartRestriction.G.FD.Frame ((U σ).X k).Ψ D.R.r,
       AllWt.ptN la P' z = if z.1 ∈ S then AllWt.ptN la P z else 0 := fun z => by
     by_cases hz : z.1 ∈ S
-    · simp only [AllWt.ptN, hP', if_pos hz]
-    · simp only [AllWt.ptN, hP', if_neg hz]
+    · simp only [AllWt.ptN, hP', ite_eq_left hz]
+    · simp only [AllWt.ptN, hP', ite_eq_right hz]
       exact Formalism.L2.Pj.pnorm_zero _ _ _
 
   have h1 : ENNReal.ofReal (AllWt.ptN la P ⟨y.1, y.2.1⟩) ^ 2 ≤ Formalism.L2.Pj.supE (U σ).X la P' ^ 2 := by
     have e : AllWt.ptN la P ⟨y.1, y.2.1⟩ = AllWt.ptN la P' ⟨y.1, y.2.1⟩ := by
-      rw [hpt, if_pos hyS]
+      rw [hpt, ite_eq_left hyS]
     rw [e]
     gcongr
     exact le_iSup (fun p : Formalism.L2.Pj.FPt (U σ).X => ENNReal.ofReal (((U σ).X p.1).pnorm (la p.1) (P' p.1) p.2)) y
@@ -875,7 +875,7 @@ theorem _root_.UpperTheory.Lit.Tam.tamagawaPeterssonLambdaSq_nonneg : True → �
       apply hq
       have : ¬ (dict σ q.out).1 ∈ S := fun h => hn ((key _).2 h)
       show AllWt.ptN la P' (dict σ q.out) = 0
-      rw [hpt, if_neg this]
+      rw [hpt, ite_eq_right this]
     have hrestrict : eLpNorm' (fun q : AutQ (D.sp.W j) => AllWt.ptN la P' (dict σ q.out)) 2
         ((muQ1 (D.sp.W j)).restrict Cl) =
         eLpNorm' (fun q : AutQ (D.sp.W j) => AllWt.ptN la P' (dict σ q.out)) 2 (muQ1 (D.sp.W j)) := by
@@ -922,7 +922,7 @@ namespace GlobalTheory.ConstSzRows
 
 theorem _root_.UpperTheory.Lit.Tam.supConst2Bounds : ∀ (D : D7) (M : ℕ) (Lb w : ℝ), 1 ≤ M → 1 ≤ Lb → Real.log M ≤ 30 * Lb → fieldSz D.host.E ≤ 3 * Lb → Real.log (D.R.f * D.R.r) ≤ Lb → 1 ≤ w → Real.log w ≤ 25 * Lb → 1 ≤ MainStatements.Tam.Plug.supConst2 D.host.E D.R.r D.host.d M w ∧ Real.log (MainStatements.Tam.Plug.supConst2 D.host.E D.R.r D.host.d M w) ≤ 4000 * ((D.R.f : ℝ) * D.R.r * Lb) ^ 3 := by
   intro D M Lb w hM hLb hMl hsz hfrl hw hwl
-  haveI : IsCMField D.host.E := inferInstance
+  have : IsCMField D.host.E := inferInstance
   have hfd := GlobalTheory.FramedCMPointCompare.fdeg_host D
   have hf0 : 1 ≤ D.R.f := by have : 0 < D.R.n := D.R.ord_pos; unfold Formalism.BasicNotions.Ranks.f; omega
   have hr2 : 2 ≤ D.R.r := by

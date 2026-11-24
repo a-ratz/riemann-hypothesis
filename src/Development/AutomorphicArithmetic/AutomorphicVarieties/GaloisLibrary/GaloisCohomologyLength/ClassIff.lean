@@ -76,7 +76,7 @@ private theorem ci_red {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosed Ω] (l 
     w = KStar.TotallyRealRoots.redPow l n (cyclotomicCharacter Ω l g) := by
   have hen := ci_hen Ω l n
   have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ n)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ n)
   have h1 := ci_spec l n g ζ hζ.pow_eq_one
   rw [h ζ hζ.pow_eq_one] at h1
   have hfin : IsOfFinOrder ζ :=

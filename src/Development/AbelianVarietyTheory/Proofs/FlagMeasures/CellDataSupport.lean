@@ -113,7 +113,7 @@ theorem closed_pairSet (L : LocBessel k r) : IsClosed (pairSet L) := by
     ((hWc'.preimage continuous_snd.fst).inter (hNc.preimage continuous_snd.snd)))
 
 theorem meas_pairSet (L : LocBessel k r) : MeasurableSet (pairSet L) := by
-  haveI : BorelSpace (PairSp k r) := Prod.borelSpace
+  have : BorelSpace (PairSp k r) := Prod.borelSpace
   exact (closed_pairSet L).measurableSet
 
 theorem ae_pairMeas (L : LocBessel k r) : ∀ᵐ p ∂(pairMeas L), p ∈ pairSet L := by
@@ -215,7 +215,7 @@ theorem coefF_eq (L : LocBessel k r) (v v' : L.Hs) (ξ : L.Wp) (ξ' : L.Wq)
     (g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :
     coefF L v v' ξ ξ' g = ⟪v, L.σ g v'⟫_ℂ • (innerSL ℂ ξ').smulRight ξ := by
   ext w
-  simp only [coefF, ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.smul_apply]
+  simp only [coefF, ContinuousLinearMap.smulRight_apply, smul_apply]
   rw [smul_comm]
 
 theorem orbInt_integrable : Hyps → ∀ (k r : ℕ) (L : LocBessel k r) (h : ℝ) (μG : Measure (Mt k r)) (γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (μR νR : Measure (Mt k r)) (ν : Measure (PairSp k r)), GapAtLeast L.ε L.lam h → Formalism.FourierDecayAlt.ThreeDimData.GapOK k r h → L.κN ≠ ⊤ → CellData L μG γ μR νR ν → (∀ᵐ p ∂ν, Matrix.of p.1.1 ∈ UWset k r L.z ∧ Matrix.of p.1.2 ∈ Nset k r ∧ Matrix.of p.2.1 ∈ UWset k r L.z' ∧ Matrix.of p.2.2 ∈ Nset k r) ∧ ∀ b : ℝ, 0 ≤ b → b ≤ Formalism.FourierDecayAlt.ThreeDimData.aOf r h - 1 → Integrable (pairMaj γ b) ν → ∀ v v' : L.Hs, PI.UpqRep.IsKFinHpk (k := k) (r := r) L.σ v → PI.UpqRep.IsKFinHpk (k := k) (r := r) L.σ v' → ∀ (ξ : L.Wp) (ξ' : L.Wq), Integrable (besselIntg L (coefF L v v' ξ ξ') γ) ν := by
@@ -233,7 +233,7 @@ theorem orbInt_integrable : Hyps → ∀ (k r : ℕ) (L : LocBessel k r) (h : �
       funext (coefF_eq L v v' ξ ξ')
     rw [e]
     exact (ContinuousOn.inner (𝕜 := ℂ) continuousOn_const (Formalism.FourierDecayAlt.P.S3dx4.sigma_contOn hσ v')).smul continuousOn_const
-  haveI : BorelSpace (PairSp k r) := Prod.borelSpace
+  have : BorelSpace (PairSp k r) := Prod.borelSpace
   have hm : AEStronglyMeasurable (besselIntg L (coefF L v v' ξ ξ') γ) ν := by
     have := (contOn_intg L hγ hF).aestronglyMeasurable (μ := ν) (meas_pairSet L)
     rwa [Measure.restrict_eq_self_of_ae_mem hae] at this

@@ -125,7 +125,7 @@ theorem hmk_box {N : ℕ} (hN : 1 ≤ N) (B : Matrix (Fin N) (Fin N) ℝ) (hB : 
       rw [ENNReal.ofReal_pow (by norm_num)]; simp]
     rw [ENNReal.ofReal_lt_ofReal_iff (by positivity)]
     exact pow_lt_pow_left₀ (by norm_num) (by norm_num) (by omega)
-  haveI : Countable (Submodule.span ℤ (Set.range b)).toAddSubgroup :=
+  have : Countable (Submodule.span ℤ (Set.range b)).toAddSubgroup :=
     inferInstanceAs (Countable (Submodule.span ℤ (Set.range b)))
   obtain ⟨x, hx0, hxs⟩ :=
     exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure fund h_symm h_conv h

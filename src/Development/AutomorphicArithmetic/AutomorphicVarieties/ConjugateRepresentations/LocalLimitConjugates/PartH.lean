@@ -116,10 +116,10 @@ theorem UpperTheory.V.Cj.H.autOf :
       (H₂ := { carrier := {k | finRep E a k φ = φ}
                one_mem' := by simp
                mul_mem' := fun {x y} hx hy => by
-                 rw [Set.mem_setOf_eq] at hx hy ⊢
+                 rw [Set.mem_ofPred_eq] at hx hy ⊢
                  rw [map_mul, Module.End.mul_apply, hy, hx]
                inv_mem' := fun {x} hx => by
-                 rw [Set.mem_setOf_eq] at hx ⊢
+                 rw [Set.mem_ofPred_eq] at hx ⊢
                  conv_lhs => rw [← hx]
                  rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] })
       (fun u hu => hl.2.1 u hu) hU
@@ -162,7 +162,7 @@ private theorem exists_orthogonal_decomposition_of_isPos {W : Type} [AddCommGrou
     (M : Submodule ℂ W) (hB : IsPos B M) (F K : Submodule ℂ W) (hF : F ≤ M) (hK : K ≤ F)
     [FiniteDimensional ℂ F] (v : W) (hv : v ∈ F) :
     ∃ a ∈ K, ∃ b ∈ F, v = a + b ∧ ∀ x ∈ K, B x b = 0 := by
-  letI core : InnerProductSpace.Core ℂ F :=
+  let core : InnerProductSpace.Core ℂ F :=
     { inner := fun x y => B x y
       conj_inner_symm := fun x y => by
         show (starRingEnd ℂ) (B y x) = B x y
@@ -175,10 +175,10 @@ private theorem exists_orthogonal_decomposition_of_isPos {W : Type} [AddCommGrou
         show B (r • x : F) y = (starRingEnd ℂ) r * B x y
         simp
       definite := fun x hx => Subtype.ext (hB.definite x (hF x.2) hx) }
-  letI : NormedAddCommGroup F := InnerProductSpace.Core.toNormedAddCommGroup (cd := core)
-  letI : InnerProductSpace ℂ F := InnerProductSpace.ofCore (𝕜 := ℂ) (F := F) inferInstance
+  let : NormedAddCommGroup F := InnerProductSpace.Core.toNormedAddCommGroup (cd := core)
+  let : InnerProductSpace ℂ F := InnerProductSpace.ofCore (𝕜 := ℂ) (F := F) inferInstance
   let K' : Submodule ℂ F := K.comap F.subtype
-  haveI : CompleteSpace K' := FiniteDimensional.complete ℂ K'
+  have : CompleteSpace K' := FiniteDimensional.completeSpace ℂ K'
   obtain ⟨y, hy, z, hz, hyz⟩ := K'.exists_add_mem_mem_orthogonal ⟨v, hv⟩
   refine ⟨y, hy, z, z.2, congrArg Subtype.val hyz, fun x hx => ?_⟩
   have := (Submodule.mem_orthogonal K' z).1 hz ⟨x, hK hx⟩ hx
@@ -227,7 +227,7 @@ theorem UpperTheory.V.Cj.H.absSS :
   · refine le_antisymm (sup_le hNM fun w hw => ((memN' w).1 hw).1) ?_
     intro v hv
     obtain ⟨U, hUo, hUc, hUv⟩ := hsm v hv
-    haveI := hfd U hUo
+    have := hfd U hUo
     have hFM : Submodule.span ℂ {x | x ∈ M ∧ ∀ u ∈ U, ρ u x = x} ≤ M :=
       Submodule.span_le.2 fun x hx => hx.1
     have hFfix : ∀ x ∈ Submodule.span ℂ {x | x ∈ M ∧ ∀ u ∈ U, ρ u x = x}, ∀ u ∈ U, ρ u x = x := by
@@ -458,7 +458,7 @@ theorem UpperTheory.V.Cj.H.harmSS :
       have h := UpperTheory.V.Cj.H.harmFin E a Ξ r m q U hU
       have e : {v : Co Ξ q | v ∈ M ∧ ∀ u ∈ U, ρ u v = v} = {ω : Co Ξ q | IsH r m ω ∧ ∀ u ∈ U, trans u ω = ω} := by
         ext v
-        simp only [Set.mem_setOf_eq, hM, hρ]
+        simp only [Set.mem_ofPred_eq, hM, hρ]
       rw [e]
       exact h)
     N hNM (fun g v hv => by rw [hρ]; exact hN g v hv)
@@ -927,8 +927,8 @@ theorem UpperTheory.V.Cj.H.corrLim :
     (by positivity) (fun I => ?_) fun i => (1 / 2 : ℝ) • sand g⁻¹ (v i)
   · have e : (((2 : ℝ) • sand g : HV E a →L[ℝ] HV E a) ∘ fun i => (1 / 2 : ℝ) • sand g⁻¹ (v i)) = v := by
       funext i
-      simp only [Function.comp_apply, ContinuousLinearMap.smul_apply, map_smul, smul_smul]
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]
+      simp only [Function.comp_apply, smul_apply, map_smul, smul_smul]
+      rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]
       norm_num
     rw [ContinuousAlternatingMap.compContinuousLinearMap_apply, e] at key
     have hp : ∏ i, ‖(1 / 2 : ℝ) • sand g⁻¹ (v i)‖ ≤ B ^ q * ∏ i, ‖v i‖ := by
@@ -1175,9 +1175,9 @@ theorem UpperTheory.V.Cj.H.poinOp :
   have hf : ∀ p ∈ G.Y, ∀ w, f p w ∈ G.Om q := by
     intro p hp w
     refine fun s => ⟨?_, ?_⟩
-    · exact ((hD p hp q _ (hwm w s).1).1).congr (fun x hx => if_pos hx)
+    · exact ((hD p hp q _ (hwm w s).1).1).congr (fun x hx => ite_eq_left hx)
     · intro x hx
-      exact if_neg hx
+      exact ite_eq_right hx
   let K : V → G.Om (q + 1) → G.Om q := fun p w => if hp : p ∈ G.Y then ⟨f p w, hf p hp w⟩ else 0
   have hK : ∀ p (hp : p ∈ G.Y) w, ((K p w : G.Om q) : S → V → V [⋀^Fin q]→L[ℝ] (Fin d → ℂ)) = f p w := by
     intro p hp w
@@ -1199,7 +1199,7 @@ theorem UpperTheory.V.Cj.H.poinOp :
         rw [← extDerivWithin_univ, ← extDerivWithin_univ]
         apply Filter.EventuallyEq.extDerivWithin_eq_of_mem _ (Set.mem_univ x)
         rw [nhdsWithin_univ]
-        exact Filter.eventually_of_mem (G.isOpen.mem_nhds hx) (fun y hy => if_pos hy)
+        exact Filter.eventually_of_mem (G.isOpen.mem_nhds hx) (fun y hy => ite_eq_left hy)
       rw [hloc]
       exact (hD p hp q _ (hwm w s).1).2 hclosed x hx
     · have h1 := ((G.dOm q (K p w)).2 s).2 x hx
@@ -1214,7 +1214,7 @@ theorem UpperTheory.V.Cj.H.poinOp :
     rw [hK p hp, hK _ hp']
     by_cases hx : x ∈ G.Y
     · have hx' : G.ρ γ⁻¹ x ∈ G.Y := G.maps γ⁻¹ x hx
-      simp only [f, if_pos hx, if_pos hx']
+      simp only [f, ite_eq_left hx, ite_eq_left hx']
       exact tr_coneOp G q γ _ p x
     · have hx' : G.ρ γ⁻¹ x ∉ G.Y := by
         intro h
@@ -1223,7 +1223,7 @@ theorem UpperTheory.V.Cj.H.poinOp :
         have h3 := Geo.ρ_inv_apply G γ⁻¹ x
         rw [inv_inv] at h3
         rwa [h3] at h2
-      simp only [f, if_neg hx, if_neg hx', map_zero]
+      simp only [f, ite_eq_right hx, ite_eq_right hx', map_zero]
   · intro p hp w hw s C hC hCc
     have h := coneLim V (Fin d → ℂ) G.Y hconv p hp q
       (fun k => ((w k : G.Om (q + 1)) : S → V → V [⋀^Fin (q + 1)]→L[ℝ] (Fin d → ℂ)) s)
@@ -1303,7 +1303,7 @@ theorem UpperTheory.V.Cj.H.zigLim :
       refine ⟨fun j x => if h : x.length = k + 1 then f j x h else 0, ?_, ?_⟩
       · intro j x hx
         show u j x = G.incl (if h : x.length = k + 1 then f j x h else 0)
-        rw [dif_pos hx, hf j x hx]
+        rw [dite_eq_left hx, hf j x hx]
       · intro x hx s
         have hx' : x.length = k + 1 := by simpa using hx
         have ht := (hlim x hx' s {p} (Set.singleton_subset_iff.2 hp)
@@ -1314,7 +1314,7 @@ theorem UpperTheory.V.Cj.H.zigLim :
           intro j
           rw [← hf j x hx']
           simp [Dr.Geo.incl, Set.indicator_of_mem hp]
-        simp only [dif_pos hx']
+        simp only [dite_eq_left hx']
         have hfun : (fun j => f j x hx' s) =
             fun j => ((u j x : S → V → V [⋀^Fin 0]→L[ℝ] (Fin d → ℂ)) s p) (fun _ => 0) :=
           funext fun j => (heq j).symm
@@ -1582,7 +1582,7 @@ theorem UpperTheory.V.Cj.H.kugaSm :
   · refine AlternatingMap.ext fun X => ?_
     have h := kugaSucc E a n e he _ _ _ hA hB hcom q ω (by rw [hsum]; exact hinf _ ω hω) X
     rw [hsum, hd, hdel, hcas, LinearMap.neg_apply, add_zero] at h
-    rw [app_apply, AlternatingMap.neg_apply]
+    rw [app_apply, neg_apply]
     exact (neg_eq_iff_eq_neg.1 h.symm)
 end -- clump:auto
 end -- clump:auto
@@ -1637,7 +1637,7 @@ private theorem co_ext {E : Type} [Field E] [NumberField E] [_root_.NumberField.
 private theorem app_zero' {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ} {Ξ : AlgRep E a} {q : ℕ}
     (T : Module.End ℂ (Sm E a)) : app T (0 : Co Ξ q) = 0 :=
   AlternatingMap.ext fun X => by
-    rw [app_apply, AlternatingMap.zero_apply, map_zero]
+    rw [app_apply, zero_apply, map_zero]
 
 private theorem hasLev_of {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ}
     {U : Subgroup (GL (Fin a) (Af E))} (hU : IsOpen (U : Set (GL (Fin a) (Af E)))) {φ : Sm E a}
@@ -1688,16 +1688,16 @@ theorem UpperTheory.V.Cj.H.hodgeEx :
   obtain ⟨h1, h2, h3, h4⟩ := key P hR.opP
   refine ⟨app P α, h1, h4, (resExact E a ha n e he U Ξ r c hc q _ h1 h4).2 h3 (co_ext fun X i => ?_), h3,
     fun X i => hN.grow _ (h2 X i), ?_⟩
-  · rw [l4, l4, hR.ker _ (hV X i), AlternatingMap.zero_apply, map_zero]
+  · rw [l4, l4, hR.ker _ (hV X i), zero_apply, map_zero]
   · refine exactLim E a ha U hUc Ξ q _ (fun k => app (Q k) α - app P α) (lsub _ _ hα h1) (dsub _ _ hd h4)
       (fun k => lsub _ _ (key _ (hR.opQ k)).1 h1) (fun k => dsub _ _ (key _ (hR.opQ k)).2.2.2 h4) (fun X i => ?_) fun k => ?_
     · have := locLim_sub (hR.lim _ (hV X i))
-      simpa only [AlternatingMap.sub_apply, map_sub, l4] using this
+      simpa only [sub_apply, map_sub, l4] using this
     · obtain ⟨s1, -, -, s4⟩ := key _ (hR.opS k)
       have e1 : α - app P α - (app (Q k) α - app P α) = app (casA r c e) (app (S k) α) := by
         rw [sub_sub_sub_cancel_right]
         refine co_ext fun X i => ?_
-        rw [AlternatingMap.sub_apply, map_sub, l4, l4, l4, hR.res k _ (hV X i)]
+        rw [sub_apply, map_sub, l4, l4, l4, hR.res k _ (hV X i)]
       rw [e1]
       exact (resExact E a ha n e he U Ξ r c hc q _ s1 s4).1
 end -- clump:auto

@@ -87,8 +87,8 @@ theorem mem_of_smul_eq (H : Subgroup (N ≃ₐ[K] N)) (𝔭 : HeightOneSpectrum 
     induction i with
     | zero => simp
     | succ i ih => intro x; rw [pow_succ', mul_smul, hσ', ih, ← pow_mul, pow_succ]
-  letI : Field (𝓞 K ⧸ 𝔭.asIdeal) := Ideal.Quotient.field _
-  letI : Field (𝓞 N ⧸ P) := Ideal.Quotient.field _
+  let : Field (𝓞 K ⧸ 𝔭.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 N ⧸ P) := Ideal.Quotient.field _
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 K ⧸ 𝔭.asIdeal)
   have : Fact p.Prime := ⟨CharP.char_is_prime (𝓞 K ⧸ 𝔭.asIdeal) p⟩
   obtain ⟨i, hi⟩ := FiniteField.exists_forall_apply_eq_pow (𝓞 K ⧸ 𝔭.asIdeal) p (𝓞 N ⧸ P)

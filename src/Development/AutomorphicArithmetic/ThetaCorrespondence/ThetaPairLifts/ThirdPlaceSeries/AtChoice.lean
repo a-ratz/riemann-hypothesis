@@ -244,7 +244,7 @@ def incKH (k r : ℕ) (u : subKH k r) : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r
   ((u : Matrix.unitaryGroup (Fin (2 * r + k + 1)) ℂ) : Matrix _ _ ℂ)
 
 theorem continuous_incKH (k r : ℕ) : Continuous (incKH k r) :=
-  continuous_subtype_val.comp continuous_subtype_val
+  continuous_subtypeVal.comp continuous_subtypeVal
 
 theorem incKH_mem (k r : ℕ) (u : subKH k r) : incKH k r u ∈ GlobalTheory.ThA.KH k r := u.2
 
@@ -386,7 +386,7 @@ theorem integrable_smul_orbit {k r : ℕ} {H : Type} [NormedAddCommGroup H] [Inn
     (hσ : Formalism.MainNotions.S.IsURepOn (Formalism.QuantumDeterminants.UH (PI.UpqRep.Hpk k r)) σ) (hμ : IsHaarKH k r μ)
     {f : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ → ℂ} (hf : Continuous f) (v : H) :
     Integrable (fun g => f g • σ g v) μ := by
-  haveI := hμ.1
+  have := hμ.1
   have hK := isCompact_KH k r
   have hsub : GlobalTheory.ThA.KH k r ⊆ Formalism.QuantumDeterminants.UH (PI.UpqRep.Hpk k r) := fun g hg => hg.1
   have hc : ContinuousOn (fun g => f g • σ g v) (GlobalTheory.ThA.KH k r) :=
@@ -499,9 +499,9 @@ theorem tendsto_integral_normalised_pow_peak :
     refine integral_mono_ae ((integrable_const (η ^ m)).indicator hWm) (hfm_int m) ?_
     filter_upwards [hKae] with x hx
     by_cases hxW : x ∈ {x | η < f x}
-    · rw [Set.indicator_apply, if_pos hxW]
+    · rw [Set.indicator_apply, ite_eq_left hxW]
       exact pow_le_pow_left₀ hη (le_of_lt hxW) m
-    · rw [Set.indicator_apply, if_neg hxW]
+    · rw [Set.indicator_apply, ite_eq_right hxW]
       exact pow_nonneg (hf01 x hx).1 m
   rw [Metric.tendsto_atTop]
   intro ε hε
@@ -1425,7 +1425,7 @@ variable [Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc] [Fact Forma
 theorem xPinsP_ofG (hJ : CompanionTheory.Lime.BM.UniqGap) (hNZ : KFinNZ) : XPinsP := by
   intro CA C0 CG CDel cT Cb' Cg cb Cw cTf CT C0f C' Cl D L T u u' e τ Cp Th' i0 i0' νq hne hcb hcT hTies hC' hClp hk18
     hH0 hPl hSz hi hPt hNu
-  haveI : Nonempty D.what₂.Word := ⟨u⟩
+  have : Nonempty D.what₂.Word := ⟨u⟩
   have hCl : (1000 : ℝ) ≤ Cl := by have := abs_nonneg (Formalism.FourierDecayAlt.P.orbital_integral_converges.choose); linarith
   have hG : Formalism.L2.SG.ConcreteSettingExists.GapHyp D :=
     Formalism.L2.SG.ThmSOwn.gap_hypothesis_of_hypotheses hH0.1 (by linarith) hC'
@@ -1487,7 +1487,7 @@ theorem vIndepAtAllP_ofG (hJ : CompanionTheory.Lime.BM.UniqGap) (hNZ : KFinNZ) :
   intro Cg cb Cw cTf CT C0f hcb hcT
   refine ⟨29, 1000 + |Formalism.FourierDecayAlt.P.orbital_integral_converges.choose|, ?_⟩
   intro C' Cl hC' hClp D L T u u' i0 i0' νq hTies hne hSt hCT hi hNu hPt hH0
-  haveI : Nonempty D.what₂.Word := ⟨u⟩
+  have : Nonempty D.what₂.Word := ⟨u⟩
   have hCl : (1000 : ℝ) ≤ Cl := by have := abs_nonneg (Formalism.FourierDecayAlt.P.orbital_integral_converges.choose); linarith
   have hS0 := hH0.1
   have hk18 := rootLatticeThresholds_k_of_fact hS0 hC'
@@ -1538,7 +1538,7 @@ theorem vIndepAtAllP_ofG (hJ : CompanionTheory.Lime.BM.UniqGap) (hNZ : KFinNZ) :
   have hcO : ∀ j, cOf hB u (e (plE D j)) ≠ 0 := fun j => (hc u _).ne'
   have hf : 2 ≤ D.R.f := le_trans D.R.two_le_m D.R.m_le_f
   have hfpos : 0 < D.R.f := lt_of_lt_of_le (by decide) hf
-  haveI : Nonempty D.what₂.Tau := Fintype.card_pos_iff.1 (by rw [Formalism.MainNotions.BridgeLemma.szf_card_Tau]; exact hfpos)
+  have : Nonempty D.what₂.Tau := Fintype.card_pos_iff.1 (by rw [Formalism.MainNotions.BridgeLemma.szf_card_Tau]; exact hfpos)
   obtain ⟨τ⟩ := (inferInstance : Nonempty D.what₂.Tau)
   have hrS : 2 * D.R.rS + 2 = D.R.m := Ranks.rS_two D.R
   have hr : D.R.r = 2 * D.R.rS + D.R.k + 1 := by unfold Ranks.r; omega

@@ -131,7 +131,7 @@ lemma Hol.conjEntry (i j : Fin n) : Hol ε (fun k => star (toMK k i j)) := by
         split_ifs <;> fun_prop)
     intro y hy
     have hy1 : IsUnit (Matrix.of y) := by
-      simp only [Set.mem_setOf_eq, KC] at hy
+      simp only [Set.mem_ofPred_eq, KC] at hy
       exact hy.1
     have hne : (Matrix.of y).det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det _).1 hy1).ne_zero
     exact ((hdet y).inv hne).differentiableWithinAt.mul (hadj y).differentiableWithinAt
@@ -175,7 +175,7 @@ lemma Sep.mul {p q : KG ε → ℂ} (hp : Sep ε p) (hq : Sep ε q) : Sep ε (fu
 
 lemma isEmb (ε : Fin n → Bool) : Topology.IsEmbedding (fun k : KG ε => toMK k) := by
   have hc : Continuous (fun k : KG ε => toMK k) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hi : Function.Injective (fun k : KG ε => toMK k) := fun a b h =>
     Subtype.ext (Subtype.ext (Units.ext h))
   exact (hc.isClosedEmbedding hi).isEmbedding

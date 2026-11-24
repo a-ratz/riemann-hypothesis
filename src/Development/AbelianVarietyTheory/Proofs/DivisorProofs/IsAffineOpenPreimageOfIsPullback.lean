@@ -80,14 +80,14 @@ variable {D : ℕ}
 
 theorem formMapSq_dForm (σ : k →+* k') (ρ : A →+* B) (h : ρ.comp α = β.comp σ) (f : Fin D → A) :
     formMapSq D σ ρ h (dForm α f) = dForm β fun i => ρ (f i) := by
-  letI := α.toAlgebra
-  letI := β.toAlgebra
-  letI := ρ.toAlgebra
-  letI := σ.toAlgebra
-  letI := (ρ.comp α).toAlgebra
-  haveI : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower k k' B := IsScalarTower.of_algebraMap_eq' h
-  haveI : SMulCommClass k' A B := SMulCommClass.of_commMonoid _ _ _
+  let := α.toAlgebra
+  let := β.toAlgebra
+  let := ρ.toAlgebra
+  let := σ.toAlgebra
+  let := (ρ.comp α).toAlgebra
+  have : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower k k' B := IsScalarTower.of_algebraMap_eq' h
+  have : SMulCommClass k' A B := SMulCommClass.of_commMonoid _ _ _
   change exteriorPowerMapOver B D (KaehlerDifferential.map k k' A B)
     (exteriorPower.ιMulti A D _) = _
   rw [exteriorPowerMapOver_ιMulti, dForm_eq]
@@ -98,15 +98,15 @@ theorem IsFreeGen.formMapSq (σ : k →+* k') (ρ : A →+* B) (h : ρ.comp α =
     (H : IsPushout (CommRingCat.ofHom α) (CommRingCat.ofHom σ) (CommRingCat.ofHom ρ)
       (CommRingCat.ofHom β)) {ω : Forms α D} (hω : IsFreeGen A ω) :
     IsFreeGen B (formMapSq D σ ρ h ω) := by
-  letI := α.toAlgebra
-  letI := β.toAlgebra
-  letI := ρ.toAlgebra
-  letI := σ.toAlgebra
-  letI := (ρ.comp α).toAlgebra
-  haveI : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower k k' B := IsScalarTower.of_algebraMap_eq' h
-  haveI : SMulCommClass k' A B := SMulCommClass.of_commMonoid _ _ _
-  haveI : Algebra.IsPushout k k' A B := (CommRingCat.isPushout_iff_isPushout.1 H).symm
+  let := α.toAlgebra
+  let := β.toAlgebra
+  let := ρ.toAlgebra
+  let := σ.toAlgebra
+  let := (ρ.comp α).toAlgebra
+  have : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower k k' B := IsScalarTower.of_algebraMap_eq' h
+  have : SMulCommClass k' A B := SMulCommClass.of_commMonoid _ _ _
+  have : Algebra.IsPushout k k' A B := (CommRingCat.isPushout_iff_isPushout.1 H).symm
   refine hω.of_isBaseChange (isBaseChange_exteriorPower
     (IsBaseChange.of_equiv (KaehlerDifferential.tensorKaehlerEquiv k k' A B) fun x => ?_) D)
   have hx : x ∈ Submodule.span A (Set.range (KaehlerDifferential.D k A)) :=
@@ -152,7 +152,7 @@ theorem pullForm_dOn (h : W ≤ φ ⁻¹ᵁ V) (f : Fin D → Γ(Y, V)) :
 
 theorem resForm_pullForm (h : W ≤ φ ⁻¹ᵁ V) (e : W' ≤ W) (η : FormsOn p D V) :
     resForm e (pullForm w h η) = pullForm w (e.trans h) η := by
-  haveI : RingHomCompTriple (φ.appLE V W h).hom (resG Y' e) (φ.appLE V W' (e.trans h)).hom :=
+  have : RingHomCompTriple (φ.appLE V W h).hom (resG Y' e) (φ.appLE V W' (e.trans h)).hom :=
     ⟨RingHom.ext (resG_appLE φ h e)⟩
   refine LinearMap.congr_fun (forms_ext (φ := (resForm e).comp (pullForm w h))
     (ψ := pullForm w (e.trans h)) fun f => ?_) η
@@ -161,7 +161,7 @@ theorem resForm_pullForm (h : W ≤ φ ⁻¹ᵁ V) (e : W' ≤ W) (η : FormsOn 
 
 theorem pullForm_resForm (e : V ≤ U) (h : W ≤ φ ⁻¹ᵁ V) (η : FormsOn p D U) :
     pullForm w h (resForm e η) = pullForm w (h.trans (φ.preimage_mono e)) η := by
-  haveI : RingHomCompTriple (resG Y e) (φ.appLE V W h).hom
+  have : RingHomCompTriple (resG Y e) (φ.appLE V W h).hom
       (φ.appLE U W (h.trans (φ.preimage_mono e))).hom :=
     ⟨RingHom.ext (appLE_resG φ e h)⟩
   refine LinearMap.congr_fun (forms_ext (φ := (pullForm w h).comp (resForm e))
@@ -190,7 +190,7 @@ theorem isAffineOpen_preimage_of_isPullback (H : IsPullback φ p' p (spMap σ))
 
 theorem IsFrame.pullForm (H : IsPullback φ p' p (spMap σ)) {ω : FormsOn p D U} (hω : IsFrame ω)
     (hW : IsAffineOpen W) (h : W ≤ φ ⁻¹ᵁ U) : IsFrame (pullForm H.w h ω) := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   have h₁ : IsFrame (TopForm.pullForm H.w (inf_le_left : φ ⁻¹ᵁ U ⊓ p' ⁻¹ᵁ ⊤ ≤ _) ω) := by
     refine ⟨?_, hω.gen.formMapSq σ _ _ (isPushout_sections p p' φ H U hω.affine)⟩
     rw [show φ ⁻¹ᵁ U ⊓ p' ⁻¹ᵁ ⊤ = φ ⁻¹ᵁ U from inf_top_eq _]

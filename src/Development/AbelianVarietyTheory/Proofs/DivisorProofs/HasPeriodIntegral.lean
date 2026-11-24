@@ -109,7 +109,7 @@ theorem baseChange_bijective_of_ker {O : Type} [CommRing O] {M N : Type} [AddCom
     (ha : algebraMap O k a = 0) (f : M →ₗ[O] N) (hf : Function.Surjective f)
     (hfa : ∀ v, f (a • v) = 0) (hk : ∀ w, f w = 0 → ∃ v, w = a • v) :
     Function.Bijective (f.baseChange k) := by
-  rw [LinearMap.baseChange_eq_ltensor]
+  rw [LinearMap.baseChange_eq_lTensor]
   refine ⟨?_, LinearMap.lTensor_surjective k hf⟩
   have hex : Function.Exact (a • LinearMap.id : M →ₗ[O] M) f := by
     intro w
@@ -167,7 +167,7 @@ theorem GlobalTheory.PDivGroup.chart_dim_add_finrank_dual_lie : ∀ (p : ℕ) [F
     ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d),
       d + Module.finrank O G.dual.Lie = G.height := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv G d c
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : ValuationRing O := ValuationRing.of_integers v hv
   let k := IsLocalRing.ResidueField O
   have hpk : algebraMap O k p = 0 := by
     change IsLocalRing.residue O p = 0
@@ -176,9 +176,9 @@ theorem GlobalTheory.PDivGroup.chart_dim_add_finrank_dual_lie : ∀ (p : ℕ) [F
   have hpk' : ((p : ℕ) : k) = 0 := by rw [← map_natCast (algebraMap O k), hpk]
   obtain ⟨hbij, -⟩ := _root_.GlobalTheory.chart_form_basis p C v O hv G d c
   let eG : (Fin d → O) ≃ₗ[O] G.omega := LinearEquiv.ofBijective _ hbij
-  haveI : Module.Free O G.omega := Module.Free.of_equiv eG
+  have : Module.Free O G.omega := Module.Free.of_equiv eG
   obtain ⟨hfin, hproj⟩ := GlobalTheory.PDiv.omega_finite_projective p C v O hv G.dual
-  haveI : Module.Free O G.dual.omega := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O G.dual.omega := Module.free_of_flat_of_isLocalRing
   have hd : finrank O G.omega = d := by rw [← eG.finrank_eq, Module.finrank_fin_fun]
   have hLie : finrank O G.dual.Lie = finrank O G.dual.omega := by
     let b := Module.Free.chooseBasis O G.dual.omega
@@ -246,7 +246,7 @@ theorem coeff_subst_elim_zero {R : Type} [CommRing R] {d : ℕ}
       rfl
   rw [← coeff_embDomain_rename (Function.Embedding.inl : Fin d ↪ Fin d ⊕ Fin d), hr,
     OnePair.coeff_subst_kill]
-  rw [if_pos]
+  rw [ite_eq_left]
   rintro (i | i) hi
   · simp at hi
   · simp [Finsupp.embDomain_apply]
@@ -256,7 +256,7 @@ theorem exists_isLift : ∀ (B O : Type) [CommRing B] [CommRing O] (θ : B →+*
   classical
   by_cases h1 : (1 : O) = 0
   ·
-    haveI : Subsingleton O := subsingleton_of_zero_eq_one h1.symm
+    have : Subsingleton O := subsingleton_of_zero_eq_one h1.symm
     have hm : ∀ i, map θ (addLaw B d i) = μ i := fun i => by
       ext α
       exact Subsingleton.elim _ _
@@ -362,8 +362,8 @@ theorem frob_congr (p : ℕ) [Fact p.Prime] (t : B →+* B) (ht : ∀ b, (p : B)
     coeff α (w ^ p - expand p (Fact.out : p.Prime).ne_zero (map t w)) ∈
       Ideal.span {(p : B)} := by
   set I : Ideal B := Ideal.span {(p : B)}
-  haveI : CharP (B ⧸ I) p := CharP.quotient B p (by simpa [mem_nonunits_iff] using hu)
-  haveI : ExpChar (B ⧸ I) p := ExpChar.prime Fact.out
+  have : CharP (B ⧸ I) p := CharP.quotient B p (by simpa [mem_nonunits_iff] using hu)
+  have : ExpChar (B ⧸ I) p := ExpChar.prime Fact.out
   have hw : map (Ideal.Quotient.mk I) (map t w) =
       map (frobenius (B ⧸ I) p) (map (Ideal.Quotient.mk I) w) := by
     ext n
@@ -1255,8 +1255,8 @@ private lemma subst_inr_zero_pderiv_coboundary_eq {Q : Type} [CommRing Q] {d : �
     hasSubst_of_constantCoeff_zero (by simp)
   rw [map_sub, map_sub, _root_.GlobalTheory.PSChain.pderiv_subst_chain _ hν0, _root_.GlobalTheory.PSChain.pderiv_subst_chain _ (by simp),
     _root_.GlobalTheory.PSChain.pderiv_subst_chain _ (by simp)]
-  simp only [pderiv_X, Pi.single_apply, Sum.inr.injEq, reduceCtorEq, if_false, mul_zero,
-    Finset.sum_const_zero, sub_zero, mul_ite, mul_one, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [pderiv_X, Pi.single_apply, Sum.inr.injEq, reduceCtorEq, ite_false, mul_zero,
+    Finset.sum_const_zero, sub_zero, mul_ite, mul_one, Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   rw [← coe_substAlgHom he0]
 
   simp only [map_sub, map_sum, map_mul]
@@ -1395,7 +1395,7 @@ theorem _root_.GlobalTheory.QLog.hasPeriod_frob : ∀ (p : ℕ) [Fact p.Prime] (
       (_root_.GlobalTheory.QLog.frob p F.s f) (F.σ y) := by
   intro p _ C _ _ _ v O _ _ _ _ _ _ ε hε F G d c μ' hlift hμ f t y hQL hper
   have hF := F.frame
-  haveI := hF.complete
+  have := hF.complete
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   have hs := F.s_alg
   have hdiff : _root_.GlobalTheory.QLog.DIn (⊤ : Ideal F.B) f := dIn_univ_of_QL_of_isLift hlift hQL
@@ -1662,9 +1662,9 @@ theorem window_matrices : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsA
   have hUu := _root_.GlobalTheory.FrobUnit.frob_matrix_isUnit p C v O hv ε hε F G d c μ' hL hμ k e hB hA U hU
   have hN1 := _root_.GlobalTheory.QLog.isNil_frobenius_chart p C v O hv ε hε F G d c μ' hL hμ k e hB hA U fun i => (hU i).1
   have hN2 := _root_.GlobalTheory.DualFrobNil.isNil_dual_frobenius p C v O hv ε hε F G d c μ' hL hμ k e hB hA hGd U hUu hU
-  haveI := integers_isIntegrallyClosedIn hv
-  haveI := G.finite_tate C
-  haveI := G.free_tate C
+  have := integers_isIntegrallyClosedIn hv
+  have := G.finite_tate C
+  have := G.free_tate C
   let tb : Module.Basis (Fin G.height) ℤ_[p] G.Tate :=
     Module.finBasisOfFinrankEq ℤ_[p] G.Tate (G.finrank_tate C)
   obtain ⟨χ, hχ, -⟩ :=

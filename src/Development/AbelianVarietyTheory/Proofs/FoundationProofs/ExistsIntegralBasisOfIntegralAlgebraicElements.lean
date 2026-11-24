@@ -176,7 +176,7 @@ theorem val_rat (hφ : ∀ z, v (fromInt p L z) ≤ 1) {a : ℚ_[p]} (ha : a ≠
   obtain ⟨m, hm⟩ := val_int v _ hφ hx0
   obtain ⟨n, hn⟩ := val_int v _ hφ hy0
   have hp0 : v (p : L) ≠ 0 := by
-    haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ_[p] L).injective
+    have : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ_[p] L).injective
     exact (Valuation.ne_zero_iff v).2 (Nat.cast_ne_zero.2 hp.out.ne_zero)
   refine ⟨(m : ℤ) - n, ?_⟩
   rw [map_div₀, map_div₀, zpow_sub₀ hp0, zpow_natCast, zpow_natCast, ← hm, ← hn]
@@ -327,8 +327,8 @@ end Abstract
 
 theorem okbasis : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω], IsClo p Ω → ∀ (v : Valuation Ω ℝ≥0), (∀ x : Ω, v x ≤ 1 ↔ IsInt (p := p) x) → 0 < v (p : Ω) → v (p : Ω) < 1 → ∀ (d : ℕ) (e : Fin d → Ω), (∀ t, IsInt (p := p) (e t) ∧ IsAlgZp p (e t)) → ∃ (E F : ℕ) (π : Ω) (κ : Fin F → Ω) (lam : Fin d → Fin F → Fin E → ℤ_[p]), 1 ≤ E ∧ IsAlgZp p π ∧ v π ^ E = v (p : Ω) ∧ (∀ j, IsInt (p := p) (κ j) ∧ IsAlgZp p (κ j)) ∧ (∀ μ : Fin F → ℤ_[p], (∃ j, ¬ (p : ℤ_[p]) ∣ μ j) → v (∑ j, κ j * zp Ω (μ j)) = 1) ∧ ∀ t, e t = ∑ j, ∑ s : Fin E, κ j * π ^ (s : ℕ) * zp Ω (lam t j s) := by
   intro p hp Ω _ _ hc v hv h0 h1 d e he
-  letI : Algebra ℤ_[p] Ω := ((algebraMap (O0 p) Ω).comp (algebraMap ℤ_[p] (O0 p))).toAlgebra
-  haveI : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra ℤ_[p] Ω := ((algebraMap (O0 p) Ω).comp (algebraMap ℤ_[p] (O0 p))).toAlgebra
+  have : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hzp : ∀ z, zp Ω z = algebraMap ℤ_[p] Ω z := fun z => by
     have h : (HahnSeries.single 0 z : Lau p) = algebraMap ℤ_[p] (Lau p) z := by
       rw [HahnSeries.algebraMap_apply' ]; simp
@@ -346,13 +346,13 @@ theorem okbasis : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (
     obtain ⟨n, hn⟩ := val_int v _ hle hz0
     rw [hz, map_zero] at hn
     exact (pow_pos h0 n).ne hn
-  letI : Algebra ℚ_[p] Ω := (IsFractionRing.lift (K := ℚ_[p]) hinj).toAlgebra
-  haveI : IsScalarTower ℤ_[p] ℚ_[p] Ω := IsScalarTower.of_algebraMap_eq fun z =>
+  let : Algebra ℚ_[p] Ω := (IsFractionRing.lift (K := ℚ_[p]) hinj).toAlgebra
+  have : IsScalarTower ℤ_[p] ℚ_[p] Ω := IsScalarTower.of_algebraMap_eq fun z =>
     (IsFractionRing.lift_algebraMap hinj z).symm
   have halg' : ∀ x : Ω, IsAlgZp p x ↔ IsAlgebraic ℚ_[p] x := fun x =>
     (halg x).trans (IsFractionRing.isAlgebraic_iff ℤ_[p] ℚ_[p] Ω)
   let L := IntermediateField.adjoin ℚ_[p] (Set.range e)
-  haveI : FiniteDimensional ℚ_[p] L := IntermediateField.finiteDimensional_adjoin (by
+  have : FiniteDimensional ℚ_[p] L := IntermediateField.finiteDimensional_adjoin (by
     rintro _ ⟨t, rfl⟩
     exact ((halg' _).1 (he t).2).isIntegral)
   have hL : ∀ x : L, IsAlgZp p (x : Ω) := fun x =>

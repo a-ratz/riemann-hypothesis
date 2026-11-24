@@ -82,7 +82,7 @@ omit [CommRing R] [IsTopologicalRing R] in
 theorem integrable_pair {κ : Type} (μ : @Measure (κ → R) (borel _))
     (hμ : @IsFiniteMeasureOnCompacts _ (borel _) _ μ) (φ φ' : SB (κ → R)) :
     @Integrable _ _ _ _ (borel _) (fun x => (starRingEnd ℂ) ((φ : (κ → R) → ℂ) x) * (φ' : (κ → R) → ℂ) x) μ := by
-  haveI := hμ
+  have := hμ
   have hφ : IsLocallyConstant (φ : (κ → R) → ℂ) ∧ HasCompactSupport (φ : (κ → R) → ℂ) := φ.2
   have hφ' : IsLocallyConstant (φ' : (κ → R) → ℂ) ∧ HasCompactSupport (φ' : (κ → R) → ℂ) := φ'.2
   have hcont : Continuous (fun x => (starRingEnd ℂ) ((φ : (κ → R) → ℂ) x) * (φ' : (κ → R) → ℂ) x) :=
@@ -90,8 +90,8 @@ theorem integrable_pair {κ : Type} (μ : @Measure (κ → R) (borel _))
   have hsupp : HasCompactSupport
       (fun x => (starRingEnd ℂ) ((φ : (κ → R) → ℂ) x) * (φ' : (κ → R) → ℂ) x) :=
     HasCompactSupport.mul_left (f := fun x => (starRingEnd ℂ) ((φ : (κ → R) → ℂ) x)) hφ'.2
-  letI : MeasurableSpace (κ → R) := borel _
-  haveI : BorelSpace (κ → R) := ⟨rfl⟩
+  let : MeasurableSpace (κ → R) := borel _
+  have : BorelSpace (κ → R) := ⟨rfl⟩
   exact Continuous.integrable_of_hasCompactSupport hcont hsupp
 
 
@@ -139,7 +139,7 @@ omit [IsTopologicalRing R] in
 theorem pair_pos {κ : Type} (μ : @Measure (κ → R) (borel _))
     (hμ : @Measure.IsAddHaarMeasure _ _ _ (borel _) μ) (φ : SB (κ → R)) (hφ : φ ≠ 0) :
     0 < (pair μ (φ : (κ → R) → ℂ) φ).re := by
-  haveI := hμ
+  have := hμ
   have hφl : IsLocallyConstant (φ : (κ → R) → ℂ) ∧ HasCompactSupport (φ : (κ → R) → ℂ) := φ.2
   have hcont : Continuous (φ : (κ → R) → ℂ) := hφl.1.continuous
   have hint := integrable_pair μ

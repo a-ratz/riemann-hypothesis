@@ -265,8 +265,8 @@ theorem adm_two_pendant_iff_representative (D : Formalism.BasicNotions.D7) (X : 
     (pos : (Σ v : X.Pl, Fin (X.G.P.n' v)) ≃ T)
     (F : ∀ j, X.Lt j → X.Lt (j + 1) → MvPowerSeries (T × Fin ((X.Pj (j + 1)).m + 1) × Fin ((X.Pj j).m + 1)) ℂ_[p]) :
     adm2b D X (pendT X E hfin hst hLT pos F) ↔ RepresentativeCondition X E hfin (beLT hLT) pos F := by
-  letI := wittFractionAlgebraCp p
-  letI := algKfC E.toCEmb
+  let := wittFractionAlgebraCp p
+  let := algKfC E.toCEmb
   rw [adm_two_pendant_iff]
   constructor
   · intro H

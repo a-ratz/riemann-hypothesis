@@ -83,7 +83,7 @@ theorem _root_.GlobalTheory.BesselPeriodNonzero.sq_int {X E : Type} [MeasurableS
     Integrable (fun x => ‖f x‖ ^ 2) ν ∧ ∫ x, ‖f x‖ ^ 2 ∂ν = a := by
   have key : ∀ x, ENNReal.ofReal (‖f x‖ ^ 2) = (‖f x‖₊ : ℝ≥0∞) ^ 2 := by
     intro x
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm, enorm_eq_nnnorm]
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm, eNorm_eq_nnNorm]
   have hm : AEStronglyMeasurable (fun x => ‖f x‖ ^ 2) ν := hf.norm.pow 2
   refine ⟨⟨hm, ?_⟩, ?_⟩
   · rw [hasFiniteIntegral_iff_ofReal (ae_of_all _ fun x => by positivity)]
@@ -143,9 +143,9 @@ theorem _root_.GlobalTheory.BesselPeriodNonzero.unfold_zero {k r : ℕ} {ε : Fi
   obtain ⟨-, hPU, hE, -⟩ := _root_.GlobalTheory.muSof_isHaar k r z μW μN hz hzpos hW hN
   unfold _root_.PI.IsHaarOnM at hE
   unfold _root_.PI.BesselPeriodGGP.IsHaarOn at hW hN hG
-  haveI : SigmaFinite μW := hW.1
-  haveI : SigmaFinite μN := hN.1
-  haveI : SFinite (_root_.Formalism.FourierDecayAlt.ThreeDimData.muSof μW μN) := by unfold _root_.Formalism.FourierDecayAlt.ThreeDimData.muSof; infer_instance
+  have : SigmaFinite μW := hW.1
+  have : SigmaFinite μN := hN.1
+  have : SFinite (_root_.Formalism.FourierDecayAlt.ThreeDimData.muSof μW μN) := by unfold _root_.Formalism.FourierDecayAlt.ThreeDimData.muSof; infer_instance
   set F : _root_.Formalism.QuantumDeterminants.Mt k r → ℂ := fun g => star ⟪v, R.σ (Matrix.of g) w⟫_ℂ * ⟪ξ, B (R.σ (Matrix.of g) w)⟫_ℂ with hFdef
   set G := hi.1.mk F
   have hGm : Measurable G := hi.1.stronglyMeasurable_mk.measurable
@@ -199,7 +199,7 @@ theorem _root_.GlobalTheory.BesselPeriodNonzero.unfold_zero {k r : ℕ} {ε : Fi
     simp only [F, e1, e2]
     unfold _root_.Formalism.FourierDecayAlt.ThreeDimData.beInt
     rw [inner_smul_right, _root_.Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.piW_inner hzpos hπ hp.1]
-    simp only [ContinuousLinearMap.smul_apply, inner_smul_right, inner_smul_left, map_mul, Complex.star_def,
+    simp only [smul_apply, inner_smul_right, inner_smul_left, map_mul, Complex.star_def,
       inner_conj_symm, RCLike.conj_to_real, Complex.conj_conj]
     ring
   have hL := ((innerSL ℂ (B (R.σ (Matrix.of x) w))).comp

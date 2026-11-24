@@ -183,7 +183,7 @@ theorem sum_s_pderiv_detR (h : P ≤ R) (a' a : Fin P) :
     · simp [blockR, hj]
     · simp
   rw [Finset.sum_congr rfl fun c _ => e c, Finset.sum_comm]
-  simp only [Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [← Matrix.mul_apply, Matrix.mul_adjugate, detR_eq]
   simp [Matrix.one_apply]
 
@@ -494,7 +494,7 @@ theorem rowDer_mR (a a' i : Fin P) (b : Fin Q) :
 theorem rowDer_detR (h : P ≤ R) (a a' : Fin P) :
     rowDer Q R a a' (detR P Q R h) = if a = a' then detR P Q R h else 0 := by
   rw [detR, der_det, Finset.sum_eq_single a']
-  · simp only [Matrix.of_apply, rowDer_X_inl_inl, if_true]
+  · simp only [Matrix.of_apply, rowDer_X_inl_inl, ite_true]
     split_ifs with e
     · subst e
       congr 1
@@ -502,7 +502,7 @@ theorem rowDer_detR (h : P ≤ R) (a a' : Fin P) :
     · exact Matrix.det_updateRow_eq_zero (M := Matrix.of fun a c : Fin P =>
         (X (Sum.inl a, Sum.inl (Fin.castLE h c)) : Pol P Q R 0)) e
   · intro i _ hi
-    simp only [Matrix.of_apply, rowDer_X_inl_inl, if_neg hi]
+    simp only [Matrix.of_apply, rowDer_X_inl_inl, ite_eq_right hi]
     exact Matrix.det_eq_zero_of_row_eq_zero i (by simp)
   · simp
 
@@ -534,7 +534,7 @@ theorem act_first_block : ∀ (P Q R : ℕ) (h : P ≤ R) (k : ℕ) (a a' : Fin 
       ∑ b, mR P Q R a b * aeval (fun ab : Fin P × Fin Q => mR P Q R ab.1 ab.2) (pderiv (a', b) G) := by
     rw [der_aeval, Fintype.sum_prod_type, Finset.sum_comm]
     refine Finset.sum_congr rfl fun b _ => ?_
-    simp only [rowDer_mR, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [rowDer_mR, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [mul_comm]
   have he : ∀ H, embR P Q R h k H =
       aeval (fun ab : Fin P × Fin Q => mR P Q R ab.1 ab.2) H * detR P Q R h ^ k := fun H => rfl

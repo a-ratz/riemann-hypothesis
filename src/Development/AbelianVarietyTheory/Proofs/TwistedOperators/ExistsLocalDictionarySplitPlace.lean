@@ -152,7 +152,7 @@ theorem mem_of_trace_int {ψ : AddChar (AF F) ℂ} (hψ : IsStd ψ) {v : Pl (F :
 theorem form_mem {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) {d r s : ℕ} {W : Spc F E d}
     (hW : W.IsSkew σ B r s) {v : Pl (F := F)} (hu : PsiUnr B.ψ v) (τ : E →ₐ[F] Fv F v) {x y : Fin d → E}
     (hx : x ∈ W.L) (hy : y ∈ W.L) : τ (form σ W.J x y) ∈ v.adicCompletionIntegers F := by
-  haveI := hB.unram
+  have := hB.unram
   obtain ⟨m, p, c, hsc⟩ := exists_traceFamily (F := F) (E := E)
 
   rw [← hsc (form σ W.J x y), map_sum]
@@ -278,8 +278,8 @@ theorem exists_split_dictionary : ∀ {F E : Type} [Field F] [NumberField F] [Fi
         S.map (fun x => (x : Fv F v)) =
           (b₁ : Matrix (Fin d) (Fin d) (Fv F v))ᵀ * (incM F W.J).map π₁ * (b₂ : Matrix (Fin d) (Fin d) (Fv F v)) := by
   intro F E _ _ _ _ _ σ B d W r s hB hW v hv hu
-  haveI := hB.unram
-  haveI := hW.lat
+  have := hB.unram
+  have := hW.lat
   have h := hB.cm
   obtain ⟨τ⟩ := nonempty_emb h v hv
   obtain ⟨b₁, h₁⟩ := exists_isSplitBasis τ W.L h

@@ -321,11 +321,11 @@ theorem det_placeBlockMatrix_unit_twist (h : P.m + 1 = n) (pos : (Σ v : Fin P.n
       else (g (pos ⟨v, s⟩) : Matrix (Fin n) (Fin n) ℂ).det⁻¹ := by
   unfold hAt
   by_cases hs : Even s.val
-  · simp only [hs, if_true, one_mul, inv_one, mul_one]
+  · simp only [hs, ite_true, one_mul, inv_one, mul_one]
     show (reM P h (g (pos ⟨v, s⟩) : Matrix (Fin n) (Fin n) ℂ)).det = _
     unfold reM
     rw [Matrix.det_submatrix_equiv_self]
-  · simp only [hs, if_false, one_mul, inv_one, mul_one]
+  · simp only [hs, ite_false, one_mul, inv_one, mul_one]
     show (Matrix.transpose (((reG P h (g (pos ⟨v, s⟩)))⁻¹ : GL (Fin (P.m + 1)) ℂ) : Matrix (Fin (P.m + 1)) (Fin (P.m + 1)) ℂ)).det = _
     rw [Matrix.det_transpose, det_inv_gl]
     show (reM P h (g (pos ⟨v, s⟩) : Matrix (Fin n) (Fin n) ℂ)).det⁻¹ = _
@@ -339,10 +339,10 @@ theorem inv_placeBlockMatrix_unit_twist (h : P.m + 1 = n) (pos : (Σ v : Fin P.n
       else Matrix.transpose (reM P h (g (pos ⟨v, s⟩) : Matrix (Fin n) (Fin n) ℂ)) := by
   unfold hAt
   by_cases hs : Even s.val
-  · simp only [hs, if_true, one_mul, inv_one, mul_one]
+  · simp only [hs, ite_true, one_mul, inv_one, mul_one]
     rw [← map_inv]
     rfl
-  · simp only [hs, if_false, one_mul, inv_one, mul_one]
+  · simp only [hs, ite_false, one_mul, inv_one, mul_one]
     rfl
 
 end GlobalTheory.TwV.DelA.ActInv
@@ -578,22 +578,22 @@ theorem scal_tauV : ∀ {p : ℕ} [Fact p.Prime] (X : Sys p) (D : D7) (pos : (Σ
   beta_reduce
   rw [Equiv.symm_apply_apply]
   by_cases ho : IsOddPos b.2
-  · simp only [if_pos ho]
+  · simp only [ite_eq_left ho]
     have hw : GlobalTheory.FrameB.wV Kc fd c j La' b.1 b.2 = GlobalTheory.FrameB.mk Kc fd j La' b.1 b.2 := by
-      unfold GlobalTheory.FrameB.wV; rw [if_pos ho]
+      unfold GlobalTheory.FrameB.wV; rw [ite_eq_left ho]
     have hk : GlobalTheory.FrameB.kV Kc fd c j La' b.1 b.2 = c * (GlobalTheory.FrameB.mk Kc fd j La' b.1 b.2).det⁻¹ := by
-      unfold GlobalTheory.FrameB.kV; rw [if_pos ho]
+      unfold GlobalTheory.FrameB.kV; rw [ite_eq_left ho]
     rw [hw, hk, exY, exT, blk_scal_odd c _ hc (hdet0 b.1 b.2) _ hN1 _ _ (hbd b)]
     have h1 : szMu X j b.1 b.2 = szT X D pos j (pos b) := by
       show _ = szMu X j (pos.symm (pos b)).1 (pos.symm (pos b)).2; rw [Equiv.symm_apply_apply]
     have h2 : cMu X j b.1 b.2 = cT1 X D pos j (pos b) := by
       show _ = cMu X j (pos.symm (pos b)).1 (pos.symm (pos b)).2; rw [Equiv.symm_apply_apply]
     have h3 := (GlobalTheory.T.unitaryBlockMatrices_read_in_placeField X D pos Kc ι ρ hT M hU b.1 b.2).2
-    rw [if_pos ho] at h3
+    rw [ite_eq_left ho] at h3
     rw [h1, h2, hdet, h3, ← zpow_mul]
     congr 2
     ring
-  · simp only [if_neg ho]
+  · simp only [ite_eq_right ho]
     simp
 
 end GlobalTheory.TwV.DelA
@@ -678,7 +678,7 @@ theorem GlobalTheory.TwV.DelA.targetFrameMap_eq_complexBlockAction_scalar_alt : 
       (∑ x : Var (X.Pj (j + 1)), if (⟨x.1, x.2.1⟩ : Σ v : Fin (X.Pj (j + 1)).nV, Fin ((X.Pj (j + 1)).n' v)) =
         (posJ X D pos (j + 1)).symm τ then (m x : ℤ) else 0) = szT X D pos j τ := by
     intro m hm τ ho
-    rw [hdeg m (MvPolynomial.support_map_subset _ _ hm) τ, if_neg ho, (GlobalTheory.T.realPlaceBlockWeightLastEntry_consecutive_levels X D pos j τ).2, if_neg ho, ← hsz' τ]
+    rw [hdeg m (MvPolynomial.support_map_subset _ _ hm) τ, ite_eq_right ho, (GlobalTheory.T.realPlaceBlockWeightLastEntry_consecutive_levels X D pos j τ).2, ite_eq_right ho, ← hsz' τ]
     ring
   rw [hphi, hRR]
   unfold GlobalTheory.FrameB.tauV
@@ -758,7 +758,7 @@ theorem target_scalar : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
     apply Int.cast_injective (α := ℚ)
     rw [(D.chTw u μ).sDiv_eq j hjm τ, Int.cast_sub, D.hcW_e, he τ, half_rank_cast]
     simp only [sExp, Nat.add_sub_cancel]
-  simp only [dPow, sPt, Dec.uT, dif_pos hj, kT, hW, hsd]
+  simp only [dPow, sPt, Dec.uT, dite_eq_left hj, kT, hW, hsd]
   rw [← hγ, hmuγ, hgd]
   have hP : ∀ τ x, TaylorLogMetric.embT D τ x = embT D τ x := fun _ _ => rfl
   simp only [hP, map_mul]
@@ -857,8 +857,8 @@ theorem transported_frame_realAt : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ 
     simp only [GL3Theta.evFr, map_smul, Pi.smul_apply, smul_eq_mul, MvPolynomial.smul_eval] at h1 ⊢
     rw [h1]
     ring
-  · letI := wittFractionAlgebraCp (D.what₂.places.resChar w)
-    letI := algKfC S.E.toCEmb
+  · let := wittFractionAlgebraCp (D.what₂.places.resChar w)
+    let := algKfC S.E.toCEmb
     have hPT := (posTie_at S hPos ι hι).1
     have hFr := GlobalTheory.T.changedFrame_rational_unitary S d (j + 1) hj h La'
     have hτ := GlobalTheory.T.targetFrameMap_eq_complexBlockAction_scalar (sysS H X std) D (hT.gat_pos u w hg) ℂ_[D.what₂.places.resChar w] ι (J.rho std) hPT d.fd2
@@ -1037,8 +1037,8 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.TwV.DelA.unit_mul_scal_eq_scT : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => S.Pos → ∀ ι : ℂ →+* ℂ_[D.what₂.places.resChar w], (∀ z : TaylorLogMetric.Qbar, ι z = S.lam z) → letI := wittFractionAlgebraCp (D.what₂.places.resChar w); letI := algKfC S.E.toCEmb; ∀ (d : Dec J std) j (hj : j + 1 ≤ D.R.m) (La : (sysS H X std).Lt j) (La' : (sysS H X std).Lt (j + 1)), cKs S ι j hj La.1 La'.1 * (Formalism.L2.G.Pend.cA (sysS H X std) ℂ_[D.what₂.places.resChar w] j (BOf d.fd2 j La) * sO d ι j La) * ι (d.uS S j La) * ι (d.uT S j La') = scT d S ι j La'.1 La'.2) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S hpos ι hι
-  letI := wittFractionAlgebraCp (D.what₂.places.resChar w)
-  letI := algKfC S.E.toCEmb
+  let := wittFractionAlgebraCp (D.what₂.places.resChar w)
+  let := algKfC S.E.toCEmb
   have hps := GlobalTheory.TwV.DelA.posTie_at S hpos ι hι
   intro d j hj La La'
   have hr := GlobalTheory.TwV.DelB.sysS_ranks S
@@ -1088,8 +1088,8 @@ namespace GlobalTheory.TwV.DelA
 
 theorem tieDel_all_steps : AllSites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X} [Fact (D.what₂.places.resChar w).Prime] {std t J} S => J.Dict std → S.Pair → S.Pos → S.Law → ∀ j < D.R.m, S.Del j) := by
   intro D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H X _ std t J S hDict hPair hPos hLaw j hj ι hι
-  letI := wittFractionAlgebraCp (D.what₂.places.resChar w)
-  letI := algKfC S.E.toCEmb
+  let := wittFractionAlgebraCp (D.what₂.places.resChar w)
+  let := algKfC S.E.toCEmb
   have hj1 : j + 1 ≤ D.R.m := hj
   by_cases hne : Nonempty (Lv.comp j) ∧ Nonempty (Lv.comp (j + 1))
   swap

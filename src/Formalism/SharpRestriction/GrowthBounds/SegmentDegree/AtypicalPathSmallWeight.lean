@@ -202,12 +202,12 @@ theorem lemT_of (ha : PathWeightEqRank) (hb : PathCountFinite) (hc : AtypicalPat
         have : (hBfin.toFinset.filter fun q => q.1 = μ).card ≤ hIfin.toFinset.card := by
           refine Finset.card_le_card_of_injOn Prod.snd ?_ ?_
           · intro q hq
-            simp only [Finset.coe_filter, Set.mem_setOf_eq, Set.Finite.mem_toFinset] at hq
-            simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+            simp only [Finset.coe_filter, Set.mem_ofPred_eq, Set.Finite.mem_toFinset] at hq
+            simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
             have := hq.1.1.2
             rwa [hq.2] at this
           · intro q hq q' hq' hqq
-            simp only [Finset.coe_filter, Set.mem_setOf_eq] at hq hq'
+            simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hq hq'
             exact Prod.ext (hq.2.trans hq'.2.symm) hqq
         exact_mod_cast this
     have hsum : (hBfin.toFinset.card : ℝ) =

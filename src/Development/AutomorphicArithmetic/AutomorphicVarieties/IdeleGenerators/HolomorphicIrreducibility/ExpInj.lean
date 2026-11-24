@@ -284,10 +284,10 @@ theorem UpperTheory.V.Sd.expInj :
     { carrier := {u | UpperTheory.V.TR.finRep F 2 u φ = φ}
       one_mem' := by simp
       mul_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_mul, Module.End.mul_apply, hy, hx]
       inv_mem' := fun {x} hx => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] } hφ.aut.level g
   have hu' : ∀ g, φ.1 (g * finGL F 2 u) = φ.1 g := fun g => congrFun (congrArg Subtype.val hu) g

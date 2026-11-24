@@ -113,9 +113,9 @@ private theorem last_step (hCh : Ch4) (hCD : ChainDesc4) (hC : CohomologyHyp) (h
   obtain ⟨c', b₁, b₂⟩ := (coefSup l).1 d₁ d₂
   have e₁ : c₁.O ≤ c'.O := a₁.trans b₁
   have h : c.O ≤ c'.O := h₁.trans e₁
-  haveI : Finite (ResidueField c'.O) := by
-    haveI : IsLocalHom (algebraMap ℤ_[l] c'.O) := (dvrFacts l c'.O).2.2.1
-    haveI : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
+  have : Finite (ResidueField c'.O) := by
+    have : IsLocalHom (algebraMap ℤ_[l] c'.O) := (dvrFacts l c'.O).2.2.1
+    have : Finite (ResidueField ℤ_[l]) := Finite.of_equiv _ (PadicInt.residueField (p := l)).symm.toEquiv
     exact Module.finite_of_finite (ResidueField ℤ_[l])
   have hS := (std hC D T hF ∅ c' h).1 (Finset.notMem_empty 0)
   obtain ⟨X⟩ := spaceEx (T.fr ∅) l (inc h) hS

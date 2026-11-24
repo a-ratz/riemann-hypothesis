@@ -108,8 +108,8 @@ theorem ringKrullDim_eq_of_isIntegral_of_injective {A B : Type*} [CommRing A] [C
       (⟨q.asIdeal.comap (algebraMap A B), inferInstance⟩ : PrimeSpectrum A)) := by
     intro q q' hqq'
     rw [← PrimeSpectrum.asIdeal_lt_asIdeal] at hqq' ⊢
-    obtain ⟨x, hx, hx'⟩ := SetLike.exists_of_lt hqq'
-    exact Ideal.comap_lt_comap_of_integral_mem_sdiff (le_of_lt hqq') ⟨hx, hx'⟩
+    obtain ⟨x, hx, hx'⟩ := IsConcreteLE.exists_of_lt hqq'
+    exact Ideal.under_lt_under_of_integral_mem_sdiff (le_of_lt hqq') ⟨hx, hx'⟩
       (Algebra.IsIntegral.isIntegral x)
   apply le_antisymm
   · first
@@ -123,7 +123,7 @@ theorem ringKrullDim_eq_of_isIntegral_of_injective {A B : Type*} [CommRing A] [C
 theorem ringKrullDim_quotient_eq_quotient_comap_of_isIntegral {A B : Type*} [CommRing A]
     [CommRing B] [Algebra A B] [Algebra.IsIntegral A B] (I : Ideal B) :
     ringKrullDim (B ⧸ I) = ringKrullDim (A ⧸ I.comap (algebraMap A B)) := by
-  haveI : Algebra.IsIntegral (A ⧸ I.comap (algebraMap A B)) (B ⧸ I) := by
+  have : Algebra.IsIntegral (A ⧸ I.comap (algebraMap A B)) (B ⧸ I) := by
     first
     | infer_instance
   exact ringKrullDim_eq_of_isIntegral_of_injective Ideal.algebraMap_quotient_injective

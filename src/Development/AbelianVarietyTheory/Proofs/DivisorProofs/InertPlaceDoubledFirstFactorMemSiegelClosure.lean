@@ -416,17 +416,17 @@ theorem mulVec_surj {d : ℕ} {W : Spc F E d} (hL : W.L.IsFullLattice E) (v : Pl
   let S : Submodule E (Fin d → E) :=
     { carrier := {x | oneT v d x ∈ T}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at ha hb ⊢
         exact add_mem ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq, map_zero]
+        simp only [Set.mem_ofPred_eq, map_zero]
         exact zero_mem _
       smul_mem' := fun e x hx => by
         have he : oneT v d (e • x) = ((1 : Fv F v) ⊗ₜ[F] e) • oneT v d x := by
           funext i
           rw [oneT_apply, Pi.smul_apply, Pi.smul_apply, oneT_apply, smul_eq_mul, smul_eq_mul,
             Algebra.TensorProduct.tmul_mul_tmul, one_mul]
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         rw [he]
         exact T.smul_mem _ hx }
   have hLS : Submodule.span E (W.L : Set (Fin d → E)) ≤ S := by
@@ -1057,9 +1057,9 @@ theorem units_mod {d : ℕ} (Λ : AddSubgroup (Fin d → AE F E)) (p : ℕ) (K K
     intro x hx y hy
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hx hy
     rcases hx with rfl | rfl <;> rcases hy with rfl | rfl <;> simp [hKK, hKiK]
-  letI : IsMulCommutative (Algebra.adjoin (AE F E) ({K, Ki} : Set (Matrix (Fin d) (Fin d) (AE F E)))) :=
+  let : IsMulCommutative (Algebra.adjoin (AE F E) ({K, Ki} : Set (Matrix (Fin d) (Fin d) (AE F E)))) :=
     Algebra.isMulCommutative_adjoin (AE F E) (fun x hx y hy _ => hcomm x hx y hy)
-  letI : CommRing (Algebra.adjoin (AE F E) ({K, Ki} : Set (Matrix (Fin d) (Fin d) (AE F E)))) :=
+  let : CommRing (Algebra.adjoin (AE F E) ({K, Ki} : Set (Matrix (Fin d) (Fin d) (AE F E)))) :=
     by
       open scoped IsMulCommutative in
         infer_instance

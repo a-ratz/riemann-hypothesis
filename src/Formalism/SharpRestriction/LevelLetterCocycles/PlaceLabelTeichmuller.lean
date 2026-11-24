@@ -147,7 +147,7 @@ theorem conv_coeff {H : Type} [Group H] [Fintype H] (x y : MonoidAlgebra ℂ H) 
 theorem tens_mul (a b : ∀ i, MonoidAlgebra ℂ (G i)) :
     tens a * tens b = tens (fun i => a i * b i) := by
   classical
-  letI : ∀ i, Fintype (G i) := fun i => Fintype.ofFinite _
+  let : ∀ i, Fintype (G i) := fun i => Fintype.ofFinite _
   apply MonoidAlgebra.ext
   ext g
   simp only [conv_coeff, tens_coeff]
@@ -234,9 +234,9 @@ theorem tens_one : tens (fun i => (1 : MonoidAlgebra ℂ (G i))) = 1 := by
   by_cases hg : g = 1
   · subst hg
     simp
-  · rw [if_neg (Ne.symm hg)]
+  · rw [ite_eq_right (Ne.symm hg)]
     obtain ⟨i, hi⟩ := Function.ne_iff.mp hg
-    exact Finset.prod_eq_zero (Finset.mem_univ i) (if_neg (Ne.symm hi))
+    exact Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right (Ne.symm hi))
 
 theorem sum_tens {P : ι → Type} [∀ i, Fintype (P i)] [DecidableEq ι]
     (E : ∀ i, P i → MonoidAlgebra ℂ (G i)) :
@@ -304,15 +304,15 @@ theorem mapDomain_mulSingle (i : ι) (a : MonoidAlgebra ℂ (G i)) :
     · intro j hj
       rw [Pi.mulSingle_eq_of_ne hj]
       first | rw [Function.update_of_ne hj] | rw [Function.update_noteq hj]
-      rw [h1, if_pos rfl]
+      rw [h1, ite_eq_left rfl]
   · push_neg at hg
     obtain ⟨j, hj, hgj⟩ := hg
-    rw [Finsupp.mapDomain_notin_range]
+    rw [Finsupp.mapDomain_of_notMem_range]
     · symm
       refine Finset.prod_eq_zero (Finset.mem_univ j) ?_
       first | rw [Function.update_of_ne hj] | rw [Function.update_noteq hj]
       rw [h1]
-      exact if_neg (Ne.symm hgj)
+      exact ite_eq_right (Ne.symm hgj)
     · rintro ⟨h, rfl⟩
       exact hgj (Pi.mulSingle_eq_of_ne hj h)
 
@@ -431,9 +431,9 @@ theorem onC_eGood (hid : ∀ i p, E i p * E i p = E i p) (hcen : ∀ i p a, E i 
       exact absurd (Finset.mem_univ _) hl
   constructor
   · intro hg
-    rw [hmain, if_pos hg]
+    rw [hmain, ite_eq_left hg]
   · intro hg
-    rw [hmain, if_neg hg]
+    rw [hmain, ite_eq_right hg]
 
 end Good
 
@@ -457,13 +457,13 @@ def goodVec (p : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), Fin D.R.r → ZMod (D.host
 private theorem monicOf_coeff_lemma {K : Type} [Field K] {N : ℕ} (a : Fin N → K) (i : Fin N) :
     (Formalism.CyclotomicNorms.monicOf a).coeff i = a i := by
   unfold Formalism.CyclotomicNorms.monicOf
-  rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, if_neg (Nat.ne_of_lt i.isLt), zero_add,
+  rw [Polynomial.coeff_add, Polynomial.coeff_X_pow, ite_eq_right (Nat.ne_of_lt i.isLt), zero_add,
     Polynomial.finsetSum_coeff]
   simp only [Polynomial.coeff_C_mul_X_pow]
   rw [Finset.sum_eq_single i]
   · simp
   · intro j _ hj
-    rw [if_neg]
+    rw [ite_eq_right]
     exact fun h => hj (Fin.ext h).symm
   · simp
 
@@ -592,7 +592,7 @@ theorem pp_arith (l n : ℕ) (hl : l.Prime) (hn : 0 < n) :
       omega
     · exact h
   have hcop : Nat.Coprime P Q := (Nat.coprime_ordCompl hl hn.ne').pow_left _
-  haveI : NeZero Q := ⟨hQpos.ne'⟩
+  have : NeZero Q := ⟨hQpos.ne'⟩
   have htot : 0 < Nat.totient Q := by
     first
     | exact Nat.totient_pos.mpr hQpos
@@ -666,11 +666,11 @@ theorem root_pow {N : ℕ} {f : (ZMod g)[X]} (h0 : f.coeff 0 ≠ 0) (hd : f.natD
   have hdN : (minpoly (ZMod g) x).natDegree ≤ N := by
     rw [← hd]
     exact Polynomial.natDegree_le_of_dvd (minpoly.dvd _ _ hroot) hf0
-  haveI : FiniteDimensional (ZMod g) (IntermediateField.adjoin (ZMod g) ({x} : Set (Formalism.CyclotomicNorms.Fbar g))) :=
+  have : FiniteDimensional (ZMod g) (IntermediateField.adjoin (ZMod g) ({x} : Set (Formalism.CyclotomicNorms.Fbar g))) :=
     IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite (IntermediateField.adjoin (ZMod g) ({x} : Set (Formalism.CyclotomicNorms.Fbar g))) :=
+  have : Finite (IntermediateField.adjoin (ZMod g) ({x} : Set (Formalism.CyclotomicNorms.Fbar g))) :=
     Module.finite_of_finite (ZMod g)
-  letI : Fintype (IntermediateField.adjoin (ZMod g) ({x} : Set (Formalism.CyclotomicNorms.Fbar g))) := Fintype.ofFinite _
+  let : Fintype (IntermediateField.adjoin (ZMod g) ({x} : Set (Formalism.CyclotomicNorms.Fbar g))) := Fintype.ofFinite _
   have hcard : Fintype.card (IntermediateField.adjoin (ZMod g) ({x} : Set (Formalism.CyclotomicNorms.Fbar g))) =
       g ^ (minpoly (ZMod g) x).natDegree := by
     first

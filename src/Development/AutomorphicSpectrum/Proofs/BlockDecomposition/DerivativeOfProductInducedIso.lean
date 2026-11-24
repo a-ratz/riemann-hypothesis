@@ -96,7 +96,7 @@ theorem det_levi' (n : ℕ) (g : GL (Fin n) k) :
 theorem det_unip' (n : ℕ) (v : Multiplicative (Fin n → k)) : GeneralLinearGroup.det (unip k n v) = 1 := by
   ext
   show (1 + colMat k n v.toAdd : Matrix (Fin (n + 1)) (Fin (n + 1)) k).det = 1
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
     by_cases hi : i = Fin.last n
     · subst hi

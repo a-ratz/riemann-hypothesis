@@ -57,10 +57,10 @@ theorem regAt_of_forall_dvr : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoet
   intro X _ _ hN f x hreg
   by_contra hf
   obtain ⟨U, hU, hx, -⟩ := exists_isAffineOpen_mem_and_subset (x := x) (U := ⊤) trivial
-  haveI : Nonempty U := ⟨⟨x, hx⟩⟩
-  haveI := isIntegrallyClosed_sections_of_stalks hN hU
-  haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  haveI := functionField_isFractionRing_of_isAffineOpen X U hU
+  have : Nonempty U := ⟨⟨x, hx⟩⟩
+  have := isIntegrallyClosed_sections_of_stalks hN hU
+  have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have := functionField_isFractionRing_of_isAffineOpen X U hU
   have key : ∀ y : U, RegAt (y : X) f ↔ ∃ s c : Γ(X, U), algebraMap _ X.functionField s * f =
       algebraMap _ X.functionField c ∧ s ∉ (hU.primeIdealOf y).asIdeal := fun y =>
     haveI := hU.isLocalization_stalk y
@@ -83,8 +83,8 @@ theorem regAt_of_forall_dvr : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoet
     rw [hP] at hs
     exact hs (hpf s c e)
   clear_value z
-  haveI := hU.isLocalization_stalk z
-  haveI : IsDiscreteValuationRing (X.presheaf.stalk (z : X)) :=
+  have := hU.isLocalization_stalk z
+  have : IsDiscreteValuationRing (X.presheaf.stalk (z : X)) :=
     isDiscreteValuationRing_of_height_eq_one (hU.primeIdealOf z).asIdeal (by rw [hP]; exact h1) _
   exact hfz (hreg z hzx inferInstance)
 

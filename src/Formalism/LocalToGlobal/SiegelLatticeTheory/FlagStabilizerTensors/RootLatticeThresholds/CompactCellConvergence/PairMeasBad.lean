@@ -61,14 +61,14 @@ theorem sfin_muN (L : LocBessel k r) : SFinite L.μN := by
   exact Formalism.MainNotions.FrameBoundFromBesselTorus.sFinite_haarLie _ _
 
 theorem pairMeas_bad (L : LocBessel k r) : pairMeas L {x | ¬ Good L x} = 0 := by
-  haveI : SFinite L.μN := sfin_muN L
-  haveI : SigmaFinite L.μW := L.hμW.1.1
-  haveI : SigmaFinite L.μW' := L.hμW'.1.1
+  have : SFinite L.μN := sfin_muN L
+  have : SigmaFinite L.μW := L.hμW.1.1
+  have : SigmaFinite L.μW' := L.hμW'.1.1
   have hN : L.μN {x | Matrix.of x ∉ Nset k r} = 0 := by
     obtain ⟨c, -, hform⟩ := Formalism.MainNotions.BridgeCSB.haarLie_N_eq (k := k) (r := r)
     have h1 := (Formalism.MainNotions.BridgeCSB.haarLieN k r 1 one_ne_zero ENNReal.one_ne_top).2.2.1
     rw [hform, one_smul] at h1
-    rw [LocBessel.μN, hform, Measure.smul_apply, h1, smul_zero]
+    rw [LocBessel.μN, hform, smul_apply, h1, smul_zero]
   have hW : L.μW {x | Matrix.of x ∉ UWset k r L.z} = 0 := L.hμW.1.2.2.1
   have hW' : L.μW' {x | Matrix.of x ∉ UWset k r L.z'} = 0 := L.hμW'.1.2.2.1
   have hsub : {x : PairSp k r | ¬ Good L x} ⊆
@@ -77,7 +77,7 @@ theorem pairMeas_bad (L : LocBessel k r) : pairMeas L {x | ¬ Good L x} = 0 := b
       (({x | Matrix.of x ∉ UWset k r L.z} ×ˢ Set.univ) ×ˢ Set.univ ∪
         Set.univ ×ˢ ({x | Matrix.of x ∉ UWset k r L.z'} ×ˢ Set.univ)) := by
     intro x hx
-    simp only [Set.mem_union, Set.mem_prod, Set.mem_univ, Set.mem_setOf_eq, true_and, and_true]
+    simp only [Set.mem_union, Set.mem_prod, Set.mem_univ, Set.mem_ofPred_eq, true_and, and_true]
     by_contra hc
     push_neg at hc
     exact hx (by unfold Good; exact ⟨hc.1.1, hc.1.2, hc.2.1, hc.2.2⟩)
@@ -102,7 +102,7 @@ theorem nu_bad (L : LocBessel k r) {γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * 
         (stabAct γ (Matrix.of a) x) = {x : PairSp k r | ¬ Good L x}.indicator 1 x := by
       filter_upwards [hst] with a ha
       classical
-      simp only [Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply, good_stabAct L ha x]
+      simp only [Set.indicator_apply, Set.mem_ofPred_eq, Pi.one_apply, good_stabAct L ha x]
     rw [lintegral_congr_ae hae, lintegral_const, mul_comm]
   simp_rw [hin] at h
   rw [lintegral_const_mul _ (measurable_one.indicator hm), lintegral_indicator_one hm] at h

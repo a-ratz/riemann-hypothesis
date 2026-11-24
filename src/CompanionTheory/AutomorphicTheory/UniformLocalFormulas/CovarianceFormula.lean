@@ -182,7 +182,7 @@ theorem aDil_e (t : ℝ) (a : Fin r) :
   unfold B.aDil bvec
   rw [Matrix.diagonal_mulVec_single, ← Pi.single_smul']
   have : (eI k r a).val < r := a.isLt
-  rw [if_pos this]
+  rw [ite_eq_left this]
   simp [eI]
 
 theorem aDil_f (t : ℝ) (a : Fin r) :
@@ -193,7 +193,7 @@ theorem aDil_f (t : ℝ) (a : Fin r) :
   have h1 : ¬ (esI k r a).val < r := by simp only [esI]; omega
   have h2 : ¬ (esI k r a).val ≤ r + k := by simp only [esI]; omega
   have h3 : (esI k r a).val - (r + k) = r - a.val := by simp only [esI]; omega
-  rw [if_neg h1, if_neg h2, h3]
+  rw [ite_eq_right h1, ite_eq_right h2, h3]
   simp
 
 theorem conj_levi {d : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hd : d ∈ UH (Hpk k r)) {t : ℝ} (ht : 0 < t)
@@ -296,10 +296,10 @@ theorem place_eq {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e
   ext s hs
   show (haarLie (Nset k r) κ).comap (cM (ε := ε) Q' Q) s =
     ((κ * ENNReal.ofReal ((t ^ B.kap k r)⁻¹)) • (haarLie (Nset k r) 1).comap (cM (ε := ε) P' P)) s
-  rw [emb'.comap_apply, Measure.smul_apply, emb.comap_apply, hκ, Measure.smul_apply, smul_eq_mul, smul_eq_mul, mul_assoc]
+  rw [emb'.comap_apply, smul_apply, emb.comap_apply, hκ, smul_apply, smul_eq_mul, smul_eq_mul, mul_assoc]
   congr 1
   have h3 := congrArg (fun m : Measure (Mt k r) => m (cM (ε := ε) P' P '' s)) hmap
-  simp only [Measure.smul_apply, smul_eq_mul] at h3
+  simp only [smul_apply, smul_eq_mul] at h3
   rw [← h3, Measure.map_apply (meas_conjM _) (emb.measurableSet_image.2 hs), hcomp, Set.image_comp,
     Set.preimage_image_eq _ hinj]
 
@@ -397,7 +397,7 @@ theorem covariance_formula : Formalism.L2.SG.Pf.LoopBCovN.CovNFormula := by
   have hcard : Fintype.card (InfinitePlace X.B.I.F) = Fintype.card D.what₂.Tau := Fintype.card_congr X.pl
   have hf : D.R.f = Fintype.card D.what₂.Tau := D.what₂.card_Tau.symm
   unfold Formalism.L2.SG.LoopTerm.covN
-  rw [hcov, hv, pi_smul _ (by rw [hce]; exact ENNReal.ofReal_ne_top), Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul,
+  rw [hcov, hv, pi_smul _ (by rw [hce]; exact ENNReal.ofReal_ne_top), smul_apply, smul_eq_mul, ENNReal.toReal_mul,
     href, disc_rd D X, hrd, hf, hcard, hce, ENNReal.toReal_pow, ENNReal.toReal_ofReal (by positivity),
     ← Real.rpow_natCast ρ, ← Real.rpow_mul hρ0.le, mul_comm ((Fintype.card D.what₂.Tau : ℕ) : ℝ), Real.rpow_mul hρ0.le,
     Real.rpow_natCast (ρ ^ Formalism.L2.SG.Pf.LsNc5.covolumeExponent D.R.rS D.R.k), ← mul_pow]

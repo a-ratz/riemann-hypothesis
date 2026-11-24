@@ -68,7 +68,7 @@ namespace GlobalTheory.ShFam.Hor.LogCh
 
 theorem exp_lattice_torsion_count : ∀ (Q : Type) [Group Q] (g r N : ℕ) (e : (Fin g → ℂ) → Q) (b : Fin r → Fin g → ℂ) (T : Set Q), 0 < N → (∀ v w, e (v + w) = e v * e w) → Function.Surjective e → IsLatBasis {w | e w = 1} b → (∀ τ ∈ T, τ ^ N = 1) → Nat.card {p : Q // p ^ N = 1} * Nat.card T = N ^ (2 * g) → ∃ S : Set (Fin r → ZMod N), N ^ r * Nat.card S = N ^ (2 * g) ∧ ∀ a : Fin r → ℤ, (fun j => (a j : ZMod N)) ∈ S → e ((N : ℂ)⁻¹ • ∑ j, a j • b j) ∈ T := by
   intro Q _ g r N e b T hN he _hs hb hT hcard
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have e0 : e 0 = 1 := by
     have h := he 0 0
     rw [add_zero] at h

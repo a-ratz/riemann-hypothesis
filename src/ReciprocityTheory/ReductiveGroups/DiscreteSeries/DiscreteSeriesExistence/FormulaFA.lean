@@ -150,7 +150,7 @@ theorem ffa_cont_rreg (x : L2 ε) : Continuous fun k : S7.KG ε => rreg ε (S7.t
 
 theorem ffa_intK {E : Type*} [NormedAddCommGroup E] {f : S7.KG ε → E} (hf : Continuous f) :
     Integrable f (dk ε) := by
-  letI := (dk_props ε).1
+  let := (dk_props ε).1
   exact integrableOn_univ.mp (hf.continuousOn.integrableOn_compact isCompact_univ)
 
 theorem ffa_inner_int (c : S7.KG ε → ℂ) (hc : Continuous c) (x z : L2 ε) :
@@ -166,11 +166,11 @@ theorem ffa_eval {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : ContinuousOn F (
     (c : S7.KG ε → ℂ) (hc : Continuous c) (h0 : ∫ k, c k • rreg ε (S7.toMK k) x ∂(dk ε) = 0) :
     ∫ k, c k * F (S7.toMK k) ∂(dk ε) = 0 := by
   classical
-  letI := (dk_props ε).1
+  let := (dk_props ε).1
   have hmem : ∀ (g : Formalism.REAL.UJ ε) (k : S7.KG ε), Formalism.MainNotions.S.umat g * S7.toMK k ∈ UJset ε :=
     fun g k => (g * (@id (Formalism.REAL.UJ ε) k.1)).2
   have hcu : Continuous fun g : Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat g :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hjoint : Continuous fun p : Formalism.REAL.UJ ε × S7.KG ε =>
       c p.2 * F (Formalism.MainNotions.S.umat p.1 * S7.toMK p.2) :=
     (hc.comp continuous_snd).mul (hF.comp_continuous
@@ -196,7 +196,7 @@ theorem ffa_eval {F : Matrix (Fin n) (Fin n) ℂ → ℂ} (hF : ContinuousOn F (
       rw [hy, L2.inner_indicatorConstLp_one]
       refine setIntegral_congr_ae hSm ?_
       have e1 := rreg_umat_ae ε y x
-      have e2 := (quasiMeasurePreserving_mul_right (Formalism.REAL.muG ε) y).ae_eq hx
+      have e2 := (quasiMeasurePreserving_mul_right (Formalism.REAL.muG ε) y).ae_eq_comp hx
       filter_upwards [e1, e2] with g hg1 hg2 _
       rw [hg1]
       simp only [Function.comp_apply] at hg2
@@ -248,11 +248,11 @@ theorem ffa_op_inner (T : S7.KType ε Λ) (k : S7.KG ε) (x y : T.V) :
     | exact unitary.star_mul_self_of_mem (T.τ k).2
     | exact Unitary.star_mul_self_of_mem (T.τ k).2
     | exact (unitary.mem_iff.1 (T.τ k).2).1
-  rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.mul_apply, h1,
-    ContinuousLinearMap.one_apply]
+  rw [← ContinuousLinearMap.adjoint_inner_right, ← mul_apply_eq_comp, h1,
+    one_apply_eq_self]
 
 theorem ffa_op_inv_apply (T : S7.KType ε Λ) (k : S7.KG ε) (y : T.V) : T.op k (T.op k⁻¹ y) = y := by
-  rw [← ContinuousLinearMap.mul_apply, ← ffa_op_mul]
+  rw [← mul_apply_eq_comp, ← ffa_op_mul]
   simp [ffa_op_one]
 
 theorem ffa_op_adj' (T : S7.KType ε Λ) (k : S7.KG ε) (x y : T.V) :
@@ -261,7 +261,7 @@ theorem ffa_op_adj' (T : S7.KType ε Λ) (k : S7.KG ε) (x y : T.V) :
 
 theorem ffa_cont_coef (T : S7.KType ε Λ) (a v : T.V) :
     Continuous fun k : S7.KG ε => inner ℂ (T.op k a) v := by
-  have h1 : Continuous fun k : S7.KG ε => T.op k := continuous_subtype_val.comp T.cont
+  have h1 : Continuous fun k : S7.KG ε => T.op k := continuous_subtypeVal.comp T.cont
   exact (h1.clm_apply continuous_const).inner continuous_const
 
 def ffaB (T : S7.KType ε Λ) (a : T.V) (x : L2 ε) : T.V →ₗ[ℂ] L2 ε where
@@ -281,7 +281,7 @@ theorem ffaB_equiv (T : S7.KType ε Λ) (a : T.V) (x : L2 ε) (k₀ : S7.KG ε) 
     ffaB T a x (T.op k₀ v) = rreg ε (S7.toMK k₀) (ffaB T a x v) := by
   rw [ffaB_apply, ffaB_apply]
   have h1 : ∀ k : S7.KG ε, inner ℂ (T.op k a) (T.op k₀ v) = inner ℂ (T.op (k₀⁻¹ * k) a) v := fun k => by
-    rw [ffa_op_adj', ffa_op_mul, ContinuousLinearMap.mul_apply]
+    rw [ffa_op_adj', ffa_op_mul, mul_apply_eq_comp]
   simp_rw [h1]
   have h2 := integral_mul_left_eq_self (μ := dk ε)
     (fun k => inner ℂ (T.op (k₀⁻¹ * k) a) v • rreg ε (S7.toMK k) x) k₀
@@ -368,12 +368,12 @@ private theorem inner_uniformisationL2_eq_norm_sq_mul_inner (hP : IsPsiFor ε la
     intro k
     refine ContinuousLinearMap.ext fun b => ?_
     refine ext_inner_left ℂ fun a => ?_
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, ffa_op_adj' T k a (A b), hA, hA,
+    rw [mul_apply_eq_comp, mul_apply_eq_comp, ffa_op_adj' T k a (A b), hA, hA,
       ← rightRegular_datumEmbedding hP v₀ a k⁻¹, ← rightRegular_datumEmbedding hP v₀ b k, ffa_rreg_adj, inv_inv]
   obtain ⟨c, hc⟩ := CompactHaarProbability.schur T A hcomm
   have hform : ∀ a b : T.V, inner ℂ (uniformisationL2 ε Ψ v₀ a) (uniformisationL2 ε Ψ v₀ b) = c * inner ℂ a b := by
     intro a b
-    rw [← hA, hc, ContinuousLinearMap.smul_apply, ContinuousLinearMap.one_apply, inner_smul_right]
+    rw [← hA, hc, smul_apply, one_apply_eq_self, inner_smul_right]
   have hc' : c = ((‖uniformisationL2 ε Ψ v₀ T.w‖ ^ 2 : ℝ) : ℂ) := by
     have h1 := hform T.w T.w
     rw [inner_self_eq_norm_sq_to_K, inner_self_eq_norm_sq_to_K, T.w_norm] at h1

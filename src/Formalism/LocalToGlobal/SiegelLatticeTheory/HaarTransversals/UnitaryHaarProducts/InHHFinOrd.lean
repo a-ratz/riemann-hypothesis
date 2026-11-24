@@ -144,7 +144,7 @@ theorem mapM_unitaryC (M : GL (Fin X.B.I.n) X.B.I.E) (hM : M ∈ Formalism.UG.UJ
     (mapMC X (M : Matrix _ _ _))ᴴ * mapMC X X.B.I.J * mapMC X (M : Matrix _ _ _) = mapMC X X.B.I.J := by
 
   have hstar : ∀ y : D.host.E, D.host.conj y = star y := fun y => by
-    haveI := D.host.isCMField_hostE
+    have := D.host.isCMField_hostE
     apply D.host.φ₀.injective
     rw [← D.embE_φ₀, RingHom.comp_apply, RingHom.comp_apply, D.embE_conj, D.starLL_cx]
     first
@@ -188,7 +188,7 @@ theorem af_nontrivC (F : Type) [Field F] [NumberField F] : Nontrivial (Af F) := 
      | exact zero_ne_one h')
 
 theorem inclInjC {D : D7} (X : HidaSetting D) : Function.Injective (Formalism.UG.inclE (F := X.B.I.F) (Af X.B.I.F) : X.B.I.E → X.B.I.E ⊗[X.B.I.F] Af X.B.I.F) := by
-  haveI := af_nontrivC X.B.I.F
+  have := af_nontrivC X.B.I.F
   exact Algebra.TensorProduct.includeLeft_injective (R := X.B.I.F) (S := X.B.I.F) (RingHom.injective _)
 
 def latOfC (h : Hfin X u) : Set (VS D).V :=
@@ -349,13 +349,13 @@ theorem delta_finOrd (δ : (VS D).V ≃ₗ[D.host.E] (VS D).V) (hδiso : δ ∈ 
 
       rw [← hcf, map_sum] at h1
       simp only [map_smul, smul_eq_mul, hT_f_e, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-        Finset.mem_univ, if_true] at h1
+        Finset.mem_univ, ite_true] at h1
       exact h1
     rw [← hcf]
     simp [hc0]
-  haveI := hΛlat
+  have := hΛlat
   set Q := qEquiv δ W ⊥ hWmap hX with hQ
-  haveI : Submodule.IsFullLattice D.host.E (qLat Λ W ⊥) := by
+  have : Submodule.IsFullLattice D.host.E (qLat Λ W ⊥) := by
     refine { toIsLattice := qLat_isLattice Λ W ⊥, span_eq_top := ?_ }
     rw [eq_top_iff]
     intro q _

@@ -178,7 +178,7 @@ theorem exists_integral_multiple_of_ker {O Ω₀ : Type} [CommRing O] [Field Ω�
     [FiniteDimensional ℚ F] (β : O →+* F) (g₀ : O →+* Ω₀) (hk : ∀ a, g₀ a = 0 → β a = 0) (u : F) :
     letI := β.toAlgebra
     ∃ a : O, g₀ a ≠ 0 ∧ _root_.IsIntegral O (a • u) := by
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have hQ : IsAlgebraic ℚ u := Algebra.IsAlgebraic.isAlgebraic u
   have hZ : IsAlgebraic ℤ u := (IsFractionRing.isAlgebraic_iff ℤ ℚ F).2 hQ
   obtain ⟨n, hn, hi⟩ := hZ.exists_integral_multiple
@@ -197,8 +197,8 @@ theorem eq_of_specializes_of_fst_of_ne {X : Scheme.{0}} {O F Ω₀ : Type} [Comm
     (β : O →+* F) (g₀ : O →+* Ω₀) (ξ₀ : Sp Ω₀ ⟶ X) (h₀ : IsCptGen ξ₀) (hs : ξ₀ ≫ s = spMap g₀)
     (hF : letI := β.toAlgebra; ∀ u : F, ∃ a : O, g₀ a ≠ 0 ∧ _root_.IsIntegral O (a • u))
     {y y' : ↥(pullback s (spMap β))} (hy : pullback.fst s (spMap β) y = genPt ξ₀) (hyy : y' ⤳ y) : y' = y := by
-  letI := β.toAlgebra
-  letI := g₀.toAlgebra
+  let := β.toAlgebra
+  let := g₀.toAlgebra
   have hy' : pullback.fst s (spMap β) y' = genPt ξ₀ :=
     GlobalTheory.CompanionTheory.Ar.CptInh.nogen ξ₀ h₀ _ (hy ▸ hyy.map (pullback.fst s (spMap β)).continuous)
   have hsurj : SurjectiveOnStalks ξ₀ := by
@@ -308,7 +308,7 @@ theorem nonempty_genTors_of_data (𝔐 : HodgeCpt Y S y) (p : ℕ) (hp : 0 < p) 
     (h7 : ∀ φ : (Fin (D.p + D.q) → 𝓞 E) →+ ZMod (p ^ 𝔐.R p), ∃ x, e x = φ)
     (h8 : ∀ x, e x = 0 → ∃ x', x = (p ^ 𝔐.R p) • x') : Nonempty (GenTors 𝔐 p) := by
   have hN0 : 0 < p ^ 𝔐.R p := pow_pos hp _
-  haveI : NeZero (p ^ 𝔐.R p) := ⟨hN0.ne'⟩
+  have : NeZero (p ^ 𝔐.R p) := ⟨hN0.ne'⟩
   have hm0 : 0 < p ^ (𝔐.R p - 1) := pow_pos hp _
   have hpow : p ^ (𝔐.R p - 1) * p = p ^ 𝔐.R p := by
     rw [← pow_succ]; congr 1; omega

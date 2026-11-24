@@ -74,7 +74,7 @@ private theorem exists_avg (ρ : Representation ℂ G X) (hs : ∀ x, IsOpen {g 
     ∃ (ι : Type) (_ : Fintype ι) (t : ι → G), Nonempty ι ∧ (∀ i, t i ∈ J) ∧
       ∀ j ∈ J, ρ j (∑ i, conj (χ (t i)) • ρ (t i) y) = χ j • ∑ i, conj (χ (t i)) • ρ (t i) y := by
   classical
-  haveI : CompactSpace J := isCompact_iff_compactSpace.1 hJ.1
+  have : CompactSpace J := isCompact_iff_compactSpace.1 hJ.1
   have h1 := chi_one hχ
   let H : Subgroup J :=
     { carrier := {j | ρ j.1 y = y ∧ χ j.1 = 1}
@@ -100,9 +100,9 @@ private theorem exists_avg (ρ : Representation ℂ G X) (hs : ∀ x, IsOpen {g 
   have hHo : IsOpen (H : Set J) := by
     have : (H : Set J) = Subtype.val ⁻¹' ({g | ρ g y = y} ∩ χ ⁻¹' {1}) := rfl
     rw [this]
-    exact ((hs y).inter (hχ.1.isOpen_fiber 1)).preimage continuous_subtype_val
-  haveI : Finite (J ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
-  letI : Fintype (J ⧸ H) := Fintype.ofFinite _
+    exact ((hs y).inter (hχ.1.isOpen_fiber 1)).preimage continuous_subtypeVal
+  have : Finite (J ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
+  let : Fintype (J ⧸ H) := Fintype.ofFinite _
   refine ⟨J ⧸ H, inferInstance, fun c => (c.out : J).1, ⟨QuotientGroup.mk 1⟩, fun c => c.out.2, fun j hj => ?_⟩
   let F : J ⧸ H → X := fun c => conj (χ (c.out : J).1) • ρ (c.out : J).1 y
   have hF : ∀ a : J, F (QuotientGroup.mk a) = conj (χ a.1) • ρ a.1 y := by

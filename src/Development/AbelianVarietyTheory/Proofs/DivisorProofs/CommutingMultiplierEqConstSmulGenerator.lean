@@ -70,7 +70,7 @@ theorem commuting_map_eq_smul_multiplier :
     { toFun := fun f => ⟨h' * (T f : B), hW _ (T f).2⟩
       map_add' := fun f g => by ext; simp [mul_add]
       map_smul' := fun c f => by ext; simp [mul_smul_comm] }
-  haveI : Nontrivial W := by
+  have : Nontrivial W := by
     by_contra hnt
     rw [not_nontrivial_iff_subsingleton] at hnt
     apply hT
@@ -193,7 +193,7 @@ theorem commuting_multiplier_eq_const_smul_generator
     simp only [map_sum, map_smul, Submodule.coe_sum, Submodule.coe_smul, hsemi]
   have Tc_basis : ∀ i, Tc (bW i) = img i := fun i => by
     simp only [Tc, Module.Basis.constr_basis]
-  haveI : FiniteDimensional ℂ W := Module.Finite.of_basis bW
+  have : FiniteDimensional ℂ W := Module.Finite.of_basis bW
   have Tc_ne : Tc ≠ 0 := by
     obtain ⟨f, hf⟩ : ∃ f, T f ≠ 0 := by
       by_contra hc

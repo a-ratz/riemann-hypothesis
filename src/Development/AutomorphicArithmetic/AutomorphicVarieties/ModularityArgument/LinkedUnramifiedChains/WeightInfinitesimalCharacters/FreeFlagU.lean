@@ -159,20 +159,20 @@ variable {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAl
 
 private theorem cyc_cont : Continuous ((cycBar F Ω l).comp (Dec (F := F) A).subtype) :=
   ((Continuous.units_map ((algebraMap ℚ_[l] (Qbar l)).comp PadicInt.Coe.ringHom).toMonoidHom
-    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtype_val)).comp (continuous_cycZ F Ω l)).comp continuous_subtype_val
+    ((continuous_algebraMap ℚ_[l] (Qbar l)).comp continuous_subtypeVal)).comp (continuous_cycZ F Ω l)).comp continuous_subtypeVal
 
 private theorem ex_elt (H : GlobalTheory.Published.GlobalArtinReciprocity) (hw : ((l : ℕ) : 𝓞 F) ∈ w.asIdeal) (ha : IsLocalArtin h a) :
     ∃ s : Weil h, deg s ≠ 0 ∧ cycZ F Ω l s = 1 := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI : CharZero (w.adicCompletion F) := algebraRat.charZero _
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : CharZero (w.adicCompletion F) := algebraRat.charZero _
   have hl : (l : Qbar l) ≠ 0 := Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero
   obtain ⟨s, hs⟩ := ha.surj (Units.mk0 (l : w.adicCompletion F) (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero))
   refine ⟨s, fun h0 => ?_, ?_⟩
   · have h2 := ha.ord_eq s
     rw [h0, neg_zero, hs] at h2
-    haveI : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+    have : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
       Valuation.Compatible.ofValuation _
     have h3 := (ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion F))
       (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ)))).eq_one_iff_eq_one.1
@@ -196,8 +196,8 @@ private theorem ex_elt (H : GlobalTheory.Published.GlobalArtinReciprocity) (hw :
 
 private theorem algPow_const (c : ℤ) (y : w.adicCompletion F) :
     Hi.algPow (l := l) w (-fun _ => -c) y = Hi.algPow w (fun _ => 1) y ^ c := by
-  haveI := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
-  haveI := Fintype.ofFinite (W.Emb l w)
+  have := GlobalTheory.HeckeGal.finite_contEmb (l := l) w
+  have := Fintype.ofFinite (W.Emb l w)
   unfold Hi.algPow
   rw [finprod_eq_prod_of_fintype, finprod_eq_prod_of_fintype, ← Finset.prod_zpow]
   exact Finset.prod_congr rfl fun j _ => by rw [Pi.neg_apply, neg_neg, zpow_one]
@@ -219,7 +219,7 @@ theorem UpperTheory.V.Th.purLocS :
   obtain ⟨rc, a, ha, -⟩ := P.exists_rec h
   obtain ⟨O, _, _, _, Bw, hj⟩ := Af.exists_bridge (l := l) h hw
   obtain ⟨hp, hcmp⟩ := hx O Bw hj
-  have hc : Continuous (r.comp (Dec (F := F) A).subtype) := hr.comp continuous_subtype_val
+  have hc : Continuous (r.comp (Dec (F := F) A).subtype) := hr.comp continuous_subtypeVal
   have hψc := flag_cont hc hf
   choose ω hω using fun i => (Loc.ordCharIff H h ι a ha (fun _ => -m i) (ψ i)).1.2
     ⟨hψc i, Loc.laArith H h hw (ψ i) (hψc i) (m i) k hk (hI i)⟩

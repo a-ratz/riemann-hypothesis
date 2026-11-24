@@ -58,7 +58,7 @@ theorem finite_not_le_one (a : K) : {i | ¬ C.v i a ≤ 1}.Finite := by
     simp
   · refine (C.fin a ha).subset ?_
     intro i hi
-    simp only [Set.mem_setOf_eq] at hi ⊢
+    simp only [Set.mem_ofPred_eq] at hi ⊢
     intro h
     exact hi (le_of_eq h)
 
@@ -70,8 +70,8 @@ theorem finite_not_mapsTo {V V' : Type} [AddCommGroup V] [Module K V] [AddCommGr
   refine (Set.finite_iUnion fun q : Fin m => Set.finite_iUnion fun r : Fin n =>
     finite_not_le_one C (b'.repr (f (b r)) q)).subset ?_
   intro i hi
-  simp only [Set.mem_setOf_eq] at hi
-  simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq] at hi
+  simp only [Set.mem_iUnion, Set.mem_ofPred_eq]
   by_contra hcon
   push_neg at hcon
   apply hi
@@ -102,7 +102,7 @@ theorem isBun_sub_quot : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [Add
   · refine ((hb0.union (finite_not_mapsTo C (Module.finBasis K W) b0 W.subtype)).union
       (finite_not_mapsTo C b0 (Module.finBasis K W) g)).subset ?_
     intro i hi
-    simp only [Set.mem_union, Set.mem_setOf_eq] at hi ⊢
+    simp only [Set.mem_union, Set.mem_ofPred_eq] at hi ⊢
     by_contra hcon
     push_neg at hcon
     obtain ⟨⟨h1, h2⟩, h3⟩ := hcon
@@ -124,7 +124,7 @@ theorem isBun_sub_quot : ∀ (K : Type) [Field K] (C : ACurve K) (V : Type) [Add
   · refine ((hb0.union (finite_not_mapsTo C b0 (Module.finBasis K (V ⧸ W)) W.mkQ)).union
       (finite_not_mapsTo C (Module.finBasis K (V ⧸ W)) b0 s)).subset ?_
     intro i hi
-    simp only [Set.mem_union, Set.mem_setOf_eq] at hi ⊢
+    simp only [Set.mem_union, Set.mem_ofPred_eq] at hi ⊢
     by_contra hcon
     push_neg at hcon
     obtain ⟨⟨h1, h2⟩, h3⟩ := hcon

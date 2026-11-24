@@ -87,7 +87,7 @@ theorem pr_pull : ∀ {T T' : Scheme.{0}} {t : T' ⟶ T} {B C : Over T} [GrpObj 
     show (x.left ≫ (pr' a).left) ≫ χ = (x.left ≫ φB) ≫ (pr a).left
     rw [Category.assoc, h1, Category.assoc]
   refine ⟨pr', h1, fun a => ?_, fun T₁ y => ?_⟩
-  · haveI := hpr a
+  · have := hpr a
     refine isMonHom_of_mul_pts _ fun T₁ x y => ?_
     apply Over.OverMorphism.ext
     apply hC.1.hom_ext

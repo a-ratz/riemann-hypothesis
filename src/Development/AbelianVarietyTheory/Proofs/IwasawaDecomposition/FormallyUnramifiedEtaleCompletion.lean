@@ -138,8 +138,8 @@ theorem lieMult_unif_loc {E : Type} [Field E] [NumberField E] [IsCMField E] (H :
     letI := H.starRing; ∃ n, LieMult (ofRingAct P.oD.onB.toRingAct) (spMap f) τ n ∧
       n + Module.finrank (𝓞 E) P.D.toPre.X = N := by
   classical
-  letI := H.starRing
-  haveI : CharZero F := ⟨fun a b h => Nat.cast_injective (R := R) (hf (by simpa using h))⟩
+  let := H.starRing
+  have : CharZero F := ⟨fun a b h => Nat.cast_injective (R := R) (hf (by simpa using h))⟩
   have := P.U.smooth
   have : Smooth P.D.toPre.P.A.hom := P.D.toPre.P.smoothDim.smooth
   obtain ⟨g, v, hv⟩ := Chart.exists_isLieBasis t.G P.U.smooth
@@ -152,8 +152,8 @@ theorem lieMult_unif_loc {E : Type} [Field E] [NumberField E] [IsCMField E] (H :
   obtain ⟨w', ρB', hw', hρB', hMB⟩ := ToricRank.exists_action_pullback hw hρB f
   let aG := t.act.pullback (spMap f) t.G
   let aB := (ofRingAct P.oD.onB.toRingAct).pullback (spMap f) P.D.toPre.P.A
-  haveI := Module.Finite.of_basis (Lie.basis aG hv')
-  haveI := Module.Finite.of_basis (Lie.basis aB hw')
+  have := Module.Finite.of_basis (Lie.basis aG hv')
+  have := Module.Finite.of_basis (Lie.basis aB hw')
   have tG : ∀ a, LinearMap.trace F (Lie aG) (Module.toModuleEnd F (Lie aG) a) = f (LinearMap.trace R _ (ρ a)) :=
     fun a => by rw [trace_map_eq]; exact trace_lie hv' aG a _ (fun c => by rw [← hM, hρ'])
   have tB : ∀ a, LinearMap.trace F (Lie aB) (Module.toModuleEnd F (Lie aB) a) = f (LinearMap.trace R _ (ρB a)) :=

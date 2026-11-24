@@ -94,7 +94,7 @@ theorem exists_mvpoly_backDiff {K : Type} [DecidableEq K] (k : K) (q : MvPolynom
       | add p q hp hq => simp only [map_add (f := _), Polynomial.eval_add, hp, hq]
       | monomial n c => simp [Polynomial.aeval_monomial]
     have hu : monomial u a = monomial (u.erase k) a * X k ^ (u k) := by
-      rw [X_pow_eq_monomial, monomial_mul, mul_one, add_comm, Finsupp.single_add_erase]
+      rw [X_pow_eq_monomial, monomial_mul_monomial, mul_one, add_comm, Finsupp.single_add_erase]
     have hy : ∀ i, i ≠ k → (x - Pi.single k (1 : ℚ) : K → ℚ) i = x i := by
       intro i hi
       simp [hi]

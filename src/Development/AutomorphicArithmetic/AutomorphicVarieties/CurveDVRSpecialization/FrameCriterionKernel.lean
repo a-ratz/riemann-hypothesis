@@ -88,7 +88,7 @@ theorem UpperTheory.frame_criterion_kernel :
   unfold UpperTheory.V.Pr.CrKer
   intro Ω _ _ _ l _ O _ _ η Ψ σ g₁ B M L _ _ _ _ _ Φ k s x V hS π hπ N hN hNc hNconj hIu hI0
   let N' : Subgroup V.frame.Γ := N.map V.frame.η.ker.subtype
-  haveI hN'n : N'.Normal := normal_map V.frame N hN hNconj
+  have hN'n : N'.Normal := normal_map V.frame N hN hNconj
   have hG0c : IsClosed (V.frame.η.ker : Set V.frame.Γ) :=
     Subgroup.isClosed_of_isOpen _ V.frame.η_open
   have hN'c : IsClosed (N' : Set V.frame.Γ) := by
@@ -96,9 +96,9 @@ theorem UpperTheory.frame_criterion_kernel :
     exact hG0c.isClosedEmbedding_subtypeVal.isClosedMap _ hNc
   let K : Subgroup (G (W.Lp L) Ω) := N'.comap (toGS Ω V.S')
   have hKc : IsClosed (K : Set (G (W.Lp L) Ω)) := hN'c.preimage (continuous_toGS Ω V.S')
-  haveI hKn : K.Normal := hN'n.comap _
+  have hKn : K.Normal := hN'n.comap _
   let Kup : Subgroup (upl Ω L) := K.map (toUpl Ω L)
-  haveI hKupn : Kup.Normal := hKn.map _ toUpl_surj
+  have hKupn : Kup.Normal := hKn.map _ toUpl_surj
   have hind : Topology.IsInducing (toUpl Ω L) :=
     (Topology.IsInducing.subtypeVal.of_comp_iff).1 (galEmbTop ℚ (W.Lp L) Ω).1.isInducing
   have hKupc : IsClosed (Kup : Set (upl Ω L)) := by

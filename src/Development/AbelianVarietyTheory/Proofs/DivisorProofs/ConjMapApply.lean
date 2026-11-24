@@ -121,7 +121,7 @@ theorem IsTame.comp {κ κ' κ'' : Type} [Fintype κ] [Fintype κ'] [Fintype κ'
   intro g hg
   obtain ⟨ι, _, P, g', hg', hP⟩ := hT g hg
   choose ι' inst P' g'' hg'' hP' using fun j => hT' (g' j) (hg' j)
-  letI : ∀ j, Fintype (ι' j) := inst
+  let : ∀ j, Fintype (ι' j) := inst
   refine ⟨Σ j, ι' j, inferInstance, fun p => (P' p.1 p.2).comp (P p.1), fun p => g'' p.1 p.2,
     fun p => hg'' p.1 p.2, fun f => ?_⟩
 
@@ -149,7 +149,7 @@ theorem IsTame.comp_adm {κ κ' : Type} [Fintype κ] [Fintype κ'] {T : ((κ →
   choose L hL using fun j => hl (g' j) (hg' j)
   refine ⟨∑ j, (L j).comp (P j), fun f => ?_⟩
 
-  rw [LinearMap.comp_apply, hP, map_sum, ContinuousLinearMap.sum_apply]
+  rw [LinearMap.comp_apply, hP, map_sum, sum_apply]
   exact Finset.sum_congr rfl fun j _ => hL j (P j f)
 
 end Tame

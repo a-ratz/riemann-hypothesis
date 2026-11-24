@@ -76,8 +76,8 @@ private lemma mk_mul_reduction_eq_mk (P : HeightOneSpectrum (𝓞 E)) {x : E} {r
     (h : algebraMap (𝓞 E) E s * x = algebraMap (𝓞 E) E r) :
     Ideal.Quotient.mk P.asIdeal s * redP P x = Ideal.Quotient.mk P.asIdeal r := by
   classical
-  haveI : P.asIdeal.IsMaximal := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  have : P.asIdeal.IsMaximal := P.isMaximal
+  let := Ideal.Quotient.field P.asIdeal
   have hs0 : Ideal.Quotient.mk P.asIdeal s ≠ 0 := by
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   have hex : ∃ c : 𝓞 E ⧸ P.asIdeal, ∃ r s : 𝓞 E, s ∉ P.asIdeal ∧ algebraMap (𝓞 E) E s * x = algebraMap (𝓞 E) E r ∧
@@ -101,7 +101,7 @@ variable {n : ℕ} [NeZero n] (ST SG : Finset (Pl E))
 private lemma reduction_mul_of_integral' (P : Pl E) (b : 𝓞 E) {a : E} (ha : IntAt P a) :
     redP P (algebraMap (𝓞 E) E b * a) = Ideal.Quotient.mk P.asIdeal b * redP P a := by
   obtain ⟨r, s, hs, h⟩ := ha
-  haveI : P.asIdeal.IsPrime := P.isPrime
+  have : P.asIdeal.IsPrime := P.isPrime
   have h1 := mk_mul_reduction_eq_mk P hs h
   have h2 := mk_mul_reduction_eq_mk P (x := algebraMap (𝓞 E) E b * a) (r := b * r) hs (by rw [map_mul, ← h]; ring)
   have hs0 : Ideal.Quotient.mk P.asIdeal s ≠ 0 := by

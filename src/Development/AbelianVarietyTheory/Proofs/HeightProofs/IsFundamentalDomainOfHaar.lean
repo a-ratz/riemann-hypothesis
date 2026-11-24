@@ -180,8 +180,8 @@ theorem exists_char_of_not_mem {G : Type} [CommGroup G] (N : Subgroup G) (hN : �
     have hx : x = Additive.ofMul (QuotientGroup.mk g : G ⧸ N) := by rw [hg]; rfl
     rw [hx, two_nsmul, ← ofMul_mul, ← QuotientGroup.mk_mul, (QuotientGroup.eq_one_iff _).2 (hN g)]
     rfl
-  letI : Module (ZMod 2) (Additive (G ⧸ N)) := AddCommGroup.zmodModule h2
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  let : Module (ZMod 2) (Additive (G ⧸ N)) := AddCommGroup.zmodModule h2
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨φ, hφ⟩ := Module.Projective.exists_dual_ne_zero (ZMod 2)
     (x := (Additive.ofMul (QuotientGroup.mk a : G ⧸ N))) hne
   refine ⟨{ toFun := fun g => ZMod.toCircle (φ (Additive.ofMul (QuotientGroup.mk g : G ⧸ N)))

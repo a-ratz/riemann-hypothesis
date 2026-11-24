@@ -339,8 +339,8 @@ theorem hasTypeAt_of_isTypeAt : ∀ {D : D7} (θ : D.what₂.Tau → (Ainf D.hos
     GoodPar V.rank (V.sig (tauE D τ)).1 (V.sig (tauE D τ)).2 S → IsAutFunSm θ V φ →
     IsTypeAt θ V τ S φ → GlobalTheory.IndefiniteRowSideFullHecke.FinitePartTypes.HasTypeAt θ V τ S φ := by
   intro D θ V τ S φ _ _ hHC _ hθ _ hS hφ ⟨H, i1, i2, σ, lam, ε, P, hE, hD, hP, hJ, hx⟩ K hK δ hδ
-  haveI : CompleteSpace H := hD.1
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : CompleteSpace H := hD.1
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   have hσ : Std ε σ := std_of_isDS hHC hD
   have hlam : Formalism.QuantumDeterminants.IsHCParam lam := by
     obtain ⟨l, e, h1, h2, -⟩ := hS

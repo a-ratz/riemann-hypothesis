@@ -226,7 +226,7 @@ theorem trace_cont {S : Set T} {f : T → Matrix ι ι ℂ} (hf : EntC S f) :
   exact continuousOn_finsetSum _ fun i _ => hf i i
 
 theorem mR_cont : Continuous fun y : GR n => mR y :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem gramB_cont {m : ℕ} (ε : Fin m → Bool) (b : Bool) (i j : Fin n) :
     Continuous fun u : Fin m → Fin n → ℂ => gramB ε b u i j := by
@@ -318,12 +318,12 @@ theorem trace_gramB {m : ℕ} (Z : Matrix (Fin n) (Fin n) ℂ) (ε : Fin m → B
 
   simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, gramB, evX, Qb, map_sum, map_mul, MvPolynomial.eval_X,
   dotProduct, Matrix.mulVec, rowC, Pi.star_apply, star_star, Finset.mul_sum, Finset.sum_mul]
-  simp only [Bool.true_eq_false, if_true, if_false]
+  simp only [Bool.true_eq_false, ite_true, ite_false]
   conv_rhs => rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun i _ => ?_)
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun k _ => Finset.sum_congr rfl (fun a _ => ?_))
-  simp only [Bool.false_eq_true, if_false]
+  simp only [Bool.false_eq_true, ite_false]
   ring
 
 theorem star_dot_conjTranspose (Z : Matrix (Fin n) (Fin n) ℂ) (w : Fin n → ℂ) :

@@ -134,7 +134,7 @@ theorem defect_bounded : ∀ (R : Type) [CommRing R] [IsDomain R] [IsDiscreteVal
     (M' := Ω[Localization.Away (algebraMap R B π)⁄R]) (algebraMap R B π)
     (KaehlerDifferential.map R R B (Localization.Away (algebraMap R B π)))
   refine ⟨c, fun R' _ _ _ a => ?_⟩
-  letI := a.toRingHom.toAlgebra
+  let := a.toRingHom.toAlgebra
   intro w hw
   obtain ⟨⟨r, hr⟩, hrw⟩ := hw
   have hsw : s.baseChange R' w = 0 := by
@@ -293,13 +293,13 @@ theorem exists_lift {R B S W : Type} [CommRing R] [CommRing B] [CommRing S] [Alg
     (hm : ∀ x y, D (x * y) = algebraMap B S x • D y + algebraMap B S y • D x)
     (hr : ∀ r, D (algebraMap R B r) = 0) :
     ∃ l : S ⊗[B] (KaehlerDifferential R B) →ₗ[S] W, ∀ b, l (1 ⊗ₜ KaehlerDifferential.D R B b) = D b := by
-  letI : Module B W := Module.compHom W (algebraMap B S)
-  letI : Module R W := Module.compHom W ((algebraMap B S).comp (algebraMap R B))
+  let : Module B W := Module.compHom W (algebraMap B S)
+  let : Module R W := Module.compHom W ((algebraMap B S).comp (algebraMap R B))
   have e1 : ∀ (b : B) (w : W), b • w = algebraMap B S b • w := fun _ _ => rfl
   have e2 : ∀ (b : R) (w : W), b • w = algebraMap B S (algebraMap R B b) • w := fun _ _ => rfl
-  haveI : IsScalarTower R B W := ⟨fun r b w => by
+  have : IsScalarTower R B W := ⟨fun r b w => by
     rw [e2, e1, e1, Algebra.smul_def, map_mul, mul_smul]⟩
-  haveI : IsScalarTower B S W := ⟨fun r b w => by
+  have : IsScalarTower B S W := ⟨fun r b w => by
     rw [e1, Algebra.smul_def, mul_smul]⟩
   let L : B →ₗ[R] W :=
     { toFun := D
@@ -447,7 +447,7 @@ theorem factA {R k C : Type} {n : ℕ} [CommRing R] [CommRing k] [CommRing C] [A
     exact Ideal.mem_sup_left (Ideal.mem_span_singleton_self _)⟩
   have hκ : ∀ r, κ (algebraMap R k r) = algebraMap R A r := fun r =>
     RingHom.liftOfSurjective_comp_apply _ _ _ _
-  letI : Algebra k A := κ.toAlgebra
+  let : Algebra k A := κ.toAlgebra
   let ρ0 : A →ₐ[R] C := Ideal.Quotient.liftₐ T σ (fun a ha => (hI a).1 (hT ha))
   have hρ0 : ∀ p, ρ0 (m p) = σ p := fun p => rfl
   let ρ : A →ₐ[k] C :=
@@ -904,8 +904,8 @@ theorem dilatation_lowers_defect : ∀ (R : Type) [CommRing R] [IsDomain R] [IsD
   have hreg : algebraMap R R' π ∈ nonZeroDivisors R' := mem_nonZeroDivisors_of_ne_zero hirr.ne_zero
   obtain ⟨a', ha'⟩ := exists_ext φ π I hinj hden hgen a hreg (fun g hg => (hI g).1 hg R' a ha)
   refine ⟨a', ha', ?_⟩
-  letI := a.toRingHom.toAlgebra
-  letI := a'.toRingHom.toAlgebra
+  let := a.toRingHom.toAlgebra
+  let := a'.toRingHom.toAlgebra
   have hφ : ∀ b, algebraMap B' R' (φ b) = algebraMap B R' b := fun b => AlgHom.congr_fun ha' b
   have hϖ : algebraMap B' R' (algebraMap R B' π) = algebraMap R R' π := a'.commutes π
   intro m hm
@@ -953,9 +953,9 @@ theorem GenOpen.comp {φ : B →ₐ[R] C} {ψ : C →ₐ[R] D} (h : GenOpen K φ
 
 theorem genOpen_away (f : B) : GenOpen K (IsScalarTower.toAlgHom R B (Localization.Away f)) := by
   unfold GenOpen
-  letI : Algebra (K ⊗[R] B) (K ⊗[R] Localization.Away f) :=
+  let : Algebra (K ⊗[R] B) (K ⊗[R] Localization.Away f) :=
     (Algebra.TensorProduct.map (AlgHom.id K K) (IsScalarTower.toAlgHom R B (Localization.Away f))).toRingHom.toAlgebra
-  haveI : IsScalarTower K (K ⊗[R] B) (K ⊗[R] Localization.Away f) :=
+  have : IsScalarTower K (K ⊗[R] B) (K ⊗[R] Localization.Away f) :=
     IsScalarTower.of_algHom (Algebra.TensorProduct.map (AlgHom.id K K) (IsScalarTower.toAlgHom R B (Localization.Away f)))
   have h := IsLocalization.tensorProduct_tensorProduct_right R K (Submonoid.powers f) (Localization.Away f) (by
     ext x; simp [RingHom.algebraMap_toAlgebra])
@@ -967,7 +967,7 @@ theorem genOpen_of_inj [IsDomain R] [IsFractionRing R K] {π : R} (hπ : π ≠ 
   unfold GenOpen
   have hb : Function.Bijective (Algebra.TensorProduct.map (AlgHom.id K K) φ) := by
     constructor
-    · haveI : Module.Flat R K := IsLocalization.flat K (nonZeroDivisors R)
+    · have : Module.Flat R K := IsLocalization.flat K (nonZeroDivisors R)
       exact Module.Flat.lTensor_preserves_injective_linearMap (M := K) φ.toLinearMap hi
     · intro x
       induction x using TensorProduct.induction_on with
@@ -990,12 +990,12 @@ theorem smooth_away_away {π : R} (h : Algebra.Smooth R (Localization.Away (alge
     Algebra.Smooth R (Localization.Away (algebraMap R (Localization.Away f) π)) := by
   let p := algebraMap R B π
   let T := Localization.Away (algebraMap B (Localization.Away p) f)
-  haveI : Algebra.Smooth (Localization.Away p) T := Algebra.Smooth.of_isLocalization_Away (algebraMap B (Localization.Away p) f)
-  haveI : Algebra.Smooth R T := Algebra.Smooth.comp R (Localization.Away p) T
-  haveI : IsLocalization.Away (f * p) T := inferInstance
-  haveI : IsLocalization.Away (algebraMap B (Localization.Away f) p) (Localization.Away (algebraMap R (Localization.Away f) π)) := by
+  have : Algebra.Smooth (Localization.Away p) T := Algebra.Smooth.of_isLocalization_Away (algebraMap B (Localization.Away p) f)
+  have : Algebra.Smooth R T := Algebra.Smooth.comp R (Localization.Away p) T
+  have : IsLocalization.Away (f * p) T := inferInstance
+  have : IsLocalization.Away (algebraMap B (Localization.Away f) p) (Localization.Away (algebraMap R (Localization.Away f) π)) := by
     rw [← IsScalarTower.algebraMap_apply]; infer_instance
-  haveI : IsLocalization.Away (f * p) (Localization.Away (algebraMap R (Localization.Away f) π)) :=
+  have : IsLocalization.Away (f * p) (Localization.Away (algebraMap R (Localization.Away f) π)) :=
     IsLocalization.Away.mul' (Localization.Away f) _ f p
   exact Algebra.Smooth.of_equiv ((IsLocalization.algEquiv (Submonoid.powers (f * p)) T
     (Localization.Away (algebraMap R (Localization.Away f) π))).restrictScalars R)
@@ -1004,10 +1004,10 @@ theorem smooth_away_of_inj {π : R} (h : Algebra.Smooth R (Localization.Away (al
     (φ : B →ₐ[R] C) (hi : Function.Injective φ)
     (hs : ∀ b' : C, ∃ (n : ℕ) (b : B), algebraMap R C π ^ n * b' = φ b) :
     Algebra.Smooth R (Localization.Away (algebraMap R C π)) := by
-  letI : Algebra B C := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower R B C := IsScalarTower.of_algHom φ
+  let : Algebra B C := φ.toRingHom.toAlgebra
+  have : IsScalarTower R B C := IsScalarTower.of_algHom φ
   have hφ : ∀ b, algebraMap B (Localization.Away (algebraMap R C π)) b = algebraMap C _ (φ b) := fun b => rfl
-  haveI : IsLocalization.Away (algebraMap R B π) (Localization.Away (algebraMap R C π)) := by
+  have : IsLocalization.Away (algebraMap R B π) (Localization.Away (algebraMap R C π)) := by
     refine IsLocalization.Away.mk _ ?_ ?_ ?_
     · rw [hφ, φ.commutes]; exact IsLocalization.Away.algebraMap_isUnit _
     · intro s
@@ -1033,9 +1033,9 @@ def kaehlerAway (R : Type) {B : Type} [CommRing R] [CommRing B] [Algebra R B] (f
 
 theorem defect_away (f : B) (a : Localization.Away f →ₐ[R] D) (π : R) (c : ℕ)
     (h : Defect (a.comp (IsScalarTower.toAlgHom R B (Localization.Away f))) π c) : Defect a π c := by
-  letI := a.toRingHom.toAlgebra
-  letI := (a.comp (IsScalarTower.toAlgHom R B (Localization.Away f))).toRingHom.toAlgebra
-  haveI : IsScalarTower B (Localization.Away f) D := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let := a.toRingHom.toAlgebra
+  let := (a.comp (IsScalarTower.toAlgHom R B (Localization.Away f))).toRingHom.toAlgebra
+  have : IsScalarTower B (Localization.Away f) D := IsScalarTower.of_algebraMap_eq fun _ => rfl
   intro w hw
   let e := kaehlerAway R f D
   apply e.injective
@@ -1049,11 +1049,11 @@ theorem defect_away (f : B) (a : Localization.Away f →ₐ[R] D) (π : R) (c : 
 theorem free_of_away (f : C) (M : Type) [AddCommGroup M] [Module C M] (D : Type) [CommRing D] [Algebra C D]
     [IsLocalization.Away f D] (h : Module.Free (Localization.Away f) (LocalizedModule (Submonoid.powers f) M)) :
     Module.Free D (D ⊗[C] M) := by
-  haveI : Module.Free (Localization.Away f) (Localization.Away f ⊗[C] M) :=
+  have : Module.Free (Localization.Away f) (Localization.Away f ⊗[C] M) :=
     Module.Free.of_equiv (LocalizedModule.equivTensorProduct (Submonoid.powers f) M)
   let e := IsLocalization.algEquiv (Submonoid.powers f) (Localization.Away f) D
-  letI : Algebra (Localization.Away f) D := e.toAlgHom.toRingHom.toAlgebra
-  haveI : IsScalarTower C (Localization.Away f) D := IsScalarTower.of_algHom e.toAlgHom
+  let : Algebra (Localization.Away f) D := e.toAlgHom.toRingHom.toAlgebra
+  have : IsScalarTower C (Localization.Away f) D := IsScalarTower.of_algHom e.toAlgHom
   exact Module.Free.of_equiv (TensorProduct.AlgebraTensorModule.cancelBaseChange C (Localization.Away f) D D M)
 end
 
@@ -1191,7 +1191,7 @@ include hπ
 theorem cov_zero (B : Type) [CommRing B] [Algebra R B] [Algebra.FiniteType R B] [Module.Flat R B]
     (hB : Algebra.Smooth R (Localization.Away (algebraMap R B π))) :
     Cov K (fun R' _ _ a => Unr π R' ∧ Defect a π 0 : Pts R B) := by
-  haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing R B
+  have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing R B
   refine cov_of_generic π _ (fun R' _ _ a h => h.1) ?_
   rintro E hE ⟨R', _, _, a, ha⟩
   obtain ⟨f, hf, hs⟩ := _root_.GlobalTheory.SS.exists_smooth_of_defect_zero R π hπ B hB R' a (hE R' a ha).1 (hE R' a ha).2
@@ -1204,7 +1204,7 @@ theorem cov_succ (hk : PerfectField (IsLocalRing.ResidueField R)) (c : ℕ)
     (B : Type) [CommRing B] [Algebra R B] [Algebra.FiniteType R B] [Module.Flat R B]
     (hB : Algebra.Smooth R (Localization.Away (algebraMap R B π))) :
     Cov K (fun R' _ _ a => Unr π R' ∧ Defect a π (c + 1) : Pts R B) := by
-  haveI : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing R B
+  have : IsNoetherianRing B := Algebra.FiniteType.isNoetherianRing R B
   refine cov_of_generic π _ (fun R' _ _ a h => h.1) ?_
   rintro E hE ⟨R₀, _, _, a₀, ha₀⟩
   have hU : ∀ (R' : Type) [CommRing R'] [Algebra R R'] (a : B →ₐ[R] R'), E R' a → Unr π R' :=
@@ -1213,8 +1213,8 @@ theorem cov_succ (hk : PerfectField (IsLocalRing.ResidueField R)) (c : ℕ)
   let k := IsLocalRing.ResidueField R
   have hI : I ≠ ⊤ := fun h => not_dvd_of_unit (hU R₀ a₀ ha₀) (isUnit_one.map a₀)
     ((h ▸ Submodule.mem_top : (1 : B) ∈ I) R₀ a₀ ha₀)
-  haveI : Nontrivial (B ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
-  haveI : IsReduced (B ⧸ I) := (Ideal.isRadical_iff_quotient_reduced I).1 (vanish_isRadical π E hU)
+  have : Nontrivial (B ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
+  have : IsReduced (B ⧸ I) := (Ideal.isRadical_iff_quotient_reduced I).1 (vanish_isRadical π E hU)
   have hm : ∀ r ∈ IsLocalRing.maximalIdeal R, algebraMap R (B ⧸ I) r = 0 := by
     intro r hr
     rw [hπ.maximalIdeal_eq, Ideal.mem_span_singleton] at hr
@@ -1222,31 +1222,31 @@ theorem cov_succ (hk : PerfectField (IsLocalRing.ResidueField R)) (c : ℕ)
     intro R' _ _ a _
     rw [a.commutes]
     exact map_dvd _ hr
-  letI : Algebra k (B ⧸ I) := (Ideal.Quotient.lift (IsLocalRing.maximalIdeal R) (algebraMap R (B ⧸ I)) hm).toAlgebra
-  haveI : IsScalarTower R k (B ⧸ I) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FiniteType k (B ⧸ I) := Algebra.FiniteType.of_restrictScalars_finiteType R k _
+  let : Algebra k (B ⧸ I) := (Ideal.Quotient.lift (IsLocalRing.maximalIdeal R) (algebraMap R (B ⧸ I)) hm).toAlgebra
+  have : IsScalarTower R k (B ⧸ I) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.FiniteType k (B ⧸ I) := Algebra.FiniteType.of_restrictScalars_finiteType R k _
   obtain ⟨g, hg, hs, hfree⟩ := _root_.GlobalTheory.SS.exists_smooth_free_away k (B ⧸ I) ((B ⧸ I) ⊗[B] KaehlerDifferential R B)
   obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective g
   refine ⟨f, fun h => hg (Ideal.Quotient.eq_zero_iff_mem.2 h), ?_⟩
   let L := Localization.Away f
   let J : Ideal L := I.map (algebraMap B L)
   let jf := IsScalarTower.toAlgHom R B L
-  haveI : IsLocalization.Away (Ideal.Quotient.mk I f) (L ⧸ J) := by
+  have : IsLocalization.Away (Ideal.Quotient.mk I f) (L ⧸ J) := by
     have : IsLocalization (Algebra.algebraMapSubmonoid (B ⧸ I) (Submonoid.powers f)) (L ⧸ J) := inferInstance
     rwa [Algebra.algebraMapSubmonoid_powers] at this
-  letI : Algebra k (L ⧸ J) := ((algebraMap (B ⧸ I) (L ⧸ J)).comp (algebraMap k (B ⧸ I))).toAlgebra
-  haveI : IsScalarTower k (B ⧸ I) (L ⧸ J) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower R k (L ⧸ J) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra k (L ⧸ J) := ((algebraMap (B ⧸ I) (L ⧸ J)).comp (algebraMap k (B ⧸ I))).toAlgebra
+  have : IsScalarTower k (B ⧸ I) (L ⧸ J) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower R k (L ⧸ J) := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hs' : Algebra.Smooth k (L ⧸ J) := Algebra.Smooth.of_equiv
     ((IsLocalization.algEquiv (Submonoid.powers (Ideal.Quotient.mk I f)) (Localization.Away (Ideal.Quotient.mk I f))
       (L ⧸ J)).restrictScalars k)
   have hfree' : Module.Free (L ⧸ J) ((L ⧸ J) ⊗[L] KaehlerDifferential R L) := by
-    haveI := free_of_away (Ideal.Quotient.mk I f) _ (L ⧸ J) hfree
-    haveI : Module.Free (L ⧸ J) ((L ⧸ J) ⊗[B] KaehlerDifferential R B) :=
+    have := free_of_away (Ideal.Quotient.mk I f) _ (L ⧸ J) hfree
+    have : Module.Free (L ⧸ J) ((L ⧸ J) ⊗[B] KaehlerDifferential R B) :=
       Module.Free.of_equiv (TensorProduct.AlgebraTensorModule.cancelBaseChange B (B ⧸ I) (L ⧸ J) (L ⧸ J) _)
     exact Module.Free.of_equiv (kaehlerAway R f (L ⧸ J)).symm
-  haveI : Algebra.FiniteType R L := Algebra.FiniteType.trans (S := B) inferInstance inferInstance
-  haveI : Module.Flat R L := Module.Flat.trans R B L
+  have : Algebra.FiniteType R L := Algebra.FiniteType.trans (S := B) inferInstance inferInstance
+  have : Module.Flat R L := Module.Flat.trans R B L
   obtain ⟨B', _, _, φ, _, _, hi, hsurj, hpt⟩ := _root_.GlobalTheory.SS.dilatation_lowers_defect R π hπ L (fun R' _ _ a => E R' (a.comp jf))
     (fun R' _ _ a ha => hU R' _ ha) J (vanish_away π E hU f) k IsLocalRing.residue_surjective hs' hfree'
   refine Cov.trans (φ.comp jf) ((genOpen_away f).comp (genOpen_of_inj hπ.ne_zero φ hi hsurj))
@@ -1270,7 +1270,7 @@ theorem smoothening : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscreteValu
   obtain ⟨l, p, q⟩ := H c B hB
   refine ⟨l.length, fun i => (l.get i).1, inferInstance, inferInstance, fun i => (l.get i).2,
     fun i => p _ (List.get_mem l i), fun R' _ _ a hu => ?_⟩
-  obtain ⟨x, hx, r⟩ := q R' a ⟨hu, by haveI := hu.1; exact hc R' a⟩
+  obtain ⟨x, hx, r⟩ := q R' a ⟨hu, by have := hu.1; exact hc R' a⟩
   obtain ⟨i, rfl⟩ := List.get_of_mem hx
   exact ⟨i, r⟩
 

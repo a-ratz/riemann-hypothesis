@@ -1325,7 +1325,7 @@ theorem exists_half_idem (l : Level H) :
   classical
   obtain ⟨Φ, hΦ⟩ := exists_comp D
   have hT : ∀ Q, Q ∈ (Ideal.finite_factors (half_ne_bot l)).toFinset ↔ l.Mb ≤ Q.asIdeal := fun Q => by
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_iff_le]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_iff_le]
   generalize (Ideal.finite_factors (half_ne_bot l)).toFinset = T at hT
   obtain ⟨e, h0, h1, h2, h3⟩ := exists_idem_finset hΦ T fun P hP hP' =>
     GlobalTheory.GeoLevel.not_isConjPl_of_le l ((hT _).1 hP) ((hT _).1 hP') ((isConjPl_iff _ _).2 rfl)

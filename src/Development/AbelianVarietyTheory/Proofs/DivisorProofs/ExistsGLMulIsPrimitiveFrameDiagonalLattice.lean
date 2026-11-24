@@ -72,12 +72,12 @@ theorem exists_gl_mul_isPrimFrame : ∀ (k : Type) [Field k] [ValuativeRel k] [T
   set V : Submodule k (C → k) := Submodule.span k (Set.range X.row) with hVdef
   set M : Submodule 𝒪[k] (C → k) := V.restrictScalars 𝒪[k] ⊓ Λ with hMdef
   have hΛfg : Λ.FG := (isLattice_diagLat d).fg
-  haveI : IsNoetherian 𝒪[k] Λ := isNoetherian_of_fg_of_noetherian Λ hΛfg
-  haveI : IsNoetherian 𝒪[k] M := isNoetherian_of_le inf_le_right
-  haveI : Module.IsTorsionFree 𝒪[k] k := inferInstance
-  haveI : Module.IsTorsionFree 𝒪[k] (C → k) := Module.IsTorsionFree.trans_faithfulSMul 𝒪[k] k (C → k)
-  haveI : Module.IsTorsionFree 𝒪[k] M := inferInstance
-  haveI : Module.Free 𝒪[k] M := Module.free_of_finite_type_torsion_free'
+  have : IsNoetherian 𝒪[k] Λ := isNoetherian_of_fg_of_noetherian Λ hΛfg
+  have : IsNoetherian 𝒪[k] M := isNoetherian_of_le inf_le_right
+  have : Module.IsTorsionFree 𝒪[k] k := inferInstance
+  have : Module.IsTorsionFree 𝒪[k] (C → k) := Module.IsTorsionFree.trans_faithfulSMul 𝒪[k] k (C → k)
+  have : Module.IsTorsionFree 𝒪[k] M := inferInstance
+  have : Module.Free 𝒪[k] M := Module.free_of_finite_type_torsion_free'
   let ι := Module.Free.ChooseBasisIndex 𝒪[k] M
   let b : Module.Basis ι 𝒪[k] M := Module.Free.chooseBasis 𝒪[k] M
   let v : ι → (C → k) := fun i => (b i : C → k)
@@ -140,7 +140,7 @@ theorem exists_gl_mul_isPrimFrame : ∀ (k : Type) [Field k] [ValuativeRel k] [T
     funext i
     rw [← hYg]
     try rfl
-  have hu : IsUnit (Matrix.of g) := Matrix.linearIndependent_rows_iff_isUnit.1 hgli
+  have hu : IsUnit (Matrix.of g) := linearIndependent_row_iff_isUnit.1 hgli
   refine ⟨hu.unit, ?_⟩
   rw [IsUnit.unit_spec, hYg, isPrimFrame_iff]
   refine ⟨fun i => hvΛ (e i), fun c hc i => ?_⟩

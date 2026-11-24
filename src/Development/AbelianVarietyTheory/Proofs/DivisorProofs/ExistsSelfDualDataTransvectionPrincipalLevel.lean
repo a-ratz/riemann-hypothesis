@@ -89,7 +89,7 @@ theorem gam_keeps_L' {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ
     · rw [add_smul, Matrix.mulVec_add]; exact add_mem h1 h2
   have h1 : (1 : E) ∈ ((A⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) : Submodule (𝓞 E) E) *
       (A : Submodule (𝓞 E) E) := by
-    rw [← FractionalIdeal.coe_mul, hinv]
+    rw [← FractionalIdeal.coeToSubmodule_mul, hinv]
     exact (FractionalIdeal.mem_one_iff _).2 ⟨1, map_one _⟩
   have := key 1 h1
   rwa [one_smul] at this

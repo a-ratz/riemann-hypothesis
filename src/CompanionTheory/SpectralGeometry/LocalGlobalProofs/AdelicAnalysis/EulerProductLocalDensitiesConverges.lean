@@ -64,14 +64,14 @@ theorem mass_fibre_summable :
   · intro v
     have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
     obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc
-    haveI := hTR
-    haveI := hLC
-    haveI := hSC
-    haveI := hT2
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := hTR
+    have := hLC
+    have := hSC
+    have := hT2
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     have hh := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b (lam v) (hlam v).1
-    haveI hW := hh.2.1 n M
-    haveI hH := hh.2.2 n
+    have hW := hh.2.1 n M
+    have hH := hh.2.2 n
     have hlf := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hCM M J hJ (Fv F v) hloc n _ _ (m v) hW hH (hm v)
       (hermOf (Fv F v) σ T hT)).1
     exact (_root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hCM d b n M v).1.measure_lt_top

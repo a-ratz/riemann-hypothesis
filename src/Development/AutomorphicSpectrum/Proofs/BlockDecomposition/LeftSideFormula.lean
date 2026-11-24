@@ -153,10 +153,10 @@ theorem scale_one (v : HeightOneSpectrum (𝓞 F)) (Q : Set (Fv F v)) (hQ : IsCo
       · have hvt : Valued.v t ≠ 0 := (Valuation.ne_zero_iff _).2 ht
         obtain ⟨n, hn⟩ := exists_pow_lt₀ hp1 (Units.mk0 _ (inv_ne_zero hvt))
         refine Set.mem_iUnion.2 ⟨n, ?_⟩
-        simp only [Set.mem_setOf_eq, map_mul, map_pow]
+        simp only [Set.mem_ofPred_eq, map_mul, map_pow]
         exact (mul_le_mul' hn.le le_rfl).trans (inv_mul_cancel₀ hvt).le)
     (directed_of_isDirected_le fun i j hij t ht => by
-      simp only [Set.mem_setOf_eq] at ht ⊢
+      simp only [Set.mem_ofPred_eq] at ht ⊢
       rw [← Nat.sub_add_cancel hij, pow_add, mul_assoc, map_mul, map_pow]
       exact mul_le_one' (pow_le_one' hp1.le _) ht)
   exact ⟨p ^ k, pow_pos hp0 k, fun t ht => (HeightOneSpectrum.mem_adicCompletionIntegers (𝓞 F) F v).2 (by
@@ -298,8 +298,8 @@ theorem pointwise : Equi → ∀ (F E : Type) [Field F] [NumberField F] [Field E
   have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (Rv v).2.2.1
   have : ∀ v, T2Space (Fv F v) := fun v => (Rv v).2.2.2.1
   have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
-  haveI := hli.1
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have := hli.1
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
   have hKi : IsHomeomorph (cK (F := F) (E := E) (Ainf F) b) := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Ainf F)).2.2.2.2.2.2.1 2 b
   have hKv : ∀ v, IsHomeomorph (cK (F := F) (E := E) (Fv F v) b) := fun v =>
     (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Fv F v)).2.2.2.2.2.2.1 2 b
@@ -474,14 +474,14 @@ theorem count : Equi → ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal
   intro hEq F _ _ hF θ hθ li lam hli hlam ι _ K hK
   obtain ⟨_, _, _, _, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
   have : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI := hli.1
+  have := hli.1
   obtain ⟨f, hf1, -, hfc, hf01⟩ := exists_continuous_one_zero_of_isCompact
     (hK.union (isCompact_singleton (x := (0 : ι → Ainf F)))) isClosed_empty (Set.disjoint_empty _)
   have hL := hEq F hF θ hθ li lam hli hlam ι ∅ (f : (ι → Ainf F) → ℝ) (fun _ _ => 0) f.continuous hfc (by simp)
   simp only [Finset.prod_empty, mul_one] at hL
   set L := ∫ y, f y ∂(Measure.pi fun _ : ι => li) with hLdef
   have hLpos : 0 < L := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero f.continuous hfc (fun x => (hf01 x).1)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero f.continuous hfc (fun x => (hf01 x).1)
       (x := 0) ?_
     rw [hf1 (Or.inr rfl)]
     exact one_ne_zero
@@ -761,7 +761,7 @@ theorem term_eq {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] {
   have e2 : ∀ v, projV v (projFin (ratTup (F := F) (AF F) X)) = ratTup (Fv F v) X := fun v => by
     funext a i
     simp [projV, projFin, ratTup, inclR]
-  simp only [Phi, term, Set.indicator, Set.mem_setOf_eq, (hp h _).1, (hp h _).2, e1, e2]
+  simp only [Phi, term, Set.indicator, Set.mem_ofPred_eq, (hp h _).1, (hp h _).2, e1, e2]
 
 theorem lside : Equi → CoCpt → LSide := by
   open scoped Pointwise in
@@ -789,7 +789,7 @@ theorem lside : Equi → CoCpt → LSide := by
     have e : {X : Fin 1 → Fin 2 → AF F ⊗[F] E | ∀ v, projV v (projFin X) ∈ A v} =
         (⋂ v ∈ S, (fun X => projV v (projFin X)) ⁻¹' A v) ∩ intOff b S := by
       ext X
-      simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, intOff]
+      simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, intOff]
       refine ⟨fun h => ⟨fun v _ => h v, fun v hv => hAoff v hv ▸ h v⟩, fun h v => ?_⟩
       by_cases hv : v ∈ S
       · exact h.1 v hv

@@ -99,7 +99,7 @@ theorem isMeasLevW_exists
     (K : Subgroup (GL (Fin V.rank) (Lev.EAf D))) (hK : IsLevelA V K) : ∃ μ, Lev.IsMeasLevW V K good μ := by
   obtain ⟨F⟩ := MF.frA_nonempty hS
   choose m0 hm0 using hex
-  haveI : ∀ ρ, (m0 ρ).IsHaarMeasure := fun ρ => hgH ρ _ (hm0 ρ)
+  have : ∀ ρ, (m0 ρ).IsHaarMeasure := fun ρ => hgH ρ _ (hm0 ρ)
   obtain ⟨g1, g2, g3⟩ := gf_facts (MF.toFrames F)
   obtain ⟨h1, h2, h3⟩ := G5.af_facts D.host.F
   obtain ⟨h1, h2, h3, h4, h5⟩ := G5.ha_facts (AF D.host.F) D.sp.cm.deg2 D.sp.cm.sig V.gram
@@ -108,9 +108,9 @@ theorem isMeasLevW_exists
   have hk0 : νf (kf (MF.toFrames F) K) ≠ 0 := (hko.measure_pos νf ⟨1, K.one_mem⟩).ne'
   have hkt : νf (kf (MF.toFrames F) K) ≠ ⊤ := hkc.measure_lt_top.ne
   set μf := (νf (kf (MF.toFrames F) K))⁻¹ • νf
-  haveI hμf : μf.IsHaarMeasure := by
+  have hμf : μf.IsHaarMeasure := by
     exact Measure.IsHaarMeasure.smul _ (ENNReal.inv_ne_zero.mpr hkt) (ENNReal.inv_ne_top.mpr hk0)
-  haveI hmv : ∀ v, ((m0 ((Formalism.L2.Host.tauPl D).symm v)).map (MF.phiR F v)).IsHaarMeasure := fun v =>
+  have hmv : ∀ v, ((m0 ((Formalism.L2.Host.tauPl D).symm v)).map (MF.phiR F v)).IsHaarMeasure := fun v =>
     (MF.phiR F v).toMulEquiv.isHaarMeasure_map (m0 ((Formalism.L2.Host.tauPl D).symm v)) (MF.phiR F v).continuous (MF.phiR F v).symm.continuous
   set μi := Measure.pi fun v => (m0 ((Formalism.L2.Host.tauPl D).symm v)).map (MF.phiR F v)
   have hμi : μi.IsHaarMeasure := Measure.pi.isHaarMeasure _
@@ -120,7 +120,7 @@ theorem isMeasLevW_exists
   have hmi : MeasurableMul ((v : InfinitePlace D.host.F) → Formalism.REAL.UJ ((MF.toFrames F).ε v)) := inferInstance
   have hprod : (μi.prod μf).IsHaarMeasure := Measure.prod.instIsHaarMeasure μi μf
   let μA : Measure (UI.instV (MF.toFrames F)).GA := μi.prod μf
-  haveI hμA : μA.IsHaarMeasure := hprod
+  have hμA : μA.IsHaarMeasure := hprod
   refine ⟨μA.map (UI.brg (MF.toFrames F)), ?_, ?_⟩
   · exact (UI.brg (MF.toFrames F)).toMulEquiv.isHaarMeasure_map μA (UI.brg (MF.toFrames F)).continuous
       (UI.brg (MF.toFrames F)).symm.continuous
@@ -147,7 +147,7 @@ theorem isMeasLevW_exists
       {h : GA D V | Lev.finE V h ∈ K ∧ ∀ ρ, ∃ c ∈ B' ρ,
       UpqT.mat c * F.A ρ = F.A ρ * infMat D.sp.cm.sig V.gram (thetaC D ρ) h} := by
     ext h
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     refine and_congr Iff.rfl (forall_congr' fun ρ => ?_)
     exact cond_change (F.A ρ) (A ρ) (u ρ) (hu ρ) (B ρ) _
   rw [hset, ← Finset.prod_congr rfl fun ρ _ => hB' ρ]
@@ -155,7 +155,7 @@ theorem isMeasLevW_exists
       UpqT.mat c * F.A ρ = F.A ρ * infMat D.sp.cm.sig V.gram (thetaC D ρ) h} =
       (Set.univ.pi fun v => MF.phiR F v '' B' ((Formalism.L2.Host.tauPl D).symm v)) ×ˢ kf (MF.toFrames F) K := by
     ext x
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_prod, Set.mem_univ_pi]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_prod, Set.mem_univ_pi]
     rw [finE_brg, and_comm]
     refine and_congr ?_ Iff.rfl
     constructor
@@ -174,7 +174,7 @@ theorem isMeasLevW_exists
   rw [Measure.prod_prod, Measure.pi_pi]
   have hf1 : μf (kf (MF.toFrames F) K) = 1 := by
     show ((νf (kf (MF.toFrames F) K))⁻¹ • νf) (kf (MF.toFrames F) K) = 1
-    rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hk0 hkt]
+    rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hk0 hkt]
   rw [hf1, mul_one]
   have hv : ∀ v, ((m ((Formalism.L2.Host.tauPl D).symm v)).map (MF.phiR F v)) (MF.phiR F v '' B' ((Formalism.L2.Host.tauPl D).symm v)) = m ((Formalism.L2.Host.tauPl D).symm v) (B' ((Formalism.L2.Host.tauPl D).symm v)) := by
     intro v
@@ -195,9 +195,9 @@ theorem measLevDefExists_holds : MeasLevDefExists D := fun V hS hD K hK =>
   isMeasLevW_exists (V := V) (fun _ m => m.IsHaarMeasure ∧ IsProbabilityMeasure m) (fun _ _ h => h.1)
     (fun ρ => by
       rcases hD (tauE D ρ) with h | h
-      · haveI : CompactSpace (UpqT (V.sig (tauE D ρ)).1 (V.sig (tauE D ρ)).2) := by rw [h]; infer_instance
+      · have : CompactSpace (UpqT (V.sig (tauE D ρ)).1 (V.sig (tauE D ρ)).2) := by rw [h]; infer_instance
         exact MU.prob_exists
-      · haveI : CompactSpace (UpqT (V.sig (tauE D ρ)).1 (V.sig (tauE D ρ)).2) := by rw [h]; infer_instance
+      · have : CompactSpace (UpqT (V.sig (tauE D ρ)).1 (V.sig (tauE D ρ)).2) := by rw [h]; infer_instance
         exact MU.prob_exists)
     (fun _ _ _ h h' => MU.prob_unique h h') hS K hK
 
@@ -205,7 +205,7 @@ theorem measFDExists_holds : MeasFDExists D := fun V hS K hK => by
   obtain ⟨μ, hμ⟩ := measLevExists_holds D V hS K hK
   obtain ⟨h1, h2, h3⟩ := G5.af_facts D.host.F
   obtain ⟨h1, -, -, h4, h5⟩ := G5.ha_facts (AF D.host.F) D.sp.cm.deg2 D.sp.cm.sig V.gram
-  haveI : DiscreteTopology (GQ V) := G5.hfin_disc D.sp.cm.sig V.gram
+  have : DiscreteTopology (GQ V) := G5.hfin_disc D.sp.cm.sig V.gram
   obtain ⟨𝓕, -, h𝓕⟩ := _root_.Bl.SecondBlockLemmaC.goal1 (GQ V)
   exact ⟨μ, 𝓕, hμ, h𝓕 μ⟩
 

@@ -54,8 +54,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.splitAlg_of :
   classical
   intro κ B Λ _ _ _ _ _ _ _ hcard ε g
   have hli := linearIndependent_toLinearMap κ B κ
-  haveI : Finite (B →ₐ[κ] κ) := hli.finite
-  letI := Fintype.ofFinite (B →ₐ[κ] κ)
+  have : Finite (B →ₐ[κ] κ) := hli.finite
+  let := Fintype.ofFinite (B →ₐ[κ] κ)
   have hspan : Submodule.span κ (Set.range (AlgHom.toLinearMap : (B →ₐ[κ] κ) → B →ₗ[κ] κ)) = ⊤ := by
     apply hli.span_eq_top_of_card_eq_finrank'
     rw [← Nat.card_eq_fintype_card, hcard]

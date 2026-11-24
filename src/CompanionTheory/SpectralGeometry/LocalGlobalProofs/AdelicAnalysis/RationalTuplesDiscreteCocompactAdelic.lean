@@ -72,7 +72,7 @@ theorem scalar (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] 
   obtain ⟨⟨hlc, hsc, ht2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨hC, hfin, hnc⟩ := _root_.GlobalTheory.CompanionTheory.Adelic.FieldCocompact.discrete_cocompact F
   obtain ⟨-, -, -, -, -, -, hb, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ h (AF F)
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have hd : 0 < Module.finrank F E := by rw [h.2.2.1]; norm_num
   let b := Module.finBasis F E
   let φ : AF F ⊗[F] E → Fin (Module.finrank F E) → AF F :=

@@ -93,13 +93,13 @@ theorem exists_continuous_modulus :
       map_add_left_eq_self]
   have hscale : ∀ t, ∃ c : ℝ≥0, μ.map (a t) = c • μ := by
     intro t
-    haveI := hfin t
-    haveI := hinvar t
+    have := hfin t
+    have := hinvar t
     exact ⟨_, Measure.isAddLeftInvariant_eq_smul _ μ⟩
   choose c hc using hscale
   obtain ⟨f, hfc, hf0, hfx⟩ := exists_continuous_nonneg_pos (0 : V)
   have hI : 0 < ∫ y, f y ∂μ :=
-    f.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hfc hf0 hfx
+    f.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hfc hf0 hfx
   have hint : ∀ t (g : V → ℝ), Continuous g →
       ∫ y, g (a t y) ∂μ = (c t : ℝ) * ∫ y, g y ∂μ := by
     intro t g hg

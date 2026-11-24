@@ -108,7 +108,7 @@ lemma coef_smoothOnGV {n : ℕ} (ε : Fin n → Bool) {Hs : Type} [NormedAddComm
   · intro g hg hgJ
     have h' : ∀ i, F i g = τ g (Q (b i)) := fun i => (hEq i g (Set.mem_iInter.1 hg i) hgJ).symm
     ext w
-    simp only [ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.coe_sum',
+    simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, FunLike.coe_sum,
       Finset.sum_apply, ContinuousLinearMap.smulRight_apply, h', c,
       LinearMap.coe_toContinuousLinearMap', Module.Basis.coord_apply]
     conv_lhs => rw [← b.sum_repr w]

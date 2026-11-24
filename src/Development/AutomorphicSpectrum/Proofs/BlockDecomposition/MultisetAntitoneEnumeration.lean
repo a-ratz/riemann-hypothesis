@@ -57,9 +57,9 @@ theorem exists_antitone_listing {α : Type*} (m : Multiset α) (f : α → ℝ) 
   classical
   obtain ⟨l, rfl⟩ := Quot.exists_rep m
   let r : α → α → Prop := fun a b => f b ≤ f a
-  haveI : DecidableRel r := fun _ _ => Classical.dec _
-  haveI : Std.Total r := ⟨fun a b => le_total (f b) (f a)⟩
-  haveI : IsTrans α r := ⟨fun a b c h1 h2 => le_trans h2 h1⟩
+  have : DecidableRel r := fun _ _ => Classical.dec _
+  have : Std.Total r := ⟨fun a b => le_total (f b) (f a)⟩
+  have : IsTrans α r := ⟨fun a b c h1 h2 => le_trans h2 h1⟩
   let l' := l.insertionSort r
   have hperm : l'.Perm l := List.perm_insertionSort r l
   have hsort : l'.Pairwise r := List.pairwise_insertionSort r l

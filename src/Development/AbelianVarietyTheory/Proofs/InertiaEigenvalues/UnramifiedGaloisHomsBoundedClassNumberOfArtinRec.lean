@@ -169,7 +169,7 @@ theorem hilbertSubgroup_le_ker : ∀ (E Ω : Type) [Field E] [NumberField E] [Fi
   intro σ hσ
   refine (hf σ).1 (Subgroup.topologicalClosure_minimal _ ((Subgroup.closure_le _).2 ?_) hclosed hσ)
   rintro g ((hg | ⟨A, hg⟩) | hg)
-  · exact Abelianization.commutator_subset_ker f hg
+  · exact Group.Abelianization.commutator_le_ker f hg
   · have hg' := (ReciprocityTheory.Neutral.Bridge.HCF.mem_inertia_map_iff E A g).1 hg
     rcases GlobalTheory.inertiaEl_eq_one_or_liesAbove E Ω A g hg' with rfl | ⟨v, hv⟩
     · exact f.ker.one_mem
@@ -205,7 +205,7 @@ theorem length_self_eq_top : Module.length O O = ⊤ := by
   by_contra h
   rw [← ne_eq, Module.length_ne_top_iff, isFiniteLength_iff_isNoetherian_isArtinian] at h
   obtain ⟨_, h2⟩ := h
-  haveI : IsArtinianRing O := h2
+  have : IsArtinianRing O := h2
   exact IsDiscreteValuationRing.not_a_field O
     (IsLocalRing.isField_iff_maximalIdeal_eq.1 (IsArtinianRing.isField_of_isDomain O))
 
@@ -313,7 +313,7 @@ theorem length_cyclic_le (l : ℕ) [Fact l.Prime] [Algebra ℤ_[l] O] {M : Type}
         rw [PadicInt.isUnit_iff, PadicInt.norm_natCast_eq_one_iff]
         exact (Nat.coprime_primes (Fact.out) (Fact.out)).2 (Ne.symm hpl)
       simpa using h1.map (algebraMap ℤ_[l] O)
-    haveI : Subsingleton ((AddSubgroup.zmultiples a) →+ M) := by
+    have : Subsingleton ((AddSubgroup.zmultiples a) →+ M) := by
       constructor
       intro f g
       apply evalGen_injective a
@@ -378,14 +378,14 @@ theorem length_addMonoidHom_le_of_card_eq (l : ℕ) [Fact l.Prime] [Algebra ℤ_
   | _ n ih =>
   intro A _ _ hn
   by_cases h1 : n = 1
-  · haveI : Subsingleton A := by
+  · have : Subsingleton A := by
       exact (Nat.card_eq_one_iff_unique.1 (hn.trans h1)).1
-    haveI : Subsingleton (A →+ M) :=
+    have : Subsingleton (A →+ M) :=
       ⟨fun f g => by ext x; rw [Subsingleton.elim x 0, map_zero, map_zero]⟩
     rw [Module.length_eq_zero]
     simp
   obtain ⟨p, hp, hpn⟩ := Nat.exists_prime_and_dvd h1
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨a, ha⟩ := exists_prime_addOrderOf_dvd_card' (G := A) p (hn ▸ hpn)
   set B := AddSubgroup.zmultiples a
   have hcard := AddSubgroup.card_eq_card_quotient_mul_card_addSubgroup B

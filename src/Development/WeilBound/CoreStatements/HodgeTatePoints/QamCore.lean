@@ -112,22 +112,22 @@ theorem exists_section_of_pow {X : Scheme.{0}} [IsIntegral X] (hN : ∀ b : X, I
     (ht : t ^ l = (X.germToFunctionField V).hom f) : ∃ s : Γ(X, V), (X.germToFunctionField V).hom s = t := by
   refine IsNormalScheme.exists_germToFunctionField_eq_of_locally V t fun x hx => ?_
   refine exists_germToFunctionField_eq_of_mem_range_stalk ?_ hx
-  haveI := hN x
+  have := hN x
   refine IsIntegrallyClosed.algebraMap_eq_of_integral (IsIntegral.of_pow hl ?_)
   rw [ht, ← Scheme.algebraMap_germ_eq_germToFunctionField X hx f]
   exact isIntegral_algebraMap
 
 theorem charP_functionField {X : Scheme.{0}} [IsIntegral X] (l : ℕ) [Fact l.Prime] (h : (l : Γ(X, ⊤)) = 0) :
     CharP X.functionField l := by
-  haveI : Nonempty (⊤ : X.Opens) := ⟨⟨genericPoint X, trivial⟩⟩
+  have : Nonempty (⊤ : X.Opens) := ⟨⟨genericPoint X, trivial⟩⟩
   refine (CharP.charP_iff_prime_eq_zero Fact.out).2 ?_
   rw [← map_natCast (X.germToFunctionField ⊤).hom, h, map_zero]
 
 theorem exists_root : ∀ (X : Scheme.{0}) [IsIntegral X], (∀ b : X, IsIntegrallyClosed (X.presheaf.stalk b)) → ∀ (l : ℕ) [Fact l.Prime], (l : Γ(X, ⊤)) = 0 → ∀ (J : Type) (U : J → X.Opens) (f : ∀ j, Γ(X, U j)) (n : ∀ j j', Γ(X, U j ⊓ U j')), (∀ j j', (X.presheaf.map (homOfLE (inf_le_left : U j ⊓ U j' ≤ U j)).op).hom (f j) - (X.presheaf.map (homOfLE (inf_le_right : U j ⊓ U j' ≤ U j')).op).hom (f j') = n j j' ^ l) → ∀ (i : J) (b : X) (hb : b ∈ U i) (h : FractionRing (X.presheaf.stalk b)), h ^ l = algebraMap (X.presheaf.stalk b) _ ((X.presheaf.germ (U i) b hb).hom (f i)) → ∃ H : ∀ j, Γ(X, U j), ∀ j j', (X.presheaf.map (homOfLE (inf_le_left : U j ⊓ U j' ≤ U j)).op).hom (H j) - (X.presheaf.map (homOfLE (inf_le_right : U j ⊓ U j' ≤ U j')).op).hom (H j') = n j j' := by
   intro X _ hN l _ hl J U f n hf i b hb h hh
-  haveI := charP_functionField l hl
+  have := charP_functionField l hl
   have hl0 : 0 < l := (Fact.out : l.Prime).pos
-  haveI : Nonempty (U i) := ⟨⟨b, hb⟩⟩
+  have : Nonempty (U i) := ⟨⟨b, hb⟩⟩
   let e := FractionRing.algEquiv (X.presheaf.stalk b) X.functionField
   have he : e h ^ l = (X.germToFunctionField (U i)).hom (f i) := by
     rw [← map_pow, hh, AlgEquiv.commutes]
@@ -141,7 +141,7 @@ theorem exists_root : ∀ (X : Scheme.{0}) [IsIntegral X], (∀ b : X, IsIntegra
       (X.germToFunctionField (U j)).hom H ^ l = (X.germToFunctionField (U j)).hom (f j) := by
     intro j
     by_cases hj : Nonempty (U j)
-    · haveI := nonempty_inf (U j) (U i)
+    · have := nonempty_inf (U j) (U i)
       have ht : (e h + (X.germToFunctionField (U j ⊓ U i)).hom (n j i)) ^ l =
           (X.germToFunctionField (U j)).hom (f j) := by
         rw [add_pow_char, he, ← hg, add_sub_cancel]
@@ -152,8 +152,8 @@ theorem exists_root : ∀ (X : Scheme.{0}) [IsIntegral X], (∀ b : X, IsIntegra
   refine ⟨H, fun j j' => ?_⟩
   by_cases hj : Nonempty (U j ⊓ U j' : X.Opens)
   · obtain ⟨⟨z, hz⟩⟩ := id hj
-    haveI : Nonempty (U j) := ⟨⟨z, hz.1⟩⟩
-    haveI : Nonempty (U j') := ⟨⟨z, hz.2⟩⟩
+    have : Nonempty (U j) := ⟨⟨z, hz.1⟩⟩
+    have : Nonempty (U j') := ⟨⟨z, hz.2⟩⟩
     apply X.germToFunctionField_injective (U j ⊓ U j')
     apply frobenius_inj X.functionField l
     change (X.germToFunctionField (U j ⊓ U j')).hom _ ^ l = (X.germToFunctionField (U j ⊓ U j')).hom _ ^ l
@@ -180,7 +180,7 @@ theorem GlobalTheory.CompanionTheory.Ar.CechP.coboundary_of_pow_coboundary : ∀
   have hg : genericPoint Z ∈ U a₀ := ((genericPoint_spec Z).mem_open_set_iff (U a₀).isOpen).mpr (by
     obtain ⟨⟨z, hz⟩⟩ := ‹Nonempty (U a₀)›
     exact ⟨z, trivial, hz⟩)
-  haveI : Nonempty (⊤ : Z.Opens) := ⟨⟨genericPoint Z, trivial⟩⟩
+  have : Nonempty (⊤ : Z.Opens) := ⟨⟨genericPoint Z, trivial⟩⟩
   have hp : (p : Γ(Z, ⊤)) = 0 := by
     apply Z.germToFunctionField_injective ⊤
     rw [map_natCast, map_zero]
@@ -452,7 +452,7 @@ theorem spec_case {Y : Scheme.{0}} (p : Y ⟶ Sp A) (q : Y ⟶ Sp J)
   have eq' : e.hom ≫ spMap ((Algebra.TensorProduct.includeRight : J →ₐ[k] A ⊗[k] J) : J →+* A ⊗[k] J) = q := by
     simp [e]
   let Φ : A ⊗[k] J →+* Γ(Y, ⊤) := e.hom.appTop.hom.comp (toΓ _)
-  haveI : IsIso e.hom.appTop := inferInstanceAs (IsIso (e.hom.app ⊤))
+  have : IsIso e.hom.appTop := inferInstanceAs (IsIso (e.hom.app ⊤))
   have hΦ : Function.Bijective Φ :=
     (ConcreteCategory.bijective_of_isIso e.hom.appTop).comp
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of (A ⊗[k] J))).inv)
@@ -495,14 +495,14 @@ theorem affine_case {U Y : Scheme.{0}} [IsAffine U] (p : Y ⟶ U) (q : Y ⟶ Sp 
     ∃! c : I → Γ(U, ⊤), f = ∑ i, p.appTop.hom (c i) * q.appTop.hom (toΓ J (b i)) := by
   let A : Type := Γ(U, ⊤)
   let g : k →+* A := (Spec.preimage (U.isoSpec.inv ≫ u)).hom
-  letI : Algebra k A := g.toAlgebra
+  let : Algebra k A := g.toAlgebra
   have hg : spMap (algebraMap k A) = U.isoSpec.inv ≫ u := Spec.map_preimage _
   have sq' : IsPullback (p ≫ U.isoSpec.hom) q (spMap (algebraMap k A)) (spMap (algebraMap k J)) := by
     rw [hg]
     exact IsPullback.of_iso sq (Iso.refl _) U.isoSpec (Iso.refl _) (Iso.refl _)
       (by simp) (by simp) (by simp) (by simp)
   let ψ : A →+* Γ(U, ⊤) := U.isoSpec.hom.appTop.hom.comp (toΓ A)
-  haveI : IsIso U.isoSpec.hom.appTop := inferInstanceAs (IsIso (U.isoSpec.hom.app ⊤))
+  have : IsIso U.isoSpec.hom.appTop := inferInstanceAs (IsIso (U.isoSpec.hom.app ⊤))
   have hψ : Function.Bijective ψ :=
     (ConcreteCategory.bijective_of_isIso U.isoSpec.hom.appTop).comp
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of A)).inv)
@@ -562,7 +562,7 @@ theorem prZ_affine (U : (pullback G.hom x).Opens) (hU : IsAffineOpen U) (f : Γ(
     ∃! c : Fin (m + 1) → Γ(pullback G.hom x, U),
       f = ∑ i, ((prZ G x m).app U).hom (c i) * dltOn G x m _ ^ (i : ℕ) := by
   obtain ⟨b, hb⟩ := jet_basis k m
-  haveI : IsAffine U.toScheme := hU
+  have : IsAffine U.toScheme := hU
   have sq := (isPullback_morphismRestrict (prZ G x m) U).paste_vert (prZ_isPullback G x m)
   have letterRowOperator : ∀ y, (prZ G x m ⁻¹ᵁ U).topIso.hom.hom ((prZ G x m ⁻¹ᵁ U).topIso.inv.hom y) = y := fun y =>
     congrArg (fun q => q.hom y) (prZ G x m ⁻¹ᵁ U).topIso.inv_hom_id
@@ -654,7 +654,7 @@ theorem pow_frobenius_truncated {B : Type} [CommRing B] (δ : B) (p : ℕ) [Fact
   have hp2 : 2 ≤ p := hpp.two_le
   rcases subsingleton_or_nontrivial B with hB | hB
   · exact Subsingleton.elim _ _
-  haveI : CharP B p := by
+  have : CharP B p := by
     have h := CharP.ringChar_of_prime_eq_zero hpp hp0
     rw [← h]
     exact ringChar.charP B
@@ -684,7 +684,7 @@ theorem pow_frobenius_truncated {B : Type} [CommRing B] (δ : B) (p : ℕ) [Fact
         obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_le hle
         rw [hk, pow_add, hδ, zero_mul]
       simp [hi0, hi1, mul_pow, ← pow_mul, hz]
-  simp only [hterm, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [hterm, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem delta_pow_mul_truncated {B : Type} [CommRing B] (δ : B) (p : ℕ)
     (hδ : δ ^ (p + 1) = 0) (b : Fin (p + 1) → B) (hb0 : b 0 = 1) :
@@ -717,7 +717,7 @@ theorem coeff_comparison : ∀ (A B : Type) [CommRing A] [CommRing B] (π : A �
     · simp [Function.update_of_ne hi, hi]
   have hsum : ∑ i, π (c₁ i) * δ ^ (i : ℕ) = ∑ i,
       π (Function.update c₂ (Fin.last p) (c₂ (Fin.last p) + u ⟨1, h1⟩ ^ p) i) * δ ^ (i : ℕ) := by
-    simp only [hlast, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hlast, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rw [hmain, hfrob, add_mul, _root_.one_mul, _root_.mul_assoc, hdel]
   have := huniq _ _ hsum
   rw [this]
@@ -835,7 +835,7 @@ theorem trU_pull (L : LB X) (a b : Y ⟶ X) (j j' : L.ι) (V : Y.Opens)
         Units.map ((h ≫ c).appLE _ V' hC').hom.toMonoidHom (L.g j j') := by
     intro c hC hC'
     ext
-    simp only [Units.coe_map, MonoidHom.coe_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass]
     have := Scheme.Hom.appLE_comp_appLE h c _ V V' hC hV
     exact congrArg (fun q => q.hom (L.g j j' : Γ(X, L.U j ⊓ L.U j'))) this
   rw [trU, trU, map_mul, map_inv, e a hA hA', e b hB hB']

@@ -139,8 +139,8 @@ theorem left_of_mem {σ : D.what₂.LL →+* ℂ} {Θ : MMap (R.MW i σ)} (h : �
   induction h using Submodule.span_induction with
   | mem F hF => exact (hF.aut v).left γ hγ g
   | zero => rfl
-  | add F F' _ _ h h' => simp only [MultilinearMap.add_apply, Pi.add_apply, h, h']
-  | smul s F _ h => simp only [MultilinearMap.smul_apply, Pi.smul_apply, h]
+  | add F F' _ _ h h' => simp only [add_apply, Pi.add_apply, h, h']
+  | smul s F _ h => simp only [smul_apply, Pi.smul_apply, h]
 
 theorem ratio_of_j (hU : R.LUnif) {y y' : Fin (R.nW i) → D.what₂.LL} {ρ : ℂ}
     (h : (R.FW i).j (sg0 D A) y = ρ • (R.FW i).j (sg0 D A) y') (h0 : (R.FW i).j (sg0 D A) y ≠ 0) : ∃ a, D.what₂.embLL a = ρ :=
@@ -215,9 +215,9 @@ theorem exists_adForm (fw : FWTie T R κ v₀) (hHW : R.models_HW) (hU : R.LUnif
     · simp only [Pi.sub_apply, evAt, left_of_mem ((hHW i _).2.1.le (LinearMap.mem_range_self _ _)) _ γ hγ g]
     · rw [mul_one, Pi.sub_apply, sub_eq_zero]
       refine (h q).trans ?_
-      rw [evAt, e', e, MultilinearMap.smul_apply, MultilinearMap.sum_apply, Pi.smul_apply, Finset.sum_apply]
+      rw [evAt, e', e, smul_apply, sum_apply, Pi.smul_apply, Finset.sum_apply]
       refine congrArg (c * ·) (Finset.sum_congr rfl fun l _ => ?_)
-      rw [MultilinearMap.smul_apply, adForm_e fw hU hV]
+      rw [smul_apply, adForm_e fw hU hV]
       rfl
   exact ⟨_, (congrArg _ (GlobalTheory.EvalAtUnitVector.evInj T R v₀ hHW fw.hv₀ i _ hg key)).trans e'⟩
 

@@ -174,7 +174,7 @@ private theorem exp_pi_I_intCast_eq_neg_one_pow (m : ℤ) :
   have h : (Real.pi : ℂ) * Complex.I * (((m : ℝ)) : ℂ) = (m : ℂ) * ((Real.pi : ℂ) * Complex.I) := by
     push_cast
     ring
-  rw [h, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [h, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
 
 private theorem cmTheta_one_eq :
     cmTheta 1 d = ((1 / 2 : ℝ) : ℂ) + ((Real.sqrt d / 2 : ℝ) : ℂ) * Complex.I := by
@@ -327,7 +327,7 @@ theorem char_eq (hd : d % 8 = 7) (w : ℂ) (hw : w ∈ L.lattice) : aa L d w = t
   have rtwo : ∀ v ∈ L.lattice, aa L d (2 * v) * thetaZeroCharacter L ω₀ (2 * v) = 1 := by
     intro v hv; rw [two_mul, radd v hv v hv, rsq v hv]
   have r0 : aa L d ω₀ * thetaZeroCharacter L ω₀ ω₀ = 1 := by
-    rw [aa, hQ, exp_pi_int, hodd.neg_one_zpow, thetaZeroCharacter, semiChar, if_neg (half_notMem hst h0 hθ hθ'), cayleyGaussianIntegrals_self_fact]
+    rw [aa, hQ, exp_pi_int, hodd.neg_one_zpow, thetaZeroCharacter, semiChar, ite_eq_right (half_notMem hst h0 hθ hθ'), cayleyGaussianIntegrals_self_fact]
     simp
   have ru : aa L d (cmTheta 1 d * ω₀) * thetaZeroCharacter L ω₀ (cmTheta 1 d * ω₀) = 1 := by
     have hne : cmTheta 1 d * ω₀ / 2 ∉ L.lattice := by rwa [mul_div_assoc]
@@ -336,7 +336,7 @@ theorem char_eq (hd : d % 8 = 7) (w : ℂ) (hw : w ∈ L.lattice) : aa L d w = t
       rw [quadratic_form_theta_scaling, hQ]
       have hd' : (d : ℝ) = 8 * (k' : ℝ) + 7 := by exact_mod_cast hk'
       rw [hd']; push_cast; ring
-    rw [aa, hq2, exp_pi_int, thetaZeroCharacter, semiChar, if_neg hne, altE_theta, hQ, exp_pi_int, hodd.neg_one_zpow,
+    rw [aa, hq2, exp_pi_int, thetaZeroCharacter, semiChar, ite_eq_right hne, altE_theta, hQ, exp_pi_int, hodd.neg_one_zpow,
       Even.neg_one_zpow ⟨(k' + 1) * Q, by ring⟩]
     norm_num
   have rall : aa L d w * thetaZeroCharacter L ω₀ w = 1 := by

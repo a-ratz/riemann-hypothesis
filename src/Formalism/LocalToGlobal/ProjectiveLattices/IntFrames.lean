@@ -152,7 +152,7 @@ theorem intFrames_of (hC : ReciprocityTheory.ChartRestriction.G.Out.CubePullSt) 
     rw [ha i]
     exact e _ _ _ _
   intro T io O _ β Y hP yt z h1 h2
-  letI := io.toAlgebra
+  let := io.toAlgebra
   intro y₀ hy₀
   obtain ⟨x0, hx0, u0, tan0, eig0, basis0, s0, gen0⟩ := y₀
   dsimp only at hy₀

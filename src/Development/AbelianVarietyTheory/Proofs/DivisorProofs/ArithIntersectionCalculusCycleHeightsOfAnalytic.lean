@@ -235,7 +235,7 @@ theorem polarisation_mixed_term_of_powers : ∀ (A : Type) [CommRing A] (θ : A 
   have hc := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 1) hPQ
   simp only [hP, hQ, Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow] at hc
   simp only [Finset.sum_ite_eq, Finset.mem_range] at hc
-  rw [if_pos (by omega), if_pos (by omega)] at hc
+  rw [ite_eq_left (by omega), ite_eq_left (by omega)] at hc
   · simp only [pow_one, Nat.choose_one_right, Nat.add_sub_cancel] at hc
     have hD : ((D + 1 : ℕ) : ℝ) ≠ 0 := by positivity
     push_cast at hc hD
@@ -389,7 +389,7 @@ theorem finite_coheight_one_mem_supp {Z : Scheme.{0}} [IsIntegral Z] [IsLocallyN
     fun z hz => ?_
   obtain ⟨T, hT, hzT⟩ := Set.mem_sUnion.1 (hU.le hz.2)
   refine ⟨T, hT, ?_⟩
-  simp only [dif_pos (hi T hT)]
+  simp only [dite_eq_left (hi T hT)]
   have hg := (hi T hT).isGenericPoint_genericPoint (hc T hT)
   have h₁ : z ≤ (hi T hT).genericPoint := hg.specializes hzT
   have h₂ : (hi T hT).genericPoint < genericPoint Z := by
@@ -508,7 +508,7 @@ theorem log_card_residueField {κ : Type} [Field κ] [Finite κ] {Y : Scheme.{0}
   obtain ⟨W, j, _, _, rfl⟩ := exists_isClosedImmersion_genericPoint z
   have hrange : Set.range j = closure {j (genericPoint W)} := by
     rw [← Set.image_singleton, j.isClosedEmbedding.closure_image_eq, (genericPoint_spec _).def, Set.image_univ]
-  letI := algebraΓAlong κ j
+  let := algebraΓAlong κ j
   have hW : topologicalKrullDim W = (0 : ℕ) :=
     (topologicalKrullDim_eq_of_isEmbedding j.isClosedEmbedding.isEmbedding hrange).symm.trans hdim
   rw [InterModel.interNumRed_eq_interNumOn _ j _ hrange,
@@ -790,7 +790,7 @@ theorem injective_of_ringHom (B : Type) [CommRing B] [IsDomain B] [Module.Finite
   have h : (RingHom.ker τ).comap (algebraMap ℤ B) = ⊥ := by
     ext n
     simp [RingHom.mem_ker, Ideal.mem_comap]
-  have := Ideal.eq_bot_of_comap_eq_bot h
+  have := Ideal.eq_bot_of_under_eq_bot h
   have hx' : x ∈ RingHom.ker τ := hx
   rw [this] at hx'
   simpa using hx'
@@ -813,13 +813,13 @@ theorem log_card_quot_span_eq_finsum_log_norm : ∀ (B : Type) [CommRing B] [IsD
       Real.log (Nat.card (B ⧸ Ideal.span {b})) = ∑ᶠ τ : B →+* ℂ, Real.log ‖τ b‖ := by
   intro B _ _ _ _ b hb
   classical
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid B ℤ⁰) (FractionRing B) :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid B ℤ⁰) (FractionRing B) :=
     Algebra.IsAlgebraic.instIsLocalizationAlgebraMapSubmonoidNonZeroDivisors ℤ B (FractionRing B)
-  haveI : IsScalarTower ℤ ℚ (FractionRing B) :=
+  have : IsScalarTower ℤ ℚ (FractionRing B) :=
     ⟨fun n q x => by rw [zsmul_eq_mul, zsmul_eq_mul, Algebra.smul_def, Algebra.smul_def, map_mul, map_intCast, mul_assoc]⟩
-  haveI : @IsScalarTower ℤ ℚ (FractionRing B) Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
+  have : @IsScalarTower ℤ ℚ (FractionRing B) Algebra.toSMul Algebra.toSMul Algebra.toSMul :=
     IsScalarTower.of_algebraMap_eq' (RingHom.ext_int _ _)
-  haveI : FiniteDimensional ℚ (FractionRing B) := Module.Finite.of_isLocalization ℤ B ℤ⁰
+  have : FiniteDimensional ℚ (FractionRing B) := Module.Finite.of_isLocalization ℤ B ℤ⁰
   have hcard := card_quot_span_eq B b hb
   have hN0 : Algebra.norm ℤ b ≠ 0 := Algebra.norm_ne_zero_iff.mpr hb
   refine ⟨Nat.finite_of_card_ne_zero (by rw [hcard]; exact Int.natAbs_ne_zero.mpr hN0), ?_⟩
@@ -1083,7 +1083,7 @@ theorem archInt_eq_zero {k : Type} [CommRing k] {Z : Scheme.{0}} [IsIntegral Z] 
     {r : M.B.ι → Z.functionFieldˣ} (hr : IsRatSec M.B r) : L.archInt M e hr = 0 := by
   unfold HermLB.archInt
   refine finsum_eq_zero_of_forall_eq_zero fun σ => ?_
-  haveI := hq σ
+  have := hq σ
   simp [Weight.chernInt, MeasureTheory.integral_of_isEmpty]
 
 theorem main : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp k), IsAmb q → topologicalKrullDim Y = (0 + 1 : ℕ) → ∀ (N : HermLB q) (L : Fin 0 → HermLB q) (r : N.B.ι → Y.functionFieldˣ) (hr : IsRatSec N.B r) (r' : N.B.ι → Y.functionFieldˣ) (hr' : IsRatSec N.B r'), recVal (fun z => Real.log (Nat.card (Y.residueField z))) L N hr = recVal (fun z => Real.log (Nat.card (Y.residueField z))) L N hr' := by
@@ -1185,10 +1185,10 @@ theorem iso_of_closedImmersion_genericPoint_eq :
     obtain ⟨y', hy⟩ : i y ∈ Set.range i' := hr ▸ ⟨y, rfl⟩
     obtain ⟨z, hz, -⟩ := Scheme.Pullback.exists_preimage_pullback (f := i) (g := i') y y' hy.symm
     exact ⟨z, hz⟩
-  haveI : Surjective (pullback.snd i i') := ⟨hs⟩
-  haveI : Surjective (pullback.fst i i') := ⟨hf⟩
-  haveI : IsIso (pullback.snd i i') := isIso_of_isClosedImmersion_of_surjective _
-  haveI : IsIso (pullback.fst i i') := isIso_of_isClosedImmersion_of_surjective _
+  have : Surjective (pullback.snd i i') := ⟨hs⟩
+  have : Surjective (pullback.fst i i') := ⟨hf⟩
+  have : IsIso (pullback.snd i i') := isIso_of_isClosedImmersion_of_surjective _
+  have : IsIso (pullback.fst i i') := isIso_of_isClosedImmersion_of_surjective _
   refine ⟨inv (pullback.snd i i') ≫ pullback.fst i i', inferInstance, ?_, ?_⟩
   · rw [Category.assoc, pullback.condition, IsIso.inv_hom_id_assoc]
   · apply i.isClosedEmbedding.injective
@@ -1546,7 +1546,7 @@ def extend (m : ℕ) (T : ∀ d : ℕ, (Fin d → HermLB p) → X → ℝ) (V : 
   fun d L x => if h : d = m + 1 then V (fun a => L (Fin.cast h.symm a)) x else T d L x
 
 theorem extend_of_ne {m : ℕ} {T : ∀ d : ℕ, (Fin d → HermLB p) → X → ℝ} {V : (Fin (m + 1) → HermLB p) → X → ℝ}
-    {d : ℕ} (h : d ≠ m + 1) (L : Fin d → HermLB p) (x : X) : extend m T V d L x = T d L x := dif_neg h
+    {d : ℕ} (h : d ≠ m + 1) (L : Fin d → HermLB p) (x : X) : extend m T V d L x = T d L x := dite_eq_right h
 
 theorem extend_self {m : ℕ} {T : ∀ d : ℕ, (Fin d → HermLB p) → X → ℝ} {V : (Fin (m + 1) → HermLB p) → X → ℝ}
     (L : Fin (m + 1) → HermLB p) (x : X) : extend m T V (m + 1) L x = V L x := by
@@ -1577,7 +1577,7 @@ theorem isRatSec_tens_mul {Z : Scheme.{0}} [IsIntegral Z] {A B : LB Z} {r : A.ι
 theorem isMix_succ : ArchInteg → ArchRecip → ∀ m : ℕ, (∀ (k : Type) [CommRing k] (Y : Scheme.{0}) (q : Y ⟶ Sp k), IsAmb q → ∃ T, IsMix q m T) → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp k), IsAmb p → ∃ T, IsMix p (m + 1) T := by
   intro hI hR m hm k _ X p hp
   classical
-  haveI : IsNoetherian X := hp.isNoetherian
+  have : IsNoetherian X := hp.isNoetherian
   obtain ⟨T, hT⟩ := hm k X p hp
   choose v hv using _root_.GlobalTheory.MixHt.StepVal.step_val hI hR m hm k X p hp T hT
   have hD := _root_.GlobalTheory.MixHt.hasDim_basic k X p hp
@@ -1603,7 +1603,7 @@ theorem isMix_succ : ArchInteg → ArchRecip → ∀ m : ℕ, (∀ (k : Type) [C
   have hV : ∀ (L : Fin (m + 1) → HermLB p) (x : X) (hx : HasDim x (m + 1)),
       extend m T V (m + 1) L x = v x hx (L 0) (Fin.tail L) := fun L x hx => by
     rw [extend_self]
-    exact dif_pos hx
+    exact dite_eq_left hx
   have hsym : ∀ (x : X) (hx : HasDim x (m + 1)) (L : Fin (m + 1) → HermLB p) (e : Equiv.Perm (Fin (m + 1))),
       v x hx (L (e 0)) (Fin.tail fun a => L (e a)) = v x hx (L 0) (Fin.tail L) := by
     intro x hx L e

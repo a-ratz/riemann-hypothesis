@@ -636,8 +636,8 @@ theorem model_ext {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
     {Xo : Moduli D l} {c : Coeff l} {O : Type} [CommRing O] {β : O →+* c.F} (Y : Model Xo c β)
     {F : Type} [Field F] (A : Subring F) {z z' : Spec (CommRingCat.of A) ⟶ Y.X}
     (h : Spec.map (CommRingCat.ofHom A.subtype) ≫ z = Spec.map (CommRingCat.ofHom A.subtype) ≫ z') : z = z' := by
-  haveI : IsProper Y.s := GlobalTheory.SchemeWords.isProper_of_isProjOver Y.proj
-  haveI : IsDominant (Spec.map (CommRingCat.ofHom A.subtype)) :=
+  have : IsProper Y.s := GlobalTheory.SchemeWords.isProper_of_isProjOver Y.proj
+  have : IsDominant (Spec.map (CommRingCat.ofHom A.subtype)) :=
     ⟨(PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical A.subtype).2 (by
       rw [(RingHom.injective_iff_ker_eq_bot A.subtype).1 Subtype.val_injective]
       exact bot_le)⟩
@@ -727,7 +727,7 @@ theorem coeff_mem {F : Type} [Field F] (A : Subring F) (hfrac : ∀ a : F, ∃ d
     · intro l _ hl
       simp [hl]
     · simp
-  rw [if_pos trivial, hs, add_zero] at e
+  rw [ite_eq_left trivial, hs, add_zero] at e
   have : d * ((g x : A) : F) = d * (n * C) := by rw [e]; ring
   exact (mul_left_cancel₀ hd0 this).symm
 
@@ -821,8 +821,8 @@ theorem core (𝔐 : HodgeCpt Y S y) (𝔐₀ : HodgeCpt Y S₀ y₀) (Fl : 𝔐
     ∃ (t : Ω) (t₀ : Ω₀), ((𝔐.V s).gr (Fl.b s) j).IsGenAt ⟨centre z, h⟩ t ∧
       ((𝔐₀.V s).gr (Fl₀.b s) j).IsGenAt ⟨centre z₀, h₀⟩ t₀ ∧ t / i t₀ ∈ A ∧ i t₀ / t ∈ A := by
   classical
-  haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
-  haveI : Smooth 𝔐₀.t.G.hom := 𝔐₀.t.semi.smooth
+  have : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
+  have : Smooth 𝔐₀.t.G.hom := 𝔐₀.t.semi.smooth
   obtain ⟨m, hm0, hm⟩ := Sandwich.lat_sandwich E H D l Xo c Y S Ω K J y 𝔐 Fl
   obtain ⟨m₀, hm₀0, hm₀⟩ := Sandwich.lat_sandwich E H D l Xo c Y S₀ Ω₀ K₀ J₀ y₀ 𝔐₀ Fl₀
   obtain ⟨b, π, hbF, hbV, hbm, hbπ, hbr⟩ := hm s ⟨centre z, h⟩
@@ -948,7 +948,7 @@ theorem genUnit_join : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   classical
   choose cj hcj using hz.1
   obtain ⟨A, hloc, hrat, hnat, hunit⟩ := exists_locRing (Ht.joinOf M R i) z hz
-  haveI := hloc
+  have := hloc
   have hyj : ∀ k, Ht.joinOf M R i ⟨k, cj k⟩ ≠ 0 := fun k => (hrat k (cj k) (cj k) (hcj k)).1
   obtain ⟨c₁, hc₁⟩ : ∃ c₁ : (k : M.K) → M.«ι» k, c₁ = fun k => cj (Sum.inl k) := ⟨_, rfl⟩
   obtain ⟨c₂, hc₂⟩ : ∃ c₂ : (k : R.K) → R.«ι» k, c₂ = fun k => cj (Sum.inr k) := ⟨_, rfl⟩

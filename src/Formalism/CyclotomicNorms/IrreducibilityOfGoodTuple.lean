@@ -606,7 +606,7 @@ theorem restriction_of_blocks_and_jordan (hB : BlocksCycle) (hJ : JordanTransiti
       have hd := hsing _ (htr W hW g) x hj _ hmem
       exact ⟨g, (hsame (e.repr (ρ g (e i₀)) x) (co g i₀) x (fo g i₀) (hc0 g i₀)
         (by rw [← hfc g i₀]; exact hd.symm)).symm⟩
-    letI : MulAction (G ⧸ H) (Fin N) := MulAction.compHom (Fin N) (QuotientGroup.lift H σ (by
+    let : MulAction (G ⧸ H) (Fin N) := MulAction.compHom (Fin N) (QuotientGroup.lift H σ (by
       intro x hx
       first
       | exact hker1 x hx

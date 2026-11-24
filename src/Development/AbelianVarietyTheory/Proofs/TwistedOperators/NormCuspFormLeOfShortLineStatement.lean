@@ -319,7 +319,7 @@ theorem exists_step (I : AutInst) (x : I.GA) (q : ℕ) (hn : 1 ≤ I.n)
     | zero => exact Nat.zero_le _
     | succ i ih =>
       have := (hpiece i).2.1
-      simp only [Fin.coe_castSucc] at ih
+      simp only [Fin.val_castSucc] at ih
       simp only [Fin.val_succ]
       omega
   have haq : a ≤ q := by
@@ -338,13 +338,13 @@ theorem exists_step (I : AutInst) (x : I.GA) (q : ℕ) (hn : 1 ≤ I.n)
     · norm_num
   have hτ'lt : ∀ i < a, τ' i < τ' (i + 1) := by
     intro i hi
-    simp only [hτ', dif_pos hi]
+    simp only [hτ', dite_eq_left hi]
     split_ifs with h
     · exact hτmono (Fin.mk_lt_mk.2 (Nat.lt_succ_self i))
     · exact (hτ ⟨i, hi⟩).2.1
   have hτ'a : τ' a = 1 / 2 := by simp [hτ']
   have hτ'0 : τ' 0 = least I x := by
-    simp only [hτ', dif_pos (show 0 < a by omega)]
+    simp only [hτ', dite_eq_left (show 0 < a by omega)]
     exact hτ0 (by omega)
   obtain ⟨b, hb, hratio, hsq⟩ := GlobalTheory.exists_consecutive_ratio_le_rpow a q τ' ha haq hτ'pos hτ'lt hτ'a
   rw [hτ'0] at hratio hsq
@@ -565,7 +565,7 @@ theorem least_pow_mul_sqrt_absNorm_le_prod : ∀ (I : AutInst) (x : I.GA) (𝔪 
       ∏ v, Real.sqrt (∑ i, ‖(uMat (x.1 v)⁻¹ *ᵥ ((I.P v)⁻¹ *ᵥ fun j => I.φ v (w j))) i‖ ^ 2) := by
   intro I x 𝔪 h𝔪 w hw hw0
   obtain ⟨hTC, hf, -, hbij, hX0⟩ := GlobalTheory.Count.FrameMajorant.frames_give_majorants I x
-  haveI := hTC
+  have := hTC
   have hX : ∀ v, IsUnit (frm I x v).det := fun v => (hX0 v).1
   obtain ⟨a, ha𝔪, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h𝔪
   obtain ⟨𝔟, h𝔟⟩ := (Ideal.dvd_span_singleton).2 ha𝔪
@@ -713,7 +713,7 @@ theorem prod_map_mulSingle_apply {ι : Type u_1} [DecidableEq ι] {M : ι → Ty
     rw [List.map_cons, List.prod_cons, Pi.mul_apply, ih hl']
     by_cases h : w = a
     · subst h
-      rw [if_neg ha, if_pos List.mem_cons_self, Pi.mulSingle_eq_same, mul_one]
+      rw [ite_eq_right ha, ite_eq_left List.mem_cons_self, Pi.mulSingle_eq_same, mul_one]
     · rw [Pi.mulSingle_eq_of_ne h, one_mul]
       simp only [List.mem_cons, h, false_or]
 
@@ -915,7 +915,7 @@ theorem lip_move_real : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (V : H
     funext w
     refine Eq.trans ?_ (list_prod_mulSingle (M := fun w : InfinitePlace (UI.instV fr).F => Formalism.REAL.UJ ((UI.instV fr).ε w))
       (fun v => expUJ (hAZ v).1 * expUJ (hAZ v).2) _ (Finset.nodup_toList _) w).symm
-    refine Eq.trans ?_ (if_pos (Finset.mem_toList.2 (Finset.mem_univ _))).symm
+    refine Eq.trans ?_ (ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ _))).symm
     exact Subtype.ext (Units.ext (hu w))
   have hfac : UI.brg fr (u, 1) = ((Finset.univ : Finset (InfinitePlace D.host.F)).toList.map fun v =>
       oneP θ V ((Formalism.L2.Host.tauPl D).symm v) (fr.P v * Av v * (fr.P v)⁻¹) 1 *
@@ -1144,7 +1144,7 @@ theorem sum_sqrt_add_le : ∀ (ι : Type) [Fintype ι] (a b : ι → ℝ), (∀ 
 
 theorem finrank_eq_card_and_rd : ∀ D : D7, Module.finrank ℚ D.host.F = Fintype.card D.what₂.Tau ∧ |(discr D.host.E : ℝ)| ^ ((1 : ℝ) / (2 * (Module.finrank ℚ D.host.F : ℝ))) = rdisc D := by
   intro D
-  haveI := D.sp.cm.totReal
+  have := D.sp.cm.totReal
   refine ⟨?_, ?_⟩
   · rw [Fintype.card_congr (Formalism.L2.Host.tauPl D), ← NumberField.InfinitePlace.card_add_two_mul_card_eq_rank,
       NumberField.IsTotallyReal.nrComplexPlaces_eq_zero, mul_zero, add_zero,

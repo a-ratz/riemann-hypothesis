@@ -126,9 +126,9 @@ private theorem eq_one_of_geom {Z B : Over S} [GrpObj B] [IsCommMonObj B] (hB : 
     (hn : IsUnit (n : Γ(S, ⊤))) (g : Z ⟶ B) (hg : g ^ n = 1)
     (h : ∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ S) (y : Over.mk x ⟶ Z), y ≫ g = 1) : g = 1 := by
   obtain ⟨_, hfin, het⟩ := GlobalTheory.GrpTangent.finiteEtale_mulN_torsion B (hG := hB) hn
-  haveI := hfin
-  haveI := het
-  haveI := GlobalTheory.HTTorsRep.mono_ι (A := B) n
+  have := hfin
+  have := het
+  have := GlobalTheory.HTTorsRep.mono_ι (A := B) n
   have hw : g ≫ mulN B n = toUnit Z ≫ η := by
     rw [GlobalTheory.GrpTangent.mulN_eq_pow, comp_pow, Category.comp_id, hg]
     rfl
@@ -186,14 +186,14 @@ private theorem exists_factor {A B C : Over S} [GrpObj A] [IsCommMonObj A] [GrpO
     ∃ φ : B ⟶ C, IsMonHom φ ∧ ψ₁ ≫ φ = ψ₂ := by
   obtain ⟨_, _, _, _⟩ := GlobalTheory.abelianScheme_id_pow_finite_etale_surjective S A n hA hn
   obtain ⟨_, _, _, _⟩ := GlobalTheory.abelianScheme_id_pow_finite_etale_surjective S B n hB hn
-  haveI : EffectiveEpi (Over.Hom.left ((𝟙 A) ^ n)) := inferInstance
-  haveI : EffectiveEpi (Over.Hom.left ((𝟙 B) ^ n)) := inferInstance
+  have : EffectiveEpi (Over.Hom.left ((𝟙 A) ^ n)) := inferInstance
+  have : EffectiveEpi (Over.Hom.left ((𝟙 B) ^ n)) := inferInstance
   have e1 : ψ₁.left ≫ ψ₁'.left = Over.Hom.left ((𝟙 A) ^ n) := by rw [← Over.comp_left, h1]
   have e2 : ψ₁'.left ≫ ψ₁.left = Over.Hom.left ((𝟙 B) ^ n) := by rw [← Over.comp_left, h2]
-  haveI : Epi (ψ₁.left ≫ ψ₁'.left) := by rw [e1]; infer_instance
-  haveI : Epi ψ₁'.left := epi_of_epi ψ₁.left ψ₁'.left
-  haveI : EffectiveEpi (ψ₁'.left ≫ ψ₁.left) := by rw [e2]; infer_instance
-  haveI : EffectiveEpi ψ₁.left := effectiveEpi_of_effectiveEpi_epi_comp ψ₁.left ψ₁'.left
+  have : Epi (ψ₁.left ≫ ψ₁'.left) := by rw [e1]; infer_instance
+  have : Epi ψ₁'.left := epi_of_epi ψ₁.left ψ₁'.left
+  have : EffectiveEpi (ψ₁'.left ≫ ψ₁.left) := by rw [e2]; infer_instance
+  have : EffectiveEpi ψ₁.left := effectiveEpi_of_effectiveEpi_epi_comp ψ₁.left ψ₁'.left
   have compat : ∀ {W : Scheme} (a b : W ⟶ A.left), a ≫ ψ₁.left = b ≫ ψ₁.left →
       a ≫ ψ₂.left = b ≫ ψ₂.left := by
     intro W a b hab
@@ -394,10 +394,10 @@ private theorem UpperTheory.EvaluationPowerKernel.main :
   intro p _ D R _ b N hN hNp hpR c T s o o₁ o₂ ψ₁ ψ₂ h1 h2 hgeom
   obtain ⟨⟨k, hck⟩, hm1, hact1, heta1, ⟨hpol1⟩, ψ₁', hm1', h11, h12⟩ := h1
   obtain ⟨_, hm2, hact2, heta2, ⟨hpol2⟩, ψ₂', hm2', h21, h22⟩ := h2
-  haveI := hm1
-  haveI := hm2
-  haveI := hm1'
-  haveI := hm2'
+  have := hm1
+  have := hm2
+  have := hm1'
+  have := hm2'
   have hpT : IsUnit ((p : ℕ) : Γ(T, ⊤)) := by
     have e1 := hpR.map ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom)
     have e2 := e1.map (s.appTop).hom
@@ -425,11 +425,11 @@ private theorem UpperTheory.EvaluationPowerKernel.main :
     (fun k _ _ x g hg => (hgeom k x g).2 hg) (Z := Z) x hx
   obtain ⟨φ, hφm, hφ⟩ := UpperTheory.EvaluationPowerKernel.exists_factor o.ab o₁.ab o₂.ab hc ψ₁ ψ₁' ψ₂ h11 h12 ker12
   obtain ⟨φ', hφm', hφ'⟩ := UpperTheory.EvaluationPowerKernel.exists_factor o.ab o₂.ab o₁.ab hc ψ₂ ψ₂' ψ₁ h21 h22 ker21
-  haveI := hφm
+  have := hφm
   have hinv1 : φ ≫ φ' = 𝟙 _ := epi1 _ _ (by rw [← Category.assoc, hφ, hφ', Category.comp_id])
   have hinv2 : φ' ≫ φ = 𝟙 _ := epi2 _ _ (by rw [← Category.assoc, hφ', hφ, Category.comp_id])
   let e : o₁.A ≅ o₂.A := ⟨φ, φ', hinv1, hinv2⟩
-  haveI : IsMonHom e.hom := hφm
+  have : IsMonHom e.hom := hφm
   refine ⟨⟨φ.left, sq2 φ, ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_of_iso e, ?_, ?_, ?_, ?_⟩, ?_⟩
   · constructor
     · show (lift (fst _ _ ≫ φ) (snd _ _ ≫ φ)).left ≫ (fst o₂.A o₂.A).left = _
@@ -608,8 +608,8 @@ theorem finite_points {X Y : Scheme.{0}} (f : X ⟶ Y) [IsFinite f] (K : Type) [
   obtain ⟨φ, hφ⟩ := Spec.map_surjective ((pullback f y).isoSpec.inv ≫ pullback.snd f y)
   have h4 : φ.hom.Finite := by
     rw [← IsFinite.SpecMap_iff, hφ]; infer_instance
-  letI : Algebra K Γ(pullback f y, ⊤) := φ.hom.toAlgebra
-  haveI : Module.Finite K Γ(pullback f y, ⊤) := h4
+  let : Algebra K Γ(pullback f y, ⊤) := φ.hom.toAlgebra
+  have : Module.Finite K Γ(pullback f y, ⊤) := h4
   refine (Set.finite_range fun σ : Γ(pullback f y, ⊤) →ₐ[K] K =>
     Spec.map (CommRingCat.ofHom σ.toRingHom) ≫ (pullback f y).isoSpec.inv ≫ pullback.fst f y).subset fun x hx => ?_
   let s : Sp K ⟶ pullback f y := pullback.lift x (𝟙 _) (by rw [Category.id_comp]; exact hx)
@@ -705,7 +705,7 @@ theorem GlobalTheory.AV.AbVar.finite_lam_eq_zero : ∀ (K : Type) [Field K] (A :
   subst hc
   obtain ⟨H, _, i, -, hmono, hfin, -, hH⟩ := GlobalTheory.kernel_finiteFlat_subgroup K A.X A.ab L hL ha
   have hF := GlobalTheory.FlagCovQF.finite_points H.hom (AlgebraicClosure K) (spMap (algebraMap K (AlgebraicClosure K)))
-  haveI := hF.to_subtype
+  have := hF.to_subtype
   have hz : ∀ x : {x : A.Pt // AbVar.lam (cls L hL) (fst A.X (ptOver K (AlgebraicClosure K))) (snd A.X _ ≫ x) = 0},
       ∃ z : ptOver K (AlgebraicClosure K) ⟶ H, z ≫ i = x.1 := fun x =>
     (hH _ x.1).1 (memKL_of_lam_geom_eq_zero A hL x.1 x.2)
@@ -999,7 +999,7 @@ private theorem val_adj_left (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [
     (hI : IsPIsog c o o' ψ) (hφ : IsMonHom φ) (_ : ψ ≫ φ = (𝟙 o.A) ^ c) (h2 : φ ≫ ψ = (𝟙 o'.A) ^ c)
     (T : Over (Sp Ω)) (x : T ⟶ o.A) (y : T ⟶ o'.A) :
     GlobalTheory.BirigidPow.val o'.isLB (x ≫ ψ) y = GlobalTheory.BirigidPow.val o.isLB x (y ≫ φ) := by
-  haveI := hφ
+  have := hφ
   rw [val_symm p D R b N (Sp Ω) σ o' T (x ≫ ψ) y, GlobalTheory.UPel.HT.ESDual.val_adj hI h2 y x,
     val_symm p D R b N (Sp Ω) σ o T (y ≫ φ) x]
 
@@ -1182,9 +1182,9 @@ private theorem act_natCast {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [C
 private theorem exists_div :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N E : ℕ) (r : ℤ) (Ω : Type) [Field Ω] (σ : Sp Ω ⟶ Sp R) (o₁ o₂ o' : Obj b N σ) (ψ₁ : o₁.A ⟶ o'.A) (φ₁ : o'.A ⟶ o₁.A) (φ₂ : o'.A ⟶ o₂.A) (β : 𝓞 D.F), IsPIsog (p ^ E) o₁ o' ψ₁ → IsMonHom φ₁ → IsMonHom φ₂ → ψ₁ ≫ φ₁ = (𝟙 o₁.A) ^ (p ^ E) → φ₁ ≫ ψ₁ = (𝟙 o'.A) ^ (p ^ E) → (∀ a ∈ uIdeal D r ^ E, ∃ v : 𝓞 D.F, a * β = v * (p : 𝓞 D.F) ^ E) → (∀ (T : Over (Sp Ω)) (x : T ⟶ o'.A), (∃ e : ℕ, KilledBy o' (uIdeal D r ^ e) x) → (x ≫ φ₁ = 1 ↔ x ≫ φ₂ = 1)) → ∃ κ : o₁.A ⟶ o₂.A, IsMonHom κ ∧ o₁.act.act (algebraMap (𝓞 D.F) D.O β) ≫ ψ₁ ≫ φ₂ = κ ^ (p ^ E) := by
   intro p _ D R _ b N E r Ω _ σ o₁ o₂ o' ψ₁ φ₁ φ₂ β h₁ hφ₁ hφ₂ e₁ e₁' hβ H
-  haveI := h₁.2.1
-  haveI := hφ₂
-  haveI := o₁.act.hom (algebraMap (𝓞 D.F) D.O β)
+  have := h₁.2.1
+  have := hφ₂
+  have := o₁.act.hom (algebraMap (𝓞 D.F) D.O β)
   have hker' : ∀ (T : Over (Sp Ω)) (x : T ⟶ o₁.A), x ≫ (𝟙 o₁.A) ^ (p ^ E) = 1 →
       x ≫ o₁.act.act (algebraMap (𝓞 D.F) D.O β) ≫ ψ₁ ≫ φ₂ = 1 := by
     intro T x hx0
@@ -1195,7 +1195,7 @@ private theorem exists_div :
     have hkill : ∃ e : ℕ, KilledBy o' (uIdeal D r ^ e) (x ≫ o₁.act.act (algebraMap (𝓞 D.F) D.O β) ≫ ψ₁) := by
       refine ⟨E, fun a ha => ?_⟩
       obtain ⟨v, hv⟩ := hβ a ha
-      haveI := o₁.act.hom (algebraMap (𝓞 D.F) D.O v)
+      have := o₁.act.hom (algebraMap (𝓞 D.F) D.O v)
       rw [Category.assoc, Category.assoc, ← h₁.2.2.1, ← Category.assoc (o₁.act.act (algebraMap (𝓞 D.F) D.O β)),
         ← o₁.act.mul, ← map_mul, hv, map_mul, o₁.act.mul, map_pow, map_natCast, ← Nat.cast_pow, act_natCast]
       simp only [Category.assoc]
@@ -1219,7 +1219,7 @@ private theorem exists_div :
     rw [hf]
     exact hker' T x (hq ▸ hx0)
   obtain ⟨g, hg⟩ := GlobalTheory.T.exists_factor_through_isogeny_of_kills_kernel Ω (avOf o₁) (avOf o₁) (avOf o₂) q f hqi hker
-  haveI hgm : IsMonHom (GlobalTheory.AV.AbVar.Hom.hom g) := (Additive.toMul g).property
+  have hgm : IsMonHom (GlobalTheory.AV.AbVar.Hom.hom g) := (Additive.toMul g).property
   refine ⟨GlobalTheory.AV.AbVar.Hom.hom g, hgm, ?_⟩
   rw [← hf, ← hg, GlobalTheory.AV.AbVar.comp_hom, hq]
   exact idPow_comp _ _
@@ -1233,8 +1233,8 @@ private theorem lin {o o' : Obj b N σ} {c : ℕ} (hc : 0 < c) {ψ : o.A ⟶ o'.
     (hψl : ∀ a : D.O, o.act.act a ≫ ψ = ψ ≫ o'.act.act a) (hφ : IsMonHom φ)
     (h1 : ψ ≫ φ = (𝟙 o.A) ^ c) (h2 : φ ≫ ψ = (𝟙 o'.A) ^ c) (a : D.O) :
     o'.act.act a ≫ φ = φ ≫ o.act.act a := by
-  haveI := o.act.hom a
-  haveI := o'.act.hom a
+  have := o.act.hom a
+  have := o'.act.hom a
   apply hom_cancel Ω o'.A o.A o'.ab o.ab _ _ inferInstance inferInstance c hc
   calc (o'.act.act a ≫ φ) ^ c = ((𝟙 o'.A) ^ c) ≫ o'.act.act a ≫ φ := by
         rw [MonObj.pow_comp, Category.id_comp]
@@ -1282,7 +1282,7 @@ private theorem conj (D : Datum p) (r : ℤ) (hr : (p : ℤ) ∣ r ^ 2 - D.tr * 
       push_cast at h1
       linear_combination h1 + (v : 𝓞 D.F) * D.tr_eq
   · unfold uIdeal
-    rw [Ideal.span_mul_span', Ideal.span_le]
+    rw [Ideal.span_mul_span, Ideal.span_le]
     rintro _ ⟨x, hx, y, hy, rfl⟩
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hx hy
     have hp : (p : 𝓞 D.F) ∈ Ideal.span {(p : 𝓞 D.F)} := Ideal.mem_span_singleton_self _
@@ -1391,20 +1391,20 @@ private theorem half {E : ℕ} {r : ℤ} (o₁ o₂ o' : Obj b N σ) (ψ₁ : o�
     (ht : a = D.bar β + t * (p : 𝓞 D.F) ^ E) :
     ∃ τ : o₁.A ⟶ o₂.A, IsMonHom τ ∧ ψ₁ ≫ φ₂ = τ ^ (p ^ E) := by
   have hpE : 0 < p ^ E := pow_pos (Fact.out : p.Prime).pos E
-  haveI := h₁.2.1
-  haveI := h₂.2.1
-  haveI := hφ₁
-  haveI := hφ₂
+  have := h₁.2.1
+  have := h₂.2.1
+  have := hφ₁
+  have := hφ₂
   obtain ⟨κ, hκ, eκ⟩ := exists_div p D R b N E r Ω σ o₁ o₂ o' ψ₁ φ₁ φ₂ β h₁ hφ₁ hφ₂ e₁ e₁' hβ H
   obtain ⟨κ₂, hκ₂, eκ₂⟩ := exists_div p D R b N E r Ω σ o₂ o₁ o' ψ₂ φ₂ φ₁ β h₂ hφ₂ hφ₁ e₂ e₂' hβ
     (fun T x hx => (H T x hx).symm)
-  haveI := hκ₂
+  have := hκ₂
   obtain ⟨e, ν, hcop, hν, eν⟩ := exists_adjoint p D R b N Ω σ o₁ o₂ κ₂ hκ₂
-  haveI := hν
+  have := hν
   obtain ⟨bβ, hbβ⟩ : ∃ c : D.O, c = algebraMap (𝓞 D.F) D.O (D.bar β) := ⟨_, rfl⟩
-  haveI : IsMonHom (o₁.act.act bβ) := o₁.act.hom _
-  haveI : IsMonHom (o₂.act.act bβ) := o₂.act.hom _
-  haveI : IsMonHom (o₂.act.act (algebraMap (𝓞 D.F) D.O β)) := o₂.act.hom _
+  have : IsMonHom (o₁.act.act bβ) := o₁.act.hom _
+  have : IsMonHom (o₂.act.act bβ) := o₂.act.hom _
+  have : IsMonHom (o₂.act.act (algebraMap (𝓞 D.F) D.O β)) := o₂.act.hom _
   obtain ⟨M, hMdef⟩ : ∃ M : o₁.A ⟶ o₂.A, M = o₁.act.act bβ ≫ ψ₁ ≫ φ₂ := ⟨_, rfl⟩
   have hMcomm : M = ψ₁ ≫ φ₂ ≫ o₂.act.act bβ := by
     rw [hMdef, ← Category.assoc, h₁.2.2.1 bβ, Category.assoc, lin hpE h₂.2.2.1 hφ₂ e₂ e₂' bβ]
@@ -1452,7 +1452,7 @@ private theorem half {E : ℕ} {r : ℤ} (o₁ o₂ o' : Obj b N σ) (ψ₁ : o�
     have h1 : ν ^ (u' * ((p ^ E : ℕ) : ℤ)) = M ^ (u' * (e : ℤ)) := by
       rw [mul_comm u', zpow_mul, zpow_natCast, ← hMe, ← zpow_natCast, ← zpow_mul, mul_comm]
     rw [h1, ← zpow_add, huw, zpow_one]
-  haveI : IsMonHom (o₁.act.act (algebraMap (𝓞 D.F) D.O t)) := o₁.act.hom _
+  have : IsMonHom (o₁.act.act (algebraMap (𝓞 D.F) D.O t)) := o₁.act.hom _
   have hsplit : ψ₁ ≫ φ₂ = (o₁.act.act (algebraMap (𝓞 D.F) D.O a) ≫ ψ₁ ≫ φ₂) *
       (o₁.act.act (algebraMap (𝓞 D.F) D.O β) ≫ ψ₁ ≫ φ₂) := by
     rw [← MonObj.mul_comp, ← o₁.act.add, ← map_add (f := _), hab, map_one, o₁.act.one, Category.id_comp]
@@ -1476,8 +1476,8 @@ namespace UpperTheory.KEq
 private theorem sec_ext {k : Type} [Field k] {B : Over (Sp k)} (hs : IsSeparated B.hom) (V : Over (Sp k))
     (w : V.left) (f g : 𝟙_ (Over (Sp k)) ⟶ B) (h : toUnit V ≫ f = toUnit V ≫ g) : f = g := by
   apply Over.OverMorphism.ext
-  haveI : IsSeparated B.hom := hs
-  haveI : Surjective V.hom := ⟨fun y => ⟨w, Subsingleton.elim _ _⟩⟩
+  have : IsSeparated B.hom := hs
+  have : Surjective V.hom := ⟨fun y => ⟨w, Subsingleton.elim _ _⟩⟩
   refine ext_of_isDominant_of_isSeparated (X := Sp k) B.hom ?_ V.hom ?_
   · rw [Over.w f, Over.w g]
   · have := congrArg Over.Hom.left h
@@ -1496,7 +1496,7 @@ private theorem glue_ext {S : Scheme.{0}} {T B : Over S} (f g : T ⟶ B)
     rw [TopologicalSpace.Opens.mem_iSup]
     exact ⟨w, w' w, hiw w⟩
   refine (T.left.openCoverOfIsOpenCover U hU).hom_ext _ _ fun (w : T.left) => ?_
-  haveI := hi w
+  have := hi w
   show (U w).ι ≫ f.left = (U w).ι ≫ g.left
   have e : (U w).ι = ((i w).left.isoOpensRange).inv ≫ (i w).left := by
     rw [Iso.eq_inv_comp]
@@ -1510,8 +1510,8 @@ private theorem ker_le {k : Type} [Field k] [IsAlgClosed k] [CharZero k] {σ : S
     (ψ₁ : o.A ⟶ O₁) (ψ₂ : o.A ⟶ o₂.A)
     (hk : ∀ h : 𝟙_ (Over (Sp k)) ⟶ o.A, h ≫ ψ₁ = 1 → KilledBy o v h → h ≫ ψ₂ = 1)
     (T : Over (Sp k)) (x : T ⟶ o.A) (hv : KilledBy o v x) (h1 : x ≫ ψ₁ = 1) (hxc : x ^ c = 1) : x ≫ ψ₂ = 1 := by
-  haveI := o.ab
-  haveI : IsProper o.A.hom := IsAbelianScheme.proper
+  have := o.ab
+  have : IsProper o.A.hom := IsAbelianScheme.proper
   have hsepA : IsSeparated o.A.hom := inferInstance
   have hc0 : ((c : ℕ) : k) ≠ 0 := Nat.cast_ne_zero.mpr hc.ne'
   apply glue_ext
@@ -1575,15 +1575,15 @@ private theorem factor {k : Type} [Field k] [IsAlgClosed k] [CharZero k] {σ : S
     ⟨h₁.2.1, hφ₁, e₁, e₁'⟩
   have hq₂ : IsMonHom ψ₂ ∧ IsMonHom φ₂ ∧ ψ₂ ≫ φ₂ = 𝟙 o.A ^ (p ^ E) ∧ φ₂ ≫ ψ₂ = 𝟙 o₂.A ^ (p ^ E) :=
     ⟨h₂.2.1, hφ₂, e₂, e₂'⟩
-  haveI := hq₁.1
-  haveI := hq₁.2.1
-  haveI := hq₂.1
-  haveI := hq₂.2.1
-  haveI := o.ab
-  haveI := o₁.ab
-  haveI := o₂.ab
-  haveI : IsProper o₁.A.hom := IsAbelianScheme.proper
-  haveI : IsProper o₂.A.hom := IsAbelianScheme.proper
+  have := hq₁.1
+  have := hq₁.2.1
+  have := hq₂.1
+  have := hq₂.2.1
+  have := o.ab
+  have := o₁.ab
+  have := o₂.ab
+  have : IsProper o₁.A.hom := IsAbelianScheme.proper
+  have : IsProper o₂.A.hom := IsAbelianScheme.proper
   have hs₁ : IsSeparated o₁.A.hom := inferInstance
   have hs₂ : IsSeparated o₂.A.hom := inferInstance
   let o' : Obj b N σ := ESDual.scale o E rfl
@@ -1611,7 +1611,7 @@ private theorem factor {k : Type} [Field k] [IsAlgClosed k] [CharZero k] {σ : S
       exact ker_le (p ^ e) hc _ hs₂ ψ₂ ψ₁ (fun h hh hv => ((hk h).mpr ⟨hh, e, hv⟩).1) T x he h2 hxc
   obtain ⟨τ, hτ, hτe⟩ := half o₁ o₂ o' φ₁ φ₂ ψ₁ ψ₂ g₁ g₂ hq₁.1 hq₂.1 hq₁.2.2.2 hq₁.2.2.1
     hq₂.2.2.2 hq₂.2.2.1 H a β t hab hβ ht
-  haveI := hτ
+  have := hτ
   refine ⟨τ, hτ, ?_⟩
   refine hom_cancel k o.A o₂.A o.ab o₂.ab (ψ₁ ≫ τ) ψ₂ inferInstance hq₂.1 (p ^ E)
     (pow_pos (Fact.out : p.Prime).pos E) ?_
@@ -1626,7 +1626,7 @@ end UpperTheory.KEq
 theorem UpperTheory.isogeny_kernel_points_iff_of_isPIsog :
     ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ), IsUnit ((p : ℕ) : R) → ∀ (r : ℤ) (w : Ideal (𝓞 D.F)) (c : ℕ), w.IsMaximal → uIdeal D r ≤ w → ∀ (k : Type) [Field k] [IsAlgClosed k] (σ : Sp k ⟶ Sp R) (o o₁ o₂ : Obj b N σ) (ψ₁ : o.A ⟶ o₁.A) (ψ₂ : o.A ⟶ o₂.A), IsPIsog c o o₁ ψ₁ → IsPIsog c o o₂ ψ₂ → (∀ h : 𝟙_ (Over (Sp k)) ⟶ o.A, (h ≫ ψ₁ = 1 ∧ ∃ e : ℕ, KilledBy o (uIdeal D r ^ e) h) ↔ (h ≫ ψ₂ = 1 ∧ ∃ e : ℕ, KilledBy o (uIdeal D r ^ e) h)) → ∀ (κ : Type) [Field κ] [IsAlgClosed κ] (x : Sp κ ⟶ Sp k) (g : Over.mk x ⟶ o.A), g ≫ ψ₁ = 1 ↔ g ≫ ψ₂ = 1 := by
   intro p _ D R _ b N hp r w c hw hu k _ _ σ o o₁ o₂ ψ₁ ψ₂ h₁ h₂ hk κ _ _ x g
-  haveI := GlobalTheory.UPel.HT.ES.TjExists.charZero_of_base b hp σ
+  have := GlobalTheory.UPel.HT.ES.TjExists.charZero_of_base b hp σ
   obtain ⟨E, rfl⟩ := h₁.1
   have hr := UpperTheory.KEq.root_dvd D hw.ne_top hu
   obtain ⟨τ, hτ, e⟩ := UpperTheory.KEq.factor E r hr ψ₁ ψ₂ h₁ h₂ hk

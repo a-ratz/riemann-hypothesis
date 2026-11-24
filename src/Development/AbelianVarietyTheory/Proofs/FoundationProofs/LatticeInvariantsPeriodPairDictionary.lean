@@ -98,7 +98,7 @@ lemma wpF_eq (z : ℂ) : wpF Λ z = L.weierstrassP z := by
   · refine Eq.trans (tsum_congr fun w ↦ ?_) (tsum_subtype_congr (p := fun w ↦ w ∈ Λ ∧ w ≠ 0)
       (q := fun w ↦ w ∈ L.lattice)
       (fun w ↦ if w = 0 then 0 else 1 / (z - w) ^ 2 - 1 / w ^ 2) fun w hw ↦ ?_)
-    · rw [if_neg w.2.2]
+    · rw [ite_eq_right w.2.2]
     · have : w ≠ 0 := by rintro rfl; simp at hw
       simp [h, this]
   · simp
@@ -149,7 +149,7 @@ lemma discrete_of_eisG_ne_zero {Λ : AddSubgroup ℂ} {k : ℕ} (hk : k ≠ 0) (
   have ho : IsOpen {w : Λ | ‖(w : ℂ)‖ < 1} := isOpen_lt (by fun_prop) continuous_const
   convert ho.sdiff hf.isClosed using 1
   ext w
-  simp only [Set.mem_singleton_iff, Set.mem_sdiff, Set.mem_setOf_eq, not_not]
+  simp only [Set.mem_singleton_iff, Set.mem_sdiff, Set.mem_ofPred_eq, not_not]
   constructor
   · rintro rfl
     simp [hk]

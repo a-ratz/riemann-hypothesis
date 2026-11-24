@@ -188,7 +188,7 @@ theorem secCoord_one {X : Scheme.{0}} {I : Type} [Unique I] {R : Type} [CommRing
       rw [hg, _root_.one_mul]
     · intro i j h
       rw [hone, Unique.eq_default i]
-      simp only [Units.coe_map_inv, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, RingHom.coe_comp,
+      simp only [Units.coe_map_inv, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, RingHom.coe_comp,
         Function.comp_apply, ← map_mul, IsUnit.mul_val_inv, map_one]
 
 

@@ -138,7 +138,7 @@ theorem exists_int_gS {K : Type} [Field K] [NumberField K] (σ : K →+* ℂ) {�
       ψl (a / (ϖ : k) ^ c) = ψl (b / (ϖ : k) ^ c) := fun a b h => by
     apply psi_congr hadd hO
     rw [← sub_div, map_div₀, map_pow]
-    exact div_le_one_of_le₀ h zero_le'
+    exact div_le_one_of_le₀ h zero_le
   have hmul : ∀ x y : Res k c, valuation k (rep (x * y) - rep x * rep y) ≤ valuation k (ϖ : k) ^ c := fun x y =>
     val_rep_sub hϖ (x * y) (Quotient.out x * Quotient.out y)
       (by rw [map_mul, Ideal.Quotient.mk_out, Ideal.Quotient.mk_out])
@@ -170,9 +170,9 @@ theorem exists_int_gS {K : Type} [Field K] [NumberField K] (σ : K →+* ℂ) {�
     change valuation k (rep d - 0) ≤ _
     rw [sub_zero, e2, map_mul, map_pow]
     exact mul_le_of_le_one_left' h3
-  haveI : Nontrivial (Res k c) := Ideal.Quotient.nontrivial_iff.2 fun h =>
+  have : Nontrivial (Res k c) := Ideal.Quotient.nontrivial_iff.2 fun h =>
     (IsLocalRing.maximalIdeal.isMaximal 𝒪[k]).ne_top (top_le_iff.1 (h.ge.trans (Ideal.pow_le_self (by omega))))
-  haveI : IsLocalRing (Res k c) := IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
+  have : IsLocalRing (Res k c) := IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
   obtain ⟨u, ⟨hu1, hu2⟩, hν⟩ := hmin
   have hu' : IsUnit (⟨u, hu1.le⟩ : 𝒪[k]) :=
     (Valuation.integer.integers (valuation k)).isUnit_iff_valuation_eq_one.2 hu1

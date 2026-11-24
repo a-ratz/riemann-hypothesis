@@ -237,7 +237,7 @@ theorem subsingleton_coinvariants_jacquetRep {β γ : Fin n → ℕ}
         split_ifs
         · exact huP hij
         · rfl
-      · rw [leviProj_apply, if_pos (hβeq i j hij)]
+      · rw [leviProj_apply, ite_eq_left (hβeq i j hij)]
         exact hu1 i j hij
     have hn' := leviProj_inv_mul_mem p
     have hu : (u : GL (Fin n) F) = ((m : levi F n β) : GL (Fin n) F) *
@@ -328,7 +328,7 @@ theorem exists_finset_span_jacquetRep (hπ : IsSmooth π) {v : V}
   have hQ : Finite (K₀ ⧸ Km.subgroupOf K₀) := by
     refine Subgroup.quotient_finite_of_isOpen _ ?_
     rw [Subgroup.coe_subgroupOf]
-    exact (isOpen_congruenceSubgroup F n m₀).preimage continuous_subtype_val
+    exact (isOpen_congruenceSubgroup F n m₀).preimage continuous_subtypeVal
   have := Fintype.ofFinite (K₀ ⧸ Km.subgroupOf K₀)
   let R : Finset (GL (Fin n) F) :=
     Finset.univ.image fun q : K₀ ⧸ Km.subgroupOf K₀ => ((Quotient.out q : K₀) : GL (Fin n) F)

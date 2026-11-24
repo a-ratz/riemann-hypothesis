@@ -44,17 +44,17 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem pow_mem_open {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     (U : Subgroup Γ) (hU : IsOpen (U : Set Γ)) : ∃ N : ℕ, 0 < N ∧ ∀ s : Γ, s ^ N ∈ U := by
-  haveI : Finite (Γ ⧸ U) := U.quotient_finite_of_isOpen hU
-  haveI : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (Γ ⧸ U) := U.quotient_finite_of_isOpen hU
+  have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   refine ⟨U.normalCore.index, Nat.pos_of_ne_zero Subgroup.FiniteIndex.index_ne_zero, fun s => ?_⟩
   exact U.normalCore_le (U.normalCore.pow_index_mem s)
 
 theorem UpperTheory.V.Ws.Pt.ptWts :
     ∀ {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c} {T : Tower D} {c' : Coef l} {h : c.O ≤ c'.O} (K : Link T c' h) (X : Space (T.fr ∅) (inc h)) (B : W.UniversalOrdinaryDeterminantRing K.r) (n : ℕ) (φ : B.B →ₐ[c'.O] X.B), K.IsPhi X n B φ → ∀ y : X.A →ₐ[c'.O] PadicAlgCl l, ∀ w : Fin 4 → ℤ, (∀ i, Even (w i + n)) → T.Wts w (X.P.map (y : X.A →+* PadicAlgCl l)) → ∃ m : W.Vl l T.L → Fin 4 → ℤ, (∀ v i j, 2 * (m v i - m v j) = w i - w j) ∧ ∃ k : ℕ, 0 < k ∧ ∀ (v : W.Vl l T.L) (i : Fin 4) (g : Dec (F := T.L) (K.s.A v)), (g : G T.L Ω) ∈ Ine (F := T.L) (K.s.A v) → ((Link.pt φ y).psi v i g * cycBar T.L Ω l g ^ (-m v i)) ^ k = 1 := by
   intro Ω _ _ _ l _ c D T c' h K X B n φ hφ y w hw hW
-  haveI := T.fin
-  haveI : Finite (W.Vl l T.L) := Finite.of_equiv _ K.e.symm
-  haveI := Fintype.ofFinite (W.Vl l T.L)
+  have := T.fin
+  have : Finite (W.Vl l T.L) := Finite.of_equiv _ K.e.symm
+  have := Fintype.ofFinite (W.Vl l T.L)
   obtain ⟨U, hU, hUψ⟩ := hW
   obtain ⟨N, hN, hNU⟩ := pow_mem_open U hU
   choose e k hk he hek using fun v : W.Vl l T.L =>

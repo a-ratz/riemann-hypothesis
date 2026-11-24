@@ -292,7 +292,7 @@ theorem sum_gE (R : RealDat D A Ks) (hE : R.models_HE) (hg : R.models_gE) (y : R
   ext v
   rw [← hfix v]
   simp only [RealDat.e0, gaL, RealDat.eC, LinearMap.sum_apply, LinearMap.smul_apply,
-    MultilinearMap.sum_apply, MultilinearMap.smul_apply, postOn_apply]
+    sum_apply, smul_apply, postOn_apply]
   rfl
 
 theorem rat_of_formula {K : Type} [Field K] (σ : K →+* ℂ) {z : K} {c c₀ κ p w : ℂ} (hz : σ z ≠ 0) (hc : c ≠ 0) (hc₀ : c₀ ≠ 0)
@@ -1033,7 +1033,7 @@ theorem twisted_grid_existence_of_identity (hP : _root_.GlobalTheory.FunPr.Theta
   obtain ⟨G⟩ := (GlobalTheory.ChiGridModel.nonempty_gridData_iff R.toLevCh A.μ0 hS.core.lev ⟨1, CF, large₂.sc.b⟩).2 hPl
   obtain ⟨W, hW⟩ := GlobalTheory.ChiGrid.WeilOver.exists_weil_over_of_clauses hP.weilRepresentationUnitaryPair R hS.core.lev
     hS.core.chain hS.core.models _ G
-  haveI := hS.fin
+  have := hS.fin
   exact ⟨G, W, hW, GlobalTheory.FunObj.gridChoice_nonempty_of W hS.core.lev Set.finite_univ (GlobalTheory.RowClaim.Test.pde_ne_q hS)
     fun t _ P hP => GlobalTheory.RowClaim.Test.guard hS t P hP⟩
 end GlobalTheory.RowEx
@@ -1142,7 +1142,7 @@ theorem sqRatio_mem_grid {D : D7} {T : Type} {Lc : LevCh D T} {sc : GlobalTheory
   have hr := hS.rationalSums (fun t P g => hlam.2.choose_spec.choose_spec.choose_spec.choose_spec.2.2.1 t P g) hi'
   have hrat := GlobalTheory.ConstRatio.ratIn_of_definite hI (GlobalTheory.ConstRatio.posDef_of_std hX.std) (GlobalTheory.ConstRatio.posDef_of_std hX.std')
     (GlobalTheory.ConstRatio.posDef_of_std hX.stdW) hlam hr μ₀
-  haveI : Nonempty T := ⟨μ₀⟩
+  have : Nonempty T := ⟨μ₀⟩
   have hcst : X.IsConst W.ψ W.θ lam := hlam.isConst
 
   obtain ⟨Λ, hΛ, hΛne⟩ := hLN i j t

@@ -161,7 +161,7 @@ theorem chi_eq_one_of_deep : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.O
   have hu : P.1.under (𝓞 B.host.F) = v := by
     rw [hs] at hv
     exact HeightOneSpectrum.ext (Eq.symm hv)
-  haveI : CharZero (P.1.adicCompletion B.fields.E) := algebraRat.charZero _
+  have : CharZero (P.1.adicCompletion B.fields.E) := algebraRat.charZero _
   set c : P.1.adicCompletion B.fields.E := ((qOf P.1 : ℕ) : P.1.adicCompletion B.fields.E) ^ (N₀ + 1) with hcdef
   have hc : Valued.v c = WithZero.exp (-((N₀ : ℤ) + 1)) := by
     rw [hcdef, map_pow, hq, ← WithZero.exp_nsmul]

@@ -64,10 +64,10 @@ variable {D : D7}
 
 theorem continuous_comm : letI := tensTopL (F := D.host.F) (E := D.host.E) (Af D.host.F)
     Continuous (Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E) := by
-  letI : Algebra (Af D.host.F) (D.host.E ⊗[D.host.F] Af D.host.F) := Algebra.TensorProduct.rightAlgebra
-  letI : TopologicalSpace (D.host.E ⊗[D.host.F] Af D.host.F) := moduleTopology (Af D.host.F) _
-  haveI : IsModuleTopology (Af D.host.F) (D.host.E ⊗[D.host.F] Af D.host.F) := ⟨rfl⟩
-  haveI : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  let : Algebra (Af D.host.F) (D.host.E ⊗[D.host.F] Af D.host.F) := Algebra.TensorProduct.rightAlgebra
+  let : TopologicalSpace (D.host.E ⊗[D.host.F] Af D.host.F) := moduleTopology (Af D.host.F) _
+  have : IsModuleTopology (Af D.host.F) (D.host.E ⊗[D.host.F] Af D.host.F) := ⟨rfl⟩
+  have : IsModuleTopology (Af D.host.F) (Af D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
   let φ : (Af D.host.F ⊗[D.host.F] D.host.E) →ₗ[Af D.host.F] (D.host.E ⊗[D.host.F] Af D.host.F) :=
     { toFun := Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E
       map_add' := (Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E).map_add
@@ -82,8 +82,8 @@ theorem continuous_comm : letI := tensTopL (F := D.host.F) (E := D.host.E) (Af D
         | add x y hx hy =>
           rw [smul_add, map_add (Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E),
             map_add (Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E), hx, hy, smul_add] }
-  haveI : ContinuousAdd (D.host.E ⊗[D.host.F] Af D.host.F) := IsModuleTopology.toContinuousAdd (Af D.host.F) _
-  haveI : ContinuousSMul (Af D.host.F) (D.host.E ⊗[D.host.F] Af D.host.F) := IsModuleTopology.toContinuousSMul (Af D.host.F) _
+  have : ContinuousAdd (D.host.E ⊗[D.host.F] Af D.host.F) := IsModuleTopology.toContinuousAdd (Af D.host.F) _
+  have : ContinuousSMul (Af D.host.F) (D.host.E ⊗[D.host.F] Af D.host.F) := IsModuleTopology.toContinuousSMul (Af D.host.F) _
   exact IsModuleTopology.continuous_of_linearMap φ
 
 def finGL (V : HSp D) (h : GA D V) : GL (Fin V.rank) (EAf D) := bc (toEAf D) (matHom V h)
@@ -93,7 +93,7 @@ theorem finGL_val (V : HSp D) (h : GA D V) : (finGL V h).val = finM V rfl h := b
 
 theorem continuous_finGL (V : HSp D) : letI := tensTopL (F := D.host.F) (E := D.host.E) (Af D.host.F)
     Continuous (finGL V) := by
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (Af D.host.F)
+  let := tensTopL (F := D.host.F) (E := D.host.E) (Af D.host.F)
   have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have hv : Continuous fun h : GA D V => (finGL V h).val :=
     (GlobalTheory.Mem.VolExists.continuous_finMat (σ := D.sp.cm.sig) V.gram).matrix_map continuous_comm
@@ -206,7 +206,7 @@ theorem law_cont (θ : InfFam D) (hθ : IsInfFam θ) (V : HSp D) (T f : ℕ) (ba
   obtain ⟨W, hWo, hW⟩ := hW
   have key := GlobalTheory.AdForm.rdS_val D θ hθ V V.rank rfl V.gram (by simp) T f bad S cl yc hb Ψ hΨ
   have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
-  letI := tensTopL (F := D.host.F) (E := D.host.E) (Af D.host.F)
+  let := tensTopL (F := D.host.F) (E := D.host.E) (Af D.host.F)
   have hmem : ∀ h : GA D V, finGL V h ∈ UPts (sigD D) V.gram (FiniteAdeleRing (𝓞 D.host.F) D.host.F) := fun h => by
     obtain ⟨⟨x, hx⟩, -⟩ := key y h
     have e : finGL V h = x.1 := Units.ext (by rw [finGL_val, hx])

@@ -58,7 +58,7 @@ theorem UpperTheory.Gal.Gen.levFacts_pf :
   have hs_loc : ∀ h, cLoc w₀ (s h) = h := fun h => by
     rw [← he]
     exact e.apply_symm_apply h
-  have hs_cont : Continuous s := continuous_subtype_val.comp e.symm.continuous
+  have hs_cont : Continuous s := continuous_subtypeVal.comp e.symm.continuous
   have hs_eq : ∀ x ∈ locU a w₀, s (cLoc w₀ x) = x := fun x hx => by
     have := e.symm_apply_apply ⟨x, hx⟩
     rw [he] at this

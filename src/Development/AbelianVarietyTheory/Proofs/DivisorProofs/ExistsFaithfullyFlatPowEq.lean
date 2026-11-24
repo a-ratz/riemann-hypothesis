@@ -71,7 +71,7 @@ theorem exists_faithfullyFlat_pow_eq :
   have hφ : Spec.map φ = q := Spec.map_preimage q
   have hff : φ.hom.FaithfullyFlat := (flat_and_surjective_SpecMap_iff φ).1 (by
     rw [hφ]; exact ⟨inferInstance, inferInstance⟩)
-  letI : Algebra R Γ(Y, ⊤) := (φ.hom.comp (algebraMap R D)).toAlgebra
+  let : Algebra R Γ(Y, ⊤) := (φ.hom.comp (algebraMap R D)).toAlgebra
   let ψ : D →ₐ[R] Γ(Y, ⊤) := { φ.hom with commutes' := fun _ ↦ rfl }
   have hψ : (spOver ψ).left = q := hφ
   have hc : (Y.isoSpec.inv ≫ Limits.pullback.snd x₀ m) ≫ m = (spOver ψ ≫ x).left := by

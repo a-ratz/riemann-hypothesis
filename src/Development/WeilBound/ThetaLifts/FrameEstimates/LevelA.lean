@@ -206,7 +206,7 @@ theorem pow_near (U : Set (UA σ J)) (hU : U ∈ 𝓝 (1 : UA σ J)) :
     refine eventually_all.2 fun i => eventually_all.2 fun j => ?_
     have hc : Continuous fun h => (f h - 1) i j := (hf.sub continuous_const).matrix_elem i j
     exact hc.continuousAt.preimage_mem_nhds (by simpa [h1] using hV')
-  filter_upwards [ent' mat (Units.continuous_val.comp continuous_subtype_val) rfl,
+  filter_upwards [ent' mat (Units.continuous_val.comp continuous_subtypeVal) rfl,
     ent' (fun h => mat h⁻¹) continuous_mat_inv rfl] with u h1 h2 hu p
   refine hVU ⟨fun i j => hΛ (key u (fun i j => hop _ (h1 i j) (congrFun (congrFun hu i) j)) p i j), fun i j => hΛ ?_⟩
   rw [← inv_pow]

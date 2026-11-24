@@ -107,16 +107,16 @@ theorem exists_gen_of_summand {A E : Type} [CommRing A] [IsLocalRing A] [AddComm
     obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.1 hx
     exact ⟨(⟨y, hy⟩, ⟨z, hz⟩), by ext; simp [f]⟩
   let g : (P × M) ≃ₗ[A] M' := LinearEquiv.ofBijective f ⟨hfinj, hfsurj⟩
-  haveI : Module.Free A M' := Module.Free.of_basis bM'
-  haveI : Module.Finite A M' := Module.Finite.of_basis bM'
-  haveI : Module.Free A M := Module.Free.of_basis bM
-  haveI : Module.Finite A M := Module.Finite.of_basis bM
-  haveI : Module.Free A (P × M) := Module.Free.of_equiv g.symm
-  haveI : Module.Finite A (P × M) := Module.Finite.equiv g.symm
-  haveI : Module.Finite A P := Module.Finite.of_surjective (LinearMap.fst A P M) LinearMap.fst_surjective
-  haveI : Module.Projective A P :=
+  have : Module.Free A M' := Module.Free.of_basis bM'
+  have : Module.Finite A M' := Module.Finite.of_basis bM'
+  have : Module.Free A M := Module.Free.of_basis bM
+  have : Module.Finite A M := Module.Finite.of_basis bM
+  have : Module.Free A (P × M) := Module.Free.of_equiv g.symm
+  have : Module.Finite A (P × M) := Module.Finite.equiv g.symm
+  have : Module.Finite A P := Module.Finite.of_surjective (LinearMap.fst A P M) LinearMap.fst_surjective
+  have : Module.Projective A P :=
     Module.Projective.of_split (LinearMap.inl A P M) (LinearMap.fst A P M) (by ext; simp)
-  haveI : Module.Free A P := Module.free_of_flat_of_isLocalRing
+  have : Module.Free A P := Module.free_of_flat_of_isLocalRing
   have hr : Module.finrank A P = 1 := by
     have h1 := g.finrank_eq
     rw [Module.finrank_prod, Module.finrank_eq_card_basis bM, Module.finrank_eq_card_basis bM'] at h1
@@ -255,7 +255,7 @@ namespace GlobalTheory.CompanionTheory.Ar
 theorem isFlagVBOn_inter_of_steps : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (E : Type) [AddCommGroup E] [Module Ω E] (L : Lat ξ E) (T : Set (Cpt ξ)) (g r : ℕ) (W : Submodule Ω E) (b₀ : Fin r → E), LinearIndependent Ω b₀ → (∀ k, b₀ k ∈ W) → L.IsVBOn T g W → (∀ n : ℕ, ∃ s W', (L.map (flagStep Ω b₀ n).mkQ).IsVBOn T s W') → (L.inter (Submodule.span Ω (Set.range b₀))).IsFlagVBOn T b₀ := by
   intro X Ω _ ξ E _ _ L T g r W b₀ hli hW hL hq p hp
   classical
-  haveI : IsLocalRing (regAt ξ p) := (_root_.GlobalTheory.CompanionTheory.Ar.regAt_local_mono_frac X Ω ξ).1 p
+  have : IsLocalRing (regAt ξ p) := (_root_.GlobalTheory.CompanionTheory.Ar.regAt_local_mono_frac X Ω ξ).1 p
   have hFW : ∀ n, flagStep Ω b₀ n ≤ W := fun n =>
     Submodule.span_le.2 (by
       rintro _ ⟨k, -, rfl⟩
@@ -382,7 +382,7 @@ theorem flagStep_min {r : ℕ} (b₀ : Fin r → E) (n : ℕ) : flagStep Ω b₀
   congr 2
   ext k
   have := k.2
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   omega
 
 theorem flagStep_le {r : ℕ} {b₀ : Fin r → E} {W : Submodule Ω E} (h : ∀ k, b₀ k ∈ W) (n : ℕ) :
@@ -395,7 +395,7 @@ theorem flagStep_le {r : ℕ} {b₀ : Fin r → E} {W : Submodule Ω E} (h : ∀
 theorem flagModel : FlagModelStatement := by
   intro o _ _ Ω _ _ κ _ x M A _ κa _ w S _ E _ _ L g r W b₀ hw hL hb hbW
   obtain ⟨p₀⟩ : Nonempty (Cpt M.ξ) := ⟨⟨genPt M.ξ, specializes_rfl⟩⟩
-  haveI hfin : ∀ σ, FiniteDimensional Ω (W σ) := fun σ => by
+  have hfin : ∀ σ, FiniteDimensional Ω (W σ) := fun σ => by
     obtain ⟨U, -, b, hW, -⟩ := hL σ p₀ (Set.mem_univ _)
     rw [← hW]
     exact FiniteDimensional.span_of_finite Ω (Set.finite_range b)

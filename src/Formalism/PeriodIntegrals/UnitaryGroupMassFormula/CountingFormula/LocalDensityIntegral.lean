@@ -60,7 +60,7 @@ open ValuativeRel
 
 theorem fl_inj {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [CommRing E]
     [Algebra F E] [TopologicalSpace E] (L : Loc.LocE F E) : Function.Injective (algebraMap F E) := by
-  haveI : Nontrivial E := by
+  have : Nontrivial E := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     have h1 := L.rank
@@ -71,7 +71,7 @@ theorem fl_inj {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [Com
 theorem fl_norm_ne {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [CommRing E]
     [Algebra F E] [TopologicalSpace E] (L : Loc.LocE F E) (hE : ∀ x : E, x ≠ 0 → IsUnit x)
     {x : E} (hx0 : x ≠ 0) (n : 𝒪[F]) (hn : algebraMap F E n = x * L.cj x) : n ≠ 0 := by
-  haveI : Nontrivial E := by
+  have : Nontrivial E := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     have h1 := L.rank
@@ -90,7 +90,7 @@ theorem fl_fact {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [Co
     (hE : ∀ x : E, x ≠ 0 → IsUnit x) (hinj : Function.Injective (algebraMap F E))
     (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) :
     ∀ x ∈ L.O, x ≠ 0 → ∃ k : ℕ, ∃ u ∈ L.O, (∃ w ∈ L.O, u * w = 1) ∧ x = algebraMap F E ϖ ^ k * u := by
-  haveI := hl
+  have := hl
   have key : ∀ n : 𝒪[F], ∀ x ∈ L.O, x ≠ 0 → algebraMap F E n = x * L.cj x →
       ∃ k : ℕ, ∃ u ∈ L.O, (∃ w ∈ L.O, u * w = 1) ∧ x = algebraMap F E ϖ ^ k * u := by
     intro n

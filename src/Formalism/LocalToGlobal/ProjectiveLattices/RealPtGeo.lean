@@ -61,7 +61,7 @@ theorem intFr_of_model (hIF : IntFramesSt Xo c) (T : CDVR) (io : c.F →+* T.Fr)
     {β : O →+* c.F} (Y : Model Xo c β) (hPI : PushInvertible Y.t.G Y.t.PP.L) (b : O →+* T.V)
     (hb : (algebraMap T.V T.Fr).comp b = io.comp β) (y₀ : letI := io.toAlgebra; FrPt Xo c T.Fr) :
     ∃ (y : IntFr Xo c T io) (t : Ix Dw → T.Frˣ), (letI := io.toAlgebra; FrBor t y₀ y.1) := by
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have e1 : y₀.x ≫ Xo.s = spMap io ≫ spMap (IntermediateField.inclusion c.le).toRingHom := by
     rw [y₀.x_over]
     exact spMap_comp _ _

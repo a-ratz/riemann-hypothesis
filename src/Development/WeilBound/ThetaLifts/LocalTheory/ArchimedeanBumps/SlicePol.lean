@@ -222,10 +222,10 @@ theorem pol_fd (hA : ActsLaws) (hD : DerEx) (hV : VacLine) (hF : FockEx) (hFr : 
     rw [hAe s hs, pureA_ptA, mul_div_cancel_right₀ _ ha]
   have hadd : ∀ s, At (evI F) s → ∀ g g', A s (g + g') = A s g + A s g' := fun s hs g g' => SchwartzMap.ext fun y => by
     have : pureA F (g + g' : SInf F _) ψ = pureA F g ψ + pureA F g' ψ := funext fun x => add_mul _ _ _
-    rw [SchwartzMap.add_apply, hval s hs, hval s hs, hval s hs, this, rho_add, map_add (f := _), Pi.add_apply, add_div]
+    rw [add_apply, hval s hs, hval s hs, hval s hs, this, rho_add, map_add (f := _), Pi.add_apply, add_div]
   have hsm : ∀ s, At (evI F) s → ∀ (c : ℂ) g, A s (c • g) = c • A s g := fun s hs c g => SchwartzMap.ext fun y => by
     have : pureA F (c • g : SInf F _) ψ = c • pureA F g ψ := funext fun x => mul_assoc _ _ _
-    rw [SchwartzMap.smul_apply, hval s hs, hval s hs, this, rho_smul, map_smul, Pi.smul_apply, smul_eq_mul, smul_eq_mul, mul_div_assoc]
+    rw [smul_apply, hval s hs, hval s hs, this, rho_smul, map_smul, Pi.smul_apply, smul_eq_mul, smul_eq_mul, mul_div_assoc]
   have atR : ∀ {p q : ℕ} (t : ℝ) {v : Matrix (Fin p) (Fin q) (AE F E)}, At (evI F) v → At (evI F) (realAd F t • v) :=
     fun t v hv c hc => by rw [smul_comm, hv c hc, smul_zero]
   have hder : ∀ s, At (evI F) s → ∀ v, At (evI F) v → ∀ g : SInf F (Fin n × Fin d), ∀ l ∈ (adeleClass F).adm (Fin n₁ × Fin d₁),
@@ -308,7 +308,7 @@ theorem pol_fd (hA : ActsLaws) (hD : DerEx) (hV : VacLine) (hF : FockEx) (hFr : 
         ⟨fun c hc => by rw [smul_sub, hv c hc, atM z hz c hc, sub_zero], hzo⟩
       have hs : D v g = D (incM F H.ι * z * (incM F H'.ι)ᵀ) g + D (v - incM F H.ι * z * (incM F H'.ι)ᵀ) g := by
         ext x
-        rw [SchwartzMap.add_apply, (hD0 v hv g).2, (hD0 _ (atM z hz) g).2, (hD0 _ hv0.1 g).2]
+        rw [add_apply, (hD0 v hv g).2, (hD0 _ (atM z hz) g).2, (hD0 _ hv0.1 g).2]
         have e1 : (fun i => evI F ((M.co.e (v - incM F H.ι * z * (incM F H'.ι)ᵀ)).1 i)) =
             (fun i => evI F ((M.co.e v).1 i)) - fun i => evI F ((M.co.e (incM F H.ι * z * (incM F H'.ι)ᵀ)).1 i) := by
           funext i; rw [map_sub]; exact map_sub (InfiniteAdeleRing.ringEquiv_mixedSpace F) _ _
@@ -364,7 +364,7 @@ theorem archCone_of (hDi : ArchDict) (hSt : StabEx) (hO : ArchOp) (hS : Slice) (
       rw [pureA_ptA, pureA_ptA] at this
       exact mul_right_cancel₀ ha this
     let V := Submodule.span ℂ (Set.range fun k => T k f)
-    haveI : FiniteDimensional ℂ V := by
+    have : FiniteDimensional ℂ V := by
       unfold KFinite at hfin
       refine FiniteDimensional.of_injective (j.restrict (p := V) (q := Submodule.span ℂ (Set.range fun k : K => om (k.1, 1) (pure f M.vac)))
         fun g hg => ?_) fun a b hab => Subtype.ext (hj (congrArg Subtype.val hab))

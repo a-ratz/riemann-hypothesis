@@ -82,7 +82,7 @@ theorem exists_monic_of_stable (S : Multiset (Fbar g)) (hS : S.map (fun x => x ^
       have := congrArg (fun q => q.coeff n) hfix
       simpa [frobenius_def] using this
     have h2 : P.coeff n ∈ (⊥ : Subfield (Fbar g)) := (Subfield.mem_bot_iff_pow_eq_self _ g).2 h1
-    rw [Subfield.bot_eq_of_zMod_algebra g] at h2
+    rw [Subfield.bot_eq_of_zmod_algebra g] at h2
     exact h2
   obtain ⟨q, hq, -, hqm⟩ := lifts_and_natDegree_eq_and_monic hl hm
   refine ⟨q, hqm, ?_⟩
@@ -101,9 +101,9 @@ theorem root_pow_rootExp {N : ℕ} {f : (ZMod g)[X]} (hf : IsLabel N f) {x : Fba
     exact natDegree_le_of_dvd (minpoly.dvd _ _ hroot) hf.1.ne_zero
   have hd1 : 1 ≤ (minpoly (ZMod g) x).natDegree := minpoly.natDegree_pos hint
   set K := IntermediateField.adjoin (ZMod g) ({x} : Set (Fbar g))
-  haveI : FiniteDimensional (ZMod g) K := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite K := Module.finite_of_finite (ZMod g)
-  letI : Fintype K := Fintype.ofFinite K
+  have : FiniteDimensional (ZMod g) K := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite K := Module.finite_of_finite (ZMod g)
+  let : Fintype K := Fintype.ofFinite K
   have hc : Fintype.card K = g ^ (minpoly (ZMod g) x).natDegree := by
     rw [Module.card_eq_pow_finrank (K := ZMod g), ZMod.card, IntermediateField.adjoin.finrank hint]
   let y : K := ⟨x, IntermediateField.mem_adjoin_simple_self _ x⟩
@@ -172,7 +172,7 @@ theorem labAct_eq (k : Fin 2) (α : ℂ ≃+* ℂ) (a : ℤ)
     {f f' : (ZMod (D.host.g k))[X]} (hf : IsLabel D.R.r f) (hm : f'.Monic)
     (hp : haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩; IsPowLabel a f f') :
     Formalism.MainNotions.ArithmeticCylinders.labAct D α k f = f' := by
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hinj := teich_injective (D.ntypes.teichC k) (D.ntypes.teichC_inj k)
   have e : (rootsBar f).map
       (fun x => Function.invFun (D.ntypes.teichC k) (α (D.ntypes.teichC k x))) =

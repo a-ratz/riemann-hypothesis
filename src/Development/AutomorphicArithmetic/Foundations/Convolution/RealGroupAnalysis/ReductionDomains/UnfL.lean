@@ -57,7 +57,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.cosetSum :
     ∀ (F : Type) [Field F] [NumberField F] (M₀ : Meas F) (σ) (β u : G1 F → ℝ≥0∞), M.RowSec (F := F) σ → M.NWt β → Measurable u → (∀ (ξ : F) g, u (nU (rt ξ) * g) = u g) → ∫⁻ g, u g * β g ∂M₀.μ = ∫⁻ g in M₀.D, ∑' r, u (ratS F (σ r) * g) ∂M₀.μ := by
   intro F _ _ M₀ σ β u hσ hβ hu hinv
   have hc := (UpperTheory.ConvolutionTheory.R2.M.rowCosets F).2 σ hσ
-  haveI := M₀.haar
+  have := M₀.haar
   let e : ({r : Fin 2 → F // r ≠ 0} × F) → Gam F := fun p =>
     ⟨nU (rt p.2) * ratS F (σ p.1), (Gam F).mul_mem (M.nU_rt_mem _) ⟨_, rfl⟩⟩
   have he : Function.Bijective e := by
@@ -110,8 +110,8 @@ private theorem oneVar {F : Type} [Field F] [NumberField F] (f w : A F → ℝ�
       exact AdeleRing.algebraMap_injective (𝓞 F) F (congrArg Subtype.val h)
     · rintro ⟨_, ξ, rfl⟩
       exact ⟨ξ, rfl⟩
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ)
-  haveI : Countable (AdeleRing.principalSubgroup (𝓞 F) F) := hφ.2.countable
+  have : Countable F := Countable.of_moduleFinite (R := ℚ)
+  have : Countable (AdeleRing.principalSubgroup (𝓞 F) F) := hφ.2.countable
   rw [hD.lintegral_eq_tsum'' (fun b => f b * w b), ← lintegral_tsum]
   · refine lintegral_congr fun x => ?_
     rw [← (Equiv.ofBijective φ hφ).tsum_eq]
@@ -127,7 +127,7 @@ private theorem oneVar {F : Type} [Field F] [NumberField F] (f w : A F → ℝ�
 theorem UpperTheory.ConvolutionTheory.R2.M.wtInt :
     ∀ (F : Type) [Field F] [NumberField F] (M₀ : Meas F) (β u : G1 F → ℝ≥0∞), M.NWt β → Measurable u → (∀ (ξ : F) g, u (nU (rt ξ) * g) = u g) → ∫⁻ g, u g * β g ∂M₀.μ = M.J0 M₀ fun g => ∫⁻ b in fundamentalSet F, u (nU b * g) ∂(adeleMeasure F) := by
   intro F _ _ M₀ β u hβ hu hinv
-  haveI := M₀.prob
+  have := M₀.prob
   have hnU : Measurable (nU : A F → G1 F) := M.continuous_nU.measurable
   have hmD : Measurable (mD : IdeleGroup F → G1 F) := M.continuous_mD.measurable
   have hy : Measurable fun p : IdeleGroup F × G1 F => mD p.1 * p.2 :=

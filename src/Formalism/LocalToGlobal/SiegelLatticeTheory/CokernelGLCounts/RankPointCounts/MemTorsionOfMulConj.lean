@@ -149,7 +149,7 @@ theorem count_int (I : Ideal (𝓞 E)) (hI : I ≠ ⊥) (m : 𝓞 E) (hm : m ≠
     (hS : ∀ y ∈ S, y ∈ I ∧ y * cO E y = m) :
     S.card * Ideal.absNorm I ^ 2 ≤ 2 * (Module.finrank ℚ E) ^ 2 * (Algebra.norm ℤ m).natAbs := by
   classical
-  haveI : Fintype (Units.torsion E) := Fintype.ofFinite _
+  have : Fintype (Units.torsion E) := Fintype.ofFinite _
   rcases S.eq_empty_or_nonempty with hS0 | ⟨y0, hy0⟩
   · simp [hS0]
   have hNI' : Ideal.absNorm (I.map (cO E)) = Ideal.absNorm I :=

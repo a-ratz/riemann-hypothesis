@@ -58,7 +58,7 @@ theorem valued_eq_one_of_isCompact_closure_zpowers (E : Type) [Field E] [NumberF
     fun x => ((p⁻¹ * x.1 * p : GLw n w) : Matrix (Fin n) (Fin n) _) i i with hφdef
   have hφ : Continuous φ := by
     have h1 : Continuous fun x : H => (p⁻¹ * x.1 * p : GLw n w) :=
-      (continuous_const.mul continuous_subtype_val).mul continuous_const
+      (continuous_const.mul continuous_subtypeVal).mul continuous_const
     have h2 : Continuous fun x : H => ((p⁻¹ * x.1 * p : GLw n w) : Matrix (Fin n) (Fin n) (w.adicCompletion E)) :=
       Units.continuous_val.comp h1
     exact (continuous_apply i).comp ((continuous_apply i).comp h2)

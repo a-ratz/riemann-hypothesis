@@ -128,7 +128,7 @@ theorem thriceY_eq : letI := alg c iK; (real3 c R).ioY = thriceY b c R := by
   have h2 := real_ioY b R.toRealDat
   have h3 := real_ioY (a := b) c (iK := alg b iK) (real b R.toRealDat)
   have h4 : HEq _ (thriceY b c R) := HEq.trans (HEq.trans h1.symm h2) ((by with_unfolding_all exact (h3 :)))
-  letI := alg c iK
+  let := alg c iK
   exact eq_of_heq ((by with_unfolding_all exact (h4 :)))
 
 theorem thriceX_eq : letI := alg c iK; (real3 c R).ioX = thriceX b c R := by
@@ -136,11 +136,11 @@ theorem thriceX_eq : letI := alg c iK; (real3 c R).ioX = thriceX b c R := by
   have h2 := real_ioX b R.toRealDat
   have h3 := real_ioX (a := b) c (iK := alg b iK) (real b R.toRealDat)
   have h4 : HEq _ (thriceX b c R) := HEq.trans (HEq.trans h1.symm h2) ((by with_unfolding_all exact (h3 :)))
-  letI := alg c iK
+  let := alg c iK
   exact eq_of_heq ((by with_unfolding_all exact (h4 :)))
 
 theorem thrice_eq : real3 c R = thrice b c R := by
-  letI := alg c iK
+  let := alg c iK
   exact (by with_unfolding_all exact ((congrArg₂ (DatCopy.setIo (real3 c R)) (thriceY_eq b c R) (thriceX_eq b c R)) :))
 
 theorem inertTransport_twice_heq_direct : HEq (real3 (a := b) c (iK := alg b iK) (real3 b R)) (real3 c R) :=
@@ -205,7 +205,7 @@ theorem exists_moved_transfer (s : SameGrp (B := B) (C := w.C) o.Z o'.Z) (m : Mo
   obtain ⟨t, a1, a2, a3, a4, a5, a6, a7⟩ := Mv.pkT_tr (a := o.Z) o'.Z (iK := m.z.alg) m.z.F m.y y' hy m.t
   have he := (@GlobalTheory.T.rowBasis_congruenceLengths_other_later_stages B w.C o.Z o'.Z _ _ _ _ _ _ _ _ _ m.z.alg _ m.z.R m.z.F).1
   have hW := Dat.nonzeroIndexPlaces_transferAlongSameFiniteGroup (B := B) (C := w.C) (a := o.Z) (b := o'.Z) s m.z
-  letI : Algebra m.z.core.Q.c.F (Late.D o'.Z).what₂.LL := alg (a := o.Z) o'.Z m.z.alg
+  let : Algebra m.z.core.Q.c.F (Late.D o'.Z).what₂.LL := alg (a := o.Z) o'.Z m.z.alg
   have hA : ((by with_unfolding_all exact (t.tA :)) : type_of% m.t.tA) = m.t.tA := eq_of_heq ((by with_unfolding_all exact (a1 :)))
   have b2 := HEq.trans hy.PY hm.PY
   have b3 := HEq.trans hy.PW hm.PW
@@ -500,7 +500,7 @@ theorem CGTrueT.blocksUnique (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (hF :
     BlocksUnique D := by
   intro Sig Sig' h _ _ e
   have := host_isCMField D.host
-  haveI : Fact (Nat.Prime 2) := Nat.fact_prime_two
+  have : Fact (Nat.Prime 2) := Nat.fact_prime_two
   obtain ⟨ι⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex 2
   have h1 := fun p hp => h p (List.mem_append_left Sig' hp)
   have h2 := fun p hp => h p (List.mem_append_right Sig hp)

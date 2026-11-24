@@ -59,7 +59,7 @@ open GlobalTheory.CMVal (IsHeckeL IsCMType eulerFactor)
 
 theorem lInt2 : LInt2 := by
   intro F E _ _ _ _ _ σ B a a' G X om om' h χ hχ
-  haveI := h.base.cm.2.1
+  have := h.base.cm.2.1
   obtain ⟨H, hu, hloc, hinf⟩ := exists_hchar_unitary F E σ h.base.cm X.ν (isHecke_nu h)
   have hφ := isCMType_emb h.base.cm B.emb
   have hn := hinf _ _ (hasExp_nu h)

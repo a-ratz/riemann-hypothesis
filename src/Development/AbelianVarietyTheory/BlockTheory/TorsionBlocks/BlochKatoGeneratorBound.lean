@@ -103,7 +103,7 @@ variable {G : Type} [Group G] {LL : Type} [Field LL] {O : Type} [CommRing O] [Al
 omit [Algebra O LL] [IsScalarTower O LL V] in
 theorem _root_.GlobalTheory.IndefiniteRowSideFullHecke.GaloisLatticeModuleActions.finite_latMod (L : _root_.Formalism.WeaklyAdmissibleFiltrations.Lattice (O := O) ρ) (I : Ideal O) :
     Module.Finite (O ⧸ I) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.GaloisLatticeModuleActions.LatMod L I) := by
-  haveI : Module.Finite O ↥L.T := Module.Finite.iff_fg.mpr L.fg
+  have : Module.Finite O ↥L.T := Module.Finite.iff_fg.mpr L.fg
   exact Module.Finite.of_restrictScalars_finite O (O ⧸ I) _
 
 end Reduction

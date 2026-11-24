@@ -72,8 +72,8 @@ def lf (t : ℝ) (β : E n) : E n →L[ℝ] ℂ :=
 
 theorem lf_apply (t : ℝ) (β w : E n) :
     lf t β w = -(Complex.I * t * ∑ a, ∑ b, (β a b : ℂ) * (w a b : ℂ)) := by
-  simp only [lf, ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
-    Pi.smul_apply, ContinuousLinearMap.coe_comp', Function.comp_apply, ContinuousLinearMap.proj_apply,
+  simp only [lf, FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
+    Pi.smul_apply, ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearMap.proj_apply,
     Complex.ofRealCLM_apply, smul_eq_mul]
   rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun a _ => ?_

@@ -212,9 +212,9 @@ theorem lo_last (hP : Formalism.MainNotions.S.IsLoUni P) (i : Fin (r + 1)) :
     P i (Fin.last r) = if i = Fin.last r then 1 else 0 := by
   by_cases hi : i = Fin.last r
   · subst hi
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact (hP _ _).2 rfl
-  · rw [if_neg hi]
+  · rw [ite_eq_right hi]
     exact (hP _ _).1 (lt_of_le_of_ne (Fin.le_last i) hi)
 
 theorem Pbar_mul_Pl (hP : Formalism.MainNotions.S.IsLoUni P) : P.map star * Pl r = Pl r := by
@@ -226,7 +226,7 @@ theorem Pbar_mul_Pl (hP : Formalism.MainNotions.S.IsLoUni P) : P.map star * Pl r
   · subst hj
     rw [lo_last hP]
     split_ifs <;> simp_all
-  · simp only [hj, if_false, mul_zero]
+  · simp only [hj, ite_false, mul_zero]
     split_ifs <;> simp_all
 
 theorem Pl_mul_PT (hP : Formalism.MainNotions.S.IsLoUni P) : Pl r * Pᵀ = Pl r := by
@@ -241,13 +241,13 @@ theorem Pl_mul_PT (hP : Formalism.MainNotions.S.IsLoUni P) : Pl r * Pᵀ = Pl r 
     · subst hj
       simp
     · simp [hj, Ne.symm hj]
-  · simp only [hi, if_false, zero_mul]
+  · simp only [hi, ite_false, zero_mul]
     clear hP
     split_ifs <;> simp_all
 
 theorem det_Pbar (hP : Formalism.MainNotions.S.IsLoUni P) : (P.map star).det = 1 := by
   have hd : ∀ i, P i i = 1 := fun i => (hP i i).2 rfl
-  rw [Matrix.det_of_lowerTriangular]
+  rw [det_of_isLowerTriangular]
   · simp [Matrix.map_apply, hd]
   · intro i j hij
     simp only [Matrix.map_apply]

@@ -55,10 +55,10 @@ namespace GlobalTheory.CompanionTheory.Untilt
 theorem existsUnique_idempotent_sharp {l : ℕ} [Fact l.Prime] (A : PAlg l) (e : A.U)
     (he : IsIdempotentElem e) : ∃! e₀ : A.A, IsIdempotentElem e₀ ∧ A.sharp e₀ = e := by
   obtain ⟨hsurj, hker⟩ := sharp_map_surjective_ker A
-  haveI hcA : IsAdicComplete (Ideal.span {A.pi ^ 1}) A.A := by
+  have hcA : IsAdicComplete (Ideal.span {A.pi ^ 1}) A.A := by
     rw [pow_one]; exact A.compl
-  haveI hcA' : IsAdicComplete (Ideal.span {A.pi}) A.A := A.compl
-  haveI hcU : IsAdicComplete (Ideal.span {(l : A.U)}) A.U := _root_.GlobalTheory.CompanionTheory.Untilt.isAdicComplete_U A
+  have hcA' : IsAdicComplete (Ideal.span {A.pi}) A.A := A.compl
+  have hcU : IsAdicComplete (Ideal.span {(l : A.U)}) A.U := _root_.GlobalTheory.CompanionTheory.Untilt.isAdicComplete_U A
   have hmemker : ∀ x y : A.A, A.aToU1 x = A.aToU1 y →
       Ideal.Quotient.mk (Ideal.span {A.pi ^ 1}) x = Ideal.Quotient.mk _ y := by
     intro x y h

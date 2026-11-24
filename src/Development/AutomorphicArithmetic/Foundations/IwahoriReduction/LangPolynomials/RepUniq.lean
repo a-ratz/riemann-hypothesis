@@ -81,12 +81,12 @@ private theorem step {R : Type} [CommRing R] [IsDomain R] (p : ℕ) [hp : Fact p
     ∃ h' : PowerSeries R, h = (p : PowerSeries R) * h' ∧ ∀ m, m₀ + c + 1 ≤ m →
       ∃ a b : PowerSeries R, h' = (p : PowerSeries R) ^ (m - (c + 1)) * a + cyc R p m * b := by
   set π := Ideal.Quotient.mk (Ideal.span {(p : R)}) with hπ
-  haveI : Nontrivial (R ⧸ Ideal.span {(p : R)}) :=
+  have : Nontrivial (R ⧸ Ideal.span {(p : R)}) :=
     Ideal.Quotient.nontrivial_iff.2 (by rw [Ne, Ideal.span_singleton_eq_top]; exact hpr.not_isUnit)
   have hp0 : ((p : ℕ) : R ⧸ Ideal.span {(p : R)}) = 0 := by
     rw [← map_natCast π]
     exact Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.subset_span rfl)
-  haveI : CharP (R ⧸ Ideal.span {(p : R)}) p := (CharP.charP_iff_prime_eq_zero hp.out).2 hp0
+  have : CharP (R ⧸ Ideal.span {(p : R)}) p := (CharP.charP_iff_prime_eq_zero hp.out).2 hp0
   have hp1 : ((p : ℕ) : PowerSeries (R ⧸ Ideal.span {(p : R)})) = 0 := by
     rw [← map_natCast (PowerSeries.C (R := R ⧸ Ideal.span {(p : R)})), hp0, map_zero]
   have key : ∀ j, c ≤ j → ∀ a b : PowerSeries R, h = (p : PowerSeries R) ^ (j + 1 - c) * a + cyc R p (j + 1) * b →
@@ -150,8 +150,8 @@ private theorem pow_comp_pow {R : Type} [CommRing R] (σ : R ≃+* R) (m : ℕ) 
 
 theorem pUniq : SUniq := by
   intro R _ p hp σ hF h c m₀ H
-  haveI := hF.dom
-  haveI := hF.complete
+  have := hF.dom
+  have := hF.complete
   have H' : ∀ m, m₀ ≤ m → ∃ a b : PowerSeries R, h = (p : PowerSeries R) ^ (m - c) * a + cyc R p m * b := by
     intro m hm
     have h1 := H m hm

@@ -109,14 +109,14 @@ omit [ValuativeRel k] [IsNonarchimedeanLocalField k] [Fintype A] in
 theorem continuous_setCols (P : Finset C) (Y : Matrix A C k) : Continuous (setCols P Y) := by
   refine continuous_pi fun i => continuous_pi fun j => ?_
   by_cases h : j ∈ P
-  · simp only [setCols, of_apply, dif_pos h]
+  · simp only [setCols, of_apply, dite_eq_left h]
     exact (continuous_apply (⟨j, h⟩ : P)).comp (continuous_apply i)
-  · simp only [setCols, of_apply, dif_neg h]
+  · simp only [setCols, of_apply, dite_eq_right h]
     exact continuous_const
 
 theorem comp_setCols_mem_SB {Ξ : Matrix A C k → ℂ} (hΞ : Ξ ∈ SB (Matrix A C k)) (P : Finset C)
     (Y : Matrix A C k) : (fun U => Ξ (setCols P Y U)) ∈ SB (Matrix A P k) := by
-  haveI := t2Space k
+  have := t2Space k
   refine ⟨hΞ.1.comp_continuous (continuous_setCols P Y),
     HasCompactSupport.intro (hΞ.2.image (continuous_restrictCols P)) fun U hU => ?_⟩
   exact image_eq_zero_of_notMem_tsupport fun h => hU ⟨_, h, restrictCols_setCols P Y U⟩
@@ -131,7 +131,7 @@ variable [MeasurableSpace k] [BorelSpace k]
 omit [DecidableEq C] in
 theorem isAddHaarMeasure_volM (m : Measure k) [m.IsAddHaarMeasure] (B : Type*) [Fintype B] :
     (volM m A B).IsAddHaarMeasure := by
-  haveI := secondCountable k; haveI := t2Space k
+  have := secondCountable k; have := t2Space k
   haveI : (Measure.pi fun _ : B => m).IsAddHaarMeasure := inferInstance
   exact Measure.pi.isAddHaarMeasure (fun _ : A => (Measure.pi fun _ : B => m))
 

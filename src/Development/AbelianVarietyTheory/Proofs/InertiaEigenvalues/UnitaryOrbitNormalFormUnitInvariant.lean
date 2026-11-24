@@ -67,11 +67,11 @@ theorem exists_algebraMap_of_star_eq (y : E) (hy : star y = y) : ∃ x : F, alge
   have hfin : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
   let S : Submodule F E :=
     { carrier := {z | star z = z}
-      add_mem' := by intro a b ha hb; simp only [Set.mem_setOf_eq] at *; rw [star_add, ha, hb]
+      add_mem' := by intro a b ha hb; simp only [Set.mem_ofPred_eq] at *; rw [star_add, ha, hb]
       zero_mem' := by simp
       smul_mem' := by
         intro c z hz
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [Algebra.smul_def, star_mul, hz, hU.star_fix, mul_comm] }
   have h1 : (Submodule.span F {(1 : E)}) ≤ S := by
     rw [Submodule.span_le]; intro z hz; simp only [Set.mem_singleton_iff] at hz; subst hz

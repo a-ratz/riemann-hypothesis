@@ -130,7 +130,7 @@ lemma exists_ball [IsUltrametricDist L] (hs : IsInv s) (hh : IsHerm s h)
     ∃ V₀ : AddSubgroup V, ∀ x, x ∈ V₀ ↔ ‖h x x‖ ≤ 1 := by
   refine ⟨{ carrier := {x | ‖h x x‖ ≤ 1}, add_mem' := ?_, zero_mem' := ?_, neg_mem' := ?_ }, fun x => Iff.rfl⟩
   · intro a b ha hb
-    simp only [Set.mem_setOf_eq] at ha hb ⊢
+    simp only [Set.mem_ofPred_eq] at ha hb ⊢
     rw [q_add hh]
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ?_ (hp a b ha hb))
     exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le ha hb)
@@ -138,7 +138,7 @@ lemma exists_ball [IsUltrametricDist L] (hs : IsInv s) (hh : IsHerm s h)
     simp only [zero_smul, zero_mul] at this
     simp [this]
   · intro a ha
-    simp only [Set.mem_setOf_eq] at ha ⊢
+    simp only [Set.mem_ofPred_eq] at ha ⊢
     have := norm_q_smul hs hh (-1 : L) a
     simp only [neg_smul, one_smul, norm_neg, norm_one, one_mul] at this
     rwa [this]

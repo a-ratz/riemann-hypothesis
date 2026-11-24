@@ -364,7 +364,7 @@ theorem cubWeil_alpha_rational : ∀ (Ω : Type) [Field Ω] (p : ℕ) [Fact p.Pr
     have hs : (a + a') ^ p = 0 := by
       rcases subsingleton_or_nontrivial A with _ | _
       · exact Subsingleton.elim _ _
-      · haveI : CharP A p := charP_of_injective_algebraMap (algebraMap Ω A).injective p
+      · have : CharP A p := charP_of_injective_algebraMap (algebraMap Ω A).injective p
         rw [add_pow_char, ha, ha', add_zero]
     have h₁ := (hζ A a ha).mul_left (hζ A a' ha')
     rw [← hg.2 A a a' ha ha'] at h₁
@@ -712,7 +712,7 @@ theorem truncLift_root {A : Type} [CommRing A] [Algebra Ω A] (a : A) (ha : a ^ 
 
 theorem isLocalRing_trunc : IsLocalRing (AdjoinRoot ((X : Polynomial Ω) ^ p)) := by
   have hp : p ≠ 0 := (Fact.out : p.Prime).ne_zero
-  haveI : Nontrivial (AdjoinRoot ((X : Polynomial Ω) ^ p)) :=
+  have : Nontrivial (AdjoinRoot ((X : Polynomial Ω) ^ p)) :=
     (truncLift (0 : Ω) (zero_pow hp)).toRingHom.domain_nontrivial
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
   obtain ⟨f, rfl⟩ := AdjoinRoot.mk_surjective a
@@ -771,13 +771,13 @@ theorem IsAlpha.eq_one_of_tangent (Ω : Type) [Field Ω] (p : ℕ) [Fact p.Prime
     g A a = 1 := by
   have hp : p.Prime := Fact.out
   let R := AdjoinRoot ((Polynomial.X : Polynomial Ω) ^ p)
-  haveI : IsLocalRing R := isLocalRing_trunc
+  have : IsLocalRing R := isLocalRing_trunc
   let t : R := AdjoinRoot.root _
   have ht : t ^ p = 0 := root_pow_eq_zero
   have heps : ∀ (B : Type) [CommRing B], (DualNumber.eps : DualNumber B) ^ p = 0 := fun B _ =>
     pow_eq_zero_of_le hp.two_le (by rw [sq, DualNumber.eps_mul_eps])
-  haveI : CharP R p := charP_of_injective_algebraMap (algebraMap Ω R).injective p
-  haveI : CharP (DualNumber R) p := charP_of_injective_algebraMap (algebraMap Ω (DualNumber R)).injective p
+  have : CharP R p := charP_of_injective_algebraMap (algebraMap Ω R).injective p
+  have : CharP (DualNumber R) p := charP_of_injective_algebraMap (algebraMap Ω (DualNumber R)).injective p
   let t' : DualNumber R := TrivSqZeroExt.inl t
   have ht' : t' ^ p = 0 := by
     change TrivSqZeroExt.inlAlgHom Ω R R t ^ p = 0
@@ -1372,7 +1372,7 @@ theorem exists_root_one (Ω : Type) [Field Ω] (p : ℕ) [hp : Fact p.Prime] [Ch
       (s : A'ˣ), Function.Injective f ∧ π'.comp f = π ∧ IsNilpotent (RingHom.ker π') ∧
       π' s.val = 1 ∧ s ^ p = Units.map (f : A →* A') a := by
   have hp0 : p ≠ 0 := hp.out.ne_zero
-  haveI : Nontrivial A := π.toRingHom.domain_nontrivial
+  have : Nontrivial A := π.toRingHom.domain_nontrivial
   let P : A[X] := X ^ p - C a.val
   have hP : P.Monic := monic_X_pow_sub_C _ hp0
   let f : A →ₐ[Ω] AdjoinRoot P := IsScalarTower.toAlgHom Ω A (AdjoinRoot P)
@@ -1404,8 +1404,8 @@ theorem exists_root_one (Ω : Type) [Field Ω] (p : ℕ) [hp : Fact p.Prime] [Ch
   have hu : IsUnit (AdjoinRoot.root P) := by
     rw [← isUnit_pow_iff hp0, hroot]
     exact a.isUnit.map f
-  haveI : Nontrivial (AdjoinRoot P) := g.domain_nontrivial
-  haveI : CharP (AdjoinRoot P) p :=
+  have : Nontrivial (AdjoinRoot P) := g.domain_nontrivial
+  have : CharP (AdjoinRoot P) p :=
     charP_of_injective_algebraMap (algebraMap Ω (AdjoinRoot P)).injective p
   refine ⟨AdjoinRoot P, inferInstance, inferInstance, f, π', hu.unit, hinj, ?_, ?_, hgr, ?_⟩
   · ext x; exact hg x
@@ -1853,8 +1853,8 @@ theorem ev_map_eq_one {R R' : Type} [CommRing R] [CommRing R'] (β : R →+* R')
 theorem ndg_at_chart : ∀ (E : Type) [Field E] [NumberField E] [NumberField.IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Moduli Dw l) (c : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Coeff l) [StarRing (NumberField.RingOfIntegers E)], NondegenerateCharts Xo c := by
   intro E _ _ _ H Dw l Xo c inst hstar T io y C3 C _ _ V ι' hι k Y hY
   obtain rfl := PowGerm.starSt E H inst hstar
-  letI := H.starRing
-  letI := io.toAlgebra
+  let := H.starRing
+  let := io.toAlgebra
   by_contra hN
   obtain ⟨Ω, _, _, _, ρ, hρ⟩ := GlobalTheory.T.exists_algClosed_residueField_valuedField C V Y.algClosed
   obtain ⟨j, hj, hjm⟩ := GlobalTheory.T.exists_ringHom_valuationRing_of_embOK T C V ι' hι

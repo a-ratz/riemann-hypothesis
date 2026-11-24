@@ -597,7 +597,7 @@ theorem hasFDerivAt_chart_kernel : ∀ (E : Type) [Field E] [NumberField E] [_ro
   rw [ContinuousLinearMap.integral_apply hF'int]
   congr 1
   funext x
-  rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply, hrm, hcG, fderiv_chart_apply hsm g, smul_eq_mul]
+  rw [smul_apply, ContinuousLinearMap.comp_apply, hrm, hcG, fderiv_chart_apply hsm g, smul_eq_mul]
   congr 3
   change ((y * γ x)⁻¹).val * (Matrix.of Z * (γ x).val) = ((γ x)⁻¹).val * ((y⁻¹).val * Matrix.of Z) * (γ x).val
   rw [_root_.mul_inv_rev, Units.val_mul, Matrix.mul_assoc, Matrix.mul_assoc, Matrix.mul_assoc]
@@ -626,7 +626,7 @@ attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebr
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem contDiffOn_invL : ContDiffOn ℝ ∞ (fun x : Lie E a => toL (Matrix.of x)⁻¹) (invSet E a) := by
-  haveI : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix (Fin a) (Fin a) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
   let T : Matrix (Fin a) (Fin a) (Cinf E) →L[ℝ] Lie E a :=
     LinearMap.toContinuousLinearMap (LinearMap.id : Lie E a →ₗ[ℝ] Lie E a)
   let S : Lie E a →L[ℝ] Matrix (Fin a) (Fin a) (Cinf E) :=
@@ -1055,7 +1055,7 @@ theorem measurable_comp_of_continuousOn {X : Type} [MeasurableSpace X] {f : Lie 
     Measurable fun x => f (φ x) := by
   have e : (fun x => f (φ x)) = (invSet E a).restrict f ∘ fun x => (⟨φ x, hφ' x⟩ : invSet E a) := rfl
   rw [e]
-  exact hf.restrict.measurable.comp (hφ.subtype_mk)
+  exact hf.domRestrict.measurable.comp (hφ.subtype_mk)
 
 
 omit [_root_.NumberField.IsTotallyComplex E] in

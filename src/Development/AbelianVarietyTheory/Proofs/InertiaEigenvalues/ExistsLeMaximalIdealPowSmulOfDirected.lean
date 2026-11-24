@@ -154,11 +154,11 @@ theorem _root_.GlobalTheory.Chevalley.exists_le_maximalIdeal_pow_smul_of_directe
       (K : ι → Submodule B M), Nonempty ι → Directed (· ≥ ·) K → (⨅ i, K i) = ⊥ →
       ∀ N : ℕ, ∃ i, K i ≤ maximalIdeal B ^ N • (⊤ : Submodule B M) := by
   intro B M ι _ _ _ _ _ _ _ K hne hdir hbot N
-  haveI := hne
+  have := hne
   have hmin : ∀ n, ∃ j, ∀ i, K j ⊔ maximalIdeal B ^ (n + 1) • (⊤ : Submodule B M) ≤
       K i ⊔ maximalIdeal B ^ (n + 1) • (⊤ : Submodule B M) := by
     intro n
-    haveI := isArtinian_quotient_maximalIdeal_pow_succ_smul B M n
+    have := isArtinian_quotient_maximalIdeal_pow_succ_smul B M n
     obtain ⟨_, ⟨j, rfl⟩, hj⟩ :=
       (wellFounded_lt (α := Submodule B (M ⧸ (maximalIdeal B ^ (n + 1) •
         (⊤ : Submodule B M))))).has_min
@@ -209,7 +209,7 @@ theorem _root_.GlobalTheory.Chevalley.exists_le_maximalIdeal_pow_smul_of_directe
       maximalIdeal B ^ (N + 1) • (⊤ : Submodule B M) := fun h =>
     hcon (j N) ((le_sup_left.trans h).trans
       (Submodule.smul_mono_left (Ideal.pow_le_pow_right (by omega))))
-  obtain ⟨x0, hx0, hx0P⟩ := SetLike.not_le_iff_exists.mp hnot
+  obtain ⟨x0, hx0, hx0P⟩ := IsConcreteLE.not_le_iff_exists.mp hnot
   choose f hf1 hf2 using hE_step
   let y : (k : ℕ) → {x // x ∈ K (j (N + k)) ⊔ maximalIdeal B ^ (N + k + 1) • (⊤ : Submodule B M)} :=
     fun k => Nat.rec (motive := fun k =>

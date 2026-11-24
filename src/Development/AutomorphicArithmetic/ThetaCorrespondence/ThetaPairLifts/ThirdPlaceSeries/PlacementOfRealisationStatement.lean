@@ -406,7 +406,7 @@ theorem contRep_facts (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure] [Si
       filter_upwards [he', he] with x h1 h2
       rw [h1, h2]
     exact GlobalTheory.RepSmooth.eq_of_ae B hc' hc hae
-  · haveI : IsFiniteMeasure ν := hν.1
+  · have : IsFiniteMeasure ν := hν.1
     filter_upwards [hcu W hW ν hν, hfin ν inferInstance] with x h1 h2
     have h2' : ∀ᵐ m ∂ν, I.ext y (m * x) = f (m * x) := h2
     rw [← h1]
@@ -1157,7 +1157,7 @@ theorem multR_left_inv {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} 
 theorem goodOp_star_ev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D), R.toLevCh.Is A.μ0 → R.IsGrp F → R.IsModels → ∀ (Gd : GoodOp X) (t : GA D (Yc D 0)) (v₀ : (MP R).Vec), RowLevelMatchAt R F X h t → ∀ S ∈ Mult R.θ (R.MY 0) (levS (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))) (levChi (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))), ∀ φ : L2X X, φ =ᵐ[muX X] (fun x => ev (MP R) v₀ S (@HMul.hMul (GA D (Yc D 0)) (GA D (Yc D 0)) (GA D (Yc D 0)) _ ((iotaX X h).symm x) t)) → (star (Gd.Rg (star φ)) : L2X X) =ᵐ[muX X] (fun x => ev (MP R) v₀ (postOn (MP R) R.e0 S) (@HMul.hMul (GA D (Yc D 0)) (GA D (Yc D 0)) (GA D (Yc D 0)) _ ((iotaX X h).symm x) t)) := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F X h _ _ _ Gd t v₀ hM S hS φ hφ
   obtain ⟨σ, red, -, hB, hC⟩ := hM
-  letI : Fintype (G0g D.nd) := Fintype.ofEquiv G σ.symm.toEquiv
+  let : Fintype (G0g D.nd) := Fintype.ofEquiv G σ.symm.toEquiv
   obtain ⟨hgood, hmul, hsurj, hker⟩ := hB.1
   choose s hsK hsred using hsurj
   have hinv := multR_left_inv R F v₀ S hS
@@ -1532,7 +1532,7 @@ theorem redFn_conj (β t x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (PP :
       refine MonoidHom.mem_range.2 ⟨y, ?_⟩
       rw [frGL_mul_apply, hy]
       group
-    simp only [Formalism.L2.DIV.redFn, Formalism.L2.DIV.ext1, dif_neg hx, dif_neg hx']
+    simp only [Formalism.L2.DIV.redFn, Formalism.L2.DIV.ext1, dite_eq_right hx, dite_eq_right hx']
 
 end Gen
 
@@ -1698,11 +1698,11 @@ theorem hasType_flag1_of_mem (R : RealDat D A Ks) (P P' : LevelP R.Pg D.R.r ℂ)
     simp
   | add S S' _ _ hS hS' =>
     intro κ hκ g
-    simp only [MultilinearMap.add_apply, Pi.add_apply]
+    simp only [add_apply, Pi.add_apply]
     rw [hS κ hκ g, hS' κ hκ g, mul_add]
   | smul c S _ hS =>
     intro κ hκ g
-    simp only [MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul]
+    simp only [smul_apply, Pi.smul_apply, smul_eq_mul]
     rw [hS κ hκ g, mul_left_comm]
 
 theorem act_kap : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D), R.toLevCh.Is A.μ0 → R.IsGrp F → R.IsModels → ∀ (cG : G0 R.Pg D.R.r ≃* G0g D.nd) (t : GA D (Yc D 0)), (∀ x : X.B.I.E, HEq (X.ιE x) x) → (∃ (plg : (Σ k : Fin 2, D.nd.PlG k) ≃ R.Pg) (iso : ∀ kv : (Σ k : Fin 2, D.nd.PlG k), ZMod (D.host.g kv.1) ≃+* kP (plg kv).1), (∀ kv, ((plg kv : R.Pg) : Pl D.host.E) = D.naut.plGw kv.1 kv.2) ∧ (∀ g, D.what₂.embLL ((idemOf A.X).coeff g) = D.ntypes.e0.coeff ((R.eG.trans cG) g)) ∧ (∀ kv, R.C.P.Div kv.1 (plg kv).1) ∧ ∀ g kv, R.eG g (plg kv) = Formalism.UG.bc (iso kv : ZMod (D.host.g kv.1) →+* kP (plg kv).1) ((R.eG.trans cG) g kv)) → IdempotentRealFixed D → t ∈ GfC (Yc D 0) → ConjLevel (t)⁻¹ (levS (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))) (levChi (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))) ((iotaX X h).toMulEquiv ⁻¹' {x : X.B.I.GA | x.1 = 1 ∧ x.2 ∈ X.K2}) (fun k => star (X.chi2 ((iotaX X h).toMulEquiv k).2)) → IsFrame (finE (Yc D 0) t * R.βY 0) (Formalism.L2.Herm.crdLat (Yc D 0) (Yc D 0).L0) → ∀ k ∈ X.B.I.Kset, ∀ T ∈ Mult R.θ (R.MY 0) (levS (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))) (levChi (Yc D 0) (R.βY 0) (R.dat0 (R.levR F true))), ∀ (v : (MP R).Vec) (g : GA D (Yc D 0)), (T : MMap (MP R)) v (g * kap X h t k) = actL (Yc D 0) (R.βY 0) (R.dat0 R.triv) (rTup (R.βY 0) (R.dat0 R.triv) (finE (Yc D 0) (kap X h t k))) ((T : MMap (MP R)) v) g := by
@@ -1897,7 +1897,7 @@ theorem placement_of_realisation_alt : GlobalTheory.Published.DiscreteSeriesClas
   have hE0 : Formalism.L2.SG.RowDict.IdempotentRealFixed D := by
     have key : ∀ {g : ℕ} [Fact g.Prime] {C : Formalism.IrreducibleCountingLemmas.TYPES.LabelConv (ZMod g)} (O : Formalism.IrreducibleCountingLemmas.TYPES.LabelMap (ZMod g) C), Formalism.IrreducibleCountingLemmas.TYPES.LabelMapEquivariant O → ∀ (r : ℕ) (f : Polynomial (ZMod g)), f.Monic → f.coeff 0 ≠ 0 → ∀ x, star ((Formalism.L2.NT.eSerO O r f).coeff x) = (Formalism.L2.NT.eSerO O r (Polynomial.C (f.coeff 0)⁻¹ * f.reverse)).coeff x := _root_.GlobalTheory.SerConj.star_coeff_eSerO
     exact GlobalTheory.GoodIdemReal.star_coeff_of_reverse D (fun k f hm h0 x => by
-      haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+      have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
       rw [Rc.T.n.types.eSer_def, Rc.T.n.types.eSer_def]
       exact key _ (Rc.T.n.types.O_equiv k) D.R.r f hm h0 x)
   exact GlobalTheory.T.exists_rowPlacement_finiteElement_matches_levels hDS Q.Rl.toRealDat (faceT P Dcf Spf Zscf).lv2 S.X S.G Q.instEq Q.ιS Q.tS Q.cG

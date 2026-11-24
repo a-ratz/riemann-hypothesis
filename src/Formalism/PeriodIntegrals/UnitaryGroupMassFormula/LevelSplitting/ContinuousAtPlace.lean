@@ -84,7 +84,7 @@ end
 theorem continuous_at_place : PI.LevelKSplit.W.Meas.ContPlace := by
   intro F E _ _ _ _ _ σ n J v
   have h1 : Continuous (fun g : HA (Af F) σ J => (incAf σ J g : GL (Fin n) (Af F ⊗[F] E))) :=
-    continuous_subtype_val
+    continuous_subtypeVal
   have h2 : Continuous (fun g : HA (Af F) σ J =>
       ((incAf σ J g : GL (Fin n) (Af F ⊗[F] E)) : Matrix (Fin n) (Fin n) (Af F ⊗[F] E))) :=
     Units.continuous_val.comp h1

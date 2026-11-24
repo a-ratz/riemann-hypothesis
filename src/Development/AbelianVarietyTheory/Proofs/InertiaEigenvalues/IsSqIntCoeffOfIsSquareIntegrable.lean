@@ -96,7 +96,7 @@ theorem isSqIntCoeff_of_isSquareIntegrable {δ : IrrGL (k := k)} (h : UnitaryDua
   obtain ⟨-, hu, ν, hν, H⟩ := h
   intro m hm μ hμ v l hl
   obtain rfl : m = _root_.borel _ := hm.measurable_eq
-  letI : MeasurableSpace (AdGL k δ.1) := _root_.borel _
+  let : MeasurableSpace (AdGL k δ.1) := _root_.borel _
   have := secondCountableTopology_GL k (Fin δ.1)
   have hs := δ.2.rep.smooth
   have hF := norm_coeff_out hs δ.2.rep.irr hu v l
@@ -109,7 +109,7 @@ theorem isSqIntCoeff_of_isSquareIntegrable {δ : IrrGL (k := k)} (h : UnitaryDua
   rw [memLp_iff, show ENNReal.ofReal 2 = 2 by simp, eLpNorm_lt_top_iff_lintegral_rpow_eNorm_lt_top two_ne_zero ENNReal.ofNat_ne_top hf,
     Measure.isMulLeftInvariant_eq_smul μ ν, lintegral_smul_measure]
   have h1 := H v l hl'
-  simp only [enorm_norm, ENNReal.toReal_ofNat, ENNReal.rpow_two]
+  simp only [eNorm_norm, ENNReal.toReal_ofNat, ENNReal.rpow_two]
   exact ENNReal.mul_lt_top ENNReal.coe_lt_top h1
 
 end GlobalTheory.LocGL.SqIntBridge

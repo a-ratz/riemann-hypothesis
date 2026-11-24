@@ -178,9 +178,9 @@ theorem relIndex_scl_ne_zero {E W : Type} [CommRing E] [AddCommGroup W] [Module 
     (P : Submodule O W) (hP : P.FG) (I : Ideal O) [Finite (O ⧸ I)] (c : E)
     (hI : ∀ x ∈ I, ∃ y ∈ O, (x : E) = c * y) :
     (scl P.toAddSubgroup c).relIndex P.toAddSubgroup ≠ 0 := by
-  haveI : Module.Finite O P := Module.Finite.iff_fg.2 hP
-  haveI : Finite (P ⧸ (⊤ : Submodule O P)) := inferInstance
-  haveI hf : Finite (P ⧸ I • (⊤ : Submodule O P)) :=
+  have : Module.Finite O P := Module.Finite.iff_fg.2 hP
+  have : Finite (P ⧸ (⊤ : Submodule O P)) := inferInstance
+  have hf : Finite (P ⧸ I • (⊤ : Submodule O P)) :=
     Submodule.finite_quotient_smul I Module.Finite.fg_top
   have h1 : (I • (⊤ : Submodule O P)).toAddSubgroup.index ≠ 0 :=
     AddSubgroup.index_ne_zero_iff_finite.2 hf
@@ -199,7 +199,7 @@ theorem relIndex_scl_ne_zero {E W : Type} [CommRing E] [AddCommGroup W] [Module 
 
 theorem finite_image_mk {W : Type} [AddCommGroup W] (B G : AddSubgroup W) (h : B.relIndex G ≠ 0)
     (s : Set W) (hs : s ⊆ G) : ((fun w => (QuotientAddGroup.mk w : W ⧸ B)) '' s).Finite := by
-  haveI : Finite (G ⧸ B.addSubgroupOf G) := AddSubgroup.index_ne_zero_iff_finite.1 h
+  have : Finite (G ⧸ B.addSubgroupOf G) := AddSubgroup.index_ne_zero_iff_finite.1 h
   let φ : G ⧸ B.addSubgroupOf G → W ⧸ B :=
     QuotientAddGroup.map (B.addSubgroupOf G) B G.subtype (fun x hx => hx)
   refine (Set.finite_range φ).subset ?_
@@ -267,7 +267,7 @@ theorem pair_int (g : Fin (r + 1) → S.V) (gs : Fin r → S.V)
       refine h_span_zero S _ {gs j} ?_ _ h1 _ (Submodule.subset_span rfl)
       rintro _ ⟨a, ha, rfl⟩ _ rfl
       have ha' : (a : ℕ) < i := ha
-      rw [hd, if_neg]
+      rw [hd, ite_eq_right]
       rintro rfl
       simp at ha'; omega
     have h3 : n (g i) = (n (g i) - g i) + g i := by abel
@@ -465,7 +465,7 @@ theorem half_int : ∃ v : ℕ, algebraMap F E S.ϖ ^ v * algebraMap F E 2⁻¹ 
 theorem scl_index {W : Type} [AddCommGroup W] [Module E W] (P : Submodule L.O W) (hP : P.FG) (n : ℕ) :
     (scl P.toAddSubgroup (algebraMap F E S.ϖ ^ n)).relIndex P.toAddSubgroup ≠ 0 := by
   obtain ⟨-, -, -, -, -, h1, h2, -⟩ := GlobalTheory.UnramOrder.order_facts L S.ϖ S.ϖ_irr
-  haveI : Finite (L.O ⧸ (Ideal.span {y : L.O | (y : E) = algebraMap F E ((S.ϖ : F) ^ n)})) := by
+  have : Finite (L.O ⧸ (Ideal.span {y : L.O | (y : E) = algebraMap F E ((S.ϖ : F) ^ n)})) := by
     refine Nat.finite_of_card_ne_zero ?_
     rw [h1]; positivity
   refine relIndex_scl_ne_zero L.O P hP
@@ -674,7 +674,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
     refine finite_image_mk B G (hidx G inf_le_left fun w hw => hw.2) _ fun w hw => ?_
     have hw' : S.Mv (j + 1) d Λ w := by
       by_contra h
-      exact hw (if_neg h)
+      exact hw (ite_eq_right h)
     refine ⟨Mv_lin S hw', hbd w (Mv_lin S hw') hw'.2.2.1 hw'.2.2.2.2.1 ?_⟩
     obtain ⟨-, -, -, -, hu, -, ⟨c, hc, e⟩, -⟩ := hw'
     have : algebraMap F E S.ϖ ^ v * w.2.2 = algebraMap F E S.ϖ ^ v * (algebraMap F E S.ϖ ^ A * c) -

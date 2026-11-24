@@ -81,7 +81,7 @@ theorem ball_eq_preimage {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramInv ϖ 
     {x : L | Valued.v x ≤ WithZero.exp j} = (fun x => ϖ ^ j * x) ⁻¹' (intL L : Set L) := by
   have hϖ : Valued.v ϖ = WithZero.exp (-1) := h.2.2.2.1
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, intL, Valuation.mem_integer_iff, map_mul,
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, intL, Valuation.mem_integer_iff, map_mul,
     map_zpow₀, hϖ]
   rw [← WithZero.exp_zsmul, smul_neg, smul_eq_mul, mul_one, WithZero.exp_neg, inv_mul_le_iff₀ WithZero.exp_pos, mul_one]
 
@@ -129,7 +129,7 @@ theorem InBlock.entry (ham : m.val = a.val + 1) (hma : a'.val = m.val + 1) {X : 
   · by_cases h1 : i < a ∨ a' < j
     · exact Or.inr (Or.inl (hZ i j h h1))
     · push_neg at h1
-      simp only [Fin.lt_iff_val_lt_val, Fin.le_iff_val_le_val, Fin.ext_iff] at h h1 ⊢
+      simp only [Fin.lt_def, Fin.le_iff_val_le_val, Fin.ext_iff] at h h1 ⊢
       omega
   · exact Or.inl (hB.2 i)
   · exact Or.inr (Or.inl (hB.1 i j h))
@@ -150,25 +150,25 @@ theorem InBlock.mul_corner (ham : m.val = a.val + 1) (hma : a'.val = m.val + 1) 
     · subst h1
       have e1 : l ≠ m := fun e => by rw [Fin.ext_iff] at e; omega
       have e2 : l ≠ a' := fun e => by rw [Fin.ext_iff] at e; omega
-      rw [if_pos rfl, if_neg e1, if_neg e2, hXB.2, one_mul, add_zero, add_zero]
+      rw [ite_eq_left rfl, ite_eq_right e1, ite_eq_right e2, hXB.2, one_mul, add_zero, add_zero]
     by_cases h2 : l = m
     · subst h2
       have e2 : l ≠ a' := fun e => by rw [Fin.ext_iff] at e; omega
-      rw [if_neg h1, if_pos rfl, if_neg e2, zero_add, add_zero]
+      rw [ite_eq_right h1, ite_eq_left rfl, ite_eq_right e2, zero_add, add_zero]
     by_cases h3 : l = a'
     · subst h3
-      rw [if_neg h1, if_neg h2, if_pos rfl, hYB.2, mul_one, zero_add, zero_add]
-    rw [if_neg h1, if_neg h2, if_neg h3, add_zero, add_zero]
+      rw [ite_eq_right h1, ite_eq_right h2, ite_eq_left rfl, hYB.2, mul_one, zero_add, zero_add]
+    rw [ite_eq_right h1, ite_eq_right h2, ite_eq_right h3, add_zero, add_zero]
     have hv1 : l.val ≠ a.val := fun e => h1 (Fin.ext e)
     have hv2 : l.val ≠ m.val := fun e => h2 (Fin.ext e)
     have hv3 : l.val ≠ a'.val := fun e => h3 (Fin.ext e)
     rcases Nat.lt_or_gt_of_ne hv1 with h4 | h4
-    · rw [hXB.1 a l (Fin.lt_iff_val_lt_val.2 h4), zero_mul]
+    · rw [hXB.1 a l (Fin.lt_def.2 h4), zero_mul]
     · have h5 : a'.val < l.val := by omega
-      rw [hYB.1 l a' (Fin.lt_iff_val_lt_val.2 h5), mul_zero]
+      rw [hYB.1 l a' (Fin.lt_def.2 h5), mul_zero]
   rw [Units.val_mul, Matrix.mul_apply, Finset.sum_congr rfl fun l _ => key l, Finset.sum_add_distrib,
     Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.sum_ite_eq', Finset.sum_ite_eq']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   ring
 
 end Block
@@ -222,7 +222,7 @@ theorem entry_le (ham : m.val = a.val + 1) (hma : a'.val = m.val + 1) (harev : a
   have hb := le_max_one_of_mul_self_le (mid_sq_le ham hma harev ha'rev hmrev hσv hX hB hBi hc)
   rcases InBlock.entry ham hma hB i j with h | h | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
   · rw [h, map_one]; exact le_max_left _ _
-  · rw [h, map_zero]; exact zero_le'
+  · rw [h, map_zero]; exact zero_le
   · exact hb
   · exact hc.trans (le_max_right _ _)
   · rw [mid_eq hma ha'rev hmrev hX hB, Valuation.map_neg, hσv]; exact hb
@@ -311,14 +311,14 @@ theorem shellU_open_compact_subgroup : ∀ (L : Type) [Field L] [Valued L (WithZ
     fun j u hu i l => entry_le ham hma harev ha'rev hmrev hσv (hG u) (hblk u) (hblki u) hu i l
   have hcont : Continuous fun u : cellU y =>
       (((u : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev :=
-    (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).matrix_elem _ _
+    (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).matrix_elem _ _
   have hshell : ∀ j : ℤ, shellU k y j = (fun u : cellU y =>
       (((u : GU σ n) : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev) ⁻¹'
         {x : L | Valued.v x ≤ WithZero.exp j} := fun j => rfl
   have hGc : IsClosed (GU σ n : Set (GL (Fin n) L)) :=
     isClosed_eq (((Units.continuous_val.matrix_map (GlobalTheory.LGrp.continuous_of_unramInv h)).matrix_transpose.matrix_mul
       continuous_const).matrix_mul Units.continuous_val) continuous_const
-  have hCc : IsClosed (cellU y : Set (GU σ n)) := (isClosed_cell _).preimage continuous_subtype_val
+  have hCc : IsClosed (cellU y : Set (GU σ n)) := (isClosed_cell _).preimage continuous_subtypeVal
   have hι : Topology.IsClosedEmbedding fun u : cellU y => ((u : GU σ n) : GL (Fin n) L) :=
     hGc.isClosedEmbedding_subtypeVal.comp hCc.isClosedEmbedding_subtypeVal
   refine ⟨fun j => ⟨?_, ?_, ?_, ?_, hinvS j⟩, ?_⟩
@@ -337,14 +337,14 @@ theorem shellU_open_compact_subgroup : ∀ (L : Type) [Field L] [Valued L (WithZ
   · rw [hcorner]
     show Valued.v (((1 : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k).rev) ≤ _
     rw [Units.val_one, Matrix.one_apply_ne (fun e => by rw [Fin.ext_iff] at e; omega), map_zero]
-    exact zero_le'
+    exact zero_le
   · intro u v hu hv
     rw [hcorner] at hu hv ⊢
     exact corner_mul_le ham hma harev ha'rev hmrev hσv (hG u) (hG v) (hblk u) (hblki u) (hblk v) (hblki v) hu hv
   · ext u
     rw [SetLike.mem_coe, Subgroup.mem_subgroupOf, ← SetLike.mem_coe, GlobalTheory.LFun.IntPtsUnitary.coe_KU, Set.mem_preimage,
       GlobalTheory.LFun.IntPtsUnitary.coe_GLint]
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, intL, Valuation.mem_integer_iff]
+    simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, intL, Valuation.mem_integer_iff]
     constructor
     · intro hu
       have h1 := hent 0 u hu

@@ -268,7 +268,7 @@ theorem mem_of_toL2_mem_irreducible {W : Submodule ℂ (Sm E a)} (hW : _root_.Gl
   have hfix : h.toL2 ∈ fixedBy μ U := fun u hu =>
     (right_translate_toL2 h _).trans (((h.mul_right _).toL2_eq_iff_ae_eq h).2 (.of_forall fun x => congrFun (congrArg Subtype.val hu.2) x))
   set Y₀ := Submodule.span ℂ (Set.range fun k : Kinf E a => piInf E a μ k h.toL2) with hY₀def
-  haveI : FiniteDimensional ℂ Y₀ := finiteDimensional_span_inf hφ h
+  have : FiniteDimensional ℂ Y₀ := finiteDimensional_span_inf hφ h
   have hY₀s : ∀ g, ∀ v ∈ Y₀, piInf E a μ g v ∈ Y₀ := span_orbit_stable _ _
   have hY₀ : Y₀ ≤ C ⊓ fixedBy μ U := span_inf_le hHs (hHC hH) hfix
   have hF0Y : h.toL2 ∈ Y₀ := Submodule.subset_span ⟨1, by simp⟩
@@ -279,7 +279,7 @@ theorem mem_of_toL2_mem_irreducible {W : Submodule ℂ (Sm E a)} (hW : _root_.Gl
     ⨆ (T : Y₀ →ₗ[ℂ] L2 (latticeGL E a) μ) (_ : (∀ k w, T (ρ k w) = piInf E a μ k (T w)) ∧ ∀ w, P (T w)), LinearMap.range T
   let M₀ : Submodule ℂ (L2 (latticeGL E a) μ) :=
     ⨆ (T : Y₀ →ₗ[ℂ] L2 (latticeGL E a) μ) (_ : (∀ k w, T (ρ k w) = piInf E a μ k (T w)) ∧ ∀ w, P₀ (T w)), LinearMap.range T
-  haveI hM₀f : FiniteDimensional ℂ M₀ := _root_.GlobalTheory.CompanionTheory.IsoTypes.finiteDimensional_isotypic E a μ H hcusp hirr U hUo Y₀ ρ
+  have hM₀f : FiniteDimensional ℂ M₀ := _root_.GlobalTheory.CompanionTheory.IsoTypes.finiteDimensional_isotypic E a μ H hcusp hirr U hUo Y₀ ρ
   have hMP : M ≤ C ⊓ fixedBy μ U := iSup₂_le fun T hT => by
     rintro _ ⟨w, rfl⟩
     exact hT.2 w
@@ -288,7 +288,7 @@ theorem mem_of_toL2_mem_irreducible {W : Submodule ℂ (Sm E a)} (hW : _root_.Gl
       (_ : (∀ k w, T (ρ k w) = piInf E a μ k (T w)) ∧ ∀ w, P (T w)) => LinearMap.range T) Y₀.subtype
       ⟨fun k w => rfl, fun w => hY₀ w.2⟩ le_rfl) ⟨⟨_, hF0Y⟩, rfl⟩
   let M' : Submodule ℂ (L2 (latticeGL E a) μ) := M ⊓ classes W μ
-  haveI : CompleteSpace H := hirr.1.completeSpace
+  have : CompleteSpace H := hirr.1.completeSpace
   have hPM : M ≤ M₀.comap (H.starProjection : L2 (latticeGL E a) μ →ₗ[ℂ] L2 (latticeGL E a) μ) :=
     iSup₂_le fun T hT => by
       rintro _ ⟨w, rfl⟩
@@ -310,7 +310,7 @@ theorem mem_of_toL2_mem_irreducible {W : Submodule ℂ (Sm E a)} (hW : _root_.Gl
     refine Subtype.ext ?_
     rw [← hψ, hinj ψ h1, map_zero]
     rfl
-  haveI : FiniteDimensional ℂ M' := FiniteDimensional.of_injective L hL
+  have : FiniteDimensional ℂ M' := FiniteDimensional.of_injective L hL
   have hpm : M'.starProjection h.toL2 ∈ M' := Submodule.starProjection_apply_mem _ _
   obtain ⟨m, hmdef⟩ : ∃ m, m = h.toL2 - M'.starProjection h.toL2 := ⟨_, rfl⟩
   have hmM : m ∈ M := hmdef ▸ M.sub_mem hF0M hpm.1
@@ -331,9 +331,9 @@ theorem mem_of_toL2_mem_irreducible {W : Submodule ℂ (Sm E a)} (hW : _root_.Gl
       exact this hF'c
     have hF'U : F' ∈ fixedBy μ U := hF'f
     obtain ⟨ψ', rfl⟩ := (range_toL2ₗ hWm).ge hF'c
-    haveI := finiteDimensional_span_inf (hWa ψ' ψ'.2) (hWm ψ' ψ'.2)
+    have := finiteDimensional_span_inf (hWa ψ' ψ'.2) (hWm ψ' ψ'.2)
     obtain ⟨Y₁, hY₁⟩ : ∃ Y₁, Y₁ = Submodule.span ℂ (Set.range fun k : Kinf E a => piInf E a μ k (toL2ₗ μ W hWm ψ')) := ⟨_, rfl⟩
-    haveI : FiniteDimensional ℂ Y₁ := hY₁ ▸ this
+    have : FiniteDimensional ℂ Y₁ := hY₁ ▸ this
     have hY₁s : ∀ g, ∀ v ∈ Y₁, piInf E a μ g v ∈ Y₁ := hY₁ ▸ span_orbit_stable _ _
     have hY₁P : Y₁ ≤ C ⊓ fixedBy μ U := hY₁ ▸ span_inf_le hHs hF'H hF'U
     have hY₁c : Y₁ ≤ classes W μ := hY₁ ▸ Submodule.span_le.2 (by

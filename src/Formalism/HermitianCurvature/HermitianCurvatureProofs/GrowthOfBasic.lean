@@ -245,7 +245,7 @@ lemma price_exponential_bound (f k : ℕ) (b g : ℝ) (hb : 1 ≤ b) (hk : 1 ≤
     linarith
   have h1 : 1 + 3 / g ≤ Real.exp (3 / g) := by linarith [Real.add_one_le_exp (3 / g)]
   have h2 : (1 + 3 / g) ^ f ≤ Real.exp (3 / g) ^ f := pow_le_pow_left₀ hpos0 h1 f
-  rw [← Real.exp_nat_mul] at h2
+  rw [← Real.exp_natCast_mul] at h2
   have h3 : (f:ℝ) * (3 / g) ≤ 3 * (b ^ 7)⁻¹ := by
     have : (f:ℝ) * (3 / g) = 3 * (f / g) := by ring
     rw [this]
@@ -673,7 +673,7 @@ theorem t_PairSplit : PairSplit := by
     rw [← Summable.tsum_finsetSum]
     · apply tsum_congr; intro p
       rw [Finset.sum_ite_eq]
-      simp only [mem_univ, if_true]
+      simp only [mem_univ, ite_true]
       by_cases h3 : p.1 ∈ S <;> by_cases h4 : p.2 ∈ S <;>
         by_cases h5 : X.rowOf p.1 = X.rowOf p.2 <;>
         simp [Set.indicator, Terms.allPairs, h3, h4, h5]
@@ -857,16 +857,16 @@ theorem outOk (hA : J.PSDAgree) (hA2 : A5.A2) (hLP : J.LocalPullback) (hPh : J.P
     · have hS : t ∈ S.L := hL (fun q => (AddSubgroup.mem_iInf.1 hin) q)
       refine psd_congr ?_ key
       intro x hx y hy
-      simp only [hin, hS, if_true, hN x hx y hy]
+      simp only [hin, hS, ite_true, hN x hx y hy]
     · by_cases hS : t ∈ S.L
       · have := psd_add (psd_one hSch Y) key
         refine psd_congr ?_ this
         intro x hx y hy
-        simp only [hin, hS, if_true, if_false, hN x hx y hy]
+        simp only [hin, hS, ite_true, ite_false, hN x hx y hy]
         ring
       · refine psd_congr ?_ key
         intro x hx y hy
-        simp only [hin, hS, if_false, hN x hx y hy]
+        simp only [hin, hS, ite_false, hN x hx y hy]
 
 theorem famOk (hA : J.PSDAgree) (hA2 : A5.A2) (hLP : J.LocalPullback) (hPh : J.PhaseOk)
     (hUH : J.LocalUnitHeads) (hN0 : A5.BaseKernelOne) (h13 : ∀ s, 1 ≤ s → A5.A13 s)

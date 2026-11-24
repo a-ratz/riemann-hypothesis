@@ -115,15 +115,15 @@ theorem exists_clopen_kerStableAt : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
     have := (hp.pow e).map (s.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom)
     rw [← Nat.cast_pow, map_natCast, ← he] at this
     exact this
-  haveI : IsMonHom ψ := hq.1
-  haveI : IsMonHom ψ' := hq.2.1
-  haveI := D.finO
+  have : IsMonHom ψ := hq.1
+  have : IsMonHom ψ' := hq.2.1
+  have := D.finO
   obtain ⟨S, hS⟩ := Module.Finite.fg_top (R := ℤ) (M := D.O)
   have key : ∀ a : D.O, ∃ W : Set Y, IsOpen W ∧ IsClosed W ∧ ∀ (Tb : Scheme.{0}) (t : Tb ⟶ Y),
       Set.range t.base ⊆ W ↔ ∀ (T : Over Y) (σ : T.left ⟶ Tb), σ ≫ t = T.hom → ∀ g : T ⟶ o.A,
         g ^ c = 1 → g ≫ ψ = 1 → g ≫ o.act.act a ≫ ψ = 1 := by
     intro a
-    haveI := o.act.hom a
+    have := o.act.hom a
     obtain ⟨W, hW1, hW2, hW, -⟩ := GlobalTheory.LevCover.kerlocus_open_closed Y o.A c Unit (fun _ => B) (fun _ => ψ) B
       (o.act.act a ≫ ψ) o.ab (fun _ => hB) hB (fun _ => inferInstance) inferInstance hc
     refine ⟨W, hW1, hW2, fun Tb t => (hW Tb t).trans ?_⟩
@@ -141,8 +141,8 @@ theorem exists_clopen_kerStableAt : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (
     let f : D.O →+ Additive (T ⟶ B) := AddMonoidHom.mk' (fun a => Additive.ofMul (g ≫ o.act.act a ≫ ψ))
       (fun a a' => by
         rw [o.act.add]
-        haveI := o.act.hom a
-        haveI := o.act.hom a'
+        have := o.act.hom a
+        have := o.act.hom a'
         rw [MonObj.mul_comp, MonObj.comp_mul]
         rfl)
     have hSk : (S : Set D.O) ⊆ (f.toIntLinearMap.ker : Set D.O) := fun a ha => by
@@ -184,8 +184,8 @@ theorem UpperTheory.Cb.exists_objMap_of_p_isogeny_pullback :
     fun f g h1 h2 => Limits.pullback.hom_ext h1 h2
   obtain ⟨ψ₁', hq⟩ := hψ₁.exists_quasiInv
   have hc : 0 < c := hψ₁.pos
-  haveI := (SiegUniqBase.flat_surjective_qc_pow T o₁'.A o₁'.ab c hc).1
-  haveI := (SiegUniqBase.flat_surjective_qc_pow T o₁'.A o₁'.ab c hc).2.1
+  have := (SiegUniqBase.flat_surjective_qc_pow T o₁'.A o₁'.ab c hc).1
+  have := (SiegUniqBase.flat_surjective_qc_pow T o₁'.A o₁'.ab c hc).2.1
   have hepi : Epi (Over.Hom.left (𝟙 o₁'.A ^ c)) := Flat.epi_of_flat_of_surjective _
   have he : Over.Hom.left (𝟙 o₁'.A ^ c) = ψ₁'.left ≫ ψ₁.left := by
     rw [← hq.2.2.2, Over.comp_left]
@@ -279,14 +279,14 @@ theorem exists_oAct_desc : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type)
     rw [← Nat.cast_pow, map_natCast, ← he] at this
     exact this
   obtain ⟨hfin, het, hsurj⟩ := isFinite_etale_surjective_of_isQuasiInv Y o.A B c ψ ψ' o.ab hB hc hq
-  haveI : Surjective ψ.left := hsurj
-  haveI : Flat ψ.left := inferInstance
-  haveI : QuasiCompact ψ.left := inferInstance
-  haveI : IsMonHom ψ := hq.1
+  have : Surjective ψ.left := hsurj
+  have : Flat ψ.left := inferInstance
+  have : QuasiCompact ψ.left := inferInstance
+  have : IsMonHom ψ := hq.1
   have : Epi ψ := GlobalTheory.FlatQuotient.epi_of_flat_surjective ψ
   have : Epi (ψ ⊗ₘ ψ) := GlobalTheory.FlatQuotient.epi_tensorHom ψ ψ
   have hd : ∀ a : D.O, ∃ t : B ⟶ B, ψ ≫ t = o.act.act a ≫ ψ := fun a => by
-    haveI := o.act.hom a
+    have := o.act.hom a
     refine GlobalTheory.AbelianQuotient.exists_desc ψ (o.act.act a ≫ ψ) fun W x₁ x₂ h => ?_
     have h1 : (x₁ / x₂) ≫ ψ = 1 := by rw [GrpObj.div_comp, h, div_self']
     have h2 : (x₁ / x₂) ≫ o.act.act a ≫ ψ = 1 := hst W W.hom (Category.comp_id _) _ h1 a
@@ -294,7 +294,7 @@ theorem exists_oAct_desc : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type)
   choose t ht using hd
   refine ⟨{ act := t, hom := fun a => ?_, one := ?_, mul := fun a a' => ?_, add := fun a a' => ?_ },
     fun a => (ht a).symm⟩
-  · haveI := o.act.hom a
+  · have := o.act.hom a
     refine ⟨?_, ?_⟩
     · rw [← IsMonHom.one_hom (f := ψ), Category.assoc, ht, ← Category.assoc, IsMonHom.one_hom]
     · rw [← cancel_epi (ψ ⊗ₘ ψ), ← Category.assoc, ← IsMonHom.mul_hom, Category.assoc, ht,
@@ -390,8 +390,8 @@ theorem UpperTheory.Cb.exists_polarization_descent_of_quasi_isogeny :
   intro p _ D R _ b N c Y s o B _ _ ψ ψ' hp hce hB hq hker
   obtain ⟨e, rfl⟩ := hce
   obtain ⟨hψ, hψ', h1, h2⟩ := hq
-  haveI := hψ
-  haveI := hψ'
+  have := hψ
+  have := hψ'
   have hc0 : 0 < p ^ e := pow_pos (Fact.out : p.Prime).pos e
   have hP := o.isLB
   have hlb : ∀ m, (Hecke.lbPow o.P m).IsLB := fun m => by
@@ -500,8 +500,8 @@ theorem lie_of_isQuasiInv : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type
     rw [Nat.cast_pow]
     exact this
   obtain ⟨-, hEt, -⟩ := isFinite_etale_surjective_of_isQuasiInv Y o.A B (p ^ e) ψ ψ' o.ab hB hcY hq
-  haveI : IsMonHom ψ := hq.1
-  haveI : Etale ψ.left := hEt
+  have : IsMonHom ψ := hq.1
+  have : Etale ψ.left := hEt
   refine ⟨?_, ?_⟩
   · intro R' _ β x hx v hv
     obtain ⟨l, ⟨hl₁, hl₂⟩, -⟩ := GlobalTheory.UPel.HT.EtaleLie.existsUnique_dual_lift ψ x v.left hv.1
@@ -513,7 +513,7 @@ theorem lie_of_isQuasiInv : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type
       have hh : spMap (TrivSqZeroExt.fstHom R' R' R').toRingHom ≫ (spMap (epsScaleR (β b.ρ)) ≫ v.left) =
           (1 : Over.mk x ⟶ B).left := by
         rw [← Category.assoc, GlobalTheory.UPel.HT.EtaleLie.fst_spMap_epsScaleR, hv.1]
-      haveI := o.act.hom (algebraMap (𝓞 D.F) D.O D.ω)
+      have := o.act.hom (algebraMap (𝓞 D.F) D.O D.ω)
       refine (GlobalTheory.UPel.HT.EtaleLie.existsUnique_dual_lift ψ x _ hh).unique ⟨?_, ?_⟩ ⟨?_, ?_⟩
       · show _ ≫ l ≫ (o.act.act _).left = _
         rw [← Category.assoc, hl₁]
@@ -664,7 +664,7 @@ theorem polKer_locus_clopen : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
     rw [hc, ← pow_mul, Nat.cast_pow]
     exact hpY.pow _
   obtain ⟨C, _, Q, h, hC, -, -, hh, -, hT⟩ := GlobalTheory.T.harrisTaylor_pullback_bundle_dual_hom p D R b N Y s o B ψ' hB hq.2.1
-  haveI := isMonHom_id_npow B c
+  have := isMonHom_id_npow B c
   have hcomp : ∀ {T : Over Y} (x : T ⟶ B), x ≫ (𝟙 B) ^ c = x ^ c := fun x => by
     rw [MonObj.comp_pow, Category.comp_id]
   obtain ⟨W₁, o₁, c₁, H₁, -⟩ := GlobalTheory.T.isClopen_torsion_kernel_locus Y B (c ^ 3) Unit (fun _ => C) (fun _ => h) B ((𝟙 B) ^ c) hB
@@ -1116,7 +1116,7 @@ theorem UpperTheory.Cb.polarization_descent_along_quasi_isogeny_compat :
     rw [hv, MonObj.comp_pow, GlobalTheory.KerCalc.evc_pow_left hP' addP', hx0, smul_zero, map_zero]
   have hwc1 := (hpol T' T'.hom (Category.comp_id _) w hw3).mp hppt
   rw [hwc] at hwc1
-  haveI : Epi (pullback.fst (x ^ e0).left (𝟙 B ^ c).left) := Flat.epi_of_flat_of_surjective _
+  have : Epi (pullback.fst (x ^ e0).left (𝟙 B ^ c).left) := Flat.epi_of_flat_of_surjective _
   have e1 : πo ≫ x ^ e0 = πo ≫ (1 : T ⟶ B) := by rw [hwc1, MonObj.comp_one]
   have e2 := congrArg Over.Hom.left e1
   simp only [Over.comp_left, Over.homMk_left, πo] at e2
@@ -1144,8 +1144,8 @@ theorem UpperTheory.Cb.polarization_kernel_of_p_isogeny_quasi_inverse :
   have hP' := o'.isLB
   have hc0 : 0 < c := hI.pos
   obtain ⟨k, hk⟩ := hI.1
-  haveI := hq.1
-  haveI := hq.2.1
+  have := hq.1
+  have := hq.2.1
   have hu : IsUnit (c : Γ(Y, ⊤)) := by
     have h := hp.map (s.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom)
     rw [map_natCast] at h
@@ -1376,10 +1376,10 @@ namespace GlobalTheory.UPel.HT.ES.QCompat
 theorem comp_quasiInv : ∀ (T Y : Scheme.{0}) (t : T ⟶ Y) (A B : Over Y) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B] (k : ℕ) (ψ : A ⟶ B) (ψ' : B ⟶ A) (A₁ B₁ : Over T) [GrpObj A₁] [IsCommMonObj A₁] [GrpObj B₁] [IsCommMonObj B₁] (φ : A₁.left ⟶ A.left) (θ : B₁.left ⟶ B.left) (ψ₁ : A₁ ⟶ B₁) (ψ₁' : B₁ ⟶ A₁), IsAbelianScheme B₁ → 0 < k → IsQuasiInv k ψ ψ' → IsQuasiInv k ψ₁ ψ₁' → IsGrpPullback A₁ A t φ → φ ≫ ψ.left = ψ₁.left ≫ θ → θ ≫ ψ'.left = ψ₁'.left ≫ φ := by
   intro T Y t A B _ _ _ _ k ψ ψ' A₁ B₁ _ _ _ _ φ θ ψ₁ ψ₁' hB hk hq hq₁ hφ hsq
   obtain ⟨h1, h2, -⟩ := GlobalTheory.UPel.HT.SiegUniqBase.flat_surjective_qc_pow T B₁ hB k hk
-  haveI : Epi ((𝟙 B₁) ^ k).left := Flat.epi_of_flat_of_surjective _
+  have : Epi ((𝟙 B₁) ^ k).left := Flat.epi_of_flat_of_surjective _
   have e₁ : ψ₁'.left ≫ ψ₁.left = ((𝟙 B₁) ^ k).left := by rw [← Over.comp_left, hq₁.2.2.2]
-  haveI : Epi (ψ₁'.left ≫ ψ₁.left) := by rw [e₁]; infer_instance
-  haveI : Epi ψ₁.left := epi_of_epi ψ₁'.left ψ₁.left
+  have : Epi (ψ₁'.left ≫ ψ₁.left) := by rw [e₁]; infer_instance
+  have : Epi ψ₁.left := epi_of_epi ψ₁'.left ψ₁.left
   rw [← cancel_epi ψ₁.left, ← Category.assoc, ← hsq, Category.assoc, ← Over.comp_left, hq.2.2.1,
     ← Category.assoc, ← Over.comp_left, hq₁.2.2.1]
   exact (GlobalTheory.LamF.IsGrpPullback.id_pow_left hφ k).symm
@@ -1425,8 +1425,8 @@ theorem rosati_of_quasiInv_root : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R 
     have := (hp.pow e).map (s.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom)
     rwa [← Nat.cast_pow, map_natCast] at this
   obtain ⟨hL', r₁, r₂⟩ := hP'
-  haveI := act'.hom a
-  haveI := act'.hom (D.star a).unop
+  have := act'.hom a
+  have := act'.hom (D.star a).unop
   have e₁ : Hecke.sq2 ψ ≫ (lift (fst B B ≫ act'.act a) (snd B B)).left =
       (lift (fst o.A o.A ≫ o.act.act a) (snd o.A o.A)).left ≫ Hecke.sq2 ψ := by
     simp only [Hecke.sq2, ← Over.comp_left]
@@ -1766,7 +1766,7 @@ theorem exists_obj {c : ℕ} {Y : Scheme.{0}} [IsLocallyNoetherian Y] {s : Y ⟶
   obtain ⟨act', hact⟩ := GlobalTheory.T.exists_orderAction_descent_along_isogeny p D R b N c Y s o B ψ ψ' hp hc hB hq h1
   obtain ⟨P', hP', w1, w2⟩ := _root_.UpperTheory.Cb.exists_polarization_descent_of_quasi_isogeny p D R b N c Y s o B ψ ψ' hp hc hB hq h2
   have hlie := GlobalTheory.T.harrisTaylor_lie_of_quasiInverseIsogeny p D R b N c Y s o B ψ ψ' hp hc hB hq act' hact
-  haveI := hq.1
+  have := hq.1
   let o' : Obj b N s :=
     { A := B, ab := hB, act := act', P := P', isLB := hP'.1, rig₁ := hP'.2.1, rig₂ := hP'.2.2
       symm := GlobalTheory.T.quasiInverse_root_bundle_symmetric p D R b N c Y s o B ψ ψ' hp hc hB hq P' hP' w1 w2
@@ -1796,12 +1796,12 @@ theorem exists_rep : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
   obtain ⟨W₁, a₁, c₁, H₁⟩ := _root_.GlobalTheory.UPel.HT.ES.exists_clopen_kerStableAt p D R b N c _ _ oZ B ψ ψ' hp hc hB hq
   obtain ⟨W₂, a₂, c₂, H₂⟩ := _root_.GlobalTheory.UPel.HT.ES.polKer_locus_clopen p D R b N c _ _ oZ B ψ ψ' hp hc hB hq
   obtain ⟨W₃, a₃, c₃, H₃⟩ := _root_.UpperTheory.Cb.exists_clopen_locus_of_annihilator p D R b N c _ _ oZ B ψ ψ' hp hc hB hq r w j
-  haveI := hZf
-  haveI := hZe
+  have := hZf
+  have := hZe
   obtain ⟨Y, i, hYf, hYe, hmono, Hi⟩ := GlobalTheory.LevCover.exists_sub (Z := Z)
     ⟨W₁ ∩ W₂ ∩ W₃, (a₁.inter a₂).inter a₃⟩ ((c₁.inter c₂).inter c₃)
-  haveI := hYf
-  haveI : IsLocallyNoetherian Y.left := LocallyOfFiniteType.isLocallyNoetherian Y.hom
+  have := hYf
+  have : IsLocallyNoetherian Y.left := LocallyOfFiniteType.isLocallyNoetherian Y.hom
   have hi : Set.range i.left.base ⊆ W₁ ∩ W₂ ∩ W₃ := (Hi Y i).2 ⟨𝟙 Y, Category.id_comp i⟩
   obtain ⟨o₀, ⟨mi⟩⟩ := exists_pull i.left oZ (s' := Y.hom ≫ s) (by rw [← Category.assoc, Over.w i])
   obtain ⟨m₀, hm₀⟩ : ∃ m₀ : ObjMap o₀ o Y.hom, m₀.φ = mi.φ ≫ mZ.φ := by
@@ -1833,7 +1833,7 @@ theorem exists_rep : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [Comm
       ((tjAt_id_iff r w j o₁ o₁' ψ₁).2 h2)))
   obtain ⟨y, hy⟩ := (Hi (Over.mk x) (Over.homMk z hz)).1 hr
   have hyz : y.left ≫ i.left = z := congrArg CommaMorphism.left hy
-  haveI : Mono i.left := inferInstanceAs (Mono ((Over.forget S).map i))
+  have : Mono i.left := inferInstanceAs (Mono ((Over.forget S).map i))
   refine ⟨y.left, ⟨Over.w y, ?_⟩, ?_⟩
   · obtain ⟨m₀', hm⟩ := exists_factor hN hNp hyz mi mz
     let φ₁ : o₁'.A.left ⟶ o'.A.left := hθ.1.lift θ' (o₁'.A.hom ≫ y.left) (by rw [hθb.1.w, Category.assoc, hyz])

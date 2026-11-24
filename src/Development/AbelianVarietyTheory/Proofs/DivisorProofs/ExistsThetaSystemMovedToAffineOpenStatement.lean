@@ -99,7 +99,7 @@ namespace GlobalTheory.Poinc.ChartAt
 
 theorem exists_affine_chart_lift : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W i) (w : X₁.M.Z), X₁.π w ∈ Set.range i → ∃ (U : X₁.M.Z.Opens) (u : Sp (X₁.M.ringOn U) ⟶ F.X), IsAffineOpen U ∧ w ∈ U ∧ (∀ w' ∈ U, X₁.π w' ∈ Set.range i) ∧ spMap (X₁.M.ringOn U).val.toRingHom ≫ u = spMap X₁.S.R.val.toRingHom ≫ X₁.u := by
   intro g n F W Z i X₁ w hw
-  haveI := X₁.imm
+  have := X₁.imm
   set V : X₁.M.Z.Opens := X₁.π ⁻¹ᵁ i.opensRange with hVdef
   have hwV : w ∈ V := by
     show X₁.π w ∈ (i.opensRange : Set Z)
@@ -228,8 +228,8 @@ theorem diagEnd_unique_comm {g n : ℕ} (F : SFam g n (zetaAway n)) (W : Matrix 
     have wz : ((x * y).left ≫ α) ≫ P'.A.hom = (Over.mk (T₀.hom ≫ h)).hom := by
       rw [Category.assoc, hαw, ← Category.assoc, Over.w (x * y)]; rfl
     have := ext' (x₁ * y₁) (Over.homMk ((x * y).left ≫ α) wz) fun a => by
-      haveI := hpr a
-      haveI := hpr' a
+      have := hpr a
+      have := hpr' a
       rw [MonObj.mul_comp]
       have e := hκ.2 T₀ (x ≫ pr a) (y ≫ pr a) (x₁ ≫ pr' a) (y₁ ≫ pr' a)
         (by show x₁.left ≫ (pr' a).left = x.left ≫ (pr a).left ≫ κ; rw [hx, Category.assoc, hα])
@@ -363,7 +363,7 @@ theorem exists_sharpOver_connected {g n : ℕ} {o : Type} [CommRing o] {ζ : o} 
 
 theorem exists_sharpOver_domain : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (R : Type) [CommRing R] [IsDomain R] (u : Sp R ⟶ F.X), ∃ P : PolAV (Sp R), SharpOver F W P u := by
   intro g n F W hW R _ _ u
-  haveI : ConnectedSpace (Sp R) := by
+  have : ConnectedSpace (Sp R) := by
     change ConnectedSpace (PrimeSpectrum R)
     infer_instance
   exact exists_sharpOver_connected F W hW u

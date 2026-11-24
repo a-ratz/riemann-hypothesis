@@ -107,7 +107,7 @@ theorem absEv_inert : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   have hz' : Valued.v z ≠ 0 := (Valuation.ne_zero_iff _).mpr hz0
   have hN' : Valued.v N ≠ 0 := (Valuation.ne_zero_iff _).mpr hN0
 
-  rw [GlobalTheory.Doubling.absEv_apply, coe_nnnorm]
+  rw [GlobalTheory.Doubling.absEv_apply, coe_nnNorm]
   show ‖N‖ = _
   rw [NumberField.FinitePlace.norm_def, WithZeroMulInt.toNNReal_neg_apply _ hN',
     hvN, WithZero.log_pow, ordL_eq_neg_log (y := toCompl h x.1) hz']

@@ -873,15 +873,15 @@ theorem integrable_of_periodisation_bound : ∀ (D : D7) (ρ : ℕ) (lz : Measur
   intro D ρ lz 𝓖 hC f hf hf0 hS K hK κ hκ hb
   obtain ⟨hlam, hFD, h1⟩ := hC
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.TowerResNonzero.lattice_ratMx D ρ ρ
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (hermA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : ContinuousAdd (hermA D ρ) := ⟨Continuous.subtype_mk ((continuous_subtype_val.comp continuous_fst).add
-    (continuous_subtype_val.comp continuous_snd)) _⟩
-  haveI : MeasurableAdd (hermA D ρ) := ContinuousAdd.measurableAdd
-  haveI : DiscreteTopology (ratHerm D ρ) := GlobalTheory.CompanionTheory.FourierN.discrete_ratHerm
-  haveI : Countable (ratHerm D ρ) := by
-    haveI : SecondCountableTopology (ratHerm D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+  have : SecondCountableTopology (hermA D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : ContinuousAdd (hermA D ρ) := ⟨Continuous.subtype_mk ((continuous_subtypeVal.comp continuous_fst).add
+    (continuous_subtypeVal.comp continuous_snd)) _⟩
+  have : MeasurableAdd (hermA D ρ) := ContinuousAdd.measurableAdd
+  have : DiscreteTopology (ratHerm D ρ) := GlobalTheory.CompanionTheory.FourierN.discrete_ratHerm
+  have : Countable (ratHerm D ρ) := by
+    have : SecondCountableTopology (ratHerm D ρ) := TopologicalSpace.Subtype.secondCountableTopology _
     exact (TopologicalSpace.separableSpace_iff_countable).1 inferInstance
   exact integrable_of_cover (ratHerm D ρ) lz 𝓖 hFD h1 f hf hf0 hS K hK κ hκ hb
 
@@ -1269,7 +1269,7 @@ theorem dil_exists : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (n ρ p :
     rw [ha0, one_smul]; exact GlobalTheory.CompanionTheory.PcB.blockMatrix_one hn
   have hAc : Continuous A := by
     have h1 : Continuous fun u => a u • (1 : Mx D ρ ρ) := by
-      haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+      have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
       exact continuous_matrix fun i j => (hac.mul continuous_const : Continuous fun u => a u * (1 : Mx D ρ ρ) i j)
     exact (h1.matrix_fromBlocks continuous_const continuous_const continuous_const).matrix_submatrix _ _
   have hex : ∀ u, ∃ g : G D n, mat g = blk4 (A u) 0 0 (adj (A (-u))) := fun u =>
@@ -1352,7 +1352,7 @@ theorem exists_shear_bound (D : D7) (n ρ p : ℕ) (hn : ρ + p = n) (M : Maps D
       have h := Nat.ceil_lt_add_one (abs_nonneg u)
       exact h.le.trans (by rw [hu])
     calc κ₁ ^ ⌈|u|⌉₊ ≤ Real.exp N ^ ⌈|u|⌉₊ := pow_le_pow_left₀ (zero_le_one.trans hκ₁) hκE _
-      _ = Real.exp ((N : ℝ) * (⌈|u|⌉₊ : ℝ)) := by rw [← Real.exp_nat_mul]; ring_nf
+      _ = Real.exp ((N : ℝ) * (⌈|u|⌉₊ : ℝ)) := by rw [← Real.exp_natCast_mul]; ring_nf
       _ ≤ Real.exp ((N : ℝ) * (Real.log r + 1)) := Real.exp_le_exp.2 (by gcongr)
       _ = Real.exp N * r ^ N := by
         rw [mul_add, mul_one, Real.exp_add, mul_comm, mul_comm (N : ℝ), Real.exp_mul, Real.exp_log hr0, Real.rpow_natCast]
@@ -1738,8 +1738,8 @@ theorem wz_family (hψ : IsCharAF D.host.F ψ) {H : G D n → ℝ≥0} (hH : IsH
     ContinuousOn (fun u : ℂ × G D n => Wz M m ψ b₀ (fam H φ s₁ u.1) u.2)
         ({z : ℂ | ((ρ : ℝ) - p) / 2 < z.re} ×ˢ Set.univ) ∧
       ∀ c, DifferentiableOn ℂ (fun z => Wz M m ψ b₀ (fam H φ s₁ z) c) {z : ℂ | ((ρ : ℝ) - p) / 2 < z.re} := by
-  haveI : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D ρ) := Subtype.borelSpace _
+  have : BorelSpace (Mx D ρ ρ) := ⟨rfl⟩
+  have : BorelSpace (hermA D ρ) := Subtype.borelSpace _
   obtain ⟨B, hB, hf⟩ := GlobalTheory.T.eisenstein_family_height_bound D n H hH hcpt χ s₁ φ hφ hlaw
   obtain ⟨hcz, hnz⟩ := GlobalTheory.T.centre_character_continuous_unit D ρ ψ hψ b₀
   have hU : IsOpen {z : ℂ | ((ρ : ℝ) - p) / 2 < z.re} := isOpen_lt continuous_const Complex.continuous_re
@@ -1799,7 +1799,7 @@ theorem rsec_family (hψ : IsCharAF D.host.F ψ) {χ χ' : (AE D)ˣ →* Circle}
     ContinuousOn (fun u : ℂ × G D p => Rsec M m ψ b₀ (fam H φ s₁ u.1) g Ω u.2)
         ({z : ℂ | ((ρ : ℝ) - p) / 2 < z.re} ×ˢ Set.univ) ∧
       ∀ h, DifferentiableOn ℂ (fun z => Rsec M m ψ b₀ (fam H φ s₁ z) g Ω h) {z : ℂ | ((ρ : ℝ) - p) / 2 < z.re} := by
-  haveI : BorelSpace (Mx D ρ p) := ⟨rfl⟩
+  have : BorelSpace (Mx D ρ p) := ⟨rfl⟩
   obtain ⟨hc1, hd1⟩ := wz_family M m b₀ hψ hH hcpt hφ hlaw
   obtain ⟨B, hB, hf⟩ := GlobalTheory.T.eisenstein_family_height_bound D n H hH hcpt χ s₁ φ hφ hlaw
   obtain ⟨hcz, hnz⟩ := GlobalTheory.T.centre_character_continuous_unit D ρ ψ hψ b₀

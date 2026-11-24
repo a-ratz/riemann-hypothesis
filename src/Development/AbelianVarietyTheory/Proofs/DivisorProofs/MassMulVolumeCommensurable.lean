@@ -73,7 +73,7 @@ theorem fib_sum_q (S X : Type*) [Group S] [MulAction S X] [Finite S] [Finite X]
       rw [Nat.card_coe_set_eq, ← MulAction.index_stabilizer, Subgroup.card_mul_index]
     have hs : (Nat.card (MulAction.stabilizer S O.out) : ℚ) ≠ 0 := by
       exact_mod_cast (Nat.card_pos (α := MulAction.stabilizer S O.out)).ne'
-    haveI : Nonempty (MulAction.orbit S O.out) := ⟨⟨O.out, MulAction.mem_orbit_self _⟩⟩
+    have : Nonempty (MulAction.orbit S O.out) := ⟨⟨O.out, MulAction.mem_orbit_self _⟩⟩
     have ho : (Nat.card (MulAction.orbit S O.out) : ℚ) ≠ 0 := by
       exact_mod_cast (Nat.card_pos (α := MulAction.orbit S O.out)).ne'
     rw [← h, Nat.cast_mul]
@@ -92,43 +92,43 @@ theorem qmass_eq_of_fibre {A B : Type*} [MulAction Γ A] [MulAction Γ B] (f : A
     qmass Γ A = N * qmass Γ B := by
   have hSA : ∀ a : A, Finite (MulAction.stabilizer Γ a) := by
     intro a
-    letI := fibAct f hf (f a)
-    haveI := hS (f a)
+    let := fibAct f hf (f a)
+    have := hS (f a)
     exact Finite.of_equiv _ (stabEquiv f hf (f a) ⟨a, rfl⟩)
   have hposA : ∀ a : A, ((Nat.card (MulAction.stabilizer Γ a) : ℕ) : ℚ)⁻¹ ≠ 0 := fun a => by
-    haveI := hSA a
+    have := hSA a
     exact inv_ne_zero (by exact_mod_cast (Nat.card_pos (α := MulAction.stabilizer Γ a)).ne')
   have hposB : ∀ b : B, ((Nat.card (MulAction.stabilizer Γ b) : ℕ) : ℚ)⁻¹ ≠ 0 := fun b => by
-    haveI := hS b
+    have := hS b
     exact inv_ne_zero (by exact_mod_cast (Nat.card_pos (α := MulAction.stabilizer Γ b)).ne')
   have hqfin : ∀ oB, Finite ↥(qmap f hf ⁻¹' {oB}) := by
     intro oB
-    letI := fibAct f hf oB.out
-    haveI := hfin oB.out
+    let := fibAct f hf oB.out
+    have := hfin oB.out
     exact Finite.of_equiv _ (orbEquiv f hf oB)
   have hqsurj : Function.Surjective (qmap f hf) := by
     intro oB
     have hne : Nonempty {a : A // f a = oB.out} := by
-      haveI := hfin oB.out
+      have := hfin oB.out
       have : 0 < Nat.card {a : A // f a = oB.out} := by rw [hN]; exact Nat.pos_of_ne_zero hN0
       exact (Nat.card_pos_iff.1 this).1
     obtain ⟨⟨a, ha⟩⟩ := hne
     exact ⟨Quotient.mk _ a, by rw [qmap_mk, ha]; exact Quotient.out_eq oB⟩
   unfold qmass
   by_cases hB : Finite (Quotient (MulAction.orbitRel Γ B))
-  · haveI := hB
-    haveI : Finite (Quotient (MulAction.orbitRel Γ A)) :=
+  · have := hB
+    have : Finite (Quotient (MulAction.orbitRel Γ A)) :=
       Finite.of_surjective (fun p : Σ oB, ↥(qmap f hf ⁻¹' {oB}) => p.2.1)
         (fun x => ⟨⟨qmap f hf x, x, rfl⟩, rfl⟩)
-    letI := Fintype.ofFinite (Quotient (MulAction.orbitRel Γ B))
-    letI := Fintype.ofFinite (Quotient (MulAction.orbitRel Γ A))
+    let := Fintype.ofFinite (Quotient (MulAction.orbitRel Γ B))
+    let := Fintype.ofFinite (Quotient (MulAction.orbitRel Γ A))
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, Finset.mul_sum,
       ← Fintype.sum_fiberwise (qmap f hf)]
     refine Finset.sum_congr rfl fun oB _ => ?_
-    letI := fibAct f hf oB.out
-    haveI := hS oB.out
-    haveI := hfin oB.out
-    letI := Fintype.ofFinite
+    let := fibAct f hf oB.out
+    have := hS oB.out
+    have := hfin oB.out
+    let := Fintype.ofFinite
       (Quotient (MulAction.orbitRel (MulAction.stabilizer Γ oB.out) {a : A // f a = oB.out}))
     have hc : ∀ O, Nat.card (MulAction.stabilizer Γ
         ((orbEquiv f hf oB O) : Quotient (MulAction.orbitRel Γ A)).out) =
@@ -249,7 +249,7 @@ theorem dmass_of_le (A C D : Subgroup H) (hDC : D ≤ C) (hi : D.relIndex C ≠ 
     | H a => rfl
   · intro b
     obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective b
-    haveI := hfin g
+    have := hfin g
     exact Finite.of_equiv _ (stabEquivInf A C g).symm
 
 end Coset
@@ -264,7 +264,7 @@ theorem massC_mul_vol : ∀ {G : Type} [Group G] (Γ' T C C' : Subgroup G), C �
       (∀ t ∈ T, ((Γ' ⊓ E.map (MulAut.conj t).toMonoidHom : Subgroup G) : Set G).Finite) →
       ∀ t : T, Finite (Γ'.subgroupOf T ⊓ (E.subgroupOf T).map (MulAut.conj t).toMonoidHom : Subgroup T) := by
     intro E hfE t
-    haveI := (hfE t t.2).to_subtype
+    have := (hfE t t.2).to_subtype
     refine Finite.of_injective (β := ↥((Γ' ⊓ E.map (MulAut.conj (t : G)).toMonoidHom : Subgroup G) : Set G))
       (fun x => ⟨((x : T) : G), ?_⟩) ?_
     · have hx := x.2

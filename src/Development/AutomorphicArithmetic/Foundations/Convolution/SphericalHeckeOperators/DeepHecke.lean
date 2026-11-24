@@ -109,7 +109,7 @@ theorem UpperTheory.V.Z.Tf.Orb.convTest :
       refine (setIntegral_eq_integral_of_forall_compl_eq_zero fun y hy => ?_).symm
       rw [image_eq_zero_of_notMem_tsupport hy, zero_mul]
     rw [h]
-    haveI : FirstCountableTopology G := inferInstance
+    have : FirstCountableTopology G := inferInstance
     exact continuous_parametric_integral_of_continuous (by fun_prop) a2
   · refine HasCompactSupport.intro (a2.isCompact.mul b2.isCompact) fun x hx => ?_
     refine integral_eq_zero_of_ae (Filter.Eventually.of_forall fun y => ?_)
@@ -240,7 +240,7 @@ theorem UpperTheory.ConvolutionTheory.H.core :
   have hv : ∑ S ∈ (pairs n).powerset, sgS S • monomial (eL S + eR S) = dPol n 1 :=
     eq_of_forall_evalAt fun z => by
       have := vandSum n z 1 1
-      simp only [Equiv.Perm.coe_one, Function.comp_id, if_true] at this
+      simp only [Equiv.Perm.coe_one, Function.comp_id, ite_true] at this
 
       rw [← this, map_sum]
       refine Finset.sum_congr rfl fun S _ => ?_
@@ -449,8 +449,8 @@ private lemma phi_anti (b : Fin n → ℕ) {i j : Fin n} (hij : i ≤ j) : phi b
   rw [phi_apply, phi_apply]
   refine Finset.sum_le_sum fun k _ => ?_
   by_cases h1 : j ≤ k
-  · rw [if_pos h1, if_pos (hij.trans h1)]
-  · rw [if_neg h1]
+  · rw [ite_eq_left h1, ite_eq_left (hij.trans h1)]
+  · rw [ite_eq_right h1]
     split_ifs <;> simp
 
 private def chi (w : Fin n → ℂˣ) : Multiplicative (Fin n → ℕ) →* ℂ where
@@ -877,7 +877,7 @@ private theorem diag_mem_I {d : Fin n → Eˣ} (hd : ∀ i, ValuativeRel.valuati
     · subst e
       rw [Matrix.diagonal_apply_eq, hd]
     · rw [Matrix.diagonal_apply_ne _ e, map_zero]
-      exact zero_le'
+      exact zero_le
   · rw [coe_diagGL, Matrix.diagonal_apply_ne _ h.ne', map_zero]
     exact zero_lt_one
   · rw [coe_diagGL, Matrix.diagonal_apply_eq, hd]
@@ -949,7 +949,7 @@ private theorem finiteField_norm_trace_surjective {k : Type} [Field k] [Finite k
       ∃ a : k, ∑ i ∈ Finset.range q, (τ ^ i) a = 1 := by
   classical
   subst hq
-  haveI : Finite (k ≃+* k) := Finite.of_injective (fun f : k ≃+* k => (f : k → k)) DFunLike.coe_injective
+  have : Finite (k ≃+* k) := Finite.of_injective (fun f : k ≃+* k => (f : k → k)) DFunLike.coe_injective
   have hfin : IsOfFinOrder τ := isOfFinOrder_of_finite τ
   let G := Subgroup.zpowers τ
   let F := FixedPoints.subfield G k
@@ -1135,7 +1135,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.unitNorm :
     rw [hd, map_div₀, hN1, div_one, Valuation.map_sub_swap]
   have hd1 : valuation E d < 1 := hdv ▸ hlt
   have hd0 : 0 < valuation E d := by
-    rw [hdv, zero_lt_iff, Valuation.ne_zero_iff]
+    rw [hdv, pos_iff_ne_zero, Valuation.ne_zero_iff]
     exact sub_ne_zero.2 hne
   obtain ⟨c, hc, he⟩ := prod_expand d hd1.le (fun i => σ^[i] b) (fun i => (hiso i b).trans_le hb) q
   have hw' : valuation E (w * (1 + d * b)) ≤ 1 := by
@@ -1172,7 +1172,7 @@ private theorem exists_rep {G : Type} [Group G] (H U : Subgroup G) (y : G) :
   let s := DoubleCoset.setoid (H : Set G) (U : Set G)
   have hs : ∀ a b, s.r a b ↔ ∃ h ∈ H, ∃ u ∈ U, b = h * a * u := fun a b => DoubleCoset.rel_iff
   refine ⟨fun g => if Quotient.mk s g = Quotient.mk s y then y else (Quotient.mk s g).out, fun g => ?_, fun g h hh u hu => ?_,
-    if_pos rfl⟩
+    ite_eq_left rfl⟩
   · apply (hs _ _).1
     apply Quotient.exact (s := s)
     dsimp only
@@ -1190,10 +1190,10 @@ private theorem quot_dcoset {G : Type} [Group G] [TopologicalSpace G] [IsTopolog
     quotIntegral μ H ν F = c * (((μ U).toReal / (ν {h | y⁻¹ * h * y ∈ U}).toReal : ℝ) : ℂ) := by
   classical
   have hcomm : ∀ a b : H, a * b = b * a := fun a b => Subtype.ext (hc _ a.2 _ b.2)
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
-  haveI : ν.IsInvInvariant := by
-    letI : CommGroup H := { (inferInstance : Group H) with mul_comm := hcomm }
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
+  have : ν.IsInvInvariant := by
+    let : CommGroup H := { (inferInstance : Group H) with mul_comm := hcomm }
     exact Measure.IsHaarMeasure.isInvInvariant_of_regular ν
   let V : G → Set H := fun r => {h | r⁻¹ * h * r ∈ U}
   have hVo : ∀ r, IsOpen (V r) := fun r => hUo.preimage (by fun_prop : Continuous fun h : H => r⁻¹ * h * r)
@@ -1226,7 +1226,7 @@ private theorem quot_dcoset {G : Type} [Group G] [TopologicalSpace G] [IsTopolog
           rw [hc h0 hh0 h h.2]
           nth_rewrite 2 [e]
           group
-        simp only [ρ, hrl g h h.2, e2, U.mul_mem_cancel_right hu0, Set.indicator_apply, Set.mem_preimage, V, Set.mem_setOf_eq,
+        simp only [ρ, hrl g h h.2, e2, U.mul_mem_cancel_right hu0, Set.indicator_apply, Set.mem_preimage, V, Set.mem_ofPred_eq,
           Subgroup.coe_mul]
       rw [lintegral_congr this, lintegral_indicator_const ((hVo _).preimage (by fun_prop)).measurableSet,
         measure_preimage_mul, ENNReal.inv_mul_cancel (hV0 _) (hVt _)]
@@ -1395,7 +1395,7 @@ private theorem pow_eq (ϖ : Eˣ) (a : Fin n → ℤ) : diagPow ϖ a = diagT E (
 
 private theorem strict_pow {ϖ : Eˣ} (h : valuation E (ϖ : E) < 1) {a : Fin n → ℤ} (ha : StrictAnti a) :
     Strict fun i => ϖ ^ a i := fun i j hij => by
-  have h0 : 0 < valuation E (ϖ : E) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
+  have h0 : 0 < valuation E (ϖ : E) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ϖ.ne_zero)
   simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
   exact (zpow_lt_zpow_iff_right_of_lt_one₀ h0 h).2 (ha hij)
 
@@ -1403,7 +1403,7 @@ private theorem val_dec {π : E} (h : valuation E π < 1) (hm : ∀ x, valuation
     π ≠ 0 ∧ ∀ y : E, y ≠ 0 → ∃ a : ℤ, valuation E y = valuation E (π ^ a) := by
   obtain ⟨p, hp⟩ := IsDiscreteValuationRing.exists_irreducible 𝒪[E]
   have h1 : valuation E (p : E) < 1 := Valuation.Integer.not_isUnit_iff_valuation_lt_one.1 hp.not_isUnit
-  have h0 : 0 < valuation E (p : E) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 fun e => hp.ne_zero (Subtype.ext e))
+  have h0 : 0 < valuation E (p : E) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 fun e => hp.ne_zero (Subtype.ext e))
   have dec : ∀ y : E, y ≠ 0 → ∃ a : ℤ, valuation E y = valuation E (p : E) ^ a := fun y hy => by
     obtain ⟨a, u, hu⟩ := IsDiscreteValuationRing.exists_units_eq_smul_zpow_of_irreducible (K := E) hp hy
     have h1 : valuation E (algebraMap 𝒪[E] E (u : 𝒪[E])) = 1 := (Valuation.integer.integers (valuation E)).valuation_unit u
@@ -1461,7 +1461,7 @@ private theorem nrm_incl (σ : E ≃ₐ[k] E) (q : ℕ) (ϖ : kˣ) (a : Fin n �
   funext i
   have h1 : ∀ j (x : k), (σ : E ≃+* E)^[j] (algebraMap k E x) = algebraMap k E x := fun j x =>
     Function.iterate_fixed (σ.commutes x) j
-  simp only [Pi.mul_apply, Units.val_mul, Units.coe_map, MonoidHom.coe_coe, iterate_map_mul, h1, Finset.prod_mul_distrib, h,
+  simp only [Pi.mul_apply, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, iterate_map_mul, h1, Finset.prod_mul_distrib, h,
     Finset.prod_const, Finset.card_range, map_mul]
   rw [mul_comm (q : ℤ), zpow_mul, zpow_natCast, Units.val_pow_eq_pow_val, map_pow]
 
@@ -1584,7 +1584,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.elemMatch :
   have hv := congrArg (fun m : Measure (GL (Fin n) E) => m {g | incl z * g * (incl z)⁻¹ ∈ GlobalTheory.SmGL.iwahori E (Fin n)}) hm
   rw [Measure.map_apply (by fun_prop) hS,
     Measure.map_apply (f := fun t : Subgroup.centralizer {γ} => (incl (t : GL (Fin n) k) : GL (Fin n) E))
-      (hcl.continuous.comp continuous_subtype_val).measurable hS] at hv
+      (hcl.continuous.comp continuous_subtypeVal).measurable hS] at hv
   have e1 : μδ {c | y⁻¹ * c * y ∈ GlobalTheory.SmGL.iwahori E (Fin n)} = μγ {c | z⁻¹⁻¹ * c * z⁻¹ ∈ GlobalTheory.SmGL.iwahori k (Fin n)} := by
     convert hv using 2
     · ext c
@@ -1592,9 +1592,9 @@ theorem UpperTheory.ConvolutionTheory.Loc.elemMatch :
       have : incl z * (h⁻¹ * (c : GL (Fin n) E) * h) * (incl z)⁻¹ = y⁻¹ * (c : GL (Fin n) E) * y := by
         calc _ = (y⁻¹ * h * incl z⁻¹)⁻¹ * ((y⁻¹ * (c : GL (Fin n) E) * y) * (y⁻¹ * h * incl z⁻¹)) := by rw [map_inv]; group
           _ = _ := by rw [hu, hw, diag_comm, inv_mul_cancel_left]
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, this]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, this]
     · ext c
-      simp only [Set.mem_setOf_eq, Set.mem_preimage, ← incl_mem (E := E), map_mul, map_inv, inv_inv]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage, ← incl_mem (E := E), map_mul, map_inv, inv_inv]
   have h0 : (μk (GlobalTheory.SmGL.iwahori k (Fin n))).toReal ≠ 0 :=
     ENNReal.toReal_ne_zero.2 ⟨(IwahoriOnto.isOpen_iwahori k _).measure_ne_zero μk ⟨1, one_mem _⟩,
       (IwahoriOnto.isCompact_iwahori k _).measure_ne_top⟩

@@ -142,7 +142,7 @@ theorem section_eq_zero_of_forall_geometric_point :
   intro O F _ _ _ _ hinj H Y hfin hflat hred hY W f h
   have : IsAffine H.left := isAffine_of_isAffineHom H.hom
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (H.left.isoSpec.inv ≫ H.hom)
-  letI : Algebra O Γ(H.left, ⊤) := ψ.hom.toAlgebra
+  let : Algebra O Γ(H.left, ⊤) := ψ.hom.toAlgebra
   let e : specO O Γ(H.left, ⊤) ≅ H := Over.isoMk H.left.isoSpec.symm hψ.symm
   have h1 : IsFinite (Spec.map ψ) := by rw [hψ]; infer_instance
   have h2 : Flat (Spec.map ψ) := by rw [hψ]; infer_instance

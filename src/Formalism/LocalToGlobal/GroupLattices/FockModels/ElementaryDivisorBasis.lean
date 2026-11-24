@@ -228,7 +228,7 @@ theorem ten_basis (O Kf : Type) [CommRing O] [IsDomain O] [Field Kf] [Algebra O 
     unfold Vsp
     congr 1
     funext s
-    rw [if_pos (hanti s)]
+    rw [ite_eq_left (hanti s)]
   have hKK : IsFractionRing Kf Kf := jr_KK Kf
   obtain ⟨kL, kS⟩ := tensorBasis Kf Kf (Fin n') (m + 1) (m + 1) _ _ X b1 b2
   have hfin : ∀ s : Fin n', Finite ↥(ssIdx (m + 1) (m + 1) (nuOf (lamAt lam0 s))) :=
@@ -282,7 +282,7 @@ theorem w_ne (h : HidaSetting p n' W Qq O Kf ι σ j w) : algebraMap O Kf w ≠ 
   intro h0
   have hpK : (p : Kf) = algebraMap O Kf w ^ 2 := by rw [← map_pow, h.w_sq, map_natCast]
   have hpW : (p : W) ≠ 0 := h.p_unif.ne_zero
-  haveI := h.frac_alt
+  have := h.frac_alt
   have hpQ : (p : Qq) ≠ 0 := by
     rw [← map_natCast (algebraMap W Qq)]
     exact (map_ne_zero_iff _ (IsFractionRing.injective W Qq)).2 hpW

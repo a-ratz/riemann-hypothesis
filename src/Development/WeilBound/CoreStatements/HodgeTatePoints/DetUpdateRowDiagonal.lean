@@ -63,7 +63,7 @@ theorem len_eq : ∀ (C : Type) [Field C] (v : Valuation C NNReal) (R : Type) [C
   intro C _ v R _ _ hv ι _ L L' hL x y hx0 hx hy
   obtain ⟨m, c, ⟨e⟩, rfl⟩ := hx
   obtain ⟨n, d, ⟨e'⟩, rfl⟩ := hy
-  haveI := isLocal_of_integers hv
+  have := isLocal_of_integers hv
   let π : ((i : Fin m) → R ⧸ Ideal.span {c i}) →ₗ[R] ((i : Fin n) → R ⧸ Ideal.span {d i}) :=
     e'.toLinearMap ∘ₗ (Submodule.factor hL) ∘ₗ e.symm.toLinearMap
   have hπ : Function.Surjective π :=

@@ -326,10 +326,10 @@ private lemma sum_range_cexp_eq_ite_dvd (d : ℕ) (hd : 0 < d) (k : ℤ) :
   have hd' : (d:ℂ) ≠ 0 := by exact_mod_cast hd.ne'
   set ζ := cexp (2 * ↑Real.pi * I * k / d) with hζ
   have hterm : ∀ a : ℕ, cexp (2 * ↑Real.pi * I * k * a / d) = ζ ^ a := by
-    intro a; rw [hζ, ← Complex.exp_nat_mul]; congr 1; ring
+    intro a; rw [hζ, ← exp_natCast_mul]; congr 1; ring
   simp_rw [hterm]
   have hζd : ζ ^ d = 1 := by
-    rw [hζ, ← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [hζ, ← exp_natCast_mul, Complex.exp_eq_one_iff]
     exact ⟨k, by field_simp⟩
   split_ifs with h
   · obtain ⟨j, rfl⟩ := h
@@ -399,7 +399,7 @@ private lemma sum_norm_sq_exp_sum_eq_mul_sum_residues (d : ℕ) (hd : 0 < d) (S 
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun r hr => ?_
   rw [Finset.sum_comm, Finset.sum_congr rfl fun s hs => horth r hr s hs, Finset.sum_ite_eq]
-  simp only [hr, if_true]
+  simp only [hr, ite_true]
   rw [hB]
 
   simp [map_sum, Finset.sum_mul_sum]
@@ -600,7 +600,7 @@ open scoped Classical
 namespace GlobalTheory.Lin
 
 theorem exists_dvd_mul_add_of_prime (l q r : ℕ) (hl : l.Prime) (hq : ¬ l ∣ q) : ∃ c : ℕ, l ∣ q * c + r := by
-  haveI := Fact.mk hl
+  have := Fact.mk hl
   have hq' : (q : ZMod l) ≠ 0 := fun h => hq ((ZMod.natCast_eq_zero_iff q l).1 h)
   refine ⟨(-(r : ZMod l) * (q : ZMod l)⁻¹).val, (ZMod.natCast_eq_zero_iff _ l).1 ?_⟩
   push_cast

@@ -151,7 +151,7 @@ theorem gen_mem_polys {n : ℕ} (γ : Fin n → ℂ) (M : ℕ) (T : (Fin n → �
       simp
     · intro b _ hb
       obtain ⟨i, hi⟩ := Function.ne_iff.mp hb
-      rw [Finset.prod_eq_zero (Finset.mem_univ i) (if_neg (Ne.symm hi)), mul_zero]
+      rw [Finset.prod_eq_zero (Finset.mem_univ i) (ite_eq_right (Ne.symm hi)), mul_zero]
     · intro h
       exact absurd (Fintype.mem_piFinset.mpr fun i => Finset.mem_range.mpr (by omega)) h
   rw [key, Finset.mul_sum]
@@ -908,7 +908,7 @@ theorem zetaUnr_indicator {ϖ : kˣ} (hϖ : IsUnif ϖ) {ν : kˣ →* ℂˣ} (h�
     rcases lt_or_ge m 0 with h | h
     · exact conv_neg hf h
     · obtain ⟨t, rfl⟩ := Int.eq_ofNat_of_zero_le h
-      rw [conv_natCast (natDegree_invL_le n d ϖ ν) hf, key, PowerSeries.coeff_one, if_neg]
+      rw [conv_natCast (natDegree_invL_le n d ϖ ν) hf, key, PowerSeries.coeff_one, ite_eq_right]
       exact fun ht => hm (by rw [ht])
 
 theorem summable_antidiag_of_growth {n : ℕ} (Q : Fin n → ℝ) (hQ : ∀ i, 1 ≤ Q i) {r : ℝ} (hr : 0 ≤ r)
@@ -1462,7 +1462,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 
 theorem valuation_integers_eq_completion : IntEq := by
   intro F _ _ v x
-  haveI : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have h := (ValuativeRel.isEquiv (valuation (v.adicCompletion F))
     (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ)))).le_one_iff_le_one (x := x)
@@ -1610,7 +1610,7 @@ theorem finSplit_of_lt (hU : UnrMaps) (hI : IndIrredLt) (hIw : IndIwasawa) (hD :
     unfold intInd
     congr 1
     ext Y
-    simp only [Set.mem_setOf_eq, hZ F v]
+    simp only [Set.mem_ofPred_eq, hZ F v]
   have h1 : ∀ h ∈ GlobalTheory.SplitWeil.KO (Fv F v) (Fin (a + a')), pUnr a a' (unifAt v) (chrW X.ν τ) (chrW X.β τ) (intInd v) h = 1 :=
     fun h hh => by rw [hind]; exact hsph h hh
   have h1' : ∀ h ∈ GlobalTheory.SplitWeil.KO (Fv F v) (Fin (a + a')), pUnr' a a' (unifAt v) (chrW X.ν τ) (chrW X.α τ) (intInd v) h = 1 :=

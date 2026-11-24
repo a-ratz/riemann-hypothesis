@@ -177,12 +177,12 @@ theorem exists_equiv (h : BasePi ST π) (hP : P ∈ ST) (hov : IsOver v P) {T : 
     (rll_psi hc n v h P).liftOfSurjective hsurj ⟨f.toAddMonoidHom, fun t ht => hker t ht⟩
   have hg : ∀ t, g (rll_psi hc n v h P t) = f t := fun t =>
     AddMonoidHom.liftOfRightInverse_comp_apply _ _ _ _ t
-  haveI : Fact T.Prime := ⟨hT⟩
-  haveI : Finite M := Nat.finite_of_card_ne_zero (hM ▸ hT.ne_zero)
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (hcard ▸ hT.ne_zero)
+  have : Fact T.Prime := ⟨hT⟩
+  have : Finite M := Nat.finite_of_card_ne_zero (hM ▸ hT.ne_zero)
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (hcard ▸ hT.ne_zero)
   have hinj : Function.Injective g := by
     rw [← AddMonoidHom.ker_eq_bot_iff]
-    haveI : Fact (Nat.card (𝓞 E ⧸ P.asIdeal)).Prime := ⟨hcard ▸ hT⟩
+    have : Fact (Nat.card (𝓞 E ⧸ P.asIdeal)).Prime := ⟨hcard ▸ hT⟩
     refine (AddSubgroup.eq_bot_or_eq_top_of_prime_card g.ker).resolve_right fun h0 => hf ?_
     ext t
     rw [← hg]
@@ -239,8 +239,8 @@ theorem f_eq_rho (h : BasePi ST π) (hP : P ∈ ST) (hov : IsOver v P) {SG Q : F
   have e4 : algebraMap E (P.adicCompletion E) (star (π : E)) * adAt F P (Col2.pullV y z (lastIdx n)) =
       ∑ j, algebraMap E (P.adicCompletion E) (algebraMap (𝓞 E) E (if j = lastIdx n then cO E π else 0)) *
         adAt F P (Col2.pullV y z j) := by
-    rw [Finset.sum_eq_single (lastIdx n) (fun j _ hj => by rw [if_neg hj, map_zero, map_zero, zero_mul])
-      (fun hh => absurd (Finset.mem_univ _) hh), if_pos rfl]
+    rw [Finset.sum_eq_single (lastIdx n) (fun j _ hj => by rw [ite_eq_right hj, map_zero, map_zero, zero_mul])
+      (fun hh => absurd (Finset.mem_univ _) hh), ite_eq_left rfl]
     rfl
   show Valued.v (adAt F P _ - _) < 1
 
@@ -346,7 +346,7 @@ theorem fvTieG : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pin
   intro B X I hI hP l Z u a i hi bad Ch chOf K eV L hK hV hL hS
   obtain ⟨k, hR⟩ := hK
   have hB : BasePi ((B.primes X).vT u) (X.piT u) := basePi_of_ok (base_fields_primes_ok B X).1 l.pr u
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   have hcrd := (GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hI hP l Z).2.2.2 i hi
   have hJ := hcrd.1
   have hlat := fun c => ((hcrd.2.2 u a).1 c)

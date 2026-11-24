@@ -160,9 +160,9 @@ theorem restr_injective [IsIntegral Y] (h : O' ≤ O) (hne : (O' : Set Y).Nonemp
   exact congrArg _ (map_injective_of_isIntegral Y (homOfLE (inf_le_inf_right _ h)) e)
 
 theorem finite_top (hp : IsProjOver p) (hB : B.IsLB) : Module.Finite k (H0 p B ⊤) := by
-  letI := algebraΓOfHom p
-  letI : Module k B.Sec := Module.compHom _ (algebraMap k Γ(Y, ⊤))
-  haveI : IsScalarTower k Γ(Y, ⊤) B.Sec := IsScalarTower.of_compHom _ _ _
+  let := algebraΓOfHom p
+  let : Module k B.Sec := Module.compHom _ (algebraMap k Γ(Y, ⊤))
+  have : IsScalarTower k Γ(Y, ⊤) B.Sec := IsScalarTower.of_compHom _ _ _
   have e (c : k) : algebraMap k Γ(Y, ⊤) c = algX p ⊤ c := by
     change p.appTop _ = _
     rw [Scheme.Hom.appTop, Scheme.Hom.app_eq_appLE]
@@ -223,7 +223,7 @@ theorem isExtension_pullChart_top (hp : IsProjOver p) (hq : IsProjOver q) :
     rw [← e]
     infer_instance
   have e : Module.finrank E (H0 q B' ⊤) = Module.finrank k (H0 p B ⊤) := by
-    letI := algebraΓOfHom q
+    let := algebraΓOfHom q
     rw [H0.finrank_top, H0.finrank_top, lineBundleGlobalSectionsDim_congr_picardClass hB' (LB.isLB_pull hB r) ((cls_eq_iff _ _).2 (lbIso_of_chartPull
       ⟨fun i _ => a.idx i, fun i _ hz => mem_pull.2 (a.le i hz), fun z i j hi hj => (a.g z i j hi hj).trans ?_⟩
       (LB.isLB_pull hB r)))]
@@ -304,7 +304,7 @@ theorem sum_tmul_eq_zero {E Ω A ι : Type*} [Field E] [Field Ω] [IsAlgClosed �
   have : IsJacobsonRing (Ω ⊗[E] A) := isJacobsonRing_of_finiteType (A := Ω)
   refine (IsJacobsonRing.out this (Ideal.isRadical_bot (R := Ω ⊗[E] A))).le (Ideal.mem_sInf.2 fun m hm => ?_)
   have := hm.2
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   have := finite_of_finite_type_of_isJacobsonRing Ω ((Ω ⊗[E] A) ⧸ m)
   let e := AlgEquiv.ofBijective (Algebra.ofId Ω ((Ω ⊗[E] A) ⧸ m)) IsAlgClosed.algebraMap_bijective_of_isIntegral
   let ψ := e.symm.toAlgHom.comp (Ideal.Quotient.mkₐ Ω m)
@@ -320,8 +320,8 @@ variable {E : Type} [Field E] {S : Scheme.{0}} {q : S ⟶ Sp E} {B : LB S}
 
 theorem finite_cxPts (hq : IsFinite q) (τ : E →+* ℂ) : Finite (CxPts q τ) := by
   have : IsAffine S := isAffine_of_isAffineHom q
-  letI := (algX q ⊤).toAlgebra
-  letI := τ.toAlgebra
+  let := (algX q ⊤).toAlgebra
+  let := τ.toAlgebra
   have : Module.Finite E Γ(S, ⊤) := by
     have := q.finite_appTop.comp (RingHom.Finite.of_surjective _
       (Scheme.ΓSpecIso (.of E)).symm.commRingCatIsoToRingEquiv.surjective)
@@ -336,12 +336,12 @@ theorem finite_cxPts (hq : IsFinite q) (τ : E →+* ℂ) : Finite (CxPts q τ) 
 theorem linearIndependent_cval (hq : Etale q) (hB : B.IsLB) (τ : E →+* ℂ) {ι : Type*} [Fintype ι]
     {g : ι → H0 q B ⊤} (hg : LinearIndependent E g) :
     LinearIndependent ℂ fun i y => cval τ (g i) (pick hB y) y := by
-  letI := τ.toAlgebra
+  let := τ.toAlgebra
   refine Fintype.linearIndependent_iff.2 fun u hu j => (Module.forall_dual_apply_eq_zero_iff E (u j)).1 fun l =>
     Fintype.linearIndependent_iff.1 hg (fun i => l (u i)) (ext_germ fun y hy => ?_) j
   obtain ⟨c, hc⟩ := exists_chart hB y
   obtain ⟨⟨V, hV⟩, hyV, hle⟩ := exists_affine (memInf hy hc)
-  letI := (algX q V).toAlgebra
+  let := (algX q V).toAlgebra
   have : Algebra.Etale E Γ(S, V) := RingHom.Etale.respectsIso.2 _
     (Scheme.ΓSpecIso (CommRingCat.of E)).symm.commRingCatIsoToRingEquiv
     (HasRingHomProperty.appLE @Etale q hq ⟨⊤, isAffineOpen_top _⟩ ⟨V, hV⟩ le_top)
@@ -384,7 +384,7 @@ theorem form_pointHerm (τ : E →+* ℂ) [Fintype (CxPts q τ)] (g g' : H0 q B 
 
 theorem csq_pointHerm (τ : E →+* ℂ) {ι : Type*} [Fintype ι] (c : ι → ℂ) (g : ι → H0 q B ⊤) :
     csq (pointHerm hf he φ) τ c g = ∑ᶠ y, (φ τ).nsq (∑ i, c i • cval τ (g i)) y := by
-  letI := @Fintype.ofFinite _ (finite_cxPts hf τ)
+  let := @Fintype.ofFinite _ (finite_cxPts hf τ)
   rw [finsum_eq_sum_of_fintype, csq, ← Complex.ofReal_re (∑ y, _)]
 
   simp only [form_pointHerm, Finset.mul_sum, Weight.nsq, Complex.ofReal_sum, Complex.ofReal_mul,

@@ -86,7 +86,7 @@ theorem finite_forms (h : ∀ (L' : Subgroup (GL (Fin a) (Af E))), IsOpen (L' : 
     (c : (E →+* ℂ) → ℂ → ℂ) :
     FiniteDimensional ℂ (Submodule.span ℂ (GlobalTheory.Published.AutFinGL.forms L ρ c)) := by
   classical
-  haveI hW' : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := _root_.GlobalTheory.Proof.CoeffSpan.finiteDimensional_coeffSpan _ W ρ
+  have hW' : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := _root_.GlobalTheory.Proof.CoeffSpan.finiteDimensional_coeffSpan _ W ρ
   let χ : Module.End ℂ (Sm E a) → ℂ := fun z =>
     if hz : ∃ s : ℂ, ∀ φ : Sm E a, (∀ τ u, cap τ u φ = c τ u • φ) → z φ = s • φ then hz.choose else 0
   have hsub : GlobalTheory.Published.AutFinGL.forms L ρ c ⊆ formsGL E a L (GlobalTheory.Published.AutFin.coeffSpan ρ) {χ} 1 := by
@@ -97,7 +97,7 @@ theorem finite_forms (h : ∀ (L' : Subgroup (GL (Fin a) (Af E))), IsOpen (L' : 
     | [z], _ =>
       have hz : z ∈ Zalg E a := hzs z (List.mem_singleton_self z)
       have hex := _root_.GlobalTheory.CuspRep.Zalg_acts_by_scalar E a c z hz
-      have hχ : χ z = hex.choose := dif_pos hex
+      have hχ : χ z = hex.choose := dite_eq_left hex
       simp only [List.foldr_cons, List.foldr_nil]
       rw [hχ, hex.choose_spec φ h4, sub_self]
   have hfin := h L hL (GlobalTheory.Published.AutFin.coeffSpan ρ) hW' {χ} (Set.finite_singleton χ) 1
@@ -111,9 +111,9 @@ theorem finiteDimensional_capEigen_maps_rank (h : ∀ (L' : Subgroup (GL (Fin a)
     (W : Submodule ℂ (Sm E a)) (hW : ∀ k, ∀ w ∈ W, cptRep E a k w ∈ W) (hWf : FiniteDimensional ℂ W)
     (c : (E →+* ℂ) → ℂ → ℂ) (N : Submodule ℂ (W →ₗ[ℂ] Sm E a)) (hN : N ≤ maps L W hW)
     (hcap : ∀ T ∈ N, ∀ τ u, cap τ u ∘ₗ T = c τ u • T) : FiniteDimensional ℂ N := by
-  haveI := hWf
+  have := hWf
   have hF := finite_forms h L hL W (GlobalTheory.PRep.sub (cptRep E a) W hW) c
-  haveI := hF
+  have := hF
   have hmem : ∀ T ∈ N, ∀ w, T w ∈ GlobalTheory.Published.AutFinGL.forms L (GlobalTheory.PRep.sub (cptRep E a) W hW) c := by
     intro T hT w
     have hm : (∀ k w, T (GlobalTheory.PRep.sub (cptRep E a) W hW k w) = cptRep E a k (T w)) ∧
@@ -184,7 +184,7 @@ theorem finiteDimensional_mapsJ_rank (h : ∀ (L' : Subgroup (GL (Fin a) (Af E))
           Submodule.span ℂ ((fun z : Module.End ℂ (Sm E a) => z φ) '' Zalg E a) := by
         rintro _ ⟨z, rfl⟩
         exact Submodule.subset_span ⟨z.1, z.2, rfl⟩
-      haveI := hφ.zfin
+      have := hφ.zfin
       exact Submodule.finiteDimensional_of_le h1
     refine fd_adjoin_of_ker_le (mapsJ φ L) (Zalg E a) (Sm E a) (postZAlg φ L) ev hev hker S ?_
     rintro _ ⟨τ, u, rfl⟩
@@ -218,7 +218,7 @@ theorem exists_finite_space_rank (h : ∀ (L' : Subgroup (GL (Fin a) (Af E))), I
     ∃ V : Submodule ℂ (Sm E a), FiniteDimensional ℂ V ∧ V ≤ tame E a ∧ ∀ α, IsTest (invSet E a) α → KInv α →
       ∃ h : smoothing ν α φ.1 ∈ Sm E a, (⟨smoothing ν α φ.1, h⟩ : Sm E a) ∈ V := by
   let w0 : spanK E a φ := ⟨φ, self_mem_spanK φ⟩
-  haveI := finiteDimensional_mapsJ_rank h φ hφ (stabL φ) hφ.level
+  have := finiteDimensional_mapsJ_rank h φ hφ (stabL φ) hφ.level
   refine ⟨(mapsJ φ (stabL φ)).map (LinearMap.applyₗ w0), inferInstance, ?_, fun α hα hK =>
     ⟨GlobalTheory.T.realLieSmoothing_mem_smoothAdelicFunctions E a ν α hα φ.1 φ.2, smoothMap ν hα _, smoothMap_mem ν hα hK hφ, rfl⟩⟩
   rintro _ ⟨T, hT, rfl⟩
@@ -235,7 +235,7 @@ theorem tame_of_autForm_rank : ∀ (E : Type) [Field E] [NumberField E] [_root_.
   obtain ⟨α, hα, hlim⟩ := _root_.GlobalTheory.AutGrowth.ApproxId.exists_approx_identity E a ν
   obtain ⟨V, hVf, hVt, hV⟩ := exists_finite_space_rank hfin ν φ hφ
   let V' : Submodule ℂ (GA E a → ℂ) := V.map (Sm E a).subtype
-  have hc : IsClosed (V' : Set (GA E a → ℂ)) := Submodule.closed_of_finiteDimensional V'
+  have hc : IsClosed (V' : Set (GA E a → ℂ)) := Submodule.isClosed_of_finiteDimensional V'
   have hmem : ∀ n, smoothing ν (α n) φ.1 ∈ V' := fun n => by
     obtain ⟨h, hv⟩ := hV (α n) (hα n).1 (hα n).2
     exact ⟨_, hv, rfl⟩

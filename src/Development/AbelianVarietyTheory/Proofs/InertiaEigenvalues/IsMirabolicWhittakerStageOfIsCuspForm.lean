@@ -78,10 +78,10 @@ theorem blkU_comp_equiv {R : Type} [CommRing R] (r : ℕ) (x : BlockIx a r → R
   · rw [Fintype.sum_eq_single ⟨(i, j), h⟩]
     · simp
     · intro s hs
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨h1, h2⟩
       exact hs (Subtype.ext (Prod.ext h1 h2))
-  · refine Finset.sum_eq_zero fun s _ => if_neg ?_
+  · refine Finset.sum_eq_zero fun s _ => ite_eq_right ?_
     rintro ⟨h1, h2⟩
     apply h
     rw [← h1, ← h2]
@@ -132,8 +132,8 @@ theorem good_of_isCuspForm : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
     have hfun : (fun x => φ.1 (blkU (blkIxHomeo r x) * g)) = fun x => φ.1 (unip x * g) :=
       funext fun x => by rw [← blkU_comp_equiv]; rfl
     rw [hfun] at hper2 ⊢
-    letI : MeasurableSpace (BlockIx a r → Ad E) := borel _
-    haveI : BorelSpace (BlockIx a r → Ad E) := ⟨rfl⟩
+    let : MeasurableSpace (BlockIx a r → Ad E) := borel _
+    have : BorelSpace (BlockIx a r → Ad E) := ⟨rfl⟩
     obtain ⟨μ, 𝓕, hμ, hF, h1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one _ (ratN E a r) (isCoLat_ratV E (BlockIx a r))
     obtain ⟨-, -, -, hint⟩ := _root_.GlobalTheory.CuspGeneric.setIntegral_eq_mass_mul_avg _ _ (isCoLat_ratV E (BlockIx a r)) μ 𝓕 hμ hF _ hper2
     have hc := h.2 r hr hra' μ 𝓕 hμ hF g

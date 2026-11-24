@@ -80,7 +80,7 @@ theorem coeff_at2_x1_x2_eq_zero_of_third_ne_zero {R : Type} [CommRing R] {d : �
     by_contra h; push_neg at h; exact he (Finsupp.ext h)
   apply hi
   have h2 := congrArg (fun w : Fin d ⊕ (Fin d ⊕ Fin d) →₀ ℕ => w (Sum.inr (Sum.inr i))) hv
-  rw [Finsupp.mapDomain_notin_range] at h2
+  rw [Finsupp.mapDomain_of_notMem_range] at h2
   · simpa using h2.symm
   · rintro ⟨s, hs⟩; rcases s with s | s <;> simp [g] at hs
 
@@ -124,7 +124,7 @@ theorem degree_eq_one {σ : Type} [Fintype σ] {D : σ →₀ ℕ} (h : D.degree
     simp only [Finsupp.single_eq_same]
     omega
   · have := hle t ht
-    simp only [Finsupp.single_apply, if_neg (Ne.symm ht)]
+    simp only [Finsupp.single_apply, ite_eq_right (Ne.symm ht)]
     omega
 
 theorem le_order_prod_pow {σ τ : Type} {a : σ → MvPowerSeries τ R}
@@ -339,14 +339,14 @@ theorem coeff_prod_pow_add (α : Fin d ⊕ Fin d →₀ ℕ) (a b e : Fin d →�
   · rw [Finset.sum_congr rfl fun p hp => by rw [if_congr (expo_iff α a b e p (hmem p hp)) rfl rfl]]
     simp only [hα, true_and]
     rw [Finset.sum_ite_eq']
-    rw [if_pos]
+    rw [ite_eq_left]
     · simp
     · rw [Fintype.mem_piFinset]
       intro i
       simp only [Finset.mem_range, Finsupp.sumElim_apply, Sum.elim_inl, Finsupp.coe_add, Pi.add_apply]
       omega
   · refine Finset.sum_eq_zero fun p hp => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     exact hα ((expo_iff α a b e p (hmem p hp)).1 h).1
 
@@ -488,19 +488,19 @@ theorem coeff_prod_pow_second_add_third_threeGroups {R : Type} [CommRing R] {d :
       ∀ i, J i ≤ α (Sum.inr i) := fun J hJ i =>
     Nat.lt_succ_iff.1 (Finset.mem_range.1 (Fintype.mem_piFinset.1 hJ i))
   by_cases hα : α = Finsupp.sumElim a (b + e)
-  · rw [if_pos hα]
+  · rw [ite_eq_left hα]
     have hb : ⇑b ∈ Fintype.piFinset (fun i => Finset.range (α (Sum.inr i) + 1)) := by
       refine Fintype.mem_piFinset.2 fun i => Finset.mem_range.2 ?_
       rw [hα]; simp
     rw [Finset.sum_eq_single_of_mem (⇑b) hb]
-    · rw [if_pos ((sumElim_eq_expo_iff α a b e _ (hmem _ hb)).2 ⟨hα, rfl⟩)]
+    · rw [ite_eq_left ((sumElim_eq_expo_iff α a b e _ (hmem _ hb)).2 ⟨hα, rfl⟩)]
       refine Finset.prod_congr rfl fun i _ => ?_
       rw [hα]; simp
     · intro J hJ hJb
-      rw [if_neg fun h => hJb ((sumElim_eq_expo_iff α a b e J (hmem J hJ)).1 h).2]
-  · rw [if_neg hα]
+      rw [ite_eq_right fun h => hJb ((sumElim_eq_expo_iff α a b e J (hmem J hJ)).1 h).2]
+  · rw [ite_eq_right hα]
     refine Finset.sum_eq_zero fun J hJ => ?_
-    rw [if_neg fun h => hα ((sumElim_eq_expo_iff α a b e J (hmem J hJ)).1 h).1]
+    rw [ite_eq_right fun h => hα ((sumElim_eq_expo_iff α a b e J (hmem J hJ)).1 h).1]
 
 end GlobalTheory.BinomRight
 end -- clump:auto

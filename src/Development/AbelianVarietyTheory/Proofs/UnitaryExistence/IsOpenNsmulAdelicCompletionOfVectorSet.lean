@@ -241,12 +241,12 @@ theorem exists_denom (L : Submodule (𝓞 E) (Fin n → E))
 theorem isOpen_nsmul_hat : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n : ℕ) (L : Submodule (𝓞 E) (Fin n → E)), Submodule.span E (L : Set (Fin n → E)) = ⊤ → letI : TopologicalSpace (FiniteAdeleRing (𝓞 F) F ⊗[F] E) := moduleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E); (∀ N : ℕ, 0 < N → IsOpen {z : Fin n → RA F E | ∃ y ∈ hat F (L : Set (Fin n → E)), z = N • y}) ∧ ∀ W ∈ 𝓝 (0 : RA F E), ∃ N : ℕ, 0 < N ∧ ∀ y ∈ hat1 F (Set.range (algebraMap (𝓞 E) E)), N • y ∈ W := by
   intro F E _ _ _ _ _ n L hL
   classical
-  letI : TopologicalSpace (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
+  let : TopologicalSpace (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
     moduleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E)
-  haveI : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (FiniteAdeleRing (𝓞 F) F) _
-  haveI : ContinuousSMul (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
+  have : IsModuleTopology (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
+    IsModuleTopology.isTopologicalAddGroup (FiniteAdeleRing (𝓞 F) F) _
+  have : ContinuousSMul (FiniteAdeleRing (𝓞 F) F) (FiniteAdeleRing (𝓞 F) F ⊗[F] E) :=
     IsModuleTopology.toContinuousSMul _ _
   refine ⟨fun N hN => ?_, fun W hW => ?_⟩
   · let S : AddSubgroup (Fin n → RA F E) := (hat F (L : Set (Fin n → E))).map (nsmulAddMonoidHom N)
@@ -255,7 +255,7 @@ theorem isOpen_nsmul_hat : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       exact ⟨fun ⟨y, hy, h⟩ => ⟨y, hy, h.symm⟩, fun ⟨y, hy, h⟩ => ⟨y, hy, h.symm⟩⟩
     rw [hS]
     refine S.isOpen_of_mem_nhds (g := 0) ?_
-    haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+    have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
     let b := Module.finBasis F E
     let B := Algebra.TensorProduct.basis (FiniteAdeleRing (𝓞 F) F) b
     choose d hd hdL using fun i k => exists_denom L hL (Pi.single i (b k))

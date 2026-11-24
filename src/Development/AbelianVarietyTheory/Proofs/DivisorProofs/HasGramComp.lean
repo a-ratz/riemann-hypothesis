@@ -53,7 +53,7 @@ theorem hasGram_comp {K V W : Type} [Field K] [NumberField K] [AddCommGroup V] [
     [Module K W] (N : (K →+* ℂ) → V → ℝ) (φ : W →ₗ[K] V) (hφ : Function.Injective φ) {n : ℕ}
     (b : Module.Basis (Fin n) K V) (X : InfinitePlace K → Matrix (Fin n) (Fin n) ℂ) (hG : IsGram b X N) :
     HasGram (fun σ (x : W) => N σ (φ x)) := by
-  haveI : Module.Finite K V := Module.Finite.of_basis b
+  have : Module.Finite K V := Module.Finite.of_basis b
   let e : W ≃ₗ[K] LinearMap.range φ := LinearEquiv.ofInjective φ hφ
   let c := Module.finBasis K (LinearMap.range φ)
   obtain ⟨Y, hY, hn⟩ := GlobalTheory.Mem.DivInhab.exists_frames_restrict b X (fun v => (hG v).1) (LinearMap.range φ) c
@@ -73,7 +73,7 @@ theorem restrict_deg : ∀ (K V : Type) [Field K] [NumberField K] [_root_.Number
   have hN' := hasGram_comp N φ hφ b X hG
   refine ⟨hN', fun L hL => ?_⟩
   obtain ⟨⟨m, ⟨c, Y⟩, hG'⟩⟩ := hN'
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   have hr := Formalism.HN.rerealize K W (Fin m) V (Fin n) c Y b X φ (fun v => (hG' v).1) (fun v => (hG v).1) hφ
     (fun v x => by rw [(hG v).2, (hG' v).2]) L hL
   have hrk : Formalism.HN.rkK (L.map (φ.restrictScalars (𝓞 K))) = Formalism.HN.rkK L := by

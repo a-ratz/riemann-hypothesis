@@ -119,8 +119,8 @@ theorem _root_.GlobalTheory.unramExt : _root_.ReciprocityTheory.ChartRestriction
   obtain ⟨μ, hμmap, hμdeg, hμ⟩ := lifts_and_degree_eq_and_monic
     (map_surjective _ (residue_surjective (R := V)) (minpoly (ResidueField V) θ))
     (minpoly.monic hint)
-  letI : Algebra V k' := ((algebraMap (ResidueField V) k').comp (residue V)).toAlgebra
-  haveI : IsScalarTower V (ResidueField V) k' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra V k' := ((algebraMap (ResidueField V) k').comp (residue V)).toAlgebra
+  have : IsScalarTower V (ResidueField V) k' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hroot : eval₂ (algebraMap V k') θ μ = 0 := by
     rw [show algebraMap V k' = (algebraMap (ResidueField V) k').comp (residue V) from rfl,
       ← eval₂_map, hμmap]
@@ -139,7 +139,7 @@ theorem _root_.GlobalTheory.unramExt : _root_.ReciprocityTheory.ChartRestriction
     refine ⟨AdjoinRoot.mk μ q, ?_⟩
     rw [hφ]
     simp [aeval_def, eval₂_map, IsScalarTower.algebraMap_eq V (ResidueField V) k']
-  haveI : Nontrivial (AdjoinRoot μ) := φ.domain_nontrivial
+  have : Nontrivial (AdjoinRoot μ) := φ.domain_nontrivial
   have hnon : ∀ w : AdjoinRoot μ, w ∈ nonunits (AdjoinRoot μ) ↔ φ w = 0 := by
     intro w
     refine ⟨fun hw => ?_, fun hw hu => (hu.map φ).ne_zero hw⟩
@@ -147,7 +147,7 @@ theorem _root_.GlobalTheory.unramExt : _root_.ReciprocityTheory.ChartRestriction
     obtain ⟨g, rfl⟩ := AdjoinRoot.mk_surjective w
     rw [hφ] at hne
     exact hw (_root_.GlobalTheory.isUnit_adjoinRoot_mk_of_aeval_ne_zero hint hμ hμmap hne)
-  haveI : IsLocalRing (AdjoinRoot μ) := IsLocalRing.of_nonunits_add fun a b ha hb => by
+  have : IsLocalRing (AdjoinRoot μ) := IsLocalRing.of_nonunits_add fun a b ha hb => by
     rw [hnon] at ha hb ⊢
     rw [map_add (f := _), ha, hb, add_zero]
   have hmax : maximalIdeal (AdjoinRoot μ) = RingHom.ker φ := by
@@ -181,9 +181,9 @@ theorem _root_.GlobalTheory.unramExt : _root_.ReciprocityTheory.ChartRestriction
   have hmW : maximalIdeal (AdjoinRoot μ) = (maximalIdeal V).map (algebraMap V (AdjoinRoot μ)) :=
     hmax.trans hker
   let pb := AdjoinRoot.powerBasis' hμ
-  haveI : Module.Finite V (AdjoinRoot μ) := pb.finite
-  haveI : Module.Free V (AdjoinRoot μ) := Module.Free.of_basis pb.basis
-  haveI : IsNoetherianRing (AdjoinRoot μ) := inferInstance
+  have : Module.Finite V (AdjoinRoot μ) := pb.finite
+  have : Module.Free V (AdjoinRoot μ) := Module.Free.of_basis pb.basis
+  have : IsNoetherianRing (AdjoinRoot μ) := inferInstance
   have hinj : Function.Injective (algebraMap V (AdjoinRoot μ)) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro v hv
@@ -192,7 +192,7 @@ theorem _root_.GlobalTheory.unramExt : _root_.ReciprocityTheory.ChartRestriction
     have hle := degree_le_of_dvd hv (C_ne_zero.2 hne)
     rw [degree_C hne, hμdeg] at hle
     exact absurd hle (not_le.2 (minpoly.degree_pos hint))
-  haveI hlh : IsLocalHom (algebraMap V (AdjoinRoot μ)) := by
+  have hlh : IsLocalHom (algebraMap V (AdjoinRoot μ)) := by
     refine ⟨fun v hv => ?_⟩
     by_contra hnu
     have hvm : v ∈ maximalIdeal V := (mem_maximalIdeal v).2 hnu
@@ -212,9 +212,9 @@ theorem _root_.GlobalTheory.unramExt : _root_.ReciprocityTheory.ChartRestriction
       commutes' := fun r => by
         obtain ⟨v, rfl⟩ := residue_surjective r
         simpa using he' v }
-  haveI : Algebra.IsSeparable (ResidueField V) (ResidueField (AdjoinRoot μ)) :=
+  have : Algebra.IsSeparable (ResidueField V) (ResidueField (AdjoinRoot μ)) :=
     Algebra.IsSeparable.of_algHom _ _ eAlg
-  haveI : Algebra.FormallyUnramified V (AdjoinRoot μ) :=
+  have : Algebra.FormallyUnramified V (AdjoinRoot μ) :=
     Algebra.FormallyUnramified.of_map_maximalIdeal hmW.symm
   obtain ⟨hdom, hdvr⟩ := _root_.GlobalTheory.exists_isDiscreteValuationRing_of_flat V (AdjoinRoot μ) hmW.symm
     (Ideal.iInf_pow_eq_bot_of_isLocalRing _ (maximalIdeal.isMaximal _).ne_top)

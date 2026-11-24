@@ -121,7 +121,7 @@ structure TjCorr {N : ℕ} (F : RepFam b N) (r : ℤ) (w : Ideal (𝓞 D.F)) (j 
 
 theorem KilledBy.one {N : ℕ} {s : S ⟶ Sp R} (o : Obj b N s) (v : Ideal (𝓞 D.F)) (T : Over S) :
     KilledBy o v (1 : T ⟶ o.A) := fun a _ => by
-  haveI := o.act.hom (algebraMap (𝓞 D.F) D.O a)
+  have := o.act.hom (algebraMap (𝓞 D.F) D.O a)
   exact one_comp _
 
 theorem pReg_of_flat {Y : Scheme.{0}} (s : Y ⟶ Sp R) [Flat s] (hR : ∀ a : R, (p : R) * a = 0 → a = 0)
@@ -139,8 +139,8 @@ theorem pReg_of_flat {Y : Scheme.{0}} (s : Y ⟶ Sp R) [Flat s] (hR : ∀ a : R,
       let e := (Scheme.ΓSpecIso (CommRingCat.of R)).commRingCatIsoToRingEquiv
       refine e.injective ((hR _ ?_).trans (map_zero e).symm)
       rw [← map_natCast e, ← map_mul, ha, map_zero]
-    letI := (s.appLE ⊤ V.1.1 le_top).hom.toAlgebra
-    haveI : Module.Flat Γ(Sp R, ⊤) Γ(Y, V.1.1) := hfl
+    let := (s.appLE ⊤ V.1.1 le_top).hom.toAlgebra
+    have : Module.Flat Γ(Sp R, ⊤) Γ(Y, V.1.1) := hfl
     have hreg := Module.Flat.isSMulRegular_of_nonZeroDivisors (M := Γ(Y, V.1.1)) hp
     let ρ : Γ(Y, U) →+* Γ(Y, V.1.1) := (Y.presheaf.map (homOfLE V.2).op).hom
     show ρ f = ρ 0

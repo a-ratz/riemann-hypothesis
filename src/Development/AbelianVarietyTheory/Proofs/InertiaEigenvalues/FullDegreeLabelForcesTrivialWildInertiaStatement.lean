@@ -65,7 +65,7 @@ open Polynomial
 
 theorem main : ∀ (D : D7) (T : GlobalTheory.RowTie.WDTie D.nd D.naut), GlobalTheory.HeightCounting.LabTrue D T → GlobalTheory.TypeLeaf.WildOne D := by
   intro D T hL k v L hdeg s hsI hsW
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have h1 := hL k v L
   rw [h1, ← T.dim] at hdeg
   rw [T.inePol _ L s hsI, ← T.dim]

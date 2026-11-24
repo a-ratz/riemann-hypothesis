@@ -74,8 +74,8 @@ theorem continuous_of_valuation_eq {A B Γ : Type} [Ring A] [Ring B]
     exact (map_ne_zero _).mpr γ.ne_zero
   have hk1 : (Valued.v : Valuation A Γ).restrict k ≠ 0 := by simpa using hk0
   refine ⟨Units.mk0 _ hk1, trivial, fun x hx => ?_⟩
-  simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
+  simp only [Set.mem_ofPred_eq]
   rw [Valuation.restrict_lt_iff_lt_embedding, hg, ← hk]
   exact hx
 
@@ -113,7 +113,7 @@ theorem exists_extension {K : Type} [Field K] [NumberField K] {R L : Type} [Comm
   have hV := (HeightOneSpectrum.adicCompletion.continuous_ofCompletion K w).continuousAt
     (x := y.toCompletion) |>.preimage_mem_nhds hU
   obtain ⟨a, ha1, ha2⟩ := UniformSpace.Completion.denseRange_coe.mem_nhds hV
-  simp only [Set.mem_preimage, Set.mem_setOf_eq] at ha1 ha2
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq] at ha1 ha2
   rw [← ha1, ← ha2, hφa, hf]
   exact (HeightOneSpectrum.adicCompletion.valued_coe K w a.ofVal).symm
 
@@ -184,7 +184,7 @@ theorem le_of_forall_le_exp {a b : ℤᵐ⁰} (hb : b ≤ 1)
       rintro rfl
       exact ha le_rfl
     obtain ⟨n, hn⟩ := GlobalTheory.Idele.exists_exp_neg_lt ha0
-    exact absurd (h n zero_le') (not_le.2 hn)
+    exact absurd (h n zero_le) (not_le.2 hn)
   · have hl : log b ≤ 0 := by
       rw [← exp_le_exp, exp_log hb0, exp_zero]
       exact hb
@@ -194,7 +194,7 @@ theorem le_of_forall_le_exp {a b : ℤᵐ⁰} (hb : b ≤ 1)
     exact (h _ he.ge).trans he.le
 
 theorem eq_zero_of_forall_le_exp {a : ℤᵐ⁰} (h : ∀ n : ℕ, a ≤ exp (-(n : ℤ))) : a = 0 :=
-  le_antisymm (le_of_forall_le_exp zero_le' fun n _ => h n) zero_le'
+  le_antisymm (le_of_forall_le_exp zero_le fun n _ => h n) zero_le
 
 theorem continuous_of_valued_eq {A B Γ : Type*} [Ring A] [Ring B] [LinearOrderedCommGroupWithZero Γ]
     [Valued A Γ] [Valued B Γ] (hs : Function.Surjective (Valued.v : A → Γ)) (f : A →+* B)
@@ -206,8 +206,8 @@ theorem continuous_of_valued_eq {A B Γ : Type*} [Ring A] [Ring B] [LinearOrdere
   have ha0 : (Valued.v : Valuation A Γ).restrict a ≠ 0 := by
     simp [ha]
   refine ⟨Units.mk0 _ ha0, trivial, fun x hx => ?_⟩
-  simp only [Set.mem_setOf_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
-  simp only [Set.mem_setOf_eq, Valuation.restrict_lt_iff_lt_embedding]
+  simp only [Set.mem_ofPred_eq, Units.val_mk0, Valuation.restrict_lt_iff] at hx
+  simp only [Set.mem_ofPred_eq, Valuation.restrict_lt_iff_lt_embedding]
   rw [hf, ← ha]
   exact hx
 

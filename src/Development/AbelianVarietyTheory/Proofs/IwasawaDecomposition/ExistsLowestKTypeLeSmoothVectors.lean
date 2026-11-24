@@ -153,7 +153,7 @@ theorem exists_smooth_ktype {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAd
     ∃ S' : Submodule ℂ H, IsKTypeOf ε σ Λ S' ∧ ∀ v ∈ S', ∀ (k : ℕ) (x : (Fin k → ℝ) → Matrix (Fin n) (Fin n) ℂ),
       ContDiff ℝ ∞ x → (∀ t, x t ∈ UJset ε) → ContDiff ℝ ∞ fun t => σ (x t) v := by
   have : (muG ε).IsMulRightInvariant := ⟨fun g => indefinite_unitary_unimodular n ε g⟩
-  haveI := hK.1
+  have := hK.1
   obtain ⟨v, hvS, hv0, -⟩ := hK.2.2.2.1
   have humat : Continuous (fun g : UJ ε => umat g) := (isClosedEmbeddingMatrix n ε).1.continuous
   have hcont : ∀ s : H, Continuous (fun g : UJ ε => σ (umat g) s) := fun s =>
@@ -233,7 +233,7 @@ theorem exists_smooth_ktype {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAd
     simp only [RCLike.re_to_complex, Complex.re_ofReal_mul] at h3
     rw [← h3] at h2
     have h4 : 0 < ∫ g : UJ ε, a (umat g) * (⟪v, σ (umat g) v⟫_ℂ).re ∂(muG ε) := by
-      refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1)
+      refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1)
         (hacont.mul hre) hac.mul_right ?_ (mul_ne_zero ha1 hone.ne')
       intro g
       by_cases h : a (umat g) = 0

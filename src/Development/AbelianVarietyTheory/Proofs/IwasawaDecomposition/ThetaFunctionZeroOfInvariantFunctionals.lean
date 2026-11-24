@@ -90,11 +90,11 @@ theorem exists_char_form {G V : Type} [AddCommGroup G] [AddCommGroup V] [Module 
   let I : Ideal A :=
     { carrier := {a | π a g = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [map_add (f := _), LinearMap.add_apply, ha, hb, add_zero]
       zero_mem' := by simp
       smul_mem' := fun c a ha => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         rw [smul_eq_mul, map_mul, Module.End.mul_apply, ha, map_zero] }
   have hI : I ≠ ⊤ := fun h => hg (by
     have : π 1 g = 0 := (h.ge Submodule.mem_top : (1 : A) ∈ I)
@@ -220,7 +220,7 @@ theorem exists_eq_dilate {K : Type} [NormedField K] [IsUltrametricDist K] [Prope
   have hZ : IsClosed {y : K | ψ y ≠ 1} := by
     rw [← isOpen_compl_iff, Metric.isOpen_iff]
     refine fun y hy => ⟨δ, hδ, fun y' hy' => ?_⟩
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_not] at hy ⊢
+    simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_not] at hy ⊢
     rw [← add_sub_cancel y y', AddChar.map_add_eq_mul, hy, one_mul]
     exact hψδ _ (mem_ball_iff_norm.1 hy')
   obtain ⟨y₀, hy₀, hd⟩ := hZ.exists_infDist_eq_dist hne 0
@@ -247,7 +247,7 @@ theorem exists_eq_dilate {K : Type} [NormedField K] [IsUltrametricDist K] [Prope
   let B : Set K := {a | ∀ u ∈ U, ψ (a * u) = 1}
   have hB : IsCompact B := by
     refine (isCompact_closedBall (0 : K) (‖y₀‖ / r)).of_isClosed_subset ?_ fun a ha => ?_
-    · simp only [B, Set.setOf_forall]
+    · simp only [B, Set.ofPred_forall]
       exact isClosed_iInter fun u => isClosed_iInter fun _ =>
         isClosed_eq (hc.comp (continuous_id.mul continuous_const)) continuous_const
     · by_contra hn
@@ -262,7 +262,7 @@ theorem exists_eq_dilate {K : Type} [NormedField K] [IsUltrametricDist K] [Prope
   obtain ⟨a, -, ha⟩ := hB.inter_iInter_nonempty (fun x : K => {a | χ x = ψ (a * x)})
     (fun x => isClosed_eq continuous_const (hc.comp (continuous_id.mul continuous_const))) fun s => by
     let P : AddSubgroup (K ⧸ U) := AddSubgroup.closure (s.image (QuotientAddGroup.mk : K → K ⧸ U) : Finset (K ⧸ U))
-    have : Finite P := AddCommGroup.finite_of_fg_torsion P (by
+    have : Finite P := AddCommGroup.finite_of_fg_isAddTorsion P (by
       rintro ⟨⟨x⟩, hx⟩
       obtain ⟨N, hN, h⟩ := exists_nsmul_mem_open U Metric.isOpen_ball x
       exact isOfFinAddOrder_iff_nsmul_eq_zero.2 ⟨N, hN, Subtype.ext ((QuotientAddGroup.eq_zero_iff _).2 h)⟩)

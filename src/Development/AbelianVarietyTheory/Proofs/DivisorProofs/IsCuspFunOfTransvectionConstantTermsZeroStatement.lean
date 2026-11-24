@@ -199,9 +199,9 @@ theorem isCuspFun_of_zCusp : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam 
   have : SecondCountableTopology (NI V C) := TopologicalSpace.Subtype.secondCountableTopology _
   have : IsFiniteMeasure (ν.restrict 𝓖) := isFiniteMeasure_restrict.2 m1
   refine setIntegral_eq_zero (ν.restrict 𝓖) (fun h => m0 (Measure.restrict_eq_zero.1 h))
-    (Subgroup.inclusion (ZI_le V hC j)) (continuous_subtype_val.subtype_mk _)
+    (Subgroup.inclusion (ZI_le V hC j)) (continuous_subtypeVal.subtype_mk _)
     (fun z n => Subtype.ext (ZI_comm V j z.2 n.2)) h𝓕 (F := fun n => φ ((n : GA D V) * g))
-    (hφ.cont.comp (continuous_subtype_val.mul continuous_const)) (fun γ n => ?_) fun n => ?_
+    (hφ.cont.comp (continuous_subtypeVal.mul continuous_const)) (fun γ n => ?_) fun n => ?_
   · rw [Subgroup.coe_mul, mul_assoc]
     exact hφ.left _ γ.2 _
   · simpa only [Subgroup.coe_mul, mul_assoc, Subgroup.coe_inclusion] using hZ _ hξ ν 𝓖 hν h𝓖 ((n : GA D V) * g)

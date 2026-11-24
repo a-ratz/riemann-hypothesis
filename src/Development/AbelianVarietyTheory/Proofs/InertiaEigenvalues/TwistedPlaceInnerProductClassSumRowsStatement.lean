@@ -223,7 +223,7 @@ theorem finite_stab_mono {Γ Γ' K K' : Subgroup G} (h : Γ' ≤ Γ) (hK : K' �
 theorem Cover.of_finite {Γ Γ' K : Subgroup G} (hc : Cover Γ K) {α : Type} [Finite α] (r : Γ → α)
     (hr : ∀ a b, r a = r b → (a : G) * (b : G)⁻¹ ∈ Γ') : Cover Γ' K := by
   obtain ⟨S, hS⟩ := hc
-  haveI := Fintype.ofFinite α
+  have := Fintype.ofFinite α
   refine ⟨(Finset.univ ×ˢ S).image fun p : α × G => ((Function.invFun r p.1 : Γ) : G) * p.2, fun g => ?_⟩
   obtain ⟨s, hs, γ, κ, hκ, e⟩ := hS g
   exact ⟨_, Finset.mem_image.2 ⟨(r γ, s), Finset.mem_product.2 ⟨Finset.mem_univ _, hs⟩, rfl⟩,
@@ -329,9 +329,9 @@ theorem exists_form [Finite ι] {K Γ₁ Γ₂ : Subgroup G} (hK : ∀ x, (cj K 
       ∀ x x', dsum Γ₂ K (fun g => b (f x g) (f x' g)) = c * dsum Γ₁ K fun g => β (f x g) (f x' g) := by
   have hinv' : ∀ γ ∈ Γ₂, γ • kn f b = kn f b := fun γ hγ => funext fun q => funext fun x => funext fun x' =>
     hinv _ (Γ₂.inv_mem hγ) x x' q.1 q.2
-  haveI := finite_orbit hs hK hr h₂ hc₂ hb hinv'
+  have := finite_orbit hs hK hr h₂ hc₂ hb hinv'
   set O := MulAction.orbit (acts f) (kn f b) with hO
-  haveI := Fintype.ofFinite O
+  have := Fintype.ofFinite O
   have hk₀ : kn f b ∈ O := MulAction.mem_orbit_self _
   choose δ hδ using fun k : O => k.2
   choose B hB eB using fun k : O => smul_kn_pos hs (δ k).2 hb
@@ -532,7 +532,7 @@ theorem span_values (a : NG.AlgWt L n) {f : GAf L n → a.W} (hf : f ∈ NG.AFal
     · intro c a _ ha
       rw [map_smul]; exact Submodule.smul_mem _ c ha⟩
   have hU : U = ⊤ := by
-    haveI := a.irr
+    have := a.irr
     refine (eq_bot_or_eq_top U).resolve_left fun hb => h₀ ?_
     funext g
     have : f g ∈ U.toSubmodule := Submodule.subset_span ⟨g, rfl⟩
@@ -543,10 +543,10 @@ theorem span_values (a : NG.AlgWt L n) {f : GAf L n → a.W} (hf : f ∈ NG.AFal
 theorem span_finite_values (a : NG.AlgWt L n) {f : GAf L n → a.W} (hf : f ∈ NG.AFall L n a.ρ) (h₀ : f ≠ 0) :
     ∃ (m : ℕ) (g : Fin m → GAf L n), Submodule.span ℂ (Set.range fun i => f (g i)) = ⊤ := by
   obtain ⟨_, ι, _, _, b, -⟩ := a.alg
-  haveI : Module.Finite ℂ a.W := Module.Finite.of_basis b
+  have : Module.Finite ℂ a.W := Module.Finite.of_basis b
   have h := span_values a hf h₀
   obtain ⟨s, hs, hsp, hli⟩ := exists_linearIndependent ℂ (Set.range f)
-  haveI : Finite s := hli.finite
+  have : Finite s := hli.finite
   obtain ⟨m, ⟨e⟩⟩ := Finite.exists_equiv_fin s
   choose g hg using fun v : s => hs v.2
   refine ⟨m, fun i => g (e.symm i), ?_⟩
@@ -654,7 +654,7 @@ theorem finite_stab_frame {V : HSp D} {n : ℕ} (hV : GlobalTheory.StdFrame.Orth
   have hU : ∀ κ ∈ ReciprocityTheory.Aut.Umax D.host.E n, θ κ ∈ ReciprocityTheory.Aut.Umax D.host.E V.rank := fun κ hκ => by
     rw [h₀, TopMult.lift_unique (P₀.into (θ κ)) (P.into κ) (hθ κ)]
     exact (hP.2 κ).1 hκ
-  haveI := finite_stabQ (bounded_of_le (le_refl (ReciprocityTheory.Aut.Umax D.host.E V.rank))) (θ t)
+  have := finite_stabQ (bounded_of_le (le_refl (ReciprocityTheory.Aut.Umax D.host.E V.rank))) (θ t)
   refine Finite.of_injective (β := stabQ (ReciprocityTheory.Aut.GQ D.host.E V.rank) (ReciprocityTheory.Aut.Umax D.host.E V.rank) (θ t))
     (fun γ => ⟨⟨θ γ.1, (hrat.iff _).2 (by rw [hθ]; exact γ.1.2)⟩, mem_stabQ.2 (by simpa using hU _ (mem_stabQ.1 γ.2))⟩)
     fun a b h => Subtype.ext (Subtype.ext (θ.injective (congrArg (fun z => (z.1 : GAf D.host.E V.rank)) h)))

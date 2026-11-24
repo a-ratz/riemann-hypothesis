@@ -102,7 +102,7 @@ theorem genusBasic_sigma_mem (hinj : Function.Injective (algebraMap R K))
   induction hs using Submonoid.closure_induction with
   | mem x hx =>
     obtain ⟨hx1, hx2⟩ := hx
-    refine Submonoid.subset_closure (Set.mem_setOf.2 ⟨hx2 _ (locBasic_sigma_spec hinj hstar x), fun t ht => ?_⟩)
+    refine Submonoid.subset_closure (Set.mem_ofPred.2 ⟨hx2 _ (locBasic_sigma_spec hinj hstar x), fun t ht => ?_⟩)
     have e : t = x := hinj (by rw [ht, locBasic_sigma_spec, star_star])
     rw [e]
     exact hx1
@@ -111,7 +111,7 @@ theorem genusBasic_sigma_mem (hinj : Function.Injective (algebraMap R K))
 
 theorem genusBasic_hS (p : Ideal R) (hp : p.IsMaximal) (s : R) (hs : s ∈ hcompl (K := K) p) :
     s ∉ p := by
-  haveI := hp.isPrime
+  have := hp.isPrime
   exact locBasic_hcompl_not_mem p s hs
 
 theorem genusBasic_lg {W : Type*} [AddCommGroup W] [Module R W] (L : Submodule R W) (x : W)

@@ -73,7 +73,7 @@ theorem exists_idF_eq_mul_sigR (D : D7) (x : (Formalism.L2.Theta.AE D)ˣ) :
     rw [map_add (f := _), hσ, add_comm]
   obtain ⟨t, ht⟩ := GlobalTheory.Member.exists_unit_of_sigR_fixed (AF D.host.F) D.sp.cm.sig htr
     (x * Units.map (sigR (AF D.host.F) D.sp.cm.sig).toMonoidHom x) (by
-      rw [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, map_mul, sigR_sigR, mul_comm])
+      rw [Units.val_mul, Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, map_mul, sigR_sigR, mul_comm])
   refine ⟨t, ?_⟩
   convert congrArg Units.val ht using 1
   · rfl

@@ -120,20 +120,20 @@ theorem det_minor {n : ℕ} (L R : Matrix (Fin n) (Fin n) ℂ) (hL : IsLoUni L)
     rw [this, add_zero]
   rw [hf, Matrix.det_mul]
   congr 1
-  · rw [Matrix.det_of_lowerTriangular]
+  · rw [det_of_isLowerTriangular]
     · rw [Finset.prod_eq_single (⟨j, le_rfl⟩ : {k : Fin n // k ≤ j})]
       · simp
       · intro b _ hb
         have : b.1 ≠ j := fun h => hb (Subtype.ext h)
-        simp only [Matrix.submatrix_apply, if_neg this]
+        simp only [Matrix.submatrix_apply, ite_eq_right this]
         exact (hL _ _).2 rfl
       · simp
     · intro a b hab
       have hab' : a.1 < b.1 := hab
       have : a.1 ≠ j := ne_of_lt (lt_of_lt_of_le hab' b.2)
-      simp only [Matrix.submatrix_apply, if_neg this]
+      simp only [Matrix.submatrix_apply, ite_eq_right this]
       exact (hL _ _).1 hab'
-  · rw [Matrix.det_of_upperTriangular]
+  · rw [det_of_isUpperTriangular]
     · simp only [Matrix.submatrix_apply]
       exact (Finset.prod_subtype (Finset.Iic j) (fun k => Finset.mem_Iic) (fun k => R k k)).symm
     · intro a b hab
@@ -186,10 +186,10 @@ theorem ldu_bound (m : ℕ) : ∃ c : ℝ, 0 < c ∧ ∀ (L U : Matrix (Fin (m +
           simp [Matrix.transpose_mul, Matrix.mul_assoc]
         rw [this]; exact hZ b a) j i
   have dL : L.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular L (fun a b hab => (hL a b).1 hab)]
+    rw [det_of_isLowerTriangular L (fun a b hab => (hL a b).1 hab)]
     exact Finset.prod_eq_one fun k _ => (hL k k).2 rfl
   have dU : U.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (M := U) (fun a b hab => (hU a b).1 hab)]
+    rw [det_of_isUpperTriangular (M := U) (fun a b hab => (hU a b).1 hab)]
     exact Finset.prod_eq_one fun k _ => (hU k k).2 rfl
   have e1 : ((m + 1).factorial : ℝ) * B ^ (m + 1) / δ ≤
       ((m + 1).factorial + m.factorial * ((m + 1).factorial : ℝ) ^ m) * B ^ (m + 1) / δ := by
@@ -292,7 +292,7 @@ theorem exists_ldu {n : ℕ} (Z : Matrix (Fin n) (Fin n) ℂ) (hZ : ∀ l, mnr Z
     have := minor_mul_left (Nat.succ_le_of_lt l.isLt) b Lᴴ hU
     rw [conjTranspose_conjTranspose, ← e] at this
     unfold mnr
-    rw [this, det_of_upperTriangular, ← prod_castLE (fun i => b i i) l]
+    rw [this, det_of_isUpperTriangular, ← prod_castLE (fun i => b i i) l]
     · rfl
     · intro i j hij
       exact h3 _ _ hij
@@ -336,7 +336,7 @@ theorem loUni_iff {n : ℕ} {A : Matrix (Fin n) (Fin n) ℂ} : IsLoUni A ↔ IsU
       rwa [conjTranspose_apply, star_star, star_one] at this⟩
 
 theorem det_upUni {n : ℕ} {A : Matrix (Fin n) (Fin n) ℂ} (hA : IsUpUni A) : A.det = 1 := by
-  rw [det_of_upperTriangular (fun i j h => (hA i j).1 h)]
+  rw [det_of_isUpperTriangular (fun i j h => (hA i j).1 h)]
   exact Finset.prod_eq_one fun i _ => (hA i i).2 rfl
 
 theorem det_loUni {n : ℕ} {A : Matrix (Fin n) (Fin n) ℂ} (hA : IsLoUni A) : A.det = 1 := by

@@ -70,7 +70,7 @@ theorem frob_fixes_root_of_one_mod (F Ω : Type) [Field F] [NumberField F] [Fiel
     rcases Nat.eq_zero_or_pos M with h | h
     · subst h; simp at hMv
     · exact h
-  haveI : NeZero M := ⟨hM0.ne'⟩
+  have : NeZero M := ⟨hM0.ne'⟩
   have hx1 : A.valuation (x' - 1) < 1 := by
     have := (hA (x - 1)).2 hx
     simpa [hx'] using this

@@ -80,7 +80,7 @@ def cubeProj (θ : Fin n → ℝ) : Cube n :=
 
 theorem continuous_cubeProj : Continuous (cubeProj (n := n)) := by
   refine continuous_induced_rng.2 (continuous_pi fun i => ?_)
-  exact continuous_subtype_val.comp (continuous_projIcc.comp (continuous_apply i))
+  exact continuous_subtypeVal.comp (continuous_projIcc.comp (continuous_apply i))
 
 theorem cubeProj_of_mem {θ : Fin n → ℝ} (hθ : θ ∈ Icc (0 : Fin n → ℝ) (fun _ => 2 * π)) :
     (cubeProj θ : Fin n → ℝ) = θ := by

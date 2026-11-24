@@ -118,13 +118,13 @@ lemma rm_bil_expand (B : V n →L[ℝ] V n →L[ℝ] ℝ) (z w : ℂ) (a b : V n
     B (z • a) (w • b) = z.re * w.re * B a b + z.re * w.im * B a (Complex.I • b)
       + z.im * w.re * B (Complex.I • a) b + z.im * w.im * B (Complex.I • a) (Complex.I • b) := by
   rw [rm_cplx_smul_eq z a, rm_cplx_smul_eq w b]
-  simp only [map_add (f := _), map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [map_add (f := _), map_smul, add_apply, smul_apply, smul_eq_mul]
   ring
 
 lemma rm_bil_sum (B : V n →L[ℝ] V n →L[ℝ] ℝ) (c : Fin n → ℂ) :
     B (∑ j, c j • bas n j) (∑ k, c k • bas n k) = ∑ j, ∑ k, B (c j • bas n j) (c k • bas n k) := by
 
-  simp only [map_sum, ContinuousLinearMap.sum_apply]
+  simp only [map_sum, sum_apply]
   exact Finset.sum_comm
 
 lemma rm_I_smul_vec (ξ : Fin n → ℂ) : Complex.I • rmVec ξ = ∑ j, (Complex.I * ξ j) • bas n j := by

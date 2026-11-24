@@ -211,7 +211,7 @@ theorem nonempty_decomposition (hirr : Mx.IsIrreducible) (hadm : Mx.IsAdmissible
   have hschur : ∀ T : End ℂ ((mGenSubrep Mx.τ N₂).toSubmodule ⧸ mGenKernel Mx.τ e₂ N₂),
       (∀ b, T * π₂ b = π₂ b * T) → ∃ c : ℂ, T = c • 1 := by
     intro T hT
-    haveI := hπ₂
+    have := hπ₂
     have hwin := isWinProj_fixedEnd hπ₂s hHc hHo
     have hfinH : FiniteDimensional ℂ (LinearMap.range (fixedEnd hπ₂s hHc hHo)) := by
       rw [range_fixedEnd]
@@ -430,7 +430,7 @@ theorem finrank_fixedVectors_integralGL_le_one {F : Type*} [Field F] [ValuativeR
   by_cases h : fixedVectors σ (GLnLocal.integralGL F n) = ⊥
   · rw [h, finrank_bot]
     exact zero_le_one
-  · haveI := hirr
+  · have := hirr
     exact (Spherical.finrank_fixedVectors_eq_one hσ h).le
 
 instance factIsOpenIntegralGL :

@@ -164,7 +164,7 @@ theorem lintegral_type_le : GlobalTheory.FlagMeas.FlagMeasureBound → ∀ (B : 
   have h2 : Measure.map s (μ.restrict (T ∩ B.fund)) ≤ K • ρ := by
     rw [Measure.le_iff]
     intro A hA
-    rw [Measure.map_apply hs hA, Measure.restrict_apply (hs hA), Measure.smul_apply, smul_eq_mul,
+    rw [Measure.map_apply hs hA, Measure.restrict_apply (hs hA), smul_apply, smul_eq_mul,
       hρ, withDensity_apply _ hA, Measure.restrict_restrict hA]
     have hsub : s ⁻¹' A ∩ (T ∩ B.fund) ⊆
         GlobalTheory.FlagMeas.typeSet B.I j (A ∩ GlobalTheory.FlagMeas.simplexH a) ∩ B.fund := by
@@ -479,7 +479,7 @@ theorem finrank_skewOpsBlock_le (F : Type) [NormedAddCommGroup F] [InnerProductS
           ((⟪b x, b x⟫_ℂ - ⟪x, b (b x)⟫_ℂ) / 2) * Complex.I_mul_I
       simpa using h3
     rw [hb0, map_zero]
-  haveI : FiniteDimensional ℝ (F →L[ℂ] F) := FiniteDimensional.complexToReal _
+  have : FiniteDimensional ℝ (F →L[ℂ] F) := FiniteDimensional.complexToReal _
   have h1 := Submodule.finrank_add_finrank_le_of_disjoint hd
   rw [← (Submodule.equivMapOfInjective J hJ (skewOpsBlock F)).finrank_eq,
     finrank_real_of_complex] at h1
@@ -499,7 +499,7 @@ theorem exists_submodule_skew_block_finrank_le (n : ℕ)
     { toFun := fun M => E.subtypeL ∘L M ∘L E.orthogonalProjection
       map_add' := fun a b => by ext1 x; rfl
       map_smul' := fun c a => by ext1 x; rfl }
-  haveI : FiniteDimensional ℝ (E →L[ℂ] E) := FiniteDimensional.complexToReal _
+  have : FiniteDimensional ℝ (E →L[ℂ] E) := FiniteDimensional.complexToReal _
   refine ⟨(skewOpsBlock E).map Φ,
     (Submodule.finrank_map_le Φ _).trans (finrank_skewOpsBlock_le E), ?_⟩
   intro T hT
@@ -507,8 +507,8 @@ theorem exists_submodule_skew_block_finrank_le (n : ℕ)
   · intro x z
     have := hT x x.2 z z.2
     simp only [ContinuousLinearMap.comp_apply, Submodule.subtypeL_apply,
-      Submodule.inner_orthogonalProjection_eq_of_mem_left,
-      Submodule.inner_orthogonalProjection_eq_of_mem_right]
+      Submodule.inner_orthogonalProjectionOnto_eq_of_mem_left,
+      Submodule.inner_orthogonalProjectionOnto_eq_of_mem_right]
     exact this
   · ext1 x; rfl
 
@@ -557,7 +557,7 @@ theorem card_le_prod_of_separated_levels {α β : Type} (S : Set α) (lv : β �
     · have := ih hps ∅ (by simp) (by simp)
       simp only [card_empty, Nat.cast_zero] at this ⊢
       positivity
-    haveI : Nonempty α := ⟨x0⟩
+    have : Nonempty α := ⟨x0⟩
     let q : α → Set α := fun x => {y | ∀ b ∈ s, r b x y}
     have hq : ∀ x y, q x = q y ↔ ∀ b ∈ s, r b x y := by
       intro x y
@@ -1294,13 +1294,13 @@ theorem block_count (a : ℕ) (G : ℕ → Submodule (𝓞 I.E) (Fin I.n → I.E
     intro w
     by_cases h : q + p = 2 * a
     · obtain ⟨U, h1, h2⟩ := GlobalTheory.exists_submodule_skew_block_finrank_le I.n (E w)
-      refine ⟨U, by rw [dimB, if_pos h, ← hE w p]; exact h1, fun γ hγ => ?_⟩
+      refine ⟨U, by rw [dimB, ite_eq_left h, ← hE w p]; exact h1, fun γ hγ => ?_⟩
       have hp : 2 * a - q = p := by omega
       simp only [blk, E', hp]
       refine h2 _ fun u hu z hz => sp_skew I x w _ (A := G (p + 1)) ?_ u hu.1 z hz.1
       exact fun s hs y hy => (hadj γ hγ γ₀ hγ₀).2 p p (by omega) (by omega) (by omega) s hs y hy
     · obtain ⟨U, h1, h2⟩ := GlobalTheory.exists_real_submodule_block_finrank_le I.n (E w) (E' w)
-      exact ⟨U, by rw [dimB, if_neg h, ← hE w p, ← hE w (2 * a - q)]; exact h1, fun γ _ => h2 _⟩
+      exact ⟨U, by rw [dimB, ite_eq_right h, ← hE w p, ← hE w (2 * a - q)]; exact h1, fun γ _ => h2 _⟩
   choose U hU1 hU2 using hU
   have hnorm : ∀ w φ, ‖blk w φ‖ ≤ ‖op I x w φ‖ := by
     intro w φ
@@ -1443,7 +1443,7 @@ theorem exists_chain (a : ℕ) (j : Fin a → ℕ) (τ : Fin a → ℝ) (h : Has
   have hanti : ∀ p q, p ≤ q → perpIn I x (S' q) ≤ perpIn I x (S' p) := fun p q h =>
     (hp _ _ (hsat _) (hsat _) (hS'm h)).2.2.2.1
   let τ' : ℕ → ℝ := fun p => if h : p < a then τ ⟨p, h⟩ else 1
-  have hτ' : ∀ i : Fin a, τ' i = τ i := fun i => dif_pos i.2
+  have hτ' : ∀ i : Fin a, τ' i = τ i := fun i => dite_eq_left i.2
   have hτ0 : ∀ p, 0 < τ' p := fun p => by
     simp only [τ']; split_ifs with h
     · exact (hSi _).1
@@ -1455,39 +1455,39 @@ theorem exists_chain (a : ℕ) (j : Fin a → ℕ) (τ : Fin a → ℝ) (h : Has
   refine ⟨fun p => if p ≤ a then S' p else perpIn I x (S' (2 * a + 1 - p)),
     fun p => if p < a then τ' p else if p = a then 2 else (τ' (2 * a - p))⁻¹,
     ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, by simp⟩
-  · simp only [Nat.zero_le, if_true]
+  · simp only [Nat.zero_le, ite_true]
     rw [← hS0]; exact congrArg S (Fin.ext (by simp))
   · intro p q h
     by_cases h1 : q ≤ a
-    · simp only [if_pos h1, if_pos (h.trans h1)]; exact hS'm h
+    · simp only [ite_eq_left h1, ite_eq_left (h.trans h1)]; exact hS'm h
     · by_cases h2 : p ≤ a
-      · simp only [if_neg h1, if_pos h2]
+      · simp only [ite_eq_right h1, ite_eq_left h2]
         exact ((hS'm h2).trans hiso).trans (hanti _ _ (by omega))
-      · simp only [if_neg h1, if_neg h2]
+      · simp only [ite_eq_right h1, ite_eq_right h2]
         exact hanti _ _ (by omega)
   · intro p
     by_cases h1 : p ≤ a
-    · simp only [if_pos h1]; exact hsat _
-    · simp only [if_neg h1]; exact (hp _ _ (hsat _) (hsat _) le_rfl).1
+    · simp only [ite_eq_left h1]; exact hsat _
+    · simp only [ite_eq_right h1]; exact (hp _ _ (hsat _) (hsat _) le_rfl).1
   · intro p hpa
     by_cases h1 : p ≤ a
-    · simp only [if_pos h1, if_neg (show ¬ 2 * a + 1 - p ≤ a by omega)]
+    · simp only [ite_eq_left h1, ite_eq_right (show ¬ 2 * a + 1 - p ≤ a by omega)]
       rw [show 2 * a + 1 - (2 * a + 1 - p) = p by omega]
-    · simp only [if_neg h1, if_pos (show 2 * a + 1 - p ≤ a by omega)]
+    · simp only [ite_eq_right h1, ite_eq_left (show 2 * a + 1 - p ≤ a by omega)]
       exact (hp _ _ (hsat _) (hsat _) le_rfl).2.2.1.symm
   · intro p hpa
     rcases lt_trichotomy p a with h1 | rfl | h1
-    · simp only [if_pos h1, if_pos (show p + 1 ≤ a by omega)]; exact hLe p h1
-    · simp only [lt_irrefl, if_false, if_true, if_neg (show ¬ p + 1 ≤ p by omega)]
+    · simp only [ite_eq_left h1, ite_eq_left (show p + 1 ≤ a by omega)]; exact hLe p h1
+    · simp only [lt_irrefl, ite_false, ite_true, ite_eq_right (show ¬ p + 1 ≤ p by omega)]
       rw [show 2 * p + 1 - (p + 1) = p by omega, hS'a, (hd _ (by norm_num)).2]
       norm_num
-    · simp only [if_neg h1.not_gt, if_neg h1.ne', if_neg (show ¬ p + 1 ≤ a by omega)]
+    · simp only [ite_eq_right h1.not_gt, ite_eq_right h1.ne', ite_eq_right (show ¬ p + 1 ≤ a by omega)]
       rw [show 2 * a + 1 - (p + 1) = 2 * a - p by omega, hLt _ (by omega), (hd _ (hτ0 _)).2]
   · intro p hpa
     rcases lt_trichotomy p a with h1 | rfl | h1
-    · simp only [if_pos h1, if_pos h1.le, if_neg h1.ne]; exact hLt p h1
-    · simp only [le_rfl, if_true]; exact hS'a
-    · simp only [if_neg h1.not_gt, if_neg h1.ne', if_neg h1.not_ge]
+    · simp only [ite_eq_left h1, ite_eq_left h1.le, ite_eq_right h1.ne]; exact hLt p h1
+    · simp only [le_rfl, ite_true]; exact hS'a
+    · simp only [ite_eq_right h1.not_gt, ite_eq_right h1.ne', ite_eq_right h1.not_ge]
       rw [show 2 * a + 1 - p = 2 * a - p + 1 by omega, hLe _ (by omega), (hd _ (hτ0 _)).1]
   · intro p
     have := hτ0 p
@@ -1496,10 +1496,10 @@ theorem exists_chain (a : ℕ) (j : Fin a → ℕ) (τ : Fin a → ℝ) (h : Has
     split_ifs <;> positivity
   · intro i
     have hi := i.2
-    refine ⟨by simp only [if_pos hi, hτ'], ?_, ?_⟩
-    · simp only [if_neg (show ¬ 2 * a - i < a by omega), if_neg (show ¬ 2 * a - i = a by omega)]
+    refine ⟨by simp only [ite_eq_left hi, hτ'], ?_, ?_⟩
+    · simp only [ite_eq_right (show ¬ 2 * a - i < a by omega), ite_eq_right (show ¬ 2 * a - i = a by omega)]
       rw [show 2 * a - (2 * a - i) = i by omega, hτ']
-    · simp only [if_pos (show i + 1 ≤ a by omega), if_pos hi.le]
+    · simp only [ite_eq_left (show i + 1 ≤ a by omega), ite_eq_left hi.le]
       rw [hS's, hS'c, hj]
 
 theorem mem_lowSet (de : ℝ) (hde : 0 < de) (hde' : de < 1 / 4) (a : ℕ)
@@ -1566,7 +1566,7 @@ theorem near_count : ∀ (I : AutInst) (x : I.GA) (de : ℝ), 0 < de → de < 1 
   obtain ⟨hfin, hcard⟩ := core_count I x a G h0 hmono hsat
     (fun p hp y => by rw [hperp p hp, mem_perpIn, htop]) hrk htop t ht
     (fun q hq N h1 h2 => by
-      rw [hLt q (by omega), if_neg hq.ne] at h1 ⊢
+      rw [hLt q (by omega), ite_eq_right hq.ne] at h1 ⊢
       exact (hst _ (ht q)).2.2.2.2.2.2.2.1 N h1 h2)
     (fun p hp hne => by
       rw [hLe p hp] at hne ⊢
@@ -1575,12 +1575,12 @@ theorem near_count : ∀ (I : AutInst) (x : I.GA) (de : ℝ), 0 < de → de < 1 
     if h : g ∈ I.GFset then (h.choose : GL (Fin I.n) I.E) else 0
   have hmap : Set.MapsTo e (nearSet I x de) (lowSet I x a G de) := fun g hg => by
     have hs := hg.1.choose_spec
-    simp only [e, dif_pos hg.1]
+    simp only [e, dite_eq_left hg.1]
     exact mem_lowSet I x de hde hde' a G t ht hta hLe hLt g hg _ hs.1 hs.2.1 hs.2.2
   have hinj : Set.InjOn e (nearSet I x de) := fun g hg g' hg' h => by
     have hs := hg.1.choose_spec
     have hs' := hg'.1.choose_spec
-    simp only [e, dif_pos hg.1, dif_pos hg'.1] at h
+    simp only [e, dite_eq_left hg.1, dite_eq_left hg'.1] at h
     refine Prod.ext (funext fun v => Subtype.ext (Units.ext ?_)) (Subtype.ext (Units.ext ?_))
     · exact (hs.2.1 v).trans (h ▸ (hs'.2.1 v).symm)
     · exact hs.2.2.trans (h ▸ hs'.2.2.symm)
@@ -1636,7 +1636,7 @@ theorem near_count : ∀ (I : AutInst) (x : I.GA) (de : ℝ), 0 < de → de < 1 
     have hk' := k.2
     have := hτ i
     have := hτ k
-    rw [dimB, dimB, if_neg (by omega), if_neg (by omega), r1, r2, r2, (hti i).1, (hti k).1, (hti k).2.1,
+    rw [dimB, dimB, ite_eq_right (by omega), ite_eq_right (by omega), r1, r2, r2, (hti i).1, (hti k).1, (hti k).2.1,
       div_inv_eq_mul]
     refine mul_le_mul (pow_le_pow_ratio hde (by positivity) ?_ _) (pow_le_pow_ratio hde (by positivity) ?_ _)
       (by positivity) (by positivity)
@@ -1646,7 +1646,7 @@ theorem near_count : ∀ (I : AutInst) (x : I.GA) (de : ℝ), 0 < de → de < 1 
       linarith
   · have hi := i.2
     have := hτ i
-    rw [dimB, dimB, if_neg (by omega), if_pos (by omega), r2, r3, (hti i).1, hta, (hti i).2.1,
+    rw [dimB, dimB, ite_eq_right (by omega), ite_eq_left (by omega), r2, r3, (hti i).1, hta, (hti i).2.1,
       div_inv_eq_mul]
     refine mul_le_mul (pow_le_pow_ratio hde (by positivity) (by linarith) _)
       (pow_le_pow_ratio hde (by positivity) (by nlinarith) _) (by positivity) (by positivity)
@@ -1748,10 +1748,10 @@ theorem integral_count_dens (n f q a : ℕ) (j : Fin a → ℕ) (de lo M : ℝ) 
 theorem tsum_le_card {α : Type} (s t : Set α) (hst : s ⊆ t) (ht : t.Finite) (g : α → ℂ) (M : ℝ)
     (hM : 0 ≤ M) (hg : ∀ y, ‖g y‖ ≤ M) : ∑' y : s, ‖g y.1‖ₑ ≤ ENNReal.ofReal (M * (t.ncard : ℝ)) := by
   have hs : s.Finite := ht.subset hst
-  haveI : Fintype s := hs.fintype
+  have : Fintype s := hs.fintype
   calc ∑' y : s, ‖g y.1‖ₑ ≤ ∑' _ : s, ENNReal.ofReal M := by
         refine ENNReal.tsum_le_tsum fun y => ?_
-        rw [← ofReal_norm_eq_enorm]
+        rw [← ofReal_norm]
         exact ENNReal.ofReal_le_ofReal (hg y.1)
     _ = (Fintype.card s : ENNReal) * ENNReal.ofReal M := by
         rw [tsum_fintype, Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
@@ -1792,7 +1792,7 @@ theorem near_terms_one_type : GlobalTheory.FlagMeas.FlagMeasureBound → GlobalT
     set lo : ℝ := tauStar B q b with hlodef
     have hlo2 : lo ≤ 1 / 2 := (hsmall hq).1.le
     have hmeasS : MeasurableSet {τ : Fin a → ℝ | ∀ i, lo ≤ τ i} := by
-      rw [Set.setOf_forall]
+      rw [Set.ofPred_forall]
       exact MeasurableSet.iInter fun i => measurableSet_le measurable_const (measurable_pi_apply i)
     have hGm : Measurable (fun τ : Fin a → ℝ => {τ : Fin a → ℝ | ∀ i, lo ≤ τ i}.indicator
         (fun τ => ENNReal.ofReal (M * layerProd B.I.n B.I.f j τ (fun la => 1 + 12 * δ / la))) τ) :=

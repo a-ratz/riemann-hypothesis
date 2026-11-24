@@ -152,7 +152,7 @@ theorem pf_Fell : UpperTheory.Esk.C4 → UpperTheory.Esk.E0a → UpperTheory.Esk
   intro hC4 hE0a hE0c hE0d hE1 hE3 hEcut hFsum hF2 hF3 hF4
   intro F I Gf _ _ _ D hD ι _ a
   classical
-  haveI : Nonempty I := by have := hD.two; infer_instance
+  have : Nonempty I := by have := hD.two; infer_instance
 
   obtain ⟨f, hf1, hf2⟩ : ∃ f : D.Cj × D.Om → D.Cj × D.Om, (∀ p, f p ∈ MulAction.orbit (PG F) p) ∧
       (∀ p q, q ∈ MulAction.orbit (PG F) p → f q = f p) :=
@@ -184,8 +184,8 @@ theorem pf_Fell : UpperTheory.Esk.C4 → UpperTheory.Esk.E0a → UpperTheory.Esk
   have hu_meas : ∀ γ, Measurable (u γ) := by
     intro γ
     by_cases h : IsEll γ
-    · simp only [u, h, if_true]; exact hc.2.2.1 γ
-    · simp only [u, h, if_false]; exact measurable_const
+    · simp only [u, h, ite_true]; exact hc.2.2.1 γ
+    · simp only [u, h, ite_false]; exact measurable_const
   obtain ⟨c₀, hc₀, hmink⟩ := hD.mink
   obtain ⟨C, hC⟩ := hE1 F I Gf ι D k a hk c₀ hc₀
   have hbd : ∀ y, ∑' γ, ‖u γ y‖ₑ ≤ (C : ℝ≥0∞) := by
@@ -195,7 +195,7 @@ theorem pf_Fell : UpperTheory.Esk.C4 → UpperTheory.Esk.E0a → UpperTheory.Esk
           ENNReal.summable.tsum_le_tsum (fun γ => by
             by_cases h : IsEll γ
             · have hm : γ ∈ {γ : PG F | ¬ Fix s γ} := h s hs
-              simp only [u, h, if_true, Set.indicator_of_mem hm, le_refl]
+              simp only [u, h, ite_true, Set.indicator_of_mem hm, le_refl]
             · simp [u, h]) ENNReal.summable
       _ = ∑' γ : {γ : PG F | ¬ Fix s γ}, ‖D.kk k a γ.1 y‖ₑ := (tsum_subtype _ _).symm
       _ ≤ C := hC y s hs hsy
@@ -208,11 +208,11 @@ theorem pf_Fell : UpperTheory.Esk.C4 → UpperTheory.Esk.E0a → UpperTheory.Esk
   obtain ⟨hmeas', hint', hintY, heq⟩ := hFs u hu_meas hfin
   refine ⟨hintY, heq.trans ?_⟩
   obtain ⟨hcount, hsig, hpres, -⟩ := hE0a F I Gf D hD
-  haveI : Countable (PG F) := hcount
-  haveI : Countable D.Cj := hcount
-  haveI : Countable D.Om := hD.cO
-  haveI : SigmaFinite (volume : Measure D.Xs) := hsig
-  haveI : DiscreteMeasurableSpace (D.Cj × D.Om) := ⟨fun s => s.to_countable.measurableSet⟩
+  have : Countable (PG F) := hcount
+  have : Countable D.Cj := hcount
+  have : Countable D.Om := hD.cO
+  have : SigmaFinite (volume : Measure D.Xs) := hsig
+  have : DiscreteMeasurableSpace (D.Cj × D.Om) := ⟨fun s => s.to_countable.measurableSet⟩
   have stab_le : ∀ p : D.Cj × D.Om, MulAction.stabilizer (PG F) p ≤ MulAction.stabilizer (PG F) p.2 := by
     intro p g hg
     rw [MulAction.mem_stabilizer_iff] at hg ⊢
@@ -239,12 +239,12 @@ theorem pf_Fell : UpperTheory.Esk.C4 → UpperTheory.Esk.E0a → UpperTheory.Esk
         obtain ⟨-, htot, hte, -⟩ := hS
         have hell := isEll_of_totEll D (D.el γ) htot
         have := (hF3 F I Gf ι D k a hk (D.el γ) ω htot hte).2 (β (γ, ω)) (hβ (γ, ω))
-        simp only [g', u, hell, if_true]
+        simp only [g', u, hell, ite_true]
         exact this
       · rw [Set.indicator_of_notMem hS]
         simp only [g', u]
         by_cases hell : IsEll (D.el γ)
-        · simp only [hell, if_true]
+        · simp only [hell, ite_true]
           by_cases htot : D.TotEll (D.el γ).out
           · by_cases hte : D.Te a (D.el γ).out (D.rep ω) = 0
             · simp [Dat.kk, Dat.kt, hte]
@@ -252,7 +252,7 @@ theorem pf_Fell : UpperTheory.Esk.C4 → UpperTheory.Esk.E0a → UpperTheory.Esk
               exact hS ⟨hpR, htot, hte, (hF3 F I Gf ι D k a hk (D.el γ) ω htot hte).1⟩
           · refine hF2 F I Gf ι D k a hk (D.el γ) ω htot (β (γ, ω)) (hβ (γ, ω)) ?_
             have hI' := hI
-            simp only [u, hell, if_true] at hI'
+            simp only [u, hell, ite_true] at hI'
             exact hI'
         · simp [hell]
     · rw [Set.indicator_of_notMem hpR, Set.indicator_of_notMem (by exact fun h => hpR h.1)]

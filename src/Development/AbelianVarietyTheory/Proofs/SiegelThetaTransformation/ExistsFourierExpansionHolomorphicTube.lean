@@ -148,7 +148,7 @@ theorem _root_.GlobalTheory.exists_fourier_expansion_tube :
   have hTc : IsPreconnected T := by
     refine Convex.isPreconnected ?_
     intro z hz w hw s t hs ht hst
-    simp only [hT, Set.mem_setOf_eq] at hz hw ⊢
+    simp only [hT, Set.mem_ofPred_eq] at hz hw ⊢
     convert hΩc hz hw hs ht hst using 1
     ext i
     simp [Complex.mul_im]

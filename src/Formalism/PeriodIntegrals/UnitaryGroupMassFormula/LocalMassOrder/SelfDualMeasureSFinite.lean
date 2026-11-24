@@ -273,10 +273,10 @@ theorem sfinite_of_fib {V X Y : Type} [TopologicalSpace V] [MeasurableSpace V]
     show (1 : ℝ) ≤ ‖g x‖
     rw [hg1 hx]
     simp
-  haveI : LocallyCompactSpace U := hU.locallyCompactSpace
+  have : LocallyCompactSpace U := hU.locallyCompactSpace
   let K : ℕ → Set V := fun n => Subtype.val '' compactCovering U n
   have hKc : ∀ n, IsCompact (K n) := fun n =>
-    (isCompact_compactCovering U n).image continuous_subtype_val
+    (isCompact_compactCovering U n).image continuous_subtypeVal
   have hKU : ∀ n, K n ⊆ U := by
     intro n y hy
     obtain ⟨x, -, rfl⟩ := hy
@@ -288,7 +288,7 @@ theorem sfinite_of_fib {V X Y : Type} [TopologicalSpace V] [MeasurableSpace V]
   have hfin : ∀ n, fib b (K n ∪ Uᶜ) < ⊤ := fun n =>
     (measure_union_le _ _).trans_lt
       (ENNReal.add_lt_top.mpr ⟨hK _ (hKc n) (hKU n), by rw [hnull]; exact ENNReal.zero_lt_top⟩)
-  haveI : SigmaFinite (fib b) := ⟨⟨{
+  have : SigmaFinite (fib b) := ⟨⟨{
     set := fun n => K n ∪ Uᶜ
     set_mem := fun _ => Set.mem_univ _
     finite := hfin
@@ -313,7 +313,7 @@ theorem finDim_FE : FiniteDimensional F E := by
 
 theorem isOpen_indep (v : HeightOneSpectrum (𝓞 F)) (n a : ℕ) :
     IsOpen (IndepV (E := E) (n := n) v a) := by
-  haveI : FiniteDimensional F E := finDim_FE
+  have : FiniteDimensional F E := finDim_FE
   exact isOpen_linIndep (Module.finBasis F E) (Fv F v) (isOpen_units_Fv v) (lip_field _)
 
 end Main
@@ -324,16 +324,16 @@ theorem orbit_measure_sFinite : LocMassOrdW.OmSF := by
   split_ifs with hT
   · unfold Formalism.L2.SG.LocVol.omFam
     split_ifs with hfib
-    · haveI : FiniteDimensional F E := finDim_FE
-      haveI : LocallyCompactSpace (Fv F v) := locallyCompact_Fv v
-      haveI : SecondCountableTopology (Fv F v) := secondCountable_Fv v
-      haveI : LocallyCompactSpace (Fv F v ⊗[F] E) := lc_tens (Fv F v)
-      haveI : T2Space (Fv F v ⊗[F] E) := t2_tensor_product (Fv F v)
-      haveI : SecondCountableTopology (Fv F v ⊗[F] E) := sc_tens (Fv F v)
-      haveI : OpensMeasurableSpace (TupV (E := E) v n a) := by
+    · have : FiniteDimensional F E := finDim_FE
+      have : LocallyCompactSpace (Fv F v) := locallyCompact_Fv v
+      have : SecondCountableTopology (Fv F v) := secondCountable_Fv v
+      have : LocallyCompactSpace (Fv F v ⊗[F] E) := lc_tens (Fv F v)
+      have : T2Space (Fv F v ⊗[F] E) := t2_tensor_product (Fv F v)
+      have : SecondCountableTopology (Fv F v ⊗[F] E) := sc_tens (Fv F v)
+      have : OpensMeasurableSpace (TupV (E := E) v n a) := by
         first
         | exact ⟨le_rfl⟩
-        | (haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩; infer_instance)
+        | (have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩; infer_instance)
       exact sfinite_of_fib (isOpen_indep v n a) hfib.choose_spec ⟨T, hT⟩
     · infer_instance
   · infer_instance
@@ -342,13 +342,13 @@ theorem self_dual_measure_sFinite : LocMassOrdW.SdESF := by
   intro F E _ _ _ _ _ σ n J ψ v _ r
   unfold Formalism.L2.SG.LocVol.sdE
   split_ifs with h
-  · haveI : FiniteDimensional F E := finDim_FE
-    haveI : LocallyCompactSpace (Fv F v) := locallyCompact_Fv v
-    haveI : SecondCountableTopology (Fv F v) := secondCountable_Fv v
-    haveI : LocallyCompactSpace (Fv F v ⊗[F] E) := lc_tens (Fv F v)
-    haveI : T2Space (Fv F v ⊗[F] E) := t2_tensor_product (Fv F v)
-    haveI : SecondCountableTopology (Fv F v ⊗[F] E) := sc_tens (Fv F v)
-    haveI := h.choose_spec.1
+  · have : FiniteDimensional F E := finDim_FE
+    have : LocallyCompactSpace (Fv F v) := locallyCompact_Fv v
+    have : SecondCountableTopology (Fv F v) := secondCountable_Fv v
+    have : LocallyCompactSpace (Fv F v ⊗[F] E) := lc_tens (Fv F v)
+    have : T2Space (Fv F v ⊗[F] E) := t2_tensor_product (Fv F v)
+    have : SecondCountableTopology (Fv F v ⊗[F] E) := sc_tens (Fv F v)
+    have := h.choose_spec.1
     infer_instance
   · infer_instance
 

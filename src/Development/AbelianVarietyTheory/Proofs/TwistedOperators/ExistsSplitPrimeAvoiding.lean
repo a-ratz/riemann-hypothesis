@@ -72,12 +72,12 @@ theorem card_eq_ncard_primesOver (E : Type) [Field E] [NumberField E] {g : ℕ} 
     Nat.card {w : HeightOneSpectrum (𝓞 E) // (g : 𝓞 E) ∈ w.asIdeal} =
       (Ideal.primesOver (Ideal.span {(g : ℤ)}) (𝓞 E)).ncard := by
   have hp : Prime (g : ℤ) := Nat.prime_iff_prime_int.mp hg
-  haveI : (Ideal.span {(g : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).mpr hp
+  have : (Ideal.span {(g : ℤ)}).IsPrime := (Ideal.span_singleton_prime hp.ne_zero).mpr hp
   have hne : (Ideal.span {(g : ℤ)}) ≠ ⊥ := by simpa using hg.ne_zero
-  haveI hmax : (Ideal.span {(g : ℤ)}).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hne
+  have hmax : (Ideal.span {(g : ℤ)}).IsMaximal := Ideal.IsPrime.isMaximal inferInstance hne
   rw [← Nat.card_coe_set_eq]
   refine Nat.card_congr (Equiv.ofBijective (fun w => ⟨w.1.asIdeal, w.1.isPrime, ?_⟩) ⟨?_, ?_⟩)
-  · haveI := w.1.isPrime
+  · have := w.1.isPrime
     refine ⟨hmax.eq_of_le (Ideal.IsPrime.ne_top inferInstance) ?_⟩
     rw [Ideal.span_singleton_le_iff_mem, Ideal.under_def, Ideal.mem_comap]
     simpa using w.2
@@ -93,13 +93,13 @@ theorem residue_and_unramified : ∀ (E : Type) [Field E] [NumberField E] (g : �
     ∀ w : HeightOneSpectrum (𝓞 E), (g : 𝓞 E) ∈ w.asIdeal →
       Nonempty ((𝓞 E ⧸ w.asIdeal) ≃+* ZMod g) ∧ (g : 𝓞 E) ∉ w.asIdeal ^ 2 := by
   intro E _ _ g hg h w hw
-  haveI := w.isPrime
-  haveI := Fact.mk hg
+  have := w.isPrime
+  have := Fact.mk hg
   have h' := (card_eq_ncard_primesOver E hg).symm.trans h
   obtain ⟨h1, h2⟩ := GlobalTheory.LocSplit.split_prime hg h' w.asIdeal hw
   refine ⟨?_, h1⟩
-  haveI : Nontrivial (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.2 w.isPrime.ne_top
-  haveI : CharP (𝓞 E ⧸ w.asIdeal) g := by
+  have : Nontrivial (𝓞 E ⧸ w.asIdeal) := Ideal.Quotient.nontrivial_iff.2 w.isPrime.ne_top
+  have : CharP (𝓞 E ⧸ w.asIdeal) g := by
     rw [CharP.charP_iff_prime_eq_zero hg, ← map_natCast (Ideal.Quotient.mk w.asIdeal),
       Ideal.Quotient.eq_zero_iff_mem]
     exact hw
@@ -163,7 +163,7 @@ theorem splitsCompletely_of_modEq_one (D : D7) {p : ℕ} (hp : p.Prime)
     unfold GlobalTheory.IndefiniteRowSideFullHecke.FlagUnipotentStabilizers.SplitsCompletely
     rw [GlobalTheory.SplitResidue.card_eq_ncard_primesOver D.host.E hp, ← GlobalTheory.HostSplit.ncard_placesOver D.host.E hp, h1]
   refine ⟨hp, fun w hw => ⟨h3 w hw, ?_⟩⟩
-  haveI := w.isPrime
+  have := w.isPrime
   have hs' := (GlobalTheory.SplitResidue.card_eq_ncard_primesOver D.host.E hp).symm.trans hs
   exact (GlobalTheory.LocSplit.split_prime hp hs' w.asIdeal hw).1
 

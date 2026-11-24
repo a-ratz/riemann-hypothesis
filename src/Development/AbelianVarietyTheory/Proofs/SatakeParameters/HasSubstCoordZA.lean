@@ -75,7 +75,7 @@ theorem resV_CX {ι κ R : Type} [CommRing R] [Finite ι] {f : κ → ι} (hf : 
   rw [resV_coeff, MvPowerSeries.coeff_C, MvPowerSeries.coeff_C]
   by_cases hn : n = 0
   · subst hn; simp
-  · rw [if_neg hn, if_neg]
+  · rw [ite_eq_right hn, ite_eq_right]
     intro h0
     apply hn
     have := congrArg Finsupp.degree h0

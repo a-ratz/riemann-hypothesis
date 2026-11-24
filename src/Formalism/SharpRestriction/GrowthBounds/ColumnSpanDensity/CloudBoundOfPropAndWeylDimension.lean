@@ -201,10 +201,10 @@ theorem top_shape {n' mm : ℕ} (TT : Finset (Fin n')) (aw bw : Fin n' → ℤ) 
   unfold lamAt
   split_ifs with he
   · refine ⟨h0, hl, fun j => hmid _ ?_ ?_⟩
-    · simp only [Fin.val_succ, Fin.coe_castSucc]
+    · simp only [Fin.val_succ, Fin.val_castSucc]
       omega
     · have := j.isLt
-      simp only [Fin.val_succ, Fin.coe_castSucc]
+      simp only [Fin.val_succ, Fin.val_castSucc]
       omega
   · refine ⟨?_, ?_, fun j => ?_⟩
     · simp [hl]
@@ -212,9 +212,9 @@ theorem top_shape {n' mm : ℕ} (TT : Finset (Fin n')) (aw bw : Fin n' → ℤ) 
     · rw [abs_neg]
       have := j.isLt
       refine hmid _ ?_ ?_
-      · simp only [Fin.val_rev, Fin.val_succ, Fin.coe_castSucc]
+      · simp only [Fin.val_rev, Fin.val_succ, Fin.val_castSucc]
         omega
-      · simp only [Fin.val_rev, Fin.val_succ, Fin.coe_castSucc]
+      · simp only [Fin.val_rev, Fin.val_succ, Fin.val_castSucc]
         omega
 
 theorem share_abs (L H Hp Cl κ₁ κ₂ ep : ℝ) (hL : 0 ≤ L) (_hH : 0 ≤ H) (hCl : 0 ≤ Cl) (h1 : 0 ≤ κ₁) (h1' : κ₁ ≤ 1)
@@ -233,7 +233,7 @@ private theorem one_sub_mul_exp_le_one_of_le (x ep : ℝ) (hx : x ≤ ep) : (1 -
   nlinarith [mul_le_mul_of_nonneg_right h1 h3.le, mul_le_mul_of_nonneg_right hx h3.le]
 
 private theorem one_add_pow_le_exp_mul (t : ℝ) (ht : 0 ≤ t) (N : ℕ) : (1 + t) ^ N ≤ Real.exp (N * t) := by
-  rw [Real.exp_nat_mul]
+  rw [Real.exp_natCast_mul]
   exact pow_le_pow_left₀ (by linarith) (by linarith [Real.add_one_le_exp t]) N
 
 private theorem top_facts_lemma_4 {n' mm : ℕ} (TT : Finset (Fin n')) (aw bw : Fin n' → ℤ) (ccl : ℕ)

@@ -226,7 +226,7 @@ theorem exists_rescale (P : Out.PolAV (Sp ℂ)) (hg rig hr th hth v hv)
     ∃ th₀ hth₀ v₀ hv₀, NormalAt ⟨P, hg, rig, hr, th₀, hth₀, v₀, hv₀⟩ τ 1 a b 1 ∧
       (∀ i, LB.Sec.f th i = constFn P.A.hom _ c * LB.Sec.f th₀ i) ∧ ∀ i, IsLieComb (M i) v₀ (v i) := by
   obtain ⟨u, h₁, h₂, h₃, h₄, h₅, h₆⟩ := hx
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨ex, tan, comp, sgl, bas⟩ := GlobalTheory.LieComb.lieComb_algebra ℂ P.A P.g v hv.1
   choose v₀ hv₀ using fun i => (ex (M⁻¹ i)).exists
   have hb₀ : IsLieBasis v₀ := (bas M⁻¹ v₀ hv hv₀).2 (Matrix.isUnit_nonsing_inv_det M hM.isUnit)

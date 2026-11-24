@@ -121,7 +121,7 @@ private theorem div_of_dv (N : ℕ) (hN : 0 < N) (x : A ℚ) (h1 : x.1 = 0) (h2 
   · change Valued.v (x.2 v * (iota N).2 v) ≤ 1
     rw [hio, map_mul, map_inv₀]
     have hv : Valued.v (N : H.Kv v) ≠ 0 := (Valuation.ne_zero_iff _).2 (hne v)
-    exact mul_inv_le_one_of_le₀ (h2 v) zero_le'
+    exact mul_inv_le_one_of_le₀ (h2 v) zero_le
   · refine Prod.ext ?_ (FiniteAdeleRing.ext (K := ℚ) fun v => ?_)
     · change x.1 = (N : A ℚ).1 * (x.1 * (iota N).1)
       rw [h1, zero_mul, mul_zero]
@@ -532,9 +532,9 @@ private theorem int_zero {E : Type} [Field E] [NumberField E] (D : Dat ℚ E) (H
     ∫ x in fundamentalSet E, H x ∂(adeleMeasure E) = 0 := by
   let β : (Fin 2 → A ℚ) ≃ₜ+ A E := D.coE.symm
   let m := β.toHomeomorph.toMeasurableEquiv
-  haveI : (adeleMeasurePi ℚ (ι := Fin 2)).IsAddHaarMeasure :=
+  have : (adeleMeasurePi ℚ (ι := Fin 2)).IsAddHaarMeasure :=
     inferInstanceAs (Measure.pi fun _ : Fin 2 => adeleMeasure ℚ).IsAddHaarMeasure
-  haveI : ((adeleMeasurePi ℚ (ι := Fin 2)).map m).IsAddHaarMeasure := β.isAddHaarMeasure_map (adeleMeasurePi ℚ)
+  have : ((adeleMeasurePi ℚ (ι := Fin 2)).map m).IsAddHaarMeasure := β.isAddHaarMeasure_map (adeleMeasurePi ℚ)
   have hF : IsAddFundamentalDomain (AdeleRing.principalSubgroup (𝓞 E) E) (m '' FS2 ℚ)
       ((adeleMeasurePi ℚ (ι := Fin 2)).map m) :=
     (isAddFundamentalDomain_vecDomain (K := ℚ) (ι := Fin 2)).image_of_equiv m.toEquiv
@@ -549,7 +549,7 @@ private theorem int_zero {E : Type} [Field E] [NumberField E] (D : Dat ℚ E) (H
   have hp : ∀ (g : AdeleRing.principalSubgroup (𝓞 E) E) (x : A E), H (g +ᵥ x) = H x := by
     rintro ⟨_, k, rfl⟩ x
     exact hper k x
-  haveI : Countable (AdeleRing.principalSubgroup (𝓞 E) E) := (latQ D).symm.injective.countable
+  have : Countable (AdeleRing.principalSubgroup (𝓞 E) E) := (latQ D).symm.injective.countable
   have h1 := (isAddFundamentalDomain_fundamentalSet E).setIntegral_eq hF' (f := H) hp
   rw [h1, Measure.isAddLeftInvariant_eq_smul (adeleMeasure E) ((adeleMeasurePi ℚ (ι := Fin 2)).map m), Measure.restrict_smul,
     integral_smul_nnreal_measure, m.measurableEmbedding.setIntegral_map, m.injective.preimage_image]
@@ -819,7 +819,7 @@ private theorem sg_oh (v : H.P ℚ) (c : H.Kv v) (hc : Valued.v c ≤ 1) : H.sg 
     rw [this]
     exact hc
   · rw [(hs c).2 w h, map_zero]
-    exact zero_le'
+    exact zero_le
 
 private theorem oh_nat_mul (n : ℕ) {c : A ℚ} (hc : c ∈ Oh ℚ) : (n : A ℚ) * c ∈ Oh ℚ := by
   refine ⟨?_, fun v => ?_⟩
@@ -1295,13 +1295,13 @@ open scoped ComplexOrder
 theorem UpperTheory.whittaker_sum_mul_eq_sum_mul_whittaker :
     ∀ (E : Type) [Field E] [NumberField E] (D : Dat ℚ E) (ι : Type) (s : Finset ι) (c : ι → ℂ) (φ : ι → GL (Fin 2) (A E) → ℂ), (∀ i, Continuous (φ i)) → (∀ i, ∃ B : ℝ, ∀ g, ‖φ i g‖ ≤ B) → ∀ h : GL (Fin 2) (A E), Wo D (fun g => ∑ i ∈ s, c i * φ i g) h = ∑ i ∈ s, c i * Wo D (φ i) h := by
   intro E _ _ D ι s c φ hc hb h
-  haveI : IsFiniteMeasure ((adeleMeasurePi (ι := Fin 2) ℚ).restrict (FS2 ℚ)) := ⟨by
+  have : IsFiniteMeasure ((adeleMeasurePi (ι := Fin 2) ℚ).restrict (FS2 ℚ)) := ⟨by
     rw [Measure.restrict_apply_univ]
     have h1 : adeleMeasurePi (ι := Fin 2) ℚ (FS2 ℚ) = 1 :=
       GroundTheory.Automorphic.FourierWhittaker.vecMeasure_vecDomain
     rw [h1]
     exact ENNReal.one_lt_top⟩
-  have hψ : Continuous (ψ (F := ℚ)) := continuous_subtype_val.comp continuous_adelicChar
+  have hψ : Continuous (ψ (F := ℚ)) := continuous_subtypeVal.comp continuous_adelicChar
   have hn : Continuous (nE D : (Fin 2 → A ℚ) → GL (Fin 2) (A E)) :=
     UpperTheory.ConvolutionTheory.R2.Pp.cont_n.comp (D.continuous_mkE' (continuous_apply 0) (continuous_apply 1))
   have hi : ∀ i, Integrable (fun u : Fin 2 → A ℚ => φ i (nE D u * h) * ψ (u 1))
@@ -1534,7 +1534,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.exGd_of :
       have hs : S y ≠ 0 := fun h0 => hy (by rw [h0]; simp)
       rw [hSv y X hz] at hs
       by_contra hv
-      exact hs (if_neg fun hall => hv (hall v))
+      exact hs (ite_eq_right fun hall => hv (hall v))
     ·
       intro t ht h1 y X
       have htL := UpperTheory.hasLevel_of_unitIdele_congruent_one L hL t ht h1
@@ -1570,7 +1570,7 @@ theorem UpperTheory.ConvolutionTheory.RankTwoDescent.exGd_of :
       simpa only [hφ₀, mul_one] using hne
     have h2 := hW 1 1
     rw [e1] at h2
-    rw [h2, hSv 1 1 hz, if_pos fun v => ?_]
+    rw [h2, hSv 1 1 hz, ite_eq_left fun v => ?_]
     · exact mul_ne_zero (div_self hnC ▸ one_ne_zero) hz
     · unfold Dv
       simp

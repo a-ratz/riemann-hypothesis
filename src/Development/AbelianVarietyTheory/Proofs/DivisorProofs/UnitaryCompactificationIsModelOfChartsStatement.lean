@@ -184,7 +184,7 @@ theorem genOf_isGrpPullback : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
   obtain ⟨tK, ⟨m₁⟩, ⟨m₂⟩⟩ := hy
   obtain ⟨b⟩ := GlobalTheory.TraitOrder.cancel rfl mF m₂
   obtain ⟨e, he, -⟩ := ReciprocityTheory.ChartRestriction.G.Geo.Tor.grpPullback_iso (isGrpPullback_pullback t.G (jK R)) m₁.cart
-  haveI := he
+  have := he
   exact ⟨e.hom.left ≫ b.φ,
     ((ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_of_iso e).comp b.cart).congr (Category.id_comp _) rfl⟩
 
@@ -269,7 +269,7 @@ theorem completedStalk_chart (X : Scheme.{0}) (x : X) [IsNoetherianRing (X.presh
   have fg : (maximalIdeal (X.presheaf.stalk x)).FG := IsNoetherian.noetherian _
   have hm := AdicCompletion.maximalIdeal_eq_map_of_fg fg
   let φ := algebraMap (X.presheaf.stalk x) (AdicCompletion (maximalIdeal (X.presheaf.stalk x)) (X.presheaf.stalk x))
-  haveI : IsLocalHom φ := ((IsLocalRing.local_hom_tfae φ).out 1 3).mpr hm.symm.le
+  have : IsLocalHom φ := ((IsLocalRing.local_hom_tfae φ).out 1 3).mpr hm.symm.le
   have hres : Function.Surjective ((residue _).comp φ) := by
     intro r
     obtain ⟨a, ha⟩ := (AdicCompletion.residueField_map_bijective (X.presheaf.stalk x)).2 r
@@ -299,8 +299,8 @@ theorem nonempty_chart : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     (A : Over (Xo.XF c)) [GrpObj A], IsSemiAbelian A → ∀ x ∈ Set.range j, Nonempty (GlobalTheory.Desc.Chart j A x) := by
   intro E _ _ _ H Dw l Xo c S j _ A _ hA x hx
   obtain ⟨x', rfl⟩ := hx
-  haveI : Smooth Xo.s := by haveI := Xo.smooth; exact SmoothOfRelativeDimension.smooth Dw.dim Xo.s
-  haveI hreg : IsRegularLocalRing ((Xo.XF c).presheaf.stalk x') :=
+  have : Smooth Xo.s := by have := Xo.smooth; exact SmoothOfRelativeDimension.smooth Dw.dim Xo.s
+  have hreg : IsRegularLocalRing ((Xo.XF c).presheaf.stalk x') :=
     GroundTheory.Arith.SchemeCoh.isRegularLocalRing_stalk_of_smooth_field
       (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) x'
   obtain ⟨hcen, hEt, hres⟩ := completedStalk_chart (Xo.XF c) x'
@@ -308,8 +308,8 @@ theorem nonempty_chart : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     (pullback.snd Xo.s (spMap (IntermediateField.inclusion c.le).toRingHom)) x'
   set St := (Xo.XF c).presheaf.stalk x'
   set R := AdicCompletion (maximalIdeal St) St
-  haveI : IsRegularLocalRing R := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion St
-  haveI : IsDomain R := GlobalTheory.isDomain_of_isRegularLocalRing R
+  have : IsRegularLocalRing R := GlobalTheory.RegularCompletion.isRegularLocalRing_adicCompletion St
+  have : IsDomain R := GlobalTheory.isDomain_of_isRegularLocalRing R
   let g : Sp R ⟶ Xo.XF c := GlobalTheory.fromSpecCompletedStalk (Xo.XF c) x'
   have hcz : CharZero R := (RingHom.charZero_iff ((algebraMap St R).comp ιF).injective).1 inferInstance
   have hb : Function.Bijective (j.stalkMap (g (closedPoint R))).hom :=
@@ -448,9 +448,9 @@ theorem exists_semiAbelian_of_charts : ∀ {E : Type} [Field E] [NumberField E] 
       ∃ Ch : GlobalTheory.Desc.Chart j tF.G x, ∀ (G : Over S) [GrpObj G], IsSemiAbelian G → ∀ π : Ch.G.left ⟶ G.left,
         IsGrpPullback Ch.G G Ch.ξ π → (x ∈ abLocus G ↔ closedPoint (ChartRing k m e) ∈ abLocus C.t.G) := by
     intro x k _ m e C ξ hy hcl het
-    haveI : CharZero (ChartRing k m e) := charZero_of_injective_ringHom C.b.injective
-    haveI := GlobalTheory.FormalIsogeny.isRegularLocalRing_mvPowerSeries k (Fin m ⊕ Fin e)
-    haveI := hkc k
+    have : CharZero (ChartRing k m e) := charZero_of_injective_ringHom C.b.injective
+    have := GlobalTheory.FormalIsogeny.isRegularLocalRing_mvPowerSeries k (Fin m ⊕ Fin e)
+    have := hkc k
     obtain ⟨α, hα⟩ := GlobalTheory.T.genericFibre_isGrpPullback_of_universalTriple Xo c (ChartRing k m e) C.y C.t tF C.gen mF
     refine ⟨{ R := ChartRing k m e
               complete := GlobalTheory.PlaceInt.isAdicComplete_mvPowerSeries_finite (V := k) _
@@ -476,7 +476,7 @@ theorem exists_semiAbelian_of_charts : ∀ {E : Type} [Field E] [NumberField E] 
       obtain ⟨Ch, -⟩ := bdChart x k m e C ξ hy hcl het
       exact ⟨Ch⟩
   obtain ⟨G, _, e, hG, hpb, hmap⟩ := _root_.GlobalTheory.Desc.descent_semiAbelian (Xo.XF c) S hNorm j hdom tF.G hAab tF.PP.L hLB hAmp hch
-  haveI : IsCommMonObj G := hG.comm
+  have : IsCommMonObj G := hG.comm
   refine ⟨G, inferInstance, hG.comm, e, hG, hpb, ?_, ?_⟩
   · ext x
     constructor
@@ -492,7 +492,7 @@ theorem exists_semiAbelian_of_charts : ∀ {E : Type} [Field E] [NumberField E] 
       have hm : 1 ≤ C.m := by
         rcases Nat.eq_zero_or_pos C.m with h0 | h0
         · exfalso
-          haveI : IsEmpty (Fin C.m) := by rw [h0]; infer_instance
+          have : IsEmpty (Fin C.m) := by rw [h0]; infer_instance
           rw [Finset.univ_eq_empty, Finset.prod_empty] at hprod
           exact (maximalIdeal (ChartRing k m e')).ne_top_iff_one.1 (maximalIdeal.isMaximal _).ne_top hprod
         · exact h0
@@ -500,11 +500,11 @@ theorem exists_semiAbelian_of_charts : ∀ {E : Type} [Field E] [NumberField E] 
     · rintro ⟨x', rfl⟩
       rw [abLocus_pullback abLocusOne hG hpb.1 x']
       intro K _ _ t _
-      haveI := hAab.proper
+      have := hAab.proper
       infer_instance
   · intro k _ m n C hC ξ hξ tK a b
-    haveI := GlobalTheory.FormalIsogeny.isRegularLocalRing_mvPowerSeries k (Fin m ⊕ Fin n)
-    haveI := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing (ChartRing k m n)).2
+    have := GlobalTheory.FormalIsogeny.isRegularLocalRing_mvPowerSeries k (Fin m ⊕ Fin n)
+    have := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing (ChartRing k m n)).2
     exact GlobalTheory.T.exists_grpPullback_map_semiAbelian_normalDomain (ChartRing k m n) j tF.G G e hG hpb C.t.G C.t.semi ξ C.y hξ tK.G a.φ b.φ a.cart b.cart
 
 theorem exists_semiAbelian_of_charts_sepB : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Geo.Tor.Level H} (Xo : Moduli Dw l) (c : Coeff l) (φ : InvFun (𝓞 E)), 1 ≤ Dw.p + Dw.q → IsPolFan H.bar (min Dw.p Dw.q) φ → NoSelfInt H.bar (min Dw.p Dw.q) φ → ∀ {Z : Scheme.{0}} (zs : Z ⟶ Sp c.F) (i : Xo.XF c ⟶ Z) (OZ : LB Z) (N d : ℕ) (J : Z.IdealSheafData) {S : Scheme.{0}} (π : S ⟶ Z) (j : Xo.XF c ⟶ S) [IsOpenImmersion j] (BD : EffCartierData S), GlobalTheory.UPoinc.UPoinOnX Xo c φ zs i OZ N d J π j BD → SepB Xo c φ j → (∀ x : S, x ∉ Set.range j → UPre Xo c φ j BD d x) → ∀ (tF : SAB H (Xo.XF c)), SABMap tF Xo.univ.t (pullback.fst _ _) → ∃ (G : Over S) (_ : GrpObj G) (_ : IsCommMonObj G) (e : tF.G.left ⟶ G.left), IsSemiAbelian G ∧ IsGrpPullback tF.G G j e ∧ abLocus G = Set.range j ∧ ∀ {k : Type} [Field k] {m n : ℕ} (C : MonoFam Xo c φ (ChartRing k m n)), IsTaut C → ∀ ξ : Sp (ChartRing k m n) ⟶ S, C.y ≫ j = jK _ ≫ ξ → ∀ (tK : SAB H (Sp (FractionRing (ChartRing k m n)))) (a : SABMap tK C.t (jK _)) (b : SABMap tK tF C.y), ∃ πC : C.t.G.left ⟶ G.left, IsGrpPullback C.t.G G ξ πC ∧ a.φ ≫ πC = b.φ ≫ e := by
@@ -577,10 +577,10 @@ theorem act_chart_compat : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E
     (∀ u, (tK.act.act u).left ≫ ψ = ψ ≫ (act.act u).left) → a.φ ≫ πC = ψ →
     ∀ u, (tC.act.act u).left ≫ πC = πC ≫ (act.act u).left := by
   intro E _ _ _ H R _ _ tC S G _ _ ξ πC hG hP act tK a ψ hψ hφ u
-  haveI : IsSeparated G.hom := hG.separated
-  haveI : Smooth tC.G.hom := tC.semi.smooth
-  haveI : IsReduced tC.G.left := GlobalTheory.isReduced_of_smooth_of_isReduced tC.G.hom
-  haveI : IsDominant a.φ := isDominant_of_isPullback_jK tC.G.hom tK.G.hom a.φ a.cart.1
+  have : IsSeparated G.hom := hG.separated
+  have : Smooth tC.G.hom := tC.semi.smooth
+  have : IsReduced tC.G.left := GlobalTheory.isReduced_of_smooth_of_isReduced tC.G.hom
+  have : IsDominant a.φ := isDominant_of_isPullback_jK tC.G.hom tK.G.hom a.φ a.cart.1
   have hw : πC ≫ G.hom = tC.G.hom ≫ ξ := hP.1.w
   refine ext_of_isDominant_of_isSeparated G.hom ?_ a.φ ?_
   · rw [Category.assoc, Category.assoc, hw, Over.w (act.act u), hw, ← Category.assoc, Over.w (tC.act.act u)]
@@ -628,7 +628,7 @@ theorem exists_oAct_extend_toSemiAbelian_normBl : ∀ {E : Type} [Field E] [Numb
   obtain ⟨-, -, -, -, ⟨hBl, hP, -, hd, -⟩, -⟩ := hU
   have : AlgebraicGeometry.IsNoetherian S := GlobalTheory.isNoetherian_of_isProjOver hP
   have : IsDominant j := ⟨hd⟩
-  haveI : GlobalTheory.IsNormalScheme S := hBl.1
+  have : GlobalTheory.IsNormalScheme S := hBl.1
   obtain ⟨a, ha, -⟩ := GlobalTheory.Published.SemiAbelianHomExtension.existsUnique_oAct_of_isGrpPullback
     GlobalTheory.semiAbelianHomExtension_holds (GlobalTheory.IsNormalScheme.pred S) hG he tF.act
   exact ⟨a, ha⟩
@@ -790,21 +790,21 @@ theorem adj_extends : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
   obtain ⟨⟨-, -, -, -, -, -⟩, -, -, -, ⟨⟨hnorm, -⟩, hproj, -, hdense, -, -⟩, -⟩ := hU
   have := hsa.smooth
   have := hsa.geomConnected
-  haveI : LocallyOfFiniteType (π ≫ zs) := by
+  have : LocallyOfFiniteType (π ≫ zs) := by
     obtain ⟨M, i', hi', hcomp⟩ := hproj
-    haveI := hi'
-    haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
+    have := hi'
+    have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
     rw [← hcomp]
     infer_instance
-  haveI : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
-  haveI : IsDominant j := ⟨hdense⟩
+  have : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
+  have : IsDominant j := ⟨hdense⟩
   have hS : Geo.Tor.IsNormalScheme S := (GlobalTheory.isNormalScheme_iff_pred S).mp hnorm
   obtain ⟨w, hw, -, -⟩ := hpc
   have hw' := (isGen_iff w).1 hw
-  haveI := act.hom a
-  haveI := act.hom (H.bar a)
-  haveI := tF.act.hom a
-  haveI := tF.act.hom (H.bar a)
+  have := act.hom a
+  have := act.hom (H.bar a)
+  have := tF.act.hom a
+  have := tF.act.hom (H.bar a)
   let x₁ : Fin 2 → (G2 G ⟶ G) := ![fst G G ≫ act.act a, snd G G]
   let x₂ : Fin 2 → (G2 G ⟶ G) := ![fst G G, snd G G ≫ act.act (H.bar a)]
   let y₁ : Fin 2 → (G2 tF.G ⟶ tF.G) := ![fst tF.G tF.G ≫ tF.act.act a, snd tF.G tF.G]
@@ -969,7 +969,7 @@ theorem lbIso_prim_ext : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     obtain ⟨N', im, _, h⟩ := hproj
     have : LocallyOfFiniteType (π ≫ zs) := h ▸ inferInstance
     exact LocallyOfFiniteType.isLocallyNoetherian (π ≫ zs)
-  have hS' : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S := by haveI := hS; exact GlobalTheory.IsNormalScheme.pred S
+  have hS' : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S := by have := hS; exact GlobalTheory.IsNormalScheme.pred S
   have hw : LBIso tF.PP.L (PP.L.pull e) := by
     obtain ⟨w, hw, -⟩ := hlin
     exact hF ▸ ⟨w, hw⟩
@@ -988,11 +988,11 @@ theorem lbIso_prim_ext : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
       obtain ⟨z, rfl⟩ := hx'
       refine ⟨he.1.isoPullback.inv z, ?_⟩
       rw [← Scheme.Hom.comp_apply, he.1.isoPullback_inv_fst]
-  haveI := act.hom H.w0
-  haveI := hG.smooth
-  haveI : GeometricallyIntegral G.hom := @GlobalTheory.geometricallyIntegral_of_isSemiAbelian _ G _ hG
+  have := act.hom H.w0
+  have := hG.smooth
+  have : GeometricallyIntegral G.hom := @GlobalTheory.geometricallyIntegral_of_isSemiAbelian _ G _ hG
   let V : S.Opens := j.opensRange
-  haveI : IsDominant V.ι := ⟨by
+  have : IsDominant V.ι := ⟨by
     show Dense (Set.range V.ι)
     rw [Scheme.Opens.range_ι]
     simpa [V] using hdense⟩
@@ -1069,10 +1069,10 @@ theorem rigUnit_exists_ratio {X Y : Scheme.{0}} (M : LB X) (hM : M.IsLB) (f : Y 
 theorem rigUnit_exists : ∀ (R K : Type) [CommRing R] [IsDomain R] [Field K] [Algebra R K] [IsFractionRing R K] (X : Over (Sp R)) (e : Sp R ⟶ X.left), e ≫ X.hom = 𝟙 _ → ∀ (eA : Sp K ⟶ pullback X.hom (spMap (algebraMap R K))), eA ≫ pullback.fst X.hom (spMap (algebraMap R K)) = spMap (algebraMap R K) ≫ e → ∀ (M : LB X.left) (rig : LB.Gen (M.pull e)) (c : LB.Gen (M.pull (pullback.fst X.hom (spMap (algebraMap R K))))), M.IsLB → rig.IsGen → LB.Gen.Corr M _ _ _ _ (LB.pullGen M _ _ c eA) (LB.pullGen M _ _ rig (spMap (algebraMap R K))) → ∀ (a : Kˣ) (u : LB.Gen M), u.IsGen → (∀ (i : M.ι) (Z : Scheme.{0}) (r : Z ⟶ pullback X.hom (spMap (algebraMap R K))) (z : Z), pullback.fst X.hom (spMap (algebraMap R K)) (r z) ∈ M.U i → (gm (r ≫ pullback.fst X.hom (spMap (algebraMap R K))) z (M.U i) (u.s i)).val = gs (r ≫ pullback.snd X.hom (spMap (algebraMap R K))) z ⊤ ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom (a : K)) * (gm r z ((M.pull (pullback.fst X.hom (spMap (algebraMap R K)))).U fun _ => i) (c.s fun _ => i)).val) → ∃ b : Rˣ, algebraMap R K (b : R) = (a : K) := by
   intro R K _ _ _ _ _ X e he eA heA M rig c hM hrig hcorr a u hu H
   obtain ⟨w, hw⟩ := rigUnit_exists_ratio M hM e (LB.genPull M u e) rig (LB.isGen_genPull M u hu e) hrig
-  haveI : Epi (CommRingCat.ofHom (algebraMap R K)) := by
+  have : Epi (CommRingCat.ofHom (algebraMap R K)) := by
     have := IsLocalization.epi (nonZeroDivisors R) K
     exact this
-  haveI : Mono (spMap (algebraMap R K)) := by
+  have : Mono (spMap (algebraMap R K)) := by
     exact inferInstanceAs (Mono (Scheme.Spec.map (CommRingCat.ofHom (algebraMap R K)).op))
   have hsnd : eA ≫ pullback.snd X.hom (spMap (algebraMap R K)) = 𝟙 _ := by
     rw [← cancel_mono (spMap (algebraMap R K)), Category.assoc, ← pullback.condition, ← Category.assoc, heA,
@@ -1289,7 +1289,7 @@ theorem finite_coheight_one_notMem (X : Scheme.{0}) [IsIntegral X] [AlgebraicGeo
   have hzη : z < genericPoint X := lt_of_le_not_ge (genericPoint_specializes z)
     fun h => hzS ((show z ⤳ genericPoint X from h).mem_open hS hη)
   refine ⟨Z, hZ, ?_⟩
-  simp only [dif_pos (hi Z hZ)]
+  simp only [dite_eq_left (hi Z hZ)]
   by_contra hne
   have hxlt : x < z := lt_of_le_not_ge hxz fun h =>
     hne ((show x ⤳ z from h).antisymm (show z ⤳ x from hxz)).eq.symm
@@ -1357,7 +1357,7 @@ theorem exists_const_mul_unitAt_coheight_one : ∀ (R K : Type) [CommRing R] [Is
   let S : Set X := {x | ∃ i, x ∈ U i ∧ UnitAt x (t i)}
   have hS : IsOpen S := by
     change IsOpen {x | ∃ i, x ∈ U i ∧ UnitAt x (t i)}
-    rw [Set.setOf_exists]
+    rw [Set.ofPred_exists]
     exact isOpen_iUnion fun i => (U i).isOpen.inter (isOpen_unitAt _)
   have hg : genericPoint X ∈ S := by
     let p₀ : PrimeSpectrum R := ⟨⊥, Ideal.isPrime_bot⟩

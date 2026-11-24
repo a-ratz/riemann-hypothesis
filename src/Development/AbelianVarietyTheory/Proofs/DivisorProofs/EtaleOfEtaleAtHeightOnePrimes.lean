@@ -70,8 +70,8 @@ theorem trace_one_tmul (R A S : Type) [CommRing R] [CommRing A] [Algebra R A] [C
 theorem discr_baseChange (R A S : Type) [CommRing R] [CommRing A] [Algebra R A] [CommRing S]
     [Algebra R S] {ι : Type} [Fintype ι] [DecidableEq ι] (b : Module.Basis ι R A) :
     Algebra.discr S (Algebra.TensorProduct.basis S b) = algebraMap R S (Algebra.discr R b) := by
-  haveI := Module.Free.of_basis b
-  haveI := Module.Finite.of_basis b
+  have := Module.Free.of_basis b
+  have := Module.Finite.of_basis b
   rw [Algebra.discr_def, Algebra.discr_def, RingHom.map_det]
   congr 1
   ext i j
@@ -102,9 +102,9 @@ theorem discr_ne_zero_of_etale (K A : Type) [Field K] [CommRing A] [Algebra K A]
   classical
   let L := AlgebraicClosure K
   let e := Algebra.FormallyEtale.equivPiOfIsSepClosed L (L ⊗[K] A)
-  haveI : Module.Finite L (L ⊗[K] A) := Module.Finite.of_basis (Algebra.TensorProduct.basis L b)
-  haveI : IsArtinianRing (L ⊗[K] A) := isArtinian_of_tower L inferInstance
-  haveI : Fintype (PrimeSpectrum (L ⊗[K] A)) := Fintype.ofFinite _
+  have : Module.Finite L (L ⊗[K] A) := Module.Finite.of_basis (Algebra.TensorProduct.basis L b)
+  have : IsArtinianRing (L ⊗[K] A) := isArtinian_of_tower L inferInstance
+  have : Fintype (PrimeSpectrum (L ⊗[K] A)) := Fintype.ofFinite _
   let c := (Algebra.TensorProduct.basis L b).map e.toLinearEquiv
   have hc : Algebra.discr L c ≠ 0 := by
     have h := (LinearMap.BilinForm.nondegenerate_iff_det_ne_zero c).mp
@@ -141,8 +141,8 @@ theorem formallyUnramified_of_dual (R A : Type) [CommRing R] [CommRing A] [Algeb
     (hd : ∀ i j, Algebra.trace R A (b i * d j) = if i = j then 1 else 0) :
     Algebra.FormallyUnramified R A := by
   classical
-  haveI := Module.Free.of_basis b
-  haveI := Module.Finite.of_basis b
+  have := Module.Free.of_basis b
+  have := Module.Finite.of_basis b
   set T := Algebra.trace R A
 
   have hrepr : ∀ (z : A) (i : ι), b.repr z i = T (z * d i) := by
@@ -205,12 +205,12 @@ theorem formallyUnramified_of_dual (R A : Type) [CommRing R] [CommRing A] [Algeb
 theorem etale_of_isUnit_discr (R A : Type) [CommRing R] [CommRing A] [Algebra R A] {ι : Type}
     [Fintype ι] [DecidableEq ι] (b : Module.Basis ι R A) (h : IsUnit (Algebra.discr R b)) :
     Algebra.Etale R A := by
-  haveI := Module.Free.of_basis b
-  haveI := Module.Finite.of_basis b
+  have := Module.Free.of_basis b
+  have := Module.Finite.of_basis b
   obtain ⟨d, hd⟩ := exists_dual R A b h
-  haveI := formallyUnramified_of_dual R A b d hd
-  haveI : Module.FinitePresentation R A := Module.finitePresentation_of_projective R A
-  haveI : Algebra.FinitePresentation R A := inferInstance
+  have := formallyUnramified_of_dual R A b d hd
+  have : Module.FinitePresentation R A := Module.finitePresentation_of_projective R A
+  have : Algebra.FinitePresentation R A := inferInstance
   exact Algebra.Etale.of_formallyUnramified_of_flat
 
 theorem exists_height_one_mem (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] {x : R}
@@ -237,8 +237,8 @@ theorem etale_of_etale_height_one : ∀ (R A : Type) [CommRing R] [IsDomain R] [
   let b := Module.Free.chooseBasis R A
   have key : ∀ p : Ideal R, p.IsPrime → p.height = 1 → Algebra.discr R b ∉ p := by
     intro p hp' h1
-    haveI := hp'
-    haveI := hp p h1
+    have := hp'
+    have := hp p h1
     let Rp := Localization.AtPrime p
     let κ := ResidueField Rp
     have h := discr_ne_zero_of_etale κ (κ ⊗[Rp] (Rp ⊗[R] A))

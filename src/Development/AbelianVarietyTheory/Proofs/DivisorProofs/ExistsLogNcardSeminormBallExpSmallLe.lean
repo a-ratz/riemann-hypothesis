@@ -86,7 +86,7 @@ private lemma encard_mul_encard_le_isBallFam {G : Type} [AddCommGroup G] {Λ : A
     obtain ⟨p₀, hp₀, rfl⟩ := Finset.mem_image.1 hw
     refine Finset.card_le_card_of_injOn (fun p ↦ p₀.1 - p.1) ?_ ?_
     · intro p hp
-      simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_filter] at hp
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_filter] at hp
       obtain ⟨hpS, hfp⟩ := hp
       have hp₀' := hp₀
       rw [hS, Finset.mem_product, Set.Finite.mem_toFinset, Set.Finite.mem_toFinset] at hpS hp₀'
@@ -100,7 +100,7 @@ private lemma encard_mul_encard_le_isBallFam {G : Type} [AddCommGroup G] {Λ : A
         isBallFam_mono hB (by simpa using hbm) (hB.sub_mem _ _ _ _ hpS.2 hp₀'.2)
       exact (hB.nsmul_iff m 1 _ hm hΛ).1 (hd ▸ h2)
     · intro p hp q hq hpq
-      simp only [Finset.coe_filter, Set.mem_setOf_eq] at hp hq
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hp hq
       have h1 : p.1 = q.1 := by simpa using hpq
       have h2 : p.2 = q.2 := by
         have := hp.2.trans hq.2.symm
@@ -228,7 +228,7 @@ theorem log_ncard_ball_exp_le : ∀ (G : Type) [AddCommGroup G] (Λ : ℕ → Ad
     have := (hB m).sub_mem r (s - r) x 0 hx ((hB m).zero_mem _ (by linarith))
     simpa using this
   have hRe : R ^ (e + 1) ≤ Real.exp (2 * m) := by
-    rw [hR, ← Real.exp_nat_mul]
+    rw [hR, ← Real.exp_natCast_mul]
     apply Real.exp_le_exp.mpr
     have : (m : ℝ) / e ≤ m := div_le_self hm0 he1R
     have h3 : ((e + 1 : ℕ) : ℝ) * (1 / e * m) = m + m / e := by
@@ -241,7 +241,7 @@ theorem log_ncard_ball_exp_le : ∀ (G : Type) [AddCommGroup G] (Λ : ℕ → Ad
     calc R * (Q : ℝ) ^ e ≤ R * (4 * R) ^ e := by gcongr
       _ = 4 ^ e * R ^ (e + 1) := by ring
       _ ≤ Real.exp 3 ^ e * Real.exp (2 * m) := by gcongr
-      _ = Real.exp (3 * e + 2 * m) := by rw [← Real.exp_nat_mul, ← Real.exp_add]; ring_nf
+      _ = Real.exp (3 * e + 2 * m) := by rw [← Real.exp_natCast_mul, ← Real.exp_add]; ring_nf
       _ ≤ Real.exp (3 * m) := by
         apply Real.exp_le_exp.mpr
         have : (3 * e : ℝ) ≤ m := by exact_mod_cast hm3

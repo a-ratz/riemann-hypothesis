@@ -49,7 +49,7 @@ theorem UpperTheory.V.Ws.P1.condC :
           (∀ i, ∃ j, η * K.r.chib i = K.r.chib j) → η = 1 := by
   intro Ω _ _ _ l _ c D T hfit _ c' h K η hη2 hker hperm
   obtain ⟨hrange, hinj, -, -, hres, -⟩ := P1.towerGal D T
-  haveI : IsLocalHom (inc h) := (P1.coefRes c).2.2.1 c' h
+  have : IsLocalHom (inc h) := (P1.coefRes c).2.2.1 c' h
   have hgood : D.Good := by
     rcases hfit.2 with ⟨h2, -⟩ | ⟨h3, -⟩
     exacts [h2.1, h3.1]

@@ -250,7 +250,7 @@ theorem rhoPart_splits_by_idempotents : ∀ (W L : Type) [CommRing W] [IsDomain 
         simp [Finsupp.sum, map_sum, map_mul]
     rw [act_list β v _ _ hZ]
     by_cases hki : k = i
-    · rw [if_pos hki]
+    · rw [ite_eq_left hki]
       subst hki
       refine congrArg (· • v) ?_
       apply List.prod_eq_one
@@ -259,11 +259,11 @@ theorem rhoPart_splits_by_idempotents : ∀ (W L : Type) [CommRing W] [IsDomain 
       split_ifs with hj
       · rfl
       · rw [← map_sub, hf k j (Ne.symm hj), map_one]
-    · rw [if_neg hki]
+    · rw [ite_eq_right hki]
       refine congrArg (· • v) ?_
       apply List.prod_eq_zero
       refine List.mem_map.2 ⟨k, List.mem_finRange k, ?_⟩
-      rw [if_neg hki, sub_self]
+      rw [ite_eq_right hki, sub_self]
   have hQ : ∀ (R' : Type) [CommRing R'] (β : W →+* R') (k i : Fin a) (v : Fin n → R'),
       (∀ c, ((A c).map β) *ᵥ v = β (t k c) • v) → ((Q i).map β) *ᵥ v = (if k = i then (1 : R') else 0) • v := by
     intro R' _ β k i v hv
@@ -299,8 +299,8 @@ theorem rhoPart_splits_by_idempotents : ∀ (W L : Type) [CommRing W] [IsDomain 
     show ((E i * P).map βL) *ᵥ x = w i
     rw [Matrix.map_mul, ← mulVec_mulVec, hsum, mulVec_sum]
     rw [Finset.sum_eq_single i]
-    · rw [hE L βL i i (w i) (hw i), if_pos rfl, one_smul]
-    · intro k _ hk; rw [hE L βL k i (w k) (hw k), if_neg hk, zero_smul]
+    · rw [hE L βL i i (w i) (hw i), ite_eq_left rfl, one_smul]
+    · intro k _ hk; rw [hE L βL k i (w k) (hw k), ite_eq_right hk, zero_smul]
     · intro h; exact absurd (Finset.mem_univ i) h
   choose w hwQ hwA hwP using hdec
   have hsumQ : ∑ i, Q i = P := by
@@ -317,7 +317,7 @@ theorem rhoPart_splits_by_idempotents : ∀ (W L : Type) [CommRing W] [IsDomain 
     apply ext_mulVec
     intro x
     simp only
-    rw [Matrix.map_mul, ← mulVec_mulVec, hwQ x i, hQ L βL i i _ (hwA x i), if_pos rfl, one_smul]
+    rw [Matrix.map_mul, ← mulVec_mulVec, hwQ x i, hQ L βL i i _ (hwA x i), ite_eq_left rfl, one_smul]
   · apply hinj
     apply ext_mulVec
     intro x
@@ -328,7 +328,7 @@ theorem rhoPart_splits_by_idempotents : ∀ (W L : Type) [CommRing W] [IsDomain 
     have : (∑ i, Q i).map β = ∑ i, (Q i).map β := by ext; simp [Matrix.sum_apply]
     rw [← Matrix.sum_mulVec, ← this, hsumQ, hP R' β v hv]
   · intro R' _ β i v hv
-    rw [hQ R' β i i v hv, if_pos rfl, one_smul]
+    rw [hQ R' β i i v hv, ite_eq_left rfl, one_smul]
 
 end GlobalTheory.LieExtProj
 end -- clump:auto
@@ -371,22 +371,22 @@ theorem exists_conj_diag (W : Type) [CommRing W] [IsLocalRing W] (n : ℕ)
     show f * f = f
     rw [Module.End.mul_eq_comp, hfdef, ← Matrix.toLin'_mul, hp]
   have hc := LinearMap.IsIdempotentElem.isCompl hf
-  haveI : Module.Projective W (LinearMap.range f) :=
+  have : Module.Projective W (LinearMap.range f) :=
     Module.Projective.of_split (LinearMap.range f).subtype
       (Submodule.linearProjOfIsCompl _ _ hc)
-      (LinearMap.ext fun x => Submodule.linearProjOfIsCompl_apply_left hc x)
-  haveI : Module.Projective W (LinearMap.ker f) :=
+      (LinearMap.ext fun x => Submodule.projectionOnto_apply_left hc x)
+  have : Module.Projective W (LinearMap.ker f) :=
     Module.Projective.of_split (LinearMap.ker f).subtype
       (Submodule.linearProjOfIsCompl _ _ hc.symm)
-      (LinearMap.ext fun x => Submodule.linearProjOfIsCompl_apply_left hc.symm x)
-  haveI : Module.Finite W (LinearMap.range f) :=
+      (LinearMap.ext fun x => Submodule.projectionOnto_apply_left hc.symm x)
+  have : Module.Finite W (LinearMap.range f) :=
     Module.Finite.of_surjective (Submodule.linearProjOfIsCompl _ _ hc)
-      (Submodule.linearProjOfIsCompl_surjective hc)
-  haveI : Module.Finite W (LinearMap.ker f) :=
+      (Submodule.projectionOnto_surjective hc)
+  have : Module.Finite W (LinearMap.ker f) :=
     Module.Finite.of_surjective (Submodule.linearProjOfIsCompl _ _ hc.symm)
-      (Submodule.linearProjOfIsCompl_surjective hc.symm)
-  haveI : Module.Free W (LinearMap.range f) := Module.free_of_flat_of_isLocalRing
-  haveI : Module.Free W (LinearMap.ker f) := Module.free_of_flat_of_isLocalRing
+      (Submodule.projectionOnto_surjective hc.symm)
+  have : Module.Free W (LinearMap.range f) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free W (LinearMap.ker f) := Module.free_of_flat_of_isLocalRing
   set r := Module.finrank W (LinearMap.range f)
   set s := Module.finrank W (LinearMap.ker f)
   let b1 := Module.finBasis W (LinearMap.range f)
@@ -416,11 +416,11 @@ theorem exists_conj_diag (W : Type) [CommRing W] [IsLocalRing W] (n : ℕ)
     · have : (finSumFinEquiv.trans (finCongr hrs)).symm j = Sum.inl ⟨j, h⟩ := by
         apply (finSumFinEquiv.trans (finCongr hrs)).injective
         ext; simp
-      rw [this, if_pos h, one_smul, hbs1]
+      rw [this, ite_eq_left h, one_smul, hbs1]
     · have : (finSumFinEquiv.trans (finCongr hrs)).symm j = Sum.inr ⟨j.val - r, by omega⟩ := by
         apply (finSumFinEquiv.trans (finCongr hrs)).injective
         ext; simp; omega
-      rw [this, if_neg h, zero_smul, hbs2]
+      rw [this, ite_eq_right h, zero_smul, hbs2]
   have hdiag : LinearMap.toMatrix b b f = Matrix.diagonal (fun i : Fin n => if i.val < r then (1 : W) else 0) := by
     ext i j
     rw [LinearMap.toMatrix_apply, hb j, map_smul, b.repr_self]
@@ -690,14 +690,14 @@ namespace GlobalTheory
 theorem retract_flat_of_finite (R : Type) [CommRing R] (H K : Over (Sp R)) (s : H ⟶ K) (r : K ⟶ H)
     (hsr : s ≫ r = 𝟙 H) (hH : IsFinite H.hom) (hK : IsFinite K.hom) (hKf : Flat K.hom) :
     Flat H.hom := by
-  haveI : IsAffine H.left := isAffine_of_isAffineHom H.hom
-  haveI : IsAffine K.left := isAffine_of_isAffineHom K.hom
+  have : IsAffine H.left := isAffine_of_isAffineHom H.hom
+  have : IsAffine K.left := isAffine_of_isAffineHom K.hom
   rw [HasRingHomProperty.iff_of_isAffine (P := @Flat)] at hKf ⊢
   have wr : r.left ≫ H.hom = K.hom := Over.w r
   have ws : s.left ≫ K.hom = H.hom := Over.w s
   have hid : s.left ≫ r.left = 𝟙 H.left := by rw [← Over.comp_left, hsr, Over.id_left]
-  letI := H.hom.appTop.hom.toAlgebra
-  letI := K.hom.appTop.hom.toAlgebra
+  let := H.hom.appTop.hom.toAlgebra
+  let := K.hom.appTop.hom.toAlgebra
   have hKf' : Module.Flat Γ(Sp R, ⊤) Γ(K.left, ⊤) := hKf
   show Module.Flat Γ(Sp R, ⊤) Γ(H.left, ⊤)
   let rs : Γ(H.left, ⊤) →ₗ[Γ(Sp R, ⊤)] Γ(K.left, ⊤) :=
@@ -967,7 +967,7 @@ theorem flat_of_finite_rep : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (B
   refine GlobalTheory.T.flat_of_isFinite_of_flat_at_maximal R H hfin (fun m _ => ?_)
   set f := spMap (algebraMap R (Localization.AtPrime m)) with hf
   have hB' : IsAbelianScheme ((Over.pullback f).obj B) := GlobalTheory.isAbelianScheme_pullback_obj f B hB
-  haveI := hB'.comm
+  have := hB'.comm
   have hpb := IsPullback.of_hasPullback B.hom f
   obtain ⟨hP, -, -, -⟩ := GlobalTheory.AmpleBaseChange.isProjBy_smooth_isProper_geometricallyIntegral _ B N hB hN hamp
     (Localization.AtPrime m) f _ _ _ hpb
@@ -979,7 +979,7 @@ theorem flat_of_finite_rep : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (B
   have hfin' : IsFinite ((Over.pullback f).obj H).hom := by
     first
     | exact MorphismProperty.pullback_snd (P := @IsFinite) _ _ hfin
-    | (haveI := hfin; exact (inferInstance : IsFinite (pullback.snd H.hom f)))
+    | (have := hfin; exact (inferInstance : IsFinite (pullback.snd H.hom f)))
   exact GlobalTheory.T.lineBundleKernel_flat_of_finite_noetherian_local hG (Localization.AtPrime m) ((Over.pullback f).obj B) hB' hP _ hML hth _ _ hcl hrep' hfin'
 
 theorem exists_closed_rep : ∀ (R : Type) [CommRing R] (B : Over (Sp R)) [GrpObj B], IsAbelianScheme B →
@@ -997,10 +997,10 @@ theorem exists_closed_rep : ∀ (R : Type) [CommRing R] (B : Over (Sp R)) [GrpOb
 
 private theorem isFinite_of_closedImmersion_factor_through_finite {S : Scheme.{0}} {H F G : Over S} (j : H ⟶ G) (i : F ⟶ G)
     (m : H ⟶ F) (hm : m ≫ i = j) (hj : IsClosedImmersion j.left) (hF : IsFinite F.hom) : IsFinite H.hom := by
-  haveI : IsSeparated (i.left ≫ G.hom) := by rw [Over.w i]; infer_instance
-  haveI : IsSeparated i.left := IsSeparated.of_comp i.left G.hom
-  haveI : IsClosedImmersion (m.left ≫ i.left) := by rw [← Over.comp_left, hm]; exact hj
-  haveI : IsClosedImmersion m.left := IsClosedImmersion.of_comp m.left i.left
+  have : IsSeparated (i.left ≫ G.hom) := by rw [Over.w i]; infer_instance
+  have : IsSeparated i.left := IsSeparated.of_comp i.left G.hom
+  have : IsClosedImmersion (m.left ≫ i.left) := by rw [← Over.comp_left, hm]; exact hj
+  have : IsClosedImmersion m.left := IsClosedImmersion.of_comp m.left i.left
   rw [← Over.w m]; infer_instance
 
 end GlobalTheory.KerFlatP
@@ -1014,8 +1014,8 @@ theorem kernel_finiteFlat : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (G 
   have hL : (P.pull (lift (𝟙 G) (𝟙 G)).left).IsLB := pull_isLB hP _
   obtain ⟨HL, _, iL, -, -, hfinL, -, hrepL⟩ := GlobalTheory.kernel_finiteFlat_subgroup R G hG _ hL hamp
   have hGG : IsAbelianScheme (G ⊗ G) := ReciprocityTheory.ChartRestriction.G.Geo.Tor.AbelianSchemeGerms.isAbelianScheme_tensor G G hG hG
-  haveI : IsProper G.hom := hG.proper
-  haveI : IsProper (G ⊗ G).hom := by
+  have : IsProper G.hom := hG.proper
+  have : IsProper (G ⊗ G).hom := by
     show IsProper (pullback.fst G.hom G.hom ≫ G.hom)
     infer_instance
   have hL1 := pull_isLB hL (fst G G).left
@@ -1034,7 +1034,7 @@ theorem kernel_finiteFlat : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (G 
   obtain ⟨za, hza⟩ := (hrepL K _).1 (GlobalTheory.T.mem_kernel_diagonal_restriction_of_symmetric_trivial R G hG P hP h1 h2 hsym K _ ha)
   obtain ⟨zb, hzb⟩ := (hrepL K _).1 (GlobalTheory.T.mem_kernel_diagonal_restriction_of_symmetric_trivial R G hG P hP h1 h2 hsym K _ hb)
   have hfinHL2 : IsFinite (HL ⊗ HL).hom := by
-    haveI := hfinL
+    have := hfinL
     show IsFinite (pullback.fst HL.hom HL.hom ≫ HL.hom)
     infer_instance
   have hfinK : IsFinite K.hom := by
@@ -1048,7 +1048,7 @@ theorem kernel_finiteFlat : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (G 
     apply CartesianMonoidalCategory.hom_ext <;> simp [e]
   let H : Over (Sp R) := Over.mk (pullback.snd k.left e.left ≫ G.hom)
   let i : H ⟶ G := Over.homMk (pullback.snd k.left e.left) rfl
-  haveI := hk
+  have := hk
   have hi : IsClosedImmersion i.left := by
     show IsClosedImmersion (pullback.snd k.left e.left)
     infer_instance
@@ -1083,7 +1083,7 @@ theorem kernel_finiteFlat : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (G 
 
   obtain ⟨r, hr⟩ := (hmemH K (k ≫ fst G G)).1 ha
   have hsr : s ≫ r = 𝟙 H := by
-    haveI : Mono i.left := by
+    have : Mono i.left := by
       show Mono (pullback.snd k.left e.left)
       infer_instance
     have h3 : s ≫ r ≫ i = 𝟙 H ≫ i := by
@@ -1114,9 +1114,9 @@ theorem kernel_killed : ∀ (W L : Type) [CommRing W] [IsDomain W] [IsDiscreteVa
   obtain ⟨H, i, -, -, hflat, hker⟩ := _root_.GlobalTheory.kernel_finiteFlat W G hab P' hP' h1 h2 hsym hamp
   obtain ⟨y, rfl⟩ := (hker T x).1 hx
   have key : i ^ m = 1 := by
-    haveI := hab.proper
-    haveI : IsOpenImmersion (spMap (algebraMap W L)) := isOpenImmersion_spMap_of_isDiscreteValuationRing W L
-    haveI : Nonempty (Sp L) := inferInstanceAs (Nonempty (PrimeSpectrum L))
+    have := hab.proper
+    have : IsOpenImmersion (spMap (algebraMap W L)) := isOpenImmersion_spMap_of_isDiscreteValuationRing W L
+    have : Nonempty (Sp L) := inferInstanceAs (Nonempty (PrimeSpectrum L))
     refine GrpDense.hom_ext_of_points (spMap (algebraMap W L)) (fun T' t => ?_)
     obtain ⟨z, hz⟩ := GrpDense.pushPt_surjective hpb.1 T' (t ≫ i)
     have hzl : z.left ≫ φ = t.left ≫ i.left := congrArg (fun q => q.left) hz
@@ -1382,7 +1382,7 @@ theorem tate_push {D : Datum p} {S S' : Scheme.{0}} {G : Over S} {A : Over S'} [
 
 theorem extends_obj : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (N : ℕ) (W L : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [Field L] [Algebra W L] [IsFractionRing W L] (gm : R →+* W) (o : Obj b N (spMap ((algebraMap W L).comp gm))) (G : Over (Sp W)) [GrpObj G] (φ : o.A.left ⟶ G.left), IsAbelianScheme G → IsGrpPullback o.A G (spMap (algebraMap W L)) φ → ∃ o' : Obj b N (spMap gm), Nonempty (ObjMap o o' (spMap (algebraMap W L))) := by
   intro p _ D R _ b N W L _ _ _ _ _ _ gm o G _ φ hG hA
-  haveI : IsCommMonObj G := hG.comm
+  have : IsCommMonObj G := hG.comm
   have pG : IsPullback (fst G G).left (snd G G).left G.hom G.hom := IsPullback.of_hasPullback _ _
   let φ₂ : (G2 o.A).left ⟶ (G2 G).left := pG.lift ((fst o.A o.A).left ≫ φ) ((snd o.A o.A).left ≫ φ) (by
     rw [Category.assoc, Category.assoc, hA.1.w, ← Category.assoc, ← Category.assoc, Over.w (fst o.A o.A),

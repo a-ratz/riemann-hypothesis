@@ -341,7 +341,7 @@ private theorem integrable_ker {n : ℕ} [MeasurableSpace (G n)] [BorelSpace (G 
     exact mul_ne_zero hx (val_mem_GLs' y)
   refine hcont.integrable_of_hasCompactSupport (HasCompactSupport.intro (UpperTheory.RealTr.lgCpt n R) ?_)
   intro y hy
-  simp only [Set.mem_setOf_eq, not_le] at hy
+  simp only [Set.mem_ofPred_eq, not_le] at hy
   simp [hR _ (val_mem_GLs' y) hy]
 
 theorem UpperTheory.RealTr.actEig :
@@ -371,7 +371,7 @@ theorem UpperTheory.RealTr.actEig :
     exact (UpperTheory.RealTr.zEig n E.V χ f hf1 he _).2 (w i) x hx
   have hk' : ∀ y : G n, k y.val = ∑ i, c i • ks i y.val := fun y => hk _ (val_mem_GLs' y)
   have hsum : act μ E k f x = ∑ i, c i • act μ E (ks i) f x := by
-    simp only [act, hk', ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply]
+    simp only [act, hk', sum_apply, smul_apply]
     rw [integral_finsetSum]
     · simp only [integral_smul]
     · intro i _
@@ -418,7 +418,7 @@ theorem UpperTheory.RealTr.kerReg :
     refine HasCompactSupport.intro (K := {y : G n | lg (y : Mat n) ≤ ∑ i, |R i|})
       (UpperTheory.RealTr.lgCpt n _) ?_
     intro y hy
-    simp only [Set.mem_setOf_eq, not_le] at hy
+    simp only [Set.mem_ofPred_eq, not_le] at hy
     rw [hsum _ (hG y)]
     refine Finset.sum_eq_zero fun i _ => ?_
     have hle : R i ≤ ∑ j, |R j| :=
@@ -476,7 +476,7 @@ variable [MeasurableSpace (Un n)] [BorelSpace (Un n)] (ν : Measure (Un n)) [ν.
   {ι : Type} [Fintype ι] {c : ι → Un n → ℂ} {F : ι → Mat n → ℂ} {F0 : Mat n → ℂ}
 
 private theorem integrable_c (hc : ∀ j, Continuous (c j)) (j : ι) : Integrable (fun κ => c j κ • M.ρ κ) ν := by
-  haveI : CompactSpace (Un n) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
+  have : CompactSpace (Un n) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
   exact ((hc j).smul M.cont).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
 private theorem sec_eq (hc : ∀ j, Continuous (c j))
@@ -493,7 +493,7 @@ private theorem sec_eq (hc : ∀ j, Continuous (c j))
 private theorem sec_equiv (hc : ∀ j, Continuous (c j))
     (hF : ∀ y ∈ GLs n, ∀ κ : Un n, F0 (y * κ.1) = ∑ j, c j κ * F j y) {y : Mat n} (hy : y ∈ GLs n) (a : Un n) :
     ∑ j, F j (y * a.1) • ∫ κ, c j κ • M.ρ κ ∂ν = M.ρ a⁻¹ * ∑ j, F j y • ∫ κ, c j κ • M.ρ κ ∂ν := by
-  haveI := FiniteDimensional.complete ℂ M.V
+  have := FiniteDimensional.completeSpace ℂ M.V
   have ha : a.1 ∈ GLs n := val_mem (Unitary.toUnits a)
   rw [sec_eq ν M hc hF (mul_mem hy ha), sec_eq ν M hc hF hy]
   have hint : Integrable (fun κ : Un n => F0 (y * κ.1) • M.ρ κ) ν := by
@@ -523,8 +523,8 @@ private theorem ker_avg (hν : ν Set.univ = 1) (hk : IsMult μ M k val T') (hc 
     (hs : ∀ j, ContinuousOn (F j) (GLs n))
     (hF : ∀ y ∈ GLs n, ∀ κ : Un n, F0 (y * κ.1) = ∑ j, c j κ * F j y) :
     ∫ y : G n, F0 y.val • k y.val ∂μ = ∑ j, (∫ y : G n, F j y.val • k y.val ∂μ) * ∫ κ, c j κ • M.ρ κ ∂ν := by
-  haveI := FiniteDimensional.complete ℂ M.V
-  haveI := GlobalTheory.CompanionTheory.QuotVan.isMulRightInvariant_GL n μ
+  have := FiniteDimensional.completeSpace ℂ M.V
+  have := GlobalTheory.CompanionTheory.QuotVan.isMulRightInvariant_GL n μ
   have he := (UpperTheory.RealTr.kerReg n μ M k val T' hk).2.2
   have h1 : ∀ κ : Un n, ∫ y : G n, F0 y.val • k y.val ∂μ =
       ∑ j, (∫ y : G n, F j y.val • k y.val ∂μ) * (c j κ • M.ρ κ) := by
@@ -558,7 +558,7 @@ private theorem ker_val (hk : IsMult μ M k val T') (hc : ∀ j, Continuous (c j
     (hF : ∀ y ∈ GLs n, ∀ κ : Un n, F0 (y * κ.1) = ∑ j, c j κ * F j y) :
     ∑ j, (∫ y : G n, F j y.val • k y.val ∂μ) * ∫ κ, c j κ • M.ρ κ ∂ν =
       val χ • ∑ j, F j 1 • ∫ κ, c j κ • M.ρ κ ∂ν := by
-  haveI := FiniteDimensional.complete ℂ M.V
+  have := FiniteDimensional.completeSpace ℂ M.V
   ext e
   set B : ι → (M.V →L[ℂ] M.V) := fun j => ∫ κ, c j κ • M.ρ κ ∂ν with hB
   have hCE : (fun x => ∑ j, F j x • B j e) ∈ CE M := by
@@ -584,7 +584,7 @@ private theorem abs_act (hν : ν Set.univ = 1) (hk : IsMult μ M k val T') (T :
     (hF : ∀ y ∈ GLs n, ∀ κ : Un n, F0 (y * κ.1) = ∑ j, c j κ * F j y) :
     ∫ y : G n, phiOf M T k y * F0 y.val ∂μ = val χ * ∑ j,
       (∫ κ, LinearMap.trace ℂ M.V ((M.ρ κ * T : M.V →L[ℂ] M.V) : M.V →ₗ[ℂ] M.V) * c j κ ∂ν) * F j 1 := by
-  haveI := FiniteDimensional.complete ℂ M.V
+  have := FiniteDimensional.completeSpace ℂ M.V
   have h1 := (trR M T).integral_comp_comm (integrable_k M μ hk h0)
   rw [ker_avg ν M μ hν hk hc (fun j => (hs j).continuousOn) hF, ker_val ν M μ hk hc χ hs he hF] at h1
   have h2 : ∀ y : G n, phiOf M T k y * F0 y.val = trR M T (F0 y.val • k y.val) := by

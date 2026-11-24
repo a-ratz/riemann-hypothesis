@@ -233,7 +233,7 @@ theorem enorm_integral_mul_le {W : Set (V n)} (hW : IsOpen W) {ρ : V n → ℝ}
     simp only
     rw [ENNReal.ofReal_rpow_of_nonneg (by positivity) (by norm_num), Real.rpow_two, div_pow,
       Real.sq_sqrt (hpos v hv).le]
-  calc ‖∫ v in W, d v * h v‖ₑ ≤ ∫⁻ v in W, ‖d v * h v‖ₑ := enorm_integral_le_lintegral_enorm _
+  calc ‖∫ v in W, d v * h v‖ₑ ≤ ∫⁻ v in W, ‖d v * h v‖ₑ := eNorm_integral_le_lintegral_eNorm _
     _ = ∫⁻ v in W, ((fun v => ENNReal.ofReal (‖d v‖ * Real.sqrt (ρ v))) *
           fun v => ENNReal.ofReal (‖h v‖ / Real.sqrt (ρ v))) v :=
         setLIntegral_congr_fun hW.measurableSet hab
@@ -299,7 +299,7 @@ theorem integral_mul_eq_zero {W : Set (V n)} (hW : IsOpen W) {ρ : V n → ℝ}
       (Or.inr (ENNReal.rpow_ne_top_of_nonneg (by norm_num) hH.ne))
     simpa using this
   have hle := ge_of_tendsto' hT key
-  exact enorm_eq_zero.mp (le_antisymm hle bot_le)
+  exact eNorm_eq_zero.mp (le_antisymm hle bot_le)
 
 theorem tsupport_dbarDir_subset (g : V n → ℂ) (w : V n) :
     tsupport (fun z => C.dbarDir g z w) ⊆ tsupport g := by
@@ -396,7 +396,7 @@ theorem exists_null (A : WeightedAtlas n Y ι La) (i : ι) (c : V n) (r : ℝ) (
     show (A.chart i).source.piecewise (A.chart i) (fun _ => (0 : V n)) y ∈ T
     rw [Set.piecewise_eq_of_mem _ _ _ hy]
     apply hET
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     intro heq
     apply hne
     simpa [Function.comp, (A.chart i).left_inv hy] using heq hb
@@ -616,7 +616,7 @@ noncomputable def limSec (F : ℕ → ι → Y → ℂ) : ι → Y → ℂ := fu
 
 theorem limSec_eq (F : ℕ → ι → Y → ℂ) (i : ι) (y : Y) {c : ℂ}
     (h : Tendsto (fun m => F m i y) atTop (𝓝 c)) : limSec F i y = c := by
-  unfold limSec; rw [if_pos ⟨c, h⟩]; exact h.limUnder_eq
+  unfold limSec; rw [ite_eq_left ⟨c, h⟩]; exact h.limUnder_eq
 
 theorem limSec_trans (A : WeightedAtlas n Y ι La) (la : La) (F : ℕ → ι → Y → ℂ)
     (hF : ∀ m, A.IsSSec la (F m)) (i j : ι) (y : Y) (hi : y ∈ (A.chart i).source)
@@ -636,7 +636,7 @@ theorem limSec_trans (A : WeightedAtlas n Y ι La) (la : La) (F : ℕ → ι →
       have := h2.const_mul (A.g la i j y)⁻¹
       simpa [← mul_assoc, inv_mul_cancel₀ hg] using this
     unfold limSec
-    rw [if_neg hc, if_neg hc', mul_zero]
+    rw [ite_eq_right hc, ite_eq_right hc', mul_zero]
 
 theorem limSec_aemeas (A : WeightedAtlas n Y ι La) (la : La) (F : ℕ → ι → Y → ℂ)
     (hF : ∀ m, A.IsSSec la (F m)) (i : ι) :
@@ -657,7 +657,7 @@ theorem limSec_aemeas (A : WeightedAtlas n Y ι La) (la : La) (F : ℕ → ι �
   refine (ae_restrict_iff' hT).mpr (Eventually.of_forall fun v hv => ?_)
   have hGv : (fun m => G m v) = fun m => F m i ((A.chart i).symm v) :=
     funext fun m => by simp only [G, Set.piecewise_eq_of_mem _ _ _ hv, Function.comp_apply]
-  simp only [Set.piecewise, Set.mem_setOf_eq, hGv, Function.comp_apply, limSec]
+  simp only [Set.piecewise, Set.mem_ofPred_eq, hGv, Function.comp_apply, limSec]
 
 theorem measurable_step (A : WeightedAtlas n Y ι La) (la : La) (F : ℕ → ι → Y → ℂ)
     (hF : ∀ m, A.IsSSec la (F m)) (j : ℕ) :

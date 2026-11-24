@@ -140,7 +140,7 @@ theorem UpperTheory.V.Af.Smo.archKir :
     · have hs : IsUnit (rowM m' ((1 : GL (Fin n) (Rinf E)).val m')) := by
         rw [Units.val_one, rowM_one]; exact isUnit_one
       have e : hs.unit = 1 := Units.ext (by rw [hs.unit_spec, Units.val_one, rowM_one])
-      simp only [dif_pos hs, e]
+      simp only [dite_eq_left hs, e]
       simp [h1, c1, H1]
     · obtain ⟨β₀, hβ₀⟩ := hH α
       obtain ⟨β, hβ⟩ := hh β₀
@@ -155,7 +155,7 @@ theorem UpperTheory.V.Af.Smo.archKir :
       by_cases h0 : h (p.val m') = 0
       · simp [h0]
       have hs := hu _ h0
-      simp only [dif_pos hs]
+      simp only [dite_eq_left hs]
       have hy := hR (Rinf E) n m' p hs.unit hp hs.unit_spec
       have e1 := hβ₀ w wm ⟨C, hCb⟩ hw _ hy
       have e2 := hc hs.unit (fun y => w (lmul (toL (p * hs.unit⁻¹).val) y) * β₀ y)
@@ -199,10 +199,10 @@ private theorem exists_bil {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     { toFun := fun u => lmul (toL (L u))
       map_add' := fun u v => by
         ext1 x
-        rw [ContinuousLinearMap.add_apply, of_lmul, of_lmul, of_lmul, map_add (f := _), add_mul]; rfl
+        rw [add_apply, of_lmul, of_lmul, of_lmul, map_add (f := _), add_mul]; rfl
       map_smul' := fun c u => by
         ext1 x
-        rw [ContinuousLinearMap.smul_apply, of_lmul, of_lmul, map_smul, smul_mul_assoc]; rfl }
+        rw [smul_apply, of_lmul, of_lmul, map_smul, smul_mul_assoc]; rfl }
   exact ⟨LinearMap.toContinuousLinearMap B0, fun _ _ => rfl⟩
 
 private theorem isUnit_of_inj (a : Matrix (Fin n) (Fin n) (Rinf E)) (h : ∀ y : Lie E n, lmul (toL a) y = 0 → y = 0) :
@@ -243,11 +243,11 @@ private theorem colL_sq (m : Fin n) (u : EuclideanSpace ℝ (Fin n × InfinitePl
   refine Finset.sum_eq_zero fun k _ => ?_
   simp only [colL, LinearMap.coe_mk, AddHom.coe_mk, Matrix.of_apply]
   by_cases h : k ≤ m
-  · rw [if_neg, zero_mul]
+  · rw [ite_eq_right, zero_mul]
     rintro ⟨-, h'⟩
     rw [Fin.le_def] at h
     omega
-  · rw [if_neg (fun h' : k ≤ m ∧ _ => h h'.1), mul_zero]
+  · rw [ite_eq_right (fun h' : k ≤ m ∧ _ => h h'.1), mul_zero]
 
 private theorem rowM_eq (m : Fin n) (ξ : Fin n → Rinf E) :
     rowM m ξ = 1 + rowL m (eta m ξ - eta m ((1 : Matrix (Fin n) (Fin n) (Rinf E)) m)) := by
@@ -285,9 +285,9 @@ theorem UpperTheory.V.Af.Smo.archStep :
   obtain ⟨K, hK⟩ := h2 _ _ G
   obtain ⟨K', β, hK', hβ⟩ := h3 _ _ B hBB K
   refine ⟨β, fun w ξ hw hb hw' => ?_⟩
-  haveI : (volume : Measure (Rinf E)).IsAddHaarMeasure := isAddHaarMeasure_volume_pi _
-  haveI : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Rinf E)).IsAddHaarMeasure := isAddHaarMeasure_volume_pi _
+  have : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have := h4 _ _ (volume : Measure (Lie E n)) B hBB G K K' hK hK' w (eta m ξ) hw hb fun u x => by
     rw [hB, ← lmul_one_add, inner_eta]
     exact hw' (fun j v => u (j, v)) x
@@ -435,10 +435,10 @@ theorem UpperTheory.V.Af.Smo.chartCont :
     UpperTheory.V.Af.Smo.ChartCont := by
   intro E _ _ _ n f hf
   have h1 : ContinuousOn (fun z : GA E n × Lie E n => chart f z.1 z.2) (Set.univ ×ˢ invSet E n) := by
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     let u : ↥((Set.univ : Set (GA E n)) ×ˢ invSet E n) → GL (Fin n) (Rinf E) :=
       fun z => (show IsUnit (Matrix.of z.1.2) from z.2.2).unit
-    have hu : Continuous u := cc_unit E n u (continuous_snd.comp continuous_subtype_val)
+    have hu : Continuous u := cc_unit E n u (continuous_snd.comp continuous_subtypeVal)
     have e : ((Set.univ : Set (GA E n)) ×ˢ invSet E n).domRestrict (fun z : GA E n × Lie E n => chart f z.1 z.2) =
         fun z => f (z.1.1 * infGL E n (u z)) := by
       funext z
@@ -446,7 +446,7 @@ theorem UpperTheory.V.Af.Smo.chartCont :
       change chart f z.1.1 z.1.2 = _
       rw [chart, dite_eq_left h]
     rw [e]
-    exact hf.comp ((continuous_fst.comp continuous_subtype_val).mul ((cc_infGL E n).comp hu))
+    exact hf.comp ((continuous_fst.comp continuous_subtypeVal).mul ((cc_infGL E n).comp hu))
   refine ⟨h1, fun g => ?_⟩
   classical
   have h2 : ContinuousOn (chart f g) (invSet E n) :=
@@ -571,11 +571,11 @@ theorem UpperTheory.V.Af.Smo.convCont :
     intro g x
     rw [norm_mul]
     exact mul_le_mul_of_nonneg_right (hch g x) (norm_nonneg _)
-  haveI i1 : (volume : Measure (Rinf E)).IsAddHaarMeasure := inferInstance
-  haveI i2 : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI i3 : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have i1 : (volume : Measure (Rinf E)).IsAddHaarMeasure := inferInstance
+  have i2 : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have i3 : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hint : Integrable (fun x => C * ‖α x‖) := (α.integrable.norm).const_mul C
-  haveI : FirstCountableTopology (GA E n) :=
+  have : FirstCountableTopology (GA E n) :=
     GroundTheory.Automorphic.FourierWhittaker.firstCountableTopology_adelicGL ..
   refine ⟨?_, ∫ x, C * ‖α x‖, fun g => ?_⟩
   · unfold conv
@@ -589,7 +589,7 @@ theorem UpperTheory.V.Af.Smo.convCont :
       · have : (fun g => chart f g x) = fun _ => 0 := by
           funext g
           unfold UpperTheory.V.TR.chart
-          exact dif_neg hx
+          exact dite_eq_right hx
         rw [this]
         exact continuous_const
   · exact norm_integral_le_of_norm_le hint (Filter.Eventually.of_forall (hbd g))
@@ -626,14 +626,14 @@ theorem UpperTheory.V.Af.Smo.convFub :
     by_cases hz : z ∈ (Set.univ : Set X) ×ˢ invSet E n
     · rw [Set.piecewise_eq_of_mem _ _ _ hz]
     · rw [Set.piecewise_eq_of_notMem _ _ _ hz, chart]
-      exact dif_neg fun h => hz ⟨trivial, h⟩
+      exact dite_eq_right fun h => hz ⟨trivial, h⟩
   have hb : ∀ g y, ‖chart f g y‖ ≤ C := fun g y => by
     unfold chart
     split_ifs
     · exact hC _
     · simpa using (norm_nonneg _).trans (hC 1)
-  haveI : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   have hα : Integrable (fun y => α y) (volume : Measure (Lie E n)) := α.integrable
   have ha' : Integrable a ν := Integrable.of_bound ha.measurable.aestronglyMeasurable D (.of_forall hD)
   have hi : Integrable (fun z : X × Lie E n => chart f (u z.1 * g) z.2 * (a z.1 * α z.2)) (ν.prod volume) :=
@@ -680,7 +680,7 @@ theorem UpperTheory.V.Af.Smo.convNice :
       simp only [chart, mul_assoc, hN.left γ]
     simp only [conv, e]
   · intro r hr hrn g
-    haveI : IsFiniteMeasure ((unipMeasure E n r).restrict (unipFundamentalDomain E n r)) := by
+    have : IsFiniteMeasure ((unipMeasure E n r).restrict (unipFundamentalDomain E n r)) := by
       obtain ⟨C, hC, hDC⟩ := exists_isCompact_superset_unipFundamentalDomain (K := E) (n := n) (r := r)
       exact ⟨by
         rw [Measure.restrict_apply_univ]
@@ -697,13 +697,13 @@ theorem UpperTheory.V.Af.Smo.convNice :
     have e : (fun x => f (x * finGL E n v)) = f := funext fun x => hV x v hv
     rw [conv, ← TR.chart_rt_fin, e, conv]
   · funext g
-    haveI : IsFiniteMeasure ((FourierWhittaker.vecMeasure E (FourierWhittaker.Pos n)).restrict
+    have : IsFiniteMeasure ((FourierWhittaker.vecMeasure E (FourierWhittaker.Pos n)).restrict
         (FourierWhittaker.vecDomain E (FourierWhittaker.Pos n))) :=
       ⟨by rw [Measure.restrict_apply_univ, FourierWhittaker.vecMeasure_vecDomain]; exact ENNReal.one_lt_top⟩
     exact hf E n f hN.cont hN.bdd α _ ((FourierWhittaker.vecMeasure E (FourierWhittaker.Pos n)).restrict
         (FourierWhittaker.vecDomain E (FourierWhittaker.Pos n))) FourierWhittaker.uGL
       (fun X => (GroundTheory.Global.adelicChar E (-FourierWhittaker.supSum 0 X) : ℂ)) FourierWhittaker.continuous_uGL
-      (continuous_subtype_val.comp (GroundTheory.Global.continuous_adelicChar.comp
+      (continuous_subtypeVal.comp (GroundTheory.Global.continuous_adelicChar.comp
         (FourierWhittaker.continuous_supSum 0).neg)) ⟨1, fun _ => (Circle.norm_coe _).le⟩ g
 end -- clump:auto
 end -- clump:auto
@@ -815,18 +815,18 @@ theorem UpperTheory.V.Af.Smo.eigMap :
     · have hc : Continuous fun X : Pos n → Ad E => f (uGL X * (g * finGL E n (locGL E n w y))) *
           (GroundTheory.Global.adelicChar E (-supSum 0 X) : ℂ) :=
         (hN.cont.comp (continuous_uGL.mul continuous_const)).mul
-          (continuous_subtype_val.comp (GroundTheory.Global.continuous_adelicChar.comp (continuous_supSum 0).neg))
+          (continuous_subtypeVal.comp (GroundTheory.Global.continuous_adelicChar.comp (continuous_supSum 0).neg))
       exact (hc.continuousOn.integrableOn_compact isCompact_closure_vecDomain).mono_set subset_closure
   · refine eig_int volume (hf 1).card (fun x y => chart f (g * finGL E n (locGL E n w y)) x) α (fun x => ?_) fun y => ?_
     · by_cases hx : IsUnit (Matrix.of x)
       · have := hf (g * infGL E n hx.unit)
-        simpa only [chart, dif_pos hx, mul_assoc, TR.infGL_comm] using this
-      · simpa only [chart, dif_neg hx] using eig_zero (w := w) (hf 1).card
+        simpa only [chart, dite_eq_left hx, mul_assoc, TR.infGL_comm] using this
+      · simpa only [chart, dite_eq_right hx] using eig_zero (w := w) (hf 1).card
     · obtain ⟨C, hC'⟩ := hN.bdd
-      haveI : BorelSpace (Lie E n) := inferInstance
-      haveI : (volume : Measure (Rinf E)).IsAddHaarMeasure := inferInstance
-      haveI : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-      haveI : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+      have : BorelSpace (Lie E n) := inferInstance
+      have : (volume : Measure (Rinf E)).IsAddHaarMeasure := inferInstance
+      have : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+      have : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
       refine α.integrable.bdd_mul (c := C) ((hC E n f hN.cont).2 _).aestronglyMeasurable
         (Filter.Eventually.of_forall fun x => ?_)
       unfold chart
@@ -855,11 +855,11 @@ private theorem lev (hL : LevelS) {E : Type} [Field E] [NumberField E] [IsTotall
   let V : OpenSubgroup (GL (Fin n) (Af E)) :=
     { carrier := {k | TR.finRep E n k φ = φ}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq] at ha hb ⊢
         rw [map_mul, Module.End.mul_apply, hb, ha]
       one_mem' := by simp
       inv_mem' := fun {a} ha => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         conv_lhs => rw [← ha]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
       isOpen' := (π.cusp φ hφ).1.level }
@@ -883,7 +883,7 @@ theorem UpperTheory.V.Af.Smo.setUp :
       GoodAt w (psiL w) ∧ π.HasSat w B ∧ π'.HasSat w B := fun w => by
     by_cases hw : w ∈ hf.toFinset
     · exact ⟨0, fun h => absurd hw h⟩
-    · rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hw
+    · rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hw
       obtain ⟨hg, B, hB⟩ := hw
       exact ⟨B, fun _ => ⟨hg, hB⟩⟩
   choose B hB using hB
@@ -1045,9 +1045,9 @@ theorem UpperTheory.V.Af.Smo.linChange :
       LinearMap.ext fun x => one_mul (Matrix.of x)
     simp only [this]
     simp
-  · haveI : (volume : Measure (Rinf E)).IsAddHaarMeasure := inferInstance
-    haveI : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-    haveI : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  · have : (volume : Measure (Rinf E)).IsAddHaarMeasure := inferInstance
+    have : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+    have : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
     exact linearMap_comp_eq_on_smul_of_eq volume (lmul (toL s.val)) (lmul (toL (s⁻¹).val))
       (fun x => s.inv_mul_cancel_left (Matrix.of x)) (fun x => s.mul_inv_cancel_left (Matrix.of x)) f
 end -- clump:auto
@@ -1102,7 +1102,7 @@ private theorem zero_of_sq {E : Type} [Field E] [NumberField E] {n : ℕ} (μ : 
   have h2 := (integral_eq_zero_iff_of_nonneg (fun q => sq_nonneg _) hi).1 h1
   have h3 := QuasiMeasurePreserving.ae_eq_comp (RightCosetSpace.quasiMeasurePreserving_mk (Reduction.rationalGLOne (K := E) (n := n)) μ) h2
   have h4 := (Continuous.ae_eq_iff_eq μ (f := fun y : Reduction.normOneGL (K := E) (n := n) => ‖F y‖ ^ 2)
-    ((hc.comp continuous_subtype_val).norm.pow 2) continuous_const).1 h3
+    ((hc.comp continuous_subtypeVal).norm.pow 2) continuous_const).1 h3
   intro y hy
   exact norm_eq_zero.1 (pow_eq_zero_iff two_ne_zero |>.1 (congrFun h4 ⟨y, hy⟩))
 
@@ -1201,7 +1201,7 @@ theorem UpperTheory.V.Af.Smo.orthStep :
       intro q x hx
       obtain ⟨y, rfl⟩ := RightCosetSpace.mk_surjective _ q
       rw [hFmk]
-      exact dif_neg hx
+      exact dite_eq_right hx
     have hopen : IsOpen ((Set.univ : Set (RightCosetSpace (Reduction.rationalGLOne (K := E) (n := n)))) ×ˢ invSet E n) :=
       isOpen_univ.prod TR.isOpen_invSet
     have hFc : ContinuousOn F (Set.univ ×ˢ invSet E n) := by
@@ -1214,7 +1214,7 @@ theorem UpperTheory.V.Af.Smo.orthStep :
       have h1 : ContinuousAt (fun z : GA E n × Lie E n => chart f z.1 z.2) (y.1, x) :=
         (hcc E n f hf).1.continuousAt ((isOpen_univ.prod TR.isOpen_invSet).mem_nhds ⟨trivial, hx⟩)
       have h2 : Continuous fun z : Reduction.normOneGL (K := E) (n := n) × Lie E n => ((z.1.1, z.2) : GA E n × Lie E n) :=
-        (continuous_subtype_val.comp continuous_fst).prodMk continuous_snd
+        (continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd
       exact ContinuousAt.comp (f := fun z : Reduction.normOneGL (K := E) (n := n) × Lie E n => ((z.1.1, z.2) : GA E n × Lie E n))
         (x := (y, x)) h1 h2.continuousAt
     have hFm : Measurable F := by
@@ -1246,7 +1246,7 @@ theorem UpperTheory.V.Af.Smo.orthStep :
           intro q
           obtain ⟨y, rfl⟩ := RightCosetSpace.mk_surjective _ q
           rw [hFmk, CuspidalSpectrum.cuspQuot_mk]
-          exact dif_pos hx'
+          exact dite_eq_left hx'
         simp only [e]
         rw [h0, zero_mul]
       · simp [hF0 _ x hx]
@@ -1438,10 +1438,10 @@ theorem UpperTheory.V.Af.Smo.seed :
       { carrier := {k | TR.finRep E n k (Fb.ofCusp E n ψ) = Fb.ofCusp E n ψ}
         one_mem' := by simp
         mul_mem' := fun {a b} ha hb => by
-          simp only [Set.mem_setOf_eq] at ha hb ⊢
+          simp only [Set.mem_ofPred_eq] at ha hb ⊢
           rw [map_mul, Module.End.mul_apply, hb, ha]
         inv_mem' := fun {a} ha => by
-          simp only [Set.mem_setOf_eq] at ha ⊢
+          simp only [Set.mem_ofPred_eq] at ha ⊢
           conv_lhs => rw [← ha]
           rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
     exact ⟨⟨V, hl⟩, fun g v hv => congrFun (congrArg Subtype.val hv) g⟩
@@ -1497,7 +1497,7 @@ private theorem exists_schwartz_integral_eq_one {X : Type} [NormedAddCommGroup X
   have hK : HasCompactSupport fun x => b x • (F x / F x₀) := b.hasCompactSupport.smul_right
   have hI : Integrable (fun x => b x • (F x / F x₀)) μ := hG.integrable_of_hasCompactSupport hK
   have hpos : 0 < ∫ x, (b x • (F x / F x₀)).re ∂μ := by
-    refine (Complex.continuous_re.comp hG).integral_pos_of_hasCompactSupport_nonneg_nonzero (x := x₀)
+    refine (Complex.continuous_re.comp hG).integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := x₀)
       (hK.comp_left (g := Complex.re) rfl) (fun x => ?_) ?_
     · by_cases hx : b x = 0
       · simp [hx]
@@ -1526,9 +1526,9 @@ private theorem exists_schwartz_integral_eq_one {X : Type} [NormedAddCommGroup X
 theorem UpperTheory.V.Af.Smo.seedConv :
     UpperTheory.V.Af.Smo.ChartCont → UpperTheory.V.Af.Smo.SeedConv := by
   intro h E _ _ _ n W hW y hy
-  haveI i1 : (volume : Measure (Rinf E)).IsAddHaarMeasure := inferInstance
-  haveI i2 : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI i3 : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have i1 : (volume : Measure (Rinf E)).IsAddHaarMeasure := inferInstance
+  have i2 : (volume : Measure (Fin n → Rinf E)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have i3 : (volume : Measure (Lie E n)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   refine exists_schwartz_integral_eq_one volume (chart W 1) (invSet E n) (toL y.val) ?_ ?_ ?_
   · exact TR.isOpen_invSet.mem_nhds (TR.val_mem_invSet y)
   · exact (h E n W hW).1.comp (f := fun x => ((1 : GA E n), x)) (by fun_prop) fun x hx => ⟨trivial, hx⟩

@@ -197,7 +197,7 @@ theorem small_card (K : UQ) : K.Small (Nat.card (IsLocalRing.ResidueField K.O) :
     rw [Nat.cast_eq_zero] at h'
     exact (Nat.card_pos (α := IsLocalRing.ResidueField K.O)).ne' h'
   · rw [← IsLocalRing.residue_eq_zero_iff, map_natCast]
-    haveI := Fintype.ofFinite (IsLocalRing.ResidueField K.O)
+    have := Fintype.ofFinite (IsLocalRing.ResidueField K.O)
     rw [Nat.card_eq_fintype_card]
     exact FiniteField.cast_card_eq_zero _
   · rw [map_natCast, map_natCast]

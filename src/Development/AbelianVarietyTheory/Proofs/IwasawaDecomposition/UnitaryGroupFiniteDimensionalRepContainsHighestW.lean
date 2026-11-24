@@ -92,8 +92,8 @@ theorem star_permMat {n : ℕ} (s : Equiv.Perm (Fin n)) : star (permMat s) = per
   ext i j
   simp only [permMat, Matrix.star_apply, Matrix.of_apply]
   by_cases h : s j = i
-  · rw [if_pos h, if_pos (by rw [← h]; simp)]; simp
-  · rw [if_neg h, if_neg (by rintro rfl; simp at h)]; simp
+  · rw [ite_eq_left h, ite_eq_left (by rw [← h]; simp)]; simp
+  · rw [ite_eq_right h, ite_eq_right (by rintro rfl; simp at h)]; simp
 
 theorem permMat_mem {n : ℕ} (s : Equiv.Perm (Fin n)) : permMat s ∈ Matrix.unitaryGroup (Fin n) ℂ := by
   rw [Matrix.mem_unitaryGroup_iff, star_permMat, permMat_mul]
@@ -122,7 +122,7 @@ theorem weight_int_dom {n : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProduct
       · simp [hc]
     have h := hvw (Pi.single a (2 * Real.pi)) (by rw [hd]; exact one_mem _)
     rw [hd, h1] at h
-    simp only [ContinuousLinearMap.one_apply] at h
+    simp only [one_apply_eq_self] at h
     have hs : (∑ c, Λ c * (Pi.single a (2 * Real.pi) : Fin n → ℝ) c) = Λ a * (2 * Real.pi) := by
       simp [Pi.single_apply]
     rw [hs] at h
@@ -226,9 +226,9 @@ theorem exists_intertwining_of_minimal {n : ℕ} {V : Type} [AddCommGroup V] [Mo
     rw [e]
     exact hc L v
   obtain ⟨c, hcinv⟩ := GlobalTheory.exists_invariant_core_of_continuous_coeff σ hcS
-  letI : NormedAddCommGroup S := c.toNormedAddCommGroup
-  letI : InnerProductSpace ℂ S := InnerProductSpace.ofCore c.toCore
-  haveI : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS0
+  let : NormedAddCommGroup S := c.toNormedAddCommGroup
+  let : InnerProductSpace ℂ S := InnerProductSpace.ofCore c.toCore
+  have : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS0
   have hcont : ∀ v : S, Continuous fun u : Matrix.unitaryGroup (Fin n) ℂ => σ u v := by
     intro v
     let b := Module.finBasis ℂ S
@@ -258,7 +258,7 @@ theorem exists_intertwining_of_minimal {n : ℕ} {V : Type} [AddCommGroup V] [Mo
     · rw [hπu g hg, norm_eq_sqrt_re_inner (𝕜 := ℂ), norm_eq_sqrt_re_inner (𝕜 := ℂ)]
       congr 2
       exact hcinv _ v v
-    · rw [continuousOn_iff_continuous_restrict]
+    · rw [continuousOn_iff_continuous_domRestrict]
       exact (hcont v).congr fun u => (hπu u.1 u.2 v).symm
   have hirr : ∀ S' : Submodule ℂ S, (∀ g ∈ PI.UpqRep.UJset (PI.UpqRep.allPos n), ∀ v ∈ S', π g v ∈ S') →
       S' = ⊥ ∨ S' = ⊤ := by
@@ -326,7 +326,7 @@ theorem exists_intertwining_of_minimal {n : ℕ} {V : Type} [AddCommGroup V] [Mo
     exact A.injective (he this)
   let G : σ.IntertwiningMap (GlobalTheory.Branching.smallRep (GlobalTheory.Branching.unitaryIncl n) lam) :=
     G0.intertwiningMap_of_isIntertwiningMap _ _ hG0
-  haveI := GlobalTheory.Branching.isIrreducible_smallRep_unitary n lam
+  have := GlobalTheory.Branching.isIrreducible_smallRep_unitary n lam
   have hsurj : Function.Surjective G := by
     rcases Representation.IsIrreducible.surjective_or_eq_zero G with h | h
     · exact h

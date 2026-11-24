@@ -530,7 +530,7 @@ theorem hasFiniteLength_of_coinvariants {V : Type u} [AddCommGroup V] [Module �
   have heq : ∀ i, Λ A i = Λ B i := fun i =>
     (lt_or_eq_of_le (hmono A B hAB.le i)).resolve_left (hne i)
 
-  obtain ⟨x, hxB, hxA⟩ := SetLike.exists_of_lt hAB
+  obtain ⟨x, hxB, hxA⟩ := IsConcreteLE.exists_of_lt hAB
   let S : Submodule ℂ V := Submodule.span ℂ (Set.range fun g : G => X g x)
   have hS : ∀ g, S ≤ S.comap (X g) := by
     intro g

@@ -85,7 +85,7 @@ theorem q_fvec {v : InfinitePlace X.B.I.F} {lam : ℂ} {Q : Matrix (Fin X.B.I.n)
     have hbb : (⟨(Fin.castSucc b).val, hb⟩ : Fin D.R.rS) = b := Fin.ext rfl
     rw [hbb, (h4 b b rfl).1]
     unfold dsc frm famSc fam
-    simp only [Fin.coe_castSucc, Fin.snoc_castSucc]
+    simp only [Fin.val_castSucc, Fin.snoc_castSucc]
     rw [smul_smul, mul_pow, mul_assoc, mul_inv_cancel₀ (pow_ne_zero _ hsc'), mul_one]
 
 theorem zhat_tr {v : InfinitePlace X.B.I.F} {lam : ℂ} {Q : Matrix (Fin X.B.I.n) (Fin (2 * D.R.rS + D.R.k + 1)) ℂ}

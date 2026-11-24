@@ -153,7 +153,7 @@ theorem mInt_zero [CompactSpace X] [T2Space X] (A : FinHolAtlas e X) (Y : Set X)
     have hK1 : IntegrableOn (fun y => P.χ j ((A.chart j).symm y) * (1 * locDens A Φ j y))
         ((A.chart j) '' tsupport (P.χ j)) :=
       (h1 j _ hKs hKc).continuousOn_mul hc hKc
-    refine IntegrableOn.of_forall_diff_eq_zero (s := (A.chart j) '' tsupport (P.χ j)) ?_ (hT j) ?_
+    refine IntegrableOn.of_forall_sdiff_eq_zero (s := (A.chart j) '' tsupport (P.χ j)) ?_ (hT j) ?_
     · simpa only [mul_assoc] using hK1
     · rintro y ⟨hy, hyK⟩
       have : (A.chart j).symm y ∉ tsupport (P.χ j) := fun h =>
@@ -166,7 +166,7 @@ theorem mInt_zero [CompactSpace X] [T2Space X] (A : FinHolAtlas e X) (Y : Set X)
     have hae : ∀ᵐ y ∂(volume.restrict (A.chart j).target), (A.chart j).symm y ∈ Y := by
       rw [ae_restrict_iff' (hT j)]
       refine measure_mono_null (fun y hy => ?_) (hnull j)
-      simp only [Set.mem_compl_iff, Set.mem_setOf_eq, Classical.not_imp] at hy
+      simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, Classical.not_imp] at hy
       exact ⟨hy.1, hy.2⟩
     filter_upwards [hae, ae_restrict_mem (hT j)] with y hy hyT
     exact mul_nonneg (mul_nonneg (P.nonneg _ _) zero_le_one) (hd j y hyT hy)
@@ -417,8 +417,8 @@ theorem chart_aesm {e : ℕ} {Y : Type} [TopologicalSpace Y] (A : FinHolAtlas e 
     (hm : @Measurable Y ℝ (borel Y) _ (Yo.indicator G))
     (hnull : ∀ j, volume ((A.chart j).target ∩ (A.chart j).symm ⁻¹' Yoᶜ) = 0) (j : Fin A.n) :
     AEStronglyMeasurable (G ∘ (A.chart j).symm) (volume.restrict (A.chart j).target) := by
-  letI : MeasurableSpace Y := borel Y
-  haveI : BorelSpace Y := ⟨rfl⟩
+  let : MeasurableSpace Y := borel Y
+  have : BorelSpace Y := ⟨rfl⟩
   have hT : MeasurableSet (A.chart j).target := (A.chart j).open_target.measurableSet
   have h1 : AEMeasurable (A.chart j).symm (volume.restrict (A.chart j).target) :=
     (A.chart j).continuousOn_symm.aemeasurable hT
@@ -427,7 +427,7 @@ theorem chart_aesm {e : ℕ} {Y : Type} [TopologicalSpace Y] (A : FinHolAtlas e 
   refine h2.congr ?_
   rw [Filter.EventuallyEq, ae_restrict_iff' hT]
   refine measure_mono_null (fun y hy => ?_) (hnull j)
-  simp only [Set.mem_compl_iff, Set.mem_setOf_eq, Classical.not_imp] at hy
+  simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, Classical.not_imp] at hy
   refine ⟨hy.1, fun hY => hy.2 ?_⟩
   simp [Function.comp, Set.indicator_of_mem hY]
 
@@ -584,11 +584,11 @@ theorem muMeasureLimit : GroundTheory.Heights₂.Heights.LowerBoundFree.MuMeasur
         funext x
         by_cases hx : x ∈ X.S.R.Yo <;> simp [hx]
       rw [this]
-      letI : MeasurableSpace X.M.Xc := borel X.M.Xc
+      let : MeasurableSpace X.M.Xc := borel X.M.Xc
       exact hm.div_const 2
     have hm1 : @Measurable X.M.Xc ℝ (borel X.M.Xc) _ (X.S.R.Yo.indicator fun _ => (1 : ℝ)) := by
-      letI : MeasurableSpace X.M.Xc := borel X.M.Xc
-      haveI : BorelSpace X.M.Xc := ⟨rfl⟩
+      let : MeasurableSpace X.M.Xc := borel X.M.Xc
+      have : BorelSpace X.M.Xc := ⟨rfl⟩
       exact measurable_const.indicator (_root_.GlobalTheory.CompanionTheory.Ar.Giv.regData_open_part D.n X.M.Xc X.M.atlas X.S.R).1.measurableSet
     obtain ⟨-, cU, tU, hnull, hdens⟩ := core X B hΨ.choose hΨ.choose_spec (fun z => X.Cd.cuspWeight z / 2)
       (fun x => G x / 2) |Cg| hm2 hCg (fun z hz hY => by rw [hG z hz hY])

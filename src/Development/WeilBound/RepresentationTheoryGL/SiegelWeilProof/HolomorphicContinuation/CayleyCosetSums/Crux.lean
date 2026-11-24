@@ -186,7 +186,7 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 variable {n : ℕ}
 
 theorem Fd_analytic (m : ℕ) : AnalyticOnNhd ℂ (Fd (n := n) m) (DomZ n) := by
-  letI : TopologicalSpace (M2 n) := (inferInstance : NormedAddCommGroup (M2 n)).toMetricSpace.toUniformSpace.toTopologicalSpace
+  let : TopologicalSpace (M2 n) := (inferInstance : NormedAddCommGroup (M2 n)).toMetricSpace.toUniformSpace.toTopologicalSpace
   have hU := (fzHol n m 0).2.2
   intro y hy
   have h1 : AnalyticAt ℂ (fun p : ℂ × M2 n => fderiv ℂ (fun p : ℂ × M2 n => fz m 0 p.1 p.2) p (1, 0)) (0, y) :=
@@ -364,15 +364,15 @@ theorem ks_single_eq (a b : Fin n) :
         rw [Equiv.swap_apply_eq_iff, Equiv.swap_apply_right]
         exact hi
       simp [this, Ne.symm hi]
-  · simp only [hj, if_false]
+  · simp only [hj, ite_false]
     by_cases h : Equiv.swap a b i = j
-    · simp only [h, if_true]
+    · simp only [h, ite_true]
       have : ¬ (a = i ∧ b = j) := fun h' => hj h'.2.symm
-      rw [if_neg this]
+      rw [ite_eq_right this]
       ring
-    · simp only [h, if_false]
+    · simp only [h, ite_false]
       have : ¬ (a = i ∧ b = j) := fun h' => hj h'.2.symm
-      rw [if_neg this]
+      rw [ite_eq_right this]
       ring
 
 theorem kSplit : KSplit := by
@@ -433,8 +433,8 @@ private theorem finiteDimensional_continuousMultilinearMap {E : Type} [NormedAdd
 private theorem aestronglyMeasurable_of_continuous {Kg : Type} [TopologicalSpace Kg] [MeasurableSpace Kg] [BorelSpace Kg]
     (μ : Measure Kg) {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [FiniteDimensional ℂ W]
     (f : Kg → W) (hf : Continuous f) : AEStronglyMeasurable f μ := by
-  haveI : ProperSpace W := FiniteDimensional.proper ℂ W
-  haveI : SecondCountableTopology W := secondCountable_of_proper
+  have : ProperSpace W := FiniteDimensional.proper ℂ W
+  have : SecondCountableTopology W := secondCountable_of_proper
   exact hf.aestronglyMeasurable
 
 private theorem integrable_of_continuous_isFiniteMeasure {Kg : Type} [TopologicalSpace Kg] [CompactSpace Kg] [MeasurableSpace Kg]
@@ -451,7 +451,7 @@ private theorem matrix_mul_comm_of_mul_eq_smul_one_of_ne_zero {E : Type} [Normed
     (hd : ∀ k, ContDiffOn ℂ ∞ (G k) Ω) :
     (∀ N : ℕ, ∀ x ∈ Ω, iteratedFDeriv ℂ N (fun x => ∫ k, G k x ∂μ) x = ∫ k, iteratedFDeriv ℂ N (G k) x ∂μ) ∧
       ContDiffOn ℂ ∞ (fun x => ∫ k, G k x ∂μ) Ω := by
-  haveI : ProperSpace E := FiniteDimensional.proper ℂ E
+  have : ProperSpace E := FiniteDimensional.proper ℂ E
   have hck : ∀ (N : ℕ) (x : E), x ∈ Ω → Continuous (fun k => iteratedFDeriv ℂ N (G k) x) :=
     fun N x hx => (hc N).comp_continuous (continuous_id.prodMk continuous_const) (fun k => ⟨trivial, hx⟩)
   have hdiff : ∀ (N : ℕ) (k : Kg) (x : E), x ∈ Ω →
@@ -475,8 +475,8 @@ private theorem matrix_mul_comm_of_mul_eq_smul_one_of_ne_zero {E : Type} [Normed
   have hstep : ∀ (N : ℕ) (x : E), x ∈ Ω → HasFDerivAt (fun y => ∫ k, iteratedFDeriv ℂ N (G k) y ∂μ)
       (∫ k, fderiv ℂ (iteratedFDeriv ℂ N (G k)) x ∂μ) x := by
     intro N x hx
-    haveI := finiteDimensional_continuousMultilinearMap (E := E) N
-    haveI := finiteDimensional_continuousMultilinearMap (E := E) (N + 1)
+    have := finiteDimensional_continuousMultilinearMap (E := E) N
+    have := finiteDimensional_continuousMultilinearMap (E := E) (N + 1)
     obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hΩ x hx
     have hcb : Metric.closedBall x (ε / 2) ⊆ Ω :=
       (Metric.closedBall_subset_ball (by linarith)).trans hball
@@ -589,7 +589,7 @@ private theorem exists_ne_zero_smul_mem_of_mem_span' {E : Type} [NormedAddCommGr
     fun k => (hF.comp (L k).contDiff.contDiffOn (show Set.MapsTo (L k) {y | ∀ k, L k y ∈ U} U from fun y hy => hy k)).mul contDiffOn_const
   obtain ⟨key, hcd⟩ := matrix_mul_comm_of_mul_eq_smul_one_of_ne_zero μ {y | ∀ k, L k y ∈ U} (fun k y => F (L k y) * c k) hW hG hdG
   refine ⟨hW, hcd, fun N y hy => key N y hy, fun N y hy => ?_⟩
-  haveI := finiteDimensional_continuousMultilinearMap (E := E) N
+  have := finiteDimensional_continuousMultilinearMap (E := E) N
   exact integrable_of_continuous_isFiniteMeasure μ _ ((hG N).comp_continuous (continuous_id.prodMk continuous_const) (fun k => ⟨trivial, hy⟩))
 
 private theorem exists_continuous_clm_of_bilinear {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] [FiniteDimensional ℂ E]
@@ -802,11 +802,11 @@ theorem embOn_single_pf (s : Finset (Fin n)) (a b : s) :
   by_cases hi : i = (a : Fin n) <;> by_cases hj : j = (b : Fin n)
   · subst hi hj
     simp [embOn, Matrix.single_apply]
-  · simp only [embOn, Matrix.single_apply, hj, and_false, if_false]
+  · simp only [embOn, Matrix.single_apply, hj, and_false, ite_false]
     split_ifs with h h' <;> simp_all [Subtype.ext_iff]
-  · simp only [embOn, Matrix.single_apply, hi, false_and, if_false]
+  · simp only [embOn, Matrix.single_apply, hi, false_and, ite_false]
     split_ifs with h h' <;> simp_all [Subtype.ext_iff]
-  · simp only [embOn, Matrix.single_apply, hi, false_and, if_false]
+  · simp only [embOn, Matrix.single_apply, hi, false_and, ite_false]
     split_ifs with h h' <;> simp_all [Subtype.ext_iff]
 
 theorem deriv_prod_range_sub_mul_prod_ne_zero (n m : ℕ) (hmn : m < n) :

@@ -163,7 +163,7 @@ private theorem comb {I : Type} (S : Finset I) (N : I → ℕ) (P : I → ℂ[X]
     have hN : (N v : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (by have := (h v hv).1; omega)
     rw [hev v hv, hev v hv, sub_eq_add_neg, Complex.cpow_add _ _ hN, Complex.cpow_one]
     congr 3
-    rw [Complex.cpow_def_of_ne_zero hN, ← Complex.exp_int_mul, ← Complex.natCast_log]
+    rw [Complex.cpow_def_of_ne_zero hN, ← Complex.exp_intCast_mul, ← Complex.natCast_log]
     congr 1
     push_cast
     ring
@@ -238,13 +238,13 @@ theorem UpperTheory.V.Z.ImaginaryQuadraticEtaCharacter.sideXCen :
   choose Φb hΦb b hb0 hb using hb
   let Φ : ∀ v : HeightOneSpectrum (𝓞 K), Matrix (Fin n) (Fin n) (v.adicCompletion K) → ℂ :=
     fun v => if v ∈ S then Φb v else integralIndicator (v.adicCompletion K) n
-  have hΦS : ∀ v ∈ S, Φ v = Φb v := fun v hv => if_pos hv
+  have hΦS : ∀ v ∈ S, Φ v = Φb v := fun v hv => ite_eq_left hv
   obtain ⟨c, c', hc, hc', hSB1, hG⟩ := by
     set_option synthInstance.maxHeartbeats 200000 in
       exact genFE hn μ φ₀.2 φ₀.2 (h hmem) S hRS
         D.finite.π x ℓ hsm hℓs (fun v hv => ⟨hfix v hv, hℓ1 v⟩) (fun v hv => hℓK v (hfix v hv)) D.finite.isIrreducible
         D.finite.isAdmissible z (fun v hv => (hz v hv).1) fi hf' ⟨1, hF1'⟩ Φ (fun v hv => hΦS v hv ▸ hΦb v)
-        (fun v hv => if_neg hv)
+        (fun v hv => ite_eq_right hv)
   obtain ⟨σ₁, Λ, hΛ, h1⟩ := hG φ
   obtain ⟨σ₂, Λ', hΛ', h2⟩ := hG φ'
   have hloc : ∀ s, ∏ v ∈ S, zetaIntegral (localHaar n v) (Φ v)
@@ -387,13 +387,13 @@ private theorem cnt_unram {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
 
 private theorem unram_loc {χ : HChar K} {v : HeightOneSpectrum (𝓞 K)} (h : χ.UnrAt v) : IsUnram (χ.loc v) := by
   intro x hx
-  haveI : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact h x ((ValuativeRel.isEquiv (ValuativeRel.valuation (v.adicCompletion K)) Valued.v).eq_one_iff_eq_one.1 hx)
 
 private theorem loc_unif {χ : HChar K} {v : HeightOneSpectrum (𝓞 K)} (h : χ.UnrAt v) :
     χ.loc v (unif (v.adicCompletion K)) = χ.val v := by
-  haveI : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have E := ValuativeRel.isEquiv (ValuativeRel.valuation (v.adicCompletion K))
     (Valued.v : Valuation (v.adicCompletion K) (WithZero (Multiplicative ℤ)))

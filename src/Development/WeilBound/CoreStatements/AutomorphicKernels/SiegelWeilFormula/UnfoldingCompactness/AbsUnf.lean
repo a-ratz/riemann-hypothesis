@@ -101,14 +101,14 @@ theorem abs_unfold {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopologic
     calc ∫⁻ β in C, S β ∂lam ≤ ∫⁻ _ in C, ENNReal.ofReal (∑' q, u q) ∂lam := setLIntegral_mono measurable_const hSC
       _ = ENNReal.ofReal (∑' q, u q) * lam C := setLIntegral_const _ _
       _ < ∞ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top hC.measure_lt_top
-  have hmeasA : ∀ q, Measurable fun β => ‖A q β‖ₑ := fun q => (hA q).measurable.enorm
+  have hmeasA : ∀ q, Measurable fun β => ‖A q β‖ₑ := fun q => (hA q).measurable.eNorm
   have hsumA : ∑' q, ∫⁻ β in 𝓖, ‖A q β‖ₑ ∂lam < ∞ := by
     rw [← lintegral_tsum fun q => (hmeasA q).aemeasurable]
     exact hS𝓖
   have hsumAχ : ∑' q, ∫⁻ β in 𝓖, ‖A q β * χ₀ β‖ₑ ∂lam < ∞ := by
     calc ∑' q, ∫⁻ β in 𝓖, ‖A q β * χ₀ β‖ₑ ∂lam ≤ ∑' q, ∫⁻ β in 𝓖, ENNReal.ofReal M * ‖A q β‖ₑ ∂lam :=
           ENNReal.tsum_le_tsum fun q => lintegral_mono fun β => by
-            rw [enorm_mul, mul_comm]
+            rw [eNorm_mul, mul_comm]
             refine mul_le_mul' ?_ le_rfl
             rw [← ofReal_norm]
             exact ENNReal.ofReal_le_ofReal (hM β)
@@ -147,7 +147,7 @@ theorem abs_unfold {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopologic
   refine ⟨hint, hintχ, ?_⟩
   rw [hLHS]
 
-  letI s : Setoid Q :=
+  let s : Setoid Q :=
     { r := fun q q' => ∃ ν, act q ν = q'
       iseqv := ⟨fun q => ⟨0, hact0 q⟩, fun ⟨ν, h⟩ => ⟨-ν, by rw [← h, hactneg]⟩,
         fun ⟨ν, h⟩ ⟨ν', h'⟩ => ⟨ν + ν', by rw [← hact, h, h']⟩⟩ }

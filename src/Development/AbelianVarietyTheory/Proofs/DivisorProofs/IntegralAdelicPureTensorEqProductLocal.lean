@@ -75,7 +75,7 @@ open scoped RestrictedProduct Topology
 
 theorem isCompact_integral (F : Type) [Field F] [NumberField F] :
     IsCompact {b : Af F | ∀ v : HeightOneSpectrum (𝓞 F), evalV F v b ∈ v.adicCompletionIntegers F} := by
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), CompactSpace (v.adicCompletionIntegers F : Set (v.adicCompletion F)) :=
+  have : ∀ v : HeightOneSpectrum (𝓞 F), CompactSpace (v.adicCompletionIntegers F : Set (v.adicCompletion F)) :=
     fun v => GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   have h := isCompact_range (RestrictedProduct.isEmbedding_structureMap
     (R := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
@@ -128,11 +128,11 @@ theorem lintegral_split_mul : ∀ (F : Type) [Field F] [NumberField F] (κ : Typ
       Measurable fi → Measurable g →
         ∫⁻ x, fi (fun i => evI F (x i)) * g (fun i => sndA F (x i)) ∂μ = c * ((∫⁻ z, fi z ∂μi) * ∫⁻ y, g y ∂μf) := by
   intro F _ _ κ _ mA _ mI _ mf _ μ _ μi _ μf _
-  haveI : LocallyCompactSpace (Af F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  haveI : BorelSpace ((κ → mixedEmbedding.mixedSpace F) × (κ → Af F)) := Prod.borelSpace
-  haveI : (μi.prod μf).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure μi μf
+  have : LocallyCompactSpace (Af F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : BorelSpace ((κ → mixedEmbedding.mixedSpace F) × (κ → Af F)) := Prod.borelSpace
+  have : (μi.prod μf).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure μi μf
   have hH : ((μ.map (splitE F κ).symm)).IsAddHaarMeasure :=
     (splitE F κ).symm.isAddHaarMeasure_map μ (continuous_splitE_symm F κ) (continuous_splitE F κ)
   let em : (κ → AF F) ≃ᵐ ((κ → mixedEmbedding.mixedSpace F) × (κ → Af F)) :=
@@ -247,17 +247,17 @@ theorem lintegral_evalV_mul_shiftInvariant : ∀ (F : Type) [Field F] [NumberFie
       ∫⁻ y, g (fun i => evalV F w (y i)) * K y ∂μf =
         (∫⁻ t, g t ∂μw) * ∫⁻ y, {t : κ → Fv F w | ∀ i, t i ∈ w.adicCompletionIntegers F}.indicator 1 (fun i => evalV F w (y i)) * K y ∂μf := by
   intro F _ _ κ _ _ _ w _ _ μf _ μw _ hO K hK hKinv g hg
-  haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F w
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI : SecondCountableTopology (κ → Af F) := inferInstance
-  haveI : SecondCountableTopology (κ → Fv F w) := inferInstance
-  haveI : LocallyCompactSpace (κ → Af F) := inferInstance
-  haveI : LocallyCompactSpace (κ → Fv F w) := inferInstance
+  have := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F w
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have : SecondCountableTopology (κ → Af F) := inferInstance
+  have : SecondCountableTopology (κ → Fv F w) := inferInstance
+  have : LocallyCompactSpace (κ → Af F) := inferInstance
+  have : LocallyCompactSpace (κ → Fv F w) := inferInstance
   have hcont : Continuous fun (y : κ → Af F) (i : κ) => evalV F w (y i) :=
     continuous_pi fun i => (GlobalTheory.GaugeGlue.continuous_evalV w).comp (continuous_apply i)
   have hOc : IsClosed {t : κ → Fv F w | ∀ i, t i ∈ w.adicCompletionIntegers F} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun i =>
       (Valued.isClosed_integer (Fv F w)).preimage (continuous_apply i)
   refine lintegral_factor μf μw (fun y i => evalV F w (y i)) (fun t i => singleFin w (t i))
@@ -266,7 +266,7 @@ theorem lintegral_evalV_mul_shiftInvariant : ∀ (F : Type) [Field F] [NumberFie
     funext i
     simp only [Pi.add_apply, map_add (f := _), evalV_singleFin_self]
   · intro x
-    simp only [Set.mem_setOf_eq, Pi.neg_apply, neg_mem_iff]
+    simp only [Set.mem_ofPred_eq, Pi.neg_apply, neg_mem_iff]
 
 end GlobalTheory.HaarFactorOffPlace
 end -- clump:auto
@@ -318,7 +318,7 @@ theorem finPart (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] [M
     rw [lintegral_indicator_one (measurableSet_box F κ ∅), ← hμf]
     congr 1
     ext y
-    simp only [Finset.notMem_empty, not_false_eq_true, forall_const, Set.mem_setOf_eq]
+    simp only [Finset.notMem_empty, not_false_eq_true, forall_const, Set.mem_ofPred_eq]
     exact forall_comm
   | insert w S hw ih =>
     set K : (κ → Af F) → ℝ≥0∞ := fun y =>
@@ -337,7 +337,7 @@ theorem finPart (F : Type) [Field F] [NumberField F] (κ : Type) [Fintype κ] [M
         have : ((fun i => y i + singleFin w (t i)) ∈
             {y : κ → Af F | ∀ v ∉ insert w S, ∀ i, evalV F v (y i) ∈ v.adicCompletionIntegers F}) ↔
             (y ∈ {y : κ → Af F | ∀ v ∉ insert w S, ∀ i, evalV F v (y i) ∈ v.adicCompletionIntegers F}) := by
-          simp only [Set.mem_setOf_eq]
+          simp only [Set.mem_ofPred_eq]
           refine forall_congr' fun v => imp_congr_right fun hv => forall_congr' fun i => ?_
           rw [evalV_add_singleFin_ne (by rintro rfl; exact hv (Finset.mem_insert_self _ S))]
         by_cases hy : y ∈ {y : κ → Af F | ∀ v ∉ insert w S, ∀ i, evalV F v (y i) ∈ v.adicCompletionIntegers F}
@@ -401,9 +401,9 @@ theorem integral_pure_haar : ∀ (F : Type) [Field F] [NumberField F] (κ : Type
         ∫ x, f (fun i => evI F (x i)) * ∏ᶠ v, φ v (fun i => evFin F v (x i)) ∂μ = c * (∫ x, f x ∂μi) * ∏ᶠ v, ∫ x, φ v x ∂(μv v) := by
   intro F _ _ κ _ _ _ _ _ _ _ μ _ μi _ μv _ hμv
   classical
-  letI : MeasurableSpace (κ → Af F) := borel _
-  haveI : BorelSpace (κ → Af F) := ⟨rfl⟩
-  haveI : ∀ v : Pl (F := F), ProperSpace (Fv F v) := fun v => GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
+  let : MeasurableSpace (κ → Af F) := borel _
+  have : BorelSpace (κ → Af F) := ⟨rfl⟩
+  have : ∀ v : Pl (F := F), ProperSpace (Fv F v) := fun v => GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion F v
   obtain ⟨μf, hμfH, hμf1⟩ := _root_.GlobalTheory.FinAdeleHaarNorm.exists_addHaar_integral_eq_one F κ
   obtain ⟨c, hc0, hctop, hc⟩ := _root_.GlobalTheory.WeilAdm.HaarSplit.lintegral_split_mul F κ μ μi μf
   refine ⟨(c.toReal : ℂ), Complex.ofReal_ne_zero.2 (ENNReal.toReal_ne_zero.2 ⟨hc0, hctop⟩), fun f φ hfc hfi hφ => ?_⟩
@@ -471,7 +471,7 @@ theorem integral_pure_haar : ∀ (F : Type) [Field F] [NumberField F] (κ : Type
       exact Set.indicator_of_mem (show (fun i => evFin F v (x i)) ∈ {x | ∀ i, x i ∈ v.adicCompletionIntegers F} from
         hx v hvS) _
     · rw [Set.indicator_of_notMem hx]
-      simp only [hB, Set.mem_setOf_eq, not_forall] at hx
+      simp only [hB, Set.mem_ofPred_eq, not_forall] at hx
       obtain ⟨v, hvS, i, hv⟩ := hx
       have hev : ∀ᶠ v in Filter.cofinite, φ v (fun i => evFin F v (x i)) = 1 := by
         have h1 : ∀ᶠ v in Filter.cofinite, ∀ i, evFin F v (x i) ∈ v.adicCompletionIntegers F :=

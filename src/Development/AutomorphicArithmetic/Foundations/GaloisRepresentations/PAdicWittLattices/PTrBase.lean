@@ -49,8 +49,8 @@ universe u v
 theorem UpperTheory.Gal.G3.pTrBase :
     FEtBasic → SplitsBasic → GalClosD → TrBase.{u} := by
   intro hF hS hC B R _ T hT P Y Z' Z p q p' q' v s' s g d hv hg hq' hpb hs tr tr' htr htr' x
-  haveI : IsFinite s := hs.1
-  haveI : Etale s := hs.2.1
+  have : IsFinite s := hs.1
+  have : Etale s := hs.2.1
   obtain ⟨W, c, G, _, _, a, σ, hgal, hspl⟩ := hC s' d (hF.1 v s' s g d hpb hs)
   have hσs : ∀ j, σ j ≫ s' = c := hspl.1
   have hσ' : ∀ j, σ j ≫ q' = c ≫ p' := fun j => by

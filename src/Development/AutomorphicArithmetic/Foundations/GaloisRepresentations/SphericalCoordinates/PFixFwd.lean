@@ -122,5 +122,5 @@ theorem UpperTheory.Gal.W2.fixFwd_of :
     hCls'' hCls' hPl'' hPl hCA'' (coordA_of_dvd L hLev.2.2.2.2.1 hCA') hLoc'' hLoc Y).2 ⟨w, hmk, fun u => hyj u⟩
   refine ⟨Y, hfixL, ?_, by simpa using hmem.2⟩
   have h1 := hmem.1
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   simpa [mul_inv_rev, _root_.mul_assoc] using h1

@@ -64,8 +64,8 @@ variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensiona
 theorem exists_basis (Λ : Submodule ℤ V) [DiscreteTopology Λ]
     (hs : Submodule.span ℝ (Λ : Set V) = ⊤) :
     ∃ (n : ℕ) (b : Basis (Fin n) ℝ V), Submodule.span ℤ (Set.range b) = Λ := by
-  haveI : IsZLattice ℝ Λ := ⟨hs⟩
-  haveI : Module.Free ℤ Λ := ZLattice.module_free ℝ Λ
+  have : IsZLattice ℝ Λ := ⟨hs⟩
+  have : Module.Free ℤ Λ := ZLattice.module_free ℝ Λ
   let b := (Module.Free.chooseBasis ℤ Λ).reindex (Fintype.equivFin _)
   exact ⟨_, b.ofZLatticeBasis ℝ Λ, b.ofZLatticeBasis_span ℝ Λ⟩
 
@@ -89,12 +89,12 @@ theorem span_of_le {L M : Submodule ℤ V} (hs : Submodule.span ℝ (L : Set V) 
 theorem exists_nsmul_mem {L M : Submodule ℤ V} [DiscreteTopology M]
     (hs : Submodule.span ℝ (L : Set V) = ⊤) (h : L ≤ M) :
     ∃ N : ℕ, 0 < N ∧ ∀ x ∈ M, N • x ∈ L := by
-  haveI := discrete_of_le h
-  haveI : IsZLattice ℝ L := ⟨hs⟩
-  haveI : IsZLattice ℝ M := ⟨span_of_le hs h⟩
+  have := discrete_of_le h
+  have : IsZLattice ℝ L := ⟨hs⟩
+  have : IsZLattice ℝ M := ⟨span_of_le hs h⟩
   have hr : finrank ℤ (L.comap M.subtype) = finrank ℤ M := by
     rw [(Submodule.comapSubtypeEquivOfLe h).finrank_eq, ZLattice.rank ℝ L, ZLattice.rank ℝ M]
-  haveI hfin : Finite (M ⧸ L.comap M.subtype) := Submodule.finiteQuotientOfFreeOfRankEq _ hr
+  have hfin : Finite (M ⧸ L.comap M.subtype) := Submodule.finiteQuotientOfFreeOfRankEq _ hr
   refine ⟨Nat.card (M ⧸ L.comap M.subtype), Nat.card_pos, fun x hx => ?_⟩
   have h1 := (L.comap M.subtype).toAddSubgroup.nsmul_index_mem ⟨x, hx⟩
   exact h1
@@ -103,17 +103,17 @@ theorem exists_selfDual (B : LinearMap.BilinForm ℝ V) (hB : B.Nondegenerate) (
     (Λ : Submodule ℤ V) [DiscreteTopology Λ] (hs : Submodule.span ℝ (Λ : Set V) = ⊤)
     (hint : Λ ≤ B.dualSubmodule Λ) :
     ∃ M : Submodule ℤ V, Λ ≤ M ∧ M ≤ B.dualSubmodule Λ ∧ B.dualSubmodule M = M := by
-  haveI := discrete_dual B hB Λ hs
+  have := discrete_dual B hB Λ hs
   set D := B.dualSubmodule Λ with hD
-  haveI : IsZLattice ℝ D := ⟨span_of_le hs hint⟩
-  haveI : IsNoetherian ℤ D := inferInstance
+  have : IsZLattice ℝ D := ⟨span_of_le hs hint⟩
+  have : IsNoetherian ℤ D := inferInstance
   have anti : ∀ {L M : Submodule ℤ V}, L ≤ M → B.dualSubmodule M ≤ B.dualSubmodule L :=
     fun h _ hy x hx => hy x (h hx)
   obtain ⟨M, ⟨h1, h2⟩, hmax⟩ := (set_has_maximal_iff_noetherian.2 this)
     {M : Submodule ℤ D | Λ ≤ M.map D.subtype ∧
       M.map D.subtype ≤ B.dualSubmodule (M.map D.subtype)}
     ⟨Λ.comap D.subtype, by
-      simp only [Set.mem_setOf_eq, Submodule.map_comap_subtype, inf_eq_right.2 hint]
+      simp only [Set.mem_ofPred_eq, Submodule.map_comap_subtype, inf_eq_right.2 hint]
       exact ⟨le_rfl, hint⟩⟩
   refine ⟨M.map D.subtype, h1, Submodule.map_subtype_le _ _, le_antisymm ?_ h2⟩
   intro w hw
@@ -160,13 +160,13 @@ theorem dualSubmoduleToDual_surjective (B : LinearMap.BilinForm ℝ V) (hB : B.N
   have hbΛ : ∀ i, (bΛ i : V) = b i := fun i => by simp [bΛ, Module.Basis.span_apply]
   refine ⟨⟨y, hymem⟩, bΛ.ext fun j => ?_⟩
   apply Int.cast_injective (α := ℝ)
-  have hspec := LinearMap.BilinForm.dualSubmoduleParing_spec B ⟨y, hymem⟩ (bΛ j)
+  have hspec := LinearMap.BilinForm.dualSubmodulePairing_spec B ⟨y, hymem⟩ (bΛ j)
   simp only [algebraMap_int_eq, Int.coe_castRingHom] at hspec
   rw [LinearMap.BilinForm.dualSubmoduleToDual_apply_apply, hspec]
 
   simp only [hbΛ, hy, map_sum, LinearMap.sum_apply, map_zsmul, LinearMap.smul_apply,
   LinearMap.BilinForm.apply_dualBasis_left, smul_ite, smul_zero, zsmul_eq_mul, mul_one,
-  Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   congr 2
   exact Subtype.ext (hbΛ j).symm
 
@@ -178,14 +178,14 @@ theorem exists_unimodular (B : LinearMap.BilinForm ℝ V) (hB : B.Nondegenerate)
       Submodule.span ℝ (M : Set V) = ⊤ ∧ (∀ a b : M, (Ef a b : ℝ) = B a b) ∧
       Function.Bijective Ef := by
   obtain ⟨M, h1, h2, h3⟩ := exists_selfDual B hB hA Λ hs hint
-  haveI := discrete_dual B hB Λ hs
-  haveI : DiscreteTopology M := discrete_of_le h2
+  have := discrete_dual B hB Λ hs
+  have : DiscreteTopology M := discrete_of_le h2
   have hsM := span_of_le hs h1
   obtain ⟨N, hN, hNM⟩ := exists_nsmul_mem hs h1
   let e := LinearEquiv.ofEq _ _ h3.symm
   refine ⟨M, N, (B.dualSubmoduleToDual M).comp e.toLinearMap, h1, hN, hNM, this, hsM, ?_, ?_⟩
   · intro a b
-    exact B.dualSubmoduleParing_spec (e a) b
+    exact B.dualSubmodulePairing_spec (e a) b
   · exact Function.Bijective.comp (g := B.dualSubmoduleToDual M) (f := e)
       ⟨B.dualSubmoduleToDual_injective hB M hsM, dualSubmoduleToDual_surjective B hB M hsM⟩
       e.bijective

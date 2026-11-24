@@ -181,7 +181,7 @@ theorem UpperTheory.Gal.TP.Loc.contraUnit :
   obtain ⟨w0, hw0⟩ : ∃ w : V, w ≠ 0 := by
     by_contra hne
     push_neg at hne
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hirr
+    have : IsSimpleOrder (Subrepresentation ρ) := hirr
     apply (bot_ne_top : (⊥ : Subrepresentation ρ) ≠ ⊤)
     generalize (⊥ : Subrepresentation ρ) = a
     generalize (⊤ : Subrepresentation ρ) = b
@@ -536,7 +536,7 @@ theorem UpperTheory.Gal.TP.Loc.pairOfLift :
           = (g : Matrix (Fin n) (Fin n) k).transpose := by
         rw [GlobalTheory.SplitFlip.invT_val, inv_inv]
       have hY := hg Y.transpose
-      simp only [Set.mem_preimage, Set.mem_setOf_eq] at hY
+      simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hY
       simp only [tr, hval, Matrix.transpose_mul, Matrix.transpose_transpose] at hY
       exact hY
     have hK0 : (KO k (Fin n) : Set (GL (Fin n) k)) ∈ nhds 1 :=
@@ -950,7 +950,7 @@ variable {K : Type} [Field K] [NumberField K] {w : HeightOneSpectrum (𝓞 K)}
 
 private theorem unram_apply (hc : IsUnram c) {x : (w.adicCompletion K)ˣ}
     (hx : Valued.v (x : w.adicCompletion K) = 1) : c x = 1 := by
-  haveI : (Valued.v : Valuation (w.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion K) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := isEquiv (valuation (w.adicCompletion K))
     (Valued.v : Valuation (w.adicCompletion K) (WithZero (Multiplicative ℤ)))
@@ -1087,7 +1087,7 @@ variable {G H V W Y : Type} [Group G] [Group H] [AddCommGroup V] [Module ℂ V] 
 
 theorem isIrreducible_comp {ρ : Representation ℂ G V} (h : ρ.IsIrreducible) (φ : H →* G)
     (hφ : Function.Surjective φ) : Representation.IsIrreducible (ρ.comp φ) := by
-  haveI hV : Nontrivial V := by
+  have hV : Nontrivial V := by
     by_contra hV
     rw [not_nontrivial_iff_subsingleton] at hV
     exact (bot_ne_top (α := Subrepresentation ρ))

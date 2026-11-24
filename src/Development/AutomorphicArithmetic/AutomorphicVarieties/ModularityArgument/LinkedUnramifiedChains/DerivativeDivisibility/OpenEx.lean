@@ -66,7 +66,7 @@ private theorem oe_field {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [Algeb
     (φ : R →ₐ[ℤ_[l]] PadicAlgCl l) :
     ∃ E : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] E ∧ ∀ x, φ x ∈ E ∧ ‖φ x‖ ≤ 1 := by
   obtain ⟨t, ht⟩ := Module.Finite.fg_top (R := ℤ_[l]) (M := R)
-  haveI := (t.finite_toSet.image φ).to_subtype
+  have := (t.finite_toSet.image φ).to_subtype
   refine ⟨IntermediateField.adjoin ℚ_[l] (φ '' (t : Set R)),
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x, fun x => ⟨?_,
       oe_norm ((Algebra.IsIntegral.isIntegral (R := ℤ_[l]) x).map φ)⟩⟩
@@ -81,7 +81,7 @@ private theorem oe_field {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [Algeb
 
 private theorem oe_big {l : ℕ} [Fact l.Prime] (c : Coef l) (A : Subalgebra c.O (PadicAlgCl l)) [Module.Finite c.O A] :
     ∃ c₂ : Coef l, c.O ≤ c₂.O ∧ ∀ x ∈ A, x ∈ c₂.O := by
-  haveI : Module.Finite ℤ_[l] A := Module.Finite.trans c.O A
+  have : Module.Finite ℤ_[l] A := Module.Finite.trans c.O A
   obtain ⟨E₁, f₁, m₁⟩ := oe_field c.O.val
   obtain ⟨E₂, f₂, m₂⟩ := oe_field (A.val.restrictScalars ℤ_[l])
   obtain ⟨c₂, hc⟩ := UpperTheory.V.X.So.coefOf l (E₁ ⊔ E₂)
@@ -93,12 +93,12 @@ private theorem oe_res {l : ℕ} [Fact l.Prime] {c c₁ : Coef l} (hle : c.O ≤
       ∀ (a : c.O) (b : c₁.O), a.1 = b.1 → f (residue c.O a) = residue c₁.O b := by
   let i : c.O →+* c₁.O := (Subalgebra.inclusion hle).toRingHom
   have hi : i.IsIntegral := by
-    haveI : Algebra.IsIntegral ℤ_[l] c₁.O := Algebra.IsIntegral.of_finite ℤ_[l] c₁.O
+    have : Algebra.IsIntegral ℤ_[l] c₁.O := Algebra.IsIntegral.of_finite ℤ_[l] c₁.O
     have e : i.comp (algebraMap ℤ_[l] c.O) = algebraMap ℤ_[l] c₁.O := (Subalgebra.inclusion hle).comp_algebraMap
     refine RingHom.IsIntegral.tower_top (algebraMap ℤ_[l] c.O) i ?_
     rw [e]
     exact fun x => Algebra.IsIntegral.isIntegral x
-  haveI : IsLocalHom i := hi.isLocalHom (Subalgebra.inclusion_injective hle)
+  have : IsLocalHom i := hi.isLocalHom (Subalgebra.inclusion_injective hle)
   exact ⟨ResidueField.map i, fun a b h => by
     rw [ResidueField.map_residue]
     exact congrArg _ (Subtype.ext h)⟩

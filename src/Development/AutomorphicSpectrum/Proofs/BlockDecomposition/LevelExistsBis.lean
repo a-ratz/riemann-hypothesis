@@ -84,7 +84,7 @@ private theorem exists_continuousMulEquiv_subgroup_of_forall_mem {G H : Type} [G
      right_inv := fun y => by ext; simp
      map_mul' := fun x y => by ext; simp
      continuous_toFun := e0.continuous.subtype_mk _
-     continuous_invFun := e0.symm.continuous.comp continuous_subtype_val }, fun _ => rfl⟩
+     continuous_invFun := e0.symm.continuous.comp continuous_subtypeVal }, fun _ => rfl⟩
 
 private theorem exists_continuousMulEquiv_of_subgroup_eq {G H : Type} [Group G] [TopologicalSpace G] [Group H] [TopologicalSpace H]
     (A B : Subgroup H) (hAB : ∀ h, h ∈ A → h ∈ B) (hBA : ∀ h, h ∈ B → h ∈ A) (e0 : G ≃ₜ* A) :
@@ -94,8 +94,8 @@ private theorem exists_continuousMulEquiv_of_subgroup_eq {G H : Type} [Group G] 
      left_inv := fun x => by simp
      right_inv := fun y => by ext; simp
      map_mul' := fun x y => by ext; simp
-     continuous_toFun := (continuous_subtype_val.comp e0.continuous).subtype_mk _
-     continuous_invFun := e0.symm.continuous.comp (continuous_subtype_val.subtype_mk _) }, fun _ => rfl⟩
+     continuous_toFun := (continuous_subtypeVal.comp e0.continuous).subtype_mk _
+     continuous_invFun := e0.symm.continuous.comp (continuous_subtypeVal.subtype_mk _) }, fun _ => rfl⟩
 
 theorem exists_equiv (n : ℕ) (w : Pl E) :
     ∃ e : locU n w ≃ₜ* UL n w, ∀ x : locU n w, ((e x : UL n w) : GLw n w) = cLoc w (x : UA E n) := by
@@ -264,7 +264,7 @@ theorem isLevel_cong (w : Pl E) (m : ℕ) : IsLevel (MonoidHom.id (UL n w)) (KL 
   unfold GlobalTheory.BCT.IsLevel
   refine ⟨?_, ?_, fun k hk => hk⟩
   · rw [cong, Subgroup.coe_subgroupOf]
-    exact (GlobalTheory.PrincCong.isOpen_congSub w n m).preimage continuous_subtype_val
+    exact (GlobalTheory.PrincCong.isOpen_congSub w n m).preimage continuous_subtypeVal
   · intro k hk
     rw [cong, Subgroup.mem_subgroupOf] at hk
     rw [GlobalTheory.BCT.KL, Subgroup.mem_subgroupOf]
@@ -276,7 +276,7 @@ theorem isLevel_KL (w : Pl E) : IsLevel (MonoidHom.id (UL n w)) (KL n w) (KL n w
   have hK : IsOpen (GlobalTheory.LFun.KGL w (n := n) : Set (GLw n w)) :=
     Subgroup.isOpen_mono (congSub_le_KGL w 0) (GlobalTheory.PrincCong.isOpen_congSub w n 0)
   rw [GlobalTheory.BCT.KL, Subgroup.coe_subgroupOf]
-  exact hK.preimage continuous_subtype_val
+  exact hK.preimage continuous_subtypeVal
 
 def fixG (φ : UA E n → ℂ) : Subgroup (UA E n) where
   carrier := {x | RU E n x φ = φ}
@@ -441,9 +441,9 @@ theorem levelEx : LevelEx := by
   have hlev : ∀ w : Pl E, IsLevel (MonoidHom.id (UL n w)) (KL n w) (K₀ w) := by
     intro w
     by_cases h : IsUnramU π w ∧ w ∉ R
-    · simp only [K₀, if_pos h]
+    · simp only [K₀, ite_eq_left h]
       exact isLevel_KL w
-    · simp only [K₀, if_neg h]
+    · simp only [K₀, ite_eq_right h]
       exact isLevel_cong w m
   have hcof : ∀ᶠ w in Filter.cofinite, K₀ w = KL n w := by
     rw [Filter.eventually_cofinite]
@@ -452,13 +452,13 @@ theorem levelEx : LevelEx := by
     by_contra hwT
     apply hw
     have h : IsUnramU π w ∧ w ∉ R := ⟨hunr w hwT, fun hR => hwT (by simp [Tb, hR])⟩
-    simp only [K₀, if_pos h]
+    simp only [K₀, ite_eq_left h]
   have hfam : IsLevelFam (fun w => MonoidHom.id (UL n w)) (KL n) K₀ := by
     unfold GlobalTheory.BCT.IsLevelFam
     exact ⟨hlev, hcof⟩
   have hK1 : ∀ w : Pl E, IsUnramU π w → w ∉ R → K₀ w = KL n w := by
     intro w h1 h2
-    simp only [K₀, if_pos (And.intro h1 h2)]
+    simp only [K₀, ite_eq_left (And.intro h1 h2)]
   have hK2 : ∀ w : Pl E, ¬ IsUnramU π w ∨ w ∈ R → IsCong m (K₀ w) := by
     intro w h
     have h' : ¬ (IsUnramU π w ∧ w ∉ R) := by
@@ -466,7 +466,7 @@ theorem levelEx : LevelEx := by
       rcases h with h | h
       · exact h h1
       · exact h2 h
-    simp only [K₀, if_neg h']
+    simp only [K₀, ite_eq_right h']
     exact isCong_cong w m
   let F : Finset (Pl E) := Tb.filter (fun w => w ∈ S ∧ IsUnramU π w ∧ w ∉ R)
   have hbase : ∀ w ∈ S, w ∉ F → ∀ x ∈ locU n w,
@@ -474,7 +474,7 @@ theorem levelEx : LevelEx := by
     rintro w hwS hwF x hx ⟨κ, hκ, hκx⟩
     by_cases hT' : w ∈ Tb
     · have h' : ¬ (IsUnramU π w ∧ w ∉ R) := fun h => hwF (Finset.mem_filter.2 ⟨hT', hwS, h⟩)
-      simp only [K₀, if_neg h'] at hκ
+      simp only [K₀, ite_eq_right h'] at hκ
       rw [cong, Subgroup.mem_subgroupOf] at hκ
       have hc : cLoc w x ∈ GlobalTheory.PrincCong.congSub w n m := by
         rw [← hκx]
@@ -482,11 +482,11 @@ theorem levelEx : LevelEx := by
       exact hk w m (le_trans (Finset.le_sup hT') (le_max_right _ _)) x hx hc
     · have hKL : cLoc w x ∈ GlobalTheory.LFun.KGL w (n := n) := by
         by_cases h : IsUnramU π w ∧ w ∉ R
-        · simp only [K₀, if_pos h] at hκ
+        · simp only [K₀, ite_eq_left h] at hκ
           rw [GlobalTheory.BCT.KL, Subgroup.mem_subgroupOf] at hκ
           rw [← hκx]
           exact hκ
-        · simp only [K₀, if_neg h] at hκ
+        · simp only [K₀, ite_eq_right h] at hκ
           rw [cong, Subgroup.mem_subgroupOf] at hκ
           rw [← hκx]
           exact congSub_le_KGL w m hκ
@@ -522,7 +522,7 @@ theorem levelEx : LevelEx := by
       by_cases hwa : w = a
       · subst hwa
         rintro x hx ⟨κ, hκ, hκx⟩
-        simp only [K₀, if_pos (And.intro haU haR)] at hκ
+        simp only [K₀, ite_eq_left (And.intro haU haR)] at hκ
         rw [GlobalTheory.BCT.KL, Subgroup.mem_subgroupOf] at hκ
         apply hψa x hx
         rw [← hκx]

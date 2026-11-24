@@ -217,7 +217,7 @@ private theorem unif_dec {x : kˣ} (hx : IsUnif x) (y : kˣ) :
 
 private theorem dom_zpow {x : kˣ} (hx : IsUnif x) {a : Fin n → ℤ} (ha : Antitone a) : Dom fun i => x ^ a i := by
   intro i j hij
-  have h0 : 0 < valuation k (x : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
+  have h0 : 0 < valuation k (x : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
   simp only [Units.val_zpow_eq_zpow_val, map_zpow₀]
   exact (zpow_le_zpow_iff_right_of_lt_one₀ h0 (unif_lt hx)).2 (ha hij)
 
@@ -313,7 +313,7 @@ theorem UpperTheory.V.AlgebraTools.domMul :
         rw [e, ← hmul _ _ (dom_zpow hx ha') (dom_zpow hx hfa)]
         exact (ih _ ha' hb').mul (hfund m hm)
     choose a hav using fun i => unif_dec hx (t i)
-    have h0 : 0 < valuation k (x : k) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
+    have h0 : 0 < valuation k (x : k) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 x.ne_zero)
     have ha : Antitone a := by
       intro i j hij
       have := ht i j hij

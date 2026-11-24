@@ -130,7 +130,7 @@ private theorem exists_unimodular_lattice_eq_lat_of_isSelfDualC (X : LSp D) (h :
       rw [← RingOfIntegers.coe_eq_algebraMap, ht, hT_frame, hinv, hinv]
   refine ⟨X.lat.map e, h1, h2, ?_⟩
   ext x
-  simp only [Set.mem_setOf_eq, SetLike.mem_coe]
+  simp only [Set.mem_ofPred_eq, SetLike.mem_coe]
   rw [← he x, hmem x]
 
 theorem exists_sameL (X : LSp D) : ∃ X', SameL X X' ∧ (IsSelfDualC X.sp X.lat → (X'.lat : Set _) = L0c D X'.sp) := by

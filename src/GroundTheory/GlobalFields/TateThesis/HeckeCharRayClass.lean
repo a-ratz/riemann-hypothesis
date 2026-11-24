@@ -234,7 +234,7 @@ theorem finite_quotient_idealLevel {𝔪 : Ideal (𝓞 K)} (h𝔪 : 𝔪 ≠ ⊥
     rw [← mulSupport_asIdeal_pow]
     exact hm
   exact Subgroup.quotient_finite_of_isOpen _
-    ((isOpen_finiteLevel hs).preimage continuous_subtype_val)
+    ((isOpen_finiteLevel hs).preimage continuous_subtypeVal)
 
 def standardOpenInfiniteHom : standardOpenSubgroup K →* (InfiniteAdeleRing K)ˣ ⧸ infinitePositive K :=
   (QuotientGroup.mk' _).comp ((toInfinite K).comp (standardOpenSubgroup K).subtype)

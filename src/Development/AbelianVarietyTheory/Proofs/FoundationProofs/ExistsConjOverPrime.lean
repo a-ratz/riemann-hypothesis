@@ -122,7 +122,7 @@ theorem ratCast_mem_iff {Ω : Type} [Field Ω] [CharZero Ω] {p : ℕ} (hp : p.P
 theorem isClosed_apply_mem {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω] [Algebra.IsIntegral F Ω]
     (x : Ω) (T : Set Ω) : IsClosed {σ : Ω ≃ₐ[F] Ω | σ x ∈ T} := by
   let E := IntermediateField.adjoin F ({x} : Set Ω)
-  haveI : FiniteDimensional F E :=
+  have : FiniteDimensional F E :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral (R := F) x)
   rw [← isOpen_compl_iff, isOpen_iff_forall_mem_open]
   intro σ hσ
@@ -186,7 +186,7 @@ theorem exists_conj_of_isGalois {F Ω : Type} [Field F] [Field Ω] [Algebra F Ω
 
 theorem exists_conj_over_prime : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (p : ℕ) [Fact p.Prime] (A B : ValuationSubring Ω), ((p : ℕ) : Ω) ∈ A.nonunits → ((p : ℕ) : Ω) ∈ B.nonunits → ∃ σ : Ω ≃ₐ[ℚ] Ω, ∀ x, σ x ∈ B ↔ x ∈ A := by
   intro Ω _ _ _ p _ A B hA hB
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hp : p.Prime := Fact.out
   have hA' := (A.mem_nonunits_iff).mp hA
   have hB' := (B.mem_nonunits_iff).mp hB

@@ -105,10 +105,10 @@ theorem stab_level (W : Wt E n) (f : algForms W) (C : Subgroup (UA E n)) (hC : C
   have hN : N₁ ∩ t ∩ finU (E := E) (n := n) ⊆ (C ⊓ stab W f : Subgroup (UA E n)) := fun x ⟨⟨hx1, hxt⟩, hxf⟩ =>
     ⟨hN₁C ⟨hx1, hxf⟩, hfix x hxf hxt⟩
   refine ⟨?_, N₁ ∩ t, hN₁.inter ht, ⟨h1, h1t⟩, hN⟩
-  haveI : CompactSpace C := isCompact_iff_compactSpace.1 hc
+  have : CompactSpace C := isCompact_iff_compactSpace.1 hc
   have hHo : IsOpen (((C ⊓ stab W f).subgroupOf C : Subgroup C) : Set C) := by
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1) (Filter.mem_of_superset
-      (((hN₁.inter ht).preimage continuous_subtype_val).mem_nhds ⟨h1, h1t⟩) ?_)
+      (((hN₁.inter ht).preimage continuous_subtypeVal).mem_nhds ⟨h1, h1t⟩) ?_)
     intro x hx
     exact Subgroup.mem_subgroupOf.2 (hN ⟨hx, hC x.2⟩)
   have hHc := Subtype.isCompact_iff.1 (Subgroup.isClosed_of_isOpen _ hHo).isCompact

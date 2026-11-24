@@ -150,13 +150,13 @@ theorem foldDCUnfold_of (h0 : TransExists.{u}) (h1 : TransIndep.{u}) (h2 : Trans
     congr 1
     calc h (r⁻¹ * (s * y)) = h ((r⁻¹ * s * r) * (r⁻¹ * y)) := by congr 1; group
       _ = h (r⁻¹ * y) := hh _ hs' _
-  haveI : Countable R := (hΓc.mono hR.1).to_subtype
+  have : Countable R := (hΓc.mono hR.1).to_subtype
   simp_rw [hpt]
   rw [lintegral_tsum (fun r => ?_)]
   · refine tsum_congr fun r => ?_
     exact hU G μ Γ (stab S S' r) ((hstabS r).trans hS) (Fs r) (hFs r r.2) FΓ hFΓ _
       (hTP (r : G)).2 (fun y : G => g y * h ((r : G)⁻¹ * y)) (hFm r) (hinv r)
-  · haveI : Countable (Set.range (fun p : E (r : G) × D => (p.1 : G) * (p.2 : G))) :=
+  · have : Countable (Set.range (fun p : E (r : G) × D => (p.1 : G) * (p.2 : G))) :=
       (hΓc.mono (hTP (r : G)).2.1).to_subtype
     exact (Measurable.tsum fun η : Set.range (fun p : E (r : G) × D => (p.1 : G) * (p.2 : G)) =>
       (hFm (r : G)).comp (measurable_const_mul (η : G))).aemeasurable

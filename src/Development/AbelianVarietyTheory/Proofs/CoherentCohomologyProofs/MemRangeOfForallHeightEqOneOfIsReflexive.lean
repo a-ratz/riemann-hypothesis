@@ -431,7 +431,7 @@ theorem finite_heightOneOrd_vw_ne_zero {x : K} (hx : x ≠ 0) :
   refine ((finite_height_eq_one_mem ha).union (finite_height_eq_one_mem hb0)).subset ?_
   rintro p ⟨hp, h⟩
   by_contra hn
-  simp only [Set.mem_union, Set.mem_setOf_eq, hp, true_and, not_or] at hn
+  simp only [Set.mem_union, Set.mem_ofPred_eq, hp, true_and, not_or] at hn
   apply h
   rw [heightOneOrd_vw_div _ _ (IsFractionRing.to_map_eq_zero_iff.not.mpr ha)
     (IsFractionRing.to_map_eq_zero_iff.not.mpr hb0), heightOneOrd_vw_algebraMap_of_notMem _ _ hn.1,
@@ -474,7 +474,7 @@ theorem mem_primeLocalSubalgebra_iff_heightOneOrd_vw_nonneg {x : K} (hx : x ≠ 
   have h1 : 1 ≤ heightOneOrdHom K p hp x := by
     rwa [heightOneOrdHom_eq_exp p hp hx, ← WithZero.exp_zero, WithZero.exp_le_exp]
   rw [heightOneOrdHom_eq_valuation_inv p hp (primeLocalSubalgebra K p),
-    one_le_inv₀ (zero_lt_iff.mpr ((map_ne_zero _).mpr hx))] at h1
+    one_le_inv₀ (pos_iff_ne_zero.mpr ((map_ne_zero _).mpr hx))] at h1
   obtain ⟨y, rfl⟩ := IsDiscreteValuationRing.exists_lift_of_le_one h1
   exact y.2
 

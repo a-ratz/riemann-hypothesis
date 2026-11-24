@@ -108,8 +108,8 @@ open GlobalTheory.MemN.TypesInhab in
 theorem goodSeriesIdempotent_central_idempotent (D : D7) :
     D.ntypes.e0 ∈ Subalgebra.center ℂ (MonoidAlgebra ℂ (G0g D.nd)) ∧ D.ntypes.e0 * D.ntypes.e0 = D.ntypes.e0 := by
   classical
-  haveI : ∀ k, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
-  haveI : ∀ k, Fact (D.host.g k).Prime := fun k => ⟨D.host.g_prime k⟩
+  have : ∀ k, NeZero (D.host.g k) := fun k => ⟨(D.host.g_prime k).ne_zero⟩
+  have : ∀ k, Fact (D.host.g k).Prime := fun k => ⟨D.host.g_prime k⟩
   obtain ⟨hc, hm⟩ := good_sum (I := TypePl D) (P := fun v => Fin D.R.r → ZMod (D.host.g v.1))
     (fun v p => D.ntypes.eSer v.1 (Formalism.CyclotomicNorms.monicOf p))
     (fun a => D.ntypes.goodTuple (fun k v => Formalism.CyclotomicNorms.monicOf (a ⟨k, v⟩))) D.ntypes.e0 (fun g => rfl)
@@ -129,7 +129,7 @@ theorem goodSeriesIdempotent_central_idempotent (D : D7) :
   conv_rhs => rw [h]
   refine Finset.sum_congr rfl fun a _ => ?_
   split_ifs with ha
-  · rw [hm, if_pos ha]
+  · rw [hm, ite_eq_left ha]
   · rw [mul_zero]
 
 theorem isCentralIdempotent_of_goodSeriesIdempotent {D : D7} {LL : Type} [Field LL] (σ₀ : LL →+* ℂ) {eC : G0g D.nd → LL}

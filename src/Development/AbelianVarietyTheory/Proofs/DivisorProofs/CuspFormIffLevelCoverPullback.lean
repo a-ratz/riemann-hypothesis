@@ -102,7 +102,7 @@ theorem mean_zero_comp_smul_of_periodic :
     simpa [φ, smul_right_inj hqi] using h
   let L' : AddSubgroup (n → ℝ) := L.map φ
   let eL : L ≃+ L' := AddSubgroup.equivMapOfInjective L φ hφ
-  haveI : Countable L' := Countable.of_equiv L eL.toEquiv
+  have : Countable L' := Countable.of_equiv L eL.toEquiv
   let f : (n → ℝ) ≃ (n → ℝ) := (Homeomorph.smulOfNeZero q⁻¹ hqi).toEquiv
   have hf : ∀ x, f x = q⁻¹ • x := fun x => rfl
   have hfs : ∀ x, f.symm x = q • x := fun x => by
@@ -397,7 +397,7 @@ theorem cusp_iff_pull : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestr
     refine ⟨π, fun k => ?_, fun k₂ => ?_⟩
     · by_contra hne
       push_neg at hne
-      haveI : IsEmpty {k₂ // π k₂ = k} := ⟨fun x => hne x.1 x.2⟩
+      have : IsEmpty {k₂ // π k₂ = k} := ⟨fun x => hne x.1 x.2⟩
       have h0 := hsum k
       rw [finsum_of_isEmpty] at h0
       omega

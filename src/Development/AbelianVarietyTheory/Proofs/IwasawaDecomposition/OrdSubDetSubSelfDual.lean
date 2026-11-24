@@ -71,7 +71,7 @@ theorem exists_det_ge {N : ℕ} (M : Submodule (𝓞 L) (Fin N → L)) (w : Heig
     | mem d hd =>
       obtain ⟨x, hx, rfl⟩ := hd
       exact hn x hx
-    | zero => rw [map_zero]; exact zero_lt_iff.2 h0
+    | zero => rw [map_zero]; exact pos_iff_ne_zero.2 h0
     | add x y _ _ hx hy => exact Valuation.map_add_lt _ hx hy
     | smul r x _ hx =>
       rw [Algebra.smul_def, map_mul]
@@ -92,7 +92,7 @@ theorem coord_le_one {N : ℕ} (M : Submodule (𝓞 L) (Fin N → L)) (w : Heigh
     · simpa [Function.update_of_ne h] using hx i
   have h3 := hmax _ h2
   rw [← h1, Pi.smul_apply, smul_eq_mul, map_mul] at h3
-  have h0 : 0 < w.valuation L (Matrix.of x).det := zero_lt_iff.2 (by simpa using hd)
+  have h0 : 0 < w.valuation L (Matrix.of x).det := pos_iff_ne_zero.2 (by simpa using hd)
   exact (mul_le_iff_le_one_right h0).1 h3
 
 theorem exists_den_prime {V : Type} [AddCommGroup V] [Module (𝓞 L) V] {N : ℕ} (M : Submodule (𝓞 L) V) (hM : M.FG)
@@ -169,7 +169,7 @@ theorem ordSub_add_eq_zero {N : ℕ} (M : Submodule (𝓞 L) (Fin N → L)) (hM 
     have hd : (Matrix.of x).det ≠ 0 := by
       intro h
       rw [h, map_zero] at hxk
-      exact nz w k (le_zero_iff.1 hxk)
+      exact nz w k (nonpos_iff_eq_zero.1 hxk)
     have hmax : ∀ z ∈ detSub M, w.valuation L z ≤ w.valuation L k := by
       intro z hz
       by_cases h0 : z = 0
@@ -228,7 +228,7 @@ namespace GlobalTheory.Mem.Chr
 open Classical in
 theorem ordSub_detSub_selfDual : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (N : ℕ), letI := H.cmStar; ∀ (M : SDLat H.E N) (w w' : HeightOneSpectrum (𝓞 H.E)), IsConjPl H w w' → ordSub w (detSub M.1) + ordSub w' (detSub M.1) = 0 := by
   intro R H N
-  letI := H.cmStar
+  let := H.cmStar
   intro M w w' h
   have hc : ConjPl H.conj.toRingEquiv w w' := (conjPl_main.2.1 R H w w').1 h
   refine DetSD.ordSub_add_eq_zero M.1 M.2 w w' fun x => ?_

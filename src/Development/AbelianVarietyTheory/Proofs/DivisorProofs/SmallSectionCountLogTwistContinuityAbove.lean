@@ -509,12 +509,12 @@ theorem gen_low : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p
       (∀ i, v i ∈ P.Bl 0 c ρ⁻¹) ∧ ∀ (σ : k →+* ℂ) (y : CxPts p σ), ∃ i, ρ ≤ P.nu 0 c σ y (v i) := by
   intro k _ X _ p D hX P c ⟨n, v, hvH, hnz⟩
   classical
-  haveI : Finite (k →+* ℂ) := hX.finite_emb
+  have : Finite (k →+* ℂ) := hX.finite_emb
   obtain ⟨M, hM⟩ := _root_.GlobalTheory.VolBr.Pair.exists_rep k X p P 0 c
   have hb : ∀ σ : k →+* ℂ, ∃ m U : ℝ, 0 < m ∧ 0 < U ∧ ∀ y : CxPts p σ,
       m ≤ ∑ i, P.nu 0 c σ y (v i) ∧ ∑ i, P.nu 0 c σ y (v i) ≤ U := by
     intro σ
-    haveI : CompactSpace (CxPts p σ) := hX.compactSpace σ
+    have : CompactSpace (CxPts p σ) := hX.compactSpace σ
     refine exists_pos_bounds _ (continuous_finsetSum _ fun i _ => continuous_nu P 0 c M hM σ (v i) (hvH i))
       fun y => ?_
     obtain ⟨i, hi⟩ := hnz σ y
@@ -638,7 +638,7 @@ theorem mem_Bl_of_mul_pow_twist : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
         rw [mul_assoc, mul_inv_cancel₀ hρ₁.ne', mul_one]
     _ ≤ Real.exp (δ * N) * (2 * ρ₂⁻¹ ^ m * ρ₁⁻¹) * ρ₁⁻¹ := by gcongr
     _ = Real.exp (δ * N) * ρ₂⁻¹ ^ m * (2 * ρ₁⁻¹ * ρ₁⁻¹) := by ring
-    _ = Real.exp (δ * N) * Real.exp (m * A) * Real.exp B := by rw [Real.exp_nat_mul, hA, hB]
+    _ = Real.exp (δ * N) * Real.exp (m * A) * Real.exp B := by rw [Real.exp_natCast_mul, hA, hB]
     _ ≤ Real.exp (δ * N) * Real.exp (m * (|A| + |B|)) * Real.exp (|A| + |B|) := by
         gcongr
     _ = Real.exp (δ * N + (|A| + |B|) * m + (|A| + |B|)) := by

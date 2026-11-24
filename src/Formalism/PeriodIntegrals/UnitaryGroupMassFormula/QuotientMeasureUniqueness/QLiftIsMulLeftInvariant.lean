@@ -71,7 +71,7 @@ theorem measurable_hAvg {G : Type} [Group G] [TopologicalSpace G] [IsTopological
     (ν : Measure H) [SFinite ν] {f : G → ℝ≥0∞} (hf : Measurable f) : Measurable (hAvg ν f) := by
   unfold hAvg
   have hm : Measurable (fun p : G × H => f (p.1 * (p.2 : G))) :=
-    hf.comp (measurable_fst.mul (measurable_subtype_coe.comp measurable_snd))
+    hf.comp (measurable_fst.mul (measurable_subtypeVal.comp measurable_snd))
   exact hm.lintegral_prod_right'
 
 theorem hAvg_mul_mem {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [MeasurableSpace G] [BorelSpace G] {H : Subgroup G}
@@ -139,7 +139,7 @@ theorem lintegral_qKer {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalG
     [MeasurableSpace G] [BorelSpace G] {H : Subgroup G} (ν : Measure H) {f : G → ℝ≥0∞}
     (hf : Measurable f) (y : G ⧸ H) : ∫⁻ x, f x ∂qKer ν y = hAvg ν f y.out := by
   unfold qKer hAvg
-  exact lintegral_map hf ((measurable_const_mul _).comp measurable_subtype_coe)
+  exact lintegral_map hf ((measurable_const_mul _).comp measurable_subtypeVal)
 
 theorem measurable_qKer {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
     [SecondCountableTopology G] [MeasurableSpace G] [BorelSpace G] {H : Subgroup G}

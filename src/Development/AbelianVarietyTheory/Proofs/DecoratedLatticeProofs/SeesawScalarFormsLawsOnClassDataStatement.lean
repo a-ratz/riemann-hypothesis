@@ -125,7 +125,7 @@ theorem GlobalTheory.SeeSaw.scalarForm_laws : ∀ (D : D7) (c : Comm D) (t : Tup
       rw [h0]
       exact hκ0
     refine ContinuousOn.continuousAt ?_ (hW.mem_nhds hg0)
-    rw [continuousOn_iff_continuous_restrict]
+    rw [continuousOn_iff_continuous_domRestrict]
     have hU : ∀ g : W, ((GlobalTheory.AutMult.toFin (c.X j) (q g.1) : GfC (c.X j)) : GA D (c.X j)) ∈ A.U j β := fun g => g.2
     show Continuous fun g : W => t.rd j β ψ y g.1
     have key : (fun g : W => t.rd j β ψ y g.1) = fun g : W => (A.chi j β ⟨_, hU g⟩ : ℂ) *
@@ -143,11 +143,11 @@ theorem GlobalTheory.SeeSaw.scalarForm_laws : ∀ (D : D7) (c : Comm D) (t : Tup
     rw [key]
     refine Continuous.mul ?_ ?_
     · have hc : Continuous fun g : W => (⟨_, hU g⟩ : A.U j β) :=
-        Continuous.subtype_mk (continuous_subtype_val.comp
-          ((GlobalTheory.AutMult.continuous_toFin (c.X j)).comp (hq.comp continuous_subtype_val))) _
+        Continuous.subtype_mk (continuous_subtypeVal.comp
+          ((GlobalTheory.AutMult.continuous_toFin (c.X j)).comp (hq.comp continuous_subtypeVal))) _
       exact (hA.chi j hj β).comp hc
     · have hk : Continuous fun g : W => ρ.r j hj (GlobalTheory.AutMult.toInf (c.X j) (q g.1)).1 :=
-        hr.cont.comp ((GlobalTheory.AutMult.continuous_toInf (c.X j)).comp (hq.comp continuous_subtype_val))
+        hr.cont.comp ((GlobalTheory.AutMult.continuous_toInf (c.X j)).comp (hq.comp continuous_subtypeVal))
       exact continuous_valC (f := fun g : W => fun τ => ρ.r j hj (GlobalTheory.AutMult.toInf (c.X j) (q g.1)).1 τ * (ρ.fr j y).1 τ)
         (hA.valC j hj ψ hψ β a) (continuous_pi fun τ => ((continuous_apply τ).comp hk).matrix_mul continuous_const) _
   · intro y g κ'

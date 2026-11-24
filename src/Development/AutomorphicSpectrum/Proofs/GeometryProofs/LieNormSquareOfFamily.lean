@@ -147,7 +147,7 @@ theorem lie_norm_square_of_family : ∀ (E : Type) [Field E] [NumberField E] [Is
   have hvv : v' ≫ e (wK H) = CMCurveTest.scaleVec (σ ω) v' :=
     (existsUnique_isVecOver hpb.1 (C.v ≫ C.act.act (wK H))).unique hover hsc
   have hGw : G (wK H) (K w) = σ ω • K w := by
-    haveI := hem (wK H)
+    have := hem (wK H)
     have h1 := HodgeUniq.isDiff_comp u0 u0 d20 (e (wK H)) (G (wK H)) (hGl _) hv'T hd0
     have h2 := CMCurveTest.isDiff_scaleVec u0 hd0 (σ ω)
     rw [← hvv] at h2
@@ -166,7 +166,7 @@ theorem lie_norm_square_of_family : ∀ (E : Type) [Field E] [NumberField E] [Is
     fun k => ⟨?_, ?_⟩, fun k k' => ?_⟩
   · rw [Over.comp_left, Category.assoc, hfc, ← Category.assoc, hvo, hu k, Category.assoc]
     rfl
-  · haveI := hfm (a k)
+  · have := hfm (a k)
     exact HodgeUniq.isDiff_comp uT u0 d2T (f (a k)) (F (a k)) (hFl _) hv'T hd0
   · simp only [Matrix.of_apply]
     rw [hkey, hc, hermForm_smul_left, hKH]

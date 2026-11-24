@@ -741,8 +741,8 @@ theorem perDet_det_mul_conj {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem per_det_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (gam : D.La ≃ₗ[𝓞 E] D.La), (∀ a b, D.EF (gam a) (gam b) = D.EF a b) → (∀ a ∈ l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E) • (⊤ : Submodule (𝓞 E) D.La), ∃ e, gam a = a + l.M • e) → LinearMap.det ((gam : D.La →ₗ[𝓞 E] D.La).baseChange E) = 1 := by
   intro E _ _ _ H D l gam hiso hlev
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   have hM : ((l.M : ℕ) : 𝓞 E) ∈ l.Mb := by
     have h1 : ((l.M : ℕ) : 𝓞 E) ∈ Ideal.span {((l.M : ℕ) : 𝓞 E)} := Ideal.mem_span_singleton_self _
     rw [← l.prod] at h1
@@ -800,13 +800,13 @@ theorem exists_matrix {E : Type} [Field E] [NumberField E] {La : Type} [AddCommG
       ∀ (M : Type) [AddCommGroup M] [Module ℂ M] (τ : E →+* ℂ) (φ : La →+ M),
         (∀ (a : 𝓞 E) x, φ (a • x) = τ (a : E) • φ x) → ∀ m, φ (gam (e m)) = ∑ n, τ (A m n) • φ (e n) := by
   let j : La →ₗ[𝓞 E] E ⊗[𝓞 E] La := TensorProduct.mk (𝓞 E) E La 1
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 E)) j :=
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 E)) j :=
     (isLocalizedModule_iff_isBaseChange (nonZeroDivisors (𝓞 E)) E j).2 (TensorProduct.isBaseChange _ _ _)
   have hli : LinearIndependent E (j ∘ e) := he.of_isLocalizedModule E (nonZeroDivisors (𝓞 E)) j
   have hr : Fintype.card I = Module.finrank E (E ⊗[𝓞 E] La) := by
     rw [hc]
     exact ((TensorProduct.isBaseChange (𝓞 E) La E).finrank_eq).symm
-  haveI : FiniteDimensional E (E ⊗[𝓞 E] La) := inferInstance
+  have : FiniteDimensional E (E ⊗[𝓞 E] La) := inferInstance
   let b : Module.Basis I E (E ⊗[𝓞 E] La) := basisOfLinearIndependentOfCardEqFinrank' _ hli hr
   have hb : ∀ n, b n = j (e n) := fun n => by simp [b]
   refine ⟨(LinearMap.toMatrix b b (gam.baseChange E))ᵀ, by rw [det_transpose, LinearMap.det_toMatrix], ?_⟩
@@ -996,8 +996,8 @@ theorem cond_transport (D : Datum H) {g p q : ℕ} (ty : Fin g → (E →+* ℂ)
     (hC : Cond D ty τ' e P V W C Fm B) :
     ∃ C' Fm' B', Cond D ty τ' e P' (fun a => h (V a)) (fun j => h (W j)) C' Fm' B' ∧
       (Matrix.fromRows C' Fm').det = (Matrix.fromRows C Fm).det := by
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   obtain ⟨A, hA, hφ⟩ := exists_matrix e he (by rw [D.rank, ← hc]; simp) gam
   rw [hdet] at hA
   have hcomm := tyPart_comm ty h (comm_of_period D D ty P P' hP hP' h gam hgam)

@@ -307,15 +307,15 @@ theorem flat_of_basis {R R' : Type} [CommRing R] [CommRing R'] (g : R →+* R') 
 
 theorem exists_sec_of_free : ∀ (R R' : Type) [CommRing R] [CommRing R'] (g : R →+* R') (d : ℕ) (b : Fin d → R'), (∀ r' : R', ∃! c : Fin d → R, r' = ∑ l, g (c l) * b l) → ∀ (Z Z' : Scheme.{0}) (k' : Z' ⟶ Z) (f : Z ⟶ Sp R) (f' : Z' ⟶ Sp R'), IsPullback k' f' f (spMap g) → ∀ (O : Z.Opens), IsCompact (O : Set Z) → IsQuasiSeparated (O : Set Z) → ∀ (L : LB Z), L.IsLB → ∀ σ : LB.Gen ((L.pull k').pull (k' ⁻¹ᵁ O).ι), σ.IsGen → ∀ m : Ideal Γ(Z, O), m.IsMaximal → ∃ u : LB.Sec (L.pull O.ι), ∀ z : (k' ⁻¹ᵁ O).toScheme, (∀ a ∈ m, k' ((k' ⁻¹ᵁ O).ι z) ∉ Z.basicOpen a) → ∀ z₀ : O.toScheme, O.ι z₀ = k' ((k' ⁻¹ᵁ O).ι z) → z₀ ∈ nonzeroLocus u := by
   intro R R' _ _ g d b hb Z Z' k' f f' H O hO hO' L hL σ hσ m hm
-  haveI : CompactSpace O.toScheme := isCompact_iff_compactSpace.mp hO
-  haveI : QuasiSeparatedSpace O.toScheme := (isQuasiSeparated_iff_quasiSeparatedSpace _ O.isOpen).mp hO'
+  have : CompactSpace O.toScheme := isCompact_iff_compactSpace.mp hO
+  have : QuasiSeparatedSpace O.toScheme := (isQuasiSeparated_iff_quasiSeparatedSpace _ O.isOpen).mp hO'
   have H' : IsPullback (k' ∣_ O) ((k' ⁻¹ᵁ O).ι ≫ f') (O.ι ≫ f) (spMap g) :=
     (isPullback_morphismRestrict k' O).paste_vert H
   obtain ⟨t₁, h₁⟩ := gen_chartPull (chartPullIn L (fun _ : PUnit => k') (fun _ => 1) (k' ⁻¹ᵁ O).ι) σ hσ
   obtain ⟨t, ht⟩ := gen_chartPull (chartPullOut L (fun _ : PUnit => O.ι) (fun _ => 1) (k' ∣_ O) _
     fun _ => (morphismRestrict_ι k' O).symm) t₁ h₁
   let e : Γ(O.toScheme, ⊤) ≃+* Γ(Z, O) := O.topIso.commRingCatIsoToRingEquiv
-  haveI := hm
+  have := hm
   obtain ⟨u, hu⟩ := exists_sec_of_flat g (flat_of_basis g d b hb) (O.ι ≫ f) (k' ∣_ O) _ H' (L.pull O.ι)
     (LB.isLB_pull hL _) t ht (m.comap e) (Ideal.comap_isMaximal_of_surjective e e.surjective)
   refine ⟨u, fun z hz z₀ hz₀ => ?_⟩
@@ -654,12 +654,12 @@ theorem exists_sec_nonzero_on_fibre : ∀ (Y Y' Z' : Scheme.{0}) (k : Y' ⟶ Y),
     intro a z
     rw [Scheme.basicOpen_appLE]
     exact ⟨fun h => h.2, fun h => ⟨trivial, h⟩⟩
-  haveI : CompactSpace (k ⁻¹ᵁ V).toScheme := isCompact_iff_compactSpace.1 hU.isCompact
-  haveI : CompactSpace (p' ⁻¹ᵁ (k ⁻¹ᵁ V)).toScheme := by
+  have : CompactSpace (k ⁻¹ᵁ V).toScheme := isCompact_iff_compactSpace.1 hU.isCompact
+  have : CompactSpace (p' ⁻¹ᵁ (k ⁻¹ᵁ V)).toScheme := by
     have := hpc.isCompact_preimage _ (k ⁻¹ᵁ V).isOpen hU.isCompact
     exact isCompact_iff_compactSpace.1 this
-  haveI : IsAffine (k ⁻¹ᵁ V).toScheme := hU
-  haveI : QuasiSeparatedSpace (p' ⁻¹ᵁ (k ⁻¹ᵁ V)).toScheme := quasiSeparatedSpace_of_quasiSeparated (p' ∣_ (k ⁻¹ᵁ V))
+  have : IsAffine (k ⁻¹ᵁ V).toScheme := hU
+  have : QuasiSeparatedSpace (p' ⁻¹ᵁ (k ⁻¹ᵁ V)).toScheme := quasiSeparatedSpace_of_quasiSeparated (p' ∣_ (k ⁻¹ᵁ V))
   have hσ : ∀ a : F, ∃ σ : LB.Sec (M.pull (p' ⁻¹ᵁ (k ⁻¹ᵁ V)).ι), (p' ⁻¹ᵁ (k ⁻¹ᵁ V)).toScheme.basicOpen (r a) ≤ nonzeroLocus σ := by
     rintro ⟨a, ha⟩
     obtain ⟨-, t, ht⟩ := hW a ((hF a).1 ha)
@@ -814,7 +814,7 @@ namespace GlobalTheory.Mum
 
 theorem exists_gen_near_of_finFlat : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R'), FinExt ρ → ρ.Flat → ∀ (Z Y Z' Y' : Scheme.{0}) (p : Z ⟶ Y) (p' : Z' ⟶ Y') (y : Y ⟶ Sp R) (y' : Y' ⟶ Sp R') (k : Y' ⟶ Y) (k' : Z' ⟶ Z), IsPullback k y' y (spMap ρ) → IsPullback k' p' p k → IsProper p → IsLocallyNoetherian Y → (∀ V : Y.Opens, Function.Bijective (p.app V).hom) → ∀ L' : LB Z, L'.IsLB → (∀ x : Y', ∃ V : Y'.Opens, x ∈ V ∧ ∃ t : LB.Gen ((L'.pull k').pull (p' ⁻¹ᵁ V).ι), t.IsGen) → ∀ x : Y, ∃ V : Y.Opens, x ∈ V ∧ ∃ t : LB.Gen (L'.pull (p ⁻¹ᵁ V).ι), t.IsGen := by
   intro R _ _ _ hR R' _ _ _ ρ hfin hflat Z Y Z' Y' p p' y y' k k' hk hk' hp hY hbij L hL hloc x
-  haveI : IsNoetherianRing R := hR.1
+  have : IsNoetherianRing R := hR.1
   obtain ⟨hkf, hqc, hqs, hsurj, hcl, hclp, hO, d, b, hb⟩ :=
     GlobalTheory.T.finite_flat_local_baseChange_of_proper_properties R R' ρ hfin.2.1 hfin.2.2 hflat Z Y Z' Y' p p' y y' k k' hk hk' hp
   obtain ⟨V, hV, y₀, hy₀, hxy, hE⟩ := GlobalTheory.T.exists_specialization_closed_in_affine_neighbourhood Y x
@@ -837,7 +837,7 @@ theorem exists_gen_near_of_finFlat : ∀ (R : Type) [CommRing R] [IsDomain R] [I
     exact hf1 hz₀))
   have hsurjp : Function.Surjective (p.app (Y.basicOpen f)).hom := (hbij _).2
   let e := RingEquiv.ofBijective (p.app (Y.basicOpen f)).hom (hbij _)
-  haveI hm : (Ideal.comap e.symm.toRingHom M).IsMaximal :=
+  have hm : (Ideal.comap e.symm.toRingHom M).IsMaximal :=
     Ideal.comap_isMaximal_of_surjective _ e.symm.surjective
   obtain ⟨hOc, hOq⟩ := hO _ hV₂
   obtain ⟨u, hu⟩ := GlobalTheory.T.exists_nonzero_section_of_finite_free_baseChange R R' ρ d b hb Z Z' k' (p ≫ y) (p' ≫ y') (hk'.paste_vert hk) (p ⁻¹ᵁ Y.basicOpen f) hOc hOq

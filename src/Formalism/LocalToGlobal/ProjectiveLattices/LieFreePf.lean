@@ -137,7 +137,7 @@ theorem herm (m : ℕ) (Λ : Submodule V (Fin m → K)) (hfg : Λ.FG)
     ∃ β : Fin m → (Fin m → K), (∀ i, β i ∈ Λ) ∧ (∀ i j, i < j → β i j = 0) ∧ (∀ i, β i i ≠ 0) ∧
       ∀ α ∈ Λ, ∃! r : Fin m → V, α = ∑ i, r i • β i := by
   classical
-  haveI : IsNoetherian V Λ := isNoetherian_of_fg_of_noetherian Λ hfg
+  have : IsNoetherian V Λ := isNoetherian_of_fg_of_noetherian Λ hfg
   have key : ∀ i : Fin m, ∃ b : Fin m → K, b ∈ Λ ∧ (∀ j, i < j → b j = 0) ∧ b i ≠ 0 ∧
       ∀ α ∈ Λ, (∀ j, i < j → α j = 0) → ∃ c : V, α i = c • b i := by
     intro i
@@ -249,11 +249,11 @@ theorem eig_basis {n m : ℕ} {ι : Type} (L : ι → (Fin n → V) →ₗ[V] (F
   let E : Submodule V (Fin n → V) :=
     { carrier := {c | ∀ a, L a c = χ a • c}
       add_mem' := fun {c c'} hc hc' a => by
-        simp only [Set.mem_setOf_eq] at hc hc' ⊢
+        simp only [Set.mem_ofPred_eq] at hc hc' ⊢
         rw [map_add (f := _), hc a, hc' a, smul_add]
       zero_mem' := fun a => by simp
       smul_mem' := fun r c hc a => by
-        simp only [Set.mem_setOf_eq] at hc ⊢
+        simp only [Set.mem_ofPred_eq] at hc ⊢
         rw [map_smul, hc a, smul_comm] }
   have memE : ∀ c, c ∈ E ↔ ∀ a, L a c = χ a • c := fun c => Iff.rfl
   have eigK : ∀ c ∈ E, ∀ a, M a (emb c) = algebraMap V K (χ a) • emb c := fun c hc a => by
@@ -330,7 +330,7 @@ theorem tri_basis {n m : ℕ} (P : (Fin n → K) → Prop) (v : Fin m → (Fin n
   let A : Matrix (Fin m) (Fin m) K := Matrix.of C
   have hA : A.IsLowerTriangular := fun i j h => hCz i j h
   have hdet : A.det ≠ 0 := by
-    rw [Matrix.det_of_lowerTriangular A hA]
+    rw [Matrix.det_of_isLowerTriangular A hA]
     exact Finset.prod_ne_zero_iff.2 (fun i _ => hCd i)
   have hu : IsUnit A.det := isUnit_iff_ne_zero.2 hdet
   have expand : ∀ d : Fin m → K, ∑ i, d i • ∑ j, C i j • v j = ∑ j, (Matrix.vecMul d A) j • v j := by

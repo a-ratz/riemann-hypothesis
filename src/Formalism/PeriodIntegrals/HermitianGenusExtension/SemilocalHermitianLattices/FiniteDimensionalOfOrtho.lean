@@ -130,7 +130,7 @@ theorem isLattice_of_ortho {h : V →ₗ⋆[K] V →ₗ[K] K} {L : Submodule (�
 
 theorem isFullLattice_of_ortho {h : V →ₗ⋆[K] V →ₗ[K] K} {L : Submodule (𝓞 K) V} {n : ℕ}
     (hL : Formalism.HermitianLatticesTheory.IsOrthoLattice h L n) : Submodule.IsFullLattice K L := by
-  haveI := isLattice_of_ortho hL
+  have := isLattice_of_ortho hL
   obtain ⟨e, hli, hsp, rfl, -⟩ := hL
   refine ⟨?_⟩
   apply top_unique

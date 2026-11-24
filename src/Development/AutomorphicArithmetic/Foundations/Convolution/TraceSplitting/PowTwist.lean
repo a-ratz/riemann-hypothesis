@@ -84,7 +84,7 @@ private theorem powHom_apply (s : ℂ) (x : Neutral.B1.Ideles K) : ((powHom K s 
 
 private theorem continuous_powHom (s : ℂ) : Continuous (powHom K s) := by
   refine Units.isEmbedding_val₀.continuous_iff.2 ?_
-  refine Continuous.cpow (Complex.continuous_ofReal.comp (continuous_subtype_val.comp
+  refine Continuous.cpow (Complex.continuous_ofReal.comp (continuous_subtypeVal.comp
     GroundTheory.Global.IdeleGroup.continuous_ideleModule)) continuous_const fun x => ?_
   exact Or.inl (by simpa using (GroundTheory.Global.IdeleGroup.ideleModule K x).2)
 
@@ -160,7 +160,7 @@ private theorem module_infId (u : (Cinf K)ˣ) :
       (map_zero (InfinitePlace.Completion.ringEquivComplexOfIsComplex (IsTotallyComplex.isComplex w)).symm) _
   have h4 : ((infId K u : Neutral.B1.Ideles K) : NumberField.AdeleRing (𝓞 K) K).1 w = infEq K u w :=
     congrFun h2 w
-  rw [h4, h3, InfinitePlace.mult, if_neg (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w))]
+  rw [h4, h3, InfinitePlace.mult, ite_eq_right (InfinitePlace.not_isReal_iff_isComplex.2 (IsTotallyComplex.isComplex w))]
 
 private theorem pow_expo {χ : HChar K} {s : ℂ} (h : UpperTheory.ConvolutionTheory.T.IsPow χ s) (τ : K →+* ℂ) : expo χ τ = s := by
   refine expo_eq_of_exp χ τ s s fun z => ?_
@@ -242,7 +242,7 @@ private theorem norm_completionMap_unit (v : HeightOneSpectrum (𝓞 F)) (w : Pl
     ‖completionMap v w.1 (x : v.adicCompletion F)‖ = ‖(x : v.adicCompletion F)‖ := by
   obtain ⟨w, hw⟩ := w
   obtain rfl : GroundTheory.Global.AdeleBaseChange.below F w = v := (GroundTheory.Global.AdeleBaseChange.below_eq_iff w v).2 hw
-  haveI := hw
+  have := hw
   have hs' : Function.Surjective (algebraMap ((GroundTheory.Global.AdeleBaseChange.below F w).adicCompletion F) (w.adicCompletion E)) := hs
   have hfr : Module.finrank ((GroundTheory.Global.AdeleBaseChange.below F w).adicCompletion F) (w.adicCompletion E) = 1 := by
     have := (LinearEquiv.ofBijective (Algebra.linearMap ((GroundTheory.Global.AdeleBaseChange.below F w).adicCompletion F) (w.adicCompletion E))
@@ -332,8 +332,8 @@ private theorem mult_comap_equiv (j : K ≃+* K) (u : InfinitePlace K) :
   have h : (u.comap j.toRingHom).IsReal ↔ u.IsReal := InfinitePlace.isReal_comap_iff (f := j)
   unfold InfinitePlace.mult
   by_cases hu : u.IsReal
-  · rw [if_pos (h.2 hu), if_pos hu]
-  · rw [if_neg (mt h.1 hu), if_neg hu]
+  · rw [ite_eq_left (h.2 hu), ite_eq_left hu]
+  · rw [ite_eq_right (mt h.1 hu), ite_eq_right hu]
 
 private def infPerm (j : K ≃+* K) : InfinitePlace K ≃ InfinitePlace K where
   toFun u := u.comap j.toRingHom

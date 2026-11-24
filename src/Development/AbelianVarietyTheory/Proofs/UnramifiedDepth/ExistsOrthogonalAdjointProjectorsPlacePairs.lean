@@ -82,7 +82,7 @@ theorem exists_lim_pair {C : Type} [Field C] [CharZero C] {V : VF C} {O : Type} 
 
 theorem exists_orth_proj : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O : Type) [CommRing O] [StarRing O] (dd : ℕ) (Y : FBChart C V O dd) (d : ℕ) [NeZero d] (Orb : Type) (I : Orb → Fin 2 → Type) [∀ o g, Fintype (I o g)] (p : ∀ o, PairData Y d (I o)), (∀ x x' : Orb × Fin 2 × ZMod d, x ≠ x' → ∃ a : O, V.v ((p x.1).em x.2.1 x.2.2 a - (p x'.1).em x'.2.1 x'.2.2 a) = 0) → ∃ M : Orb → Fin 2 → Matrix (Fin dd) (Fin dd) C, (∀ o, IsEnd (Y.raw (p o)) V (M o 0) (M o 1) ∧ IsEnd (Y.raw (p o)) V (M o 1) (M o 0)) ∧ (∀ o g c, (M o g).mulVec ((p o).u g c) = (p o).u g c) ∧ (∀ o g o' g' c, (o, g) ≠ (o', g') → (M o g).mulVec ((p o').u g' c) = 0) ∧ ∀ o g v, ∃ b : I o g → C, (M o g).mulVec v = ∑ c, b c • (p o).u g c := by
   intro C _ _ V O _ _ dd Y d _ Orb I _ p hsep
-  haveI := Y.algClosed
+  have := Y.algClosed
   have hex : ∃ ρ : O →+* Matrix (Fin dd) (Fin dd) C,
       (∀ a i j, ρ a i j = MvPowerSeries.coeff (Finsupp.single ((0 : Fin 1), j) 1) (Y.B.A.act a i)) ∧
       ∀ a v, linAct (Y.B.A.act a) v = (ρ a).mulVec v := by
@@ -97,7 +97,7 @@ theorem exists_orth_proj : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O :
         rw [MvPowerSeries.coeff_X]
         by_cases h : p = q
         · simp [h]
-        · rw [if_neg, if_neg h]
+        · rw [ite_eq_right, ite_eq_right h]
           intro h'
           exact h (Finsupp.single_left_injective one_ne_zero h')
       have hX2 : ∀ (p q : Fin 2 × Fin dd), MvPowerSeries.coeff (Finsupp.single p 1)
@@ -106,7 +106,7 @@ theorem exists_orth_proj : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O :
         rw [MvPowerSeries.coeff_X]
         by_cases h : p = q
         · simp [h]
-        · rw [if_neg, if_neg h]
+        · rw [ite_eq_right, ite_eq_right h]
           intro h'
           exact h (Finsupp.single_left_injective one_ne_zero h')
 

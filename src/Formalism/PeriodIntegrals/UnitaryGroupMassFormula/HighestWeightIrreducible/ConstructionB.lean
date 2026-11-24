@@ -242,8 +242,8 @@ theorem bC_graded {r n : ℕ} (M : Submodule ℂ (MvPolynomial (Fin r × Fin n) 
         rw [hw]
         exact e a (Finset.mem_univ a)
     by_cases e1 : Finsupp.weight (rowW r n) m = μ
-    · rw [if_pos e1, if_pos (hiff.mp e1)]
-    · rw [if_neg e1, if_neg (fun h' => e1 (hiff.mpr h'))]
+    · rw [ite_eq_left e1, ite_eq_left (hiff.mp e1)]
+    · rw [ite_eq_right e1, ite_eq_right (fun h' => e1 (hiff.mpr h'))]
   rw [e]
   exact hhM
 
@@ -258,7 +258,7 @@ private theorem isWeightedHomogeneous_coeff_rowGen_X_fst_weight {r n : ℕ} (a b
       (0 : MvPolynomial (Fin r × Fin n) ℂ) e :=
     fun e => MvPolynomial.isWeightedHomogeneous_zero ℂ _ e
   by_cases hb : v.1 = b
-  · rw [if_pos hb, Polynomial.X_mul_C, Polynomial.C_mul_X_eq_monomial, Polynomial.coeff_add,
+  · rw [ite_eq_left hb, Polynomial.X_mul_C, Polynomial.C_mul_X_eq_monomial, Polynomial.coeff_add,
       Polynomial.coeff_C, Polynomial.coeff_monomial]
     by_cases hk0 : k = 0
     · subst hk0
@@ -271,13 +271,13 @@ private theorem isWeightedHomogeneous_coeff_rowGen_X_fst_weight {r n : ℕ} (a b
           ring
         rw [e]
         simpa using hX (a, v.2)
-      · rw [if_neg hk0, Finsupp.single_eq_of_ne hk1, add_zero]
+      · rw [ite_eq_right hk0, Finsupp.single_eq_of_ne hk1, add_zero]
         exact h0 _
-  · rw [if_neg hb, add_zero, Polynomial.coeff_C]
+  · rw [ite_eq_right hb, add_zero, Polynomial.coeff_C]
     by_cases hk0 : k = 0
     · subst hk0
       simpa using hX v
-    · rw [if_neg hk0]
+    · rw [ite_eq_right hk0]
       exact h0 _
 
 private theorem isWeightedHomogeneous_coeff_mul_fst_weight {r n : ℕ} (c : ℤ)
@@ -313,7 +313,7 @@ private theorem isWeightedHomogeneous_coeff_rowGen_monomial {r n : ℕ} (a b : F
     by_cases hk : k = 0
     · subst hk
       simpa using MvPolynomial.isWeightedHomogeneous_C (fun v : Fin r × Fin n => ((v.1 : ℕ) : ℤ)) c0
-    · rw [if_neg hk]
+    · rw [ite_eq_right hk]
       exact MvPolynomial.isWeightedHomogeneous_zero ℂ _ _
   next v e m _ _ ih =>
     intro k
@@ -332,7 +332,7 @@ private theorem isWeightedHomogeneous_coeff_rowGen_monomial {r n : ℕ} (a b : F
         by_cases hk : k = 0
         · subst hk
           simpa using MvPolynomial.isWeightedHomogeneous_one ℂ (fun v : Fin r × Fin n => ((v.1 : ℕ) : ℤ))
-        · rw [if_neg hk]
+        · rw [ite_eq_right hk]
           exact MvPolynomial.isWeightedHomogeneous_zero ℂ _ _
       | succ j ihj =>
         intro k
@@ -431,7 +431,7 @@ private theorem homogeneousSubmodule_le_span_bounded_monomials (σ : Type) [Fint
 
 theorem bC_fd (r n : ℕ) (ν : Fin n → ℕ) : FiniteDimensional ℂ (dualWeyl ℂ r n ν) := by
   have h1 := (bC_dualWeyl_le_homog r n ν).trans (homogeneousSubmodule_le_span_bounded_monomials (Fin r × Fin n) (∑ s, ν s))
-  haveI := FiniteDimensional.span_of_finite ℂ ((Set.finite_range (fun e : (Fin r × Fin n) → Fin ((∑ s, ν s) + 1) =>
+  have := FiniteDimensional.span_of_finite ℂ ((Set.finite_range (fun e : (Fin r × Fin n) → Fin ((∑ s, ν s) + 1) =>
     Finsupp.equivFunOnFinite.symm (fun v => (e v : ℕ)))).image
       (fun d => (monomial d (1 : ℂ) : MvPolynomial (Fin r × Fin n) ℂ)))
   exact Submodule.finiteDimensional_of_le h1
@@ -484,8 +484,8 @@ theorem closure_eq_nabla : ClosedEqNablaC := by
   intro r n hn ν hν M hMle hM hhw
   by_contra hne
   have hlt : M < dualWeyl ℂ r n ν := lt_of_le_of_ne hMle hne
-  haveI := bC_fd r n ν
-  haveI : FiniteDimensional ℂ M := Submodule.finiteDimensional_of_le hMle
+  have := bC_fd r n ν
+  have : FiniteDimensional ℂ M := Submodule.finiteDimensional_of_le hMle
   let bM := Module.finBasis ℂ M
   let L : dualWeyl ℂ r n ν →ₗ[ℂ] (Fin (Module.finrank ℂ M) → ℂ) :=
     { toFun := fun g i => star (fockF ((bM i : M) : MvPolynomial (Fin r × Fin n) ℂ)

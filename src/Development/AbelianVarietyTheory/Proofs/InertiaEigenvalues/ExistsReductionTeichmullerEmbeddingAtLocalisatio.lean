@@ -56,13 +56,13 @@ theorem exists_extend_residue {O A F : Type} [CommRing O] [IsLocalRing O] [CommR
     ∃ g : A →+* F, g.comp (algebraMap O A) = κ.comp (IsLocalRing.residue O) := by
   obtain ⟨Q, hQ, hQm⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral (S := A) (IsLocalRing.maximalIdeal O)
     (by rw [(RingHom.injective_iff_ker_eq_bot _).1 hinj]; exact bot_le)
-  letI : Field (A ⧸ Q) := Ideal.Quotient.field Q
+  let : Field (A ⧸ Q) := Ideal.Quotient.field Q
   let j : IsLocalRing.ResidueField O →+* A ⧸ Q := Ideal.quotientMap Q (algebraMap O A) hQm.ge
   have hj : j.comp (IsLocalRing.residue O) = (Ideal.Quotient.mk Q).comp (algebraMap O A) := by
     ext x; rfl
-  letI : Algebra (IsLocalRing.ResidueField O) (A ⧸ Q) := j.toAlgebra
-  letI : Algebra (IsLocalRing.ResidueField O) F := κ.toAlgebra
-  haveI : Algebra.IsIntegral (IsLocalRing.ResidueField O) (A ⧸ Q) := ⟨fun x => by
+  let : Algebra (IsLocalRing.ResidueField O) (A ⧸ Q) := j.toAlgebra
+  let : Algebra (IsLocalRing.ResidueField O) F := κ.toAlgebra
+  have : Algebra.IsIntegral (IsLocalRing.ResidueField O) (A ⧸ Q) := ⟨fun x => by
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective x
     obtain ⟨p, hp, hpa⟩ := Algebra.IsIntegral.isIntegral (R := O) a
     refine ⟨p.map (IsLocalRing.residue O), hp.map _, ?_⟩
@@ -84,11 +84,11 @@ theorem exists_redVia : ∀ (D : D7) (i : D.nd.Loc) (k : Fin 2), D.nd.l i ≠ D.
     ∃ ι : Fb (D.host.g k) (D.host.g_prime k) →* Formalism.CyclotomicNorms.Fbar (D.nd.l i),
       InjPrimeTo (D.nd.l i) ι ∧ RedVia D i k ι := by
   intro D i k _
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   have hφ : Function.Injective (iotaO D.nd D.naut i) :=
     (((D.naut.iotaQC i).toRingHom.comp (D.naut.iotaQ i)).injective).comp
       (IsFractionRing.injective (D.nd.O i) (FractionRing (D.nd.O i)))
-  letI : Algebra (D.nd.O i) ℂ := (iotaO D.nd D.naut i).toAlgebra
+  let : Algebra (D.nd.O i) ℂ := (iotaO D.nd D.naut i).toAlgebra
   let A := integralClosure (D.nd.O i) ℂ
   have hA : Function.Injective (algebraMap (D.nd.O i) A) := fun x y h => hφ (congrArg Subtype.val h)
   obtain ⟨g, hg⟩ := exists_extend_residue hA (D.naut.kFbar i)

@@ -165,9 +165,9 @@ private theorem absVal {F : Type} [Field F] [NumberField F] (t : ℤ) (v : Heigh
 private theorem fin_order {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] {l : ℕ}
     [Fact l.Prime] (ξ : G F Ω →* (Qbar l)ˣ) (h : IsOpen (ξ.ker : Set (G F Ω))) :
     Continuous ξ ∧ ∃ m : ℕ, 0 < m ∧ ξ ^ m = 1 := by
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
   refine ⟨continuous_of_isOpen_ker' ξ h, ξ.ker.index, ?_, ?_⟩
-  · haveI : Finite (G F Ω ⧸ ξ.ker) := Subgroup.quotient_finite_of_isOpen _ h
+  · have : Finite (G F Ω ⧸ ξ.ker) := Subgroup.quotient_finite_of_isOpen _ h
     exact Nat.pos_of_ne_zero Subgroup.index_ne_zero_of_finite
   · ext σ
     have := Subgroup.pow_index_mem ξ.ker σ

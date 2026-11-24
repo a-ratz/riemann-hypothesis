@@ -77,7 +77,7 @@ theorem UpperTheory.V.Two.extTwo :
     simpa only [Subgroup.mem_subgroupOf, Subgroup.coe_mul] using this
   have hσi : σ⁻¹ ∉ U := fun hh => hσU (by simpa using U.inv_mem hh)
   let Φ : Γ → ZMod 2 := fun g => if hg : g ∈ U then φ ⟨g, hg⟩ else 0
-  have hΦ : ∀ g (hg : g ∈ U), Φ g = φ ⟨g, hg⟩ := fun g hg => dif_pos hg
+  have hΦ : ∀ g (hg : g ∈ U), Φ g = φ ⟨g, hg⟩ := fun g hg => dite_eq_left hg
   have hΦadd : ∀ a b, a ∈ U → b ∈ U → Φ (a * b) = Φ a + Φ b := by
     intro a b ha hb
     rw [hΦ a ha, hΦ b hb, hΦ _ (U.mul_mem ha hb), ← hadd]
@@ -97,8 +97,8 @@ theorem UpperTheory.V.Two.extTwo :
     exact hinv _ _ rfl
   have hΦσ : Φ (σ * σ) = 0 := by rw [hΦ _ h2, hσσ]
   let ψ : V → ZMod 2 := fun v => if v.1 ∈ U then Φ v.1 else Φ (v.1 * σ)
-  have hψU : ∀ v : V, v.1 ∈ U → ψ v = Φ v.1 := fun v hv => if_pos hv
-  have hψN : ∀ v : V, v.1 ∉ U → ψ v = Φ (v.1 * σ) := fun v hv => if_neg hv
+  have hψU : ∀ v : V, v.1 ∈ U → ψ v = Φ v.1 := fun v hv => ite_eq_left hv
+  have hψN : ∀ v : V, v.1 ∉ U → ψ v = Φ (v.1 * σ) := fun v hv => ite_eq_right hv
   have hψadd : ∀ a b : V, ψ (a * b) = ψ a + ψ b := by
     intro a b
     have hk := key a.1 b.1 a.2 b.2
@@ -125,7 +125,7 @@ theorem UpperTheory.V.Two.extTwo :
   refine ⟨ψ, ⟨?_, hψadd, ?_⟩, ?_, ?_⟩
   · obtain ⟨O, hO, hOe⟩ := isOpen_induced_iff.1 (hlc {0})
     have hW : IsOpen ((U.subgroupOf V : Set V) ∩ Subtype.val ⁻¹' O) :=
-      hopen.inter (hO.preimage continuous_subtype_val)
+      hopen.inter (hO.preimage continuous_subtypeVal)
     rw [IsLocallyConstant.iff_exists_open]
     intro x
     refine ⟨(fun y => x⁻¹ * y) ⁻¹' ((U.subgroupOf V : Set V) ∩ Subtype.val ⁻¹' O),
@@ -272,7 +272,7 @@ theorem UpperTheory.V.Two.invTwo :
   · have h' := hbranch.mp h
     simpa [h, h'] using hχ
   · have h' : ¬ val φ' = 0 := fun h' => h (hbranch.mpr h')
-    simp only [h, h', if_false] at hχ
+    simp only [h, h', ite_false] at hχ
     exact add_right_cancel hχ
 end -- clump:auto
 end -- clump:auto
@@ -328,7 +328,7 @@ private theorem idxTwo_conj {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopo
     CardLe (CharOff U S 2) (n ^ 2) := by
   let c : U → U := fun u => ⟨σ⁻¹ * u.1 * σ, hc u.1 u.2⟩
   have hcc : Continuous c :=
-    ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
+    ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
   have hcm : ∀ a b : U, c (a * b) = c a * c b := by
     intro a b
     apply Subtype.ext
@@ -406,7 +406,7 @@ theorem UpperTheory.V.Two.idxTwo :
   · have hnot : ¬ V ≤ U := fun hle => by
       rw [Subgroup.relIndex_eq_one.2 hle] at h2
       exact absurd h2 (by norm_num)
-    obtain ⟨σ, hσV, hσU⟩ := SetLike.not_le_iff_exists.1 hnot
+    obtain ⟨σ, hσV, hσU⟩ := IsConcreteLE.not_le_iff_exists.1 hnot
     have hidx : (U.subgroupOf V).index = 2 := h2
     have hnorm := Subgroup.normal_of_index_eq_two hidx
     refine idxTwo_conj U S σ n ?_ ?_ (fun s hs => hSV σ hσV s hs)
@@ -450,7 +450,7 @@ theorem UpperTheory.V.Two.quadStep :
     · exact Subgroup.normal_of_index_eq_two h2
   refine idxTwo (G ℚ Ω) _ (cycU 2 (abU Ω A)) (ineOff ℚ Ω N) n inf_le_right ?_ ?_ ?_ ?_ h
   · rw [Subgroup.inf_subgroupOf_right, Subgroup.coe_subgroupOf]
-    exact hq.2.2.1.preimage continuous_subtype_val
+    exact hq.2.2.1.preimage continuous_subtypeVal
   · rw [Subgroup.inf_relIndex_right]
     exact (Subgroup.relIndex_dvd_index_of_normal _ _).trans hidx
   · intro v _ s hs
@@ -458,7 +458,7 @@ theorem UpperTheory.V.Two.quadStep :
   · intro s hs hsV
     refine Subgroup.mem_inf.2 ⟨?_, hsV⟩
     obtain ⟨B, hB, hsB⟩ := hs
-    haveI : NeZero (AbF.quad p).m := ⟨by simp [AbF.quad]⟩
+    have : NeZero (AbF.quad p).m := ⟨by simp [AbF.quad]⟩
     have hv : ¬ B.valuation ((AbF.quad p).m : Ω) < 1 := by
       intro hlt
       apply hB

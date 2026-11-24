@@ -64,12 +64,12 @@ theorem isHaarMeasure_map_prodHomeo : ∀ (G : Type) [Group G] [TopologicalSpace
   set e := prodHomeo hle hs hsc hπc hπmul hπs hker with he_def
   set P : Measure (N' × V) := (Measure.haar : Measure N').prod μ with hP
   set ν : Measure N := P.map e with hν
-  haveI := hc'.isMulRightInvariant (Measure.haar : Measure N')
+  have := hc'.isMulRightInvariant (Measure.haar : Measure N')
   have hem : Measurable e := e.continuous.measurable
-  haveI : IsFiniteMeasureOnCompacts ν := Measure.IsFiniteMeasureOnCompacts.map P e
-  haveI : ν.IsOpenPosMeasure := e.continuous.isOpenPosMeasure_map e.surjective
+  have : IsFiniteMeasureOnCompacts ν := Measure.IsFiniteMeasureOnCompacts.map P e
+  have : ν.IsOpenPosMeasure := e.continuous.isOpenPosMeasure_map e.surjective
 
-  haveI hR : ν.IsMulRightInvariant := ⟨fun n₀ => by
+  have hR : ν.IsMulRightInvariant := ⟨fun n₀ => by
     set z₀ := e.symm n₀
     have hz₀ : ((n₀ : N) : G) = (z₀.1 : G) * s z₀.2 := by
       rw [← prodHomeo_apply hle hs hsc hπc hπmul hπs hker z₀]; simp [z₀, e]
@@ -90,10 +90,10 @@ theorem isHaarMeasure_map_prodHomeo : ∀ (G : Type) [Group G] [TopologicalSpace
       change _ = (m : G) * (s v * (z₀.1 : G) * (s v)⁻¹) * (s v * s z₀.2)
       group
     rw [hν, Measure.map_map (measurable_mul_const n₀) hem, hcomm, ← Measure.map_map hem hT.measurable, hT.map_eq]⟩
-  haveI : IsFiniteMeasureOnCompacts ν.inv := Measure.IsFiniteMeasureOnCompacts.map ν (Homeomorph.inv N)
-  haveI : ν.inv.IsOpenPosMeasure := (Homeomorph.inv N).continuous.isOpenPosMeasure_map (Homeomorph.inv N).surjective
-  haveI : ν.inv.IsHaarMeasure := {}
-  haveI := hc.isMulRightInvariant ν.inv
+  have : IsFiniteMeasureOnCompacts ν.inv := Measure.IsFiniteMeasureOnCompacts.map ν (Homeomorph.inv N)
+  have : ν.inv.IsOpenPosMeasure := (Homeomorph.inv N).continuous.isOpenPosMeasure_map (Homeomorph.inv N).surjective
+  have : ν.inv.IsHaarMeasure := {}
+  have := hc.isMulRightInvariant ν.inv
   have hL : ν.IsMulLeftInvariant := by rw [← Measure.inv_inv ν]; infer_instance
   exact {}
 

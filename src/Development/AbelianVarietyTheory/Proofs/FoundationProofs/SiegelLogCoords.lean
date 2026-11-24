@@ -110,7 +110,7 @@ theorem siegel_logCoords : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
     · rw [hs]; exact ⟨zero_mem _, zero_mem _⟩
     have hden := ((KTExp.mem_KT_iff ε X (p ^ L) hpL (y : X.K)).1 y.2) s hs
     have hsr : s = (((s * ((p ^ L : ℕ) : ℚ)).num : ℤ) : ℚ) / (p : ℚ) ^ L := by
-      have e := Rat.coe_int_num_of_den_eq_one hden
+      have e := Rat.intCast_num_of_den_eq_one hden
       have hp0 : (p : ℚ) ^ L ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero)
       rw [e, Nat.cast_pow, mul_div_assoc, div_self hp0, mul_one]
     rw [hsr, hexp]
@@ -149,7 +149,7 @@ theorem siegel_logCoords : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClo
       constructor
       · by_contra h0
         apply hi
-        rw [if_neg h0, zero_mul]
+        rw [ite_eq_right h0, zero_mul]
       · by_contra h1
         apply hi
         have h2 : ∀ k, θ k (r - i) = 0 := fun k => hr0' k _ (by omega)

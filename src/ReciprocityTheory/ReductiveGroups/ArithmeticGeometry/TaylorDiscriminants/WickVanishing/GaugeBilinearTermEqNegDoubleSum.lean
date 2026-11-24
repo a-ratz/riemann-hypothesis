@@ -79,11 +79,11 @@ theorem coeff_subst_killCompl {σ τ R : Type*} [CommRing R] [Finite τ] (e : σ
     by_cases hn : n = embDomain e x
     · subst hn
       simp
-    · rw [if_neg (Ne.symm hn), if_neg hn, smul_zero]
+    · rw [ite_eq_right (Ne.symm hn), ite_eq_right hn, smul_zero]
   rw [coeff_subst haS, finsum_eq_single _ (embDomain e x)]
-  · rw [hterm, if_pos rfl]
+  · rw [hterm, ite_eq_left rfl]
   · intro n hn
-    rw [hterm, if_neg hn]
+    rw [hterm, ite_eq_right hn]
 
 variable {k : Type} [CommRing k] {d : ℕ}
 
@@ -108,11 +108,11 @@ theorem coeff_ev_zero_left (h : PS k 2 d) (x : Fin 1 × Fin d →₀ ℕ) :
   fin_cases b
   · show (0 : PS k 1 d) = killCompl (eZ d) (X ((0 : Fin 2), i))
     ext m
-    rw [coeff_killCompl, coeff_X, if_neg]
+    rw [coeff_killCompl, coeff_X, ite_eq_right]
     · simp
     · intro hm
       have h1 := congrArg (fun g => g ((0 : Fin 2), i)) hm
-      rw [Finsupp.embDomain_notin_range _ _ _ (hnr i), Finsupp.single_eq_same] at h1
+      rw [embDomain_of_notMem_range _ _ _ (hnr i), Finsupp.single_eq_same] at h1
       exact zero_ne_one h1
   · show X ((0 : Fin 1), i) = killCompl (eZ d) (X ((1 : Fin 2), i))
     exact (killCompl_X (e := eZ d) ((0 : Fin 1), i)).symm
@@ -130,11 +130,11 @@ theorem coeff_ev_zero_right (h : PS k 2 d) (x : Fin 1 × Fin d →₀ ℕ) :
     exact (killCompl_X (e := eXv d) ((0 : Fin 1), i)).symm
   · show (0 : PS k 1 d) = killCompl (eXv d) (X ((1 : Fin 2), i))
     ext m
-    rw [coeff_killCompl, coeff_X, if_neg]
+    rw [coeff_killCompl, coeff_X, ite_eq_right]
     · simp
     · intro hm
       have h1 := congrArg (fun g => g ((1 : Fin 2), i)) hm
-      rw [Finsupp.embDomain_notin_range _ _ _ (hnr i), Finsupp.single_eq_same] at h1
+      rw [embDomain_of_notMem_range _ _ _ (hnr i), Finsupp.single_eq_same] at h1
       exact zero_ne_one h1
 
 def swE (d : ℕ) : Fin 2 × Fin d ↪ Fin 2 × Fin d := ⟨fun p => (Fin.rev p.1, p.2), fun p q h => by

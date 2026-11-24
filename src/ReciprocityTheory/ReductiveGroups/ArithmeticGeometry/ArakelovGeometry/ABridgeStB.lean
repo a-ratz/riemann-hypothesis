@@ -60,8 +60,8 @@ open ReciprocityTheory.ChartRestriction.G.Geo MvPolynomial TensorProduct
 
 theorem isReduced_tensor_finite (Ω E : Type*) [Field Ω] [CharZero Ω] [Field E] [Algebra ℚ E]
     [FiniteDimensional ℚ E] : IsReduced (E ⊗[ℚ] Ω) := by
-  haveI : Algebra.FormallyUnramified ℚ E := Algebra.FormallyUnramified.of_isSeparable ℚ E
-  haveI : IsReduced (Ω ⊗[ℚ] E) := Algebra.FormallyUnramified.isReduced_of_field Ω (Ω ⊗[ℚ] E)
+  have : Algebra.FormallyUnramified ℚ E := Algebra.FormallyUnramified.of_isSeparable ℚ E
+  have : IsReduced (Ω ⊗[ℚ] E) := Algebra.FormallyUnramified.isReduced_of_field Ω (Ω ⊗[ℚ] E)
   exact isReduced_of_injective (Algebra.TensorProduct.comm ℚ E Ω).toRingHom
     (Algebra.TensorProduct.comm ℚ E Ω).injective
 
@@ -94,8 +94,8 @@ theorem nilp_coeff_eq_zero {Ω : Type} [Field Ω] [CharZero Ω] {r : ℕ} {s : F
     (h : IsNilpotent (∑ k, c k ⊗ₜ[ℚ] s k : ℂ ⊗[ℚ] Ω)) : c = 0 := by
   classical
   let A : Subalgebra ℚ ℂ := Algebra.adjoin ℚ ((Finset.univ.image c : Finset ℂ) : Set ℂ)
-  haveI : Algebra.FiniteType ℚ A := (Subalgebra.fg_iff_finiteType A).1 (Subalgebra.fg_adjoin_finset _)
-  haveI : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := ℚ) (B := A)
+  have : Algebra.FiniteType ℚ A := (Subalgebra.fg_iff_finiteType A).1 (Subalgebra.fg_adjoin_finset _)
+  have : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := ℚ) (B := A)
   have hcA : ∀ k, c k ∈ A := fun k => Algebra.subset_adjoin (by simp)
   let cA : Fin r → A := fun k => ⟨c k, hcA k⟩
   let tA : A ⊗[ℚ] Ω := ∑ k, cA k ⊗ₜ[ℚ] s k
@@ -123,7 +123,7 @@ theorem nilp_coeff_eq_zero {Ω : Type} [Field Ω] [CharZero Ω] {r : ℕ} {s : F
       ∀ k, φ (cA k) = 0 := by
     intro E _ _ _ φ
     let π : A ⊗[ℚ] Ω →ₐ[ℚ] E ⊗[ℚ] Ω := Algebra.TensorProduct.map φ (AlgHom.id ℚ Ω)
-    haveI : IsReduced (E ⊗[ℚ] Ω) := isReduced_tensor_finite Ω E
+    have : IsReduced (E ⊗[ℚ] Ω) := isReduced_tensor_finite Ω E
     have h0 : π tA = 0 := (hnA.map π).eq_zero
     have h1 : ∑ k, φ (cA k) ⊗ₜ[ℚ] s k = 0 := by
       rw [← h0]
@@ -132,10 +132,10 @@ theorem nilp_coeff_eq_zero {Ω : Type} [Field Ω] [CharZero Ω] {r : ℕ} {s : F
     exact congrFun (eq_zero_of_sum_tmul hs h1)
   have hmax : ∀ M : Ideal A, M.IsMaximal → ∀ k, cA k ∈ M := by
     intro M hM k
-    letI hF : Field (A ⧸ M) := Ideal.Quotient.field M
-    haveI : Algebra.FiniteType ℚ (A ⧸ M) :=
+    let hF : Field (A ⧸ M) := Ideal.Quotient.field M
+    have : Algebra.FiniteType ℚ (A ⧸ M) :=
       Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ ℚ M) Ideal.Quotient.mk_surjective
-    haveI : Module.Finite ℚ (A ⧸ M) := finite_of_finite_type_of_isJacobsonRing ℚ (A ⧸ M)
+    have : Module.Finite ℚ (A ⧸ M) := finite_of_finite_type_of_isJacobsonRing ℚ (A ⧸ M)
     exact Ideal.Quotient.eq_zero_iff_mem.1 (key (A ⧸ M) (Ideal.Quotient.mkₐ ℚ M) k)
   have hjac : (⊥ : Ideal A).jacobson = ⊥ := IsJacobsonRing.out inferInstance Ideal.isPrime_bot.isRadical
   funext k

@@ -148,9 +148,9 @@ theorem cayley_inverse_measurable : CayInvMeas := by
     (hmat.add continuous_const).matrix_det
   have hO : IsOpen O := isOpen_ne_fun hdet continuous_const
   have hcand : Continuous fun g : O => cayCand P Q g := by
-    have hm : Continuous fun g : O => UpqT.mat (g : UpqT P Q) := hmat.comp continuous_subtype_val
+    have hm : Continuous fun g : O => UpqT.mat (g : UpqT P Q) := hmat.comp continuous_subtypeVal
     have hd : Continuous fun g : O => (UpqT.mat (g : UpqT P Q) + 1).det :=
-      hdet.comp continuous_subtype_val
+      hdet.comp continuous_subtypeVal
     have hinv : Continuous fun g : O => (UpqT.mat (g : UpqT P Q) + 1)⁻¹ := by
       have e : (fun g : O => (UpqT.mat (g : UpqT P Q) + 1)⁻¹) =
           fun g : O => ((UpqT.mat (g : UpqT P Q) + 1).det)⁻¹ • (UpqT.mat (g : UpqT P Q) + 1).adjugate := by

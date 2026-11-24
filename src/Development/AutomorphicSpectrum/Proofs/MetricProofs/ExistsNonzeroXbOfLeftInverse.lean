@@ -72,7 +72,7 @@ theorem exists_rows_det_ne_zero {Ω : Type} [Field Ω] {n m : ℕ} (M : Matrix (
     rw [this]
     exact hl.comp _ (Fin.cast_injective _)
   exact ((Matrix.isUnit_iff_isUnit_det _).1
-    (Matrix.linearIndependent_rows_iff_isUnit.1 hl')).ne_zero
+    (linearIndependent_row_iff_isUnit.1 hl')).ne_zero
 
 theorem exists_rows_castLE_det_ne_zero {Ω : Type} [Field Ω] {n m a : ℕ} (M : Matrix (Fin n) (Fin m) Ω)
     (B : Matrix (Fin m) (Fin n) Ω) (h : B * M = 1) (ha : a + 1 ≤ m) (hm : a + 1 = m) :

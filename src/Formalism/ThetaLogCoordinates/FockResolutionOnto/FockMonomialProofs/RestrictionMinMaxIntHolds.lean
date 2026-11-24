@@ -83,7 +83,7 @@ theorem wtsp_mono (LL : Letters N) (j : ℕ) (Cs : Finset (Fin r)) (w : Fin r �
   simp only [WtSpC, MvPolynomial.mem_restrictSupport_iff] at hx ⊢
   intro m hm
   have hm' := hx hm
-  simp only [Set.mem_setOf_eq] at hm' ⊢
+  simp only [Set.mem_ofPred_eq] at hm' ⊢
   intro c _
   exact hm' c (Finset.mem_univ c)
 
@@ -184,7 +184,7 @@ private theorem glAct_slice_lemma_2 (LL : Letters N) (j : ℕ) (ρ c d : Fin r) 
     intro a b ha hb n t i' hn
     rw [MvPolynomial.pderiv_monomial]
     have hX : (X (i', a) : MvPolynomial (Fin N × Fin r) ℚ_[p]) = monomial (Finsupp.single (i', a) 1) 1 := rfl
-    rw [hX, MvPolynomial.monomial_mul, MvPolynomial.mem_restrictSupport_iff]
+    rw [hX, monomial_mul_monomial, MvPolynomial.mem_restrictSupport_iff]
     intro m hm
     rw [Finset.mem_singleton.mp (MvPolynomial.support_monomial_subset hm)]
     have h1 : (i', a) ≠ (i, ρ) := fun h => ha (Prod.mk.inj h).2
@@ -231,17 +231,17 @@ private theorem resL_glAct_lemma_3 (LL : Letters N) (j : ℕ) (ρ c d : Fin r) (
     rw [MvPolynomial.mem_restrictSupport_iff]
     intro n hn
     rw [Finset.mem_coe, MvPolynomial.mem_support_iff, hres] at hn
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     by_contra h
-    exact hn (if_neg h)
+    exact hn (ite_eq_right h)
   have hrest : x - resL p (i, ρ) e x ∈
       MvPolynomial.restrictSupport ℚ_[p] {n : Fin N × Fin r →₀ ℕ | n (i, ρ) ∈ ({e}ᶜ : Set ℕ)} := by
     rw [MvPolynomial.mem_restrictSupport_iff]
     intro n hn
     rw [Finset.mem_coe, MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, hres] at hn
-    simp only [Set.mem_setOf_eq, Set.mem_compl_iff, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_compl_iff, Set.mem_singleton_iff]
     intro h
-    exact hn (by rw [if_pos h, sub_self])
+    exact hn (by rw [ite_eq_left h, sub_self])
   have hid : ∀ y ∈ MvPolynomial.restrictSupport ℚ_[p] {n : Fin N × Fin r →₀ ℕ | n (i, ρ) ∈ ({e} : Set ℕ)},
       resL p (i, ρ) e y = y := by
     intro y hy
@@ -299,7 +299,7 @@ private theorem glAct_md_lemma_5 (LL : Letters N) (j : ℕ) (c d : Fin r) (B : P
       simp
     · have hle : Finsupp.single (i', b) 1 ≤ n := Finsupp.single_le_iff.mpr (Nat.one_le_iff_ne_zero.mpr h0)
       have hX : (X (i', a) : MvPolynomial (Fin N × Fin r) ℚ_[p]) = monomial (Finsupp.single (i', a) 1) 1 := rfl
-      rw [hX, MvPolynomial.monomial_mul, MvPolynomial.mem_restrictSupport_iff]
+      rw [hX, monomial_mul_monomial, MvPolynomial.mem_restrictSupport_iff]
       intro m hm
       rw [Finset.mem_singleton.mp (MvPolynomial.support_monomial_subset hm)]
       have hsum : ∀ i'', ∑ c', ((Finsupp.single (i', a) 1 + (n - Finsupp.single (i', b) 1) : Fin N × Fin r →₀ ℕ)) (i'', c') =
@@ -364,17 +364,17 @@ theorem eproj_pol (LL : Letters N) (j : ℕ) (ρ : Fin r) (w : Fin r → ℤ)
     rw [MvPolynomial.mem_restrictSupport_iff]
     intro n hn
     rw [Finset.mem_coe, MvPolynomial.mem_support_iff, hπ] at hn
-    simp only [Set.mem_setOf_eq, iff_true]
+    simp only [Set.mem_ofPred_eq, iff_true]
     by_contra h
-    exact hn (if_neg h)
+    exact hn (ite_eq_right h)
   have hrest : ∀ y, y - Pm y ∈ MvPolynomial.restrictSupport ℚ_[p] {n | (MultiDeg LL n ↔ False)} := by
     intro y
     rw [MvPolynomial.mem_restrictSupport_iff]
     intro n hn
     rw [Finset.mem_coe, MvPolynomial.mem_support_iff, MvPolynomial.coeff_sub, hπ] at hn
-    simp only [Set.mem_setOf_eq, iff_false]
+    simp only [Set.mem_ofPred_eq, iff_false]
     intro h
-    exact hn (by rw [if_pos h, sub_self])
+    exact hn (by rw [ite_eq_left h, sub_self])
   have hid : ∀ y ∈ MvPolynomial.restrictSupport ℚ_[p] {n | (MultiDeg LL n ↔ True)}, Pm y = y := by
     intro y hy
     rw [MvPolynomial.mem_restrictSupport_iff] at hy
@@ -482,7 +482,7 @@ theorem wtComp_mem (LL : Letters N) (j : ℕ) (w : Fin r → ℤ) (x : MvPolynom
   · rw [WtSpC, MvPolynomial.mem_restrictSupport_iff]
     intro m' hm'
     rw [Finset.mem_singleton.mp (MvPolynomial.support_monomial_subset hm')]
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     intro c _
     exact h c
   · exact Submodule.zero_mem _

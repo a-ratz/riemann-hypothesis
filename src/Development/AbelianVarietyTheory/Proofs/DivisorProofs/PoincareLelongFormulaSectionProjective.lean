@@ -382,11 +382,11 @@ theorem dim_le_of_dominant : ∀ (F : Type) [Field F] (X Y : Scheme.{0}) [IsInte
   intro F _ W M _ _ p q hp hq f hπ hη n hM
   obtain ⟨N, i, hi, hcomp⟩ := hp
   obtain ⟨N', j, hj, hcomp'⟩ := hq
-  haveI : IsProper (PSpace.str F N) := isProper_str F N
-  haveI : IsProper (PSpace.str F N') := isProper_str F N'
-  haveI : IsProper p := by rw [← hcomp]; infer_instance
-  haveI : IsProper (f ≫ p) := by rw [hπ, ← hcomp']; infer_instance
-  haveI : IsProper f := IsProper.of_comp f p
+  have : IsProper (PSpace.str F N) := isProper_str F N
+  have : IsProper (PSpace.str F N') := isProper_str F N'
+  have : IsProper p := by rw [← hcomp]; infer_instance
+  have : IsProper (f ≫ p) := by rw [hπ, ← hcomp']; infer_instance
+  have : IsProper f := IsProper.of_comp f p
   have hf : LocallyOfFiniteType f := inferInstance
   obtain ⟨_, ⟨V, hV, rfl⟩, hxV, -⟩ := W.isBasis_affineOpens.exists_subset_of_mem_open
     (Set.mem_univ (genericPoint W)) isOpen_univ
@@ -395,19 +395,19 @@ theorem dim_le_of_dominant : ∀ (F : Type) [Field F] (X Y : Scheme.{0}) [IsInte
   obtain ⟨_, ⟨U, hU, rfl⟩, hy, hUV⟩ := M.isBasis_affineOpens.exists_subset_of_mem_open
     (show genericPoint M ∈ f ⁻¹ᵁ V from hx) (f ⁻¹ᵁ V).isOpen
   have hU : IsAffineOpen U := hU
-  haveI : Nonempty V := ⟨⟨_, hx⟩⟩
-  haveI : Nonempty U := ⟨⟨_, hy⟩⟩
+  have : Nonempty V := ⟨⟨_, hx⟩⟩
+  have : Nonempty U := ⟨⟨_, hy⟩⟩
   have e : U ≤ f ⁻¹ᵁ V := hUV
   let φ := Spec.preimage (hV.fromSpec ≫ p)
   have hφ : Spec.map φ = hV.fromSpec ≫ p := Spec.map_preimage _
-  letI : Algebra F Γ(W, V) := φ.hom.toAlgebra
+  let : Algebra F Γ(W, V) := φ.hom.toAlgebra
   have hftA : Algebra.FiniteType F Γ(W, V) :=
     (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType) (φ := φ)).mp (hφ ▸ inferInstance)
-  letI : Algebra Γ(W, V) Γ(M, U) := (f.appLE V U e).hom.toAlgebra
+  let : Algebra Γ(W, V) Γ(M, U) := (f.appLE V U e).hom.toAlgebra
   have hftB : Algebra.FiniteType Γ(W, V) Γ(M, U) :=
     HasRingHomProperty.appLE @LocallyOfFiniteType f hf ⟨V, hV⟩ ⟨U, hU⟩ e
-  letI : Algebra F Γ(M, U) := (φ ≫ f.appLE V U e).hom.toAlgebra
-  haveI : IsScalarTower F Γ(W, V) Γ(M, U) := IsScalarTower.of_algebraMap_eq' rfl
+  let : Algebra F Γ(M, U) := (φ ≫ f.appLE V U e).hom.toAlgebra
+  have : IsScalarTower F Γ(W, V) Γ(M, U) := IsScalarTower.of_algebraMap_eq' rfl
   have hftC : Algebra.FiniteType F Γ(M, U) := Algebra.FiniteType.trans hftA hftB
   obtain ⟨d, h₁, h₂⟩ := exists_ringKrullDim_eq_and_trdeg_eq F Γ(W, V)
   have hd : topologicalKrullDim (V : Set W) = d := by
@@ -416,14 +416,14 @@ theorem dim_le_of_dominant : ∀ (F : Type) [Field F] (X Y : Scheme.{0}) [IsInte
       hV.range_fromSpec
   rw [GlobalTheory.OpenDim.topologicalKrullDim_open F p V ⟨_, hx⟩] at hd
   have hB : Algebra.trdeg F Γ(M, U) = n := GlobalTheory.GenFinite.trdeg_affineOpen_eq F (f ≫ p) hU ⟨_, hy⟩ n hM
-  letI := (W.evaluation V _ hx).hom.toAlgebra
+  let := (W.evaluation V _ hx).hom.toAlgebra
   have nat : f.appLE V U e ≫ M.evaluation U _ hy =
       W.evaluation V _ hx ≫ f.residueFieldMap (genericPoint M) := by
     rw [Scheme.evaluation_naturality f _ hx, Scheme.Hom.appLE, Category.assoc]
     congr 1
     simp only [Scheme.evaluation]
     rw [← Category.assoc, TopCat.Presheaf.germ_res]
-  haveI := GenFiniteEtale.isFractionRing_eval W hV hη hx
+  have := GenFiniteEtale.isFractionRing_eval W hV hη hx
   have hinj : Function.Injective (IsScalarTower.toAlgHom F Γ(W, V) Γ(M, U)) := by
     have h₃ : Function.Injective (f.appLE V U e ≫ M.evaluation U _ hy).hom := by
       rw [nat]
@@ -531,7 +531,7 @@ theorem finsum_weighted_regroup_along_fibres {A B : Type} (π : A → B) (m : A 
   · have e : ∑ᶠ (w : A) (_ : π w = z), m w * (d w : ℤ) = ∑ w ∈ S.filter (fun w => π w = z), m w * (d w : ℤ) := by
       refine finsum_mem_eq_sum_of_inter_support_eq (s := {w | π w = z}) _ ?_
       ext w
-      simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Function.mem_support, Finset.coe_filter]
+      simp only [Set.mem_inter_iff, mem_ofPred_eq, Function.mem_support, Finset.coe_filter]
       constructor
       · rintro ⟨h1, h2⟩
         exact ⟨⟨(hmS w).1 (left_ne_zero_of_mul h2), h1⟩, h2⟩
@@ -558,8 +558,8 @@ theorem finsum_cycInt_push : ∀ (F : Type) [Field F] (X Y : Scheme.{0}) [IsInte
     have := isProper_str F m
     have : IsProper (i ≫ PSpace.str F m) := inferInstance
     exact QuasiCompact.compactSpace_of_compactSpace (i ≫ PSpace.str F m)
-  haveI := hc hp
-  haveI := hc hq
+  have := hc hp
+  have := hc hq
   have key := fun (w : Y) (hw : Δ'.mult w ≠ 0) => _root_.GlobalTheory.CycPush.cycInt_pull F X Y p q σ hp hq π hπ e L f hf w
     ((_root_.GlobalTheory.FieldDimCoheight.coheight_eq_one_iff F Y q e hq hY w).1 (CartierDiv.coheight_eq_one_of_mult_ne_zero (D := Δ') hw))
   exact finsum_weighted_regroup_along_fibres π Δ'.mult Δ.mult (fun w => π.residueDegree w) _ _ (fun z => Order.coheight z = 1)
@@ -711,7 +711,7 @@ theorem height_eq_one {R S : Type} [CommRing R] [IsDomain R] [CommRing S] [IsDom
   refine le_antisymm ?_ ?_
   · rw [← h, PrimeSpectrum.height_eq_orderHeight, PrimeSpectrum.height_eq_orderHeight]
     exact Order.height_le_height_apply_of_strictMono _
-      (fun a b hab => Ideal.IsIntegral.comap_lt_comap (R := R) (I := a.asIdeal) hab) Q
+      (fun a b hab => Ideal.IsIntegral.under_lt_under (R := R) (I := a.asIdeal) hab) Q
   · rw [Order.one_le_iff_ne_zero]
     intro h0
     have hQ : Q.asIdeal = ⊥ := Ideal.height_eq_zero_iff_eq_bot.1 h0
@@ -958,20 +958,20 @@ theorem exists_subAtlas : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) (p : X 
   have hq : IsProjOver q := by
     obtain ⟨N, i, hi, h⟩ := hp
     exact ⟨N, π ≫ i, inferInstance, by rw [Category.assoc, h, hπ]⟩
-  haveI : CompactSpace (CxPts q σ) := CxPts.compactSpace σ hq
-  haveI : T2Space (CxPts q σ) := CxPts.t2Space_cxPts_of_isProjOver σ hq
-  haveI : SecondCountableTopology (CxPts q σ) := CxPts.secondCountableTopology_of_isProjOver σ hq
-  haveI : T2Space (CxPts p σ) := CxPts.t2Space_cxPts_of_isProjOver σ hp
+  have : CompactSpace (CxPts q σ) := CxPts.compactSpace σ hq
+  have : T2Space (CxPts q σ) := CxPts.t2Space_cxPts_of_isProjOver σ hq
+  have : SecondCountableTopology (CxPts q σ) := CxPts.secondCountableTopology_of_isProjOver σ hq
+  have : T2Space (CxPts p σ) := CxPts.t2Space_cxPts_of_isProjOver σ hp
   have hc : Continuous (ptMap π hπ σ) := PtsOver.continuous_map π hπ _
   have hinj : Function.Injective (ptMap π hπ σ) := fun a b h =>
     Subtype.ext ((cancel_mono π).1 (congrArg Subtype.val h))
   have hE : IsClosedEmbedding (ptMap π hπ σ) := hc.isClosedEmbedding hinj
   let h : CxPts q σ ≃ₜ Set.range (ptMap π hπ σ) := hE.isEmbedding.toHomeomorph
-  haveI : CompactSpace (Set.range (ptMap π hπ σ)) := h.compactSpace
+  have : CompactSpace (Set.range (ptMap π hπ σ)) := h.compactSpace
   let A' : FinHolAtlas e (CxPts q σ) := (AnRead.all q σ e).finAtlas
   have hA' : IsAlgAtlas A' := AnRead.isAlgAtlas_finAtlas _
   have hm : HoloMap A' A (ptMap π hπ σ) := hA.holoMap hA' (f := π) fun _ => rfl
-  have hB : HoloMap (tAtlas A' h) A Subtype.val := ⟨continuous_subtype_val, fun j l => hm.2 j l⟩
+  have hB : HoloMap (tAtlas A' h) A Subtype.val := ⟨continuous_subtypeVal, fun j l => hm.2 j l⟩
   refine ⟨tAtlas A' h, hB, fun L v hv => ?_⟩
   have hsm (i : Fin e) : (L i).φ.IsSmooth hA.anRead := (Weight.isCInf_iff_isSmooth _).1 (L i).cInf
   have hv' : Continuous fun y => v (ptMap π hπ σ y) := hv.comp hc
@@ -981,7 +981,7 @@ theorem exists_subAtlas : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) (p : X 
   rw [h₂ (h₁.2 (mIntegrableCont _ _ hP _ hv')),
     GlobalTheory.Adopt.mongeAmpereIntegral_invariant_homeomorph_transport e _ _ A' h _ _
       (fun i => isPotentialPullback A _ _ hB _ ((hsm i).isPotential hA))
-      (hv.comp continuous_subtype_val)]
+      (hv.comp continuous_subtypeVal)]
   exact (SameForm.mInt_eq (fun i => (hsm i).sameForm_pull hA hA' π hπ) _).symm
 
 end GlobalTheory.Mix
@@ -1010,7 +1010,7 @@ theorem exists_affine_germ_eq : ∀ (Y : Scheme.{0}) (y : Y) (n : ℕ) (r : Fin 
     ∃ (V : Y.affineOpens) (hy : y ∈ V.1) (F : Fin n → Γ(Y, V.1)), ∀ j, Y.presheaf.germ V.1 y hy (F j) = r j := by
   intro Y y n r
   classical
-  choose U hU s hs using fun j => TopCat.Presheaf.germ_exist Y.presheaf (r j)
+  choose U hU s hs using fun j => TopCat.Presheaf.exists_germ_eq Y.presheaf (r j)
   have hmem : ∀ t : Finset (Fin n), y ∈ t.inf U := by
     intro t
     induction t using Finset.induction_on with
@@ -1294,7 +1294,7 @@ theorem exists_compatChart {F : Type} [Field F] {X : Scheme.{0}} {p : X ⟶ Sp F
     ∃ (hn : n ≤ D) (ψ : OpenPartialHomeomorph (CxPts p σ) (Fin D → ℂ)), IsCompatChart A ψ ∧ x ∈ ψ.source ∧
       ψ.source ⊆ N ∧ ψ.source ⊆ ptsIn p σ V.1 ∧
       ∀ y ∈ ψ.source, ∀ j, ψ y (Fin.castLE hn j) = ev p σ V.1 (G j) y := by
-  haveI : CharZero F := σ.charZero
+  have : CharZero F := σ.charZero
   obtain ⟨c, hc⟩ := AlgChart.exists_mem_source (D := D) (p := p) (σ := σ) x
   have hli := SncChart.linearIndependent_fderiv_params F X p D σ c x hc V hV n G hR
   have hxV : x ∈ ptsIn p σ V.1 := mem_ptsIn.2 hV
@@ -1326,7 +1326,7 @@ theorem exists_compatChart {F : Type} [Field F] {X : Scheme.{0}} {p : X ⟶ Sp F
 theorem isSNC_locSec : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp F) (σ : F →+* ℂ) (D : ℕ), IsProjOver p → SmoothOfRelativeDimension D p → ∀ (A : FinHolAtlas D (CxPts p σ)), IsAlgAtlas A → ∀ (M : MLine p σ) (s : M.B.Sec) (hs : genericPoint X ∈ nonzeroLocus s) (r : ℕ) (z : Fin r → X), Function.Injective z → (∀ a, Order.coheight (z a) = 1) → ((nonzeroLocus s : Set X)ᶜ = ⋃ a, closure {z a}) → (∀ x : X, FinalTheorems.LSncAt X (fun a => (Closeds.closure {z a})) x) → IsSNC A M.φ.locPot (M.φ.locSec (secVal p σ s)) (fun a => ((divOfSec M.φ.isLB s hs).mult (z a)).toNat) (fun a => Set.range (ptMap (closι (z a)) rfl σ)) := by
   intro F _ X _ _ p σ D _ hsm A hA M s hs r z hz hco hzero hsnc x
   classical
-  haveI := hsm
+  have := hsm
   have hxi := mem_pick (p := p) (σ := σ) M.φ.isLB x
   have hi := mem_ptsIn.1 hxi
   obtain ⟨n, g, e, u, inst, hR, hI, hf⟩ :=
@@ -1360,12 +1360,12 @@ theorem isSNC_locSec : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] 
     exact congrArg Subtype.val (e.injective this)
   · intro a
     ext y
-    simp only [Set.mem_inter_iff, Set.mem_setOf_eq, mem_range_ptMap_closι]
+    simp only [Set.mem_inter_iff, mem_ofPred_eq, mem_range_ptMap_closι]
     refine and_comm.trans (and_congr_right fun hy => ?_)
     by_cases h : x.1 (IsLocalRing.closedPoint ℂ) ∈ Closeds.closure {z a}
-    · simp only [τ, dif_pos h, Option.some.injEq, exists_eq_left', hev y hy]
+    · simp only [τ, dite_eq_left h, Option.some.injEq, exists_eq_left', hev y hy]
       exact ((hN hy).2.2.1 ⟨a, h⟩).symm
-    · simp only [τ, dif_neg h, reduceCtorEq, false_and, exists_false, iff_false]
+    · simp only [τ, dite_eq_right h, reduceCtorEq, false_and, exists_false, iff_false]
       exact (hN hy).2.2.2.1 a h
   · exact (hA.holoOn_iff hA.anRead ψ.open_source).2 ((hA.anRead.holoOn_ev V.1 (G' 0)).mono hψV)
   · intro y hy
@@ -1375,9 +1375,9 @@ theorem isSNC_locSec : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] 
     congr 1
     rw [Finset.prod_eq_one (s := Finset.univ)
       (f := fun a : {a // ¬ x.1 (IsLocalRing.closedPoint ℂ) ∈ Closeds.closure {z a}} => _)
-      (fun a _ => by simp only [τ, dif_neg a.2]), mul_one]
+      (fun a _ => by simp only [τ, dite_eq_right a.2]), mul_one]
     refine Finset.prod_congr (by ext; simp) fun a _ => ?_
-    simp only [τ, dif_pos a.2, map_pow, hev y hy, ev_eq (hψV hy)]
+    simp only [τ, dite_eq_left a.2, map_pow, hev y hy, ev_eq (hψV hy)]
 
 end GlobalTheory.SecSnc
 end -- clump:auto
@@ -1456,7 +1456,7 @@ theorem smooth_component : ∀ (F : Type) [Field F] [CharZero F] (X : Scheme.{0}
   | bot => exact absurd h2 (by rw [WithBot.bot_add]; exact WithBot.bot_ne_coe)
   | coe u =>
     induction u using ENat.recTopCoe with
-    | top => exact absurd (WithBot.coe_injective h2) (ENat.top_ne_coe _)
+    | top => exact absurd (WithBot.coe_injective h2) (ENat.top_ne_natCast _)
     | coe u =>
       have : u + 1 = e + 1 := by exact_mod_cast h2
       exact_mod_cast Nat.succ_injective this
@@ -1501,7 +1501,7 @@ theorem lSncAt_of_snc (X : Scheme.{0}) [IsNoetherian X] (B : Closeds X) (m : ℕ
     (hB : Snc (Scheme.IdealSheafData.vanishingIdeal B)) (hC : CompList (B : Set X) C) (x : X) :
     LSncAt X C x := by
   obtain ⟨hreg, U, hx, n, f, J, hrsp, hZU⟩ := hB x
-  haveI := hreg
+  have := hreg
   have hs : ((Scheme.IdealSheafData.vanishingIdeal B).support : Set X) = B := by simp
   obtain ⟨O, hxO, -, hO⟩ := exists_open_comps x U hx f J hrsp hZU
   have key : ∀ i : {i : Fin m // x ∈ C i}, ∃ j ∈ J,
@@ -1522,7 +1522,7 @@ theorem lSncAt_of_snc (X : Scheme.{0}) [IsNoetherian X] (B : Closeds X) (m : ℕ
         rw [Scheme.range_fromSpecStalk] at h
         exact Specializes.mem_open h O.isOpen hxO
       have h := Set.ext_iff.1 hO' (X.fromSpecStalk x q)
-      simp only [Set.mem_inter_iff, Set.mem_setOf_eq, hqO, and_true, true_and,
+      simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, hqO, and_true, true_and,
         GlobalTheory.SncComponents.fromSpecStalk_mem_zeroLocus_iff U x hx] at h
       exact h
     obtain ⟨j, hj, hbj, -⟩ := (hq (IsLocalRing.closedPoint _)).1
@@ -1631,14 +1631,14 @@ theorem coheight_eq_one_of_lSncAt {X : Scheme.{0}} {r : ℕ} (z : Fin r → X) (
 
 theorem exists_genericPoints : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp F) (D : ℕ), IsProjOver p → SmoothOfRelativeDimension D p → ∀ T : Closeds X, FinalTheorems.Snc (Scheme.IdealSheafData.vanishingIdeal T) → ∃ (r : ℕ) (z : Fin r → X), Function.Injective z ∧ (∀ a, Order.coheight (z a) = 1) ∧ (T : Set X) = ⋃ a, closure {z a} ∧ (∀ w : X, w ∈ T → Order.coheight w = 1 → ∃ a, w = z a) ∧ ∀ x : X, FinalTheorems.LSncAt X (fun a => (Closeds.closure {z a})) x := by
   intro F _ X _ p D hp hs T hT
-  haveI : QuasiCompact p := by
+  have : QuasiCompact p := by
     obtain ⟨N, i, hi, rfl⟩ := hp
-    haveI : IsProper (PSpace.str F N) := isProper_str F N
+    have : IsProper (PSpace.str F N) := isProper_str F N
     infer_instance
-  haveI : Smooth p := SmoothOfRelativeDimension.smooth D p
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
-  haveI : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
-  haveI : IsNoetherian X := {}
+  have : Smooth p := SmoothOfRelativeDimension.smooth D p
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian p
+  have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace p
+  have : IsNoetherian X := {}
   obtain ⟨m, C, hC, -⟩ := GlobalTheory.SncComponents.exists_compList_effCartier F X p D T hT
   have hL := GlobalTheory.SncLocal.lSncAt_of_snc' X T m C hT hC
   have hz : ∀ a, ∃ z : X, closure {z} = (C a : Set X) := fun a =>
@@ -1706,10 +1706,10 @@ theorem finsum_mult {X : Scheme.{0}} [IsIntegral X] [IsLocallyNoetherian X] {B :
 
 theorem poincareLelong_snc : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp F) (σ : F →+* ℂ) (e : ℕ), IsProjOver p → SmoothOfRelativeDimension (e + 1) p → ∀ (L : Fin e → MLine p σ) (M : MLine p σ) (s : M.B.Sec) (hs : genericPoint X ∈ nonzeroLocus s), FinalTheorems.Snc (Scheme.IdealSheafData.vanishingIdeal (nonzeroLocus s).compl) → ∀ (u : CxPts p σ → ℝ) (hu : ∀ y, CInfAt u y), 2 * Mix.int (Fin.cons (MLine.ofFun u hu) L : Fin (e + 1) → MLine p σ) (M.logSec s) = ∑ᶠ z, ((divOfSec M.φ.isLB s hs).mult z : ℝ) * cycInt L u z - Mix.int (Fin.cons M L : Fin (e + 1) → MLine p σ) u := by
   intro F _ X _ _ p σ e hp hsm L M s hs hsnc u hu
-  haveI : CharZero F := σ.charZero
-  haveI := CxPts.compactSpace σ hp
-  haveI := CxPts.t2Space_cxPts_of_isProjOver σ hp
-  haveI := CxPts.secondCountableTopology_of_isProjOver σ hp
+  have : CharZero F := σ.charZero
+  have := CxPts.compactSpace σ hp
+  have := CxPts.t2Space_cxPts_of_isProjOver σ hp
+  have := CxPts.secondCountableTopology_of_isProjOver σ hp
   let R := AnRead.all p σ (e + 1)
   have hA := R.isAlgAtlas_finAtlas
   generalize R.finAtlas = A at hA
@@ -1742,7 +1742,7 @@ theorem poincareLelong_snc : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegr
     rw [h.2 (h.1.2 (mIntegrableCont A _ (fun i => pot _) _ hvc))]
     congr 1
     exact funext fun i => Fin.cases rfl (fun _ => rfl) i
-  have e₄ (a) : mInt (B a) (fun i => (L i).φ.locPot.pullback Subtype.val continuous_subtype_val)
+  have e₄ (a) : mInt (B a) (fun i => (L i).φ.locPot.pullback Subtype.val continuous_subtypeVal)
       ((fun y => u y / 2) ∘ Subtype.val) = cycInt L u (z a) / 2 :=
     (hBint a L _ hvc).trans (int_half _ _)
   rw [e₁, ← e₂, ← e₃, int_half] at key
@@ -1772,12 +1772,12 @@ namespace GlobalTheory
 
 theorem poincareLelong_sec : GlobalTheory.Published.Principalisation → ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp F) (σ : F →+* ℂ) (e : ℕ), IsProjOver p → topologicalKrullDim X = (e + 1 : ℕ) → ∀ (L : Fin e → MLine p σ) (M : MLine p σ) (s : M.B.Sec) (hs : genericPoint X ∈ nonzeroLocus s) (u : CxPts p σ → ℝ) (hu : ∀ y, CInfAt u y), 2 * Mix.int (Fin.cons (MLine.ofFun u hu) L : Fin (e + 1) → MLine p σ) (M.logSec s) = ∑ᶠ z, ((divOfSec M.φ.isLB s hs).mult z : ℝ) * cycInt L u z - Mix.int (Fin.cons M L : Fin (e + 1) → MLine p σ) u := by
   intro hP F _ X _ _ p σ e hX hdim L M s hs u hu
-  haveI : CharZero F := RingHom.charZero σ
+  have : CharZero F := RingHom.charZero σ
   obtain ⟨Y, hYi, π, hsm, hproj, hdimY, hgen, hdeg, hsnc⟩ :=
     _root_.GlobalTheory.LogResProj.exists_logResolution hP F X p (e + 1) hX hdim (nonzeroLocus s).compl (fun h => h hs)
-  haveI := hYi
-  haveI : IsLocallyNoetherian Y := by
-    haveI := SmoothOfRelativeDimension.smooth (e + 1) (π ≫ p)
+  have := hYi
+  have : IsLocallyNoetherian Y := by
+    have := SmoothOfRelativeDimension.smooth (e + 1) (π ≫ p)
     exact LocallyOfFiniteType.isLocallyNoetherian (π ≫ p)
   have hη : π (genericPoint Y) ⤳ genericPoint X := by rw [hgen]
   obtain ⟨s', hnz, hnsq, hmult⟩ := _root_.GlobalTheory.Mix.exists_secPull_props F X Y p (π ≫ p) σ π rfl M s

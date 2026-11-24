@@ -90,11 +90,11 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 private theorem top_GL (E : Type) [Field E] [NumberField E] :
     LocallyCompactSpace (GL (Fin 2) (Cinf E)) ∧ FirstCountableTopology (GL (Fin 2) (Cinf E)) := by
-  haveI : LocallyCompactSpace (Matrix (Fin 2) (Fin 2) (Cinf E)) :=
+  have : LocallyCompactSpace (Matrix (Fin 2) (Fin 2) (Cinf E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin 2 → Fin 2 → Cinf E))
-  haveI : FirstCountableTopology (Matrix (Fin 2) (Fin 2) (Cinf E)) :=
+  have : FirstCountableTopology (Matrix (Fin 2) (Fin 2) (Cinf E)) :=
     inferInstanceAs (FirstCountableTopology (Fin 2 → Fin 2 → Cinf E))
-  haveI : FirstCountableTopology (Matrix (Fin 2) (Fin 2) (Cinf E))ᵐᵒᵖ :=
+  have : FirstCountableTopology (Matrix (Fin 2) (Fin 2) (Cinf E))ᵐᵒᵖ :=
     (MulOpposite.opHomeomorph (M := Matrix (Fin 2) (Fin 2) (Cinf E))).symm.isInducing.firstCountableTopology
   have h := Units.isClosedEmbedding_embedProduct (α := Matrix (Fin 2) (Fin 2) (Cinf E))
   exact ⟨h.locallyCompactSpace, h.isEmbedding.isInducing.firstCountableTopology⟩
@@ -156,7 +156,7 @@ theorem UpperTheory.ConvolutionTheory.R2.Ff.contOne :
     isClosed_eq (hnu.comp hinf) continuous_const
   have hC' := hS.inter_right hcl
   obtain ⟨B, hB⟩ := thBoundH F E D W π f hf φ hφ 1 {1} isCompact_singleton _ hC' (fun y hy => hy.2)
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using vol F M⟩
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using vol F M⟩
   have key : ContinuousWithinAt (fun y : GL (Fin 2) (Cinf E) =>
       ∫ g, f.1 (gl g) * Th (W.Om g (W.L (infGL E 2 y) φ)).1 ∂(M.μ.restrict M.D))
       {y | UpperTheory.ConvolutionTheory.R2.Ff.One F y} y₀ := by
@@ -292,11 +292,11 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 
 private theorem exp_eq (Y : Lie E 2) : toL (NormedSpace.exp (Matrix.of Y)) =
     (Cm.archEq E 2).symm (NormedSpace.exp (Cm.archEq E 2 Y)) := by
-  letI : NormedRing (Matrix (Fin 2) (Fin 2) (Cinf E)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℚ (Matrix (Fin 2) (Fin 2) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℝ (Matrix (Fin 2) (Fin 2) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin 2) (Fin 2) (Cinf E)) := FiniteDimensional.complete ℝ _
-  letI : NormedAlgebra ℚ (ArchMatrix E 2) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedRing (Matrix (Fin 2) (Fin 2) (Cinf E)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℚ (Matrix (Fin 2) (Fin 2) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℝ (Matrix (Fin 2) (Fin 2) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin 2) (Fin 2) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
+  let : NormedAlgebra ℚ (ArchMatrix E 2) := NormedAlgebra.restrictScalars ℚ ℝ _
   refine (Cm.archEq E 2).injective ?_
   rw [ContinuousLinearEquiv.apply_symm_apply, Cm.archEq_toL]
   have hc : Continuous (Cm.matEq E 2) := (Cm.archEq E 2).continuous
@@ -314,7 +314,7 @@ private theorem expL_strict : HasStrictFDerivAt (expL (E := E))
   exact (Cm.archEq E 2).symm_apply_apply x
 
 private theorem expL_cont : Continuous (expL (E := E)) := by
-  letI : NormedAlgebra ℚ (ArchMatrix E 2) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedAlgebra ℚ (ArchMatrix E 2) := NormedAlgebra.restrictScalars ℚ ℝ _
   exact (Cm.archEq E 2).symm.continuous.comp (NormedSpace.exp_continuous.comp (Cm.archEq E 2).continuous)
 
 private theorem toL_ex (Y : Lie E 2) : toL (ex Y 1).val = expL Y := by

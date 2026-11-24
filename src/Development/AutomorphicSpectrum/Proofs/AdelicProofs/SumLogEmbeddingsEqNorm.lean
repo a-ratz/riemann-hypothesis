@@ -56,7 +56,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Fl
 theorem sum_log_norm_embeddings_eq_log_norm (k A : Type) [Field k] [NumberField k] [NormedField A]
     [CharZero A] [IsAlgClosed A] (x : k) (hx : x ≠ 0) :
     ∑ j : k →+* A, Real.log ‖j x‖ = Real.log ‖((Algebra.norm ℚ x : ℚ) : A)‖ := by
-  letI : Algebra ℚ A := DivisionRing.toRatAlgebra
+  let : Algebra ℚ A := DivisionRing.toRatAlgebra
   have h1 : algebraMap ℚ A (Algebra.norm ℚ x) = ∏ σ : k →ₐ[ℚ] A, σ x :=
     Algebra.norm_eq_prod_embeddings ℚ A x
   have h2 : ((Algebra.norm ℚ x : ℚ) : A) = ∏ σ : k →ₐ[ℚ] A, σ x := by

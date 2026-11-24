@@ -58,15 +58,15 @@ theorem finrank_le_min : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     Module.finrank (𝓞 E) T.P.D.toPre.X ≤ min Dw.p Dw.q := by
   intro E _ _ _ H Dw l Xo c T
   obtain ⟨hdvr, -, hch⟩ := T.cdvr
-  haveI := hdvr
-  haveI := hch
+  have := hdvr
+  have := hch
   obtain ⟨tK, ⟨m₁⟩, ⟨m₂⟩⟩ := T.gen
   let K := AlgebraicClosure (FractionRing T.V)
   let g : FractionRing T.V →+* K := algebraMap (FractionRing T.V) K
   let f : T.V →+* K := g.comp (algebraMap T.V (FractionRing T.V))
   have hf : Function.Injective f :=
     (algebraMap (FractionRing T.V) K).injective.comp (IsFractionRing.injective T.V (FractionRing T.V))
-  haveI : CharZero K := ⟨fun a b h => Nat.cast_injective (R := T.V) (hf (by simpa using h))⟩
+  have : CharZero K := ⟨fun a b h => Nat.cast_injective (R := T.V) (hf (by simpa using h))⟩
   let x' : Sp K ⟶ Xo.X := spMap g ≫ T.y ≫ pullback.fst _ _
   obtain ⟨β₀, hβ₀⟩ := Spec.map_surjective (x' ≫ Xo.s)
   have hβ : x' ≫ Xo.s = spMap β₀.hom := hβ₀.symm

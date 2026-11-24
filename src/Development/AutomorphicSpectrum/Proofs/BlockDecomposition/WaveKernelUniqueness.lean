@@ -137,9 +137,9 @@ theorem emb_val (κ : UK n) : (emb κ).val = κ.1 := rfl
 
 theorem continuous_emb : Continuous (emb : UK n → G n) := by
   rw [Units.continuous_iff]
-  refine ⟨continuous_subtype_val, ?_⟩
+  refine ⟨continuous_subtypeVal, ?_⟩
   show Continuous fun κ : UK n => star κ.1
-  exact continuous_subtype_val.star
+  exact continuous_subtypeVal.star
 
 theorem map_mul_emb {_ : MeasurableSpace (G n)} [BorelSpace (G n)] (μ : Measure (G n)) [μ.IsHaarMeasure]
     (κ : UK n) : Measure.map (· * emb κ) μ = μ :=
@@ -184,13 +184,13 @@ theorem cpt_of {V : Type} [Zero V] {S : Set (Mat n)} (hS : IsCompact S) (hG : S 
 
 theorem isCompact_preimage_val {C : Set (Mat n)} (hC : IsCompact C) (hs : C ⊆ GLs n) :
     IsCompact {y : G n | y.val ∈ C} := by
-  haveI : CompactSpace C := isCompact_iff_compactSpace.1 hC
+  have : CompactSpace C := isCompact_iff_compactSpace.1 hC
   let φ : C → G n := fun c => Matrix.GeneralLinearGroup.mkOfDetNeZero c.1 (hs c.2)
   have hφ : Continuous φ := by
     rw [Units.continuous_iff]
-    refine ⟨continuous_subtype_val, ?_⟩
+    refine ⟨continuous_subtypeVal, ?_⟩
     have : Continuous fun c : C => (c.1)⁻¹ :=
-      continuousOn_iff_continuous_restrict.1 (continuousOn_inv.mono hs)
+      continuousOn_iff_continuous_domRestrict.1 (continuousOn_inv.mono hs)
     refine this.congr fun c => ?_
     exact (Matrix.coe_units_inv (φ c)).symm
   have he : {y : G n | y.val ∈ C} = Set.range φ := by
@@ -233,11 +233,11 @@ theorem contDiff_sec (hβ : ContDiff ℝ ∞ β) : ContDiff ℝ ∞ (sec E β v)
   have hΨ : ContDiff ℝ ∞ (fun z : Mat n × (Mat n × E.V) => β (z.1 * z.2.1) • z.2.2) :=
     (hβ.comp (contDiff_mul.comp (contDiff_fst.prodMk contDiff_snd.fst))).smul contDiff_snd.snd
   exact GlobalTheory.CompanionTheory.ParSmooth.contDiff_integral_comp_compact (nu n) _ hΨ (fun κ : UK n => (κ.1, E.ρ κ v))
-    (continuous_subtype_val.prodMk (continuous_orbit E v))
+    (continuous_subtypeVal.prodMk (continuous_orbit E v))
 
 theorem integrable_avg (hβ : Continuous β) (y : Mat n) (a : UK n → E.V) (ha : Continuous a) :
     Integrable (fun κ : UK n => β (y * κ.1) • a κ) (nu n) :=
-  ((hβ.comp (continuous_const.matrix_mul continuous_subtype_val)).smul ha).integrable_of_hasCompactSupport
+  ((hβ.comp (continuous_const.matrix_mul continuous_subtypeVal)).smul ha).integrable_of_hasCompactSupport
     (HasCompactSupport.of_compactSpace _)
 
 theorem sec_mul (hβ : Continuous β) (y : Mat n) (k' : UK n) :
@@ -266,7 +266,7 @@ theorem cpt_sec {U : Set (Mat n)} (hU : ∀ y ∈ U, ∀ k₂ : UK n, y * k₂.1
     (hc : HasCompactSupport β) (hs : tsupport β ⊆ U) : Cpt (sec E β v) := by
   let S : Set (Mat n) := (fun p : Mat n × UK n => p.1 * (p.2⁻¹ : UK n).1) '' (tsupport β ×ˢ Set.univ)
   have hcont : Continuous fun p : Mat n × UK n => p.1 * (p.2⁻¹ : UK n).1 :=
-    continuous_fst.matrix_mul (continuous_subtype_val.comp (continuous_inv.comp continuous_snd))
+    continuous_fst.matrix_mul (continuous_subtypeVal.comp (continuous_inv.comp continuous_snd))
   have hS : IsCompact S := (hc.isCompact.prod isCompact_univ).image hcont
   refine cpt_of hS ?_ fun y _ hy => ?_
   · rintro _ ⟨p, ⟨hp, -⟩, rfl⟩
@@ -336,7 +336,7 @@ theorem main : PositivityTheory.RgBcC.KerUniq := by
   intro n _ _ μ _ E k U hU hUG hUK hk hr hact y₀ hy₀
   refine ContinuousLinearMap.ext fun v => ?_
   by_contra hne
-  rw [ContinuousLinearMap.zero_apply] at hne
+  rw [zero_apply] at hne
   set w := k y₀ v with hw
   let ℓ : E.V →L[ℝ] ℝ := Complex.reCLM ∘L ((innerSL ℂ w).restrictScalars ℝ)
   have hℓ : ∀ x, ℓ x = (⟪w, x⟫_ℂ).re := fun x => rfl
@@ -367,7 +367,7 @@ theorem main : PositivityTheory.RgBcC.KerUniq := by
   have hzero : ∫ y, ℓ (hf β k v y) ∂μ = 0 := by
     rw [ContinuousLinearMap.integral_comp_comm _ (hH.integrable_of_hasCompactSupport hC), hI, map_zero]
   have hpos : 0 < ∫ y, ℓ (hf β k v y) ∂μ := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero
       (x := Matrix.GeneralLinearGroup.mkOfDetNeZero y₀ (hUG hy₀)) (ℓ.continuous.comp hH)
       (hC.comp_left (map_zero ℓ)) (fun y => ?_) ?_
     · have e : ℓ (hf β k v y) = β y.val * ℓ (k y.val v) := by

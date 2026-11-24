@@ -114,7 +114,7 @@ theorem theta_smul₂ {E : Type} [Field E] [NumberField E] [IsCMField E] {r g q0
   rw [thP, thP, e, I2.polyDeriv, I2.polyDeriv, Finset.mul_sum]
   refine Finset.sum_congr rfl fun m _ => ?_
   rw [iteratedFDeriv_const_smul_apply ((h 0 trivial).contDiffAt)]
-  simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 theorem isSB_smul {n g : ℕ} (C : ℂ) {φ : TF n g} (h : IsSB φ) : IsSB (C • φ) := by
@@ -169,7 +169,7 @@ theorem reading_eq_thP : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartInde
       (MvPolynomial.rename Dc.eL (MvPolynomial.map σ P))) ρ hρ
     (fun _ => ⟨hS.1, hhol.1, fun x hx b hb => ⟨hS.2.1 x hx b hb, hhol.2.1 x hx b hb⟩⟩) (by
       intro x hx hux
-      letI : Algebra c.F ℂ := σ.toAlgebra
+      let : Algebra c.F ℂ := σ.toAlgebra
       obtain ⟨A, hA, θ, hθ, hmean⟩ := GlobalTheory.Dict.uw_anFib E H Dw l Xo c σ r U hσ hU hr1 W k Dc.bas Dc.idx Dc.sympl
         (he ▸ Dc.per_eq) (he ▸ Dc.ty_eq) ⟨x, hx⟩ hux
       have h1 := GlobalTheory.Dict.isTheta1_of_reads_generator E H Dw l Xo c r W.g (U.X k) Dc.bas Dc.idx W.e x _ _ A Dc.sympl hx hsd θ hθ

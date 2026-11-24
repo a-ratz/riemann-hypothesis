@@ -66,10 +66,10 @@ theorem continuous_gaussQ {F E : Type} [Field F] [NumberField F] [Field E] [Numb
     (Pm : InfinitePlace F → Matrix (Fin M × Fin d) (Fin M × Fin d) ℝ) :
     Continuous (gaussQ e b Pm) := by
   obtain ⟨h1, h2, h3, h4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
+  have := h1
+  have := h2
+  have := h3
+  have := h4
   obtain ⟨-, -, -, -, -, -, hco, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   have hxw : ∀ w p, Continuous fun X : Fin 1 → Fin M → Ainf F ⊗[F] E => xw e b X w p := by
     intro w p
@@ -86,7 +86,7 @@ theorem lintegral_thetaMeas_gauss : ∀ (F E : Type) [Field F] [NumberField F] [
   intro F E _ _ _ _ _ σ hσ M J hJ d b B hB ρ e hom hρ Pm μ 𝓕 hμ h𝓕 a ha β
   obtain ⟨⟨h1, h2, h3⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨hR, -, -, -, -, -, -, hBor, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
-  haveI := hBor 1 M
+  have := hBor 1 M
   have hA := _root_.GlobalTheory.CompanionTheory.SW.BB.measurableSet_natMul_int F E σ hσ d M b a
   have hproj : Continuous (projInf : (Fin 1 → Fin M → AF F ⊗[F] E) → _) :=
     (_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hσ d b 1 M).1

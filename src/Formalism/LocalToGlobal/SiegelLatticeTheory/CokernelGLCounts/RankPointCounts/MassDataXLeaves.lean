@@ -88,7 +88,7 @@ theorem kCompactOpen_holds : MassDataMassesW.KCompactOpen := by
 theorem dc_finite_mono {G : Type} [Group G] (Γ K' K : Subgroup G) (h : K' ≤ K)
     (hf : Finite (DoubleCoset.Quotient (Γ : Set G) (K' : Set G))) :
     Finite (DoubleCoset.Quotient (Γ : Set G) (K : Set G)) := by
-  haveI : Finite (Quotient (DoubleCoset.setoid (Γ : Set G) (K' : Set G))) := hf
+  have : Finite (Quotient (DoubleCoset.setoid (Γ : Set G) (K' : Set G))) := hf
   have hr : ∀ a b : G, (DoubleCoset.setoid (Γ : Set G) (K' : Set G)) a b → (DoubleCoset.setoid (Γ : Set G) (K : Set G)) a b := by
     intro a b hab
     rw [DoubleCoset.rel_iff] at hab ⊢
@@ -122,7 +122,7 @@ theorem classFinite_holds : MassDataMassesW.ClassFinite := by
   have hc := PIW.MassDataColumns.class_sets_equal_card X hb hK u (Formalism.L2.SG.Closed.AdBridgeGF_holds X.B.I)
     (Formalism.L2.SG.Closed.level_subgroup_properties X)
   have hne : Nonempty (Formalism.L2.SG.ColsDim.Classes (Formalism.L2.SG.PoincareInHH.PoincareSetting.iotaF X u) (Formalism.L2.SG.PoincareInHH.PoincareSetting.Ku X u hK)) := inferInstance
-  haveI : Finite (Formalism.L2.SG.ColsDim.Classes (Formalism.L2.SG.PoincareInHH.PoincareSetting.iotaF X u) (Formalism.L2.SG.PoincareInHH.PoincareSetting.Ku X u hK)) := hF
+  have : Finite (Formalism.L2.SG.ColsDim.Classes (Formalism.L2.SG.PoincareInHH.PoincareSetting.iotaF X u) (Formalism.L2.SG.PoincareInHH.PoincareSetting.Ku X u hK)) := hF
   have hfin : Finite (PIW.MassDataColumns.ClsHA X hb u) := by
     have hpos : 0 < Nat.card (Formalism.L2.SG.ColsDim.Classes (Formalism.L2.SG.PoincareInHH.PoincareSetting.iotaF X u) (Formalism.L2.SG.PoincareInHH.PoincareSetting.Ku X u hK)) :=
       Nat.card_pos

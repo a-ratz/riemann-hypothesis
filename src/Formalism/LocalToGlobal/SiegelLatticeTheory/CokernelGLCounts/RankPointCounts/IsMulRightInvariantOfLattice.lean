@@ -70,7 +70,7 @@ def lwt (Γ : Subgroup H) (K : Set H) (x : H) : ℝ≥0∞ := K.indicator 1 x * 
 theorem finite_hits (Γ : Subgroup H) [DiscreteTopology Γ] {K : Set H} (hK : IsCompact K) (x : H) :
     {γ : Γ | (γ : H) * x ∈ K}.Finite := by
   have hK' : IsCompact ((fun y => y * x⁻¹) '' K) := hK.image (continuous_mul_const x⁻¹)
-  have h1 := (Γ.tendsto_coe_cofinite_of_discrete (isDiscrete_iff_discreteTopology.mpr inferInstance))
+  have h1 := (Γ.tendsto_coe_cofinite_of_isDiscrete (isDiscrete_iff_discreteTopology.mpr inferInstance))
     hK'.compl_mem_cocompact
   refine (Filter.mem_cofinite.1 h1).subset ?_
   intro γ hγ
@@ -85,7 +85,7 @@ theorem lcount_ne_top (Γ : Subgroup H) [DiscreteTopology Γ] {K : Set H} (hK : 
   · exact ENNReal.sum_ne_top.2 fun γ _ => by
       by_cases h : (γ : H) * x ∈ K <;> simp [Set.indicator, h]
   · intro γ hγ
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hγ
+    simp only [Set.Finite.mem_toFinset, mem_ofPred_eq] at hγ
     simp [Set.indicator, hγ]
 
 theorem one_le_lcount (Γ : Subgroup H) {K : Set H} (hcov : ∀ x : H, ∃ s ∈ Γ, s * x ∈ K) (x : H) :
@@ -193,7 +193,7 @@ theorem haar_map_mul_right_of_lattice (μ : Measure H) [IsHaarMeasure μ] (Γ : 
     rw [hmul]
     have h1 : (modularCharacterFun (s * r) : ℝ≥0∞) * μ V ≤ μ (V * K⁻¹) := by
       have e := congrArg (fun m : Measure H => m V) (map_mul_right_eq_modular μ (s * r))
-      simp only [Measure.smul_apply, smul_eq_mul] at e
+      simp only [smul_apply, smul_eq_mul] at e
       rw [← e, Measure.map_apply (measurable_mul_const _) hV.measurableSet]
       refine measure_mono fun x hx => ?_
       have hx' : x * (s * r) ∈ V := hx
@@ -231,7 +231,7 @@ theorem isMulRightInvariant_of_lattice (μ : Measure H) [IsHaarMeasure μ] (Γ :
 theorem haar_map_inv_of_lattice (μ : Measure H) [IsHaarMeasure μ] (Γ : Subgroup H) [Countable Γ]
     [DiscreteTopology Γ] {K : Set H} (hK : IsCompact K) (hcov : ∀ x : H, ∃ s ∈ Γ, s * x ∈ K) :
     μ.map (fun x => x⁻¹) = μ := by
-  haveI := isMulRightInvariant_of_lattice μ Γ hK hcov
+  have := isMulRightInvariant_of_lattice μ Γ hK hcov
   let c : ℝ≥0∞ := haarScalarFactor μ.inv μ
   have hc : μ.inv = c • μ := isMulLeftInvariant_eq_smul μ.inv μ
   have h2 : map Inv.inv (map Inv.inv μ) = c ^ 2 • μ := by
@@ -273,7 +273,7 @@ theorem one_le_of_iterate_bounded (μ : Measure H) [IsHaarMeasure μ] {f : H →
     intro n
     have hcpt : IsCompact (f^[n] '' V) := hV.image (hf.iterate n)
     have e := congrArg (fun m : Measure H => m (f^[n] '' V)) (hpow n)
-    simp only [Measure.smul_apply, smul_eq_mul] at e
+    simp only [smul_apply, smul_eq_mul] at e
     rw [Measure.map_apply (hf.iterate n).measurable hcpt.measurableSet,
       Set.preimage_image_eq _ (hinj.iterate n)] at e
     rw [e]

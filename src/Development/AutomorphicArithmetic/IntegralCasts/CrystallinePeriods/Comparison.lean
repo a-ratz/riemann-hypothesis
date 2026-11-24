@@ -115,7 +115,7 @@ theorem truncLog_add {n : ℕ} {x y : B} (hx : x ^ n = 0) (hy : y ^ n = 0)
       ← mul_assoc, d2]
     simp
     ring
-  haveI : HasUniqueDiv B := HasUniqueDiv.of_module_rat B
+  have : HasUniqueDiv B := HasUniqueDiv.of_module_rat B
   have hC := eq_C_of_derivative_eq_zero hD
   have e1 := congrArg (evalRingHom 1) hC
   have e0 := congrArg (evalRingHom 0) hC

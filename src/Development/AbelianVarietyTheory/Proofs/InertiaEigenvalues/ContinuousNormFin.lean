@@ -230,7 +230,7 @@ open Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N F
 
 theorem isCSD_of_trivOn : ∀ (R : Ranks) (H : Formalism.BasicNotions.Host R) (χ : HChar H.E), χ.TrivOn H.F → IsCSD H χ := by
   intro R H χ ht
-  haveI : IsCMField H.E := H.isCMField_hostE
+  have : IsCMField H.E := H.isCMField_hostE
   have hU : ∀ k : H.Eˣ, Units.map (MonoidHomClass.toMonoidHom H.conj) k =
       cU (AlgEquiv.toRingEquiv (IsCMField.complexConj H.E)) k :=
     fun k => Units.ext (host_complexConj H k).symm

@@ -163,7 +163,7 @@ theorem UpperTheory.continuous_GL2BaseChange_diagUnit_infiniteIdele :
       · exact continuous_pi fun _ => (Real.continuous_exp.inv₀ Real.exp_ne_zero)
     have he : (fun t : ℝ => iy (Real.exp t)) = fun t => TR.infId ℚ (u t) := by
       funext t
-      simp only [iy, dif_neg (Real.exp_ne_zero t)]
+      simp only [iy, dite_eq_right (Real.exp_ne_zero t)]
       rfl
     rw [he]
     exact (TR.continuous_infId ℚ).comp hu
@@ -441,9 +441,9 @@ theorem UpperTheory.norm_integral_unitaryHeckeChar_fundDomain_le :
         (∀ u ∈ UU, IntegrableOn (f u) M.D M.μ) ∧ Integrable (fun u => ((χ.1 u : ℂˣ) : ℂ) * ∫ g in M.D, f u g ∂M.μ) U.υ ∧
           ‖∫ u, ((χ.1 u : ℂˣ) : ℂ) * ∫ g in M.D, f u g ∂M.μ ∂U.υ‖ ≤ B * M.μ.real M.D := by
   intro M U χ f B hχ hf hB
-  haveI := U.prob
+  have := U.prob
   have hD : M.μ M.D < ⊤ := UpperTheory.ConvolutionTheory.R2.M.volD ℚ M
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using hD⟩
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using hD⟩
   have hfu : ∀ u, Measurable (f u) := fun u => hf.comp measurable_prodMk_left
   have hae : ∀ᵐ u ∂U.υ, u ∈ (UU : Set (A ℚ)ˣ) := mem_ae_iff.mpr U.supp
   have hI : StronglyMeasurable (fun u => ∫ g in M.D, f u g ∂M.μ) :=
@@ -994,7 +994,7 @@ private lemma term_bd (n : ℕ) (κ Bu α T d ν a b t L M : ℝ) (hd : 1 ≤ d)
     positivity
   refine (inv_anti₀ hpos hmain).trans (le_of_eq ?_)
   have hexp : Real.exp (-((n : ℝ) * t)) = (E ^ n)⁻¹ := by
-    rw [Real.exp_neg, Real.exp_nat_mul]
+    rw [Real.exp_neg, Real.exp_natCast_mul]
   rw [hexp, hc1, hc2, pow_add T n 2]
   have e1 : κ * E * (1 / (d * Bu * T)) = (κ / (d * Bu)) * E * T⁻¹ := by
     field_simp
@@ -1259,8 +1259,8 @@ theorem UpperTheory.norm_thetaSeries_siegelSet_le_exp :
       rw [hfi]
       rfl
   have hR : ∀ ξ ∈ R, ∀ ξ' ∈ R, _ := fun ξ h ξ' h' =>
-    hden u hu b'.2 ξ.1 ξ'.1 (by have := h; simp only [R, Set.mem_setOf_eq, hfin] at this; exact this)
-      (by have := h'; simp only [R, Set.mem_setOf_eq, hfin] at this; exact this)
+    hden u hu b'.2 ξ.1 ξ'.1 (by have := h; simp only [R, Set.mem_ofPred_eq, hfin] at this; exact this)
+      (by have := h'; simp only [R, Set.mem_ofPred_eq, hfin] at this; exact this)
   obtain ⟨hs, hle⟩ := hsum R β α T t ht hlo hhi hT1 (fun ξ h => (hR ξ h ξ h).1) (fun ξ h => (hR ξ h ξ h).2.1)
     (fun ξ h ξ' h' => (hR ξ h ξ' h').2.2)
   have hterm : ∀ ξ : Rw ℚ, ‖Φ fun j => (iy (Real.exp t) : A ℚ) * (Yv b' a' ξ.1 ᵥ* k.val) j‖ ≤ B0 * R.indicator Wt ξ := by
@@ -1642,8 +1642,8 @@ private theorem measPhi (ω : HChar ℚ) (D : Dat ℚ E) (φ : GL (Fin 2) (A E) 
 
 private theorem irMeas (D : Dat ℚ E) (ω χ : HChar ℚ) (M : Meas ℚ) (U : UMeas) (φ : GL (Fin 2) (A E) → ℂ) (hφ : admitted D ω φ)
     (Φ : (Fin 2 → A ℚ) → ℂ) (hΦ : Φ ∈ schwartzBruhatPi (K := ℚ) (ι := Fin 2)) : StronglyMeasurable (Ir M U χ φ Φ) := by
-  haveI := U.prob
-  haveI : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
+  have := U.prob
+  have : IsFiniteMeasure (M.μ.restrict M.D) := ⟨by simpa using UpperTheory.ConvolutionTheory.R2.M.volD ℚ M⟩
   have hdM := (UpperTheory.continuous_GL2BaseChange_diagUnit_infiniteIdele E).2.1
   have hc : Continuous fun p : (ℝ × IdeleGroup ℚ) × G1 ℚ => gl p.2 * dM p.1.2 :=
     (UpperTheory.ConvolutionTheory.R2.M.continuous_gl.comp continuous_snd).mul (hdM.comp (continuous_snd.comp continuous_fst))
@@ -1659,7 +1659,7 @@ private theorem irDecay (D : Dat ℚ E) (ω χ : HChar ℚ) (M : Meas ℚ) (U : 
     (hχ : ∀ a, ‖((χ.1 a : ℂˣ) : ℂ)‖ = 1) (hP : Per M U χ φ = 0)
     (Φ : (Fin 2 → A ℚ) → ℂ) (hΦ : Φ ∈ schwartzBruhatPi (K := ℚ) (ι := Fin 2)) (n : ℕ) :
     ∃ B : ℝ, ∀ t, ‖Ir M U χ φ Φ t‖ ≤ B * Real.exp (-((n : ℝ) * |t|)) := by
-  haveI := U.prob
+  have := U.prob
   obtain ⟨hUc, hU1⟩ := UpperTheory.isCompact_integralIdeleUnits_and_abs_eq_one
   have hdM := (UpperTheory.continuous_GL2BaseChange_diagUnit_infiniteIdele E).2.1
   obtain ⟨Ψ, hΨ, hpois⟩ := UpperTheory.thetaSeries_poisson_functional_equation Φ hΦ

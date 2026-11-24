@@ -162,7 +162,7 @@ theorem minpoly_eq_X_pow_sub_C_of_pow_mem {K : Type} [Field K] (p : ℕ) [Fact p
   have hp : p.Prime := Fact.out
   symm
   apply minpoly.eq_of_irreducible_of_monic
-  · apply X_pow_sub_C_irreducible_of_prime hp
+  · apply irreducible_X_pow_sub_C_of_prime hp
     intro b hb
     apply hx
     have h1 : (b : K) ^ p = x ^ p := by
@@ -211,7 +211,7 @@ theorem exists_pow_eq_of_forall_derivation_eq_zero (K : Type) [Field K] (p : ℕ
       by_contra hcon
       have h1 : (M⟮x⟯).toSubfield ∈ S := ⟨fun y => hle (hMp y), hcon⟩
       exact hx (hM.le_of_ge h1 hle (mem_adjoin_simple_self M x))
-    haveI := adjoin.finiteDimensional (isIntegral_of_pow_mem_subfield p M hMp x)
+    have := adjoin.finiteDimensional (isIntegral_of_pow_mem_subfield p M hMp x)
     have heq : M⟮f⟯ = M⟮x⟯ :=
       eq_of_le_of_finrank_eq (adjoin_simple_le_iff.mpr hfx) (by rw [hrank f hMf, hrank x hx])
     rw [heq]; exact mem_adjoin_simple_self M x
@@ -253,8 +253,8 @@ theorem exists_pow_eq_of_pderiv_eq_zero {k : Type} [Field k] [PerfectField k] (p
     [Fact p.Prime] [CharP k p] {σ : Type} [DecidableEq σ] (F : MvPowerSeries σ k)
     (hF : ∀ i, MvPowerSeries.pderiv (R := k) i F = 0) : ∃ g : MvPowerSeries σ k, g ^ p = F := by
   have hp : p ≠ 0 := (Fact.out : p.Prime).ne_zero
-  haveI : ExpChar k p := ExpChar.prime Fact.out
-  haveI : PerfectRing k p := PerfectField.toPerfectRing p
+  have : ExpChar k p := ExpChar.prime Fact.out
+  have : PerfectRing k p := PerfectField.toPerfectRing p
   let g : MvPowerSeries σ k :=
     fun d => (frobeniusEquiv k p).symm (MvPowerSeries.coeff (p • d) F)
   have hg : ∀ d, MvPowerSeries.coeff d g =
@@ -303,9 +303,9 @@ theorem derivation_mem_pow_smul_top {R A M : Type} [CommRing R] [CommRing A] [Al
 theorem derivation_algebraMap_perfect {k K : Type} [Field k] [PerfectField k] (p : ℕ)
     [Fact p.Prime] [CharP k p] [Field K] [Algebra k K] (D : Derivation ℤ K K) (c : k) :
     D (algebraMap k K c) = 0 := by
-  haveI : ExpChar k p := ExpChar.prime Fact.out
-  haveI : PerfectRing k p := PerfectField.toPerfectRing p
-  haveI : CharP K p := charP_of_injective_algebraMap (algebraMap k K).injective p
+  have : ExpChar k p := ExpChar.prime Fact.out
+  have : PerfectRing k p := PerfectField.toPerfectRing p
+  have : CharP K p := charP_of_injective_algebraMap (algebraMap k K).injective p
   obtain ⟨b, rfl⟩ := (frobeniusEquiv k p).surjective c
   rw [frobeniusEquiv_apply, frobenius_def, map_pow, Derivation.leibniz_pow, nsmul_eq_mul,
     CharP.cast_eq_zero, zero_mul]
@@ -333,11 +333,11 @@ theorem derivation_eq_zero_of_kaehler {k A K : Type} [Field k] [PerfectField k] 
 theorem exists_pow_eq_fractionRing_of_pderiv_eq_zero : ∀ (k : Type) [Field k] [PerfectField k] (p : ℕ) [Fact p.Prime] [CharP k p] (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [Algebra k A] [Algebra.EssFiniteType k A] (σ : Type) [Fintype σ] [DecidableEq σ] (j : A →ₐ[k] MvPowerSeries σ k), (∀ (m : ℕ) (a : A), j a ∈ Ideal.span (Set.range (MvPowerSeries.X : σ → MvPowerSeries σ k)) ^ m ↔ a ∈ IsLocalRing.maximalIdeal A ^ m) → (∀ (m : ℕ) (s : MvPowerSeries σ k), ∃ a : A, j a - s ∈ Ideal.span (Set.range (MvPowerSeries.X : σ → MvPowerSeries σ k)) ^ m) → ∀ f : A, (∀ i, MvPowerSeries.pderiv (R := k) i (j f) = 0) → ∃ h : FractionRing A, h ^ p = algebraMap A (FractionRing A) f := by
   intro k _ _ p _ _ A _ _ _ _ _ σ _ _ j hj hsurj f hf
   have hp : p ≠ 0 := (Fact.out : p.Prime).ne_zero
-  haveI : IsNoetherianRing A := Algebra.EssFiniteType.isNoetherianRing k A
-  haveI : CharP (FractionRing A) p :=
+  have : IsNoetherianRing A := Algebra.EssFiniteType.isNoetherianRing k A
+  have : CharP (FractionRing A) p :=
     charP_of_injective_algebraMap (algebraMap k (FractionRing A)).injective p
-  haveI : CharP A p := charP_of_injective_algebraMap (algebraMap k A).injective p
-  haveI : CharP (MvPowerSeries σ k) p :=
+  have : CharP A p := charP_of_injective_algebraMap (algebraMap k A).injective p
+  have : CharP (MvPowerSeries σ k) p :=
     charP_of_injective_algebraMap (algebraMap k (MvPowerSeries σ k)).injective p
   obtain ⟨g, hg⟩ := exists_pow_eq_of_pderiv_eq_zero p (j f) hf
   have hd : KaehlerDifferential.D k A f = 0 := by
@@ -381,7 +381,7 @@ variable {k : Type} [Field k]
 
 theorem isLocalRing_of_aug {A : Type} [CommRing A] [Algebra k A] (aug : A →ₐ[k] k) {n : ℕ}
     (h : RingHom.ker aug ^ n = ⊥) : IsLocalRing A := by
-  haveI : Nontrivial A := (aug : A →+* k).domain_nontrivial
+  have : Nontrivial A := (aug : A →+* k).domain_nontrivial
   have nil : ∀ a : A, aug a = 0 → IsNilpotent a := fun a ha =>
     ⟨n, by rw [← Ideal.mem_bot, ← h]; exact Ideal.pow_mem_pow ha n⟩
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
@@ -601,7 +601,7 @@ theorem taylor [PerfectField k] (p : ℕ) [Fact p.Prime] [CharP k p] [IsIntegral
   have htop : ⊤ ≤ Z.fromSpecStalk b ⁻¹ᵁ U :=
     (Scheme.preimage_eq_top_of_closedPoint_mem _ (by rw [Scheme.fromSpecStalk_closedPoint]; exact hb)).ge
   have hv : valR (A := Z.presheaf.stalk b) (Z.fromSpecStalk b) U f = (Z.presheaf.germ U b hb).hom f := by
-    refine (dif_pos htop).trans ?_
+    refine (dite_eq_left htop).trans ?_
     have : (Z.fromSpecStalk b).appLE U ⊤ htop ≫ (Scheme.ΓSpecIso (Z.presheaf.stalk b)).hom =
         Z.presheaf.germ U b hb := by
       rw [Scheme.Hom.appLE, Scheme.fromSpecStalk_app hb]
@@ -615,7 +615,7 @@ theorem taylor [PerfectField k] (p : ℕ) [Fact p.Prime] [CharP k p] [IsIntegral
   · have e1 : valR (x m) U f = psJet m (j ((Z.presheaf.germ U b hb).hom f)) := by
       rw [← tj_eq, hj, ← hv, ← h1]
       exact (GlobalTheory.ZH.CrdCalc.valR_spMap (τ m : Z.presheaf.stalk b →+* Jet k κ m) _ U htop).2 f
-    rw [← e1, valR, dif_pos (hU m)]
+    rw [← e1, valR, dite_eq_left (hU m)]
     exact (Iso.hom_inv_id_apply (Scheme.ΓSpecIso (CommRingCat.of (Jet k κ m))) _).symm
   · apply germ_injective_of_isIntegral Z b hb
     rw [map_zero, ← Ideal.mem_bot, ← Ideal.iInf_pow_eq_bot_of_isLocalRing _ (maximalIdeal.isMaximal _).ne_top,

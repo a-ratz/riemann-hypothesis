@@ -302,7 +302,7 @@ theorem loc_neBot : NeBot (𝓝[≠] (0 : k)) := by
   refine ⟨y * p, hrs ?_, mul_ne_zero hy (by simpa using hp0)⟩
   show ValuativeRel.valuation k (y * p) < _
   rw [map_mul]
-  exact mul_lt_of_lt_one_right (zero_lt_iff.2 hr) hp
+  exact mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hr) hp
 
 
 variable (k n d) in

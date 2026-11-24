@@ -95,7 +95,7 @@ private theorem inj_dichotomy {G V W V₁ V₂ : Type} [Group G] [AddCommGroup V
     (hσ : σ.IsIrreducible) (hι : Function.Injective ι) (hex : ∀ v, p v = 0 → ∃ u, ι u = v) (h : Inj σ ρ) :
     Inj σ ρ₁ ∨ Inj σ ρ₂ := by
   obtain ⟨f, hf⟩ := h
-  haveI := hσ
+  have := hσ
   rcases Representation.IsIrreducible.injective_or_eq_zero (p.comp f) with h1 | h1
   · exact Or.inr ⟨_, h1⟩
   · left
@@ -173,8 +173,8 @@ private theorem exists_covBy_inj {r t N : ℕ} (hN : r + t = N) {U V W : Type} [
   refine exists_covBy_of_split (fun (S T : Subrepresentation A) =>
     Inj π (ind₂ (stdSum hN) (extTensor (subQuot S T) B))) ?_ ?_ ⊤ ⊥ bot_le ?_
   · intro S hS
-    haveI := subsingleton_subQuot_self S
-    haveI := tensor_subsingleton_left (F := ℂ)
+    have := subsingleton_subQuot_self S
+    have := tensor_subsingleton_left (F := ℂ)
       (V := ↥S.toSubmodule ⧸ Submodule.comap S.toSubmodule.subtype S.toSubmodule) (W := W)
     exact not_isSubquotient_ind₂ _ _ hπ hS.isSubquotient
   · intro S M T hTM hMS hQ

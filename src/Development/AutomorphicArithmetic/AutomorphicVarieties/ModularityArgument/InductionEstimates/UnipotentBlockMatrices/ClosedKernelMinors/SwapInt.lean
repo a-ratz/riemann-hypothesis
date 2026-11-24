@@ -329,7 +329,7 @@ private theorem bigCell {F : Type} [Field F] (g : GL (Fin (2 + 2)) F)
 private theorem oneInt {K : Type} [Field K] [NumberField K] (f : (UPos 2 1 → 𝔸[K]) → ℂ) :
     ∫ y in GroundTheory.Global.fundamentalSet K, f (fun _ => y) ∂GroundTheory.Global.adeleMeasure K =
       ∫ Y in unipFundamentalDomain K 2 1, f Y ∂unipMeasure K 2 1 := by
-  letI : Unique (UPos 2 1) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
+  let : Unique (UPos 2 1) := ⟨⟨⟨(0, 1), by decide⟩⟩, by decide⟩
   have hm : MeasurePreserving (MeasurableEquiv.funUnique (UPos 2 1) 𝔸[K]) (unipMeasure K 2 1) (GroundTheory.Global.adeleMeasure K) := by
     convert measurePreserving_funUnique (GroundTheory.Global.adeleMeasure K) (UPos 2 1)
   rw [← hm.setIntegral_preimage_emb (MeasurableEquiv.measurableEmbedding _)]
@@ -475,7 +475,7 @@ private theorem finsum_eq_sum_filter {Q : Type} (f : Q → ℂ) (S : Set Q) (T :
     ∑ᶠ q ∈ S, f q = ∑ q ∈ T.filter (· ∈ S), f q := by
   refine finsum_mem_eq_sum_of_inter_support_eq f ?_
   ext q
-  simp only [mem_inter_iff, Function.mem_support, Finset.coe_filter, mem_setOf_eq]
+  simp only [mem_inter_iff, Function.mem_support, Finset.coe_filter, mem_ofPred_eq]
   exact ⟨fun h => ⟨⟨hT q h.2, h.1⟩, h.2⟩, fun h => ⟨h.1.2, h.2⟩⟩
 
 private theorem one_dir {K : Type} [Field K] [NumberField K] {n r : ℕ} {Q : Type} (f : Q → (UPos n r → 𝔸[K]) → ℂ)
@@ -646,7 +646,7 @@ private theorem w_mul {R : Type} [CommRing R] (M : Matrix (Fin (2 + 2)) (Fin (2 
   rw [Matrix.mul_apply, Fin.sum_univ_add]
   simp only [wGL, Matrix.reindex_apply, Matrix.submatrix_apply, finSumFinEquiv_symm_apply_natAdd,
     finSumFinEquiv_symm_apply_castAdd, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂, Matrix.zero_apply, zero_mul,
-    Finset.sum_const_zero, add_zero, Matrix.one_apply, ite_mul, one_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_const_zero, add_zero, Matrix.one_apply, ite_mul, one_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 private theorem mul_w {R : Type} [CommRing R] (M : Matrix (Fin (2 + 2)) (Fin (2 + 2)) R) (j : Fin 2) (k : Fin (2 + 2)) :
     (M * ((wGL R)⁻¹).val) k (Fin.castAdd 2 j) = M k (Fin.natAdd 2 j) := by
@@ -654,7 +654,7 @@ private theorem mul_w {R : Type} [CommRing R] (M : Matrix (Fin (2 + 2)) (Fin (2 
   change (∑ i, _ * (wGL R).inv _ _) + (∑ i, _ * (wGL R).inv _ _) = _
   simp only [wGL, Matrix.reindex_apply, Matrix.submatrix_apply, finSumFinEquiv_symm_apply_natAdd,
     finSumFinEquiv_symm_apply_castAdd, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₁₁, Matrix.zero_apply, mul_zero,
-    Finset.sum_const_zero, zero_add, Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    Finset.sum_const_zero, zero_add, Matrix.one_apply, mul_ite, mul_one, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 private theorem swap_int {K : Type} [Field K] [NumberField K] (F : G1 K (2 + 2) → ℂ) (hF : Continuous F)
     (hfin : ∀ C : Set (G1 K (2 + 2)), IsCompact C → {q : Cos K | ∃ g ∈ C, F ((q.out : G1 K (2 + 2)) * g) ≠ 0}.Finite)
@@ -680,7 +680,7 @@ private theorem swap_int {K : Type} [Field K] [NumberField K] (F : G1 K (2 + 2) 
     intro f hf
     refine finsum_mem_eq_sum_of_inter_support_eq _ ?_
     ext q
-    simp only [mem_inter_iff, Function.mem_support, Finset.coe_filter, mem_setOf_eq]
+    simp only [mem_inter_iff, Function.mem_support, Finset.coe_filter, mem_ofPred_eq]
     exact ⟨fun h => ⟨⟨by_contra fun h' => h.2 (hf q h'), h.1⟩, h.2⟩, fun h => ⟨h.1.2, h.2⟩⟩
   have hI : ∀ q : Cos K, Integrable (fun X => F ((q.out : G1 K (2 + 2)) * (unipOne 2 X * g)))
       ((unipMeasure K (2 + 2) 2).restrict (unipFundamentalDomain K (2 + 2) 2)) := fun q =>

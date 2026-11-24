@@ -203,8 +203,8 @@ theorem exists_ev_eq {ξ : Spec (CommRingCat.of Ω) ⟶ X} {U : X.Opens} (hU : I
       have : hU.fromSpec y ∈ Set.range hU.fromSpec := ⟨y, rfl⟩
       rwa [hU.range_fromSpec] at this
     let q : Cpt ξ := ⟨hU.fromSpec y, sp _ hy⟩
-    letI := X.presheaf.algebra_section_stalk (⟨hU.fromSpec y, hy⟩ : U)
-    haveI : IsLocalization.AtPrime (X.presheaf.stalk (hU.fromSpec y)) y.asIdeal := hU.isLocalization_stalk' y hy
+    let := X.presheaf.algebra_section_stalk (⟨hU.fromSpec y, hy⟩ : U)
+    have : IsLocalization.AtPrime (X.presheaf.stalk (hU.fromSpec y)) y.asIdeal := hU.isLocalization_stalk' y hy
     obtain ⟨t, ht⟩ := ha q hy
     obtain ⟨⟨r, s⟩, e⟩ := IsLocalization.surj y.asIdeal.primeCompl t
     refine s.2 (hIP ⟨r, ?_⟩)
@@ -278,7 +278,7 @@ section Main
 
 theorem ringInt_injective {F : Type} [Field F] [NumberField F] (r : 𝓞 F →+* ℂ) : Function.Injective r := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+  refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
   rw [eq_bot_iff]
   intro n hn
   have h0 : r (algebraMap ℤ (𝓞 F) n) = 0 := hn

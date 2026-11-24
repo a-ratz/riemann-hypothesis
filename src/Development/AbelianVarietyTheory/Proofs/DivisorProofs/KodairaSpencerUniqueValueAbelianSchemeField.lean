@@ -69,7 +69,7 @@ theorem IsKSValue.exists_of_isAbelianScheme (P : AbelianDeRham) {K : Type} [Fiel
       MorphismProperty.of_isPullback (P := @GeometricallyConnected) h.1 hA.geomConnected⟩
   have g₀ := (smoothOfRelativeDimension_isStableUnderBaseChange g).of_isPullback h.1 hg
   have hL := (P.2.1 K A g a₀ g₀).1
-  letI : Algebra (DualNumber K) K := (TrivSqZeroExt.fstHom K K K).toRingHom.toAlgebra
+  let : Algebra (DualNumber K) K := (TrivSqZeroExt.fstHom K K K).toRingHom.toAlgebra
   obtain ⟨-, hF⟩ := P.2.2.1 (DualNumber K) A' g hA hg K A i h
   obtain ⟨-, ⟨N, hN⟩, -⟩ := P.2.1 (DualNumber K) A' g hA hg
   obtain ⟨-, hproj, -⟩ := P.1.prim hA hg

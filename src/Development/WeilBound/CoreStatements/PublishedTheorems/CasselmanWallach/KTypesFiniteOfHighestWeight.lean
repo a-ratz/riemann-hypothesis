@@ -66,7 +66,7 @@ theorem exists_hull (hL : LocFin ε E) (W : Submodule ℂ V) [FiniteDimensional 
   choose S hSfin hSmem hSk using hL
   let bW := Module.finBasis ℂ W
   let Y : Submodule ℂ V := ⨆ i, S (bW i : V)
-  haveI : ∀ i, FiniteDimensional ℂ (S (bW i : V)) := fun i => hSfin _
+  have : ∀ i, FiniteDimensional ℂ (S (bW i : V)) := fun i => hSfin _
   refine ⟨Y, Submodule.finite_iSup _, ?_, ?_⟩
   · intro a b hab v hv
     refine Submodule.iSup_induction (fun i => S (bW i : V)) (motive := fun x => E a b x ∈ Y) hv ?_ ?_ ?_
@@ -158,7 +158,7 @@ theorem mem_of_eig (hgl : IsGlRep E) (hU : IsInfUnitary ε E) (hL : LocFin ε E)
       have hwKw : w ∈ Kw := Submodule.mem_sInf.2 (fun T hT => hT.1)
       have hKwZ : Kw ≤ Z := sInf_le ⟨hwZ, hZs⟩
       have hKwY : Kw ≤ Y := sInf_le ⟨hwY, hYk⟩
-      haveI : FiniteDimensional ℂ Kw := Submodule.finiteDimensional_of_le hKwZ
+      have : FiniteDimensional ℂ Kw := Submodule.finiteDimensional_of_le hKwZ
       have hZ'lt : Kwᗮ ⊓ Z < Z := by
         refine lt_of_le_of_ne inf_le_right (fun h => ?_)
         have hwZ' : w ∈ Kwᗮ ⊓ Z := by
@@ -166,7 +166,7 @@ theorem mem_of_eig (hgl : IsGlRep E) (hU : IsInfUnitary ε E) (hL : LocFin ε E)
           exact hwZ
         have h0 : ⟪w, w⟫_ℂ = 0 := Submodule.inner_right_of_mem_orthogonal hwKw hwZ'.1
         exact hw0 (inner_self_eq_zero.1 h0)
-      haveI : FiniteDimensional ℂ (Kwᗮ ⊓ Z : Submodule ℂ V) :=
+      have : FiniteDimensional ℂ (Kwᗮ ⊓ Z : Submodule ℂ V) :=
         Submodule.finiteDimensional_of_le inf_le_right
       have hZ'k : IsKStableSub ε E (Kwᗮ ⊓ Z) := by
         intro a b hab x hx
@@ -185,7 +185,7 @@ theorem mem_of_eig (hgl : IsGlRep E) (hU : IsInfUnitary ε E) (hL : LocFin ε E)
       rw [← hsplit]
       exact sup_le hKwY hZ'le
   obtain ⟨S, hSf, hvS, hSk⟩ := hL v
-  haveI : FiniteDimensional ℂ S := hSf
+  have : FiniteDimensional ℂ S := hSf
   let Z : Submodule ℂ V := S ⊓ LinearMap.ker (casimirK ε E - (μ : ℂ) • (1 : Module.End ℂ V))
   have hZk : IsKStableSub ε E Z := by
     intro a b hab x hx
@@ -227,14 +227,14 @@ theorem k_types_finite_of_highest_weight (h : KStableHighestWeightVector) : KTyp
       exact_mod_cast this
     · have : ((Λ a : ℤ) : ℝ) ≤ ((⌈R⌉ : ℤ) : ℝ) := by linarith
       exact_mod_cast this
-  haveI : Finite F := hFfin.to_subtype
+  have : Finite F := hFfin.to_subtype
   let W0 : Submodule ℂ V :=
     ⨆ Λ : F, Submodule.span ℂ {w | IsKHWVec ε E (fun a => ((Λ.1 a : ℤ) : ℝ)) w}
-  haveI : ∀ Λ : F, FiniteDimensional ℂ
+  have : ∀ Λ : F, FiniteDimensional ℂ
       (Submodule.span ℂ {w | IsKHWVec ε E (fun a => ((Λ.1 a : ℤ) : ℝ)) w}) := fun Λ => hfinHW _
-  haveI : FiniteDimensional ℂ W0 := Submodule.finite_iSup _
+  have : FiniteDimensional ℂ W0 := Submodule.finite_iSup _
   obtain ⟨Y, hYf, hYk, hWY⟩ := exists_hull hL W0
-  haveI : FiniteDimensional ℂ Y := hYf
+  have : FiniteDimensional ℂ Y := hYf
   refine Submodule.finiteDimensional_of_le (S₂ := Y) ?_
   refine Submodule.span_le.2 ?_
   rintro v ⟨μ, hμR, hv⟩

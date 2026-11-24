@@ -168,7 +168,7 @@ theorem holAt_of_isPullback {S X : Scheme.{0}} {p : Z ⟶ X} {q : Z ⟶ Y} {s : 
     fun g => ?_⟩
   · convert (ha U₁ 0).1.inter (hb U₂ 0).1 using 1
     ext w
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, hiff]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, hiff]
     tauto
   · have hg : g ∈ Subring.closure _ := hgen.ge (Subring.mem_top g)
     induction hg using Subring.closure_induction with

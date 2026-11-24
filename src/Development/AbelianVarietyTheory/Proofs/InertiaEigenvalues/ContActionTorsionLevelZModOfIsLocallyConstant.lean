@@ -58,7 +58,7 @@ theorem contAction_levRepZ_of_isLocallyConstant
     (hloc : ∀ m : M, c • m = 0 → IsLocallyConstant (fun g => ρ g m)) :
     letI := GlobalTheory.ShapeNeg.levZ (M := M) p r h
     ReciprocityTheory.Gal.ContAction (GlobalTheory.ShapeNeg.levRepZ p r h ρ) := by
-  letI := GlobalTheory.ShapeNeg.levZ (M := M) p r h
+  let := GlobalTheory.ShapeNeg.levZ (M := M) p r h
   unfold ReciprocityTheory.Gal.ContAction
   apply IsLocallyConstant.continuous
   rw [IsLocallyConstant.iff_exists_open]

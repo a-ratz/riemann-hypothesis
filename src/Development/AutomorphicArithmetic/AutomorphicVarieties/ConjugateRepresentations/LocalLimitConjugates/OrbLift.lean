@@ -75,28 +75,28 @@ theorem UpperTheory.V.Cj.H.smDiv :
   refine ⟨fun g => ?_, fun Z hZ h0 hw g x hx => ?_⟩
   · refine ((φ.2 g).mul (u.2 g)).congr fun x hx => ?_
     have h : IsUnit (Matrix.of x) := hx
-    simp only [chart, dif_pos h]
+    simp only [chart, dite_eq_left h]
   · have h : IsUnit (Matrix.of x) := hx
     have e : ∀ y ∈ invSet E a, chart (fun g => φ.1 g / w.1 g) g y = chart φ.1 g y * (chart w.1 g y)⁻¹ := by
       intro y hy
       have h' : IsUnit (Matrix.of y) := hy
-      simp only [chart, dif_pos h', div_eq_mul_inv]
+      simp only [chart, dite_eq_left h', div_eq_mul_inv]
     by_cases hz : g * infGL E a h.unit ∈ Z
     · have hne : chart w.1 g x ≠ 0 := by
-        rw [chart, dif_pos h]
+        rw [chart, dite_eq_left h]
         exact hw _ hz
       exact ((φ.2 g x hx).mul ((w.2 g x hx).inv hne)).congr e (e x hx)
     · let v : invSet E a → GL (Fin a) (Cinf E) := fun y => (show IsUnit (Matrix.of y.1) from y.2).unit
-      have hv : Continuous v := unit_cont E a v continuous_subtype_val
+      have hv : Continuous v := unit_cont E a v continuous_subtypeVal
       have hc : Continuous fun y : invSet E a => g * infGL E a (v y) :=
         continuous_const.mul ((inf_cont E a).comp hv)
       have ho : IsOpen {y : invSet E a | g * infGL E a (v y) ∉ Z} := hZ.isOpen_compl.preimage hc
       have hn : ∀ᶠ y : invSet E a in 𝓝 ⟨x, hx⟩, g * infGL E a (v y) ∉ Z := ho.mem_nhds hz
       have hv : ∀ᶠ y in 𝓝[invSet E a] x, chart (fun g => φ.1 g / w.1 g) g y = 0 := by
-        rw [nhdsWithin_eq_map_subtype_coe hx, eventually_map]
+        rw [nhdsWithin_eq_map_subtypeVal hx, eventually_map]
         filter_upwards [hn] with y hy
         have h' : IsUnit (Matrix.of y.1) := y.2
-        rw [chart, dif_pos h', h0 _ hy, zero_div]
+        rw [chart, dite_eq_left h', h0 _ hy, zero_div]
       exact (contDiffWithinAt_const (c := (0 : ℂ))).congr_of_eventuallyEq hv (hv.self_of_nhdsWithin hx)
 end -- clump:auto
 end -- clump:auto
@@ -127,7 +127,7 @@ variable [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G] (Γ : Subgroup 
 
 private theorem summ (u : G → ℂ) (hu : HasCompactSupport u) (g : G) : Summable fun γ : Γ => u (γ * g) := by
   have hd : _root_.IsDiscrete (Γ : Set G) := ⟨inferInstanceAs (DiscreteTopology Γ)⟩
-  have ht := Subgroup.tendsto_coe_cofinite_of_discrete Γ hd
+  have ht := Subgroup.tendsto_coe_cofinite_of_isDiscrete Γ hd
   have hK : IsCompact ((fun x => x * g⁻¹) '' tsupport u) := IsCompact.image hu (by fun_prop)
   have hf := ht hK.compl_mem_cocompact
   rw [Filter.mem_map, Filter.mem_cofinite] at hf
@@ -169,7 +169,7 @@ theorem UpperTheory.V.Cj.H.orbLift :
   have hZ : IsClosed ((latticeGL E a : Set (GA E a)) * C) :=
     by
       set_option synthInstance.maxHeartbeats 200000 in
-        exact IsClosed.mul_right_of_isCompact Subgroup.isClosed_of_discrete hC
+        exact IsClosed.mul_right_of_isCompact Subgroup.isClosed_of_discreteTopology hC
   have hwZ : ∀ g ∈ (latticeGL E a : Set (GA E a)) * C, w.1 g ≠ 0 := by
     rintro _ ⟨γ, hγ, c, hc, rfl⟩
     rw [ew]

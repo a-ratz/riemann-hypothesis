@@ -54,7 +54,7 @@ theorem eq_zero_of_mem_minimalPrimes {R : Type} [CommRing R] [IsReduced R] {y : 
   have : y ∈ nilradical R := by
     rw [nilradical_eq_sInf, Submodule.mem_sInf]
     intro J hJ
-    haveI : Ideal.IsPrime J := hJ
+    have : Ideal.IsPrime J := hJ
     obtain ⟨p, hp, hpJ⟩ := Ideal.exists_minimalPrimes_le (I := ⊥) (J := J) bot_le
     exact hpJ (hy p hp)
   rw [nilradical_eq_zero] at this
@@ -66,7 +66,7 @@ theorem isDomain_of_isIntegrallyClosed_of_isReduced :
   intro R _ _ _ _ hic
   classical
   suffices hbot : (⊥ : Ideal R).IsPrime by
-    haveI : NoZeroDivisors R := ⟨fun {x y} h => by
+    have : NoZeroDivisors R := ⟨fun {x y} h => by
       have : x * y ∈ (⊥ : Ideal R) := by simp [h]
       simpa using hbot.mem_or_mem this⟩
     exact NoZeroDivisors.to_isDomain R

@@ -228,14 +228,14 @@ theorem exists_dR_frame : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Lo
         ∃ f : Fin m → P.R.BdR, (∀ i, f i ∈ (P.PD K).Fil (n - k i)) ∧ y = ∑ i, f i • u i) ∧
       LinearIndependent P.R.BdR u := by
   intro l _ P AI T K LL m r' hdR τ' hτ
-  haveI := K.2
-  haveI := LL.2
+  have := K.2
+  have := LL.2
   have hDR : IsDR (P.PD K) (repOf r') := by
     unfold IsDR
     rw [hdR, Module.finrank_fin_fun]
-  haveI hfinD : FiniteDimensional ↥LL.1 ↥(DdR (P.PD K) (repOf r')) := by
+  have hfinD : FiniteDimensional ↥LL.1 ↥(DdR (P.PD K) (repOf r')) := by
     rcases Nat.eq_zero_or_pos m with rfl | hm
-    · haveI : Subsingleton ((Fin 0 → ↥LL.1) ⊗[ℚ_[l]] P.R.BdR) := ⟨fun x y => by
+    · have : Subsingleton ((Fin 0 → ↥LL.1) ⊗[ℚ_[l]] P.R.BdR) := ⟨fun x y => by
         have h : ∀ z : (Fin 0 → ↥LL.1) ⊗[ℚ_[l]] P.R.BdR, z = 0 := fun z => by
           induction z using TensorProduct.induction_on with
           | zero => rfl
@@ -275,11 +275,11 @@ theorem exists_dR_frame : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Lo
           Finset.single_le_sum (f := fun j => |f j|) (fun j _ => abs_nonneg _) (Finset.mem_univ j)
         have h2 := neg_abs_le (f j)
         linarith
-      exact SetLike.le_def.1 (GlobalTheory.DRFil.fil_antitone (P.PD K) hle) (hf j)
+      exact IsConcreteLE.le_iff.1 (GlobalTheory.DRFil.fil_antitone (P.PD K) hle) (hf j)
     obtain ⟨c, -, hc⟩ := hspan' _ y hn
     rw [hc]
     exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨i, rfl⟩)
-  letI : Field P.R.BdR := (GlobalTheory.DRFil.isField_dR T).toField
+  let : Field P.R.BdR := (GlobalTheory.DRFil.isField_dR T).toField
   have hle1 : m ≤ m' := by
     have h1 := finrank_range_le_card (R := P.R.BdR) u'
     rw [Set.finrank, eq_top_iff.2 htop, finrank_top, Module.finrank_fin_fun, Fintype.card_fin] at h1

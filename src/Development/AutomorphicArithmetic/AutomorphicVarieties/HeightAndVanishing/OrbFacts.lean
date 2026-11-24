@@ -115,7 +115,7 @@ theorem UpperTheory.V.HV.orbFacts :
     have h1 := IsPrimitiveRoot.orderOf (ψ.toUnitHom g)
     have h2 := IsPrimitiveRoot.orderOf (ψ'.toUnitHom g)
     rw [ho] at h2
-    haveI : NeZero (orderOf (ψ.toUnitHom g)) := ⟨hpos.ne'⟩
+    have : NeZero (orderOf (ψ.toUnitHom g)) := ⟨hpos.ne'⟩
     obtain ⟨j, hj, hcop, hjj⟩ := (h1.isPrimitiveRoot_iff').1 h2
     refine ⟨j, hord ▸ hj, hord ▸ hcop, hext _ _ fun x => ?_⟩
     obtain ⟨a, ha⟩ := hg x

@@ -113,7 +113,7 @@ theorem embV_sum (D : D7) (T : Tor D) (h0 : ∀ τ, T.emb τ 0 = 0)
     map_sum f _ _
   simp only [embV, e, e2, hmul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
 
-theorem liftM_of_mem (M : IntermediateField ℚ ℂ) {x : ℂ} (h : x ∈ M) : liftM M x = ⟨x, h⟩ := dif_pos h
+theorem liftM_of_mem (M : IntermediateField ℚ ℂ) {x : ℂ} (h : x ∈ M) : liftM M x = ⟨x, h⟩ := dite_eq_left h
 
 theorem sum_smul_comm {V : Type*} [AddCommGroup V] [Module ℂ V] {r s : ℕ} (c : Fin s → ℂ) (k : Fin s → Fin r → ℂ)
     (v : Fin r → V) : ∑ j, c j • ∑ i, k j i • v i = ∑ i, (∑ j, k j i * c j) • v i := by
@@ -269,7 +269,7 @@ theorem exists_top_embedding_eq_on_countable (M : IntermediateField ℚ ℂ) (ρ
   let A : Set M := {y | (y : ℂ) ∈ S}
   have hA : A.Countable := hS.preimage Subtype.val_injective
   let k : Subfield M := Subfield.closure A
-  haveI : Countable k := by
+  have : Countable k := by
     rw [← Cardinal.mk_le_aleph0_iff]
     refine (Subfield.cardinalMk_closure_le_max A).trans (max_le ?_ le_rfl)
     exact Cardinal.mk_le_aleph0_iff.2 hA.to_subtype
@@ -277,8 +277,8 @@ theorem exists_top_embedding_eq_on_countable (M : IntermediateField ℚ ℂ) (ρ
     ((M.val : M →+* ℂ).comp k.subtype) ((ρ : M →+* ℂ).comp k.subtype)
   refine ⟨(τ.toRingHom.toRatAlgHom).comp (⊤ : IntermediateField ℚ ℂ).val, fun x hx hxM => ?_⟩
   have h := hτ ⟨⟨x, hxM⟩, Subfield.subset_closure hx⟩
-  have h1 : liftM ⊤ x = ⟨x, IntermediateField.mem_top⟩ := dif_pos IntermediateField.mem_top
-  have h2 : liftM M x = ⟨x, hxM⟩ := dif_pos hxM
+  have h1 : liftM ⊤ x = ⟨x, IntermediateField.mem_top⟩ := dite_eq_left IntermediateField.mem_top
+  have h2 : liftM M x = ⟨x, hxM⟩ := dite_eq_left hxM
   unfold cj
   rw [h1, h2]
   exact h
@@ -388,10 +388,10 @@ open Avg
 theorem exists_theta_of_level : ∀ (D : D7) (T : Tor D) (N N' : ℕ) (A : AddSubgroup (VC D N N')), A.FG → (∀ x ∈ A, ∀ y ∈ A, ∃ m : ℤ, (Hf D T x y).im = m) → (∀ x, (∀ y ∈ A, ∃ m : ℤ, (Hf D T x y).im = m) → x ∈ A) → (∀ x ∈ A, ∃ m : ℤ, qH D T x = m) → (∀ x ∈ A, ∀ y ∈ A, al D T (x + y) = al D T x * al D T y * Complex.exp (-(Real.pi : ℂ) * Complex.I * ((Hf D T x y).im : ℂ))) → ∀ F : VC D N N' → ℂ, Differentiable ℂ F → F ≠ 0 → ∀ n : ℕ, 0 < n → (∀ x ∈ A, U D T (n • x) F = F) → ∃ P, IsTr D T A F P ∧ P ∈ ThSp D T A ∧ P ≠ 0 := by
   intro D T N N' A hfg hint hdual hq hal F hF hF0 n hn hlev
   have hn2 : 0 < 2 * n := by omega
-  haveI : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg A).2 hfg
+  have : AddGroup.FG A := (AddGroup.fg_iff_addSubgroup_fg A).2 hfg
   set S : AddSubgroup A := (nsmulAddMonoidHom (α := A) (2 * n)).range with hS
-  haveI : S.FiniteIndex := AddSubgroup.finiteIndex_range_nsmulAddMonoidHom_of_fg A hn2.ne'
-  letI : Fintype (A ⧸ S) := Fintype.ofFinite _
+  have : S.FiniteIndex := AddSubgroup.finiteIndex_range_nsmulAddMonoidHom_of_fg A hn2.ne'
+  let : Fintype (A ⧸ S) := Fintype.ofFinite _
   set c : ℝ := ((2 * n : ℕ) : ℝ)⁻¹ with hc
   have hcn : ((2 * n : ℕ) : ℝ) * c = 1 := mul_inv_cancel₀ (by exact_mod_cast hn2.ne')
   have hcs : ∀ y : VC D N N', (2 * n) • ((c : ℂ) • y) = y := by
@@ -551,7 +551,7 @@ theorem al_add (D : D7) (T : Tor D) (N N' : ℕ) (A : AddSubgroup (VC D N N'))
     simp only [qH, Hf_add_left, Hf_add_right, Complex.add_re, Hf_re_swap D T x y]
     ring
   have he : Complex.exp (-(Real.pi : ℂ) * Complex.I * ((Hf D T x y).im : ℂ)) = (-1 : ℂ) ^ (-b) := by
-    rw [hb, ← Complex.exp_pi_mul_I, ← Complex.exp_int_mul]
+    rw [hb, ← Complex.exp_pi_mul_I, ← Complex.exp_intCast_mul]
     congr 1
     push_cast
     ring
@@ -597,7 +597,7 @@ theorem sign_eq {p k k' : ℕ} {m m' : ℤ} {q : ℝ} (hp : Odd p) (h : (p : ℝ
 theorem wPh_eq (D : D7) (T : Tor D) {N N' : ℕ} (x : VC D N N') {p k : ℕ} {m : ℤ} (hp : p.Prime) (h2 : p ≠ 2)
     (h : (p : ℝ) ^ k * qH D T x = (m : ℝ)) : wPh D T p x = (-1 : ℂ) ^ m := by
   have hodd : Odd p := hp.odd_of_ne_two h2
-  rw [wPh, if_neg h2]
+  rw [wPh, ite_eq_right h2]
   have hex : ∃ s : ℂ, ∃ (k : ℕ) (m : ℤ), (p : ℝ) ^ k * qH D T x = (m : ℝ) ∧ s = (-1 : ℂ) ^ m :=
     ⟨_, k, m, h, rfl⟩
   obtain ⟨k0, m0, h0, hs⟩ := Classical.epsilon_spec hex
@@ -606,18 +606,18 @@ theorem wPh_eq (D : D7) (T : Tor D) {N N' : ℕ} (x : VC D N N') {p k : ℕ} {m 
 
 theorem ee_half_pow (q : ℝ) (n : ℕ) :
     ee (q / 2) ^ n = Complex.exp ((((n : ℝ) * q : ℝ) : ℂ) * ((Real.pi : ℂ) * Complex.I)) := by
-  rw [ee, ← Complex.exp_nat_mul]
+  rw [ee, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   ring
 
 theorem exp_int_pi (m : ℤ) : Complex.exp ((m : ℂ) * ((Real.pi : ℂ) * Complex.I)) = (-1 : ℂ) ^ m := by
-  rw [Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
 
 theorem cj_top_pow (σ : (⊤ : IntermediateField ℚ ℂ) →ₐ[ℚ] ℂ) (z : ℂ) (n : ℕ) :
     cj ⊤ σ (z ^ n) = cj ⊤ σ z ^ n := by
   have hl : ∀ w : ℂ, liftM ⊤ w = (⟨w, IntermediateField.mem_top⟩ : (⊤ : IntermediateField ℚ ℂ)) :=
-    fun w => dif_pos IntermediateField.mem_top
+    fun w => dite_eq_left IntermediateField.mem_top
   simp only [cj]
   rw [hl, hl, ← map_pow]
   congr 1
@@ -625,7 +625,7 @@ theorem cj_top_pow (σ : (⊤ : IntermediateField ℚ ℂ) →ₐ[ℚ] ℂ) (z :
 theorem cj_top_sign (σ : (⊤ : IntermediateField ℚ ℂ) →ₐ[ℚ] ℂ) (m : ℤ) :
     cj ⊤ σ ((-1 : ℂ) ^ m) = (-1 : ℂ) ^ m := by
   have hl : ∀ w : ℂ, liftM ⊤ w = (⟨w, IntermediateField.mem_top⟩ : (⊤ : IntermediateField ℚ ℂ)) :=
-    fun w => dif_pos IntermediateField.mem_top
+    fun w => dite_eq_left IntermediateField.mem_top
   have he : (⟨(-1 : ℂ) ^ m, IntermediateField.mem_top⟩ : (⊤ : IntermediateField ℚ ℂ)) = (-1) ^ m := by
     apply Subtype.ext
     change (-1 : ℂ) ^ m = (⊤ : IntermediateField ℚ ℂ).val ((-1) ^ m)
@@ -851,7 +851,7 @@ theorem translate_level_four : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D
           rw [coordB_nsmul]; push_cast; ring
         rw [this]; exact add_mem hk hk
       have := hU _ h4 (coordB D (tor0 D cc δ) b k z)
-      rw [if_pos h2, one_mul] at this
+      rw [ite_eq_left h2, one_mul] at this
       exact this
     obtain ⟨m, hm⟩ := hint ω hω _ h2t
     have ha : (Hf D (tor0 D cc δ) (4 • ω) t).im = 2 * m := by
@@ -1014,7 +1014,7 @@ theorem gal_top (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hc : Crv D cc 
 
 theorem cj_mul (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ) {a b : ℂ} (ha : a ∈ M) (hb : b ∈ M) :
     cj M ρ (a * b) = cj M ρ a * cj M ρ b := by
-  simp only [cj, TaylorLogMetric.liftM, dif_pos ha, dif_pos hb, dif_pos (M.mul_mem ha hb), ← map_mul]
+  simp only [cj, TaylorLogMetric.liftM, dite_eq_left ha, dite_eq_left hb, dite_eq_left (M.mul_mem ha hb), ← map_mul]
   rfl
 
 theorem cj_neg_one_zpow (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ) (m : ℤ) :
@@ -1023,11 +1023,11 @@ theorem cj_neg_one_zpow (M : IntermediateField ℚ ℂ) (ρ : M →ₐ[ℚ] ℂ)
   rcases Int.even_or_odd m with h | h
   · rw [h.neg_one_zpow]
     refine ⟨M.one_mem, ?_⟩
-    simp only [cj, TaylorLogMetric.liftM, dif_pos M.one_mem]
+    simp only [cj, TaylorLogMetric.liftM, dite_eq_left M.one_mem]
     exact map_one ρ
   · rw [h.neg_one_zpow]
     refine ⟨h1, ?_⟩
-    simp only [cj, TaylorLogMetric.liftM, dif_pos h1]
+    simp only [cj, TaylorLogMetric.liftM, dite_eq_left h1]
     have : (⟨-1, h1⟩ : M) = -1 := rfl
     rw [this, map_neg, map_one]
 
@@ -1040,7 +1040,7 @@ theorem fnConj_mul (D : D7) {N N' : ℕ} (M : IntermediateField ℚ ℂ) (ρ : M
     have : (fun z => a * F z) = a • F := rfl
     unfold TaylorLogMetric.taylor
     rw [this, iteratedFDeriv_const_smul_apply han.contDiffAt]
-    simp only [ContinuousMultilinearMap.smul_apply, smul_eq_mul, mul_div_assoc]
+    simp only [smul_apply, smul_eq_mul, mul_div_assoc]
   funext z
   unfold fnConj
   rw [← tsum_mul_left]
@@ -1058,7 +1058,7 @@ theorem gal_all : ∀ D : D7, gal D := by
       Set.range (fun j => wpD (lamOf D cc δ) (a j / ((2 * m₀ : ℕ) : ℂ))) ∪
       Set.range (TaylorLogMetric.taylor D (comb D (tor0 D cc δ) c t e₀)) ∪
       Set.range (TaylorLogMetric.taylor D (U D (tor0 D cc δ) x (comb D (tor0 D cc δ) c t e₀)))) (by
-      haveI : Countable D.host.E := Countable.of_equiv _ (Module.finBasis ℚ D.host.E).equivFun.toEquiv.symm
+      have : Countable D.host.E := Countable.of_equiv _ (Module.finBasis ℚ D.host.E).equivFun.toEquiv.symm
       simp only [Set.countable_union]
       refine ⟨⟨⟨⟨⟨⟨Set.countable_iUnion fun _ => Set.countable_range _, Set.countable_range _⟩, ?_⟩,
         Set.countable_range _⟩, Set.countable_range _⟩, Set.countable_range _⟩, Set.countable_range _⟩

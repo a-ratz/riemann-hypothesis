@@ -69,9 +69,9 @@ theorem fourierStep (hCE : CoefEx) (hFZ : FourierZero) (hAux : AuxiliaryPrimeFun
     (nr : (Fin d.n → Fin d.n → ℝ) → GR d.n) (hnr : ∀ x, mR (nr x) = nU (herm x)) :
     ∀ z, ∫ x, f (R.ι w (nr x) * z) * ψ₀ x = 0 := by
   obtain ⟨-, -, hG, hLC, -, hSC⟩ := hAux F E σ d
-  haveI := hG
-  haveI := hLC
-  haveI := hSC
+  have := hG
+  have := hLC
+  have := hSC
   obtain ⟨nb, lam, 𝓖, hCD⟩ := hCE F E σ d
   obtain ⟨β, hβc, hβ⟩ := nbw d R w hCD.1 nr hnr
   have hnrc := cont_nr nr hnr

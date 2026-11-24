@@ -65,7 +65,7 @@ section
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 theorem adele_rat_of_isGood_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheory.TP.W.GoodK σ B) (a : AF F)
     (h : ∀ c : F, B.ψ (a * algebraMap F _ c) = 1) : ∃ d : F, a = algebraMap F _ d := by
-  haveI : IsTotallyReal F := hB.cm.1
+  have : IsTotallyReal F := hB.cm.1
   obtain ⟨⟨θ, hθ⟩, -⟩ := (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood_k F E σ B hB).2
   let L : Ainf F →+ ℂ := AddMonoidHom.mk' (fun x => ∑ w, θ w (x ⊗ₜ[F] (1 : E))) fun a b => by
     simp only [map_add (f := _), TensorProduct.add_tmul, Finset.sum_add_distrib]
@@ -88,7 +88,7 @@ theorem ratLF_annihilator_k : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     IsHermND σ JS → IsHermND σ JT → ∀ ξ₀ : E, ξ₀ ≠ 0 → ∀ x : WOF F E nS nT,
       (∀ γ ∈ ratLF F E nS nT, B.ψ (symplOF σ JS JT ξ₀ x γ) = 1) ↔ x ∈ ratLF F E nS nT := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ x
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hB.cm.2.2.1]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hB.cm.2.2.1]; norm_num)
   have hσ : Function.Surjective σ := (Algebra.IsAlgebraic.algHom_bijective σ).2
   constructor
   · intro h

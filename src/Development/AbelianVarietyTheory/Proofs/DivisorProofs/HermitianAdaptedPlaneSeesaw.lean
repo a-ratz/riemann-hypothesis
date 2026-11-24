@@ -112,7 +112,7 @@ theorem incM_gram {α β γ : Type} [Fintype α] (J : Matrix α α E) (A : Matri
   rfl
 
 theorem alg_inj : Function.Injective (algebraMap F (AF F)) := by
-  haveI : Nontrivial (AF F) := by
+  have : Nontrivial (AF F) := by
     obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
     refine ⟨0, 1, fun h => ?_⟩
     have := congrFun (congrArg Prod.fst h) w
@@ -159,7 +159,7 @@ theorem exists_ratCoord {n d : ℕ} {X : Spc F E n} {W : Spc F E d} (M : Model �
     have : M.co.e (incM F a) = M.co.e (incM F b) := by
       rw [h, h]; exact congrArg (emb F) hab
     exact incM_inj (M.co.e.injective this)
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   have hrk : Module.finrank F (Matrix (Fin n) (Fin d) E) =
       Module.finrank F ((Fin n × Fin d → F) × (Fin n × Fin d → F)) := by
     rw [Module.finrank_matrix, h2]
@@ -273,7 +273,7 @@ theorem exists_lagr (B : Base F E) (hB : B.IsGood σ) (M : Model σ X W) (M₁ :
         (M₁.co.e m).1 = 0 ∧ ∀ φ : Fn F n d,
           schr B.ψ (t • emb F w) φ = M.co.rho B.ψ (Matrix.vecMulVec (incV F H.x) u) (M.co.rho B.ψ (incM F H.ι * m) φ) := by
   have h2 : Module.finrank F E = 2 := hB.cm.2.2.1
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by omega)
   obtain ⟨φ, hφ⟩ := exists_ratCoord M h2 hM.rat
   obtain ⟨φ₁, hφ₁⟩ := exists_ratCoord M₁ h2 hM₁.rat
   let g : ((Fin d → E) × (Fin n₁ × Fin d → F)) →ₗ[F] Matrix (Fin n) (Fin d) E :=
@@ -325,7 +325,7 @@ theorem adelicCoordinatesEvalZeroForm_mem_admissible (κ : Type) [Fintype κ] : 
   intro g _
   refine ⟨g 0 • (BoundedContinuousFunction.evalCLM ℂ 0).comp
     (SchwartzMap.toBoundedContinuousFunctionCLM ℂ (κ → mixedEmbedding.mixedSpace F) ℂ), fun f => ?_⟩
-  simp only [ev0, LinearMap.proj_apply, pureA, ContinuousLinearMap.coe_smul', ContinuousLinearMap.coe_comp',
+  simp only [ev0, LinearMap.proj_apply, pureA, FunLike.coe_smul, ContinuousLinearMap.coe_comp,
     Function.comp_apply, Pi.smul_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply,
     BoundedContinuousFunction.evalCLM_apply, smul_eq_mul]
   have h1 : (fun i : κ => InfiniteAdeleRing.ringEquiv_mixedSpace F ((0 : κ → AdeleRing (𝓞 F) F) i).1) = 0 := by

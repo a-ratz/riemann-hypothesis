@@ -93,7 +93,7 @@ theorem exists_isPrim_frac : ∀ {O : Type} [CommRing O] (bar : O → O) (φ : I
     have : Nat.card (Submodule.torsion ℤ (balForms bar X ⧸ P)) = M := hM
     omega
   have hfin : Finite (Submodule.torsion ℤ (balForms bar X ⧸ P)) := Nat.finite_of_card_ne_zero (by omega)
-  haveI := Finite.one_lt_card_iff_nontrivial.1 hcard
+  have := Finite.one_lt_card_iff_nontrivial.1 hcard
   obtain ⟨t, ht⟩ := exists_ne (0 : Submodule.torsion ℤ (balForms bar X ⧸ P))
   obtain ⟨⟨a, ha⟩, hat⟩ := (Submodule.mem_torsion_iff _).1 t.2
   obtain ⟨x, hx⟩ := Submodule.mkQ_surjective P t.1

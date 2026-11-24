@@ -97,13 +97,13 @@ private theorem exists_algClosed_compositum {k K K₀ : Type} [Field k] [Field K
     (φ : k →+* K) (ψ : k →+* K₀) :
     ∃ (Ω : Type) (_ : Field Ω) (_ : IsAlgClosed Ω) (i : K →+* Ω) (j : K₀ →+* Ω),
       i.comp φ = j.comp ψ := by
-  letI : Algebra k K := φ.toAlgebra
-  letI : Algebra k K₀ := ψ.toAlgebra
-  haveI : Nontrivial (K ⊗[k] K₀) :=
+  let : Algebra k K := φ.toAlgebra
+  let : Algebra k K₀ := ψ.toAlgebra
+  have : Nontrivial (K ⊗[k] K₀) :=
     Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain k K K₀
       φ.injective ψ.injective
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (K ⊗[k] K₀)
-  letI : Field (K ⊗[k] K₀ ⧸ m) := Ideal.Quotient.field m
+  let : Field (K ⊗[k] K₀ ⧸ m) := Ideal.Quotient.field m
   let emb : K ⊗[k] K₀ →+* AlgebraicClosure (K ⊗[k] K₀ ⧸ m) :=
     (algebraMap (K ⊗[k] K₀ ⧸ m) (AlgebraicClosure (K ⊗[k] K₀ ⧸ m))).comp (Ideal.Quotient.mk m)
   refine ⟨AlgebraicClosure (K ⊗[k] K₀ ⧸ m), inferInstance, inferInstance,

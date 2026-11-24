@@ -59,7 +59,7 @@ theorem formallyUnramified_residue_comp_of_isEtaleCompletion :
       (φ : A →+* ChartRing k m e), IsEtaleCompletion φ → ((residue (ChartRing k m e)).comp φ).FormallyUnramified := by
   intro k _ m e _ A _ _ φ hφ
   obtain ⟨-, hmax, hfin⟩ := hφ
-  haveI : IsLocalHom φ := by
+  have : IsLocalHom φ := by
     constructor
     intro a ha
     by_contra hna
@@ -71,13 +71,13 @@ theorem formallyUnramified_residue_comp_of_isEtaleCompletion :
   have hfin' : (ResidueField.map φ).Finite := by
     rw [← ResidueField.map_comp_residue] at hfin
     exact RingHom.Finite.of_comp_finite hfin
-  haveI : CharZero k := RingHom.charZero (algebraMap k (ChartRing k m e))
-  haveI : CharZero (ResidueField (ChartRing k m e)) :=
+  have : CharZero k := RingHom.charZero (algebraMap k (ChartRing k m e))
+  have : CharZero (ResidueField (ChartRing k m e)) :=
     (RingHom.charZero_iff ((residue (ChartRing k m e)).comp (algebraMap k (ChartRing k m e))).injective).1 inferInstance
-  haveI : CharZero (ResidueField A) := RingHom.charZero (ResidueField.map φ)
-  letI := (ResidueField.map φ).toAlgebra
-  haveI : Module.Finite (ResidueField A) (ResidueField (ChartRing k m e)) := hfin'
-  haveI : Algebra.IsSeparable (ResidueField A) (ResidueField (ChartRing k m e)) := inferInstance
+  have : CharZero (ResidueField A) := RingHom.charZero (ResidueField.map φ)
+  let := (ResidueField.map φ).toAlgebra
+  have : Module.Finite (ResidueField A) (ResidueField (ChartRing k m e)) := hfin'
+  have : Algebra.IsSeparable (ResidueField A) (ResidueField (ChartRing k m e)) := inferInstance
   exact Algebra.FormallyUnramified.of_isSeparable _ _
 
 end GlobalTheory.GenFan

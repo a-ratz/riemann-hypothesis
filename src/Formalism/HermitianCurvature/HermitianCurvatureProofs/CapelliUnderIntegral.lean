@@ -57,7 +57,7 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Fo
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 theorem glev0 {k r : ℕ} (g : Mat k r) : g ∈ Q.Glev k r 0 ↔ g ∈ GV k r := by
-  simp only [Q.Glev, Set.mem_setOf_eq]
+  simp only [Q.Glev, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨h, -⟩
     exact h

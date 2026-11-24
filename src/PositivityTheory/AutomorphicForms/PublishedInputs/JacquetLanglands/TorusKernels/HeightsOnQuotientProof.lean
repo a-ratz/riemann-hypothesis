@@ -214,7 +214,7 @@ theorem meas_ht (s : Fin 2 → F) (x : Gf) : Measurable fun z : D.Xs => D.Ht s z
   unfold Dat.Ht
   refine Measurable.mul_const (Finset.measurable_prod _ fun v _ => ?_) _
   have hz : Measurable fun z : D.Xs => (z v).1 :=
-    measurable_subtype_coe.comp (measurable_pi_apply (X := fun _ : I => P) v)
+    measurable_subtypeVal.comp (measurable_pi_apply (X := fun _ : I => P) v)
   exact (continuous_abs.measurable.comp (Complex.measurable_im.comp hz)).div
     (((measurable_const.mul hz).add measurable_const).norm.pow_const 2)
 

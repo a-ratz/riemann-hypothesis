@@ -269,7 +269,7 @@ theorem elem_of_coset (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ)
       (g : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = (a : Matrix (Fin n) (Fin n) _) * diagJ n ϖ j * (b : Matrix (Fin n) (Fin n) _)) →
     glMap g (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1 ∈
       Subtype.val '' subElem j (std (w.adicCompletionIntegers E) (w.adicCompletion E) n) := by
-  haveI := GlobalTheory.RowSatakeBound.finite_residue w
+  have := GlobalTheory.RowSatakeBound.finite_residue w
   rintro ⟨a, ha, b, hb, e⟩
   set S : Finset (Fin n) := Finset.univ.filter fun i => (i : ℕ) < j
   have hS : S.card = j := by
@@ -299,7 +299,7 @@ theorem Tj_eq_dosetInd {n : ℕ} {ϖ : w.adicCompletion E} (hϖ : IsUnifV E w ϖ
   unfold Tj dosetInd
   congr 1
   ext g
-  simp only [Set.mem_setOf_eq, DoubleCoset.mem_doubleCoset, SetLike.mem_coe]
+  simp only [Set.mem_ofPred_eq, DoubleCoset.mem_doubleCoset, SetLike.mem_coe]
   refine exists_congr fun a => and_congr_right fun _ => exists_congr fun b => and_congr_right fun _ => ?_
   rw [Units.ext_iff]
   simp [Matrix.GeneralLinearGroup.mkOfDetNeZero]
@@ -312,7 +312,7 @@ theorem heckeVec_Tj_eq_sum {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
       Set.BijOn (fun g => glMap g (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1) s
         (Subtype.val '' subElem j (std (w.adicCompletionIntegers E) (w.adicCompletion E) n))) :
     heckeVec ρ (KGL w (n := n)) (Tj ℂ n (Ov E w) ϖ j) x = ∑ g ∈ s, ρ g x := by
-  haveI := GlobalTheory.RowSatakeBound.finite_residue w
+  have := GlobalTheory.RowSatakeBound.finite_residue w
   set D := Matrix.GeneralLinearGroup.mkOfDetNeZero (diagJ n ϖ j) (diagJ_det_ne hϖ j)
   have hD : ∀ g : GL (Fin n) (w.adicCompletion E), g ∈ DoubleCoset.doubleCoset D (KGL w (n := n) : Set _) (KGL w (n := n)) ↔
       ∃ a ∈ GLint (Fin n) (Ov E w), ∃ b ∈ GLint (Fin n) (Ov E w),
@@ -369,17 +369,17 @@ namespace GlobalTheory.SatHecke
 
 theorem isUnitarySatakeAt_of_hasSatake : ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) (n : ℕ), letI := GlobalTheory.LocalData.complRel w; haveI := GlobalTheory.LocalData.isLocalField w; ∀ (π : Irr (w.adicCompletion E) n) (α : Fin n → ℂˣ), HasSatake π.π α → IsUnitarisable π.π → GlobalTheory.RowSatakeBound.IsUnitarySatakeAt w n (Finset.univ.val.map fun i => (α i : ℂ)) := by
   intro E _ _ w n
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   intro π α hS hU
   have hG : GlobalTheory.LGrp.HasSatakeGL π.π (Finset.univ.val.map α) :=
     (GlobalTheory.LGrp.SatakeCompare.hasSatakeGL_iff _ _ _ π.π _).2 ⟨α, rfl, hS⟩
   obtain ⟨x, hx⟩ := (GlobalTheory.LFun.SatCompare.hasSatGL_of_hasSatakeGL hG).exists_vec
   obtain ⟨B, hB, hpos, hi⟩ := hU
-  letI cd : InnerProductSpace.Core ℂ π.V := formCore B hB hpos
-  letI : NormedAddCommGroup π.V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
-  letI : InnerProductSpace ℂ π.V := InnerProductSpace.ofCore cd.toCore
-  haveI := GlobalTheory.RowSatakeBound.finite_residue w
+  let cd : InnerProductSpace.Core ℂ π.V := formCore B hB hpos
+  let : NormedAddCommGroup π.V := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
+  let : InnerProductSpace ℂ π.V := InnerProductSpace.ofCore cd.toCore
+  have := GlobalTheory.RowSatakeBound.finite_residue w
   have hn : ∀ y : π.V, ‖y‖ ^ 2 = (B y y).re := fun y => by
     rw [← @inner_self_eq_norm_sq ℂ]
     rfl

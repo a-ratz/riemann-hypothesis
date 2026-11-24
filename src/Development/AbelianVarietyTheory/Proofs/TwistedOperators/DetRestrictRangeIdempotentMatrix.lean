@@ -75,7 +75,7 @@ theorem exists_factor {F m : Type} [Field F] [Fintype m] [DecidableEq m] (p : Ma
     simp [e, f]
   refine ⟨_, _, _, ?_, hAB, ?_⟩
   · refine Nat.pos_of_ne_zero fun h => h0 ?_
-    haveI : IsEmpty (Fin (Module.finrank F (LinearMap.range f))) := by rw [h]; infer_instance
+    have : IsEmpty (Fin (Module.finrank F (LinearMap.range f))) := by rw [h]; infer_instance
     rw [← hAB]; ext i j; simp [Matrix.mul_apply]
   · rw [← LinearMap.toMatrix_comp, ← LinearMap.toMatrix_id c]
     congr 1
@@ -110,9 +110,9 @@ theorem regRep_tmul (b : Module.Basis ι F E) (R : Type) [CommRing R] [Algebra F
 theorem continuous_regRep (b : Module.Basis ι F E) (R : Type) [CommRing R] [Algebra F R]
     [TopologicalSpace R] [IsTopologicalRing R] :
     @Continuous _ _ (Formalism.BasicNotions.tensTopL (F := F) (E := E) R) _ (regRep b R) := by
-  letI : Algebra R (E ⊗[F] R) := Algebra.TensorProduct.rightAlgebra
-  letI := moduleTopology R (E ⊗[F] R)
-  haveI : IsModuleTopology R (E ⊗[F] R) := ⟨rfl⟩
+  let : Algebra R (E ⊗[F] R) := Algebra.TensorProduct.rightAlgebra
+  let := moduleTopology R (E ⊗[F] R)
+  have : IsModuleTopology R (E ⊗[F] R) := ⟨rfl⟩
   refine IsModuleTopology.continuous_of_ringHom (R := R) (regRep b R).toRingHom ?_
   have : ⇑((regRep b R).toRingHom.comp (algebraMap R (E ⊗[F] R))) =
       fun t : R => t • (Algebra.leftMulMatrix b 1).map (algebraMap F R) :=
@@ -170,7 +170,7 @@ open IdemDet
 
 theorem idempotentDet : IdempotentDet := by
   intro F E _ _ _ _ n _ _ ε h0 hε R _ _ _ _
-  letI : TopologicalSpace (E ⊗[F] R) := Formalism.BasicNotions.tensTopL (F := F) (E := E) R
+  let : TopologicalSpace (E ⊗[F] R) := Formalism.BasicNotions.tensTopL (F := F) (E := E) R
   let b := Module.finBasis F E
   have hq : blockRat b ε * blockRat b ε = blockRat b ε := by rw [← map_mul, hε]
   obtain ⟨d, A, B, hd, hAB, hBA⟩ := exists_factor (blockRat b ε)

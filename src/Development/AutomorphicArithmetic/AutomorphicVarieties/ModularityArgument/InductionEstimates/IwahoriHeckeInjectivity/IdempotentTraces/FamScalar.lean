@@ -78,7 +78,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.E.famScalar :
       rw [show v₀ = 0 from Subsingleton.elim _ _, map_zero]
       simp only [hflat0, mul_zero, integral_zero]
     · exact h
-  haveI : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
+  have : Nonempty (Fin d) := ⟨⟨0, hd⟩⟩
   obtain ⟨h0, h1, -⟩ := UpperTheory.ConvolutionTheory.evEx K (2 + 2) (by norm_num) μ 𝔞
   have hpos := (posSymb A.J 𝔞.A β hA.1 (hR ▸ hA.2.1) h0 h1).1
   have hcomm : ∀ h M, HeckeAt A (levOn S U) h M → Commute M (symb β 0 : Eu d →ₗ[ℂ] Eu d) := by

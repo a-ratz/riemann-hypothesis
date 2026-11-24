@@ -368,7 +368,7 @@ theorem norm_intZ_le : ∀ K : Set ℂ, IsCompact K → K ⊆ halfPlane → ∀ 
   set e : ℝ := (a : ℝ) / 2 + b + σ.re with he
   have hee : e₀ ≤ e := by
     have := hmin hσ
-    simp only [Set.mem_setOf_eq] at this
+    simp only [Set.mem_ofPred_eq] at this
     rw [he, he₀]; linarith
   have hc : 0 < |y| := abs_pos.2 hy
   have hmono : (∫ s : ℝ, (1 + s ^ 2) ^ (-e)) ≤ ∫ s : ℝ, (1 + s ^ 2) ^ (-e₀) :=
@@ -732,7 +732,7 @@ theorem sum_pushforward_eval (σ : ℂ) (F : ℕ × ℕ × ℕ → ℂ) (g : ℕ
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun p hp => ?_
   simp_rw [apply_ite (Polynomial.eval σ), Polynomial.eval_zero, ite_mul, zero_mul]
-  rw [Finset.sum_ite_eq, if_pos (hU p hp)]
+  rw [Finset.sum_ite_eq, ite_eq_left (hU p hp)]
 
 theorem iteratedDeriv_hTrans_repr : ∀ j : ℕ, ∃ (S : Finset (ℕ × ℕ × ℕ)) (P : ℕ × ℕ × ℕ → Polynomial ℂ),
     (∀ p ∈ S, 2 ≤ p.1 + 2 * p.2.1 ∧ p.1 + 2 * p.2.1 = p.2.2 + 2 + j) ∧

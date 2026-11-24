@@ -50,11 +50,11 @@ theorem UpperTheory.Gal.KunnethLefschetz.sumCl_holds :
     UpperTheory.Gal.KunnethLefschetz.SumCl := by
   intro X r Y j hj s
   obtain ⟨hop, hcov, hdis⟩ := hj
-  haveI := hop s
+  have := hop s
   apply AlgebraicGeometry.IsClosedImmersion.of_isPreimmersion
   have hc : (Set.range (j s).base)ᶜ = ⋃ t ∈ {t : Fin r | t ≠ s}, Set.range (j t).base := by
     ext x
-    simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+    simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
     constructor
     · intro hx
       obtain ⟨t, ht⟩ := hcov x
@@ -65,5 +65,5 @@ theorem UpperTheory.Gal.KunnethLefschetz.sumCl_holds :
       exact Set.disjoint_left.mp (hdis t s hts) ht hx
   rw [← isOpen_compl_iff, hc]
   refine isOpen_biUnion fun t _ => ?_
-  haveI := hop t
+  have := hop t
   exact (j t).isOpenEmbedding.isOpen_range

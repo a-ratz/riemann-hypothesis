@@ -131,7 +131,7 @@ theorem coeff_cmap {K L σ : Type} [CommRing K] [CommRing L] (f : K →+ L) (y :
 theorem restDecomp_proved : RestDecomp := by
   intro O _ _ p _ ι σ y
   classical
-  letI : Algebra ℚ_[p] (KK O) := ι.toAlgebra
+  let : Algebra ℚ_[p] (KK O) := ι.toAlgebra
   let V : Submodule ℚ_[p] (KK O) := Submodule.span ℚ_[p] (y.coeffs : Set (KK O))
   let bV := Module.finBasis ℚ_[p] V
   obtain ⟨rV, hrV⟩ := LinearMap.exists_leftInverse_of_injective V.subtype V.ker_subtype

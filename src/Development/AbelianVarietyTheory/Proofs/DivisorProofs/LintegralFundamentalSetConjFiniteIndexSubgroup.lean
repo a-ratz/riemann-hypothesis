@@ -181,8 +181,8 @@ theorem tsum_indicator_satFrames (Y : Data E r) {x0' : Frame Y.Ψ r} {FF' : Set 
   rw [e2]
   have hc : Nat.card (Γ ⧸ H.subgroupOf Γ) ≠ 0 := by
     rwa [← Subgroup.index_eq_card]
-  haveI : Finite (Γ ⧸ H.subgroupOf Γ) := Nat.finite_of_card_ne_zero hc
-  haveI := Fintype.ofFinite (Γ ⧸ H.subgroupOf Γ)
+  have : Finite (Γ ⧸ H.subgroupOf Γ) := Nat.finite_of_card_ne_zero hc
+  have := Fintype.ofFinite (Γ ⧸ H.subgroupOf Γ)
   rw [tsum_fintype, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one,
     Fintype.card_eq_nat_card, Subgroup.relIndex, Subgroup.index_eq_card]
 

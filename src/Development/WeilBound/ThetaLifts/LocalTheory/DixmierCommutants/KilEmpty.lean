@@ -97,7 +97,7 @@ theorem exists_invar {f : V → ℂ} (hf : f ∈ SB V) : ∃ W ∈ 𝓝 (0 : V),
 theorem mem_of_cs {H : AddSubgroup V} (ho : IsOpen (H : Set V)) {f : V → ℂ} (hf : f ∈ SB V) (hi : ∀ h ∈ H, ∀ y, f (y + h) = f y)
     (Z : Submodule ℂ (V → ℂ)) (hZ : ∀ x, f x ≠ 0 → cs H x ∈ Z) : f ∈ Z := by
   classical
-  haveI : DiscreteTopology (V ⧸ H) := QuotientAddGroup.discreteTopology ho
+  have : DiscreteTopology (V ⧸ H) := QuotientAddGroup.discreteTopology ho
   have hfin : ((QuotientAddGroup.mk : V → V ⧸ H) '' tsupport f).Finite :=
     (hf.2.isCompact.image QuotientAddGroup.continuous_mk).finite_of_discrete
   have e : f = ∑ q ∈ hfin.toFinset, f q.out • cs H q.out := by
@@ -318,7 +318,7 @@ theorem fixk [T2Space k] {Z : Submodule ℂ (Matrix m n k → ℂ)} {U₀ : Set 
       have := stR _ _ _ hX2 v2 _ (stL _ _ _ hX1 v1 _ hT)
       rwa [← Matrix.mul_assoc, ← Matrix.mul_assoc, iP, Matrix.one_mul, Matrix.mul_assoc, iQ, Matrix.mul_one] at this
     classical
-    simp only [cs, Set.indicator_apply, Set.mem_setOf_eq, this, Pi.one_apply]
+    simp only [cs, Set.indicator_apply, Set.mem_ofPred_eq, this, Pi.one_apply]
   have := hop _ (cs_mem (lo c' c0) (lc c' c0) y)
   rw [e1] at this
   have h2 := Z.smul_mem (1 - c)⁻¹ this

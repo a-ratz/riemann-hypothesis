@@ -120,9 +120,9 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
 private theorem integers_symm {v : HeightOneSpectrum (𝓞 F)} {w : HeightOneSpectrum (𝓞 E)}
     (i : v.adicCompletion F ≃+* w.adicCompletion E) (hi' : Continuous i.symm) {y : w.adicCompletion E}
     (hy : y ∈ w.adicCompletionIntegers E) : i.symm y ∈ v.adicCompletionIntegers F := by
-  haveI : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (v.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have hy' : Valued.v y ≤ 1 := hy
   change Valued.v (i.symm y) ≤ 1

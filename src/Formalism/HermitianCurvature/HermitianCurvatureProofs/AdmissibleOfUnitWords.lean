@@ -215,7 +215,7 @@ theorem fibre_unit_normalization : C6.FibUnit := by
   have heq : ∀ g' ∈ GV k r, g' ∈ {g : Mat k r | ε / 2 < Gp g} →
       (fun g' => C6.unitOf T (Gp g') (om g')) g' = Ut g' := by
     intro g' _ hg'
-    have hp : 0 < Gp g' := by simp only [Set.mem_setOf_eq] at hg'; linarith
+    have hp : 0 < Gp g' := by simp only [Set.mem_ofPred_eq] at hg'; linarith
     funext a
     simp only [C6.unitOf, hUt, Phh, hψdef, Complex.ofReal_re, Pi.smul_apply, smul_eq_mul]
     rw [AdmissibleLieWords.hh, sc_one hε (le_of_lt hg'), one_mul, sqrt_div_eq hT hp]

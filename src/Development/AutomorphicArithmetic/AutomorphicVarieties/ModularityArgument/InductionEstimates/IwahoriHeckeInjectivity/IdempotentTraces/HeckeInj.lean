@@ -77,7 +77,7 @@ private noncomputable def onSub (ρ : Representation ℂ G V) (Z : Submodule ℂ
 private theorem cosets_finite [TopologicalSpace G] [IsTopologicalGroup G] (I : Subgroup G)
     (hc : IsCompact (I : Set G)) (ho : IsOpen (I : Set G)) (t : G) :
     {c : G ⧸ I | ∃ u ∈ I, c = QuotientGroup.mk (u * t)}.Finite := by
-  haveI := QuotientGroup.discreteTopology ho
+  have := QuotientGroup.discreteTopology ho
   have h : IsCompact ((fun u : G => (QuotientGroup.mk (u * t) : G ⧸ I)) '' (I : Set G)) :=
     hc.image (QuotientGroup.continuous_mk.comp (continuous_id.mul continuous_const))
   refine h.finite_of_discrete.subset ?_
@@ -154,7 +154,7 @@ private theorem conj_mem_iwahori {ν : Fin n → ℤ} (hν : Antitone ν) {b : G
   · rw [conj_apply]
     rcases lt_or_ge i j with h | h
     · rw [hl i j h, mul_zero, map_zero]
-      exact zero_le'
+      exact zero_le
     · exact (hle i j h).trans (h1 i j)
   · rw [conj_apply]
     exact (hle i j hij.le).trans_lt (h2 i j hij)

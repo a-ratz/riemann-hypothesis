@@ -60,7 +60,7 @@ theorem exists_mul_eq {R : Type} [CommRing R] [IsDedekindDomain R] (P : Ideal R)
     apply ht2
     rw [← Ideal.span_singleton_le_iff_mem, hI, sq]
     exact Ideal.mul_mono_right h
-  obtain ⟨s, hs, hsP⟩ := SetLike.not_le_iff_exists.1 hIP
+  obtain ⟨s, hs, hsP⟩ := IsConcreteLE.not_le_iff_exists.1 hIP
   have h1 : a * s ∈ Ideal.span {t} := by rw [hI]; exact Ideal.mul_mem_mul ha hs
   obtain ⟨b, hb⟩ := Ideal.mem_span_singleton.1 h1
   exact ⟨s, b, hsP, by rw [mul_comm, hb]⟩
@@ -115,7 +115,7 @@ theorem notMem_sq {ι : Type} [Fintype ι] (s : 𝓞 E →+* 𝓞 E) (hs : ∀ x
   omega
 
 theorem finrank_E (D : D7) : 2 * D.R.f = Module.finrank ℚ D.host.E := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h1 := Module.finrank_mul_finrank ℚ D.host.F D.host.E
   have h2 : Module.finrank ℚ D.host.F = D.R.f := by
     rw [D.host.finrank_hostF, Ranks.f, Ranks.n]

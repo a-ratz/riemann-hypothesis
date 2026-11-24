@@ -243,7 +243,7 @@ theorem ae_UH_conj {k r : ℕ} {μG μR νR : Measure (Mt k r)}
     exact hR.2.1 ((Measure.map_eq_zero_iff hf.aemeasurable).1 h0)
   · rw [Measure.map_apply hf hUm]
     refine measure_mono_null (fun x hx => ?_) hR.2.2.1
-    simp only [Set.mem_preimage, Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hx ⊢
     intro hxR
     exact hx hxR.2.1
 

@@ -94,7 +94,7 @@ theorem exists_extend_of_localSubring : ∀ (k : Type) [CommRing k] (G : Over (S
   obtain ⟨R, i, hi, hx, -⟩ := Scheme.exists_affine_mem_range_and_range_subset (X := G.left)
     (x := b'.left x0) (U := ⊤) trivial
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (i ≫ G.hom : Spec R ⟶ Spec (CommRingCat.of k))
-  letI : Algebra k R := φ.hom.toAlgebra
+  let : Algebra k R := φ.hom.toAlgebra
   let j : algOver k R ⟶ G := Over.homMk i hφ.symm
   have hj : IsOpenImmersion j.left := hi
   have hrb : Set.range b'.left ⊆ Set.range j.left := by
@@ -177,7 +177,7 @@ theorem not_X_one_dvd_subst (k : Type) [Field k] (b : PowerSeries k) (hb : b ≠
   have hs : PowerSeries.HasSubst (MvPowerSeries.X 0 : MvPowerSeries (Fin 2) k) :=
     PowerSeries.HasSubst.X 0
   obtain ⟨n, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hb
-    (PowerSeries.X_prime (R := k)).irreducible
+    (PowerSeries.prime_X (R := k)).irreducible
   rw [PowerSeries.subst_mul hs, PowerSeries.subst_pow hs, PowerSeries.subst_X hs]
   apply not_X_dvd_mul
   · intro h

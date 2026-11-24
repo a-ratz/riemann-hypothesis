@@ -709,11 +709,11 @@ theorem patch_eq_of_subset {S₀ S : Finset ℕ} (h : S₀ ⊆ S) (L₀ : Lat ξ
   have hex : (∃ p ∈ S₀, InFibre ξ p q) ↔ ∃ p ∈ S, InFibre ξ p q := exists_congr hmem
   simp only [Lat.patch]
   by_cases hc : ∃ p ∈ S, InFibre ξ p q
-  · rw [if_pos hc, if_pos (hex.2 hc)]
+  · rw [ite_eq_left hc, ite_eq_left (hex.2 hc)]
     refine le_antisymm (le_iInf₂ fun p hp => le_iInf fun hf => ?_) (le_iInf₂ fun p hp => le_iInf fun hf => ?_)
     · exact iInf₂_le_of_le p ((hmem p).2 ⟨hp, hf⟩).1 (iInf_le _ hf)
     · exact iInf₂_le_of_le p (h hp) (iInf_le _ hf)
-  · rw [if_neg hc, if_neg (fun c => hc (hex.1 c))]
+  · rw [ite_eq_right hc, ite_eq_right (fun c => hc (hex.1 c))]
 
 theorem gr_congr_at {L L' : Lat ξ V} {r : ℕ} (b : Fin r → V) (i : Fin r) {q : Cpt ξ} (hq : L q = L' q) :
     L.gr b i q = L'.gr b i q := by
@@ -980,7 +980,7 @@ theorem UpperTheory.Reformulated.B.DYda8.main :
                           (τ : NumberField.RingOfIntegers E → O) x ^ p ∈
                         n := by
   intro E _ _ _ hc p hp
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hp0 : (Ideal.span {(p : ℤ)}) ≠ ⊥ := by
     simpa using hp.ne_zero
   have hmax : (Ideal.span {(p : ℤ)}).IsMaximal :=
@@ -989,7 +989,7 @@ theorem UpperTheory.Reformulated.B.DYda8.main :
   obtain ⟨Q, hQm, hQo⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral
     (S := NumberField.RingOfIntegers E) (Ideal.span {(p : ℤ)})
   have hQbot : Q ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot hp0 Q
-  haveI : Finite (NumberField.RingOfIntegers E ⧸ Q) := Ideal.finiteQuotientOfFreeOfNeBot Q hQbot
+  have : Finite (NumberField.RingOfIntegers E ⧸ Q) := Ideal.finiteQuotientOfFreeOfNeBot Q hQbot
   obtain ⟨φ, hφ⟩ := IsArithFrobAt.exists_of_isInvariant ℤ Gal(E/ℚ) Q
   refine ⟨φ, ?_⟩
   intro O _ n hn hpn τ x
@@ -1189,14 +1189,14 @@ theorem exists_frob_labels : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   let φ : ℕ → Equiv.Perm (CMType H ⊕ CMType H) := fun p =>
     if hp : p.Prime then labelPerm H (h p hp).choose else 1
   refine ⟨φ, fun p hp => ?_, _root_.GlobalTheory.CompanionTheory.Ar.Num.frobShape_of_side _ φ fun p => ?_⟩
-  · simp only [φ, dif_pos hp]
+  · simp only [φ, dite_eq_left hp]
     exact labelPerm_isFrobLabels c p _ (h p hp).choose_spec
   · by_cases hp : p.Prime
-    · simp only [φ, dif_pos hp]
+    · simp only [φ, dite_eq_left hp]
       exact labelPerm_side H _
     · left
       intro σ
-      simp [φ, dif_neg hp]
+      simp [φ, dite_eq_right hp]
 
 end GlobalTheory.CompanionTheory.Ar.Num
 
@@ -1240,7 +1240,7 @@ theorem BaseChangeColon.genNum_mul_expansion : ∀ (F : Type) [Field F] (K : Typ
   have hmon : ∀ (κ : σ →₀ ℕ) (c : ℝ), genNum F V cls (monomial κ c) Q = c * (intNumL F V (classList cls κ ++ Q) : ℝ) := by
     intro κ c
     rw [key _ Q {κ} MvPolynomial.support_monomial_subset, Finset.sum_singleton,
-      MvPolynomial.coeff_monomial, if_pos rfl]
+      MvPolynomial.coeff_monomial, ite_eq_left rfl]
   have hperm : ∀ ν μ : σ →₀ ℕ, intNumL F V (classList cls (ν + μ) ++ Q) = intNumL F V (classList cls ν ++ (classList cls μ ++ Q)) := by
     intro ν μ
     have hp : (classList cls (ν + μ)).Perm (classList cls ν ++ classList cls μ) := by
@@ -1250,7 +1250,7 @@ theorem BaseChangeColon.genNum_mul_expansion : ∀ (F : Type) [Field F] (K : Typ
     exact BaseChangeColon.intersection_numbers_perm_invariant.1 F K ι V _ _ (hp.append_right Q)
   conv_lhs => rw [H.as_sum, G.as_sum, Finset.sum_mul_sum]
   rw [hsum]
-  simp_rw [hsum, MvPolynomial.monomial_mul, hmon]
+  simp_rw [hsum, monomial_mul_monomial, hmon]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl (fun μ _ => ?_)
   rw [key H (classList cls μ ++ Q) H.support subset_rfl, Finset.mul_sum]
@@ -1444,7 +1444,7 @@ theorem flag_frame_of_point_ideal : NumericalSegre.Statement → ∀ (F : Type) 
   have h2 := hS F Ω K ι y e hP hd N hN _ _ _ _ (isFlagFrame_scaledTriv F y N (one_ne_zero (α := Ω))) N 0 _
     (isTwistedDualGens_triv F y N) _ _ ht (N - 1 + a) Y (by omega)
   rw [projIdeal_independent_of_basis F Ω K ι y N N _ w (scaledBasis N (one_ne_zero (α := Ω))) _ _ _ ht, h2,
-    if_pos (Nat.le_add_right _ _), if_pos (Nat.le_add_right _ _), Nat.add_sub_cancel_left] at h1
+    ite_eq_left (Nat.le_add_right _ _), ite_eq_left (Nat.le_add_right _ _), Nat.add_sub_cancel_left] at h1
   simp only [zero_sub] at h1
   rw [← h1]
   refine Finset.sum_eq_zero fun α hα => intNumL_of_zero_mem _ _ ?_

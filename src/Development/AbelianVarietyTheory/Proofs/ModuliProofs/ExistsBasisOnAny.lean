@@ -64,8 +64,8 @@ theorem exists_basisOn_any {S : Scheme.{0}} (hS : SecBaseChangeAnySt) (P : PolAV
   have hq : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
   let T : Over S := overRes (T := baseOver S) V
   have hT : T.hom = V.ι := Category.comp_id _
-  haveI : IsOpenImmersion T.hom := by rw [hT]; exact inferInstanceAs (IsOpenImmersion V.ι)
-  haveI : IsOpenImmersion (snd T P.A).left := inferInstanceAs (IsOpenImmersion (pullback.snd T.hom P.A.hom))
+  have : IsOpenImmersion T.hom := by rw [hT]; exact inferInstanceAs (IsOpenImmersion V.ι)
+  have : IsOpenImmersion (snd T P.A).left := inferInstanceAs (IsOpenImmersion (pullback.snd T.hom P.A.hom))
   have hr : ∀ g : P.A.left, P.A.hom g ∈ V → g ∈ Set.range (snd T P.A).left := fun g hg => by
     rw [range_snd, hT]
     exact ⟨⟨_, hg⟩, rfl⟩
@@ -122,8 +122,8 @@ theorem pushInvertible_any : Out.SecBaseChangeAnySt → Out.GlobalSectionsRankAl
     ∀ (S : Scheme.{0}) (Q : Out.PolAV S), PushInvertible Q.A Q.L := by
   intro hS _ S P x
   obtain ⟨V, hV, θ, hθ, H⟩ := exists_basisOn_any hS P x
-  haveI := P.smoothDim
-  haveI : Smooth P.A.hom := SmoothOfRelativeDimension.smooth P.g _
+  have := P.smoothDim
+  have : Smooth P.A.hom := SmoothOfRelativeDimension.smooth P.g _
   refine ⟨V, hV, θ, hθ, fun W hW s hs => ?_, exists_nonvanishing H⟩
   have e : ∀ (a : Γ(S, W)) (g : P.A.left) i, P.A.hom g ∈ W → g ∈ P.L.U i →
       gs (𝟙 _) g _ ((P.A.hom.appLE W (P.A.hom ⁻¹ᵁ W ⊓ P.L.U i) inf_le_left).hom a *

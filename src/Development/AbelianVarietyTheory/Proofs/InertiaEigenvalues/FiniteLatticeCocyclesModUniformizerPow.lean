@@ -135,7 +135,7 @@ theorem finite_Z1Q : Formalism.GaloisCohomology.LocalTateDualityK → ∀ (l : �
   have hc : algebraMap O LL (ϖ ^ n) ≠ 0 := by
     rw [Ne, IsFractionRing.to_map_eq_zero_iff]
     exact pow_ne_zero _ hϖ.ne_zero
-  haveI := IsModuleTopology.topologicalAddGroup LL A.V
+  have := IsModuleTopology.isTopologicalAddGroup LL A.V
   refine cocycles_finite hT l K n _ (fun g => (actQ LA _ hI g).toAddMonoidHom) ?_ ?_ ?_ ?_
   · intro m
     induction m using Submodule.Quotient.induction_on with

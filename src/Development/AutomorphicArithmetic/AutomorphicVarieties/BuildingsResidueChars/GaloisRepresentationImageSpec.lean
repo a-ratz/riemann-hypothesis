@@ -42,7 +42,7 @@ open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.Conjuga
 theorem UpperTheory.galois_representation_image_spec :
     UpperTheory.V.Af.Sol.GalRange := by
   intro K M Ω _ _ _ _ _ _ _ _ _ _ _ _
-  haveI : FiniteDimensional K M := Module.Finite.of_restrictScalars_finite ℚ K M
+  have : FiniteDimensional K M := Module.Finite.of_restrictScalars_finite ℚ K M
   let ρ : Gal(Ω/K) →* Gal(M/K) := AlgEquiv.restrictNormalHom M
   have hker : (resG K M Ω).range = ρ.ker := by
     ext σ

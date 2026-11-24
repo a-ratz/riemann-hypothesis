@@ -87,11 +87,11 @@ theorem congLev_relIndex_ne_zero (V : HSp D) {Λ : Submodule (𝓞 D.host.E) (Fi
   have ho := (congLev_open_compact V hΛ h𝔪).1
   have hc := (congLev_open_compact V hΛ (𝔪 := ⊤) top_ne_bot).2
   rw [← map_levA V (K := congLev D.sp.cm V.gram Λ ⊤) fun _ h => h.1, ← Subgroup.relIndex_comap]
-  haveI := isCompact_iff_compactSpace.1 hc
-  haveI : CompactSpace (levA V (congLev D.sp.cm V.gram Λ ⊤)) := this
-  haveI := Subgroup.quotient_finite_of_isOpen
+  have := isCompact_iff_compactSpace.1 hc
+  have : CompactSpace (levA V (congLev D.sp.cm V.gram Λ ⊤)) := this
+  have := Subgroup.quotient_finite_of_isOpen
     (((congLev D.sp.cm V.gram Λ 𝔪).comap (finE V)).subgroupOf (levA V (congLev D.sp.cm V.gram Λ ⊤)))
-    (ho.preimage continuous_subtype_val)
+    (ho.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 private theorem selfDual_isFullLattice : ∀ (V : HSp D) (Λ : Submodule (𝓞 D.host.E) (Fin V.rank → D.host.E)),
@@ -124,8 +124,8 @@ theorem finite_testIx (h : (L.ΛY 0).FG) : Finite (TestIx G) :=
 
 theorem exists_coords (h : (L.ΛY 0).FG) :
     ∃ n, Nonempty (Fin n ≃ GlobalTheory.FunObj.TestIx G × VVIdx (GlobalTheory.FunObj.LaP G)) := by
-  haveI := finite_testIx G h
-  haveI : ∀ τ, Finite (Formalism.GradedWeylDivisibility.ssIdx (Xp G).rank (Xp G).rank (LaP G τ).natW) :=
+  have := finite_testIx G h
+  have : ∀ τ, Finite (Formalism.GradedWeylDivisibility.ssIdx (Xp G).rank (Xp G).rank (LaP G τ).natW) :=
     fun τ => (Formalism.GradedWeylDivisibility.sSIdxFinite _ _ _).to_subtype
   obtain ⟨n, ⟨e⟩⟩ := Finite.exists_equiv_fin (TestIx G × VVIdx (LaP G))
   exact ⟨n, ⟨e.symm⟩⟩

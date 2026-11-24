@@ -160,7 +160,7 @@ theorem algId : AlgId := by
     norm_num
   rw [h1, hrow, Fin.sum_univ_castSucc]
   simp only [Fin.succAbove_last, rr_comp_castSucc, rr_last, rr_castSucc, hcol, hT, hq, hlast,
-    Int.cast_one, one_mul, Fin.coe_castSucc]
+    Int.cast_one, one_mul, Fin.val_castSucc]
   unfold Th
   simp only [← zsmul_eq_mul, Finset.smul_sum, Finset.sum_mul, smul_mul_assoc]
   simp only [LinearMap.add_apply, Module.End.mul_apply, LinearMap.smul_apply, LinearMap.sum_apply,

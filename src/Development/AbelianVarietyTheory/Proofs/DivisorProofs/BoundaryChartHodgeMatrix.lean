@@ -88,10 +88,10 @@ theorem isLocalizationAway_of_le {k L : Type} [Field k] [Field L] [Algebra k L] 
 theorem smooth_of_le_away {k L : Type} [Field k] [Field L] [Algebra k L] {A B : Subalgebra k L} (hle : A ≤ B)
     (s : L) (hsA : s ∈ A) (hs : s ≠ 0) (hsi : s⁻¹ ∈ B) (hy : ∀ y ∈ B, ∃ N : ℕ, y * s ^ N ∈ A)
     [Algebra.Smooth k A] : Algebra.Smooth k B := by
-  letI : Algebra A B := (Subalgebra.inclusion hle).toRingHom.toAlgebra
-  haveI : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsLocalization.Away (⟨s, hsA⟩ : A) B := isLocalizationAway_of_le (fun _ => rfl) _ hs hsi hy
-  haveI : Algebra.Smooth A B := Algebra.Smooth.of_isLocalization_Away (⟨s, hsA⟩ : A)
+  let : Algebra A B := (Subalgebra.inclusion hle).toRingHom.toAlgebra
+  have : IsScalarTower k A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsLocalization.Away (⟨s, hsA⟩ : A) B := isLocalizationAway_of_le (fun _ => rfl) _ hs hsi hy
+  have : Algebra.Smooth A B := Algebra.Smooth.of_isLocalization_Away (⟨s, hsA⟩ : A)
   exact Algebra.Smooth.comp k A B
 
 section Parts
@@ -117,8 +117,8 @@ theorem rA_singleton_le {I : Finset (Fin (d + 1))} {i : Fin (d + 1)} (hi : i ∈
 theorem rA_isIntegrallyClosed (h : IsPd k x) {I : Finset (Fin (d + 1))} {i : Fin (d + 1)} (hi : i ∈ I) :
     IsIntegrallyClosed (rA k x I) := by
   obtain ⟨e, -⟩ := GlobalTheory.T.standardAffineOpen_ring_polynomialEquiv k F d x h i
-  haveI : IsIntegrallyClosed (rA k x {i}) := IsIntegrallyClosed.of_equiv e.toRingEquiv
-  letI : Algebra (rA k x {i}) (rA k x I) := (Subalgebra.inclusion (rA_singleton_le hi)).toRingHom.toAlgebra
+  have : IsIntegrallyClosed (rA k x {i}) := IsIntegrallyClosed.of_equiv e.toRingEquiv
+  let : Algebra (rA k x {i}) (rA k x I) := (Subalgebra.inclusion (rA_singleton_le hi)).toRingHom.toAlgebra
   haveI : IsLocalization.Away (⟨_, prod_ratio_mem I i⟩ : rA k x {i}) (rA k x I) :=
     isLocalizationAway_of_le (fun _ => rfl) _ (prod_ratio_ne_zero h I i) (prod_ratio_inv_mem I i)
       fun y hy => (GlobalTheory.T.mem_standardOpenCoordinateRing_iff_localization_chart k F d x h I i hi y).1 hy
@@ -127,18 +127,18 @@ theorem rA_isIntegrallyClosed (h : IsPd k x) {I : Finset (Fin (d + 1))} {i : Fin
 
 theorem rA_finite (h : IsFinCover k K x) {I : Finset (Fin (d + 1))} {i : Fin (d + 1)} (hi : i ∈ I) :
     Module.Finite (rA k x I) (integralClosure (rA k x I) K) := by
-  haveI := h.fin
-  haveI := h.sep
-  haveI : IsFractionRing (rA k x I) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x h.pd I ⟨i, hi⟩).1
-  haveI : IsNoetherianRing (rA k x I) := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x h.pd I ⟨i, hi⟩).2
-  haveI := rA_isIntegrallyClosed h.pd hi
+  have := h.fin
+  have := h.sep
+  have : IsFractionRing (rA k x I) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x h.pd I ⟨i, hi⟩).1
+  have : IsNoetherianRing (rA k x I) := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x h.pd I ⟨i, hi⟩).2
+  have := rA_isIntegrallyClosed h.pd hi
   set_option synthInstance.maxHeartbeats 200000 in
     exact IsIntegralClosure.finite (rA k x I) F K (integralClosure (rA k x I) K)
 
 theorem rB_frac (h : IsFinCover k K x) {I : Finset (Fin (d + 1))} {i : Fin (d + 1)} (hi : i ∈ I) :
     IsFractionRing (rB k K x I) K := by
-  haveI := h.fin
-  haveI : IsFractionRing (rA k x I) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x h.pd I ⟨i, hi⟩).1
+  have := h.fin
+  have : IsFractionRing (rA k x I) F := (GlobalTheory.T.standardOpenCoordinateRing_isFractionRing_isNoetherianRing k F d x h.pd I ⟨i, hi⟩).1
   exact integralClosure.isFractionRing_of_finite_extension F K
 
 theorem rB_smooth [CharZero k] (h : IsFinCover k K x) {I : Finset (Fin (d + 1))} {i : Fin (d + 1)} (hi : i ∈ I) :
@@ -150,7 +150,7 @@ theorem rB_smooth [CharZero k] (h : IsFinCover k K x) {I : Finset (Fin (d + 1))}
     (integralClosure (rA k x {i}) K).algebraMap_mem ⟨_, prod_ratio_mem I i⟩
   have hsiB : (algebraMap F K (∏ j ∈ I, x j / x i))⁻¹ ∈ rB k K x I := by
     rw [← map_inv₀]; exact (integralClosure (rA k x I) K).algebraMap_mem ⟨_, prod_ratio_inv_mem I i⟩
-  haveI := h.smooth i
+  have := h.smooth i
   exact smooth_of_le_away hleB _ hsB ((map_ne_zero _).2 (prod_ratio_ne_zero h.pd I i)) hsiB fun y hy => (hloc y).1 hy
 
 end Parts

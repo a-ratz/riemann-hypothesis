@@ -109,7 +109,7 @@ theorem not_two_dvd_ord_norm (F K L : Type) [Field F] [ValuativeRel F] [Topologi
     [Field L] [Algebra K L] (h2 : Module.finrank K L = 2) (ζ : L)
     (hζ : IsPrimitiveRoot ζ (Nat.card 𝓀[F] ^ 2 - 1)) (htop : K⟮ζ⟯ = ⊤) (s : K) (hs0 : s ≠ 0)
     (hs : ¬ ∃ y : L, Algebra.norm K y = s) : ¬ (2 : ℤ) ∣ ord (Algebra.norm F s) := by
-  haveI : FiniteDimensional K L := Module.finite_of_finrank_pos (by omega)
+  have : FiniteDimensional K L := Module.finite_of_finrank_pos (by omega)
   obtain ⟨vK, tK, hK, eK⟩ := exists_isNonarchimedeanLocalField_valuativeExtension F K
   obtain ⟨vL, tL, hL, eL⟩ := exists_isNonarchimedeanLocalField_valuativeExtension K L
   have hm : ((Nat.card 𝓀[F] ^ 2 - 1 : ℕ) : 𝓀[K]) ≠ 0 :=
@@ -117,7 +117,7 @@ theorem not_two_dvd_ord_norm (F K L : Type) [Field F] [ValuativeRel F] [Topologi
       have hmF : ((Nat.card 𝓀[F] ^ 2 - 1 : ℕ) : 𝓀[F]) ≠ 0 :=
         natCast_card_pow_sub_one_ne_zero (K := F) two_ne_zero
       simpa using (map_ne_zero (algebraMap (𝓀[F]) (𝓀[K]))).2 hmF
-  haveI : IsUnramified K L := ⟨ramificationIndex_eq_one_of_adjoin_eq_top hζ hm htop⟩
+  have : IsUnramified K L := ⟨ramificationIndex_eq_one_of_adjoin_eq_top hζ hm htop⟩
   have hodd : ¬ (2 : ℤ) ∣ ord s := by
     intro hd
     have h := (mem_range_normUnits_iff (K := K) (L := L) (Units.mk0 s hs0)).2 (by rw [h2]; exact hd)
@@ -133,7 +133,7 @@ theorem not_two_dvd_ord_norm (F K L : Type) [Field F] [ValuativeRel F] [Topologi
       hz.map_of_injective (f := (𝒪[K]).subtype) Subtype.val_injective
     have hz2 : IsPrimitiveRoot (algebraMap K L z) (Nat.card 𝓀[K] - 1) :=
       hz1.map_of_injective (algebraMap K L).injective
-    haveI : NeZero (Nat.card 𝓀[K] - 1) := ⟨by have := one_lt_card_residueField K; omega⟩
+    have : NeZero (Nat.card 𝓀[K] - 1) := ⟨by have := one_lt_card_residueField K; omega⟩
     have hdvd : Nat.card 𝓀[F] ^ 2 - 1 ∣ Nat.card 𝓀[K] - 1 := by
       rw [hcard, hj, pow_mul]
       exact Nat.sub_one_dvd_pow_sub_one _ _
@@ -156,7 +156,7 @@ theorem not_two_dvd_ord_norm (F K L : Type) [Field F] [ValuativeRel F] [Topologi
 theorem isLocalField (F : Type) [NontriviallyNormedField F] [IsUltrametricDist F] [LocallyCompactSpace F] :
     letI := normRel F;
     IsNonarchimedeanLocalField F := by
-  letI := normRel F
+  let := normRel F
   have hc : (NormedField.valuation (K := F)).Compatible := Valuation.Compatible.ofValuation _
   refine { toIsValuativeTopology := ?_, toLocallyCompactSpace := inferInstance, toIsNontrivial := ?_ }
   · exact IsValuativeTopology.of_mem_nhds_zero_iff_vle (NormedField.valuation (K := F))
@@ -169,8 +169,8 @@ theorem ord_eq_of_norm_eq (F : Type) [NontriviallyNormedField F] [IsUltrametricD
     letI := normRel F;
     haveI := isLocalField F;
     ord x = ord y := by
-  letI := normRel F
-  haveI := isLocalField F
+  let := normRel F
+  have := isLocalField F
   have h1 : x ≤ᵥ y := h.le
   have h2 : y ≤ᵥ x := h.ge
   rw [(valuation F).vle_iff_le] at h1 h2
@@ -179,16 +179,16 @@ theorem ord_eq_of_norm_eq (F : Type) [NontriviallyNormedField F] [IsUltrametricD
 
 theorem etaK_eq_neg_one : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E), IsField A.K → IsField A.L → ∀ s : A.Kˣ, (¬ ∃ y : A.L, A.NL y = s) → A.etaK s = -1 := by
   intro F E _ _ _ _ hU A hK hL s hs
-  haveI := hU.ultraF
-  haveI := hU.ultraE
-  haveI := hU.lcF
-  haveI := hU.lcE
-  letI := normRel F
-  letI := normRel E
-  haveI := isLocalField F
-  haveI := isLocalField E
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
-  haveI : ValuativeExtension F E := ⟨fun {a b} => by
+  have := hU.ultraF
+  have := hU.ultraE
+  have := hU.lcF
+  have := hU.lcE
+  let := normRel F
+  let := normRel E
+  have := isLocalField F
+  have := isLocalField E
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
+  have : ValuativeExtension F E := ⟨fun {a b} => by
     change ‖algebraMap F E a‖ ≤ ‖algebraMap F E b‖ ↔ ‖a‖ ≤ ‖b‖
     rw [norm_algebraMap', norm_algebraMap']⟩
   have he : (_root_.Ideal.ramificationIdx (_root_.IsLocalRing.maximalIdeal (_root_.Valuation.integer (_root_.ValuativeRel.valuation E))) (_root_.Valuation.integer (_root_.ValuativeRel.valuation F))) = 1 := by
@@ -204,8 +204,8 @@ theorem etaK_eq_neg_one : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivi
     exact Module.natCard_eq_pow_finrank
   rw [hcard] at hζ
   obtain ⟨⟨b⟩, -⟩ := Et.quadratic_structure F E A
-  letI : Field A.K := hK.toField
-  letI : Field A.L := hL.toField
+  let : Field A.K := hK.toField
+  let : Field A.L := hL.toField
   have h2 : Module.finrank A.K A.L = 2 := by simpa using Module.finrank_eq_card_basis b
   have hζ' : IsPrimitiveRoot (algebraMap E A.L ζ) (Nat.card 𝓀[F] ^ 2 - 1) :=
     hζ.map_of_injective (algebraMap E A.L).injective
@@ -232,7 +232,7 @@ theorem etaK_eq_neg_one : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivi
     | add y z hy hz => exact add_mem (hy trivial) (hz trivial)
   have hodd := not_two_dvd_ord_norm F A.K A.L h2 _ hζ' htop' s s.ne_zero hs
   unfold Et.etaK eta
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨y, hy⟩
   apply hodd
   have hy0 : y ≠ 0 := by
@@ -377,14 +377,14 @@ theorem exists_idem (K : Type) [CommRing K] [IsArtinianRing K] [IsReduced K] [No
   have hex : ∃ m₂ : Ideal K, m₂.IsMaximal ∧ m₂ ≠ m₁ := by
     by_contra h
     push_neg at h
-    haveI : IsLocalRing K := IsLocalRing.of_unique_max_ideal ⟨m₁, hm₁, fun y hy => h y hy⟩
+    have : IsLocalRing K := IsLocalRing.of_unique_max_ideal ⟨m₁, hm₁, fun y hy => h y hy⟩
     exact hf (IsArtinianRing.isField_of_isReduced_of_isLocalRing K)
   obtain ⟨m₂, hm₂, hne⟩ := hex
   let i : MaximalSpectrum K := ⟨m₁, hm₁⟩
   let j : MaximalSpectrum K := ⟨m₂, hm₂⟩
   have hij : j ≠ i := fun h => hne (congrArg MaximalSpectrum.asIdeal h)
-  haveI : i.asIdeal.IsMaximal := hm₁
-  haveI : j.asIdeal.IsMaximal := hm₂
+  have : i.asIdeal.IsMaximal := hm₁
+  have : j.asIdeal.IsMaximal := hm₂
   let φ := IsArtinianRing.equivPi K
   refine ⟨φ.symm (Pi.single i 1), ?_, ?_, ?_⟩
   · unfold IsIdempotentElem
@@ -416,7 +416,7 @@ theorem exists_splitting : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriv
       IsSplitting A A₁ A₂ eK eL ∧ Module.finrank F A₁.K < Module.finrank F A.K ∧
         Module.finrank F A₂.K < Module.finrank F A.K := by
   intro F E _ _ _ _ _ A hnt hf
-  haveI : IsArtinianRing A.K := IsArtinianRing.of_finite F A.K
+  have : IsArtinianRing A.K := IsArtinianRing.of_finite F A.K
   obtain ⟨e, he, h0, h1⟩ := exists_idem A.K hf
   let A₁ := quotEt A e he
   let A₂ := quotEt A (1 - e) he.one_sub
@@ -433,8 +433,8 @@ theorem exists_splitting : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriv
       (AlgEquiv.prodCongr (Ideal.quotientEquivAlgOfEq F hJ1.symm) (Ideal.quotientEquivAlgOfEq F hJ2.symm))
   have hsum : Module.finrank F A.K = Module.finrank F A₁.K + Module.finrank F A₂.K := by
     rw [eK.toLinearEquiv.finrank_eq, Module.finrank_prod]
-  haveI : Nontrivial A₁.K := nontrivial_quot he h1
-  haveI : Nontrivial A₂.K := nontrivial_quot he.one_sub (fun h => h0 (by linear_combination -h))
+  have : Nontrivial A₁.K := nontrivial_quot he h1
+  have : Nontrivial A₂.K := nontrivial_quot he.one_sub (fun h => h0 (by linear_combination -h))
   have p1 : 0 < Module.finrank F A₁.K := Module.finrank_pos
   have p2 : 0 < Module.finrank F A₂.K := Module.finrank_pos
   refine ⟨A₁, A₂, eK, eL, ⟨fun k => ?_, fun y => ?_, fun y => ?_⟩, by omega, by omega⟩
@@ -582,8 +582,8 @@ namespace GlobalTheory.JR.Hyp
 
 theorem pt_linear : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (x : A.K) (ν : Measure A.K), ν.IsAddHaarMeasure → ∀ (c : ℂ) (Φ Φ' : A.K × A.K → ℂ), IsTest Φ → IsTest Φ' → Hyp.pt A ν ψ x (c • Φ + Φ') = c • Hyp.pt A ν ψ x Φ + Hyp.pt A ν ψ x Φ' := by
   intro F E _ _ _ _ _ A ψ hψ x ν hν c Φ Φ' hΦ hΦ'
-  haveI := hν
-  haveI : T2Space A.K := T2Space.of_injective_continuous (Module.finBasis F A.K).equivFun.injective
+  have := hν
+  have : T2Space A.K := T2Space.of_injective_continuous (Module.finBasis F A.K).equivFun.injective
     (IsModuleTopology.continuous_of_linearMap _)
   have hψc : Continuous (fun t : F => ψ t) := by
     rw [continuous_iff_continuousAt]
@@ -638,9 +638,9 @@ theorem integral_comp_unit_mul {F E : Type} [NontriviallyNormedField F] [Nontriv
     [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ν : Measure A.K) [ν.IsAddHaarMeasure]
     (s : A.Kˣ) (g : A.K → ℂ) :
     ∫ b, g ((s : A.K) * b) ∂ν = ((A.absK (s : A.K) : ℂ))⁻¹ * ∫ b, g b ∂ν := by
-  haveI : LocallyCompactSpace F := Unram.lcF (E := E)
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : SecondCountableTopology A.K := by
+  have : LocallyCompactSpace F := Unram.lcF (E := E)
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : SecondCountableTopology A.K := by
     let e : A.K ≃ₗ[F] (Fin (Module.finrank F A.K) → F) := (Module.finBasis F A.K).equivFun
     have h1 : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
     have h2 : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -649,7 +649,7 @@ theorem integral_comp_unit_mul {F E : Type} [NontriviallyNormedField F] [Nontriv
   have hme : MeasurableEmbedding (fun b : A.K => s • b) := (Homeomorph.smul s).measurableEmbedding
   have hmap : Measure.map (fun b : A.K => s • b) ν = ((distribHaarChar A.K s : ℝ≥0∞))⁻¹ • ν := by
     ext S hS
-    rw [hme.map_apply, Measure.smul_apply, smul_eq_mul]
+    rw [hme.map_apply, smul_apply, smul_eq_mul]
     have h1 := distribHaarChar_mul ν s⁻¹ S
     rw [Set.preimage_smul, ← h1, map_inv, ENNReal.coe_inv (distribHaarChar_pos).ne']
   have hint : ∫ b, g ((s : A.K) * b) ∂ν = ∫ b, g b ∂(Measure.map (fun b : A.K => s • b) ν) := by
@@ -835,20 +835,20 @@ def tt (A : Et F E) (ν : Measure A.K) (ψ : AddChar F ℂ) (x : A.K) (Φ : A.K 
 
 theorem measure_eq_coords : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (x : A.Kˣ) (e : A.L), e * e = e → star e = 1 - e → ∀ (ν : Measure A.K) (μ : Measure A.L), SelfDual ν (Hyp.kx A ψ x) → SelfDual μ (A.kerL ψ x) → ∀ h : A.L → ℂ, IsTest h → ∫ y, h y ∂μ = ∫ a, ∫ b, h (Hyp.cc A e (a, b)) ∂ν ∂ν := by
   intro F E _ _ _ _ _ A ψ hψ x e he hse ν μ hν hμ h hh
-  haveI : LocallyCompactSpace F := Unram.lcF E
-  haveI : IsUltrametricDist F := Unram.ultraF E
-  haveI := EtMeas.finite_L A
-  haveI := GlobalTheory.FourKFub.secondCountableK A
+  have : LocallyCompactSpace F := Unram.lcF E
+  have : IsUltrametricDist F := Unram.ultraF E
+  have := EtMeas.finite_L A
+  have := GlobalTheory.FourKFub.secondCountableK A
   obtain ⟨_, _, _, _, hS⟩ := EtMeas.top_facts F A.L
   obtain ⟨_, _, _, _, -⟩ := EtMeas.top_facts F A.K
   obtain ⟨h1, h2, -, hker, -⟩ := _root_.GlobalTheory.JR.Hyp.coord_structure F E A e he hse
   obtain ⟨htc, htc'⟩ := _root_.GlobalTheory.JR.Hyp.isTest_coord F E A e h1 h2
   have hlc := (_root_.GlobalTheory.JR.Hyp.isLocallyConstant_psiK_kerL F E A ψ hψ).2 (x : A.K)
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   let C := ccEquiv A e h1 h2
   have hC : (C : A.K × A.K → A.L) = cc A e := rfl
   set μ₀ := Measure.map (cc A e) (ν.prod ν) with hμ₀
-  haveI : μ₀.IsAddHaarMeasure := by rw [hμ₀, ← hC]; exact C.isAddHaarMeasure_map _
+  have : μ₀.IsAddHaarMeasure := by rw [hμ₀, ← hC]; exact C.isAddHaarMeasure_map _
   have hint : ∀ g : A.L → ℂ, IsTest g → ∫ y, g y ∂μ₀ = ∫ a, ∫ b, g (cc A e (a, b)) ∂ν ∂ν := by
     intro g hg
     have e1 : ∫ y, g y ∂μ₀ = ∫ p, g (cc A e p) ∂(ν.prod ν) := C.toHomeomorph.measurableEmbedding.integral_map g
@@ -1109,8 +1109,8 @@ theorem GlobalTheory.JR.fourB_prod_iterated : ∀ {V V₁ V₂ : Type} [AddCommG
   intro V V₁ V₂ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ e he hes B B₁ B₂ hB₁ hB₂ hB μ μ₁ μ₂ hμ hμ₁ hμ₂
   let h : V ≃ₜ V₁ × V₂ := { toEquiv := e.toEquiv, continuous_toFun := he, continuous_invFun := hes }
   let hm : V ≃ᵐ V₁ × V₂ := h.toMeasurableEquiv
-  haveI : (Measure.map e μ).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map μ e he hes
-  haveI : (μ₁.prod μ₂).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure μ₁ μ₂
+  have : (Measure.map e μ).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map μ e he hes
+  have : (μ₁.prod μ₂).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure μ₁ μ₂
   set k := Measure.addHaarScalarFactor (Measure.map e μ) (μ₁.prod μ₂) with hk
   have hkeq : Measure.map e μ = k • (μ₁.prod μ₂) := Measure.isAddLeftInvariant_eq_smul _ _
   have hkpos : 0 < k := Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _
@@ -1259,7 +1259,7 @@ theorem decomp {f : X × Y → ℂ} (hf : IsTest f) :
   have hfin : (Set.range (fun u => fun v => f (u, v))).Finite := by
     have : CompactSpace (Prod.fst '' tsupport f) := isCompact_iff_compactSpace.1 hK₁
     have h1 : (Set.range ((fun u => fun v => f (u, v)) ∘ ((↑) : Prod.fst '' tsupport f → X))).Finite :=
-      (hF.comp_continuous continuous_subtype_val).range_finite
+      (hF.comp_continuous continuous_subtypeVal).range_finite
     refine (h1.union (Set.finite_singleton 0)).subset ?_
     rintro _ ⟨u, rfl⟩
     by_cases hu : u ∈ Prod.fst '' tsupport f
@@ -1273,7 +1273,7 @@ theorem decomp {f : X × Y → ℂ} (hf : IsTest f) :
     by_contra hK
     apply hu
     show (if (fun v => f (u, v)) = φ then (1:ℂ) else 0) = 0
-    rw [hzero u hK, if_neg (Ne.symm hφ0)]
+    rw [hzero u hK, ite_eq_right (Ne.symm hφ0)]
   · intro φ hφ
     obtain ⟨u, rfl⟩ : φ ∈ Set.range (fun u => fun v => f (u, v)) :=
       (hfin.mem_toFinset).1 (Finset.mem_of_mem_erase hφ)
@@ -1642,13 +1642,13 @@ theorem weilAt_of_subsingleton (F E : Type) [NontriviallyNormedField F] [Nontriv
     [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (hK : Subsingleton A.K) : WeilAt A := by
   have h01 : (0 : A.L) = 1 := by
     rw [← map_zero (algebraMap A.K A.L), ← map_one (algebraMap A.K A.L), Subsingleton.elim (0 : A.K) 1]
-  haveI hL : Subsingleton A.L := subsingleton_of_zero_eq_one h01
+  have hL : Subsingleton A.L := subsingleton_of_zero_eq_one h01
   have hpsi : ∀ (ψ : AddChar F ℂ), IsStdChar ψ → ∀ t : A.K, A.psiK ψ t = 1 := by
     intro ψ _ t
     unfold Et.psiK
     rw [Subsingleton.elim t 0, map_zero, AddChar.map_zero_eq_one]
   intro ψ hψ x μ hμ
-  haveI := hμ.1
+  have := hμ.1
   have hpos : 0 < μ Set.univ := (isOpen_univ.measure_pos μ Set.univ_nonempty)
   have hfin : μ Set.univ < ⊤ := isCompact_univ.measure_lt_top
   have hreal : μ.real Set.univ ≠ 0 := by
@@ -1662,7 +1662,7 @@ theorem weilAt_of_subsingleton (F E : Type) [NontriviallyNormedField F] [Nontriv
       have he : A.etaK (s : A.K) = 1 := by
         unfold Et.etaK eta
         rw [Subsingleton.elim (s : A.K) 1, map_one]
-        rw [if_pos ⟨1, by simp⟩]
+        rw [ite_eq_left ⟨1, by simp⟩]
       have ha : A.absK (s : A.K) = 1 := by
         unfold Et.absK
         rw [dite_eq_left s.isUnit]

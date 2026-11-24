@@ -59,20 +59,20 @@ theorem UpperTheory.V.CF.unramIff :
     rw [NumberField.not_dvd_discr_iff_forall_mem L (𝓞 L) hpZ]
     unfold UnramAt
     refine forall_congr' fun P => forall_congr' fun hP => ?_
-    haveI := hP
+    have := hP
     rw [Int.cast_natCast, Ideal.ramificationIdx_eq_one_iff]
   refine ⟨?_, h2, ?_⟩
   · intro L _ _ _ p hp
     unfold UnramAt
     constructor
     · intro h w hw
-      haveI := w.isPrime
+      have := w.isPrime
       rw [← Subgroup.card_eq_one,
         Ideal.card_inertia_eq_ramificationIdxIn (w.asIdeal.under ℤ) w.asIdeal,
         Ideal.ramificationIdxIn_eq_ramificationIdx (w.asIdeal.under ℤ) w.asIdeal Gal(L/ℚ)]
       exact h w.asIdeal w.isPrime hw
     · intro h P hP hpP
-      haveI := hP
+      have := hP
       have hne : P ≠ ⊥ := by
         intro hb
         rw [hb, Ideal.mem_bot] at hpP

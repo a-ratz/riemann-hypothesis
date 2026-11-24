@@ -71,7 +71,7 @@ theorem UpperTheory.V.Fr.star :
     have : (fun g : F.G0 => ((F.star g : F.G0) : F.Γ)) = fun g : F.G0 => F.c * (g : F.Γ)⁻¹ * F.c⁻¹ := funext hs
     change Continuous (fun g : F.G0 => ((F.star g : F.G0) : F.Γ))
     rw [this]
-    exact (continuous_const.mul continuous_subtype_val.inv).mul continuous_const
+    exact (continuous_const.mul continuous_subtypeVal.inv).mul continuous_const
   · rw [ρ.pol]
     simp only [Matrix.mul_apply, Jmat, Matrix.transpose_apply, mul_ite, mul_one, mul_zero, ite_mul, zero_mul, one_mul]
     have h : ∀ a : Fin n, (j = a.rev) ↔ (a = j.rev) := fun a => by

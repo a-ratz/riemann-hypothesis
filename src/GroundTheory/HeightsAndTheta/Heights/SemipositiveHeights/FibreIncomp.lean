@@ -354,7 +354,7 @@ theorem FibreIncomp.full : Inter.FibreIncomp.Statement := by
   intro K _ ι _ K' _ ι' _ κ v P' n s α W hv hP' hQ hs hsQ hW W₁ W₂ hW₁ hW₂ h12
   classical
   by_contra hne
-  obtain ⟨f, hf2, hf1⟩ := SetLike.exists_of_lt (lt_of_le_of_ne h12 hne)
+  obtain ⟨f, hf2, hf1⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne h12 hne)
   have := hP'.2.1.1
   have := hW₁.1.1
   have hsW : s ∈ W := hW.1.1.2 (Ideal.mem_sup_right (Ideal.mem_span_singleton_self s))

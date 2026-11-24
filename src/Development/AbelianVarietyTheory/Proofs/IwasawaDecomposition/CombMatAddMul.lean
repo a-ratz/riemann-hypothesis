@@ -98,21 +98,21 @@ theorem combMat_shift {g r : ℕ} (l : Fin r → Fin g → ℂ) (ε φ : Matrix 
 theorem shift_mem {n a : ℕ} (ha : a ≤ n) (k : Fin a) {s : Fin n → ℂ} (hs : s ∈ logDom n a) :
     s + Pi.single (Fin.castLE ha k) (2 * (Real.pi : ℂ) * Complex.I) ∈ logDom n a ∧
       logExp a (s + Pi.single (Fin.castLE ha k) (2 * (Real.pi : ℂ) * Complex.I)) = logExp a s := by
-  simp only [logDom, Set.mem_setOf_eq] at hs ⊢
+  simp only [logDom, Set.mem_ofPred_eq] at hs ⊢
   constructor
   · intro j
     have h := hs j
     by_cases hj : j = Fin.castLE ha k
     · subst hj
-      have hk : ((Fin.castLE ha k : Fin n) : ℕ) < a := by simp [Fin.coe_castLE, k.isLt]
-      simp only [hk, if_true] at h ⊢
+      have hk : ((Fin.castLE ha k : Fin n) : ℕ) < a := by simp [Fin.val_castLE, k.isLt]
+      simp only [hk, ite_true] at h ⊢
       simpa [Pi.add_apply] using h
     · simpa [Pi.add_apply, Pi.single_eq_of_ne hj] using h
   · funext j
     by_cases hj : j = Fin.castLE ha k
     · subst hj
-      have hk : ((Fin.castLE ha k : Fin n) : ℕ) < a := by simp [Fin.coe_castLE, k.isLt]
-      simp only [logExp, hk, if_true, Pi.add_apply, Pi.single_eq_same]
+      have hk : ((Fin.castLE ha k : Fin n) : ℕ) < a := by simp [Fin.val_castLE, k.isLt]
+      simp only [logExp, hk, ite_true, Pi.add_apply, Pi.single_eq_same]
       rw [Complex.exp_add, Complex.exp_two_pi_mul_I, _root_.mul_one]
     · simp [logExp, Pi.single_eq_of_ne hj]
 

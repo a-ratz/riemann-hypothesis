@@ -100,7 +100,7 @@ theorem isProper_restrict_of_cover {X Z : Scheme.{0}} (p : X ⟶ Z) {I : Type} {
 private theorem mem_abLocus_of_map_mem_of_isPullback {Y Z : Scheme.{0}} {A : Over Y} {B : Over Z} {g : Y ⟶ Z}
     {φ : A.left ⟶ B.left} (h : IsPullback φ A.hom B.hom g) (y : Y) (hy : g y ∈ abLocus B) :
     y ∈ abLocus A := by
-  simp only [abLocus, Set.mem_setOf_eq] at hy ⊢
+  simp only [abLocus, Set.mem_ofPred_eq] at hy ⊢
   intro K _ _ s hs
   obtain ⟨x, rfl⟩ := hs
   have big := (IsPullback.of_hasPullback A.hom s).paste_horiz h
@@ -109,7 +109,7 @@ private theorem mem_abLocus_of_map_mem_of_isPullback {Y Z : Scheme.{0}} {A : Ove
 private theorem map_mem_abLocus_of_isPullback {Y Z : Scheme.{0}} {A : Over Y} {B : Over Z} {g : Y ⟶ Z}
     [IsOpenImmersion g] {φ : A.left ⟶ B.left} (h : IsPullback φ A.hom B.hom g) (y : Y)
     (hy : y ∈ abLocus A) : g y ∈ abLocus B := by
-  simp only [abLocus, Set.mem_setOf_eq] at hy ⊢
+  simp only [abLocus, Set.mem_ofPred_eq] at hy ⊢
   intro K _ _ s hs
   obtain ⟨x0, hx0⟩ := hs
   have hr : Set.range s ⊆ Set.range g := by

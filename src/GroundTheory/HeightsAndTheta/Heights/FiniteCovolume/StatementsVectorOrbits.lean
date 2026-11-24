@@ -64,7 +64,7 @@ variable {E} in
 theorem mem_congruenceUnits {N : ℕ} {ε : (𝓞 E)ˣ} :
     ε ∈ congruenceUnits E N ↔ (ε : 𝓞 E) - 1 ∈ Ideal.span {(N : 𝓞 E)} := by
   rw [congruenceUnits, MonoidHom.mem_ker, Units.ext_iff, Units.coe_map, Units.val_one,
-    RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, ← map_one (Ideal.Quotient.mk _),
+    RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, ← map_one (Ideal.Quotient.mk _),
     Ideal.Quotient.eq]
 
 def CongruenceUnitsFiniteIndex.Statement : Prop :=

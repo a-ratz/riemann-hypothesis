@@ -125,7 +125,7 @@ theorem exists_det_add_mul_one_sub_mul_ne_zero {k : Type*} [Field k] {n : ℕ}
     show LA v = 0
     rw [hLA, Matrix.toLin'_apply, hAv]
   have hp : Submodule.linearProjOfIsCompl K K' hK' v = ⟨v, hvK⟩ :=
-    Submodule.linearProjOfIsCompl_apply_left hK' ⟨v, hvK⟩
+    Submodule.projectionOnto_apply_left hK' ⟨v, hvK⟩
   have he : e ⟨v, hvK⟩ = 0 := by
     apply Subtype.ext
     have : f v = 0 := hv
@@ -212,7 +212,7 @@ theorem mem_span_indicator_lowerSets :
             ∑ l' ∈ Finset.univ.filter (· < l),
               Set.indicator {x | ρ x = some l'} (fun _ => (1 : ℂ)) := by
         funext x
-        simp only [Pi.sub_apply, Finset.sum_apply, Set.indicator_apply, Set.mem_setOf_eq]
+        simp only [Pi.sub_apply, Finset.sum_apply, Set.indicator_apply, Set.mem_ofPred_eq]
         cases hx : ρ x with
         | none => simp
         | some m =>
@@ -233,14 +233,14 @@ theorem mem_span_indicator_lowerSets :
   let c : L → ℂ := fun l => if h : ∃ x, ρ x = some l then Φ h.choose else 0
   have hdecomp : Φ = ∑ l, c l • Set.indicator {x | ρ x = some l} (fun _ => (1 : ℂ)) := by
     funext x
-    simp only [Finset.sum_apply, Pi.smul_apply, Set.indicator_apply, Set.mem_setOf_eq,
+    simp only [Finset.sum_apply, Pi.smul_apply, Set.indicator_apply, Set.mem_ofPred_eq,
       smul_eq_mul, mul_ite, mul_one, mul_zero]
     cases hx : ρ x with
     | none => simpa using h0 x hx
     | some m =>
-      simp only [Option.some.injEq, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [Option.some.injEq, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       have hex : ∃ y, ρ y = some m := ⟨x, hx⟩
-      simp only [c, dif_pos hex]
+      simp only [c, dite_eq_left hex]
       exact hΦ _ _ (hx.trans hex.choose_spec.symm)
   rw [hdecomp]
   exact S.sum_mem fun l _ => S.smul_mem _ (key l)
@@ -366,11 +366,11 @@ theorem _root_.GlobalTheory.DownLift.SplitGen.exists_same_images_matrix (hr : r 
     fun i => by obtain ⟨-, a, -⟩ := hP i; exact a
   have hInv : ∀ i (h : GL (Fin n) O) x, M i f ((h : Matrix (Fin n) (Fin n) O).map ι * x) = M i f x :=
     fun i => by obtain ⟨-, -, a⟩ := hP i; exact a
-  haveI := finite_quotient_span_sq (O := O) hd
-  haveI : Finite (Submodule O (Fin r → O ⧸ Ideal.span {d ^ 2})) :=
+  have := finite_quotient_span_sq (O := O) hd
+  have : Finite (Submodule O (Fin r → O ⧸ Ideal.span {d ^ 2})) :=
     Finite.of_injective (fun N : Submodule O (Fin r → O ⧸ Ideal.span {d ^ 2}) =>
       (N : Set (Fin r → O ⧸ Ideal.span {d ^ 2}))) SetLike.coe_injective
-  letI : Fintype (Submodule O (Fin r → O ⧸ Ideal.span {d ^ 2})) := Fintype.ofFinite _
+  let : Fintype (Submodule O (Fin r → O ⧸ Ideal.span {d ^ 2})) := Fintype.ofFinite _
   let red : Matrix (Fin n) (Fin r) O → Fin n → Fin r → O ⧸ Ideal.span {d ^ 2} :=
     fun y a b => Ideal.Quotient.mk _ (y a b)
   let ρ : Matrix (Fin n) (Fin r) K → Option (Submodule O (Fin r → O ⧸ Ideal.span {d ^ 2})) := fun x =>
@@ -465,12 +465,12 @@ theorem _root_.GlobalTheory.DownLift.SplitGen.exists_same_images_matrix (hr : r 
           simp [A, Matrix.mul_smul, smul_smul, hιd]
         rw [this, Matrix.mul_assoc, hAA, Matrix.mul_one]
     ext x
-    simp only [Set.mem_setOf_eq, hgA, key]
+    simp only [Set.mem_ofPred_eq, hgA, key]
     constructor
     · rintro ⟨z, hz⟩
       replace hz := (key x z).1 hz
       have hx : ∃ y : Matrix (Fin n) (Fin r) O, ι d • x = y.map ι := ⟨_, hz⟩
-      refine ⟨_, dif_pos hx, ?_⟩
+      refine ⟨_, dite_eq_left hx, ?_⟩
       have hy : hx.choose = z * B := Matrix.map_injective hιinj (hx.choose_spec.symm.trans hz)
       rw [Submodule.span_le]
       rintro _ ⟨a, rfl⟩
@@ -517,10 +517,10 @@ theorem _root_.GlobalTheory.DownLift.SplitGen.exists_same_images_matrix (hr : r 
       ∑ l, E (rep l) ({x | ρ x = some l}.indicator fun _ => (1 : ℂ)) := by
     funext i x
     simp only [Finset.sum_apply, E, LinearMap.pi_apply, LinearMap.smul_apply, LinearMap.id_apply,
-      Pi.smul_apply, Set.indicator_apply, Set.mem_setOf_eq, smul_eq_mul, mul_ite, mul_one, mul_zero]
+      Pi.smul_apply, Set.indicator_apply, Set.mem_ofPred_eq, smul_eq_mul, mul_ite, mul_one, mul_zero]
     rcases hρ : ρ x with _ | l0
     · simp [hnone i x hρ]
-    · rw [Finset.sum_eq_single l0 (fun l _ hl => by simp [Ne.symm hl]) (by simp), if_pos rfl]
+    · rw [Finset.sum_eq_single l0 (fun l _ hl => by simp [Ne.symm hl]) (by simp), ite_eq_left rfl]
       have h : ∃ x', ρ x' = some l0 := ⟨x, hρ⟩
       simp only [rep, h, dite_true]
       exact hfib i _ _ (hρ.trans h.choose_spec.symm)

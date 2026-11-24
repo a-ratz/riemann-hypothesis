@@ -84,7 +84,7 @@ theorem _root_.GlobalTheory.surjective_of_fibre_rank (O M N : Type) [CommRing O]
     (Submodule.mkQ_surjective (LinearMap.range f)) y
   have hx : x ∈ LinearMap.range (f.baseChange q.asIdeal.ResidueField) := htop ▸ Submodule.mem_top
   obtain ⟨z, rfl⟩ := hx
-  rw [LinearMap.baseChange_eq_ltensor]
+  rw [LinearMap.baseChange_eq_lTensor]
   exact hex.apply_apply_eq_zero z
 
 theorem injective_of_fibre_rank (O M N : Type) [CommRing O] [AddCommGroup M] [Module O M]

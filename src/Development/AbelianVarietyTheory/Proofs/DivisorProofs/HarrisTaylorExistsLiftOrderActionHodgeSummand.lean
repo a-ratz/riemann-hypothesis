@@ -124,17 +124,17 @@ theorem exists_lift_oAct : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.H
   have GD := GlobalTheory.Published.grothendieckDeformation_of_lifting _root_.GlobalTheory.abelianDeRham _root_.GlobalTheory.abelianScheme_hom_lifting_nilpotent_dividedPowers
   have hκ := isDPNilpotent_squareZero hsq
   obtain ⟨A₁, _, i₁, h₁, hA₁⟩ := GlobalTheory.T.abelianScheme_unobstructed_squareZero_affine C (RingHom.ker π) hsq C₀ π hπ rfl o₀.A o₀.ab
-  haveI := hA₁.smooth
-  haveI := hA₁.geomConnected
-  haveI := connectedSpace_sp_of_local C
-  haveI : ConnectedSpace A₁.left := GeometricallyConnected.connectedSpace A₁.hom A₁.hom.isOpenMap
+  have := hA₁.smooth
+  have := hA₁.geomConnected
+  have := connectedSpace_sp_of_local C
+  have : ConnectedSpace A₁.left := GeometricallyConnected.connectedSpace A₁.hom A₁.hom.isOpenMap
   obtain ⟨g, hg⟩ := exists_dim_of_preconnected A₁.hom (Classical.arbitrary _)
   obtain ⟨A, _, i, h, hA, hgA, hE'⟩ :=
     GlobalTheory.RMDeform.exists_lift_abelian GD _root_.GlobalTheory.abelianDeRham (divided₂ hsq) hκ π hπ rfl h₁ hA₁ hg E hE hFil
-  haveI : IsCommMonObj A := hA.comm
+  have : IsCommMonObj A := hA.comm
   have HL := (GD C _ (divided₂ hsq) hκ C₀ π hπ rfl).2.2
   have key : ∀ c : D.O, ∃! f : A ⟶ A, IsMonHom f ∧ i ≫ f.left = (o₀.act.act c).left ≫ i := fun c ↦ by
-    haveI := o₀.act.hom c
+    have := o₀.act.hom c
     exact HL g o₀.A A i h hA hgA g o₀.A A i h hA hgA (o₀.act.act c) (fun d hd ↦ by
       rw [hE'] at hd ⊢; exact hstab c d hd)
   choose f hf huniq using key
@@ -143,14 +143,14 @@ theorem exists_lift_oAct : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.H
     rw [o₀.act.one]
     simp
   · intro x y
-    haveI := (hf x).1
-    haveI := (hf y).1
+    have := (hf x).1
+    have := (hf y).1
     refine (huniq (x * y) (f y ≫ f x) ⟨inferInstance, ?_⟩).symm
     rw [o₀.act.mul, Over.comp_left, Over.comp_left, ← Category.assoc, (hf y).2, Category.assoc, (hf x).2,
       Category.assoc]
   · intro x y
-    haveI := (hf x).1
-    haveI := (hf y).1
+    have := (hf x).1
+    have := (hf y).1
     refine (huniq (x + y) (f x * f y) ⟨GlobalTheory.OActLift.isMonHom_mul_of_comm _ _, ?_⟩).symm
     rw [o₀.act.add]
     let j : Over.mk (o₀.A.hom ≫ spMap π) ⟶ A := Over.homMk i h.1.w

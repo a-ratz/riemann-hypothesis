@@ -129,7 +129,7 @@ theorem classGroup_nthPower_of_codim_one_mod : ∀ (k A : Type) [Field k] [IsAlg
     hP₀ne (h.eq_of_le hP₀.ne_top bot_le).symm
   have hjac : ∀ x : A, x ≠ 0 → ∃ Q : Ideal A, Q.IsMaximal ∧ x ∉ Q := by
     intro x hx
-    haveI : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := k) (B := A)
+    have : IsJacobsonRing A := isJacobsonRing_of_finiteType (A := k) (B := A)
     have hj : (⊥ : Ideal A).jacobson = ⊥ :=
       IsJacobsonRing.out' _ (Ideal.isPrime_bot).isRadical
     by_contra hne
@@ -163,7 +163,7 @@ theorem classGroup_nthPower_of_codim_one_mod : ∀ (k A : Type) [Field k] [IsAlg
       have hx' : x = ⊤ := Ideal.isUnit_iff.mp hx
       subst hx'
       have e1 : (⟨⊤, h⟩ : nonZeroDivisors (Ideal A)) = 1 := Subtype.ext Ideal.one_eq_top.symm
-      haveI : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+      have : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
       rw [e1, map_one, map_one, Module.finrank_zero_of_subsingleton, pow_zero]
     · intro a p ha hp ih h
       have hpne : p ≠ ⊥ := hp.ne_zero
@@ -217,9 +217,9 @@ theorem _root_.GlobalTheory.exists_integral_norm_natDegree_mod_eq_one :
     exact ⟨x, hx, h 0⟩
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.norm_surjective_of_is_c1 (RatFunc k) K hC1
     RatFunc.X RatFunc.X_ne_zero
-  haveI : Module.IsTorsionFree k[X] K := .trans_faithfulSMul k[X] (RatFunc k) K
-  haveI : Module.Free k[X] O := Module.free_of_finite_type_torsion_free'
-  haveI := IsIntegralClosure.isLocalization k[X] (RatFunc k) K O
+  have : Module.IsTorsionFree k[X] K := .trans_faithfulSMul k[X] (RatFunc k) K
+  have : Module.Free k[X] O := Module.free_of_finite_type_torsion_free'
+  have := IsIntegralClosure.isLocalization k[X] (RatFunc k) K O
   have hnorm : ∀ a : O, algebraMap k[X] (RatFunc k) (Algebra.norm k[X] a) =
       Algebra.norm (RatFunc k) (algebraMap O K a) := fun a =>
     (Algebra.norm_localization k[X] (nonZeroDivisors k[X]) (Rₘ := RatFunc k) (Sₘ := K) a).symm
@@ -286,7 +286,7 @@ theorem degree_count_generates : ∀ (k A : Type) [Field k] [IsAlgClosed k] [Cha
     rw [← Ideal.zero_eq_bot] at hM hM' ⊢
     exact mul_ne_zero hM hM'
   have htop : Module.finrank k (A ⧸ (⊤ : Ideal A)) = 0 := by
-    haveI : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+    have : Subsingleton (A ⧸ (⊤ : Ideal A)) := Ideal.Quotient.subsingleton_iff.mpr rfl
     exact Module.finrank_zero_of_subsingleton
   have hpow : ∀ (M : Ideal A) (n : ℕ), M.IsMaximal → Module.finrank k (A ⧸ M ^ n) = n := by
     intro M n hM
@@ -565,8 +565,8 @@ namespace GlobalTheory.CurveCompletion
 theorem residue_exists (k A : Type) [Field k] [IsAlgClosed k] [CommRing A] [Algebra k A]
     [Algebra.FiniteType k A] (Q : Ideal A) (hQ : Q.IsMaximal) (c : A) :
     ∃ a : k, c - algebraMap k A a ∈ Q := by
-  letI := Ideal.Quotient.field Q
-  haveI : Module.Finite k (A ⧸ Q) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ Q)
+  let := Ideal.Quotient.field Q
+  have : Module.Finite k (A ⧸ Q) := finite_of_finite_type_of_isJacobsonRing k (A ⧸ Q)
   obtain ⟨a, ha⟩ := (IsAlgClosed.algebraMap_bijective_of_isIntegral (k := k) (K := A ⧸ Q)).2
     (Ideal.Quotient.mk Q c)
   refine ⟨a, ?_⟩
@@ -780,8 +780,8 @@ theorem exists_completion_embedding : ∀ (k A : Type) [Field k] [IsAlgClosed k]
       ∀ (m : ℕ) (φ : PowerSeries k), ∃ u : A,
         (PowerSeries.X : PowerSeries k) ^ m ∣ φ - σ u := by
   intro k A _ _ _ _ _ _ _ Q hQ hQ0
-  haveI : Q.IsPrime := hQ.isPrime
-  obtain ⟨π, hπ1, hπ2⟩ := SetLike.exists_of_lt (Ideal.pow_succ_lt_pow hQ0 1)
+  have : Q.IsPrime := hQ.isPrime
+  obtain ⟨π, hπ1, hπ2⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_succ_lt_pow hQ0 1)
   have hπ : π ∈ Q := by simpa using hπ1
   have hnot := pow_not_mem hQ0 hπ hπ2
   have hex := exists_approx (k := k) hπ (residue_exists k A Q hQ) (pow_le_span_sup hQ0 hπ hπ2)
@@ -807,7 +807,7 @@ theorem exists_completion_embedding : ∀ (k A : Type) [Field k] [IsAlgClosed k]
     have h2 : (PowerSeries.X : PowerSeries k) ^ m ∣ φ - (PowerSeries.trunc m φ : PowerSeries k) := by
       rw [PowerSeries.X_pow_dvd_iff]
       intro n hn
-      rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, if_pos hn, sub_self]
+      rw [map_sub, Polynomial.coeff_coe, PowerSeries.coeff_trunc, ite_eq_left hn, sub_self]
     have := dvd_sub h2 h1
     rwa [sub_sub_sub_cancel_right] at this
 
@@ -1077,22 +1077,22 @@ theorem formal_deformation : ∀ (k A : Type) [Field k] [IsAlgClosed k] [CharZer
   · intro i i' hii'
     have hle : ¬ Q i' ≤ Q i := fun h =>
       hii' (hQinj ((hQmax i').eq_of_le (hQmax i).ne_top h)).symm
-    obtain ⟨u, hu', hu⟩ := SetLike.not_le_iff_exists.mp hle
+    obtain ⟨u, hu', hu⟩ := IsConcreteLE.not_le_iff_exists.mp hle
     refine ⟨u, ?_⟩
     rw [hunit, map_sub, hcc, hcc, (hQσ i' u).mp hu', sub_zero]
     exact fun h => hu ((hQσ i u).mpr h)
   · intro i
     have hle : ¬ P₀ ≤ Q i := fun h => hQP i (hP₀.eq_of_le (hQmax i).ne_top h).symm
-    obtain ⟨u, hu', hu⟩ := SetLike.not_le_iff_exists.mp hle
+    obtain ⟨u, hu', hu⟩ := IsConcreteLE.not_le_iff_exists.mp hle
     refine ⟨u, ?_⟩
     rw [hunit, map_sub, hcc, (hPσ u).mp hu', sub_zero]
     exact fun h => hu ((hQσ i u).mpr h)
   · intro i
-    obtain ⟨u, hu', hu⟩ := SetLike.not_le_iff_exists.mp (hDQ i)
+    obtain ⟨u, hu', hu⟩ := IsConcreteLE.not_le_iff_exists.mp (hDQ i)
     refine ⟨u, hu', ?_⟩
     rw [hunit, hcc]
     exact fun h => hu ((hQσ i u).mpr h)
-  · obtain ⟨u, hu', hu⟩ := SetLike.not_le_iff_exists.mp hDP
+  · obtain ⟨u, hu', hu⟩ := IsConcreteLE.not_le_iff_exists.mp hDP
     refine ⟨u, hu', ?_⟩
     rw [hunit]
     exact fun h => hu ((hPσ u).mpr h)
@@ -1461,7 +1461,7 @@ theorem exists_class_group_mk0_eq_mul_pow :
         a ∉ P → ∀ h : P ∈ nonZeroDivisors (Ideal A), ∃ d : ClassGroup A,
           ClassGroup.mk0 ⟨P, h⟩ = ClassGroup.mk0 ⟨P₀, h₀⟩ * d ^ N := by
   intro k A _ _ _ _ _ _ _ _ _ _ N hN P₀ hP₀ h₀
-  haveI : Algebra.FiniteType k A :=
+  have : Algebra.FiniteType k A :=
     Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
   obtain ⟨r, V, D, Q, f₀, hset, hdeg⟩ := _root_.GlobalTheory.linear_system_setup k A N P₀ (by omega) hP₀
   have hform := _root_.GlobalTheory.FormalDeform.formal_deformation k A N (Fin r) V D P₀ Q f₀ hN hP₀ hset
@@ -1520,7 +1520,7 @@ theorem classGroup_ringOfIntegers_divisible : GlobalTheory.NeedB.ClDiv := by
   have : Module.Free k[X] A := IsIntegralClosure.module_free k[X] (RatFunc k) K _
   have : Module.Finite k[X] A := IsIntegralClosure.finite k[X] (RatFunc k) K _
   have : IsDedekindDomain A := IsIntegralClosure.isDedekindDomain k[X] (RatFunc k) K _
-  letI : Algebra k A := ((algebraMap k[X] A).comp (algebraMap k k[X])).toAlgebra
+  let : Algebra k A := ((algebraMap k[X] A).comp (algebraMap k k[X])).toAlgebra
   have : IsScalarTower k k[X] A := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have : Algebra.FiniteType k A := Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
   obtain ⟨f, hf0, hf⟩ := GlobalTheory.exists_integral_norm_natDegree_mod_eq_one k K N hN

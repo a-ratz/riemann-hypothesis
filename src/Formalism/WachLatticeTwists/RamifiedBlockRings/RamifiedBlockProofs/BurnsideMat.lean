@@ -100,9 +100,9 @@ private theorem free_of_isCompl [IsLocalRing O] (p q : Submodule O (r → O)) (h
     Module.Free O p ∧ Module.Finite O p := by
   have hproj : Module.Projective O p :=
     Module.Projective.of_split p.subtype (Submodule.linearProjOfIsCompl p q h)
-      (LinearMap.ext fun x => Submodule.linearProjOfIsCompl_apply_left h x)
+      (LinearMap.ext fun x => Submodule.projectionOnto_apply_left h x)
   have hfin : Module.Finite O p :=
-    Module.Finite.of_surjective (Submodule.linearProjOfIsCompl p q h) (fun x => ⟨x, Submodule.linearProjOfIsCompl_apply_left h x⟩)
+    Module.Finite.of_surjective (Submodule.linearProjOfIsCompl p q h) (fun x => ⟨x, Submodule.projectionOnto_apply_left h x⟩)
   exact ⟨Module.free_of_flat_of_isLocalRing, hfin⟩
 
 private theorem idem_normal_form [IsLocalRing O] (e : Matrix r r O) (he : IsIdempotentElem e) :
@@ -128,14 +128,14 @@ private theorem idem_normal_form [IsLocalRing O] (e : Matrix r r O) (he : IsIdem
     rcases σ.symm j with k | k
     · have hk : (b0 (Sum.inl k) : r → O) = (bp k : r → O) := by
         simp [b0, Basis.map_apply, Basis.prod_apply]
-      simp only [Sum.isLeft_inl, if_true, one_smul, hk]
+      simp only [Sum.isLeft_inl, ite_true, one_smul, hk]
       obtain ⟨y, hy⟩ := (bp k).2
       rw [← hy]
       show (f * f) y = f y
       rw [hf]
     · have hk : (b0 (Sum.inr k) : r → O) = (bq k : r → O) := by
         simp [b0, Basis.map_apply, Basis.prod_apply]
-      simp only [Sum.isLeft_inr, Bool.false_eq_true, if_false, zero_smul, hk]
+      simp only [Sum.isLeft_inr, Bool.false_eq_true, ite_false, zero_smul, hk]
       exact LinearMap.mem_ker.mp (bq k).2
   have hdiag : LinearMap.toMatrix b b f =
       Matrix.diagonal fun i => if (σ.symm i).isLeft then (1 : O) else 0 := by
@@ -208,13 +208,13 @@ theorem burnsideMat : StatBurnsideMat := by
   let V := n → k
   let L : A →ₐ[k] Matrix n n k := MonoidAlgebra.lift k (Matrix n n k) G ρ
   let φ : A →ₐ[k] Module.End k V := (Matrix.toLinAlgEquiv' : Matrix n n k ≃ₐ[k] _).toAlgHom.comp L
-  letI : Module A V := Module.compHom V φ.toRingHom
+  let : Module A V := Module.compHom V φ.toRingHom
   have hact : ∀ (a : A) (v : V), a • v = (L a).mulVec v := fun a v => rfl
-  haveI : IsScalarTower k A V := ⟨fun c a v => by
+  have : IsScalarTower k A V := ⟨fun c a v => by
     rw [hact, hact, map_smul, Matrix.smul_mulVec]⟩
   have hof : ∀ g, L (MonoidAlgebra.of k G g) = ρ g := fun g => MonoidAlgebra.lift_of ρ g
   have hS : IsSimpleModule A V := by
-    haveI : Nontrivial (Submodule A V) := by
+    have : Nontrivial (Submodule A V) := by
       refine ⟨⊥, ⊤, fun h => ?_⟩
       have : (⊤ : Submodule A V) = ⊥ := h.symm
       have h2 : (fun _ : n => (1 : k)) ∈ (⊤ : Submodule A V) := Submodule.mem_top
@@ -270,9 +270,9 @@ theorem noeth : StatNoeth := by
     intro a ha
     choose F hF using hint a ha
     exact ⟨F, by funext x'; ext i j; exact hF x' i j⟩
-  haveI : IsNoetherian O (LinearMap.range L) := inferInstance
-  haveI h1 : IsNoetherian O (Subalgebra.toSubmodule R') := isNoetherian_of_le hle
-  haveI h2 : IsNoetherian O R' := h1
+  have : IsNoetherian O (LinearMap.range L) := inferInstance
+  have h1 : IsNoetherian O (Subalgebra.toSubmodule R') := isNoetherian_of_le hle
+  have h2 : IsNoetherian O R' := h1
   exact isNoetherian_of_tower O h2
 
 end Formalism.RepresentationBoundsCohomology.ringDataObjects

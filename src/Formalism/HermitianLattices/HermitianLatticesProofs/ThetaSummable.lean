@@ -75,7 +75,7 @@ lemma thetaSummable_gauss {δ : ℝ} (hδ : 0 < δ) :
     summable_geometric_of_lt_one (Real.exp_pos _).le hr1
   have key : ∀ n : ℕ, Real.exp (-δ * (n : ℝ) ^ 2) ≤ Real.exp (-δ) ^ n := by
     intro n
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     apply Real.exp_le_exp.mpr
     have h1 : (n : ℝ) ≤ (n : ℝ) ^ 2 := by
       rcases Nat.eq_zero_or_pos n with h | h
@@ -370,11 +370,11 @@ lemma thetaSummable_main (h : V →ₗ⋆[K] V →ₗ[K] K)
     Summable (fun x : L => Complex.exp (Real.pi * Complex.I * τ *
         ((Algebra.trace ℚ K (h (γ + x) (γ + x)) : ℚ) : ℂ))) := by
   classical
-  haveI : Module.Finite (NumberField.RingOfIntegers K) L :=
+  have : Module.Finite (NumberField.RingOfIntegers K) L :=
     Module.Finite.iff_fg.mpr (Submodule.IsLattice.fg (A := K) L)
-  haveI : Module.Finite ℤ L := Module.Finite.trans (NumberField.RingOfIntegers K) L
-  haveI : IsAddTorsionFree L := isAddTorsionFree_ringOfIntegers_submodule L
-  haveI : Module.IsTorsionFree ℤ L := by
+  have : Module.Finite ℤ L := Module.Finite.trans (NumberField.RingOfIntegers K) L
+  have : IsAddTorsionFree L := isAddTorsionFree_ringOfIntegers_submodule L
+  have : Module.IsTorsionFree ℤ L := by
     first
     | infer_instance
     | (constructor
@@ -388,7 +388,7 @@ lemma thetaSummable_main (h : V →ₗ⋆[K] V →ₗ[K] K)
          rw [smul_sub, Int.cast_smul_eq_zsmul K, Int.cast_smul_eq_zsmul K, hab', sub_self]
        have hrK : (r : K) ≠ 0 := Int.cast_ne_zero.mpr hr0
        exact sub_eq_zero.mp ((smul_eq_zero.mp h1).resolve_left hrK))
-  haveI : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
   obtain ⟨ι, _, _, ⟨b⟩⟩ : ∃ (ι : Type) (_ : Fintype ι) (_ : DecidableEq ι),
       Nonempty (Module.Basis ι ℤ L) :=
     ⟨_, inferInstance, inferInstance, ⟨Module.Free.chooseBasis ℤ L⟩⟩

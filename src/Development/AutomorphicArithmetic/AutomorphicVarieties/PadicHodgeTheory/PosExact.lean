@@ -225,7 +225,7 @@ theorem mem_Dcris {V : Type} [AddCommGroup V] [Module E V] [Module Qp V] [IsScal
 
 theorem sub_sigma_ne_one [CharZero Qp] (e : K₀) : e - PD.σ e ≠ 1 := by
   intro h
-  haveI := PD.finK₀
+  have := PD.finK₀
   have h1 := congrArg (Algebra.trace Qp K₀) h
   have h2 : Algebra.trace Qp K₀ (PD.σ e) = Algebra.trace Qp K₀ e :=
     Algebra.trace_eq_of_algEquiv (AlgEquiv.ofBijective PD.σ PD.σ_bij) e
@@ -363,7 +363,7 @@ theorem FilT_eq (K : FinExt l) (a : ℤ) : FilT E V a = FilV ((PP l).PD K) (LL :
   rw [this]
 
 theorem isOpenEmbedding_GK (K : FinExt l) : IsOpenEmbedding (GK K).subtype := by
-  haveI := K.2
+  have := K.2
   exact (IntermediateField.fixingSubgroup_isOpen K.1).isOpenEmbedding_subtypeVal
 
 theorem iota_mem (K : FinExt l) (ρ : Representation E ↥(GK K) V) {y : V ⊗[ℚ_[l]] Bcr l}
@@ -451,9 +451,9 @@ theorem noFix_char_field (K : FinExt l) (κ : ↥(GK K) →* Eˣ) (hκ : Continu
   have hfil := ((charFil _ (isOpenEmbedding_GK K) κ⁻¹ hκ' (-w)
     ⟨⊤, isOpen_univ, fun g _ hg => hinv g hg⟩).2 1).1 (by omega)
   rw [FilD, Ddr_eq, FilT_eq K, inf_eq_left] at hfil
-  haveI : IsDomain (PP l).R.B := GlobalTheory.RegularRing.isDomain_of_tied T K
-  haveI : Module.Finite E ↥(Dcris ((PP l).PD K) (chRep κ⁻¹)) := by
-    haveI := ((PP l).PD K).finK₀
+  have : IsDomain (PP l).R.B := GlobalTheory.RegularRing.isDomain_of_tied T K
+  have : Module.Finite E ↥(Dcris ((PP l).PD K) (chRep κ⁻¹)) := by
+    have := ((PP l).PD K).finK₀
     apply Module.finite_of_finrank_pos
     rw [hcr]
     exact Nat.mul_pos finrank_pos finrank_pos
@@ -485,7 +485,7 @@ theorem noFix_char {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup
     have := DFunLike.congr_fun hcomp (e.symm g)
     simpa using this.symm
   have := noFix_char_field K (κ.comp (U.subtype.comp e.symm.toMonoidHom))
-    (hκ.comp (continuous_subtype_val.comp he)) w hw (fun g hg => by
+    (hκ.comp (continuous_subtypeVal.comp he)) w hw (fun g hg => by
       have := h (e.symm g : U) (e.symm g).2 (by rw [hval]; exact hg)
       rw [hval] at this
       exact this)
@@ -611,10 +611,10 @@ theorem noFix_quot {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpa
     [IsScalarTower ℚ_[l] E V'] (ρ : Representation E G V) (ρ' : Representation E G V')
     (hc : ReciprocityTheory.Gal.ContAction ρ) (h : FiltBy ρ {κ | ∃ w : ℤ, 1 ≤ w ∧ HasWeight φ κ w}) (f : V →ₗ[E] V')
     (hf : ∀ g x, f (ρ g x) = ρ' g (f x)) (hs : Function.Surjective f) : NoFix φ ρ' := by
-  letI : TopologicalSpace E := moduleTopology ℚ_[l] E
-  haveI : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
-  haveI : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
-  haveI : ContinuousSMul ℚ_[l] E := IsModuleTopology.toContinuousSMul ℚ_[l] E
+  let : TopologicalSpace E := moduleTopology ℚ_[l] E
+  have : IsModuleTopology ℚ_[l] E := ⟨rfl⟩
+  have : IsTopologicalRing E := IsModuleTopology.isTopologicalRing ℚ_[l] E
+  have : ContinuousSMul ℚ_[l] E := IsModuleTopology.toContinuousSMul ℚ_[l] E
   refine noFix_of_filt φ ρ' _ (filtBy_of_surjective f hf hs h) ?_
   rintro κ ⟨w, hw, hκ⟩ ⟨μ, v, hv⟩
   obtain ⟨v, rfl⟩ := hs v
@@ -636,19 +636,19 @@ theorem lift_dR {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l P} (T 
     IsDR (P.PD K) ρ' ∧ ∀ y ∈ DdR (P.PD K) ρ', ∃ x ∈ DdR (P.PD K) ρ,
         AlgebraTensorModule.map f (LinearMap.id : P.R.BdR →ₗ[ℚ_[l]] P.R.BdR) x = y := by
   let L : FinExt l := ⟨⊥, inferInstance⟩
-  letI : Algebra ↥L.1 LL :=
+  let : Algebra ↥L.1 LL :=
     ((algebraMap ℚ_[l] LL).comp (IntermediateField.botEquiv ℚ_[l] (Om l)).toRingEquiv.toRingHom).toAlgebra
-  haveI : IsScalarTower ℚ_[l] ↥L.1 LL := IsScalarTower.of_algebraMap_eq fun x =>
+  have : IsScalarTower ℚ_[l] ↥L.1 LL := IsScalarTower.of_algebraMap_eq fun x =>
     (congrArg (algebraMap ℚ_[l] LL) ((IntermediateField.botEquiv ℚ_[l] (Om l)).commutes x)).symm
-  haveI : FiniteDimensional ↥L.1 LL := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
-  letI : Module ↥L.1 V := Module.compHom V (algebraMap ↥L.1 LL)
-  letI : Module ↥L.1 V' := Module.compHom V' (algebraMap ↥L.1 LL)
-  haveI : IsScalarTower ↥L.1 LL V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : IsScalarTower ↥L.1 LL V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : IsScalarTower ℚ_[l] ↥L.1 V := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V
-  haveI : IsScalarTower ℚ_[l] ↥L.1 V' := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V'
-  haveI : FiniteDimensional ↥L.1 V := Module.Finite.trans LL V
-  haveI : FiniteDimensional ↥L.1 V' := Module.Finite.trans LL V'
+  have : FiniteDimensional ↥L.1 LL := Module.Finite.of_restrictScalars_finite ℚ_[l] _ _
+  let : Module ↥L.1 V := Module.compHom V (algebraMap ↥L.1 LL)
+  let : Module ↥L.1 V' := Module.compHom V' (algebraMap ↥L.1 LL)
+  have : IsScalarTower ↥L.1 LL V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : IsScalarTower ↥L.1 LL V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : IsScalarTower ℚ_[l] ↥L.1 V := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V
+  have : IsScalarTower ℚ_[l] ↥L.1 V' := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V'
+  have : FiniteDimensional ↥L.1 V := Module.Finite.trans LL V
+  have : FiniteDimensional ↥L.1 V' := Module.Finite.trans LL V'
   have hd : IsDR (P.PD K) (res ↥L.1 ρ) := by
     unfold IsDR at h ⊢
     rw [DdR_res]
@@ -677,9 +677,9 @@ theorem exists_fixed (hc : ∀ x, Continuous fun g => ρ g x) (hn : NoFix (GK K)
     ∃ x : V ⊗[ℚ_[l]] Bcr l, φVB ((PP l).PD K) (LL := ℚ_[l]) x = x ∧
       ∀ g, c g ⊗ₜ[ℚ_[l]] (1 : Bcr l) = actVB ((PP l).PD K) ρ g x - x := by
   obtain ⟨T⟩ := tiedP l
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : Module.Finite ℚ_[l] ↥(Dcris ((PP l).PD K) ρ) :=
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : Module.Finite ℚ_[l] ↥(Dcris ((PP l).PD K) ρ) :=
     (GlobalTheory.Per.FontaineTied.fontCore_all_of_tied l _ _ T K ℚ_[l] ℤ_[l] GlobalTheory.Published.BlochKato.goodO_padicInt
       { V := V, ρ := ρ, cont := hc }).1.1
   have hcm : ∀ g (y : V ⊗[ℚ_[l]] Bcr l), actVB ((PP l).PD K) ρ g (φVB ((PP l).PD K) (LL := ℚ_[l]) y) =
@@ -711,10 +711,10 @@ theorem core_surj (hc : ∀ x, Continuous fun g => ρ g x) (hc' : ∀ x, Continu
     ∃ c ∈ Formalism.WeaklyAdmissibleFiltrations.finiteCocycles ((PP l).PD K) ρ, ∃ v, ∀ g, f (c g) - c' g = ρ' g v - v := by
   obtain ⟨T⟩ := tiedP l
   obtain ⟨x', hφ, hx'⟩ := exists_fixed K ρ' hc' hn c' x' hx'
-  letI : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  letI : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
-  haveI : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V := Module.compHom V (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
+  have : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   obtain ⟨hdr', hl2⟩ := lift_dR T K ℚ_[l] ρ ρ' f hf hs hdr
   obtain ⟨-, d₂', hd2, hfil⟩ := _root_.GlobalTheory.CobCrisLift.coboundary_lift l _ _ T K ℚ_[l] ℤ_[l] GlobalTheory.Published.BlochKato.goodO_padicInt
     { V := V', ρ := ρ', cont := hc' } hdr' c' x' hx'
@@ -808,8 +808,8 @@ theorem UpperTheory.V.Loc.posExact :
     LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ l) (hφ : IsOpenEmbedding φ) {E : Type} [Field E] [Algebra ℚ_[l] E] [FiniteDimensional ℚ_[l] E] [Algebra ℤ_[l] E] [IsScalarTower ℤ_[l] ℚ_[l] E] {V : Type} [AddCommGroup V] [Module E V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] E V] [FiniteDimensional ℚ_[l] V] [TopologicalSpace V] [IsModuleTopology ℚ_[l] V] [IsTopologicalAddGroup V] [ContinuousConstSMul E V] {V' : Type} [AddCommGroup V'] [Module E V'] [Module ℚ_[l] V'] [IsScalarTower ℚ_[l] E V'] [FiniteDimensional ℚ_[l] V'] [TopologicalSpace V'] [IsModuleTopology ℚ_[l] V'] [IsTopologicalAddGroup V'] [ContinuousConstSMul E V'] (ρ : Representation E G V) (ρ' : Representation E G V'), ContAction ρ → ContAction ρ' → Positive φ ρ → ∀ f : V →ₗ[E] V', (∀ g x, f (ρ g x) = ρ' g (f x)) → (Function.Surjective f → ∀ c' ∈ UpperTheory.V.Loc.finiteCocycles φ ρ', ∃ c ∈ UpperTheory.V.Loc.finiteCocycles φ ρ, (fun g => f (c g)) = c') ∧ (Function.Injective f → Positive φ ρ' → ∀ c ∈ Z1 ρ, (fun g => f (c g)) ∈ UpperTheory.V.Loc.finiteCocycles φ ρ' → c ∈ UpperTheory.V.Loc.finiteCocycles φ ρ) := by
   intro _ l _ G _ _ _ φ hφ E _ _ _ _ _ V _ _ _ _ _ _ _ _ _ V' _ _ _ _ _ _ _ _ _ ρ ρ' hc hc' hpos f hf
   obtain ⟨K, e, he, he', rfl, -⟩ := openField φ hφ
-  haveI : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
-  haveI : ContinuousSMul ℚ_[l] V' := IsModuleTopology.toContinuousSMul ℚ_[l] V'
+  have : ContinuousSMul ℚ_[l] V := IsModuleTopology.toContinuousSMul ℚ_[l] V
+  have : ContinuousSMul ℚ_[l] V' := IsModuleTopology.toContinuousSMul ℚ_[l] V'
   have hk : ∀ x, Continuous fun g => tr e ρ g x := fun x => hc.comp (he'.prodMk continuous_const)
   have hk' : ∀ x, Continuous fun g => tr e ρ' g x := fun x => hc'.comp (he'.prodMk continuous_const)
   constructor

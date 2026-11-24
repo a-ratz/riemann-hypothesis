@@ -85,7 +85,7 @@ theorem locF_mem_fibS (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} {U : 
     (hM : Λ ⊓ U.restrictScalars (𝓞 K) = M) (hT : Λ ⊓ (orthK h U).restrictScalars (𝓞 K) = T)
     {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) : locF 𝔭 Λ ∈ fibS h U 𝔭 M T := by
   have hu' : Formalism.HermitianLatticesTheory.dual h Λ = Λ := hu
-  simp only [fibS, Set.mem_setOf_eq]
+  simp only [fibS, Set.mem_ofPred_eq]
   refine ⟨⟨Λ, hΛ, rfl⟩, ?_, ?_, ?_⟩
   · rw [← Formalism.L2.SG.Pf.G7.locF_dual hF h hΛ.fg h𝔭.isPrime, hu']
   · rw [← hM, locF_inf_restrictScalars U Λ h𝔭.isPrime]
@@ -106,7 +106,7 @@ theorem fibS_eq_singleton (hF : IsFixF K F) {h : V →ₗ⋆[K] V →ₗ[K] K} {
   have hcapW : locF 𝔭 (M ⊔ T) ⊓ (orthK h U).restrictScalars (𝓞 K) = locF 𝔭 T := by
     rw [sup_comm]; exact locF_sup_inf hUc.symm hTW hMU h𝔭.isPrime
   ext Λ
-  simp only [fibS, Set.mem_setOf_eq, Set.mem_singleton_iff]
+  simp only [fibS, Set.mem_ofPred_eq, Set.mem_singleton_iff]
   constructor
   · rintro ⟨⟨Λ₁, hΛ₁, rfl⟩, hd, hcU, hcW⟩
     have hle : locF 𝔭 (M ⊔ T) ≤ locF 𝔭 Λ₁ := by
@@ -173,7 +173,7 @@ theorem card_glue (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsF
     obtain ⟨Λ, ⟨hΛ, hin, hout⟩, -⟩ := exists_unique_patch hK hF hN s
       (fun 𝔭 => if hp : 𝔭 ∈ s then (τ ⟨𝔭, hp⟩).1 else ⊥) (by
         intro 𝔭 hp
-        simp only [dif_pos hp]
+        simp only [dite_eq_left hp]
         obtain ⟨⟨A, hA, e⟩, -, hU, hW⟩ := (τ ⟨𝔭, hp⟩).2
         refine ⟨by rw [← e, LocF.locF_idem], A, { toIsLattice := hA, span_eq_top := ?_ }, e⟩
         have hle : locF 𝔭.1 A ≤ (Submodule.span K (A : Set V)).restrictScalars (𝓞 K) := by
@@ -188,7 +188,7 @@ theorem card_glue (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsF
     have hfib : ∀ 𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}, locF 𝔭.1 Λ ∈ fibS h U 𝔭.1 M T := by
       intro 𝔭
       by_cases hp : 𝔭 ∈ s
-      · rw [hin 𝔭 hp, dif_pos hp]
+      · rw [hin 𝔭 hp, dite_eq_left hp]
         exact (τ ⟨𝔭, hp⟩).2
       · rw [hout 𝔭 hp, hsing 𝔭 hp]
         exact Set.mem_singleton _
@@ -208,6 +208,6 @@ theorem card_glue (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsF
     funext 𝔭
     apply Subtype.ext
     show locF 𝔭.1.1 Λ = (τ 𝔭).1
-    rw [hin 𝔭.1 𝔭.2, dif_pos 𝔭.2]
+    rw [hin 𝔭.1 𝔭.2, dite_eq_left 𝔭.2]
 
 end Formalism.L2.SG.Pf.G8

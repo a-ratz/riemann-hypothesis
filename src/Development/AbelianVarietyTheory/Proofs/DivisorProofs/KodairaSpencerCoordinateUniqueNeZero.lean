@@ -84,13 +84,13 @@ theorem derivation_eq_zero_of_jacobian {k B F : Type} [CommRing k] [CommRing B] 
     (hmul : ∀ x y, δ (x * y) = φ x * δ y + φ y * δ x) (hc : ∀ c, δ (α c) = 0)
     (hg : ∀ a, δ (g a) = 0) (b : B) : δ b = 0 := by
   classical
-  letI := α.toAlgebra
-  letI : Algebra B F := φ.toAlgebra
-  letI : Algebra k F := (φ.comp α).toAlgebra
-  haveI : IsScalarTower k B F := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Nontrivial B := φ.domain_nontrivial
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension D k B := hα
-  haveI := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth D (R := k) (S := B)
+  let := α.toAlgebra
+  let : Algebra B F := φ.toAlgebra
+  let : Algebra k F := (φ.comp α).toAlgebra
+  have : IsScalarTower k B F := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Nontrivial B := φ.domain_nontrivial
+  have : Algebra.IsStandardSmoothOfRelativeDimension D k B := hα
+  have := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth D (R := k) (S := B)
   have hr : Module.finrank B Ω[B⁄k] = D := Module.finrank_eq_of_rank_eq
     (Algebra.IsStandardSmoothOfRelativeDimension.rank_kaehlerDifferential (R := k) (S := B) D)
   let e := Module.finBasisOfFinrankEq B Ω[B⁄k] hr
@@ -170,7 +170,7 @@ theorem eq_zero_tangent_of_jacobian {k : Type} [CommRing k] {Y : Scheme.{0}} {p 
     (hg : ∀ a, (evalPt w _ hw (g a)).snd = 0) : w = spMap (TrivSqZeroExt.inlHom F F) ≫ z := by
   classical
   have hU : IsAffineOpen (K.bundle.U i) := K.affine i
-  haveI : Subsingleton (Sp F) := inferInstanceAs (Subsingleton (PrimeSpectrum F))
+  have : Subsingleton (Sp F) := inferInstanceAs (Subsingleton (PrimeSpectrum F))
   let y0 : Sp F := (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum F)
   have hx : z y0 ∈ K.bundle.U i := hz (Set.mem_univ y0)
   have h := HasRingHomProperty.appLE (@SmoothOfRelativeDimension D) p ‹_›

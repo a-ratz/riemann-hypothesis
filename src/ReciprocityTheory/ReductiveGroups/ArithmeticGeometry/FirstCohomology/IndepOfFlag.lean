@@ -76,7 +76,7 @@ lemma mem_V_of_lt {d : ℕ} (u : Fin d → E) {l : Fin d} {n : ℕ} (h : l.val <
 
 lemma finite_ball [FiniteDimensional ℝ E] (X : Submodule ℤ E) [DiscreteTopology X] (R : ℝ) :
     (Metric.closedBall (0 : E) R ∩ (X : Set E)).Finite := by
-  haveI : DiscreteTopology X.toAddSubgroup := ‹DiscreteTopology X›
+  have : DiscreteTopology X.toAddSubgroup := ‹DiscreteTopology X›
   have hc : IsClosed (X : Set E) := (X.toAddSubgroup).isClosed_of_discreteTopology
   have hdisc : IsDiscrete (X : Set E) := by
     first
@@ -121,7 +121,7 @@ lemma indep_of_flag [FiniteDimensional ℝ E] {d : ℕ} (hd : d = finrank ℝ E)
     rw [eq_neg_of_add_eq_zero_left h2]
     refine Submodule.neg_mem _ (_root_.sum_mem fun l hl => Submodule.smul_mem _ _ (Submodule.subset_span ⟨l, ?_, rfl⟩))
     have hl' : l < k := by simpa using hl
-    exact Fin.lt_iff_val_lt_val.1 hl'
+    exact Fin.lt_def.1 hl'
   have h3 := Submodule.smul_mem (V f k.val) (g k)⁻¹ hmem
   rw [smul_smul, inv_mul_cancel₀ hk, one_smul] at h3
   exact h k h3
@@ -186,7 +186,7 @@ lemma phi_comb (hu : LinearIndependent ℝ u) (a : Fin d → ℝ) (ha : ∀ l, k
   · rw [phi_self u k hu, mul_one]
   · intro l _ hlk
     rcases lt_or_gt_of_ne hlk with h1 | h1
-    · rw [phi_V u k (mem_V_of_lt u (Fin.lt_iff_val_lt_val.1 h1)), mul_zero]
+    · rw [phi_V u k (mem_V_of_lt u (Fin.lt_def.1 h1)), mul_zero]
     · rw [ha l h1, zero_mul]
   · simp
 
@@ -205,13 +205,13 @@ private lemma exists_coeffs_of_mem_V {d : ℕ} (u : Fin d → E) {n : ℕ} {x : 
 lemma decomp (hu : LinearIndependent ℝ u) {x : E} (hx : x ∈ V u (k.val + 1)) :
     x - phi u k x • u k ∈ V u k.val := by
   obtain ⟨c, hc, rfl⟩ := exists_coeffs_of_mem_V u hx
-  rw [phi_comb u k hu c (fun l hl => hc l (Fin.lt_iff_val_lt_val.1 hl))]
+  rw [phi_comb u k hu c (fun l hl => hc l (Fin.lt_def.1 hl))]
   rw [← Finset.add_sum_erase _ _ (Finset.mem_univ k), add_sub_cancel_left]
   refine _root_.sum_mem fun l hl => ?_
   have hlk : l ≠ k := Finset.ne_of_mem_erase hl
   rcases lt_or_gt_of_ne hlk with h1 | h1
-  · exact Submodule.smul_mem _ _ (mem_V_of_lt u (Fin.lt_iff_val_lt_val.1 h1))
-  · rw [hc l (Fin.lt_iff_val_lt_val.1 h1), zero_smul]
+  · exact Submodule.smul_mem _ _ (mem_V_of_lt u (Fin.lt_def.1 h1))
+  · rw [hc l (Fin.lt_def.1 h1), zero_smul]
     exact Submodule.zero_mem _
 
 end phi
@@ -290,7 +290,7 @@ lemma reduce {d : ℕ} (u : Fin d → E) (hu : LinearIndependent ℝ u) (X : Sub
     ∃ y ∈ X, y ∈ V u (k.val + 1) ∧ phi u k y = phi u k x ∧ ‖y‖ ^ 2 ≤ d * ‖u k‖ ^ 2 := by
   have hkd : k.val < d := k.isLt
   have hM : ∀ j : Fin d, j.val < k.val → ‖u j‖ ^ 2 ≤ ‖u k‖ ^ 2 := fun j hj =>
-    pow_le_pow_left₀ (norm_nonneg _) (hmono j (Fin.lt_iff_val_lt_val.2 hj)) 2
+    pow_le_pow_left₀ (norm_nonneg _) (hmono j (Fin.lt_def.2 hj)) 2
   have hw2 : x - phi u k x • gs u k ∈ V u k.val := by
     have h1 := decomp u k hu hxV
     have h2 : phi u k x • (u k - gs u k) ∈ V u k.val :=

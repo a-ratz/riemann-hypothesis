@@ -159,7 +159,7 @@ theorem p_ne_zero : ((PD.p : ℕ) : LL) ≠ 0 := by
 
 theorem qRoot_iff (i : ZMod n) (ζ : LL) :
     QRoot W i ζ ↔ (∃ c : O, algebraMap O LL c = ζ) ∧ IsPrimitiveRoot ζ (PD.p ^ W.s) := by
-  haveI : Fact PD.p.Prime := ⟨PD.hp⟩
+  have : Fact PD.p.Prime := ⟨PD.hp⟩
   have hs : W.s = W.s - 1 + 1 := by have := W.s_pos; omega
   constructor
   · rintro ⟨hc, ⟨m, hm⟩, h0⟩
@@ -433,7 +433,7 @@ theorem van_letE_iff {ι : Type} [Fintype ι] (nb : Module.Basis ι (LetA O n) �
 include W in
 theorem mem_N_iff (x : W.DD T) : x ∈ W.N T ↔ ∀ i, (letE i : LetA O n) • x ∈ W.Nl T i := by
   refine ⟨fun h i => letE_smul_mem W T i h, fun h => ?_⟩
-  haveI := neZero_letters W
+  have := neZero_letters W
   have e : (∑ i, letE i : LetA O n) = 1 := Finset.univ_sum_single (1 : LetA O n)
   rw [← one_smul (LetA O n) x, ← e, Finset.sum_smul]
   exact Submodule.sum_mem _ fun i _ => ((mem_Nl_iff W T i _).1 (h i)).1
@@ -487,7 +487,7 @@ end Generic
 
 theorem letterMax_eq {l : ℕ} [Fact l.Prime] (K : FinExt l)
     (m : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → ℕ) : letterMax K m = mx m := by
-  haveI := letters_neZero K
+  have := letters_neZero K
   unfold letterMax mx
   exact Finset.sup_univ_eq_ciSup m
 
@@ -678,7 +678,7 @@ theorem exists_gam_matrix (hI : ∀ a : O⟦X⟧, (∀ δ ∈ W.DelF, W.γ₀ δ
   exact (hDm i m k).symm
 
 theorem mem_of_letters (x : W.DD T) (h : ∀ i, (letE i : LetA O f) • x ∈ W.N T) : x ∈ W.N T := by
-  haveI := GlobalTheory.WachLettersCompare.neZero_letters W
+  have := GlobalTheory.WachLettersCompare.neZero_letters W
   have e : (∑ i, letE i : LetA O f) = 1 := Finset.univ_sum_single (1 : LetA O f)
   rw [← one_smul (LetA O f) x, ← e, Finset.sum_smul]
   exact Submodule.sum_mem _ fun i _ => h i
@@ -790,7 +790,7 @@ theorem exists_inv {n : ℕ} (T : LocLat G Qp LL O) (b : Module.Basis (Fin n) (L
     have e1 : ∑ m, (∑ j, c k j * PA m j - if m = k then W.Q ^ h * (letE i : LetA O f) else 0) •
         (b m : W.DD T) = 0 := by
       simp only [sub_smul, Finset.sum_sub_distrib, ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ,
-        if_true, Finset.sum_smul, mul_smul]
+        ite_true, Finset.sum_smul, mul_smul]
       rw [← hc k, sub_eq_zero, Finset.sum_comm]
       refine Finset.sum_congr rfl fun j _ => ?_
       rw [hφ, Finset.smul_sum]
@@ -818,7 +818,7 @@ theorem frame_height : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW
   intro D HW F Cm l _ K LL hA T U n h γ b N hU hb hfr i
   have hJ : Formalism.MainNotions.DeltaInvariantLattices.JumpsLet ((HW l).W K 1 LL hA.2.2) T (fun _ => 0) (fun _ => h) := by
     intro τ i' hτ a ha
-    haveI := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l (D.loc l) (D.locA l) (D.locT l) K LL T.V T.ρ).1
+    have := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l (D.loc l) (D.locA l) (D.locT l) K LL T.V T.ρ).1
     have h1 := (GlobalTheory.Per.JumpMult.jump_iff_of_finite ((D.loc l).PD K) T.ρ τ a).2.2.1 ha
     rw [hU.2 i' τ (fun x => DFunLike.congr_fun hτ x) a] at h1
     have h2 := hb i' a (Multiset.count_ne_zero.1 (by exact_mod_cast h1))
@@ -1054,7 +1054,7 @@ theorem mat_identity {S M M' : Type} [CommRing S] [AddCommGroup M] [Module S M] 
 
   simp only [hv, hv', hY, map_sum, map_smul, Finset.sum_apply', Finsupp.smul_apply,
   Module.Basis.repr_self, Finsupp.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-  Finset.mem_univ, if_true] at h
+  Finset.mem_univ, ite_true] at h
   simp only [Matrix.mul_apply]
   rw [Finset.sum_congr rfl (fun m _ => mul_comm (G' r m) (X m k)), ← h]
   exact Finset.sum_congr rfl fun m _ => mul_comm _ _
@@ -1075,8 +1075,8 @@ theorem exists_unit_mat {S M : Type} [CommRing S] [AddCommGroup M] [Module S M] 
 theorem one_not_mem_map {Z O C : Type} [CommRing Z] [CommRing O] [CommRing C] [Algebra Z O] [Algebra Z C]
     [Module.FaithfullyFlat Z C] (I : Ideal O) (hI : I ≠ ⊤) :
     (1 : TensorProduct Z O C) ∉ Ideal.map (algebraMap O (TensorProduct Z O C)) I := by
-  haveI : Nontrivial (O ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
-  haveI : Nontrivial (TensorProduct Z (O ⧸ I) C) := Module.FaithfullyFlat.rTensor_nontrivial Z C (O ⧸ I)
+  have : Nontrivial (O ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
+  have : Nontrivial (TensorProduct Z (O ⧸ I) C) := Module.FaithfullyFlat.rTensor_nontrivial Z C (O ⧸ I)
   let f := Algebra.TensorProduct.map (Ideal.Quotient.mkₐ Z I) (AlgHom.id Z C)
   have hle : Ideal.map (algebraMap O (TensorProduct Z O C)) I ≤ RingHom.ker f := by
     rw [Ideal.map_le_iff_le_comap]
@@ -1160,7 +1160,7 @@ theorem exists_lift {O κ : Type} [CommRing O] [IsDomain O] [IsDiscreteValuation
     RingHom.liftOfRightInverse_comp_apply _ _ _ _ f
   refine ⟨_, (injective_iff_map_eq_zero _).2 fun f hf => ?_, hc⟩
   by_contra hf0
-  obtain ⟨k, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hf0 PowerSeries.X_irreducible
+  obtain ⟨k, u, rfl⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hf0 irreducible_X
   have h3 := hc X
   rw [map_X] at h3
   rw [map_mul, map_pow, h3] at hf
@@ -1174,7 +1174,7 @@ theorem exists_psi (l : ℕ) [Fact l.Prime] (hl : l ≠ 2) {O R : Type} [CommRin
       (∀ y : ZMod n → O⟦X⟧, Ideal.Quotient.mk m (ι (fun j => inc l O (y j))) =
         ψ (PowerSeries.map (residue O) (y i))) ∧
       ∀ c : O, Ideal.Quotient.mk m (algebraMap O R c) = ψ (C (residue O c)) := by
-  haveI : Nontrivial (R ⧸ m) := Ideal.Quotient.nontrivial_iff.2 hm.ne_top
+  have : Nontrivial (R ⧸ m) := Ideal.Quotient.nontrivial_iff.2 hm.ne_top
   let θ : O⟦X⟧ →+* R ⧸ m := (Ideal.Quotient.mk m).comp ((ι : LetA O n →+* R).comp (Pi.constRingHom (ZMod n) O⟦X⟧))
   have hθ : ∀ f, θ f = Ideal.Quotient.mk m (ι (fun _ => f)) := fun _ => rfl
   have hC : ∀ c, θ (C c) = Ideal.Quotient.mk m (algebraMap O R c) := fun c => by
@@ -1194,7 +1194,7 @@ theorem exists_psi (l : ℕ) [Fact l.Prime] (hl : l ≠ 2) {O R : Type} [CommRin
   obtain ⟨θ', hinj, hθ'⟩ := exists_lift θ (fun c hc => by
     rw [hC]
     exact Ideal.Quotient.eq_zero_iff_mem.2 (hmO (Ideal.mem_map_of_mem _ hc))) (hπ.map (Ideal.Quotient.mk m))
-  letI : Algebra ℤ_[l] (ResidueField O) := ((residue O).comp (algebraMap ℤ_[l] O)).toAlgebra
+  let : Algebra ℤ_[l] (ResidueField O) := ((residue O).comp (algebraMap ℤ_[l] O)).toAlgebra
   obtain ⟨hadd, hmul, hcst, -, -, -, -, hi'⟩ := pi0Subst_laws_hold l (ResidueField O)
   obtain ⟨-, hred, -⟩ := pi0Subst_reduction_holds l O (ResidueField O) (residue O) (fun _ => rfl)
   let incK : (ResidueField O)⟦X⟧ →+* (ResidueField O)⟦X⟧ :=
@@ -1220,7 +1220,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 theorem ioE_φE [IsDomain O] (x : W.EE) : E.ioE (W.φE x) = φR (E.ioE x) := by
   obtain ⟨e, e₀, hsp, hj, -⟩ := E.one_e
   obtain ⟨e₁, he₁, hT⟩ := W.one_line
-  haveI : Module.Free O ↥W.one.L.T := W.one.L.free
+  have : Module.Free O ↥W.one.L.T := W.one.L.free
   have he₀ : e₀ ≠ 0 := by
     rintro rfl
     have h1 : (⟨e₁, hT ▸ Submodule.mem_span_singleton_self e₁⟩ : ↥W.one.L.T) ∈ Submodule.span O {(0 : ↥W.one.L.T)} :=
@@ -1299,7 +1299,7 @@ theorem rank_eq_of_tie (l : ℕ) [Fact l.Prime] (hl : l ≠ 2) [IsDomain O] [IsD
       rw [Algebra.TensorProduct.basis_apply, LinearMap.baseChange_tmul, h2, TensorProduct.tmul_sum]
       refine Finset.sum_congr rfl fun r _ => ?_
       rw [Algebra.TensorProduct.basis_apply, Matrix.map_apply, algebraMap_smul, TensorProduct.tmul_smul]
-  letI : Field (RW' ⧸ m) := Ideal.Quotient.field m
+  let : Field (RW' ⧸ m) := Ideal.Quotient.field m
   have key2 := congrArg (fun Z => Matrix.map Z (Ideal.Quotient.mk m)) key
   simp only [Matrix.map_mul] at key2
   have hr := rank_eq_of_mul_eq _ _ _ _ (by
@@ -1321,11 +1321,11 @@ end Generic
 
 theorem main : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (hA : CaseA K LL) (T T' : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (n n' : ℕ) (b : Module.Basis (Fin n) (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) ↥(((HW l).W K 1 LL hA.2.2).N T)) (b' : Module.Basis (Fin n') (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) ↥(((HW l).W K 1 LL hA.2.2).N T')) (g : LatHom T.L T'.L) (A : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → Mx (PowerSeries ↥(OL LL)) n' n) (e : Module.Basis (Fin n) ↥(OL LL) ↥T.L.T) (e' : Module.Basis (Fin n') ↥(OL LL) ↥T'.L.T) (a : Mx ↥(OL LL) n' n), IsCrys ((D.loc l).PD K) T.ρ → IsCrys ((D.loc l).PD K) T'.ρ → IsMapMat ((HW l).W K 1 LL hA.2.2) g b b' A → (∀ k, g.f (e k : T.V) = ∑ m, ((a m k : ↥(OL LL)) : ↥LL.1) • (e' m : T'.V)) → ∀ i, lrank ((A i).map (PowerSeries.map (residue ↥(OL LL)))) = (a.map (residue ↥(OL LL))).rank := by
   intro D HW F l _ K LL hA T T' n n' b b' g A e e' a hT hT' hmap ha i
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     Module.Finite.of_injective (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).injective
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   exact rank_eq_of_tie ((F l).E K 1 LL hA.2.2).tie l hA.2.1
     (one_not_mem_map (Z := ℤ_[l]) (C := WCb l) _ (maximalIdeal.isMaximal ↥(OL LL)).ne_top) b b' g A e e' a hT hT' hmap ha i
 

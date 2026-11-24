@@ -102,7 +102,7 @@ theorem UpperTheory.Reformulated.B.ExistsDiagonalization.exists_diag :
     rw [Module.End.mem_eigenspace_iff]
     simpa using hv i
   refine ⟨(Matrix.of v).transpose, ?_, ?_⟩
-  · exact Matrix.linearIndependent_cols_iff_isUnit.mp hli
+  · exact Matrix.linearIndependent_col_iff_isUnit.mp hli
   · ext j i
     have h := congrFun (hv i) j
     rw [Matrix.mul_diagonal]
@@ -189,7 +189,7 @@ theorem UpperTheory.V.Pa.Lev.pairRel :
       intro k
       by_cases hk : k = i
       · simp [hk]
-      · simp only [if_neg hk]
+      · simp only [ite_eq_right hk]
         rw [sub_mul, hPV, smul_mul_assoc, one_mul]
         ext a b
         simp [Matrix.mul_diagonal, mul_sub, mul_comm])

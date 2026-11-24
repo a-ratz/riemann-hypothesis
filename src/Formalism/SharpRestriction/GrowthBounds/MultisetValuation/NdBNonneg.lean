@@ -319,7 +319,7 @@ theorem nd_size : nd_NeedSize := by
         exact nd_aT_le _
       nlinarith
     · unfold al
-      rw [if_neg hsT]
+      rw [ite_eq_right hsT]
       push_cast
       positivity
   · obtain ⟨_, _, _, hw⟩ := hs s

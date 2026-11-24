@@ -140,7 +140,7 @@ theorem GlobalTheory.Uo_lowers_level : ∀ (k L l : ℕ) (χ : ℤ → ℂ) (a :
     (∀ d, χ (d + L) = χ d) → MF k (L * l) χ a → MF k L χ (Uo l a) := by
   intro k L l χ a hk hl hlL hχ hMF
   obtain ⟨hP, hI⟩ := hMF
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have : NeZero l := ⟨hl.ne_zero⟩
   obtain ⟨hPU, hqs⟩ := _root_.GlobalTheory.EisM.Uo_qs_sum_slz k l a hk hl.pos hP
   obtain ⟨hcoc, -, hinv, -, -⟩ := _root_.GlobalTheory.EisM.slz_props k (qs a) hk
   have hI' := (hinv (L * l) χ).mp hI

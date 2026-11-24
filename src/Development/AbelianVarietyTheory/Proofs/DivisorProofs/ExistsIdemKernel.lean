@@ -96,7 +96,7 @@ theorem exists_schemeTheoreticallyDominant_isUnit_natCast (T : Scheme.{0}) (c : 
       show T.presheaf.germ _ x hx (T.presheaf.map _ b) = T.presheaf.germ _ x hx 0
       rw [TopCat.Presheaf.germ_res_apply, map_zero]
       exact hb x _ (hD ▸ hx).2
-    letI := hU.isLocalization_basicOpen (c : Γ(T, U))
+    let := hU.isLocalization_basicOpen (c : Γ(T, U))
     obtain ⟨⟨m, n, rfl⟩, hm⟩ :=
       (IsLocalization.map_eq_zero_iff (Submonoid.powers (c : Γ(T, U)))
         Γ(T, T.basicOpen (c : Γ(T, U))) b).mp h0
@@ -143,24 +143,24 @@ namespace GlobalTheory.UPel.HT.ES.OrdCount
 open GlobalTheory.IwLevel GlobalTheory.IwLevel.KerGrp in
 theorem exists_idem_kernel : ∀ (S : Scheme.{0}) (A A' : Over S) [GrpObj A] [IsCommMonObj A] [GrpObj A'] [IsCommMonObj A'] (ψ : A ⟶ A') (f : A ⟶ A), IsMonHom ψ → IsMonHom f → IsFinite ψ.left → Flat ψ.left → (∀ (T : Over S) (z : T ⟶ A), z ≫ ψ = 1 → (z ≫ f) ≫ ψ = 1 ∧ (z ≫ f) ≫ f = z ≫ f) → ∃ (K : Over S) (_ : GrpObj K) (i : K ⟶ A), IsMonHom i ∧ Mono i ∧ IsFinite K.hom ∧ Flat K.hom ∧ ∀ (T : Over S) (z : T ⟶ A), GlobalTheory.IwLevel.InSub i z ↔ (z ≫ ψ = 1 ∧ z ≫ f = 1) := by
   intro S A A' _ _ _ _ ψ fx _ _ hfin hfl hyp
-  letI gH : GrpObj (IwLevel.ker ψ) := grp ψ
-  haveI : IsMonHom (pullback.fst ψ η[A']) := isMonHom_fst ψ
+  let gH : GrpObj (IwLevel.ker ψ) := grp ψ
+  have : IsMonHom (pullback.fst ψ η[A']) := isMonHom_fst ψ
   have hPB := (IsPullback.of_hasPullback ψ η[A']).map (Over.forget S)
   have hHfin : IsFinite (IwLevel.ker ψ).hom := by
     rw [← Over.w (pullback.snd ψ η[A'])]
-    haveI : IsFinite (pullback.snd ψ η[A']).left := MorphismProperty.of_isPullback (P := @IsFinite) hPB hfin
+    have : IsFinite (pullback.snd ψ η[A']).left := MorphismProperty.of_isPullback (P := @IsFinite) hPB hfin
     exact inferInstanceAs (IsFinite (_ ≫ 𝟙 S))
   have hHflat : Flat (IwLevel.ker ψ).hom := by
     rw [← Over.w (pullback.snd ψ η[A'])]
-    haveI : Flat (pullback.snd ψ η[A']).left := MorphismProperty.of_isPullback (P := @Flat) hPB hfl
+    have : Flat (pullback.snd ψ η[A']).left := MorphismProperty.of_isPullback (P := @Flat) hPB hfl
     exact inferInstanceAs (Flat (_ ≫ 𝟙 S))
   set jH := pullback.fst ψ η[A'] with hjH
   have hj : jH ≫ ψ = 1 := fst_comp ψ
   let g : IwLevel.ker ψ ⟶ IwLevel.ker ψ := KerGrp.lift ψ (jH ≫ fx) (hyp _ jH hj).1
   have hg : g ≫ jH = jH ≫ fx := KerGrp.lift_fst _ _ _
   have hxx' : jH ≫ fx ≫ fx = jH ≫ fx := by rw [← Category.assoc]; exact (hyp _ jH hj).2
-  letI gK : GrpObj (IwLevel.ker (jH ≫ fx)) := grp (jH ≫ fx)
-  haveI : IsMonHom (pullback.fst (jH ≫ fx) η[A]) := isMonHom_fst (jH ≫ fx)
+  let gK : GrpObj (IwLevel.ker (jH ≫ fx)) := grp (jH ≫ fx)
+  have : IsMonHom (pullback.fst (jH ≫ fx) η[A]) := isMonHom_fst (jH ≫ fx)
   set iK := pullback.fst (jH ≫ fx) η[A] with hiK
   have hk : iK ≫ jH ≫ fx = 1 := fst_comp (jH ≫ fx)
   have hrk : (𝟙 (IwLevel.ker ψ) / g) ≫ jH ≫ fx = 1 := by
@@ -174,14 +174,14 @@ theorem exists_idem_kernel : ∀ (S : Scheme.{0}) (A A' : Over S) [GrpObj A] [Is
     rw [Category.assoc, hr, GrpObj.comp_div, Category.comp_id, hiKg, div_one, Category.id_comp])
   have hirl : iK.left ≫ r.left = 𝟙 _ := by rw [← Over.comp_left, hir, Over.id_left]
   have hKfin : IsFinite (IwLevel.ker (jH ≫ fx)).hom := by
-    haveI : IsFinite (r.left ≫ (IwLevel.ker (jH ≫ fx)).hom) := by rw [Over.w r]; exact hHfin
-    haveI : IsSeparated (r.left ≫ (IwLevel.ker (jH ≫ fx)).hom) := by rw [Over.w r]; infer_instance
-    haveI : IsSeparated r.left := IsSeparated.of_comp _ (IwLevel.ker (jH ≫ fx)).hom
-    haveI : IsFinite (iK.left ≫ r.left) := by rw [hirl]; infer_instance
-    haveI : IsFinite iK.left := IsFinite.of_comp _ r.left
+    have : IsFinite (r.left ≫ (IwLevel.ker (jH ≫ fx)).hom) := by rw [Over.w r]; exact hHfin
+    have : IsSeparated (r.left ≫ (IwLevel.ker (jH ≫ fx)).hom) := by rw [Over.w r]; infer_instance
+    have : IsSeparated r.left := IsSeparated.of_comp _ (IwLevel.ker (jH ≫ fx)).hom
+    have : IsFinite (iK.left ≫ r.left) := by rw [hirl]; infer_instance
+    have : IsFinite iK.left := IsFinite.of_comp _ r.left
     rw [← Over.w iK]; infer_instance
   have hKflat : Flat (IwLevel.ker (jH ≫ fx)).hom := by
-    haveI : Flat (r.left ≫ (IwLevel.ker (jH ≫ fx)).hom) := by rw [Over.w r]; exact hHflat
+    have : Flat (r.left ≫ (IwLevel.ker (jH ≫ fx)).hom) := by rw [Over.w r]; exact hHflat
     exact HTTorsionFF.flat_of_retract _ iK.left r.left hirl
   refine ⟨IwLevel.ker (jH ≫ fx), gK, iK ≫ jH, inferInstance, inferInstance, hKfin, hKflat, fun T z => ?_⟩
   refine ⟨?_, fun ⟨h1, h2⟩ => ?_⟩

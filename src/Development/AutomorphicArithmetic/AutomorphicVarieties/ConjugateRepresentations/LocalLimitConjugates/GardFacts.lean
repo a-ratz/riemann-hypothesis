@@ -415,7 +415,7 @@ theorem UpperTheory.V.Cj.H.cvGrow :
     · obtain ⟨γ₀, hγ₀⟩ := hne
       refine le_trans (Set.encard_le_encard_of_injOn (f := fun γ => γ * γ₀⁻¹) ?_ ?_) hcard
       · intro γ hγ
-        simp only [Set.mem_setOf_eq] at hγ hγ₀ ⊢
+        simp only [Set.mem_ofPred_eq] at hγ hγ₀ ⊢
         have h₁ := subset_tsupport ψ hγ
         have h₂ := subset_tsupport ψ hγ₀
         have e : (g * infGL E a y)⁻¹ * ↑(γ * γ₀⁻¹) * (g * infGL E a y)

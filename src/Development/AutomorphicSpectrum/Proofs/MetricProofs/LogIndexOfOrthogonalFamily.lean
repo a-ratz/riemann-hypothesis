@@ -229,7 +229,7 @@ theorem exists_extend (I : Submodule (𝓞 E) (Fin N → E)) (f : I →ₗ[𝓞 
     { toFun := fun y => ⟨y, Submodule.subset_span y.2⟩
       map_add' := fun _ _ => rfl
       map_smul' := fun _ _ => rfl }
-  haveI : IsLocalizedModule (𝓞 E)⁰ incl :=
+  have : IsLocalizedModule (𝓞 E)⁰ incl :=
     { map_units := fun a => isUnit_end a
       surj := fun v => by
         obtain ⟨d, hd, hv⟩ := exists_smul_mem I v.2
@@ -251,7 +251,7 @@ theorem exists_extend (I : Submodule (𝓞 E) (Fin N → E)) (f : I →ₗ[𝓞 
 
 theorem exists_dual_system (I : Submodule (𝓞 E) (Fin N → E)) (hI : I.FG) :
     ∃ (m : ℕ) (x : Fin m → I) (f : Fin m → I →ₗ[𝓞 E] 𝓞 E), ∀ y : I, ∑ i, f i y • x i = y := by
-  haveI : Module.Finite (𝓞 E) I := Module.Finite.iff_fg.2 hI
+  have : Module.Finite (𝓞 E) I := Module.Finite.iff_fg.2 hI
   have htors : Submodule.torsion (𝓞 E) I = ⊥ := by
     rw [eq_bot_iff]
     rintro y ⟨a, ha⟩
@@ -263,9 +263,9 @@ theorem exists_dual_system (I : Submodule (𝓞 E) (Fin N → E)) (hI : I.FG) :
     · exact absurd ((map_eq_zero_iff _ (FaithfulSMul.algebraMap_injective _ _)).1 h)
         (nonZeroDivisors.ne_zero a.2)
     · exact (Submodule.mem_bot _).2 (Subtype.ext h)
-  haveI : Module.Flat (𝓞 E) I := IsDedekindDomain.flat_iff_torsion_eq_bot.2 htors
-  haveI := Module.finitePresentation_of_finite (𝓞 E) I
-  haveI : Module.Projective (𝓞 E) I := Module.Flat.projective_of_finitePresentation
+  have : Module.Flat (𝓞 E) I := IsDedekindDomain.flat_iff_torsion_eq_bot.2 htors
+  have := Module.finitePresentation_of_finite (𝓞 E) I
+  have : Module.Projective (𝓞 E) I := Module.Flat.projective_of_finitePresentation
   obtain ⟨m, p, hp⟩ := Module.Finite.exists_fin' (𝓞 E) I
   obtain ⟨h, hh⟩ := Module.projective_lifting_property p LinearMap.id hp
   refine ⟨m, fun i => p (Pi.single i 1), fun i => LinearMap.proj i ∘ₗ h, fun y => ?_⟩
@@ -374,10 +374,10 @@ theorem diffLat_le [Fintype (E →+* K)] (I : Submodule (𝓞 E) (Fin N → E)) 
 
 theorem eigenLat_eq_diffLat : EigenLatDifferent.Statement := by
   intro E _ _ K _ _ ι hι N I hI s
-  haveI : Finite (E →+* K) := Finite.of_injective (fun t : E →+* K => ι.comp t) (fun a b hab => by
+  have : Finite (E →+* K) := Finite.of_injective (fun t : E →+* K => ι.comp t) (fun a b hab => by
     ext x
     exact ι.injective (DFunLike.congr_fun hab x))
-  letI := Fintype.ofFinite (E →+* K)
+  let := Fintype.ofFinite (E →+* K)
   exact le_antisymm (eigenLat_le (card_embeddings ι hι) I hI s) (diffLat_le I s)
 
 end GlobalTheory.CompanionTheory.Ar.EigLat
@@ -707,7 +707,7 @@ theorem theta_injective (hcard : Fintype.card (E →+* L) = Module.finrank ℚ E
       by_cases htu : u = t
       · subst htu
         simpa using this
-      · rw [if_neg (Ne.symm htu)] at this
+      · rw [ite_eq_right (Ne.symm htu)] at this
         rw [Pi.single_eq_of_ne htu]
         simpa using this
     · have h0 : (Pi.single a 1 : Fin r → E) b = 0 := Pi.single_eq_of_ne hb 1
@@ -809,12 +809,12 @@ theorem map_eigenLat [NumberField L] (hcard : Fintype.card (E →+* L) = Module.
       rw [phi_apply, thetaO_apply, theta_apply, map_sum, Finset.sum_eq_single t]
       · simp only [map_sum, map_smul]
         refine Finset.sum_congr rfl fun a _ => ?_
-        rw [eigProj_eigProj, if_pos rfl]
+        rw [eigProj_eigProj, ite_eq_left rfl]
       · intro u _ hu
 
         simp only [map_sum, map_smul]
         refine Finset.sum_eq_zero fun a _ => ?_
-        rw [eigProj_eigProj, if_neg hu, smul_zero]
+        rw [eigProj_eigProj, ite_eq_right hu, smul_zero]
       · simp
     have h6 : z = Pi.single t (z t) := by
       apply hinj
@@ -964,7 +964,7 @@ theorem torusPartDegree : ∀ (E L Ψ : Type) [Field E] [NumberField E] [Field L
     exact ⟨IsFractionRing.lift (A.σ_inj q), RingHom.ext fun x => IsFractionRing.lift_algebraMap (A.σ_inj q) x⟩
   have hfin1 : Finite (𝓞 E →+* L) := Finite.of_surjective A.σ A.σ_bij.2
   have hfin2 : Finite (E →+* L) := Finite.of_injective _ hres.1
-  letI : Fintype (E →+* L) := Fintype.ofFinite _
+  let : Fintype (E →+* L) := Fintype.ofFinite _
   have hcard : Fintype.card (E →+* L) = Module.finrank ℚ E := by
     rw [← Nat.card_eq_fintype_card, Nat.card_congr (Equiv.ofBijective _ hres),
       ← Nat.card_congr (Equiv.ofBijective _ A.σ_bij), ← hΨ, Nat.card_eq_fintype_card,

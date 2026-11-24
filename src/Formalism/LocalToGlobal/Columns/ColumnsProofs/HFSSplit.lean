@@ -178,7 +178,7 @@ theorem finiteDimensional (F : CoefFrame ι) [FiniteDimensional K S.EqFun] : Fin
 theorem splitOver (F : CoefFrame ι) [FiniteDimensional K S.EqFun] {I : Type} (op : I → Module.End K S.EqFun)
     (op' : I → Module.End L S'.EqFun) (hl : ∀ x, b.Lifts (op' x) (op x)) (hc : PairComm op) {p : K[X]}
     (hp : HeckePolyFor op p) (hsp : (p.map ι).Splits) : SplitOver op' := by
-  haveI := b.finiteDimensional F
+  have := b.finiteDimensional F
   obtain ⟨hp0, s, hs, hd⟩ := hp
   have hcomm : ∀ y z, Commute (op' y) (op' z) := fun y z => by
     have h0 : b.Lifts (op' y * op' z - op' z * op' y) 0 := by

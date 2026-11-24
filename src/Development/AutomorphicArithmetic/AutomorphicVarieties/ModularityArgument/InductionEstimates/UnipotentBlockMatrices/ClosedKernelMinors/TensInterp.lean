@@ -89,7 +89,7 @@ private theorem tens_interp {X : Type} (E : Submodule ℂ (X → ℂ)) [FiniteDi
     by_contra hu
     exact h ⟨ev u, ⟨u, rfl⟩, hu⟩
   obtain ⟨κ, c, -, hc, hli⟩ := exists_linearIndependent' ℂ ev
-  haveI : Finite κ := hli.finite
+  have : Finite κ := hli.finite
   obtain ⟨a, ⟨e⟩⟩ := Finite.exists_equiv_fin κ
   let b0 : Module.Basis κ ℂ (Module.Dual ℂ E) := Module.Basis.mk hli (by rw [hc, hspan])
   let b : Module.Basis (Fin a) ℂ (Module.Dual ℂ E) := b0.reindex e

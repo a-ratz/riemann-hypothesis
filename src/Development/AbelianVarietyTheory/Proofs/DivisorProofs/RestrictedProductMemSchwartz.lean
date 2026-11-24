@@ -93,7 +93,7 @@ theorem finprod_mem_SB : ∀ (F : Type) [Field F] [NumberField F] (κ : Type) [F
     have hGe : G = ⋂ i, (fun z : κ → FiniteAdeleRing (𝓞 F) F => z i) ⁻¹'
         {x : FiniteAdeleRing (𝓞 F) F | ∀ v, v ∉ S → x.1 v ∈ v.adicCompletionIntegers F} := by
       ext z
-      simp only [G, L, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage, hev]
+      simp only [G, L, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage, hev]
       exact ⟨fun h i v hv => h v hv i, fun h v hv i => h i v hv⟩
     have hGo : IsOpen G := by
       rw [hGe]

@@ -506,7 +506,7 @@ theorem UpperTheory.V.Alg.M.ift_holds :
       simp only [Matrix.mul_apply, Matrix.of_apply, this, Matrix.one_apply, Subtype.ext_iff, eq_comm]
     · have := hX i.1
 
-      simp only [G, g, dif_pos i.2, map_sub, map_sum, map_smul] at this
+      simp only [G, g, dite_eq_left i.2, map_sub, map_sum, map_smul] at this
       simp only [Matrix.of_apply]
       linear_combination this
   · have := key f 0 (by simp)
@@ -518,7 +518,7 @@ theorem UpperTheory.V.Alg.M.ift_holds :
       simp only [G]
       split_ifs with h
       · simp
-      · rw [ift_coeff_X, if_neg (fun h' => hs (by rw [h'])), mul_zero]
+      · rw [ift_coeff_X, ite_eq_right (fun h' => hs (by rw [h'])), mul_zero]
     · simp
 end -- clump:auto
 end -- clump:auto
@@ -598,7 +598,7 @@ private theorem lin_span {O A τ : Type} [CommRing O] [IsDomain O] [CommRing A] 
   have hgl : ∀ i', MvPowerSeries.coeff (Finsupp.single i' 1) (φ g) =
       MvPowerSeries.coeff (Finsupp.single i' 1) (φ f0) := by
     intro i'
-    rw [hgdef, map_sub, map_sub, AlgHom.commutes, MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, if_neg (by simp),
+    rw [hgdef, map_sub, map_sub, AlgHom.commutes, MvPowerSeries.algebraMap_apply, MvPowerSeries.coeff_C, ite_eq_right (by simp),
       sub_zero]
   obtain ⟨c, hc, hs⟩ := hZ _ ⟨g, ⟨hg0, hgx⟩, rfl⟩
   obtain ⟨a, ha⟩ := (Submodule.mem_span_range_iff_exists_fun O).1 hs
@@ -621,8 +621,8 @@ private theorem lin_span {O A τ : Type} [CommRing O] [IsDomain O] [CommRing A] 
   rw [← Finset.mul_sum, h1, MvPowerSeries.coeff_X]
   by_cases hii : i' = i
   · subst hii
-    rw [if_pos rfl, hf0, lin_proj 𝒜 wt φ h.graded i' hi, inv_mul_cancel₀ (mul_ne_zero hc' hf)]
-  · rw [if_neg (fun h0 => hii (Finsupp.single_left_injective one_ne_zero h0))]
+    rw [ite_eq_left rfl, hf0, lin_proj 𝒜 wt φ h.graded i' hi, inv_mul_cancel₀ (mul_ne_zero hc' hf)]
+  · rw [ite_eq_right (fun h0 => hii (Finsupp.single_left_injective one_ne_zero h0))]
     have : MvPowerSeries.coeff (Finsupp.single i' 1) (φ f0) = 0 := by
       by_cases hw : wt i' = 0
       · rw [hf0, lin_proj 𝒜 wt φ h.graded i' hw, hf' i' hii]
@@ -646,7 +646,7 @@ theorem UpperTheory.V.Alg.M.cut_holds :
   · obtain ⟨f, hf, hf'⟩ := h.onto i.1
     refine ⟨f, fun h0 => hf ((hψ4 _ i).symm.trans h0), fun i' hi' => (hψ4 _ i').trans (hf' _ fun h0 => hi' (Subtype.ext h0))⟩
   · have h1 : Nat.card {i' // wt i' = wt i} ≠ 0 := by
-      haveI : Nonempty {i' // wt i' = wt i} := ⟨⟨i, rfl⟩⟩
+      have : Nonempty {i' // wt i' = wt i} := ⟨⟨i, rfl⟩⟩
       exact Nat.card_pos.ne'
     rw [hcard] at h1
     have h2 := i.2
@@ -655,7 +655,7 @@ theorem UpperTheory.V.Alg.M.cut_holds :
     simp [mDims, hn.1, hn.2.1, hn.2.2.1, hn.2.2.2, h2] at h1
   · by_cases hj : j = 0
     · subst hj
-      haveI : IsEmpty {i : {i // wt i ≠ 0} // wt i = 0} := ⟨fun i => i.1.2 i.2⟩
+      have : IsEmpty {i : {i // wt i ≠ 0} // wt i = 0} := ⟨fun i => i.1.2 i.2⟩
       simp [mDims]
     · have : mDims r s r' s' 0 j = mDims r s r' s' m j := by simp [mDims, hj]
       rw [this, ← hcard]
@@ -738,7 +738,7 @@ theorem UpperTheory.V.Alg.M.fin_holds :
       fun ξ hξ => ⟨hξ.1, hξ.2.1, hξ.2.2.1⟩
   refine ⟨hS.toFinset, fun ξ hξ => ?_, fun ξ hon htw => ?_⟩
   · rw [Set.Finite.mem_toFinset] at hξ
-    simp only [S, Set.mem_iUnion, Set.mem_setOf_eq] at hξ
+    simp only [S, Set.mem_iUnion, Set.mem_ofPred_eq] at hξ
     obtain ⟨f, -, g, -, h1, -, -, h3⟩ := hξ
     exact ⟨h1, h3⟩
   · obtain ⟨f0, hf0, hξf0⟩ := (sign_holds O A 𝒜 x hx K ξ).1.1 htw.1
@@ -762,7 +762,7 @@ theorem UpperTheory.V.Alg.M.fin_holds :
         (sign_holds O A 𝒜 x hx K _).2.2 ⟨g, hsm' g hg, e2⟩⟩
     refine ⟨act 𝒜 (tz (Units.mk0 r hr0)) ξ, ?_, (Units.mk0 r hr0)⁻¹, fin_inv 𝒜 _ ξ⟩
     rw [Set.Finite.mem_toFinset]
-    simp only [S, Set.mem_iUnion, Set.mem_setOf_eq]
+    simp only [S, Set.mem_iUnion, Set.mem_ofPred_eq]
     exact ⟨f, hf, g, hg, fin_onS 𝒜 _ ξ I hI hon, e1, e2, e3⟩
 end -- clump:auto
 end -- clump:auto
@@ -930,9 +930,9 @@ theorem UpperTheory.V.Alg.M.rk_holds :
     show (satSq x).mkQ f = 0
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     exact hs
-  haveI : Module.IsTorsionFree O (FractionRing O) :=
+  have : Module.IsTorsionFree O (FractionRing O) :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr (IsFractionRing.injective O _)
-  haveI : Module.IsTorsionFree O (cotLat x 𝒜 (-1)) :=
+  have : Module.IsTorsionFree O (cotLat x 𝒜 (-1)) :=
     Function.Injective.moduleIsTorsionFree (⇑L) hinj (fun r m => L.map_smul r m)
   have hup : Module.finrank O (cotLat x 𝒜 (-1)) ≤ Fintype.card {i // wt i = -1} := by
     let B := Module.Free.chooseBasis O (cotLat x 𝒜 (-1))
@@ -1140,7 +1140,7 @@ theorem UpperTheory.V.Alg.M.sm_holds :
         cotLen x 𝒜 (-1) F = ((∑ i, c i : ℕ) : ℕ∞) := by
   intro O _ _ _ A _ _ 𝒜 x hx r F hF hfin hr hs ϖ hϖ
   classical
-  haveI : Module.IsTorsionFree O (A ⧸ satSq x) := by
+  have : Module.IsTorsionFree O (A ⧸ satSq x) := by
     refine Module.IsTorsionFree.of_smul_eq_zero fun c p h => ?_
     obtain ⟨f, rfl⟩ := (satSq x).mkQ_surjective p
     by_cases hc : c = 0
@@ -1222,7 +1222,7 @@ private theorem UpperTheory.V.Alg.M.main_span {O A ι : Type} [CommRing O] [Comm
 theorem UpperTheory.V.Alg.M.main_holds :
     LemmaM := by
   intro O _ _ _ _ _ K _ _ _ _ v hv A _ _ 𝒜 _ x hW r s r' s' m Q a h1 h2 h3 h4 h5
-  haveI := hW.co
+  have := hW.co
   obtain ⟨hr, hsm, hF, hG, hZ⟩ := h1
   obtain ⟨hfin, hrk⟩ := rk_holds O A 𝒜 x hW _ hsm
   have hrk' : Module.finrank O (cotLat x 𝒜 (-1)) = r := by rw [hrk]; simp [mDims]
@@ -1252,11 +1252,11 @@ theorem UpperTheory.V.Alg.M.main_holds :
     rwa [map_sub, sub_eq_zero] at this
   have h5' : M5 𝒜 K x Q.ideal a' :=
     ⟨ha'0, ha'x.trans h5.2.1, fun ξ hξ ht => by rw [hval ξ hξ]; exact h5.2.2 ξ hξ ht⟩
-  refine ⟨?_, by rw [hlen]; exact ENat.coe_ne_top _, fun T hT => ?_⟩
+  refine ⟨?_, by rw [hlen]; exact ENat.natCast_ne_top _, fun T hT => ?_⟩
   · exact fin_holds O K A 𝒜 x hW _ (hom_holds O A 𝒜 x hW r s r' s' m Q).1 h2 h4
   · have := core_holds O K v hv A 𝒜 x hW r s r' s' m Q' τ wt φ hφ hφZ hr hcard ϖ hϖ y c hy hlast hF' hG
       (hI ▸ h2) (hI ▸ h3) (hI ▸ h4) a' (hI ▸ h5') ha'φ T (hI ▸ hT)
-    rw [hlen, ENat.toNat_coe]
+    rw [hlen, ENat.toNat_natCast]
     rwa [Finset.sum_congr rfl fun ξ hξ => congrArg v (hval ξ (hT.1 ξ hξ).1)] at this
 end -- clump:auto
 end -- clump:auto

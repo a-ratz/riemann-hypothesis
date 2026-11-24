@@ -154,7 +154,7 @@ theorem whittaker_torus_root_bound : ∀ (k : Type) [Field k] [ValuativeRel k] [
     exact (continuous_elem h).continuousAt.preimage_mem_nhds (by rw [hc0]; exact hU)
   obtain ⟨s, hs⟩ := exists_cball_subset hall
   refine ⟨c * s⁻¹, fun t i j hij hne0 => ?_⟩
-  have hlt : i < j := by rw [Fin.lt_iff_val_lt_val]; omega
+  have hlt : i < j := by rw [Fin.lt_def]; omega
   have key : ∀ y ∈ cball s, ψ (y * ((t i : k) / t j)) = 1 := by
     intro y hy
     have hfix : ρ (elem hlt.ne y) x = x := hs hy i j hlt.ne

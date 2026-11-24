@@ -115,7 +115,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem delta_indep {w : Pl E} (hw : ¬ IsSplitAt w) (μ μ' : (w.adicCompletion E)ˣ →* ℂˣ)
     (Q₁ Q₂ : (w.adicCompletion E)[X]) : delta w μ Q₁ Q₂ = delta w μ' Q₁ Q₂ := by
-  simp only [delta, hw, if_false]
+  simp only [delta, hw, ite_false]
 
 theorem match_indep {n a b : ℕ} {w : Pl E} (hw : ¬ IsSplitAt w) (μ μ' : (w.adicCompletion E)ˣ →* ℂˣ)
     (f : UL n w → ℂ) (φ : GLw a w × GLw b w → ℂ) : Match n a b w μ f φ ↔ Match n a b w μ' f φ := by
@@ -292,7 +292,7 @@ theorem mu_conj {K : Type} [Group K] (μ : K →* ℂˣ) (hμ : ∀ u, ‖((μ u
 
 theorem ctStar : PositivityTheory.Rg.BcB.F.MLM.CtStar := by
   intro E _ _ _ n a ha w hw μ hμ f hf
-  have hU : UL n w = ⊤ := if_pos hw
+  have hU : UL n w = ⊤ := ite_eq_left hw
   funext m
   have hH := GlobalTheory.CompanionTheory.CtMulSplit.isHk_of_isHecke hU hf
   have hF : ∃ K' : Subgroup (GLw n w), IsOpen (K' : Set (GLw n w)) ∧ IsHecke K' (fun y => f (toSub (UL n w) y)) :=
@@ -362,7 +362,7 @@ theorem word_ct (d : LocData E n) (a : ℕ) (ha : a ≤ n) {w : Pl E} (hCt : MT.
         ctMu (Nat.add_sub_cancel' ha) w (d.μ w) (wordUS d w l) := by
   have hG' := hG
   obtain ⟨hw, hT, hS₀, hBad, hμ⟩ := hG
-  have hU : UL n w = ⊤ := if_pos hw
+  have hU : UL n w = ⊤ := ite_eq_left hw
   set C := ctMu (Nat.add_sub_cancel' ha) w (d.μ w) with hC
   have conv : ∀ {f g : UL n w → ℂ}, IsHecke (KL n w) f → IsHecke (KL n w) g → IsHecke (KL n w) (lconv f g) :=
     fun hf hg => GlobalTheory.CompanionTheory.UnitaryWord.isHecke_lconv GlobalTheory.CompanionTheory.LocHecke.locAlg (GlobalTheory.CompanionTheory.MatchPowers.isLevel_KL n w) hf hg
@@ -374,10 +374,10 @@ theorem word_ct (d : LocData E n) (a : ℕ) (ha : a ≤ n) {w : Pl E} (hCt : MT.
   have hunit : C (lone (KL n w)) = PositivityTheory.Rg.BcB.F.idem (K2 a (n - a) w) := GlobalTheory.CompanionTheory.MatchUnit.ctMu_lone _ hU _ hμ
   have hlev : d.lev a w = K2 a (n - a) w := by
     unfold LocData.lev
-    rw [if_neg hT, if_neg (by simp [hS₀, hBad])]
+    rw [ite_eq_right hT, ite_eq_right (by simp [hS₀, hBad])]
   have hlev₂ : d.lev₂ a w = K2 a (n - a) w := by
     unfold LocData.lev₂
-    rw [if_neg (by simp [hS₀, hBad])]
+    rw [ite_eq_right (by simp [hS₀, hBad])]
   have hes : (d.eL a).s w = C (lone (KL n w)) := by
     rw [hunit]
     show PositivityTheory.Rg.BcB.F.idem (d.lev a w) = _
@@ -458,7 +458,7 @@ theorem word_ct (d : LocData E n) (a : ℕ) (ha : a ≤ n) {w : Pl E} (hCt : MT.
 theorem matchLMWordSOf : PositivityTheory.Rg.BcB.F.MLM.MatchLMWordSOf := by
   intro hS hCt hSt hSp _ E _ _ _ hE n d hd a ha w hG hN l
   have hP : w ∉ d.P := by simp [LocData.P, hG.2.1, hG.2.2.1]
-  have htr : (wordLS d a ha w l).tr d.P d.one w = (wordLS d a ha w l).s w := if_neg hP
+  have htr : (wordLS d a ha w l).tr d.P d.one w = (wordLS d a ha w l).s w := ite_eq_right hP
   obtain ⟨hW, A, B, -, -, hs, ht, hm⟩ := word_ct d a ha hCt hSt hSp hE hd hG hN l
   rw [htr, hs, ht, hm]
   have hμ := hG.2.2.2.2
@@ -574,7 +574,7 @@ theorem nrmL_diagT {n : ℕ} {w : Pl E} (hw : ¬ IsSplitAt w) (u : Fin n → (w.
     nrmL n w (GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) u) =
       GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n)
         fun i => u i * Units.map (cj w : w.adicCompletion E →* w.adicCompletion E) (u i.rev)⁻¹ := by
-  rw [nrmL, if_neg hw, thetaGL_diagT, ← map_mul]
+  rw [nrmL, ite_eq_right hw, thetaGL_diagT, ← map_mul]
   rfl
 
 theorem ordL_norm_entry (hU : Unr E) {n : ℕ} {w : Pl E} (u : Fin n → (w.adicCompletion E)ˣ) (y : Fin n → ℤ)
@@ -763,7 +763,7 @@ theorem mconv_left {a b : ℕ} {w : Pl E} {U : Subgroup (GLw a w × GLw b w)} {f
 theorem tr_one (d : LocData E n) {a : ℕ} (L : LM d.kap a (n - a)) {w : Pl E} (hw : w ∈ d.P) :
     L.tr d.P d.one w = ∑ x, L.m w x x := by
   unfold LM.tr
-  rw [if_pos hw]
+  rw [ite_eq_left hw]
   refine Finset.sum_congr rfl fun x _ => ?_
   rw [Finset.sum_eq_single x]
   · simp [LocData.one]
@@ -775,7 +775,7 @@ theorem sum_kap_alt (d : LocData E n) {w : Pl E} (hT : w ∈ d.T) {M : Type} [Ad
     (F : Finset (Fin (n / 2)) → M) : ∑ x : d.kap w, F x.1.1 = ∑ s, F s := by
   have e : d.idx w = Finset.univ ×ˢ {1} := by
     unfold LocData.idx
-    rw [if_pos hT]
+    rw [ite_eq_left hT]
   rw [Finset.sum_coe_sort (d.idx w) (fun p => F p.1), e, Finset.sum_product]
   simp
 
@@ -794,7 +794,7 @@ theorem powers_diagonal_at_T_block (d : LocData E n) {a : ℕ} (ha : a ≤ n) {w
     (PositivityTheory.Rg.BcB.F.MLM.pw (d.betaL a ha) k).m w x y = d.diag (fun x => MT.mpow w (d.qT a w x.1.1) (k + 1)) x y := by
   have hb : ∀ x y : d.kap w, (d.betaL a ha).m w x y = d.diag (fun x => d.qT a w x.1.1) x y := fun x y => by
     show (if w ∈ d.T then _ else _) = _
-    rw [if_pos hT]
+    rw [ite_eq_left hT]
   induction k generalizing x y with
   | zero =>
     show (d.betaL a ha).m w x y = _
@@ -819,18 +819,18 @@ theorem trace_test_function_eq (d : LocData E n) {a : ℕ} (ha : a ≤ n) {w : P
   have hP : w ∈ d.P := Finset.mem_union_left _ hT
   have hlev : d.lev a w = I2 a (n - a) w := by
     unfold LocData.lev
-    rw [if_pos hT]
+    rw [ite_eq_left hT]
   have hent : ∀ x : d.kap w, ((d.fixL a).mul (PositivityTheory.Rg.BcB.F.MLM.pw (d.betaL a ha) m)).m w x x =
       MT.mpow w (d.qT a w x.1.1) (m + 1) := by
     intro x
     show ∑ z, mconv ((d.fixL a).m w x z) ((PositivityTheory.Rg.BcB.F.MLM.pw (d.betaL a ha) m).m w z x) = _
     have e : ∀ z, (d.fixL a).m w x z = d.diag (fun _ => PositivityTheory.Rg.BcB.F.idem (I2 a (n - a) w)) x z := fun z => by
       show d.diag (fun _ => if w ∈ d.T then PositivityTheory.Rg.BcB.F.idem (d.lev a w) else d.sgn a w • PositivityTheory.Rg.BcB.F.idem (d.lev a w)) x z = _
-      rw [if_pos hT, hlev]
+      rw [ite_eq_left hT, hlev]
     simp only [e]
     rw [GlobalTheory.CompanionTheory.MatchId.sum_mconv_diag_left d (fun z => (PositivityTheory.Rg.BcB.F.MLM.pw (d.betaL a ha) m).m w z x), powers_diagonal_at_T_block d ha hT]
     unfold LocData.diag
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     exact GlobalTheory.CompanionTheory.FmPowP.mconv_idem_left (GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_open a (n - a) w) (GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_le_maximal a (n - a) w) _
       fun u hu g => qT_mpow_left d w _ m hu g
   rw [tr_one d _ hP]
@@ -968,7 +968,7 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = Posi
     rw [sg, map_pow, Valuation.map_neg, map_one, one_pow]
   have hev : ∀ i, valuation F (e i) ≠ 0 := fun i => (Valuation.ne_zero_iff _).2 (he i)
   have hq : ∀ i l, i < l → valuation F (e i / e l) ≤ ρ := fun i l h => by
-    rw [map_div₀, div_le_iff₀ (zero_lt_iff.2 (hev l))]
+    rw [map_div₀, div_le_iff₀ (pos_iff_ne_zero.2 (hev l))]
     exact hc i l h
   set s : ℕ := max j 1 with hs
   have hs1 : 1 ≤ s := le_max_right _ _
@@ -982,13 +982,13 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = Posi
     if l < i then sg F l.rev i.rev * c (C l.rev i.rev / d l.rev)
     else if i < l then (e i / e l) * (C i l / d l) else 0
   have hTlo : ∀ i l, l < i → T i l = sg F l.rev i.rev * c (C l.rev i.rev / d l.rev) :=
-    fun i l h => if_pos h
+    fun i l h => ite_eq_left h
   have hTup : ∀ i l, i < l → T i l = (e i / e l) * (C i l / d l) := fun i l h => by
     show (if l < i then _ else _) = _
-    rw [if_neg (not_lt.2 h.le), if_pos h]
+    rw [ite_eq_right (not_lt.2 h.le), ite_eq_left h]
   have hTd : ∀ i, T i i = 0 := fun i => by
     show (if i < i then _ else _) = _
-    rw [if_neg (lt_irrefl i), if_neg (lt_irrefl i)]
+    rw [ite_eq_right (lt_irrefl i), ite_eq_right (lt_irrefl i)]
   have hTlov : ∀ i l, l < i → valuation F (T i l) ≤ ρ ^ s := fun i l h => by
     rw [hTlo i l h, map_mul, hsgv, one_mul, hcv, map_div₀, hd, div_one]
     exact hlow _ _ (Fin.rev_lt_rev.2 h)
@@ -998,7 +998,7 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = Posi
   have hT : Dp ρ s T := fun i l => by
     rcases lt_trichotomy i l with h | h | h
     · exact (hTupv i l h).trans (pow_le_pow_right_of_le_one' hρ1' hsj)
-    · subst h; rw [hTd, map_zero]; exact zero_le'
+    · subst h; rw [hTd, map_zero]; exact zero_le
     · exact hTlov i l h
   have hρs : ρ ^ s ≤ ρ := by
     calc ρ ^ s ≤ ρ ^ 1 := pow_le_pow_right_of_le_one' hρ1' hs1
@@ -1125,7 +1125,7 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = Posi
     · subst h
       show valuation F (C i i - Dg i i) ≤ _
       rw [show Dg i i = C i i from Matrix.diagonal_apply_eq _ _, sub_self, map_zero]
-      exact zero_le'
+      exact zero_le
     · show valuation F (C i l - Dg i l) ≤ _
       rw [show Dg i l = 0 from Matrix.diagonal_apply_ne _ h, sub_zero]
       exact hgD i l h
@@ -1142,7 +1142,7 @@ theorem step (U : Subgroup (GL (Fin n) F)) (hU : (U : Set (GL (Fin n) F)) = Posi
       rw [hT'd, hQd, mul_zero, add_zero, one_mul]
       show valuation F (C i i - C i i) ≤ _
       rw [sub_self, map_zero]
-      exact zero_le'
+      exact zero_le
     · rw [hT'lo i l h, mul_neg, mul_div_cancel₀ _ (hd0 i),
         add_neg_cancel, zero_sub, Valuation.map_neg, map_mul, hd, mul_one]
       refine (hQlow i l h).trans ?_
@@ -1217,7 +1217,7 @@ theorem contraction (U : Subgroup (GL (Fin n) F))
   have hSc : ∀ j, IsClosed (S j) := fun j => by
     have h1 : IsClosed {m : GL (Fin n) F | ∀ i l, i ≠ l →
         valuation F ((f m : Matrix (Fin n) (Fin n) F) i l) ≤ ρ ^ j} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       refine isClosed_iInter fun i => isClosed_iInter fun l => isClosed_iInter fun _ => ?_
       have hcont : Continuous fun m : GL (Fin n) F => (f m : Matrix (Fin n) (Fin n) F) i l :=
         (Units.continuous_val.comp hf).matrix_elem i l
@@ -1293,7 +1293,7 @@ theorem thetaGL_mem_iwGL {w : Pl E} (c : w.adicCompletion E →+* w.adicCompleti
 theorem contr_tw : PositivityTheory.Rg.Bc.ArchbcB.B.M4.Tw.P_contr_tw := by
   intro E _ _ _ hU w hw ϖ hϖ n y hy δ hδ
   obtain ⟨hcont, hcc, hcv, -⟩ := _root_.GlobalTheory.ConjAtPlace.main E hU w
-  have hθ : GlobalTheory.BCT.thL n w = GlobalTheory.CuspRep.thetaGL n (GlobalTheory.BCT.cj w) := if_neg hw
+  have hθ : GlobalTheory.BCT.thL n w = GlobalTheory.CuspRep.thetaGL n (GlobalTheory.BCT.cj w) := ite_eq_right hw
   have hEq : (ValuativeRel.valuation (w.adicCompletion E)).IsEquiv
       (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))) := by
     have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
@@ -1325,7 +1325,7 @@ theorem contr_tw : PositivityTheory.Rg.Bc.ArchbcB.B.M4.Tw.P_contr_tw := by
     have ha' := (GlobalTheory.CompanionTheory.IwEntries.rel_lt_one_iff w a).1 ha
     refine (hEq _ _).2 ?_
     by_cases h0 : Valued.v a = 0
-    · rw [h0]; exact zero_le'
+    · rw [h0]; exact zero_le
     · obtain ⟨b, hb⟩ := WithZero.ne_zero_iff_exists.1 h0
       rw [← hb, ← WithZero.coe_one, WithZero.coe_lt_coe] at ha'
       rw [← hb, ← hu, WithZero.coe_le_coe]
@@ -1355,7 +1355,7 @@ theorem contr_tw : PositivityTheory.Rg.Bc.ArchbcB.B.M4.Tw.P_contr_tw := by
   have hδ' : δ ∈ PositivityTheory.Rg.Tf.Loc.iwDouble (w.adicCompletion E) (GlobalTheory.BCT.tdiag ϖ y) := by
     have h : ∃ x ∈ GlobalTheory.BCT.iwGL n w, ∃ z ∈ GlobalTheory.BCT.iwGL n w, δ = x * GlobalTheory.BCT.tdiag ϖ y * z := by
       by_contra h
-      exact hδ (if_neg h)
+      exact hδ (ite_eq_right h)
     obtain ⟨a, ha, b, hb, e'⟩ := h
     exact ⟨a, by rw [← hIU]; exact ha, b, by rw [← hIU]; exact hb, e'⟩
   obtain ⟨m, hm, t, ht, hoff, h⟩ := contraction (GlobalTheory.BCT.iwGL n w) hIU hcpt (GlobalTheory.BCT.cj w) hcc hvF hcont
@@ -1447,7 +1447,7 @@ theorem regPowT : RegPowT := by
   have h1 : entT n w (d.ϖ w) a c' x' s y ≠ 0 := fun h => hs (by simp [h])
   by_cases hA : MT.admitted n a s
   swap
-  · exact absurd (dif_neg hA) h1
+  · exact absurd (dite_eq_right hA) h1
   unfold entT at h1
   rw [dite_eq_left hA] at h1
   obtain ⟨j, -, hj⟩ := Finset.exists_ne_zero_of_sum_ne_zero h1
@@ -1529,14 +1529,14 @@ theorem zpow_mul_inj {w : Pl E} {ϖ : (w.adicCompletion E)ˣ} (hϖ : IsUnifAt ϖ
     have := WithZero.exp_injective h2
     omega
   rw [Units.val_zpow_eq_zpow_val, Units.val_zpow_eq_zpow_val, map_zpow₀, map_zpow₀] at e
-  exact zpow_right_injective₀ (zero_lt_iff.2 h0) hne e
+  exact zpow_right_injective₀ (pos_iff_ne_zero.2 h0) hne e
 
 theorem separable_of_fU {w : Pl E} {b : GLw n w} {ϖ : (w.adicCompletion E)ˣ} (hϖ : IsUnifAt ϖ) {l : Fin (n / 2) → ℤ}
     (hl : Cone l) {γ : UL n w} (h : fU n w b ϖ l γ ≠ 0) : γ.1.val.charpoly.Separable := by
   have hy := (GlobalTheory.CompanionTheory.Wexp.wexp_strictAnti_rev n l hl).1
   have h' : ∃ x ∈ iwU n w b, ∃ z ∈ iwU n w b, γ.1 = x.1 * (b * tdiag ϖ (wexp n l) * b⁻¹) * z.1 := by
     by_contra hc
-    exact h (if_neg hc)
+    exact h (ite_eq_right hc)
   obtain ⟨x, hx, z, hz, e⟩ := h'
   obtain ⟨x', hx', ex⟩ := Subgroup.mem_map.1 (Subgroup.mem_subgroupOf.1 hx)
   obtain ⟨z', hz', ez⟩ := Subgroup.mem_map.1 (Subgroup.mem_subgroupOf.1 hz)

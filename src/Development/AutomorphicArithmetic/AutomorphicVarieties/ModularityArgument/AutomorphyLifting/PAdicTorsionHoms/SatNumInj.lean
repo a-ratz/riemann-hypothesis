@@ -79,8 +79,8 @@ private theorem frobEig_eq {F Ω : Type} [Field F] [NumberField F] [Field Ω] [A
 theorem UpperTheory.V.Z.Win.attBC :
     AttBC := by
   intro K L Ω _ _ _ _ _ _ _ _ _ _ _ _ l _ ι n r π P hπ hP
-  haveI : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) (L := L) (A := Ω)⟩
+  have : Algebra.IsAlgebraic K Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure L Ω := ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.tower_top (K := K) (L := L) (A := Ω)⟩
   obtain ⟨-, hπ⟩ := hπ
   obtain ⟨-, hP⟩ := hP
   unfold WeakBC

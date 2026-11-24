@@ -105,8 +105,8 @@ theorem herm_re_im_vkl (k l : Fin n) :
     split_ifs <;> first | (exfalso; tauto) | norm_num
   have e7 : (if l = i ∧ k = j then (1 : ℂ) else 0) = (((if i = l ∧ j = k then (1 : ℝ) else 0) : ℝ) : ℂ) := by
     by_cases h : i = l ∧ j = k
-    · rw [if_pos h, if_pos ⟨h.1.symm, h.2.symm⟩]; simp
-    · rw [if_neg h, if_neg (fun h' => h ⟨h'.1.symm, h'.2.symm⟩)]; simp
+    · rw [ite_eq_left h, ite_eq_left ⟨h.1.symm, h.2.symm⟩]; simp
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h ⟨h'.1.symm, h'.2.symm⟩)]; simp
   rw [e1, e2, e3, e4, e5, e6, e7]
   push_cast
   ring_nf
@@ -208,7 +208,7 @@ theorem cpart_sum {ι : Type} (s : Finset ι) (c : ι → ℂ) (f : ι → Mc n 
   refine Finset.sum_congr rfl fun t _ => ?_
   have h1 : HasFDerivAt (fun x => c t * f t x) (c t • fderiv ℂ (f t) b) b :=
     (differentiableAt_of_cdo hU (hf t) hb).hasFDerivAt.const_mul (c t)
-  rw [h1.fderiv, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  rw [h1.fderiv, smul_apply, smul_eq_mul]
 
 theorem word_sum {ι : Type} (s : Finset ι) (c : ι → ℂ) (f : ι → Mc n → ℂ) (L : List (Fin n × Fin n))
     (hU : IsOpen U) (hf : ∀ t, ContDiffOn ℂ (⊤ : ℕ∞) (f t) U) :

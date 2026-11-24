@@ -68,7 +68,7 @@ theorem isLevel_iff {g : ℕ} (τ : Matrix (Fin g) (Fin g) ℂ) (a b : Fin g →
         eC (-(l : ℂ) * (ofIntVec n ⬝ᵥ (τ *ᵥ ofIntVec n) / 2 + ofIntVec n ⬝ᵥ z)) := by
     intro m n z
     unfold eC
-    rw [← Complex.exp_nat_mul, ← Complex.exp_add]
+    rw [← Complex.exp_natCast_mul, ← Complex.exp_add]
     congr 1
     unfold ofIntVec
     ring

@@ -133,12 +133,12 @@ theorem hsOp_ge_integral {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType �
 open CompactHaarProbability in
 theorem continuous_fF (ε : Fin n → Bool) (lam : Fin n → ℝ) {Λ : Fin n → ℝ} (T : KType ε Λ) :
     Continuous fun z : PCoord ε → ℂ => fF ε lam T (pmat z) := by
-  letI : IsProbabilityMeasure (dk ε) := ⟨by
+  let : IsProbabilityMeasure (dk ε) := ⟨by
     change (muK ε Set.univ)⁻¹ * muK ε Set.univ = 1
     exact ENNReal.inv_mul_cancel
       (ENNReal.toReal_pos_iff.mp (muK_univ_pos ε)).1.ne'
       (ENNReal.toReal_pos_iff.mp (muK_univ_pos ε)).2.ne⟩
-  letI : IsFiniteMeasureOnCompacts (dk ε) := ⟨fun K hK =>
+  let : IsFiniteMeasureOnCompacts (dk ε) := ⟨fun K hK =>
     (measure_mono (Set.subset_univ K)).trans_lt (measure_lt_top (dk ε) Set.univ)⟩
   have hf : Continuous (fun p : (PCoord ε → ℂ) × KG ε =>
       ((Real.exp (-Ph lam (toMK p.2⁻¹ * pmat p.1 * toMK p.2)) : ℝ) : ℂ) • (T.op p.2 * projW T * T.op p.2⁻¹)) :=
@@ -157,7 +157,7 @@ theorem continuous_fF (ε : Fin n → Bool) (lam : Fin n → ℝ) {Λ : Fin n �
 theorem inner_fF_conj {ε : Fin n → Bool} {lam : Fin n → ℝ} (T : KType ε (lowK ε lam)) (k : KG ε)
     (z : PCoord ε → ℂ) :
     ⟪T.w, fF ε lam T (pmat (adK k⁻¹ z)) T.w⟫_ℂ = ⟪T.op k T.w, fF ε lam T (pmat z) (T.op k T.w)⟫_ℂ := by
-  rw [← conj_pmat_eq_adK, fF_conj_pmat_eq_op_inv_mul_fF_mul_op, KType_op_inv_eq_adjoint, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply,
+  rw [← conj_pmat_eq_adK, fF_conj_pmat_eq_op_inv_mul_fF_mul_op, KType_op_inv_eq_adjoint, mul_apply_eq_comp, mul_apply_eq_comp,
     ContinuousLinearMap.adjoint_inner_right]
 
 theorem formal_degree_inequality {ε : Fin n → Bool} {lam : Fin n → ℝ} {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
@@ -166,14 +166,14 @@ theorem formal_degree_inequality {ε : Fin n → Bool} {lam : Fin n → ℝ} {H 
     ENNReal.ofReal (cPQ ε) *
         ∫⁻ z : PCoord ε → ℂ, ENNReal.ofReal (‖⟪T.w, fF ε lam T (pmat z) T.w⟫_ℂ‖ ^ 2 * Jac z) ≤
       ENNReal.ofReal ((Module.finrank ℂ T.V : ℝ) / d) := by
-  letI : IsProbabilityMeasure (dk ε) := ⟨by
+  let : IsProbabilityMeasure (dk ε) := ⟨by
     change (muK ε Set.univ)⁻¹ * muK ε Set.univ = 1
     exact ENNReal.inv_mul_cancel
       (ENNReal.toReal_pos_iff.mp (muK_univ_pos ε)).1.ne'
       (ENNReal.toReal_pos_iff.mp (muK_univ_pos ε)).2.ne⟩
-  letI : IsFiniteMeasureOnCompacts (dk ε) := ⟨fun K hK =>
+  let : IsFiniteMeasureOnCompacts (dk ε) := ⟨fun K hK =>
     (measure_mono (Set.subset_univ K)).trans_lt (measure_lt_top (dk ε) Set.univ)⟩
-  letI : SFinite (dk ε) := by infer_instance
+  let : SFinite (dk ε) := by infer_instance
   have hpos : 0 < (Module.finrank ℂ T.V : ℝ) := by
     have : Nontrivial T.V := ⟨⟨T.w, 0, fun h => by
       have := T.w_norm; rw [h, norm_zero] at this; exact zero_ne_one this⟩⟩

@@ -139,7 +139,7 @@ theorem lintegral_abs_det_eq_lintegral_encard {E : Type*} [NormedAddCommGroup E]
       simp only [r, ContinuousLinearMap.inverse_equiv]
     rw [hr]
     have hpos : 0 < ‖(e.symm : E →L[ℝ] E)‖₊ := by
-      rw [pos_iff_ne_zero, ne_eq, nnnorm_eq_zero]
+      rw [pos_iff_ne_zero, ne_eq, nnNorm_eq_zero]
       intro h0
       obtain ⟨z, hz⟩ := exists_ne (0 : E)
       apply hz

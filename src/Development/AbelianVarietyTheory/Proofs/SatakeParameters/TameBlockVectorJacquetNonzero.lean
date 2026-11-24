@@ -74,7 +74,7 @@ def blocks (r t : ℕ) : (Σ a : Fin (t + 1), Fin (sizes r t a)) ≃ Fin (r + t)
 theorem blocks_zero (r t : ℕ) (i : Fin r) : blocks r t ⟨0, i⟩ = Fin.castAdd t i := by
   ext
   have hv := stdBlocks_val (sizes r t) (sum_sizes r t) 0 i
-  haveI : IsEmpty (Fin ((0 : Fin (t + 1)) : ℕ)) := by simp only [Fin.val_zero]; infer_instance
+  have : IsEmpty (Fin ((0 : Fin (t + 1)) : ℕ)) := by simp only [Fin.val_zero]; infer_instance
   rw [Finset.univ_eq_empty, Finset.sum_empty, zero_add] at hv
   exact hv
 
@@ -167,10 +167,10 @@ theorem unipRad_inf_KO_le_stab {r t : ℕ} {χ : kˣ →* ℂˣ} {W : Type} [Add
     rw [Matrix.submatrix_apply, Matrix.one_apply]
     by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       rw [← blocks_zero]
       exact (hD 0 i i).trans (Matrix.one_apply_eq _)
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       rw [← blocks_zero, ← blocks_zero]
       exact (hD 0 i j).trans (Matrix.one_apply_ne hij)
   have hdet : (h.val.submatrix (Fin.natAdd r) (Fin.natAdd r)).det = 1 := by

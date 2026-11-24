@@ -183,8 +183,8 @@ theorem not_NV_of_ge :
     ∀ (K : Type) [Field K] [IsAlgClosed K] (A : Over (Sp K)) [GrpObj A], IsAbelianScheme A →
       ∃ c : ℕ, ∀ P : LB A.left, P.IsLB → ∀ j : ℕ, c ≤ j → ¬ NV A P j := by
   intro K _ _ A _ hA
-  haveI : IsProper A.hom := hA.proper
-  haveI : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
+  have : IsProper A.hom := hA.proper
+  have : CompactSpace A.left := QuasiCompact.compactSpace_of_compactSpace A.hom
   have hsep : IsSeparated A.hom := inferInstance
   obtain ⟨m, V, hV, hc⟩ :=
     GlobalTheory.exists_fin_affine_cover (X := A.left) (V := ⊤) (by simpa using isCompact_univ)
@@ -255,12 +255,12 @@ theorem finite_etale_of_comp_eq {X S : Scheme.{0}} (p : X ⟶ S) [IsSeparated p]
     (h1 : f ≫ g = m) (h2 : g ≫ f = m) : IsFinite f ∧ Etale f := by
   have hgs : IsSeparated g :=
     MorphismProperty.of_postcomp (W' := ⊤) @IsSeparated g p trivial (by rw [hg]; infer_instance)
-  haveI : LocallyOfFiniteType (g ≫ p) := by rw [hg]; infer_instance
-  haveI : LocallyOfFiniteType g := locallyOfFiniteType_of_comp g p
-  haveI : FormallyUnramified (g ≫ f) := by rw [h2]; infer_instance
-  haveI : FormallyUnramified g := FormallyUnramified.of_comp g f
-  haveI : Etale (f ≫ g) := by rw [h1]; infer_instance
-  haveI : IsFinite (f ≫ g) := by rw [h1]; infer_instance
+  have : LocallyOfFiniteType (g ≫ p) := by rw [hg]; infer_instance
+  have : LocallyOfFiniteType g := locallyOfFiniteType_of_comp g p
+  have : FormallyUnramified (g ≫ f) := by rw [h2]; infer_instance
+  have : FormallyUnramified g := FormallyUnramified.of_comp g f
+  have : Etale (f ≫ g) := by rw [h1]; infer_instance
+  have : IsFinite (f ≫ g) := by rw [h1]; infer_instance
   exact ⟨MorphismProperty.of_postcomp @IsFinite (W' := @IsSeparated) f g hgs inferInstance,
     Etale.of_comp f g⟩
 
@@ -275,13 +275,13 @@ theorem psiMap_finite_locallyFree : ∀ (K : Type) [Field K] [IsAlgClosed K] (A 
       LocallyOfFinitePresentation (psiMap A a₁ b₁ a₂ b₂).left ∧
       ∃ r : ℕ, (∀ y, (psiMap A a₁ b₁ a₂ b₂).left.finrank y = r) ∧ (r : K) ≠ 0 := by
   intro K _ _ A _ hA a₁ b₁ a₂ b₂ hd
-  haveI := hA.comm
+  have := hA.comm
   set n := (a₁ * b₂ - b₁ * a₂).natAbs with hn_def
   have hn : (n : K) ≠ 0 := by
     rcases Int.natAbs_eq (a₁ * b₂ - b₁ * a₂) with h | h
     · rw [h, Int.cast_natCast] at hd; exact hd
     · rw [h, Int.cast_neg, Int.cast_natCast, neg_ne_zero] at hd; exact hd
-  haveI hAA : IsAbelianScheme (A ⊗ A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA
+  have hAA : IsAbelianScheme (A ⊗ A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA
   obtain ⟨hfin, -, het, r, hr0, -, hall, -⟩ :=
     GlobalTheory.AbelianMulFin.mulA_finite_locallyFree K (A ⊗ A) n hn
   obtain ⟨s, hs⟩ := exists_sign_mul (a₁ * b₂ - b₁ * a₂)
@@ -296,12 +296,12 @@ theorem psiMap_finite_locallyFree : ∀ (K : Type) [Field K] [IsAlgClosed K] (A 
     congr 1 <;> push_cast <;> first | ring1 | linear_combination hs
   have h1' : ψ.left ≫ ψ'.left = (Out.mulA (A ⊗ A) n).left := by rw [← Over.comp_left, h1]
   have h2' : ψ'.left ≫ ψ.left = (Out.mulA (A ⊗ A) n).left := by rw [← Over.comp_left, h2]
-  haveI := hAA.proper
-  haveI := hAA.smooth
-  haveI := hAA.geomConnected
+  have := hAA.proper
+  have := hAA.smooth
+  have := hAA.geomConnected
   obtain ⟨hψfin, hψet⟩ := finite_etale_of_comp_eq (A ⊗ A).hom ψ.left ψ'.left _ (Over.w ψ') h1' h2'
   obtain ⟨hψ'fin, hψ'et⟩ := finite_etale_of_comp_eq (A ⊗ A).hom ψ'.left ψ.left _ (Over.w ψ) h2' h1'
-  haveI : ConnectedSpace (A ⊗ A).left :=
+  have : ConnectedSpace (A ⊗ A).left :=
     GeometricallyConnected.connectedSpace (A ⊗ A).hom (A ⊗ A).hom.isOpenMap
   let o : (A ⊗ A).left := Classical.arbitrary _
   set r' := ψ.left.finrank o with hr'
@@ -488,7 +488,7 @@ variable {A B A' B' : Type} [CommRing A] [CommRing B] [CommRing A'] [CommRing B'
 def tr (φ : A →+* B) : B →+ A := letI := φ.toAlgebra; (Algebra.trace A B).toAddMonoidHom
 
 theorem tr_mul (φ : A →+* B) (a : A) (b : B) : tr φ (φ a * b) = a * tr φ b := by
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   change Algebra.trace A B (algebraMap A B a * b) = a * Algebra.trace A B b
   rw [← Algebra.smul_def, map_smul, smul_eq_mul]
 
@@ -500,8 +500,8 @@ theorem tr_of_isPushout {φ : A →+* B} {α : A →+* A'} {β : B →+* B'} {φ
   have : IsScalarTower A B B' :=
     IsScalarTower.of_algebraMap_eq' (congrArg CommRingCat.Hom.hom H.w).symm
   have P : Algebra.IsPushout A B A' B' := CommRingCat.isPushout_iff_isPushout.1 H
-  haveI : Module.Finite A B := h.1
-  haveI : Module.Free A B := h.2
+  have : Module.Finite A B := h.1
+  have : Module.Free A B := h.2
   have hb : IsBaseChange A' (IsScalarTower.toAlgHom A B B').toLinearMap := P.symm.out
   change LinearMap.trace A' B' (Algebra.lmul A' B' (β b)) =
     algebraMap A A' (LinearMap.trace A B (Algebra.lmul A B b))
@@ -519,9 +519,9 @@ theorem tr_of_isPushout {φ : A →+* B} {α : A →+* A'} {β : B →+* B'} {φ
 theorem tr_map (φ : A →+* B) (h : FinFree φ) (r : ℕ)
     (hr : Nontrivial A → (letI := φ.toAlgebra; Module.finrank A B) = r) (a : A) :
     tr φ (φ a) = r * a := by
-  letI := φ.toAlgebra
-  haveI : Module.Finite A B := h.1
-  haveI : Module.Free A B := h.2
+  let := φ.toAlgebra
+  have : Module.Finite A B := h.1
+  have : Module.Free A B := h.2
   rcases subsingleton_or_nontrivial A with hA | hA
   · exact Subsingleton.elim _ _
   · change Algebra.trace A B (algebraMap A B a) = _
@@ -585,9 +585,9 @@ theorem ext_freeOpen {V : Y.Opens} {a b : Γ(Y, V)}
 theorem finrank_app_of_finrank (r : ℕ) (hr : ∀ y, f.finrank y = r) (V : Y.Opens) (hV : IsAffineOpen V)
     (hF : FinFree (f.app V).hom) (hN : Nontrivial Γ(Y, V)) :
     (letI := (f.app V).hom.toAlgebra; Module.finrank Γ(Y, V) Γ(X, f ⁻¹ᵁ V)) = r := by
-  letI := (f.app V).hom.toAlgebra
-  haveI : Module.Free Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := hF.2
-  haveI : Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := hF.1
+  let := (f.app V).hom.toAlgebra
+  have : Module.Free Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := hF.2
+  have : Module.Finite Γ(Y, V) Γ(X, f ⁻¹ᵁ V) := hF.1
   obtain ⟨p⟩ : Nonempty (PrimeSpectrum Γ(Y, V)) := inferInstance
   have e := (GlobalTheory.AbelianMulFin.affine_finite_projective_rankAtStalk f r hr V hV).2.2.2 p
   rw [Module.rankAtStalk_eq_finrank_of_free] at e
@@ -820,7 +820,7 @@ theorem cechLB_retract_and_exactAt (r : ℕ) (hr : ∀ y, f.finrank y = r) (hu :
     cechPull f q L D ≫ (cechTr f q L D ≫ cechSMul q (hu.unit⁻¹).val L D) = 𝟙 (cechLB q L D) ∧
       ∀ n : ℕ, (cechLB (f ≫ q) (L.pull f) (fun i => f ⁻¹ᵁ D i)).ExactAt n → (cechLB q L D).ExactAt n := by
   refine ⟨cechLB_retract f q r hr hu L D, fun n h => ?_⟩
-  haveI : IsIso (cechPull f q L D ≫ (cechTr f q L D ≫ cechSMul q (hu.unit⁻¹).val L D)) := by
+  have : IsIso (cechPull f q L D ≫ (cechTr f q L D ≫ cechSMul q (hu.unit⁻¹).val L D)) := by
     rw [cechLB_retract f q r hr hu]
     infer_instance
   exact exactAt_of_isIso_comp (cechPull f q L D) (cechTr f q L D ≫ cechSMul q (hu.unit⁻¹).val L D) h
@@ -887,7 +887,7 @@ theorem lbIso_pull_psiMap {K : Type} [Field K] (A : Over (Sp K)) [GrpObj A] (hA 
                    (a * tri (-a₁) + b * tri a₁ + a * tri (-a₂) + b * tri a₂)).pull (fst A A).left)
         ((mix A L (a * tri b₁ + b * tri (-b₁) + a * tri b₂ + b * tri (-b₂))
           (a * tri (-b₁) + b * tri b₁ + a * tri (-b₂) + b * tri b₂)).pull (snd A A).left) 1) := by
-  haveI := hA.comm
+  have := hA.comm
   have hP' : ∀ a b : ℤ, (mix A L a b).IsLB := fun _ _ => LB.isLB_linComb hL _ _
   have h₁ := GlobalTheory.AbLaw.isLB_tw (LB.isLB_pull (hP' a b) (fst A A).left) (LB.isLB_pull (hP' a b) (snd A A).left) 1
   refine (cls_eq_iff (LB.isLB_pull h₁ _) (GlobalTheory.AbLaw.isLB_tw (LB.isLB_pull (hP' _ _) _)
@@ -935,8 +935,8 @@ theorem exists_nonvanishing_invMix_pair_isogeny (K : Type) [Field K] [IsAlgClose
         (a * tri (-a₁) + b * tri a₁ + a * tri (-a₂) + b * tri a₂)) j₁ ∧
       NV A (mix A L (a * tri b₁ + b * tri (-b₁) + a * tri b₂ + b * tri (-b₂))
         (a * tri (-b₁) + b * tri b₁ + a * tri (-b₂) + b * tri b₂)) j₂ := by
-  haveI := hA.comm
-  haveI := hA.proper
+  have := hA.comm
+  have := hA.proper
   obtain ⟨κ, _, _, W, hW, hWc, hne⟩ := hN
   have hP' : ∀ a b : ℤ, (mix A L a b).IsLB := fun _ _ => LB.isLB_linComb hL _ _
   have hsep : IsSeparated A.hom := inferInstance
@@ -945,11 +945,11 @@ theorem exists_nonvanishing_invMix_pair_isogeny (K : Type) [Field K] [IsAlgClose
     fun M hM => cechLB_homology_finite_of_affine_cover K _ A.hom M κ W hM hsep hproj hW hWc
   have h₀ : IsPullback (fst A A).left (snd A A).left A.hom A.hom := IsPullback.of_hasPullback A.hom A.hom
   have hAA := ReciprocityTheory.ChartRestriction.G.Geo.Tor.AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA
-  haveI := hAA.comm
-  haveI := hAA.proper
+  have := hAA.comm
+  have := hAA.proper
   have hsepAA : IsSeparated (A ⊗ A).hom := inferInstance
   have hprojAA := GlobalTheory.AbelianProjective.isProjBy_of_isAbelianScheme K (A ⊗ A) hAA
-  haveI : CompactSpace (A ⊗ A).left := QuasiCompact.compactSpace_of_compactSpace (A ⊗ A).hom
+  have : CompactSpace (A ⊗ A).left := QuasiCompact.compactSpace_of_compactSpace (A ⊗ A).hom
   obtain ⟨k, E, hE, hEc⟩ := GlobalTheory.PicZeroVan.exists_fin_affine_cover (A ⊗ A).left
   obtain ⟨hfin, hflat, hlfp, r, hr, hr0⟩ := GlobalTheory.T.abelianVarietySquareLinearEndomorphism_finiteLocallyFree K A hA a₁ b₁ a₂ b₂ hd
   set ψ := psiMap A a₁ b₁ a₂ b₂ with hψ
@@ -961,7 +961,7 @@ theorem exists_nonvanishing_invMix_pair_isogeny (K : Type) [Field K] [IsAlgClose
   have k₀ := finrank_cechLB_homology_extProd K _ _ _ A.hom A.hom (fst A A).left (snd A A).left P P h₀ hP hP
     hsep hsep κ W κ W (Fin k) E hW hWc hW hWc hE hEc (fin P hP) (fin P hP) (2 * j)
   have hpos : 0 < Module.finrank K ((cechLB A.hom P W).homology j) := by
-    haveI := fin P hP j
+    have := fin P hP j
     exact finrank_pos_of_not_exactAt hne
   have hM : ¬ (cechLB ((fst A A).left ≫ A.hom) (tw (P.pull (fst A A).left) (P.pull (snd A A).left) 1) E).ExactAt
       (2 * j) := by
@@ -1004,7 +1004,7 @@ theorem exists_nonvanishing_invMix_pair_isogeny (K : Type) [Field K] [IsAlgClose
   have k₁ := finrank_cechLB_homology_extProd K _ _ _ A.hom A.hom (fst A A).left (snd A A).left P₁ P₂ h₀ hP₁ hP₂
     hsep hsep κ W κ W (Fin k) (fun i => ψ.left ⁻¹ᵁ E i) hW hWc hW hWc hD hDc (fin P₁ hP₁) (fin P₂ hP₂) (2 * j)
   rw [hf₁] at k₁
-  haveI := cechLB_homology_finite_of_affine_cover K _ (A ⊗ A).hom _ (Fin k) (fun i => ψ.left ⁻¹ᵁ E i) hTw hsepAA
+  have := cechLB_homology_finite_of_affine_cover K _ (A ⊗ A).hom _ (Fin k) (fun i => ψ.left ⁻¹ᵁ E i) hTw hsepAA
     hprojAA hD hDc (2 * j)
   have hpos₂ := finrank_pos_of_not_exactAt hN₂
   rw [k₁] at hpos₂
@@ -1012,11 +1012,11 @@ theorem exists_nonvanishing_invMix_pair_isogeny (K : Type) [Field K] [IsAlgClose
   have hx' : x.1 + x.2 = 2 * j := by simpa using hx
   refine ⟨x.1, x.2, hx', ⟨κ, inferInstance, inferInstance, W, hW, hWc, fun h => hx0 ?_⟩,
     ⟨κ, inferInstance, inferInstance, W, hW, hWc, fun h => hx0 ?_⟩⟩
-  · haveI := fin P₁ hP₁ x.1
+  · have := fin P₁ hP₁ x.1
     have : Subsingleton ((cechLB A.hom P₁ W).homology x.1) :=
       ModuleCat.subsingleton_of_isZero ((HomologicalComplex.exactAt_iff_isZero_homology _ _).1 h)
     rw [Module.finrank_zero_of_subsingleton, zero_mul]
-  · haveI := fin P₂ hP₂ x.2
+  · have := fin P₂ hP₂ x.2
     have : Subsingleton ((cechLB A.hom P₂ W).homology x.2) :=
       ModuleCat.subsingleton_of_isZero ((HomologicalComplex.exactAt_iff_isZero_homology _ _).1 h)
     rw [Module.finrank_zero_of_subsingleton (R := K) (M := (cechLB A.hom P₂ W).homology x.2), mul_zero]
@@ -1319,7 +1319,7 @@ theorem exists_not_NV_mix (K : Type) [Field K] [IsAlgClosed K] (A : Over (Sp K))
     (hA : IsAbelianScheme A) (L : LB A.left) (hL : L.IsLB) (hamp : Out.RelAmple A L) (d : ℤ) :
     ∃ N : ℕ, ∀ a b : ℕ, N ≤ a + b → (a : ℤ) - b = d → ∀ j : ℕ, ¬ NV A (mix A L a b) (j + 1) := by
   have := hA.proper
-  letI := algebraΓOfHom A.hom
+  let := algebraΓOfHom A.hom
   have hLa : IsAmpleLB L := isAmpleLB_of_relAmple_of_isAffine A hL hamp
   have hι : IsIso (GrpObj.inv : A ⟶ A) := ⟨⟨GrpObj.inv, by simp, by simp⟩⟩
   have : IsIso (GrpObj.inv : A ⟶ A).left := (Over.forget _).map_isIso GrpObj.inv
@@ -1353,7 +1353,7 @@ theorem exists_not_NV_mix (K : Type) [Field K] [IsAlgClosed K] (A : Over (Sp K))
       have ha : (a : ℤ) = d + b := by omega
       rw [ha, add_smul, smul_add]
       abel)
-  haveI := hn₀ b (by omega) (j + 1) j.succ_pos
+  have := hn₀ b (by omega) (j + 1) j.succ_pos
   rw [HomologicalComplex.exactAt_iff_isZero_homology, ModuleCat.isZero_iff_subsingleton]
   exact (e.trans (cohOn.mapIso K ⊤ (j + 1) e₂).symm).injective.subsingleton
 
@@ -1579,7 +1579,7 @@ theorem coboundary_of_exact {κ : Type} [LinearOrder κ] (W : κ → X.Opens)
       SecOnR.restrict f M (le_inf (hle (by simp)) (hle (by simp))) (Φ k l) := by
     intro k l hkl
     have hn : ({k, l} : Finset κ).Nonempty := by simp
-    simp only [x, dif_pos hn]
+    simp only [x, dite_eq_left hn]
     exact hcongr (by simp [hkl.le]) (by simp [hkl.le]) _ _
   have hE := (cechComplex_exactAt_succ_iff (secCube f M W) 0).1 hW
   have hd : Cube.d (secCube f M W) (0 + 2) (fun s => x s.1) = 0 := by

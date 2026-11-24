@@ -63,8 +63,8 @@ namespace GlobalTheory.JR.OrbTest
 theorem eta_eq_of_norm_eq {F : Type} [NormedField F] {x y : F} (h : ‖x‖ = ‖y‖) : eta x = eta y := by
   unfold eta
   by_cases hx : ∃ z : F, ‖x‖ = ‖z‖ ^ 2
-  · rw [if_pos hx, if_pos (h ▸ hx)]
-  · rw [if_neg hx, if_neg (h ▸ hx)]
+  · rw [ite_eq_left hx, ite_eq_left (h ▸ hx)]
+  · rw [ite_eq_right hx, ite_eq_right (h ▸ hx)]
 
 theorem isLocallyConstant_eta_comp {X F : Type} [TopologicalSpace X] [NormedField F] [IsUltrametricDist F]
     (h : X → F) (hc : Continuous h) (h0 : ∀ x, h x ≠ 0) : IsLocallyConstant (fun x => eta (h x)) := by
@@ -106,8 +106,8 @@ theorem continuous_actU {r : ℕ} {F E : Type} [CommRing F] [CommRing E] [StarRi
     Continuous (fun g : Matrix.unitaryGroup (Fin r) E => actU g X) := by
   unfold actU
   refine Continuous.prodMk (Continuous.subtype_mk ?_ _) (Continuous.prodMk ?_ continuous_const)
-  · exact (continuous_subtype_val.matrix_mul continuous_const).matrix_mul continuous_subtype_val.star
-  · exact continuous_subtype_val.matrix_mulVec continuous_const
+  · exact (continuous_subtypeVal.matrix_mul continuous_const).matrix_mul continuous_subtypeVal.star
+  · exact continuous_subtypeVal.matrix_mulVec continuous_const
 
 end GlobalTheory.JR.OrbTest
 
@@ -117,7 +117,7 @@ theorem isTest_orbG_integrand (F E : Type) [NontriviallyNormedField F] [Nontrivi
     [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (f' : Gl r F → ℂ) (hf : IsTest f') (Y : Gl r F)
     (hY : Delta (inv Y) ≠ 0) :
     IsTest (fun g : GL (Fin r) F => f' (act g Y) * omega (act g Y)) := by
-  haveI : IsUltrametricDist F := Unram.ultraF (E := E)
+  have : IsUltrametricDist F := Unram.ultraF (E := E)
   obtain ⟨-, hL1b, hL1c, hL1d, hL1e⟩ := _root_.GlobalTheory.JR.normalForm_invariants F r
   obtain ⟨hL6a, hL6b⟩ := _root_.GlobalTheory.JR.transfer_factor_lemma F r
   obtain ⟨-, -, -, hL4⟩ := _root_.GlobalTheory.JR.OrbitProper.main F E r
@@ -151,14 +151,14 @@ theorem isTest_orbG_integrand (F E : Type) [NontriviallyNormedField F] [Nontrivi
       ext g; simp [Homeomorph.coe_mulRight, hL1d, hg₀]
     refine HasCompactSupport.intro' hK ((isClosed_tsupport f').preimage (continuous_act Y)) ?_
     intro g hg
-    simp only [Set.mem_setOf_eq] at hg
+    simp only [Set.mem_ofPred_eq] at hg
     simp only [image_eq_zero_of_notMem_tsupport hg, zero_mul]
 
 theorem isTest_orbU_integrand (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E]
     [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (f : Hn r F E → ℂ) (hf : IsTest f) (a : Inv r F)
     (X : Hn r F E) (ha : Delta a ≠ 0) (hX : HasInv X a) :
     IsTest (fun g : Matrix.unitaryGroup (Fin r) E => f (actU g X)) := by
-  haveI : ContinuousStar E := ⟨by
+  have : ContinuousStar E := ⟨by
     have : Continuous (starAddEquiv : E ≃+ E) :=
       AddMonoidHomClass.continuous_of_bound (starAddEquiv : E ≃+ E) 1
         (fun x => by rw [starAddEquiv_apply, Unram.norm_star (F := F), one_mul])
@@ -181,7 +181,7 @@ theorem isTest_orbU_integrand (F E : Type) [NontriviallyNormedField F] [Nontrivi
     ext g; simp [Homeomorph.coe_mulRight, actU_mul, hg₀]
   refine HasCompactSupport.intro' hK ((isClosed_tsupport f).preimage (continuous_actU X)) ?_
   intro g hg
-  simp only [Set.mem_setOf_eq] at hg
+  simp only [Set.mem_ofPred_eq] at hg
   exact image_eq_zero_of_notMem_tsupport hg
 
 end GlobalTheory.JR.OrbTest

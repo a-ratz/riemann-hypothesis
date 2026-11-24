@@ -114,12 +114,12 @@ theorem herm_eq_trace {K K' : UQ} {d : ℕ} {φ : K.E →+* K'.E} (hU : IsUnrExt
     (ψ : K'.E →+* B.A) (hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e) (hσ : ∀ e, B.σ (ψ e) = ψ (K'.c e))
     (x y z : B.A) :
     B.herm x y z = @Algebra.trace K.E K'.E _ _ φ.toAlgebra ((overExt φ B ψ hψ hσ).herm x y z) := by
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  letI : Algebra K'.E B.A := ψ.toAlgebra
-  haveI : IsScalarTower K.E K'.E B.A := IsScalarTower.of_algebraMap_eq fun e => (hψ e).symm
-  haveI : Module.Finite K.E K'.E := Module.finite_of_finrank_pos
+  let : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K'.E B.A := ψ.toAlgebra
+  have : IsScalarTower K.E K'.E B.A := IsScalarTower.of_algebraMap_eq fun e => (hψ e).symm
+  have : Module.Finite K.E K'.E := Module.finite_of_finrank_pos
     (by rw [show Module.finrank K.E K'.E = d from hU.2.2.2.2]; exact deg_pos hU)
-  haveI : Module.Finite K'.E B.A := Module.Finite.of_restrictScalars_finite K.E K'.E B.A
+  have : Module.Finite K'.E B.A := Module.Finite.of_restrictScalars_finite K.E K'.E B.A
   show Algebra.trace K.E B.A (x * y * B.σ z) = Algebra.trace K.E K'.E (Algebra.trace K'.E B.A (x * y * B.σ z))
   exact (Algebra.trace_trace _).symm
 
@@ -128,7 +128,7 @@ theorem herm_smul {K K' : UQ} {φ : K.E →+* K'.E} (B : InvAlg K)
     (x y z : B.A) (m : K'.E) (y₀ : K'.O) (hcm : K'.c (algebraMap K'.O K'.E y₀) = m) :
     (overExt φ B ψ hψ hσ).herm x y (y₀ • (show (overExt φ B ψ hψ hσ).A from z)) =
       m * (overExt φ B ψ hψ hσ).herm x y z := by
-  letI : Algebra K'.E B.A := ψ.toAlgebra
+  let : Algebra K'.E B.A := ψ.toAlgebra
   have hs : B.σ (ψ (algebraMap K'.O K'.E y₀) * z) = ψ m * B.σ z := by
     rw [map_mul, hσ, hcm]
   show Algebra.trace K'.E B.A (x * y * B.σ (ψ (algebraMap K'.O K'.E y₀) * z)) =
@@ -142,7 +142,7 @@ end GlobalTheory.UnitLemma.Unr.Dual
 open GlobalTheory.UnitLemma GlobalTheory.UnitLemma.Unr GlobalTheory.UnitLemma.Unr.Dual in
 theorem GlobalTheory.UnitLemma.Unr.dual_iff : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K' d φ → ∀ (B : InvAlg K) (ψ : K'.E →+* B.A) (hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e) (hσ : ∀ e, B.σ (ψ e) = ψ (K'.c e)) (L : Submodule K'.O (overExt φ B ψ hψ hσ).A) (x y : B.A), (∀ z ∈ L, (overExt φ B ψ hψ hσ).herm x y z ∈ (algebraMap K'.O K'.E).range) ↔ (∀ z ∈ L, B.herm x y z ∈ (algebraMap K.O K.E).range) := by
   intro K K' d φ hU B ψ hψ hσ L x y
-  letI : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.E K'.E := φ.toAlgebra
   have hT : ∀ z, B.herm x y z = Algebra.trace K.E K'.E ((overExt φ B ψ hψ hσ).herm x y z) :=
     fun z => herm_eq_trace hU B ψ hψ hσ x y z
   constructor
@@ -333,8 +333,8 @@ theorem exists_eq_base_mul_int {K K' : UQ} {d : ℕ} {φ : K.E →+* K'.E} (hU :
 theorem isLat_overExt_iff : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K' d φ → ∀ (B : InvAlg K) (ψ : K'.E →+* B.A) (hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e) (hσ : ∀ e, B.σ (ψ e) = ψ (K'.c e)) (L : Submodule K'.O (overExt φ B ψ hψ hσ).A) (M : Submodule K.O B.A), (L : Set (overExt φ B ψ hψ hσ).A) = (M : Set B.A) → (IsLat K'.O K'.E L ↔ IsLat K.O K.E M) := by
   intro K K' d φ hU B ψ hψ hσ L M h
   obtain ⟨u, hu⟩ := _root_.GlobalTheory.UnitLemma.Unr.exists_int_basis_of_unr K K' d φ hU
-  letI : Algebra K'.E B.A := ψ.toAlgebra
-  letI : Algebra K'.O B.A := (ψ.comp (algebraMap K'.O K'.E)).toAlgebra
+  let : Algebra K'.E B.A := ψ.toAlgebra
+  let : Algebra K'.O B.A := (ψ.comp (algebraMap K'.O K'.E)).toAlgebra
   have hO' : ∀ b : K'.O, algebraMap K'.O B.A b = ψ (algebraMap K'.O K'.E b) := fun _ => rfl
   have hE' : ∀ b : K'.E, algebraMap K'.E B.A b = ψ b := fun _ => rfl
   have hO : ∀ a : K.O, algebraMap K.O B.A a = ψ (φ (algebraMap K.O K.E a)) := fun a => by
@@ -386,10 +386,10 @@ theorem isIntegral_overExt_iff (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU :
       map_zero' := inj (by rw [hι]; simp)
       map_add' := fun x y => inj (by simp [hι]) }
   have hf : ∀ c, algebraMap K'.O K'.E (f c) = φ (algebraMap K.O K.E c) := hι
-  letI : Algebra K.O K'.O := f.toAlgebra
-  letI iC : Algebra K'.O B.A := (overExt φ B ψ hψ hσ).aO
+  let : Algebra K.O K'.O := f.toAlgebra
+  let iC : Algebra K'.O B.A := (overExt φ B ψ hψ hσ).aO
   have hC : ∀ y : K'.O, algebraMap K'.O B.A y = ψ (algebraMap K'.O K'.E y) := fun _ => rfl
-  haveI : IsScalarTower K.O K'.O B.A := IsScalarTower.of_algebraMap_eq fun c => by
+  have : IsScalarTower K.O K'.O B.A := IsScalarTower.of_algebraMap_eq fun c => by
     rw [IsScalarTower.algebraMap_apply K.O K.E B.A c, RingHom.algebraMap_toAlgebra, hC]
     show _ = ψ (algebraMap K'.O K'.E (f c))
     rw [hf, hψ]
@@ -397,7 +397,7 @@ theorem isIntegral_overExt_iff (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU :
   constructor
   · intro h
     obtain ⟨u, hu⟩ := _root_.GlobalTheory.UnitLemma.Unr.exists_int_basis_of_unr K K' d φ hU
-    haveI : Module.Finite K.O K'.O := by
+    have : Module.Finite K.O K'.O := by
       refine ⟨⟨Finset.univ.image u, eq_top_iff.2 fun y _ => ?_⟩⟩
       obtain ⟨c, hc⟩ := hu y
       have hy : y = ∑ i, c i • u i := by
@@ -409,7 +409,7 @@ theorem isIntegral_overExt_iff (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E) (hU :
       rw [hy]
       refine Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (Submodule.subset_span ?_)
       simp
-    haveI : Algebra.IsIntegral K.O K'.O := Algebra.IsIntegral.of_finite K.O K'.O
+    have : Algebra.IsIntegral K.O K'.O := Algebra.IsIntegral.of_finite K.O K'.O
     exact isIntegral_trans (R := K.O) (A := K'.O) a h
   · intro h
     exact h.tower_top

@@ -66,7 +66,7 @@ namespace GlobalTheory.Dieu.Theory
 
 theorem frobProj_omega_surjective {p : ℕ} [Fact p.Prime] {k : Type} [Field k] [CharP k p] [PerfectRing k p]
     (G : PDivGroup p k) : Function.Surjective (frobProj (p_eq_zero p k) G).omega := by
-  letI := (frobRing (p_eq_zero p k)).toAlgebra
+  let := (frobRing (p_eq_zero p k)).toAlgebra
   intro t
   obtain ⟨x, rfl⟩ := (omega_baseChange_bijective G k (p_eq_zero p k)).2 t
   induction x using TensorProduct.inductionOn with

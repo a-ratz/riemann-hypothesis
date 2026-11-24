@@ -113,9 +113,9 @@ private theorem crystalline_of_theta_twist_gl3 {l : ℕ} [Fact l.Prime] {H : Typ
     (φ : H →* GQ l) (hφ : Topology.IsOpenEmbedding φ) (E : FinExt l) (ρ : H →* GL (Fin 3) ↥E.1) (hρ : Continuous ρ)
     (h : Loc.IsCr φ (Loc.colRep ρ)) :
     Loc.IsCr φ (Loc.colRep ((thetaAut 3 ↥E.1).toMonoidHom.comp ρ)) := by
-  haveI := E.2
-  haveI : IsModuleTopology ℚ_[l] ↥E.1 := isModuleTopologyOfFiniteDimensional
-  haveI : IsModuleTopology ℚ_[l] (Fin 3 → ↥E.1) := isModuleTopologyOfFiniteDimensional
+  have := E.2
+  have : IsModuleTopology ℚ_[l] ↥E.1 := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology ℚ_[l] (Fin 3 → ↥E.1) := isModuleTopologyOfFiniteDimensional
   have h0 : Loc.IsCr φ (Loc.chRep (1 : H →* (↥E.1)ˣ)) :=
     Loc.crUnr φ hφ _ (by
       have : ∀ p : H × ↥E.1, Loc.chRep (1 : H →* (↥E.1)ˣ) p.1 p.2 = p.2 := fun p => by simp [Loc.chRep]
@@ -151,20 +151,20 @@ private theorem isAlgClosure_of_number_field (Ω : Type) [Field Ω] [CharZero Ω
     [Algebra K Ω] : IsAlgClosure K Ω :=
   ⟨IsAlgClosure.isAlgClosed ℚ, Algebra.IsAlgebraic.tower_top (K := ℚ) K⟩
 private theorem continuous_rho_of_point (h : D.IsPt U g₁ r) : Continuous (D.rhoK r h.mult) := by
-  haveI := isAlgClosure_of_number_field Ω K
+  have := isAlgClosure_of_number_field Ω K
   exact continuous_of_matrix_units _ (h.cont.comp (galEmbTop ℚ K Ω).1.continuous)
 private theorem exists_local_crystalline_gl3_model (hI : CohInp) (h : D.IsPt U g₁ r) :
     ∃ (E : FinExt l) (ρ : ↥D.loc.HL →* GL (Fin 3) ↥E.1),
       (∀ g, GeneralLinearGroup.map (E.1.val : ↥E.1 →+* PadicAlgCl l) (ρ g) = (r (D.ι g)).left) ∧
       Loc.IsCr D.loc.HL.subtype (Loc.colRep ρ) := by
   obtain ⟨f, hf, hker, hpush⟩ := h.loc
-  haveI : IsLocalRing c.O := c.dvr.toIsLocalRing
-  haveI := (dvrFacts l c.O).2.2.2.1
+  have : IsLocalRing c.O := c.dvr.toIsLocalRing
+  have := (dvrFacts l c.O).2.2.2.1
   obtain ⟨E, hE⟩ := Loc.ptFin (l := l) U.R ((TrivSqZeroExt.inlAlgHom c.O _ _).comp f) hf
   have hE' : ∀ a, f a ∈ E.1 := fun a => (hE a).1
-  haveI := E.2
-  letI : Algebra c.O ↥E.1 := ((algebraMap c.O (PadicAlgCl l)).codRestrict E.1 fun a => f.commutes a ▸ hE' _).toAlgebra
-  haveI : IsScalarTower ℤ_[l] c.O ↥E.1 := IsScalarTower.of_algebraMap_eq fun _ => Subtype.ext rfl
+  have := E.2
+  let : Algebra c.O ↥E.1 := ((algebraMap c.O (PadicAlgCl l)).codRestrict E.1 fun a => f.commutes a ▸ hE' _).toAlgebra
+  have : IsScalarTower ℤ_[l] c.O ↥E.1 := IsScalarTower.of_algebraMap_eq fun _ => Subtype.ext rfl
   let f' : U.R →ₐ[c.O] ↥E.1 :=
     { (f : U.R →+* PadicAlgCl l).codRestrict E.1 hE' with commutes' := fun a => Subtype.ext (f.commutes a) }
   obtain ⟨-, -, ρ, h1, h2⟩ := Loc.rtPoints hI.loc D.loc U ↥E.1 (push f' U.r.hom)
@@ -174,7 +174,7 @@ private theorem exists_local_crystalline_gl3_model (hI : CohInp) (h : D.IsPt U g
   rfl
 private theorem potentially_crystalline_conjugate_place (hI : CohInp) (h : D.IsPt U g₁ r) (g : G ℚ Ω) (hg : g = 1 ∨ g = D.cc) :
     Af.PotCrysAt (D.rhoK r h.mult) (Loc.placeJ (D.j.comp (g : Ω →+* Ω))) := by
-  haveI := isAlgClosure_of_number_field Ω K
+  have := isAlgClosure_of_number_field Ω K
   obtain ⟨E, ρ, h1, h2⟩ := exists_local_crystalline_gl3_model D hI h
   obtain ⟨-, hcc, -, hη, -⟩ := dat_facts D
   have hop : IsOpen (D.loc.HL : Set (GQ l)) :=
@@ -198,7 +198,7 @@ private theorem potentially_crystalline_conjugate_place (hI : CohInp) (h : D.IsP
   have hρ : Continuous ρ := by
     refine continuous_of_matrix_units _ (continuous_pi fun a => continuous_pi fun b => continuous_induced_rng.2 ?_)
     have h3 : Continuous fun s : ↥D.loc.HL => (r (D.ι s)).mat a b :=
-      (h.cont.comp (D.ι_cont.comp continuous_subtype_val)).matrix_elem a b
+      (h.cont.comp (D.ι_cont.comp continuous_subtypeVal)).matrix_elem a b
     exact h3.congr fun s => by rw [GG.mat, ← h1]; rfl
   rcases hg with rfl | rfl
   · refine Loc.potCrysOf _ _ ψ' hφ hspec _ (continuous_rho_of_point D h) E ρ (fun s a b => ?_) h2
@@ -210,12 +210,12 @@ private theorem potentially_crystalline_conjugate_place (hI : CohInp) (h : D.IsP
     rfl
 private theorem exists_place_over_conjugate_embedding (w : HeightOneSpectrum (𝓞 K)) (hw : ((l : ℕ) : 𝓞 K) ∈ w.asIdeal) :
     ∃ g : G ℚ Ω, (g = 1 ∨ g = D.cc) ∧ IsPlaceOver (Loc.placeJ (D.j.comp (g : Ω →+* Ω))) w := by
-  haveI := isAlgClosure_of_number_field Ω K
+  have := isAlgClosure_of_number_field Ω K
   obtain ⟨-, hcc, -⟩ := dat_facts D
   obtain ⟨j, hj⟩ := (Loc.decEmb (F := K) (Ω := Ω) (v := l)).1 _ w (isPlaceOver_placeOf Ω w) hw
   obtain ⟨g, hg⟩ : ∃ g : G ℚ Ω, ∀ x, j x = D.j (g x) := by
-    letI : Algebra Ω (Om l) := D.j.toAlgebra
-    haveI : IsScalarTower ℚ Ω (Om l) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+    let : Algebra Ω (Om l) := D.j.toAlgebra
+    have : IsScalarTower ℚ Ω (Om l) := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
     exact ⟨AlgHom.restrictNormal' j.toRatAlgHom Ω, fun x => (AlgHom.restrictNormal_commutes j.toRatAlgHom Ω x).symm⟩
   have key : ∀ g' : G ℚ Ω, D.η g' = D.η g → IsPlaceOver (Loc.placeJ (D.j.comp (g' : Ω →+* Ω))) w := by
     intro g' hg' x
@@ -238,7 +238,7 @@ theorem UpperTheory.V.U3.admissible_rank_three_of_type_one_of_automorphic_point 
       {l : ℕ} [Fact l.Prime] {c : Coef l} {N : ℕ} [NeZero N] {e : ℕ} {ψ : DirichletCharacter c.O N} (D : Dat Ω K c e ψ) {U : (_root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition _ (D.η.comp D.ι) (D.Ψ.comp D.ι)))} {g₁ : G ℚ Ω}, D.Marked g₁ → ∀ {r : G ℚ Ω →* GG (m := 3) (R := PadicAlgCl l)} (h : D.IsPt U g₁ r), ∀ [IsCMField K] (ι : Qbar l ≃+* ℂ),
       TypeI D.η r → D.IsAutIAlt ι r h.mult → _root_.UpperTheory.V.Af.Adm3Alt ι e N (D.rhoK r h.mult) := by
   intro hI Ω _ _ _ K _ _ _ l _ c N _ e ψ D U g₁ hM r h _ ι hT hA
-  haveI := isAlgClosure_of_number_field Ω K
+  have := isAlgClosure_of_number_field Ω K
   have hη : ∀ s : G K Ω, D.η (galEmb ℚ K Ω s) = 1 := fun s => by
     rw [← MonoidHom.mem_ker, D.η_ker]
     exact galEmb_mem ℚ K Ω s
@@ -315,9 +315,9 @@ private theorem loc_of_int {O R A : Type} [CommRing O] [CommRing R] [IsLocalRing
     [Nontrivial A] [Algebra O A] [Algebra.IsIntegral O A] (f : R →ₐ[O] A) : IsLocalHom f := by
   let g : R →+* f.range := f.rangeRestrict
   have hg : Function.Surjective g := f.rangeRestrict_surjective
-  haveI : IsLocalRing f.range := IsLocalRing.of_surjective' g hg
+  have : IsLocalRing f.range := IsLocalRing.of_surjective' g hg
   have hl : IsLocalHom g := IsLocalHom.of_surjective _ hg
-  haveI : Algebra.IsIntegral f.range A := Algebra.IsIntegral.tower_top (R := O)
+  have : Algebra.IsIntegral f.range A := Algebra.IsIntegral.tower_top (R := O)
   have h2 : IsLocalHom (algebraMap f.range A) := Algebra.IsIntegral.isLocalHom _ _
   exact ⟨fun x hx => hl.map_nonunit x (h2.map_nonunit (g x) hx)⟩
 private theorem norm_le {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [CommRing R] [Algebra c.O R] [IsCO c.O R]
@@ -338,10 +338,10 @@ private theorem factor {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [CommRin
     (f : R →ₐ[c.O] PadicAlgCl l) (hf : IsLocPt f) :
     ∃ (A : Subalgebra c.O (PadicAlgCl l)) (h : IsDiscreteValuationRing A) (_ : Module.Finite c.O A) (f' : R →ₐ[c.O] A),
       IsAdicComplete (@maximalIdeal A _ h.toIsLocalRing) A ∧ ∀ x, (f' x : PadicAlgCl l) = f x := by
-  haveI := (UpperTheory.V.abelian₂.dvr_finite l c.O).1
+  have := (UpperTheory.V.abelian₂.dvr_finite l c.O).1
   obtain ⟨E, hE⟩ := Loc.ptFin (l := l) R ((TrivSqZeroExt.inlAlgHom c.O _ _).comp f) hf
   have hE' : ∀ a, f a ∈ E.1 := fun a => (hE a).1
-  haveI := E.2
+  have := E.2
   obtain ⟨h1, h2, -⟩ := UpperTheory.V.abelian₂.dvr_intClosure l E.1
   let j : E.1 →ₐ[ℤ_[l]] PadicAlgCl l := E.1.val.restrictScalars ℤ_[l]
   have hj : Function.Injective j := Subtype.val_injective
@@ -352,8 +352,8 @@ private theorem factor {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [CommRin
   let A : Subalgebra c.O (PadicAlgCl l) := { B.toSubsemiring with algebraMap_mem' := fun a => f.commutes a ▸ hB _ }
   have d1 : IsDiscreteValuationRing B := IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing e
   have d2 : Module.Finite ℤ_[l] B := Module.Finite.equiv e.toLinearEquiv
-  haveI : Module.Finite ℤ_[l] A := d2
-  haveI d3 : IsDiscreteValuationRing A := d1
+  have : Module.Finite ℤ_[l] A := d2
+  have d3 : IsDiscreteValuationRing A := d1
   exact ⟨A, d3, Module.Finite.of_restrictScalars_finite ℤ_[l] c.O A, f.codRestrict A hB, (UpperTheory.V.abelian₂.dvr_finite l A).1,
     fun _ => rfl⟩
 end SlopeTestRemainingChoices
@@ -365,12 +365,12 @@ theorem UpperTheory.V.Z.J.admissible_typeI_even_level_alt :
   intro hI hH hE Ω _ _ _ K _ _ _ _ _ l hl c N _ e ψ D U g₁ hM S f hf hr ι hT hA
   have hN := hH.litN
   have hσ : Sd.IsCC D.cc := D.conj
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
-  haveI : CharP (ResidueField c.O) l := by
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (dvrFacts l c.O).2.2.1
+  have : CharP (ResidueField c.O) l := by
     rw [CharP.charP_iff_prime_eq_zero hl.out, ← map_natCast (residue c.O), residue_eq_zero_iff,
       mem_maximalIdeal, mem_nonunits_iff, ← map_natCast (algebraMap ℤ_[l] c.O)]
     intro hu
-    exact PadicInt.prime_p.not_unit (isUnit_of_map_unit _ _ hu)
+    exact PadicInt.prime_p.not_isUnit (isUnit_of_map_unit _ _ hu)
   obtain ⟨B, hB, -, -, -, hB', -⟩ := U3.dat_loc D
   have hF := Fr.gd_ex ⟨⟨hN.coh.lf, hN.coh.lt, hN.coh.le, hN.coh.gf, hN.coh.ge, hN.coh.pt⟩, hN.coh.uo, hN.coh.gw⟩
     Ω K l c N e ψ D B hB
@@ -392,7 +392,7 @@ theorem UpperTheory.V.Z.J.admissible_typeI_even_level_alt :
   have hram : ∀ B' : ValuationSubring Ω, ¬ Ine (F := ℚ) B' ≤ D.η.ker →
       B'.valuation ((l * N * (discr K).natAbs : ℕ) : Ω) < 1 := by
     intro B' h
-    haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+    have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
     have hd : B'.valuation ((discr K : ℤ) : Ω) < 1 := by
       by_contra h4
       refine h fun s hs => ?_
@@ -411,7 +411,7 @@ theorem UpperTheory.V.Z.J.admissible_typeI_even_level_alt :
     ⟨D.gd.e_pos, dvd_mul_right _ _,
       mul_ne_zero (mul_ne_zero hl.out.ne_zero (NeZero.ne N)) (Int.natAbs_ne_zero.2 (discr_ne_zero K)), hram, hB, hσ⟩
   obtain ⟨A, hA1, hA2, f', hA3, hf'⟩ := factor f hf
-  haveI : IsLocalRing A := hA1.toIsLocalRing
+  have : IsLocalRing A := hA1.toIsLocalRing
   have ho := Pr.ordPt_of_gd hI.loc D g₁ hM U S B hB' A f' (loc_of_int f')
   have e1 : UnitaryThreeInertia.push A.val (U3.push f' S.r.hom) = U3.push f S.r.hom :=
     MonoidHom.ext fun g => SemidirectProduct.ext (Units.ext (Matrix.ext fun a b => hf' _)) rfl

@@ -83,7 +83,7 @@ theorem hpk_mulVec (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1)) :
     rw [Finset.sum_eq_single ⟨2 * r + k - i.val, by omega⟩]
     · simp
     · intro j _ hj
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       intro hj'
       exact hj (Fin.ext hj')
     · intro h
@@ -92,7 +92,7 @@ theorem hpk_mulVec (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1)) :
     rw [Finset.sum_eq_single i]
     · simp [h2]
     · intro j _ hj
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       intro hj'
       exact hj (Fin.ext hj')
     · intro h
@@ -101,7 +101,7 @@ theorem hpk_mulVec (v : Fin (2 * r + k + 1) → ℂ) (i : Fin (2 * r + k + 1)) :
     rw [Finset.sum_eq_single i]
     · simp [h2]
     · intro j _ hj
-      rw [if_neg, zero_mul]
+      rw [ite_eq_right, zero_mul]
       intro hj'
       exact hj (Fin.ext hj')
     · intro h
@@ -112,15 +112,15 @@ theorem hpk_mulVec_mulVec (v : Fin (2 * r + k + 1) → ℂ) : Hpk k r *ᵥ (Hpk 
   have hi := i.isLt
   rw [hpk_mulVec]
   split_ifs with h1 h2
-  · rw [hpk_mulVec, if_pos]
+  · rw [hpk_mulVec, ite_eq_left]
     · congr 1
       ext
       show 2 * r + k - (2 * r + k - i.val) = i.val
       omega
     · show 2 * r + k - i.val < r ∨ r + k < 2 * r + k - i.val
       omega
-  · rw [hpk_mulVec, if_neg h1, if_pos h2, neg_neg]
-  · rw [hpk_mulVec, if_neg h1, if_neg h2]
+  · rw [hpk_mulVec, ite_eq_right h1, ite_eq_left h2, neg_neg]
+  · rw [hpk_mulVec, ite_eq_right h1, ite_eq_right h2]
 
 theorem mat_eq_of_mulVec {A B : Mat k r} (h : ∀ v, A *ᵥ v = B *ᵥ v) : A = B := by
   ext i j
@@ -296,7 +296,7 @@ theorem sig_inner (X : SigData k r) {y : Mat k r} (hy : y ∈ GV k r) (u v : X.H
     have h := X.rep.1.2 y hy y⁻¹ hyi
     rw [gv_mul_inv hy, X.rep.1.1] at h
     have h2 := DFunLike.congr_fun h v
-    simp only [ContinuousLinearMap.one_apply, ContinuousLinearMap.comp_apply] at h2
+    simp only [one_apply_eq_self, ContinuousLinearMap.comp_apply] at h2
     exact h2.symm
   let L : X.Hs →ₗᵢ[ℂ] X.Hs :=
     { toLinearMap := (X.σ y).toLinearMap, norm_map' := fun w => X.rep.2.1 y hy w }
@@ -361,8 +361,8 @@ theorem pi_norm_le (D : RealPlaceData k r Wp Wp) {h : Mat k r} (hh : h ∈ UWset
 
 theorem ae_UN (D : RealPlaceData k r Wp Wp) :
     ∀ᵐ p ∂(D.μW.prod D.μN), Matrix.of p.1 ∈ UWset k r D.z ∧ Matrix.of p.2 ∈ Nset k r := by
-  haveI : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
   have hW : ∀ᵐ x ∂D.μW, Matrix.of x ∈ UWset k r D.z := ae_iff.mpr D.haarW.conc
   have hN : ∀ᵐ x ∂D.μN, Matrix.of x ∈ Nset k r := ae_iff.mpr D.haarN.conc
   exact ((Measure.quasiMeasurePreserving_fst (μ := D.μW) (ν := D.μN)).ae hW).and

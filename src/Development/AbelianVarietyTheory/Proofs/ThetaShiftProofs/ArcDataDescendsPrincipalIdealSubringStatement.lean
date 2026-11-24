@@ -408,9 +408,9 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem exists_common_closed {k A B : Type} [Field k] [Field A] [Field B] (i : k →+* A) (j : k →+* B) :
     ∃ (L : Type) (_ : Field L) (_ : IsAlgClosed L) (g : A →+* L) (h : B →+* L), g.comp i = h.comp j := by
   obtain ⟨M, hM⟩ := (letI := i.toAlgebra; letI := j.toAlgebra; Ideal.exists_maximal (TensorProduct k A B))
-  letI := i.toAlgebra
-  letI := j.toAlgebra
-  letI := Ideal.Quotient.field M
+  let := i.toAlgebra
+  let := j.toAlgebra
+  let := Ideal.Quotient.field M
   refine ⟨AlgebraicClosure (TensorProduct k A B ⧸ M), inferInstance, inferInstance,
     (algebraMap (TensorProduct k A B ⧸ M) _).comp ((Ideal.Quotient.mk M).comp Algebra.TensorProduct.includeLeftRingHom),
     (algebraMap (TensorProduct k A B ⧸ M) _).comp ((Ideal.Quotient.mk M).comp

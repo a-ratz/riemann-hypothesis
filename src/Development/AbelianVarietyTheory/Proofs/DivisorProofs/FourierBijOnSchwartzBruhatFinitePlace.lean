@@ -82,10 +82,10 @@ theorem bijOn_circle [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circle) 
     Set.BijOn (fun (φ : (κ → k) → ℂ) (y : κ → k) => ∫ x, φ x * (ψ (x ⬝ᵥ y) : ℂ) ∂μ)
       (SB (κ → k) : Set _) (SB (κ → k) : Set _) := by
   classical
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   obtain ⟨ν, hν⟩ := (GlobalTheory.SplitWeil.selfDual_measure k ψ hc h1).1
-  haveI := hν.1
+  have := hν.1
   set m : Measure (κ → k) := Measure.pi fun _ => ν with hm
   have hμ : μ = μ.addHaarScalarFactor m • m := Measure.isAddLeftInvariant_eq_smul μ m
   set r := μ.addHaarScalarFactor m with hr_def
@@ -142,9 +142,9 @@ theorem fourier_bijOn : ∀ (F : Type) [Field F] [NumberField F] (v : Pl (F := F
     Set.BijOn (fun (φ : (κ → Fv F v) → ℂ) (y : κ → Fv F v) => ∫ x, φ x * ψ (x ⬝ᵥ y) ∂μ)
       (SB (κ → Fv F v) : Set _) (SB (κ → Fv F v) : Set _) := by
   intro F _ _ v ψ hc hn h1 κ _ inst _ μ _
-  letI : MeasurableSpace (Fv F v) := borel _
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := GlobalTheory.SplitWeil.secondCountable (Fv F v)
+  let : MeasurableSpace (Fv F v) := borel _
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := GlobalTheory.SplitWeil.secondCountable (Fv F v)
   have e : inst = MeasurableSpace.pi := by
     rw [BorelSpace.measurable_eq (α := κ → Fv F v)]
     exact (BorelSpace.measurable_eq (α := κ → Fv F v) (self := Pi.borelSpace)).symm

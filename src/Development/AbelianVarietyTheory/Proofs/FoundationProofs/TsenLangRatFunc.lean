@@ -81,7 +81,7 @@ theorem exists_ne_zero_common_zero_of_constantCoeff_eq_zero :
   set m : Ideal (MvPolynomial (Fin n) k) := RingHom.ker (MvPolynomial.eval (0 : Fin n → k)) with hm
   have hsurj : Function.Surjective (MvPolynomial.eval (0 : Fin n → k)) :=
     fun c => ⟨MvPolynomial.C c, by simp⟩
-  haveI hmax : m.IsMaximal := RingHom.ker_isMaximal_of_surjective _ hsurj
+  have hmax : m.IsMaximal := RingHom.ker_isMaximal_of_surjective _ hsurj
   set I : Ideal (MvPolynomial (Fin n) k) := Ideal.span ((Finset.univ.image f : Finset _) : Set (MvPolynomial (Fin n) k)) with hI
   have hIm : I ≤ m := by
     rw [hI, Ideal.span_le]
@@ -91,7 +91,7 @@ theorem exists_ne_zero_common_zero_of_constantCoeff_eq_zero :
     simp [hm, RingHom.mem_ker, MvPolynomial.eval_zero, hf i]
   have hItop : I ≠ ⊤ := fun h => hmax.ne_top (top_le_iff.mp (h ▸ hIm))
   obtain ⟨P, hP⟩ := Ideal.nonempty_minimalPrimes hItop
-  haveI hPp : P.IsPrime := hP.1.1
+  have hPp : P.IsPrime := hP.1.1
   have hht : P.height ≤ r := by
     have h1 := Ideal.height_le_card_of_mem_minimalPrimes_span_finset hP
     refine h1.trans ?_
@@ -268,7 +268,7 @@ theorem tsenLang_ratFunc :
   have hnumer : ∀ a ∈ S, algebraMap k[X] (RatFunc k) (numer a) = b • a := by
     intro a ha
     have h := hbS a ha
-    simp only [numer, dif_pos h]
+    simp only [numer, dite_eq_left h]
     exact (RingHom.mem_rangeS.mp h).choose_spec
   let g : Fin r → MvPolynomial (Fin n) k[X] := fun i =>
     ∑ μ ∈ (f i).support, MvPolynomial.monomial μ (numer ((f i).coeff μ))
@@ -290,7 +290,7 @@ theorem tsenLang_ratFunc :
     intro i μ hμ
     refine ⟨?_, ?_⟩
     · have hmem : μ ∈ (f i).support := by
-        by_contra h; rw [hgc, if_neg h] at hμ; exact hμ rfl
+        by_contra h; rw [hgc, ite_eq_right h] at hμ; exact hμ rfl
       have := hf i (MvPolynomial.mem_support_iff.mp hmem)
       rwa [Finsupp.degree_eq_weight_one]
     · exact le_trans (Finset.le_sup (f := fun μ => ((g i).coeff μ).natDegree)

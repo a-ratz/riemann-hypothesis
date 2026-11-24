@@ -345,8 +345,8 @@ theorem isAdicComplete_tensor_finite : ∀ (W : Type) [CommRing W] [IsDomain W]
     intro h
     apply hl.ne_zero
     rw [hm, Nat.cast_mul, h, zero_mul]
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI hA' : IsAdicComplete (Ideal.span {(p : A)}) A := by
+  have : Fact p.Prime := ⟨hp⟩
+  have hA' : IsAdicComplete (Ideal.span {(p : A)}) A := by
     rw [← hI]
     exact hA
   obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' W L
@@ -437,7 +437,7 @@ theorem exists_eq_pow_smul [Module.Flat W A] (n : ℕ)
       rw [map_smul]
       exact hkill _
   have hw' : (LinearMap.lTensor A (pr S n)) w = 0 := by
-    rw [← LinearMap.baseChange_eq_ltensor]
+    rw [← LinearMap.baseChange_eq_lTensor]
     exact hw
   obtain ⟨v, rfl⟩ := (Module.Flat.lTensor_exact A hex w).1 hw'
   exact ⟨v, lTensor_pow_smul l n v⟩
@@ -508,7 +508,7 @@ end
 
 theorem limit_extension_upTo : ∀ (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] (l : ℕ), Irreducible (l : W) → ∀ (S : Sys.{1} W) (c : ℕ), Module.Finite W S.lim → (∀ n (x : S.M n), ((l : W) ^ n) • x = 0) → (∀ n (x : S.lim), x.1 n = 0 → ∃ y : S.lim, x = ((l : W) ^ n) • y) → (∀ n (x : S.M n), ∃ y : S.lim, y.1 n = ((l : W) ^ c) • x) → ∀ (A : Type) [CommRing A] [Algebra W A] [Module.Flat W A] [IsAdicComplete (Ideal.span {(l : A)}) A], (∀ w : A ⊗[W] S.lim, (∀ n, (pr S n).baseChange A w = 0) → w = 0) ∧ ∃ α : (tens A S).lim →ₗ[A] A ⊗[W] S.lim, ∀ z n, (pr S n).baseChange A (α z) = ((l : A) ^ c) • (z.1 n : A ⊗[W] S.M n) := by
   intro W _ _ _ l hl S c hfin hkill hker hcok A _ _ _ _
-  haveI hcompl : IsAdicComplete (Ideal.span {(l : A)}) (A ⊗[W] S.lim) :=
+  have hcompl : IsAdicComplete (Ideal.span {(l : A)}) (A ⊗[W] S.lim) :=
     _root_.GlobalTheory.CompanionTheory.TensorCompleteFinite.isAdicComplete_tensor_finite W l hl A S.lim
   have hinj := eq_zero_of_baseChange_pr l S A hkill hker
   refine ⟨hinj, ?_⟩
@@ -721,7 +721,7 @@ namespace GlobalTheory.CompanionTheory.TwCok
 theorem pow_torsion_bounded {W : Type} [CommRing W] [IsNoetherianRing W] (r : W) (T : Type 1)
     [AddCommGroup T] [Module W T] [Module.Finite W T] :
     ∃ c : ℕ, ∀ (k : ℕ) (t : T), r ^ k • t = 0 → r ^ c • t = 0 := by
-  haveI := isNoetherian_of_isNoetherianRing_of_finite W T
+  have := isNoetherian_of_isNoetherianRing_of_finite W T
   let f : ℕ →o Submodule W T :=
     ⟨fun k => LinearMap.ker ((r ^ k) • LinearMap.id : T →ₗ[W] T), fun a b hab t ht => by
       simp only [LinearMap.mem_ker, LinearMap.smul_apply, LinearMap.id_apply] at ht ⊢
@@ -765,11 +765,11 @@ theorem lift_of_conn_zero (Q : LSeq l S S') (hA : ∀ n, IsArtinian W (S.M n)) (
   let y : ∀ m, S.M m := fun m => if hm : n ≤ m then (hy m hm).choose else 0
   have hyx : ∀ m (hm : n ≤ m), Q.ρ m n (y m) = x := by
     intro m hm
-    simp only [y, dif_pos hm]
+    simp only [y, dite_eq_left hm]
     exact (hy m hm).choose_spec
   let N : ∀ m, Submodule W (S.M m) := fun m => if n ≤ m then LinearMap.ker (Q.ρ m n) else ⊤
-  have hN : ∀ m (hm : n ≤ m), N m = LinearMap.ker (Q.ρ m n) := fun m hm => if_pos hm
-  have hN' : ∀ m (hm : ¬ n ≤ m), N m = ⊤ := fun m hm => if_neg hm
+  have hN : ∀ m (hm : n ≤ m), N m = LinearMap.ker (Q.ρ m n) := fun m hm => ite_eq_left hm
+  have hN' : ∀ m (hm : ¬ n ≤ m), N m = ⊤ := fun m hm => ite_eq_right hm
   have hNr : ∀ m, ∀ u ∈ N (m + 1), S.r m u ∈ N m := by
     intro m u hu
     by_cases hm : n ≤ m
@@ -1176,7 +1176,7 @@ def nm (r : Res l K) (M : Model l K) (n : ℕ) :
 theorem bWMorL_eq (r : Res l K) (M : Model l K) (n : ℕ) :
     letI := (Mid.wn r n).toAlgebra
     bWMorL r M n = B.omMor ((nm r M n).mor l) r.w (Mid.wn_mk r n) := by
-  letI := (Mid.wn r n).toAlgebra
+  let := (Mid.wn r n).toAlgebra
   unfold bWMorL
   refine omMor_congr ?_ _ _
   unfold B.crMor NMor.mor
@@ -1224,8 +1224,8 @@ theorem flat_quotient_of_flat {R A : Type} [CommRing R] [CommRing A] [Algebra R 
     (hf : ∀ a, f (Ideal.Quotient.mk I a) = Ideal.Quotient.mk J (algebraMap R A a)) :
     letI := f.toAlgebra; Module.Flat (R ⧸ I) (A ⧸ J) := by
   subst hJ
-  letI := f.toAlgebra
-  haveI : IsScalarTower R (R ⧸ I) (A ⧸ I.map (algebraMap R A)) :=
+  let := f.toAlgebra
+  have : IsScalarTower R (R ⧸ I) (A ⧸ I.map (algebraMap R A)) :=
     IsScalarTower.of_algebraMap_eq fun a => (hf a).symm
   let e₀ : (R ⧸ I) ⊗[R] A ≃ₗ[R] A ⧸ I.map (algebraMap R A) :=
     (TensorProduct.comm R (R ⧸ I) A).trans
@@ -1241,7 +1241,7 @@ def wToAcr0 (r : Res l K) : WittVector l r.k →+* (base l).Acr0 :=
 
 theorem isTorsionFree_acris_zero (r : Res l K) :
     letI := (wToAcr0 r).toAlgebra; Module.IsTorsionFree (WittVector l r.k) (base l).Acr0 := by
-  letI := (wToAcr0 r).toAlgebra
+  let := (wToAcr0 r).toAlgebra
   rw [Module.isTorsionFree_iff_smul_eq_zero]
   intro a x h
   by_cases ha : a = 0
@@ -1265,14 +1265,14 @@ theorem isTorsionFree_acris_zero (r : Res l K) :
 
 theorem flat_acris_zero (r : Res l K) :
     letI := (wToAcr0 r).toAlgebra; Module.Flat (WittVector l r.k) (base l).Acr0 := by
-  letI := (wToAcr0 r).toAlgebra
-  haveI := isTorsionFree_acris_zero r
+  let := (wToAcr0 r).toAlgebra
+  have := isTorsionFree_acris_zero r
   infer_instance
 
 theorem flat_acr (r : Res l K) (n : ℕ) :
     letI := (Mid.wn r n).toAlgebra; Module.Flat (Wc.Wm l r.k n) ((base l).Acr n) := by
-  letI := (wToAcr0 r).toAlgebra
-  haveI := flat_acris_zero r
+  let := (wToAcr0 r).toAlgebra
+  have := flat_acris_zero r
   refine flat_quotient_of_flat (R := WittVector l r.k) (A := (base l).Acr0)
     (Ideal.span {(l : WittVector l r.k) ^ n}) (Ideal.span {(l : (base l).Acr0) ^ n}) ?_ (Mid.wn r n) ?_
   · rw [Ideal.map_span, Set.image_singleton, map_pow, map_natCast]
@@ -1540,8 +1540,8 @@ theorem bc_tens : ∀ {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (P
     Tens (WittVector l r.k) (N := fun _ : Unit => AW r) (M := fun _ => (Wc.HS l (B.schFn M.p) r.ρ j).M n)
       (M' := Mid.HM r M n j) fun _ a y => idA r a • bWL r M n j y := by
   intro l _ K r M hM j n
-  letI := (Mid.wn r n).toAlgebra
-  haveI : Module.Flat (Wc.Wm l r.k n) ((base l).Acr n) := GlobalTheory.T.flat_acris_truncated_witt r n
+  let := (Mid.wn r n).toAlgebra
+  have : Module.Flat (Wc.Wm l r.k n) ((base l).Acr n) := GlobalTheory.T.flat_acris_truncated_witt r n
   obtain ⟨U⟩ := cov_of_sm M hM
   let m := nm r M n
   let Q : ObjectProperty (Thick (nlFun (Wc.pd l r.k n) l M.X M.p ((Wc.res l r.k n).comp r.ρ))) := St ⊤ {⊤}

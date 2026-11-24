@@ -63,14 +63,14 @@ theorem leibniz_of_comm : ∀ (n : ℕ) (F G : V n → Alt n) (v : V n) (F' : Al
     rw [Finset.sum_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [coefwise_mul (T := fun f => del f v (coordVec a))
-      (fun f hf => by rw [del_sum (fun p _ => hf p), ContinuousLinearMap.sum_apply])
+      (fun f hf => by rw [del_sum (fun p _ => hf p), sum_apply])
       (fun f g hf hg => del_mul hf hg _) (fun c => by rw [del_const]; rfl) hF hG]
     simp only [mul_add, ← mul_assoc, h]
   · unfold dbarAt
     rw [Finset.sum_mul, Finset.mul_sum, ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun a _ => ?_
     rw [coefwise_mul (T := fun f => dbar f v (coordVec a))
-      (fun f hf => by rw [dbar_sum (fun p _ => hf p), ContinuousLinearMap.sum_apply])
+      (fun f hf => by rw [dbar_sum (fun p _ => hf p), sum_apply])
       (fun f g hf hg => dbar_mul hf hg _) (fun c => by rw [dbar_const]; rfl) hF hG]
     simp only [mul_add, ← mul_assoc, h]
 

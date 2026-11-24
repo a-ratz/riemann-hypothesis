@@ -79,12 +79,12 @@ theorem exists_map_eq_smul {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting
       Measure.map (iotaX X h).toMulEquiv.symm (X.B.I.muA X.B.μf) = ENNReal.ofReal c • ν := by
   obtain ⟨hT, hL, hS, -⟩ := GlobalTheory.CongTop.adelic_topology X.B.I
   obtain ⟨h1, h2, h3, h4, h5⟩ := Formalism.IndefR.Eqv.ga_facts D (D.sp.Y 0)
-  haveI := X.B.haar
-  haveI := X.B.sf
-  haveI : BorelSpace X.B.I.GA := inferInstance
-  haveI : (X.B.I.muA X.B.μf).IsHaarMeasure := Measure.prod.instIsHaarMeasure _ _
+  have := X.B.haar
+  have := X.B.sf
+  have : BorelSpace X.B.I.GA := inferInstance
+  have : (X.B.I.muA X.B.μf).IsHaarMeasure := Measure.prod.instIsHaarMeasure _ _
   set μ' := Measure.map (iotaX X h).toMulEquiv.symm (X.B.I.muA X.B.μf) with hμ'
-  haveI hH : μ'.IsHaarMeasure :=
+  have hH : μ'.IsHaarMeasure :=
     (iotaX X h).toMulEquiv.symm.isHaarMeasure_map _ (iotaX X h).symm.continuous (iotaX X h).continuous
   refine ⟨(Measure.haarScalarFactor μ' ν : ℝ), ?_, ?_⟩
   · exact_mod_cast Measure.haarScalarFactor_pos_of_isHaarMeasure μ' ν
@@ -93,7 +93,7 @@ theorem exists_map_eq_smul {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting
 
 theorem evalTranslate_norm : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D), R.toLevCh.Is A.μ0 → R.IsGrp F → R.IsModels → ∀ t ∈ GfC (Yc D 0), ∃ c : ℝ, 0 < c ∧ ∀ v₀ : (MP R).Vec, (∀ τ, ‖(v₀ τ : (MP R).H τ)‖ = 1) → ∀ S ∈ EP R F, MemLp (fun x => ev (MP R) v₀ S (@HMul.hMul (GA D (Yc D 0)) (GA D (Yc D 0)) (GA D (Yc D 0)) _ ((iotaX X h).symm x) t)) 2 (muX X) ∧ ∫ x, ‖(fun x => ev (MP R) v₀ S (@HMul.hMul (GA D (Yc D 0)) (GA D (Yc D 0)) (GA D (Yc D 0)) _ ((iotaX X h).symm x) t)) x‖ ^ 2 ∂(muX X) = c * (ipM (MP R) R.ν0 R.fd0 S S).re ∧ ((ipM (MP R) R.ν0 R.fd0 S S).re = 0 → S = 0) := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F X h hL hG hM t ht
-  haveI hνH : R.ν0.IsHaarMeasure := hM.ν0.1.1
+  have hνH : R.ν0.IsHaarMeasure := hM.ν0.1.1
   obtain ⟨c, hc, hmap⟩ := @exists_map_eq_smul D X h R.ν0 hνH
   obtain ⟨hι, hιs⟩ := measurable_of_borel X (iotaX X h) (borel_inst X)
   have hTr : SquareIntegrableTransfer R.ν0 R.fd0 X (iotaX X h).toMulEquiv t c :=

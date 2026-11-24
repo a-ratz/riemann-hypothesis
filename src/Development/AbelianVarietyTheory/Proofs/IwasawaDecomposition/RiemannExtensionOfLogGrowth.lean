@@ -87,7 +87,7 @@ private theorem exists_differentiableOn_of_locally_extends {U S : Set V} (hU : I
   have key : ∀ b ∈ U, ∀ N ∈ 𝓝 b, ∀ G : V → ℂ, DifferentiableOn ℂ G N → EqOn G u (N ∩ S) →
       limUnder (𝓝[S] b) u = G b := by
     intro b hbU N hN G hG hGu
-    haveI : (𝓝[S] b).NeBot := mem_closure_iff_nhdsWithin_neBot.mp (hd hbU)
+    have : (𝓝[S] b).NeBot := mem_closure_iff_nhdsWithin_neBot.mp (hd hbU)
     apply Tendsto.limUnder_eq
     have hc : ContinuousAt G b := (hG.differentiableAt hN).continuousAt
     refine (hc.tendsto.mono_left nhdsWithin_le_nhds).congr' ?_
@@ -118,7 +118,7 @@ private theorem isLittleO_sub_inv_sub_of_log_bound {ψ h : ℂ → ℂ} {s₀ : 
     have h0' : ∀ᶠ z in 𝓝[≠] s₀, ψ z = 0 := nhdsWithin_le_nhds h0
     obtain ⟨s, hs1, hs2⟩ := (h0'.and hne).exists
     exact hs2 hs1
-  obtain ⟨n, g, hg, hg0, hfg⟩ := hψ.exists_eventuallyEq_pow_smul_nonzero_iff.mpr hnz
+  obtain ⟨n, g, hg, hg0, hfg⟩ := hψ.exists_eventuallyEq_pow_smul_ne_zero_iff.mpr hnz
   set A := |Real.log ‖g s₀‖| + 1 with hA
   have hA0 : 0 ≤ A := by positivity
   have hglog : ∀ᶠ s in 𝓝 s₀, |Real.log ‖g s‖| ≤ A :=

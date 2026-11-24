@@ -147,10 +147,10 @@ theorem exists_local_solution_contDiffAt {V : Type} [AddCommGroup V] [Topologica
   let f₁ : (Fin N → ℝ) →L[ℝ] (Fin N → ℝ) := (2 : ℝ) • ContinuousLinearMap.id ℝ (Fin N → ℝ)
   let f₂ : (Fin N → ℝ) →L[ℝ] (Fin N → ℝ) := (1 / 2 : ℝ) • ContinuousLinearMap.id ℝ (Fin N → ℝ)
   have h12 : Function.LeftInverse f₂ f₁ := fun w => by
-    simp only [f₁, f₂, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, smul_smul]
+    simp only [f₁, f₂, smul_apply, ContinuousLinearMap.id_apply, smul_smul]
     norm_num
   have h21 : Function.RightInverse f₂ f₁ := fun w => by
-    simp only [f₁, f₂, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply, smul_smul]
+    simp only [f₁, f₂, smul_apply, ContinuousLinearMap.id_apply, smul_smul]
     norm_num
   let fe : (Fin N → ℝ) ≃L[ℝ] (Fin N → ℝ) := ContinuousLinearEquiv.equivOfInverse f₁ f₂ h12 h21
   have hFs : HasStrictFDerivAt Ft (fe : (Fin N → ℝ) →L[ℝ] (Fin N → ℝ)) u0 := by
@@ -165,7 +165,7 @@ theorem exists_local_solution_contDiffAt {V : Type} [AddCommGroup V] [Topologica
     ((bL.isBoundedBilinearMap.contDiff.comp (contDiff_id.prodMk contDiff_id)).add
       lL.contDiff).contDiffAt
   have hs : HasStrictFDerivAt Ft (fe : (Fin N → ℝ) →L[ℝ] (Fin N → ℝ)) u0 :=
-    hcd.hasStrictFDerivAt' hFs.hasFDerivAt one_ne_zero
+    hcd.hasStrictFDerivAt hFs.hasFDerivAt one_ne_zero
   let G := hcd.localInverse hFs.hasFDerivAt one_ne_zero
   have hGc : ContinuousAt G (Ft u0) := hs.localInverse_continuousAt
   have hGa : G (Ft u0) = u0 := hs.localInverse_apply_image
@@ -279,11 +279,11 @@ theorem square_chart_c1_local {F E : Type} [Field F] [NumberField F] [Field E] [
     rw [hTiT, hc1, Matrix.one_mul, Matrix.mul_one, hcT, sub_self, add_zero]
   rw [hy0] at hgc hg0 hgev hgcd hgd
   refine ⟨Subtype.val ⁻¹' {y | Bq (g y) (g y) + Lq (g y) = y}, fun T => Ti * g T.val, ?_, ?_, ?_, ?_, ?_⟩
-  · exact continuous_subtype_val.continuousAt.preimage_mem_nhds hgev
+  · exact continuous_subtypeVal.continuousAt.preimage_mem_nhds hgev
   · show Ti * g Tm = 1
     rw [hg0, hTiT]
   · exact (continuous_const.matrix_mul continuous_id).continuousAt.comp
-      (ContinuousAt.comp_of_eq hgc continuous_subtype_val.continuousAt rfl)
+      (ContinuousAt.comp_of_eq hgc continuous_subtypeVal.continuousAt rfl)
   · intro T hT'
     have hT'' : Bq (g T.val) (g T.val) + Lq (g T.val) = T.val := hT'
     show gramR (Ainf F) σ J (fun b i => ∑ c, (Ti * g T.val) c b * ratTup (Ainf F) Y c i) = T.val
@@ -318,7 +318,7 @@ theorem square_chart_c1_local {F E : Type} [Field F] [NumberField F] [Field E] [
     let L₁ : EuclideanSpace ℝ η →L[ℝ] (Fin N → ℝ) :=
       (AddMonoidHom.mk' (fun z => e ((eH.symm z : HermR (Ainf F) σ m) : Matrix (Fin m) (Fin m) (Ainf F ⊗[F] E)))
         (by intro x y; simp only [hHs, AddSubgroup.coe_add, he])).toRealLinearMap
-        (e.continuous.comp (continuous_subtype_val.comp eH.symm.continuous))
+        (e.continuous.comp (continuous_subtypeVal.comp eH.symm.continuous))
     let L₂ : (Fin N → ℝ) →L[ℝ] EuclideanSpace ℝ μ' :=
       (AddMonoidHom.mk' (fun y => eM (Ti * e.symm y)) (by intro x y; simp only [hes, Matrix.mul_add, heM])).toRealLinearMap
         (eM.continuous.comp ((continuous_const.matrix_mul continuous_id).comp e.symm.continuous))
@@ -348,7 +348,7 @@ theorem square_chart_c1_local {F E : Type} [Field F] [NumberField F] [Field E] [
       have hD' : HasFDerivAt (fun z => L₂ ((fun y => e (g (e.symm y))) (L₁ z))) _
           (eH (hermOf (Ainf F) σ (gramE σ J Y) hT)) := hD
       rw [hfun, hD'.fderiv]
-      simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply,
+      simp only [ContinuousLinearMap.comp_apply, smul_apply, ContinuousLinearMap.id_apply,
         map_smul]
       rw [hL₂, hL₁, Homeomorph.symm_apply_apply]
 
@@ -366,8 +366,8 @@ def SquareChartC1 : Prop := ∀ {D : D7} (X : HidaSetting D) (u' : D.what₂.Wor
 
 theorem square_chart_c1 : SquareChartC1 := by
   intro D X u' ψ hT μinf νinf fibInf hP
-  haveI : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
-  haveI : FiniteDimensional X.B.I.F X.B.I.E :=
+  have : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
+  have : FiniteDimensional X.B.I.F X.B.I.E :=
     Module.finite_of_finrank_pos (by rw [X.B.I.cm.deg2]; norm_num)
   have hσ : ∀ x, X.B.I.cm.sig (X.B.I.cm.sig x) = x := fun x => star_star x
   have hdet := detNZ_holds X u' ψ hT μinf νinf fibInf hP
@@ -464,10 +464,10 @@ theorem tupJac_of_pieces {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) (ψ 
     (κ : EuclideanSpace ℝ ι → HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) {η : Type} [Fintype η]
     (eH : HmI X ≃ₜ EuclideanSpace ℝ η) (cν : ℝ) (hν : νinf.map eH = ENNReal.ofReal cν • volume)
     (h1 : PolarChartContDiffAt X u' hT a κ eH) (h2 : PsiDet X u' hT a κ eH cν) : TupJac X u' hT μinf νinf a κ := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : BorelSpace (TupI X) :=
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : BorelSpace (TupI X) :=
     PI.AprimeInfT.borelSpace_tup (F := X.B.I.F) (E := X.B.I.E) (Ainf X.B.I.F) (D.R.rS + 1 + D.R.rS)
-  haveI : BorelSpace (HmI X) := ⟨rfl⟩
+  have : BorelSpace (HmI X) := ⟨rfl⟩
   obtain ⟨Φ, Dv, hd, hDv, hvol, harith⟩ := h2
   set z0 : EuclideanSpace ℝ ι × EuclideanSpace ℝ η :=
     ((0 : EuclideanSpace ℝ ι), eH (TI X u' hT)) with hz0
@@ -579,8 +579,8 @@ def HermEuc : Prop := ∀ {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) (ψ
 
 theorem hermEuc : HermEuc := by
   intro D X u' ψ hT μinf νinf fibInf hP
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : BorelSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) := ⟨rfl⟩
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : BorelSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) := ⟨rfl⟩
   obtain ⟨eH, hadd, hmap⟩ := euc_coords νinf (hermCoord X) (hermCoord_add X) _ (densNu_holds X u' ψ hT μinf νinf fibInf hP)
   exact ⟨_, inferInstance, eH, _, hadd, hmap⟩
 
@@ -676,7 +676,7 @@ theorem contDiffAt_bilinear_comp_prod {P Q M T : Type} [NormedAddCommGroup P] [N
   have dBA := (B.hasFDerivAt.comp (p0, q0) dA)
   have h : HasFDerivAt (fun z : P × Q => B (A z.2) (K z.1)) _ (p0, q0) := dBA.clm_apply dK
   rw [h.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.coe_comp', Function.comp_apply,
+  simp only [add_apply, ContinuousLinearMap.coe_comp, Function.comp_apply,
     ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd', ContinuousLinearMap.flip_apply]
   rw [add_comm]
 
@@ -704,7 +704,7 @@ def Rm {μ' : Type} (eM : MfI X ≃ₜ EuclideanSpace ℝ μ') (m : EuclideanSpa
 theorem rm_bil {μ' : Type} [Fintype μ'] (eM : MfI X ≃ₜ EuclideanSpace ℝ μ') (heM : ∀ x y, eM (x + y) = eM x + eM y) :
     ∃ B : EuclideanSpace ℝ μ' →L[ℝ] EuclideanSpace ℝ (KapI X) →L[ℝ] EuclideanSpace ℝ (KapI X),
       ∀ m y, B m y = Rm X eM m y := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   have hTs := symm_add_of (tupCoord X) (tupCoord_add X)
   have hMs := symm_add_of eM heM
   have H1 : ∀ m m' y, Rm X eM (m + m') y = Rm X eM m y + Rm X eM m' y := by
@@ -736,8 +736,8 @@ def KapOrb {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) {ι : Type}
 
 theorem eM_ex {D : D7} (X : HidaSetting D) : ∃ (μ' : Type) (_ : Fintype μ') (eM : MfI X ≃ₜ EuclideanSpace ℝ μ'),
     ∀ x y, eM (x + y) = eM x + eM y := by
-  haveI : NumberField.IsTotallyReal X.B.I.F := X.B.I.cm.totReal
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : NumberField.IsTotallyReal X.B.I.F := X.B.I.cm.totReal
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   obtain ⟨k, eK, hK⟩ := sq_coord_tens X.B.I.F X.B.I.E
   obtain ⟨k1, e1, h1⟩ := sq_coord_pi eK hK (Fin (D.R.rS + 1 + D.R.rS))
   obtain ⟨N, eM, hM⟩ := sq_coord_pi e1 h1 (Fin (D.R.rS + 1 + D.R.rS))
@@ -825,7 +825,7 @@ theorem tupDet_of (hK : LieComplementChartContDiffAt) (hLam : LamDet) : TupDet :
   rw [e]
   refine ContinuousLinearMap.ext fun z => ?_
   rw [(contDiffAt_bilinear_comp_prod B (fun t => eM (a (eH.symm t))) _ 0 (eH (TI X u' hT)) hA hk).2 z.1 z.2, hdA, map_smul,
-    ContinuousLinearMap.smul_apply, hB, hB]
+    smul_apply, hB, hB]
   show _ = Φ (z.1, z.2)
   rw [hΦ, LamMap, add_comm]
   congr 1

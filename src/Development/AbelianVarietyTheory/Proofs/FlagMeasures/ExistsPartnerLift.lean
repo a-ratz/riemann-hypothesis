@@ -189,7 +189,7 @@ theorem comp_eq_zero (F : FlagG S r T) (F' : FlagG S r T') (hG : Gflag F F' ≠ 
   obtain ⟨b, rfl⟩ := (mem_Xplus_iff F' y).1 hy
   have := pair_eq_zero (Zhat F F') a b T T' (by
     have e : (Fin.castLE (Nat.le_refl (r + 1)) : Fin (r + 1) → Fin (r + 1)) = id := rfl
-    simp only [Gflag, Dl, leadMinorE, e, le_refl, Nat.le_succ, dif_pos, Matrix.submatrix_id_id] at hG
+    simp only [Gflag, Dl, leadMinorE, e, le_refl, Nat.le_succ, dite_eq_left, Matrix.submatrix_id_id] at hG
     exact hG) (by
     funext i
     have := h _ (Submodule.mem_sup_left (fvec_mem_Xplus F i))
@@ -296,7 +296,7 @@ theorem smul_mem_UU {g : ℕ} (hg : g ≠ 0) (F : LFlag S r T) (F' : LFlag S r T
   obtain ⟨m, hm, hJm⟩ := Ideal.exists_le_maximal J hne
   let P : HeightOneSpectrum (𝓞 E) :=
     ⟨m, hm.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hm (RingOfIntegers.not_isField E)⟩
-  haveI := P.isPrime
+  have := P.isPrime
   have hxl : x ∈ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (BLat Λ F F') :=
     (GenericOrder.mem_locP' _ _ _).2 ⟨1, (Ideal.ne_top_iff_one _).1 P.isPrime.ne_top, by simpa using hx⟩
   by_cases hP : (g : 𝓞 E) ∈ P.asIdeal
@@ -368,7 +368,7 @@ theorem idx_le_of_rel {R V W : Type} [CommRing R] [AddCommGroup V] [Module R V] 
     (h0 : Mass.idxN A₂ B₂ ≠ 0) : Mass.idxN A₁ B₁ ≤ Mass.idxN A₂ B₂ := by
   choose φ hφ hR using h1
   unfold Mass.idxN AddSubgroup.relIndex AddSubgroup.index at *
-  haveI := Nat.finite_of_card_ne_zero h0
+  have := Nat.finite_of_card_ne_zero h0
   refine Nat.card_le_card_of_injective
     (fun c => (QuotientAddGroup.mk (⟨φ c.out.1 c.out.2, hφ _ _⟩ : A₂.toAddSubgroup))) fun c c' h => ?_
   rw [← c.out_eq', ← c'.out_eq', QuotientAddGroup.eq]
@@ -387,7 +387,7 @@ theorem det_sq {K V : Type} [Field K] [NumberField K] [StarRing K] [AddCommGroup
     ⟨fun x hx => Subtype.ext (hn x x.2 fun y hy => RowPerp.swap_zero hs (hx ⟨y, hy⟩)),
       fun x hx => Subtype.ext (hn x x.2 fun y hy => hx ⟨y, hy⟩)⟩
   have hlat : Submodule.IsFullLattice K (latIn U M) := by
-    haveI := isLattice_latIn_span hM (U := U) rfl
+    have := isLattice_latIn_span hM (U := U) rfl
     refine ⟨?_⟩
     apply Submodule.map_injective_of_injective U.injective_subtype
     rw [Submodule.map_span, Submodule.map_top, Submodule.range_subtype]

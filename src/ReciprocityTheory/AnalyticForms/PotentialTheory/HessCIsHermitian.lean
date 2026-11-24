@@ -71,7 +71,7 @@ theorem hessC_const_mul' (c : ℝ) (φ : (Fin D → ℂ) → ℝ) (z : Fin D →
   have h2 : fderiv ℝ (fderiv ℝ (fun w => c * φ w)) = c • fderiv ℝ (fderiv ℝ φ) := by
     rw [h1]; exact fderiv_const_smul_field c
   ext i j
-  simp only [hessC, h2, Pi.smul_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+  simp only [hessC, h2, Pi.smul_apply, smul_apply, smul_eq_mul,
     Matrix.smul_apply]
   push_cast
   ring
@@ -90,7 +90,7 @@ theorem hessC_add' (φ ψ : (Fin D → ℂ) → ℝ) (z : Fin D → ℂ) (hφ : 
       fderiv ℝ (fderiv ℝ φ) z + fderiv ℝ (fderiv ℝ ψ) z := by
     rw [e1.fderiv_eq]; exact fderiv_add d1 d2
   ext i j
-  simp only [hessC, e2, ContinuousLinearMap.add_apply, Matrix.add_apply]
+  simp only [hessC, e2, add_apply, Matrix.add_apply]
   push_cast
   ring
 
@@ -140,8 +140,8 @@ theorem leviC_smul_right (H : (Fin D → ℂ) →L[ℝ] (Fin D → ℂ) →L[ℝ
     linear_combination ((c.im : ℂ) * b k) * Complex.I_sq
   unfold leviC
   rw [h2, h1]
-  simp only [map_add (f := _), map_sub, map_smul, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [map_add (f := _), map_sub, map_smul, add_apply,
+    sub_apply, smul_apply, smul_eq_mul]
   apply Complex.ext <;> simp <;> ring
 
 theorem sum_leviC_right (H : (Fin D → ℂ) →L[ℝ] (Fin D → ℂ) →L[ℝ] ℝ) (a x : Fin D → ℂ) :

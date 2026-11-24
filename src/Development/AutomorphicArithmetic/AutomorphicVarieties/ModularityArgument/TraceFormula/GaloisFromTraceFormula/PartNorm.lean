@@ -314,7 +314,7 @@ theorem UpperTheory.V.Z.Tf.GaloisFromTraceFormula.partNorm :
   obtain ⟨w, hsp, B, ⟨b, hb, rfl⟩, hB⟩ : ∃ w : UpperTheory.V.Cj.S.Pl E, IsSplitAt w ∧ ∃ B, D.Sat w B ∧ (CG.mk π).HasSat w B := by
     have hinf := (UpperTheory.V.Z.Tf.GOne.thin E).2
     have hfin := Filter.eventually_cofinite.1 hs
-    obtain ⟨w, hw, hw'⟩ := (hinf.diff hfin).nonempty
+    obtain ⟨w, hw, hw'⟩ := (hinf.sdiff hfin).nonempty
     have h : ¬ ¬ (IsSplitAt w → ∃ B, D.Sat w B ∧ (CG.mk π).HasSat w B) := hw'
     exact ⟨w, hw, (not_not.1 h) hw⟩
   obtain ⟨ρ, hρ⟩ : ∃ ρ : CuspSub E (D.N i), CG.mk ρ = D.P i := Quotient.exists_rep (D.P i)

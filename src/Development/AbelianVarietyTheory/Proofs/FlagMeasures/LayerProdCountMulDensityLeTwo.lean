@@ -133,7 +133,7 @@ theorem layerProd_le_exp (n f : ℕ) {a : ℕ} (j : Fin a → ℕ) (τ : Fin a �
       intro k _
       positivity
   refine key.trans ?_
-  rw [layerProd_const_eq_pow, ← Real.exp_nat_mul]
+  rw [layerProd_const_eq_pow, ← Real.exp_natCast_mul]
   apply Real.exp_le_exp.2
   apply mul_le_mul_of_nonneg_right _ hx
   exact_mod_cast layerProd_exponent_le_three_mul_sum_mul n f j hn

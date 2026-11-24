@@ -217,9 +217,9 @@ theorem exists_kummer_flat : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : B
   classical
   refine ⟨fun g => if bk.FixFlat g then 0 else (good g).choose, fun g m => ?_, fun g hg => by simp [hg]⟩
   by_cases hg : bk.FixFlat g
-  · simp only [hg, if_true, map_zero, ZMod.val_zero, pow_zero, one_mul]
+  · simp only [hg, ite_true, map_zero, ZMod.val_zero, pow_zero, one_mul]
     rw [show Per.σF (g : GQ l) bk.flat = bk.flat from hg]
-  · simp only [hg, if_false]
+  · simp only [hg, ite_false]
     exact (good g).choose_spec m
 
 end GlobalTheory.FlatKummer
@@ -274,7 +274,7 @@ lemma coeff_monomial_two (i j p q : ℕ) (c : ℤ) :
 
 lemma monomial_two_eq (p q : ℕ) (c : ℤ) :
     monomial (Finsupp.single (0 : Fin 2) p + Finsupp.single 1 q) c = C c * X 0 ^ p * X 1 ^ q := by
-  rw [X_pow_eq_monomial, X_pow_eq_monomial, C_mul_monomial, monomial_mul]
+  rw [X_pow_eq_monomial, X_pow_eq_monomial, C_mul_monomial, monomial_mul_monomial]
   simp
 
 lemma factorial_dvd_term (n K s a : ℕ) (hK1 : 1 ≤ K) (hKn : K ≤ n) (hs : s ≤ K) (ha : a ≤ K - s)
@@ -1700,7 +1700,7 @@ theorem rootT_cocycle_of_pow_eq_mul : ∀ (l : ℕ) [Fact l.Prime] (C : Core l) 
     have : rootT C.ε m = 0 := pow_eq_zero_iff'.mp h0 |>.1
     rw [this, zero_pow (pow_ne_zero _ (Fact.out : l.Prime).ne_zero)] at hζ
     exact zero_ne_one hζ
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   set A := (PadicInt.toZModPow m a).val
   set B := (PadicInt.toZModPow m b).val
   set Cc := (PadicInt.toZModPow m ((n : ℤ_[l]) * a - b)).val

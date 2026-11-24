@@ -204,9 +204,9 @@ lemma pi_Gs (lf : Measure (A F)) (hlf : lf.IsAddHaarMeasure) (h1 : lf (Oh F) = 1
     (Measure.pi fun _ : ι => lf) (Gs g S) =
       ENNReal.ofReal (|((Algebra.norm ℚ g.det : ℚ) : ℝ)|⁻¹) * lf S ^ Fintype.card ι := by
   obtain ⟨hlc, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI := hlc
-  haveI := hsc
-  haveI : SigmaFinite lf := inferInstance
+  have := hlc
+  have := hsc
+  have : SigmaFinite lf := inferInstance
   have h := (_root_.GlobalTheory.CompanionTheory.SW.Core.PiScale.pi_scale F lf hlf h1 ι).1 g hg (Set.univ.pi fun _ => S)
     (MeasurableSet.univ_pi fun _ => hS)
   rw [Gs, h, Measure.pi_pi]
@@ -280,7 +280,7 @@ lemma mass_one (lf : Measure (A F)) (hlf : lf.IsAddHaarMeasure) (h1 : lf (Oh F) 
       Matrix.det_transpose, map_mul]
     push_cast
     rw [abs_inv, inv_inv, abs_mul]
-  simp only [muF, Measure.smul_apply, smul_eq_mul]
+  simp only [muF, smul_apply, smul_eq_mul]
   rw [pi_Gs lf hlf h1 hg hOm, pi_Gs lf hlf h1 (det_inv_ne hd) hPm, h1, hlP, e2, one_pow, mul_one]
   have hnd := hnorm hg
   have hnD := hnorm hB
@@ -353,10 +353,10 @@ theorem naQuad : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)
     (B : Matrix ι ι F), B.IsSymm → B.det ≠ 0 → NAQuad ψ (hf F) (Bf B) (muF B lf) := by
   intro F _ _ _ _ lf hlf h1 ψ hψ ι _ _ B hS hB
   obtain ⟨hlc, hsc, ht2, hOc, hOo, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI := hlc
-  haveI := hsc
-  haveI := ht2
-  haveI : SigmaFinite lf := inferInstance
+  have := hlc
+  have := hsc
+  have := ht2
+  have : SigmaFinite lf := inferInstance
   obtain ⟨hnorm, -, -⟩ := (_root_.GlobalTheory.CompanionTheory.SW.Core.StdChar.main F).2 ψ hψ
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, hL⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.SelfDual.finiteAdeles_selfDual F lf hlf h1 ψ hψ
   have hO : IsCompact (perp (fun x y => ψ (x * y)) (Oh F)) ∧
@@ -368,7 +368,7 @@ theorem naQuad : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)
   obtain ⟨hPc, hPo, hPP, hPm⟩ := hO
   have hP : ENNReal.ofReal (kap F) *
       (ENNReal.ofReal (kap F) * lf (perp (fun x y => ψ (x * y)) (Oh F))) = 1 := by
-    simpa [Measure.smul_apply, h1] using hPm
+    simpa [smul_apply, h1] using hPm
   have good : ∀ {c : F}, c ≠ 0 → _ := fun {c} hc =>
     LL_good (ι := ι) lf hlf h1 ψ hS hB hOc hOo hPc hPo hPP hP hc
   have hk : 0 < kap F := by

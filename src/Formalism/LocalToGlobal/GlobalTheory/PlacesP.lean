@@ -292,7 +292,7 @@ theorem muMax_le (hN' : DV.NprimeDef D L) (hc : Lnk.NuCommens D L) (u : D.what�
       ((DV.Iu D L u * (Jd : FractionalIdeal (nonZeroDivisors (𝓞 D.what₂.LL)) D.what₂.LL) :
         FractionalIdeal (nonZeroDivisors (𝓞 D.what₂.LL)) D.what₂.LL) : Submodule (𝓞 D.what₂.LL) D.what₂.LL)
       (DV.MramL D u) := by
-    rw [hNL, FractionalIdeal.coe_mul, slopeLatticeData.idealSmul_mul, slopeLatticeData.idealSmul_coeIdeal]
+    rw [hNL, FractionalIdeal.coeToSubmodule_mul, slopeLatticeData.idealSmul_mul, slopeLatticeData.idealSmul_coeIdeal]
     exact slopeLatticeData.idealSmul_mono_right _ hle
   have h1 := slopeLatticeData.muMaxDef_mono (D.div.Nu u).b (D.div.Nu u).X hX (slopeLatticeData.idealSmul_fg _ (D.MramL_fg u)) hle2
     (J.ne_bot_of_rank_pos _ hr)
@@ -353,12 +353,12 @@ theorem lenLoc_atT_zero (hAtT : NuAtTDef D L) {X : ErrX D} {K : G.Consts} {c : E
   have h1 := hE u 1 hm w
   rw [L.E_supp u 1 w hs] at h1
   unfold Eval at h1
-  simp only [if_pos hw] at h1
+  simp only [ite_eq_left hw] at h1
   have hseen : (D.fm u).seenP w = false := by
     by_contra hcon
     have ht : (D.fm u).seenP w = true := by simpa using hcon
     unfold EatT at h1
-    rw [if_pos ht] at h1
+    rw [ite_eq_left ht] at h1
     have hf : (0 : ℝ) < (D.R.f : ℝ) := by
       have : 0 < D.R.f := by
         exact lt_of_lt_of_le (by have := D.R.two_le_m; omega) D.R.m_le_f
@@ -624,7 +624,7 @@ theorem VV_empty_of_ge {D : D7} {L : SizeData₂ D} (X : G.Inst D L) (K : G.Cons
 theorem tau_eq_zero_of_le {D : D7} {L : SizeData₂ D} (X : G.Inst D L) (K : G.Consts) (a b : G.HH D → ℤ) (p : ℕ)
     (h : L.sc.X' ≤ (p : ℝ)) : G.tauP X K a b p = 0 := by
   unfold G.tauP
-  rw [if_pos (VV_empty_of_ge X K a b p h)]
+  rw [ite_eq_left (VV_empty_of_ge X K a b p h)]
 
 theorem sizes_at {D : D7} (L : SizeData₂ D) (S : SizesAt L) (hx5 : 5 ≤ L.sc.x) (hb9 : L.sc.x ^ 9 ≤ L.sc.b) :
     (D.R.f : ℝ) ≤ 2 * L.sc.x ^ 3 ∧ (D.R.m : ℝ) ≤ 2 * L.sc.x ^ 3 ∧ (D.host.TT.card : ℝ) ≤ 2 * L.sc.x ^ 3 ∧

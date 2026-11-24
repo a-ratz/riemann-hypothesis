@@ -69,7 +69,7 @@ theorem psiUnitOn_of_psiOn : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPr
   have hle : W.ι ⁻¹ᵁ V ≤ LB.wchart D.P.L (fun _ : PUnit => (toUnit (TW W) ≫ D.c y).left) (fun _ => p) :=
     fun z hz => mem_wchart1 _ _ _ _ (hj hz)
   have hVr : V ≤ W.ι.opensRange := by rw [Scheme.Opens.opensRange_ι]; exact hVW
-  haveI := W.ι.isIso_app V hVr
+  have := W.ι.isIso_app V hVr
   set u : Γ(W.toScheme, W.ι ⁻¹ᵁ V)ˣ := res hle ((ψ.psi y).s (fun _ => p)) with hu
   set r : Γ(Spec (CommRingCat.of R), V) := (inv (W.ι.app V)).hom u.val with hr
   have hr' : (W.ι.app V).hom r = u.val := by
@@ -77,7 +77,7 @@ theorem psiUnitOn_of_psiOn : ∀ (R : Type) [CommRing R] [IsDomain R] (D : DegPr
   refine ⟨r, u.isUnit.map (inv (W.ι.app V)).hom, ?_⟩
   have hKr : jK R ⁻¹ᵁ V ≤ (jK R ⁻¹ᵁ W).ι.opensRange := by
     rw [Scheme.Opens.opensRange_ι]; exact fun z hz => hVW hz
-  haveI := (jK R ⁻¹ᵁ W).ι.isIso_app (jK R ⁻¹ᵁ V) hKr
+  have := (jK R ⁻¹ᵁ W).ι.isIso_app (jK R ⁻¹ᵁ V) hKr
   apply injective_of_isIso ((jK R ⁻¹ᵁ W).ι.app (jK R ⁻¹ᵁ V))
   refine fn_ext ?_
   intro z hz

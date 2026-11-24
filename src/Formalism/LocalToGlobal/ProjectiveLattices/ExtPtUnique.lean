@@ -58,7 +58,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 theorem extPt (Y : Model Xo c β) (T : CDVR) (b : O →+* T.V) (x : Sp T.Fr ⟶ Xo.XF c)
     (hx : x ≫ Y.j ≫ Y.s = Out.jK T.V ≫ spMap b) :
     ∃ yt : Sp T.V ⟶ Y.X, Out.jK T.V ≫ yt = x ≫ Y.j ∧ yt ≫ Y.s = spMap b := by
-  haveI : IsProper Y.s := projProper _ _ _ Y.proj
+  have : IsProper Y.s := projProper _ _ _ Y.proj
   have hE : ValuativeCriterion.Existence Y.s := by
     have h1 : UniversallyClosed Y.s := inferInstance
     rw [UniversallyClosed.eq_valuativeCriterion] at h1

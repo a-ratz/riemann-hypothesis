@@ -74,7 +74,7 @@ theorem main : ∀ {G : Type u_1} [inst : Group G] {V : Type u_2} [inst_1 : AddC
         have := congrArg Subrepresentation.toSubmodule h1
         exact this
   · rintro ⟨hV, hU⟩
-    haveI : Nontrivial (Subrepresentation ρ) := by
+    have : Nontrivial (Subrepresentation ρ) := by
       refine ⟨⟨⊥, ⊤, fun h => ?_⟩⟩
       have := congrArg Subrepresentation.toSubmodule h
       rw [hbot, htop] at this

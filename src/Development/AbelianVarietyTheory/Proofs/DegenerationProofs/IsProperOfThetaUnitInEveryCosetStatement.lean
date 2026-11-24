@@ -80,9 +80,9 @@ namespace GlobalTheory.CosetGood
 
 theorem subsingleton_of_forall_hom {X : Type} [AddCommGroup X] [Module.Free ℤ X] {n : ℕ} (hn : n.Prime)
     (h : ∀ (l : X →+ ZMod n) (y : X), l y = 0) : Subsingleton X := by
-  haveI : Fact n.Prime := ⟨hn⟩
+  have : Fact n.Prime := ⟨hn⟩
   let b := Module.Free.chooseBasis ℤ X
-  haveI : IsEmpty (Module.Free.ChooseBasisIndex ℤ X) := ⟨fun i => by
+  have : IsEmpty (Module.Free.ChooseBasisIndex ℤ X) := ⟨fun i => by
     have := h ((Int.castAddHom (ZMod n)).comp (b.coord i).toAddMonoidHom) (b i)
     simp at this⟩
   exact b.repr.toEquiv.subsingleton
@@ -144,7 +144,7 @@ theorem subsingleton_lattice (hV : HV) {E : Type} [Field E] [NumberField E] [IsC
     (o : Full D C) (M : Mdl o) {n j : ℕ} (hn : n.Prime) (ho : Odd n) (h1 : ‖(n : C)‖ = 1) (hj : 2 ≤ j) (v : D.La → C)
     (hv : o.Theta (n ^ j) v) (hle : ∀ x, ‖v x‖ ≤ 1) (hco : ∀ x, ∃ h, ‖v (x + n ^ (j - 1) • h)‖ = 1) :
     Subsingleton M.P.D.toPre.X := by
-  letI := H.starRing
+  let := H.starRing
   have hL : Laws := hV.1.1
   have hL2 : Laws2 := hV.1.2.1
   obtain ⟨hdvr, hcomp, hchar⟩ := (GlobalTheory.LN.cDvr_iff M.W).1 M.cdv
@@ -174,7 +174,7 @@ theorem subsingleton_lattice (hV : HV) {E : Type} [Field E] [NumberField E] [IsC
     exact key _ (Category.id_comp _).symm x fun a => he _
   have hm : ((n ^ j : ℕ) : C) ≠ 0 := Nat.cast_ne_zero.2 (pow_pos hn.pos _).ne'
   obtain ⟨-, c₂, c₃, -⟩ := GlobalTheory.T.thetaCoordinates_exist_unique_separate_points hL C _ M.P.A (jFK (R := M.W) C) (n ^ j) ho.pow hm D.La x hx
-  haveI := subsingleton_of_labels N Q hQ hn ho h1 hT hj (fun q a => ∃ p, ν.QPt p q ∧ f p = x a) (fun a => ?_)
+  have := subsingleton_of_labels N Q hQ hn ho h1 hT hj (fun q a => ∃ p, ν.QPt p q ∧ f p = x a) (fun a => ?_)
     (fun q => ?_) ?_ ?_ v (fun q hq => ?_) hle hco
   · exact ν.eX.symm.toEquiv.subsingleton
   · obtain ⟨p, hp⟩ := f₂ _ (hx a)

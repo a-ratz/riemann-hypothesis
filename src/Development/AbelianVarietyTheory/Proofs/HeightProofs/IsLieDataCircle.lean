@@ -91,7 +91,7 @@ theorem _root_.GlobalTheory.SmoothForms.contDiff_family [FiniteDimensional ℝ �
   have anti := H.anti
   have invol := H.invol
   simp only [_root_.GlobalTheory.SmoothForms.expMap] at hφ
-  haveI : IsArtinianRing 𝔸 := IsArtinianRing.of_finite ℝ 𝔸
+  have : IsArtinianRing 𝔸 := IsArtinianRing.of_finite ℝ 𝔸
   obtain ⟨Λ, hΛ, hexp, hlog⟩ := hl
   have hΛ0 : Λ 1 = 0 := by
     simpa using hlog.self_of_nhds

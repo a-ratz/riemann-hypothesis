@@ -127,8 +127,8 @@ theorem jacobi_of_card {PP : Formalism.L2.DIV.Pl D.host.E} {p q : ℕ} (hp : p.P
     (hm : (p : 𝓞 D.host.E) ∈ PP.asIdeal) (hd : ((D.host.d : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal) :
     jacobiSym (-(D.host.d : ℤ)) p = 1 := by
   classical
-  haveI : Finite (kP PP) := Nat.finite_of_card_ne_zero (by rw [hc]; exact hq.ne_zero)
-  letI : Fintype (kP PP) := Fintype.ofFinite _
+  have : Finite (kP PP) := Nat.finite_of_card_ne_zero (by rw [hc]; exact hq.ne_zero)
+  let : Fintype (kP PP) := Fintype.ofFinite _
   have hc' : Fintype.card (kP PP) = q := by rw [← hc, Nat.card_eq_fintype_card]
   have z : ∀ n : ℕ, ((n : ℕ) : kP PP) = 0 ↔ (n : 𝓞 D.host.E) ∈ PP.asIdeal := fun n => by
     rw [← map_natCast (Ideal.Quotient.mk PP.asIdeal)]
@@ -138,7 +138,7 @@ theorem jacobi_of_card {PP : Formalism.L2.DIV.Pl D.host.E} {p q : ℕ} (hp : p.P
     have h1 : ((p : ℕ) : ZMod q) = 0 := e.injective (by rw [map_natCast, map_zero]; exact (z p).2 hm)
     exact ((Nat.prime_dvd_prime_iff_eq hq hp).1 ((ZMod.natCast_eq_zero_iff _ _).1 h1)).symm
   subst hpq
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hs := Formalism.BasicNotions.Host.sqrtMinusD_sq D.host
   have hi : IsIntegral ℤ D.host.sqrtMinusD := IsIntegral.of_pow two_pos (by
     rw [hs]
@@ -220,7 +220,7 @@ theorem isLevDatum_kerDat (hL : R.toLevCh.Is A.μ0) {ξ χ ξR Q ω φ} (hK : Ke
   · intro t ht
     by_cases hc : IsHalf (cA D e) t ∧ IsIntM (frMapAdj (Vc D j) (Wc D j) (R.βV j) (R.βW j) t)
     · exact ⟨GlobalTheory.T.idempotent_sum_self_dual_frames_bound D _ _ _ _ _ _ hsV hsW hfV hfW _ e he hP2 t hc.1 hc.2, hc.1⟩
-    · exact absurd (if_neg hc) ht
+    · exact absurd (ite_eq_right hc) ht
   · intro u hu hue t
     have hN' := GlobalTheory.T.adjointFrameMatrix_integral_of_conjugate_half D _ _ _ _ _ _ hsV hsW hfV hfW _ e he hP2 u hu hue
     have hfr : frMapAdj (Vc D j) (Wc D j) (R.βV j) (R.βW j) (t + N • u) =
@@ -239,7 +239,7 @@ theorem isLevDatum_kerDat (hL : R.toLevCh.Is A.μ0) {ξ χ ξR Q ω φ} (hK : Ke
     show (if _ then _ else _) = (if _ then _ else _)
     rw [hfr]
     by_cases hc : IsHalf (cA D e) t ∧ IsIntM (frMapAdj (Vc D j) (Wc D j) (R.βV j) (R.βW j) t)
-    · rw [if_pos ⟨hhalf'.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff hN' _).2 hc.2⟩, if_pos hc]
+    · rw [ite_eq_left ⟨hhalf'.2 hc.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff hN' _).2 hc.2⟩, ite_eq_left hc]
       refine congrArg₂ (· * ·) (GlobalTheory.RefDatumLev.omegaK_congr _ fun PP hPP =>
         GlobalTheory.RefDatumLev.redM_add_nsmul PP hc.2 hN' _ (hN PP (Or.inl hPP))) ?_
       have h : ∀ PP ∈ Q, redM PP (frMapAdj (Vc D j) (Wc D j) (R.βV j) (R.βW j) t +
@@ -255,7 +255,7 @@ theorem isLevDatum_kerDat (hL : R.toLevCh.Is A.μ0) {ξ χ ξR Q ω φ} (hK : Ke
       · exact absurd (fun PP hP => by beta_reduce; rw [← h PP hP]; exact h1 PP hP) h2
       · exact absurd (fun PP hP => by beta_reduce; rw [h PP hP]; exact h2 PP hP) h1
       · rfl
-    · rw [if_neg, if_neg hc]
+    · rw [ite_eq_right, ite_eq_right hc]
       intro h'
       exact hc ⟨hhalf'.1 h'.1, (GlobalTheory.RefDatumLev.isIntM_add_nsmul_iff hN' _).1 h'.2⟩
   · intro t
@@ -1041,7 +1041,7 @@ theorem kerRatAt_alt : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Pu
   obtain ⟨c', w', hw', hfr, B', hv⟩ := exists_framed_half hP h0.size (GlobalTheory.Core5.of_core h0.core) (geoHalf p) h0.unif
     (_root_.GlobalTheory.T.inGeo_half_of_ratHyp0 hP Fm x hx i p hp hM _ j h0)
   obtain ⟨S', YS', -⟩ := GlobalTheory.T.seriesRationality_back_from_movedReadings p.R p.cG p.Sx p.nexp w' hw'
-  letI iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
+  let iA : Algebra (setCE p.T c').Q.c.F (Fm.D x i).what₂.LL := p.alg
   have hV' : (setCE p.T c').V ((j : ℕ) + 1) (setCE p.T c').σ₀ = Wc (Fm.D x i) j :=
     B'.fw.laws.spaceW _ ⟨Nat.le_add_left _ _, j.2⟩ _ (setCE p.T c').toCore.good_σ₀
   have hU' : (fullHeckeRealDatMovedReadings p.R w').toRealDat.LUnif := GlobalTheory.T.uniformisationLaws_centralMovedReadings p.R.toRealDat w' hw' h0.unif

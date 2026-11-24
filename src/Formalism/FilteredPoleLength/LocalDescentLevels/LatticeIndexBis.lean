@@ -153,15 +153,15 @@ theorem exists_indep [FiniteDimensional K V] (A : Submodule O V) (hA : A.FG) (U 
     ∃ a : Fin (finrank K U) → V, LinearIndependent K a ∧ A = Submodule.span O (Set.range a) ∧
       Submodule.span K (Set.range a) = U := by
   classical
-  haveI : NoZeroSMulDivisors O V := ⟨fun {o v} h => by
+  have : NoZeroSMulDivisors O V := ⟨fun {o v} h => by
     rw [← algebraMap_smul K o v, smul_eq_zero] at h
     rcases h with h | h
     · left
       exact (IsFractionRing.injective O K) (by rw [h, map_zero])
     · right
       exact h⟩
-  haveI : Module.Finite O A := Module.Finite.iff_fg.mpr hA
-  haveI : Module.Free O A := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite O A := Module.Finite.iff_fg.mpr hA
+  have : Module.Free O A := Module.free_of_finite_type_torsion_free'
   let bA := Module.Free.chooseBasis O A
   let e : Module.Free.ChooseBasisIndex O A → V := fun i => (bA i : V)
   have hliO : LinearIndependent O e := bA.linearIndependent.map' A.subtype (Submodule.ker_subtype A)

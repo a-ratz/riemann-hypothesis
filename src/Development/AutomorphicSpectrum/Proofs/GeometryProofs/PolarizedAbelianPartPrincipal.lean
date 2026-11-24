@@ -123,7 +123,7 @@ noncomputable def tqOfIso {S : Scheme.{0}} {X : Type} [AddCommGroup X] {G : Over
 
 theorem lamdiff : (∀ (k : Type) [Field k] [IsAlgClosed k] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (G : Over (Sp k)) [GrpObj G] [IsCommMonObj G] (T : GlobalTheory.UU.TQ G X) (N : LB T.B.left), N.IsLB → ∀ t : LB.Gen (N.pull T.q.left), t.IsGen → ∃ (χ : X) (t' : LB.Gen (N.pull T.q.left)), T.GenWt N t' χ) → ∀ (Q : Out.PolAV (Sp ℂ)) (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (G : Over (Sp ℂ)) [GrpObj G] [IsCommMonObj G] (T : GlobalTheory.UU.TQ G X) (β : T.B ≅ Q.A), IsMonHom β.hom → ∀ M : LB Q.A.left, M.IsLB → LBIso (M.pull (T.q ≫ β.hom).left) (Q.L.pull (T.q ≫ β.hom).left) → ∃ u : LB.Gen (abelian₂ Q.A (LB.div M Q.L)), u.IsGen := by
   intro hw Q X _ _ _ G _ _ T β hβ M hM hiso
-  haveI := hβ
+  have := hβ
   have hL := Q.isLB
   have hN : (LB.div M Q.L).IsLB := LB.isLB_div hM hL
   have hNp : ((LB.div M Q.L).pull (T.q ≫ β.hom).left).IsLB := LB.isLB_pull hN _
@@ -193,7 +193,7 @@ theorem exists_factor_torus {K : Type} [Field K] [IsAlgClosed K] {G B B' : Over 
     (i : splitTorus (Sp K) X ⟶ G) (q : G ⟶ B) [IsMonHom i] [IsMonHom q] [Flat q.left] [Surjective q.left]
     [QuasiCompact q.left] (hk : IsPullback i (toUnit _) q (η : 𝟙_ _ ⟶ B)) (f : G ⟶ B') [IsMonHom f] :
     ∃ a : B ⟶ B', q ≫ a = f := by
-  haveI : IsProper B'.hom := hB'.proper
+  have : IsProper B'.hom := hB'.proper
   have hif : i ≫ f = toUnit _ ≫ η :=
     GlobalTheory.splitTorus_hom_proper_trivial_field K X B' (i ≫ f) inferInstance
   refine GlobalTheory.ExtensionRigidity.exists_factor q f ?_
@@ -213,33 +213,33 @@ theorem exists_factor_torus {K : Type} [Field K] [IsAlgClosed K] {G B B' : Over 
 
 theorem quot : ∀ (G : Over (Sp ℂ)) [GrpObj G] [IsCommMonObj G] (τ : TorusExtension G) (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (T : GlobalTheory.UU.TQ G X), letI := τ.grpB; ∃ e : τ.B ≅ T.B, IsMonHom e.hom ∧ τ.q ≫ e.hom = T.q := by
   intro G _ _ τ X _ _ _ T
-  letI := τ.grpB
-  letI := τ.addCommGroup
-  haveI := τ.free
-  haveI := τ.finite
-  haveI := τ.q_hom
-  haveI := τ.q_flat
-  haveI := τ.q_surjective
-  haveI := τ.q_quasiCompact
-  haveI := τ.i_hom
-  haveI := T.q_hom
-  haveI := T.q_flat
-  haveI := T.q_surj
-  haveI := T.q_affine
-  haveI := T.i_hom
+  let := τ.grpB
+  let := τ.addCommGroup
+  have := τ.free
+  have := τ.finite
+  have := τ.q_hom
+  have := τ.q_flat
+  have := τ.q_surjective
+  have := τ.q_quasiCompact
+  have := τ.i_hom
+  have := T.q_hom
+  have := T.q_flat
+  have := T.q_surj
+  have := T.q_affine
+  have := T.i_hom
   obtain ⟨a, ha⟩ := exists_factor_torus T.isAb τ.i τ.q τ.isKernel T.q
   obtain ⟨b, hb⟩ := exists_factor_torus τ.isAbelian T.i T.q T.isKernel τ.q
-  haveI : Epi τ.q := Over.epi_of_epi_left _
-  haveI : Epi T.q := Over.epi_of_epi_left _
-  haveI : MorphismProperty.IsStableUnderComposition @Surjective :=
-    { comp_mem := fun f g hf hg => by haveI := hf; haveI := hg; infer_instance }
-  haveI : Epi (τ.q ⊗ₘ τ.q) := by
-    haveI : Flat (τ.q ⊗ₘ τ.q).left :=
+  have : Epi τ.q := Over.epi_of_epi_left _
+  have : Epi T.q := Over.epi_of_epi_left _
+  have : MorphismProperty.IsStableUnderComposition @Surjective :=
+    { comp_mem := fun f g hf hg => by have := hf; have := hg; infer_instance }
+  have : Epi (τ.q ⊗ₘ τ.q) := by
+    have : Flat (τ.q ⊗ₘ τ.q).left :=
       MorphismProperty.pullbackMap (P := @Flat) τ.q_flat τ.q_flat (Over.w τ.q).symm (Over.w τ.q).symm
-    haveI : Surjective (τ.q ⊗ₘ τ.q).left :=
+    have : Surjective (τ.q ⊗ₘ τ.q).left :=
       MorphismProperty.pullbackMap (P := @Surjective) τ.q_surjective τ.q_surjective
         (Over.w τ.q).symm (Over.w τ.q).symm
-    haveI : QuasiCompact (τ.q ⊗ₘ τ.q).left :=
+    have : QuasiCompact (τ.q ⊗ₘ τ.q).left :=
       MorphismProperty.pullbackMap (P := @QuasiCompact) τ.q_quasiCompact τ.q_quasiCompact
         (Over.w τ.q).symm (Over.w τ.q).symm
     exact Over.epi_of_epi_left _
@@ -632,7 +632,7 @@ theorem split : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host
     ⟨r.liftOfRightInverse _ (Function.rightInverse_surjInv hs)
       ⟨Ideal.Quotient.mk (IsLocalRing.maximalIdeal V), by rw [hk, Ideal.mk_ker]⟩,
       RingHom.liftOfRightInverse_comp _ _ _ _⟩
-  letI : Field (V ⧸ IsLocalRing.maximalIdeal V) := Ideal.Quotient.field _
+  let : Field (V ⧸ IsLocalRing.maximalIdeal V) := Ideal.Quotient.field _
   have e : spMap ψ ≫ spMap r = spMap (Ideal.Quotient.mk (IsLocalRing.maximalIdeal V)) := by
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, hψ]
   obtain ⟨T⟩ := GlobalTheory.SS.nonempty_torusExtension_pullback (Ω := V ⧸ IsLocalRing.maximalIdeal V) (spMap ψ) P.tK.G ⟨P.τ⟩
@@ -675,9 +675,9 @@ theorem isPrincipal_tB_of (hU : GlobalTheory.LN.UDvrSt) : ∀ (E : Type) [Field 
   obtain ⟨Pu, -⟩ := hU E H V hC tV hpol (PositivityTheory.HtPt.Pquo.split E H V r tV hr hker P)
   obtain ⟨Q, X, _, _, _, T, β, hβ, hL⟩ := PositivityTheory.HtPt.Pquo.fibre E H V r tV hr hker Pu P
   obtain ⟨e', he', hq⟩ := PositivityTheory.HtPt.Ppic.quot P.tK.G P.τ X T
-  letI := P.τ.grpB
+  let := P.τ.grpB
   let g : Q.A ≅ P.tB.G := Iso.trans β.symm (Iso.trans e'.symm P.e)
-  haveI : IsMonHom g.hom :=
+  have : IsMonHom g.hom :=
     isMonHom_comp_comp β.symm e'.symm P.e (by show IsMonHom β.inv; infer_instance)
       (by show IsMonHom e'.inv; infer_instance) P.e_hom
   have hLB := P.tB.PP.isLB
@@ -701,10 +701,10 @@ theorem isPrincipal_tB_of (hU : GlobalTheory.LN.UDvrSt) : ∀ (E : Type) [Field 
   obtain ⟨u, hu⟩ := PositivityTheory.HtPt.Ppic.lamdiff PositivityTheory.HtPt.Ppic.weight Q X P.tK.G T β hβ _ hMLB h2
   obtain ⟨x, hx⟩ := PositivityTheory.HtPt.Ppic.pic Q _ hMLB ⟨u, hu⟩
   obtain ⟨hA, hK⟩ := PositivityTheory.HtPt.Ppic.transl Q _ hMLB x hx
-  haveI := P.tB.semi.smooth
-  haveI := P.tB.semi.separated
-  haveI := P.tB.semi.quasiCompact
-  haveI : IsProper Q.A.hom := Q.isAb.proper
+  have := P.tB.semi.smooth
+  have := P.tB.semi.separated
+  have := P.tB.semi.quasiCompact
+  have : IsProper Q.A.hom := Q.isAb.proper
   have hpb : IsGrpPullback Q.A P.tB.G (specOf (RingHom.id ℂ)) g.hom.left :=
     (isGrpPullback_of_iso g).congr (specOf_id ℂ).symm rfl
   exact GlobalTheory.AmpleDescent.proper_relAmple_kTriv_of_fieldExtension ℂ ℂ (RingHom.id ℂ) P.tB.G Q.A

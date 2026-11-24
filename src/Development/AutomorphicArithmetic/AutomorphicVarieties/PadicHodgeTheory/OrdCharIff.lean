@@ -59,7 +59,7 @@ private theorem algPow_ne {F : Type} [Field F] [NumberField F] {l : ℕ} [Fact l
 
 private theorem algPow_mul {F : Type} [Field F] [NumberField F] {l : ℕ} [Fact l.Prime] (w : Plc F)
     (hh : (F →+* Qbar l) → ℤ) (x y : w.adicCompletion F) : algPow w hh (x * y) = algPow w hh x * algPow w hh y := by
-  haveI := finite_contEmb (l := l) w
+  have := finite_contEmb (l := l) w
   unfold algPow
   rw [← finprod_mul_distrib (Set.toFinite _) (Set.toFinite _)]
   exact finprod_congr fun j => by rw [map_mul, mul_zpow]
@@ -145,7 +145,7 @@ theorem UpperTheory.V.Loc.ordCharIff :
     have hsm : IsSmooth ξ := by
       have hset : {σ | ξ (ineIncl h σ) = 1} = (ph.ker : Set (Ine (F := F) A)) := by
         ext σ
-        simp only [Set.mem_setOf_eq, SetLike.mem_coe, MonoidHom.mem_ker]
+        simp only [Set.mem_ofPred_eq, SetLike.mem_coe, MonoidHom.mem_ker]
         have e := hph.2 a ha σ
         change ((ψ (incl (ineIncl h σ)) * ph σ : (Qbar l)ˣ) : Qbar l) =
           algPow w (-hh) (a (ineIncl h σ) : w.adicCompletion F) at e

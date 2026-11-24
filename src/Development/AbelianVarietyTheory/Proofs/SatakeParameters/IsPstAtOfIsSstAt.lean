@@ -102,8 +102,8 @@ theorem isSst_twist (T : LocTied l P AI) [FiniteDimensional ↥L.1 V] (ρs ρt :
     (ρm : Representation ↥L.1 ↥(GK K) (Fin 1 → ↥L.1)) (χ : ↥(GK K) → ↥L.1)
     (hm : ∀ g v, ρm g v = χ g • v) (ht : ∀ g v, ρt g v = χ g • ρs g v)
     (hs : IsSst P ρs) (hc : Formalism.WeaklyAdmissibleFiltrations.IsCrys (P.PD K) ρm) : IsSst P ρt := by
-  haveI := L.2
-  haveI : FiniteDimensional ℚ_[l] V := Module.Finite.trans ↥L.1 V
+  have := L.2
+  have : FiniteDimensional ℚ_[l] V := Module.Finite.trans ↥L.1 V
   have hPs : IsPst P ρs := GlobalTheory.GalCut.IwaAll.isPst_of_isSst P AI T ρs hs
   have hPm : IsPst P ρm := GlobalTheory.PstOfCrys.isPst_of_isCrys T ρm hc
   have hIs := ineTriv_of_isSst P ρs hPs hs
@@ -217,7 +217,7 @@ theorem isPstAt_of_isSstAt {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAi
     IsSstAt P Bw r → IsPstAt P Bw r := by
   rintro ⟨LL', r', hm, hs⟩
   obtain ⟨T⟩ := hT
-  haveI := LL'.2
+  have := LL'.2
   exact ⟨LL', r', hm, isPst_of_isSst P AI T _ hs⟩
 
 theorem isSstAt_twist (hD : GlobalTheory.Published.DeRhamPotSemistable) {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (hT : Nonempty (LocTied l P AI))

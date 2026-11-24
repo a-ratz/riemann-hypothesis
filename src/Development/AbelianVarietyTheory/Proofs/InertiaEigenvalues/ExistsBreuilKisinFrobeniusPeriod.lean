@@ -109,7 +109,7 @@ theorem lang_unit
     (ω : WittVector p k) (hω : IsUnit ω) :
     ∃ η : WittVector p k, IsUnit η ∧ WittVector.frobenius η = ω * η := by
   have hp1 : 1 < p := hp.out.one_lt
-  haveI : Nontrivial k := CharP.nontrivial_of_char_ne_one hp.out.ne_one
+  have : Nontrivial k := CharP.nontrivial_of_char_ne_one hp.out.ne_one
   set ω₀ := ω.coeff 0 with hω₀
   have hu0 : IsUnit ω₀ := by
     rw [hω₀, ← WittVector.constantCoeff_apply]; exact hω.map _
@@ -171,9 +171,9 @@ open Formalism Formalism.BasicNotions Formalism.BasicNotions.Loc
 
 theorem OCb_exists_root (l : ℕ) [Fact l.Prime] (f : (OCb l)[X]) (hf : f.Monic)
     (hd : 0 < f.natDegree) : ∃ x, f.IsRoot x := by
-  haveI : IsAlgClosed (Cb l) := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).1
-  haveI : ValuationRing (OCb l) := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).2
-  haveI : IsIntegrallyClosed (OCb l) :=
+  have : IsAlgClosed (Cb l) := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).1
+  have : ValuationRing (OCb l) := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).2
+  have : IsIntegrallyClosed (OCb l) :=
     (ValuationRing.integers (OCb l) (Cb l)).isIntegrallyClosed
   obtain ⟨z, hz⟩ := IsAlgClosed.exists_root (f.map (algebraMap (OCb l) (Cb l))) (by
     rw [degree_map_eq_of_injective (IsFractionRing.injective (OCb l) (Cb l)),

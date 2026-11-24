@@ -92,7 +92,7 @@ theorem coeff_rz (m : ℕ) (f : PS C (m + 1) dd) (ν : Fin m × Fin dd →₀ �
       simp only [one_pow, Finsupp.prod, Finset.prod_const_one, one_smul] at h1
       rw [Finsupp.prod, h1]
       rfl
-    rw [e, coeff_monomial, if_pos rfl, smul_eq_mul, mul_one]
+    rw [e, coeff_monomial, ite_eq_left rfl, smul_eq_mul, mul_one]
   · intro d hd
     by_cases hx : ∃ j, d ((0 : Fin (m + 1)), j) ≠ 0
     · obtain ⟨j, hj⟩ := hx
@@ -118,7 +118,7 @@ theorem coeff_rz (m : ℕ) (f : PS C (m + 1) dd) (ν : Fin m × Fin dd →₀ �
         simp only [one_pow, Finsupp.prod, Finset.prod_const_one, one_smul] at h1
         rw [Finsupp.prod, h1]
         rfl
-      rw [e2, coeff_monomial, if_neg (Ne.symm hne), smul_zero]
+      rw [e2, coeff_monomial, ite_eq_right (Ne.symm hne), smul_zero]
 
 theorem coeff_iter_pderiv {σ : Type} (q : σ) (L : ℕ) (f : MvPowerSeries σ C) (n : σ →₀ ℕ) :
     coeff n ((pderiv (R := C) q)^[L] f) =
@@ -136,7 +136,7 @@ theorem coeff_iter_pderiv {σ : Type} (q : σ) (L : ℕ) (f : MvPowerSeries σ C
 theorem coeff_rz_iter (m : ℕ) (i : Fin dd) (L : ℕ) (f : PS C (m + 1) dd) (ν : Fin m × Fin dd →₀ ℕ) :
     coeff ν (ev (rz m) ((pderiv (R := C) ((0 : Fin (m + 1)), i))^[L] f)) =
       (L.factorial : C) * coeff (Finsupp.single ((0 : Fin (m + 1)), i) L + ν.mapDomain (up m)) f := by
-  rw [coeff_rz, coeff_iter_pderiv, Finsupp.mapDomain_notin_range _ _ (up_ne_zero m i)]
+  rw [coeff_rz, coeff_iter_pderiv, Finsupp.mapDomain_of_notMem_range _ _ (up_ne_zero m i)]
   simp only [Nat.cast_zero, zero_add]
   rw [← Finset.prod_range_add_one_eq_factorial, Nat.cast_prod, Finsupp.smul_single_one,
     add_comm (Finsupp.mapDomain (up m) ν)]

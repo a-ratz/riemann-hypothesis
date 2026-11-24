@@ -130,12 +130,12 @@ theorem exists_prime_to_part {c : 𝓞 F} (hc : c ≠ 0) {𝔭 : Ideal (𝓞 F)}
     exact hp.ne_top
   obtain ⟨𝔟, hb, hnd⟩ := (FiniteMultiplicity.of_not_isUnit hu hc').exists_eq_pow_mul_and_not_dvd
   rw [Ideal.dvd_iff_le] at hnd
-  obtain ⟨t, htb, htp⟩ := SetLike.not_le_iff_exists.mp hnd
+  obtain ⟨t, htb, htp⟩ := IsConcreteLE.not_le_iff_exists.mp hnd
   refine ⟨t, htp, fun 𝔮 hq hne => ?_⟩
   have h1 : ¬ 𝔭 ^ multiplicity 𝔭 (Ideal.span {c}) ≤ 𝔮 := by
     intro hle
     exact hne (hp.eq_of_le hq.ne_top (hq.isPrime.le_of_pow_le hle)).symm
-  obtain ⟨u, hu1, hu2⟩ := SetLike.not_le_iff_exists.mp h1
+  obtain ⟨u, hu1, hu2⟩ := IsConcreteLE.not_le_iff_exists.mp h1
   refine ⟨u, hu2, ?_⟩
   rw [← Ideal.mem_span_singleton, hb]
   exact Ideal.mul_mem_mul hu1 htb

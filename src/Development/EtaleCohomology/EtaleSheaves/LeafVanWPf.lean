@@ -211,7 +211,7 @@ theorem LeafVanW_of : LeafVanW := by
   intro hH q _ k _ hq i B W Y b ι _ p hp A _ s hA hx m
   obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hE2, -⟩ := hH
   obtain ⟨hHen, hsep⟩ := hA
-  haveI : IsProper p := hp
+  have : IsProper p := hp
   have hqA : IsUnit (q : A) := by
     have := hq.map (Spec.preimage (s ≫ b)).hom
     simpa using this
@@ -220,7 +220,7 @@ theorem LeafVanW_of : LeafVanW := by
   have hxc := closed_eq x hx1
   have hrpt : (Spec.map (CommRingCat.ofHom (IsLocalRing.residue A))) (IsLocalRing.closedPoint (IsLocalRing.ResidueField A)) =
       IsLocalRing.closedPoint A := IsLocalRing.comap_closedPoint (IsLocalRing.residue A)
-  haveI : Surjective (pullback.fst (Spec.map (CommRingCat.ofHom (IsLocalRing.residue A)) ≫ s) ι) := by
+  have : Surjective (pullback.fst (Spec.map (CommRingCat.ofHom (IsLocalRing.residue A)) ≫ s) ι) := by
     constructor
     intro t
     obtain ⟨z, hz, -⟩ := Scheme.Pullback.exists_preimage_pullback (f := Spec.map (CommRingCat.ofHom (IsLocalRing.residue A)) ≫ s) (g := ι)
@@ -229,7 +229,7 @@ theorem LeafVanW_of : LeafVanW := by
         rw [← hxc, ← hw0] at this
         exact this)
     exact ⟨z, hz.trans (Subsingleton.elim _ _)⟩
-  haveI := isIso_of_isClosedImmersion_of_surjective (pullback.fst (Spec.map (CommRingCat.ofHom (IsLocalRing.residue A)) ≫ s) ι)
+  have := isIso_of_isClosedImmersion_of_surjective (pullback.fst (Spec.map (CommRingCat.ofHom (IsLocalRing.residue A)) ≫ s) ι)
   have hw : (inv (pullback.fst (Spec.map (CommRingCat.ofHom (IsLocalRing.residue A)) ≫ s) ι) ≫ pullback.snd _ _) ≫ ι =
       Spec.map (CommRingCat.ofHom (IsLocalRing.residue A)) ≫ s := by
     rw [Category.assoc, ← pullback.condition, IsIso.inv_hom_id_assoc]
@@ -241,7 +241,7 @@ theorem LeafVanW_of : LeafVanW := by
       pullback.snd (pullback.fst (pullback.snd p s ≫ s) ι ≫ pullback.snd p s) (Spec.map (CommRingCat.ofHom (IsLocalRing.residue A))) ≫
         Spec.map (CommRingCat.ofHom (IsLocalRing.residue A)) := by
     rw [Category.assoc, pullback.condition]
-  haveI := commGroup_inv_eq_conj_twist_identity (pullback.snd p s) s ι _ _ hw hc
+  have := commGroup_inv_eq_conj_twist_identity (pullback.snd p s) s ι _ _ hw hc
   have heqv : Eqv (ZMod q) (sch.map (prS p ι s)) (tw q i) :=
     eqv_of_square _ _ _ _ _ (pullback.lift_fst _ _ _).symm e2 (eqv_of_iso _ (pullback.lift (pullback.fst (pullback.fst (pullback.snd p s ≫ s) ι ≫ pullback.snd p s)
       (Spec.map (CommRingCat.ofHom (IsLocalRing.residue A))) ≫ pullback.fst (pullback.snd p s ≫ s) ι) _ hc)) e1

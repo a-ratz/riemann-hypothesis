@@ -223,7 +223,7 @@ theorem stab_of (hJ : IsHermND σ J) (hinv : ∀ x, σ (σ x) = x) {r : ℕ} (P 
       rw [covR_ratV, hP.2.2.1 b a]
       by_cases hab : a = b
       · subst hab; simp
-      · rw [if_neg (Ne.symm hab), if_neg hab, map_zero]
+      · rw [ite_eq_right (Ne.symm hab), ite_eq_right hab, map_zero]
     · intro a b
       rw [covR_ratV, hE_swap hJ hinv, hP.2.2.1 a b]
       split_ifs <;> simp
@@ -367,7 +367,7 @@ theorem lattice_borel : LatBorel := by
     refine continuous_finsetSum _ fun i _ => ?_
     have h1 : Continuous fun c : T → v.adicCompletionIntegers F =>
         ((c i : v.adicCompletionIntegers F) : Fv F v) :=
-      continuous_subtype_val.comp (continuous_apply i)
+      continuous_subtypeVal.comp (continuous_apply i)
     exact h1.smul continuous_const
   exact isCompact_range hc
 
@@ -416,7 +416,7 @@ theorem product_haar_measure_holds : ProdHaarG := by
   have hem : Measurable e := e.continuous.measurable
   have hPF : ProdF K N H ((μN.prod μH).map e) μN μH := by
     intro f hf
-    have h1 : Measurable (fun k : K => f (k : X)) := hf.comp measurable_subtype_coe
+    have h1 : Measurable (fun k : K => f (k : X)) := hf.comp measurable_subtypeVal
     rw [lintegral_map h1 hem, lintegral_prod (fun p => f ((e p : K) : X)) (h1.comp hem).aemeasurable]
     simp only [he]
   refine ⟨(μN.prod μH).map e, ?_, hPF⟩
@@ -460,12 +460,12 @@ theorem product_haar_measure_holds : ProdHaarG := by
       have key := hC μN hμN (p0.2 : X) p0.2.2 (B.indicator 1) (measurable_one.indicator hB)
       have e1 : ∫⁻ n, B.indicator 1 ((p0.2 : X) * (n : X) * (p0.2 : X)⁻¹) ∂μN =
           μN (C ⁻¹' (Subtype.val ⁻¹' B)) := by
-        rw [← lintegral_indicator_one (hCm (measurable_subtype_coe hB))]
+        rw [← lintegral_indicator_one (hCm (measurable_subtypeVal hB))]
         first
           | rfl
           | (congr 1; funext n; simp [Set.indicator_apply, C])
       have e2 : ∫⁻ n, B.indicator 1 (n : X) ∂μN = μN (Subtype.val ⁻¹' B) := by
-        rw [← lintegral_indicator_one (measurable_subtype_coe hB)]
+        rw [← lintegral_indicator_one (measurable_subtypeVal hB)]
         first
           | rfl
           | (congr 1; funext n; simp [Set.indicator_apply])

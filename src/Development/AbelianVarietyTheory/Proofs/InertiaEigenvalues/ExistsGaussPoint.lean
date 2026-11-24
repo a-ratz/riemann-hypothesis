@@ -115,7 +115,7 @@ theorem exists_gaussPoint (T : CDVR) (ϖ : T.V) (hϖ : Irreducible ϖ) :
       ∀ x, vV T'.V (i x) = vV T.V x := by
   let R := PowerSeries T.V
   let P : Ideal R := Ideal.span {(PowerSeries.C ϖ : PowerSeries T.V)}
-  haveI hP : P.IsPrime := isPrime_span_C hϖ.prime
+  have hP : P.IsPrime := isPrime_span_C hϖ.prime
   let L := Localization.AtPrime P
   have hinj : Function.Injective (algebraMap R L) :=
     IsLocalization.injective L P.primeCompl_le_nonZeroDivisors
@@ -136,7 +136,7 @@ theorem exists_gaussPoint (T : CDVR) (ϖ : T.V) (hϖ : Irreducible ϖ) :
   have hunit : ∀ s : R, ¬ PowerSeries.C ϖ ∣ s → IsUnit (ev s) := fun s hs =>
     (IsLocalization.map_units L (⟨s, fun h => hs (Ideal.mem_span_singleton.1 h)⟩ :
       P.primeCompl)).map (algebraMap L S)
-  haveI : CharZero S := charZero_of_injective_ringHom
+  have : CharZero S := charZero_of_injective_ringHom
     (f := ev.comp PowerSeries.C) (hev.comp PowerSeries.C_injective)
   let T' : CDVR := { V := S }
   let g : T.V →+* T'.Fr := (algebraMap T'.V T'.Fr).comp (ev.comp PowerSeries.C)

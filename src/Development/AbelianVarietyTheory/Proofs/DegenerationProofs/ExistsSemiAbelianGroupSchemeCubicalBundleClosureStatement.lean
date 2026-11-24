@@ -132,8 +132,8 @@ namespace GlobalTheory.ZJ
 
 theorem etale_mulN_and_isOpen_om (C : Core) (L : C.Law) (T : C.Theta) :
     letI := L.grp; Etale (ReciprocityTheory.ChartRestriction.G.Semi.mulN C.GG T.m).left ∧ IsOpen (T.Om L) := by
-  letI := L.grp
-  letI := L.comm
+  let := L.grp
+  let := L.comm
   have := L.smooth
   have : Smooth C.GG.hom := SmoothOfRelativeDimension.smooth C.g _
   have h : Etale (ReciprocityTheory.ChartRestriction.G.Semi.mulN C.GG T.m).left := GlobalTheory.GrpTangent.etale_mulN C.GG T.m_unit
@@ -173,7 +173,7 @@ theorem exists_point_norm_valF_eq {X : Scheme.{0}} {p : ℕ} [Fact p.Prime]
       valF (gPt p ≫ y') U φ = (((Scheme.ΓSpecIso (.of K)).hom
         ((Spec.map (CommRingCat.ofHom (algebraMap (integralClosure ℤ_[p] K) K)) ≫ y).appLE
           U ⊤ hy φ) : K) : PadicAlgCl p) := by
-  haveI := isLocalHom_integralClosureToPadicAlgClIntegers K
+  have := isLocalHom_integralClosureToPadicAlgClIntegers K
   have e : gPt p ≫ spMap (integralClosureToPadicAlgClIntegers K) ≫ y =
       spMap K.val.toRingHom ≫
         Spec.map (CommRingCat.ofHom (algebraMap (integralClosure ℤ_[p] K) K)) ≫ y := by
@@ -194,8 +194,8 @@ theorem existsUnique_resG_eq {X : Scheme.{0}} [IsIntegral X] (π : X ⟶ Sp ℤ)
     (H : ∀ (p : ℕ) [Fact p.Prime] (y : Sp (OO p) ⟶ X), y (cPt p) ∈ W →
       Set.range (gPt p ≫ y) ⊆ U → ‖valF (gPt p ≫ y) U φ‖ ≤ 1) :
     ∃! ψ : Γ(X, W), resG X h ψ = φ := by
-  haveI : Nonempty U := hU.to_subtype
-  haveI : Nonempty W := (hU.mono h).to_subtype
+  have : Nonempty U := hU.to_subtype
+  have : Nonempty W := (hU.mono h).to_subtype
   obtain ⟨ψ, hψ⟩ := exists_germToFunctionField_eq_of_frequently_norm_le_one π U W
     (fun x _ _ _ => (hX x).2) (φ := φ) fun p _ K hK => ⟨K, hK, le_rfl, fun y hy hW _ _ => by
       obtain ⟨y', h1, h2, h3⟩ := exists_point_norm_valF_eq K y U hy φ
@@ -216,7 +216,7 @@ theorem regular (X : Scheme.{0}) [IsIntegral X] (π : X ⟶ Sp ℤ) [Flat π]
         Set.range (gPt p ≫ y) ⊆ U → ‖valF (gPt p ≫ y) U φ‖ = 1) →
           ∃ ψ : Γ(X, W), IsUnit ψ ∧ resG X h ψ = φ) := by
   refine ⟨existsUnique_resG_eq π hX h φ hU, fun hφ H => ?_⟩
-  haveI : Nonempty U := hU.to_subtype
+  have : Nonempty U := hU.to_subtype
   obtain ⟨φ', hφ'⟩ := hφ.exists_right_inv
   obtain ⟨ψ, hψ, -⟩ := existsUnique_resG_eq π hX h φ hU fun p _ y h1 h2 => (H p y h1 h2).le
   obtain ⟨ψ', hψ', -⟩ := existsUnique_resG_eq π hX h φ' hU fun p _ y h1 h2 => by
@@ -429,7 +429,7 @@ theorem exists_rational_section {C : Core} (T : C.Theta) (Om : Set C.G.toScheme)
   have := C.isOpenImmersion_a
   have := C.nonempty_A
   have hA := C.isPullback_a
-  haveI : IsIntegral C.A.left := isIntegral_of_isOpenImmersion C.a
+  have : IsIntegral C.A.left := isIntegral_of_isOpenImmersion C.a
   obtain ⟨ξ, hξ⟩ := exists_generic C.A.left
   obtain ⟨j, hj⟩ := exists_basicOpen_theta T
   have lθ : C.A.left.basicOpen (T.θ.f j) ≤ T.L.L.U j := C.A.left.basicOpen_le _
@@ -1289,7 +1289,7 @@ theorem Core.Theta.exists_norms : Semi.extend_existsSt.{0} → ∀ (C : Core) (L
     have hj' := (range_subset_iff _ (z₀ p) _).1 hj
     obtain ⟨t₁, t₂⟩ := k₁.theta (E p y hy) ha hj'
     rw [hν p y hy c q a j k₁ ha hj', ← mul_div_assoc]
-    refine ⟨div_le_div_of_nonneg_right t₁ (hρ p y hy).le, (div_left_inj' (hρ p y hy).ne').trans (t₂.trans
+    refine ⟨div_le_div_of_nonneg_right t₁ (hρ p y hy).le, (div_left_inj₀ (hρ p y hy).ne').trans (t₂.trans
       ((hB p y _ (E p y hy) _ k₁.centre).symm.trans ?_))⟩
     have e : (τ p y hy).f (c (cPt p)) = b (cPt p) := congrArg (fun g => g (cPt p)) k₂
     rw [e]
@@ -1388,8 +1388,8 @@ theorem exists_residue_point (X : Scheme.{0}) (π : X ⟶ Sp ℤ) [LocallyOfFini
   have hpp : Fact p.Prime := ⟨CharP.char_is_prime (X.residueField w) p⟩
   have : CharP (kb p) p := charP_kb
   have : IsAlgClosed (kb p) := isAlgClosed_kb
-  letI : Algebra (ZMod p) (X.residueField w) := ZMod.algebra _ p
-  letI : Algebra (ZMod p) (kb p) := ZMod.algebra _ p
+  let : Algebra (ZMod p) (X.residueField w) := ZMod.algebra _ p
+  let : Algebra (ZMod p) (kb p) := ZMod.algebra _ p
   have : Module.Finite (ZMod p) (X.residueField w) := Module.Finite.of_finite
   let r : X.residueField w →+* kb p := (IsAlgClosed.lift (R := ZMod p) (S := X.residueField w) (M := kb p)).toRingHom
   refine ⟨p, hpp, Spec.map (CommRingCat.ofHom r) ≫ X.fromSpecResidueField w, fun s => ?_⟩
@@ -1404,8 +1404,8 @@ open TwoSections
 
 theorem Core.Law.six_of_few : Semi.extend_existsSt.{0} → ∀ (C : Core) (L : C.Law) (T : C.Theta) (n : ℕ), C.HasTests → T.BTest L → C.TorsSec n → T.Few n → L.CompanionTheory (T.Om L) := by
   intro hext C L T n hT hB hS hF w hw
-  letI := L.grp
-  letI := L.comm
+  let := L.grp
+  let := L.comm
   have := C.lft
   have := C.flat
   have hlft : LocallyOfFiniteType C.GG.hom := (GlobalTheory.ZJ.core_basic C).2.1
@@ -1651,8 +1651,8 @@ theorem exists_law_splitAll_cubical : Out.Laws → ∀ (C : Core) (T : C.Theta) 
   intro hL C T n hT hI hC hS hF
   obtain ⟨L⟩ := Core.nonempty_law_of_hasTests_of_indep C hT hI
   refine ⟨L, ?_⟩
-  letI := L.grp
-  letI := L.comm
+  let := L.grp
+  let := L.comm
   obtain ⟨h₁, h₂⟩ := GlobalTheory.ZJ.FibreSplit.splitAll_and_isSemiAbelian C L hT hC
   obtain ⟨M, hM, hMa, hσ⟩ := _root_.GlobalTheory.ZJ.exists_extension_with_section hL.extend hL.mulN
     GlobalTheory.abelian_torsion_finite_and_mulN_surjective.2 C L T n h₂ hT hS hF

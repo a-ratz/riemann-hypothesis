@@ -265,9 +265,9 @@ theorem adjoin_coord_eq_top : Algebra.adjoin (quotGrading I 0) (Set.range (coord
 
 theorem isProper_toSpecC [Fintype σ] : IsProper (toSpecC I) := by
   classical
-  haveI : Algebra.FiniteType (quotGrading I 0) (MvPolynomial σ ℂ ⧸ I) :=
+  have : Algebra.FiniteType (quotGrading I 0) (MvPolynomial σ ℂ ⧸ I) :=
     ⟨⟨Finset.univ.image (coord I), by rw [Finset.coe_image, Finset.coe_univ, Set.image_univ, adjoin_coord_eq_top]⟩⟩
-  haveI h2 : IsClosedImmersion (Spec.map (CommRingCat.ofHom (algebraMap ℂ (quotGrading I 0)))) :=
+  have h2 : IsClosedImmersion (Spec.map (CommRingCat.ofHom (algebraMap ℂ (quotGrading I 0)))) :=
     IsClosedImmersion.spec_of_surjective _ (algebraMap_zero_surjective I)
   exact inferInstanceAs (IsProper (Proj.toSpecZero (quotGrading I) ≫
     Spec.map (CommRingCat.ofHom (algebraMap ℂ (quotGrading I 0)))))
@@ -395,7 +395,7 @@ theorem exists_projModel {σ : Type} [Fintype σ] (I : Ideal (MvPolynomial σ �
       (∀ c c', Y.left.basicOpen (r c c') ≤ D c') ∧
       (∀ c c' q, resG _ (inf_le_left : D c ⊓ D c' ≤ _) (r c q) * resG _ (inf_le_right : D c ⊓ D c' ≤ _) (r c' c) =
         resG _ (inf_le_right : D c ⊓ D c' ≤ _) (r c' q)) := by
-  letI : GradedAlgebra (quotGrading I) := Classical.choice (quot_gradedAlgebra I hI)
+  let : GradedAlgebra (quotGrading I) := Classical.choice (quot_gradedAlgebra I hI)
   obtain ⟨c₀, hc₀⟩ := hX
   refine ⟨Over.mk (toSpecC I), chart I, ratio I,
     isIntegral_proj (quotGrading I) (coord_mem I c₀) one_pos (fun h => hc₀ (Ideal.Quotient.eq_zero_iff_mem.mp h)),
@@ -535,7 +535,7 @@ private theorem valAt'_presheaf_map_of_le_of_whole_le_preimage' {Y : Over (Sp �
   have hU : ⊤ ≤ x.left ⁻¹ᵁ U := fun y hy => hVU (h hy)
   have hm : Y.left.presheaf.map (homOfLE hVU).op ≫ x.left.appLE V ⊤ h = x.left.appLE U ⊤ hU :=
     Scheme.Hom.map_appLE x.left h (homOfLE hVU).op
-  simp only [valAt', valAt, dif_pos h, dif_pos hU, resG]
+  simp only [valAt', valAt, dite_eq_left h, dite_eq_left hU, resG]
   exact congrArg (fun φ => (Scheme.ΓSpecIso (CommRingCat.of ℂ)).hom.hom (φ.hom s)) hm
 
 private theorem preimage_basicOpen_whole_iff_valAt'_ne_zero {Y : Over (Sp ℂ)} (x : 𝟙_ (Over (Sp ℂ)) ⟶ Y) {U : Y.left.Opens}
@@ -723,7 +723,7 @@ theorem exists_projModel_of_cone
       obtain ⟨h, hhle, hhmem⟩ := (hAff (cz w)).exists_basicOpen_le (V := U ⊓ D (cz w)) ⟨_, hpin⟩ hpin.2
       have hbU : Y.left.basicOpen h ≤ U := hhle.trans inf_le_left
       have hbD : Y.left.basicOpen h ≤ D (cz w) := Y.left.basicOpen_le h
-      haveI := (hAff (cz w)).isLocalization_basicOpen h
+      have := (hAff (cz w)).isLocalization_basicOpen h
       obtain ⟨⟨a, ⟨_, n, rfl⟩⟩, han⟩ := IsLocalization.surj (Submonoid.powers h) (resG _ hbU s)
       obtain ⟨H, hH⟩ := hGen (cz w) h
       obtain ⟨A, hA⟩ := hGen (cz w) a

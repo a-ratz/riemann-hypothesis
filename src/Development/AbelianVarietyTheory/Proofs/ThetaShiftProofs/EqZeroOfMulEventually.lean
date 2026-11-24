@@ -159,7 +159,7 @@ theorem sum_single_of_support {J : Type} {m : J → ℕ} {g : ℕ} (e : Fin g �
 theorem isUnit_det_of_support {J : Type} {m : J → ℕ} {g : ℕ} (e : Fin g ≃ Σ τ : J, Fin (m τ)) (τ : J)
     (v : Fin (m τ) → Fin g → ℂ) (hl : LinearIndependent ℂ v) (hv : ∀ i jj, v i jj ≠ 0 → (e jj).1 = τ) :
     IsUnit (Matrix.of fun i k : Fin (m τ) => v i (e.symm ⟨τ, k⟩)).det := by
-  rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_rows_iff_isUnit]
+  rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.linearIndependent_row_iff_isUnit]
   rw [Fintype.linearIndependent_iff] at hl ⊢
   intro cf hc
   refine hl cf (funext fun jj => ?_)

@@ -164,7 +164,7 @@ lemma htd_E (H : HodgeTateDatum p g v R O σ cp) :
 
 lemma av_kill (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O σ cp) (a b : O) (hab : σ b = a) :
     ∀ m : htCoker H a b, cp • m = 0 := by
-  haveI := htd_domain hS
+  have := htd_domain hS
   obtain ⟨hEt, hdiag, hdet⟩ := htd_E H
   intro m
   refine Submodule.Quotient.induction_on _ m fun x => ?_
@@ -206,7 +206,7 @@ theorem permutedCokernelLowerBound_of (hU6 : CokernelLengthComparisonStatement) 
   unfold PermutedCokernelLowerBoundStatement
   intro p _ g C _ _ _ v R _ _ _ O _ _ σ cp hS H m e π he hσ hP1 hP2 hL1 hL2 w hw d hd cw hcw
   have hidem : H.ρL (e (π w)) * H.ρL (e (π w)) = H.ρL (e (π w)) := by
-    rw [← map_mul, he, if_pos rfl]
+    rw [← map_mul, he, ite_eq_left rfl]
   obtain ⟨y, hy⟩ := hIG R g d (H.ρL (e (π w))) hidem hd
   obtain ⟨cwb, hcwb⟩ := hEx C v R hS.integers g H.Ht (H.ρL (e (π w)))
     ((H.ρ (e w)).map (algebraMap ℤ_[p] R))
@@ -234,7 +234,7 @@ lemma cj_cj (hS : HodgeTateSetting p v R O σ cp) {H : HodgeTateDatum p g v R O 
 lemma ht_block_zero (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O σ cp)
     (U : UnramData p g v R O σ cp H) (k j : Fin U.m) (hkj : U.cj k ≠ j) :
     (U.εL k)ᵀ * H.Ht * U.εT j = 0 := by
-  haveI := htd_domain hS
+  have := htd_domain hS
   obtain ⟨a, ha⟩ := U.distinct (U.cj k) j hkj
   set X := (U.εL k)ᵀ * H.Ht * U.εT j with hX
   have h1 : (U.εL k)ᵀ * (H.ρL (σ a))ᵀ = U.sg (U.cj k) a • (U.εL k)ᵀ := by
@@ -260,7 +260,7 @@ lemma ht_block_zero (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p 
 lemma up_kill (hS : HodgeTateSetting p v R O σ cp) (H : HodgeTateDatum p g v R O σ cp)
     (U : UnramData p g v R O σ cp H) (i : Fin U.m) :
     ∀ m : cokE H.Ht U.εT U.εL (U.cj i) i, cp • m = 0 := by
-  haveI := htd_domain hS
+  have := htd_domain hS
   obtain ⟨hEt, hdiag, hdet⟩ := htd_E H
   have hsumL : ∑ k, (U.εL k)ᵀ = 1 := by
     rw [← Matrix.transpose_sum, U.εL_sum, Matrix.transpose_one]
@@ -302,7 +302,7 @@ theorem unramifiedCokernelLowerBound_of (hU7 : UnramifiedCokernelLengthStatement
   unfold UnramifiedCokernelLowerBoundStatement
   intro p _ g C _ _ _ v R _ _ _ O _ _ σ cp hp2 hS H U i V1 hV1
   have hidem : U.εL (U.cj i) * U.εL (U.cj i) = U.εL (U.cj i) := by
-    rw [U.εL_orth, if_pos rfl]
+    rw [U.εL_orth, ite_eq_left rfl]
   obtain ⟨y, hy⟩ := hIG R g (U.r (U.cj i)) (U.εL (U.cj i)) hidem (U.rank (U.cj i))
   obtain ⟨V2, hV2⟩ := hEx C v R hS.integers g H.Ht (U.εL (U.cj i)) (U.εT i)
   have hkill := up_kill hS H U i

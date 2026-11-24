@@ -125,7 +125,7 @@ theorem isogeny_decomposition_product : ∀ (R V : Type) [CommRing R] [CommRing 
   have hMG' : ∀ e, (MG.pt e).left ≫ π = (MBV.pt e).left := fun e => (hMG e).trans (castM_left hx MBV e)
 
   have hvt : ∀ k, IsTanAt B.A (𝟙 (Sp R)) (toAt (v k) ≫ ψ k) := fun k => by
-    haveI := hψ k; exact tan_comp _ (toAt_tan (v k) ((hv k).1 0)) (ψ k)
+    have := hψ k; exact tan_comp _ (toAt_tan (v k) ((hv k).1 0)) (ψ k)
   choose eR heR using fun k => MBR.onto _ (hvt k)
   let EV : Fin n → EBV := fun k => j (eR k)
   have hlift : ∀ e, (MBV.pt (j e)).left = spMap (dualMap f) ≫ (MBR.pt e).left := fun e =>
@@ -136,7 +136,7 @@ theorem isogeny_decomposition_product : ∀ (R V : Type) [CommRing R] [CommRing 
 
   choose EC iC mC MC bC hbC using fun k => lc (C k) (v k) (hv k) V f
   have hd : ∀ k, ∃ A : EBV →ₗ[V] EC k, ∀ e, (MC k).pt (A e) = MBV.pt e ≫ χ k := fun k => by
-    haveI := hχ k
+    have := hχ k
     exact (_root_.GlobalTheory.CompanionTheory.Ar.lieModel_exists_unique_diff (Sp R) B.A (C k).A V (spMap f ≫ 𝟙 (Sp R)) EBV (EC k) MBV (MC k) (χ k)).exists
   choose dχ hdχ using hd
   let fV : Fin n → (EBV →ₗ[V] V) := fun k => ((bC k).coord 0).comp (dχ k)

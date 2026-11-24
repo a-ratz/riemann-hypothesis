@@ -114,12 +114,12 @@ theorem iwasawa_transfer (μG : Measure (GL (Fin n) F)) [μG.IsHaarMeasure]
     simp_rw [heq]
     exact hint _
   have hP0 : μP (Subtype.val ⁻¹' (integralGL F n : Set (GL (Fin n) F))) ≠ 0 :=
-    ((isOpen_integralGL F n).preimage continuous_subtype_val).measure_ne_zero _
+    ((isOpen_integralGL F n).preimage continuous_subtypeVal).measure_ne_zero _
       ⟨1, by simp [one_mem]⟩
   have hK0 : μK Set.univ ≠ 0 := isOpen_univ.measure_ne_zero μK Set.univ_nonempty
   have hintG : Integrable f μG := by
     refine ⟨hf.aestronglyMeasurable, ?_⟩
-    have hC := lintegral_eq_sum_parabolic (β := β) (r := r) μG μP μK hf.enorm.measurable
+    have hC := lintegral_eq_sum_parabolic (β := β) (r := r) μG μP μK hf.eNorm.measurable
       (h := fun g => ‖f g‖ₑ) (fun g k hk => by simp only [hr g k hk])
     have hlt : μG (integralGL F n) * (μK ((congruenceSubgroup F n r).subgroupOf
         (integralGL F n)) * ∑ q : integralGL F n ⧸ (congruenceSubgroup F n r).subgroupOf
@@ -176,7 +176,7 @@ theorem inducedFE_of_leviFE [mG : MeasurableSpace (GL (Fin n) F)] [hGB : BorelSp
     isCompact_iff_compactSpace.1 (isCompact_integralGL F n)
   have : Finite (integralGL F n ⧸ (congruenceSubgroup F n r).subgroupOf (integralGL F n)) :=
     Subgroup.quotient_finite_of_isOpen _
-      ((isOpen_congruenceSubgroup F n r).preimage continuous_subtype_val)
+      ((isOpen_congruenceSubgroup F n r).preimage continuous_subtypeVal)
   let _ := Fintype.ofFinite
     (integralGL F n ⧸ (congruenceSubgroup F n r).subgroupOf (integralGL F n))
   obtain ⟨C, hCf⟩ := iwasawa_transfer (β := β) μG (measureP β ψ) r
@@ -213,7 +213,7 @@ theorem inducedFE_of_leviFE [mG : MeasurableSpace (GL (Fin n) F)] [hGB : BorelSp
         detPow ((p : GL (Fin n) F) * y q) (s + ((n : ℂ) - 1) / 2) *
           ℓ (φ ((p : GL (Fin n) F) * y q))) (measureP β ψ) := by
     intro s hs q
-    refine ⟨((hcontA s).comp (continuous_subtype_val.mul continuous_const)).aestronglyMeasurable,
+    refine ⟨((hcontA s).comp (continuous_subtypeVal.mul continuous_const)).aestronglyMeasurable,
       ?_⟩
     show ∫⁻ p, ‖inducedIntegrand Φ φ ℓ (s + ((n : ℂ) - 1) / 2) ((p : GL (Fin n) F) * y q)‖ₑ
       ∂measureP β ψ < ⊤

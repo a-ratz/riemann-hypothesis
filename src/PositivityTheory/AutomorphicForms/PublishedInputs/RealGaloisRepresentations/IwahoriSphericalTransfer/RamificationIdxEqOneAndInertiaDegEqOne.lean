@@ -112,7 +112,7 @@ theorem fixes_of_mem_stabilizer [IsAlgClosure F Ω] [IsAlgClosure L Ω]
     (hD : Dec (F := F) A ≤ (res F Ω K).range)
     (τ : L ≃ₐ[F] L) (hτ : τ • P.asIdeal = P.asIdeal) (x : K) :
     τ (algebraMap K L x) = algebraMap K L x := by
-  haveI : Normal F Ω := IsAlgClosure.normal F Ω
+  have : Normal F Ω := IsAlgClosure.normal F Ω
   set σ : Ω ≃ₐ[F] Ω := τ.liftNormal Ω with hσ
   have hσL : ∀ y : L, σ (algebraMap L Ω y) = algebraMap L Ω (τ y) := fun y =>
     AlgEquiv.liftNormal_commutes τ Ω y
@@ -153,10 +153,10 @@ theorem ramificationIdx_eq_one_and_inertiaDeg_eq_one [IsAlgClosure F Ω] [IsAlgC
     {P : HeightOneSpectrum (𝓞 L)} (hv : IsPlaceOver A v) (hw : IsPlaceOver A w) (hP : IsPlaceOver A P)
     (hD : Dec (F := F) A ≤ (res F Ω K).range) :
     w.asIdeal.ramificationIdx (𝓞 F) = 1 ∧ w.asIdeal.inertiaDeg (𝓞 F) = 1 := by
-  haveI : IsGalois K L := IsGalois.tower_top_of_isGalois F K L
-  haveI : w.asIdeal.LiesOver v.asIdeal := liesOver_of_isPlaceOver hv hw
-  haveI : P.asIdeal.LiesOver w.asIdeal := liesOver_of_isPlaceOver hw hP
-  haveI : P.asIdeal.LiesOver v.asIdeal := liesOver_of_isPlaceOver hv hP
+  have : IsGalois K L := IsGalois.tower_top_of_isGalois F K L
+  have : w.asIdeal.LiesOver v.asIdeal := liesOver_of_isPlaceOver hv hw
+  have : P.asIdeal.LiesOver w.asIdeal := liesOver_of_isPlaceOver hw hP
+  have : P.asIdeal.LiesOver v.asIdeal := liesOver_of_isPlaceOver hv hP
   have hcard : Nat.card (MulAction.stabilizer (L ≃ₐ[K] L) P.asIdeal) =
       Nat.card (MulAction.stabilizer (L ≃ₐ[F] L) P.asIdeal) := by
     refine Nat.card_congr (Equiv.ofBijective
@@ -191,13 +191,13 @@ open GroundTheory.Global.SemiLocal in
 theorem exists_placeIso_of_dec_le_range : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (K : Type) [Field K] [NumberField K] [Algebra F K] [Algebra K Ω] [IsScalarTower F K Ω] [IsAlgClosure K Ω] (v : HeightOneSpectrum (𝓞 F)) (A : ValuationSubring Ω), IsPlaceOver A v → Dec (F := F) A ≤ (res F Ω K).range → ∃ (w : HeightOneSpectrum (𝓞 K)) (_ : IsPlaceOver A w) (i : v.adicCompletion F ≃+* w.adicCompletion K), PlaceIso A v A w (RingEquiv.refl Ω) (algebraMap F K) i := by
   intro F Ω _ _ _ _ _ K _ _ _ _ _ _ v A hv hD
   obtain ⟨w, hw⟩ := GlobalTheory.PlaceIsoDec.exists_isPlaceOver_mid (L := K) hv
-  haveI : Module.Finite F K := Module.Finite.of_restrictScalars_finite ℚ F K
-  haveI : NumberField (IntermediateField.normalClosure F K Ω) := NumberField.of_module_finite F (IntermediateField.normalClosure F K Ω)
-  haveI : IsAlgClosure (IntermediateField.normalClosure F K Ω) Ω :=
+  have : Module.Finite F K := Module.Finite.of_restrictScalars_finite ℚ F K
+  have : NumberField (IntermediateField.normalClosure F K Ω) := NumberField.of_module_finite F (IntermediateField.normalClosure F K Ω)
+  have : IsAlgClosure (IntermediateField.normalClosure F K Ω) Ω :=
     ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) (IntermediateField.normalClosure F K Ω)⟩
   obtain ⟨P, hP⟩ := GlobalTheory.PlaceIsoDec.exists_isPlaceOver_mid (L := IntermediateField.normalClosure F K Ω) hv
   obtain ⟨he, hf⟩ := GlobalTheory.PlaceIsoDec.ramificationIdx_eq_one_and_inertiaDeg_eq_one (K := K) hv hw hP hD
-  haveI : w.asIdeal.LiesOver v.asIdeal := GlobalTheory.PlaceIsoDec.liesOver_of_isPlaceOver hv hw
+  have : w.asIdeal.LiesOver v.asIdeal := GlobalTheory.PlaceIsoDec.liesOver_of_isPlaceOver hv hw
   have hrank : Module.finrank (v.adicCompletion F) (w.adicCompletion K) = 1 := by
     rw [finrank_eq_ramificationIdx_mul_inertiaDeg K v w, he, hf]
   have hsurj : Function.Surjective (completionMap v w) := by

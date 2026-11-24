@@ -89,7 +89,7 @@ theorem entire_apply_eq_of_periodic_of_span_real [NormedSpace ℝ E] [FiniteDime
     (hper : ∀ x, ∀ g ∈ S, F (x + g) = F x) (z w : E) : F z = F w := by
   obtain ⟨t, htS, hspan, hli⟩ := exists_linearIndependent ℝ S
   let b : Module.Basis t ℝ E := Module.Basis.mk hli (by simp [hspan, hS])
-  haveI : Finite t := Module.Finite.finite_basis b
+  have : Finite t := Module.Finite.finite_basis b
   refine entire_apply_eq_of_isZLattice_periodic hF (Submodule.span ℤ (range b))
     (periodic_of_mem_span_int ?_) z w
   rintro x _ ⟨i, rfl⟩

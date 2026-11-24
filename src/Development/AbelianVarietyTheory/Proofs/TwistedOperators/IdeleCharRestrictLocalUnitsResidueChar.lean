@@ -193,7 +193,7 @@ theorem exists_modulus (hΦ : Comp D Φ) (c : (AE D)ˣ →* Circle) (hc : Contin
   · rw [HeightOneSpectrum.mem_adicCompletionIntegers, ev_mul, ev_sub, ev_one, ev_inc hΦ, map_mul, val_alg, map_inv₀]
     by_cases hQ : Q = P
     · subst hQ
-      exact (inv_mul_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hN0))).2 h3
+      exact (inv_mul_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hN0))).2 h3
     · rw [h1 Q hQ, sub_self, map_zero, mul_zero]
       exact zero_le
   · have e : (N : AE D) * (incA D (N : D.host.E)⁻¹ * ((y : AE D) - 1)) = (y : AE D) - 1 := by

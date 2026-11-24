@@ -78,16 +78,16 @@ theorem trdeg_adjoin_eq_iff_exists_linearIndependent_D {K F κ : Type} [Field K]
     rw [h] at htow
     have h0 : Algebra.trdeg L F = 0 :=
       (Cardinal.add_nat_inj D).mp (by rw [add_comm, htow, zero_add])
-    haveI : Algebra.IsAlgebraic L F := trdeg_eq_zero_iff.mp h0
-    haveI : Algebra.IsAlgebraic (Algebra.adjoin K (Set.range x)) F :=
+    have : Algebra.IsAlgebraic L F := trdeg_eq_zero_iff.mp h0
+    have : Algebra.IsAlgebraic (Algebra.adjoin K (Set.range x)) F :=
       Algebra.IsAlgebraic.trans (Algebra.adjoin K (Set.range x)) L F
     obtain ⟨t, ht, hb⟩ := exists_isTranscendenceBasis_subset (R := K) (Set.range x)
     have hc : Cardinal.mk t = Cardinal.mk (Fin D) := by
       rw [hb.cardinalMk_eq_trdeg, hD, Cardinal.mk_fin]
     obtain ⟨e⟩ := Cardinal.eq.mp hc
     choose J hJ using fun k : Fin D => ht (e.symm k).2
-    haveI := hb.isAlgebraic_field
-    haveI : CharZero (IntermediateField.adjoin K (Set.range ((↑) : t → F))) :=
+    have := hb.isAlgebraic_field
+    have : CharZero (IntermediateField.adjoin K (Set.range ((↑) : t → F))) :=
       algebraRat.charZero _
     obtain ⟨b, hbD⟩ := exists_basis_kaehler_of_algebraicIndependent hb.1
     refine ⟨J, ?_⟩

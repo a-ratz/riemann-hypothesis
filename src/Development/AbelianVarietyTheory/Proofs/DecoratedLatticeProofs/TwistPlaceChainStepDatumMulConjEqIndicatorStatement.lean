@@ -86,12 +86,12 @@ theorem phiQ_mul_conj_eq_indicator : ∀ (D : D7) (PP : Pl D.host.E) (v : FinPl 
       (IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers _ _ _).2 hvi.le
     have hunit : IsUnit (⟨(u : Fv D.host.F v), hint⟩ : v.adicCompletionIntegers D.host.F) :=
       ⟨⟨⟨_, hint⟩, ⟨_, hint'⟩, Subtype.ext (by simp), Subtype.ext (by simp)⟩, rfl⟩
-    haveI : Finite (kP PP) := PP.asIdeal.finiteQuotientOfFreeOfNeBot PP.ne_bot
+    have : Finite (kP PP) := PP.asIdeal.finiteQuotientOfFreeOfNeBot PP.ne_bot
     set k := (hunit.map red).unit with hk
     have hR : GlobalTheory.IndefiniteRowSideFullHecke.RestrictedTensorSplitting.RedRel φ PP (u : Fv D.host.F v) (k : kP PP) :=
       (hrel _ _).2 ⟨hint, (IsUnit.unit_spec (hunit.map red)).symm⟩
     have hmu : mu u = ξ k := hL u k hR
-    haveI : Finite (kP PP)ˣ := Finite.of_injective _ Units.val_injective
+    have : Finite (kP PP)ˣ := Finite.of_injective _ Units.val_injective
     obtain ⟨n, hn0, hn⟩ := (ξ.isOfFinOrder (isOfFinOrder_of_finite k)).exists_pow_eq_one
     have hpow : ((mu u : ℂˣ) : ℂ) ^ n = 1 := by
       rw [hmu, ← Units.val_pow_eq_pow_val, hn, Units.val_one]

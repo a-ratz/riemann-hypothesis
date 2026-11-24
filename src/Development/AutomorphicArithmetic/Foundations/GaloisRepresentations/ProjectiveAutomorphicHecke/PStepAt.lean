@@ -69,7 +69,7 @@ private def CJ {w : Plc E} (J : Subgroup (GLw n w)) : Subgroup (UA E n) := locU 
 private theorem isCompact_CJ {w : Plc E} (hw : IsSplitAt w) (J : Subgroup (GLw n w))
     (hJ : IsCompact (J : Set (GLw n w))) : IsCompact (CJ J : Set (UA E n)) := by
   have hc : Continuous fun x : GLw n w => (((locE hw).symm x : locU n w) : UA E n) :=
-    continuous_subtype_val.comp (locE hw).symm.continuous
+    continuous_subtypeVal.comp (locE hw).symm.continuous
   have he : (CJ J : Set (UA E n)) = (fun x : GLw n w => (((locE hw).symm x : locU n w) : UA E n)) '' (J : Set (GLw n w)) := by
     ext g
     constructor
@@ -90,7 +90,7 @@ private theorem isCompact_CJ {w : Plc E} (hw : IsSplitAt w) (J : Subgroup (GLw n
 private theorem finite_index {w : Plc E} (hw : IsSplitAt w) (J : Subgroup (GLw n w))
     (hJ : IsCompact (J : Set (GLw n w))) (φ : UA E n → ℂ) (hφ : IsAutFormU φ) :
     ∃ N : Subgroup (CJ J : Subgroup (UA E n)), N.FiniteIndex ∧ ∀ k ∈ N, RU E n (k : UA E n) φ = φ := by
-  haveI : CompactSpace (CJ J : Subgroup (UA E n)) := isCompact_iff_compactSpace.1 (isCompact_CJ hw J hJ)
+  have : CompactSpace (CJ J : Subgroup (UA E n)) := isCompact_iff_compactSpace.1 (isCompact_CJ hw J hJ)
   let N : Subgroup (CJ J : Subgroup (UA E n)) :=
     { carrier := {k | RU E n (k : UA E n) φ = φ}
       one_mem' := by simp
@@ -105,8 +105,8 @@ private theorem finite_index {w : Plc E} (hw : IsSplitAt w) (J : Subgroup (GLw n
   have hle : (CJ J : Subgroup (UA E n)) ≤ finU (E := E) (n := n) := fun k hk => (Subgroup.mem_inf.1 (Subgroup.mem_inf.1 hk).1).1
   have hop : IsOpen (N : Set (CJ J : Subgroup (UA E n))) :=
     hφ.level.preimage (f := fun k : (CJ J : Subgroup (UA E n)) => (⟨k.1, hle k.2⟩ : finU (E := E) (n := n)))
-      (Continuous.subtype_mk continuous_subtype_val _)
-  haveI := Subgroup.quotient_finite_of_isOpen N hop
+      (Continuous.subtype_mk continuous_subtypeVal _)
+  have := Subgroup.quotient_finite_of_isOpen N hop
   exact ⟨N, Subgroup.finiteIndex_of_finite_quotient, fun k hk => hk⟩
 
 private theorem step_core (π : AutSub E n) (W : Wt E n) (f : algForms W) {w : Plc E} (hw : IsSplitAt w)

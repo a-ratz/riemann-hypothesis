@@ -114,9 +114,9 @@ theorem eig_mul {W : Submodule ℂ H} (hW : IsClosed (W : Set H)) {O : H →L[�
     have hv : v ∈ W := by
       have h1 : (x : ℂ) • v ∈ W := by rw [← h, hc.eq]; exact prj_mem hW _
       exact (W.smul_mem_iff (Complex.ofReal_ne_zero.2 hx)).1 h1
-    exact ⟨hv, by rw [← h, ContinuousLinearMap.mul_apply, prj_self hv]⟩
+    exact ⟨hv, by rw [← h, mul_apply_eq_comp, prj_self hv]⟩
   · rintro ⟨hv, h⟩
-    rw [ContinuousLinearMap.mul_apply, prj_self hv, h]
+    rw [mul_apply_eq_comp, prj_self hv, h]
 
 variable {Γ : Type*} [Group Γ] [TopologicalSpace Γ]
 
@@ -265,7 +265,7 @@ theorem GA_commute {A : Set (Pl K)} (B : LL μ →L[ℂ] LL μ) (hB : ∀ u ∈ 
     Commute B (prj (GA μ J χ A)) := by
   have key : ∀ B : LL μ →L[ℂ] LL μ, (∀ u ∈ A, ∀ x, Commute B (rhoL μ u x)) → ∀ v ∈ GA μ J χ A, B v ∈ GA μ J χ A :=
     fun B hB v hv => (mem_GA μ).2 fun u hu y hy => by
-      rw [← ContinuousLinearMap.mul_apply, ← (hB u hu y).eq, ContinuousLinearMap.mul_apply, (mem_GA μ).1 hv u hu y hy, map_smul]
+      rw [← mul_apply_eq_comp, ← (hB u hu y).eq, mul_apply_eq_comp, (mem_GA μ).1 hv u hu y hy, map_smul]
   refine prj_commute (GA_closed μ A) B (key B hB) (key _ fun u hu x => ?_)
   have h := (hB u hu x⁻¹).star_star
   rwa [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.star_eq_adjoint, rhoL_adj, inv_inv] at h
@@ -300,13 +300,13 @@ theorem GA_mem {V : Submodule ℂ (LL μ)} (hV : IsSummand μ V) (A : Set (Pl K)
     prj (GA μ J χ A) v ∈ V := by
   have h := GA_commute μ (J := J) (χ := χ) (A := A) (prj V) fun u _ x =>
     ContinuousLinearMap.ext fun y => inv_commute _ hV.closed hV.inv _ y
-  rw [← prj_self hv, ← ContinuousLinearMap.mul_apply, ← h.eq]
+  rw [← prj_self hv, ← mul_apply_eq_comp, ← h.eq]
   exact prj_mem hV.closed _
 
 theorem GA_arch (A : Set (Pl K)) (a : archGroup K n) :
     Commute (rightRegularRep (rationalGLOne (K := K) (n := n)) μ (archP K n a)) (prj (GA μ J χ A)) :=
   GA_commute μ _ fun u _ x => ContinuousLinearMap.ext fun y => by
-    simp only [ContinuousLinearMap.mul_apply, rhoL, rhoF]
+    simp only [mul_apply_eq_comp, rhoL, rhoF]
     rw [← UnitaryRep.map_mul_apply, ← UnitaryRep.map_mul_apply, (arch_fin _ _).eq]
 
 theorem test_ind {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] {J : Subgroup G} (hJ : CO J)
@@ -337,8 +337,8 @@ theorem compact_typed (hn : 0 < n) (ν : Measure (archGroup K n)) [ν.IsHaarMeas
   have h2 := ((UpperTheory.ConvolutionTheory.C.opBasics K n μ (tens β e)).2.2).smul ((κ : ℂ)⁻¹)
   refine cast (congrArg _ (funext fun v => Eq.symm ?_)) h2
   have h3 : GA μ J χ Set.univ = ⨅ u, eigL μ u (J u) (χ u) := by simp [GA]
-  simp only [h1, h3, ContinuousLinearMap.comp_apply, Pi.smul_apply, ContinuousLinearMap.smul_apply, List.ofFn_zero,
-    List.prod_nil, ContinuousLinearMap.one_apply]
+  simp only [h1, h3, ContinuousLinearMap.comp_apply, Pi.smul_apply, smul_apply, List.ofFn_zero,
+    List.prod_nil, one_apply_eq_self]
   rw [inv_smul_smul₀ (Complex.ofReal_ne_zero.2 hκ.ne')]
 
 theorem split_fin (M : Submonoid (normOneGL (K := K) (n := n))) (B : Finset (Pl K))

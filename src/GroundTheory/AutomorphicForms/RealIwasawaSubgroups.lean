@@ -394,7 +394,7 @@ def upperPosDiagPart (b : upperPosSubgroup n 𝕜) : diagPosSubgroup n 𝕜 :=
 theorem continuous_upperPosDiagPart :
     Continuous (upperPosDiagPart : upperPosSubgroup n 𝕜 → diagPosSubgroup n 𝕜) :=
   diagPosHomeomorph.continuous.comp (Continuous.subtype_mk (continuous_pi fun i =>
-    RCLike.continuous_re.comp ((Units.continuous_val.comp continuous_subtype_val).matrix_elem i i))
+    RCLike.continuous_re.comp ((Units.continuous_val.comp continuous_subtypeVal).matrix_elem i i))
     _)
 
 theorem upperPosDiagPart_inv_mul_mem (b : upperPosSubgroup n 𝕜) :
@@ -413,8 +413,8 @@ def upperPosUnipotentPart (b : upperPosSubgroup n 𝕜) : upperUnipotentSubgroup
 
 theorem continuous_upperPosUnipotentPart :
     Continuous (upperPosUnipotentPart : upperPosSubgroup n 𝕜 → upperUnipotentSubgroup n 𝕜) :=
-  Continuous.subtype_mk ((continuous_subtype_val.comp continuous_upperPosDiagPart).inv.mul
-    continuous_subtype_val) _
+  Continuous.subtype_mk ((continuous_subtypeVal.comp continuous_upperPosDiagPart).inv.mul
+    continuous_subtypeVal) _
 
 def diagUnipotentMul (p : diagPosSubgroup n 𝕜 × upperUnipotentSubgroup n 𝕜) :
     upperPosSubgroup n 𝕜 :=
@@ -496,8 +496,8 @@ theorem continuous_iwasawaDelta_diagPos :
   show Continuous fun a : PosDiag (n := n) => (iwasawaDelta (diagPosOf a : GL n 𝕜) : ℝ)
   simp_rw [iwasawaDelta_diagPosOf]
   refine continuous_finsetProd _ fun p _ => (Continuous.div ?_ ?_ fun a => (a.2 _).ne').pow _
-  · exact (continuous_apply _).comp continuous_subtype_val
-  · exact (continuous_apply _).comp continuous_subtype_val
+  · exact (continuous_apply _).comp continuous_subtypeVal
+  · exact (continuous_apply _).comp continuous_subtypeVal
 
 end Delta
 

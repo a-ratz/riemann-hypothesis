@@ -199,7 +199,7 @@ theorem latAtV_selfDual_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
       (by rw [map_one]; exact one_mem _) z hzm γ hγ
     simpa using h
   · intro hψ
-    haveI := hB.unram
+    have := hB.unram
     obtain ⟨m, s, c, hsc⟩ := exists_traceFamily (F := F) (E := E)
     obtain ⟨k, S, T, hS, hTm, -, hTS⟩ := exists_formFrame' σ X.J (det_ne_zero_of_herm σ B hX) X.L (by first | exact hX.lat | exact hX.lat.toIsLattice)
       (fun y hy => (hX.dual y).2 fun x hx => by
@@ -403,8 +403,8 @@ private theorem sep_dual_pk (v : HeightOneSpectrum (𝓞 F)) {κ : Type} [Fintyp
     intro l hl
     refine ⟨(fun i => ⟨c₀ * l.1 i, (hbd l hl i).1⟩, fun i => ⟨c₀ * l.2 i, (hbd l hl i).2⟩), ?_⟩
     ext i <;> simp [φ, hc₀]
-  haveI : IsNoetherian O (LinearMap.range φ) := isNoetherian_of_isNoetherianRing_of_finite _ _
-  haveI : IsNoetherian O L' := isNoetherian_of_le hle'
+  have : IsNoetherian O (LinearMap.range φ) := isNoetherian_of_isNoetherianRing_of_finite _ _
+  have : IsNoetherian O L' := isNoetherian_of_le hle'
   have hfg : L'.FG := Module.Finite.iff_fg.1 inferInstance
   have hspan : Submodule.span (Fv F v) (L' : Set ((κ → Fv F v) × (κ → Fv F v))) = ⊤ := by
     refine eq_top_iff.2 fun w _ => ?_
@@ -428,8 +428,8 @@ private theorem sep_dual_pk (v : HeightOneSpectrum (𝓞 F)) {κ : Type} [Fintyp
     have e : w = t⁻¹ • (t • w) := by rw [smul_smul, inv_mul_cancel₀ ht0, one_smul]
     rw [e]
     exact Submodule.smul_mem _ _ (Submodule.subset_span hw)
-  haveI : L'.IsLattice (Fv F v) := Submodule.IsLattice.of_fg (Fv F v) hfg
-  haveI : L'.IsFullLattice (Fv F v) := ⟨hspan⟩
+  have : L'.IsLattice (Fv F v) := Submodule.IsLattice.of_fg (Fv F v) hfg
+  have : L'.IsFullLattice (Fv F v) := ⟨hspan⟩
   let ψ' : AddChar (Fv F v) ℂ := ψ₀.compAddMonoidHom (AddMonoidHom.mulLeft c)
   have hψ' : ∀ x, ψ' x = ψ₀ (c * x) := fun _ => rfl
   have hsep : ∀ x, (∀ y : O, ψ' (x * algebraMap O (Fv F v) y) = 1) ↔ x ∈ (algebraMap O (Fv F v)).range := by
@@ -651,7 +651,7 @@ private theorem unit_abs {O A : Type} [CommRing O] [IsLocalRing O] [CommRing A] 
     (M : Matrix (Fin n) (Fin n) A) (hM : ∀ i j, M i j ∈ S) :
     ∃ N : Matrix (Fin n) (Fin n) A, (∀ i j, N i j ∈ S) ∧ (1 + φ ϖ • M) * N = 1 := by
   let φS : O →+* S := φ.codRestrict S hφ
-  letI : Algebra O S := φS.toAlgebra
+  let : Algebra O S := φS.toAlgebra
   have hI : Algebra.IsIntegral O S := ⟨fun x => by
     obtain ⟨P, hP, h⟩ := hint x.1 x.2
     refine ⟨P, hP, ?_⟩
@@ -676,7 +676,7 @@ private theorem unit_abs {O A : Type} [CommRing O] [IsLocalRing O] [CommRing A] 
     have h1 : Ideal.Quotient.mk m Q.det = 1 := by
       rw [RingHom.map_det, hmap, Matrix.det_one]
     rw [Ideal.Quotient.eq_zero_iff_mem.2 hq] at h1
-    haveI := Ideal.Quotient.nontrivial_iff.2 hm.ne_top
+    have := Ideal.Quotient.nontrivial_iff.2 hm.ne_top
     exact zero_ne_one h1
   have hQ : Q * Q⁻¹ = 1 := Matrix.mul_nonsing_inv Q hdet
   refine ⟨S.subtype.mapMatrix Q⁻¹, fun i j => (Q⁻¹ i j).2, ?_⟩
@@ -949,7 +949,7 @@ private theorem small_oh (v : Pl (F := F)) {ϖ : Fv F v} (h1 : Valued.v ϖ < 1) 
     fun p => ∑ i, sg v (p.1 * p.2 i) • inclR (F := F) (AF F) (o i : E)
   have cJ : Continuous J := continuous_finsetSum _ fun i _ => by
     have c1 : Continuous fun p : Fv F v × (ι → v.adicCompletionIntegers F) => sg v (p.1 * (p.2 i : Fv F v)) :=
-      (continuous_sg v).comp (continuous_fst.mul (continuous_subtype_val.comp ((continuous_apply i).comp continuous_snd)))
+      (continuous_sg v).comp (continuous_fst.mul (continuous_subtypeVal.comp ((continuous_apply i).comp continuous_snd)))
     exact c1.smul (continuous_const (y := inclR (F := F) (AF F) (o i : E)))
   have h : ∀ᶠ a : Fv F v in 𝓝 0, ∀ y ∈ (Set.univ : Set (ι → v.adicCompletionIntegers F)), J (a, y) ∈ V :=
     isCompact_univ.eventually_forall_of_forall_eventually fun y _ =>
@@ -1094,8 +1094,8 @@ private theorem part2 {σ : E →ₐ[F] E} {X : Spc F E n} (b c : Matrix (Fin n)
   have c1 : Continuous fun M : Matrix (Fin n) (Fin n) (AE F E) => c * (M - 1) * b :=
     ((continuous_const (y := c)).matrix_mul (continuous_id.sub continuous_const)).matrix_mul (continuous_const (y := b))
   have cψ : Continuous ψ := c1.const_smul (sg v (ϖ ^ k)⁻¹)
-  have cm : Continuous fun g : UA σ X.J => mat g := Units.continuous_val.comp continuous_subtype_val
-  have ci : Continuous fun g : UA σ X.J => mat g⁻¹ := Units.continuous_coe_inv.comp continuous_subtype_val
+  have cm : Continuous fun g : UA σ X.J => mat g := Units.continuous_val.comp continuous_subtypeVal
+  have ci : Continuous fun g : UA σ X.J => mat g⁻¹ := Units.continuous_coe_inv.comp continuous_subtypeVal
   have ψ1 : ψ 1 = 0 := by simp [ψ]
   refine ⟨⋂ i, ⋂ j, ((fun g => ψ (mat g) i j) ⁻¹' interior V ∩ (fun g => ψ (mat g⁻¹) i j) ⁻¹' interior V),
     isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j =>
@@ -1172,7 +1172,7 @@ private theorem at_one {F : Type} [Field F] [NumberField F] (v : Pl (F := F)) {M
 theorem UpperTheory.unitaryLattice_exists_frame :
     ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (n : ℕ) (X : Spc F E n) (v : Pl (F := F)), X.L.IsFullLattice E → ∃ b c, IsFr X v b c := by
   intro F E _ _ _ _ _ n X v hL
-  haveI := hL
+  have := hL
   obtain ⟨P, h1, h2⟩ := GlobalTheory.AdelicU.Frames.exists_rational_frame (F := F) X.L v
   have hss : sg v 1 * sg v 1 = sg v 1 := by rw [mul_sg, ev_sg, mul_one]
   have hPQ : incM F P.1 * incM F (P⁻¹).1 = 1 := by
@@ -1294,7 +1294,7 @@ theorem exists_isoW_k {σ : E →ₐ[F] E} {B : Base F E} {n d : ℕ} {W : Spc F
     have e5 : (f j : ℕ) = j := rfl
     rw [Matrix.smul_apply]
     simp only [antiJ, Matrix.of_apply]
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
     simp
   · obtain ⟨h3, h4⟩ := (mem_latW_iff hw h W z).1 hz
     rw [← Matrix.mulVec_transpose]
@@ -1329,8 +1329,8 @@ namespace PositivityTheory.ThK
 open NumberField IsDedekindDomain GlobalTheory.AdelicU
 theorem inertof_proof_k : _root_.PositivityTheory.ThK.InertOf_k := by
   intro F E _ _ _ _ _ σ B hB v he
-  haveI := hB.unram
-  haveI := v.isMaximal
+  have := hB.unram
+  have := v.isMaximal
   have h1 := ncard_primesOver_le_two hB.cm v
   have h2 : (v.asIdeal.primesOver (𝓞 E)).ncard ≠ 2 := fun h =>
     not_nonempty_iff.2 he ((nonempty_split_iff hB.cm).2 h)

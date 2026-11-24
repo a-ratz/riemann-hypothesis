@@ -565,8 +565,8 @@ theorem baseChange_free (G Z : Over S) [GrpObj G] [ModObj G Z] (hf : IsFreeActio
     letI := Functor.grpObjObj (F := Over.pullback j) (G := G)
     letI := modObjObj (Over.pullback j) G Z
     IsFreeAction ((Over.pullback j).obj G) ((Over.pullback j).obj Z) := by
-  letI := Functor.grpObjObj (F := Over.pullback j) (G := G)
-  letI := modObjObj (Over.pullback j) G Z
+  let := Functor.grpObjObj (F := Over.pullback j) (G := G)
+  let := modObjObj (Over.pullback j) G Z
   apply free_of_mono
   have := mono_of_free G Z hf
   have hm : Mono ((Over.pullback j).map (lift (γ[G, Z] : G ⊗ Z ⟶ Z) (snd G Z))) := inferInstance
@@ -616,8 +616,8 @@ theorem hasAffineChart_of_stable : ∀ {S : Scheme.{0}} (G X : Over S) [GrpObj G
     have e₁ : g • (x ≫ m) = (g • x) ≫ m := by
       rw [Hom.smul_def, Hom.smul_def, Category.assoc, hm, ← Category.assoc, lift_whiskerLeft]
     rw [e₁, e]
-  letI := Functor.grpObjObj (F := Over.pullback j) (G := G)
-  letI := modObjObj (Over.pullback j) G Z
+  let := Functor.grpObjObj (F := Over.pullback j) (G := G)
+  let := modObjObj (Over.pullback j) G Z
   obtain ⟨hi, e, he₁, he₂⟩ := baseChange_compare j G Z z hz
   have hfZ' := baseChange_free j G Z hfZ
   have hH : IsFiniteLocallyFree ((Over.pullback j).obj G).hom := by
@@ -1283,10 +1283,10 @@ theorem FreeQuotientScheme_holds : FreeQuotientScheme := by
         GlobalTheory.T.orbit_affine_neighbourhood G X hG x U hU hxU
       exact ⟨V, hxV,
         GlobalTheory.T.free_action_affine_chart G X hG hfree V W hV hW hVW hinv⟩)
-  haveI : IsFinite q₀ := hfin
-  haveI : Flat q₀ := hflat
-  haveI : LocallyOfFinitePresentation q₀ := hfp
-  haveI : Surjective q₀ := hsurj
+  have : IsFinite q₀ := hfin
+  have : Flat q₀ := hflat
+  have : LocallyOfFinitePresentation q₀ := hfp
+  have : Surjective q₀ := hsurj
   have hdesc : ∀ {Z} (g₁ g₂ : Z ⟶ X.left), g₁ ≫ q₀ = g₂ ≫ q₀ → g₁ ≫ X.hom = g₂ ≫ X.hom := by
     intro Z g₁ g₂ hg
     rw [← hpb.lift_fst g₁ g₂ hg]

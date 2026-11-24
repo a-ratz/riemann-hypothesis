@@ -245,7 +245,7 @@ theorem isUnit_delta_l : IsUnit ((acrisDelta l).δ (l : Per.Acris l)) := by
     apply sub_eq_zero.1
     apply htf
     linear_combination -h - e
-  haveI := (GlobalTheory.MemLoc.acris_basic l).1
+  have := (GlobalTheory.MemLoc.acris_basic l).1
   rw [h2]
   exact Ideal.mem_jacobson_bot.1
     (IsAdicComplete.le_jacobson_bot _ (Ideal.mem_span_singleton_self (l : Per.Acris l))) _

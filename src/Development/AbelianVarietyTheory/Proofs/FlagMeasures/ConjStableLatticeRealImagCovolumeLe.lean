@@ -107,15 +107,15 @@ theorem reflection_stable (μ : Measure E) [μ.IsAddHaarMeasure] (M : Submodule 
     have := M.sub_mem hp (hM p hp)
     convert this using 1
     ext <;> simp
-  haveI dA : DiscreteTopology A :=
+  have dA : DiscreteTopology A :=
     DiscreteTopology.of_continuous_injective
       (f := fun x : A => (⟨(x.1, 0), (hA _).1 x.2⟩ : M))
-      ((continuous_subtype_val.prodMk continuous_const).subtype_mk _)
+      ((continuous_subtypeVal.prodMk continuous_const).subtype_mk _)
       (fun x y h => Subtype.ext (congrArg (fun z : M => z.1.1) h))
-  haveI dB : DiscreteTopology B :=
+  have dB : DiscreteTopology B :=
     DiscreteTopology.of_continuous_injective
       (f := fun x : B => (⟨(0, x.1), (hB _).1 x.2⟩ : M))
-      ((continuous_const.prodMk continuous_subtype_val).subtype_mk _)
+      ((continuous_const.prodMk continuous_subtypeVal).subtype_mk _)
       (fun x y h => Subtype.ext (congrArg (fun z : M => z.1.2) h))
   have key : ∀ (C : Submodule ℤ E) (f : E × E →ₗ[ℝ] E), Function.Surjective f →
       (∀ p ∈ M, f p + f p ∈ C) → Submodule.span ℝ (C : Set E) = ⊤ := by
@@ -125,8 +125,8 @@ theorem reflection_stable (μ : Measure E) [μ.IsAddHaarMeasure] (M : Submodule 
     rintro _ ⟨p, hp, rfl⟩
     have h := (Submodule.span ℝ (C : Set E)).smul_mem (2⁻¹ : ℝ) (Submodule.subset_span (hC p hp))
     rwa [← two_smul ℝ, inv_smul_smul₀ two_ne_zero] at h
-  haveI lA : IsZLattice ℝ A := ⟨key A (LinearMap.fst ℝ E E) LinearMap.fst_surjective h2A⟩
-  haveI lB : IsZLattice ℝ B := ⟨key B (LinearMap.snd ℝ E E) LinearMap.snd_surjective h2B⟩
+  have lA : IsZLattice ℝ A := ⟨key A (LinearMap.fst ℝ E E) LinearMap.fst_surjective h2A⟩
+  have lB : IsZLattice ℝ B := ⟨key B (LinearMap.snd ℝ E E) LinearMap.snd_surjective h2B⟩
   refine ⟨⟨dA, lA⟩, ⟨dB, lB⟩, ?_⟩
   have hle : A.prod B ≤ M := fun p hp => by
     have := M.add_mem ((hA _).1 hp.1) ((hB _).1 hp.2)
@@ -206,11 +206,11 @@ theorem real_imag_covolume_le : ∀ (ι κ : Type) [Fintype ι] [Fintype κ] (L 
       rw [hB, hmem]
       congr! 1
       ext v i; apply Complex.ext <;> simp [reImEquiv_apply])
-  haveI : (volume : Measure (κ → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (ι → κ → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (κ → ℝ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (volume : Measure (ι → κ → ℝ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : ((volume : Measure (ι → κ → ℝ)).prod (volume : Measure (ι → κ → ℝ))).IsAddHaarMeasure :=
+  have : (volume : Measure (κ → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (ι → κ → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (κ → ℝ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (ι → κ → ℝ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : ((volume : Measure (ι → κ → ℝ)).prod (volume : Measure (ι → κ → ℝ))).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure _ _
   rw [ZLattice.covolume_comap L volume _ (measurePreserving_reImEquiv ι κ)] at h
   have hr : Module.finrank ℝ (ι → κ → ℝ) = Fintype.card ι * Fintype.card κ := by

@@ -77,7 +77,7 @@ theorem exists_theta : ∃ (θ : D.host.E) (c tr nm : 𝓞 D.host.F), IsIntegral
     ((tr : D.host.F) : D.host.E) = θ + D.conjF θ ∧ ((nm : D.host.F) : D.host.E) = θ * D.conjF θ := by
   have hinv : ∀ z : D.host.E, D.conjF (D.conjF z) = z := fun z => by
     rw [← star_eq_conjF, ← star_eq_conjF, star_star]
-  haveI : Algebra.IsIntegral (𝓞 D.host.F) (𝓞 D.host.E) := by
+  have : Algebra.IsIntegral (𝓞 D.host.F) (𝓞 D.host.E) := by
     first
     | infer_instance
   have hinj : Function.Injective (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) := by
@@ -169,10 +169,10 @@ private theorem isScalarTower_integers_Fp_Ep : IsScalarTower 𝒪[(D.s.atP p).Fp
   | infer_instance
 
 private theorem algebraMap_Fp_Ep_injective : Function.Injective (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep) := by
-  haveI : Nontrivial (D.s.atP p).Ep := by
+  have : Nontrivial (D.s.atP p).Ep := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
-    haveI := hn
+    have := hn
     have h := (D.s.atP p).rank
     rw [Module.finrank_zero_of_subsingleton] at h
     exact absurd h (by norm_num)
@@ -180,7 +180,7 @@ private theorem algebraMap_Fp_Ep_injective : Function.Injective (algebraMap (D.s
 
 private theorem mem_integers_of_isIntegral_algebraMap (s : (D.s.atP p).Fp) (hs : IsIntegral 𝒪[(D.s.atP p).Fp] (algebraMap (D.s.atP p).Fp (D.s.atP p).Ep s)) :
     s ∈ 𝒪[(D.s.atP p).Fp] := by
-  haveI := isScalarTower_integers_Fp_Ep p
+  have := isScalarTower_integers_Fp_Ep p
   have h1 : IsIntegral 𝒪[(D.s.atP p).Fp] s := (isIntegral_algebraMap_iff ).1 hs
   first
   | exact (Valuation.integer.integers _).mem_of_integral h1
@@ -188,7 +188,7 @@ private theorem mem_integers_of_isIntegral_algebraMap (s : (D.s.atP p).Fp) (hs :
 
 private theorem algebraMap_mem_O_of_mem_integers (a : (D.s.atP p).Fp) (ha : a ∈ 𝒪[(D.s.atP p).Fp]) :
     algebraMap (D.s.atP p).Fp (D.s.atP p).Ep a ∈ (D.s.atP p).O := by
-  haveI := isScalarTower_integers_Fp_Ep p
+  have := isScalarTower_integers_Fp_Ep p
   rw [(D.s.atP p).O_def]
   have h := isIntegral_algebraMap (R := 𝒪[(D.s.atP p).Fp]) (A := (D.s.atP p).Ep) (x := (⟨a, ha⟩ : 𝒪[(D.s.atP p).Fp]))
   first
@@ -216,7 +216,7 @@ private theorem linearIndependent_one_omega_of_cj_ne (ω : (D.s.atP p).Ep) (hne 
 private theorem exists_eq_algebraMap_add_mul_omega (ω : (D.s.atP p).Ep) (hne : (D.s.atP p).cj ω ≠ ω) (y : (D.s.atP p).Ep) :
     ∃ a b : (D.s.atP p).Fp, y = algebraMap (D.s.atP p).Fp (D.s.atP p).Ep a + algebraMap (D.s.atP p).Fp (D.s.atP p).Ep b * ω := by
   have hli := linearIndependent_one_omega_of_cj_ne p ω hne
-  haveI : FiniteDimensional (D.s.atP p).Fp (D.s.atP p).Ep :=
+  have : FiniteDimensional (D.s.atP p).Fp (D.s.atP p).Ep :=
     Module.finite_of_finrank_pos (by rw [(D.s.atP p).rank]; norm_num)
   have hsp : Submodule.span (D.s.atP p).Fp (Set.range ![(1 : (D.s.atP p).Ep), ω]) = ⊤ := by
     apply Submodule.eq_top_of_finrank_eq
@@ -231,7 +231,7 @@ private theorem exists_eq_algebraMap_add_mul_omega (ω : (D.s.atP p).Ep) (hne : 
 
 theorem trace_mem (y : (D.s.atP p).Ep) (hy : y ∈ (D.s.atP p).O) :
     ∃ s ∈ 𝒪[(D.s.atP p).Fp], y + (D.s.atP p).cj y = algebraMap (D.s.atP p).Fp (D.s.atP p).Ep s := by
-  haveI := isScalarTower_integers_Fp_Ep p
+  have := isScalarTower_integers_Fp_Ep p
   obtain ⟨θ, c, tr, nm, hθ, hc, hcp, htr, hnm⟩ := exists_theta p
   have hc' : ((D.s.atP p).ιE θ - (D.s.atP p).cj ((D.s.atP p).ιE θ)) ^ 2 =
       algebraMap (D.s.atP p).Fp (D.s.atP p).Ep ((D.s.atP p).ιF (c : D.host.F)) := by
@@ -413,7 +413,7 @@ variable {D : D7} (p : PlF D)
 
 
 theorem prime_of_irr (ϖ : 𝒪[(D.s.atP p).Fp]) (h : Irreducible ϖ) : Prime ϖ := by
-  haveI := (D.s.atP p).lf
+  have := (D.s.atP p).lf
   first
   | exact h.prime
 

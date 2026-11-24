@@ -82,7 +82,7 @@ theorem rder_apply (hE : IsEquivMap θ M T) (hC : IsSobValued M T) (τ : D.what�
     {X : Matrix (Fin V.rank) (Fin V.rank) ℂ} (hX : X ∈ lieG (gramAt D V τ)) (u w : M.sm τ)
     (hw : (w : M.H τ) = dRep (trRep (M.σ τ) (M.fr τ)) X u) :
     Rder θ V τ X (T (Function.update v τ u)) = T (Function.update v τ w) := by
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   have hG := gram_unit (M.fr_unit τ) (M.fr_gram τ)
   funext x
   obtain ⟨ℓ, hℓ, hℓT⟩ := hC τ v x
@@ -157,7 +157,7 @@ theorem gelf_apply (hE : IsEquivMap θ M T) (hC : IsSobValued M T) (τ : D.what�
 
 theorem gelf_eigen (hE : IsEquivMap θ M T) (hC : IsSobValued M T) (τ : D.what₂.Tau) (k : ℕ) (v : M.Vec) :
     ∃ c : ℂ, gelf θ V τ k (T v) = c • T v := by
-  haveI : CompleteSpace (M.H τ) := (M.ds τ).1
+  have : CompleteSpace (M.H τ) := (M.ds τ).1
   obtain ⟨c, hc⟩ := GelfScalar.gelfH_scalar _ (M.ε τ) (M.H τ) (M.σ τ) (M.fr τ) (gramAt D V τ) (M.fr_unit τ)
     (M.fr_gram τ) (M.ds τ).2.2.1 (M.ds τ).2.2.2.1 k
   refine ⟨c, ?_⟩

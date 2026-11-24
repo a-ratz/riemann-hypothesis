@@ -105,7 +105,7 @@ theorem exists_intFr_index_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     rw [Category.assoc, Limits.pullback.condition, ← Category.assoc, hs, GlobalTheory.EtaVal.spMap_comp_spMap]
     rfl
   obtain ⟨y₀, -, h0, -, -⟩ := gfp_frPt_gen (Xo := Xo) (c := c) (L := T.Fr) (L' := T.Fr) hT (fun _ => rfl) _ hx
-    (fun _ i j => if i = j then 1 else 0) (fun _ _ => if_pos rfl) (fun _ _ _ h => if_neg h.ne')
+    (fun _ i j => if i = j then 1 else 0) (fun _ _ => ite_eq_left rfl) (fun _ _ _ h => ite_eq_right h.ne')
   obtain ⟨y', t, hbor⟩ := intFr_of_model hIF T (k.comp (algebraMap c.F K)) Y hPI b hb y₀
   refine ⟨T, k.comp (algebraMap c.F K), y', ho, hfin, fun q => ?_⟩
   have h1 : y'.1.x = y₀.x := hbor.1
@@ -271,9 +271,9 @@ theorem unramified_points_of_CMDatum : _root_.GlobalTheory.CovTop.PublishedHodge
   intro hP E _ _ _ H Dw l Xo c hpq hcase hg
   refine UnramPts.of_index_one fun Z w hw => ?_
   have hch : ∃ q : ℕ, q.Prime ∧ ((q : ℕ) : 𝓞 c.F) ∈ w.asIdeal := by
-    haveI := w.isMaximal
-    haveI : Finite (𝓞 c.F ⧸ w.asIdeal) := Ring.HasFiniteQuotients.finiteQuotient w.ne_bot
-    letI := Ideal.Quotient.field w.asIdeal
+    have := w.isMaximal
+    have : Finite (𝓞 c.F ⧸ w.asIdeal) := Ring.HasFiniteQuotients.finiteQuotient w.ne_bot
+    let := Ideal.Quotient.field w.asIdeal
     refine ⟨ringChar (𝓞 c.F ⧸ w.asIdeal), CharP.char_is_prime (𝓞 c.F ⧸ w.asIdeal) _, ?_⟩
     rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast]
     exact ringChar.Nat.cast_ringChar
@@ -292,13 +292,13 @@ theorem unramified_points_of_CMDatum : _root_.GlobalTheory.CovTop.PublishedHodge
     exact h.trans this
   obtain ⟨F', _, hdisc, hcurve⟩ := _root_.GlobalTheory.T.unramified_curve_field_existence hP E H l.M' q h3 hq hqd
   let K : IntermediateField ℚ ℂ := c.F ⊔ F'
-  haveI : FiniteDimensional ℚ K := IntermediateField.finiteDimensional_sup _ _
-  haveI : NumberField K := ⟨⟩
+  have : FiniteDimensional ℚ K := IntermediateField.finiteDimensional_sup _ _
+  have : NumberField K := ⟨⟩
   have hle : c.F ≤ K := le_sup_left
   have hK : GlobalTheory.CompRat.CurveOver H K l.M' := fun τ hτ =>
     hcurve τ fun x hx => hτ x (le_sup_right (a := c.F) hx)
   obtain ⟨𝔭, h𝔭⟩ := _root_.GlobalTheory.UnramCompositum.exists_vLa_eq c.F F' K hle rfl q hq hdisc w hqw
-  letI : Algebra c.F K := (IntermediateField.inclusion hle).toRingHom.toAlgebra
+  let : Algebra c.F K := (IntermediateField.inclusion hle).toRingHom.toAlgebra
   obtain ⟨y, hy⟩ := _root_.GlobalTheory.FixedPoint.exists_frPt_liesOn E H Dw l Xo c hpq hcase K hle hK Z
   exact _root_.GlobalTheory.CompletionPoint.exists_intFr_index_one E H Dw l Xo c hpq hg Z K y hy w 𝔭 h𝔭
 end GlobalTheory.UnramCM

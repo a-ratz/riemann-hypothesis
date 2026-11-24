@@ -136,7 +136,7 @@ theorem exists_int_near_of_closure_short :
     exists_linearIndependent ℝ ((fun z : ι → ℤ => fun i => (z i : ℝ)) '' T)
   rw [span_intCast_image_eq_top T hT] at hspan
   have hfin : b.Finite := hli.setFinite
-  haveI : Fintype b := hfin.fintype
+  have : Fintype b := hfin.fintype
   have hcard : Fintype.card b ≤ Fintype.card ι := by
     simpa using hli.fintype_card_le_finrank
   have hx : x ∈ Submodule.span ℝ (Set.range ((↑) : b → ι → ℝ)) := by
@@ -383,7 +383,7 @@ namespace GlobalTheory.HSAmp
 theorem sumSq_ball_eq_smul (ι : Type) [Fintype ι] (R : ℝ) (hR : 0 ≤ R) :
     {x : ι → ℝ | ∑ i, x i ^ 2 ≤ R ^ 2} = (fun x => R • x) '' {x : ι → ℝ | ∑ i, x i ^ 2 ≤ 1} := by
   ext x
-  simp only [Set.mem_setOf_eq, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · intro hx
     rcases hR.eq_or_lt with h0 | h0
@@ -436,7 +436,7 @@ theorem volume_ellipsoid : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (A : Ma
   have hset : {x : ι → ℝ | ∑ i, ∑ j, A i j * x i * x j ≤ R ^ 2}
       = (Matrix.toLin' B) ⁻¹' {x : ι → ℝ | ∑ i, x i ^ 2 ≤ R ^ 2} := by
     ext x
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Matrix.toLin'_apply]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Matrix.toLin'_apply]
     have : ∑ i, ∑ j, A i j * x i * x j = ∑ i, (B *ᵥ x) i ^ 2 := by
       simp only [hB, Matrix.mul_apply, Matrix.transpose_apply, Matrix.mulVec, dotProduct, sq,
         Finset.sum_mul, Finset.mul_sum]
@@ -496,7 +496,7 @@ theorem log_ellCount_near : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (A : M
     intro r r' hr hrr
     apply measure_mono
     intro x hx
-    simp only [Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_ofPred_eq] at hx ⊢
     nlinarith
   have hlo' := (hmono (R / 2) (R - s) (by positivity) (by linarith)).trans hlo
   have hup' := hup.2.2.trans (hmono (R + s) (2 * R) (by linarith) (by linarith))
@@ -1020,12 +1020,12 @@ theorem eventually_poly_mul_pow_le_exp (c C t : ℝ) (n : ℕ) (hC : 1 ≤ C) (h
 
 theorem count_ball_asymp : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → GenSmooth p D → ∀ (P : Pair p), P.L.SemiPos D → ∀ (ω : ∀ σ, VolDens p σ D) (r : ℕ → ℕ) (f : ∀ m, Fin (r m) → X.functionField), (∀ (m : ℕ) i, f m i ∈ P.H m 1) → (∀ m, LinearIndependent ℤ (f m)) → ∀ g : ℝ, Tendsto (fun m : ℕ => (r m : ℝ) / (m : ℝ) ^ D) atTop (𝓝 g) → ∀ C : ℝ, 1 ≤ C → (∀ m : ℕ, 1 ≤ m → AddSubgroup.closure (Set.range (f m)) ≤ AddSubgroup.closure (ballIn P (AddSubgroup.closure (Set.range (f m))) m 1 (C ^ m))) → ∀ t : ℝ, Real.log C < t → Tendsto (fun m : ℕ => (Real.log ((ballIn P (AddSubgroup.closure (Set.range (f m))) m 1 (Real.exp (t * m))).ncard : ℝ) - (r m * (t * m) - Real.log (gram (fun σ => (ω σ).meas) (vals P m 1 (f m))).det.re / 2 + Real.log (volume {x : Fin (r m) → ℝ | ∑ i, x i ^ 2 ≤ 1}).toReal)) / (m : ℝ) ^ (D + 1)) atTop (𝓝 0) := by
   intro k _ X _ p D hX hS P hP ω r f hf hli g hg C hC hball t ht
-  haveI := hX.finite_emb
-  letI := Fintype.ofFinite (k →+* ℂ)
+  have := hX.finite_emb
+  let := Fintype.ofFinite (k →+* ℂ)
   have hρ := fun σ => _root_.GlobalTheory.HSAmp.exists_isRatio_chernInt k X p D hX hS P.L hP σ (ω σ)
   choose ρ hρr hρ0 _ using hρ
   have hbd : ∀ σ, ∃ b : ℝ, ∀ y, ρ σ y ≤ b := fun σ => by
-    haveI := hX.compactSpace σ
+    have := hX.compactSpace σ
     obtain ⟨b, hb⟩ := (isCompact_range (hρr σ).1).bddAbove
     exact ⟨b, fun y => hb ⟨y, rfl⟩⟩
   choose b hb using hbd

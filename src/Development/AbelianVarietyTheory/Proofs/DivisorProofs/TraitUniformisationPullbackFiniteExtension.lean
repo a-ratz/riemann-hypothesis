@@ -133,18 +133,18 @@ namespace GlobalTheory.Mum.TraitExt
 theorem exists_fracHom {R R₁ M : Type} [CommRing R] [IsDomain R] [CommRing R₁] [IsDomain R₁] [Field M] [IsAlgClosed M]
     (ρ : R →+* R₁) (hρ : Function.Injective ρ) (hfin : ρ.Finite) (g : R →+* M) (hg : Function.Injective g) :
     ∃ e : FractionRing R₁ →+* M, ∀ r, e (algebraMap R₁ (FractionRing R₁) (ρ r)) = g r := by
-  letI : Algebra R R₁ := ρ.toAlgebra
-  letI : Algebra R M := g.toAlgebra
+  let : Algebra R R₁ := ρ.toAlgebra
+  let : Algebra R M := g.toAlgebra
   have hinj : Function.Injective (algebraMap R (FractionRing R₁)) := by
     rw [IsScalarTower.algebraMap_eq R R₁ (FractionRing R₁)]
     exact (IsFractionRing.injective R₁ (FractionRing R₁)).comp hρ
-  haveI : Module.IsTorsionFree R (FractionRing R₁) := by
+  have : Module.IsTorsionFree R (FractionRing R₁) := by
     rw [Module.isTorsionFree_iff_algebraMap_injective]; exact hinj
-  haveI : Module.IsTorsionFree R M := by
+  have : Module.IsTorsionFree R M := by
     rw [Module.isTorsionFree_iff_algebraMap_injective]; exact hg
-  haveI : Algebra.IsIntegral R R₁ := ⟨fun x => hfin.to_isIntegral x⟩
-  haveI : Algebra.IsAlgebraic R R₁ := Algebra.IsIntegral.isAlgebraic
-  haveI : Algebra.IsAlgebraic R (FractionRing R₁) :=
+  have : Algebra.IsIntegral R R₁ := ⟨fun x => hfin.to_isIntegral x⟩
+  have : Algebra.IsAlgebraic R R₁ := Algebra.IsIntegral.isAlgebraic
+  have : Algebra.IsAlgebraic R (FractionRing R₁) :=
     (IsFractionRing.isAlgebraic_iff' R R₁ (FractionRing R₁)).1 inferInstance
   refine ⟨(IsAlgClosed.lift : FractionRing R₁ →ₐ[R] M).toRingHom, fun r => ?_⟩
   have h := (IsAlgClosed.lift : FractionRing R₁ →ₐ[R] M).commutes r
@@ -174,12 +174,12 @@ theorem unifTrait_pull : ∀ (R R₁ : Type) [CommRing R] [IsDomain R] [IsLocalR
   obtain ⟨W₁, _, _, _, iw, φ₁, -, hW₁, hiwi, -, hiwl, hφ₁i, hφ₁l, hcomm, -, -⟩ :=
     GlobalTheory.T.exists_finite_complete_trait_extension_of_base R W R₁ hW φ hφi hφl ρ hfin (Kb W) e he
   have hAW : AdmBase W (maximalIdeal W) := by
-    haveI := hW.1; exact ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
+    have := hW.1; exact ⟨inferInstance, inferInstance, inferInstance, hW.2.1⟩
   have hAW₁ : AdmBase W₁ (maximalIdeal W₁) := by
-    haveI := hW₁.1; exact ⟨inferInstance, inferInstance, inferInstance, hW₁.2.1⟩
+    have := hW₁.1; exact ⟨inferInstance, inferInstance, inferInstance, hW₁.2.1⟩
   have hG' : IsSemiAbelian G' := by
     obtain ⟨eI, heI, -⟩ := grpPullback_iso hpb' (isGrpPullback_pullback G (spMap φ))
-    haveI := heI
+    have := heI
     exact GlobalTheory.isSemiAbelian_of_grpIso eI (IsSemiAbelian.pullback _ G hG)
   obtain ⟨hL5, -, -, h4, h5⟩ := GlobalTheory.firstFiveLaws
   obtain ⟨D'', hD'', A'', U'', hP⟩ := GlobalTheory.UT.EndBaseChange.exists_pull hL5.polBaseChange h4.unifBaseChange

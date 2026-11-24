@@ -81,7 +81,7 @@ theorem av_key {S : Type*} [CommRing S] [IsDomain S] [IsNoetherianRing S] [IsLoc
   set m := IsLocalRing.maximalIdeal S with hm_def
   have hQlt : Q < m := lt_of_le_of_ne (IsLocalRing.le_maximalIdeal hQ.ne_top)
     (fun h => hQm (h ▸ IsLocalRing.maximalIdeal.isMaximal S))
-  haveI : (Ideal.span {g}).IsPrincipal := ⟨⟨g, rfl⟩⟩
+  have : (Ideal.span {g}).IsPrincipal := ⟨⟨g, rfl⟩⟩
   have hfin := Ideal.finite_minimalPrimes_of_isNoetherianRing S (Ideal.span {g})
 
   have hmin : ∀ P ∈ (Ideal.span {g}).minimalPrimes, P.IsPrime ∧ P ≠ ⊥ ∧ P.height ≤ 1 := by
@@ -104,8 +104,8 @@ theorem av_key {S : Type*} [CommRing S] [IsDomain S] [IsNoetherianRing S] [IsLoc
     obtain ⟨P0, hP0, hP0Q⟩ := hbelow Q hQ hQ0
     obtain ⟨hPp, -, hPh⟩ := hmin P hP
     obtain ⟨hP0p, hP00, -⟩ := hmin P0 hP0
-    haveI := hPp
-    haveI := hP0p
+    have := hPp
+    have := hP0p
     exact av_no_two_chain (bot_lt_iff_ne_bot.mpr hP00)
       (lt_of_le_of_lt hP0Q (lt_of_lt_of_le hQlt hmP)) hPh
 
@@ -126,18 +126,18 @@ theorem av_key {S : Type*} [CommRing S] [IsDomain S] [IsNoetherianRing S] [IsLoc
     rw [h]
     exact Submodule.zero_mem _
   obtain ⟨P', hP', -⟩ := Ideal.exists_minimalPrimes_le ((Ideal.span_singleton_le_iff_mem m).mpr hxm)
-  haveI := hP'.1.1
+  have := hP'.1.1
   have hxP' : x ∈ P' := hP'.1.2 (Ideal.mem_span_singleton_self x)
   have hP'0 : P' ≠ ⊥ := by
     intro h
     rw [h] at hxP'
     exact hx0 ((Submodule.mem_bot S).mp hxP')
-  haveI : (Ideal.span {x}).IsPrincipal := ⟨⟨x, rfl⟩⟩
+  have : (Ideal.span {x}).IsPrincipal := ⟨⟨x, rfl⟩⟩
   have hP'h : P'.height ≤ 1 := Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes _ P' hP'
   obtain ⟨P, hP, hPP'⟩ := hbelow P' hP'.1.1 hP'0
   obtain ⟨hPp, hP00, -⟩ := hmin P hP
   rcases lt_or_eq_of_le hPP' with hlt | heq
-  · haveI := hPp
+  · have := hPp
     exact av_no_two_chain (bot_lt_iff_ne_bot.mpr hP00) hlt hP'h
   · apply hxP P hP
     rw [heq]
@@ -157,12 +157,12 @@ theorem av_prime_dim_one {R : Type*} [CommRing R] [IsDomain R] [IsNoetherianRing
   obtain ⟨p, ⟨hpP, hhp, hpm⟩, hpmax⟩ := set_has_maximal_iff_noetherian.mpr
     (inferInstance : IsNoetherian R R) {q : Ideal R | q.IsPrime ∧ h ∉ q ∧ q ≠ m}
     ⟨⊥, Ideal.isPrime_bot, fun h' => hh ((Submodule.mem_bot R).mp h'), fun e => hm0 e.symm⟩
-  haveI := hpP
+  have := hpP
   refine ⟨p, hpP, ?_, hhp⟩
   have hplt : p < m := lt_of_le_of_ne (IsLocalRing.le_maximalIdeal hpP.ne_top) hpm
-  obtain ⟨y, hym, hyp⟩ := SetLike.exists_of_lt hplt
+  obtain ⟨y, hym, hyp⟩ := IsConcreteLE.exists_of_lt hplt
   set f := Ideal.Quotient.mk p with hf_def
-  haveI : IsLocalRing (R ⧸ p) := IsLocalRing.of_surjective' f Ideal.Quotient.mk_surjective
+  have : IsLocalRing (R ⧸ p) := IsLocalRing.of_surjective' f Ideal.Quotient.mk_surjective
   have hfz : ∀ a : R, f a = 0 ↔ a ∈ p := fun a => Ideal.Quotient.eq_zero_iff_mem
   have hg0 : f (h * y) ≠ 0 := by
     rw [Ne, hfz]
@@ -173,7 +173,7 @@ theorem av_prime_dim_one {R : Type*} [CommRing R] [IsDomain R] [IsNoetherianRing
 
   have hall : ∀ Q : Ideal (R ⧸ p), Q.IsPrime → Q ≠ ⊥ → f (h * y) ∈ Q := by
     intro Q hQ hQ0
-    haveI := hQ
+    have := hQ
     have hq : (Q.comap f).IsPrime := inferInstance
     have hpq : p < Q.comap f := by
       refine lt_of_le_of_ne (fun a ha => ?_) (fun e => hQ0 ?_)
@@ -211,7 +211,7 @@ theorem av_prime_dim_one {R : Type*} [CommRing R] [IsDomain R] [IsNoetherianRing
     have hne : (s ⟨1, by omega⟩).asIdeal ≠ ⊥ := fun e => not_lt_bot (e ▸ a01)
     have hM := hmax _ (s ⟨1, by omega⟩).isPrime hne
     exact a12.ne (hM.eq_of_le (s ⟨2, by omega⟩).isPrime.ne_top a12.le)
-  · haveI hMp : (m.map f).IsPrime := Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective
+  · have hMp : (m.map f).IsPrime := Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective
       (by rw [Ideal.mk_ker]; exact hplt.le)
     have hlt : (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum (R ⧸ p)) < ⟨m.map f, hMp⟩ := by
       rw [← PrimeSpectrum.asIdeal_lt_asIdeal]
@@ -268,7 +268,7 @@ theorem local_step {B : Type*} [CommRing B] [IsDomain B] [IsNoetherianRing B] (M
       ∀ P : Ideal B, P.IsPrime → q ≤ P → P ≤ M → w ∈ P → P = M := by
   classical
   let R := Localization.AtPrime M
-  haveI : IsDomain R := IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors M)
+  have : IsDomain R := IsLocalization.isDomain_localization (Ideal.primeCompl_le_nonZeroDivisors M)
   have hinj : Function.Injective (algebraMap B R) :=
     IsLocalization.injective R (Ideal.primeCompl_le_nonZeroDivisors M)
   have hcm : (IsLocalRing.maximalIdeal R).comap (algebraMap B R) = M :=
@@ -285,7 +285,7 @@ theorem local_step {B : Type*} [CommRing B] [IsDomain B] [IsNoetherianRing B] (M
     exact hw0 (hinj (by rw [hw', map_zero]))
   have hdim : 1 ≤ ringKrullDim R := one_le_dim ⊥ (IsLocalRing.maximalIdeal R) hmax
   obtain ⟨p, hp, hpd, hpn⟩ := ReciprocityTheory.ChartRestriction.G.T0.av_prime_dim_one hdim _ hh
-  haveI := hp
+  have := hp
   refine ⟨p.comap (algebraMap B R), Ideal.comap_isPrime _ _, ?_, ?_, ?_, ?_⟩
   · intro x hx
     rw [← hcm]
@@ -304,7 +304,7 @@ theorem local_step {B : Type*} [CommRing B] [IsDomain B] [IsNoetherianRing B] (M
       rw [Set.disjoint_left]
       intro x hx hxP
       exact hx (hPM hxP)
-    haveI hP' : (P.map (algebraMap B R)).IsPrime :=
+    have hP' : (P.map (algebraMap B R)).IsPrime :=
       IsLocalization.isPrime_of_isPrime_disjoint M.primeCompl R P hP hdisj
     have hcomap : (P.map (algebraMap B R)).comap (algebraMap B R) = P :=
       IsLocalization.under_map_of_isPrime_disjoint M.primeCompl R hP hdisj

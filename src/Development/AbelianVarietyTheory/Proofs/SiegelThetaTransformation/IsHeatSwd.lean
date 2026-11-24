@@ -204,12 +204,12 @@ theorem quad_add {n N : ℕ} (S : Matrix (Fin N) (Fin N) ℂ) (z z' : Matrix (Fi
     rw [h, h]
     by_cases hj : j = k
     · subst hj
-      simp only [if_true, Matrix.mulVec_add, add_dotProduct, dotProduct_add, single_dotProduct]
+      simp only [ite_true, Matrix.mulVec_add, add_dotProduct, dotProduct_add, single_dotProduct]
       rw [Matrix.dotProduct_mulVec _ _ (Pi.single a s), dotProduct_single]
       simp [Matrix.mulVec_single]
       ring
     · simp [hj]
-  simp only [h2, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [h2, Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring
 
 theorem deriv_deriv_const_mul_cexp_bilinear_at_zero (K w q u v c : ℂ) :
@@ -616,8 +616,8 @@ end GlobalTheory.SW.SwdHeat
 open GlobalTheory.SW.EisHeat GlobalTheory.SW.SwdHeat in
 theorem GlobalTheory.SW.isHeat_swd : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (Ψ : Finset (E →+* ℂ)), IsType Ψ → ∀ (n N : ℕ), Even n → 4 * N < n → ∀ (M R : ℕ) (φ : Fam E n N), admitted M R φ → IsHeat Ψ (swd Ψ M φ) := by
   intro E _ _ _ Ψ hΨ n N hn hN M R φ hφ
-  haveI := (finite_cls_and_stab E n M hφ.pos.1).1
-  haveI := Fintype.ofFinite (Cls E n M)
+  have := (finite_cls_and_stab E n M hφ.pos.1).1
+  have := Fintype.ofFinite (Cls E n M)
   have h := isHeat_sum Ψ (ι := Cls E n M) fun c => isHeat_const_mul Ψ
     (isHeat_sub Ψ (_root_.GlobalTheory.SW.isHeat_thH E Ψ hΨ n N _ (isSB_member hφ (Quot.out c).2))
       (_root_.GlobalTheory.SW.isHeat_eis E Ψ hΨ n N hn hN _ (isSB_member hφ (Quot.out c).2))) (wt M (Quot.out c).1 : ℂ)

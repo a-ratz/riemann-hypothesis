@@ -134,7 +134,7 @@ theorem schr_pureA_eq [Invertible (2 : AdeleRing (𝓞 F) F)] (ψ : AddChar (Ade
         change q (x ⬝ᵥ w.2 + h) = _
         rw [map_add (f := _), RingHom.map_dotProduct]
         rfl
-      rw [e1, map_add (f := _), eChar_apply, ContinuousLinearMap.neg_apply, trL_apply]
+      rw [e1, map_add (f := _), eChar_apply, neg_apply, trL_apply]
       congr 1
       push_cast
       ring

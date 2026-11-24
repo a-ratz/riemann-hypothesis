@@ -264,7 +264,7 @@ theorem mdel_mul [Fintype n] {B : E → Matrix n l ℂ} (h : MContDiffAt 1 A z)
   ext a b
   simp only [mdel_apply, Matrix.mul_apply, Matrix.add_apply]
   rw [del_sum fun c _ => (h.diff a c).fun_mul (h'.diff c b), ← Finset.sum_add_distrib,
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   exact Finset.sum_congr rfl fun c _ => del_mul (h.diff a c) (h'.diff c b) ξ
 
 theorem mdbar_mul [Fintype n] {B : E → Matrix n l ℂ} (h : MContDiffAt 1 A z)
@@ -273,7 +273,7 @@ theorem mdbar_mul [Fintype n] {B : E → Matrix n l ℂ} (h : MContDiffAt 1 A z)
   ext a b
   simp only [mdbar_apply, Matrix.mul_apply, Matrix.add_apply]
   rw [dbar_sum fun c _ => (h.diff a c).fun_mul (h'.diff c b), ← Finset.sum_add_distrib,
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   exact Finset.sum_congr rfl fun c _ => dbar_mul (h.diff a c) (h'.diff c b) ξ
 
 theorem mdel_inv [Fintype n] [DecidableEq n] {A : E → Matrix n n ℂ} (h : MContDiffAt 1 A z)

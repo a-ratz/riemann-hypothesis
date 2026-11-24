@@ -189,7 +189,7 @@ theorem finprod_val_congr (χ : HChar L) (hv : ∀ v, ∏ P ∈ aboveF (L := L) 
     ∏ᶠ w, χ.val w ^ n w = ∏ᶠ w, χ.val w ^ m w := by
   have hd : {w | n w - m w ≠ 0}.Finite := (hn.union hm).subset fun w hw => by
     by_contra h0
-    simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at h0
+    simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at h0
     exact hw (by rw [h0.1, h0.2, sub_self])
   have h1 := finprod_val_add χ _ m hd hm
   rw [finprod_val_eq_one χ hv _ hd h, one_mul] at h1
@@ -232,7 +232,7 @@ theorem isChi_chiId : ∀ (D : D7) (χ : HChar D.host.E), IsChiPsi D.host χ →
     have nB := ordSub_finite fB b hb
     have nAB : {w | ordSub w A + ordSub w B ≠ 0}.Finite := (nA.union nB).subset fun w hw => by
       by_contra h0
-      simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at h0
+      simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at h0
       exact hw (by rw [h0.1, h0.2, add_zero])
     unfold chiId
     rw [← Units.val_mul]
@@ -241,14 +241,14 @@ theorem isChi_chiId : ∀ (D : D7) (χ : HChar D.host.E), IsChiPsi D.host χ →
     rw [← finprod_val_add χ _ _ (finite_toNat nA) (finite_toNat nB)]
     refine finprod_val_congr χ hv _ _ (finite_toNat nAB) ((nA.union nB).subset fun w hw => ?_) fun w w' h => ?_
     · by_contra h0
-      simp only [Set.mem_union, not_or, Set.mem_setOf_eq, not_not] at h0
+      simp only [Set.mem_union, not_or, Set.mem_ofPred_eq, not_not] at h0
       exact hw (by simp [h0.1, h0.2])
     · rcases hpl w w' h with rfl | h
       · rfl
       · rw [ordSub_conj_eq_neg h (fun x => (hA' x).trans (by rw [← hc]; rfl)) hA,
           ordSub_conj_eq_neg h (fun x => (hB' x).trans (by rw [← hc]; rfl)) hB]
         omega
-  · letI := D.host.cmStar
+  · let := D.host.cmStar
     intro z
     have hcmf : IsCMField D.host.E := D.host.isCMField_hostE
     have hcc : ∀ x, IsCMField.complexConj D.host.E x = D.host.conj x := fun x => bridge_star_holds D.R D.host x

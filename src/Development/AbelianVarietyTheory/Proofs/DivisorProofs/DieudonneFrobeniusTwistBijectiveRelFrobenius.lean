@@ -97,9 +97,9 @@ theorem frobTwist_module (p : ℕ) [Fact p.Prime] (B : Base p fun _ _ _ => True)
       (SemiHom.ofHom (relFrob (p_eq_zero p k) G)) (absFrob (p_eq_zero p k) G)
       (fun n a => by rw [SemiHom.ofHom_app, relFrob_app_frobProj, absFrob_app]) m).symm
   refine ⟨?_, h2, fun m n e => ?_⟩
-  · haveI := B.free G trivial
-    haveI := B.finite G trivial
-    letI := (frobRing (p_eq_zero p k)).toAlgebra
+  · have := B.free G trivial
+    have := B.finite G trivial
+    let := (frobRing (p_eq_zero p k)).toAlgebra
     obtain ⟨b', hb'⟩ := _root_.GlobalTheory.Dieu.Base.smap_toBase_basis p (fun _ _ _ => True) B k k G trivial trivial _
       (Module.Free.chooseBasis (WittVector p k) (B.M G trivial))
     exact bijective_of_basis _ (wittMap_frobRing_bijective p k) _

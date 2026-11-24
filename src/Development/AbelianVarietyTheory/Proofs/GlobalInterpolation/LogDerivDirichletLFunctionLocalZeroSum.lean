@@ -118,7 +118,7 @@ theorem summatory_eq_zero {t : ℝ} (ht : t < 1) : summatory f t = 0 := by
 theorem mellin_summatory (s : ℂ) :
     mellin (summatory f) (-s) =
       ∫ t in Set.Ioi (1 : ℝ), (∑ k ∈ Finset.Icc 1 ⌊t⌋₊, f k) * (t : ℂ) ^ (-(s + 1)) := by
-  rw [mellin, setIntegral_eq_of_subset_of_forall_diff_eq_zero measurableSet_Ioi
+  rw [mellin, setIntegral_eq_of_subset_of_forall_sdiff_eq_zero measurableSet_Ioi
     (s := Set.Ici (1 : ℝ)) (fun t ht => Set.mem_Ioi.2 (zero_lt_one.trans_le (Set.mem_Ici.1 ht))), integral_Ici_eq_integral_Ioi]
   · refine setIntegral_congr_fun measurableSet_Ioi fun t _ => ?_
     simp only [summatory, smul_eq_mul]

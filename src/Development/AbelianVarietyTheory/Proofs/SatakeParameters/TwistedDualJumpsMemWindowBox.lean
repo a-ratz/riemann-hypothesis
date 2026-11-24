@@ -70,17 +70,17 @@ theorem HTW.WordData.jumps_mem_box {n : ℕ} (W : WordData n) (hsz : ∀ i, 0 �
     le_max_right _ _
   rcases hT' with h | h
   · by_cases hup : W.up i
-    · rw [if_pos hup] at h
-      simp only [WordData.Mi, WordData.hi, if_pos hup, Nat.cast_max]
+    · rw [ite_eq_left hup] at h
+      simp only [WordData.Mi, WordData.hi, ite_eq_left hup, Nat.cast_max]
       omega
-    · rw [if_neg hup] at h
-      simp only [WordData.Mi, WordData.hi, if_neg hup, Nat.cast_max]
+    · rw [ite_eq_right hup] at h
+      simp only [WordData.Mi, WordData.hi, ite_eq_right hup, Nat.cast_max]
       omega
   · have h' := abs_le.mp h
     by_cases hup : W.up i
-    · simp only [WordData.Mi, WordData.hi, if_pos hup, Nat.cast_max]
+    · simp only [WordData.Mi, WordData.hi, ite_eq_left hup, Nat.cast_max]
       omega
-    · simp only [WordData.Mi, WordData.hi, if_neg hup, Nat.cast_max]
+    · simp only [WordData.Mi, WordData.hi, ite_eq_right hup, Nat.cast_max]
       omega
 
 end GlobalTheory
@@ -140,8 +140,8 @@ theorem jT1_mem_window_of_bounded_v : ∀ {R : Ranks} (P : HCParam R) (j : Fin R
     Finset.mem_univ, true_and, Multiset.mem_range] at hu
   cases s with
   | true =>
-    simp only [szT, if_true, Bool.not_true, Bool.false_eq_true, if_false, ht2, hEf]
-    simp only [if_true, Multiset.mem_map, Multiset.mem_add, Finset.mem_val, Finset.mem_univ,
+    simp only [szT, ite_true, Bool.not_true, Bool.false_eq_true, ite_false, ht2, hEf]
+    simp only [ite_true, Multiset.mem_map, Multiset.mem_add, Finset.mem_val, Finset.mem_univ,
       true_and] at hu
     obtain ⟨x, (hx | hx) | hx, rfl⟩ := hu
     · obtain ⟨i, rfl⟩ := hx
@@ -153,8 +153,8 @@ theorem jT1_mem_window_of_bounded_v : ∀ {R : Ranks} (P : HCParam R) (j : Fin R
     · obtain ⟨a, ha, rfl⟩ := hx
       right; rw [abs_le]; push_cast; constructor <;> omega
   | false =>
-    simp only [szT, Bool.not_false, if_true, Bool.false_eq_true, if_false, ht2, hEf]
-    simp only [Bool.false_eq_true, if_false, Multiset.mem_map, Multiset.mem_add, Finset.mem_val,
+    simp only [szT, Bool.not_false, ite_true, Bool.false_eq_true, ite_false, ht2, hEf]
+    simp only [Bool.false_eq_true, ite_false, Multiset.mem_map, Multiset.mem_add, Finset.mem_val,
       Finset.mem_univ, true_and] at hu
     obtain ⟨x, hx | hx, rfl⟩ := hu
     · obtain ⟨y, hy | hy, rfl⟩ := hx
@@ -329,10 +329,10 @@ theorem jR_symm_card {R : Ranks} (P : HCParam R) (j : Fin R.m) :
         Finset.card_univ, Fintype.card_fin, Ranks.r]
       omega
     cases s
-    · simp only [jW, Bool.false_eq_true, if_false, Multiset.card_map, h]
-    · simp only [jW, if_true, h]
+    · simp only [jW, Bool.false_eq_true, ite_false, Multiset.card_map, h]
+    · simp only [jW, ite_true, h]
   refine ⟨?_, fun s => ?_⟩
-  · simp only [jR, jW, if_true, Bool.false_eq_true, if_false, Multiset.map_add (f := _), block_map_reflect]
+  · simp only [jR, jW, ite_true, Bool.false_eq_true, ite_false, Multiset.map_add (f := _), block_map_reflect]
   · have hR : (jR P j s).card = R.nV := by
       simp only [jR, Multiset.card_add, hW s, block, Multiset.card_map, Multiset.card_range, Ranks.nV]
     refine ⟨hW s, hR, ?_, ?_⟩
@@ -426,7 +426,7 @@ theorem recWord_jumps : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.R.
   · have h1 := t1 u hu
     have h2 := bx u hu
     refine ⟨?_, ?_⟩
-    · simp only [NWord.win, recWord, Set.mem_setOf_eq]
+    · simp only [NWord.win, recWord, Set.mem_ofPred_eq]
       rw [hsz]
       exact h1
     · simp only [recWord, Set.mem_Icc]

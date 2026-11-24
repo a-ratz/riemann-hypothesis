@@ -219,7 +219,7 @@ theorem charts_tuple : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → 
     have hK := hKB.1
     have hfin := hKB.2
     have hCK := hC K hK
-    haveI := finite_chart I l u a i
+    have := finite_chart I l u a i
     refine ⟨Chart I u a i, inferInstance, chartOf I u a i, K, g, ⟨k, hK⟩, fun β => ⟨?_, hfin β, ?_⟩⟩
     · intro v hv
       refine _root_.GlobalTheory.stepLevel_uloc_eq_of_agree (K β).lev (K0 (g β)).lev (Q : Set _) (fun x hx => ⟨fun hxK => ?_, fun hx0 => ?_⟩) v hv

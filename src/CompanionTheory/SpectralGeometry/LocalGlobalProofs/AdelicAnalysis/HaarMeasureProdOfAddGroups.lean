@@ -60,7 +60,7 @@ theorem map_addEquiv_haar (V V' : Type) [AddCommGroup V] [TopologicalSpace V] [L
       ∀ (L : Set V) (L' : Set V'), IsCompact L → IsOpen L → L.Nonempty →
         (∀ v, e v ∈ L' ↔ v ∈ L) → μ L = μ' L' → μ.map e = μ' := by
   let E : V ≃ₜ+ V' := { e with continuous_toFun := he, continuous_invFun := hes }
-  haveI hH : (μ.map e).IsAddHaarMeasure := E.isAddHaarMeasure_map μ
+  have hH : (μ.map e).IsAddHaarMeasure := E.isAddHaarMeasure_map μ
   have ha := Measure.isAddLeftInvariant_eq_smul (μ.map e) μ'
   have ha0 : Measure.addHaarScalarFactor (μ.map e) μ' ≠ 0 :=
     (Measure.addHaarScalarFactor_pos_of_isAddHaarMeasure _ _).ne'
@@ -76,7 +76,7 @@ theorem map_addEquiv_haar (V V' : Type) [AddCommGroup V] [TopologicalSpace V] [L
       rw [hemb.map_apply, hpre]
     have hval : μ L = (a : ℝ≥0∞) * μ L := by
       have h1 := congrArg (fun m => m L') ha
-      simp only [Measure.smul_apply, hLm] at h1
+      simp only [smul_apply, hLm] at h1
       rw [← hmass] at h1
       simpa [ENNReal.smul_def] using h1
     have ha1 : (a : ℝ≥0∞) = 1 := by

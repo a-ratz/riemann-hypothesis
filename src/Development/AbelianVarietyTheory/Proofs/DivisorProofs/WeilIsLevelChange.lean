@@ -143,7 +143,7 @@ theorem weilIs_levelChange : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCom
   have hG : Out.GlobalFnsSt := GlobalTheory.globalFns_holds
   have hAA : IsAbelianScheme (G2 A) := AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA
   have hB' := pc_mul_right A hA hP h₁ h₂
-  haveI := isMonHom_id_pow A m
+  have := isMonHom_id_pow A m
   let ψ : G2 A ⟶ G2 A := lift (fst A A) (snd A A ≫ (𝟙 A) ^ m)
   have e : ∀ {T : Over S} (u v : T ⟶ A), lift u v ≫ ψ = lift u (v ^ m) := fun u v => by
     simp only [ψ, comp_lift, ← Category.assoc, MonObj.comp_pow, Category.comp_id, lift_fst, lift_snd]

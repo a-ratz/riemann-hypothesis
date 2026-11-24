@@ -73,13 +73,13 @@ theorem exists_adeles_haarMeasure_covolume_one : ∀ (F : Type) [Field F] [Numbe
         subst this
         ext; simp
     rw [this]
-    exact hVo.preimage continuous_subtype_val
-  letI : MeasurableSpace (Multiplicative (AF F)) := borel _
-  haveI : BorelSpace (Multiplicative (AF F)) := ⟨rfl⟩
-  haveI : SecondCountableTopology (Multiplicative (AF F)) := inferInstanceAs (SecondCountableTopology (AF F))
-  haveI : DiscreteTopology (AddSubgroup.toSubgroup Γ) := hdisc
+    exact hVo.preimage continuous_subtypeVal
+  let : MeasurableSpace (Multiplicative (AF F)) := borel _
+  have : BorelSpace (Multiplicative (AF F)) := ⟨rfl⟩
+  have : SecondCountableTopology (Multiplicative (AF F)) := inferInstanceAs (SecondCountableTopology (AF F))
+  have : DiscreteTopology (AddSubgroup.toSubgroup Γ) := hdisc
   obtain ⟨hc, D, hDm, hD⟩ := GlobalTheory.discreteSubgroup_countable_and_exists_strict_fundamentalDomain (AddSubgroup.toSubgroup Γ)
-  haveI : Countable Γ := hc
+  have : Countable Γ := hc
   let D' : Set (AF F) := Multiplicative.ofAdd ⁻¹' D
   have hDm' : MeasurableSet D' := hDm
   have hfd : ∀ m : Measure (AF F), IsAddFundamentalDomain Γ D' m := by
@@ -117,6 +117,6 @@ theorem exists_adeles_haarMeasure_covolume_one : ∀ (F : Type) [Field F] [Numbe
     exact (Measure.measure_univ_ne_zero.2 (NeZero.ne μ)) this
   refine ⟨(μ D')⁻¹ • μ, ?_, D', hDm', hfd _, ?_⟩
   · exact Measure.IsAddHaarMeasure.smul (μ := μ) (ENNReal.inv_ne_zero.2 hfin.ne) (ENNReal.inv_ne_top.2 hpos)
-  · rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin.ne]
+  · rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin.ne]
 
 end GlobalTheory.SWQ

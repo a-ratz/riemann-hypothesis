@@ -93,9 +93,9 @@ theorem Dm_apply (e : κ → α) (a b : α) :
   · subst h
     rw [Matrix.diagonal_apply_eq]
     by_cases h2 : a ∈ Set.range e
-    · rw [if_pos h2, if_neg fun hh => hh.2 h2]
-    · rw [if_neg h2, if_pos ⟨rfl, h2⟩]
-  · rw [Matrix.diagonal_apply_ne _ h, if_neg fun hh => h hh.1]
+    · rw [ite_eq_left h2, ite_eq_right fun hh => hh.2 h2]
+    · rw [ite_eq_right h2, ite_eq_left ⟨rfl, h2⟩]
+  · rw [Matrix.diagonal_apply_ne _ h, ite_eq_right fun hh => h hh.1]
 
 theorem Pmt_Pm {e : κ → α} (he : Function.Injective e) : (Pm R e)ᵀ * Pm R e = 1 := by
   ext x y
@@ -104,12 +104,12 @@ theorem Pmt_Pm {e : κ → α} (he : Function.Injective e) : (Pm R e)ᵀ * Pm R 
 
 theorem Pmt_Dm (e : κ → α) : (Pm R e)ᵀ * Dm R e = 0 := by
   ext x a
-  rw [Pmt_mul, Dm_apply, if_neg fun hh => hh.2 ⟨x, rfl⟩]
+  rw [Pmt_mul, Dm_apply, ite_eq_right fun hh => hh.2 ⟨x, rfl⟩]
   rfl
 
 theorem Dm_Pm (e : κ → α) : Dm R e * Pm R e = 0 := by
   ext a x
-  rw [mul_Pm, Dm_apply, if_neg fun hh => hh.2 ⟨x, hh.1.symm⟩]
+  rw [mul_Pm, Dm_apply, ite_eq_right fun hh => hh.2 ⟨x, hh.1.symm⟩]
   rfl
 
 theorem Dm_Dm (e : κ → α) : Dm R e * Dm R e = Dm R e := by
@@ -717,17 +717,17 @@ theorem jM_cont : Continuous (jM (emb s) : Matrix (↥sᶜ ⊕ ↥sᶜ) (↥sᶜ
 
 theorem pi_cont (hσ : ∀ x, A.σ (A.σ x) = x) : Continuous (piQ (s := s) A ε hσ) := by
   refine continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)
-  · exact (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).matrix_submatrix _ _
-  · exact (Units.continuous_coe_inv.comp (continuous_subtype_val.comp continuous_subtype_val)).matrix_submatrix _ _
+  · exact (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).matrix_submatrix _ _
+  · exact (Units.continuous_coe_inv.comp (continuous_subtypeVal.comp continuous_subtypeVal)).matrix_submatrix _ _
 
 theorem j_cont : Continuous (jQ (s := s) A ε) := by
   refine continuous_induced_rng.2 (continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩))
-  · exact jM_cont.comp (Units.continuous_val.comp continuous_subtype_val)
+  · exact jM_cont.comp (Units.continuous_val.comp continuous_subtypeVal)
   · have : (fun m : A.U ε ↥sᶜ => (((jQ (s := s) A ε m : A.U ε ι).1)⁻¹ : GL (ι ⊕ ι) R).val) =
         fun m => jM (emb s) ((m.1)⁻¹ : GL (↥sᶜ ⊕ ↥sᶜ) R).val := by
       funext m
       exact jG_inv m.1
-    exact this ▸ jM_cont.comp (Units.continuous_coe_inv.comp continuous_subtype_val)
+    exact this ▸ jM_cont.comp (Units.continuous_coe_inv.comp continuous_subtypeVal)
 
 end Cont
 
@@ -735,7 +735,7 @@ variable [T2Space R] [LocallyCompactSpace R] [SecondCountableTopology R] (A : Ad
 
 theorem uQ_closed {κ : Type} [Fintype κ] [DecidableEq κ] (S : Set κ) (hB : BdetLaw) (hL : A.GoodL) :
     IsClosed (A.uQ ε S : Set (A.U ε κ)) :=
-  (hB E R A hL (κ ⊕ κ) (Sum.inl '' S)).1.preimage continuous_subtype_val
+  (hB E R A hL (κ ⊕ κ) (Sum.inl '' S)).1.preimage continuous_subtypeVal
 
 theorem bdet_mulQ {κ : Type} [Fintype κ] [DecidableEq κ] (S : Set κ) (hB : BdetLaw) (hL : A.GoodL)
     (p q : A.U ε κ) (hp : p ∈ A.uQ ε S) (hq : q ∈ A.uQ ε S) :
@@ -744,7 +744,7 @@ theorem bdet_mulQ {κ : Type} [Fintype κ] [DecidableEq κ] (S : Set κ) (hB : B
 
 theorem bdet_contQ {κ : Type} [Fintype κ] [DecidableEq κ] (S : Set κ) (hB : BdetLaw) (hL : A.GoodL) :
     ContinuousOn (fun p : A.U ε κ => bdet (Sum.inl '' S) p.1) (A.uQ ε S : Set (A.U ε κ)) :=
-  (hB E R A hL (κ ⊕ κ) (Sum.inl '' S)).2.2.1.comp continuous_subtype_val.continuousOn
+  (hB E R A hL (κ ⊕ κ) (Sum.inl '' S)).2.2.1.comp continuous_subtypeVal.continuousOn
     fun _ hp => Subgroup.mem_subgroupOf.1 hp
 
 theorem bdet_ratQ {κ : Type} [Fintype κ] [DecidableEq κ] (S : Set κ) (hB : BdetLaw) (hL : A.GoodL)
@@ -816,8 +816,8 @@ theorem levi_pullback_iwasawa_unitary (hB : BdetLaw) (hE : ExtLaw) (hT : GrpTop)
   have hσ := hA.σσ
   obtain ⟨-, -, -, t1, -, -, hK⟩ := hT E R A hA ι ε
   obtain ⟨-, -, -, t2, -, -, hK'⟩ := hT E R A hA ↥sᶜ ε
-  haveI := t1
-  haveI := t2
+  have := t1
+  have := t2
   have hIs : Iwa (A.uQ ε s) (A.uK ε ι) := fun g => by
     obtain ⟨p, hp, k, hk, h⟩ := hI g
     exact ⟨p, hp.1, k, hk, h⟩

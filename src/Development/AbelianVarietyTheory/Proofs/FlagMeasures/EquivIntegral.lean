@@ -345,7 +345,7 @@ theorem one_mem_dd (n : ℕ) (a : Fin n) :
   have : ddS D ^ k = ((Ideal.map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) (differentIdeal ℤ (𝓞 D.host.F)) ^ k : Ideal (𝓞 D.host.E)) : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) := by
     rw [FractionalIdeal.coeIdeal_pow]; rfl
   rw [this]
-  exact FractionalIdeal.one_mem_inv_coe_ideal (pow_ne_zero _ hI)
+  exact FractionalIdeal.one_mem_inv_coeIdeal (pow_ne_zero _ hI)
 
 theorem fvec_mem {T : D.host.E} (Λ : LatV D) (F : LFlag (D.sp.Y 0) D.R.rS T) (hz : IsLift Λ F)
     (hX : XLam Λ F = XS D F.fl) (a : Fin (D.R.rS + 1)) : F.fl.fvec a ∈ Λ := by

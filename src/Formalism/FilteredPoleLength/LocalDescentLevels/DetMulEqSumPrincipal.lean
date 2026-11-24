@@ -126,7 +126,7 @@ theorem detPerturbNumeric : DetPerturbNumeric := by
     linarith
   have h1 : (1 + (ρ : ℝ) ^ (-(3 : ℝ) / 2) / 10) ^ ρ
       ≤ Real.exp ((ρ:ℝ) * ((ρ : ℝ) ^ (-(3 : ℝ) / 2) / 10)) := by
-    rw [Real.exp_nat_mul]
+    rw [Real.exp_natCast_mul]
     exact pow_le_pow_left₀ (by linarith)
       (by linarith [Real.add_one_le_exp ((ρ : ℝ) ^ (-(3 : ℝ) / 2) / 10)]) ρ
   have h2 : Real.exp ((ρ:ℝ) * ((ρ : ℝ) ^ (-(3 : ℝ) / 2) / 10)) ≤ Real.exp (1/10) :=
@@ -135,7 +135,7 @@ theorem detPerturbNumeric : DetPerturbNumeric := by
     by_contra hc
     push_neg at hc
     have h4 : (3/2:ℝ)^10 < Real.exp (1/10) ^ 10 := pow_lt_pow_left₀ hc (by norm_num) (by norm_num)
-    rw [← Real.exp_nat_mul] at h4
+    rw [← Real.exp_natCast_mul] at h4
     norm_num at h4
     linarith [Real.exp_one_lt_d9]
   linarith
@@ -254,7 +254,7 @@ theorem cauchyBinetMax : CauchyBinetMax := by
     intro S hS
     have hc := (Finset.mem_powersetCard.1 hS).2
     rw [principal_minor_factor M Mᴴ S hc]
-    simp only [g, dif_pos hc]
+    simp only [g, dite_eq_left hc]
     have e : Mᴴ.submatrix (S.orderEmbOfFin hc) id = (M.submatrix id (S.orderEmbOfFin hc))ᴴ := by
       ext a b
       simp [Matrix.conjTranspose_apply]
@@ -269,7 +269,7 @@ theorem cauchyBinetMax : CauchyBinetMax := by
   have hlt : ∀ S ∈ (Finset.univ : Finset (Fin N)).powersetCard i, g S < (2 : ℝ) ^ (-(r : ℝ)) := by
     intro S hS
     have hc := (Finset.mem_powersetCard.1 hS).2
-    simp only [g, dif_pos hc]
+    simp only [g, dite_eq_left hc]
     have h4 := hcon _ (S.orderEmbOfFin hc).strictMono
     have h5 : ‖(M.submatrix id (S.orderEmbOfFin hc)).det‖ ^ 2 < ((2 : ℝ) ^ (-(r : ℝ) / 2)) ^ 2 :=
       pow_lt_pow_left₀ h4 (norm_nonneg _) (by norm_num)
@@ -304,7 +304,7 @@ theorem packingCount : PackingCount := by
     simp only [pow_zero]
     have : P.card ≤ 1 := Finset.card_le_one.2 (fun a _ b _ => PiLp.ext (fun i => Fin.elim0 i))
     exact_mod_cast this
-  · haveI : Nontrivial (EuclideanSpace ℝ (Fin n)) :=
+  · have : Nontrivial (EuclideanSpace ℝ (Fin n)) :=
       Module.nontrivial_of_finrank_pos (R := ℝ) (by rw [finrank_euclideanSpace_fin]; exact hn)
     classical
     have hd2 : 0 < δ / 2 := by linarith

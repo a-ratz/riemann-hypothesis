@@ -145,7 +145,7 @@ theorem eq_of_reps {F F' : G → W} (hF : F ∈ AdForms ι ρ J χ) (hF' : F' �
   rw [hF γ _ k, hF' γ _ k, h]
 
 theorem ext_li : LinearIndependent ℂ (fun i => P.extL (S.basis i)) := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   let Φ : S.Forms →ₗ[K] (S.Cl × S.ιV → K) :=
     { toFun := fun f p => S.bV.repr ((f : S.Cl → S.V) p.1) p.2
       map_add' := by intro f f'; funext p; simp

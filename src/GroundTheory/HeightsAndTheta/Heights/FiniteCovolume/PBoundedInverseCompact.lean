@@ -184,7 +184,7 @@ theorem BoundedInverseCompact.proof (h : HermitianForm F E W) (v : Basis ι E W)
     refine isClosed_iInter fun a => isClosed_le ?_ continuous_const
     have hw : ∀ w, Continuous fun x : archUnitary h v =>
         (((x⁻¹ : archUnitary h v) : InfinitePlace E → GL ι ℂ) w : Matrix ι ι ℂ) := fun w =>
-      Units.continuous_val.comp ((continuous_apply w).comp (continuous_subtype_val.comp continuous_inv))
+      Units.continuous_val.comp ((continuous_apply w).comp (continuous_subtypeVal.comp continuous_inv))
     have hm : ∀ w, Continuous fun x : archUnitary h v => invApply x (vecAt v (e a)) w := fun w =>
       (hw w).matrix_mulVec continuous_const
     exact Real.continuous_sqrt.comp (continuous_finsetSum _ fun w _ => Complex.continuous_re.comp

@@ -430,7 +430,7 @@ theorem mem_eigSp_iff {R : Type} [CommRing R] {V : Type} [AddCommGroup V] [Modul
 theorem exists_lie_eig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] [CharZero Ω] (K : Type) [Fintype K] (J : K → Type) (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (y₀ : Sp Ω ⟶ Xo.XF c) (cst₀ : c.F →+* 𝔐.Ω₀) (y₁ : Sp 𝔐.Ω₀ ⟶ Xo.XF c), 𝔐.ξ ≫ 𝔐.f = y₀ ≫ Y.j → 𝔐.ξ₀ = y₁ ≫ Y.j → 𝔐.ξ₀ ≫ Y.s = spMap (cst₀.comp (algebraMap (𝓞 c.F) c.F)) → 𝔐.fn.comp cst₀ = 𝔐.cst → ∃ (Li₀ : Type) (_ : AddCommGroup Li₀) (_ : Module 𝔐.Ω₀ Li₀) (M₀ : LieModel Y.t.G 𝔐.ξ₀ Li₀) (j : Li₀ →+ 𝔐.Li) (V₀ : CMType H ⊕ CMType H → Submodule 𝔐.Ω₀ Li₀) (b : ∀ s, Fin (labelRk D s) → Li₀), (∀ e, (𝔐.M.pt (j e)).left ≫ 𝔐.m.φ = spMap (dualMap 𝔐.fn) ≫ (M₀.pt e).left) ∧ (∀ (a : 𝔐.Ω₀) e, j (a • e) = 𝔐.fn a • j e) ∧ (∀ s e, e ∈ V₀ s ↔ j e ∈ 𝔐.Vgen s) ∧ (∀ s, LinearIndependent 𝔐.Ω₀ (b s) ∧ Submodule.span 𝔐.Ω₀ (Set.range (b s)) = V₀ s) ∧ (∀ s, LinearIndependent Ω fun k => j (b s k)) ∧ ∀ s, Submodule.span Ω (Set.range fun k => j (b s k)) = 𝔐.Vgen s := by
   intro E _ _ _ H D l Xo c Y S Ω _ _ K _ J y 𝔐 y₀ cst₀ y₁ hy hy₁ hs₀ hcst
   classical
-  haveI : CharZero 𝔐.Ω₀ := (RingHom.charZero_iff 𝔐.fn.injective).2 inferInstance
+  have : CharZero 𝔐.Ω₀ := (RingHom.charZero_iff 𝔐.fn.injective).2 inferInstance
   obtain ⟨Li₀, _, _, ⟨M₀⟩⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists _ Y.t.G 𝔐.Ω₀ 𝔐.ξ₀
   obtain ⟨ρ₀, hρ₀, -⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists_unique_act _ Y.t.G 𝔐.Ω₀ 𝔐.ξ₀ Li₀ M₀ (𝓞 E) Y.t.act.act
     Y.t.act.hom Y.t.act.one Y.t.act.mul Y.t.act.add
@@ -502,9 +502,9 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 
 theorem exists_open_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (y₀ : Sp Ω ⟶ Xo.XF c), 𝔐.ξ ≫ 𝔐.f = y₀ ≫ Y.j → ∃ (cst₀ : c.F →+* 𝔐.Ω₀) (y₁ : Sp 𝔐.Ω₀ ⟶ Xo.XF c), 𝔐.ξ₀ = y₁ ≫ Y.j ∧ 𝔐.ξ₀ ≫ Y.s = spMap (cst₀.comp (algebraMap (𝓞 c.F) c.F)) ∧ 𝔐.fn.comp cst₀ = 𝔐.cst := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J y 𝔐 y₀ hy
-  haveI : FiniteDimensional ℚ c.F := c.fin
-  haveI : NumberField c.F := {}
-  haveI := Y.jQ_open
+  have : FiniteDimensional ℚ c.F := c.fin
+  have : NumberField c.F := {}
+  have := Y.jQ_open
   have hd : 𝔐.ξ ≫ 𝔐.f = spMap 𝔐.fn ≫ 𝔐.ξ₀ := 𝔐.fn_over
 
   let b₀ : 𝓞 c.F →+* 𝔐.Ω₀ := (Spec.preimage (𝔐.ξ₀ ≫ Y.s)).hom
@@ -609,7 +609,7 @@ namespace GlobalTheory.CompanionTheory.Ar.FlagBun.GenericColumns
 
 theorem det_eq_one {K : Type*} [Field K] {n : ℕ} (u : Matrix (Fin n) (Fin n) K)
     (h1 : ∀ k, u k k = 1) (h0 : ∀ l k, l < k → u l k = 0) : u.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular u (fun i j hij => h0 _ _ hij)]
+  rw [Matrix.det_of_isLowerTriangular u (fun i j hij => h0 _ _ hij)]
   simp [h1]
 
 theorem linearIndependent_cols {K M : Type*} [Field K] [AddCommGroup M] [Module K M] {n : ℕ}
@@ -670,7 +670,7 @@ theorem genU_gen (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) (q : GenIx r)
     genU Ω r q.1 q.2.1.1 q.2.1.2 =
       algebraMap (MvPolynomial (GenIx r) Ω) (GenField Ω r) (MvPolynomial.X q) := by
   obtain ⟨s, ⟨⟨l, k⟩, h⟩⟩ := q
-  exact dif_pos h
+  exact dite_eq_left h
 
 theorem algebraicIndependent_gen (Ω : Type) [Field Ω] {S : Type} (r : S → ℕ) :
     AlgebraicIndependent Ω (fun q : GenIx r =>
@@ -683,9 +683,9 @@ theorem algebraicIndependent_comp {Ω₀ Ω K I : Type} [Field Ω₀] [Field Ω]
     (fn : Ω₀ →+* Ω) {x : I → K} (hx : AlgebraicIndependent Ω x) :
     letI := ((algebraMap Ω K).comp fn).toAlgebra;
     AlgebraicIndependent Ω₀ x := by
-  letI a1 : Algebra Ω₀ Ω := fn.toAlgebra
-  letI a2 : Algebra Ω₀ K := ((algebraMap Ω K).comp fn).toAlgebra
-  haveI : IsScalarTower Ω₀ Ω K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let a1 : Algebra Ω₀ Ω := fn.toAlgebra
+  let a2 : Algebra Ω₀ K := ((algebraMap Ω K).comp fn).toAlgebra
+  have : IsScalarTower Ω₀ Ω K := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact hx.restrictScalars (R := Ω₀) (K := Ω) fn.injective
 
 theorem adjoin_entries {Ω₀ Ω : Type} [Field Ω₀] [Field Ω] (fn : Ω₀ →+* Ω) {S : Type} (r : S → ℕ) :
@@ -694,7 +694,7 @@ theorem adjoin_entries {Ω₀ Ω : Type} [Field Ω₀] [Field Ω] (fn : Ω₀ �
         (Set.range fun q : Σ s, Fin (r s) × Fin (r s) => genU Ω r q.1 q.2.1 q.2.2) =
       IntermediateField.adjoin Ω₀ (Set.range fun q : GenIx r =>
         algebraMap (MvPolynomial (GenIx r) Ω) (GenField Ω r) (MvPolynomial.X q)) := by
-  letI := ((algebraMap Ω (GenField Ω r)).comp fn).toAlgebra
+  let := ((algebraMap Ω (GenField Ω r)).comp fn).toAlgebra
   apply le_antisymm
   · refine IntermediateField.adjoin_le_iff.2 ?_
     rintro _ ⟨⟨s, l, k⟩, rfl⟩
@@ -717,7 +717,7 @@ theorem adjoin_entries {Ω₀ Ω : Type} [Field Ω₀] [Field Ω] (fn : Ω₀ �
 theorem isGenericFlag_columns : ∀ (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] (fn : Ω₀ →+* Ω) (S : Type) (r : S → ℕ) (d : ℕ), 0 < d → (letI := ((algebraMap Ω (GenField Ω r)).comp fn).toAlgebra; Module.finrank (IntermediateField.adjoin Ω₀ (Set.range fun q : GenIx r => algebraMap (MvPolynomial (GenIx r) Ω) (GenField Ω r) (MvPolynomial.X q))) (GenField Ω r) = d) → ∀ (E₀ E' : Type) [AddCommGroup E₀] [Module Ω₀ E₀] [AddCommGroup E'] [Module (GenField Ω r) E'] (j : E₀ →+ E') (V₀ : S → Submodule Ω₀ E₀) (c : ∀ s, Fin (r s) → E₀), (∀ s, LinearIndependent Ω₀ (c s) ∧ Submodule.span Ω₀ (Set.range (c s)) = V₀ s) → (∀ (a : Ω₀) e, j (a • e) = algebraMap Ω (GenField Ω r) (fn a) • j e) → (∀ s, LinearIndependent (GenField Ω r) fun k => j (c s k)) → (∀ s, Submodule.span (GenField Ω r) (Set.range fun k => ∑ l, genU Ω r s l k • j (c s l)) = Submodule.span (GenField Ω r) (Set.range fun k => j (c s k))) ∧ (letI := ((algebraMap Ω (GenField Ω r)).comp fn).toAlgebra; IsGenericFlag (Ω' := GenField Ω r) j V₀ (fun s k => ∑ l, genU Ω r s l k • j (c s l)) d) := by
   intro Ω₀ Ω _ _ fn S r d hd hdeg E₀ E' _ _ _ _ j V₀ c hc hj hli
   refine ⟨fun s => span_cols _ (genU_diag Ω r s) (genU_zero Ω r s) _, ?_⟩
-  letI := ((algebraMap Ω (GenField Ω r)).comp fn).toAlgebra
+  let := ((algebraMap Ω (GenField Ω r)).comp fn).toAlgebra
   refine ⟨c, genU Ω r, hc, hj, hli,
     fun s => linearIndependent_cols _ (genU_diag Ω r s) (genU_zero Ω r s) _ (hli s),
     genU_diag Ω r, genU_zero Ω r, fun _ _ => rfl, ?_, hd, ?_⟩
@@ -796,10 +796,10 @@ end Model
 theorem exists_genericFlag : Out.WeilSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] [CharZero Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (A : HodgeCpt Y S y) (y₀ : Sp Ω ⟶ Xo.XF c) (d : ℕ), A.ξ ≫ A.f = y₀ ≫ Y.j → (∀ p : ℕ, p.Prime → (p : ℤ) ∣ NumberField.discr E → p ∈ S) → (∀ p ∈ S, HT.HTFree A p) → (∀ p ∈ S, ∃ ζ : Ω, IsPrimitiveRoot ζ (p ^ A.R p)) → A.IsCover d → ∃ (Ω' : Type) (_ : Field Ω') (_ : CharZero Ω') (i : Ω →+* Ω') (K' : Type) (_ : Fintype K') (J' : K' → Type) (_ : ∀ k, Fintype (J' k)) (y' : (Σ k, J' k) → Ω') (𝔐 : HodgeCpt Y S y') (g : 𝔐.X ⟶ A.X) (b : ∀ s, Fin (labelRk D s) → 𝔐.Li) (Li₀ : Type) (_ : AddCommGroup Li₀) (_ : Module 𝔐.Ω₀ Li₀) (M₀ : LieModel Y.t.G 𝔐.ξ₀ Li₀) (j : Li₀ →+ 𝔐.Li) (V₀ : CMType H ⊕ CMType H → Submodule 𝔐.Ω₀ Li₀), GlobalTheory.CompanionTheory.Ar.Dominates 𝔐.ξ A.ξ g i ∧ 𝔐.f = g ≫ A.f ∧ 𝔐.R = A.R ∧ (∀ p ∈ S, HT.HTFree 𝔐 p) ∧ (∀ s, Submodule.span Ω' (Set.range (b s)) = 𝔐.Vgen s) ∧ (∀ e, (𝔐.M.pt (j e)).left ≫ 𝔐.m.φ = spMap (dualMap 𝔐.fn) ≫ (M₀.pt e).left) ∧ (∀ s e, e ∈ V₀ s ↔ j e ∈ 𝔐.Vgen s) ∧ (letI := 𝔐.fn.toAlgebra; IsGenericFlag (Ω' := Ω') j V₀ b d) := by
   intro hW E _ _ _ H D l Xo c Y S Ω _ _ K _ J _ y A y₀ d hy hS hHT hζ hcov
   classical
-  haveI : Finite (GenIx (labelRk D)) := by unfold GenIx; infer_instance
+  have : Finite (GenIx (labelRk D)) := by unfold GenIx; infer_instance
   let Ω' := GenField Ω (labelRk D)
   let i : Ω →+* Ω' := algebraMap Ω Ω'
-  haveI : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω Ω').injective
+  have : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω Ω').injective
 
   let x : ((k : K) → J k) → Ω := fun c' => ∏ k, y ⟨k, c' k⟩
   let M₁ : PModel ℤ x :=
@@ -809,7 +809,7 @@ theorem exists_genericFlag : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
   obtain ⟨M₂, f₂, hd₂⟩ := GlobalTheory.T.exists_join_model_dominates ℤ Ω _ x M₁ Ω' i _ w (fun a => by simp)
     ⟨none, one_ne_zero⟩ (closure_genField Ω)
   obtain ⟨κ₃, _, y₃, M₃, f₃, hd₃, hN, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.NormEx.exists_normalisation ℤ Ω' _ _ M₂ Ω'
-  letI : Fintype κ₃ := Fintype.ofFinite κ₃
+  let : Fintype κ₃ := Fintype.ofFinite κ₃
   let y' : (Σ _ : Unit, κ₃) → Ω' := fun q => y₃ q.2
   have htie : CoordTie ℤ M₃.ξ (fun c' : (k : Unit) → κ₃ => ∏ k, y' ⟨k, c' k⟩) :=
     coordTie_along M₃.tie (fun c' => c' ()) (fun a => ⟨fun _ => a, rfl⟩) _ fun c' => by simp [y']
@@ -888,7 +888,7 @@ theorem exists_join {X X' : Scheme.{0}} {Ω Ω' : Type} [Field Ω] [Field Ω'] {
       (bx : ∀ k, J k ≃ J₃ (bk k)), Nonempty K₃ ∧ Function.Injective bk ∧ (∀ k x, y₃ ⟨bk k, bx k x⟩ = i (y ⟨k, x⟩)) ∧
       CoordTie ℤ ξ' fun c' : (k : K₃) → J₃ k => ∏ k, y₃ ⟨k, c' k⟩ := by
   let J₁ : K ⊕ Unit → Type := Sum.elim J fun _ => Unit
-  letI : ∀ k, Fintype (J₁ k) := fun k => match k with
+  let : ∀ k, Fintype (J₁ k) := fun k => match k with
     | .inl k => (inferInstance : Fintype (J k))
     | .inr _ => (inferInstance : Fintype Unit)
   let s : (Σ k, J₁ k) → Ω' := fun q => match q with
@@ -933,7 +933,7 @@ theorem flag_zero [∀ k, Fintype (J k)] (B : HodgeCpt Y S y) (d : ℕ) (hc : B.
     rintro (τ | τ)
     · show D.p = 0; omega
     · show D.q = 0; omega
-  haveI : ∀ s, IsEmpty (Fin (labelRk D s)) := fun s => by rw [hrk s]; infer_instance
+  have : ∀ s, IsEmpty (Fin (labelRk D s)) := fun s => by rw [hrk s]; infer_instance
   have hV : ∀ s, B.Vgen s = ⊥ := fun s => by
     obtain ⟨U, -, b, hb, -⟩ := B.vb s ⟨_, specializes_rfl⟩ trivial
     refine hb.symm.trans ?_
@@ -950,15 +950,15 @@ theorem flag_zero [∀ k, Fintype (J k)] (B : HodgeCpt Y S y) (d : ℕ) (hc : B.
     refine ⟨fun h => by rw [h, map_zero], fun h => by_contra fun hne => ?_⟩
     have := hext.2 1 (fun _ => e) (linearIndependent_unique_iff.2 hne)
     exact this.ne_zero 0 h
-  · letI := B.fn.toAlgebra
+  · let := B.fn.toAlgebra
     refine ⟨fun _ => isEmptyElim, fun _ => 0, fun s => ⟨linearIndependent_empty_type, ?_⟩, hext.1,
       fun _ => linearIndependent_empty_type, fun _ => linearIndependent_empty_type, fun _ => isEmptyElim,
       fun _ => isEmptyElim, fun s i => congrArg (fun b => flagStep Ω b i) (Subsingleton.elim _ _), ?_, hc.1, ?_⟩
     · rw [Set.range_eq_empty, Submodule.span_empty]
-    · haveI : IsEmpty (Σ σ : CMType H ⊕ CMType H,
+    · have : IsEmpty (Σ σ : CMType H ⊕ CMType H,
           {lk : Fin (labelRk D σ) × Fin (labelRk D σ) // lk.2 < lk.1}) := ⟨fun q => isEmptyElim q.2.1.1⟩
       exact algebraicIndependent_empty_type
-    · haveI : IsEmpty (Σ σ : CMType H ⊕ CMType H, Fin (labelRk D σ) × Fin (labelRk D σ)) :=
+    · have : IsEmpty (Σ σ : CMType H ⊕ CMType H, Fin (labelRk D σ) × Fin (labelRk D σ)) :=
         ⟨fun q => isEmptyElim q.2.1⟩
       rw [Set.range_eq_empty, IntermediateField.adjoin_empty, IntermediateField.finrank_bot']
       exact hc.2
@@ -1011,8 +1011,8 @@ theorem exists_pull (A : HodgeCpt Y S y) (B : HodgeCpt Y S y') (h : B.X ⟶ A.X)
       (labelRk D s) ⊤)
     (hdom : GlobalTheory.CompanionTheory.Ar.Dominates B.ξ A.ξ h i) (hf : B.f = h ≫ A.f) (hR : B.R = A.R) :
     ∃ j : A.Li →+ B.Li, IsExtOver i j ∧ ∀ s, B.V s = (A.V s).pull B.ξ h j := by
-  haveI : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
-  haveI : CharZero Ω' := charZero_of_injective_ringHom i.injective
+  have : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
+  have : CharZero Ω' := charZero_of_injective_ringHom i.injective
   have hgen := A.tie.gen
   have hgen' := B.tie.gen
   obtain ⟨mh, -⟩ := GlobalTheory.CompanionTheory.Ar.CoverLie.cancel hf A.m B.m
@@ -1086,7 +1086,7 @@ theorem exists_pull (A : HodgeCpt Y S y) (B : HodgeCpt Y S y') (h : B.X ⟶ A.X)
         Submodule.span (regAt B.ξ p')
           (j '' (A.M.htW A.t.PP.L (p ^ A.R p) A.ρ (A.emb s) (differentIdeal ℤ (𝓞 E)) ⟨h p'.1, hsp p'⟩ : Set A.Li)) := by
     intro p hp s p' hf
-    haveI := regAt_isLocalRing (ξ := A.ξ) ⟨h p'.1, hsp p'⟩
+    have := regAt_isLocalRing (ξ := A.ξ) ⟨h p'.1, hsp p'⟩
     obtain ⟨d₀, hd₀, hne, hdv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.differentIdeal_principal_in_localSubring E Ω (regAt A.ξ ⟨h p'.1, hsp p'⟩) (A.emb s) (hint s _)
     exact _root_.GlobalTheory.CompanionTheory.Ar.scale_pull_ext Ω Ω' i (regAt A.ξ ⟨h p'.1, hsp p'⟩) (regAt B.ξ p') A.Li B.Li j (A.Vgen s) _ (𝓞 E) (A.emb s)
       (differentIdeal ℤ (𝓞 E)) d₀ (A.M.htDual A.t.PP.L (p ^ A.R p) A.ρ (A.emb s) ⟨h p'.1, hsp p'⟩)
@@ -1179,7 +1179,7 @@ theorem exists_flagged (hW : Out.WeilSt) (A : HodgeCpt Y S y) (x : Sp Ω ⟶ Xo.
       rw [CommRingCat.ofHom_id, Spec.map_id, Category.id_comp, Category.comp_id]
     obtain ⟨K₃, _, J₃, _, y₃, bk, bx, hne, hinj, hy, hT⟩ := exists_join A.tie A.tie (𝟙 _) (RingHom.id Ω) hd
     obtain ⟨Fl⟩ := flag_zero (reTie A hT) dg hcov h0
-    haveI : IsEmpty (CMType H × Fin (D.p + D.q)) := ⟨fun r => by have := r.2.2; omega⟩
+    have : IsEmpty (CMType H × Fin (D.p + D.q)) := ⟨fun r => by have := r.2.2; omega⟩
     exact ⟨Ω, _, K₃, _, J₃, inferInstance, y₃, reTie A hT, Fl, fun _ => 0, fun _ => 1, RingHom.id Ω, 𝟙 _, bk, bx, hne, hinj, hy, hd,
       (Category.id_comp _).symm, rfl, hHT, isEmptyElim⟩
   · have hζ := exists_root A x hx hpos
@@ -1322,7 +1322,7 @@ theorem multAt_sup_span_eq_of_sub_mem {P W : Ideal (MRing ι)} (hW : W.IsPrime) 
   have hm' : v * g - u * f ∈ P := by
     have := P.neg_mem hm
     rwa [neg_sub] at this
-  haveI := hW
+  have := hW
   unfold multAt
   rw [dite_eq_left hW, dite_eq_left hW,
     length_localizedModule_quot_eq W
@@ -1639,7 +1639,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.hodge_comp_cover_cm_signs : To
   obtain ⟨M, 𝔐', Fl, e, i, g, bk, bx, j, hbk, hy, hd, hS2, hR, hj, hli, hV⟩ :=
     _root_.GlobalTheory.CompanionTheory.Relay.hodge_comp_cover_primes hW E H D Xo l c Y S Ω K J y 𝔐 dg hcov
       (fun p hp hdv => by by_contra h; exact (hS' p hp h).1 hdv) hS
-  haveI : CharZero M.Ω := charZero_of_injective_ringHom i.injective
+  have : CharZero M.Ω := charZero_of_injective_ringHom i.injective
   have hNef : _ ∧ _ :=
     _root_.GlobalTheory.CompanionTheory.Relay.nefOnFibres_block_xdeg_sums_of_rootLines hG E H D Xo l c Y S M 𝔐' Fl e
       hY hp hq hS2 hS' hR
@@ -1721,7 +1721,7 @@ theorem span_eq_of_card_nef {Ω V : Type} [Field Ω] [AddCommGroup V] [Module Ω
     (hU : Submodule.span Ω (Set.range b) = U) (hm : ∀ k, s k ∈ U) (h : r = m) :
     Submodule.span Ω (Set.range s) = U := by
   subst hU
-  haveI : FiniteDimensional Ω (Submodule.span Ω (Set.range b)) := FiniteDimensional.span_of_finite _ (Set.finite_range _)
+  have : FiniteDimensional Ω (Submodule.span Ω (Set.range b)) := FiniteDimensional.span_of_finite _ (Set.finite_range _)
   refine Submodule.eq_of_le_of_finrank_eq (Submodule.span_le.2 ?_) ?_
   · rintro _ ⟨k, rfl⟩
     exact hm k
@@ -1733,7 +1733,7 @@ end GlobalTheory.CompanionTheory.Ar.Cusp
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.intersection_degree_upper : Top.Given → Out.WeilSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (II : IntersectionSystem) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (Hd : HodgeData Dc) (S₀ : Finset ℕ) (Or : CptOrigin Y S₀ Dc Hd) (B₁ B : ℕ), admitted Xo l c Y Or B₁ → 4 * Dc.f + 2 ≤ B → NefOnFibres (mCoordIdeal Dc.y) (muTwDeg Hd B) := by
   intro hG hW E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or B₁ B hA hB
-  haveI : CharZero Ω := algebraRat.charZero Ω
+  have : CharZero Ω := algebraRat.charZero Ω
   obtain ⟨hY, hgood, hS₀, -, hB₁, hS, -⟩ := hA
   obtain ⟨v1, v2, v3, v4⟩ := _root_.GlobalTheory.CompanionTheory.Relay.compact_datum_intersection E H D Xo l c Y II K J Ω W Dc Hd S₀ Or B
   let g : Cpt Or.𝔐.ξ := ⟨genPt Or.𝔐.ξ, specializes_rfl⟩

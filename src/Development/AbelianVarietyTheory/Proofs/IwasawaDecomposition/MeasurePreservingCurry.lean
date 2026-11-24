@@ -262,7 +262,7 @@ theorem covol_eq_muD : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r
   have hD := hsub.trans hF.2.1
   rw [inter_OmF X hj κ hp hD] at hfs
   obtain ⟨h1, h2⟩ := covol_eq X (isOrth_x0F X) hfs
-  have e : muD Tau j (r - j) F' = muD Tau j (r - j) F := (measure_eq_measure_of_null_diff hsub h0)
+  have e : muD Tau j (r - j) F' = muD Tau j (r - j) F := (measure_eq_measure_of_null_sdiff hsub h0)
   have hc0 : 0 < flagConst j * flagConst (r - j) := mul_pos (flagConst_pos _) (flagConst_pos _)
   rw [muF_preimage X hj κ hp hm hD, e] at h1 h2
   refine ⟨?_, ?_⟩

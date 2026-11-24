@@ -115,11 +115,11 @@ theorem hasFDerivAt_eval {σ : Type} [Fintype σ] [DecidableEq σ] (q : MvPolyno
     rw [hfun]
     refine (hp.mul (hasFDerivAt_apply i x)).congr_fderiv ?_
     refine ContinuousLinearMap.ext fun v => ?_
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.proj_apply, smul_eq_mul, pderiv_mul,
+    simp only [add_apply, smul_apply,
+      FunLike.coe_sum, Finset.sum_apply, ContinuousLinearMap.proj_apply, smul_eq_mul, pderiv_mul,
       pderiv_X, map_add, map_mul, eval_X, Pi.single_apply, add_mul, Finset.sum_add_distrib]
     simp only [apply_ite, map_one, map_zero, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true, Finset.mul_sum]
+      ite_true, Finset.mul_sum]
     rw [add_comm]
     congr 1
     · exact Finset.sum_congr rfl fun j _ => by ring

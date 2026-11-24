@@ -140,7 +140,7 @@ theorem lintegral_eq_of_integral {α β γ : Type} [MeasurableSpace α] [Measura
       integrableOn_const_iff] at h1
     rw [e1, e2, integrable_indicator_iff (hb hA), integrableOn_const_iff, integral_indicator (ha hA),
       integral_indicator (hb hA)] at h2
-    simp only [enorm_eq_zero, one_ne_zero, false_or, integral_const, MeasurableSet.univ, measureReal_restrict_apply,
+    simp only [eNorm_eq_zero, one_ne_zero, false_or, integral_const, MeasurableSet.univ, measureReal_restrict_apply,
       Set.univ_inter, Complex.real_smul, mul_one, Complex.ofReal_inj] at h1 h2
     by_cases hf : m₂ (b ⁻¹' A) < ∞
     · exact (ENNReal.toReal_eq_toReal_iff' (h1.2 hf).ne hf.ne).1 (h2 hf)
@@ -176,7 +176,7 @@ theorem exists_quotientIntegrable_of_le_mean (hΓR : Γ ≤ R) (hR : IsClosed (R
     (Subgroup.subgroupOfEquivOfLe hΓR).toEquiv.countable_iff.2 inferInstance
   have hSfd : IsFundamentalDomain Γ S μ := IsFundamentalDomain.mk' hSm.nullMeasurableSet hS
   have hSh : ∀ h : G, MeasurableSet {r : R | (r : G) * h ∈ S} := fun h =>
-    (continuous_subtype_val.mul continuous_const).measurable hSm
+    (continuous_subtypeVal.mul continuous_const).measurable hSm
   have e : ∀ h : G, ∫⁻ r in 𝓡, K (r * h) ∂μR = ∫⁻ r : R, S.indicator K (r * h) ∂μR := fun h => by
     have hfd : IsFundamentalDomain (Γ.subgroupOf R) {r : R | (r : G) * h ∈ S} μR :=
       IsFundamentalDomain.mk' (hSh h).nullMeasurableSet (GlobalTheory.QuotDiscrete.existsUnique_subgroupOf hΓR hS h)
@@ -225,14 +225,14 @@ theorem exists_quotientIntegrable_fold_unimodular (hΓR : Γ ≤ R) (hR : IsClos
     simp only [hv]
     rw [integral_mul_right_eq_self (fun u => ‖P (j u * g)‖) v]
   · have hm : Measurable fun p : U × R => q (p.2 * h) (p.2 * j p.1⁻¹) :=
-      hq.comp (((measurable_subtype_coe.comp measurable_snd).mul_const h).prodMk
-        ((measurable_subtype_coe.comp measurable_snd).mul (hj.comp measurable_fst.inv)))
+      hq.comp (((measurable_subtypeVal.comp measurable_snd).mul_const h).prodMk
+        ((measurable_subtypeVal.comp measurable_snd).mul (hj.comp measurable_fst.inv)))
     calc ‖((∫ u, ‖P (j u * h)‖ ∂ν : ℝ) : ℂ)‖ₑ = ‖∫ u, ‖P (j u * h)‖ ∂ν‖ₑ := by
           simp [eNorm_eq_nnNorm]
-      _ ≤ ∫⁻ u, ‖‖P (j u * h)‖‖ₑ ∂ν := enorm_integral_le_lintegral_enorm _
+      _ ≤ ∫⁻ u, ‖‖P (j u * h)‖‖ₑ ∂ν := eNorm_integral_le_lintegral_eNorm _
       _ ≤ ∫⁻ u, ∫⁻ r in 𝓡, q (r * h) (r * j u⁻¹) ∂μR ∂ν := by
           refine lintegral_mono fun u => ?_
-          rw [enorm_norm]
+          rw [eNorm_norm]
           refine (hle _).trans (le_of_eq ?_)
           rw [← setLIntegral_mul_right h𝓡 (fun r : R => q (r * h) (r * j u⁻¹)) (fun γ hγ r => by
             simp only [Subgroup.coe_mul, mul_assoc]
@@ -276,12 +276,12 @@ theorem lintegral_three_lt_top {α β γ : Type} [MeasurableSpace α] [Measurabl
     (hi : Integrable φ μ) {M : ℝ} (hM : ∀ a, ∫⁻ b, ‖G b‖ₑ * ∫⁻ c, ‖E a b c‖ₑ ∂κ ∂ν ≤ ENNReal.ofReal M) :
     ∫⁻ b, ∫⁻ c, ‖G b‖ₑ * ∫⁻ a, ‖φ a‖ₑ * ‖E a b c‖ₑ ∂μ ∂κ ∂ν < ∞ := by
   have hm : Measurable fun p : (β × γ) × α => ‖φ p.2‖ₑ * (‖G p.1.1‖ₑ * ‖E p.2 p.1.1 p.1.2‖ₑ) :=
-    (hφ.comp measurable_snd).enorm.mul ((hG.comp (measurable_fst.comp measurable_fst)).enorm.mul
-      (hE.comp (measurable_snd.prodMk measurable_fst)).enorm)
+    (hφ.comp measurable_snd).eNorm.mul ((hG.comp (measurable_fst.comp measurable_fst)).eNorm.mul
+      (hE.comp (measurable_snd.prodMk measurable_fst)).eNorm)
   calc ∫⁻ b, ∫⁻ c, ‖G b‖ₑ * ∫⁻ a, ‖φ a‖ₑ * ‖E a b c‖ₑ ∂μ ∂κ ∂ν
       = ∫⁻ b, ∫⁻ c, ∫⁻ a, ‖φ a‖ₑ * (‖G b‖ₑ * ‖E a b c‖ₑ) ∂μ ∂κ ∂ν := by
         refine lintegral_congr fun b => lintegral_congr fun c => ?_
-        rw [← lintegral_const_mul' _ _ enorm_ne_top]
+        rw [← lintegral_const_mul' _ _ eNorm_ne_top]
         exact lintegral_congr fun a => mul_left_comm _ _ _
     _ = ∫⁻ p : β × γ, ∫⁻ a, ‖φ a‖ₑ * (‖G p.1‖ₑ * ‖E a p.1 p.2‖ₑ) ∂μ ∂ν.prod κ :=
         (lintegral_prod _ hm.lintegral_prod_right'.aemeasurable).symm
@@ -289,9 +289,9 @@ theorem lintegral_three_lt_top {α β γ : Type} [MeasurableSpace α] [Measurabl
     _ ≤ ∫⁻ a, ‖φ a‖ₑ * ENNReal.ofReal M ∂μ := by
         refine lintegral_mono fun a => ?_
         have h1 : Measurable fun p : β × γ => ‖G p.1‖ₑ * ‖E a p.1 p.2‖ₑ :=
-          (hG.comp measurable_fst).enorm.mul (hE.comp measurable_prodMk_left).enorm
-        rw [lintegral_const_mul' _ _ enorm_ne_top, lintegral_prod _ h1.aemeasurable]
-        simp only [lintegral_const_mul' _ _ enorm_ne_top]
+          (hG.comp measurable_fst).eNorm.mul (hE.comp measurable_prodMk_left).eNorm
+        rw [lintegral_const_mul' _ _ eNorm_ne_top, lintegral_prod _ h1.aemeasurable]
+        simp only [lintegral_const_mul' _ _ eNorm_ne_top]
         exact mul_le_mul_right (hM a) _
     _ < ∞ := by
         rw [lintegral_mul_const' _ _ ENNReal.ofReal_ne_top]
@@ -328,7 +328,7 @@ theorem val_theta {Ψ : WO B.V J.W → ℂ} (hΨ : IsThetaFunO ψ B.V J.W Ψ) (x
 
 theorem enorm_val_le {Ψ : WO B.V J.W → ℂ} (hΨ : IsThetaFunO ψ B.V J.W Ψ) (x : Mx D J.W.rank ρ) :
     ‖val s Ψ x 0‖ₑ ≤ ∫⁻ b in s.vT.𝓕, ‖B.d.mixS J.W ψ s.vS.μ s.vS.𝓕 Ψ x (xZero J.d ⬝ b)‖ₑ ∂s.vT.μ := by
-  refine (enorm_integral_le_lintegral_enorm _).trans (le_of_eq (lintegral_congr fun b => ?_))
+  refine (eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq (lintegral_congr fun b => ?_))
   have hf := (GlobalTheory.MixValues.mixed_values D ψ s.weil.std).1 _ _ _ _ B.d _ _ s.vS.covol Ψ hΨ x
   change IsThetaFunO ψ B.V₀ J.W (B.d.mixS J.W ψ s.vS.μ s.vS.𝓕 Ψ x) at hf
   change ‖heisO ψ B.V₀ J.W (J.d.incX B.V₀ b)
@@ -412,12 +412,12 @@ theorem measurable_maj (hφ : IsContAut B.A φ) (hG : RapidDec J.W G) (hΦ : IsT
   have : BorelSpace (GA D B.A) := ⟨rfl⟩
   have := B.vA.haar
   have := sFinite_of_haar B.vA.μ
-  refine (hG.continuous.measurable.comp measurable_fst).enorm.mul ?_
+  refine (hG.continuous.measurable.comp measurable_fst).eNorm.mul ?_
   have hc : Continuous fun p : GA D B.A × GA D J.W × GA D J.W =>
       val s (s.om (embA B.d B.o p.1, p.2.1) Φ) (mt J.W p.2.2 ⬝ xZero J.d) 0 :=
     continuous_val s hΦ continuous_fst (continuous_fst.comp continuous_snd)
       (((continuous_mt J.W).comp (continuous_snd.comp continuous_snd)).matrix_mul continuous_const)
-  exact ((hφ.2.measurable.comp measurable_fst).enorm.mul hc.measurable.enorm).lintegral_prod_left'
+  exact ((hφ.2.measurable.comp measurable_fst).eNorm.mul hc.measurable.eNorm).lintegral_prod_left'
 
 omit hom in
 theorem exists_mt_xZero {r : GA D J.W} (hr : r ∈ jacGrp J.d) : ∃ v : UX D ρ, mt J.W r ⬝ xZero J.d = xZero J.d ⬝ v.1.1 := by
@@ -466,11 +466,11 @@ theorem enorm_fjAllFun_le (hΦ : IsThetaFunO ψ B.V J.W Φ) (h : GA D J.W) (h' :
       evalMaj s φ G Φ (n.1 * J.d.emb0 h' * h) (n.1 * J.d.emb0 h') := by
   have e : ‖star (psiFlag ψ J.d n.1)‖ₑ = 1 := by
     rw [← ofReal_norm, norm_star, psiFlag, psiE, s.weil.std.1.2.1, ENNReal.ofReal_one]
-  rw [fjAllFun, enorm_mul, enorm_mul, e, mul_one, evalMaj]
-  refine mul_le_mul_right ((enorm_integral_le_lintegral_enorm _).trans (le_of_eq (lintegral_congr fun h₀ => ?_))) _
+  rw [fjAllFun, eNorm_mul, eNorm_mul, e, mul_one, evalMaj]
+  refine mul_le_mul_right ((eNorm_integral_le_lintegral_eNorm _).trans (le_of_eq (lintegral_congr fun h₀ => ?_))) _
   have h1 := val_flag s hom (s.weil.om_pres (1, h) Φ hΦ) h₀ n.2 h' 1
   rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one, OneMemClass.coe_one, Units.val_one, Matrix.mul_one] at h1
-  rw [enorm_mul, h1]
+  rw [eNorm_mul, h1]
   rfl
 
 theorem exists_bound (hG : RapidDec J.W G) (hΦ : IsThetaFunO ψ B.V J.W Φ)
@@ -557,10 +557,10 @@ theorem exists_domain (J : JacLev D ρ) : IsClosed (jacGrp J.d : Set (GA D J.W))
     (fun n hn h => Decomp.conj_mem J.d hn h) (fun n hn n' hn' h h' e => Decomp.flag_unipotent_mul_embedded_anisotropic_unique J.d hn hn' e)
     (GlobalTheory.Unf.base_point D J.W J.W₀ ρ J.d).2.2.2.2.2 J.v0 J.vN.ν J.vN.𝓝 J.vN.unit.1 J.vN.unit.2.1 hHaar
   have hb : Measurable fun p : GA D J.W₀ × flagN J.d => p.2.1 * J.d.emb0 p.1 :=
-    (measurable_subtype_coe.comp measurable_snd).mul (J.d.continuous_embed.measurable.comp measurable_fst)
+    (measurable_subtypeVal.comp measurable_snd).mul (J.d.continuous_embed.measurable.comp measurable_fst)
   have hF : ∀ F : GA D J.W → ℝ≥0∞, Measurable F →
       ∫⁻ r in 𝓡, F r ∂J.μR = ∫⁻ h in J.v0.𝓕, ∫⁻ n in J.vN.𝓝, F (n.1 * J.d.emb0 h) ∂J.vN.ν ∂J.v0.μ := fun F hF => by
-    refine (lintegral_eq_of_integral (a := fun r : jacGrp J.d => r.1) measurable_subtype_coe hb (fun f hf => ?_) F hF).trans
+    refine (lintegral_eq_of_integral (a := fun r : jacGrp J.d => r.1) measurable_subtypeVal hb (fun f hf => ?_) F hF).trans
       (lintegral_prod _ (hF.comp hb).aemeasurable)
     exact ⟨(hint f hf).1, fun hi => ((hint f hf).2 hi).trans (integral_prod _ hi).symm⟩
   have : Countable (GQ J.W ⊓ jacGrp J.d : Subgroup (GA D J.W)) := (GlobalTheory.RationalSubgroupFund.countable_discrete_exists_fundamentalDomain D J.W _ inf_le_left).1
@@ -570,7 +570,7 @@ theorem exists_domain (J : JacLev D ρ) : IsClosed (jacGrp J.d : Set (GA D J.W))
     have h1 := hF (fun _ => 1) measurable_const
     have h2 := (contAut_rapidDec_bounded_integrable D J.W₀ J.cpt (fun _ => 1) ⟨fun _ _ _ => rfl, continuous_const⟩).2.2 J.v0
     rw [integrableOn_const_iff] at h2
-    simp only [enorm_eq_zero, one_ne_zero, false_or] at h2
+    simp only [eNorm_eq_zero, one_ne_zero, false_or] at h2
     simp only [lintegral_const, MeasurableSet.univ, Measure.restrict_apply, Set.univ_inter, one_mul, J.vN.unit.2.2] at h1
     rw [h1]; exact h2.ne
   have := GlobalTheory.UnitU.isMulRightInvariant_of_fundamentalDomain _ J.μR h𝓡' (h𝓡'.measure_ne_zero (NeZero.ne _)) hfin
@@ -601,7 +601,7 @@ theorem evalBF_abs : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B
   obtain ⟨hcont, hinv⟩ := GlobalTheory.Unf.evalIntegrand_continuous_invariant D ψ ρ B J s om' hom φ G Φ hφ hG hΦ
   have hq := measurable_maj s hφ hG hΦ
   refine exists_quotientIntegrable_fold_unimodular inf_le_right hc h𝓡 h𝓑 (J.d.levi.comp (UX D ρ).subtype)
-    (J.d.continuous_levi.comp continuous_subtype_val).measurable
+    (J.d.continuous_levi.comp continuous_subtypeVal).measurable
     (fun u => Subgroup.mem_sup_left (J.d.levi_mem_NFlag u.2)) hq (fun γ hγ g r hr => maj_left s hom hG hΦ hγ g hr)
     (fun r hr => maj_levi s hr) (lintegral_maj_lt_top s hom hφ hG hΦ h𝓑)
     (P := fun h => J.perAll ψ B s.om₀ φ (rTrans h G) (evalBF s (s.om (1, h) Φ))) hcont.measurable
@@ -616,8 +616,8 @@ theorem evalBF_abs : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (ρ : ℕ) (B
     have hm := hq.comp hp
     simp only [Function.comp_def, Function.uncurry_apply_pair] at hm
     refine le_trans ?_ (hF (fun r => evalMaj s φ G Φ (r * h) r) hm).ge
-    exact (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun h' =>
-      (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun n => enorm_fjAllFun_le s hom hΦ h h' n))
+    exact (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun h' =>
+      (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun n => enorm_fjAllFun_le s hom hΦ h h' n))
 
 end GlobalTheory.Unf
 
@@ -854,7 +854,7 @@ theorem ker_cont {Ψ : WO B.V J.W → ℂ} (hΨ : IsThetaFunO ψ B.V J.W Ψ) :
   have hc : Continuous (embA B.d B.o) :=
     B.d.continuous_embed.comp (B.o.continuous_emb.comp (continuous_id.prodMk continuous_const))
   have hn : Continuous fun p : UX D ρ × GA D J.W₀ × flagN J.d × GA D B.A => p.2.2.1.1 :=
-    continuous_subtype_val.comp continuous_snd.snd.fst
+    continuous_subtypeVal.comp continuous_snd.snd.fst
   have h1 : Continuous fun p : UX D ρ × GA D J.W₀ × flagN J.d × GA D B.A =>
       ((embA B.d B.o p.2.2.2, p.2.2.1.1 * J.d.emb0 p.2.1), mt J.W p.2.2.1.1 ⬝ (xZero J.d ⬝ p.1.1.1),
         yZero B.V₀ ρ (vecB B.o B.ζ), (0 : WO B.V₀ J.W₀)) :=
@@ -945,12 +945,12 @@ theorem perAll_flat_eq_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) 
     exact GlobalTheory.CharLaws.continuous_psiBes ψ J.d hψ.1 1 0
   have hun : Continuous fun v : UX D ρ => psiUni ψ v.1 := by
     simp only [← psiFlag_levi ψ J.d]
-    exact hfl.comp (J.d.continuous_levi.comp continuous_subtype_val)
+    exact hfl.comp (J.d.continuous_levi.comp continuous_subtypeVal)
   let H : UX D ρ × GA D J.W₀ × flagN J.d × GA D B.A → ℂ := fun p =>
     rTrans h G (p.2.2.1.1 * J.d.emb0 p.2.1) * star (psiFlag ψ J.d p.2.2.1.1) * (φ p.2.2.2 * (star (psiUni ψ p.1.1) *
       fjKer ψ J.d B.o B.ζ s.om₀ (ev s Ψ (xZero J.d ⬝ p.1.1.1)) p.2.2.2 p.2.2.1.1 p.2.1))
   have hn : Continuous fun p : UX D ρ × GA D J.W₀ × flagN J.d × GA D B.A => p.2.2.1.1 :=
-    continuous_subtype_val.comp continuous_snd.snd.fst
+    continuous_subtypeVal.comp continuous_snd.snd.fst
   have hH : Continuous H :=
     ((hG'.continuous.comp (hn.mul (J.d.continuous_embed.comp continuous_snd.fst))).mul (hfl.comp hn).star).mul
       ((hφ.2.comp continuous_snd.snd.snd).mul ((hun.comp continuous_fst).star.mul (ker_cont s hom hΨ)))
@@ -1057,9 +1057,9 @@ theorem lintegral_eq_cutoff_inner {T : Subgroup G} {μ : Measure G} {μT : Measu
     ∫⁻ x, H x ∂μ = ∫⁻ x, (β x : ℝ≥0∞) * ∫⁻ t : T, H (t * x) ∂μT ∂μ := by
   have hb : Measurable fun x => (β x : ℝ≥0∞) := hβ.1.coe_nnreal_ennreal
   have hmul : Measurable fun p : G × T => (p.2 : G) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd).mul measurable_fst
   have hmul' : Measurable fun p : G × T => ((p.2⁻¹ : T) : G) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd.inv).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd.inv).mul measurable_fst
   have e1 : ∀ x, (β x : ℝ≥0∞) * ∫⁻ t : T, H (t * x) ∂μT = ∫⁻ t : T, β x * H (t * x) ∂μT := fun x =>
     (lintegral_const_mul' _ _ ENNReal.coe_ne_top).symm
   rw [lintegral_congr e1, lintegral_lintegral_swap ((hb.comp measurable_fst).mul (hH.comp hmul)).aemeasurable]
@@ -1078,11 +1078,11 @@ theorem map_val_eq_map_stages {R₀ R : Subgroup G} (μ₀ : Measure R₀) (μR 
     (hst : ∀ F : G → ℝ≥0∞, Measurable F → ∫⁻ r : R, F r ∂μR = ∫⁻ u, ∫⁻ r : R₀, F (r * j u) ∂μ₀ ∂ν) :
     μR.map Subtype.val = (ν.prod μ₀).map (fun p : U × R₀ => (p.2 : G) * j p.1) := by
   have hm : Measurable (fun p : U × R₀ => (p.2 : G) * j p.1) :=
-    (measurable_subtype_coe.comp measurable_snd).mul (hj.comp measurable_fst)
+    (measurable_subtypeVal.comp measurable_snd).mul (hj.comp measurable_fst)
   have key : ∀ F : G → ℝ≥0∞, Measurable F →
       ∫⁻ y, F y ∂(μR.map Subtype.val) = ∫⁻ y, F y ∂((ν.prod μ₀).map (fun p : U × R₀ => (p.2 : G) * j p.1)) := by
     intro F hF
-    rw [lintegral_map hF measurable_subtype_coe, lintegral_map hF hm, lintegral_prod (f := fun p : U × R₀ => F ((p.2 : G) * j p.1)) (hF.comp hm).aemeasurable]
+    rw [lintegral_map hF measurable_subtypeVal, lintegral_map hF hm, lintegral_prod (f := fun p : U × R₀ => F ((p.2 : G) * j p.1)) (hF.comp hm).aemeasurable]
     exact hst F hF
   ext A hA
   rw [← lintegral_indicator_one hA, ← lintegral_indicator_one hA]
@@ -1102,7 +1102,7 @@ theorem invariant_integral_in_stages : ∀ (G : Type) [Group G] [TopologicalSpac
   obtain ⟨F, hF⟩ : ∃ F : G → ℂ, F = fun x => (β₀ x : ℝ) • f x := ⟨_, rfl⟩
   have hFm : Measurable F := by rw [hF]; exact hβ₀.1.coe_nnreal_real.smul hf
   have hc0 : ∀ y, Integrable (fun r : R₀ => (β₀ (r * y) : ℝ)) μ₀ ∧ ∫ r : R₀, (β₀ (r * y) : ℝ) ∂μ₀ = 1 :=
-    fun y => integrable_of_lintegral_eq_one (hβ₀.1.comp (measurable_subtype_coe.mul_const y)) (hβ₀.2 y)
+    fun y => integrable_of_lintegral_eq_one (hβ₀.1.comp (measurable_subtypeVal.mul_const y)) (hβ₀.2 y)
   have hFe : ∀ y, ∀ r : R₀, F (r * y) = (β₀ (r * y) : ℝ) • f y := fun y r => by
     rw [hF]
     show (β₀ (r * y) : ℝ) • f (r * y) = _
@@ -1115,11 +1115,11 @@ theorem invariant_integral_in_stages : ∀ (G : Type) [Group G] [TopologicalSpac
     rw [integral_mul_const, (hc0 y).2, one_mul]
   have hFn' : ∀ y, ∫⁻ r : R₀, ‖F (r * y)‖ₑ ∂μ₀ = ‖f y‖ₑ := fun y => by
     have e : ∀ r : R₀, ‖F (r * y)‖ₑ = (β₀ (r * y) : ℝ≥0∞) * ‖f y‖ₑ := fun r => by
-      rw [hFe y r, enorm_smul]
+      rw [hFe y r, eNorm_smul]
       simp
-    rw [lintegral_congr e, lintegral_mul_const' _ _ enorm_ne_top, hβ₀.2, one_mul]
+    rw [lintegral_congr e, lintegral_mul_const' _ _ eNorm_ne_top, hβ₀.2, one_mul]
   have hm : Measurable (fun p : U × R₀ => (p.2 : G) * j p.1) :=
-    (measurable_subtype_coe.comp measurable_snd).mul (hj.comp measurable_fst)
+    (measurable_subtypeVal.comp measurable_snd).mul (hj.comp measurable_fst)
   have hM := map_val_eq_map_stages μ₀ μR ν hj hst
   have hP : ∀ h, Integrable ((fun y => F (y * h)) ∘ fun p : U × R₀ => (p.2 : G) * j p.1) (ν.prod μ₀) := fun h => by
     refine (integrable_prod_iff ((hFm.comp (measurable_mul_const h)).comp hm).aestronglyMeasurable).2 ⟨?_, ?_⟩
@@ -1132,10 +1132,10 @@ theorem invariant_integral_in_stages : ∀ (G : Type) [Group G] [TopologicalSpac
     have hi : Integrable (fun y => F (y * h)) (μR.map Subtype.val) := by
       rw [hM]
       exact (integrable_map_measure (hFm.comp (measurable_mul_const h)).aestronglyMeasurable hm.aemeasurable).2 (hP h)
-    exact hi.comp_measurable measurable_subtype_coe
+    exact hi.comp_measurable measurable_subtypeVal
   have hRval : ∀ h, ∫ r : R, F (r * h) ∂μR = ∫ u, f (j u * h) ∂ν := fun h => by
     have e1 : ∫ r : R, F (r * h) ∂μR = ∫ y, F (y * h) ∂(μR.map Subtype.val) :=
-      (integral_map measurable_subtype_coe.aemeasurable (hFm.comp (measurable_mul_const h)).aestronglyMeasurable).symm
+      (integral_map measurable_subtypeVal.aemeasurable (hFm.comp (measurable_mul_const h)).aestronglyMeasurable).symm
     rw [e1, hM, integral_map (f := fun y => F (y * h)) hm.aemeasurable (hFm.comp (measurable_mul_const h)).aestronglyMeasurable]
     have e2 := integral_prod _ (hP h)
     simp only [Function.comp_def] at e2
@@ -1144,9 +1144,9 @@ theorem invariant_integral_in_stages : ∀ (G : Type) [Group G] [TopologicalSpac
     simpa [mul_assoc] using (hFr (j u * h)).2
   have hGint : Integrable F μ := by
     refine ⟨hFm.aestronglyMeasurable, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm, lintegral_eq_cutoff_inner hβ hFm.enorm]
+    rw [hasFiniteIntegral_iff_eNorm, lintegral_eq_cutoff_inner hβ hFm.eNorm]
     have e : ∀ x, ∫⁻ r : R, ‖F (r * x)‖ₑ ∂μR = ∫⁻ u, ‖f (j u * x)‖ₑ ∂ν := fun x => by
-      rw [hst (fun y => ‖F (y * x)‖ₑ) (hFm.comp (measurable_mul_const x)).enorm]
+      rw [hst (fun y => ‖F (y * x)‖ₑ) (hFm.comp (measurable_mul_const x)).eNorm]
       refine lintegral_congr fun u => ?_
       have h1 := hFn' (j u * x)
       simp only [mul_assoc] at h1 ⊢
@@ -1154,9 +1154,9 @@ theorem invariant_integral_in_stages : ∀ (G : Type) [Group G] [TopologicalSpac
     simp only [e]
     obtain ⟨hi, -⟩ := hz'.cutoff hβ
     refine lt_of_le_of_lt (le_of_eq (lintegral_congr fun x => ?_)) hi.2
-    rw [enorm_smul, ← ofReal_integral_norm_eq_lintegral_enorm (hint x)]
-    simp [Real.enorm_of_nonneg (integral_nonneg fun _ => norm_nonneg _)]
-    rw [← ofReal_norm_eq_enorm, Complex.norm_real, Real.norm_of_nonneg (integral_nonneg fun _ => norm_nonneg _)]
+    rw [eNorm_smul, ← ofReal_integral_norm_eq_lintegral_eNorm (hint x)]
+    simp [Real.eNorm_of_nonneg (integral_nonneg fun _ => norm_nonneg _)]
+    rw [← ofReal_norm, Complex.norm_real, Real.norm_of_nonneg (integral_nonneg fun _ => norm_nonneg _)]
   have hq : IsQuotIntL1 μR μ (fun g => ∫ u, f (j u * g) ∂ν) (∫ x, F x ∂μ) :=
     ⟨F, hGint, hRint, fun h => (hRval h).symm, rfl⟩
   exact ⟨F, hGint, fun h => (hFr h).1, fun h => (hFr h).2.symm, hz.unique hR hq⟩
@@ -1232,7 +1232,7 @@ theorem evalBF_of_descent : ∀ D : D7, Descent D → EvalBF D := by
   rw [funext fun h => (hrel h).2] at hU
   exact GlobalTheory.T.invariant_integral_in_stages_alt (GA D J.W) s.vW.μ (radX J.d ⊔ J.d.emb0.range) (jacGrp J.d) hc0 hc
     (semiMeas (radX J.d) J.d.emb0 J.v0.μ ν₀) J.μR hH0 hI0 (hH _ J.v0.haar) hI (UX D ρ) s.vU.ν (fun u => J.d.levi u.1)
-    (J.d.continuous_levi.comp continuous_subtype_val).measurable hF _ hcont.measurable hinv (fun h => (hrel h).1) habs _ hU
+    (J.d.continuous_levi.comp continuous_subtypeVal).measurable hF _ hcont.measurable hinv (fun h => (hrel h).1) habs _ hU
 
 end GlobalTheory.Unf
 end -- clump:auto

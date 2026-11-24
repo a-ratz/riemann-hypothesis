@@ -132,11 +132,11 @@ theorem kumH_apply {F Ω' : Type*} [Field F] [Field Ω'] [Algebra F Ω'] {N : �
   rfl
 
 theorem eps_eOm [IsAlgClosed Ω] (q : ℚ) : ε (eOm ε q) = Complex.exp (2 * Real.pi * Complex.I * (q : ℂ)) := by
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero (q.den : Ω) := ⟨Nat.cast_ne_zero.2 q.den_ne_zero⟩
-  haveI : NeZero q.den := ⟨q.den_ne_zero⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero (q.den : Ω) := ⟨Nat.cast_ne_zero.2 q.den_ne_zero⟩
+  have : NeZero q.den := ⟨q.den_ne_zero⟩
   have hw : Complex.exp (2 * Real.pi * Complex.I * (q : ℂ)) ^ q.den = 1 := by
-    rw [← Complex.exp_nat_mul]
+    rw [← Complex.exp_natCast_mul]
     have : (q.den : ℂ) * (2 * Real.pi * Complex.I * (q : ℂ)) = q.num * (2 * Real.pi * Complex.I) := by
       have hd : (q.den : ℂ) ≠ 0 := by exact_mod_cast q.den_ne_zero
       have : (q : ℂ) = (q.num : ℂ) / q.den := by exact_mod_cast (Rat.num_div_den q).symm
@@ -201,7 +201,7 @@ def topChar (X : Tower Ω ε) (M l n : ℕ) (w : X.K) : topGal X M →* Multipli
 theorem topChar_apply [IsAlgClosed Ω] (X : Tower Ω ε) {M l n : ℕ} (hl : l ≠ 0) (hM : l ^ n ∣ M) {w : X.K}
     (hw : w ∈ topF X M) (hw0 : w ≠ 0) (g : topGal X M) :
     (topChar X M l n w g).toAdd = kum (K := topF X M) (N := l ^ n) (topZeta X M l n) (topRoot X M (l ^ n) w) g := by
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero n hl⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero n hl⟩
   refine kumH_apply (isPrimitiveRoot_topZeta X M hl n) (topGal_topZeta X hl hM) (w := (⟨w, hw⟩ : topF X M))
     (fun h => hw0 (congrArg Subtype.val h)) ?_ g
   rw [topRoot_pow X M (pow_ne_zero n hl) (mdl_le_lev X _ _ hw),

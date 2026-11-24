@@ -138,7 +138,7 @@ theorem sphTrans (hL : LeviExists) : SphTrans := by
         simp at hij
       · exact absurd hji (lt_irrefl _)
       · rw [hmb.2.2.2 i' j']
-        exact hb₀ i' j' (by rw [Fin.lt_iff_val_lt_val] at hji ⊢; simpa using hji)
+        exact hb₀ i' j' (by rw [Fin.lt_def] at hji ⊢; simpa using hji)
       · exact absurd hji (lt_irrefl _)
     · exact hmb.1 i j hij
   have e1 : mb * mk * u = (mb * v) * 1 * mk := by rw [hv]; group

@@ -69,7 +69,7 @@ theorem commute_proj (K : Submodule ℂ H) [K.HasOrthogonalProjection] (A : H �
     exact Submodule.orthogonalProjectionOnto_apply_of_mem_orthogonal hv
   show K.starProjection * A = A * K.starProjection
   ext x
-  simp only [ContinuousLinearMap.mul_apply]
+  simp only [mul_apply_eq_comp]
   have hw : x - K.starProjection x ∈ Kᗮ := K.sub_starProjection_mem_orthogonal x
   have hAw : A (x - K.starProjection x) ∈ Kᗮ := by
     rw [Submodule.mem_orthogonal]
@@ -138,8 +138,8 @@ theorem inverse_holds : Inv := by
     have hcl : IsClosed ((K.comap (U i : H →ₗ[ℂ] H) : Set H)) := hKcl.preimage (U i).continuous
     intro v hv
     exact Submodule.topologicalClosure_minimal R hle hcl hv
-  haveI : IsClosed (K : Set H) := hKcl
-  haveI : CompleteSpace K := IsClosed.completeSpace_coe
+  have : IsClosed (K : Set H) := hKcl
+  have : CompleteSpace K := IsClosed.completeSpace_coe
   have hPcomm : ∀ i, Commute K.starProjection (U i) := by
     intro i
     refine commute_proj K (U i) (hUK i) ?_
@@ -171,8 +171,8 @@ theorem inverse_holds : Inv := by
     show ((K : Set H)) = Set.univ
     rw [hKtop]
     rfl
-  have hRdense : DenseRange R.subtypeL := hRd.denseRange_val
-  have hRui : IsUniformInducing R.subtypeL := isUniformEmbedding_subtype_val.isUniformInducing
+  have hRdense : DenseRange R.subtypeL := hRd.denseRange_subtypeVal
+  have hRui : IsUniformInducing R.subtypeL := isUniformEmbedding_subtypeVal.isUniformInducing
   let T : H →L[ℂ] H := g.extend R.subtypeL
   have hT : ∀ r : ↥R, T r = g r := fun r => ContinuousLinearMap.extend_eq g hRdense hRui r
   have hTB : ∀ x : ↥D, T ((B x : ↥D) : H) = x := by

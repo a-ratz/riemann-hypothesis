@@ -71,7 +71,7 @@ theorem tor_facts [Fintype Ψ] (hΨ : 2 * Fintype.card Ψ = Module.finrank ℚ E
     exact ⟨IsFractionRing.lift (A.σ_inj q), RingHom.ext fun x => IsFractionRing.lift_algebraMap (A.σ_inj q) x⟩
   have hfin1 : Finite (𝓞 E →+* L) := Finite.of_surjective A.σ A.σ_bij.2
   have hfin2 : Finite (E →+* L) := Finite.of_injective _ hres.1
-  letI : Fintype (E →+* L) := Fintype.ofFinite _
+  let : Fintype (E →+* L) := Fintype.ofFinite _
   have hcard : Fintype.card (E →+* L) = Module.finrank ℚ E := by
     rw [← Nat.card_eq_fintype_card, Nat.card_congr (Equiv.ofBijective _ hres),
       ← Nat.card_congr (Equiv.ofBijective _ A.σ_bij), ← hΨ, Nat.card_eq_fintype_card,

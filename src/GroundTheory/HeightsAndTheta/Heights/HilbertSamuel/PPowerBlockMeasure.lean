@@ -293,11 +293,11 @@ theorem PowerBlockMeasure.proof (hPN : PowerBlockPointNorm.Statement) (hOS : Pow
   refine ⟨(2⁻¹ : ℝ≥0∞) • (dV.map ψ + dV.map (conjPt ∘ ψ)), ?_, ?_, ?_, ?_⟩
   ·
     constructor
-    rw [Measure.smul_apply, Measure.add_apply, Measure.map_apply hψm MeasurableSet.univ,
+    rw [smul_apply, add_apply, Measure.map_apply hψm MeasurableSet.univ,
       Measure.map_apply hcm MeasurableSet.univ, Set.preimage_univ, Set.preimage_univ, measure_univ, smul_eq_mul,
       one_add_one_eq_two, ENNReal.inv_mul_cancel two_ne_zero ENNReal.ofNat_ne_top]
   ·
-    rw [Measure.smul_apply, Measure.add_apply, Measure.map_apply hψm hT.compl, Measure.map_apply hcm hT.compl]
+    rw [smul_apply, add_apply, Measure.map_apply hψm hT.compl, Measure.map_apply hcm hT.compl]
     have h1 : ψ ⁻¹' (mcPts (mCoordIdeal y))ᶜ = ∅ := by
       ext x
       simp [hψP x]
@@ -310,7 +310,7 @@ theorem PowerBlockMeasure.proof (hPN : PowerBlockPointNorm.Statement) (hOS : Pow
 
     have h1 : dV {x | ¬ eval (ψ x) f = 0} = 0 := by
       have hS0 := ae_iff.1 hae
-      rw [Measure.smul_apply, Measure.add_apply, smul_eq_mul, mul_eq_zero, add_eq_zero] at hS0
+      rw [smul_apply, add_apply, smul_eq_mul, mul_eq_zero, add_eq_zero] at hS0
       have hS1 : dV.map ψ {z | ¬ eval z f = 0} = 0 := by
         rcases hS0 with h | h
         · exact absurd h (by simp)
@@ -355,7 +355,7 @@ theorem PowerBlockMeasure.proof (hPN : PowerBlockPointNorm.Statement) (hOS : Pow
       exact (mul_eq_zero.1 this).resolve_left hu
 
     have hprime : (mCoordIdeal (addBlock y v)).IsPrime := RingHom.ker_isPrime _
-    obtain ⟨j, hjJ, hjP⟩ := SetLike.not_le_iff_exists.1 R.nondeg
+    obtain ⟨j, hjJ, hjP⟩ := IsConcreteLE.not_le_iff_exists.1 R.nondeg
     have h4 : ∀ z ∈ mcPts (mCoordIdeal (addBlock y v)), eval (basePart₂ z) f = 0 := by
       intro z hz
       have := hZD (Option K) (addIdx ι N) (mCoordIdeal (addBlock y v)) j hprime hjP

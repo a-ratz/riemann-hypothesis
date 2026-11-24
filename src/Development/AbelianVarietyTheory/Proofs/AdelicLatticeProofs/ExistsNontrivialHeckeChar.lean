@@ -55,7 +55,7 @@ theorem exists_fin : ∃ Φ : AE F E →+* FiniteAdeleRing (𝓞 E) E, Continuou
     (∀ x, Φ (incA F E x) = algebraMap E _ x) ∧
     ∀ y, finPart F E y ∈ intAE F E ↔ ∀ P, Valued.v (Φ y P) ≤ 1 := by
   obtain ⟨ι, h1, h2, -⟩ := GlobalTheory.AdeleBaseChange.exists_tensor_finiteAdele_equiv F E
-  haveI : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AE F E) := ⟨rfl⟩
   refine ⟨ι.toRingHom.comp (finPart F E), ?_, fun x => h1 x, fun y => h2 _⟩
   refine IsModuleTopology.continuous_of_ringHom (R := AF F) _ ?_
   have := GlobalTheory.HeckeTensorRead.continuous_of_map_integral

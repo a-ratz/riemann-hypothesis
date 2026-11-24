@@ -263,7 +263,7 @@ theorem hermForm_pull_eq_of_lbIso_pow :
       obtain ⟨i, hi⟩ := exists_chart (u.ex z).left hL
       obtain ⟨j, hj⟩ := exists_chart (u'.ex (F z)).left hL'
       exact ⟨i, j, hi, hj⟩
-  haveI := u.discrete
+  have := u.discrete
   have key := appellHumbert_trivial_of_nowhere_vanishing g u.Λ u.full
     ((n : ℂ) • Hm - (m : ℂ) • H₂) (fun l => χ l ^ n / χ' ⟨F l, hΛ l⟩ ^ m) r
     ((hu.1.smul (by simp [IsSelfAdjoint])).sub (hH₂h.smul (by simp [IsSelfAdjoint])))
@@ -293,7 +293,7 @@ theorem hermForm_pull_eq_of_lbIso_pow :
       have e : Complex.exp (Real.pi * (n * a - m * a') + Real.pi / 2 * (n * b - m * b')) =
           Complex.exp (Real.pi * a + Real.pi / 2 * b) ^ n /
             Complex.exp (Real.pi * a' + Real.pi / 2 * b') ^ m := by
-        rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_sub]
+        rw [← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul, ← Complex.exp_sub]
         congr 1
         ring
       have h6 := Complex.exp_ne_zero (Real.pi * a + Real.pi / 2 * b)

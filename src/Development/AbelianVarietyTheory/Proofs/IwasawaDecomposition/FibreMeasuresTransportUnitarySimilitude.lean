@@ -67,7 +67,7 @@ theorem isFibreFamily_transport {V R : Type} [TopologicalSpace V] [MeasurableSpa
   have hmu : MeasurableEmbedding (fun z : R => (u : R) * z) :=
     (Homeomorph.smul u : R ≃ₜ R).measurableEmbedding
   refine ⟨fun b => ?_, fun φ hφ => ?_, fun φ hφ hc _ => ?_⟩
-  · rw [Measure.smul_apply, hme.map_apply]
+  · rw [smul_apply, hme.map_apply]
     have : e ⁻¹' (q₂ ⁻¹' {id b} ∩ Set.univ)ᶜ = (q ⁻¹' {id ((u⁻¹ : Rˣ) * b)} ∩ Set.univ)ᶜ := by
       ext v
       simp [hq, Units.eq_inv_mul_iff_mul_eq]

@@ -92,7 +92,7 @@ private theorem gh_cls_one {M : ℕ} (N : ℕ) [NeZero N] (h : N ∣ M) {s : G �
   rw [hs ζ (by rw [pow_mul, hζ, one_pow]), Units.val_one, ← Nat.cast_one, ZMod.val_natCast, ← pow_eq_pow_mod _ hζ, pow_one]
 
 private theorem gh_quad : ∃ δ : Ω, δ ^ 2 = -((1 : ℕ) : Ω) ∧ ∀ s : G ℚ Ω, s δ = (UnitaryThreeInertia.eta4 Ω s : ℤ) • δ := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨δ, hδ⟩ := IsAlgClosed.exists_pow_nat_eq (-1 : Ω) two_pos
   have h4 : δ ^ 4 = 1 := by rw [show 4 = 2 * 2 from rfl, pow_mul, hδ]; norm_num
   refine ⟨δ, by simpa using hδ, fun s => ?_⟩
@@ -231,7 +231,7 @@ private theorem gh_idx (l : ℕ) [hl : Fact l.Prime] {O : Type} [CommRing O] [Is
   obtain ⟨-, -, hone, -, hpow, -⟩ := compAlg O N l hl.out
   have h2 : kapB l ψ ^ l ^ (orderOf ψ).factorization l = 1 := by
     rw [kapB, kapL, mul_pow, inv_pow, ← hpow, h1, hone, inv_one, one_mul]
-  haveI : Finite (Chr.dirG ℚ Ω (kapB l ψ)).range := by
+  have : Finite (Chr.dirG ℚ Ω (kapB l ψ)).range := by
     refine Set.Finite.subset (Set.finite_range (kapB l ψ).toUnitHom) ?_
     rintro _ ⟨s, rfl⟩
     exact ⟨_, rfl⟩
@@ -247,7 +247,7 @@ private theorem gh_teich (l : ℕ) [hl : Fact l.Prime] (c : Coef l) {N : ℕ} [N
     Chr.Psi l e (Chr.dirG ℚ Ω ψ) s = 1 := by
   have h1 : cycZ ℚ Ω l s = 1 := (places ℚ Ω l A).2.2.2 hA hs
   have h2 : chiO ℚ Ω l c.O s = 1 := by rw [chiO, MonoidHom.comp_apply, h1, map_one]
-  haveI : NeZero (ordProj[l] N) := ⟨(Nat.ordProj_pos N l).ne'⟩
+  have : NeZero (ordProj[l] N) := ⟨(Nat.ordProj_pos N l).ne'⟩
   have hA' : ¬ A.valuation ((ordProj[l] N : ℕ) : Ω) < 1 := fun h' => by
     obtain ⟨p, hp, hp'⟩ := ((Chr.placesQ Ω).2.1 A _ (NeZero.ne _)).1 h'
     have := (Nat.prime_dvd_prime_iff_eq (Nat.prime_of_mem_primeFactors hp) hl.out).1
@@ -298,11 +298,11 @@ theorem UpperTheory.V.Fr.gen_host :
       g4 := kernel_not_contained_eta l hd.l_odd c e ψ hd.four_le
       g5 := exists_decomposition_nonquadratic l c e ψ o₁ hd B hB
       Hb_open := Subgroup.isOpen_mono (fun s hs => gh_dir_one _ hs) (Chr.clsFacts ℚ Ω N).1
-      Hb_ab := Abelianization.commutator_subset_ker _
+      Hb_ab := Group.Abelianization.commutator_le_ker _
       Hb_idx := gh_idx l ψ
       Hb_l := fun B' hB' => ((compIne Ω N l hl.out B' hB').2 c.O _).2.2 ?_
       teich := fun B' hB' s hs h => gh_teich l c e ψ B' hB' hs.1 hs.2 h }⟩
-  · haveI := (dvrFacts l c.O).2.2.1
+  · have := (dvrFacts l c.O).2.2.1
     exact ResidueField.finite_of_finite (R := ℤ_[l]) (Finite.of_equiv _ PadicInt.residueField.symm.toEquiv)
   · obtain ⟨δ, h1, h3⟩ := gh_quad (Ω := Ω)
     exact ⟨1, δ, one_pos, fun q hq h => absurd (Nat.dvd_one.1 h) hq.one_lt.ne', h1, h3⟩

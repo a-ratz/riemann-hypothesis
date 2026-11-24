@@ -92,7 +92,7 @@ theorem shareRhoR_of_anFacts : ∀ (D : D7) (B : WeightFamilies.Prov D) (P : Mod
     unfold PJ.rk
     have : Submodule.span B.KO (B.Mlat j ka : Set (B.Cusp j ka)) = ⊤ := Submodule.IsFullLattice.span_eq_top (self := hLat)
     rw [this]
-  haveI hfin : FiniteDimensional ℂ (R.sp ka Set.univ) := by
+  have hfin : FiniteDimensional ℂ (R.sp ka Set.univ) := by
     have h1 := (d8 ka ⊤).1
     rwa [Submodule.top_coe] at h1
 
@@ -120,12 +120,12 @@ theorem shareRhoR_of_anFacts : ∀ (D : D7) (B : WeightFamilies.Prov D) (P : Mod
     simpa using graded_prod_pow_mul (fun n x => OfWt X (addL wF wL n) x) (fun _ : Unit => p1 0)
       (fun n _ x hx => hstep n 0 x hx) (fun _ => m) Finset.univ n x hx
   obtain ⟨n, b, hb⟩ := Module.Finite.exists_fin (R := B.KO) (M := B.Cusp j (X.wF0 wL wF))
-  haveI : Finite {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i = a} :=
+  have : Finite {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i = a} :=
     ((finite_sum_le (WeightFamilies.dimY D j) a).subset (t := {α | ∑ i, α i = a}) fun α (h : ∑ i, α i = a) => h.le).to_subtype
-  haveI : Finite {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a} :=
+  have : Finite {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a} :=
     ((finite_sum_le (WeightFamilies.dimY D j) a).subset (t := {α | ∑ i, α i < a}) fun α (h : ∑ i, α i < a) => h.le).to_subtype
-  letI := Fintype.ofFinite {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i = a}
-  letI := Fintype.ofFinite {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a}
+  let := Fintype.ofFinite {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i = a}
+  let := Fintype.ofFinite {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a}
   let q : {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i = a} × Fin n → MvPolynomial (Idx D j G.N) X.Forms := fun p =>
     pm p.1.1 * MvPolynomial.C (X.inc (X.wF0 wL wF) (b p.2))
   have hq : ∀ p, OfWt X ka (q p) := by
@@ -175,14 +175,14 @@ theorem shareRhoR_of_anFacts : ∀ (D : D7) (B : WeightFamilies.Prov D) (P : Mod
   have hcard : Nat.card {α : Fin (WeightFamilies.dimY D j) → ℕ // ∑ i, α i < a} = (T - 1).choose (WeightFamilies.dimY D j) :=
     b1 (by omega) hDT
   rw [hcard] at hrk
-  haveI := Submodule.finiteDimensional_of_le hLk
-  haveI := Submodule.finiteDimensional_of_le hCk
+  have := Submodule.finiteDimensional_of_le hLk
+  have := Submodule.finiteDimensional_of_le hCk
   have hsum := Submodule.finrank_sup_add_finrank_inf_eq
     (Submodule.span ℂ (Set.range (R.lead G.w t T a fun i => R.ev (X.inc wF (θ i)))))
     (Submodule.span ℂ (Set.range fun p => R.toFn t (q p)))
   rw [(hdis.mono_right hC).eq_bot, finrank_bot, add_zero, hrk] at hsum
   have hle := Submodule.finrank_mono (sup_le hLk hCk)
-  haveI : FiniteDimensional (Kp X la G.N)
+  have : FiniteDimensional (Kp X la G.N)
       (Submodule.span (Kp X la G.N) (Set.range fun p => toRp X la G.N (q p))) :=
     FiniteDimensional.span_of_finite _ (Set.finite_range _)
   have hKle := Submodule.finrank_mono hK

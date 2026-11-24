@@ -295,7 +295,7 @@ theorem exists_dual_frame (hE : Formalism.HermitianLatticesTheory.IsCMUnram E) {
 
   · simp only [map_sub, map_sum, LinearMap.sub_apply, LinearMap.sum_apply, hsmul, map_smul, h.1, hge, heg,
     smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero, mul_ite, mul_one, Finset.sum_ite_eq,
-    Finset.sum_ite_eq', Finset.mem_univ, if_true, star_mul, hsym]
+    Finset.sum_ite_eq', Finset.mem_univ, ite_true, star_mul, hsym]
     linear_combination (-(S.hT (g a) (g b))) * ht
 
   · simp only [map_sub, map_sum, map_smul, h.1, heg, smul_eq_mul, mul_zero, Finset.sum_const_zero, sub_zero]
@@ -565,7 +565,7 @@ theorem main : ∀ (D : D7) (u : D.what₂.Word) (F0 : Fb D u) (Λ : LatV D), Is
   have hXL := XLam_gmap (lf D F0) Λ n hnX
   obtain ⟨-, -, -, hu', hl'⟩ := Formalism.HermitianLatticesTheory.isomAct _ _ _ (hS D).hT n hn Λ
   have hfull : Submodule.IsFullLattice D.host.E (Formalism.HermitianLatticesTheory.gmap n Λ) := by
-    letI := hl'.2 hl
+    let := hl'.2 hl
     refine { span_eq_top := ?_ }
     change Submodule.span D.host.E (n.toLinearMap '' (Λ : Set (hS D).V)) = ⊤
     rw [← Submodule.map_span n.toLinearMap, hgen.1.span_eq_top, Submodule.map_top,

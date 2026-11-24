@@ -60,7 +60,7 @@ open GlobalTheory.SmoothGlob GlobalTheory.LowTypeDetermined GlobalTheory.TypeSum
 
 theorem continuous_integral_K {n : ℕ} {ε : Fin n → Bool} {X : Type*} [TopologicalSpace X] (F : X → KG ε → ℂ)
     (hF : Continuous (Function.uncurry F)) : Continuous fun x => ∫ k, F x k ∂(muK ε) := by
-  haveI : IsFiniteMeasure (muK ε) := ⟨isCompact_univ.measure_lt_top⟩
+  have : IsFiniteMeasure (muK ε) := ⟨isCompact_univ.measure_lt_top⟩
   let L : C(KG ε, ℂ) →ₗ[ℂ] ℂ :=
     { toFun := fun g => ∫ k, g k ∂(muK ε)
       map_add' := fun g h => by
@@ -162,8 +162,8 @@ theorem exists_stab_insert : ∀ {D : D7} (θ : InfFam D), IsInfFam θ → ∀ (
   obtain ⟨F, hFfin, heF, hFc, hFtr⟩ := he
   have hP := N.M.fr_unit τ
   have hJ := N.M.fr_gram τ
-  haveI := hFfin
-  haveI := hW'fin
+  have := hFfin
+  have := hW'fin
   let B : F →ₗ[ℂ] W' →ₗ[ℂ] (GA D N.V → ℂ) :=
     LinearMap.mk₂ ℂ (fun a b => GlobalTheory.SeriesToClosure.avg θ N.V τ (N.M.ε τ) (N.M.fr τ) (a : Formalism.REAL.KG (N.M.ε τ) → ℂ)
         (b : GA D N.V → ℂ))

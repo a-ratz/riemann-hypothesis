@@ -169,9 +169,9 @@ open LamOfWeil IsoDescent
 
 theorem lamEq_of_weilEq : Out.Laws → ∀ (k : Type) [Field k] [IsAlgClosed k] [CharZero k] (X Y A B : Out.PolAV (Sp k)) (f₁ : X.A ⟶ A.A) (f₂ : Y.A ⟶ A.A) (g₁ : X.A ⟶ B.A) (g₂ : Y.A ⟶ B.A), IsMonHom f₁ → IsMonHom f₂ → IsMonHom g₁ → IsMonHom g₂ → WeilEq A.L f₁ f₂ B.L g₁ g₂ (𝟙 (Sp k)) → LamEq A.L f₁ f₂ B.L g₁ g₂ := by
   intro hL k _ _ _ X Y A B f₁ f₂ g₁ g₂ hf₁ hf₂ hg₁ hg₂ hW
-  haveI : IsCommMonObj A.A := A.isAb.comm
-  haveI : IsCommMonObj B.A := B.isAb.comm
-  haveI : IsCommMonObj Y.A := Y.isAb.comm
+  have : IsCommMonObj A.A := A.isAb.comm
+  have : IsCommMonObj B.A := B.isAb.comm
+  have : IsCommMonObj Y.A := Y.isAb.comm
   have axis : ∀ {Z : Over (Sp k)} (ρ : Z ⟶ X.A ⊗ Y.A), ρ ≫ fst _ _ = 1 ∨ ρ ≫ snd _ _ = 1 →
       ∃ t : LB.Gen ((LB.div (LB.LinComb B.L (sqφ (fst X.A Y.A ≫ g₁) (snd X.A Y.A ≫ g₂)) sqε)
         (LB.LinComb A.L (sqφ (fst X.A Y.A ≫ f₁) (snd X.A Y.A ≫ f₂)) sqε)).pull ρ.left), t.IsGen := by

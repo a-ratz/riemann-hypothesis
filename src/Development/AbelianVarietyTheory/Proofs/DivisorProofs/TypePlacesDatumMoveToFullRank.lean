@@ -127,33 +127,33 @@ theorem exists_det_one_mul_stdBlock {K : Type} [Field K] {n r : ℕ} (hrn : r < 
   have hs : LinearIndependent K s := b.linearIndependent.comp τ hτ
   let g₀ : Matrix (Fin n) (Fin n) K := Matrix.of fun i a => s a i
   have hg₀col : g₀.col = s := by ext a i; rfl
-  have hu : IsUnit g₀ := Matrix.linearIndependent_cols_iff_isUnit.mp (hg₀col ▸ hs)
+  have hu : IsUnit g₀ := linearIndependent_col_iff_isUnit.mp (hg₀col ▸ hs)
   have hdet : g₀.det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
   let last : Fin n := ⟨n - 1, by omega⟩
   let D : Matrix (Fin n) (Fin n) K := Matrix.diagonal fun a => if a = last then g₀.det⁻¹ else 1
   let g := g₀ * D
   have hgdet : g.det = 1 := by
-    simp only [g, D, Matrix.det_mul, Matrix.det_diagonal, Finset.prod_ite_eq', Finset.mem_univ, if_true]
+    simp only [g, D, Matrix.det_mul, Matrix.det_diagonal, Finset.prod_ite_eq', Finset.mem_univ, ite_true]
     exact mul_inv_cancel₀ hdet
   have hU : IsUnit g := (Matrix.isUnit_iff_isUnit_det g).mpr (by rw [hgdet]; exact isUnit_one)
   refine ⟨hU.unit, ?_, ?_⟩
   · ext
     simp [Matrix.GeneralLinearGroup.val_det_apply, hgdet]
   · have hE : ∀ (a : Fin n) (c : Fin r), ((a : ℕ) = (c : ℕ)) ↔ a = Fin.castLE hrn.le c := by
-      intro a c; rw [Fin.ext_iff, Fin.coe_castLE]
+      intro a c; rw [Fin.ext_iff, Fin.val_castLE]
     have hτc : ∀ c : Fin r, τ (Fin.castLE hrn.le c) = Sum.inl c := by
       intro c
-      simp only [τ, Fin.coe_castLE, dif_pos c.isLt]
+      simp only [τ, Fin.val_castLE, dite_eq_left c.isLt]
     rw [IsUnit.unit_spec]
     ext i c
     simp only [g, D, Matrix.mul_assoc, Matrix.mul_apply, Matrix.diagonal_apply, Matrix.of_apply, hE]
-    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hne : Fin.castLE hrn.le c ≠ last := by
       intro h
       have h2 := congrArg Fin.val h
-      simp only [Fin.coe_castLE, last] at h2
+      simp only [Fin.val_castLE, last] at h2
       omega
-    simp only [if_neg hne, mul_one]
+    simp only [ite_eq_right hne, mul_one]
     show b (τ (Fin.castLE hrn.le c)) i = y i c
     rw [hτc, hb]
     rfl
@@ -181,12 +181,12 @@ variable {D : D7} {n : ℕ}
 
 theorem finite_maximalSpectrum_kP (P : Pl D.host.E) : Finite (MaximalSpectrum (kP P)) := by
   have hP : P.asIdeal.IsMaximal := P.isMaximal
-  letI := Ideal.Quotient.field P.asIdeal
+  let := Ideal.Quotient.field P.asIdeal
   exact Finite.of_subsingleton
 
 theorem exists_detOne_lift (P : Pl D.host.E) (k : GL (Fin n) (kP P)) (hk : Matrix.GeneralLinearGroup.det k = 1) :
     ∃ Y : Matrix (Fin n) (Fin n) (𝓞 D.host.E), Y.map (Ideal.Quotient.mk P.asIdeal) = k.1 ∧ Y.det = 1 := by
-  haveI := finite_maximalSpectrum_kP P
+  have := finite_maximalSpectrum_kP P
   have hk' : k.1.det = 1 := by
     have := congrArg Units.val hk
     rwa [Matrix.GeneralLinearGroup.val_det_apply, Units.val_one] at this
@@ -426,11 +426,11 @@ theorem datum_move (R : RealDat D A Ks) (i : Fin D.R.m) (Q : Finset (Pl D.host.E
   by_cases hx : IsHalf (cA D e) x ∧ IsIntM (frMapAdj (Vc D i) (Wc D i) (R.βV i) (R.βW i) x)
   · obtain ⟨i1, i2⟩ := GlobalTheory.AdjDatumMove.red_actO _ _ (R.βV i) (R.βW i) hm hh1 hx.2
     simp only
-    rw [if_pos ⟨(GlobalTheory.SchrMove.isHalf_actO_iff m 1 x).2 hx.1, i1⟩, if_pos hx, funext i2]
+    rw [ite_eq_left ⟨(GlobalTheory.SchrMove.isHalf_actO_iff m 1 x).2 hx.1, i1⟩, ite_eq_left hx, funext i2]
     simp only [map_one, Formalism.L2.DIV.redFn_one, inv_one, Units.val_one, Matrix.mul_one]
     exact omegaFree_move R i Q ξR y₀ (fun PP => redFn (R.βV i) PP (finE (Vc D i) m)) hQ hM _
   · simp only
-    rw [if_neg hx, if_neg]
+    rw [ite_eq_right hx, ite_eq_right]
     rintro ⟨h1, h2⟩
     refine hx ⟨(GlobalTheory.SchrMove.isHalf_actO_iff m 1 x).1 h1, ?_⟩
     have h4 := (GlobalTheory.AdjDatumMove.red_actO _ _ (R.βV i) (R.βW i) (g := m⁻¹) (h := (1 : GA D (Wc D i))⁻¹)
@@ -472,9 +472,9 @@ theorem typePrime_not_mem {Q : Finset (Pl D.host.E)} (hQ : IsTwistPlaces D.host.
     (k : Fin 2) : ((D.host.g k : ℕ) : 𝓞 D.host.E) ∉ PP.asIdeal := by
   intro hmemE
   obtain ⟨⟨q, hq, hcard, -, hne⟩, -⟩ := hQ PP h
-  haveI : Finite (kP PP) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq.ne_zero)
+  have : Finite (kP PP) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hq.ne_zero)
   have : PP.asIdeal.IsPrime := PP.isPrime
-  haveI : Fintype (kP PP) := Fintype.ofFinite _
+  have : Fintype (kP PP) := Fintype.ofFinite _
   have h0g : ((D.host.g k : ℕ) : kP PP) = 0 := by
     have := (Ideal.Quotient.eq_zero_iff_mem (I := PP.asIdeal)).2 hmemE
     simpa using this

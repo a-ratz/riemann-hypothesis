@@ -108,13 +108,13 @@ theorem det_unip {κ : Type} [CommRing κ] {r : ℕ} {g : GL (Fin r) κ} (hg : g
     Matrix.GeneralLinearGroup.det g = 1 := by
   apply Units.ext
   rw [Matrix.GeneralLinearGroup.val_det_apply, Units.val_one,
-    Matrix.det_of_upperTriangular (fun i j hij => hg.1 hij)]
+    Matrix.det_of_isUpperTriangular (fun i j hij => hg.1 hij)]
   exact Finset.prod_eq_one fun i _ => hg.2 i
 
 theorem exists_char {Ks : Type} [Field Ks] (σ : Ks →+* ℂ) (p : ℕ) [Fact p.Prime] {ζ : Ks} (hζ : IsPrimitiveRoot ζ p)
     {k : Type} [CommRing k] (f : ZMod p ≃+* k) (χ : AddChar k ℂ) :
     ∃ ψ : AddChar (ZMod p) Ks, ∀ x, σ (ψ x) = χ (f x) := by
-  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  have : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   have hz : χ (f 1) ^ p = 1 := by
     rw [← AddChar.map_nsmul_eq_pow, ← map_nsmul, nsmul_eq_mul, mul_one, ZMod.natCast_self, map_zero,
       AddChar.map_zero_eq_one]
@@ -129,8 +129,8 @@ theorem baseLevelCharacter_eq_prod_superdiagonalSum {E : Type} [Field E] [Number
     (((P0 Pg r ψ).chi ⟨g, hg⟩ : ℂˣ) : ℂ) = ∏ PP : Pg, ψ PP.1 (edgeSum supEdge (g PP)) := by
   unfold P0 LevelP.ofLocal
   dsimp only
-  letI : IsOneApply ((Subgroup.pi Set.univ (fun PP : Pg => unip (kP PP.1) r)) →* ℂˣ) := ⟨fun _ => rfl⟩
-  letI : IsMulApply ((Subgroup.pi Set.univ (fun PP : Pg => unip (kP PP.1) r)) →* ℂˣ) := ⟨fun _ _ _ => rfl⟩
+  let : IsOneApply ((Subgroup.pi Set.univ (fun PP : Pg => unip (kP PP.1) r)) →* ℂˣ) := ⟨fun _ => rfl⟩
+  let : IsMulApply ((Subgroup.pi Set.univ (fun PP : Pg => unip (kP PP.1) r)) →* ℂˣ) := ⟨fun _ _ _ => rfl⟩
   rw [prod_apply, Units.coe_prod]
   rfl
 

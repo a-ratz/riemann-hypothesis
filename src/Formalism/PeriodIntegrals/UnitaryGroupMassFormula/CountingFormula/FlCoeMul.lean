@@ -64,9 +64,9 @@ open ValuativeRel
 
 theorem fl_hensel {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     (hl : IsNonarchimedeanLocalField F) : HenselianRing 𝒪[F] 𝓂[F] := by
-  haveI := hl
-  letI : UniformSpace F := IsTopologicalAddGroup.rightUniformSpace F
-  haveI : IsUniformAddGroup F := isUniformAddGroup_of_addCommGroup
+  have := hl
+  let : UniformSpace F := IsTopologicalAddGroup.rightUniformSpace F
+  have : IsUniformAddGroup F := isUniformAddGroup_of_addCommGroup
   exact IsAdicComplete.henselianRing _ _
 
 theorem fl_coe_mul {F : Type} [Field F] [ValuativeRel F] (a b : 𝒪[F]) :
@@ -76,7 +76,7 @@ theorem fl_sq_div {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [
     [Algebra F E] [TopologicalSpace E] (L : Loc.LocE F E) (hl : IsNonarchimedeanLocalField F)
     (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) (b n : 𝒪[F]) (hbn : b * b = n) (hn : n ∈ 𝓂[F]) :
     ∃ z ∈ L.O, algebraMap F E b = algebraMap F E ϖ * z := by
-  haveI := hl
+  have := hl
   have hb : b ∈ 𝓂[F] := by
     have h2 : b * b ∈ 𝓂[F] := hbn ▸ hn
     rcases (IsLocalRing.maximalIdeal.isMaximal 𝒪[F]).isPrime.mem_or_mem h2 with h | h <;> exact h
@@ -90,7 +90,7 @@ theorem fl_local {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [C
     (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ) :
     ∀ x ∈ L.O, (¬ ∃ z ∈ L.O, x = algebraMap F E ϖ * z) → ∃ y ∈ L.O, x * y = 1 := by
   intro x hx hnd
-  haveI := hl
+  have := hl
   obtain ⟨n, hn⟩ := fl_norm L hinj hx
   obtain ⟨t, ht⟩ := fl_trace L hinj hx
   have hquad : x * x = algebraMap F E t * x - algebraMap F E n := by
@@ -116,8 +116,8 @@ theorem fl_local {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [C
         ring
       obtain ⟨z, hz⟩ := Submodule.mem_span_singleton.1 (L.unram ϖ hϖ x hx hsp)
       exact ⟨z, z.2, by rw [← hz, Subring.smul_def]; exact mul_comm _ _⟩
-    · haveI := fl_hensel hl
-      haveI := IsLocalRing.maximalIdeal.isMaximal 𝒪[F]
+    · have := fl_hensel hl
+      have := IsLocalRing.maximalIdeal.isMaximal 𝒪[F]
       let f : Polynomial 𝒪[F] := X ^ 2 + (C n - C t * X)
       have hf : f.Monic := by
         refine (monic_X_pow 2).add_of_left ?_
@@ -127,7 +127,7 @@ theorem fl_local {F E : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [C
           (lt_of_le_of_lt (degree_C_mul_X_le t) (by norm_num))
       have h0 : f.eval 0 ∈ 𝓂[F] := by simpa [f] using hnm
       have h1 : IsUnit (Ideal.Quotient.mk 𝓂[F] (f.derivative.eval 0)) := by
-        letI := Ideal.Quotient.field 𝓂[F]
+        let := Ideal.Quotient.field 𝓂[F]
         have hne : Ideal.Quotient.mk 𝓂[F] (f.derivative.eval 0) ≠ 0 := by
           rw [Ne, Ideal.Quotient.eq_zero_iff_mem]
           simpa [f, Polynomial.derivative_sub, Polynomial.derivative_mul] using htm

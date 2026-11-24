@@ -86,7 +86,7 @@ theorem unit_of_etClosed {O Ω : Type} [CommRing O] [Field Ω] (ψ : O →+* Ω)
 
 theorem etaleClosed_point_lifts_simple_roots_monic : Lift := by
   intro O Ω _ _ ψ hE p hp a₀ h₁ h₂
-  letI : Algebra O Ω := ψ.toAlgebra
+  let : Algebra O Ω := ψ.toAlgebra
   let P : StandardEtalePair O := ⟨p, hp, p.derivative, ⟨1, 0, 1, by ring⟩⟩
   have hev : ∀ q : O[X], aeval (ψ a₀) q = ψ (q.eval a₀) := by
     intro q
@@ -117,7 +117,7 @@ theorem build_of (hC : Colim) : Build := by
     have hmon : (minpoly k ω).Monic := minpoly.monic (Algebra.IsSeparable.isIntegral k ω)
     obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_degree_eq_and_monic
       ((Polynomial.lifts_iff_coeff_lifts _).2 (fun n => IsLocalRing.residue_surjective _)) hmon
-    letI : Algebra O (SeparableClosure k) := ψ.toAlgebra
+    let : Algebra O (SeparableClosure k) := ψ.toAlgebra
     let P : StandardEtalePair O :=
       ⟨q.map f.hom, hqm.map _, (q.map f.hom).derivative, ⟨1, 0, 1, by ring⟩⟩
     have hev : ∀ r : A[X], aeval ω (r.map f.hom) = aeval ω (r.map (IsLocalRing.residue A)) := by

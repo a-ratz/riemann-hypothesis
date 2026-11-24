@@ -123,13 +123,13 @@ theorem re_trace_eq (ε : Fin m → Bool) (u y : Fin m → Fin n → ℂ) :
   have hs : (starRingEnd ℂ) (sgn ε a) = sgn ε a := by
     simp only [sgn]; split_ifs <;> simp
   rw [hs, ← Complex.star_def]
-  simp only [Matrix.diagonal_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  simp only [Matrix.diagonal_apply, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
   ring_nf
 
 theorem haar_Lc : ∃ c : ℝ, 0 < c ∧ ∀ F : V m n → ℂ, Continuous F →
     ∫ y : Fin m → Fin n → ℂ, F (Lc y) = (c : ℂ) * ∫ w, F w := by
-  haveI : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  haveI : (Measure.map (Lc (m := m) (n := n)) volume).IsAddHaarMeasure :=
+  have : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (Measure.map (Lc (m := m) (n := n)) volume).IsAddHaarMeasure :=
     (Lc (m := m) (n := n)).isAddHaarMeasure_map volume
   have hmap := Measure.isAddLeftInvariant_eq_smul (Measure.map (Lc (m := m) (n := n)) volume)
     (volume : Measure (V m n))
@@ -166,7 +166,7 @@ theorem isSch_ftLoc (ε : Fin m → Bool) (t : ℝ) (ht : t ≠ 0) (κ : ℂ) (f
   refine ⟨(κ * c) • SchwartzMap.compCLMOfContinuousLinearEquiv ℂ (Mt ε t ht)
     (𝓕 (SchwartzMap.compCLMOfContinuousLinearEquiv ℂ (Lc (m := m) (n := n)).symm S)), ?_⟩
   funext u
-  simp only [SchwartzMap.smul_apply, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, Function.comp_apply, h,
+  simp only [smul_apply, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, Function.comp_apply, h,
     smul_eq_mul]
   ring
 
@@ -185,7 +185,7 @@ theorem ftLoc_surj (ε : Fin m → Bool) (t : ℝ) (ht : t ≠ 0) (g : (Fin m �
     simp
   rw [h1, FourierInvPair.fourier_fourierInv_eq]
   have hc0 : (c : ℂ) ≠ 0 := by exact_mod_cast hc.ne'
-  simp only [SchwartzMap.smul_apply, hG, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, Function.comp_apply,
+  simp only [smul_apply, hG, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, Function.comp_apply,
     ContinuousLinearEquiv.symm_apply_apply, smul_eq_mul]
   field_simp
 

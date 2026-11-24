@@ -228,7 +228,7 @@ theorem levFn_pow {n : ℕ} {L : Formalism.L2.DIV.LevDat D.host.E ℂ n} (hL : U
   · generalize dBlk (blkOf L.r L.t) (c + 1) (redFn 1 (NX.pG D kv') x) = z
     generalize NX.pG D kv' = PP at h z
     subst h
-    haveI : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime _⟩
+    have : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime _⟩
     obtain ⟨y, rfl⟩ := (Units.mapEquiv (iso kv).toMulEquiv).surjective z
     rw [← map_pow, ← map_pow, ZMod.units_pow_card_sub_one_eq_one, map_one, map_one]
   · rw [hg kv' h, dBlk, Formalism.L2.DIV.blockDiagonalExtendByOnePrimeField_one, map_one, one_pow]
@@ -418,7 +418,7 @@ theorem joint_of {Y : R3.Read (A3 := A3) R.toRealDat F.lv2 X0} {M : MtFam D} (ad
           ((L.chi ⟨x, hx⟩ : ℂˣ) : ℂ) = (((R.toRealDat.levR F.lv2 false).chi ⟨x, by rw [hL] at hx; exact hx⟩ : ℂˣ) : ℂ)⁻¹ := by
         rintro _ rfl x hx
         exact Units.val_inv_eq_inv_val _
-      exact (key _ (if_neg (by decide)) _ _).trans rfl
+      exact (key _ (ite_eq_right (by decide)) _ _).trans rfl
   have h2 : UniDat iso Pq f ((ser.ex.ρ.B i j b).levS (ser.ex.ρ.tw i b k Q ψ)) := by
     refine ⟨FWT.rank_Wc j, blockSizes_sub_eq_twoBlock _, fun PP => (hp.Pg i j b ▸ hPg PP :), fun PP hPP => ?_, ser.ex.ρ.eG i j b,
       fun g kv h a c => (hp.grp i j b g _ h (hp.Pg i j b ▸ h) a c).trans (hiso kv g _ _ _), fun g => ?_, fun g h h' => ?_⟩

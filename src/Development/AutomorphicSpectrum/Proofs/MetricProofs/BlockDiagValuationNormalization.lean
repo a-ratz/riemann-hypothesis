@@ -135,7 +135,7 @@ theorem exists_blocks {L : Type} [Field L] (V : ValuationSubring L) (N n : ℕ) 
 theorem inv_diag_ne_zero {L : Type} [Field L] {N : ℕ} {U : Matrix (Fin N) (Fin N) L}
     (hU : U.BlockTriangular id) (hd : IsUnit U.det) (a : Fin N) : U⁻¹ a a ≠ 0 := by
   have hI : U⁻¹.BlockTriangular id := by
-    letI := Matrix.invertibleOfIsUnitDet U hd
+    let := Matrix.invertibleOfIsUnitDet U hd
     exact blockTriangular_inv_of_blockTriangular hU
   intro e
   have h := congrFun (congrFun (nonsing_inv_mul U hd) a) a
@@ -150,14 +150,14 @@ theorem main : ∀ (L : Type) [Field L] (V : ValuationSubring L) (N j : ℕ) (A 
   intro L _ V N j A hA hd
   obtain ⟨K, U, hK, hUb, hUt, hUd, hAe⟩ := exists_blocks V N (N - j) (Nat.sub_le N j) A hA hd
   have hUdet : IsUnit U.det := by
-    rw [det_of_upperTriangular hUt]
+    rw [det_of_isUpperTriangular hUt]
     exact (Finset.prod_ne_zero_iff.2 fun a _ => hUd a).isUnit
   have hAU : A * U⁻¹ = K.map (algebraMap V L) := by
     rw [hAe, Matrix.mul_nonsing_inv_cancel_right _ _ hUdet]
   have hKdet : (K.map (algebraMap V L)).det = algebraMap V L K.det := (RingHom.map_det _ K).symm
   have hUb' : IsBlockDiag j U := hUb
   refine ⟨U⁻¹, hUb'.inv hUdet, ?_, inv_diag_ne_zero hUt hUdet, fun a c => ?_, ?_, ?_⟩
-  · letI := Matrix.invertibleOfIsUnitDet U hUdet
+  · let := Matrix.invertibleOfIsUnitDet U hUdet
     exact blockTriangular_inv_of_blockTriangular hUt
   · rw [hAU]
     exact (K a c).2

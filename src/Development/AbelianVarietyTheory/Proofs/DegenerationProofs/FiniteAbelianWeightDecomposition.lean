@@ -100,7 +100,7 @@ theorem main : (let d1 : {o : Type} → [inst : CommRing o] → {T : Type} → [
   simp only [d1, LinearMap.smul_apply, LinearMap.sum_apply]
   rw [← Finset.smul_sum, Finset.sum_comm]
   simp_rw [← Finset.sum_smul, charSum_inv]
-  simp only [ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, map_one,
+  simp only [ite_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, map_one,
     Module.End.one_apply]
   rw [smul_smul, hu, one_smul]
 
@@ -226,7 +226,7 @@ theorem finiteAbelian_weightDecomposition :
           (⨅ t, LinearMap.ker (ρ t - (c t : o) • LinearMap.id)).baseChange A := by
   intro o _ _ N ζ hN hNu hζ T _ _ hT M _ _ ρ _
   classical
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
 
   have hunit : ∀ (G : Type) [CommGroup G] [Fintype G], (∀ g : G, g ^ N = 1) →
       ∃ u : o, u * (Fintype.card G : o) = 1 := by
@@ -236,13 +236,13 @@ theorem finiteAbelian_weightDecomposition :
     have h2 : (Fintype.card G : o) ∣ (N : o) ^ Group.rank G := by
       exact_mod_cast Nat.cast_dvd_cast (α := o) h1
     exact (isUnit_of_dvd_unit h2 (hNu.pow _)).exists_left_inv
-  haveI : HasEnoughRootsOfUnity o N := ⟨⟨ζ, hζ⟩, inferInstance⟩
-  haveI : HasEnoughRootsOfUnity o (Monoid.exponent T) :=
+  have : HasEnoughRootsOfUnity o N := ⟨⟨ζ, hζ⟩, inferInstance⟩
+  have : HasEnoughRootsOfUnity o (Monoid.exponent T) :=
     HasEnoughRootsOfUnity.of_dvd o (Monoid.exponent_dvd_of_forall_pow_eq_one hT)
   have hfin : Finite (T →* oˣ) :=
     Finite.of_equiv T (CommGroup.monoidHom_mulEquiv_of_hasEnoughRootsOfUnity T o).some.toEquiv.symm
-  haveI := Fintype.ofFinite T
-  haveI := Fintype.ofFinite (T →* oˣ)
+  have := Fintype.ofFinite T
+  have := Fintype.ofFinite (T →* oˣ)
   obtain ⟨u, hu⟩ := hunit T hT
   have hmem : ∀ (c : T →* oˣ) (x : M),
       avg ρ u c x ∈ ⨅ t, LinearMap.ker (ρ t - (c t : o) • LinearMap.id) := fun c x =>
@@ -274,7 +274,7 @@ theorem finiteAbelian_weightDecomposition :
       by_cases hc : c.comp T'.subtype = c'
       · exact Submodule.mem_iSup_of_mem
           (⟨c, hc⟩ : {c : T →* oˣ // c.comp T'.subtype = c'}) (hmem c x)
-      · haveI := Fintype.ofFinite T'
+      · have := Fintype.ofFinite T'
         obtain ⟨v, hv⟩ := hunit T' fun g => Subtype.ext (by simpa using hT g)
         let ρ' : Representation o T' M := ρ.comp T'.subtype
         have h1 : avg ρ' v c' (avg ρ u c x) = avg ρ u c x :=

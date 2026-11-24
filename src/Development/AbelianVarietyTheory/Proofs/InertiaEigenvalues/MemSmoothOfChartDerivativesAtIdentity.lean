@@ -110,7 +110,7 @@ theorem hasFDerivAt_chart {f : GA E a → ℂ} {ι : Type} [Fintype ι] {fs : ι
     rw [Matrix.coe_units_inv]
   rw [ei]
   ext v
-  rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.sum_apply, ContinuousLinearMap.sum_apply]
+  rw [ContinuousLinearMap.comp_apply, sum_apply, sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [chart_val]
   rfl

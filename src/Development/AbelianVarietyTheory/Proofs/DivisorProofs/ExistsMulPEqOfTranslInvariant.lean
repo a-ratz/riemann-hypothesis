@@ -110,14 +110,14 @@ theorem _root_.GlobalTheory.PDivGroup.exists_mulP_eq_of_transl_eq {p : ℕ} {R :
     { carrier := {ψ | ∀ χ : _root_.GlobalTheory.CartierDual R (G.A (n + 1)), (χ * ψ).ofConv a = 0}
       add_mem' := by
         intro x y hx hy χ
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [mul_add, ofConv_add, LinearMap.add_apply, hx, hy, add_zero]
       zero_mem' := by
         intro χ
         simp
       smul_mem' := by
         intro c x hx χ
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at hx ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at hx ⊢
         rw [← mul_assoc]
         exact hx _ }
   have hK : _root_.GlobalTheory.PDiv.torsionIdeal (R := R) (A := _root_.GlobalTheory.CartierDual R (G.A (n + 1))) (p ^ n) ≤

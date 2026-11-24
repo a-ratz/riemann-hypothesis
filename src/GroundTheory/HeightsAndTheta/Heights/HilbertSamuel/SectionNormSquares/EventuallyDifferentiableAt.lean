@@ -92,10 +92,10 @@ theorem hasFDerivAt_eval (P : MvPolynomial J ℂ) (x : J → ℂ) :
       rw [Derivation.leibniz, pderiv_X]
       by_cases hq : q = q0
       · subst hq
-        simp only [Pi.single_eq_same, smul_eq_mul, map_add (f := _), map_mul, eval_X, map_one, if_true]
+        simp only [Pi.single_eq_same, smul_eq_mul, map_add (f := _), map_mul, eval_X, map_one, ite_true]
         ring
       · rw [Pi.single_eq_of_ne' hq]
-        simp only [smul_eq_mul, map_add (f := _), map_mul, eval_X, map_zero, if_neg hq]
+        simp only [smul_eq_mul, map_add (f := _), map_mul, eval_X, map_zero, ite_eq_right hq]
         ring
     have e : (fun y : J → ℂ => eval y (p * X q0)) = fun y => eval y p * y q0 := by funext y; simp
     rw [e]
@@ -104,8 +104,8 @@ theorem hasFDerivAt_eval (P : MvPolynomial J ℂ) (x : J → ℂ) :
         ∑ q, eval x (pderiv q (p * X q0)) * w q := by simp
     rw [lhs]
     simp only [key, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul, Finset.sum_ite_eq', Finset.mem_univ,
-      if_true]
-    simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
+      ite_true]
+    simp only [add_apply, smul_apply, smul_eq_mul,
       ContinuousLinearMap.proj_apply]
     have hs : (∑ q, eval x (pderiv q p) • ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : J => ℂ) q) w =
         ∑ q, eval x (pderiv q p) * w q := by simp
@@ -172,7 +172,7 @@ theorem leviForm_add {f g : (J → ℂ) → ℝ} {z : J → ℂ} (hf : ContDiffA
     exact fderiv_fun_add h1 h2
   unfold leviForm
   rw [hfd.fderiv_eq, fderiv_fun_add (differentiableAt_fderiv hf) (differentiableAt_fderiv hg)]
-  simp only [ContinuousLinearMap.add_apply]
+  simp only [add_apply]
   ring
 
 theorem leviForm_sub {f g : (J → ℂ) → ℝ} {z : J → ℂ} (hf : ContDiffAt ℝ 2 f z) (hg : ContDiffAt ℝ 2 g z)
@@ -182,7 +182,7 @@ theorem leviForm_sub {f g : (J → ℂ) → ℝ} {z : J → ℂ} (hf : ContDiffA
     exact fderiv_fun_sub h1 h2
   unfold leviForm
   rw [hfd.fderiv_eq, fderiv_fun_sub (differentiableAt_fderiv hf) (differentiableAt_fderiv hg)]
-  simp only [ContinuousLinearMap.sub_apply]
+  simp only [sub_apply]
   ring
 
 theorem leviForm_const_mul {f : (J → ℂ) → ℝ} {z : J → ℂ} (hf : ContDiffAt ℝ 2 f z) (c : ℝ) (w : J → ℂ) :
@@ -192,7 +192,7 @@ theorem leviForm_const_mul {f : (J → ℂ) → ℝ} {z : J → ℂ} (hf : ContD
     exact fderiv_const_mul h1 c
   unfold leviForm
   rw [hfd.fderiv_eq, fderiv_fun_const_smul (differentiableAt_fderiv hf) c]
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   ring
 
 def IsFlat (u : (J → ℂ) → ℝ) (z w : J → ℂ) : Prop :=
@@ -205,8 +205,8 @@ theorem IsFlat.add {u v : (J → ℂ) → ℝ} {z w : J → ℂ} (hu : IsFlat u 
   have d1 := hu1.differentiableAt (by norm_num)
   have d2 := hv1.differentiableAt (by norm_num)
   refine ⟨hu1.add hv1, by simp [hu2, hv2], ?_, ?_, ?_⟩
-  · rw [fderiv_fun_add d1 d2, ContinuousLinearMap.add_apply, hu3, hv3, add_zero]
-  · rw [fderiv_fun_add d1 d2, ContinuousLinearMap.add_apply, hu4, hv4, add_zero]
+  · rw [fderiv_fun_add d1 d2, add_apply, hu3, hv3, add_zero]
+  · rw [fderiv_fun_add d1 d2, add_apply, hu4, hv4, add_zero]
   · rw [leviForm_add hu1 hv1, hu5, hv5, add_zero]
 
 theorem isFlat_zero (z w : J → ℂ) : IsFlat (fun _ => (0 : ℝ)) z w :=

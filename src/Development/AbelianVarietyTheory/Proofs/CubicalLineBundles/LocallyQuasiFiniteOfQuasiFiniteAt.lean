@@ -99,7 +99,7 @@ theorem eq_genericPoint {K : Type} [Field K] {X Y : Scheme.{0}} [IsIntegral X] [
   have hq : q.asIdeal = ⊥ := by
     by_contra hne
     obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
-    exact Ideal.comap_ne_bot_of_algebraic_mem ha0 ha (halg.isAlgebraic a) e'
+    exact Ideal.under_ne_bot_of_algebraic_mem ha0 ha (halg.isAlgebraic a) e'
   rw [← gV, genericPoint_eq_bot_of_affine]
   exact congrArg _ (PrimeSpectrum.ext hq)
 

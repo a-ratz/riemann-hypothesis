@@ -150,7 +150,7 @@ theorem measurable_rmul (σ : E →ₐ[F] E) (hcm : IsCMExt F E σ) (R : Type) [
     [T2Space R] (n M : ℕ) (G : Matrix (Fin n) (Fin n) (R ⊗[F] E)) :
     Measurable (fun X : Fin n → Fin M → R ⊗[F] E => rmul R X G) := by
   obtain ⟨t1, -, t3, -, -, -, -, t8, -, -⟩ := TopK.topTens_props F E σ hcm R
-  haveI := t8 n M
+  have := t8 n M
   have hc : Continuous (fun X : Fin n → Fin M → R ⊗[F] E => rmul R X G) :=
     continuous_pi fun a => continuous_pi fun i => continuous_finsetSum _ fun c _ => by
       have h : Continuous fun X : Fin n → Fin M → R ⊗[F] E => X c i :=
@@ -281,8 +281,8 @@ theorem sw_scale : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   obtain ⟨hci0, hc0, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F ci ai c a hcu hau
   have hrI : IsLocR (Ainf F) := isLocR_Ainf F hcm.1
   have hrV : ∀ v, IsLocR (Fv F v) := fun v => LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have sInf := unitary_conjugate_local σ hcm hinv J hJ (Ainf F) hrI b laminf hinf.1 minf hminf H T T' hdetH hT hT'
     hrel' ai ci hci0 hai hci
   have sV := fun v => unitary_conjugate_local σ hcm hinv J hJ (Fv F v) (hrV v) b (lam v) (hv v).1 (m v) (hm v) H T T'
@@ -305,7 +305,7 @@ theorem sw_scale : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     intro v
     obtain ⟨r1, r2, r3, r4, -⟩ := id (hrV v)
     obtain ⟨-, hW, hHm⟩ := coord_measures_haar F E σ hcm (Fv F v) d b (lam v) (hv v).1
-    haveI := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hcm M J hJ (Fv F v) (hrV v) n _ _ (m v) (hW n M) (hHm n) (hm v)
+    have := (_root_.GlobalTheory.CompanionTheory.SW.LocFin.fibre_loc_fin F E σ hcm M J hJ (Fv F v) (hrV v) n _ _ (m v) (hW n M) (hHm n) (hm v)
       (hermOf (Fv F v) σ T hT)).1
     exact (hlat.1 v).1.measure_lt_top
   rw [← hth]

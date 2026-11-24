@@ -69,7 +69,7 @@ theorem fold_L2_complex_of (hc : CplxDC.{u}) (G : Type u) [Group G] [Topological
     [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] [T2Space G]
     [MeasurableSpace G] [BorelSpace G] (μ : Measure G) [μ.IsHaarMeasure] : PoincareSeriesInner G μ := by
   intro Γ S S' hΓ hS hS' Ω hΩ h1 a a' Ph Ph' hP hP' F F' hF hF' hm hm' D D' hD hD' R hR Fs hFs FΓ hFΓ
-  haveI : Countable Γ := (TopologicalSpace.separableSpace_iff_countable).1 inferInstance
+  have : Countable Γ := (TopologicalSpace.separableSpace_iff_countable).1 inferInstance
   obtain ⟨hPm, hPinv, hPb⟩ := hP
   obtain ⟨hPm', hPinv', hPb'⟩ := hP'
   have hΩm : MeasurableSet Ω := hΩ.isClosed.measurableSet
@@ -78,10 +78,10 @@ theorem fold_L2_complex_of (hc : CplxDC.{u}) (G : Type u) [Group G] [Topological
   have hbd' := foldBound_holds G μ Γ S' hΓ hS' Ω hΩm a' Ph' hPm' hPinv' hPb' F' hF' D' hD'
   have hQf : quotientLIntegral μ F Ph < ∞ := by
     refine lt_of_le_of_lt ?_ hm
-    exact lintegral_mono fun y => le_mul_of_one_le_left zero_le' (hM1 y)
+    exact lintegral_mono fun y => le_mul_of_one_le_left zero_le (hM1 y)
   have hQf' : quotientLIntegral μ F' Ph' < ∞ := by
     refine lt_of_le_of_lt ?_ hm'
-    exact lintegral_mono fun y => le_mul_of_one_le_left zero_le' (hM1 y)
+    exact lintegral_mono fun y => le_mul_of_one_le_left zero_le (hM1 y)
   have hK : ∫⁻ x in FΓ, mult Γ Ω x * ∑' δ' : D', ‖Ph' (δ' * x)‖ₑ ∂μ = multiplicityLIntegral μ Γ Ω F' Ph' := by
     have hfun : (fun x => mult Γ Ω x * ∑' δ' : D', ‖Ph' (δ' * x)‖ₑ)
         = fun x => ∑' δ' : D', mult Γ Ω (δ' * x) * ‖Ph' (δ' * x)‖ₑ := by
@@ -91,7 +91,7 @@ theorem fold_L2_complex_of (hc : CplxDC.{u}) (G : Type u) [Group G] [Topological
       rw [hMinv δ' (hD'.1 δ'.2) x]
     rw [hfun]
     exact _root_.PI.FoldUnfold.UnitaryGroupMassFormula.foldUnfold_main G μ Γ S' hS' F' hF' FΓ hFΓ D' hD' (fun y => mult Γ Ω y * ‖Ph' y‖ₑ)
-      (hMm.mul hPm'.enorm) (fun s hs y => by simp only [hMinv s (hS' hs) y, hPinv' s hs y])
+      (hMm.mul hPm'.eNorm) (fun s hs y => by simp only [hMinv s (hS' hs) y, hPinv' s hs y])
   have hne : (a : ℝ≥0∞) * quotientLIntegral μ F Ph ≠ ∞ := ENNReal.mul_ne_top ENNReal.coe_ne_top hQf.ne
   have hfin : (a : ℝ≥0∞) * quotientLIntegral μ F Ph * multiplicityLIntegral μ Γ Ω F' Ph' < ∞ :=
     ENNReal.mul_lt_top (ENNReal.mul_lt_top ENNReal.coe_lt_top hQf) hm'
@@ -106,7 +106,7 @@ theorem fold_L2_complex_of (hc : CplxDC.{u}) (G : Type u) [Group G] [Topological
           lintegral_const_mul' _ _ hne
       _ = _ := by rw [hK]
   have hunf := fold_dc_unfold G μ Γ S S' hS hS' D D' hD hD' R hR Fs hFs FΓ hFΓ
-    (fun x => ‖Ph x‖ₑ) (fun x => ‖Ph' x‖ₑ) hPm.enorm hPm'.enorm
+    (fun x => ‖Ph x‖ₑ) (fun x => ‖Ph' x‖ₑ) hPm.eNorm hPm'.eNorm
     (fun s hs y => by simp only [hPinv s hs y]) (fun s hs y => by simp only [hPinv' s hs y])
   have h2 : ∑' r : R, ∫⁻ x in Fs r, ‖Ph x‖ₑ * ‖Ph' ((r : G)⁻¹ * x)‖ₑ ∂μ < ∞ := by
     rw [← hunf]
@@ -128,7 +128,7 @@ theorem fold_L2_complex_of (hc : CplxDC.{u}) (G : Type u) [Group G] [Topological
       (ENNReal.le_tsum (f := fun r : R => ∫⁻ x in Fs r, ‖Ph x‖ₑ * ‖Ph' ((r : G)⁻¹ * x)‖ₑ ∂μ)
         ⟨r, hr⟩).trans_lt h2
     refine ⟨(hPm.mul (hconj.comp (hPm'.comp (measurable_const_mul _)))).aestronglyMeasurable, ?_⟩
-    simpa [HasFiniteIntegral, enorm_mul, henc] using hle
+    simpa [HasFiniteIntegral, eNorm_mul, henc] using hle
   · have hψm : Measurable (fun x => (starRingEnd ℂ) (Ph' x)) := hconj.comp hPm'
     have hpc : ∀ x, poinc D' (fun y => (starRingEnd ℂ) (Ph' y)) x = (starRingEnd ℂ) (poinc D' Ph' x) :=
       fun x => by simp only [poinc, Complex.conj_tsum]

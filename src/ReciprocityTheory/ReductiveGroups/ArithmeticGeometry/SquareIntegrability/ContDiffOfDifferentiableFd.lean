@@ -81,7 +81,7 @@ theorem polyDeriv_sum {σ W ι : Type*} [NormedAddCommGroup W] [NormedSpace ℂ 
     rw [iteratedFDeriv_sum (fun i hi => (hF i hi N).const_smul (c i)), Finset.sum_apply]
     refine Finset.sum_congr rfl fun i hi => ?_
     exact iteratedFDeriv_const_smul_apply (a := c i) (hF i hi N).contDiffAt
-  simp only [hD, ContinuousMultilinearMap.sum_apply, ContinuousMultilinearMap.smul_apply, smul_eq_mul,
+  simp only [hD, sum_apply, smul_apply, smul_eq_mul,
     Finset.mul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun m _ => ?_

@@ -206,9 +206,9 @@ def upH : Matrix β β (Fv F v) × Matrix β β (Fv F v) →* Matrix β β (AE F
     (by simp only [Matrix.map_mul, up_aw, mul_one])
 
 theorem continuous_upH : Continuous (upH (β := β) hσ τ) := by
-  haveI : IsModuleTopology (Fv F v) (Ev E v) := ⟨rfl⟩
-  haveI : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
-  haveI : IsTopologicalAddGroup (Ev E v) := IsModuleTopology.topologicalAddGroup (Fv F v) _
+  have : IsModuleTopology (Fv F v) (Ev E v) := ⟨rfl⟩
+  have : ContinuousAdd (AE F E) := IsModuleTopology.toContinuousAdd (AF F) _
+  have : IsTopologicalAddGroup (Ev E v) := IsModuleTopology.isTopologicalAddGroup (Fv F v) _
   have c1 : Continuous (liftM E v β) :=
     continuous_const.add ((continuous_id.sub continuous_const).matrix_map Inert.continuous_tensAt)
   exact c1.comp (continuous_matrix fun i j => (continuous_splitAlgEquiv_symm hσ τ).comp (by fun_prop))
@@ -297,7 +297,7 @@ include hσ in
 theorem abs_at {x : (AE F E)ˣ} (hx : At (evFin F v) (x.1 - 1)) : (absE F E x : ℝ) = ‖piW τ x.1‖ * ‖piW (τ.comp σ) x.1‖ := by
   have := congrArg (splitProj τ) (GlobalTheory.Doubling.algebraMap_norm_eq hσ (compFin F E v x.1))
   rw [AlgHom.commutes, map_mul, ← splitProj_comp] at this
-  conv_lhs => rw [GlobalTheory.InertChars.eq_ideleAt_of_at x hx, GlobalTheory.Doubling.absE_ideleAt, GlobalTheory.Doubling.absEv_apply, coe_nnnorm]
+  conv_lhs => rw [GlobalTheory.InertChars.eq_ideleAt_of_at x hx, GlobalTheory.Doubling.absE_ideleAt, GlobalTheory.Doubling.absEv_apply, coe_nnNorm]
   exact (congrArg norm this).trans (norm_mul _ _)
 
 include hσ in
@@ -370,17 +370,17 @@ namespace GlobalTheory.CompanionTheory.QL.HaarGL
 theorem exists_haar_unimodular : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] {O : Subring F} {ϖ : F} {nrm : AbsoluteValue F ℝ} {q : ℕ}, LF O ϖ nrm q → ∀ n : ℕ, (∃ κ : Measure (GL (Fin n) F), κ.IsMulLeftInvariant ∧ κ (GLint O n : Set (GL (Fin n) F)) = 1) ∧ ∀ μ : Measure (GL (Fin n) F), μ.IsHaarMeasure → μ.IsMulRightInvariant ∧ μ.IsInvInvariant := by
   intro F _ _ _ _ O ϖ nrm q hLF n
   obtain ⟨hKo, hKc, hlc, _hsc, ht2, -, -⟩ := _root_.GlobalTheory.CompanionTheory.QLTop.gl_topology hLF n
-  haveI := hlc
-  haveI := ht2
-  haveI : BorelSpace (GL (Fin n) F) := GlobalTheory.CompanionTheory.QL.instBorelGL n
+  have := hlc
+  have := ht2
+  have : BorelSpace (GL (Fin n) F) := GlobalTheory.CompanionTheory.QL.instBorelGL n
   refine ⟨?_, fun μ hμ => ?_⟩
   · let μ₀ : Measure (GL (Fin n) F) := Measure.haar
     have hpos : μ₀ (GLint O n : Set (GL (Fin n) F)) ≠ 0 :=
       hKo.measure_ne_zero μ₀ ⟨1, (GLint O n).one_mem⟩
     have hfin : μ₀ (GLint O n : Set (GL (Fin n) F)) ≠ ⊤ := hKc.measure_lt_top.ne
     refine ⟨(μ₀ (GLint O n : Set (GL (Fin n) F)))⁻¹ • μ₀, inferInstance, ?_⟩
-    rw [Measure.smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin]
-  · haveI := hμ
+    rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel hpos hfin]
+  · have := hμ
     exact ⟨GroundTheory.Automorphic.Measures.isMulRightInvariant_GL F n μ,
       ⟨GroundTheory.Automorphic.Measures.inv_eq_self_GL F n μ⟩⟩
 
@@ -673,7 +673,7 @@ private theorem isOpen_GLint {F : Type} [Field F] [TopologicalSpace F] [IsTopolo
     (O : Subring F) (hO : IsOpen (O : Set F)) (c : ℕ) :
     IsOpen (GlobalTheory.CompanionTheory.QL.GLint O c : Set (GL (Fin c) F)) := by
   have h : IsOpen {Z : Matrix (Fin c) (Fin c) F | GlobalTheory.CompanionTheory.QL.IsInt O Z} := by
-    simp only [GlobalTheory.CompanionTheory.QL.IsInt, Set.setOf_forall]
+    simp only [GlobalTheory.CompanionTheory.QL.IsInt, Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun a => isOpen_iInter_of_finite fun b =>
       hO.preimage (continuous_apply_apply a b)
   exact (h.preimage Units.continuous_val).inter (h.preimage Units.continuous_coe_inv)
@@ -719,7 +719,7 @@ theorem UpperTheory.Reformulated.B.SphericalZetaCosets.zeta_spherical :
   have hqR : (0 : ℝ) < q := by exact_mod_cast hq0
   have hcard : ∀ n : ℕ, Nat.card (𝒪[F] ⧸ Ideal.span {π ^ n}) = q ^ n := fun n => by
     rw [hq]; exact card_quot_pow hπ n
-  haveI hfin : ∀ n : ℕ, Finite (𝒪[F] ⧸ Ideal.span {π ^ n}) := fun n =>
+  have hfin : ∀ n : ℕ, Finite (𝒪[F] ⧸ Ideal.span {π ^ n}) := fun n =>
     Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
   let ι : Matrix (Fin c) (Fin c) 𝒪[F] →+* Matrix (Fin c) (Fin c) F := (𝒪[F]).subtype.mapMatrix
   have hι : Function.Injective ι := fun A B h => by
@@ -732,7 +732,7 @@ theorem UpperTheory.Reformulated.B.SphericalZetaCosets.zeta_spherical :
     change ((hnf π p i i : 𝒪[F]) : F) = _
     rw [hnf_diag]; rfl
   have hdet : ∀ p : ∀ i : Fin c, Row π i, (ι (hnf π p)).det = ∏ i, ϖ ^ (p i).1 := fun p => by
-    rw [Matrix.det_of_upperTriangular (htri p)]
+    rw [det_of_isUpperTriangular (htri p)]
     exact Finset.prod_congr rfl fun i _ => hdiag p i
   let g : (∀ i : Fin c, Row π i) → GL (Fin c) F := fun p =>
     Matrix.GeneralLinearGroup.mkOfDetNeZero (ι (hnf π p))
@@ -1007,7 +1007,7 @@ theorem zeta (h : LF O (ϖ : k) nrm q) {A : kˣ →* ℂ} (hA : ∀ u : kˣ, nrm
     rw [dite_eq_right h0, this, mul_zpow, hx, ← Complex.ofReal_zpow, ← Real.rpow_intCast, ← Real.rpow_intCast, ← Real.rpow_mul hq.le,
       ← Real.rpow_mul hq.le]
     congr 3; push_cast; ring
-  · have hd : b.1.det = ∏ i, b.1 i i := det_of_upperTriangular hb
+  · have hd : b.1.det = ∏ i, b.1 i i := det_of_isUpperTriangular hb
     have h0 : ∀ i, b.1 i i ≠ 0 := fun i => Finset.prod_ne_zero_iff.1 (hd.symm.trans_ne b.det_ne_zero) i (Finset.mem_univ _)
     have : GeneralLinearGroup.det b = ∏ i, Units.mk0 _ (h0 i) := Units.ext (by simp [hd])
     beta_reduce
@@ -1204,7 +1204,7 @@ theorem lf (v : Pl F) : GlobalTheory.CompanionTheory.QL.LF (v.adicCompletionInte
   refine ⟨Subring.ext hO, Units.ne_zero _, fun x => ?_, (GlobalTheory.LFun.SatBoundGL.resCard_completion v).symm, fun x hx => ?_, norm_unif v⟩
   · rw [← le_uniformizer_iff, ← hu]
     refine ⟨fun h => ⟨x / unifAt v, (hO _).2 ?_, (mul_div_cancel₀ _ (Units.ne_zero _)).symm⟩, ?_⟩
-    · rw [map_div₀]; exact div_le_one_of_le₀ h zero_le'
+    · rw [map_div₀]; exact div_le_one_of_le₀ h zero_le
     · rintro ⟨o, ho, rfl⟩; rw [map_mul]; exact mul_le_of_le_one_right' ((hO _).1 ho)
   · change ‖x‖ = 1
     rw [FinitePlace.norm_def, he.eq_one_iff_eq_one.1 hx]; simp
@@ -1408,8 +1408,8 @@ theorem locUnrSplit : LocUnrSplit := by
     change chS χ τ _ _ * chS χ (τ.comp σ) _ _ = _
     rw [dt', dp, map_mul, map_mul, dκ, MonoidHom.mul_apply]
     ring
-  haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
-  haveI : BorelSpace (UA σ Y.J) := ⟨rfl⟩
+  have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have : BorelSpace (UA σ Y.J) := ⟨rfl⟩
   let dn : UA σ Y.J →* GL (Fin n) (Fv F v) := (GeneralLinearGroup.map (piW τ)).comp (Subgroup.subtype _)
   let φ : locGrp σ Y v ≃ₜ* GL (Fin n) (Fv F v) :=
     { toFun := fun g => b⁻¹ * dn g.1 * b
@@ -1420,10 +1420,10 @@ theorem locUnrSplit : LocUnrSplit := by
         rw [show dn (Λ (b * x * b⁻¹)) = b * x * b⁻¹ from Units.ext (a1 _)]; group
       map_mul' := fun _ _ => by simp only [Subgroup.coe_mul, map_mul]; group
       continuous_toFun := (continuous_const.mul (((Units.continuous_map (continuous_id.matrix_map (continuous_piW τ))).comp
-        continuous_subtype_val).comp continuous_subtype_val)).mul continuous_const
+        continuous_subtypeVal).comp continuous_subtypeVal)).mul continuous_const
       continuous_invFun := ((continuous_liftS hσ τ h1 h2).comp (by fun_prop)).subtype_mk _ }
   let m := φ.toHomeomorph.toMeasurableEquiv
-  haveI : (μ.map m).IsHaarMeasure := φ.isHaarMeasure_map μ
+  have : (μ.map m).IsHaarMeasure := φ.isHaarMeasure_map μ
   have hat : ∀ z ∈ latW Y v, At (evFin F v) z := fun z hz => ((mem_latW z).1 hz).1
   have st : ∀ g : UA σ Y.J, (∀ z ∈ latHat Y, At (evFin F v) z → mat g *ᵥ z ∈ latHat Y) ↔
       b⁻¹ * dn g * b ∈ GlobalTheory.CompanionTheory.QL.GLint (v.adicCompletionIntegers F).toSubring n := fun g => by
@@ -1457,7 +1457,7 @@ theorem locUnrSplit : LocUnrSplit := by
   simp only [e2] at i1 i2
   refine ⟨i1, ?_⟩
   rw [hC, ← Finset.prod_range_reflect, ← Finset.prod_mul_distrib] at i2
-  rw [locD, if_pos ⟨τ⟩]
+  rw [locD, ite_eq_left ⟨τ⟩]
   convert i2 using 2
   · refine Finset.prod_congr rfl fun i hi => ?_
     have := Finset.mem_range.1 hi

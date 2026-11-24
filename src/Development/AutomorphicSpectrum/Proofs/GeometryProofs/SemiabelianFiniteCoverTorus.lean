@@ -249,7 +249,7 @@ noncomputable def rk {K : Type} [Field K] {G : Over (Sp K)} [GrpObj G] (τ : Tor
 theorem exists_ext {S : Scheme.{0}} (G : Over S) [GrpObj G] {K K' : Type} [Field K] [Field K'] (x : Sp K ⟶ S)
     (τ : TorusExtension ((Over.pullback x).obj G)) (e : K →+* K') :
     ∃ τ' : TorusExtension ((Over.pullback (spMap e ≫ x)).obj G), rk τ' = rk τ := by
-  haveI : IsMonHom (pullCompIso (spMap e) x G).symm.hom :=
+  have : IsMonHom (pullCompIso (spMap e) x G).symm.hom :=
     inferInstanceAs (IsMonHom (pullCompIso (spMap e) x G).inv)
   exact ⟨torusExtOfIso (pullCompIso (spMap e) x G).symm
     (GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.Arch.AbPartBC.torusExtBC (spMap e) τ), rfl⟩
@@ -259,11 +259,11 @@ theorem card_field (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [GrpOb
     Nat.card {x : 𝟙_ (Over (Sp k)) ⟶ G // x ^ 2 = 1} * 2 ^ rk E = 2 ^ (2 * g) := by
   rw [← GlobalTheory.card_torsion_mul_card_toric_torsion k G E g 2 hG dG h2]
   congr 1
-  letI := E.addCommGroup
-  letI := E.grpB
-  haveI := E.free
-  haveI := E.finite
-  haveI := E.i_hom
+  let := E.addCommGroup
+  let := E.grpB
+  have := E.free
+  have := E.finite
+  have := E.i_hom
   have hk := E.isKernel
   obtain ⟨e⟩ := GlobalTheory.SemiAbTorsionCount.nonempty_torus_points_mulEquiv k E.X
   obtain ⟨-, hcard⟩ := GlobalTheory.SemiAbTorsionCount.divisible_and_card e 2 h2
@@ -300,7 +300,7 @@ theorem exists_points {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : IsSemiAbeli
         ∃ (τ' : TorusExtension ((Over.pullback y).obj G)) (m : ℕ) (P : Fin m → (Over.mk y ⟶ G)),
           Function.Injective P ∧ (∀ i, P i ^ 2 = 1) ∧ m * 2 ^ rk τ' = 2 ^ (2 * g) := by
   let F := AlgebraicClosure K
-  haveI := hG.smooth
+  have := hG.smooth
   obtain ⟨τF, hτF⟩ := exists_ext G x τ (algebraMap K F)
   have hc := card_point G hG g dG F (by exact_mod_cast (two_ne_zero : (2 : F) ≠ 0)) _ τF
   rw [hτF] at hc
@@ -308,11 +308,11 @@ theorem exists_points {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : IsSemiAbeli
     intro h0
     rw [h0, zero_mul] at hc
     exact (pow_ne_zero _ two_ne_zero) hc.symm
-  haveI := Nat.finite_of_card_ne_zero hne
+  have := Nat.finite_of_card_ne_zero hne
   let u := (Finite.equivFin {p : Over.mk (spMap (algebraMap K F) ≫ x) ⟶ G // p ^ 2 = 1}).symm
   choose T hT using fun j => GlobalTheory.TorsionRat.exists_finset_over G x (u j).1
   let s : Set F := ⋃ j, (T j : Set F)
-  haveI : Finite s := (Set.finite_iUnion fun j => (T j).finite_toSet).to_subtype
+  have : Finite s := (Set.finite_iUnion fun j => (T j).finite_toSet).to_subtype
   let L := IntermediateField.adjoin K s
   refine ⟨L, inferInstance, inferInstance,
     IntermediateField.finiteDimensional_adjoin fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral, ?_⟩
@@ -339,10 +339,10 @@ open PositivityTheory.Xgn.StratumGenericTorsion in
 theorem PositivityTheory.Xgn.stratum_generic_torsion_points : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G], IsSemiAbelian G → ∀ g : ℕ, SmoothOfRelativeDimension g G.hom → ∀ (L : Type) [Field L] [CharZero L] (z : Sp L ⟶ S), ∃ (L' : Type) (_ : Field L') (_ : Algebra L L'), FiniteDimensional L L' ∧ ∃ (τ : TorusExtension ((Over.pullback (spMap (algebraMap L L') ≫ z)).obj G)) (m : ℕ) (P : Fin m → (Over.mk (spMap (algebraMap L L') ≫ z) ⟶ G)), Function.Injective P ∧ (∀ i, P i ^ 2 = 1) ∧ (letI := τ.addCommGroup; m * 2 ^ Module.finrank ℤ τ.X = 2 ^ (2 * g)) := by
   intro S G _ hG g dG L _ _ z
   obtain ⟨L₁, _, _, h₁, ⟨τ₁⟩⟩ := exists_finite_torusExtension_fibre S G hG L z
-  haveI : CharZero L₁ := charZero_of_injective_algebraMap (algebraMap L L₁).injective
+  have : CharZero L₁ := charZero_of_injective_algebraMap (algebraMap L L₁).injective
   obtain ⟨K, _, _, h₂, H⟩ := exists_points G hG g dG L₁ _ τ₁
-  letI : Algebra L K := ((algebraMap L₁ K).comp (algebraMap L L₁)).toAlgebra
-  haveI : IsScalarTower L L₁ K := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra L K := ((algebraMap L₁ K).comp (algebraMap L L₁)).toAlgebra
+  have : IsScalarTower L L₁ K := IsScalarTower.of_algebraMap_eq fun _ => rfl
   refine ⟨K, inferInstance, inferInstance, Module.Finite.trans L₁ K, ?_⟩
   exact H _ (by rw [← Category.assoc, GlobalTheory.TorsionRat.sp_comp])
 end -- clump:auto
@@ -716,9 +716,9 @@ theorem PositivityTheory.Xgn.two_torsion_points_spread_open : ∀ (Z' S : Scheme
   intro Z' S _ c G _ _ _ L' _ j hj m P hP hP2
   obtain ⟨U, hηU, k, hk, s, hs⟩ :=
     PositivityTheory.Xgn.TwoTorsionPointsSpreading.exists_spread c G j hj P
-  haveI : Nonempty U := ⟨⟨_, hηU⟩⟩
-  haveI : IsIntegral (Over.mk (U.ι ≫ c)).left := inferInstanceAs (IsIntegral U.toScheme)
-  haveI : IsReduced (Over.mk (U.ι ≫ c)).left := inferInstanceAs (IsReduced U.toScheme)
+  have : Nonempty U := ⟨⟨_, hηU⟩⟩
+  have : IsIntegral (Over.mk (U.ι ≫ c)).left := inferInstanceAs (IsIntegral U.toScheme)
+  have : IsReduced (Over.mk (U.ι ≫ c)).left := inferInstanceAs (IsReduced U.toScheme)
   have hsinj : Function.Injective s := fun a b hab => hP (by rw [← hs a, ← hs b, hab])
   have hs2 : ∀ i, s i ^ 2 = 1 := by
     intro i
@@ -744,7 +744,7 @@ theorem PositivityTheory.Xgn.two_torsion_points_spread_open : ∀ (Z' S : Scheme
   let y : Over.mk (x ≫ c) ⟶ Over.mk (U.ι ≫ c) := Over.homMk x' (by
     simp only [Over.mk_hom]
     rw [IsOpenImmersion.lift_fac_assoc])
-  haveI : Nonempty (Over.mk (x ≫ c)).left := inferInstanceAs (Nonempty (PrimeSpectrum K))
+  have : Nonempty (Over.mk (x ≫ c)).left := inferInstanceAs (Nonempty (PrimeSpectrum K))
   refine ⟨fun i => y ≫ s i, hW (Over.mk (x ≫ c)) y ?_, fun i => ?_⟩
   · intro t _
     show x' t ∈ W
@@ -794,11 +794,11 @@ theorem card_toric_torsion (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)
     (E : TorusExtension G) (N : ℕ) (hN : (N : k) ≠ 0) :
     Nat.card {x : 𝟙_ (Over (Sp k)) ⟶ G // x ^ N = 1 ∧ ∃ y, x = y ≫ E.i} =
       N ^ @Module.finrank ℤ E.X _ E.addCommGroup.toAddCommMonoid _ := by
-  letI := E.addCommGroup
-  letI := E.grpB
-  haveI := E.free
-  haveI := E.finite
-  haveI := E.i_hom
+  let := E.addCommGroup
+  let := E.grpB
+  have := E.free
+  have := E.finite
+  have := E.i_hom
   have hk := E.isKernel
   obtain ⟨e⟩ := GlobalTheory.SemiAbTorsionCount.nonempty_torus_points_mulEquiv k E.X
   obtain ⟨-, hcard⟩ := GlobalTheory.SemiAbTorsionCount.divisible_and_card e N hN
@@ -825,7 +825,7 @@ theorem bound_algClosed (k : Type) [Field k] [IsAlgClosed k] (G : Over (Sp k)) [
     intro h0
     rw [h0, zero_mul] at h
     exact pow_ne_zero _ hN0 h.symm
-  haveI := Nat.finite_of_card_ne_zero hne
+  have := Nat.finite_of_card_ne_zero hne
   have hm : m ≤ Nat.card {x : 𝟙_ (Over (Sp k)) ⟶ G // x ^ N = 1} := by
     have := Nat.card_le_card_of_injective
       (fun i : Fin m => (⟨P i, hP' i⟩ : {x : 𝟙_ (Over (Sp k)) ⟶ G // x ^ N = 1}))
@@ -841,14 +841,14 @@ theorem PositivityTheory.Xgn.two_torsion_rank_bound : ∀ (S : Scheme.{0}) (G : 
   intro S G _ hG g hg k _ h2 x Gk _ ψ hψ τ m Q hQ hQ2
   let Ω := AlgebraicClosure k
   let f : Sp Ω ⟶ Sp k := spMap (algebraMap k Ω)
-  haveI : Flat f := by
+  have : Flat f := by
     rw [HasRingHomProperty.Spec_iff (P := @Flat)]
     exact RingHom.Flat.of_isField (Field.toIsField k) _
-  haveI : Surjective f := ⟨fun y => ⟨Classical.arbitrary _, Subsingleton.elim _ _⟩⟩
-  haveI : Epi f := Flat.epi_of_flat_of_surjective f
+  have : Surjective f := ⟨fun y => ⟨Classical.arbitrary _, Subsingleton.elim _ _⟩⟩
+  have : Epi f := Flat.epi_of_flat_of_surjective f
   have hp := isGrpPullback_pullback G (f ≫ x)
   obtain ⟨e, he, -⟩ := grpPullback_iso ((isGrpPullback_pullback Gk f).comp hψ) hp
-  haveI := he
+  have := he
   let E : TorusExtension ((Over.pullback (f ≫ x)).obj G) :=
     torusExtOfIso e (GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.Arch.AbPartBC.torusExtBC f τ)
   have hg' : SmoothOfRelativeDimension g ((Over.pullback (f ≫ x)).obj G).hom :=
@@ -1044,18 +1044,18 @@ theorem field_case [Module.Free ℤ X] [Module.Finite ℤ X] {G : Over (Sp K)} [
     (τ : TorusExtension G) (hr : letI := τ.addCommGroup; Module.finrank ℤ τ.X ≤ Module.finrank ℤ X)
     (A : Type) [CommRing A] [Algebra K A] (p : sp K A ⟶ G) :
     letI := τ.grpB; p ≫ τ.q = 1 ↔ ∃ t : sp K A ⟶ splitTorus (Sp K) X, t ≫ v = p := by
-  letI := τ.addCommGroup
-  haveI := τ.free
-  haveI := τ.finite
-  letI := τ.grpB
-  haveI := τ.q_hom
-  haveI := τ.i_hom
-  haveI : IsProper τ.B.hom := τ.isAbelian.proper
+  let := τ.addCommGroup
+  have := τ.free
+  have := τ.finite
+  let := τ.grpB
+  have := τ.q_hom
+  have := τ.i_hom
+  have : IsProper τ.B.hom := τ.isAbelian.proper
   have hvq : v ≫ τ.q = toUnit _ ≫ η :=
     GlobalTheory.splitTorus_hom_proper_trivial_field K X τ.B (v ≫ τ.q) inferInstance
   let w := τ.isKernel.lift v (toUnit _) hvq
   have hwv : w ≫ τ.i = v := τ.isKernel.lift_fst _ _ _
-  haveI : Mono τ.i := τ.isKernel.mono_fst_of_mono
+  have : Mono τ.i := τ.isKernel.mono_fst_of_mono
   have hw1 : (1 : sp K K ⟶ _) ≫ w = 1 := by
     apply (cancel_mono τ.i).mp
     rw [Category.assoc, hwv, MonObj.one_comp, MonObj.one_comp]
@@ -1090,7 +1090,7 @@ end PositivityTheory.Xgn.MaximalTorusFibre
 open PositivityTheory.Xgn.MaximalTorusFibre GlobalTheory.TorusToProper ReciprocityTheory.ChartRestriction.G.Out.GtBCPf ReciprocityTheory.ChartRestriction.G.Out.PullGtPf in
 theorem PositivityTheory.Xgn.maximal_torus_in_fibre : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (u : splitTorus S X ⟶ G) [IsMonHom u] (k : Type) [Field k] (x : Sp k ⟶ S), (∀ (A : Type) [CommRing A] (g : k →+* A) (t : Over.mk (spMap g ≫ x) ⟶ splitTorus S X), t ≫ u = 1 → t = 1) → ∀ (Gk : Over (Sp k)) [GrpObj Gk] (ψ : Gk.left ⟶ G.left), IsGrpPullback Gk G x ψ → ∀ τ : TorusExtension Gk, (letI := τ.addCommGroup; Module.finrank ℤ τ.X ≤ Module.finrank ℤ X) → letI := τ.grpB; ∀ (A : Type) [CommRing A] (g : k →+* A) (p : Over.mk (spMap g) ⟶ Gk), p ≫ τ.q = 1 ↔ ∃ t : Over.mk (spMap g ≫ x) ⟶ splitTorus S X, (t ≫ u).left = p.left ≫ ψ := by
   intro S G _ X _ _ _ u _ k _ x hu Gk _ ψ hψ τ hr A _ g p
-  letI : Algebra k A := g.toAlgebra
+  let : Algebra k A := g.toAlgebra
   have one_left : ∀ {T : Scheme.{0}} (Z M : Over T) [GrpObj M],
       (1 : Z ⟶ M).left = Z.hom ≫ (η : 𝟙_ (Over T) ⟶ M).left := by
     intro T Z M _
@@ -1103,7 +1103,7 @@ theorem PositivityTheory.Xgn.maximal_torus_in_fibre : ∀ (S : Scheme.{0}) (G : 
   let v : splitTorus (Sp k) X ⟶ Gk :=
     Over.homMk (hψ.1.lift (hT x X ≫ u.left) (splitTorus (Sp k) X).hom hcond) (hψ.1.lift_snd _ _ _)
   have hvψ : v.left ≫ ψ = hT x X ≫ u.left := hψ.1.lift_fst _ _ _
-  haveI : IsMonHom v := isMonHom_of_grpPullback gT hψ u v hvψ
+  have : IsMonHom v := isMonHom_of_grpPullback gT hψ u v hvψ
   have toS : ∀ (B : Type) [CommRing B] [Algebra k B] (t' : sp k B ⟶ splitTorus (Sp k) X),
       (t'.left ≫ hT x X) ≫ (splitTorus S X).hom =
         (Over.mk (spMap (algebraMap k B) ≫ x)).hom := by
@@ -1184,7 +1184,7 @@ open scoped CategoryTheory.Obj
 
 theorem PositivityTheory.Xgn.finite_surjective_image_open : ∀ (Z Z' : Scheme.{0}) [IsIntegral Z] [IsIntegral Z'] (π : Z' ⟶ Z), IsFinite π → Surjective π → ∀ V : Z'.Opens, (V : Set Z').Nonempty → ∃ U : Z.Opens, (U : Set Z).Nonempty ∧ π ⁻¹ᵁ U ≤ V := by
   intro Z Z' _ _ π hπ _ V hV
-  haveI : IsFinite π := hπ
+  have : IsFinite π := hπ
   have hCc : IsClosed ((V : Set Z')ᶜ) := V.isOpen.isClosed_compl
   refine ⟨⟨(π '' (V : Set Z')ᶜ)ᶜ, (π.isClosedMap _ hCc).isOpen_compl⟩, ⟨genericPoint Z, ?_⟩, ?_⟩
   · show genericPoint Z ∉ π '' (V : Set Z')ᶜ
@@ -1194,7 +1194,7 @@ theorem PositivityTheory.Xgn.finite_surjective_image_open : ∀ (Z Z' : Scheme.{
       have a : π (genericPoint Z') ⤳ π x := h1.map π.continuous
       rw [hx] at a
       exact (a.antisymm ((genericPoint_spec Z).specializes (Set.mem_univ _))).eq
-    haveI hd := (π.isDiscrete_preimage_singleton (genericPoint Z)).to_subtype
+    have hd := (π.isDiscrete_preimage_singleton (genericPoint Z)).to_subtype
     have m2 : genericPoint Z' ∈ (π ⁻¹' {genericPoint Z} : Set Z') := h2
     have mx : x ∈ (π ⁻¹' {genericPoint Z} : Set Z') := hx
     have h3 : (⟨genericPoint Z', m2⟩ : (π ⁻¹' {genericPoint Z} : Set Z')) ⤳ ⟨x, mx⟩ :=
@@ -1281,15 +1281,15 @@ end PositivityTheory.Xgn.SplitTorusExtension
 
 theorem PositivityTheory.Xgn.exists_split_torus_extension : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (Z' : Scheme.{0}) [IsIntegral Z'] [AlgebraicGeometry.IsNoetherian Z'], IsNormalScheme Z' → ∀ (G : Over Z') [GrpObj G], IsSemiAbelian G → ∀ (L' : Type) [Field L'] (j : Sp L' ⟶ Z'), GlobalTheory.IsGenericPointHom j → ∀ τ : TorusExtension ((Over.pullback j).obj G), letI := τ.addCommGroup; ∃ u : splitTorus Z' τ.X ⟶ G, IsMonHom u ∧ ∀ (A : Type) [CommRing A] (g : L' →+* A) (t : Over.mk (spMap g ≫ j) ⟶ splitTorus Z' τ.X), t ≫ u = 1 → t = 1 := by
   intro hext Z' _ _ hnorm G _ hG L' _ j hj τ
-  letI := τ.addCommGroup
-  haveI := τ.free
-  haveI := τ.finite
-  haveI := τ.i_hom
-  haveI : Mono τ.i := τ.isKernel.mono_fst_of_mono
+  let := τ.addCommGroup
+  have := τ.free
+  have := τ.finite
+  have := τ.i_hom
+  have : Mono τ.i := τ.isKernel.mono_fst_of_mono
   have hT : IsSemiAbelian (splitTorus Z' τ.X) :=
     ((GlobalTheory.splitTorus_properties Z').1 τ.X).2.2.2.2.2.2.2.2.1
   obtain ⟨e, he, -⟩ := GlobalTheory.splitTorus_baseChange Z' (Sp L') j τ.X
-  haveI := he
+  have := he
   have hφ : IsGrpPullback (splitTorus (Sp L') τ.X) (splitTorus Z' τ.X) j
       (e.hom.left ≫ pullback.fst (splitTorus Z' τ.X).hom j) := by
     have h0 := (isGrpPullback_of_iso e).comp (isGrpPullback_pullback (splitTorus Z' τ.X) j)
@@ -1298,7 +1298,7 @@ theorem PositivityTheory.Xgn.exists_split_torus_extension : GlobalTheory.Publish
   obtain ⟨F, ⟨hF, hu⟩, -⟩ :=
     GlobalTheory.Published.SemiAbelianHomExtension.generic_of_isGrpPullback hext hnorm hj hT hG hφ hψ τ.i
   refine ⟨F, hF, fun A _ g t ht => ?_⟩
-  haveI := hF
+  have := hF
   exact SplitTorusExtension.eq_one hφ hψ τ.i F hu (Over.mk (spMap g)) t ht
 end -- clump:auto
 end -- clump:auto
@@ -1371,9 +1371,9 @@ theorem core (hE : GlobalTheory.Published.SemiAbelianHomExtension) (Z : Scheme.{
   have hCS : CompactSpace Z' := QuasiCompact.compactSpace_of_compactSpace π
   have hN' : AlgebraicGeometry.IsNoetherian Z' := {}
   let τ' : TorusExtension ((Over.pullback j).obj ((Over.pullback π).obj G)) := torusExtOfIso (pullCompIso j π G) τ
-  letI := τ'.addCommGroup
-  haveI := τ'.free
-  haveI := τ'.finite
+  let := τ'.addCommGroup
+  have := τ'.free
+  have := τ'.finite
   obtain ⟨u, hu, hmono⟩ := _root_.GlobalTheory.CompanionTheory.Ar.torus_extension_generic hE Z' hnorm ((Over.pullback π).obj G) hG' L' j hj τ'
   obtain ⟨V₁, hV₁, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.KerSpread.injective_on_points_of_generic Z' ((Over.pullback π).obj G) τ'.X u L' j hj hmono
   obtain ⟨V₂, hV₂, hD⟩ := _root_.GlobalTheory.CompanionTheory.Ar.pts_spread Z' Z π G L' j hj m P hPi hP2
@@ -1394,13 +1394,13 @@ theorem core (hE : GlobalTheory.Published.SemiAbelianHomExtension) (Z : Scheme.{
     simpa using h1
   refine ⟨mono, ?_⟩
   intro Gk _ ψ hψ τk
-  letI := τk.grpB
-  letI := τk.addCommGroup
-  haveI := τk.free
-  haveI := τk.finite
+  let := τk.grpB
+  let := τk.addCommGroup
+  have := τk.free
+  have := τk.finite
   obtain ⟨Q, hQi, hQ2⟩ := hD k x (hxV V₂ inf_le_right)
   have h2 : ((2 : ℕ) : k) ≠ 0 := by
-    haveI : CharZero k := charZero_of_point (x ≫ π ≫ s)
+    have : CharZero k := charZero_of_point (x ≫ π ≫ s)
     exact Nat.cast_ne_zero.2 two_ne_zero
   have hle := _root_.GlobalTheory.CompanionTheory.Ar.RankBound.rank_bound_of_points_of_order_two Z G hG g hg k h2 (x ≫ π) Gk (ψ ≫ pullback.fst G.hom π) (hψ.comp (isGrpPullback_pullback G π)) τk m Q hQi hQ2
   have hrk : Module.finrank ℤ τk.X ≤ Module.finrank ℤ τ'.X := by
@@ -1419,7 +1419,7 @@ theorem strat_open : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (Z :
   have hfq := hG.quasiCompact
   let z : Sp Z.functionField ⟶ Z := Z.fromSpecStalk (genericPoint Z)
   have hz : GlobalTheory.IsGenericPointHom z := GlobalTheory.IsGenericPointHom.fromSpecStalk Z
-  haveI : CharZero Z.functionField := charZero_of_point (z ≫ s)
+  have : CharZero Z.functionField := charZero_of_point (z ≫ s)
   obtain ⟨g, hg⟩ := GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.smoothGrp_relDim Z Z.functionField z G (fun q => by
     have : genPt z = genericPoint Z := by
       have := hz.range_eq

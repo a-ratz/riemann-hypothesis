@@ -72,7 +72,7 @@ theorem ideleModule_infId (d : (UpperTheory.V.TR.Rinf F)ˣ) :
   rw [h2, mul_one, infiniteModule]
   refine Finset.prod_congr rfl fun w _ => ?_
   have hm : w.mult = 1 := by
-    unfold InfinitePlace.mult; rw [if_pos (IsTotallyReal.isReal w)]
+    unfold InfinitePlace.mult; rw [ite_eq_left (IsTotallyReal.isReal w)]
   rw [hm, pow_one]
   change ‖(((1 : Ad F) - UpperTheory.V.TR.sInf F 1 + UpperTheory.V.TR.sInf F (d : UpperTheory.V.TR.Rinf F) : Ad F)).1 w‖ = _
   change ‖((1 : InfiniteAdeleRing F) - UpperTheory.V.TR.infEq F 1 + UpperTheory.V.TR.infEq F (d : UpperTheory.V.TR.Rinf F)) w‖ = _
@@ -123,10 +123,10 @@ instance sigmaFinite_posRealMeasure : SigmaFinite posRealMeasure := by
   exact measurableEmbedding_expPos.sigmaFinite_map
 
 theorem measurableSet_ge_one : MeasurableSet {t : {r : ℝ // 0 < r} | 1 ≤ (t : ℝ)} :=
-  measurable_subtype_coe measurableSet_Ici
+  measurable_subtypeVal measurableSet_Ici
 
 theorem measurableSet_lt_one : MeasurableSet {t : {r : ℝ // 0 < r} | (t : ℝ) < 1} :=
-  measurable_subtype_coe measurableSet_Iio
+  measurable_subtypeVal measurableSet_Iio
 
 theorem integrableOn_ge_one {r : ℕ} (hr : 2 ≤ r) :
     IntegrableOn (fun t : {r : ℝ // 0 < r} => ((t : ℝ) ^ r)⁻¹ * (t : ℝ)) {t | 1 ≤ (t : ℝ)} posRealMeasure := by
@@ -139,7 +139,7 @@ theorem integrableOn_ge_one {r : ℕ} (hr : 2 ≤ r) :
       fun x => Real.exp ((1 - (r : ℝ)) * x) := by
     funext x
     simp only [Function.comp_apply, coe_expPos]
-    rw [← Real.exp_nat_mul, ← Real.exp_neg, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_neg, ← Real.exp_add]
     congr 1; ring
   rw [hf]
   have hneg : (1 - (r : ℝ)) < 0 := by
@@ -153,14 +153,14 @@ theorem integrableOn_lt_one {r : ℕ} (hr : 2 ≤ r) :
     measurableEmbedding_expPos.restrict_map, measurableEmbedding_expPos.integrable_map_iff]
   have hpre : expPos ⁻¹' {t : {r : ℝ // 0 < r} | (t : ℝ) < 1} = Set.Iio 0 := by
     ext x
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, coe_expPos, Set.mem_Iio]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, coe_expPos, Set.mem_Iio]
     rw [← Real.exp_zero, Real.exp_lt_exp]
   rw [hpre]
   have hf : (fun t : {r : ℝ // 0 < r} => (t : ℝ) ^ r * (t : ℝ)⁻¹) ∘ expPos =
       fun x => Real.exp (((r : ℝ) - 1) * x) := by
     funext x
     simp only [Function.comp_apply, coe_expPos]
-    rw [← Real.exp_nat_mul, ← Real.exp_neg, ← Real.exp_add]
+    rw [← Real.exp_natCast_mul, ← Real.exp_neg, ← Real.exp_add]
     congr 1; ring
   rw [hf]
   have hpos : 0 < ((r : ℝ) - 1) := by

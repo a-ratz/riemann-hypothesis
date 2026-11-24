@@ -66,7 +66,7 @@ theorem UpperTheory.Reformulated.B.Qj3.burnside_end.{u_3, u_4} :
   rcases subsingleton_or_nontrivial V with hV | hV
   · have : f = 0 := by ext v; exact Subsingleton.elim _ _
     rw [this]; exact S.zero_mem
-  haveI : IsSimpleModule S V := by
+  have : IsSimpleModule S V := by
     refine { eq_bot_or_eq_top := fun N => ?_ }
     rcases h (N.restrictScalars K) (fun g hg v hv => N.smul_mem (⟨g, hg⟩ : S) hv) with h1 | h1
     · left

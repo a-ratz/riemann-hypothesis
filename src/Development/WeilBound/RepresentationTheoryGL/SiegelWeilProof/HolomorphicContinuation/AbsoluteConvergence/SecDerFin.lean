@@ -174,7 +174,7 @@ theorem evX_eulH (H : Matrix (Fin n) (Fin n) ℂ) (R : PX m n) (z : Fin m → Fi
   rw [Fintype.sum_prod_type, Finset.sum_congr rfl fun a _ => Fintype.sum_prod_type _]
   refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun j _ => ?_
   rw [Fintype.sum_bool]
-  simp only [ept, mulR, if_true, Bool.false_eq_true, if_false, star_sum, star_mul']
+  simp only [ept, mulR, ite_true, Bool.false_eq_true, ite_false, star_sum, star_mul']
   ring_nf
 
 def trHQ (ε : Fin m → Bool) (H : Matrix (Fin n) (Fin n) ℂ) : PX m n :=
@@ -183,7 +183,7 @@ def trHQ (ε : Fin m → Bool) (H : Matrix (Fin n) (Fin n) ℂ) : PX m n :=
 theorem evX_Qb_add (ε : Fin m → Bool) (z : Fin m → Fin n → ℂ) (i j : Fin n) :
     evX (Qb ε true i j + Qb ε false i j) z = ∑ a, star (z a i) * z a j := by
 
-  simp only [Qb, evX_eq, map_add (f := _), map_sum, map_mul, eval_X, ept, if_true, Bool.false_eq_true, if_false]
+  simp only [Qb, evX_eq, map_add (f := _), map_sum, map_mul, eval_X, ept, ite_true, Bool.false_eq_true, ite_false]
   convert Finset.sum_filter_add_sum_filter_not Finset.univ (fun x => ε x = true) (fun x => star (z x i) * z x j) using 3
   ext x; simp
 
@@ -413,7 +413,7 @@ theorem secN_aE (ε : Fin m → Bool) (c t : ℝ) {H : Matrix (Fin n) (Fin n) �
     rw [det_aE]
     exact Complex.exp_ne_zero _
   have hr : Complex.normSq (aE H σ).det ^ m = Real.exp (2 * m * σ * H.trace.re) := by
-    rw [det_aE, Complex.normSq_eq_norm_sq, Complex.norm_exp, ← Real.exp_nat_mul, ← Real.exp_nat_mul]
+    rw [det_aE, Complex.normSq_eq_norm_sq, Complex.norm_exp, ← Real.exp_natCast_mul, ← Real.exp_natCast_mul]
     congr 1
     simp only [Complex.re_ofReal_mul]
     push_cast
@@ -464,7 +464,7 @@ theorem hasDerivAt_Psi (ε : Fin m → Bool) {c : ℝ} (hc : 0 < c) (t : ℝ) {H
     HasDerivAt (Psi ε c t H b R) (Psi ε c t H b (DMp ε c H R) s) s ∧
       ∀ P : PX m n, Integrable fun y => evX P (mulR (aE H s) y) * gs c (mulR (aE H s) y) *
         Complex.exp (Complex.I * t * (b * gramX ε y).trace) := by
-  haveI : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure :=
+  have : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure :=
     MeasureTheory.Measure.pi.isAddHaarMeasure _
   have hd : ((Module.finrank ℝ (Fin m → Fin n → ℂ) : ℕ) : ℝ) <
       (Module.finrank ℝ (Fin m → Fin n → ℂ) : ℝ) + 1 := by linarith
@@ -576,7 +576,7 @@ theorem continuous_gs (c : ℝ) : Continuous (gs (m := m) (n := n) c) := by
 
 theorem integrable_poly_gs (P : PX m n) {c : ℝ} (hc : 0 < c) :
     Integrable (fun x : Fin m → Fin n → ℂ => ‖evX P x‖ * ‖gs c x‖) := by
-  haveI : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
+  have : (volume : Measure (Fin m → Fin n → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   set r : ℝ := (Module.finrank ℝ (Fin m → Fin n → ℂ) : ℝ) + 1 with hr
   obtain ⟨Cp, k, hCp, hP⟩ := poly_bound P
   obtain ⟨Cd, hCd, hdec⟩ := decay k c hc r
@@ -743,7 +743,7 @@ def toGR (M : TK n) : GR n :=
 theorem continuous_toGR : Continuous (toGR (n := n)) := by
   refine Continuous.subtype_mk ?_ _
   rw [Units.continuous_iff]
-  exact ⟨continuous_subtype_val, continuous_subtype_val.matrix_conjTranspose⟩
+  exact ⟨continuous_subtypeVal, continuous_subtypeVal.matrix_conjTranspose⟩
 
 theorem isCompact_KR : IsCompact ((KR n : Set (GR n))) := by
   have hset : (KR n : Set (GR n)) = Set.range (toGR (n := n)) := by
@@ -756,7 +756,7 @@ theorem isCompact_KR : IsCompact ((KR n : Set (GR n))) := by
       rfl
     · rintro ⟨M, rfl⟩
       exact ⟨M.2.2, M.2.1⟩
-  haveI : CompactSpace (TK n) := isCompact_iff_compactSpace.mp isCompact_TK
+  have : CompactSpace (TK n) := isCompact_iff_compactSpace.mp isCompact_TK
   rw [hset]
   exact isCompact_range continuous_toGR
 
@@ -908,9 +908,9 @@ theorem unif_family (S D : GR n → ℂ) (hS : Continuous S) (hD : Continuous D)
     apply isCompact_univ.eventually_forall_of_forall_eventually
     intro k _
     have hc : Continuous fun p : ℝ × KR n => ‖D ((p.2 : GR n) * y * f p.1) - D ((p.2 : GR n) * y)‖ :=
-      ((hD.comp (((continuous_subtype_val.comp continuous_snd).mul continuous_const).mul
+      ((hD.comp (((continuous_subtypeVal.comp continuous_snd).mul continuous_const).mul
         (hf.comp continuous_fst))).sub
-        (hD.comp ((continuous_subtype_val.comp continuous_snd).mul continuous_const))).norm
+        (hD.comp ((continuous_subtypeVal.comp continuous_snd).mul continuous_const))).norm
     have h0 : ‖D ((k : GR n) * y * f 0) - D ((k : GR n) * y)‖ < δ := by simp [hf0, hδ]
     exact Filter.eventually_of_mem ((hc.isOpen_preimage _ isOpen_Iio).mem_nhds h0) (fun z hz => hz)
   obtain ⟨η, hη, hball⟩ := Metric.eventually_nhds_iff.mp htube

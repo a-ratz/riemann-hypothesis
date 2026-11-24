@@ -141,7 +141,7 @@ theorem exists_integral_basis [DecidableEq (InfinitePlace F)] (hF : IsTotallyRea
 theorem exists_real_basis {ι : Type} [Fintype ι] [DecidableEq ι] [Nonempty ι] (A : Matrix ι ι ℝ) (h : A.det ≠ 0) :
     ∃ b : Module.Basis ι ℝ (ι → ℝ), ∀ i, b i = A i := by
   have hl : LinearIndependent ℝ A.row :=
-    Matrix.linearIndependent_rows_iff_isUnit.2 ((Matrix.isUnit_iff_isUnit_det A).2 (isUnit_iff_ne_zero.2 h))
+    linearIndependent_row_iff_isUnit.2 ((Matrix.isUnit_iff_isUnit_det A).2 (isUnit_iff_ne_zero.2 h))
   refine ⟨basisOfLinearIndependentOfCardEqFinrank hl (by simp), fun i => ?_⟩
   rw [coe_basisOfLinearIndependentOfCardEqFinrank]
   rfl
@@ -273,7 +273,7 @@ theorem GlobalTheory.CompanionTheory.SW.FD.main : ∀ (F : Type) [Field F] [Numb
     rw [hspan]
     exact ZSpan.isAddFundamentalDomain' b volume
   have hcount : Countable (latR ρ N) := by
-    haveI : Countable (𝓞 F) := B.equivFun.toEquiv.injective.countable
+    have : Countable (𝓞 F) := B.equivFun.toEquiv.injective.countable
     rw [GlobalTheory.CompanionTheory.SW.FD.latR_eq_range]
     exact (Set.countable_range (GlobalTheory.CompanionTheory.SW.FD.scaleMap ρ N)).to_subtype
   refine ⟨⟨_, hfd⟩, hcount, GlobalTheory.CompanionTheory.SW.FD.mem_latR_iff ρ N, fun D hD => ⟨?_, fun β hβ hint =>

@@ -63,8 +63,8 @@ theorem snd_val_affine {R' : Type} [CommRing R'] [Algebra R R'] (U : X.affineOpe
     (h0 : connForm f.1 (affPt s U) (affPt_w s U) = 0) :
     TrivSqZeroExt.snd ((SqExt.ofModule R R' R').val y hy f.1) = 0 := by
   have hx := affPt_w s U
-  letI : Algebra (Sec s U.1) R' := ((TrivSqZeroExt.fstHom R R' R').comp α).toRingHom.toAlgebra
-  haveI : IsScalarTower R (Sec s U.1) R' := IsScalarTower.of_algebraMap_eq fun r ↦
+  let : Algebra (Sec s U.1) R' := ((TrivSqZeroExt.fstHom R R' R').comp α).toRingHom.toAlgebra
+  have : IsScalarTower R (Sec s U.1) R' := IsScalarTower.of_algebraMap_eq fun r ↦
     (congrArg TrivSqZeroExt.fst (α.commutes r)).symm
   let δ : Derivation R (Sec s U.1) R' :=
     { toFun := fun b ↦ (α b).snd
@@ -136,9 +136,9 @@ theorem snd_val_eq_zero (y : Sp (DualNumber R) ⟶ X)
   have loc : ∀ m : Ideal R, m.IsMaximal →
       ∃ t ∉ m, t * TrivSqZeroExt.snd (R := R) ((SqExt.dual R).val y hy f.1) = 0 := by
     intro m hm
-    haveI := hm.isPrime
+    have := hm.isPrime
     let R' := Localization.AtPrime m
-    haveI : IsLocalRing (TrivSqZeroExt R' R') :=
+    have : IsLocalRing (TrivSqZeroExt R' R') :=
       IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun c ↦ by
         simp only [TrivSqZeroExt.isUnit_iff_isUnit_fst, TrivSqZeroExt.fst_sub, TrivSqZeroExt.fst_one]
         exact IsLocalRing.isUnit_or_isUnit_one_sub_self c.fst

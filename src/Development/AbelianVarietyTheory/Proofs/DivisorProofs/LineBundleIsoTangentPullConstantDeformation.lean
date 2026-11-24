@@ -76,9 +76,9 @@ theorem lbIso_tangent_const :
   intro E _ _ _ H Dw l Xo c K _ _ x₀ x' A _ A' _ π π' i q hi hπ hπ' hiπ hiq hq
   have pull_isLB : ∀ {X Y : Scheme.{0}} {L : LB X}, L.IsLB → (F : Y ⟶ X) → (L.pull F).IsLB :=
     fun hL F => ReciprocityTheory.ChartRestriction.G.Geo.Tor.pull_isLB hL F
-  haveI : CharZero K := (RingHom.charZero_iff (algebraMap c.F K).injective).1 inferInstance
+  have : CharZero K := (RingHom.charZero_iff (algebraMap c.F K).injective).1 inferInstance
   have hAbG : IsAbelianScheme Xo.univ.t.G := by
-    haveI := Xo.univ.proper
+    have := Xo.univ.proper
     exact AbelianSchemeGerms.isAbelianScheme_of_proper _ Xo.univ.t.semi
   have hA : IsAbelianScheme A := by
     refine { comm := ?_, smooth := ?_, proper := ?_, geomConnected := ?_ }

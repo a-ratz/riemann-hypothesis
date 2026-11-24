@@ -154,11 +154,11 @@ theorem conv_cosetInd_eq_smul (μ : Measure G) [μ.IsMulLeftInvariant] (K : Subg
     rw [GlobalTheory.InvBilinTest.cosetInd_apply]
     by_cases hx : y⁻¹ * x ∈ K
     · have h1 : x⁻¹ * y * 1⁻¹ ∈ K := by simpa using K.inv_mem hx
-      rw [if_pos h1, Set.indicator_of_mem (show x ∈ (fun x => y⁻¹ * x) ⁻¹' (K : Set G) from hx), mul_one]
+      rw [ite_eq_left h1, Set.indicator_of_mem (show x ∈ (fun x => y⁻¹ * x) ⁻¹' (K : Set G) from hx), mul_one]
       have := hf _ hx y
       rwa [mul_inv_cancel_left] at this
     · have h1 : ¬ x⁻¹ * y * 1⁻¹ ∈ K := fun h => hx (by simpa using K.inv_mem h)
-      rw [if_neg h1, Set.indicator_of_notMem (show x ∉ (fun x => y⁻¹ * x) ⁻¹' (K : Set G) from hx), mul_zero]
+      rw [ite_eq_right h1, Set.indicator_of_notMem (show x ∉ (fun x => y⁻¹ * x) ⁻¹' (K : Set G) from hx), mul_zero]
   show ∫ x, f x * (GlobalTheory.InvBilinTest.cosetInd K ho hK 1).1 (x⁻¹ * y) ∂μ = _
   rw [e, integral_indicator_const _ hs]
   simp only [Measure.real, measure_preimage_mul, Complex.real_smul]
@@ -180,7 +180,7 @@ theorem hasTrace_repOp_of_isCopyFinDS : ∀ (D : D7) (V : HSp D) (lam : D.what�
   intro D V lam S M T U μa μf μ _ _ fa ff hT ν hν H _ _ _ π hπ W _ _ σ hirr hadm hcopy c hc
   obtain ⟨-, -, -, -, hres, harch, hfin⟩ := hT
   have hff := hfin.isFinFamily
-  haveI : ν.IsHaarMeasure := hν.1
+  have : ν.IsHaarMeasure := hν.1
   obtain ⟨Tm, hTm, hinj, hdense⟩ := hcopy
   have hTm' : Tm ∈ homTensorPi (GfC V).subtype (fun τ => embW V (placeOf D τ)) σ (dsRep M) π ⊤ := hTm
   obtain ⟨A, hA, hAtr⟩ := hc
@@ -254,7 +254,7 @@ theorem hasTrace_repOp_of_isCopyFinDS : ∀ (D : D7) (V : HSp D) (lam : D.what�
     have h3 := LinearMap.congr_fun hAP w
     rw [LinearMap.comp_apply, h0, map_zero, LinearMap.smul_apply] at h3
     exact (smul_eq_zero.1 h3.symm).resolve_left hvol
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (M.ds τ).1
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (M.ds τ).1
   have key := GlobalTheory.TensorTrace.hasTrace_finiteRank_tensor D.what₂.Tau M.H H W Tm (fun w w' => bePi (Tm w) (Tm w')) hinner hinj hdense A c hAtr
     (GlobalTheory.PRep.fixed σ K) hZ hrange hcond (fun τ => repOp (dsRep M τ) (μa (placeOf D τ)) (fa (placeOf D τ)))
     (fun _ => 1) (fun τ => (harch τ).trace_self) (repOp π μ (tensor D.sp.cm.sig V.gram fa ff)) hX

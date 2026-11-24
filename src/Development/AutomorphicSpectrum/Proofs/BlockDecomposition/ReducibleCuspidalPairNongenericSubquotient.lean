@@ -153,7 +153,7 @@ theorem exists_subquotient_subsingleton [TopologicalSpace G] [IsTopologicalGroup
     exact apply_mem_twKer q H χ (hr S v (hSK v.2))
   · obtain ⟨s, hsS, hsK⟩ := IsConcreteLE.not_le_iff_exists.1 hSK
     have hs0 : (Submodule.mkQ (twKer π H χ)) s ≠ 0 := fun h => hsK ((Submodule.Quotient.mk_eq_zero _).1 h)
-    have hline := (finrank_eq_one_iff_of_nonzero' _ hs0).1 h1
+    have hline := (finrank_eq_one_iff_of_ne_zero' _ hs0).1 h1
     let U : Submodule ℂ V := S.toSubmodule
     have hU : ∀ g, U ≤ U.comap (π g) := fun g v hv => S.apply_mem_toSubmodule g hv
     let σ : Representation ℂ G (V ⧸ U) := π.quotient U hU
@@ -202,7 +202,7 @@ theorem finrank_twJacquet_of_isCusp (hW : WhitRankIrr k) {ψ : AddChar k Circle}
     exact ⟨fun _ => b.toSubmodule.zero_mem, fun _ => a.toSubmodule.zero_mem⟩
   have hg : IsGenericFor ψ c.rep.ρ := _root_.GlobalTheory.CompanionTheory.BZDeriv.isGenericFor_of_isCuspidal k ψ hc h1 n _ c.rep.ρ hx.2 hV
   have hle := hW ψ hc h1 (n + 1) _ c.rep.ρ c.rep.smooth c.rep.irr
-  haveI : Nontrivial (TwJacquet c.rep.ρ (unipB k (Fin (n + 1))) (whitChar ψ (n + 1))) := hg
+  have : Nontrivial (TwJacquet c.rep.ρ (unipB k (Fin (n + 1))) (whitChar ψ (n + 1))) := hg
   exact Module.finrank_eq_of_rank_eq (le_antisymm hle (Cardinal.one_le_iff_pos.2 rank_pos))
 
 theorem exists_nongeneric_subquotient : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k],

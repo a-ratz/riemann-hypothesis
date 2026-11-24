@@ -125,8 +125,8 @@ theorem exists_hyperbolic_partner {F E : Type} [Field F] [NumberField F] [Field 
 
 theorem transitive_free_isotropic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R] [MeasurableSpace R] [BorelSpace R], IsLocR R → ∀ X Y : Fin 1 → Fin M → R ⊗[F] E, LinearIndependent (R ⊗[F] E) X → LinearIndependent (R ⊗[F] E) Y → gramR R σ J X = 0 → gramR R σ J Y = 0 → ∃ h : HA R σ J, actW R σ J h X = Y := by
   intro F E _ _ _ _ _ σ hσ M J hJ R _ _ _ _ _ hL X Y hX hY gX gY
-  haveI : IsArtinianRing R := hL.2.2.2.2.1
-  haveI : IsReduced R := hL.2.2.2.2.2.1
+  have : IsArtinianRing R := hL.2.2.2.2.1
+  have : IsReduced R := hL.2.2.2.2.2.1
   have hconst : ∀ Z : Fin 1 → Fin M → R ⊗[F] E, (fun _ : Fin 1 => Z 0) = Z := by
     intro Z
     funext a

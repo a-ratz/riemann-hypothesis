@@ -59,17 +59,17 @@ theorem finite_away_of_isAlgebraic_of_finiteType : ∀ {A B : Type} [CommRing A]
   refine ⟨∏ b ∈ s, y b, Finset.prod_ne_zero_iff.mpr fun b _ => hy b, ?_⟩
   intro c A' B' _ _ _ _ _ _ _ _ hA' hB'
   set a := ∏ b ∈ s, y b with ha
-  haveI hBB : Algebra.FiniteType B B' :=
+  have hBB : Algebra.FiniteType B B' :=
     IsLocalization.finiteType_of_monoid_fg (Submonoid.powers (algebraMap A B (a * c))) B'
-  haveI : Algebra.FiniteType A B' := Algebra.FiniteType.trans hft hBB
-  haveI : Algebra.FiniteType A' B' := .of_restrictScalars_finiteType A A' B'
+  have : Algebra.FiniteType A B' := Algebra.FiniteType.trans hft hBB
+  have : Algebra.FiniteType A' B' := .of_restrictScalars_finiteType A A' B'
   have hu : IsUnit (algebraMap A A' (a * c)) := IsLocalization.Away.algebraMap_isUnit (a * c)
   have hunit : ∀ (r : A) (m : ℕ), r ∣ (a * c) ^ m → ∃ r' : A', algebraMap A' B' r' * algebraMap A B' r = 1 := by
     intro r m hr
     obtain ⟨u, hu'⟩ := isUnit_of_dvd_unit (map_dvd (algebraMap A A') hr) (by rw [map_pow]; exact hu.pow m)
     refine ⟨↑u⁻¹, ?_⟩
     rw [IsScalarTower.algebraMap_apply A A' B', ← hu', ← map_mul, Units.inv_mul, map_one]
-  haveI : Algebra.IsIntegral A' B' := by
+  have : Algebra.IsIntegral A' B' := by
     let S : Subalgebra A B :=
       ((integralClosure A' B').restrictScalars A).comap (IsScalarTower.toAlgHom A B B')
     have hS : Algebra.adjoin A (s : Set B) ≤ S := by

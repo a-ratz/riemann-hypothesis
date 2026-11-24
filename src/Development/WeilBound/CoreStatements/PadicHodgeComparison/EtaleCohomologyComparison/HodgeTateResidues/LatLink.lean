@@ -246,7 +246,7 @@ theorem pInv_injective (l : ℕ) [Fact l.Prime] : Function.Injective (pInv l) :=
 theorem existsUnique_bdRp_of_compatible (l : ℕ) [Fact l.Prime]
     (y : ∀ m : ℕ, Bk l (m + 1)) (hy : ∀ m, dk l (m + 1) (y (m + 1)) = y m) :
     ∃! x : BdRp l, ∀ m, pk l (m + 1) x = y m := by
-  haveI := isAdicComplete_span_tBdR l
+  have := isAdicComplete_span_tBdR l
   choose z hz using fun m => Ideal.Quotient.mk_surjective (y m)
   have key : ∀ (m : ℕ) (x : BdRp l), pk l (m + 1) x = y m ↔ tBdR l ^ (m + 1) ∣ x - z m := by
     intro m x
@@ -580,7 +580,7 @@ theorem hc_k : ∀ (l : ℕ) [Fact l.Prime] (M k : ℕ),
   intro l _ M k
   rcases Nat.eq_zero_or_pos k with rfl | hk
   · intro x _ n
-    haveI := subsingleton_Bk_zero l
+    have := subsingleton_Bk_zero l
     exact ⟨0, Subsingleton.elim _ _⟩
   · exact GlobalTheory.CompanionTheory.LatDP.dpClosed _ _ l M k (GlobalTheory.CompanionTheory.LatCHyp.hyp_k l k hk)
 
@@ -746,7 +746,7 @@ variable (l : ℕ) [Fact l.Prime]
 
 theorem span_xi_eq_span_fontaine_t :
     Ideal.span {wittToBDeRhamPlus (normInteger ℂ_[l]) l (xi0 l)} = Ideal.span {tBdR l} := by
-  haveI : IsPerfectoidField ℂ_[l] l := IsPerfectoidField.padicComplex l
+  have : IsPerfectoidField ℂ_[l] l := IsPerfectoidField.padicComplex l
   have hg := IsPerfectoidField.ker_fontaineTheta_eq_span_kerThetaGenerator ℂ_[l] l
   generalize IsPerfectoidField.kerThetaGenerator ℂ_[l] l = g at hg
   have hnorm : ∀ z : normInteger ℂ_[l], ‖(z : ℂ_[l])‖ ≤ 1 := fun z => mem_normInteger.1 z.2

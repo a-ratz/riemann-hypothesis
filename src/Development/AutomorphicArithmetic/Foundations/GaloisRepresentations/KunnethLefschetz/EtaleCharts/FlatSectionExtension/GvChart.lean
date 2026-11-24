@@ -259,8 +259,8 @@ theorem UpperTheory.Gal.KunnethLefschetz.G.PX.chartNzdAlg :
     ∀ {A E R : Type} [CommRing A] [CommRing E] [CommRing R] {D : ℕ} (p : A →+* E) (ψ : E →+* R) (s : Fin D → E) (y : Fin D → R) (j : Fin D), (MvPolynomial.eval₂Hom p s).Etale → Function.Surjective (MvPolynomial.eval₂Hom ψ y) → RingHom.ker (MvPolynomial.eval₂Hom ψ y) = Ideal.span (insert (MvPolynomial.X j - 1 : MvPolynomial (Fin D) E) (Set.range fun k => MvPolynomial.C (s k) - MvPolynomial.C (s j) * MvPolynomial.X k)) → ψ (s j) ∈ nonZeroDivisors R := by
   intro A E R _ _ _ D p ψ s y j hE hsurj hker
   classical
-  letI : Algebra (MvPolynomial (Fin D) A) E := (MvPolynomial.eval₂Hom p s).toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin D) A) E := hE
+  let : Algebra (MvPolynomial (Fin D) A) E := (MvPolynomial.eval₂Hom p s).toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin D) A) E := hE
   have hX : ∀ k, algebraMap (MvPolynomial (Fin D) A) E (MvPolynomial.X k) = s k := fun k => by
     simp [RingHom.algebraMap_toAlgebra]
   set J : Ideal (MvPolynomial (Fin D) (MvPolynomial (Fin D) A)) :=

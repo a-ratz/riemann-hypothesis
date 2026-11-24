@@ -192,7 +192,7 @@ theorem mat_cancel' {J : Matrix (Fin n) (Fin n) E} (g : UA σ J) (z : Fin n → 
 
 theorem inclR_inj : Function.Injective (inclR (F := F) (E := E) (AF F)) :=
   haveI : Nontrivial (AF F ⊗[F] E) := by
-    haveI : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+    have : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
     infer_instance
   (inclR (F := F) (E := E) (AF F)).injective
 
@@ -200,7 +200,7 @@ theorem mem_ratU {J : Matrix (Fin n) (Fin n) E} {g : UA σ J} : g ∈ ratU σ J 
   refine ⟨fun h => ?_, fun ⟨M, hM⟩ => ?_⟩
   · obtain ⟨u, hu⟩ := Subgroup.mem_subgroupOf.1 h
     exact ⟨u.1, (congrArg Units.val hu).symm⟩
-  · haveI : Nontrivial (AE F E) := inclR_inj.nontrivial
+  · have : Nontrivial (AE F E) := inclR_inj.nontrivial
     have h1 : IsUnit (mat g).det := (Matrix.isUnit_iff_isUnit_det _).1 g.1.isUnit
     have h2 : M.det ≠ 0 := fun h0 => by
       rw [hM, incM, ← RingHom.mapMatrix_apply, ← RingHom.map_det, h0, map_zero] at h1

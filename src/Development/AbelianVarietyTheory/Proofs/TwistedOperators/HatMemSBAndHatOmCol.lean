@@ -52,9 +52,9 @@ namespace GlobalTheory.IndefiniteRowSideFullHecke.OmegaColumnSlices
 
 theorem hat_mem_SB_and_hat_omCol : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circle) (ν : Measure k) (ε : k), HasConductor ψ 1 → IsUnitVol ν → valuation k ε = 1 → ∀ (n : Type) [Fintype n] [DecidableEq n] (μz : kˣ →* ℂˣ) (h : GL n k), ∀ φ ∈ SB (n → k), hat ψ ν ε φ ∈ SB (n → k) ∧ hat ψ ν ε (omCol μz h φ) = omRow μz h (hat ψ ν ε φ) := by
   intro k _ _ _ _ _ _ ψ ν ε hψ hν hε n _ _ μz h φ hφ
-  haveI := hν.1
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := hν.1
+  have := secondCountable k
+  have := t2Space k
   have hε0 : ε ≠ 0 := by
     rintro rfl
     simp at hε

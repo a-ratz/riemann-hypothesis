@@ -446,7 +446,7 @@ theorem eB_neg (ε : Fin n → Bool) (B : Mode ε → ℂ) : eB ε (-B) = (eB ε
 def pol (ε : Fin n → Bool) (x : KG ε × (Mode ε → ℂ)) : UJ ε := x.1 * eB ε x.2
 
 theorem continuous_pol (ε : Fin n → Bool) : Continuous (pol ε) :=
-  (continuous_subtype_val.comp continuous_fst).mul ((stEB n ε).1.comp continuous_snd)
+  (continuous_subtypeVal.comp continuous_fst).mul ((stEB n ε).1.comp continuous_snd)
 
 def den (ε : Fin n → Bool) (B : Mode ε → ℂ) : ℝ≥0 := (Jac (low ε B)).toNNReal
 
@@ -469,7 +469,7 @@ theorem map_pol (ε : Fin n → Bool) : ∃ c : ℝ≥0, c ≠ 0 ∧ muCD ε = c
       (fun m : Measure (PCoord ε → ℂ) => ∫⁻ z, s.indicator (fun z => ENNReal.ofReal (Jac z)) z ∂m) hlow
     simp only [lintegral_smul_measure, smul_eq_mul] at hL
     rw [lintegral_map (hJm.indicator hs) hl, lintegral_indicator hs] at hL
-    rw [Measure.map_apply hl hs, withDensity_apply _ (hl hs), Measure.smul_apply, withDensity_apply _ hs,
+    rw [Measure.map_apply hl hs, withDensity_apply _ (hl hs), smul_apply, withDensity_apply _ hs,
       smul_eq_mul, ← hL, ← lintegral_indicator (hl hs)]
     refine lintegral_congr fun B => ?_
     by_cases hB : low ε B ∈ s
@@ -519,7 +519,7 @@ theorem map_pol (ε : Fin n → Bool) : ∃ c : ℝ≥0, c ≠ 0 ∧ muCD ε = c
   unfold muCD ReciprocityTheory.ChartRestriction.DS.muPolarMat
   erw [h2]
   ext s hs
-  rw [Measure.smul_apply]
+  rw [smul_apply]
   erw [humP.comap_apply]
   change ENNReal.ofReal (cPQ ε) * ((c0 : ℝ≥0∞)⁻¹ *
       (Measure.map (fun g : UJ ε => Formalism.MainNotions.S.umat g) (Measure.map (pol ε) (rho ε))) ((fun g : UJ ε => Formalism.MainNotions.S.umat g) '' s)) =
@@ -871,7 +871,7 @@ theorem stFamBlow_of (hB : StBlow) : StFamBlow := by
     by_cases hkN : k = Fintype.card ι
     · subst hkN
       simpa using (key (Fintype.card ι)).2
-    · rw [if_neg hkN]
+    · rw [ite_eq_right hkN]
       have hlt : k < Fintype.card ι := lt_of_le_of_ne hk' hkN
       have h0 : Tendsto (fun t : ℝ => ((t : ℂ) ^ (Fintype.card ι - k))⁻¹) atTop (𝓝 0) := by
         have h2 : Tendsto (fun t : ℝ => (t ^ (Fintype.card ι - k))⁻¹) atTop (𝓝 0) :=
@@ -892,7 +892,7 @@ theorem stFamBlow_of (hB : StBlow) : StFamBlow := by
       field_simp
   have hsum := tendsto_finsetSum _ hlim
   rw [Finset.sum_ite_eq' (Finset.range (Fintype.card ι + 1)) (Fintype.card ι),
-    if_pos (Finset.self_mem_range_succ _)] at hsum
+    ite_eq_left (Finset.self_mem_range_succ _)] at hsum
   exact hsum.congr' (by filter_upwards [heq] with t ht using ht.symm)
 
 end GlobalTheory.PsCo.PcdSFB
@@ -959,7 +959,7 @@ theorem stConst_holds : StConst := by
     simp only [hF, Pi.zero_apply, norm_zero]
     simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, Finset.sum_const_zero]
     exact ne_of_gt hpos
-  exact ne_of_gt (hFc.integral_pos_of_hasCompactSupport_nonneg_nonzero hFs hFn hF0)
+  exact ne_of_gt (hFc.integral_pos_of_hasCompactSupport_nonneg_ne_zero hFs hFn hF0)
 
 end GlobalTheory.PsCo.Pc3
 end -- clump:auto
@@ -975,8 +975,8 @@ namespace GlobalTheory
 
 theorem exp_conj_entries_hasFDerivAt_zero : ∀ (n : ℕ) (ι : Type) [Fintype ι] (A : (ι → ℂ) →ₗ[ℝ] Matrix (Fin n) (Fin n) ℂ) (p : ι → Fin n × Fin n), (∃ L : (ι → ℂ) →L[ℝ] (ι → ℂ), (∀ w x, L w x = A w (p x).1 (p x).2) ∧ HasFDerivAt (fun (w : ι → ℂ) (x : ι) => (NormedSpace.exp (A w) : Matrix (Fin n) (Fin n) ℂ) (p x).1 (p x).2) L 0) ∧ ∀ s : Matrix (Fin n) (Fin n) ℂ, ∃ L : (ι → ℂ) →L[ℝ] (ι → ℂ), (∀ w x, L w x = (s * A w - A w * s) (p x).1 (p x).2) ∧ HasFDerivAt (fun (w : ι → ℂ) (x : ι) => (NormedSpace.exp (-A w) * s * NormedSpace.exp (A w) : Matrix (Fin n) (Fin n) ℂ) (p x).1 (p x).2) L 0 := by
   intro n ι _ A p
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
   let E : Matrix (Fin n) (Fin n) ℂ →ₗ[ℝ] (ι → ℂ) :=
     { toFun := fun M x => M (p x).1 (p x).2
       map_add' := by intros; rfl
@@ -1120,7 +1120,7 @@ theorem muK_univ (ε : Fin n → Bool) : muK ε Set.univ = 1 := by
 theorem toM_mul (ε : Fin n → Bool) (a b : UJ ε) : toM (a * b) = toM a * toM b := rfl
 
 theorem continuous_toM (ε : Fin n → Bool) : Continuous fun g : UJ ε => toM g :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 theorem continuous_ev (P : Poly n) : Continuous fun M : Mat n => ev M P := by
   unfold ev
@@ -1204,7 +1204,7 @@ theorem lim1 (hEB : StEB) (hR : StR) (hL : StExpLow) (hD : StExpDeriv) (hF : StF
   have hcont2 : ∀ j, Continuous (Function.uncurry fun (B : Mode ε → ℂ) (k : KG ε) =>
       ev (toM ((k : UJ ε) * eB ε B)) (p j) * w (k * eB ε B)) := fun j => by
     have hm : Continuous fun q : (Mode ε → ℂ) × KG ε => (q.2 : UJ ε) * eB ε q.1 :=
-      (continuous_subtype_val.comp continuous_snd).mul (hcEB.comp continuous_fst)
+      (continuous_subtypeVal.comp continuous_snd).mul (hcEB.comp continuous_fst)
     exact ((continuous_ev _).comp ((continuous_toM ε).comp hm)).mul (hw.comp hm)
   have hψc : ∀ j, Continuous (ψ j) := fun j => by
     refine (Complex.continuous_ofReal.comp hJc).mul ?_
@@ -1246,7 +1246,7 @@ theorem lim1 (hEB : StEB) (hR : StR) (hL : StExpLow) (hD : StExpDeriv) (hF : StF
       rw [this]; rfl
     have hint : ∀ j, Integrable (fun k : KG ε => ev (toM ((k : UJ ε) * eB ε B)) (p j) * w (k * eB ε B))
         (muK ε) := fun j => by
-      have hm : Continuous fun k : KG ε => (k : UJ ε) * eB ε B := continuous_subtype_val.mul continuous_const
+      have hm : Continuous fun k : KG ε => (k : UJ ε) * eB ε B := continuous_subtypeVal.mul continuous_const
       have hc1 : Continuous fun k : KG ε => ev (toM ((k : UJ ε) * eB ε B)) (p j) * w (k * eB ε B) :=
         ((continuous_ev _).comp ((continuous_toM ε).comp hm)).mul (hw.comp hm)
       exact integrableOn_univ.1 (hc1.continuousOn.integrableOn_compact isCompact_univ)
@@ -1299,7 +1299,7 @@ theorem lim2 (hEB : StEB) (hR : StR) (hL : StExpLow) (hD : StExpDeriv) (hC : StC
       ev (toM ((k : UJ ε)⁻¹ * ((eB ε B)⁻¹ * s * eB ε B) * (k : UJ ε))) (p j)) := fun j => by
     have hy : Continuous fun q : (Mode ε → ℂ) × KG ε => (eB ε q.1)⁻¹ * s * eB ε q.1 :=
       ((hcEB.comp continuous_fst).inv.mul continuous_const).mul (hcEB.comp continuous_fst)
-    have hk : Continuous fun q : (Mode ε → ℂ) × KG ε => (q.2 : UJ ε) := continuous_subtype_val.comp continuous_snd
+    have hk : Continuous fun q : (Mode ε → ℂ) × KG ε => (q.2 : UJ ε) := continuous_subtypeVal.comp continuous_snd
     exact (continuous_ev _).comp ((continuous_toM ε).comp ((hk.inv.mul hy).mul hk))
   have hψc : ∀ j, Continuous (ψ j) := fun j => by
     refine (Complex.continuous_ofReal.comp hJc).mul ?_
@@ -1357,7 +1357,7 @@ theorem lim2 (hEB : StEB) (hR : StR) (hL : StExpLow) (hD : StExpDeriv) (hC : StC
         rw [this]; rfl
     have hint : ∀ j, Integrable (fun k : KG ε =>
         ev (toM ((k : UJ ε)⁻¹ * ((eB ε B)⁻¹ * s * eB ε B) * (k : UJ ε))) (p j)) (muK ε) := fun j => by
-      have hk : Continuous fun k : KG ε => (k : UJ ε) := continuous_subtype_val
+      have hk : Continuous fun k : KG ε => (k : UJ ε) := continuous_subtypeVal
       have hc1 : Continuous fun k : KG ε => ev (toM ((k : UJ ε)⁻¹ * ((eB ε B)⁻¹ * s * eB ε B) * (k : UJ ε))) (p j) :=
         (continuous_ev _).comp ((continuous_toM ε).comp ((hk.inv.mul continuous_const).mul hk))
       exact integrableOn_univ.1 (hc1.continuousOn.integrableOn_compact isCompact_univ)

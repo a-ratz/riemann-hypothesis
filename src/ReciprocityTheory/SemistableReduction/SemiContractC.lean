@@ -180,7 +180,7 @@ theorem sc_index {K : Type} [Field K] [NumberField K] {r k m : ℕ}
   congr 1
   ext x
   simp only [AddSubgroup.mem_inf, AddSubgroup.mem_comap, Submodule.mem_toAddSubgroup,
-    AddMonoidHom.coe_coe]
+    AddMonoidHom.coe_ofClass]
   constructor
   · rintro ⟨hx, hxL⟩
     refine ⟨?_, hxL⟩

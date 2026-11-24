@@ -112,7 +112,7 @@ theorem map_symm_eq_smul (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
   have hc : Continuous M.symm := (M.symm : (ι → k) →ₗ[k] (ι → k)).continuous_on_pi
   ext s hs
-  rw [Measure.map_apply hc.measurable hs, Measure.smul_apply, ← GroundTheory.Automorphic.Measures.distribHaarChar_pi_eq,
+  rw [Measure.map_apply hc.measurable hs, smul_apply, ← GroundTheory.Automorphic.Measures.distribHaarChar_pi_eq,
     ENNReal.smul_def, smul_eq_mul, distribHaarChar_mul μ M s]
   have : (M.symm : (ι → k) → (ι → k)) ⁻¹' s = M • s := by
     ext x
@@ -195,7 +195,7 @@ theorem smInt_comp_inv_mulVec : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
   refine finsum_congr fun v => ?_
   have hlev : μ ((fun x => φ (((w⁻¹ : GL (Fin t) k) : Matrix (Fin t) (Fin t) k).mulVec x)) ⁻¹' {v}) =
       (distribHaarChar k (Matrix.GeneralLinearGroup.det w)) • μ (φ ⁻¹' {v}) := by
-    rw [← Measure.smul_apply, ← map_inv_mulVec t μ w]
+    rw [← smul_apply, ← map_inv_mulVec t μ w]
     exact (Measure.map_apply hc.measurable (hl.isOpen_fiber v).measurableSet).symm
   rw [hlev, ENNReal.toReal_smul, smul_smul, NNReal.smul_def, smul_eq_mul, Complex.ofReal_mul]
 

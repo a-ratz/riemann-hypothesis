@@ -61,7 +61,7 @@ private theorem exists_element_separating_powers {G K : Type} [Group G] [Field K
       PowerSeries.constantCoeff (ψ b g : PowerSeries K))
     (hsep : ∀ a b, a ≠ b → ∃ g ∈ N, ψ a g ≠ ψ b g) :
     ∃ g ∈ N, g ∈ V ∧ ∀ a b, a ≠ b → ∀ m : ℕ, 0 < m → ψ a g ^ m ≠ ψ b g ^ m := by
-  haveI : CharP (PowerSeries K) l := charP_of_injective_ringHom (PowerSeries.C_injective (R := K)) l
+  have : CharP (PowerSeries K) l := charP_of_injective_ringHom (PowerSeries.C_injective (R := K)) l
   have tf : ∀ g ∈ N, ∀ a b (m : ℕ), 0 < m → (ψ a g / ψ b g) ^ m = 1 → ψ a g / ψ b g = 1 := by
     intro g hg a b m hm h
     apply Units.ext
@@ -101,8 +101,8 @@ private theorem exists_element_separating_powers {G K : Type} [Group G] [Field K
 theorem UpperTheory.V.Pr.niceSep :
     ∀ (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [UpperTheory.V.Fr.IsCoef l O] [Algebra ℤ_[l] O] (F : UpperTheory.V.Fr.Frame l (IsLocalRing.ResidueField O)) (n : ℕ) (T : UpperTheory.V.Pr.Setup F n) (x : Ideal T.S.A) (L : T.S.Loc x) (y : UpperTheory.V.W.Point T.r) (j : L.R →ₐ[O] y.A), IsLocalHom j → UpperTheory.V.Pr.Nice L.ρ (RingHom.ker j) → UpperTheory.V.W.mat y.ρ = T.K.tw (L.ρ.map (j : L.R →+* y.A)) → y.ψ = T.K.twψ (L.ρ.map (j : L.R →+* y.A)) → ∀ U : Subgroup T.G.G₀, IsOpen (U : Set T.G.G₀) → ∀ v, ∃ g : T.G.Gv v, T.G.φ v g ∈ U ⊓ T.G.G' ∧ UpperTheory.V.Pr.FreeRatios fun i => y.ψ v i g |> Units.map (algebraMap y.A y.Fr).toMonoidHom := by
   intro l _ O _ _ _ _ _ F n T x L y j hj hnice hmat hψ U hU v
-  haveI : CharP (IsLocalRing.ResidueField O) l := UpperTheory.V.Fr.IsCoef.char
-  haveI : CharP y.K l :=
+  have : CharP (IsLocalRing.ResidueField O) l := UpperTheory.V.Fr.IsCoef.char
+  have : CharP y.K l :=
     charP_of_injective_algebraMap (algebraMap (IsLocalRing.ResidueField O) y.K).injective l
   let N : Subgroup (T.G.Gv v) := (F.Nv (T.K.e v)).comap (T.K.lam v).toMonoidHom
   let V : Subgroup (T.G.Gv v) := U.comap (T.G.φ v)

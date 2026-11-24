@@ -122,7 +122,7 @@ theorem val_lt_of_mem_idS (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} 
     exact Valuation.map_add_lt _ hx hy
   · intro c x _ hx
     rw [smul_eq_mul, Subring.coe_mul, map_mul, Valuation.map_mul]
-    exact (mul_le_mul_of_nonneg_right (hint c) zero_le').trans_lt (by rwa [one_mul])
+    exact (mul_le_mul_of_nonneg_right (hint c) zero_le).trans_lt (by rwa [one_mul])
 
 theorem resS_eq_zero_of_mem {PP : Formalism.L2.DIV.Pl D.host.E} {s : Formalism.L2.Herm.intAf D.host.F D.host.E}
     (hs : s ∈ Formalism.L2.DIV.idS D.host.F PP.asIdeal) : Formalism.L2.DIV.resS D.host.F PP s = 0 := by

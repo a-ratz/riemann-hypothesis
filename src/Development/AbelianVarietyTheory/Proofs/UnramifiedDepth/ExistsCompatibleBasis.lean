@@ -395,7 +395,7 @@ namespace GlobalTheory.FormalChartOf
 variable {R₀ : Type} [CommRing R₀]
 
 theorem dual_local [IsLocalRing R₀] : IsLocalRing (DualNumber R₀) := by
-  haveI : Nontrivial (DualNumber R₀) := TrivSqZeroExt.inl_injective.nontrivial
+  have : Nontrivial (DualNumber R₀) := TrivSqZeroExt.inl_injective.nontrivial
   refine IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => ?_
   simp only [TrivSqZeroExt.isUnit_iff_isUnit_fst]
   simpa using IsLocalRing.isUnit_or_isUnit_one_sub_self a.fst
@@ -819,7 +819,7 @@ lemma finOf_local_of_comp {O Q S : Type} [CommRing O] [CommRing Q] [CommRing S] 
     [IsLocalRing Q] [IsLocalRing S] [Algebra O Q] [Algebra.IsIntegral O Q] (g : Q →+* S)
     (h : IsLocalHom (g.comp (algebraMap O Q))) : IsLocalHom g := by
   have h1 : (maximalIdeal S).comap (g.comp (algebraMap O Q)) = maximalIdeal O :=
-    ((local_hom_TFAE (g.comp (algebraMap O Q))).out 1 5).1 h
+    ((local_hom_tfae (g.comp (algebraMap O Q))).out 1 5).1 h
   have h2 : (((maximalIdeal S).comap g).comap (algebraMap O Q)).IsMaximal := by
     rw [Ideal.comap_comap, h1]; infer_instance
   have h3 := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap (algebraMap O Q)
@@ -828,7 +828,7 @@ lemma finOf_local_of_comp {O Q S : Type} [CommRing O] [CommRing Q] [CommRing S] 
 
 lemma finOf_local_algebraMap {O Q : Type} [CommRing O] [CommRing Q] [IsLocalRing O]
     [IsLocalRing Q] [Algebra O Q] [Algebra.IsIntegral O Q] : IsLocalHom (algebraMap O Q) :=
-  ((local_hom_TFAE (algebraMap O Q)).out 5 1).1
+  ((local_hom_tfae (algebraMap O Q)).out 5 1).1
     (eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (algebraMap _ _)
       (algebraMap_isIntegral_iff.mpr inferInstance) (maximalIdeal Q)))
 
@@ -884,8 +884,8 @@ lemma finOf_free {O A : Type} [CommRing O] [IsLocalRing O] [CommRing A] [Algebra
   let E : A ≃ₗ[O] (∀ i, Q i) :=
     LinearEquiv.ofBijective (LinearMap.pi fun i => (Ideal.Quotient.mkₐ O _).toLinearMap)
       hε.bijective_pi
-  haveI hfree : ∀ i, Module.Free O (Q i) := fun i => by
-    haveI : Module.Projective O (Q i) :=
+  have hfree : ∀ i, Module.Free O (Q i) := fun i => by
+    have : Module.Projective O (Q i) :=
       Module.Projective.of_split (M := A)
         (E.symm.toLinearMap ∘ₗ LinearMap.single O Q i) (LinearMap.proj i ∘ₗ E.toLinearMap)
         (LinearMap.ext fun x => by simp)
@@ -1070,16 +1070,16 @@ theorem main :
   have pt_univ : ∀ (S : LAlg R₀) (s : O →ₐ[R₀] S) (z : B.G S), p • z = 0 →
       ∃! φ : A →ₐ[R₀] S, φ.comp (IsScalarTower.toAlgHom R₀ (O : Type) A) = s ∧ pt S φ = z := by
     intro S s z hz
-    letI : Algebra (O : Type) S := s.toRingHom.toAlgebra
-    haveI : IsScalarTower R₀ (O : Type) S :=
+    let : Algebra (O : Type) S := s.toRingHom.toAlgebra
+    have : IsScalarTower R₀ (O : Type) S :=
       IsScalarTower.of_algebraMap_eq fun r => (s.commutes r).symm
     obtain ⟨φ, hφ, hu⟩ := huniv S (e S z) ((htor S z).1 hz)
     refine ⟨φ.restrictScalars R₀, ⟨by ext r; exact φ.commutes r, (hbij S).1 (by rw [hpt, hφ])⟩,
       fun φ' ⟨h1, h2⟩ => ?_⟩
     have h3 := hu ⟨φ'.toRingHom, fun r => AlgHom.congr_fun h1 r⟩ (by rw [← h2, hpt]; rfl)
     rw [← h3]; rfl
-  letI : Algebra R₀ C := ((algebraMap (O : Type) C).comp (algebraMap R₀ (O : Type))).toAlgebra
-  haveI : IsScalarTower R₀ (O : Type) C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R₀ C := ((algebraMap (O : Type) C).comp (algebraMap R₀ (O : Type))).toAlgebra
+  have : IsScalarTower R₀ (O : Type) C := IsScalarTower.of_algebraMap_eq fun _ => rfl
   obtain ⟨hfinite, hsep, hrank⟩ := ETA C O A v hv
     (finOf_unram O B p hp pt pt_nat pt_p pt_univ C)
   obtain ⟨n, ε, hε, hloc⟩ := SPLIT O A hsep
@@ -1192,7 +1192,7 @@ theorem finite_algebra_split_local :
     simp only [not_exists] at hcon
     have hnot : ∀ φ : A →ₐ[O] O, ¬ RingHom.ker φ ≤ N := fun φ hle =>
       hcon φ (finSplit_max_eq φ N hN hle).symm
-    simp only [SetLike.not_le_iff_exists] at hnot
+    simp only [IsConcreteLE.not_le_iff_exists] at hnot
     choose a ha haN using hnot
     have := hN.isPrime
     have h0 : ∏ φ, a φ = 0 := hsep _ fun ψ => by
@@ -1225,7 +1225,7 @@ theorem finite_algebra_split_local :
     rw [Finset.sum_eq_single ⟨(maximalIdeal O).comap φ, φ, rfl⟩]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hb (Subtype.ext h.symm)
     · intro h
@@ -1758,8 +1758,8 @@ namespace GlobalTheory.PeriodDatum
 theorem exists_basis_of_card (p : ℕ) [hp : Fact p.Prime] (g : ℕ) (V : Type) [AddCommGroup V]
     [Module (ZMod p) V] (hcV : Nat.card V = p ^ (2 * g)) :
     ∃ f : Ix g → V, ∀ x : V, ∃! t : Ix g → ZMod p, x = ∑ j, (t j).val • f j := by
-  haveI : Finite V := Nat.finite_of_card_ne_zero (by rw [hcV]; exact pow_ne_zero _ hp.out.ne_zero)
-  haveI : Module.Finite (ZMod p) V := Module.Finite.of_finite
+  have : Finite V := Nat.finite_of_card_ne_zero (by rw [hcV]; exact pow_ne_zero _ hp.out.ne_zero)
+  have : Module.Finite (ZMod p) V := Module.Finite.of_finite
   have hrk : Module.finrank (ZMod p) V = Fintype.card (Ix g) := by
     have h := Module.natCard_eq_pow_finrank (K := ZMod p) (V := V)
     rw [hcV, Nat.card_zmod] at h
@@ -1825,8 +1825,8 @@ theorem main :
       ∀ a j n, (Ad a).a.f (LHom.id (Ainf.ainfTowerL p O hv ε hε).O) (D.L.τ j n) = ∑ k, (PadicInt.toZModPow (n + 1) (D.H.ρ (1 ⊗ₜ[ℤ] a) k j)).val • D.L.τ k n) := by
   intro p _ C _ _ _ v O _ _ _ _ hv ε hε g G _ _ B e hbij hadd hnat hsm hfin hflat hdiv hcard hperf
     _ O₀ _ cj Ad hab hcj hAd
-  haveI : IsLocalRing (Ainf.R0 p O ε) := WdAinf.ainf_thetaQuotRing_isLocalRing p O hv ε hε
-  haveI : IsDomain ((Ainf.ainfTowerL p O hv ε hε).O : Type) := Ainf.ainfTower_isDomain p O hv ε hε
+  have : IsLocalRing (Ainf.R0 p O ε) := WdAinf.ainf_thetaQuotRing_isLocalRing p O hv ε hε
+  have : IsDomain ((Ainf.ainfTowerL p O hv ε hε).O : Type) := Ainf.ainfTower_isDomain p O hv ε hε
   have hsm' : Smooth G.hom := SmoothOfRelativeDimension.smooth g G.hom
   obtain ⟨K, wd, hnil, hK, hKl⟩ :=
     GlobalTheory.wData_ainfTower_exists GlobalTheory.WittQuot.teichmuller_quot p O hv ε hε

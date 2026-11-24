@@ -98,7 +98,7 @@ private theorem kappa_ne_zero (M : Meas ℚ)
   have hK0 : M.κ (KK ℚ) = 0 := by
     refine measure_mono_null hcov ?_
     exact (measure_biUnion_null_iff t.countable_toSet).2 fun x hx => hnull _ (hmem k hk x (ht x hx))
-  haveI := M.prob
+  have := M.prob
   have hle : M.κ Set.univ ≤ M.κ (KK ℚ) + M.κ (KK ℚ)ᶜ := by
     rw [← Set.union_compl_self (KK ℚ)]
     exact measure_union_le _ _
@@ -124,10 +124,10 @@ private theorem isOpen_dv {N : ℕ} (hN : 0 < N) (v : H.P ℚ) :
   have : {k : G1 ℚ | Dv N v (k 1 0)} =
       (fun k : G1 ℚ => H.cp v (k 1 0) * (N : H.Kv v)⁻¹) ⁻¹' ((v.adicCompletionIntegers ℚ : ValuationSubring (H.Kv v)) : Set (H.Kv v)) := by
     ext k
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, Dv]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, Dv]
     rw [HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_inv₀]
     rw [← div_eq_mul_inv]
-    exact (div_le_one₀ (zero_lt_iff.2 hv0)).symm
+    exact (div_le_one₀ (pos_iff_ne_zero.2 hv0)).symm
   rw [this]
   exact hO.preimage hc
 
@@ -145,7 +145,7 @@ private theorem dv_of_int {N : ℕ} (hN : 0 < N) (v : H.P ℚ)
   have h2 : (1 : _) ≤ v.valuation ℚ (N : ℚ) := by
     rw [map_inv₀] at h1
     have h3 := not_lt.1 h1
-    have hp : 0 < v.valuation ℚ (N : ℚ) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hN0)
+    have hp : 0 < v.valuation ℚ (N : ℚ) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hN0)
     exact (inv_le_one₀ hp).1 h3
   have h4 : Valued.v (N : H.Kv v) = v.valuation ℚ (N : ℚ) := val_nat v N
   refine hx.trans ?_
@@ -155,7 +155,7 @@ private theorem dv_of_int {N : ℕ} (hN : 0 < N) (v : H.P ℚ)
 theorem UpperTheory.congruenceSubgroup_volume_pos :
     ∀ (M : Meas ℚ) (N : ℕ), 0 < N → 0 < cK M N := by
   intro M N hN
-  haveI := M.prob
+  have := M.prob
   have hfin := HeightOneSpectrum.Support.finite (𝓞 ℚ) ((N : ℚ)⁻¹)
   set T := HeightOneSpectrum.Support (𝓞 ℚ) ((N : ℚ)⁻¹) with hT
   set U : Set (G1 ℚ) := ⋂ v ∈ T, {k : G1 ℚ | Dv N v (k 1 0)} with hU
@@ -244,7 +244,7 @@ private lemma nhds_cong (L : ℕ) (hL : 0 < L) (v : H.P ℚ) :
   have h0 : ((1 : (FiniteAdeleRing (𝓞 ℚ) ℚ)ˣ) : FiniteAdeleRing (𝓞 ℚ) ℚ) v - 1 = 0 := sub_self _
   change Valued.v (((1 : (FiniteAdeleRing (𝓞 ℚ) ℚ)ˣ) : FiniteAdeleRing (𝓞 ℚ) ℚ) v - 1) ≤ _
   rw [h0, map_zero]
-  exact zero_le'
+  exact zero_le
 
 theorem UpperTheory.finiteIdele_congruenceVolume_pos :
     ∀ L : ℕ, 0 < L → 0 < cT L := by
@@ -455,16 +455,16 @@ theorem UpperTheory.has_sum_twisted_zeta_integral_dirichlet_series :
   obtain ⟨G, hGd⟩ : ∃ G : ℝ → ℂ, G = fun y => Wo D φ (em E (aE (iy y) * rot t)) * ((χ.1 (iy y) : ℂˣ) : ℂ) * (y : ℂ) ^ 0 * ((|y| : ℝ) : ℂ) ^ (s - 2) := ⟨_, rfl⟩
   have hGmeas : AEStronglyMeasurable G volume := by
     have hcont : ContinuousOn G ({0}ᶜ : Set ℝ) := by
-      refine continuousOn_iff_continuous_restrict.2 ?_
-      have ci : Continuous fun y : ({0}ᶜ : Set ℝ) => iy y.1 := continuousOn_iff_continuous_restrict.1 Nz.contOn_iy
+      refine continuousOn_iff_continuous_domRestrict.2 ?_
+      have ci : Continuous fun y : ({0}ᶜ : Set ℝ) => iy y.1 := continuousOn_iff_continuous_domRestrict.1 Nz.contOn_iy
       have h1 : Continuous fun y : ({0}ᶜ : Set ℝ) => Wo D φ (em E (aE (iy y.1) * rot t)) :=
         Nz.cont_Wo D hA.cont hA.bdd (Nz.cont_em.comp ((continuous_aE.comp ci).mul continuous_const))
       have h2 : Continuous fun y : ({0}ᶜ : Set ℝ) => ((χ.1 (iy y.1) : ℂˣ) : ℂ) :=
         Units.continuous_val.comp (χ.2.1.comp ci)
       have h3 : Continuous fun y : ({0}ᶜ : Set ℝ) => ((y.1 : ℝ) : ℂ) ^ 0 :=
-        (Complex.continuous_ofReal.comp continuous_subtype_val).pow 0
+        (Complex.continuous_ofReal.comp continuous_subtypeVal).pow 0
       have h4 : Continuous fun y : ({0}ᶜ : Set ℝ) => (((|y.1| : ℝ)) : ℂ) ^ (s - 2) :=
-        Continuous.cpow (Complex.continuous_ofReal.comp (continuous_abs.comp continuous_subtype_val))
+        Continuous.cpow (Complex.continuous_ofReal.comp (continuous_abs.comp continuous_subtypeVal))
           continuous_const fun y => Complex.ofReal_mem_slitPlane.2 (abs_pos.2 y.2)
       rw [hGd]
       exact ((h1.mul h2).mul h3).mul h4
@@ -636,7 +636,7 @@ private theorem mul_mem_SS (N : ℕ) (u : ℝ) (k : G1 ℚ) : Rr u * k ∈ SS N 
   have h : ∀ v, H.cp v ((Rr u * k) 1 0) = H.cp v (k 1 0) := by
     intro v
     simp [Matrix.SpecialLinearGroup.coe_mul, Matrix.mul_apply, Fin.sum_univ_two, map_add (f := _), map_mul, Rr_cp]
-  simp only [SS, Dv, Set.mem_setOf_eq, h]
+  simp only [SS, Dv, Set.mem_ofPred_eq, h]
 
 private theorem Rr_SS (N : ℕ) (t : ℝ) : Rr t ∈ SS N := by
   intro v
@@ -654,9 +654,9 @@ private theorem SS_closed (N : ℕ) (hN : 0 < N) : IsClosed (SS N) := by
   have hset : {k : G1 ℚ | Dv N v (k 1 0)} =
       (fun k : G1 ℚ => H.cp v (k 1 0) * (N : H.Kv v)⁻¹) ⁻¹' (Valued.integer (H.Kv v) : Set (H.Kv v)) := by
     ext k
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, SetLike.mem_coe, Dv]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, SetLike.mem_coe, Dv]
     change _ ↔ Valued.v (H.cp v (k 1 0) * (N : H.Kv v)⁻¹) ≤ 1
-    rw [map_mul, map_inv₀, ← div_eq_mul_inv, div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hc))]
+    rw [map_mul, map_inv₀, ← div_eq_mul_inv, div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hc))]
   rw [hset]
   exact (Valued.isClosed_integer (H.Kv v)).preimage ((hcp.comp (cont_entry 1 0)).mul continuous_const)
 
@@ -782,7 +782,7 @@ theorem UpperTheory.integral_maxCompact_eq_circle_average :
         (∀ k ∈ KK ℚ, k ∈ SS N → ∀ t : ℝ, re (k 1 0) = Real.sin t → re (k 1 1) = Real.cos t → A' k = H' t) →
         ∫ k, A' k ∂M.κ = ((cK M N / (2 * Real.pi) : ℝ) : ℂ) * ∫ t in (0 : ℝ)..2 * Real.pi, H' t := by
   intro M N hN A' H' hH ⟨C, hC⟩ h0 h1
-  haveI := M.prob
+  have := M.prob
   have hS : MeasurableSet (SS N) := (SS_closed N hN).measurableSet
   have hper : Function.Periodic H' (2 * Real.pi) := fun t => by
     have e1 := h1 (Rr t) (Rr_mem t) (Rr_SS N t) t (rotation_entry_sin t) (rotation_entry_cos t)
@@ -878,7 +878,7 @@ theorem UpperTheory.lseries_twisted_coeff_eq_tsum_coprime_of_summable :
     rintro ⟨n, hn, hc⟩
     have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
     rw [LSeries.term_of_ne_zero hn.ne']
-    simp only [bN, if_pos hc]
+    simp only [bN, ite_eq_left hc]
     rw [Complex.cpow_sub _ _ hn0, Complex.cpow_one]
     ring
   have hzero : ∀ x ∉ Set.range (Subtype.val : {n : ℕ // 0 < n ∧ n.Coprime N} → ℕ),
@@ -888,7 +888,7 @@ theorem UpperTheory.lseries_twisted_coeff_eq_tsum_coprime_of_summable :
     · rw [h0, LSeries.term_zero]
     · rw [LSeries.term_of_ne_zero h0]
       have hc : ¬ x.Coprime N := fun hc => hx ⟨⟨x, Nat.pos_of_ne_zero h0, hc⟩, rfl⟩
-      simp only [bN, if_neg hc, zero_div]
+      simp only [bN, ite_eq_right hc, zero_div]
   have heq : (LSeries.term (bN N χ μ) s) ∘ (Subtype.val : {n : ℕ // 0 < n ∧ n.Coprime N} → ℕ) =
       fun n : {n : ℕ // 0 < n ∧ n.Coprime N} => μ n * ((χ.1 (pin n) : ℂˣ) : ℂ) * (n : ℂ) ^ (1 - s) :=
     funext hterm
@@ -1249,7 +1249,7 @@ theorem UpperTheory.zeta_integral_eq_zero_of_mem_maximal_compact_not_mem_level :
   have hz : ∀ z : IdeleGroup ℚ, (PhiN N p fun j => ((z : (A ℚ)ˣ) : A ℚ) * row k j) = 0 := by
     intro z
     unfold PhiN
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hkS
     intro v

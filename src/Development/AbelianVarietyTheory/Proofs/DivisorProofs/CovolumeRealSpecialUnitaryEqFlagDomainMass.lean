@@ -117,19 +117,19 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   intro E _ _ _ r X x _ _ hr hx
   classical
   set H := UnitaryFrames.unitarySubgroup X with hHdef
-  letI : MeasurableSpace H := borel H
-  haveI : BorelSpace H := ⟨rfl⟩
+  let : MeasurableSpace H := borel H
+  have : BorelSpace H := ⟨rfl⟩
   have hHm : ∀ g, g ∈ H ↔ X.IsUnitaryC fun τ => (g τ : Matrix (Fin r) (Fin r) ℂ) := fun _ => Iff.rfl
   obtain ⟨hLC, hSC, hfr⟩ := UnitaryFrames.unitary_group_frames.2 r X H hHm
-  haveI := hLC
-  haveI := hSC
+  have := hLC
+  have := hSC
   obtain ⟨-, ι, hιc, hι1, -⟩ := hfr x hx
   obtain ⟨νU, hνl, hνf, hν⟩ := invMeas FrameMeasureClosed.measure_statements.2.1
     GramSchmidtCont.exists_continuous_gramSchmidt isOrth_rmul_iff_unitary_diagonal
     (SatFin.muF_sat_lt_top FrameMeasureClosed.measure_statements.2.1)
     UnitaryFrames.unitary_group_frames.2 r X H hHm x hx
-  haveI := hνl
-  haveI := hνf
+  have := hνl
+  have := hνf
   let M : (X.Ψ → GL (Fin r) ℂ) → X.Ψ → Matrix (Fin r) (Fin r) ℂ := fun g τ => (g τ : Matrix (Fin r) (Fin r) ℂ)
   have hU : ∀ g : H, X.IsUnitaryC (M g.1) := fun g => g.2
   have hMmul : ∀ g h : X.Ψ → GL (Fin r) ℂ, ∀ τ, M (g * h) τ = M g τ * M h τ := fun g h τ => by
@@ -148,13 +148,13 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hcx : ∀ t, X.lmulC (M (cT t).1) x = rmul x (diagF X t) := fun t => hι1 _ (horthT t)
 
   have hdCc : Continuous dC := continuous_pi fun τ =>
-    Continuous.subtype_mk ((hMc τ).comp continuous_subtype_val).matrix_det _
+    Continuous.subtype_mk ((hMc τ).comp continuous_subtypeVal).matrix_det _
   have htUc : Continuous tU := by
     refine continuous_pi fun τ => continuous_pi fun a => ?_
     by_cases ha : (a : ℕ) = 0
-    · simp only [tU, ha, if_true]
+    · simp only [tU, ha, ite_true]
       exact ((continuous_apply τ).comp hdCc).inv
-    · simp only [tU, ha, if_false]
+    · simp only [tU, ha, ite_false]
       exact continuous_const
   have hcTc : Continuous cT := by
     refine hιc.comp_continuous ?_ fun t => horthT t
@@ -169,10 +169,10 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have e3 : (mat (diagF X (tU g)) τ).det = ((M g.1 τ).det)⁻¹ := by
       show (Matrix.diagonal fun a => ((tU g τ a : Circle) : ℂ)).det = _
       rw [Matrix.det_diagonal, Finset.prod_eq_single (⟨0, hr⟩ : Fin r)]
-      · simp only [tU, if_true, Circle.coe_inv, hdC]
+      · simp only [tU, ite_true, Circle.coe_inv, hdC]
       · intro b _ hb
         have : (b : ℕ) ≠ 0 := fun h => hb (Fin.ext h)
-        simp only [tU, this, if_false, Circle.coe_one]
+        simp only [tU, this, ite_false, Circle.coe_one]
       · simp
     have hx0 := UnitaryFrames.det_ne_zero_of_isOrth X hx τ
     have hg0 : (M g.1 τ).det ≠ 0 := by
@@ -200,11 +200,11 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     exact hdetc g τ
   let p : H → realSU X.Ψ X.Gm := fun g => ⟨(g * cU g).1, hpmem g⟩
   have hpc : Continuous p :=
-    Continuous.subtype_mk (continuous_subtype_val.comp (continuous_id.mul hcUc)) _
+    Continuous.subtype_mk (continuous_subtypeVal.comp (continuous_id.mul hcUc)) _
   have hpm : Measurable p := hpc.measurable
 
   let incl : realSU X.Ψ X.Gm → H := fun s => ⟨s.1, fun τ => (s.2 τ).2⟩
-  have hinclc : Continuous incl := Continuous.subtype_mk continuous_subtype_val _
+  have hinclc : Continuous incl := Continuous.subtype_mk continuous_subtypeVal _
   have hpinv : ∀ (s : (realSU X.Ψ X.Gm)) (g : H), p (incl s * g) = s * p g := by
     intro s g
     have htU : tU (incl s * g) = tU g := by
@@ -248,20 +248,20 @@ theorem exists_haar_lying_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have h1 := hν (fun _ => 1) measurable_const (fun _ _ _ _ => rfl)
     simp only [lintegral_const, one_mul] at h1
     rw [hνdef, Measure.map_apply hpm MeasurableSet.univ, Set.preimage_univ, h1]
-  haveI := hνinv
-  haveI := hνfin
+  have := hνinv
+  have := hνfin
   have hs := Measure.isMulLeftInvariant_eq_smul ν (Measure.haar : Measure (realSU X.Ψ X.Gm))
   have hc0 : ν.haarScalarFactor (Measure.haar : Measure (realSU X.Ψ X.Gm)) ≠ 0 := by
     intro h0
     apply FlagQuotHaar.muF_univ_ne_zero X hx
-    rw [← huniv, hs, h0, zero_smul, Measure.coe_zero, Pi.zero_apply]
+    rw [← huniv, hs, h0, zero_smul, FunLike.coe_zero, Pi.zero_apply]
   refine ⟨ν, ?_, fun φ hφ hφb => ?_⟩
   · rw [hs, ENNReal.smul_def]
     exact Measure.IsHaarMeasure.smul _ (ENNReal.coe_ne_zero.2 hc0) ENNReal.coe_ne_top
   · have hLc : Continuous fun g : realSU X.Ψ X.Gm =>
         X.lmulC (fun τ => (((g : realSU X.Ψ X.Gm) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x := by
       refine continuous_pi fun τ => ?_
-      exact ((hMc τ).comp continuous_subtype_val).matrix_mul continuous_const
+      exact ((hMc τ).comp continuous_subtypeVal).matrix_mul continuous_const
     have hm : Measurable fun g : realSU X.Ψ X.Gm =>
         φ (X.lmulC (fun τ => (((g : realSU X.Ψ X.Gm) : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x) :=
       hφ.comp hLc.measurable
@@ -296,8 +296,8 @@ theorem countable_numberField : Countable E :=
   (Module.finBasis ℚ E).equivFun.injective.countable
 
 theorem countable_GL : Countable (GL (Fin r) E) := by
-  haveI := countable_numberField (E := E)
-  haveI : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
+  have := countable_numberField (E := E)
+  have : Countable (Matrix (Fin r) (Fin r) E) := inferInstanceAs (Countable (Fin r → Fin r → E))
   exact Function.Injective.countable (f := (Units.val : GL (Fin r) E → Matrix (Fin r) (Fin r) E))
     fun a b h => Units.ext h
 
@@ -331,7 +331,7 @@ theorem invB_mem {Ψ : Finset (E →+* ℂ)} {b : Frame Ψ r} (hb : b ∈ Bor Ψ
   intro τ
   have hm : mat (invB b) τ = (mat b τ)⁻¹ := rfl
   have hu : IsUnit (mat b τ).det := isUnit_iff_ne_zero.mpr (hb τ).1
-  letI := Matrix.invertibleOfIsUnitDet _ hu
+  let := Matrix.invertibleOfIsUnitDet _ hu
   refine ⟨by rw [hm]; exact (Matrix.isUnit_nonsing_inv_det _ hu).ne_zero, fun a c h => ?_⟩
   exact (Matrix.blockTriangular_inv_of_blockTriangular (tri_of_mem hb τ)) h
 
@@ -395,7 +395,7 @@ theorem continuous_frOf (X : Data E r) (x : Frame X.Ψ r) : Continuous (frOf X x
   refine continuous_pi fun τ => ?_
   show Continuous fun g : realSU X.Ψ X.Gm =>
     ((((g : realSU X.Ψ X.Gm) : X.Ψ → GL (Fin r) ℂ) τ : GL (Fin r) ℂ) : Matrix (Fin r) (Fin r) ℂ) * mat x τ
-  exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtype_val)).matrix_mul
+  exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtypeVal)).matrix_mul
     continuous_const
 
 end GlobalTheory.SUCovol
@@ -415,7 +415,7 @@ theorem covolume_realSU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     rw [hμ, lintegral_smul_measure, smul_eq_mul]
     exact congrArg (C * ·) (hνφ φ hφ hB)
   obtain ⟨hFFm, hFFO, hFFinj, hFFae⟩ := hFF
-  haveI := countable_GL (E := E) (r := r)
+  have := countable_GL (E := E) (r := r)
 
   obtain ⟨T, hTdef⟩ : ∃ T : Set (Frame X.Ψ r), T = (fun p : ReciprocityTheory.L2DbarEstimates.V (nd X) × Frame X.Ψ r =>
       rmul (cpt X x p.1) p.2) '' (FF ×ˢ Bor X.Ψ r) := ⟨_, rfl⟩
@@ -425,8 +425,8 @@ theorem covolume_realSU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     · rintro ⟨z, hz, b, hb, rfl⟩; exact ⟨(z, b), ⟨hz, hb⟩, rfl⟩
   have hTm : MeasurableSet T := by
     rw [hTdef]
-    haveI : PolishSpace (Frame X.Ψ r) := {}
-    haveI : PolishSpace (ReciprocityTheory.L2DbarEstimates.V (nd X) × Frame X.Ψ r) := {}
+    have : PolishSpace (Frame X.Ψ r) := {}
+    have : PolishSpace (ReciprocityTheory.L2DbarEstimates.V (nd X) × Frame X.Ψ r) := {}
     refine (hFFm.prod (measurableSet_Bor X.Ψ r)).image_of_continuousOn_injOn ?_ ?_
     · exact ((GlobalTheory.UnitaryInvMeasure.continuous_rmul X).comp
         (((KU.cont_cpt X x).comp continuous_fst).prodMk continuous_snd)).continuousOn
@@ -552,19 +552,19 @@ theorem covolume_realSU : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     exact h
   have hfd : IsFundamentalDomain (inReal X.Ψ X.Gm X.Γ) (frOf X x ⁻¹' T) (riemHaar X.Ψ X.Gm x) :=
     ⟨(hfm hTm).nullMeasurableSet, hcov, hdisj⟩
-  haveI : Countable (inReal X.Ψ X.Gm X.Γ) := by
+  have : Countable (inReal X.Ψ X.Gm X.Γ) := by
     let f : {γ : X.Γ // embGL X.Ψ r (γ : GL (Fin r) E) ∈ realSU X.Ψ X.Gm} → inReal X.Ψ X.Gm X.Γ :=
       fun p => ⟨⟨embGL X.Ψ r p.1, p.2⟩, Subgroup.mem_subgroupOf.2 (Subgroup.mem_map.2 ⟨p.1, p.1.2, rfl⟩)⟩
     refine Function.Surjective.countable (f := f) ?_
     rintro ⟨⟨g, hg⟩, hgm⟩
     obtain ⟨c, hc, e⟩ := Subgroup.mem_map.1 (Subgroup.mem_subgroupOf.1 hgm)
     exact ⟨⟨⟨c, hc⟩, e ▸ hg⟩, Subtype.ext (Subtype.ext e)⟩
-  haveI : MeasurableConstSMul (inReal X.Ψ X.Gm X.Γ) (realSU X.Ψ X.Gm) :=
+  have : MeasurableConstSMul (inReal X.Ψ X.Gm X.Γ) (realSU X.Ψ X.Gm) :=
     ⟨fun c => by
       show Measurable fun a : realSU X.Ψ X.Gm => (c : realSU X.Ψ X.Gm) * a
       exact (continuous_const_mul _).measurable⟩
-  haveI : (riemHaar X.Ψ X.Gm x).IsMulLeftInvariant := by rw [hμ]; infer_instance
-  haveI : SMulInvariantMeasure (inReal X.Ψ X.Gm X.Γ) (realSU X.Ψ X.Gm) (riemHaar X.Ψ X.Gm x) :=
+  have : (riemHaar X.Ψ X.Gm x).IsMulLeftInvariant := by rw [hμ]; infer_instance
+  have : SMulInvariantMeasure (inReal X.Ψ X.Gm X.Γ) (realSU X.Ψ X.Gm) (riemHaar X.Ψ X.Gm x) :=
     ⟨fun c s _ => measure_preimage_mul (riemHaar X.Ψ X.Gm x) (c : realSU X.Ψ X.Gm) s⟩
   rw [hfd.covolume_eq_volume, hDμ]
 

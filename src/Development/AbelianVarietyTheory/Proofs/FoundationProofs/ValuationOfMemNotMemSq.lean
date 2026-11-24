@@ -146,7 +146,7 @@ theorem locIdele_int_iff (P : HeightOneSpectrum (𝓞 E)) (u : (P.adicCompletion
 theorem isUnitAt_iff (P : HeightOneSpectrum (𝓞 E)) (u : (P.adicCompletion E)ˣ) :
     Formalism.L2.Host.IsUnitAt P u ↔ Valued.v (u : P.adicCompletion E) ≤ 1 ∧
       Valued.v ((u⁻¹ : (P.adicCompletion E)ˣ) : P.adicCompletion E) ≤ 1 := by
-  have h0 : 0 < Valued.v (u : P.adicCompletion E) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 u.ne_zero)
+  have h0 : 0 < Valued.v (u : P.adicCompletion E) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 u.ne_zero)
   rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ h0]
   exact le_antisymm_iff
 
@@ -225,7 +225,7 @@ theorem chiAt_eq_val (hσ : IsCMExt F E σ) {χ : (AE F E)ˣ →* Circle} {P : H
 
 theorem chiAt_eq_zero (hσ : IsCMExt F E σ) {χ : (AE F E)ˣ →* Circle} {P : HeightOneSpectrum (𝓞 E)}
     (h : ¬ UnrAt χ P) : chiAt σ χ P = 0 :=
-  dif_neg fun hc => h ((isUnramAt_iff_unrAt hσ χ P).1 hc.1)
+  dite_eq_right fun hc => h ((isUnramAt_iff_unrAt hσ χ P).1 hc.1)
 
 theorem lfac_eq_locL (hσ : IsCMExt F E σ) (χ : (AE F E)ˣ →* Circle) (P : HeightOneSpectrum (𝓞 E)) (s : ℂ) :
     lfac σ χ P s = locL (charFam χ) P s := by

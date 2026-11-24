@@ -115,7 +115,7 @@ variable {G V W : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [A
 
 theorem finite_quot {K K' : Subgroup G} (c : IsCompact (K : Set G)) (o : IsOpen (K' : Set G)) :
     Finite (K ⧸ K'.subgroupOf K) := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 c
+  have : CompactSpace K := isCompact_iff_compactSpace.1 c
   exact Subgroup.quotient_finite_of_isOpen _ (Subgroup.subgroupOf_isOpen K K' o)
 
 theorem mem_of_span (ρ : Representation ℂ G V) {K : Subgroup G} (c : IsCompact (K : Set G)) (S : Set V) (W₀ : Submodule ℂ V)
@@ -139,8 +139,8 @@ theorem mem_of_span (ρ : Representation ℂ G V) {K : Subgroup G} (c : IsCompac
       have := W₀.smul_mem a (h₁ K' h)
       simpa [av, Finset.smul_sum] using this
   obtain ⟨K₀, o, h⟩ := key w hw
-  haveI := finite_quot c o
-  letI := Fintype.ofFinite (K ⧸ K₀.subgroupOf K)
+  have := finite_quot c o
+  let := Fintype.ofFinite (K ⧸ K₀.subgroupOf K)
   have h1 := h K₀ le_rfl
   rw [av_of_fixed ρ K K₀ hfix] at h1
   exact (Submodule.smul_mem_iff _ (Nat.cast_ne_zero.2 Fintype.card_ne_zero)).1 h1

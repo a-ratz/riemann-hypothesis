@@ -67,9 +67,9 @@ private theorem isGVal_unique' {F : Type} [Field F] [NumberField F] {k : ℕ}
     have hU : IsOpen {σ : ℂ | -1 / 2 < σ.re} := isOpen_lt continuous_const Complex.continuous_re
     have hC : IsPreconnected {σ : ℂ | -1 / 2 < σ.re} := (convex_halfSpace_re_gt _).isPreconnected
     have hone : (1 : ℂ) ∈ {σ : ℂ | -1 / 2 < σ.re} := by
-      simp only [Set.mem_setOf_eq, Complex.one_re]; norm_num
+      simp only [Set.mem_ofPred_eq, Complex.one_re]; norm_num
     have hzero : (0 : ℂ) ∈ {σ : ℂ | -1 / 2 < σ.re} := by
-      simp only [Set.mem_setOf_eq, Complex.zero_re]; norm_num
+      simp only [Set.mem_ofPred_eq, Complex.zero_re]; norm_num
     have hev : H =ᶠ[nhds 1] H' := by
       filter_upwards [(isOpen_lt continuous_const Complex.continuous_re).mem_nhds
         (show (0 : ℝ) < (1 : ℂ).re by simp)] with σ hσ

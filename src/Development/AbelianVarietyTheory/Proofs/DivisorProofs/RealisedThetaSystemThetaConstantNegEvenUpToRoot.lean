@@ -76,7 +76,7 @@ namespace GlobalTheory.ThetaParity
 theorem exists_rigPull_inv {S : Scheme.{0}} (P : PolAV S) (rig : LB.Gen (P.L.pull (eSec P.A))) (hrig : rig.IsGen) :
     haveI := P.isAb.comm
     ∃ w : LB.Iso P.L (P.L.pull (ι[P.A]).left), GlobalTheory.OneBasis.RigPull P.A P.A (𝟙 S) (ι[P.A]).left w rig rig := by
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   obtain ⟨u, hu⟩ := GlobalTheory.exists_gen_neg_of_sym GlobalTheory.globalFns_holds P.isAb P.isLB P.sym
   obtain ⟨s, hs, hr⟩ := GlobalTheory.AbPackage.exists_rigidified_sym P.isLB u hu
   let L : RigLB P.A := ⟨P.L, rig, P.isLB, hrig⟩
@@ -107,7 +107,7 @@ theorem pt_neg_left {S : ThetaSys o Ω} (ρ : S.Real) (a : S.Gam) :
 theorem key_fn (S : ThetaSys o Ω) (ρ : S.Real) :
     ∃ c₀ : Γ((baseOver (Sp S.R)).left, ⊤), ∀ a, ∃ d : Γ((baseOver (Sp S.R)).left, ⊤),
       d ^ ((S.r * S.N) ^ 2) = 1 ∧ c₀ * fn (⟨S.th (-a), S.th_mem (-a)⟩ : S.R) = d * fn (⟨S.th a, S.th_mem a⟩ : S.R) := by
-  haveI := ρ.P.isAb.comm
+  have := ρ.P.isAb.comm
   obtain ⟨w, R⟩ := exists_rigPull_inv ρ.P ρ.rig ρ.rig_gen
   have hφ : (ι[ρ.P.A]).left ≫ ρ.P.A.hom = ρ.P.A.hom ≫ 𝟙 _ := by rw [Over.w, Category.comp_id]
   obtain ⟨s', hs', -⟩ := GlobalTheory.OneBasis.Calc.existsUnique_thru (k := 1) (T := baseOver (Sp S.R))

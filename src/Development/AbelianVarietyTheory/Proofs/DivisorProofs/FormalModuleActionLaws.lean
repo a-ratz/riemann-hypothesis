@@ -84,21 +84,21 @@ theorem exists_mem_pow_forall_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
 
 theorem exists_mem_pow_add_eq_one : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (w0 : Ideal (𝓞 D.F)) (r : ℕ), IsEtPlace b w0 → ∀ (k : Type) [Field k] [IsAlgClosed k] [CharP k p] (β : R →+* k) (r2 : ℤ), (r2 : k) = (D.tr : k) - β b.ρ → ∃ c ∈ w0 ^ r, ∃ e f : 𝓞 D.F, c + e * (D.ω - (r2 : 𝓞 D.F)) + f * (p : 𝓞 D.F) = 1 := by
   intro p _ D R _ b w0 r hw k _ _ _ β r2 hr2
-  haveI : w0.IsMaximal := hw.1
-  letI : Field (𝓞 D.F ⧸ w0) := Ideal.Quotient.field w0
+  have : w0.IsMaximal := hw.1
+  let : Field (𝓞 D.F ⧸ w0) := Ideal.Quotient.field w0
 
   have hpQ : ((p : 𝓞 D.F ⧸ w0)) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk w0), Ideal.Quotient.eq_zero_iff_mem]; exact hw.2.1
-  haveI : CharP (𝓞 D.F ⧸ w0) p := (CharP.charP_iff_prime_eq_zero (Fact.out)).mpr hpQ
+  have : CharP (𝓞 D.F ⧸ w0) p := (CharP.charP_iff_prime_eq_zero (Fact.out)).mpr hpQ
   have hne : w0 ≠ ⊥ := by
     intro h
     have h1 := hw.2.1
     rw [h, Ideal.mem_bot] at h1
     exact (Nat.cast_ne_zero.mpr (Fact.out : p.Prime).ne_zero) h1
-  haveI : Finite (𝓞 D.F ⧸ w0) := Ideal.finiteQuotientOfFreeOfNeBot w0 hne
-  letI : Algebra (ZMod p) (𝓞 D.F ⧸ w0) := ZMod.algebra _ p
-  letI : Algebra (ZMod p) k := ZMod.algebra _ p
-  haveI : Algebra.IsAlgebraic (ZMod p) (𝓞 D.F ⧸ w0) := inferInstance
+  have : Finite (𝓞 D.F ⧸ w0) := Ideal.finiteQuotientOfFreeOfNeBot w0 hne
+  let : Algebra (ZMod p) (𝓞 D.F ⧸ w0) := ZMod.algebra _ p
+  let : Algebra (ZMod p) k := ZMod.algebra _ p
+  have : Algebra.IsAlgebraic (ZMod p) (𝓞 D.F ⧸ w0) := inferInstance
   let φ0 := IsAlgClosed.lift (M := k) (R := ZMod p) (S := 𝓞 D.F ⧸ w0)
   let φ : 𝓞 D.F →+* k := φ0.toRingHom.comp (Ideal.Quotient.mk w0)
   have hker : RingHom.ker φ = w0 := by
@@ -174,7 +174,7 @@ theorem core {p : ℕ} [Fact p.Prime] (D : Datum p) {R : Type} [CommRing R] (b :
   · have h := hv _ (Ideal.pow_mem_pow hw.2.1 r)
     rw [← Nat.cast_pow, L_nat] at h
     exact (smul_eq_zero.mp h).resolve_left (by rw [Nat.cast_pow]; exact pow_ne_zero _ hp)
-  haveI : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out)).mpr hp
+  have : CharP k p := (CharP.charP_iff_prime_eq_zero (Fact.out)).mpr hp
   set Tω := L D.ω with hTω
   set ρ1 := β b.ρ with hρ1
   set ρ2 := (D.tr : k) - ρ1 with hρ2

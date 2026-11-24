@@ -267,9 +267,9 @@ theorem wall_scale [IsTopologicalGroup G] {K Γ P P' : Subgroup G} {ρ : K →* 
     rw [norm_smul]
     exact mul_le_mul hE hH (norm_nonneg _) (Real.exp_pos _).le
   · rw [eis_twist hl c ρ (fun x => s * z * η x) _ (s * z) (fun x => by push_cast; ring),
-      ContinuousLinearMap.smul_apply, hw.eqR _ (by rw [hre]; exact hgtx _ hz) g w, smul_comm]
+      smul_apply, hw.eqR _ (by rw [hre]; exact hgtx _ hz) g w, smul_comm]
   · rw [eis_twist hl c ρ (fun x => β x - s * z * η' x) _ (s * z) (fun x => by push_cast; ring),
-      ContinuousLinearMap.smul_apply, hw.eqL _ (by rw [hre]; exact hltx _ hz) g w]
+      smul_apply, hw.eqL _ (by rw [hre]; exact hltx _ hz) g w]
 
 theorem scale : PositivityTheory.RgEis.Scale := by
   intro G _ _ _ _ _ W _ _ _ K ρ _ _ Γ P P' c η η' β l s hs hl hW
@@ -452,7 +452,7 @@ theorem UpperTheory.Reformulated.B.DYhc7.main :
         IsClosed (↑P : Set G) →
           UpperTheory.Reformulated.B.DYhc7.Iwa P K → Topology.IsQuotientMap fun (x : ↥P × ↥K) ↦ (↑x.1 : G) * (↑x.2 : G) := by
   intro G _ _ _ K P hK hP hI
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   let h : G × K ≃ₜ G × K :=
     { toFun := fun y => (y.1 * (y.2 : G), y.2)
       invFun := fun y => (y.1 * (y.2 : G)⁻¹, y.2)
@@ -523,7 +523,7 @@ theorem sec_continuous [IsTopologicalGroup G] {Γ K P : Subgroup G} {c : G → �
     {ρ : K →* (W →L[ℂ] W)} (hK : IsCompact (K : Set G)) (hρ : Continuous ρ) (hpar : IsPar Γ K P c)
     {w : W} (hw : w ∈ secSp K P c ρ) : Continuous fun g => sec K P c ρ g w := by
   refine (isQuotientMap_mul hK hpar.closed hpar.iwa).continuous_iff.mpr ?_
-  have hc : Continuous fun p : P => c p := continuousOn_iff_continuous_restrict.mp hpar.ch.cont
+  have hc : Continuous fun p : P => c p := continuousOn_iff_continuous_domRestrict.mp hpar.ch.cont
   have he : ((fun g => sec K P c ρ g w) ∘ fun x : P × K => (x.1 : G) * (x.2 : G))
       = fun x : P × K => c x.1 • ρ x.2⁻¹ w := by
     funext x
@@ -536,12 +536,12 @@ theorem sec_continuous [IsTopologicalGroup G] {Γ K P : Subgroup G} {c : G → �
 theorem sec_bound {Γ K P : Subgroup G} {c : G → ℂ} {ρ : K →* (W →L[ℂ] W)}
     (hK : IsCompact (K : Set G)) (hρ : Continuous ρ) (hpar : IsPar Γ K P c) :
     ∃ M : ℝ, ∀ g (w : W), ‖sec K P c ρ g w‖ ≤ M * ‖w‖ := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   obtain ⟨M, hM⟩ := (isCompact_range hρ).isBounded.exists_norm_le
   refine ⟨M, fun g w => ?_⟩
   obtain ⟨p, hp, k, hk, rfl⟩ := hpar.iwa g
   have h : ∃ k' : K, (p * k) * (k' : G)⁻¹ ∈ P := ⟨⟨k, hk⟩, by simpa using hp⟩
-  rw [sec, dite_eq_left h, ContinuousLinearMap.smul_apply, norm_smul, hpar.ch.norm _ h.choose_spec,
+  rw [sec, dite_eq_left h, smul_apply, norm_smul, hpar.ch.norm _ h.choose_spec,
     one_mul]
   exact ((ρ _).le_opNorm w).trans (mul_le_mul_of_nonneg_right (hM _ ⟨_, rfl⟩) (norm_nonneg _))
 
@@ -935,7 +935,7 @@ theorem cA_cA {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (z : AE F E) : cA σ (cA
   | add x y hx hy => simp [map_add (f := _), hx, hy]
 
 theorem continuous_cA (σ : E →ₐ[F] E) : Continuous (cA σ) := by
-  haveI : Module.Finite (AF F) (AE F E) := inferInstance
+  have : Module.Finite (AF F) (AE F E) := inferInstance
   exact IsModuleTopology.continuous_of_linearMap (cA σ).toLinearMap
 
 theorem cA_mem_intHat (σ : E →ₐ[F] E) {z : AE F E} (hz : z ∈ intHat F E) : cA σ z ∈ intHat F E := by
@@ -1243,7 +1243,7 @@ theorem ext_gl (hB : BdetLaw) (hE : ExtLaw) (hT : GrpTop) (A : Ad E R) (hA : A.G
     (t : Set κ) : IsHt (A.ratGL κ) (A.kGL κ) (stab R t) (A.htGL t) ∧
       ∀ p ∈ stab R t, ∀ k ∈ A.kGL κ, A.htGL t (p * k) = A.lg (bdet t p) := by
   obtain ⟨hc, hm, hcont, hr, hk, -⟩ := hB E R A hA.toGoodL κ t
-  haveI : T2Space (GL κ R) := (hT E R A hA κ 1).1
+  have : T2Space (GL κ R) := (hT E R A hA κ 1).1
   refine hE (GL κ R) (A.ratGL κ) (A.kGL κ) (stab R t) (fun p => A.lg (bdet t p)) (hA.kcpt κ) hc (hA.iwa κ t) ?_ ?_ hk ?_
   · intro p hp q hq
     simp only [hm p hp q hq, hA.lgmul]
@@ -1254,7 +1254,7 @@ theorem ext_gl (hB : BdetLaw) (hE : ExtLaw) (hT : GrpTop) (A : Ad E R) (hA : A.G
 
 theorem closed_uQ (hB : BdetLaw) (A : Ad E R) (hA : A.GoodL) (ε : ℤˣ) {κ : Type} [Fintype κ] [DecidableEq κ] (t : Set κ) :
     IsClosed (A.uQ ε t : Set (A.U ε κ)) :=
-  (hB E R A hA (κ ⊕ κ) (Sum.inl '' t)).1.preimage continuous_subtype_val
+  (hB E R A hA (κ ⊕ κ) (Sum.inl '' t)).1.preimage continuous_subtypeVal
 
 theorem ext_u (hB : BdetLaw) (hE : ExtLaw) (hT : GrpTop) (A : Ad E R) (hA : A.Good) (ε : ℤˣ) {κ : Type} [Fintype κ]
     [DecidableEq κ] (t : Set κ) (hI : Iwa (A.uQ ε t) (A.uK ε κ)) :
@@ -1262,12 +1262,12 @@ theorem ext_u (hB : BdetLaw) (hE : ExtLaw) (hT : GrpTop) (A : Ad E R) (hA : A.Go
       ∀ p ∈ A.uQ ε t, ∀ k ∈ A.uK ε κ, A.uH ε t (p * k) = A.lg (bdet (Sum.inl '' t) p.1) := by
   obtain ⟨-, hm, hcont, hr, hk, -⟩ := hB E R A hA.toGoodL (κ ⊕ κ) (Sum.inl '' t)
   obtain ⟨-, -, -, h2, -, -, hK⟩ := hT E R A hA κ ε
-  haveI := h2
+  have := h2
   refine hE (A.U ε κ) (A.uΓ ε κ) (A.uK ε κ) (A.uQ ε t) (fun p => A.lg (bdet (Sum.inl '' t) p.1)) hK
     (closed_uQ hB A hA.toGoodL ε t) hI ?_ ?_ ?_ ?_
   · intro p hp q hq
     simp only [Subgroup.coe_mul, hm p.1 hp q.1 hq, hA.lgmul]
-  · exact hA.lgcont.comp_continuousOn (hcont.comp continuous_subtype_val.continuousOn fun x hx => hx)
+  · exact hA.lgcont.comp_continuousOn (hcont.comp continuous_subtypeVal.continuousOn fun x hx => hx)
   · exact fun p hp hpk => hk p.1 hp hpk
   · intro p hp hg
     obtain ⟨x, hx⟩ := hr p.1 hp hg
@@ -1281,7 +1281,7 @@ theorem isCh_uC (hB : BdetLaw) (A : Ad E R) (hA : A.GoodL) (ε : ℤˣ) {κ : Ty
   · obtain ⟨x, hx⟩ := hr γ.1 hp hγ
     simp only [Ad.uC, hx, hA.χi, Circle.coe_one]
   · exact continuous_circle_coe.comp_continuousOn
-      (hA.χcont.comp_continuousOn (hcont.comp continuous_subtype_val.continuousOn fun x hx => hx))
+      (hA.χcont.comp_continuousOn (hcont.comp continuous_subtypeVal.continuousOn fun x hx => hx))
 
 theorem parLaw : BdetLaw → ExtLaw → GrpTop → ParLaw := by
   intro hB hE hT E R _ _ _ _ _ _ _ A hA ι _ _ ε s
@@ -1765,7 +1765,7 @@ end Sec
 theorem wallLaw_of_secLaw : SecLaw → WallLaw := by
   intro hS
   intro G _ _ _ _ _ W _ _ _ K ρ hK hρ Γ P P' c η η' β L R D Op H hP hP' hη hη' hβ hW
-  haveI : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   obtain ⟨h1, -, Ms, hb⟩ := hS G W K ρ hK hρ Γ P c hP
   obtain ⟨-, -, Ms', hb'⟩ := hS G W K ρ hK hρ Γ P' c hP'
   have hdiff : ∀ (g : G) (w : L), Differentiable ℂ fun z => H z g w := fun g w =>

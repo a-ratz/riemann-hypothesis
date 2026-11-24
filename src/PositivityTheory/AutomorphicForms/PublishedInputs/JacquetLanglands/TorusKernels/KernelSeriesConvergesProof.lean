@@ -151,7 +151,7 @@ theorem main (hE0c : KernelTermsInvariantBounded) (hE0d : E0d) (hPack : Pack) (h
   obtain ⟨CM, hCM⟩ := hMult F I Gf D hyp.ax (1 / 16) c₀ (by norm_num) hc₀
   obtain ⟨CK, A, hK⟩ := hKI I k hyp.four
   have hm : ∀ v, Measurable fun w : D.Xs => (w v).1.im := fun v =>
-    Complex.measurable_im.comp (measurable_subtype_coe.comp (measurable_pi_apply v))
+    Complex.measurable_im.comp (measurable_subtypeVal.comp (measurable_pi_apply v))
   refine ⟨(Fintype.card ι : ℝ≥0) * Cp * A * CK *
     Real.toNNReal (max CE 0 * Real.sqrt C' * max CM 0 * (1 + 1 / c₀)), fun y hy => ?_⟩
   have hHt : 0 < D.HtY ![0, 1] y := hc₀.trans_le hy

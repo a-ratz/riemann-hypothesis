@@ -63,8 +63,8 @@ theorem eq_zero_of_forall_algHom {K R Ω : Type} [Field K] [CommRing R] [Algebra
   have hb : (⊥ : Ideal R).jacobson = ⊥ := hJ.out (Ideal.isRadical_bot)
   rw [← Ideal.mem_bot, ← hb, Ideal.jacobson, Ideal.mem_sInf]
   rintro J ⟨-, hM⟩
-  letI := Ideal.Quotient.field J
-  haveI : Module.Finite K (R ⧸ J) := finite_of_finite_type_of_isJacobsonRing K (R ⧸ J)
+  let := Ideal.Quotient.field J
+  have : Module.Finite K (R ⧸ J) := finite_of_finite_type_of_isJacobsonRing K (R ⧸ J)
   let ψ : (R ⧸ J) →ₐ[K] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -88,7 +88,7 @@ theorem pow_eq_one_of_complex {K : Type} [Field K]
     (h : ∀ y : pts (CAt σ), evalAt pts mapR f y ^ k = 1) (p : TRing K) (y : pts p.R) : f p y ^ k = 1 := by
   have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).mp p.rad
   rw [← sub_eq_zero]
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   refine eq_zero_of_forall_algHom (K := K) (Ω := ℂ) _ ?_
   intro φ
   let φ' : p.R →ₐ[K] CAt σ := φ
@@ -131,7 +131,7 @@ theorem GlobalTheory.FiniteOrderRule.unitC_of_cmp : ∀ (E : Type) [Field E] [Nu
     d.c₂.F.val.toRingHom d.cδ hC.1.1 (Nat.card Cls) (fun z => by
       have h2 := hC.2 z
       unfold evR at h2
-      rw [h2, if_neg Bool.false_ne_true, ← map_pow, ← Units.val_pow_eq_pow_val, ← map_pow, pow_card_eq_one', map_one,
+      rw [h2, ite_eq_right Bool.false_ne_true, ← map_pow, ← Units.val_pow_eq_pow_val, ← map_pow, pow_card_eq_one', map_one,
         Units.val_one, map_one])
   have h3 := @GlobalTheory.FiniteOrderRule.evalAt_pow_eq_one d.c₂.F _ (fun S _ _ => FrPt d.Xo₂ d.c₂ S)
     (fun φ y z => FrMap φ y z) d.cδ (Nat.card Cls) h1 ℂ _ A y

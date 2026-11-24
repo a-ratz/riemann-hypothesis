@@ -175,7 +175,7 @@ lemma measure_subgroup_eq (μ : Measure G) [IsMulLeftInvariant μ] (A H : Subgro
       exact Set.disjoint_left.mp (pairwise_disjoint_cosets A H hne) hmem hself
     rw [← hiq]
     exact Finset.mem_coe.mpr hi
-  letI := Fintype.ofFinite (H ⧸ A.subgroupOf H)
+  let := Fintype.ofFinite (H ⧸ A.subgroupOf H)
   have hcard : A.relIndex H = Fintype.card (H ⧸ A.subgroupOf H) := by
     unfold Subgroup.relIndex Subgroup.index
     exact Nat.card_eq_fintype_card
@@ -336,7 +336,7 @@ theorem ksub_coe (I : AutInst) : ((Ksub I : Subgroup I.Gf) : Set I.Gf) = I.Kset 
 theorem sigmaFinite_of_K (I : AutInst) (μ : Measure I.Gf) (hμ : μ.IsHaarMeasure)
     (hKc : IsCompact I.Kset) (hQ : ∃ s : Set I.Gf, s.Countable ∧ ∀ x : I.Gf, ∃ y ∈ s, y⁻¹ * x ∈ I.Kset) :
     SigmaFinite μ := by
-  haveI := hμ
+  have := hμ
   obtain ⟨s, hs, hcov⟩ := hQ
   refine Measure.sigmaFinite_of_countable (S := (fun y => (fun x => y * x) '' I.Kset) '' s)
     (hs.image _) ?_ ?_
@@ -352,7 +352,7 @@ theorem sigmaFinite_of_K (I : AutInst) (μ : Measure I.Gf) (hμ : μ.IsHaarMeasu
 theorem adUnimod_of (hA : KgSubgroup) (hC : KCompact) (hQ : KCountable) (hI : IndexEq) :
     PI.AdUnimod := by
   intro I μ hμ
-  haveI := sigmaFinite_of_K I μ hμ (hC I) (hQ I)
+  have := sigmaFinite_of_K I μ hμ (hC I) (hQ I)
   choose U hU using fun n : ℕ => hA I (n + 1) (by omega)
   refine PI.UnimodIdxWork.unimodIdx_main I.Gf μ hμ U (fun n => ?_) (fun V hV => ?_) (Ksub I) ?_ ?_ (hI I)
   · rw [hU n]

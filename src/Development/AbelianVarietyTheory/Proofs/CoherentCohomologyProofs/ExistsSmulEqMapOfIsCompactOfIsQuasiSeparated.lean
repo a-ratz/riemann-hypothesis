@@ -197,8 +197,8 @@ variable [F.IsQuasicoherent]
 theorem exists_pow_smul_eq_zero_of_isCompact (hU : IsCompact (U : Set X)) (f : Γ(X, U))
     (h : V ≤ U) (hV : V = X.basicOpen f) (t : Γ(F, U))
     (ht : F.presheaf.map (homOfLE h).op t = 0) : ∃ n : ℕ, f ^ n • t = 0 := by
-  letI (W : Set.Iic U) : Module Γ(X, U) Γ(F, W.1) := resModule F W.2
-  letI (W : Set.Iic U) : Module Γ(X, U) Γ(F, W.1 ⊓ V) := resModule F (inf_le_right.trans h)
+  let (W : Set.Iic U) : Module Γ(X, U) Γ(F, W.1) := resModule F W.2
+  let (W : Set.Iic U) : Module Γ(X, U) Γ(F, W.1 ⊓ V) := resModule F (inf_le_right.trans h)
   obtain ⟨_, ⟨n, rfl⟩, e⟩ := exists_smul_eq_zero_of_isCompact (.powers f) U
     (A := fun W ↦ Γ(F, W.1)) (B := fun W ↦ Γ(F, W.1 ⊓ V))
     (fun {W₁ W₂} h' ↦ resLinearOver F W₂.2 W₁.2 h')
@@ -222,8 +222,8 @@ theorem exists_pow_smul_eq_res_of_qcqs (hU : IsCompact (U : Set X))
     (hU' : IsQuasiSeparated (U : Set X)) (f : Γ(X, U)) (h : V ≤ U) (hV : V = X.basicOpen f)
     (s : Γ(F, V)) : ∃ (n : ℕ) (t : Γ(F, U)),
       X.presheaf.map (homOfLE h).op f ^ n • s = F.presheaf.map (homOfLE h).op t := by
-  letI (W : Set.Iic U) : Module Γ(X, U) Γ(F, W.1) := resModule F W.2
-  letI (W : Set.Iic U) : Module Γ(X, U) Γ(F, W.1 ⊓ V) := resModule F (inf_le_right.trans h)
+  let (W : Set.Iic U) : Module Γ(X, U) Γ(F, W.1) := resModule F W.2
+  let (W : Set.Iic U) : Module Γ(X, U) Γ(F, W.1 ⊓ V) := resModule F (inf_le_right.trans h)
   obtain ⟨_, ⟨n, rfl⟩, t, e⟩ := exists_smul_eq_map_of_isCompact_of_isQuasiSeparated (.powers f) U
     (A := fun W ↦ Γ(F, W.1)) (B := fun W ↦ Γ(F, W.1 ⊓ V))
     (fun {W₁ W₂} h' ↦ resLinearOver F W₂.2 W₁.2 h')

@@ -284,7 +284,7 @@ lemma exists_family {Q : ∀ i, (B →+* A i) → Prop}
   classical
   refine ⟨fun i => if hx : ∃ p : B →+* A i, Q i p then ⇑hx.choose else 0, ?_⟩
   filter_upwards [H] with i hi
-  exact ⟨hi.choose, by simp [dif_pos hi], hi.choose_spec⟩
+  exact ⟨hi.choose, by simp [dite_eq_left hi], hi.choose_spec⟩
 
 lemma ae_eq_of_fg [Algebra.FiniteType ℤ B] {h h' : ∀ i, B → A i} (hh : IsAEHom U h)
     (hh' : IsAEHom U h') (H : ∀ b, mk U (fun i => h i b) = mk U (fun i => h' i b)) :
@@ -448,9 +448,9 @@ theorem ae_pt_eq_of_pt_eq [IsLocalRing (Ult U A)]
   obtain ⟨T, hT⟩ := exists_pt_of_isLocalRing (pt W₁ g₁) W hxW
   have e₁ : g₁ = T.comp (res hle₁) := pt_injective W₁ (by rw [pt_res]; exact hT)
   have e₂ : g₂ = T.comp (res hle₂) := pt_injective W₂ (by rw [pt_res, ← H]; exact hT)
-  haveI := hfp W
-  haveI := hfp W₁
-  haveI := hfp W₂
+  have := hfp W
+  have := hfp W₁
+  have := hfp W₂
   obtain ⟨h, hr⟩ := exists_rep U T
   have aeh : ∀ {W' : X.affineOpens} (hl : W.1 ≤ W'.1),
       IsAEHom U (fun i b => h i (res hl b)) := by
@@ -688,11 +688,11 @@ theorem ae_exists_lift [CompactSpace X] [Algebra.FiniteType ℤ R₀]
   have H : pt W₁ P ≫ f₀ = Spec.map (CommRingCat.ofHom
       ((algebraMap (Ult U V) (Ult U K)).comp (ρ.comp φ))) := by rw [pt_comp, hP]
   obtain ⟨⟨ℓ, e1, e2⟩, -⟩ := val_lift hpb hval ρ (pt W₁ P) H
-  haveI := isLocalRing_ult U (V := V)
+  have := isLocalRing_ult U (V := V)
   obtain ⟨W₂, hx, -⟩ := exists_affine_le (show ℓ (IsLocalRing.closedPoint (Ult U V) :
     PrimeSpectrum (Ult U V)) ∈ (⊤ : X.Opens) from trivial)
   obtain ⟨γ, rfl⟩ := exists_pt_of_isLocalRing ℓ W₂ hx
-  haveI := hfp W₂
+  have := hfp W₂
   obtain ⟨h₂, r₂⟩ := exists_rep U γ
   have hγ : γ.comp (baseHom f₀ W₂) = ρ.comp φ := spec_inj (by rw [← pt_comp, e1])
   have c1 : ∀ᶠ i in (U : Filter ι), (fun b => h₂ i (baseHom f₀ W₂ b)) = fun r => β i (ψ i r) := by
@@ -760,7 +760,7 @@ theorem not_ae_two_lifts [CompactSpace X] [QuasiSeparatedSpace X] [Algebra.Finit
   obtain ⟨W₁, h₁, P, rP, ha, hP⟩ := exists_limit_point f₀ U ψ a β φ hsq ρ hρ
   have HP : pt W₁ P ≫ f₀ = Spec.map (CommRingCat.ofHom
       ((algebraMap (Ult U V) (Ult U K)).comp (ρ.comp φ))) := by rw [pt_comp, hP]
-  haveI := isLocalRing_ult U (V := V)
+  have := isLocalRing_ult U (V := V)
   obtain ⟨S, hSf, -, hS2⟩ := exists_finite_affine_cover (⊤ : X.Opens) (by simpa using isCompact_univ)
   have hQ : ∀ᶠ i in (U : Filter ι), ∃ w ∈ S ×ˢ S, ∃ (p : Γ(X, w.1.1) →+* V i)
       (q : Γ(X, w.2.1) →+* V i) (l₁ l₂ : Spec (CommRingCat.of (V i)) ⟶
@@ -890,7 +890,7 @@ lemma exists_limit_hom {R₀ R : Type} [CommRing R₀] [CommRing R] (φ : R₀ �
     exact Algebra.subset_adjoin (Or.inr (by simpa using hF))
   let h : ∀ F, R → V F := fun F r => if hr : r ∈ lvl φ S₀ F then β F ⟨r, hr⟩ else 0
   have hv : ∀ (F : Finset R) (r : R) (hr : r ∈ lvl φ S₀ F), h F r = β F ⟨r, hr⟩ :=
-    fun F r hr => dif_pos hr
+    fun F r hr => dite_eq_left hr
   refine ⟨ofFamily U h ?_ ?_ ?_, fun r => ?_⟩
   · filter_upwards [hmem 1] with F h1
     rw [hv F 1 h1]
@@ -920,8 +920,8 @@ theorem properSpreads : GlobalTheory.SpreadingModels.Spreads (fun _ _ f => IsPro
   have hval : ValuativeCriterion f := by
     rw [IsProper.eq_valuativeCriterion] at hprop'
     exact hprop'.1.1.1
-  haveI : CompactSpace Y₀ := QuasiCompact.compactSpace_of_compactSpace f₀
-  haveI : QuasiSeparatedSpace Y₀ := quasiSeparatedSpace_of_quasiSeparated f₀
+  have : CompactSpace Y₀ := QuasiCompact.compactSpace_of_compactSpace f₀
+  have : QuasiSeparatedSpace Y₀ := quasiSeparatedSpace_of_quasiSeparated f₀
   have hfp := fp_sections f₀ (R₀ := R₀)
   obtain ⟨S₀, hS₀⟩ := hft.out
   have hS₀f : (S₀ : Set R₀).Finite := S₀.finite_toSet

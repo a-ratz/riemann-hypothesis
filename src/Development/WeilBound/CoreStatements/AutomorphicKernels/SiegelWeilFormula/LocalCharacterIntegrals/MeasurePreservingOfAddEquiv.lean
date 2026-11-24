@@ -128,7 +128,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 variable (v : HeightOneSpectrum (𝓞 F))
 
 theorem exists_norm_lt_one' : ∃ ϖ : Fv F v, 0 < ‖ϖ‖ ∧ ‖ϖ‖ < 1 := by
-  letI : NontriviallyNormedField (Fv F v) := Valued.toNontriviallyNormedField (Fv F v) (WithZero (Multiplicative ℤ))
+  let : NontriviallyNormedField (Fv F v) := Valued.toNontriviallyNormedField (Fv F v) (WithZero (Multiplicative ℤ))
   exact NormedField.exists_norm_lt_one _
 
 variable {v}
@@ -518,7 +518,7 @@ theorem isClosed_hermSet (σ : E →ₐ[F] E) (n : ℕ) :
   have : ((HermR (Fv F v) σ n : AddSubgroup (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) :
       Set (Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E))) =
       ⋂ a, ⋂ b, {S : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E) | sigR (Fv F v) σ (S b a) = S a b} := by
-    ext S; simp only [Set.mem_iInter, Set.mem_setOf_eq]; rfl
+    ext S; simp only [Set.mem_iInter, Set.mem_ofPred_eq]; rfl
   rw [this]
   refine isClosed_iInter fun a => isClosed_iInter fun b => isClosed_eq ?_ ?_
   · exact (continuous_sigR v σ).comp ((continuous_apply a).comp (continuous_apply b))

@@ -77,16 +77,16 @@ private theorem card_fiber_le (n M k : ℕ) (hk : 1 ≤ k) :
       (fun a => ∏ i, a i ≤ M / k)).card := by
   refine Finset.card_le_card_of_injOn (fun a => Fin.tail a) ?_ ?_
   · intro a ha
-    simp only [coe_filter, mem_filter, Fintype.mem_piFinset, mem_Icc, Set.mem_setOf_eq] at ha ⊢
+    simp only [coe_filter, mem_filter, Fintype.mem_piFinset, mem_Icc, Set.mem_ofPred_eq] at ha ⊢
     obtain ⟨⟨h1, h2⟩, h3⟩ := ha
     rw [Fin.prod_univ_succ, h3] at h2
     have h4 : ∏ i, Fin.tail a i ≤ M / k := by
       rw [Nat.le_div_iff_mul_le (by omega), mul_comm]
       exact h2
     refine ⟨fun i => ⟨(h1 _).1, le_trans ?_ h4⟩, h4⟩
-    exact Finset.single_le_prod' (f := fun i => Fin.tail a i) (fun j _ => (h1 _).1) (mem_univ i)
+    exact single_le_prod (f := fun i => Fin.tail a i) (fun j _ => (h1 _).1) (mem_univ i)
   · intro a ha b hb hab
-    simp only [coe_filter, Set.mem_setOf_eq] at ha hb
+    simp only [coe_filter, Set.mem_ofPred_eq] at ha hb
     have : Fin.tail a = Fin.tail b := hab
     rw [← Fin.cons_self_tail a, ← Fin.cons_self_tail b, ha.2, hb.2, this]
 
@@ -107,7 +107,7 @@ theorem card_tuples_le (n M : ℕ) (hM : 1 ≤ M) :
     rw [Finset.card_eq_sum_card_fiberwise (f := fun a : Fin (n + 1 + 1) → ℕ => a 0)
       (t := Icc 1 M) (by
         intro a ha
-        simp only [coe_filter, Fintype.mem_piFinset, Set.mem_setOf_eq] at ha
+        simp only [coe_filter, Fintype.mem_piFinset, Set.mem_ofPred_eq] at ha
         exact_mod_cast ha.1 0)]
     push_cast
     have key : ∀ k ∈ Icc 1 M,
@@ -165,7 +165,7 @@ private theorem classB_prod {ι : Type*} {n : ℕ} (q : ι → ℕ) (idx : ι �
       by_cases h : idx a = i
       · simp [Multiset.filter_cons_of_pos, h]
       · simp [Multiset.filter_cons_of_neg, h]
-    simp only [h, Finset.prod_mul_distrib, ih, Finset.prod_ite_eq, Finset.mem_univ, if_true,
+    simp only [h, Finset.prod_mul_distrib, ih, Finset.prod_ite_eq, Finset.mem_univ, ite_true,
       Multiset.map_cons, Multiset.prod_cons]
 
 private theorem classB_inj {ι : Type*} {n : ℕ} (q : ι → ℕ) (idx : ι → Fin n)
@@ -281,7 +281,7 @@ theorem card_ideals_le_tuples (K : Type*) [Field K] [NumberField K] (M : ℕ) :
   · have h1 := (classB_prod q idx (s I.1 I.2.1)).trans_le ((hprod I.1 I.2.1).trans I.2.2)
     rw [Finset.mem_filter, Fintype.mem_piFinset]
     refine ⟨fun i => Finset.mem_Icc.mpr ⟨hpos _, le_trans ?_ h1⟩, h1⟩
-    exact Finset.single_le_prod' (f := fun i => (((s I.1 I.2.1).filter
+    exact single_le_prod (f := fun i => (((s I.1 I.2.1).filter
       (fun x => idx x = i)).map q).prod) (fun j _ => hpos _) (Finset.mem_univ i)
   · intro I J hIJ
     have h := classB_inj q idx hq hidx _ _ (congrFun (congrArg Subtype.val hIJ))
@@ -343,7 +343,7 @@ theorem classNumber_le_card_ideals (K : Type*) [Field K] [NumberField K] :
   classical
   have hfin : Finite {I : Ideal (𝓞 K) // I ≠ ⊥ ∧ Ideal.absNorm I ≤ ⌊√|(discr K : ℝ)|⌋₊} := by
     have hf : {I : Ideal (𝓞 K) | I ≠ ⊥ ∧ Ideal.absNorm I ≤ ⌊√|(discr K : ℝ)|⌋₊}.Finite :=
-      (Ideal.finite_setOfPred_absNorm_le (S := 𝓞 K) ⌊√|(discr K : ℝ)|⌋₊).subset
+      (Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 K) ⌊√|(discr K : ℝ)|⌋₊).subset
         (by intro I h; exact h.2)
     exact hf
   rw [classNumber, ← Nat.card_eq_fintype_card]

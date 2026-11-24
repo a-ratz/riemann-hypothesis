@@ -355,7 +355,7 @@ theorem frame_dualRestrict (L : Lat ξ E) (p : Cpt ξ) {I : Type} (V : I → Sub
       (fun _ _ h1 h2 => by simpa using add_mem h1 h2)
     by_cases h : t = s
     · subst h
-      have : π e = ⟨e, he.2⟩ := Submodule.linearProjOfIsCompl_apply_left hc ⟨e, he.2⟩
+      have : π e = ⟨e, he.2⟩ := Submodule.projectionOnto_apply_left hc ⟨e, he.2⟩
       rw [this]; exact he.1
     · have : π e = 0 := Submodule.projectionOnto_apply_of_mem_right hc
         (Submodule.mem_iSup_of_mem t (Submodule.mem_iSup_of_mem h he.2))
@@ -384,7 +384,7 @@ theorem frame_dualRestrict (L : Lat ξ E) (p : Cpt ξ) {I : Type} (V : I → Sub
     rintro _ ⟨i, rfl⟩
     refine ⟨B.coord i ∘ₗ π, fun e he => hco _ (hπ e he) i, ?_⟩
     ext v
-    exact congrArg (B.coord i) (Submodule.linearProjOfIsCompl_apply_left hc v)
+    exact congrArg (B.coord i) (Submodule.projectionOnto_apply_left hc v)
 
 end Lin
 
@@ -394,7 +394,7 @@ variable {X : Scheme.{0}} {Ω K : Type} [Field Ω] [Field K]
 
 theorem exists_factor (ξ₀ : Spec (CommRingCat.of K) ⟶ X) (h₀ : IsCptGen ξ₀) (z : Spec (CommRingCat.of Ω) ⟶ X)
     (h : z (IsLocalRing.closedPoint (CommRingCat.of Ω)) ⤳ ξ₀ (IsLocalRing.closedPoint (CommRingCat.of K))) : ∃ i : K →+* Ω, z = Spec.map (CommRingCat.ofHom i) ≫ ξ₀ := by
-  haveI : IsIso (Scheme.stalkClosedPointTo ξ₀) := (ConcreteCategory.isIso_iff_bijective _).2 h₀.bij
+  have : IsIso (Scheme.stalkClosedPointTo ξ₀) := (ConcreteCategory.isIso_iff_bijective _).2 h₀.bij
   refine ⟨(inv (Scheme.stalkClosedPointTo ξ₀) ≫ X.presheaf.stalkSpecializes h ≫ Scheme.stalkClosedPointTo z).hom, ?_⟩
   have e₀ := Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ₀
   have e₁ : Spec.map (inv (Scheme.stalkClosedPointTo ξ₀)) ≫ ξ₀ = X.fromSpecStalk _ :=
@@ -442,16 +442,16 @@ theorem common₂ (Ω : Type) [Field Ω] (κ : Type) [Finite κ] (x : κ → Ω)
   let F : B₁ ⊕ B₂ → Type := fun b => match b with
     | .inl _ => E₁
     | .inr b => E₂ b
-  letI iA : ∀ b, AddCommGroup (F b) := fun b => match b with
+  let iA : ∀ b, AddCommGroup (F b) := fun b => match b with
     | .inl _ => inferInstanceAs (AddCommGroup E₁)
     | .inr b => inferInstanceAs (AddCommGroup (E₂ b))
-  letI iM : ∀ b, Module Ω (F b) := fun b => match b with
+  let iM : ∀ b, Module Ω (F b) := fun b => match b with
     | .inl _ => inferInstanceAs (Module Ω E₁)
     | .inr b => inferInstanceAs (Module Ω (E₂ b))
   let L : ∀ b, Lat M.ξ (F b) := fun b => match b with
     | .inl b => L₁ b
     | .inr b => L₂ b
-  haveI iF : ∀ b, FiniteDimensional Ω (⊤ : Submodule Ω (F b)) := fun b => match b with
+  have iF : ∀ b, FiniteDimensional Ω (⊤ : Submodule Ω (F b)) := fun b => match b with
     | .inl _ => inferInstanceAs (FiniteDimensional Ω (⊤ : Submodule Ω E₁))
     | .inr b => inferInstanceAs (FiniteDimensional Ω (⊤ : Submodule Ω (E₂ b)))
   obtain ⟨c₀, hc₀⟩ := M.tie.cover ⟨genPt M.ξ, specializes_rfl⟩
@@ -507,7 +507,7 @@ theorem frame_om {X : Scheme.{0}} {Ω : Type} [Field Ω] [CharZero Ω] {ξ : Sp 
   have hlat := (_root_.GlobalTheory.CompanionTheory.Ar.lieLat_isVB_of_smooth X Ω ξ t.G Li M hg t.semi.smooth).1
   obtain ⟨hvb, hsup⟩ := _root_.GlobalTheory.CompanionTheory.Ar.EigSplit.isVBOn_eigSp X Ω ξ Li E ρ M.lat {q} _ (CMType H ⊕ CMType H) _ hg hσ
     (by rw [← hcard, Nat.card_eq_fintype_card]) (isVBOn_mono hlat _)
-    (fun p _ a => by haveI := t.act.hom a; exact lat_stable M _ _ (hρ a) p)
+    (fun p _ a => by have := t.act.hom a; exact lat_stable M _ _ (hρ a) p)
     (fun p _ s a => hN p _ ((((RingOfIntegers.isIntegral a).map_of_comp_eq (RingHom.id ℤ) (cst.comp (labelEmb c s))
       (Subsingleton.elim _ _))).tower_top))
     (by
@@ -538,7 +538,7 @@ theorem exists_hodgeCpt_htFree : Out.WeilSt → ∀ (E : Type) [Field E] [Number
   have hcst₁ : M₁.ξ ≫ f₁ ≫ Y.s = spMap (cst.comp (algebraMap (𝓞 c.F) c.F)) := by
     rw [← Category.assoc, hy₀, Category.assoc, hcst]
   obtain ⟨hfd, hrk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.EigRank.eig_finrank_label E H D l Xo c Y _ Ω M₁.ξ f₁ y₀ t₁ m₁ Li N₁ ρ cst hy₀ hcst₁ hρ₁
-  haveI : IsNoetherian M₁.X := ((_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie _ Ω M₁.ξ ℤ _ _ M₁.tie).2 M₁.all).1
+  have : IsNoetherian M₁.X := ((_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie _ Ω M₁.ξ ℤ _ _ M₁.tie).2 M₁.all).1
   have hom₁ := (_root_.GlobalTheory.CompanionTheory.Ar.lieLat_isVB_of_smooth _ Ω M₁.ξ t₁.G Li N₁ M₁.tie.gen t₁.semi.smooth).2
   have htw₁ := fun p hp => tors_weil hW m₁ hy₀ (hpos p hp) (hT p hp) (hζ p hp)
   have hcoh : ∀ p ∈ S, (N₁.htOm t₁.PP.L (p ^ R p)).IsCohOn Set.univ ∧
@@ -589,7 +589,7 @@ theorem exists_hodgeCpt_htFree : Out.WeilSt → ∀ (E : Type) [Field E] [Number
   have hy' : M'.ξ ≫ g ≫ f₁ = y₀ ≫ Y.j := by rw [← Category.assoc, hg, hy₀]
   have hcst' : M'.ξ ≫ (g ≫ f₁) ≫ Y.s = spMap (cst.comp (algebraMap (𝓞 c.F) c.F)) := by
     rw [← Category.assoc, hy', Category.assoc, hcst]
-  haveI : IsNoetherian M'.X := ((_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie _ Ω M'.ξ ℤ _ _ M'.tie).2 M'.all).1
+  have : IsNoetherian M'.X := ((_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie _ Ω M'.ξ ℤ _ _ M'.tie).2 M'.all).1
   have htw' := fun p hp => tors_weil hW m hy' (hpos p hp) (hT p hp) (hζ p hp)
   have hpull : ∀ p ∈ S, N'.htOm t'.PP.L (p ^ R p) =
       (N₁.htOm t₁.PP.L (p ^ R p)).pull M'.ξ g (AddMonoidHom.id _) := fun p hp => by

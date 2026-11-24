@@ -93,7 +93,7 @@ theorem gaussianInner_monomial_orthogonal (q : ℕ) {α β : ι →₀ ℕ} (h :
   have hc : ((α j : ℂ) - β j) * θ = Real.pi := by exact_mod_cast hθ
   have hfac : ((Circle.exp θ : Circle) : ℂ) ^ (α j) *
       (starRingEnd ℂ) (((Circle.exp θ : Circle) : ℂ) ^ (β j)) = -1 := by
-    rw [Circle.coe_exp, map_pow, ← Complex.exp_conj, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul,
+    rw [Circle.coe_exp, map_pow, ← Complex.exp_conj, ← exp_natCast_mul, ← exp_natCast_mul,
       ← Complex.exp_add, ← Complex.exp_pi_mul_I]
     congr 1
     rw [map_mul, Complex.conj_ofReal, Complex.conj_I]

@@ -68,13 +68,13 @@ theorem monicOf_natDegree (c : Fin N → K) : (monicOf c).natDegree = N := by
   exact monicOf_degree_lt c
 
 theorem monicOf_coeff (c : Fin N → K) (i : Fin N) : (monicOf c).coeff i = c i := by
-  rw [monicOf, coeff_add, coeff_X_pow, if_neg (Nat.ne_of_lt i.isLt), zero_add,
+  rw [monicOf, coeff_add, coeff_X_pow, ite_eq_right (Nat.ne_of_lt i.isLt), zero_add,
     Polynomial.finsetSum_coeff]
   simp only [coeff_C_mul_X_pow]
   rw [Finset.sum_eq_single i]
   · simp
   · intro j _ hj
-    rw [if_neg]
+    rw [ite_eq_right]
     exact fun h => hj (Fin.ext h).symm
   · simp
 
@@ -96,10 +96,10 @@ theorem irreducible_count_upper : IrredCountUpper := by
   have hd0 : d ≠ 0 := by omega
   have hdvd : ∀ f : K[X], Irreducible f → f.natDegree = d → f ∣ X ^ (Fintype.card K ^ d) - X := by
     intro f hf hfd
-    haveI := Fact.mk hf
-    haveI : Module.Finite K (AdjoinRoot f) := (AdjoinRoot.powerBasis hf.ne_zero).finite
-    haveI : Finite (AdjoinRoot f) := Module.finite_of_finite K
-    letI : Fintype (AdjoinRoot f) := Fintype.ofFinite _
+    have := Fact.mk hf
+    have : Module.Finite K (AdjoinRoot f) := (AdjoinRoot.powerBasis hf.ne_zero).finite
+    have : Finite (AdjoinRoot f) := Module.finite_of_finite K
+    let : Fintype (AdjoinRoot f) := Fintype.ofFinite _
     have hcard : Fintype.card (AdjoinRoot f) = Fintype.card K ^ d := by
       rw [Module.card_fintype (AdjoinRoot.powerBasis hf.ne_zero).basis, Fintype.card_fin,
         AdjoinRoot.powerBasis_dim, hfd]

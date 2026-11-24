@@ -334,20 +334,20 @@ theorem exists_of_bilin (ψ : AddChar (Fv F v) ℂ) (hψ : Continuous ψ) (hu : 
     (β : LinearMap.BilinForm (Fv F v) V) (hs : ∀ x y, β x y = β y x)
     (hn : ∀ x, (∀ y, β x y = 0) → x = 0) :
     ∃ μ : Measure V, SelfDual μ (fun x y => ψ (β x y)) := by
-  haveI hp : ProperSpace (Fv F v) := properSpace_Fv v
-  letI : NontriviallyNormedField (Fv F v) :=
+  have hp : ProperSpace (Fv F v) := properSpace_Fv v
+  let : NontriviallyNormedField (Fv F v) :=
     Valued.toNontriviallyNormedField (Fv F v) (WithZero (Multiplicative ℤ))
-  haveI : IsUltrametricDist (Fv F v) := inferInstance
-  haveI : LocallyCompactSpace (Fv F v) := inferInstance
-  haveI : SecondCountableTopology (Fv F v) := inferInstance
-  haveI : IsModuleTopology (Fv F v) V := isModuleTopologyOfFiniteDimensional
+  have : IsUltrametricDist (Fv F v) := inferInstance
+  have : LocallyCompactSpace (Fv F v) := inferInstance
+  have : SecondCountableTopology (Fv F v) := inferInstance
+  have : IsModuleTopology (Fv F v) V := isModuleTopologyOfFiniteDimensional
   let c' := (Module.finBasis (Fv F v) V).equivFun
   have hcc : Continuous c' := IsModuleTopology.continuous_of_linearMap c'.toLinearMap
   have hcc' : Continuous c'.symm := IsModuleTopology.continuous_of_linearMap c'.symm.toLinearMap
   let eV : V ≃ₜ (Fin (Module.finrank (Fv F v) V) → Fv F v) :=
     { c'.toEquiv with continuous_toFun := hcc, continuous_invFun := hcc' }
-  haveI : LocallyCompactSpace V := eV.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology V := eV.secondCountableTopology
+  have : LocallyCompactSpace V := eV.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology V := eV.secondCountableTopology
   obtain ⟨n, hc⟩ := GlobalTheory.CharConductor.exists_exponent_of_valued ψ hψ hne
   obtain ⟨c, hcv⟩ := HeightOneSpectrum.valuedAdicCompletion_surjective F v (WithZero.exp n)
   have hc0 : c ≠ 0 := by
@@ -572,31 +572,31 @@ theorem exists_sdW_sdHerm : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     obtain ⟨φ⟩ : Nonempty (E →+* ℂ) := inferInstance
     apply φ.injective
     rw [h.2.2.2, h.2.2.2, star_star]
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨hc, hne⟩ := (_root_.GlobalTheory.CompanionTheory.AdeleCharLocal.char_nontrivial_at_every_place F ψ hψ).1 v
   have hu : ∀ t, ‖psiChar ψ v t‖ = 1 := fun t => hψ.2.1 _
-  haveI hp : ProperSpace (Fv F v) := properSpace_Fv v
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
-  haveI : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul (Fv F v) _
+  have hp : ProperSpace (Fv F v) := properSpace_Fv v
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Fv F v ⊗[F] E) := IsModuleTopology.isTopologicalRing (Fv F v) _
+  have : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul (Fv F v) _
   let cE := (Algebra.TensorProduct.basis (Fv F v) (Module.finBasis F E)).equivFun
   let eE : (Fv F v ⊗[F] E) ≃ₜ (Fin (Module.finrank F E) → Fv F v) :=
     { cE.toEquiv with
       continuous_toFun := IsModuleTopology.continuous_of_linearMap cE.toLinearMap
       continuous_invFun := IsModuleTopology.continuous_of_linearMap cE.symm.toLinearMap }
-  haveI : T2Space (Fv F v ⊗[F] E) := eE.isEmbedding.t2Space
-  haveI : SecondCountableTopology (Fv F v ⊗[F] E) := eE.secondCountableTopology
+  have : T2Space (Fv F v ⊗[F] E) := eE.isEmbedding.t2Space
+  have : SecondCountableTopology (Fv F v ⊗[F] E) := eE.secondCountableTopology
   refine ⟨exists_of_bilin v (psiChar ψ v) hc hu hne _ (bilinW (Fv F v) σ J n) (BR_symm _ σ J hσ hJ)
     (BR_nondeg _ σ J hσ hJ), ?_⟩
-  letI := hermModule (Fv F v) σ n
-  haveI : Module.Finite (Fv F v) (HermR (Fv F v) σ n) :=
+  let := hermModule (Fv F v) σ n
+  have : Module.Finite (Fv F v) (HermR (Fv F v) σ n) :=
     Module.Finite.of_injective
       ({ toFun := Subtype.val, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl } :
         HermR (Fv F v) σ n →ₗ[Fv F v] Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)) Subtype.val_injective
-  haveI : ContinuousSMul (Fv F v) (HermR (Fv F v) σ n) :=
-    ⟨Continuous.subtype_mk (continuous_fst.smul (continuous_subtype_val.comp continuous_snd)) _⟩
-  haveI : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
+  have : ContinuousSMul (Fv F v) (HermR (Fv F v) σ n) :=
+    ⟨Continuous.subtype_mk (continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)) _⟩
+  have : BorelSpace (HermR (Fv F v) σ n) := ⟨rfl⟩
   exact exists_of_bilin v (psiChar ψ v) hc hu hne _ (bilinH (Fv F v) σ n) (pairHerm_symm _ σ n)
     (pairHerm_nondeg _ σ hσ n)
 
@@ -622,7 +622,7 @@ theorem selfDual_transport {V W : Type} [AddCommGroup V] [TopologicalSpace V] [M
     (f : V ≃+ W) (hf : Continuous f) (hf' : Continuous f.symm) (ν : Measure W) (χ : W → W → ℂ)
     (h : SelfDual ν χ) : SelfDual (ν.map f.symm) (fun x y => χ (f x) (f y)) := by
   let g : W ≃ₜ V := { f.symm.toEquiv with continuous_toFun := hf', continuous_invFun := hf }
-  haveI : IsTopologicalAddGroup V := g.symm.isInducing.topologicalAddGroup f.toAddMonoidHom
+  have : IsTopologicalAddGroup V := g.symm.isInducing.isTopologicalAddGroup f.toAddMonoidHom
   obtain ⟨hν, hinv⟩ := h
   have hm : MeasurableEmbedding f.symm := g.measurableEmbedding
   refine ⟨AddEquiv.isAddHaarMeasure_map ν f.symm hf' hf, ?_⟩
@@ -782,8 +782,8 @@ theorem HasCoord.fixed {V : Type} [AddCommGroup V] [TopologicalSpace V] (h : Has
       right_inv := fun u => Subtype.ext (e.apply_symm_apply _)
       map_add' := fun x y => Subtype.ext (e.map_add _ _) }
   refine HasCoord.of_equiv T ?_ ?_ (hasCoord_of_finiteDimensional K)
-  · exact (g1.comp continuous_subtype_val).subtype_mk _
-  · exact (g2.comp continuous_subtype_val).subtype_mk _
+  · exact (g1.comp continuous_subtypeVal).subtype_mk _
+  · exact (g2.comp continuous_subtypeVal).subtype_mk _
 
 theorem HasCoord.secondCountable {V : Type} [AddCommGroup V] [TopologicalSpace V]
     (h : HasCoord V) : SecondCountableTopology V := by
@@ -1088,7 +1088,7 @@ theorem continuous_pairHerm (n : ℕ) (S : HermR R σ n) : Continuous (pairHerm 
     (∑ a, ∑ b, (S : Matrix (Fin n) (Fin n) (R ⊗[F] E)) a b * (T : Matrix (Fin n) (Fin n) _) b a)
   exact continuous_const.mul ((continuous_trace R).comp
     (continuous_finsetSum _ fun a _ => continuous_finsetSum _ fun b _ =>
-      continuous_const.mul (continuous_subtype_val.matrix_elem b a)))
+      continuous_const.mul (continuous_subtypeVal.matrix_elem b a)))
 
 theorem hasCoord_tens (h : HasCoord R) : HasCoord (R ⊗[F] E) := by
   have := isModuleTopology_tens (F := F) (E := E) R
@@ -1211,14 +1211,14 @@ theorem det_mul_eq_zero_of_lt {R : Type*} [CommRing R] {M n : ℕ} (h : M < n)
   have he : e * eᵀ = 1 := by
     ext i j
     simp only [e, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply, Matrix.one_apply, ite_mul, one_mul,
-      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Fin.castLE_inj, eq_comm (a := j)]
+      zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Fin.castLE_inj, eq_comm (a := j)]
   have : X * Y = (X * e) * (eᵀ * Y) := by
     rw [Matrix.mul_assoc, ← Matrix.mul_assoc e, he, Matrix.one_mul]
   rw [this, Matrix.det_mul, Matrix.det_eq_zero_of_column_eq_zero (A := X * e) ⟨M, h⟩, zero_mul]
   intro a
   simp only [Matrix.mul_apply, e, Matrix.of_apply]
   refine Finset.sum_eq_zero fun i _ => ?_
-  rw [if_neg, mul_zero]
+  rw [ite_eq_right, mul_zero]
   intro hh
   have := congrArg Fin.val hh
   simp at this
@@ -1230,13 +1230,13 @@ theorem densZero {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E
     (Φv : (Fin n → Fin M → Fv F v ⊗[F] E) → ℂ) :
     IsContDensityOn μv (gramR (Fv F v) σ J) Subtype.val νv
       {S | IsUnit (S : Matrix (Fin n) (Fin n) (Fv F v ⊗[F] E)).det} Φv 0 := by
-  haveI : Nontrivial (Fv F v ⊗[F] E) := Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain F
+  have : Nontrivial (Fv F v ⊗[F] E) := Algebra.TensorProduct.nontrivial_of_algebraMap_injective_of_isDomain F
     (Fv F v) E (algebraMap F (Fv F v)).injective (algebraMap F E).injective
   refine ⟨continuousOn_const, fun S _ hS => ?_⟩
   have : gramR (Fv F v) σ J ⁻¹' (Subtype.val '' S) = ∅ := by
     refine Set.eq_empty_of_forall_notMem fun X ⟨s, hs, e⟩ => ?_
     have hu := hS hs
-    simp only [Set.mem_setOf_eq] at hu
+    simp only [Set.mem_ofPred_eq] at hu
     rw [e] at hu
     let A : Matrix (Fin n) (Fin M) (Fv F v ⊗[F] E) := Matrix.of fun a i => sigR (Fv F v) σ (X a i)
     let B : Matrix (Fin M) (Fin n) (Fv F v ⊗[F] E) := Matrix.of fun i b => ∑ j, JR (Fv F v) J i j * X b j
@@ -1266,14 +1266,14 @@ theorem count (c d M n : ℕ) (hd : 1 ≤ d) (h : M < n) :
   | zero =>
     rw [Nat.add_zero, Finset.sum_range_succ, Finset.sum_eq_zero fun i hi => by
       have := Finset.mem_range.1 hi
-      rw [if_pos (by omega)]]
-    rw [if_neg (by omega), if_pos (by omega)]
+      rw [ite_eq_left (by omega)]]
+    rw [ite_eq_right (by omega), ite_eq_left (by omega)]
     have : M + 1 - M = 1 := by omega
     rw [this, mul_one]
     omega
   | succ r ih =>
     rw [show M + 1 + (r + 1) = M + 1 + r + 1 by ring, Finset.sum_range_succ, add_right_comm, ih]
-    rw [if_neg (by omega), if_neg (by omega)]
+    rw [ite_eq_right (by omega), ite_eq_right (by omega)]
     have : M + 1 + r + 1 - M = (M + 1 + r - M) + 1 := by omega
     rw [this, Nat.mul_succ]
     ring
@@ -1287,8 +1287,8 @@ theorem analyticAt_update_zero {G A : ℂ → ℂ} {s₀ c : ℂ} {K N : ℕ} (h
   filter_upwards [eventually_nhdsWithin_iff.1 h] with z hz
   by_cases hzs : z = s₀
   · subst hzs
-    rw [if_pos rfl, sub_self, zero_pow (by omega), zero_mul, mul_zero]
-  · rw [if_neg hzs]
+    rw [ite_eq_left rfl, sub_self, zero_pow (by omega), zero_mul, mul_zero]
+  · rw [ite_eq_right hzs]
     have hx : z - s₀ ≠ 0 := sub_ne_zero.2 hzs
     have h1 := hz hzs
     have hN : (z - s₀) ^ N = (z - s₀) ^ K * (z - s₀) ^ (N - K) := by
@@ -1482,11 +1482,11 @@ theorem whitGenLowOf : WhitGenLowOf := by
     by_cases hx : x = s₀
     · subst hx
       filter_upwards [self_mem_nhdsWithin] with z hz
-      exact (if_neg hz).symm
+      exact (ite_eq_right hz).symm
     · filter_upwards [nhdsWithin_le_nhds (eventually_ne_nhds hx)] with z hz
-      exact (if_neg hz).symm
+      exact (ite_eq_right hz).symm
   · show (if z = s₀ then 0 else G z) = _
-    rw [if_neg (hne z hz)]
+    rw [ite_eq_right (hne z hz)]
     exact hright z hz
 
 end PositivityTheory.SiegelWeilFormula.Gen.WL

@@ -500,9 +500,9 @@ theorem thetaObject_of_lattice :
     rintro _ ⟨x, rfl⟩
     simp [hF, ← map_add (f := _), hw]
   have hmul : act w * act w' = 𝟙 P.A := by
-    haveI := P.isAb.comm
-    haveI := (hact w).1
-    haveI := (hact w').1
+    have := P.isAb.comm
+    have := (hact w).1
+    have := (hact w').1
     refine (_root_.GlobalTheory.existsUnique_isMonHom_of_map_lattice h1 h2 h3 h4 P P P.L P.L u u LinearMap.id (fun z hz => hz)).unique ⟨?_, fun z => ?_⟩
       ⟨inferInstance, fun z => by simp⟩
     · rw [Hom.mul_def]; infer_instance
@@ -737,7 +737,7 @@ theorem exists_complementary (u : HolUnif A L g) (hL : L.IsLB) {Hm : Matrix (Fin
           cexp (Real.pi * (((κ * N : ℕ) - a : ℂ) * hermForm Hm z l - N * hermForm Hm (F z) (F l)) +
             Real.pi / 2 * (((κ * N : ℕ) - a : ℂ) * hermForm Hm l l - N * hermForm Hm (F l) (F l))) =
           cexp (Real.pi * hermForm Hm z l + Real.pi / 2 * hermForm Hm l l) ^ (κ * N) := by
-        rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add, ← Complex.exp_add]
+        rw [← exp_natCast_mul, ← exp_natCast_mul, ← exp_natCast_mul, ← Complex.exp_add, ← Complex.exp_add]
         congr 1
         ring
       change θ (F z + F l) = (_ * cexp (Real.pi * hermForm Hm (F z) (F l) +
@@ -765,7 +765,7 @@ theorem exists_complementary (u : HolUnif A L g) (hL : L.IsLB) {Hm : Matrix (Fin
     have he : cexp (Real.pi * I * (hermForm Hm l m).im) ^ (κ * N) =
         cexp (Real.pi * I * (((κ * N : ℕ) - a : ℂ) * hermForm Hm l m - N * hermForm Hm (F l) (F m)).im) *
         cexp (Real.pi * I * (hermForm Hm l m).im) ^ a * cexp (Real.pi * I * (hermForm Hm (φ l) (φ m)).im) ^ N := by
-      rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add, ← Complex.exp_add]
+      rw [← exp_natCast_mul, ← exp_natCast_mul, ← exp_natCast_mul, ← Complex.exp_add, ← Complex.exp_add]
       congr 1
       simp only [φ, sub_im, sub_re, mul_im, natCast_re, natCast_im, zero_mul, add_zero, sub_zero]
       push_cast
@@ -884,7 +884,7 @@ theorem level_comb_sub_mem {g n k : ℕ} (hk : (k : ℂ) ≠ 0) {La : Type} [Add
     ∃ x, (k : ℂ)⁻¹ • Q (∑ i, m i • lam i + k • y) =
       ∑ i, ((m i : ZMod k)).val • ((k : ℂ)⁻¹ • Q (lam i)) + Q x := by
   have hk0 : k ≠ 0 := by rintro rfl; simp at hk
-  haveI : NeZero k := ⟨hk0⟩
+  have : NeZero k := ⟨hk0⟩
   refine ⟨∑ i, (m i / k) • lam i + y, ?_⟩
 
   rw [map_add (f := _), map_add (f := _), map_sum, map_sum, map_nsmul, smul_add, Finset.smul_sum, ← add_assoc,
@@ -945,7 +945,7 @@ namespace GlobalTheory
 theorem countable_addEquiv_of_free_finite (La : Type) [AddCommGroup La] [Module.Free ℤ La] [Module.Finite ℤ La] :
     Countable (La ≃+ La) := by
   let bas := Module.Free.chooseBasis ℤ La
-  haveI : Countable La := bas.equivFun.injective.countable
+  have : Countable La := bas.equivFun.injective.countable
   have hinj : Function.Injective (fun (gm : La ≃+ La) (i : Module.Free.ChooseBasisIndex ℤ La) => gm (bas i)) := by
     intro gm gm' h
     have h2 : gm.toAddMonoidHom.toIntLinearMap = gm'.toAddMonoidHom.toIntLinearMap :=
@@ -981,7 +981,7 @@ theorem goodClass_of_lattice_families : Out.Laws → Out.Laws2 → (∀ (S : Sch
     exact ⟨t, (hfam i).2.2.2.2.2.2.2.2.2.2 z hz t hu htp, hθ i z hz t hu⟩
   · obtain ⟨hfree, hfin, -⟩ := unimodular_symplectic_coordinates_and_lattice_rank.2 (La i) (EF i) g (Q i z) (Hm i z)
       ((hfam i).2.2.2.2.2.2.2.2.1 z hz).1
-    haveI := countable_addEquiv_of_free_finite (La i)
+    have := countable_addEquiv_of_free_finite (La i)
     have hc : (⋃ gm : La i ≃+ La i, {z' ∈ B i | ∃ h : (Fin g → ℂ) ≃ₗ[ℂ] (Fin g → ℂ),
         ∀ x, h (Q i z' x) = Q i z (gm x)}).Countable := by
       refine Set.countable_iUnion fun gm => Set.Subsingleton.countable ?_

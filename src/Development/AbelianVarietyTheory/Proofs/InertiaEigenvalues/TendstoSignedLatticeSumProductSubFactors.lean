@@ -316,7 +316,7 @@ theorem lattice_split (K : UQ) (V₁ V₂ : Type) [AddCommGroup V₁] [Module K.
   set M₁ := M.comap (LinearMap.inl K.O V₁ V₂) with hM₁
   set M₂ := M.map (LinearMap.snd K.O V₁ V₂) with hM₂
   have hfg₁ : M₁.FG := by
-    haveI : IsNoetherian K.O M := isNoetherian_of_fg_of_noetherian M hfg
+    have : IsNoetherian K.O M := isNoetherian_of_fg_of_noetherian M hfg
     refine Submodule.fg_of_fg_map_injective (LinearMap.inl K.O V₁ V₂) LinearMap.inl_injective ?_
     exact Submodule.FG.of_le_of_isNoetherian (T := M) (Submodule.map_comap_le _ _)
   have hsp₁ : Submodule.span K.E (M₁ : Set V₁) = ⊤ := by
@@ -419,22 +419,22 @@ theorem det_trace_lift {E A₁ A₂ : Type} [Field E] [CommRing A₁] [CommRing 
     | left i' =>
       induction l using Fin.addCases with
       | left l' =>
-        rw [hcc, if_neg]
+        rw [hcc, ite_eq_right]
         rintro rfl
         exact lt_irrefl _ hli
       | right j =>
         exfalso
-        rw [Fin.lt_def, Fin.coe_natAdd, Fin.val_castAdd] at hli
+        rw [Fin.lt_def, Fin.val_natAdd, Fin.val_castAdd] at hli
         have := i'.2
         omega
     | right j' =>
       induction l using Fin.addCases with
       | left l' => exact hnc j' l'
       | right j =>
-        rw [hnn, if_neg]
+        rw [hnn, ite_eq_right]
         rintro rfl
         exact lt_irrefl _ hli
-  rw [Matrix.det_of_upperTriangular htri, Fin.prod_univ_add]
+  rw [Matrix.det_of_isUpperTriangular htri, Fin.prod_univ_add]
   simp [hcc, hnn]
 
 end GlobalTheory.UnitLemma.SgnProd
@@ -1154,7 +1154,7 @@ theorem fibsum : ∀ (K : UQ) (B₁ B₂ : InvAlg K), B₁.σ B₁.g = B₁.g �
     refine (Set.finite_coe_iff.1 ?_)
     have e : {M | M ∈ (B₁.prod B₂).Lin ∧ π M = p} = {M | M ∈ (B₁.prod B₂).Lin ∧
         M.comap (LinearMap.inl K.O B₁.A B₂.A) = p.1 ∧ M.map (LinearMap.snd K.O B₁.A B₂.A) = p.2} := by
-      ext M; simp only [Set.mem_setOf_eq, hπ, Prod.ext_iff]
+      ext M; simp only [Set.mem_ofPred_eq, hπ, Prod.ext_iff]
     rw [e]; exact this
   set W := {M | M ∈ (B₁.prod B₂).Lin ∧ π M ∈ s₁ ×ˢ s₂} with hW
   have hWfin : W.Finite := by
@@ -1179,14 +1179,14 @@ theorem fibsum : ∀ (K : UQ) (B₁ B₂ : InvAlg K), B₁.σ B₁.g = B₁.g �
   have h1 : ∑ᶠ M ∈ B₁.Lin, φ₁ M = ∑ M ∈ s₁, φ₁ M := by
     have hset : B₁.Lin ∩ Function.support φ₁ = {M | M ∈ B₁.Lin ∧ φ₁ M ≠ 0} ∩ Function.support φ₁ := by
       ext M
-      simp only [Set.mem_inter_iff, Function.mem_support, Set.mem_setOf_eq]
+      simp only [Set.mem_inter_iff, Function.mem_support, Set.mem_ofPred_eq]
       exact ⟨fun h => ⟨⟨h.1, h.2⟩, h.2⟩, fun h => ⟨h.1.1, h.2⟩⟩
     rw [← finsum_mem_eq_finite_toFinset_sum _ hf₁, ← finsum_mem_inter_support,
       ← finsum_mem_inter_support (s := {M | M ∈ B₁.Lin ∧ φ₁ M ≠ 0}), hset]
   have h2 : ∑ᶠ M ∈ B₂.Lin, φ₂ M = ∑ M ∈ s₂, φ₂ M := by
     have hset : B₂.Lin ∩ Function.support φ₂ = {M | M ∈ B₂.Lin ∧ φ₂ M ≠ 0} ∩ Function.support φ₂ := by
       ext M
-      simp only [Set.mem_inter_iff, Function.mem_support, Set.mem_setOf_eq]
+      simp only [Set.mem_inter_iff, Function.mem_support, Set.mem_ofPred_eq]
       exact ⟨fun h => ⟨⟨h.1, h.2⟩, h.2⟩, fun h => ⟨h.1.1, h.2⟩⟩
     rw [← finsum_mem_eq_finite_toFinset_sum _ hf₂, ← finsum_mem_inter_support,
       ← finsum_mem_inter_support (s := {M | M ∈ B₂.Lin ∧ φ₂ M ≠ 0}), hset]
@@ -1207,7 +1207,7 @@ theorem fibsum : ∀ (K : UQ) (B₁ B₂ : InvAlg K), B₁.σ B₁.g = B₁.g �
   apply Nat.card_congr
   apply Equiv.subtypeEquivRight
   intro M
-  simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq, hW, hπ, Prod.ext_iff]
+  simp only [Finset.coe_filter, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, hW, hπ, Prod.ext_iff]
   constructor
   · rintro ⟨⟨h, _⟩, h'⟩; exact ⟨h, h'⟩
   · rintro ⟨h, h'⟩

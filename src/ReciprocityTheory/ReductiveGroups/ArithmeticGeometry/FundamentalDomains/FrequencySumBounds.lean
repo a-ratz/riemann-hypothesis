@@ -157,14 +157,14 @@ theorem freq_sum_bound (X : Data E r) (la : Wt X.Ψ r) (a : ℝ) (ha : 0 < a) :
     refine Summable.of_nat_of_neg ?_ ?_
     · refine hgeo.congr fun n => ?_
       show Real.exp (-b) ^ n = Real.exp (-b * |(((n : ℤ)) : ℝ)|)
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       push_cast
       rw [abs_of_nonneg (Nat.cast_nonneg n)]
       ring
     · refine hgeo.congr fun n => ?_
       show Real.exp (-b) ^ n = Real.exp (-b * |((-(n : ℤ) : ℤ) : ℝ)|)
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       push_cast
       rw [abs_neg, abs_of_nonneg (Nat.cast_nonneg n)]

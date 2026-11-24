@@ -157,8 +157,8 @@ theorem unitBlock_mul_int (D : D7) (o : ℕ) {a d : ℕ} (r : GA D a) (hr : r �
   refine sum_mem fun l _ => mul_mem ?_ ?_
   · rw [Matrix.map_apply]
     by_cases h : i.1 = o + l.1
-    · simp only [unitBlock, Matrix.of_apply, h, if_true, map_one]; exact one_mem _
-    · simp only [unitBlock, Matrix.of_apply, h, if_false, map_zero]; exact zero_mem _
+    · simp only [unitBlock, Matrix.of_apply, h, ite_true, map_one]; exact one_mem _
+    · simp only [unitBlock, Matrix.of_apply, h, ite_false, map_zero]; exact zero_mem _
   · rw [Subgroup.coe_inv]
     exact ((mem_intG r).1 hr l j).2
 
@@ -211,10 +211,10 @@ theorem pres_stdSum_last (D : D7) (δ t0 : ℂ) (hc : Crv D ⊤ δ) {o a d : ℕ
   have he : e0 ∈ Th D (tor0 D ⊤ δ) (stdL D a) (stdL D d) := hv.1
   have hN0 : 0 < Ideal.absNorm 𝔪 := Nat.pos_of_ne_zero (Ideal.absNorm_eq_zero_iff.not.2 h𝔪)
   have hidx := _root_.GlobalTheory.SkewIndex.index_inter_skew D δ hc 𝔪 h𝔪 hco a d
-  haveI hfin : Finite (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d) ⧸
+  have hfin : Finite (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d) ⧸
       (La0 D (tor0 D ⊤ δ) a d).addSubgroupOf (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d))) :=
     AddSubgroup.index_ne_zero_iff_finite.1 (by rw [hidx]; positivity)
-  letI : Fintype (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d) ⧸
+  let : Fintype (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d) ⧸
       (La0 D (tor0 D ⊤ δ) a d).addSubgroupOf (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d))) := Fintype.ofFinite _
   have wsm : ∀ (x : VC D a d) (c : ℂ) (G : VC D a d → ℂ), Wd D (tor0 D ⊤ δ) x (c • G) = c • Wd D (tor0 D ⊤ δ) x G := by
     intro x c G; funext z; simp only [Wd, U, Pi.smul_apply, smul_eq_mul]; ring

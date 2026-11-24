@@ -218,7 +218,7 @@ theorem sobCont_conjMap {D : D7} {S : D.what₂.Tau → SPar} (X : Formalism.L2.
     show star (GlobalTheory.ConjRowMult.contRepL X (F fun τ => (u τ : M.H τ)) (T (x * t⁻¹))) = _
     rw [e]
     simp only [MulEquiv.symm_apply_apply]
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D (D.sp.Y 0) S M τ).1
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D (D.sp.Y 0) S M τ).1
   have hH : ∀ τ, (gramAt D (D.sp.Y 0) τ).IsHermitian := GlobalTheory.SmoothAutCheck.gramAt_herm (D.sp.Y 0)
   have hdet : ∀ τ, (gramAt D (D.sp.Y 0) τ).det ≠ 0 := fun τ => (GlobalTheory.SmoothAutCheck.gramAt_unit (D.sp.Y 0) τ).ne_zero
   have hsv := fun τ => GlobalTheory.T.smoothVectors_subspace_stable_sobolevForm_deriv (D.sp.Y 0).rank (gramAt D (D.sp.Y 0) τ) (M.H τ) (M.rep τ) (hH τ) (hdet τ)

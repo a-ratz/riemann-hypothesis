@@ -60,12 +60,12 @@ theorem frob_inv_mul_mem_inertia : ∀ (E Ω : Type) [Field E] [NumberField E] [
   obtain ⟨hτD, hτF⟩ := hτ
   obtain ⟨hτ'D, hτ'F⟩ := hτ'
 
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 E ⧸ v.asIdeal) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 E ⧸ v.asIdeal) := inferInstance
-  letI : Fintype (𝓞 E ⧸ v.asIdeal) := Fintype.ofFinite _
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 E ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 E ⧸ v.asIdeal) := inferInstance
+  let : Fintype (𝓞 E ⧸ v.asIdeal) := Fintype.ofFinite _
   set p := ringChar (𝓞 E ⧸ v.asIdeal) with hpdef
-  haveI : CharP (𝓞 E ⧸ v.asIdeal) p := ringChar.charP _
+  have : CharP (𝓞 E ⧸ v.asIdeal) p := ringChar.charP _
   obtain ⟨n, hp, hcard⟩ := FiniteField.card (𝓞 E ⧸ v.asIdeal) p
   have hq : normV v = p ^ (n : ℕ) := by
     simp only [normV, Nat.card_eq_fintype_card, hcard]
@@ -81,11 +81,11 @@ theorem frob_inv_mul_mem_inertia : ∀ (E Ω : Type) [Field E] [NumberField E] [
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff,
       ValuationSubring.valuation_lt_one_iff]
     simpa using hpA
-  haveI : CharP (IsLocalRing.ResidueField A) p := by
+  have : CharP (IsLocalRing.ResidueField A) p := by
     have h := CharP.ringChar_of_prime_eq_zero (R := IsLocalRing.ResidueField A) hp hpk
     rw [← h]; exact ringChar.charP _
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : ExpChar (IsLocalRing.ResidueField A) p := ExpChar.prime hp
+  have : Fact p.Prime := ⟨hp⟩
+  have : ExpChar (IsLocalRing.ResidueField A) p := ExpChar.prime hp
   refine ⟨(Dec (F := E) A).mul_mem ((Dec (F := E) A).inv_mem hτ'D) hτD, fun x hx => ?_⟩
   have hxA : x ∈ A := A.valuation_le_one_iff x |>.mp hx
   set z := (τ'⁻¹ : G E Ω) (τ x) with hz

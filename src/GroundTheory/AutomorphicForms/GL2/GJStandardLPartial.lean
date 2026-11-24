@@ -87,7 +87,7 @@ theorem continuous_globalMatrixCoeff (hn : 0 < n) (μ : Measure (Reduction.normO
     (hA : ∀ (t : {r : ℝ // 0 < r}) (x : AdelicGLn.AdelicGL K n), φ₁ (Reduction.centralSection K n t * x) = φ₁ x) :
     Continuous (GJGlobal.matrixCoeff μ φ₁ φ₂) := by
   set_option synthInstance.maxHeartbeats 200000 in
-  haveI : FirstCountableTopology (AdelicGLn.AdelicGL K n) := inferInstance
+  have : FirstCountableTopology (AdelicGLn.AdelicGL K n) := inferInstance
   obtain ⟨C₁, hC₁⟩ := exists_norm_le_of_cusp hn h₁ hA
   obtain ⟨C₂, hC₂⟩ := CuspidalSpectrum.exists_norm_le_of_mem_cuspForms h₂
   have h1c : Continuous φ₁ := h₁.1.continuous
@@ -98,8 +98,8 @@ theorem continuous_globalMatrixCoeff (hn : 0 < n) (μ : Measure (Reduction.normO
     isFiniteMeasure_restrict.2 hfin.ne
   refine continuous_of_dominated (bound := fun _ ↦ C₁ * C₂) (fun g ↦ ?_) (fun g ↦ ?_)
     (integrable_const _) (Eventually.of_forall fun x ↦ ?_)
-  · exact ((h1c.comp (continuous_subtype_val.mul continuous_const)).mul
-      (continuous_star.comp (h2c.comp continuous_subtype_val))).aestronglyMeasurable
+  · exact ((h1c.comp (continuous_subtypeVal.mul continuous_const)).mul
+      (continuous_star.comp (h2c.comp continuous_subtypeVal))).aestronglyMeasurable
   · refine Eventually.of_forall fun x ↦ ?_
     rw [norm_mul, Complex.norm_conj]
     exact mul_le_mul (hC₁ _) (hC₂ _ x.2) (norm_nonneg _) ((norm_nonneg _).trans (hC₁ 1))

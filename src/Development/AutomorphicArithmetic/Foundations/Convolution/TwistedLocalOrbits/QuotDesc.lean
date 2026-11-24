@@ -166,8 +166,8 @@ private theorem integral_desc {j : H →* G} (hj : Measurable j) {ι : T →* H}
   have hπ : Measurable fun p : H × G => Φ (j p.1 * p.2) := by fun_prop
   have hint : Integrable (fun p : H × G => Φ (j p.1 * p.2)) B := by
     refine ⟨hπ.aestronglyMeasurable, ?_⟩
-    rw [HasFiniteIntegral, ← key (fun g => ‖Φ g‖ₑ) hΦ.enorm (fun t g => by rw [hΦT]) (fun g hg h => hg (by simp [h])), hA,
-      lintegral_withDensity_eq_lintegral_mul _ (by fun_prop) hΦ.enorm]
+    rw [HasFiniteIntegral, ← key (fun g => ‖Φ g‖ₑ) hΦ.eNorm (fun t g => by rw [hΦT]) (fun g hg h => hg (by simp [h])), hA,
+      lintegral_withDensity_eq_lintegral_mul _ (by fun_prop) hΦ.eNorm]
     exact ENNReal.mul_lt_top hc.lt_top hfin.lt_top
   have h0 : MeasurableSet ({0}ᶜ : Set ℂ) := (measurableSet_singleton 0).compl
   have hm : ((μH (K.comap j) • A).map Φ).restrict {0}ᶜ = (B.map fun p : H × G => Φ (j p.1 * p.2)).restrict {0}ᶜ := by
@@ -194,10 +194,10 @@ private theorem mass_ne_top {G T : Type} [Group G] [TopologicalSpace G] [IsTopol
     {ρ : G → ℝ≥0∞} (hρ : Measurable ρ) (h1 : ∀ g, ∫⁻ t, ρ (i t * g) ∂μT = 1) {Φ : G → ℂ} (hΦ : Continuous Φ)
     (hΦT : ∀ t g, Φ (i t * g) = Φ g) {D : Set G} (hD : IsCompact D) (hs : ∀ g, Φ g ≠ 0 → ∃ s, ∃ d ∈ D, g = i s * d) :
     ∫⁻ g, ρ g * ‖Φ g‖ₑ ∂μG ≠ ∞ := by
-  haveI : μT.IsMulRightInvariant := by rw [← Measure.inv_eq_self μT]; infer_instance
+  have : μT.IsMulRightInvariant := by rw [← Measure.inv_eq_self μT]; infer_instance
   obtain ⟨V, hV, hV1⟩ := exists_compact_mem_nhds (1 : T)
   have hC : IsCompact (i '' V * D) := (hV.image hi).mul hD
-  have h := swap_fibre (μG := μG) (μT := μT) hi.measurable (F := fun g => ‖Φ g‖ₑ) hΦ.measurable.enorm hρ
+  have h := swap_fibre (μG := μG) (μT := μT) hi.measurable (F := fun g => ‖Φ g‖ₑ) hΦ.measurable.eNorm hρ
     (measurable_one.indicator hC.measurableSet) (fun t g => by rw [hΦT])
   simp only [h1, mul_one] at h
   have h2 : ∫⁻ g, ‖Φ g‖ₑ * (i '' V * D).indicator 1 g ∂μG < ∞ := by
@@ -207,7 +207,7 @@ private theorem mass_ne_top {G T : Type} [Group G] [TopologicalSpace G] [IsTopol
     by_cases hg : g ∈ i '' V * D <;> simp [hg]
   refine (ENNReal.lt_top_of_mul_ne_top_left (b := μT V) (ne_top_of_le_ne_top (h.trans_lt h2).ne ?_)
     (Measure.measure_pos_of_mem_nhds μT hV1).ne').ne
-  rw [← lintegral_mul_const (f := fun g => ρ g * ‖Φ g‖ₑ) _ (hρ.mul hΦ.measurable.enorm)]
+  rw [← lintegral_mul_const (f := fun g => ρ g * ‖Φ g‖ₑ) _ (hρ.mul hΦ.measurable.eNorm)]
   refine lintegral_mono fun g => ?_
   by_cases hg : Φ g = 0
   · simp [hg]
@@ -235,13 +235,13 @@ theorem UpperTheory.ConvolutionTheory.Loc.quotDesc :
         (∃ D : Set G, IsCompact D ∧ ∀ g, Φ g ≠ 0 → ∃ s ∈ S, ∃ d ∈ D, g = s * d) →
         quotIntegral μG S μS Φ = (((μH (K.comap j)).toReal⁻¹ : ℝ) : ℂ) * quotIntegral μH T μT fun h => ∫ κ in (K : Set G), Φ (j h * κ) ∂μG := by
   intro G H _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ j hj μG μH _ _ _ _ K hKo hKc S T μS μT hT hS _ _ hmap Φ hΦ hΦS hs ⟨D, hD, hDs⟩
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
-  haveI : SecondCountableTopology T := TopologicalSpace.Subtype.secondCountableTopology (T : Set H)
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
+  have : SecondCountableTopology T := TopologicalSpace.Subtype.secondCountableTopology (T : Set H)
   have hjm : Measurable j := hj.continuous.measurable
   have hi : Topology.IsClosedEmbedding (j.comp T.subtype) := hj.comp hT.isClosedEmbedding_subtypeVal
   have hN : ∀ ρ : G → ℝ≥0∞, Measurable ρ → ∀ g, ∫⁻ s : S, ρ (s * g) ∂μS = ∫⁻ t : T, ρ (j t * g) ∂μT := by
     intro ρ hρ g
-    rw [← lintegral_map (f := fun x => ρ (x * g)) (by fun_prop) measurable_subtype_coe, hmap,
+    rw [← lintegral_map (f := fun x => ρ (x * g)) (by fun_prop) measurable_subtypeVal, hmap,
       lintegral_map (f := fun x => ρ (x * g)) (by fun_prop) (by fun_prop)]
   have exG : ∃ ρ, IsQuotNormaliser S μS ρ := by
     obtain ⟨b, hb, h1⟩ := GlobalTheory.exists_bruhat_function_closedEmbedding G T (j.comp T.subtype) hi μT
@@ -259,7 +259,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.quotDesc :
     obtain ⟨s, hsS, d, hd, rfl⟩ := hDs g hg
     obtain ⟨t, ht, rfl⟩ := (hS ▸ hsS : s ∈ T.map j)
     exact ⟨⟨t, ht⟩, d, hd, rfl⟩
-  have := integral_desc (μG := μG) (μH := μH) (μT := μT) (ι := T.subtype) hjm measurable_subtype_coe hKo.measurableSet hc hρ h1T hρ' h1'
+  have := integral_desc (μG := μG) (μH := μH) (μT := μT) (ι := T.subtype) hjm measurable_subtypeVal hKo.measurableSet hc hρ h1T hρ' h1'
     hΦ.measurable hΦT hs (ne_top_of_le_ne_top hfin (lintegral_mono fun g => mul_le_mul_left ENNReal.coe_toNNReal_le_self _))
   have hc' : ((μH (K.comap j)).toReal : ℂ) ≠ 0 := by exact_mod_cast ENNReal.toReal_ne_zero.2 ⟨hc0, hc⟩
   rw [← this, Complex.ofReal_inv, inv_mul_cancel_left₀ hc']

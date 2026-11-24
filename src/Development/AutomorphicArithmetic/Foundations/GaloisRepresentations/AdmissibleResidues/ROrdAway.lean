@@ -152,7 +152,7 @@ private theorem mod_retr {R S M : Type} [Ring R] [AddCommGroup S] [Module R S] [
     rcases f.injective_or_eq_zero with hi | rfl
     · exact le_sSup ⟨(LinearEquiv.ofInjective _ hi).symm⟩
     · simp)
-  haveI : IsSemisimpleModule R M :=
+  have : IsSemisimpleModule R M :=
     IsSemisimpleModule.congr (M := isotypicComponent R M S) (LinearEquiv.ofTop _ htop).symm
   have hiso := IsIsotypicOfType.of_isotypicComponent_eq_top htop
   obtain ⟨m, hm, hxm⟩ : ∃ m : Submodule R M, IsCoatom m ∧ x ∉ m := by
@@ -162,7 +162,7 @@ private theorem mod_retr {R S M : Type} [Ring R] [AddCommGroup S] [Module R S] [
     rw [← IsSemisimpleModule.jacobson_eq_bot R M]
     exact Submodule.mem_sInf.2 hn
   obtain ⟨W, hc⟩ := exists_isCompl m
-  haveI : IsSimpleModule R W := isSimpleModule_iff_isAtom.2 (hc.isCoatom_iff_isAtom.1 hm)
+  have : IsSimpleModule R W := isSimpleModule_iff_isAtom.2 (hc.isCoatom_iff_isAtom.1 hm)
   obtain ⟨e⟩ := hiso W
   refine ⟨e.toLinearMap ∘ₗ W.projectionOnto m hc.symm, fun h0 => hxm ?_⟩
   simpa using h0
@@ -198,7 +198,7 @@ private theorem map_dc (σ : Representation ℂ Γ X) (τ : Representation ℂ �
     T (Hi.dc τ K K a x) = Hi.dc σ K K a (T x) := by
   have hx0 : x ≠ 0 := fun e => hx (by rw [e, map_zero])
   rcases finite_or_infinite (MulAction.orbit K (a : Γ ⧸ K)) with hf | hf
-  · haveI := Fintype.ofFinite (MulAction.orbit K (a : Γ ⧸ K))
+  · have := Fintype.ofFinite (MulAction.orbit K (a : Γ ⧸ K))
 
     simp only [Hi.dc, finsum_eq_sum_of_fintype, LinearMap.sum_apply, map_sum, hT]
   · rw [Hi.dc, Hi.dc, finsum_of_infinite_support, finsum_of_infinite_support]
@@ -302,7 +302,7 @@ private theorem diag_of_wd (hl : ((l : ℕ) : 𝓞 F) ∉ w.asIdeal) (ι : Qbar 
     simp at h1
     simp only [map_add (f := _), map_one]
     linear_combination -h1
-  obtain ⟨s₀, hs₀, h0⟩ := SetLike.not_le_iff_exists.1 hr
+  obtain ⟨s₀, hs₀, h0⟩ := IsConcreteLE.not_le_iff_exists.1 hr
   have h0' : (ξ s₀ : Qbar l) ≠ 1 := fun e => h0 (Units.ext e)
   obtain ⟨p, hp⟩ := exists_diag (r s₀) h0' (ht _ hs₀) (hd _ hs₀)
   let r' : G F Ω →* GL (Fin 2) (Qbar l) := (MulAut.conj p).toMonoidHom.comp r
@@ -336,7 +336,7 @@ private theorem iwahori_level_zero_eq {F : Type} [Field F] [NumberField F] (w : 
     exact ⟨k, rfl⟩
   · rintro ⟨k, rfl⟩
     refine ⟨k, ?_, rfl⟩
-    haveI : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) :=
+    have : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) :=
       Ideal.Quotient.subsingleton_iff.2 (by simp)
     exact Subsingleton.elim (α := Fin 2 → _) _ _
 

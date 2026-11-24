@@ -200,7 +200,7 @@ theorem exists_unitary_of_torus : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       rw [Finset.sum_congr rfl (fun k _ => mul_comm (cj w (h.val k i)) (h.val k j)), hp]
       by_cases hij : i = j
       · subst hij; simp [Pi.single_apply]
-      · rw [if_neg hij, Finset.sum_eq_zero]
+      · rw [ite_eq_right hij, Finset.sum_eq_zero]
         intro k _
         by_cases hk : k = j
         · subst hk; simp [Pi.single_apply, Ne.symm hij, hij]
@@ -235,15 +235,15 @@ theorem exists_basis_of_lattice (O E V : Type) [CommRing O] [IsDomain O] [IsPrin
     ∃ b : Module.Basis (Fin (Module.finrank E V)) E V,
       ∀ y : V, y ∈ L ↔ ∀ i, b.repr y i ∈ (algebraMap O E).range := by
   classical
-  haveI : Module.IsTorsionFree O V := by
+  have : Module.IsTorsionFree O V := by
     refine Module.IsTorsionFree.of_smul_eq_zero ?_
     intro c v h
     rw [← algebraMap_smul E c v] at h
     rcases smul_eq_zero.mp h with h | h
     · left; exact (IsFractionRing.injective O E) (by simpa using h)
     · right; exact h
-  haveI : Module.Finite O L := Module.Finite.iff_fg.mpr hfg
-  haveI : Module.Free O L := inferInstance
+  have : Module.Finite O L := Module.Finite.iff_fg.mpr hfg
+  have : Module.Free O L := inferInstance
   let bL := Module.Free.chooseBasis O L
   let v : Module.Free.ChooseBasisIndex O L → V := fun i => (bL i : V)
   have hli : LinearIndependent O v :=
@@ -607,7 +607,7 @@ theorem continuous_cj (w : Pl E) : Continuous (cj w) := by
 
 theorem isClosed_UL (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) :
     IsClosed ((UL n w : Subgroup (GLw n w)) : Set (GLw n w)) := by
-  unfold UL; rw [if_neg hw]
+  unfold UL; rw [ite_eq_right hw]
   have : ((UJ (cj w) (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) : Subgroup _) : Set (GLw n w)) =
       (fun g : GLw n w => cT (cj w) (g : Matrix (Fin n) (Fin n) (w.adicCompletion E)) * 1 *
         (g : Matrix (Fin n) (Fin n) (w.adicCompletion E))) ⁻¹' {1} := rfl
@@ -1071,7 +1071,7 @@ theorem pullLat_selfDual : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hMu : Formalism.UG.cT (cj w) M * 1 * M = 1 := by
     have h := hgi
     unfold UL at h
-    rw [if_neg hw] at h
+    rw [ite_eq_right hw] at h
     exact h
   have hMg : M * g.val = 1 := by rw [hMdef]; exact Units.inv_mul g
   have hgM : g.val * M = 1 := by rw [hMdef]; exact Units.mul_inv g
@@ -1118,7 +1118,7 @@ theorem pullLat_selfDual : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     funext j
     rw [Finset.sum_apply]
     simp only [hφs, z, hpre, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
-      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     exact (ha j).symm
   have hsd : ∀ y, (∀ i, φ y i ∈ w.adicCompletionIntegers E) ↔
       ∀ z' ∈ pullLat w B ψ g, B.herm x y z' ∈ (algebraMap K.O K.E).range := by
@@ -1294,7 +1294,7 @@ theorem pullLat_stable_iff_cong : ∀ (E : Type) [Field E] [NumberField E] [IsCM
     refine ⟨?_, fun i j => by simpa [Matrix.sub_apply] using H i j⟩
     have hγ' : g⁻¹ * γ * g ∈ UL n w := mul_mem (mul_mem (inv_mem hg) hγ) hg
     unfold UL at hγ'
-    rw [if_neg hns] at hγ'
+    rw [ite_eq_right hns] at hγ'
     have hU : cT (cj w) (g⁻¹ * γ * g : GLw n w).val * 1 * (g⁻¹ * γ * g : GLw n w).val = 1 := hγ'
     rw [Matrix.mul_one] at hU
     have hinv : ((g⁻¹ * γ * g)⁻¹ : GLw n w).val = cT (cj w) (g⁻¹ * γ * g : GLw n w).val :=
@@ -1521,12 +1521,12 @@ theorem twOrb_congruence_eq_N : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
         rw [hc]
         exact _root_.GlobalTheory.KapOrb.conj_mem_congSet_iff E w n k _ _ (Subgroup.mem_subgroupOf.1 kk.2)
       by_cases h : g.1⁻¹ * γ * g.1 ∈ congSet w n k
-      · rw [if_pos (hm.2 h), if_pos h]; rfl
-      · rw [if_neg (fun h' => h (hm.1 h')), if_neg h]
+      · rw [ite_eq_left (hm.2 h), ite_eq_left h]; rfl
+      · rw [ite_eq_right (fun h' => h (hm.1 h')), ite_eq_right h]
     rw [hfun, GlobalTheory.TwOrbGood.avg_const]
     by_cases h : g.1⁻¹ * γ * g.1 ∈ congSet w n k
-    · rw [if_pos h, if_pos ((hiff g).2 h)]
-    · rw [if_neg h, if_neg (fun h' => h ((hiff g).1 h'))]
+    · rw [ite_eq_left h, ite_eq_left ((hiff g).2 h)]
+    · rw [ite_eq_right h, ite_eq_right (fun h' => h ((hiff g).1 h'))]
   have hmul : ∀ h ∈ twCent (MonoidHom.id (UL n w)) δ, ∀ h' ∈ twCent (MonoidHom.id (UL n w)) δ,
       τ (h * h') = τ h * τ h' := by
     intro h hh h' hh'

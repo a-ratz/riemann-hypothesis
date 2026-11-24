@@ -394,7 +394,7 @@ private theorem psi_add (a b : A F) : ψ (a + b) = ψ a * ψ b := by
   simp [ψ, AddChar.map_add_eq_mul]
 
 private theorem co_mkE (D : Dat F E) (u t : A F) : D.co (D.mkE u t) = ![u, t] := by
-  letI : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
+  let : Algebra (A F) (A E) := AdeleBaseChange.algebraAdeleRing
   have h : D.mkE u t = ∑ i, (![u, t] : Fin 2 → A F) i • AdeleBaseChange.adeleBasis D.b i := by
     rw [Fin.sum_univ_two]
     simp only [AdeleBaseChange.adeleBasis_apply, D.b0, D.b1, Algebra.smul_def, map_one, Dat.mkE,

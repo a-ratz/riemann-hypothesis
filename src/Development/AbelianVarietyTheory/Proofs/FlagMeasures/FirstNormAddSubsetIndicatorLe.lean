@@ -273,11 +273,11 @@ theorem kappa_bound : Hyps → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup W
     (fun J => by
       by_cases hJ : NzOn (R (ν + eZ J.1)) (lb (ν + eZ J.1))
       · exact Or.inl ((hmass _ (hνJ0 J)).2 hJ).1
-      · exact Or.inr (if_neg hJ))
+      · exact Or.inr (ite_eq_right hJ))
     (fun J y hy => by
       rw [hκd J y hy]
       by_cases hJ : NzOn (R (ν + eZ J.1)) (lb (ν + eZ J.1))
-      · rw [if_pos hJ, smul_smul, smul_smul]
+      · rw [ite_eq_left hJ, smul_smul, smul_smul]
         congr 1
         have : ((Real.sqrt (dg (ν + eZ J.1)) : ℝ) : ℂ) ≠ 0 :=
           Complex.ofReal_ne_zero.2 (Real.sqrt_pos.2 (hdJ J)).ne'
@@ -285,11 +285,11 @@ theorem kappa_bound : Hyps → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup W
       · have : lb (ν + eZ J.1) y = 0 := by
           by_contra hne
           exact hJ ⟨y, hy, hne⟩
-        rw [if_neg hJ, this]
+        rw [ite_eq_right hJ, this]
         simp)
     I ((hmass _ (hνJ0 I)).2 hnzI).1 w hw
   have hae := (GlobalTheory.quotMeas_ae_mem_and_measurable hyp.1.2.2.1 k r _ _ (R ν) Wp z π u μW μN μG νq hDS hG).1
-  rw [if_pos hnzI, hκI I rfl, hw1] at h8
+  rw [ite_eq_left hnzI, hκI I rfl, hw1] at h8
   have h9 := h8.trans (le_trans (le_of_eq (lintegral_congr_ae ?_)) hint)
   · have hH : 0 ≤ Hsq r (Formalism.QuantumDeterminants.Tz k r z) b ^ l := by
       apply pow_nonneg
@@ -363,8 +363,8 @@ theorem exists_setup (hH : Hyps) {k r : ℕ} {Wp : Type} [NormedAddCommGroup Wp]
 
 theorem exists_setup_both : Hyps → ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl Cg cb Cu cT CT C0 : ℝ), HypZ D large₂ C' Cl Cg cb Cu cT CT C0 → 1000 ≤ Cl → ∀ τ w w' θ (W : LocW D.R.k D.R.rS), HypTT D w w' → 0 < θ → GoodW D τ w w' θ W → ∀ t ∈ GG D.R.k D.R.rS, (∀ n, n ∈ Nset D.R.k D.R.rS ↔ t * n * t⁻¹ ∈ Nset D.R.k D.R.rS) → (∀ z, inWb D.R.k D.R.rS z → (∀ h ∈ UWset D.R.k D.R.rS z, t * h = h * t) ∧ ∀ n ∈ Nset D.R.k D.R.rS, psi D.R.k D.R.rS z cStd n = psiS D z (t * n * t⁻¹)) → ∀ R : (Fin (2 * D.R.rS + D.R.k + 1) → ℤ) → Rep D.R.k D.R.rS, IsFam (lamD D τ) (D.R.k * D.R.m ^ 5) R → haveI := FiniteDimensional.complete ℂ W.Wp; haveI := FiniteDimensional.complete ℂ W.Wq; ∃ (U U' : ℕ → ℝ) (l : ∀ ν, (R ν).H → W.Wp) (l' : ∀ ν, (R ν).H → W.Wq) (dg : (Fin (2 * D.R.rS + D.R.k + 1) → ℤ) → ℝ), Setup (lamD D τ) U (large₂.sc.b ^ max 2 Cu) (bOne D τ 1) ((D.R.r : ℝ) * (D.R.m : ℝ) ^ 10) ((D.R.r : ℝ) ^ 19) (D.R.k * D.R.m ^ 5) W.z W.π W.μW (W.μN.map fun x => fun i j => (t⁻¹ * Matrix.of x * t) i j) W.μG (W.νS.map fun x => fun i j => (t⁻¹ * Matrix.of x) i j) R l dg ∧ Setup (lamD D τ) U' (large₂.sc.b ^ max 2 Cu) (bOne D τ 1) ((D.R.r : ℝ) * (D.R.m : ℝ) ^ 10) ((D.R.r : ℝ) ^ 19) (D.R.k * D.R.m ^ 5) W.z' W.π' W.μW' (W.μN.map fun x => fun i j => (t⁻¹ * Matrix.of x * t) i j) W.μG (W.νS'.map fun x => fun i j => (t⁻¹ * Matrix.of x) i j) R l' dg := by
   intro hH D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w w' θ W hTT hθ hW t ht hNt hψ R hF
-  haveI := FiniteDimensional.complete ℂ W.Wp
-  haveI := FiniteDimensional.complete ℂ W.Wq
+  have := FiniteDimensional.completeSpace ℂ W.Wp
+  have := FiniteDimensional.completeSpace ℂ W.Wq
   obtain ⟨c1, c2, z1, z2, t1, t2, hG, w1, -, w2, -, hN, q1, q2⟩ := hW
   have hv : 1 ≤ D.host.v := hZ.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hNH : IsHaarOn (Nset D.R.k D.R.rS) W.μN := by
@@ -654,7 +654,7 @@ theorem mass_move {Wp : Type} [NormedAddCommGroup Wp] {R : Rep k r} (hR : IsURep
     refine lintegral_congr_ae (hae'.mono fun x hx => ?_)
     show _ = ENNReal.ofReal (1 * (d * ‖l (R.σ (t⁻¹ * Matrix.of x) w)‖ ^ 2))
     rw [one_mul, sig_mul hR (inv_mem ht) hx, ENNReal.ofReal_mul hd.le, ENNReal.ofReal_pow (norm_nonneg _),
-      ofReal_norm_eq_enorm]
+      ofReal_norm]
     rfl
   have h0 : ENNReal.ofReal d ≠ 0 := (ENNReal.ofReal_pos.2 hd).ne'
   rw [ENNReal.ofReal_div_of_pos hd, ← h2, mul_comm (ENNReal.ofReal d), ENNReal.mul_div_cancel_right h0 ENNReal.ofReal_ne_top]
@@ -666,7 +666,7 @@ theorem kappa_zero {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp
     (hd : ∀ y ∈ (RI I).sm, l (ev (cmp 0 (Hpk k r)) R (wedge f) (fun c => io I c y)) = ((ep I : ℂ) * star κ₀) • lI y)
     (hnz : NzOn (RI I) lI) : ‖κ₀‖ ^ 2 ≤ 1 := by
   obtain ⟨y, hy, hy0⟩ := hnz
-  haveI : Unique (Sub (2 * r + k + 1) 0) :=
+  have : Unique (Sub (2 * r + k + 1) 0) :=
     ⟨⟨I⟩, fun J => Subtype.ext ((Finset.card_eq_zero.1 J.2).trans (Finset.card_eq_zero.1 I.2).symm)⟩
   have hw : ∀ c, wedge f c = 1 := fun c => Matrix.det_fin_zero
   have hc : ∀ c d, cmp 0 (Hpk k r) c d = 1 := fun c d => Matrix.det_fin_zero
@@ -792,8 +792,8 @@ theorem line_of_tens (hH : Hyps) (hKF : AmpKF) (hCC : CellConv) (D : D7) {τ w w
   have hN : 0 < Real.sqrt ((Module.finrank ℂ W.Wp : ℝ) * (Module.finrank ℂ W.Wq : ℝ)) := by
     obtain ⟨v, -, hv⟩ := n1
     obtain ⟨v', -, hv'⟩ := n2
-    haveI := nontrivial_of_ne _ _ hv
-    haveI := nontrivial_of_ne _ _ hv'
+    have := nontrivial_of_ne _ _ hv
+    have := nontrivial_of_ne _ _ hv'
     have a1 : 0 < Module.finrank ℂ W.Wp := Module.finrank_pos
     have a2 : 0 < Module.finrank ℂ W.Wq := Module.finrank_pos
     positivity
@@ -816,15 +816,15 @@ theorem line_of_tens (hH : Hyps) (hKF : AmpKF) (hCC : CellConv) (D : D7) {τ w w
     rw [← norm_pos_iff, (hηI I hI).1]
     exact mul_pos (hdI0 I) hN
   refine ⟨fun I => if gd I then (Real.sqrt (d / dI I) : ℂ) * (η / d * ((ep I : ℂ) * κ₁ I * star (κ₀ I) * dI I) / ηI I)
-    else 0, fun I hI => if_neg hI, fun I => ?_, ?_⟩
+    else 0, fun I hI => ite_eq_right hI, fun I => ?_, ?_⟩
   · by_cases hI : gd I
     · have he : ‖(ep I : ℂ)‖ = 1 := by rcases hTH.ep_sq I with h | h <;> simp [h]
       have := hdI0 I
-      simp only [if_pos hI, norm_mul, norm_div, he, norm_star, hη, (hηI I hI).1, Complex.norm_real, Real.norm_eq_abs,
+      simp only [ite_eq_left hI, norm_mul, norm_div, he, norm_star, hη, (hηI I hI).1, Complex.norm_real, Real.norm_eq_abs,
         abs_of_pos hd0, abs_of_pos this, abs_of_nonneg (Real.sqrt_nonneg _)]
       refine le_of_eq ?_
       field_simp
-    · simp only [if_neg hI, norm_zero]
+    · simp only [ite_eq_right hI, norm_zero]
       positivity
   intro μsec K hK hM hMI γ p hγ θ' hθ' νR hν
   obtain ⟨g₀, μR, ν₀, ν, s, hcell, hν₀, hD, hs⟩ :=
@@ -842,7 +842,7 @@ theorem line_of_tens (hH : Hyps) (hKF : AmpKF) (hCC : CellConv) (D : D7) {τ w w
   rw [GlobalTheory.PrincipalMinorExterior.pairing_eq_leading_minor, hd _ (ne_zero_of_low hw0)] at key
   have hDm : DminN W.z W.z' g₀ l =
       ((Zhat D.R.k D.R.rS W.z W.z' g₀).submatrix (Fin.castLE hl) (Fin.castLE hl)).det := by
-    rw [DminN, dif_pos (by omega)]; rfl
+    rw [DminN, dite_eq_left (by omega)]; rfl
   have hdc : (d : ℂ) ≠ 0 := Complex.ofReal_ne_zero.2 hd0.ne'
   rw [hD, jhUnit, hs _ _ hA₀, hJ _ _ hcell.1 hν₀, hM, deg_eq hR (hdeg _ _ hA₀) hd (ne_zero_of_low hw0)]
   set M : ℂ := (((ENNReal.ofReal (K / (c * d))).toReal ^ (-(1 / 2 : ℝ)) : ℝ) : ℂ) with hMd
@@ -860,7 +860,7 @@ theorem line_of_tens (hH : Hyps) (hKF : AmpKF) (hCC : CellConv) (D : D7) {τ w w
   rw [hdI I _ (ne_zero_of_low (hwI I))]
   beta_reduce
   by_cases hI : gd I
-  · rw [if_pos hI, jhUnit, hs _ _ (hAI I hI), (hηI I hI).2 _ _ hcell.1 hν₀, hMI I hI,
+  · rw [ite_eq_left hI, jhUnit, hs _ _ (hAI I hI), (hηI I hI).2 _ _ hcell.1 hν₀, hMI I hI,
       deg_eq (hRI I hI) (hdeg _ _ (hAI I hI)) (hdI I) (ne_zero_of_low (hwI I)), hMd,
       rpow_ratio hK hc hd0 (hdI0 I)]
     simp only [smul_smul]
@@ -868,7 +868,7 @@ theorem line_of_tens (hH : Hyps) (hKF : AmpKF) (hCC : CellConv) (D : D7) {τ w w
     have := hη0 I hI
     push_cast
     field_simp
-  · rw [if_neg hI]
+  · rw [ite_eq_right hI]
     rcases hz I hI with h0 | h0 <;> simp only [h0, mul_zero, zero_mul, star_zero, zero_smul, smul_zero]
 
 section side
@@ -1070,8 +1070,8 @@ theorem minor_line : Hyps → AmpKF → CellConv → ∀ Cg cb Cu cT CT C0 C1 : 
     ⟨1, Or.inl rfl, fun AI hAI => ?_⟩⟩
   classical
   simp only [one_smul] at hAI ⊢
-  haveI := FiniteDimensional.complete ℂ W.Wp
-  haveI := FiniteDimensional.complete ℂ W.Wq
+  have := FiniteDimensional.completeSpace ℂ W.Wp
+  have := FiniteDimensional.completeSpace ℂ W.Wq
   replace hJ := hJ D large₂ C' Cl hCl ⟨hBig.1, hBig.2.1, (le_max_left _ _).trans hBig.2.2⟩ hcd hZ τ w w' hTT θ hθw W hW
   obtain ⟨-, -, hbe, hm, -, -, -, hmk, hv, -, hka, hvb, hg1, hgb, hCg, -, hTb, -, -⟩ :=
     GlobalTheory.Amp.SizesProof.sizes_of_hyp D large₂ C' Cl Cg cb Cu cT CT C0 hBig.1 hZ
@@ -1191,7 +1191,7 @@ theorem minor_line : Hyps → AmpKF → CellConv → ∀ Cg cb Cu cT CT C0 C1 : 
       ∑ I ∈ univ.filter (fun I => I.card = l), f I = ∑ I : Sub _ l, f I.1 := fun f =>
     Finset.sum_subtype _ (by simp) f
   have haI : ∀ I : Sub (2 * D.R.rS + D.R.k + 1) l, (if h : I.1.card = l then a ⟨I.1, h⟩ else 0) = a I :=
-    fun I => dif_pos I.2
+    fun I => dite_eq_left I.2
   refine ⟨fun I => if h : I.card = l then a ⟨I, h⟩ else 0, fun I hI hn => (haI ⟨I, hI⟩).trans (ha0 _ hn), ?_, ?_⟩
   · rw [hsum]
     simp only [haI]

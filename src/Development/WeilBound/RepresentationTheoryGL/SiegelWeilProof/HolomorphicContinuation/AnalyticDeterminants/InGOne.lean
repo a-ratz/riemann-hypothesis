@@ -114,7 +114,7 @@ private theorem integral_minorOn_wM_ne_zero {n : ℕ} (j : ℕ) (Kg : Type) [Gro
     exact ((Complex.continuous_normSq.comp ((continuous_minorOn _).comp hcw))).mul
       (Complex.continuous_normSq.comp ((continuous_minorOn _).comp hcw))
   have hpos : 0 < ∫ k, g k ∂μ := by
-    refine hgc.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) (HasCompactSupport.of_compactSpace _) (fun k => ?_) ?_
+    refine hgc.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) (HasCompactSupport.of_compactSpace _) (fun k => ?_) ?_
     · exact mul_nonneg (Complex.normSq_nonneg _) (Complex.normSq_nonneg _)
     · simp [hg, map_one, hw1, hm1]
   exact_mod_cast hpos.ne'

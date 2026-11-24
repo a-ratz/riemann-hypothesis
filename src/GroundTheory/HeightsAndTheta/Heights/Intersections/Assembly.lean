@@ -301,7 +301,7 @@ theorem RegularityLocalPrime.proof (h₁ : RegularityOrder.Statement) : Regulari
   have hcR : c ∈ regRing P := fun W h1 h2 => (hc W h1 h2).1
   have : Module.Finite ℤ (regRing P) := (h₁ K ι P hP).2.1
   have hci : IsIntegral ℤ (⟨c, hcR⟩ : regRing P) := Algebra.IsIntegral.isIntegral _
-  have hne := Ideal.comap_ne_bot_of_integral_mem (I := Ideal.span {(⟨c, hcR⟩ : regRing P)})
+  have hne := Ideal.under_ne_bot_of_integral_mem (I := Ideal.span {(⟨c, hcR⟩ : regRing P)})
     (fun h => hc0 (congrArg Subtype.val h)) (Ideal.mem_span_singleton_self _) hci
   obtain ⟨N, hN, hN0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   obtain ⟨d, hd⟩ := Ideal.mem_span_singleton'.1 (Ideal.mem_comap.1 hN)
@@ -491,7 +491,7 @@ theorem VerticalEmbedding.proof (hD : regularityDehomogenization_holds.Statement
     if h : ReciprocityTheory.ChartRestriction.G.Geo.IsRelevant W then ∏ k, (X ⟨k, (h k).choose⟩ : MRing ι) ^ a k else 1
   have ht : ∀ W : Ideal (MRing ι), W.IsPrime → ReciprocityTheory.ChartRestriction.G.Geo.IsRelevant W → ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog (t W) a ∧ t W ∉ W := by
     intro W hWp hW
-    simp only [t, dif_pos hW]
+    simp only [t, dite_eq_left hW]
     refine ⟨AvoidRing.isMultiHomog_coordProd _ _, fun hmem => ?_⟩
     obtain ⟨k, -, hk⟩ := hWp.prod_mem_iff.mp hmem
     exact (hW k).choose_spec (hWp.mem_of_pow_mem _ hk)
@@ -520,7 +520,7 @@ theorem VerticalEmbedding.proof (hD : regularityDehomogenization_holds.Statement
     intro s hs hsP W hW
     have hA : IsSectionOn P (HermLine.ofMetrics (fun k => fsMetric (ι := ι k)) (fun k => (a k : ℤ))) s :=
       ⟨a, fun _ => rfl, hs, hsP⟩
-    rw [if_neg (not_isHorizontal_of_dimOne arithVarZero hP hA hW)]
+    rw [ite_eq_right (not_isHorizontal_of_dimOne arithVarZero hP hA hW)]
     obtain ⟨-, -, hta, htW, hy⟩ := hdata s W hW
     obtain ⟨hyW, hm⟩ := hD K ι P s (t W) a W (y s W) hP.2.1 hs hsP hW hta htW (hy s)
     have hy0 : y s W ≠ 0 := by
@@ -831,7 +831,7 @@ theorem FnDegAdjoin.proof : FnDegAdjoin.Statement := by
   refine RingHom.ext fun a => ?_
   obtain ⟨p, rfl⟩ := Ideal.Quotient.mk_surjective a
   apply Subtype.ext
-  simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingHom.coe_coe, AlgEquiv.coe_ringEquiv]
+  simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingHom.coe_coe, AlgEquiv.coe_toRingEquiv]
   rw [RingHom.algebraMap_toAlgebra, RingHom.algebraMap_toAlgebra, chartMap, Ideal.quotientMap_mk]
   rw [FnDegAdjoin.incl_apply, FnDegAdjoin.toRingHom_apply, FnDegAdjoin.quotEquiv_mk, FnDegAdjoin.quotEquiv_mk,
     aeval_rename]
@@ -1415,7 +1415,7 @@ theorem SemilocIntegral.proof (h₁ : ValCentreZ.Statement) (h₂ : CentreOverW.
     SemilocIntegral.Statement := by
   intro K _ ι _ K' _ ι' _ κ v P' n s α W hv hP' hP hs hsP hW
   have := hP'.2.1.1
-  letI := (locToSemiloc hv P' W).toAlgebra
+  let := (locToSemiloc hv P' W).toAlgebra
   let f : locRing (imageZ v P') W →+* FractionRing (MRing ι' ⧸ P') :=
     (semiLocRing P' (fibreOver v P' W)).subtype.comp (locToSemiloc hv P' W)
   refine ⟨fun b => ?_⟩
@@ -1554,7 +1554,7 @@ theorem RegularityLocalFinite.proof (hD : regularityLocalDimension_holds.Stateme
   have : Ring.KrullDimLE 1 (locRing P W) := ReciprocityTheory.ChartRestriction.G.AI.krullDimLE_one_of_krullDim_eq hdim
   have hfinRes : Finite (IsLocalRing.ResidueField (locRing P W)) :=
     (regularityLocalResidue_holds.proof K ι P s a W (fun i => i.elim0) hP hs hsP hW).1
-  letI := hfinRes
+  let := hfinRes
   have hy0' : (⟨y, hy⟩ : locRing P W) ≠ 0 := fun h => hy0 (congrArg Subtype.val h)
   have hfin : Module.length (locRing P W) (locRing P W ⧸ locIdeal P W y) ≠ ⊤ := by
     rw [locIdeal_eq_span hy, span_singleton_eq_range_lsmul]

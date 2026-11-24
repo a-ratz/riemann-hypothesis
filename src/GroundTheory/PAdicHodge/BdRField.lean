@@ -217,7 +217,7 @@ variable (K p) in
 theorem iInf_fil : ⨅ i, fil K p i = ⊥ := by
   have hϖ := maximalIdeal_eq_span_varpi K p
   have hne := algebraMap_ne_zero_of_maximalIdeal_eq_span (K := K) hϖ
-  haveI := isLocalization_away_bDeRham hϖ
+  have := isLocalization_away_bDeRham hϖ
   refine eq_bot_iff.2 fun x hx => ?_
   rw [Submodule.mem_iInf] at hx
   obtain ⟨⟨a, ⟨_, m, rfl⟩⟩, ha⟩ := IsLocalization.surj (Submonoid.powers (varpi K p)) x
@@ -239,7 +239,7 @@ variable (K p) in
 theorem iSup_fil : ⨆ i, fil K p i = ⊤ := by
   have hϖ := maximalIdeal_eq_span_varpi K p
   have hne := algebraMap_ne_zero_of_maximalIdeal_eq_span (K := K) hϖ
-  haveI := isLocalization_away_bDeRham hϖ
+  have := isLocalization_away_bDeRham hϖ
   refine eq_top_iff.2 fun x _ => ?_
   obtain ⟨⟨a, ⟨_, m, rfl⟩⟩, ha⟩ := IsLocalization.surj (Submonoid.powers (varpi K p)) x
   simp only [map_pow] at ha
@@ -321,7 +321,7 @@ theorem galBdRField_one : galBdRField (1 : Gal(PadicAlgCl p/L)) = RingEquiv.refl
   refine RingEquiv.toRingHom_injective (IsLocalization.ringHom_ext (nonZeroDivisors 𝔹)
     (RingHom.ext fun b => ?_))
   simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingHom.coe_coe,
-    galBdRField_algebraMap, one_smul, RingEquiv.coe_ringHom_refl, RingHom.id_apply]
+    galBdRField_algebraMap, one_smul, RingEquiv.toRingHom_refl, RingHom.id_apply]
 
 theorem galBdRField_mul (σ τ : Gal(PadicAlgCl p/L)) :
     galBdRField (σ * τ) = (galBdRField τ).trans (galBdRField σ) := by

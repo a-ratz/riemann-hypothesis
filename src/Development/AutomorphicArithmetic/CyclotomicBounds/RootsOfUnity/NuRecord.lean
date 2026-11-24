@@ -71,11 +71,11 @@ open Ideal in
 theorem UpperTheory.Mu.splitNotDvd :
     ∀ (φ : Frame) (H : HostAx φ), H.toHostRaw.Exact → ∀ p : ℕ, p.Prime → {v : HeightOneSpectrum (𝓞 H.E) | ((p : ℕ) : 𝓞 H.E) ∈ v.asIdeal}.ncard = Module.finrank ℚ H.E → ¬ p ∣ H.QS := by
   intro φ H hex p hp hcard hdvd
-  haveI hpf : Fact p.Prime := ⟨hp⟩
-  haveI hgal : IsGalois ℚ H.E := H.galois
+  have hpf : Fact p.Prime := ⟨hp⟩
+  have hgal : IsGalois ℚ H.E := H.galois
   obtain ⟨u, hu, hne⟩ := hex p hp hdvd
   set pZ : Ideal ℤ := Ideal.span {((p : ℕ) : ℤ)} with hpZ
-  haveI hmax : pZ.IsMaximal := Int.ideal_span_isMaximal_of_prime p
+  have hmax : pZ.IsMaximal := Int.ideal_span_isMaximal_of_prime p
   have hmem : ∀ P : Ideal (𝓞 H.E), P.IsPrime → (((p : ℕ) : 𝓞 H.E) ∈ P ↔ P.LiesOver pZ) := by
     intro P hP
     constructor
@@ -107,8 +107,8 @@ theorem UpperTheory.Mu.splitNotDvd :
     rw [heq, Set.ncard_image_of_injective _ (fun a b h => HeightOneSpectrum.ext h)]
   have hn : 0 < Module.finrank ℚ H.E := Module.finrank_pos
   obtain ⟨P, hPp, hPl⟩ := Set.nonempty_of_ncard_ne_zero (hset ▸ hn.ne')
-  haveI := hPp
-  haveI := hPl
+  have := hPp
+  have := hPl
   have key := Ideal.ncard_primesOver_mul_card_inertia_mul_finrank (G := Gal(H.E/ℚ)) pZ P
   rw [hset, IsGalois.card_aut_eq_finrank, mul_assoc] at key
   have h1 : Nat.card (Ideal.inertia Gal(H.E/ℚ) P) * P.inertiaDeg ℤ = 1 :=
@@ -165,7 +165,7 @@ theorem UpperTheory.Mu.nuSum :
       (H.QS.factorization l : ℝ) * Real.log l + (n.factorization l : ℝ) * Real.log l := by
     intro l hl
     have hp : l.Prime := hS l hl
-    haveI : Fact l.Prime := ⟨hp⟩
+    have : Fact l.Prime := ⟨hp⟩
     have hlog : 0 ≤ Real.log l := Real.log_nonneg (by exact_mod_cast hp.one_lt.le)
     have hnat : ν l ≤ H.QS.factorization l + n.factorization l := by
       rw [hν l]
@@ -208,7 +208,7 @@ private theorem wDvdQS_not_dvd {φ : Frame} (H : HostRaw φ) (A p : ℕ) (hp : p
     (hN : H.condN = A * p) (hA : A.Coprime p)
     (hart : ∀ u : (ZMod H.condN)ˣ, (u : ZMod H.condN).val ≡ 1 [MOD A] → H.art u ^ 2 = 1) : ¬ p ∣ H.w := by
   intro hdvd
-  haveI : NeZero H.condN := ⟨by rw [hN]; exact mul_ne_zero (fun h0 => by simp [h0] at hA; exact hp.one_lt.ne' hA) hp.ne_zero⟩
+  have : NeZero H.condN := ⟨by rw [hN]; exact mul_ne_zero (fun h0 => by simp [h0] at hA; exact hp.one_lt.ne' hA) hp.ne_zero⟩
   obtain ⟨ζ, hζ⟩ := H.exists_primitiveRoot_w
   have hζp : IsPrimitiveRoot (ζ ^ (H.w / p)) p := hζ.pow H.w_pos (Nat.div_mul_cancel hdvd).symm
   have hξ : IsPrimitiveRoot (Formalism.HC.Der.emb H (ζ ^ (H.w / p))) p :=
@@ -299,7 +299,7 @@ theorem nu_eq_zero_of_not_dvd (l : ℕ) [Fact l.Prime] (h : ¬ l ∣ H.QS) : nuO
   · exact nu_eq_zero_of_qd H Ω l hqd
   · push_neg at hqd
     have hle := nuLe _ H.toHostRaw l Ω (R.t * R.r) (tr_odd R) hqd.1 hqd.2
-    rw [if_neg h, Nat.factorization_eq_zero_of_not_dvd h] at hle
+    rw [ite_eq_right h, Nat.factorization_eq_zero_of_not_dvd h] at hle
     omega
 
 theorem nu_eq_zero_of_split (l : ℕ) [hl : Fact l.Prime]
@@ -312,10 +312,10 @@ theorem sum_nu_le (ν : ℕ → ℝ) (hν : ∀ (l : ℕ) [Fact l.Prime], ν l =
     ∑ l ∈ S, ν l * Real.log l ≤ Real.log (H.QS : ℝ) + Real.log ((R.t * R.r : ℕ) : ℝ) := by
   classical
   let μ : ℕ → ℕ := fun l => if h : l.Prime then (haveI := Fact.mk h; nuOf l (cyc l H.E Ω) (R.t * R.r)) else 0
-  have hμ : ∀ (l : ℕ) [Fact l.Prime], μ l = nuOf l (cyc l H.E Ω) (R.t * R.r) := fun l hl => dif_pos hl.out
+  have hμ : ∀ (l : ℕ) [Fact l.Prime], μ l = nuOf l (cyc l H.E Ω) (R.t * R.r) := fun l hl => dite_eq_left hl.out
   refine le_of_eq_of_le (Finset.sum_congr rfl fun l hl => ?_)
     (nuSum _ H.toHostRaw Ω _ (tr_odd R) (half_not_dvd H (Or.inl rfl)) (half_not_dvd H (Or.inr rfl)) μ hμ S hS)
-  haveI := Fact.mk (hS l hl)
+  have := Fact.mk (hS l hl)
   rw [hν l, hμ l]
 
 theorem budget_le : Real.log (H.QS : ℝ) + Real.log ((R.t * R.r : ℕ) : ℝ) ≤

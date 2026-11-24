@@ -814,7 +814,7 @@ theorem F_le {i : ℕ} : F f ξ l M (i + 1) ≤ F f ξ l M i :=
 
 theorem cpl_step {m : ℕ} (h : Hyp f ξ l m) {i : ℕ} (hi : i < m) (hN : Cpl l (F f ξ l M (i + 1))) :
     Cpl l (F f ξ l M i) := by
-  haveI := h.dom
+  have := h.dom
   obtain ⟨π, hs, hk⟩ := exists_pi ((F f ξ l M (i + 1)).addSubgroupOf (F f ξ l M i))
     (gF f ξ l M i) (Ideal.Quotient.mk (Ideal.span {ξ})).toAddMonoidHom Ideal.Quotient.mk_surjective
     (fun x => by
@@ -839,7 +839,7 @@ theorem cpl_F {m : ℕ} (h : Hyp f ξ l m) (d i : ℕ) (hd : i + d = m) : Cpl l 
   | zero =>
     have hm : i = m := by omega
     subst hm
-    haveI : Subsingleton (F f ξ l M i) := ⟨fun a b => by
+    have : Subsingleton (F f ξ l M i) := ⟨fun a b => by
       have key : ∀ c : F f ξ l M i, c = 0 := fun c => by
         apply Subtype.ext
         apply ι_injective f ξ l M

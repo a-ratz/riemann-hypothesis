@@ -432,7 +432,7 @@ theorem scLat_isFull {E : Type} [Field E] [NumberField E] {n : ℕ}
     {𝔞 : FractionalIdeal (𝓞 E)⁰ E} (h𝔞 : 𝔞 ≠ 0)
     {M : Submodule (𝓞 E) (Fin n → E)} (hM : Submodule.IsFullLattice E M) :
     Submodule.IsFullLattice E (scLat 𝔞 M) := by
-  haveI := GlobalTheory.SkewLat.PairLatLattice.scLat_isLattice h𝔞 hM.toIsLattice
+  have := GlobalTheory.SkewLat.PairLatLattice.scLat_isLattice h𝔞 hM.toIsLattice
   obtain ⟨a, ha, ha0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
     (FractionalIdeal.coeToSubmodule_ne_bot.mpr h𝔞)
   have ha' : a ∈ 𝔞 := ha
@@ -460,7 +460,7 @@ theorem pairLat_isFull {E : Type} [Field E] [NumberField E] {a b d : ℕ}
     {M : Submodule (𝓞 E) (Fin a → E)} {N : Submodule (𝓞 E) (Fin b → E)}
     (hM : Submodule.IsFullLattice E M) (hN : Submodule.IsFullLattice E N)
     (e : Fin a ⊕ Fin b ≃ Fin d) : Submodule.IsFullLattice E (pairLat M N e) := by
-  haveI := GlobalTheory.SkewLat.PairLatLattice.pairLat_isLattice hM.toIsLattice hN.toIsLattice e
+  have := GlobalTheory.SkewLat.PairLatLattice.pairLat_isLattice hM.toIsLattice hN.toIsLattice e
   let φ : (Fin d → E) ≃ₗ[E] (Fin a → E) × (Fin b → E) :=
     (LinearEquiv.funCongrLeft E E e).trans (LinearEquiv.sumArrowLequivProdArrow _ _ E E)
   refine ⟨?_⟩

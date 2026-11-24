@@ -70,12 +70,12 @@ theorem exists_dualBasis {Λ : Submodule (𝓞 E) (Fin N → E)} (h : IsLat Λ) 
       (∀ j, ∀ x ∈ Λ, ∃ o : 𝓞 F, l j x = o) ∧ ∀ x, x = ∑ j, l j x • y j := by
   classical
   obtain ⟨hfg, hspan⟩ := h
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hfg
-  haveI : Module.Finite (𝓞 F) Λ := Module.Finite.trans (𝓞 E) Λ
-  haveI : Module.FinitePresentation (𝓞 F) Λ := Module.finitePresentation_of_finite _ _
-  haveI : Module.Flat (𝓞 F) Λ := IsDedekindDomain.flat_iff_torsion_eq_bot.2
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.2 hfg
+  have : Module.Finite (𝓞 F) Λ := Module.Finite.trans (𝓞 E) Λ
+  have : Module.FinitePresentation (𝓞 F) Λ := Module.finitePresentation_of_finite _ _
+  have : Module.Flat (𝓞 F) Λ := IsDedekindDomain.flat_iff_torsion_eq_bot.2
     (Submodule.isTorsionFree_iff_torsion_eq_bot.1 inferInstance)
-  haveI : Module.Projective (𝓞 F) Λ := Module.Flat.projective_of_finitePresentation
+  have : Module.Projective (𝓞 F) Λ := Module.Flat.projective_of_finitePresentation
   obtain ⟨n, f, g, -, -, hfg'⟩ := Module.Finite.exists_comp_eq_id_of_projective (𝓞 F) Λ
   have hne : ∀ s : nonZeroDivisors (𝓞 F), algebraMap (𝓞 F) F s ≠ 0 := fun s =>
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors s.2
@@ -93,7 +93,7 @@ theorem exists_dualBasis {Λ : Submodule (𝓞 E) (Fin N → E)} (h : IsLat Λ) 
       simp only [Module.algebraMap_end_apply]
       rw [← IsScalarTower.algebraMap_smul F (s : 𝓞 F), smul_smul, mul_inv_cancel₀ (hne s), one_smul]
   let ι : Λ →ₗ[𝓞 F] (Fin N → E) := Λ.subtype.restrictScalars (𝓞 F)
-  haveI hloc : IsLocalizedModule (nonZeroDivisors (𝓞 F)) ι := by
+  have hloc : IsLocalizedModule (nonZeroDivisors (𝓞 F)) ι := by
     refine IsLocalizedModule.mk (fun s => hunit s) (fun v => ?_)
       (fun {x₁ x₂} hx => ⟨1, by simpa using Subtype.ext hx⟩)
     obtain ⟨m, hm0, hm⟩ := exists_smul_mem ⟨hfg, hspan⟩ v
@@ -274,7 +274,7 @@ theorem hatRat : HatRat := by
 theorem hatCompactOpen : HatCompactOpen := by
   intro F E _ _ _ _ _ N Λ hΛ
   obtain ⟨k, y, l, hy, hl, hsum⟩ := exists_dualBasis (F := F) hΛ
-  haveI : ContinuousAdd (Adf F E) := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (Adf F E)
+  have : ContinuousAdd (Adf F E) := IsModuleTopology.toContinuousAdd (FiniteAdeleRing (𝓞 F) F) (Adf F E)
   have hsmul : ∀ j (r : FiniteAdeleRing (𝓞 F) F) (z : Fin N → Adf F E),
       coordR (l j) (FiniteAdeleRing (𝓞 F) F) (r • z) = r * coordR (l j) (FiniteAdeleRing (𝓞 F) F) z := by
     intro j r z

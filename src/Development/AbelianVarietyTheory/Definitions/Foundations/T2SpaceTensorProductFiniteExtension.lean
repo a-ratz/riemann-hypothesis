@@ -80,7 +80,7 @@ theorem norm_sigR (σ : E →ₐ[F] E) (x : R ⊗[F] E) :
 theorem continuous_norm_tens [TopologicalSpace R] [IsTopologicalRing R] :
     Continuous (Algebra.norm R : R ⊗[F] E → R) := by
   classical
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
   let b := Algebra.TensorProduct.basis R (Module.finBasis F E)
   rw [show (Algebra.norm R : R ⊗[F] E → R) = fun x => (Algebra.leftMulMatrix b x).det from
     funext fun x => Algebra.norm_eq_matrix_det b x]
@@ -142,10 +142,10 @@ theorem absEw_apply (w : InfinitePlace F) (x : (w.Completion ⊗[F] E)ˣ) :
     absEw F E w x = ‖Algebra.norm w.Completion x.1‖₊ ^ w.mult := rfl
 
 theorem continuous_absEv (v : HeightOneSpectrum (𝓞 F)) : Continuous (absEv F E v) :=
-  (continuous_norm_tens.comp Units.continuous_val).nnnorm
+  (continuous_norm_tens.comp Units.continuous_val).nnNorm
 
 theorem continuous_absEw (w : InfinitePlace F) : Continuous (absEw F E w) :=
-  (continuous_norm_tens.comp Units.continuous_val).nnnorm.pow _
+  (continuous_norm_tens.comp Units.continuous_val).nnNorm.pow _
 
 theorem absEv_conjUnit (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (x : (Fv F v ⊗[F] E)ˣ) :
     absEv F E v (conjUnit σ x) = absEv F E v x := congrArg nnnorm (norm_sigR σ x.1)
@@ -156,12 +156,12 @@ theorem absEw_conjUnit (σ : E →ₐ[F] E) (w : InfinitePlace F) (x : (w.Comple
 theorem absEv_algebraMap (v : HeightOneSpectrum (𝓞 F)) (a : (Fv F v)ˣ) :
     absEv F E v (Units.map (algebraMap (Fv F v) (Fv F v ⊗[F] E)).toMonoidHom a) = ‖a.1‖₊ ^ Module.finrank F E := by
   change ‖Algebra.norm (Fv F v) (algebraMap (Fv F v) (Fv F v ⊗[F] E) a.1)‖₊ = _
-  rw [Algebra.norm_algebraMap, Module.finrank_baseChange, nnnorm_pow]
+  rw [Algebra.norm_algebraMap, Module.finrank_baseChange, nnNorm_pow]
 
 theorem algebraMap_norm_eq {σ : E →ₐ[F] E} (h : IsCMExt F E σ) {R : Type} [CommRing R] [Algebra F R] (x : R ⊗[F] E) :
     algebraMap R (R ⊗[F] E) (Algebra.norm R x) = x * Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR R σ x := by
   classical
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
   let s := AlgEquiv.ofBijective σ (Algebra.IsAlgebraic.algHom_bijective σ)
   have hs : (1 : E ≃ₐ[F] E) ≠ s := fun e => by
     have := h.2.1
@@ -180,8 +180,8 @@ theorem absEw_eq_sq {σ : E →ₐ[F] E} (h : IsCMExt F E σ) {w : InfinitePlace
     (x : (w.Completion ⊗[F] E)ˣ) : absEw F E w x = ‖infEmb τ x.1‖₊ ^ 2 := by
   have := h.1
   have h1 := congrArg (fun y => ‖infEmb τ y‖₊) (algebraMap_norm_eq h x.1)
-  simp only [map_mul, ← infEmb_sigR h τ, nnnorm_mul, RCLike.nnnorm_conj] at h1
-  rw [absEw_apply, InfinitePlace.mult, if_pos (IsTotallyReal.isReal w), pow_one, sq, ← h1,
+  simp only [map_mul, ← infEmb_sigR h τ, nnNorm_mul, RCLike.nnNorm_conj] at h1
+  rw [absEw_apply, InfinitePlace.mult, ite_eq_left (IsTotallyReal.isReal w), pow_one, sq, ← h1,
     Algebra.TensorProduct.algebraMap_apply, infEmb_tmul, map_one, mul_one]
   exact NNReal.eq ((InfinitePlace.Completion.isometry_extensionEmbedding w).norm_map_of_map_zero (map_zero _) _).symm
 
@@ -246,7 +246,7 @@ theorem absE_inclR (x : Eˣ) : absE F E (Units.map (inclR (F := F) (AF F)).toMon
     ← finprod_comp_equiv FinitePlace.equivHeightOneSpectrum.symm]
   congr 1
   · refine Finset.prod_congr rfl fun w _ => ?_
-    rw [NNReal.coe_pow, coe_nnnorm]
+    rw [NNReal.coe_pow, coe_nnNorm]
     congr 1
     rw [AbsoluteValue.Completion.algebraMap_def, WithAbs.algebraMap_right_apply,
       Algebra.algebraMap_self_apply, AbsoluteValue.Completion.norm_coe]
@@ -262,7 +262,7 @@ theorem continuous_unitInf (w : InfinitePlace F) : Continuous (unitInf F E w) :=
     ((continuous_apply w).comp continuous_fst))
 
 theorem continuous_absE : Continuous (absE F E) := by
-  haveI := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+  have := isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   refine continuous_of_continuousAt_one _ ?_
   have ho : IsOpen {a : AF F | ∀ v, evFin F v a ∈ v.adicCompletionIntegers F} :=
     (RestrictedProduct.isOpen_forall_mem fun v : HeightOneSpectrum (𝓞 F) =>

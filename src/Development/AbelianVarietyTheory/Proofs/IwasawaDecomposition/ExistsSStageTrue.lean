@@ -84,7 +84,7 @@ theorem code_of_over (K : Ctx) (B : Pre) (h : K.Over B) :
 theorem exists_split (B : Pre) (p : HeightOneSpectrum (𝓞 B.host.F)) (L : LocAt B.host.F B.host.E B.conjF p) :
     ∃ s : Option (SplitAt L.Fp L.Ep L.cj (resChar p)),
       (s.isSome ↔ resChar p ∈ ({B.host.g 0, B.host.g 1} : Finset ℕ)) := by
-  letI := B.host.cmStar
+  let := B.host.cmStar
   by_cases h : resChar p ∈ ({B.host.g 0, B.host.g 1} : Finset ℕ)
   · have hk : ∃ k, resChar p = B.host.g k := by
       simp only [Finset.mem_insert, Finset.mem_singleton] at h

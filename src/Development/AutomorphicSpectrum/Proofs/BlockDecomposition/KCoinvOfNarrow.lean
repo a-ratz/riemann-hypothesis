@@ -73,13 +73,13 @@ namespace PositivityTheory.KCo
 theorem good_split_of_cm : GoodSplit := by
   intro F E _ _ _ _ _ σ B hB v hs
   have hcm := hB.cm
-  haveI hgal : IsGalois ℚ E := hB.galois
-  haveI : IsGalois F E := IsGalois.tower_top_of_isGalois ℚ F E
+  have hgal : IsGalois ℚ E := hB.galois
+  have : IsGalois F E := IsGalois.tower_top_of_isGalois ℚ F E
   set p : Ideal ℤ := Ideal.under ℤ v.asIdeal with hp
   have hs' : (p.primesOver (NumberField.RingOfIntegers E)).ncard = Module.finrank ℚ E := hs
   have hfin : (p.primesOver (NumberField.RingOfIntegers E)).Finite :=
     Set.finite_of_ncard_ne_zero (by rw [hs']; exact Module.finrank_pos.ne')
-  haveI : Fintype (p.primesOver (NumberField.RingOfIntegers E)) := hfin.fintype
+  have : Fintype (p.primesOver (NumberField.RingOfIntegers E)) := hfin.fintype
   have hA : ∀ q ∈ p.primesOver (NumberField.RingOfIntegers E),
       q.ramificationIdx ℤ * q.inertiaDeg ℤ = 1 := by
     have hsum := Ideal.sum_ramification_inertia_eq_finrank p (NumberField.RingOfIntegers E)
@@ -89,7 +89,7 @@ theorem good_split_of_cm : GoodSplit := by
     have hpos : ∀ x : p.primesOver (NumberField.RingOfIntegers E),
         1 ≤ x.1.ramificationIdx ℤ * x.1.inertiaDeg ℤ := by
       intro x
-      haveI : x.1.IsPrime := x.2.1
+      have : x.1.IsPrime := x.2.1
       exact Nat.mul_pos (Ideal.ramificationIdx_pos _ _) (Ideal.inertiaDeg_pos _ _)
     intro q hq
     by_contra hne
@@ -104,10 +104,10 @@ theorem good_split_of_cm : GoodSplit := by
       Q.ramificationIdx (NumberField.RingOfIntegers F) = 1 ∧
         Q.inertiaDeg (NumberField.RingOfIntegers F) = 1 := by
     intro Q hQ
-    haveI : Q.IsPrime := hQ.1
-    haveI : Q.LiesOver v.asIdeal := hQ.2
-    haveI : v.asIdeal.LiesOver p := ⟨rfl⟩
-    haveI : Q.LiesOver p := Ideal.LiesOver.trans Q v.asIdeal p
+    have : Q.IsPrime := hQ.1
+    have : Q.LiesOver v.asIdeal := hQ.2
+    have : v.asIdeal.LiesOver p := ⟨rfl⟩
+    have : Q.LiesOver p := Ideal.LiesOver.trans Q v.asIdeal p
     have h1 := hA Q ⟨inferInstance, inferInstance⟩
     rw [Ideal.ramificationIdx_tower (R := ℤ) (q := v.asIdeal) (r := Q),
       Ideal.inertiaDeg_tower (R := ℤ) (q := v.asIdeal) (r := Q)] at h1
@@ -124,8 +124,8 @@ theorem good_split_of_cm : GoodSplit := by
     rw [h0, zero_mul] at hC
     exact absurd hC (by norm_num)
   obtain ⟨Q, hQ⟩ := Set.nonempty_of_ncard_ne_zero hne
-  haveI : Q.IsPrime := hQ.1
-  haveI : Q.LiesOver v.asIdeal := hQ.2
+  have : Q.IsPrime := hQ.1
+  have : Q.LiesOver v.asIdeal := hQ.2
   rw [Ideal.ramificationIdxIn_eq_ramificationIdx v.asIdeal Q (E ≃ₐ[F] E),
     Ideal.inertiaDegIn_eq_inertiaDeg v.asIdeal Q (E ≃ₐ[F] E), (hB1 Q hQ).1, (hB1 Q hQ).2,
     mul_one, mul_one] at hC

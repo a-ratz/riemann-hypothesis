@@ -118,9 +118,9 @@ lemma re_nonneg_of_trace (s : E)
     refine tendsto_finsetSum _ fun φ _ => ?_
     simp only [g]
     by_cases h1 : InfinitePlace.mk φ = InfinitePlace.mk τ
-    · simp only [if_pos h1, mul_zero]; exact tendsto_const_nhds
+    · simp only [ite_eq_left h1, mul_zero]; exact tendsto_const_nhds
     · have h2 : φ ≠ τ := fun h => h1 (by rw [h])
-      simp only [if_neg h1, if_neg h2]
+      simp only [ite_eq_right h1, ite_eq_right h2]
       have h3 := hlt _ h1
       have h4 := apply_nonneg (InfinitePlace.mk φ) ((u : 𝓞 E) : E)
       have := (tendsto_pow_atTop_nhds_zero_of_lt_one (r := InfinitePlace.mk φ ((u : 𝓞 E) : E) ^ 2)
@@ -135,7 +135,7 @@ omit [IsCMField E] in
 lemma cross_eq {Y : Type} [AddCommGroup Y] [Module (𝓞 E) Y] [Module.Finite ℤ Y]
     (hY : Module.finrank (𝓞 E) Y = 1) (η η' : Module.Dual ℤ Y) (x x' : Y) :
     pairE (E := E) η x * pairE η' x' = pairE η x' * pairE η' x := by
-  haveI : Module.Finite (𝓞 E) Y := Module.Finite.of_restrictScalars_finite ℤ _ _
+  have : Module.Finite (𝓞 E) Y := Module.Finite.of_restrictScalars_finite ℤ _ _
   have hni : ¬ LinearIndependent (𝓞 E) ![x, x'] := fun h => by
     have := h.fintype_card_le_finrank
     rw [hY] at this
@@ -183,7 +183,7 @@ lemma transvMat_mulVec (G : Matrix (Fin r) (Fin r) E) (ξ v : Fin r → E) (α :
     (transvMat G ξ α).mulVec v - v = (α * herm G v ξ) • ξ := by
   funext a
   simp only [transvMat, Matrix.mulVec, dotProduct, Matrix.of_apply, add_mul, Finset.sum_add_distrib, ite_mul,
-    one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+    one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
     herm, add_sub_cancel_left, Finset.mul_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun k _ => by ring
 

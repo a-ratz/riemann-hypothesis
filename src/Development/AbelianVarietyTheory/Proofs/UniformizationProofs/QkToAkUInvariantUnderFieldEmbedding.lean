@@ -369,8 +369,8 @@ theorem qkToAkU_iff_of_algebra (hG : GlobalFnsSt) (hK : KerPowSt) {I : Ideal R} 
 
 theorem qkToAkU_iff_of_qkExt : LL → AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _ => ∀ (F' : Type) [Field F'] [IsAlgClosed F'] [Algebra (FractionRing R) F'] (σ : F →ₐ[FractionRing R] F') (k : ℕ), 1 ≤ k → ∀ (p : QkPt D.toPre F k) (p' : QkPt D.toPre F' k) (x : TFK (R := R) F ⟶ A.A) (x' : TFK (R := R) F' ⟶ A.A), QkExt σ.toRingHom p p' → x'.left = spMap σ.toRingHom ≫ x.left → (QkToAkU U.toUnifPre F k p x ↔ QkToAkU U.toUnifPre F' k p' x') := by
   intro hL R _ _ _ I _ D A G _ _ _ U F _ _ _ F' _ _ _ σ k hk p p' x x' hp hx
-  letI : Algebra F F' := σ.toRingHom.toAlgebra
-  haveI : IsScalarTower (FractionRing R) F F' := IsScalarTower.of_algebraMap_eq fun c => (σ.commutes c).symm
+  let : Algebra F F' := σ.toRingHom.toAlgebra
+  have : IsScalarTower (FractionRing R) F F' := IsScalarTower.of_algebraMap_eq fun c => (σ.commutes c).symm
   obtain rfl : x' = fieldMap F F' ≫ x := Over.OverMorphism.ext hx
   exact qkToAkU_iff_of_algebra hL.1.globalFns hL.1.kerPow U hk hp x
 

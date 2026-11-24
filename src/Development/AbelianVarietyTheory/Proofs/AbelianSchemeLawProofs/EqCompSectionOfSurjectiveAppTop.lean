@@ -89,7 +89,7 @@ theorem _root_.GlobalTheory.local_rigidity : ∀ (X T Y : Scheme.{0}) (p : X ⟶
     change p (ε s) ∈ V
     rw [← Scheme.Hom.comp_apply, h]
     exact hs
-  haveI : IsAffine W := hW
+  have : IsAffine W := hW
   refine ⟨V, htV, ?_⟩
   have hsec : ε.resLE (p ⁻¹ᵁ V) V hεV ≫ p ∣_ V = 𝟙 V.toScheme := by
     rw [← cancel_mono V.ι, Category.assoc, morphismRestrict_ι, ← Category.assoc,

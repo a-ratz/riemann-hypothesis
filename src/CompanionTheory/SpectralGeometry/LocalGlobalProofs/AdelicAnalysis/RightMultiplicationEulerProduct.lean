@@ -217,25 +217,25 @@ theorem rmul_product_formula : ∀ (F E : Type) [Field F] [NumberField F] [Field
   refine ⟨cinf, c, hU, ?_, ?_⟩
   · intro μ hμ
     obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
-    haveI := h1
-    haveI := h2
-    haveI := h3
-    haveI := h4
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+    have := h1
+    have := h2
+    have := h3
+    have := h4
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
     obtain ⟨t1, -, -, -, -, -, t7, t8, -, -⟩ :=
       GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
-    haveI := t1
+    have := t1
     exact rmul_map_haar b (Ainf F) (t8 n M) (t7 _ b) g cinf hinf μ hμ
   · intro v μ hμ
     obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-    haveI := h1
-    haveI := h2
-    haveI := h3
-    haveI := h4
-    haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+    have := h1
+    have := h2
+    have := h3
+    have := h4
+    have : BorelSpace (Fv F v) := ⟨rfl⟩
     obtain ⟨t1, -, -, -, -, -, t7, t8, -, -⟩ :=
       GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
-    haveI := t1
+    have := t1
     exact rmul_map_haar b (Fv F v) (t8 n M) (t7 _ b) g (c v) (hv v) μ hμ
 
 end GlobalTheory.CompanionTheory.SW.RmulPF

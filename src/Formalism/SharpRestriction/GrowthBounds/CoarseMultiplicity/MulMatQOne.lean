@@ -72,7 +72,7 @@ theorem Avec_eq {m : ℕ} (TT : Finset (Fin n')) (aT bT : Fin n' → ℕ) :
   unfold Avec AHH
   push_cast
   rw [Fintype.sum_prod_type]
-  simp only [Fintype.sum_bool, vecH, hhDegs, if_true, Bool.false_eq_true, if_false, add_zero]
+  simp only [Fintype.sum_bool, vecH, hhDegs, ite_true, Bool.false_eq_true, ite_false, add_zero]
   exact Finset.sum_coe_sort TT (fun s => (hhDeg aT bT s true : ℤ))
 
 theorem flatTheta (hS : HidaSetting p n' W Qq O Kf ι σ jO w) (φ : WF p n' ≃+* W) (hφ : IsWittIdent σ φ) (m : ℕ)
@@ -83,7 +83,7 @@ theorem flatTheta (hS : HidaSetting p n' W Qq O Kf ι σ jO w) (φ : WF p n' ≃
       IsFlatTheta ι σ jO w φ TT aT bT h Θ ∧
       ∀ F, ((Θ F : ↥(VHH (m := m) Kf TT aT bT)) : MvPolynomial ((TT × Bool) × (Fin (m + 1) × Fin (m + 1))) Kf) =
         thF hS m (vecH TT) (fun x => la_tw ι σ x.1.val.val h) F.1 := by
-  letI : Algebra (WF p n') O := algOfIdent jO φ
+  let : Algebra (WF p n') O := algOfIdent jO φ
   have hw := w_ne hS
   obtain ⟨Θ0, hΘ0⟩ := gen_equiv hS m hm (fun x : TT × Bool => x.2) (Formalism.MainNotions.ColumnSystems.hhDegs TT aT bT)
     (fun x => la_tw ι σ x.1.val.val h) (fun x => la_tw_det _ _ _ _ hh)
@@ -147,7 +147,7 @@ theorem lift_Pol (hS : HidaSetting p n' W Qq O Kf ι σ jO w) (φ : WF p n' ≃+
     (F : MvPolynomial ((TT × Bool) × Fin (m + 1)) (KK O)) (hF : F ∈ Pol (KK O) (m + 1) (hhDegs TT aT bT)) :
     letI : Algebra (WF p n') O := algOfIdent jO φ
     liftSubst p n' O w 1 (hhLetters TT) g F ∈ Pol (KK O) (m + 1) (hhDegs TT aT bT) := by
-  letI : Algebra (WF p n') O := algOfIdent jO φ
+  let : Algebra (WF p n') O := algOfIdent jO φ
   rw [pol_iff hS, lift_eq hS φ hφ 1 (hhLetters TT) (fun x => x.1.val) (fun _ => rfl) g hg F]
   exact Lin_Pol _ _ ((pol_iff hS _ _ _).1 hF)
 
@@ -159,7 +159,7 @@ theorem lift_one (hS : HidaSetting p n' W Qq O Kf ι σ jO w) (φ : WF p n' ≃+
       (algebraMap O Kf w ^ Avec (vecH TT) (hhDegs TT aT bT)) •
         Lin (fun x : TT × Bool => Aa x.2 (la_tw ι σ x.1.val.val h * lb_D (m + 1) 1 (algebraMap O Kf w)))
           (Lin (fun x : TT × Bool => Aa x.2 (la_tw ι σ x.1.val.val h)⁻¹) (map (kapR hS) F)) := by
-  letI : Algebra (WF p n') O := algOfIdent jO φ
+  let : Algebra (WF p n') O := algOfIdent jO φ
   have hw := w_ne hS
   set c := algebraMap O Kf w with hc
   have hF' := (pol_iff hS _ _ _).1 hF

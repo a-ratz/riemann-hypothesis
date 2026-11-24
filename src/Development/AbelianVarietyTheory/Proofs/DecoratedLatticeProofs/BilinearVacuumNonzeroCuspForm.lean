@@ -201,7 +201,7 @@ theorem om_dLine_right : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (A S A' :
   have hk : Continuous k := hoF0.comp (f := fun s : ℝ => (s, u)) (continuous_id.prodMk continuous_const)
   have hφint : ∀ t, 0 ≤ t → φ t = φ 0 + ∫ s in (0 : ℝ)..t, k s := by
     intro t ht
-    haveI : IsFiniteMeasure (volume.restrict (Set.Ioc (0 : ℝ) t)) :=
+    have : IsFiniteMeasure (volume.restrict (Set.Ioc (0 : ℝ) t)) :=
       isFiniteMeasure_restrict.2 measure_Ioc_lt_top.ne
     have hth : IsThetaFunO ψ A S (fun x => ∫ a, F a x ∂(volume.restrict (Set.Ioc (0 : ℝ) t))) := by
       have e : (fun x => ∫ a, F a x ∂(volume.restrict (Set.Ioc (0 : ℝ) t))) =
@@ -450,7 +450,7 @@ theorem integral_mean [IsProbabilityMeasure μ] {A : HSp D} (hA : CoCpt A) (vA :
     {F : GA D A → ℂ} (hF : IsContAut A F) : ∫ h in vA.𝓕, ∫ k, F (h * j k) ∂μ ∂vA.μ = ∫ h in vA.𝓕, F h ∂vA.μ := by
   obtain ⟨i1, -, i3, -, i5, -⟩ := GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D A
   have hfin := (GlobalTheory.T.continuous_integral_compactAutomorphicQuotient_param D A hA vA Unit (fun _ _ => 1) continuous_const (fun _ _ _ _ => rfl)).1 ()
-  haveI : IsFiniteMeasure (vA.μ.restrict vA.𝓕) := by
+  have : IsFiniteMeasure (vA.μ.restrict vA.𝓕) := by
     rcases (integrable_const_iff (c := (1 : ℂ))).1 hfin with h | h
     · exact absurd h one_ne_zero
     · exact h
@@ -580,7 +580,7 @@ theorem om_avg (ha : IsWeilDatumO ψ A S χA χS oma) (hb : IsWeilDatumO ψ S A'
     (hjc : Continuous j) (hj : ∀ k, j k ∈ GinfC A) (hc : Continuous c) (hG : IsBiTheta ψ A S A' G) (g : GA D A) (h : GA D S)
     (u : WO A S) (v : WO S A') :
     oma (g, h) (fun u' => avg oma μ j c G u' v) u = ∫ k, c k * oma (g * j k, h) (fun u' => G u' v) u ∂μ := by
-  haveI := (GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D A).1
+  have := (GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D A).1
   have hm : ∀ k f, oma (g, h) (oma (j k, 1) f) = oma (g * j k, h) f := fun k f => by
     rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, mul_one]
   have hv : Continuous fun q : K × WO A S => (q.1, q.2, v) := continuous_fst.prodMk (continuous_snd.prodMk continuous_const)
@@ -599,7 +599,7 @@ theorem ker_avg (ha : IsWeilDatumO ψ A S χA χS oma) (hb : IsWeilDatumO ψ S A
     (q : GA D S × GA D A') (u : WO A S) (v : WO S A') :
     omb q (fun v' => oma (g, h) (fun u' => avg oma μ j c G u' v') u) v =
       ∫ k, c k * omb q (fun v' => oma (g * j k, h) (fun u' => G u' v') u) v ∂μ := by
-  haveI := (GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D A).1
+  have := (GlobalTheory.Ker.CongTop.adelicUnitary_top_cong D A).1
   have hBG := hB ψ A S A' _ _ _ _ oma omb ha hb G hG
   have hp : Continuous fun k => (g * j k, h) := (continuous_const.mul hjc).prodMk continuous_const
   have hI := GlobalTheory.FrComb.slice_right ((hB ψ A S A' _ _ _ _ oma omb ha hb _ (isBiTheta_avg μ ha hb hB hjc hj hc hG)).1 (g, h)) u

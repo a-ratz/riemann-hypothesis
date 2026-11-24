@@ -220,7 +220,7 @@ variable {R : Type} [CommRing R]
 
 theorem det_eq_one_of_card_eq_zero {a : α} (h : Fintype.card (m a) = 0) (g : GL (m a) R) :
     Matrix.GeneralLinearGroup.det g = 1 := by
-  haveI : IsEmpty (m a) := Fintype.card_eq_zero_iff.1 h
+  have : IsEmpty (m a) := Fintype.card_eq_zero_iff.1 h
   ext
   simp [Matrix.det_isEmpty]
 
@@ -353,7 +353,7 @@ theorem continuous_leviTo : Continuous (leviTo k d) := by
   unfold leviTo
   rw [MonoidHom.coe_comp]
   exact (GlobalTheory.SmGL.ProdIrr.continuous_leviProj (stdE d)).comp
-    (continuous_induced_rng.2 continuous_subtype_val)
+    (continuous_induced_rng.2 continuous_subtypeVal)
 
 theorem leviTo_surjective : Function.Surjective (leviTo k d) := by
   intro g
@@ -384,7 +384,7 @@ theorem isSmoothChar_invHalf : IsSmoothChar (invHalf k d) := by
       (levi k (∑ a, d a) (pos d)).subtype : Subgroup (levi k (∑ a, d a) (pos d))) :
         Set (levi k (∑ a, d a) (pos d))) := by
     rw [Subgroup.coe_comap]
-    exact continuous_subtype_val.isOpen_preimage _ (GroundTheory.Automorphic.GLnLocal.isOpen_integralGL ..)
+    exact continuous_subtypeVal.isOpen_preimage _ (GroundTheory.Automorphic.GLnLocal.isOpen_integralGL ..)
   refine Subgroup.isOpen_mono (fun m hm => ?_) hopen
   rw [MonoidHom.mem_ker]
   apply Units.ext
@@ -537,8 +537,8 @@ theorem hasFiniteLength_parInd_std (ρ : Representation ℂ (Levi k fun a => Fin
     GroundTheory.Automorphic.Parabolic.hasFiniteLength_parabolicInd hsm hfl
   obtain ⟨hgt, hlt⟩ :=
     (GlobalTheory.SmGL.hasFiniteLength_iff_wellFounded (parabolicInd k (∑ a, d a) (pos d) (carry ρ))).1 hind
-  haveI := hgt
-  haveI := hlt
+  have := hgt
+  have := hlt
   rw [GlobalTheory.SmGL.hasFiniteLength_iff_wellFounded]
   let φ : Subrepresentation (parInd (stdE d) ρ) →
       Subrepresentation (parabolicInd k (∑ a, d a) (pos d) (carry ρ)) := fun U =>

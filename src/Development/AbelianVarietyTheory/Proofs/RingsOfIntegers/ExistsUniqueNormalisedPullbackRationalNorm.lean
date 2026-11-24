@@ -87,7 +87,7 @@ end NormPullUniq
 theorem existsUnique_pulls : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (S : Type) [CommRing S] (x : Sp S ⟶ Xo.X) (a : 𝓞 E) (N k k' : ℕ), a * H.bar a = (N : 𝓞 E) → k' = k * N → ∀ F : SecN Xo x k, ∃! F' : SecN Xo x k', Pulls Xo a F F' := by
   intro E _ _ _ H Dw l Xo S _ x a N k k' ha hk F
   subst hk
-  letI := H.starRing
+  let := H.starRing
   have := Xo.univ.t.act.hom a
   have hL := Xo.univ.t.PP.isLB
   have h := PullGenG.hasGen_pull Xo.univ.t.PP Xo.univ.t.cub Xo.univ.t.act.toRingAct H.w0 a N ha (Xo.univ.t.adj a)

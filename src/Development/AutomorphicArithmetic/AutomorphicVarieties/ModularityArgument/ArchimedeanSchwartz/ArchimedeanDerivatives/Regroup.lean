@@ -61,27 +61,27 @@ namespace ArchimedeanTermRegrouping
 
 private theorem term_pos (K E : Type) [Field K] [NumberField K] [Field E] [NumberField E] [Algebra K E] (v : HeightOneSpectrum (𝓞 E)) :
     1 ≤ (v.under (𝓞 K)).asIdeal.ramificationIdx' v.asIdeal * (v.under (𝓞 K)).asIdeal.inertiaDeg' v.asIdeal := by
-  haveI := v.isMaximal
-  haveI : v.asIdeal.LiesOver (v.under (𝓞 K)).asIdeal := ⟨rfl⟩
-  haveI := (v.under (𝓞 K)).isMaximal
+  have := v.isMaximal
+  have : v.asIdeal.LiesOver (v.under (𝓞 K)).asIdeal := ⟨rfl⟩
+  have := (v.under (𝓞 K)).isMaximal
   have h1 := Ideal.IsDedekindDomain.ramificationIdx'_ne_zero_of_liesOver v.asIdeal (v.under (𝓞 K)).ne_bot
   have h2 := Ideal.inertiaDeg'_pos (p := (v.under (𝓞 K)).asIdeal) (P := v.asIdeal)
   exact Nat.one_le_iff_ne_zero.mpr (Nat.mul_ne_zero h1 h2.ne')
 
 private theorem mem_fin (K E : Type) [Field K] [NumberField K] [Field E] [NumberField E] [Algebra K E] (v : HeightOneSpectrum (𝓞 E)) :
     v.asIdeal ∈ IsDedekindDomain.primesOverFinset (v.under (𝓞 K)).asIdeal (𝓞 E) := by
-  haveI := (v.under (𝓞 K)).isMaximal
+  have := (v.under (𝓞 K)).isMaximal
   rw [IsDedekindDomain.mem_primesOverFinset_iff (v.under (𝓞 K)).ne_bot]
   exact ⟨v.isPrime, ⟨rfl⟩⟩
 
 private theorem sum_eq (K E : Type) [Field K] [NumberField K] [Field E] [NumberField E] [Algebra K E] (hE : Module.finrank K E = 2) (p : HeightOneSpectrum (𝓞 K)) :
     ∑ P ∈ IsDedekindDomain.primesOverFinset p.asIdeal (𝓞 E), p.asIdeal.ramificationIdx' P * p.asIdeal.inertiaDeg' P = 2 := by
-  haveI := p.isMaximal
+  have := p.isMaximal
   rw [Ideal.sum_ramification_inertia (𝓞 E) K E p.ne_bot, hE]
 
 private theorem exists_above (K E : Type) [Field K] [NumberField K] [Field E] [NumberField E] [Algebra K E]
     (v : HeightOneSpectrum (𝓞 K)) : ∃ w : HeightOneSpectrum (𝓞 E), w.under (𝓞 K) = v := by
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨P, hPm, hP⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 E) v.asIdeal
   have hne : P ≠ ⊥ := by
     intro h
@@ -126,8 +126,8 @@ private theorem fiber_inert (K E : Type) [Field K] [NumberField K] [Field E] [Nu
   by_contra h
   have hvw : v.asIdeal ≠ w.asIdeal := fun e => h (HeightOneSpectrum.ext e)
   set p := w.under (𝓞 K)
-  haveI := w.isMaximal
-  haveI : w.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
+  have := w.isMaximal
+  have : w.asIdeal.LiesOver p.asIdeal := ⟨rfl⟩
   have hf := Ideal.absNorm_eq_pow_inertiaDeg'_of_liesOver w.asIdeal p.asIdeal p.isPrime p.ne_bot
   rw [hN] at hf
   have hf2 : p.asIdeal.inertiaDeg' w.asIdeal = 2 :=

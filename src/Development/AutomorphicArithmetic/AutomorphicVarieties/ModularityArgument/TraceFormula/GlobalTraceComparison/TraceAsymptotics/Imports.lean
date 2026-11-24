@@ -45,8 +45,8 @@ open GlobalTheory.CuspRep GlobalTheory.PRep
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.adm :
     UpperTheory.V.Z.Tf.GlobalTraceComparison.Asm.admitted := by
   intro E _ _ _ n w τ U hU
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   have hadm := PositivityTheory.Tls2.BZGL.irreducibleAdmissibleGL_top (w.adicCompletion E) n τ.V τ.ρ τ.smooth τ.irred
   obtain ⟨ho, hc⟩ := GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL (E := E) w n
   have hsmall : FiniteDimensional ℂ (fixed τ.ρ (U ⊓ GlobalTheory.LFun.KGL w (n := n))) :=

@@ -153,7 +153,7 @@ theorem UpperTheory.Zero.LLC.resEx :
       let H1 : Subgroup (Ine (F := E) A) :=
         (L.restrictScalars E).fixingSubgroup.comap (Ine (F := E) A).subtype
       have hH1 : IsOpen (H1 : Set (Ine (F := E) A)) :=
-        (IntermediateField.fixingSubgroup_isOpen _).preimage continuous_subtype_val
+        (IntermediateField.fixingSubgroup_isOpen _).preimage continuous_subtypeVal
       refine Subgroup.isOpen_mono (fun t ht => ?_) hH1
       obtain ⟨t', e⟩ := hlift t
       have hfix : (t' : G D.E' Ω) ∈ L.fixingSubgroup := by

@@ -111,7 +111,7 @@ theorem alphaL_pos (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : Is
     {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) : 0 < alphaL h L 𝔭 := by
   rw [firstFamilyOperatorEnd.alphaL_eq hK hF hs hd hL hLi h𝔭 (k := 2 * vd h L 𝔭 + 1) le_rfl]
   have hN : 0 < Ideal.absNorm 𝔭 := by
-    haveI := h𝔭
+    have := h𝔭
     exact Nat.pos_of_ne_zero fun h0 =>
       Ideal.IsMaximal.ne_bot_of_isIntegral_int 𝔭 (Ideal.absNorm_eq_zero_iff.mp h0)
   apply div_pos

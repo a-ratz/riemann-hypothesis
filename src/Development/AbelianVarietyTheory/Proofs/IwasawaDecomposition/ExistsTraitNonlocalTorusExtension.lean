@@ -56,10 +56,10 @@ namespace GlobalTheory.NonlocalTrait
 
 theorem exists_common_ext {F L₁ L₂ : Type} [Field F] [Field L₁] [Field L₂] (a : F →+* L₁) (b : F →+* L₂) :
     ∃ (L : Type) (_ : Field L) (i : L₁ →+* L) (j : L₂ →+* L), i.comp a = j.comp b := by
-  letI := a.toAlgebra
-  letI := b.toAlgebra
+  let := a.toAlgebra
+  let := b.toAlgebra
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (TensorProduct F L₁ L₂)
-  letI := Ideal.Quotient.field m
+  let := Ideal.Quotient.field m
   refine ⟨TensorProduct F L₁ L₂ ⧸ m, inferInstance,
     (Ideal.Quotient.mk m).comp Algebra.TensorProduct.includeLeftRingHom,
     (Ideal.Quotient.mk m).comp (Algebra.TensorProduct.includeRight (R := F) (A := L₁) (B := L₂)).toRingHom, ?_⟩
@@ -79,7 +79,7 @@ theorem torusExtension_compose {K : Type} [Field K] {S S₁ : Scheme.{0}} (a : S
     (h : Nonempty (TorusExtension ((Over.pullback b).obj ((Over.pullback a).obj G)))) :
     Nonempty (TorusExtension ((Over.pullback (b ≫ a)).obj G)) := by
   obtain ⟨T⟩ := h
-  haveI : IsMonHom (pullCompIso b a G).symm.hom := inferInstanceAs (IsMonHom (pullCompIso b a G).inv)
+  have : IsMonHom (pullCompIso b a G).symm.hom := inferInstanceAs (IsMonHom (pullCompIso b a G).inv)
   exact ⟨torusExtOfIso (pullCompIso b a G).symm T⟩
 
 theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (h : B →+* C) :
@@ -99,14 +99,14 @@ theorem GlobalTheory.exists_trait_nonlocal_torusExtension : ∀ (R : Type) [Comm
       Nonempty (TorusExtension ((Over.pullback (spMap ((algebraMap V (FractionRing V)).comp ψ))).obj G)) := by
   intro R _ _ _ _ G _ hG W _ _ g hg
   set p : Ideal R := Ideal.comap g (maximalIdeal W) with hp
-  haveI : p.IsPrime := Ideal.comap_isPrime g (maximalIdeal W)
+  have : p.IsPrime := Ideal.comap_isPrime g (maximalIdeal W)
   obtain ⟨r₀, hr₀u, hr₀⟩ : ∃ r, IsUnit (g r) ∧ ¬ IsUnit r := by
     by_contra h
     push_neg at h
     exact hg ⟨fun r hr => h r hr⟩
   have hr₀p : r₀ ∉ p := fun h => ((mem_maximalIdeal _).1 (Ideal.mem_comap.1 h)) hr₀u
   have hpm : p ≤ maximalIdeal R := le_maximalIdeal (Ideal.IsPrime.ne_top inferInstance)
-  haveI : IsLocalRing (R ⧸ p) := .of_surjective' (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
+  have : IsLocalRing (R ⧸ p) := .of_surjective' (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
   have hunit : ∀ r : R, IsUnit (Ideal.Quotient.mk p r) → IsUnit r := by
     intro r hr
     obtain ⟨b, hb⟩ := hr.exists_right_inv
@@ -146,19 +146,19 @@ theorem GlobalTheory.exists_trait_nonlocal_torusExtension : ∀ (R : Type) [Comm
     · intro Ω _ _ q
       obtain ⟨E⟩ := hG.fibres Ω (q ≫ spMap φ₀)
       exact ⟨torusExtOfIso (pullCompIso q (spMap φ₀) G) E⟩
-  haveI := hG₀.smooth
-  haveI := hG₀.quasiCompact
-  haveI := hG₀.separated
+  have := hG₀.smooth
+  have := hG₀.quasiCompact
+  have := hG₀.separated
   have T₀ : Nonempty (TorusExtension ((Over.pullback (spMap σ)).obj G₀)) :=
     torusExtension_iterate _ _ G (by rw [← spMap_comp']; exact hG.fibres _ _)
   obtain ⟨T⟩ := T₀
   obtain ⟨s, hs, H⟩ := FieldModel.exists_finite_torusExtension_range σ G₀ T
-  haveI : Finite s := hs.to_subtype
+  have : Finite s := hs.to_subtype
   let k' := IntermediateField.adjoin k₀ s
-  haveI : FiniteDimensional k₀ k' :=
+  have : FiniteDimensional k₀ k' :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
-  letI : Algebra (R ⧸ p) k' := ((algebraMap k₀ k').comp (algebraMap (R ⧸ p) k₀)).toAlgebra
-  haveI : IsScalarTower (R ⧸ p) k₀ k' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra (R ⧸ p) k' := ((algebraMap k₀ k').comp (algebraMap (R ⧸ p) k₀)).toAlgebra
+  have : IsScalarTower (R ⧸ p) k₀ k' := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   obtain ⟨V, hV, hdom⟩ := (discreteValuationRing_dominating_noetherian_local (R := R ⧸ p) (K := k₀) k').1 hA
   rw [LocalSubring.le_def] at hdom
   obtain ⟨hsub, hloc⟩ := hdom

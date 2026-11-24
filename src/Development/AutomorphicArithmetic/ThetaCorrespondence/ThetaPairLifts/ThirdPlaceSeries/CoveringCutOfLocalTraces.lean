@@ -498,7 +498,7 @@ namespace GlobalTheory.TieIdem
 theorem coeff_conj_of_central' {K : Type} [Field K] {G : Type} [Group G] (e : MonoidAlgebra K G)
     (he : ∀ x, x * e = e * x) (k g : G) : e.coeff (k * g * k⁻¹) = e.coeff g := by
   have h := congrArg (fun a : MonoidAlgebra K G => a.coeff (k * g)) (he (MonoidAlgebra.single k 1))
-  simp only [MonoidAlgebra.mul_single_apply, MonoidAlgebra.single_mul_apply] at h
+  simp only [MonoidAlgebra.coeff_mul_single_apply, MonoidAlgebra.coeff_single_mul_apply] at h
   simpa [mul_assoc] using h.symm
 
 theorem idemOf_props {K : Type} [Field K] [NumberField K] {G : Type} [Group G] [Fintype G] (X : Finset (G → K))
@@ -600,7 +600,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem card_GL_zmod_le (r q : ℕ) (hq : q ≠ 0) :
     Nat.card (GL (Fin r) (ZMod q)) ≤ q ^ (r * r) := by
-  haveI : NeZero q := ⟨hq⟩
+  have : NeZero q := ⟨hq⟩
   calc Nat.card (GL (Fin r) (ZMod q)) ≤ Nat.card (Matrix (Fin r) (Fin r) (ZMod q)) :=
         Nat.card_le_card_of_injective (fun u => (u : Matrix (Fin r) (Fin r) (ZMod q))) (fun a b h => Units.ext h)
     _ = q ^ (r * r) := by

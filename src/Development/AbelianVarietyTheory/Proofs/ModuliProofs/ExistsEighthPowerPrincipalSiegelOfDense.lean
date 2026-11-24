@@ -451,7 +451,7 @@ theorem pull_unitS {o K : Type} [CommRing o] [CommRing K] {S : Scheme.{0}} (s : 
     Units.map p.appTop.hom.toMonoidHom (unitS s u) = unitOn z := by
   apply Units.ext
   have hc := congrArg (fun f : Sp K ⟶ Sp o => f.appTop.hom (unitOn u).val) hp
-  simp only [unitS, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe, Scheme.Hom.comp_appTop,
+  simp only [unitS, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe, Scheme.Hom.comp_appTop,
     CommRingCat.hom_comp, RingHom.comp_apply] at hc ⊢
   rw [hc]
   unfold unitOn spMap Sp
@@ -567,8 +567,8 @@ theorem tMap_ext (e : Fin 8 → Fin 8 → J) {t : TObj g k J b s} {t' : TObj g k
   refine ⟨φ, h, hL, hpt, ?_⟩
   rintro (j | m)
   · exact hact j
-  · letI := t.ab.comm
-    letI := t'.ab.comm
+  · let := t.ab.comm
+    let := t'.ab.comm
     let U : Over.mk (t'.A.hom ≫ f) ⟶ t.A := Over.homMk φ h.1.w
     have key : pushHom h t'.A (matEnd e t' m) = preHom (G := t.A) U (matEnd e t m) := by
       simp only [matEnd, map_prod, map_zpow]
@@ -592,8 +592,8 @@ theorem isSharp_ext {h : ℕ} {W : Matrix (Fin 8) (Fin 8) ℤ} {a : J → Matrix
       simp [Ne.symm hw]
   rintro (j | m) w
   · exact hmat j w
-  · letI := t.ab.comm
-    haveI := hmon w
+  · let := t.ab.comm
+    have := hmon w
     let P : (t.A ⟶ t.A) →* (t.A ⟶ c.A) := MonoidHom.mk' (· ≫ pr w) fun x y => MonObj.mul_comp x y (pr w)
     have hP : ∀ x, P x = x ≫ pr w := fun _ => rfl
     have key : P (matEnd e t m) = (List.ofFn fun v => pr v ^ m w v).prod := by
@@ -716,14 +716,14 @@ theorem ext_of_dense {S : Scheme.{0}} {T G : Over S} [IsReduced T.left] (hT : Is
   let inc : (∐ fun p : D => Z p.1 p.2) ⟶ T.left := Sigma.desc fun p => ψ p.1 p.2
   have hinc : inc ≫ f.left = inc ≫ g.left := by
     refine Sigma.hom_ext _ _ fun p => ?_
-    simp only [inc, Sigma.ι_desc_assoc]
+    simp only [inc, Sigma.ι_comp_desc_assoc]
     exact hψ p.1 p.2
   have hsub : T.hom.base ⁻¹' D ⊆ Set.range inc.base := by
     intro a ha
     obtain ⟨y, hy⟩ := hx _ ha
     obtain ⟨z, hz₁, -⟩ := Scheme.Pullback.exists_preimage_pullback a y hy.symm
     refine ⟨(Sigma.ι (fun p : D => Z p.1 p.2) ⟨_, ha⟩).base ((hpb _ ha).isoPullback.inv.base z), ?_⟩
-    rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, Sigma.ι_desc]
+    rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, Sigma.ι_comp_desc]
     show ((hpb _ ha).isoPullback.inv ≫ ψ _ ha) z = a
     rw [IsPullback.isoPullback_inv_fst]
     exact hz₁
@@ -973,7 +973,7 @@ theorem eq_one_of_slice_trivial : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ) (S : Sche
   have h1 : x' = 1 := KerPow.eq_one_of_locGen hK x' fun _ => ⟨⊤, trivial, H.pull _ fun _ => rfl⟩
   have h0 := hx' 0
   have := hpr 0
-  rw [h1, MonObj.one_comp, if_pos rfl] at h0
+  rw [h1, MonObj.one_comp, ite_eq_left rfl] at h0
   exact h0.symm
 
 end GlobalTheory.FormBundleKer
@@ -1273,11 +1273,11 @@ theorem level_on_factor_of_eighth_power : ∀ (h g : ℕ) (J : Type) (bas : (Fin
       have := hpr u
       exact MonObj.mul_comp x y (pr u))
   refine ⟨?_, fun K _ _ p => ?_⟩
-  · letI := cg (Out.baseOver S)
+  · let := cg (Out.baseOver S)
     exact levelFactor_torsion (G := Out.baseOver S ⟶ t.A) (H := Out.baseOver S ⟶ A)
       (0 : Fin 8) bas t.pt (π _) lev hlev hcomp k t.torsion
   let T := Over.mk p
-  letI := cg T
+  let := cg T
   let q : T ⟶ Out.baseOver S := Over.homMk p (by simp [T])
   let ρ : (Out.baseOver S ⟶ t.A) →* (T ⟶ t.A) :=
     MonoidHom.mk' (fun x => q ≫ x) (fun x y => MonObj.comp_mul q x y)
@@ -1327,8 +1327,8 @@ theorem sum_single {G M : Type*} [Group G] [AddCommGroup M] (B : G → G → M)
   · simp
   · by_cases a₁ : b.1 = 0
     · have a₂ : b.2 ≠ 0 := fun a₂ => hb (Prod.ext a₁ a₂)
-      rw [if_neg a₂, z₂, smul_zero]
-    · rw [if_neg a₁, z₁, smul_zero]
+      rw [ite_eq_right a₂, z₂, smul_zero]
+    · rw [ite_eq_right a₁, z₁, smul_zero]
 
 
 #check GlobalTheory.CechPic.cls_linComb_add
@@ -1342,7 +1342,7 @@ theorem relAmple_diag : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ) (S : Scheme.{0}) [I
   obtain ⟨j, hj, -⟩ := hpr A fun v => if v = 0 then 𝟙 A else 1
   have := hG.proper
   have hcl : IsClosedImmersion j.left := GlobalTheory.Retract.isClosedImmersion_section (r := (pr 0).left)
-    (by rw [← Over.comp_left, hj, if_pos rfl, Over.id_left]) (Over.w (pr 0))
+    (by rw [← Over.comp_left, hj, ite_eq_left rfl, Over.id_left]) (Over.w (pr 0))
   have hpos := diag_pos hW 0
   have hn : 0 < (W 0 0).toNat := by omega
   have hD : (P.pull (lift (𝟙 A) (𝟙 A)).left).IsLB := LB.isLB_pull hP _
@@ -1772,12 +1772,12 @@ theorem exists_isSharp_of_dense : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0
   obtain ⟨t, hd, back⟩ := _root_.GlobalTheory.exists_dense_sharp_all_matrices h g W J a bas k o b em S s t₀ hunit hd₀
   obtain ⟨rmul, radd, rone, rpt⟩ := _root_.GlobalTheory.sharp_family_relations h g W _ _ bas k o b em S s t hd
   obtain ⟨adj, diag⟩ := _root_.GlobalTheory.SharpAdjoint.adjoint_primitive_of_dense laws.globalFns cube h g W _ _ bas k o b em S s t hd
-  letI := t.ab.comm
+  let := t.ab.comm
   let ρ : Matrix (Fin 8) (Fin 8) ℤ → (t.A ⟶ t.A) := fun m => t.act (Sum.inr m)
   obtain ⟨A, _, pr, hA, hpr, hprod, hρ⟩ := _root_.GlobalTheory.MatrixPower.abelianScheme_matrix_power S t.A ρ t.ab (fun m => t.hom _)
     (fun m m' => rmul (Sum.inr m) (Sum.inr m') (Sum.inr _) rfl) (fun m m' => radd (Sum.inr m) (Sum.inr m') (Sum.inr _) rfl)
     (rone (Sum.inr 1) rfl)
-  letI := hA.comm
+  let := hA.comm
   obtain ⟨P, hP, r₁, r₂, hsym, hbi, hiso⟩ := _root_.GlobalTheory.EighthPower.main W S t.A A pr t.L ρ hW hpr hprod t.isLB
     (cube S t.pol t.L t.isLB) hρ (fun m m' e => adj (Sum.inr m) (Sum.inr m') e) (fun m e => diag (Sum.inr m) e)
   let pt : Fin (2 * g) → (𝟙_ (Over S) ⟶ t.A) := fun i => Over.homMk (t.pt i).left (Over.w (t.pt i))

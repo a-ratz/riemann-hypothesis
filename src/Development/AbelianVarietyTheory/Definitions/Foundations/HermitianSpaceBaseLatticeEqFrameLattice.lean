@@ -409,7 +409,7 @@ theorem height_mul_le (g h : GAd σ J) : height σ J (g * h) ≤ height σ J g *
 
 theorem htInf_le_height (w : InfinitePlace F) (g : GAd σ J) :
     htInf F w (matHom _ σ J (projArch σ J w g)) ≤ height σ J g :=
-  (Finset.single_le_prod' (f := fun w => htInf F w (matHom _ σ J (projArch σ J w g)))
+  (Finset.single_le_prod (f := fun w => htInf F w (matHom _ σ J (projArch σ J w g)))
     (fun _ _ => one_le_htOf _ _) (Finset.mem_univ w)).trans
     (le_mul_of_one_le_right' (one_le_finprod' fun _ => one_le_htOf _ _))
 

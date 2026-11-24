@@ -88,7 +88,7 @@ theorem shapeX : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F]
       Acts (evFin F v) (om (g, 1)) φ φ₁ → ι φ₁ = κ₀ • fun Y => ι φ (((locMat t b g)⁻¹ : GL (Fin n) (Fv F v)).val * Y) by
     classical
     refine ⟨fun g => if hg : g ∈ UAt σ X (evFin F v) then (H g hg).choose else 0, fun g hg => ?_⟩
-    simp only [dif_pos hg]
+    simp only [dite_eq_left hg]
     exact (H g hg).choose_spec
   intro g hg
   have hcm : IsCMExt F E σ := hP.base.cm
@@ -445,7 +445,7 @@ theorem chrW_comp_conj (h : IsCMExt F E σ) {K : Subgroup (AF F)ˣ} {χ : Chr F 
   have n1' : At (evFin F v) ((a : AF F) - 1) := n1
   have n2' : evFin F v (a : AF F) = x := by rw [← mul_one (x : Fv F v), ← z1, ← z2]; exact n2
   have h1 := hχ a
-  rw [if_pos (Subgroup.mem_sup_right (MonoidHom.mem_range.mpr ⟨z, rfl⟩)), Circle.coe_eq_one] at h1
+  rw [ite_eq_left (Subgroup.mem_sup_right (MonoidHom.mem_range.mpr ⟨z, rfl⟩)), Circle.coe_eq_one] at h1
   set A : (AE F E)ˣ := Units.map (algebraMap (AF F) (AE F E) : AF F →* AE F E) a with hA
   have hAv : (A : AE F E) = algebraMap (AF F) (AE F E) a := rfl
   have w0 : At (evFin F v) (((A * z⁻¹ : (AE F E)ˣ) : AE F E) - 1) := fun u hu => by

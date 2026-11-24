@@ -80,7 +80,7 @@ theorem mem_maxOrder_iff_mem_intLoc {F E : Type} [Field F] [NumberField F] [Fiel
   · refine intLoc_induction (p := fun z => z ∈ maxOrder F E v) (fun a ha x => ?_) (zero_mem _)
       (fun _ _ => add_mem) (fun _ => neg_mem)
     have h1 : (1 : Fv F v) ⊗ₜ[F] (x : E) ∈ maxOrder F E v := by
-      letI := (intToEv F E v).toAlgebra
+      let := (intToEv F E v).toAlgebra
       exact (RingOfIntegers.isIntegral_coe x).map_of_comp_eq (algebraMap ℤ _) (inclR (F := F) (E := E) (Fv F v))
         (RingHom.ext_int _ _)
     have h2 : a ⊗ₜ[F] (1 : E) ∈ maxOrder F E v :=

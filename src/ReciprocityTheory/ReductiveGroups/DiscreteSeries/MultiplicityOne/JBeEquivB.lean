@@ -71,10 +71,10 @@ private theorem Hpk_mul_self_eq_one : Hpk k r * Hpk k r = 1 := by
   rw [Matrix.mul_apply, Matrix.one_apply]
   rw [Finset.sum_eq_single (if i.val < r ∨ r + k < i.val then i.rev else i)]
   · by_cases h : i.val < r ∨ r + k < i.val
-    · rw [if_pos h]
+    · rw [ite_eq_left h]
       simp only [Hpk, Fin.val_rev, Fin.ext_iff, and_true]
       split_ifs <;> first | (exfalso; omega) | norm_num
-    · rw [if_neg h]
+    · rw [ite_eq_right h]
       simp only [Hpk, Fin.ext_iff, and_true]
       split_ifs <;> first | (exfalso; omega) | norm_num
   · intro l _ hl
@@ -171,13 +171,13 @@ theorem shL_mp (D : RealPlaceData k r Wp Wp) (hF : BEFacts D) {h0 m : Mat k r} (
   have hW : ∀ᵐ x ∂D.μW, (Matrix.of x : Mat k r) ∈ UWset k r D.z := ae_iff.mpr D.haarW.conc
   have hc : Continuous (rmulF (n := 2 * r + k + 1) h0) := by unfold rmulF; fun_prop
   have hf : MeasurePreserving (rmulF h0) D.μW D.μW := ⟨hc.measurable, D.haarW.right h0 hh0⟩
-  haveI : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
-  haveI : SigmaFinite D.μW := by
+  have : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
+  have : SigmaFinite D.μW := by
     first
       | infer_instance
       | exact sigmaFinite_of_locallyFinite
-  haveI : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
-  haveI : SigmaFinite D.μN := by
+  have : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
+  have : SigmaFinite D.μN := by
     first
       | infer_instance
       | exact sigmaFinite_of_locallyFinite
@@ -208,13 +208,13 @@ private theorem mul_mem_UH_Hpk {a b : Mat k r} (ha : a ∈ UH (Hpk k r)) (hb : b
 
 theorem shR_mp (D : RealPlaceData k r Wp Wp) (hF : BEFacts D) {h0 m : Mat k r} (hh0 : h0 ∈ UWset k r D.z)
     (hm : m ∈ Nset k r) : MeasurePreserving (shR h0 m) (D.μW.prod D.μN) (D.μW.prod D.μN) := by
-  haveI : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
-  haveI : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
-  haveI : SigmaFinite D.μW := by
+  have : IsFiniteMeasureOnCompacts D.μW := ⟨fun K hK => D.haarW.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts D.μN := ⟨fun K hK => D.haarN.finite_compact K hK⟩
+  have : SigmaFinite D.μW := by
     first
       | infer_instance
       | exact sigmaFinite_of_locallyFinite
-  haveI : SigmaFinite D.μN := by
+  have : SigmaFinite D.μN := by
     first
       | infer_instance
       | exact sigmaFinite_of_locallyFinite

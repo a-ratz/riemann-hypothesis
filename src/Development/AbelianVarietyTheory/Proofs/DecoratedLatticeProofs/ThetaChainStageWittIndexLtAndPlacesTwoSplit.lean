@@ -53,7 +53,7 @@ namespace GlobalTheory.ChainOnto.WittTwo
 theorem wittIndex_lt_and_two_split : ∀ (D : D7) (c : Com D) (j : ℕ) (s : PiLocalization₂ D), j ≤ D.R.m → s.Is c j → GlobalTheory.Cusp.wittIndex s.V < D.R.t ∧ ∀ v : HeightOneSpectrum (𝓞 D.host.F), (2 : 𝓞 D.host.F) ∈ v.asIdeal → Formalism.MainNotions.SchurIrreducible.IsSplit (E := D.host.E) v := by
   intro D c j s hj hs
   refine ⟨?_, fun v h2 => GlobalTheory.Core.Rk.IP.Model.isSplit_two v h2⟩
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hpar : ∀ τ : D.host.E →+* ℂ, Formalism.UG.HasSignature (s.V.gram.map τ) (sigYD D.R j).1 (sigYD D.R j).2 := by
     intro τ
     have h := hs.sigOK τ

@@ -58,23 +58,23 @@ namespace GlobalTheory.Glue.KTExp
 
 theorem exists_prim_root_of_isAlgClosed (Ω : Type) [Field Ω] [IsAlgClosed Ω] [CharZero Ω] (n : ℕ) (hn : 0 < n) :
     ∃ ζ : Ω, IsPrimitiveRoot ζ n := by
-  haveI : NeZero (n : Ω) := ⟨by exact_mod_cast hn.ne'⟩
+  have : NeZero (n : Ω) := ⟨by exact_mod_cast hn.ne'⟩
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic n Ω)
     (by rw [Polynomial.degree_cyclotomic]; exact_mod_cast (Nat.totient_pos.2 hn).ne')
   exact ⟨ζ, (Polynomial.isRoot_cyclotomic_iff).1 hζ⟩
 
 theorem map_eOm {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ)
     (x : ℚ) : ε (eOm ε x) = Complex.exp (2 * Real.pi * Complex.I * (x : ℂ)) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
   have hε : Function.Injective ε := ε.injective
   unfold eOm
   apply Function.invFun_eq
   obtain ⟨ζ, hζ⟩ := exists_prim_root_of_isAlgClosed Ω x.den x.den_pos
   have hζ' : IsPrimitiveRoot (ε ζ) x.den := hζ.map_of_injective hε
-  haveI : NeZero x.den := ⟨x.den_nz⟩
+  have : NeZero x.den := ⟨x.den_nz⟩
   have hpow : (Complex.exp (2 * Real.pi * Complex.I * (x : ℂ))) ^ x.den = 1 := by
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨x.num, ?_⟩
     have hx : (x : ℂ) * x.den = x.num := by exact_mod_cast Rat.mul_den_eq_num x
     calc (x.den : ℂ) * (2 * Real.pi * Complex.I * (x : ℂ)) = ((x : ℂ) * x.den) * (2 * Real.pi * Complex.I) := by ring

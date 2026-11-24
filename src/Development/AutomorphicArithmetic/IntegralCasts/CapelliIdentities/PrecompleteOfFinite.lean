@@ -203,12 +203,12 @@ theorem UpperTheory.Reformulated.B.Qe2.locAbs :
   · exact ⟨0, IsIdempotentElem.zero, fun i => ⟨0, by simp⟩, by simp [htop], hs,
       fun h0 => absurd rfl h0⟩
   have hmax : J.IsMaximal := maximal_of_scalar J htop le_sup_left hs
-  haveI : IsPrecomplete (IsLocalRing.maximalIdeal Λ) T := precomplete_of_finite _ T
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal Λ) T := {}
-  haveI : IsAdicComplete I T := (IsAdicComplete.map_algebraMap_iff _ _).mpr this
-  haveI : IsArtinianRing (T ⧸ I) := by
-    letI : Field (Λ ⧸ IsLocalRing.maximalIdeal Λ) := Ideal.Quotient.field _
-    haveI : Module.Finite (Λ ⧸ IsLocalRing.maximalIdeal Λ) (T ⧸ I) :=
+  have : IsPrecomplete (IsLocalRing.maximalIdeal Λ) T := precomplete_of_finite _ T
+  have : IsAdicComplete (IsLocalRing.maximalIdeal Λ) T := {}
+  have : IsAdicComplete I T := (IsAdicComplete.map_algebraMap_iff _ _).mpr this
+  have : IsArtinianRing (T ⧸ I) := by
+    let : Field (Λ ⧸ IsLocalRing.maximalIdeal Λ) := Ideal.Quotient.field _
+    have : Module.Finite (Λ ⧸ IsLocalRing.maximalIdeal Λ) (T ⧸ I) :=
       Module.Finite.of_restrictScalars_finite Λ _ _
     exact IsArtinianRing.of_finite (Λ ⧸ IsLocalRing.maximalIdeal Λ) (T ⧸ I)
   obtain ⟨f, n, hf, hfJ, hfn⟩ := artin_idem (J.map (Ideal.Quotient.mk I))

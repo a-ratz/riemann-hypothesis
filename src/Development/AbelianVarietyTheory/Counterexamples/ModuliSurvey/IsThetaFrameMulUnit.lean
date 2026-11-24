@@ -56,6 +56,6 @@ theorem isHolTo_const {V : Type} [NormedAddCommGroup V] [NormedSpace ℂ V] {X :
   refine ⟨?_, differentiableOn_const _⟩
   by_cases h : ⊤ ≤ x ⁻¹ᵁ U
   · simpa [h] using hB
-  · simp only [h, and_false, Set.setOf_false, isOpen_empty]
+  · simp only [h, and_false, Set.ofPred_false, isOpen_empty]
 
 end GlobalTheory.PeriodTests

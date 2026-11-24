@@ -640,7 +640,7 @@ namespace GlobalTheory.HeckeEx
 
 theorem exists_etale_cover_lists_kerScheme : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (P : Ideal (𝓞 E)) (p i : ℕ) (Z : KerScheme Xo P p i), admitted l P p → ∀ (T : Type) [CommRing T] (h : Sp T ⟶ Z.Hk), ∃ (T' : Type) (_ : CommRing T') (_ : Algebra T T') (n : ℕ) (σ : Fin n → (Sp T' ⟶ Xo.univ.t.G.left)), Algebra.Etale T T' ∧ Function.Surjective (PrimeSpectrum.comap (algebraMap T T')) ∧ (∀ j, σ j ≫ Xo.univ.t.G.hom = spMap (algebraMap T T') ≫ h ≫ Z.π₁) ∧ ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (χ : T' →+* Ω) (x₁ : Sp Ω ⟶ Xo.X) (C : Subgroup (Over.mk x₁ ⟶ Xo.univ.t.G)), Z.Carries (spMap χ ≫ spMap (algebraMap T T') ≫ h) x₁ C → ∃ e : Fin n ≃ C, ∀ j, (e j).1.left = spMap χ ≫ σ j := by
   intro E _ _ _ H Dw l Xo P p i Z hA T _ h
-  haveI := Z.isReduced
+  have := Z.isReduced
   obtain ⟨S', π, o', m, τ, hfin, het, hsur, hL⟩ :=
     GlobalTheory.exists_cover_lists_heckeSet E H Dw l P p i Z.Hk (Z.π₁ ≫ Xo.s) Z.o₁ Z.K hA Z.et Z.hecke
   obtain ⟨B, _, _, h', -, hBet, hh', hBsur, -⟩ := exists_finiteEtale_algebra_pullback Z.Hk S' π hfin het T h
@@ -950,7 +950,7 @@ theorem exists_trace_eq_finsum : ∀ (R B : Type) [CommRing R] [CommRing B] [Alg
   have : Module.Projective R B := Module.Flat.projective_of_finitePresentation
   obtain ⟨n, f, g, -, -, hfg⟩ := Module.Finite.exists_comp_eq_id_of_projective R B
   refine ⟨LinearMap.trace R _ (g ∘ₗ Algebra.lmul R B b ∘ₗ f), fun Ω _ _ φ => ?_⟩
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   have hφ : algebraMap R Ω = φ := rfl
 
   have step1 : φ (LinearMap.trace R _ (g ∘ₗ Algebra.lmul R B b ∘ₗ f)) =
@@ -960,10 +960,10 @@ theorem exists_trace_eq_finsum : ∀ (R B : Type) [CommRing R] [CommRing B] [Alg
       LinearMap.baseChange_id, LinearMap.comp_id, Algebra.trace_apply, Algebra.baseChange_lmul]
   rw [step1]
   set e := Algebra.FormallyEtale.equivPiOfIsSepClosed Ω (Ω ⊗[R] B) with he
-  haveI : Module.Finite Ω (PrimeSpectrum (Ω ⊗[R] B) → Ω) := Module.Finite.equiv e.toLinearEquiv
-  haveI : IsArtinianRing (Ω ⊗[R] B) := isArtinian_of_tower Ω inferInstance
-  haveI : Finite (PrimeSpectrum (Ω ⊗[R] B)) := inferInstance
-  haveI : Fintype (PrimeSpectrum (Ω ⊗[R] B)) := Fintype.ofFinite _
+  have : Module.Finite Ω (PrimeSpectrum (Ω ⊗[R] B) → Ω) := Module.Finite.equiv e.toLinearEquiv
+  have : IsArtinianRing (Ω ⊗[R] B) := isArtinian_of_tower Ω inferInstance
+  have : Finite (PrimeSpectrum (Ω ⊗[R] B)) := inferInstance
+  have : Fintype (PrimeSpectrum (Ω ⊗[R] B)) := Fintype.ofFinite _
   rw [← Algebra.trace_eq_of_algEquiv e, trace_pi_self]
   let S := {χ : B →+* Ω // χ.comp (algebraMap R B) = φ}
   let G : PrimeSpectrum (Ω ⊗[R] B) → (B →ₐ[R] Ω) := fun p =>
@@ -1176,7 +1176,7 @@ theorem hkVal_frBor : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have hS : GlobalTheory.IndefiniteRowSideFullHecke.FibrePushforwardExistenceTori.IsSplitOff l P p := hA
   obtain ⟨g, hgt, hgd, hch⟩ := (frBor_iff_frChg y y' t).1 hB
   have hdet : ∀ τ, IsUnit (g τ).det := fun τ => by
-    rw [Matrix.det_of_lowerTriangular _ (fun i j hij => hgt τ i j hij)]
+    rw [Matrix.det_of_isLowerTriangular _ (fun i j hij => hgt τ i j hij)]
     exact isUnit_iff_ne_zero.2 (Finset.prod_ne_zero_iff.2 fun j _ => by rw [hgd]; exact Units.ne_zero _)
   obtain ⟨x', xo', u', tan', eig', bas', s', gen'⟩ := y'
   obtain rfl : x' = y.x := hch.1
@@ -1375,7 +1375,7 @@ theorem evR_scale_of_isReduced (hL : GlobalTheory.Reg.EvLaws Xo c) {a : (E →+*
     · subst h1; simp [hM1, hG1]
     · by_cases h2 : i < j
       · simp [hM2 τ i j h2, hG2 τ i j h2]
-      · simp only [M, Matrix.map_apply, Matrix.of_apply, if_neg h1, if_neg h2, hk]
+      · simp only [M, Matrix.map_apply, Matrix.of_apply, ite_eq_right h1, ite_eq_right h2, hk]
         simp [k₀, v, R]
   have hdet : ∀ τ, IsUnit (M τ).det := fun τ => by
     rw [Matrix.det_of_isLowerTriangular (M τ) (fun i j hij => hM2 τ i j hij)]
@@ -1576,7 +1576,7 @@ theorem exists_term_of_family (hA : admitted l P p) (hT : TotalAt Xo c P p i)
   refine ⟨a₀ ^ n * evR Xo c f z₀, fun Ω _ _ _ χ y₁ x₁' Ψ₁ C hy hF hC => ?_⟩
   obtain ⟨-, hI⟩ := hΨ.2.2.2.2 Ω _ _ _ Ψ₁ hF
   have hex := hT Ω y₁ C
-  rw [term, hkTerm, dif_pos hex]
+  rw [term, hkTerm, dite_eq_left hex]
   have hz := hex.choose_spec
   generalize hex.choose = z at hz ⊢
   obtain ⟨rfl, h₁, h₂⟩ := hkPt_along hA C.2 (hC ▸ hI) hz
@@ -1603,8 +1603,8 @@ theorem exists_term (hA : admitted l P p) (hT : TotalAt Xo c P p i) (Z : Corr Xo
   obtain ⟨b, hb⟩ := _root_.GlobalTheory.SmoothLocalDescent.exists_of_smooth_locally c.F B (fun Ω _ _ _ χ => term P p i f (bc Ω χ) (e Ω _ ⟨_, hw Ω χ⟩)) (fun q => by
     obtain ⟨T', _, _, m, σ, hT', hs, hσ, hl⟩ := _root_.GlobalTheory.HeckeEx.exists_etale_cover_lists_kerScheme E H Dw l Xo P p i Z.toKerScheme hA B h
     obtain ⟨q', rfl⟩ := hs q
-    letI : Algebra c.F T' := ((algebraMap B T').comp (algebraMap c.F B)).toAlgebra
-    haveI : IsScalarTower c.F B T' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    let : Algebra c.F T' := ((algebraMap B T').comp (algebraMap c.F B)).toAlgebra
+    have : IsScalarTower c.F B T' := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have hso : ∀ (T : Type) [CommRing T] [Algebra c.F T] [Algebra B T] [IsScalarTower c.F B T],
         (spMap (algebraMap B T) ≫ h ≫ Z.π₂) ≫ Xo.s = sOf c T := fun T _ _ _ _ => by
       rw [Category.assoc, Category.assoc, Z.base₂, reassoc_of% hh, y.x_over, sOf, sOf, ChgBC.spMap_comp_ring,
@@ -1653,8 +1653,8 @@ theorem exists_sum (hr : 1 ≤ Dw.p + Dw.q) (hA : admitted l P p) (hT : TotalAt 
       FrMap φ y z → φ v = ∑ᶠ C, term P p i f z C := by
   obtain ⟨⟨Z, -⟩, -⟩ := heckeInFamilies E H Dw l Xo P p i hr hA
   obtain ⟨B, _, _, h, hfin, het, hh, -, hu⟩ := _root_.GlobalTheory.HeckeEx.exists_finiteEtale_algebra_pullback _ _ Z.π₁ Z.fin₁ Z.et₁ R y.x
-  letI : Algebra c.F B := ((algebraMap R B).comp (algebraMap c.F R)).toAlgebra
-  haveI : IsScalarTower c.F R B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra c.F B := ((algebraMap R B).comp (algebraMap c.F R)).toAlgebra
+  have : IsScalarTower c.F R B := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hred : IsReduced B := GlobalTheory.isReduced_algebra_of_smooth_of_isReduced R B
   obtain ⟨yB, hyB⟩ := bc_exists (IsScalarTower.toAlgHom c.F R B) y
   obtain ⟨b, hb⟩ := exists_term hA hT Z hf yB h (hh.trans hyB.1.symm)
@@ -1705,7 +1705,7 @@ theorem secTransform (hL : GlobalTheory.IndefiniteRowSideFullHecke.HeckePrimeDet
   rw [evalAt_smul]
   congr 1
   have hy := _root_.GlobalTheory.Frames.allTest_of_secBaseChange GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c Ω y
-  rw [evalAt, dif_pos hy]
+  rw [evalAt, dite_eq_left hy]
   exact hg _ _ Ω _ y hy.choose_spec.choose_spec.choose_spec
 
 end Sec
@@ -1754,11 +1754,11 @@ theorem exists_qmatch (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L
   have he : ∀ τ, Formalism.L2.PjFree.relab c σ (e.symm τ) = τ := e.apply_symm_apply
   have m1 : ∀ τ ∈ (U.X k).Ψ, Dw.mult (e.symm τ) = r - (U.X k).p0 := fun τ hτ => by
     unfold Datum.mult
-    rw [if_pos ((hrt _).1 (by rw [he]; exact ((hty k).2 τ).1 hτ)), (hty k).1]
+    rw [ite_eq_left ((hrt _).1 (by rw [he]; exact ((hty k).2 τ).1 hτ)), (hty k).1]
     omega
   have m2 : ∀ τ ∉ (U.X k).Ψ, Dw.mult (e.symm τ) = (U.X k).p0 := fun τ hτ => by
     unfold Datum.mult
-    rw [if_neg (fun h => hτ (((hty k).2 τ).2 (by rw [← he τ]; exact (hrt _).2 h))), (hty k).1]
+    rw [ite_eq_right (fun h => hτ (((hty k).2 τ).2 (by rw [← he τ]; exact (hrt _).2 h))), (hty k).1]
   have hrel : ∀ τ, ∀ i < Dw.mult (e.symm τ), ∀ v ∈ (U.X k).Λ,
       Formalism.L2.PjFree.perFr (U.X k') x'.1 ((a : Matrix (Fin r) (Fin r) E) *ᵥ v) τ i =
         ∑ j ∈ Finset.range (Dw.mult (e.symm τ)), A (e.symm τ) i j * Formalism.L2.PjFree.perFr (U.X k) x.1 v τ j :=
@@ -1798,8 +1798,8 @@ theorem rdU_mem_SS (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2.P
   refine _root_.GlobalTheory.HeckeEx.mem_SS_of_dom E r _ U.Comp U.X _ _ _ _ p (‖σ (hkScal c cq P i n)‖ * (M * ((Ideal.absNorm P : ℝ) ^ i) ^ n))
     hA.2.2.1.pos (by positivity) hsec hfc (fun j a h => laU_qmatch h w n) fun x hx B hB0 hB => ?_
   obtain ⟨x₀, hx₀, ⟨b₀, hb₀, e₀⟩, -⟩ := hun1 k ⟨x, hx⟩
-  letI := fieldCAt σ
-  haveI := algClosedCAt σ
+  let := fieldCAt σ
+  have := algClosedCAt σ
   have hb0 := norm_pos_iff.2 (AR.Up.OntoE.bchar_ne _ (Formalism.L2.PjFree.laU U w n k) hb₀)
   have hterm : ∀ C, cabs (term P p i f (U.un k x₀) C) ≤
       ((Ideal.absNorm P : ℝ) ^ i) ^ n * (‖bchar (Formalism.L2.PjFree.laU U w n k) b₀‖ * B) := fun C => by
@@ -1813,7 +1813,7 @@ theorem rdU_mem_SS (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2.P
     obtain ⟨a, h, b, hbB, hxb, hb1, ht⟩ := exists_qmatch hσ hU hr hxi hA C.2 hz hb hx₀ hx'
     have ht0 := _root_.GlobalTheory.HeckeEx.cabs_gen_le_of_hkPt E H Dw l Xo c σ r U hσ hU P p i k k' x₀ x' C.1 z t hA C.2 hz hb hx₀ hx'
     have hQ := (hfc k').1.1
-    have v2 : Formalism.L2.PjFree.rdU U f k' x'.1 = Formalism.L2.PjFree.toC (evR Xo c f (U.un k' x')) := dif_pos x'.2
+    have v2 : Formalism.L2.PjFree.rdU U f k' x'.1 = Formalism.L2.PjFree.toC (evR Xo c f (U.un k' x')) := dite_eq_left x'.2
     have v3 := (GlobalTheory.Frames.algebraic_laws GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c).2.2.2.2.2.2 (CAt σ)
       (inferInstanceAs (IsReduced ℂ)) w n f hf t _ z hb
     have v4 : ‖Formalism.L2.PjFree.toC (wchar (ex Dw w n) t : CAt σ)‖ ≤ ((Ideal.absNorm P : ℝ) ^ i) ^ n := by
@@ -1841,7 +1841,7 @@ theorem rdU_mem_SS (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2.P
     exact_mod_cast hM (CAt σ) (U.un k x₀).x
   have v1 : Formalism.L2.PjFree.rdU U g k x₀.1 =
       σ (hkScal c cq P i n) * ∑ C, Formalism.L2.PjFree.toC (term P p i f (U.un k x₀) C) :=
-    (dif_pos x₀.2).trans ((hT (CAt σ) (U.un k x₀)).trans (congrArg _ (finsum_eq_sum_of_fintype _)))
+    (dite_eq_left x₀.2).trans ((hT (CAt σ) (U.un k x₀)).trans (congrArg _ (finsum_eq_sum_of_fintype _)))
   have v7 := congrArg norm v1
   rw [e₀, hsec.2.1 x hx b₀ hb₀, norm_mul, norm_mul] at v7
   have v8 := (norm_sum_le _ _).trans (Finset.sum_le_card_nsmul Finset.univ

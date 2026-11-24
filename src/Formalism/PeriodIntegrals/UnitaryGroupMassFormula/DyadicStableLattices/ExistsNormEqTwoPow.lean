@@ -292,7 +292,7 @@ theorem core (m : ℕ) [Fact (∀ r : ℚ, r ^ 2 ≠ -(m : ℚ) + 1 * r)] (d : �
     congr 1 <;> (try rw [hk']) <;> ring
   have hPQ2 : P * Q = Ideal.span {2} := by
     apply le_antisymm
-    · rw [hP, hQ, Ideal.span_mul_span', Ideal.span_le]
+    · rw [hP, hQ, Ideal.span_mul_span, Ideal.span_le]
       rintro _ ⟨a, ha, b, hb, rfl⟩
       simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at ha hb
       rw [SetLike.mem_coe, Ideal.mem_span_singleton]

@@ -364,7 +364,7 @@ variable {g : ℕ} {Λ : Type} [AddCommGroup Λ]
 
 theorem det_ne_of_li {v : Fin g → Fin g → ℂ} (h : LinearIndependent ℂ v) :
     (Matrix.of fun a j => v j a).det ≠ 0 := by
-  have h1 : IsUnit (Matrix.of v) := Matrix.linearIndependent_rows_iff_isUnit.1 h
+  have h1 : IsUnit (Matrix.of v) := linearIndependent_row_iff_isUnit.1 h
   have h2 : (Matrix.of fun a j => v j a) = (Matrix.of v)ᵀ := rfl
   rw [h2, det_transpose]
   exact ((Matrix.isUnit_iff_isUnit_det _).1 h1).ne_zero
@@ -379,7 +379,7 @@ theorem exists_period_frame (Q : Λ →+ (Fin g → ℂ)) (h : Submodule.span �
     exact Submodule.span_le_restrictScalars ℝ ℂ _ h1
   obtain ⟨b, hbS, hspan, hli⟩ := exists_linearIndependent ℂ (Set.range Q)
   let bb := Module.Basis.mk hli (by simp [hspan, hC])
-  haveI : Fintype b := Module.Basis.fintypeIndexOfRankLtAleph0 bb (Module.rank_lt_aleph0 ℂ _)
+  have : Fintype b := Module.Basis.fintypeIndexOfRankLtAleph0 bb (Module.rank_lt_aleph0 ℂ _)
   have hcard : Fintype.card b = g := by simpa using (Module.finrank_eq_card_basis bb).symm
   let e : Fin g ≃ b := (Fintype.equivFinOfCardEq hcard).symm
   choose y hy using fun i : b => hbS i.2
@@ -508,8 +508,8 @@ theorem period_of_riem : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   classical
   have hPd := hF.2
   have hlat : Submodule.span ℝ (Set.range (R t₀).P) = ⊤ := by
-    haveI := (R t₀).free
-    haveI := (R t₀).fin
+    have := (R t₀).free
+    have := (R t₀).fin
     exact (lat_of_herm (R t₀).rank (R t₀).form (R t₀).unimod (R t₀).P (R t₀).Hm (R t₀).im).2.2
   obtain ⟨x, hx⟩ := exists_period_frame (R t₀).P hlat
   have hdim : ∀ s : E →+* ℂ, Module.finrank ℂ (HT.eigSp (R t₀).B s) = Nat.card {i // ty i = s} := by
@@ -556,8 +556,8 @@ theorem period_of_riem : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
         ((R t).form y y' : ℝ) := fun y y' => by
       rw [hpres]
       exact (R t).im y y'
-    haveI := (R t).free
-    haveI := (R t).fin
+    have := (R t).free
+    have := (R t).fin
     obtain ⟨i1, i2, i3⟩ := lat_of_herm (R t).rank (R t).form (R t).unimod (Pf t) _ him
     refine ⟨?_, i1, i2, i3, _, herm_change_isHermitian (R t).herm (Wm t), ?_, fun y y' => ?_⟩
     · intro c y i
@@ -659,7 +659,7 @@ theorem hasRk_iff (κ : c.F →+* ℂ) (ρ : c.F) (hρ : (ρ : ℂ) = H.rt0) (h�
     have e := hv ρ hρ
     have e' := hv' ρ hρ
     simp only [Sum.elim_inl, Sum.elim_inr, hκ] at e e'
-    rw [hs, hs', h s, h s', if_pos e, if_neg (by rw [e']; exact hne)]
+    rw [hs, hs', h s, h s', ite_eq_left e, ite_eq_right (by rw [e']; exact hne)]
     exact ⟨rfl, rfl⟩
   · intro h s
     obtain ⟨lab, hl⟩ := (label_bij (c := c) κ).2 (s.comp (algebraMap (𝓞 E) E))
@@ -669,9 +669,9 @@ theorem hasRk_iff (κ : c.F →+* ℂ) (ρ : c.F) (hρ : (ρ : ℂ) = H.rt0) (h�
     have e2 : s (H.rt : E) = s' (H.rt : E) := RingHom.congr_fun (hl'.symm.trans hs') H.rt
     rw [← hl', e2, e]
     rcases lab with τ | τ
-    · simp only [Sum.elim_inl, hκ, if_true]
+    · simp only [Sum.elim_inl, hκ, ite_true]
       exact (h τ).1
-    · simp only [Sum.elim_inr, hκ, if_neg hne]
+    · simp only [Sum.elim_inr, hκ, ite_eq_right hne]
       exact (h τ).2
 
 theorem hasSig_iff (κ : c.F →+* ℂ) (ρ : c.F) (hρ : (ρ : ℂ) = H.rt0) (hκ : κ ρ = H.rt0) (p q : ℕ)
@@ -811,7 +811,7 @@ theorem kUnif_good (hV : VecOfPeriods) (Y : Model Xo c (algebraMap (𝓞 c.F) c.
   choose F hq hσ hform using hF
   have hΓ : ∀ k : ι, ∃ Γ : Subgroup ((FU.Di k.1).La ≃ₗ[𝓞 E] (FU.Di k.1).La), (F k).IsArith Γ ∧
       ∀ γ, γ ∈ Γ ↔ InLevel l (FU.Di k.1) γ := fun k => by
-    haveI := ((F k).R 0).fin
+    have := ((F k).R 0).fin
     obtain ⟨Γ, a₁, a₂, a₃⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.levelGrp_finite_index E (FU.Di k.1).La (FU.Di k.1).EF (l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E)) l.M l.A
       (by have := l.three_le; omega) l.A_pos
     refine ⟨Γ, ?_, a₃⟩

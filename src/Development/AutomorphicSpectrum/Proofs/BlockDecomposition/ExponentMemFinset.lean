@@ -59,7 +59,7 @@ theorem detModule_tor_one (K : Type) [Field K] [NumberField K] (n : ℕ) :
       = Real.exp ((n : ℝ) * (Module.finrank ℚ K : ℝ)) := by
   unfold PositivityTheory.Rg.Rs.An.tor
   rw [CuspidalSpectrum.detModule_diagUnits_posIdele]
-  rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← pow_mul, ← Real.exp_nat_mul]
+  rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin, ← pow_mul, ← Real.exp_natCast_mul]
   simp
 
 open GroundTheory.Automorphic.Reduction in
@@ -105,7 +105,7 @@ open GroundTheory.Automorphic.Reduction in
 theorem exponent_mem_finset : ∀ (K : Type) [Field K] [NumberField K] (n r : ℕ), 0 < n → ∀ (Q : Set (AdelicGLn.AdelicGL K n)), IsCompact Q → ∃ M : Finset ℤ, ∀ (t : ℝ) (X Y : UPos n r → 𝔸[K]), ∀ q ∈ Q, ∀ (γ₀ : GL (Fin n) K) (m : ℤ), AdelicGLn.diagonal K n γ₀ * (PositivityTheory.Rg.Rs.An.tor K fun _ : Fin n => (1 : ℝ)) ^ m = unipGL X * PositivityTheory.Rg.Rs.An.aR K n r t * q * (PositivityTheory.Rg.Rs.An.aR K n r t)⁻¹ * (unipGL Y)⁻¹ → m ∈ M := by
   intro K _ _ n r hn Q hQ
   have hdc : Continuous fun g : AdelicGLn.AdelicGL K n => (detModule K n g : ℝ) :=
-    continuous_subtype_val.comp continuous_detModule
+    continuous_subtypeVal.comp continuous_detModule
   obtain ⟨a, b, ha, -, hab⟩ := Reduction.exists_pos_bounds hQ hdc (fun g _ => (detModule K n g).2)
   have hN : 0 < (n : ℝ) * (Module.finrank ℚ K : ℝ) :=
     mul_pos (Nat.cast_pos.2 hn) (Nat.cast_pos.2 Module.finrank_pos)

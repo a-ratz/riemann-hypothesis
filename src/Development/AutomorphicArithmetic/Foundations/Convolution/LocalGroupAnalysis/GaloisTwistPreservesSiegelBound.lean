@@ -440,7 +440,7 @@ private theorem map_pos' (s : ℝ) (hs : 0 < s) :
     rw [GroundTheory.Global.InfinitePlace.infiniteAdeleRingMap_apply]
     have := GroundTheory.Global.InfinitePlace.liesOver_comap (K := F) w
     have : CharZero (w.comap (algebraMap F E)).Completion := algebraRat.charZero _
-    letI : Algebra (w.comap (algebraMap F E)).Completion w.Completion :=
+    let : Algebra (w.comap (algebraMap F E)).Completion w.Completion :=
       AbsoluteValue.Completion.algebraOfLiesOver _ _
     rw [AbsoluteValue.Completion.algebraMap_eq_of_liesOver (w.comap (algebraMap F E)).1 w.1]
     exact real_fix (InfinitePlace.Completion.extensionEmbedding (w.comap (algebraMap F E)))

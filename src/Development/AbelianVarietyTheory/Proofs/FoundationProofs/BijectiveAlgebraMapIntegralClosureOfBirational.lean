@@ -73,10 +73,10 @@ theorem _root_.GlobalTheory.isIntegrallyClosed_sections_of_stalks [IsIntegral Y]
   let q : PrimeSpectrum Γ(Y, U) := ⟨p, inferInstance⟩
   have hq : hU.fromSpec q ∈ U := by
     rw [← SetLike.mem_coe, ← hU.range_fromSpec]; exact ⟨q, rfl⟩
-  letI := Y.presheaf.algebra_section_stalk (U := U) ⟨hU.fromSpec q, hq⟩
-  haveI : IsLocalization p.primeCompl (Y.presheaf.stalk (hU.fromSpec q)) :=
+  let := Y.presheaf.algebra_section_stalk (U := U) ⟨hU.fromSpec q, hq⟩
+  have : IsLocalization p.primeCompl (Y.presheaf.stalk (hU.fromSpec q)) :=
     hU.isLocalization_stalk' q hq
-  haveI := hY (hU.fromSpec q)
+  have := hY (hU.fromSpec q)
   exact IsIntegrallyClosed.of_equiv
     (IsLocalization.algEquiv p.primeCompl (Y.presheaf.stalk (hU.fromSpec q))
       (Localization.AtPrime p)).toRingEquiv
@@ -97,7 +97,7 @@ theorem _root_.GlobalTheory.isFractionRing_stalk_of_eq_genericPoint [IsIntegral 
     (y : Y) (hyU : y ∈ U) (hy : y = genericPoint Y) :
     (letI := Y.presheaf.algebra_section_stalk (U := U) ⟨y, hyU⟩;
       IsFractionRing Γ(Y, U) (Y.presheaf.stalk y)) := by
-  haveI : Nonempty U := ⟨⟨y, hyU⟩⟩
+  have : Nonempty U := ⟨⟨y, hyU⟩⟩
   subst hy
   exact functionField_isFractionRing_of_isAffineOpen Y U hU
 
@@ -113,9 +113,9 @@ private lemma app_injective_and_exists_app_eq_of_isIntegral (f : X ⟶ Y) [IsInt
   obtain ⟨y, hy⟩ := ‹Nonempty U›
   have hηU : f (genericPoint X) ∈ U := by
     rw [h2]; exact ((genericPoint_spec Y).mem_open_set_iff U.isOpen).2 ⟨y, trivial, hy⟩
-  letI := Y.presheaf.algebra_section_stalk (U := U) ⟨_, hηU⟩
-  haveI := _root_.GlobalTheory.isFractionRing_stalk_of_eq_genericPoint hU _ hηU h2
-  haveI := _root_.GlobalTheory.isIntegrallyClosed_sections_of_stalks hY hU
+  let := Y.presheaf.algebra_section_stalk (U := U) ⟨_, hηU⟩
+  have := _root_.GlobalTheory.isFractionRing_stalk_of_eq_genericPoint hU _ hηU h2
+  have := _root_.GlobalTheory.isIntegrallyClosed_sections_of_stalks hY hU
   have hsq := f.germ_stalkMap_apply U (genericPoint X) hηU
   have hgX := germ_injective_of_isIntegral X (U := f ⁻¹ᵁ U) (genericPoint X) hηU
   have hg := ConcreteCategory.bijective_of_isIso (f.stalkMap (genericPoint X))
@@ -123,7 +123,7 @@ private lemma app_injective_and_exists_app_eq_of_isIntegral (f : X ⟶ Y) [IsInt
     IsFractionRing.injective Γ(Y, U) (Y.presheaf.stalk (f (genericPoint X)))
   refine ⟨fun a b hab => hgY (hg.1 ?_), fun s hs => ?_⟩
   · rw [hsq, hsq, hab]
-  · letI := (f.app U).hom.toAlgebra
+  · let := (f.app U).hom.toAlgebra
     let ψ := (inv (f.stalkMap (genericPoint X))).hom.comp (X.presheaf.germ (f ⁻¹ᵁ U) _ hηU).hom
     have hψ : (algebraMap Γ(Y, U) (Y.presheaf.stalk (f (genericPoint X)))).comp (RingHom.id _) =
         ψ.comp (algebraMap Γ(Y, U) Γ(X, f ⁻¹ᵁ U)) := by
@@ -144,7 +144,7 @@ private lemma bijective_algebraMap_integralClosure_of_isIntegrallyClosed (f : X 
     (hY : ∀ y : Y, IsIntegrallyClosed (Y.presheaf.stalk y)) {U : Y.Opens} (hU : IsAffineOpen U) :
     (letI := (f.app U).hom.toAlgebra;
       Function.Bijective (algebraMap Γ(Y, U) (integralClosure Γ(Y, U) Γ(X, f ⁻¹ᵁ U)))) := by
-  letI := (f.app U).hom.toAlgebra
+  let := (f.app U).hom.toAlgebra
   rcases isEmpty_or_nonempty U with hE | hN
   · have hU0 : U = ⊥ := by
       ext x
@@ -155,7 +155,7 @@ private lemma bijective_algebraMap_integralClosure_of_isIntegrallyClosed (f : X 
       rw [← map_zero (algebraMap Γ(Y, ⊥) (integralClosure Γ(Y, ⊥) Γ(X, f ⁻¹ᵁ ⊥))),
         ← map_one (algebraMap Γ(Y, ⊥) (integralClosure Γ(Y, ⊥) Γ(X, f ⁻¹ᵁ ⊥))),
         Subsingleton.elim (0 : Γ(Y, ⊥)) 1]
-    haveI := subsingleton_of_zero_eq_one h01
+    have := subsingleton_of_zero_eq_one h01
     exact ⟨fun a b _ => Subsingleton.elim a b, fun b => ⟨0, Subsingleton.elim _ _⟩⟩
   · obtain ⟨hinj, hex⟩ := app_injective_and_exists_app_eq_of_isIntegral f hY hU
     refine ⟨fun a b hab => hinj (congrArg Subtype.val hab), fun b => ?_⟩
@@ -171,15 +171,15 @@ theorem _root_.GlobalTheory.isIso_fromNormalization_of_birational (f : X ⟶ Y) 
   have hpiece : ∀ U : Y.affineOpens,
       IsIso (Spec.map ((f.normalizationDiagramMap).app (Opposite.op U.1))) := by
     intro U
-    haveI : IsIso ((f.normalizationDiagramMap).app (Opposite.op U.1)) :=
+    have : IsIso ((f.normalizationDiagramMap).app (Opposite.op U.1)) :=
       (ConcreteCategory.isIso_iff_bijective _).2 (bijective_algebraMap_integralClosure_of_isIntegrallyClosed f hY U.2)
     infer_instance
   have hcomp : ∀ U : Y.affineOpens,
       IsOpenImmersion (f.normalizationOpenCover.f U ≫ f.fromNormalization) := by
     intro U
     rw [Scheme.Hom.ι_fromNormalization]
-    haveI := hpiece U
-    haveI : IsOpenImmersion (Spec.map ((f.normalizationDiagramMap).app (Opposite.op U.1))) :=
+    have := hpiece U
+    have : IsOpenImmersion (Spec.map ((f.normalizationDiagramMap).app (Opposite.op U.1))) :=
       IsOpenImmersion.of_isIso _
     exact @IsOpenImmersion.comp _ _ _ _ _ this (IsAffineOpen.isOpenImmersion_fromSpec _)
   have hinj : Function.Injective f.fromNormalization := by
@@ -194,20 +194,20 @@ theorem _root_.GlobalTheory.isIso_fromNormalization_of_birational (f : X ⟶ Y) 
     rw [Scheme.Hom.fromNormalization_preimage] at h₁ h₂
     obtain ⟨q₁, rfl⟩ := h₁
     obtain ⟨q₂, rfl⟩ := h₂
-    haveI := hcomp U
+    have := hcomp U
     congr 1
     apply (f.normalizationOpenCover.f U ≫ f.fromNormalization).isOpenEmbedding.injective
     rw [Scheme.Hom.comp_apply, Scheme.Hom.comp_apply, h]
-  haveI : IsOpenImmersion f.fromNormalization :=
+  have : IsOpenImmersion f.fromNormalization :=
     IsOpenImmersion.of_openCover_source _ f.normalizationOpenCover hinj hcomp
-  haveI : Epi f.fromNormalization.base := by
+  have : Epi f.fromNormalization.base := by
     rw [TopCat.epi_iff_surjective]
     intro y
     obtain ⟨V, hV, hyV, -⟩ :=
       (Opens.isBasis_iff_nbhd.1 Y.isBasis_affineOpens) (show y ∈ (⊤ : Y.Opens) from trivial)
     let U : Y.affineOpens := ⟨V, hV⟩
     have hV' : IsAffineOpen V := hV
-    haveI := hpiece U
+    have := hpiece U
     obtain ⟨p, hp⟩ : y ∈ Set.range hV'.fromSpec := by
       rw [← SetLike.mem_coe, ← hV'.range_fromSpec] at hyV; exact hyV
     obtain ⟨q, rfl⟩ := (Spec.map ((f.normalizationDiagramMap).app (Opposite.op U.1))).surjective p
@@ -225,8 +225,8 @@ private lemma isIso_stalkMap_of_comp_isOpenImmersion {W : Scheme.{u}} (f : X ⟶
     IsIso (f.stalkMap (c w)) := by
   subst h
   have h' := Scheme.Hom.stalkMap_comp c f w
-  haveI : IsIso ((c ≫ f).stalkMap w) := inferInstance
-  haveI : IsIso (f.stalkMap (c w) ≫ c.stalkMap w) := h' ▸ this
+  have : IsIso ((c ≫ f).stalkMap w) := inferInstance
+  have : IsIso (f.stalkMap (c w) ≫ c.stalkMap w) := h' ▸ this
   exact IsIso.of_isIso_comp_right _ (c.stalkMap w)
 
 
@@ -262,15 +262,15 @@ theorem _root_.GlobalTheory.isOpenImmersion_of_quasiFinite_of_isIso_stalkMap (f 
       rw [hpre]
       exact f.quasiFiniteAt x
     exact ⟨⟨x, hx⟩, rfl⟩
-  haveI : IsIso (f.toNormalization ⁻¹ᵁ U).ι := by
+  have : IsIso (f.toNormalization ⁻¹ᵁ U).ι := by
     rw [isIso_iff_isOpenImmersion_and_epi_base, TopCat.epi_iff_surjective]
     exact ⟨inferInstance, hsurj⟩
   have h1 : IsOpenImmersion ((f.toNormalization ⁻¹ᵁ U).ι ≫ f.toNormalization) := by
     rw [← morphismRestrict_ι]
     infer_instance
-  haveI : IsOpenImmersion f.toNormalization :=
+  have : IsOpenImmersion f.toNormalization :=
     (MorphismProperty.cancel_left_of_respectsIso @IsOpenImmersion _ _).mp h1
-  haveI := _root_.GlobalTheory.isIso_fromNormalization_of_birational f hY
+  have := _root_.GlobalTheory.isIso_fromNormalization_of_birational f hY
   rw [← f.toNormalization_fromNormalization]
   infer_instance
 
@@ -280,7 +280,7 @@ variable {X Y : Scheme.{u}} in
 theorem _root_.GlobalTheory.isIso_of_isIntegralHom_of_isIso_stalkMap (f : X ⟶ Y) [IsIntegralHom f]
     [IsIntegral X] [IsIntegral Y] [IsDominant f] [IsIso (f.stalkMap (genericPoint X))]
     (hY : ∀ y : Y, IsIntegrallyClosed (Y.presheaf.stalk y)) : IsIso f := by
-  haveI := _root_.GlobalTheory.isIso_fromNormalization_of_birational f hY
+  have := _root_.GlobalTheory.isIso_fromNormalization_of_birational f hY
   rw [← f.toNormalization_fromNormalization]
   infer_instance
 
@@ -291,8 +291,8 @@ theorem _root_.GlobalTheory.isIso_of_isProper_of_quasiFinite_of_isIso_stalkMap (
     [LocallyQuasiFinite f] [IsIntegral X] [IsIntegral Y] [IsDominant f]
     [IsIso (f.stalkMap (genericPoint X))]
     (hY : ∀ y : Y, IsIntegrallyClosed (Y.presheaf.stalk y)) : IsIso f := by
-  haveI := _root_.GlobalTheory.isOpenImmersion_of_quasiFinite_of_isIso_stalkMap f hY
-  haveI : Epi f.base := by
+  have := _root_.GlobalTheory.isOpenImmersion_of_quasiFinite_of_isIso_stalkMap f hY
+  have : Epi f.base := by
     rw [TopCat.epi_iff_surjective, ← Set.range_eq_univ]
     refine IsClopen.eq_univ ⟨f.isClosedMap.isClosed_range, f.isOpenEmbedding.isOpen_range⟩ ?_
     exact Set.range_nonempty _
@@ -327,9 +327,9 @@ theorem _root_.GlobalTheory.isOpenImmersion_of_quasiFinite_of_isOpenImmersion_re
   obtain ⟨v, hv⟩ := hV
   have hg : genericPoint X ∈ V :=
     ((genericPoint_spec X).mem_open_set_iff V.isOpen).2 ⟨v, trivial, hv⟩
-  haveI : IsIso (f.stalkMap (genericPoint X)) := by
+  have : IsIso (f.stalkMap (genericPoint X)) := by
     simpa using isIso_stalkMap_of_comp_isOpenImmersion f V.ι (V.ι ≫ f) rfl ⟨_, hg⟩
-  haveI : IsDominant f := by
+  have : IsDominant f := by
     refine ⟨((V.ι ≫ f).isOpenEmbedding.isOpen_range.dense ⟨_, ⟨v, hv⟩, rfl⟩).mono ?_⟩
     rintro _ ⟨w, rfl⟩
     exact ⟨V.ι w, (Scheme.Hom.comp_apply _ _ w).symm⟩

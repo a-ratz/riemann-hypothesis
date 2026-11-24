@@ -84,7 +84,7 @@ theorem pair_dich : ∀ (A A' : Type) [CommRing A] [CommRing A'] [Algebra A A'] 
     simp only at this
     rw [comp_rule, comp_rule] at this
     exact this
-  letI : Algebra A Γ(T, ⊤) := (φ.comp (algebraMap A A')).toAlgebra
+  let : Algebra A Γ(T, ⊤) := (φ.comp (algebraMap A A')).toAlgebra
   let φa : A' →ₐ[A] Γ(T, ⊤) := ⟨φ, fun _ => rfl⟩
   let φa' : A' →ₐ[A] Γ(T, ⊤) := ⟨φ', fun r => (hA r).symm⟩
   let ψ := Algebra.TensorProduct.productMap φa φa'

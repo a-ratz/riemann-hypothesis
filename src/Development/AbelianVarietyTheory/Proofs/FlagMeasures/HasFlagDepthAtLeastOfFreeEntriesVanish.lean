@@ -63,11 +63,11 @@ def sg (k r : ℕ) (i : Fin (2 * r + k + 1)) : ℂ := if i.val = r + k then -1 e
 theorem mir_val_out {i : Fin (2 * r + k + 1)} (h : i.val < r ∨ r + k < i.val) :
     (mir k r i).val = 2 * r + k - i.val := by
   unfold mir
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 theorem mir_val_in {i : Fin (2 * r + k + 1)} (h : ¬ (i.val < r ∨ r + k < i.val)) : mir k r i = i := by
   unfold mir
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 theorem mir_mir (i : Fin (2 * r + k + 1)) : mir k r (mir k r i) = i := by
   have hi := i.isLt
@@ -113,13 +113,13 @@ theorem sg_eI (a : Fin r) : sg k r (eI k r a) = 1 := by
   have ha := a.isLt
   have h : (eI k r a).val ≠ r + k := by rw [eI_val]; omega
   unfold sg
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 theorem sg_esI (a : Fin r) : sg k r (esI k r a) = 1 := by
   have ha := a.isLt
   have h : (esI k r a).val ≠ r + k := by rw [esI_val]; omega
   unfold sg
-  rw [if_neg h]
+  rw [ite_eq_right h]
 
 theorem sg_mir (i : Fin (2 * r + k + 1)) : sg k r (mir k r i) = sg k r i := by
   by_cases h : i.val < r ∨ r + k < i.val
@@ -128,7 +128,7 @@ theorem sg_mir (i : Fin (2 * r + k + 1)) : sg k r (mir k r i) = sg k r i := by
     have h2 : (mir k r i).val ≠ r + k := by omega
     have h3 : i.val ≠ r + k := by omega
     unfold sg
-    rw [if_neg h2, if_neg h3]
+    rw [ite_eq_right h2, ite_eq_right h3]
   · rw [mir_val_in h]
 
 theorem Hpk_apply (i l : Fin (2 * r + k + 1)) :
@@ -141,7 +141,7 @@ theorem Hpk_apply (i l : Fin (2 * r + k + 1)) :
       omega
     have s : sg k r i = 1 := by
       unfold sg
-      rw [if_neg (by omega)]
+      rw [ite_eq_right (by omega)]
     rw [s]
     unfold Hpk
     simp only [e]
@@ -162,7 +162,7 @@ theorem Hpk_apply' (l j : Fin (2 * r + k + 1)) :
   · subst h
     simp [mir_mir, sg_mir]
   · have h' : ¬ j = mir k r l := fun h2 => h (by rw [h2, mir_mir])
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
 
 theorem H_mul (Y : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (i j : Fin (2 * r + k + 1)) :
     (Hpk k r * Y) i j = sg k r i * Y (mir k r i) j := by
@@ -200,17 +200,17 @@ theorem sub_entry {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (
 theorem pos_eI (a : Fin r) : pos k r (eI k r a) = a.val := by
   have ha := a.isLt
   unfold pos
-  rw [eI_val, if_pos ha]
+  rw [eI_val, ite_eq_left ha]
 
 theorem pos_wI (j : Fin (k + 1)) : pos k r (wI k r j) = r := by
   have hj := j.isLt
   unfold pos
-  rw [wI_val, if_neg (by omega), if_pos (by omega)]
+  rw [wI_val, ite_eq_right (by omega), ite_eq_left (by omega)]
 
 theorem pos_esI (a : Fin r) : pos k r (esI k r a) = 2 * r - a.val := by
   have ha := a.isLt
   unfold pos
-  rw [esI_val, if_neg (by omega), if_neg (by omega)]
+  rw [esI_val, ite_eq_right (by omega), ite_eq_right (by omega)]
   omega
 
 theorem idx_cases (i : Fin (2 * r + k + 1)) :
@@ -260,21 +260,21 @@ theorem row_es {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hx 
       rcases idx_cases l with ⟨a, rfl⟩ | ⟨j, rfl⟩ | ⟨a, rfl⟩
       · have hal := a.isLt
         rw [mir_eI, hcol s (esI k r a) (by rw [esI_val]; omega)]
-        rw [if_neg (fun h' => by have := congrArg Fin.val h'; rw [esI_val, eI_val] at this; omega)]
+        rw [ite_eq_right (fun h' => by have := congrArg Fin.val h'; rw [esI_val, eI_val] at this; omega)]
         simp
       · have hjl := j.isLt
         rw [mir_wI, hcol s (wI k r j) (by rw [wI_val]; omega)]
-        rw [if_neg (fun h' => by have := congrArg Fin.val h'; rw [wI_val, eI_val] at this; omega)]
+        rw [ite_eq_right (fun h' => by have := congrArg Fin.val h'; rw [wI_val, eI_val] at this; omega)]
         simp
       · have ha : a ≠ s := fun h => hl (by rw [h])
         have hav : a.val ≠ s.val := fun h => ha (Fin.ext h)
         rw [mir_esI]
         rcases Nat.lt_or_gt_of_ne hav with h | h
         · rw [ih a.val (by omega) a rfl t (show a.val ≤ t.val by omega)]
-          rw [if_neg (fun h' => by have := congrArg Fin.val h'; omega)]
+          rw [ite_eq_right (fun h' => by have := congrArg Fin.val h'; omega)]
           simp
         · rw [hcol s (eI k r a) (by rw [eI_val]; omega)]
-          rw [if_neg (fun h' => by have := congrArg Fin.val h'; rw [eI_val, eI_val] at this; omega)]
+          rw [ite_eq_right (fun h' => by have := congrArg Fin.val h'; rw [eI_val, eI_val] at this; omega)]
           simp
     · intro h
       exact absurd (Finset.mem_univ _) h
@@ -287,7 +287,7 @@ theorem row_es {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hx 
       have := congrArg Fin.val h'
       rw [esI_val, esI_val] at this
       omega))
-    rw [if_neg h, if_neg h']
+    rw [ite_eq_right h, ite_eq_right h']
 
 theorem dep_one {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hx : x ∈ Nset k r) :
     Dep k r 1 (x - 1) := by
@@ -305,7 +305,7 @@ theorem dep_one {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hx
       have hi : r ≤ i.val := by
         by_contra hc
         have hc' : i.val < r := by omega
-        have : pos k r i = i.val := by unfold pos; rw [if_pos hc']
+        have : pos k r i = i.val := by unfold pos; rw [ite_eq_left hc']
         omega
       have hl := l.isLt
       exact hmid i (wI k r l) (by rw [wI_val]; omega) (by rw [wI_val]; omega) hi
@@ -328,7 +328,7 @@ theorem dep_one {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hx
             have := congrArg Fin.val h'
             rw [esI_val, esI_val] at this
             omega))
-          rw [if_neg h, if_neg h']
+          rw [ite_eq_right h, ite_eq_right h']
   rw [Matrix.sub_apply, key, Matrix.one_apply, sub_self]
 
 theorem mirror {x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hx : x ∈ UH (Hpk k r)) {e : ℕ}

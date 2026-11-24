@@ -269,7 +269,7 @@ def gel (Γ : Subgroup SL(2, ℤ)) (τ : ℂ) : SL(2, ℤ) :=
 
 theorem gel_spec (Γ : Subgroup SL(2, ℤ)) {τ : ℂ} (h : τ ∈ Hs) :
     gel Γ τ ∈ Γ ∧ mob (ofSL (gel Γ τ)) (rep Γ ⟨τ, h⟩).1 = τ := by
-  simp only [gel, dif_pos h]
+  simp only [gel, dite_eq_left h]
   exact (rep_rel Γ ⟨τ, h⟩).choose_spec
 
 theorem rep_eq (Γ : Subgroup SL(2, ℤ)) {δ : SL(2, ℤ)} (hδ : δ ∈ Γ) {τ : ℂ} (h : τ ∈ Hs)
@@ -324,7 +324,7 @@ theorem GlobalTheory.KZ.H3.exists_pot_of_isCoc : ∀ (R : Type) [CommRing R] (w 
   refine ⟨potOf Γ z, ⟨fun τ => ?_, fun γ hγ => ⟨z γ, key γ hγ⟩⟩, key⟩
   by_cases hτ : τ ∈ Hs
   · exact polySlash_isHomogeneous _ (hz.1 _ (gel_spec Γ hτ).1)
-  · have : gel Γ τ = 1 := by simp [gel, dif_neg hτ]
+  · have : gel Γ τ = 1 := by simp [gel, dite_eq_right hτ]
     unfold potOf
     rw [this]
     exact polySlash_isHomogeneous _ (hz.1 _ Γ.one_mem)
@@ -467,7 +467,7 @@ open Matrix GlobalTheory.KZ
 
 theorem GlobalTheory.KZ.exists_pot_rel_of_mem_bSet : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (N l w : ℕ) [Fact l.Prime], l ≠ 2 → 5 ≤ N → Nat.Coprime N l → Odd w → ∀ b ∈ X.BSet N l w, ∃ F ∈ Pot ℤ_[l] w (Gam N l), H3.Rel X l b F := by
   intro Ω _ _ _ ε X _ hj N l w hl h2 hN hc hw b hb
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨φ, hφ, hφ'⟩ := hj
   exact _root_.GlobalTheory.KZ.H3.exists_pot_rel Ω ε X l ⟨φ, hφ', hφ⟩ N w (by omega) h2
     ((Nat.Prime.coprime_iff_not_dvd hl.out).1 hc.symm) hw b (Submodule.subset_span hb)
@@ -710,7 +710,7 @@ theorem kum_near_zero_eval : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε : �
   obtain ⟨ψ, hψ⟩ := Quot.exists_rep (X.an g)
   have hψ' : X.an g = (ψ : Mero) := hψ.symm
   rw [hψ', ← Filter.Germ.coe_mul, Filter.Germ.coe_eq] at hg
-  haveI : Nontrivial Mero := ⟨⟨(b : Mero), 0, hb0⟩⟩
+  have : Nontrivial Mero := ⟨⟨(b : Mero), 0, hb0⟩⟩
   have hgm : g ^ (l ^ n) = (f : X.K) := by
     apply X.an.injective
     rw [map_pow, hψ', hφ', ← Filter.Germ.coe_pow, Filter.Germ.coe_eq]
@@ -842,13 +842,13 @@ theorem exists_basis (hinj : Function.Injective (algebraMap ℤ_[l] E)) (S : Fin
       ∀ x ∈ S, x = ∑ a, r x a • v a := by
   classical
   let L := Submodule.span ℤ_[l] (S : Set E)
-  haveI : Module.Finite ℤ_[l] L := Module.Finite.span_finset _ _
-  haveI : NoZeroSMulDivisors ℤ_[l] E := ⟨fun {c x} h => by
+  have : Module.Finite ℤ_[l] L := Module.Finite.span_finset _ _
+  have : NoZeroSMulDivisors ℤ_[l] E := ⟨fun {c x} h => by
     rw [Algebra.smul_def] at h
     rcases mul_eq_zero.1 h with h | h
     · exact Or.inl (hinj (by simpa using h))
     · exact Or.inr h⟩
-  haveI : Module.Free ℤ_[l] L := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ_[l] L := Module.free_of_finite_type_torsion_free'
   let b := Module.finBasis ℤ_[l] L
   refine ⟨_, fun a => (b a : E), fun x => if h : x ∈ L then b.repr ⟨x, h⟩ else 0, ?_, ?_⟩
   · exact b.linearIndependent.map' L.subtype (by simp)
@@ -857,7 +857,7 @@ theorem exists_basis (hinj : Function.Injective (algebraMap ℤ_[l] E)) (S : Fin
     have h2 : ((∑ i, (b.repr ⟨x, hxL⟩) i • b i : L) : E) = x := congrArg Subtype.val (b.sum_repr _)
     rw [Submodule.coe_sum] at h2
     simp only [Submodule.coe_smul] at h2
-    simp only [dif_pos hxL]
+    simp only [dite_eq_left hxL]
     exact h2.symm
 
 theorem poly_decomp {k : ℕ} (v : Fin k → E) (r : E → Fin k → ℤ_[l]) (P : MvPolynomial (Fin 2) E)
@@ -870,11 +870,11 @@ theorem poly_decomp {k : ℕ} (v : Fin k → E) (r : E → Fin k → ℤ_[l]) (P
   simp only [MvPolynomial.coeff_sum, MvPolynomial.coeff_smul, MvPolynomial.coeff_map, MvPolynomial.coeff_monomial,
   smul_eq_mul, map_sum]
   by_cases hn : n ∈ P.support
-  · simp only [apply_ite (algebraMap ℤ_[l] E), map_zero, Finset.sum_ite_eq', if_pos hn]
+  · simp only [apply_ite (algebraMap ℤ_[l] E), map_zero, Finset.sum_ite_eq', ite_eq_left hn]
     refine (hr n hn).trans ?_
     simp [Algebra.smul_def, mul_comm]
   · rw [MvPolynomial.notMem_support_iff.1 hn]
-    simp only [apply_ite (algebraMap ℤ_[l] E), map_zero, Finset.sum_ite_eq', if_neg hn, mul_zero,
+    simp only [apply_ite (algebraMap ℤ_[l] E), map_zero, Finset.sum_ite_eq', ite_eq_right hn, mul_zero,
       Finset.sum_const_zero]
 
 end GlobalTheory.KZ.H3.LamZero
@@ -1201,7 +1201,7 @@ theorem lift_mem_lam {Ω : Type} [Field Ω] [Algebra ℚ Ω] (ε : Ω →+* ℂ)
 
 theorem ssbb_of_ssPotB : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (N l w : ℕ) [Fact l.Prime], l ≠ 2 → 5 ≤ N → Nat.Coprime N l → Odd w → ∀ {E : Type} [Field E] [Algebra ℤ_[l] E] (ι : E ≃+* ℂ) (lam : Letter → E), SSPotB N l w (fun T => ι (lam T)) → X.SSBB N l w E lam := by
   intro Ω _ _ _ ε X hε hj N l w _ hl2 hN hNl hw E _ _ ι lam hSS
-  haveI : CharZero E := RingHom.charZero ι.toRingHom
+  have : CharZero E := RingHom.charZero ι.toRingHom
   obtain ⟨P, hPA, hP1, hP⟩ := _root_.GlobalTheory.KZ.ssPot_transport N l w ι lam hSS
   refine ⟨P, hPA, hP1, fun x hx T hT => ?_⟩
   obtain ⟨G, hG, hxG⟩ := _root_.GlobalTheory.KZ.H3.exists_pot_of_mem_VB ε X N l w (_root_.GlobalTheory.KZ.exists_pot_rel_of_mem_bSet ε X hε hj N l w hl2 hN hNl hw) x hx

@@ -98,15 +98,15 @@ theorem fourG_hasCompactSupport : ∀ (F E : Type) [NontriviallyNormedField F] [
     ∀ f' : Gl r F → ℂ, IsTest f' → (∃ U ∈ 𝓝 (0 : Gl r F), ∀ Y : Gl r F, ∀ u ∈ U, f' (Y + u) = f' Y) →
     HasCompactSupport (fourG M ψ f') := by
   intro F E _ _ _ _ _ r M ψ hψ f' hf' hU
-  letI := M.mF
-  haveI := M.bF
-  haveI := M.haarF
-  haveI : LocallyCompactSpace F := Unram.lcF (E := E)
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  let := M.mF
+  have := M.bF
+  have := M.haarF
+  have : LocallyCompactSpace F := Unram.lcF (E := E)
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   obtain ⟨U, hU0, hUinv⟩ := hU
   obtain ⟨x₀, hx₀, -⟩ := hψ.2
   set μ : Measure (Fin r → F) := Measure.pi fun _ : Fin r => M.μF with hμ
-  haveI : μ.IsAddHaarMeasure := by rw [hμ]; infer_instance
+  have : μ.IsAddHaarMeasure := by rw [hμ]; infer_instance
   have h00 : ((0 : Matrix (Fin r) (Fin r) F), (0 : Fin r → F), (0 : Fin r → F), (0 : F)) = (0 : Gl r F) := rfl
   obtain ⟨ε2, hε2, hB⟩ : ∃ ε > 0, ∀ t : Fin r → F, ‖t‖ < ε →
       ((0 : Matrix (Fin r) (Fin r) F), t, (0 : Fin r → F), (0 : F)) ∈ U := by

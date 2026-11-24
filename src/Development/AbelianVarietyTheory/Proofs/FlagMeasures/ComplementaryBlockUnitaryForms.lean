@@ -222,7 +222,7 @@ theorem exists_measurable_levMap (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin 
     if hz : z ∈ S then (hex z hz).choose else 1
   have hθ : ∀ z ∈ S, uMat (θ z) = lev ε B B₀ (fun i => Matrix.of (z.1 i)) (uMat z.2) := by
     intro z hz
-    simp only [θ, dif_pos hz]
+    simp only [θ, dite_eq_left hz]
     exact (hex z hz).choose_spec
   refine ⟨θ, ?_, fun z hz => hθ z hz⟩
   have hdet : ∀ i, Measurable fun z : (∀ i, Fin (j i) → Fin (j i) → ℂ) × UJ ε₀ => (Matrix.of (z.1 i)).det :=
@@ -242,8 +242,8 @@ theorem exists_measurable_levMap (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin 
       else (fun r s => uMat (1 : UJ ε) r s) := by
     funext z
     by_cases hz : z ∈ S
-    · simp only [Function.comp_apply, if_pos hz, hθ z hz]
-    · simp only [Function.comp_apply, if_neg hz, θ, dif_neg hz]
+    · simp only [Function.comp_apply, ite_eq_left hz, hθ z hz]
+    · simp only [Function.comp_apply, ite_eq_right hz, θ, dite_eq_right hz]
   rw [heq]
   exact Measurable.ite hS (measurable_lev ε ε₀ B B₀) measurable_const
 
@@ -269,11 +269,11 @@ theorem exists_hermitian_sqrt_mul_mul_eq {n : ℕ} (J C : Matrix (Fin n) (Fin n)
     (h : (Cᴴ * C) * J * (Cᴴ * C) = J) :
     ∃ s : Matrix (Fin n) (Fin n) ℂ, IsUnit s.det ∧ sᴴ = s ∧ s * s = Cᴴ * C ∧ s * J * s = J :=
   by
-  letI : PartialOrder ℂ := RCLike.toPartialOrder
-  letI : PartialOrder (Matrix (Fin n) (Fin n) ℂ) := Matrix.instPartialOrder
-  letI : StarOrderedRing ℂ := RCLike.toStarOrderedRing
-  letI : StarOrderedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.instStarOrderedRing
-  letI : NonnegSpectrumClass ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.instNonnegSpectrumClass
+  let : PartialOrder ℂ := RCLike.toPartialOrder
+  let : PartialOrder (Matrix (Fin n) (Fin n) ℂ) := Matrix.instPartialOrder
+  let : StarOrderedRing ℂ := RCLike.toStarOrderedRing
+  let : StarOrderedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.instStarOrderedRing
+  let : NonnegSpectrumClass ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.instNonnegSpectrumClass
   set H := Cᴴ * C with hHdef
   have hH : 0 ≤ H := (Matrix.posSemidef_conjTranspose_mul_self C).nonneg
   set s := CFC.sqrt H with hsdef
@@ -1085,7 +1085,7 @@ theorem sandwich (j : ℕ) {a : ℝ} (ha : 0 < a) (ha1 : a < 1) :
     ring
   constructor
   · rw [ENNReal.le_div_iff_mul_le (Or.inl hrd) (Or.inl ENNReal.ofReal_ne_top), ← hvol a ha,
-      Measure.smul_apply, smul_eq_mul]
+      smul_apply, smul_eq_mul]
     gcongr
     refine le_trans ?_ (measure_mono (s := unitBallAt j (a * r / √2)) fun x hx => ?_)
     · rw [haarLoc, withDensity_apply _ (measurableSet_unitBallAt j _), ← setLIntegral_const]
@@ -1100,7 +1100,7 @@ theorem sandwich (j : ℕ) {a : ℝ} (ha : 0 < a) (ha1 : a < 1) :
       have h6 : a ^ 2 * r ^ 2 ≤ r ^ 2 := mul_le_of_le_one_left (by positivity) (by nlinarith)
       refine Real.sqrt_le_iff.2 ⟨hr.le, by linarith⟩
   · rw [ENNReal.div_le_iff hrd ENNReal.ofReal_ne_top, ← hvol a⁻¹ (by positivity),
-      Measure.smul_apply, smul_eq_mul]
+      smul_apply, smul_eq_mul]
     gcongr
     refine le_trans (measure_mono (t := unitBallAt j (a⁻¹ * r / √2)) fun x hx => ?_) ?_
     · have h1 := (Real.sqrt_le_iff.1 hx).2
@@ -1241,7 +1241,7 @@ theorem hs_nonneg' {n : ℕ} (g : Matrix (Fin n) (Fin n) ℂ) : 0 ≤ Formalism.
 theorem measurable_hs_uMat {n : ℕ} (ε : Fin n → Bool) :
     Measurable fun g : Formalism.REAL.UJ ε => Formalism.REAL.hs (uMat g - 1) := by
   have : Continuous fun g : Formalism.REAL.UJ ε => uMat g :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   exact (continuous_hs.comp (this.sub continuous_const)).measurable
 
 theorem measurable_hs_loc (j : ℕ) : Measurable fun x : Fin j → Fin j → ℂ =>
@@ -1261,7 +1261,7 @@ theorem isRadial_map_lev : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n 
   have hG : IsRadial (ENNReal.ofReal c • Formalism.REAL.muG ε₀) (fun g => Formalism.REAL.hs (uMat g - 1)) (n₀ ^ 2) := by
     have := ((GlobalTheory.GaugeWhole.gauge_whole n₀ ε₀).1 c hc).2.2.2
     simpa [IsRadial] using this
-  haveI : SigmaFinite (Formalism.REAL.muG ε₀) := by
+  have : SigmaFinite (Formalism.REAL.muG ε₀) := by
     unfold Formalism.REAL.muG
     infer_instance
   have hP := _root_.GlobalTheory.LeviIso.isRadial_pi a (fun i => Fin (j i) → Fin (j i) → ℂ)
@@ -1311,7 +1311,7 @@ namespace GlobalTheory.LeviIso
 
 theorem isClosed_flagM {n a : ℕ} (ε : Fin n → Bool) (W : Fin (a + 1) → Submodule ℂ (Fin n → ℂ)) :
     IsClosed (flagM ε W) := by
-  have hc : Continuous fun g : Formalism.REAL.UJ ε => uMat g := Units.continuous_val.comp continuous_subtype_val
+  have hc : Continuous fun g : Formalism.REAL.UJ ε => uMat g := Units.continuous_val.comp continuous_subtypeVal
   have hc' : Continuous fun g : Formalism.REAL.UJ ε => (uMat g)ᴴ := hc.matrix_conjTranspose
   have hset : flagM ε W = ⋂ i, ⋂ y ∈ W i,
       ((fun g : Formalism.REAL.UJ ε => uMat g *ᵥ y) ⁻¹' (W i : Set (Fin n → ℂ)) ∩
@@ -1320,7 +1320,7 @@ theorem isClosed_flagM {n a : ℕ} (ε : Fin n → Bool) (W : Fin (a + 1) → Su
     simp [flagM]
   rw [hset]
   refine isClosed_iInter fun i => isClosed_biInter fun y _ => ?_
-  have hW : IsClosed (W i : Set (Fin n → ℂ)) := (W i).closed_of_finiteDimensional
+  have hW : IsClosed (W i : Set (Fin n → ℂ)) := (W i).isClosed_of_finiteDimensional
   exact (hW.preimage (hc.matrix_mulVec continuous_const)).inter (hW.preimage (hc'.matrix_mulVec continuous_const))
 
 theorem ae_det_ne_zero {a : ℕ} (j : Fin a → ℕ) (d : Fin a → ℝ) {Y : Type} [MeasurableSpace Y] (ν : Measure Y)
@@ -1331,7 +1331,7 @@ theorem ae_det_ne_zero {a : ℕ} (j : Fin a → ℕ) (d : Fin a → ℝ) {Y : Ty
     intro i
     have h0 : ∀ᵐ y ∂(ENNReal.ofReal (d i) • haarLoc (j i)), (Matrix.of y).det ≠ 0 := by
       have hn := (haarLoc_conj_and_null (j i)).2
-      rw [ae_iff, Measure.smul_apply]
+      rw [ae_iff, smul_apply]
       simp [hn]
     exact (Measure.tendsto_eval_ae_ae (μ := fun i => ENNReal.ofReal (d i) • haarLoc (j i)) (i := i)).eventually
       (p := fun y => (Matrix.of y).det ≠ 0) h0

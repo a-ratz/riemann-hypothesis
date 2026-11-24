@@ -137,7 +137,7 @@ theorem surjective_iff_ptMap_surjective : ∀ (K : Type) [Field K] (A B : AbVar 
     have hsub : closedPoints B.X.left ⊆ Set.range p.hom.left := by
       intro b hb
       let t : Sp (AlgebraicClosure K) ⟶ Sp K := spMap (algebraMap K (AlgebraicClosure K))
-      haveI : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+      have : Subsingleton (Sp K) := inferInstanceAs (Subsingleton (PrimeSpectrum K))
       obtain ⟨z, hz, -⟩ := Scheme.Pullback.exists_preimage_pullback (f := B.X.hom) (g := t) b
         (IsLocalRing.closedPoint (AlgebraicClosure K)) (Subsingleton.elim _ _)
       have : JacobsonSpace ↥(pullback B.X.hom t : Scheme.{0}) :=

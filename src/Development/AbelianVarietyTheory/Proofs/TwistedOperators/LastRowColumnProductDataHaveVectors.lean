@@ -75,7 +75,7 @@ theorem exists_nat_val_le {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
   · unfold GlobalTheory.SplitWeil.resCard
     exact Nat.card_pos
   · rw [Nat.cast_pow, map_pow, Units.val_pow_eq_pow_val, map_pow, hϖ]
-    exact pow_le_pow_left₀ zero_le' (le_uniformizer_iff.2 GlobalTheory.RootEx.UnipPow.valuation_resCard_lt_one) d
+    exact pow_le_pow_left₀ zero_le (le_uniformizer_iff.2 GlobalTheory.RootEx.UnipPow.valuation_resCard_lt_one) d
 
 end GlobalTheory.VecsLast
 
@@ -111,11 +111,11 @@ theorem isSBHalf_prodCoord {m n : ℕ} {e : AE D} {Λ : AddSubgroup (Mx D m n)} 
       simp only [Matrix.add_apply, mul_add, h i j, hu i j]
   refine ⟨fun t ht => ?_, ∏ w : P, N w, hk0, fun u hu hue t => ?_, fun t ht => ?_⟩
   · by_contra hc'
-    exact ht (if_neg hc')
+    exact ht (ite_eq_right hc')
   · have hku := hhalf (∏ w : P, N w) u hue
     dsimp only
     by_cases ht : IsHalf e t
-    · rw [if_pos ((hadd hku).2 ht), if_pos ht]
+    · rw [ite_eq_left ((hadd hku).2 ht), ite_eq_left ht]
       refine Finset.prod_congr rfl fun w _ => ?_
       rw [map_add (f := _), map_nsmul]
       refine h2 w _ _ fun i j => ?_
@@ -128,12 +128,12 @@ theorem isSBHalf_prodCoord {m n : ℕ} {e : AE D} {Λ : AddSubgroup (Mx D m n)} 
       calc valuation (Kw w.1) (((∏ w : P, N w : ℕ) : Kw w.1)) * valuation (Kw w.1) (c w u i j)
           ≤ valuation (Kw w.1) (((∏ w : P, N w : ℕ) : Kw w.1)) := mul_le_of_le_one_right' hint
         _ ≤ _ := hle.trans (hN w)
-    · rw [if_neg (fun h => ht ((hadd hku).1 h)), if_neg ht]
+    · rw [ite_eq_right (fun h => ht ((hadd hku).1 h)), ite_eq_right ht]
   · dsimp only at ht
     have hE : IsHalf e t := by
       by_contra h
-      exact ht (if_neg h)
-    rw [if_pos hE] at ht
+      exact ht (ite_eq_right h)
+    rw [ite_eq_left hE] at ht
     have hmem : t ∈ Λ := (hc t hE).2 fun w => h1 w _ (Finset.prod_ne_zero_iff.1 ht w (Finset.mem_univ _))
     exact Λ.nsmul_mem hmem _
 
@@ -234,8 +234,8 @@ theorem vecs_last : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (t : T) (e : A
       (fun w => coordHom ch.S.B t w.1 (X := (D.R.m, (j : ℕ) + 1)) (Y := (D.R.m, (j : ℕ))) ⟨le_rfl, j.2⟩ ⟨le_rfl, j.2.le⟩)
       (fun w z => coordHom_int_iff ch.S.B t w.1 (X := (D.R.m, (j : ℕ) + 1)) (Y := (D.R.m, (j : ℕ))) ⟨le_rfl, j.2⟩ ⟨le_rfl, j.2.le⟩ z) (fun w => depthAt ch.G w.1) (fun w => φ w (.theta D.R.m j))
       (fun w => (natDatum_props (hφ w _ hmem)).1) (fun w => (natDatum_props (hφ w _ hmem)).2)
-    letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hS
-    letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hT
+    let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hS
+    let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hT
     obtain ⟨f, hf⟩ := GlobalTheory.FunObj.VecEx.exists_isThetaAt_of_vac inferInstance inferInstance hS hT he (ch.rm.vT_is t D.R.m j le_rfl j.2) hSB
     exact ⟨f, hSB, hf⟩
   · have hS : IsSelfDualC (ch.G.pS (.chi i D.R.m)) (ch.G.latS (.chi i D.R.m)) :=
@@ -250,8 +250,8 @@ theorem vecs_last : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (t : T) (e : A
       (fun w => coordHom ch.S.B t w.1 (X := ((i : ℕ), D.R.m)) (Y := ((i : ℕ) + 1, D.R.m)) ⟨i.2.le, le_rfl⟩ ⟨i.2, le_rfl⟩)
       (fun w z => coordHom_int_iff ch.S.B t w.1 (X := ((i : ℕ), D.R.m)) (Y := ((i : ℕ) + 1, D.R.m)) ⟨i.2.le, le_rfl⟩ ⟨i.2, le_rfl⟩ z) (fun w => depthAt ch.G w.1) (fun w => φ w (.ex i D.R.m))
       (fun w => (natDatum_props (hφ w _ hmem)).1) (fun w => (natDatum_props (hφ w _ hmem)).2)
-    letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hS
-    letI := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hT
+    let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hS
+    let := GlobalTheory.FinPl.PlacesAdeles.selfDual_isFull _ _ hT
     obtain ⟨f, hf⟩ := GlobalTheory.FunObj.VecEx.exists_isThetaAt_of_vac inferInstance inferInstance hS hT he (ch.rm.vX_is i D.R.m i.2 le_rfl) hSB
     exact ⟨f, hSB, hf⟩
 

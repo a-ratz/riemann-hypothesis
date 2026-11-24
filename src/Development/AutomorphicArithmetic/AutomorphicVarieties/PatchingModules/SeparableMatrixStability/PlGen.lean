@@ -57,7 +57,7 @@ theorem UpperTheory.V.Pa.pl_gen :
   intro l _ Γ _ _ _ _ _ H _ hH hPL hfin
   have hpro : IsProL l H := ((pl_props l Γ H hH).2.2.2.2.1).1 hPL
   have hcl : IsClosed (H : Set Γ) := Subgroup.isClosed_of_isOpen H hH
-  haveI : CompactSpace H := isCompact_iff_compactSpace.1 hcl.isCompact
+  have : CompactSpace H := isCompact_iff_compactSpace.1 hcl.isCompact
   obtain ⟨-, hgen⟩ := topGen_of_hom l H hpro
   have key : ∀ b : ℕ, Nat.card (HomL l H) ≤ b → ∃ z : Fin b → H, TopGen (Set.range z) := by
     intro b hb
@@ -68,7 +68,7 @@ theorem UpperTheory.V.Pa.pl_gen :
     exact hgen b hf hn
   refine ⟨?_, key⟩
   obtain ⟨z, hz⟩ := key _ le_rfl
-  haveI : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
+  have : Finite (Γ ⧸ H) := Subgroup.quotient_finite_of_isOpen H hH
   refine ⟨Subtype.val '' Set.range z ∪ Set.range (Quotient.out : Γ ⧸ H → Γ),
     ((Set.finite_range z).image _).union (Set.finite_range _), ?_⟩
   rw [topGen_iff]
@@ -81,7 +81,7 @@ theorem UpperTheory.V.Pa.pl_gen :
   have hHK : H ≤ K := by
     intro h hh
     have h1 : (⟨h, hh⟩ : H) ∈ closure ((Subgroup.closure (Set.range z) : Subgroup H) : Set H) := hz ⟨h, hh⟩
-    have h2 := mem_closure_image continuous_subtype_val.continuousAt h1
+    have h2 := mem_closure_image continuous_subtypeVal.continuousAt h1
     exact closure_minimal hsub (Subgroup.isClosed_topologicalClosure _) h2
   refine eq_top_iff.2 fun g _ => ?_
   obtain ⟨h, hh⟩ := QuotientGroup.mk_out_eq_mul H g

@@ -68,8 +68,8 @@ theorem hl_reduced (k : Type) [Field k] (d : ℕ) (P : Ideal (MvPolynomial (Fin 
 theorem pn_reduced (k : Type) [Field k] (d : ℕ) : IsReduced (PN k d) := by
   have : ∀ x : PN k d, _root_.IsReduced ((PN k d).presheaf.stalk x) := by
     intro x
-    haveI : x.asHomogeneousIdeal.toIdeal.IsPrime := x.isPrime
-    haveI := hl_reduced k d x.asHomogeneousIdeal.toIdeal
+    have : x.asHomogeneousIdeal.toIdeal.IsPrime := x.isPrime
+    have := hl_reduced k d x.asHomogeneousIdeal.toIdeal
     let e := Proj.stalkIso' (MvPolynomial.homogeneousSubmodule (Fin (d + 1)) k) x
     exact isReduced_of_injective e.toRingHom e.injective
   exact isReduced_of_isReduced_stalk _
@@ -103,8 +103,8 @@ theorem pn_irred (k : Type) [Field k] (d : ℕ) : IrreducibleSpace (PN k d) := b
   exact isIrreducible_singleton.closure
 
 theorem PNIntegral_of : PNIntegral := fun k _ d => by
-  haveI := pn_reduced k d
-  haveI := pn_irred k d
+  have := pn_reduced k d
+  have := pn_irred k d
   exact isIntegral_of_irreducibleSpace_of_isReduced _
 
 end LateralTheory.EtaleTrace.Cov

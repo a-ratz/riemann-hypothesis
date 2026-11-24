@@ -82,10 +82,10 @@ def ofVec (σ : E →ₐ[F] E) {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ
 theorem ofVec_herm {σ : E →ₐ[F] E} (hinv : ∀ x, σ (σ x) = x) {d : ℕ} (b : Module.Basis (Fin d) F E)
     (n : ℕ) (k : Idx n d → F) (a c : Fin n) : σ (ofVec σ b n k c a) = ofVec σ b n k a c := by
   rcases lt_trichotomy a c with h | h | h
-  · simp only [ofVec, dif_pos h, dif_neg (not_lt_of_gt h), hinv]
+  · simp only [ofVec, dite_eq_left h, dite_eq_right (not_lt_of_gt h), hinv]
   · subst h
     simp only [ofVec, lt_irrefl, dite_false, AlgHom.commutes]
-  · simp only [ofVec, dif_pos h, dif_neg (not_lt_of_gt h)]
+  · simp only [ofVec, dite_eq_left h, dite_eq_right (not_lt_of_gt h)]
 
 theorem ratVec_ofVec [FiniteDimensional F E] [CharZero F] (h2 : Module.finrank F E = 2)
     (σ : E →ₐ[F] E) {d : ℕ} (b : Module.Basis (Fin d) F E) (n : ℕ) (k : Idx n d → F) :
@@ -97,7 +97,7 @@ theorem ratVec_ofVec [FiniteDimensional F E] [CharZero F] (h2 : Module.finrank F
     simp
   | inr q =>
     obtain ⟨p, l⟩ := q
-    simp only [ratVec, Sum.elim_inr, ofVec, dif_pos p.2]
+    simp only [ratVec, Sum.elim_inr, ofVec, dite_eq_left p.2]
     rw [b.repr_sum_self]
 
 variable (R : Type) [CommRing R] [Algebra F R]
@@ -164,7 +164,7 @@ theorem hermCovol : HermCovol := by
   intro F E _ _ _ _ _ σ hCM ψ hψ n ν hν
   obtain ⟨hinv, δ, hδ, hσδ⟩ := HaarCoord.conj_facts hCM
   have h2 := hCM.2.2.1
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [h2]; omega)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [h2]; omega)
   obtain ⟨⟨hlc, hsc, ht2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   let b : Module.Basis (Fin 2) F E := Module.finBasisOfFinrankEq F E h2
   let e := (hermVec_isHomeomorph hCM (AF F) b n).homeomorph _
@@ -180,9 +180,9 @@ theorem hermCovol : HermCovol := by
   have hdet : (ξ • formB σ b n).det ≠ 0 := by
     rw [Matrix.det_smul]
     exact mul_ne_zero (pow_ne_zero _ hξ0) (formB_det hinv b n)
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (HermR (AF F) σ n) := inferInstance
-  haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (HermR (AF F) σ n) := inferInstance
+  have : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
   have hsd : ν.map e = adeleMeasurePi F := by
     refine GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Fth.selfDual_eq _ hs hdet _
       (GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Fth.selfDual_transport e ?_ _ _ ?_ ν hν)

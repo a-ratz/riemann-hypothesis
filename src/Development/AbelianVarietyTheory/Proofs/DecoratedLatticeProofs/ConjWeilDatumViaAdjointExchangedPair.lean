@@ -156,8 +156,8 @@ theorem isWeilDatumO_conjAdjoint : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ)
     exact Complex.continuous_conj.comp ((hw.om_cont _ (thB f hf) _).comp continuous_swap)
   · intro μ 𝓕 hμ h𝓕 p f hf
     obtain ⟨g, h⟩ := p
-    haveI : BorelSpace (WO S T) := ⟨rfl⟩
-    haveI : BorelSpace (WO T S) := ⟨rfl⟩
+    have : BorelSpace (WO S T) := ⟨rfl⟩
+    have : BorelSpace (WO T S) := ⟨rfl⟩
     let dE : WO T S ≃+ WO S T :=
       { toFun := adjO S T, invFun := adjO T S, left_inv := hT.invol, right_inv := hS.invol, map_add' := hS.add }
     let hE : WO S T ≃ₜ WO T S :=

@@ -161,7 +161,7 @@ theorem chart_loc [CharZero Ω] {κ : Type} [Finite κ] {x : κ → Ω} (hall : 
   have hinj := secVal_injective hall T.gen.inj U hg
   let ψ : Γ(X, U) →+* B := (secVal ξ U hg).codRestrict _ fun s => hAB _ (hE s ▸ (E s).2)
   have hψ : ∀ s, (ψ s : Ω) = secVal ξ U hg s := fun _ => rfl
-  letI : Algebra Γ(X, U) B := ψ.toAlgebra
+  let : Algebra Γ(X, U) B := ψ.toAlgebra
   let M : Submonoid Γ(X, U) :=
     { carrier := {r | ∃ b : ℕ, ¬ p ∣ b ∧ r = b}
       one_mem' := ⟨1, hp.not_dvd_one, Nat.cast_one.symm⟩
@@ -169,7 +169,7 @@ theorem chart_loc [CharZero Ω] {κ : Type} [Finite κ] {x : κ → Ω} (hall : 
         rintro _ _ ⟨b, hb, rfl⟩ ⟨b', hb', rfl⟩
         exact ⟨b * b', hp.not_dvd_mul hb hb', (Nat.cast_mul _ _).symm⟩ }
   have hb0 : ∀ b : ℕ, ¬ p ∣ b → (b : Ω) ≠ 0 := fun b hb => Nat.cast_ne_zero.2 fun h => hb (h ▸ dvd_zero p)
-  haveI hloc : IsLocalization M B := by
+  have hloc : IsLocalization M B := by
     refine ⟨?_, fun a => ?_, fun {r s} h => ⟨1, ?_⟩⟩
     · rintro ⟨_, b, hb, rfl⟩
       obtain ⟨r, hr⟩ := (ho ((1 : ℤ) / (b : Ω))).2 ⟨1, b, hb, rfl⟩
@@ -183,14 +183,14 @@ theorem chart_loc [CharZero Ω] {κ : Type} [Finite κ] {x : κ → Ω} (hall : 
       rw [← hE (E.symm _), E.apply_symm_apply, map_natCast]
     · have h' : secVal ξ U hg r = secVal ξ U hg s := (hψ r).symm.trans ((congrArg Subtype.val h).trans (hψ s))
       rw [hinj h']
-  haveI : Algebra.FiniteType ℤ (Algebra.adjoin ℤ (Set.range fun j => x j / x c)) := by
+  have : Algebra.FiniteType ℤ (Algebra.adjoin ℤ (Set.range fun j => x j / x c)) := by
     refine (Subalgebra.fg_iff_finiteType _).1 ⟨(Set.finite_range fun j => x j / x c).toFinset, ?_⟩
     rw [Set.Finite.coe_toFinset]
-  haveI : IsNoetherianRing (Algebra.adjoin ℤ (Set.range fun j => x j / x c)) :=
+  have : IsNoetherianRing (Algebra.adjoin ℤ (Set.range fun j => x j / x c)) :=
     Algebra.FiniteType.isNoetherianRing ℤ _
   have hRN : IsNoetherianRing Γ(X, U) := isNoetherianRing_of_ringEquiv _ E.symm
-  haveI : IsDomain Γ(X, U) := hinj.isDomain _
-  haveI : IsIntegrallyClosed Γ(X, U) := IsIntegrallyClosed.of_equiv E.symm
+  have : IsDomain Γ(X, U) := hinj.isDomain _
+  have : IsIntegrallyClosed Γ(X, U) := IsIntegrallyClosed.of_equiv E.symm
   have hM : M ≤ nonZeroDivisors Γ(X, U) := by
     rintro _ ⟨b, hb, rfl⟩
     refine mem_nonZeroDivisors_of_ne_zero fun h => hb0 b hb ?_

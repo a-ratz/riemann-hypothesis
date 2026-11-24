@@ -243,8 +243,8 @@ theorem mem_of_map_eq_zero {A B M N : Type*} [CommRing A] [CommRing B] [Algebra 
     rw [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     exact hI c hc ω'
   obtain ⟨inst, hinst⟩ := exists_module hs hQ
-  letI := inst
-  haveI : IsScalarTower A B ((⋀[A]^a M) ⧸ P) := .of_algebraMap_smul hinst
+  let := inst
+  have : IsScalarTower A B ((⋀[A]^a M) ⧸ P) := .of_algebraMap_smul hinst
   have h := eq_zero_of_map hs f hf a P.mkQ
     (fun v k hv => by
       rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]; exact hP v k hv) T hT ω h0
@@ -346,8 +346,8 @@ theorem iota_mem_relOm {B : Type} [CommRing B] [Algebra K B] [Algebra A B] [IsSc
 theorem formLaws : FormLaws := by
   intro K A B _ _ _ _ _ a
   refine ⟨span_forms K A a, fun φ => ?_⟩
-  letI : Algebra A B := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower K A B := IsScalarTower.of_algHom φ
+  let : Algebra A B := φ.toRingHom.toAlgebra
+  have : IsScalarTower K A B := IsScalarTower.of_algHom φ
   let T : Om K A a →ₗ[A] Om K B a := exteriorPower.alternatingMapLinearEquiv
     { ((exteriorPower.ιMulti B a (M := Ω[B⁄K])).toMultilinearMap.restrictScalars A).compLinearMap
         fun _ => KaehlerDifferential.map K K A B with

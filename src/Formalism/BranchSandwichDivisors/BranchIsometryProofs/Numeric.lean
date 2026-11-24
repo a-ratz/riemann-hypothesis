@@ -180,14 +180,14 @@ theorem cap_factor {n : ℕ} {lam : Fin (n + 1) → ℤ} {sg : Fin n → ℤ} (h
   · intro heq
     rcases lt_trichotomy (j : ℕ) (i : ℕ) with hji | hji | hji
     · have h3 : lam i.castSucc ≤ lam j.succ :=
-        hA (Fin.le_def.2 (by simp only [Fin.val_succ, Fin.coe_castSucc]; omega))
+        hA (Fin.le_def.2 (by simp only [Fin.val_succ, Fin.val_castSucc]; omega))
       have h4 := (h j).2
       omega
     · have hij : j = i := Fin.ext hji
       subst hij
       exact hne (by omega)
     · have h3 : lam j.castSucc ≤ lam i.succ :=
-        hA (Fin.le_def.2 (by simp only [Fin.val_succ, Fin.coe_castSucc]; omega))
+        hA (Fin.le_def.2 (by simp only [Fin.val_succ, Fin.val_castSucc]; omega))
       have h4 := (h j).1
       omega
   · rw [abs_le]

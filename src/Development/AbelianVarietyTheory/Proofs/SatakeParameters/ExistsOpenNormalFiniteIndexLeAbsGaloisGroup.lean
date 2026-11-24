@@ -73,10 +73,10 @@ namespace GlobalTheory.OpenNormal
 
 theorem exists_open_normal_le : ∀ (Ω : Type) [Field Ω] (F : Type) [Field F] [NumberField F] [Algebra F Ω] [IsAlgClosure F Ω] (U : Subgroup (G F Ω)), IsOpen (U : Set (G F Ω)) → ∃ N : Subgroup (G F Ω), N.Normal ∧ IsOpen (N : Set (G F Ω)) ∧ N.FiniteIndex ∧ N ≤ U := by
   intro Ω _ F _ _ _ _ U hU
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
-  haveI : CompactSpace (G F Ω) := inferInstanceAs (CompactSpace Gal(Ω/F))
-  haveI : Finite (G F Ω ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
-  haveI : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : CompactSpace (G F Ω) := inferInstanceAs (CompactSpace Gal(Ω/F))
+  have : Finite (G F Ω ⧸ U) := Subgroup.quotient_finite_of_isOpen U hU
+  have : U.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   refine ⟨U.normalCore, U.normalCore_normal, ?_, inferInstance, U.normalCore_le⟩
   exact Subgroup.isOpen_of_isClosed_of_finiteIndex _ (U.normalCore_isClosed (U.isClosed_of_isOpen hU))
 

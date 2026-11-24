@@ -151,7 +151,7 @@ theorem ResAboveCover.exists_limit {P J : Ideal (MRing ι)} {e : ℕ} (R : AnLog
   obtain ⟨-, x₁, -⟩ := hex.exists
   let x : α → R.X := fun a => if h : ∃ x, SameOrbit (v a) (R.lift x x) then h.choose else x₁
   have hvx : ∀ᶠ a in l, SameOrbit (v a) (R.lift (x a) (x a)) :=
-    hex.mono fun a h => by simp only [x, dif_pos h]; exact h.choose_spec
+    hex.mono fun a h => by simp only [x, dite_eq_left h]; exact h.choose_spec
   let F := Ultrafilter.of l
   have hFl : (F : Filter α) ≤ l := Ultrafilter.of_le l
   obtain ⟨x₀, -, hx₀⟩ := isCompact_univ.ultrafilter_le_nhds (F.map x) (by simp)
@@ -164,7 +164,7 @@ theorem ResAboveCover.surj_all (hND : HilbertSamuel.NonvanishingDense.Statement)
     (P J : Ideal (MRing ι)) {e d : ℕ} (R : AnLogRes P J e) (hP : IsArithVar P d) :
     ∀ v ∈ mcPts P, ∃ x, SameOrbit v (R.lift x x) := by
   intro v hv
-  obtain ⟨f, hfJ, hfP⟩ := SetLike.not_le_iff_exists.1 R.nondeg
+  obtain ⟨f, hfJ, hfP⟩ := IsConcreteLE.not_le_iff_exists.1 R.nondeg
   have hcl := hND K ι P d f hP hfP hv
   have := mem_closure_iff_nhdsWithin_neBot.1 hcl
   have hex : ∀ᶠ w in 𝓝[{w | w ∈ mcPts P ∧ eval w (map (Int.castRingHom ℂ) f) ≠ 0}] v,

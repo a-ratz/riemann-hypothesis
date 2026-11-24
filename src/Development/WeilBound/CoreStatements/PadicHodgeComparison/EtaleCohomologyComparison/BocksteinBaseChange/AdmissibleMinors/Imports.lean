@@ -92,9 +92,9 @@ theorem exists_weight_basis_filtration {K H : Type*} [Field K] [AddCommGroup H] 
     refine ⟨b, fun v => if v ∈ s then w v else N - (i + 1), hlib, ?_, ?_⟩
     · intro v hv
       by_cases h : v ∈ s
-      · simp only [h, if_true]
+      · simp only [h, ite_true]
         exact ⟨(hs v h).1, by have := (hs v h).2; omega⟩
-      · simp only [h, if_false]
+      · simp only [h, ite_false]
         refine ⟨?_, le_rfl⟩
         rcases hbt hv with h' | h'
         · exact absurd h' h
@@ -109,7 +109,7 @@ theorem exists_weight_basis_filtration {K H : Type*} [Field K] [AddCommGroup H] 
         intro v hv
         refine ⟨hv, ?_⟩
         by_cases h : v ∈ s
-        · simp only [h, if_true]
+        · simp only [h, ite_true]
           have := (hs v h).2
           omega
         · simp [h]
@@ -132,7 +132,7 @@ theorem wt_basis {K H : Type*} [Field K] [AddCommGroup H] [Module K H] [FiniteDi
   let b0 := Module.Basis.mk hli' htop
   have hb0 : ∀ v, b0 v = (v : H) := fun v => Module.Basis.mk_apply hli' htop v
   have : Finite s := Module.Finite.finite_basis b0
-  haveI : Fintype s := Fintype.ofFinite s
+  have : Fintype s := Fintype.ofFinite s
   let e := Fintype.equivFin s
   refine ⟨Fintype.card s, b0.reindex e, fun t => w (e.symm t), fun t => ⟨?_, ?_⟩⟩
   · rw [Module.Basis.reindex_apply, hb0]

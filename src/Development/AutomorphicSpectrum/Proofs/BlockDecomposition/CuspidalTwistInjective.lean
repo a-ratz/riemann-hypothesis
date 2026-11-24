@@ -61,7 +61,7 @@ theorem exists_ne_zero_of_irr {G V : Type} [Group G] [AddCommGroup V] [Module �
     {π : Representation ℂ G V} (hi : π.IsIrreducible) : ∃ v : V, v ≠ 0 := by
   by_contra h
   push_neg at h
-  haveI := hi
+  have := hi
   refine (bot_ne_top : (⊥ : Subrepresentation π) ≠ ⊤) (Subrepresentation.toSubmodule_injective ?_)
   show (⊥ : Submodule ℂ V) = ⊤
   ext v
@@ -70,7 +70,7 @@ theorem exists_ne_zero_of_irr {G V : Type} [Group G] [AddCommGroup V] [Module �
 theorem eq_smul_of_eigenvector {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V]
     {π : Representation ℂ G V} (hi : π.IsIrreducible) {z : G} (hz : ∀ g, z * g = g * z) {c : ℂ} {w : V}
     (hw : w ≠ 0) (hc : π z w = c • w) (v : V) : π z v = c • v := by
-  haveI := hi
+  have := hi
   let E : Subrepresentation π :=
     { toSubmodule := LinearMap.ker (π z - c • (1 : Module.End ℂ V))
       apply_mem_toSubmodule := fun g v hv => by
@@ -119,11 +119,11 @@ theorem exists_scalar {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V] {π :
   have hKo : IsOpen (K : Set (GL (Fin n) k)) := hSo.inter SplitFlip.isOpen_KO
   have hKc : IsCompact (K : Set (GL (Fin n) k)) :=
     SplitFlip.isCompact_KO.of_isClosed_subset (K.isClosed_of_isOpen hKo) Set.inter_subset_right
-  haveI : FiniteDimensional ℂ (fixed π K) := ha.2 K hKo hKc
+  have : FiniteDimensional ℂ (fixed π K) := ha.2 K hKo hKc
   have hvK : v ∈ fixed π K := fun h => by
     have h' : π (h : GL (Fin n) k) v = v := h.2.1
     simpa using h'
-  haveI : Nontrivial (fixed π K) := ⟨⟨⟨v, hvK⟩, 0, fun e => hv (congrArg Subtype.val e)⟩⟩
+  have : Nontrivial (fixed π K) := ⟨⟨⟨v, hvK⟩, 0, fun e => hv (congrArg Subtype.val e)⟩⟩
   have hst : ∀ u ∈ fixed π K, π z u ∈ fixed π K := fun u hu h => by
     have hu' := hu h
     simp only [MonoidHom.one_apply, Units.val_one, one_smul] at hu' ⊢

@@ -73,7 +73,7 @@ theorem locPos_holds : LocPos := by
   have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   have : BorelSpace (HermR (Fv F v) σ a) := ⟨rfl⟩
   have : IsTopologicalAddGroup (Fv F v ⊗[F] E) :=
-    IsModuleTopology.topologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
+    IsModuleTopology.isTopologicalAddGroup (Fv F v) (Fv F v ⊗[F] E)
   have : T2Space (Matrix (Fin a) (Fin a) (Fv F v ⊗[F] E)) :=
     inferInstanceAs (T2Space (Fin a → Fin a → Fv F v ⊗[F] E))
   have : LocallyCompactSpace (HermR (Fv F v) σ a) :=

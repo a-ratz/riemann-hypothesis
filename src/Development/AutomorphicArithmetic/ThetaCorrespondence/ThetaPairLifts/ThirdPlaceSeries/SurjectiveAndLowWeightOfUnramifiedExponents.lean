@@ -461,7 +461,7 @@ theorem leafShareI_of_shareW (p : PtAt ex Csz) {Pm : ParameterChoice' D L} {Tp :
     {c : OnConst} {O : Obj p c} (hR : RecAt p Tp r O) (hW : ∀ i, ShareW p i (1 / (4 * ((D.R.f : ℝ) * D.R.k) ^ 3))) :
     LeafShareI O := by
   have hfk : O.f = (D.R.f : ℝ) ∧ O.k = (D.R.k : ℝ) := by
-    letI := hostAlg D
+    let := hostAlg D
     obtain ⟨st, rt⟩ := hR.1.depth
     exact ⟨rt.f_eq, rt.k_eq⟩
   obtain ⟨hc, hinj, ht⟩ := hR.1.tied
@@ -557,9 +557,9 @@ theorem finrank_eig_eq {LL G W : Type} [Field LL] [Group G] [AddCommGroup W] [Mo
     finrank ℂ (GlobalTheory.BadCount.eig ρ H ((Units.map σ.toMonoidHom).comp μ)) =
       finrank LL (⨅ h : H, LinearMap.ker (ρV h - ((μ h : LLˣ) : LL) • LinearMap.id) : Submodule LL (Fin n → LL)) := by
   classical
-  letI : Algebra LL ℂ := σ.toAlgebra
-  letI : Module LL W := Module.compHom W σ
-  haveI : IsScalarTower LL ℂ W := ⟨fun a b w => by
+  let : Algebra LL ℂ := σ.toAlgebra
+  let : Module LL W := Module.compHom W σ
+  have : IsScalarTower LL ℂ W := ⟨fun a b w => by
     show (σ a * b) • w = σ a • (b • w)
     rw [mul_smul]⟩
   have hsum : ∀ v : Fin n → LL, f v = ∑ k, σ (v k) • f (Pi.single k 1) := by

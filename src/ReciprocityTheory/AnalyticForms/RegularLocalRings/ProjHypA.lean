@@ -72,7 +72,7 @@ theorem isReduced_away {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMulti
     (hrad : P.IsRadical) (p : (k : K) → ι k) :
     letI := segreGraded hP
     _root_.IsReduced (HomogeneousLocalization.Away (segreGrading P) (segreW P p)) := by
-  letI := segreGraded hP
+  let := segreGraded hP
   have : _root_.IsReduced (MvPolynomial ((k : K) → ι k) ℂ ⧸ segreIdeal P) :=
     (Ideal.isRadical_iff_quotient_reduced _).mp (hrad.comap _)
   exact isReduced_of_injective (algebraMap _ (Localization.Away (segreW P p)))
@@ -81,17 +81,17 @@ theorem isReduced_away {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMulti
 theorem isReduced_gammaChart {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
     (hrad : P.IsRadical) (p : (k : K) → ι k) :
     _root_.IsReduced Γ(projX P hP, (chartOpen hP p).1) := by
-  letI := segreGraded hP
-  letI := isReduced_away hP hrad p
+  let := segreGraded hP
+  let := isReduced_away hP hrad p
   exact isReduced_of_injective _ ((gammaChart hP p).trans (awayEquiv hP p)).injective
 
 theorem qeRing_gammaChart {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
     (hQE : FinalTheorems.FinTypeQE) (p : (k : K) → ι k) : FinalTheorems.QERing Γ(projX P hP, (chartOpen hP p).1) := by
-  letI : Algebra ℂ Γ(projX P hP, (chartOpen hP p).1) :=
+  let : Algebra ℂ Γ(projX P hP, (chartOpen hP p).1) :=
     ((gammaChart hP p).symm.toRingHom.comp (algebraMap ℂ (chartRing P p))).toAlgebra
   let e : chartRing P p ≃ₐ[ℂ] Γ(projX P hP, (chartOpen hP p).1) :=
     AlgEquiv.ofRingEquiv (f := (gammaChart hP p).symm) (fun c => rfl)
-  haveI : Algebra.FiniteType ℂ Γ(projX P hP, (chartOpen hP p).1) :=
+  have : Algebra.FiniteType ℂ Γ(projX P hP, (chartOpen hP p).1) :=
     Algebra.FiniteType.equiv inferInstance e
   exact hQE Γ(projX P hP, (chartOpen hP p).1)
 
@@ -99,8 +99,8 @@ theorem isRegularLocalRing_stalk_fromSpec_iff {X : Scheme.{0}} {U : X.Opens} (hU
     (y : PrimeSpectrum Γ(X, U)) (hy : hU.fromSpec y ∈ U) :
     IsRegularLocalRing (X.presheaf.stalk (hU.fromSpec y)) ↔
       IsRegularLocalRing (Localization.AtPrime y.asIdeal) := by
-  letI := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨hU.fromSpec y, hy⟩
-  haveI : IsLocalization y.asIdeal.primeCompl (X.presheaf.stalk (hU.fromSpec y)) :=
+  let := TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨hU.fromSpec y, hy⟩
+  have : IsLocalization y.asIdeal.primeCompl (X.presheaf.stalk (hU.fromSpec y)) :=
     hU.isLocalization_stalk' y hy
   let e := IsLocalization.algEquiv y.asIdeal.primeCompl (Localization.AtPrime y.asIdeal)
     (X.presheaf.stalk (hU.fromSpec y))

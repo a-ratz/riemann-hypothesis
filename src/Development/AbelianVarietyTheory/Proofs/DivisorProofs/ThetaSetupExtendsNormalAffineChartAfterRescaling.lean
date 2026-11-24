@@ -107,7 +107,7 @@ theorem exists_unit_root [GlobalTheory.IsNormalScheme T] (hg : ∀ V : T.Opens, 
   by_cases hW : f y ∈ W
   swap
   · exact ⟨1, fun h => (hW h).elim⟩
-  haveI : Nonempty W := ⟨⟨_, hW⟩⟩
+  have : Nonempty W := ⟨⟨_, hW⟩⟩
   obtain ⟨a, b, hb, e⟩ := hf t.val
   let F : Γ(T, W) →+* Y.presheaf.stalk y := (Y.presheaf.germ (f ⁻¹ᵁ W) y hW).hom.comp (f.app W).hom
   have hF : ∀ c, gs f y W c = F c := fun c => gs_eq f y W hW c
@@ -178,7 +178,7 @@ theorem generic_spMap {R Ω : Type} [CommRing R] [Field Ω] (φ : R →+* Ω) (h
     rw [Ideal.eq_bot_of_prime y.asIdeal, Ideal.mem_bot, map_eq_zero_iff φ hφ] at h
     exact h ▸ zero_mem _
   · intro t
-    obtain ⟨U, hU, c, rfl⟩ := (Sp Ω).presheaf.germ_exist t
+    obtain ⟨U, hU, c, rfl⟩ := (Sp Ω).presheaf.exists_germ_eq t
     obtain rfl : U = ⊤ := eq_top_iff.2 fun z _ => by rwa [Subsingleton.elim z y]
     obtain ⟨c, rfl⟩ := (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of Ω)).inv).2 c
     have key : ∃ a b : R, b ≠ 0 ∧ c * φ b = φ a := by
@@ -402,7 +402,7 @@ theorem rel_sum [Fintype κ] (c : κ → Γ(T.left, ⊤)) {b₀ : κ → SecM P.
 theorem rel_inj [Fintype κ] [IsAffine S'] [IsAffine T.left] (hw : w.IsGen) {b₀ : κ → SecM P.A P.L n T}
     (hb₀ : UnivBasis P n b₀) (hi : Function.Injective τ.appTop.hom) {s : SecM P'.A P'.L n (baseOver S')}
     {x y : SecM P.A P.L n T} (hx : Rel hp τ hτ w s x) (hy : Rel hp τ hτ w s y) : x = y := by
-  haveI : IsAffine (baseOver S').left := ‹IsAffine S'›
+  have : IsAffine (baseOver S').left := ‹IsAffine S'›
   choose b hb using fun i => exists_rel hp τ hτ hw P.isLB P'.isLB (b₀ i)
   obtain ⟨c, hc⟩ := (univBasis_of_rel hw hb₀ hb).exists_basis
   obtain ⟨c₀, hc₀⟩ := hb₀.exists_basis
@@ -460,14 +460,14 @@ theorem exists_real_rechart (hL : Laws) {o Ω : Type} [CommRing o] [Field Ω] [A
     ∃ (c₀ : Ω) (hc : c₀ ≠ 0) (hth : ∀ x, c₀ * S.th x ∈ R') (hev : ∀ x k, c₀ * S.ev x k ∈ R')
       (ρ' : (S.rechart c₀ hc R' fg frac hth hev).Real), Q ρ'.P ρ'.pt ∧ ρ'.i₀ = ρ.i₀ := by
   classical
-  haveI := isNoetherian_of_fg fg
-  haveI : IsAffine (baseOver (Sp R')).left := inferInstanceAs (IsAffine (Sp R'))
-  haveI : IsAffine (baseOver (Sp Ω)).left := inferInstanceAs (IsAffine (Sp Ω))
-  haveI : IsIntegral (baseOver (Sp R')).left := inferInstanceAs (IsIntegral (Sp R'))
-  haveI : GlobalTheory.IsNormalScheme (baseOver (Sp R')).left := inferInstanceAs (GlobalTheory.IsNormalScheme (Sp R'))
-  haveI : Subsingleton (baseOver (Sp Ω)).left := inferInstanceAs (Subsingleton (Sp Ω))
-  haveI : Nontrivial Γ((baseOver (Sp R')).left, ⊤) := (fn_injective (R := R')).nontrivial
-  haveI := P₀.isAb.comm
+  have := isNoetherian_of_fg fg
+  have : IsAffine (baseOver (Sp R')).left := inferInstanceAs (IsAffine (Sp R'))
+  have : IsAffine (baseOver (Sp Ω)).left := inferInstanceAs (IsAffine (Sp Ω))
+  have : IsIntegral (baseOver (Sp R')).left := inferInstanceAs (IsIntegral (Sp R'))
+  have : GlobalTheory.IsNormalScheme (baseOver (Sp R')).left := inferInstanceAs (GlobalTheory.IsNormalScheme (Sp R'))
+  have : Subsingleton (baseOver (Sp Ω)).left := inferInstanceAs (Subsingleton (Sp Ω))
+  have : Nontrivial Γ((baseOver (Sp R')).left, ⊤) := (fn_injective (R := R')).nontrivial
+  have := P₀.isAb.comm
   have hL₁ := ρ.P.isLB
   have hL' := P'.isLB
   have hL₀ := P₀.isLB
@@ -521,7 +521,7 @@ theorem exists_real_rechart (hL : Laws) {o Ω : Type} [CommRing o] [Field Ω] [A
   obtain ⟨rig', hrig'⟩ := P'.rigid
   obtain ⟨w', hw', vrig'⟩ := exists_iso_through gp' lb' hrig' hrig₀
   let y : (baseOver (Sp Ω)).left := closedPoint Ω
-  haveI : IsDomain ((baseOver (Sp Ω)).left.presheaf.stalk y) := inferInstanceAs (IsDomain ((Sp Ω).presheaf.stalk y))
+  have : IsDomain ((baseOver (Sp Ω)).left.presheaf.stalk y) := inferInstanceAs (IsDomain ((Sp Ω).presheaf.stalk y))
   obtain ⟨g₁, g₂⟩ := generic_spMap R'.val.toRingHom Subtype.val_injective frac' y
   choose fr' hfr' vfr' using fun x => exists_frame_up hL (h := τ') y g₁ g₂ gp' hw' hrig' vrig' (hx' x) (by omega)
     (by rw [← hsm, nsmul_self, h0]) (hfr₀ x).1
@@ -592,8 +592,8 @@ theorem exists_real_rechart (hL : Laws) {o Ω : Type} [CommRing o] [Field Ω] [A
     have e₁ : (S.ζ ^ e) ^ ((S.r * S.N) ^ 2 - 1) * S.ζ ^ e = 1 := by
       rw [← pow_succ, hq, ← pow_mul, mul_comm e, pow_mul, S.prim.pow_eq_one, one_pow]
     have h := (act x r₃).smul (κ' ((S.ζ ^ e) ^ ((S.r * S.N) ^ 2 - 1)))
-    rw [map_smul, mat, Finset.sum_eq_single i (fun l _ hl => by rw [he, if_neg hl, map_zero, map_zero, zero_smul])
-      (fun h => (h (Finset.mem_univ _)).elim), he, if_pos rfl, smul_comm, smul_smul (τ'.appTop.hom _), ← map_mul,
+    rw [map_smul, mat, Finset.sum_eq_single i (fun l _ hl => by rw [he, ite_eq_right hl, map_zero, map_zero, zero_smul])
+      (fun h => (h (Finset.mem_univ _)).elim), he, ite_eq_left rfl, smul_comm, smul_smul (τ'.appTop.hom _), ← map_mul,
       ← map_mul, e₁, map_one, map_one, one_smul] at h
     exact ⟨_, h⟩
   choose s' hs' using ex
@@ -663,9 +663,9 @@ end GlobalTheory.ThetaExtend
 theorem GlobalTheory.Poinc.exists_real_rechart_of_univBasis : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W : Matrix (Fin 8) (Fin 8) ℤ) (Z : Scheme.{0}) (i : F.X ⟶ Z) (X₁ : Setup F W i) (U : X₁.M.Z.Opens) (ε₁ : Matrix (Fin 8) (Fin 8) ℤ → (X₁.ρ.P.A ⟶ X₁.ρ.P.A)) (fg : (X₁.M.ringOn U).FG) (frac : ∀ x : X₁.Ω₁, ∃ a ∈ (X₁.M.ringOn U), ∃ b ∈ (X₁.M.ringOn U), x = a / b) (u' : Sp (X₁.M.ringOn U) ⟶ F.X) (P' : PolAV (Sp (X₁.M.ringOn U))) (ε' : Matrix (Fin 8) (Fin 8) ℤ → (P'.A ⟶ P'.A)) (P₀ : PolAV (Sp X₁.Ω₁)) (a : P₀.A.left ⟶ X₁.ρ.P.A.left) (a' : P₀.A.left ⟶ P'.A.left) (ε₀ : Matrix (Fin 8) (Fin 8) ℤ → (P₀.A ⟶ P₀.A)) (pt' : X₁.S.Gam → (baseOver (Sp (X₁.M.ringOn U)) ⟶ P'.A)) (th : LB.Sec (LPow P'.A P'.L 1 (baseOver (Sp (X₁.M.ringOn U))))) (b : Fin (X₁.S.N ^ P'.g) → SecM P'.A P'.L (X₁.S.N : ℕ) (baseOver (Sp (X₁.M.ringOn U)))), IsAffineOpen U → (U : Set X₁.M.Z).Nonempty → IsDiagEnd F W X₁.ρ.P X₁.u ε₁ → IsDiagEnd F W P' u' ε' → IsGrpPullback P₀.A X₁.ρ.P.A (spMap X₁.S.R.val.toRingHom) a → IsGrpPullback P₀.A P'.A (spMap (X₁.M.ringOn U).val.toRingHom) a' → LBIso P₀.L (X₁.ρ.P.L.pull a) → LBIso P₀.L (P'.L.pull a') → (∀ E, (ε₀ E).left ≫ a = a ≫ (ε₁ E).left ∧ (ε₀ E).left ≫ a' = a' ≫ (ε' E).left) → P'.g = X₁.S.g → HypS P'.A P'.L → (∀ x y, pt' (x + y) = pt' x * pt' y) → (∀ (K : Type) [Field K] [IsAlgClosed K] (x : Sp K ⟶ Sp (X₁.M.ringOn U)) (z : Over.mk x ⟶ P'.A), z ^ (X₁.S.r * X₁.S.N) = 1 → ∃! c, (Over.homMk x (by simp) : Over.mk x ⟶ baseOver (Sp (X₁.M.ringOn U))) ≫ pt' c = z) → (∀ x y (c : (X₁.M.ringOn U)ˣ), (c : (X₁.M.ringOn U)) = algebraMap X₁.o₁ (X₁.M.ringOn U) (X₁.S.ζ ^ (X₁.S.r * X₁.S.N * (eStd X₁.S.g _ x y).val)) → WeilIs P'.A P'.L (X₁.S.r * X₁.S.N : ℕ) (pt' x) (pt' y) (unitOn c)) → (∀ x, ∃ w0 : Sp X₁.Ω₁ ⟶ P₀.A.left, w0 ≫ a = spMap X₁.S.R.val.toRingHom ≫ (X₁.ρ.pt x).left ∧ w0 ≫ a' = spMap (X₁.M.ringOn U).val.toRingHom ≫ (pt' x).left) → GlobalTheory.ThetaReal.UnivBasis P' 1 (fun _ : Fin 1 => SecM.ofSec P'.A th) → GlobalTheory.ThetaReal.UnivBasis P' (X₁.S.N : ℕ) b → ∃ (c₀ : X₁.Ω₁) (hc : c₀ ≠ 0) (hth : ∀ x, c₀ * X₁.S.th x ∈ (X₁.M.ringOn U)) (hev : ∀ x k, c₀ * X₁.S.ev x k ∈ (X₁.M.ringOn U)) (ρ' : (X₁.S.rechart c₀ hc (X₁.M.ringOn U) fg frac hth hev).Real) (ε'' : Matrix (Fin 8) (Fin 8) ℤ → (ρ'.P.A ⟶ ρ'.P.A)), Same X₁.ρ ε₁ ρ' ε'' (fun x => x) (RingHom.id _) ∧ ρ'.i₀ = X₁.ρ.i₀ ∧ IsDiagEnd F W ρ'.P u' ε'' := by
   intro g n F W Z i X₁ U ε₁ fg frac u' P' ε' P₀ a a' ε₀ pt' th b _ hne _ hd gp gp' lb lb' hε hg hS hadd hbij hweil hw0
     hth hb
-  haveI : GlobalTheory.IsNormalScheme X₁.M.Z := X₁.normal
-  haveI : Nonempty U := hne.to_subtype
-  haveI : IsIntegrallyClosed (X₁.M.ringOn U) := .of_equiv (X₁.M.sectionsEquiv U hne)
+  have : GlobalTheory.IsNormalScheme X₁.M.Z := X₁.normal
+  have : Nonempty U := hne.to_subtype
+  have : IsIntegrallyClosed (X₁.M.ringOn U) := .of_equiv (X₁.M.sectionsEquiv U hne)
   obtain ⟨c₀, hc, h₁, h₂, ρ', ⟨ε'', q₁, q₂⟩, e⟩ := GlobalTheory.ThetaExtend.exists_real_rechart GlobalTheory.abelianSchemeLaws_all.1 X₁.S X₁.ρ
     (X₁.M.ringOn U) fg frac P' P₀ a a' pt' th b gp gp' lb lb' hg hS hadd hbij hweil hw0 hth hb
     (fun P pt => ∃ ε'' : Matrix (Fin 8) (Fin 8) ℤ → (P.A ⟶ P.A), IsDiagEnd F W P u' ε'' ∧

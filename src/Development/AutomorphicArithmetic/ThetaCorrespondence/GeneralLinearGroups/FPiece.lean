@@ -224,7 +224,7 @@ private theorem wd_exists (hG : GlobalTheory.Published.GeometricLemma) (hBZ : Gl
     (piTensor fun i => (u i).rep)
   let f : x.rep.IntertwiningMap (prodIrr u hd) := ψ.toIntertwiningMap.comp φ
   have hf : Function.Injective f := ψ.toLinearEquiv.injective.comp hφ
-  haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
+  have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : x.2.rep.V)
   have h1 := GlobalTheory.CompanionTheory.FrobJm.one_le_jm hA u hd x.rep x.2.rep.smooth f
     ⟨v, fun e => hv (hf (e.trans (map_zero f).symm))⟩
@@ -243,7 +243,7 @@ theorem UpperTheory.Lit.Full.piece :
   · obtain ⟨s, u, hd, hu, hj, hs⟩ := wd_exists hG hBZ (q 0) hpos
     let W : ℕ → IrrGL (k := k) := fun i => if hi : i < s + 1 then u ⟨i, hi⟩ else q 1
     have h1 : Wd W (s + 1 + 1) x := wd_up hBZ q hq h W (s + 1) 1
-      ((wd_iff rfl u fun i => by simp only [W, dif_pos i.2]).2 ⟨hd, hj⟩) (wd_one.2 (by simp [W]))
+      ((wd_iff rfl u fun i => by simp only [W, dite_eq_left i.2]).2 ⟨hd, hj⟩) (wd_one.2 (by simp [W]))
     rw [add_comm] at h1
     obtain ⟨y, hy, h2, h3, -⟩ := wd_down hBZ W 1 (s + 1) h1
     have h4 : y 0 = u 0 := (wd_one.1 h3).symm.trans (by simp [W])
@@ -252,7 +252,7 @@ theorem UpperTheory.Lit.Full.piece :
     let W : ℕ → IrrGL (k := k) := fun i => if hi : 0 < i ∧ i - 1 < s + 1 then u ⟨i - 1, hi.2⟩ else q 0
     have hW : ∀ i : Fin (s + 1), u i = W (1 + i) := fun i => by
       have hi : 0 < 1 + i.1 ∧ 1 + i.1 - 1 < s + 1 := by omega
-      simp only [W, dif_pos hi]
+      simp only [W, dite_eq_left hi]
       exact congrArg u (Fin.ext (by simp))
     have h1 : Wd W (1 + (s + 1)) x := wd_up hBZ q hq h W 1 (s + 1) (wd_one.2 (by simp [W]))
       ((wd_iff rfl u hW).2 ⟨hd, hj⟩)

@@ -153,7 +153,7 @@ private theorem avg_mem (σ : Representation ℂ G W) (ρ : Representation ℂ G
     rw [Finset.sum_congr rfl fun q _ => LocEx.mem_fix.1 hf _ (q.out : N).2]
     simp [Nat.cast_smul_eq_nsmul]
   have h3 : (Fintype.card (N ⧸ H.subgroupOf N) : ℂ) ≠ 0 := by
-    haveI : Nonempty (N ⧸ H.subgroupOf N) := ⟨QuotientGroup.mk 1⟩
+    have : Nonempty (N ⧸ H.subgroupOf N) := ⟨QuotientGroup.mk 1⟩
     exact Nat.cast_ne_zero.2 Fintype.card_ne_zero
   rw [h2] at h1
   exact (Submodule.smul_mem_iff _ h3).1 h1
@@ -165,10 +165,10 @@ private theorem iso_abs [TopologicalSpace G] [IsTopologicalGroup G] [Nontrivial 
     (p : FreeAlgebra ℂ (G → ℂ)) (hp : ∀ x ∈ fixed σ N, FreeAlgebra.lift ℂ (Lv σ N) p x = 0)
     (y : V) (hy : y ∈ fixed ρ N) : FreeAlgebra.lift ℂ (Lv ρ N) p y = 0 := by
   obtain ⟨H, hH, hyH⟩ := exists_open σ ρ hσ (hI ▸ Submodule.mem_top : y ∈ _)
-  haveI : CompactSpace N := isCompact_iff_compactSpace.1 hNc
-  haveI : Finite (N ⧸ H.subgroupOf N) :=
-    Subgroup.quotient_finite_of_isOpen _ (hH.preimage continuous_subtype_val)
-  haveI := Fintype.ofFinite (N ⧸ H.subgroupOf N)
+  have : CompactSpace N := isCompact_iff_compactSpace.1 hNc
+  have : Finite (N ⧸ H.subgroupOf N) :=
+    Subgroup.quotient_finite_of_isOpen _ (hH.preimage continuous_subtypeVal)
+  have := Fintype.ofFinite (N ⧸ H.subgroupOf N)
   have hyN := avg_mem σ ρ N H hyH hy
   refine Submodule.mem_comap.1 ((iSup_le fun f => ?_ :
     isoM σ ρ N ≤ (⊥ : Submodule ℂ V).comap (FreeAlgebra.lift ℂ (Lv ρ N) p)) hyN)
@@ -239,12 +239,12 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.isot_pf :
   have hNc : IsCompact (N : Set (GLw n w)) :=
     (Asm.unitHecke E n 0 0 w).2.2.2.1.of_isClosed_subset (Subgroup.isClosed_of_isOpen N hNo) hNK
   obtain ⟨f, f0, hf⟩ := id hτ
-  haveI : Nontrivial τ.V := by
+  have : Nontrivial τ.V := by
     by_contra h
     rw [not_nontrivial_iff_subsingleton] at h
     exact f0 (LinearMap.ext fun v => by rw [Subsingleton.elim v 0]; simp)
-  haveI : Nontrivial π.V := Submodule.nontrivial_iff_ne_bot.2 π.ne_bot
-  haveI : Nontrivial (Sm E n) := π.V.injective_subtype.nontrivial
+  have : Nontrivial π.V := Submodule.nontrivial_iff_ne_bot.2 π.ne_bot
+  have : Nontrivial (Sm E n) := π.V.injective_subtype.nontrivial
   have hy' : (⟨y, hyπ⟩ : π.V) ∈ fixed (π.locRep w) N :=
     LocEx.mem_fix.2 fun k hk => Subtype.ext (LocEx.mem_fix.1 hy k hk)
   have h1 := iso_abs τ.ρ (π.locRep w) τ.smooth N hNc (iso_top π w τ hτ) p hp _ hy'

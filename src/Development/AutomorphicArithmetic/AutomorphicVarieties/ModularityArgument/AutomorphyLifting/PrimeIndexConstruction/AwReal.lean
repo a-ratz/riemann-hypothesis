@@ -168,7 +168,7 @@ private theorem exists_padic_hom (F : Type) [Field F] [NumberField F] (v : Heigh
 private theorem family (F Ω : Type) [Field F] [NumberField F] [IsTotallyReal F] [Field Ω] [Algebra F Ω]
     [IsAlgClosure F Ω] (v : HeightOneSpectrum (𝓞 F)) :
     {Q : QCM F Ω | Nonempty (↥Q.K →ₐ[F] Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Fv F v)}.Infinite := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have halg : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   obtain ⟨q, ⟨f⟩⟩ := exists_padic_hom F v
   have hsq : ∀ p : ℕ, ∃ δ : Ω, δ ^ 2 = -(p : Ω) := fun p =>
@@ -180,9 +180,9 @@ private theorem family (F Ω : Type) [Field F] [NumberField F] [IsTotallyReal F]
       refine (Set.finite_singleton 2).union ?_
       exact (Nat.divisors (discr F).natAbs).finite_toSet.subset fun p hp =>
         Nat.mem_divisors.2 ⟨hp, Int.natAbs_ne_zero.2 (discr_ne_zero F)⟩
-    refine ((GlobalTheory.T.infinite_primes_neg_square_padic (q : ℕ)).diff hbad).mono ?_
+    refine ((GlobalTheory.T.infinite_primes_neg_square_padic (q : ℕ)).sdiff hbad).mono ?_
     rintro p ⟨⟨hp, hs⟩, hn⟩
-    simp only [Set.mem_union, Set.mem_singleton_iff, Set.mem_setOf_eq, not_or] at hn
+    simp only [Set.mem_union, Set.mem_singleton_iff, Set.mem_ofPred_eq, not_or] at hn
     exact ⟨hp, hs, hn.1, fun h => hn.2 (Int.natCast_dvd.1 h)⟩
   have hQ : ∀ p ∈ Good, ∃ Q : QCM F Ω, Q.K = IntermediateField.adjoin F {δ p} := by
     intro p hp
@@ -245,7 +245,7 @@ private theorem exists_sq_neg (F K : Type) [Field F] [NumberField F] [IsTotallyR
     [IsCMField K] [Algebra F K] (h : Module.finrank F K = 2) :
     ∃ (t : K) (d : F), t * t = algebraMap F K d ∧ (∀ φ : F →+* ℝ, φ d < 0) ∧
       ∀ x : K, ∃ a b : F, x = algebraMap F K a + algebraMap F K b * t := by
-  haveI : Algebra.IsQuadraticExtension F K := ⟨h⟩
+  have : Algebra.IsQuadraticExtension F K := ⟨h⟩
   obtain ⟨d, e, hd, h0, h1⟩ := GlobalTheory.QuadSymbol.AlmostNorm.exists_basis_sq F K
   have hx : ∀ x : K, ∃ a b : F, x = algebraMap F K a + algebraMap F K b * e 1 := fun x => by
     refine ⟨e.repr x 0, e.repr x 1, ?_⟩
@@ -253,8 +253,8 @@ private theorem exists_sq_neg (F K : Type) [Field F] [NumberField F] [IsTotallyR
     rw [Fin.sum_univ_two, h0, Algebra.smul_def, Algebra.smul_def, mul_one]
   refine ⟨e 1, d, h1, fun φ => ?_, hx⟩
   by_contra hnn
-  letI : Algebra F ℂ := ((algebraMap ℝ ℂ).comp φ).toAlgebra
-  haveI : Algebra.IsAlgebraic F K := inferInstance
+  let : Algebra F ℂ := ((algebraMap ℝ ℂ).comp φ).toAlgebra
+  have : Algebra.IsAlgebraic F K := inferInstance
   let τ : K →ₐ[F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -276,14 +276,14 @@ private theorem cm_of_sq (F M : Type) [Field F] [NumberField F] [IsTotallyReal F
     (a b : M) (α β : F) (ha : a * a = algebraMap F M α) (hb : b * b = algebraMap F M β)
     (hα : ∀ φ : F →+* ℝ, φ α < 0) (hβ : ∀ φ : F →+* ℝ, φ β < 0)
     (hgen : ∀ L : IntermediateField F M, a ∈ L → b ∈ L → L = ⊤) : IsCMField M := by
-  haveI : FiniteDimensional F M := Module.Finite.of_restrictScalars_finite ℚ F M
+  have : FiniteDimensional F M := Module.Finite.of_restrictScalars_finite ℚ F M
   let K : IntermediateField F M := IntermediateField.adjoin F {a * b}
-  haveI : NumberField K := NumberField.of_module_finite F K
+  have : NumberField K := NumberField.of_module_finite F K
   have hc : a * b ∈ K := IntermediateField.mem_adjoin_simple_self F _
   have hreal : ∀ (ρ : K →+* ℂ) (x : K), star (ρ x) = ρ x := by
     intro ρ
     obtain ⟨φ, hφ⟩ := exists_real_emb F (ρ.comp (algebraMap F K))
-    letI : Algebra F ℂ := (ρ.comp (algebraMap F K)).toAlgebra
+    let : Algebra F ℂ := (ρ.comp (algebraMap F K)).toAlgebra
     let f : K →ₐ[F] ℂ := { ρ with commutes' := fun _ => rfl }
     let g : K →ₐ[F] ℂ := { (starRingEnd ℂ).comp ρ with
       commutes' := fun x => by
@@ -308,7 +308,7 @@ private theorem cm_of_sq (F M : Type) [Field F] [NumberField F] [IsTotallyReal F
       simpa using this
     intro x
     exact (DFunLike.congr_fun hfg x).symm
-  haveI : IsTotallyReal K := ⟨fun w => by
+  have : IsTotallyReal K := ⟨fun w => by
     rw [← InfinitePlace.mk_embedding w, InfinitePlace.isReal_mk_iff]
     exact ComplexEmbedding.isReal_iff.2 (RingHom.ext (hreal w.embedding))⟩
   have hα0 : α ≠ 0 := fun h0 => by
@@ -354,13 +354,13 @@ private theorem cm_of_sq (F M : Type) [Field F] [NumberField F] [IsTotallyReal F
     exact IntermediateField.restrictScalars_injective F (hL.trans (IntermediateField.restrictScalars_top).symm)
   have h2 : Module.finrank K M = 2 := by
     rw [← hdeg, ← IntermediateField.adjoin.finrank hint, htop, IntermediateField.finrank_top']
-  haveI : IsTotallyComplex M := ⟨fun w => by
+  have : IsTotallyComplex M := ⟨fun w => by
     rw [← InfinitePlace.not_isReal_iff_isComplex]
     intro hw
     have h3 := hα ((InfinitePlace.embedding_of_isReal hw).comp (algebraMap F M))
     rw [RingHom.comp_apply, ← ha, map_mul] at h3
     exact absurd h3 (not_lt.2 (mul_self_nonneg _))⟩
-  haveI : Algebra.IsQuadraticExtension K M := ⟨h2⟩
+  have : Algebra.IsQuadraticExtension K M := ⟨h2⟩
   exact IsCMField.ofCMExtension K M
 
 private theorem compositum (F E Ω : Type) [Field F] [NumberField F] [IsTotallyReal F] [Field E] [NumberField E] [IsCMField E]
@@ -378,19 +378,19 @@ private theorem compositum (F E Ω : Type) [Field F] [NumberField F] [IsTotallyR
   let M : IntermediateField F Ω := A ⊔ Q.K
   have ha : ∀ x, a x ∈ M := fun x => (le_sup_left : A ≤ M) ⟨x, rfl⟩
   have hBM : Q.K ≤ M := le_sup_right
-  letI iE : Algebra E M := (a.toRingHom.codRestrict M ha).toAlgebra
-  letI iB : Algebra ↥Q.K M := (IntermediateField.inclusion hBM).toRingHom.toAlgebra
-  haveI t1 : IsScalarTower F E M := IsScalarTower.of_algebraMap_eq fun x => Subtype.ext (a.commutes x).symm
-  haveI t2 : IsScalarTower F ↥Q.K M := IsScalarTower.of_algebraMap_eq fun x => rfl
-  haveI t3 : IsScalarTower E M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
-  haveI t4 : IsScalarTower ↥Q.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : FiniteDimensional F A := a.equivFieldRange.toLinearEquiv.finiteDimensional
+  let iE : Algebra E M := (a.toRingHom.codRestrict M ha).toAlgebra
+  let iB : Algebra ↥Q.K M := (IntermediateField.inclusion hBM).toRingHom.toAlgebra
+  have t1 : IsScalarTower F E M := IsScalarTower.of_algebraMap_eq fun x => Subtype.ext (a.commutes x).symm
+  have t2 : IsScalarTower F ↥Q.K M := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have t3 : IsScalarTower E M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have t4 : IsScalarTower ↥Q.K M Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F A := a.equivFieldRange.toLinearEquiv.finiteDimensional
   have hA2 : Module.finrank F A = 2 := a.equivFieldRange.toLinearEquiv.finrank_eq ▸ hE
   have hB2 : Module.finrank F Q.K = 2 := Q.two
-  haveI : FiniteDimensional F Q.K := Module.finite_of_finrank_pos (by rw [hB2]; norm_num)
-  haveI : Algebra.IsQuadraticExtension F A := ⟨hA2⟩
+  have : FiniteDimensional F Q.K := Module.finite_of_finrank_pos (by rw [hB2]; norm_num)
+  have : Algebra.IsQuadraticExtension F A := ⟨hA2⟩
   have hinf : A ⊓ Q.K = ⊥ := by
     by_contra hbot
     have h1 : Module.finrank F ↥(A ⊓ Q.K) ∣ 2 := hA2 ▸ IntermediateField.finrank_dvd_of_le_right inf_le_left
@@ -400,14 +400,14 @@ private theorem compositum (F E Ω : Type) [Field F] [NumberField F] [IsTotallyR
         (IntermediateField.eq_of_le_of_finrank_eq inf_le_right (h.trans hB2.symm)))
   have hM4 : Module.finrank F M = 4 := by
     rw [(IntermediateField.LinearDisjoint.of_inf_eq_bot hinf).finrank_sup, hA2, hB2]
-  haveI : FiniteDimensional F M := IntermediateField.finiteDimensional_sup _ _
-  haveI nM : NumberField M := NumberField.of_module_finite F M
+  have : FiniteDimensional F M := IntermediateField.finiteDimensional_sup _ _
+  have nM : NumberField M := NumberField.of_module_finite F M
   have h1 : Module.finrank E M = 2 := by
     have := Module.finrank_mul_finrank F E M
     rw [hE, hM4] at this
     omega
   have h2 : Module.finrank ↥Q.K M = 2 := by
-    haveI : Module.Free ↥Q.K M := Module.Free.of_divisionRing _ _
+    have : Module.Free ↥Q.K M := Module.Free.of_divisionRing _ _
     have := Module.finrank_mul_finrank F ↥Q.K M
     rw [hB2, hM4] at this
     omega
@@ -508,15 +508,15 @@ theorem UpperTheory.V.Z.Win.splitCM :
     SplitCM := by
   intro F E Ω _ _ _ _ _ _ _ _ _ _ _ _ hE l _ n r hr v
   classical
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI hal : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : IsGalois F Ω := IsAlgClosure.isGalois F Ω
-  haveI : IsAlgClosure E Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) _⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have hal : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : IsGalois F Ω := IsAlgClosure.isGalois F Ω
+  have : IsAlgClosure E Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) _⟩
   have hS := family F Ω v
   let Q : Fin (2 * n ^ 2 + 1) → QCM F Ω := fun i => (hS.natEmbedding _ (i : ℕ)).1
   have hQi : Function.Injective Q := fun i j h =>
     Fin.ext (hS.natEmbedding _ |>.injective (Subtype.ext h))
-  haveI clo : ∀ i, IsAlgClosure ↥(Q i).K Ω := fun i =>
+  have clo : ∀ i, IsAlgClosure ↥(Q i).K Ω := fun i =>
     ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := F) _⟩
   choose δ _ _ hδ _ using fun i => UpperTheory.exists_quadratic_sign_character F ↥(Q i).K Ω l (Q i).two
   have hδi : Function.Injective δ := fun i j hij => hQi (qcm_ext (k_eq_of_range _ _ (Subgroup.ext fun s => by
@@ -666,9 +666,9 @@ private theorem selfTw : Sd.SelfTwGal := by
     refine Multiset.map_congr rfl fun b _ => ?_
     simp only [Function.comp_apply, Units.val_mul, mul_assoc]
   · intro E _ _ _ _ _ hN
-    haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-    haveI : Algebra.IsAlgebraic E Ω := Algebra.IsAlgebraic.tower_top (K := F) E
-    haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, inferInstance⟩
+    have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+    have : Algebra.IsAlgebraic E Ω := Algebra.IsAlgebraic.tower_top (K := F) E
+    have : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, inferInstance⟩
     have hw : ∀ᶠ w : HeightOneSpectrum (𝓞 E) in Filter.cofinite, CharEig ι (δ.comp (res F Ω E)) w 1 := by
       filter_upwards [hN.2.2, (underTendsto (K := F) (K' := E)).eventually hT] with w h1 h2
       have hf := normUnder (K := F) w
@@ -684,7 +684,7 @@ private theorem selfTw : Sd.SelfTwGal := by
 
 private theorem upCycle : Sd.UpCyc := by
   intro F E Ω _ _ _ _ _ _ _ _ _ _ _ _ _ l _ ι hp n hn r hr ⟨π, hreg, hatt⟩ hirr
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.trans F E Ω⟩
   have key : (∃ η : HChar F, IsNormChar E η ∧ SelfTw (CG.mk π).HasSat η) ∨
       ∃ P : CuspSub E n, (∀ τ m, π.HasInfChar (τ.comp (algebraMap F E)) m → P.HasInfChar τ m) ∧ WeakBC (CG.mk π).HasSat (CG.mk P).HasSat := by
     rcases (Z.Bc.cycC_holds F E hp inferInstance n hn).1 _ _ (Or.inl ⟨inferInstance, π, rfl, rfl⟩)
@@ -715,17 +715,17 @@ private theorem upCycle : Sd.UpCyc := by
 
 private theorem quadGalois (K L : Type) [Field K] [NumberField K] [Field L] [NumberField L] [Algebra K L]
     (h : Module.finrank K L = 2) : IsGalois K L := by
-  haveI : Algebra.IsQuadraticExtension K L := { finrank_eq_two' := h }
+  have : Algebra.IsQuadraticExtension K L := { finrank_eq_two' := h }
   infer_instance
 
 private theorem plainUp : RealUp := by
   intro F E Ω _ _ _ _ _ _ _ _ _ _ _ _ hE l _ ι r π hr hreg hatt hirr P hPreg hPatt w hw
   obtain ⟨E', M, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, h1, h2, h3, hM, hsp⟩ :=
     splitCM F E Ω hE l 2 r hirr (w.under (𝓞 F))
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E⟩
-  haveI : IsAlgClosure E' Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E'⟩
-  haveI : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) M⟩
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure E Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E⟩
+  have : IsAlgClosure E' Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) E'⟩
+  have : IsAlgClosure M Ω := ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.tower_top (K := F) M⟩
   have e1 : (r.comp (resG F E' Ω)).comp (resG E' M Ω) = r.comp (resG F M Ω) := MonoidHom.ext fun _ => rfl
   have e2 : (r.comp (resG F E Ω)).comp (UpperTheory.V.Base.galEmb E M Ω) = r.comp (resG F M Ω) := MonoidHom.ext fun _ => rfl
   have e3 : (r.comp (resG F E Ω)).comp (resG E M Ω) = r.comp (resG F M Ω) := MonoidHom.ext fun _ => rfl
@@ -735,8 +735,8 @@ private theorem plainUp : RealUp := by
     fun ⟨η, hη, ht⟩ => noTw F E' Ω l ι h1 2 r π hr hatt hirrE' η hη ht
   have hP'att : AttC ι (r.comp (resG F E' Ω)) P' :=
     (Bc.bcAtt F E' Ω l ι 2 r π P' hBC).2 hatt ((Bc.irrBasic.1 _ Unit _ 2 _).2.1 hirrE')
-  haveI gE : IsGalois E M := quadGalois E M h2
-  haveI gE' : IsGalois E' M := quadGalois E' M h3
+  have gE : IsGalois E M := quadGalois E M h2
+  have gE' : IsGalois E' M := quadGalois E' M h3
   obtain ⟨Q, -, hQatt⟩ := upCycle E M Ω l ι (h2 ▸ Nat.prime_two) 2 one_le_two (r.comp (resG F E Ω))
     (hr.comp (continuous_restrictScalarsHom F E Ω)) ⟨P, hPreg, hPatt⟩ (e2.symm ▸ hM)
   rw [e2] at hQatt

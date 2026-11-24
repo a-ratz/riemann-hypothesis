@@ -135,11 +135,11 @@ open ReciprocityTheory.Gal Formalism.RepresentationBoundsCohomology.LOC
 
 theorem jSpan_holds : ReciprocityTheory.ChartRestriction.T2.JSpan := by
   intro p _ K O _ _ _ _ _ _ _ VT VT' _ _ _ _ _ _ _ _ _ _ _ _ _ _ G _ _ _ hF i D hD y
-  haveI : IsGalois K (PadicAlgCl p) := by
+  have : IsGalois K (PadicAlgCl p) := by
     have : IsGalois ℚ_[p] (PadicAlgCl p) := inferInstance
     infer_instance
-  haveI : CompactSpace (Formalism.GaloisCohomology.GK p K) := inferInstance
-  haveI : CompactSpace G := i.symm.surjective.compactSpace i.symm.continuous
+  have : CompactSpace (Formalism.GaloisCohomology.GK p K) := inferInstance
+  have : CompactSpace G := i.symm.surjective.compactSpace i.symm.continuous
   exact ContCocycleDualLattice.exists_smul_mem_range_j' D hF.emb.isOpen_range hD.lat.1 y
 
 end GlobalTheory

@@ -72,7 +72,7 @@ theorem SemilocalResidueLength.proof (hRes : DegZeroLocResidue.Statement.{u})
   have := hP'.isPrime
   intro W' hW'
   have := hW'.1.isPrime
-  haveI hfin := (hFR F K K' j ι' P' hP' n hP'n hPn W hW hWn hPW).1
+  have hfin := (hFR F K K' j ι' P' hP' n hP'n hPn W hW hWn hPW).1
   have h𝒲 := FibreFinite.proof F K K' j ι' P' hP' n hP'n hPn W hW hWn hPW
   obtain ⟨-, hPW', hc⟩ := id hW'
   subst hc
@@ -92,10 +92,10 @@ theorem SemilocalResidueLength.proof (hRes : DegZeroLocResidue.Statement.{u})
     obtain ⟨w, hw, rfl⟩ := hz
     obtain ⟨a, rfl⟩ := (hρAr w).mp hw
     exact ⟨a, rfl⟩
-  letI : Algebra (degZeroLoc (contractPrime j P') {contractPrime j W'}) L := σ.toAlgebra
-  letI : Algebra (degZeroLoc (contractPrime j P') {contractPrime j W'}) M :=
+  let : Algebra (degZeroLoc (contractPrime j P') {contractPrime j W'}) L := σ.toAlgebra
+  let : Algebra (degZeroLoc (contractPrime j P') {contractPrime j W'}) M :=
     ((algebraMap L M).comp σ).toAlgebra
-  haveI : IsScalarTower (degZeroLoc (contractPrime j P') {contractPrime j W'}) L M :=
+  have : IsScalarTower (degZeroLoc (contractPrime j P') {contractPrime j W'}) L M :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
 
   have hcomp : ∀ a : degZeroLoc (contractPrime j P') {contractPrime j W'}, τ (algebraMap _ _ a) = algebraMap _ M a := by
@@ -147,9 +147,9 @@ theorem SemilocalResidueLength.proof (hRes : DegZeroLocResidue.Statement.{u})
       AlgEquiv.ofRingEquiv (f := RingHom.quotientKerEquivOfSurjective hsurj) (fun a => by
         rw [← Ideal.Quotient.mk_algebraMap, RingHom.quotientKerEquivOfSurjective_apply_mk]
         exact hcomp a)
-    haveI : Module.Finite (degZeroLoc (contractPrime j P') {contractPrime j W'}) M :=
+    have : Module.Finite (degZeroLoc (contractPrime j P') {contractPrime j W'}) M :=
       Module.Finite.of_surjective τA.toLinearMap hsurj
-    haveI : Module.Finite L M :=
+    have : Module.Finite L M :=
       Module.Finite.of_restrictScalars_finite (degZeroLoc (contractPrime j P') {contractPrime j W'}) L M
     refine e.toLinearEquiv.length_eq.trans ?_
     refine (Module.length_eq_of_surjective (S := degZeroLoc (contractPrime j P') {contractPrime j W'}) (R := L) (M := M) hσs).trans ?_

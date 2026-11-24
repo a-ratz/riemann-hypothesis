@@ -52,11 +52,11 @@ namespace GlobalTheory.NoGlobalInv
 theorem sub_one_mem_of_pow {Λ : Type} [CommRing Λ] [IsLocalRing Λ] {l : ℕ} (hp : l.Prime)
     (hl : (l : Λ) ∈ IsLocalRing.maximalIdeal Λ) (u : Λ) {n : ℕ} (hu : u ^ (l ^ n) = 1) :
     u - 1 ∈ IsLocalRing.maximalIdeal Λ := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have h0 : ((l : ℕ) : IsLocalRing.ResidueField Λ) = 0 := by
     rw [← map_natCast (IsLocalRing.residue Λ)]
     exact (IsLocalRing.residue_eq_zero_iff _).2 hl
-  haveI : CharP (IsLocalRing.ResidueField Λ) l := (CharP.charP_iff_prime_eq_zero hp).2 h0
+  have : CharP (IsLocalRing.ResidueField Λ) l := (CharP.charP_iff_prime_eq_zero hp).2 h0
   rw [← IsLocalRing.residue_eq_zero_iff]
   have h1 : (IsLocalRing.residue Λ u - 1) ^ (l ^ n) = 0 := by
     rw [sub_pow_char_pow, ← map_pow, hu]; simp
@@ -117,7 +117,7 @@ theorem eq_zero_of_span {Γ O Λ B : Type} [CommRing O] [IsLocalRing O] [CommRin
     have := hx _ this q
     rwa [map_sub, sub_smul, sub_eq_zero] at this
   funext b
-  haveI : Nontrivial (Fin r) := Fin.nontrivial_iff_two_le.2 hr
+  have : Nontrivial (Fin r) := Fin.nontrivial_iff_two_le.2 hr
   obtain ⟨a, hab⟩ := exists_ne b
   obtain ⟨c, hc⟩ := key2 (Matrix.single a b 1)
   obtain ⟨c', hc'⟩ := key2 (Matrix.single b b 1)

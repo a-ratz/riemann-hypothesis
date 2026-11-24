@@ -241,7 +241,7 @@ theorem uniqueDiffWithinAt_compl {V : Type} [NormedAddCommGroup V] [NormedSpace 
     refine mem_closure_of_tendsto ht ?_
     filter_upwards [self_mem_nhdsWithin] with t ht
     have ht' : (0 : ℝ) < t := ht
-    simp only [Set.mem_setOf_eq, map_add (f := _), map_smul, smul_eq_mul]
+    simp only [Set.mem_ofPred_eq, map_add (f := _), map_smul, smul_eq_mul]
     nlinarith [mul_pos ht' hv]
   have hU := uniqueDiffWithinAt_convex hH (by
     rw [hO.interior_eq]
@@ -477,15 +477,15 @@ theorem zR_flip (e : X.Ψ → X'.Ψ) (he : ∀ τ, (e τ).1 = ComplexEmbedding.c
   dsimp only
   rw [hm, hv', Fin.val_rev]
   by_cases h : (a : ℕ) < X.p0
-  · rw [if_pos h, if_neg (by omega), ← conj_hermC, h1, sgn, if_pos h]
+  · rw [ite_eq_left h, ite_eq_right (by omega), ← conj_hermC, h1, sgn, ite_eq_left h]
     have := Matrix.inv_submatrix_equiv ((mat x τ).map conj) (Equiv.refl _) Fin.revPerm
     rw [Equiv.coe_refl] at this
     rw [this, Ker.ONBasis.inv_map_conj hu]
     simp [mulVec, dotProduct]
-  · rw [if_neg h, if_pos (by omega), he, hG]
+  · rw [ite_eq_right h, ite_eq_left (by omega), he, hG]
     have e2 : FD.col (((mat x τ).map conj).submatrix id Fin.revPerm) a.rev = fun i => conj (FD.col (mat x τ) a i) := by
       funext i; simp [FD.col]
-    rw [e2, hermC_flip, conj_hermC, h1, sgn, if_neg h]
+    rw [e2, hermC_flip, conj_hermC, h1, sgn, ite_eq_right h]
     simp
 
 theorem thA_congr (hb : ∀ s, perMat X' bas' idx' s x' = perMat X bas idx s x) (φ : TF n g) :

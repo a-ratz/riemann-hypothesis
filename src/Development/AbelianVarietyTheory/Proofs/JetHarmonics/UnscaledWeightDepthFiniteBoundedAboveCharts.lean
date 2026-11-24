@@ -64,7 +64,7 @@ theorem nuW_eq_zero (hE : IntChartEx Xo c) (hS : ChartSaturated Xo c) (la : Heig
   refine max_eq_left ?_
   refine iSup_le fun T => iSup_le fun io => iSup_le fun e => iSup_le fun ho => iSup_le fun y => iSup_le fun hy => ?_
   obtain ⟨C⟩ := hE T io y hy
-  letI := io.toAlgebra
+  let := io.toAlgebra
   exact (iInf_le _ C).trans ((crude_inf C.ch.B C.ch.h C.ch.gauge H.w0 k C.ch.uvec (satDir_of hS C) a n ha hn ho).2 hl)
 
 theorem nuLocC_le_nuW (hI : ChartIndep Xo c) (la : HeightOneSpectrum (𝓞 c.F)) (k : ℕ)
@@ -96,7 +96,7 @@ theorem ereal_unit {x : EReal} {r d q : ℝ} (hr : 0 < r) (hd : 0 ≤ d) (hq : 0
 
 theorem nuWt_bounds : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (w : WeightFamilies.Wt D j), 2 * D.R.f * D.R.r ≤ w.n → ∀ (la : HeightOneSpectrum (𝓞 T.Q.c.F)), letI := T.Q.H.starRing; nuW (T.Q.Xo j) T.Q.c la T.Q.l.M (wtA w) w.n = (((ramOverZ la : ℝ) * nuWt T w la : ℝ) : EReal) ∧ 0 ≤ nuWt T w la ∧ nuWt T w la ≤ (WeightAlgebra.DF w : ℝ) / ((resCharOf la : ℝ) - 1) ∧ (WeightAlgebra.DF w < resCharOf la → nuWt T w la = 0) ∧ ∀ (T' : CDVR) (io : T.Q.c.F →+* T'.Fr) (e : ℕ), OverLa la T'.V io e → ∀ z : IntFr (T.Q.Xo j) T.Q.c T' io, z.IsAlg → ∀ C : IntegralChartA3 (T.Q.Xo j) T.Q.c T' io z, nuLocC C e T.Q.l.M (wtA w) w.n ≤ (((ramOverZ la : ℝ) * nuWt T w la : ℝ) : EReal) := by
   intro D T h j hj w hn la
-  letI := T.Q.H.starRing
+  let := T.Q.H.starRing
   have hst : ∀ a : 𝓞 D.host.E, star a = T.Q.H.bar a := fun _ => rfl
   obtain ⟨hDF, hdom, -, -, hcard, -⟩ := GlobalTheory.WeightOnDatum.weight_on_datum D T.toCore h.pins j hj w
   have hE : IntChartEx (T.Q.Xo j) T.Q.c :=

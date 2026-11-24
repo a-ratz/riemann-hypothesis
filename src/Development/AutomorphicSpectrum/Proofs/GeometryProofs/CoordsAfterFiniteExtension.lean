@@ -90,7 +90,7 @@ theorem exists_trdeg_eq {κ : Type} [Finite κ] {x : κ → Ω} (ht : CoordTie �
     ∃ d : ℕ, Algebra.trdeg ℤ Ω = d := by
   obtain ⟨c, hc⟩ := ht.cover (TieArith.genCpt ξ)
   set s : Set Ω := Set.range fun j => x j / x c with hs
-  haveI : Algebra.IsAlgebraic (Algebra.adjoin ℤ s) Ω := by
+  have : Algebra.IsAlgebraic (Algebra.adjoin ℤ s) Ω := by
     refine ⟨fun a => ?_⟩
     obtain ⟨u, hu, v, hv, hv0, rfl⟩ := exists_div_of_tie ht hc a
     have h1 : IsAlgebraic (Algebra.adjoin ℤ s) u := isAlgebraic_algebraMap (⟨u, hu⟩ : Algebra.adjoin ℤ s)
@@ -99,8 +99,8 @@ theorem exists_trdeg_eq {κ : Type} [Finite κ] {x : κ → Ω} (ht : CoordTie �
     exact h1.mul h2.inv
   obtain ⟨t, hts, hb⟩ := exists_isTranscendenceBasis_subset (R := ℤ) s
   have hfin : t.Finite := (Set.finite_range _).subset hts
-  haveI := hfin.to_subtype
-  haveI := Fintype.ofFinite t
+  have := hfin.to_subtype
+  have := Fintype.ofFinite t
   exact ⟨Fintype.card t, by rw [← hb.cardinalMk_eq_trdeg, Cardinal.mk_fintype]⟩
 
 variable {K : Type} [Fintype K] {J : K → Type} [∀ k, Fintype (J k)] {y : (Σ k, J k) → Ω}
@@ -112,7 +112,7 @@ theorem mem_regAt_of_isIntegral (ht : CoordTie ℤ ξ (fun c' : (k : K) → J k 
   obtain ⟨c, hc⟩ := ht.cover q
   have hne : ∀ k, y ⟨k, c k⟩ ≠ 0 := fun k => (Finset.prod_ne_zero_iff.1 hc.1) k (Finset.mem_univ k)
   set A : Subalgebra ℚ Ω := Algebra.adjoin ℚ (Set.range fun p : Σ k, J k => y p / y ⟨p.1, c p.1⟩) with hA
-  haveI : Algebra.Smooth ℚ A := hs c hne
+  have : Algebra.Smooth ℚ A := hs c hne
   let R : Subalgebra ℚ Ω :=
     { (regAt ξ q) with
       algebraMap_mem' := fun r => by
@@ -142,10 +142,10 @@ theorem mem_regAt_of_isIntegral (ht : CoordTie ℤ ξ (fun c' : (k : K) → J k 
     field_simp [hsu.1]
   obtain ⟨v, hvA, hv0, hvR, hint⟩ :=
     GlobalTheory.CompanionTheory.Ggeo.ClearDenominators.exists_mul_isIntegral A (regAt ξ q) hAR hfr a ha
-  haveI : IsFractionRing A Ω := IsFractionRing.of_field A Ω fun z => by
+  have : IsFractionRing A Ω := IsFractionRing.of_field A Ω fun z => by
     obtain ⟨u, hu, w, hw, -, rfl⟩ := exists_div_of_tie ht hc z
     exact ⟨⟨u, hBA u hu⟩, ⟨w, hBA w hw⟩, rfl⟩
-  haveI : IsIntegrallyClosed A := by
+  have : IsIntegrallyClosed A := by
     have h1 : IsIntegrallyClosed (A ⧸ (⊥ : Ideal A)) :=
       GlobalTheory.isIntegrallyClosed_quotient_minimalPrime_of_smooth ℚ A ⊥ (by
         rw [IsDomain.minimalPrimes_eq_singleton_bot]; rfl)
@@ -209,8 +209,8 @@ theorem closure_eq_top_of_basis {Ω₁ Ω : Type} [Field Ω₁] [Field Ω] (i : 
     (hfin : letI := i.toAlgebra; FiniteDimensional Ω₁ Ω) :
     ∃ (n : ℕ) (w : Option (Fin n) → Ω), w none ≠ 0 ∧
       Subfield.closure (Set.range i ∪ {a | ∃ l l', a = w l / w l'}) = ⊤ := by
-  letI := i.toAlgebra
-  haveI := hfin
+  let := i.toAlgebra
+  have := hfin
   let b := Module.finBasis Ω₁ Ω
   refine ⟨_, fun l => l.elim 1 b, one_ne_zero, ?_⟩
   rw [eq_top_iff]

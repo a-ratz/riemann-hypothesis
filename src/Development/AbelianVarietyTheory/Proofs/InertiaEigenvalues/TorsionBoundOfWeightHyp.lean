@@ -383,7 +383,7 @@ theorem exists_basis_compHom [IsFractionRing R Qp] {ι : Type} :
     letI : Module R ↥T.L.T := Module.compHom ↥T.L.T φ
     ∀ b : Module.Basis ι R ↥T.L.T, ∃ bV : Module.Basis ι Qp T.V, ∀ g i j,
       algebraMap R Qp (b.repr (actT T.L g (b j)) i) = bV.repr (T.ρ g (bV j)) i := by
-  letI : Module R ↥T.L.T := Module.compHom ↥T.L.T φ
+  let : Module R ↥T.L.T := Module.compHom ↥T.L.T φ
   intro b
   obtain ⟨bV, h1, h2⟩ := exists_basis_of_full (F := Qp) (V := T.V) T.L.T.subtype.toAddMonoidHom
     Subtype.val_injective (fun c x => smul_eq T φ hφ c (x : T.V))
@@ -404,7 +404,7 @@ theorem algebraMap_OL {l : ℕ} [Fact l.Prime] (LL : FinExt l) (c : ℤ_[l]) :
 theorem exists_multiple_OL {l : ℕ} [Fact l.Prime] (LL : FinExt l) (a : ↥LL.1) :
     ∃ c : ℤ_[l], c ≠ 0 ∧ ∃ o : ↥(OL LL),
       algebraMap ↥(OL LL) ↥LL.1 o = algebraMap ℤ_[l] ℚ_[l] c • a := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have h2 : IsAlgebraic ℤ_[l] a :=
     (IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] ↥LL.1).2 (Algebra.IsAlgebraic.isAlgebraic a)
   obtain ⟨y, hy, hi⟩ := h2.exists_integral_multiple
@@ -555,7 +555,7 @@ theorem basis_of_invariants (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P A
       (by
         intro i _
         simp only [Pi.single_apply, ite_smul, one_smul, zero_smul, Finset.sum_ite_eq',
-          Finset.mem_univ, if_true]
+          Finset.mem_univ, ite_true]
         exact h i) k
     simp at this
 
@@ -592,7 +592,7 @@ theorem htBasis_of_isCrys (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P AI)
   let M0 : GQ l → Matrix (Fin d) (Fin d) ℚ_[l] := fun g =>
     if hg : g ∈ GK K then Matrix.of fun i j => bV.repr (T'.ρ ⟨g, hg⟩ (bV j)) i else 0
   have hM0 : ∀ g (hg : g ∈ GK K), M0 g = Matrix.of fun i j => bV.repr (T'.ρ ⟨g, hg⟩ (bV j)) i :=
-    fun g hg => dif_pos hg
+    fun g hg => dite_eq_left hg
   have hmul : ∀ g ∈ GK K, ∀ g' ∈ GK K, M0 (g * g') = M0 g * M0 g' := by
     intro g hg g' hg'
     rw [hM0 g hg, hM0 g' hg', hM0 _ (mul_mem hg hg')]
@@ -970,7 +970,7 @@ theorem graded_of_theta (θ : Ainf l →+* OC l) (hθ : IsTheta AI θ) (i : ℤ)
     constructor
     · rintro ⟨x, rfl⟩
       obtain ⟨a, rfl⟩ := hsurj x
-      rw [Set.mem_setOf_eq, hΦ]
+      rw [Set.mem_ofPred_eq, hΦ]
       exact norm_OC _
     · intro hy
       obtain ⟨a, ha⟩ := hθ.2.1 ⟨y, (mem_OC_iff y).2 hy⟩
@@ -1134,7 +1134,7 @@ theorem transfer {G : Subgroup (GQ l)} {X : Type} [AddCommGroup X] [Module ℤ_[
   rw [continuous_adicModule_iff] at hfc
   have hb : ∀ y, Ψ y ∈ ball l d := fun y => hr ▸ ⟨y, rfl⟩
   let c : GQ l → Fin d → PadicComplex l := fun σ => if h : σ ∈ G then Ψ (f ⟨σ, h⟩) else 0
-  have hc : ∀ σ (h : σ ∈ G), c σ = Ψ (f ⟨σ, h⟩) := fun σ h => dif_pos h
+  have hc : ∀ σ (h : σ ∈ G), c σ = Ψ (f ⟨σ, h⟩) := fun σ h => dite_eq_left h
   have hcont : Continuous fun g : ↥G => Ψ (f g) := by
     rw [continuous_iff_continuousAt]
     intro g
@@ -1301,7 +1301,7 @@ theorem continuous_adicModule_span_iff {R M G : Type} [CommRing R] [AddCommGroup
     [TopologicalSpace G] (a : R) (f : G → M) :
     @Continuous G M _ ((Ideal.span {a}).adicModuleTopology M) f ↔
       ∀ (g₀ : G) (n : ℕ), ∀ᶠ g in 𝓝 g₀, ∃ y : M, f g = f g₀ + a ^ n • y := by
-  letI : TopologicalSpace M := (Ideal.span {a}).adicModuleTopology M
+  let : TopologicalSpace M := (Ideal.span {a}).adicModuleTopology M
   have hmem : ∀ (n : ℕ) (x : M), x ∈ ((Ideal.span {a}) ^ n • (⊤ : Submodule R M)) ↔
       ∃ y : M, a ^ n • y = x := by
     intro n x
@@ -1500,7 +1500,7 @@ theorem tors_of_subgroup {R Γ X : Type} [CommRing R] [Group Γ] [TopologicalSpa
     TorsKilledBy ρ (l : R) ((l : R) ^ (v + c)) := by
   rintro f ⟨hfc, hf⟩ ⟨k, x, hx⟩
   have hcont : Continuous (Subgroup.inclusion hHG) :=
-    Continuous.subtype_mk continuous_subtype_val _
+    Continuous.subtype_mk continuous_subtypeVal _
   obtain ⟨y, hy⟩ := hT (fun g => f (Subgroup.inclusion hHG g))
     ⟨hfc.comp hcont, fun g g' => by simp only [map_mul, hf, hρ]⟩
     ⟨k, x, fun g => by rw [hρ, ← hx]; rfl⟩
@@ -1601,7 +1601,7 @@ theorem free_finite (K LL : FinExt l) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(
   obtain ⟨d, M, A, hM⟩ := (GlobalTheory.Cyc.isMat_exists_and_props l K LL T).1
   unfold IsMat at hM
   obtain ⟨bT, _⟩ := hM
-  letI := zlMod LL T
+  let := zlMod LL T
   exact ⟨Module.Free.of_basis bT, Module.Finite.of_basis bT⟩
 
 theorem tors_induction {P : LocPrime l} (AI : LocAinf l P) (G : Subgroup (GQ l)) [CompactSpace ↥G]

@@ -751,7 +751,7 @@ theorem tensor_assoc_comul_placement_eq (K B : Type) [CommRing K] [CommRing B] [
         (Algebra.TensorProduct.map (AlgHom.id K B) (Bialgebra.comulAlgHom K B)) := by
   refine Algebra.TensorProduct.ext' fun a b => ?_
   simp only [Algebra.TensorProduct.lift_tmul, AlgHom.comp_apply, Algebra.TensorProduct.map_tmul,
-    AlgHom.id_apply, Bialgebra.comulAlgHom_apply, AlgHom.coe_coe]
+    AlgHom.id_apply, Bialgebra.comulAlgHom_apply, AlgHom.coe_ofClass]
   have hab : a ⊗ₜ[K] Coalgebra.comul (R := K) b =
       (a ⊗ₜ[K] (1 : B ⊗[K] B)) * ((1 : B) ⊗ₜ[K] Coalgebra.comul (R := K) b) := by simp
   rw [hab, map_mul]
@@ -787,7 +787,7 @@ theorem exists_coboundary : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : Over (
   have hsymB : Algebra.TensorProduct.comm K B B (Ψ cG) = Ψ cG := by
     have h := congrArg Units.val (hsym _ (pt K iL ≫ e.hom) (pt K iR ≫ e.hom))
     rw [hpull, hpull] at h
-    simp only [pullTop, Units.coe_map, MonoidHom.coe_coe] at h
+    simp only [pullTop, Units.coe_map, MonoidHom.coe_ofClass] at h
     rw [← hcB, key K B _ _ _ _ iL iR _ (pt_sharp K iL) (pt_sharp K iR),
       key K B _ _ _ _ iR iL _ (pt_sharp K iR) (pt_sharp K iL)] at h
     have h' := specInv_injective _ h
@@ -807,7 +807,7 @@ theorem exists_coboundary : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : Over (
         Algebra.TensorProduct.map (AlgHom.id K B) (Bialgebra.comulAlgHom K B) (Ψ cG)) := by
     have h := congrArg Units.val (hcoc _ (pt K ι₁ ≫ e.hom) (pt K ι₂ ≫ e.hom) (pt K ι₃ ≫ e.hom))
     simp only [hmul, hpull] at h
-    simp only [Units.val_mul, pullTop, Units.coe_map, MonoidHom.coe_coe] at h
+    simp only [Units.val_mul, pullTop, Units.coe_map, MonoidHom.coe_ofClass] at h
     have k₁ := key K B _ _ (pt K ι₁) (pt K ι₂) ι₁ ι₂ _ (pt_sharp K ι₁) (pt_sharp K ι₂) (Ψ cG)
     have k₂ := key K B _ _ (pt K ι₁ * pt K ι₂) (pt K ι₃) _ ι₃ _
       (mulpt K B _ _ (pt K ι₁) (pt K ι₂) ι₁ ι₂ _ (pt_sharp K ι₁) (pt_sharp K ι₂)) (pt_sharp K ι₃) (Ψ cG)
@@ -857,7 +857,7 @@ theorem exists_coboundary : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : Over (
     intro z
     rw [hw]
     exact (over_comp_appTop z e.inv _).symm
-  letI : Algebra K Γ(T.left, ⊤) :=
+  let : Algebra K Γ(T.left, ⊤) :=
     (T.hom.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom).toAlgebra
   let sh : (T ⟶ (Spec (CommRingCat.of B)).asOver (Sp K)) → (B →ₐ[K] Γ(T.left, ⊤)) := fun f =>
     { toRingHom := f.left.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of B)).inv.hom
@@ -875,7 +875,7 @@ theorem exists_coboundary : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : Over (
   ext
   simp only [Units.val_mul, hval]
   simp only [hxy]
-  simp only [pullTop, Units.coe_map, MonoidHom.coe_coe]
+  simp only [pullTop, Units.coe_map, MonoidHom.coe_ofClass]
   simp only [kc, km, RingHom.id_apply]
   exact fin
 end GlobalTheory.SymCob

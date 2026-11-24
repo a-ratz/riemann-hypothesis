@@ -365,7 +365,7 @@ theorem upperLeftBlock_eq_one_iff_of_mem_blockTri {κ : Type} [CommRing κ] {n r
     rw [e2, Matrix.one_apply, Matrix.one_apply]
     by_cases hab : a = b
     · subst hab; simp
-    · rw [if_neg hab, if_neg (fun h' => hab (Fin.ext (Fin.mk.inj h')))]
+    · rw [ite_eq_right hab, ite_eq_right (fun h' => hab (Fin.ext (Fin.mk.inj h')))]
   · intro h
     apply Units.ext
     ext i j
@@ -374,7 +374,7 @@ theorem upperLeftBlock_eq_one_iff_of_mem_blockTri {κ : Type} [CommRing κ] {n r
     rw [e, Matrix.one_apply, Matrix.one_apply]
     by_cases hij : i = j
     · subst hij; simp
-    · rw [if_neg hij, if_neg (fun h' => hij (Fin.castLE_injective hr h'))]
+    · rw [ite_eq_right hij, ite_eq_right (fun h' => hij (Fin.castLE_injective hr h'))]
 
 theorem levelChainTypePlaces_subset_chosenPlaces {T : Type} {L : LevCh D T} {sc : Consts} (G : GridData L sc) {μ₀ : T} (hL : L.Is μ₀) (t : T) :
     L.Pg ⊆ G.pl.W0 := by

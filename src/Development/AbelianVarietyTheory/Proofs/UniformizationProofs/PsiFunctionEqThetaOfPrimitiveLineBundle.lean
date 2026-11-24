@@ -133,7 +133,7 @@ theorem exists_norm_form : LL → TwistBCSpanStatement → TWM.VRatioGtStatement
   obtain ⟨E', eG', -, -, eh', -⟩ := GlobalTheory.T.exists_uniformizationEndomorphism_of_linear hL R I hI D A G hG U O ιD ιA ιG hlin (star a)
   have hg := GlobalTheory.PullGenG.hasGen_pull U.LG U.cubG ιG w₀ a N hN (hadj a) hprim 1
   rw [← eG] at hg
-  haveI := E.homG
+  have := E.homG
   obtain ⟨β, hβ, nβ⟩ := exists_norm_three U.LG E.aG N hg
   obtain ⟨κ, hκ, -⟩ := GlobalTheory.T.descent_powerIso_endomorphism_abelianPart_uniformization hL R I hI D A G hG U E N 1 β hβ nβ
   have key := GlobalTheory.T.psi_comp_endomorphism_eq_pow_of_pullback_iso hL h1 h2 h3 h4 R I hI D A G hG U (AlgebraicClosure (FractionRing R)) E E'

@@ -60,7 +60,7 @@ namespace GlobalTheory
 theorem algebraMap_padicInt_qbar_continuous (l : ℕ) [Fact l.Prime] :
     Continuous (algebraMap ℤ_[l] (Qbar l)) := by
   rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] (Qbar l)]
-  exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp (by exact continuous_subtype_val)
+  exact (continuous_algebraMap ℚ_[l] (Qbar l)).comp (by exact continuous_subtypeVal)
 
 theorem Coef.isCompact_O (l : ℕ) [Fact l.Prime] (c : Coef l) :
     IsCompact ((c.O : Set (Qbar l))) := by

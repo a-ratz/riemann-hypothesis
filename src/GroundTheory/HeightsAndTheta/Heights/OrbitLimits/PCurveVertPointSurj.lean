@@ -204,7 +204,7 @@ theorem le_of_minimal {Ω : Type} [Field Ω] (y : (Σ k, ι k) → Ω) (c : ∀ 
   have hIQmax : (formIdeal y c hc Q).IsMaximal := by
     have : Algebra.IsIntegral ℤ (curveRing y) := Algebra.IsIntegral.of_finite ℤ _
     have hcomap : (formIdeal y c hc Q).comap (algebraMap ℤ (curveRing y)) ≠ ⊥ :=
-      Ideal.comap_ne_bot_of_integral_mem ha0 haIQ (Algebra.IsIntegral.isIntegral a)
+      Ideal.under_ne_bot_of_integral_mem ha0 haIQ (Algebra.IsIntegral.isIntegral a)
     have : ((formIdeal y c hc Q).comap (algebraMap ℤ (curveRing y))).IsPrime := Ideal.IsPrime.comap _
     exact Ideal.isMaximal_of_isIntegral_of_isMaximal_under (formIdeal y c hc Q)
       (IsPrime.to_maximal_ideal hcomap)

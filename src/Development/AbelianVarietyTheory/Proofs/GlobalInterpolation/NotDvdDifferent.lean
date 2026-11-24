@@ -106,7 +106,7 @@ theorem locP_AA_eq_one : ∀ (X : Fields) (D : D7) (s : Seam D X) (cc : Ideal (�
   have hnot : ¬ D.host.𝔟 ≤ v := fun hle => hnd (by
     rw [D.host.𝔟_spec.1]
     exact (Ideal.dvd_iff_le.2 hle).mul_right _)
-  obtain ⟨z, hz, hzP⟩ := SetLike.not_le_iff_exists.1 hnot
+  obtain ⟨z, hz, hzP⟩ := IsConcreteLE.not_le_iff_exists.1 hnot
   have hN : ((Ideal.absNorm cc : ℕ) : 𝓞 X.E) ∉ P.asIdeal := fun h => by
     have h3 : IsCoprime ((Ideal.absNorm cc : ℕ) : 𝓞 X.E) ((Ideal.absNorm P.asIdeal : ℕ) : 𝓞 X.E) := hc.cast
     obtain ⟨a, b, hab⟩ := h3

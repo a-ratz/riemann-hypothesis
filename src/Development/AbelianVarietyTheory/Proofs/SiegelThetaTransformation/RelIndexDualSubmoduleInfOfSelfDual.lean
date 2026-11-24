@@ -86,7 +86,7 @@ variable {M : Type*} [AddCommGroup M]
 
 theorem exists_ker_eq_of_index_prime {p : ℕ} (hp : p.Prime) (H : AddSubgroup M)
     (hH : H.index = p) : ∃ f : M →ₗ[ℤ] ZMod p, f.toAddMonoidHom.ker = H := by
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have e : (M ⧸ H) ≃+ ZMod p := addEquivOfPrimeCardEq (p := p) hH (Nat.card_zmod p)
   refine ⟨(e.toAddMonoidHom.comp (QuotientAddGroup.mk' H)).toIntLinearMap, ?_⟩
   ext x
@@ -95,7 +95,7 @@ theorem exists_ker_eq_of_index_prime {p : ℕ} (hp : p.Prime) (H : AddSubgroup M
 theorem encard_setOf_index_prime_le [Module.Free ℤ M] [Module.Finite ℤ M] {p : ℕ}
     (hp : p.Prime) :
     {H : AddSubgroup M | H.index = p}.encard ≤ ((p ^ finrank ℤ M : ℕ) : ℕ∞) := by
-  haveI : NeZero p := ⟨hp.ne_zero⟩
+  have : NeZero p := ⟨hp.ne_zero⟩
   let b := Module.finBasis ℤ M
   let φ : (Fin (finrank ℤ M) → ZMod p) → AddSubgroup M :=
     fun w => (b.constr ℤ w).toAddMonoidHom.ker
@@ -112,8 +112,8 @@ theorem encard_setOf_index_prime_le [Module.Free ℤ M] [Module.Finite ℤ M] {p
 theorem exists_le_relIndex_eq_prime {p : ℕ} (hp : p.Prime) (H : AddSubgroup M)
     (h0 : H.index ≠ 0) (hd : p ∣ H.index) :
     ∃ K : AddSubgroup M, H ≤ K ∧ H.relIndex K = p := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : H.FiniteIndex := ⟨h0⟩
+  have : Fact p.Prime := ⟨hp⟩
+  have : H.FiniteIndex := ⟨h0⟩
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := M ⧸ H) p hd
   refine ⟨(AddSubgroup.zmultiples x).comap (QuotientAddGroup.mk' H), ?_, ?_⟩
   · intro y hy
@@ -179,8 +179,8 @@ theorem encard_setOf_index_eq_le [Module.Free ℤ M] [Module.Finite ℤ M] {m : 
     · intro K _
       rw [setOf_le_relIndex_eq_image]
       refine (Set.encard_image_le _ _).trans ?_
-      haveI : Module.Finite ℤ K := inferInstanceAs (Module.Finite ℤ K.toIntSubmodule)
-      haveI : Module.Free ℤ K := inferInstanceAs (Module.Free ℤ K.toIntSubmodule)
+      have : Module.Finite ℤ K := inferInstanceAs (Module.Finite ℤ K.toIntSubmodule)
+      have : Module.Free ℤ K := inferInstanceAs (Module.Free ℤ K.toIntSubmodule)
       refine (encard_setOf_index_prime_le hp).trans ?_
       have : finrank ℤ K ≤ finrank ℤ M := Submodule.finrank_le K.toIntSubmodule
       exact_mod_cast Nat.pow_le_pow_right hp.pos this
@@ -196,8 +196,8 @@ theorem encard_setOf_submodule_le_relIndex_eq_le {R : Type*} [Ring R] [Module R 
     (L : Submodule R M) [Module.Free ℤ L] [Module.Finite ℤ L] {m : ℕ} (hm : m ≠ 0) :
     {H : Submodule R M | H ≤ L ∧ H.toAddSubgroup.relIndex L.toAddSubgroup = m}.encard ≤
       ((m ^ finrank ℤ L : ℕ) : ℕ∞) := by
-  haveI : Module.Free ℤ L.toAddSubgroup := inferInstanceAs (Module.Free ℤ L)
-  haveI : Module.Finite ℤ L.toAddSubgroup := inferInstanceAs (Module.Finite ℤ L)
+  have : Module.Free ℤ L.toAddSubgroup := inferInstanceAs (Module.Free ℤ L)
+  have : Module.Finite ℤ L.toAddSubgroup := inferInstanceAs (Module.Finite ℤ L)
   refine le_trans ?_ (encard_setOf_le_relIndex_eq_le L.toAddSubgroup hm)
   refine Set.encard_le_encard_of_injOn (f := Submodule.toAddSubgroup) ?_
     Submodule.toAddSubgroup_injective.injOn
@@ -238,8 +238,8 @@ theorem dualSubmodule_le_dualSubmodule_of_le (B : LinearMap.BilinForm ℚ V)
 
 theorem eq_zero_of_forall_rat_smul_mem (L : Submodule ℤ V) (hL : L.FG) {x : V}
     (hx : ∀ q : ℚ, q • x ∈ L) : x = 0 := by
-  haveI : Module.Finite ℤ L := Module.Finite.iff_fg.2 hL
-  haveI := Module.IsTorsionFree.trans_faithfulSMul ℤ ℚ V
+  have : Module.Finite ℤ L := Module.Finite.iff_fg.2 hL
+  have := Module.IsTorsionFree.trans_faithfulSMul ℤ ℚ V
   let b := Module.Free.chooseBasis ℤ L
   have h1 : x ∈ L := by simpa using hx 1
   have h2 : (⟨x, h1⟩ : L) = 0 := by
@@ -260,7 +260,7 @@ variable [FiniteDimensional ℚ V]
 
 theorem isLattice_of_fg_dualSubmodule (B : LinearMap.BilinForm ℚ V) (hB : B.Nondegenerate)
     (L : Submodule ℤ V) (hL : L.FG) (hd : (B.dualSubmodule L).FG) : L.IsFullLattice ℚ := by
-  haveI : L.IsLattice ℚ := Submodule.IsLattice.of_fg ℚ hL
+  have : L.IsLattice ℚ := Submodule.IsLattice.of_fg ℚ hL
   constructor
   by_contra hne
   obtain ⟨φ, hφ, hle⟩ := Submodule.exists_le_ker_of_lt_top _ (lt_top_iff_ne_top.2 hne)
@@ -299,7 +299,7 @@ theorem isLattice_dualSubmodule (B : LinearMap.BilinForm ℚ V) (hB : B.Nondegen
     (L : Submodule ℤ V) [L.IsFullLattice ℚ] : (B.dualSubmodule L).IsFullLattice ℚ := by
   obtain ⟨b, rfl⟩ := exists_basis_span_eq_of_isLattice L
   rw [B.dualSubmodule_span_of_basis hB]
-  haveI : (Submodule.span ℤ (Set.range (B.dualBasis hB b))).IsLattice ℚ :=
+  have : (Submodule.span ℤ (Set.range (B.dualBasis hB b))).IsLattice ℚ :=
     Submodule.IsLattice.of_fg _ (Submodule.fg_span (Set.finite_range _))
   constructor
   rw [Submodule.span_span_of_tower]
@@ -372,7 +372,7 @@ theorem card_selfDual_le {V : Type*} [AddCommGroup V] [Module ℚ V] [FiniteDime
     {L' : Submodule ℤ V | L'.FG ∧ B.dualSubmodule L' = L' ∧ L'.toAddSubgroup.relIndex L.toAddSubgroup = m}.ncard ≤ m ^ (2 * Module.finrank ℚ V) ∧
     ∀ L' : Submodule ℤ V, L'.FG → B.dualSubmodule L' = L' → L'.toAddSubgroup.relIndex L.toAddSubgroup ≠ 0 ∧ (L'.toAddSubgroup.relIndex L.toAddSubgroup = 1 → L' = L) := by
   have hm0 : m ≠ 0 := by omega
-  haveI : L.IsFullLattice ℚ := isLattice_of_fg_dualSubmodule B hB L hL (hLd.symm ▸ hL)
+  have : L.IsFullLattice ℚ := isLattice_of_fg_dualSubmodule B hB L hL (hLd.symm ▸ hL)
   have hinf : ∀ L' : Submodule ℤ V, (L ⊓ L').toAddSubgroup.relIndex L.toAddSubgroup =
       L'.toAddSubgroup.relIndex L.toAddSubgroup := fun L' =>
     AddSubgroup.inf_relIndex_left L.toAddSubgroup L'.toAddSubgroup
@@ -383,7 +383,7 @@ theorem card_selfDual_le {V : Type*} [AddCommGroup V] [Module ℚ V] [FiniteDime
         {H | H ≤ B.dualSubmodule M ∧
           H.toAddSubgroup.relIndex (B.dualSubmodule M).toAddSubgroup = m} := by
     rintro L' ⟨h1, h2, h3⟩
-    haveI : L'.IsFullLattice ℚ := isLattice_of_fg_dualSubmodule B hB L' h1 (h2.symm ▸ h1)
+    have : L'.IsFullLattice ℚ := isLattice_of_fg_dualSubmodule B hB L' h1 (h2.symm ▸ h1)
     refine Set.mem_biUnion (x := L ⊓ L') ⟨inferInstance, inf_le_left, (hinf L').trans h3⟩ ⟨?_, ?_⟩
     · exact h2.ge.trans (dualSubmodule_le_dualSubmodule_of_le B inf_le_right)
     · rw [relIndex_dualSubmodule_inf_of_selfDual B hB hLd h2, hinf, h3]
@@ -398,8 +398,8 @@ theorem card_selfDual_le {V : Type*} [AddCommGroup V] [Module ℚ V] [FiniteDime
       exact (Set.encard_le_encard (show {M : Submodule ℤ V | M.IsFullLattice ℚ ∧ M ≤ L ∧ M.toAddSubgroup.relIndex L.toAddSubgroup = m} ⊆ {M : Submodule ℤ V | M ≤ L ∧ M.toAddSubgroup.relIndex L.toAddSubgroup = m} from fun _ hM => hM.2)).trans
         (encard_setOf_submodule_le_relIndex_eq_le L hm0)
     · intro M hM
-      haveI := hM.1
-      haveI := isLattice_dualSubmodule B hB M
+      have := hM.1
+      have := isLattice_dualSubmodule B hB M
       have := Submodule.IsLattice.free ℚ (B.dualSubmodule M)
       have := Submodule.IsLattice.finite ℚ (B.dualSubmodule M)
       rw [← finrank_eq_of_isLattice (B.dualSubmodule M)]
@@ -408,7 +408,7 @@ theorem card_selfDual_le {V : Type*} [AddCommGroup V] [Module ℚ V] [FiniteDime
   refine ⟨hf, ?_, fun L' h1 h2 => ⟨?_, fun h3 => ?_⟩⟩
   · rw [← hf.cast_ncard_eq] at hcard
     exact_mod_cast hcard
-  · haveI : L'.IsFullLattice ℚ := isLattice_of_fg_dualSubmodule B hB L' h1 (h2.symm ▸ h1)
+  · have : L'.IsFullLattice ℚ := isLattice_of_fg_dualSubmodule B hB L' h1 (h2.symm ▸ h1)
     rw [← hinf]
     exact relIndex_ne_zero_of_isLattice inf_le_left
   · have h4 : L ≤ L' := AddSubgroup.relIndex_eq_one.1 h3

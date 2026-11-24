@@ -69,7 +69,7 @@ theorem UpperTheory.V.Z.J.wtCut :
       (fun s t => (hZ _ z.2).2 j s t) hz0 s hs
   have h1 : Nat.card Φ.ker ≤ S.ncard := by
     rw [← Nat.card_coe_set_eq]
-    haveI := hSfin.to_subtype
+    have := hSfin.to_subtype
     refine Nat.card_le_card_of_injective (fun z : Φ.ker => (⟨z.1.1, hker z.1 z.2⟩ : S)) ?_
     intro a b hab
     simp only [Subtype.mk.injEq] at hab

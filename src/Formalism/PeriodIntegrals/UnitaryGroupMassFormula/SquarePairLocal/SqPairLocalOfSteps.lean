@@ -252,7 +252,7 @@ theorem pLocalAll_of_glued (h1 : LocGlob) (h2 : IntMul) (h3 : Glued) : PLocalAll
   have hloc : ∀ Q : Ideal (𝓞 E), Q.IsMaximal → (p : 𝓞 E) ∈ Q →
       ∃ s : 𝓞 E, s ∉ Q ∧ s • ((c' : 𝓞 E) • (M *ᵥ y)) ∈ X := by
     intro Q hQ hpQ
-    haveI : Q.IsPrime := hQ.isPrime
+    have : Q.IsPrime := hQ.isPrime
     have hsm := three_small he' he'' (hg Q hQ hpQ) M hM
     have key : ∃ s : 𝓞 E, s ∉ Q ∧ ∃ m, (m ∈ L' ∨ m ∈ L'') ∧
         s • (M *ᵥ y) = (p : 𝓞 E) ^ a • m := by

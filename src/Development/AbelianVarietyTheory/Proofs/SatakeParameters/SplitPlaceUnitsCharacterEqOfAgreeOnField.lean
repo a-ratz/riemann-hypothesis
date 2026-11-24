@@ -82,9 +82,9 @@ theorem eq_of_agree : ∀ {L : Type} [Field L] [NumberField L] [IsCMField L] (s 
         Valued.v ((x : s.v.adicCompletion (maximalRealSubfield L)) - 1) < Valued.v z} := by
       have h1 := (Valued.isOpen_ball (s.v.adicCompletion (maximalRealSubfield L)) (Valued.v.restrict z)).preimage
         (Units.continuous_val.sub (continuous_const (y := (1 : s.v.adicCompletion (maximalRealSubfield L)))))
-      simpa only [Set.preimage_setOf_eq, Valuation.restrict_lt_iff, Pi.sub_apply] using h1
+      simpa only [Set.preimage_ofPred_eq, Valuation.restrict_lt_iff, Pi.sub_apply] using h1
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1) (Filter.mem_of_superset (hU.mem_nhds ?_) fun x hx => ?_)
-    · simp only [Set.mem_setOf_eq, Units.val_one, sub_self, map_zero, hz]
+    · simp only [Set.mem_ofPred_eq, Units.val_one, sub_self, map_zero, hz]
       exact WithZero.exp_pos
     · have hx' : Valued.v ((x : s.v.adicCompletion (maximalRealSubfield L)) - 1) < Valued.v z := hx
       exact hN x (by rw [← hz]; exact hx'.le)

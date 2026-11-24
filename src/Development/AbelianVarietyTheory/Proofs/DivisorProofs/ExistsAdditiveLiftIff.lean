@@ -205,9 +205,9 @@ theorem exists_relAmple_prod [IsAffine S] (hA : IsAbelianScheme A) (hB : IsAbeli
   have last : LBIso (M.pull (snd A B).left) (H.div (L.pull (fst A B).left)) := by
     refine (cls_eq_iff (pull_isLB hM _) hd).1 ?_
     rw [cls_div hH (pull_isLB hL (fst A B).left), eH, cls_pull hL, cls_pull hM, add_sub_cancel_left]
-  haveI := hA.proper
-  haveI := hB.proper
-  haveI := (AbelianSchemeGerms.isAbelianScheme_tensor A B hA hB).proper
+  have := hA.proper
+  have := hB.proper
+  have := (AbelianSchemeGerms.isAbelianScheme_tensor A B hA hB).proper
   exact ⟨H, hH, (relAmple_iff_isAmpleLB_of_isAffine _ hH).2 (IsAmpleLB.box
     ((relAmple_iff_isAmpleLB_of_isAffine _ hL).1 aL) ((relAmple_iff_isAmpleLB_of_isAffine _ hM).1 aM)
     hH (p := (fst A B).left) (q := (snd A B).left) (f := A.hom) (g := B.hom) (IsPullback.of_hasPullback _ _) last)⟩

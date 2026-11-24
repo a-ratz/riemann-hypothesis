@@ -187,7 +187,7 @@ theorem map_frameEquiv (hB : Bᴴ * Formalism.UG.Jpq p q * B = Formalism.REAL.Jm
     (hB' : B'ᴴ * Formalism.UG.Jpq p q * B' = Formalism.REAL.Jm ε) (hn : p + q = n) (ν : Measure (UpqT p q)) (c : NNReal)
     (hc : ν.map (frameEquiv B hB hn) = (c : ENNReal) • Formalism.REAL.muG ε) :
     ν.map (frameEquiv B' hB' hn) = (c : ENNReal) • Formalism.REAL.muG ε := by
-  haveI : BorelSpace (UpqT p q) := ⟨rfl⟩
+  have : BorelSpace (UpqT p q) := ⟨rfl⟩
   obtain ⟨u, hu⟩ := frameEquiv_conj hB hB' hn
   have hm : Measurable (frameEquiv B hB hn) := (frameEquiv B hB hn).continuous.measurable
   have e : (frameEquiv B' hB' hn : UpqT p q → Formalism.REAL.UJ ε) =
@@ -263,13 +263,13 @@ theorem exists_coef_sq (M : DSModel W S) (ρ : D.what₂.Tau)
         Integrable (fun b => ‖⟪v, M.rep ρ (realMat W Fr ρ b) v⟫_ℂ‖ ^ 2) mR ∧
           ∫ b, ‖⟪v, M.rep ρ (realMat W Fr ρ b) v⟫_ℂ‖ ^ 2 ∂mR = δ := by
   classical
-  haveI := (GlobalTheory.UpqTopology.upq_lcsc (W.sig (tauE D ρ)).1 (W.sig (tauE D ρ)).2).1
-  haveI : BorelSpace (Upq W ρ) := ⟨rfl⟩
+  have := (GlobalTheory.UpqTopology.upq_lcsc (W.sig (tauE D ρ)).1 (W.sig (tauE D ρ)).2).1
+  have : BorelSpace (Upq W ρ) := ⟨rfl⟩
   by_cases h0 : ∃ Fr : Frames W, IsFrames W Fr ∧ ∃ mR : Measure (Upq W ρ), Lev.IsMinf mR
   swap
   · exact ⟨1, one_pos, fun Fr hFr mR hmR => absurd ⟨Fr, hFr, mR, hmR⟩ h0⟩
   obtain ⟨Fr₀, hFr₀, mR₀, hmR₀⟩ := h0
-  haveI := hmR₀.1
+  have := hmR₀.1
   haveI : (mR₀.map (frameEquiv _ (frame_herm M hFr₀ ρ) hn)).IsHaarMeasure :=
     (frameEquiv _ (frame_herm M hFr₀ ρ) hn).isHaarMeasure_map mR₀
   have hc := Measure.isMulLeftInvariant_eq_smul (mR₀.map (frameEquiv _ (frame_herm M hFr₀ ρ) hn))

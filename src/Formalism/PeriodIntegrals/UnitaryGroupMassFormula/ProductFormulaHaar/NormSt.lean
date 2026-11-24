@@ -79,7 +79,7 @@ private theorem exists_valuation_sub_algebraMap_le {R K : Type*} [CommRing R] [I
   have hc0 : c ≠ 0 := nonZeroDivisors.ne_zero hc
   have hcK : algebraMap R K c ≠ 0 := (map_ne_zero_iff _ (IsFractionRing.injective R K)).2 hc0
   have hpos : 0 < v.valuation K (algebraMap R K c) :=
-    zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hcK)
+    pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hcK)
   have hbc : v.intValuation b ≤ v.intValuation c := by
     rw [map_div₀, div_le_one₀ hpos] at hf
     simpa only [HeightOneSpectrum.valuation_of_algebraMap] using hf
@@ -298,15 +298,15 @@ theorem isCompact_integers : IsCompact ((𝒪[K] : Subring K) : Set K) := by
 
 private theorem measurableEmbedding_coe_integers :
     MeasurableEmbedding (Subtype.val : 𝒪[K] → K) :=
-  MeasurableEmbedding.subtype_coe isOpen_integers.measurableSet
+  MeasurableEmbedding.subtypeVal isOpen_integers.measurableSet
 
 private theorem measurable_integers_const_add (c : 𝒪[K]) :
     Measurable (fun x : 𝒪[K] => c + x) := by
-  exact Measurable.subtype_mk ((measurable_const_add (c : K)).comp measurable_subtype_coe)
+  exact Measurable.subtype_mk ((measurable_const_add (c : K)).comp measurable_subtypeVal)
 
 private theorem measurable_integers_add_const (c : 𝒪[K]) :
     Measurable (fun x : 𝒪[K] => x + c) := by
-  exact Measurable.subtype_mk ((measurable_add_const (c : K)).comp measurable_subtype_coe)
+  exact Measurable.subtype_mk ((measurable_add_const (c : K)).comp measurable_subtypeVal)
 
 private theorem measurableAdd_integers : MeasurableAdd 𝒪[K] :=
   ⟨fun c => measurable_integers_const_add c, fun c => measurable_integers_add_const c⟩
@@ -387,10 +387,10 @@ private theorem index_span_mul_distribHaarChar_eq_one {K : Type} [Field K] [Valu
     exact hmem y
   have hHo : IsOpen (H : Set 𝒪[K]) := by
     rw [hH]
-    exact huS.preimage continuous_subtype_val
+    exact huS.preimage continuous_subtypeVal
   have hHm : MeasurableSet (H : Set 𝒪[K]) := by
     rw [hH]
-    exact measurable_subtype_coe huS.measurableSet
+    exact measurable_subtypeVal huS.measurableSet
   have : Finite (𝒪[K] ⧸ H) := AddSubgroup.quotient_finite_of_isOpen H hHo
   have : H.FiniteIndex := AddSubgroup.finiteIndex_of_finite_quotient
   have : MeasurableAdd 𝒪[K] := measurableAdd_integers

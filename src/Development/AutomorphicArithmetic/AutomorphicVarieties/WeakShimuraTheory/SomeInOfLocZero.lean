@@ -122,14 +122,14 @@ theorem end_pt {s t : PD Φ.ι Γ (ResidueField Λ)} (h : Φ.Linked ((residue Λ
 
 theorem someIn_of_locZero {K : Type} [CommRing K] [IsDomain K] (y : X.A →+* K) (h : X.LocZero J y) {p : Ideal X.A}
     (hp : RingHom.ker y ≤ p) : X.SomeIn J p := by
-  haveI := RingHom.ker_isPrime y
+  have := RingHom.ker_isPrime y
   obtain ⟨q, hq, hle⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal X.A)) (J := RingHom.ker y) bot_le
-  haveI : q.IsPrime := hq.1.1
+  have : q.IsPrime := hq.1.1
   exact ⟨q, hq, hle.trans hp, Ideal.map_le_iff_le_comap.2 (h _ (Ideal.comap_isPrime _ q) fun s hs => hle hs)⟩
 
 theorem zero_of_allIn {K : Type} [CommRing K] [IsDomain K] (y : X.A →+* K) {p : Ideal X.A} (h : X.AllIn J p)
     (hp : RingHom.ker y ≤ p) : ∀ b ∈ J, y (algebraMap X.B X.A b) = 0 := fun b hb => by
-  haveI := RingHom.ker_isPrime y
+  have := RingHom.ker_isPrime y
   obtain ⟨q, hq, hle⟩ := Ideal.exists_minimalPrimes_le (I := (⊥ : Ideal X.A)) (J := RingHom.ker y) bot_le
   exact hle (h q hq (hle.trans hp) (Ideal.mem_map_of_mem _ hb))
 

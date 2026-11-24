@@ -95,7 +95,7 @@ theorem ker_stalkMap (z : I.subscheme) :
         ger (U := I.subschemeι ⁻¹ᵁ W.1) z hW ((I.subschemeι.app W.1).hom a) :=
     Scheme.Hom.germ_stalkMap_apply _ _ z hW a
   refine le_antisymm (fun x hx => ?_) ?_
-  · obtain ⟨U, hU, a, rfl⟩ := Y.presheaf.germ_exist x
+  · obtain ⟨U, hU, a, rfl⟩ := Y.presheaf.exists_germ_eq x
     have h₀ : ger (U := I.subschemeι ⁻¹ᵁ U) z hU ((I.subschemeι.app U).hom a) =
         ger (U := I.subschemeι ⁻¹ᵁ U) z hU 0 :=
       (Scheme.Hom.germ_stalkMap_apply _ _ z hU a).symm.trans (hx.trans (map_zero _).symm)

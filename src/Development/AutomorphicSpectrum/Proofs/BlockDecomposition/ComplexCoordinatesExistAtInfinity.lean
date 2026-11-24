@@ -180,7 +180,7 @@ theorem exists_hom (e : Ainf F ≃+* (InfinitePlace F → ℝ)) (τ : InfinitePl
     (hc : ∀ x w, ((e (algebraMap F (Ainf F) x) w : ℝ) : ℂ) = τ w (algebraMap F E x)) :
     ∃ Θ : Ainf F ⊗[F] E →+* (InfinitePlace F → ℂ),
       ∀ a x w, Θ (a ⊗ₜ[F] x) w = (e a w : ℂ) * τ w x := by
-  letI : Algebra F (InfinitePlace F → ℂ) :=
+  let : Algebra F (InfinitePlace F → ℂ) :=
     (Pi.ringHom fun w => (τ w).comp (algebraMap F E)).toAlgebra
   let fA : Ainf F →ₐ[F] (InfinitePlace F → ℂ) :=
     { toRingHom := Pi.ringHom fun w =>
@@ -207,10 +207,10 @@ theorem exists_isCoord : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     IsCoord σ e τ Θ := by
   intro F E _ _ _ _ _ σ h ρ e hρ he hx
   classical
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; norm_num)
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [h.2.2.1]; norm_num)
   have hex : ∀ w : InfinitePlace F, ∃ t : E →+* ℂ, ∀ x, t (algebraMap F E x) = w.embedding x := by
     intro w
-    letI : Algebra F ℂ := w.embedding.toAlgebra
+    let : Algebra F ℂ := w.embedding.toAlgebra
     let t : E →ₐ[F] ℂ := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,

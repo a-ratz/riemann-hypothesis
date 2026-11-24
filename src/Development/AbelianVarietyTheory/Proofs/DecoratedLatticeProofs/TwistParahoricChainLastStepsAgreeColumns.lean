@@ -201,7 +201,7 @@ private theorem sigmaCompactSpace_of_isNonarchimedeanLocalField' (k : Type) [Fie
     · exact ⟨0, by simp⟩
     have hpos : 0 < S.emb (valuation k x) := by
       rw [← map_zero S.emb]
-      exact hf (zero_lt_iff.2 (by simpa using hx))
+      exact hf (pos_iff_ne_zero.2 (by simpa using hx))
     have hlt : S.emb (valuation k b) < 1 := by
       rw [← map_one S.emb]
       exact hf hb1
@@ -225,7 +225,7 @@ theorem _root_.GlobalTheory.StepData.mul_mem_of_hat_cosetInd_ne_zero : ∀ (k : 
     _root_.GlobalTheory.StepData.hat ψ ν ε (_root_.GlobalTheory.StepData.cosetInd (_root_.GlobalTheory.StepData.box n c) yb) η ≠ 0 →
     ∀ i, ε * η i * (c : k) ∈ 𝒪[k] := by
   intro k _ _ _ _ _ _ ψ hψ ν _ n _ _ c ε yb η hne i
-  haveI := sigmaCompactSpace_of_isNonarchimedeanLocalField' k
+  have := sigmaCompactSpace_of_isNonarchimedeanLocalField' k
   by_contra hx
   obtain ⟨t, ht, hψt⟩ : ∃ t ∈ 𝒪[k], ψ (t * (ε * η i * c)) ≠ 1 := by
     by_contra h
@@ -331,13 +331,13 @@ theorem hat_coset_eq_ftY : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Ch
         σ₀ (ftY sel mu cst P (atNL X.E (R.N R.m) (R.N R.m - 1) ∘ₗ y) y') := by
   classical
   intro X Pr R Ch sel S₀ mu cst σ₀ P k _ _ _ _ ι s W _ _ ν hν _ hA hD e' e _ he y y' hy'
-  haveI := hν.1
+  have := hν.1
   have hint : ∀ a : X.E, ι a ∈ 𝒪[k] ↔ IntAt P.1 a := hA.compl.int
   have hlast : (e (Sum.inr ())).val = R.N R.m - 1 := he (Sum.inr ())
   have hNpos : R.N R.m - 1 < R.N R.m := by have := (e (Sum.inr ())).isLt; omega
   set η' := atNL X.E (R.N R.m) (R.N R.m - 1) ∘ₗ y with hη'
   have hη'v : ∀ v, η' v = y v (e (Sum.inr ())) := fun v => by
-    simp only [hη', LinearMap.comp_apply, atNL, dif_pos hNpos, LinearMap.proj_apply]
+    simp only [hη', LinearMap.comp_apply, atNL, dite_eq_left hNpos, LinearMap.proj_apply]
     rw [show (⟨R.N R.m - 1, hNpos⟩ : Fin (R.N R.m)) = e (Sum.inr ()) from Fin.ext hlast.symm]
   have hrow : (toLoc ι e e' y) (Sum.inr ()) = fun a => ι (η' (Pi.single (e' a) 1)) := by
     funext a; simp [toLoc, hη'v]
@@ -353,9 +353,9 @@ theorem hat_coset_eq_ftY : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Ch
   have hϖ : (W.ϖ : k) = ι (qOf P.1 : X.E) := hA.compl.unif
   have hcM : ((W.ϖ ^ cst.M : kˣ) : k) = ι ((qOf P.1 : X.E) ^ cst.M) := by
     rw [Units.val_pow_eq_pow_val, hϖ, map_pow]
-  rw [hrow, ftY, if_neg hA.nmem]
+  rw [hrow, ftY, ite_eq_right hA.nmem]
   by_cases hη : ∀ i : Fin (R.N (s + 1)), IntAt P.1 ((qOf P.1 : X.E) ^ cst.M * η' (Pi.single i 1))
-  · rw [if_pos hη, hat_coset_box W.cond hν (neg_mem (one_mem _)) _ _ (fun a => ?_), hdot]
+  · rw [ite_eq_left hη, hat_coset_box W.cond hν (neg_mem (one_mem _)) _ _ (fun a => ?_), hdot]
     · have hres : resCard k = qOf P.1 := ComplRes.resCard_eq hA.compl W.unif
       obtain ⟨p, hp, hpϖ⟩ := GlobalTheory.PeriodicIntegral.exists_irreducible_of_isUnif W.unif
       have hnabs : nabs k W.ϖ = (resCard k : ℝ)⁻¹ := nabs_uniformiser hp hpϖ.symm
@@ -387,7 +387,7 @@ theorem hat_coset_eq_ftY : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Ch
     · rw [show (fun a => ι (η' (Pi.single (e' a) 1))) a * ((W.ϖ ^ cst.M : kˣ) : k) =
         ι ((qOf P.1 : X.E) ^ cst.M * η' (Pi.single (e' a) 1)) by rw [hcM, ← map_mul, mul_comm]]
       exact (hint _).2 (hη _)
-  · rw [if_neg hη, map_zero]
+  · rw [ite_eq_right hη, map_zero]
     by_contra hne
     have hm := mul_mem_of_hat_cosetInd_ne_zero k W.ψ W.cond ν _ (W.ϖ ^ cst.M) (-1) _ _ hne
     refine hη fun i => (hint _).1 ?_
@@ -505,7 +505,7 @@ theorem support_invariance_of_dense : ∀ (k : Type) [Field k] [ValuativeRel k] 
     obtain ⟨⟨x0, y0⟩, hp⟩ := (hM.prodMap hv).exists_mem_open hU ⟨_, hxy⟩
     obtain ⟨h1, h2⟩ := hp
     have hne' : f (x0.map ι) (fun a => ι (y0 a)) ≠ 0 := by
-      simp only [Set.mem_setOf_eq, Prod.map] at h1; rw [h1]; exact hne
+      simp only [Set.mem_ofPred_eq, Prod.map] at h1; rw [h1]; exact hne
     have hy0 := hsupp x0 y0 hne'
     have h2' : (fun a => ι (y0 a)) - y ∈ GlobalTheory.StepData.box A c⁻¹ := h2
     have := Submodule.sub_mem _ hy0 h2'
@@ -523,7 +523,7 @@ theorem support_invariance_of_dense : ∀ (k : Type) [Field k] [ValuativeRel k] 
     have hxyz : (x, y, z) ∈ V := ⟨⟨rfl, rfl⟩, hz⟩
     obtain ⟨⟨x0, y0, z0⟩, hp⟩ := (hM.prodMap (hv.prodMap hv)).exists_mem_open hV ⟨_, hxyz⟩
     obtain ⟨⟨h1, h2⟩, h3⟩ := hp
-    simp only [Set.mem_setOf_eq, Prod.map] at h1 h2 h3
+    simp only [Set.mem_ofPred_eq, Prod.map] at h1 h2 h3
     have e := hinv x0 y0 z0 h3
     have e' : (fun a => ι (y0 a + z0 a)) = (fun a => ι (y0 a)) + (fun a => ι (z0 a)) := by
       funext a; simp
@@ -615,7 +615,7 @@ theorem char_scalar (hok : cst.Ok) (hA : AtTwist (R := R) sel mu cst σ₀ P ι 
     exact hq0 (by exact_mod_cast (zero_pow two_ne_zero).symm.trans h2 |>.symm)
   have hmuAt : muAt Ch sel mu cst s P a = cst.muq (s + 1) P ^ v * (LocE.unitV (resChar (mu : Chr X.F X.E X.K) P.1) b)⁻¹ := by
     unfold muAt LocE.locChar
-    rw [if_neg hA.nmem, ← hvdef, ← hbdef]
+    rw [ite_eq_right hA.nmem, ← hvdef, ← hbdef]
     congr 1
     unfold LocE.unitV
     rw [dite_eq_left hspec, dite_eq_left hspec, MonoidHom.inv_apply, Units.val_inv_eq_inv_val]
@@ -932,7 +932,7 @@ theorem lastAgree : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X P
         simp
       rw [hy, hrat _ (fun i => y ((GlobalTheory.IndefiniteRowSideFullHecke.LocalOrderMatrix.ordX R (s + 1)).symm i))] at hne
       have hs := hL.psiSupp al P _ _ (fun h => (right_ne_zero_of_mul hne) (by rw [h, map_zero]))
-      rw [if_neg hnm] at hs
+      rw [ite_eq_right hnm] at hs
       rw [mem_box]
       intro a
       have h1 := hs ((GlobalTheory.IndefiniteRowSideFullHecke.LocalOrderMatrix.ordX R (s + 1)) a)
@@ -953,7 +953,7 @@ theorem lastAgree : ∀ (X : Fields) (Pr : Primes X) (R : Ranks) (Ch : Chars X P
           (fun i => z ((GlobalTheory.IndefiniteRowSideFullHecke.LocalOrderMatrix.ordX R (s + 1)).symm i))) ((GlobalTheory.IndefiniteRowSideFullHecke.LocalOrderMatrix.ordX R (s + 1)) a)) := by
         simp
       rw [hy, hyz, hrat, hrat _ (fun i => y ((GlobalTheory.IndefiniteRowSideFullHecke.LocalOrderMatrix.ordX R (s + 1)).symm i)), hL.psiInv al P _ _ _ ?_]
-      rw [if_neg hnm]
+      rw [ite_eq_right hnm]
       intro i
       apply (hint _).1
       rw [mem_box] at hz

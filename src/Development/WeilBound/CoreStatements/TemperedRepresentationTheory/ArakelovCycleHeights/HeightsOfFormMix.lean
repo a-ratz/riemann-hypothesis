@@ -100,7 +100,7 @@ theorem arFormExists_of_int :
       ∀ (ι : Type) [Fintype ι] (L : ι → HermLB p), ∃ Φ, IsArFun L D Φ) → GlobalTheory.Published.ArFormExists := by
   intro H k _ X _ p D hX ι _ L
   let t : X ⟶ Sp ℤ := specZIsTerminal.from X
-  haveI : Module.Finite ℤ k := hX.finite
+  have : Module.Finite ℤ k := hX.finite
   have hL : ∀ i τ, (wZ (L i) t τ).IsCInf := fun i τ => _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.wZ_isCInf k X p t (L i) τ
   obtain ⟨Φ, hΦ⟩ := H X t D (GlobalTheory.CompanionTheory.Ar.BaseZ.isArithVar_int k X p t D hX) ι
     (fun i => GlobalTheory.CompanionTheory.Ar.BaseZ.toZ (L i) t (hL i))
@@ -130,7 +130,7 @@ theorem archInt_toZ : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X
   let τ₀ : ℤ →+* ℂ := Int.castRingHom ℂ
   have hu : ∀ τ : ℤ →+* ℂ, τ = τ₀ := fun τ => Subsingleton.elim _ _
   refine ⟨⟨fun h => (W τ₀).1.1 (h τ₀), fun h τ => (W τ).1.2 h⟩, fun h => ?_⟩
-  haveI : Unique (ℤ →+* ℂ) := ⟨⟨τ₀⟩, hu⟩
+  have : Unique (ℤ →+* ℂ) := ⟨⟨τ₀⟩, hu⟩
   unfold HermLB.archInt
   rw [finsum_unique]
   exact (W default).2 h
@@ -154,7 +154,7 @@ namespace GlobalTheory.CompanionTheory.Ar.BaseZ
 
 theorem arMix_of_base_int : (∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (p : X ⟶ Sp ℤ) (D : ℕ), IsArithVar p D → ∀ (ι : Type) [Fintype ι] (M : HermLB p) (L : ι → HermLB p) (Φ : MvPolynomial (Option ι) ℝ →ₗ[ℝ] ℝ), IsArFun (fun o : Option ι => o.elim M L) D Φ → ∀ (n : ι → ℤ) (h : X → ℝ), (comb L n).IsArithHeight h → ∀ (r : M.B.ι → X.functionFieldˣ) (hr : IsRatSec M.B r), (comb L n).ArchIntegrable M D hr ∧ Φ (MvPolynomial.X none * MvPolynomial.rename some (lin fun i => (n i : ℝ)) ^ D) = ∑ᶠ z, ((M.div hr).mult z : ℝ) * h z - (comb L n).archInt M D hr) → GlobalTheory.Published.ArMix := by
   intro H k _ X _ _ p D hX ι _ M L Φ hΦ n h hh r hr
-  haveI := hX.finite
+  have := hX.finite
   let t : X ⟶ Sp ℤ := p ≫ spMap (Int.castRingHom k)
   have hX' : IsArithVar t D := isArithVar_int k X p t D hX
   have Hc : ∀ (N : HermLB p) (τ : ℤ →+* ℂ), (wZ N t τ).IsCInf := fun N τ => _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.wZ_isCInf k X p t N τ
@@ -236,7 +236,7 @@ namespace GlobalTheory.CompanionTheory.Ar.BaseZ
 
 theorem heightProjection_of_int : (∀ (X Y : Scheme.{0}) [IsIntegral Y] (p : X ⟶ Sp ℤ) (q : Y ⟶ Sp ℤ) (D e : ℕ), IsArithVar p D → IsArithVar q e → ∀ (π : Y ⟶ X) (hπ : π ≫ p = q), topologicalKrullDim (closure ({π (genericPoint Y)} : Set X)) = (e + 1 : ℕ) → π.residueDegree (genericPoint Y) ≠ 0 → ∀ (L : HermLB p) (h : X → ℝ), L.IsArithHeight h → (L.pull π hπ).IsSelfInter ((π.residueDegree (genericPoint Y) : ℝ) * h (π (genericPoint Y)))) → GlobalTheory.Published.HeightProjection := by
   intro H k _ X Y _ p q D e hp hq π hπ hdim hdeg L h hL
-  haveI : Module.Finite ℤ k := hp.finite
+  have : Module.Finite ℤ k := hp.finite
   have hc : ∀ τ : ℤ →+* ℂ, (wZ L (p ≫ spMap (Int.castRingHom k)) τ).IsCInf :=
     _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.wZ_isCInf k X p (p ≫ spMap (Int.castRingHom k)) L
   have hc' : ∀ τ : ℤ →+* ℂ,
@@ -609,7 +609,7 @@ theorem exists_bump {P : Scheme.{0}} {q : P ⟶ Sp k} {N : ℕ} {σ : k →+* �
       refine (β₀.contDiff.contDiffOn (s := e.target ∩ e.symm ⁻¹' e.source)).congr fun v hv => ?_
       have hv1 : e.symm v ∈ e.source := hv.2
       show (if e.symm v ∈ e.source then β₀ (e (e.symm v)) else 0) = β₀ v
-      rw [if_pos hv1, e.right_inv hv.1]
+      rw [ite_eq_left hv1, e.right_inv hv.1]
     · have hzC : z ∉ C := fun h => hz (hCsub h).1
       refine (cInfAt_const (p := q) 0 z).congr ?_
       filter_upwards [hCc.isClosed.isOpen_compl.mem_nhds hzC] with w hw
@@ -622,7 +622,7 @@ theorem exists_bump {P : Scheme.{0}} {q : P ⟶ Sp k} {N : ℕ} {σ : k →+* �
   · have ho : IsOpen (e.source ∩ e ⁻¹' Metric.ball (e y) (ε / 4)) :=
       e.isOpen_inter_preimage Metric.isOpen_ball
     filter_upwards [ho.mem_nhds ⟨hc, Set.mem_preimage.mpr (Metric.mem_ball_self (by linarith))⟩] with w hw
-    simp only [β, if_pos hw.1]
+    simp only [β, ite_eq_left hw.1]
     exact β₀.one_of_mem_closedBall (Metric.ball_subset_closedBall hw.2)
 
 theorem exists_partition {P : Scheme.{0}} {q : P ⟶ Sp k} {N : ℕ} {σ : k →+* ℂ} (R : AnRead q σ N)
@@ -837,8 +837,8 @@ theorem exists_weight_ext_sigma (i : X ⟶ P) [IsClosedImmersion i] (hi : i ≫ 
     (hs : GenSmooth q N) (B : LB P) (hB : B.IsLB) (σ : k →+* ℂ) (χ : Weight p σ (B.pull i)) (hχ : χ.IsCInf) :
     ∃ ψ : Weight q σ B, ψ.IsCInf ∧ ∀ (c : B.ι) (x : CxPts p σ),
       PtsOver.map i hi (spMap σ) x ∈ ptsIn q σ (B.U c) → ψ.φ c (PtsOver.map i hi (spMap σ) x) = χ.φ (fun _ => c) x := by
-  haveI : CompactSpace (CxPts q σ) := compactSpace σ hP.isProjOver
-  haveI : T2Space (CxPts q σ) := t2Space_cxPts_of_isProjOver σ hP.isProjOver
+  have : CompactSpace (CxPts q σ) := compactSpace σ hP.isProjOver
+  have : T2Space (CxPts q σ) := t2Space_cxPts_of_isProjOver σ hP.isProjOver
   obtain ⟨R⟩ := hs σ
   set m := PtsOver.map i hi (spMap σ) with hm
   have hmc : IsClosed (range m) := (PtsOver.isClosedEmbedding_map i hi (spMap σ)).isClosed_range
@@ -1085,7 +1085,7 @@ theorem exists_lb_twB (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℤ) (D : �
     ∃ (m : ℕ) (n : Fin (m + 1) → ℕ) (i : X ⟶ MP ℤ m n) (_ : IsClosedImmersion i) (_ : i ≫ mpStr ℤ m n = p)
       (c : ι → Fin m) (t : ι → ℤ), ∀ j, LBIso ((twB m n (c j) (t j)).pull i) (B j) := by
   obtain ⟨N, e, he, hep⟩ := hX.isProjOver
-  haveI := he
+  have := he
   choose tt r g hg hcls using fun (j : ι) => GlobalTheory.Amb.exists_twist_map e (B j) (hB j)
   set eq := Fintype.equivFin ι
   let n : Fin (Fintype.card ι + 1) → ℕ := Fin.cons N (fun k => r (eq.symm k))
@@ -1098,8 +1098,8 @@ theorem exists_lb_twB (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp ℤ) (D : �
     · exact (hg (eq.symm k)).trans hep
   let i := GroundTheory.Arith.SchemeCoh.ProjSpace.lift (Fintype.card ι) n p a ha
   have hi0 : i ≫ pr ℤ (Fintype.card ι) n 0 = e := GroundTheory.Arith.SchemeCoh.ProjSpace.lift_pr _ n p a ha 0
-  haveI := GlobalTheory.Amb.isSeparated_pr_zero ℤ (Fintype.card ι) n
-  haveI : IsClosedImmersion (i ≫ pr ℤ (Fintype.card ι) n 0) := by rw [hi0]; exact he
+  have := GlobalTheory.Amb.isSeparated_pr_zero ℤ (Fintype.card ι) n
+  have : IsClosedImmersion (i ≫ pr ℤ (Fintype.card ι) n 0) := by rw [hi0]; exact he
   have hci : IsClosedImmersion i := IsClosedImmersion.of_comp i (pr ℤ (Fintype.card ι) n 0)
   have key : ∀ k : Fin (Fintype.card ι),
       LBIso ((twB (Fintype.card ι) n k (-(tt (eq.symm k) : ℤ))).pull i) (B (eq.symm k)) := by
@@ -1143,8 +1143,8 @@ theorem exists_ambientZ {X : Scheme.{0}} [IsIntegral X] {p : X ⟶ Sp ℤ} {D : 
       (M : ι → HermLB (mpStr ℤ m n)), (∀ j, IsTwB (M j)) ∧ ∀ j, ((M j).pull i hi).Isometric (L j) := by
   obtain ⟨m, n, i, hci, hi, c, t, hiso⟩ :=
     exists_lb_twB X p D hX ι (fun j => (L j).B) (fun j => (L j).isLB)
-  haveI := hci
-  haveI := GlobalTheory.Amb.isIntegral_mp ℤ m n
+  have := hci
+  have := GlobalTheory.Amb.isIntegral_mp ℤ m n
   choose M hMB hMI using fun (j : ι) => exists_metric_ext_B ℤ (MP ℤ m n) (mpStr ℤ m n) _ (isArithVar_mpZ m n)
     (GlobalTheory.Amb.genSmooth_mp ℤ m n) X i p hi (twB m n (c j) (t j)) (isLB_twB m n (c j) (t j)) (L j) (hiso j)
   exact ⟨m, n, i, hci, hi, M, fun j => isTwB_of_eq (M j) (c j) (t j) (hMB j), hMI⟩
@@ -1153,7 +1153,7 @@ theorem form (H : FormZ) : ArFormExists := by
   apply GlobalTheory.CompanionTheory.Ar.BaseZ.arFormExists_of_int
   intro X _ p D hX ι _ L
   obtain ⟨m, n, i, hci, hi, M, hM, hI⟩ := exists_ambientZ hX L
-  haveI := hci
+  have := hci
   subst hi
   obtain ⟨Φ, hΦ1, hΦ2⟩ := H m n X i D hX ι M hM
   refine ⟨Φ, fun c => ?_, hΦ2⟩
@@ -1163,7 +1163,7 @@ theorem mix (H : MixZ) : ArMix := by
   apply GlobalTheory.CompanionTheory.Ar.BaseZ.arMix_of_base_int
   intro X _ _ p D hX ι _ M L Φ hΦ c h hh r hr
   obtain ⟨m, n, i, hci, hi, N, hN, hI⟩ := exists_ambientZ hX (fun o : Option ι => o.elim M L)
-  haveI := hci
+  have := hci
   subst hi
   have hmix := H m n X i D hX ι (N none) (fun j => N (some j)) (hN none) (fun j => hN (some j))
   have hmix' := GlobalTheory.Published.Amb.mixOn_congr hX (hI none) (fun j => hI (some j)) hmix
@@ -1172,17 +1172,17 @@ theorem mix (H : MixZ) : ArMix := by
 theorem proj (HH : HeightsZ) (HQ : HeightsQ) (HP : ProjQ) : HeightProjection := by
   apply GlobalTheory.CompanionTheory.Ar.BaseZ.heightProjection_of_int
   intro X Y _ p q D e hX hY π hπ hdim hdeg L h hh
-  haveI := hX.isIntegral
+  have := hX.isIntegral
   obtain ⟨m, n, i, hci, hi, M, hM, hI⟩ := exists_ambientZ hX (fun _ : Unit => L)
-  haveI := hci
+  have := hci
   obtain ⟨n', j0, hj0, hj0q⟩ := hY.isProjOver
-  haveI := hj0
+  have := hj0
   have hπi : (π ≫ i) ≫ mpStr ℤ m n = q := by rw [Category.assoc, hi, hπ]
   have cond : j0 ≫ toSpecBase ℤ n' = (π ≫ i) ≫ mpStr ℤ m n := by
     rw [hπi]
     exact hj0q
   let j : Y ⟶ QP n' m n := pullback.lift j0 (π ≫ i) cond
-  haveI : IsClosedImmersion j := GlobalTheory.Amb.isClosedImmersion_lift ℤ m n' n j0 (π ≫ i) cond
+  have : IsClosedImmersion j := GlobalTheory.Amb.isClosedImmersion_lift ℤ m n' n j0 (π ≫ i) cond
   have hjq : j ≫ qpStr n' m n = q := by
     simp only [j, qpStr, pullback.lift_fst_assoc]
     exact hj0q

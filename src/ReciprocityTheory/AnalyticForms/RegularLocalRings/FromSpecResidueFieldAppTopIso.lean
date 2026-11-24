@@ -137,11 +137,11 @@ theorem constSec_res (U : S.Opens) (c : ℂ) :
 theorem isClosed_image_of_closed {T : Scheme.{0}} (t : T ⟶ Spec (CommRingCat.of ℂ)) (g : S ⟶ T)
     (hg : g ≫ t = s) [LocallyOfFiniteType s] [LocallyOfFiniteType t] (x : S)
     (hc : IsClosed ({x} : Set S)) : IsClosed ({g.base x} : Set T) := by
-  haveI : JacobsonSpace T := AlgebraicGeometry.LocallyOfFiniteType.jacobsonSpace t
-  haveI : AlgebraicGeometry.LocallyOfFiniteType (g ≫ t) := by rw [hg]; infer_instance
-  haveI : AlgebraicGeometry.LocallyOfFiniteType g := AlgebraicGeometry.locallyOfFiniteType_of_comp g t
+  have : JacobsonSpace T := AlgebraicGeometry.LocallyOfFiniteType.jacobsonSpace t
+  have : AlgebraicGeometry.LocallyOfFiniteType (g ≫ t) := by rw [hg]; infer_instance
+  have : AlgebraicGeometry.LocallyOfFiniteType g := AlgebraicGeometry.locallyOfFiniteType_of_comp g t
   have hx : x ∈ closedPoints S := by simpa [mem_closedPoints_iff] using hc
-  have := g.closePoints_subset_preimage_closedPoints hx
+  have := g.closedPoints_subset_preimage_closedPoints hx
   simpa [mem_closedPoints_iff] using this
 
 theorem residueFieldMap_constRes {T : Scheme.{0}} (t : T ⟶ Spec (CommRingCat.of ℂ)) (g : S ⟶ T)

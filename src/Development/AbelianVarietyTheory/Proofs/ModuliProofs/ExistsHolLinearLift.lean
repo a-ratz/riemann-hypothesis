@@ -119,9 +119,9 @@ theorem exists_hol_rep {O : Type} [CommRing O] {B : Set (Fin m → ℂ)} (hB : I
         rw [h1 _ b hb, LinearMap.add_apply, (he b hb).1.1, h1 _ b hb, h1 _ b hb, act.add, MonObj.comp_mul], map_add (f := _)]
   choose F hF using key
   refine ⟨fun b => if hb : b ∈ B then F b hb else F b₀ hb₀, fun b hb a z => ?_, fun a i j => ?_⟩
-  · simp only [dif_pos hb, hF, LinearMap.toMatrix'_mulVec, h1 a b hb]
+  · simp only [dite_eq_left hb, hF, LinearMap.toMatrix'_mulVec, h1 a b hb]
   · refine (differentiableOn_pi.1 (h2 a (Pi.single j 1)) i).congr fun b hb => ?_
-    simp only [dif_pos hb, hF, LinearMap.toMatrix'_apply]
+    simp only [dite_eq_left hb, hF, LinearMap.toMatrix'_apply]
 
 def HasForm {La : Type} [AddCommGroup La] (EF : LinearMap.BilinForm ℤ La) (P : La → (Fin g → ℂ)) : Prop :=
   ∃ Hm : Matrix (Fin g) (Fin g) ℂ, Hm.IsHermitian ∧ (∀ z : Fin g → ℂ, z ≠ 0 → 0 < (hermForm Hm z z).re) ∧
@@ -191,7 +191,7 @@ theorem hasForm_of_weil (hT : ThetaUnifAV) (hB : Out.PolBaseChangeSt)
   have hhol : IsHolTo Set.univ (fun w => (u.ex w).left) := fun U f => by simpa using u.hol U f
   obtain ⟨ζ, hζ, hζ'⟩ := hl _ x (isHolTo_comp_hom hhol φ) (by rw [hom_zero hx, hom_zero he.1])
   obtain ⟨L, hL⟩ := exists_linearEquiv_lift hx he.1 hsx he.2.1 (by
-    haveI := u.discrete
+    have := u.discrete
     rw [show {z | x z = 1} = (u.Λ : Set _) from Set.ext hker]
     exact DiscreteTopology.isDiscrete) hr hk hζ.differentiableAt hζ'
   have hmem : ∀ a, L.symm (P a) ∈ u.Λ := fun a => by rw [← hker, ← hL, L.apply_symm_apply, hP]
@@ -202,7 +202,7 @@ theorem hasForm_of_weil (hT : ThetaUnifAV) (hB : Out.PolBaseChangeSt)
   have hp : ∀ a, (e ((k : ℂ)⁻¹ • P a)).left = (u.ex ((k : ℂ)⁻¹ • L.symm (P a))).left ≫ φ := fun a => by
     rw [← map_smul, ← L.apply_symm_apply ((k : ℂ)⁻¹ • P a), hL, L.symm_apply_apply]
     rfl
-  haveI := A.isAb.comm
+  have := A.isAb.comm
   have e3 := (weilIs_grpPullback_of_comm _ _ A.A A'.A y₀ φ A.L A'.L A.isLB A'.isLB hgp (LBIso.symm ⟨t, ht⟩) _ k _ _ _ _ _ (hp a) (hp a₂)).1 e1
   exact congrArg Units.val (weilIs_unique_fieldPoint _ A.A A.L A.isLB ℂ _ k _ _ _ _ e3 e2)
 

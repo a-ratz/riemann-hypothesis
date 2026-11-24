@@ -215,7 +215,7 @@ theorem kernel_decomp (hι : Injective ι) (hθ : ∀ r, ι (θR r) = θ (ι r))
           (fun d => if cls d = c then χ x * φ (twConj θ x (ι d)) else 0) (orbPt ι θR (rep c) q) := by
       intro q
       have : cls (orbPt ι θR (rep c) q) = c := (hcls _ _).2 ⟨_, rfl⟩
-      simp only [this, if_true]
+      simp only [this, ite_true]
       exact hg c q
     have hs : support (fun d => if cls d = c then χ x * φ (twConj θ x (ι d)) else 0) ⊆
         range (orbPt ι θR (rep c) (S := (H c).subgroupOf ι.range)) := by
@@ -246,8 +246,8 @@ theorem lintegral_kernel_ne_top [TopologicalSpace G] [IsTopologicalGroup G] [T2S
     (hfin : {d | ∃ x ∈ K, φ (twConj θ x (ι d)) ≠ 0}.Finite) :
     ∫⁻ x in Fd, ∑' d : R, ‖χ x * φ (twConj θ x (ι d))‖ₑ ∂μ ≠ ∞ := by
   classical
-  haveI : Countable ι.range := (Set.countable_range ι).to_subtype
-  haveI : MeasurableMul G := inferInstance
+  have : Countable ι.range := (Set.countable_range ι).to_subtype
+  have : MeasurableMul G := inferInstance
   set Ψ : G → ℝ≥0∞ := fun x => ∑' d : R, ‖χ x * φ (twConj θ x (ι d))‖ₑ with hΨ
   have hinv : ∀ γ ∈ ι.range, ∀ x, Ψ (γ * x) = Ψ x := by
     rintro _ ⟨r, rfl⟩ x
@@ -273,7 +273,7 @@ theorem lintegral_kernel_ne_top [TopologicalSpace G] [IsTopologicalGroup G] [T2S
       simp [this]
     rw [h1]
     refine Finset.sum_le_card_nsmul _ _ _ fun d _ => ?_
-    rw [← ofReal_norm_eq_enorm, norm_mul]
+    rw [← ofReal_norm, norm_mul]
     refine ENNReal.ofReal_le_ofReal ?_
     calc ‖χ k‖ * ‖φ (twConj θ k (ι d))‖ ≤ 1 * B :=
           mul_le_mul (hχb k) (hφb _) (norm_nonneg _) zero_le_one
@@ -297,7 +297,7 @@ theorem unfold_abs [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G] [Seco
       ∫ x in Fd, χ x * ∑ᶠ d : R, φ (twConj θ x (ι d)) ∂μ =
         ∑ᶠ c, quotIntegral μ (H c) Measure.count fun x => χ x * φ (twConj θ x (ι (rep c))) := by
   classical
-  haveI : Countable ι.range := (Set.countable_range ι).to_subtype
+  have : Countable ι.range := (Set.countable_range ι).to_subtype
   have hfinK := hfin K hK
   set T : Finset C := (hfinK.image cls).toFinset with hTdef
   have hT : ∀ (x : G) (d : R), χ x * φ (twConj θ x (ι d)) ≠ 0 → cls d ∈ T := fun x d h =>
@@ -332,7 +332,7 @@ theorem unfold_abs [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G] [Seco
   have hterm : ∀ c, (quotIntegral μ (H c) Measure.count fun x => χ x * φ (twConj θ x (ι (rep c)))) =
       ∫ x in Fd, ∑' q : ι.range ⧸ (H c).subgroupOf ι.range,
         χ ((q.out : G)⁻¹ * x) * φ (twConj θ ((q.out : G)⁻¹ * x) (ι (rep c))) ∂μ := fun c => by
-    haveI := hdisc c
+    have := hdisc c
     exact GlobalTheory.CompanionTheory.QuotUnfold.quotIntegral_unfold (hle c) hFd (hFm c) (hFH c) (hint c)
   have hzero : ∀ c, c ∉ T → (quotIntegral μ (H c) Measure.count fun x => χ x * φ (twConj θ x (ι (rep c)))) = 0 := by
     intro c hc
@@ -358,7 +358,7 @@ theorem unfold_abs [TopologicalSpace G] [IsTopologicalGroup G] [T2Space G] [Seco
   rw [integral_finsetSum]
   · exact Finset.sum_congr rfl fun c _ => (hterm c).symm
   · intro c _
-    haveI := hdisc c
+    have := hdisc c
     exact GlobalTheory.CompanionTheory.QuotUnfold.integrableOn_unfold (hFm c) (hint c)
 
 end Main
@@ -414,15 +414,15 @@ theorem thetaA_ratGL (n : ℕ) (d : GL (Fin n) E) : thetaA E n (ratGL E n d) = r
   exact conjAd_algebraMap _
 
 theorem discreteTopology_prodMap : DiscreteTopology ((ratGL E a).prodMap (ratGL E b)).range := by
-  haveI := GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (E := E) (n := a)
-  haveI := GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (E := E) (n := b)
+  have := GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (E := E) (n := a)
+  have := GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (E := E) (n := b)
   let f : ((ratGL E a).prodMap (ratGL E b)).range → (ratGL E a).range × (ratGL E b).range := fun z =>
     (⟨z.1.1, by obtain ⟨w, hw⟩ := z.2; exact ⟨w.1, congrArg Prod.fst hw⟩⟩,
      ⟨z.1.2, by obtain ⟨w, hw⟩ := z.2; exact ⟨w.2, congrArg Prod.snd hw⟩⟩)
   have hf : Continuous f := by
     refine Continuous.prodMk ?_ ?_
-    · exact (continuous_fst.comp continuous_subtype_val).subtype_mk _
-    · exact (continuous_snd.comp continuous_subtype_val).subtype_mk _
+    · exact (continuous_fst.comp continuous_subtypeVal).subtype_mk _
+    · exact (continuous_snd.comp continuous_subtypeVal).subtype_mk _
   have hi : Injective f := by
     intro z w h
     refine Subtype.ext (Prod.ext ?_ ?_)
@@ -471,24 +471,24 @@ end Adelic
 
 theorem unfold2_of (hM : Mahler) : Unfold2 := by
   intro E _ _ _ a b _ _ _ _ μ₁ _ μ₂ _ F₁ F₂ τ r φ hF₁ hF₂ hφ
-  haveI := CuspidalL2GL.locallyCompactSpace_GA E a
-  haveI := CuspidalL2GL.locallyCompactSpace_GA E b
-  haveI := CuspidalL2GL.secondCountableTopology_GA E a
-  haveI := CuspidalL2GL.secondCountableTopology_GA E b
-  haveI : SigmaFinite μ₁ := sigmaFinite_of_locallyFinite
-  haveI : SigmaFinite μ₂ := sigmaFinite_of_locallyFinite
+  have := CuspidalL2GL.locallyCompactSpace_GA E a
+  have := CuspidalL2GL.locallyCompactSpace_GA E b
+  have := CuspidalL2GL.secondCountableTopology_GA E a
+  have := CuspidalL2GL.secondCountableTopology_GA E b
+  have : SigmaFinite μ₁ := sigmaFinite_of_locallyFinite
+  have : SigmaFinite μ₂ := sigmaFinite_of_locallyFinite
   obtain ⟨hc₁, hi₁, C₁, hC₁, hs₁⟩ := hM E a τ
   obtain ⟨hc₂, hi₂, C₂, hC₂, hs₂⟩ := hM E b τ
   let ι : GL (Fin a) E × GL (Fin b) E →* GA E a × GA E b := (ratGL E a).prodMap (ratGL E b)
   let θ : Monoid.End (GA E a × GA E b) := (thetaA E a).prodMap (thetaA E b)
   let θR : Monoid.End (GL (Fin a) E × GL (Fin b) E) := (thetaE E a).prodMap (thetaE E b)
-  haveI : DiscreteTopology ι.range := discreteTopology_prodMap
-  haveI : Countable ι.range := by
-    haveI : SecondCountableTopology ι.range := inferInstance
+  have : DiscreteTopology ι.range := discreteTopology_prodMap
+  have : Countable ι.range := by
+    have : SecondCountableTopology ι.range := inferInstance
     exact (TopologicalSpace.separableSpace_iff_countable).1 inferInstance
   have hι : Injective ι :=
     GlobalTheory.CompanionTheory.KerTwFin.injective_ratGL.prodMap GlobalTheory.CompanionTheory.KerTwFin.injective_ratGL
-  haveI : Countable (GL (Fin a) E × GL (Fin b) E) :=
+  have : Countable (GL (Fin a) E × GL (Fin b) E) :=
     Injective.countable (f := ι.rangeRestrict) (fun x y h => hι (congrArg Subtype.val h))
   have hθ : ∀ r, ι (θR r) = θ (ι r) := fun r => Prod.ext (thetaA_ratGL a r.1).symm (thetaA_ratGL b r.2).symm
   have hFd : IsFundamentalDomain ι.range (F₁ ×ˢ F₂) (μ₁.prod μ₂) :=
@@ -539,7 +539,7 @@ theorem unfold2_of (hM : Mahler) : Unfold2 := by
     (GlobalTheory.CompanionTheory.KerTwFin.continuous_thetaA.comp continuous_snd)
   have hφm : ∀ d, Measurable fun x => φ (twConj θ x (ι d)) := fun d =>
     (hφ.cont.comp ((continuous_inv.mul continuous_const).mul hθc)).measurable
-  haveI : T2Space (GA E a × GA E b) := by
+  have : T2Space (GA E a × GA E b) := by
     set_option synthInstance.maxHeartbeats 200000 in
       exact inferInstance
   obtain ⟨B, hB⟩ := hφ.supp.exists_bound_of_continuous hφ.cont
@@ -587,7 +587,7 @@ theorem quotIntegral_eq_indicator {μ : Measure G} [μ.IsMulLeftInvariant] [SFin
     [Countable H] {D : Set G} (hDm : MeasurableSet D) (hD : ∀ g : G, ∃! h : H, (h : G) * g ∈ D)
     {f : G → ℂ} (hf : Measurable f) (hfH : ∀ h ∈ H, ∀ g, f (h * g) = f g) :
     quotIntegral μ H Measure.count f = ∫ x, D.indicator f x ∂μ := by
-  haveI := GlobalTheory.CompanionTheory.QuotUnfold.count_isInvInvariant H
+  have := GlobalTheory.CompanionTheory.QuotUnfold.count_isInvInvariant H
   rw [GlobalTheory.CompanionTheory.QuotNorm.quotIntegral_eq hf hfH (isQuotNormaliser_indicator H hDm hD)]
   refine integral_congr_ae (Filter.Eventually.of_forall fun g => ?_)
   by_cases hg : g ∈ D <;> simp [hg]
@@ -664,7 +664,7 @@ theorem quotIntegral_prod {μ₁ : Measure G₁} [μ₁.IsMulLeftInvariant] [SFi
   classical
   obtain ⟨D₁, d₁, u₁⟩ := GlobalTheory.CompanionTheory.QuotUnfold.exists_strict_domain H₁
   obtain ⟨D₂, d₂, u₂⟩ := GlobalTheory.CompanionTheory.QuotUnfold.exists_strict_domain H₂
-  haveI : Countable (H₁.prod H₂) :=
+  have : Countable (H₁.prod H₂) :=
     Function.Injective.countable (f := fun z : H₁.prod H₂ =>
       ((⟨z.1.1, z.2.1⟩ : H₁), (⟨z.1.2, z.2.2⟩ : H₂))) (by
         rintro ⟨⟨a, b⟩, h⟩ ⟨⟨c, d⟩, h'⟩ e
@@ -774,13 +774,13 @@ theorem twConj_ratCent (d : GL (Fin n) E) {h : GA E n} (hh : h ∈ ratCent d) (x
   exact congrArg _ ht
 
 theorem discreteTopology_ratCent (d : GL (Fin n) E) : DiscreteTopology (ratCent d) := by
-  haveI := GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (E := E) (n := n)
+  have := GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (E := E) (n := n)
   exact DiscreteTopology.of_subset (s := ((ratGL E n).range : Set (GA E n)))
     GlobalTheory.CompanionTheory.KerTwFin.discreteTopology_range (by rintro _ ⟨t, -, rfl⟩; exact ⟨t, rfl⟩)
 
 theorem countable_ratCent (d : GL (Fin n) E) : Countable (ratCent d) := by
-  haveI := discreteTopology_ratCent d
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E n
+  have := discreteTopology_ratCent d
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E n
   exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
 
 theorem continuous_twConj (δ : GA E n) : Continuous fun x : GA E n => twConj (thetaA E n) x δ :=
@@ -813,7 +813,7 @@ theorem exists_compact_cover (hM : Mahler) (τ : ℝ) (d : GL (Fin n) E) {K : Se
     exact Set.mul_mem_mul (Set.mul_mem_mul hc hk) (Set.inv_mem_inv.2 (mem_image_of_mem _ hc))
   have hex : ∃ γ, twConj (thetaE E n) γ d = δ := ⟨γ, rfl⟩
   have hp : twConj (thetaE E n) (pick δ) d = δ := by
-    simp only [pick, dif_pos hex]
+    simp only [pick, dite_eq_left hex]
     exact hex.choose_spec
   set p := pick δ with hpdef
   have ht : γ * p⁻¹ ∈ twCent (thetaE E n) d := by
@@ -843,16 +843,16 @@ theorem chiT_ratGL (hM : Mahler) {n : ℕ} (τ : ℝ) (t : GL (Fin n) E) (x : GA
 
 theorem sliceTerm_of (hM : Mahler) : SliceTerm := by
   intro E _ _ _ a b _ _ _ _ μ₁ _ μ₂ _ τ r φ d₁ d₂ hφ
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E a
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E b
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E a
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E b
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E a
-  haveI := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E b
-  haveI := discreteTopology_ratCent d₁
-  haveI := discreteTopology_ratCent d₂
-  haveI := countable_ratCent d₁
-  haveI := countable_ratCent d₂
+  have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E a
+  have := GlobalTheory.CuspRep.CuspidalL2GL.t2Space_GA E b
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E a
+  have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E b
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E a
+  have := GlobalTheory.CuspRep.CuspidalL2GL.locallyCompactSpace_GA E b
+  have := discreteTopology_ratCent d₁
+  have := discreteTopology_ratCent d₂
+  have := countable_ratCent d₁
+  have := countable_ratCent d₂
   have c₁ : Measurable (chiT τ : GA E a → ℂ) :=
     measurable_one.indicator (hM E a τ).1.measurableSet
   have c₂ : Measurable (chiT τ : GA E b → ℂ) :=

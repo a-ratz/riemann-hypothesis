@@ -98,7 +98,7 @@ private theorem ag_lift {G C : Type} [Group G] [TopologicalSpace G] [IsTopologic
     [TopologicalSpace C] [T2Space C] (q : G →* C) (hq : Continuous q) :
     ∃ F : TopologicalAbelianization G →* C, Continuous F ∧ ∀ g : G, F g = q g := by
   have hle : (commutator G).topologicalClosure ≤ q.ker :=
-    Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker q)
+    Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker q)
       (isClosed_singleton.preimage hq)
   refine ⟨QuotientGroup.lift _ q hle, ?_, fun g => rfl⟩
   exact continuous_coinduced_dom.2 hq
@@ -113,7 +113,7 @@ private theorem ag_map {G G' : Type} [Group G] [TopologicalSpace G] [IsTopologic
   have hle : (commutator G).topologicalClosure ≤ M.comap f := by
     apply Subgroup.topologicalClosure_minimal
     · rw [← hker]
-      exact Abelianization.commutator_subset_ker _
+      exact Group.Abelianization.commutator_le_ker _
     · exact (Subgroup.isClosed_topologicalClosure _).preimage hf
   refine ⟨QuotientGroup.map _ M f hle, ?_, fun g => rfl⟩
   exact continuous_coinduced_dom.2 (continuous_quotient_mk'.comp hf)
@@ -173,7 +173,7 @@ private theorem ag_field (K Ω : Type) [Field K] [ValuativeRel K] [TopologicalSp
       (topologicalAbelianizationEquiv K Ω).toMulEquiv.toMonoidHom).comp F
     have hψ : Continuous ψ :=
       (continuous_artinCoord H').comp ((topologicalAbelianizationEquiv K Ω).continuous.comp hF)
-    haveI := openCompletion.discreteTopology_quotient H'
+    have := openCompletion.discreteTopology_quotient H'
     refine ⟨ψ.ker, ?_, ?_⟩
     · exact (isOpen_discrete ({1} : Set (Kˣ ⧸ (H : Subgroup Kˣ)))).preimage hψ
     · ext y
@@ -215,16 +215,16 @@ theorem UpperTheory.local_class_field_theory_of_open_embedding :
     ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ l) (hφ : IsOpenEmbedding φ), ∃ (K : Type) (_ : Field K) (_ : ValuativeRel K) (_ : TopologicalSpace K) (_ : IsNonarchimedeanLocalField K) (_ : Algebra ℚ_[l] K) (_ : ValuativeExtension ℚ_[l] K) (_ : FiniteDimensional ℚ_[l] K), φ.range.index = Module.finrank ℚ_[l] K ∧ ∃ (θ : Kˣ →* TopologicalAbelianization G) (D : TopologicalAbelianization G →* Multiplicative GroundTheory.LocalField.Abstract.ProfiniteInteger), Continuous θ ∧ Function.Injective θ ∧ DenseRange θ ∧ (∀ H : Subgroup Kˣ, IsOpen (H : Set Kˣ) → H.FiniteIndex → ∃ V : Subgroup (TopologicalAbelianization G), IsOpen (V : Set (TopologicalAbelianization G)) ∧ V.comap θ = H) ∧ Continuous D ∧ (∀ y : Kˣ, D (θ y) = Multiplicative.ofAdd ((GroundTheory.LocalField.ord (y : K) : ℤ) : GroundTheory.LocalField.Abstract.ProfiniteInteger)) ∧ ∀ g : G, φ g ∈ Iq l ↔ D (QuotientGroup.mk' _ g) = 1 := by
   intro l _ G _ _ _ φ hφ
   obtain ⟨K, e, he, he', hcomp, -, hidx, -⟩ := openField φ hφ
-  haveI hfin : FiniteDimensional ℚ_[l] K.1 := K.2
+  have hfin : FiniteDimensional ℚ_[l] K.1 := K.2
   obtain ⟨vr, tp, hloc, hext⟩ :=
     GroundTheory.LocalField.exists_isNonarchimedeanLocalField_valuativeExtension ℚ_[l] K.1
-  letI := vr
-  letI := tp
-  haveI := hloc
-  haveI := hext
-  haveI : Algebra.IsAlgebraic K.1 (Om l) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) K.1
-  haveI : IsAlgClosure K.1 (Om l) := ⟨inferInstance, inferInstance⟩
-  haveI : IsSepClosure K.1 (Om l) := inferInstance
+  let := vr
+  let := tp
+  have := hloc
+  have := hext
+  have : Algebra.IsAlgebraic K.1 (Om l) := Algebra.IsAlgebraic.tower_top (K := ℚ_[l]) K.1
+  have : IsAlgClosure K.1 (Om l) := ⟨inferInstance, inferInstance⟩
+  have : IsSepClosure K.1 (Om l) := inferInstance
   obtain ⟨hc1, hc2⟩ := GlobalTheory.fixingSubgroupEquiv_bicontinuous ℚ_[l] (Om l) K.1
   let ε : G ≃* Gal(Om l/K.1) := e.trans K.1.fixingSubgroupEquiv
   have hε : Continuous ε := hc1.comp he
@@ -237,7 +237,7 @@ theorem UpperTheory.local_class_field_theory_of_open_embedding :
     intro x
     rw [← hcomp]
     rfl
-  haveI := ag_char l K.1
+  have := ag_char l K.1
   rw [hD g, GroundTheory.LocalField.unramifiedDegree_eq_one_iff]
   simp only [Iq, MaximalUnramifiedExtension, GroundTheory.LocalField.mem_fixingSubgroup_adjoin_iff,
     GroundTheory.LocalField.mem_unramifiedRoots_iff, hεg]
@@ -302,7 +302,7 @@ theorem UpperTheory.exists_principal_units_retraction_localField :
   intro K _ _ _ _ l _ _
   have hl : l.Prime := Fact.out
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible ↥𝒪[K]
-  haveI : Fintype 𝓀[K] := Fintype.ofFinite _
+  have : Fintype 𝓀[K] := Fintype.ofFinite _
   have hq : l ∣ Nat.card 𝓀[K] := by
     rw [← CharP.cast_eq_zero_iff 𝓀[K] l, Nat.card_eq_fintype_card]
     exact FiniteField.cast_card_eq_zero 𝓀[K]
@@ -448,9 +448,9 @@ theorem UpperTheory.finite_zp_module_torsion_free_splitting :
     rw [this]
     exact IsUltrametricDist.isOpen_closedBall 0 (zpow_ne_zero _ hl0)
   set T := Submodule.torsion ℤ_[l] N with hT
-  haveI : Module.IsTorsionFree ℤ_[l] (N ⧸ T) :=
+  have : Module.IsTorsionFree ℤ_[l] (N ⧸ T) :=
     Submodule.isTorsionFree_iff_torsion_eq_bot.mpr Submodule.QuotientTorsion.torsion_eq_bot
-  haveI : Module.Free ℤ_[l] (N ⧸ T) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ_[l] (N ⧸ T) := Module.free_of_finite_type_torsion_free'
   have hrank : Module.finrank ℤ_[l] (N ⧸ T) = Module.finrank ℤ_[l] N := by
     have h := rank_quotient_add_rank_of_isDomain T
     rw [Module.IsTorsion.rank_eq_zero Submodule.torsion_isTorsion, add_zero] at h
@@ -476,7 +476,7 @@ theorem UpperTheory.finite_zp_module_torsion_free_splitting :
     have : c = ((l : ℤ_[l]) ^ K) • c' := funext fun i => by simp [← hc' i, mul_comm]
     rw [this, map_smul, map_smul, hkill]
   refine ⟨?_, p, t, hlin p, ?_, fun y => ⟨?_, ?_⟩, ?_, ?_⟩
-  · haveI : NeZero (l ^ K) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  · have : NeZero (l ^ K) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     refine Finite.of_surjective (fun d : Fin m → ZMod (l ^ K) => t (g (fun i => ((d i).val : ℤ_[l])))) ?_
     intro y
     obtain ⟨c, hc⟩ := hg (y : N)
@@ -572,7 +572,7 @@ private theorem UpperTheory.finite_quotient_of_retraction_rank (l : ℕ) [hl : F
       ∀ (n : ℕ) (y : G), (∀ i, (l : ℤ_[l]) ^ n ∣ Multiplicative.toAdd (p y) i) → t y = 1 →
         ∃ w, r y = w ^ l ^ n := by
   subst hd
-  haveI : T2Space (Additive U) := inferInstanceAs (T2Space U)
+  have : T2Space (Additive U) := inferInstanceAs (T2Space U)
   obtain ⟨hfin, p0, t0, hp0c, ht0o, hpt, hbij⟩ := UpperTheory.finite_zp_module_torsion_free_splitting l (Additive U)
   have memT : ∀ u : U, (u : G) ∈ CommGroup.primaryComponent G l →
       Additive.ofMul u ∈ Submodule.torsion ℤ_[l] (Additive U) := fun u hu =>
@@ -598,7 +598,7 @@ private theorem UpperTheory.finite_quotient_of_retraction_rank (l : ℕ) [hl : F
     show ((Additive.toMul (t0 (Additive.ofMul (r g)) : Additive U) : U) : G) = 1 ↔ _
     rw [OneMemClass.coe_eq_one, toMul_eq_one, ZeroMemClass.coe_eq_zero]
   refine ⟨?_, p, t, ?_, ?_, ?_, ?_, ?_⟩
-  · haveI := hfin
+  · have := hfin
     refine Finite.of_injective (β := Submodule.torsion ℤ_[l] (Additive U))
       (fun y => ⟨Additive.ofMul ⟨(y : G), hP y y.2⟩, memT _ y.2⟩) ?_
     intro a b hab
@@ -655,7 +655,7 @@ private theorem UpperTheory.finite_quotient_of_retraction_rank (l : ℕ) [hl : F
 theorem UpperTheory.localField_units_structure_theorem :
     ∀ (K : Type) [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K] (l : ℕ) [Fact l.Prime] [Algebra ℚ_[l] K] [ValuativeExtension ℚ_[l] K] [FiniteDimensional ℚ_[l] K], Finite ↥(CommGroup.primaryComponent Kˣ l) ∧ ∃ (p : Kˣ →* Multiplicative (Fin (Module.finrank ℚ_[l] K) → ℤ_[l])) (t : Kˣ →* ↥(CommGroup.primaryComponent Kˣ l)), Continuous p ∧ IsOpen (t.ker : Set Kˣ) ∧ (∀ y : ↥(CommGroup.primaryComponent Kˣ l), p y = 1 ∧ t y = y) ∧ (∀ x τ, ∃ y : Kˣ, GroundTheory.LocalField.ord (y : K) = 0 ∧ p y = x ∧ t y = τ) ∧ ∀ (n : ℕ) (y : Kˣ), (∀ i, (l : ℤ_[l]) ^ n ∣ Multiplicative.toAdd (p y) i) → (l : ℤ) ^ n ∣ GroundTheory.LocalField.ord (y : K) → t y = 1 → ∃ z : Kˣ, y = z ^ l ^ n := by
   intro K _ _ _ _ l _ _ _ _
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap ℚ_[l] K).injective
   have hlmax : (l : 𝒪[K]) ∈ IsLocalRing.maximalIdeal 𝒪[K] := by
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     intro hu
@@ -674,7 +674,7 @@ theorem UpperTheory.localField_units_structure_theorem :
       inv_inv] at hinv
     have h2 : (2 : ℝ) ≤ l := by exact_mod_cast (Fact.out : l.Prime).two_le
     linarith
-  haveI : CharP 𝓀[K] l := by
+  have : CharP 𝓀[K] l := by
     rw [CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)]
     have := (IsLocalRing.residue_eq_zero_iff _).2 hlmax
     simpa using this
@@ -690,7 +690,7 @@ theorem UpperTheory.localField_units_structure_theorem :
     have := finrank_principalUnits (K := K) l
     rw [halg] at this
     exact this
-  haveI := finite_principalUnits (K := K) l
+  have := finite_principalUnits (K := K) l
   obtain ⟨hPU, r, hr, hid, hdiv⟩ := UpperTheory.exists_principal_units_retraction_localField K l
   obtain ⟨hfin, p, t, hp, ht, hpt, hsurj, hpow⟩ := UpperTheory.finite_quotient_of_retraction_rank l (unitFiltrationUnits K 1) hPU r hr
     hid (Module.finrank ℚ_[l] K) hfr
@@ -771,7 +771,7 @@ private theorem as_ext {M A B : Type} [CommGroup M] [TopologicalSpace M] [CommGr
     simp [one_mem]
   have hlim : ∀ a : A, ∃ b : B, Filter.Tendsto f (Filter.comap θ (𝓝 a)) (𝓝 b) := by
     intro a
-    haveI := hnb a
+    have := hnb a
     obtain ⟨b, -, hb⟩ := isCompact_univ.exists_clusterPt (f := Filter.map f (Filter.comap θ (𝓝 a)))
       (Filter.le_principal_iff.2 Filter.univ_mem)
     refine ⟨b, htend _ _ fun U => ?_⟩
@@ -793,7 +793,7 @@ private theorem as_ext {M A B : Type} [CommGroup M] [TopologicalSpace M] [CommGr
   choose F0 hF using hlim
   have hθ : ∀ y, F0 (θ y) = f y := by
     intro y
-    haveI := hnb (θ y)
+    have := hnb (θ y)
     refine tendsto_nhds_unique (hF (θ y)) (htend _ _ fun U => ?_)
     filter_upwards [Filter.preimage_mem_comap ((hNo (θ y) U).mem_nhds (hNa (θ y) U))] with z hz
     have h1 : θ (y⁻¹ * z) ∈ V U := by simpa using hz
@@ -801,8 +801,8 @@ private theorem as_ext {M A B : Type} [CommGroup M] [TopologicalSpace M] [CommGr
     simpa using h1
   have hmul : ∀ a b, F0 (a * b) = F0 a * F0 b := by
     intro a b
-    haveI := hnb a
-    haveI := hnb b
+    have := hnb a
+    have := hnb b
     have hP : Filter.Tendsto (fun p : M × M => p.1 * p.2)
         (Filter.comap θ (𝓝 a) ×ˢ Filter.comap θ (𝓝 b)) (Filter.comap θ (𝓝 (a * b))) := by
       rw [Filter.tendsto_comap_iff]
@@ -829,7 +829,7 @@ private theorem as_ext {M A B : Type} [CommGroup M] [TopologicalSpace M] [CommGr
   have hev : ∀ᶠ y in Filter.comap θ (𝓝 x), f y ∈ U.toSubgroup := by
     filter_upwards [Filter.preimage_mem_comap ((hVo U).mem_nhds hx)] with y hy
     exact (hmem U y).1 hy
-  haveI := hnb x
+  have := hnb x
   exact (hUc U).mem_of_tendsto (hF x) hev
 
 private theorem as_cont {M B : Type} [Group M] [TopologicalSpace M] [IsTopologicalGroup M] [Group B]
@@ -862,7 +862,7 @@ private theorem as_ker {M A : Type} [CommGroup M] [TopologicalSpace M] [CommGrou
       (continuous_const_mul x).continuousAt.preimage_mem_nhds (by simpa using hO)
     obtain ⟨O', hO'O, hO'o, h1O'⟩ := mem_nhds_iff.1 hO1
     obtain ⟨V, hVo, hVO⟩ := hb O' hO'o h1O'
-    haveI : Finite (A ⧸ V) := Subgroup.quotient_finite_of_isOpen V hVo
+    have : Finite (A ⧸ V) := Subgroup.quotient_finite_of_isOpen V hVo
     have hNpos : 0 < V.index := Nat.pos_of_ne_zero (Subgroup.index_ne_zero_of_finite)
     let Np : ℕ+ := ⟨V.index, hNpos⟩
     let S : Set A := {a | ProfiniteInteger.proj Np (Multiplicative.toAdd (D a)) = 0}
@@ -929,7 +929,7 @@ private theorem as_core {l : ℕ} [Fact l.Prime] {d : ℕ} {M A : Type} [CommGro
       ∀ (Y : Type) [CommGroup Y] [Finite Y], IsPGroup l Y → ∀ f : A →* Y, IsOpen (f.ker : Set A) →
         ∀ g, π g = 1 → a g = 1 → m g = 1 → f g = 1 := by
   classical
-  haveI : T2Space M := T2Space.of_injective_continuous hi hc
+  have : T2Space M := T2Space.of_injective_continuous hi hc
   obtain ⟨π, hπc, hπθ⟩ := as_ext θ hd hE p hp
   let va : M →* Multiplicative ℤ_[l] := (AddMonoidHom.toMultiplicative (Int.castAddHom ℤ_[l])).comp v
   have hva : Continuous va := by
@@ -1037,7 +1037,7 @@ private theorem as_core {l : ℕ} [Fact l.Prime] {d : ℕ} {M A : Type} [CommGro
     rintro h ⟨j, hj⟩ hall
     by_contra hne
     obtain ⟨V, hVo, hVsub⟩ := hb {h}ᶜ isOpen_compl_singleton (Ne.symm hne)
-    haveI : Finite (A ⧸ V) := Subgroup.quotient_finite_of_isOpen V hVo
+    have : Finite (A ⧸ V) := Subgroup.quotient_finite_of_isOpen V hVo
     obtain ⟨e, e', hle', he⟩ := Nat.exists_eq_pow_mul_and_not_dvd
       (Nat.card_pos (α := A ⧸ V)).ne' l (Fact.out : l.Prime).one_lt.ne'
     let φ : A ⧸ V →* A ⧸ V := powMonoidHom e'
@@ -1095,8 +1095,8 @@ theorem UpperTheory.V.Loc.abStruct :
     ∀ {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] (φ : G →* GQ l) (hφ : IsOpenEmbedding φ), Finite ↥(CommGroup.primaryComponent (TopologicalAbelianization G) l) ∧ IsCyclic ↥(CommGroup.primaryComponent (TopologicalAbelianization G) l) ∧ ∃ (π : G →* Multiplicative (Fin φ.range.index → ℤ_[l])) (a : G →* Multiplicative ℤ_[l]) (m : G →* ↥(CommGroup.primaryComponent (TopologicalAbelianization G) l)), Continuous π ∧ Continuous a ∧ IsOpen (m.ker : Set G) ∧ (∀ g : G, (QuotientGroup.mk' _ g : TopologicalAbelianization G) ∈ CommGroup.primaryComponent (TopologicalAbelianization G) l → π g = 1 ∧ a g = 1 ∧ (m g : TopologicalAbelianization G) = QuotientGroup.mk' _ g) ∧ (∀ g, φ g ∈ Iq l → a g = 1) ∧ Function.Surjective a ∧ (∀ x t, ∃ g, φ g ∈ Iq l ∧ π g = x ∧ m g = t) ∧ ∀ (Y : Type) [CommGroup Y] [Finite Y], IsPGroup l Y → ∀ f : G →* Y, IsOpen (f.ker : Set G) → ∀ g, π g = 1 → a g = 1 → m g = 1 → f g = 1 := by
   intro l _ G _ _ _ φ hφ
   classical
-  haveI : T2Space G := T2Space.of_injective_continuous hφ.injective hφ.continuous
-  haveI : CompactSpace G := by
+  have : T2Space G := T2Space.of_injective_continuous hφ.injective hφ.continuous
+  have : CompactSpace G := by
     have hcl : IsClosed (Set.range φ) := by
       have ho : IsOpen (φ.range : Set (GQ l)) := by simpa using hφ.isOpen_range
       simpa using Subgroup.isClosed_of_isOpen φ.range ho
@@ -1108,7 +1108,7 @@ theorem UpperTheory.V.Loc.abStruct :
     refine ⟨U.toSubgroup.comap φ, U.toOpenSubgroup.isOpen.preimage hφ.continuous, fun x hx => ?_⟩
     obtain ⟨y, hy, hyx⟩ := hU hx
     exact hφ.injective hyx ▸ hy
-  haveI : IsClosed ((commutator G).topologicalClosure : Set G) := Subgroup.isClosed_topologicalClosure _
+  have : IsClosed ((commutator G).topologicalClosure : Set G) := Subgroup.isClosed_topologicalClosure _
   let q : G →* TopologicalAbelianization G := QuotientGroup.mk' (commutator G).topologicalClosure
   have hqc : Continuous q := QuotientGroup.continuous_mk
   have hqs : Function.Surjective q := QuotientGroup.mk'_surjective _
@@ -1137,8 +1137,8 @@ theorem UpperTheory.V.Loc.abStruct :
       GroundTheory.LocalField.normalizedValuation_eq_exp_ord y.ne_zero]
     simp
   obtain ⟨hfin, p, t, hp, ht, h1, h2, h3⟩ := UpperTheory.localField_units_structure_theorem K l
-  haveI := hfin
-  haveI : IsCyclic ↥(CommGroup.primaryComponent Kˣ l) := inferInstance
+  have := hfin
+  have : IsCyclic ↥(CommGroup.primaryComponent Kˣ l) := inferInstance
   obtain ⟨hAf, hAc, πA, aA, mA, hπc, hac, hmo, hA1, hA2, hA3, hA4, hA5⟩ :=
     as_core (l := l) θ hc hi hd hE hbA v _ hϖ (by rw [hker]; exact GroundTheory.LocalField.isCompact_unitFiltrationUnits 0)
       (by rw [hker]; exact GroundTheory.LocalField.isOpen_unitFiltrationUnits 0) D hD
@@ -1245,7 +1245,7 @@ private theorem lc_ab {l : ℕ} [Fact l.Prime] {G : Type} [Group G] [Topological
 theorem UpperTheory.V.W.locCFT :
     GlobalTheory.Published.GlobalArtinReciprocity → Pa.CohP → LocCFTAll := by
   intro _ _ l _ L Ω _ _ _ _ _ _ s
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap L Ω).injective
   refine ⟨fun v => ReciprocityTheory.Gal.locDeg v.1, lc_sum l (Lp L), fun v => ?_⟩
   obtain ⟨v, hv⟩ := v
   have hA := s.hA v

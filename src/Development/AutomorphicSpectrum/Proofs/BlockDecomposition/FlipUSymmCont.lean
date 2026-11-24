@@ -132,10 +132,10 @@ def flipU (he : ∀ a, ε' a = !ε a) : Formalism.REAL.UJ ε' ≃* Formalism.REA
   map_mul' _ _ := rfl
 
 theorem flipU_cont (he : ∀ a, ε' a = !ε a) : Continuous (flipU he) := by
-  exact continuous_induced_rng.2 continuous_subtype_val
+  exact continuous_induced_rng.2 continuous_subtypeVal
 
 theorem flipU_symm_cont (he : ∀ a, ε' a = !ε a) : Continuous (flipU he).symm := by
-  exact continuous_induced_rng.2 continuous_subtype_val
+  exact continuous_induced_rng.2 continuous_subtypeVal
 
 theorem memLp_flip (he : ∀ a, ε' a = !ε a) {F : Formalism.REAL.UJ ε → ℂ} (hF : MemLp F 2 (Formalism.REAL.muG ε)) :
     MemLp (F ∘ flipU he) 2 (Formalism.REAL.muG ε') := by
@@ -143,7 +143,7 @@ theorem memLp_flip (he : ∀ a, ε' a = !ε a) {F : Formalism.REAL.UJ ε → ℂ
   have hcs := flipU_symm_cont he
   let eH : Formalism.REAL.UJ ε' ≃ₜ Formalism.REAL.UJ ε := ⟨(flipU he).toEquiv, hc, hcs⟩
   have hme : MeasurableEmbedding (flipU he) := eH.measurableEmbedding
-  haveI : (Measure.map (flipU he) (Formalism.REAL.muG ε')).IsHaarMeasure :=
+  have : (Measure.map (flipU he) (Formalism.REAL.muG ε')).IsHaarMeasure :=
     (flipU he).isHaarMeasure_map (Formalism.REAL.muG ε') hc hcs
   have hmap : Measure.map (flipU he) (Formalism.REAL.muG ε') =
       MeasureTheory.Measure.haarScalarFactor (Measure.map (flipU he) (Formalism.REAL.muG ε')) (Formalism.REAL.muG ε) •

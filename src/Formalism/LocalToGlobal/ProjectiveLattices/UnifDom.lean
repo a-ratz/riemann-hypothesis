@@ -90,11 +90,11 @@ theorem sub_mul_tri {i : ℕ} (h : i ≤ r) (Q A : Matrix (Fin r) (Fin r) ℂ) (
     rw [sum_castLE h]
     intro k hk
     have hz : Q k (Fin.castLE h a) = 0 :=
-      hQ (by simp only [id_eq, Fin.lt_iff_val_lt_val, Fin.coe_castLE]; exact lt_of_lt_of_le a.isLt hk)
+      hQ (by simp only [id_eq, Fin.lt_def, Fin.val_castLE]; exact lt_of_lt_of_le a.isLt hk)
     rw [hz, zero_mul]
   · intro l hl
     have hz : Q l (Fin.castLE h b) = 0 :=
-      hQ (by simp only [id_eq, Fin.lt_iff_val_lt_val, Fin.coe_castLE]; exact lt_of_lt_of_le b.isLt hl)
+      hQ (by simp only [id_eq, Fin.lt_def, Fin.val_castLE]; exact lt_of_lt_of_le b.isLt hl)
     rw [hz, map_zero, mul_zero]
 
 theorem lminor_mul_tri (τ : E →+* ℂ) (G : Matrix (Fin r) (Fin r) E) (P Q : Matrix (Fin r) (Fin r) ℂ)
@@ -115,9 +115,9 @@ theorem det_sub_tri_ne {i : ℕ} (h : i ≤ r) (Q : Matrix (Fin r) (Fin r) ℂ) 
   have hsub : (Q.submatrix (Fin.castLE h) (Fin.castLE h)).BlockTriangular id := by
     intro a b hab
     simp only [Matrix.submatrix_apply]
-    exact hQ (by simp only [id_eq, Fin.lt_iff_val_lt_val, Fin.coe_castLE] at hab ⊢; exact hab)
-  rw [Matrix.det_of_upperTriangular hsub]
-  rw [Matrix.det_of_upperTriangular hQ] at hd
+    exact hQ (by simp only [id_eq, Fin.lt_def, Fin.val_castLE] at hab ⊢; exact hab)
+  rw [Matrix.det_of_isUpperTriangular hsub]
+  rw [Matrix.det_of_isUpperTriangular hQ] at hd
   rw [Finset.prod_ne_zero_iff] at hd ⊢
   intro c _
   exact hd _ (Finset.mem_univ _)
@@ -129,7 +129,7 @@ theorem bor_upper {Ψ : Finset (E →+* ℂ)} {b : Frame Ψ r} (hb : b ∈ Bor �
 
 theorem dom_rmul (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) :
     rmul x b ∈ X.dom := by
-  simp only [Data.dom, GG, Set.mem_setOf_eq] at hx ⊢
+  simp only [Data.dom, GG, Set.mem_ofPred_eq] at hx ⊢
   intro τ
   obtain ⟨hdet, hpos⟩ := hx τ
   have hQ := bor_upper hb τ
@@ -172,7 +172,7 @@ theorem dom_lact (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) {γ : GL (
   have hcc : ∀ (σ : E →+* ℂ) (a : E), σ (cc a) = starRingEnd ℂ (σ a) := by
     intro σ a
     exact NumberField.IsCMField.complexEmbedding_complexConj E σ a
-  simp only [Data.dom, GG, Set.mem_setOf_eq] at hx ⊢
+  simp only [Data.dom, GG, Set.mem_ofPred_eq] at hx ⊢
   intro τ
   obtain ⟨hdet, hpos⟩ := hx τ
   have hm : mat (lact γ x) τ = (γ : Matrix (Fin r) (Fin r) E).map τ.1 * mat x τ := rfl

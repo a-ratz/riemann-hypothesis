@@ -128,9 +128,9 @@ theorem GlobalTheory.SeeSaw.ontoUni_inB : ∀ (D : D7) (θ : InfFam D) (V : HSp 
   obtain rfl := eq_thetaC D hθ
   refine ⟨?_, ?_, ?_, ?_⟩
   · refine continuous_pi fun τ => ?_
-    have hm : Continuous fun g : GA D V => mt V g := Units.continuous_val.comp continuous_subtype_val
+    have hm : Continuous fun g : GA D V => mt V g := Units.continuous_val.comp continuous_subtypeVal
     have h1 : Continuous fun k : GinfC V => (mt V k.1).map (psiT D τ) :=
-      (hm.comp continuous_subtype_val).matrix_map (psiT_continuous τ)
+      (hm.comp continuous_subtypeVal).matrix_map (psiT_continuous τ)
     exact (continuous_const.matrix_mul h1).matrix_mul continuous_const
   · intro k k' τ
     rw [inB_eq, inB_eq, inB_eq]

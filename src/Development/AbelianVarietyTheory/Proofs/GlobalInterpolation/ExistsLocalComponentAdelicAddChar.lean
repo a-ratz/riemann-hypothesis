@@ -78,7 +78,7 @@ theorem continuous_singleV (F : Type) [Field F] [NumberField F] (v : HeightOneSp
 theorem index_intV (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) :
     (LocalAdditiveCharacterDual.intV F v).index = 0 := by
   by_contra hn
-  haveI : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
+  have : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F (Fv F v)).injective
   obtain ⟨t, ht⟩ := HeightOneSpectrum.valuedAdicCompletion_surjective F v (WithZero.exp (1 : ℤ))
   have hn' : (((LocalAdditiveCharacterDual.intV F v).index : ℕ) : Fv F v) ≠ 0 := Nat.cast_ne_zero.2 hn
   have h := (LocalAdditiveCharacterDual.intV F v).nsmul_index_mem (t / (((LocalAdditiveCharacterDual.intV F v).index : ℕ) : Fv F v))

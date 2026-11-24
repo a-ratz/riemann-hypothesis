@@ -110,8 +110,8 @@ theorem rank_bound {r r₀ : ℕ} (P : Matrix (Fin r₀) (Fin r₀) ℤ)
   classical
   set Pr := P.map (Int.cast : ℤ → ℝ) with hPr
   obtain ⟨κ, c, hc, hsp, hli⟩ := exists_linearIndependent' ℝ (fun k => Pr k)
-  haveI : Finite κ := Finite.of_injective c hc
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective c hc
+  let : Fintype κ := Fintype.ofFinite κ
   have hρ : Pr.rank = Nat.card κ := by
     rw [Matrix.rank_eq_finrank_span_row, Nat.card_eq_fintype_card, ← finrank_span_eq_card hli, hsp]; rfl
   set R : Matrix κ (Fin r₀) ℤ := P.submatrix c id with hR
@@ -124,7 +124,7 @@ theorem rank_bound {r r₀ : ℕ} (P : Matrix (Fin r₀) (Fin r₀) ℤ)
   set d := (R * Rᵀ).det
   set N := d.natAbs + 1 with hN
   have hN2 : 2 ≤ N := by have := Int.natAbs_pos.2 hd0; omega
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   have hu : IsUnit (d : ZMod N) := by
     have h1 : ((d.natAbs : ℕ) : ZMod N) = -1 := by
       have : ((N : ℕ) : ZMod N) = 0 := ZMod.natCast_self N
@@ -248,7 +248,7 @@ theorem coisotropic_of_torsion_count (r r₀ : ℕ) (M : Matrix (Fin r) (Fin r) 
     rw [hAr, hMr, gramQ]
     apply rank_bound P
     intro N hN
-    haveI : NeZero N := ⟨hN.ne'⟩
+    have : NeZero N := ⟨hN.ne'⟩
     obtain ⟨S, hc, hS'⟩ := hS N hN
     refine ⟨S, hc, fun x hx => ?_⟩
     funext k

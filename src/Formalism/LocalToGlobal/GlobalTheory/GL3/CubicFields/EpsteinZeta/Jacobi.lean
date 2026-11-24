@@ -122,7 +122,7 @@ theorem jac_eisG (a z : ℂ) (ha : a ≠ 0) (hz : 0 < z.im) (k : ℕ) (hk : k �
       EisensteinSeries.eisSummand ((2 * k : ℕ) : ℤ) v (⟨z, hz⟩ : UpperHalfPlane)) ⊆ {v | v ≠ 0} := by
     intro v hv
     by_contra hv0
-    simp only [Set.mem_setOf_eq, not_not] at hv0
+    simp only [Set.mem_ofPred_eq, not_not] at hv0
     apply hv
     subst hv0
     have hk2 : ((2 * k : ℕ) : ℤ) ≠ 0 := by exact_mod_cast (by omega : 2 * k ≠ 0)

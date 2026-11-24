@@ -213,7 +213,7 @@ theorem norm_intCast (p : ℕ) [Fact p.Prime] (m : ℤ) (hm : m ≠ 0) :
     rw [Rat.cast_intCast, map_intCast]
   rw [e]
   refine (PadicComplex.norm_extends' (p := p) _).trans ?_
-  rw [Padic.eq_padicNorm, padicNorm.eq_zpow_of_nonzero (by exact_mod_cast hm),
+  rw [Padic.eq_padicNorm, padicNorm.eq_zpow_of_ne_zero (by exact_mod_cast hm),
     padicValRat.of_int]
   push_cast; rfl
 
@@ -319,7 +319,7 @@ private theorem valBound_embedding_mem_mul_lemma_2 {l : ℕ} [Fact l.Prime] {lam
     simpa using this
   have key : _root_.GlobalTheory.LatVal.Sz l lam
       ((padicValInt l (discr F) : ℝ) / Module.finrank ℚ F + ρ₀) ((i (t * ξ) : ℝ) : ℂ) := by
-    rw [Units.val_mul, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_mul] at hξ
+    rw [Units.val_mul, ← mem_coeToSubmodule, coeToSubmodule_mul] at hξ
     have hmul : t * ξ ∈ ({y | _root_.GlobalTheory.LatVal.Sz l lam
         ((padicValInt l (discr F) : ℝ) / Module.finrank ℚ F + ρ₀) ((i y : ℝ) : ℂ)} : Set F) := by
       refine Submodule.mul_induction_on hξ ?_ ?_
@@ -934,8 +934,8 @@ variable {l : ℕ} [Fact l.Prime] {lam : algebraicClosure ℚ ℂ →+* ℂ_[l]}
 theorem qAll_const {r : ℝ} {c : ℂ} (hc : Sz l lam r c) : QAll (Sz l lam r) N fun _ => c := by
   refine ⟨_, (_root_.GlobalTheory.QFam.hasQ_linear N).2.2.2.1 c, fun n => ?_⟩
   by_cases h : n = 0
-  · simpa only [h, if_true] using hc
-  · simpa only [h, if_false] using (_root_.GlobalTheory.QFam.SzSum.sz_ring l lam).1 r
+  · simpa only [h, ite_true] using hc
+  · simpa only [h, ite_false] using (_root_.GlobalTheory.QFam.SzSum.sz_ring l lam).1 r
 
 theorem qAll_mono {r s : ℝ} {f : ℍ → ℂ} (h : r ≤ s) (hf : QAll (Sz l lam r) N f) : QAll (Sz l lam s) N f := by
   obtain ⟨a, ha, hs⟩ := hf

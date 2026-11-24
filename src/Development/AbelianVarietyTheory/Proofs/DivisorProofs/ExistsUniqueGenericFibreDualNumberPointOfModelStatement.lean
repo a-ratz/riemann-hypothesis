@@ -73,7 +73,7 @@ theorem dualMap_comp_algebraMap {R R' : Type} [CommRing R] [CommRing R'] (g : R 
 theorem isPullback_gen {V : Type} [CommRing V] [IsDomain V] {I : Ideal V} {D : DegData V I}
     {A : PolAV (Sp (FractionRing V))} {G : Over (Sp V)} [GrpObj G] [IsCommMonObj G] (U : UnifPre I D A G) :
     IsPullback (U.gen.inv.left ≫ pullback.fst G.hom (jK V)) A.A.hom G.hom (spMap (algebraMap V (FractionRing V))) := by
-  haveI : IsIso U.gen.inv.left := inferInstanceAs (IsIso ((Over.forget _).map U.gen.inv))
+  have : IsIso U.gen.inv.left := inferInstanceAs (IsIso ((Over.forget _).map U.gen.inv))
   have sq : IsPullback U.gen.inv.left A.A.hom (pullback.snd G.hom (jK V)) (𝟙 _) :=
     IsPullback.of_horiz_isIso ⟨by simpa using Over.w U.gen.inv⟩
   simpa using sq.paste_horiz (IsPullback.of_hasPullback G.hom (jK V))

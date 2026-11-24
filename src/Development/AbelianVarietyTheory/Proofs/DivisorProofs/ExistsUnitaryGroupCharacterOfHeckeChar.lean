@@ -135,9 +135,9 @@ theorem cutDet_eq_one (ε : AE D) (h : ε * ε = ε) (V : HSp D) (g : GA D V)
   linear_combination mul_det_sub_one ε _ hg
 
 theorem continuous_cutDet (ε : AE D) (h : ε * ε = ε) (V : HSp D) : Continuous (cutDet ε h V) := by
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
-  have h0 : Continuous fun g : GA D V => matHom V g := continuous_subtype_val
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have h0 : Continuous fun g : GA D V => matHom V g := continuous_subtypeVal
   have h1 : Continuous (Formalism.L2.Theta.mt V) := Units.continuous_val.comp h0
   have h2 : Continuous fun g : GA D V => Formalism.L2.Theta.mt V g⁻¹ := by
     have e : (fun g : GA D V => Formalism.L2.Theta.mt V g⁻¹) = fun g => ((matHom V g)⁻¹).1 := by

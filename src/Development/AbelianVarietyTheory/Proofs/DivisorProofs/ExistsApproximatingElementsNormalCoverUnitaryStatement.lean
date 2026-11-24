@@ -121,7 +121,7 @@ namespace GlobalTheory.CorrCover
 
 theorem exists_corr : ∀ (Z M S₁ : Scheme.{0}) [IsIntegral M] [IsIntegral S₁] (sM : M ⟶ Sp ℤ) (p₁ : S₁ ⟶ M) (g : M ⟶ Z) (J : Z.IdealSheafData), LocallyOfFiniteType sM → QuasiCompact sM → Flat (p₁ ≫ sM) → Geo.Tor.IsNormalScheme S₁ → IsProper p₁ → IsDominant p₁ → FinalTheorems.EffCartier (J.comap (p₁ ≫ g)) → ∀ (U₁ : S₁.Opens), (U₁ : Set S₁).Nonempty → ∀ (z₁ : M) (R : Type) [CommRing R] [IsLocalRing R] (ev : M.presheaf.stalk z₁ →+* R), IsLocalHom ev → ∀ ξ₁ : Sp R ⟶ S₁, ξ₁ ≫ p₁ = spMap ev ≫ M.fromSpecStalk z₁ → ∃ g₀ : R, idlAlong (J.comap (p₁ ≫ g)) ξ₁ = Ideal.span {g₀} ∧ ∀ D e : ℕ, ∃ e' : ℕ, ∀ f : M.presheaf.stalk z₁, (∀ (V : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [CharZero V], IsAdicComplete (maximalIdeal V) V → ∀ (ξ' : Sp V ⟶ S₁) (ev' : M.presheaf.stalk z₁ →+* V), IsLocalHom ev' → spMap ev' ≫ M.fromSpecStalk z₁ = ξ' ≫ p₁ → Set.range (jK V ≫ ξ') ⊆ (U₁ : Set S₁) → ev' f ∈ idlAlong (J.comap (p₁ ≫ g)) ξ' ^ D ⊔ ((maximalIdeal (M.presheaf.stalk z₁)).map ev') ^ e') → ∃ h ∈ (Scheme.stalkClosedPointTo ξ₁).hom.range, ev f - h * g₀ ^ D ∈ maximalIdeal R ^ e := by
   intro Z M S₁ _ _ sM p₁ g J h1 h2 h3 hN h5 h6 hEC U₁ hU z₁ R _ _ ev hev ξ₁ hξ
-  haveI := h1; haveI := h2; haveI := h3; haveI := h5; haveI := h6; haveI := hev
+  have := h1; have := h2; have := h3; have := h5; have := h6; have := hev
   set I := J.comap (p₁ ≫ g) with hIdef
   set x₁ := ξ₁ (closedPoint R)
   set ψ := (Scheme.stalkClosedPointTo ξ₁).hom
@@ -212,10 +212,10 @@ namespace GlobalTheory.USep
 
 theorem exists_normalisation_pullback_cover : ∀ {o : CommRingCat.{0}} [Algebra.FiniteType ℤ o] {Z Z' M : Scheme.{0}} (z : Z ⟶ Spec o) [LocallyOfFiniteType z] (b : Z' ⟶ Z) [IsProper b] (J : Z.IdealSheafData), FinalTheorems.Blowup b J → ∀ [IsIntegral M] [GlobalTheory.IsNormalScheme M] (U : Z.Opens) (g' : M ⟶ U.toScheme) [IsFinite g'], (∃ m, (g' ≫ U.ι) m ∉ J.support) → ∃ (S₁ : Scheme.{0}) (_ : IsIntegral S₁) (p₁ : S₁ ⟶ M) (ν₁ : S₁ ⟶ (b ⁻¹ᵁ U).toScheme), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S₁ ∧ IsProper p₁ ∧ IsFinite ν₁ ∧ ν₁ ≫ (b ∣_ U) = p₁ ≫ g' ∧ FinalTheorems.EffCartier (J.comap (p₁ ≫ g' ≫ U.ι)) ∧ (∀ m, (g' ≫ U.ι) m ∉ J.support → m ∈ Set.range p₁) ∧ ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (a : Sp R ⟶ (b ⁻¹ᵁ U).toScheme) (β : Sp R ⟶ M), a ≫ (b ∣_ U) = β ≫ g' → (∀ w, (jK R ≫ β ≫ g' ≫ U.ι) w ∉ J.support) → ∃ ξ₁ : Sp R ⟶ S₁, ξ₁ ≫ ν₁ = a ∧ ξ₁ ≫ p₁ = β := by
   intro o _ Z Z' M z _ b _ J hB _ _ U g' _ hne
-  haveI : IsNoetherianRing o := Algebra.FiniteType.isNoetherianRing ℤ o
-  haveI : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian z
-  haveI : LocallyOfFiniteType (g' ≫ U.ι ≫ z) := inferInstance
-  haveI : IsLocallyNoetherian M := LocallyOfFiniteType.isLocallyNoetherian (g' ≫ U.ι ≫ z)
+  have : IsNoetherianRing o := Algebra.FiniteType.isNoetherianRing ℤ o
+  have : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian z
+  have : LocallyOfFiniteType (g' ≫ U.ι ≫ z) := inferInstance
+  have : IsLocallyNoetherian M := LocallyOfFiniteType.isLocallyNoetherian (g' ≫ U.ι ≫ z)
   let Vi : Z.Opens := J.support.compl
   haveI hbV : IsIso (b ∣_ Vi) := GlobalTheory.Principalise.isIso_restrict_of_blowup hB Vi (fun x hx => hx)
   have monoV : ∀ {T : Scheme.{0}} (u v : T ⟶ Z'), u ≫ b = v ≫ b → Set.range (u ≫ b) ⊆ (Vi : Set Z) → u = v := by
@@ -247,7 +247,7 @@ theorem exists_normalisation_pullback_cover : ∀ {o : CommRingCat.{0}} [Algebra
     · rw [Category.assoc, ← hbU]; exact hr
   let V : M.Opens := (g' ≫ U.ι) ⁻¹ᵁ Vi
   obtain ⟨m₀, hm₀⟩ := hne
-  haveI : Nonempty V := ⟨⟨m₀, hm₀⟩⟩
+  have : Nonempty V := ⟨⟨m₀, hm₀⟩⟩
   let c₀ : (V : Scheme.{0}) ⟶ Z' := (g' ≫ U.ι) ∣_ Vi ≫ inv (b ∣_ Vi) ≫ (b ⁻¹ᵁ Vi).ι
   have hc₀ : c₀ ≫ b = V.ι ≫ g' ≫ U.ι := by
     simp only [c₀, Category.assoc]
@@ -265,17 +265,17 @@ theorem exists_normalisation_pullback_cover : ∀ {o : CommRingCat.{0}} [Algebra
   let j : (V : Scheme.{0}) ⟶ pullback bU g' := pullback.lift c V.ι hc
   have hjs : j ≫ pullback.snd bU g' = V.ι := pullback.lift_snd _ _ _
   have hjf : j ≫ pullback.fst bU g' = c := pullback.lift_fst _ _ _
-  haveI : IsProper bU := by dsimp only [bU]; infer_instance
-  haveI : QuasiCompact (j ≫ pullback.snd bU g') := by rw [hjs]; infer_instance
-  haveI : QuasiCompact j := QuasiCompact.of_comp j (pullback.snd bU g')
-  haveI : QuasiSeparated (j ≫ pullback.snd bU g') := by rw [hjs]; infer_instance
-  haveI : QuasiSeparated j := QuasiSeparated.of_comp j (pullback.snd bU g')
-  haveI : LocallyOfFiniteType (j ≫ pullback.snd bU g') := by rw [hjs]; infer_instance
-  haveI : LocallyOfFiniteType j := locallyOfFiniteType_of_comp j (pullback.snd bU g')
-  haveI : GlobalTheory.IsNormalScheme (V : Scheme.{0}) := .of_isOpenImmersion V.ι
-  haveI : IsReduced (V : Scheme.{0}) := inferInstance
-  haveI : IsLocallyNoetherian (V : Scheme.{0}) := inferInstance
-  haveI hfin : IsFinite j.fromNormalization :=
+  have : IsProper bU := by dsimp only [bU]; infer_instance
+  have : QuasiCompact (j ≫ pullback.snd bU g') := by rw [hjs]; infer_instance
+  have : QuasiCompact j := QuasiCompact.of_comp j (pullback.snd bU g')
+  have : QuasiSeparated (j ≫ pullback.snd bU g') := by rw [hjs]; infer_instance
+  have : QuasiSeparated j := QuasiSeparated.of_comp j (pullback.snd bU g')
+  have : LocallyOfFiniteType (j ≫ pullback.snd bU g') := by rw [hjs]; infer_instance
+  have : LocallyOfFiniteType j := locallyOfFiniteType_of_comp j (pullback.snd bU g')
+  have : GlobalTheory.IsNormalScheme (V : Scheme.{0}) := .of_isOpenImmersion V.ι
+  have : IsReduced (V : Scheme.{0}) := inferInstance
+  have : IsLocallyNoetherian (V : Scheme.{0}) := inferInstance
+  have hfin : IsFinite j.fromNormalization :=
     GlobalTheory.NormBlowupInt.isFinite_fromNormalization_int_of_isReduced (o := o) j
       (pullback.fst bU g' ≫ bU ≫ U.ι ≫ z) fun x _ => (LocallyOfFiniteType.stalkMap j x).residueFieldMap
   let p₁ : j.normalization ⟶ M := j.fromNormalization ≫ pullback.snd bU g'
@@ -471,7 +471,7 @@ theorem defOver_of_isIntegralHom : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [IsInteg
   intro X Y f _ K _ k₀ hk P ⟨Q₀, hQ⟩
   let g := pullback.snd f Q₀
   let Pt : Sp K ⟶ pullback f Q₀ := pullback.lift P (spMap k₀.subtype) hQ.symm
-  haveI : IsAffine (pullback f Q₀) := isAffine_of_isAffineHom g
+  have : IsAffine (pullback f Q₀) := isAffine_of_isAffineHom g
   have hint : (g.app ⊤).hom.IsIntegral := g.isIntegral_app ⊤ (isAffineOpen_top _)
   let φc : Γ(pullback f Q₀, ⊤) ⟶ CommRingCat.of K := Pt.appTop ≫ (Scheme.ΓSpecIso (CommRingCat.of K)).hom
   have hPt : Pt = Spec.map φc ≫ (pullback f Q₀).isoSpec.inv := by
@@ -548,25 +548,25 @@ namespace GlobalTheory.USepCov
 theorem exists_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c), ∀ (J : C.Z.IdealSheafData), (∀ x ∈ J.support, x ∉ Set.range C.i) → ∀ (S : Scheme.{0}) (π : S ⟶ pullback C.z (spMap C.b)), IsNormBl π (J.comap (pullback.fst C.z (spMap C.b))) → ∀ (M : Scheme.{0}) [IsIntegral M] (g : M ⟶ C.Z) (z₁ : M) (ζ : Sp (M.presheaf.stalk z₁) ⟶ pullback C.z (spMap C.b)), IsCov C g z₁ ζ → ∃ (S₁ : Scheme.{0}) (_ : IsIntegral S₁) (p₁ : S₁ ⟶ M) (sM : M ⟶ Sp ℤ) (U₁ : S₁.Opens), LocallyOfFiniteType sM ∧ QuasiCompact sM ∧ Flat (p₁ ≫ sM) ∧ ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme S₁ ∧ IsProper p₁ ∧ IsDominant p₁ ∧ FinalTheorems.EffCartier (J.comap (p₁ ≫ g)) ∧ (U₁ : Set S₁).Nonempty ∧ (∀ (K : Type) [Field K] (x : Sp K ⟶ S₁) (ev : M.presheaf.stalk z₁ →+* K), x ≫ p₁ = spMap ev ≫ M.fromSpecStalk z₁ → Set.range x ⊆ (U₁ : Set S₁) → ∃ y : Sp K ⟶ Xo.XF c, y ≫ C.iF = spMap ev ≫ ζ) ∧ ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsIntegrallyClosed R] (a : Sp R ⟶ S) (ev : M.presheaf.stalk z₁ →+* R), a ≫ π = spMap ev ≫ ζ → Set.range (jK R ≫ a ≫ π) ⊆ Set.range C.iF → ∃ ξ₁ : Sp R ⟶ S₁, ξ₁ ≫ p₁ = spMap ev ≫ M.fromSpecStalk z₁ ∧ ∀ (K : Type) [Field K] [IsAlgClosed K] (ev' : R →+* K) (k₀ : Subfield K), IsAlgClosed k₀ → (∀ p, (spMap ev' ≫ a) p = a (closedPoint R)) → GlobalTheory.UChart.DefOver k₀ (spMap ev' ≫ a) → (∀ p, (spMap ev' ≫ ξ₁) p = ξ₁ (closedPoint R)) ∧ GlobalTheory.UChart.DefOver k₀ (spMap ev' ≫ ξ₁) := by
   intro E _ _ _ H Dw _ l Xo c C J hJi S π hNB M _ g z₁ ζ hcov
   obtain ⟨hMn, ⟨U, g', hg'fin, hg'U, hUF⟩, hζ, hgen⟩ := hcov
-  haveI := hg'fin
-  haveI := C.ft
-  haveI : Algebra.FiniteType ℤ (CommRingCat.of C.o) := ‹Algebra.FiniteType ℤ C.o›
-  haveI : IsNoetherianRing C.o := Algebra.FiniteType.isNoetherianRing ℤ _
-  haveI := C.iF_open
+  have := hg'fin
+  have := C.ft
+  have : Algebra.FiniteType ℤ (CommRingCat.of C.o) := ‹Algebra.FiniteType ℤ C.o›
+  have : IsNoetherianRing C.o := Algebra.FiniteType.isNoetherianRing ℤ _
+  have := C.iF_open
   obtain ⟨Z', b, hB, hBproj, -⟩ := GlobalTheory.ProjBlowup.exists_blowup C.z C.proj J
-  haveI : IsProper C.z := by
+  have : IsProper C.z := by
     obtain ⟨m, e, he, he'⟩ := C.proj
-    haveI := he
+    have := he
     have := isProper_str C.o m
     rw [← he']
     infer_instance
-  haveI : IsProper (b ≫ C.z) := by
+  have : IsProper (b ≫ C.z) := by
     obtain ⟨m, e, he, he'⟩ := hBproj
-    haveI := he
+    have := he
     have := isProper_str C.o m
     rw [← he']
     infer_instance
-  haveI : IsProper b := IsProper.of_comp b C.z
+  have : IsProper b := IsProper.of_comp b C.z
   obtain ⟨-, S₀, π₀, ν, -, hB₀, hνπ, -, -, -, -⟩ := hNB
   obtain ⟨ψ₀, hψ₀, -⟩ := hB.2 S₀ (π₀ ≫ pullback.fst C.z (spMap C.b))
     (by rw [Scheme.IdealSheafData.comap_comp]; exact hB₀.1)
@@ -583,8 +583,8 @@ theorem exists_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   have hpt : ∀ q : Sp (M.presheaf.stalk z₁), g (M.fromSpecStalk z₁ q) = pullback.fst C.z (spMap C.b) (ζ q) := by
     intro q
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, hζ]
-  haveI := hMn
-  haveI : IsDomain (M.presheaf.stalk z₁) := inferInstance
+  have := hMn
+  have : IsDomain (M.presheaf.stalk z₁) := inferInstance
   let p0 : Sp (M.presheaf.stalk z₁) := ⟨⊥, Ideal.isPrime_bot⟩
   obtain ⟨y0, hy0⟩ := hgen p0 rfl
   let m0 : M := M.fromSpecStalk z₁ p0
@@ -597,17 +597,17 @@ theorem exists_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   have hm0J : (g' ≫ U.ι) m0 ∉ J.support := hgm m0 ⟨y0, hm0.symm⟩
   obtain ⟨S₁, hS₁i, p₁, ν₁, hS₁n, hp₁P, hν₁fin, hcomm, hEff, hrange, hlift⟩ :=
     GlobalTheory.T.exists_normalisation_blowup_pullback_finiteCover (o := CommRingCat.of C.o) C.z b J hB U g' ⟨m0, hm0J⟩
-  haveI := hν₁fin
+  have := hν₁fin
 
-  haveI : IsPreimmersion (spMap C.b) := by
-    letI := C.b.toAlgebra
-    haveI := C.isFractionRing
+  have : IsPreimmersion (spMap C.b) := by
+    let := C.b.toAlgebra
+    have := C.isFractionRing
     exact IsPreimmersion.of_isLocalization (nonZeroDivisors C.o)
   obtain ⟨W', hW'o, hW'⟩ := ((IsPreimmersion.isEmbedding (pullback.fst C.z (spMap C.b))).isInducing.isOpen_iff).mp
     C.iF.isOpenMap.isOpen_range
   let sM : M ⟶ Sp ℤ := g ≫ C.z ≫ Spec.map (CommRingCat.ofHom (algebraMap ℤ C.o))
   obtain ⟨x0, hx0⟩ := hrange m0 hm0J
-  haveI hSpecZ : LocallyOfFiniteType (Spec.map (CommRingCat.ofHom (algebraMap ℤ C.o))) := by
+  have hSpecZ : LocallyOfFiniteType (Spec.map (CommRingCat.ofHom (algebraMap ℤ C.o))) := by
     rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)]
     exact RingHom.finiteType_algebraMap.mpr inferInstance
   refine ⟨S₁, hS₁i, p₁, sM, (p₁ ≫ g) ⁻¹ᵁ ⟨W', hW'o⟩, ?_, ?_, ?_, hS₁n, hp₁P, ?_, ?_, ?_, ?_, ?_⟩
@@ -615,7 +615,7 @@ theorem exists_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     rw [← hg'U]
     infer_instance
   · show QuasiCompact (g ≫ C.z ≫ Spec.map (CommRingCat.ofHom (algebraMap ℤ C.o)))
-    haveI : IsLocallyNoetherian C.Z := LocallyOfFiniteType.isLocallyNoetherian (C.z ≫ Spec.map (CommRingCat.ofHom (algebraMap ℤ C.o)))
+    have : IsLocallyNoetherian C.Z := LocallyOfFiniteType.isLocallyNoetherian (C.z ≫ Spec.map (CommRingCat.ofHom (algebraMap ℤ C.o)))
     rw [← hg'U]
     infer_instance
   · apply GlobalTheory.T.flat_int_of_integral_scheme_generic_point _ x0
@@ -630,7 +630,7 @@ theorem exists_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       rfl
     rw [e]
     show Ideal.comap _ _ = ⊥
-    haveI := ((C.iF ≫ pullback.snd C.z (spMap C.b)) y0).isPrime
+    have := ((C.iF ≫ pullback.snd C.z (spMap C.b)) y0).isPrime
     rw [Ideal.eq_bot_of_prime (((C.iF ≫ pullback.snd C.z (spMap C.b)) y0).asIdeal), Ideal.comap_bot_of_injective]
     exact fun u v h => Int.cast_injective (α := c.F) (by simpa using h)
   · constructor
@@ -757,7 +757,7 @@ theorem main : ∀ (V R K : Type) [inst : CommRing V] [IsDomain V] [IsLocalRing 
   have hint : ρ.IsIntegral := hfin.to_isIntegral
   refine ⟨?_, fun ev => ?_⟩
   · refine ((IsLocalRing.local_hom_tfae ρ).out 5 1).mp ?_
-    exact IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' ρ hint _)
+    exact IsLocalRing.eq_maximalIdeal (Ideal.isMaximal_comap_of_isIntegral_of_isMaximal ρ hint _)
   · let := ρ.toAlgebra
     have : Algebra.IsIntegral V R := ⟨hint⟩
     have : FaithfulSMul V R := (faithfulSMul_iff_algebraMap_injective V R).2 hinj
@@ -846,7 +846,7 @@ namespace GlobalTheory.UGZero
 
 theorem idlAlong_eq_span_monomial : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c), ∀ (φ : InvFun (𝓞 E)), IsPolFan H.bar (min Dw.p Dw.q) φ → ∀ (d : ℕ) (J : C.Z.IdealSheafData), (∀ x ∈ J.support, x ∉ Set.range C.i) → UValOn Xo c C.i φ J d → ∀ (S : Scheme.{0}) (π : S ⟶ pullback C.z (spMap C.b)), IsNormBl π (J.comap (pullback.fst C.z (spMap C.b))) → ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRing V] (Cm : GlobalTheory.UChart.MonoFam Xo c φ V), GlobalTheory.Mum.Base V → ∀ ξ : Sp V ⟶ S, Cm.y ≫ C.iF = jK V ≫ ξ ≫ π → ∃ b : Fin Cm.m → ℕ, (∀ k, (b k : ℝ) = d * φ.evalZ ((l.M' : ℤ) • Cm.δ k)) ∧ idlAlong J (ξ ≫ π ≫ pullback.fst C.z (spMap C.b)) = Ideal.span {∏ k, Cm.s k ^ b k} := by
   intro E _ _ _ H Dw hpq l Xo c C φ hpf d J hJ hval S π hbl V _ _ _ Cm hV ξ hξ
-  haveI : Module.Projective (𝓞 E) Cm.P.D.toPre.X := GlobalTheory.Forms.projective_of_int _ _
+  have : Module.Projective (𝓞 E) Cm.P.D.toPre.X := GlobalTheory.Forms.projective_of_int _ _
   have hP := hpf Cm.P.D.toPre.X Cm.rank
   have key0 : ∀ k, ∃ n : ℕ, φ.evalZ ((l.M' : ℤ) • Cm.δ k) = n := fun k =>
     hP.exists_nat (Submodule.smul_mem _ _ (Cm.cone.mem k)) (fun y => by
@@ -863,7 +863,7 @@ theorem idlAlong_eq_span_monomial : ∀ (E : Type) [Field E] [NumberField E] [Is
   have key : ∀ (W : Type) [CommRing W] [IsDomain W] [IsLocalRing W], GlobalTheory.LN.CDvr W → ∀ ψ : V →+* W,
       Function.Injective ψ → IsLocalHom ψ → Ideal.span {ψ g₀} = Ideal.span {ψ f} := by
     intro W _ _ _ hW ψ hψi hψl
-    haveI : IsDiscreteValuationRing W := ((GlobalTheory.LN.cDvr_iff W).1 hW).1
+    have : IsDiscreteValuationRing W := ((GlobalTheory.LN.cDvr_iff W).1 hW).1
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
     have hw : ∀ k, ∃ w : ℕ, Associated (ψ (Cm.s k)) (ϖ ^ w) := fun k => by
       have h0 : ψ (Cm.s k) ≠ 0 := fun h => s_ne_zero Cm k (hψi (h.trans (map_zero ψ).symm))
@@ -901,9 +901,9 @@ theorem idlAlong_eq_span_monomial : ∀ (E : Type) [Field E] [NumberField E] [Is
       fun k _ => ?_).symm
     rw [map_pow, pow_mul ϖ (w k)]
     exact (hw k).pow_pow
-  haveI := hNoeth
-  haveI := hIC
-  haveI := hchar
+  have := hNoeth
+  have := hIC
+  have := hchar
   have hf0 : f ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => pow_ne_zero _ (s_ne_zero Cm k)
   have hg0 : g₀ ≠ 0 := by
     rintro rfl
@@ -964,7 +964,7 @@ theorem sp_comp {R S U : Type} [CommRing R] [CommRing S] [CommRing U] (f : R →
 theorem comap_map_eq {R S : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [CommRing S] [IsDomain S]
     [IsLocalRing S] (f : R →+* S) (hf : Function.Injective f) [IsLocalHom f] (I : Ideal R) :
     (I.map f).comap f = I := by
-  letI := f.toAlgebra
+  let := f.toAlgebra
   have : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective _ _).2 hf
   have : IsLocalHom (algebraMap R S) := ‹IsLocalHom f›
   have : Module.Flat R S := inferInstance
@@ -1001,7 +1001,7 @@ theorem range_jK_spMap_subset_of_injective (V R : Type) [CommRing V] [IsDomain V
     apply PrimeSpectrum.ext
     change Ideal.comap ρ (Ideal.comap (algebraMap R (FractionRing R)) p.asIdeal) =
       Ideal.comap (algebraMap V (FractionRing V)) ⊥
-    haveI : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
+    have : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
     rw [Ideal.eq_bot_of_prime p.asIdeal, Ideal.comap_comap,
       Ideal.comap_bot_of_injective _ (IsFractionRing.injective V (FractionRing V)),
       Ideal.comap_bot_of_injective _ (by rw [RingHom.coe_comp]; exact (IsFractionRing.injective R (FractionRing R)).comp hρ)]
@@ -1014,9 +1014,9 @@ theorem mem_of_ordGe_on : UTraitExtSt → ∀ (E : Type) [Field E] [NumberField 
   intro hExt E _ _ _ H Dw l Xo c C φ d J hval M z₁ U ζ N₁ Φ hT V _ _ _ _ hV ev' hev' hU y' hy' D e f hf
   have hB : GlobalTheory.Mum.Base V := ⟨⟨inferInstance, inferInstance, inferInstance, hV⟩, inferInstance⟩
   obtain ⟨T, fx, fK, hfi, hfl, -, hfK, hTy⟩ := hExt E H Dw l Xo c V hB inferInstance y'
-  haveI : IsDiscreteValuationRing T.V := T.cdvr.1
+  have : IsDiscreteValuationRing T.V := T.cdvr.1
   let evT := fx.comp ev'
-  haveI : IsLocalHom evT := RingHom.isLocalHom_comp fx ev'
+  have : IsLocalHom evT := RingHom.isLocalHom_comp fx ev'
   have hring : (algebraMap T.V (FractionRing T.V)).comp evT = fK.comp ((algebraMap V (FractionRing V)).comp ev') :=
     RingHom.ext fun a => (hfK (ev' a)).symm
   have hsq : jK T.V ≫ spMap evT ≫ ζ = T.y ≫ C.iF := by
@@ -1050,7 +1050,7 @@ theorem mem_of_ordGe_on : UTraitExtSt → ∀ (E : Type) [Field E] [NumberField 
   have hmem := hf.mem y2 hP hm k (D * (2 * n)) hb
   have htp : Φ.t y2 k ^ (D * (2 * n)) = f₂ (T.ϖ ^ (n * D)) := by
     rw [show D * (2 * n) = 2 * (n * D) by ring, pow_mul, (ht k).1, map_pow]
-  haveI := hf₂l
+  have := hf₂l
   have hK : (Ideal.span {T.ϖ ^ (n * D)} ⊔ ((maximalIdeal (M.presheaf.stalk z₁)).map evT) ^ e).map f₂ =
       Ideal.span {Φ.t y2 k ^ (D * (2 * n))} ⊔ ((maximalIdeal (M.presheaf.stalk z₁)).map (Φ.ev y2)) ^ e := by
     rw [Ideal.map_sup, Ideal.map_span, Set.image_singleton, Ideal.map_pow, Ideal.map_map, hf₂c, htp]
@@ -1059,7 +1059,7 @@ theorem mem_of_ordGe_on : UTraitExtSt → ∀ (E : Type) [Field E] [NumberField 
     rw [Ideal.mem_comap]
     rw [hK, ← RingHom.comp_apply, hf₂c]
     exact hmem
-  haveI := hfl
+  have := hfl
   have hK' : ((idlAlong J (spMap ev' ≫ ζ ≫ pullback.fst C.z (spMap C.b))) ^ D ⊔
       ((maximalIdeal (M.presheaf.stalk z₁)).map ev') ^ e).map fx =
       Ideal.span {T.ϖ ^ (n * D)} ⊔ ((maximalIdeal (M.presheaf.stalk z₁)).map evT) ^ e := by
@@ -1207,7 +1207,7 @@ theorem range_jK_spMap_subset : ∀ (V R : Type) [CommRing V] [IsDomain V] [Comm
     apply PrimeSpectrum.ext
     change Ideal.comap ρ (Ideal.comap (algebraMap R (FractionRing R)) p.asIdeal) =
       Ideal.comap (algebraMap V (FractionRing V)) ⊥
-    haveI : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
+    have : p.asIdeal.IsPrime := PrimeSpectrum.isPrime p
     rw [Ideal.eq_bot_of_prime p.asIdeal, Ideal.comap_comap,
       Ideal.comap_bot_of_injective _ (IsFractionRing.injective V (FractionRing V)),
       Ideal.comap_bot_of_injective _ (by rw [RingHom.coe_comp]; exact (IsFractionRing.injective R (FractionRing R)).comp hρ)]
@@ -1225,8 +1225,8 @@ theorem exists_elements_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   obtain ⟨-, -, hζg, -⟩ := hcov'
   obtain ⟨S₁, hS₁, p₁, sM, U₁, hft, hqc, hfl, hnorm, hprop, hdom, hcart, hU₁, hlift, hxi⟩ :=
     GlobalTheory.T.exists_normalisedBlowup_finite_normal_cover E H Dw hpq l Xo c C J hJ S π hπ M g z₁ ζ hcov
-  haveI := hS₁
-  haveI : IsIntegrallyClosed (Φ.V y) := (Φ.cn y).2.1
+  have := hS₁
+  have : IsIntegrallyClosed (Φ.V y) := (Φ.cn y).2.1
   have hζ' : (spMap ρ ≫ ξ) ≫ π = spMap (Φ.ev y) ≫ ζ := by rw [hζ, Category.assoc]
   have hgen : Set.range (jK (Φ.V y) ≫ (spMap ρ ≫ ξ) ≫ π) ⊆ Set.range C.iF := by
     intro x hx

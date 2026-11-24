@@ -76,8 +76,8 @@ namespace GlobalTheory
 theorem exists_kHighest_real_of_finiteDimensional : ∀ (n : ℕ) (ε : Fin n → Bool) (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] (E : Fin n → Fin n → Module.End ℂ V), KRel ε E → KUnit ε E → ∀ N : Submodule ℂ V, FiniteDimensional ℂ N → KStab ε E N → N ≠ ⊥ → ∃ (μ : Fin n → ℝ) (w : V), w ∈ N ∧ w ≠ 0 ∧ KHighest ε E μ w := by
   intro n ε V _ _ E hR hU N hfd hS hN
   classical
-  haveI : FiniteDimensional ℂ N := hfd
-  haveI : Nontrivial N := Submodule.nontrivial_iff_ne_bot.2 hN
+  have : FiniteDimensional ℂ N := hfd
+  have : Nontrivial N := Submodule.nontrivial_iff_ne_bot.2 hN
   have hcomm : ∀ k i j, ε i = ε j → E k k * E i j - E i j * E k k =
       ((if k = i then (1 : ℂ) else 0) - (if j = k then 1 else 0)) • E i j := by
     intro k i j h
@@ -331,7 +331,7 @@ theorem GlobalTheory.HolDS.lowKSub_kMod : ∀ (n : ℕ) (ε : Fin n → Bool) (H
     exact (lowKSub_mem_of_forall (LinearMap.ker (E b a)) hD
       (fun S hS y hy => by
         have h := hT _ S hS
-        haveI := h.2.1
+        have := h.2.1
         exact _root_.GlobalTheory.HolDS.pMinus_kills_lowest n ε D E lam hK.gl hK.unit hHC.1 hch hM (S.comap D.subtype) h.2.1 h.2.2.1 h.2.2.2
           a b ha hb y hy) x hx : x ∈ LinearMap.ker (E b a))
 end -- clump:auto

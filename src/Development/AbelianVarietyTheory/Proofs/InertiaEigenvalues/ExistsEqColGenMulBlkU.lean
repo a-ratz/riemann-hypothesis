@@ -259,7 +259,7 @@ theorem discrete_of_le_range {Γ : Subgroup (GA E a)} (hΓ : Γ ≤ (ratGL E a).
   have hW : IsOpen (⋂ i : Fin a, ⋂ k : Fin a,
       {g : Γ | (g : GA E a).val i k - (1 : Matrix (Fin a) (Fin a) (Ad E)) i k ∈ V}) :=
     isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun k =>
-      hVo.preimage (((Units.continuous_val.comp continuous_subtype_val).matrix_elem i k).sub continuous_const)
+      hVo.preimage (((Units.continuous_val.comp continuous_subtypeVal).matrix_elem i k).sub continuous_const)
   convert hW using 1
   ext ⟨g, hg⟩
   obtain ⟨γ, rfl⟩ := hΓ hg

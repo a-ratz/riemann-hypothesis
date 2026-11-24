@@ -373,7 +373,7 @@ theorem final_sum_bound : Formalism.HermitianLatticeCounting.S6.FinalSum := by
       Real.exp ((((k:ℝ) - 2) * f) * (Real.log C - Real.log (k:ℝ))) := by
     have hncast : (((k - 2) * f : ℕ) : ℝ) = ((k:ℝ) - 2) * f := by
       push_cast [Nat.cast_sub (by omega : 2 ≤ k)]; ring
-    rw [← hncast, ← Real.log_div (by positivity) hkpos.ne', Real.exp_nat_mul, Real.exp_log hx0]
+    rw [← hncast, ← Real.log_div (by positivity) hkpos.ne', Real.exp_natCast_mul, Real.exp_log hx0]
   rw [hxn] at hS1
   have h2r : 2 * (r:ℝ) ^ 2 ≤ Real.exp (m ^ 6) := by
     have h1 : 2 * (r:ℝ) ^ 2 ≤ m * m := by rw [hmr]; nlinarith

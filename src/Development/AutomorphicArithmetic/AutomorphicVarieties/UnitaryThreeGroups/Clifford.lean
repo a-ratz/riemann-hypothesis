@@ -74,7 +74,7 @@ private theorem common_eigen {κ E ι : Type*} [Field κ] [IsAlgClosed κ] [AddC
     {F | F ≠ ⊥ ∧ F ≤ S ∧ ∀ i, ∀ v ∈ F, f i v ∈ F} ⟨S, hS, le_rfl, hst⟩
   obtain ⟨v, hvF, hv0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hF0
   refine ⟨v, hFS hvF, hv0, fun i => ?_⟩
-  haveI : Nontrivial F := Submodule.nontrivial_iff_ne_bot.mpr hF0
+  have : Nontrivial F := Submodule.nontrivial_iff_ne_bot.mpr hF0
   obtain ⟨c, hc'⟩ := Module.End.exists_eigenvalue ((f i).restrict (hFst i) : Module.End κ F)
   obtain ⟨w, hw⟩ := hc'.exists_hasEigenvector
   have hw1 : f i w = c • (w : E) := congrArg Subtype.val hw.apply_eq_smul
@@ -164,9 +164,9 @@ private theorem exists_traceless {Γ κ V : Type*} [Group Γ] [Field κ] [CharZe
     ∃ P : Module.End κ V, P ≠ 0 ∧ LinearMap.trace κ V P = 0 ∧ ∀ h ∈ H, σ h * P = P * σ h := by
   let Q : Module.End κ V := U.subtype ∘ₗ U.linearProjOfIsCompl W hc
   have hQU : ∀ u ∈ U, Q u = u := fun u hu => by
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨u, hu⟩)
+    exact congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨u, hu⟩)
   have hQW : ∀ u ∈ W, Q u = 0 := fun u hu => by
-    exact congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc ⟨u, hu⟩)
+    exact congrArg Subtype.val (Submodule.projectionOnto_apply_right hc ⟨u, hu⟩)
   have hQ : ∀ h ∈ H, σ h * Q = Q * σ h := by
     intro h hh
     ext v
@@ -175,7 +175,7 @@ private theorem exists_traceless {Γ κ V : Type*} [Group Γ] [Field κ] [CharZe
     simp [hQU a ha, hQW b hb, hQU _ (hU h hh a ha), hQW _ (hW h hh b hb)]
   obtain ⟨u, hu, hu0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hU0
   obtain ⟨w, hw, hw0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hW0
-  haveI : Nontrivial V := ⟨u, 0, hu0⟩
+  have : Nontrivial V := ⟨u, 0, hu0⟩
   have hn : (Module.finrank κ V : κ) ≠ 0 := Nat.cast_ne_zero.mpr Module.finrank_pos.ne'
   refine ⟨(Module.finrank κ V : κ) • Q - LinearMap.trace κ V Q • 1, fun h => ?_, ?_, ?_⟩
   · have h1 := congrArg (fun T : Module.End κ V => T w) h
@@ -276,7 +276,7 @@ theorem UpperTheory.V.U3.exists_selfTwist :
     rw [map_smul, LinearMap.toMatrix'_mul, LinearMap.toMatrix'_mul] at this
     simpa [σ] using this.symm
   refine ⟨φ, fun h1 => ?_, fun h hh => ?_, ?_, ⟨GeneralLinearGroup.mkOfDetNeZero _ hdet, fun g _ => hM g⟩⟩
-  · haveI : Nontrivial (Fin m → κ) := by
+  · have : Nontrivial (Fin m → κ) := by
       obtain ⟨u, -, hu0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hU0
       exact ⟨u, 0, hu0⟩
     obtain ⟨a, ha⟩ := Module.End.exists_eigenvalue T

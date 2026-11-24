@@ -158,7 +158,7 @@ theorem dual_facts (hc : Continuous ψ) (ha : ∀ x y, ψ (x + y) = ψ x * ψ y)
     lam.real (L : Set R) * lam.real (ann ha hn L : Set R) = 1 ∧
       (∀ z, z ∈ ann ha hn (ann ha hn L) → z ∈ L) ∧ IsOpen (ann ha hn L : Set R) := by
   classical
-  haveI := hsd.1
+  have := hsd.1
   set P := ann ha hn L with hPdef
   have hLm : MeasurableSet (L : Set R) := hLo.measurableSet
   have hPm : MeasurableSet (P : Set R) := hP.isClosed.measurableSet
@@ -235,11 +235,11 @@ theorem integral_ann_eq (lam : Measure R) [lam.IsAddHaarMeasure] (L P : AddSubgr
     ∫ t in (P : Set R), ψ (s * t) ∂lam = if s ∈ L then (lam.real (P : Set R) : ℂ) else 0 := by
   simp_rw [mul_comm s]
   by_cases h : s ∈ L
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     exact integral_subgroup_eq_real lam _ hPm s fun x hx => by
       rw [mul_comm]
       exact hLP s h x hx
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     have : ∃ a ∈ P, ψ (a * s) ≠ 1 := by
       by_contra hcon
       push_neg at hcon
@@ -279,7 +279,7 @@ theorem fubini_box (hc : Continuous ψ) (ha : ∀ x y, ψ (x + y) = ψ x * ψ y)
     (Φc : Continuous Φ) (hi : Integrable Φ μ) (z : ι → R) :
     ∫ y in B, (∫ x, Φ x * ψ (x ⬝ᵥ y) ∂μ) * ψ (y ⬝ᵥ z) ∂μ =
       ∫ x, Φ x * ∫ y in B, ψ ((x + z) ⬝ᵥ y) ∂μ ∂μ := by
-  haveI : IsFiniteMeasure (μ.restrict B) := ⟨by rwa [Measure.restrict_apply_univ]⟩
+  have : IsFiniteMeasure (μ.restrict B) := ⟨by rwa [Measure.restrict_apply_univ]⟩
   have e1 : ∀ y, (∫ x, Φ x * ψ (x ⬝ᵥ y) ∂μ) * ψ (y ⬝ᵥ z) = ∫ x, Φ x * ψ ((x + z) ⬝ᵥ y) ∂μ := by
     intro y
     rw [← integral_mul_const]
@@ -361,7 +361,7 @@ section Main
 
 theorem selfDual_pi : ∀ (R : Type) [CommRing R] [TopologicalSpace R] [IsTopologicalRing R] [LocallyCompactSpace R] [SecondCountableTopology R] [T2Space R] [MeasurableSpace R] [BorelSpace R] (ψ : R → ℂ), Continuous ψ → (∀ x y, ψ (x + y) = ψ x * ψ y) → (∀ x, ‖ψ x‖ = 1) → ∀ lam : Measure R, SelfDual lam (fun s t => ψ (s * t)) → (∃ L : AddSubgroup R, IsCompact (L : Set R) ∧ IsOpen (L : Set R)) → (∀ L : AddSubgroup R, IsCompact (L : Set R) → IsOpen (L : Set R) → IsCompact {t | ∀ s ∈ L, ψ (s * t) = 1}) → (∀ K : Set R, IsCompact K → ∃ L : AddSubgroup R, IsCompact (L : Set R) ∧ IsOpen (L : Set R) ∧ K ⊆ L) → (∀ U ∈ 𝓝 (0 : R), ∃ L : AddSubgroup R, IsCompact (L : Set R) ∧ IsOpen (L : Set R) ∧ (L : Set R) ⊆ U) → ∀ (ι : Type) [Fintype ι], SelfDual (Measure.pi fun _ : ι => lam) (fun x y => ψ (x ⬝ᵥ y)) := by
   intro R _ _ _ _ _ _ _ _ ψ hc ha hn lam hsd _ hC hK hU ι _
-  haveI := hsd.1
+  have := hsd.1
   refine ⟨inferInstance, ?_⟩
   intro Φ Φc Φs hint z
   change Integrable (fun y => ∫ x, Φ x * ψ (x ⬝ᵥ y) ∂(Measure.pi fun _ : ι => lam))
@@ -491,7 +491,7 @@ theorem ball_le {a b : ℤ} (hab : a ≤ b) : (ball v a : Set (Fv F v)) ⊆ ball
 
 theorem exists_mem_ball (x : Fv F v) : ∃ m, x ∈ ball v m := by
   by_cases hx : Valued.v x = 0
-  · exact ⟨0, by rw [mem_ball, hx]; exact zero_le'⟩
+  · exact ⟨0, by rw [mem_ball, hx]; exact zero_le⟩
   · exact ⟨WithZero.log (Valued.v x), by rw [mem_ball, WithZero.exp_log hx]⟩
 
 theorem exists_ball_of_isCompact (K : Set (Fv F v)) (hK : IsCompact K) :
@@ -543,7 +543,7 @@ theorem ann_isCompact {χ : Fv F v → ℂ} (hc : Continuous χ) (h0 : χ 0 = 1)
   have hy0 : y ≠ 0 := fun h => hy (h ▸ h0)
   have hv : Valued.v y ≠ 0 := (Valuation.ne_zero_iff _).2 hy0
   have hcl : IsClosed {t | ∀ s ∈ L, χ (s * t) = 1} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isClosed_iInter fun s => isClosed_iInter fun _ =>
       isClosed_eq (hc.comp (continuous_const.mul continuous_id)) continuous_const
   refine (ball_isCompact (v := v) (WithZero.log (Valued.v y) - m)).of_isClosed_subset hcl ?_
@@ -551,10 +551,10 @@ theorem ann_isCompact {χ : Fv F v → ℂ} (hc : Continuous χ) (h0 : χ 0 = 1)
   by_contra hne
   have hlt : WithZero.exp (WithZero.log (Valued.v y) - m) < Valued.v t :=
     not_le.1 fun h => hne h
-  have hvt : Valued.v t ≠ 0 := (lt_of_le_of_lt zero_le' hlt).ne'
+  have hvt : Valued.v t ≠ 0 := (lt_of_le_of_lt zero_le hlt).ne'
   have ht0 : t ≠ 0 := (Valuation.ne_zero_iff _).1 hvt
   have hmem : y / t ∈ ball v m := by
-    rw [mem_ball, map_div₀, div_le_iff₀ (zero_lt_iff.2 hvt)]
+    rw [mem_ball, map_div₀, div_le_iff₀ (pos_iff_ne_zero.2 hvt)]
     calc Valued.v y = WithZero.exp m * WithZero.exp (WithZero.log (Valued.v y) - m) := by
           rw [← WithZero.exp_add, add_sub_cancel, WithZero.exp_log hv]
       _ ≤ WithZero.exp m * Valued.v t := mul_le_mul_right hlt.le _
@@ -565,11 +565,11 @@ theorem ann_isCompact {χ : Fv F v → ℂ} (hc : Continuous χ) (h0 : χ 0 = 1)
 theorem selfDual_pi_v : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ), IsCharAF F ψ → ∀ (v : HeightOneSpectrum (𝓞 F)) (k : Measure (Fv F v)), SelfDual k (fun s t => psiV F ψ v (s * t)) → ∀ (ι : Type) [Fintype ι], SelfDual (Measure.pi fun _ : ι => k) (fun x y => psiV F ψ v (x ⬝ᵥ y)) := by
   intro F _ _ ψ hψ v k hk ι _
   obtain ⟨h1, h2, h3, h4, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨hc, y, hy⟩ := (GlobalTheory.CompanionTheory.AdeleCharLocal.char_nontrivial_at_every_place F ψ hψ).1 v
   have ha := psiV_add ψ v
   have hn : ∀ x, ‖psiV F ψ v x‖ = 1 := fun x => hψ.2.1 _

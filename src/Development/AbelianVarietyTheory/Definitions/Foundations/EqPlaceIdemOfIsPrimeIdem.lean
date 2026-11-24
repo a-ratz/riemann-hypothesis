@@ -233,7 +233,7 @@ theorem isIdemAt_splitIdemAd (τ : D.host.E →ₐ[D.host.F] Fv D.host.F v) :
   have hx0 : Valued.v (τ x) ≠ 0 := by
     rw [Valuation.ne_zero_iff, map_ne_zero]
     exact fun h => hx (Subtype.ext h)
-  rw [mem_splitPrime, hφ, GlobalTheory.IdemPrime.mem_iff he, map_inv₀, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 hx0)]
+  rw [mem_splitPrime, hφ, GlobalTheory.IdemPrime.mem_iff he, map_inv₀, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 hx0)]
 
 theorem exists_eq_splitIdemAd {e : AE D} (he : SplitAt D v e) :
     ∃ τ : D.host.E →ₐ[D.host.F] Fv D.host.F v, e = splitIdemAd (isCMExt_host D) τ := by
@@ -326,7 +326,7 @@ theorem eq_placeIdem_of_isPrimeIdem {P : HeightOneSpectrum (𝓞 D.host.E)} {e f
     change _ ↔ algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t ∈ P.asIdeal
     rw [h _ (by simpa using ht), show ((algebraMap (𝓞 D.host.F) (𝓞 D.host.E) t : 𝓞 D.host.E) : D.host.E) =
         algebraMap D.host.F D.host.E (algebraMap (𝓞 D.host.F) D.host.F t) from rfl, h3, finPart_fj_mem_iff, map_inv₀, h2, not_le,
-      one_lt_inv₀ (zero_lt_iff.2 h0)]
+      one_lt_inv₀ (pos_iff_ne_zero.2 h0)]
     exact (u.valuation_lt_one_iff_mem _).symm
 
 theorem suppF_iff_of_isPrimeIdem {P : HeightOneSpectrum (𝓞 D.host.E)} {e f : AE D} (h : IsPrimeIdem P e f)

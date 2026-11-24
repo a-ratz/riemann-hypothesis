@@ -109,15 +109,15 @@ theorem om_latVac_split : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : H
   · subst hf0
     simp
   obtain ⟨htop, hlc, hsc, ht2, hdisc, K, hK, hcov⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI := htop
-  haveI := hlc
-  haveI := hsc
-  haveI := ht2
-  haveI := hdisc
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have := htop
+  have := hlc
+  have := hsc
+  have := ht2
+  have := hdisc
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   obtain ⟨⟨μ, 𝓕, hμ, h𝓕, h1⟩, hN⟩ :=
     GlobalTheory.meanSquare_addFundamentalDomain_of_cocompact _ (ratL T S) K hK hcov
-  haveI := hμ
+  have := hμ
   have hper := GlobalTheory.WeilVacMove.norm_periodic hW.std hf
   obtain ⟨N, hNf⟩ := hN f hf.cont hper
   obtain ⟨-, -, hI, -⟩ := hNf μ 𝓕 hμ h𝓕
@@ -125,14 +125,14 @@ theorem om_latVac_split : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : H
   rw [key] at hu
   have hpt : ∀ w, ‖(((r : ℂ) * (splitFacO χS χT x y : ℂ)) • f) w‖ₑ ^ 2 =
       ‖(r : ℂ) * (splitFacO χS χT x y : ℂ)‖ₑ ^ 2 * ‖f w‖ₑ ^ 2 := fun w => by
-    rw [Pi.smul_apply, smul_eq_mul, enorm_mul (a := (r : ℂ) * (splitFacO χS χT x y : ℂ)), mul_pow]
+    rw [Pi.smul_apply, smul_eq_mul, eNorm_mul (a := (r : ℂ) * (splitFacO χS χT x y : ℂ)), mul_pow]
   simp_rw [hpt] at hu
-  rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top enorm_ne_top), hI, h1, one_mul] at hu
+  rw [lintegral_const_mul' _ _ (ENNReal.pow_ne_top eNorm_ne_top), hI, h1, one_mul] at hu
   have hN0 : (N : ENNReal) ≠ 0 := by
     intro hz
     apply hf0
     have h0 : ∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ = 0 := by rw [hI, hz, mul_zero]
-    rw [lintegral_eq_zero_iff' (hf.cont.measurable.enorm.pow_const 2).aemeasurable] at h0
+    rw [lintegral_eq_zero_iff' (hf.cont.measurable.eNorm.pow_const 2).aemeasurable] at h0
     apply GlobalTheory.WeilVacMove.eq_zero_of_ae_fundamentalDomain (ratL T S) μ 𝓕 h𝓕 f hf.cont hper
     filter_upwards [h0] with w hw
     simpa using hw
@@ -146,13 +146,13 @@ theorem om_latVac_split : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : H
     rw [hs1, mul_one]
   have hr1 : r = 1 := by
     have hc : ‖(r : ℂ) * (splitFacO χS χT x y : ℂ)‖₊ ^ 2 = 1 := by
-      rw [enorm_eq_nnnorm] at hu
+      rw [eNorm_eq_nnNorm] at hu
       have hN0' : N ≠ 0 := fun hz => hN0 (by rw [hz]; rfl)
       have h2 : ‖(r : ℂ) * (splitFacO χS χT x y : ℂ)‖₊ ^ 2 * N = 1 * N := by
         rw [one_mul]; exact_mod_cast hu
       exact mul_right_cancel₀ hN0' h2
     have hc' : ‖(r : ℂ) * (splitFacO χS χT x y : ℂ)‖ ^ 2 = 1 := by
-      rw [← coe_nnnorm]
+      rw [← coe_nnNorm]
       exact_mod_cast hc
     rw [hnorm] at hc'
     nlinarith

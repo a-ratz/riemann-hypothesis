@@ -238,7 +238,7 @@ theorem mem_SB_of {ψ : AddChar k Circle} (hψ : ψ ≠ 1) (f : (n → k) → �
     have hu0 : u i ≠ 0 := by
       intro e; rw [e] at hi; simp at hi
     have hv0 : 0 < valuation k (u i) := lt_of_le_of_lt zero_le hi
-    have hγ0 : 0 < γ := zero_lt_iff.2 hγ
+    have hγ0 : 0 < γ := pos_iff_ne_zero.2 hγ
     have hy : valuation k (x₀ / u i) < γ := by
       rw [map_div₀, div_lt_iff₀ hv0]
       rw [div_lt_iff₀ hγ0] at hi

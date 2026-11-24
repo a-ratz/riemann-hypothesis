@@ -114,18 +114,18 @@ private lemma exists_coh_extending_of_mem_wchart (hL : L.IsLB) (φ : K → (Y �
   · intro k k' h
     have hex : ∃ k'', φ' k'' = φ k := ⟨k', h.symm⟩
     show g (φ k) = j' k'
-    simp only [g, dif_pos hex]
+    simp only [g, dite_eq_left hex]
     exact hj' _ _ (hex.choose_spec.trans h)
   · rw [memw]
     intro k
     have hy' := (memw φ' j').mp hy
     show (φ k).base y ∈ L.U (g (φ k))
     by_cases hex : ∃ k'', φ' k'' = φ k
-    · simp only [g, dif_pos hex]
+    · simp only [g, dite_eq_left hex]
       have := hy' hex.choose
       rw [hex.choose_spec] at this
       exact this
-    · simp only [g, dif_neg hex]
+    · simp only [g, dite_eq_right hex]
       exact (hcov _).choose_spec
 
 private lemma sections_eq_of_locally_rs_eq {Z : Scheme.{0}} {W : Z.Opens} (a b : Γ(Z, W))
@@ -484,7 +484,7 @@ theorem generates_of_ne (hLaws : Laws) [IsDiscreteValuationRing R] (hI : I = max
   unfold SecBGenerates
   intro s'
   obtain ⟨c₀, c', h, h0⟩ := secB_rank_one (hLaws := hLaws) (t := t) (s' := s')
-  haveI : Flat D.toPre.P.A.hom := flat_B
+  have : Flat D.toPre.P.A.hom := flat_B
 
   have hc₀ : c₀ ≠ 0 := by
     intro hz

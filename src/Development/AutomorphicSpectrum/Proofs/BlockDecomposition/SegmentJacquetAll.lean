@@ -78,7 +78,7 @@ theorem nontrivial_of_isSubquotient {G V W : Type} [Group G] [AddCommGroup V] [M
     [Module ℂ W] {ρ : Representation ℂ G V} {σ : Representation ℂ G W} (hσ : σ.IsIrreducible)
     (h : IsSubquotient σ ρ) : Nontrivial V := by
   obtain ⟨S, f, hf⟩ := h
-  haveI : Nontrivial W := Model.nontrivial_of_isIrreducible hσ
+  have : Nontrivial W := Model.nontrivial_of_isIrreducible hσ
   obtain ⟨u, hu⟩ := exists_ne (0 : W)
   obtain ⟨v, rfl⟩ := hf u
   refine ⟨(v : V), 0, fun h0 => hu ?_⟩

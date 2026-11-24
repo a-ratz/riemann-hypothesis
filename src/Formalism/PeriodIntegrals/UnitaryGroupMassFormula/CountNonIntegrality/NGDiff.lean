@@ -129,13 +129,13 @@ theorem ell_not_mem_sq (p : PlF D)
 theorem not_dvd_diff (p : PlF D)
     (sg : Loc.SplitAt (D.s.atP p).Fp (D.s.atP p).Ep (D.s.atP p).cj (Loc.resChar p)) :
     ¬ p.asIdeal ∣ differentIdeal ℤ (𝓞 D.host.F) := by
-  haveI hℓ : Fact (Loc.resChar p).Prime := (D.s.atP p).ellPrime
+  have hℓ : Fact (Loc.resChar p).Prime := (D.s.atP p).ellPrime
   have hmem := ell_mem p
   have hsq := ell_not_mem_sq p sg
   have hle : Ideal.span {((Loc.resChar p : ℕ) : 𝓞 D.host.F)} ≤ p.asIdeal :=
     (Ideal.span_singleton_le_iff_mem _).2 hmem
   obtain ⟨Q, hQ⟩ := Ideal.dvd_iff_le.2 hle
-  haveI hPm : p.asIdeal.IsMaximal := p.isMaximal
+  have hPm : p.asIdeal.IsMaximal := p.isMaximal
   have hcop : IsCoprime p.asIdeal Q := by
     rw [Ideal.isCoprime_iff_sup_eq]
     by_contra hne
@@ -151,10 +151,10 @@ theorem not_dvd_diff (p : PlF D)
   have hmap : p.asIdeal * Q =
       Ideal.map (algebraMap ℤ (𝓞 D.host.F)) (Ideal.span {((Loc.resChar p : ℕ) : ℤ)}) := by
     rw [Ideal.map_span, Set.image_singleton, map_natCast, ← hQ]
-  haveI : (Ideal.span {((Loc.resChar p : ℕ) : ℤ)}).IsMaximal :=
+  have : (Ideal.span {((Loc.resChar p : ℕ) : ℤ)}).IsMaximal :=
     PrincipalIdealRing.isMaximal_of_irreducible (Nat.prime_iff_prime_int.1 hℓ.out).irreducible
-  haveI : NeZero (Loc.resChar p) := ⟨hℓ.out.ne_zero⟩
-  haveI : Finite (ℤ ⧸ Ideal.span {((Loc.resChar p : ℕ) : ℤ)}) :=
+  have : NeZero (Loc.resChar p) := ⟨hℓ.out.ne_zero⟩
+  have : Finite (ℤ ⧸ Ideal.span {((Loc.resChar p : ℕ) : ℤ)}) :=
     Finite.of_equiv _ (Int.quotientSpanNatEquivZMod (Loc.resChar p)).symm.toEquiv
   exact not_dvd_differentIdeal_of_isCoprime ℤ (p := Ideal.span {((Loc.resChar p : ℕ) : ℤ)})
     p.asIdeal Q hcop hmap
@@ -164,7 +164,7 @@ theorem different_lattice_index : DiffG := by
   obtain ⟨sg, hsg⟩ := Option.isSome_iff_exists.1 hs
   have hnd := not_dvd_diff (D := D) p sg
   rw [Ideal.dvd_iff_le] at hnd
-  obtain ⟨d, hdD, hdp⟩ := SetLike.not_le_iff_exists.1 hnd
+  obtain ⟨d, hdD, hdp⟩ := IsConcreteLE.not_le_iff_exists.1 hnd
   have hdt : ∃ b : 𝓞 D.host.F,
       algebraMap (𝓞 D.host.F) D.host.F b = algebraMap (𝓞 D.host.F) D.host.F d * t := by
     have h1 : algebraMap (𝓞 D.host.F) D.host.F d ∈

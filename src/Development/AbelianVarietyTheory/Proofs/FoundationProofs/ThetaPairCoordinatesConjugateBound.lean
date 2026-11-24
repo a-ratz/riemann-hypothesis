@@ -104,8 +104,8 @@ theorem differentiable_Iop {D : D7} {T : Tor D} {N N' : ℕ} (A B : AddSubgroup 
   unfold Iop
   by_cases h : (A.addSubgroupOf B).index = 0
   · simp [h]
-  · haveI : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h
-    haveI := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
+  · have : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h
+    have := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
     simp only [finsum_eq_sum_of_fintype]
     exact (Differentiable.fun_sum fun q _ => (differentiable_U _ hG).const_mul _).const_mul _
 
@@ -182,8 +182,8 @@ theorem coord_conj_le : ∀ (D : D7), Inp D → ∀ (cc : Ideal (𝓞 D.host.K))
     have h1 : ‖ρ ⟨c, hcQ⟩‖ = 1 := hc1 (ρ : Qbar →+* ℂ)
     simp only [map_mul, norm_mul, h1, one_mul]
     exact hr (ρ : Qbar →+* ℂ)
-  haveI := (_root_.GlobalTheory.NormSum.cls_finite_card_le D P.a).1
-  haveI := Fintype.ofFinite (Cls D P.a (intG D P.a))
+  have := (_root_.GlobalTheory.NormSum.cls_finite_card_le D P.a).1
+  have := Fintype.ofFinite (Cls D P.a (intG D P.a))
   have e : P.coord h T = ∑ x : Cls D P.a (intG D P.a),
       ((((gam D (intG D P.a) x.out : Qbar))⁻¹ : Qbar) : ℂ) * P.term x.out h T := by
     unfold Pair.coord

@@ -329,8 +329,8 @@ theorem lu_unique : ∀ (R : Type) [CommRing R] (m : ℕ) (A₁ A₂ N₁ U N₀
     · rw [h2 k j (lt_of_le_of_lt hk hij), mul_zero]
   have hbt : N₁.BlockTriangular id := fun i j hij => hN1 i j hij
   have hdet : N₁.det = 1 := by
-    rw [det_of_upperTriangular hbt]; simp [hN1d]
-  letI : Invertible N₁ := invertibleOfIsUnitDet N₁ (by rw [hdet]; exact isUnit_one)
+    rw [det_of_isUpperTriangular hbt]; simp [hN1d]
+  let : Invertible N₁ := invertibleOfIsUnitDet N₁ (by rw [hdet]; exact isUnit_one)
   have hinv : N₁⁻¹.BlockTriangular id := blockTriangular_inv_of_blockTriangular hbt
   have hinv' : ∀ i j, j < i → N₁⁻¹ i j = 0 := fun i j hij => hinv hij
   have hinvd : ∀ i, N₁⁻¹ i i = 1 := by

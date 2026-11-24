@@ -88,22 +88,22 @@ theorem intO_val_ne_zero_of_mem (K : UQ) (a : K.O) (ha0 : a ≠ 0) (ha : a ∈ m
 theorem intO : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K' d φ → d ≠ 0 → ∀ y : K'.O,
     @IsIntegral K.O K'.E _ _ (φ.comp (algebraMap K.O K.E)).toAlgebra (algebraMap K'.O K'.E y) := by
   intro K K' d φ hU hd y
-  letI : Algebra K.E K'.E := φ.toAlgebra
-  letI : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
-  haveI : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra K.E K'.E := φ.toAlgebra
+  let : Algebra K.O K'.E := (φ.comp (algebraMap K.O K.E)).toAlgebra
+  have : IsScalarTower K.O K.E K'.E := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hfr : Module.finrank K.E K'.E = d := hU.2.2.2.2
-  haveI : FiniteDimensional K.E K'.E := Module.finite_of_finrank_pos (by omega)
-  haveI : Algebra.IsSeparable K.E K'.E := Algebra.IsSeparable.of_integral _ _
+  have : FiniteDimensional K.E K'.E := Module.finite_of_finrank_pos (by omega)
+  have : Algebra.IsSeparable K.E K'.E := Algebra.IsSeparable.of_integral _ _
   let S := integralClosure K.O K'.E
-  haveI : Module.Finite K.O S := IsIntegralClosure.finite K.O K.E K'.E S
-  haveI : IsDedekindDomain S := IsIntegralClosure.isDedekindDomain K.O K.E K'.E S
-  haveI : IsFractionRing S K'.E := IsIntegralClosure.isFractionRing_of_finite_extension K.O K.E K'.E S
-  haveI : IsLocalRing S := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := K.O) S
+  have : Module.Finite K.O S := IsIntegralClosure.finite K.O K.E K'.E S
+  have : IsDedekindDomain S := IsIntegralClosure.isDedekindDomain K.O K.E K'.E S
+  have : IsFractionRing S K'.E := IsIntegralClosure.isFractionRing_of_finite_extension K.O K.E K'.E S
+  have : IsLocalRing S := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.isLocalRing_finite_domain (R := K.O) S
   have hinj : Function.Injective (algebraMap K.O S) :=
     algebraMap_injective_of_field_isFractionRing K.O S K.E K'.E
   have hnf : ¬ IsField S := fun h =>
     IsDiscreteValuationRing.not_isField K.O (isField_of_isIntegral_of_isField hinj h)
-  haveI : IsDiscreteValuationRing S := ((IsDiscreteValuationRing.TFAE S hnf).out 3 1).1
+  have : IsDiscreteValuationRing S := ((IsDiscreteValuationRing.TFAE S hnf).out 3 1).1
     (inferInstance : IsDedekindDomain S)
 
   have hv : ∀ a : K.O, 0 ≤ val K'.O (φ (algebraMap K.O K.E a)) := fun a => by

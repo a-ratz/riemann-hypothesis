@@ -97,7 +97,7 @@ theorem fock_kfinite : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.ho
   have hkf : GlobalTheory.IndefiniteRowSideFullHecke.SphericalZero.IsKFinVec omh K' f :=
     GlobalTheory.Core.Rk.IP.isKFinVec_of_isFockVec D ψ₀ θ (dblSp A) V 1 χ⁻¹ omh s' s hdat hθ
       (GlobalTheory.CartStd.isCartanInv_stdInv D A μ' hsk s' hstd') hs K' hK' (fun k hk τ => hcomm k hk τ) f hfock
-  haveI : FiniteDimensional ℂ (Submodule.span ℂ {g : WO (dblSp A) V → ℂ | ∃ k ∈ K', g = omh (k, 1) f}) := hkf
+  have : FiniteDimensional ℂ (Submodule.span ℂ {g : WO (dblSp A) V → ℂ | ∃ k ∈ K', g = omh (k, 1) f}) := hkf
 
   let T := Formalism.IndefR.Eqv.thetaSubO ψ₀ (dblSp A) V
   let L : T →ₗ[ℂ] (Mx D V.rank A.rank → ℂ) :=
@@ -110,8 +110,8 @@ theorem fock_kfinite : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.ho
     apply Submodule.span_mono
     rintro _ ⟨g, ⟨k, hk, hg⟩, rfl⟩
     exact ⟨k, hk, hg⟩
-  haveI : FiniteDimensional ℂ (W.map T.subtype) := Submodule.finiteDimensional_of_le hWmap
-  haveI : FiniteDimensional ℂ W :=
+  have : FiniteDimensional ℂ (W.map T.subtype) := Submodule.finiteDimensional_of_le hWmap
+  have : FiniteDimensional ℂ W :=
     LinearEquiv.finiteDimensional (Submodule.equivMapOfInjective T.subtype Subtype.val_injective W).symm
   have hWL : FiniteDimensional ℂ (W.map L) := Module.Finite.map W L
   set S := Submodule.span ℂ {Ψ : schwartzA θ V.rank n | ∃ k ∈ K D n, Ψ = ω k Φ} with hSdef
@@ -127,7 +127,7 @@ theorem fock_kfinite : ∀ (D : D7) (n : ℕ) (V : HSp D) (ψ : AddChar (AF D.ho
     · have := htr (κ.symm k) f hf Φ hfΦ.symm
       rw [show κ (κ.symm k) = k from κ.apply_symm_apply k] at this
       exact this.symm
-  haveI : FiniteDimensional ℂ (S.map (schwartzA θ V.rank n).subtype) := @Submodule.finiteDimensional_of_le _ _ _ _ _ _ _ hWL hSmap
+  have : FiniteDimensional ℂ (S.map (schwartzA θ V.rank n).subtype) := @Submodule.finiteDimensional_of_le _ _ _ _ _ _ _ hWL hSmap
   exact Module.Finite.equiv (Submodule.equivMapOfInjective (schwartzA θ V.rank n).subtype Subtype.val_injective S).symm
 
 end GlobalTheory.StdUnn.KFin

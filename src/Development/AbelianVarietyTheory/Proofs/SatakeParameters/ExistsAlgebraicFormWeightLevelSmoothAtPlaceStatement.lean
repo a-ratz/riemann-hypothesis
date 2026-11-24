@@ -70,7 +70,7 @@ theorem exists_continuous_inv_cLoc {E : Type} [Field E] [NumberField E] [IsCMFie
   by_cases hsp : IsSplitAt w₀
   · obtain ⟨e, he⟩ := GlobalTheory.locU_equiv_GL E n w₀ hsp
     refine ⟨fun h => ((e.symm h : locU n w₀) : UA E n).1,
-      continuous_subtype_val.comp (continuous_subtype_val.comp e.symm.continuous), by simp, fun x hx => ?_⟩
+      continuous_subtypeVal.comp (continuous_subtypeVal.comp e.symm.continuous), by simp, fun x hx => ?_⟩
     have h1 : e.symm (cLoc w₀ x) = ⟨x, hx⟩ := by
       rw [← he ⟨x, hx⟩]
       exact e.symm_apply_apply _
@@ -98,7 +98,7 @@ theorem exists_algForm_ofType : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hM0 : M ≠ ⊥ := AutSub.finPart_wt_ne_bot E n π
   have hV : π.V = Pairs.img (Pairs.jOf W M) := Pairs.V_eq_img π (Pairs.finPart_stable π W) hM0 le_rfl
   obtain ⟨φ, hφU, hφ0, hφK⟩ := hU.fix
-  haveI : Nontrivial W.Sp := (Pairs.nontrivial_of_ne_bot hM0).1
+  have : Nontrivial W.Sp := (Pairs.nontrivial_of_ne_bot hM0).1
   let b := Module.finBasis ℂ W.Sp
   obtain ⟨c, hc⟩ : φ ∈ LinearMap.range (Pairs.total b (Pairs.jOf W M)) := by
     rw [Pairs.range_total, ← hV]
@@ -106,11 +106,11 @@ theorem exists_algForm_ofType : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   let Fx : Submodule ℂ (UA E n → ℂ) :=
     { carrier := {ψ | ∀ k ∈ K, RU E n k ψ = ψ}
       add_mem' := fun {x y} hx hy k hk => by
-        simp only [Set.mem_setOf_eq] at hx hy ⊢
+        simp only [Set.mem_ofPred_eq] at hx hy ⊢
         rw [map_add (f := _), hx k hk, hy k hk]
       zero_mem' := fun k _ => map_zero _
       smul_mem' := fun r ψ h k hk => by
-        simp only [Set.mem_setOf_eq] at h ⊢
+        simp only [Set.mem_ofPred_eq] at h ⊢
         rw [map_smul, h k hk] }
   have hFx : ∀ x : infU E n, ∀ u ∈ Fx, RU E n x.1 u ∈ Fx := fun x u hu k hk => by
     change RU E n k (RU E n x.1 u) = RU E n x.1 u

@@ -94,8 +94,8 @@ theorem AdicFin_of : LateralTheory.KummerTheory.AdicFin := by
   classical
 
   let S : Set (Ht (l ^ 1) E n i) := Set.range fun x : Hl l E n i => LateralTheory.KummerTheory.lev l x 1
-  haveI : Finite (Ht (l ^ 1) E n i) := hfin 1
-  haveI : Fintype S := Fintype.ofFinite S
+  have : Finite (Ht (l ^ 1) E n i) := hfin 1
+  have : Fintype S := Fintype.ofFinite S
   let g : S → Hl l E n i := fun s => s.2.choose
   have hgs : ∀ s : S, LateralTheory.KummerTheory.lev l (g s) 1 = s.1 := fun s => s.2.choose_spec
   have hg : ∀ x : Hl l E n i, ∃ t y, x = g t + ((l : ℤ_[l]) ^ 1) • y := by
@@ -121,9 +121,9 @@ theorem AdicFin_of : LateralTheory.KummerTheory.AdicFin := by
   let f : ∀ k, T (k + 1) ⟶ T k := fun k => TypeCat.ofHom fun a =>
     (⟨fun t => ZMod.castHom (pow_dvd_pow l (Nat.le_succ k)) (ZMod (l ^ k)) (a.1 t), hT k a⟩ : T k)
   let F : ℕᵒᵖ ⥤ Type 1 := Functor.ofOpSequence f
-  haveI : ∀ j : ℕᵒᵖ, Finite (F.obj j) := fun j => by
+  have : ∀ j : ℕᵒᵖ, Finite (F.obj j) := fun j => by
     change Finite (T j.unop); exact Subtype.finite
-  haveI : ∀ j : ℕᵒᵖ, Nonempty (F.obj j) := fun j => by
+  have : ∀ j : ℕᵒᵖ, Nonempty (F.obj j) := fun j => by
     change Nonempty (T j.unop)
     obtain ⟨m, hm, y, rfl⟩ := gen_mod l E n i g hg j.unop x
     obtain ⟨c, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun ℤ_[l]).mp hm

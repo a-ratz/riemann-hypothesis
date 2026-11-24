@@ -52,7 +52,7 @@ open NumberField IsDedekindDomain Neutral.B1 Formalism.L2.Host Formalism.Conjuga
 private theorem untwist (k N : ℕ) [NeZero N] (hk : 1 ≤ k) (χ ψ : DirichletCharacter ℂ N) (g : Eigenform k N χ) :
     ∃ (χ' : DirichletCharacter ℂ (N * N)) (g' : Eigenform k (N * N) χ'), ∀ p : ℕ, p.Prime → ¬ p ∣ N →
       g'.a p * ψ (p : ZMod N) = g.a p ∧ χ' (p : ZMod (N * N)) * ψ (p : ZMod N) ^ 2 = χ (p : ZMod N) := by
-  haveI : NeZero (N * N) := ⟨mul_ne_zero (NeZero.ne N) (NeZero.ne N)⟩
+  have : NeZero (N * N) := ⟨mul_ne_zero (NeZero.ne N) (NeZero.ne N)⟩
   obtain ⟨h, hc, hn⟩ := clTwist N k χ ψ⁻¹ g.f g.char
   have h0 : h ≠ 0 := by
     rintro rfl
@@ -78,10 +78,10 @@ private theorem untwist (k N : ℕ) [NeZero N] (hk : 1 ≤ k) (χ ψ : Dirichlet
     rw [e, hn, hn n, Nat.cast_mul, map_mul, Eigenform.a]
     by_cases hpn : p ∣ n
     · obtain ⟨m, rfl⟩ := hpn
-      rw [if_pos (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hp.pos] at this ⊢
+      rw [ite_eq_left (dvd_mul_right _ _), Nat.mul_div_cancel_left _ hp.pos] at this ⊢
       rw [hn, Nat.cast_mul, map_mul]
       linear_combination ψ⁻¹ (p : ZMod N) * (ψ⁻¹ (p : ZMod N) * ψ⁻¹ (m : ZMod N)) * this
-    · rw [if_neg hpn] at this ⊢
+    · rw [ite_eq_right hpn] at this ⊢
       linear_combination ψ⁻¹ (p : ZMod N) * ψ⁻¹ (n : ZMod N) * this
   · rw [e]
     linear_combination χ (p : ZMod N) * (ψ⁻¹ (p : ZMod N) * ψ (p : ZMod N) + 1) * e1
@@ -96,7 +96,7 @@ private theorem level_zero_eq_maximal_compact {F : Type} [Field F] [NumberField 
     K1 w 0 = GlobalTheory.LFun.KGL w (n := 2) := by
   ext g
   refine ⟨fun ⟨k, _, e⟩ => ⟨k, e⟩, fun ⟨k, e⟩ => ⟨k, ?_, e⟩⟩
-  haveI : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) :=
+  have : Subsingleton (w.adicCompletionIntegers F ⧸ IsLocalRing.maximalIdeal (w.adicCompletionIntegers F) ^ 0) :=
     Ideal.Quotient.subsingleton_iff.2 (by simp)
   exact Subsingleton.elim _ _
 

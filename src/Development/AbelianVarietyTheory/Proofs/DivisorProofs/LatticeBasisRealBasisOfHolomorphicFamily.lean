@@ -77,7 +77,7 @@ theorem isRealBasis_of_isLatFam : ∀ (n g r : ℕ) (B : Set (Fin n → ℂ)) (K
     simpa [hζ0] using hw
   obtain ⟨U, hU, hUo, hU0⟩ := mem_nhds_iff.1 hev'
   set L := Submodule.span ℤ (Set.range lam) with hLdef
-  haveI : DiscreteTopology L := by
+  have : DiscreteTopology L := by
     apply discreteTopology_of_isOpen_singleton_zero
     rw [isOpen_induced_iff]
     refine ⟨U, hUo, ?_⟩
@@ -91,7 +91,7 @@ theorem isRealBasis_of_isLatFam : ∀ (n g r : ℕ) (B : Set (Fin n → ℂ)) (K
   have hLset : (L : Set (Fin g → ℂ)) = K b₀ := by
     ext w
     exact hmemL w
-  haveI : IsZLattice ℝ L := ⟨by rw [hLset, hspan]⟩
+  have : IsZLattice ℝ L := ⟨by rw [hLset, hspan]⟩
   have hrank := ZLattice.rank ℝ L
   have hcard : Module.finrank ℤ L = r := by
     rw [Module.finrank_eq_card_basis (Module.Basis.span hli)]

@@ -329,11 +329,11 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.exponents3 :
       have : (1 : ℝ) ≤ 4 / a₀ := by rw [le_div_iff₀ h0]; linarith
       calc (4 / a₀) ^ m ≤ (4 / a₀) ^ j := pow_le_pow_right₀ this (Nat.div_le_self _ _)
         _ = Real.exp (g * j) := by
-          rw [mul_comm, Real.exp_nat_mul, hg, Real.exp_log (by positivity)]
+          rw [mul_comm, Real.exp_natCast_mul, hg, Real.exp_log (by positivity)]
     have h5 : (η / a₀) ^ m ≤ Real.exp (-(m * p * A)) := by
       have : η / a₀ ≤ Real.exp (-(p * A)) := by rw [div_le_iff₀ h0, mul_comm]; exact hη
       calc _ ≤ Real.exp (-(p * A)) ^ m := by gcongr
-        _ = _ := by rw [← Real.exp_nat_mul]; congr 1; ring
+        _ = _ := by rw [← Real.exp_natCast_mul]; congr 1; ring
     have hmp : (j : ℝ) ≤ m * p + p := by
       have := Nat.lt_div_mul_add (a := j) hp
       rw [← hm] at this
@@ -401,7 +401,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.exponents3 :
       have : η / a₀ * (a₀ / η) = 1 := by field_simp
       rw [this, one_pow]
     have e3 : Real.exp ((cq + 1) * j) * Real.exp (-cq) ^ j = Real.exp j := by
-      rw [← Real.exp_nat_mul, ← Real.exp_add]; congr 1; ring
+      rw [← Real.exp_natCast_mul, ← Real.exp_add]; congr 1; ring
     refine le_of_mul_le_mul_right ?_ hpos
     calc _ = x * a₀ ^ (d + 1) * (a₀ / η) ^ m * Real.exp (-cq) ^ j := by ring
       _ ≤ a₀ ^ (d + 1) * Real.exp j * E := h6
@@ -450,14 +450,14 @@ private lemma regroup {T : Type} (s : Finset T) (a : T → ℝ) (S : T → Finse
       = ∑ q ∈ (S i).image (fun ζ : ℂ => (a i, ζ)), (if a i = q.1 ∧ q.2 ∈ S i then w i * c i q.2 else 0) * f q := by
         rw [Finset.sum_image hinj]
         refine Finset.sum_congr rfl fun ζ hζ => ?_
-        rw [if_pos ⟨rfl, hζ⟩, mul_assoc]
+        rw [ite_eq_left ⟨rfl, hζ⟩, mul_assoc]
     _ = _ := by
         refine Finset.sum_subset ?_ ?_
         · intro q hq
           obtain ⟨ζ, hζ, rfl⟩ := Finset.mem_image.1 hq
           exact hP i hi ζ hζ
         · intro q _ hq
-          rw [if_neg, zero_mul]
+          rw [ite_eq_right, zero_mul]
           rintro ⟨h1, h2⟩
           exact hq (Finset.mem_image.2 ⟨q.2, h2, Prod.ext h1 rfl⟩)
 
@@ -559,12 +559,12 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.absX :
     refine Finset.sum_congr rfl fun i hi => ?_
     by_cases hg : good i
     · by_cases ha : a i = x
-      · simp only [hg, ha, and_self, if_true, hgood i hi hg ha, hj i hi]
+      · simp only [hg, ha, and_self, ite_true, hgood i hi hg ha, hj i hi]
       · simp [ha]
     · simp [hg, hbad i hi hg]
   have h4 : {i | act i ∧ good i ∧ a i = x} = ↑(s.filter (fun i => good i ∧ a i = x)) := by
     ext i
-    simp only [Set.mem_setOf_eq, Finset.coe_filter]
+    simp only [Set.mem_ofPred_eq, Finset.coe_filter]
     constructor
     · rintro ⟨h1, h2, h3⟩
       exact ⟨(hs i).2 ⟨h3 ▸ hηx, h1⟩, h2, h3⟩
@@ -592,7 +592,7 @@ private theorem homog_eq {ι : Type} (d : ℕ) (p : MvPolynomial ι ℂ) :
       monomial (Finsupp.single none (d - α.degree) + α.mapDomain some) (p.coeff α) := by
   unfold homog
   refine Finset.sum_congr rfl fun α _ => ?_
-  rw [rename_monomial, X_pow_eq_monomial, monomial_mul, one_mul]
+  rw [rename_monomial, X_pow_eq_monomial, monomial_mul_monomial, one_mul]
 
 private theorem deg_le {ι : Type} {d : ℕ} {p : MvPolynomial ι ℂ} (h : p.totalDegree ≤ d) {α : ι →₀ ℕ}
     (hα : α ∈ p.support) : α.degree ≤ d := by
@@ -624,7 +624,7 @@ private theorem mon_norm {σ : Type} {H : Type} [NormedAddCommGroup H] [NormedSp
   | zero => simpa using h1
   | add a b ha hb =>
     have : (monomial (a + b) 1 : MvPolynomial σ ℂ) = monomial a 1 * monomial b 1 := by
-      rw [monomial_mul, one_mul]
+      rw [monomial_mul_monomial, one_mul]
     rw [this, map_mul, map_add (f := _), pow_add]
     exact (norm_mul_le _ _).trans (mul_le_mul ha hb (norm_nonneg _) (by positivity))
   | single i e =>
@@ -755,7 +755,7 @@ private theorem pw_mul {a b M R b' : ℝ} {d : ℕ} (ha : a ≤ M ^ (d + 1)) (hb
 private theorem exp_grow {B c₁ : ℝ} {j m' s₀ : ℕ} (hB0 : 0 ≤ B) (hB : B ≤ Real.exp c₁) (hc : 0 ≤ c₁) (hm : m' ≤ s₀) :
     B ^ (j + m') ≤ Real.exp (c₁ * s₀) * Real.exp (c₁ * j) := by
   refine (pow_le_pow_left₀ hB0 hB _).trans ?_
-  rw [← Real.exp_nat_mul, ← Real.exp_add]
+  rw [← Real.exp_natCast_mul, ← Real.exp_add]
   refine Real.exp_le_exp.mpr ?_
   rw [Nat.cast_add, add_mul, mul_comm (j : ℝ), mul_comm (m' : ℝ), add_comm (c₁ * (j : ℝ))]
   exact add_le_add (mul_le_mul_of_nonneg_left (Nat.cast_le.mpr hm) hc) le_rfl
@@ -784,7 +784,7 @@ private theorem main_est {C₁ cU M₁ C₂ N c₁ η e1 e2 W D : ℝ} {N₀ j k
   have hR3 : 1 ≤ (r * q) ^ s₀ := one_le_pow₀ hrq1
   have a1 : cU ^ (j + m') * Real.exp (N₀ * (C₂ * ((j + m' : ℕ) : ℝ))) ≤ Real.exp (c₁ * s₀) * Real.exp (c₁ * j) := by
     refine le_trans (le_of_eq ?_) (exp_grow (by positivity) hA hc hm')
-    rw [mul_pow, ← Real.exp_nat_mul]
+    rw [mul_pow, ← Real.exp_natCast_mul]
     congr 2
     ring
   have a2 : cU ^ (j + m') * r ^ k * Real.exp (-2 * (C₂ * ((j + m' : ℕ) : ℝ))) ≤ Real.exp (-N * j) := by
@@ -792,13 +792,13 @@ private theorem main_est {C₁ cU M₁ C₂ N c₁ η e1 e2 W D : ℝ} {N₀ j k
     have b2 : (cU * r * Real.exp (-2 * C₂)) ^ (j + m') ≤ Real.exp (-|N|) ^ (j + m') :=
       pow_le_pow_left₀ (by positivity) hB _
     have b3 : Real.exp (-|N|) ^ (j + m') ≤ Real.exp (-N * j) := by
-      rw [← Real.exp_nat_mul, Nat.cast_add, add_mul, mul_comm (j : ℝ), mul_comm (m' : ℝ)]
+      rw [← Real.exp_natCast_mul, Nat.cast_add, add_mul, mul_comm (j : ℝ), mul_comm (m' : ℝ)]
       have hm0 : -|N| * (m' : ℝ) ≤ 0 :=
         mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr (abs_nonneg N)) (Nat.cast_nonneg m')
       exact Real.exp_le_exp.mpr ((add_le_of_nonpos_right hm0).trans
         (mul_le_mul_of_nonneg_right (neg_le_neg (le_abs_self N)) (Nat.cast_nonneg j)))
     refine le_trans ?_ (b2.trans b3)
-    rw [mul_pow, mul_pow, ← Real.exp_nat_mul]
+    rw [mul_pow, mul_pow, ← Real.exp_natCast_mul]
     have : ((j + m' : ℕ) : ℝ) * (-2 * C₂) = -2 * (C₂ * ((j + m' : ℕ) : ℝ)) := by ring
     rw [this]
     gcongr
@@ -1384,8 +1384,8 @@ private theorem sep (hEV : EvVal) (hVB : ValBc) (hSep : SepPoly) {F E : Type} [F
   choose! LF tF hLF using pF
   let I₁ := {y // y ∈ sE.filter fun y => ¬ At μE 𝔞.S y.2 Λ t}
   let I₂ := {y // y ∈ sF.filter fun y => ¬ (∃ Λ' t', At μF 𝔟.S y.2 Λ' t' ∧ Λ = bcInf Λ' ∧ ∀ w ∉ 𝔞.S, t w = bcSat t' w)}
-  letI : Fintype I₁ := Finset.Subtype.fintype _
-  letI : Fintype I₂ := Finset.Subtype.fintype _
+  let : Fintype I₁ := Finset.Subtype.fintype _
+  let : Fintype I₂ := Finset.Subtype.fintype _
   obtain ⟨P, κ, D, h1, h2, h3, h4⟩ := hSep E n 𝔞.S Λ t (I₁ ⊕ I₂)
     (Sum.elim (fun y => msOf (LE y.1)) fun y => bcInf (msOf (LF y.1))) (Sum.elim (fun y => tE y.1) fun y => bcSat (tF y.1)) hΛ ht
     (by

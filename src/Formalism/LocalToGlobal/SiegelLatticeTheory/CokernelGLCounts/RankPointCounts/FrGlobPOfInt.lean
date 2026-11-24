@@ -548,7 +548,7 @@ theorem proj_exists (Λ : Submodule (𝓞 E) S.V) (hL : Submodule.IsFullLattice 
     rw [PI.UnitaryGroupMassFormula.BetaModX.Iota.herm'', h2]
     by_cases hab : a = b
     · subst hab; simp
-    · rw [if_neg (Ne.symm hab), if_neg hab, star_zero]
+    · rw [ite_eq_right (Ne.symm hab), ite_eq_right hab, star_zero]
   refine ⟨u, fun l hl => ⟨?_, ?_⟩⟩
   ·
     refine Λ.sub_mem hl ?_
@@ -572,7 +572,7 @@ theorem proj_exists (Λ : Submodule (𝓞 E) S.V) (hL : Submodule.IsFullLattice 
 
     rw [map_sub, map_sum]
     simp only [LinearMap.map_smul, smul_eq_mul, hdual, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
-      Finset.mem_univ, if_true, sub_self]
+      Finset.mem_univ, ite_true, sub_self]
 
 end Proj
 

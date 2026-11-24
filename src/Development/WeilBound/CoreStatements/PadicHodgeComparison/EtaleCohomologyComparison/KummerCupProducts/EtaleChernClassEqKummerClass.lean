@@ -547,7 +547,7 @@ theorem liftEx : CrystallineSemistableComparison.E.LiftEx := by
   refine ⟨key, fun hE => ?_⟩
   have sec : ∀ T : C, ∃ p : Spec (CommRingCat.of (G.obj T).1.obj.U) ⟶ D.Y, p ≫ D.f = (G.obj T).2.1 := by
     intro T
-    haveI := D.surj
+    have := D.surj
     obtain ⟨s, hs⟩ := H.splitU _ (G.obj T).1.property (pullback D.f (G.obj T).2.1)
       (pullback.snd D.f (G.obj T).2.1) inferInstance inferInstance
     refine ⟨s ≫ pullback.fst D.f (G.obj T).2.1, ?_⟩
@@ -625,7 +625,7 @@ theorem locSplit : CrystallineSemistableComparison.E.LocSplit := by
     intro x
     obtain ⟨i, y, hy⟩ := 𝒰.exists_eq x
     refine ⟨(Limits.Sigma.ι 𝒰.X i) y, ?_⟩
-    rw [← Scheme.Hom.comp_apply, Limits.Sigma.ι_desc, hy]
+    rw [← Scheme.Hom.comp_apply, Limits.Sigma.ι_comp_desc, hy]
   have het : Etale (Limits.Sigma.desc 𝒰.f) := by
     have := 𝒰.sigma.map_prop ⟨⟩
     simpa [Scheme.Cover.sigma_f] using this
@@ -1350,7 +1350,7 @@ theorem twZero : RootPow → LcCover → RepRoot → TwZero := by
       have e : (primRes (j a) ξ).1 = (CommRingCat.Hom.hom (Scheme.Hom.appTop (j a))) ξ.1 := rfl
       rw [IsUnit.unit_spec, e]
       exact hpw
-    · haveI : IsEmpty (W a) := ⟨fun v => by
+    · have : IsEmpty (W a) := ⟨fun v => by
         have hv := hu (j a v)
         rw [hWf a v] at hv
         exact ha hv⟩

@@ -87,7 +87,7 @@ theorem eq_of_split (hC : GlobalTheory.Published.ChebotarevDegreeOne) {Y : Type}
       IsPlaceOver (F := H.E) B w → IsFrob (F := H.E) B (normV w) σ → f σ = f' σ) : f = f' := by
   obtain ⟨S, hS, hsp⟩ := GlobalTheory.FrobDense.exists_finite_split H
   refine hC.eq_of_frob (hS.union (eventually_cofinite.1 h)) hf hf' fun v hv hd B hB σ hσ => ?_
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hv
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hv
   exact hv.2 (hsp v hv.1 hd) B σ hB hσ
 
 variable (A : NAut N)

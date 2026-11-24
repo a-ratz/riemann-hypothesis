@@ -96,7 +96,7 @@ theorem killedBy_iff_map {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Comm
     · intro y z _ _ hy hz
       rw [o.act.add, comp_mul, hy, hz, _root_.mul_one]
     · intro c y _ hy
-      haveI := o.act.hom c
+      have := o.act.hom c
       rw [smul_eq_mul, o.act.mul, ← Category.assoc, hy, one_comp]
 
 end GlobalTheory.UPel.HT.ES.WTors
@@ -178,14 +178,14 @@ private theorem line_of_red {k H G : Type} [Field k] [Finite k] [AddCommGroup H]
 theorem UpperTheory.Gal.crystallineComparison.Mod.lineC_of :
     RankN → LiftFF → LineC := by
   intro hrk hlift p _ D O _ _ _ _ f b N r w _ hstd M V _ _ _ _ _ hp x hord W
-  letI := W.grp
-  letI := W.md
+  let := W.grp
+  let := W.md
   obtain ⟨hfin, hrank⟩ := hrk p D O f b N r w hstd M V hp x W
   have hnorm := hstd.norm
   have hpf : p ^ f ≠ 0 := pow_ne_zero _ (Fact.out : Nat.Prime p).ne_zero
   have hcardk : Nat.card (𝓞 D.F ⧸ w) = p ^ f := by
     rw [← hnorm, Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 D.F ⧸ w) := Nat.finite_of_card_ne_zero (by rw [hcardk]; exact hpf)
+  have : Finite (𝓞 D.F ⧸ w) := Nat.finite_of_card_ne_zero (by rw [hcardk]; exact hpf)
   have hw : w ≠ ⊥ := by
     rintro rfl
     rw [Ideal.absNorm_bot] at hnorm
@@ -199,7 +199,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.lineC_of :
   have hsm : ∀ (c : 𝓞 D.F ⧸ w) h, red h = 1 → red (c • h) = 1 := by
     intro c h hh
     obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective c
-    haveI := M.univ.act.hom ((algebraMap (𝓞 D.F) D.O) a)
+    have := M.univ.act.hom ((algebraMap (𝓞 D.F) D.O) a)
     simp only [red] at hh ⊢
     rw [W.smul, ← Category.assoc, hh, MonObj.one_comp]
   have hkill : ∀ {T T' : Over M.X} (e : T' ⟶ T) (g : T ⟶ M.univ.A),

@@ -267,7 +267,7 @@ private theorem pf_approx {O X σ : Type} [CommRing O] [AddCommGroup X] [Finite 
 
   rw [map_sub, map_sum]
   simp only [coeff_wcomp]
-  rw [Finset.sum_ite_eq, if_pos hmem, sub_self]
+  rw [Finset.sum_ite_eq, ite_eq_left hmem, sub_self]
 
 private theorem pf_vanish {O X σ S : Type} [CommRing O] [AddCommGroup X] [Finite σ] [CommRing S]
     [Algebra O S] (wt : σ → X) (J : Ideal S) [IsHausdorff J S] (φ : MvPowerSeries σ O →ₐ[O] S)
@@ -346,7 +346,7 @@ private theorem mono_lemma {O' σ' B' : Type} [CommRing O'] [CommRing B'] [Algeb
   have hd' : Finsupp.degree d < 1 := by exact_mod_cast hd
   have hd0 : d = 0 := (Finsupp.degree_eq_zero_iff d).mp (by omega)
   subst hd0
-  rw [MvPowerSeries.coeff_monomial, if_neg (Ne.symm hm)]
+  rw [MvPowerSeries.coeff_monomial, ite_eq_right (Ne.symm hm)]
 
 private theorem exists_lift_sub_mem_pow_of_mem_wtPart_zero
     (hg : ∀ s, ι (g (MvPowerSeries.X s)) = t (Multiplicative.ofAdd (W.wt s)) * ξ (W.zA s))
@@ -377,11 +377,11 @@ private theorem exists_lift_sub_mem_pow_of_mem_wtPart_zero
           by_contra h
           exact hm ⟨hw, h⟩
         subst hm0
-        rw [if_pos rfl, hb0, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, sub_self]
+        rw [ite_eq_left rfl, hb0, MvPowerSeries.coeff_zero_eq_constantCoeff_apply, sub_self]
       · have hm0 : m ≠ 0 := by
           rintro rfl
           exact hw (map_zero _)
-        rw [if_neg hm0, hb' m hw, sub_zero]
+        rw [ite_eq_right hm0, hb' m hw, sub_zero]
     obtain ⟨c', hc', hcm⟩ := pf_step W ξ ι t g hg (J ^ n) J
       {m : W.σ →₀ ℕ | Finsupp.weight W.wt m = 0 ∧ m ≠ 0} 0 (fun m hm => hm.1)
       (fun m hm => mono_lemma g J hJ m hm.2) ih _ hF x' hx'
@@ -535,13 +535,13 @@ private theorem md_ext {O X R K : Type} [CommRing O] [IsDomain O] [IsDiscreteVal
     · exact hw' _ (hz s).le
     · exact he s
   let B : Subalgebra O (DualNumber K) := Algebra.adjoin O G
-  haveI : Module.Finite O B := Algebra.finite_adjoin_of_finite_of_isIntegral hG hGi
-  haveI : IsNoetherianRing B := IsNoetherianRing.of_finite O B
-  haveI := GlobalTheory.isAdicComplete_map_of_finite (maximalIdeal O) B
+  have : Module.Finite O B := Algebra.finite_adjoin_of_finite_of_isIntegral hG hGi
+  have : IsNoetherianRing B := IsNoetherianRing.of_finite O B
+  have := GlobalTheory.isAdicComplete_map_of_finite (maximalIdeal O) B
   let J : Ideal B := ((maximalIdeal O).map (algebraMap O B)).radical
   obtain ⟨N, hN⟩ := Ideal.exists_radical_pow_le_of_fg ((maximalIdeal O).map (algebraMap O B))
     (IsNoetherian.noetherian _)
-  haveI : IsAdicComplete J B :=
+  have : IsAdicComplete J B :=
     { toIsHausdorff := GlobalTheory.NilpotentEval.isHausdorff_of_pow_le hN
       toIsPrecomplete := GlobalTheory.NilpotentEval.isPrecomplete_of_pow_le hN Ideal.le_radical }
   have hB : ∀ x, ξ x ∈ B := fun x => by
@@ -632,8 +632,8 @@ private theorem md_main {O R S K : Type} [CommRing O] [IsDomain O] [IsDiscreteVa
   have hz : ∀ s, ‖f (qh (W.z s))‖ < 1 := fun s => hf _ (by
     rw [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
     exact mem_max_of_zero (W.origin h) (origin_presentation_var_eq_zero W h s))
-  letI : Module Oᵐᵒᵖ K := Module.compHom K ((RingHom.id O).fromOpposite mul_comm)
-  haveI : IsCentralScalar O K := ⟨fun _ _ => rfl⟩
+  let : Module Oᵐᵒᵖ K := Module.compHom K ((RingHom.id O).fromOpposite mul_comm)
+  have : IsCentralScalar O K := ⟨fun _ _ => rfl⟩
   obtain ⟨τ, hτ⟩ := (der_hom O W.A K K (f.comp (qh.comp W.A.val)) D).1 ⟨D, hD, rfl⟩
   have hg0 : ∀ i, τ (g i) = 0 := fun i => by
     have h1 : qh (g i) = 0 := by
@@ -677,7 +677,7 @@ private theorem md_main {O R S K : Type} [CommRing O] [IsDomain O] [IsDiscreteVa
     intro x
     have : (Ideal.quotientKerAlgEquivOfSurjective hq).symm (qh x) = Ideal.Quotient.mk _ x := by
       rw [AlgEquiv.symm_apply_eq]; rfl
-    simp only [F, AlgHom.comp_apply, AlgEquiv.coe_algHom]
+    simp only [F, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom]
     erw [this]
     rfl
   refine ⟨F, AlgHom.ext fun x => ?_, fun y => by rw [hF, hΞ, (hτ y).2]⟩
@@ -696,11 +696,11 @@ theorem UpperTheory.exists_dualNumber_point_of_pointDerivation_vanishing :
           ∀ f : S →ₐ[c.O] PadicAlgCl l, IsLocPt f → ∀ D ∈ PtDer (f.comp (qh.comp W.A.val)) (PadicAlgCl l), (∀ y ∈ Ideal.span (Set.range g), D y = 0) →
             ∃ F : S →ₐ[c.O] DualNumber (PadicAlgCl l), dualFst F = f ∧ ∀ y : W.A, (F (qh y)).snd = D y := by
   intro l _ c R S _ _ _ _ _ _ W h qh hq κ g w _ hker hM f hf D hD hDI
-  haveI := c.dvr
-  haveI := c.fin
-  haveI : IsLocalRing c.O := c.dvr.toIsLocalRing
-  haveI : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
-  haveI : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite _ _
+  have := c.dvr
+  have := c.fin
+  have : IsLocalRing c.O := c.dvr.toIsLocalRing
+  have : IsAdicComplete (maximalIdeal c.O) c.O := (UpperTheory.V.Base.dvrFacts l c.O).2.2.2.1
+  have : Algebra.IsIntegral ℤ_[l] c.O := Algebra.IsIntegral.of_finite _ _
   exact md_main Subtype.val_injective (fun x => ⟨fun hx => (md_intIff x).1 (isIntegral_trans (A := c.O) x hx),
     fun hx => ((md_intIff x).2 hx).tower_top⟩) W h qh hq g hker hM f hf D hD hDI
 end -- clump:auto
@@ -745,7 +745,7 @@ theorem UpperTheory.exists_eqns_of_weighted_generators :
   congr 2
   ext i
   have := hw i
-  simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+  simp only [Set.mem_union, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
   omega
 end -- clump:auto
 end -- clump:auto
@@ -768,14 +768,14 @@ private theorem lc_wcomp_mul (O : Type) [CommRing O] {σ X : Type} [AddCommGroup
   · refine Finset.sum_congr rfl fun p hp => ?_
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = w
-    · rw [coeff_wcomp, if_pos]
+    · rw [coeff_wcomp, ite_eq_left]
       rw [← h, ← hp', map_add (f := _), h2, add_sub_cancel_right]
     · rw [he _ h2, mul_zero, mul_zero]
   · symm
     refine Finset.sum_eq_zero fun p hp => ?_
     have hp' := Finset.HasAntidiagonal.mem_antidiagonal.1 hp
     by_cases h2 : Finsupp.weight wt p.2 = w
-    · rw [coeff_wcomp, if_neg, zero_mul]
+    · rw [coeff_wcomp, ite_eq_right, zero_mul]
       intro h1
       apply h
       rw [← hp', map_add (f := _), h1, h2, sub_add_cancel]
@@ -937,7 +937,7 @@ private theorem theta_entry {R : Type} [CommRing R] (g : GL (Fin 3) R) (i j : Fi
   rw [Finset.sum_eq_single j.rev]
   · simp
   · intro k _ hk
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hk
     rw [h, Fin.rev_rev]
@@ -978,7 +978,7 @@ private theorem der_inv {O R Q : Type} [CommRing O] [CommRing R] [Algebra O R] [
 
   simp only [Units.val_mul, Units.val_one, h1, Matrix.mul_apply, map_sum, hDm, hx, hxi, htor, htori,
   Finset.sum_add_distrib, diagonal_apply, ite_smul, zero_smul, Finset.sum_ite_eq, Finset.sum_ite_eq',
-  Finset.mem_univ, if_true] at key
+  Finset.mem_univ, ite_true] at key
   have e : ((t ^ wt1 p : Oˣ) : O) • D (((g⁻¹ : GL (Fin 3) R) : Matrix (Fin 3) (Fin 3) R) p q) =
       -((((t ^ wt1 q)⁻¹ : Oˣ) : O) • D ((g : Matrix (Fin 3) (Fin 3) R) p q)) :=
     eq_neg_of_add_eq_zero_left key
@@ -1013,23 +1013,23 @@ theorem UpperTheory.exists_pointDerivation_emb_entry_eq_smul_mat_entry :
     · refine ⟨1, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_pos (hr.trans hs)]
+      rw [emb_apply, ite_eq_left (hr.trans hs)]
       simp [GG.mat]
     · refine ⟨0, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_pos (hr.trans hs)]
+      rw [emb_apply, ite_eq_left (hr.trans hs)]
       simp
     · refine ⟨0, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_pos (hr.trans hs)]
+      rw [emb_apply, ite_eq_left (hr.trans hs)]
       simp
     · refine ⟨-((((t ^ wt1 i.rev)⁻¹ : Oˣ) : O) * (((t ^ wt1 j.rev)⁻¹ : Oˣ) : O)), j.rev, i.rev,
         by simp [wt6, wt_rev_rev_eq_wt1_sub_wt1], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨hl, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_pos (hr.trans hs)]
+      rw [emb_apply, ite_eq_left (hr.trans hs)]
       simp only [fromBlocks_apply₂₂]
       rw [theta_entry]
       exact der_inv x D hD t y.left hl j.rev i.rev
@@ -1037,25 +1037,25 @@ theorem UpperTheory.exists_pointDerivation_emb_entry_eq_smul_mat_entry :
     · refine ⟨0, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_neg (by rw [hr]; exact hs)]
+      rw [emb_apply, ite_eq_right (by rw [hr]; exact hs)]
       simp
     · refine ⟨1, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_neg (by rw [hr]; exact hs)]
+      rw [emb_apply, ite_eq_right (by rw [hr]; exact hs)]
       simp [GG.mat]
     · refine ⟨-((((t ^ wt1 i.rev)⁻¹ : Oˣ) : O) * (((t ^ wt1 j.rev)⁻¹ : Oˣ) : O)), j.rev, i.rev,
         by simp [wt6, wt_rev_rev_eq_wt1_sub_wt1], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨hl, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_neg (by rw [hr]; exact hs)]
+      rw [emb_apply, ite_eq_right (by rw [hr]; exact hs)]
       simp only [fromBlocks_apply₂₁]
       rw [theta_entry]
       exact der_inv x D hD t y.left hl j.rev i.rev
     · refine ⟨0, i, j, by simp [wt6, wt], ?_⟩
       intro R Q _ _ _ _ x D hD y hy
       obtain ⟨_, hr⟩ := map_left_eq_tor_and_right_eq_of_map_eq s t x y hy
-      rw [emb_apply, if_neg (by rw [hr]; exact hs)]
+      rw [emb_apply, ite_eq_right (by rw [hr]; exact hs)]
       simp
 end -- clump:auto
 end -- clump:auto
@@ -1234,9 +1234,9 @@ theorem UpperTheory.exists_surjection_univ_normCond_ker_span_nEq :
     rw [← nEq_map, hp]
     exact (norm_iff c g₁ S.r.hom hc (hr _ S.r)).1 hNS.1 i
   set I := Ideal.span (Set.range (nEq c g₁ B.r.hom)) with hIdef
-  haveI : Nontrivial (B.R ⧸ I) :=
+  have : Nontrivial (B.R ⧸ I) :=
     Ideal.Quotient.nontrivial_iff.mpr (ne_top_of_le_ne_top (RingHom.ker_ne_top _) hI)
-  haveI : IsCO O (B.R ⧸ I) := co_quot O B.R (B.R ⧸ I) (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
+  have : IsCO O (B.R ⧸ I) := co_quot O B.R (B.R ⧸ I) (Ideal.Quotient.mkₐ O I) (Ideal.Quotient.mkₐ_surjective O I)
   have hNq : NormCond c g₁ P (B.R ⧸ I) (B.r.map (Ideal.Quotient.mkₐ O I)) := by
     refine ⟨(norm_iff c g₁ _ hc (hr _ _)).2 (fun i => ?_), (B.rep _).1 _⟩
     rw [nEq_map]
@@ -1311,7 +1311,7 @@ private theorem pts_unit {B K : Type} [CommRing B] [Field K] [Algebra B K] (hi :
   obtain ⟨p, hpm, hp⟩ := h
   set y := (algebraMap B K b)⁻¹ with hy
   have hy0 : y ≠ 0 := inv_ne_zero h0
-  letI : Invertible y := invertibleOfNonzero hy0
+  let : Invertible y := invertibleOfNonzero hy0
   have hrev := Polynomial.eval₂_reverse_mul_pow (algebraMap B K) y p
   rw [hp, invOf_eq_inv, hy, inv_inv] at hrev
   have hq : Polynomial.eval₂ (algebraMap B K) (algebraMap B K b) p.reverse = 0 :=
@@ -1380,11 +1380,11 @@ theorem UpperTheory.exists_torus_twist_eq_localPoint_of_weightedPres :
             ∃ (t : (PadicAlgCl l)ˣ) (f : S →ₐ[c.O] PadicAlgCl l), IsLocPt f ∧ act W.gr (tz t) ξ = f.comp (qh.comp W.A.val) := by
   intro l _ c R S _ _ _ _ _ _ W h qh hqh κ g w hg hk hM ξ hOn
   have hfg : (Submodule.map ξ.toLinearMap (W.gr 0)).FG := fg_lemma (W.gr 0) _ ξ hOn hM
-  haveI : IsLocalRing c.O := IsDiscreteValuationRing.toIsLocalRing
-  haveI : Module.Finite ℤ_[l] c.O := c.fin
+  have : IsLocalRing c.O := IsDiscreteValuationRing.toIsLocalRing
+  have : Module.Finite ℤ_[l] c.O := c.fin
   obtain ⟨hcomp, -, -, hinj, -, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI := hcomp
-  haveI : Algebra.IsAlgebraic c.O (PadicAlgCl l) := Algebra.IsAlgebraic.mk fun x =>
+  have := hcomp
+  have : Algebra.IsAlgebraic c.O (PadicAlgCl l) := Algebra.IsAlgebraic.mk fun x =>
     ((IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] (PadicAlgCl l)).mpr
       (Algebra.IsAlgebraic.isAlgebraic x)).extendScalars hinj
   obtain ⟨t, Ξ, hΞ, -⟩ := points_finite c.O ℤ R W (automorphic_points_exist W h) (PadicAlgCl l) ξ hfg
@@ -1466,9 +1466,9 @@ private theorem mop_cover {O Bl B S : Type} [CommRing O] [IsLocalRing O] [IsNoet
     rw [AlgHom.comp_apply, this, map_zero]
   let qh : (MvPowerSeries W.σ O ⧸ J) →ₐ[O] S := Ideal.Quotient.liftₐ J (p.comp W.π) hle
   have hqh : ∀ F, qh (Ideal.Quotient.mk J F) = p (W.π F) := fun _ => rfl
-  haveI : Nontrivial (MvPowerSeries W.σ O ⧸ J) := qh.toRingHom.domain_nontrivial
-  haveI := co_mvps O O W.σ
-  haveI : IsCO O (MvPowerSeries W.σ O ⧸ J) :=
+  have : Nontrivial (MvPowerSeries W.σ O ⧸ J) := qh.toRingHom.domain_nontrivial
+  have := co_mvps O O W.σ
+  have : IsCO O (MvPowerSeries W.σ O ⧸ J) :=
     co_quot O _ _ (Ideal.Quotient.mkₐ O J) (Ideal.Quotient.mkₐ_surjective O J)
   have hkm : RingHom.ker (Ideal.Quotient.mkₐ O J) = J := Ideal.Quotient.mkₐ_ker O J
   let WA : WPres O ℤ (MvPowerSeries W.σ O ⧸ J) :=
@@ -1626,18 +1626,18 @@ private theorem mop_main {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [I
     exact blockWeight_sub_mem_Icc a b
   set a : ℤ → ℕ := fun j => Nat.card {t // W.wt (e (.inr t)) = j} with ha
   have ha0 : ∀ j, ¬ (-2 ≤ j ∧ j ≤ 2) → a j = 0 := fun j hj => by
-    haveI : IsEmpty {t // W.wt (e (.inr t)) = j} := ⟨fun t => hj (by rw [← t.2, ← hw]; exact hbd _)⟩
+    have : IsEmpty {t // W.wt (e (.inr t)) = j} := ⟨fun t => hj (by rw [← t.2, ← hw]; exact hbd _)⟩
     exact Nat.card_of_isEmpty
   have hcnt : ∀ j, Nat.card {u // wf u = j} = a j + boxDef j := hcount
   have hgb : ∀ k, -2 ≤ Sum.elim wf nWt k ∧ Sum.elim wf nWt k ≤ 2 := by
     rintro (k | k)
     · by_contra hj
       have h1 := hcnt (wf k)
-      have h2 : boxDef (wf k) = 0 := if_neg fun h3 => hj (by
+      have h2 : boxDef (wf k) = 0 := ite_eq_right fun h3 => hj (by
         have := abs_le.1 h3
         exact ⟨by show -2 ≤ wf k; omega, by show wf k ≤ 2; omega⟩)
       rw [ha0 (wf k) hj, h2] at h1
-      haveI : Nonempty {u // wf u = wf k} := ⟨⟨k, rfl⟩⟩
+      have : Nonempty {u // wf u = wf k} := ⟨⟨k, rfl⟩⟩
       exact Nat.card_pos.ne' h1
     · revert k
       show ∀ k, -2 ≤ nWt k ∧ nWt k ≤ 2
@@ -1730,8 +1730,8 @@ theorem UpperTheory.V.U3.model_of_pres :
       l ≠ 2 → Marks η Ψ cc g₁ → LocGood U I → CharCont Ψ → (∀ g ∈ N, r0 η Ψ g = 1) →
       IsLocPres U I WB → BoxPres B WB → Nonempty (Model S (PadicAlgCl l)) := by
   intro l _ c Γ H _ _ _ _ _ _ η Ψ N ι hι U I cc g₁ S B WB _ hM hL hΨ hN hWB hbox
-  haveI := (UpperTheory.V.abelian₂.dvr_finite l c.O).1
-  haveI : IsNoetherianRing c.O := PrincipalIdealRing.isNoetherianRing
+  have := (UpperTheory.V.abelian₂.dvr_finite l c.O).1
+  have : IsNoetherianRing c.O := PrincipalIdealRing.isNoetherianRing
   exact mop_main (@UpperTheory.exists_torus_twist_eq_localPoint_of_weightedPres l _ c) (@UpperTheory.exists_dualNumber_point_of_pointDerivation_vanishing l _ c) S B WB hM hL hΨ hN hWB hbox
 end -- clump:auto
 end -- clump:auto

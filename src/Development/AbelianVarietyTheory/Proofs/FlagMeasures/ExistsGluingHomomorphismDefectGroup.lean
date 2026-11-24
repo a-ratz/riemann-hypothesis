@@ -171,7 +171,7 @@ private theorem isNoetherianRing_locE_O (L : _root_.Formalism.MainNotions.S.Loc.
   let φ : (ValuativeRel.valuation F).integer →+* L.O :=
     ((algebraMap F E).comp (ValuativeRel.valuation F).integer.subtype).codRestrict L.O
       (fun c => (_root_.GlobalTheory.UnramOrder.algebraMap_mem_iff L c).2 c.2)
-  letI : Algebra (ValuativeRel.valuation F).integer L.O := φ.toAlgebra
+  let : Algebra (ValuativeRel.valuation F).integer L.O := φ.toAlgebra
   let σ : L.O →+* L.O := ((L.cj : E →+* E).comp L.O.subtype).codRestrict L.O
     (fun x => _root_.GlobalTheory.UnramOrder.cj_mem L x.2)
   have key := _root_.GlobalTheory.UnramOrder.exists_eq_add_mul (R₀ := (ValuativeRel.valuation F).integer) σ
@@ -180,7 +180,7 @@ private theorem isNoetherianRing_locE_O (L : _root_.Formalism.MainNotions.S.Loc.
       obtain ⟨c, hc⟩ := _root_.GlobalTheory.UnramOrder.exists_int_of_fixed L x.2 (congrArg Subtype.val hx)
       exact ⟨c, Subtype.ext hc.symm⟩)
     (ω := ⟨ω, hω⟩) (isUnit_iff_exists_inv.2 ⟨⟨e, he⟩, Subtype.ext hωe⟩)
-  haveI : Module.Finite (ValuativeRel.valuation F).integer L.O := by
+  have : Module.Finite (ValuativeRel.valuation F).integer L.O := by
     refine ⟨⟨{1, ⟨ω, hω⟩}, ?_⟩⟩
     rw [eq_top_iff]
     intro x _
@@ -235,7 +235,7 @@ theorem _root_.GlobalTheory.HL.CompLat.main : ∀ {F : Type} [Field F] [Valuativ
       rw [h1]
       exact Submodule.smul_mem _ _ (Submodule.subset_span hq)
   have hFG : Q.FG := by
-    haveI := isNoetherianRing_locE_O L
+    have := isNoetherianRing_locE_O L
     obtain ⟨-, hcompl, -⟩ := _root_.GlobalTheory.FrameBasic.main L r k S
     let π : S.V →ₗ[L.O] S.V :=
       (S.W0.subtype.comp
@@ -248,8 +248,8 @@ theorem _root_.GlobalTheory.HL.CompLat.main : ∀ {F : Type} [Field F] [Valuativ
     refine ⟨y, hy, ?_⟩
     have hy' : y = w + (y - w) := by abel
     change ((Submodule.linearProjOfIsCompl S.W0 S.ME hcompl.symm y : S.V)) = w
-    have e1 := Submodule.linearProjOfIsCompl_apply_left hcompl.symm ⟨w, h1⟩
-    have e2 := Submodule.linearProjOfIsCompl_apply_right hcompl.symm ⟨y - w, hXME⟩
+    have e1 := Submodule.projectionOnto_apply_left hcompl.symm ⟨w, h1⟩
+    have e2 := Submodule.projectionOnto_apply_right hcompl.symm ⟨y - w, hXME⟩
     rw [hy', map_add (f := _)]
     erw [e1, e2]
     simp

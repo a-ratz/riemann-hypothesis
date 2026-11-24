@@ -66,7 +66,7 @@ theorem exists_level (U : Set (FiniteAdeleRing (𝓞 K) K)) (hU : U ∈ 𝓝 (0 
       HeightOneSpectrum.valuedAdicCompletion_eq_valuation', map_inv₀,
       ← map_natCast (algebraMap (𝓞 K) K), HeightOneSpectrum.valuation_of_algebraMap]
     have h0 : P.intValuation (M : 𝓞 K) ≠ 0 := P.intValuation_ne_zero _ hM1
-    rw [inv_mul_le_iff₀ (zero_lt_iff.mpr h0), mul_one]
+    rw [inv_mul_le_iff₀ (pos_iff_ne_zero.mpr h0), mul_one]
     exact ha P
   rwa [nsmul_eq_mul, ← mul_assoc, ← map_natCast (algebraMap K (FiniteAdeleRing (𝓞 K) K)) M,
     ← map_mul, mul_inv_cancel₀ hM0, map_one, one_mul] at this

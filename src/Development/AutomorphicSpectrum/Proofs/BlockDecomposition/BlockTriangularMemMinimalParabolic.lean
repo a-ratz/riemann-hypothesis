@@ -153,7 +153,7 @@ theorem levi_core (hc : ∀ x, c (c x) = x) {n r : ℕ} {Jh : Matrix (Fin n) (Fi
     rwa [Formalism.UG.cT_mul, cT_cT c hc, Formalism.UG.cT_one] at h
   have hBBi : B * cT c (Xd * M * Ya) = 1 := mul_eq_one_comm.mp hBiB
   have hBit : (cT c (Xd * M * Ya)).BlockTriangular id := by
-    haveI : Invertible B := invertibleOfRightInverse B _ hBBi
+    have : Invertible B := invertibleOfRightInverse B _ hBBi
     have h := Matrix.blockTriangular_inv_of_blockTriangular hBt
     rwa [Matrix.inv_eq_right_inv hBBi] at h
   have hdiag : ∀ i, c ((Xd * M * Ya) i i) * B i i = 1 := by

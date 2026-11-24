@@ -258,7 +258,7 @@ theorem lieImg_iff (W : Wit Y a χ) {ν : GtPt a.D₀ (epsR A)} {g : GtPt W.P.D.
   let I : Ideal (PowerSeries A) := Ideal.span {PowerSeries.X}
   have hI : I ≠ ⊤ := by
     rw [Ne, Ideal.span_singleton_eq_top]
-    exact PowerSeries.X_prime.not_unit
+    exact PowerSeries.prime_X.not_isUnit
   have loc : ∀ n, IsLocalRing (DualNumber (PowerSeries A ⧸ I ^ (n + 1))) := fun n =>
     have : IsLocalRing (PowerSeries A ⧸ I ^ (n + 1)) := isLocalRing_quotient_pow hI n
     isLocalRing_dual _

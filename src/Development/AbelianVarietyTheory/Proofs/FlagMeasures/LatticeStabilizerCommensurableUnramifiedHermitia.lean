@@ -66,8 +66,8 @@ variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 
 theorem exists_pow_mul_mem (L : LocE F E) {ϖ : 𝒪[F]} (hϖ : Irreducible ϖ) (c : E) :
     ∃ k : ℕ, algebraMap F E ((ϖ : F) ^ k) * c ∈ L.O := by
-  haveI : Module.Free F E := L.free
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
+  have : Module.Free F E := L.free
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [L.rank]; norm_num)
   have hc : IsIntegral F c := Algebra.IsIntegral.isIntegral c
   obtain ⟨⟨m, hm0⟩, hm⟩ := IsIntegral.exists_multiple_integral_of_isLocalization
     (nonZeroDivisors 𝒪[F]) c hc
@@ -205,7 +205,7 @@ theorem stab_commensurable : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologi
       have h1 := hcard (a + b)
       have h2 : {y : L.O | (y : E) = algebraMap F E ((ϖ : F) ^ (a + b))} = {p ^ (a + b)} := by
         ext y
-        simp only [Set.mem_setOf_eq, Set.mem_singleton_iff, Subtype.ext_iff,
+        simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff, Subtype.ext_iff,
           SubmonoidClass.coe_pow, hp, map_pow]
       rw [h2] at h1
       apply Nat.finite_of_card_ne_zero

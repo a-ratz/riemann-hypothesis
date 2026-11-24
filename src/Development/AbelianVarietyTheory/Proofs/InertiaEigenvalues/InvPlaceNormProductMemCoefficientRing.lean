@@ -57,10 +57,10 @@ theorem coprime_absNorm {K : Type} [Field K] [NumberField K] (l : ℕ) (hl : l.P
     Nat.Coprime l (Ideal.absNorm P.asIdeal) := by
   rw [Nat.Prime.coprime_iff_not_dvd hl]
   intro hd
-  haveI : Fact l.Prime := ⟨hl⟩
-  letI : Field (𝓞 K ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
+  have : Fact l.Prime := ⟨hl⟩
+  let : Field (𝓞 K ⧸ P.asIdeal) := Ideal.Quotient.field P.asIdeal
   have hfin : Finite (𝓞 K ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
-  haveI := Fintype.ofFinite (𝓞 K ⧸ P.asIdeal)
+  have := Fintype.ofFinite (𝓞 K ⧸ P.asIdeal)
   have hc : l ∣ Fintype.card (𝓞 K ⧸ P.asIdeal) := by
     rw [Fintype.card_eq_nat_card, ← Submodule.cardQuot_apply, ← Ideal.absNorm_apply]; exact hd
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card l hc

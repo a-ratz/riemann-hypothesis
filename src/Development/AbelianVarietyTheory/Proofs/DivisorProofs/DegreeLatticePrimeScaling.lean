@@ -99,7 +99,7 @@ theorem adjoin_comm {A : Type} [Ring A] [Algebra F' A] (M : A) :
 theorem inv_mem_of_finite {n : ℕ} [Finite F'] (B : Subalgebra F' (Matrix (Fin n) (Fin n) F'))
     (δ : GL (Fin n) F') (h : (δ : Matrix (Fin n) (Fin n) F') ∈ B) :
     ((δ⁻¹ : GL (Fin n) F') : Matrix (Fin n) (Fin n) F') ∈ B := by
-  haveI : Finite (Matrix (Fin n) (Fin n) F') := inferInstanceAs (Finite (Fin n → Fin n → F'))
+  have : Finite (Matrix (Fin n) (Fin n) F') := inferInstanceAs (Finite (Fin n → Fin n → F'))
   let f : B → B := fun b => ⟨δ, h⟩ * b
   have hf : Function.Injective f := by
     intro a b hab

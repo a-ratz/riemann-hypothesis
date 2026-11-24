@@ -114,7 +114,7 @@ theorem integral_hk_ne (k l : ℕ) (h : k ≠ l) : ∫ z, hk k l z = 0 := by
     have hs : star (Complex.exp (θ * I)) = Complex.exp (-(θ * I)) := by
       rw [Complex.star_def, ← Complex.exp_conj]
       simp
-    rw [hs, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+    rw [hs, ← exp_natCast_mul, ← exp_natCast_mul, ← Complex.exp_add]
     have h2 : (θ : ℂ) * ((k : ℂ) - l) = Real.pi := by
       rw [hθ]
       push_cast

@@ -59,7 +59,7 @@ def Orth (y z : (Fin N → R) × (Fin N → R)) : Prop := y.2 ⬝ᵥ z.1 = 0 ∧
 
 theorem mem_splitSeq_iff (l : List ((Fin N → R) × (Fin N → R))) :
     l ∈ splitSeq R N ↔ (∀ y ∈ l, y.2 ⬝ᵥ y.1 = 1) ∧ l.Pairwise Orth := by
-  simp only [splitSeq, Set.mem_setOf_eq]
+  simp only [splitSeq, Set.mem_ofPred_eq]
   constructor
   · intro h
     refine ⟨fun y hy => ?_, List.pairwise_iff_get.mpr fun i j hij => ⟨?_, ?_⟩⟩
@@ -107,7 +107,7 @@ theorem form_dot_corr (γ : List ((Fin N → R) × (Fin N → R))) (hγ : γ ∈
     intro i _
     rw [dotProduct_smul, h k i, smul_eq_mul]
     split_ifs <;> simp
-  rw [Finset.sum_congr rfl hs, Finset.sum_ite_eq Finset.univ k, if_pos (Finset.mem_univ _),
+  rw [Finset.sum_congr rfl hs, Finset.sum_ite_eq Finset.univ k, ite_eq_left (Finset.mem_univ _),
     sub_self]
 
 end GlobalTheory.SeqCx.RowLink
@@ -143,7 +143,7 @@ theorem _root_.GlobalTheory.T.exists_splitSeq_linkIn_orthogonal_eq_linkIn : ∀ 
     (GlobalTheory.SeqCx.RowLink.append_mem_splitSeq_iff γ σ').mpr ⟨hγ, hσ's, horth⟩
   refine ⟨γ ++ σ', hρ, by rw [List.length_append, hσ'eq, List.length_map], ?_⟩
   ext w
-  simp only [linkIn, Set.mem_setOf_eq, Set.mem_univ, implies_true, true_and, List.append_assoc,
+  simp only [linkIn, Set.mem_ofPred_eq, Set.mem_univ, implies_true, true_and, List.append_assoc,
     GlobalTheory.SeqCx.RowLink.append_mem_splitSeq_iff, List.mem_append]
   constructor
   · rintro ⟨hS, ⟨-, hw, hσw⟩, hz⟩

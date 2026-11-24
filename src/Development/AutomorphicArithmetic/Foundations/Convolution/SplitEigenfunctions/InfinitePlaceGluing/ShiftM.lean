@@ -68,7 +68,7 @@ private theorem cont_em : Continuous (em E) := by
     continuous_id.matrix_map AdeleBaseChange.continuous_adeleMap
   exact Continuous.units_map _ hM
 
-private theorem cont_ψ : Continuous (ψ (F := ℚ)) := continuous_subtype_val.comp continuous_adelicChar
+private theorem cont_ψ : Continuous (ψ (F := ℚ)) := continuous_subtypeVal.comp continuous_adelicChar
 
 private theorem norm_ψ (x : A ℚ) : ‖ψ x‖ = 1 := Circle.norm_coe _
 
@@ -85,7 +85,7 @@ private theorem finite_fundamentalSet_measure : IsFiniteMeasure ((adeleMeasurePi
 private theorem cont_Wo (D : Dat ℚ E) {φ : GL (Fin 2) (A E) → ℂ} (hc : Continuous φ) {B : ℝ}
     (hB : ∀ g, ‖φ g‖ ≤ B) {X : Type*} [TopologicalSpace X] [FirstCountableTopology X]
     {h : X → GL (Fin 2) (A E)} (hh : Continuous h) : Continuous fun x => Wo D φ (h x) := by
-  haveI := finite_fundamentalSet_measure
+  have := finite_fundamentalSet_measure
   refine continuous_of_dominated (bound := fun _ => B) ?_ ?_ (integrable_const B) ?_
   · exact fun x => ((hc.comp ((cont_nE D).mul continuous_const)).mul
       (cont_ψ.comp (continuous_apply 1))).aestronglyMeasurable
@@ -105,13 +105,13 @@ private theorem cont_rot : Continuous rot := by
 private def uu (y : ({0}ᶜ : Set ℝ)) : (TR.Rinf ℚ)ˣ :=
   ⟨fun _ => y.1, fun _ => y.1⁻¹, funext fun _ => mul_inv_cancel₀ y.2, funext fun _ => inv_mul_cancel₀ y.2⟩
 
-private theorem iy_uu (y : ({0}ᶜ : Set ℝ)) : iy y.1 = TR.infId ℚ (uu y) := dif_neg y.2
+private theorem iy_uu (y : ({0}ᶜ : Set ℝ)) : iy y.1 = TR.infId ℚ (uu y) := dite_eq_right y.2
 
 private theorem cont_iy : Continuous fun y : ({0}ᶜ : Set ℝ) => iy y.1 := by
   simp only [iy_uu]
   refine (TR.continuous_infId ℚ).comp (Units.continuous_iff.2 ⟨?_, ?_⟩)
-  · exact continuous_pi fun _ => continuous_subtype_val
-  · exact continuous_pi fun _ => continuous_subtype_val.inv₀ fun y => y.2
+  · exact continuous_pi fun _ => continuous_subtypeVal
+  · exact continuous_pi fun _ => continuous_subtypeVal.inv₀ fun y => y.2
 
 private theorem pInf_inf (x : (TR.Rinf ℚ)ˣ) : TR.pInf ℚ (TR.infId ℚ x).val = x := by
   have h : ∀ x, TR.pInf ℚ (TR.sInf ℚ x) = x := fun x => (TR.infEq ℚ).symm_apply_apply x
@@ -183,15 +183,15 @@ private theorem G_bd (D : Dat ℚ E) {ω χ : HChar ℚ} (hχ : ∀ a, ‖((χ.1
 private theorem G_meas (D : Dat ℚ E) (χ : HChar ℚ) {φ : GL (Fin 2) (A E) → ℂ} (hc : Continuous φ) {B : ℝ}
     (hB : ∀ g, ‖φ g‖ ≤ B) (k : ℕ) (s : ℂ) (t : ℝ) : AEStronglyMeasurable (G D χ k φ s t) volume := by
   have hcont : ContinuousOn (G D χ k φ s t) ({0}ᶜ : Set ℝ) := by
-    refine continuousOn_iff_continuous_restrict.2 ?_
+    refine continuousOn_iff_continuous_domRestrict.2 ?_
     have h1 : Continuous fun y : ({0}ᶜ : Set ℝ) => Wo D φ (em E (aE (iy y.1) * rot t)) :=
       cont_Wo D hc hB (cont_em.comp ((continuous_aE.comp cont_iy).mul continuous_const))
     have h2 : Continuous fun y : ({0}ᶜ : Set ℝ) => ((χ.1 (iy y.1) : ℂˣ) : ℂ) :=
       Units.continuous_val.comp (χ.2.1.comp cont_iy)
     have h3 : Continuous fun y : ({0}ᶜ : Set ℝ) => ((y.1 : ℝ) : ℂ) ^ k :=
-      (Complex.continuous_ofReal.comp continuous_subtype_val).pow k
+      (Complex.continuous_ofReal.comp continuous_subtypeVal).pow k
     have h4 : Continuous fun y : ({0}ᶜ : Set ℝ) => (((|y.1| : ℝ)) : ℂ) ^ (s - 2) :=
-      Continuous.cpow (Complex.continuous_ofReal.comp (continuous_abs.comp continuous_subtype_val))
+      Continuous.cpow (Complex.continuous_ofReal.comp (continuous_abs.comp continuous_subtypeVal))
         continuous_const fun y => Complex.ofReal_mem_slitPlane.2 (abs_pos.2 y.2)
     exact ((h1.mul h2).mul h3).mul h4
   have h := hcont.aestronglyMeasurable (μ := volume) (measurableSet_singleton (0 : ℝ)).compl

@@ -80,7 +80,7 @@ theorem continuous_resQ {φ : GA E a → ℂ} (hc : Continuous φ) (h : ∀ γ g
   have : resQ φ ∘ RightCosetSpace.mk (rationalGLOne (K := E) (n := a)) = fun x : normOneGL (K := E) (n := a) => φ x :=
     funext fun x => resQ_mk h x
   rw [this]
-  exact hc.comp continuous_subtype_val
+  exact hc.comp continuous_subtypeVal
 
 end GlobalTheory.CompanionTheory.CuspTransfer
 end

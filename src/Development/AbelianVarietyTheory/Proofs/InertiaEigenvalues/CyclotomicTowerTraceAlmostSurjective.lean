@@ -109,8 +109,8 @@ theorem norm_pow_sub_pow_le {u v : Om l} (hu : ‖u‖ ≤ 1) (hv : ‖v‖ ≤ 
 
 theorem exists_generator (E : IntermediateField ℚ_[l] (Om l)) [FiniteDimensional ℚ_[l] E] :
     ∃ x ∈ E, ‖x‖ ≤ 1 ∧ ∀ z ∈ E, ‖z‖ ≤ 1 → ∃ p : ℤ_[l][X], aeval x p = z := by
-  haveI := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_faithful ℤ_[l] ℚ_[l] E
-  haveI := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_isLocalHom ℤ_[l] E
+  have := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_faithful ℤ_[l] ℚ_[l] E
+  have := ReciprocityTheory.ChartRestriction.G.T0.FiniteAlgebraLocalCompletion.cl_isLocalHom ℤ_[l] E
   have : Finite (IsLocalRing.ResidueField ℤ_[l]) :=
     Finite.of_equiv _ (PadicInt.residueField (p := l)).toEquiv.symm
   obtain ⟨θ, hθ⟩ : ∃ θ : integralClosure ℤ_[l] E, Algebra.adjoin ℤ_[l] {θ} = ⊤ :=
@@ -414,8 +414,8 @@ theorem exists_moved (K : FinExt l) {y : Om l} (hy : ‖y‖ ≤ 1) (n : ℕ) {�
   refine ⟨x, hxE, hx, fun σ hσ hσy => ?_⟩
   by_contra hlt
   rw [not_le] at hlt
-  haveI : NeZero (l ^ (j + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ (j + 1))
+  have : NeZero (l ^ (j + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ (j + 1))
   have hζ1 : ‖ζ‖ = 1 := norm_root (pow_ne_zero _ hl.ne_zero) hζ.pow_eq_one
   have hζK : ζ ∈ Ks K (j + 1) := mem_Ks K hζ.pow_eq_one
   have hω : IsPrimitiveRoot (ζ ^ l) (l ^ j) := hζ.pow (pow_pos hl.pos _) (by ring)
@@ -491,21 +491,21 @@ theorem exists_moved (K : FinExt l) {y : Om l} (hy : ‖y‖ ≤ 1) (n : ℕ) {�
 theorem finite_Ks (K : FinExt l) (i : ℕ) : FiniteDimensional ℚ_[l] (Ks K i) := by
   classical
   have hl : l.Prime := Fact.out
-  haveI := K.2
-  haveI : FiniteDimensional ℚ_[l] (K0 K) :=
+  have := K.2
+  have : FiniteDimensional ℚ_[l] (K0 K) :=
     FiniteDimensional.of_injective (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective inf_le_left)
-  haveI : Finite {x : Om l | x ^ (l ^ i) = 1} := by
+  have : Finite {x : Om l | x ^ (l ^ i) = 1} := by
     refine ((Polynomial.nthRoots (l ^ i) (1 : Om l)).toFinset.finite_toSet.subset ?_).to_subtype
     intro x hx
     simpa [mem_nthRoots (pow_pos hl.pos i)] using hx
-  haveI := IntermediateField.finiteDimensional_adjoin (K := ℚ_[l]) (S := {x : Om l | x ^ (l ^ i) = 1})
+  have := IntermediateField.finiteDimensional_adjoin (K := ℚ_[l]) (S := {x : Om l | x ^ (l ^ i) = 1})
     fun x _ => Algebra.IsIntegral.isIntegral x
   exact IntermediateField.finiteDimensional_sup _ _
 
 theorem exists_primitive (L : FinExt l) : ∃ y ∈ L.1, ‖y‖ ≤ 1 ∧
     ∀ g : GQ l, g y = y → g ∈ L.1.fixingSubgroup := by
-  haveI := L.2
+  have := L.2
   obtain ⟨x, hxL, hx, hgen⟩ := exists_generator L.1
   refine ⟨x, hxL, hx, fun g hg => (IntermediateField.mem_fixingSubgroup_iff _ _).2 fun z hz => ?_⟩
   have h1 : ∀ z ∈ L.1, ‖z‖ ≤ 1 → g z = z := fun z hz hn => by
@@ -535,8 +535,8 @@ theorem exists_trace_norm_ge : ∀ (l : ℕ) [Fact l.Prime] (K L' : FinExt l) (�
     nlinarith
   obtain ⟨i₀, hi₀⟩ := exists_moved K hy n (δ := 1 - a) (by linarith) (by linarith)
   refine ⟨i₀, fun i hi S hS hu => ?_⟩
-  haveI := L'.2
-  haveI := finite_Ks K i
+  have := L'.2
+  have := finite_Ks K i
   have hsep : ∀ s ∈ S, ∀ t ∈ S, (s⁻¹ * t) y = y → s = t := by
     intro s hs t ht h
     refine (hu t (hS t ht)).unique ⟨hs, ?_⟩ ⟨ht, by simp⟩

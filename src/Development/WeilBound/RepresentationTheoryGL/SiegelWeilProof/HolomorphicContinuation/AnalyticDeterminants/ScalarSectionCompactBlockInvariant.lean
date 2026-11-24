@@ -138,7 +138,7 @@ theorem isOpen_dom : IsOpen (Dom n) := by
   have e : Dom n = ({x : M2 n | x.det ≠ 0} ∩ (fun x => ub1 x) ⁻¹' {M | M.det ≠ 0}) ∩
       ({x | (u1 x).det ≠ 0} ∩ {x | (u2 x).det ≠ 0}) := by
     ext x
-    simp only [Dom, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_preimage, isUnit_iff_ne_zero]
+    simp only [Dom, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_preimage, isUnit_iff_ne_zero]
     tauto
   rw [e]
   refine IsOpen.inter (continuousOn_inverse_first_block.isOpen_inter_preimage h0
@@ -238,7 +238,7 @@ theorem scalar_section_compact_block_invariant (hU : UAct) (j : ℕ) (p q : ℤ)
   have hmA : ∀ a : Fin n, a ∈ blkA j ↔ (a : ℕ) < j := fun a => by simp [blkA]
   have hmB : ∀ a : Fin n, a ∈ blkB j ↔ ¬ (a : ℕ) < j := fun a => by simp [blkB, blkA]
   have dP : (1 + P').det = 1 := by
-    rw [Matrix.det_of_upperTriangular]
+    rw [det_of_isUpperTriangular]
     · refine Finset.prod_eq_one fun i _ => ?_
       have : P' i i = 0 := by
         by_contra h0
@@ -252,7 +252,7 @@ theorem scalar_section_compact_block_invariant (hU : UAct) (j : ℕ) (p q : ℤ)
       have := hP a b h0
       exact ((hmB b).1 this.2) (lt_trans (Fin.lt_def.1 hba) ((hmA a).1 this.1))
   have dS : (1 + S').det = 1 := by
-    rw [← det_transpose, Matrix.transpose_add, Matrix.transpose_one, Matrix.det_of_upperTriangular]
+    rw [← det_transpose, Matrix.transpose_add, Matrix.transpose_one, det_of_isUpperTriangular]
     · refine Finset.prod_eq_one fun i _ => ?_
       have : S' i i = 0 := by
         by_contra h0
@@ -293,7 +293,7 @@ theorem pos_int (j : ℕ) (Kg : Type) [Group Kg] [TopologicalSpace Kg] [IsTopolo
       · have h' : (a : Fin n) ≠ b := fun e => h (Subtype.ext e)
         rw [Matrix.submatrix_apply, Matrix.one_apply_ne h', Matrix.one_apply_ne h]
     rw [this, det_one]
-  refine hc.integral_pos_of_hasCompactSupport_nonneg_nonzero
+  refine hc.integral_pos_of_hasCompactSupport_nonneg_ne_zero
     (IsCompact.of_isClosed_subset isCompact_univ (isClosed_tsupport _) (Set.subset_univ _))
     (fun k => by positivity) (x := 1) ?_
   rw [map_one, wM_one, hm1, hm1]; norm_num

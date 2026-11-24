@@ -140,8 +140,8 @@ theorem norm_mean_le (hr : X.p0 + q0 = r) (idx : Fin g ≃ X.Ψ × Fin r) (hs : 
   by_cases h0 : Nat.card T = 0
   · rw [h0]
     simpa using mul_nonneg hC hB
-  haveI : Finite T := Nat.finite_of_card_ne_zero h0
-  haveI := Fintype.ofFinite T
+  have : Finite T := Nat.finite_of_card_ne_zero h0
+  have := Fintype.ofFinite T
   have hpos : (0 : ℝ) < Nat.card T := by exact_mod_cast Nat.pos_of_ne_zero h0
   rw [finsum_eq_sum_of_fintype, theta_sum₂ hr idx hs hx _ W f hf, Finset.mul_sum, norm_mul, norm_inv,
     Complex.norm_natCast, inv_mul_le_iff₀ hpos]
@@ -219,9 +219,9 @@ theorem norm_evR_le : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt
   obtain ⟨ph, ψ, x₀, hpin⟩ := hpin
   have hr : r = Dw.p + Dw.q := hU.1
   have hn : Even n := hDom.2
-  letI A₁ : Algebra c.F ℂ := σ.toAlgebra
+  let A₁ : Algebra c.F ℂ := σ.toAlgebra
   let σ₂ : d.c₂.F →+* ℂ := σ.comp (d.eF.symm : d.c₂.F →+* c.F)
-  letI A₂ : Algebra d.c₂.F ℂ := σ₂.toAlgebra
+  let A₂ : Algebra d.c₂.F ℂ := σ₂.toAlgebra
   have hσ₂ : ∀ s : c.F, σ₂ (d.eF s) = σ s := fun s => congrArg σ (d.eF.symm_apply_apply s)
   have hcomp : ∀ s : c.F, algebraMap d.c₂.F ℂ (d.eF s) = algebraMap c.F ℂ s := hσ₂
   have huf : IsUnitFr (U.X k) x.1 := fun τ i => by

@@ -78,11 +78,11 @@ def ColFix (u : D.what₂.Word) : Prop :=
         (nxt X.e0 X.z0 a))
 
 theorem mem_Kset_mul {x y : X.B.I.Gf} (hx : x ∈ X.B.I.Kset) (hy : y ∈ X.B.I.Kset) : x * y ∈ X.B.I.Kset := by
-  simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq] at hx hy ⊢
+  simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq] at hx hy ⊢
   exact Subgroup.mul_mem _ hx hy
 
 theorem mem_Kset_inv {x : X.B.I.Gf} (hx : x ∈ X.B.I.Kset) : x⁻¹ ∈ X.B.I.Kset := by
-  simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_setOf_eq] at hx ⊢
+  simp only [Formalism.MainNotions.S.AutInst.Kset, Set.mem_ofPred_eq] at hx ⊢
   exact Subgroup.inv_mem _ hx
 
 variable {X}

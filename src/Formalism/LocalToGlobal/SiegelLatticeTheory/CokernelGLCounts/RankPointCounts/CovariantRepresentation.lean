@@ -207,7 +207,7 @@ theorem one_mem_SinfU (X : HidaSetting D) (u : D.what₂.Word) : (1 : X.B.I.Ginf
 theorem psiInfU_one (X : HidaSetting D) (u : D.what₂.Word) : X.psiInfU u 1 = 1 := by
   have h1 : ∀ x, X.Wu u x = X.psiInfU u 1 • X.Wu u x := fun x => by
     have e : X.Wu u (1 * x) = X.psiInfU u 1 • X.piU u 1 (X.Wu u x) := (X.Wu_spec u).1 1 (one_mem_SinfU X u) x
-    rwa [one_mul, (X.piU_rep u).1, ContinuousLinearMap.one_apply] at e
+    rwa [one_mul, (X.piU_rep u).1, one_apply_eq_self] at e
   by_contra hne
   have h0 : ∀ x, X.Wu u x = 0 := fun x => by
     have h2 : (1 - X.psiInfU u 1) • X.Wu u x = 0 := by rw [sub_smul, one_smul, ← h1 x, sub_self]

@@ -262,8 +262,8 @@ theorem UpperTheory.V.AlgebraTools.topGen_of_hom :
       (hHc.isOpen_compl.preimage (continuous_const_mul g))
       (by simp only [Set.mem_preimage, Set.mem_compl_iff, mul_one]; exact hg')
     let Ns : Subgroup G := N.toOpenSubgroup
-    haveI : Ns.Normal := N.isNormal'
-    haveI : Finite (G ⧸ Ns) := Subgroup.quotient_finite_of_isOpen _ N.isOpen'
+    have : Ns.Normal := N.isNormal'
+    have : Finite (G ⧸ Ns) := Subgroup.quotient_finite_of_isOpen _ N.isOpen'
     let K := H.map (QuotientGroup.mk' Ns)
     have hK : K = ⊤ := by
       refine UpperTheory.V.CF.burnsideHom l (G ⧸ Ns) (hpro N) K (fun f hf => ?_)
@@ -309,7 +309,7 @@ theorem UpperTheory.V.AlgebraTools.topGen_of_hom :
           simp [MonoidHom.mem_ker]
         rw [this]
         exact ha }
-  haveI : Finite S := hfin.to_subtype
+  have : Finite S := hfin.to_subtype
   have hle : Nat.card S ≤ l ^ h := by
     have : Nat.card S = {f : G →* Multiplicative (ZMod l) | IsOpen (f.ker : Set G)}.ncard :=
       Nat.card_coe_set_eq _

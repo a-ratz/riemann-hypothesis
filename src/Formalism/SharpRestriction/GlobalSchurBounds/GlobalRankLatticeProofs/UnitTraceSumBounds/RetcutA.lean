@@ -199,11 +199,11 @@ private theorem isClosed_setOf_coeff_exp_norm_le_one {K Y : Type*} [NormedField 
     refine isClosed_eq ?_ continuous_const
     simpa only [MvPowerSeries.coeff_zero_eq_constantCoeff_apply] using hF 0
   have h2 : IsClosed {y | ∀ n : Unit →₀ ℕ, ‖MvPowerSeries.coeff n (G y)‖ ≤ 1} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isClosed_iInter fun n => isClosed_le ?_ continuous_const
     simp only [hG]
     exact (continuous_finsetSum _ fun k _ => (continuous_coeff_pow_of_continuous_coeff F hF k n).div_const _).norm
-  simpa only [Set.setOf_and] using h1.inter h2
+  simpa only [Set.ofPred_and] using h1.inter h2
 
 private theorem continuous_coeff_subst_subst_C_mul_subst {K Y : Type*} [NormedField K] [TopologicalSpace Y]
     (l ex ph : PowerSeries K) (hl : PowerSeries.constantCoeff l = 0)

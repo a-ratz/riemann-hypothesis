@@ -54,11 +54,11 @@ open MonObj
 namespace GlobalTheory.Poinc.DeepLab
 
 theorem epi_spMap_field {K L : Type} [Field K] [Field L] (f : K →+* L) : Epi (spMap f) := by
-  letI := f.toAlgebra
-  haveI : Flat (spMap f) := by
+  let := f.toAlgebra
+  have : Flat (spMap f) := by
     rw [spMap, HasRingHomProperty.Spec_iff (P := @Flat)]
     exact (show Module.Flat K L from inferInstance)
-  haveI : Surjective (spMap f) := ⟨fun z => ⟨⟨⊥, Ideal.isPrime_bot⟩, Subsingleton.elim _ _⟩⟩
+  have : Surjective (spMap f) := ⟨fun z => ⟨⟨⊥, Ideal.isPrime_bot⟩, Subsingleton.elim _ _⟩⟩
   exact Flat.epi_of_flat_of_surjective _
 
 theorem spMap_comp {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C) :
@@ -132,7 +132,7 @@ theorem exists_lab_same : ∀ {o₁ Ω₁ o₂ Ω₂ : Type} [CommRing o₁] [Fi
   obtain ⟨lab, hlab⟩ := exists_lab _ _ _ uniq hsL
   have hlabl : ∀ a : S₁.Gam, x₀ ≫ (ρ₂.pt (lab a)).left = x₀ ≫ (σ (Multiplicative.ofAdd a)).left := fun a =>
     congrArg (fun q => q.left) (hlab a)
-  haveI := epi_spMap_field (algebraMap Ω₂ K)
+  have := epi_spMap_field (algebraMap Ω₂ K)
   refine ⟨lab, ?_, ?_⟩
   · let P₀ := GlobalTheory.StrictPull.polPull ρ₂.P (spMap S₂.R.val.toRingHom)
     refine ⟨P₀, pullback.fst ρ₂.P.A.hom (spMap S₂.R.val.toRingHom) ≫ ψ,

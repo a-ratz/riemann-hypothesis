@@ -55,7 +55,7 @@ theorem UpperTheory.GalN.V.csdOf0_alt :
       IsPairing c r (cycBar F Ω l ^ (1 - (n : ℤ))) P → AutCsd0 ι r := by
   intro hP F₀ F Ω _ _ _ _ _ _ _ _ _ _ _ _ l _ ι n hn r c P hc haut hpair
   obtain ⟨π, hreg, hatt⟩ := ((_root_.UpperTheory.GalN.V.automorphy_bridge_of_printed_hida hP F Ω l ι n r).2.1).1 haut
-  haveI : IsAlgClosure (maximalRealSubfield F) Ω :=
+  have : IsAlgClosure (maximalRealSubfield F) Ω :=
     ⟨IsAlgClosure.isAlgClosed F, Algebra.IsAlgebraic.trans (maximalRealSubfield F) F Ω⟩
   obtain ⟨art, hart⟩ : ∃ art : Neutral.B1.Ideles (maximalRealSubfield F) →* Gab (maximalRealSubfield F) Ω,
       IsGlobalArtin art := hP.toClassicalTheorems.litN.aut.art _ Ω

@@ -455,7 +455,7 @@ theorem kernel_eq_sum : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ)
   have b₁ : flatBF s₁ (T₁ Φα) = U₁ Ψα := hfl Φα Ψα rfl
   have b₁' : flatBF s₁ (T₁ O₁) = U₁ O₁' := hfl O₁ O₁' (by
     have := (GlobalTheory.LocFlat.flat_contr_intIndicator Q.k Q.ψk Q.ν Q.cond Q.unitVol (Q.X (Q.s + 1)) (Q.X Q.s) Unit 0 (0 + 1)).1
-    rw [if_neg (by omega)] at this
+    rw [ite_eq_right (by omega)] at this
     exact this.symm)
   have b₂ := hext Φ₂ Y₂ hY₂
   have b₂' := hext O₂ O₂' fun x => by
@@ -465,7 +465,7 @@ theorem kernel_eq_sum : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ)
       rcases q with q | q
       · exact hx r q
       · exact q.elim0
-    simp only [O₂, O₂', Set.indicator_apply, Set.mem_setOf_eq, hx]
+    simp only [O₂, O₂', Set.indicator_apply, Set.mem_ofPred_eq, hx]
   rw [a₁, a₂, a₃, ← hX₁ O₁ rfl, ← hX₂ O₂ rfl]
   unfold Comm.lst
   rw [b₁, b₁', b₂, b₂']
@@ -475,9 +475,9 @@ theorem kernel_eq_sum : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ)
   obtain ⟨Ξ, hΞ, hΞK⟩ := hK Ψα Y₂
   obtain ⟨Ξ', hΞ', hΞ'K⟩ := hK O₁' O₂'
   have hv1 : valuation Q.k (-1 : Q.k) = 1 := by simp
-  haveI := Q.unitVol.1
-  haveI := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := Q.k) (n := Q.X (Q.s + 1)) (n' := Q.X Q.s)
-  haveI := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := Q.k) (n := Q.Z ⊕ Unit) (n' := Q.X (Q.s + 1))
+  have := Q.unitVol.1
+  have := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := Q.k) (n := Q.X (Q.s + 1)) (n' := Q.X Q.s)
+  have := GlobalTheory.FinPl.Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := Q.k) (n := Q.Z ⊕ Unit) (n' := Q.X (Q.s + 1))
   let P₁ : SB _ := ⟨_, GlobalTheory.LastTwoSteps.intInd_mem_SB (k := Q.k) (Q.X (Q.s + 1)) (Q.X Q.s)⟩
   let P₂ : SB _ := ⟨_, GlobalTheory.LastTwoSteps.intInd_mem_SB (k := Q.k) (Q.Z ⊕ Unit) (Q.X (Q.s + 1))⟩
   let E₁ := fun yb => (⟨_, (GlobalTheory.T.twistPlace_last_two_step_entries_schwartzBruhat D c v χ Q α yb).1⟩ : SB _)
@@ -754,11 +754,11 @@ theorem lastOne : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ), c.Is
     intro yb hyb
     obtain ⟨y₀, hy₀⟩ := Q.cos_cov yb ((hmemS yb).1 hyb)
     rw [Finset.sum_eq_single y₀]
-    · rw [if_pos hy₀]
+    · rw [ite_eq_left hy₀]
       exact GlobalTheory.T.doubleThetaLift_lastSteps_couplingCoset_orbit_invariant D c v χ Q hc hv h hr hτ s₁ hχ oma omb hoa hob c₁ c₂ hc₁ hc₂ Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ α u y₀ yb hy₀
         (d₁ yb) (d₂ yb) (hd₁ yb) (hd₂ yb)
     · intro y _ hy
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h'
       exact hy (Q.cos_inj y y₀ (htrans _ _ _ h' (hsymm _ _ hy₀)))
     · intro h'; exact absurd (Finset.mem_univ _) h'
@@ -769,7 +769,7 @@ theorem lastOne : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ), c.Is
   · have hset : {yb | SameOrb (Q.T.lev (Q.s + 1) 0 rfl).J (box _ Q.c₂) (Q.cos y) yb} =
         ↑(S.filter fun yb => SameOrb (Q.T.lev (Q.s + 1) 0 rfl).J (box _ Q.c₂) (Q.cos y) yb) := by
       ext yb
-      simp only [Set.mem_setOf_eq, Finset.coe_filter]
+      simp only [Set.mem_ofPred_eq, Finset.coe_filter]
       exact ⟨fun h' => ⟨(hmemS yb).2 (hstab _ hy yb h'), h'⟩, fun h' => h'.2⟩
     rw [hset, Nat.card_coe_set_eq, Set.ncard_coe_finset, Nat.cast_smul_eq_nsmul]
   · have hempty : (S.filter fun yb => SameOrb (Q.T.lev (Q.s + 1) 0 rfl).J (box _ Q.c₂) (Q.cos y) yb) = ∅ := by
@@ -889,7 +889,7 @@ theorem half_one_sub_of_ne : ∀ (D : D7) (k k' : Type) [Field k] [ValuativeRel 
 theorem comb_single_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ), comb ψ S T (Finsupp.single 0 1) f = f := by
   intro D ψ S T f
   unfold comb
-  rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
+  rw [Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
   funext w
   have hh : hO S T w 0 = 0 := by simp [hO]
   simp [heisO, symplOH, symplO, hh]
@@ -1161,7 +1161,7 @@ theorem biComb_one {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (A S A' : HSp D) (C
 theorem sum_conv_nil {D : D7} {S T : HSp D} (om : GA D S × GA D T →* Module.End ℂ (WO S T → ℂ)) (X : WO S T → ℂ) :
     ∑ g ∈ (conv ([] : List (GA D S →₀ ℂ))).support, conv ([] : List (GA D S →₀ ℂ)) g • om (g, 1) X = X := by
   have e : conv ([] : List (GA D S →₀ ℂ)) = Finsupp.single 1 1 := rfl
-  rw [e, Finsupp.support_single_ne_zero _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
+  rw [e, Finsupp.support_single _ one_ne_zero, Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
   show om 1 X = X
   rw [map_one]; rfl
 
@@ -1270,12 +1270,12 @@ theorem core : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t) (
   have h1 : ∀ k : Fin F.r, ∀ u ∈ (Finsupp.single (0 : WO (c.X j) (c.X (j + 1))) (1 : ℂ)).support,
       IsHalf (1 - ((F.Q (id k)).q.e + cA D (F.Q (id k)).q.e)) u := by
     intro k u hu
-    rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hu
+    rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hu
     subst hu; intro a b; simp
   have h2 : ∀ k : Fin F.r, ∀ u ∈ (Finsupp.single (0 : WO (c.X (j + 1)) (c.X (j + 1 + 1))) (1 : ℂ)).support,
       IsHalf (1 - ((F.Q (id k)).q.e + cA D (F.Q (id k)).q.e)) u := by
     intro k u hu
-    rw [Finsupp.support_single_ne_zero _ one_ne_zero, Finset.mem_singleton] at hu
+    rw [Finsupp.support_single _ one_ne_zero, Finset.mem_singleton] at hu
     subst hu; intro a b; simp
   have H := iter_places F hc ht hv hW hF j h Ψ₁ Ψ₂ hΨ₁ hΨ₂ φ hφ α β F.r id Function.injective_id _ _ h1 h2
   rw [biComb_one] at H
@@ -1326,9 +1326,9 @@ namespace GlobalTheory.QPl
 
 theorem relIndex_KO_ne_zero {k n : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     [Fintype n] [DecidableEq n] (J : Subgroup (GL n k)) (hJ : IsOpen (J : Set (GL n k))) : J.relIndex (KO k n) ≠ 0 := by
-  haveI : CompactSpace (KO k n) := isCompact_iff_compactSpace.1 (GlobalTheory.SplitFlip.isCompact_KO (k := k) (n := n))
-  haveI : Finite (KO k n ⧸ J.subgroupOf (KO k n)) :=
-    Subgroup.quotient_finite_of_isOpen _ (hJ.preimage continuous_subtype_val)
+  have : CompactSpace (KO k n) := isCompact_iff_compactSpace.1 (GlobalTheory.SplitFlip.isCompact_KO (k := k) (n := n))
+  have : Finite (KO k n ⧸ J.subgroupOf (KO k n)) :=
+    Subgroup.quotient_finite_of_isOpen _ (hJ.preimage continuous_subtypeVal)
   exact Subgroup.index_ne_zero_of_finite
 
 theorem QAt.idx_last_ne_zero : ∀ (D : D7) (c : Comm D) (v : VCom c) (χ : ℕ → (AE D)ˣ →* Circle) (Q : QAt v χ), Q.idx (Q.s + 1) ≠ 0 ∧ Q.idx (Q.s + 1 + 1) ≠ 0 := by

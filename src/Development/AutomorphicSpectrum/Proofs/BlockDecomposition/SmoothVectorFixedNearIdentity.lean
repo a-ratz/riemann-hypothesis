@@ -51,7 +51,7 @@ private theorem continuous_leviProj_hpgIncl (k : Type) [Field k] [ValuativeRel k
     Continuous (fun h : HPG k i t => (leviProj k (ePG i t) (hpgIncl k i t h)) b) := by
   have h0 : Continuous (fun h : HPG k i t =>
       (((h : Mir k (i + t)) : GL (Fin (i + t + 1)) k) : Matrix (Fin (i + t + 1)) (Fin (i + t + 1)) k)) :=
-    Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)
+    Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hv : Continuous (fun h : HPG k i t =>
       ((leviProj k (ePG i t) (hpgIncl k i t h)) b : Matrix (Two (Fin (i + 1)) (Fin t) b) (Two (Fin (i + 1)) (Fin t) b) k)) :=
     (h0.matrix_submatrix (fun j => (ePG i t) ⟨b, j⟩) (fun j => (ePG i t) ⟨b, j⟩)).congr (fun _ => rfl)
@@ -81,7 +81,7 @@ theorem isSmooth_sigX {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k]
     unfold dpowM dpow
     unfold IsSmoothChar
     rw [← MonoidHom.comap_ker]
-    exact IsOpen.preimage continuous_subtype_val (hd _ _)
+    exact IsOpen.preimage continuous_subtypeVal (hd _ _)
   have h2 : IsSmooth (σ.tw (-↑(i + 1 + 1) / 2)).ρ := by
     unfold GRep.tw
     exact isSmooth_twist hσ (by unfold dpow; exact hd _ _)

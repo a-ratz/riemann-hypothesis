@@ -140,7 +140,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem absE_flow (h : IsCMExt F E σ) {τ : Multiplicative ℝ →* (AF F ⊗[F] E)ˣ} (hτ : IsFlow τ) (x : ℝ) :
     (absE F E (τ (Multiplicative.ofAdd x)) : ℝ) = Real.exp (2 * Module.finrank ℚ F * x) := by
   obtain ⟨-, θ, hθ, hv⟩ := hτ
-  haveI : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
+  have : Nontrivial (AF F) := (AdeleRing.algebraMap_injective (𝓞 F) F).nontrivial
   have e := GlobalTheory.CompanionTheory.SW.FChi.norm_tmul_one h.2.2.1 (AF F) (pairA F (θ (Real.exp x)) 1)
   rw [← hv] at e
   simp only [GlobalTheory.Doubling.absE_apply, GlobalTheory.Doubling.absEv_unitFin, GlobalTheory.Doubling.absEw_unitInf, e, map_pow]
@@ -154,9 +154,9 @@ theorem absE_flow (h : IsCMExt F E σ) {τ : Multiplicative ℝ →* (AF F ⊗[F
     rw [← (InfinitePlace.Completion.isometry_extensionEmbedding w).norm_map_of_map_zero (map_zero _)]
     refine Eq.trans h2 ?_
     simp
-  simp only [e1, one_pow, nnnorm_one, finprod_one, mul_one, NNReal.coe_prod, NNReal.coe_pow, nnnorm_pow, coe_nnnorm, e2,
+  simp only [e1, one_pow, nnNorm_one, finprod_one, mul_one, NNReal.coe_prod, NNReal.coe_pow, nnNorm_pow, coe_nnNorm, e2,
     Finset.prod_pow_eq_pow_sum, InfinitePlace.sum_mult_eq]
-  rw [← pow_mul, ← Real.exp_nat_mul]
+  rw [← pow_mul, ← Real.exp_natCast_mul]
   push_cast
   ring_nf
 
@@ -168,8 +168,8 @@ theorem modulus (h : IsCMExt F E σ) (M : ℕ) (μW : Measure (Fin 1 → Fin M �
   obtain ⟨_, _, _, _, hsc, -, -, hB, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ h (AF F)
   have := hB 1 M
   have : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : Countable E := Function.Injective.countable (Module.finBasis ℚ E).equivFun.injective
-  haveI : Countable F := Function.Injective.countable (Module.finBasis ℚ F).equivFun.injective
+  have : Countable E := Function.Injective.countable (Module.finBasis ℚ E).equivFun.injective
+  have : Countable F := Function.Injective.countable (Module.finBasis ℚ F).equivFun.injective
   obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CompanionTheory.SW.Flow.exists_flow F E σ h
   obtain ⟨χ, χc, χ1, χ2⟩ := _root_.GlobalTheory.CompanionTheory.SW.FChi.exists_modulus_chi F E σ h τ hτ M μW μA hW hA
   obtain ⟨ω, hω, hid⟩ := _root_.GlobalTheory.CompanionTheory.SW.Fujisaki.units_decomp F E σ h τ hτ
@@ -207,7 +207,7 @@ theorem modulus (h : IsCMExt F E σ) (M : ℕ) (μW : Measure (Fin 1 → Fin M �
     exact congrArg _ (Units.ext hl)
   have e2 : χ (τ (Multiplicative.ofAdd (j : ℝ))) * absE F E (τ (Multiplicative.ofAdd (j : ℝ))) ^ (M + 1) = 1 := by
     apply NNReal.coe_injective
-    rw [NNReal.coe_mul, NNReal.coe_pow, χ2, absE_flow h hτ, ← Real.exp_nat_mul, ← Real.exp_add, NNReal.coe_one, Real.exp_eq_one_iff]
+    rw [NNReal.coe_mul, NNReal.coe_pow, χ2, absE_flow h hτ, ← Real.exp_natCast_mul, ← Real.exp_add, NNReal.coe_one, Real.exp_eq_one_iff]
     push_cast
     ring
   rw [map_mul, map_mul]
@@ -612,7 +612,7 @@ theorem conjEx (h : IsCMExt F E σ) {n : ℕ} {J J' : Matrix (Fin n) (Fin n) E} 
       (∀ g, mat (Φ g) * incM F A.1 = incM F A.1 * g.1.val) ∧
       ∀ g, HeckeCharacterZeroLocus.SiegelWeilU.HA.mat (AF F) σ J' g ∈ HeckeCharacterZeroLocus.SiegelWeilU.HFin (AF F) σ J' → Φ g ∈ ratU σ J := by
   obtain ⟨⟨_, _, _⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-  haveI : IsTopologicalRing (AE F E) := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ h (AF F)).1
+  have : IsTopologicalRing (AE F E) := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ h (AF F)).1
   let a : GL (Fin n) (AE F E) := Matrix.GeneralLinearGroup.map (inclR (F := F) (AF F)) A
   have ha : inclR (F := F) (AF F) ξ • (a.1ᵀ * incM F J * a.1.map (cA σ : AE F E →+* AE F E))ᵀ = incM F J' := by
     rw [← hA]
@@ -627,8 +627,8 @@ theorem conjEx (h : IsCMExt F E σ) {n : ℕ} {J J' : Matrix (Fin n) (Fin n) E} 
             left_inv := fun g => Subtype.ext (show a⁻¹ * (a * g.1 * a⁻¹) * a = g.1 by group)
             right_inv := fun g => Subtype.ext (show a * (a⁻¹ * g.1 * a) * a⁻¹ = g.1 by group)
             map_mul' := fun g g' => Subtype.ext (show a * (g.1 * g'.1) * a⁻¹ = a * g.1 * a⁻¹ * (a * g'.1 * a⁻¹) by group)
-            continuous_toFun := ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _
-            continuous_invFun := ((continuous_const.mul continuous_subtype_val).mul continuous_const).subtype_mk _ },
+            continuous_toFun := ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _
+            continuous_invFun := ((continuous_const.mul continuous_subtypeVal).mul continuous_const).subtype_mk _ },
     fun g => congrArg Units.val (inv_mul_cancel_right (a * g.1) a), ?_⟩
   rintro g ⟨u, -, hu⟩
   refine Subgroup.mem_subgroupOf.2 ⟨A * u * A⁻¹, ?_⟩

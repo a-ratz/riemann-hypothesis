@@ -178,7 +178,7 @@ theorem card_add_card_le_of_isUnit {M : Matrix (Fin n) (Fin n) K} (hM : IsUnit M
     (I J : Finset (Fin n)) (h : ∀ i ∈ I, ∀ j ∈ J, M i j = 0) : I.card + J.card ≤ n := by
   classical
   have hli : LinearIndependent K (fun j : J => M.col j) :=
-    (linearIndependent_cols_iff_isUnit.mpr hM).comp _ Subtype.val_injective
+    (linearIndependent_col_iff_isUnit.mpr hM).comp _ Subtype.val_injective
   let π : (Fin n → K) →ₗ[K] ((Iᶜ : Finset (Fin n)) → K) :=
     LinearMap.funLeft K K (fun i : (Iᶜ : Finset (Fin n)) => (i : Fin n))
   have hdisj : Disjoint (Submodule.span K (Set.range fun j : J => M.col j)) (LinearMap.ker π) := by

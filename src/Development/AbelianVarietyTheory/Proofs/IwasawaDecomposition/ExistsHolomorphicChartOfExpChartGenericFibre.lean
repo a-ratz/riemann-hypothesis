@@ -66,8 +66,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : D
 
 theorem isOpenEmbedding_cxOf [IsOpenImmersion j] : IsOpenEmbedding (cxOf e σ hj) := by
   have hc : Continuous (cxOf e σ hj) :=
-    continuous_induced_rng.2 ((continuous_comp (C := ℂ) j).comp continuous_subtype_val)
-  refine ⟨IsEmbedding.of_comp hc continuous_subtype_val
+    continuous_induced_rng.2 ((continuous_comp (C := ℂ) j).comp continuous_subtypeVal)
+  refine ⟨IsEmbedding.of_comp hc continuous_subtypeVal
     (((isOpenEmbedding_comp (C := ℂ) j).isEmbedding).comp IsEmbedding.subtypeVal), ?_⟩
   have hr : Set.range (cxOf e σ hj) = Subtype.val ⁻¹' Set.range fun x : Sp ℂ ⟶ X.X => x ≫ j := by
     ext y
@@ -80,7 +80,7 @@ theorem isOpenEmbedding_cxOf [IsOpenImmersion j] : IsOpenEmbedding (cxOf e σ hj
       rw [← hj, ← Category.assoc, hx, ← Category.assoc, y.2, ← Spec.map_comp]
       rfl
   rw [hr]
-  exact (isOpenEmbedding_comp (C := ℂ) j).isOpen_range.preimage continuous_subtype_val
+  exact (isOpenEmbedding_comp (C := ℂ) j).isOpen_range.preimage continuous_subtypeVal
 
 variable [IsOpenImmersion j]
 
@@ -134,7 +134,7 @@ theorem exists_holoChart_of_expChart : ∀ (E : Type) [Field E] [NumberField E] 
   intro E _ _ _ H Dw l Xo c O _ β Y T F _ e σ X j hj hji y n g ch₀ ex hex hy0 hy00 r hr
   set κ := cxOf e σ hj with hκdef
   have hκ : IsOpenEmbedding κ := isOpenEmbedding_cxOf e σ hj
-  haveI : Nonempty (GlobalTheory.CxPts X.str (σ.comp e.toRingHom)) := ⟨y⟩
+  have : Nonempty (GlobalTheory.CxPts X.str (σ.comp e.toRingHom)) := ⟨y⟩
   set χ := (hκ.toOpenPartialHomeomorph κ).trans ch₀ with hχdef
   have hχ : ∀ u ∈ χ.target, κ (χ.symm u) = ch₀.symm u := fun u hu => by
     have h2 : ch₀.symm u ∈ Set.range κ := by
@@ -231,7 +231,7 @@ theorem exists_holoChart_of_expChart : ∀ (E : Type) [Field E] [NumberField E] 
     exact Metric.mem_ball_self hr'0
   · rw [hch, hχy, map_zero]
   · intro z hz
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.polydisc, Set.mem_setOf_eq]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.HodgePeriodGram.polydisc, Set.mem_ofPred_eq]
     intro k
     rw [hch, hL, norm_mul, norm_inv, Complex.norm_real, Real.norm_of_nonneg hr'0.le]
     have h1 := (hsrc z hz).2

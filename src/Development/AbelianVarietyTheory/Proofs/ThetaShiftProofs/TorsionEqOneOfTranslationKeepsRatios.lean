@@ -336,10 +336,10 @@ variable {S : Scheme.{0}} {A : Over S} [GrpObj A] {L : LB A.left} {k : ℤ} {T :
 
 theorem exists_eigenvector {R F M : Type} [CommRing R] [Field F] [IsAlgClosed F] (e : R ≃+* F) [AddCommGroup M]
     [Module R M] (h : 0 < Module.finrank R M) (Φ : M →ₗ[R] M) : ∃ (a : R) (v : M), v ≠ 0 ∧ Φ v = a • v := by
-  letI : Field R := (e.toMulEquiv.isField (Field.toIsField F)).toField
-  haveI : IsAlgClosed R := IsAlgClosed.of_ringEquiv F R e.symm
-  haveI : Module.Finite R M := Module.finite_of_finrank_pos h
-  haveI : Nontrivial M := Module.nontrivial_of_finrank_pos h
+  let : Field R := (e.toMulEquiv.isField (Field.toIsField F)).toField
+  have : IsAlgClosed R := IsAlgClosed.of_ringEquiv F R e.symm
+  have : Module.Finite R M := Module.finite_of_finrank_pos h
+  have : Nontrivial M := Module.nontrivial_of_finrank_pos h
   obtain ⟨a, ha⟩ := Module.End.exists_eigenvalue (K := R) (V := M) Φ
   obtain ⟨v, hv⟩ := ha.exists_hasEigenvector
   exact ⟨a, v, hv.2, hv.apply_eq_smul⟩
@@ -452,8 +452,8 @@ theorem theta_pt_eq_one_of_actVal (hW : WeilSt) (hN : WeilNondegSt) (hH : Global
     (θ : ThetaGrp P.A P.L k (baseOver (Spec (CommRingCat.of F)))) (hd : θ.pt ^ k = 1)
     (a : Γ((baseOver (Spec (CommRingCat.of F))).left, ⊤))
     (hθ : ∀ s s', ActVal θ s s' → ∀ j, s'.f j = liftFun P.A _ a * s.f j) : θ.pt = 1 := by
-  haveI := P.isAb.comm
-  haveI := nontrivial_of_laws hH P hk
+  have := P.isAb.comm
+  have := nontrivial_of_laws hH P hk
   refine hN F P k hk θ.pt hd fun y hy => ?_
   obtain ⟨c, hc, -⟩ := (hW _ P k _).1 θ.pt y hd hy
   obtain rfl := weil_eq_one_of_scalar P.isLB (T := baseOver (Spec (CommRingCat.of F))) (IsLocalRing.closedPoint F)

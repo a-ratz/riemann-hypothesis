@@ -281,7 +281,7 @@ theorem integral_and_rational_of_polynomial_growth :
       have h1 : (Lagrange.nodal (T x) (fun y => φ (x, y))).degree = n := by
         rw [Lagrange.degree_nodal, hcard x hx]
       rw [← h1]
-      refine Polynomial.degree_sub_lt (by rw [h1, Polynomial.degree_X_pow])
+      refine Polynomial.degree_sub_lt_left (by rw [h1, Polynomial.degree_X_pow])
         Lagrange.nodal_monic.ne_zero ?_
       rw [Lagrange.nodal_monic.leadingCoeff, (Polynomial.monic_X_pow n).leadingCoeff]
     · intro t

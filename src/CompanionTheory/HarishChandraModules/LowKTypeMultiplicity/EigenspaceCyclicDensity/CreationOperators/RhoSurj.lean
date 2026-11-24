@@ -60,10 +60,10 @@ theorem burnside {A : Type} [Ring A] [Algebra ℂ A] [FiniteDimensional ℂ V] (
     (hnt : Nontrivial V) (hirr : ∀ W : Submodule ℂ V, (∀ a : A, ∀ w ∈ W, ρ a w ∈ W) → W = ⊥ ∨ W = ⊤) :
     Function.Surjective ρ := by
   classical
-  letI : Module A V := Module.compHom V (ρ : A →+* Module.End ℂ V)
+  let : Module A V := Module.compHom V (ρ : A →+* Module.End ℂ V)
   have hsm : ∀ (a : A) (x : V), a • x = ρ a x := fun _ _ => rfl
-  haveI : IsScalarTower ℂ A V := ⟨fun c a x => by simp [hsm]⟩
-  haveI : IsSimpleModule A V := by
+  have : IsScalarTower ℂ A V := ⟨fun c a x => by simp [hsm]⟩
+  have : IsSimpleModule A V := by
     rw [isSimpleModule_iff]
     refine { eq_bot_or_eq_top := fun W => ?_ }
     rcases hirr (W.restrictScalars ℂ) (fun a w hw => W.smul_mem a hw) with h | h

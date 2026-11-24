@@ -81,13 +81,13 @@ theorem jet_point_eq {K : Type} [Field K] {I : Type} {m : ℕ} (p : PrimeSpectru
 theorem res_res' {X : Scheme.{0}} {U V W : X.Opens} (h : V ≤ U) (h' : W ≤ V) (a : Γ(X, U)ˣ) :
     res h' (res h a) = res (h'.trans h) a := by
   apply Units.ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← CommRingCat.comp_apply, ← Functor.map_comp]
   rfl
 
 theorem res_id' {X : Scheme.{0}} {U : X.Opens} (h : U ≤ U) (a : Γ(X, U)ˣ) : res h a = a := by
   apply Units.ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   have : (homOfLE h).op = 𝟙 _ := Subsingleton.elim _ _
   rw [this, CategoryTheory.Functor.map_id]
   rfl
@@ -222,7 +222,7 @@ theorem exists_gen_jetRd : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A] [IsCommM
     Φ.fr_ne j _ (top_le_of_mem h)
   have hu0 : ∀ k j, (Φ.e (Λ k (colsOf n g 0))).left cpt ∈ L.L.U j → (u0 k j).val = jetOf m (F k j) := fun k j h => by
     have hu : IsUnit (jetOf m (F k j)) := isUnit_of_jetAug _ (by rw [jetAug_jetOf]; exact hF0 k j h)
-    simp only [u0, dif_pos hu, IsUnit.unit_spec]
+    simp only [u0, dite_eq_left hu, IsUnit.unit_spec]
   let ρ : (Jet ℂ (Fin 1 × Fin (n * g)) m)ˣ →* Γ(Sp (Jet ℂ (Fin n × Fin g) m), ⊤)ˣ :=
     Units.map ((toΓ (Jet ℂ (Fin n × Fin g) m)).comp r).toMonoidHom
   have hρ : ∀ a, (ρ a).val = toΓ _ (r a.val) := fun _ => rfl

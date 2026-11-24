@@ -116,8 +116,8 @@ end GlobalTheory.CompanionTheory.Ar.LieExact
 open GlobalTheory.CompanionTheory.Ar.LieExact in
 theorem GlobalTheory.CompanionTheory.Ar.LieExact.lie_exact_field : ∀ (K : Type) [Field K] (G : Over (Sp K)) [GrpObj G] (τ : TorusExtension G), letI := τ.addCommGroup; letI := τ.grpB; ∀ (A : Type) [Field A] (c : K →+* A), (∀ v : epsAt (spMap c) ⟶ G, IsTanAt G _ v → (v ≫ τ.q = 1 ↔ ∃ w : epsAt (spMap c) ⟶ splitTorus (Sp K) τ.X, IsTanAt _ _ w ∧ w ≫ τ.i = v)) ∧ ∀ w : epsAt (spMap c) ⟶ τ.B, IsTanAt τ.B _ w → ∃ v : epsAt (spMap c) ⟶ G, IsTanAt G _ v ∧ v ≫ τ.q = w := by
   intro K _ G _ τ
-  letI := τ.addCommGroup
-  letI := τ.grpB
+  let := τ.addCommGroup
+  let := τ.grpB
   intro A _ c
   have hq : IsMonHom τ.q := τ.q_hom
   have hi : IsMonHom τ.i := τ.i_hom

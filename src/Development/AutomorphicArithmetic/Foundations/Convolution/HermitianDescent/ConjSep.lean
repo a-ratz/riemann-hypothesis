@@ -82,7 +82,7 @@ private theorem UpperTheory.Reformulated.B.G8.eq_zero_of_aeval_eq_zero {K : Type
   classical
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · simpa using hp
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   let L := AlgebraicClosure K
   let f : K →+* L := algebraMap K L
   let G : Matrix (Fin n) (Fin n) L := g.map f
@@ -160,8 +160,8 @@ theorem UpperTheory.Reformulated.B.G8.exists_kry :
   have h1 : ∀ m : MaximalSpectrum R, ∃ w : Fin n → R ⧸ m.asIdeal,
       (UpperTheory.Reformulated.B.G8.kry (g.map (Ideal.Quotient.mk m.asIdeal)) w).det ≠ 0 := by
     intro m
-    haveI := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
+    have := m.isMaximal
+    let := Ideal.Quotient.field m.asIdeal
     refine UpperTheory.Reformulated.B.G8.exists_kry_field _ ?_
     rw [Matrix.charpoly_map]
     exact hg.map

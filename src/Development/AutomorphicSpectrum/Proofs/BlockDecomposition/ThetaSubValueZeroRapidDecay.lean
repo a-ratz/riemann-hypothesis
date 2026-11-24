@@ -459,7 +459,7 @@ theorem exists_decay_boundC_tensor (w : InfinitePlace k) (φ : 𝓢(ι → mixed
     have hu : ∏ i, u₁ (ξ i) = ∏ i, ((1 + ‖mixedEmbedding k (ξ i)‖) ^ m)⁻¹ :=
       Finset.prod_congr rfl fun i _ ↦ by
         simp only [u₁]
-        rw [if_pos (hξJ i)]
+        rw [ite_eq_left (hξJ i)]
     beta_reduce
     rw [hu]
     exact (hφ z).trans (decay_real_bound hA hB'0 (X := fun j ↦ 1 + ‖mixedEmbedding k (ξ j)‖)

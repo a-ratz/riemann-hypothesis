@@ -144,7 +144,7 @@ theorem exists_int_charpoly_atPl_split : ∀ (E : Type) [Field E] [NumberField E
     rw [hdetN, ← map_mul, mul_inv_cancel₀ hdet, map_one]
   let g : GL (Fin n) (Ov E w) := ((Matrix.isUnit_iff_isUnit_det N).2 hu).unit
   have hmemU : bc (Ov E w).subtype g ∈ UL n w := by
-    simp only [UL, if_pos hs]; exact Subgroup.mem_top _
+    simp only [UL, ite_eq_left hs]; exact Subgroup.mem_top _
   refine ⟨⟨_, hmemU⟩, ?_, ?_⟩
   · rw [KL, Subgroup.mem_subgroupOf]
     exact ⟨g, rfl⟩
@@ -205,7 +205,7 @@ theorem exists_conj_of_isSplitAt : ∀ (E : Type) [Field E] [NumberField E] [IsC
   have hs : (atPl w P).Separable := hP.2.2.1.map
   obtain ⟨g, hg⟩ := GlobalTheory.BCT.ClsFin.conj_of_charpoly γ.1 γ'.1 (by rw [h]; exact hs) (h.trans h'.symm)
   have hmem : g ∈ UL n w := by
-    rw [UL, if_pos hw]
+    rw [UL, ite_eq_left hw]
     exact Subgroup.mem_top g
   exact ⟨⟨g, hmem⟩, Subtype.ext hg⟩
 
@@ -393,7 +393,7 @@ theorem exists_herm_of_selfRecip [CharZero E] (c : E →+* E) (hc : ∀ x, c (c 
       cT c M * G * M = G := by
   let A := AdjoinRoot P
   let pb := AdjoinRoot.powerBasis hP.ne_zero
-  haveI : Module.Finite E A := pb.finite
+  have : Module.Finite E A := pb.finite
   let b : Module.Basis (Fin P.natDegree) E A :=
     pb.basis.reindex (finCongr (AdjoinRoot.powerBasis_dim hP.ne_zero))
   let σ := sig c P h0 hr
@@ -509,14 +509,14 @@ theorem mk_eq_iff {G : Type} [Group G] (x y : G) :
 theorem exists_section : ∃ S : Set (Pl E), IsSection S := by
   refine ⟨{u | u = @Classical.epsilon _ ⟨u⟩ fun u' : Pl E => u'.under (𝓞 (maximalRealSubfield E)) =
       u.under (𝓞 (maximalRealSubfield E))}, fun w => ?_⟩
-  haveI : Nonempty (Pl E) := ⟨w⟩
+  have : Nonempty (Pl E) := ⟨w⟩
   have hspec := Classical.epsilon_spec (p := fun u' : Pl E => u'.under (𝓞 (maximalRealSubfield E)) =
       w.under (𝓞 (maximalRealSubfield E))) ⟨w, rfl⟩
   refine ⟨_, ⟨?_, hspec⟩, ?_⟩
   · show _ = _
     simp only [hspec]
   · rintro u ⟨hu, hu'⟩
-    rw [Set.mem_setOf_eq] at hu
+    rw [Set.mem_ofPred_eq] at hu
     rw [hu]
     simp only [hu']
 
@@ -605,7 +605,7 @@ theorem kapOrb_unit_pos (hU : Unr E) (n : ℕ) (hn : 1 ≤ n) (p₁ p₂ : E[X])
     · rintro ⟨g, hg⟩
       exact ⟨g, hg ▸ hγ₀K⟩
   unfold kapOrb clSum
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   obtain ⟨c₀, hc₀⟩ : ∃ c₀ : TwCl (MonoidHom.id (UL n w)), Quot.mk _ γ₀ = c₀ := ⟨_, rfl⟩
   rw [hc₀] at key
   rw [finsum_eq_single _ c₀]
@@ -617,17 +617,17 @@ theorem kapOrb_unit_pos (hU : Unr E) (n : ℕ) (hn : 1 ≤ n) (p₁ p₂ : E[X])
     have hex : ∃ g : UL n w, g⁻¹ * c₀.rep * g ∈ KL n w :=
       ⟨g, hg ▸ hγ₀K⟩
     obtain ⟨hT, -, hQ⟩ := hA _ hp
-    rw [if_pos hp, hT, if_pos hex, hQ (atPl w p₁) (dvd_mul_right _ _) hex, mul_one]
+    rw [ite_eq_left hp, hT, ite_eq_left hex, hQ (atPl w p₁) (dvd_mul_right _ _) hex, mul_one]
   · intro c hne
     have hc : (Quot.mk _ c.rep : TwCl (MonoidHom.id (UL n w))) = c := Quot.out_eq c
     by_cases hp : c.rep.1.val.charpoly = atPl w p₁ * atPl w p₂
     · obtain ⟨hT, -, -⟩ := hA c.rep hp
-      rw [if_pos hp, hT, if_neg, mul_zero]
+      rw [ite_eq_left hp, hT, ite_eq_right, mul_zero]
       intro hex
       apply hne
       rw [← hc]
       exact (key _ hp).1 hex
-    · rw [if_neg hp]
+    · rw [ite_eq_right hp]
 
 instance subsingleton_units_rank_zero (w : Pl E) : Subsingleton (UL 0 w) := by
   refine ⟨fun a b => Subtype.ext (Units.ext ?_)⟩
@@ -640,7 +640,7 @@ theorem kapSign_zero (w : Pl E) (Q : (w.adicCompletion E)[X]) (γ : GLw 0 w) : k
   · simp only
     have hsub : Subsingleton (LinearMap.ker (Matrix.toLin' (aeval γ.val Q))) := by
       refine ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
-    haveI : IsEmpty (Fin (Module.finrank (w.adicCompletion E) (LinearMap.ker (Matrix.toLin' (aeval γ.val Q))))) := by
+    have : IsEmpty (Fin (Module.finrank (w.adicCompletion E) (LinearMap.ker (Matrix.toLin' (aeval γ.val Q))))) := by
       rw [Module.finrank_zero_of_subsingleton]
       infer_instance
     rw [Matrix.det_isEmpty]
@@ -649,12 +649,12 @@ theorem kapSign_zero (w : Pl E) (Q : (w.adicCompletion E)[X]) (γ : GLw 0 w) : k
 
 theorem kapOrb_unit_zero (w : Pl E) (Q₁ Q₂ : (w.adicCompletion E)[X]) (hQ : Q₁ * Q₂ = 1) :
     kapOrb 0 w Q₁ Q₂ ((KL 0 w : Set (UL 0 w)).indicator 1) = 1 := by
-  haveI : Subsingleton (TwCl (MonoidHom.id (UL 0 w))) := by
+  have : Subsingleton (TwCl (MonoidHom.id (UL 0 w))) := by
     refine ⟨fun a b => ?_⟩
     induction a using Quot.ind with | _ x => ?_
     induction b using Quot.ind with | _ y => ?_
     rw [Subsingleton.elim x y]
-  haveI : Unique (TwCl (MonoidHom.id (UL 0 w))) := ⟨⟨Quot.mk _ 1⟩, fun _ => Subsingleton.elim _ _⟩
+  have : Unique (TwCl (MonoidHom.id (UL 0 w))) := ⟨⟨Quot.mk _ 1⟩, fun _ => Subsingleton.elim _ _⟩
   unfold kapOrb clSum
   rw [finsum_unique]
   set γ : UL 0 w := (default : TwCl (MonoidHom.id (UL 0 w))).rep
@@ -665,14 +665,14 @@ theorem kapOrb_unit_zero (w : Pl E) (Q₁ Q₂ : (w.adicCompletion E)[X]) (hQ : 
     rw [Subsingleton.elim γ 1]
     exact one_mem _
   have hT : twOrb (MonoidHom.id _) (KL 0 w) γ ((KL 0 w : Set (UL 0 w)).indicator 1) = 1 := by
-    rw [GlobalTheory.BCT.OrbUnit.twOrb_unit (KL 0 w) γ, if_pos ⟨1, by simpa using hγ⟩]
+    rw [GlobalTheory.BCT.OrbUnit.twOrb_unit (KL 0 w) γ, ite_eq_left ⟨1, by simpa using hγ⟩]
     · intro g₁ g₂ _ _
       exact ⟨1, one_mem _, 1, one_mem _, Subsingleton.elim _ _⟩
     · intro g _ x _
       rw [Subsingleton.elim x 1]
       exact one_mem _
   have hcp' : γ ∈ {γ : UL 0 w | γ.1.val.charpoly = Q₁ * Q₂} := hcp
-  rw [if_pos hcp', hT, mul_one]
+  rw [ite_eq_left hcp', hT, mul_one]
   exact kapSign_zero w Q₁ γ.1
 
 end GlobalTheory.CompanionTheory.KapOrbAE
@@ -722,22 +722,22 @@ attribute [local instance] borelG borelF borelA
 
 theorem haarGA_ex (E : Type) [Field E] [NumberField E] (a : ℕ) : ∃ μ : Measure (GA E a), μ.IsHaarMeasure := by
   open scoped GlobalTheory.CuspRep.CuspidalL2GL in
-  haveI : BorelSpace (GA E a) := ⟨rfl⟩
+  have : BorelSpace (GA E a) := ⟨rfl⟩
   exact ⟨Measure.haar, inferInstance⟩
 
 theorem haarG_ex (a : ℕ) : ∃ ν : Measure (G a), ν.IsHaarMeasure := by
-  haveI : BorelSpace (G a) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin a) ℂ) :=
+  have : BorelSpace (G a) := ⟨rfl⟩
+  have : LocallyCompactSpace (Matrix (Fin a) (Fin a) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin a → Fin a → ℂ))
-  haveI : LocallyCompactSpace (Matrix (Fin a) (Fin a) ℂ)ᵐᵒᵖ :=
+  have : LocallyCompactSpace (Matrix (Fin a) (Fin a) ℂ)ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : LocallyCompactSpace (G a) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : LocallyCompactSpace (G a) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
   exact ⟨Measure.haar, inferInstance⟩
 
 def dw0 (N : ℕ) : DomWeight N := ⟨fun _ => 0, fun _ _ _ => le_rfl⟩
 
 theorem infinitesimal_weight_zero (n : ℕ) : infOfWeight (dw0 (n - n)) = 0 := by
-  haveI : IsEmpty (Fin (n - n)) := by rw [Nat.sub_self]; infer_instance
+  have : IsEmpty (Fin (n - n)) := by rw [Nat.sub_self]; infer_instance
   simp [infOfWeight]
 
 theorem chainEx_of (h2 : G8.GlobalComplexCoefficients) (h3 : G8.G3) (h4 : G8.G4) : ChainEx := by

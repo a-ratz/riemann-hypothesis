@@ -75,19 +75,19 @@ private theorem gfun_lc {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace 
       (fun q : Matrix (Fin m) (Fin m) k × Matrix (Fin m) (Fin r) k => gfun ν ϖ c q.1 q.2) := by
   have h0 : ∀ e : ℕ, ∀ i j, (0 : Matrix (Fin m) (Fin r) k) i j ∈ GlobalTheory.SplitWeil.cball (ϖ ^ e) := by
     intro e i j
-    rw [GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq]
+    rw [GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq]
     simp
   have hfac : ∀ (A : Matrix (Fin m) (Fin m) k) (B : Matrix (Fin m) (Fin r) k),
       gfun ν ϖ c A B = if (∀ i j, B i j ∈ GlobalTheory.SplitWeil.cball (ϖ ^ c)) then
         gfun ν ϖ n A (0 : Matrix (Fin m) (Fin r) k) else 0 := by
     intro A B
     by_cases hB : ∀ i j, B i j ∈ GlobalTheory.SplitWeil.cball (ϖ ^ c)
-    · rw [if_pos hB]
+    · rw [ite_eq_left hB]
       unfold gfun
       by_cases hA : A.det ≠ 0 ∧ IsGLO A
       · rw [dite_eq_left ⟨hA.1, hA.2, hB⟩, dite_eq_left ⟨hA.1, hA.2, h0 n⟩]
       · rw [dite_eq_right fun h => hA ⟨h.1, h.2.1⟩, dite_eq_right fun h => hA ⟨h.1, h.2.1⟩]
-    · rw [if_neg hB]
+    · rw [ite_eq_right hB]
       unfold gfun
       rw [dite_eq_right fun h => hB h.2.2]
   have h1 : IsLocallyConstant
@@ -113,10 +113,10 @@ private theorem gfun_lc {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace 
       ∀ i j, B i j ∈ GlobalTheory.SplitWeil.cball (ϖ ^ c) := by
     constructor
     · intro h i j
-      rw [GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq, ← sub_sub_cancel (q.2 i j) (B i j)]
+      rw [GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq, ← sub_sub_cancel (q.2 i j) (B i j)]
       exact Valuation.map_sub_le _ (h i j) (hq i j)
     · intro h i j
-      rw [GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq, ← sub_add_cancel (q.2 i j) (B i j)]
+      rw [GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq, ← sub_add_cancel (q.2 i j) (B i j)]
       exact Valuation.map_add_le _ (hq i j) (h i j)
   show gfun ν ϖ c q.1 q.2 = gfun ν ϖ c A B
   rw [hfac, hfac]
@@ -127,7 +127,7 @@ private theorem finiteRing_sq_sub_mul_sq_eq_of_card {k : Type} [Field k] [Valuat
     (hν : GlobalTheory.SplitFlip.CondLE ϖ n ν) (c a a' : ℕ) :
     stdA ν ϖ c a a' ∈ GlobalTheory.WeilM.SB (Matrix (Fin a) (Fin (a + a')) k) ∧
       stdB ν ϖ c a a' ∈ GlobalTheory.WeilM.SB (Matrix (Fin a') (Fin (a + a')) k) := by
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.t2Space k
   have hc1 : ∀ m : ℕ, Continuous fun X : Matrix (Fin m) (Fin (a + a')) k => blk₁ X := by
     intro m; exact continuous_pi fun i => continuous_pi fun j => continuous_id.matrix_elem i (Fin.castAdd a' j)
   have hc2 : ∀ m : ℕ, Continuous fun X : Matrix (Fin m) (Fin (a + a')) k => blk₂ X := by

@@ -228,7 +228,7 @@ lemma finite_small (hg : 0 < g) : {y | y ∈ Lc X g ∧ ‖y‖ < 1}.Finite := b
     rw [en] at h2
     nlinarith [norm_nonneg (τ.1 (γ i k))]
   refine ⟨γ, ?_, ?_⟩
-  · simp only [Set.mem_pi, Set.mem_univ, true_implies, forall_const, Set.mem_setOf_eq]
+  · simp only [Set.mem_pi, Set.mem_univ, true_implies, forall_const, Set.mem_ofPred_eq]
     intro i k
     refine ⟨hγi i k, fun φ => ?_⟩
     by_cases hφ : φ ∈ X.Ψ

@@ -53,8 +53,8 @@ theorem associated_primitiveRoot_sub_one_pow_totient_prime_pow {O : Type} [CommR
     {l k : ℕ} (hl : l.Prime) {ζ : O} (hζ : IsPrimitiveRoot ζ (l ^ (k + 1))) :
     Associated ((ζ - 1) ^ Nat.totient (l ^ (k + 1))) (l : O) := by
   classical
-  haveI : Fact l.Prime := ⟨hl⟩
-  haveI : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : Fact l.Prime := ⟨hl⟩
+  have : NeZero (l ^ (k + 1)) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have h1 := Polynomial.eval_one_cyclotomic_prime_pow (R := O) (p := l) k
   rw [Polynomial.cyclotomic_eq_prod_X_sub_primitiveRoots hζ, Polynomial.eval_prod] at h1
   rw [← h1, ← hζ.card_primitiveRoots, ← Finset.prod_const]
@@ -88,7 +88,7 @@ theorem nval_primitiveRoot_prime_pow_sub_one :
     apply hl1
     rw [hv']; simp
   unfold Formalism.MainNotions.BlochKatoReduction.Gen.nval
-  rw [hv', ← ha, ENat.toNat_coe, ENat.toNat_coe]
+  rw [hv', ← ha, ENat.toNat_natCast, ENat.toNat_natCast]
   have : (a : ℝ) ≠ 0 := by exact_mod_cast ha0
   have : (Nat.totient (l ^ (k + 1)) : ℝ) ≠ 0 := by exact_mod_cast hφ.ne'
   push_cast

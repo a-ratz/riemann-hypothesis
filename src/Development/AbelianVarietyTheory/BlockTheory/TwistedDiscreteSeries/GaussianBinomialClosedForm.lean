@@ -134,7 +134,7 @@ theorem v_aD_le {σ : L →+* L} {n : ℕ} (p : PD σ n) (hp : (p : GD σ n) ∈
 theorem v_aD_eq {σ : L →+* L} {n : ℕ} (p : PD σ n) (hp : (p : GD σ n) ∈ KD σ n) : Valued.v (aD σ n p : L) = 1 := by
   have h := v_aD_le p⁻¹ (inv_mem hp)
   rw [map_inv, Units.val_inv_eq_inv_val, map_inv₀,
-    inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _)))] at h
+    inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _)))] at h
   exact le_antisymm (v_aD_le p hp) h
 
 theorem exists_isSphSec (σ : L →+* L) {q : ℕ} (hq : q ≠ 0) (n : ℕ) {χ : Lˣ →* ℂˣ} (hχ : IsUnr χ) (s : ℂ) :
@@ -150,7 +150,7 @@ theorem exists_isSphSec (σ : L →+* L) {q : ℕ} (hq : q ≠ 0) (n : ℕ) {χ 
       exact e.symm
     rw [this]
     exact mul_mem hk (inv_mem hk')
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   rw [← mul_inv_cancel_left p h.choose, map_mul, secVal_mul hq, secVal_unit q hχ _ (v_aD_eq _ hm), mul_one]
 
 theorem isZonal_of_isSatVecU {ϖ : L} {σ : L →+* L} {q n : ℕ} (hU : IsUnramInv ϖ σ q) {V : Type} [AddCommGroup V]

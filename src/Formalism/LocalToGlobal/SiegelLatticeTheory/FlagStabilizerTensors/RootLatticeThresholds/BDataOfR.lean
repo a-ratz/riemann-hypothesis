@@ -103,7 +103,7 @@ theorem jointAmplitude_bound_rotated {τ₀ Rw I₀ H H₁ : Type} [Fintype I₀
         ∏ τ, (ENNReal.ofReal (I.K τ * large₂.sc.b ^ (Ca * (D.R.m : ℝ) ^ 2)) *
           orbSq ((bdOf I.toInputs hok).L τ) ((bdOf I.toInputs hok).f τ)
             (Formalism.MainNotions.S.Pv.Frames.turnPt (ptLoc D τ w))) := by
-      apply Finset.prod_le_prod'
+      apply Finset.prod_le_prod
       intro τ _
       exact le_trans (I.hJ τ (g τ) (ptLoc D τ w) (hτ τ).1 (θ' τ) (hτ τ).2.1 (νR τ) (hτ τ).2.2)
         (by gcongr; exact orbSqO_le_bdOf I.toInputs hok hka τ _)
@@ -171,16 +171,16 @@ theorem jointAmplitudeFactorizationRotated_of (Y : Full X) (u u' : D.what₂.Wor
   have hww : w' = w := toPts_inj_lemma w' w hw'
   subst hww
   have hP1 : 0 < localAmplitudeProduct u u' hB w' := hP w' hrow hpos
-  haveI := Formalism.L2.SG.Pf.LTL.tau_nonempty D
+  have := Formalism.L2.SG.Pf.LTL.tau_nonempty D
   have hn : 0 < Fintype.card D.what₂.Tau := Fintype.card_pos
   have hθ0 : thetaP u u' hB (J2of Y u u' ν (toPts w')) w' =
       (localAmplitudeProduct u u' hB w' / J2of Y u u' ν (toPts w')) ^ ((1 : ℝ) / (2 * Fintype.card D.what₂.Tau)) := by
-    simp only [thetaP, if_pos (And.intro hpos hP1)]
+    simp only [thetaP, ite_eq_left (And.intro hpos hP1)]
   have hθpos : 0 < thetaP u u' hB (J2of Y u u' ν (toPts w')) w' := by
     rw [hθ0]; apply Real.rpow_pos_of_pos; exact div_pos hP1 hpos
   have hν1 : ∀ τ, RMeas D (locW C u u' τ) (gamP C u u' w' τ) 1 (nu1P C u u' w' τ) := fun τ => by
     have h := hM w' hrow hrep τ
-    simp only [nu1P, dif_pos h]
+    simp only [nu1P, dite_eq_left h]
     exact h.choose_spec
   have hsc : ∀ τ, RMeas D (locW C u u' τ) (gamP C u u' w' τ) (thetaP u u' hB (J2of Y u u' ν (toPts w')) w')
       (ENNReal.ofReal (thetaP u u' hB (J2of Y u u' ν (toPts w')) w')⁻¹ • nu1P C u u' w' τ) := fun τ => by

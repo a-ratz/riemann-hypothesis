@@ -79,11 +79,11 @@ lemma exists_affine (i : (Fb s).Elements) :
 
 lemma exists_small : ∃ (Q : Set (Fb s).Elements), Small.{0} Q ∧ (∀ j ∈ Q, IsAffine j.1.left) ∧
     ∀ i, ∃ j ∈ Q, Nonempty (j ⟶ i) := by
-  haveI : InitiallySmall.{0} (Fb s).Elements := (Scheme.pointSmallEtale s).initiallySmall
+  have : InitiallySmall.{0} (Fb s).Elements := (Scheme.pointSmallEtale s).initiallySmall
   obtain ⟨Q0, hQ0, h0⟩ := InitiallySmall.exists_small_weakly_initial_set.{0} (Fb s).Elements
   choose g hg hg' using exists_affine s
   refine ⟨g '' Q0, ?_, ?_, ?_⟩
-  · haveI := hQ0; infer_instance
+  · have := hQ0; infer_instance
   · rintro _ ⟨i, -, rfl⟩; exact hg i
   · intro i
     obtain ⟨k, hk, ⟨f⟩⟩ := h0 i
@@ -164,7 +164,7 @@ lemma l_e (j : (Jc s Q)ᵒᵖ) : l s Q haff j ≫ e s Q haff j = pt s Q j.unop :
 
 lemma nat {j k : (Jc s Q)ᵒᵖ} (f : j ⟶ k) :
     Spec.map ((D s Q).map f) ≫ e s Q haff j = e s Q haff k ≫ (G s Q).map f.unop := by
-  haveI := aff s Q haff j.unop; haveI := aff s Q haff k.unop
+  have := aff s Q haff j.unop; have := aff s Q haff k.unop
   exact Scheme.isoSpec_inv_naturality ((G s Q).map f.unop)
 
 def t (j0 : (Jc s Q)ᵒᵖ) : Sp (colimit.cocone (D s Q)).pt ⟶ U.left :=
@@ -174,7 +174,7 @@ lemma main (x : U.left) (hx : s default = x) (hwi : ∀ i, ∃ j ∈ Q, Nonempty
     ∃ (J : Type) (_ : SmallCategory J) (_ : IsFiltered J) (D : J ⥤ CommRingCat.{0}) (c : Cocone D)
     (_ : IsColimit c) (V : J → B.Etale) (a : ∀ j, V j ⟶ U) (l : ∀ j, Spec (CommRingCat.of Ω) ⟶ Sp (D.obj j))
     (e : ∀ j, Sp (D.obj j) ⟶ (V j).left) (t : Sp c.pt ⟶ U.left), IsPtNb U x Ω s D c V a l e t := by
-  haveI := cof s Q hwi
+  have := cof s Q hwi
   obtain ⟨j0⟩ := IsFiltered.nonempty (C := (Jc s Q)ᵒᵖ)
   have hcomp0 : ∀ (j k : (Jc s Q)ᵒᵖ) (f : j ⟶ k),
       Spec.map ((D s Q).map f) ≫ e s Q haff j ≫ (a s Q j).left = e s Q haff k ≫ (a s Q k).left := by
@@ -201,7 +201,7 @@ lemma main (x : U.left) (hx : s default = x) (hwi : ∀ i, ∃ j ∈ Q, Nonempty
     erw [key j k f, ← key j0 k g]
     rfl
   · intro j k f
-    haveI := e_iso s Q haff j
+    have := e_iso s Q haff j
     rw [← cancel_mono (e s Q haff j)]
     simp only [CommRingCat.ofHom_hom, Category.assoc]
     rw [nat, reassoc_of% (l_e s Q haff k), l_e, pt_map]
@@ -242,7 +242,7 @@ theorem LeafSHNbSys_of : LeafSHNbSys := by
   have hx : s default = x := by
     first | exact Scheme.fromSpecResidueField_apply x _ | (simp [s]; exact Scheme.fromSpecResidueField_apply x _)
   obtain ⟨Q, hQs, haff, hwi⟩ := exists_small s
-  haveI := hQs
+  have := hQs
   exact ⟨Ω, inferInstance, inferInstance, s, main s Q haff x hx hwi⟩
 
 end LateralTheory.E.EtaleNeighbourhoodSystem

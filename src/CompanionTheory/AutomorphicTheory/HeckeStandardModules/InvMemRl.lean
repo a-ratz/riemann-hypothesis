@@ -244,7 +244,7 @@ theorem pow_mul_mem {p : ℕ} (hp : s.Above p) {z : AL L} (hz : ∀ w, w ≠ s.v
     have hy' : Valued.v y ≠ 0 := (map_ne_zero _).2 hy
     obtain ⟨a, ha⟩ := exists_pow_lt₀ hv (Units.mk0 _ (inv_ne_zero hy'))
     refine ⟨a, fun b hb => ?_⟩
-    rw [map_mul, map_pow, ← le_mul_inv_iff₀ (zero_lt_iff.2 hy'), one_mul]
+    rw [map_mul, map_pow, ← le_mul_inv_iff₀ (pos_iff_ne_zero.2 hy'), one_mul]
     exact (pow_le_pow_right_of_le_one' hv.le hb).trans ha.le
   obtain ⟨a, ha⟩ := key (s.proj (L := L) z)
   obtain ⟨b, hb⟩ := key (s.proj (L := L) (conjAL L z))
@@ -588,11 +588,11 @@ theorem eig_int (alg : Formalism.AUTREP.IsAlgWeight L n ρ) (hJ : NG.HypOutside 
     (hf : f ∈ NG.TypeSp ρ J χ) (hf0 : f ≠ 0) (ν : ℂ)
     (hν : op (emb s n) (KL s n) (dosetInd ℂ (KL s n) d) f = ν • f) : IsIntegral (Rl l) ν := by
   have hl := hl'.out
-  letI : Module (Rl l) W := Module.compHom W (algebraMap (Rl l) ℂ)
-  haveI : IsScalarTower (Rl l) ℂ W := ⟨fun r c w => by
+  let : Module (Rl l) W := Module.compHom W (algebraMap (Rl l) ℂ)
+  have : IsScalarTower (Rl l) ℂ W := ⟨fun r c w => by
     show (r • c) • w = algebraMap (Rl l) ℂ r • (c • w)
     rw [Algebra.smul_def r c, mul_smul]⟩
-  haveI : IsNoetherianRing (Rl l) :=
+  have : IsNoetherianRing (Rl l) :=
     IsLocalization.isNoetherianRing (Ideal.span {(l : ℤ)}).primeCompl _ inferInstance
   obtain ⟨g0, hg0⟩ : ∃ g0, f g0 ≠ 0 := not_forall.1 fun h => hf0 (funext h)
   set Y : Set (GA L n) := {y | ∀ i j, ent y i j ∈ Sl L hl} with hYdef
@@ -608,7 +608,7 @@ theorem eig_int (alg : Formalism.AUTREP.IsAlgWeight L n ρ) (hJ : NG.HypOutside 
   ·
     obtain ⟨N', hN'0, hN'⟩ := hf.1.2
     obtain ⟨T, hT, hrep⟩ := reps (L := L) (n := n) (Nat.pos_iff_ne_zero.1 hN'0)
-    haveI : Finite T := hT
+    have : Finite T := hT
     obtain ⟨c, hc0, hc⟩ := exists_den_fin ((hT.image (·⁻¹)).insert g0)
     obtain ⟨-, ι0, hι0, hdec, b, P, hP⟩ := alg
     choose Nt hNt hNt' using fun t : T => apply_fg (R := Rl l) b P (M0_fg (L := L) l c) (f t)
@@ -733,7 +733,7 @@ theorem heckeStd : HeckeStdStatement := by
       refine Finset.sum_congr rfl fun c _ => Finset.sum_congr rfl fun c' _ => ?_
       rw [mul_comm, mul_assoc, mul_assoc, commute_of_ne hv (emb_triv s' _) (emb_triv s _)]
   ·
-    haveI : Fact l.Prime := ⟨hl⟩
+    have : Fact l.Prime := ⟨hl⟩
     obtain ⟨p, hp, hA, fq, hfq⟩ := exists_prime s
     have hlp : ¬ l ∣ s.q ^ (k * (n - 1)) := fun h => hsl (by
       rw [hfq, ← pow_mul] at h
@@ -746,7 +746,7 @@ theorem heckeStd : HeckeStdStatement := by
     have hμR : IsIntegral (Rl l) μ := by
       have := (isIntegral_algebraMap (x := r)).mul hν
       rwa [hr, Nat.cast_pow, ← mul_assoc, inv_mul_cancel₀ hq0, one_mul] at this
-    haveI : IsScalarTower ℤ (Rl l) ℂ := IsScalarTower.of_algebraMap_eq fun _ => by simp
+    have : IsScalarTower ℤ (Rl l) ℂ := IsScalarTower.of_algebraMap_eq fun _ => by simp
     obtain ⟨⟨m, hm⟩, hmi⟩ := IsIntegral.exists_multiple_integral_of_isLocalization
       (Ideal.span {(l : ℤ)}).primeCompl μ hμR
     have hm' : ¬ l ∣ m.natAbs := fun h => hm (Ideal.mem_span_singleton.2 (Int.natCast_dvd.2 h))

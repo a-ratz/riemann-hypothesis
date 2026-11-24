@@ -62,11 +62,11 @@ theorem spanLt_mono (e : Fin r → Fin n → ℂ) {a a' : ℕ} (h : a ≤ a') : 
 
 private theorem isClosed_sub_one_mulVec_mem (v : Fin n → ℂ) (S : Submodule ℂ (Fin n → ℂ)) :
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ | (g - 1) *ᵥ v ∈ S} :=
-  S.closed_of_finiteDimensional.preimage ((continuous_id.sub continuous_const).matrix_mulVec continuous_const)
+  S.isClosed_of_finiteDimensional.preimage ((continuous_id.sub continuous_const).matrix_mulVec continuous_const)
 
 theorem isClosed_inN (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) :
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ | InN ε e z g} := by
-  simp only [InN, InS, Set.setOf_and, Set.setOf_forall]
+  simp only [InN, InS, Set.ofPred_and, Set.ofPred_forall]
   exact ((isClosed_iInter fun a => isClosed_sub_one_mulVec_mem _ _).inter (isClosed_sub_one_mulVec_mem _ _)).inter
     (isClosed_iInter fun y => isClosed_iInter fun _ => isClosed_sub_one_mulVec_mem _ _)
 
@@ -176,7 +176,7 @@ theorem uMat_inv_mul (a : Formalism.REAL.UJ ε) : uMat a⁻¹ * uMat a = 1 := by
   rw [← Formalism.L2.SG.Pf.Tau.uMat_mul, inv_mul_cancel, Formalism.L2.SG.Pf.Tau.uMat_one]
 
 theorem continuous_uMat : Continuous fun g : Formalism.REAL.UJ ε => uMat g :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 end Formalism.L2.SG.Pf.WFL.HNL
 
@@ -382,7 +382,7 @@ theorem frameFix_isCompact {ε : Fin (2 * r + k + 1) → Bool} {e f : Fin r → 
       rw [Matrix.mulVec_mulVec, uMat_inv_mul, Matrix.one_mulVec]
   have hclosed : IsClosed {g : Formalism.REAL.UJ ε | (∀ a, uMat g *ᵥ e a = e a) ∧ (∀ a, uMat g *ᵥ f a = f a) ∧
       uMat g *ᵥ z = z} := by
-    simp only [Set.setOf_and, Set.setOf_forall]
+    simp only [Set.ofPred_and, Set.ofPred_forall]
     refine (isClosed_iInter fun a => ?_).inter ((isClosed_iInter fun a => ?_).inter ?_) <;>
       exact isClosed_eq (continuous_uMat.matrix_mulVec continuous_const) continuous_const
   have hB : IsCompact {A : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ | ∀ i j, ‖A i j‖ ≤ C} := by
@@ -404,7 +404,7 @@ theorem frameFix_isCompact {ε : Fin (2 * r + k + 1) → Bool} {e f : Fin r → 
         (isClosed_eq ((continuous_fst.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul
           continuous_fst) continuous_const))
   have hK := (hB.prod hB).inter_right hTc
-  haveI := isCompact_iff_compactSpace.mp hK
+  have := isCompact_iff_compactSpace.mp hK
   let ψ : ↥({A : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ | ∀ i j, ‖A i j‖ ≤ C} ×ˢ
       {A : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ | ∀ i j, ‖A i j‖ ≤ C} ∩
       {p : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ × Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ |
@@ -412,8 +412,8 @@ theorem frameFix_isCompact {ε : Fin (2 * r + k + 1) → Bool} {e f : Fin r → 
     fun q => ⟨⟨q.1.1, q.1.2, q.2.2.1, q.2.2.2.1⟩, q.2.2.2.2⟩
   have hψ : Continuous ψ := by
     refine Continuous.subtype_mk (Units.continuous_iff.mpr ⟨?_, ?_⟩) _
-    · exact continuous_fst.comp continuous_subtype_val
-    · exact continuous_snd.comp continuous_subtype_val
+    · exact continuous_fst.comp continuous_subtypeVal
+    · exact continuous_snd.comp continuous_subtypeVal
   refine (isCompact_range hψ).of_isClosed_subset hclosed ?_
   rintro g ⟨he, hf, hzz⟩
   refine ⟨⟨(uMat g, uMat g⁻¹), ⟨⟨?_, ?_⟩, uMat_mul_inv g, uMat_inv_mul g, g.2⟩⟩, ?_⟩

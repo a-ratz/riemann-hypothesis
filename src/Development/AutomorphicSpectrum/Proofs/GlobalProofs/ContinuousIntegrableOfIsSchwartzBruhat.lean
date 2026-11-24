@@ -57,11 +57,11 @@ open scoped NNReal
 
 theorem continuous_integrable_of_isSchwartzBruhat : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (dx : Measure (Fin 1 → Fin M → AF F ⊗[F] E)), dx.IsAddHaarMeasure → ∀ Φ : (Fin 1 → Fin M → AF F ⊗[F] E) → ℂ, IsSchwartzBruhat Φ → Continuous Φ ∧ Integrable Φ dx := by
   intro F E _ _ _ _ _ σ hCM M dx hdx Φ hΦ
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let b := Module.finBasis F E
   obtain ⟨h1, -, -, -, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := h1
-  haveI := hBor 1 M
+  have := h1
+  have := hBor 1 M
   have hf := (isSchwartzBruhat_iff b Φ).1 hΦ
   let e := crd (AF F) b M
   have hcomp : (Φ ∘ e.symm) ∘ e = Φ := by
@@ -72,9 +72,9 @@ theorem continuous_integrable_of_isSchwartzBruhat : ∀ (F E : Type) [Field F] [
       (continuous_of_mem_schwartzBruhatPi hf).comp e.continuous
     rwa [hcomp] at h
   refine ⟨hcont, ?_⟩
-  haveI : LocallyCompactSpace (Fin 1 → Fin M → AF F ⊗[F] E) :=
+  have : LocallyCompactSpace (Fin 1 → Fin M → AF F ⊗[F] E) :=
     e.toHomeomorph.isOpenEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (Fin 1 → Fin M → AF F ⊗[F] E) :=
+  have : SecondCountableTopology (Fin 1 → Fin M → AF F ⊗[F] E) :=
     e.toHomeomorph.secondCountableTopology
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, dx = c • mu0 e := ⟨_, Measure.isAddLeftInvariant_eq_smul dx (mu0 e)⟩
   have hI : Integrable Φ (mu0 e) := by

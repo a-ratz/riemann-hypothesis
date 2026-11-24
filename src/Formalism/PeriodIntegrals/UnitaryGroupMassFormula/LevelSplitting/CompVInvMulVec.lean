@@ -63,13 +63,13 @@ theorem countable_nf (K : Type) [Field K] [NumberField K] : Countable K :=
 
 theorem places_countable : PlacesCountable := by
   intro F _ _
-  haveI : Countable F := countable_nf F
-  haveI : Countable (𝓞 F) := (IsFractionRing.injective (𝓞 F) F).countable
+  have : Countable F := countable_nf F
+  have : Countable (𝓞 F) := (IsFractionRing.injective (𝓞 F) F).countable
   have hs : Function.Surjective (fun s : Finset (𝓞 F) => Ideal.span (s : Set (𝓞 F))) := by
     intro I
     obtain ⟨s, hs⟩ := IsNoetherian.noetherian I
     exact ⟨s, hs⟩
-  haveI : Countable (Ideal (𝓞 F)) := hs.countable
+  have : Countable (Ideal (𝓞 F)) := hs.countable
   have hinj : Function.Injective (fun P : HeightOneSpectrum (𝓞 F) => P.asIdeal) :=
     fun P Q h => HeightOneSpectrum.ext h
   exact hinj.countable
@@ -123,8 +123,8 @@ theorem compV_mulVec_inv {F E : Type} [Field F] [NumberField F] [Field E] [Algeb
 
 theorem measKf_of (h2 : ContPlace) (h3 : LatBorel) : MeasKfAll := by
   intro F E _ _ _ _ _ σ _ M J _ Λ
-  haveI : Countable (HeightOneSpectrum (𝓞 F)) := places_countable F
-  haveI : Countable E := countable_nf E
+  have : Countable (HeightOneSpectrum (𝓞 F)) := places_countable F
+  have : Countable E := countable_nf E
   unfold Kf
   rw [Subgroup.coe_iInf]
   refine MeasurableSet.iInter fun v => ?_
@@ -141,8 +141,8 @@ theorem measKf_of (h2 : ContPlace) (h3 : LatBorel) : MeasKfAll := by
     exact stab_iff (Mf g) (Mf g⁻¹) (compV_inv_mulVec v g) (compV_mulVec_inv v g) G
   rw [hset]
   refine MeasurableSet.biInter hG fun y _ => ?_
-  letI : MeasurableSpace (Fin M → Fv F v ⊗[F] E) := borel _
-  haveI : BorelSpace (Fin M → Fv F v ⊗[F] E) := ⟨rfl⟩
+  let : MeasurableSpace (Fin M → Fv F v ⊗[F] E) := borel _
+  have : BorelSpace (Fin M → Fv F v ⊗[F] E) := ⟨rfl⟩
   have hc : Continuous (fun g => (Mf g).mulVec y) :=
     (h2 F E σ M J v).matrix_mulVec continuous_const
   refine MeasurableSet.inter (hc.measurable (h3 F E M v Λ)) ?_

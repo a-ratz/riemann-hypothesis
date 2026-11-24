@@ -98,7 +98,7 @@ theorem exp_coord_eq {a g : ℕ} (T : Matrix (Fin g) (Fin g) ℂ)
         * ∏ j, Complex.exp (l j) ^ ((B j *ᵥ v) k) := by
   rw [Pi.add_apply, mul_add, coord_eq, Complex.exp_add, Complex.exp_add, mul_comm _ (u k : ℂ),
     Complex.exp_int_mul_two_pi_mul_I, one_mul, Complex.exp_sum]
-  simp only [Complex.exp_int_mul]
+  simp only [Complex.exp_intCast_mul]
 
 theorem exp_pair_eq {a g : ℕ} (T : Matrix (Fin g) (Fin g) ℂ)
     (B : Fin a → Matrix (Fin g) (Fin g) ℤ) (l : Fin a → ℂ) (u v : Fin g → ℤ) :
@@ -108,10 +108,10 @@ theorem exp_pair_eq {a g : ℕ} (T : Matrix (Fin g) (Fin g) ℂ)
       = Complex.exp (∑ k, (v k : ℂ) *
           (2 * Real.pi * Complex.I * (T *ᵥ (fun k => (v k : ℂ))) k))
         * ∏ j, Complex.exp (l j) ^ (v ⬝ᵥ (B j *ᵥ v)) := by
-  simp only [Complex.exp_sum, Complex.exp_int_mul, exp_coord_eq, mul_zpow,
+  simp only [Complex.exp_sum, Complex.exp_intCast_mul, exp_coord_eq, mul_zpow,
     Finset.prod_mul_distrib]
   congr 1
-  simp only [← Finset.prod_zpow, ← _root_.zpow_mul, ← Complex.exp_int_mul]
+  simp only [← Finset.prod_zpow, ← _root_.zpow_mul, ← Complex.exp_intCast_mul]
   rw [Finset.prod_comm]
   refine Finset.prod_congr rfl fun j _ => ?_
   rw [← Complex.exp_sum]
@@ -179,7 +179,7 @@ theorem limit_period : ∀ (n a g : ℕ) (ha : a ≤ n) (U : Set (Fin n → ℂ)
   obtain ⟨M, hM⟩ := ((hcont.tendsto w).comp hw').bddAbove_range
   have hfin : ∀ m, v m ∈ {v : Fin g → ℤ | ∑ k, (v k : ℝ) ^ 2 ≤ M / c ^ 2} := by
     intro m
-    rw [Set.mem_setOf_eq, le_div_iff₀ (by positivity), mul_comm]
+    rw [Set.mem_ofPred_eq, le_div_iff₀ (by positivity), mul_comm]
     exact (hbd m).trans (hM ⟨m, rfl⟩)
   obtain ⟨v0, hv0⟩ : ∃ v0, ∃ᶠ m in atTop, v m = v0 := by
     have h1 : ∃ᶠ m in atTop, ∃ v0 ∈ {v : Fin g → ℤ | ∑ k, (v k : ℝ) ^ 2 ≤ M / c ^ 2}, v m = v0 :=

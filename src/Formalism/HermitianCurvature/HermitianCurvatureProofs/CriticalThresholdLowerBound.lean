@@ -172,12 +172,12 @@ theorem vandLamLower : VandLamLower := by
   have hlam1 : ∀ i, i ≤ c.k - 1 → c.lam i = c.v i := by
     intro i hi
     have hi' : i < c.k := by omega
-    simp only [Cfg.lam, if_pos hi']
+    simp only [Cfg.lam, ite_eq_left hi']
   have hlam2 : ∀ j, 1 ≤ j → c.lam (j + (c.k - 1)) = -c.b j := by
     intro j hj
     have h1 : ¬ (j + (c.k - 1) < c.k) := by omega
     have h2 : j + (c.k - 1) + 1 - c.k = j := by omega
-    simp only [Cfg.lam, if_neg h1, h2]
+    simp only [Cfg.lam, ite_eq_right h1, h2]
   have eqn : Vand (c.k + c.m - 1) c.lam = Vand (c.k - 1) c.v *
       (∏ i ∈ Icc 1 (c.k - 1), ∏ j ∈ Icc 1 c.m, (c.v i + c.b j)) * Vand c.m (fun j => -c.b j) := by
     rw [hkm, vand_split (c.k - 1) c.m c.lam]
@@ -294,7 +294,7 @@ theorem tcritWords_of (hVW : VandWords) : TcritWords := by
 lemma E_le : Real.exp (1/4) ≤ 1.3 := by
   have h1 : Real.exp (1/4) ^ 4 = Real.exp 1 := by
     first
-    | (rw [← Real.exp_nat_mul]; norm_num)
+    | (rw [← Real.exp_natCast_mul]; norm_num)
     | (rw [← Real.exp_nat_mul]; congr 1; norm_num)
     | (rw [← Real.exp_nat_mul]; congr 1; push_cast; ring)
   have h2 := Real.exp_one_lt_d9
@@ -324,7 +324,7 @@ lemma fac_bound (n : ℕ) (hn : 2 ≤ n) :
     | (have h1' := mul_le_mul_of_nonneg_right h1 hf.le
        rwa [div_mul_cancel₀ _ hf.ne'] at h1')
   have h3 : Real.exp ((n:ℝ) + 2) = Real.exp 1 ^ (n + 2) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring
@@ -539,7 +539,7 @@ lemma mu_bound (c : Cfg) (h : c.Ok) (bb : ℝ) (hs : c.Small bb) :
     exact_mod_cast (by omega : 0 < c.k)
   have hbb0 : 0 < bb := by linarith [hs.hbb]
   have e1 : Real.exp (-(2 * c.m * Real.log bb / c.k)) ^ c.k = Real.exp (-(2 * c.m * Real.log bb)) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     have hk' : (c.k:ℝ) ≠ 0 := hk.ne'
     first
@@ -608,7 +608,7 @@ lemma key_nontop (hNT : VandNonTop) (hEF : EdgeFactors) (c : Cfg) (bb : ℝ) (de
     rw [Icc_one_eq, hI]
     exact hs2.symm
   have hexp : Real.exp ((c.k:ℝ) / 4) = Real.exp (1/4) ^ c.k := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     ring
   have hP2 : Vand (c.k - 1) (fun i => c.u de (i + 1)) ≤ Real.exp (1/4) ^ c.k * Vand (c.k - 1) c.v := by
@@ -763,7 +763,7 @@ lemma key_top (hTp : VandTop) (c : Cfg) (bb : ℝ) (de : ℕ → ℝ) (h : c.Ok)
     have hb := u_mid_bounds c h de hw i hi.1 (by omega)
     linarith [hb.1]
   have hexp : Real.exp (((c.k:ℝ) - 1) / 4) = Real.exp (1/4) ^ (c.k - 1) := by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     rw [Nat.cast_sub (show 1 ≤ c.k by omega), Nat.cast_one]
     ring

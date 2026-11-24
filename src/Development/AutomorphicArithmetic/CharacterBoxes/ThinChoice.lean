@@ -69,10 +69,10 @@ private theorem gauss_sum_function_eq {N : ℕ} [NeZero N] (χ : DirichletCharac
     exact max_eq_left (by linarith)
   unfold Formalism.HC.An.gChi G0
   by_cases h : χ = 1
-  · rw [if_pos h, if_pos h]
+  · rw [ite_eq_left h, ite_eq_left h]
     unfold Formalism.HC.An.G G1
     rw [Finset.sum_congr rfl fun n hn => by rw [hmax n hn]]
-  · rw [if_neg h, if_neg h]
+  · rw [ite_eq_right h, ite_eq_right h]
     unfold Formalism.HC.An.sumLamChi Gchi Formalism.HC.An.logDerivativeAtOne logDerivLAtOne
     rw [Finset.sum_congr rfl fun n hn => by rw [hmax n hn]]
 

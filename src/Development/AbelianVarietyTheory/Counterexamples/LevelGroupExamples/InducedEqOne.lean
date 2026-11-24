@@ -58,13 +58,13 @@ variable {Xo : Moduli Dw l} {c : Coeff l} {n : ℕ}
 
 theorem noDelta_phiPin (nab : NabV Xo c) (m : SABMap Xo.univ.t Xo.univ.t (𝟙 Xo.X)) :
     (noDelta Xo c nab m n).PhiPin (fun _ => 1) 1 (fun _ => 0) := by
-  haveI hs : Subsingleton (LaJ Xo c (noDelta Xo c nab m n)) := by
+  have hs : Subsingleton (LaJ Xo c (noDelta Xo c nab m n)) := by
     apply Submodule.Quotient.subsingleton_iff.2
     show Ideal.map _ ⊤ • ⊤ = ⊤
     rw [Ideal.map_top, Submodule.top_smul]
   refine ⟨fun _ _ _ => rfl, fun _ _ => Subsingleton.elim _ _, fun _ _ _ _ => by simp, rfl,
     Subsingleton.elim _ _, fun q => ?_⟩
-  haveI : Unique (Fin n → LaJ Xo c (noDelta Xo c nab m n)) := uniqueOfSubsingleton (fun _ => 0)
+  have : Unique (Fin n → LaJ Xo c (noDelta Xo c nab m n)) := uniqueOfSubsingleton (fun _ => 0)
   rw [finsum_unique]
   have hz : ((⟨zeta l.M', c.zeta_mem⟩ : c.F) ^ (l.M' / 1)) = 1 := by
     have h0 : l.M' ≠ 0 := Nat.lcm_ne_zero (by have := l.three_le; omega) l.A_pos.ne'

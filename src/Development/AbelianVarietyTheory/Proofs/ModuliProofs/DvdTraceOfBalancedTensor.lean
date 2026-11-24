@@ -75,7 +75,7 @@ theorem exists_common_eigenvector_mem {K V ι : Type*} [Field K] [IsAlgClosed K]
       {U | U ≤ W ∧ U ≠ ⊥ ∧ ∀ i, ∀ v ∈ U, T i v ∈ U} ⟨W, le_rfl, hW, hs⟩
   obtain ⟨v, hvU, hv0⟩ := (Submodule.ne_bot_iff U).1 hU0
   refine ⟨v, hUW hvU, hv0, fun i => ?_⟩
-  haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU0
+  have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.2 hU0
   obtain ⟨l, hl⟩ := Module.End.exists_eigenvalue ((T i).restrict (hUs i))
   obtain ⟨w, hw⟩ := hl.exists_hasEigenvector
   have hw1 : T i w = l • (w : V) := congrArg Subtype.val hw.apply_eq_smul
@@ -164,7 +164,7 @@ theorem eq_zero_of_lTensor_eq_zero_of_balanced [Module.Free O H] [Module.Finite 
   classical
   by_contra hne
   let b := Module.Free.chooseBasis O H
-  haveI : FiniteDimensional K (H →ₗ[O] K) := Module.Finite.equiv (b.constr K)
+  have : FiniteDimensional K (H →ₗ[O] K) := Module.Finite.equiv (b.constr K)
   have hsm : ∀ (l : K) (a : H →ₗ[O] K), LinearMap.lTensor H a Θ = 0 →
       LinearMap.lTensor H (l • a) Θ = 0 := by
     intro l a ha
@@ -173,7 +173,7 @@ theorem eq_zero_of_lTensor_eq_zero_of_balanced [Module.Free O H] [Module.Finite 
   let W : Submodule K (H →ₗ[O] K) :=
     { carrier := {a | LinearMap.lTensor H a Θ = 0}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         simp [LinearMap.lTensor_add, ha, hb]
       zero_mem' := by simp
       smul_mem' := fun l a ha => hsm l a ha }

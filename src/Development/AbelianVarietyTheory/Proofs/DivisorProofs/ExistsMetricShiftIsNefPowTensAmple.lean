@@ -155,9 +155,9 @@ include H
 theorem app_injective_of_affine (hc : CharZero Γ(X, ⊤)) {U : X.Opens} (hU : IsAffineOpen U) :
     Function.Injective (j.app U).hom := by
   by_cases hne : Nonempty U
-  · letI := (j.app U).hom.toAlgebra
-    haveI := isLocalization_app H hU
-    haveI : CharZero Γ(X, U) :=
+  · let := (j.app U).hom.toAlgebra
+    have := isLocalization_app H hU
+    have : CharZero Γ(X, U) :=
       ((resG X (le_top : U ≤ ⊤)).charZero_iff (map_injective_of_isIntegral X _)).1 hc
     refine IsLocalization.injective (M := (nonZeroDivisors ℤ).map (AbLaw.cst f U)) Γ(XK, j ⁻¹ᵁ U) ?_
     rintro _ ⟨π, hπ, rfl⟩
@@ -165,7 +165,7 @@ theorem app_injective_of_affine (hc : CharZero Γ(X, ⊤)) {U : X.Opens} (hU : I
     have e : AbLaw.cst f U π = (π : Γ(X, U)) := map_intCast _ π
     rw [e, Ne, Int.cast_eq_zero]
     exact nonZeroDivisors.ne_zero hπ
-  · haveI : Subsingleton Γ(X, U) := by
+  · have : Subsingleton Γ(X, U) := by
       have : U = ⊥ := by
         rw [eq_bot_iff]
         exact fun x hx => (hne ⟨⟨x, hx⟩⟩).elim
@@ -270,7 +270,7 @@ end GlobalTheory.GenSecInt
 
 theorem GlobalTheory.GenSecInt.main : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (B : LB X), B.IsLB → ∀ t : (B.pull (Limits.pullback.fst (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ)))).Sec, ∃ s : B.Sec, ∀ y : ↥(Limits.pullback (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ))), (Limits.pullback.fst (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ))) y ∈ ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus s ↔ y ∈ ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus t := by
   intro k _ X _ p D h B hB t
-  haveI := h.isNoetherian
+  have := h.isNoetherian
   have H : IsPullback (Limits.pullback.fst (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ)))
       (Limits.pullback.snd (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ)))
       (p ≫ spMap (Int.castRingHom k)) (spMap (algebraMap ℤ ℚ)) := IsPullback.of_hasPullback _ _
@@ -307,7 +307,7 @@ theorem isReduced_pullback_localization : ∀ (R S : Type) [CommRing R] [CommRin
     obtain ⟨φ, hφ⟩ := Spec.map_surjective (V.affineOpenCover.f i ≫ f)
     change IsReduced (pullback (V.affineOpenCover.f i ≫ f) _)
     rw [← hφ]
-    letI : Algebra R (V.affineOpenCover.X i) := φ.hom.toAlgebra
+    let : Algebra R (V.affineOpenCover.X i) := φ.hom.toAlgebra
     have h2 : IsReduced (V.affineOpenCover.X i ⊗[R] S) :=
       isReduced_localizationPreserves (Algebra.algebraMapSubmonoid (V.affineOpenCover.X i) M) _ h1
     have h3 := (affine_isReduced_iff (.of (V.affineOpenCover.X i ⊗[R] S))).mpr h2
@@ -356,20 +356,20 @@ theorem exists_closure_arith_surface_rat : ∀ (k : Type) [CommRing k] (X : Sche
   let S : Closeds X := ⟨closure (ratFibre.fst p '' (Z : Set (ratFibre p))), isClosed_closure⟩
   have hSirr : IsIrreducible (S : Set X) :=
     (hZ.isIrreducible.image _ (ratFibre.fst p).continuous.continuousOn).closure
-  haveI : IsIntegral (Scheme.IdealSheafData.vanishingIdeal S).subscheme := isIntegral_red hSirr
-  haveI : IsIntegral (Scheme.IdealSheafData.vanishingIdeal Z).subscheme := isIntegral_red hZ.isIrreducible
+  have : IsIntegral (Scheme.IdealSheafData.vanishingIdeal S).subscheme := isIntegral_red hSirr
+  have : IsIntegral (Scheme.IdealSheafData.vanishingIdeal Z).subscheme := isIntegral_red hZ.isIrreducible
   set w := redι S with hw
-  haveI : IsPreimmersion (spMap (Int.castRingHom ℚ)) :=
+  have : IsPreimmersion (spMap (Int.castRingHom ℚ)) :=
     IsPreimmersion.of_isLocalization (R := ℤ) (S := ℚ) (nonZeroDivisors ℤ)
-  haveI : IsPreimmersion (ratFibre.fst p) :=
+  have : IsPreimmersion (ratFibre.fst p) :=
     MorphismProperty.of_isPullback (ratFibre.isPullback p).flip inferInstance
   have hpb0 := (IsPullback.of_hasPullback w (ratFibre.fst p)).paste_vert (ratFibre.isPullback p)
   rw [← Category.assoc] at hpb0
   have hpb1 : IsPullback (pullback.fst w (ratFibre.fst p)) (pullback.snd w (ratFibre.fst p) ≫ ratFibre.snd p)
       ((w ≫ p) ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ)) := hpb0
-  haveI : IsReduced (pullback ((w ≫ p) ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ))) :=
+  have : IsReduced (pullback ((w ≫ p) ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ))) :=
     isReduced_pullback_localization ℤ ℚ (nonZeroDivisors ℤ) _ _
-  haveI : IsReduced (pullback w (ratFibre.fst p)) := isReduced_of_isOpenImmersion hpb1.isoPullback.hom
+  have : IsReduced (pullback w (ratFibre.fst p)) := isReduced_of_isOpenImmersion hpb1.isoPullback.hom
   have hrange : Set.range (pullback.snd w (ratFibre.fst p)) = (Z : Set (ratFibre p)) := by
     rw [Scheme.Pullback.range_snd, hw, range_redι]
     change ratFibre.fst p ⁻¹' closure (ratFibre.fst p '' (Z : Set (ratFibre p))) = _
@@ -395,14 +395,14 @@ theorem exists_closure_arith_surface_rat : ∀ (k : Type) [CommRing k] (X : Sche
     exact ⟨N, w ≫ j, inferInstance, by rw [Category.assoc, hj]⟩
   have hdZ : topologicalKrullDim (Scheme.IdealSheafData.vanishingIdeal Z).subscheme = (1 : ℕ) := by
     rw [topologicalKrullDim_red, hZ.dim_eq]; rfl
-  haveI : IsProper (w ≫ p) := by
+  have : IsProper (w ≫ p) := by
     obtain ⟨N, i, _, hi⟩ := hproj
     have := isProper_str k N
     exact hi ▸ inferInstance
-  haveI : IsFinite (spMap (Int.castRingHom k)) := by
+  have : IsFinite (spMap (Int.castRingHom k)) := by
     rw [IsFinite.SpecMap_iff]
     exact RingHom.finite_algebraMap.2 hX.finite
-  haveI : Flat ((w ≫ p) ≫ spMap (Int.castRingHom k)) := (flat_int_iff_charZero _).2 hcW
+  have : Flat ((w ≫ p) ≫ spMap (Int.castRingHom k)) := (flat_int_iff_charZero _).2 hcW
   have hdim : topologicalKrullDim (Scheme.IdealSheafData.vanishingIdeal S).subscheme = (1 + 1 : ℕ) :=
     IntModel.topologicalKrullDim_eq_succ (O := ℤ) (K := ℚ) Int.not_isField hpb hdZ
   exact ⟨_, w, e.hom ≫ pullback.fst w (ratFibre.fst p), inferInstance, hX.of_isClosedImmersion w hcW hdim,
@@ -449,10 +449,10 @@ namespace GlobalTheory.FibreDim
 
 theorem fibre_isProjOver_and_dim_le : ∀ (k : Type) [CommRing k] (W : Scheme.{0}) (q : W ⟶ Sp k), IsArithVar q 1 → ∀ (p : ℕ) [Fact p.Prime], (letI := GlobalTheory.algebraΓOfHom (pullback.snd (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p)))); IsProjOver (strHom (ZMod p) (X := (pullback (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p))))))) ∧ topologicalKrullDim ↥(pullback (C := Scheme.{0}) (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p)))) ≤ 1 := by
   intro k _ W q hq p _
-  haveI hgc : IsClosedImmersion (spMap (Int.castRingHom (ZMod p))) :=
+  have hgc : IsClosedImmersion (spMap (Int.castRingHom (ZMod p))) :=
     IsClosedImmersion.spec_of_surjective _ (ZMod.ringHom_surjective _)
   refine ⟨?_, ?_⟩
-  · letI := GlobalTheory.algebraΓOfHom (pullback.snd (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p))))
+  · let := GlobalTheory.algebraΓOfHom (pullback.snd (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p))))
     exact VertProj.isProjOver_strHom_zmod k W q 1 hq _
       (pullback.fst (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p)))) p
   · set f := q ≫ spMap (Int.castRingHom k)
@@ -648,10 +648,10 @@ theorem card_quot_prime_smul_eq_card_ker_mul_pow_finrank (M : Type) [AddCommGrou
       Nat.card (LinearMap.ker ((p : ℤ) • (LinearMap.id : M →ₗ[ℤ] M))) *
         p ^ Module.finrank ℤ M := by
   obtain rfl : inst = AddCommGroup.toIntModule M := Subsingleton.elim _ _
-  haveI : AddGroup.FG M := Module.Finite.iff_addGroup_fg.1 inferInstance
+  have : AddGroup.FG M := Module.Finite.iff_addGroup_fg.1 inferInstance
   obtain ⟨n, ι, _, q, hq, k, ⟨e⟩⟩ := AddCommGroup.equiv_free_prod_directSum_zmod M
-  haveI : ∀ i, NeZero (q i ^ k i) := fun i => ⟨pow_ne_zero _ (hq i).ne_zero⟩
-  haveI : Finite (DirectSum ι fun i => ZMod (q i ^ k i)) :=
+  have : ∀ i, NeZero (q i ^ k i) := fun i => ⟨pow_ne_zero _ (hq i).ne_zero⟩
+  have : Finite (DirectSum ι fun i => ZMod (q i ^ k i)) :=
     Finite.of_equiv _ DFinsupp.equivFunOnFintype.symm
   exact card_quot_smul_eq_of_equiv_prod
     (e.trans ((Finsupp.linearEquivFunOnFinite ℤ ℤ (Fin n)).toAddEquiv.prodCongr (AddEquiv.refl _)))
@@ -947,8 +947,8 @@ theorem uct_mod_p : ∀ (C : CochainComplex (ModuleCat.{0} ℤ) ℕ) (p : ℕ) [
   obtain ⟨π, hz, hS⟩ := _root_.GlobalTheory.shortExact_mul_p_modP C p hinj
   have e := _root_.GlobalTheory.natCard_homology_of_shortExact_mul p C _ π hz hS n
   rw [_root_.GlobalTheory.natCard_homology_restrictScalars] at e
-  haveI := hfin n
-  haveI := hfin (n + 1)
+  have := hfin n
+  have := hfin (n + 1)
   have a1 := _root_.GlobalTheory.card_quot_prime_smul_eq_card_ker_mul_pow_finrank (C.homology n) p
   have a2 := _root_.GlobalTheory.card_quot_prime_smul_eq_card_ker_mul_pow_finrank (C.homology (n + 1)) p
   rw [← _root_.GlobalTheory.card_zmod_tensor_eq_card_quot'] at a1 a2 e
@@ -962,8 +962,8 @@ theorem uct_mod_p : ∀ (C : CochainComplex (ModuleCat.{0} ℤ) ℕ) (p : ℕ) [
     intro h0; rw [h0, zero_mul, c2] at a2; exact absurd a2 (pow_ne_zero _ (by omega))
   have hD : Nat.card D ≠ 0 := by
     rw [e, c1]; exact mul_ne_zero (pow_ne_zero _ (by omega)) hk
-  haveI : Finite D := Nat.finite_of_card_ne_zero hD
-  haveI : Module.Finite (ZMod p) D := Module.Finite.of_finite
+  have : Finite D := Nat.finite_of_card_ne_zero hD
+  have : Module.Finite (ZMod p) D := Module.Finite.of_finite
   have c0 := Module.natCard_eq_pow_finrank (K := ZMod p) (V := D)
   rw [hcp] at c0
   have key : p ^ (Module.finrank (ZMod p) D + Module.finrank ℤ (C.homology (n + 1))) = p ^ (Module.finrank (ZMod p) (TensorProduct ℤ (ZMod p) (C.homology n)) + Module.finrank (ZMod p) (TensorProduct ℤ (ZMod p) (C.homology (n + 1)))) := by
@@ -1076,10 +1076,10 @@ theorem finrank_zmod_tensor_eq_finrank_of_noPTorsion (M : Type*) [AddCommGroup M
     Module.finrank (ZMod p) (TensorProduct ℤ (ZMod p) M) = Module.finrank ℤ M := by
   obtain rfl : inst = AddCommGroup.toIntModule M := Subsingleton.elim _ _
   set T := Submodule.torsion ℤ M
-  haveI : Module.Free ℤ (M ⧸ T) := Module.free_of_finite_type_torsion_free'
-  haveI := subsingleton_zmod_tensor_torsion p hM
+  have : Module.Free ℤ (M ⧸ T) := Module.free_of_finite_type_torsion_free'
+  have := subsingleton_zmod_tensor_torsion p hM
   let g := LinearMap.baseChange (ZMod p) T.mkQ
-  have hg : ⇑g = ⇑(LinearMap.lTensor (ZMod p) T.mkQ) := LinearMap.baseChange_eq_ltensor _
+  have hg : ⇑g = ⇑(LinearMap.lTensor (ZMod p) T.mkQ) := LinearMap.baseChange_eq_lTensor _
   have hex := lTensor_exact (ZMod p) (LinearMap.exact_subtype_mkQ T) (Submodule.mkQ_surjective T)
   have hinj : Function.Injective g := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
@@ -1159,12 +1159,12 @@ theorem altSum (C : CochainComplex (ModuleCat.{0} ℤ) ℕ) (p : ℕ) [Fact p.Pr
   have hsub : ∀ n, m ≤ n → Subsingleton (C.homology n) :=
     fun n hn => homology_subsingleton C n (hz n hn)
   have hr0 : ∀ n, m ≤ n → r n = 0 := fun n hn => by
-    haveI := hsub n hn
+    have := hsub n hn
     simp only [r]
     rw [Module.finrank_zero_of_subsingleton]
     rfl
   have ha0 : ∀ n, m ≤ n → a n = 0 := fun n hn => by
-    haveI := hsub n hn
+    have := hsub n hn
     have : Subsingleton (TensorProduct ℤ (ZMod p) (C.homology n)) := inferInstance
     simp only [a]
     rw [Module.finrank_zero_of_subsingleton]
@@ -1176,7 +1176,7 @@ theorem altSum (C : CochainComplex (ModuleCat.{0} ℤ) ℕ) (p : ℕ) [Fact p.Pr
     have hZ : IsZero ((((ModuleCat.extendScalars g).mapHomologicalComplex
         (ComplexShape.up ℕ)).obj C).X n) :=
       (ModuleCat.extendScalars g).map_isZero (hz n hn)
-    haveI := homology_subsingleton _ n hZ
+    have := homology_subsingleton _ n hZ
     exact Module.finrank_zero_of_subsingleton
   have hsupp : ∀ (F : Type) [Field F] (g : ℤ →+* F),
       (Function.support fun n => (-1 : ℤ) ^ n * (Module.finrank F ((((ModuleCat.extendScalars
@@ -1211,9 +1211,9 @@ theorem hdim_fibre {X X' : Scheme.{0}} {F : Type} [Field F] (g : ℤ →+* F) (f
     (letI := GlobalTheory.algebraΓOfHom f'; hdim F (toMod (M.pull π)) n) =
       Module.finrank F ((((ModuleCat.extendScalars g).mapHomologicalComplex
         (ComplexShape.up ℕ)).obj (cechLB f M D)).homology n) := by
-  letI := GlobalTheory.algebraΓOfHom f'
+  let := GlobalTheory.algebraΓOfHom f'
   have hM' := LB.isLB_pull hM π
-  haveI := LB.isQuasicoherent_toMod hM'
+  have := LB.isQuasicoherent_toMod hM'
   have hc' : ⨆ i, π ⁻¹ᵁ D i = ⊤ := by rw [← Scheme.Hom.preimage_iSup, hc]; rfl
   have hD' : ∀ s : Finset κ, s.Nonempty → IsAffineOpen (⨅ i ∈ s, π ⁻¹ᵁ D i) :=
     fun s hs => isAffineOpen_biInf_preimage H (hD s hs)
@@ -1242,13 +1242,13 @@ theorem chi_fibres_LB {X Xp Xq : Scheme.{0}} [IsIntegral X] [CompactSpace X]
     fun n hn => isZero_cechLB_X f M Dc (by simpa using hn)
   have hfin' : ∀ n, Module.Finite ℤ ((cechLB f M Dc).homology n) := by
     intro n
-    letI := GlobalTheory.algebraΓOfHom f
+    let := GlobalTheory.algebraΓOfHom f
     obtain ⟨e⟩ := nonempty_coh_equiv f hM hc hD' n
-    letI : Module ℤ (coh (twist (structureModule X) M) n) := cohOn.instModule ℤ _ ⊤ n
-    haveI hf1 : Module.Finite ℤ (coh (twist (structureModule X) M) n) := finite_int_congr (hfin n)
+    let : Module ℤ (coh (twist (structureModule X) M) n) := cohOn.instModule ℤ _ ⊤ n
+    have hf1 : Module.Finite ℤ (coh (twist (structureModule X) M) n) := finite_int_congr (hfin n)
     exact finite_int_congr (Module.Finite.equiv e.symm)
-  letI := GlobalTheory.algebraΓOfHom fp
-  letI := GlobalTheory.algebraΓOfHom fq
+  let := GlobalTheory.algebraΓOfHom fp
+  let := GlobalTheory.algebraΓOfHom fq
   rw [chi_def, chi_def]
   have hp := fun n => hdim_fibre (Int.castRingHom (ZMod p)) f fp πp Hp Dc hc hD' M hM n
   have hq := fun n => hdim_fibre (Int.castRingHom ℚ) f fq πq Hq Dc hc hD' M hM n
@@ -1265,20 +1265,20 @@ theorem chi_structureModule_eq {X X' : Scheme.{0}} (F : Type) [Field F] [Algebra
 
 theorem chi_fibre_eq : ∀ (k : Type) [CommRing k] (W : Scheme.{0}) (q : W ⟶ Sp k) (D : ℕ), IsArithVar q D → ∀ (p : ℕ) [Fact p.Prime] (N : LB W), N.IsLB → (letI := GlobalTheory.algebraΓOfHom (pullback.snd (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p)))); chi (ZMod p) (toMod (N.pull (pullback.fst (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p)))))) = chi ℚ (toMod (N.pull (ratFibre.fst q))) ∧ chi (ZMod p) (structureModule (pullback (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod p))))) = chi ℚ (structureModule (ratFibre q))) := by
   intro k _ W q D hq p _ N hN
-  haveI := hq.isDomain
-  haveI := hq.finite
-  haveI := hq.isIntegral
-  haveI : IsNoetherianRing k := isNoetherian_of_tower ℤ inferInstance
+  have := hq.isDomain
+  have := hq.finite
+  have := hq.isIntegral
+  have : IsNoetherianRing k := isNoetherian_of_tower ℤ inferInstance
   have hproj := hq.isProjOver
-  haveI : IsProper q := (isProper_and_exists_isAmpleLB_of_isProjOver hproj).1
-  haveI : CompactSpace W := QuasiCompact.compactSpace_of_compactSpace q
-  haveI := isAffineHom_diagonal_of_isSeparated q
+  have : IsProper q := (isProper_and_exists_isAmpleLB_of_isProjOver hproj).1
+  have : CompactSpace W := QuasiCompact.compactSpace_of_compactSpace q
+  have := isAffineHom_diagonal_of_isSeparated q
   have hX : CharZero Γ(W, ⊤) := (flat_int_iff_charZero _).1 hq.flat
   have hfin : ∀ M : LB W, M.IsLB → ∀ n,
       letI := GlobalTheory.algebraΓOfHom (q ≫ spMap (Int.castRingHom k))
       Module.Finite ℤ (coh (twist (structureModule W) M) n) := by
     intro M hM n
-    letI := GlobalTheory.algebraΓOfHom q
+    let := GlobalTheory.algebraΓOfHom q
     have h1 : Module.Finite k (coh (twist (structureModule W) M) n) :=
       (((serre_finiteness_vanishing k W (structureModule W)).2 q (fun _ => rfl)).2
         (Or.inl hproj)).2.1 M hM n
@@ -1286,7 +1286,7 @@ theorem chi_fibre_eq : ∀ (k : Type) [CommRing k] (W : Scheme.{0}) (q : W ⟶ S
     exact finite_int_congr h2
   refine ⟨chi_fibres_LB hX _ p _ _ (IsPullback.of_hasPullback _ _) _ _ (ratFibre.isPullback q) N hN
     (hfin N hN), ?_⟩
-  letI := GlobalTheory.algebraΓOfHom (pullback.snd (q ≫ spMap (Int.castRingHom k))
+  let := GlobalTheory.algebraΓOfHom (pullback.snd (q ≫ spMap (Int.castRingHom k))
     (spMap (Int.castRingHom (ZMod p))))
   rw [chi_structureModule_eq (ZMod p) (pullback.fst _ _), chi_structureModule_eq ℚ (ratFibre.fst q)]
   exact chi_fibres_LB hX _ p _ _ (IsPullback.of_hasPullback _ _) _ _ (ratFibre.isPullback q) _
@@ -1321,10 +1321,10 @@ namespace GlobalTheory.NefGeneric
 theorem ratDeg_nonneg : ∀ (k : Type) [CommRing k] (W : Scheme.{0}) (q : W ⟶ Sp k) (L : HermLB q),
     IsArithVar q 1 → ArInt.NefFib L → 0 ≤ ratDeg q L.B := by
   intro k _ W q L hW hL
-  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   obtain ⟨e1, e2⟩ := _root_.GlobalTheory.ChiFibre.chi_fibre_eq k W q 1 hW 2 L.B L.isLB
   obtain ⟨hproj, hdim⟩ := _root_.GlobalTheory.FibreDim.fibre_isProjOver_and_dim_le k W q hW 2
-  letI := GlobalTheory.algebraΓOfHom
+  let := GlobalTheory.algebraΓOfHom
     (pullback.snd (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod 2))))
   have h := _root_.GlobalTheory.CurveDevissage.degOfRank_nonneg 2 _ hproj hdim _ (LB.isLB_pull L.isLB _)
     (fun Z i _ _ _ hZ => _root_.GlobalTheory.NefFibPrime.topSelf_nonneg_of_nefFib k W q L 2 hL Z i hZ)
@@ -1359,11 +1359,11 @@ namespace GlobalTheory.RatFibreClosure
 
 theorem ratDeg_pull_eq_interNumRed : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp k) (Z : Closeds (ratFibre p)), IsCompleteCurve ℚ Z → ∀ (W : Scheme.{0}) (w : W ⟶ X) (z : (Scheme.IdealSheafData.vanishingIdeal Z).subscheme ⟶ W), IsArithVar (w ≫ p) 1 → z ≫ w = redι Z ≫ ratFibre.fst p → IsPullback z (redι Z ≫ ratFibre.snd p) ((w ≫ p) ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ)) → ∀ M : LB X, M.IsLB → ratDeg (w ≫ p) (M.pull w) = interNumRed ℚ Z ![M.pull (ratFibre.fst p)] := by
   intro k _ X p Z hZ W w z hW hzw H M hM
-  letI iQ : Algebra ℚ Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) :=
+  let iQ : Algebra ℚ Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) :=
     algebraΓOfHom (redι Z ≫ ratFibre.snd p)
   have hi : ∀ r : ℚ, (redι Z).appTop (algebraMap ℚ Γ(ratFibre p, ⊤) r) =
       algebraMap ℚ Γ((Scheme.IdealSheafData.vanishingIdeal Z).subscheme, ⊤) r := fun _ ↦ rfl
-  haveI : IsIntegral (Scheme.IdealSheafData.vanishingIdeal Z).subscheme := isIntegral_red hZ.isIrreducible
+  have : IsIntegral (Scheme.IdealSheafData.vanishingIdeal Z).subscheme := isIntegral_red hZ.isIrreducible
   have hC : VB.IsProjCurve ℚ (Scheme.IdealSheafData.vanishingIdeal Z).subscheme := by
     have hs : strHom ℚ (Scheme.IdealSheafData.vanishingIdeal Z).subscheme = redι Z ≫ strHom ℚ (ratFibre p) := by
       rw [ratFibre.strHom_eq]; exact strHom_eq fun _ ↦ rfl
@@ -1431,8 +1431,8 @@ open GlobalTheory GlobalTheory.ArInt GlobalTheory.CxPts GlobalTheory.Cartier Glo
 
 theorem GlobalTheory.GenNef.isNef_ratFibre : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ L : HermLB p, NefFib L → (letI := GlobalTheory.algebraΓOfHom (Limits.pullback.snd (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ))); GlobalTheory.IsNef ℚ (L.B.pull (Limits.pullback.fst (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ))))) := by
   intro k _ X _ p D hX L hL
-  haveI := hX.finite
-  letI := GlobalTheory.algebraΓOfHom (Limits.pullback.snd (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ)))
+  have := hX.finite
+  let := GlobalTheory.algebraΓOfHom (Limits.pullback.snd (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ)))
   refine ⟨LB.isLB_pull L.isLB _, fun Z hZ => ?_⟩
   obtain ⟨W, w, z, _, hW, hzw, hpb⟩ := _root_.GlobalTheory.CurveClosure.exists_closure_arith_surface_rat k X p D hX Z hZ
   have e := _root_.GlobalTheory.RatFibreClosure.ratDeg_pull_eq_interNumRed k X p Z hZ W w z hW hzw hpb L.B L.isLB

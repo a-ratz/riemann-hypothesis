@@ -119,7 +119,7 @@ theorem clear_denominators : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgC
   · rw [map_prod]; exact Finset.prod_ne_zero_iff.mpr fun j _ => hbne _
   · have hmem : P.natDegree ∈ S := by simp [hS]
     intro h
-    simp only [hmem, if_true] at h
+    simp only [hmem, ite_true] at h
     have h2 := congrArg T.io h
     rw [map_zero, map_mul, ← hab, map_prod, mul_assoc, Finset.mul_prod_erase S (fun j => T.io (b (P.coeff j))) hmem] at h2
     rcases mul_eq_zero.mp h2 with h3 | h3
@@ -127,9 +127,9 @@ theorem clear_denominators : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgC
     · exact (Finset.prod_ne_zero_iff.mpr fun j _ => hbne _) h3
   · intro i
     by_cases hi : i ∈ S
-    · simp only [hi, if_true]
+    · simp only [hi, ite_true]
       rw [map_mul, ← hab, map_prod, map_prod, mul_assoc, Finset.mul_prod_erase S (fun j => T.io (b (P.coeff j))) hi, mul_comm]
-    · simp only [hi, if_false, map_zero]
+    · simp only [hi, ite_false, map_zero]
       have : P.natDegree < i := by simp [hS] at hi; omega
       rw [Polynomial.coeff_eq_zero_of_natDegree_lt this, mul_zero]
 
@@ -230,7 +230,7 @@ theorem coeff_mem_range_of_isRoot : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] 
     ∀ k, PowerSeries.coeff k b ∈ ε.range := by
   intro Ω _ _ ε b Q hQ hcoef hb k
   let E : Subfield ℂ := ε.fieldRange
-  haveI : IsAlgClosed E := IsAlgClosed.of_ringEquiv Ω E ε.rangeRestrictFieldEquiv
+  have : IsAlgClosed E := IsAlgClosed.of_ringEquiv Ω E ε.rangeRestrictFieldEquiv
   have hE : ∀ z : ℂ, z ∈ ε.range → z ∈ E := fun z hz => by
     obtain ⟨y, rfl⟩ := hz
     exact ⟨y, rfl⟩
@@ -248,7 +248,7 @@ theorem coeff_mem_range_of_isRoot : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] 
     rw [hfix, hb, map_zero] at h2
     exact h2
   have hfin : (Set.range fun g : ℂ ≃ₐ[E] ℂ => g (PowerSeries.coeff k b)).Finite := by
-    refine ((Polynomial.finite_setOf_isRoot hQ).image (PowerSeries.coeff k)).subset ?_
+    refine ((Polynomial.finite_setOfPred_isRoot hQ).image (PowerSeries.coeff k)).subset ?_
     rintro _ ⟨g, rfl⟩
     refine ⟨PowerSeries.map (g : ℂ →+* ℂ) b, hroot g, ?_⟩
     simp [PowerSeries.coeff_map]
@@ -323,7 +323,7 @@ theorem qAll_range_of_monic_root : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (
   have hQ0 : Q ≠ 0 := by
     intro h0
     have := hcoeff n
-    rw [h0, if_pos (Nat.lt_succ_self n), hcn] at this
+    rw [h0, ite_eq_left (Nat.lt_succ_self n), hcn] at this
     simp at this
   have hcr : ∀ i k, PowerSeries.coeff k (Q.coeff i) ∈ ε.range := by
     intro i k
@@ -524,7 +524,7 @@ theorem sat : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (ε : Ω →+* ℂ) (M
     apply Convex.isPreconnected
     show Convex ℝ {z : ℂ | 0 < z.im}
     intro x hx y hy s t hs ht hst
-    simp only [Set.mem_setOf_eq, Complex.add_im, Complex.real_smul, Complex.mul_im, Complex.ofReal_re,
+    simp only [Set.mem_ofPred_eq, Complex.add_im, Complex.real_smul, Complex.mul_im, Complex.ofReal_re,
       Complex.ofReal_im, zero_mul, add_zero] at hx hy ⊢
     rcases hs.eq_or_lt with rfl | hs'
     · simp at hst; subst hst; simpa using hy
@@ -670,7 +670,7 @@ theorem fn_sat : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ �
     intro τ
     have := hF0 τ (hmemHs τ)
     simpa [hF, hupT] using this
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed (R := ℚ)
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed (R := ℚ)
   obtain ⟨h, hhR, hh⟩ := _root_.GlobalTheory.FN.Sat.sat Ω ε M n (fun τ : ℍ => a τ) (fun τ : ℍ => b τ) (fun i => (p i : ℍ → ℂ)) hM haM hbM hbne
     hinvT hR hpn' hsumT
   let hr : ring ε.range := ⟨h, mem_ring_of_inR hhR⟩

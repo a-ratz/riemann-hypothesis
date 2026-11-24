@@ -61,7 +61,7 @@ theorem transfer_card_H0_H1 : ∀ {O : Type} [CommRing O] {G G' : Type} [Group G
       Nat.card (ReciprocityTheory.Gal.H1 (GlobalTheory.ShapeNeg.levRep ρ c)) =
         Nat.card (ReciprocityTheory.Gal.H1 (GlobalTheory.ShapeNeg.levRepZ p r h (ρ.comp i.symm.toMulEquiv.toMonoidHom))) := by
   intro O _ G G' _ _ _ _ i M _ _ ρ p r _ c h
-  letI := levZ (M := M) p r h
+  let := levZ (M := M) p r h
 
   have hact : ∀ (g' : G') (x : Lev M c),
       levRepZ p r h (ρ.comp i.symm.toMulEquiv.toMonoidHom) g' x = levRep ρ c (i.symm g') x :=

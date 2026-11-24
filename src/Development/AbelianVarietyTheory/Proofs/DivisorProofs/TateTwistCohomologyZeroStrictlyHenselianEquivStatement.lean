@@ -64,7 +64,7 @@ namespace GlobalTheory.EtC.CyclotomicGlobalSections
 theorem exists_cyclotomic_root (q : ℕ) [NeZero q] (A : Type) [CommRing A] (hA : SH A) (hq : IsUnit (q : A)) :
     ∃ ζ : A, Polynomial.aeval ζ (Polynomial.cyclotomic q ℤ) = 0 := by
   obtain ⟨hH, hsep⟩ := hA
-  haveI := hH
+  have := hH
   have hqk : (q : IsLocalRing.ResidueField A) ≠ 0 := by
     have := hq.map (IsLocalRing.residue A)
     simpa using this.ne_zero
@@ -100,12 +100,12 @@ theorem GlobalTheory.EtC.tateTwistCohomology_zero_strictlyHenselian_equiv : ∀ 
   intro q _ A _ hA hq j
   obtain ⟨ζ0, hζ0⟩ := GlobalTheory.EtC.CyclotomicGlobalSections.exists_cyclotomic_root q A hA hq
   obtain ⟨hH, -⟩ := hA
-  haveI := hH
+  have := hH
   let e : Sec (tw q j) (Spec (CommRingCat.of A)) ≃+ Ht q (sp A) 0 j :=
     AddEquiv.ofBijective (AddMonoidHom.mk' (secClass (tw q j))
       (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q j) _).2.2.1)
       (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q j) _).2.1
-  haveI : Nonempty (Spec (CommRingCat.of A)) := inferInstance
+  have : Nonempty (Spec (CommRingCat.of A)) := inferInstance
   let ζ : Prim q Γ(Spec (CommRingCat.of A), ⊤) :=
     Prim.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom ⟨ζ0, hq, hζ0⟩
   have hidem : ∀ x : A, IsIdempotentElem x → x = 0 ∨ x = 1 := fun x hx => by

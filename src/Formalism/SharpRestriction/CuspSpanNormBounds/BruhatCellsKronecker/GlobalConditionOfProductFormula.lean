@@ -304,7 +304,7 @@ theorem unit_of (p : HeightOneSpectrum (𝓞 F)) (ϖ : (A p).Fp) (hϖ0 : ϖ ≠ 
     exact (A p).O.add_mem ((A p).O.add_mem ho hco) ((A p).O.mul_mem (alg_mem_O _ _ hϖO) ((A p).O.mul_mem ho hco))
   have h4 : valuation (A p).Fp (n - 1) < 1 := by
     rw [Valuation.mem_integer_iff, map_mul, map_inv₀] at h3
-    have hv0 : 0 < valuation (A p).Fp ϖ := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hϖ0)
+    have hv0 : 0 < valuation (A p).Fp ϖ := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hϖ0)
     have := (mul_inv_le_iff₀ hv0).1 h3
     rw [one_mul] at this
     exact lt_of_le_of_lt this hϖ

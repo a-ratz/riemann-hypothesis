@@ -93,7 +93,7 @@ theorem partBetween : PartBetween := by
   intro E _ _ m N hN δ hδ
   obtain ⟨k, n, hn⟩ := Submodule.fg_iff_exists_fin_generating_family.mp hN
   have hne : Ideal.span {δ} ≠ ⊥ := by rwa [Ne, Ideal.span_singleton_eq_bot]
-  haveI : Finite ((𝓞 E) ⧸ Ideal.span {δ}) := by
+  have : Finite ((𝓞 E) ⧸ Ideal.span {δ}) := by
     first
       | exact (Ideal.absNorm_ne_zero_iff _).mp (by rw [Ne, Ideal.absNorm_eq_zero_iff]; exact hne)
       | exact Ideal.finiteQuotientOfFreeOfNeBot _ hne
@@ -233,7 +233,7 @@ theorem spDen : SpDen := by
     · exact hmem
     · rw [Int.cast_neg, neg_mul]; exact neg_mem hmem
   choose Dp hDp1 hDp using h
-  refine ⟨∏ p, Dp p, Finset.one_le_prod' fun p _ => hDp1 p, fun i j => ?_⟩
+  refine ⟨∏ p, Dp p, Finset.one_le_prod fun p _ => hDp1 p, fun i j => ?_⟩
   obtain ⟨c, hc⟩ := Finset.dvd_prod_of_mem Dp (Finset.mem_univ (i, j))
   rw [hc, Nat.cast_mul, mul_comm (Dp (i, j) : E), mul_assoc]
   exact Subring.mul_mem _ ⟨c, by simp⟩ (hDp (i, j))
@@ -716,7 +716,7 @@ private lemma mul_isPrincipal_of_classGroup_mk0_eq_inv {E : Type} [Field E] [Num
 private lemma exists_bounded_norm_ideal_mul_isPrincipal {E : Type} [Field E] [NumberField E] :
     ∃ B : ℕ, ∀ I : Ideal (𝓞 E), I ≠ ⊥ → ∃ J : Ideal (𝓞 E), J ≠ ⊥ ∧ Ideal.absNorm J ≤ B ∧
       I * J ≠ ⊥ ∧ Submodule.IsPrincipal (I * J) := by
-  letI hF : Fintype (ClassGroup (𝓞 E)) := NumberField.RingOfIntegers.instFintypeClassGroup E
+  let hF : Fintype (ClassGroup (𝓞 E)) := NumberField.RingOfIntegers.instFintypeClassGroup E
   choose rep hrep using (ClassGroup.mk0_surjective (R := 𝓞 E))
   refine ⟨Finset.univ.sup (fun x => Ideal.absNorm ((rep x : Ideal (𝓞 E)))), ?_⟩
   intro I hI
@@ -993,7 +993,7 @@ theorem partUnits : PartUnits := by
   classical
   obtain ⟨U, hUf, hU⟩ := units_mod_sq F
   let S : Set (Ideal (𝓞 E)) := {I | Ideal.absNorm I ≤ ⌊C⌋₊}
-  have hSf : S.Finite := Ideal.finite_setOfPred_absNorm_le _
+  have hSf : S.Finite := Ring.HasFiniteQuotients.finite_absNorm_le _
   let P : Ideal (𝓞 E) → Prop := fun I => ∃ y : 𝓞 E, I = Ideal.span {y} ∧
     star (algebraMap (𝓞 E) E y) = algebraMap (𝓞 E) E y ∧ y ≠ 0
   let rep : Ideal (𝓞 E) → E := fun I => if h : P I then algebraMap (𝓞 E) E h.choose else 1
@@ -1012,7 +1012,7 @@ theorem partUnits : PartUnits := by
     exact hN
   have hP : P (Ideal.span {x}) := ⟨x, rfl, hstar, hx0⟩
   obtain ⟨hyI, hys, hy0⟩ := hP.choose_spec
-  have hrep : rep (Ideal.span {x}) = algebraMap (𝓞 E) E hP.choose := dif_pos hP
+  have hrep : rep (Ideal.span {x}) = algebraMap (𝓞 E) E hP.choose := dite_eq_left hP
   obtain ⟨w, hw⟩ : Associated hP.choose x := Ideal.span_singleton_eq_span_singleton.mp hyI.symm
   have hyE : algebraMap (𝓞 E) E hP.choose ≠ 0 := fun h => hy0 (hinj (h.trans (map_zero _).symm))
   have h1 : algebraMap (𝓞 E) E x =
@@ -1289,7 +1289,7 @@ end GD
 theorem successive_vector_gram_det : SvGramDet := by
   classical
   intro F E _ _ _ _ _ _ cm m d δ hd hδ hcod p hp e hli he hspan
-  simp only [Lat, Set.mem_setOf_eq] at hp
+  simp only [Lat, Set.mem_ofPred_eq] at hp
   obtain ⟨hJh, hJdet, -, -, hMint, hMdual⟩ := hp
   set J := p.1 with hJdef
   set M := p.2 with hMdef
@@ -1589,9 +1589,9 @@ theorem successive_vector_majorant_e : SvMajE := by
   have hcc : ComplexEmbedding.conjugate (ComplexEmbedding.conjugate φ) = φ := star_star φ
   by_cases hp : ι φ < ι (ComplexEmbedding.conjugate φ)
   · have hp' : ¬ ι (ComplexEmbedding.conjugate φ) < ι φ := lt_asymm hp
-    simp only [if_pos hp]
+    simp only [ite_eq_left hp]
     refine ⟨(hH0 φ).1, (hH0 φ).2.1, (hH0 φ).2.2, ?_⟩
-    rw [hcc, if_neg hp']
+    rw [hcc, ite_eq_right hp']
   · set ψ := ComplexEmbedding.conjugate φ with hψ
     have hψφ : ι ψ < ι (ComplexEmbedding.conjugate ψ) := by
       rw [hψ, hcc]
@@ -1600,7 +1600,7 @@ theorem successive_vector_majorant_e : SvMajE := by
       ext i j
       simp [hψ, ComplexEmbedding.conjugate_coe_eq]
     have hM := hH0 ψ
-    simp only [if_neg hp, if_pos hψφ, ← hψ]
+    simp only [ite_eq_right hp, ite_eq_left hψφ, ← hψ]
     refine ⟨?_, ?_, ?_, ?_⟩
     · rw [hmapT _ hM.1.1]
       exact hM.1.transpose
@@ -1694,7 +1694,7 @@ theorem svBig_block [DecidableEq (E →+* ℂ)] {m N : ℕ} (e : Fin N → Fin m
   rw [svR_entry, Matrix.sum_apply]
   simp_rw [svR_entry]
   simp only [svBig, svP, Matrix.of_apply, Matrix.blockDiagonal_apply, Fintype.sum_prod_type,
-    mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    mul_ite, ite_mul, mul_zero, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [Finset.sum_comm]
 
 theorem svR_hform (hst : ∀ (φ : E →+* ℂ) (a : E), φ (star a) = starRingEnd ℂ (φ a)) {m : ℕ}

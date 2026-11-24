@@ -178,7 +178,7 @@ theorem cxF_pairOfDat (wt : Polynomial G.F → ℂ) (f : G.GAf → ℂ) (hf : �
   obtain ⟨k, hk, e⟩ := LeftCosets.rep_mk (ι := (toAfF G β x t hx).prod (toP1 G β)) (K := Kf.prod K') d.1
   have hz := posV_ne_zero G v β d.2
   obtain ⟨u, hu⟩ : ∃ u : ℂˣ, u • d.2.1 = Projectivization.rep (lineOf G v β d.2.1 hz) :=
-    (Projectivization.mk_eq_mk_iff ℂ _ _ (Projectivization.rep_nonzero _) hz).1
+    (Projectivization.mk_eq_mk_iff ℂ _ _ (Projectivization.rep_ne_zero _) hz).1
       (Projectivization.mk_rep (lineOf G v β d.2.1 hz))
   have hpos : 0 < (star (Projectivization.rep (lineOf G v β d.2.1 hz)) ⬝ᵥ
       (herm G v β *ᵥ Projectivization.rep (lineOf G v β d.2.1 hz))).re := by

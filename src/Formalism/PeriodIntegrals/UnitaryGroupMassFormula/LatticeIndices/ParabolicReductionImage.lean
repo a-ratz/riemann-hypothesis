@@ -93,7 +93,7 @@ theorem stImA_of (p : TypX X) (h : LevelReductionImage X hb p) : StImA X hb p :=
     ext x
     simp only [MonoidHom.mem_ker, MonoidHom.coe_comp, Function.comp_apply, hker, hker₀]
   rw [hq ρ, hk2, ← hq ρ₀, hc, card_conj]
-  haveI : Fact (gOf p).Prime := ⟨gOf_prime X p⟩
+  have : Fact (gOf p).Prime := ⟨gOf_prime X p⟩
   first
   | exact card_nuG (ZMod (gOf p)) D.R.rS D.R.k
   | (rw [card_nuG]; unfold nnC ukC; rfl)
@@ -122,7 +122,7 @@ theorem stImB_of (u : D.what₂.Word) (p : TypX X) (h : ParabolicReductionImage 
     ext x
     simp only [MonoidHom.mem_ker, MonoidHom.coe_comp, Function.comp_apply, hker, hker₀]
   rw [hq ρ, hk2, ← hq ρ₀, hc, card_conj]
-  haveI : Fact (gOf p).Prime := ⟨gOf_prime X p⟩
+  have : Fact (gOf p).Prime := ⟨gOf_prime X p⟩
   first
   | exact card_sG (ZMod (gOf p)) D.R.rS D.R.k
   | (rw [card_sG]; unfold glkC nnC; rfl)

@@ -107,15 +107,15 @@ theorem lowUni_mulVec_eLast {M : Matrix (Fin n) (Fin n) K} (h : IsLowUni M) :
   rw [hw i]
   simp only [Matrix.mulVec, dotProduct, hw, mul_ite, mul_one, mul_zero]
   by_cases hi : i.val + 1 = n
-  · rw [if_pos hi, Finset.sum_eq_single i]
-    · rw [if_pos hi, h.2 i]
+  · rw [ite_eq_left hi, Finset.sum_eq_single i]
+    · rw [ite_eq_left hi, h.2 i]
     · intro j _ hj
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hj'
       exact hj (Fin.ext (by omega))
     · intro hi'
       exact absurd (Finset.mem_univ i) hi'
-  · rw [if_neg hi]
+  · rw [ite_eq_right hi]
     apply Finset.sum_eq_zero
     intro j _
     split_ifs with hj
@@ -221,7 +221,7 @@ theorem lamLin_mul (A B : Matrix (Fin n) (Fin n) R) (Z : Matrix (Fin n) (Fin n) 
   have hAinv : (A.map R.subtype)⁻¹ * A.map R.subtype = 1 :=
     Matrix.nonsing_inv_mul _ (by rw [hA]; exact isUnit_one)
   have hBd : (B.map R.subtype).det = 1 := by
-    rw [Matrix.det_of_upperTriangular hup.1]
+    rw [det_of_isUpperTriangular hup.1]
     exact Finset.prod_eq_one (fun i _ => hup.2 i)
   have hBinv : B.map R.subtype * (B.map R.subtype)⁻¹ = 1 :=
     Matrix.mul_nonsing_inv _ (by rw [hBd]; exact isUnit_one)
@@ -242,10 +242,10 @@ theorem isoInv : IsoInv := by
   obtain ⟨B, rfl⟩ : ∃ B : Matrix (Fin n) (Fin n) R, B.map R.subtype = b :=
     ⟨liftR R b hbi, liftR_map R b hbi⟩
   have hA : (A.map R.subtype).det = 1 := by
-    rw [Matrix.det_of_lowerTriangular _ ha.1]
+    rw [det_of_isLowerTriangular _ ha.1]
     exact Finset.prod_eq_one (fun i _ => ha.2 i)
   have hB : (B.map R.subtype).det = 1 := by
-    rw [Matrix.det_of_upperTriangular hb.1]
+    rw [det_of_isUpperTriangular hb.1]
     exact Finset.prod_eq_one (fun i _ => hb.2 i)
   have hAA : A * A⁻¹ = 1 :=
     Matrix.mul_nonsing_inv A (by rw [det_lift_eq_one R A hA]; exact isUnit_one)
@@ -259,7 +259,7 @@ theorem isoInv : IsoInv := by
         ext x
         rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply, LinearEquiv.symm_apply_apply] } ?_)
   intro φ
-  simp only [isoSet, Set.mem_setOf_eq, Equiv.coe_fn_mk]
+  simp only [isoSet, Set.mem_ofPred_eq, Equiv.coe_fn_mk]
   constructor
   · rintro ⟨h1, h2⟩
     refine ⟨?_, fun v => ?_⟩
@@ -283,7 +283,7 @@ theorem isoFinite : IsoFinite := by
   obtain ⟨Zr, rfl⟩ : ∃ Zr : Matrix (Fin n) (Fin n) R, Zr.map R.subtype = Z :=
     ⟨liftR R Z hZ, liftR_map R Z hZ⟩
   have hd : ((Zr.det : R) : K) = (Zr.map R.subtype).det := RingHom.map_det R.subtype Zr
-  haveI : Finite (R ⧸ Ideal.span {Zr.det}) := hfin Zr.det (by rw [hd]; exact hdet)
+  have : Finite (R ⧸ Ideal.span {Zr.det}) := hfin Zr.det (by rw [hd]; exact hdet)
   have hmem : ∀ x : Fin n → R, Zr.det • x ∈ latZ R (Zr.map R.subtype) := by
     intro x
     refine (mem_latZ R _ _).2 ⟨Zr.adjugate *ᵥ x, ?_⟩
@@ -318,9 +318,9 @@ theorem isoFinite : IsoFinite := by
   refine ⟨hcok, fun C _ _ e lam => ?_⟩
   by_cases hne : (isoSet R (Zr.map R.subtype) C e lam).Nonempty
   · obtain ⟨φ₀, -⟩ := hne
-    haveI := hcok
-    haveI : Finite C := Finite.of_surjective φ₀ φ₀.surjective
-    haveI : Finite (coker R (Zr.map R.subtype) ≃ₗ[R] C) :=
+    have := hcok
+    have : Finite C := Finite.of_surjective φ₀ φ₀.surjective
+    have : Finite (coker R (Zr.map R.subtype) ≃ₗ[R] C) :=
       Finite.of_injective (fun φ : coker R (Zr.map R.subtype) ≃ₗ[R] C =>
         (φ : coker R (Zr.map R.subtype) → C)) (fun φ ψ h => LinearEquiv.ext (congrFun h))
     exact Set.toFinite _

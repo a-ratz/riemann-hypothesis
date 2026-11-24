@@ -62,8 +62,8 @@ theorem stepWtSpan : PositivityTheory.RgDs.Hilb.StepWtSpan := by
   have hKU : IsKUnitary ε (smE ε (rreg ε)) :=
     isKUnitary_of_isInfUnitary (isInfUnitary_of_isDerivedOn hσ hD)
   have hSK' : ∀ k ∈ Kset ε, ∀ x ∈ S, rreg ε k x ∈ S := hSK
-  haveI := hSf
-  haveI hS'f : FiniteDimensional ℂ (S.comap (smD ε (rreg ε)).subtype) :=
+  have := hSf
+  have hS'f : FiniteDimensional ℂ (S.comap (smD ε (rreg ε)).subtype) :=
     LinearEquiv.finiteDimensional (Submodule.comapSubtypeEquivOfLe hSD).symm
   have hS'k : IsKStableSub ε (smE ε (rreg ε)) (S.comap (smD ε (rreg ε)).subtype) :=
     isKStableSub_of_kStable hσ hD _ hS'f fun k hk v hv =>

@@ -191,7 +191,7 @@ theorem exists_idempotent {O : Type} [CommRing O] [IsLocalRing O] {A : Type} [Co
         apply Multiset.prod_eq_zero
         refine Multiset.mem_map.2 ⟨x, Multiset.mem_filter.2 ⟨hx, hρ⟩, ?_⟩
         simp [hcx]
-      rw [if_pos (hcx.trans hρ), map_mul]
+      rw [ite_eq_left (hcx.trans hρ), map_mul]
       rw [hg0, mul_zero, zero_add] at h1
       exact h1
     · have hh0 : aeval (c a) h = 0 := by
@@ -199,7 +199,7 @@ theorem exists_idempotent {O : Type} [CommRing O] [IsLocalRing O] {A : Type} [Co
         apply Multiset.prod_eq_zero
         refine Multiset.mem_map.2 ⟨x, Multiset.mem_filter.2 ⟨hx, hρ⟩, ?_⟩
         simp [hcx]
-      rw [if_neg (show ¬ c a = ρ by rwa [hcx]), map_mul, hh0, mul_zero]
+      rw [ite_eq_right (show ¬ c a = ρ by rwa [hcx]), map_mul, hh0, mul_zero]
 
 end GlobalTheory.FiniteAlgIdem
 
@@ -251,7 +251,7 @@ theorem finite_and_idempotents {L : Type} [Field L] [IsAlgClosed L] {v : Valuati
         (∀ c c', c ≠ c' → e c * e c' = 0) ∧ (∑ᶠ c, e c) = 1 ∧
         ∀ c c' : A →ₐ[O] IsLocalRing.ResidueField O, c' (e c) = 1 ↔ c = c' := by
   classical
-  haveI : Algebra.IsIntegral O A := Algebra.IsIntegral.of_finite O A
+  have : Algebra.IsIntegral O A := Algebra.IsIntegral.of_finite O A
   obtain ⟨S, hS⟩ := Module.Finite.fg_top (R := O) (M := A)
   choose r hr using fun a : A => exists_prod_sub_eq_zero hv a
   choose E hEi hEc using fun (a : A) (ρ : IsLocalRing.ResidueField O) =>
@@ -268,8 +268,8 @@ theorem finite_and_idempotents {L : Type} [Field L] [IsAlgClosed L] {v : Valuati
     simp only [e, map_prod, hEc]
     by_cases hcc : c = c'
     · subst hcc
-      rw [if_pos rfl, Finset.prod_boole, if_pos (fun j _ => rfl)]
-    · rw [if_neg hcc, Finset.prod_boole, if_neg (fun hh => hcc (hsep c c' hh).symm)]
+      rw [ite_eq_left rfl, Finset.prod_boole, ite_eq_left (fun j _ => rfl)]
+    · rw [ite_eq_right hcc, Finset.prod_boole, ite_eq_right (fun hh => hcc (hsep c c' hh).symm)]
   have hei : ∀ c, IsIdempotentElem (e c) := fun c =>
     Finset.prod_induction _ IsIdempotentElem (fun _ _ ha hb => ha.mul hb)
       IsIdempotentElem.one (fun j _ => hEi _ _)
@@ -291,8 +291,8 @@ theorem finite_and_idempotents {L : Type} [Field L] [IsAlgClosed L] {v : Valuati
     intro c c' hcc
     exact hsep c' c fun j hj => congrArg Subtype.val (congrFun hcc ⟨j, hj⟩)
   refine ⟨hfin, e, hei, hort, ?_, ?_⟩
-  · haveI := hfin
-    letI := Fintype.ofFinite (A →ₐ[O] IsLocalRing.ResidueField O)
+  · have := hfin
+    let := Fintype.ofFinite (A →ₐ[O] IsLocalRing.ResidueField O)
     rw [finsum_eq_sum_of_fintype]
     have horth : OrthogonalIdempotents e := ⟨hei, fun c c' h => hort c c' h⟩
     have hsum := horth.isIdempotentElem_sum (s := Finset.univ)
@@ -337,8 +337,8 @@ theorem exists_algHom_lift : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [
     ∀ (A : Type) [CommRing A] [Algebra O A] [Module.Finite O A] [Module.Flat O A]
     (c : A →ₐ[O] IsLocalRing.ResidueField O), ∃ x : A →ₐ[O] O, ∀ a, IsLocalRing.residue O (x a) = c a := by
   intro p _ C _ _ _ v O _ _ _ _ _ _ hv A _ _ _ _ c
-  haveI : IsFractionRing O C := hv.isFractionRing
-  haveI : IsIntegrallyClosed O := hv.isIntegrallyClosed
+  have : IsFractionRing O C := hv.isFractionRing
+  have : IsIntegrallyClosed O := hv.isIntegrallyClosed
   obtain ⟨ψ, h1, h2⟩ := GlobalTheory.UT.ExactTerm.exists_ringHom_lift C (c : A →+* IsLocalRing.ResidueField O)
     (RingHom.ext fun o => by simp [IsLocalRing.ResidueField.algebraMap_eq])
   refine ⟨{ ψ with commutes' := fun o => RingHom.congr_fun h1 o }, fun a => RingHom.congr_fun h2 a⟩
@@ -505,7 +505,7 @@ theorem idem_eq_zero (H : HasIdem O) {A : Type} [CommRing A] [Algebra O A] [Modu
     {g : A} (hg : IsIdempotentElem g)
     (h : ∀ c : A →ₐ[O] IsLocalRing.ResidueField O, c g = 0) : g = 0 := by
   set I : Ideal A := Ideal.span {1 - g}
-  haveI : Module.Finite O (A ⧸ I) := Module.Finite.of_surjective
+  have : Module.Finite O (A ⧸ I) := Module.Finite.of_surjective
     (Ideal.Quotient.mkₐ O I).toLinearMap (Ideal.Quotient.mkₐ_surjective O I)
   obtain ⟨-, e, -, -, hsum, -⟩ := H (A ⧸ I)
   have hE : IsEmpty ((A ⧸ I) →ₐ[O] IsLocalRing.ResidueField O) := ⟨fun d => by
@@ -723,7 +723,7 @@ theorem counit_endo (n : ℕ) :
   simp_rw [map_smul, (he n).ptO]
   simp only [smul_eq_mul, mul_ite, mul_one, mul_zero]
   rw [Finset.sum_ite_eq']
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   have h := congrArg (fun x : G.A n →ₐ[O] O => x a) (sig_one (hpt := hpt) hw n)
   exact h
 
@@ -769,7 +769,7 @@ theorem comul_endo (H : HasIdem O) (n : ℕ) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun x _ => ?_
   rw [Finset.sum_ite_eq]
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   rw [sig_mul hw]
   congr 1
   exact (AlgHom.convMul_apply _ _ a).symm
@@ -786,7 +786,7 @@ theorem res_endo (H : HasIdem O) (n : ℕ) (a : G.A (n + 1)) :
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun c' _ => ?_
   rw [Finset.sum_ite_eq]
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   rw [sig_res hw]
   rfl
 
@@ -820,7 +820,7 @@ theorem exists_endo (H : HasIdem O) : ∃ u : G ⟶ G, u ≫ u = u ∧
     rw [endo_apply, map_sum]
     simp_rw [map_smul, (he n).pt, smul_ite, smul_zero]
     rw [Finset.sum_ite_eq']
-    simp only [Finset.mem_univ, if_true, Algebra.smul_def, mul_one]
+    simp only [Finset.mem_univ, ite_true, Algebra.smul_def, mul_one]
     exact DFunLike.congr_fun (ofId_comp_sig (hpt := hpt) hs hw n c) a
   · have h : ((uEnd s hpt hs hw he H).app n : G.A n →ₐ[O] G.A n) = endo s hpt he n := rfl
     rw [h]
@@ -837,7 +837,7 @@ theorem exists_idempotent_constPart : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [F
   have hH : ∀ n, Finite (G.A n →ₐ[O] IsLocalRing.ResidueField O) ∧
       ∃ e, IdemData (G.A n) e := fun n => H (G.A n)
   choose hfin e he using hH
-  haveI : ∀ n, Fintype (G.A n →ₐ[O] IsLocalRing.ResidueField O) := fun n => Fintype.ofFinite _
+  have : ∀ n, Fintype (G.A n →ₐ[O] IsLocalRing.ResidueField O) := fun n => Fintype.ofFinite _
   exact exists_endo (hpt := hpt) hs hw he H
 
 end GlobalTheory.ConstPart
@@ -906,7 +906,7 @@ theorem exists_of_family {p : ℕ} {k : Type} [CommRing k] (G : PDivGroup p k)
     (h : ∀ (n : ℕ) (q : PrimeSpectrum k), Module.rankAtStalk (B n) q = p ^ (n * h₀)) :
     ∃ (K : PDivGroup p k) (i : K ⟶ G), ∀ n : ℕ, Function.Surjective (i.app n) ∧
       RingHom.ker (i.app n) = kerIdeal (v.app n) := by
-  haveI : ∀ n, IsCocomm k (B n) := fun n => isCocomm_of_surjective (π n) (hπ n)
+  have : ∀ n, IsCocomm k (B n) := fun n => isCocomm_of_surjective (π n) (hπ n)
   have hle : ∀ n, RingHom.ker (π (n + 1)) ≤ RingHom.ker ((π n).comp (G.res n)) := fun n a ha => by
     have : G.res n a ∈ RingHom.ker (π n) := by
       rw [hk, ← map_res_kerIdeal]
@@ -1019,7 +1019,7 @@ theorem idempotent_split_of_isLocalRing (G : PDivGroup p O) (u : G ⟶ G) (hu : 
     exact hrk n
   have hBrank : ∀ (n : ℕ) (q : PrimeSpectrum O), Module.rankAtStalk (B n) q = p ^ (n * h₀) :=
     fun n q => by
-      haveI := Module.Free.of_equiv (eqv n).symm
+      have := Module.Free.of_equiv (eqv n).symm
       rw [Module.rankAtStalk_eq_finrank_of_free, hrank]
       rfl
   obtain ⟨K, i, hi⟩ := exists_of_family G v h₀ B
@@ -1074,17 +1074,17 @@ theorem isLocalRing_of_subsingleton_points (O : Type) [CommRing O] [IsLocalRing 
     intro M hM
     have hu : (M.under O).IsMaximal := Ideal.IsMaximal.under O M
     have hum : M.under O = maximalIdeal O := IsLocalRing.eq_maximalIdeal hu
-    letI : Field (A ⧸ M) := Ideal.Quotient.field M
+    let : Field (A ⧸ M) := Ideal.Quotient.field M
     let g : O →+* A ⧸ M := (Ideal.Quotient.mk M).comp (algebraMap O A)
-    haveI : IsLocalHom g := ⟨fun x hx => by
+    have : IsLocalHom g := ⟨fun x hx => by
       by_contra h
       have hxm : x ∈ M.under O := by rw [hum]; exact h
       have h0 : g x = 0 := Ideal.Quotient.eq_zero_iff_mem.2 hxm
       exact hx.ne_zero h0⟩
     let f : ResidueField O →+* A ⧸ M := ResidueField.lift g
-    letI : Algebra (ResidueField O) (A ⧸ M) := f.toAlgebra
+    let : Algebra (ResidueField O) (A ⧸ M) := f.toAlgebra
     have hf : ∀ x : O, f (residue O x) = g x := fun x => rfl
-    haveI : Algebra.IsIntegral (ResidueField O) (A ⧸ M) := ⟨fun y => by
+    have : Algebra.IsIntegral (ResidueField O) (A ⧸ M) := ⟨fun y => by
       obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective y
       obtain ⟨P, hPm, hPa⟩ := Algebra.IsIntegral.isIntegral (R := O) a
       refine ⟨P.map (residue O), hPm.map _, ?_⟩
@@ -1107,7 +1107,7 @@ theorem isLocalRing_of_subsingleton_points (O : Type) [CommRing O] [IsLocalRing 
     rw [← hc, RingHom.mem_ker]
     change a ∈ M ↔ e.symm (Ideal.Quotient.mk M a) = 0
     rw [RingEquiv.symm_apply_eq, map_zero, Ideal.Quotient.eq_zero_iff_mem]
-  haveI : Nontrivial A := c₀.toRingHom.domain_nontrivial
+  have : Nontrivial A := c₀.toRingHom.domain_nontrivial
   obtain ⟨M, hM⟩ := Ideal.exists_maximal A
   exact IsLocalRing.of_unique_max_ideal ⟨M, hM, fun M' hM' => (key M' hM').trans (key M hM).symm⟩
 
@@ -1136,9 +1136,9 @@ open IsLocalRing
 
 theorem exists_isSum_conn_const : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O] [IsLocalRing O], v.Integers O → ∀ G : PDivGroup p O, ∃ G₁ G₂ : PDivGroup p O, IsSum G G₁ G₂ ∧ PDivLat.IsConn G₁ ∧ IsConst G₂ := by
   intro p _ C _ _ _ v O _ _ _ _ _ _ hv G
-  haveI := ValuationRing.of_integers v hv
-  haveI := hv.isFractionRing
-  haveI : IsAlgClosed (ResidueField O) :=
+  have := ValuationRing.of_integers v hv
+  have := hv.isFractionRing
+  have : IsAlgClosed (ResidueField O) :=
     GlobalTheory.isAlgClosed_residueField_of_valuationRing_of_isAlgClosed O C
   obtain ⟨u, huu, hfix, hrange⟩ := GlobalTheory.ConstPart.exists_idempotent_constPart p C v O hv G
   obtain ⟨G₂, i₂, q₂, h₂1, h₂2⟩ := GlobalTheory.PDivGroup.IdemSplit.idempotent_split_integers p C v O hv G u huu
@@ -1193,7 +1193,7 @@ theorem exists_isSum_conn_const : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field
         rw [← hx]
       rw [hx', AlgHom.convOne_apply, CoalgHomClass.counit_comp_apply]
       rfl
-    haveI : Subsingleton (G₁.A n →ₐ[O] ResidueField O) :=
+    have : Subsingleton (G₁.A n →ₐ[O] ResidueField O) :=
       ⟨fun a b => (hall a).trans (hall b).symm⟩
     exact isLocalRing_of_subsingleton_points O (G₁.A n) c₀
   · intro n

@@ -98,10 +98,10 @@ theorem selfDualOK (D : D7) : SelfDualOK D := by
 open scoped Pointwise in
 theorem petAll (D : D7) : PetAll D := by
   intro V μ 𝓕 hμ h𝓕 F hc hl h0 hi
-  haveI : BorelSpace (GA D V) := ⟨rfl⟩
-  haveI := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
-  haveI : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
-  haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
+  have : BorelSpace (GA D V) := ⟨rfl⟩
+  have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing (F := D.host.F) (E := D.host.E)
+  have : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
   rw [setIntegral_pos_iff_support_of_nonneg_ae (Filter.Eventually.of_forall fun g => by positivity) hi]
   have hs : Function.support (fun g => ‖F g‖ ^ 2) = Function.support F := by
     ext g

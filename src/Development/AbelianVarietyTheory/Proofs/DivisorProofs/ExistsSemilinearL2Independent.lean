@@ -232,7 +232,7 @@ end Gen
 set_option maxHeartbeats 2000000 in
 theorem hasGram_nrm_of_good (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : ℕ) (o : ℝ) (hY : Y.Good e o)
     (G : WTZ D.host.E) : GlobalTheory.AllWt.HasGram (Y.nrm G) := by
-  haveI := GlobalTheory.Deep.finiteDimensional_V_of_good D T j Y e o hY G
+  have := GlobalTheory.Deep.finiteDimensional_V_of_good D T j Y e o hY G
   refine GlobalTheory.HSApp.hasGram_of_inner Y.d.c₂.F (Y.V G) (Y.nrm G) fun v => ?_
   have hσ' : GoodEmb Y.d.c₂ (Formalism.L2.Pj.goodOf Y.d.c₂ v.embedding) := Formalism.L2.Pj.goodEmb_goodOf _ _
   have hd : ∀ g, (Y.dict (Formalism.L2.Pj.goodOf Y.d.c₂ v.embedding) g).2 ∈
@@ -247,11 +247,11 @@ theorem hasGram_nrm_of_good (D : D7) (T : Core D) (j : ℕ) (Y : Deep T j) (e : 
   · left
     intro a x
     refine ((Classical.choose_spec hex).1 a x).trans ?_
-    exact congrArg (· • Classical.choose hex x) (congrArg (fun τ : Y.d.c₂.F →+* ℂ => τ a) (if_pos h))
+    exact congrArg (· • Classical.choose hex x) (congrArg (fun τ : Y.d.c₂.F →+* ℂ => τ a) (ite_eq_left h))
   · right
     intro a x
     refine ((Classical.choose_spec hex).1 a x).trans ?_
-    exact congrArg (· • Classical.choose hex x) (congrArg (fun τ : Y.d.c₂.F →+* ℂ => τ a) (if_neg h))
+    exact congrArg (· • Classical.choose hex x) (congrArg (fun τ : Y.d.c₂.F →+* ℂ => τ a) (ite_eq_right h))
 
 
 end GlobalTheory.HSApp

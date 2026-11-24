@@ -128,7 +128,7 @@ theorem load_trunc (x : ZMod d → ℕ → ℝ) (s : ZMod d) :
 
 theorem flowVal_trunc (x : ZMod d → ℕ → ℝ) : flowVal d (trunc d x) = flowVal d x := by
   simp only [Formalism.IncomingBounds.flowVal, trunc]
-  exact Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun i hi => if_pos hi
+  exact Finset.sum_congr rfl fun s _ => Finset.sum_congr rfl fun i hi => ite_eq_left hi
 
 theorem trunc_nonneg {x : ZMod d → ℕ → ℝ} (hx : ∀ s i, 0 ≤ x s i) : ∀ s i, 0 ≤ trunc d x s i := by
   intro s i
@@ -410,7 +410,7 @@ theorem isCompact_dual : IsCompact {sig : ZMod d → ℝ | IsDual l d sig} := by
       ((⋂ s, {sig : ZMod d → ℝ | 0 ≤ sig s}) ∩ ⋂ s, {sig : ZMod d → ℝ | sig s ≤ 1}) ∩
         ⋂ s, ⋂ i ∈ oddLevels d, {sig : ZMod d → ℝ | 1 ≤ (l : ℝ) ^ i * sig s + sig (s + (i : ZMod d))} := by
     ext sig
-    simp only [Formalism.IncomingBounds.IsDual, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, forall_and]
+    simp only [Formalism.IncomingBounds.IsDual, mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, forall_and]
   have hclosed : IsClosed {sig : ZMod d → ℝ | Formalism.IncomingBounds.IsDual l d sig} := by
     rw [e]
     exact ((isClosed_iInter fun s => isClosed_le continuous_const (continuous_apply s)).inter

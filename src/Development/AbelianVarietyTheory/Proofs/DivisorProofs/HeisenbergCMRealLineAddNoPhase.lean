@@ -159,9 +159,9 @@ theorem symplOF_self (hσ : ∀ x, σ (σ x) = x) (hS : IsHermND σ JS) (hT : Is
 
 theorem continuous_symplOF_left (ξ₀ : E) (y : WOF F E nS nT) :
     Continuous fun x : WOF F E nS nT => symplOF σ JS JT ξ₀ x y := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AEF F E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
+  have : IsTopologicalRing (AEF F E) := IsModuleTopology.isTopologicalRing (AF F) _
   have ht : Continuous (Algebra.trace (AF F) (AEF F E)) := IsModuleTopology.continuous_of_linearMap _
   refine ht.comp (continuous_const.mul ?_)
   unfold hOF
@@ -170,7 +170,7 @@ theorem continuous_symplOF_left (ξ₀ : E) (y : WOF F E nS nT) :
 
 omit [Algebra F E] [Field E] [NumberField E] in
 theorem line_zero (g : ℝ →+ AF F) (hg : Continuous g) (t : ℝ) (ht : g t = 0) (u : ℝ) : g (u * t) = 0 := by
-  haveI : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : T2Space (AF F) := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
   have hq : ∀ r : ℚ, g ((r : ℝ) * t) = 0 := by
     intro r
     have hden : (r.den : ℝ) * ((r : ℝ) * t) = (r.num : ℝ) * t := by

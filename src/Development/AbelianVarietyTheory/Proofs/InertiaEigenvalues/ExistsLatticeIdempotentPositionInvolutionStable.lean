@@ -164,21 +164,21 @@ theorem isIntegral_or_isIntegral_of_fieldFactor : ∀ (K : UQ) (B : InvAlg K) (f
       obtain ⟨v, hv⟩ := hinv x hfx
       refine ⟨Ideal.Quotient.mk I v, ?_⟩
       rw [← map_mul, ← hfm (x * v), ← mul_assoc, hv, hf1]
-  haveI : I.IsMaximal := Ideal.Quotient.maximal_of_isField I hfield
-  letI : Field (B.A ⧸ I) := Ideal.Quotient.field I
-  haveI : CharZero K.O :=
+  have : I.IsMaximal := Ideal.Quotient.maximal_of_isField I hfield
+  let : Field (B.A ⧸ I) := Ideal.Quotient.field I
+  have : CharZero K.O :=
     ⟨fun m n h => Nat.cast_injective (R := K.E) (by simpa using congrArg (algebraMap K.O K.E) h)⟩
   let e : FractionRing K.O ≃ₐ[K.O] K.E := IsLocalization.algEquiv (nonZeroDivisors K.O) (FractionRing K.O) K.E
-  letI : Algebra (FractionRing K.O) (B.A ⧸ I) :=
+  let : Algebra (FractionRing K.O) (B.A ⧸ I) :=
     ((algebraMap K.E (B.A ⧸ I)).comp (e : FractionRing K.O →+* K.E)).toAlgebra
-  haveI : IsScalarTower K.O (FractionRing K.O) (B.A ⧸ I) := by
+  have : IsScalarTower K.O (FractionRing K.O) (B.A ⧸ I) := by
     refine IsScalarTower.of_algebraMap_eq fun x => ?_
     change _ = algebraMap K.E (B.A ⧸ I) (e (algebraMap K.O (FractionRing K.O) x))
     rw [AlgEquiv.commutes]
     first
       | exact IsScalarTower.algebraMap_apply K.O K.E (B.A ⧸ I) x
       | rw [← Ideal.Quotient.mk_algebraMap, ← Ideal.Quotient.mk_algebraMap, ← IsScalarTower.algebraMap_apply]
-  haveI : Algebra.IsIntegral (FractionRing K.O) (B.A ⧸ I) := by
+  have : Algebra.IsIntegral (FractionRing K.O) (B.A ⧸ I) := by
     refine ⟨fun x => ?_⟩
     have hx : IsIntegral K.E x := Algebra.IsIntegral.isIntegral x
     have := IsIntegral.map_of_comp_eq (e.symm : K.E →+* FractionRing K.O) (RingHom.id (B.A ⧸ I)) ?_ hx

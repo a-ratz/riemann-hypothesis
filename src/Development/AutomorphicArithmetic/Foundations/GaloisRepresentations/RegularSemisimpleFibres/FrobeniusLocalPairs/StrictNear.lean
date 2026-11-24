@@ -75,7 +75,7 @@ private theorem fixB {ι : Type} [Fintype ι] (r c : ValueGroupWithZero E) (hc :
     (hF : ∀ u u', (∀ j, valuation E (u j) ≤ r) → (∀ j, valuation E (u' j) ≤ r) → ∀ ρ,
       (∀ j, valuation E (u j - u' j) ≤ ρ) → ∀ j, valuation E (F u j - F u' j) ≤ c * ρ) :
     ∃ u, (∀ j, valuation E (u j) ≤ r) ∧ F u = u := by
-  haveI : MulArchimedean (ValueGroupWithZero E) := isRankLeOne_iff_mulArchimedean.1 inferInstance
+  have : MulArchimedean (ValueGroupWithZero E) := isRankLeOne_iff_mulArchimedean.1 inferInstance
   have hK : IsCompact (Set.pi Set.univ fun _ : ι => {x : E | valuation E x ≤ r}) :=
     isCompact_univ_pi fun _ => IsNonarchimedeanLocalField.isCompact_closedBall E r
   have hin : ∀ m : ℕ, ∀ j, valuation E (F^[m] 0 j) ≤ r := by
@@ -100,22 +100,22 @@ private theorem fixB {ι : Type} [Fintype ι] (r c : ValueGroupWithZero E) (hc :
   have hd0 : valuation E (F p j - p j) ≠ 0 := by simpa [sub_eq_zero] using hne
   set d := valuation E (F p j - p j) with hdd
   have hN : {u : ι → E | ∀ l, valuation E (u l - p l) < d} ∈ nhds p := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     refine Filter.iInter_mem.2 fun l => ?_
     exact (continuous_apply l).continuousAt.preimage_mem_nhds
       ((IsValuativeTopology.hasBasis_nhds (p l)).mem_of_mem (i := Units.mk0 d hd0) trivial)
   have hev : ∀ᶠ m : ℕ in Filter.atTop, c ^ m * r < d := by
     by_cases hr : r = 0
-    · exact Filter.Eventually.of_forall fun m => by simpa [hr] using zero_lt_iff.2 hd0
+    · exact Filter.Eventually.of_forall fun m => by simpa [hr] using pos_iff_ne_zero.2 hd0
     · obtain ⟨m₀, hm₀⟩ := exists_pow_lt₀ hc (Units.mk0 (d / r) (div_ne_zero hd0 hr))
       refine Filter.eventually_atTop.2 ⟨m₀, fun m hm => ?_⟩
       have h1 : c ^ m < d / r := (pow_le_pow_right_of_le_one' hc.le hm).trans_lt hm₀
-      exact (lt_div_iff₀ (zero_lt_iff.2 hr)).1 h1
+      exact (lt_div_iff₀ (pos_iff_ne_zero.2 hr)).1 h1
   obtain ⟨m, hm1, hm2⟩ := ((mapClusterPt_iff_frequently.1 hcl _ hN).and_eventually hev).exists
   have h1 := hF _ _ (hin m) hp' d (fun l => (hm1 l).le) j
   rw [← Function.iterate_succ_apply' F m] at h1
   have h2 : valuation E (F^[m + 1] 0 j - F p j) < d :=
-    h1.trans_lt (by simpa using mul_lt_mul_of_pos_right hc (zero_lt_iff.2 hd0))
+    h1.trans_lt (by simpa using mul_lt_mul_of_pos_right hc (pos_iff_ne_zero.2 hd0))
   have h3 := (hd m j).trans_lt hm2
   have e : F p j - p j = ((F^[m + 1] 0 j - F^[m] 0 j) + (F^[m] 0 j - p j)) - (F^[m + 1] 0 j - F p j) := by ring
   have : valuation E (F p j - p j) < d := by
@@ -244,10 +244,10 @@ private theorem gridInteriorVertexDecompTransport {n : ℕ} {σ : E ≃+* E} (h�
           · rw [← mul_sub, map_mul]; exact (mul_le_mul' ha1 (hρ j)).trans (one_mul _).le)
   refine ⟨u, w u, hu, hw u hu, fun _ => rfl, fun j h => ?_, fun j h => ?_⟩
   · have := congrFun hfix j
-    simp only [if_pos h] at this
+    simp only [ite_eq_left h] at this
     exact (σ.symm_apply_eq.1 this).symm
   · have := congrFun hfix j
-    simp only [if_neg h] at this
+    simp only [ite_eq_right h] at this
     exact this.symm
 
 private theorem rowB {n : ℕ} {σ : E ≃+* E} (hσ : Isom σ) {t : Fin n → Eˣ} (ht : Strict t)
@@ -258,15 +258,15 @@ private theorem rowB {n : ℕ} {σ : E ≃+* E} (hσ : Isom σ) {t : Fin n → E
   let α : Fin n → E := fun j => if j < i then 1 else if j = i then 0 else (t i : E) / t j
   let β : Fin n → E := fun j => if j < i then (t j : E) / t i else if j = i then 0 else 1
   have hq : ∀ p q, p < q → valuation E ((t p : E) / t q) ≤ uniformizer E := fun p q h => by
-    rw [le_uniformizer_iff, map_div₀, div_lt_one₀ (zero_lt_iff.2 (by simp))]
+    rw [le_uniformizer_iff, map_div₀, div_lt_one₀ (pos_iff_ne_zero.2 (by simp))]
     exact ht p q h
   have hα : ∀ j, ¬ j < i → valuation E (α j) ≤ uniformizer E := fun j h => by
-    simp only [α, if_neg h]
+    simp only [α, ite_eq_right h]
     split_ifs with h'
     · simp
     · exact hq _ _ (by omega)
   have hβ : ∀ j, j < i → valuation E (β j) ≤ uniformizer E := fun j h => by
-    simp only [β, if_pos h]
+    simp only [β, ite_eq_left h]
     exact hq _ _ h
   have hα1 : ∀ j, valuation E (α j) ≤ 1 := fun j => by
     by_cases h : j < i
@@ -275,7 +275,7 @@ private theorem rowB {n : ℕ} {σ : E ≃+* E} (hσ : Isom σ) {t : Fin n → E
   have hβ1 : ∀ j, valuation E (β j) ≤ 1 := fun j => by
     by_cases h : j < i
     · exact (hβ j h).trans uniformizer_lt_one.le
-    · simp only [β, if_neg h]
+    · simp only [β, ite_eq_right h]
       split_ifs <;> simp
   have hαβ : ∀ j, α j * t j = t i * β j := fun j => by
     simp only [α, β]
@@ -299,7 +299,7 @@ private theorem rowB {n : ℕ} {σ : E ≃+* E} (hσ : Isom σ) {t : Fin n → E
         (1 : Matrix (Fin n) (Fin n) E) i j + β j * u j + w j := by
       rw [hw' j]
       simp only [Matrix.sub_apply, mul_sub, Finset.sum_sub_distrib, Matrix.one_apply (i := _) (j := j), mul_ite, mul_one,
-        mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
       ring
     simp only [e1, mul_assoc]
     rw [← Finset.mul_sum, e2]
@@ -405,7 +405,7 @@ private theorem strict_near {r : ValueGroupWithZero E} (hr : r < 1) {t s : Fin n
 
 private theorem ball_sg {r : ValueGroupWithZero E} {σ : E ≃+* E} (hσ : Isom σ) {a : GL (Fin n) E}
     (ha : a ∈ ball n r) : sg σ a ∈ ball n r := by
-  simp only [ball, Set.mem_setOf_eq] at ha ⊢
+  simp only [ball, Set.mem_ofPred_eq] at ha ⊢
   intro i j
   have h : ((sg σ a : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) i j - (1 : Matrix (Fin n) (Fin n) E) i j
       = σ ((a : Matrix (Fin n) (Fin n) E) i j - (1 : Matrix (Fin n) (Fin n) E) i j) := by

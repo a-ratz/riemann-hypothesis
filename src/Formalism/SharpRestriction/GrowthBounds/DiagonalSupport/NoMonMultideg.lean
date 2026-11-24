@@ -177,7 +177,7 @@ theorem bigM_no (hinj : Function.Injective fun x : TL J nL r => posOf n' (posTL 
 theorem bigM_notin (rho : TL J nL r × Fin (r + K) → ℕ) (bp : TL J nL r × Fin r →₀ ℕ) (bn : TL J nL r × Fin K →₀ ℕ)
     (w : TV n' (m + 1)) (hw : w ∉ Set.range (tvar Fr hk nL)) : bigM Fr p hk nL rho bp bn w = 0 := by
   rw [bigM]
-  exact Finsupp.mapDomain_notin_range _ _ hw
+  exact Finsupp.mapDomain_of_notMem_range _ _ hw
 
 theorem eq_bigM (hinj : Function.Injective fun x : TL J nL r => posOf n' (posTL Fr x))
     (rho : TL J nL r × Fin (r + K) → ℕ) (mo : TV n' (m + 1) →₀ ℕ)

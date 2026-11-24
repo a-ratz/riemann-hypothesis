@@ -83,8 +83,8 @@ variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [N
   [Unram F E] (A : Et F E)
 
 theorem secondCountable_K : SecondCountableTopology A.K := by
-  haveI : LocallyCompactSpace F := Unram.lcF (E := E)
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : LocallyCompactSpace F := Unram.lcF (E := E)
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   let e : A.K ≃ₗ[F] (Fin (Module.finrank F A.K) → F) := (Module.finBasis F A.K).equivFun
   have h1 : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have h2 : Continuous e.symm := IsModuleTopology.continuous_of_linearMap e.symm.toLinearMap
@@ -111,7 +111,7 @@ theorem absK_mul (s t : A.K) : A.absK (s * t) = A.absK s * A.absK t := by
     simp [absK, this, hs]
 
 theorem distribHaarChar_le_one_of_mem_OK (u : A.Kˣ) (hu : (u : A.K) ∈ A.OK) : distribHaarChar A.K u ≤ 1 := by
-  haveI := A.secondCountable_K
+  have := A.secondCountable_K
   obtain ⟨-, -, -, -, -, -, -, -, -, hO, hC, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   let μ : Measure A.K := Measure.addHaar
   have h0 : (0 : A.K) ∈ A.OK := by rw [← hR]; exact R.zero_mem
@@ -138,13 +138,13 @@ theorem absK_facts : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyN
     have : distribHaarChar A.K u = 1 := by
       refine le_antisymm h1 ?_
       calc (1 : ℝ≥0) = distribHaarChar A.K u * distribHaarChar A.K u⁻¹ := hprod.symm
-        _ ≤ distribHaarChar A.K u * 1 := mul_le_mul_of_nonneg_left h2 zero_le'
+        _ ≤ distribHaarChar A.K u * 1 := mul_le_mul_of_nonneg_left h2 zero_le
         _ = distribHaarChar A.K u := mul_one _
     have e := A.absK_unit u
     change A.absK s = 1
     rw [show s = (u : A.K) from rfl, e, this, NNReal.coe_one]
   · intro μ hμ x a S _
-    haveI := A.secondCountable_K
+    have := A.secondCountable_K
     have hset : {a' : A.K | (x : A.K) * a' - a ∈ S} = x⁻¹ • ((fun z => z + -a) ⁻¹' S) := by
       ext a'
       rw [Set.mem_smul_set_iff_inv_smul_mem, inv_inv]
@@ -213,7 +213,7 @@ theorem exists_open_compact_annihilator : ∀ (F E : Type) [NontriviallyNormedFi
   have := U.ultraF
   have := U.lcF
   obtain ⟨-, -, hnd, -, -, -, -, -, -, hop, hcp, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
-  haveI : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
+  have : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
   let D : AddSubgroup A.K :=
     { carrier := {b : A.K | ∀ z : A.K, c • z ∈ A.OK → A.psiK ψ (z * b) = 1}
       zero_mem' := by
@@ -281,9 +281,9 @@ namespace GlobalTheory.JR.SqrtNearOne
 
 theorem exists_sq_eq_inv_near_one : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E), ∀ U ∈ 𝓝 (1 : A.K), ∀ᶠ v in 𝓝 (1 : A.K), ∃ s ∈ U, ∃ s' ∈ U, s * s' = 1 ∧ s ^ 2 = v := by
   intro F E _ _ _ _ hU A U hUm
-  haveI : CharZero F := hU.charZero
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+  have : CharZero F := hU.charZero
+  have : LocallyCompactSpace F := hU.lcF
+  have : ProperSpace F := ProperSpace.of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
   let V := Fin (Module.finrank F A.K) → F
   let b := Module.finBasis F A.K
   let eL : A.K ≃ₗ[F] V := b.equivFun
@@ -415,7 +415,7 @@ theorem charIntegral_inv_OK : ∀ (F E : Type) [NontriviallyNormedField F] [Nont
   rw [← hM]
   convert key using 2
   ext y
-  simp only [Set.mem_setOf_eq, Algebra.traceForm_apply]
+  simp only [Set.mem_ofPred_eq, Algebra.traceForm_apply]
   constructor
   · intro h x hx
     exact h x (by simpa [hM] using (show x ∈ (M : Set A.K) from hx))
@@ -436,9 +436,9 @@ open GlobalTheory.JR Matrix MeasureTheory Filter Topology
 
 theorem GlobalTheory.JR.annihilator_small : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ U ∈ 𝓝 (0 : A.K), ∀ᶠ c in 𝓝[≠] (0 : F), ∀ b : A.K, (∀ z : A.K, c • z ∈ A.OK → A.psiK ψ (z * b) = 1) → b ∈ U := by
   intro F E _ _ _ _ hU A ψ hψ U hUmem
-  haveI : IsUltrametricDist F := hU.ultraF
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
+  have : IsUltrametricDist F := hU.ultraF
+  have : LocallyCompactSpace F := hU.lcF
+  have : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
   have hfacts := _root_.GlobalTheory.JR.EtFacts.main F E A
   have hnd : (Algebra.traceForm F A.K).Nondegenerate := hfacts.2.2.1
   have hOKopen : IsOpen A.OK := hfacts.2.2.2.2.2.2.2.2.2.1
@@ -491,7 +491,7 @@ variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [N
 
 theorem absK_ne_zero (A : Et F E) {t : A.K} (h : IsUnit t) : A.absK t ≠ 0 := by
   unfold Et.absK
-  rw [dif_pos h]
+  rw [dite_eq_left h]
   exact NNReal.coe_ne_zero.2 (IsUnit.map (distribHaarChar A.K) (Group.isUnit h.unit)).ne_zero
 
 theorem absK_nonneg (A : Et F E) (t : A.K) : 0 ≤ A.absK t := by
@@ -578,14 +578,14 @@ theorem GlobalTheory.JR.truncated_integral_eq_vol_mul_orbL : ∀ (F E : Type) [N
       s ^ 2 = 1 + Ring.inverse a * ((x : A.K) * a' - a) ∧ ∀ y : A.L, φ (y * algebraMap A.K A.L s) = φ y := by
     intro a' hb
     obtain ⟨s', -, -, -, h4, h5⟩ := Classical.choose_spec (hsq _ hb)
-    exact ⟨Classical.choose (hsq _ hb), by simp only [σ, dif_pos hb], h4, h5⟩
+    exact ⟨Classical.choose (hsq _ hb), by simp only [σ, dite_eq_left hb], h4, h5⟩
   have hσN : ∀ a', ((x : A.K) * a' - a ∈ (D : Set A.K) ∨ ∃ y : A.L, A.NL y = a') → A.NL (σ a') = a' := by
     intro a' hor
     by_cases hb : (x : A.K) * a' - a ∈ (D : Set A.K)
     · obtain ⟨s, hσs, hs2, -⟩ := hσD a' hb
       rw [hσs]; exact hsec a' s hs2
     · have he := hor.resolve_left hb
-      simp only [σ, dif_neg hb, dif_pos he]
+      simp only [σ, dite_eq_right hb, dite_eq_left he]
       exact Classical.choose_spec he
   have hσ : ∀ y : A.L, IsUnit y → A.NL (σ (A.NL y)) = A.NL y := fun y _ => hσN _ (Or.inr ⟨y, rfl⟩)
   rw [m.nat.2 σ hσ h hTest hsupp]
@@ -620,7 +620,7 @@ theorem GlobalTheory.JR.truncated_integral_eq_vol_mul_orbL : ∀ (F E : Type) [N
           by_cases he : ∃ y : A.L, A.NL y = a'
           · show (x : A.K) * A.NL (t.1 * σ a') - a ∉ (D : Set A.K)
             rw [hNmul, hNt, hσN a' (Or.inr he), one_mul]; exact hb
-          · have h0 : σ a' = 0 := by simp only [σ, dif_neg (show ¬ ((x : A.K) * a' - a ∈ (D : Set A.K)) from hb), dif_neg he]
+          · have h0 : σ a' = 0 := by simp only [σ, dite_eq_right (show ¬ ((x : A.K) * a' - a ∈ (D : Set A.K)) from hb), dite_eq_right he]
             show (x : A.K) * A.NL (t.1 * σ a') - a ∉ (D : Set A.K)
             rw [h0, mul_zero, hNL0, mul_zero, zero_sub]
             intro hD
@@ -630,7 +630,7 @@ theorem GlobalTheory.JR.truncated_integral_eq_vol_mul_orbL : ∀ (F E : Type) [N
             have hsu : IsUnit s := ⟨⟨s, s', hss, by rw [mul_comm]; exact hss⟩, rfl⟩
             have hu : IsUnit (a * s ^ 2) := ha.mul (hsu.pow 2)
             rw [h1, isUnit_zero_iff] at hu
-            haveI := subsingleton_of_zero_eq_one hu
+            have := subsingleton_of_zero_eq_one hu
             exact he ⟨0, Subsingleton.elim _ _⟩
         simp only [h, Set.indicator_of_notMem hft, mul_zero]
       simp only [Et.orbL, hz, integral_zero, zero_mul]
@@ -835,7 +835,7 @@ theorem M_sub (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField 
     [Unram F E] (A : Et F E) (c : F) (hc : c ≠ 0) :
     ∃ M : AddSubgroup A.K, (M : Set A.K) = {z : A.K | c • z ∈ A.OK} ∧ IsOpen (M : Set A.K) ∧ IsCompact (M : Set A.K) := by
   obtain ⟨-, -, -, -, -, -, -, -, -, hOo, hOc, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
-  haveI : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
+  have : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
   refine ⟨(R.toAddSubgroup).comap (DistribSMul.toAddMonoidHom A.K c), ?_, ?_, ?_⟩
   · ext z; simp [← hR]
   · have : ((R.toAddSubgroup).comap (DistribSMul.toAddMonoidHom A.K c) : Set A.K) = (fun z => c • z) ⁻¹' A.OK := by
@@ -850,8 +850,8 @@ theorem M_sub (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField 
 
 theorem lam_weil_eventually : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (m : A.Meas ψ) (x : A.Kˣ) (γ : ℂ) W, A.IsWeil ψ x A.etaK (m.μL x) γ W → ∀ φ, IsTest φ → ∀ a : A.K, IsUnit a → (∀ y : A.L, IsUnit y → a = x * A.NL y → ∀ᶠ c in 𝓝[≠] (0 : F), A.abelian₂ m.μK ψ a (fun g => W g φ 0) c = γ * A.orbL m.ν φ y) ∧ ((¬ ∃ y : A.L, IsUnit y ∧ a = x * A.NL y) → ∀ᶠ c in 𝓝[≠] (0 : F), A.abelian₂ m.μK ψ a (fun g => W g φ 0) c = 0) := by
   intro F E _ _ _ _ _ A ψ hψ m x γ W hW φ hφ a ha
-  haveI := m.sdK.1
-  haveI := (m.sdL x).1
+  have := m.sdK.1
+  have := (m.sdL x).1
   obtain ⟨-, -, hnd, -, -, -, -, -, -, hOo, -, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   have key : ∀ c : F, c ≠ 0 → A.abelian₂ m.μK ψ a (fun g => W g φ 0) c =
       γ * ((m.μK {z | c • z ∈ A.OK}).toReal : ℂ) *

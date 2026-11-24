@@ -130,7 +130,7 @@ theorem tn_single (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum (�
     unfold Formalism.UG.Tj Formalism.UG.dosetInd
     congr 1
     ext y
-    simp only [Set.mem_setOf_eq, DoubleCoset.mem_doubleCoset, SetLike.mem_coe]
+    simp only [Set.mem_ofPred_eq, DoubleCoset.mem_doubleCoset, SetLike.mem_coe]
     constructor
     · rintro ⟨a, ha, b, hb, e⟩
       exact ⟨a, ha, b, hb, Units.ext (by rw [Units.val_mul, Units.val_mul, hg, Formalism.UG.P.tjcosets_dG_val]; exact e)⟩

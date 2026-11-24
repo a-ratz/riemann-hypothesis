@@ -78,7 +78,7 @@ theorem emb_injective (s : 𝓞 E →+* ℂ) : Function.Injective s := by
   have hc : (RingHom.ker s).comap (algebraMap ℤ (𝓞 E)) = ⊥ := by
     rw [RingHom.comap_ker]
     exact (RingHom.injective_iff_ker_eq_bot _).1 (RingHom.injective_int _)
-  exact (RingHom.injective_iff_ker_eq_bot s).2 (Ideal.eq_bot_of_comap_eq_bot hc)
+  exact (RingHom.injective_iff_ker_eq_bot s).2 (Ideal.eq_bot_of_under_eq_bot hc)
 
 def extEmb (s : 𝓞 E →+* ℂ) : E →+* ℂ := IsFractionRing.lift (emb_injective s)
 
@@ -194,12 +194,12 @@ theorem continuous_nz : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   by_cases h : ∃ r v, GroundTheory.Heights₂.Heights.LowerBoundFree.IsNzFamily I r v
   · have e : (fun x => (R x).nz σ I) = fun x => (R x).nzOf σ I h.choose_spec.choose := by
       funext x
-      simp only [RiemLat.nz, dif_pos h]
+      simp only [RiemLat.nz, dite_eq_left h]
     rw [e]
     exact continuous_nzOf R hP hH σ I _
   · have e : (fun x => (R x).nz σ I) = fun _ => 1 := by
       funext x
-      simp only [RiemLat.nz, dif_neg h]
+      simp only [RiemLat.nz, dite_eq_right h]
     rw [e]
     exact continuous_const
 
@@ -369,8 +369,8 @@ theorem GlobalTheory.CompanionTheory.Ar.Cusp.continuous_first_minimum : ∀ (E :
   intro E _ _ _ g Λ _ _ X _ R hP hH
   rcases isEmpty_or_nonempty X with hX | ⟨⟨x₀⟩⟩
   · exact continuous_of_const fun x => hX.elim x
-  haveI := (R x₀).free
-  haveI := (R x₀).fin
+  have := (R x₀).free
+  have := (R x₀).fin
   let b := Module.Free.chooseBasis ℤ Λ
   let Q : X → (Module.Free.ChooseBasisIndex ℤ Λ → ℝ) → ℝ := fun x a =>
     ((R x).ip (FirstMin.comb (R x) b a) (FirstMin.comb (R x) b a)).re
@@ -481,7 +481,7 @@ theorem first_minimum_cusp_weight_regular : ∀ (E : Type) [Field E] [NumberFiel
   let U := ↥(ballDom F.q)
   let R : U → RiemLat E g Λ := fun t => F.R t.1
   have hP : ∀ v, Continuous fun x : U => (R x).P v := fun v =>
-    continuousOn_iff_continuous_restrict.1 (F.hol.2 v).continuousOn
+    continuousOn_iff_continuous_domRestrict.1 (F.hol.2 v).continuousOn
   have hH : Continuous fun x : U => (R x).Hm := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.HmCont.continuous_Hm E g Λ U R F.form (fun x => F.form_eq _) hP
   have hlam : Continuous fun x : U => (R x).lam1 := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.continuous_first_minimum E g Λ U R hP hH
   have hnz : ∀ I, Continuous fun x : U => (R x).nz F.σ I := fun I => GlobalTheory.T.continuous_cusp_norm_family E g Λ Ψ U R F.σ I hP hH
@@ -494,7 +494,7 @@ theorem first_minimum_cusp_weight_regular : ∀ (E : Type) [Field E] [NumberFiel
     exact (h3 I hI).1
   have hcw : Measurable fun x : U => (R x).cuspW F.σ :=
     GlobalTheory.T.measurable_cusp_weight_family E g Λ Ψ U R F.σ F.form (fun x => F.form_eq _) (fun I => (hnz I).measurable) hbdd
-  refine ⟨continuousOn_iff_continuous_restrict.2 hlam, ?_, hO, ?_⟩
+  refine ⟨continuousOn_iff_continuous_domRestrict.2 hlam, ?_, hO, ?_⟩
   · classical
     have e : (ballDom F.q).indicator (fun t => (F.R t).cuspW F.σ) =
         fun t => if h : t ∈ ballDom F.q then (R ⟨t, h⟩).cuspW F.σ else 0 := by

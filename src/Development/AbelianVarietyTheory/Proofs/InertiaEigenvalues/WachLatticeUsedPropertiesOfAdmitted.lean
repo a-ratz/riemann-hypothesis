@@ -391,7 +391,7 @@ theorem associated_of_dvd (f : O⟦X⟧) (hf : ∀ δ ∈ S, d δ f = f) (N : �
     rw [← h1, hg]
   obtain ⟨F, rfl⟩ := (hr f).2 hf
   have h2 : F ∣ X ^ N := ⟨G, hJ (by rw [map_pow, map_mul, hg])⟩
-  obtain ⟨m, -, hm⟩ := (dvd_prime_pow X_prime N).1 h2
+  obtain ⟨m, -, hm⟩ := (dvd_prime_pow prime_X N).1 h2
   exact ⟨m, by simpa using hm.map J⟩
 
 theorem eq_zero_of_dvd_C (c : O) (h : J X ∣ C c) : c = 0 := by
@@ -673,7 +673,7 @@ theorem rankOne_of_caseA (h : CaseA K LL) (hs : W.s = 1) (h1 : InvBasis W) (h2 :
   obtain ⟨-, J, hJ⟩ := exists_qFrame P K LL W g h hg
   have hγ := gam_X P K LL W hg
   obtain ⟨c, hc⟩ := exists_c (LL := ↥LL.1) l (W.χΓ g) hg
-  haveI := isNoetherianRing_OL LL
+  have := isNoetherianRing_OL LL
   exact rankOne_of_qFrame W hs hJ (by rw [hp]; exact hg) (by rw [hp]; exact hγ) (c := c)
     (fun a => by rw [hp]; exact hc a) h1 h2
 
@@ -1026,7 +1026,7 @@ theorem spanIsLines_of_coeff (j : M →ₗ[F] M') (ex : N → ℤ → M) (hex : 
     exact ⟨⟨m, fun k hk => show j (f k) = 0 by rw [hm k hk, map_zero]⟩, fun k => ⟨f k, h k, rfl⟩⟩
   · rintro ⟨⟨m, hm⟩, h⟩
     choose f hf hfy using h
-    refine ⟨fun k => if k < m then 0 else f k, (hG _).2 ⟨⟨m, fun k hk => if_pos hk⟩, fun k => ?_⟩, ?_⟩
+    refine ⟨fun k => if k < m then 0 else f k, (hG _).2 ⟨⟨m, fun k hk => ite_eq_left hk⟩, fun k => ?_⟩, ?_⟩
     · split_ifs
       · exact zero_mem _
       · exact hf k
@@ -1118,7 +1118,7 @@ theorem invBasis_of_basisModule [Nontrivial O] (T : LocLat G Qp LL O) (hT : IsCr
     let bN := (Module.Basis.span hli).map (LinearEquiv.ofEq _ _ hsp.symm)
     have hbc := W.N_base T hT
     let bD := (Algebra.TensorProduct.basis W.EE bN).map hbc.equiv
-    haveI : Nontrivial W.EE := W.EE_inj.nontrivial
+    have : Nontrivial W.EE := W.EE_inj.nontrivial
     rw [← (W.DD_free T).2, Module.finrank_eq_card_basis bD, Fintype.card_fin]
   subst hr
   exact ⟨b, hbN, hli, hsp⟩
@@ -1138,7 +1138,7 @@ theorem invBasis_of_admitted : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D
 theorem heights_of_admitted : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW), Formalism.MainNotions.DeltaInvariantLattices.P5 D HW F →
     ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (hA : CaseA K LL), GlobalTheory.WachUse.Heights ((HW l).W K 1 LL hA.2.2) := by
   intro D HW F h5 l _ K LL hA T U M hh hU hb i
-  haveI := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l (D.loc l) (D.locA l) (D.locT l) K LL T.V T.ρ).1
+  have := (GlobalTheory.Per.TiedDdR.ddR_finrank_le l (D.loc l) (D.locA l) (D.locT l) K LL T.V T.ρ).1
   have hJ := GlobalTheory.WachUse.HeightsProof.jumpsOverLetters_of_crysWith _ T U M hh hU hb
   have hp := h5 l K 1 LL hA.2.2 T M hh hU.1
     (fun τ j hτ => hJ j τ (fun c => by simpa using congrArg (fun f => f c) hτ))

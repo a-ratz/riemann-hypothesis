@@ -183,7 +183,7 @@ theorem cc_isIntegral {z : E} (h : IsIntegral ℤ z) : IsIntegral ℤ (cc z) :=
 theorem herm_diag (d : Fin r → E) (x y : Fin r → E) :
     hermF (Matrix.diagonal d) x y = ∑ a, x a * d a * ccF (y a) := by
   simp only [ReciprocityTheory.ChartRestriction.G.FD.herm, Matrix.diagonal_apply, mul_ite, ite_mul, mul_zero, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 private theorem mem_stdLat_iff_forall_isIntegral (n : ℕ) (x : Fin n → E) :
     x ∈ GlobalTheory.InertWitt.stdLat E n ↔ ∀ i, IsIntegral ℤ (x i) := by
@@ -310,7 +310,7 @@ theorem perm_exists {r k : ℕ} (hk : k ≤ r) (ε : Fin r → Bool) (he : cnt �
 
 theorem wittLBeq : WittLBeq := by
   intro D V k hk hS
-  letI hcm : IsCMField D.host.E := D.host.isCMField_hostE
+  let hcm : IsCMField D.host.E := D.host.isCMField_hostE
   have hst : ∀ z : D.host.E, star z = IsCMField.complexConj D.host.E z := fun _ => rfl
   set r := V.rank with hrdef
   set G₁ : Matrix (Fin r) (Fin r) D.host.E := (V.gram)ᵀ with hG₁
@@ -421,7 +421,7 @@ theorem wittLBeq : WittLBeq := by
     intro z hz
     rw [mem_one_iff_isIntegral] at hz ⊢
     exact cc_isIntegral hz
-  haveI : Algebra.Unramified (𝓞 (maximalRealSubfield D.host.E)) (𝓞 D.host.E) :=
+  have : Algebra.Unramified (𝓞 (maximalRealSubfield D.host.E)) (𝓞 D.host.E) :=
     Formalism.L2.Pj.unramBridge D.host.E (Formalism.L2.Pj.cmUnram_conj D)
   obtain ⟨P, hP, hPG⟩ := GlobalTheory.SelfDualGenus.congr_of_modular (G := G₁) (G' := dSgn r k) (L := L)
     (L' := GlobalTheory.InertWitt.stdLat D.host.E r) (𝔟 := 1)
@@ -845,7 +845,7 @@ open ReciprocityTheory.ChartRestriction.G
 
 theorem wittLBlt : WittLBlt := by
   intro D V k hk hS
-  letI : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
+  let : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
   have hH := GlobalTheory.Doubling.isHermND_gram V
   have hσ : ∀ x : D.host.E, D.sp.cm.sig x = FD.cc x := fun x => rfl
   have hT : ∀ a b, FD.cc (V.gram a b) = V.gram b a := fun a b => by rw [← hσ]; exact hH.1 b a

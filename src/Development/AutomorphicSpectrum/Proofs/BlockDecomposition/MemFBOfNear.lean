@@ -313,7 +313,7 @@ theorem exists_monic_eval₂_of_span {A B : Type*} [CommRing A] [CommRing B] (f 
     (T : Finset B) (hW : ∀ a, f a ∈ S) (hT : ∀ t ∈ T, t ∈ S)
     (hS : ∀ s ∈ S, ∃ a : B → A, s = ∑ t ∈ T, t * f (a t)) (e : B) (he : e ∈ S) :
     ∃ P : Polynomial A, P.Monic ∧ P.eval₂ f e = 0 := by
-  letI : Algebra A B := f.toAlgebra
+  let : Algebra A B := f.toAlgebra
   let C : Subalgebra A B := { S with algebraMap_mem' := hW }
   have hfg : (Subalgebra.toSubmodule C).FG := by
     refine ⟨T, le_antisymm ?_ ?_⟩
@@ -356,7 +356,7 @@ theorem tch_ne_mul_of_pow_eq {l : ℕ} [Fact l.Prime] (S : Subring (Formalism.Pe
     ∀ (ϖ y : Formalism.Per6.BdRp l) (N : ℕ), y ∈ S → ϖ ^ N = (l : Formalism.Per6.BdRp l) * y →
     ∀ u : Tl l, u ≠ 0 → ∀ s ∈ S, tch l u ≠ ϖ * s := by
   intro hW hT hS ϖ y N hy hN u hu s hs h
-  haveI := GroundTheory.PAdicHodge.IsPerfectoidField.isDomain_preTilt (K := ℂ_[l]) l
+  have := GroundTheory.PAdicHodge.IsPerfectoidField.isDomain_preTilt (K := ℂ_[l]) l
   obtain ⟨P, hP, hev⟩ := exists_monic_eval₂_of_span (wB l) S T hW hT hS (y * s ^ N)
     (S.mul_mem hy (S.pow_mem hs N))
   have hinj : Function.Injective (wB l) := PositivityTheory.LocInh.wittTo_injective

@@ -187,13 +187,13 @@ theorem exists_common_nonzero_of_polynomial_on_lines (V : Type) [AddCommGroup V]
       have hfin : Set.Finite (⋃ i ∈ (insert j t : Finset ι),
           (fun s : ℝ => (s : ℂ)) ⁻¹' {z | (p i).IsRoot z}) :=
         Set.Finite.biUnion (Finset.finite_toSet _) fun i hi =>
-          (Polynomial.finite_setOf_isRoot (hp0 i hi)).preimage Complex.ofReal_injective.injOn
+          (Polynomial.finite_setOfPred_isRoot (hp0 i hi)).preimage Complex.ofReal_injective.injOn
       obtain ⟨s, hs⟩ := hfin.exists_notMem
       refine ⟨v + s • (w - v), fun i hi => ?_⟩
       rw [hp i s]
       intro h0
       apply hs
-      simp only [Set.mem_iUnion, Set.mem_preimage, Set.mem_setOf_eq]
+      simp only [Set.mem_iUnion, Set.mem_preimage, Set.mem_ofPred_eq]
       exact ⟨i, hi, h0⟩
   obtain ⟨v, hv⟩ := key Finset.univ
   exact ⟨v, fun i => hv i (Finset.mem_univ i)⟩
@@ -523,7 +523,7 @@ theorem exists_pos_isQuotInt : ∀ (D : D7) (V : HSp D), V.SigOK → ∀ ν : Me
   intro D V hV ν hν
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   obtain ⟨μ₀, hμ₀, huniq⟩ := GlobalTheory.Mem.VolMeasure.existsUnique_isVolMeasG D V hV
-  haveI := hμ₀.1
+  have := hμ₀.1
   obtain ⟨-, 𝓕₀, h𝓕₀⟩ := GlobalTheory.Mem.AdelicGroupFund.rightInvariant_and_exists_fundamentalDomain D V μ₀ hμ₀.1
   have e : ν = Measure.haarScalarFactor ν μ₀ • μ₀ := Measure.isMulLeftInvariant_eq_smul ν μ₀
   have cpos : 0 < Measure.haarScalarFactor ν μ₀ := Measure.haarScalarFactor_pos_of_isHaarMeasure ν μ₀
@@ -859,18 +859,18 @@ open GlobalTheory.Mem.Isom GlobalTheory.Mem.Isom.IsoMat in
 theorem GlobalTheory.Mem.Isom.isCuspFun_tr : ∀ (D : D7) (V V' : HSp D) (I : GlobalTheory.Mem.Isom.IsoMat V V') (φ : GA D V → ℂ),
     IsCuspFun V φ → IsCuspFun V' (I.tr φ) := by
   intro D V V' I φ hφ r C' hC' μ 𝓕 hμ h𝓕 g
-  haveI := GlobalTheory.AutFunCounterexample.borel_NI D V (I.Q * C')
-  haveI := GlobalTheory.AutFunCounterexample.borel_NI D V' C'
-  haveI := GlobalTheory.AutFunCounterexample.topGroup_GA D V
-  haveI := GlobalTheory.AutFunCounterexample.topGroup_GA D V'
+  have := GlobalTheory.AutFunCounterexample.borel_NI D V (I.Q * C')
+  have := GlobalTheory.AutFunCounterexample.borel_NI D V' C'
+  have := GlobalTheory.AutFunCounterexample.topGroup_GA D V
+  have := GlobalTheory.AutFunCounterexample.topGroup_GA D V'
   let T : NI V (I.Q * C') ≃ₜ* NI V' C' :=
     { toFun := fun x => ⟨I.kap (x : GA D V), I.kap_mem_NI' x.2⟩
       invFun := fun y => ⟨I.kap.symm (y : GA D V'), I.kap_symm_mem_NI y.2⟩
       left_inv := fun x => Subtype.ext (I.kap.symm_apply_apply (x : GA D V))
       right_inv := fun y => Subtype.ext (I.kap.apply_symm_apply (y : GA D V'))
       map_mul' := fun x y => Subtype.ext (map_mul I.kap (x : GA D V) (y : GA D V))
-      continuous_toFun := (I.continuous_kap.comp continuous_subtype_val).subtype_mk _
-      continuous_invFun := (I.continuous_kap_symm.comp continuous_subtype_val).subtype_mk _ }
+      continuous_toFun := (I.continuous_kap.comp continuous_subtypeVal).subtype_mk _
+      continuous_invFun := (I.continuous_kap_symm.comp continuous_subtypeVal).subtype_mk _ }
   let e : NI V (I.Q * C') ≃ᵐ NI V' C' := T.toHomeomorph.toMeasurableEquiv
   have hp : MeasurePreserving e (μ.map e.symm) μ :=
     (MeasurePreserving.symm e.symm ⟨e.symm.measurable, rfl⟩ :)
@@ -1065,7 +1065,7 @@ namespace IsoMat
 variable {V V' : HSp D} (I : IsoMat V V') {θ : InfF D}
 
 theorem isAutFun_tr {φ : GA D V → ℂ} (h : IsAutFun V φ) : IsAutFun V' (I.tr φ) := by
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   refine ⟨fun γ hγ g => ?_, ?_, h.cont.comp I.continuous_kap_symm⟩
   · unfold tr
     rw [map_mul]
@@ -1356,10 +1356,10 @@ theorem quot_transport {V V' : HSp D} {κ : GA D V ≃* GA D V'} (hκ : Moves V 
       GlobalTheory.IndefiniteRowSideFullHecke.SplittingKernelQuotients.IsQuotInt V' r (fun h => φ (κ.symm h)) (∫ g in 𝓕, φ g ∂ν) := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   obtain ⟨j1, j2, j3, j4, j5, -⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V'
-  haveI := hq.1
+  have := hq.1
   let H : GA D V ≃ₜ GA D V' := { toEquiv := κ.toEquiv, continuous_toFun := hκ.1, continuous_invFun := hκ.2.1 }
   let E : GA D V ≃ᵐ GA D V' := H.toMeasurableEquiv
-  haveI : (ν.map κ).IsHaarMeasure := MulEquiv.isHaarMeasure_map ν κ hκ.1 hκ.2.1
+  have : (ν.map κ).IsHaarMeasure := MulEquiv.isHaarMeasure_map ν κ hκ.1 hκ.2.1
   obtain ⟨r, hr, hR⟩ := GlobalTheory.Mem.QuotHaar.exists_pos_isQuotInt D V' hV' (ν.map κ) inferInstance
   refine ⟨r, hr, fun φ hφ hint => ?_⟩
   have hmap : ν.map κ = ν.map E := rfl
@@ -1505,7 +1505,7 @@ theorem ipT_swap (hP : GlobalTheory.Published.CuspRapidDecay) {θ : InfF D} (hθ
     (M : DSModel V S) (J : Set (GA D V)) (χ : GA D V → ℂ) {μ : Measure (GA D V)} {𝓕 : Set (GA D V)} (hq : IsQuot V μ 𝓕)
     (d : M.Vec) (hd : ∀ τ, ‖(d τ : M.H τ)‖ = 1) {X Y : SmT M →ₗ[ℂ] (GA D V → ℂ)} (hX : X ∈ MultT θ M J χ)
     (hY : Y ∈ MultT θ M J χ) : ipT M μ 𝓕 X Y = star (ipT M μ 𝓕 Y X) := by
-  haveI := hq.1
+  have := hq.1
   have hS : SchurMult θ M J χ μ 𝓕 := GlobalTheory.MultFinite.schurMult hP μ 𝓕
   obtain ⟨c, hc⟩ := hS hθ hq.1 hq.2 _ ((mem_multT θ M J χ X).1 hX) _ ((mem_multT θ M J χ Y).1 hY)
   have h1 := ipM_spec M μ 𝓕 _ _ ⟨c, hc⟩
@@ -1802,9 +1802,9 @@ theorem GlobalTheory.Mem.OneTuple.rows_theta : GlobalTheory.Published.CuspRapidD
   choose κT hκT sT hsT rowT hrowT hisoT using htop'
   let row : ∀ j, D.what₂.Mult μ j →ₗ[ℂ] CuspS R.θ (D.sp.Y j) := fun j =>
     if hj : j < D.R.m then rowL j hj else if hj' : j = D.R.m then rowT j hj' else 0
-  have row_low : ∀ j (hj : j < D.R.m), row j = rowL j hj := fun j hj => dif_pos hj
+  have row_low : ∀ j (hj : j < D.R.m), row j = rowL j hj := fun j hj => dite_eq_left hj
   have row_top : ∀ j (hj : j = D.R.m), row j = rowT j hj := fun j hj => by
-    simp only [row, dif_neg (show ¬ j < D.R.m by omega), dif_pos hj]
+    simp only [row, dite_eq_right (show ¬ j < D.R.m by omega), dite_eq_left hj]
 
   have hstep : ∀ j, j < D.R.m → ∃ Φ : ThS R.ψ (D.sp.Y (j + 1)) (D.sp.Y j), Φ ≠ 0 ∧
       ∀ y : D.what₂.Mult μ (j + 1), ∃ L : GA D (D.sp.Y j) → ℂ,
@@ -1854,14 +1854,14 @@ theorem GlobalTheory.Mem.OneTuple.rows_theta : GlobalTheory.Published.CuspRapidD
   choose PhiC hPhiC hL2 using hstep
   let Phi : ∀ j, ThS R.ψ (D.sp.Y (j + 1)) (D.sp.Y j) := fun j => if hj : j < D.R.m then PhiC j hj else 0
   refine ⟨row, Phi, fun j hj => ?_, fun j hj x y => ?_, fun j hj y => ?_⟩
-  · simp only [Phi, dif_pos hj]
+  · simp only [Phi, dite_eq_left hj]
     exact hPhiC j hj
   · rcases hj.lt_or_eq with hj | hj
     · rw [row_low j hj]
       exact hisoL j hj x y
     · rw [row_top j hj]
       exact hisoT j hj x y
-  · simp only [Phi, dif_pos hj]
+  · simp only [Phi, dite_eq_left hj]
     exact hL2 j hj y
 end -- clump:auto
 end -- clump:auto

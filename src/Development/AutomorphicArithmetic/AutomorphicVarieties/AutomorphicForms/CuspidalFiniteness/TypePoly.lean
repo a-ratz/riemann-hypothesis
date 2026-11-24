@@ -98,9 +98,9 @@ theorem skewCurve : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (
     ext i j v
     simp [Matrix.star_apply, hX i j]
   have hcs : ContinuousStar (Matrix (Fin a) (Fin a) (TR.Rinf F)) := inferInstance
-  letI : NormedRing (Matrix (Fin a) (Fin a) (TR.Rinf F)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin a) (Fin a) (TR.Rinf F)) := Matrix.linftyOpNormedAlgebra
-  letI : NormedAlgebra ℚ (Matrix (Fin a) (Fin a) (TR.Rinf F)) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (Fin a) (Fin a) (TR.Rinf F)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin a) (Fin a) (TR.Rinf F)) := Matrix.linftyOpNormedAlgebra
+  let : NormedAlgebra ℚ (Matrix (Fin a) (Fin a) (TR.Rinf F)) := Matrix.linftyOpNormedAlgebra
   refine ⟨fun t => ⟨NormedSpace.exp (t • Matrix.of X), by
     have := @NormedSpace.exp_mem_unitary_of_mem_skewAdjoint (Matrix (Fin a) (Fin a) (TR.Rinf F)) _ _ _ _ hcs
     exact this (hs t)⟩, ?_, ?_⟩
@@ -135,7 +135,7 @@ theorem sliceOp : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (a 
     have hm : (fun k => (TR.cptRep F a k φ).1 g) ∈ U := fun k => (key φ g k).differentiableAt
     refine (LinearMap.congr_fun hD ⟨_, hm⟩).trans (funext fun k => (key φ g k).deriv)
   · intro V hV hst φ g hφ
-    have hcl : IsClosed (V : Set (TR.Kinf F a → ℂ)) := V.closed_of_finiteDimensional
+    have hcl : IsClosed (V : Set (TR.Kinf F a → ℂ)) := V.isClosed_of_finiteDimensional
     refine hcl.mem_of_tendsto (b := nhdsWithin (0 : ℝ) {0}ᶜ)
       (f := fun t k => slope (fun t => (TR.cptRep F a (k * c t) φ).1 g) 0 t)
       (tendsto_pi_nhds.2 fun k => hasDerivAt_iff_tendsto_slope.1 (key φ g k)) (Filter.Eventually.of_forall fun t => ?_)

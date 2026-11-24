@@ -335,8 +335,8 @@ theorem section_slice_eq_poly_div_det_pow :
   have htri : ReciprocityTheory.MultiplicativeHeights.IsTriEquivariant a h := by
     intro y b hy hb hbt
     let b' : Frame X.Ψ r := fun σ => if σ = τ then b else (1 : Matrix (Fin r) (Fin r) ℂ)
-    have hbτ : b' τ = b := by exact if_pos rfl
-    have hbσ : ∀ σ, σ ≠ τ → b' σ = (1 : Matrix (Fin r) (Fin r) ℂ) := fun σ hσ => by exact if_neg hσ
+    have hbτ : b' τ = b := by exact ite_eq_left rfl
+    have hbσ : ∀ σ, σ ≠ τ → b' σ = (1 : Matrix (Fin r) (Fin r) ℂ) := fun σ hσ => by exact ite_eq_right hσ
     have hb'B : b' ∈ Bor X.Ψ r := by
       intro σ
       by_cases hσ : σ = τ
@@ -348,7 +348,7 @@ theorem section_slice_eq_poly_div_det_pow :
       · refine ⟨?_, fun c d hcd => ?_⟩
         · change (Matrix.of (b' σ)).det ≠ 0
           rw [hbσ σ hσ]; change (1 : Matrix (Fin r) (Fin r) ℂ).det ≠ 0; simp
-        · rw [hbσ σ hσ, Matrix.one_apply, if_neg (ne_of_lt hcd).symm]
+        · rw [hbσ σ hσ, Matrix.one_apply, ite_eq_right (ne_of_lt hcd).symm]
     have hrm : rmul (Function.update x τ (fun i j => y i j)) b' =
         Function.update x τ (fun i j => (y * b) i j) := by
       funext σ
@@ -373,7 +373,7 @@ theorem section_slice_eq_poly_div_det_pow :
     have hmem : Function.update x τ (fun i j => y i j) ∈ X.dom := (hupd _).2 hy
     have hP2 := hP.2.1 _ hmem b' hb'B
     rw [hrm, hbc] at hP2
-    have hdb : b.det = ∏ i, b i i := Matrix.det_of_upperTriangular hbt
+    have hdb : b.det = ∏ i, b i i := Matrix.det_of_isUpperTriangular hbt
     have hbii : ∀ i, b i i ≠ 0 := by
       intro i
       rw [hdb] at hb
@@ -491,7 +491,7 @@ theorem finiteDimensional_span_of_slices (ι : Type) [Fintype ι] [DecidableEq �
     rw [Submodule.span_le]
     rintro _ ⟨g, hg, rfl⟩
     exact ⟨g, hS g hg, rfl⟩
-  haveI : Finite G := hGfin.to_subtype
+  have : Finite G := hGfin.to_subtype
   have hinj : Function.Injective (resG.domRestrict (V.map resD)) := by
     rw [← LinearMap.ker_eq_bot, eq_bot_iff]
     rintro ⟨φ, g, hg, rfl⟩ hφ
@@ -503,7 +503,7 @@ theorem finiteDimensional_span_of_slices (ι : Type) [Fintype ι] [DecidableEq �
       have := congrFun (show resG (resD g) = 0 from hφ) ⟨y, hy⟩
       exact this
     exact key g hg hz x hx
-  haveI : FiniteDimensional ℂ (V.map resD) := Module.Finite.of_injective _ hinj
+  have : FiniteDimensional ℂ (V.map resD) := Module.Finite.of_injective _ hinj
   exact Submodule.finiteDimensional_of_le hsub
 
 theorem finiteDimensional_cusp_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r),
@@ -536,7 +536,7 @@ theorem finiteDimensional_cusp_definite : ∀ (E : Type) [Field E] [NumberField 
   refine finiteDimensional_span_of_slices X.Ψ (fun _ => Fin r → Fin r → ℂ) (fun _ => {y | (Matrix.of y).det ≠ 0})
     W hW X.dom ?_ (X.SS la) ?_
   · ext x
-    simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq]
+    simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_ofPred_eq]
     exact hdom x
   · intro g hg x hx τ
     obtain ⟨F, hF, hFy⟩ := _root_.GlobalTheory.section_slice_eq_poly_div_det_pow E r X hdom la N hNle g hg.1.1 x hx τ
@@ -563,7 +563,7 @@ namespace GlobalTheory.SplitLevelsBall
 theorem setOf_prime_mem_eq_primesOver (E : Type) [Field E] [NumberField E] (g : ℕ) (hg : g.Prime) :
     {P : Ideal (𝓞 E) | P.IsPrime ∧ (g : 𝓞 E) ∈ P} = (Ideal.span {(g : ℤ)}).primesOver (𝓞 E) := by
   ext P
-  simp only [Set.mem_setOf_eq, Ideal.primesOver, Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq, Ideal.primesOver, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hP, hgP⟩
     refine ⟨hP, ⟨?_⟩⟩
@@ -716,7 +716,7 @@ theorem cutF_mem_SS (M : TwoLevels E r U C) (la : Wt M.Ψ r) (c : C) {F : C → 
   intro c'
   by_cases h : c' = c
   · simpa [h] using hF c'
-  · simp only [h, if_false]
+  · simp only [h, ite_false]
     exact ⟨BoundedSectionAlgebra.bdd_zero _ _, fun ξ _ x _ => BoundedSectionAlgebra.fj_zero _ _ ξ x 0⟩
 
 theorem cut_mem_cusp (M : TwoLevels E r U C) (la : Wt M.Ψ r) (c : C) {v : C → M.dom → ℂ}
@@ -960,12 +960,12 @@ theorem free_of_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
 theorem share_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (U C : Type) [Group U] [Finite U] [Finite C] [MulAction U C] (M : TwoLevels E r U C), (M.p0 = 0 ∨ M.p0 = r) → ∀ (ka : Wt M.Ψ r) (ρ : Representation ℂ U (M.cusp ka)), IsPullRep M ka ρ → Module.Finite ℂ (M.cusp ka) ∧ ∀ H : Subgroup U, LevelHyp (sub M H) → (∃ n : ℕ, GlobalTheory.BadCount.EmbReg ρ H n ∧ n * Nat.card H = finrank ℂ (M.cusp ka)) ∧ ∀ lam : H →* ℂˣ, Nat.card H * finrank ℂ (GlobalTheory.BadCount.eig ρ H lam) = finrank ℂ (M.cusp ka) := by
   intro E _ _ _ r U C _ _ _ _ M hdef ka ρ hρ
   classical
-  haveI : Fintype C := Fintype.ofFinite C
+  have : Fintype C := Fintype.ofFinite C
   have hfin : Module.Finite ℂ (M.cusp ka) :=
     _root_.GlobalTheory.cusp_finite_of_comp E r U C M ka (fun c =>
       _root_.GlobalTheory.DefiniteFin.finiteDimensional_cusp_definite E r (M.comp c).toData (by rw [M.comp_basePoint c]; exact hdef) _)
   refine ⟨hfin, fun H hH => ?_⟩
-  haveI : FiniteDimensional ℂ (M.cusp ka) := hfin
+  have : FiniteDimensional ℂ (M.cusp ka) := hfin
   have hfree : ∀ (h : H) (c : C), h • c = c → h = 1 :=
     free_of_definite E (_root_.GlobalTheory.BalancedPointPf.balancedPoint E) (_root_.GlobalTheory.SmallElement.smallElement E) r H C (sub M H) hdef hH
   obtain ⟨A, hA, hAρ⟩ := _root_.GlobalTheory.ShareOn.cusp_decomp E r U C M ka ρ hρ

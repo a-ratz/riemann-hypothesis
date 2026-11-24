@@ -64,7 +64,7 @@ theorem sqOf_of_siegPB {h k : ℕ} {o o' : Type} [CommRing o] [CommRing o'] {ζ 
     ∃ φ : P.A.left ⟶ c.A.left, SqOf P c f φ ∧ ∀ a, (c'.lev a ≫ e.hom).left ≫ φ = f ≫ (c.lev a).left := by
   obtain ⟨ψ, ψ₂, hψ, hs, hv, hl⟩ := m
   have lam : (abelian₂ P.A P.L).IsLB := LB.isLB_linComb P.isLB _ _
-  haveI : IsMonHom e.symm.hom := inferInstanceAs (IsMonHom e.inv)
+  have : IsMonHom e.symm.hom := inferInstanceAs (IsMonHom e.inv)
   let j : P.A ⊗ P.A ⟶ c'.A ⊗ c'.A := lift (fst P.A P.A ≫ e.inv) (snd P.A P.A ≫ e.inv)
   let i : c'.A ⊗ c'.A ⟶ P.A ⊗ P.A := lift (fst c'.A c'.A ≫ e.hom) (snd c'.A c'.A ≫ e.hom)
   have hji : j.left ≫ i.left = 𝟙 _ := by
@@ -116,7 +116,7 @@ theorem exists_point_of_perLev : Out.Laws → ∀ (h k : ℕ) (K : Type) [Field 
   have weil : ∀ x y, Out.WeilIs P.A P.L k (lev x) (lev y) (unitOn (ze ^ omegaStd x y)) := fun x y => by
     rw [hlev, hlev]
     refine hW k x y _ (Nat.pos_of_ne_zero hk₀) ?_
-    rw [Units.val_zpow_eq_zpow_val, Units.val_mk0, ← Complex.exp_int_mul]
+    rw [Units.val_zpow_eq_zpow_val, Units.val_mk0, ← Complex.exp_intCast_mul]
     congr 1
     ring
   obtain ⟨c, e, he, hc, hw, hl⟩ := GlobalTheory.exists_siegPre_of_polAV hL GlobalTheory.Moduli.cube_of_isLB K ℂ σ h k ζ ze P lev hg hk'

@@ -157,7 +157,7 @@ theorem exists_det_ne_zero {K I Λ : Type} [Field K] [Fintype Λ] [DecidableEq �
   refine ⟨fun l => a (e l), ?_⟩
   have hli' : LinearIndependent K (Matrix.of fun x l => v (a (e x)) l).row :=
     hli.comp e e.injective
-  have := Matrix.linearIndependent_rows_iff_isUnit.mp hli'
+  have := linearIndependent_row_iff_isUnit.mp hli'
   exact ((Matrix.isUnit_iff_isUnit_det _).mp this).ne_zero
 
 theorem integral_coefficients : ∀ (W : Type) [CommRing W] [IsDomain W] (K₀ K₁ : Type) [Field K₀] [Field K₁]
@@ -341,7 +341,7 @@ theorem exists_keyIn_local : ∀ (W : Type) [CommRing W] [IsDomain W] [IsNoether
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp, hgf, CommRingCat.ofHom_id, Spec.map_id]
   have w₁ : 𝟙 P.A.left ≫ P.A.hom = (P.A.hom ≫ spMap g) ≫ spMap (algebraMap W (Localization.Away b)) := by
     rw [Category.assoc, e]; simp
-  haveI : IsMonHom (Iso.refl P.A).hom := inferInstanceAs (IsMonHom (𝟙 P.A))
+  have : IsMonHom (Iso.refl P.A).hom := inferInstanceAs (IsMonHom (𝟙 P.A))
   have hid : IsGrpPullback P.A P.A (𝟙 _) (𝟙 P.A.left) := isGrpPullback_of_iso (Iso.refl P.A)
   have h₂ : IsGrpPullback P.A _ (spMap g) (h₁.1.lift _ _ w₁) :=
     IsGrpPullback.cancel h₁ (hid.congr e.symm (h₁.1.lift_fst _ _ w₁).symm) (h₁.1.lift_snd _ _ w₁)
@@ -459,14 +459,14 @@ abbrev red (W : Type) [CommRing W] : Sp W ⟶ Sp (DualNumber W) := spMap (TrivSq
 theorem red_closedPoint [IsLocalRing W] :
     letI := dual_isLocalRing (W := W)
     (red W).base (IsLocalRing.closedPoint W) = IsLocalRing.closedPoint (DualNumber W) := by
-  letI := dual_isLocalRing (W := W)
-  haveI := fstHom_isLocalHom (W := W)
+  let := dual_isLocalRing (W := W)
+  have := fstHom_isLocalHom (W := W)
   rw [Spec.map_base]
   exact IsLocalRing.comap_closedPoint _
 
 theorem top_le_of_red [IsLocalRing W] {X : Scheme.{0}} (y : Sp (DualNumber W) ⟶ X) (U : X.Opens)
     (h : ⊤ ≤ (red W ≫ y) ⁻¹ᵁ U) : ⊤ ≤ y ⁻¹ᵁ U := by
-  letI := dual_isLocalRing (W := W)
+  let := dual_isLocalRing (W := W)
   rw [Scheme.preimage_eq_top_of_closedPoint_mem y (U := U) ?_]
   have := h (show IsLocalRing.closedPoint W ∈ (⊤ : (Sp W).Opens) from trivial)
   rw [← red_closedPoint]
@@ -477,7 +477,7 @@ theorem valR_fst {X : Scheme.{0}} (y : Sp (DualNumber W) ⟶ X) (U : X.Opens) (h
   have h' : ⊤ ≤ (red W ≫ y) ⁻¹ᵁ U := by
     rw [Scheme.Hom.comp_preimage]; exact fun p _ => h trivial
   unfold valR
-  rw [dif_pos h, dif_pos h', ← Scheme.Hom.appLE_comp_appLE (red W) y U ⊤ ⊤ h le_top]
+  rw [dite_eq_left h, dite_eq_left h', ← Scheme.Hom.appLE_comp_appLE (red W) y U ⊤ ⊤ h le_top]
   have n := congrArg (fun q => q.hom ((y.appLE U ⊤ h).hom f))
     (Scheme.ΓSpecIso_naturality (CommRingCat.ofHom (TrivSqZeroExt.fstHom W W W).toRingHom))
   simp only [CommRingCat.hom_comp, RingHom.comp_apply, CommRingCat.hom_ofHom] at n
@@ -532,7 +532,7 @@ theorem exists_jets [IsLocalRing W] (P : PolAV (Sp W)) (ρ : LB.Gen (P.L.pull (e
       exact this
   set u := valR (𝟙 (Sp W)) ((P.L.pull (eSec P.A)).U fun _ => i₀) (ρ.s fun _ => i₀).val with hu_def
   have hu : IsUnit u := by
-    rw [hu_def, valR, dif_pos hρt]
+    rw [hu_def, valR, dite_eq_left hρt]
     exact ((ρ.s _).isUnit.map _).map _
   set ui := Ring.inverse (u ^ k)
   have hui : u ^ k * ui = 1 := Ring.mul_inverse_cancel _ (hu.pow k)
@@ -547,7 +547,7 @@ theorem exists_jets [IsLocalRing W] (P : PolAV (Sp W)) (ρ : LB.Gen (P.L.pull (e
     fun i j => ui * (valR (epsLift (v j)) ((LPow P.A P.L (k : ℤ) (Over.mk (𝟙 (Sp W)))).U fun _ => i₀)
         ((t i).f fun _ => i₀)).snd, htop, fun i j => ?_⟩
   have hn : Nonempty (Fin g) := ⟨j⟩
-  simp only [dif_pos hn]
+  simp only [dite_eq_left hn]
   have hf : (valR (epsLift (v hn.some)) ((LPow P.A P.L (k : ℤ) (Over.mk (𝟙 (Sp W)))).U fun _ => i₀)
         ((t i).f fun _ => i₀)).fst =
       (valR (epsLift (v j)) ((LPow P.A P.L (k : ℤ) (Over.mk (𝟙 (Sp W)))).U fun _ => i₀) ((t i).f fun _ => i₀)).fst := by
@@ -667,7 +667,7 @@ theorem valR_add' {A : Type} [CommRing A] {X : Scheme.{0}} (x : Sp A ⟶ X) (U :
     valR x U (f + g) = valR x U f + valR x U g := by
   by_cases h : ⊤ ≤ x ⁻¹ᵁ U
   · rw [valR_eq x U h, valR_eq x U h, valR_eq x U h, map_add (f := _)]
-  · simp only [valR, dif_neg h, add_zero]
+  · simp only [valR, dite_eq_right h, add_zero]
 
 theorem valR_scal_mul {R A : Type} [CommRing R] [CommRing A] {X : Scheme.{0}} (ψ : R →+* A) (p : X ⟶ Sp R)
     (x : Sp A ⟶ X) (hx : x ≫ p = spMap ψ) (U : X.Opens) (c : R) (f : Γ(X, U)) :
@@ -676,7 +676,7 @@ theorem valR_scal_mul {R A : Type} [CommRing R] [CommRing A] {X : Scheme.{0}} (�
   · rw [valR_eq x U h, valR_eq x U h, map_mul]
     have e : resTop U (scal p c) = Geo.Tor.constFn p U c := rfl
     rw [e, vh_const ψ p x hx U h c]
-  · simp only [valR, dif_neg h, mul_zero]
+  · simp only [valR, dite_eq_right h, mul_zero]
 
 theorem exists_linear_valR_sec : ∀ (K : Type) [Field K] (x : KeyIn K) (N : ℕ) (i : Fin 1 → x.P.L.ι) (B : Type) [CommRing B] [Algebra K B]
     (y : Sp B ⟶ (baseOver (Sp K) ⊗ x.P.A).left),
@@ -1170,8 +1170,8 @@ theorem span_eq_top : ∀ (K : Type) [Field K] [IsAlgClosed K] [CharZero K] (x :
     Submodule.span K (Set.range fun i =>
       (SecMod.mk (fst (baseOver (Sp K)) x.P.A).left (t i) : EA x.P (𝟙 (Sp K)) (m ^ 2))) = ⊤ := by
   intro K _ _ _ x m hm hm3 I pt hpt th hth U t hUt
-  haveI : IsLocallyNoetherian (Sp K) := inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of K)))
-  haveI := x.P.isAb.comm
+  have : IsLocallyNoetherian (Sp K) := inferInstanceAs (IsLocallyNoetherian (Spec (CommRingCat.of K)))
+  have := x.P.isAb.comm
   have hm0 : m ≠ 0 := by omega
   have hN : ((m ^ 2 : ℕ) : K) ≠ 0 := Nat.cast_ne_zero.2 (pow_ne_zero 2 hm0)
   have hN1 : 1 ≤ m ^ 2 := Nat.one_le_iff_ne_zero.2 (pow_ne_zero 2 hm0)
@@ -1591,7 +1591,7 @@ theorem GlobalTheory.MBLow.thJet_of_keyAtMap : ∀ (R K : Type) [CommRing R] [Fi
   intro R K _ _ f x x' φ hK g hg hg' m I pt pt' ϑ J hpt ⟨th, hth, H⟩
   obtain ⟨he, w, hgg, F, hp, hw, hrig, hθ, hF1, hF2, hv⟩ := hK
   have := x'.P.isAb.comm
-  haveI : IsLocalRing (DualNumber K) := isLocalRing_dual K
+  have : IsLocalRing (DualNumber K) := isLocalRing_dual K
   let τ : (baseOver (Sp K)).left ⟶ (baseOver (Sp R)).left := spMap f
   have hτ : τ ≫ (baseOver (Sp R)).hom = (baseOver (Sp K)).hom ≫ spMap f := by simp [τ]
   obtain ⟨U₀, t₀, i₀, c, h₁, h₂, h₃⟩ := H

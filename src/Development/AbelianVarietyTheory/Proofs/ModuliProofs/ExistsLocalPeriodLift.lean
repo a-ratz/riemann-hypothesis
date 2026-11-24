@@ -99,8 +99,8 @@ theorem complexExtend_tmul {O M : Type} [CommRing O] [Ring M] [Algebra ℂ M]
 theorem exists_eigen_element (O : Type) [CommRing O] [Module.Finite ℤ O]
     [IsReduced (ℂ ⊗[ℤ] O)] (τ : O →+* ℂ) :
     ∃ e : ℂ ⊗[ℤ] O, complexExtend τ e = 1 ∧ ∀ a : O, ((1 : ℂ) ⊗ₜ[ℤ] a) * e = τ a • e := by
-  haveI : IsArtinianRing (ℂ ⊗[ℤ] O) := IsArtinianRing.of_finite ℂ _
-  haveI : IsSemisimpleRing (ℂ ⊗[ℤ] O) := IsArtinianRing.isSemisimpleRing_of_isReduced _
+  have : IsArtinianRing (ℂ ⊗[ℤ] O) := IsArtinianRing.of_finite ℂ _
+  have : IsSemisimpleRing (ℂ ⊗[ℤ] O) := IsArtinianRing.isSemisimpleRing_of_isReduced _
   obtain ⟨f, hf, hI⟩ := IsSemisimpleRing.ideal_eq_span_idempotent
     (RingHom.ker (complexExtend τ))
   have hf0 : complexExtend τ f = 0 := by

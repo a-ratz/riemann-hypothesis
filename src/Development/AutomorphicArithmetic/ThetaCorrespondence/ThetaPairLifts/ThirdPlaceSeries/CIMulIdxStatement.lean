@@ -324,7 +324,7 @@ theorem core {D : D7} (S : HSp D) (N : Lat S) (hN : IsSelfDualC S N) {r : ℕ} (
       map_one' := by ext1; simp
       map_mul' := fun g h => by ext1; simp [mul_assoc] }
   have hcj : Continuous cj :=
-    Continuous.subtype_mk ((continuous_const.mul continuous_subtype_val).mul continuous_const) _
+    Continuous.subtype_mk ((continuous_const.mul continuous_subtypeVal).mul continuous_const) _
   have hcjb : Function.Bijective cj := by
     refine ⟨fun g h e => ?_, fun g => ⟨⟨b⁻¹ * g.1 * b, (GfC S).mul_mem ((GfC S).mul_mem ((GfC S).inv_mem hb) g.2) hb⟩, ?_⟩⟩
     · have := congrArg Subtype.val e
@@ -360,7 +360,7 @@ theorem core {D : D7} (S : HSp D) (N : Lat S) (hN : IsSelfDualC S N) {r : ℕ} (
       rfl
     rw [e]
     exact hUo.inter (isOpen_iInter_of_finite fun i =>
-      (hJo i).preimage ((continuous_locHom (q i) S (F i)).comp continuous_subtype_val))
+      (hJo i).preimage ((continuous_locHom (q i) S (F i)).comp continuous_subtypeVal))
   have hH'o : IsOpen (H' : Set (GfC S)) := hU'o.preimage hcj
   have hH'H : H' ≤ H := fun g hg => hle hg
   rw [eH, eH', ← Nat.cast_prod, ← hidx, ← hHH']

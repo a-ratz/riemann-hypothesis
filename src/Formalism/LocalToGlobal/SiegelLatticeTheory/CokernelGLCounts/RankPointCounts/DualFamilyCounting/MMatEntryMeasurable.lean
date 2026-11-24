@@ -60,7 +60,7 @@ variable {D : D7} (X : HidaSetting D) (u : D.what₂.Word)
 theorem uMat_continuous (v : InfinitePlace X.B.I.F) :
     Continuous fun s : X.B.I.Ginf => uMat (s v) := by
   first
-    | exact (Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply v)
+    | exact (Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply v)
     | fun_prop
     | continuity
 
@@ -124,7 +124,7 @@ private lemma isClosed_setOf_sub_one_mulVec_mem {n : ℕ} (w : Fin n → ℂ) (S
     first
       | exact (continuous_id.sub continuous_const).matrix_mulVec continuous_const
       | fun_prop
-  exact S.closed_of_finiteDimensional.preimage hc
+  exact S.isClosed_of_finiteDimensional.preimage hc
 
 private lemma isClosed_setOf_InN {n r : ℕ} (ε : Fin n → Bool) (e : Fin r → Fin n → ℂ) (z : Fin n → ℂ) :
     IsClosed {g : Matrix (Fin n) (Fin n) ℂ | InN ε e z g} := by
@@ -134,7 +134,7 @@ private lemma isClosed_setOf_InN {n r : ℕ} (ε : Fin n → Bool) (e : Fin r �
       ⋂ y : Fin n → ℂ, ⋂ (_ : ∀ a, hJ ε (e a) y = 0),
         {g : Matrix (Fin n) (Fin n) ℂ | (g - 1) *ᵥ y ∈ spanLt e r} := by
     ext g
-    simp only [InN, InS, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [InN, InS, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [h]
   exact ((isClosed_iInter fun a => isClosed_setOf_sub_one_mulVec_mem _ _).inter (isClosed_setOf_sub_one_mulVec_mem _ _)).inter
     (isClosed_iInter fun y => isClosed_iInter fun _ => isClosed_setOf_sub_one_mulVec_mem _ _)
@@ -145,12 +145,12 @@ theorem ninfU_closed : IsClosed (X.NinfU u) := by
     (isClosed_setOf_InN (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u))).preimage
       (uMat_continuous X v)
   have h2 := isClosed_iInter h
-  simp only [← Set.setOf_forall] at h2
+  simp only [← Set.ofPred_forall] at h2
   exact h2
 
 theorem boxN_eq : boxN X u = X.NinfU u ∩ kap X u ⁻¹' Set.pi Set.univ (fun _ => Set.Ico (0 : ℝ) 1) := by
   ext s
-  simp only [boxN, Set.mem_inter_iff, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_univ_pi, Set.mem_Ico]
+  simp only [boxN, Set.mem_inter_iff, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_univ_pi, Set.mem_Ico]
   refine and_congr_right fun _ => ?_
   constructor
   · rintro h ⟨v, i⟩
@@ -220,7 +220,7 @@ theorem coordHaar_of (hU : HaarUnique) (hL : LebHaar) : CoordHaar := by
   have hbox : lam (boxN X u) = 1 := by
     rw [boxN_eq, Set.inter_comm, measure_inter_eq_of_compl_null lam hlam.2.2.1,
       ← Measure.map_apply hkm hbm, hmap, hvol]
-  rw [Measure.map_smul c hkm.aemeasurable, hmap, Measure.smul_apply, hbox, smul_eq_mul, mul_one]
+  rw [Measure.map_smul c hkm.aemeasurable, hmap, smul_apply, hbox, smul_eq_mul, mul_one]
 
 theorem covolN_of_four (hInj : KapInj) (hU : HaarUnique) (hL : LebHaar) (hC : CoordCovol) : CovolN := by
   intro D X u μ FdN hμ hF
@@ -240,7 +240,7 @@ theorem covolN_of_four (hInj : KapInj) (hU : HaarUnique) (hL : LebHaar) (hC : Co
   have h3 : μ.map (kap X u) (kap X u '' (FdN ∩ X.NinfU u)) = μ (FdN ∩ X.NinfU u) := by
     rw [Measure.map_apply hkm hAm]
     exact h2.symm
-  rw [hH, Measure.smul_apply, hAv, smul_eq_mul] at h3
+  rw [hH, smul_apply, hAv, smul_eq_mul] at h3
   rw [← measure_inter_eq_of_compl_null μ hμ.2.2.1 FdN, ← h3]
   exact mul_comm _ _
 

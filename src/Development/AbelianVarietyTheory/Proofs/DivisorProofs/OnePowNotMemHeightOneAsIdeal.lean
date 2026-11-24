@@ -293,15 +293,15 @@ theorem strictInterlace_of_good {A B : Finset ℚ} (h : Good 0 1 1 A B) : Strict
     · intro hxA hyA
       have hxB : x ∉ B := disjoint_left.1 hd hxA
       have hyB : y ∉ B := disjoint_left.1 hd hyA
-      rw [if_pos hxA, if_pos hyA] at hA
-      rw [if_neg hxB, if_neg hyB] at hB
+      rw [ite_eq_left hxA, ite_eq_left hyA] at hA
+      rw [ite_eq_right hxB, ite_eq_right hyB] at hB
       omega
     · intro hyA
       by_contra hxA
       have hxB : x ∈ B := hxAB.resolve_left hxA
       have hyB : y ∈ B := hyAB.resolve_left hyA
-      rw [if_neg hxA, if_neg hyA] at hA
-      rw [if_pos hxB, if_pos hyB] at hB
+      rw [ite_eq_right hxA, ite_eq_right hyA] at hA
+      rw [ite_eq_left hxB, ite_eq_left hyB] at hB
       omega
 
 end GlobalTheory.WtInterlaceC

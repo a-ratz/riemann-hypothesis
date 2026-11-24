@@ -121,5 +121,5 @@ theorem UpperTheory.ConvolutionTheory.R2.M.borHomeo :
     · exact Continuous.subtype_mk
         ((M.continuous_nU.comp continuous_snd).mul (M.continuous_mD.comp continuous_fst)) _
     · have c : ∀ i j, Continuous fun g : M.Bor F => g.1 i j := fun i j =>
-        (M.continuous_entry i j).comp continuous_subtype_val
+        (M.continuous_entry i j).comp continuous_subtypeVal
       exact (Units.continuous_iff.2 ⟨c 0 0, c 1 1⟩).prodMk ((c 0 1).mul (c 0 0))

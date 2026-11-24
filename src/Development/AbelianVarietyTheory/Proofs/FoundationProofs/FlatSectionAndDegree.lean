@@ -345,7 +345,7 @@ theorem hom_ext_of_loc {R : Type} [CommRing R] {X : Scheme.{0}} {f g : Sp R ⟶ 
   have : Epi (Sigma.desc q) := Flat.epi_of_flat_of_surjective _
   rw [← cancel_epi (Sigma.desc q)]
   refine Sigma.hom_ext _ _ fun p => ?_
-  rw [Sigma.ι_desc_assoc, Sigma.ι_desc_assoc]
+  rw [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc_assoc]
   exact h p.asIdeal
 
 section Res

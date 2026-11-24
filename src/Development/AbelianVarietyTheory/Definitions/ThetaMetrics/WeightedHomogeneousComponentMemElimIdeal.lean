@@ -401,7 +401,7 @@ theorem weightedHomogeneousComponent_mem_elimIdeal [Fintype σ] [Finite β]
     {f : MvPolynomial (β × σ) K} (hf : f ∈ elimIdeal (β := β) p) (a : β → ℕ) :
     weightedHomogeneousComponent blockWeight a f ∈ elimIdeal (β := β) p := by
   classical
-  letI := weightedGradedAlgebra (MvPolynomial σ K) (blockWeight : β × σ → β → ℕ)
+  let := weightedGradedAlgebra (MvPolynomial σ K) (blockWeight : β × σ → β → ℕ)
   have hI : (incidenceIdeal (β := β) p).IsHomogeneous
       (weightedHomogeneousSubmodule (MvPolynomial σ K) (blockWeight : β × σ → β → ℕ)) := by
     refine Ideal.IsHomogeneous.sup (Ideal.homogeneous_span _ _ ?_) (Ideal.homogeneous_span _ _ ?_)
@@ -442,7 +442,7 @@ theorem exists_isWeightedHomogeneous_of_dvd (w : τ → M) {f : MvPolynomial τ 
   have hne : weightedHomogeneousComponent w (Finsupp.weight w d) f ≠ 0 := by
     intro h0
     have := coeff_weightedHomogeneousComponent (w := w) (Finsupp.weight w d) f d
-    rw [h0, if_pos rfl, AddMonoidAlgebra.coeff_zero] at this
+    rw [h0, ite_eq_left rfl, AddMonoidAlgebra.coeff_zero] at this
     exact hd this.symm
   have hle : (weightedHomogeneousComponent w (Finsupp.weight w d) f).totalDegree ≤
       f.totalDegree := by

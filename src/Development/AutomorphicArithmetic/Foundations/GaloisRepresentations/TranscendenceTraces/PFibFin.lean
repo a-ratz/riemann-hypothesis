@@ -65,7 +65,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.fibFin_of :
   unfold FibFin
   intro V U r _ Ω _ x
   obtain ⟨B, iB, iAB, v, hfin, hpb⟩ := hC r Ω x
-  haveI := hfin
+  have := hfin
   have h := (fib_bijOn hpb (𝟙 (gp Ω))).image_eq
   rw [Category.id_comp] at h
   rw [← h]

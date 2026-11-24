@@ -106,7 +106,7 @@ theorem absNorm_eq_card (I : Ideal (𝓞 K)) : Ideal.absNorm I = Nat.card (𝓞 
 theorem conjIdeal_isMaximal (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {P : Ideal (𝓞 K)} (hP : P.IsMaximal) :
     (Formalism.HermitianLatticesTheory.conjIdeal (K := K) P).IsMaximal := by
   rw [conjIdeal_eq_comap]
-  haveI := hP
+  have := hP
   exact Ideal.comap_isMaximal_of_surjective (conjO K) (fun y => ⟨conjO K y, conjO_conjO y⟩)
 
 theorem conjIdeal_conjIdeal (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (P : Ideal (𝓞 K)) :
@@ -182,7 +182,7 @@ theorem comap_eq_comap_iff (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) 
 
 theorem exists_maximal_over (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : ∀ a : K, star a = a ↔ a ∈ Set.range (algebraMap F K)) {𝔭 : Ideal (𝓞 F)}
     (h𝔭 : 𝔭.IsMaximal) : ∃ P : Ideal (𝓞 K), P.IsMaximal ∧ P.comap (algebraMap (𝓞 F) (𝓞 K)) = 𝔭 := by
-  haveI := h𝔭
+  have := h𝔭
   have hinj : Function.Injective (algebraMap (𝓞 F) (𝓞 K)) := by
     first
     | exact NoZeroSMulDivisors.algebraMap_injective _ _
@@ -217,10 +217,10 @@ theorem etaF_comap (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : �
   unfold etaF
   by_cases hc : P.comap (conjO K) = P
   · obtain ⟨θ, hθ⟩ := exists_sub_conjO_notMem hK hP
-    rw [SplitPrimeIdeals.map_comap_of_inert conjO_conjO (conjO_eq_iff_mem_range hF) hP hc hθ, if_pos hP.isPrime,
-      if_pos hc]
-  · rw [if_neg (SplitPrimeIdeals.not_isPrime_map_of_split conjO_conjO (conjO_eq_iff_mem_range hF) hP hc),
-      if_neg hc]
+    rw [SplitPrimeIdeals.map_comap_of_inert conjO_conjO (conjO_eq_iff_mem_range hF) hP hc hθ, ite_eq_left hP.isPrime,
+      ite_eq_left hc]
+  · rw [ite_eq_right (SplitPrimeIdeals.not_isPrime_map_of_split conjO_conjO (conjO_eq_iff_mem_range hF) hP hc),
+      ite_eq_right hc]
 
 end WithF
 

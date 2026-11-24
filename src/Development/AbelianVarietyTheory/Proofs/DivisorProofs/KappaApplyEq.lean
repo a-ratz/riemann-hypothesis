@@ -78,8 +78,8 @@ theorem theta_tmul {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A)) (U : T.O
     theta A B g U (c ⊗ₜ[A] b) = ((pullback.snd (str A B) g).app U).hom c *
       ((pullback.fst (str A B) g).appLE ⊤ ((pullback.snd (str A B) g) ⁻¹ᵁ U)
         (by simp)).hom ((Scheme.ΓSpecIso (CommRingCat.of B)).inv.hom b) := by
-  letI := (secAlg A g U).toAlgebra
-  letI : Algebra A Γ(pullback (str A B) g, (pullback.snd (str A B) g) ⁻¹ᵁ U) :=
+  let := (secAlg A g U).toAlgebra
+  let : Algebra A Γ(pullback (str A B) g, (pullback.snd (str A B) g) ⁻¹ᵁ U) :=
     (((pullback.snd (str A B) g).app U).hom.comp (secAlg A g U)).toAlgebra
   exact Algebra.TensorProduct.lift_tmul _ _ _ _ _
 
@@ -87,7 +87,7 @@ theorem kappa_apply_eq {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A))
     (I : (pullback (str A B) g).IdealSheafData) (U : T.Opens) (x : letI := (secAlg A g U).toAlgebra; Γ(T, U) ⊗[A] B) :
     kappa A B g I U x =
       (I.subschemeι.app ((pullback.snd (str A B) g) ⁻¹ᵁ U)).hom (theta A B g U x) := by
-  letI := (secAlg A g U).toAlgebra
+  let := (secAlg A g U).toAlgebra
   induction x using TensorProduct.inductionOn with
   | tmul c b =>
     have hk : kappa A B g I U (c ⊗ₜ[A] b) =
@@ -95,7 +95,7 @@ theorem kappa_apply_eq {T : Scheme.{0}} (g : T ⟶ Spec (CommRingCat.of A))
           ((I.subschemeι ≫ pullback.fst (str A B) g).appLE ⊤
             ((I.subschemeι ≫ pullback.snd (str A B) g) ⁻¹ᵁ U) (by simp)).hom
             ((Scheme.ΓSpecIso (CommRingCat.of B)).inv.hom b) := by
-      letI : Algebra A Γ(I.subscheme, (I.subschemeι ≫ pullback.snd (str A B) g) ⁻¹ᵁ U) :=
+      let : Algebra A Γ(I.subscheme, (I.subschemeι ≫ pullback.snd (str A B) g) ⁻¹ᵁ U) :=
         (((I.subschemeι ≫ pullback.snd (str A B) g).app U).hom.comp (secAlg A g U)).toAlgebra
       exact Algebra.TensorProduct.lift_tmul _ _ _ _ _
     rw [hk, theta_tmul, map_mul]

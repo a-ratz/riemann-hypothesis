@@ -293,13 +293,13 @@ theorem v_p_pow (hD : DVRHyp v p) (n : ℕ) : v ((p : K) ^ n) = ((n : ℚ) : Wit
 
 theorem v_natCast (hD : DVRHyp v p) {n : ℕ} (hn : n ≠ 0) :
     v (n : K) = ((padicValNat p n : ℚ) : WithTop ℚ) := by
-  haveI := Fact.mk hD.prime
+  have := Fact.mk hD.prime
   obtain ⟨e, m, hm, rfl⟩ := Nat.exists_eq_pow_mul_and_not_dvd hn p hD.prime.ne_one
   have hm0 : m ≠ 0 := by
     rintro rfl
     exact hm (dvd_zero p)
-  rw [(show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) (pow_ne_zero _ hD.prime.ne_zero) hm0, Nat.padicValNat_def, padicValNat.prime_pow,
-    Nat.padicValNat_def, padicValNat.eq_zero_of_not_dvd hm, add_zero, Nat.cast_mul, Nat.cast_pow, v.map_mul,
+  rw [(show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) (pow_ne_zero _ hD.prime.ne_zero) hm0, Nat.padicValNat_def, Nat.multiplicity_prime_pow,
+    Nat.padicValNat_def, multiplicity_eq_zero_of_not_dvd hm, add_zero, Nat.cast_mul, Nat.cast_pow, v.map_mul,
     v_p_pow hD, v_natCast_of_not_dvd hD hm, add_zero]
 
 theorem vN_eq (hD : DVRHyp v p) (n : ℕ) : vN v n = padicValNat p n := by
@@ -326,7 +326,7 @@ theorem vN_one (hD : DVRHyp v p) : vN v 1 = 0 := by
 
 theorem vN_mul (hD : DVRHyp v p) {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) :
     vN v (m * n) = vN v m + vN v n := by
-  haveI := Fact.mk hD.prime
+  have := Fact.mk hD.prime
   rw [vN_eq hD, vN_eq hD, vN_eq hD, (show ∀ {p a b : ℕ} [_root_.Fact (_root_.Nat.Prime p)], a ≠ 0 → b ≠ 0 → _root_.padicValNat p (a * b) = _root_.padicValNat p a + _root_.padicValNat p b from by simpa only [← _root_.Nat.padicValNat_def] using @_root_.Nat.multiplicity_mul) hm hn]
   push_cast
   ring
@@ -379,7 +379,7 @@ theorem fact_eq_prod {σ : Type} [Fintype σ] (α : σ →₀ ℕ) : fact α = �
 theorem eOut_add_eIn_n {L : Type} {r : ℕ} (out : L → Prop) [DecidablePred out] (α : L × Fin r →₀ ℕ) :
     eOut out α + eIn out α = α := by
   unfold eOut eIn
-  exact Finsupp.filter_pos_add_filter_neg α _
+  exact Finsupp.filter_add_filter_not α _
 
 theorem disjoint_eOut_eIn {L : Type} {r : ℕ} (out : L → Prop) [DecidablePred out]
     (α β : L × Fin r →₀ ℕ) : Disjoint (eOut out α).support (eIn out β).support := by
@@ -446,12 +446,12 @@ theorem kapL_mono {p : ℕ} (hp : 2 ≤ p) (r : ℕ) {L : Type} [Fintype L] {d d
   apply Finset.sum_le_sum
   intro i _
   by_cases h0 : d i = 0
-  · rw [if_pos h0]
+  · rw [ite_eq_left h0]
     exact kapL_term_nonneg hp r (d' i)
   · have h1 : d' i ≠ 0 := by
       have := h i
       omega
-    rw [if_neg h0, if_neg h1]
+    rw [ite_eq_right h0, ite_eq_right h1]
     exact mul_le_mul_of_nonneg_left (logb_add_mono hp r (by omega) (h i)) (Nat.cast_nonneg r)
 
 theorem kapL_le_kap {p : ℕ} (hp : 2 ≤ p) {r : ℕ} (hr : 1 ≤ r) {L : Type} [Fintype L] (d : L → ℕ) :

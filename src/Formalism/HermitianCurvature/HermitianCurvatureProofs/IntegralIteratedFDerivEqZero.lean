@@ -55,7 +55,7 @@ theorem integral_iteratedFDeriv_eq_zero {W : Type*} [NormedAddCommGroup W] [Norm
     rw [norm_fderiv_iteratedFDeriv]
   ext m'
   rw [ContinuousMultilinearMap.integral_apply (hint (i + 1) hjm)]
-  simp only [iteratedFDeriv_succ_apply_left, ContinuousMultilinearMap.zero_apply]
+  simp only [iteratedFDeriv_succ_apply_left, zero_apply]
   have h0 := integral_fderiv_eq_zero hdiff (hint i (by omega)) hF' (m' 0)
   rw [← ContinuousMultilinearMap.integral_apply (hF'.apply_continuousLinearMap (m' 0)), h0]
   rfl

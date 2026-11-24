@@ -50,7 +50,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.wtOne :
     ∀ (F : Type) [Field F] [NumberField F] (β : G1 F → ℝ≥0∞), M.NWt β → ∀ g, ∫⁻ b, β (nU b * g) ∂(adeleMeasure F) = 1 := by
   intro F _ _ β hβ g
   obtain ⟨hm, hs⟩ := hβ
-  haveI : Countable F := Finsupp.Countable.of_moduleFinite (R := ℚ)
+  have : Countable F := Countable.of_moduleFinite (R := ℚ)
   let e : F → AdeleRing.principalSubgroup (𝓞 F) F := fun ξ => ⟨rt ξ, ξ, rfl⟩
   have he : Function.Bijective e := by
     constructor
@@ -58,7 +58,7 @@ theorem UpperTheory.ConvolutionTheory.R2.M.wtOne :
       exact AdeleRing.algebraMap_injective (𝓞 F) F (congrArg Subtype.val h)
     · rintro ⟨_, ξ, rfl⟩
       exact ⟨ξ, rfl⟩
-  haveI : Countable (AdeleRing.principalSubgroup (𝓞 F) F) := he.surjective.countable
+  have : Countable (AdeleRing.principalSubgroup (𝓞 F) F) := he.surjective.countable
   have hfd := isAddFundamentalDomain_fundamentalSet F
   have hf : Measurable fun b : A F => β (nU b * g) :=
     hm.comp (M.continuous_nU.mul continuous_const).measurable

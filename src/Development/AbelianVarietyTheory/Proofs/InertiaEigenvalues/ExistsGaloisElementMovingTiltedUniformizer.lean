@@ -193,7 +193,7 @@ theorem fixed_twist (ϖ : PiSys l e) (H : Subgroup (GQ l))
     by_contra h
     exact Nat.find_min hex (show s < N by omega) ⟨σ, hσ, y, hy, h⟩
   have hlN : 0 < l ^ N := pow_pos hl.out.pos N
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot (Om l) (l ^ N)
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot (Om l) (l ^ N)
   have hζ0 : ζ ≠ 0 := hζ.ne_zero hlN.ne'
   have hpowζ : ∀ y : Om l, y ^ l ^ N = 1 → ∃ i : ℕ, ζ ^ i = y := fun y hy =>
     (hζ.eq_pow_of_pow_eq_one hy).imp fun _ h => h.2

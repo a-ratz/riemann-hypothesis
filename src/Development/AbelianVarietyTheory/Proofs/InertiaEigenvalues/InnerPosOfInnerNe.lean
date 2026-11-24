@@ -285,7 +285,7 @@ theorem adInner_eq_mul_integral {G H W : Type} [Group G] [TopologicalSpace G] [I
   have hmt : m ≠ ⊤ := ne_top_of_le_ne_top (h1 ▸ ENNReal.one_ne_top) (measure_mono (Subgroup.comap_mono hle))
   have h𝓖' : IsFundamentalDomain Γ 𝓖 (m⁻¹ • ν) := h𝓖.mono Measure.smul_absolutelyContinuous
   have h1' : (m⁻¹ • ν) (J.comap π) = 1 := by
-    rw [Measure.smul_apply, smul_eq_mul, ← hmdef, ENNReal.inv_mul_cancel hm0 hmt]
+    rw [smul_apply, smul_eq_mul, ← hmdef, ENNReal.inv_mul_cancel hm0 hmt]
   obtain ⟨-, key⟩ := GlobalTheory.InnerClassSum.integral_inner_eq_adInner (m⁻¹ • ν) π hπ Γ h𝓖' J ho h1' ρ hρ χ hχ y hy
   refine ⟨m.toReal⁻¹, inv_pos.2 (ENNReal.toReal_pos hm0 hmt), fun f hf f' hf' => ?_⟩
   obtain ⟨hi, he⟩ := key f hf f' hf'
@@ -356,10 +356,10 @@ theorem norm_eq_integral : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T 
   have hν := hL.models.νV i t
   have hH := hL.models.HV i t
   have hc := hL.models.cV i
-  haveI : IsTopologicalGroup (GA D (Vc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D (Vc D i)) := ⟨rfl⟩
-  haveI : Countable (GQ (Vc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Vc D i).gram
-  haveI := hν.1.1
+  have : IsTopologicalGroup (GA D (Vc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D (Vc D i)) := ⟨rfl⟩
+  have : Countable (GQ (Vc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig (Vc D i).gram
+  have := hν.1.1
   have ho : IsOpen (((levEnv (Vc D i) (R.βV i) (R.datVt i t)).J.comap (finHom (Vc D i)).rangeRestrict :
       Subgroup (GA D (Vc D i))) : Set (GA D (Vc D i))) := by
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_
@@ -1116,7 +1116,7 @@ theorem exists_sum_inv {Γ : Type*} [Group Γ] (K : Subgroup Γ) (γ : Γ)
         ∑ δ ∈ C, F (g * k * δ) = ∑ δ ∈ C, F (g * δ) := by
   classical
   set H := (conjMeet K γ).subgroupOf K
-  haveI : Fintype (K ⧸ H) := Fintype.ofFinite _
+  have : Fintype (K ⧸ H) := Fintype.ofFinite _
   let r : K ⧸ H → Γ := fun q => ((Quotient.out q : K) : Γ) * γ
   have hr : Function.Injective r := by
     intro q₁ q₂ h
@@ -1154,7 +1154,7 @@ namespace GlobalTheory.TransSum
 theorem heckeOn_doubleCoset_mem_wall : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks} {i : Fin D.R.m}, LevProd R i → ∀ (γ : GA D (Wc D i)), γ ∈ GfC (Wc D i) → ∃ C : Finset (GA D (Wc D i)), C.Nonempty ∧ (∀ δ ∈ C, ∃ k ∈ levW R i, δ = k * γ) ∧ ∀ T ∈ R.Wall i (sg0 D A), heckeOn (R.MW i (sg0 D A)) C T ∈ R.Wall i (sg0 D A) := by
   intro D G _ _ Pl0 T A Ks _ _ _ R i hP γ hγ
   have topgrp := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig (Wc D i).gram
-  haveI : CompactSpace (levW R i) :=
+  have : CompactSpace (levW R i) :=
     isCompact_iff_compactSpace.mp (GlobalTheory.ParahoricCompact.isCompact_levG _ _ _)
   have hU := GlobalTheory.LevelOpen.isOpen_levG (Wc D i) (R.βW i) (R.datWp i R.triv)
   have hopen : IsOpen (((conjMeet (levW R i) γ).subgroupOf (levW R i) : Subgroup (levW R i)) : Set (levW R i)) := by
@@ -1162,17 +1162,17 @@ theorem heckeOn_doubleCoset_mem_wall : ∀ {D : D7} {G : Type} [Group G] [Fintyp
       ⟨γ⁻¹ * (x : GA D (Wc D i)) * γ, mul_mem (mul_mem (inv_mem hγ) (hP.1 x.2)) hγ⟩
     have hφ : Continuous φ := by
       refine Continuous.subtype_mk ?_ _
-      exact (continuous_const.mul continuous_subtype_val).mul continuous_const
+      exact (continuous_const.mul continuous_subtypeVal).mul continuous_const
     have e : (((conjMeet (levW R i) γ).subgroupOf (levW R i) : Subgroup (levW R i)) : Set (levW R i)) =
         φ ⁻¹' {g : GfC (Wc D i) | (g : GA D (Wc D i)) ∈ levG _ (R.βW i) (R.datWp i R.triv)} := by
       ext x
-      simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, mem_conjMeet, Set.mem_preimage, Set.mem_setOf_eq, φ]
+      simp only [SetLike.mem_coe, Subgroup.mem_subgroupOf, mem_conjMeet, Set.mem_preimage, Set.mem_ofPred_eq, φ]
       exact ⟨fun h => h.2, fun h => ⟨x.2, h⟩⟩
     rw [e]
     exact hU.preimage hφ
-  haveI : Finite (levW R i ⧸ (conjMeet (levW R i) γ).subgroupOf (levW R i)) :=
+  have : Finite (levW R i ⧸ (conjMeet (levW R i) γ).subgroupOf (levW R i)) :=
     Subgroup.quotient_finite_of_isOpen _ hopen
-  haveI : ((conjMeet (levW R i) γ).subgroupOf (levW R i)).FiniteIndex :=
+  have : ((conjMeet (levW R i) γ).subgroupOf (levW R i)).FiniteIndex :=
     Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨C, hne, hC, hsum⟩ := exists_sum_inv (levW R i) γ
   refine ⟨C, hne, hC, fun Tm hT => ?_⟩
@@ -1379,11 +1379,11 @@ theorem hecke_one (T : MMap (R.MW i (sg0 D A))) : heckeOn (R.MW i (sg0 D A)) {1}
 theorem shift {F : Face D A} (hL : Laws R F) (u : GA D (Wc D i) → ℂ)
     (hu : ∀ δ ∈ GQ (Wc D i), ∀ h, u (δ * h) = u h) (y : GA D (Wc D i)) :
     ∫ h in R.fdW i, u (h * y) ∂(R.νW i) = ∫ h in R.fdW i, u h ∂(R.νW i) := by
-  haveI : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
-  haveI : Countable (GQ (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
-  haveI := (hL.models.νW i).1.1
-  haveI := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D (Wc D i) (R.νW i) (hL.models.νW i).1.1
+  have : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
+  have : Countable (GQ (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
+  have := (hL.models.νW i).1.1
+  have := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D (Wc D i) (R.νW i) (hL.models.νW i).1.1
   exact GlobalTheory.DoubleCosetAdjoint.setIntegral_mul_right (R.νW i) (GQ (Wc D i)) (R.fdW i) (hL.models.νW i).2 u hu y
 
 theorem sq_int {F : Face D A} (hL : Laws R F) {T : MMap (R.MW i (sg0 D A))} (hT : T ∈ R.Wall i (sg0 D A))
@@ -1396,19 +1396,19 @@ theorem sq_int {F : Face D A} (hL : Laws R F) {T : MMap (R.MW i (sg0 D A))} (hT 
 theorem sq_int_tr {F : Face D A} (hL : Laws R F) {T : MMap (R.MW i (sg0 D A))} (hT : T ∈ R.Wall i (sg0 D A))
     (v : (R.MW i (sg0 D A)).Vec) (δ : GA D (Wc D i)) :
     IntegrableOn (fun g => star (T v (g * δ)) * T v (g * δ)) (R.fdW i) (R.νW i) := by
-  haveI : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
-  haveI : Countable (GQ (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
-  haveI := (hL.models.νW i).1.1
-  haveI := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D (Wc D i) (R.νW i) (hL.models.νW i).1.1
+  have : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
+  have : Countable (GQ (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
+  have := (hL.models.νW i).1.1
+  have := GlobalTheory.T.isMulRightInvariant_haar_adelicUnitaryGroup_hermitianSpace D (Wc D i) (R.νW i) (hL.models.νW i).1.1
   exact GlobalTheory.DoubleCosetAdjoint.integrableOn_mul_right (R.νW i) (GQ (Wc D i)) (R.fdW i) (hL.models.νW i).2
     (fun g => star (T v g) * T v g) (fun δ' hδ' g => by simp only [linv hT v hδ' g]) δ (sq_int hL hT v)
 
 theorem int_tr {F : Face D A} (hL : Laws R F) {T T' : MMap (R.MW i (sg0 D A))} (hT : T ∈ R.Wall i (sg0 D A))
     (hT' : T' ∈ R.Wall i (sg0 D A)) (v v' : (R.MW i (sg0 D A)).Vec) (δ : GA D (Wc D i)) :
     IntegrableOn (fun g => star (T v g) * T' v' (g * δ)) (R.fdW i) (R.νW i) := by
-  haveI : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
+  have : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
   exact GlobalTheory.DoubleCosetAdjoint.integrableOn_star_mul (R.νW i) (R.fdW i) (T v) (fun g => T' v' (g * δ))
     (cont hT v) ((cont hT' v').comp (continuous_mul_const δ)) (sq_int hL hT v) (sq_int_tr hL hT' v' δ)
 
@@ -1530,8 +1530,8 @@ theorem transLaws_of {F : Face D A} (hL : Laws R F) (hLP : LevProd R i) : TransL
   refine ⟨ha, hb, ?_, hd, hsym, h1⟩
 
   intro γ hγ
-  haveI : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
-  haveI : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
+  have : IsTopologicalGroup (GA D (Wc D i)) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : BorelSpace (GA D (Wc D i)) := ⟨rfl⟩
   have hn2 : ∀ z : (R.HW i (sg0 D A)).H, ‖⟪z, z⟫_ℂ‖ = ‖z‖ ^ 2 := fun z => by
     rw [inner_self_eq_norm_sq_to_K]; simp
   have hsq : ∀ x, ‖x‖ ^ 2 = ‖cst‖ * ‖∫ g in R.fdW i, star (e x v0 g) * e x v0 g ∂(R.νW i)‖ / ‖P‖ := fun x => by
@@ -1566,7 +1566,7 @@ theorem transLaws_of {F : Face D A} (hL : Laws R F) (hLP : LevProd R i) : TransL
     intro x1 x2 y
     have hf : ∀ g : GA D (Wc D i), star (e (x1 + x2) v0 g) * e y v0 (g * γ) =
         star (e x1 v0 g) * e y v0 (g * γ) + star (e x2 v0 g) * e y v0 (g * γ) := fun g => by
-      simp only [map_add (f := _), MultilinearMap.add_apply, Pi.add_apply, Complex.star_def, add_mul]
+      simp only [map_add (f := _), add_apply, Pi.add_apply, Complex.star_def, add_mul]
     rw [htp γ hγ, htp γ hγ, htp γ hγ]
     simp only [hf]
     rw [integral_add (hI x1 y γ) (hI x2 y γ)]
@@ -1575,7 +1575,7 @@ theorem transLaws_of {F : Face D A} (hL : Laws R F) (hLP : LevProd R i) : TransL
     intro c x y
     have hf : ∀ g : GA D (Wc D i), star (e (c • x) v0 g) * e y v0 (g * γ) = (starRingEnd ℂ) c * (star (e x v0 g) * e y v0 (g * γ)) :=
       fun g => by
-        simp only [map_smul, MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul, Complex.star_def, map_mul]; ring
+        simp only [map_smul, smul_apply, Pi.smul_apply, smul_eq_mul, Complex.star_def, map_mul]; ring
     rw [htp γ hγ, htp γ hγ]
     simp only [hf]
     rw [integral_const_mul (μ := (R.νW i).restrict (R.fdW i)) ((starRingEnd ℂ) c)
@@ -1585,7 +1585,7 @@ theorem transLaws_of {F : Face D A} (hL : Laws R F) (hLP : LevProd R i) : TransL
     intro x y1 y2
     have hf : ∀ g : GA D (Wc D i), star (e x v0 g) * e (y1 + y2) v0 (g * γ) =
         star (e x v0 g) * e y1 v0 (g * γ) + star (e x v0 g) * e y2 v0 (g * γ) := fun g => by
-      simp only [map_add (f := _), MultilinearMap.add_apply, Pi.add_apply, mul_add]
+      simp only [map_add (f := _), add_apply, Pi.add_apply, mul_add]
     rw [htp γ hγ, htp γ hγ, htp γ hγ]
     simp only [hf]
     rw [integral_add (hI x y1 γ) (hI x y2 γ)]
@@ -1593,7 +1593,7 @@ theorem transLaws_of {F : Face D A} (hL : Laws R F) (hLP : LevProd R i) : TransL
   have hsm2 : ∀ (c : ℂ) (x y : (R.HW i (sg0 D A)).H), trPair R i γ x (c • y) = (RingHom.id ℂ) c • trPair R i γ x y := by
     intro c x y
     have hf : ∀ g : GA D (Wc D i), star (e x v0 g) * e (c • y) v0 (g * γ) = c * (star (e x v0 g) * e y v0 (g * γ)) := fun g => by
-      simp only [map_smul, MultilinearMap.smul_apply, Pi.smul_apply, smul_eq_mul]; ring
+      simp only [map_smul, smul_apply, Pi.smul_apply, smul_eq_mul]; ring
     rw [htp γ hγ, htp γ hγ]
     simp only [hf]
     rw [integral_const_mul (μ := (R.νW i).restrict (R.fdW i)) c

@@ -65,7 +65,7 @@ theorem count_span_int (w : HeightOneSpectrum (𝓞 L)) (a : 𝓞 L) (ha : a ≠
     FractionalIdeal.count L w (FractionalIdeal.spanSingleton (𝓞 L)⁰ (algebraMap (𝓞 L) L a)) =
       -WithZero.log (w.valuation L (algebraMap (𝓞 L) L a)) := by
   classical
-  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coe L w (by simpa using ha),
+  rw [← FractionalIdeal.coeIdeal_span_singleton, FractionalIdeal.count_coeIdeal L w (by simpa using ha),
     HeightOneSpectrum.valuation_of_algebraMap, HeightOneSpectrum.intValuation_if_neg _ ha]
   simp
 
@@ -116,7 +116,7 @@ theorem inf_mul_val_pow : ∀ (L : Type) [Field L] [NumberField L] (χ : HChar L
     Finset.prod_eq_one (fun w hw => locK_eq_one (hT w hw) k (h1 w hw)), mul_one]
   congr 1
   rw [finprod_eq_single _ v]
-  · rw [finprod_eq_if, if_pos hv, ordF_eq_count, hk, FractionalIdeal.count_pow, FractionalIdeal.count_self, mul_one,
+  · rw [finprod_eq_if, ite_eq_left hv, ordF_eq_count, hk, FractionalIdeal.count_pow, FractionalIdeal.count_self, mul_one,
       zpow_natCast]
   · intro w hw
     rw [ordF_eq_count, hk, FractionalIdeal.count_pow, FractionalIdeal.count_maximal_coprime L w (Ne.symm hw), mul_zero,

@@ -216,8 +216,8 @@ theorem cns_ofSum_core (dual : Bool) {ε : Fin n → Bool} {μ lam' : Fin n → 
           (tensGrp dual (rreg ε) g (fun d => ((F d : smD ε (rreg ε)) : L2 ε)) c) := by
   obtain ⟨⟨h, hh, hth⟩, hgap, hP, hv, hpos, hW, hG⟩ := hok
   obtain ⟨⟨h', hh', hth'⟩, hgap', hP', hv', hpos', hW', hG'⟩ := hok'
-  haveI := Hlam_nontrivial hgap hP hv
-  haveI := Hlam_nontrivial hgap' hP' hv'
+  have := Hlam_nontrivial hgap hP hv
+  have := Hlam_nontrivial hgap' hP' hv'
   obtain ⟨w, hw⟩ := exists_ne (0 : Hlam ε Ψ T.w)
   obtain ⟨w', hw'⟩ := exists_ne (0 : Hlam ε Ψ' T'.w)
   obtain ⟨⟨ι, hι, -, -⟩, -⟩ := cc_gk dual hgap hP hv hgap' hP' hv' hh hth hh' hth' hpos hpos' hW hW' hG hG'
@@ -579,7 +579,7 @@ private theorem gap_lemma {ν : Fin n → ℝ} (h : S7.IsHCParam ν) :
     intro a b hab
     have hc : a.val + d < n := by omega
     have h1 := ih a ⟨a.val + d, hc⟩ rfl
-    have hcb : (⟨a.val + d, hc⟩ : Fin n) < b := Fin.lt_iff_val_lt_val.mpr (by simp only; omega)
+    have hcb : (⟨a.val + d, hc⟩ : Fin n) < b := Fin.lt_def.mpr (by simp only; omega)
     have hlt := h.1 hcb
     obtain ⟨m1, hm1⟩ := h.2 b
     obtain ⟨m2, hm2⟩ := h.2 ⟨a.val + d, hc⟩
@@ -614,18 +614,18 @@ private theorem term_lemma_3 {ε : Fin n → Bool} {a b : Fin n} (he : ε a = ε
       (((if a < c ∧ ε c ≠ ε a then 1 else 0 : ℝ) - (if c < a ∧ ε c ≠ ε a then 1 else 0)) -
         ((if a < c ∧ ε c = ε a then 1 else 0 : ℝ) - (if c < a ∧ ε c = ε a then 1 else 0)))) =
       ((if a < c ∧ c ≤ b then 1 else 0 : ℝ) + (if a ≤ c ∧ c < b then 1 else 0))) := by
-  rw [Fin.lt_iff_val_lt_val] at hab
+  rw [Fin.lt_def] at hab
   by_cases e : ε c = ε a
   · have e' : ε c = ε b := e.trans he
     refine ⟨?_, fun _ => ?_⟩
     all_goals
-      simp only [e', he, ne_eq, not_true_eq_false, and_false, and_true, if_false, if_true,
-        Fin.lt_iff_val_lt_val, Fin.le_iff_val_le_val]
+      simp only [e', he, ne_eq, not_true_eq_false, and_false, and_true, ite_false, ite_true,
+        Fin.lt_def, Fin.le_iff_val_le_val]
       split_ifs <;> first | (exfalso; omega) | norm_num
   · have e' : ¬ ε c = ε b := fun h => e (h.trans he.symm)
     refine ⟨?_, fun h => absurd h e⟩
-    simp only [e, e', ne_eq, not_false_eq_true, and_false, and_true, if_false, if_true,
-      Fin.lt_iff_val_lt_val, Fin.le_iff_val_le_val]
+    simp only [e, e', ne_eq, not_false_eq_true, and_false, and_true, ite_false, ite_true,
+      Fin.lt_def, Fin.le_iff_val_le_val]
     split_ifs <;> first | (exfalso; omega) | norm_num
 
 private theorem sumR_lemma_4 {a b : Fin n} (hab : a < b) :
@@ -649,7 +649,7 @@ theorem cns_hc_of_dom {ε : Fin n → Bool} (he : ∀ a b, ε a = ε b) {ν : Fi
   rw [sumR_lemma_4 hab] at hs
   have hk := hdom a b hab (he a b)
   have hba : (1 : ℝ) ≤ ((b.val - a.val : ℕ) : ℝ) := by
-    have := Fin.lt_iff_val_lt_val.mp hab
+    have := Fin.lt_def.mp hab
     exact_mod_cast (by omega : 1 ≤ b.val - a.val)
   linarith
 
@@ -659,7 +659,7 @@ theorem cns_dom_of_hc {ε : Fin n → Bool} {ν : Fin n → ℝ} (h : S7.IsHCPar
   have hd := lowK_diff_lemma_2 ε ν a b
   have hs := Finset.sum_le_sum fun c (_ : c ∈ Finset.univ) => (term_lemma_3 he hab c).1
   rw [sumR_lemma_4 hab] at hs
-  have hg := gap_lemma h (b.val - a.val) a b (by have := Fin.lt_iff_val_lt_val.mp hab; omega)
+  have hg := gap_lemma h (b.val - a.val) a b (by have := Fin.lt_def.mp hab; omega)
   linarith
 
 theorem cns_kfin_fd {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [FiniteDimensional ℂ H]
@@ -717,7 +717,7 @@ theorem cns_zuck_cpt {ε : Fin n → Bool} (hpq : pOf ε = 0 ∨ qOf ε = 0) {μ
   have hμ' : S7.IsHCParam μ := hμ
   obtain ⟨T⟩ := HW.kType_exists ε μ hμ'
   obtain ⟨-, -, U0, hU0⟩ := compact_isDS_unique hpq hμ' hd T
-  haveI : FiniteDimensional ℂ H := LinearEquiv.finiteDimensional U0.toLinearEquiv
+  have : FiniteDimensional ℂ H := LinearEquiv.finiteDimensional U0.toLinearEquiv
   have hdat : ∀ s, ∃ lam' : Fin n → ℝ, ∃ T' : S7.KType ε (lowK ε lam'),
       ∃ σ' : Matrix (Fin n) (Fin n) ℂ → (T'.V →L[ℂ] T'.V), S7.IsHCParam lam' ∧ Formalism.MainNotions.S.IsDS ε lam' σ' ∧
         (∀ k, σ' (S7.toMK k) = T'.op k) ∧ (S7.IsHCParam (shiftF false μ s) → lam' = shiftF false μ s) := by
@@ -804,7 +804,7 @@ theorem cns_zuckd_cpt {ε : Fin n → Bool} (hpq : pOf ε = 0 ∨ qOf ε = 0) {�
   have hμ' : S7.IsHCParam μ := hμ
   obtain ⟨T⟩ := HW.kType_exists ε μ hμ'
   obtain ⟨-, -, U0, hU0⟩ := compact_isDS_unique hpq hμ' hd T
-  haveI : FiniteDimensional ℂ H := LinearEquiv.finiteDimensional U0.toLinearEquiv
+  have : FiniteDimensional ℂ H := LinearEquiv.finiteDimensional U0.toLinearEquiv
   have hdat : ∀ s, ∃ lam' : Fin n → ℝ, ∃ T' : S7.KType ε (lowK ε lam'),
       ∃ σ' : Matrix (Fin n) (Fin n) ℂ → (T'.V →L[ℂ] T'.V), S7.IsHCParam lam' ∧ Formalism.MainNotions.S.IsDS ε lam' σ' ∧
         (∀ k, σ' (S7.toMK k) = T'.op k) ∧ (S7.IsHCParam (shiftF true μ s) → lam' = shiftF true μ s) := by

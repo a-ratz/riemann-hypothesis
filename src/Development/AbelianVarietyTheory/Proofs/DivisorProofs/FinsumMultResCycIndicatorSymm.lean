@@ -64,7 +64,7 @@ namespace GlobalTheory.MixHt.CycLoc
 
 theorem length_quot_equiv (R S : Type) [CommRing R] [CommRing S] (e : R ≃+* S) (a : R) :
     Module.length R (R ⧸ Ideal.span {a}) = Module.length S (S ⧸ Ideal.span {e a}) := by
-  letI : Algebra R S := e.toRingHom.toAlgebra
+  let : Algebra R S := e.toRingHom.toAlgebra
   let f : R ≃ₐ[R] S := AlgEquiv.ofRingEquiv (f := e) fun _ => rfl
   rw [← Module.length_eq_of_surjective (S := R) (R := S) (M := S ⧸ Ideal.span {e a}) e.surjective]
   exact (Ideal.quotientEquivAlg (Ideal.span {a}) (Ideal.span {e a}) f (by

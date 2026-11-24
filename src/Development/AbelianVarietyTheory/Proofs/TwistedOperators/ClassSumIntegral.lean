@@ -72,7 +72,7 @@ theorem integral_eq_sum {G H : Type} [Group G] [TopologicalSpace G] [IsTopologic
   have hs : ∀ i, (Bridge.stab (π.comp Γ.subtype) J (y i) : Set Γ) = {γ : Γ | (a i)⁻¹ * (γ : G) * a i ∈ J.comap π} := by
     intro i
     ext γ
-    rw [SetLike.mem_coe, Bridge.mem_stab, Set.mem_setOf_eq, Subgroup.mem_comap, map_mul, map_mul, map_inv, ha]
+    rw [SetLike.mem_coe, Bridge.mem_stab, Set.mem_ofPred_eq, Subgroup.mem_comap, map_mul, map_mul, map_inv, ha]
     rfl
   have hfin : ∀ i, {γ : Γ | (a i)⁻¹ * (γ : G) * a i ∈ J.comap π}.Finite := fun i =>
     GlobalTheory.InnerClassSum.finite_stab_of_measure ν Γ _ h𝓖 (h1 ▸ one_ne_zero) (h1 ▸ ENNReal.one_ne_top) (a i)
@@ -80,7 +80,7 @@ theorem integral_eq_sum {G H : Type} [Group G] [TopologicalSpace G] [IsTopologic
       Subtype.val '' {γ : Γ | (a i)⁻¹ * (γ : G) * a i ∈ J.comap π} := by
     intro i
     ext γ
-    simp only [Set.mem_setOf_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
+    simp only [Set.mem_ofPred_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
     exact ⟨fun h => ⟨h.1, h.2⟩, fun ⟨h, h'⟩ => ⟨h, h'⟩⟩
   have hu : ∀ x : G, ∃! i, ∃ γ ∈ Γ, ∃ k ∈ J.comap π, x = γ * a i * k := by
     intro x

@@ -185,10 +185,10 @@ theorem skew_of_exp_smul_mem {m : ℕ} (A Z : Matrix (Fin m) (Fin m) ℂ)
     Zᴴ * A + A * Z = 0 := by
   let _ := Matrix.linftyOpNormedRing (n := Fin m) (α := ℂ)
   let _ := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin m) (α := ℂ)
-  have _ : CompleteSpace (Matrix (Fin m) (Fin m) ℂ) := FiniteDimensional.complete ℝ _
+  have _ : CompleteSpace (Matrix (Fin m) (Fin m) ℂ) := FiniteDimensional.completeSpace ℝ _
   have e : ∀ t : ℝ, NormedSpace.exp (t • Zᴴ) * A * NormedSpace.exp (t • Z) = A := fun t => by
     have h := hZ t
-    simp only [Set.mem_setOf_eq] at h
+    simp only [Set.mem_ofPred_eq] at h
     rwa [← Matrix.exp_conjTranspose, conjTranspose_smul, star_trivial] at h
   have hd : HasDerivAt (fun t : ℝ => NormedSpace.exp (t • Zᴴ) * A * NormedSpace.exp (t • Z))
       (Zᴴ * A + A * Z) 0 := by
@@ -216,13 +216,13 @@ theorem coords_second_kind_unitary : ∀ (m : ℕ) (A : Matrix (Fin m) (Fin m) �
   have h1 : (1 : Matrix (Fin m) (Fin m) ℂ) ∈ S := by simp [S]
   have hm : ∀ a ∈ S, ∀ b ∈ S, a * b ∈ S := by
     intro a ha b hb
-    simp only [S, Set.mem_setOf_eq] at ha hb ⊢
+    simp only [S, Set.mem_ofPred_eq] at ha hb ⊢
     rw [conjTranspose_mul]
     calc bᴴ * aᴴ * A * (a * b) = bᴴ * (aᴴ * A * a) * b := by simp only [Matrix.mul_assoc]
       _ = A := by rw [ha, hb]
   have hi : ∀ Z : Matrix (Fin m) (Fin m) ℂ, NormedSpace.exp Z ∈ S → NormedSpace.exp (-Z) ∈ S := by
     intro Z hZ
-    simp only [S, Set.mem_setOf_eq] at hZ ⊢
+    simp only [S, Set.mem_ofPred_eq] at hZ ⊢
     have hXY : NormedSpace.exp Z * NormedSpace.exp (-Z) = 1 := by
       rw [← Matrix.exp_add_of_commute _ _ (Commute.refl Z).neg_right, add_neg_cancel,
         NormedSpace.exp_zero]
@@ -234,7 +234,7 @@ theorem coords_second_kind_unitary : ∀ (m : ℕ) (A : Matrix (Fin m) (Fin m) �
       _ = A := by rw [hXY]; simp
   let _ := Matrix.linftyOpNormedRing (n := Fin m) (α := ℂ)
   let _ := Matrix.linftyOpNormedAlgebra (R := ℝ) (n := Fin m) (α := ℂ)
-  have _ : CompleteSpace (Matrix (Fin m) (Fin m) ℂ) := FiniteDimensional.complete ℝ _
+  have _ : CompleteSpace (Matrix (Fin m) (Fin m) ℂ) := FiniteDimensional.completeSpace ℝ _
   obtain ⟨d, Z, s, hZ, hs, hev⟩ := exists_coords_second_kind hc h1 hm hi
   exact ⟨d, Z, s, fun i => skew_of_exp_smul_mem A (Z i) (hZ i), hs.mono_left nhdsWithin_le_nhds,
     eventually_nhdsWithin_iff.2 hev⟩

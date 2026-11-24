@@ -135,14 +135,14 @@ theorem _root_.UpperTheory.ConvolutionTheory.Sph.descAt (hCI : CI) (hGM : GM.GM)
   have hEig := L1.eigBasic
   obtain ⟨hInf, hUnr, hNe, -, -, -⟩ := places F E hp
   obtain ⟨-, -, h0⟩ := Dp.parEx E n hn μE V hV
-  obtain ⟨v, hv, hvu⟩ := (hInf.diff (Set.finite_singleton u₀)).nonempty
+  obtain ⟨v, hv, hvu⟩ := (hInf.sdiff (Set.finite_singleton u₀)).nonempty
   obtain ⟨w⟩ := hNe v
   obtain ⟨τ', hτ'⟩ : ∃ τ', Occurs μE V w.1 τ' := by
-    letI : MeasurableSpace (Gw n w.1) := borel _
-    haveI : BorelSpace (Gw n w.1) := ⟨rfl⟩
+    let : MeasurableSpace (Gw n w.1) := borel _
+    have : BorelSpace (Gw n w.1) := ⟨rfl⟩
     exact (hOcc E n μE V w.1 Measure.haar hV).1
   have hfin := ((hS₀.image (fun w => w.under (𝓞 F))).union (Filter.eventually_cofinite.1 hUnr)).union (Set.finite_singleton v)
-  obtain ⟨q, hq, hqS'⟩ := (hInf.diff (hfin.union (Set.finite_singleton u₀))).nonempty
+  obtain ⟨q, hq, hqS'⟩ := (hInf.sdiff (hfin.union (Set.finite_singleton u₀))).nonempty
   obtain ⟨w₀⟩ := hNe q
   obtain ⟨S, hSdef⟩ : ∃ S, S = hfin.toFinset := ⟨_, rfl⟩
   have hsub : ∀ w : Pl E, w.under (𝓞 F) ∉ S → w ∉ S₀ := fun w hw hw0 =>
@@ -175,17 +175,17 @@ theorem _root_.UpperTheory.ConvolutionTheory.Sph.descAt (hCI : CI) (hGM : GM.GM)
   obtain ⟨u, hu, hu0⟩ := (Submodule.ne_bot_iff _).1 htyped
   obtain ⟨m, hm, D, s, hs, νE, iE, νF, iF, b, a, aE, aF, hposition, harch, hAE, hAF, hpair, hua⟩ :=
     hPI F E σ hσ hp n hn μE μF u hu0
-  letI : ∀ x : Pl E, MeasurableSpace (Gw n x) := fun _ => borel _
-  haveI : ∀ x : Pl E, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
-  letI : ∀ x : Pl F, MeasurableSpace (Gw n x) := fun _ => borel _
-  haveI : ∀ x : Pl F, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
+  let : ∀ x : Pl E, MeasurableSpace (Gw n x) := fun _ => borel _
+  have : ∀ x : Pl E, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
+  let : ∀ x : Pl F, MeasurableSpace (Gw n x) := fun _ => borel _
+  have : ∀ x : Pl F, BorelSpace (Gw n x) := fun _ => ⟨rfl⟩
   have hmE : ∀ x : Pl E, ∃ mm : Measure (Gw n x), mm.IsHaarMeasure := fun x => (haar_norm E n x).imp fun _ h => h.1
   have hmF : ∀ x : Pl F, ∃ mm : Measure (Gw n x), mm.IsHaarMeasure ∧ mm (GLnLocal.integralGL (x.adicCompletion F) n) = 1 :=
     fun x => haar_norm F n x
   choose mE hmE using hmE
   choose mF hmF using hmF
   have hτ : ∀ x : Pl E, ∃ τ : SmIrr (Gw n x), Occurs μE V x τ := fun x => by
-    haveI := hmE x
+    have := hmE x
     exact (hOcc E n μE V x (mE x) hV).1
   choose τ₁ hτ₁ using hτ
   obtain ⟨τ, hτ, hτw⟩ : ∃ τ : ∀ x : Pl E, SmIrr (Gw n x), (∀ x, Occurs μE V x (τ x)) ∧ τ (T.mk' v).1 = τ' := by
@@ -224,13 +224,13 @@ theorem _root_.UpperTheory.ConvolutionTheory.Sph.descAt (hCI : CI) (hGM : GM.GM)
   have hL₁S : L₁.S = S := hfit₁.S_eq.trans hTS
   have hs₁ : ∀ i (y : Pl F), ∃ z : ℂ, y ∈ S → HasTrace (mF y) (τ₀ i y).ρ (L₁.f y) z := fun i y => by
     by_cases hy : y ∈ S
-    · haveI := (hmF y).1
+    · have := (hmF y).1
       have ht := L₁.test y (hL₁S ▸ hy)
       obtain ⟨z, hz⟩ := (hOcc F n μF (V₀ i) y (mF y) (hι i).1).2.2 _ ((hι i).2.2.2 y) (L₁.f y) ⟨ht.2.2.1, ht.2.2.2⟩
       exact ⟨z, fun _ => hz⟩
     · exact ⟨0, fun h => absurd h hy⟩
   choose s₁ hs₁ using hs₁
-  haveI := (hmF v).1
+  have := (hmF v).1
   obtain ⟨i, hi⟩ := hAbs F n v (mF v) (UF v) hCO ι (fun i => τ₀ i v)
     (fun i => (κ * ∏ y ∈ S, c y) * bF i * ∏ y ∈ S.erase v, s₁ i y) Z τv (cE * r * ∏ y ∈ T.sp.erase v, su y) Z₀
     (mul_ne_zero (mul_ne_zero hcE hr) (Finset.prod_ne_zero_iff.2 fun y hy => (hsu y (Finset.mem_of_mem_erase hy)).1))
@@ -416,13 +416,13 @@ theorem UpperTheory.ConvolutionTheory.Sph.down :
   obtain ⟨Λ, t, S, hS, hAt⟩ := hAtE V' hV'.summand
   let t₁ : Pl E → Multiset ℂ := fun u => if u.under (𝓞 F) = v then b u else t u
   let S₀ : Set (Pl E) := S \ {u | u.under (𝓞 F) = v}
-  have hS₀ : S₀.Finite := hS.subset Set.diff_subset
+  have hS₀ : S₀.Finite := hS.subset Set.sdiff_subset
   have hAt₁ : At μE S₀ V' Λ t₁ := by
     refine ⟨hAt.1, fun u hu => ?_⟩
     by_cases h : u.under (𝓞 F) = v
-    · simp only [t₁, if_pos h]
+    · simp only [t₁, ite_eq_left h]
       exact hb u h
-    · simp only [t₁, if_neg h]
+    · simp only [t₁, ite_eq_right h]
       exact hAt.2 u fun h' => hu ⟨h', h⟩
   have hAE₁ : AtAE μE V' Λ t₁ := ⟨S₀, hS₀, hAt₁⟩
   obtain ⟨V₀, Λ₀, t₀, hV₀, hAt₀, hΛ, ht, hv₀, -⟩ := Sph.descAt ci Sph.gm F E σ hσ hp n hn μE μF θ hθ V' Λ t₁ S₀
@@ -474,10 +474,10 @@ private theorem pow_zero_of (B : H →L[ℂ] H) (m : ℕ) : ∀ x : H, ((B * sta
   | zero => exact fun x h => star_zero_of B x (by simpa using h)
   | succ m ih =>
     intro x h
-    rw [pow_succ, ContinuousLinearMap.mul_apply] at h
+    rw [pow_succ, mul_apply_eq_comp] at h
     have h1 := ih _ h
     have h2 : ((B * star B) * star (B * star B)) x = 0 := by
-      rw [hs, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, h1, map_zero]
+      rw [hs, mul_apply_eq_comp, mul_apply_eq_comp, h1, map_zero]
     have h3 := star_zero_of _ x h2
     rw [hs] at h3
     exact star_zero_of B x h3
@@ -637,7 +637,7 @@ theorem UpperTheory.ConvolutionTheory.Sph.up :
       simpa [t₁] using hSv
     · have hu' : u ∉ S := fun h => hu ⟨h, e⟩
       simpa [t₁, Function.update_of_ne e] using hAt.2 u hu'
-  have hfin : (S \ {v}).Finite := hS.diff
+  have hfin : (S \ {v}).Finite := hS.sdiff
   have hAE₁ : AtAE μF V Λ t₁ := ⟨_, hfin, hAt₁⟩
   obtain ⟨V'', hV'', hAE'', hup⟩ := Sph.liftAt ci Sph.gm F E σ hσ hp n hn μE μF θ hθ V Λ t₁ (S \ {v})
     hV.summand hfin hAt₁ (hOff Λ t₁ hAE₁) v (by simp) hv
@@ -688,11 +688,11 @@ private theorem not_both (F : Type) [Field F] [NumberField F] (h : IsTotallyReal
 theorem UpperTheory.ConvolutionTheory.Sph.cbcSph :
     UpperTheory.ConvolutionTheory.Sph.CBCsph := by
   intro K M _ _ _ _ _ _ hp hK n hn π P hW v hv
-  haveI := hK
-  haveI hM : IsTotallyComplex M := isTotallyComplex_of_algebra K M
-  haveI : Fact (Module.finrank K M).Prime := ⟨hp⟩
-  haveI : FiniteDimensional K M := Module.finite_of_finrank_pos hp.pos
-  haveI : IsCyclic (M ≃ₐ[K] M) := isCyclic_of_prime_card (IsGalois.card_aut_eq_finrank K M)
+  have := hK
+  have hM : IsTotallyComplex M := isTotallyComplex_of_algebra K M
+  have : Fact (Module.finrank K M).Prime := ⟨hp⟩
+  have : FiniteDimensional K M := Module.finite_of_finrank_pos hp.pos
+  have : IsCyclic (M ≃ₐ[K] M) := isCyclic_of_prime_card (IsGalois.card_aut_eq_finrank K M)
   obtain ⟨σ, hσ⟩ := IsCyclic.exists_generator (α := M ≃ₐ[K] M)
   rcases π with @⟨_, π⟩ | @⟨hR, π⟩
   swap

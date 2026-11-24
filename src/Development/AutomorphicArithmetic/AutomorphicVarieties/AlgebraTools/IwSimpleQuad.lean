@@ -143,7 +143,7 @@ theorem UpperTheory.V.AlgebraTools.simpleQuad :
   have hij : i ≠ j := fun h => by rw [h] at hj; omega
   have hI := (heckePairIwC k n C).1
   have hU : unipO k n ≤ iwC k n C := le_sup_right.trans le_sup_left
-  letI : Fintype 𝓀[k] := Fintype.ofFinite _
+  let : Fintype 𝓀[k] := Fintype.ofFinite _
   have hq : resCard k = Fintype.card 𝓀[k] := Nat.card_eq_fintype_card
   obtain ⟨r0, hr0⟩ := (IsLocalRing.residue_surjective (R := 𝒪[k])).hasRightInverse
   have hup : ∀ (b : 𝒪[k]) c, IsLocalRing.residue 𝒪[k] (Function.update r0 (IsLocalRing.residue 𝒪[k] b) b c) = c := by

@@ -70,7 +70,7 @@ theorem LineEigenvalue.continuous_coordRatio (h : HermitianForm F E W) (v : Basi
   unfold coordRatio
   refine Continuous.div_const ?_ _
   exact (continuous_apply (i w)).comp
-    ((Units.continuous_val.comp ((continuous_apply w).comp continuous_subtype_val)).matrix_mulVec
+    ((Units.continuous_val.comp ((continuous_apply w).comp continuous_subtypeVal)).matrix_mulVec
       continuous_const)
 
 
@@ -106,9 +106,9 @@ theorem LineEigenvalue.proof (h : HermitianForm F E W) (v : Basis ι E W)
   refine ⟨fun p w => Units.mk0 (coordRatio h v x₀ i (p : archUnitary h v) w)
     (coordRatio_ne_zero hi p.2 w), ?_, fun p w => ?_⟩
   · refine continuous_pi fun w => Units.continuous_iff.2 ⟨?_, ?_⟩
-    · exact (continuous_coordRatio h v x₀ i w).comp continuous_subtype_val
+    · exact (continuous_coordRatio h v x₀ i w).comp continuous_subtypeVal
     · simp only [Units.val_inv_eq_inv_val, Units.val_mk0]
-      exact ((continuous_coordRatio h v x₀ i w).comp continuous_subtype_val).inv₀
+      exact ((continuous_coordRatio h v x₀ i w).comp continuous_subtypeVal).inv₀
         fun p => coordRatio_ne_zero hi p.2 w
   · rw [Units.val_mk0]
     exact mulVec_eq_coordRatio hi p.2 w

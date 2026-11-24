@@ -78,14 +78,14 @@ theorem conj_conj (h : IsCMExt F E σ) (e : E) : σ (σ e) = e := by
 
 theorem exists_of_conj_eq (h : IsCMExt F E σ) (e : E) (he : σ e = e) :
     ∃ f, algebraMap F E f = e := by
-  haveI := Subalgebra.isSimpleOrder_of_finrank h.2.2.1
+  have := Subalgebra.isSimpleOrder_of_finrank h.2.2.1
   rcases eq_bot_or_eq_top (AlgHom.equalizer σ (AlgHom.id F E)) with h0 | h0
   · have : e ∈ AlgHom.equalizer σ (AlgHom.id F E) := he
     rw [h0, Algebra.mem_bot] at this
     exact this
   · exfalso
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
-    haveI := h.2.1
+    have := h.2.1
     refine IsTotallyComplex.complexEmbedding_not_isReal τ ?_
     rw [ComplexEmbedding.isReal_iff]
     ext x

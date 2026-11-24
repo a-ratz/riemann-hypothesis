@@ -170,7 +170,7 @@ theorem existsUnique_hasVal_of_dIn : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type)
     [DecidableEq σ] (z : σ → B), (∀ i, ∃ N : ℕ, (p : B) ∣ z i ^ N) →
     ∀ f : MvPowerSeries σ Q, DIn (⊤ : Ideal B) f → ∃! q : Q, HasVal p z f q := by
   intro p _ B O Q _ _ _ _ θ hF σ _ _ z hz f hf
-  haveI := hF.complete
+  have := hF.complete
   have hI : ∀ (k : ℕ) (x : B), x ∈ ((Ideal.span {(p : B)}) ^ k • ⊤ : Submodule B B) ↔
       ∃ e, x = (p : B) ^ k * e := by
     intro k x

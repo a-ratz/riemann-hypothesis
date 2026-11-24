@@ -346,8 +346,8 @@ end Conj
 
 theorem coeff_rational : ∀ (D : D7) (A B : HSp D) (ι : A.V →ₗ[D.host.E] B.V) (d : BesselDatum A B ι) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ F : GA D B → ℂ, (∀ γ ∈ GQ B, ∀ g, F (γ * g) = F g) → ∀ ν 𝓝, d.IsUnitPair ν 𝓝 → ∀ γ h, EmbRel B A ι γ h → γ ∈ GQ B → ∀ g, d.coeff ψ ν 𝓝 F (γ * g) = d.coeff ψ ν 𝓝 F g := by
   intro D A B ι d ψ hψ F hF ν 𝓝 hν γ h hγ hQ g
-  haveI : BorelSpace (GA D B) := ⟨rfl⟩
-  haveI : IsTopologicalGroup (GA D B) := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B).2.2.2.2.1
+  have : BorelSpace (GA D B) := ⟨rfl⟩
+  have : IsTopologicalGroup (GA D B) := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B).2.2.2.2.1
   obtain ⟨s, -, hs, -⟩ := GlobalTheory.Mem.UnitaryEmb.exists_embHom D B A ι d.isom
   have hγ' : EmbRel B A ι γ⁻¹ h⁻¹ := by
     rw [hs] at hγ ⊢
@@ -430,7 +430,7 @@ def fixGrp (B : HSp D) (x : Fin B.rank → AE D) : Subgroup (GA D B) where
 theorem fix_of_isK (d : BesselDatum A B ι) {i l : Fin (d.ρ + 1)} (h : l ≠ i) {t} {g : GA D B}
     (hg : IsK B (vecA B (dual d i)) (iA ι t) g) : g ∈ fixGrp B (vecA B (d.aux l)) := by
   show _ = _
-  rw [hg, hA_vec_iA (besselDatum_auxiliaryVector_orthogonal_image d l), hA_vec, (GlobalTheory.T.besselDatum_adelicVector_decomposition D A B ι d).1, if_neg h]
+  rw [hg, hA_vec_iA (besselDatum_auxiliaryVector_orthogonal_image d l), hA_vec, (GlobalTheory.T.besselDatum_adelicVector_decomposition D A B ι d).1, ite_eq_right h]
   simp
 
 theorem fix_of_ExGe (d : BesselDatum A B ι) {ε : AE D} (he : IsSplitIdem D ε) {p : ℕ} {l : Fin (d.ρ + 1)} (h : l.1 < p)
@@ -454,7 +454,7 @@ theorem hD_basis_succ_f (d : BesselDatum A B ι) (i : Fin d.ρ) : B.hD (d.aux i.
     unfold BesselDatum.aux
     refine Fin.lastCases (fun _ => ?_) (fun l hl => ?_) m
     · rw [Fin.snoc_last]; exact hD_swap_zero (d.fz i)
-    · rw [Fin.snoc_castSucc, d.ef, if_neg]
+    · rw [Fin.snoc_castSucc, d.ef, ite_eq_right]
       rintro rfl
       simp at hl
   exact key _ rfl
@@ -509,13 +509,13 @@ theorem mirror : ∀ (D : D7) (A B : HSp D) (ι : A.V →ₗ[D.host.E] B.V) (d :
       intro i
       rw [hact _ (hD_basis_e d _ j), hA_add, hA_smul, hA_vec, hA_vec, hD_basis_succ_f, d.ef]
       split_ifs <;> simp
-    simp only [e, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    simp only [e, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     have hb' : (mt B b⁻¹).mulVec (vecA B (d.aux j.succ)) = vecA B (d.aux j.succ) :=
       inv_mem (fix_of_ExGe d he (by simp) hb)
     have p1 : hA B (iA ι t) (vecA B (dual d j.succ)) = 0 := by
       rw [← hA_herm, hA_vec_iA (dual_perp d _), map_zero]
     rw [_root_.mul_inv_rev, mulVec_mul, hb', hA_mt_left, inv_inv, hb₀, p1, zero_smul, sub_zero, hA_add_right,
-      hA_vec_iA (besselDatum_auxiliaryVector_orthogonal_image d _), zero_add, hA_smul_right, hA_herm, hA_vec, (GlobalTheory.T.besselDatum_adelicVector_decomposition D A B ι d).1, if_pos rfl,
+      hA_vec_iA (besselDatum_auxiliaryVector_orthogonal_image d _), zero_add, hA_smul_right, hA_herm, hA_vec, (GlobalTheory.T.besselDatum_adelicVector_decomposition D A B ι d).1, ite_eq_left rfl,
       map_one, mul_one, hA_iA d.isom]
 
 end GlobalTheory.RootExch.Mirror
@@ -618,7 +618,7 @@ theorem isK_zero (v : Fin B.rank → AE D) : IsK B v 0 1 := fun x => by
   rw [GlobalTheory.BesselCompare.mt_one, Matrix.one_mulVec, hA_zero_right, zero_smul, smul_zero, add_zero, sub_zero]
 
 theorem continuous_iA : Continuous (iA (A := A) (B := B) ι) := by
-  haveI : IsTopologicalRing (AE D) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing
+  have : IsTopologicalRing (AE D) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing
   unfold iA
   exact continuous_const.matrix_mulVec continuous_id
 
@@ -626,11 +626,11 @@ theorem exists_K (η : AE D) (hη : η * cA D η = 0) {v : B.V} (hv : ∀ x, B.h
     ∃ K : {t : Fin A.rank → AE D // η • t = t} → GA D B, Continuous K ∧ ∀ t, IsK B (vecA B v) (iA ι t.1) (K t) := by
   obtain ⟨K, hK, hk⟩ := GlobalTheory.RootUnip.exists_continuous_isK D B η hη (vecA B v)
   refine ⟨fun t => K ⟨iA ι t.1, by rw [← iA_smul, t.2], hA_vec_iA hv _⟩,
-    hK.comp (Continuous.subtype_mk (continuous_iA.comp continuous_subtype_val) _), fun t => hk _⟩
+    hK.comp (Continuous.subtype_mk (continuous_iA.comp continuous_subtypeVal) _), fun t => hk _⟩
 
 theorem isLocallyConstant_of_lvl {β : GA D B → ℂ} (h : Lvl β) (H : Subgroup (GA D B)) (hH : H ≤ GfC B) (g : GA D B) :
     IsLocallyConstant fun u : H => β ((u : GA D B) * g) := by
-  haveI : IsTopologicalGroup (GA D B) := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B).2.2.2.2.1
+  have : IsTopologicalGroup (GA D B) := (GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B).2.2.2.2.1
   obtain ⟨U, hU, hk⟩ := h
   rw [IsLocallyConstant.iff_exists_open]
   intro u
@@ -646,11 +646,11 @@ theorem exch_finite (d : BesselDatum A B ι) {ψ} (hψ : IsStdChar D ψ (-1)) {�
     IsLocallyConstant (fun u : d.Ex ε i => exL d ε m l β ((u : GA D B) * g)) ∧
       HasCompactSupport (fun u : d.Ex ε i => exL d ε m l β ((u : GA D B) * g)) := by
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B
-  haveI : IsTopologicalRing (AE D) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing
-  haveI : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
+  have : IsTopologicalRing (AE D) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.isTopRing
+  have : Module.Finite D.host.F D.host.E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField D.host.F
   obtain ⟨e0⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := D.host.F) (E := D.host.E) (AF D.host.F)
-  haveI : T2Space (AE D) := e0.isEmbedding.t2Space
+  have : T2Space (AE D) := e0.isEmbedding.t2Space
   have hL := lvl_exL d ε m l h1
   refine ⟨isLocallyConstant_of_lvl hL _ (fun u hu => mem_GfC hε (suppAt_of_mem_Ex hu)) g, ?_⟩
   obtain ⟨j, rfl⟩ : ∃ j : Fin d.ρ, i = j.succ := (Fin.eq_zero_or_eq_succ i).resolve_left (by rintro rfl; simp at hi)
@@ -716,7 +716,7 @@ theorem exL_add (d : BesselDatum A B ι) {ψ} (hψ : IsStdChar D ψ (-1)) {ε : 
     have hj : ∀ j ∈ l, i.1 + 1 ≤ j.1 := fun j hj => (List.pairwise_cons.1 hs).1 j hj
     obtain ⟨a1, a2⟩ := exch_finite d hψ hε m h1 h2 i hi l hj g
     obtain ⟨b1, b2⟩ := exch_finite d hψ hε m h1' h2' i hi l hj g
-    haveI := hm i
+    have := hm i
     rw [ih (fun j hj => hl j (List.mem_cons_of_mem _ hj)) (List.pairwise_cons.1 hs).2,
       ← integral_add (a1.continuous.integrable_of_hasCompactSupport a2) (b1.continuous.integrable_of_hasCompactSupport b2)]
     rfl
@@ -981,11 +981,11 @@ def actReal (hθ : IsInfFam θ) (V : HSp D) (τ : D.what₂.Tau) (g : Matrix (Fi
 
 theorem actReal_apply (hθ : IsInfFam θ) (V : HSp D) (τ) {g} (h : g ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)) (F : AFs θ V) (x) :
     (actReal hθ V τ g F).1 x = F.1 (x * atTau θ V τ g) := by
-  rw [actReal, dif_pos h]; rfl
+  rw [actReal, dite_eq_left h]; rfl
 
 theorem mul_mem_UH {n : ℕ} {H g h : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ Formalism.QuantumDeterminants.UH H) (hh : h ∈ Formalism.QuantumDeterminants.UH H) :
     g * h ∈ Formalism.QuantumDeterminants.UH H := by
-  simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at *
+  simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq] at *
   rw [conjTranspose_mul]
   calc hᴴ * gᴴ * H * (g * h) = hᴴ * (gᴴ * H * g) * h := by simp only [Matrix.mul_assoc]
     _ = H := by rw [hg, hh]
@@ -1014,7 +1014,7 @@ def transp {ψ : AddChar (AF D.host.F) ℂ} {V W : HSp D} (Φ : ThS ψ V W) : Th
 
 theorem transp_apply {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) {V W : HSp D} (h : V.rank ≠ W.rank)
     (Φ : ThS ψ V W) (x : WA V W) : (transp Φ).1 x.transpose = Φ.1 x := by
-  rw [transp, dif_pos ((GlobalTheory.Mem.ThetaClosed.thetaFun_closed D ψ hψ V W Φ.1).2.2 h (mem_ThS.1 Φ.2))]
+  rw [transp, dite_eq_left ((GlobalTheory.Mem.ThetaClosed.thetaFun_closed D ψ hψ V W Φ.1).2.2 h (mem_ThS.1 Φ.2))]
   rfl
 
 abbrev Trip (D : D7) := Σ (A B : HSp D), A.V →ₗ[D.host.E] B.V
@@ -1080,7 +1080,7 @@ def perT (A B : HSp D) (ι : A.V →ₗ[D.host.E] B.V) : PosT A B ι → Ses θ 
 
 theorem perT_inl {A B : HSp D} {ι : A.V →ₗ[D.host.E] B.V} (ho : Odd (B.rank - A.rank))
     (f : Odd (B.rank - A.rank) → Bes1 A B ι) :
-    perT hB hθ hψ Rc A B ι (.inl f) = (exists_bes hB hθ hψ (f ho).1).choose := dif_pos ho
+    perT hB hθ hψ Rc A B ι (.inl f) = (exists_bes hB hθ hψ (f ho).1).choose := dite_eq_left ho
 
 theorem perT_inr (u : D.what₂.Word) :
     perT hB hθ hψ Rc (D.sp.X 0) (D.sp.Y 0) (D.sp.iXY 0) (.inr (u, ⟨rfl⟩)) = per1 hθ hψ Rc u := rfl

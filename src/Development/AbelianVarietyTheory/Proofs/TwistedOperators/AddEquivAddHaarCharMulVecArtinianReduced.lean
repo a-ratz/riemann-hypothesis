@@ -77,10 +77,10 @@ theorem addEquivAddHaarChar_mulVecCE (B : Type) [CommRing B] [TopologicalSpace B
   set m := (Measure.map M.mulVec μ) (K : Set (κ → B))
   have e1 : (addEquivAddHaarChar (mulVecCE M hM) : ℝ≥0∞) * m = μ K := by
     conv_rhs => rw [← h1]
-    rw [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, ENNReal.smul_def, smul_eq_mul]
   have e2 : (modu B M.det : ℝ≥0∞) * m = μ K := by
     conv_rhs => rw [← h2]
-    rw [Measure.smul_apply, smul_eq_mul]
+    rw [smul_apply, smul_eq_mul]
   have hm0 : m ≠ 0 := by
     intro h; rw [h, mul_zero] at e1; exact hpos e1.symm
   have hmt : m ≠ ⊤ := by

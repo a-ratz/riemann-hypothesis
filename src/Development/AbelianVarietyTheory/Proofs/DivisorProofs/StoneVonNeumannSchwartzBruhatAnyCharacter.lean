@@ -91,7 +91,7 @@ theorem exists_ball_trivial (ψ0 : AddChar k ℂ) (hψ : Continuous ψ0) :
     intro s hs n
     have h1 : n • s ∈ {t : k | ‖ψ0 t - 1‖ < 1} :=
       hsub (lt_of_le_of_lt (GlobalTheory.CharDualMat.valuation_nsmul_le s n) hs)
-    rw [Set.mem_setOf_eq, AddChar.map_nsmul_eq_pow] at h1
+    rw [Set.mem_ofPred_eq, AddChar.map_nsmul_eq_pow] at h1
     exact h1
   have hneg : valuation k (-t) < γ := by rwa [Valuation.map_neg]
   have a1 := norm_le_one_of_pow_near _ (hp t ht)
@@ -123,7 +123,7 @@ theorem exists_rescale_conductor_integers [CharZero k]
     apply ht
     have hmem : t / a ∈ 𝒪[k] := by
       rw [Valuation.mem_integer_iff, map_div₀]
-      exact div_le_one_of_le₀ hle zero_le'
+      exact div_le_one_of_le₀ hle zero_le
     have := ha _ hmem
     rwa [mul_div_cancel₀ _ ha0] at this
   obtain ⟨γ, hγ, hball⟩ := exists_ball_trivial ψ0 hψ
@@ -181,7 +181,7 @@ theorem exists_rescale_conductor_integers [CharZero k]
   have h2 : valuation k x = valuation k (a0 * x) / valuation k a0 := by
     rw [map_mul, mul_div_cancel_left₀ _ hv0]
   rw [h2]
-  exact (div_le_one₀ (zero_lt_iff.2 hv0)).2 h1
+  exact (div_le_one₀ (pos_iff_ne_zero.2 hv0)).2 h1
 
 end GlobalTheory.CondRescale
 end -- clump:auto

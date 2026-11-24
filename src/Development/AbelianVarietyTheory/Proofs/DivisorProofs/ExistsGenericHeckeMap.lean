@@ -178,7 +178,7 @@ theorem weil_value (G : GDatum) (g : G.La →ₗ[G.O] G.La) (c k : ℕ) (hc0 : 0
   have hev : ∀ w : G.La, I.ev (n * k) (g w) = I.ev (n * (m * k ^ 2)) (m • g w) ≫ Out.mulA A k := fun w => by
     rw [Out.mulA, MonObj.comp_pow, Category.comp_id, ← ev_nsmul, smul_smul, mul_comm k m,
       ev_nsmul, eN, I.tower (n * k) (m * k) (by positivity) (by positivity)]
-  haveI := isMonHom_mulA (A := A) k
+  have := isMonHom_mulA (A := A) k
   have hw := GlobalTheory.HeckeWeilValue.lbIso_mulA_diag hA hP hamp h₁ h₂ k
   rw [hev u, hev v] at he
   have h1 := GlobalTheory.WeilIsogeny.weilIs_pull_hom hG hA hL hL (Out.mulA A k) hw he
@@ -209,7 +209,7 @@ theorem tate_transl (G : GDatum) (g : G.La →ₗ[G.O] G.La) (c k N : ℕ) (cpos
     (I : TateAt G A act P x) (hsurj : ∀ q : Over.mk x ⟶ A', ∃ a : Over.mk x ⟶ A, a ≫ ψ = q)
     (hker : ∀ t : Over.mk x ⟶ A, t ≫ ψ = 1 ↔ ∃ z, t = I.ev (N * k) (N • g z)) :
     ∃ I' : TateAt G A' act' P' x, ∀ n y, I'.ev n y = I.ev (n * k) (g y) ≫ ψ := by
-  haveI := G.freeLa
+  have := G.freeLa
   let Ψ : (Over.mk x ⟶ A) →* (Over.mk x ⟶ A') :=
     MonoidHom.mk' (fun t => t ≫ ψ) (fun a a' => MonObj.mul_comp a a' ψ)
   have hΨ : ∀ t, Ψ t = t ≫ ψ := fun _ => rfl
@@ -362,8 +362,8 @@ theorem tate_hecke {b : Base D R} (g : D.La →ₗ[D.O] D.La) (c k N : ℕ) (cpo
     ∃ I' : TateAt D.toG o'.A o'.act o'.P x, ∀ y, toUnit _ ≫ o'.eta y = I'.ev N y := by
   obtain ⟨hψ, hact, heta, hGal, ⟨hiso⟩, hck⟩ := h
   have hsurj : ∀ q : Over.mk x ⟶ o'.A, ∃ a : Over.mk x ⟶ o.A, a ≫ ψ = q := fun q => by
-    haveI := hGal.fin
-    haveI := hGal.onto
+    have := hGal.fin
+    have := hGal.onto
     obtain ⟨a₀, ha₀⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective ψ.left q.left
     let a : Over.mk x ⟶ o.A := Over.homMk a₀ (by
       show a₀ ≫ o.A.hom = x

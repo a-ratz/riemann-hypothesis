@@ -127,7 +127,7 @@ private lemma nrm_eq_wn (s M ε : ℝ) (F : E d → ℂ) : nrm s M ε F = wn s M
   rw [← ENNReal.rpow_natCast, show ((2 : ℕ) : ℝ) = 2 by norm_num, ← h]
   unfold nrm
   congr 1; ext ξ
-  rw [Real.enorm_eq_ofReal (mul_nonneg (om_nonneg' _ _ _ _) (norm_nonneg _)),
+  rw [Real.eNorm_eq_ofReal (mul_nonneg (om_nonneg' _ _ _ _) (norm_nonneg _)),
     ENNReal.ofReal_mul (om_nonneg' _ _ _ _), ofReal_norm]
   have hp (x : ℝ≥0∞) : x ^ (2 : ℝ) = x ^ (2 : ℕ) := by
     simpa using (ENNReal.rpow_natCast x 2)
@@ -158,7 +158,7 @@ private lemma wn_le_of (s s' M M' ε ε' : ℝ) (F G : E d → ℂ) (c : ℝ) (h
       abs_of_nonneg (mul_nonneg hc (mul_nonneg (om_nonneg' _ _ _ _) (norm_nonneg _)))]
     exact h ξ
   rw [eLpNorm'_const_smul c (by norm_num)] at this
-  simpa [Real.enorm_eq_ofReal hc] using this
+  simpa [Real.eNorm_eq_ofReal hc] using this
 
 private lemma wn_mono_alt (s s' M ε : ℝ) (hs : s ≤ s') (F : E d → ℂ) : wn s M ε F ≤ wn s' M ε F := by
   simpa using wn_le_of s s' M M ε ε F F 1 zero_le_one
@@ -559,8 +559,8 @@ private lemma ell_wn {ι : Type} [Fintype ι] (m : ι → ℕ) (k : ℕ) (c : �
   refine h1.trans ((eLpNorm_add_le (p := 2) (by norm_num)).trans ?_)
   rw [eLpNorm_const_smul, eLpNorm_const_smul]
   refine add_le_add ?_ ?_
-  · rw [Real.enorm_eq_ofReal (Real.sqrt_nonneg _), hb (wt_aesm s M ε hV.measurable)]; rfl
-  · rw [Real.enorm_eq_ofReal (Real.sqrt_nonneg _)]
+  · rw [Real.eNorm_eq_ofReal (Real.sqrt_nonneg _), hb (wt_aesm s M ε hV.measurable)]; rfl
+  · rw [Real.eNorm_eq_ofReal (Real.sqrt_nonneg _)]
     apply mul_le_mul' le_rfl
     refine (eLpNorm_sum_le (p := 2) (by norm_num)).trans ?_
     apply Finset.sum_le_sum

@@ -169,10 +169,10 @@ theorem encard_smallSec_le : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInt
   have hrep := Pair.rep_base k X p P
   have eL : P.L.smallSec.encard = (P.Bl 1 0 1).encard :=
     SmallBall.encard_eq_Bl P hrep.1 P.L.smallSec 1 zero_le_one fun u => by
-      simp only [HermLB.smallSec, Set.mem_setOf_eq, one_pow]
+      simp only [HermLB.smallSec, Set.mem_ofPred_eq, one_pow]
   have eA : P.A.smallSec.encard = (P.Bl 0 1 1).encard :=
     SmallBall.encard_eq_Bl P hrep.2.1 P.A.smallSec 1 zero_le_one fun u => by
-      simp only [HermLB.smallSec, Set.mem_setOf_eq, one_pow]
+      simp only [HermLB.smallSec, Set.mem_ofPred_eq, one_pow]
   rw [eL, eA]
   refine Set.encard_le_encard fun f hf => ?_
   have e := NuMul.mul_mem_H_and_nu_mul k X p P 1 (-1) 0 1 1 f h1.1 hf.1
@@ -620,7 +620,7 @@ theorem main : GlobalTheory.Published.ArCalc → AmpleHS → ∀ (k : Type) [Com
       (Pair.rep_dual k X p P _ _ _ (Pair.rep_pow k X p P _ _ _ c h2))
     simpa using this
   have hE := SmallBall.encard_eq_Bl P hRep ((P.L.pow m).tens ((P.A.pow c).dual)).smallSec 1 zero_le_one fun u => by
-    simp only [HermLB.smallSec, Set.mem_setOf_eq, one_pow]
+    simp only [HermLB.smallSec, Set.mem_ofPred_eq, one_pow]
   have hle := _root_.GlobalTheory.HSNef.LeCard.encard_smallSec_le k X p _ _ ((_root_.GlobalTheory.HSNef.le_tens_isometric_trans_shift k X p _ _ (P.L.pow m)).1 hLe)
   have hfin := _root_.GlobalTheory.SmallFin.smallSec_finite k X p D hX ((P.L.pow m).tens N)
   have hBle : (P.Bl m (-c) 1).encard ≤ ((P.L.pow m).tens N).smallSec.encard := hE ▸ hle
@@ -891,7 +891,7 @@ namespace GlobalTheory.NefUpper
 theorem log_ncard_smallSec {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X] {p : X ⟶ Sp k} (P : Pair p) :
     Real.log (P.L.smallSec.ncard : ℝ) = P.lc 1 0 1 := by
   have h := SmallBall.encard_eq_Bl P (Pair.rep_base k X p P).1 P.L.smallSec 1 zero_le_one fun u => by
-    simp only [HermLB.smallSec, Set.mem_setOf_eq, one_pow]
+    simp only [HermLB.smallSec, Set.mem_ofPred_eq, one_pow]
   unfold Pair.lc
   rw [Set.ncard_def, Set.ncard_def, h]
 
@@ -1039,8 +1039,8 @@ theorem exists_residueDegree_pos_of_mem_range (W Z : Scheme.{0}) (g : W ⟶ Z) [
     have : LocallyOfFiniteType (Spec.map β) := hβ ▸ inferInstance
     exact HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType) |>.mp this
   have hβf : β.hom.Finite := by
-    letI := β.hom.toAlgebra
-    haveI : Algebra.FiniteType (Z.residueField z) (F.residueField x) := hβft
+    let := β.hom.toAlgebra
+    have : Algebra.FiniteType (Z.residueField z) (F.residueField x) := hβft
     exact finite_of_finite_type_of_isJacobsonRing _ _
   have hhf : (h.residueFieldMap x).hom.Finite := by
     have : h.residueFieldMap x = (Z.residueFieldCongr e.symm).inv ≫ β := by simp [β]
@@ -1050,15 +1050,15 @@ theorem exists_residueDegree_pos_of_mem_range (W Z : Scheme.{0}) (g : W ⟶ Z) [
   refine ⟨g.fiberι z x, e, ?_⟩
   rw [show h.residueFieldMap x = g.residueFieldMap (g.fiberι z x) ≫ (g.fiberι z).residueFieldMap x
     from Scheme.residueFieldMap_comp _ _ _] at hhf
-  letI := (g.residueFieldMap (g.fiberι z x)).hom.toAlgebra
-  letI := ((g.fiberι z).residueFieldMap x).hom.toAlgebra
-  letI := (g.residueFieldMap (g.fiberι z x) ≫ (g.fiberι z).residueFieldMap x).hom.toAlgebra
-  haveI : IsScalarTower (Z.residueField (g (g.fiberι z x))) (W.residueField (g.fiberι z x))
+  let := (g.residueFieldMap (g.fiberι z x)).hom.toAlgebra
+  let := ((g.fiberι z).residueFieldMap x).hom.toAlgebra
+  let := (g.residueFieldMap (g.fiberι z x) ≫ (g.fiberι z).residueFieldMap x).hom.toAlgebra
+  have : IsScalarTower (Z.residueField (g (g.fiberι z x))) (W.residueField (g.fiberι z x))
       (F.residueField x) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Finite (Z.residueField (g (g.fiberι z x))) (F.residueField x) := hhf
+  have : Module.Finite (Z.residueField (g (g.fiberι z x))) (F.residueField x) := hhf
   let φ := IsScalarTower.toAlgHom (Z.residueField (g (g.fiberι z x)))
     (W.residueField (g.fiberι z x)) (F.residueField x)
-  haveI : Module.Finite (Z.residueField (g (g.fiberι z x))) (W.residueField (g.fiberι z x)) :=
+  have : Module.Finite (Z.residueField (g (g.fiberι z x))) (W.residueField (g.fiberι z x)) :=
     Module.Finite.of_injective φ.toLinearMap φ.toRingHom.injective
   exact Module.finrank_pos
 
@@ -1254,7 +1254,7 @@ theorem semiPos_of_pull_etale : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [
   have := hp.finite
   have hσ : Function.Injective σ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
     exact RingHom.injective_int _
   have : Etale (V.ι ≫ π) := hE
@@ -1413,7 +1413,7 @@ theorem semiPos_pull_of_etale : ∀ (k : Type) [CommRing k] (X Y : Scheme.{0}) [
   intro σ
   have hσ : Function.Injective σ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     change Ideal.comap (algebraMap ℤ k) (RingHom.ker σ) = ⊥
     rw [RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
     exact RingHom.injective_int _

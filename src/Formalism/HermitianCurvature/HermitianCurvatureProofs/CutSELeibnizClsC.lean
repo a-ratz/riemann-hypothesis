@@ -127,8 +127,8 @@ theorem slDom_zero : SlDom μ l c (0 : RadSp k r z z' π π') := by
 theorem slDom_add (hμ : B.IsHaarOn (Glev k r (Fin.last r)) μ) {Φ Ψ : RadSp k r z z' π π'}
     (hΦ : Φ ∈ lcSub k r z z' π π') (hΨ : Ψ ∈ lcSub k r z z' π π') (h1 : SlDom μ l c Φ) (h2 : SlDom μ l c Ψ) :
     SlDom μ l c (Φ + Ψ) := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨hμ.finite_compact⟩
-  haveI : SFinite μ := by
+  have : IsFiniteMeasureOnCompacts μ := ⟨hμ.finite_compact⟩
+  have : SFinite μ := by
     first
       | infer_instance
       | exact (sigmaFinite_of_locallyFinite (μ := μ)).toSFinite
@@ -567,8 +567,8 @@ theorem rr_picC (P : M.Par) (z z' : Fin (2 * P.r + P.k + 1) → ℂ) (π : Mx P.
   have hN' : ∀ b', JC.NiceCoef D ε (F' b') := by
     intro b'
     by_cases h : b' = b
-    · simp only [F', if_pos h]; exact hN
-    · simp only [F', if_neg h]; exact Formalism.FourierDecayAlt.P.JCx2.mn_nice_zero
+    · simp only [F', ite_eq_left h]; exact hN
+    · simp only [F', ite_eq_right h]; exact Formalism.FourierDecayAlt.P.JCx2.mn_nice_zero
   let x : Ix S → Mx P.k P.r → (Wq →L[ℂ] Wp) := fun b' => B.JF D (F' b')
   let Φv : Ix S → RadSp P.k P.r D.z D.z' D.π D.π' := fun b' => if b' = b then Φ else 0
   have hx : ∀ b', x b' ∈ FFl P.k P.r D.z D.z' D.π D.π' 0 (OmPlus P.k P.r D.z D.z') := fun b' =>
@@ -577,16 +577,16 @@ theorem rr_picC (P : M.Par) (z z' : Fin (2 * P.r + P.k + 1) → ℂ) (π : Mx P.
       (Φv b' : Fn P.k P.r (Wq →L[ℂ] Wp)) y.1 y.2 = resG P.k P.r (Fin.last P.r) (x b') y.1 y.2 := by
     intro b' y hy
     by_cases h : b' = b
-    · simp only [Φv, x, F', if_pos h]; exact hΦ y hy
-    · simp only [Φv, x, F', if_neg h]
+    · simp only [Φv, x, F', ite_eq_left h]; exact hΦ y hy
+    · simp only [Φv, x, F', ite_eq_right h]
       simp only [resG, Formalism.FourierDecayAlt.P.JCx2.bc_JF_zero, smul_zero]
       rfl
   have key := Formalism.FourierDecayAlt.P.JCx2.rma_main D.z_mem D.z'_mem X L st (M.sgn P l0) hD.2.2.1 hD.2.2.2.1 w x Φv hx hΦv
   have hsingle : act (RRi L st 0 w) Φv a = ((RRi L st 0 w) a b).1 Φ := by
     unfold act
-    rw [Finset.sum_eq_single b (fun b' _ hb' => by simp only [Φv, if_neg hb', map_zero])
+    rw [Finset.sum_eq_single b (fun b' _ hb' => by simp only [Φv, ite_eq_right hb', map_zero])
       (fun h => absurd (Finset.mem_univ b) h)]
-    simp only [Φv, if_pos rfl]
+    simp only [Φv, ite_eq_left rfl]
   have hR := Formalism.FourierDecayAlt.P.JCx2.mn_rrop_closure Formalism.FourierDecayAlt.P.JCx2.bcGood_closed
     (Formalism.FourierDecayAlt.P.JCx2.rma_Qop P.k P.r D.z D.z' (M.sgn P l0))
     (fun Y p q => Formalism.FourierDecayAlt.P.JCx2.bcGood_tL (Bs := D) (ε := ε) (M.sgn P l0) Y p q) w
@@ -603,8 +603,8 @@ theorem rr_picC (P : M.Par) (z z' : Fin (2 * P.r + P.k + 1) → ℂ) (π : Mx P.
     rw [Finset.sum_apply]
     refine Finset.sum_eq_zero fun b' _ => hS a b' (F' b') g fun hg' => ?_
     by_cases h : b' = b
-    · simp only [F', if_pos h] at hg'; exact hgG hg'
-    · simp only [F', if_neg h] at hg'; simp at hg'
+    · simp only [F', ite_eq_left h] at hg'; exact hgG hg'
+    · simp only [F', ite_eq_right h] at hg'; simp at hg'
   · intro y hy
     rw [← hsingle, key a y hy]
     have hGV : wCell P.k P.r (Fin.last _) y.1 * y.2 ∈ B.GV P.k P.r := by
@@ -746,7 +746,7 @@ theorem leibnizCls_ofC (hO : OuterLeib) (hJ : JSliceGenC) : LeibnizCls := by
 theorem densSmoothCls_ofC (hO : OuterLeib) (hJ : JSliceGenC) : DensSmoothCls := by
   intro Wp Wq _ _ _ _ _ _ S _ _ P z z' π π' X μ L st l0 D hD h1 h2 hz hz' hπ hπ' l hl u v hu hv c hc
   have hμ : B.IsHaarOn (Glev P.k P.r (Fin.last P.r)) μ := hD.2.1
-  haveI : SFinite μ := Formalism.FourierDecayAlt.P5.sfinite_of_isHaarOn _ μ hμ
+  have : SFinite μ := Formalism.FourierDecayAlt.P5.sfinite_of_isHaarOn _ μ hμ
   have hsu : ∀ b, SliceGood X μ l c (u b) := fun b =>
     clsE_sliceGood_ofC hJ S P z z' π π' X μ L st l0 D hD h1 h2 hz hz' hπ hπ' l hl c hc (u b) (hu b)
   have hsv : ∀ b, SliceGood X μ l c (v b) := fun b =>

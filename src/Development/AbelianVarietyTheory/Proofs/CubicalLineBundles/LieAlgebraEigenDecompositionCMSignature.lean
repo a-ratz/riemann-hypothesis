@@ -128,9 +128,9 @@ theorem finrank_eigenSub {K : Type} [Field K] [NumberField K] {P : Out.PolAV (Sp
     intro a c
     rw [hact']
     exact (hB _ _ (hlie a (r a) (hr a) c _ (hA c))).symm
-  haveI : IsCommMonObj F.P₀.A := F.P₀.isAb.comm
-  haveI : Smooth F.P₀.A.hom := by
-    haveI := F.P₀.smoothDim
+  have : IsCommMonObj F.P₀.A := F.P₀.isAb.comm
+  have : Smooth F.P₀.A.hom := by
+    have := F.P₀.smoothDim
     exact SmoothOfRelativeDimension.smooth F.P₀.g F.P₀.A.hom
   have hN1 : LieMult act (spMap j ≫ spMap (algebraMap (𝓞 K) K)) (j.comp χ) N := by
     rw [← spMap_comp]
@@ -211,7 +211,7 @@ private theorem isSplitting_of_splits {E₁ K₁ : Type} [Field E₁] [NumberFie
     rw [← Nat.card_eq_fintype_card, hs, ← RingOfIntegers.rank E₁, Module.finrank_eq_card_chooseBasisIndex]
   let b := (RingOfIntegers.basis E₁).reindex (Fintype.equivOfCardEq hcard).symm
   rw [EigenSplit.isSplitting_iff_isUnit_det _ b, ← Matrix.isUnit_iff_isUnit_det,
-    ← Matrix.linearIndependent_rows_iff_isUnit]
+    ← Matrix.linearIndependent_row_iff_isUnit]
   have hinj : Function.Injective fun τ : 𝓞 E₁ →+* 𝓞 K₁ => ((algebraMap (𝓞 K₁) K₁).comp τ).toMonoidHom := by
     intro τ τ' hττ
     apply RingHom.ext
@@ -237,7 +237,7 @@ private theorem isSplitting_of_splits {E₁ K₁ : Type} [Field E₁] [NumberFie
     intro i _
     rw [map_zsmul, zsmul_eq_mul]
   simp only [Finset.sum_apply, Pi.smul_apply, Function.comp_apply, smul_eq_mul, Pi.zero_apply,
-    MonoidHom.coe_coe]
+    MonoidHom.coe_ofClass]
   show ∑ τ : 𝓞 E₁ →+* 𝓞 K₁, g τ * ((algebraMap (𝓞 K₁) K₁).comp τ) x = 0
   simp only [hx, Finset.mul_sum]
   rw [Finset.sum_comm]
@@ -258,7 +258,7 @@ theorem eigen_decomposition : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   obtain ⟨r, hr, hrl⟩ := _root_.GlobalTheory.CM.GenFib.exists_lieRep_eigLat K T.pol F (𝓞 E) T.t.act
   have hfin : Finite (𝓞 E →+* 𝓞 K) :=
     Nat.finite_of_card_ne_zero (by rw [hs]; exact (Module.finrank_pos (R := ℚ) (M := E)).ne')
-  haveI := Fintype.ofFinite (𝓞 E →+* 𝓞 K)
+  have := Fintype.ofFinite (𝓞 E →+* 𝓞 K)
   have hspan : ∀ τ : 𝓞 E →+* 𝓞 K, Submodule.span K (F.eigLat T.t.act τ : Set (Fin F.P₀.g → K)) =
       EigenSplit.eigenSub r ((algebraMap (𝓞 K) K).comp τ) := by
     intro τ

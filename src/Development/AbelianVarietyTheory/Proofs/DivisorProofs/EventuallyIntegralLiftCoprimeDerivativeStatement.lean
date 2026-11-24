@@ -83,12 +83,12 @@ theorem finite_bad {E : Type} [Field E] [NumberField E] (Q : E[X]) :
   refine ((Finset.range (Q.natDegree + 1)).finite_toSet.biUnion
     fun n _ => HeightOneSpectrum.Support.finite (𝓞 E) (Q.coeff n)).subset ?_
   intro w hw
-  simp only [Set.mem_setOf_eq, not_forall, not_le] at hw
+  simp only [Set.mem_ofPred_eq, not_forall, not_le] at hw
   obtain ⟨n, hn⟩ := hw
   have hn' : n < Q.natDegree + 1 := by
     by_contra hc
     rw [Polynomial.coeff_eq_zero_of_natDegree_lt (by omega), map_zero] at hn
-    exact (not_lt.2 zero_le') hn
+    exact (not_lt.2 zero_le) hn
   simp only [Set.mem_iUnion]
   exact ⟨n, by simpa using hn', hn⟩
 
@@ -106,7 +106,7 @@ theorem eventually_integral_coprime : ∀ (E : Type) [Field E] [NumberField E] (
   refine Filter.eventually_cofinite.2 (hfin.subset ?_)
   intro w hw
   by_contra hc
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hc
   obtain ⟨⟨hPw, haw⟩, hbw⟩ := hc
   apply hw
   obtain ⟨P₀, hP₀⟩ := lift_of_val_le w P hPw

@@ -90,7 +90,7 @@ theorem discreteTopology_principalSubgroup :
 theorem isClosed_principalSubgroup :
     IsClosed (AdeleRing.principalSubgroup (𝓞 K) K : Set 𝔸[K]) :=
   haveI := discreteTopology_principalSubgroup K
-  AddSubgroup.isClosed_of_discrete
+  AddSubgroup.isClosed_of_discreteTopology
 
 noncomputable def fundamentalSet : Set 𝔸[K] :=
   fundamentalSetInfinite K ×ˢ (integralFiniteAdeles (𝓞 K) K : Set (FiniteAdeleRing (𝓞 K) K))

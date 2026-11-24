@@ -371,7 +371,7 @@ theorem valR_sub_const_mul {R S : Type} [CommRing R] [CommRing S] {X : Scheme.{0
   have hc : valR x W (constFn p W r) = φ r := GlobalTheory.Points.valR_constFn_of_over p φ x hx W h r
   rw [← hc]
   unfold valR
-  simp only [dif_pos h, map_sub, map_mul]
+  simp only [dite_eq_left h, map_sub, map_mul]
 
 theorem isWt_sub_const_mul : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (Ω : Type) [CommRing Ω] [StarRing Ω] [Module Ω Q.X] (oa : Q.OAct Ω) (Y : Ray oa), ∀ (α : Q.X) (W : Y.H.left.Opens) (f g : Γ(Y.H.left, W)) (r : R), IsWt Y α W f → IsWt Y α W g → IsWt Y α W (f - constFn Y.H.hom W r * g) := by
   intro R _ _ Q Ω _ _ _ oa Y α W f g r hf hg S _ φ x x' c a a' ha ha' hW hW' hq hc
@@ -791,7 +791,7 @@ theorem hom_ext_of_localizationAtPrime : ∀ (A : Type) [CommRing A] (X : Scheme
   intro A _ X a b h
   refine GlobalTheory.hom_ext_of_isLocalRing fun B _ _ φ => ?_
   let P : Ideal A := (IsLocalRing.maximalIdeal B).comap φ
-  haveI : P.IsPrime := Ideal.comap_isPrime φ (IsLocalRing.maximalIdeal B)
+  have : P.IsPrime := Ideal.comap_isPrime φ (IsLocalRing.maximalIdeal B)
   have hu : ∀ y : P.primeCompl, IsUnit (φ y) := fun y => by
     by_contra hy
     exact y.2 ((IsLocalRing.mem_maximalIdeal _).2 hy)
@@ -859,7 +859,7 @@ theorem residue_eq_zero_of_sq {B : Type} [CommRing B] [IsLocalRing B] (x : B) (h
 
 theorem lieExp_comp_q_eq_one : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPre R) (O : Type) [CommRing O] [StarRing O] [Module O Q.X] (oa : Q.OAct O) (Y : Ray oa) (n : ℕ) (v : Fin n → TanM (𝟙 (Sp R)) Y.H) (u : Fin n → (epsR R ⟶ Y.H)), (∀ a, IsTangent (u a)) → (∀ a, (u a).left = (tv (v a)).left) → ∀ (dd : Fin n → Fld Y.H.left), (∀ a, IsInv Y.H (v a) (dd a)) → ∀ e : Fin n → R, (∀ (V : Q.P.A.left.Opens) f, IsWt Y 0 (Y.q.left ⁻¹ᵁ V) f → ∑ a, constFn Y.H.hom _ (e a) * dd a _ f = 0) → ∀ (B : Type) [CommRing B] [IsLocalRing B] (ψ : DualNumber R →+* B), spMap ψ ≫ (GlobalTheory.SqZero.lieExp u (fun a => (TrivSqZeroExt.inr (e a) : DualNumber R)) (fun _ => TrivSqZeroExt.inr_mul_inr _ _ _) ≫ Y.q).left = spMap ψ ≫ (1 : epsR R ⟶ Q.P.A).left := by
   intro R _ _ Q O _ _ _ oa Y n v u ht hu dd hd e hw B _ _ ψ
-  letI : Algebra R B := (ψ.comp (TrivSqZeroExt.inlHom R R)).toAlgebra
+  let : Algebra R B := (ψ.comp (TrivSqZeroExt.inlHom R R)).toAlgebra
   let ψ' : DualNumber R →ₐ[R] B := { ψ with commutes' := fun r => rfl }
   have hqm : IsMonHom Y.q := Y.q_linear.isMonHom
   let c : Fin n → DualNumber R := fun a => inr (e a)
@@ -878,7 +878,7 @@ theorem lieExp_comp_q_eq_one : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : Deg
   rw [e1, e2]
 
   refine ReciprocityTheory.ChartRestriction.G.PullbackSections.hom_ext_of_local (R := CommRingCat.of B) ?_ ?_
-  · letI : Algebra R (IsLocalRing.ResidueField B) :=
+  · let : Algebra R (IsLocalRing.ResidueField B) :=
       ((IsLocalRing.residue B).comp (algebraMap R B)).toAlgebra
     let r : B →ₐ[R] IsLocalRing.ResidueField B := { IsLocalRing.residue B with commutes' := fun _ => rfl }
     have htan : IsTangent p :=
@@ -1003,7 +1003,7 @@ theorem exists_addHom_of_kills_wt_zero : ∀ (R : Type) [CommRing R] [IsDomain R
   obtain ⟨φ', hφ'⟩ := Spec.map_surjective (R := CommRingCat.of R) (S := CommRingCat.of S) (g ≫ Y.H.hom)
   let φ : R →+* S := φ'.hom
   have hφ : g ≫ Y.H.hom = spMap φ := hφ'.symm
-  letI : Algebra R S := φ.toAlgebra
+  let : Algebra R S := φ.toAlgebra
   let z : sp (R₀ := R) S ⟶ Y.H := Over.homMk g hφ
   let ψ : DualNumber R →ₐ[R] DualNumber S := GlobalTheory.SqZero.dualMap (Algebra.ofId R S)
   have hψ : ∀ a : R, ψ (inr a) = inr (φ a) := fun a => GlobalTheory.SqZero.dualMap_inr _ _
@@ -1377,7 +1377,7 @@ theorem isWt_rsT_of_isTerm : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPr
     rw [hq, hc α y J hJ] at e
     rw [gs_mul (𝟙 _) y ⊤ trivial, gs_unit (𝟙 _) y ⊤ trivial, gs_appLE _ _ ⊤ _ (𝟙 _) y trivial,
       gs_appLE _ _ ⊤ _ (𝟙 _) y trivial, Category.id_comp, Category.id_comp]
-    simp only [rsT, dif_pos hle]
+    simp only [rsT, dite_eq_left hle]
     erw [gs_res _ y hle hy, gs_res _ y hle hy']
     have e1 := sval_of τ x'.left y J (fun _ => j) (fun _ => (congrArg J hql).trans (eJ ()))
     have e2 := sval_of τ x.left y J (fun _ => j) (fun _ => eJ ())
@@ -1388,7 +1388,7 @@ theorem isWt_rsT_of_isTerm : ∀ (R : Type) [CommRing R] [IsDomain R] (Q : DegPr
     simp only [Units.val_mul]
     ring
   unfold valR
-  rw [dif_pos hV, dif_pos hV', key, map_mul]
+  rw [dite_eq_left hV, dite_eq_left hV', key, map_mul]
   congr 1
   simp [unitOn]
 
@@ -1898,7 +1898,7 @@ theorem GlobalTheory.heat_commuting_periods_exists : ∀ (R : Type) [CommRing R]
   intro R _ _ _ _ _ _ Dd O _ _ _ oa Y n v dd hv m t gam hmon ht D hD
   obtain ⟨h, w, π, π', hb, hdef⟩ := GlobalTheory.T.exists_torusInvariant_heatOperator_polynomial_defect R Dd O oa Y n v dd hv m t gam hmon ht D hD
   have hcoc := GlobalTheory.T.heatOperator_period_defect_isCocycle R Dd O oa Y n v dd hv D h _ hb hdef
-  haveI : CharZero R := charZero_of_injective_algebraMap (algebraMap ℚ R).injective
+  have : CharZero R := charZero_of_injective_algebraMap (algebraMap ℚ R).injective
   obtain ⟨h1, h2, h3, h4⟩ := GlobalTheory.T.cocycle_polynomialDefect_bilinear_additive_parts R Dd.toPre.X w π π' hcoc
   exact GlobalTheory.T.exists_heatOperator_period_defect_zero R Dd O oa Y n v dd hv D h w π π' hb hdef h1 h2 h3 h4
 end -- clump:auto

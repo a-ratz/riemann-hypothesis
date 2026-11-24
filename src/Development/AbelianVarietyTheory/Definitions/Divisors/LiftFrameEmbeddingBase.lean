@@ -171,8 +171,8 @@ theorem isHalf_lab {l : ℕ} [Fact l.Prime] (e0 : D.what₂.LL →+* PadicAlgCl 
     (D.host.gal).symm.injective
       (AlgEquiv.ext fun x => (e0.comp D.embE).injective (RingHom.congr_fun h x))
   have hsurj : Function.Surjective s := by
-    haveI := D.host.hostE_isGalois
-    haveI : Finite (D.R.GG) := Finite.of_equiv _ (D.host.gal).toEquiv
+    have := D.host.hostE_isGalois
+    have : Finite (D.R.GG) := Finite.of_equiv _ (D.host.gal).toEquiv
     refine ((Nat.bijective_iff_injective_and_card s).2 ⟨hinj, ?_⟩).2
     rw [← Nat.card_congr (D.host.gal).toEquiv, IsGalois.card_aut_eq_finrank,
       Nat.card_eq_fintype_card, NumberField.Embeddings.card]

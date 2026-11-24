@@ -78,7 +78,7 @@ theorem psi_injective (ψ : W →+* WittVector p k) (hirr : Irreducible (p : W))
   obtain ⟨u, hu⟩ := hn
   have h2 : ψ ((p : W) ^ n) = 0 := by rw [← hu, map_mul, hx, zero_mul]
   rw [map_pow, map_natCast] at h2
-  exact pow_ne_zero n (WittVector.p_nonzero p k) h2
+  exact pow_ne_zero n (p_ne_zero p k) h2
 
 theorem psi_step (ψ : W →+* WittVector p k) (res : W →+* k) (hres : Function.Surjective res)
     (h0 : ∀ x, (ψ x).coeff 0 = res x) (w : WittVector p k) :
@@ -148,7 +148,7 @@ theorem psi_surjective (ψ : W →+* WittVector p k) (res : W →+* k) (hres : F
     obtain ⟨m, b, hb0, hb⟩ := WittVector.exists_eq_pow_p_mul (w - ψ L) hne
     obtain ⟨c, hc⟩ := hw (m + 1)
     rw [hb, pow_succ, mul_assoc] at hc
-    have hp : (p : WittVector p k) ^ m ≠ 0 := pow_ne_zero m (WittVector.p_nonzero p k)
+    have hp : (p : WittVector p k) ^ m ≠ 0 := pow_ne_zero m (p_ne_zero p k)
     have hbc := mul_left_cancel₀ hp hc
     apply hb0
     rw [hbc]
@@ -188,22 +188,22 @@ theorem wittUnram_main : PI.WittUnram := by
   have hinj : Function.Injective (algebraMap W Qq) := IsFractionRing.injective W Qq
   have hF : ∀ x : W, ∃ y : W, sigW hinj σ hσ x = x ^ p + (p : W) * y := sigW_lift hinj σ hσ
   set I : Ideal W := Ideal.span {(p : W)} with hI
-  haveI hmax : I.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hirr
-  letI : Field (W ⧸ I) := Ideal.Quotient.field I
+  have hmax : I.IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hirr
+  let : Field (W ⧸ I) := Ideal.Quotient.field I
   have hp0 : ((p : ℕ) : W ⧸ I) = 0 := by
     have h : Ideal.Quotient.mk I (p : W) = 0 :=
       Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.subset_span (Set.mem_singleton _))
     rwa [map_natCast] at h
-  haveI hchar : CharP (W ⧸ I) p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).mpr hp0
-  haveI hfin : Finite (W ⧸ I) := Nat.finite_of_card_ne_zero (by
+  have hchar : CharP (W ⧸ I) p := (CharP.charP_iff_prime_eq_zero (Fact.out : p.Prime)).mpr hp0
+  have hfin : Finite (W ⧸ I) := Nat.finite_of_card_ne_zero (by
     rw [hcard]; exact pow_ne_zero _ (Fact.out : p.Prime).ne_zero)
   obtain ⟨e⟩ : Nonempty ((W ⧸ I) ≃+* GaloisField p f) := by
-    letI : Algebra (ZMod p) (W ⧸ I) := (ZMod.castHom (dvd_refl p) (W ⧸ I)).toAlgebra
+    let : Algebra (ZMod p) (W ⧸ I) := (ZMod.castHom (dvd_refl p) (W ⧸ I)).toAlgebra
     exact ⟨(GaloisField.algEquivGaloisField p f hcard).toRingEquiv⟩
   have hpQ : ((p : ℕ) : Qq) ≠ 0 := by
     rw [← map_natCast (algebraMap W Qq) p]
     exact fun h => hirr.ne_zero (hinj (h.trans (map_zero _).symm))
-  letI : Invertible ((p : ℕ) : Qq) := invertibleOfNonzero hpQ
+  let : Invertible ((p : ℕ) : Qq) := invertibleOfNonzero hpQ
   let ψ : W →+* WittVector p (W ⧸ I) :=
     (WittVector.map (Ideal.Quotient.mk I)).comp (sHom p Qq (sigW hinj σ hσ) hF hinj)
   have h0 : ∀ x, (ψ x).coeff 0 = Ideal.Quotient.mk I x := by

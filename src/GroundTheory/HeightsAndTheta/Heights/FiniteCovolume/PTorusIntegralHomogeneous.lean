@@ -70,9 +70,9 @@ private lemma weighted_sum_smul (q : κ → ℝ) (t : ℝ) (b : κ → ℂ) :
 private lemma prod_smul (n : ℕ) {t : ℝ} (ht : 0 < t) (b : κ → ℂ) :
     ∏ i, ‖(t • b) i‖ₑ ^ (2 * n) =
       ENNReal.ofReal (t ^ (2 * n * Fintype.card κ)) * ∏ i, ‖b i‖ₑ ^ (2 * n) := by
-  simp_rw [Pi.smul_apply, enorm_smul, mul_pow]
+  simp_rw [Pi.smul_apply, eNorm_smul, mul_pow]
   rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, ← pow_mul,
-    Real.enorm_eq_ofReal ht.le, ENNReal.ofReal_pow ht.le]
+    Real.eNorm_eq_ofReal ht.le, ENNReal.ofReal_pow ht.le]
 
 private lemma indicator_smul (q : κ → ℝ) (n : ℕ) {t : ℝ} (ht : 0 < t) (b : κ → ℂ) :
     {b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < t ^ 2}.indicator
@@ -92,7 +92,7 @@ private lemma measurable_integrand (q : κ → ℝ) (n : ℕ) (s : ℝ) :
     Measurable ({b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < s}.indicator
       (fun b => ∏ i, ‖b i‖ₑ ^ (2 * n))) := by
   refine Measurable.indicator ?_ ?_
-  · exact Finset.measurable_prod _ fun i _ => (measurable_pi_apply i).enorm.pow_const _
+  · exact Finset.measurable_prod _ fun i _ => (measurable_pi_apply i).eNorm.pow_const _
   · exact measurableSet_lt (Finset.measurable_sum _ fun i _ =>
       measurable_const.mul ((measurable_pi_apply i).norm.pow_const 2)) measurable_const
 
@@ -154,7 +154,7 @@ theorem TorusIntegralHomogeneous.proof (κ : Type*) [Fintype κ] :
     rintro b ⟨hb1, hb2⟩
     rw [Function.mem_support, Set.indicator_of_mem hb1]
     exact Finset.prod_ne_zero_iff.2 fun i _ =>
-      pow_ne_zero _ (enorm_ne_zero.2 (Set.mem_iInter.1 hb2 i))
+      pow_ne_zero _ (eNorm_ne_zero.2 (Set.mem_iInter.1 hb2 i))
   ·
     set R : ℝ := ∑ i, (q i)⁻¹ + 1 with hR
     have hR1 : 1 ≤ R := by
@@ -188,7 +188,7 @@ theorem TorusIntegralHomogeneous.proof (κ : Type*) [Fintype κ] :
       intro b
       by_cases hb : b ∈ {b : κ → ℂ | ∑ i, q i * ‖b i‖ ^ 2 < 1 ^ 2}
       · rw [Set.indicator_of_mem hb, Set.indicator_of_mem hb]
-        refine Finset.prod_le_prod' fun i _ => pow_le_pow_left' ?_ _
+        refine Finset.prod_le_prod fun i _ => pow_le_pow_left' ?_ _
         rw [← ofReal_norm]
         exact ENNReal.ofReal_le_ofReal (hbd b hb i).le
       · rw [Set.indicator_of_notMem hb, Set.indicator_of_notMem hb]

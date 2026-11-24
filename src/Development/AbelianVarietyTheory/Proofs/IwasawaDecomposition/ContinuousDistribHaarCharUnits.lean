@@ -106,7 +106,7 @@ theorem modu_basic : ∀ (S : Type) [CommRing S] [TopologicalSpace S] [IsTopolog
     have e : (fun z : S => (u : S) * z) ⁻¹' s = u⁻¹ • s := by
       ext z
       rw [Set.mem_inv_smul_set_iff]; rfl
-    rw [Measure.smul_apply, Measure.map_apply (measurable_const_mul _) hs, e, ENNReal.smul_def,
+    rw [smul_apply, Measure.map_apply (measurable_const_mul _) hs, e, ENNReal.smul_def,
       smul_eq_mul, distribHaarChar_mul, smul_inv_smul]
   · rintro _ _ ⟨u, rfl⟩ ⟨w, rfl⟩
     rw [← Units.val_mul, modu_units, modu_units, modu_units, map_mul]

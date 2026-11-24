@@ -60,8 +60,8 @@ theorem span_image_inf_of_linearIndependent {K V W ι : Type} [Field K] [AddComm
     Submodule.span ℂ (j '' (U : Set V)) ⊓ Submodule.span ℂ (j '' (U' : Set V)) =
       Submodule.span ℂ (j '' ((U ⊓ U' : Submodule K V) : Set V)) := by
   classical
-  letI : Algebra K ℂ := σ.toAlgebra
-  haveI := Fintype.ofFinite ι
+  let : Algebra K ℂ := σ.toAlgebra
+  have := Fintype.ofFinite ι
   let B := Algebra.TensorProduct.basis ℂ b
   let J : ℂ ⊗[K] V →ₗ[ℂ] W := B.constr ℂ (fun k => j (b k))
   have hJb : ∀ k, J (1 ⊗ₜ b k) = j (b k) := fun k => by

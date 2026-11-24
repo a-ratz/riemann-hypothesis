@@ -97,7 +97,7 @@ theorem adic_ringEquiv_eq_self {F : Type} [Field F] [NumberField F] (w : HeightO
     intro b u hb
     have hb' : (algebraMap F (w.adicCompletion F) b) ≠ 0 := by simpa using hb
     have hpos : 0 < Valued.v (algebraMap F (w.adicCompletion F) b) :=
-      zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb')
+      pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb')
     have h1 := hO (u / algebraMap F _ b)
     rw [map_div₀, hF, HeightOneSpectrum.mem_adicCompletionIntegers,
       HeightOneSpectrum.mem_adicCompletionIntegers, map_div₀, map_div₀, div_le_one₀ hpos,
@@ -109,7 +109,7 @@ theorem adic_ringEquiv_eq_self {F : Type} [Field F] [NumberField F] (w : HeightO
     intro b z hb
     set t := algebraMap F (w.adicCompletion F) b
     have ht : t ≠ 0 := by simpa [t] using hb
-    have hpos : 0 < Valued.v t := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 ht)
+    have hpos : 0 < Valued.v t := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 ht)
     have hc : Continuous fun x : w.adicCompletion F => (x - z) / t := by fun_prop
     have ho := (Valued.isOpen_valuationSubring (w.adicCompletion F)).preimage hc
     refine mem_of_superset (ho.mem_nhds ?_) ?_
@@ -129,7 +129,7 @@ theorem adic_ringEquiv_eq_self {F : Type} [Field F] [NumberField F] (w : HeightO
     exact (mul_ne_zero hvz WithZero.exp_ne_zero) hb.symm
   have hbv : Valued.v (algebraMap F (w.adicCompletion F) b) < Valued.v (ψ y - y) := by
     rw [hval, hb]
-    exact mul_lt_of_lt_one_right (zero_lt_iff.2 hvz) (by have h : (WithZero.exp (1:ℤ))⁻¹ < 1 := compareOfLessAndEq_eq_lt.mp rfl; simpa using h)
+    exact mul_lt_of_lt_one_right (pos_iff_ne_zero.2 hvz) (by have h : (WithZero.exp (1:ℤ))⁻¹ < 1 := compareOfLessAndEq_eq_lt.mp rfl; simpa using h)
   obtain ⟨_, hx, a, rfl⟩ := mem_closure_iff_nhds.1
     ((HeightOneSpectrum.denseRange_algebraMap F w) y) _ (hball b y hb0)
   have h1 : Valued.v (y - algebraMap F _ a) ≤ Valued.v (algebraMap F (w.adicCompletion F) b) := by
@@ -176,7 +176,7 @@ theorem firstFactor_agree : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     have h0 : w.intValuation b ≠ 0 :=
       HeightOneSpectrum.intValuation_ne_zero w b (fun h => hbw' (h ▸ w'.asIdeal.zero_mem))
     have := key.2 le_rfl
-    exact absurd this (not_le.2 ((one_lt_inv₀ (zero_lt_iff.2 h0)).2 h1))
+    exact absurd this (not_le.2 ((one_lt_inv₀ (pos_iff_ne_zero.2 h0)).2 h1))
   subst hww
   refine ⟨rfl, ?_⟩
   have hψ := adic_ringEquiv_eq_self w (e.symm.trans e') (fun a => by simp [hF a])
@@ -357,7 +357,7 @@ theorem cpAt_y_succ (i : ℕ) (hi : i + 1 ≤ D.R.m) (La : (sysAt Ch std vp unif
           (basesAt Ch std vp unif eO eO_spec dG dG_spec om (i + 1) La.2) x ∧
           x ∈ Formalism.UG.UPts (sigD D) (gramN D (i + 1) hi) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) := by
   show (chAt Ch std vp unif eO eO_spec dG dG_spec om I A0 J0 Lb0 Uloc0 (i + 1) La).y = _
-  simp only [chAt, dif_pos hi]
+  simp only [chAt, dite_eq_left hi]
 
 end GlobalTheory.TwV.Xc.PtOrd
 end

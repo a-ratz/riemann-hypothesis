@@ -281,7 +281,7 @@ theorem primeOfPlace_placeOfPrime
         have : b = 0 := Subtype.ext h0
         rw [this]; exact q.1.zero_mem)
     have h1 := (v.placeOfPrime q).ring.valuation_le_one_iff _ |>.2 hinv
-    rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb0))] at h1
+    rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb0))] at h1
     exact absurd hb (not_lt.2 h1)
   · intro hbq
     by_contra hb
@@ -296,7 +296,7 @@ theorem primeOfPlace_placeOfPrime
     have h1 : (v.primeHS q).valuation K' (b : K')⁻¹ ≤ 1 := hle hinv
     have h2 : (v.primeHS q).valuation K' (algebraMap (integralClosure v.ring K') K' b) < 1 :=
       ((v.primeHS q).valuation_lt_one_iff_mem (K := K') b).2 hbq
-    rw [map_inv₀, inv_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb0))] at h1
+    rw [map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb0))] at h1
     exact absurd h2 (not_lt.2 h1)
 
 noncomputable def primesOverEquiv :

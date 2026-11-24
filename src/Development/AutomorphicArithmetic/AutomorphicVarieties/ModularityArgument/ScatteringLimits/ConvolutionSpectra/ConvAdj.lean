@@ -75,7 +75,7 @@ theorem UpperTheory.V.Z.IntegralApplyAeEq.convAdj :
       ← integral_inner ((hi _ hk _).apply_continuousLinearMap u), ← inner_conj_symm,
       ← integral_inner ((hi _ hs _).apply_continuousLinearMap v), ← integral_conj, ← integral_neg_eq_self]
     refine integral_congr_ae (Eventually.of_forall fun t => ?_)
-    simp only [ContinuousLinearMap.smul_apply, inner_smul_right, map_mul, inner_conj_symm, sharp, neg_neg,
+    simp only [smul_apply, inner_smul_right, map_mul, inner_conj_symm, sharp, neg_neg,
       ContinuousLinearMap.adjoint_inner_left, ← Complex.exp_conj, Complex.conj_ofReal]
     congr 2
     push_cast

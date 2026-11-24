@@ -355,14 +355,14 @@ variable {l : ℕ} [Fact l.Prime] {LL : FinExt l}
 
 theorem completeSpace_finExt (LL : FinExt l) : CompleteSpace ↥LL.1 :=
   haveI := LL.2
-  FiniteDimensional.complete ℚ_[l] ↥LL.1
+  FiniteDimensional.completeSpace ℚ_[l] ↥LL.1
 
 theorem conv_iff_sc (a : PowerSeries ↥LL.1) : Conv a ↔ SC a :=
   ⟨fun h => sc_of_tendsto h, fun h r h0 h1 => (h r h0 h1).tendsto_atTop_zero⟩
 
 theorem isExp_iff_ev {ζ : ↥LL.1} (hζ : ‖(ζ : Om l) - 1‖ < 1) {a : PowerSeries ↥LL.1} (ha : Conv a)
     (e : PowerSeries ↥LL.1) : IsExp ζ a e ↔ Ev (C ζ * exp ↥LL.1 - 1) a e := by
-  haveI := completeSpace_finExt LL
+  have := completeSpace_finExt LL
   have hy : ‖constantCoeff (C ζ * exp ↥LL.1 - 1)‖ < 1 := by
     have : constantCoeff (C ζ * exp ↥LL.1 - 1) = ζ - 1 := by simp
     rw [this]; exact hζ
@@ -396,7 +396,7 @@ theorem conv_expansion (l : ℕ) [Fact l.Prime] (LL : FinExt l) (ζ : ↥LL.1) (
       Conv (a + b) ∧ Conv (a * b) ∧ IsExp ζ (a + b) (e + f) ∧ IsExp ζ (a * b) (e * f)) ∧
     (∀ a : PowerSeries ↥(OL LL), Conv (PowerSeries.map (algebraMap ↥(OL LL) ↥LL.1) a)) ∧
     Conv (logS LL) ∧ ((∃ j : ℕ, ζ ^ l ^ j = 1) → IsExp ζ (logS LL) PowerSeries.X) := by
-  haveI := completeSpace_finExt LL
+  have := completeSpace_finExt LL
   have hy : ‖constantCoeff (C ζ * exp ↥LL.1 - 1)‖ < 1 := by
     have : constantCoeff (C ζ * exp ↥LL.1 - 1) = ζ - 1 := by simp
     rw [this]; exact hζ

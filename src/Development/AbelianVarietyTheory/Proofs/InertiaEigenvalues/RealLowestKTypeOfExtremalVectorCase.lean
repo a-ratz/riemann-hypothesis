@@ -72,8 +72,8 @@ variable {D : D7} {S T' : HSp D} {ψ : AddChar (AF D.host.F) ℂ}
 theorem integrable_star_mul (hψ : IsStdChar D ψ (-1)) {μ : Measure (WO S T')} {𝓕 : Set (WO S T')} (h1 : μ 𝓕 = 1)
     {f g : WO S T' → ℂ} (hf : IsThetaFunO ψ S T' f) (hg : IsThetaFunO ψ S T' g) :
     Integrable (fun w => star (f w) * g w) (μ.restrict 𝓕) := by
-  haveI : BorelSpace (WO S T') := ⟨rfl⟩
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
+  have : BorelSpace (WO S T') := ⟨rfl⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
   obtain ⟨C, hC⟩ := GlobalTheory.ThetaSchurBdd.exists_bound hψ hf
   obtain ⟨C', hC'⟩ := GlobalTheory.ThetaSchurBdd.exists_bound hψ hg
   refine Integrable.of_bound (hf.cont.star.mul hg.cont).aestronglyMeasurable (C * C')
@@ -288,16 +288,16 @@ theorem of_ext (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel W S') (hLS : Low
       (offReal W) e hne ?_ ?_ v'
     · intro g hg
       have := key g hg
-      simp only [MultilinearMap.sub_apply, MultilinearMap.smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+      simp only [sub_apply, smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
         prodR_apply, thR_apply] at this
       exact sub_eq_zero.1 this
     · intro g hg
-      simp only [MultilinearMap.sub_apply, MultilinearMap.smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+      simp only [sub_apply, smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
         prodR_apply, thR_apply]
       exact sub_eq_zero.2 (hX e hext g hg)
     · intro τ k hk v' u hu hv' g hg
       have := hv' (g * atTau θ W τ ((M.fr τ)⁻¹ * k * M.fr τ)) (mul_mem hg (GlobalTheory.PointAtPlaceHom.atTau_mem W τ _))
-      simp only [MultilinearMap.sub_apply, MultilinearMap.smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+      simp only [sub_apply, smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
         prodR_apply, thR_apply] at this ⊢
       rw [hK τ k hk v' u hu, hωmul]
       have hp : ∏ ρ, ⟪((e ρ : M.sm ρ) : M.H ρ), M.rep ρ (infMat D.sp.cm.sig W.gram (θ ρ) g)
@@ -319,18 +319,18 @@ theorem of_ext (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel W S') (hLS : Low
         prodL θ M (fun ρ => ((v' ρ : M.sm ρ) : M.H ρ))) (offReal W) e hne ?_ ?_ v
     · intro g hg
       have := key g hg
-      simp only [MultilinearMap.sub_apply, MultilinearMap.smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+      simp only [sub_apply, smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
         prodL_apply, thL_apply] at this
       rw [sub_eq_zero, hconj, ← star_mul'] at this
       exact star_injective this
     · intro g hg
-      simp only [MultilinearMap.sub_apply, MultilinearMap.smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+      simp only [sub_apply, smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
         prodL_apply, thL_apply]
       rw [st1 v' g hg, star_mul', ← hconj, sub_self]
     · intro τ k hk v u hu hv g hg
       set a := atTau θ W τ ((M.fr τ)⁻¹ * k * M.fr τ) with ha
       have := hv (a⁻¹ * g) (mul_mem (inv_mem (GlobalTheory.PointAtPlaceHom.atTau_mem W τ _)) hg)
-      simp only [MultilinearMap.sub_apply, MultilinearMap.smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+      simp only [sub_apply, smul_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
         prodL_apply, thL_apply] at this ⊢
       have e1 : ω (1, g) (J v') = ω (1, a) (ω (1, a⁻¹ * g) (J v')) := by rw [hωmul, mul_inv_cancel_left]
       rw [hK τ k hk v u hu, e1, GlobalTheory.WeilPairing.thetaInner_weilRep D ψ V W χV χW ω μ 𝓕 hω hcv (1, a) _ _ (hJ v)
@@ -349,7 +349,7 @@ theorem of_ext (θ : InfFam D) (hθ : IsInfFam θ) (M : DSModel W S') (hLS : Low
     have h11 : ω ((1 : GA D V), (1 : GA D W)) = 1 := map_one ω
     rw [h11, Module.End.one_apply] at P1
     rw [P1]
-    simp only [hrep1, ContinuousLinearMap.one_apply, inner_self_eq_norm_sq_to_K, hv]
+    simp only [hrep1, one_apply_eq_self, inner_self_eq_norm_sq_to_K, hv]
     simp
   rw [st2 v v u hu, hn]
 

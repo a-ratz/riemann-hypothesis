@@ -423,8 +423,8 @@ theorem classSet_finIdx {G : Type} [Group G] (Γ K K' : Subgroup G) (h : K' ≤ 
     (hi : K'.relIndex K ≠ 0) :
     Finite (Formalism.UG.ClassSet Γ K) → Finite (Formalism.UG.ClassSet Γ K') := by
   intro hf
-  haveI : (K'.subgroupOf K).FiniteIndex := ⟨hi⟩
-  haveI : Finite (K ⧸ K'.subgroupOf K) := Subgroup.finite_quotient_of_finiteIndex
+  have : (K'.subgroupOf K).FiniteIndex := ⟨hi⟩
+  have : Finite (K ⧸ K'.subgroupOf K) := Subgroup.finite_quotient_of_finiteIndex
   let f : Formalism.UG.ClassSet Γ K × (K ⧸ K'.subgroupOf K) → Formalism.UG.ClassSet Γ K' :=
     fun p => DoubleCoset.mk Γ K' (p.1.out * ((p.2.out : K) : G))
   refine Finite.of_surjective f ?_
@@ -679,7 +679,7 @@ theorem lvA_princ_form {ι : Type} [Fintype ι] [DecidableEq ι] (d : S) (u : GL
   have hent : ∀ i j, ∃ a : S, a * d = (u' : Matrix ι ι S) i j - (1 : Matrix ι ι S) i j := by
     intro i j
     have h2 := congrArg (fun g : GL ι (S ⧸ Ideal.span {d}) => (g : Matrix ι ι (S ⧸ Ideal.span {d})) i j) h1
-    simp only [Formalism.UG.redGL, Formalism.UG.bc, Units.coe_map, MonoidHom.coe_coe, RingHom.mapMatrix_apply,
+    simp only [Formalism.UG.redGL, Formalism.UG.bc, Units.coe_map, MonoidHom.coe_ofClass, RingHom.mapMatrix_apply,
       Matrix.map_apply, Units.val_one] at h2
     have h3 : (u' : Matrix ι ι S) i j - (1 : Matrix ι ι S) i j ∈ Ideal.span {d} := by
       rw [← Ideal.Quotient.eq]
@@ -983,8 +983,8 @@ theorem one_mem_Kg (I : Formalism.MainNotions.S.AutInst) (g : ℕ) : (1 : I.Gf) 
 
 theorem kgNhd : KgNhd := by
   intro I g x hg
-  letI := I.topf
-  haveI := I.topf_group
+  let := I.topf
+  have := I.topf_group
   have hK : I.Kg g ∈ nhds (1 : I.Gf) := (I.topf_open g hg).mem_nhds (one_mem_Kg I g)
   have hc : Continuous fun h : I.Gf => x⁻¹ * h * x := by fun_prop
   have hT : {h : I.Gf | x⁻¹ * h * x ∈ I.Kg g} ∈ nhds (1 : I.Gf) := by

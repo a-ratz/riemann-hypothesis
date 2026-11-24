@@ -135,9 +135,9 @@ theorem blockJ_relIndex : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)), 𝔪 ≠ 
     ring
   have hcard : Nat.card (𝓞 D.host.E ⧸ 𝔪) = Ideal.absNorm 𝔪 := by
     rw [Ideal.absNorm_apply, Submodule.cardQuot_apply]
-  haveI : Finite (𝓞 D.host.E ⧸ 𝔪) :=
+  have : Finite (𝓞 D.host.E ⧸ 𝔪) :=
     Nat.finite_of_card_ne_zero (by rw [hcard]; simpa [Ideal.absNorm_eq_zero_iff] using h𝔪)
-  haveI : Finite (intG D N ⧸ H) := Finite.of_injective f hf
+  have : Finite (intG D N ⧸ H) := Finite.of_injective f hf
   refine ⟨Subgroup.index_ne_zero_of_finite, ?_⟩
   show H.index ≤ _
   rw [Subgroup.index]

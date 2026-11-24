@@ -214,7 +214,7 @@ theorem growthSize_eq_quot (hφ : ∀ γ ∈ GQ V, ∀ g, φ (γ * g) = φ g) :
   refine hc.closure_subset_iff.2 ?_ (csInf_mem_closure (Set.range_nonempty fun γ : GQ V => height V (γ * g))
     ⟨1, by rintro _ ⟨_, rfl⟩; exact one_le_height V _⟩)
   rintro _ ⟨γ, rfl⟩
-  simpa only [hφ γ γ.2, Set.mem_setOf_eq] using h1 (γ * g)
+  simpa only [hφ γ γ.2, Set.mem_ofPred_eq] using h1 (γ * g)
 
 theorem growthSize_anti {N' : ℕ} (h : N ≤ N') : growthSize V N' φ ≤ growthSize V N φ :=
   iSup_mono fun g => ENNReal.ofReal_le_ofReal (div_le_div_of_nonneg_left (norm_nonneg _)
@@ -228,10 +228,10 @@ theorem growthSize_add_le : growthSize V N (φ + φ') ≤ growthSize V N φ + gr
 
 theorem growthSize_smul (c : ℂ) : growthSize V N (c • φ) = ‖c‖ₑ * growthSize V N φ := by
   simp only [growthSize, ENNReal.mul_iSup, Pi.smul_apply, norm_smul, mul_div_assoc,
-    ENNReal.ofReal_mul (norm_nonneg c), ofReal_norm_eq_enorm]
+    ENNReal.ofReal_mul (norm_nonneg c), ofReal_norm]
 
 theorem growthSize_const (c : ℂ) : growthSize V N (fun _ => c) = ‖c‖ₑ := by
-  rw [← ofReal_norm_eq_enorm]
+  rw [← ofReal_norm]
   refine le_antisymm ((growthSize_le_iff (norm_nonneg c)).2 fun g =>
     le_mul_of_one_le_right (norm_nonneg c) (one_le_pow₀ (one_le_height V g))) (le_iSup_of_le 1 (by simp))
 
@@ -283,8 +283,8 @@ theorem exists_growthSob_ne_top (hs : φ ∈ SmFun θ V) (h : UnifModGrowth V θ
   let M : Submodule ℂ (GA D V → ℂ) :=
     { carrier := {f | growthSize V N f ≠ ∞}
       add_mem' := fun a b => ne_top_of_le_ne_top (ENNReal.add_ne_top.2 ⟨a, b⟩) growthSize_add_le
-      zero_mem' := (growthSize_const (0 : ℂ)).trans_ne enorm_ne_top
-      smul_mem' := fun c _ a => (growthSize_smul c).trans_ne (ENNReal.mul_ne_top enorm_ne_top a) }
+      zero_mem' := (growthSize_const (0 : ℂ)).trans_ne eNorm_ne_top
+      smul_mem' := fun c _ a => (growthSize_smul c).trans_ne (ENNReal.mul_ne_top eNorm_ne_top a) }
   refine ⟨N, fun d => wordSum_ne_top_iff.2 fun l _ => ?_⟩
   exact (wordAct_rel (A := glDer θ V) (B := glDer θ V) (R := fun f _ => f ∈ allDer θ V M) l
     (fun a _ _ _ hf => RderC_mem_allDer hf a.1 _) (y := φ) ⟨hs, hN⟩).2 [] (fun _ h => by simp at h)
@@ -560,10 +560,10 @@ theorem sobO_add_le (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) (h : IsTheta
 
 theorem sobO_eq_zero_iff (hψ : IsStdChar D ψ (-1)) (hμ : μ.IsAddHaarMeasure)
     (h𝓕 : IsAddFundamentalDomain (ratL W V) 𝓕 μ) (h : IsThetaFunO ψ V W f) (d : ℕ) : sobO ψ θ μ 𝓕 d f = 0 ↔ f = 0 := by
-  refine ⟨fun h0 => (l2O_eq_zero_iff_of_isThetaFunO hψ hμ h𝓕 h).1 (le_zero_iff.1 ?_), fun h0 => ?_⟩
+  refine ⟨fun h0 => (l2O_eq_zero_iff_of_isThetaFunO hψ hμ h𝓕 h).1 (nonpos_iff_eq_zero.1 ?_), fun h0 => ?_⟩
   · exact (sobO_zero (ψ := ψ) (θ := θ)).ge.trans ((sobO_mono d.zero_le).trans h0.le)
   · have := sobO_smul (ψ := ψ) (θ := θ) (μ := μ) (𝓕 := 𝓕) (f := f) d 0
-    rwa [zero_smul, enorm_zero, zero_mul, ← h0] at this
+    rwa [zero_smul, eNorm_zero, zero_mul, ← h0] at this
 
 theorem isTheta_iff_level : IsThetaFunO ψ V W f ↔
     ∃ U : AddSubgroup (WO V W), IsOpen (U : Set (WO V W)) ∧ f ∈ thetaLevel ψ V W U :=

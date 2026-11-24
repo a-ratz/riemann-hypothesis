@@ -112,7 +112,7 @@ theorem windowOne : WindowOne := by
   rcases isEmpty_or_nonempty S with hE | ⟨⟨s₀⟩⟩
   · exact ⟨fun _ => ∅, fun s => isEmptyElim s, fun s => isEmptyElim s, fun s => isEmptyElim s⟩
   have hmul : ∀ (a b : Γ) (x : V), G.ρ (a * b) x = G.ρ a (G.ρ b x) := fun a b x => by
-    rw [map_mul, ContinuousLinearMap.mul_apply]
+    rw [map_mul, mul_apply_eq_comp]
   have hfin : ∀ K ⊆ G.Y, IsCompact K → {γ : Γ | ∃ p ∈ K, G.ρ γ p ∈ K}.Finite := fun K hK hKc =>
     (hP K hK hKc s₀ s₀).subset (fun γ h => ⟨Subsingleton.elim _ _, h⟩)
   have hball : ∀ p ∈ G.Y, ∃ r > 0, Metric.closedBall p r ⊆ G.Y := by
@@ -142,7 +142,7 @@ theorem windowOne : WindowOne := by
     classical
     have hx : ∃ n, ∃ γ, G.ρ γ p ∈ K n := by
       obtain ⟨n, hn⟩ := hcov p hp
-      exact ⟨n, 1, by rwa [map_one, ContinuousLinearMap.one_apply]⟩
+      exact ⟨n, 1, by rwa [map_one, one_apply_eq_self]⟩
     obtain ⟨γ, hγ⟩ := Nat.find_spec hx
     exact ⟨Nat.find hx, γ, hγ, fun m hm => Nat.find_min hx hm⟩
   let W0 : Set V := ⋃ n, {q | q ∈ O n ∧ ∀ m < n, ¬ ∃ γ, G.ρ γ q ∈ K m}
@@ -179,7 +179,7 @@ theorem windowOne : WindowOne := by
       by_contra hlt
       push_neg at hlt
       refine hk2 (n+1) hlt ⟨γ * δ, ?_⟩
-      rw [hmul, ← hmul δ δ⁻¹ x, mul_inv_cancel, map_one, ContinuousLinearMap.one_apply]
+      rw [hmul, ← hmul δ δ⁻¹ x, mul_inv_cancel, map_one, one_apply_eq_self]
       exact hOK n hx2
     exact ⟨x, Or.inl hx1, Or.inr (hmono (by omega : k + 1 ≤ n + 2) (hOK k hk1))⟩
 
@@ -259,7 +259,7 @@ theorem window : Window := by
       exact hrr _ _
     refine ⟨δ * h.1, ?_⟩
     beta_reduce
-    rw [h1, if_pos h2, mul_inv_rev, map_mul]
+    rw [h1, ite_eq_left h2, mul_inv_rev, map_mul]
     exact hh
   · obtain ⟨δ, hδ⟩ := hr s
     obtain ⟨N, hN, hfin⟩ := (hW (r s)).2.2 () _ (G.maps δ⁻¹ p hp)
@@ -276,7 +276,7 @@ theorem window : Window := by
       refine ⟨⟨_, h2⟩, ⟨_, hx, ?_⟩, by simp⟩
       rw [h1] at hγ
       change G.ρ (δ⁻¹ * γ)⁻¹ (G.ρ δ⁻¹ x) ∈ W (r s) ()
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_rev, inv_inv, mul_inv_cancel_right]
+      rw [← mul_apply_eq_comp, ← map_mul, mul_inv_rev, inv_inv, mul_inv_cancel_right]
       exact hγ
     · exact hγ.elim
 

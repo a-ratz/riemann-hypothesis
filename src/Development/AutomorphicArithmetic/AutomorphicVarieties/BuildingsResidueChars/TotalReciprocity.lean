@@ -87,8 +87,8 @@ theorem exists_isL_of_unitary_twists (k : Type) [Field k] [ValuativeRel k] [Topo
     ⟨t, δ, Γ, h⟩
   choose! t ht using h'
   let r : Segment k → Segment k → Prop := fun a b => t b ≤ t a
-  haveI : IsTrans (Segment k) r := ⟨fun a b c h1 h2 => le_trans h2 h1⟩
-  haveI : Std.Total r := ⟨fun a b => le_total _ _⟩
+  have : IsTrans (Segment k) r := ⟨fun a b c h1 h2 => le_trans h2 h1⟩
+  have : Std.Total r := ⟨fun a b => le_total _ _⟩
   obtain ⟨l, hl, hs⟩ : ∃ l : List (Segment k), (l : Multiset (Segment k)) = 𝔫 ∧ l.Pairwise r :=
     ⟨𝔫.toList.insertionSort r,
       (Multiset.coe_eq_coe.2 (List.perm_insertionSort r _)).trans (Multiset.coe_toList 𝔫),

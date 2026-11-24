@@ -172,7 +172,7 @@ theorem indep_const {r : ℕ} (g : Fin r → ℤ → M) {D D' : Submodule L M} {
     LinearIndependent L fun j => φ (g j 0) := by
   rw [linearIndependent_iff_card_le_finrank_span, Fintype.card_fin]
   refine hr.trans ?_
-  haveI : Module.Finite L ↥(Submodule.span L (Set.range fun j => φ (g j 0))) :=
+  have : Module.Finite L ↥(Submodule.span L (Set.range fun j => φ (g j 0))) :=
     Module.Finite.span_of_finite L (Set.finite_range _)
   refine Submodule.finrank_mono fun d hd => ?_
   obtain ⟨d', hd', rfl⟩ := hφ hd
@@ -421,7 +421,7 @@ theorem indep_lead {L M ι : Type} [Field L] [AddCommGroup M] [Module L M] {w : 
     have h2 := conv_lead (e := (PowerSeries.X * w) ^ m) (a := m) (pow_dvd_pow_of_dvd (dvd_mul_right _ _) m)
       (f := fun k => c ^ k • g j k) (b := 0) (fun k hk => by simp only [hg j k hk, smul_zero])
     rw [add_zero] at h2
-    rw [hu, h2, mul_pow, PowerSeries.coeff_X_pow_mul', if_pos le_rfl]
+    rw [hu, h2, mul_pow, PowerSeries.coeff_X_pow_mul', ite_eq_left le_rfl]
     simp
   rw [h1]
   exact hi.units_smul fun _ => Units.mk0 _ hc
@@ -499,8 +499,8 @@ theorem heights_from_jumps : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.lo
         (fun a ha => hconst i ζ τ hτ a fun hm => absurd hm.2 (not_le.2 ha)) _ (mem_latSpan _ y)
     · obtain ⟨w, hw, hw'⟩ := hQ i ζ hζ
       have h1 := pow_pow_pred h.1 hζ
-      haveI := LL.2
-      haveI : IsFractionRing ↥(OL LL) ↥LL.1 :=
+      have := LL.2
+      have : IsFractionRing ↥(OL LL) ↥LL.1 :=
         integralClosure.isFractionRing_of_finite_extension ℚ_[l] ↥LL.1
       have hr : Module.finrank ↥(OL LL) ↥T.L.T ≤ Module.finrank ↥LL.1 ↥(Di (HW l) h T i) := by
         rw [(GlobalTheory.Per.LetterDim.tied_letter_component_finrank l _ _ (D.locT l) K LL T.V T.ρ).1

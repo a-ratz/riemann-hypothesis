@@ -293,9 +293,9 @@ theorem eSerC_ne_zero : ∀ (g : ℕ) [Fact g.Prime] (L : LabelDatum g), Green �
   have h : zOf ρ * eSerC L n f = zOf ρ := by
     unfold eSerC
     rw [finsum_mem_eq_finite_toFinset_sum _ hfin, Finset.mul_sum, Finset.sum_eq_single ρ]
-    · rw [(_root_.GlobalTheory.GLq.ZOrth.zorth _ ρ ρ hρ hρ).1, if_pos rfl]
+    · rw [(_root_.GlobalTheory.GLq.ZOrth.zorth _ ρ ρ hρ hρ).1, ite_eq_left rfl]
     · intro b hb hne
-      rw [(_root_.GlobalTheory.GLq.ZOrth.zorth _ ρ b hρ (hfin.mem_toFinset.mp hb).1).1, if_neg hne.symm]
+      rw [(_root_.GlobalTheory.GLq.ZOrth.zorth _ ρ b hρ (hfin.mem_toFinset.mp hb).1).1, ite_eq_right hne.symm]
     · intro hb
       exact absurd (hfin.mem_toFinset.mpr ⟨hρ, hl⟩) hb
   rw [← h, he, mul_zero]
@@ -333,7 +333,7 @@ theorem trace_mem_adjoin_of_pow_eq_one (V : Type) [AddCommGroup V] [Module ℂ V
     rcases smul_eq_zero.mp h3 with h | h
     · exact sub_eq_zero.mp h
     · exact absurd h hv.2
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   obtain ⟨i, -, hi⟩ := (Complex.isPrimitiveRoot_exp N hN.ne').eq_pow_of_pow_eq_one h2
   rw [← hi]
   exact pow_mem (IntermediateField.mem_adjoin_simple_self ℚ _) i

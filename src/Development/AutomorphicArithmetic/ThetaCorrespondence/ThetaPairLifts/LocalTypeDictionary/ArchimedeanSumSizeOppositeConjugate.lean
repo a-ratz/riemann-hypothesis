@@ -221,7 +221,7 @@ theorem natW_dual_wtOf_le (n : ℕ) (E : Finset ℚ) (M : ℝ) (hM : 0 ≤ M) (h
   have hn : 0 < n := a.pos
   have hrev : Fin.rev (⟨n - 1, by omega⟩ : Fin n) = ⟨0, hn⟩ := by ext; simp; omega
   have key : (wtOf n E).dual.natW a = ((wtOf n E).w ⟨0, hn⟩ - (wtOf n E).w a.rev).toNat := by
-    simp only [DomWeight.natW, DomWeight.detShift, DomWeight.dual, dif_pos hn, hrev]
+    simp only [DomWeight.natW, DomWeight.detShift, DomWeight.dual, dite_eq_left hn, hrev]
     congr 1; ring
   have hd : (((wtOf n E).w ⟨0, hn⟩ - (wtOf n E).w a.rev : ℤ) : ℝ) ≤ 2 * M + 1 := by
     unfold wtOf
@@ -319,8 +319,8 @@ theorem jetOp_transport {K M : Type} [Field K] [Field M] {ι : Type} [Fintype ι
 theorem applyAt0_monomial (D : D7) {N N' : ℕ} (m : GL3Theta.Idx D N N' →₀ ℕ) (H : VC D N N' → ℂ) :
     GL3Theta.applyAt0 D (MvPolynomial.monomial m 1) H = (m.prod fun _ n => (n.factorial : ℂ)) * TaylorLogMetric.taylor D H m := by
   classical
-  rw [GL3Theta.applyAt0, MvPolynomial.support_monomial, if_neg one_ne_zero, Finset.sum_singleton,
-    MvPolynomial.coeff_monomial, if_pos rfl, one_mul]
+  rw [GL3Theta.applyAt0, MvPolynomial.support_monomial, ite_eq_right one_ne_zero, Finset.sum_singleton,
+    MvPolynomial.coeff_monomial, ite_eq_left rfl, one_mul]
 
 def trL (D : D7) (a b : ℕ) : VC D a b →ₗ[ℂ] VC D b a where
   toFun z := fun τ i j => z τ j i
@@ -693,7 +693,7 @@ theorem row_jets (hI : GlobalTheory.NormSum.Inp D) (hDict : DictAt ch) {Φ β d}
   obtain ⟨Ls, Lt, κ, n, r, s, hLs, hLt, hκ, hs, -, hr, -, hJ⟩ := hDict A.μ0 _ hp _ (d.2 i) hk ((h3 d hd).2 i)
     ((h1 d hd).2 i).2.2 ((h1 d hd).2 i).1 (ch.S.ptRow c i) (ch.S.ptRow c (i + 1))
   have hkk := kkMap_eq ch hp (d.2 i) _ _ _ hJ
-  haveI := fld_finiteDimensional D hI _ _ ch.S.Z.crv ch.S.Z.pt0
+  have := fld_finiteDimensional D hI _ _ ch.S.Z.crv ch.S.Z.pt0
   obtain ⟨ρ', hρ'⟩ := GlobalTheory.ArchNorm.exists_extension _ ρ
   have hlam : lamConj Qbar ρ' (lamOf D D.host.ccK ch.S.Z.δ) = L := by
     rw [hL]
@@ -704,7 +704,7 @@ theorem row_jets (hI : GlobalTheory.NormSum.Inp D) (hDict : DictAt ch) {Φ β d}
   obtain ⟨t', ht'⟩ := (hI.t0Ex _ _ ch.S.Z.crv).2 Qbar ρ' hdata.2.1 hdata.2.2
   have htc : GL3Theta.IsTwoTorsionPointUnkilled D (lamConj Qbar ρ' (lamOf D D.host.ccK ch.S.Z.δ)) (tc D ch.S.Z.δ ch.S.Z.t0 ρ) := by
     rw [hlam, hL] at ht' ⊢
-    unfold tc; rw [dif_pos ⟨t', ht'⟩]; exact Exists.choose_spec _
+    unfold tc; rw [dite_eq_left ⟨t', ht'⟩]; exact Exists.choose_spec _
   have hev := even_rank_mul ch.G i i.2
   obtain ⟨harea, hcoef, hdiff, hgr⟩ := GlobalTheory.ConjGrowth.conj_growth D hI _ _ _ ch.S.Z.crv ch.S.Z.pt0 _ _ _ hev
     (ch.S.Z.e0_is _ hp) Ls Lt hLs hLt κ hκ _ n r s hk hs hr ρ' _ htc
@@ -728,8 +728,8 @@ theorem row_jets (hI : GlobalTheory.NormSum.Inp D) (hDict : DictAt ch) {Φ β d}
   have e2 : (ρ' : Qbar →+* ℂ).comp (barQ.comp (embQ D)) = σ.comp (starRingEnd D.what₂.LL) := RingHom.ext fun x => by
     have h1 := hρ' _ (embLL_mem D ch.S.Z.δ ch.S.Z.t0 (starRingEnd _ x))
     unfold TaylorLogMetric.liftM at h1
-    rw [dif_pos (embLL_mem D ch.S.Z.δ ch.S.Z.t0 (starRingEnd _ x)), hρ,
-      dif_pos (show D.what₂.embLL (starRingEnd _ x) ∈ Qbar from (embQ D (starRingEnd _ x)).2)] at h1
+    rw [dite_eq_left (embLL_mem D ch.S.Z.δ ch.S.Z.t0 (starRingEnd _ x)), hρ,
+      dite_eq_left (show D.what₂.embLL (starRingEnd _ x) ∈ Qbar from (embQ D (starRingEnd _ x)).2)] at h1
     refine Eq.trans (congrArg ρ' (Subtype.ext ?_)) h1
     exact (D.starLL_cx x).symm
   have key := jetOp_transport _ _ _ hW.2 (barQ.comp (embQ D)) ((algebraMap Qbar ℂ).comp barQ) (ρ' : Qbar →+* ℂ) J u (f u) (by
@@ -747,7 +747,7 @@ theorem row_jets (hI : GlobalTheory.NormSum.Inp D) (hDict : DictAt ch) {Φ β d}
   congr 2
   funext m
   rw [applyAt0_tr D hdiff, applyAt0_monomial, htay]
-  simp only [J, Finsupp.prod, map_mul, map_natCast, StandardLatticesGL3.cj, TaylorLogMetric.liftM, dif_pos (hcoef _)]
+  simp only [J, Finsupp.prod, map_mul, map_natCast, StandardLatticesGL3.cj, TaylorLogMetric.liftM, dite_eq_left (hcoef _)]
   push_cast
   rfl
 

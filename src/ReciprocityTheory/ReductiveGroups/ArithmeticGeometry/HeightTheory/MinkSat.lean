@@ -134,7 +134,7 @@ theorem exists_integral_completion {b : Fin k → Fin r → K} (hb : LinearIndep
     rw [e1, Submodule.span_image, (Pi.basisFun K (Fin r)).span_eq, Submodule.map_top,
       Submodule.range_mkQ]
   have hsfin : s.Finite := (Set.finite_range v).subset hs
-  haveI : Fintype s := hsfin.fintype
+  have : Fintype s := hsfin.fintype
   have hcard : Fintype.card s = r - k := by
     have h1 : Fintype.card s = Module.finrank K ((Fin r → K) ⧸ W) := by
       rw [← Set.toFinset_card, ← finrank_span_set_eq_card hli, hspan, hspan_top, finrank_top]
@@ -244,7 +244,7 @@ theorem latDeg_standard_basis {n : ℕ} (h : n = r) (v : Fin n → Fin r → K)
         have hl' : ¬ l = Fin.cast h i := hl
         simp [Pi.single_apply, hl']
       · simp
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       refine Finset.sum_eq_zero fun l _ => ?_
       by_cases hl : l = finCongr h i
       · have : l ≠ finCongr h j := by
@@ -360,7 +360,7 @@ theorem exists_ne_zero_mem_norm_sq_le_gram_det_div_relIndex {E : Type*} [NormedA
       Submodule.span_le.mpr (by rintro _ ⟨i, rfl⟩; exact hΛ i)
     exact hle hx
   have hfin : Module.finrank ℝ V = N := by rw [finrank_span_eq_card hw, Fintype.card_fin]
-  haveI : FiniteDimensional ℝ V := FiniteDimensional.span_of_finite ℝ (Set.finite_range w)
+  have : FiniteDimensional ℝ V := FiniteDimensional.span_of_finite ℝ (Set.finite_range w)
   let f : OrthonormalBasis (Fin N) ℝ V := (stdOrthonormalBasis ℝ V).reindex (finCongr hfin)
   let wV : Fin N → V := fun i => ⟨w i, Submodule.subset_span ⟨i, rfl⟩⟩
   have hwV : LinearIndependent ℝ wV := LinearIndependent.of_comp V.subtype hw
@@ -368,7 +368,7 @@ theorem exists_ne_zero_mem_norm_sq_le_gram_det_div_relIndex {E : Type*} [NormedA
   have hφ : ∀ v : V, φ v = (f.repr v).ofLp := fun v => rfl
   let vb : Fin N → (Fin N → ℝ) := fun i => φ (wV i)
   have hvb : LinearIndependent ℝ vb := hwV.map' φ.toLinearMap (LinearEquiv.ker _)
-  haveI : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
+  have : Nonempty (Fin N) := ⟨⟨0, hN⟩⟩
   let b : Module.Basis (Fin N) ℝ (Fin N → ℝ) :=
     basisOfLinearIndependentOfCardEqFinrank hvb (by simp)
   have hb : ∀ i, b i = φ (wV i) := fun i => by simp [b, vb]
@@ -438,9 +438,9 @@ theorem exists_ne_zero_mem_norm_sq_le_gram_det_div_relIndex {E : Type*} [NormedA
     rw [hx', ← hc, Finset.smul_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [hb', smul_comm]
-  haveI : DiscreteTopology L2 := DiscreteTopology.of_subset (inferInstance :
+  have : DiscreteTopology L2 := DiscreteTopology.of_subset (inferInstance :
     DiscreteTopology (span ℤ (Set.range b'))) hL2sub
-  haveI : IsZLattice ℝ L2 := ⟨by
+  have : IsZLattice ℝ L2 := ⟨by
     rw [eq_top_iff, ← b.span_eq]
     exact Submodule.span_le.mpr fun x hx => Submodule.subset_span (hL12 (Submodule.subset_span hx))⟩
   have hcov1 : ZLattice.covolume L1 MeasureTheory.volume = |d| := by
@@ -463,14 +463,14 @@ theorem exists_ne_zero_mem_norm_sq_le_gram_det_div_relIndex {E : Type*} [NormedA
     rw [← hcov2, ZLattice.covolume_eq_measure_fundamentalDomain L2 MeasureTheory.volume hF2,
       MeasureTheory.Measure.real, ENNReal.ofReal_toReal
         (ZSpan.fundamentalDomain_isBounded b2).measure_lt_top.ne]
-  haveI : Countable ↥L2.toAddSubgroup := by
+  have : Countable ↥L2.toAddSubgroup := by
     have hc : ((L2.toAddSubgroup : AddSubgroup (Fin N → ℝ)) : Set (Fin N → ℝ)) ⊆
         Set.range (fun c : Fin N → ℤ => ∑ i, c i • b' i) := by
       intro z hz
       obtain ⟨c, hc⟩ := (Submodule.mem_span_range_iff_exists_fun ℤ).mp (hL2sub hz)
       exact ⟨c, hc⟩
     exact ((Set.countable_range _).mono hc).to_subtype
-  haveI : DiscreteTopology ↥L2.toAddSubgroup := inferInstanceAs (DiscreteTopology L2)
+  have : DiscreteTopology ↥L2.toAddSubgroup := inferInstanceAs (DiscreteTopology L2)
   set t : ℝ := (|d| / I) ^ ((N : ℝ)⁻¹) with ht
   have hq : 0 ≤ |d| / I := div_nonneg (abs_nonneg _) (Nat.cast_nonneg _)
   have ht0 : 0 ≤ t := Real.rpow_nonneg hq _

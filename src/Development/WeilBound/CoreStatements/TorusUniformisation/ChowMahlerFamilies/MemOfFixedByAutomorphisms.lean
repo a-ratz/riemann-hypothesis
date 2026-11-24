@@ -71,8 +71,8 @@ theorem exists_equiv {R K L : Type} [CommRing R] [IsDomain R] [Field K] [Field L
     (hKL ▸ hK)
   have h3 : #s = #t := by rw [← h1, ← h2, hKL]
   obtain ⟨e⟩ := Cardinal.eq.1 h3
-  haveI := IsAlgClosed.isAlgClosure_of_transcendence_basis _ hs
-  haveI := IsAlgClosed.isAlgClosure_of_transcendence_basis _ ht
+  have := IsAlgClosed.isAlgClosure_of_transcendence_basis _ hs
+  have := IsAlgClosed.isAlgClosure_of_transcendence_basis _ ht
   let e' : Algebra.adjoin R (Set.range ((↑) : s → K)) ≃ₐ[R]
       Algebra.adjoin R (Set.range ((↑) : t → L)) :=
     hs.1.aevalEquiv.symm.trans ((MvPolynomial.renameEquiv R e).trans ht.1.aevalEquiv)
@@ -101,7 +101,7 @@ theorem PositivityTheory.Xgn.mem_of_fixed_by_automorphisms : ∀ (F : Intermedia
     simpa using this
   by_cases hc : IsAlgebraic F c
   · have hint : IsIntegral F c := hc.isIntegral
-    haveI : FiniteDimensional F (IntermediateField.adjoin F {c}) :=
+    have : FiniteDimensional F (IntermediateField.adjoin F {c}) :=
       IntermediateField.adjoin.finiteDimensional hint
     set_option synthInstance.maxHeartbeats 200000 in
     have hE : Cardinal.mk (IntermediateField.adjoin F {c}) ≤ Cardinal.aleph0 := by

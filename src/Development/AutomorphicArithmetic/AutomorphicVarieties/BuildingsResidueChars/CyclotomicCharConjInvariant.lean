@@ -48,9 +48,9 @@ theorem UpperTheory.cyclotomic_char_conj_invariant :
     UpperTheory.V.Af.Sol.CycConj := by
   intro F Ω _ _ _ _ _ l _ c hc
   obtain ⟨j, hj⟩ := hc
-  haveI : CharZero Ω := j.charZero
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : Nat.Prime l).ne_zero⟩
+  have : CharZero Ω := j.charZero
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : NeZero (l : Ω) := ⟨by exact_mod_cast (Fact.out : Nat.Prime l).ne_zero⟩
   have hinv : ∀ (x : Ω) (m : ℕ), m ≠ 0 → x ^ m = 1 → c x = x⁻¹ := by
     intro x m hm hx
     apply j.injective

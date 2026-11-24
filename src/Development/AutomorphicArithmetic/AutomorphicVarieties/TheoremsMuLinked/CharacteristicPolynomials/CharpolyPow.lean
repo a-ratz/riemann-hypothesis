@@ -79,7 +79,7 @@ private lemma strong_of {G κ : Type} [Group G] [TopologicalSpace G] [IsTopologi
     (r : G →* GL (Fin m) κ) (hc : LinClosed (gm r))
     (hirr : ∀ U : Subgroup G, IsOpen (U : Set G) → MatIrr (U ⊓ G') (gm r)) :
     StrongIrr (r.comp (V ⊓ G').subtype) := by
-  refine strongIrrOfOpen _ κ m _ (fun f => (hc f).preimage continuous_subtype_val) ?_
+  refine strongIrrOfOpen _ κ m _ (fun f => (hc f).preimage continuous_subtypeVal) ?_
   intro U hU W hW
   obtain ⟨O, hO, hOU⟩ := isOpen_induced_iff.1 hU
   have h1 : (1 : G) ∈ O := by
@@ -143,8 +143,8 @@ theorem UpperTheory.V.Th.Det.n3small :
     exact isClosed_eq h2 continuous_const
   refine cosetI hn G' ρ hc hirr ?_ U hU hne
   intro V hV
-  haveI : Finite (G ⧸ V) := Subgroup.quotient_finite_of_isOpen V hV
-  haveI : V.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (G ⧸ V) := Subgroup.quotient_finite_of_isOpen V hV
+  have : V.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   obtain ⟨d, hd, -, hdV⟩ := Subgroup.exists_pow_mem_of_index_ne_zero (Subgroup.FiniteIndex.index_ne_zero (H := V)) u
   refine ⟨u ^ d, ⟨hdV, G'.pow_mem hu d⟩, fun i => α i ^ d, ?_, ?_⟩
   · intro i j hij m hm

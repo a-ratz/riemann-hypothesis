@@ -105,7 +105,7 @@ theorem rep_of {E : Spc} (ω : Hl l E 0 0)
     (∀ x : Hl l E 0 0, ∃ c : ℤ_[l], x = c • ω) ∧ ∀ c : ℤ_[l], c • ω = 0 → c = 0 := by
   have key : ∀ j (s s' : ZMod (l ^ j)), s • lv ω j = s' • lv ω j → s = s' := by
     intro j s s' h
-    haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     have h0 : (s - s').val • lv ω j = 0 := by
       rw [← Nat.cast_smul_eq_nsmul (ZMod (l ^ j)), ZMod.natCast_zmod_val, sub_smul, h, sub_self]
     obtain ⟨t, ht⟩ := hord j _ h0
@@ -119,7 +119,7 @@ theorem rep_of {E : Spc} (ω : Hl l E 0 0)
   have redω : ∀ j (s : ZMod (l ^ (j + 1))), red (l ^ (j + 1)) (l ^ j) E 0 0 (s • lv ω (j + 1)) =
       (ZMod.castHom (pow_dvd_pow l (Nat.le_succ j)) (ZMod (l ^ j)) s) • lv ω j := by
     intro j s
-    haveI : NeZero (l ^ (j + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ (j + 1)) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     conv_lhs => rw [← ZMod.natCast_zmod_val s, Nat.cast_smul_eq_nsmul]
     rw [map_nsmul, ZMod.castHom_apply, ZMod.cast_eq_val, Nat.cast_smul_eq_nsmul]
     exact congrArg (s.val • ·) (ω.2 j)
@@ -128,14 +128,14 @@ theorem rep_of {E : Spc} (ω : Hl l E 0 0)
     have hc : s ∈ Coh l := coh_of_succ l s fun j => key j _ _ (by
       rw [← redω, ← hs (j + 1), ← hs j]; exact x.2 j)
     refine ⟨toZl l ⟨s, hc⟩, Subtype.ext (funext fun j => ?_)⟩
-    haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     change lv x j = (toZl l ⟨s, hc⟩) • (ω.1 j : HtL l j E 0 0)
     rw [HtL.smul_eq l j j le_rfl, toZModPow_toZl]
     change lv x j = (s j).val • lv ω j
     rw [← Nat.cast_smul_eq_nsmul (ZMod (l ^ j)), ZMod.natCast_zmod_val]
     exact hs j
   · refine PadicInt.ext_of_toZModPow.mp fun j => ?_
-    haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ j) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     rw [map_zero]
     refine key j _ _ ?_
     have h1 : (c • ω).1 j = (0 : Hl l E 0 0).1 j := by rw [hc]

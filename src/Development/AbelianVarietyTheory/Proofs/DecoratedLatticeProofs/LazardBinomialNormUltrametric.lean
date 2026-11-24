@@ -84,7 +84,7 @@ theorem norm_natCast_eq_one_of_not_dvd {K : Type} [NormedField K] [IsUltrametric
 
 theorem not_dvd_choose_pow_mul {l : ℕ} (hp : l.Prime) (m : ℕ) (hm : ¬ l ∣ m) :
     ∀ v : ℕ, ¬ l ∣ (l ^ v * m).choose (l ^ v) := by
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   intro v
   induction v with
   | zero => simpa using hm
@@ -107,7 +107,7 @@ theorem choose_prime_pow_pred {l : ℕ} (hp : l.Prime) (i : ℕ) (hi : 0 < i) :
     have : ((i : ℕ) : ℕ∞) = ((1 : ℕ) : ℕ∞) + ((i - 1 : ℕ) : ℕ∞) := by
       rw [← Nat.cast_add]; congr 1; omega
     rw [this] at h
-    exact WithTop.add_right_cancel (ENat.coe_ne_top _) h
+    exact WithTop.add_right_cancel (ENat.natCast_ne_top _) h
   rw [emultiplicity_eq_coe] at h1
   obtain ⟨⟨m, hm⟩, hn⟩ := h1
   refine ⟨m, ?_, by simpa using hm⟩

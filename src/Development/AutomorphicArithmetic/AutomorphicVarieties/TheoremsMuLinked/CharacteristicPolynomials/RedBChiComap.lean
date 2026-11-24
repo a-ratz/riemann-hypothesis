@@ -52,7 +52,7 @@ private theorem redB_chi_comap {n : ℕ} {A G H : Type} [CommRing A] [Group G] [
 
 private theorem redB_chi_map {n : ℕ} {A B G : Type} [CommRing A] [CommRing B] [Group G] (D : W.GDet n A G) (f : A →+* B)
     (g : G) : (D.map f).chi (MonoidAlgebra.single g 1) = (D.chi (MonoidAlgebra.single g 1)).map f := by
-  letI : Algebra A B[X] := ((algebraMap B B[X]).comp f).toAlgebra
+  let : Algebra A B[X] := ((algebraMap B B[X]).comp f).toAlgebra
   have h := D.nat A[X] B[X] { Polynomial.mapRingHom f with commutes' := fun a => by simp; rfl }
     (MonoidAlgebra.single 1 X - MonoidAlgebra.mapRingHom G C (MonoidAlgebra.single g 1))
   refine Eq.trans ?_ h

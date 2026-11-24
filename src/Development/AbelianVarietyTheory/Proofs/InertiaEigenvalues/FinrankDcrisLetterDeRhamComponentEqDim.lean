@@ -70,7 +70,7 @@ theorem card_le_of_idem {R : Type} [CommRing R] {e : R} (he : e * e = e) (he0 : 
       linear_combination (-c) * he
     · intro hx
       exact ⟨x, by linear_combination -hx⟩
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 (by
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 (by
     intro hT
     have : (1 : R) ∈ I := by rw [hT]; trivial
     rw [hI, mul_one] at this
@@ -106,7 +106,7 @@ open GlobalTheory.DRFil in
 theorem component_le [FiniteDimensional Qp K] [CharZero Qp] (hF : IsField F) (ρ : Representation LL G V)
     (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] :
     finrank LL ↥(DdRE PD ρ τ) ≤ finrank LL V := by
-  haveI := nontrivial_dR PD
+  have := nontrivial_dR PD
   let b := Module.finBasis LL ↥(DdRE PD ρ τ)
   let v := Module.finBasis LL V
   have hli : LinearIndependent LL (fun i => (b i : V ⊗[Qp] F)) :=
@@ -125,9 +125,9 @@ theorem component_le [FiniteDimensional Qp K] [CharZero Qp] (hF : IsField F) (ρ
 theorem component_eq [CharZero Qp] (hF : IsField F) (ρ : Representation LL G V)
     (hc : Nat.card (K →ₐ[Qp] LL) = finrank Qp K) (h : IsDR PD ρ) (τ : K →ₐ[Qp] LL) :
     finrank LL ↥(DdRE PD ρ τ) = finrank LL V := by
-  haveI := PD.finK
-  haveI := (GlobalTheory.Per.FontaineBound.ddR_finite_le PD hF ρ).1
-  haveI : ∀ τ, FiniteDimensional LL ↥(DdRE PD ρ τ) := fun τ =>
+  have := PD.finK
+  have := (GlobalTheory.Per.FontaineBound.ddR_finite_le PD hF ρ).1
+  have : ∀ τ, FiniteDimensional LL ↥(DdRE PD ρ τ) := fun τ =>
     Submodule.finiteDimensional_of_le (S₂ := DdR PD ρ) inf_le_left
   rw [Nat.card_eq_fintype_card] at hc
   have hs := (GlobalTheory.DeRhamSplit.finrank_DdR PD ρ hc 0).1
@@ -139,9 +139,9 @@ theorem component_eq [CharZero Qp] (hF : IsField F) (ρ : Representation LL G V)
 
 omit [FiniteDimensional Qp LL] in
 theorem finite_Dcris (ρ : Representation LL G V) (h : IsCrys PD ρ) : Module.Finite LL ↥(Dcris PD ρ) := by
-  haveI := PD.finK₀
+  have := PD.finK₀
   rcases Nat.eq_zero_or_pos (finrank LL V) with h0 | h0
-  · haveI : Subsingleton V := finrank_zero_iff.1 h0
+  · have : Subsingleton V := finrank_zero_iff.1 h0
     infer_instance
   · exact FiniteDimensional.of_finrank_pos (by
       unfold IsCrys at h
@@ -154,8 +154,8 @@ open GlobalTheory.RegularRing in
 theorem letter_eq [IsDomain B] (ρ : Representation LL G V)
     (hc : Nat.card (K₀ →ₐ[Qp] LL) = finrank Qp K₀) (h : IsCrys PD ρ) (τ : K₀ →ₐ[Qp] LL) :
     finrank LL ↥(DcrisL PD ρ τ) = finrank LL V := by
-  haveI := PD.finK₀
-  haveI := finite_Dcris PD ρ h
+  have := PD.finK₀
+  have := finite_Dcris PD ρ h
   have hle : ∀ (n : ℕ) (τ τ' : K₀ →ₐ[Qp] LL), (∀ c, τ' c = τ (PD.σ^[n] c)) →
       finrank LL ↥(DcrisL PD ρ τ') ≤ finrank LL ↥(DcrisL PD ρ τ) := by
     intro n
@@ -183,8 +183,8 @@ end General
 
 theorem tied_letter_component_finrank : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K LL : FinExt l) (V : Type) [AddCommGroup V] [Module ↥LL.1 V] [Module ℚ_[l] V] [IsScalarTower ℚ_[l] ↥LL.1 V] [FiniteDimensional ↥LL.1 V] (ρ : Representation ↥LL.1 ↥(GK K) V), (Nat.card (↥(K0 K) →ₐ[ℚ_[l]] ↥LL.1) = Module.finrank ℚ_[l] ↥(K0 K) → IsCrys (P.PD K) ρ → ∀ τ, Module.finrank ↥LL.1 ↥(DcrisL (P.PD K) ρ τ) = Module.finrank ↥LL.1 V) ∧ (Nat.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) = Module.finrank ℚ_[l] ↥K.1 → IsDR (P.PD K) ρ → ∀ τ, Module.finrank ↥LL.1 ↥(DdRE (P.PD K) ρ τ) = Module.finrank ↥LL.1 V) := by
   intro l _ P AI T K LL V _ _ _ _ _ ρ
-  haveI := LL.2
-  haveI := GlobalTheory.RegularRing.isDomain_of_tied T K
+  have := LL.2
+  have := GlobalTheory.RegularRing.isDomain_of_tied T K
   exact ⟨letter_eq (P.PD K) ρ, component_eq (P.PD K) (GlobalTheory.RegularRing.isField_of_tied T) ρ⟩
 
 end GlobalTheory.Per.LetterDim

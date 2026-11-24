@@ -64,7 +64,7 @@ def VS {R Ω : Type} [CommRing R] [CommRing Ω] (φ : R →+* Ω) {Y : Scheme.{0
 theorem VS.half {R Ω : Type} [CommRing R] [IsDomain R] [Algebra ℚ R] [CommRing Ω] (φ : R →+* Ω) {Y : Scheme.{0}}
     {L : LB Y} {x : Sp Ω ⟶ Y} {g : GlobalTheory.RayEv.Transport.Frame L (x ≫ 𝟙 Y)} {k : ℕ} {s : FractionRing Ω}
     (h : VS φ L x g k (2 * s)) : VS φ L x g k s := by
-  haveI : CharZero R := algebraRat.charZero R
+  have : CharZero R := algebraRat.charZero R
   obtain ⟨r, σ, ω, hr, hv, he⟩ := h
   refine ⟨2 * r, σ, ω, mul_ne_zero two_ne_zero hr, hv, ?_⟩
   rw [he, map_mul, map_mul, map_ofNat, map_ofNat]

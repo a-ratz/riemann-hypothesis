@@ -161,7 +161,7 @@ section Loc
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {n : ℕ}
 
-theorem unif_pos : 0 < uniformizer k := zero_lt_iff.2 (by simp)
+theorem unif_pos : 0 < uniformizer k := pos_iff_ne_zero.2 (by simp)
 
 theorem unif_spec : valuation k (unif k : k) = uniformizer k := by
   refine Classical.epsilon_spec (p := fun x : kˣ => valuation k (x : k) = uniformizer k) ?_

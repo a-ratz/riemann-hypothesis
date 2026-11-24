@@ -76,7 +76,7 @@ theorem realFlowPeriods_span_eq_top {r : ℕ} (X : Data E r) (la : Wt X.Ψ r) :
   rw [eq_top_iff]
   intro v _
   rw [← SetLike.mem_coe]
-  apply (Submodule.closed_of_finiteDimensional _).closure_subset
+  apply (Submodule.isClosed_of_finiteDimensional _).closure_subset
   rw [Metric.mem_closure_iff]
   intro ε hε
   set N : ℝ := ((X.m * X.chiOrd la : ℕ) : ℝ) with hN
@@ -151,7 +151,7 @@ theorem spectralGap_holds : CuspFormGapCondition (E := E) := by
   have hint : ∀ p ∈ X.periods la, ∃ k : ℤ, 2 * ∑ τ, ν τ * p τ = k := by
     by_contra hc
     apply hne
-    rw [Data.fj, if_neg hc]
+    rw [Data.fj, ite_eq_right hc]
   have hpos : ∀ τ, 0 ≤ ν τ := hnn ξ hξ ν x hx hne
   have hsmall : ∀ τ, ν τ ≤ 1 / (2 * M + 2) := fun τ =>
     le_trans (Finset.single_le_sum (fun σ _ => hpos σ) (Finset.mem_univ τ)) hν

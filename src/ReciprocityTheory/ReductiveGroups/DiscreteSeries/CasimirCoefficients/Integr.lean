@@ -198,7 +198,7 @@ theorem integrable_of_polar {E : Type*} [NormedAddCommGroup E] (hq : 1 ≤ q0 ε
         M * Real.exp (-(δ + n * Real.sqrt (2 * q0 ε)) * Real.sqrt (hs X))) :
     Integrable φ ν := by
   refine ⟨hφ.aestronglyMeasurable, ?_⟩
-  exact lintegral_lt_top_of_polar hq ν (fun g => ‖φ g‖ₑ) hφ.enorm.measurable hM hδ fun k X hX => by
+  exact lintegral_lt_top_of_polar hq ν (fun g => ‖φ g‖ₑ) hφ.eNorm.measurable hM hδ fun k X hX => by
     rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (hb k X hX)
 

@@ -91,8 +91,8 @@ private theorem open_ker {Ω K : Type} [Field Ω] [CharZero Ω] [IsAlgClosure �
     hfin.isClosed.isOpen_compl.preimage hc
   convert hopen using 1
   ext g
-  simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_compl_iff, Set.mem_diff,
-    Set.mem_setOf_eq, Set.mem_singleton_iff]
+  simp only [SetLike.mem_coe, MonoidHom.mem_ker, Set.mem_preimage, Set.mem_compl_iff, Set.mem_sdiff,
+    Set.mem_ofPred_eq, Set.mem_singleton_iff]
   constructor
   · intro h1
     simp [h1]
@@ -142,7 +142,7 @@ theorem UpperTheory.V.Ws.wtChar :
     have e : ∀ x : ℤ_[l], algebraMap ℤ_[l] (PadicAlgCl l) x = algebraMap ℚ_[l] (PadicAlgCl l) (x : ℚ_[l]) :=
       fun x => IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] _ x
     simp_rw [e]
-    exact (continuous_algebraMap ℚ_[l] _).comp continuous_subtype_val
+    exact (continuous_algebraMap ℚ_[l] _).comp continuous_subtypeVal
   let cU : G ℚ Ω →* (PadicAlgCl l)ˣ :=
     (Units.map (algebraMap ℤ_[l] (PadicAlgCl l)).toMonoidHom).comp (cycZ ℚ Ω l)
   have hcU : ∀ g, ((cU g : (PadicAlgCl l)ˣ) : PadicAlgCl l) = algebraMap ℤ_[l] (PadicAlgCl l) (cycZ ℚ Ω l g : ℤ_[l]) := by

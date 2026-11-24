@@ -50,12 +50,12 @@ namespace GlobalTheory.FlagPush
 
 theorem Dbl.p_comp_eq_of_isHom : ∀ (F : Type) [Field F] (X Y : Var F) (φ : X.Fn →ₐ[F] Y.Fn) (f : Y.X ⟶ X.X), (ratOf X).IsHom (ratOf Y) φ f → ∀ W : Dbl Y, (∀ u : X.Fn, W.α₁ (φ u) = W.α₂ (φ u)) → W.p₁ ≫ f = W.p₂ ≫ f := by
   intro F _ X Y φ f hf W hW
-  haveI : IsDominant (W.Z.fromSpecStalk (genericPoint W.Z)) := ⟨by
+  have : IsDominant (W.Z.fromSpecStalk (genericPoint W.Z)) := ⟨by
     rw [DenseRange, dense_iff_closure_eq]
     refine Set.eq_univ_of_univ_subset ?_
     rw [← (genericPoint_spec W.Z).def]
     exact closure_mono (Set.singleton_subset_iff.2 ⟨_, Scheme.fromSpecStalk_closedPoint⟩)⟩
-  haveI : IsSeparated X.str := (ratOf X).sep
+  have : IsSeparated X.str := (ratOf X).sep
   have hs : f ≫ X.str = Y.str := hf.inducedModelMorphism_comp_structureMap
   refine ext_of_isDominant_of_isSeparated X.str ?_ (W.Z.fromSpecStalk (genericPoint W.Z)) ?_
   · change (W.p₁ ≫ f) ≫ X.str = (W.p₂ ≫ f) ≫ X.str

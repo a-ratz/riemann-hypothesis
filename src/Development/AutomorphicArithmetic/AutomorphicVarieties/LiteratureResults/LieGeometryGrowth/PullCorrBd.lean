@@ -99,7 +99,7 @@ theorem UpperTheory.V.Lit.Geo.corrBd :
   have hv' : (fun i => (2 : ℝ) • sand (y * h) (hv (X i))) = fun i => sand y (v i) := by
     funext i
     simp only [hX, LinearEquiv.apply_symm_apply, map_smul, smul_smul]
-    rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel_right]
+    rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel_right]
     norm_num
   have hcv := centreVal E a U Ξ r hr q α hα X 1 t
     (GroundTheory.Automorphic.CuspidalSpectrum.retractOne (g * infGL E a h) : KernelIndexFullLattice.G1 E a).1

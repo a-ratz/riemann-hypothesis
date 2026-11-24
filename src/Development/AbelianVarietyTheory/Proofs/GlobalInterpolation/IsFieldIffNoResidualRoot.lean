@@ -97,7 +97,7 @@ theorem isField_iff_no_root {K A : Type*} [Field K] [CommRing A] [Algebra K A] (
     IsField A ↔ ¬ ∃ x : K, x ^ 2 - t * x + n = 0 := by
   constructor
   · rintro hF ⟨x, hx⟩
-    letI := hF.toField
+    let := hF.toField
     have hx' : algebraMap K A x ^ 2 - algebraMap K A t * algebraMap K A x + algebraMap K A n = 0 := by
       simpa using congrArg (algebraMap K A) hx
     have hprod : (algebraMap K A (-x) + algebraMap K A 1 * w) *
@@ -131,7 +131,7 @@ theorem isField_iff_no_root {K A : Type*} [Field K] [CommRing A] [Algebra K A] (
 
 theorem isField_iff_no_residual_root : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (A : Type) [CommRing A] [Algebra (Fv F v) A] (w : A) (t n : v.adicCompletionIntegers F), IsUnit (t ^ 2 - 4 * n) → w ^ 2 - algebraMap (Fv F v) A t * w + algebraMap (Fv F v) A n = 0 → (∀ z : A, ∃ a b : Fv F v, z = algebraMap (Fv F v) A a + algebraMap (Fv F v) A b * w) → (∀ a b : Fv F v, algebraMap (Fv F v) A a + algebraMap (Fv F v) A b * w = 0 → a = 0 ∧ b = 0) → (IsField A ↔ ¬ ∃ r : IsLocalRing.ResidueField (v.adicCompletionIntegers F), r ^ 2 - IsLocalRing.residue (v.adicCompletionIntegers F) t * r + IsLocalRing.residue (v.adicCompletionIntegers F) n = 0) := by
   intro F _ _ v A _ _ w t n hd hw hspan hind
-  haveI := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
+  have := GlobalTheory.SelfDualGenus.isAdicComplete_adicCompletionIntegers v
   rw [isField_iff_no_root w _ _ hw hspan hind]
   refine not_congr ⟨?_, ?_⟩
   · rintro ⟨x, hx⟩

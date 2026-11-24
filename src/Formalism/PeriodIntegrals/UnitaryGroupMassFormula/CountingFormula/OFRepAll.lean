@@ -554,7 +554,7 @@ def WPos : Prop :=
 theorem defFinW_of (hW : WPos) : DefFinW := by
   intro D P hP c
   classical
-  letI : Module ℚ (VS D).V := Module.compHom (VS D).V (algebraMap ℚ D.host.E)
+  let : Module ℚ (VS D).V := Module.compHom (VS D).V (algebraMap ℚ D.host.E)
   have hsm : ∀ (q : ℚ) (v : (VS D).V), q • v = (algebraMap ℚ D.host.E q) • v := fun _ _ => rfl
   have hsmL : ∀ (q : ℚ) (v w : (VS D).V), (VS D).hT (q • v) w = (q : D.host.E) * (VS D).hT v w := by
     intro q v w
@@ -579,13 +579,13 @@ theorem defFinW_of (hW : WPos) : DefFinW := by
           by rw [hsmR, hx3, mul_zero]⟩ }
   let A0 : Submodule ℤ (VS D).V := P ⊓ Wq.restrictScalars ℤ
   have hA0 : A0.FG := by
-    haveI := isNoetherian_of_fg_of_noetherian P hP
+    have := isNoetherian_of_fg_of_noetherian P hP
     have hfg : (A0.comap P.subtype).FG := IsNoetherian.noetherian _
     have := hfg.map P.subtype
     rwa [Submodule.map_comap_subtype, inf_of_le_right (inf_le_left : A0 ≤ P)] at this
   obtain ⟨s, hs⟩ := hA0
   let U : Submodule ℚ (VS D).V := Submodule.span ℚ (s : Set (VS D).V)
-  haveI : FiniteDimensional ℚ U := FiniteDimensional.span_finset ℚ s
+  have : FiniteDimensional ℚ U := FiniteDimensional.span_finset ℚ s
   have hA0U : ∀ w ∈ A0, w ∈ U := fun w hw => by
     rw [← hs] at hw
     exact Submodule.span_le_restrictScalars ℤ ℚ _ hw
@@ -685,17 +685,17 @@ theorem semidef (D : Formalism.BasicNotions.D7) (w : (VS D).V) (hE : ∀ a, (VS 
     · have ha : a ≠ a' := fun h => hij (by rw [h])
       have ha' : a' ≠ a := fun h => ha h.symm
       simp only [wv, Sum.elim_inl, map_sub, LinearMap.sub_apply, D.sp.hyp_ee, D.sp.hyp_ff, D.sp.hyp_ef,
-        hFE, if_neg ha, if_neg ha']
+        hFE, ite_eq_right ha, ite_eq_right ha']
       simp
     · cases b'
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, if_false, map_sub,
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, ite_false, map_sub,
           LinearMap.sub_apply, hEz, hFz, sub_zero]
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, if_true, map_sub, LinearMap.sub_apply, hE, hF,
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, ite_true, map_sub, LinearMap.sub_apply, hE, hF,
           sub_zero]
     · cases b
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, if_false, map_sub,
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, Bool.false_eq_true, ite_false, map_sub,
           (D.sp.hyp_orthz a').1, (D.sp.hyp_orthz a').2, sub_zero]
-      · simp only [wv, Sum.elim_inl, Sum.elim_inr, if_true, map_sub, hzero_swap D (hE a'),
+      · simp only [wv, Sum.elim_inl, Sum.elim_inr, ite_true, map_sub, hzero_swap D (hE a'),
           hzero_swap D (hF a'), sub_zero]
     · cases b <;> cases b'
       · exact absurd rfl hij
@@ -706,21 +706,21 @@ theorem semidef (D : Formalism.BasicNotions.D7) (w : (VS D).V) (hE : ∀ a, (VS 
     intro i
     rcases i with a | b
     · simp only [wv, d, Sum.elim_inl, map_sub, LinearMap.sub_apply, D.sp.hyp_ee, D.sp.hyp_ff,
-        D.sp.hyp_ef, hFE, if_true]
+        D.sp.hyp_ef, hFE, ite_true]
       rw [map_zero, map_one]
       push_cast; ring
     · cases b
-      · simp only [wv, d, Sum.elim_inr, Bool.false_eq_true, if_false, D.sp.zm_norm, map_neg,
+      · simp only [wv, d, Sum.elim_inr, Bool.false_eq_true, ite_false, D.sp.zm_norm, map_neg,
           map_natCast]
         push_cast; ring
-      · simp only [wv, d, Sum.elim_inr, if_true]
+      · simp only [wv, d, Sum.elim_inr, ite_true]
         exact real_of_emb D τ w
   have hneg : ∀ i, d i < 0 := by
     intro i
     rcases i with a | b
     · simp [d]
     · cases b
-      · simp only [d, Sum.elim_inr, Bool.false_eq_true, if_false]; linarith
+      · simp only [d, Sum.elim_inr, Bool.false_eq_true, ite_false]; linarith
       · simpa [d] using hlt
   have hc := PI.CntNotPosW.card_le_of_negFamily (VS D) τ hτ (D.sp.Y_sig 0 τ) wv d hoff hdiag hneg
   have hq : ((D.sp.Y 0).sig τ).2 = D.R.rS + 1 := by rw [D.sp.baseSpace_signature_eq τ]; rfl
@@ -805,7 +805,7 @@ theorem weights_are_positive : WPos := by
     apply isotropic_zero D w hE hF hz
     apply τ.injective
     rw [real_of_emb D τ w, ← h, Complex.ofReal_zero, map_zero]
-  haveI : Nonempty (D.host.E →ₐ[ℚ] ℂ) := ⟨IsAlgClosed.lift⟩
+  have : Nonempty (D.host.E →ₐ[ℚ] ℂ) := ⟨IsAlgClosed.lift⟩
   have ht := trace_eq_sum_embeddings (K := ℚ) (L := D.host.E) (E := ℂ) (x := (VS D).hT w w)
   have hre := congrArg Complex.re ht
   rw [Complex.re_sum] at hre
@@ -949,7 +949,7 @@ theorem stage1_of_unipotentIntegralIsGroup (hN : UnipotentIntegralIsGroup) : Sta
       abel
     rw [Finset.sum_congr rfl fun a _ => e4 a, Finset.sum_add_distrib, ← Finset.smul_sum]
     simp only [tv, Pm, Matrix.sub_apply, Matrix.one_apply, sub_smul, Finset.sum_sub_distrib, ite_smul, one_smul,
-      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, Matrix.mul_apply, Finset.sum_smul,
+      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, Matrix.mul_apply, Finset.sum_smul,
       Finset.sum_neg_distrib, Finset.smul_sum, smul_smul]
     rw [Finset.sum_comm (f := fun a b' => (betaZ D Z a b * R b' a) • pWf D x b')]
     have e5 : ∀ b' a, (betaZ D Z a b * R b' a) • pWf D x b' = (R b' a * betaZ D Z a b) • pWf D x b' :=

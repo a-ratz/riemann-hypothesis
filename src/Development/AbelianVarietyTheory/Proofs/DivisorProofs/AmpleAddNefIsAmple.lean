@@ -102,7 +102,7 @@ theorem isAmpleLB_tens_of_isNef_of_dim_le (k : Type) [Field k] [Infinite k] : �
 
 theorem isAmpleLB_of_cls_eq_ample_add_nef : ∀ (k : Type) [Field k] [Infinite k] (X : Scheme.{0}) (p : X ⟶ Sp k), IsProjOver p → ∀ (A N P : LB X) (hA : IsAmpleLB A) (hN : letI := algebraΓOfHom p; IsNef k N) (hP : P.IsLB), cls P hP = cls A hA.isLB + cls N (letI := algebraΓOfHom p; hN.isLB) → IsAmpleLB P := by
   intro k _ _ X p hp A N P hA hN hP hcls
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   have hs : strHom k X = p := strHom_eq fun _ => rfl
   have hp' : IsProjOver (strHom k (X := X)) := hs ▸ hp
   obtain ⟨n, i, hi, -⟩ := hp

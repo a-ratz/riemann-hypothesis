@@ -67,13 +67,13 @@ theorem exists_galois (F E : Type) [Field F] [CharZero F] [Field E] [Algebra F E
     (hn : 0 < n) :
     ∃ (Ω : Type) (_ : Field Ω) (_ : Algebra F Ω) (i : E →+* Ω) (ζ : Ωˣ), FiniteDimensional F Ω ∧ IsGalois F Ω ∧
       i.comp (algebraMap F E) = algebraMap F Ω ∧ IsPrimitiveRoot ζ n := by
-  haveI : NeZero n := ⟨hn.ne'⟩
-  haveI : CharZero E := (algebraMap F E).charZero_iff (algebraMap F E).injective |>.1 inferInstance
+  have : NeZero n := ⟨hn.ne'⟩
+  have : CharZero E := (algebraMap F E).charZero_iff (algebraMap F E).injective |>.1 inferInstance
   let C := CyclotomicField n E
-  haveI : Module.Finite E C := IsCyclotomicExtension.finite {n} E C
-  haveI : Module.Finite F C := Module.Finite.trans E C
+  have : Module.Finite E C := IsCyclotomicExtension.finite {n} E C
+  have : Module.Finite F C := Module.Finite.trans E C
   let L := AlgebraicClosure C
-  haveI : IsAlgClosure F L := IsAlgClosure.ofAlgebraic F C L
+  have : IsAlgClosure F L := IsAlgClosure.ofAlgebraic F C L
   let Ω := IntermediateField.normalClosure F C L
   have hz := (IsCyclotomicExtension.zeta_spec n E C).map_of_injective (algebraMap C Ω).injective
   obtain ⟨ζ, hζ⟩ := hz.isUnit hn.ne'
@@ -149,7 +149,7 @@ theorem exists_level_galois : ∀ {Ω₁ : Type} [Field Ω₁] [CharZero Ω₁] 
   obtain ⟨P₀, φ₀, h₀⟩ := exists_isPolFibre hB ι P₁
   obtain ⟨E, _, _, hfin, H⟩ := LevelAfterExt.exists_ext_torsion Ω₁ P₀ K hK
   obtain ⟨Ω₂, _, _, i, ζ, hfd, hgal, hi, hζ⟩ := exists_galois Ω₁ E K hK
-  haveI : CharZero Ω₂ := (algebraMap Ω₁ Ω₂).charZero_iff (algebraMap Ω₁ Ω₂).injective |>.1 inferInstance
+  have : CharZero Ω₂ := (algebraMap Ω₁ Ω₂).charZero_iff (algebraMap Ω₁ Ω₂).injective |>.1 inferInstance
   obtain ⟨Q, ψ, hQ⟩ := exists_isPolFibre hB (algebraMap Ω₁ Ω₂) P₀
   obtain ⟨Q', ψ', hQ'⟩ := exists_isPolFibre hB (algebraMap Ω₂ (AlgebraicClosure Ω₂)) Q
   refine ⟨Ω₂, inferInstance, inferInstance, Q, ψ ≫ φ₀, ζ, hfd, hgal, hζ, hQ.1.trans h₀.1,

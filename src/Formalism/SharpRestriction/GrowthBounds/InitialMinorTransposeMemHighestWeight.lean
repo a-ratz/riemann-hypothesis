@@ -797,7 +797,7 @@ theorem binomial_basis_approximation (p : ℕ) [Fact p.Prime] :
   · intro J hJ
     by_cases h : ∑ k, J k ≤ 4 * c
     · refine ⟨h, ?_⟩
-      simp only [h, if_true] at hJ ⊢
+      simp only [h, ite_true] at hJ ⊢
       rcases asm_q_ge f hd J with h0 | h1
       · exact absurd h0 hJ
       · have h2 : (0 : ℝ) ≤ (padicValRat p (∏ k, mah (f k) (J k)) : ℝ) :=
@@ -1274,7 +1274,7 @@ theorem isWeightedHomogeneous_of_column_scaling {R : Type} [CommRing R] {m n : �
     rw [aeval_monomial]
     have hs : (monomial (E d) (1 : R)) =
         monomial (d.mapDomain Sum.inl) 1 * monomial (d.mapDomain (Sum.inr ∘ Prod.snd)) 1 := by
-      rw [monomial_mul, one_mul]
+      rw [monomial_mul_monomial, one_mul]
     have hp : (d.prod fun v k => (X (Sum.inr v.2) * X (Sum.inl v) :
         MvPolynomial ((Fin m × Fin n) ⊕ Fin n) R) ^ k) = monomial (E d) 1 := by
       rw [hs, monomial_mapDomain_eq_prod, monomial_mapDomain_eq_prod, ← Finsupp.prod_mul]
@@ -1291,7 +1291,7 @@ theorem isWeightedHomogeneous_of_column_scaling {R : Type} [CommRing R] {m n : �
     rw [Finset.sum_eq_single d0]
     · simp
     · intro d _ hne
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hE
       apply hne
       ext v
@@ -1581,7 +1581,7 @@ theorem evaluation_reduction_eq {A : Type} [CommRing A] [Algebra S A] (g : Matri
     letI : Algebra R A := ((algebraMap S A).comp φ).toAlgebra
     ∀ (hg' : IsUnit (aeval (R := R) (fun x : Fin n × Fin n => g x.1 x.2) (genMat R n).det)) (f : GLCoord R n),
       evalG (R := S) g hg (redG φ n f) = evalG (R := R) g hg' f := by
-  letI : Algebra R A := ((algebraMap S A).comp φ).toAlgebra
+  let : Algebra R A := ((algebraMap S A).comp φ).toAlgebra
   intro hg' f
   have h : (evalG (R := S) g hg).comp (redG φ n) = evalG (R := R) g hg' := by
     apply IsLocalization.ringHom_ext (Submonoid.powers (genMat R n).det)
@@ -1596,7 +1596,7 @@ theorem evaluation_reduction_eq {A : Type} [CommRing A] [Algebra S A] (g : Matri
 
 theorem redHB : RedHB := by
   intro R S _ _ φ r c ka f hf A _ _ b g u hg hbg hlow hdiag
-  letI : Algebra R A := ((algebraMap S A).comp φ).toAlgebra
+  let : Algebra R A := ((algebraMap S A).comp φ).toAlgebra
   have hg' : IsUnit (aeval (R := R) (fun x : Fin (r + 1) × Fin (r + 1) => g x.1 x.2) (genMat R (r + 1)).det) := by
     rw [aeval_genMat_det] at hg ⊢; exact hg
   have hbg' : IsUnit (aeval (R := R) (fun x : Fin (r + 1) × Fin (r + 1) => (b * g) x.1 x.2)
@@ -1728,14 +1728,14 @@ theorem top_right_not_dvd_det (R : Type) [CommRing R] [IsDomain R] (r : ℕ) (hr
 theorem g0rCancel : TopRightCancelConstant := by
   intro R _ _ r a y hr ha h
   have hnd := top_right_not_dvd_det R r hr
-  have hp : Prime (g0r R r) := kr_away_prime _ (X (0, Fin.last r)) X_prime hnd
+  have hp : Prime (g0r R r) := kr_away_prime _ (X (0, Fin.last r)) prime_X hnd
   rcases hp.dvd_or_dvd h with h1 | h1
   · exfalso
     have h2 : algebraMap R (GLCoord R (r + 1)) a =
         algebraMap (MvPolynomial (Fin (r + 1) × Fin (r + 1)) R) (GLCoord R (r + 1)) (C a) :=
       IsScalarTower.algebraMap_apply R (MvPolynomial (Fin (r + 1) × Fin (r + 1)) R) (GLCoord R (r + 1)) a
     rw [h2] at h1
-    have h3 := kr_away_pow_dvd _ (X (0, Fin.last r)) X_prime hnd 1 (C a) (by rw [pow_one]; exact h1)
+    have h3 := kr_away_pow_dvd _ (X (0, Fin.last r)) prime_X hnd 1 (C a) (by rw [pow_one]; exact h1)
     rw [pow_one] at h3
     have h4 := map_dvd (constantCoeff (σ := Fin (r + 1) × Fin (r + 1)) (R := R)) h3
     rw [constantCoeff_X, constantCoeff_C, zero_dvd_iff] at h4

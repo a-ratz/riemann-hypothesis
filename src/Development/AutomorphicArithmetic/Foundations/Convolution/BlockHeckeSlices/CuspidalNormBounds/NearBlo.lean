@@ -174,7 +174,7 @@ theorem UpperTheory.exists_approximate_identity_integrated :
     (Set.disjoint_singleton_left.2 fun h => h h1U)
   have hnn : ∀ g, 0 ≤ h g := fun g => (hrange g).1
   set c : ℝ := ∫ g, h g ∂μ with hc
-  have hcpos : 0 < c := h.continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero hcs hnn
+  have hcpos : 0 < c := h.continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero hcs hnn
     (by rw [h1 (Set.mem_singleton 1)]; exact one_ne_zero)
   let k : G → ℝ := fun g => c⁻¹ * h g
   have hkc : Continuous k := continuous_const.mul h.continuous
@@ -340,9 +340,9 @@ theorem UpperTheory.exists_nhds_one_normOneGL_factorization :
     ∀ (K : Type) [Field K] [NumberField K] (n : ℕ) (N : Set (archGroup K n)) (U : Subgroup (AdelicGLn.integralFiniteGL K n)), N ∈ 𝓝 (1 : archGroup K n) → IsOpen (U : Set (AdelicGLn.integralFiniteGL K n)) → ∃ N' ∈ 𝓝 (1 : normOneGL (K := K) (n := n)), ∀ g ∈ N', ∃ a ∈ N, ∃ u ∈ U, g = archP K n a * retractOne (finEmb K n (u : AdelicGLn.integralFiniteGL K n)) := by
   intro K _ _ n N U hN hU
   have hU' : IsOpen (Subtype.val '' (U : Set (AdelicGLn.integralFiniteGL K n))) :=
-    (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtype_val _ hU
+    (AdelicGLn.isOpen_integralFiniteGL K n).isOpenMap_subtypeVal _ hU
   have hp : Continuous fun g : normOneGL (K := K) (n := n) => AdelicGLn.prodEquiv K n (g : AdelicGLn.AdelicGL K n) :=
-    (AdelicGLn.prodEquiv K n).continuous.comp continuous_subtype_val
+    (AdelicGLn.prodEquiv K n).continuous.comp continuous_subtypeVal
   have ha : Continuous fun g : normOneGL (K := K) (n := n) =>
       archEquiv K n (AdelicGLn.prodEquiv K n (g : AdelicGLn.AdelicGL K n)).1 :=
     (archEquiv K n).continuous.comp hp.fst
@@ -386,7 +386,7 @@ theorem UpperTheory.finiteDimensional_of_compact_near_identity :
     have : closure (S : Set H) ⊆ {v : H | ‖T v - v‖ ≤ 1 / 2 * ‖v‖} :=
       closure_minimal (fun w hw => hS w hw) hcl
     exact this hv
-  haveI : CompleteSpace S.topologicalClosure :=
+  have : CompleteSpace S.topologicalClosure :=
     S.isClosed_topologicalClosure.completeSpace_coe
   let f : S.topologicalClosure →L[ℂ] H := T.comp S.topologicalClosure.subtypeL
   have hf : ∀ x : S.topologicalClosure, ‖x‖ ≤ ((2 : NNReal) : ℝ) * ‖f x‖ := by
@@ -411,7 +411,7 @@ theorem UpperTheory.finiteDimensional_of_compact_near_identity :
     refine ⟨(x : H), ?_, rfl⟩
     rw [mem_closedBall_zero_iff] at hx ⊢
     exact hx
-  haveI : FiniteDimensional ℂ S.topologicalClosure :=
+  have : FiniteDimensional ℂ S.topologicalClosure :=
     FiniteDimensional.of_isCompact_closedBall₀ ℂ one_pos hc
   exact Submodule.finiteDimensional_of_le S.le_topologicalClosure
 end -- clump:auto
@@ -452,7 +452,7 @@ theorem UpperTheory.finiteDimensional_cuspForms_of_level_and_derivOp_bound :
       exact UnitaryRep.norm_map _ _ _
     · rw [derivOp_cuspVecL μ hφ']
       exact hbound φ hφ i
-  haveI : FiniteDimensional ℂ (S.map (cuspVecL μ)) :=
+  have : FiniteDimensional ℂ (S.map (cuspVecL μ)) :=
     UpperTheory.finiteDimensional_of_compact_near_identity (CuspL2 μ) _ (S.map (cuspVecL μ)) (isCompactOperator_cuspRep μ f) key
   exact UnitaryAdmissible.finiteDimensional_of_map_mem (E := S.map (cuspVecL μ)) (cuspVecL μ)
     (fun x hx => Submodule.mem_map_of_mem hx)
@@ -745,7 +745,7 @@ theorem UpperTheory.norm_deriv_orbit_le_of_polynomial_annihilated :
   intro H _ _ u p M v y h0 hadd hiso hfin hy hp hM
   obtain ⟨E, hE⟩ : ∃ E : Submodule ℂ H, E = Submodule.span ℂ (Set.range fun t => u t v) := ⟨_, rfl⟩
   rw [← hE] at hfin
-  haveI : FiniteDimensional ℂ E := hfin
+  have : FiniteDimensional ℂ E := hfin
   have hcomm : ∀ s t x, u s (u t x) = u t (u s x) := by
     intro s t x
     have h : u s * u t = u t * u s := by rw [← hadd, ← hadd, add_comm]
@@ -767,7 +767,7 @@ theorem UpperTheory.norm_deriv_orbit_le_of_polynomial_annihilated :
   have hvE : v ∈ E := by
     rw [hE]
     exact Submodule.subset_span ⟨0, h0' v⟩
-  have hclosed : IsClosed (E : Set H) := Submodule.closed_of_finiteDimensional E
+  have hclosed : IsClosed (E : Set H) := Submodule.isClosed_of_finiteDimensional E
   have hlim : ∀ w ∈ E, ∀ d, HasDerivAt (fun t : ℝ => u t w) d 0 → d ∈ E := by
     intro w hw d hd
     have ht := hasDerivAt_iff_tendsto_slope.1 hd
@@ -843,7 +843,7 @@ theorem UpperTheory.norm_deriv_orbit_le_of_polynomial_annihilated :
     | monomial n a ih =>
       intro x
       have h1 : (C a * X ^ (n + 1) : ℂ[X]) = (C a * X ^ n) * X := by ring
-      rw [h1, map_mul (aeval (u' t)) (C a * X ^ n) X, map_mul (aeval (u t)) (C a * X ^ n) X, aeval_X, aeval_X, Module.End.mul_apply, ContinuousLinearMap.mul_apply, ih, hu']
+      rw [h1, map_mul (aeval (u' t)) (C a * X ^ n) X, map_mul (aeval (u t)) (C a * X ^ n) X, aeval_X, aeval_X, Module.End.mul_apply, mul_apply_eq_comp, ih, hu']
   have hcq : ∀ (s t : ℝ) (q : ℂ[X]) (x : H), aeval (u t) q (u s x) = u s (aeval (u t) q x) := by
     intro s t q
     induction q using Polynomial.induction_on with
@@ -856,7 +856,7 @@ theorem UpperTheory.norm_deriv_orbit_le_of_polynomial_annihilated :
     | monomial n a ih =>
       intro x
       have h1 : (C a * X ^ (n + 1) : ℂ[X]) = (C a * X ^ n) * X := by ring
-      rw [h1, map_mul, aeval_X, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, hcomm t s, ih]
+      rw [h1, map_mul, aeval_X, mul_apply_eq_comp, mul_apply_eq_comp, hcomm t s, ih]
   have hkill : ∀ t, ∀ x ∈ E, aeval (u t) (p t) x = 0 := by
     intro t x hx
     rw [hE] at hx
@@ -923,7 +923,7 @@ private theorem pow_cuspVecL {K : Type} [Field K] [NumberField K] {n : ℕ} (μ 
     simp
   | succ m ih =>
     intro φ hφ
-    rw [pow_succ, pow_succ, ContinuousLinearMap.mul_apply, Module.End.mul_apply, ← cuspToL2_sigma μ k hφ,
+    rw [pow_succ, pow_succ, mul_apply_eq_comp, Module.End.mul_apply, ← cuspToL2_sigma μ k hφ,
       ih _ (σ_mem_centralCuspForms k hφ)]
 
 private theorem aeval_cuspVecL {K : Type} [Field K] [NumberField K] {n : ℕ} (μ : Measure (normOneGL (K := K) (n := n)))
@@ -933,9 +933,9 @@ private theorem aeval_cuspVecL {K : Type} [Field K] [NumberField K] {n : ℕ} (�
       cuspVecL μ (aeval ((gkModuleCusp K n).σ k) q φ) := by
   induction q using Polynomial.induction_on' with
   | add a b ha hb =>
-    simp only [map_add (f := _), ContinuousLinearMap.add_apply, LinearMap.add_apply, ha, hb]
+    simp only [map_add (f := _), add_apply, LinearMap.add_apply, ha, hb]
   | monomial m c =>
-    rw [aeval_monomial, aeval_monomial, Module.End.mul_apply, ContinuousLinearMap.mul_apply,
+    rw [aeval_monomial, aeval_monomial, Module.End.mul_apply, mul_apply_eq_comp,
       pow_cuspVecL μ k m φ hφ]
     simp [Algebra.algebraMap_eq_smul_one]
 
@@ -1359,7 +1359,7 @@ private theorem finSpace (ρ : Typ E r) (B : ℝ) : ∃ W : Submodule ℂ (cuspF
     { toFun := fun k => ⟨finEmb E r k, finEmb_mem_maxCompact k.2⟩
       map_one' := Subtype.ext (map_one _)
       map_mul' := fun _ _ => Subtype.ext (map_mul _ _ _) }
-  have hι : Continuous ι := (continuous_finEmb.comp continuous_subtype_val).subtype_mk _
+  have hι : Continuous ι := (continuous_finEmb.comp continuous_subtypeVal).subtype_mk _
   set_option synthInstance.maxHeartbeats 200000 in
     obtain ⟨U, hU, hUρ⟩ := openKer (ρ.ρ.comp ι) (ρ.cont.comp hι)
   obtain ⟨X, τ, hX⟩ := typeMap ρ
@@ -1408,7 +1408,7 @@ theorem UpperTheory.ConvolutionTheory.BW.nearBlo :
       rw [h1, b.inf]
     · change hk r w j b.f = (_ * GlobalTheory.LFun.satEig _ r (q.2 w) j) • b.f
       rw [(hkOps E r w j).1, (b.isSat w hw).2.2.2 _ (GlobalTheory.LFun.exists_isUnifV w).choose_spec j (Nat.lt_succ_iff.1 j.2), smul_smul,
-        h2, if_neg hw]
+        h2, ite_eq_right hw]
   have himg : (lam '' P).Finite := by
     have hex : ∀ x : lam '' P, ∃ b : Blo S r, Killed ρ.ρ b.f.1 ∧ (∀ τ i, ‖b.Λ τ i‖ ≤ B) ∧ ∀ i, T i b.f = x.1 i • b.f := by
       rintro ⟨_, q, ⟨b, h1, h2, h3, h4⟩, rfl⟩
@@ -1430,9 +1430,9 @@ theorem UpperTheory.ConvolutionTheory.BW.nearBlo :
     obtain ⟨k, -, hk⟩ := h
     exact ⟨k, (neg_add_eq_zero.1 hk).symm⟩
   · by_cases hw : w ∈ S
-    · rw [h4, h4', if_pos hw, if_pos hw]
-    · have c1 : (q'.2 w).card = r := by rw [h4', if_neg hw]; exact (b'.isSat w hw).2.2.1
-      have c2 : (q.2 w).card = r := by rw [h4, if_neg hw]; exact (b.isSat w hw).2.2.1
+    · rw [h4, h4', ite_eq_left hw, ite_eq_left hw]
+    · have c1 : (q'.2 w).card = r := by rw [h4', ite_eq_right hw]; exact (b'.isSat w hw).2.2.1
+      have c2 : (q.2 w).card = r := by rw [h4, ite_eq_right hw]; exact (b.isSat w hw).2.2.1
       have hq : Formalism.UG.qV E w ≠ 0 := GlobalTheory.LFun.qV_ne_zero w
       refine GlobalTheory.LFun.eq_of_satEig_eq hq c1 c2 fun j hj => ?_
       have h := congrFun he (Sum.inr (⟨w, hw⟩, ⟨j, Nat.lt_succ_iff.2 hj⟩))

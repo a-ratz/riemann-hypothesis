@@ -171,14 +171,14 @@ omit [NumberField F] [Algebra F E] in
 theorem evalMat_exp {d : ℕ} (u : InfinitePlace E) (X : Matrix (Fin d) (Fin d) (Cinf E)) :
     (Pi.evalRingHom (fun _ : InfinitePlace E => ℂ) u).mapMatrix (NormedSpace.exp X) =
       NormedSpace.exp ((Pi.evalRingHom (fun _ : InfinitePlace E => ℂ) u).mapMatrix X) := by
-  letI : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.complete ℝ _
-  letI : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) (Cinf E)) := NormedAlgebra.restrictScalars ℚ ℝ _
-  letI : NormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin d) (Fin d) ℂ) := FiniteDimensional.complete ℝ _
-  letI : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
+  let : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) (Cinf E)) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin d) (Fin d) ℂ) := FiniteDimensional.completeSpace ℝ _
+  let : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
   have hc : Continuous ((Pi.evalRingHom (fun _ : InfinitePlace E => ℂ) u).mapMatrix :
       Matrix (Fin d) (Fin d) (Cinf E) → Matrix (Fin d) (Fin d) ℂ) :=
     LinearMap.continuous_of_finiteDimensional ((LinearMap.proj u : Cinf E →ₗ[ℝ] ℂ).mapMatrix)
@@ -257,9 +257,9 @@ theorem isRealLine_blockEmb_exp : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     exact (eq_inv_of_mul_eq_one_left e.symm).symm
 
   have hcexp : Continuous fun t : ℝ => ((expGLi d (t • X) : GL (Fin d) (Cinf E)) : Matrix (Fin d) (Fin d) (Cinf E)) := by
-    letI : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
-    haveI : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.complete ℝ _
+    let : NormedRing (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) (Cinf E)) := Matrix.linftyOpNormedAlgebra
+    have : CompleteSpace (Matrix (Fin d) (Fin d) (Cinf E)) := FiniteDimensional.completeSpace ℝ _
     exact continuous_iff_continuousAt.2 fun t => (hasDerivAt_exp_smul_const (𝕂 := ℝ) X t).continuousAt
   have hcGL : Continuous fun t : ℝ => expGLi d (t • X) := by
     refine Units.continuous_iff.2 ⟨hcexp, ?_⟩

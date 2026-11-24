@@ -62,9 +62,9 @@ theorem muD_add {W : Type} [AddCommGroup W] [Module ℂ W] (n : ℕ) {φ₁ φ�
     (l₂ : IsLocallyConstant φ₂) (c₂ : HasCompactSupport φ₂) :
     @smInt _ _ (borel _) _ _ (muD k n) (φ₁ + φ₂) =
       @smInt _ _ (borel _) _ _ (muD k n) φ₁ + @smInt _ _ (borel _) _ _ (muD k n) φ₂ := by
-  letI : MeasurableSpace (Fin n → k) := borel _
-  haveI : BorelSpace (Fin n → k) := ⟨rfl⟩
-  haveI : MeasureTheory.IsFiniteMeasureOnCompacts (muD k n) := by
+  let : MeasurableSpace (Fin n → k) := borel _
+  have : BorelSpace (Fin n → k) := ⟨rfl⟩
+  have : MeasureTheory.IsFiniteMeasureOnCompacts (muD k n) := by
     unfold muD
     infer_instance
   exact smInt_add (muD k n) l₁ c₁ l₂ c₂
@@ -72,9 +72,9 @@ theorem muD_add {W : Type} [AddCommGroup W] [Module ℂ W] (n : ℕ) {φ₁ φ�
 theorem muD_smul {W : Type} [AddCommGroup W] [Module ℂ W] (n : ℕ) (c : ℂ) {φ : (Fin n → k) → W}
     (l : IsLocallyConstant φ) (h : HasCompactSupport φ) :
     @smInt _ _ (borel _) _ _ (muD k n) (c • φ) = c • @smInt _ _ (borel _) _ _ (muD k n) φ := by
-  letI : MeasurableSpace (Fin n → k) := borel _
-  haveI : BorelSpace (Fin n → k) := ⟨rfl⟩
-  haveI : MeasureTheory.IsFiniteMeasureOnCompacts (muD k n) := by
+  let : MeasurableSpace (Fin n → k) := borel _
+  have : BorelSpace (Fin n → k) := ⟨rfl⟩
+  have : MeasureTheory.IsFiniteMeasureOnCompacts (muD k n) := by
     unfold muD
     infer_instance
   have e : (⇑(c • LinearMap.id : W →ₗ[ℂ] W) ∘ φ) = c • φ := rfl

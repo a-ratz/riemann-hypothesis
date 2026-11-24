@@ -144,7 +144,7 @@ theorem mem_pow_of_psiAt_trivial {E : Type} [Field E] [NumberField E] (w : Heigh
   have hc0 : w.valuation E (c : E) ≠ 0 := by rw [hc]; exact WithZero.exp_ne_zero
   have hδ1 : w.valuation E (δ : E) ≤ 1 := w.valuation_le_one δ
   have hvt : Valued.v t ≤ WithZero.exp (((a + diffExp w : ℕ) : ℤ)) := by
-    rw [ht, valued_algebraMap, map_div₀, hc, div_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
+    rw [ht, valued_algebraMap, map_div₀, hc, div_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
     simpa using hδ1
   have key : ∀ s ∈ w.adicCompletionIntegers E, psiAt w (t * s) = 1 := by
     intro s hs
@@ -167,7 +167,7 @@ theorem mem_pow_of_psiAt_trivial {E : Type} [Field E] [NumberField E] (w : Heigh
       _ ≤ WithZero.exp (diffExp w : ℤ) := by
           rw [← WithZero.exp_zero, WithZero.exp_le_exp]; omega
   have hvt' := (psiAt_conductor w t).1 key
-  rw [ht, valued_algebraMap, map_div₀, hc, div_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), ← WithZero.exp_add] at hvt'
+  rw [ht, valued_algebraMap, map_div₀, hc, div_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), ← WithZero.exp_add] at hvt'
   have h2 : w.valuation E (δ : E) ≤ WithZero.exp (-(a : ℤ)) := by
     refine hvt'.trans (le_of_eq ?_)
     congr 1
@@ -221,7 +221,7 @@ theorem gaussSumAt_normSq (χ : HChar E) (w : HeightOneSpectrum (𝓞 E)) (a : �
   have := w.isMaximal
   set P := w.asIdeal with hP
   have hfin : Finite (𝓞 E ⧸ P ^ a) := Ideal.finiteQuotientOfFreeOfNeBot _ (pow_ne_zero _ w.ne_bot)
-  haveI : Fintype (𝓞 E ⧸ P ^ a) := Fintype.ofFinite _
+  have : Fintype (𝓞 E ⧸ P ^ a) := Fintype.ofFinite _
   have hval : ∀ z : E, Valued.v (algebraMap E (w.adicCompletion E) z) = w.valuation E z := fun z =>
     HeightOneSpectrum.valuedAdicCompletion_eq_valuation' w z
   have hne0 : ∀ x : 𝓞 E, x ∉ P → (x : E) ≠ 0 := fun x hx h0 => hx (by
@@ -235,7 +235,7 @@ theorem gaussSumAt_normSq (χ : HChar E) (w : HeightOneSpectrum (𝓞 E)) (a : �
   have f_zero : ∀ x ∈ P ^ a, f x = 1 := fun x hx => by
     apply psiAt_eq_one
     have h1 := valuation_sub_le (w := w) (y := x) (y' := 0) (by simpa using hx)
-    rw [hval, map_div₀, hc, div_le_iff₀ (zero_lt_iff.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
+    rw [hval, map_div₀, hc, div_le_iff₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), ← WithZero.exp_add]
     convert h1 using 2 <;> (push_cast; ring)
   have f_congr : ∀ x y, x - y ∈ P ^ a → f x = f y := fun x y h => by
     rw [show x = y + (x - y) by ring, f_add, f_zero _ h, mul_one]

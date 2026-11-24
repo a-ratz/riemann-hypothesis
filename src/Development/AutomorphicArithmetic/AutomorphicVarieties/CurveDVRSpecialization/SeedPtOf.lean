@@ -127,7 +127,7 @@ private theorem flag_cont {Γ : Type} [Group Γ] [TopologicalSpace Γ] {n : ℕ}
 
 private theorem comm_one {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] {κ : Γ →* (Qbar l)ˣ}
     (h : Continuous fun g => (κ g).val) {g : Γ} (hg : g ∈ (commutator Γ).topologicalClosure) : κ g = 1 := by
-  refine Subgroup.topologicalClosure_minimal _ (Abelianization.commutator_subset_ker κ) ?_ hg
+  refine Subgroup.topologicalClosure_minimal _ (Group.Abelianization.commutator_le_ker κ) ?_ hg
   have : (κ.ker : Set Γ) = {g | (κ g).val = 1} := by ext; simp
   rw [this]
   exact isClosed_eq h continuous_const
@@ -264,7 +264,7 @@ private theorem main (H : GlobalTheory.Published.GlobalArtinReciprocity) (ι : Q
     simp only [← map_inv]
     exact (h1 hr.cont hka.alg.1).comp continuous_inv
   have hρc : ∀ a b, Continuous fun g => (ρ g).val a b := fun a b => by
-    haveI := t2_space_open_subgroup R.T.G
+    have := t2_space_open_subgroup R.T.G
     have hp : Continuous (prT R) := R.V.pr_cont W.continuous_resP
     have hq : Topology.IsQuotientMap (prT R) := hp.isClosedMap.isQuotientMap hp (pr_surj R.V)
     rw [hq.continuous_iff]

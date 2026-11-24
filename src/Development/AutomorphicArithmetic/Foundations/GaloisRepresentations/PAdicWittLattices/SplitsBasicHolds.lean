@@ -123,7 +123,7 @@ theorem UpperTheory.Gal.G3.pCoverInv :
   refine ⟨hT.inj _ _ (piK C) (piK_snd C) C.Δ C.a hG, fun y hy => ?_⟩
   refine (hGal T hT _ _ (piK C) (piK_snd C) C.Δ C.a ha hG y).2 (fun δ => ?_)
   obtain ⟨g, hiso, hts, hθ⟩ := C.fix δ
-  haveI := hiso
+  have := hiso
   obtain ⟨tr, htr, hfix⟩ := hy g hiso hθ
   have hq : inv (H.s g) ≫ (H.s g ≫ H.q) = H.q := by simp
   have key : ∀ z, tr z = T.pull (inv (H.s g)) hq z := by
@@ -168,7 +168,7 @@ theorem UpperTheory.Gal.G3.pExtGood :
   · intro Z W p r c hc G _ _ a hgal
     have hinj := hG.inj p r c hc G a hgal
     show Function.Injective (LinearMap.baseChange L (T.pull c hc))
-    rw [LinearMap.baseChange_eq_ltensor]
+    rw [LinearMap.baseChange_eq_lTensor]
     exact Module.Flat.lTensor_preserves_injective_linearMap _ hinj
   · intro Z Y p q s _ _ hs
     obtain ⟨tr, htr'⟩ := hG.tr p q s hs
@@ -279,11 +279,11 @@ theorem UpperTheory.Gal.G3.pPieceLe :
     exact (algebraMap k Ω).injective (by simpa using this)
   have hT0 : (etG l k Ω).Good := hBc _ _ (hEt l _ (unit_sp l Ω hlΩ))
   have hT : ((etG l k Ω).ext L).Good := hExt _ L hT0
-  haveI : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ_[l] L).injective
+  have : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ_[l] L).injective
   obtain ⟨hinj, hsurj⟩ := hCov C hC ((etG l k Ω).ext L) hT
   refine ⟨hinj, fun y hy => hsurj y ?_⟩
   intro g hiso hθ
-  haveI := hiso
+  have := hiso
   obtain ⟨tr0, htr0⟩ := hT0.tr H.q (H.s g ≫ H.q) (H.s g) rfl
   refine ⟨tr0.baseChange L, hExtTr _ L H.q (H.s g ≫ H.q) (H.s g) tr0 htr0, ?_⟩
   have hop_eq := (hHop l hl H Ω g 1 (fEt_iso (H.s g))).2 tr0 htr0

@@ -101,7 +101,7 @@ open Formalism.BasicNotions
 
 theorem exists_pow_smul_mem_OL {l : ℕ} [Fact (Nat.Prime l)] (LL : Loc.FinExt l) (a : ↥LL.1) :
     ∃ n : ℕ, (l : ↥LL.1) ^ n * a ∈ Loc.OL LL := by
-  haveI : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
+  have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
   have hint : IsIntegral ℚ_[l] a := IsIntegral.of_finite ℚ_[l] a
   obtain ⟨⟨m, hm⟩, hmi⟩ :=
     IsIntegral.exists_multiple_integral_of_isLocalization (nonZeroDivisors ℤ_[l]) a hint
@@ -188,8 +188,8 @@ theorem exists_sub_basis {C : Type} [Field C] {d r : ℕ} (f : Fin d → Fin r �
     (hf : Submodule.span C (Set.range f) = ⊤) :
     ∃ κ : Fin r → Fin d, LinearIndependent C (fun k => f (κ k)) := by
   obtain ⟨ι, a, ha, hsp, hli⟩ := exists_linearIndependent' C f
-  haveI : Finite ι := Finite.of_injective a ha
-  haveI := Fintype.ofFinite ι
+  have : Finite ι := Finite.of_injective a ha
+  have := Fintype.ofFinite ι
   have hb := Module.finrank_eq_card_basis (Module.Basis.mk hli (by rw [hsp, hf]))
   rw [Module.finrank_fin_fun] at hb
   let e : Fin r ≃ ι := (Fintype.equivFinOfCardEq hb.symm).symm
@@ -555,7 +555,7 @@ theorem exists_basis_mem_iff {O L V : Type} [CommRing O] [IsDomain O] [Field L] 
     (hspan : Submodule.span L (T : Set V) = ⊤) :
     ∃ (ρ : ℕ) (t : Module.Basis (Fin ρ) L V),
       ∀ v, v ∈ T ↔ ∀ i, ∃ o : O, algebraMap O L o = t.repr v i := by
-  haveI : Module.Finite O T := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite O T := Module.Finite.iff_fg.mpr hfg
   let c := Module.finBasis O T
   have hli : LinearIndependent O (fun i => (c i : V)) :=
     c.linearIndependent.map' T.subtype (Submodule.ker_subtype T)
@@ -631,8 +631,8 @@ theorem exists_matrix_of_basis {F L C V : Type} [NormedField F] [Field L] [Norme
 
 theorem exists_matrix : ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (d : ℕ) (b : Module.Basis (Fin d) ℚ_[l] T.V), (∀ v : T.V, v ∈ T.L.T ↔ ∀ i, ‖b.repr v i‖ ≤ 1) → ∀ ι : GQ l, ∃ (ρ : ℕ) (Pr : Matrix (Fin ρ) (Fin d) (PadicComplex l)), (∀ i j, ‖Pr i j‖ ≤ 1) ∧ (∀ a : ↥LL.1, Pr * Matrix.of (fun i k : Fin d => algebraMap ℚ_[l] (PadicComplex l) (b.repr (a • b k) i)) = ((ι (a : Om l) : Om l) : PadicComplex l) • Pr) ∧ ∀ y : Fin d → ℚ_[l], (∀ i, ‖Pr.mulVec (fun a => algebraMap ℚ_[l] (PadicComplex l) (y a)) i‖ ≤ 1) → ∀ a, ‖y a‖ ≤ 1 := by
   intro l _ K LL T d b hb ι
-  haveI := LL.2
-  haveI : IsFractionRing (OL LL) LL.1 := isFractionRing_integralClosure_padicInt l LL.1
+  have := LL.2
+  have : IsFractionRing (OL LL) LL.1 := isFractionRing_integralClosure_padicInt l LL.1
   obtain ⟨ρ, t, ht⟩ := exists_basis_mem_iff (L := LL.1) T.L.T T.L.fg T.L.free T.L.span
   let φ : LL.1 →ₐ[ℚ_[l]] PadicComplex l :=
     (IsScalarTower.toAlgHom ℚ_[l] (Om l) (PadicComplex l)).comp (ι.toAlgHom.comp LL.1.val)
@@ -881,7 +881,7 @@ theorem exists_sep_elem (F K : Type) [Field F] [Field K] [Algebra F K] [FiniteDi
     [Algebra.IsSeparable F K] :
     ∃ (n : ℕ) (α β : Fin n → K),
       (∀ κ : K, ∑ j, (κ * α j) ⊗ₜ[F] β j = ∑ j, α j ⊗ₜ[F] (κ * β j)) ∧ ∑ j, α j * β j = 1 := by
-  haveI := Algebra.FormallyUnramified.of_isSeparable F K
+  have := Algebra.FormallyUnramified.of_isSeparable F K
   obtain ⟨n, α, β, h⟩ := TensorProduct.exists_sum_tmul_eq (Algebra.FormallyUnramified.elem F K)
   refine ⟨n, α, β, fun κ => ?_, ?_⟩
   · have := Algebra.FormallyUnramified.one_tmul_mul_elem (R := F) (S := K) κ
@@ -986,7 +986,7 @@ theorem conj_mem_subC (LL : FinExt l) (F : IntermediateField ℚ_[l] (Om l)) {d 
     (X Y : Matrix (Fin d) (Fin d) (PadicComplex l))
     (h : ∀ (a : ↥(OL LL)) i j, (X * B a * Y) i j ∈ subC F) (a : ↥LL.1) (i j : Fin d) :
     (X * B a * Y) i j ∈ subC F := by
-  haveI := LL.2
+  have := LL.2
   have ha : IsAlgebraic ℤ_[l] a :=
     (IsFractionRing.isAlgebraic_iff ℤ_[l] ℚ_[l] ↥LL.1).2 (Algebra.IsAlgebraic.isAlgebraic a)
   obtain ⟨c, hc, hint⟩ := ha.exists_integral_multiple
@@ -1022,7 +1022,7 @@ theorem frame_of_dec (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P AI) (K L
       ∀ y : Fin d → ℚ_[l],
         Pm.mulVec (fun a => algebraMap ℚ_[l] (PadicComplex l) (y a)) ∈ Pm.mulVec '' ball l d →
         ∀ a, ‖y a‖ ≤ 1 := by
-  haveI := K.2
+  have := K.2
   have ha : IsActC AI.actC := ⟨AI.actC_ext, AI.actC_norm⟩
   obtain ⟨b, hbM, hbA, hbT⟩ := exists_ratBasis_of_isMat l K LL T d M A hM
   obtain ⟨n, α, β, h1, h2⟩ := exists_sep_elem ℚ_[l] ↥K.1
@@ -1147,7 +1147,7 @@ variable {l : ℕ} [Fact l.Prime] in
 private theorem exists_primitiveRoot_primePow_padicAlgCl_lemma_9 (n : ℕ) :
     ∃ ζ : _root_.Formalism.BasicNotions.Loc.Om l, IsPrimitiveRoot ζ (l ^ n) := by
   have hl : (l : PadicAlgCl l) ≠ 0 := by exact_mod_cast (Fact.out : l.Prime).ne_zero
-  haveI : NeZero ((l ^ n : ℕ) : PadicAlgCl l) := ⟨by push_cast; exact pow_ne_zero n hl⟩
+  have : NeZero ((l ^ n : ℕ) : PadicAlgCl l) := ⟨by push_cast; exact pow_ne_zero n hl⟩
   have hpos : 0 < l ^ n := pow_pos (Fact.out : l.Prime).pos n
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic (l ^ n) (PadicAlgCl l))
     (Polynomial.degree_cyclotomic_pos _ _ hpos).ne'
@@ -1581,7 +1581,7 @@ theorem Ks_mono' (K : FinExt l) {i j : ℕ} (h : i ≤ j) : Ks K i ≤ Ks K j :=
   refine sup_le_sup_left (IntermediateField.adjoin.mono _ _ _ ?_) _
   intro x hx
   obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le h
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   rw [pow_add, pow_mul, hx, one_pow]
 
 theorem act_algebraMap' {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} (ha : IsActC act)
@@ -1705,8 +1705,8 @@ theorem two_add_sum_jumps_le_intervalExponent (S : LocalSituation.Sit) (Y : LocL
     · intro u _
       by_cases hj : IsJumpV S.PD Y.ρ τ u
       · have hu0 : u ≠ 0 := by rintro rfl; exact h0 hj
-        simp only [if_pos hj, if_pos (mem_Jset_of_isJumpV S Y τ u hj), if_pos hu0, le_refl]
-      · simp only [if_neg hj]
+        simp only [ite_eq_left hj, ite_eq_left (mem_Jset_of_isJumpV S Y τ u hj), ite_eq_left hu0, le_refl]
+      · simp only [ite_eq_right hj]
         exact Nat.zero_le _
   omega
 
@@ -1721,7 +1721,7 @@ theorem torsion_exponent_kills_invariants_no_jump_zero : GlobalTheory.Published.
   have hs : S.W.s = s := (HW l).W_s K s LL h
   have hcard := Formalism.MainNotions.N.JsetEmb.card_emb_good h
   have hpos : 0 < Nat.card (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := by
-    haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+    have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
     rw [hcard]; exact Module.finrank_pos
   obtain ⟨τ⟩ := (Nat.card_pos_iff.1 hpos).1
   have key := hat M0 h0 T τ hW (hJ τ) x hx

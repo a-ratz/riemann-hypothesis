@@ -92,7 +92,7 @@ theorem embedding_herm_self {n : ℕ} (σ : E →+* ℂ) (x : Fin n → E) :
 omit [IsCMField E] in
 theorem mem_inv_different {x : E} (hx : ∀ a : 𝓞 E, ∃ k : ℤ, Algebra.trace ℚ E (x * a) = k) :
     x ∈ (differentIdeal ℤ (𝓞 E) : FractionalIdeal (𝓞 E)⁰ E)⁻¹ := by
-  rw [← dual_one_eq_inv_differentIdeal, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_dual_one,
+  rw [← dual_one_eq_inv_differentIdeal, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_dual_one,
     Submodule.mem_traceDual]
   intro a ha
   obtain ⟨b, rfl⟩ := Submodule.mem_one.mp ha

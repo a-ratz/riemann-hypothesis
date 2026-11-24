@@ -198,7 +198,7 @@ theorem fderiv_eq_zero_of_smul {V : Type} [NormedAddCommGroup V] [NormedSpace �
     fderiv ℂ u 0 z = 0 := by
   have e' := congrArg (· z) (h.fderiv_eq (𝕜 := ℂ))
   rw [fderiv_comp_smul, smul_zero, fderiv_fun_mul hu hG, hu0] at e'
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply, smul_eq_mul, _root_.one_mul] at e'
+  simp only [smul_apply, add_apply, smul_eq_mul, _root_.one_mul] at e'
   rw [e, ← _root_.mul_assoc, mul_inv_cancel₀ hc, _root_.one_mul, left_eq_add, mul_eq_zero] at e'
   exact e'.resolve_left hG0
 
@@ -282,9 +282,9 @@ theorem exists_block_solution {g : ℕ} (S : Finset (Fin g)) (A : Matrix (Fin g)
       have h1 := hT b k
       rw [hb] at h1
       by_cases hk : k ∈ S
-      · simp only [hk, if_true, Pi.zero_apply] at h1
+      · simp only [hk, ite_true, Pi.zero_apply] at h1
         simp [← h1]
-      · simp only [hk, if_false, Pi.zero_apply] at h1
+      · simp only [hk, ite_false, Pi.zero_apply] at h1
         simp [← h1]
     exact hpos.ne' this
   obtain ⟨b, hb⟩ := LinearMap.surjective_of_injective hinj

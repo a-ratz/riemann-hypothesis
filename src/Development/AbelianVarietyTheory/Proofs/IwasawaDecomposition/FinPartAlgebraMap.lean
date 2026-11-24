@@ -161,7 +161,7 @@ theorem idem_props : ∀ D : D7, (∀ v v' : Pl D, v ≠ v' → idem D v * idem 
     · rw [idem_inr, idem_inl, ← RingHom.map_mul, mul_comm, eFin_mul_eInf, RingHom.map_zero]
     · rw [idem_inr, idem_inr, ← RingHom.map_mul, eInf_mul_eInf _ fun e => h (congrArg _ (hb.1 e)), RingHom.map_zero]
   · intro θ hθ τ τ'
-    haveI := D.sp.cm.totReal
+    have := D.sp.cm.totReal
     have h := GlobalTheory.InfAdeleCM.hom_tmul (tauE D τ') (θ τ') (hθ τ').1 (hθ τ').2
       (fstA D.host.F (eInf D.host.F (plc D τ))) 1
     rw [RingHom.map_one, mul_one, ext_eInf] at h

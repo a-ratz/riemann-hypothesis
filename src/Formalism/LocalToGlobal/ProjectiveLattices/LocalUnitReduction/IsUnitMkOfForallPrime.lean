@@ -94,7 +94,7 @@ theorem isUnit_mk_of_forall_prime {I : Ideal Fr} {p : Fr}
   have hne : Ideal.span {Ideal.Quotient.mk I p} ≠ ⊤ := by
     rwa [Ne, Ideal.span_singleton_eq_top]
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne
-  haveI := hM.isPrime
+  have := hM.isPrime
   refine hp (M.comap (Ideal.Quotient.mk I)) inferInstance (fun x hx => ?_) ?_
   · rw [Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.mpr hx]
     exact M.zero_mem
@@ -169,7 +169,7 @@ theorem mem_of_forall_sup_ker [Fintype ι] (hinj : ∀ f : Fr, (∀ c, φ c f = 
     have h1 : (1 : Fr) ∈ C := h ▸ Submodule.mem_top
     exact hfJ (by simpa [C] using h1)
   obtain ⟨Q, hQ, hCQ⟩ := Ideal.exists_le_maximal C hC
-  haveI := hQ.isPrime
+  have := hQ.isPrime
   have hJQ : J ≤ Q := fun x hx => hCQ (show x * f ∈ J from J.mul_mem_right f hx)
   have h1Q : (1 : Fr) ∉ Q := fun h1 => hQ.ne_top ((Ideal.eq_top_iff_one Q).mpr h1)
   have ht : ∀ c, ∃ t : Fr, (¬ RingHom.ker (φ c) ≤ Q → t ∈ RingHom.ker (φ c)) ∧ t ∉ Q := by
@@ -218,8 +218,8 @@ theorem finRed : FinRedStatement := by
     have hc := congr_fun hx c
     rw [← Ideal.Quotient.eq_zero_iff_mem]
     exact hc
-  haveI : ∀ c, FiniteDimensional K' (R c ⧸ Ideal.map (φ c) J) := fun c => (hfin c).1
-  haveI : ∀ c, IsReduced (R c ⧸ Ideal.map (φ c) J) := fun c => (hfin c).2
+  have : ∀ c, FiniteDimensional K' (R c ⧸ Ideal.map (φ c) J) := fun c => (hfin c).1
+  have : ∀ c, IsReduced (R c ⧸ Ideal.map (φ c) J) := fun c => (hfin c).2
   exact ⟨FiniteDimensional.of_injective Ψ.toLinearMap hinjΨ, isReduced_of_injective Ψ hinjΨ⟩
 
 end Formalism.L2.Pj.LocalUnitReduction

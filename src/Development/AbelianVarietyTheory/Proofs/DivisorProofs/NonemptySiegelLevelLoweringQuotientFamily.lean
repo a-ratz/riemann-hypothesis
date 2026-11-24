@@ -95,9 +95,9 @@ namespace GlobalTheory.SiegLev
 theorem descData_transport_id : ∀ (h n N d : ℕ) (B B' : Type) [CommRing B] [CommRing B'] (ζ : B) (ζ' : B') (X Y : Scheme.{0}) (s : X ⟶ Sp B) (s' : X ⟶ Sp B') (C : SiegPre h N ζ' s') (c : SiegPre h n ζ s) (π : X ⟶ Y) (A₀ : Over Y) [GrpObj A₀] (φ : C.A.left ⟶ A₀.left) (φ₂ : (G2 C.A).left ⟶ (G2 A₀).left) (P₀ : LB (G2 A₀).left) (lev₀ : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over Y) ⟶ A₀)), SRel C c d 1 (𝟙 X) → IsGrpPullback C.A A₀ π φ → IsSquare φ φ₂ → P₀.IsLB → LBIso C.P (P₀.pull φ₂) → (∀ a, (C.lev a ^ d).left ≫ φ = π ≫ (lev₀ a).left) → ∃ (φ' : c.A.left ⟶ A₀.left) (φ₂' : (G2 c.A).left ⟶ (G2 A₀).left), IsGrpPullback c.A A₀ π φ' ∧ IsSquare φ' φ₂' ∧ LBIso c.P (P₀.pull φ₂') ∧ ∀ a, (c.lev a).left ≫ φ' = π ≫ (lev₀ a).left := by
   intro h n N d B B' _ _ ζ ζ' X Y s s' C c π A₀ _ φ φ₂ P₀ lev₀ hS hA hsq hP₀ hw hlev
   obtain ⟨ψ, hψ, ⟨ψ₂, hsqψ, hC⟩, hlevψ⟩ := hS
-  haveI : IsMonHom (Iso.refl c.A).hom := inferInstanceAs (IsMonHom (𝟙 c.A))
+  have : IsMonHom (Iso.refl c.A).hom := inferInstanceAs (IsMonHom (𝟙 c.A))
   obtain ⟨e, he, heψ⟩ := grpPullback_iso (isGrpPullback_of_iso (Iso.refl c.A)) hψ
-  haveI := he
+  have := he
   have heψ' : e.hom.left ≫ ψ = 𝟙 _ := by simpa using heψ
   have hie : e.inv.left ≫ e.hom.left = 𝟙 _ := by rw [← Over.comp_left, e.inv_hom_id, Over.id_left]
   have hψe : ψ = e.inv.left := by
@@ -178,12 +178,12 @@ open SiegelDescent SiegelGaloisDescent CechPic
 
 theorem exists_siegPre_of_galois_descended_data : ∀ (h M : ℕ) (o : Type) [CommRing o] (ζ : o) (X Y : Scheme.{0}) (π : X ⟶ Y) (s : X ⟶ Sp o) (sY : Y ⟶ Sp o) (Ga : Type) [Group Ga] (ρ : Ga → (X ⟶ X)) (c : SiegPre h M ζ s) (A₀ : Over Y) [GrpObj A₀] (φ : c.A.left ⟶ A₀.left) (φ₂ : (G2 c.A).left ⟶ (G2 A₀).left) (P₀ : LB (G2 A₀).left) (lev₀ : (Fin h ⊕ Fin h → ℤ) → (𝟙_ (Over Y) ⟶ A₀)), s = π ≫ sY → IsGaloisCover Ga ρ π → IsAbelianScheme A₀ → IsGrpPullback c.A A₀ π φ → IsSquare φ φ₂ → P₀.IsLB → LBIso c.P (P₀.pull φ₂) → (∃ t : (P₀.pull (eSec (G2 A₀))).Gen, t.IsGen) → (∀ a, (c.lev a).left ≫ φ = π ≫ (lev₀ a).left) → ∃ c₀ : SiegPre h M ζ sY, SiegPB c c₀ π := by
   intro h M o _ ζ X Y π s sY Ga _ ρ c A₀ _ φ φ₂ P₀ lev₀ hs hGal ab hp sq hP₀ hw ht hlev
-  haveI := ab.comm
+  have := ab.comm
   have gf : Out.GlobalFnsSt := abelianSchemeLaws_all.1.globalFns
-  haveI : IsFinite π := hGal.fin
-  haveI : Etale π := hGal.etale
-  haveI : Surjective π := hGal.onto
-  haveI : Epi π := Flat.epi_of_flat_of_surjective π
+  have : IsFinite π := hGal.fin
+  have : Etale π := hGal.etale
+  have : Surjective π := hGal.onto
+  have : Epi π := Flat.epi_of_flat_of_surjective π
   have hφ : φ ≫ A₀.hom = c.A.hom ≫ π := hp.1.w
   have one := one_comp hp c.A A₀ φ hφ
   have idφ : (𝟙 c.A : c.A ⟶ c.A).left ≫ φ = φ ≫ (𝟙 A₀ : A₀ ⟶ A₀).left := by simp
@@ -277,12 +277,12 @@ theorem principal_of_sRel_finite_etale : ∀ (h M M₀ d d₀ : ℕ) (B B₀ : T
   refine ⟨(relAmple_kTriv_of_finite_etale_cover Y X π c₀.A c.A φ c₀.diag c.diag hfin het hsurj c₀.ab
     (pull_isLB c₀.isLB _) (pull_isLB c.isLB _) pb (GlobalTheory.SiegelPull.diag_iso sq iso)).1 h₁, ?_⟩
   intro T x ⟨t, ht⟩
-  haveI := het
-  haveI := hsurj
+  have := het
+  have := hsurj
   let T' : Over X := Over.mk (pullback.snd T.hom π)
   let p : T'.left ⟶ T.left := pullback.fst T.hom π
   have hp : p ≫ T.hom = T'.hom ≫ π := pullback.condition
-  haveI : Epi p := Flat.epi_of_flat_of_surjective _
+  have : Epi p := Flat.epi_of_flat_of_surjective _
   obtain ⟨ρ, hρ⟩ := GlobalTheory.SiegelDescent.exists_liftHom pb T' T p hp
   have hx' : (ρ x).left ≫ φ = p ≫ x.left := (hρ x (ρ x)).1 rfl
   have w₁ : (fst c.A T').left ≫ φ ≫ c₀.A.hom = ((snd c.A T').left ≫ p) ≫ T.hom := by
@@ -416,7 +416,7 @@ theorem nonempty_sQuot : ∀ (h n N : ℕ) (F : SFam h N (zetaAway N)) (j : cycA
   intro h n N F j hn hN hdvd hj hfin het
   have hn0 : n ≠ 0 := by omega
   have hN0 : N ≠ 0 := by rintro rfl; exact (Nat.not_odd_zero hN)
-  haveI : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway n
+  have : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway n
   obtain ⟨Ga, _, _, ρ, ν, h1, hmul, hν1, hνmul, hover, hlow, hfree, htrans⟩ := _root_.GlobalTheory.SiegAct.siegel_group_action h n N F j hn hN hdvd hj
   have hjf : j.Finite := (IsFinite.SpecMap_iff _).1 hfin
   have hq : IsQProjOver (F.s ≫ spMap j) :=
@@ -426,8 +426,8 @@ theorem nonempty_sQuot : ∀ (h n N : ℕ) (F : SFam h N (zetaAway N)) (j : cycA
   have hqY : IsQProjOver sY := _root_.GlobalTheory.GaloisQuotientRing.isQProjOver_of_isGaloisCover (cycAway n) F.X Y π sY Ga ρ hG hsep hft (by rw [hπ]; exact hq)
   have hsm : SmoothOfRelativeDimension (h * (h + 1) / 2) (π ≫ sY) := by
     rw [hπ]
-    haveI := F.smooth
-    haveI : SmoothOfRelativeDimension 0 (spMap j) := inferInstance
+    have := F.smooth
+    have : SmoothOfRelativeDimension 0 (spMap j) := inferInstance
     have := smoothOfRelativeDimension_comp (h * (h + 1) / 2) 0 F.s (spMap j)
     rwa [Nat.add_zero] at this
   have hsY : SmoothOfRelativeDimension (h * (h + 1) / 2) sY :=

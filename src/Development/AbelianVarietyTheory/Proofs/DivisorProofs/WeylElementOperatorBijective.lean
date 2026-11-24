@@ -169,10 +169,10 @@ theorem inversion_circle [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circ
     ∃ d : ℂ, d ≠ 0 ∧ ∀ φ ∈ SB (κ → k), ∀ a : κ → k,
       ∫ y, (∫ x, φ x * (ψ (x ⬝ᵥ y) : ℂ) ∂μ) * (ψ (y ⬝ᵥ a) : ℂ) ∂μ = d * φ (-a) := by
   classical
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
   obtain ⟨ν, hν⟩ := (GlobalTheory.SplitWeil.selfDual_measure k ψ hc h1).1
-  haveI := hν.1
+  have := hν.1
   set m : Measure (κ → k) := Measure.pi fun _ => ν with hm
   have hμ : μ = μ.addHaarScalarFactor m • m := Measure.isAddLeftInvariant_eq_smul μ m
   set r := μ.addHaarScalarFactor m with hr_def
@@ -214,9 +214,9 @@ theorem fourier_inversion : ∀ (F : Type) [Field F] [NumberField F] (v : Pl (F 
     (μ : Measure (κ → Fv F v)) [μ.IsAddHaarMeasure], ∃ d : ℂ, d ≠ 0 ∧ ∀ φ ∈ SB (κ → Fv F v), ∀ a : κ → Fv F v,
       ∫ y, (∫ x, φ x * χ (x ⬝ᵥ y) ∂μ) * χ (y ⬝ᵥ a) ∂μ = d * φ (-a) := by
   intro F _ _ v χ hc hn h1 κ _ inst _ μ _
-  letI : MeasurableSpace (Fv F v) := borel _
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := GlobalTheory.SplitWeil.secondCountable (Fv F v)
+  let : MeasurableSpace (Fv F v) := borel _
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := GlobalTheory.SplitWeil.secondCountable (Fv F v)
   have e : inst = MeasurableSpace.pi := by
     rw [BorelSpace.measurable_eq (α := κ → Fv F v)]
     exact (BorelSpace.measurable_eq (α := κ → Fv F v) (self := Pi.borelSpace)).symm
@@ -290,12 +290,12 @@ theorem weyl_hasOpB : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
     (∀ v : Pl (F := F), ∃ x, psiLoc ψ v x ≠ 1) → ∀ (κ : Type) [Fintype κ] [DecidableEq κ],
     GlobalTheory.SympChangeBij.HasOpB ψ (GlobalTheory.SympChange.weylM (F := F) (κ := κ)) := by
   intro F _ _ ψ hψ hunr _ κ _ _
-  letI mA : MeasurableSpace (κ → AF F) := borel _
-  haveI : BorelSpace (κ → AF F) := ⟨rfl⟩
-  letI mI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
-  letI mV : ∀ v : Pl (F := F), MeasurableSpace (κ → Fv F v) := fun _ => borel _
-  haveI bV : ∀ v : Pl (F := F), BorelSpace (κ → Fv F v) := fun _ => ⟨rfl⟩
+  let mA : MeasurableSpace (κ → AF F) := borel _
+  have : BorelSpace (κ → AF F) := ⟨rfl⟩
+  let mI : MeasurableSpace (κ → mixedEmbedding.mixedSpace F) := borel _
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
+  let mV : ∀ v : Pl (F := F), MeasurableSpace (κ → Fv F v) := fun _ => borel _
+  have bV : ∀ v : Pl (F := F), BorelSpace (κ → Fv F v) := fun _ => ⟨rfl⟩
   obtain ⟨μ, hμ⟩ : ∃ μ : Measure (κ → AF F), μ.IsAddHaarMeasure := ⟨Measure.addHaar, inferInstance⟩
   obtain ⟨μi, hμi⟩ : ∃ μ : Measure (κ → mixedEmbedding.mixedSpace F), μ.IsAddHaarMeasure :=
     ⟨Measure.addHaar, inferInstance⟩
@@ -312,7 +312,7 @@ theorem weyl_hasOpB : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
       ext x; simp [K]
     rw [e]
     exact Measure.addHaarMeasure_self
-  haveI := hμv
+  have := hμv
   obtain ⟨c₀, hc₀, hpure⟩ := _root_.GlobalTheory.AdelicHaarPure.integral_pure_haar F κ μ μi μv hμv1
   obtain ⟨ei', hei'bij, hei'⟩ := _root_.GlobalTheory.ArchFourier.exists_fourier_sInf F κ μi
   have hψc : ∀ v, Continuous (GlobalTheory.LatVac.psiAt ψ v) := fun v => GlobalTheory.SchrSB.continuous_psiAt ψ hψ.1 v
@@ -406,7 +406,7 @@ theorem weyl_hasOpB : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
     intro f
     ext a
     rw [hei2, hei2]
-    simp only [neg_neg, SchwartzMap.smul_apply, smul_eq_mul]
+    simp only [neg_neg, smul_apply, smul_eq_mul]
     ring
 
   set C : ℂ := c₀ ^ 4 * dI ^ 2 * ∏ᶠ v, d v ^ 2 with hC
@@ -440,7 +440,7 @@ theorem weyl_hasOpB : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
       simp only [ind]
       exact Set.indicator_of_mem (show (fun i => evFin F v (x i)) ∈
         {z : κ → Fv F v | ∀ i, z i ∈ v.adicCompletionIntegers F} from hP.2) 1
-    simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_eq_mul, SchwartzMap.smul_apply]
+    simp only [GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure, Pi.smul_apply, smul_eq_mul, smul_apply]
     rw [finprod_mul_distrib hdfin hφfin, hC]
     ring
   let T4 : ((κ → AF F) → ℂ) →ₗ[ℂ] (κ → AF F) → ℂ := T ∘ₗ T ∘ₗ T ∘ₗ T
@@ -455,7 +455,7 @@ theorem weyl_hasOpB : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF
   refine ⟨T, c₀ • ei', ev, fun g => ?_, hT_schA, fun w Φ hΦ => ?_, fun v => ?_, fun v φ hφ h0 => ?_,
     fun v w φ hφ => ?_, hind, fun f φ h1 h2 => hTpure f φ ⟨h1, h2⟩, ?_⟩
   · obtain ⟨h, hh⟩ := hei'bij.2 (c₀⁻¹ • g)
-    exact ⟨h, by rw [ContinuousLinearMap.smul_apply, hh, smul_smul, mul_inv_cancel₀ hc₀, one_smul]⟩
+    exact ⟨h, by rw [smul_apply, hh, smul_smul, mul_inv_cancel₀ hc₀, one_smul]⟩
   · rw [spAct_weyl, ftE_eq ψ μ (schr_mem μ ψ w (hint Φ hΦ)), ft_schr, ftE_eq ψ μ (hint Φ hΦ)]
   · refine le_antisymm (Submodule.map_le_iff_le_comap.2 fun φ h => (hbij v).mapsTo h) fun g hg => ?_
     obtain ⟨φ, h, e⟩ := (hbij v).surjOn hg

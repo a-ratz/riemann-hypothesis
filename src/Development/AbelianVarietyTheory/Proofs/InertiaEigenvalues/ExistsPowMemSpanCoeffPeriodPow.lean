@@ -114,7 +114,7 @@ theorem coeff_eq_zero_of_roots : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero 
     have h2 : IsCoprime P (Polynomial.X ^ (l - 1)) := by
       refine IsCoprime.pow_right ?_
       refine IsCoprime.symm ((Polynomial.irreducible_X.coprime_iff_not_dvd).2 ?_)
-      rw [Polynomial.X_dvd_iff, hPdef, Polynomial.coeff_expand hl0, if_pos (dvd_zero l), Nat.zero_div]
+      rw [Polynomial.X_dvd_iff, hPdef, Polynomial.coeff_expand hl0, ite_eq_left (dvd_zero l), Nat.zero_div]
       exact hc0
     have h3 : IsCoprime P ((l : K[X])) := by
       have hu : IsUnit ((l : K[X])) := by
@@ -143,7 +143,7 @@ theorem coeff_eq_zero_of_roots : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero 
     exact (Multiset.card_le_card hle).trans (Polynomial.card_roots' Q)
   have hEq : P = EK := Polynomial.eq_of_monic_of_dvd_of_natDegree_le hEK hPmon hdvd hdeg
   have hci : GlobalTheory.TameFrob.iota l a (E.coeff i) = 0 := by
-    rw [← Polynomial.coeff_map, ← hEKdef, ← hEq, hPdef, Polynomial.coeff_expand hl0, if_neg hi]
+    rw [← Polynomial.coeff_map, ← hEKdef, ← hEq, hPdef, Polynomial.coeff_expand hl0, ite_eq_right hi]
   exact GlobalTheory.TameFrob.iota_injective l a (hci.trans (map_zero _).symm)
 
 end GlobalTheory.ExpandCoeff
@@ -212,8 +212,8 @@ namespace GlobalTheory.TameFrob
 theorem exists_algEquiv_iotaO_sigma : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZero a], ∃ Φ : Om l ≃ₐ[ℚ_[l]] Om l,
     ∀ w : Wq l a, Φ (GlobalTheory.TameFrob.iotaO l a w) = GlobalTheory.TameFrob.iotaO l a (sigma l a w) := by
   intro l _ a _
-  letI : Algebra (Wq l a) ↥(Kunr l a) := algK l a
-  letI : IsFractionRing (Wq l a) ↥(Kunr l a) := by
+  let : Algebra (Wq l a) ↥(Kunr l a) := algK l a
+  let : IsFractionRing (Wq l a) ↥(Kunr l a) := by
     refine (isLocalization_iff (nonZeroDivisors (Wq l a)) ↥(Kunr l a)).2 ⟨?_, ?_, ?_⟩
     · intro s
       refine IsUnit.mk0 _ fun h => nonZeroDivisors.coe_ne_zero s (iota_injective l a ?_)
@@ -279,7 +279,7 @@ theorem expand_map_dvd_of_frobS_dvd : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [Ne
     rw [PowerSeries.coeff_map, PowerSeries.coeff_expand, Polynomial.coeff_coe, Polynomial.coeff_coe, Polynomial.coeff_expand hl0]
     split_ifs <;> simp [Polynomial.coeff_map]
   rw [hcoe] at hQ
-  haveI : IsAdicComplete (Ideal.span {(l : Wq l a)}) (Wq l a) := WittVector.isAdicCompleteIdealSpanP
+  have : IsAdicComplete (Ideal.span {(l : Wq l a)}) (Wq l a) := WittVector.isAdicCompleteIdealSpanP
   have hmon : (Polynomial.expand (Wq l a) l (P.map σ)).Monic := (hP.map σ).expand hl0
   have hdeg : (Polynomial.expand (Wq l a) l (P.map σ)).natDegree = P.natDegree * l := by
     rw [Polynomial.natDegree_expand, Polynomial.natDegree_map_eq_of_injective hσinj]
@@ -492,14 +492,14 @@ theorem weierstrass_prep_not_dvd_l : ∀ (l : ℕ) [Fact l.Prime] (a : ℕ) [NeZ
     ∃ (P : Polynomial (Wq l a)) (U : (Wq l a)⟦X⟧), IsUnit U ∧ P.Monic ∧
       (∀ i < P.natDegree, (l : Wq l a) ∣ P.coeff i) ∧ g = U * (P : (Wq l a)⟦X⟧) := by
   intro l _ a _ g hg
-  haveI : IsAdicComplete (Ideal.span {(l : Wq l a)}) (Wq l a) := WittVector.isAdicCompleteIdealSpanP
+  have : IsAdicComplete (Ideal.span {(l : Wq l a)}) (Wq l a) := WittVector.isAdicCompleteIdealSpanP
   have hsurj : Function.Surjective (WittVector.constantCoeff (p := l) (R := Fq l a)) :=
     fun x => ⟨WittVector.teichmuller l x, by simp⟩
   have hm : IsLocalRing.maximalIdeal (Wq l a) = Ideal.span {(l : Wq l a)} := by
     rw [← WittVector.ker_constantCoeff]
-    haveI := RingHom.ker_isMaximal_of_surjective _ hsurj
+    have := RingHom.ker_isMaximal_of_surjective _ hsurj
     exact (IsLocalRing.eq_maximalIdeal this).symm
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal (Wq l a)) (Wq l a) := hm ▸ inferInstance
+  have : IsAdicComplete (IsLocalRing.maximalIdeal (Wq l a)) (Wq l a) := hm ▸ inferInstance
   have hg' : g.map (IsLocalRing.residue (Wq l a)) ≠ 0 := by
     intro h0
     apply hg
@@ -793,7 +793,7 @@ theorem GlobalTheory.BSP.pow_l_mem_span_coeff : ∀ (l : ℕ) [Fact l.Prime] (K 
     have h1 : y ∈ P := hsat y (hy ▸ hgP)
     rw [hg, Ideal.mem_span_singleton] at h1
     obtain ⟨z, hz⟩ := h1
-    refine hpr.not_unit (IsUnit.of_mul_eq_one z (mul_left_cancel₀ hg0 ?_))
+    refine hpr.not_isUnit (IsUnit.of_mul_eq_one z (mul_left_cancel₀ hg0 ?_))
     rw [mul_one]
     conv_rhs => rw [hy, hz]
     ring

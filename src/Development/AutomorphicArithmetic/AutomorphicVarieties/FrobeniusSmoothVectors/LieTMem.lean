@@ -223,12 +223,12 @@ theorem UpperTheory.V.Fr.ep_dproj :
     · refine Finset.sum_congr rfl (fun c _ => ?_)
       rw [Matrix.map_apply, Matrix.map_apply, hDp]
       by_cases hcb : pw c b = 0
-      · rw [if_pos ((hsame c hcb).trans hab)]
+      · rw [ite_eq_left ((hsame c hcb).trans hab)]
       · rw [hN c b hcb, mul_zero, mul_zero]
     · refine Finset.sum_eq_zero (fun c _ => ?_)
       rw [Matrix.map_apply, hDp]
       by_cases hcb : pw c b = 0
-      · rw [if_neg (fun h => hab ((hsame c hcb).symm.trans h)), zero_mul]
+      · rw [ite_eq_right (fun h => hab ((hsame c hcb).symm.trans h)), zero_mul]
       · rw [hN c b hcb, mul_zero]
 end -- clump:auto
 end -- clump:auto
@@ -311,9 +311,9 @@ theorem UpperTheory.V.Fr.ep_tan :
     refine ⟨⟨D', hD'⟩, prp _ j X, fun s => ?_⟩
     show prp _ j (Box.tanCo O B D' s) = _
     rw [hD'e s, prp_coe, hX s, map_add (f := _), map_sub, hP, prp_coe]
-  haveI := hfin 0
+  have := hfin 0
   refine ⟨fun j => ?_, ?_⟩
-  · haveI := hfin j
+  · have := hfin j
     exact (pr_count F.loc (h.ad j) ((B.bar O).bp j) (φ j) (hbrig j) (hsurj j)).1
   have hc := (pr_count F.loc (h.ad 0) ((B.bar O).bp 0) (φ 0) (hbrig 0) (hsurj 0)).2
   obtain ⟨D, hD, hDe⟩ := pr_tor hOk O R ρ B hU hOf hCont hGood hθ

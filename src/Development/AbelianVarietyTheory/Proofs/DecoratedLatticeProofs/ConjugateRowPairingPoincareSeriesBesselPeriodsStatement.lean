@@ -192,15 +192,15 @@ theorem GlobalTheory.Core.Mi.inner_pser_eq_setIntegral : ∀ (D : D7) (X : Forma
     have hle : ∀ δ : Dt, ∫⁻ y in X.B.fund, ‖f y * Ph X u hK T ((δ : X.B.I.GA) * y)‖ₑ ∂(X.B.I.muA X.B.μf) ≤
         ENNReal.ofReal C * ∫⁻ y in X.B.fund, ‖Ph X u hK T ((δ : X.B.I.GA) * y)‖ₑ ∂(X.B.I.muA X.B.μf) := by
       intro δ
-      rw [← lintegral_const_mul (f := fun y => ‖Ph X u hK T ((δ : X.B.I.GA) * y)‖ₑ) _ (hPm.comp (measurable_const_mul _)).enorm]
+      rw [← lintegral_const_mul (f := fun y => ‖Ph X u hK T ((δ : X.B.I.GA) * y)‖ₑ) _ (hPm.comp (measurable_const_mul _)).eNorm]
       refine lintegral_mono fun y => ?_
-      rw [enorm_mul]
+      rw [eNorm_mul]
       refine mul_le_mul' ?_ le_rfl
-      rw [← ofReal_norm_eq_enorm]
+      rw [← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hC y)
     refine ne_top_of_le_ne_top ?_ (ENNReal.tsum_le_tsum hle)
-    rw [ENNReal.tsum_mul_left, ← lintegral_tsum (f := fun (δ : Dt) y => ‖Ph X u hK T ((δ : X.B.I.GA) * y)‖ₑ) (fun δ => (hPm.comp (measurable_const_mul _)).enorm.aemeasurable),
-      Formalism.L2.SG.Pf.InHHLeaf.unfold_lint hFD (Srat X u) hS Dt hD Fs hFs (fun w => ‖Ph X u hK T w‖ₑ) hPm.enorm
+    rw [ENNReal.tsum_mul_left, ← lintegral_tsum (f := fun (δ : Dt) y => ‖Ph X u hK T ((δ : X.B.I.GA) * y)‖ₑ) (fun δ => (hPm.comp (measurable_const_mul _)).eNorm.aemeasurable),
+      Formalism.L2.SG.Pf.InHHLeaf.unfold_lint hFD (Srat X u) hS Dt hD Fs hFs (fun w => ‖Ph X u hK T w‖ₑ) hPm.eNorm
         (fun s hs y => by simp only [hPinv s hs y])]
     exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hPI.2.ne
   have e4 : ∫ y in X.B.fund, f y * Pser X u hK Dt T y ∂(X.B.I.muA X.B.μf) =
@@ -213,7 +213,7 @@ theorem GlobalTheory.Core.Mi.inner_pser_eq_setIntegral : ∀ (D : D7) (X : Forma
     exact integral_tsum (fun δ => (hfm.mul (hPm.comp (measurable_const_mul _))).aestronglyMeasurable) hbound
   have hm := (hin T Dt hD).2.2.1
   have eL : ⟪star φ, PuFun X u hK Dt T⟫_ℂ = ∫ y in X.B.fund, f y * Pser X u hK Dt T y ∂(X.B.I.muA X.B.μf) := by
-    have e0 : PuFun X u hK Dt T = hm.toLp (Pser X u hK Dt T) := dif_pos hm
+    have e0 : PuFun X u hK Dt T = hm.toLp (Pser X u hK Dt T) := dite_eq_left hm
     rw [e0, MeasureTheory.L2.inner_def]
     refine integral_congr_ae ?_
     filter_upwards [Lp.coeFn_star φ, hm.coeFn_toLp, hφf] with a h1 h2 h3
@@ -277,7 +277,7 @@ theorem ph_continuousOn : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSett
   intro D X h u ψ A B hK T y hψ
   obtain ⟨p, hp, hpv⟩ := GlobalTheory.BesProj.exists_continuous_proj D _ _ A _ _ B.d B.o
   obtain ⟨hcont, hval⟩ := GlobalTheory.Core.Mi.PhCol.ph_colForm D X h u ψ A B hK T
-  refine continuousOn_iff_continuous_restrict.2 ?_
+  refine continuousOn_iff_continuous_domRestrict.2 ?_
   show Continuous fun g : (besGrp B.d B.o : Set (GA D (D.sp.Y 0))) => Ph X u hK T (iotaX X h g.1 * (y, X.xu u))
   have e : (fun g : (besGrp B.d B.o : Set (GA D (D.sp.Y 0))) => Ph X u hK T (iotaX X h g.1 * (y, X.xu u))) =
       fun g => star (psiBes ψ B.d 1 (vecB B.o B.ζ) g.1) * B.colForm T.1 (X.Wu u y) (p g) := by
@@ -293,7 +293,7 @@ theorem ph_continuousOn : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSett
   rw [e]
   have hps : Continuous (psiBes ψ B.d 1 (vecB B.o B.ζ)) :=
     GlobalTheory.CharLaws.continuous_psiBes ψ B.d hψ.1 1 _
-  exact (continuous_star.comp (hps.comp continuous_subtype_val)).mul ((hcont (X.Wu u y)).2.comp hp)
+  exact (continuous_star.comp (hps.comp continuous_subtypeVal)).mul ((hcont (X.Wu u y)).2.comp hp)
 
 end GlobalTheory.Core.Mi.PhCont
 end -- clump:auto
@@ -397,11 +397,11 @@ namespace GlobalTheory.Core.Mi.Fold
 theorem exists_cutoff_srat : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u : D.what₂.Word) (Fs : Set X.B.I.GA), IsFundamentalDomain (Srat X u) Fs (X.B.I.muA X.B.μf) → ∃ β : X.B.I.GA → ENNReal, Measurable β ∧ (∀ x, ∑' σ : Srat X u, β ((σ : X.B.I.GA) * x) = 1) ∧ ∀ F : X.B.I.GA → ENNReal, Measurable F → (∀ γ ∈ Srat X u, ∀ x, F (γ * x) = F x) → ∫⁻ x in Fs, F x ∂(X.B.I.muA X.B.μf) = ∫⁻ x, β x * F x ∂(X.B.I.muA X.B.μf) := by
   intro D X u Fs hFs
   have hR := Formalism.L2.SG.Pf.foldReady_holds X.B.I
-  haveI : BorelSpace X.B.I.GA := hR.2.2.2.1
-  haveI : SecondCountableTopology X.B.I.GA := hR.2.1
-  haveI : DiscreteTopology (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I) := hR.2.2.2.2
-  haveI : DiscreteTopology (Srat X u) := Formalism.L2.SG.Pf.srat_discrete X u
-  haveI : Countable (Srat X u) := Formalism.L2.SG.Pf.countable_of_discrete _
+  have : BorelSpace X.B.I.GA := hR.2.2.2.1
+  have : SecondCountableTopology X.B.I.GA := hR.2.1
+  have : DiscreteTopology (Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I) := hR.2.2.2.2
+  have : DiscreteTopology (Srat X u) := Formalism.L2.SG.Pf.srat_discrete X u
+  have : Countable (Srat X u) := Formalism.L2.SG.Pf.countable_of_discrete _
   obtain ⟨_, hleft, _⟩ := Formalism.L2.SG.EvalTOntoExt.instances X
   obtain ⟨F', hF'm, h1, h2⟩ := Formalism.L2.SG.Pf.exists_strictFund (Srat X u)
   have hF' := Formalism.L2.SG.Pf.isFund_of_strict (Srat X u) hF'm h1 h2 (X.B.I.muA X.B.μf)
@@ -497,7 +497,7 @@ theorem isClosed_cond (I : AutInst) (v : Fin I.n → I.E) (T : Set (Fin I.n → 
   have hset : {x : I.Gf | (I.fmat x - 1) *ᵥ incl I v ∈ Submodule.span (I.E ⊗[I.F] Formalism.MainNotions.S.Af I.F) (incl I '' T)} =
       {x | e.map (GlobalTheory.UnipApprox.inc I) *ᵥ ((I.fmat x - 1) *ᵥ incl I v) = (I.fmat x - 1) *ᵥ incl I v} := by
     ext x
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [span_incl_eq]
     exact GlobalTheory.UnipApprox.mem_span_iff (GlobalTheory.UnipApprox.inc I) he _ hW _
   rw [hset]
@@ -518,7 +518,7 @@ theorem isClosed_sfin (I : AutInst) {r : ℕ} (e : Fin r → Fin I.n → I.E) (z
     have := isClosed_cond I z (Set.range e)
     rwa [← Set.range_comp] at this
   unfold Sfin
-  rw [Set.setOf_and, Set.setOf_forall]
+  rw [Set.ofPred_and, Set.ofPred_forall]
   exact (isClosed_iInter h1).inter h2
 
 end GlobalTheory.SfinHaar
@@ -537,8 +537,8 @@ theorem disint_finPart : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetti
   set S := Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u) with hSdef
   set K := X.K2 with hKdef
   set x := X.xu u with hxdef
-  haveI : SecondCountableTopology G := Formalism.L2.SG.Pf.gf_secondCountable X.B.I
-  haveI : X.B.μf.IsHaarMeasure := X.B.haar
+  have : SecondCountableTopology G := Formalism.L2.SG.Pf.gf_secondCountable X.B.I
+  have : X.B.μf.IsHaarMeasure := X.B.haar
   have hKg := Formalism.L2.SG.Closed.level_subgroup_is_group X
   have hKt := Formalism.L2.SG.Pf.level_subgroup_compact_open X
   have hK1 : (1 : G) ∈ K := hKg.1
@@ -546,7 +546,7 @@ theorem disint_finPart : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetti
   have hKinv : ∀ a ∈ K, a⁻¹ ∈ K := hKg.2.2.1
   have hKo : IsOpen K := hKt.1
   have hKc : IsCompact K := hKt.2
-  haveI : LocallyCompactSpace G := hKc.locallyCompactSpace_of_mem_nhds_of_group (hKo.mem_nhds hK1)
+  have : LocallyCompactSpace G := hKc.locallyCompactSpace_of_mem_nhds_of_group (hKo.mem_nhds hK1)
   have hSc : IsClosed (S : Set G) := isClosed_sfin X.B.I X.eR (X.zR u)
 
   set C : Set G := {g | x⁻¹ * g * x ∈ K} with hCdef
@@ -561,21 +561,21 @@ theorem disint_finPart : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetti
   have hCo : IsOpen C := hKo.preimage ((continuous_const_mul _).mul continuous_const)
   set H : Set S := Subtype.val ⁻¹' C with hHdef
   have hHc : IsCompact H := hSc.isClosedEmbedding_subtypeVal.isCompact_preimage hCc
-  have hHo : IsOpen H := hCo.preimage continuous_subtype_val
+  have hHo : IsOpen H := hCo.preimage continuous_subtypeVal
   have hH1 : (1 : S) ∈ H := by
     show x⁻¹ * ((1 : S) : G) * x ∈ K
     simpa using hK1
-  haveI : LocallyCompactSpace S := hHc.locallyCompactSpace_of_mem_nhds_of_group (hHo.mem_nhds hH1)
+  have : LocallyCompactSpace S := hHc.locallyCompactSpace_of_mem_nhds_of_group (hHo.mem_nhds hH1)
   let K₀ : TopologicalSpace.PositiveCompacts S := ⟨⟨H, hHc⟩, ⟨1, hHo.subset_interior_iff.2 le_rfl hH1⟩⟩
   set ν : Measure S := Measure.haarMeasure K₀ with hνdef
-  haveI : ν.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure K₀
+  have : ν.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure K₀
   have hνH : ν H = 1 := Measure.haarMeasure_self
   refine ⟨ν, inferInstance, inferInstance, 1, one_pos, fun φ hφ hsupp => ?_⟩
   rw [ENNReal.ofReal_one, one_mul]
 
   set Z : Set (S × G) := {p | x⁻¹ * ((p.1 : G)⁻¹ * p.2) ∈ K} with hZdef
   have hZo : IsOpen Z := hKo.preimage
-    (continuous_const.mul ((continuous_subtype_val.comp continuous_fst).inv.mul continuous_snd))
+    (continuous_const.mul ((continuous_subtypeVal.comp continuous_fst).inv.mul continuous_snd))
   have hZm : MeasurableSet Z := hZo.measurableSet
   have hKm : MeasurableSet K := hKo.measurableSet
   let F : S → G → ENNReal := fun t g => φ g * Z.indicator 1 (t, g)
@@ -602,7 +602,7 @@ theorem disint_finPart : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetti
     obtain ⟨s, hs, k, hk, rfl⟩ := hsupp g h0
     have hset : {t : S | (t, s * x * k) ∈ Z} = (fun t => (⟨s, hs⟩ : S)⁻¹ * t) ⁻¹' H := by
       ext t
-      simp only [Set.mem_setOf_eq, Set.mem_preimage]
+      simp only [Set.mem_ofPred_eq, Set.mem_preimage]
       show x⁻¹ * ((t : G)⁻¹ * (s * x * k)) ∈ K ↔ x⁻¹ * (s⁻¹ * (t : G)) * x ∈ K
       have e : x⁻¹ * ((t : G)⁻¹ * (s * x * k)) = (x⁻¹ * (s⁻¹ * (t : G)) * x)⁻¹ * k := by group
       rw [e]
@@ -695,29 +695,29 @@ theorem iota_prodEquiv {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D) 
 
 theorem lintegral_besGrp_eq : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D) (u : D.what₂.Word) (ψ : AddChar (AF D.host.F) ℂ) (A : HSp D) (B : SBes X h u ψ A) (μSf : Measure (Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u))), μSf.IsHaarMeasure → SigmaFinite μSf → IsHaarOnSet X.B.I (X.SinfU u) (((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2)) → ∃ c : ℝ, 0 < c ∧ ∀ Φ : X.B.I.GA → ENNReal, Measurable Φ → ∫⁻ s, Φ (iotaX X h s.1) ∂B.lev.μR = ENNReal.ofReal c * ∫⁻ a, ∫⁻ t, Φ (a, t.1) ∂μSf ∂(((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2)) := by
   intro D X h u ψ A B μSf hSf hσf hS
-  haveI := hSf
-  haveI := hσf
+  have := hSf
+  have := hσf
   have hR := Formalism.L2.SG.Pf.foldReady_holds X.B.I
-  haveI : BorelSpace X.B.I.GA := hR.2.2.2.1
-  haveI : SecondCountableTopology X.B.I.GA := hR.2.1
-  haveI : LocallyCompactSpace X.B.I.GA := hR.1
-  haveI : SecondCountableTopology X.B.I.Gf := Formalism.L2.SG.Pf.gf_secondCountable X.B.I
-  haveI : SecondCountableTopology (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.secondCountableTopology
-  haveI : LocallyCompactSpace (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.isClosedEmbedding.locallyCompactSpace
+  have : BorelSpace X.B.I.GA := hR.2.2.2.1
+  have : SecondCountableTopology X.B.I.GA := hR.2.1
+  have : LocallyCompactSpace X.B.I.GA := hR.1
+  have : SecondCountableTopology X.B.I.Gf := Formalism.L2.SG.Pf.gf_secondCountable X.B.I
+  have : SecondCountableTopology (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.secondCountableTopology
+  have : LocallyCompactSpace (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.isClosedEmbedding.locallyCompactSpace
   have hcl : IsClosed (besGrp B.d B.o : Set (GA D (D.sp.Y 0))) := GlobalTheory.BesClosed.besGrp_isClosed _ _ _ _ _ _ B.d B.o
-  haveI : LocallyCompactSpace (besGrp B.d B.o) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : B.lev.μR.IsHaarMeasure := (GlobalTheory.BesselQuot.besGrp_quotient D D.R.rS B.lev).1
+  have : LocallyCompactSpace (besGrp B.d B.o) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : B.lev.μR.IsHaarMeasure := (GlobalTheory.BesselQuot.besGrp_quotient D D.R.rS B.lev).1
   have hSi : IsClosed ((Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u) : Subgroup X.B.I.Ginf) : Set X.B.I.Ginf) := Formalism.L2.SG.WuDecayPf.isClosed_sinfU X u
-  haveI : LocallyCompactSpace (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) := hSi.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) := hSi.isClosedEmbedding_subtypeVal.locallyCompactSpace
   obtain ⟨hHaar', -, -⟩ := Formalism.L2.SG.Pf.haarOnSet_isHaar_inst X.B.I (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) hSi _ hS
-  haveI := hHaar'
+  have := hHaar'
   have hmap := Formalism.L2.SG.Pf.map_comap_subgroup (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) hSi _ hS.2.2.1
   set μS' := (((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2)).comap ((↑) : (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) → X.B.I.Ginf) with hμS'
-  haveI : SigmaFinite μS' := inferInstance
+  have : SigmaFinite μS' := inferInstance
   let e := GlobalTheory.Core.Mi.BesHaar.prodEquiv X h B
-  haveI : LocallyCompactSpace ((Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) × (Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u))) := e.toHomeomorph.isClosedEmbedding.locallyCompactSpace
-  haveI : (B.lev.μR.map e.symm).IsHaarMeasure := e.symm.isHaarMeasure_map B.lev.μR
-  haveI : (μS'.prod μSf).IsHaarMeasure := Measure.prod.instIsHaarMeasure μS' μSf
+  have : LocallyCompactSpace ((Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) × (Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u))) := e.toHomeomorph.isClosedEmbedding.locallyCompactSpace
+  have : (B.lev.μR.map e.symm).IsHaarMeasure := e.symm.isHaarMeasure_map B.lev.μR
+  have : (μS'.prod μSf).IsHaarMeasure := Measure.prod.instIsHaarMeasure μS' μSf
   have hcpos := Measure.haarScalarFactor_pos_of_isHaarMeasure (B.lev.μR.map e.symm) (μS'.prod μSf)
   set c : ℝ≥0 := (B.lev.μR.map e.symm).haarScalarFactor (μS'.prod μSf) with hc
   have hme : Measurable (e : (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) × (Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u)) → besGrp B.d B.o) := e.continuous.measurable
@@ -726,20 +726,20 @@ theorem lintegral_besGrp_eq : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.Hida
     simp
   refine ⟨(c : ℝ), hcpos, fun Φ hΦ => ?_⟩
   have hv : Measurable (fun p : (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) × (Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u)) => ((p.1 : X.B.I.Ginf), (p.2 : X.B.I.Gf))) :=
-    (measurable_subtype_coe.comp measurable_fst).prodMk (measurable_subtype_coe.comp measurable_snd)
+    (measurable_subtypeVal.comp measurable_fst).prodMk (measurable_subtypeVal.comp measurable_snd)
   have hΦ' : Measurable (fun p : (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) × (Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u)) => Φ ((p.1 : X.B.I.Ginf), (p.2 : X.B.I.Gf))) := hΦ.comp hv
   have hin : Measurable (fun a : X.B.I.Ginf => ∫⁻ t, Φ (a, (t : X.B.I.Gf)) ∂μSf) := by
     have : Measurable (Function.uncurry fun (a : X.B.I.Ginf) (t : Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u)) => Φ (a, (t : X.B.I.Gf))) :=
-      hΦ.comp (measurable_fst.prodMk (measurable_subtype_coe.comp measurable_snd))
+      hΦ.comp (measurable_fst.prodMk (measurable_subtypeVal.comp measurable_snd))
     exact this.lintegral_prod_right'
   have hΦι : Measurable (fun s : besGrp B.d B.o => Φ (iotaX X h s.1)) :=
-    hΦ.comp ((iotaX X h).continuous.measurable.comp measurable_subtype_coe)
+    hΦ.comp ((iotaX X h).continuous.measurable.comp measurable_subtypeVal)
   rw [hEq, lintegral_map hΦι hme]
   have hιe : ∀ p : (Formalism.L2.SG.Pf.SinfSub X.B.I X.eR (X.zR u)) × (Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u)), iotaX X h (e p).1 = ((p.1 : X.B.I.Ginf), (p.2 : X.B.I.Gf)) :=
     GlobalTheory.Core.Mi.BesHaar.iota_prodEquiv X h B
   simp_rw [hιe]
   rw [lintegral_smul_measure, lintegral_prod _ hΦ'.aemeasurable, ← hmap,
-    lintegral_map hin measurable_subtype_coe, ENNReal.ofReal_coe_nnreal, ENNReal.smul_def, smul_eq_mul]
+    lintegral_map hin measurable_subtypeVal, ENNReal.ofReal_coe_nnreal, ENNReal.smul_def, smul_eq_mul]
 
 end GlobalTheory.Core.Mi.BesHaar
 end -- clump:auto
@@ -797,8 +797,8 @@ theorem muN_conj (h : X.B.I.Ginf) (hh : h ∈ Hinf X u) :
 
 theorem muS_compact {K : Set X.B.I.Ginf} (hK : IsCompact K) :
     ((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2) K < ⊤ := by
-  haveI := (X.muN_haar u).1
-  haveI := (X.muH_haar u).1
+  have := (X.muN_haar u).1
+  have := (X.muH_haar u).1
   have hmul : Measurable (fun p : X.B.I.Ginf × X.B.I.Ginf => p.1 * p.2) := measurable_fst.mul measurable_snd
   set L : Set X.B.I.Ginf := (K * ((Hinf X u : Subgroup X.B.I.Ginf) : Set X.B.I.Ginf)⁻¹) ∩ X.NinfU u with hL
   have hLc : IsCompact L := (hK.mul (hinf_compact X u).inv).inter_right (isClosed_ninfU X u)
@@ -819,16 +819,16 @@ theorem muS_isHaarOnSet : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSett
   intro D X u
   obtain ⟨hNσ, hN0, -, hNinv⟩ := X.muN_haar u
   obtain ⟨hHσ, hH0, -, hHinv⟩ := X.muH_haar u
-  haveI := hNσ
-  haveI := hHσ
+  have := hNσ
+  have := hHσ
   have hmul : Measurable (fun p : X.B.I.Ginf × X.B.I.Ginf => p.1 * p.2) := measurable_fst.mul measurable_snd
   refine ⟨?_, ?_, ?_, ?_⟩
-  · haveI : IsFiniteMeasureOnCompacts (((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2)) :=
+  · have : IsFiniteMeasureOnCompacts (((X.muN u).prod (X.muH u)).map (fun p => p.1 * p.2)) :=
       ⟨fun K hK => muS_compact X u hK⟩
     infer_instance
   · intro h0
     have h1 := congrArg (fun μ : Measure X.B.I.Ginf => μ Set.univ) h0
-    simp only [Measure.map_apply hmul MeasurableSet.univ, Set.preimage_univ, Measure.coe_zero,
+    simp only [Measure.map_apply hmul MeasurableSet.univ, Set.preimage_univ, FunLike.coe_zero,
       Pi.zero_apply] at h1
     rw [← Set.univ_prod_univ, Measure.prod_prod, mul_eq_zero, Measure.measure_univ_eq_zero,
       Measure.measure_univ_eq_zero] at h1
@@ -893,8 +893,8 @@ theorem disint : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h
   obtain ⟨c₃, hc₃, hR⟩ := GlobalTheory.T.lintegral_besselGroup_haar_eq_const_mul_prod D X h u ψ A B μSf hHaar hσ (GlobalTheory.T.real_stabilizer_product_measure_isHaarOnSet D X u)
   refine ⟨c₁ / c₃, div_pos hc₁ hc₃, ?_⟩
   intro G hGm hsupp
-  haveI : SecondCountableTopology X.B.I.Gf := Formalism.L2.SG.Pf.gf_secondCountable X.B.I
-  haveI := hσ
+  have : SecondCountableTopology X.B.I.Gf := Formalism.L2.SG.Pf.gf_secondCountable X.B.I
+  have := hσ
   set μS := ((X.muN u).prod (X.muH u)).map (fun p : X.B.I.Ginf × X.B.I.Ginf => p.1 * p.2) with hμS
 
   set g : X.B.I.Ginf → ENNReal := fun x => ∫⁻ t, ∫⁻ k in X.K2, G (x, t.1 * X.xu u * k) ∂X.B.μf ∂μSf with hgdef
@@ -902,7 +902,7 @@ theorem disint : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (h
     have hΨ : Measurable (fun p : (X.B.I.Ginf × Formalism.L2.SG.Pf.SfinSub X.B.I X.eR (X.zR u)) × X.B.I.Gf =>
         G (p.1.1, p.1.2.1 * X.xu u * p.2)) :=
       hGm.comp (measurable_fst.fst.prodMk
-        (((measurable_subtype_coe.comp measurable_fst.snd).mul_const _).mul measurable_snd))
+        (((measurable_subtypeVal.comp measurable_fst.snd).mul_const _).mul measurable_snd))
     exact (hΨ.lintegral_prod_right' (ν := X.B.μf.restrict X.K2)).lintegral_prod_right' (ν := μSf)
   have hL : ∫⁻ x, G x ∂(X.B.I.muA X.B.μf) = ENNReal.ofReal c₁ * ∫⁻ y, ∫⁻ a, g (a * y) ∂μS ∂(X.nuQ u) := by
     have e0 : X.B.I.muA X.B.μf = (Formalism.L2.SG.ProjRows.muInf X.B.I).prod X.B.μf := rfl
@@ -982,7 +982,7 @@ theorem lintegral_unfold : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSet
       show B.lev.μR ((fun y => (γ : besGrp B.d B.o) * y) ⁻¹' S) = B.lev.μR S
       exact measure_preimage_mul _ (γ : besGrp B.d B.o) S⟩
   have hιm : Measurable (fun s : besGrp B.d B.o => f (iotaX X h s.1)) :=
-    hf.comp ((iotaX X h).continuous.measurable.comp measurable_subtype_coe)
+    hf.comp ((iotaX X h).continuous.measurable.comp measurable_subtypeVal)
   rw [h𝓢.lintegral_eq_tsum'' (fun s => f (iotaX X h s.1))]
   rw [← lintegral_tsum (f := fun (γ : (GQ (D.sp.Y 0)).subgroupOf (besGrp B.d B.o)) (x : besGrp B.d B.o) => f (iotaX X h (γ • x).1))
     (fun γ => (hιm.comp (measurable_const_smul γ)).aemeasurable)]
@@ -1038,19 +1038,19 @@ theorem fold_quot : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D)
   refine ⟨c₁ * (X.B.μf X.K2).toReal, mul_pos hc₁ (ENNReal.toReal_pos hK0 hKT), ?_⟩
   intro F hFm hFl hFr hFsupp
   have hR := Formalism.L2.SG.Pf.foldReady_holds X.B.I
-  haveI : BorelSpace X.B.I.GA := hR.2.2.2.1
-  haveI : SecondCountableTopology X.B.I.GA := hR.2.1
-  haveI : LocallyCompactSpace X.B.I.GA := hR.1
-  haveI : SecondCountableTopology X.B.I.Gf := Formalism.L2.SG.Pf.gf_secondCountable X.B.I
-  haveI : SecondCountableTopology (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.secondCountableTopology
-  haveI : LocallyCompactSpace (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.isClosedEmbedding.locallyCompactSpace
+  have : BorelSpace X.B.I.GA := hR.2.2.2.1
+  have : SecondCountableTopology X.B.I.GA := hR.2.1
+  have : LocallyCompactSpace X.B.I.GA := hR.1
+  have : SecondCountableTopology X.B.I.Gf := Formalism.L2.SG.Pf.gf_secondCountable X.B.I
+  have : SecondCountableTopology (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.secondCountableTopology
+  have : LocallyCompactSpace (GA D (D.sp.Y 0)) := (iotaX X h).toHomeomorph.isClosedEmbedding.locallyCompactSpace
   have hcl : IsClosed (besGrp B.d B.o : Set (GA D (D.sp.Y 0))) := GlobalTheory.BesClosed.besGrp_isClosed _ _ _ _ _ _ B.d B.o
-  haveI : LocallyCompactSpace (besGrp B.d B.o) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : B.lev.μR.IsHaarMeasure := (GlobalTheory.T.besselGroup_quotient_fundamentalDomain_cocompact D D.R.rS B.lev).1
-  haveI : SigmaFinite B.lev.μR := inferInstance
+  have : LocallyCompactSpace (besGrp B.d B.o) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : B.lev.μR.IsHaarMeasure := (GlobalTheory.T.besselGroup_quotient_fundamentalDomain_cocompact D D.R.rS B.lev).1
+  have : SigmaFinite B.lev.μR := inferInstance
   have hK2m : MeasurableSet X.K2 := (Formalism.L2.SG.Pf.DstarIdxPf.isOpen_levelSubgroup' X).measurableSet
   have hι : Continuous (fun s : besGrp B.d B.o => iotaX X h s.1) :=
-    (iotaX X h).continuous.comp continuous_subtype_val
+    (iotaX X h).continuous.comp continuous_subtypeVal
 
   have key : ∀ y : X.B.I.Ginf,
       ∫⁻ s, ∫⁻ k in X.K2, β (iotaX X h s.1 * (y, X.xu u) * (1, k)) * F (iotaX X h s.1 * (y, X.xu u) * (1, k))
@@ -1133,16 +1133,16 @@ theorem integral_integral_eq_pos_sub_neg {Y Z : Type} [MeasurableSpace Y] [Measu
     ∫ y, ∫ s, h (y, s) ∂m ∂ν =
       (∫⁻ y, ∫⁻ s, ENNReal.ofReal (h (y, s)) ∂m ∂ν).toReal -
         (∫⁻ y, ∫⁻ s, ENNReal.ofReal (-h (y, s)) ∂m ∂ν).toReal := by
-  have hN : Measurable fun y => ∫⁻ s, ‖h (y, s)‖ₑ ∂m := hh.enorm.lintegral_prod_right'
+  have hN : Measurable fun y => ∫⁻ s, ‖h (y, s)‖ₑ ∂m := hh.eNorm.lintegral_prod_right'
   have hp : Measurable fun y => ∫⁻ s, ENNReal.ofReal (h (y, s)) ∂m :=
     hh.ennreal_ofReal.lintegral_prod_right'
   have hn : Measurable fun y => ∫⁻ s, ENNReal.ofReal (-h (y, s)) ∂m :=
     hh.neg.ennreal_ofReal.lintegral_prod_right'
   have bp : ∫⁻ y, ∫⁻ s, ENNReal.ofReal (h (y, s)) ∂m ∂ν < ⊤ :=
-    lt_of_le_of_lt (lintegral_mono fun y => lintegral_mono fun s => Real.ofReal_le_enorm _) hfin
+    lt_of_le_of_lt (lintegral_mono fun y => lintegral_mono fun s => Real.ofReal_le_eNorm _) hfin
   have bn : ∫⁻ y, ∫⁻ s, ENNReal.ofReal (-h (y, s)) ∂m ∂ν < ⊤ :=
     lt_of_le_of_lt (lintegral_mono fun y => lintegral_mono fun s =>
-      (Real.ofReal_le_enorm _).trans (enorm_neg _).le) hfin
+      (Real.ofReal_le_eNorm _).trans (eNorm_neg _).le) hfin
   rw [← integral_toReal hp.aemeasurable (ae_lt_top hp bp.ne),
     ← integral_toReal hn.aemeasurable (ae_lt_top hn bn.ne),
     ← integral_sub (integrable_toReal_of_lintegral_ne_top hp.aemeasurable bp.ne)
@@ -1156,10 +1156,10 @@ theorem clm_integral_integral {Y Z : Type} [MeasurableSpace Y] [MeasurableSpace 
     (ν : Measure Y) (m : Measure Z) [SFinite m] (H : Y × Z → ℂ) (hH : Measurable H)
     (hfin : ∫⁻ y, ∫⁻ s, ‖H (y, s)‖ₑ ∂m ∂ν < ⊤) (L : ℂ →L[ℝ] ℝ) :
     L (∫ y, ∫ s, H (y, s) ∂m ∂ν) = ∫ y, ∫ s, L (H (y, s)) ∂m ∂ν := by
-  have hN : Measurable fun y => ∫⁻ s, ‖H (y, s)‖ₑ ∂m := hH.enorm.lintegral_prod_right'
+  have hN : Measurable fun y => ∫⁻ s, ‖H (y, s)‖ₑ ∂m := hH.eNorm.lintegral_prod_right'
   have hI : Integrable (fun y => ∫ s, H (y, s) ∂m) ν :=
     ⟨hH.stronglyMeasurable.integral_prod_right'.aestronglyMeasurable,
-      lt_of_le_of_lt (lintegral_mono fun y => enorm_integral_le_lintegral_enorm _) hfin⟩
+      lt_of_le_of_lt (lintegral_mono fun y => eNorm_integral_le_lintegral_eNorm _) hfin⟩
   rw [← L.integral_comp_comm hI]
   refine integral_congr_ae ?_
   filter_upwards [ae_lt_top hN hfin.ne] with y hy
@@ -1168,10 +1168,10 @@ theorem clm_integral_integral {Y Z : Type} [MeasurableSpace Y] [MeasurableSpace 
 
 theorem fold : ∀ {α Y Z : Type} [MeasurableSpace α] [MeasurableSpace Y] [MeasurableSpace Z] (μ : Measure α) (Fs : Set α) (ν : Measure Y) (m : Measure Z) (S : Set Z), m S < ⊤ → ∀ (Φ : Y → Z → α), Measurable (Function.uncurry Φ) → ∀ (c : ℝ), 0 ≤ c → ∀ (P : (α → ENNReal) → Prop), (∀ F : α → ENNReal, Measurable F → P F → ∫⁻ x in Fs, F x ∂μ = ENNReal.ofReal c * ∫⁻ y, ∫⁻ s in S, F (Φ y s) ∂m ∂ν) → ∀ (G : α → ℂ), Measurable G → (∀ φ : ℂ → ENNReal, φ 0 = 0 → P (fun x => φ (G x))) → ∫⁻ y, ∫⁻ s in S, ‖G (Φ y s)‖ₑ ∂m ∂ν < ⊤ → IntegrableOn G Fs μ ∧ ∫ x in Fs, G x ∂μ = (c : ℂ) * ∫ y, ∫ s in S, G (Φ y s) ∂m ∂ν := by
   intro α Y Z _ _ _ μ Fs ν m S hS Φ hΦ c hc P hQ G hG hP hfin
-  haveI : IsFiniteMeasure (m.restrict S) := ⟨by simpa using hS⟩
+  have : IsFiniteMeasure (m.restrict S) := ⟨by simpa using hS⟩
   have hint : IntegrableOn G Fs μ := by
     refine ⟨hG.aestronglyMeasurable, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm, hQ _ hG.enorm (hP (fun z => ‖z‖ₑ) (by simp))]
+    rw [hasFiniteIntegral_iff_eNorm, hQ _ hG.eNorm (hP (fun z => ‖z‖ₑ) (by simp))]
     exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top hfin
   refine ⟨hint, ?_⟩
   have hH : Measurable fun p : Y × Z => G (Φ p.1 p.2) := hG.comp hΦ
@@ -1183,7 +1183,7 @@ theorem fold : ∀ {α Y Z : Type} [MeasurableSpace α] [MeasurableSpace Y] [Mea
     have h2 := integral_integral_eq_pos_sub_neg ν (m.restrict S)
       (fun p : Y × Z => L (G (Φ p.1 p.2))) (hLm.comp hH)
       (lt_of_le_of_lt (lintegral_mono fun y => lintegral_mono fun s => by
-        rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm]
+        rw [← ofReal_norm, ← ofReal_norm]
         exact ENNReal.ofReal_le_ofReal (hL _)) hfin)
     have h3 := hQ (fun x => ENNReal.ofReal (L (G x))) (hLm.comp hG).ennreal_ofReal
       (hP (fun z => ENNReal.ofReal (L z)) (by simp))
@@ -1275,7 +1275,7 @@ theorem GlobalTheory.Core.Mi.unfoldedPer : ∀ (D : D7) (X : Formalism.L2.SG.Hid
   have hph := GlobalTheory.Core.Mi.PhCol.ph_colForm D X h u ψ A B hK T
 
   set Φ : X.B.I.Ginf → besGrp B.d B.o → X.B.I.GA := fun y s => iotaX X h s.1 * (y, X.xu u) with hΦdef
-  have hι : Continuous fun s : besGrp B.d B.o => iotaX X h s.1 := (iotaX X h).continuous.comp continuous_subtype_val
+  have hι : Continuous fun s : besGrp B.d B.o => iotaX X h s.1 := (iotaX X h).continuous.comp continuous_subtypeVal
   have hΦ : Measurable (Function.uncurry Φ) := by
     have h1 : Measurable fun p : X.B.I.Ginf × besGrp B.d B.o => (iotaX X h p.2.1).1 * p.1 :=
       ((continuous_fst.comp hι).measurable.comp measurable_snd).mul measurable_fst
@@ -1295,7 +1295,7 @@ theorem GlobalTheory.Core.Mi.unfoldedPer : ∀ (D : D7) (X : Formalism.L2.SG.Hid
     intro K hK0 G hG
     have hpt : ∀ y (s : besGrp B.d B.o), ‖G (Φ y s)‖ₑ ≤ ENNReal.ofReal (K * |C|) * ‖X.Wu u y‖ₑ := by
       intro y s
-      rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (by positivity)]
+      rw [← ofReal_norm, ← ofReal_norm, ← ENNReal.ofReal_mul (by positivity)]
       refine ENNReal.ofReal_le_ofReal ((hG _).trans ?_)
       rw [mul_assoc]
       exact mul_le_mul_of_nonneg_left ((hbd y s).trans (mul_le_mul_of_nonneg_right (le_abs_self C) (norm_nonneg _))) hK0
@@ -1325,10 +1325,10 @@ theorem GlobalTheory.Core.Mi.unfoldedPer : ∀ (D : D7) (X : Formalism.L2.SG.Hid
 
   have hint : IntegrableOn (Ph X u hK T) Fs (X.B.I.muA X.B.μf) := by
     refine ⟨hPh.1.aestronglyMeasurable, ?_⟩
-    rw [HasFiniteIntegral, hQ' (fun x => ‖Ph X u hK T x‖ₑ) hPh.1.enorm ⟨fun γ hγ x => by dsimp only; rw [hPh.2.1 γ hγ x],
-      fun k hk x => by dsimp only; rw [hPh.2.2.1 x k hk, enorm_mul, ← ofReal_norm_eq_enorm (X.chi2 k), hchi k hk,
+    rw [HasFiniteIntegral, hQ' (fun x => ‖Ph X u hK T x‖ₑ) hPh.1.eNorm ⟨fun γ hγ x => by dsimp only; rw [hPh.2.1 γ hγ x],
+      fun k hk x => by dsimp only; rw [hPh.2.2.1 x k hk, eNorm_mul, ← ofReal_norm (X.chi2 k), hchi k hk,
         ENNReal.ofReal_one, one_mul],
-      hsupp (Ph X u hK T) (fun x hx => hx) (fun z => ‖z‖ₑ) enorm_zero⟩]
+      hsupp (Ph X u hK T) (fun x hx => hx) (fun z => ‖z‖ₑ) eNorm_zero⟩]
     exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top (hfin 1 zero_le_one _ fun x => by rw [one_mul])
   refine ⟨hint, fun f hf => ?_⟩
   obtain ⟨Cf, hCf⟩ := hf.bdd

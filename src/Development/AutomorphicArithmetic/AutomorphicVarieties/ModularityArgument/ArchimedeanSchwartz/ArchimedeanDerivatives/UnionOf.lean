@@ -170,8 +170,8 @@ private theorem unram_bound (K M : Type) [Field K] [NumberField K] [Field M] [Nu
   have hqw : ((Nat.minFac (Ideal.absNorm (w.under (𝓞 K)).asIdeal) : ℕ) : 𝓞 M) ∈ w.asIdeal := by
     have : algebraMap (𝓞 K) (𝓞 M) ((Nat.minFac (Ideal.absNorm (w.under (𝓞 K)).asIdeal) : ℕ) : 𝓞 K) ∈ w.asIdeal := hqv
     rwa [map_natCast] at this
-  haveI := w.isPrime
-  haveI := hN _ hq hqN w.asIdeal hqw
+  have := w.isPrime
+  have := hN _ hq hqN w.asIdeal hqw
   have hsq := ReciprocityTheory.Cheb.natCast_notMem_sq_of_isUnramifiedAt hq w.asIdeal
   apply Ideal.ramificationIdx'_spec
   · rw [pow_one, Ideal.map_le_iff_le_comap]

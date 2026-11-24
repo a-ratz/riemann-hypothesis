@@ -87,7 +87,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [T2Spa
 theorem exists_bound_orbit (Γ : Subgroup G) [DiscreteTopology Γ] {K : Set G} (hK : IsCompact K) :
     ∃ N : ℕ, ∀ x : G, ∑' γ : Γ, K.indicator (fun _ => (1 : ℝ≥0∞)) (γ⁻¹ • x) ≤ N := by
   classical
-  have hcl : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discreteTopology
   have hKK : IsCompact (K * K⁻¹) := hK.mul hK.inv
   have hfin : (((↑) : Γ → G) ⁻¹' (K * K⁻¹)).Finite :=
     (hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hKK).finite_of_discrete
@@ -138,8 +138,8 @@ theorem lintegral_average_le (μ : Measure G) [μ.IsMulLeftInvariant] [SFinite �
     (hΩ : IsCompact Ω) (hm : ∀ᵐ z ∂m, j z ∈ K) {h : G → ℂ} (hh : Continuous h) :
     ∫⁻ g in Ω, ‖∫ z, h (j z * g) ∂m‖ₑ ∂μ ≤ m Set.univ * ∫⁻ x in K * Ω, ‖h x‖ₑ ∂μ := by
   have hmeas : Measurable fun p : G × X => ‖h (j p.2 * p.1)‖ₑ :=
-    hh.enorm.measurable.comp ((hj.comp measurable_snd).mul measurable_fst)
-  calc _ ≤ ∫⁻ g in Ω, ∫⁻ z, ‖h (j z * g)‖ₑ ∂m ∂μ := lintegral_mono fun g => enorm_integral_le_lintegral_enorm _
+    hh.eNorm.measurable.comp ((hj.comp measurable_snd).mul measurable_fst)
+  calc _ ≤ ∫⁻ g in Ω, ∫⁻ z, ‖h (j z * g)‖ₑ ∂m ∂μ := lintegral_mono fun g => eNorm_integral_le_lintegral_eNorm _
     _ = ∫⁻ z, ∫⁻ g in Ω, ‖h (j z * g)‖ₑ ∂μ ∂m := lintegral_lintegral_swap hmeas.aemeasurable
     _ ≤ ∫⁻ _z, ∫⁻ x in K * Ω, ‖h x‖ₑ ∂μ ∂m := by
         refine lintegral_mono_ae (hm.mono fun z hz => ?_)
@@ -219,11 +219,11 @@ theorem average_eq_zero_of_mem_closure [LocallyCompactSpace G] (Γ : Subgroup G)
     refine (lintegral_average_le μ m hj.measurable hΩ (K := j '' s)
       (hm.mono fun z hz => Set.mem_image_of_mem j hz) hd).trans ?_
     rw [hc, mul_assoc, mul_assoc]
-    refine mul_le_mul_right ((hN _ hd.enorm.measurable fun γ hγ g => ?_).trans (mul_le_mul_right ?_ _)) _
+    refine mul_le_mul_right ((hN _ hd.eNorm.measurable fun γ hγ g => ?_).trans (mul_le_mul_right ?_ _)) _
     · simp only [Pi.sub_apply, hψΓ γ hγ, hi γ hγ]
-    · rw [← eLpNorm_one_eq_lintegral_enorm]
+    · rw [← eLpNorm_one_eq_lintegral_eNorm]
       refine (eLpNorm_le_eLpNorm_mul_rpow_measure_univ (q := 2) one_le_two hd.aestronglyMeasurable).trans ?_
-      rw [Measure.restrict_apply_univ, mul_comm, Lp.enorm_def,
+      rw [Measure.restrict_apply_univ, mul_comm, Lp.eNorm_def,
         eLpNorm_map_measure (Lp.aestronglyMeasurable _) hπ.aemeasurable]
       refine le_of_eq (congrArg _ (eLpNorm_congr_ae ?_))
       filter_upwards [ae_of_ae_map hπ.aemeasurable (Lp.coeFn_sub F H), ha, ae_restrict_of_ae hF] with x e1 e2 e3
@@ -231,7 +231,7 @@ theorem average_eq_zero_of_mem_closure [LocallyCompactSpace G] (Γ : Subgroup G)
       exact hd.aestronglyMeasurable
   have hz : ∫⁻ g in Ω, ‖∫ z, ψ (j z * g) ∂m‖ₑ ∂μ = 0 := by
     have hcont : Continuous fun H : Lp ℂ 2 ((μ.restrict 𝓕).map π) => c * ‖F - H‖ₑ :=
-      (ENNReal.continuous_const_mul hc').comp (continuous_const.sub continuous_id).enorm
+      (ENNReal.continuous_const_mul hc').comp (continuous_const.sub continuous_id).eNorm
     have : ∫⁻ g in Ω, ‖∫ z, ψ (j z * g) ∂m‖ₑ ∂μ ≤ c * ‖F - F‖ₑ :=
       closure_minimal (t := {H | ∫⁻ g in Ω, ‖∫ z, ψ (j z * g) ∂m‖ₑ ∂μ ≤ c * ‖F - H‖ₑ}) hbd
         (isClosed_le continuous_const hcont) hcl
@@ -240,7 +240,7 @@ theorem average_eq_zero_of_mem_closure [LocallyCompactSpace G] (Γ : Subgroup G)
     have := continuous_parametric_integral_of_continuous (μ := m) (f := fun g z => ψ (j z * g))
       (hψ.comp ((hj.comp continuous_snd).mul continuous_fst)) hs
     rwa [hms] at this
-  rw [lintegral_eq_zero_iff hC.enorm.measurable] at hz
+  rw [lintegral_eq_zero_iff hC.eNorm.measurable] at hz
   have hz' : (fun g => ∫ z, ψ (j z * g) ∂m) =ᵐ[μ.restrict (interior Ω)] fun _ => 0 := by
     refine ae_restrict_of_ae_restrict_of_subset interior_subset (hz.mono fun g hg => ?_)
     simpa using hg
@@ -258,23 +258,23 @@ theorem zcusp_of_mem_closure : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFa
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   obtain ⟨ν₀, 𝓖₀, hν₀, h𝓖₀, hc⟩ := (GlobalTheory.T.transvectionSubgroup_cocompact_haar_fundamentalDomain D θ V hθ ξ hξ).1
   have hZ : IsClosed (ZI V ξ : Set (GA D V)) := (GlobalTheory.T.adelicTransvectionSubgroup_eq_adeles_closed D θ V hθ ξ hξ).2.1
-  haveI : LocallyCompactSpace (ZI V ξ) := hZ.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : Countable ((GQ V).subgroupOf (ZI V ξ)) :=
+  have : LocallyCompactSpace (ZI V ξ) := hZ.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : Countable ((GQ V).subgroupOf (ZI V ξ)) :=
     Function.Injective.countable (f := fun x : (GQ V).subgroupOf (ZI V ξ) => (⟨x.1.1, x.2⟩ : GQ V))
       fun x y h => Subtype.ext (Subtype.ext (congrArg (fun t : GQ V => (t : GA D V)) h))
-  haveI : SecondCountableTopology (ZI V ξ) := TopologicalSpace.Subtype.secondCountableTopology (ZI V ξ : Set (GA D V))
+  have : SecondCountableTopology (ZI V ξ) := TopologicalSpace.Subtype.secondCountableTopology (ZI V ξ : Set (GA D V))
   have h₁ : IsFundamentalDomain ((GQ V).subgroupOf (ZI V ξ)) 𝓖₀ ν :=
     h𝓖₀.mono (Measure.absolutelyContinuous_isHaarMeasure ν ν₀)
-  haveI := hP.haar
-  haveI := hP.right
-  haveI : IsFiniteMeasure (ν.restrict 𝓖₀) :=
+  have := hP.haar
+  have := hP.right
+  have : IsFiniteMeasure (ν.restrict 𝓖₀) :=
     isFiniteMeasure_restrict.2 ((measure_mono subset_closure).trans_lt hc.measure_lt_top).ne
   rw [h𝓖.setIntegral_eq h₁ (f := fun z : ZI V ξ => ψ ((z : GA D V) * g)) fun γ z => by
     have := hψ.left γ.1.1 γ.2 (z.1 * g)
     rw [← mul_assoc] at this
     exact this]
   exact average_eq_zero_of_mem_closure (GQ V) μ hP.fd hP.fin (π := autMk V) measurable_quotient_mk'' (fun u H => ρ u H)
-    hρ.val (ν.restrict 𝓖₀) continuous_subtype_val hc
+    hρ.val (ν.restrict 𝓖₀) continuous_subtypeVal hc
     ((ae_restrict_mem₀ h₁.nullMeasurableSet).mono fun z hz => subset_closure hz)
     hφ.cont hφ.left (hφ0 ξ hξ ν 𝓖₀ hν h₁) hF₀ hψ.cont hψ.left hF hcl g
 
@@ -447,13 +447,13 @@ theorem exists_equivariant_multilinear_of_matrixCoeff_eq :
   have hone : ∀ τ, (1 : Mt n) ∈ Formalism.QuantumDeterminants.UH (Hm τ) := fun τ => by simp [Formalism.QuantumDeterminants.UH]
   have hmul : ∀ τ, ∀ a ∈ Formalism.QuantumDeterminants.UH (Hm τ), ∀ b ∈ Formalism.QuantumDeterminants.UH (Hm τ), a * b ∈ Formalism.QuantumDeterminants.UH (Hm τ) := by
     intro τ a ha b hb
-    simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at ha hb ⊢
+    simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq] at ha hb ⊢
     rw [conjTranspose_mul]
     calc bᴴ * aᴴ * Hm τ * (a * b) = bᴴ * (aᴴ * Hm τ * a) * b := by simp only [Matrix.mul_assoc]
       _ = Hm τ := by rw [ha, hb]
   have hinv : ∀ τ, ∀ a ∈ Formalism.QuantumDeterminants.UH (Hm τ), ∃ b ∈ Formalism.QuantumDeterminants.UH (Hm τ), a * b = 1 := by
     intro τ a ha
-    simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at ha ⊢
+    simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq] at ha ⊢
     have hd : IsUnit a.det := by
       have := congrArg Matrix.det ha
       rw [det_mul, det_mul] at this
@@ -513,11 +513,11 @@ theorem exists_equivariant_multilinear_of_matrixCoeff_eq :
     have ha : (fun τ => (a τ : Mt n)) ∈ UG Hm := fun τ => (a τ).2
     obtain ⟨d, hdm, hd⟩ := hdiv _ ha (fun τ => (b τ : Mt n)) (fun τ => (b τ).2)
     simp only [f, e]
-    rw [← hd, hρm _ ha _ hdm, ContinuousLinearMap.mul_apply, hρi _ ha, hco d hdm]
+    rw [← hd, hρm _ ha _ hdm, mul_apply_eq_comp, hρi _ ha, hco d hdm]
     congr 1
     refine Finset.prod_congr rfl fun τ _ => ?_
     have : (b τ : Mt n) = a τ * d τ := (congrFun hd τ).symm
-    rw [this, hσm τ _ (a τ).2 _ (hdm τ), ContinuousLinearMap.mul_apply, hσi τ _ (a τ).2]
+    rw [this, hσm τ _ (a τ).2 _ (hdm τ), mul_apply_eq_comp, hσi τ _ (a τ).2]
   obtain ⟨Φ, hΦ⟩ := exists_continuousMultilinearMap_of_inner_eq_prod e f _ hd hf
   have hmem : ∀ y, Φ y ∈ (Submodule.span ℂ (Set.range f)).topologicalClosure := fun y => (hΦ y).1
   have hk : f (fun τ => ⟨1, hone τ⟩) = k := by
@@ -568,7 +568,7 @@ theorem exists_equivariant_multilinear_of_matrixCoeff_eq :
     rw [h2]
     by_cases h : τ' = τ
     · subst h
-      rw [Pi.mulSingle_eq_same, Function.update_self, hσm _ _ hg _ (hdm _), ContinuousLinearMap.mul_apply, hσi _ _ hg]
+      rw [Pi.mulSingle_eq_same, Function.update_self, hσm _ _ hg _ (hdm _), mul_apply_eq_comp, hσi _ _ hg]
     · rw [Pi.mulSingle_eq_of_ne h, Function.update_of_ne h, Matrix.one_mul]
 
 end GlobalTheory
@@ -804,7 +804,7 @@ theorem eq_zero_of_inner_orbit (hd : Hm.det ≠ 0) (hσ : IsURepOn (Formalism.Qu
   obtain ⟨⟨hσ1, hσmul⟩, -, -⟩ := hσ
   have hmul : ∀ g ∈ Formalism.QuantumDeterminants.UH Hm, ∀ h ∈ Formalism.QuantumDeterminants.UH Hm, g * h ∈ Formalism.QuantumDeterminants.UH Hm := by
     intro g hg h hh'
-    simp only [Formalism.QuantumDeterminants.UH, Set.mem_setOf_eq] at hg hh' ⊢
+    simp only [Formalism.QuantumDeterminants.UH, Set.mem_ofPred_eq] at hg hh' ⊢
     rw [Matrix.conjTranspose_mul]
     calc hᴴ * gᴴ * Hm * (g * h) = hᴴ * (gᴴ * Hm * g) * h := by simp only [mul_assoc]
       _ = Hm := by rw [hg, hh']
@@ -889,11 +889,11 @@ theorem gelfRep_scalar : ∀ (n : ℕ) (Hm : Mt n) (q : ℕ) (x₀ : Mt n) (w : 
   have hup : ∀ a c, a < c → opM (dEnd hh hd hσ) x₀ x₀⁻¹ a c v₀s = 0 := by
     intro a c hac
     apply Subtype.ext
-    rw [hEv, hw a c hac.le, if_neg hac.ne, Submodule.coe_zero]
+    rw [hEv, hw a c hac.le, ite_eq_right hac.ne, Submodule.coe_zero]
   have hdiag : ∀ a, opM (dEnd hh hd hσ) x₀ x₀⁻¹ a a v₀s = ((w a : ℂ)) • v₀s := by
     intro a
     apply Subtype.ext
-    rw [hEv, hw a a le_rfl, if_pos rfl, Submodule.coe_smul]
+    rw [hEv, hw a a le_rfl, ite_eq_left rfl, Submodule.coe_smul]
   have htr := GlobalTheory.Mem.GelfCheck.trace_pow_apply (μ := fun a => (w a : ℂ)) hgl hdiag hup (k + 1)
   rw [trace_opM_pow _ hxinv'] at htr
   set c := GlobalTheory.Mem.Gelf.gelfC (fun a => (w a : ℂ)) (k + 1) with hcdef
@@ -1399,7 +1399,7 @@ theorem cont_value {K : Type} [NormedAddCommGroup K] [InnerProductSpace ℂ K] (
     exact norm_nonneg _
 
 theorem continuous_rTr (k : GA D V) {f : GA D V → ℂ} (hf : Continuous f) : Continuous (rTr V k f) := by
-  haveI : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
+  have : IsTopologicalGroup (GA D V) := inferInstanceAs (IsTopologicalGroup (HR (AF D.host.F) D.sp.cm.sig V.gram))
   exact hf.comp (continuous_mul_const k)
 
 section L2
@@ -1424,10 +1424,10 @@ theorem eig_closure {K : Type} [NormedAddCommGroup K] [InnerProductSpace ℂ K] 
     | mem x hx => exact hA x hx
     | zero => simp
     | add x y _ _ hx hy =>
-      simp only [Set.mem_setOf_eq] at hx hy ⊢
+      simp only [Set.mem_ofPred_eq] at hx hy ⊢
       rw [map_add (f := _), hx, hy, smul_add]
     | smul a x _ hx =>
-      simp only [Set.mem_setOf_eq] at hx ⊢
+      simp only [Set.mem_ofPred_eq] at hx ⊢
       rw [map_smul, hx, smul_comm]
   exact closure_minimal h1 (isClosed_eq (ρ k).continuous (continuous_const_smul c)) hF
 
@@ -1442,7 +1442,7 @@ theorem exists_map_abs {K : Type} [NormedAddCommGroup K] [InnerProductSpace ℂ 
       (∀ y, Φ y ∈ closure (Submodule.span ℂ {z | ∃ u : GA D V, z = ρ u F₀} : Set K)) ∧
       ∀ k ∈ GfC V, ∀ c : ℂ, ρ k F₀ = c • F₀ → ∀ y, ρ k (Φ y) = c • Φ y := by
   obtain ⟨L, hL1, hL2, -, -, -, hL3, -, hL4, hL5⟩ := GlobalTheory.RealLift.exists_real_lift D θ V hθ
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
   have h1 : (1 : D.what₂.Tau → Mt V.rank) ∈ UG (gramAt D V) := fun τ => by simp [Formalism.QuantumDeterminants.UH]
   have hone : L 1 = 1 := by
     have := hL2 1 h1 1 h1
@@ -1468,7 +1468,7 @@ theorem exists_map_abs {K : Type} [NormedAddCommGroup K] [InnerProductSpace ℂ 
   · refine eig_closure ρ _ k c ?_ (e3 y)
     rintro z ⟨u, hu, hz⟩
     have : ρ k (ρ (L u) F₀) = ρ (L u) (ρ k F₀) := by
-      rw [← ContinuousLinearMap.mul_apply, ← map_mul, hL4 k hk _ (hL1 u hu).1, map_mul, ContinuousLinearMap.mul_apply]
+      rw [← mul_apply_eq_comp, ← map_mul, hL4 k hk _ (hL1 u hu).1, map_mul, mul_apply_eq_comp]
     rw [hz, this, h0, map_smul]
 
 theorem eig_class (hp : FinPair V μ 𝓕) (hρ : IsReg V μ 𝓕 ρ) {φ : GA D V → ℂ}
@@ -1512,7 +1512,7 @@ theorem exists_multMap : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (S : D.what₂
   have hsmM := GlobalTheory.T.equivariantMultilinear_maps_smoothVectors_intertwines D θ V hθ S M _ ρ Φ e2
   choose ψ p1 p2 p3 p4 using fun y : M.Vec =>
     GlobalTheory.T.smooth_vector_automorphic_derivatives D θ V hθ μ 𝓕 ρ hp hρ U hU (Φ fun τ => (y τ : M.H τ)) (hsmM y).1 (hfix _)
-  haveI : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
+  have : ∀ τ, CompleteSpace (M.H τ) := fun τ => (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).1
   have hH : ∀ τ, (gramAt D V τ).IsHermitian := GlobalTheory.SmoothAutCheck.gramAt_herm V
   have hdet : ∀ τ, (gramAt D V τ).det ≠ 0 := fun τ => (GlobalTheory.SmoothAutCheck.gramAt_unit V τ).ne_zero
   have hsv := fun τ => GlobalTheory.T.smoothVectors_subspace_stable_sobolevForm_deriv V.rank (gramAt D V τ) (M.H τ) (M.rep τ) (hH τ) (hdet τ) (GlobalTheory.T.discreteSeriesModel_unitary_irreducible_orthonormal D V S M τ).2.1

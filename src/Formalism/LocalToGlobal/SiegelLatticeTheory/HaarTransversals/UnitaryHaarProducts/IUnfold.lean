@@ -356,7 +356,7 @@ theorem minkowski_submodule_short_vector (h1 : LatticeFinitelyGenerated) (h2 : E
     have := Finset.single_le_sum (f := cj) (fun j _ => hcj j) (Finset.mem_range.2 (Nat.lt_succ_of_le hjn))
     linarith
   have hcs : cj s.j = (h8m _ hd).choose * t8K I s.j ^ ((2 : ℝ) / ((2 * I.f * s.j : ℕ) : ℝ)) := by
-    simp only [cj, dif_pos hd]
+    simp only [cj, dite_eq_left hd]
   rw [← hcs]
   exact mul_le_mul_of_nonneg_right hle (sq_nonneg _)
 
@@ -555,11 +555,11 @@ theorem t7 : InfimumContinuousFamily := by
   intro X _ S g hne hpos hloc
   have hbdd : ∀ x, BddBelow (Set.range (g x)) := fun x => ⟨0, by rintro _ ⟨s, rfl⟩; exact hpos x s⟩
   have hinf_nonneg : ∀ x, 0 ≤ ⨅ s, g x s := fun x => by
-    haveI := hne x
+    have := hne x
     exact le_ciInf fun s => hpos x s
   have key : ∀ x y (r : ℝ), 0 ≤ r → (∀ s, ∃ s', g y s' ≤ r * g x s) → (⨅ s, g y s) ≤ r * ⨅ s, g x s := by
     intro x y r hr h
-    haveI := hne x
+    have := hne x
     rw [Real.mul_iInf_of_nonneg hr]
     exact le_ciInf fun s => by
       obtain ⟨s', hs'⟩ := h s
@@ -612,7 +612,7 @@ theorem exists_ne_zero_mem_L (I : AutInst) (hn : 1 ≤ I.n) : ∃ l ∈ I.L, l �
     rw [Submodule.span_eq_bot]
     exact hcon
   rw [h0] at h
-  haveI : Nonempty (Fin I.n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin I.n) := ⟨⟨0, hn⟩⟩
   exact bot_ne_top h
 
 theorem third_estimate_of_first_two (h0 : LatticeCommensurable) (h1 : LatticeFinitelyGenerated) : SubmoduleExists := by
@@ -633,7 +633,7 @@ theorem third_estimate_of_first_two (h0 : LatticeCommensurable) (h1 : LatticeFin
     have h2 : ((m : I.E) • l) ∈ Submodule.span I.E (M : Set (Fin I.n → I.E)) := Submodule.subset_span hml
     rw [← hspan] at h2
     exact hm0 ((Submodule.mem_bot _).mp h2)
-  haveI := htfin.fintype
+  have := htfin.fintype
   let e := (Fintype.equivFin t).symm
   refine ⟨⟨Fintype.card t, ?_, fun a => (e a : Fin I.n → I.E), ?_, M, ?_, ?_, ?_⟩⟩
   · exact Fintype.card_pos_iff.mpr hne.to_subtype
@@ -688,7 +688,7 @@ theorem reductionTau_of (h3 : SubmoduleExists) (h6 : SizesLocallyComparable) (h7
       have h1 := hl9 u (s.B_lat huB) hu0
       have hs0 : 0 ≤ size I s := Real.rpow_nonneg (h10 I x s).le _
       exact Real.sqrt_le_iff.2 ⟨hs0, (div_le_iff₀ hc).2 (by linarith)⟩
-    haveI := h3 I hn x
+    have := h3 I hn x
     exact ⟨lt_min (by norm_num) (lt_of_lt_of_le (Real.sqrt_pos.2 (div_pos hl hc)) (le_ciInf hδ)),
       min_le_left _ _⟩
 
@@ -734,7 +734,7 @@ namespace Formalism.L2.SG.Pf.Tau
 theorem t8m : MinkowskiFirstTheorem := by
   intro d hd
   have hfr : Module.finrank ℝ (EuclideanSpace ℝ (Fin d)) = d := by simp
-  haveI : Nontrivial (EuclideanSpace ℝ (Fin d)) :=
+  have : Nontrivial (EuclideanSpace ℝ (Fin d)) :=
     Module.nontrivial_of_finrank_pos (by rw [hfr]; omega)
   set v1 : ℝ := (volume (ball (0 : EuclideanSpace ℝ (Fin d)) 1)).toReal with hv1_def
   have hv1ne : volume (ball (0 : EuclideanSpace ℝ (Fin d)) 1) ≠ ⊤ :=
@@ -771,9 +771,9 @@ theorem t8m : MinkowskiFirstTheorem := by
       field_simp
     rw [this, e, ENNReal.ofReal_mul hcov0, ENNReal.ofReal_pow (by norm_num : (0 : ℝ) ≤ 2),
       ENNReal.ofReal_ofNat]
-  haveI hcL : Countable L := Countable.of_equiv _ b.repr.toEquiv.symm
-  haveI : Countable L.toAddSubgroup := hcL
-  haveI : DiscreteTopology L.toAddSubgroup := inferInstanceAs (DiscreteTopology L)
+  have hcL : Countable L := Countable.of_equiv _ b.repr.toEquiv.symm
+  have : Countable L.toAddSubgroup := hcL
+  have : DiscreteTopology L.toAddSubgroup := inferInstanceAs (DiscreteTopology L)
   obtain ⟨x, hx0, hxs⟩ := MeasureTheory.exists_ne_zero_mem_lattice_of_measure_mul_two_pow_le_measure
     (L := L.toAddSubgroup) hF (fun y hy => by simpa using hy) (convex_closedBall _ _)
     (isCompact_closedBall _ _) hvol
@@ -889,7 +889,7 @@ theorem mult_left (Γ : Subgroup G) (Ω : Set G) (γ : G) (hγ : γ ∈ Γ) (x :
   have : ({δ : Γ | (γ * x)⁻¹ * ((δ : G) * y) ∈ Ω} : Set Γ) =
       (fun δ : Γ => (⟨γ, hγ⟩ : Γ) * δ) '' {δ : Γ | x⁻¹ * ((δ : G) * y) ∈ Ω} := by
     ext δ
-    simp only [Set.mem_setOf_eq, Set.mem_image]
+    simp only [Set.mem_ofPred_eq, Set.mem_image]
     constructor
     · intro h
       refine ⟨(⟨γ, hγ⟩ : Γ)⁻¹ * δ, ?_, by simp⟩
@@ -1106,7 +1106,7 @@ theorem setLIntegral_le_of_cover {G : Type*} [Group G] [MeasurableSpace G] [Meas
     [μ.IsMulLeftInvariant] (Γ : Subgroup G) [Countable Γ] {s : Set G} (h : IsFundamentalDomain Γ s μ)
     (Φ Ψ : G → ℝ≥0∞) (hΨ : Measurable Ψ) (hc : ∀ x, Φ x ≤ ∑' g : Γ, Ψ ((g : G) * x)) :
     ∫⁻ x in s, Φ x ∂μ ≤ ∫⁻ x, Ψ x ∂μ := by
-  haveI : MeasurableConstSMul Γ G := ⟨fun c => measurable_const_mul (c : G)⟩
+  have : MeasurableConstSMul Γ G := ⟨fun c => measurable_const_mul (c : G)⟩
   rw [h.lintegral_eq_tsum'' Ψ]
   calc ∫⁻ x in s, Φ x ∂μ ≤ ∫⁻ x in s, ∑' g : Γ, Ψ ((g : G) * x) ∂μ := lintegral_mono hc
     _ = ∑' g : Γ, ∫⁻ x in s, Ψ (g • x) ∂μ :=
@@ -1118,7 +1118,7 @@ variable {D : D7} (X : HidaSetting D) (u : D.what₂.Word)
 
 def wt (x : X.B.I.Ginf) : ℝ≥0∞ := ENNReal.ofReal (WuDecay.nuInf X u x ^ WuDecay.N1 X) * ‖X.Wu u x‖ₑ
 
-theorem wt_ne_top (x : X.B.I.Ginf) : wt X u x ≠ ⊤ := ENNReal.mul_ne_top ENNReal.ofReal_ne_top enorm_ne_top
+theorem wt_ne_top (x : X.B.I.Ginf) : wt X u x ≠ ⊤ := ENNReal.mul_ne_top ENNReal.ofReal_ne_top eNorm_ne_top
 
 theorem wt_left (hSG : SGroup X u) (hWI : WuNormInv X u) {s : X.B.I.Ginf} (hs : s ∈ X.SinfU u)
     (x : X.B.I.Ginf) : wt X u (s * x) = wt X u x := by
@@ -1140,8 +1140,8 @@ theorem wt_int (hWD : WuDecay.WuDecay X) : ∫⁻ x, wt X u x ∂(X.nuQ u) < ⊤
     _ < ⊤ := h
 
 theorem ae_NH : ∀ᵐ p ∂((X.muN u).prod (X.muH u)), p.1 ∈ X.NinfU u ∧ p.2 ∈ (Hinf X u : Set X.B.I.Ginf) := by
-  haveI := (X.muN_haar u).1
-  haveI := (X.muH_haar u).1
+  have := (X.muN_haar u).1
+  have := (X.muH_haar u).1
   rw [ae_iff]
   refine measure_mono_null (t := (X.NinfU u)ᶜ ×ˢ Set.univ ∪ Set.univ ×ˢ ((Hinf X u : Set X.B.I.Ginf))ᶜ) ?_ ?_
   · intro p hp
@@ -1262,7 +1262,7 @@ theorem iUnfold_of {D : D7} (X : HidaSetting D) (u : D.what₂.Word) (hK : X.Lev
           rw [one_mul]; exact mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)
 
     obtain ⟨ν0, hν0⟩ : ∃ ν0 : ℝ, ν0 = WuDecay.nuInf X u y.1 := ⟨_, rfl⟩
-    haveI : Nonempty (X.SinfU u) := ⟨⟨1, one_mem_sinf X u⟩⟩
+    have : Nonempty (X.SinfU u) := ⟨⟨1, one_mem_sinf X u⟩⟩
     have hν1 : 1 ≤ ν0 := hν0 ▸ le_ciInf fun t => hNG hn _
     obtain ⟨t, ht⟩ : ∃ t : X.SinfU u, WuDecay.normInf X ((t : X.B.I.Ginf) * y.1) < ν0 + 1 :=
       exists_lt_of_ciInf_lt (by
@@ -1328,8 +1328,8 @@ theorem iUnfold_of {D : D7} (X : HidaSetting D) (u : D.what₂.Word) (hK : X.Lev
             a ((γ : X.B.I.GA) * y).1) * Cf.indicator 1 ((γ : X.B.I.GA) * y).2)
             ⟨σ'⁻¹, (Srat X u).inv_mem hσ'⟩
 
-  haveI : (X.B.I.muA X.B.μf).IsMulLeftInvariant := (Cut.muA_isHaar' X.B.I X.B.μf).toIsMulLeftInvariant
-  haveI : Countable (Srat X u) := by
+  have : (X.B.I.muA X.B.μf).IsMulLeftInvariant := (Cut.muA_isHaar' X.B.I X.B.μf).toIsMulLeftInvariant
+  have : Countable (Srat X u) := by
     have h1 : ((Formalism.MainNotions.LeviCoordinates.rr_GF X.B.I : Subgroup X.B.I.GA) : Set X.B.I.GA).Countable :=
       Set.countable_coe_iff.1 (Formalism.MainNotions.LeviCoordinates.rr_GF_countable X.B.I)
     exact (h1.mono fun x hx => (Subgroup.mem_inf.1 hx).1).to_subtype
@@ -1379,7 +1379,7 @@ theorem normInf_continuous : Continuous (WuDecay.normInf X) := by
   have hlin : Continuous fun M : Matrix (Fin X.B.I.n) (Fin X.B.I.n) ℂ => Matrix.toEuclideanCLM (𝕜 := ℂ) M :=
     LinearMap.continuous_of_finiteDimensional
       ((Matrix.toEuclideanCLM (𝕜 := ℂ) (n := Fin X.B.I.n)).toAlgEquiv.toLinearMap)
-  exact continuous_norm.comp (hlin.comp ((Units.continuous_val.comp continuous_subtype_val).comp (continuous_apply v)))
+  exact continuous_norm.comp (hlin.comp ((Units.continuous_val.comp continuous_subtypeVal).comp (continuous_apply v)))
 
 theorem weightMeas_holds : WeightMeas X u := by
   refine ⟨?_, (X.Wu_spec u).2.2.1.norm.measurable⟩
@@ -1410,7 +1410,7 @@ section Norms
 theorem opn_ge_one {n : ℕ} (hn : 1 ≤ n) (ε : Fin n → Bool) (g : Formalism.REAL.UJ ε) :
     1 ≤ WuDecay.opn (uMat g) := by
   have hA : (uMat g)ᴴ * Formalism.REAL.Jm ε * uMat g = Formalism.REAL.Jm ε := g.2
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   obtain ⟨T, hT⟩ : ∃ T, T = Matrix.toEuclideanCLM (𝕜 := ℂ) (uMat g) := ⟨_, rfl⟩
   obtain ⟨J, hJ⟩ : ∃ J, J = Matrix.toEuclideanCLM (𝕜 := ℂ) (Formalism.REAL.Jm ε) := ⟨_, rfl⟩
   have hTJ : star T * J * T = J := by
@@ -1449,7 +1449,7 @@ theorem opn_eq_one_of_definite {n : ℕ} (hn : 1 ≤ n) (ε : Fin n → Bool) (h
   have hA : (uMat g)ᴴ * uMat g = 1 := by
     have h : (uMat g)ᴴ * Formalism.REAL.Jm ε * uMat g = Formalism.REAL.Jm ε := g.2
     rwa [hJ1, Matrix.mul_one] at h
-  haveI : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
+  have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
   obtain ⟨T, hT⟩ : ∃ T, T = Matrix.toEuclideanCLM (𝕜 := ℂ) (uMat g) := ⟨_, rfl⟩
   have hTT : star T * T = 1 := by
     rw [hT, ← map_star, ← map_mul, Matrix.star_eq_conjTranspose, hA, map_one]

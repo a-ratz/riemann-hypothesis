@@ -132,11 +132,11 @@ namespace GlobalTheory.FlagBundle
 theorem exists_valuation_point {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (M : RatModel o Ω) (y : M.Z) :
     ∃ (V : ValuationSubring Ω) (v : Sp V ⟶ M.Z), spMap (algebraMap V Ω) ≫ v = M.pt ∧
       v (IsLocalRing.closedPoint V) = y := by
-  haveI : IsLocalRing (M.O y).toSubring := inferInstanceAs (IsLocalRing (M.O y))
+  have : IsLocalRing (M.O y).toSubring := inferInstanceAs (IsLocalRing (M.O y))
   obtain ⟨V, hle, hloc⟩ := (LocalSubring.mk (M.O y).toSubring).exists_le_valuationSubring
   let ψ : M.Z.presheaf.stalk y →+* V :=
     (M.stalkHom y).codRestrict V (fun a => hle (M.stalkEquiv y a).2)
-  haveI : IsLocalHom ψ := ⟨fun a ha => by
+  have : IsLocalHom ψ := ⟨fun a ha => by
     have h1 : IsUnit (Subring.inclusion hle (M.stalkEquiv y a)) := ha
     exact (MulEquiv.isUnit_map (M.stalkEquiv y)).1 (hloc.map_nonunit _ h1)⟩
   refine ⟨V, spMap ψ ≫ M.Z.fromSpecStalk y, ?_, ?_⟩
@@ -167,8 +167,8 @@ theorem lift_specializes_genericPoint : ∀ (F : Type) [Field F] (ι : Type) [Fi
   intro F _ ι _ m X Y₁ Y₂ Eb S₁ φ₁ f₁ S₂ φ₂ f₂ h₁ h₂ q hq hco y hy
   obtain ⟨V, v, hvg, hvc⟩ := exists_valuation_point_var Y₁ y
   have hs : f₂ ≫ X.str = Y₂.str := h₂.1.inducedModelMorphism_comp_structureMap
-  haveI : IsProper (f₂ ≫ X.str) := hs ▸ inferInstance
-  haveI : UniversallyClosed f₂ := UniversallyClosed.of_comp_of_isSeparated f₂ X.str
+  have : IsProper (f₂ ≫ X.str) := hs ▸ inferInstance
+  have : UniversallyClosed f₂ := UniversallyClosed.of_comp_of_isSeparated f₂ X.str
   have hE : ValuativeCriterion.Existence f₂ :=
     (UniversallyClosed.eq_valuativeCriterion ▸ (inferInstance : UniversallyClosed f₂) :
       (ValuativeCriterion.Existence ⊓ @QuasiCompact) f₂).1

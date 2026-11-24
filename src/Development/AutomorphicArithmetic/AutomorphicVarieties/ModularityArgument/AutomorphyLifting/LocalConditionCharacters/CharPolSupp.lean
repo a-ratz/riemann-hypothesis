@@ -72,7 +72,7 @@ theorem charPol_supp (H : LawsV a ha ε rc) (x : IrrGL (k := w.adicCompletion L)
 theorem ps_alg (H : LawsV a ha ε rc) {n : ℕ} (σ : SmIrr (GL (Fin n) (w.adicCompletion L))) (ω : Fin n → (w.adicCompletion L)ˣ →* ℂˣ)
     (hω : ∀ i, IsSmoothChar (ω i)) (hs : IsSubquotient σ.ρ (PS ω)) (s : Weil h) :
     (rc (algNorm σ)).charPol s = ∏ j, (X - C (ω j (a s) : ℂ)) := by
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   have hμ : ∀ i, IsSmoothChar (ω i * absPow (w.adicCompletion L) (((n : ℂ) - 1) / 2)) :=
     fun i => (hω i).mul (isSmoothChar_absPow _)
   have e0 : ((n : ℂ) - 1) / 2 + (((1 - (n : ℝ)) / 2 : ℝ) : ℂ) = 0 := by push_cast; ring
@@ -88,7 +88,7 @@ theorem ps_cls (H : LawsV a ha ε rc) {n : ℕ} (σ : SmIrr (GL (Fin n) (w.adicC
     (hψ : ∀ i, IsSmoothChar (ψ i)) (hs : IsSubquotient σ.ρ (prinSeries ψ)) :
     rc (algNorm σ) = (rc (IrrGL.of σ.ρ σ.smooth σ.irred)).lpTw ((1 - (n : ℝ)) / 2) ∧
       ∀ s, (rc (IrrGL.of σ.ρ σ.smooth σ.irred)).charPol s = ∏ j, (X - C (ψ j (a s) : ℂ)) := by
-  haveI : CharZero (w.adicCompletion L) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion L) := algebraRat.charZero _
   let τ : IrrRep (GL (Fin n) (w.adicCompletion L)) := ⟨_, σ.ρ, σ.smooth, σ.irred⟩
   exact ⟨H.nu_eq _ _, charPol_supp H _ ψ hψ
     ((hasSupport_of_isSubquotient_prinSeries _ n _ hψ τ hs).of_equiv (IrrGL.equivOf σ.ρ σ.smooth σ.irred))⟩

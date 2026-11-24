@@ -129,8 +129,8 @@ variable (E ι) in
 abbrev Q : Type := (ι → Ad E) ⧸ ratV E ι
 
 theorem isClosed_ratV : IsClosed (ratV E ι : Set (ι → Ad E)) := by
-  haveI := (isCoLat_ratV E ι).1
-  exact AddSubgroup.isClosed_of_discrete
+  have := (isCoLat_ratV E ι).1
+  exact AddSubgroup.isClosed_of_discreteTopology
 
 instance quotient_t3_space : T3Space (Q E ι) := by
   haveI : IsClosed (ratV E ι : Set (ι → Ad E)) := isClosed_ratV
@@ -293,7 +293,7 @@ theorem orth : Orthonormal ℂ (chL ψ hψ (ι := ι)) := by
   by_cases h : ξ = η
   · subst h
     simp
-  · rw [if_neg h, if_neg]
+  · rw [ite_eq_right h, ite_eq_right]
     intro h'
     rw [← sub_eq_add_neg, sub_eq_zero] at h'
     exact h h'.symm
@@ -408,7 +408,7 @@ theorem fin_case {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (f : (ι → Ad E) 
       by_cases hξ : ξ = η
       · subst hξ
         simp
-      · rw [if_neg, if_neg hξ, mul_zero]
+      · rw [ite_eq_right, ite_eq_right hξ, mul_zero]
         intro h'
         exact hξ (sub_eq_zero.1 h').symm
     rw [Finset.sum_congr rfl h3, Finset.sum_ite_eq]

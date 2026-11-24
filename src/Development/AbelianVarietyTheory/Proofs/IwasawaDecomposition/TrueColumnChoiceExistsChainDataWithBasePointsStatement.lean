@@ -235,7 +235,7 @@ theorem charts_tuple_trivQ : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.O
   have hK := hKB.1
   have hfin := hKB.2
   have hCK := hC K hK
-  haveI := finite_chart I l u a i
+  have := finite_chart I l u a i
   refine ⟨Chart I u a i, inferInstance, chartOf I u a i, K, g, ⟨k, hK, hkQ⟩, fun β => ⟨?_, hfin β, ?_⟩⟩
   · intro v hv
     refine GlobalTheory.stepLevel_uloc_eq_of_agree (K β).lev (K0 (g β)).lev (Q : Set _) (fun x hx => ⟨fun hxK => ?_, fun hx0 => ?_⟩) v hv
@@ -298,10 +298,10 @@ open Classical in
 theorem glAdeleReplaceComponentByOne_component (v w : HeightOneSpectrum (𝓞 F)) (x : GL n (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) :
     bc (prV (E := E) w) (cut1 v x) = if w = v then 1 else bc (prV (E := E) w) x := by
   by_cases h : w = v
-  · subst h; rw [if_pos rfl]
+  · subst h; rw [ite_eq_left rfl]
     change bc (prV (E := E) w) (afsplitU w 1 x) = 1
     exact afsplit_right1 w 1 x
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     apply Units.ext
     rw [afsplit_coe_bc_prV, afsplit_coe_bc_prV]
     exact afsplitC_prV_ne v w h _ _
@@ -491,7 +491,7 @@ theorem twLevJ_chi_off_of_lb : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
       rw [hchi β k1 ⟨k1.1, m2'⟩ rfl ?_]
       · exact (F u).levJ_chi h1 (g β) ⟨k1.1, m2'⟩ (ψ κ) (by rw [hψv, hk1, hκ1v])
       · intro v hv
-        rw [hk1, hloc, if_pos hv]
+        rw [hk1, hloc, ite_eq_left hv]
     exact ChiOffQ.clause1_alg (reGL (rankN (I.rec7 l Z) (B.R.m - 1) (Nat.sub_le _ _)) _) ρ ((F u).levJ.chi.comp ψ)
       J.chiJ (K β).lev.chi κ κ' k1 hκ' hk1 e3 (J.chiJ_eq β)
   · intro κ κ' hκ' hQκ
@@ -523,7 +523,7 @@ theorem stepBefore_cl_nonempty_tup {B : Base} {X : PreX B.toPre} (I : TC B X) (h
   classical
   have hm2 := B.R.two_le_m
   have hmj : B.R.m - 1 + 1 = B.R.m := by omega
-  haveI : NeZero (B.R.N (B.R.m - 1)) := ⟨(B.R.N_pos _).ne'⟩
+  have : NeZero (B.R.N (B.R.m - 1)) := ⟨(B.R.N_pos _).ne'⟩
   have hL := hOk.idx_ok a
   obtain ⟨b0x, -⟩ := hL.last_uniq
   let b0 : Idx I.sel (I.tup a) (I.idx a) (B.R.m - 1) := ⟨some (cast (by rw [show B.R.m - 1 = B.R.m - 2 + 1 by omega]) b0x), by simp; omega⟩
@@ -861,9 +861,9 @@ attribute [local instance] rlt_top rlt_topRing
 
 theorem tendsto_fact_tens : Filter.Tendsto
     (fun k : ℕ => ((k.factorial : ℕ) : E ⊗[F] FiniteAdeleRing (𝓞 F) F)) Filter.atTop (nhds 0) := by
-  letI : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
+  let : Algebra (FiniteAdeleRing (𝓞 F) F) (E ⊗[F] FiniteAdeleRing (𝓞 F) F) :=
     Algebra.TensorProduct.rightAlgebra
-  haveI := rlt_isModTop F E
+  have := rlt_isModTop F E
   have := (GlobalTheory.Mem.Col2.AdT.Opn.tendsto_fact F).smul_const (1 : E ⊗[F] FiniteAdeleRing (𝓞 F) F)
   simpa [Nat.cast_smul_eq_nsmul] using this
 
@@ -1072,7 +1072,7 @@ theorem swap_ex (hok : I.Ok) (pins : TC.Pins B X) (u : B.Word) (a : I.ι) (i : �
     ∃ Kr, ∃ hl : GlobalTheory.Mem.Col2.Reside.SwapLaws (K β).lev Kr, FunKilled (GlobalTheory.Mem.Col2.Reside.swap (K β).lev Kr hl) (X.piT u) := by
   have hPr := l.pr
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
-  haveI : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
+  have : NeZero (B.R.N i) := ⟨(B.R.N_pos i).ne'⟩
   obtain ⟨-, -, -, hc⟩ := TC.spaces_in_coordinates I hok pins l Z
   obtain ⟨hgr, -, -⟩ := hc i hi
   have hB := basePi_of_ok hX hPr u

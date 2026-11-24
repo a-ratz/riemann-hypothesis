@@ -66,8 +66,8 @@ namespace GlobalTheory.UCanon
 
 theorem eq_of_pow_eq_of_eq_at_closed : ∀ (k : Type) [Field k] (B : Over (Sp (DualNumber k))) [GrpObj B], IsAbelianScheme B → ∀ n : ℕ, (n : k) ≠ 0 → ∀ x x' : 𝟙_ (Over (Sp (DualNumber k))) ⟶ B, x ^ n = x' ^ n → spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ x.left = spMap (TrivSqZeroExt.fstHom k k k).toRingHom ≫ x'.left → x = x' := by
   intro k _ B _ hB n hn x x' hpow h0
-  haveI : IsCommMonObj B := hB.comm
-  haveI hloc : IsLocalRing (DualNumber k) := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
+  have : IsCommMonObj B := hB.comm
+  have hloc : IsLocalRing (DualNumber k) := IsLocalRing.of_isUnit_or_isUnit_one_sub_self fun a => by
     simp only [TrivSqZeroExt.isUnit_iff_isUnit_fst, TrivSqZeroExt.fst_sub, TrivSqZeroExt.fst_one, isUnit_iff_ne_zero]
     by_cases ha : a.fst = 0
     · right; rw [ha, sub_zero]; exact one_ne_zero
@@ -77,7 +77,7 @@ theorem eq_of_pow_eq_of_eq_at_closed : ∀ (k : Type) [Field k] (B : Over (Sp (D
     exact hn.isUnit
   have hnΓ : IsUnit (n : Γ(Sp (DualNumber k), ⊤)) := by
     simpa using hnD.map (Scheme.ΓSpecIso (CommRingCat.of (DualNumber k))).inv.hom
-  haveI : PreconnectedSpace (Sp (DualNumber k)) := by
+  have : PreconnectedSpace (Sp (DualNumber k)) := by
     have : PreconnectedSpace (PrimeSpectrum (DualNumber k)) := by
       refine ⟨isPreconnected_of_forall (IsLocalRing.closedPoint (DualNumber k)) fun y _ =>
         ⟨closure {y}, Set.subset_univ _, ?_, subset_closure rfl, isPreconnected_singleton.closure⟩⟩
@@ -85,7 +85,7 @@ theorem eq_of_pow_eq_of_eq_at_closed : ∀ (k : Type) [Field k] (B : Over (Sp (D
     exact this
   haveI : PreconnectedSpace (𝟙_ (Over (Sp (DualNumber k)))).left := ‹PreconnectedSpace (Sp (DualNumber k))›
   let T : Over (Sp (DualNumber k)) := Over.mk (spMap (TrivSqZeroExt.fstHom k k k).toRingHom)
-  haveI : Nonempty T.left := inferInstanceAs (Nonempty (Sp k))
+  have : Nonempty T.left := inferInstanceAs (Nonempty (Sp k))
   have hw : (x * x'⁻¹) ^ n = 1 := by rw [mul_pow, inv_pow, hpow, mul_inv_cancel]
   obtain ⟨C, hC, hz⟩ := GlobalTheory.TorsionCover.exists_clopen_eq_one B hB hnΓ (x * x'⁻¹) hw
   have hT : toUnit T ≫ x = toUnit T ≫ x' := by

@@ -94,21 +94,21 @@ theorem seminorm_phase_sub_le : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpa
   rcases eq_or_ne t 0 with ht0 | ht0
   · have h0 : E - f + ((t : ℂ) * (2 * Real.pi * Complex.I)) • g = 0 := by
       ext x
-      simp only [SchwartzMap.add_apply, SchwartzMap.sub_apply, SchwartzMap.smul_apply, hE, ha, ht0]
+      simp only [add_apply, sub_apply, smul_apply, hE, ha, ht0]
       simp
     rw [h0, map_zero, ht0]
     simp
   have ht : (t : ℂ) ≠ 0 := by exact_mod_cast ht0
   set u : 𝓢(V, ℂ) := (t : ℂ)⁻¹ • (A - f) + (2 * Real.pi * I : ℂ) • g with hudef
   have hu : ∀ x, u x = rem t (L' x) * f x := fun x => by
-    simp only [hudef, SchwartzMap.add_apply, SchwartzMap.sub_apply, SchwartzMap.smul_apply, hA, hg,
+    simp only [hudef, add_apply, sub_apply, smul_apply, hA, hg,
       rem, smul_eq_mul, hL'x]
     ring
   have hub : SchwartzMap.seminorm ℂ k n u ≤ |t| * K := seminorm_rem_mul_le L' f u ht0 ht1 hu k n
   have hid : E - f + ((t : ℂ) * (2 * Real.pi * Complex.I)) • g
       = (a * t) • u + ((a - 1) • f + (-((a - 1) * t * (2 * Real.pi * I))) • g) := by
     ext x
-    simp only [hudef, SchwartzMap.add_apply, SchwartzMap.sub_apply, SchwartzMap.smul_apply, hA, hE,
+    simp only [hudef, add_apply, sub_apply, smul_apply, hA, hE,
       smul_eq_mul]
     field_simp
     ring

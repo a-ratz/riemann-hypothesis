@@ -60,10 +60,10 @@ abbrev rtA (I : Formalism.MainNotions.S.AutInst) : Type := I.E ⊗[I.F] FiniteAd
 abbrev rtι (I : Formalism.MainNotions.S.AutInst) : I.E →+* rtA I := inclE (F := I.F) (FiniteAdeleRing (𝓞 I.F) I.F)
 
 theorem rt_inj (I : Formalism.MainNotions.S.AutInst) : Function.Injective (rtι I) := by
-  haveI : Nonempty (HeightOneSpectrum (𝓞 I.F)) := by
+  have : Nonempty (HeightOneSpectrum (𝓞 I.F)) := by
     obtain ⟨p, hp0, hp⟩ := Ring.not_isField_iff_exists_prime.mp (RingOfIntegers.not_isField I.F)
     exact ⟨⟨p, hp, hp0⟩⟩
-  haveI : Nontrivial (FiniteAdeleRing (𝓞 I.F) I.F) := by
+  have : Nontrivial (FiniteAdeleRing (𝓞 I.F) I.F) := by
     obtain ⟨v⟩ := ‹Nonempty (HeightOneSpectrum (𝓞 I.F))›
     refine ⟨⟨0, 1, fun h => ?_⟩⟩
     have h2 := congrArg (fun x : FiniteAdeleRing (𝓞 I.F) I.F => x v) h
@@ -108,7 +108,7 @@ theorem rt_det_ne (I : Formalism.MainNotions.S.AutInst) {k : Type} [Fintype k] [
     (M : Matrix k k I.E) (u : GL k (rtA I)) (hu : (u : Matrix k k (rtA I)) = M.map (rtι I)) :
     M.det ≠ 0 := by
   intro h0
-  haveI : Nontrivial (rtA I) :=
+  have : Nontrivial (rtA I) :=
     nontrivial_of_ne _ _ (by simpa using (rt_inj I).ne (one_ne_zero (α := I.E)))
   have h1 : IsUnit ((u : Matrix k k (rtA I)).det) := (Matrix.isUnit_iff_isUnit_det _).mp u.isUnit
   rw [hu, ← RingHom.mapMatrix_apply, ← RingHom.map_det, h0, map_zero] at h1

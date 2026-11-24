@@ -69,7 +69,7 @@ private theorem ringKrullDim_finite_of_finiteType_int (A : Type) [CommRing A]
   rw [MvPolynomial.ringKrullDim_of_isNoetherianRing,
     IsPrincipalIdealRing.ringKrullDim_eq_one ℤ Int.not_isField]
   have h : ((1 + Nat.card (Fin n) : ℕ) : WithBot ℕ∞) < ⊤ :=
-    WithBot.coe_lt_coe.mpr (ENat.coe_lt_top _)
+    WithBot.coe_lt_coe.mpr (ENat.natCast_lt_top _)
   push_cast [ENat.card_eq_coe_natCard]
   exact h
 

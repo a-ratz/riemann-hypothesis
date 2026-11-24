@@ -474,14 +474,14 @@ theorem exists_dominant {k : ℕ} (f : Fin k → Fv F v) (hf : ∃ j, f j ≠ 0)
     ∃ j, f j ≠ 0 ∧ ∀ c : Fv F v,
       (∀ i, c * f i ∈ v.adicCompletionIntegers F) ↔ c * f j ∈ v.adicCompletionIntegers F := by
   obtain ⟨j0, hj0⟩ := hf
-  haveI : Nonempty (Fin k) := ⟨j0⟩
+  have : Nonempty (Fin k) := ⟨j0⟩
   obtain ⟨j, hj⟩ := Finite.exists_max fun i => ‖f i‖₊
   refine ⟨j, fun h0 => hj0 ?_, fun c => ⟨fun h => h j, fun h i => ?_⟩⟩
   · have := hj j0
-    rw [h0, nnnorm_zero] at this
-    exact nnnorm_eq_zero.1 (le_antisymm this zero_le)
+    rw [h0, nnNorm_zero] at this
+    exact nnNorm_eq_zero.1 (le_antisymm this zero_le)
   · rw [← nnnorm_le_one_iff_mem] at h ⊢
-    rw [nnnorm_mul] at h ⊢
+    rw [nnNorm_mul] at h ⊢
     exact (mul_le_mul_of_nonneg_left (hj i) zero_le).trans h
 
 theorem exists_unit_gen (h : IsCMExt F E σ) (τ : E →ₐ[F] Fv F v) {k : ℕ} {u l : Fin k → Fv F v ⊗[F] E}
@@ -663,7 +663,7 @@ theorem cond_iff (q : SplitPt D k) {ϖ : k} (hϖ : ∀ x : k, valuation k x < 1 
   refine and_congr_right fun _ => ⟨fun h => ?_, fun h x hx => le_trans ?_ h⟩
   · simpa only [q.pr_sec] using h (q.sec ϖ) (by rw [q.pr_sec])
   · gcongr
-    exact zero_le'
+    exact zero_le
 
 theorem mulVec_sec (q : SplitPt D k) {m n : ℕ} (M : Matrix (Fin m) (Fin n) (AE D)) (y : Fin n → k) :
     M *ᵥ (fun i => q.sec (y i)) = fun i => q.sec ((M.map q.pr *ᵥ y) i) := by
@@ -771,7 +771,7 @@ theorem line_moved (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : F
       refine Finset.sum_comm.trans (Finset.sum_congr rfl fun m _ => Finset.sum_congr rfl fun r _ => ?_)
       ring
     rw [h1]
-    simp only [hp, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [hp, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     ring
   rw [csec_mem_iff hΛ]
   constructor
@@ -832,15 +832,15 @@ theorem line_bes (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : For
       simp only [h1, Matrix.mul_apply, Matrix.map_apply, hπ, Finset.sum_mul, Finset.mul_sum]
       refine Finset.sum_comm.trans (Finset.sum_congr rfl fun l _ => Finset.sum_congr rfl fun r _ => ?_)
       ring
-    rw [h6, if_neg (by simp)]
+    rw [h6, ite_eq_right (by simp)]
     simp only [h5, mul_zero, Finset.sum_const_zero, zero_mul]
   have hj := j.2
   rcases lt_trichotomy j.val ρ with h | h | h
-  · rw [if_neg (by simp only [Sum.inr.injEq, Fin.ext_iff]; omega)]
+  · rw [ite_eq_right (by simp only [Sum.inr.injEq, Fin.ext_iff]; omega)]
     simp only [h2 ⟨j.val, h⟩ j rfl, hπ, mul_assoc, ← Finset.mul_sum, key]
     rw [B.d.ee, Matrix.zero_apply, star_zero, map_zero]
     simp
-  · rw [if_neg (by simp only [Sum.inr.injEq, Fin.ext_iff]; omega)]
+  · rw [ite_eq_right (by simp only [Sum.inr.injEq, Fin.ext_iff]; omega)]
     have h5 := key (B.d.i₀ * replicateCol Unit (vecB B.o B.ζ)) ()
     rw [Matrix.conjTranspose_mul, Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc B.d.i₀ᴴ, B.d.i₀e, Matrix.mul_zero,
         Matrix.zero_apply, star_zero, map_zero] at h5
@@ -858,9 +858,9 @@ theorem line_bes (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : For
       rfl
     rw [h6, key, B.d.e'e]
     by_cases e : j.val = 2 * ρ
-    · rw [if_pos (by simp only [Sum.inr.injEq, Fin.ext_iff]; omega), Matrix.one_apply, if_pos (by simp only [Fin.ext_iff]; omega)]
+    · rw [ite_eq_left (by simp only [Sum.inr.injEq, Fin.ext_iff]; omega), Matrix.one_apply, ite_eq_left (by simp only [Fin.ext_iff]; omega)]
       simp [e]
-    · rw [if_neg (by simp only [Sum.inr.injEq, Fin.ext_iff]; omega), Matrix.one_apply, if_neg (by simp only [Fin.ext_iff]; omega)]
+    · rw [ite_eq_right (by simp only [Sum.inr.injEq, Fin.ext_iff]; omega), Matrix.one_apply, ite_eq_right (by simp only [Fin.ext_iff]; omega)]
       simp
 
 theorem val_nat (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : Formalism.L2.NTheta.IsIdemAt q.e PP) (T : ℕ)
@@ -1049,7 +1049,7 @@ theorem single_alt (W : _root_.GlobalTheory.MiS.RealPackAlt ex) (hW : _root_.Glo
   have hs2 : valuation _ ((G i).q.pr (incA D (star (s * μ)⁻¹))) = 1 := by
     rw [star_inv₀, ← RingHom.comp_apply, map_inv₀, map_inv₀, RingHom.comp_apply]
     rcases hs with rfl | rfl <;> simp [hμ2]
-  have hϖ : 0 < valuation _ ((G i).S.ϖ : (G i).k) := by simp [zero_lt_iff]
+  have hϖ : 0 < valuation _ ((G i).S.ϖ : (G i).k) := by simp [pos_iff_ne_zero]
   simp only [Valuation.mem_integer_iff, RingHom.map_mul, GlobalTheory.FinPl.FrameLat.cA_incA, Valuation.map_mul, map_div₀, Valuation.map_neg,
     Valuation.map_pow, Valuation.map_one, hs1, hs2, hxi, hzu, (G i).sc_unit, one_mul, one_pow, div_one, div_le_one₀ hϖ]
 theorem line_indep_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.MainNotions.G.Inst D L} {Gl : Formalism.MainNotions.G.LatInst D} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.PackageHypotheses W → ∀ (hr : 1 ≤ D.R.rS) u u' (f : _root_.GlobalTheory.Fam.FamilyCharacter W u) (f' : _root_.GlobalTheory.Fam.FamilyCharacter W u') (B : SBes W.S.X W.Q.instEq u W.Q.Rl.ψ (D.sp.X 0)) (B' : SBes W.S.X W.Q.instEq u' W.Q.Rl.ψ (D.sp.X 0)), _root_.GlobalTheory.MiTop.PlacedAlt f B → _root_.GlobalTheory.MiTop.PlacedAlt f' B' → ∀ a₀ a a₀' a', _root_.GlobalTheory.MiTop.IsTranslate' f B a₀ a → _root_.GlobalTheory.MiTop.IsTranslate' f' B' a₀' a' → ∀ v : IsDedekindDomain.HeightOneSpectrum (𝓞 D.host.F), (∃ PP ∈ (_root_.GlobalTheory.Fam.pk_z W).Pg, (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) = v) → ∀ c ∈ GlobalTheory.FinPl.idAt D (· = v), (Matrix.mulVec (Formalism.L2.Theta.mt (D.sp.Y 0) (show GA D (D.sp.Y 0) from f.g.b 0)⁻¹) ((fun i => c * Formalism.L2.Theta.incA D (W.S.X.ιE (W.S.X.eR ⟨0, hr⟩ (Fin.cast (GlobalTheory.Core.Mi.rank_eq W.S.X W.Q.instEq) i))))) ∈ GlobalTheory.FinPl.latV (D.sp.Y 0) ((_root_.GlobalTheory.Fam.pk_z W).ΛY 0) (· = v) ↔ Matrix.mulVec (Formalism.L2.Theta.mt (D.sp.Y 0) (show GA D (D.sp.Y 0) from f'.g.b 0)⁻¹) ((fun i => c * Formalism.L2.Theta.incA D (W.S.X.ιE (W.S.X.eR ⟨0, hr⟩ (Fin.cast (GlobalTheory.Core.Mi.rank_eq W.S.X W.Q.instEq) i))))) ∈ GlobalTheory.FinPl.latV (D.sp.Y 0) ((_root_.GlobalTheory.Fam.pk_z W).ΛY 0) (· = v)) := by
@@ -1154,7 +1154,7 @@ theorem line_atG_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : F
       rw [GlobalTheory.AdelicU.splitPrime_under]
       exact ⟨τ⟩
     have hΛ := (_root_.GlobalTheory.T.selfDual_and_frame_of_pkHyp W hW 0 hm).1
-    haveI : Submodule.IsLattice D.host.E ((_root_.GlobalTheory.Fam.pk_z W).ΛY 0) := hΛ.1
+    have : Submodule.IsLattice D.host.E ((_root_.GlobalTheory.Fam.pk_z W).ΛY 0) := hΛ.1
     have hfg : ((_root_.GlobalTheory.Fam.pk_z W).ΛY 0).FG := Submodule.IsLattice.fg (A := D.host.E) ((_root_.GlobalTheory.Fam.pk_z W).ΛY 0)
     obtain ⟨α, hα⟩ := GlobalTheory.T.exists_unit_multipliers_line_in_movedLattice_split D v hτ _ ((_root_.GlobalTheory.Fam.pk_z W).ΛY 0)
       (Formalism.IndefR.Fin.PDA.selfDual_isFullLattice _ _ hΛ)

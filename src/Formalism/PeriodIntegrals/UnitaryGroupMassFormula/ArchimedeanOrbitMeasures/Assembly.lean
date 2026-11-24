@@ -234,13 +234,13 @@ theorem properOne_of (hW : WittInf) (hH : MassDataMassesW.HinfCompact) : ProperO
     exact ((MassDataMassesW.SplitW.continuous_matHA X.B.I.cm.sig X.B.I.J (Ainf X.B.I.F)).comp
       continuous_fst).matrix_mulVec ((continuous_apply a).comp continuous_snd)
   have : ContinuousSMul (GI X) (MulAction.orbit (GI X) (Y0 X u')) :=
-    ⟨continuous_induced_rng.2 (hjoint.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)))⟩
+    ⟨continuous_induced_rng.2 (hjoint.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)))⟩
   have y0O : Y0 X u' ∈ MulAction.orbit (GI X) (Y0 X u') := MulAction.mem_orbit_self _
   have hopen : IsOpenMap (fun g : GI X => g • (⟨Y0 X u', y0O⟩ : MulAction.orbit (GI X) (Y0 X u'))) :=
     isOpenMap_smul_of_sigmaCompact _
   have hHc : IsCompact (Hsub (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u') : Set (GI X)) := by
     have : CompactSpace (Hsub (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u')) := hH X u'
-    have h := isCompact_range (continuous_subtype_val :
+    have h := isCompact_range (continuous_subtypeVal :
       Continuous (Subtype.val : Hsub (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u') → GI X))
     rwa [Subtype.range_coe] at h
   obtain ⟨V, hVc, hV1⟩ := exists_compact_mem_nhds (1 : GI X)
@@ -323,9 +323,9 @@ theorem hasFDerivAt_conj_exp {ι : Type} [Fintype ι] {n : ℕ}
     (L : EuclideanSpace ℝ ι →ₗ[ℝ] Matrix (Fin n) (Fin n) ℂ) (A B : Matrix (Fin n) (Fin n) ℂ) (w : Fin n → ℂ) :
     ∃ D : EuclideanSpace ℝ ι →L[ℝ] (Fin n → ℂ),
       HasFDerivAt (fun y => (A * NormedSpace.exp (L y) * B) *ᵥ w) D 0 ∧ ∀ y, D y = (A * L y * B) *ᵥ w := by
-  letI : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℝ _
   let Lc : EuclideanSpace ℝ ι →L[ℝ] Matrix (Fin n) (Fin n) ℂ := LinearMap.toContinuousLinearMap L
   let h : Matrix (Fin n) (Fin n) ℂ →ₗ[ℝ] (Fin n → ℂ) :=
     { toFun := fun M => (A * M * B) *ᵥ w
@@ -344,8 +344,8 @@ theorem hasFDerivAt_conj_exp {ι : Type} [Fintype ι] {n : ℕ}
 theorem dKForm_holds : DKForm := by
   intro D X u' ψ hT μinf νinf fibInf hP hb c S ι _ L hc hL x v
   classical
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : IsTotallyReal X.B.I.F := X.B.I.cm.totReal
   let Φ : TupI X →+ (InfinitePlace X.B.I.F → Fin (D.R.rS + 1 + D.R.rS) → Fin X.B.I.n → ℂ) :=
     { toFun := fun Y v b i => PI.AprimeInfU.thetaInf X v (Y b i)
       map_zero' := by funext v b i; exact map_zero _
@@ -498,7 +498,7 @@ theorem gram_sq {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) :
   have h2 : ∀ (x : Fin (D.R.rS + 1)) (y : Fin D.R.rS), Fin.castAdd D.R.rS x ≠ Fin.natAdd (D.R.rS + 1) y := by
     intro x y h
     have := congrArg Fin.val h
-    simp only [Fin.coe_castAdd, Fin.coe_natAdd] at this
+    simp only [Fin.val_castAdd, Fin.val_natAdd] at this
     omega
   have h2' : ∀ (x : Fin (D.R.rS + 1)) (y : Fin D.R.rS), Fin.natAdd (D.R.rS + 1) y ≠ Fin.castAdd D.R.rS x :=
     fun x y h => h2 x y h.symm
@@ -934,7 +934,7 @@ open scoped TensorProduct
 theorem lfFib_at {D : D7} (X : HidaSetting D) (u' : D.what₂.Word) (ψ : AddChar (AF X.B.I.F) ℂ) hT μinf νinf fibInf
     (hP : PushHyp X u' ψ hT μinf νinf fibInf) (T : HmI X) : LFI X (fibInf T) := by
   intro K hK hKU
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   obtain ⟨k, -, hkcl, hKk, hkU⟩ := exists_compact_closed_between hK (isOpen_IndI X) hKU
   obtain ⟨f, hf1, hf0, hfc, -⟩ := exists_continuous_one_zero_of_isCompact hK isOpen_interior.isClosed_compl
     (Set.disjoint_compl_right_iff_subset.mpr hKk)
@@ -1224,8 +1224,8 @@ def qD (p : BrI X) : ℝ := 2 * (if X.B.I.ε p.1 p.2.1 then 1 else -1)
 
 theorem betaI_q (x y : EuclideanSpace ℝ (KapI X)) : betaI X x y = ∑ p : BrI X, qD X p * bL X x p * bL X y p := by
   rw [betaI_bridge]
-  simp only [Fintype.sum_prod_type, Fintype.sum_bool, bL_apply, reimV_apply, qD, if_true, Bool.false_eq_true,
-    if_false]
+  simp only [Fintype.sum_prod_type, Fintype.sum_bool, bL_apply, reimV_apply, qD, ite_true, Bool.false_eq_true,
+    ite_false]
   refine Finset.sum_congr rfl fun v _ => ?_
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun b _ => ?_
@@ -1233,7 +1233,7 @@ theorem betaI_q (x y : EuclideanSpace ℝ (KapI X)) : betaI X x y = ∑ p : BrI 
 
 theorem card_cbi : Fintype.card
     (Module.Free.ChooseBasisIndex (Ainf X.B.I.F) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) = 2 := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   rw [← Module.finrank_eq_card_chooseBasisIndex, Module.finrank_baseChange, X.B.I.cm.deg2]
 
 theorem card_BrI : Fintype.card (BrI X) = Fintype.card (KapI X) := by
@@ -1354,7 +1354,7 @@ theorem betaIso_holds : BetaIso := by
       ext i b
       have hre := congrArg (fun z : EuclideanSpace ℝ (MuB.BrI X) => z (v, i, b, true)) hb
       have him := congrArg (fun z : EuclideanSpace ℝ (MuB.BrI X) => z (v, i, b, false)) hb
-      simp only [MuB.bL_apply, MuB.reimV_apply, if_true, Bool.false_eq_true, if_false] at hre him
+      simp only [MuB.bL_apply, MuB.reimV_apply, ite_true, Bool.false_eq_true, ite_false] at hre him
       exact Complex.ext (by simpa using hre) (by simpa using him)
     have h1 := betaV_inj X _ _ hβ
     have h2 : tupCoord X 0 = 0 := by
@@ -1440,7 +1440,7 @@ theorem perpPosV : PerpPosV := by
     simp only [nv]
     split_ifs with hj
     · rw [hJ_sub_left, hJ_sub_right, hJ_sub_right]
-      simp only [HidaSetting.eR, HidaSetting.fR, hJ_crd, X.ee, X.ff, X.ef, hT_f_e, if_true, map_zero, map_one]
+      simp only [HidaSetting.eR, HidaSetting.fR, hJ_crd, X.ee, X.ff, X.ef, hT_f_e, ite_true, map_zero, map_one]
       norm_num
     · simp only [HidaSetting.zR, hJ_crd, X.zu_norm, map_neg, map_natCast]
       simp only [Complex.neg_re, Complex.natCast_re, Left.neg_neg_iff]
@@ -1605,13 +1605,13 @@ open scoped TensorProduct
 theorem weilInf_of (hH : HtotInf) : WeilInf := by
   intro D X hb FdN FdN' u u' hX f hf s hs
   obtain ⟨e1, e2, e3⟩ := hH X hb FdN FdN' u u' hX
-  haveI : FiniteDimensional X.B.I.F X.B.I.E :=
+  have : FiniteDimensional X.B.I.F X.B.I.E :=
     Module.finite_of_finrank_pos (by rw [X.B.I.cm.deg2]; norm_num)
-  haveI : SecondCountableTopology (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
+  have : SecondCountableTopology (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) :=
     PI.AprimeInfT.secondCountable_HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J
-  haveI : BorelSpace (Fin (D.R.rS + 1 + D.R.rS) → Fin X.B.I.n → Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) :=
+  have : BorelSpace (Fin (D.R.rS + 1 + D.R.rS) → Fin X.B.I.n → Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E) :=
     PI.AprimeInfT.borelSpace_tup (F := X.B.I.F) (E := X.B.I.E) (Ainf X.B.I.F) (D.R.rS + 1 + D.R.rS)
-  haveI : X.measG.μGinf.IsHaarMeasure := X.measG_norm.2.1
+  have : X.measG.μGinf.IsHaarMeasure := X.measG_norm.2.1
   have hL : Measure.IsMulLeftInvariant ((X.measW u').μHinf : Measure (MulAction.stabilizer
       (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) (ratTup (F := X.B.I.F) (Ainf X.B.I.F) (tupH (frameOf X u'))))) :=
     (X.measW_norm u').2.1.toIsMulLeftInvariant

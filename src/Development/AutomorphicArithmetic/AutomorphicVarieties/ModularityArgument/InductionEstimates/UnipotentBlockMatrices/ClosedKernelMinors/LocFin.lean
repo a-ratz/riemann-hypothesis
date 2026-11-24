@@ -119,7 +119,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.locFin :
   let mn : (Fin 2 → Fin (2 + 2)) → G1 K (2 + 2) → 𝔸[K] := fun c g =>
     (((g : AdelicGLn.AdelicGL K (2 + 2)) : Matrix (Fin (2 + 2)) (Fin (2 + 2)) 𝔸[K]).submatrix (Fin.natAdd 2) c).det
   have hmn : ∀ c, Continuous (mn c) := fun c =>
-    ((Units.continuous_val.comp continuous_subtype_val).matrix_submatrix _ _).matrix_det
+    ((Units.continuous_val.comp continuous_subtypeVal).matrix_submatrix _ _).matrix_det
   let Φ : (Fin 2 → Fin (2 + 2)) → GroundTheory.Global.IdeleGroup K × 𝔸[K] × G1 K (2 + 2) × G1 K (2 + 2) → 𝔸[K] :=
     fun c p => (p.1 : 𝔸[K]) * p.2.1 * mn c (p.2.2.1 * p.2.2.2⁻¹)
   have hΦ : ∀ c, Continuous (Φ c) := fun c =>

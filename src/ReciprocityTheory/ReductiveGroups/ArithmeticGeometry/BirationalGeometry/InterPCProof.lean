@@ -180,9 +180,9 @@ theorem horizontal_spec {P : Ideal (MRing ι)} (h : IsHorizontal P) :
 theorem pcEquidim : PCEquidimStatement := by
   intro K _ ι _ P e hP Q hQ
   obtain ⟨_, hMP, hH, hdim⟩ := hP
-  haveI : P.IsPrime := hMP.1
+  have : P.IsPrime := hMP.1
   obtain ⟨hpr, _, hd⟩ := extQ_spec P (horizontal_spec hH)
-  haveI := hpr
+  have := hpr
   rw [pC_eq_extC_extQ] at hQ
   rw [ringKrullDim_of_mem_minimalPrimes_extC (extQ P) Q hQ]
   apply withBot_eq_of_add_one
@@ -191,16 +191,16 @@ theorem pcEquidim : PCEquidimStatement := by
 theorem pcMinContract : PCMinContractStatement := by
   intro K _ ι _ P e hP Q hQ
   obtain ⟨_, hMP, hH, _⟩ := hP
-  haveI : P.IsPrime := hMP.1
+  have : P.IsPrime := hMP.1
   obtain ⟨hpr, hcomap, _⟩ := extQ_spec P (horizontal_spec hH)
-  haveI := hpr
+  have := hpr
   rw [pC_eq_extC_extQ] at hQ
   rw [← map_int_comp, ← Ideal.comap_comap, comap_of_mem_minimalPrimes_extC (extQ P) Q hQ, hcomap]
 
 theorem pcContract : PCContractStatement := by
   intro K _ ι _ P e hP f hf
   obtain ⟨_, hMP, hH, _⟩ := hP
-  haveI : P.IsPrime := hMP.1
+  have : P.IsPrime := hMP.1
   obtain ⟨_, hcomap, _⟩ := extQ_spec P (horizontal_spec hH)
   rw [pC_eq_extC_extQ] at hf
   have h1 : f ∈ (extC (extQ P)).comap (MvPolynomial.map (Int.castRingHom ℂ) : MRing ι →+* MRingOver ℂ ι) := hf

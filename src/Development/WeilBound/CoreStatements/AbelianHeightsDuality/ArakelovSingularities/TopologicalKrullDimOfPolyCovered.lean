@@ -98,7 +98,7 @@ theorem topologicalKrullDim_of_polyCovered' [IsDomain k] [IsNoetherianRing k] (h
     refine iSup_le fun Z => ?_
     obtain ⟨x, hx⟩ := Z.isIrreducible.nonempty
     obtain ⟨σ, _, e, he, hσ, -, ⟨y, rfl⟩, -⟩ := hcov x
-    haveI := he
+    have := he
     let Φ := TopologicalSpace.IrreducibleCloseds.orderIsoOfIsOpenEmbedding e e.isOpenEmbedding
     have hZ : TopologicalSpace.IrreducibleCloseds.map e e.isOpenEmbedding.continuous
         (Φ.symm ⟨Z, ⟨y, hx⟩⟩) = Z :=
@@ -110,29 +110,29 @@ theorem topologicalKrullDim_of_polyCovered' [IsDomain k] [IsNoetherianRing k] (h
     rw [h2] at h1
     exact h1
   · obtain ⟨σ, _, e, he, hσ, -, -, -⟩ := hcov ξ
-    haveI := he
+    have := he
     rw [← hdim σ hσ]
     exact e.isOpenEmbedding.isInducing.topologicalKrullDim_le
 
 theorem isIntegral_of_polyCovered' [IsDomain k] {X : Scheme.{0}} (f : X ⟶ Sp k) (d : ℕ) (h : PolyCovered f d) :
     IsIntegral X := by
   obtain ⟨ξ, -, hcov⟩ := h
-  haveI : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := by
+  have : ∀ x : X, _root_.IsReduced (X.presheaf.stalk x) := by
     intro x
     obtain ⟨σ, _, e, he, -, -, ⟨y, rfl⟩, -⟩ := hcov x
-    haveI := he
+    have := he
     exact isReduced_of_injective (e.stalkMap y).hom
       (asIso (e.stalkMap y)).commRingCatIsoToRingEquiv.injective
-  haveI : IsReduced X := isReduced_of_isReduced_stalk X
+  have : IsReduced X := isReduced_of_isReduced_stalk X
   have hirr : ∀ x : X, ∃ R : Set X, IsOpen R ∧ IsIrreducible R ∧ x ∈ R ∧ ξ ∈ R := by
     intro x
     obtain ⟨σ, _, e, he, -, -, hx, hξ⟩ := hcov x
-    haveI := he
+    have := he
     refine ⟨Set.range e, e.isOpenEmbedding.isOpen_range, ?_, hx, hξ⟩
     rw [← Set.image_univ]
     exact (IrreducibleSpace.isIrreducible_univ (Sp (MvPolynomial σ k))).image _
       e.continuous.continuousOn
-  haveI : IrreducibleSpace X := by
+  have : IrreducibleSpace X := by
     refine (irreducibleSpace_def X).mpr ⟨⟨ξ, trivial⟩, ?_⟩
     rintro u v hu hv ⟨a, -, ha⟩ ⟨b, -, hb⟩
     obtain ⟨Ra, hRa, iRa, haRa, hξa⟩ := hirr a
@@ -145,7 +145,7 @@ theorem isIntegral_of_polyCovered' [IsDomain k] {X : Scheme.{0}} (f : X ⟶ Sp k
 
 theorem polyCovered_pSpace' [IsDomain k] (N : ℕ) : PolyCovered (PSpace.str k N) N := by
   classical
-  letI : GradedAlgebra (ProjSpace.grading k N) := MvPolynomial.gradedAlgebra
+  let : GradedAlgebra (ProjSpace.grading k N) := MvPolynomial.gradedAlgebra
   have hX : ∀ i : Fin (N + 1), (MvPolynomial.X i : MvPolynomial (Fin (N + 1)) k) ≠ 0 :=
     fun i => MvPolynomial.X_ne_zero i
   let ξ0 : PSpace k N := (⟨⊥, by rw [HomogeneousIdeal.toIdeal_bot]; exact Ideal.isPrime_bot, fun hle => hX 0 (by

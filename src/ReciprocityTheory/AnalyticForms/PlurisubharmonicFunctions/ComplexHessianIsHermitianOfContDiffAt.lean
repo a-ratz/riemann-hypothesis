@@ -72,7 +72,7 @@ theorem hessC_eq_lv {D : ℕ} (f : (Fin D → ℂ) → ℝ) (z : Fin D → ℂ) 
 variable {D : ℕ} (H : (Fin D → ℂ) →L[ℝ] (Fin D → ℂ) →L[ℝ] ℝ)
 
 theorem lv_add_left (a a' b : Fin D → ℂ) : lv H (a + a') b = lv H a b + lv H a' b := by
-  simp only [lv, smul_add, map_add (f := _), ContinuousLinearMap.add_apply]
+  simp only [lv, smul_add, map_add (f := _), add_apply]
   push_cast
   ring
 
@@ -97,8 +97,8 @@ theorem lv_smul_left (c : ℂ) (a b : Fin D → ℂ) : lv H (c • a) b = c * lv
   obtain ⟨h1, h2⟩ := smul_decomp c a
   unfold lv
   rw [h2, h1]
-  simp only [map_add (f := _), map_sub, map_smul, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [map_add (f := _), map_sub, map_smul, add_apply,
+    sub_apply, smul_apply, smul_eq_mul]
   apply Complex.ext <;> simp <;> ring
 
 theorem lv_smul_right (c : ℂ) (a b : Fin D → ℂ) :
@@ -211,7 +211,7 @@ theorem lv_comp (φ : (Fin E → ℂ) → ℝ) (τ : (Fin D → ℂ) → (Fin E 
   unfold lv
   rw [hess_comp φ τ z hτ hφ a b, hess_comp φ τ z hτ hφ (I • a) (I • b),
     hess_comp φ τ z hτ hφ a (I • b), hess_comp φ τ z hτ hφ (I • a) b, hGI]
-  simp only [ContinuousLinearMap.smul_apply, map_smul, smul_smul, I_mul_I, neg_one_smul, map_neg]
+  simp only [smul_apply, map_smul, smul_smul, I_mul_I, neg_one_smul, map_neg]
   push_cast
   ring
 
@@ -248,7 +248,7 @@ theorem complexHessian_add_of_contDiffAt (φ ψ : (Fin D → ℂ) → ℝ) (z : 
       fderiv ℝ (fderiv ℝ φ) z + fderiv ℝ (fderiv ℝ ψ) z := by
     rw [hev.fderiv_eq]; exact fderiv_add hφ' hψ'
   ext i j
-  simp only [hessC_eq_lv, lv, hD, ContinuousLinearMap.add_apply, Matrix.add_apply]
+  simp only [hessC_eq_lv, lv, hD, add_apply, Matrix.add_apply]
   push_cast
   ring
 
@@ -304,7 +304,7 @@ theorem complexHessian_sum_normSq_coord (z : Fin D → ℂ) :
   have h : (fun w => sqForm D w + (sqForm D).flip w) = ⇑(sqForm D + (sqForm D).flip) := by
     funext w; rfl
   ext i j
-  simp only [hessC, fderiv_sum_normSq, h, ContinuousLinearMap.fderiv, ContinuousLinearMap.add_apply,
+  simp only [hessC, fderiv_sum_normSq, h, ContinuousLinearMap.fderiv, add_apply,
     ContinuousLinearMap.flip_apply, smul_single_one, sqForm_single]
   by_cases hij : i = j
   · subst hij

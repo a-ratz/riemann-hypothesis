@@ -56,16 +56,16 @@ theorem UpperTheory.Gal.TranscendenceTraces.locFinAff_of :
   let A := Γ(U, ⊤)
   let u : Spec (CommRingCat.of A) ⟶ U := U.isoSpec.inv
   obtain ⟨B, _, _, v, _, hpb⟩ := hC r A u
-  haveI : IsIso v := hpb.isIso_fst_of_isIso
+  have : IsIso v := hpb.isIso_fst_of_isIso
   let f : W ⟶ Spec (CommRingCat.of B) := π ≫ inv v
   obtain ⟨C, g, h, hg, hh⟩ := GlobalTheory.T.exists_etaleFaithfullyFlat_refining_etale_surjection (CommRingCat.of B) W f inferInstance inferInstance
-  letI : Algebra B C := g.hom.toAlgebra
-  haveI : Algebra.Etale B C := hg.1
-  haveI : Module.FaithfullyFlat B C := hg.2
+  let : Algebra B C := g.hom.toAlgebra
+  have : Algebra.Etale B C := hg.1
+  have : Module.FaithfullyFlat B C := hg.2
   let P : PrimeSpectrum A := U.isoSpec.hom x
   obtain ⟨E, _, _, hE, ⟨Q, hQ⟩, ⟨φ⟩⟩ := hR A B C P
   let gE : Spec (CommRingCat.of E) ⟶ U := Spec.map (CommRingCat.ofHom (algebraMap A E)) ≫ u
-  haveI : Etale (Spec.map (CommRingCat.ofHom (algebraMap A E))) :=
+  have : Etale (Spec.map (CommRingCat.ofHom (algebraMap A E))) :=
     HasRingHomProperty.Spec_iff.mpr (RingHom.etale_algebraMap.mpr hE)
   have big := (isPullback_SpecMap_of_isPushout _ _ _ _ (CommRingCat.isPushout_tensorProduct A B E)).paste_horiz hpb
   have hhπ : h ≫ π = Spec.map g ≫ v := by

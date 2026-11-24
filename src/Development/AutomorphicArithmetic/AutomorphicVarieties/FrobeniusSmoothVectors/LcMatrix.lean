@@ -148,7 +148,7 @@ theorem UpperTheory.V.Fr.pr_omk :
     intro v s
     rw [map_mul, map_inv, map_mul, map_mul, map_inv, D.r_map, D.g_map, D.t_map]
     group
-  haveI : IsNoetherianRing C' := IsCO.toIsNoetherian O
+  have : IsNoetherianRing C' := IsCO.toIsNoetherian O
   have hrc : ∀ N, IsLocallyConstant fun s : F.Γ =>
       GeneralLinearGroup.map (Ideal.Quotient.mk (maximalIdeal C' ^ N)) (D.r s) :=
     fun N => lc_gl (fun a b => D.r_cont a b) N
@@ -170,7 +170,7 @@ theorem UpperTheory.V.Fr.pr_omk :
         simp [Function.comp, map_sgn])
     exact this
   · intro v
-    have hloc : Continuous (F.loc v) := continuous_subtype_val.comp (hF.loc_cont v)
+    have hloc : Continuous (F.loc v) := continuous_subtypeVal.comp (hF.loc_cont v)
     have := lc_ker hker
       (f := fun s : F.Gv v => D.r (F.loc v s) * ((D.g v)⁻¹ * D.t v s * D.g v)⁻¹)
       (fun s a b => mem_ker _ (ha1 v s) a b) (by

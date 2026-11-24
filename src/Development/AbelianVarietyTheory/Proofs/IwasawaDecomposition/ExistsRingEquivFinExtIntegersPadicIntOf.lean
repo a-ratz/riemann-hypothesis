@@ -58,7 +58,7 @@ theorem mem_integer_iff_norm_le_one (l : ℕ) [Fact l.Prime] (x : PadicAlgCl l) 
     x ∈ (PadicAlgCl.valued l).v.integer ↔ ‖x‖ ≤ 1 := by
   rw [Valuation.mem_integer_iff]
   show ‖x‖₊ ≤ 1 ↔ ‖x‖ ≤ 1
-  rw [← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
+  rw [← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]
 
 theorem mem_intOf_iff (l : ℕ) [Fact l.Prime] (K : IntermediateField ℚ_[l] (PadicAlgCl l))
     (x : PadicAlgCl l) : x ∈ intOf l K ↔ x ∈ K ∧ ‖x‖ ≤ 1 := by

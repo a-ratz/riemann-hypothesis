@@ -67,7 +67,7 @@ theorem exists_fixed {G V : Type} [AddCommGroup G] [AddCommGroup V] [Module ℂ 
     (hP : ∀ u ∈ L, ∀ f ∈ P, ρ u f ∈ P) (hP' : ∀ y, ∀ f ∈ P, σ y f ∈ P) {f : V} (hf : f ∈ P) (f0 : f ≠ 0)
     (hK : ∀ κ ∈ K, ρ κ f = f) : ∃ g ∈ P, g ≠ 0 ∧ ∀ u ∈ L, ρ u g = g := by
   classical
-  letI : Fintype (L ⧸ K.addSubgroupOf L) := Fintype.ofFinite _
+  let : Fintype (L ⧸ K.addSubgroupOf L) := Fintype.ofFinite _
   let A : AddSubgroup G :=
     { carrier := {y | ∀ κ ∈ K, χ κ y = 1}
       zero_mem' := fun κ _ => h.zero_right κ
@@ -142,8 +142,8 @@ theorem isOpen_box (a : kˣ) : IsOpen (box Y Y' a : Set (Matrix Y Y' k)) := by
   exact isOpen_set_pi Set.finite_univ fun _ _ => isOpen_set_pi Set.finite_univ fun _ _ => isOpen_cball a
 
 theorem finite_box (a b : kˣ) : Finite (box Y Y' a ⧸ (box Y Y' b).addSubgroupOf (box Y Y' a)) := by
-  haveI : CompactSpace (box Y Y' a) := isCompact_iff_compactSpace.1 (isCompact_box a)
-  exact AddSubgroup.quotient_finite_of_isOpen _ ((isOpen_box b).preimage continuous_subtype_val)
+  have : CompactSpace (box Y Y' a) := isCompact_iff_compactSpace.1 (isCompact_box a)
+  exact AddSubgroup.quotient_finite_of_isOpen _ ((isOpen_box b).preimage continuous_subtypeVal)
 
 theorem exists_box_subset {U : Set (Matrix Y Y' k)} (hU : U ∈ 𝓝 0) : ∃ a : kˣ, ∀ x ∈ box Y Y' a, x ∈ U := by
   have h := (isCompact_box (Y := Y) (Y' := Y') (1 : kˣ)).eventually_forall_of_forall_eventually (x₀ := (0 : k))
@@ -154,7 +154,7 @@ theorem exists_box_subset {U : Set (Matrix Y Y' k)} (hU : U ∈ 𝓝 0) : ∃ a 
   have := hs (show (s : k) ∈ cball s from le_refl (valuation k (s : k))) ((s : k)⁻¹ • x) fun r q => by
     have h0 : valuation k (s : k) ≠ 0 := by simp
     rw [Matrix.smul_apply, smul_eq_mul, map_mul, map_inv₀, Units.val_one, map_one]
-    exact inv_mul_le_one_of_le₀ (hx r q) zero_le'
+    exact inv_mul_le_one_of_le₀ (hx r q) zero_le
   rwa [smul_inv_smul₀ s.ne_zero] at this
 
 def pairing (ψ : AddChar k Circle) (t b : Matrix Y Y' k) : ℂ := ψ (∑ r, ∑ q, b r q * t r q)
@@ -194,8 +194,8 @@ theorem exists_sep {ψ : AddChar k Circle} {d : kˣ} (hd : HasConductor ψ d) (a
     by_contra hh
     push Not at hh
     exact hu hh
-  have ha : 0 < valuation k (a : k) := zero_lt_iff.2 (by simp)
-  have hd0 : 0 < valuation k (d : k) := zero_lt_iff.2 (by simp)
+  have ha : 0 < valuation k (a : k) := pos_iff_ne_zero.2 (by simp)
+  have hd0 : 0 < valuation k (d : k) := pos_iff_ne_zero.2 (by simp)
   have hu0 : 0 < valuation k (u r q) := ha.trans h
   have hne : u r q ≠ 0 := fun e => by simp [e] at hu0
   have : ¬ ∀ z : k, valuation k z ≤ valuation k (u r q * (d / a)) → ψ z = 1 := fun hh => by
@@ -231,13 +231,13 @@ theorem exists_vacuum {V : Type} [AddCommGroup V] [Module ℂ V] {ψ : AddChar k
   obtain ⟨d, hd⟩ := exists_hasConductor_of_continuous ψ hψ h1
   have hb := isBichar_pairing (Y := Y) (Y' := Y') ψ
   obtain ⟨a, ha⟩ := exists_box_subset (sm f hf)
-  haveI := finite_box (Y := Y) (Y' := Y') 1 a
+  have := finite_box (Y := Y) (Y' := Y') 1 a
   obtain ⟨g, hg, g0, hg1⟩ := exists_fixed hb ρ σ hρ
     (fun y f h => by rw [← σ0 f, ← neg_add_cancel y, ← hσ, h, map_zero]) hc (box Y Y' 1) (box Y Y' a)
     (fun u _ hu => let ⟨y, hy, hne⟩ := exists_sep hd a hu; ⟨y, fun κ hκ => pairing_box hd hκ hy, hne⟩)
     P (fun u _ => hP u) hP' hf f0 ha
   obtain ⟨b, hb'⟩ := exists_box_subset (sm' g hg)
-  haveI := finite_box (Y := Y) (Y' := Y') (d / 1) b
+  have := finite_box (Y := Y) (Y' := Y') (d / 1) b
   let Q : Submodule ℂ V :=
     { carrier := {v | v ∈ P ∧ ∀ x ∈ box Y Y' (1 : kˣ), ρ x v = v}
       zero_mem' := ⟨P.zero_mem, fun _ _ => map_zero _⟩

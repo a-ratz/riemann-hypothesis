@@ -179,7 +179,7 @@ theorem lower_left_zero {H X D : Matrix (Fin N) (Fin N) ℂ} (hH : IsBlockDiag j
     (hb : (b : ℕ) < N - j) : X a b = 0 := by
   classical
   have hunit : IsUnit H.det := isUnit_iff_ne_zero.mpr hd
-  letI : Invertible H := Matrix.invertibleOfIsUnitDet _ hunit
+  let : Invertible H := Matrix.invertibleOfIsUnitDet _ hunit
   have h1 : H.BlockTriangular (fun i : Fin N => if (i : ℕ) < N - j then 0 else 1) := by
     intro r s hrs
     apply hH
@@ -231,7 +231,7 @@ theorem eq_zero_of_lower {L D : Matrix (Fin N) (Fin N) ℂ} (hL : IsLowerUni L) 
   have hunit : IsUnit L.det := by
     rw [Matrix.det_of_isLowerTriangular L hlow]
     simp [hL1]
-  letI : Invertible L := Matrix.invertibleOfIsUnitDet _ hunit
+  let : Invertible L := Matrix.invertibleOfIsUnitDet _ hunit
   have hlow' : L⁻¹.BlockTriangular OrderDual.toDual :=
     Matrix.blockTriangular_inv_of_blockTriangular hlow
   have hM : L⁻¹ * D = 0 := by
@@ -258,7 +258,7 @@ theorem fderiv_mul_of {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {P Q
     HasFDerivAt.fun_sum fun c _ => (hP a c).hasFDerivAt.fun_mul (hQ c b).hasFDerivAt
   simp only [Matrix.of_apply, Matrix.mul_apply, Matrix.add_apply]
   rw [h1.fderiv, ← Finset.sum_add_distrib]
-  simp only [ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [sum_apply, add_apply, smul_apply,
     smul_eq_mul]
   exact Finset.sum_congr rfl fun c _ => by ring
 

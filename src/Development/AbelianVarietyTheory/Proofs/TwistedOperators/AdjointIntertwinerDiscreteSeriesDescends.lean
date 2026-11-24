@@ -124,7 +124,7 @@ private theorem kFin_map_of_intertwining {p q : ℕ} (T : GrpData p q) {E F : Ty
       funext k
       simp [hL]
     rw [e, Submodule.span_image]
-    haveI := hc
+    have := hc
     infer_instance
   exact key _ _ hx
 

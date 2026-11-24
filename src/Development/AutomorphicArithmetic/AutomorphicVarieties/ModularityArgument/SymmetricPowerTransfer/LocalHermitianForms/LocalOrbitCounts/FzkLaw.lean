@@ -52,7 +52,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 theorem UpperTheory.V.Z.Sym.Loc.fzkLaw : UpperTheory.V.Z.Sym.Loc.FzkLaw := by
   intro O K _ _ _ _ _ Δ hL χ hχ
   have inj : Function.Injective (algebraMap O K) := by
-    haveI := hL.frac
+    have := hL.frac
     exact IsFractionRing.injective O K
   have ent : ∀ b : Kˣ, ((Matrix.GeneralLinearGroup.scalar (Fin 2) b : GL (Fin 2) K) : Matrix (Fin 2) (Fin 2) K) 0 0 = b := by
     intro b

@@ -187,7 +187,7 @@ theorem hl_step (hS : PartShort) (hU : PartUnits) (hI : PartIso) (hP : PartSplit
   obtain ⟨x, hx, hx0, hxC⟩ := hC p hp
   by_cases hiso0 : hform (starRingEnd E) p.1 x x = 0
   · refine Or.inr ?_
-    simp only [SplitSet, Set.mem_setOf_eq]
+    simp only [SplitSet, Set.mem_ofPred_eq]
     exact ⟨hp, hiso p hp x hx hx0 hiso0⟩
   · refine Or.inl ?_
     have hint : hform (starRingEnd E) p.1 x x ∈ (algebraMap (𝓞 E) E).range := hp.2.2.2.2.1 x hx x hx
@@ -197,7 +197,7 @@ theorem hl_step (hS : PartShort) (hU : PartUnits) (hI : PartIso) (hP : PartSplit
       rw [hcdef, ← map_mul, Units.inv_mul, map_one]
     have hsca : star c * star (algebraMap (𝓞 E) E ((u : (𝓞 E)ˣ) : 𝓞 E)) = 1 := by
       rw [← star_mul', hca, star_one]
-    simp only [SplitSet, Set.mem_setOf_eq]
+    simp only [SplitSet, Set.mem_ofPred_eq]
     refine ⟨hp, fun _ => c • x, fun _ => ?_, ⟨r, hr, ?_⟩⟩
     · show c • x ∈ p.2
       rw [hcdef, algebraMap_smul]
@@ -241,7 +241,7 @@ theorem stH_of_hl (hHL : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     exact Classical.choose_spec (Classical.choose_spec h)
   refine ⟨(hT0.image (fun q => (pick q).1)).toFinset, fun M hfg hspan hsd => ?_⟩
   have hLat : (J, M) ∈ Lat E n 1 := by
-    simp only [Lat, Set.mem_setOf_eq]
+    simp only [Lat, Set.mem_ofPred_eq]
     refine ⟨hJ, hdet, hfg, hspan, fun x hx y hy => (hsd y).1 hy x hx, fun w hw => ?_⟩
     rw [Nat.cast_one, one_smul]
     exact (hsd w).2 hw

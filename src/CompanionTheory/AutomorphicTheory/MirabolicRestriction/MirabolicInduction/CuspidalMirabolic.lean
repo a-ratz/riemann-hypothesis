@@ -455,11 +455,11 @@ theorem fixed_eq_zero {V : Type} [AddCommGroup V] [Module ℂ V] (ρ : Represent
   have hmem : ∀ u ∈ GlobalTheory.FiniteGL.unipRadical k c, w * u * w⁻¹ ∈ Formalism.IrreducibleCountingLemmas.TYPES.unip k b := by
     intro u hu
     refine ⟨⟨fun i j hij => ?_, fun i j hij => ?_⟩, fun i j hij => ?_⟩
-    · rw [key u hu i j (Nat.le_of_lt hij), if_neg]
+    · rw [key u hu i j (Nat.le_of_lt hij), ite_eq_right]
       rintro rfl
       exact lt_irrefl _ hij
     · have e : (w * u * w⁻¹ : GL (Fin N) k)⁻¹ = w * u⁻¹ * w⁻¹ := by group
-      rw [e, key u⁻¹ (inv_mem hu) i j (Nat.le_of_lt hij), if_neg]
+      rw [e, key u⁻¹ (inv_mem hu) i j (Nat.le_of_lt hij), ite_eq_right]
       rintro rfl
       exact lt_irrefl _ hij
     · exact key u hu i j (by rw [hij])
@@ -540,7 +540,7 @@ theorem wh_eq_finrank {V : Type} [AddCommGroup V] [Module ℂ V] [FiniteDimensio
     wh (fun i j : Fin d => i < j) (cutE k d 0) ψ₀ (FDRep.of ρ).character =
       Module.finrank ℂ (GlobalTheory.FinGL.eig ρ (upU d k) fun g => ψ₀ (sdg g)) := by
   classical
-  haveI : Fintype (upU d k) := Fintype.ofFinite _
+  have : Fintype (upU d k) := Fintype.ofFinite _
   have h := GlobalTheory.FinGL.Mir.card_mul_finrank_eig ρ ψ₀ (upU d k) sdg
     (fun x hx y hy => sdSum_mul hx hy)
   have hc : (Fintype.card (upU d k) : ℂ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
@@ -606,13 +606,13 @@ theorem finrank_and_whit (ψ₀ : AddChar k ℂ) (hψ : ψ₀ ≠ 1) (ρ : Repre
     (Module.finrank ℂ V : ℂ) = ∏ i ∈ Finset.Ico 1 d, ((Fintype.card k : ℂ) ^ i - 1) ∧
       ∃ L : Module.Dual ℂ V, L ≠ 0 ∧ IsWhit ψ₀ ρ L := by
   classical
-  haveI : Fintype (upU d k) := Fintype.ofFinite _
+  have : Fintype (upU d k) := Fintype.ofFinite _
   have hcard : (Fintype.card (upU d k) : ℂ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
   have hW : (Module.finrank ℂ V : ℂ) = _ * _ :=
     GlobalTheory.CompanionTheory.TyFin.ColStep.cuspWh k d ψ₀ (FDRep.of ρ) hψ (isCuspidal_of ρ hc)
   rw [wh_eq_finrank] at hW
   set D := GlobalTheory.FinGL.eig ρ (upU d k) fun g => ψ₀ (sdg g) with hD
-  haveI : Nontrivial V := by
+  have : Nontrivial V := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     have hb : (⊥ : Subrepresentation ρ) = ⊤ := Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _)
@@ -667,13 +667,13 @@ theorem sdSum_eq_supd (M : Matrix (Fin (n + 1)) (Fin (n + 1)) k) : sdSum M = sup
   unfold sdSum superdiag supd
   rw [Fin.sum_univ_castSucc]
   have hl : (∑ j : Fin (n + 1), if (j : ℕ) = ((Fin.last n : Fin (n + 1)) : ℕ) + 1 then M (Fin.last n) j else 0) = 0 :=
-    Finset.sum_eq_zero fun j _ => if_neg (by have := j.2; simp; omega)
+    Finset.sum_eq_zero fun j _ => ite_eq_right (by have := j.2; simp; omega)
   rw [hl, add_zero]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [Finset.sum_eq_single i.succ]
   · simp
   · intro j _ hj
-    exact if_neg fun e => hj (Fin.ext (by simpa using e))
+    exact ite_eq_right fun e => hj (Fin.ext (by simpa using e))
   · simp
 
 def whitMap (ψ₀ : AddChar k ℂ) (ρ : Representation ℂ (GL (Fin (n + 1)) k) V) (L : Module.Dual ℂ V)

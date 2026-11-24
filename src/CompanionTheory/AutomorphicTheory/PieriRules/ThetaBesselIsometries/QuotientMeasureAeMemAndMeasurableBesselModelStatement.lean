@@ -70,7 +70,7 @@ theorem quotMeas_ae_mem_and_measurable : PI.KFinSmooth → ∀ (k r : ℕ) (ε :
     Formalism.FourierDecayAlt.P.DDSmoothness.ae_UH_of_quot hG.2.2.1 h0 h1 hq
   have hm : MeasurableSet {x : Formalism.QuantumDeterminants.Mt k r | Matrix.of x ∈ GG k r} := by
     have := (Formalism.FourierDecayAlt.P.DDSmoothness.uh_measurableSet (k := k) (r := r)).compl
-    simpa [Set.compl_setOf] using this
+    simpa [Set.compl_ofPred] using this
   have key : ∀ (V : Type) [NormedAddCommGroup V] [SecondCountableTopology V] (φ : Mx k r → V),
       ContinuousOn φ (GG k r) → AEStronglyMeasurable (fun x : Formalism.QuantumDeterminants.Mt k r => φ (Matrix.of x)) νq := by
     intro V _ _ φ hφ
@@ -80,8 +80,8 @@ theorem quotMeas_ae_mem_and_measurable : PI.KFinSmooth → ∀ (k r : ℕ) (ε :
     rwa [Measure.restrict_eq_self_of_ae_mem (s := {x : Formalism.QuantumDeterminants.Mt k r | Matrix.of x ∈ GG k r}) hae] at this
   refine ⟨hae, key, fun a => ?_, fun l hl w hw => ?_⟩
   · exact (key ℝ (fun g => lenA k r z g a) (GlobalTheory.LengthCont.lenA_continuousOn k r z hz hT a)).aemeasurable
-  · haveI : SecondCountableTopology Wp := by
-      haveI : ProperSpace Wp := FiniteDimensional.proper ℂ Wp
+  · have : SecondCountableTopology Wp := by
+      have : ProperSpace Wp := FiniteDimensional.proper ℂ Wp
       infer_instance
     exact key Wp (fun g => l (R.σ g w))
       (GlobalTheory.T.frechetContinuous_continuousOn_orbit_hasDerivAt hK k r ε mu R hDS Wp l hl.1 hl.2.1 hl.2.2.2 w hw).1

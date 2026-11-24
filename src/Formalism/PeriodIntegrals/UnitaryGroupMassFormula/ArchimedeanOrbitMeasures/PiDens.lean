@@ -89,7 +89,7 @@ theorem withDensity_pi {ι : Type} [Fintype ι] {E : ι → Type} [∀ i, Measur
     (Measure.pi lam).withDensity (fun z => ∏ i, ENNReal.ofReal (D i (z i))) =
       Measure.pi (fun i => (lam i).withDensity (fun x => ENNReal.ofReal (D i x))) := by
   classical
-  haveI : ∀ i, SigmaFinite ((lam i).withDensity fun x => ENNReal.ofReal (D i x)) :=
+  have : ∀ i, SigmaFinite ((lam i).withDensity fun x => ENNReal.ofReal (D i x)) :=
     fun i => SigmaFinite.withDensity_ofReal (D i)
   refine (Measure.pi_eq fun s hs => ?_).symm
   rw [withDensity_apply _ (MeasurableSet.univ_pi hs), ← lintegral_indicator (MeasurableSet.univ_pi hs)]
@@ -102,8 +102,8 @@ theorem withDensity_pi {ι : Type} [Fintype ι] {E : ι → Type} [∀ i, Measur
     · simp only [Set.mem_pi, mem_univ, true_implies, not_forall] at hz
       obtain ⟨i, hi⟩ := hz
       have hz' : z ∉ univ.pi s := fun h => hi (h i (mem_univ i))
-      rw [indicator_apply, if_neg hz']
-      exact (Finset.prod_eq_zero (Finset.mem_univ i) (by rw [indicator_apply, if_neg hi])).symm
+      rw [indicator_apply, ite_eq_right hz']
+      exact (Finset.prod_eq_zero (Finset.mem_univ i) (by rw [indicator_apply, ite_eq_right hi])).symm
   rw [h1, lintegral_fintype_prod (fun i => (s i).indicator (fun x => ENNReal.ofReal (D i x))) (fun i => (ENNReal.measurable_ofReal.comp (hD i)).indicator (hs i))]
   refine Finset.prod_congr rfl fun i _ => ?_
   rw [withDensity_apply _ (hs i), lintegral_indicator (hs i)]
@@ -124,7 +124,7 @@ theorem pi_chart_dens {V : Type} [Fintype V] {X E : V → Type} [∀ v, Measurab
   have hΨm : Measurable Ψ := Measurable.of_eval fun v => (hΦm v).comp (measurable_pi_apply v)
   let S : ∀ v, Set (X v) := fun v => Φ v '' U v
   let ν : ∀ v, Measure (E v) := fun v => (lam v).withDensity fun x => ENNReal.ofReal (D v x)
-  haveI : ∀ v, SigmaFinite (ν v) := fun v => SigmaFinite.withDensity_ofReal (D v)
+  have : ∀ v, SigmaFinite (ν v) := fun v => SigmaFinite.withDensity_ofReal (D v)
   have hκ : ∀ v, ((ν v).restrict (U v)).map (Φ v) = (μ v).restrict (S v) := by
     intro v
     ext C hC

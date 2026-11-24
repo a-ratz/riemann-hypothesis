@@ -105,7 +105,7 @@ theorem PlacesRingQuot.proof : PlacesRingQuot.Statement := by
       refine Ideal.mem_span_singleton'.2 ⟨⟨z * (g : L)⁻¹, fun w hwS ↦ ?_⟩, Subtype.ext ?_⟩
       · have h0 : w.maximalIdeal.valuation L g ≠ 0 := (Valuation.ne_zero_iff _).2 hgL
         rw [hle1, map_mul, map_inv₀]
-        exact (mul_inv_le_iff₀ (zero_lt_iff.2 h0)).2 (by simpa using h w hwS)
+        exact (mul_inv_le_iff₀ (pos_iff_ne_zero.2 h0)).2 (by simpa using h w hwS)
       · simp [hgL]
 
   let ι : 𝓞 L →+* placesRing S := (algebraMap (𝓞 L) L).codRestrict (placesRing S) fun a w _ ↦ by

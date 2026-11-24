@@ -107,7 +107,7 @@ theorem cm_smul (c : ℚ → R) (t : R) (φ : HahnSeries ℚ R) : cm c (t • φ
 theorem coeff_scale_mul {a : ℚ} (ha : 0 < a) (φ : HahnSeries ℚ R) (r : ℚ) :
     (scale a φ).coeff (a * r) = φ.coeff r := by
   unfold scale
-  rw [dif_pos ha]
+  rw [dite_eq_left ha]
   exact HahnSeries.embDomain_coeff (f := (OrderIso.mulLeft₀ a ha).toOrderEmbedding) (x := φ) (a := r)
 
 theorem coeff_scale {a : ℚ} (ha : 0 < a) (φ : HahnSeries ℚ R) (r : ℚ) :
@@ -126,7 +126,7 @@ theorem scale_smul (a : ℚ) (t : R) (φ : HahnSeries ℚ R) : scale a (t • φ
 
 theorem scale_mul (a : ℚ) (φ ψ : HahnSeries ℚ R) : scale a (φ * ψ) = scale a φ * scale a ψ := by
   by_cases ha : 0 < a
-  · simp only [scale, dif_pos ha]
+  · simp only [scale, dite_eq_left ha]
     exact HahnSeries.embDomain_mul _ (fun x y => mul_add a x y) φ ψ
   · simp [scale, ha]
 
@@ -203,16 +203,16 @@ omit [Algebra ℚ Ω] in
 theorem eOm_intCast_div {q : ℕ} {ζ : Ω} (hζ : ε ζ = Complex.exp (2 * Real.pi * Complex.I / q)) (n : ℤ) :
     eOm ε ((n : ℚ) / q) = ζ ^ n := by
   apply eOm_eq_of
-  rw [map_zpow₀, hζ, ← Complex.exp_int_mul]
+  rw [map_zpow₀, hζ, ← Complex.exp_intCast_mul]
   congr 1; push_cast; ring
 
 
 omit [Algebra ℚ Ω] in
 theorem exists_root_of_isAlgClosed [IsAlgClosed Ω] (ε : Ω →+* ℂ) {q : ℕ} (hq : 0 < q) :
     ∃ ζ : Ω, ε ζ = Complex.exp (2 * Real.pi * Complex.I / q) := by
-  haveI : CharZero Ω := ε.charZero
-  haveI : NeZero q := ⟨hq.ne'⟩
-  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω q
+  have : CharZero Ω := ε.charZero
+  have : NeZero q := ⟨hq.ne'⟩
+  obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω q
   obtain ⟨i, -, hi⟩ := (hξ.map_of_injective ε.injective).eq_pow_of_pow_eq_one
     (Complex.isPrimitiveRoot_exp q hq.ne').pow_eq_one
   exact ⟨ξ ^ i, by rw [map_pow, hi]⟩
@@ -234,7 +234,7 @@ omit [Algebra ℚ Ω] in
 theorem hq_eq_uq {q : ℕ} (hq0 : 0 < q) (hζ : ∃ ζ : Ω, ε ζ = Complex.exp (2 * Real.pi * Complex.I / q))
     {φ : HahnSeries ℚ Ω} (hφ : IsLat 1 φ) : hq ε q φ = uq q φ := by
   obtain ⟨ζ, hζ⟩ := hζ
-  haveI : CharZero Ω := ε.charZero
+  have : CharZero Ω := ε.charZero
   have h0 : (q : ℚ) ≠ 0 := by exact_mod_cast hq0.ne'
   have h1 : (q : Ω) ≠ 0 := by exact_mod_cast hq0.ne'
   have hp : IsPrimitiveRoot ζ q :=
@@ -245,7 +245,7 @@ theorem hq_eq_uq {q : ℕ} (hq0 : 0 < q) (hζ : ∃ ζ : Ω, ε ζ = Complex.exp
   · simp [hc]
   have hd := hφ _ hc
   rw [Nat.cast_one, one_mul] at hd
-  obtain ⟨n, hn⟩ : ∃ n : ℤ, (q : ℚ) * r = n := ⟨_, (Rat.coe_int_num_of_den_eq_one hd).symm⟩
+  obtain ⟨n, hn⟩ : ∃ n : ℤ, (q : ℚ) * r = n := ⟨_, (Rat.intCast_num_of_den_eq_one hd).symm⟩
   have hr : r = n / q := by rw [← hn]; field_simp
   have he : ∀ j : ℕ, eOm ε (r * j) = (ζ ^ n) ^ j := fun j => by
     rw [← zpow_natCast, ← zpow_mul, ← eOm_intCast_div hζ, hr]; congr 1; push_cast; ring
@@ -254,7 +254,7 @@ theorem hq_eq_uq {q : ℕ} (hq0 : 0 < q) (hζ : ∃ ζ : Ω, ε ζ = Complex.exp
   · have : ζ ^ n = 1 := by
       rw [hp.zpow_eq_one_iff_dvd]
       refine ⟨r.num, ?_⟩
-      have : (n : ℚ) = q * r.num := by rw [Rat.coe_int_num_of_den_eq_one hr1, hn]
+      have : (n : ℚ) = q * r.num := by rw [Rat.intCast_num_of_den_eq_one hr1, hn]
       exact_mod_cast this
     simp [this, h1]
   · have hne : ζ ^ n ≠ 1 := by

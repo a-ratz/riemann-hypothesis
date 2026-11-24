@@ -169,7 +169,7 @@ private lemma liftUnitri {R K : Type} [CommRing R] [CommRing K] (f : R →+* K) 
     h ∈ Subgroup.map (Matrix.GeneralLinearGroup.map f)
       (Matrix.GeneralLinearGroup.map (n := Fin n) (Ideal.Quotient.mk I)).ker := by
   have hdet : (Matrix.of a).det = 1 := by
-    rw [Matrix.det_of_upperTriangular (M := Matrix.of a) (fun i j hij => hlow i j hij)]
+    rw [Matrix.det_of_isUpperTriangular (M := Matrix.of a) (fun i j hij => hlow i j hij)]
     simp [hd]
   let H : GL (Fin n) R := Matrix.GeneralLinearGroup.mk'' (Matrix.of a) (by rw [hdet]; exact isUnit_one)
   refine ⟨H, ?_, ?_⟩
@@ -245,18 +245,18 @@ theorem UpperTheory.diagonal_conjugate_mem :
   · intro i j
     rw [hent]
     rcases lt_trichotomy i j with hij | rfl | hij
-    · rw [if_pos hij, map_mul, hg0', map_pow, mul_right_comm, hpow i j hij]
+    · rw [ite_eq_left hij, map_mul, hg0', map_pow, mul_right_comm, hpow i j hij]
       rfl
-    · rw [if_neg (lt_irrefl _), if_pos rfl, hd, map_one, mul_one, ← Units.val_mul]
+    · rw [ite_eq_right (lt_irrefl _), ite_eq_left rfl, hd, map_one, mul_one, ← Units.val_mul]
       simp
-    · rw [if_neg hij.not_gt, if_neg hij.ne', hb hij]
+    · rw [ite_eq_right hij.not_gt, ite_eq_right hij.ne', hb hij]
       simp
   · intro i j hij
-    rw [if_neg hij.not_gt, if_neg hij.ne']
+    rw [ite_eq_right hij.not_gt, ite_eq_right hij.ne']
   · intro i
     simp
   · intro i j hij
-    rw [if_pos hij]
+    rw [ite_eq_left hij]
     apply Ideal.mul_mem_right
     have hpos : (j : ℕ) - (i : ℕ) ≠ 0 := by
       have : (i : ℕ) < (j : ℕ) := hij
@@ -418,7 +418,7 @@ private theorem br_memN {g : GL (Fin n) k} :
   obtain ⟨h2, h3⟩ := (mem_unipB k).1 h
   let A : Matrix (Fin n) (Fin n) 𝒪[k] := fun i j => ⟨g.val i j, h1 i j⟩
   have hA : A.det = 1 := by
-    rw [Matrix.det_of_upperTriangular (M := A) fun i j hij => Subtype.ext (h2 i j hij)]
+    rw [Matrix.det_of_isUpperTriangular (M := A) fun i j hij => Subtype.ext (h2 i j hij)]
     exact Finset.prod_eq_one fun i _ => Subtype.ext (h3 i)
   exact ⟨Matrix.GeneralLinearGroup.mk'' A (by rw [hA]; exact isUnit_one), Units.ext rfl⟩
 
@@ -551,10 +551,10 @@ private theorem br_index (j : ℕ) (hj : j ≤ n) :
     · have : (b : ℕ) < a := hab
       show (1 + nilM _ : Matrix _ _ k) a b = 0
       simp only [nilM, Matrix.add_apply, Matrix.of_apply]
-      rw [dif_neg (fun h => by omega), add_zero, Matrix.one_apply_ne hab.ne']
+      rw [dite_eq_right (fun h => by omega), add_zero, Matrix.one_apply_ne hab.ne']
     · show (1 + nilM _ : Matrix _ _ k) a a = 1
       simp only [nilM, Matrix.add_apply, Matrix.of_apply]
-      rw [dif_neg (fun h => by omega), add_zero, Matrix.one_apply_eq]
+      rw [dite_eq_right (fun h => by omega), add_zero, Matrix.one_apply_eq]
     · show (1 + nilM _ : Matrix _ _ k) a b ∈ 𝒪[k]
       refine add_mem (GlobalTheory.StepData.intM_one a b) ?_
       simp only [nilM, Matrix.of_apply]
@@ -567,7 +567,7 @@ private theorem br_index (j : ℕ) (hj : j ≤ n) :
     rw [al, br_memNconj]
     refine ⟨fun h p => ?_, fun h => ⟨h1, fun a b => ?_⟩⟩
     · have := h.2 p.1.1 p.1.2
-      rwa [if_pos p.2.1, if_neg p.2.2.not_gt, sub_zero, zpow_one, le_uniformizer_iff] at this
+      rwa [ite_eq_left p.2.1, ite_eq_right p.2.2.not_gt, sub_zero, zpow_one, le_uniformizer_iff] at this
     · split_ifs with ha hb hb
       · simpa using h2 a b
       · simpa [le_uniformizer_iff] using h ⟨(a, b), ha, not_lt.1 hb⟩
@@ -589,7 +589,7 @@ private theorem br_index (j : ℕ) (hj : j ≤ n) :
     congr 2
     show (1 + nilM _ : Matrix _ _ k) _ _ = _
     simp only [nilM, Matrix.add_apply, Matrix.of_apply]
-    rw [dif_pos p.2, Matrix.one_apply_ne (fun h => by have := p.2; rw [h] at this; omega), zero_add]
+    rw [dite_eq_left p.2, Matrix.one_apply_ne (fun h => by have := p.2; rw [h] at this; omega), zero_add]
   have h2 : r.range = ⊤ := by
     refine MonoidHom.range_eq_top.2 fun y => ?_
     choose x hx using fun p => IsLocalRing.residue_surjective (y.toAdd p)
@@ -633,7 +633,7 @@ private theorem br_index (j : ℕ) (hj : j ≤ n) :
         refine (Finset.sum_eq_zero fun l _ => ?_).symm
         by_cases hl : (a : ℕ) < j ∧ j ≤ (l : ℕ)
         · rw [((mem_unipB k).1 (inv_mem hx).1).1 l b (show (b : ℕ) < l by omega), mul_zero]
-        · simp only [B, nilM, Matrix.of_apply, dif_neg hl, zero_mul]
+        · simp only [B, nilM, Matrix.of_apply, dite_eq_right hl, zero_mul]
     refine ⟨((⟨f (.ofAdd y), _, rfl⟩ : f.range) : _ ⧸ _), ?_⟩
     rw [Subgroup.quotientSubgroupOfEmbeddingOfLE_apply_mk, QuotientGroup.eq, Subgroup.mem_subgroupOf,
       hmem _ (Subtype.mem _)]
@@ -643,7 +643,7 @@ private theorem br_index (j : ℕ) (hj : j ≤ n) :
       rw [e, Matrix.sub_mul, Matrix.one_mul, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
     show valuation k (((f (.ofAdd y))⁻¹ * x).val _ _) < 1
     rw [e2]
-    simp only [B, nilM, Matrix.sub_apply, Matrix.of_apply, dif_pos p.2, sub_self, map_zero, zero_lt_one]
+    simp only [B, nilM, Matrix.sub_apply, Matrix.of_apply, dite_eq_left p.2, sub_self, map_zero, zero_lt_one]
   rw [← h4, ← Subgroup.index_comap, h1, Subgroup.index_ker, h2, Subgroup.card_top, ← h3]
   exact Nat.card_fun
 

@@ -118,7 +118,7 @@ theorem dim_localization_add_trdeg (K A : Type) [Field K] [CommRing A] [Algebra 
     rw [h] at hD
     have h' : (((⊤ + np : ℕ∞)) : WithBot ℕ∞) = ((nB : ℕ∞) : WithBot ℕ∞) := by exact_mod_cast hD
     simp only [top_add, WithBot.coe_inj] at h'
-    exact ENat.top_ne_coe nB h'
+    exact ENat.top_ne_natCast nB h'
   obtain ⟨a, ha⟩ := ENat.ne_top_iff_exists.1 hfin
   rw [← ha] at hD
   have hab : a + np = nB := by exact_mod_cast hD
@@ -133,7 +133,7 @@ theorem exists_isOpen_forall_le_of_minimal (A : Type) [CommRing A] [IsNoetherian
     (hq : ∀ r : PrimeSpectrum A, r ≤ q → r = q) :
     ∃ W : Set (PrimeSpectrum A), IsOpen W ∧ q ∈ W ∧ ∀ r ∈ W, q ≤ r := by
   set M := (⊥ : Ideal A).minimalPrimes \ {q.asIdeal}
-  have hM : M.Finite := (Ideal.finite_minimalPrimes_of_isNoetherianRing A ⊥).diff
+  have hM : M.Finite := (Ideal.finite_minimalPrimes_of_isNoetherianRing A ⊥).sdiff
   refine ⟨(⋃ q' ∈ M, PrimeSpectrum.zeroLocus (q' : Set A))ᶜ, ?_, ?_, ?_⟩
   · exact (hM.isClosed_biUnion fun q' _ => PrimeSpectrum.isClosed_zeroLocus _).isOpen_compl
   · simp only [Set.mem_compl_iff, Set.mem_iUnion, not_exists]
@@ -154,8 +154,8 @@ theorem trdeg_residueField_of_isOpenImmersion (K : Type) [Field K] {Y S : Scheme
     [IsOpenImmersion h] (f : S ⟶ Spec (CommRingCat.of K)) (y : Y) :
     @Algebra.trdeg K (S.residueField (h y)) _ _ (Spec.preimage (S.fromSpecResidueField (h y) ≫ f)).hom.toAlgebra =
       @Algebra.trdeg K (Y.residueField y) _ _ (Spec.preimage (Y.fromSpecResidueField y ≫ h ≫ f)).hom.toAlgebra := by
-  letI : Algebra K (S.residueField (h y)) := (Spec.preimage (S.fromSpecResidueField (h y) ≫ f)).hom.toAlgebra
-  letI : Algebra K (Y.residueField y) := (Spec.preimage (Y.fromSpecResidueField y ≫ h ≫ f)).hom.toAlgebra
+  let : Algebra K (S.residueField (h y)) := (Spec.preimage (S.fromSpecResidueField (h y) ≫ f)).hom.toAlgebra
+  let : Algebra K (Y.residueField y) := (Spec.preimage (Y.fromSpecResidueField y ≫ h ≫ f)).hom.toAlgebra
   let e : S.residueField (h y) ≅ Y.residueField y := asIso (h.residueFieldMap y)
   have he : Spec.preimage (S.fromSpecResidueField (h y) ≫ f) ≫ e.hom =
       Spec.preimage (Y.fromSpecResidueField y ≫ h ≫ f) := by
@@ -172,9 +172,9 @@ theorem trdeg_residueField_spec (K : Type) [Field K] (A : CommRingCat.{0}) (φ :
     @Algebra.trdeg K ((Spec A).residueField y) _ _
         (Spec.preimage ((Spec A).fromSpecResidueField y ≫ Spec.map φ)).hom.toAlgebra =
       @Algebra.trdeg K y.asIdeal.ResidueField _ _ ((algebraMap A y.asIdeal.ResidueField).comp φ.hom).toAlgebra := by
-  letI : Algebra K ((Spec A).residueField y) :=
+  let : Algebra K ((Spec A).residueField y) :=
     (Spec.preimage ((Spec A).fromSpecResidueField y ≫ Spec.map φ)).hom.toAlgebra
-  letI : Algebra K y.asIdeal.ResidueField := ((algebraMap A y.asIdeal.ResidueField).comp φ.hom).toAlgebra
+  let : Algebra K y.asIdeal.ResidueField := ((algebraMap A y.asIdeal.ResidueField).comp φ.hom).toAlgebra
   let e := Scheme.Spec.residueFieldIso A y
   have he : Spec.preimage ((Spec A).fromSpecResidueField y ≫ Spec.map φ) ≫ e.hom =
       φ ≫ CommRingCat.ofHom (algebraMap A y.asIdeal.ResidueField) := by
@@ -197,9 +197,9 @@ theorem stalk_dim_add_trdeg (K : Type) [Field K] {S X : Scheme.{0}} (f : S ⟶ S
     letI : Algebra K (S.residueField x) := (Spec.preimage (S.fromSpecResidueField x ≫ f)).hom.toAlgebra
     ∃ a b : ℕ, ringKrullDim (S.presheaf.stalk x) = a ∧ Algebra.trdeg K (S.residueField x) = b ∧ a + b = d := by
   obtain ⟨A, ι, hι, ⟨y, rfl⟩, -⟩ := Scheme.exists_affine_mem_range_and_range_subset (x := x) (U := ⊤) trivial
-  haveI : y.asIdeal.IsPrime := y.isPrime
+  have : y.asIdeal.IsPrime := y.isPrime
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (ι ≫ f)
-  letI : Algebra K A := φ.hom.toAlgebra
+  let : Algebra K A := φ.hom.toAlgebra
   have hft : Algebra.FiniteType K A := by
     have : LocallyOfFiniteType (Spec.map φ) := by rw [hφ]; infer_instance
     exact (HasRingHomProperty.Spec_iff (P := @LocallyOfFiniteType)).1 this
@@ -210,11 +210,11 @@ theorem stalk_dim_add_trdeg (K : Type) [Field K] {S X : Scheme.{0}} (f : S ⟶ S
 
   let e : S.presheaf.stalk (ι y) ≃+* Localization.AtPrime y.asIdeal :=
     (asIso (ι.stalkMap y) ≪≫ Spec.stalkIso A y).commRingCatIsoToRingEquiv
-  haveI := hdom (ι y)
-  haveI : IsDomain (Localization.AtPrime y.asIdeal) := Function.Injective.isDomain e.symm.toRingHom e.symm.injective
+  have := hdom (ι y)
+  have : IsDomain (Localization.AtPrime y.asIdeal) := Function.Injective.isDomain e.symm.toRingHom e.symm.injective
 
   let q : Ideal A := RingHom.ker (algebraMap A (Localization.AtPrime y.asIdeal))
-  haveI hqP : q.IsPrime := RingHom.ker_isPrime (algebraMap A (Localization.AtPrime y.asIdeal))
+  have hqP : q.IsPrime := RingHom.ker_isPrime (algebraMap A (Localization.AtPrime y.asIdeal))
   obtain ⟨a, b, h1, h2, h3⟩ := dim_localization_add_trdeg K A y.asIdeal q (fun c => RingHom.mem_ker)
   have hker : ∀ r : Ideal A, r.IsPrime → r ≤ y.asIdeal → q ≤ r := by
     intro r hr hry c hc
@@ -278,11 +278,11 @@ theorem stalk_dim_add_trdeg_of_uPoinOnX {E : Type} [Field E] [NumberField E] [Is
     letI : Algebra c.F (S.residueField x) := (Spec.preimage (S.fromSpecResidueField x ≫ π ≫ zs)).hom.toAlgebra
     ∃ a b : ℕ, ringKrullDim (S.presheaf.stalk x) = a ∧ Algebra.trdeg c.F (S.residueField x) = b ∧ a + b = Dw.dim := by
   obtain ⟨⟨-, -, -, -, hizs, -⟩, -, -, -, ⟨⟨hnorm, -⟩, hproj, hj, hdense, hji, -⟩, -⟩ := h
-  haveI : IsOpenImmersion j := hj
-  haveI : LocallyOfFiniteType (π ≫ zs) := by
+  have : IsOpenImmersion j := hj
+  have : LocallyOfFiniteType (π ≫ zs) := by
     obtain ⟨M, i', hi', hcomp⟩ := hproj
-    haveI := hi'
-    haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
+    have := hi'
+    have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str c.F M
     rw [← hcomp]
     infer_instance
   have hsm : SmoothOfRelativeDimension Dw.dim (j ≫ π ≫ zs) := by
@@ -334,22 +334,22 @@ theorem ringKrullDim_stalk_eq_of_isTaut {E : Type} [Field E] [NumberField E] [Is
   rw [hκ] at hb
   obtain ⟨-, -, -, -, -, -, htaut⟩ := hC
   let ρ : S.residueField x →+* ResidueField R := IsLocalRing.ResidueField.map ψ
-  letI iF : Algebra c.F (S.residueField x) := (τS ≫ S.residue x).hom.toAlgebra
-  letI iR : Algebra c.F (ResidueField R) := ((residue R).comp C.b).toAlgebra
-  letI iκ : Algebra (S.residueField x) (ResidueField R) := ρ.toAlgebra
-  haveI : IsScalarTower c.F (S.residueField x) (ResidueField R) := IsScalarTower.of_algebraMap_eq fun r => by
+  let iF : Algebra c.F (S.residueField x) := (τS ≫ S.residue x).hom.toAlgebra
+  let iR : Algebra c.F (ResidueField R) := ((residue R).comp C.b).toAlgebra
+  let iκ : Algebra (S.residueField x) (ResidueField R) := ρ.toAlgebra
+  have : IsScalarTower c.F (S.residueField x) (ResidueField R) := IsScalarTower.of_algebraMap_eq fun r => by
     show residue R (C.b r) = ρ (IsLocalRing.residue _ (τS.hom r))
     rw [← hcomp]
     exact (IsLocalRing.ResidueField.map_residue ψ (τS.hom r)).symm
-  haveI : Module.Finite (S.residueField x) (ResidueField R) := by
+  have : Module.Finite (S.residueField x) (ResidueField R) := by
     have e1 : (residue R).comp ψ = ρ.comp (IsLocalRing.residue _) :=
       RingHom.ext fun a => (IsLocalRing.ResidueField.map_residue ψ a).symm
     rw [e1] at hfin
     exact RingHom.Finite.of_comp_finite hfin
-  haveI : Algebra.IsAlgebraic (S.residueField x) (ResidueField R) := Algebra.IsAlgebraic.of_finite _ _
-  haveI : FaithfulSMul c.F (S.residueField x) :=
+  have : Algebra.IsAlgebraic (S.residueField x) (ResidueField R) := Algebra.IsAlgebraic.of_finite _ _
+  have : FaithfulSMul c.F (S.residueField x) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.injective _)
-  haveI : FaithfulSMul (S.residueField x) (ResidueField R) :=
+  have : FaithfulSMul (S.residueField x) (ResidueField R) :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.injective _)
   have htr := trdeg_add_eq c.F (S.residueField x) (A := ResidueField R)
   rw [trdeg_eq_zero (R := S.residueField x) (A := ResidueField R), add_zero] at htr

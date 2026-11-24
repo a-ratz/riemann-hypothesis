@@ -108,8 +108,8 @@ end General
 theorem exists_invariant_form (G : Type) [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G]
     [T2Space G] (K : Set G) (hKc : IsCompact K) (hKo : IsOpen K) (h0 : (0 : G) ∈ K) :
     ∃ Λ : (G → ℂ) →ₗ[ℂ] ℂ, (∀ f ∈ SB G, ∀ a, Λ (fun Y => f (Y + a)) = Λ f) ∧ ∃ f ∈ SB G, Λ f ≠ 0 := by
-  haveI : LocallyCompactSpace G := hKc.locallyCompactSpace_of_mem_nhds_of_addGroup (hKo.mem_nhds h0)
-  letI := measG G
+  have : LocallyCompactSpace G := hKc.locallyCompactSpace_of_mem_nhds_of_addGroup (hKo.mem_nhds h0)
+  let := measG G
   refine ⟨Lext G, fun f hf a => Lext_translate hf a, K.indicator fun _ => 1, ?_, ?_⟩
   · exact ⟨(LocallyConstant.indicator (1 : LocallyConstant G ℂ) ⟨hKc.isClosed, hKo⟩).isLocallyConstant,
       HasCompactSupport.intro hKc fun z hz => Set.indicator_of_notMem hz _⟩

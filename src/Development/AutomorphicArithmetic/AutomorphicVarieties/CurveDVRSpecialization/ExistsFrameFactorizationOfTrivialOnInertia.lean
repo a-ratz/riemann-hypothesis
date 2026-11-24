@@ -110,15 +110,15 @@ theorem UpperTheory.exists_frame_factorization_of_trivial_on_inertia :
     let H' : Subgroup (upl Ω L) := (r.ker.map (galEmb ℚ L Ω)).comap (upl Ω L).subtype
     have hcl : IsClosed (H' : Set (upl Ω L)) := by
       have hk : IsClosed (r.ker : Set (G L Ω)) := by
-        haveI : T2Space (Qbar l) := inferInstance
-        haveI : T2Space (Matrix (Fin n) (Fin n) (Qbar l)) :=
+        have : T2Space (Qbar l) := inferInstance
+        have : T2Space (Matrix (Fin n) (Fin n) (Qbar l)) :=
           (inferInstance : T2Space (Fin n → Fin n → Qbar l))
-        haveI h2 : T2Space (GL (Fin n) (Qbar l)) := inferInstance
-        haveI : T1Space (GL (Fin n) (Qbar l)) := @T2Space.t1Space _ _ h2
+        have h2 : T2Space (GL (Fin n) (Qbar l)) := inferInstance
+        have : T1Space (GL (Fin n) (Qbar l)) := @T2Space.t1Space _ _ h2
         exact isClosed_singleton.preimage hr
       have hi : IsClosed ((galEmb ℚ L Ω) '' (r.ker : Set (G L Ω))) :=
         (hk.isCompact.image hgc).isClosed
-      exact hi.preimage continuous_subtype_val
+      exact hi.preimage continuous_subtypeVal
     have hX : Subgroup.normalClosure
         {s : upl Ω L | ∃ B' : ValuationSubring Ω, ¬ B'.valuation (l : Ω) < 1 ∧ (s : G ℚ Ω) ∈ Ine B' ∧
           η s = 1 ∧ barChar O Ψ s = 1} ≤ H' := by

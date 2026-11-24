@@ -143,7 +143,7 @@ private theorem le_unif {w : Plc E} {ϖ y : w.adicCompletion E} (hϖ : Formalism
     Valued.v y ≤ Valued.v ϖ := by
   rw [hϖ]
   rcases eq_or_ne (Valued.v y) 0 with h0 | h0
-  · rw [h0]; exact zero_le'
+  · rw [h0]; exact zero_le
   obtain ⟨m, hm⟩ := WithZero.ne_zero_iff_exists.1 h0
   rw [← hm] at h ⊢
   rw [← WithZero.coe_one, WithZero.coe_lt_coe] at h
@@ -174,7 +174,7 @@ private theorem val_sim {x : E} {q : ℕ} {w : Plc E} (P : Pos x q w) (hq : q.Pr
     have e2 : ((Ideal.absNorm w.asIdeal : ℕ) : u.adicCompletion E) =
         completionMap (below ℚ u) u ((Ideal.absNorm w.asIdeal : ℕ) : (below ℚ u).adicCompletion ℚ) := (map_natCast _ _).symm
     rw [e1, e2, valued_completionMap, valued_completionMap] at h
-    exact (pow_left_inj₀ zero_le' zero_le' (Ideal.ramificationIdx_pos (R := 𝓞 ℚ) u.asIdeal).ne').1 h
+    exact (pow_left_inj₀ zero_le zero_le (Ideal.ramificationIdx_pos (R := 𝓞 ℚ) u.asIdeal).ne').1 h
   obtain ⟨u0, hu0⟩ := exists_over (E := E) v
   by_cases hq0 : (q : 𝓞 E) ∈ u0.asIdeal
   · obtain ⟨u, hu, hc⟩ : ∃ u : Plc E, below ℚ u = v ∧ SameK x (cj u) w :=
@@ -258,21 +258,21 @@ private theorem shape_of_torus_centre_power {x : E} {q : ℕ} {w : Plc E} (P : P
     rw [htinv, Matrix.diagonal_apply]
     split_ifs with hab hk
     · have hi0 : i ≠ 0 := by omega
-      have h1 := pow_le_of_le_one zero_le' hN1.le hi0
+      have h1 := pow_le_of_le_one zero_le hN1.le hi0
       rw [map_inv₀]
       calc _ ≤ Valued.v ϖ * (Valued.v ϖ)⁻¹ := mul_le_mul_left (h1.trans hNϖ) _
         _ = 1 := mul_inv_cancel₀ ((Valuation.ne_zero_iff _).2 hϖ0)
     · rw [map_one, mul_one]
       exact pow_le_one' hN1.le _
     · rw [map_zero, mul_zero]
-      exact zero_le'
+      exact zero_le
   have hentry : ∀ a b : Fin n, Valued.v (t.val a b) ≤ 1 := by
     intro a b
     rw [htv, Matrix.diagonal_apply]
     split_ifs
     · exact hϖ1
     · rw [map_one]
-    · rw [map_zero]; exact zero_le'
+    · rw [map_zero]; exact zero_le
   refine ⟨by rw [hgw]; exact ht, hoff, hcen, ?_, ?_, ?_⟩
   · intro u a b
     rw [HeightOneSpectrum.mem_adicCompletionIntegers]
@@ -320,7 +320,7 @@ private theorem shape_of_torus_centre_power {x : E} {q : ℕ} {w : Plc E} (P : P
       rw [h2, Matrix.one_apply]
       split_ifs
       · rw [map_one]
-      · rw [map_zero]; exact zero_le'
+      · rw [map_zero]; exact zero_le
     · rw [map_inv, hoff u huw hs, inv_one]
       have h1 : Valued.v ((Ideal.absNorm w.asIdeal : ℕ) : u.adicCompletion E) ≤ 1 := by
         have e : ((Ideal.absNorm w.asIdeal : ℕ) : u.adicCompletion E) =
@@ -331,7 +331,7 @@ private theorem shape_of_torus_centre_power {x : E} {q : ℕ} {w : Plc E} (P : P
         rw [Units.val_one, Matrix.one_apply]
         split_ifs
         · rw [map_one]
-        · rw [map_zero]; exact zero_le'
+        · rw [map_zero]; exact zero_le
       exact mul_le_one' (pow_le_one' h1 _) h2
   · intro v
     rcases Nat.eq_zero_or_pos i with rfl | hi0

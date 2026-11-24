@@ -193,9 +193,9 @@ theorem aI_mul_ae (hd : d.AxH 𝒜) (h : d.S1) {G G' : WT} (c : ι) {f g : A c}
     d.aI (fun c f P => d.nrm c (G + G') f P) c (f * g) sg =ᵐ[blockSphereProb d.D (d.N + 1)]
       fun z => d.aI (fun c f P => d.nrm c G f P) c f sg z + d.aI (fun c f P => d.nrm c G' f P) c g sg z := by
   have hfin : ∀ᵐ z ∂(blockSphereProb d.D (d.N + 1)), (d.ST c sg (d.tOf z)).Finite := by
-    letI : Countable K := countable_numberField K
-    letI : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
-    letI := d.KT_finiteDimensional hd c
+    let : Countable K := countable_numberField K
+    let : Algebra (KTf K d.D d.N) (OmS (Ω c) d.D d.N) := (d.KTtoS h c).toAlgebra
+    let := d.KT_finiteDimensional hd c
     let e : KTf K d.D d.N ≃+* d.KT c :=
       ((d.KTtoS h c).rangeRestrictFieldEquiv).trans (RingEquiv.subfieldCongr (d.KTtoS_fieldRange h c))
     have hmap : (algebraMap (KTf K d.D d.N) (OmS (Ω c) d.D d.N)).comp e.symm.toRingHom =
@@ -203,7 +203,7 @@ theorem aI_mul_ae (hd : d.AxH 𝒜) (h : d.S1) {G G' : WT} (c : ι) {f g : A c}
       ext x
       change d.KTtoS h c (e.symm x) = (x : OmS (Ω c) d.D d.N)
       exact congrArg Subtype.val (e.apply_symm_apply x)
-    letI : Module.Finite (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
+    let : Module.Finite (KTf K d.D d.N) (OmS (Ω c) d.D d.N) :=
       Module.Finite.of_equiv_equiv e.symm (RingEquiv.refl _) hmap
     filter_upwards [NPB.ae_gen (K := K) (D := d.D) (N := d.N) sg] with z hz
     obtain ⟨y, -, hpt⟩ := NPB.exists_gen sg (fun q => d.tOf z q.1 q.2) hz 1 one_ne_zero
@@ -211,7 +211,7 @@ theorem aI_mul_ae (hd : d.AxH 𝒜) (h : d.S1) {G G' : WT} (c : ι) {f g : A c}
     have hy : ∀ i, y (Fin.natAdd (d.N + 1) i) ≠ 0 := by
       intro i h0
       exact hpt (MvPolynomial.X (i.succ, 0)) (MvPolynomial.X_ne_zero _) (by simp [NPB.gpt, h0])
-    letI : Algebra (KTf K d.D d.N) ℂ := (tauPev sg pt hpt).toAlgebra
+    let : Algebra (KTf K d.D d.N) ℂ := (tauPev sg pt hpt).toAlgebra
     rw [← d.ST_scale c sg (d.tOf z) y hy]
     refine (Set.finite_range (fun σ : OmS (Ω c) d.D d.N →ₐ[KTf K d.D d.N] ℂ =>
       (σ : OmS (Ω c) d.D d.N →+* ℂ).comp (algebraMap (Ω c) (OmS (Ω c) d.D d.N)))).subset ?_
@@ -350,7 +350,7 @@ theorem exists_smul_eq (hd : d.AxH 𝒜) {c : ι} {G : WT} {f g : A c} (hf : f �
   have h1 := hd.finrank_one c G
   have hne : (⟨f, hf⟩ : 𝒜 c G) ≠ 0 := by
     rwa [Ne, Submodule.mk_eq_zero]
-  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_nonzero' _ hne).1 h1 ⟨g, hg⟩
+  obtain ⟨a, ha⟩ := (finrank_eq_one_iff_of_ne_zero' _ hne).1 h1 ⟨g, hg⟩
   have ha' : a • f = g := congrArg Subtype.val ha
   refine ⟨a, ?_, ha'⟩
   rintro rfl
@@ -384,7 +384,7 @@ theorem Hgt_pow (hd : d.AxH 𝒜) (h : d.S1) (G : WT) (f : ∀ c, A c)
     obtain ⟨hm, hI', hH⟩ := ih
     have hmem : ∀ c, (f ^ (n + 1 + 1)) c ∈ 𝒜 c ((n + 1 + 1) • G) ∧ (f ^ (n + 1 + 1)) c ≠ 0 := by
       intro c
-      haveI := hd.graded c
+      have := hd.graded c
       rw [pow_succ, succ_nsmul, Pi.mul_apply]
       exact ⟨SetLike.GradedMul.mul_mem (hm c).1 (hf c).1,
         hd.mul_ne_zero c (hm c).1 (hf c).1 (hm c).2 (hf c).2⟩
@@ -403,7 +403,7 @@ theorem Hgt_pow' (hd : d.AxH 𝒜) (h : d.S1) (G : WT) (f : ∀ c, A c)
   exact d.Hgt_pow hd h G f hf hI m
 
 theorem wx_mem (hd : d.AxH 𝒜) (x : Fin (d.N + 1) → K) (c : ι) : d.wx x c ∈ 𝒜 c d.wL := by
-  haveI := hd.tower c
+  have := hd.tower c
   rw [Data.wx, Finset.sum_apply]
   refine Submodule.sum_mem _ fun j _ => ?_
   rw [Pi.smul_apply, ← algebraMap_smul (Ω c) (x j) (d.w j c)]
@@ -467,7 +467,7 @@ theorem h_ind' (hd : d.AxH 𝒜) (h : d.S1) (hI2be : d.HeightIntegralBoundEstima
         hd.a3' c (hd.w_mem j.1 c) j.2)).subset ?_
       rintro v ⟨hv, hne⟩
       by_contra hcon
-      simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_iUnion, not_or, not_exists, not_and,
+      simp only [Set.mem_union, Set.mem_ofPred_eq, Set.mem_iUnion, not_or, not_exists, not_and,
         not_not] at hcon
       apply hne
       have hne' : Nonempty {j // d.w j c ≠ 0} := ⟨⟨d.jc c, hd.w_base c⟩⟩

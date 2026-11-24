@@ -154,7 +154,7 @@ theorem isLocalization (h : (maximalIdeal R).map (algebraMap R W) = maximalIdeal
 
 theorem isPushout (h : (maximalIdeal R).map (algebraMap R W) = maximalIdeal W) :
     Algebra.IsPushout R K W K' := by
-  haveI := isLocalization R W K' h
+  have := isLocalization R W K' h
   constructor
   exact (isLocalizedModule_iff_isBaseChange (nonZeroDivisors R) K _).1
     (isLocalizedModule_iff_isLocalization.2 this)
@@ -162,7 +162,7 @@ theorem isPushout (h : (maximalIdeal R).map (algebraMap R W) = maximalIdeal W) :
 theorem isPullback_spec (h : (maximalIdeal R).map (algebraMap R W) = maximalIdeal W) :
     IsPullback (spMap (algebraMap K K')) (spMap (algebraMap W K')) (spMap (algebraMap R K))
       (spMap (algebraMap R W)) := by
-  haveI := isPushout R K W K' h
+  have := isPushout R K W K' h
   exact isPullback_SpecMap_of_isPushout _ _ _ _ (CommRingCat.isPushout_of_isPushout R K W K')
 
 theorem flat_spec (h : (maximalIdeal R).map (algebraMap R W) = maximalIdeal W) :
@@ -180,7 +180,7 @@ namespace GlobalTheory.UnramifiedClosure
 
 theorem schDom_spMap {A B : Type} [CommRing A] [CommRing B] [IsReduced A] (φ : A →+* B)
     (hφ : Function.Injective φ) : IsSchemeTheoreticallyDominant (spMap φ) := by
-  haveI : IsDominant (spMap φ) := by
+  have : IsDominant (spMap φ) := by
     rw [isDominant_iff]
     show DenseRange (PrimeSpectrum.comap φ)
     rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical,
@@ -412,9 +412,9 @@ theorem exists_semilinear_twist : ∀ (R K W K' : Type) [CommRing R] [IsDomain R
   have hAs : IsGrpPullback ((Over.pullback (spMap (algebraMap K K'))).obj A)
       ((Over.pullback (spMap (algebraMap K K'))).obj A) (spMap (σ : K' →+* K')) s :=
     IsGrpPullback.cancel hA1 (hA1.congr hK hs1.symm) hs2
-  haveI : IsMonHom e.hom := he
+  have : IsMonHom e.hom := he
   have he1 := isGrpPullback_of_iso e
-  haveI : IsMonHom e.symm.hom := inferInstanceAs (IsMonHom e.inv)
+  have : IsMonHom e.symm.hom := inferInstanceAs (IsMonHom e.inv)
   have he2 := isGrpPullback_of_iso e.symm
   have hG1 := isGrpPullback_pullback G (spMap (algebraMap W K'))
   have h1 := (((he1.comp hAs).comp he2).comp hG1).congr
@@ -804,7 +804,7 @@ theorem rational_rows (R W : Type) [CommRing R] [IsDomain R] [IsDiscreteValuatio
     apply le_antisymm
     · rw [← e]
       exact (Submodule.finrank_le N₀).trans (Module.finrank_fin_fun R).le
-    · haveI : Module.Finite R N₀ := Module.Finite.of_basis b
+    · have : Module.Finite R N₀ := Module.Finite.of_basis b
       let ψ : (Fin n → R) →ₗ[R] N₀ := (d • LinearMap.id).codRestrict N₀ hdN₀
       have hψ : Function.Injective ψ := by
         intro a a' haa

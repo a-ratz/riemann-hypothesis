@@ -111,7 +111,7 @@ lemma sigma_zero (hz : SigmaZero) : wSigma L 0 = 0 := (hz L 0).2 (zero_mem _)
 
 lemma analyticAt_dslope (he : SigmaEntire) : AnalyticAt ℂ (dslope (wSigma L) 0) 0 := by
   obtain ⟨p, hp⟩ := (he L).analyticAt 0
-  exact ⟨_, hp.has_fpower_series_dslope_fslope⟩
+  exact ⟨_, hp.dslope_fslope⟩
 
 lemma wp_congr {x y : ℂ} (h : x + -y ∈ L.lattice) :
     L.weierstrassP x = L.weierstrassP y ∧ L.derivWeierstrassP x = L.derivWeierstrassP y := by
@@ -153,14 +153,14 @@ lemma sig_order_mem (hord : SigmaOrder) {β z : ℂ} (h : z + β ∈ L.lattice) 
     meromorphicOrderAt (fun w => wSigma L (w + β)) z = ((1 : ℤ) : WithTop ℤ) := by
   have := hord L 1 β z one_ne_zero
   simp only [one_mul] at this
-  rw [this, if_pos (by rwa [one_mul])]
+  rw [this, ite_eq_left (by rwa [one_mul])]
   rfl
 
 lemma sig_order_notMem (hord : SigmaOrder) {β z : ℂ} (h : z + β ∉ L.lattice) :
     meromorphicOrderAt (fun w => wSigma L (w + β)) z = ((0 : ℤ) : WithTop ℤ) := by
   have := hord L 1 β z one_ne_zero
   simp only [one_mul] at this
-  rw [this, if_neg (by rwa [one_mul])]
+  rw [this, ite_eq_right (by rwa [one_mul])]
   rfl
 
 lemma sig_eventually_ne (he : SigmaEntire) (hord : SigmaOrder) (β z : ℂ) :
@@ -217,7 +217,7 @@ lemma threeTermQuotient_periodic (hq : SigmaQuasi) : IsPeriodic L (threeTermQuot
   have hE : Complex.exp (wEta L ω * (x + (b + c) + ω / 2)) * Complex.exp (wEta L ω * (x + -b + ω / 2))
         * Complex.exp (wEta L ω * (x + -c + ω / 2))
       = Complex.exp (wEta L ω * (x + ω / 2)) ^ 3 := by
-    rw [← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_natCast_mul]; congr 1; push_cast; ring
   have hχ : semiChar L ω ≠ 0 := fun h => by simpa [h] using semiChar_mul_self L ω
   have hne : semiChar L ω ^ 3 * Complex.exp (wEta L ω * (x + ω / 2)) ^ 3 ≠ 0 :=
     mul_ne_zero (pow_ne_zero _ hχ) (pow_ne_zero _ (Complex.exp_ne_zero _))
@@ -420,7 +420,7 @@ theorem sgStarThree_of (h : SigmaThree) : SgStarThree := by
         * Complex.exp (-(s2 L) * c ^ 2 / 2)) ^ 3
       = Complex.exp (-(s2 L) * (a + b + c) ^ 2 / 2) * Complex.exp (-(s2 L) * (a - b) ^ 2 / 2)
         * Complex.exp (-(s2 L) * (b - c) ^ 2 / 2) * Complex.exp (-(s2 L) * (c - a) ^ 2 / 2) := by
-    rw [← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_nat_mul, ← Complex.exp_add,
+    rw [← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_natCast_mul, ← Complex.exp_add,
       ← Complex.exp_add, ← Complex.exp_add]
     congr 1; push_cast; ring
   unfold sgStar

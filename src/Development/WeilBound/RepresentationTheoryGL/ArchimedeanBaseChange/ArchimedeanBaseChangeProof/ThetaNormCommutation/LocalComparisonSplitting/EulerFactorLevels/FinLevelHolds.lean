@@ -185,14 +185,14 @@ theorem finsum_doubleCoset_restr {X V : Type} {Y : V → Type} [Group X] [Topolo
     let t' : ∀ v, Y v := fun v => if pf v x ∈ K v ∧ pf v y ∈ K v then 1 else t v
     have ht'T : ∀ v, t' v ∈ Tv v := fun v => by
       by_cases c : pf v x ∈ K v ∧ pf v y ∈ K v
-      · simp only [t', if_pos c]; exact one_mem _
-      · simp only [t', if_neg c]; exact ht v
+      · simp only [t', ite_eq_left c]; exact one_mem _
+      · simp only [t', ite_eq_right c]; exact ht v
     have ht'K : ∀ v, (pf v x)⁻¹ * (t' v)⁻¹ * pf v y ∈ K v := fun v => by
       by_cases c : pf v x ∈ K v ∧ pf v y ∈ K v
-      · simp only [t', if_pos c, inv_one, mul_one]; exact mul_mem (inv_mem c.1) c.2
-      · simp only [t', if_neg c]; rw [e v]; simpa [mul_assoc] using hk v
+      · simp only [t', ite_eq_left c, inv_one, mul_one]; exact mul_mem (inv_mem c.1) c.2
+      · simp only [t', ite_eq_right c]; rw [e v]; simpa [mul_assoc] using hk v
     have hev' : ∀ᶠ v in cofinite, t' v ∈ K v := ((hX.eventually_mem x).and (hX.eventually_mem y)).mono
-      fun v c => by simp only [t', if_pos c]; exact one_mem _
+      fun v c => by simp only [t', ite_eq_left c]; exact one_mem _
     obtain ⟨g, -, hg⟩ := hX.exists_eq isEmptyElim t' hev'
     refine (@DoubleCoset.eq _ _ _ _ _ _).2 ⟨g, (hT g).2 fun v => hg v ▸ ht'T v, x⁻¹ * g⁻¹ * y,
       (memKg _).2 fun v => by simpa [hg v] using ht'K v, by group⟩
@@ -249,7 +249,7 @@ theorem finsum_doubleCoset_restr {X V : Type} {Y : V → Type} [Group X] [Topolo
     · have hb' := hH b hb
       let y : ∀ v, Y v := fun v => if h : v ∈ S0 then Quotient.out (b ⟨v, h⟩) else 1
       obtain ⟨x, -, hx⟩ := hX.exists_eq isEmptyElim y
-        (eventually_of_finset S0 fun v hv => by simp only [y, dif_neg hv]; exact one_mem _)
+        (eventually_of_finset S0 fun v hv => by simp only [y, dite_eq_right hv]; exact one_mem _)
       have hq := L1 _ _ (DoubleCoset.out_eq' (DoubleCoset.mk T Kg x))
       have hxS : ∀ v : S0, DoubleCoset.mk (Tv v.1) (K v.1) (pf v.1 x) = b v := fun v => by
         rw [hx, show y v.1 = Quotient.out (b v) by simp [y, v.2]]
@@ -258,11 +258,11 @@ theorem finsum_doubleCoset_restr {X V : Type} {Y : V → Type} [Group X] [Topolo
       refine ⟨DoubleCoset.mk T Kg x, ?_, hΦ⟩
       show F _ ≠ 0
       have hne : ∀ v ∉ S0, Fv v (pf v (Quotient.out (DoubleCoset.mk T Kg x))) ≠ 0 := fun v hv => by
-        rw [L0 v _ _ (hq v), hx]; simp only [y, dif_neg hv, (hS0 v hv).1]; exact one_ne_zero
+        rw [L0 v _ _ (hq v), hx]; simp only [y, dite_eq_right hv, (hS0 v hv).1]; exact one_ne_zero
       rw [DegreeKernelLowerBound _ hne, Finset.prod_ne_zero_iff]
       intro v hv
       rw [L0 v _ _ (hq v), hx]
-      simp only [y, dif_pos hv]
+      simp only [y, dite_eq_left hv]
       exact hb' ⟨v, hv⟩
   refine ((finsum_mem_support _).symm.trans ((finsum_mem_eq_of_bijOn Φ hbij fun q hq => hval q hq).trans
     (finsum_mem_support H))).trans ?_
@@ -400,8 +400,8 @@ theorem avg_const_one {H : Type} [Group H] : avg (fun _ : H => (1 : ℂ)) = 1 :=
     ext k; simp [rStab]
   unfold avg
   rw [hs, Subgroup.index_top]
-  haveI : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
-  haveI : Unique (H ⧸ (⊤ : Subgroup H)) := uniqueOfSubsingleton (QuotientGroup.mk 1)
+  have : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
+  have : Unique (H ⧸ (⊤ : Subgroup H)) := uniqueOfSubsingleton (QuotientGroup.mk 1)
   rw [finsum_unique]
   simp
 
@@ -484,10 +484,10 @@ theorem avg_pi_comp {H : Type} [Group H] {ι : Type} [Fintype ι] {G : ι → Ty
     simp only [map_mul, Pi.mul_apply]
     exact Finset.prod_congr rfl fun i _ => hk' i (π x i)
   rw [avg_eq_of_le_rStab H _ R hRle hR0]
-  haveI : R.FiniteIndex := ⟨hR0⟩
-  haveI : ∀ i, (rStab (u i)).FiniteIndex := fun i => ⟨hu i⟩
-  haveI : Fintype (H ⧸ R) := Fintype.ofFinite _
-  haveI : ∀ i, Fintype (G i ⧸ rStab (u i)) := fun i => Fintype.ofFinite _
+  have : R.FiniteIndex := ⟨hR0⟩
+  have : ∀ i, (rStab (u i)).FiniteIndex := fun i => ⟨hu i⟩
+  have : Fintype (H ⧸ R) := Fintype.ofFinite _
+  have : ∀ i, Fintype (G i ⧸ rStab (u i)) := fun i => Fintype.ofFinite _
   let e : H ⧸ R → ∀ i, G i ⧸ rStab (u i) := fun q i => QuotientGroup.mk (π q.out i)
   have he : Function.Bijective e := by
     constructor
@@ -539,8 +539,8 @@ theorem avg_restr_prod : ∀ {X V : Type} {Y : V → Type} [Group X] [Topologica
     let z : ∀ v, Y v := fun v => if h : v ∈ S then (y ⟨v, h⟩ : Y v) else 1
     have hz : ∀ v, z v ∈ K v := fun v => by
       by_cases h : v ∈ S
-      · simp only [z, dif_pos h]; exact (y ⟨v, h⟩).2
-      · simp only [z, dif_neg h]; exact one_mem _
+      · simp only [z, dite_eq_left h]; exact (y ⟨v, h⟩).2
+      · simp only [z, dite_eq_right h]; exact one_mem _
     obtain ⟨x, -, hx⟩ := hX.exists_eq (fun w => w.elim) z (Eventually.of_forall hz)
     have hxK : x ∈ Kg := Subgroup.mem_iInf.2 fun v => by
       show pf v x ∈ K v
@@ -642,7 +642,7 @@ variable {X V : Type} {Y : V → Type} [Group X] [TopologicalSpace X] [IsTopolog
 
 theorem isClosed_setOf_forall_mem (hX : GlobalTheory.RestrMeas.IsRestrGroup (GlobalTheory.RestrMeas.noArch X) pf K)
     (C : ∀ v, Set (Y v)) (hC : ∀ v, IsCompact (C v)) : IsClosed {z : X | ∀ v, pf v z ∈ C v} := by
-  simp only [Set.setOf_forall]
+  simp only [ofPred_forall]
   exact isClosed_iInter fun v => (hC v).isClosed.preimage (hX.continuous_pf v)
 
 theorem isCompact_setOf_forall_mem (hX : GlobalTheory.RestrMeas.IsRestrGroup (GlobalTheory.RestrMeas.noArch X) pf K)
@@ -710,7 +710,7 @@ theorem isCompact_closure_zpowers_iff (hX : GlobalTheory.RestrMeas.IsRestrGroup 
     have hfin := Filter.eventually_cofinite.1 (hX.eventually_mem x)
     have hCK : ∀ v ∉ hfin.toFinset, closure (Subgroup.zpowers (pf v x) : Set (Y v)) ⊆ K v := by
       intro v hv
-      rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+      rw [Set.Finite.mem_toFinset, mem_ofPred_eq, not_not] at hv
       exact closure_minimal (fun y hy => Subgroup.zpowers_le.2 hv hy) (hX.isCompact_K v).isClosed
     have hM := isCompact_setOf_forall_mem hX hfin.toFinset _ h hCK
     refine hM.of_isClosed_subset isClosed_closure
@@ -795,8 +795,8 @@ theorem relIndex_iInf_comap {X V : Type} {Y : V → Type} [Group X] [Topological
     have hxC : x ∈ Cg := (hmemC x).2 fun v => by
       rw [hx v]
       by_cases h : v ∈ S
-      · simp only [z, dif_pos h]; exact (y ⟨v, h⟩).2
-      · simp only [z, dif_neg h]; exact one_mem _
+      · simp only [z, dite_eq_left h]; exact (y ⟨v, h⟩).2
+      · simp only [z, dite_eq_right h]; exact one_mem _
     refine ⟨⟨x, hxC⟩, funext fun v => Subtype.ext ?_⟩
     rw [hφ]
     show pf v x = _
@@ -1042,7 +1042,7 @@ theorem eulerFinOf' : EulerFinOf' := by
   have h : ∃ w ∈ S, w.under (𝓞 (maximalRealSubfield E)) = v := by
     obtain ⟨u, ⟨huS, hu⟩, -⟩ := hS w0
     exact ⟨u, huS, hu.trans hw0⟩
-  simp only [secPl, dif_pos h, Option.elim]
+  simp only [secPl, dite_eq_left h, Option.elim]
   exact key _ h.choose_spec.1 h.choose_spec.2
 
 end GlobalTheory.CompanionTheory.EulerAsm
@@ -1085,10 +1085,10 @@ theorem index_rStab_orbit {G : Type} [Group G] [TopologicalSpace G] [IsTopologic
     (f : G → ℂ) (δ : G) (hK : IsCompact (K : Set G)) (hU : IsOpen (U : Set G))
     (hf : ∀ u ∈ U, ∀ y, f (u⁻¹ * y * θ u) = f y) (x : G) :
     (rStab fun k : K => f ((x * k)⁻¹ * δ * θ (x * k))).index ≠ 0 := by
-  haveI : CompactSpace K := isCompact_iff_compactSpace.mp hK
+  have : CompactSpace K := isCompact_iff_compactSpace.mp hK
   have hopen : IsOpen ((U.subgroupOf K : Subgroup K) : Set K) := by
     rw [Subgroup.coe_subgroupOf]
-    exact hU.preimage continuous_subtype_val
+    exact hU.preimage continuous_subtypeVal
   have hle : U.subgroupOf K ≤ GlobalTheory.BCT.rStab fun k : K => f ((x * k)⁻¹ * δ * θ (x * k)) := by
     intro k' hk'
     rw [Subgroup.mem_subgroupOf] at hk'
@@ -1097,9 +1097,9 @@ theorem index_rStab_orbit {G : Type} [Group G] [TopologicalSpace G] [IsTopologic
     rw [← hf (k' : G) hk' ((x * ↑y)⁻¹ * δ * θ (x * ↑y))]
     congr 1
     simp only [Subgroup.coe_mul, map_mul, _root_.mul_inv_rev, mul_assoc]
-  haveI : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hopen
-  haveI : (U.subgroupOf K).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
-  haveI := Subgroup.finiteIndex_of_le hle
+  have : Finite (K ⧸ U.subgroupOf K) := Subgroup.quotient_finite_of_isOpen _ hopen
+  have : (U.subgroupOf K).FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have := Subgroup.finiteIndex_of_le hle
   exact Subgroup.FiniteIndex.index_ne_zero
 
 theorem range_pair (E : Type) [Field E] [NumberField E] [IsCMField E] (a b : ℕ) :
@@ -1240,7 +1240,7 @@ theorem cptPart_prod (T : Subgroup G) (T' : Subgroup G') :
   rw [← Subgroup.closure_prod hs hs']
   congr 1
   ext ⟨a, b⟩
-  simp only [Set.mem_setOf_eq, Set.mem_prod, compactPowers_prod, Subgroup.mem_prod]
+  simp only [Set.mem_ofPred_eq, Set.mem_prod, compactPowers_prod, Subgroup.mem_prod]
   tauto
 
 theorem card_inf_prod (Γ C : Subgroup G) (Γ' C' : Subgroup G') :
@@ -1296,7 +1296,7 @@ theorem exists_under (v : PlF E) : ∃ w : Pl E, w.under (𝓞 (maximalRealSubfi
     first
     | exact FaithfulSMul.algebraMap_injective _ _
     | exact NoZeroSMulDivisors.algebraMap_injective _ _
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
+  have : v.asIdeal.IsMaximal := v.isMaximal
   obtain ⟨Q, hQmax, hQ⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral v.asIdeal
     (by rw [(RingHom.injective_iff_ker_eq_bot _).mp hinj]; exact bot_le)
   refine ⟨⟨Q, hQmax.isPrime, ?_⟩, ?_⟩
@@ -1467,9 +1467,9 @@ theorem unitae_nrm (hU : Unr E) (n : ℕ) (w : Pl E) (δ : GL (Fin n) E) :
     nrmL n w (locEl n w δ) = GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) (δ * thE E n δ) := by
   by_cases hs : IsSplitAt w
   · unfold nrmL locEl
-    rw [if_pos hs, if_pos hs]
+    rw [ite_eq_left hs, ite_eq_left hs]
   · unfold nrmL locEl
-    rw [if_neg hs, if_neg hs]
+    rw [ite_eq_right hs, ite_eq_right hs]
     obtain ⟨-, -, -, hns, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
     obtain ⟨hp, -⟩ := hns hs
     rw [map_mul, thE, GlobalTheory.ThetaPull.map_thetaGL (algebraMap E (w.adicCompletion E)) _ (cj w) (fun x => (hp x).symm)]
@@ -1500,8 +1500,8 @@ theorem unitae_single (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E) (hsep : (polE �
   refine ⟨hy, ?_, ?_⟩
   · intro g hg
     by_cases hs : IsSplitAt w
-    · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
-      have hnr : nrmL n w (locEl n w δ) = locEl n w δ := by unfold nrmL; rw [if_pos hs]
+    · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
+      have hnr : nrmL n w (locEl n w δ) = locEl n w δ := by unfold nrmL; rw [ite_eq_left hs]
       rw [hθ, MonoidHom.id_apply] at hg
       rw [hnr] at hbez
       obtain ⟨t, ht, k, hk, hgk⟩ := GlobalTheory.SplitUniq.splitUniq E n w _ g hy hbez hg
@@ -1519,17 +1519,17 @@ theorem unitae_single (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E) (hsep : (polE �
     have ht' : t * locEl n w δ = locEl n w δ * thL n w t := ht
     have hcomm : t * nrmL n w (locEl n w δ) = nrmL n w (locEl n w δ) * t := by
       by_cases hs : IsSplitAt w
-      · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
+      · have hθ : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
         rw [hθ, MonoidHom.id_apply] at ht'
         unfold nrmL
-        rw [if_pos hs]
+        rw [ite_eq_left hs]
         exact ht'
-      · have hθ : thL n w = thetaGL n (cj w) := by unfold thL; rw [if_neg hs]
+      · have hθ : thL n w = thetaGL n (cj w) := by unfold thL; rw [ite_eq_right hs]
         obtain ⟨-, hinv, -⟩ := GlobalTheory.ConjAtPlace.main E hU w
         rw [hθ] at ht'
         have hth := GlobalTheory.ThetaPull.thetaGL_thetaGL (a := n) (cj w) hinv t
         unfold nrmL
-        rw [if_neg hs]
+        rw [ite_eq_right hs]
         calc t * (locEl n w δ * thetaGL n (cj w) (locEl n w δ))
             = locEl n w δ * thetaGL n (cj w) t * thetaGL n (cj w) (locEl n w δ) := by rw [← mul_assoc, ht']
           _ = locEl n w δ * thetaGL n (cj w) (t * locEl n w δ) := by rw [map_mul, mul_assoc]

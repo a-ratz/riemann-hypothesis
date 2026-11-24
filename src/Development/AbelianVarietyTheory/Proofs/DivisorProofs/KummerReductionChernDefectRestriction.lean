@@ -57,7 +57,7 @@ theorem res_defect : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ (V U : Scheme.{
   have hq0 : q ≠ 0 := by
     rintro rfl
     exact NeZero.ne Q (zero_dvd_iff.mp hqQ)
-  haveI : NeZero q := ⟨hq0⟩
+  have : NeZero q := ⟨hq0⟩
   have hqU : IsUnit (q : Γ(U, ⊤)) := by
     obtain ⟨k, hk⟩ := hqQ
     rw [hk, Nat.cast_mul] at hQ

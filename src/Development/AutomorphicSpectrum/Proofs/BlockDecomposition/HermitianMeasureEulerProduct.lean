@@ -255,7 +255,7 @@ theorem map_eq_of_isFD {V : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopol
     (P : Measure V) [P.IsAddHaarMeasure] (G : AddSubgroup V) [Countable G] {D : Set V}
     (hD : IsAddFundamentalDomain G D P) (h0 : P D ≠ 0) (h1 : P D ≠ ⊤) (e : V ≃ₜ+ V)
     (hG : ∀ v ∈ G, e.symm v ∈ G) (hG' : ∀ v ∈ G, e v ∈ G) : P.map e = P := by
-  haveI : (P.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map P
+  have : (P.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map P
   set c := Measure.addHaarScalarFactor (P.map e) P with hc
   have h : P.map e = c • P := Measure.isAddLeftInvariant_eq_smul _ P
   have hm : MeasurableEmbedding e := e.toHomeomorph.measurableEmbedding
@@ -282,11 +282,11 @@ open GlobalTheory.CompanionTheory.SiegelND.PiCovol in
 theorem GlobalTheory.CompanionTheory.SiegelND.piCovol_map_matrix : ∀ (F : Type) [Field F] [NumberField F] (ν : Measure (AF F)), GlobalTheory.CompanionTheory.Hypotheses₂.OneV.IsCovolOne ν → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (A : Matrix ι ι F), A.det ≠ 0 → (Measure.pi fun _ : ι => ν).map (fun x => (A.map (algebraMap F (AF F))).mulVec x) = Measure.pi fun _ : ι => ν := by
   intro F _ _ ν hν ι _ _ A hA
   obtain ⟨hH, D, hD, hD1⟩ := hν
-  haveI := hH
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
+  have := hH
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : SecondCountableTopology (AF F) := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : Countable F := (Module.finBasis ℚ F).equivFun.injective.countable
   set G₀ : AddSubgroup (AF F) := (algebraMap F (AF F)).toAddMonoidHom.range with hG₀
   set G : AddSubgroup (ι → AF F) := AddSubgroup.pi Set.univ fun _ : ι => G₀ with hGdef
   have hmemG : ∀ v : ι → AF F, v ∈ G ↔ ∃ ξ : ι → F, v = fun i => algebraMap F (AF F) (ξ i) := by
@@ -297,7 +297,7 @@ theorem GlobalTheory.CompanionTheory.SiegelND.piCovol_map_matrix : ∀ (F : Type
       exact ⟨ξ, funext fun i => (hξ i).symm⟩
     · rintro ⟨ξ, rfl⟩ i _
       exact ⟨ξ i, rfl⟩
-  haveI : Countable G := by
+  have : Countable G := by
     have : Function.Surjective (fun ξ : ι → F => (⟨fun i => algebraMap F (AF F) (ξ i), (hmemG _).2 ⟨ξ, rfl⟩⟩ : G)) := by
       rintro ⟨v, hv⟩
       obtain ⟨ξ, rfl⟩ := (hmemG v).1 hv
@@ -452,12 +452,12 @@ theorem coordHerm_map_hCo : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   obtain ⟨t1, t2, t3, t4, t5, t6, t7, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
   have h2 : Module.finrank F E = 2 := hcm.2.2.1
   obtain ⟨hinv, δ, hδ, hσδ⟩ := GlobalTheory.CompanionTheory.SW.HaarCoord.conj_facts hcm
-  haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
-  haveI : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.HermR R σ n) := ⟨rfl⟩
+  have : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousSMul R (R ⊗[F] E) := IsModuleTopology.toContinuousSMul R _
+  have : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.HermR R σ n) := ⟨rfl⟩
   obtain ⟨hK, -, -⟩ := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm R d b lam hlam
-  haveI : SigmaFinite (GlobalTheory.CompanionTheory.SW.coordK R b lam) := inferInstance
+  have : SigmaFinite (GlobalTheory.CompanionTheory.SW.coordK R b lam) := inferInstance
 
   let r : R ⊗[F] E → Fin d → R := fun y k => (Algebra.TensorProduct.basis R b).repr y k
   let Tr : (R ⊗[F] E) ≃ₜ (Fin d → R) := (t7 d b).homeomorph r
@@ -705,7 +705,7 @@ theorem isCompact_boxW (S : Finset (HeightOneSpectrum (𝓞 F)))
 theorem isCompact_boxA (S : Finset (HeightOneSpectrum (𝓞 F)))
     (U : ∀ v : HeightOneSpectrum (𝓞 F), Set (Fv F v)) (hU : ∀ v, IsCompact (U v)) :
     IsCompact (GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.boxA S U) := by
-  haveI : ∀ v, CompactSpace (boxW S U v) := fun v => isCompact_iff_compactSpace.1 (isCompact_boxW S U hU v)
+  have : ∀ v, CompactSpace (boxW S U v) := fun v => isCompact_iff_compactSpace.1 (isCompact_boxW S U hU v)
   have hle : (Filter.cofinite : Filter (HeightOneSpectrum (𝓞 F))) ≤ Filter.principal ((S : Set _)ᶜ) :=
     Filter.le_principal_iff.2 S.finite_toSet.compl_mem_cofinite
   let gP : (∀ v, boxW S U v) → RestrictedProduct (fun v : HeightOneSpectrum (𝓞 F) => Fv F v)
@@ -713,7 +713,7 @@ theorem isCompact_boxA (S : Finset (HeightOneSpectrum (𝓞 F)))
     fun x => ⟨fun v => (x v).1, Filter.eventually_principal.2 fun v hv => (x v).2.2 (by simpa using hv)⟩
   have hgP : Continuous gP :=
     RestrictedProduct.isEmbedding_coe_of_principal.continuous_iff.2
-      (continuous_pi fun v => continuous_subtype_val.comp (continuous_apply v))
+      (continuous_pi fun v => continuous_subtypeVal.comp (continuous_apply v))
   let g : (∀ v, boxW S U v) → Af F := fun x => RestrictedProduct.inclusion _ _ hle (gP x)
   have hg : Continuous g := (RestrictedProduct.continuous_inclusion hle).comp hgP
   have hr : GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.boxA S U = Set.range g := by
@@ -834,13 +834,13 @@ theorem core (F : Type) [Field F] [NumberField F] (hF : IsTotallyReal F) (ψ : A
             ∫ x, powT (testT (ρ k) S (U k)) x ∂μ) Filter.atTop
           (nhds ({x : ι → AF F | ∀ i, sndA F (x i) ∈ intF S}.indicator (fun _ => (1 : ℂ)) y)) := by
   classical
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (AF F) := ⟨rfl⟩
   obtain ⟨ν, hν⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.exists_isCovolOne F
   obtain ⟨S₀, h₀⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.exists_test_approx F hF ψ hψ ν hν laminf lam hinf hlam
   obtain ⟨S₂, h₂⟩ := _root_.GlobalTheory.CompanionTheory.MatInt.exists_finset_mulVec_integral_iff F ι B hBd
   refine ⟨S₀ ∪ S₂, fun S hS => ?_⟩
   obtain ⟨ρ, U, hρ, hρt, hU, hUt, hinv, hint, hb, hlim⟩ := h₀ S (Finset.subset_union_left.trans hS)
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have : ν.IsAddHaarMeasure := hν.1
   set Bm := B.map (algebraMap F (AF F)) with hBm
   set P : Measure (ι → AF F) := Measure.pi fun _ : ι => ν with hPdef
   have hpres : P.map (fun x => Bm.mulVec x) = P := _root_.GlobalTheory.CompanionTheory.SiegelND.piCovol_map_matrix F ν hν ι B hBd
@@ -1005,22 +1005,22 @@ theorem exists_testH_approx : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   classical
   have hF := hCM.1
   obtain ⟨t1, -, -, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
-  haveI := t1
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun v => ⟨rfl⟩
-  haveI : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
-  haveI : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (HermR (Fv F v) σ n) := fun v => ⟨rfl⟩
+  have := t1
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have : BorelSpace (HermR (AF F) σ n) := ⟨rfl⟩
+  have : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
+  have : ∀ v : HeightOneSpectrum (𝓞 F), BorelSpace (HermR (Fv F v) σ n) := fun v => ⟨rfl⟩
   obtain ⟨a1, a2, a3, a4, -, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
-  haveI := a1; haveI := a2; haveI := a3; haveI := a4
+  have := a1; have := a2; have := a3; have := a4
   have hloc := fun v => GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), IsTopologicalRing (Fv F v) := fun v => (hloc v).1
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), T2Space (Fv F v) := fun v => (hloc v).2.2.2.1
-  haveI : laminf.IsAddHaarMeasure := hinf.1
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have : ∀ v : HeightOneSpectrum (𝓞 F), IsTopologicalRing (Fv F v) := fun v => (hloc v).1
+  have : ∀ v : HeightOneSpectrum (𝓞 F), LocallyCompactSpace (Fv F v) := fun v => (hloc v).2.1
+  have : ∀ v : HeightOneSpectrum (𝓞 F), SecondCountableTopology (Fv F v) := fun v => (hloc v).2.2.1
+  have : ∀ v : HeightOneSpectrum (𝓞 F), T2Space (Fv F v) := fun v => (hloc v).2.2.2.1
+  have : laminf.IsAddHaarMeasure := hinf.1
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
   obtain ⟨eA, heA⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Coef.TestN.hCo_continuousAddEquiv F E σ hCM (AF F) d b n
   obtain ⟨eI, heI⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Coef.TestN.hCo_continuousAddEquiv F E σ hCM (Ainf F) d b n
   choose eV heV using fun v : HeightOneSpectrum (𝓞 F) => _root_.GlobalTheory.CompanionTheory.SiegelND.Coef.TestN.hCo_continuousAddEquiv F E σ hCM (Fv F v) d b n

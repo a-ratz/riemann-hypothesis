@@ -94,8 +94,8 @@ theorem exists_prim (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [CharZero Ω] [Al
         (∀ s, eval₂ ((algebraMap Ω₀ Ω).comp i) θ (low (cf s)) = t s) ∧
         eval₂ ((algebraMap Ω₀ Ω).comp i) θ G = γ ∧ MvPolynomial.eval₂ ((algebraMap Ω₀ Ω).comp i) t Q = θ := by
   classical
-  haveI : FiniteDimensional Ω₀ Ω := Module.finite_of_finrank_pos (hfin ▸ hd)
-  haveI : CharZero Ω₀ := (algebraMap Ω₀ Ω).charZero
+  have : FiniteDimensional Ω₀ Ω := Module.finite_of_finrank_pos (hfin ▸ hd)
+  have : CharZero Ω₀ := (algebraMap Ω₀ Ω).charZero
   let pb := Field.powerBasisOfFiniteOfSeparable Ω₀ Ω
   obtain rfl : pb.dim = d := pb.finrank.symm.trans hfin
   have hint : IsIntegral Ω₀ pb.gen := pb.isIntegral_gen

@@ -286,7 +286,7 @@ theorem exDownC_sv_alt (H : _root_.UpperTheory.V.Af.HypothesesH') (cyc : CycC) :
   have hEig := UpperTheory.hecke_eigenvalue_basic_properties
   have hSign := UpperTheory.sign_at_infinity_of_parallel_weight UpperTheory.adelicSolution_parallel
   intro K M Ω _ _ _ _ _ _ _ _ _ _ _ _ _ _ hp l _ ι n hn r π sat' inf' hpol hreg hc' hbc hatt
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
+  have : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
   obtain ⟨μ, χ, c, P, hμ, hs, hc, hP⟩ := hTo K Ω l ι n r hpol
   have huniq : ∀ w B B', sat' w B → sat' w B' → B = B' := by

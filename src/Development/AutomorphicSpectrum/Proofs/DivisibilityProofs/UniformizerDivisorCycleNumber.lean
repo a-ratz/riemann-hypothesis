@@ -68,7 +68,7 @@ theorem cycList_const {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationR
     (hM : IsModelOver P l.length) (u : Oˣ) (e : ℕ) :
     cycList (divCycle P (C ((u : O) * ϖ ^ e))) l =
       (e : ℤ) * intNumL (FractionRing O) (genFib P) l := by
-  haveI : P.IsPrime := hM.multiProj.isPrime
+  have : P.IsPrime := hM.multiProj.isPrime
   have hC : ∀ a : O, a ≠ 0 → (C a : MRing ι O) ∉ P := by
     intro a ha hmem
     apply ha

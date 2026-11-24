@@ -54,8 +54,8 @@ private theorem cu_ext {Γ R : Type} [TopologicalSpace Γ] [CommRing R] (I : Ide
   funext x
   refine IsHausdorff.eq_iff_smodEq (I := I).2 fun N => ?_
   rw [smul_eq_mul, Ideal.mul_top]
-  letI : TopologicalSpace (R ⧸ I ^ N) := ⊥
-  haveI : DiscreteTopology (R ⧸ I ^ N) := ⟨rfl⟩
+  let : TopologicalSpace (R ⧸ I ^ N) := ⊥
+  have : DiscreteTopology (R ⧸ I ^ N) := ⟨rfl⟩
   exact congrFun (Continuous.ext_on hS (hf N).continuous (hg N).continuous fun y hy => by simp only [h y hy]) x
 private theorem cu_prod {n : ℕ} {M : Type} [CommGroup M] (f g : Fin n → M)
     (h : ∀ j, ∏ i with i ≤ j, f i = ∏ i with i ≤ j, g i) : ∀ j, f j = g j := by

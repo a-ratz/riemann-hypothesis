@@ -175,11 +175,11 @@ theorem field_of_gens {T Hh κ : Type} [Finite T] (v : T → Hh → κ → ℂ) 
   obtain ⟨H, K, M₀, hM₀, hH, hv⟩ := hab
   obtain ⟨Ω, hΩ, halg⟩ := hc
   let S : Set ℂ := Set.range fun x : T × H × K => v x.1 x.2.1 x.2.2 / Ω
-  haveI : Finite S := Set.finite_range _ |>.to_subtype
+  have : Finite S := Set.finite_range _ |>.to_subtype
   have hS : ∀ z ∈ S, IsIntegral ℚ z := by
     rintro _ ⟨⟨t, h, k⟩, rfl⟩
     exact (halg t h (hH h h.2) k).isIntegral
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ S) := IntermediateField.finiteDimensional_adjoin hS
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ S) := IntermediateField.finiteDimensional_adjoin hS
   refine ⟨M₀ ⊔ IntermediateField.adjoin ℚ S, inferInstance, Ω, hΩ, fun t h hh k => ?_⟩
   obtain ⟨c, hc, e⟩ := hv t h hh k
   rw [e, Finset.sum_div]
@@ -459,12 +459,12 @@ theorem scalar_exists (hX : IsBottomTri W i j X) (t : T) (τ₀ : D.what₂.Tau)
     intro τ
     by_cases hτ : τ = τ₀
     · subst hτ
-      simp only [hζdef, if_pos rfl, h1]
-    · simp only [hζdef, if_neg hτ, h2 τ hτ, one_smul]
+      simp only [hζdef, ite_eq_left rfl, h1]
+    · simp only [hζdef, ite_eq_right hτ, h2 τ hτ, one_smul]
   have hζn : ∀ τ, ‖ζ τ‖ = 1 := fun τ => by
     by_cases hτ : τ = τ₀
-    · simp only [hζdef, if_pos hτ, he]
-    · simp only [hζdef, if_neg hτ, norm_one]
+    · simp only [hζdef, ite_eq_left hτ, he]
+    · simp only [hζdef, ite_eq_right hτ, norm_one]
   have hf : IsThetaFunO W.ψ A' WW (X.f' t) := (theta_snd hX t)
   have hfock := fock_snd hX t
   have cS : ∀ τ, IsCartanInv (gramAt D A' τ) (X.rA'.s τ) := fun τ => (hI.rigA'.2.2 τ).1
@@ -496,9 +496,9 @@ theorem scalar_exists (hX : IsBottomTri W i j X) (t : T) (τ₀ : D.what₂.Tau)
         (fun τ => Or.inl (hsW τ)) (X.f' t) hf ζ hζn k, smul_smul]
     congr 2
     rw [Finset.prod_eq_single τ₀]
-    · simp only [hζdef, if_pos rfl, hw]
+    · simp only [hζdef, ite_eq_left rfl, hw]
     · intro ρ _ hρ
-      simp only [hζdef, if_neg hρ, inv_one, ite_self, one_pow]
+      simp only [hζdef, ite_eq_right hρ, inv_one, ite_self, one_pow]
     · simp
   refine ⟨C, w, by rw [hw]; split_ifs; exacts [Or.inr rfl, Or.inl rfl], fun k h => ?_⟩
   set φ := pureTensorO W.ψ W.θ A' WW X.rA'.s X.rW.s X.rA'.B X.rW.B (X.f' t) (MvPolynomial.monomial k 1) with hφ
@@ -579,7 +579,7 @@ variable (D) in
 def conjField : IntermediateField ℚ ℂ := ⨆ τ : D.what₂.Tau, (tauE D τ).toRatAlgHom.fieldRange
 
 theorem finiteDimensional_conjField : FiniteDimensional ℚ (conjField D) := by
-  haveI : ∀ τ : D.what₂.Tau, FiniteDimensional ℚ (tauE D τ).toRatAlgHom.fieldRange := fun τ =>
+  have : ∀ τ : D.what₂.Tau, FiniteDimensional ℚ (tauE D τ).toRatAlgHom.fieldRange := fun τ =>
     (tauE D τ).toRatAlgHom.equivFieldRange.toLinearEquiv.finiteDimensional
   exact IntermediateField.finiteDimensional_iSup_of_finite
 
@@ -751,7 +751,7 @@ theorem twistedClassSums_span_bottom : ∀ {D : D7} {T : Type} [Finite T] {L : L
     · exact hcM b
     · exact zero_mem _
   rw [e1, Finset.sum_eq_single_of_mem h₀ hh₀ (fun b _ hb => by simp [hb])]
-  simp only [if_true]
+  simp only [ite_true]
   calc ∑ k' ∈ c.support, c.coeff k' * X.I' W.ψ W.θ t (MvPolynomial.monomial k' 1) h₀
       = ∑ k' ∈ c.support ∪ K, c.coeff k' * X.I' W.ψ W.θ t (MvPolynomial.monomial k' 1) h₀ :=
         Finset.sum_subset Finset.subset_union_left fun k' _ hk' => by
@@ -817,7 +817,7 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
   have hS' : V'.SigOK := fun τ => GlobalTheory.Proof.GenusMassSignature.hasSignature_of_posDef (hV τ)
   have hD' : V'.IsDefinite := fun τ => Or.inl rfl
   have hGc : IsCompact (GinfC A' : Set (GA D A')) := Formalism.IndefR.Eqv.isCompact_GinfC (V := V') hS' hD'
-  haveI : CompactSpace (GinfC A') := isCompact_iff_compactSpace.1 hGc
+  have : CompactSpace (GinfC A') := isCompact_iff_compactSpace.1 hGc
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D A'
   have hLC := hT.1
   have hSC := hT.2.1
@@ -827,7 +827,7 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
   obtain ⟨K'', hK'', hr⟩ := level_all μ₀ hX
   have hfin0 : Finite (FinCl A' K'') := (finite_finCl_and_gamOrd A' K'' hV hK'').1
   let μ := X.m'
-  haveI : μ.IsHaarMeasure := hX.is.meas'.1
+  have : μ.IsHaarMeasure := hX.is.meas'.1
   have hfd : IsFundamentalDomain (GQ A') X.fd' μ := hX.is.meas'.2
   let J : Subgroup (GA D A') := K''.comap (Lev.finE A')
   have hJo : IsOpen (J : Set (GA D A')) := hK''.1
@@ -842,11 +842,11 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
     rw [GlobalTheory.Mass.Levels.comap_finE]
     exact le_sup_right
   let κ : Measure (GinfC A') := Measure.haarMeasure (⊤ : TopologicalSpace.PositiveCompacts (GinfC A'))
-  haveI hκH : κ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
+  have hκH : κ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
   have hκ1 : κ Set.univ = 1 := by
     have := Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (GinfC A')))
     simpa using this
-  haveI : IsProbabilityMeasure κ := ⟨hκ1⟩
+  have : IsProbabilityMeasure κ := ⟨hκ1⟩
   let e := finEquiv A'
   have he : ∀ γ, e (((finPt A').comp (GQ A').subtype) γ) = Bridge.ratF A' γ := fun γ => e.apply_symm_apply _
   have hJe : ∀ a, e a ∈ GlobalTheory.IndefiniteRowSideFullHecke.ClassFunctionSumIntegral.levelFin A' K'' ↔ a ∈ K''.comap (finG A') := fun a => Iff.rfl
@@ -867,7 +867,7 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
       Subtype.val '' {γ : GQ A' | (z l)⁻¹ * (γ : GA D A') * z l ∈ J} := by
     intro l
     ext γ
-    simp only [Set.mem_setOf_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
+    simp only [Set.mem_ofPred_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
     exact ⟨fun h => ⟨h.1, h.2⟩, fun ⟨h, h'⟩ => ⟨h, h'⟩⟩
   have hfin : ∀ l, {γ : GA D A' | γ ∈ GQ A' ∧ (z l)⁻¹ * γ * z l ∈ J}.Finite := fun l =>
     him l ▸ (hfinΓ l).image _
@@ -884,7 +884,7 @@ theorem integral_eq_bottom_classSum : ∀ {D : D7} {T : Type} [Finite T] {L : Le
   · have hcont : Continuous (X.ker' W.ψ W.θ t P h) :=
       continuous_of_level A' K'' hK''.1 _ (fun k hk g => hr t P h k hk g) (ker'_cont hX t P h)
     obtain ⟨-, heq⟩ := integral_eq_sum_avg (GA D A') μ (GQ A') J (Lev.levA A' K'') X.fd' hfd hJo hJtop (GinfC A') κ
-      (GinfC A').subtype continuous_subtype_val hrt hdec hcomm (Fin N) z hu hfin (X.ker' W.ψ W.θ t P h) hcont
+      (GinfC A').subtype continuous_subtypeVal hrt hdec hcomm (Fin N) z hu hfin (X.ker' W.ψ W.θ t P h) hcont
       (ker'_left hX t P h) (fun k hk g => hr t P h k hk g)
     exact heq
 end GlobalTheory.RowTest.BottomClassSum
@@ -1310,13 +1310,13 @@ theorem stdSnd_shift {ν : (AE D)ˣ →* Circle} {e : AE D} {S : Finset (Pl D.ho
   unfold stdSnd
   by_cases hcnd : IsHalf (cA D e) t ∧ IsIntM (dualCoord A' WW βA' βW t) ∧
       ∀ i j, j.1 < a → InId I (dualCoord A' WW βA' βW t i j)
-  · rw [if_pos hcnd, if_pos ⟨hh.2 hcnd.1, hint.2 hcnd.2.1, hid.2 hcnd.2.2⟩]
+  · rw [ite_eq_left hcnd, ite_eq_left ⟨hh.2 hcnd.1, hint.2 hcnd.2.1, hid.2 hcnd.2.2⟩]
     refine (StandardFirstTheta.GlobalTheory.CompanionTheory.StdFstTheta.unitChar_congr he hl hc (isIntM_rightBlock hcnd.2.1)
       (Z := rightBlock a fun i j => (n₀ : EAf D) * W i j) (isIntM_rightBlock fun i j => mul_mem (natCast_mem _ _) (hW i j))
       (rightBlock_shift (c := ((n * c : ℕ) : EAf D)) fun i j => ?_)).symm
     rw [h, Nat.cast_mul n₀]
     ring
-  · rw [if_neg hcnd, if_neg fun h' => hcnd ⟨hh.1 h'.1, hint.1 h'.2.1, hid.1 h'.2.2⟩]
+  · rw [ite_eq_right hcnd, ite_eq_right fun h' => hcnd ⟨hh.1 h'.1, hint.1 h'.2.1, hid.1 h'.2.2⟩]
 
 
 
@@ -1336,7 +1336,7 @@ theorem stdSnd_isSB {ν : (AE D)ˣ →* Circle} (hν : Continuous ν) {e : AE D}
     fun u hu hh t => ?_, fun t ht => ?_⟩
   · unfold stdSnd at ht
     by_contra h
-    exact ht (if_neg fun h' => h h'.1)
+    exact ht (ite_eq_right fun h' => h h'.1)
   · refine stdSnd_shift he hnI hl hcS a A' WW βA' βW
       (W := fun i j => (K : EAf D) * ((M : EAf D) * dualCoord A' WW βA' βW u i j))
       ?_ (fun i j => mul_mem (natCast_mem _ _) (hB u hu i j)) fun i j => ?_
@@ -1348,7 +1348,7 @@ theorem stdSnd_isSB {ν : (AE D)ˣ →* Circle} (hν : Continuous ν) {e : AE D}
   · have h : IsHalf (cA D e) t ∧ IsIntM (dualCoord A' WW βA' βW t) := by
       unfold stdSnd at ht
       by_contra h
-      exact ht (if_neg fun h' => h ⟨h'.1, h'.2.1⟩)
+      exact ht (ite_eq_right fun h' => h ⟨h'.1, h'.2.1⟩)
     rw [mul_nsmul]
     exact nsmul_mem (hC t h.1 h.2) _
 
@@ -1819,7 +1819,7 @@ theorem normSum_coordinate_isAlgebraic : _root_.GlobalTheory.FunPr.ThetaLocalInp
   intro _hPr hI D δ t0 Q P h U
   obtain ⟨S, dl, hL⟩ := GlobalTheory.NormSum.Denom.exists_letters D
   obtain ⟨p, hpQ, hp, k', hk', htr⟩ := exists_prime_integralOver_gt D P.d h Q
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   have hQ0 := P.level_pos
   have hsp : p ∣ Q → SplitIn D p := fun hd => absurd (Nat.le_of_dvd hQ0 hd) (by omega)
   obtain ⟨hterm, -, -⟩ := _root_.GlobalTheory.NormSum.RepInv.rep_indep D (hI D) ⊤ δ t0 Q P.crv P.pt0 P hQ0
@@ -1930,7 +1930,7 @@ end GlobalTheory.RowEx.BotField
 theorem GlobalTheory.RowEx.bottomField_isNumberField : _root_.GlobalTheory.FunPr.ThetaLocalInputs → (∀ D, GlobalTheory.NormSum.Inp D) → NFBot := by
   intro hP hI
   refine ⟨0, fun ε CF _ => ⟨0, fun D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F hS ch _ _ => by
-    haveI : Finite T := hS.fin
+    have : Finite T := hS.fin
     have hL : R.toLevCh.Is A.μ0 := hS.core.lev
     have hex : ∀ ij : Fin D.R.m × Fin D.R.m, ∃ M : IntermediateField ℚ ℂ, FiniteDimensional ℚ M ∧
         ∃ (A₁ A₂ WW : HSp D) (X : Tri T A₁ A₂ WW), IsBottomTri ch.W ij.1 ij.2 X ∧ SumsIn ch.W (algebraMap M ℂ) X := by
@@ -1939,7 +1939,7 @@ theorem GlobalTheory.RowEx.bottomField_isNumberField : _root_.GlobalTheory.FunPr
       obtain ⟨M, hM, hs⟩ := _root_.GlobalTheory.RowEx.BotField.sums_mem_bottomField hP hI hL hX
       exact ⟨M, hM, A₁, A₂, WW, X, hX, hs⟩
     choose M hM hB using hex
-    haveI := hM
+    have := hM
     refine ⟨⨆ ij, M ij, IntermediateField.finiteDimensional_iSup_of_finite, fun i j => ?_⟩
     obtain ⟨A₁, A₂, WW, X, hX, hs⟩ := hB (i, j)
     refine ⟨A₁, A₂, WW, X, hX, GlobalTheory.RowEx.BotField.sumsIn_mono hs ?_⟩

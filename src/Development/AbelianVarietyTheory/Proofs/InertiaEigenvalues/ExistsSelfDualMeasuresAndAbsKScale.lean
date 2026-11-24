@@ -120,7 +120,7 @@ theorem integral_units_smul {L : Type} [CommRing L] [TopologicalSpace L] [IsTopo
   let φ := Homeomorph.smul (α := L) u
   have hmap : μ.map (fun y => u • y) = (distribHaarChar L u⁻¹) • μ := by
     ext s hs
-    rw [Measure.map_apply (continuous_const_smul u).measurable hs, Set.preimage_smul, Measure.smul_apply,
+    rw [Measure.map_apply (continuous_const_smul u).measurable hs, Set.preimage_smul, smul_apply,
       ← distribHaarChar_mul μ u⁻¹ s]
     rfl
   have : ∫ y, G y ∂(μ.map fun y => u • y) = ∫ y, G (u • y) ∂μ :=

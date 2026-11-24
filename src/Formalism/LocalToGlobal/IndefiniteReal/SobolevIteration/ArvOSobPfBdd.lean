@@ -164,7 +164,7 @@ theorem foldBddK_of (h4 : SobChart) : FoldBddK := by
         (((continuous_const.matrix_mul
           (continuous_id' : Continuous fun k : Fin n → Fin n → ℂ => Matrix.of k)).matrix_elem i j).sub
             continuous_const).norm
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => isOpen_lt (hc i j) continuous_const
     have hk0O : ∀ i j, ‖((Matrix.of k0)⁻¹ * Matrix.of k0) i j - (1 : Matrix (Fin n) (Fin n) ℂ) i j‖ < δ := by
       intro i j

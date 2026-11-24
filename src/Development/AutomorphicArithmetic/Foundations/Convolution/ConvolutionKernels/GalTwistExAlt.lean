@@ -121,8 +121,8 @@ private theorem mult_comap_equiv {K : Type} [Field K] [NumberField K] (σ : K �
   have h : (u.comap σ.toRingHom).IsReal ↔ u.IsReal := InfinitePlace.isReal_comap_iff σ
   simp only [InfinitePlace.mult]
   by_cases hu : u.IsReal
-  · rw [if_pos hu, if_pos (h.2 hu)]
-  · rw [if_neg hu, if_neg fun h' => hu (h.1 h')]
+  · rw [ite_eq_left hu, ite_eq_left (h.2 hu)]
+  · rw [ite_eq_right hu, ite_eq_right fun h' => hu (h.1 h')]
 
 private theorem bijective_comap {K : Type} [Field K] [NumberField K] (σ : K ≃+* K) :
     Function.Bijective fun u : InfinitePlace K => u.comap σ.toRingHom := by
@@ -185,9 +185,9 @@ theorem UpperTheory.ConvolutionTheory.K.galCusp :
       continuous_toFun := continuous_pi fun p => (Formalism.L2.Host.CT.continuous_adMap σ).comp (continuous_apply p)
       continuous_invFun := continuous_pi fun p => (Formalism.L2.Host.CT.continuous_adMap σ.symm).comp (continuous_apply p) }
   set ν := AutomorphicForm.unipMeasure K n r with hν
-  haveI : ν.IsAddHaarMeasure := by rw [hν]; infer_instance
-  haveI : (Measure.map s ν).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν s
-  haveI : (Measure.map s.symm ν).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν s.symm
+  have : ν.IsAddHaarMeasure := by rw [hν]; infer_instance
+  have : (Measure.map s ν).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν s
+  have : (Measure.map s.symm ν).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν s.symm
   obtain ⟨c, hc⟩ : ∃ c : NNReal, Measure.map s ν = c • ν := ⟨_, Measure.isAddLeftInvariant_eq_smul _ _⟩
   have hq : Measure.QuasiMeasurePreserving s.symm ν ν :=
     ⟨s.symm.continuous.measurable.aemeasurable, by
@@ -259,7 +259,7 @@ theorem UpperTheory.ConvolutionTheory.K.presOfOrder :
       0 < m → (∀ g, (⇑e)^[m] g = g) → MeasurePreserving e μ μ := by
   intro G _ _ _ _ _ _ _ _ μ _ e m hm he
   have hme : Measurable (e : G → G) := e.continuous.measurable
-  haveI : (Measure.map e μ).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ e
+  have : (Measure.map e μ).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map μ e
   obtain ⟨c, hc⟩ : ∃ c : NNReal, Measure.map e μ = c • μ := ⟨_, Measure.isMulLeftInvariant_eq_smul _ _⟩
   have hit : ∀ k : ℕ, Measure.map ((⇑e)^[k]) μ = c ^ k • μ := by
     intro k

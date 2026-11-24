@@ -69,11 +69,11 @@ lemma summable_exp_abs (c : ℝ) (hc : 0 < c) :
     apply Summable.of_nat_of_neg
     · refine hgeo.congr fun m => ?_
       simp only [Function.comp, Int.cast_natCast, Nat.abs_cast]
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       ring_nf
     · refine hgeo.congr fun m => ?_
       simp only [Int.cast_neg, Int.cast_natCast, abs_neg, Nat.abs_cast]
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       ring_nf
   intro n
   induction n with

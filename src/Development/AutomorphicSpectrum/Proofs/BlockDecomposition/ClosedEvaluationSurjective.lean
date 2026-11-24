@@ -91,15 +91,15 @@ theorem intC_one_of_bump : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
   ∃ c : ℂ, c ≠ 0 ∧ intC ψ F 1 = c • w := by
   intro k _ _ _ _ i t ψ τ σ s hψ1 w F h1 h0
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
-  letI : MeasurableSpace (Fin (t + 1) → k) := borel _
-  haveI : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
+  let : MeasurableSpace (Fin (t + 1) → k) := borel _
+  have : BorelSpace (Fin (t + 1) → k) := ⟨rfl⟩
   let A : Set (Fin (t + 1) → k) := Set.pi Set.univ fun _ => GlobalTheory.SplitWeil.cball s
   have hAc : IsCompact A := isCompact_univ_pi fun _ => GlobalTheory.SplitWeil.isCompact_cball s
   have hAo : IsOpen A := isOpen_set_pi Set.finite_univ fun _ _ => GlobalTheory.SplitWeil.isOpen_cball s
   have hne : A.Nonempty := ⟨0, fun _ _ => by simp [GlobalTheory.SplitWeil.cball]⟩
   have hmem : ∀ d, d ∈ A ↔ ∀ j, d j ∈ GlobalTheory.SplitWeil.cball s :=
     fun d => ⟨fun h j => h j (Set.mem_univ j), fun h j _ => h j⟩
-  haveI : (muD k (t + 1)).IsAddHaarMeasure := by
+  have : (muD k (t + 1)).IsAddHaarMeasure := by
     unfold muD
     infer_instance
   have hpos : 0 < muD k (t + 1) A := hAo.measure_pos _ hne
@@ -151,7 +151,7 @@ theorem ballMat_eq (s : kˣ) (m : ℕ) : ballMat (k := k) s m =
   Set.ext fun x => ⟨fun hx i _ j _ => hx i j, fun hx i j => hx i trivial j trivial⟩
 
 theorem isOpen_ballMat (s : kˣ) (m : ℕ) : IsOpen (ballMat (k := k) s m) := by
-  simp only [ballMat, Set.setOf_forall]
+  simp only [ballMat, Set.ofPred_forall]
   refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
   exact (isOpen_cball s).preimage (f := fun A : Matrix (Fin m) (Fin m) k => A i j) (by fun_prop)
 
@@ -164,7 +164,7 @@ theorem isCompact_ballMat (s : kˣ) (m : ℕ) : IsCompact (ballMat (k := k) s m)
 theorem nearSet_eq (s : kˣ) (m : ℕ) : nearSet (k := k) s m =
     (Homeomorph.subRight (1 : Matrix (Fin m) (Fin m) k)) ⁻¹' ballMat s m := by
   ext A
-  simp only [nearSet, NearOne, ballMat, Set.mem_setOf_eq, Set.mem_preimage, Homeomorph.subRight_apply,
+  simp only [nearSet, NearOne, ballMat, Set.mem_ofPred_eq, Set.mem_preimage, Homeomorph.subRight_apply,
     Matrix.sub_apply]
 
 theorem isOpen_nearSet (s : kˣ) (m : ℕ) : IsOpen (nearSet (k := k) s m) := by
@@ -208,7 +208,7 @@ theorem congM_isOpen_isCompact : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
   have e : (congM k s hs n : Set (Mir k n)) =
       (Subtype.val : Mir k n → GL (Fin (n + 1)) k) ⁻¹' (congGL k s hs (n + 1) : Set (GL (Fin (n + 1)) k)) := rfl
   rw [e]
-  exact ⟨(Topo.isOpen_congGL s hs (n + 1)).preimage continuous_subtype_val,
+  exact ⟨(Topo.isOpen_congGL s hs (n + 1)).preimage continuous_subtypeVal,
     (GlobalTheory.CompanionTheory.BZMirOnto.isClosed_Mir k n).isClosedEmbedding_subtypeVal.isCompact_preimage
       (Topo.isCompact_congGL s hs (n + 1))⟩
 
@@ -280,7 +280,7 @@ theorem congM_subset_nhds (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   refine ⟨s₀, fun s hs hss₀ g hg => ?_⟩
   have hball : ∀ x : k, x ∈ GlobalTheory.SplitWeil.cball s → x ∈ GlobalTheory.SplitWeil.cball s₀ := by
     intro x hx
-    simp only [GlobalTheory.SplitWeil.cball, Set.mem_setOf_eq] at hx ⊢
+    simp only [GlobalTheory.SplitWeil.cball, Set.mem_ofPred_eq] at hx ⊢
     exact le_trans hx hss₀
   refine huO (hwu (hsub (Set.mem_prod.2 ⟨?_, ?_⟩)))
   · have hg' : GlobalTheory.CompanionTheory.BZPhiPG.Onto.NearOne s ((g : GL (Fin (n + 1)) k) : Matrix (Fin (n + 1)) (Fin (n + 1)) k) :=
@@ -454,11 +454,11 @@ theorem average_cut (H : Subgroup G) (ρ : Representation ℂ H W)
     (B : cIndSpace H ρ) (hBI : B ∈ I) (hB : ∀ g, B.1.1.1 g = (dc H K' c).indicator y.1.1.1 g) :
     ∃ z ∈ I, ∀ g, z.1.1.1 g = (dc H K₁ c).indicator y.1.1.1 g := by
   classical
-  haveI : CompactSpace K₁ := isCompact_iff_compactSpace.1 hK₁c
+  have : CompactSpace K₁ := isCompact_iff_compactSpace.1 hK₁c
   let L : Subgroup K₁ := K'.subgroupOf K₁
-  have hLo : IsOpen (L : Set K₁) := hK'o.preimage continuous_subtype_val
-  haveI : Finite (K₁ ⧸ L) := Subgroup.quotient_finite_of_isOpen _ hLo
-  haveI := Fintype.ofFinite (K₁ ⧸ L)
+  have hLo : IsOpen (L : Set K₁) := hK'o.preimage continuous_subtypeVal
+  have : Finite (K₁ ⧸ L) := Subgroup.quotient_finite_of_isOpen _ hLo
+  have := Fintype.ofFinite (K₁ ⧸ L)
   let φ : G → ℕ := fun g => ∑ q : K₁ ⧸ L, if g * ((q.out : K₁) : G) ∈ dc H K' c then 1 else 0
   let Sg : cIndSpace H ρ := ∑ q : K₁ ⧸ L, cInd H ρ ((q.out : K₁) : G) B
   have hSg : Sg ∈ I := Submodule.sum_mem _ fun q _ => hI _ _ hBI
@@ -474,8 +474,8 @@ theorem average_cut (H : Subgroup G) (ρ : Representation ℂ H W)
     have e1 : (cInd H ρ ((q.out : K₁) : G) B).1.1.1 g = B.1.1.1 (g * ((q.out : K₁) : G)) := rfl
     rw [e1, hB]
     by_cases h : g * ((q.out : K₁) : G) ∈ dc H K' c
-    · rw [Set.indicator_of_mem h, hy g _ q.out.2, if_pos h, one_smul]
-    · rw [Set.indicator_of_notMem h, if_neg h, zero_smul]
+    · rw [Set.indicator_of_mem h, hy g _ q.out.2, ite_eq_left h, one_smul]
+    · rw [Set.indicator_of_notMem h, ite_eq_right h, zero_smul]
   have hleft : ∀ (b : H) g, φ ((b : G) * g) = φ g := by
     intro b g
     simp only [φ, mul_assoc, dc_left H K' c (b : G) b.2]
@@ -519,11 +519,11 @@ theorem average_cut (H : Subgroup G) (ρ : Representation ℂ H W)
       Finset.single_le_sum (f := fun q : K₁ ⧸ L =>
         if c * ((q.out : K₁) : G) ∈ dc H K' c then 1 else 0) (fun _ _ => Nat.zero_le _)
         (Finset.mem_univ q₀)
-    rw [if_pos h4] at h5
+    rw [ite_eq_left h4] at h5
     omega
   have hoff : ∀ g, g ∉ dc H K₁ c → φ g = 0 := by
     intro g hg
-    refine Finset.sum_eq_zero fun q _ => if_neg fun h => hg ?_
+    refine Finset.sum_eq_zero fun q _ => ite_eq_right fun h => hg ?_
     obtain ⟨b, k, hk, e⟩ := h
     exact (dc_right H K₁ c _ q.out.2 g).1 ⟨b, k, hle hk, e⟩
   have hc0 : (φ c : ℂ) ≠ 0 := by exact_mod_cast hφc
@@ -1053,7 +1053,7 @@ theorem mem_ball_mono {s s' : kˣ} (h : valuation k (s : k) ≤ valuation k (s' 
 theorem dpowM_nhds (n : ℕ) (r : ℝ) : {g : Mir k n | dpowM n r g = 1} ∈ 𝓝 (1 : Mir k n) := by
   have h : IsSmoothChar (dpow (k := k) (n + 1) r) := IsSmoothChar.detChar (GlobalTheory.LocGL.isSmoothChar_absPow ((r : ℝ) : ℂ))
   have h2 : IsOpen {g : Mir k n | dpowM n r g = 1} :=
-    h.preimage continuous_subtype_val
+    h.preimage continuous_subtypeVal
   exact h2.mem_nhds (map_one _)
 
 section Ev

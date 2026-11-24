@@ -335,7 +335,7 @@ theorem GlobalTheory.CoverGood.exists_good_cover : ∀ (E : Type) [Field E] [Num
   have hcl : IsClosedImmersion (equalizer.ι (d.r ≫ Xo.s) (d.Xo₂.s ≫ spMap jK)) :=
     GlobalTheory.isClosedImmersion_equalizer_ι_of_isSeparated _ hab
   have hred₂ : IsReduced d.Xo₂.X := by
-    haveI := d.Xo₂.smooth
+    have := d.Xo₂.smooth
     exact (GlobalTheory.isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _ d.Xo₂.s
       (SmoothOfRelativeDimension.smooth Dw.dim d.Xo₂.s)).1
   have hredU : IsReduced (equalizer (d.r ≫ Xo.s) (d.Xo₂.s ≫ spMap jK)) :=
@@ -352,7 +352,7 @@ theorem GlobalTheory.CoverGood.exists_good_cover : ∀ (E : Type) [Field E] [Num
     ⟨_, _, hop, hcl, hagree, fun K _ x hx =>
       ⟨equalizer.lift x (by simpa only [Category.assoc] using hx), equalizer.lift_ι _ _⟩⟩
   clear hop hcl hagree hredU
-  haveI := hop'; haveI := hcl'; haveI := hfin; haveI := het
+  have := hop'; have := hcl'; have := hfin; have := het
   have hsp : spMap (IntermediateField.inclusion d.hF.symm.le).toRingHom ≫
       spMap ((d.eF.symm : d.c₂.F →+* c.F).comp (IntermediateField.inclusion d.c₂.le).toRingHom) =
       spMap (IntermediateField.inclusion d.c₂.le).toRingHom := by
@@ -363,8 +363,8 @@ theorem GlobalTheory.CoverGood.exists_good_cover : ∀ (E : Type) [Field E] [Num
   · refine ⟨fun x => ?_⟩
     obtain ⟨K, _, _, j, ⟨k0, hk0⟩⟩ := GlobalTheory.ZM.IsGaloisCover.exists_algClosed_point (Xo.XF c) x
     obtain ⟨φ, hφ⟩ := Spec.map_surjective (j ≫ pullback.snd _ _ : Sp K ⟶ Sp c.F)
-    letI : Algebra c.F K := φ.hom.toAlgebra
-    letI : Algebra d.c₂.F K := ((algebraMap c.F K).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+    let : Algebra c.F K := φ.hom.toAlgebra
+    let : Algebra d.c₂.F K := ((algebraMap c.F K).comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
     have hk : ∀ a : c.F, algebraMap d.c₂.F K (d.eF a) = algebraMap c.F K a := fun a => by
       show algebraMap c.F K (d.eF.symm (d.eF a)) = _
       rw [AlgEquiv.symm_apply_apply]
@@ -443,14 +443,14 @@ theorem exists_lift_finiteEtale_testRing : ∀ (Y Z : Scheme.{0}) (π : Z ⟶ Y)
   have hg_surj : Surjective (Spec.map φ) := by rw [hφ]; infer_instance
   have hφet : φ.hom.Etale := (HasRingHomProperty.Spec_iff (P := @Etale)).1 hg_et
   have hφff : φ.hom.FaithfullyFlat := (flat_and_surjective_SpecMap_iff φ).1 ⟨inferInstance, hg_surj⟩
-  letI : Algebra p.R Γ(P, ⊤) := φ.hom.toAlgebra
+  let : Algebra p.R Γ(P, ⊤) := φ.hom.toAlgebra
   have hBet : Algebra.Etale p.R Γ(P, ⊤) := hφet
   have hBff : Module.FaithfullyFlat p.R Γ(P, ⊤) := hφff
   have hpred : _root_.IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced _).1 p.rad
   have hBred : _root_.IsReduced Γ(P, ⊤) := GlobalTheory.isReduced_algebra_of_smooth_of_isReduced p.R Γ(P, ⊤)
-  letI : Algebra K Γ(P, ⊤) := (φ.hom.comp (algebraMap K p.R)).toAlgebra
-  haveI : IsScalarTower K p.R Γ(P, ⊤) := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.FiniteType K Γ(P, ⊤) := Algebra.FiniteType.trans (S := p.R) inferInstance inferInstance
+  let : Algebra K Γ(P, ⊤) := (φ.hom.comp (algebraMap K p.R)).toAlgebra
+  have : IsScalarTower K p.R Γ(P, ⊤) := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.FiniteType K Γ(P, ⊤) := Algebra.FiniteType.trans (S := p.R) inferInstance inferInstance
   obtain ⟨n, s, hs⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1
     (inferInstance : Algebra.FiniteType K Γ(P, ⊤))
   have hrad : (RingHom.ker s).IsRadical := (Ideal.isRadical_iff_quotient_reduced _).2
@@ -460,7 +460,7 @@ theorem exists_lift_finiteEtale_testRing : ∀ (Y Z : Scheme.{0}) (π : Z ⟶ Y)
   let φK : p.R →ₐ[K] Γ(P, ⊤) := { φ.hom with commutes' := fun _ => rfl }
   let ι : p.R →ₐ[K] q.R := e.symm.toAlgHom.comp φK
   refine ⟨q, ι, ?_, ?_⟩
-  · letI := ι.toRingHom.toAlgebra
+  · let := ι.toRingHom.toAlgebra
     let e' : Γ(P, ⊤) ≃ₐ[p.R] q.R := AlgEquiv.ofRingEquiv (f := e.symm.toRingEquiv) (fun _ => rfl)
     exact ⟨Module.FaithfullyFlat.of_linearEquiv _ _ e'.symm.toLinearEquiv, Algebra.Etale.of_equiv e'⟩
   · refine ⟨Spec.map (CommRingCat.ofHom e.symm.toRingHom) ≫ P.isoSpec.inv ≫ pullback.fst π x, ?_⟩
@@ -487,16 +487,16 @@ namespace GlobalTheory.GeomPointLift
 theorem nonempty_algHom_of_isAlgClosed (K C : Type) [Field K] [IsAlgClosed K] [CommRing C] [Nontrivial C]
     [Algebra K C] [Algebra.FiniteType K C] : Nonempty (C →ₐ[K] K) := by
   obtain ⟨M, hM⟩ := Ideal.exists_maximal C
-  letI := Ideal.Quotient.field M
-  haveI : Module.Finite K (C ⧸ M) := finite_of_finite_type_of_isJacobsonRing K (C ⧸ M)
+  let := Ideal.Quotient.field M
+  have : Module.Finite K (C ⧸ M) := finite_of_finite_type_of_isJacobsonRing K (C ⧸ M)
   exact ⟨(IsAlgClosed.lift : (C ⧸ M) →ₐ[K] K).comp (Ideal.Quotient.mkₐ K M)⟩
 
 theorem exists_lift (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (hff : Module.FaithfullyFlat A B)
     (hft : Algebra.FiniteType A B) (k : Type) [Field k] [IsAlgClosed k] (φ : A →+* k) :
     ∃ φ' : B →+* k, φ'.comp (algebraMap A B) = φ := by
-  letI : Algebra A k := φ.toAlgebra
-  haveI : Nontrivial (k ⊗[A] B) := Module.FaithfullyFlat.rTensor_nontrivial A B k
-  haveI : Algebra.FiniteType k (k ⊗[A] B) := inferInstance
+  let : Algebra A k := φ.toAlgebra
+  have : Nontrivial (k ⊗[A] B) := Module.FaithfullyFlat.rTensor_nontrivial A B k
+  have : Algebra.FiniteType k (k ⊗[A] B) := inferInstance
   obtain ⟨f⟩ := nonempty_algHom_of_isAlgClosed k (k ⊗[A] B)
   refine ⟨f.toRingHom.comp (Algebra.TensorProduct.includeRight : B →ₐ[A] k ⊗[A] B).toRingHom, ?_⟩
   ext a
@@ -577,8 +577,8 @@ def Lifts (d : DeltaDat Xo c 0) : Prop :=
 theorem val_unique (d : DeltaDat Xo c 0) (hL : Lifts d) {g : Rul d.Xo₂ d.c₂} {p : TRing c.F} {y : FrPt Xo c p.R}
     {v v' : p.R} (h : Val d g p y v) (h' : Val d g p y v') : v = v' := by
   by_contra hne
-  haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
-  haveI : IsJacobsonRing p.R := inferInstance
+  have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  have : IsJacobsonRing p.R := inferInstance
   have hJ : (⊥ : Ideal p.R).jacobson = ⊥ :=
     IsJacobsonRing.out ‹_› (fun x ⟨m, hm⟩ => Ideal.mem_bot.2 (IsNilpotent.eq_zero ⟨m, Ideal.mem_bot.1 hm⟩))
   have hn : v - v' ∉ (⊥ : Ideal p.R).jacobson := by
@@ -587,11 +587,11 @@ theorem val_unique (d : DeltaDat Xo c 0) (hL : Lifts d) {g : Rul d.Xo₂ d.c₂}
   rw [Ideal.jacobson, Ideal.mem_sInf] at hn
   push Not at hn
   obtain ⟨m, ⟨-, hm⟩, ha⟩ := hn
-  haveI := hm
-  letI := Ideal.Quotient.field m
+  have := hm
+  let := Ideal.Quotient.field m
   let χ : p.R →ₐ[c.F] AlgebraicClosure (p.R ⧸ m) :=
     (IsScalarTower.toAlgHom c.F (p.R ⧸ m) (AlgebraicClosure (p.R ⧸ m))).comp (Ideal.Quotient.mkₐ c.F m)
-  letI := algAbove d (AlgebraicClosure (p.R ⧸ m))
+  let := algAbove d (AlgebraicClosure (p.R ⧸ m))
   obtain ⟨z, hz⟩ := GlobalTheory.TransferCompare.frBC_framed Xo c _ _ χ y
   obtain ⟨z₂, hz₂⟩ := hL _ (algAbove_compat d _) z
   have e := (h _ (algAbove_compat d _) χ z z₂ hz hz₂).trans (h' _ (algAbove_compat d _) χ z z₂ hz hz₂).symm
@@ -617,7 +617,7 @@ theorem sOf_cover (d : DeltaDat Xo c 0) (p q : TRing c.F) (ι : p.R →ₐ[c.F] 
     letI := algAbove d q.R
     spMap ι.toRingHom ≫ spMap (algebraMap c.F p.R) ≫
       spMap ((d.eF.symm : d.c₂.F →+* c.F).comp (IntermediateField.inclusion d.c₂.le).toRingHom) = sOf d.c₂ q.R := by
-  letI := algAbove d q.R
+  let := algAbove d q.R
   simp only [sOf, spMap, ← Spec.map_comp]
   congr 1
   ext t
@@ -631,9 +631,9 @@ theorem val_exists {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {g : Rul d.Xo₂
     (hF : GlobalTheory.LevPull.FibConst d g) (p : TRing c.F) (y : FrPt Xo c p.R) : ∃ v, Val d g p y v := by
   obtain ⟨Z, π, z₂, hfin, het, hsur, hr, hs⟩ := exists_good_cover E H Dw l Xo c d hpq hl
   obtain ⟨q, ι, ⟨hff, het'⟩, z, hz⟩ := exists_etale_lift _ _ π hfin het hsur c.F p (ptF y)
-  letI := algAbove d q.R
-  haveI : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
-  haveI : IsReduced q.R := (Ideal.isRadical_iff_quotient_reduced q.I).1 q.rad
+  let := algAbove d q.R
+  have : IsReduced p.R := (Ideal.isRadical_iff_quotient_reduced p.I).1 p.rad
+  have : IsReduced q.R := (Ideal.isRadical_iff_quotient_reduced q.I).1 q.rad
   have e1 : (z ≫ z₂) ≫ d.r = spMap ι.toRingHom ≫ y.x := by
     rw [Category.assoc, hr, ← Category.assoc, hz, Category.assoc, ptF, pullback.lift_fst]
   have e2 : (z ≫ z₂) ≫ d.Xo₂.s = sOf d.c₂ q.R := by
@@ -643,12 +643,12 @@ theorem val_exists {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {g : Rul d.Xo₂
   obtain ⟨y₂, -, hy₂⟩ := GlobalTheory.FrameLift.exists_frOver d (algAbove_compat d q.R) y' (z ≫ z₂) (e1.trans hy'.1.symm) e2
   have hN₂ := ReciprocityTheory.ChartRestriction.G.PullbackSections.evNat_of d.Xo₂ d.c₂ (GlobalTheory.TransferCompare.evalWD_framed d.Xo₂ d.c₂)
     (GlobalTheory.TransferCompare.allTest_framed d.Xo₂ d.c₂) g hg.1
-  letI : Algebra p.R q.R := ι.toRingHom.toAlgebra
-  haveI : IsScalarTower c.F p.R q.R := IsScalarTower.of_algebraMap_eq fun t => (ι.commutes t).symm
+  let : Algebra p.R q.R := ι.toRingHom.toAlgebra
+  have : IsScalarTower c.F p.R q.R := IsScalarTower.of_algebraMap_eq fun t => (ι.commutes t).symm
   obtain ⟨v, hv⟩ := exists_eq_of_geom p.R q.R hff het' (evR d.Xo₂ d.c₂ g y₂) (by
     intro k _ _ φ ψ hφψ
-    letI : Algebra c.F k := (φ.comp (algebraMap c.F q.R)).toAlgebra
-    letI := algAbove d k
+    let : Algebra c.F k := (φ.comp (algebraMap c.F q.R)).toAlgebra
+    let := algAbove d k
     have hc : ∀ t : c.F, ψ (algebraMap c.F q.R t) = φ (algebraMap c.F q.R t) := fun t => by
       rw [IsScalarTower.algebraMap_apply c.F p.R q.R, ← RingHom.comp_apply, ← hφψ, RingHom.comp_apply]
     let φ' : q.R →ₐ[c.F] k := { φ with commutes' := fun _ => rfl }
@@ -671,7 +671,7 @@ theorem val_exists {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {g : Rul d.Xo₂
     have k₃ := hF k (algAbove_compat d k) w₂ w₂' w o₁ o₂
     exact k₁.symm.trans (k₃.trans k₂))
   refine ⟨v, fun k _ _ _ _ hk φ zz zz₂ hzz hzz₂ => ?_⟩
-  have hft : Algebra.FiniteType p.R q.R := by haveI := het'; infer_instance
+  have hft : Algebra.FiniteType p.R q.R := by have := het'; infer_instance
   obtain ⟨φ₁, hφ₁⟩ := exists_lift_pt p.R q.R hff hft k φ.toRingHom
   have hc : ∀ t : c.F, φ₁ (algebraMap c.F q.R t) = algebraMap c.F k t := fun t => by
     rw [IsScalarTower.algebraMap_apply c.F p.R q.R, ← RingHom.comp_apply, hφ₁]
@@ -717,7 +717,7 @@ include hpq hl in
 theorem val_ruleDown {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {g : Rul d.Xo₂ d.c₂} (hg : g ∈ sec d.Xo₂ d.c₂ a n)
     (hF : GlobalTheory.LevPull.FibConst d g) (p : TRing c.F) (y : FrPt Xo c p.R) : Val d g p y (ruleDown d g p y) := by
   have h := val_exists d hpq hl hg hF p y
-  have e : ruleDown d g p y = h.choose := dif_pos h
+  have e : ruleDown d g p y = h.choose := dite_eq_left h
   rw [e]
   exact h.choose_spec
 
@@ -742,7 +742,7 @@ theorem ruleDown_mem {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {g : Rul d.Xo�
     have w₃ := hV p y k hk φ z z₂ hz hz₂
     rw [w₂, w₁, ← w₃, map_mul]
     congr 1
-    simp only [wchar, map_prod, map_pow, Units.coe_map, MonoidHom.coe_coe]
+    simp only [wchar, map_prod, map_pow, Units.coe_map, MonoidHom.coe_ofClass]
 
 end GlobalTheory.CoverDesc
 
@@ -791,7 +791,7 @@ variable {c c₀ : Coeff l} (hle : c₀.F ≤ c.F)
 theorem eq_sum_of_isBC {m : ℕ} {f' : Rul Xo c} {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} (hf' : f' ∈ sec Xo c a n)
     {as : Fin m → c.F} {fs : Fin m → Rul Xo c₀} (h : IsBC hle f' as fs) : f' = ∑ i, as i • rulBC hle (fs i) := by
   funext q y
-  letI := resAlg hle q.R
+  let := resAlg hle q.R
   rw [val_of_isBC hle hf'.1 h q (fun _ => rfl) y, Finset.sum_apply, Finset.sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [← Algebra.smul_def]
@@ -813,7 +813,7 @@ theorem linearIndependent_rulBC {a : (E →+* ℂ) × ℕ → ℕ} {n m : ℕ} {
   have hWD : ValueWD Xo c₀ :=
     evalWD_fr (frChartF_of (GlobalTheory.Frames.chartCoverF_of_secBaseChange hS E H Dw l Xo c₀))
   have hBC : HasBC Xo c₀ := hasBC_of hS
-  letI alg : Algebra c₀.F c.F := (incF c₀ c hle).toAlgebra
+  let alg : Algebra c₀.F c.F := (incF c₀ c hle).toAlgebra
   rw [Fintype.linearIndependent_iff] at hi ⊢
   intro g hg i
   refine (Module.forall_dual_apply_eq_zero_iff c₀.F (g i)).1 fun lam => ?_
@@ -913,7 +913,7 @@ theorem fibConst_smul {d : DeltaDat Xo c 0} {g : Rul d.Xo₂ d.c₂} (t : d.c₂
 
 theorem rulBC_zero {c' : Coeff l} (hle : c.F ≤ c'.F) : rulBC hle (0 : Rul Xo c) = 0 := by
   funext p y
-  letI := resAlg hle p.R
+  let := resAlg hle p.R
   exact evalAt_zero _ _ _
 
 end GlobalTheory.LevRingDesc
@@ -999,8 +999,8 @@ theorem span_integral_descent {c c' : Coeff l} (hle : c.F ≤ c'.F) {r : ℕ} (U
   let M : Submodule (𝓞 d.c₂.F) (Fin m → d.c₂.F) := (latW U₂ (wtZ a n)).comap Φ
   have hmemM : ∀ v, v ∈ M ↔ IntAt Xo c' (∑ i, d.eF.symm (v i) • rulBC hle (b i : Rul Xo c)) := fun v =>
     hint _ (hrul _) _ (hsec₂ _) (hpullS v)
-  letI alg : Algebra c.F d.c₂.F := ((d.eF : c'.F →+* d.c₂.F).comp (incF c c' hle)).toAlgebra
-  haveI : IsGalois c.F d.c₂.F := hgal
+  let alg : Algebra c.F d.c₂.F := ((d.eF : c'.F →+* d.c₂.F).comp (incF c c' hle)).toAlgebra
+  have : IsGalois c.F d.c₂.F := hgal
   have hstab : ∀ s : d.c₂.F ≃ₐ[c.F] d.c₂.F, ∀ v ∈ M, (fun i => s (v i)) ∈ M := by
     intro s v hv
     rw [hmemM] at hv ⊢

@@ -111,7 +111,7 @@ theorem evR_eq_of_marked_pow [inst : Algebra c.F ℂ] (hσ : GoodEmb c (algebraM
     (hx' : x' ∈ X.dom) {y y' : FrPt Xo c ℂ} (A : AnFib X bas idx e x L y) (A' : AnFib X bas idx e x' L y')
     (hk : A.Marked mk) (hk' : A'.Marked mk) : evR Xo c f y = evR Xo c f y' := by
   obtain ⟨σ, rfl⟩ : ∃ σ : c.F →+* ℂ, inst = σ.toAlgebra := ⟨algebraMap c.F ℂ, Algebra.algebra_ext _ _ fun _ => rfl⟩
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have hf' : f ∈ secZero Xo c := hf
   have hz : ∀ z : FrPt Xo c ℂ, evHom z f ^ (m + 1) = evHom z f := fun z => by rw [← map_pow, hfm]
   have e1 : ∀ z : FrPt Xo c ℂ, evR Xo c (f + 1 - f ^ m) z = evHom z f + 1 - evHom z f ^ m := fun z => by
@@ -152,8 +152,8 @@ theorem mem_cusp_of_thetaSum (d : DeltaDat Xo c n) {r : ℕ} (U : ∀ σ : c.F �
     ⟨hsec, fun σ hσ => Formalism.L2.PjFree.holCusp_mem_holSub _ _ fun k => ?_⟩
   have hu := hU σ hσ
   obtain ⟨W⟩ := nonempty_uw hu
-  letI : Algebra c.F ℂ := σ.toAlgebra
-  letI A₂ : Algebra d.c₂.F ℂ := (σ.comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
+  let A₂ : Algebra d.c₂.F ℂ := (σ.comp (d.eF.symm : d.c₂.F →+* c.F)).toAlgebra
   have halg : ∀ t : c.F, algebraMap d.c₂.F ℂ (d.eF t) = algebraMap c.F ℂ t := fun t => by
     change σ (d.eF.symm (d.eF t)) = σ t
     rw [AlgEquiv.symm_apply_apply]
@@ -215,7 +215,7 @@ theorem mem_cusp_of_thetaSum (d : DeltaDat Xo c n) {r : ℕ} (U : ∀ σ : c.F �
       obtain ⟨y₂, B, hy₂, hB, hrd⟩ := Reach.exists_lift_of_reached d halg hσ₂ hlev hA hA₂ hr1 A Dc.sympl hx hsd hmk hAk
         hmk₂ hover hx₀ B₀ hz₀ hB₀
       obtain ⟨vc, hvc, hev⟩ := hval ℂ halg _ y₂ hy₂
-      have hrd' : Formalism.L2.PjFree.rdU (U σ) f k x = evR Xo c f (unC (U σ) k ⟨x, hx⟩) := dif_pos hx
+      have hrd' : Formalism.L2.PjFree.rdU (U σ) f k x = evR Xo c f (unC (U σ) k ⟨x, hx⟩) := dite_eq_left hx
       rw [hrd', hev, Finset.mul_sum]
       refine Finset.sum_congr rfl fun j _ => ?_
       have h := GlobalTheory.T.shortThetaValue_complexPoint_eq_classicalTheta hci E H Dw d.l₂ d.Xo₂ d.c₂ r _ _ Dc.bas Dc.idx W.e x _ y₂ B Dc.sympl hx hsd _ n Dc.hr Dc.eL

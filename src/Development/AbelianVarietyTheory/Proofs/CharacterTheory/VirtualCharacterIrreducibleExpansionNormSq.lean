@@ -121,7 +121,7 @@ theorem _root_.GlobalTheory.BI.virt_expand : ∀ (G : Type) [Group G] [Finite G]
       ∑ᶠ g, φ g * star (φ g) = (c.sum fun _ m => (m : ℂ) ^ 2) * (Nat.card G : ℂ) := by
   intro G _ _ φ hφ
   classical
-  haveI := Fintype.ofFinite G
+  have := Fintype.ofFinite G
   obtain ⟨c, hc, he⟩ := exists_irreducible_expansion_of_mem_lemma φ hφ
   refine ⟨c, hc, he, ?_⟩
   have hev : ∀ g, φ g = ∑ χ ∈ c.support, (c χ : ℂ) * χ g := by
@@ -143,7 +143,7 @@ theorem _root_.GlobalTheory.BI.virt_expand : ∀ (G : Type) [Group G] [Finite G]
         refine Finset.sum_congr rfl fun χ hχ => ?_
         rw [Finset.sum_congr rfl fun ψ hψ => by rw [sum_mul_inv_irreducible_lemma_2 χ ψ (hc χ hχ) (hc ψ hψ)]]
         simp only [mul_ite, mul_zero]
-        rw [Finset.sum_ite_eq c.support χ, if_pos hχ]
+        rw [Finset.sum_ite_eq c.support χ, ite_eq_left hχ]
         ring
     _ = _ := by rw [Finsupp.sum, Finset.sum_mul]
 

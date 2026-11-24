@@ -109,8 +109,8 @@ theorem cone_single_qis {C : Type*} [Category C] [Abelian C] {F1 F2 F3 F4 : C} (
     (hS : (ShortComplex.mk _ _ w).ShortExact) :
     QuasiIso (mappingCone.map ((singleFunctor C 0).map u') ((singleFunctor C 0).map u) ((singleFunctor C 0).map a)
       ((singleFunctor C 0).map b) (by rw [← Functor.map_comp, ← Functor.map_comp, comm])) := by
-  haveI : Mono (biprod.lift a (-u')) := hS.mono_f
-  haveI : Epi (biprod.desc u b) := hS.epi_g
+  have : Mono (biprod.lift a (-u')) := hS.mono_f
+  have : Epi (biprod.desc u b) := hS.epi_g
   let T : ShortComplex C := ShortComplex.mk u (cokernel.π u) (cokernel.condition u)
   have hT : T.ShortExact := ShortComplex.ShortExact.mk' (ShortComplex.exact_of_g_is_cokernel _ (cokernelIsCokernel u))
     inferInstance inferInstance
@@ -158,8 +158,8 @@ theorem cone_single_qis {C : Type*} [Category C] [Abelian C] {F1 F2 F3 F4 : C} (
     rw [← Functor.map_comp, ← Functor.map_comp, comm]
   have hST : (ShortComplex.mk _ _ z1).ShortExact := hT.map_of_exact (HomologicalComplex.single C (ComplexShape.up ℤ) 0)
   have hST' : (ShortComplex.mk _ _ z2).ShortExact := hT'.map_of_exact (HomologicalComplex.single C (ComplexShape.up ℤ) 0)
-  haveI := mappingCone.quasiIso_descShortComplex hST
-  haveI := mappingCone.quasiIso_descShortComplex hST'
+  have := mappingCone.quasiIso_descShortComplex hST
+  have := mappingCone.quasiIso_descShortComplex hST'
   have key := map_descShortComplex _ _ z2 _ _ z1 ((singleFunctor C 0).map a) ((singleFunctor C 0).map b) c2
     (Functor.map_comp _ _ _)
   haveI : QuasiIso (mappingCone.map _ _ _ _ c2 ≫ mappingCone.descShortComplex (ShortComplex.mk _ _ z1)) := by
@@ -168,7 +168,7 @@ theorem cone_single_qis {C : Type*} [Category C] [Abelian C] {F1 F2 F3 F4 : C} (
 
 theorem mono_free_away (R : Type) [CommRing R] (A : Type) [CommRing A] (f : A) :
     Mono ((free R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f)))))) := by
-  haveI : IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f)))) :=
+  have : IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f)))) :=
     IsOpenImmersion.of_isLocalization f
   have h1 : Mono (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f))))) := inferInstance
   have h2 : Mono ((freeP R).map (yoneda.map (Spec.map (CommRingCat.ofHom (algebraMap A (Localization.Away f)))))) := by
@@ -191,16 +191,16 @@ theorem quasiIso_map_of_corners {C : Type*} [Category C] [Abelian C] {K₁ K₂ 
     (q₃ : QuasiIso e₃) (q₄ : QuasiIso e₄) (h₁₂ : φ' ≫ e₂ = e₁ ≫ ψ') (h₃₄ : φ ≫ e₄ = e₃ ≫ ψ) (h₁₃ : α ≫ e₃ = e₁ ≫ α')
     (h₂₄ : β ≫ e₄ = e₂ ≫ β') [QuasiIso (mappingCone.map φ' φ α β c₀)] :
     QuasiIso (mappingCone.map ψ' ψ α' β' c₁) := by
-  haveI := q₁; haveI := q₂; haveI := q₃; haveI := q₄
+  have := q₁; have := q₂; have := q₃; have := q₄
   have key : mappingCone.map φ' ψ' e₁ e₂ h₁₂ ≫ mappingCone.map ψ' ψ α' β' c₁ =
       mappingCone.map φ' φ α β c₀ ≫ mappingCone.map φ ψ e₃ e₄ h₃₄ := by
     rw [← mappingCone.map_comp, ← mappingCone.map_comp]
     congr 1
     · exact h₁₃.symm
     · exact h₂₄.symm
-  haveI := GlobalTheory.EtC.ConeRes.quasiIso_mappingCone_map φ' ψ' e₁ e₂ h₁₂
-  haveI := GlobalTheory.EtC.ConeRes.quasiIso_mappingCone_map φ ψ e₃ e₄ h₃₄
-  haveI : QuasiIso (mappingCone.map φ' ψ' e₁ e₂ h₁₂ ≫ mappingCone.map ψ' ψ α' β' c₁) := by
+  have := GlobalTheory.EtC.ConeRes.quasiIso_mappingCone_map φ' ψ' e₁ e₂ h₁₂
+  have := GlobalTheory.EtC.ConeRes.quasiIso_mappingCone_map φ ψ e₃ e₄ h₃₄
+  have : QuasiIso (mappingCone.map φ' ψ' e₁ e₂ h₁₂ ≫ mappingCone.map ψ' ψ α' β' c₁) := by
     rw [key]; infer_instance
   exact quasiIso_of_comp_left (mappingCone.map φ' ψ' e₁ e₂ h₁₂) _
 
@@ -374,7 +374,7 @@ theorem excision_boundary_natural_refine : ∀ (q : ℕ) (A A' : Type) [CommRing
   have hbij : ∀ (B : Type) [CommRing B] [Algebra A B], IsExcisionNbhd A B f →
       Function.Bijective (cpull (excisionConeMap (ZMod q) A B f) (res (ZMod q) (tw q i)) (n + 1)) := by
     intro B _ _ hB
-    haveI := GlobalTheory.T.excisionConeMap_quasiIso' (ZMod q) A B f hB
+    have := GlobalTheory.T.excisionConeMap_quasiIso' (ZMod q) A B f hB
     exact quasiIso_hypercohomology_bijective' (ZMod q) (excisionConeMap (ZMod q) A B f) (tw q i) (n + 1)
   obtain ⟨δ, hex, hnat⟩ := abstract_nat _ _ _ _ (excision_square_comm (ZMod q) A A' f) (res (ZMod q) (tw q i)) n
     (hbij A' hN)
@@ -691,12 +691,12 @@ theorem spMap_comp' {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A
 
 theorem etale_awayMap : ∀ (A C : Type) [CommRing A] [CommRing C] [Algebra A C] [Algebra.Etale A C] (f : A), @Algebra.Etale (Localization.Away f) (Localization.Away (algebraMap A C f)) _ _ (Localization.awayMap (algebraMap A C) f).toAlgebra := by
   intro A C _ _ _ _ f
-  letI : Algebra (Localization.Away f) (Localization.Away (algebraMap A C f)) :=
+  let : Algebra (Localization.Away f) (Localization.Away (algebraMap A C f)) :=
     (Localization.awayMap (algebraMap A C) f).toAlgebra
-  haveI : Algebra.Etale C (Localization.Away (algebraMap A C f)) := Algebra.Etale.of_isLocalizationAway (algebraMap A C f)
-  haveI : Algebra.Etale A (Localization.Away f) := Algebra.Etale.of_isLocalizationAway f
-  haveI : Algebra.Etale A (Localization.Away (algebraMap A C f)) := Algebra.Etale.comp A C _
-  haveI : IsScalarTower A (Localization.Away f) (Localization.Away (algebraMap A C f)) := by
+  have : Algebra.Etale C (Localization.Away (algebraMap A C f)) := Algebra.Etale.of_isLocalizationAway (algebraMap A C f)
+  have : Algebra.Etale A (Localization.Away f) := Algebra.Etale.of_isLocalizationAway f
+  have : Algebra.Etale A (Localization.Away (algebraMap A C f)) := Algebra.Etale.comp A C _
+  have : IsScalarTower A (Localization.Away f) (Localization.Away (algebraMap A C f)) := by
     refine IsScalarTower.of_algebraMap_eq (fun a => ?_)
     show _ = Localization.awayMap (algebraMap A C) f (algebraMap A (Localization.Away f) a)
     simp [Localization.awayMap, IsLocalization.Away.map, IsLocalization.map_eq, IsScalarTower.algebraMap_apply A C (Localization.Away (algebraMap A C f))]
@@ -717,9 +717,9 @@ theorem pull_spMap_id (q : ℕ) {A : Type} [CommRing A] (n i : ℤ) (x : Ht q (s
 theorem glue : ∀ (q : ℕ) (A C : Type) [CommRing A] [CommRing C] [Algebra A C] (f g : A), IsCoprime f g → IsExcisionNbhd A C g → ∀ (n i : ℤ) (a : Ht q (sp (Localization.Away (f * g))) n i), pull _ (spMap (Localization.awayMap (algebraMap A C) (f * g))) _ _ a = 0 → ∃ b : Ht q (sp (Localization.Away f)) n i, ∀ ρ : Localization.Away f →+* Localization.Away (f * g), ρ.comp (algebraMap A _) = algebraMap A _ → pull _ (spMap ρ) _ _ b = a := by
   intro q A C _ _ _ f g hfg hC n i a ha
   obtain ⟨hEt, h1, h2⟩ := hC
-  letI : Algebra (Localization.Away f) (Localization.Away (algebraMap A C f)) :=
+  let : Algebra (Localization.Away f) (Localization.Away (algebraMap A C f)) :=
     (Localization.awayMap (algebraMap A C) f).toAlgebra
-  haveI : Algebra.Etale (Localization.Away f) (Localization.Away (algebraMap A C f)) := etale_awayMap A C f
+  have : Algebra.Etale (Localization.Away f) (Localization.Away (algebraMap A C f)) := etale_awayMap A C f
   have hB : algebraMap (Localization.Away f) (Localization.Away (algebraMap A C f)) =
       Localization.awayMap (algebraMap A C) f := rfl
   set h : Localization.Away f := algebraMap A (Localization.Away f) g with hh
@@ -886,14 +886,14 @@ theorem away_zero_subsingleton (B : Type) [CommRing B] : Subsingleton (Localizat
 theorem main : ∀ (q : ℕ) [NeZero q] (k B : Type) [Field k] [IsAlgClosed k] [CommRing B] [IsDedekindDomain B] [Algebra k B] [Algebra.FiniteType k B], IsUnit (q : k) → ∀ f : B, f ≠ 0 → ∀ (n i : ℤ), 0 < n → ∀ x : Ht q (sp B) n i, ∃ (A' : Type) (_ : CommRing A') (_ : Algebra B A'), IsExcisionNbhd B A' f ∧ pull _ (spMap (algebraMap B A')) _ _ x = 0 := by
   intro q _ k B _ _ _ _ _ _ hq f hf n i hn x
   by_cases hu : IsUnit f
-  · haveI := away_zero_subsingleton B
+  · have := away_zero_subsingleton B
     refine ⟨Localization.Away (0 : B), inferInstance, inferInstance, ⟨Algebra.Etale.of_isLocalizationAway 0, ?_, ?_⟩, ?_⟩
     · intro a'
       exact ⟨0, by rw [Subsingleton.elim (a' - _) 0]; exact Ideal.zero_mem _⟩
     · intro a _
       rw [Ideal.span_singleton_eq_top.mpr hu]
       exact Submodule.mem_top
-    · haveI := ht_subsingleton_of_subsingleton q (Localization.Away (0 : B)) n i
+    · have := ht_subsingleton_of_subsingleton q (Localization.Away (0 : B)) n i
       exact Subsingleton.elim _ _
   · obtain ⟨A', i1, i2, i3, hN, hx⟩ := GlobalTheory.T.etale_local_vanishing_cohomology q k B hq f hf hu n i (by omega) x
     exact ⟨A', i1, i2, ⟨i3, hN.1, hN.2⟩, hx⟩
@@ -933,14 +933,14 @@ theorem smoothAffineCurve_degreeTwo_class_dies_on_principalOpen : ∀ (q : ℕ) 
   have hqB : IsUnit (q : B) := by simpa using hq.map (algebraMap k B)
   by_cases hB : IsField B
   · have hSH : SH B := GlobalTheory.T.sH_of_isField_finiteType_of_isAlgClosed k B hB
-    haveI : Subsingleton (Ht q (sp B) 2 i) := GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) B hSH (tw q i) 2 (by norm_num)
+    have : Subsingleton (Ht q (sp B) 2 i) := GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf (ZMod q) B hSH (tw q i) 2 (by norm_num)
     refine ⟨1, one_ne_zero, ?_⟩
     rw [Subsingleton.elim x 0, map_zero]
   · obtain ⟨inst, halg⟩ := GlobalTheory.T.exists_isAlgebraic_ratFunc_fractionRing_dedekind k B hB
-    letI := inst
-    haveI := halg
+    let := inst
+    have := halg
     have hqK : IsUnit (q : FractionRing B) := by simpa using hqB.map (algebraMap B (FractionRing B))
-    haveI : Subsingleton (Ht q (sp (FractionRing B)) 2 i) :=
+    have : Subsingleton (Ht q (sp (FractionRing B)) 2 i) :=
       GlobalTheory.T.etale_cohomology_vanishing_algebraic_over_ratFunc q k (FractionRing B) hqK 2 i le_rfl
     obtain ⟨f, hf, -, hx⟩ := GlobalTheory.T.class_vanishes_away_nonzero_nonunit_domain q B hB hqB 2 i x (Subsingleton.elim _ _)
     exact ⟨f, hf, hx⟩

@@ -70,7 +70,7 @@ theorem exists_unit_of_stalks {Y : Scheme.{0}} [IsIntegral Y] (W : Y.Opens) (a b
       ∀ z ∈ V, gs (𝟙 Y) z W a = gs (𝟙 Y) z V c * gs (𝟙 Y) z W b := by
     rintro ⟨y, hy⟩
     obtain ⟨v, hv⟩ := h y hy
-    obtain ⟨U, hU, c, hc⟩ := Y.presheaf.germ_exist v.val
+    obtain ⟨U, hU, c, hc⟩ := Y.presheaf.exists_germ_eq v.val
     have hm : y ∈ U ⊓ W := ⟨hU, hy⟩
     have e : gs (𝟙 Y) y (U ⊓ W) ((Y.presheaf.map (homOfLE inf_le_right).op).hom a) =
         gs (𝟙 Y) y (U ⊓ W) ((Y.presheaf.map (homOfLE inf_le_left).op).hom c *
@@ -143,7 +143,7 @@ theorem exists_gen_of_pow : ∀ (X Y : Scheme.{0}) [IsIntegral Y], (∀ y : Y, I
       (fun y hy => by
         choose J hJ using fun χ : Y ⟶ X => exists_chart hL (χ y)
         have hJ' : Good L y J := hJ
-        haveI := hN y
+        have := hN y
         have as : Associated (sval s₂ (𝟙 Y) y J) (sval s₁ (𝟙 Y) y J) :=
           (Associated.pow_iff (by omega : l ≠ 0)).1 ⟨val u (𝟙 Y) y J, (_root_.mul_comm _ _).trans (H y J hJ').symm⟩
         obtain ⟨v, hv⟩ := as

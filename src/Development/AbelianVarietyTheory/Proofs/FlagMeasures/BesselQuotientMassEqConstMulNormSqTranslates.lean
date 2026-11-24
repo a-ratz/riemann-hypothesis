@@ -83,7 +83,7 @@ theorem continuous_Lp_two_of_const_norm_pointwise_continuous {ι : Type} [Topolo
   by_contra hne
   have hfr : ∃ᶠ i in 𝓝 j, δ ≤ ‖F i - F j‖ := by
     simpa only [not_eventually, not_lt, dist_eq_norm] using hne
-  haveI : NeBot (𝓝 j ⊓ 𝓟 {i | δ ≤ ‖F i - F j‖}) := frequently_iff_neBot.1 hfr
+  have : NeBot (𝓝 j ⊓ 𝓟 {i | δ ≤ ‖F i - F j‖}) := frequently_iff_neBot.1 hfr
   have hb : ∀ i, δ ≤ ‖F i - F j‖ → ‖F i + F j‖ ^ 2 ≤ 4 * ‖F j‖ ^ 2 - δ ^ 2 := fun i hi => by
     have h1 := parallelogram_law_with_norm ℂ (F i) (F j)
     rw [hn i j] at h1
@@ -147,13 +147,13 @@ theorem closable (hσ : IsURepOn (UJset ε) σ) (D : Submodule ℂ H) (a : H →
     (u : ℕ → H) (f : Lp V 2 ν) (hu : ∀ i, u i ∈ D) (hu0 : Tendsto u atTop (𝓝 0))
     (hf : Tendsto (fun i => A (u i)) atTop (𝓝 f)) : f = 0 := by
   have hemb := (Formalism.REAL.isClosedEmbeddingMatrix n ε).1
-  haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (Formalism.REAL.UJ ε) := hemb.isEmbedding.secondCountableTopology
-  haveI : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
+  have : SecondCountableTopology (Formalism.REAL.UJ ε) := hemb.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace (Matrix (Fin n) (Fin n) ℂ) :=
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : LocallyCompactSpace (Formalism.REAL.UJ ε) := hemb.locallyCompactSpace
-  haveI : SigmaFinite (Formalism.REAL.muG ε) := inferInstance
+  have : LocallyCompactSpace (Formalism.REAL.UJ ε) := hemb.locallyCompactSpace
+  have : SigmaFinite (Formalism.REAL.muG ε) := inferInstance
   have hmul : ∀ (g : Formalism.REAL.UJ ε) (v : H), σ (umat g) (σ (umat g⁻¹) v) = v := by
     intro g v
     have e : σ (umat g * umat g⁻¹) = _ := hσ.1.2 _ g.2 _ (g⁻¹).2
@@ -228,16 +228,16 @@ theorem closable (hσ : IsURepOn (UJset ε) σ) (D : Submodule ℂ H) (a : H →
           (fun j => (hP _ (D.sub_mem (hu i) (hu j))).1.aestronglyMeasurable) (p (u i))
           (hP _ (hu i)).1.aestronglyMeasurable
           (hlim.mono fun x hx => by simpa only [hsub, sub_zero] using hx.const_sub (p (u i) x))
-        simp_rw [eLpNorm_one_eq_lintegral_enorm (hP _ (hu i)).1.aestronglyMeasurable,
-          eLpNorm_one_eq_lintegral_enorm (hP _ (D.sub_mem (hu i) (hu _))).1.aestronglyMeasurable] at h2
+        simp_rw [eLpNorm_one_eq_lintegral_eNorm (hP _ (hu i)).1.aestronglyMeasurable,
+          eLpNorm_one_eq_lintegral_eNorm (hP _ (D.sub_mem (hu i) (hu _))).1.aestronglyMeasurable] at h2
         have h3 : Tendsto (fun j => ENNReal.ofReal (c * ‖A (u i - u j)‖)) atTop
             (𝓝 (ENNReal.ofReal (c * ‖A (u i) - f‖))) := by
           simp only [map_sub]
           exact ENNReal.tendsto_ofReal ((hf.const_sub _).norm.const_mul c)
         have h4 := h2.trans ((liminf_le_liminf (Eventually.of_forall fun j => by
-          rw [← ofReal_integral_norm_eq_lintegral_enorm (hP _ (D.sub_mem (hu i) (hu j))).1]
+          rw [← ofReal_integral_norm_eq_lintegral_eNorm (hP _ (D.sub_mem (hu i) (hu j))).1]
           exact ENNReal.ofReal_le_ofReal (hP _ (D.sub_mem (hu i) (hu j))).2.1)).trans h3.liminf_eq.le)
-        rwa [← ofReal_integral_norm_eq_lintegral_enorm (hP _ (hu i)).1, ENNReal.ofReal_le_ofReal_iff
+        rwa [← ofReal_integral_norm_eq_lintegral_eNorm (hP _ (hu i)).1, ENNReal.ofReal_le_ofReal_iff
           (mul_nonneg (mul_nonneg (integral_nonneg fun _ => norm_nonneg _) (norm_nonneg _)) (norm_nonneg _))] at h4
       have t3 : Tendsto (fun i => c * ‖A (u i) - f‖) atTop (𝓝 0) := by
         simpa using (tendsto_iff_norm_sub_tendsto_zero.1 hf).const_mul c
@@ -287,7 +287,7 @@ theorem sigmaFinite_of_quot {μG μS ν : Measure (Formalism.QuantumDeterminants
     exact (hlt.trans ENNReal.one_lt_top).ne
   have hFp : ∀ x, F x ≠ 0 := fun x h0 => by
     have h1 := (lintegral_eq_zero_iff (hm.comp (measurable_prodMk_left (x := x)))).1 h0
-    haveI : NeZero μS := ⟨hS⟩
+    have : NeZero μS := ⟨hS⟩
     obtain ⟨s, hs⟩ := h1.exists
     exact (hpos _).ne' (ENNReal.coe_eq_zero.1 hs)
   refine ⟨⟨⟨fun m => {x | ((m + 1 : ℕ) : ℝ≥0∞)⁻¹ ≤ F x}, fun _ => trivial, fun m => ?_, ?_⟩⟩⟩
@@ -313,7 +313,7 @@ theorem quotientMass_right_translation_invariant {Wp : Type} [NormedAddCommGroup
   have hae := GlobalTheory.QuotRightInv.ae_mem_of_quot hset
   set A : Set (Formalism.QuantumDeterminants.Mt k r) := {x | Matrix.of x ∈ GG k r} with hA
   have hAm : MeasurableSet A := IsClosed.measurableSet (α := Formalism.QuantumDeterminants.Mt k r) hGG.1
-  have hc : ContinuousOn (fun x : Formalism.QuantumDeterminants.Mt k r => ‖Φ (Matrix.of x)‖₊) A := hΦ.nnnorm
+  have hc : ContinuousOn (fun x : Formalism.QuantumDeterminants.Mt k r => ‖Φ (Matrix.of x)‖₊) A := hΦ.nnNorm
   have hm : Measurable (A.piecewise (fun x : Formalism.QuantumDeterminants.Mt k r => ‖Φ (Matrix.of x)‖₊) (fun _ => 0)) :=
     hc.measurable_piecewise continuousOn_const hAm
   have hval : ∀ x : Formalism.QuantumDeterminants.Mt k r, Matrix.of x ∈ GG k r →
@@ -405,11 +405,11 @@ theorem besselQuotientMass_eq_const_mul_norm_sq_translates : ∀ (k r : ℕ) (ε
   obtain ⟨hz, hT, ⟨u₀, hπ⟩, -, hW, hN, hHG, hq⟩ := hS'
   obtain ⟨h0, h1⟩ := Formalism.FourierDecayAlt.P.DDSmoothness.muSof_facts hW hN
   have hae : ∀ᵐ x ∂νq, Matrix.of x ∈ BranchingSupport.GG k r := Formalism.FourierDecayAlt.P.DDSmoothness.ae_UH_of_quot hHG.2.2.1 h0 h1 hq
-  haveI := hHG.1
-  haveI := (_root_.GlobalTheory.muSof_isHaar k r z μW μN hz hT hW hN).2.2.1.1
-  haveI : SigmaFinite νq := sigmaFinite_of_quot h0 hq
-  haveI : SecondCountableTopology Wp := by
-    haveI : ProperSpace Wp := FiniteDimensional.proper ℂ Wp
+  have := hHG.1
+  have := (_root_.GlobalTheory.muSof_isHaar k r z μW μN hz hT hW hN).2.2.1.1
+  have : SigmaFinite νq := sigmaFinite_of_quot h0 hq
+  have : SecondCountableTopology Wp := by
+    have : ProperSpace Wp := FiniteDimensional.proper ℂ Wp
     infer_instance
   have hπu := (GlobalTheory.ThA.hcType_rep k r z u₀ Wp π hz hT hπ).2.2.2.1
   let L : R.smSub →ₗ[ℂ] Wp :=
@@ -486,9 +486,9 @@ theorem besselQuotientMass_eq_const_mul_norm_sq_translates : ∀ (k r : ℕ) (ε
   have hcl := closable (ν := νq) hU D a A hD' (fun v hv => by rw [hA' v hv]; exact (hmem v hv).coeFn_toLp) hn'
     (fun v hv => by
       have hemb := (Formalism.REAL.isClosedEmbeddingMatrix (2 * r + k + 1) ε).1
-      haveI : SecondCountableTopology (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :=
+      have : SecondCountableTopology (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) :=
         inferInstanceAs (SecondCountableTopology (Mt k r))
-      haveI : SecondCountableTopology (Formalism.REAL.UJ ε) := hemb.isEmbedding.secondCountableTopology
+      have : SecondCountableTopology (Formalism.REAL.UJ ε) := hemb.isEmbedding.secondCountableTopology
       have hae2 : ∀ᵐ p ∂((Formalism.REAL.muG ε).prod νq), p ∈ Prod.snd ⁻¹' {x : Mt k r | Matrix.of x ∈ BranchingSupport.GG k r} :=
         Measure.quasiMeasurePreserving_snd.ae hae
       have c2 : Continuous fun p : Formalism.REAL.UJ ε × Mt k r => Matrix.of p.2 * (P⁻¹ * umat p.1 * P) :=

@@ -108,10 +108,10 @@ theorem bochner_ineq (hE : IsGlRep E) (hU : IsInfUnitary ε E) (hV : IsKIrrHW ε
     rw [ReciprocityTheory.ChartRestriction.DS.casimirK_mAct_apply, PiLp.smul_apply]
     have hm := hP' κ
     by_cases hκ : ∀ i, ε (κ i).1 ≠ ε (κ i).2
-    · rw [if_pos hκ] at hm
+    · rw [ite_eq_left hκ] at hm
       have hm' : P κ ∈ V := hm
       exact ReciprocityTheory.ChartRestriction.DS.casimirK_irr hE hV _ hm'
-    · rw [if_neg hκ] at hm
+    · rw [ite_eq_right hκ] at hm
       have hz : P κ = 0 := (Submodule.mem_bot ℂ).1 hm
       rw [hz, map_zero, smul_zero]
 

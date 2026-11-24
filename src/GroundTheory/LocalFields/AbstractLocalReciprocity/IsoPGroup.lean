@@ -186,7 +186,7 @@ theorem Abelianization.lift_injective_of_ker_le {Γ T : Type*} [Group Γ] [CommG
     have hq : Abelianization.lift f (Abelianization.of q) = 1 := hz
     change f q = 1 at hq
     have := h hq
-    rw [← Abelianization.ker_of, MonoidHom.mem_ker] at this
+    rw [← Group.Abelianization.ker_of, MonoidHom.mem_ker] at this
     exact this
 
 end Restrict
@@ -336,8 +336,8 @@ theorem ker_reciprocity_le_of_tower
     rw [MonoidHom.mem_ker, map_mul, map_inv, hrs, mul_inv_cancel]
   have hcomm : ι (t * s⁻¹) ∈ commutator ((K : Subgroup G) ⧸ (L : Subgroup G).subgroupOf K) := by
     have h := hk hts
-    rw [← Abelianization.ker_of, MonoidHom.mem_ker] at h ⊢
-    rw [← Abelianization.map_of, h, map_one]
+    rw [← Group.Abelianization.ker_of, MonoidHom.mem_ker] at h ⊢
+    rw [← Group.Abelianization.map_of, h, map_one]
   have e3 : ι t = ι (t * s⁻¹) * ι s := by rw [map_mul, map_inv, inv_mul_cancel_right]
   rw [e3]
   exact Subgroup.mul_mem _ hcomm hsS

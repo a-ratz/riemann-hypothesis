@@ -123,10 +123,10 @@ private theorem hpk_sq_lemma (k r : ℕ) : Hpk k r * Hpk k r = 1 := by
   rw [Finset.sum_eq_single (⟨_, hs⟩ : Fin (2 * r + k + 1))]
   · by_cases hij : i = j
     · subst hij
-      rw [if_pos rfl]
+      rw [ite_eq_left rfl]
       simp only [Hpk, Fin.ext_iff, Fin.val_mk, eq_self_iff_true, and_true]
       split_ifs <;> first | (exfalso; (try simp only [Fin.val_mk] at *); omega) | (simp_all; done) | norm_num
-    · rw [if_neg hij]
+    · rw [ite_eq_right hij]
       rw [Fin.ext_iff] at hij
       simp only [Hpk, Fin.ext_iff, Fin.val_mk]
       split_ifs <;> first | (exfalso; (try simp only [Fin.val_mk] at *); omega) | (simp_all; done) | norm_num
@@ -219,7 +219,7 @@ theorem isClosed_NS : IsClosed (NS k r) := by
     by_cases h : a.val ≤ i.val
     · simp only [h, true_implies]
       exact isClosed_eq (by fun_prop) continuous_const
-    · simp only [h, false_implies, Set.setOf_true]
+    · simp only [h, false_implies, Set.ofPred_true]
       exact isClosed_univ
   have h3 : ∀ i j : Fin (2 * r + k + 1), IsClosed {x : Mt k r | r ≤ j.val → j.val ≤ r + k → r ≤ i.val →
       x i j = if i = j then 1 else 0} := by
@@ -230,7 +230,7 @@ theorem isClosed_NS : IsClosed (NS k r) := by
     · have e : {x : Mt k r | r ≤ j.val → j.val ≤ r + k → r ≤ i.val →
           x i j = if i = j then 1 else 0} = Set.univ := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+        simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
         intro h1 h2 h3
         exact absurd ⟨h1, h2, h3⟩ h
       rw [e]
@@ -241,7 +241,7 @@ theorem isClosed_NS : IsClosed (NS k r) := by
         (⋂ i : Fin (2 * r + k + 1), ⋂ j : Fin (2 * r + k + 1), {x : Mt k r | r ≤ j.val → j.val ≤ r + k →
           r ≤ i.val → x i j = if i = j then 1 else 0})) := by
     ext x
-    simp only [NS, Nset, UH, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [NS, Nset, UH, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
     rfl
   rw [e]
   exact h1.inter ((isClosed_iInter fun a => isClosed_iInter fun i => h2 a i).inter

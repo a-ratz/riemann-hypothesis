@@ -103,7 +103,7 @@ theorem cj_inv_k (hU : L.UData uM ν 𝓤) (hN : IsNMap d.b nb) (u : Fin L.n →
     _ = β.1 := by rw [h1, h2, Matrix.one_mul, Matrix.mul_one]
 theorem continuous_cj_k (hU : L.UData uM ν 𝓤) (hN : IsNMap d.b nb) (u : Fin L.n → AE F E) :
     Continuous (_root_.PositivityTheory.SiegelWeilFormula.Act.C1.cj_k hU hN u) :=
-  ((continuous_const.matrix_mul continuous_subtype_val).matrix_mul continuous_const).subtype_mk _
+  ((continuous_const.matrix_mul continuous_subtypeVal).matrix_mul continuous_const).subtype_mk _
 def cjE_k (hU : L.UData uM ν 𝓤) (hN : IsNMap d.b nb) (u : Fin L.n → AE F E) : nA σ d.Y d.b ≃ₜ+ nA σ d.Y d.b where
   toFun := _root_.PositivityTheory.SiegelWeilFormula.Act.C1.cj_k hU hN u
   invFun := _root_.PositivityTheory.SiegelWeilFormula.Act.C1.cj_k hU hN (-u)

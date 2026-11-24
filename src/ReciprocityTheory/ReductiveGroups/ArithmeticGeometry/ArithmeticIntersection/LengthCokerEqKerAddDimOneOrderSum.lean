@@ -291,7 +291,7 @@ theorem length_quot_prime_ne_top_iff (q : Ideal A) [q.IsPrime] :
     length A (A ⧸ q) ≠ ⊤ ↔ q.IsMaximal := by
   constructor
   · intro h
-    haveI : IsArtinian A (A ⧸ q) :=
+    have : IsArtinian A (A ⧸ q) :=
       (isFiniteLength_iff_isNoetherian_isArtinian.1 (Module.length_ne_top_iff.1 h)).2
     apply Ideal.Quotient.maximal_of_isField
     refine ⟨⟨0, 1, zero_ne_one⟩, mul_comm, fun {a} ha => ?_⟩
@@ -441,8 +441,8 @@ theorem dim_quot_eq_one_iff (hdim : ringKrullDim A = 1) (q : Ideal A) [q.IsPrime
     ringKrullDim (A ⧸ q) = 1 ↔ ¬ q.IsMaximal := by
   constructor
   · intro h hq
-    haveI := hq
-    letI := Ideal.Quotient.field q
+    have := hq
+    let := Ideal.Quotient.field q
     have h0 : ringKrullDim (A ⧸ q) = 0 := ringKrullDim_eq_zero_of_field (A ⧸ q)
     rw [h0] at h
     first | exact zero_ne_one h | simp at h | exact absurd h (by decide)
@@ -520,9 +520,9 @@ theorem finite_dimOne (hdim : ringKrullDim A = 1) :
   intro p hp
   have hp' : ¬ p.asIdeal.IsMaximal := (dim_quot_eq_one_iff hdim p.asIdeal).1 hp
   show p.asIdeal ∈ minimalPrimes A
-  simp only [minimalPrimes, Ideal.minimalPrimes, Set.mem_setOf_eq]
+  simp only [minimalPrimes, Ideal.minimalPrimes, Set.mem_ofPred_eq]
   refine ⟨⟨p.isPrime, bot_le⟩, fun q hq hqp => ?_⟩
-  haveI := hq.1
+  have := hq.1
   exact (eq_of_not_max_of_le hdim hp' hqp).le
 
 theorem finsum_dimOne_eq (hdim : ringKrullDim A = 1) (F : PrimeSpectrum A → ℕ∞) :
@@ -538,7 +538,7 @@ variable {A : Type u} [CommRing A] [IsNoetherianRing A] [IsLocalRing A]
 
 theorem support_of_equiv {N : Type v} [AddCommGroup N] [Module A N] (q : PrimeSpectrum A)
     (e : N ≃ₗ[A] A ⧸ q.asIdeal) : support A N = zeroLocus (q.asIdeal : Set A) := by
-  haveI : Module.Finite A N := Module.Finite.equiv e.symm
+  have : Module.Finite A N := Module.Finite.equiv e.symm
   rw [Module.support_eq_zeroLocus, e.annihilator_eq, Ideal.annihilator_quotient]
 
 theorem length_coker_equiv {N N' : Type*} [AddCommGroup N] [Module A N] [AddCommGroup N']

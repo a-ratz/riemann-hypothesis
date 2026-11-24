@@ -101,8 +101,8 @@ private theorem UpperTheory.V.Pr.npe_dim_one {R : Type} [CommRing R] [IsNoetheri
     (inferInstance : IsNoetherian R R) {p : Ideal R | p.IsPrime ∧ Q ≤ p ∧ f ∉ p}
     ⟨Q, inferInstance, le_rfl, hf⟩
   refine ⟨p, hp, hQp, hfp, ?_⟩
-  haveI : Nontrivial (R ⧸ p) := Ideal.Quotient.nontrivial_iff.mpr hp.ne_top
-  haveI : IsLocalRing (R ⧸ p) :=
+  have : Nontrivial (R ⧸ p) := Ideal.Quotient.nontrivial_iff.mpr hp.ne_top
+  have : IsLocalRing (R ⧸ p) :=
     IsLocalRing.of_surjective' (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
   have hf0 : Ideal.Quotient.mk p f ≠ 0 := fun h => hfp (Ideal.Quotient.eq_zero_iff_mem.mp h)
   have hh : (maximalIdeal (R ⧸ p)).height ≤ 1 := by
@@ -118,7 +118,7 @@ private theorem UpperTheory.V.Pr.npe_dim_one {R : Type} [CommRing R] [IsNoetheri
     have : x ∈ p := by rw [e]; exact hy
     exact Ideal.mem_bot.mpr (Ideal.Quotient.eq_zero_iff_mem.mpr this)
   have hfm' : Ideal.Quotient.mk p f ∈ maximalIdeal (R ⧸ p) := by
-    haveI := IsLocalHom.of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
+    have := IsLocalHom.of_surjective (Ideal.Quotient.mk p) Ideal.Quotient.mk_surjective
     exact map_nonunit _ f hfm
   have hlt : (⊥ : Ideal (R ⧸ p)) < maximalIdeal (R ⧸ p) :=
     bot_lt_iff_ne_bot.mpr fun e => hf0 (by simpa [e] using hfm')
@@ -161,12 +161,12 @@ theorem UpperTheory.V.Pr.nicePrimeEx :
     rw [hqh] at hI0
     exact hI0.trans (q.monotone (a := 0) (Fin.zero_le _))
   have hQ2 : Q < q ⟨2, by omega⟩ := q.strictMono (by simp [Fin.lt_def])
-  obtain ⟨g, hg, hgQ⟩ := SetLike.exists_of_lt (show Q.asIdeal < (q ⟨2, by omega⟩).asIdeal from hQ2)
+  obtain ⟨g, hg, hgQ⟩ := IsConcreteLE.exists_of_lt (show Q.asIdeal < (q ⟨2, by omega⟩).asIdeal from hQ2)
   have hgm : g ∈ maximalIdeal R := le_maximalIdeal (q ⟨2, by omega⟩).2.ne_top hg
   have hna : ∀ i, ∃ x ∈ a i, x ∉ Q.asIdeal := fun i =>
-    SetLike.not_le_iff_exists.mp fun h => (UpperTheory.V.Pr.npe_chain q (a i) N hq h).not_gt (ha i)
+    IsConcreteLE.not_le_iff_exists.mp fun h => (UpperTheory.V.Pr.npe_chain q (a i) N hq h).not_gt (ha i)
   choose x hxa hxQ using hna
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have hf : g * ∏ i, x i ∉ Q.asIdeal := fun h => by
     rcases Q.2.mem_or_mem h with h | h
     · exact hgQ h

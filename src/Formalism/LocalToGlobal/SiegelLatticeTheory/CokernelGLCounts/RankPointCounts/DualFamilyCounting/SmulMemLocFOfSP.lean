@@ -86,7 +86,7 @@ private theorem mem_pow_vF_of_ne_zero {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMa
 theorem unit_part (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : IsFixF K F) {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal)
     {π s₀ : 𝓞 F} (hu : IsUnif0 𝔭 π s₀) {a : 𝓞 F} (ha : a ≠ 0) :
     (algebraMap F K (a : F))⁻¹ * algebraMap F K (π : F) ^ vF 𝔭 a ∈ SP K 𝔭 := by
-  haveI := h𝔭.isPrime
+  have := h𝔭.isPrime
   obtain ⟨hmem, hnot⟩ := mem_pow_vF_of_ne_zero h𝔭 ha
   have hle : Ideal.span {s₀ ^ vF 𝔭 a} * 𝔭 ^ vF 𝔭 a ≤ Ideal.span {π ^ vF 𝔭 a} := by
     rw [← Ideal.span_singleton_pow, ← Ideal.span_singleton_pow, ← mul_pow]
@@ -136,7 +136,7 @@ theorem unit_part_c (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF : I
     {π s₀ : 𝓞 F} (hu : IsUnif0 𝔭 π s₀) {a : 𝓞 F} (ha : a ≠ 0) (he : vF 𝔭 a ≠ 0) {c : F}
     (hac : InP 𝔭 (2 * vF 𝔭 a) (algebraMap F K ((a : F) + c))) :
     algebraMap F K c ≠ 0 ∧ (algebraMap F K c)⁻¹ * algebraMap F K (π : F) ^ vF 𝔭 a ∈ SP K 𝔭 := by
-  haveI := h𝔭.isPrime
+  have := h𝔭.isPrime
   obtain ⟨hmem, hnot⟩ := mem_pow_vF_of_ne_zero h𝔭 ha
   have hne : 𝔭 ≠ ⊥ := (Submodule.ne_bot_iff _).mpr ⟨π, hu.mem, hu.ne_zero⟩
   obtain ⟨t, ht, z, hz, hzeq⟩ := hac

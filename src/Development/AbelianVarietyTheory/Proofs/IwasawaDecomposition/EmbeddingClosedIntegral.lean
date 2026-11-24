@@ -232,9 +232,9 @@ theorem _root_.GlobalTheory.CoefEmbed.embedding_closed_integral : ∀ (l : ℕ) 
         rfl
   have hclosed : IsClosed (Set.range κ) := by
     rw [hrange]
-    haveI : FiniteDimensional ℚ_[l] V :=
+    have : FiniteDimensional ℚ_[l] V :=
       FiniteDimensional.span_of_finite ℚ_[l] ((s.finite_toSet).image g)
-    exact V.closed_of_finiteDimensional
+    exact V.isClosed_of_finiteDimensional
   obtain ⟨hopen, hsmall⟩ := isAdic_iff.mp hO
   have hemb : Topology.IsEmbedding g := by
     refine ⟨(IsTopologicalAddGroup.isInducing_iff_nhds_zero).mpr ?_, hginj⟩

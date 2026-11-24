@@ -188,10 +188,10 @@ theorem GlobalTheory.SgInf.inner_integral_eq_be : ∀ (k r : ℕ) {H : Type} [No
   have hsG := hSG hs
   have hdet := (gg_inv hsG).1
   obtain ⟨h, hh, m, hm', hsm⟩ := hs
-  rw [of_invM, Matrix.nonsing_inv_nonsing_inv _ hdet, ContinuousLinearMap.smul_apply,
+  rw [of_invM, Matrix.nonsing_inv_nonsing_inv _ hdet, smul_apply,
     star_coef_mul_eq σ hσ w hy hsG hx]
   congr 1
-  rw [hsm, hW h hh m hm' _ hx, (hpis.1 h hh m hm').2, ContinuousLinearMap.smul_apply]
+  rw [hsm, hW h hh m hm' _ hx, (hpis.1 h hh m hm').2, smul_apply]
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -306,7 +306,7 @@ theorem lintegral_lt_top {μG μS ν : Measure (Mt k r)} [SFinite μG] [SFinite 
     _ < ⊤ := by rw [hW2]; exact ENNReal.add_lt_top.2 ⟨hl2, hΦ2⟩
 
 theorem enorm_star' (a : ℂ) : ‖star a‖ₑ = ‖a‖ₑ := by
-  rw [enorm_eq_nnnorm, enorm_eq_nnnorm, nnnorm_star]
+  rw [eNorm_eq_nnNorm, eNorm_eq_nnNorm, nnNorm_star]
 
 theorem coef_inv_mul {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {σ : Mat k r → (H →L[ℂ] H)} (hσ : IsURepOn (GG k r) σ) (w : H) {y g : Mat k r}
@@ -317,7 +317,7 @@ theorem coef_inv_mul {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
   have key : ∀ v : H, σ y (σ y⁻¹ v) = v := by
     intro v
     have := congrArg (fun T : H →L[ℂ] H => T v) (hmul y hy y⁻¹ hyi)
-    simp only [hyy, h1, ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply] at this
+    simp only [hyy, h1, ContinuousLinearMap.comp_apply, one_apply_eq_self] at this
     exact this.symm
   have hinner : ∀ u v : H, ⟪σ y u, σ y v⟫_ℂ = ⟪u, v⟫_ℂ := by
     intro u v
@@ -336,7 +336,7 @@ theorem norm_equiv {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp
   obtain ⟨-, hiso, -⟩ := hπ
   have hψ : ‖psiGen k r z c m‖ = 1 := by simp [psiGen, Complex.norm_exp]
   have hn : ‖psiGen k r z c m • π h (W x)‖ = ‖W x‖ := by rw [norm_smul, hψ, one_mul, hiso h hh]
-  simp only [enorm_eq_nnnorm]
+  simp only [eNorm_eq_nnNorm]
   congr 1
   exact NNReal.eq hn
 
@@ -356,7 +356,7 @@ theorem integrable_coef_smul : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H]
   have hone : (1 : Mat k r) ∈ GG k r := hcl.1.2.2.1
   have hwD : w ∈ DD σ w := by
     have := mem_DD σ w hone
-    rwa [hσ.1.1, ContinuousLinearMap.one_apply] at this
+    rwa [hσ.1.1, one_apply_eq_self] at this
   have hyD : σ y w ∈ DD σ w := mem_DD σ w hy
   have hint2 := hint w hwD w hwD (σ y w) hyD (σ y w) hyD
 
@@ -374,7 +374,7 @@ theorem integrable_coef_smul : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H]
       φ = GGset.piecewise (fun g => ‖coef σ w (σ y w) (Matrix.of g)‖ₑ) 0 := ⟨_, rfl⟩
   have hφm : Measurable φ := by
     rw [hφdef]
-    exact ContinuousOn.measurable_piecewise (continuous_enorm.comp_continuousOn hcc)
+    exact ContinuousOn.measurable_piecewise (continuous_eNorm.comp_continuousOn hcc)
       continuousOn_const hGGmeas
   have hφle : ∀ g, φ g ≤ ‖coef σ w (σ y w) (Matrix.of g)‖ₑ := by
     intro g
@@ -386,9 +386,9 @@ theorem integrable_coef_smul : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H]
     have hfi := hint2.hasFiniteIntegral
     unfold HasFiniteIntegral at hfi
     refine lt_of_le_of_lt ?_ hfi
-    refine le_trans (lintegral_mono fun g => lintegral_mono fun t => ?_) (lintegral_prod _ hint2.aestronglyMeasurable.enorm).symm.le
+    refine le_trans (lintegral_mono fun g => lintegral_mono fun t => ?_) (lintegral_prod _ hint2.aestronglyMeasurable.eNorm).symm.le
     dsimp only
-    rw [enorm_mul, GlobalTheory.SgInf.AbsConv.enorm_star']
+    rw [eNorm_mul, GlobalTheory.SgInf.AbsConv.enorm_star']
     exact mul_le_mul' (hφle g) (hφle _)
   have hinv : ∀ᵐ x ∂ν, ∀ s ∈ Sset k r z,
       ‖W (Matrix.of (lmulM s x))‖ₑ = ‖W (Matrix.of x)‖ₑ := by
@@ -396,9 +396,9 @@ theorem integrable_coef_smul : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H]
     filter_upwards [this] with x hx s hs
     exact GlobalTheory.SgInf.AbsConv.norm_equiv hπ hW hs hx
   have hl2' : ∫⁻ x, ‖W (Matrix.of x)‖ₑ ^ 2 ∂ν < ⊤ := by
-    simpa only [l2SG, enorm_eq_nnnorm] using hl2
+    simpa only [l2SG, eNorm_eq_nnNorm] using hl2
   have hbound := GlobalTheory.SgInf.AbsConv.lintegral_lt_top (S := Sset k r z) hq hmap (ae_iff.2 hHS.2.2.1)
-    hUS.1 hφm hfin hWG.enorm hWν.enorm hinv hl2'
+    hUS.1 hφm hfin hWG.eNorm hWν.eNorm hinv hl2'
 
   have hcm : AEStronglyMeasurable (fun g : Mt k r => star (coef σ w (σ y w) (Matrix.of g))) μG := by
     rw [← Measure.restrict_eq_self_of_ae_mem hGae]
@@ -413,7 +413,7 @@ theorem integrable_coef_smul : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H]
   show ∫⁻ g, ‖star (coef σ w (σ y w) (Matrix.of g)) • W (Matrix.of g)‖ₑ ∂μG < ⊤
   refine lt_of_eq_of_lt (lintegral_congr_ae ?_) hbound
   filter_upwards [hGae] with g hg
-  rw [enorm_smul, GlobalTheory.SgInf.AbsConv.enorm_star', hφdef, Set.piecewise_eq_of_mem _ _ _ hg]
+  rw [eNorm_smul, GlobalTheory.SgInf.AbsConv.enorm_star', hφdef, Set.piecewise_eq_of_mem _ _ _ hg]
 
 end GlobalTheory.SgInf.AbsConv
 end -- clump:auto

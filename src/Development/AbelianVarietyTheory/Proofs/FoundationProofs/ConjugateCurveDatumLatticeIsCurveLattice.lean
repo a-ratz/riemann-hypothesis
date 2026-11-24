@@ -105,8 +105,8 @@ theorem coprime_absNorm {K : Type*} [Field K] [NumberField K] (B : Ideal (𝓞 K
   apply Nat.Coprime.symm
   apply Nat.coprime_of_dvd
   intro p hp hpN hpB
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : Finite (𝓞 K ⧸ B) := Ideal.finiteQuotientOfFreeOfNeBot B hB
+  have : Fact p.Prime := ⟨hp⟩
+  have : Finite (𝓞 K ⧸ B) := Ideal.finiteQuotientOfFreeOfNeBot B hB
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hpB
   obtain ⟨x, hx⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 K ⧸ B) p hpB
   have hN : N • x = 0 := by
@@ -136,11 +136,11 @@ theorem exists_ideal {R : Type*} [CommRing R] (f : R →+* ℂ) (Λ : AddSubgrou
   let I : Ideal R :=
     { carrier := {r | w₁ / b * f r ∈ Λ}
       add_mem' := fun {x y} hx hy => by
-        simp only [Set.mem_setOf_eq, map_add (f := _), mul_add] at *
+        simp only [Set.mem_ofPred_eq, map_add (f := _), mul_add] at *
         exact Λ.add_mem hx hy
       zero_mem' := by simp
       smul_mem' := fun c x hx => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, map_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, map_mul] at *
         have := hst c _ hx
         rwa [mul_left_comm] at this }
   have hI : ∀ r, r ∈ I ↔ w₁ / b * f r ∈ Λ := fun r => Iff.rfl

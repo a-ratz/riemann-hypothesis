@@ -106,7 +106,7 @@ end SlopeTestRemainingChoices
 
 theorem exists_prim {F : Type} [Field F] [IsAlgClosed F] [CharZero F] (N : ℕ) (hN : 0 < N) :
     ∃ ζ : F, IsPrimitiveRoot ζ N := by
-  haveI : NeZero (N : F) := ⟨Nat.cast_ne_zero.mpr hN.ne'⟩
+  have : NeZero (N : F) := ⟨Nat.cast_ne_zero.mpr hN.ne'⟩
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic N F) (by
     rw [Polynomial.degree_cyclotomic]
     exact_mod_cast (Nat.totient_pos.2 hN).ne')

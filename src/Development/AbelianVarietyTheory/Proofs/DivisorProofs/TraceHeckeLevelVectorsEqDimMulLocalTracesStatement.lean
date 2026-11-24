@@ -154,7 +154,7 @@ theorem map_fixed {σ : Representation ℂ H W} {τ : Representation ℂ H X} (f
 
 theorem schur (σ : Representation ℂ H W) [σ.IsIrreducible] (K : Subgroup H) [Module.Finite ℂ (fixed σ K)]
     (h0 : fixed σ K ≠ ⊥) (φ : σ.IntertwiningMap σ) : ∃ c : ℂ, ∀ w, φ.toLinearMap w = c • w := by
-  haveI : Nontrivial (fixed σ K) := Submodule.nontrivial_iff_ne_bot.2 h0
+  have : Nontrivial (fixed σ K) := Submodule.nontrivial_iff_ne_bot.2 h0
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue
     (φ.toLinearMap.restrict (p := fixed σ K) (q := fixed σ K) fun v hv => map_fixed φ K hv)
   obtain ⟨v, hv⟩ := hc.exists_hasEigenvector
@@ -199,7 +199,7 @@ theorem exists_decomp (σ : Representation ℂ H W) [σ.IsIrreducible] (τ : Rep
   let J' : τ.asModule →ₗ[R] isotypicComponent R ρ.asModule σ.asModule :=
     J.codRestrict _ fun x => hle (h (τ.asModuleEquiv x))
   have hJ' : Function.Injective J' := fun a b e => hj (congrArg Subtype.val e)
-  haveI : IsSemisimpleModule R τ.asModule := IsSemisimpleModule.of_injective J' hJ'
+  have : IsSemisimpleModule R τ.asModule := IsSemisimpleModule.of_injective J' hJ'
   obtain ⟨ι, ⟨e⟩⟩ := ((IsIsotypicOfType.isotypicComponent R ρ.asModule σ.asModule).of_injective J' hJ').linearEquiv_finsupp
   refine ⟨ι, fun i => (Representation.IntertwiningMap.equivLinearMapAsModule σ τ).symm
       (e.symm.toLinearMap ∘ₗ Finsupp.lsingle i),
@@ -269,9 +269,9 @@ theorem exists_factor (σ : Representation ℂ H W) [σ.IsIrreducible] (τ : Rep
   refine Finset.sum_congr rfl fun i _ => ?_
 
   rw [map_sum, Finset.sum_eq_single i]
-  · rw [map_smul, LinearMap.trace_comp_comm', h2, if_pos rfl, smul_eq_mul]
+  · rw [map_smul, LinearMap.trace_comp_comm', h2, ite_eq_left rfl, smul_eq_mul]
   · intro j _ hj
-    rw [map_smul, LinearMap.trace_comp_comm', h2, if_neg hj, map_zero, smul_zero]
+    rw [map_smul, LinearMap.trace_comp_comm', h2, ite_eq_right hj, map_zero, smul_zero]
   · simp
 
 theorem trOn_cross {V : Type} [AddCommGroup V] [Module ℂ V] (σ : Representation ℂ H W) [σ.IsIrreducible]
@@ -298,10 +298,10 @@ theorem trOn_cross {V : Type} [AddCommGroup V] [Module ℂ V] (σ : Representati
     have := congrArg (p i).toLinearMap hg
 
     simp only [Function.comp_apply, Submodule.subtype_apply, map_sum, map_smul, hps, map_zero] at this
-    rw [Finset.sum_eq_single i (fun j _ hj => by rw [if_neg hj, smul_zero]) (fun h => absurd hi h), if_pos rfl] at this
+    rw [Finset.sum_eq_single i (fun j _ hj => by rw [ite_eq_right hj, smul_zero]) (fun h => absurd hi h), ite_eq_left rfl] at this
     exact (smul_eq_zero.1 this).resolve_right hu0
-  haveI : Finite ι := hli.finite
-  haveI := Fintype.ofFinite ι
+  have : Finite ι := hli.finite
+  have := Fintype.ofFinite ι
   obtain ⟨t, ht⟩ := exists_factor σ τ s p hps hp K h0 B
   rw [ht A a ha fun i => hA (s i), ht A' a' ha' fun i => hA' (s i)]
   ring
@@ -392,7 +392,7 @@ theorem levOp_split (ρ : Representation ℂ G V) (U₀ : Subgroup G) (K₀ : Su
   · intro q hq
     obtain ⟨x, hx⟩ := exists_split ι r hr q.out
     refine Finset.mem_image.2 ⟨((r q.out : H ⧸ K), (x : r.ker ⧸ U.subgroupOf r.ker)), ?_, ?_⟩
-    · simp only [Finset.mem_product, Set.Finite.mem_toFinset, Set.mem_setOf_eq, t1, t2]
+    · simp only [Finset.mem_product, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, t1, t2]
       rw [hx, hF] at hq
       exact mul_ne_zero_iff.1 hq
     · conv_rhs => rw [← QuotientGroup.out_eq' q, hx]
@@ -506,7 +506,7 @@ theorem globFn_eq (hU : Unr E) {S : Set (Pl E)} {f : ∀ w : Pl E, UL n w → �
     rw [h2, Set.indicator_of_mem (show _ ∈ (KL n u : Set (UL n u)) from h1)]
     rfl
   unfold globFn
-  conv_lhs => rw [← Set.insert_diff_self_of_mem hw]
+  conv_lhs => rw [← Set.insert_sdiff_self_of_mem hw]
   exact finprod_mem_insert' _ (fun h => h.2 rfl) (hfin.subset Set.inter_subset_right)
 
 theorem trOn_hop_peel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ n : ℕ, 1 ≤ n → ∀ π : Submodule ℂ (UA E n → ℂ), IsAutRepU π → ∀ S : Set (Pl E), IsSection S → ∀ K' : ∀ w : Pl E, Subgroup (UL n w), IsLevelFam (fun w : Pl E => MonoidHom.id (UL n w)) (KL n) K' → ∀ f : ∀ w : Pl E, UL n w → ℂ, IsTest (KL n) K' f → ∀ w ∈ S, ∀ σ : SmIrr (UL n w), IsCompU π w σ → trOn (π ⊓ fixed (RF E n) (globLev S K')) (hop S K' f) * twTr σ.ρ (KL n w) (K' w) ((K' w : Set (UL n w)).indicator 1) LinearMap.id = twTr σ.ρ (KL n w) (K' w) (f w) LinearMap.id * trOn (π ⊓ fixed (RF E n) (globLev S K')) (hop S K' (Function.update f w ((K' w : Set (UL n w)).indicator 1))) := by
@@ -584,7 +584,7 @@ theorem trOn_hop_peel : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], 
       refine QuotientGroup.eq.2 (Subgroup.mem_subgroupOf.2 ?_)
       have := QuotientGroup.eq.1 h'
       simpa using this
-  haveI := σ.irred
+  have := σ.irred
   have hiso : π ≤ LocUniq.isoPart σ.ρ ((RF E n).comp ι) := by
     obtain ⟨p, hp, -, φ, hφ0, hφm, hφ⟩ := hσ
     have hpe : ∀ g, p (e.symm g) = g := fun g => Subtype.ext ((hp _).trans (hιw g))
@@ -674,8 +674,8 @@ theorem trOn_eq_zero_of_finrank_eq_zero {V : Type} [AddCommGroup V] [Module ℂ 
   unfold trOn
   split_ifs with hL
   · by_cases hf : FiniteDimensional ℂ M
-    · haveI := hf
-      haveI : Subsingleton M := Module.finrank_zero_iff.mp h
+    · have := hf
+      have : Subsingleton M := Module.finrank_zero_iff.mp h
       rw [Subsingleton.elim (L.restrict hL) 0, map_zero]
     · rw [LinearMap.trace, dite_eq_right]
       · rfl
@@ -718,7 +718,7 @@ theorem trOn_hop_eq_dimW_mul_finprod_twTr : ∀ (E : Type) [Field E] [NumberFiel
       twTr (σ w).ρ (KL n w) (K' w) ((K' w : Set (UL n w)).indicator 1) LinearMap.id = 1 ∧
       (K' w).relIndex (KL n w) = 1 ∧ Module.finrank ℂ (fixed (σ w).ρ (K' w)) = 1 := by
     intro w hw
-    rw [hF, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hw
+    rw [hF, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hw
     obtain ⟨⟨h1, h2⟩, h3⟩ := hw
     have hr : (K' w).relIndex (KL n w) = 1 := by rw [h2]; exact Subgroup.relIndex_self _
     have hd : Module.finrank ℂ (fixed (σ w).ρ (K' w)) = 1 := by rw [h2]; exact h3
@@ -735,7 +735,7 @@ theorem trOn_hop_eq_dimW_mul_finprod_twTr : ∀ (E : Type) [Field E] [NumberFiel
     induction U using Finset.induction_on with
     | empty =>
       intro _
-      simp only [Finset.notMem_empty, if_false, Finset.prod_empty, mul_one, one_mul]
+      simp only [Finset.notMem_empty, ite_false, Finset.prod_empty, mul_one, one_mul]
     | insert a U ha ih =>
       intro hsub
       have haS : a ∈ S := hsub (Finset.mem_insert_self a U)
@@ -743,12 +743,12 @@ theorem trOn_hop_eq_dimW_mul_finprod_twTr : ∀ (E : Type) [Field E] [NumberFiel
       have hg : IsTest (KL n) K' (fun w => if w ∈ insert a U then f w else one w) := by
         refine ⟨fun w => ?_, ?_⟩
         · by_cases h : w ∈ insert a U
-          · simp only [h, if_true]; exact hf.1 w
-          · simp only [h, if_false]; exact (hTW w).1
+          · simp only [h, ite_true]; exact hf.1 w
+          · simp only [h, ite_false]; exact (hTW w).1
         · filter_upwards [hf.2, hK'.2] with w h1 h2
           by_cases h : w ∈ insert a U
-          · simp only [h, if_true]; exact h1
-          · simp only [h, if_false, hone]; rw [h2]
+          · simp only [h, ite_true]; exact h1
+          · simp only [h, ite_false, hone]; rw [h2]
       have hstep := GlobalTheory.T.trace_heckeOperator_split_one_place E hU n hn π hπ S hS K' hK' _ hg a haS (σ a) (hσ a)
       have hupd : Function.update (fun w => if w ∈ insert a U then f w else one w) a
           ((K' a : Set (UL n a)).indicator 1) = fun w => if w ∈ U then f w else one w := by
@@ -759,7 +759,7 @@ theorem trOn_hop_eq_dimW_mul_finprod_twTr : ∀ (E : Type) [Field E] [NumberFiel
         · rw [Function.update_of_ne h]
           simp [Finset.mem_insert, h]
       rw [hupd] at hstep
-      simp only [Finset.mem_insert_self, if_true] at hstep
+      simp only [Finset.mem_insert_self, ite_true] at hstep
       rw [Finset.prod_insert ha, Finset.prod_insert ha]
       have e1 : twTr (σ a).ρ (KL n a) (K' a) (one a) LinearMap.id =
           twTr (σ a).ρ (KL n a) (K' a) ((K' a : Set (UL n a)).indicator 1) LinearMap.id := rfl
@@ -778,9 +778,9 @@ theorem trOn_hop_eq_dimW_mul_finprod_twTr : ∀ (E : Type) [Field E] [NumberFiel
     refine hcongr _ _ fun w hw => ?_
     by_cases h : w ∈ F
     · have : w ∈ U := Finset.mem_filter.2 ⟨h, hw⟩
-      simp only [this, if_true]
+      simp only [this, ite_true]
     · have : w ∉ U := fun h' => h (Finset.mem_filter.1 h').1
-      simp only [this, if_false, hone]
+      simp only [this, ite_false, hone]
       exact ((hout w h).1).symm
   have hkey := key U hUS
   rw [hfU] at hkey

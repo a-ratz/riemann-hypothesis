@@ -154,13 +154,13 @@ theorem block_part_single (s t : Finset (Fin n)) (r u : Fin n) :
     matrixBlockRestriction s t (single r u (1 : ℂ)) = if r ∈ s ∧ u ∈ t then single r u 1 else 0 := by
   ext a b
   by_cases h : r ∈ s ∧ u ∈ t
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     simp only [matrixBlockRestriction, Matrix.single_apply]
     by_cases hab : r = a ∧ u = b
     · obtain ⟨rfl, rfl⟩ := hab
       simp [h]
     · simp [hab]
-  · rw [if_neg h]
+  · rw [ite_eq_right h]
     simp only [matrixBlockRestriction, Matrix.single_apply, Matrix.zero_apply]
     by_cases hab : r = a ∧ u = b
     · obtain ⟨rfl, rfl⟩ := hab
@@ -174,7 +174,7 @@ def topL (g : M2 n) (j : ℕ) : Matrix (Fin n) (Fin n) ℂ →L[ℂ] M2 n :=
     ((-(2 * Complex.I)⁻¹ : ℂ) • matrixBlockRestrictionLinear (blkB j) (blkB j)) ((-(2 * Complex.I)⁻¹ : ℂ) • matrixBlockRestrictionLinear (blkB j) (blkA j))
 
 theorem topL_single (g : M2 n) (j : ℕ) (r s : Fin n) : topL g j (single r s 1) = g * (Cm n * zTop j r s * CmI n) := by
-  simp only [topL, conjL_apply, ContinuousLinearMap.smul_apply, block_part_linear_apply, block_part_single, zTop]
+  simp only [topL, conjL_apply, smul_apply, block_part_linear_apply, block_part_single, zTop]
   congr 2
   by_cases hr : r ∈ blkA j <;> by_cases hs : s ∈ blkA j <;>
     simp [hr, hs, memB, fromBlocks_smul, fromBlocks_neg]
@@ -392,7 +392,7 @@ theorem append_eq (j : ℕ) (σA : Equiv.Perm (blkA (n := n) j)) (τ : Equiv.Per
     by_cases hpq : (a : Fin n) = p ∧ (σA a : Fin n) = q
     · obtain ⟨rfl, rfl⟩ := hpq
       simp
-    · rw [if_neg hpq]
+    · rw [ite_eq_right hpq]
       split_ifs with h1 h2
       · exact absurd ⟨by rw [h2.1], by rw [h2.2]⟩ hpq
       · rfl
@@ -410,7 +410,7 @@ theorem append_eq (j : ℕ) (σA : Equiv.Perm (blkA (n := n) j)) (τ : Equiv.Per
     by_cases hpq : (b : Fin n) = p ∧ (τ b : Fin n) = q
     · obtain ⟨rfl, rfl⟩ := hpq
       simp
-    · rw [if_neg hpq]
+    · rw [ite_eq_right hpq]
       split_ifs with h1 h2
       · exact absurd ⟨by rw [h2.1], by rw [h2.2]⟩ hpq
       · rfl
@@ -474,9 +474,9 @@ theorem rhs_eq (hA : IterAffine) (hS : IterSymm) (hN : IterNested) (j : ℕ) (ψ
     exact (ContinuousMultilinearMap.apply ℂ _ ℂ (fun i => embL (blkB (n := n) j) (w i))).contDiff.contDiffAt.comp _ h2
   unfold detD
   refine Finset.sum_congr rfl fun σA _ => ?_
-  rw [iteratedFDeriv_sum_mul_eq_sum_smul _ _ _ _ _ (fun τ _ => hG _), ContinuousMultilinearMap.sum_apply, Finset.mul_sum]
+  rw [iteratedFDeriv_sum_mul_eq_sum_smul _ _ _ _ _ (fun τ _ => hG _), sum_apply, Finset.mul_sum]
   refine Finset.sum_congr rfl fun τ _ => ?_
-  rw [ContinuousMultilinearMap.smul_apply, smul_eq_mul]
+  rw [smul_apply, smul_eq_mul]
   have hN' := hN (Matrix (Fin n) (Fin n) ℂ) (Matrix (blkA (n := n) j) (blkA (n := n) j) ℂ)
     (Matrix (blkB (n := n) j) (blkB (n := n) j) ℂ) ψ Ω hΩ hψ 0 h0 (embL (blkA (n := n) j)) (embL (blkB (n := n) j))
     (Fintype.card (blkA (n := n) j)) (Fintype.card (blkB (n := n) j))
@@ -625,9 +625,9 @@ theorem top_vanish {V : Type*} [NormedAddCommGroup V] [NormedSpace ℂ V] {k : �
   congr 1
   rw [Finset.sum_eq_single (fun _ => 2)]
   · simp only [Fin.isValue, Fin.val_two, Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul]
-    rw [if_pos (by ring), mul_one]
+    rw [ite_eq_left (by ring), mul_one]
   · intro f _ hf
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     intro h2
     exact hf (funext (sum_eq_top f h2.symm))
   · simp
@@ -739,7 +739,7 @@ theorem supp_smul {s t : Finset (Fin n)} (c : ℂ) (x : Matrix (Fin n) (Fin n) �
   intro a b h
   by_contra hn
   apply h
-  simp only [Matrix.smul_apply, matrixBlockRestriction, if_neg hn, smul_zero]
+  simp only [Matrix.smul_apply, matrixBlockRestriction, ite_eq_right hn, smul_zero]
 
 private theorem eq_mul_mX_mul_mX_blockEntries (g : M2 n) (j : ℕ) (t : Matrix (Fin n) (Fin n) ℂ) :
     g + topL g j t = g * mX 1 ((2 * Complex.I)⁻¹ • matrixBlockRestriction (blkA j) (blkA j) t)
@@ -747,7 +747,7 @@ private theorem eq_mul_mX_mul_mX_blockEntries (g : M2 n) (j : ℕ) (t : Matrix (
       mX (1 + (2 * Complex.I)⁻¹ • matrixBlockRestriction (blkA j) (blkB j) t) 0 0
         (1 + (-(2 * Complex.I)⁻¹) • matrixBlockRestriction (blkB j) (blkA j) t) := by
   rw [mul_assoc, ← mX_factor j _ _ _ _ (supp_smul _ _) (supp_smul _ _) (supp_smul _ _) (supp_smul _ _), g_mX]
-  simp only [topL, conjL_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.neg_apply, block_part_linear_apply,
+  simp only [topL, conjL_apply, smul_apply, neg_apply, block_part_linear_apply,
     neg_smul]
 
 private theorem conjL_bdiag_eq_mul_mX_blockEntries (g : M2 n) (j : ℕ) (t : Matrix (Fin n) (Fin n) ℂ) :
@@ -759,7 +759,7 @@ private theorem conjL_bdiag_eq_mul_mX_blockEntries (g : M2 n) (j : ℕ) (t : Mat
     ((-(2 * Complex.I)⁻¹) • matrixBlockRestriction (blkB j) (blkB j) t) 0
   simp only [add_zero] at h
   rw [h, conjL_apply]
-  simp only [ContinuousLinearMap.zero_apply, block_part_linear_apply, block_part_diagonal_first, block_part_diagonal_second]
+  simp only [zero_apply, block_part_linear_apply, block_part_diagonal_first, block_part_diagonal_second]
 
 private theorem comp_blockEntries_eq (g : M2 n) (j : ℕ) (T : Matrix (blkA (n := n) j) (blkA j) ℂ)
     (S : Matrix (blkB (n := n) j) (blkB j) ℂ) :
@@ -769,7 +769,7 @@ private theorem comp_blockEntries_eq (g : M2 n) (j : ℕ) (T : Matrix (blkA (n :
   have h := g_mX g 0 (embOn (blkA j) T) (embOn (blkB j) S) 0
   simp only [add_zero] at h
   rw [h, conjL_apply]
-  simp only [ContinuousLinearMap.zero_apply, block_part_linear_apply, block_part_embedding_first, block_part_embedding_second]
+  simp only [zero_apply, block_part_linear_apply, block_part_embedding_first, block_part_embedding_second]
 
 
 theorem topComp_of (hA : IterAffine) (hB : DetDBlock) : TopComp := by

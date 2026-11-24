@@ -131,7 +131,7 @@ theorem lint_fin (hvol : m 𝓕 < ⊤) (hΨ : Continuous Ψ) {C : ℝ≥0}
     (hC : ∀ h : GA D W, ∑' x : Sp W n, ‖Ψ (mm (mt W h⁻¹) (rat x.1))‖ₑ ≤ C) :
     ∑' y : Sp W n, ∫⁻ h in 𝓕, ‖Ψ (mm (mt W h⁻¹) (rat y.1))‖ₑ ∂m < ⊤ := by
   have hmeas : ∀ y : Sp W n, AEMeasurable (fun h : GA D W => ‖Ψ (mm (mt W h⁻¹) (rat y.1))‖ₑ)
-      (m.restrict 𝓕) := fun y => (cont_term hΨ y.1).enorm.measurable.aemeasurable
+      (m.restrict 𝓕) := fun y => (cont_term hΨ y.1).eNorm.measurable.aemeasurable
   calc ∑' y : Sp W n, ∫⁻ h in 𝓕, ‖Ψ (mm (mt W h⁻¹) (rat y.1))‖ₑ ∂m
       = ∫⁻ h in 𝓕, ∑' y : Sp W n, ‖Ψ (mm (mt W h⁻¹) (rat y.1))‖ₑ ∂m :=
         (MeasureTheory.lintegral_tsum hmeas).symm
@@ -143,13 +143,13 @@ theorem tsum_co_ne_top (hvol : m 𝓕 < ⊤) (hΨ : Continuous Ψ) {C : ℝ≥0}
     (hC : ∀ h : GA D W, ∑' x : Sp W n, ‖Ψ (mm (mt W h⁻¹) (rat x.1))‖ₑ ≤ C) :
     ∑' y : Sp W n, ‖co W m 𝓕 Ψ y.1‖ₑ ≠ ⊤ := by
   refine ne_top_of_le_ne_top (lint_fin hvol hΨ hC).ne (ENNReal.tsum_le_tsum (fun y => ?_))
-  exact MeasureTheory.enorm_integral_le_lintegral_enorm _
+  exact eNorm_integral_le_lintegral_eNorm _
 
 theorem summable_co (hvol : m 𝓕 < ⊤) (hΨ : Continuous Ψ) {C : ℝ≥0}
     (hC : ∀ h : GA D W, ∑' x : Sp W n, ‖Ψ (mm (mt W h⁻¹) (rat x.1))‖ₑ ≤ C) :
     Summable fun y : Sp W n => ‖co W m 𝓕 Ψ y.1‖ := by
   have h := tsum_co_ne_top hvol hΨ hC
-  simp only [enorm_eq_nnnorm] at h
+  simp only [eNorm_eq_nnNorm] at h
   exact NNReal.summable_coe.mpr (ENNReal.tsum_coe_ne_top_iff_summable.mp h)
 
 theorem exch (hvol : m 𝓕 < ⊤) (hΨ : Continuous Ψ) {C : ℝ≥0}
@@ -161,7 +161,7 @@ theorem exch (hvol : m 𝓕 < ⊤) (hΨ : Continuous Ψ) {C : ℝ≥0}
   have hc' : ∀ y, ‖c y‖ₑ = 1 := fun y => by
     rw [← ofReal_norm, hc y, ENNReal.ofReal_one]
   have hf' : ∑' y : Sp W n, ∫⁻ h in 𝓕, ‖c y * Ψ (mm (mt W h⁻¹) (rat y.1))‖ₑ ∂m ≠ ⊤ := by
-    simp_rw [enorm_mul, hc', one_mul]
+    simp_rw [eNorm_mul, hc', one_mul]
     exact (lint_fin hvol hΨ hC).ne
   rw [MeasureTheory.integral_tsum hf hf']
   congr 1
@@ -434,7 +434,7 @@ theorem _root_.PositivityTheory.Rg.Rsw.L.thCoef : LatBound → ThCoef := by
       exact tsum_co_ne_top hvol hΨc hC
   refine ⟨fun hno => ?_, fun x₀ hr hg => ?_⟩
   · rw [hcoef]
-    exact (tsum_congr fun y => if_neg fun h => hno ⟨y.1, y.2, congrArg Subtype.val h⟩).trans tsum_zero
+    exact (tsum_congr fun y => ite_eq_right fun h => hno ⟨y.1, y.2, congrArg Subtype.val h⟩).trans tsum_zero
   rw [hcoef]
   obtain ⟨-, -, -, hB, hTG, -, hcount⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D W
   have : MeasurableConstSMul (GQ W) (GA D W) := ⟨fun γ => measurable_const_mul (γ : GA D W)⟩
@@ -455,7 +455,7 @@ theorem _root_.PositivityTheory.Rg.Rsw.L.thCoef : LatBound → ThCoef := by
       exact congrArg Ψ (Matrix.mul_assoc _ _ _).symm
   have hint : Integrable (fun h : GA D W => Ψ (mm (mt W h⁻¹) (rat x₀))) m := by
     refine ⟨(cont_term hΨc x₀).aestronglyMeasurable, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm, h𝓕.lintegral_eq_tsum']
+    rw [hasFiniteIntegral_iff_eNorm, h𝓕.lintegral_eq_tsum']
     let g : T → ℝ≥0∞ := fun t => ∫⁻ h in 𝓕, ‖Ψ (mm (mt W h⁻¹) (rat t.1))‖ₑ ∂m
     have hinj : Function.Injective fun t : T => (⟨t.1, t.2.1⟩ : Sp W n) := fun t t' h =>
       Subtype.ext (by simpa using congrArg Subtype.val h)

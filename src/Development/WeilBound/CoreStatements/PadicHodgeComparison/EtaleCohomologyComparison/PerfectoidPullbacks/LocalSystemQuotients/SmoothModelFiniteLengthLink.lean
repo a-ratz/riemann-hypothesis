@@ -253,7 +253,7 @@ theorem isNoetherian_of_surj {R S M : Type*} [CommRing R] [CommRing S] [Algebra 
   have hf : StrictMono f := Monotone.strictMono_of_injective f.monotone fun N N' e => by
     ext x
     exact iff_of_eq (congrArg (fun P : Submodule S M => x ∈ P) e)
-  rw [isNoetherian_iff']
+  rw [_root_.isNoetherian_iff]
   exact hf.wellFoundedGT
 
 section Witt
@@ -268,8 +268,8 @@ theorem span_l_isMaximal : (Ideal.span {(l : WittVector l k) ^ 1}).IsMaximal := 
   exact RingHom.ker_isMaximal_of_surjective _ (WittVector.constantCoeff_surjective l)
 
 theorem wm_artinian : IsArtinianRing (Wc.Wm l k 1) := by
-  haveI := span_l_isMaximal l k
-  letI := Ideal.Quotient.field (Ideal.span {(l : WittVector l k) ^ 1})
+  have := span_l_isMaximal l k
+  let := Ideal.Quotient.field (Ideal.span {(l : WittVector l k) ^ 1})
   infer_instance
 
 end Witt
@@ -309,14 +309,14 @@ theorem finiteLength_level_one : ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field 
     Module.Finite (Wc.Wm l k 1) (HO (St (γ := Wc.pd l k 1) (p := l) (q := q) (κ := (Wc.res l k 1).comp ρ) ⊤ {⊤}) j) →
     IsFiniteLength (WittVector l k) (CH.H (Wc.OM l (B.schFn q) ρ 1) j) := by
   intro l _ k _ _ _ O _ X q ρ j hfin
-  haveI := wm_artinian l k
-  letI : Module (WittVector l k) (HO (QAll q ρ) j) := Module.compHom _ (algebraMap (WittVector l k) (Wc.Wm l k 1))
-  haveI : IsScalarTower (WittVector l k) (Wc.Wm l k 1) (HO (QAll q ρ) j) := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have := wm_artinian l k
+  let : Module (WittVector l k) (HO (QAll q ρ) j) := Module.compHom _ (algebraMap (WittVector l k) (Wc.Wm l k 1))
+  have : IsScalarTower (WittVector l k) (Wc.Wm l k 1) (HO (QAll q ρ) j) := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   have hsurj : Function.Surjective (algebraMap (WittVector l k) (Wc.Wm l k 1)) := Ideal.Quotient.mk_surjective
-  haveI : IsNoetherian (Wc.Wm l k 1) (HO (QAll q ρ) j) := inferInstance
-  haveI : IsArtinian (Wc.Wm l k 1) (HO (QAll q ρ) j) := inferInstance
-  haveI : IsNoetherian (WittVector l k) (HO (QAll q ρ) j) := isNoetherian_of_surj hsurj
-  haveI : IsArtinian (WittVector l k) (HO (QAll q ρ) j) := isArtinian_of_surjective_algebraMap hsurj
+  have : IsNoetherian (Wc.Wm l k 1) (HO (QAll q ρ) j) := inferInstance
+  have : IsArtinian (Wc.Wm l k 1) (HO (QAll q ρ) j) := inferInstance
+  have : IsNoetherian (WittVector l k) (HO (QAll q ρ) j) := isNoetherian_of_surj hsurj
+  have : IsArtinian (WittVector l k) (HO (QAll q ρ) j) := isArtinian_of_surjective_algebraMap hsurj
   let f : CH.H (Wc.OM l (B.schFn q) ρ 1) j →ₗ[WittVector l k] HO (QAll q ρ) j :=
     { toFun := (toAll q ρ).pull j
       map_add' := map_add _
@@ -1068,8 +1068,8 @@ theorem fin_vb [IsNoetherianRing R] {Z : Scheme.{0}} (z : Z ⟶ Spec (CommRingCa
 theorem fin_zero (F : C ⥤ ModuleCat.{0} R) {ι : Type} (P : ι → ObjectProperty C) (b a : ℕ)
     (h : ∀ i : Fin (a + 1) → ι, Subsingleton (HU F (capT P i) b)) :
     Module.Finite R ((CrystallineSemistableComparison.Pb.cechH F P b).cx.H a) := by
-  haveI : Subsingleton ((CrystallineSemistableComparison.Pb.cechH F P b).X a) := ⟨fun x y => funext fun i => (h i).elim _ _⟩
-  haveI : Subsingleton ((CrystallineSemistableComparison.Pb.cechH F P b).cx.H a) :=
+  have : Subsingleton ((CrystallineSemistableComparison.Pb.cechH F P b).X a) := ⟨fun x y => funext fun i => (h i).elim _ _⟩
+  have : Subsingleton ((CrystallineSemistableComparison.Pb.cechH F P b).cx.H a) :=
     ⟨fun x y => by
       obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ x
       obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ y
@@ -1125,7 +1125,7 @@ theorem level_one_gr_finite : ∀ {l : ℕ} [Fact l.Prime] {k : Type} [Field k] 
   have hn : IsNilpotent ((l : ℕ) : Wc.Wm l k 1) := by
     rw [hl]
     exact IsNilpotent.zero
-  haveI := GlobalTheory.CompanionTheory.WittLevel.isNoetherianRing_Wm_one (l := l) (k := k)
+  have := GlobalTheory.CompanionTheory.WittLevel.isNoetherianRing_Wm_one (l := l) (k := k)
   have h := fin_gen (γ := Wc.pd l k 1) (p := l) (κ := (Wc.res l k 1).comp ρ) hI (Fact.out : l.Prime).ne_zero hn U r j
   exact h
 

@@ -89,11 +89,11 @@ theorem fix_int (h : IsCMExt F E σ) (y : 𝓞 E) (hy : sigO σ y = y) :
 
 theorem qInert_holds : QInert σ J ψ v := by
   intro hstd hun hp hid
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
-  haveI : (IE (E := E) v).IsMaximal := hp.isMaximal (IE_ne_bot v)
-  letI : Field (QE (E := E) v) := Ideal.Quotient.field _
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := finite_res v
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  have : (IE (E := E) v).IsMaximal := hp.isMaximal (IE_ne_bot v)
+  let : Field (QE (E := E) v) := Ideal.Quotient.field _
+  have : Finite (𝓞 F ⧸ v.asIdeal) := finite_res v
   have hfr : Module.finrank (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) = 2 := by
     rw [Ideal.finrank_quotient_map (p := v.asIdeal) (K := F) (L := E)]
     exact hstd.1.2.2.1
@@ -111,10 +111,10 @@ theorem qInert_holds : QInert σ J ψ v := by
     refine ⟨⟨Ideal.Quotient.mk _ a, ?_⟩, ⟨Ideal.Quotient.mk _ b, ?_⟩⟩
     · rw [Ideal.Quotient.algebraMap_quotient_map_quotient, ha, map_add (f := _), hs]
     · rw [Ideal.Quotient.algebraMap_quotient_map_quotient, hb, map_mul, hs]
-  haveI : Module.Finite (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) := Module.finite_of_finrank_pos (by omega)
-  haveI : Finite (QE (E := E) v) := Module.finite_of_finite (𝓞 F ⧸ v.asIdeal)
-  letI := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
-  letI := Fintype.ofFinite (QE (E := E) v)
+  have : Module.Finite (𝓞 F ⧸ v.asIdeal) (QE (E := E) v) := Module.finite_of_finrank_pos (by omega)
+  have : Finite (QE (E := E) v) := Module.finite_of_finite (𝓞 F ⧸ v.asIdeal)
+  let := Fintype.ofFinite (𝓞 F ⧸ v.asIdeal)
+  let := Fintype.ofFinite (QE (E := E) v)
   have hc : Fintype.card (QE (E := E) v) = Fintype.card (𝓞 F ⧸ v.asIdeal) ^ 2 := by
     rw [Module.card_eq_pow_finrank (K := 𝓞 F ⧸ v.asIdeal) (V := QE (E := E) v), hfr]
   have h1 : 1 < Fintype.card (𝓞 F ⧸ v.asIdeal) := Fintype.one_lt_card

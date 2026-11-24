@@ -214,7 +214,7 @@ theorem exists_isOpen_cohomologyResLE_eq (N : Subgroup G) (hN : IsClosed (N : Se
     intro h
     refine ⟨⋂ i, (fun h' : Fin n → H => ((h i : G))⁻¹ * (h' i : G)) ⁻¹' (V : Set G),
       isOpen_iInter_of_finite fun i => V.isOpen'.preimage
-        (continuous_const.mul (continuous_subtype_val.comp (continuous_apply i))),
+        (continuous_const.mul (continuous_subtypeVal.comp (continuous_apply i))),
       Set.mem_iInter.2 fun i => by simp, fun h' hh' => ?_⟩
     have hh'' : ∀ i, ((h i : G))⁻¹ * (h' i : G) ∈ (V : Subgroup G) := fun i => Set.mem_iInter.1 hh' i
     refine (hP' (fun i => sel (h i)) h' fun i => ?_).trans rfl

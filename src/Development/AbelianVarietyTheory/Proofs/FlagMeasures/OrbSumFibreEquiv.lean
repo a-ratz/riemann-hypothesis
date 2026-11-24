@@ -95,12 +95,12 @@ theorem cmData_maximalRealSubfield {K : Type} [Field K] [NumberField K] [StarRin
   have hne : ∃ z : K, star z ≠ z := by
     by_contra hcon
     push Not at hcon
-    haveI := hK.1
+    have := hK.1
     refine IsTotallyComplex.complexEmbedding_not_isReal σ ?_
     rw [ComplexEmbedding.isReal_iff]
     ext z
     rw [ComplexEmbedding.conjugate_coe_eq, ← hK.2.1, hcon]
-  haveI : IsCMField K := GlobalTheory.LeastExponentCompare.isCMField_of_conj K star hK.2.1 hne
+  have : IsCMField K := GlobalTheory.LeastExponentCompare.isCMField_of_conj K star hK.2.1 hne
   refine ⟨hK, inferInstance, Algebra.IsQuadraticExtension.finrank_eq_two _ _, fun a => ⟨fun h => ?_, ?_⟩⟩
   · refine ⟨⟨a, fun φ => ?_⟩, rfl⟩
     have := hK.2.1 φ a
@@ -178,7 +178,7 @@ theorem orbSum_fibre (X : Set α) (Y : Set β) (π : α → β) (hπ : ∀ (g : 
     refine ne_top_of_le_ne_top (b := (X ∩ π ⁻¹' {g⁻¹ • π x}).encard) ?_
       (Set.encard_le_encard (Set.inter_subset_inter_left _ ?_))
     · rw [hn _ (hr ▸ hrY)]
-      exact ENat.coe_ne_top n
+      exact ENat.natCast_ne_top n
     · rintro _ ⟨u, rfl⟩
       exact hX u _ hq
   · intro s hs
@@ -195,7 +195,7 @@ theorem orbSum_fibre_equiv {G G' α β : Type} [Group G] [Group G'] [MulAction G
     (hX : Stable G X) (hY : Stable G' Y) (hXY : Set.MapsTo π X Y) (n : ℕ)
     (hn : ∀ y ∈ Y, (X ∩ π ⁻¹' {y}).encard = n) (φ : β → ℝ≥0∞) (hφ : ∀ (g : G') y, φ (g • y) = φ y) :
     orbSum G X (fun x => φ (π x)) = (n : ℝ≥0∞) * orbSum G' Y φ := by
-  letI : MulAction G β := MulAction.compHom β e.toMonoidHom
+  let : MulAction G β := MulAction.compHom β e.toMonoidHom
   have hY' : Stable G Y := fun g y hy => hY (e g) y hy
   rw [orbSum_fibre X Y π hπ hX hY' hXY n hn φ fun g y => hφ (e g) y]
   congr 1
@@ -230,9 +230,9 @@ theorem cyclic_of_genus (h : V →ₗ⋆[K] V →ₗ[K] K) (hK : IsCMUnram K) (h
     IsIntLat h M ∧ ∃ x ∈ dual h M, (∀ y ∈ dual h M, ∃ r : 𝓞 K, y - r • x ∈ M) ∧
       ∀ r : 𝓞 K, r • x ∈ M ↔ r ∈ Ideal.span {(T : 𝓞 K)} := by
   classical
-  haveI := Fact.mk hT
-  haveI := finite_hom (E := K) hT
-  letI := Fintype.ofFinite (𝓞 K →+* ZMod T)
+  have := Fact.mk hT
+  have := finite_hom (E := K) hT
+  let := Fintype.ofFinite (𝓞 K →+* ZMod T)
   obtain ⟨hMi, hd⟩ := (DiscOrder.main K V h hK hs hn L hL).2.2.2.1 M hM
   refine ⟨hMi, ?_⟩
   obtain ⟨x₀, hx₀, g1, g2⟩ := (cyc_iff _ _ _).1 e
@@ -284,8 +284,8 @@ theorem cyclic_of_genus (h : V →ₗ⋆[K] V →ₗ[K] K) (hK : IsCMUnram K) (h
       refine kill _ ((mem_span_iff hT hsp _).2 fun ρ => ?_) _ (hxs χ)
       rw [map_mul, map_mul, hes, hes]
       by_cases h3 : ρ = χ
-      · rw [if_neg (h3 ▸ Finset.ne_of_mem_erase hχ), zero_mul, zero_mul]
-      · rw [if_neg h3, mul_zero]
+      · rw [ite_eq_right (h3 ▸ Finset.ne_of_mem_erase hχ), zero_mul, zero_mul]
+      · rw [ite_eq_right h3, mul_zero]
     have h3 := (Submodule.add_mem_iff_left _ h2).1 h1
     rw [← mul_smul, ← mul_smul] at h3
     have h4 := hann ψ _ h3
@@ -307,7 +307,7 @@ theorem cyclic_of_genus (h : V →ₗ⋆[K] V →ₗ[K] K) (hK : IsCMUnram K) (h
     obtain ⟨e⟩ := e
     rw [← Nat.card_congr e.toEquiv]
     exact hd.symm
-  haveI : Finite (↥(dual h M) ⧸ M.comap (dual h M).subtype) :=
+  have : Finite (↥(dual h M) ⧸ M.comap (dual h M).subtype) :=
     Nat.finite_of_card_ne_zero (DiscOrder.main K V h hK hs hn M hMi).1
   have sur := ((Nat.bijective_iff_injective_and_card f').2 ⟨inj, hc⟩).2
   intro y hy
@@ -323,8 +323,8 @@ theorem card_classes (hK : IsCMUnram K) {T : ℕ} (hT : T.Prime)
     Nat.card {a : 𝓞 K ⧸ Ideal.span {(T : 𝓞 K)} // ∃ b : 𝓞 K, Ideal.Quotient.mk _ b = a ∧
       b * cj b - c ∈ Ideal.span {(T : 𝓞 K)}} = (T - 1) ^ fDeg K := by
   classical
-  haveI := Fact.mk hT
-  haveI := finite_hom (E := K) hT
+  have := Fact.mk hT
+  have := finite_hom (E := K) hT
   have hcm := GlobalTheory.StdDefinite.cmData_maximalRealSubfield hK
   have hcop : IsCoprime c (T : 𝓞 K) := by
     have h0 : ∀ ψ : 𝓞 K →+* ZMod T, ψ c ≠ 0 := by
@@ -335,7 +335,7 @@ theorem card_classes (hK : IsCMUnram K) {T : ℕ} (hT : T.Prime)
       · rw [map_mul, hu]
         by_cases h1 : χ = ψ
         · rw [h1, hψ, mul_zero]
-        · rw [if_neg h1, zero_mul]
+        · rw [ite_eq_right h1, zero_mul]
     obtain ⟨u, hu⟩ := exists_forall_hom_eq (R := 𝓞 K) (T := T) (fun χ => (χ c)⁻¹)
     have : 1 - u * c ∈ Ideal.span {(T : 𝓞 K)} := (mem_span_iff hT hsp _).2 fun χ => by
       rw [map_sub, map_mul, hu, inv_mul_cancel₀ (h0 χ), map_one, sub_self]
@@ -345,7 +345,7 @@ theorem card_classes (hK : IsCMUnram K) {T : ℕ} (hT : T.Prime)
     locBasic_sigma_spec genusCovol_hinj star_algebraMap_ringOfIntegers_mem_range r
   have key := card_norm_classes _ K hcm T hT hsp c (by rw [← sp, hc]) hcop
   have hf : Module.finrank ℚ (maximalRealSubfield K) = fDeg K := by
-    haveI := hK.1
+    have := hK.1
     have h1 := (letI : Module.Free (maximalRealSubfield K) K := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank ℚ (maximalRealSubfield K) K)
     have h2 := IsTotallyComplex.finrank K
     have h3 := InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces K
@@ -580,8 +580,8 @@ theorem exists_eq_glue (hn : (hRes h U).Nondegenerate) (L : Submodule (𝓞 K) V
   have hN : Submodule.IsLattice K N := by
     exact Submodule.IsLattice.of_fg K (hL.fg.map _)
   have hNfull : Submodule.IsFullLattice K N := by
-    letI : Submodule.IsFullLattice K M := hM.1
-    letI : Submodule.IsLattice K N := hN
+    let : Submodule.IsFullLattice K M := hM.1
+    let : Submodule.IsLattice K N := hN
     apply Submodule.IsFullLattice.of_le K (M := M) (N := N)
     intro u hu
     have huL : (u : V) ∈ L := by
@@ -705,7 +705,7 @@ theorem fibre_card (hK : IsCMUnram K) (hn : (hRes h U).Nondegenerate)
       simp only [map_add (f := _), map_mul]
       field_simp
       linear_combination (-algebraMap (𝓞 K) K r) * this
-  haveI : Finite (𝓞 K ⧸ Ideal.span {(T : 𝓞 K)}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by
+  have : Finite (𝓞 K ⧸ Ideal.span {(T : 𝓞 K)}) := Ideal.finiteQuotientOfFreeOfNeBot _ (by
     simpa [Ideal.span_singleton_eq_bot] using hT.ne_zero)
   rw [← key, ← ENat.card_eq_coe_natCard]
   refine (ENat.card_congr (Equiv.ofBijective (fun a => ⟨glue U M x z (algebraMap (𝓞 K) K (β a) / T),

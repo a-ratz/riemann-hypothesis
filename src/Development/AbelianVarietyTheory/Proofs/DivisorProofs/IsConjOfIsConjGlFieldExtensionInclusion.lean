@@ -118,8 +118,8 @@ theorem isConj_of_isConj_incl : ∀ (F F' : Type) [Field F] [Field F'] [Algebra 
       ((γ' : Matrix (Fin n) (Fin n) F).map (algebraMap F F')) * (c : Matrix (Fin n) (Fin n) F') := by
     have h2 : c * incl F F' n γ = incl F F' n γ' * c := by rw [← hc]; group
     exact congrArg (fun x : GL (Fin n) F' => (x : Matrix (Fin n) (Fin n) F')) h2
-  haveI : Finite F := Finite.of_injective _ (algebraMap F F').injective
-  haveI : FiniteDimensional F F' := inferInstance
+  have : Finite F := Finite.of_injective _ (algebraMap F F').injective
+  have : FiniteDimensional F F' := inferInstance
   have hl : 0 < Module.finrank F F' := Module.finrank_pos
   let b := Module.finBasis F F'
   let f := Matrix.toLin' (γ : Matrix (Fin n) (Fin n) F)
@@ -157,8 +157,8 @@ theorem isConj_of_isConj_incl : ∀ (F F' : Type) [Field F] [Field F'] [Algebra 
     show Module.AEval'.of g (core (fun k => (Module.AEval'.of f).symm (((X : F[X]) • x) k)) k) =
       (X : F[X]) • Module.AEval'.of g (core (fun k => (Module.AEval'.of f).symm (x k)) k)
     rw [h3, hcore, Module.AEval'.X_smul_of]
-  haveI : Finite (Module.AEval' f) := Finite.of_equiv _ (Module.AEval'.of f).toEquiv
-  haveI : Finite (Module.AEval' g) := Finite.of_equiv _ (Module.AEval'.of g).toEquiv
+  have : Finite (Module.AEval' f) := Finite.of_equiv _ (Module.AEval'.of f).toEquiv
+  have : Finite (Module.AEval' g) := Finite.of_equiv _ (Module.AEval'.of g).toEquiv
   obtain ⟨ψ⟩ := GlobalTheory.T.nonempty_linearEquiv_of_pi_fin_pow_finite F[X] (Module.AEval' f) (Module.AEval' g) (Module.finrank F F') hl
     ⟨equivOfX Θ hΘ⟩
   let e : (Fin n → F) ≃ₗ[F] (Fin n → F) :=

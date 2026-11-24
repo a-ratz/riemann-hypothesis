@@ -258,7 +258,7 @@ theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
     exact hf0 (LinearMap.ext hc)
   rw [detRep_one, detRep_one]
   rcases hrn with rfl | rfl
-  · haveI := nontrivial_of_isIrreducible hσ
+  · have := nontrivial_of_isIrreducible hσ
     obtain ⟨v, hv⟩ := exists_ne (0 : V)
     obtain ⟨eσ⟩ := equiv_trivial_of_fixed hσ hv (fun g => by rw [gl_zero_eq_one g, map_one]; rfl)
     have ht : ∀ h, TensorProduct.map (1 : Module.End ℂ V) (τ h) (f Φ) = f Φ := fun h => by
@@ -267,7 +267,7 @@ theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
       exact this.symm
     obtain ⟨w, hw0, hw⟩ := fixed_of_tensor_left eσ.toLinearEquiv τ _ hΦ ht
     exact ⟨⟨eσ⟩, equiv_trivial_of_fixed hτ hw0 hw⟩
-  · haveI := nontrivial_of_isIrreducible hτ
+  · have := nontrivial_of_isIrreducible hτ
     obtain ⟨w, hw⟩ := exists_ne (0 : W)
     obtain ⟨eτ⟩ := equiv_trivial_of_fixed hτ hw (fun h => by rw [gl_zero_eq_one h, map_one]; rfl)
     have ht : ∀ g, TensorProduct.map (σ g) (1 : Module.End ℂ W) (f Φ) = f Φ := fun g => by
@@ -379,7 +379,7 @@ theorem irr_twist {π : Representation ℂ G V} (h : π.IsIrreducible) (χ : G �
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_rel_iff' := Iff.rfl }
-  haveI : IsSimpleOrder (Subrepresentation π) := h
+  have : IsSimpleOrder (Subrepresentation π) := h
   exact E.isSimpleOrder
 
 theorem irr_comp {π : Representation ℂ G V} (φ : G →* G) (hφ : Function.Surjective φ)
@@ -392,7 +392,7 @@ theorem irr_comp {π : Representation ℂ G V} (φ : G →* G) (hφ : Function.S
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl
       map_rel_iff' := Iff.rfl }
-  haveI : IsSimpleOrder (Subrepresentation π) := h
+  have : IsSimpleOrder (Subrepresentation π) := h
   exact E.isSimpleOrder
 
 theorem equiv_of_twist {σ : Representation ℂ G V} {σ' : Representation ℂ G V'} (χ : G →* ℂˣ)

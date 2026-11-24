@@ -89,7 +89,7 @@ theorem span_partLat (hL : A.LatG) (e : Matrix (Fin A.Dg) (Fin A.Dg) K) :
     exact hy.2
   · intro w hw
     have hw' : w ∈ Submodule.span K (A.Rg : Set (Fin A.Dg → K)) := by
-      letI : Submodule.IsFullLattice K A.Rg := hL
+      let : Submodule.IsFullLattice K A.Rg := hL
       rw [Submodule.IsFullLattice.span_eq_top (A := K) (M := A.Rg)]
       exact Submodule.mem_top
     obtain ⟨d, hd, hm⟩ := exists_smul_mem A.Rg w hw'
@@ -107,7 +107,7 @@ theorem span_partLat (hL : A.LatG) (e : Matrix (Fin A.Dg) (Fin A.Dg) K) :
 
 theorem partLat_fg (hL : A.LatG) (e : Matrix (Fin A.Dg) (Fin A.Dg) K) : (A.partLat e).FG := by
   unfold LatG at hL
-  letI := hL
+  let := hL
   exact (Submodule.IsLattice.fg K A.Rg).of_le (A.partLat_le e)
 
 theorem nat_smul_ne_zero {n : ℕ} {h : ℕ} (hh : 0 < h) {y : Fin n → K} (hy : y ≠ 0) : (h : 𝓞 K) • y ≠ 0 := by

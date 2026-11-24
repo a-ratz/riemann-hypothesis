@@ -228,7 +228,7 @@ theorem applyTerm_mul {A1 A2 : Set Lt} (hA : Disjoint A1 A2) {T1 T2 : MvPowerSer
     rw [Finset.disjoint_left]
     intro v hv hv'
     exact Set.disjoint_left.1 hS (ha v (Finsupp.mem_support_iff.1 hv)) (hb v (Finsupp.mem_support_iff.1 hv'))
-  simp only [applyTerm, MvPolynomial.monomial_mul, sumFinsupp_add]
+  simp only [applyTerm, MvPolynomial.monomial_mul_monomial, sumFinsupp_add]
   rw [Finsupp.prod_add_index_of_disjoint hdis, coeff_mul_of_disjoint hS h1 h2 ha hb]
   congr 1
   push_cast
@@ -252,7 +252,7 @@ theorem applyAt0_mul {A1 A2 : Set Lt} (hA : Disjoint A1 A2) {T1 T2 : MvPowerSeri
       MvPolynomial.monomial (μ + μ') (AddMonoidAlgebra.coeff P1 μ * AddMonoidAlgebra.coeff P2 μ') := by
     conv_lhs => rw [e1, e2]
     rw [Finset.sum_mul_sum]
-    simp only [MvPolynomial.monomial_mul]
+    simp only [MvPolynomial.monomial_mul_monomial]
   rw [hprod]
   conv_rhs => rw [e1, e2]
 

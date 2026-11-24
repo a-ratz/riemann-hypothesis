@@ -80,7 +80,7 @@ theorem torsion_lies_under : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRi
         ∀ p : QkPt D.toPre (AlgebraicClosure (FractionRing V)) N, p.y = 0 →
           QkToAkU U.toUnifPre (AlgebraicClosure (FractionRing V)) N p xb → p.g.b = β := by
   intro V _ _ _ hCN D A G _ _ hG U N hN β hβ
-  haveI : CharZero V := hCN.2.2.2
+  have : CharZero V := hCN.2.2.2
   have hA := GlobalTheory.TorRef.admissibleBase_of_completeNormalLocalCharZero hCN
   obtain ⟨f, hf⟩ := GlobalTheory.TorsionIso.torsion_eq GlobalTheory.firstFiveLaws V (maximalIdeal V) hA D A G hG U
     (AlgebraicClosure (FractionRing V)) N hN
@@ -90,7 +90,7 @@ theorem torsion_lies_under : ∀ (V : Type) [CommRing V] [IsDomain V] [IsLocalRi
   · obtain ⟨w, hw⟩ := U.ext
     exact ((hf.1 p (f p)).2 rfl w hw).1
   · have e : f p = f p' := (hf.1 p' (f p)).1 hp'
-    letI := GlobalTheory.TorusExt.gtGroup D.toPre (AlgebraicClosure (FractionRing V))
+    let := GlobalTheory.TorusExt.gtGroup D.toPre (AlgebraicClosure (FractionRing V))
     obtain ⟨z, hy, w, hw₁, hw₂⟩ := (hf.2.2.1 p p').1 e
     have hg := (GlobalTheory.TorusExt.isAdd_iff_eq _ _ _).1 hw₂
     rw [hp'y, hpy, zero_add] at hy

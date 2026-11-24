@@ -56,7 +56,7 @@ private theorem satT_dc {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (
     (hS : ∀ g, g ∈ S ↔ ∃ x ∈ K, ∃ y ∈ K, g = x * a * y) (v : V) :
     dc ρ K K a v = GlobalTheory.LFun.heckeVec ρ K (Set.indicator S 1) v := by
   classical
-  haveI := hf.to_subtype
+  have := hf.to_subtype
   have h1 : dc ρ K K a v = ∑ᶠ q : MulAction.orbit K (a : G ⧸ K), ρ (q : G ⧸ K).out v :=
     (LinearMap.applyₗ (R := ℂ) (M₂ := V) v).toAddMonoidHom.map_finsum (Set.toFinite _)
   rw [h1, finsum_set_coe_eq_finsum_mem (f := fun c : G ⧸ K => ρ c.out v), finsum_mem_def, GlobalTheory.LFun.heckeVec]
@@ -78,7 +78,7 @@ private theorem satT_dc {G V : Type} [Group G] [AddCommGroup V] [Module ℂ V] (
 
 private theorem satT_unif (L : Type) [Field L] [NumberField L] (w : HeightOneSpectrum (𝓞 L)) :
     Formalism.UG.IsUnifV L w (unif (w.adicCompletion L) : w.adicCompletion L) := by
-  haveI : (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have he := ValuativeRel.isEquiv (valuation (w.adicCompletion L))
     (Valued.v : Valuation (w.adicCompletion L) (WithZero (Multiplicative ℤ)))
@@ -89,7 +89,7 @@ private theorem satT_unif (L : Type) [Field L] [NumberField L] (w : HeightOneSpe
     obtain ⟨x, hx⟩ := valuation_surjective (uniformizer (w.adicCompletion L))
     refine ⟨Units.mk0 x ?_, hx⟩
     rintro rfl
-    exact (zero_lt_iff.2 (by simp) : 0 < uniformizer (w.adicCompletion L)).ne ((map_zero _).symm.trans hx)
+    exact (pos_iff_ne_zero.2 (by simp) : 0 < uniformizer (w.adicCompletion L)).ne ((map_zero _).symm.trans hx)
   obtain ⟨p, hp⟩ := GlobalTheory.LFun.exists_isUnifV w
   unfold Formalism.UG.IsUnifV at hp ⊢
   have h1 : Valued.v (unif (w.adicCompletion L) : w.adicCompletion L) < (1 : WithZero (Multiplicative ℤ)) :=
@@ -156,4 +156,4 @@ theorem UpperTheory.V.Hi.satT :
     by_cases h : (i : ℕ) < j
     · simp [h]
     · simp [h]
-  simp only [Set.mem_setOf_eq, ← hal, ← Units.val_mul, Units.val_inj]
+  simp only [Set.mem_ofPred_eq, ← hal, ← Units.val_mul, Units.val_inj]

@@ -71,10 +71,10 @@ theorem exists_normalise_meanSquare_of_cocompact : ∀ (G : Type) [AddCommGroup 
       rw [hF.lintegral_eq_tsum'']
       have e : ∀ (g : Γ) (x : G), ‖f (g +ᵥ x)‖ₑ = ‖f x‖ₑ := fun g x => by
         have := hinv g g.2 x
-        rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← this]
+        rw [← ofReal_norm, ← ofReal_norm, ← this]
         rfl
       simp only [e, h2, tsum_zero]
-    rw [lintegral_eq_zero_iff (hf.enorm.measurable.pow_const 2)] at h3
+    rw [lintegral_eq_zero_iff (hf.eNorm.measurable.pow_const 2)] at h3
     apply hf0
     rw [← hf.ae_eq_iff_eq μ continuous_zero]
     filter_upwards [h3] with w hw

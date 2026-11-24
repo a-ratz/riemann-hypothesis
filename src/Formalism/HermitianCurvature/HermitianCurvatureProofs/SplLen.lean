@@ -142,7 +142,7 @@ lemma dx_app (x : Bool × Mat k r) {a : Mat k r → (F →L[ℝ] E)} {b : Mat k 
   rw [dx_fd x (ha.clm_apply hb), dx_fd x ha, dx_fd x hb]
   funext g
   have h2 := congrArg (fun T => T (dirL x g)) (fderiv_clm_apply (ha g) (hb g))
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply,
+  simp only [add_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.flip_apply] at h2
   exact h2.trans (add_comm _ _)
 

@@ -100,8 +100,8 @@ theorem darboux_real_coords : ∀ (D : D7) (S T : HSp D) (κ : Type) [Fintype κ
     exact ⟨(eps_mul_snd _).symm.trans h1, (eps_mul_snd _).symm.trans h2⟩
 
   have he : Continuous e := by
-    haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
-    haveI : IsModuleTopology (AF D.host.F) (Formalism.IndefR.Datum.WO S T) :=
+    have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+    have : IsModuleTopology (AF D.host.F) (Formalism.IndefR.Datum.WO S T) :=
       inferInstanceAs (IsModuleTopology (AF D.host.F) (Fin _ → Fin _ → AE D))
     exact IsModuleTopology.continuous_of_linearMap e.toLinearMap
   have hc : ∀ (p : ((κ → AF D.host.F) × (κ → AF D.host.F)) → (κ → AF D.host.F)), Continuous p →

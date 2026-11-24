@@ -107,7 +107,7 @@ theorem eq_of_fst_eq {K F : Type} [Field K] [CharZero K] [Field F] [Algebra K F]
       x ∈ (Spec.preimage (Y.fromSpecResidueField pt ≫ s)).hom.range)
     (a b : ↥(pullback s (spMap (algebraMap K F)))) (ha : pullback.fst s _ a = pt) (hb : pullback.fst s _ b = pt) :
     a = b := by
-  letI : Algebra K (Y.residueField pt) := (Spec.preimage (Y.fromSpecResidueField pt ≫ s)).hom.toAlgebra
+  let : Algebra K (Y.residueField pt) := (Spec.preimage (Y.fromSpecResidueField pt ≫ s)).hom.toAlgebra
   have hf := isField_tensor (F := F) (κ := Y.residueField pt) h
   have H := isPullback_SpecMap_of_isPushout _ _ _ _ (CommRingCat.isPushout_tensorProduct K (Y.residueField pt) F)
   have e : Spec.map (CommRingCat.ofHom (algebraMap K (Y.residueField pt))) = Y.fromSpecResidueField pt ≫ s :=
@@ -115,7 +115,7 @@ theorem eq_of_fst_eq {K F : Type} [Field K] [CharZero K] [Field F] [Algebra K F]
   rw [e] at H
   have H' := IsPullback.of_right' H.flip (IsPullback.of_hasPullback s (spMap (algebraMap K F))).flip
   have hs : Subsingleton (PrimeSpectrum (Y.residueField pt ⊗[K] F)) := by
-    letI := hf.toField
+    let := hf.toField
     infer_instance
   obtain ⟨x, hx, -⟩ := Scheme.exists_preimage_of_isPullback H' a (IsLocalRing.closedPoint _)
     (ha.trans (Scheme.fromSpecResidueField_apply pt _).symm)
@@ -133,7 +133,7 @@ theorem mem_connectedComponent_of_fst {K F : Type} [Field K] [CharZero K] [Field
       connectedComponent (pullback.fst s (spMap (algebraMap K F)) b)) :
     a ∈ connectedComponent b := by
   let π := pullback.fst s (spMap (algebraMap K F))
-  haveI : Flat (spMap (algebraMap K F)) :=
+  have : Flat (spMap (algebraMap K F)) :=
     (HasRingHomProperty.Spec_iff (P := @Flat)).2 (GlobalTheory.GeomIrr.flat_of_field _)
   obtain ⟨Z, hZ, hle⟩ := exists_mem_irreducibleComponents_subset_of_isIrreducible (connectedComponent (π b))
     ⟨⟨_, mem_connectedComponent⟩, GlobalTheory.KeyFam.isPreirreducible_connectedComponent_of_smooth s _⟩
@@ -147,7 +147,7 @@ theorem mem_connectedComponent_of_fst {K F : Type} [Field K] [CharZero K] [Field
 
 theorem exists_extension {K F : Type} [Field K] [Field F] [Algebra K F] [Algebra.IsAlgebraic K F] (σ : K →+* ℂ) :
     ∃ σ' : F →+* ℂ, σ'.comp (algebraMap K F) = σ := by
-  letI := σ.toAlgebra
+  let := σ.toAlgebra
   exact ⟨(IsAlgClosed.lift : F →ₐ[K] ℂ).toRingHom, AlgHom.comp_algebraMap _⟩
 
 theorem const_on_component_of_closed {K : IntermediateField ℚ ℂ} [FiniteDimensional ℚ K] (σ : K →+* ℂ)
@@ -163,15 +163,15 @@ theorem const_on_component_of_closed {K : IntermediateField ℚ ℂ} [FiniteDime
   have hKL : K ≤ algebraicClosure ℚ ℂ := fun z hz =>
     mem_algebraicClosure_iff'.2 ((Algebra.IsIntegral.isIntegral (R := ℚ) (⟨z, hz⟩ : K)).map K.val)
   obtain ⟨S, hS, hrat⟩ := exists_rational_components hKL s
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (S : Set ℂ)) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (S : Set ℂ)) :=
     IntermediateField.finiteDimensional_adjoin fun z hz => mem_algebraicClosure_iff'.1 (hS z hz)
   let F : IntermediateField ℚ ℂ := K ⊔ IntermediateField.adjoin ℚ (S : Set ℂ)
   have hK : K ≤ F := le_sup_left
   have hr := hrat F hK (sup_le hKL (IntermediateField.adjoin_le_iff.2 hS)) fun z hz =>
     (le_sup_right : _ ≤ F) (IntermediateField.subset_adjoin ℚ _ hz)
-  letI : Algebra K F := (IntermediateField.inclusion hK).toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ K F := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : FiniteDimensional K F := Module.Finite.of_restrictScalars_finite ℚ K F
+  let : Algebra K F := (IntermediateField.inclusion hK).toRingHom.toAlgebra
+  have : IsScalarTower ℚ K F := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : FiniteDimensional K F := Module.Finite.of_restrictScalars_finite ℚ K F
   obtain ⟨σ', hσ⟩ := exists_extension (F := F) σ
   have e : spMap σ' ≫ spMap (algebraMap K F) = spMap σ := by rw [CompIdem.spMap_comp, hσ]
   let Y' := pullback s (spMap (algebraMap K F))
@@ -226,7 +226,7 @@ theorem exists_idempotent (hA : AllTest Xo c) (σ : c.F →+* ℂ) {g : ℕ} {ty
     p (IsLocalRing.closedPoint ℂ) ∈ connectedComponent z ∧ t (p ≫ pr) = i}
   have hUc : ∀ z w, w ∈ connectedComponent z → (w ∈ U ↔ z ∈ U) := by
     intro z w h
-    simp only [U, Set.mem_setOf_eq, connectedComponent_eq h]
+    simp only [U, Set.mem_ofPred_eq, connectedComponent_eq h]
   have hU : IsClopen U := by
     refine ⟨⟨isOpen_iff_forall_mem_open.2 fun z hz => ?_⟩, isOpen_iff_forall_mem_open.2 fun z hz => ?_⟩
     · exact ⟨connectedComponent z, fun w hw h => hz ((hUc z w hw).1 h),

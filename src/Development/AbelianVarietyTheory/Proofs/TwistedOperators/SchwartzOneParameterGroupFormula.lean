@@ -73,7 +73,7 @@ theorem exists_schwartz_one (l : Type) [Fintype l] : ∃ f : Sch l, f 0 = 1 := b
 theorem lintegral_sq_eq (l : Type) [Fintype l] (f : Sch l) :
     ∫⁻ x, ‖f x‖ₑ ^ 2 = eLpNorm (⇑(f.toLp 2 : L2 l)) 2 volume ^ 2 := by
   rw [eLpNorm_congr_ae (f.coeFn_toLp 2 volume), eLpNorm_eq_eLpNorm' two_ne_zero ENNReal.ofNat_ne_top f.continuous.aestronglyMeasurable]
-  have := lintegral_rpow_enorm_eq_rpow_eLpNorm' (f := ⇑f) (μ := volume) (q := 2) two_pos
+  have := lintegral_rpow_eNorm_eq_rpow_eLpNorm' (f := ⇑f) (μ := volume) (q := 2) two_pos
   simpa [ENNReal.toReal_ofNat] using this
 
 theorem continuous_eval (l : Type) [Fintype l] (x : EuclideanSpace ℝ l) : Continuous fun f : Sch l => f x :=
@@ -121,7 +121,7 @@ theorem main_empty (l : Type) [Fintype l] [DecidableEq l] [IsEmpty l]
   have hdec : ∀ f : Sch l, f = f 0 • f0 := by
     intro f
     ext x
-    rw [hsub x, SchwartzMap.smul_apply, hf0, smul_eq_mul, mul_one]
+    rw [hsub x, smul_apply, hf0, smul_eq_mul, mul_one]
   set ν : ℝ → ℂ := fun t => T t f0 0 with hνdef
   have hTν : ∀ t (f : Sch l), T t f = ν t • f := by
     intro t f
@@ -131,7 +131,7 @@ theorem main_empty (l : Type) [Fintype l] [DecidableEq l] [IsEmpty l]
     rw [e]
     ext x
     rw [hsub x]
-    simp only [SchwartzMap.smul_apply, smul_eq_mul, hνdef]
+    simp only [smul_apply, smul_eq_mul, hνdef]
     ring
   have hν0 : ν 0 = 1 := by
     simp only [hνdef, hT0, LinearMap.id_apply, hf0]
@@ -150,7 +150,7 @@ theorem main_empty (l : Type) [Fintype l] [DecidableEq l] [IsEmpty l]
   refine (hslope.smul_const f).congr fun t => ?_
   rw [hTν]
   ext x
-  simp only [SchwartzMap.smul_apply, SchwartzMap.sub_apply, smul_eq_mul, Complex.real_smul]
+  simp only [smul_apply, sub_apply, smul_eq_mul, Complex.real_smul]
   ring
 
 end GlobalTheory.MetaplecticScalarDeriv

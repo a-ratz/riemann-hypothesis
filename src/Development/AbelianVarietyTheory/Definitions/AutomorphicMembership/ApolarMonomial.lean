@@ -72,7 +72,7 @@ theorem apolar_monomial (m : V →₀ ℕ) (c : S) (f : MvPowerSeries V S) :
     apolar (MvPolynomial.monomial m c) f = c * ((m.prod fun _ n => (n.factorial : S)) * MvPowerSeries.coeff m f) := by
   classical
   rw [apolar, Finset.sum_subset (MvPolynomial.support_monomial_subset) fun x _ hx => by
-    rw [MvPolynomial.notMem_support_iff.1 hx, zero_mul], Finset.sum_singleton, MvPolynomial.coeff_monomial, if_pos rfl]
+    rw [MvPolynomial.notMem_support_iff.1 hx, zero_mul], Finset.sum_singleton, MvPolynomial.coeff_monomial, ite_eq_left rfl]
 
 end Alg
 

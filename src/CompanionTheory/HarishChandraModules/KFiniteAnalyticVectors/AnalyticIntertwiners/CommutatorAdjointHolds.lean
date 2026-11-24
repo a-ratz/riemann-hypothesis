@@ -76,7 +76,7 @@ theorem compact_sq_le_A (hU : IsInfUnitary ε E) (x : M) {a b : Fin n} (hab : ε
   have key : ∀ a' b', ε b' = ε a' →
       RCLike.re (inner ℂ ((E a' b' * E b' a') x) x) = ‖E b' a' x‖ ^ 2 := by
     intro a' b' h
-    rw [Module.End.mul_apply, hU a' b', adjSign, if_pos h.symm, one_mul, inner_self_eq_norm_sq]
+    rw [Module.End.mul_apply, hU a' b', adjSign, ite_eq_left h.symm, one_mul, inner_self_eq_norm_sq]
   have hsum : RCLike.re (inner ℂ (casimirK ε E x) x) =
       ∑ a', ∑ b' ∈ Finset.univ.filter (fun b' => ε b' = ε a'), ‖E b' a' x‖ ^ 2 := by
 
@@ -245,7 +245,7 @@ theorem exists_log_A (n : ℕ) : ∃ L : (Fin n → Fin n → ℂ) → (Fin n �
     exact h1.congr_fderiv (ContinuousLinearMap.ext fun Y => e.symm_apply_apply Y)
   have hc : ContDiffAt ℝ (⊤ : WithTop ℕ∞) f 0 := (hfa 0).contDiffAt
   have hn : (⊤ : WithTop ℕ∞) ≠ 0 := by simp
-  have hs := hc.hasStrictFDerivAt' hd.hasFDerivAt hn
+  have hs := hc.hasStrictFDerivAt hd.hasFDerivAt hn
   have hf0 : f 0 = Matrix.of.symm 1 := by
     show e.symm (NormedSpace.exp (e 0)) = Matrix.of.symm 1
     rw [map_zero, NormedSpace.exp_zero]

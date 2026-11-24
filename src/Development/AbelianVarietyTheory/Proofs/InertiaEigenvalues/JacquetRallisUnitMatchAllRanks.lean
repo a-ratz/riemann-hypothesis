@@ -137,11 +137,11 @@ theorem conjT_conjT [Unram F E] (z : E ⊗[F] K) : conjT F E K (conjT F E K z) =
 
 theorem locallyCompact_moduleTopology [LocallyCompactSpace F] [Module.Finite F K] :
     @LocallyCompactSpace K (moduleTopology F K) := by
-  letI : TopologicalSpace K := moduleTopology F K
-  haveI : IsModuleTopology F K := ⟨rfl⟩
+  let : TopologicalSpace K := moduleTopology F K
+  have : IsModuleTopology F K := ⟨rfl⟩
   let b := (Module.finBasis F K).equivFun
   have h1 : Continuous b := IsModuleTopology.continuous_of_linearMap b.toLinearMap
-  haveI : ContinuousAdd K := IsModuleTopology.toContinuousAdd F K
+  have : ContinuousAdd K := IsModuleTopology.toContinuousAdd F K
   have h2 : Continuous b.symm := IsModuleTopology.continuous_of_linearMap b.symm.toLinearMap
   let e : K ≃ₜ (Fin (Module.finrank F K) → F) := { b.toEquiv with continuous_toFun := h1, continuous_invFun := h2 }
   exact e.isClosedEmbedding.locallyCompactSpace
@@ -179,8 +179,8 @@ theorem exists_isGen [Unram F E] (r : ℕ) (p : Fin r → F)
       rw [hP, degree_add_eq_left_of_degree_lt (by rwa [degree_X_pow]), degree_X_pow]
     exact natDegree_eq_of_degree_eq_some this
   let pb := AdjoinRoot.powerBasis' hm
-  haveI : Module.Finite F (AdjoinRoot P) := pb.finite
-  haveI : IsReduced (AdjoinRoot P) :=
+  have : Module.Finite F (AdjoinRoot P) := pb.finite
+  have : IsReduced (AdjoinRoot P) :=
     (Ideal.isRadical_iff_quotient_reduced _).1
       ((isRadical_iff_span_singleton).1 hs.squarefree.isRadical)
   refine ⟨ofAlgebra F E (AdjoinRoot P), AdjoinRoot.root P, ?_, ?_, ?_⟩
@@ -248,16 +248,16 @@ theorem charpoly_companion {k : Type} [Field k] {r : ℕ} (p : Fin r → k) :
     rw [Algebra.leftMulMatrix_eq_repr_mul, hb, ← pow_succ']
     simp only [companion, Matrix.of_apply]
     by_cases hj : (j : ℕ) + 1 = r
-    · rw [if_pos hj, hj, hroot, ← b.equivFun_symm_apply, ← b.equivFun_apply, LinearEquiv.apply_symm_apply]
-    · rw [if_neg hj]
+    · rw [ite_eq_left hj, hj, hroot, ← b.equivFun_symm_apply, ← b.equivFun_apply, LinearEquiv.apply_symm_apply]
+    · rw [ite_eq_right hj]
       have hlt' : (j : ℕ) + 1 < r := lt_of_le_of_ne j.2 hj
       have : AdjoinRoot.root P ^ ((j : ℕ) + 1) = b ⟨(j : ℕ) + 1, hlt'⟩ := by rw [hb]
       rw [this, b.repr_self, Finsupp.single_apply]
       by_cases hi : (i : ℕ) = (j : ℕ) + 1
-      · rw [if_pos hi, if_pos (Fin.ext hi.symm)]
-      · rw [if_neg hi, if_neg (fun h => hi (congrArg Fin.val h).symm)]
+      · rw [ite_eq_left hi, ite_eq_left (Fin.ext hi.symm)]
+      · rw [ite_eq_right hi, ite_eq_right (fun h => hi (congrArg Fin.val h).symm)]
   have hP0 : P ≠ 0 := hm.ne_zero
-  haveI : Module.Finite k (AdjoinRoot P) := pb.finite
+  have : Module.Finite k (AdjoinRoot P) := pb.finite
   rw [hmat, Algebra.leftMulMatrix_apply, LinearMap.charpoly_toMatrix, ← LinearMap.charpoly_toMatrix _ pb.basis,
     ← Algebra.leftMulMatrix_apply]
   have hg : pb.gen = AdjoinRoot.root P := rfl
@@ -293,14 +293,14 @@ private lemma charpoly_separable_of_isGen {F E : Type} [NontriviallyNormedField 
     (j : A.L ≃ₗ[E] (Fin r → E)) (M : Matrix (Fin r) (Fin r) E)
     (hM : ∀ z, j (algebraMap A.K A.L τ * z) = M *ᵥ j z) :
     M.charpoly.Separable := by
-  haveI : Module.Finite E A.L :=
+  have : Module.Finite E A.L :=
     Module.Finite.equiv (A.push).out.equiv
   rcases Nat.eq_zero_or_pos r with rfl | hr
   · rw [Matrix.charpoly, Matrix.det_isEmpty]
     exact Polynomial.separable_one
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   obtain ⟨hli, hfin, -⟩ := hτ
-  haveI : CharZero F := _root_.GlobalTheory.JR.Unram.charZero E
+  have : CharZero F := _root_.GlobalTheory.JR.Unram.charZero E
   let b : Module.Basis (Fin r) F A.K :=
     basisOfLinearIndependentOfCardEqFinrank hli (by simp [hfin])
   let pb : PowerBasis F A.K := ⟨τ, r, b, fun i => by simp [b]⟩
@@ -371,11 +371,11 @@ private lemma adjoin_eq_whole_of_isGen {F E : Type} [NontriviallyNormedField F]
     (hτ : A.IsGen τ p) : Algebra.adjoin F {τ} = ⊤ := by
   obtain ⟨hli, hfin, -⟩ := hτ
   rcases Nat.eq_zero_or_pos r with rfl | hr
-  · haveI : Subsingleton A.K := Module.finrank_zero_iff.1 hfin
+  · have : Subsingleton A.K := Module.finrank_zero_iff.1 hfin
     refine eq_top_iff.2 fun k _ => ?_
     rw [Subsingleton.elim k 1]
     exact Subalgebra.one_mem _
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   let b : Module.Basis (Fin r) F A.K :=
     basisOfLinearIndependentOfCardEqFinrank hli (by simp [hfin])
   let pb : PowerBasis F A.K := ⟨τ, r, b, fun i => by simp [b]⟩
@@ -431,17 +431,17 @@ private lemma isClosedEmbedding_uHom {F E : Type} [NontriviallyNormedField F]
     (hx : A.IsIsom x j) [IsTopologicalRing A.L]
     [ContinuousStar A.L] [ContinuousStar E] :
     IsClosedEmbedding (A.uHom hx) := by
-  haveI : LocallyCompactSpace F :=
+  have : LocallyCompactSpace F :=
     _root_.GlobalTheory.JR.Unram.lcF E
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by
     rw [_root_.GlobalTheory.JR.Unram.finrank_eq (F := F) (E := E)]; norm_num)
-  haveI : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
   have hj : Continuous j :=
     IsModuleTopology.continuous_of_linearMap (R := F) (j.toLinearMap.restrictScalars F)
   have hjs : Continuous j.symm :=
     IsModuleTopology.continuous_of_linearMap (R := F) (j.symm.toLinearMap.restrictScalars F)
-  haveI : T2Space A.L :=
+  have : T2Space A.L :=
     (Homeomorph.mk j.toEquiv hj hjs).isEmbedding.t2Space
   set u := A.uHom hx with hu
   have hu_mulVec : ∀ s v, (u s).1 *ᵥ v = j (s.1 * j.symm v) := by
@@ -457,7 +457,7 @@ private lemma isClosedEmbedding_uHom {F E : Type} [NontriviallyNormedField F]
       rw [← hu_mulVec]
       simp [Matrix.mulVec_single]
     rw [this]
-    exact (continuous_apply i).comp (hj.comp (continuous_subtype_val.mul continuous_const))
+    exact (continuous_apply i).comp (hj.comp (continuous_subtypeVal.mul continuous_const))
   have hfg : ∀ s, f (u s).1 = s.1 := by
     intro s
     simp [f, hu_mulVec]
@@ -472,7 +472,7 @@ private lemma isClosedEmbedding_uHom {F E : Type} [NontriviallyNormedField F]
     constructor
     · rintro ⟨s, rfl⟩
       refine ⟨by simp [hfg], Set.mem_iInter.2 fun v => ?_⟩
-      simp only [Set.mem_setOf_eq, hfg, hu_mulVec]
+      simp only [Set.mem_ofPred_eq, hfg, hu_mulVec]
     · rintro ⟨h₁, h₂⟩
       refine ⟨⟨f m, h₁⟩, ?_⟩
       apply Matrix.toLin'.injective
@@ -494,18 +494,18 @@ private lemma isClosedEmbedding_uHom {F E : Type} [NontriviallyNormedField F]
 open Matrix MeasureTheory Filter Topology in
 theorem _root_.GlobalTheory.JR.TorusCutOff.exists_unitary_cutoff : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [_root_.GlobalTheory.JR.Unram F E] (A : _root_.GlobalTheory.JR.Et F E) (r : ℕ) (τ : A.K) (p : Fin r → F), A.IsGen τ p → ∀ (x : A.K) (j : A.L ≃ₗ[E] (Fin r → E)) (hx : A.IsIsom x j) (Ax : selfAdjoint (Matrix (Fin r) (Fin r) E)), (∀ z, j (algebraMap A.K A.L τ * z) = Ax.1 *ᵥ j z) → ∀ (ν : Measure (unitary A.L)), ν.IsHaarMeasure → ∀ Z : Set (Matrix (Fin r) (Fin r) E), IsCompact Z → ∃ α : Matrix.unitaryGroup (Fin r) E → ℝ, IsLocallyConstant α ∧ HasCompactSupport α ∧ (∀ g, 0 ≤ α g) ∧ ∀ g : Matrix.unitaryGroup (Fin r) E, g.1 * Ax.1 * star g.1 ∈ Z → ∫ t, α (g * (A.uHom hx t)⁻¹) ∂ν = 1 := by
   intro F E _ _ _ _ _ A r τ p hτ x j hx Ax hAx ν _ Z hZ
-  haveI : LocallyCompactSpace E :=
+  have : LocallyCompactSpace E :=
     _root_.GlobalTheory.JR.Unram.lcE F
-  haveI : IsUltrametricDist E := _root_.GlobalTheory.JR.Unram.ultraE F
-  haveI : ContinuousStar E := ⟨(AddMonoidHomClass.isometry_of_norm (starAddEquiv : E ≃+ E)
+  have : IsUltrametricDist E := _root_.GlobalTheory.JR.Unram.ultraE F
+  have : ContinuousStar E := ⟨(AddMonoidHomClass.isometry_of_norm (starAddEquiv : E ≃+ E)
     (_root_.GlobalTheory.JR.Unram.norm_star F)).continuous⟩
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by
     rw [_root_.GlobalTheory.JR.Unram.finrank_eq (F := F) (E := E)]; norm_num)
-  haveI : Module.Finite E A.L :=
+  have : Module.Finite E A.L :=
     Module.Finite.equiv (A.push).out.equiv
-  haveI : Module.Finite F A.L := Module.Finite.trans E _
-  haveI : IsTopologicalRing A.L := IsModuleTopology.isTopologicalRing F _
-  haveI : ContinuousStar A.L := by
+  have : Module.Finite F A.L := Module.Finite.trans E _
+  have : IsTopologicalRing A.L := IsModuleTopology.isTopologicalRing F _
+  have : ContinuousStar A.L := by
     refine ⟨?_⟩
     let σ : A.L →ₗ[F] A.L :=
       { toFun := star
@@ -517,11 +517,11 @@ theorem _root_.GlobalTheory.JR.TorusCutOff.exists_unitary_cutoff : ∀ (F E : Ty
             ← IsScalarTower.algebraMap_apply, ← Algebra.commutes, ← Algebra.smul_def]
           rfl }
     exact IsModuleTopology.continuous_of_linearMap (R := F) σ
-  haveI : LocallyCompactSpace (Matrix (Fin r) (Fin r) E) :=
+  have : LocallyCompactSpace (Matrix (Fin r) (Fin r) E) :=
     (inferInstance : LocallyCompactSpace (Fin r → Fin r → E))
-  haveI : TotallyDisconnectedSpace (Matrix (Fin r) (Fin r) E) :=
+  have : TotallyDisconnectedSpace (Matrix (Fin r) (Fin r) E) :=
     (inferInstance : TotallyDisconnectedSpace (Fin r → Fin r → E))
-  haveI : LocallyCompactSpace (Matrix.unitaryGroup (Fin r) E) :=
+  have : LocallyCompactSpace (Matrix.unitaryGroup (Fin r) E) :=
     (isClosed_unitary (R := Matrix (Fin r) (Fin r) E)).isClosedEmbedding_subtypeVal.locallyCompactSpace
   have hsep : Ax.1.charpoly.Separable :=
     charpoly_separable_of_isGen A r τ p hτ j Ax.1 hAx
@@ -600,7 +600,7 @@ theorem trForm_symm [Unram F E] (r : ℕ) : (trForm (F := F) (E := E) r).IsSymm 
   rw [trForm_apply, trForm_apply, ← trace_star (F := F) (star b ⬝ᵥ c), ← star_dotProduct_star, star_star]
 
 theorem trForm_sepLeft [hU : Unram F E] (r : ℕ) (c : Fin r → E) (h : ∀ b, trForm (F := F) r c b = 0) : c = 0 := by
-  haveI : CharZero F := hU.charZero
+  have : CharZero F := hU.charZero
   by_contra hc
   obtain ⟨i, hi⟩ : ∃ i, c i ≠ 0 := by
     by_contra h'
@@ -619,11 +619,11 @@ theorem kerL_eq [hU : Unram F E] (A : Et F E) (ψ : AddChar F ℂ) {r : ℕ} {x 
     (hx : A.IsIsom x j) (y' y : A.L) :
     A.kerL ψ x y' y = ψ (Algebra.trace F E (star (j y') ⬝ᵥ j y)) := by
   obtain ⟨b⟩ := (GlobalTheory.JR.Et.quadratic_structure F E A).1
-  haveI : Module.Free A.K A.L := Module.Free.of_basis b
-  haveI : Module.Finite A.K A.L := Module.Finite.of_basis b
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
-  haveI : Module.Finite F A.L := Module.Finite.trans A.K A.L
-  haveI : Module.Finite E A.L := Module.Finite.of_restrictScalars_finite F E A.L
+  have : Module.Free A.K A.L := Module.Free.of_basis b
+  have : Module.Finite A.K A.L := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
+  have : Module.Finite F A.L := Module.Finite.trans A.K A.L
+  have : Module.Finite E A.L := Module.Finite.of_restrictScalars_finite F E A.L
   unfold Et.kerL Et.psiK
   rw [hx, Algebra.trace_trace (R := F) (S := E) (T := A.L), ← Algebra.trace_trace (R := F) (S := A.K) (T := A.L)]
   congr 2
@@ -646,17 +646,17 @@ theorem addChar_sum (ψ : AddChar F ℂ) {ι : Type} (s : Finset ι) (f : ι →
 theorem pi_selfDual [hU : Unram F E] (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) (r : ℕ) (M : Meas r F E) :
     letI := M.mE
     SelfDual (Measure.pi fun _ : Fin r => M.μE) (fun a b => ψ (trForm (F := F) r a b)) := by
-  letI := M.mE
-  haveI := M.bE
-  haveI := M.haarE
-  haveI : IsUltrametricDist E := hU.ultraE
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : LocallyCompactSpace E := hU.lcE
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
-  haveI : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
-  haveI : IsModuleTopology F (Fin r → E) := IsModuleTopology.instPi
+  let := M.mE
+  have := M.bE
+  have := M.haarE
+  have : IsUltrametricDist E := hU.ultraE
+  have : LocallyCompactSpace F := hU.lcF
+  have : LocallyCompactSpace E := hU.lcE
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
+  have : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology F (Fin r → E) := IsModuleTopology.instPi
 
   let O : AddSubgroup (Fin r → E) :=
     { carrier := {v | ∀ i, ‖v i‖ ≤ 1}
@@ -673,7 +673,7 @@ theorem pi_selfDual [hU : Unram F E] (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) (
   have hc := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).2.2.2
   have hdual : {y | ∀ x ∈ O, ψ (trForm (F := F) r x y) = 1} = (O : Set (Fin r → E)) := by
     ext y
-    simp only [Set.mem_setOf_eq, SetLike.mem_coe, hmem]
+    simp only [Set.mem_ofPred_eq, SetLike.mem_coe, hmem]
     constructor
     · intro h i
       refine (hc (y i)).1 fun e he => ?_
@@ -700,25 +700,25 @@ theorem pi_selfDual [hU : Unram F E] (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) (
 theorem map_selfDual [hU : Unram F E] [MeasurableSpace E] [BorelSpace E] (A : Et F E) (ψ : AddChar F ℂ) {r : ℕ}
     {x : A.K} {j : A.L ≃ₗ[E] (Fin r → E)} (hx : A.IsIsom x j) (μ : Measure A.L) (hμ : SelfDual μ (A.kerL ψ x)) :
     SelfDual (Measure.map j μ) (fun a b => ψ (trForm (F := F) r a b)) := by
-  haveI : IsUltrametricDist E := hU.ultraE
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : LocallyCompactSpace E := hU.lcE
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
-  haveI : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
-  haveI : IsModuleTopology F (Fin r → E) := IsModuleTopology.instPi
+  have : IsUltrametricDist E := hU.ultraE
+  have : LocallyCompactSpace F := hU.lcF
+  have : LocallyCompactSpace E := hU.lcE
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
+  have : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology F (Fin r → E) := IsModuleTopology.instPi
 
-  haveI : IsTopologicalAddGroup A.L := IsModuleTopology.topologicalAddGroup F A.L
-  haveI : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
-  haveI : ContinuousSMul F A.L := IsModuleTopology.toContinuousSMul F A.L
+  have : IsTopologicalAddGroup A.L := IsModuleTopology.isTopologicalAddGroup F A.L
+  have : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
+  have : ContinuousSMul F A.L := IsModuleTopology.toContinuousSMul F A.L
   let jF : A.L ≃ₗ[F] (Fin r → E) := j.restrictScalars F
   have hc : Continuous jF := IsModuleTopology.continuous_of_linearMap jF.toLinearMap
   have hcs : Continuous jF.symm := IsModuleTopology.continuous_of_linearMap jF.symm.toLinearMap
   let jC : A.L ≃L[F] (Fin r → E) := { jF with continuous_toFun := hc, continuous_invFun := hcs }
   have hcoe : (⇑jC : A.L → Fin r → E) = ⇑j := rfl
   have hme : MeasurableEmbedding (⇑j) := by rw [← hcoe]; exact jC.toHomeomorph.measurableEmbedding
-  haveI := hμ.1
+  have := hμ.1
   have hfour : ∀ (g : (Fin r → E) → ℂ) (y : A.L),
       fourB (Measure.map j μ) (fun a b => ψ (trForm (F := F) r a b)) g (j y) = fourB μ (A.kerL ψ x) (g ∘ j) y := by
     intro g y
@@ -739,16 +739,16 @@ theorem map_selfDual [hU : Unram F E] [MeasurableSpace E] [BorelSpace E] (A : Et
 theorem map_isIsom_eq_pi : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (r : ℕ) (M : Meas r F E) (x : A.K) (j : A.L ≃ₗ[E] (Fin r → E)), A.IsIsom x j → (∀ y' y, A.kerL ψ x y' y = ψ (Algebra.trace F E (star (j y') ⬝ᵥ j y))) ∧ ∀ μ : Measure A.L, SelfDual μ (A.kerL ψ x) → (letI := M.mE; Measure.map j μ = Measure.pi fun _ : Fin r => M.μE) := by
   intro F E _ _ _ _ hU A ψ hψ r M x j hx
   refine ⟨fun y' y => kerL_eq A ψ hx y' y, fun μ hμ => ?_⟩
-  letI := M.mE
-  haveI := M.bE
-  haveI : IsUltrametricDist E := hU.ultraE
-  haveI : LocallyCompactSpace F := hU.lcF
-  haveI : LocallyCompactSpace E := hU.lcE
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
-  haveI : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
-  haveI : IsModuleTopology F (Fin r → E) := IsModuleTopology.instPi
+  let := M.mE
+  have := M.bE
+  have : IsUltrametricDist E := hU.ultraE
+  have : LocallyCompactSpace F := hU.lcF
+  have : LocallyCompactSpace E := hU.lcE
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hU.finrank_eq]; norm_num)
+  have : IsModuleTopology F E := isModuleTopologyOfFiniteDimensional
+  have : IsModuleTopology F (Fin r → E) := IsModuleTopology.instPi
 
   obtain ⟨⟨μ0, _, huniq⟩, _⟩ := GlobalTheory.JR.SelfDualUniq.selfDual_exists_unique_isTest F E ψ hψ (Fin r → E) (trForm r)
     (trForm_symm r) (trForm_nondeg r)
@@ -791,26 +791,26 @@ end GlobalTheory.JR.FourDesc
 open GlobalTheory.JR.FourDesc in
 theorem GlobalTheory.JR.fourB_descFn : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (r : ℕ) (M : Meas r F E) (x : A.K) (j : A.L ≃ₗ[E] (Fin r → E)), A.IsIsom x j → ∀ μ : Measure A.L, SelfDual μ (A.kerL ψ x) → ∀ (Ax : selfAdjoint (Matrix (Fin r) (Fin r) E)) (lam : F) (α : Matrix.unitaryGroup (Fin r) E → ℝ), IsLocallyConstant α → HasCompactSupport α → ∀ f : Hn r F E → ℂ, IsTest f → fourB μ (A.kerL ψ x) (A.descFn M Ax j lam α f) = A.descFn M Ax j lam α (fourU M ψ f) := by
   intro F E _ _ _ _ _ A ψ hψ r M x j hx μ hμ Ax lam α hα hαc f hf
-  haveI : LocallyCompactSpace E := Unram.lcE (F := F) (E := E)
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : LocallyCompactSpace F := Unram.lcF (F := F) (E := E)
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  letI := M.mE
-  haveI := M.bE
-  letI := M.mU
-  haveI := M.bU
-  haveI := M.haarE
-  haveI := M.haarU
-  haveI : SigmaFinite M.μE := sigmaFinite_of_locallyFinite
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ (Unram.finrank_eq (F := F) (E := E))
-  haveI : ContinuousStar E := ⟨continuous_star_E (F := F)⟩
+  have : LocallyCompactSpace E := Unram.lcE (F := F) (E := E)
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : LocallyCompactSpace F := Unram.lcF (F := F) (E := E)
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  let := M.mE
+  have := M.bE
+  let := M.mU
+  have := M.bU
+  have := M.haarE
+  have := M.haarU
+  have : SigmaFinite M.μE := sigmaFinite_of_locallyFinite
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ (Unram.finrank_eq (F := F) (E := E))
+  have : ContinuousStar E := ⟨continuous_star_E (F := F)⟩
   obtain ⟨P, hP⟩ : ∃ P : Measure (Fin r → E), P = Measure.pi fun _ => M.μE := ⟨_, rfl⟩
-  haveI : SigmaFinite P := by rw [hP]; infer_instance
-  haveI : IsFiniteMeasureOnCompacts P := by rw [hP]; infer_instance
+  have : SigmaFinite P := by rw [hP]; infer_instance
+  have : IsFiniteMeasureOnCompacts P := by rw [hP]; infer_instance
   obtain ⟨ν, hν⟩ : ∃ ν : Measure (Matrix.unitaryGroup (Fin r) E), ν = M.μU.restrict (tsupport α) := ⟨_, rfl⟩
-  haveI : IsFiniteMeasure ν := by
+  have : IsFiniteMeasure ν := by
     rw [hν]; exact isFiniteMeasure_restrict.2 hαc.isCompact.measure_lt_top.ne
-  haveI : IsFiniteMeasureOnCompacts (P.prod ν) := inferInstance
+  have : IsFiniteMeasureOnCompacts (P.prod ν) := inferInstance
   have hψc := continuous_of_isStdChar hψ
   have htr : Continuous (fun e : E => Algebra.trace F E e) :=
     LinearMap.continuous_of_finiteDimensional (Algebra.trace F E)
@@ -923,18 +923,18 @@ theorem GlobalTheory.JR.descFn_isTest : ∀ (F E : Type) [NontriviallyNormedFiel
     have : Isometry (starAddEquiv : E ≃+ E) :=
       (AddMonoidHomClass.isometry_iff_norm (starAddEquiv : E ≃+ E)).2 (fun x => Unram.norm_star F x)
     exact this.continuous
-  haveI : ContinuousStar E := ⟨hstar⟩
-  haveI : LocallyCompactSpace F := Unram.lcF E
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : IsTopologicalAddGroup A.L := IsModuleTopology.topologicalAddGroup F A.L
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ (Unram.finrank_eq (F := F) (E := E))
+  have : ContinuousStar E := ⟨hstar⟩
+  have : LocallyCompactSpace F := Unram.lcF E
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : IsTopologicalAddGroup A.L := IsModuleTopology.isTopologicalAddGroup F A.L
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ (Unram.finrank_eq (F := F) (E := E))
   have hj : Continuous j := IsModuleTopology.continuous_of_linearMap ((j : A.L →ₗ[E] (Fin r → E)).restrictScalars F)
   have hjs : Continuous j.symm :=
     LinearMap.continuous_of_finiteDimensional ((j.symm : (Fin r → E) →ₗ[E] A.L).restrictScalars F)
 
   have hact : Continuous (fun p : A.L × Matrix.unitaryGroup (Fin r) E => (actU p.2 (Ax, j p.1, lam) : Hn r F E)) := by
     have hg : Continuous (fun p : A.L × Matrix.unitaryGroup (Fin r) E => (p.2 : Matrix (Fin r) (Fin r) E)) :=
-      continuous_subtype_val.comp continuous_snd
+      continuous_subtypeVal.comp continuous_snd
     have c1 : Continuous (fun p : A.L × Matrix.unitaryGroup (Fin r) E =>
         (p.2 : Matrix (Fin r) (Fin r) E) * Ax.1 * star (p.2 : Matrix (Fin r) (Fin r) E)) :=
       (hg.mul continuous_const).mul hg.star
@@ -977,7 +977,7 @@ theorem GlobalTheory.JR.descFn_isTest : ∀ (F E : Type) [NontriviallyNormedFiel
     have hK : IsCompact Kset := by
       refine (hαc.isCompact.prod hS).image ?_
       refine hjs.comp ?_
-      exact Continuous.matrix_mulVec ((continuous_subtype_val.comp continuous_fst).star) continuous_snd
+      exact Continuous.matrix_mulVec ((continuous_subtypeVal.comp continuous_fst).star) continuous_snd
     have hKc : IsClosed Kset := by
       have h1 : IsClosed (j '' Kset) := (hK.image hj).isClosed
       have h2 : Kset = j ⁻¹' (j '' Kset) := (Set.preimage_image_eq _ j.injective).symm
@@ -1047,9 +1047,9 @@ variable {F E : Type} [NontriviallyNormedField F] [NontriviallyNormedField E] [N
 
 theorem continuous_mulMat [hU : Unram F E] (A : Et F E) {r : ℕ} (j : A.L ≃ₗ[E] (Fin r → E)) :
     Continuous fun t : A.L => A.mulMat j t := by
-  haveI := hU.lcF
-  haveI := EtMeas.finite_L A
-  haveI : IsTopologicalRing A.L := IsModuleTopology.isTopologicalRing F A.L
+  have := hU.lcF
+  have := EtMeas.finite_L A
+  have : IsTopologicalRing A.L := IsModuleTopology.isTopologicalRing F A.L
   have hj : Continuous (j : A.L → Fin r → E) :=
     IsModuleTopology.continuous_of_linearMap ((j : A.L →ₗ[E] (Fin r → E)).restrictScalars F)
   refine continuous_matrix fun i k => ?_
@@ -1059,31 +1059,31 @@ theorem continuous_mulMat [hU : Unram F E] (A : Et F E) {r : ℕ} (j : A.L ≃�
 
 theorem orbL_descFn : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (r : ℕ) (M : Meas r F E) (τ : A.K) (x : A.K) (j : A.L ≃ₗ[E] (Fin r → E)) (hx : A.IsIsom x j) (Ax : selfAdjoint (Matrix (Fin r) (Fin r) E)), (∀ z, j (algebraMap A.K A.L τ * z) = Ax.1 *ᵥ j z) → ∀ (lam : F) (ν : Measure (unitary A.L)), ν.IsHaarMeasure → ∀ (α : Matrix.unitaryGroup (Fin r) E → ℝ), IsLocallyConstant α → (∀ g, 0 ≤ α g) → ∀ Z : Set (Matrix (Fin r) (Fin r) E), (∀ g : Matrix.unitaryGroup (Fin r) E, g.1 * Ax.1 * star g.1 ∈ Z → ∫ t, α (g * (A.uHom hx t)⁻¹) ∂ν = 1) → ∀ f₀ : Hn r F E → ℂ, Continuous f₀ → (∀ X, f₀ X ≠ 0 → X.1.1 ∈ Z) → ∀ y : A.L, (letI := M.mU; Integrable (fun g => f₀ (actU g (Ax, j y, lam))) M.μU) → A.orbL ν (A.descFn M Ax j lam α f₀) y = orbU M f₀ (Ax, j y, lam) := by
   intro F E _ _ _ _ hU A r M τ x j hx Ax hA lam ν hν α hα hα0 Z hZ f₀ hf₀ hf₀Z y hint
-  letI := M.mU
-  haveI := M.bU
-  haveI := M.haarU
-  haveI := hU.ultraE; haveI := hU.lcE; haveI := hU.ultraF; haveI := hU.lcF
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : NormedStarGroup E := ⟨fun y => (hU.norm_star y).le⟩
-  haveI : SecondCountableTopology (Matrix (Fin r) (Fin r) E) :=
+  let := M.mU
+  have := M.bU
+  have := M.haarU
+  have := hU.ultraE; have := hU.lcE; have := hU.ultraF; have := hU.lcF
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : NormedStarGroup E := ⟨fun y => (hU.norm_star y).le⟩
+  have : SecondCountableTopology (Matrix (Fin r) (Fin r) E) :=
     inferInstanceAs (SecondCountableTopology (Fin r → Fin r → E))
-  haveI : LocallyCompactSpace (Matrix (Fin r) (Fin r) E) :=
+  have : LocallyCompactSpace (Matrix (Fin r) (Fin r) E) :=
     inferInstanceAs (LocallyCompactSpace (Fin r → Fin r → E))
-  haveI : LocallyCompactSpace (unitaryGroup (Fin r) E) :=
+  have : LocallyCompactSpace (unitaryGroup (Fin r) E) :=
     (isClosed_unitary (R := Matrix (Fin r) (Fin r) E)).locallyCompactSpace
-  haveI : SecondCountableTopology (unitaryGroup (Fin r) E) :=
+  have : SecondCountableTopology (unitaryGroup (Fin r) E) :=
     (isClosed_unitary (R := Matrix (Fin r) (Fin r) E)).isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
-  haveI := EtMeas.finite_L A
+  have := EtMeas.finite_L A
   obtain ⟨_, _, _, _, -⟩ := EtMeas.top_facts F A.L
-  haveI : IsTopologicalRing A.L := IsModuleTopology.isTopologicalRing F A.L
-  haveI : ContinuousStar A.L := ⟨IsModuleTopology.continuous_of_linearMap (EtMeas.starF A)⟩
-  haveI : LocallyCompactSpace (unitary A.L) := (isClosed_unitary (R := A.L)).locallyCompactSpace
-  haveI : SecondCountableTopology (unitary A.L) :=
+  have : IsTopologicalRing A.L := IsModuleTopology.isTopologicalRing F A.L
+  have : ContinuousStar A.L := ⟨IsModuleTopology.continuous_of_linearMap (EtMeas.starF A)⟩
+  have : LocallyCompactSpace (unitary A.L) := (isClosed_unitary (R := A.L)).locallyCompactSpace
+  have : SecondCountableTopology (unitary A.L) :=
     (isClosed_unitary (R := A.L)).isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
-  haveI : SigmaFinite ν := inferInstance
-  haveI : SigmaFinite M.μU := inferInstance
-  haveI : M.μU.IsMulRightInvariant := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E r).2 M
-  have huc : Continuous (A.uHom hx) := continuous_induced_rng.2 ((continuous_mulMat A j).comp continuous_subtype_val)
+  have : SigmaFinite ν := inferInstance
+  have : SigmaFinite M.μU := inferInstance
+  have : M.μU.IsMulRightInvariant := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E r).2 M
+  have huc : Continuous (A.uHom hx) := continuous_induced_rng.2 ((continuous_mulMat A j).comp continuous_subtypeVal)
   have hinvc : Continuous fun g : unitaryGroup (Fin r) E => g⁻¹ := continuous_inv
 
   set X : Hn r F E := (Ax, j y, lam) with hXdef
@@ -1107,9 +1107,9 @@ theorem orbL_descFn : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivially
     simp only [hshift t, actU_actU]
   have hact : Continuous fun g : unitaryGroup (Fin r) E => actU g X := by
     refine Continuous.prodMk ?_ (Continuous.prodMk ?_ continuous_const)
-    · exact (((continuous_subtype_val.matrix_mul continuous_const).matrix_mul
-        (continuous_subtype_val.star))).subtype_mk _
-    · exact continuous_subtype_val.matrix_mulVec continuous_const
+    · exact (((continuous_subtypeVal.matrix_mul continuous_const).matrix_mul
+        (continuous_subtypeVal.star))).subtype_mk _
+    · exact continuous_subtypeVal.matrix_mulVec continuous_const
   have hcont : Continuous (Function.uncurry fun (t : unitary A.L) (g : unitaryGroup (Fin r) E) =>
       f₀ (actU g X) * (α (g * (A.uHom hx t)⁻¹) : ℂ)) :=
     (hf₀.comp (hact.comp continuous_snd)).mul (Complex.continuous_ofReal.comp
@@ -1163,7 +1163,7 @@ theorem unitary_orbital_descent : ∀ (F E : Type) [NontriviallyNormedField F] [
   intro F E _ _ _ _ _ A ψ hψ m r M τ p lam hgen x j hx Ax hAx f hf
   have hν : m.ν.IsHaarMeasure := m.nat.1
   set Z : Set (Matrix (Fin r) (Fin r) E) := (fun X : Hn r F E => X.1.1) '' tsupport f with hZdef
-  have hZ : IsCompact Z := hf.2.image (continuous_subtype_val.comp continuous_fst)
+  have hZ : IsCompact Z := hf.2.image (continuous_subtypeVal.comp continuous_fst)
   obtain ⟨α, hαlc, hαcs, hα0, hα1⟩ := _root_.GlobalTheory.JR.TorusCutOff.exists_unitary_cutoff F E A r τ p hgen (x : A.K) j hx Ax hAx m.ν hν Z hZ
   have hsuppf : ∀ X, f X ≠ 0 → X.1.1 ∈ Z := fun X hX => ⟨X, subset_tsupport f hX, rfl⟩
   have hsuppF : ∀ X, fourU M ψ f X ≠ 0 → X.1.1 ∈ Z := by
@@ -1178,9 +1178,9 @@ theorem unitary_orbital_descent : ∀ (F E : Type) [NontriviallyNormedField F] [
   have hint : ∀ f₀ : Hn r F E → ℂ, IsTest f₀ → ∀ y : A.L, IsUnit y →
       (letI := M.mU; Integrable (fun g => f₀ (actU g (Ax, j y, lam))) M.μU) := by
     intro f₀ hf₀ y hy
-    letI := M.mU
-    haveI := M.bU
-    haveI := M.haarU
+    let := M.mU
+    have := M.bU
+    have := M.haarU
     have ha : IsUnit ((x : A.K) * A.NL y) := x.isUnit.mul (hy.map (Algebra.norm A.K))
     have hD := ((_root_.GlobalTheory.JR.EtInv.invK_regular_iff_isUnit F E A r τ p lam hgen).2 ((x : A.K) * A.NL y)).2.mpr ha
     obtain ⟨Ax', hAx', hinv⟩ := (_root_.GlobalTheory.EtIsom.herm_iff_isom F E A r τ p lam hgen).2 x j hx
@@ -1342,11 +1342,11 @@ namespace GlobalTheory.JR.SizeOne
 
 theorem eta_one' {F : Type} [NormedField F] : eta (1 : F) = 1 := by
   unfold eta
-  rw [if_pos ⟨1, by simp⟩]
+  rw [ite_eq_left ⟨1, by simp⟩]
 
 theorem unitMatch_zero : UnitMatch 0 := by
   intro F E _ _ _ _ _ M a _
-  letI := M.mG; letI := M.mU
+  let := M.mG; let := M.mU
   have hG : M.μG Set.univ = 1 := by
     rw [← M.volG]; congr 1; ext g; simp [glO]
   have hU : M.μU Set.univ = 1 := by

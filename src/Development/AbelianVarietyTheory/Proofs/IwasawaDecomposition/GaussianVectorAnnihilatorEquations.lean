@@ -70,7 +70,7 @@ theorem inner_X_mul_monomial (h : HasCoeff F v E) (l : σ) (α : σ →₀ ℕ) 
     inner ℂ (F.ι (MvPolynomial.X l * MvPolynomial.monomial α 1)) v =
       α.prod (fun _ k => (k.factorial : ℂ)) *
         (((α l : ℂ) + 1) * MvPowerSeries.coeff (α + Finsupp.single l 1) E) := by
-  rw [MvPolynomial.X, MvPolynomial.monomial_mul, one_mul, add_comm, h, prod_factorial_add_single]
+  rw [MvPolynomial.X, MvPolynomial.monomial_mul_monomial, one_mul, add_comm, h, prod_factorial_add_single]
   ring
 
 theorem inner_pderiv_monomial (h : HasCoeff F v E) (m : σ) (α : σ →₀ ℕ) :
@@ -85,7 +85,7 @@ theorem inner_pderiv_monomial (h : HasCoeff F v E) (m : σ) (α : σ →₀ ℕ)
     simp [h0, this]
   · have hle : Finsupp.single m 1 ≤ α := Finsupp.single_le_iff.2 (Nat.pos_of_ne_zero h0)
     obtain ⟨β, rfl⟩ := exists_add_of_le hle
-    rw [if_pos hle, add_tsub_cancel_left, add_comm, prod_factorial_add_single]
+    rw [ite_eq_left hle, add_tsub_cancel_left, add_comm, prod_factorial_add_single]
     simp
     ring
 

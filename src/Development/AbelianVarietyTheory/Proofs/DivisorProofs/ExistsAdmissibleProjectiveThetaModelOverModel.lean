@@ -120,22 +120,22 @@ theorem GlobalTheory.Poinc.exists_admissible_projective_theta_model : ∀ (o Ω 
   intro o Ω _ _ _ _ S ρ hBig M₁ hM₁ K _ Jk _ t ht
   obtain ⟨n, c, hc⟩ := RatModel.exists_isCl_of_isProjOver hM₁
   have hN2 := S.N_ge
-  haveI hN0 : NeZero S.N := ⟨by omega⟩
-  haveI : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by omega)⟩
-  haveI : NeZero ((S.r * S.N) ^ 2) := ⟨pow_ne_zero _ (NeZero.ne _)⟩
-  haveI : Finite (AddSubgroup S.Gam) :=
+  have hN0 : NeZero S.N := ⟨by omega⟩
+  have : NeZero (S.r * S.N) := ⟨Nat.mul_ne_zero (by have := S.r_pos; omega) (by omega)⟩
+  have : NeZero ((S.r * S.N) ^ 2) := ⟨pow_ne_zero _ (NeZero.ne _)⟩
+  have : Finite (AddSubgroup S.Gam) :=
     Finite.of_injective (fun H : AddSubgroup S.Gam => (H : Set S.Gam)) SetLike.coe_injective
-  haveI : ∀ T₀ : AddSubgroup S.Gam, Finite (T₀ →+ ZMod S.N) := fun T₀ =>
+  have : ∀ T₀ : AddSubgroup S.Gam, Finite (T₀ →+ ZMod S.N) := fun T₀ =>
     Finite.of_injective (fun f : T₀ →+ ZMod S.N => (f : T₀ → ZMod S.N)) DFunLike.coe_injective
   let K₁ := {k : K // Nonempty (Jk k)}
   let K₂ := {d : Σ T : AddSubgroup S.Gam, (T →+ ZMod S.N) // S.FF d.1 d.2 ≠ 0}
-  letI : Fintype K₁ := Fintype.ofFinite _
-  letI : Fintype K₂ := Fintype.ofFinite _
+  let : Fintype K₁ := Fintype.ofFinite _
+  let : Fintype K₂ := Fintype.ofFinite _
   let J₂ : K₂ → Type := fun d => S.J × (d.1.1 → ZMod ((S.r * S.N) ^ 2))
   let B := (∀ k : K₁, Jk k.1) × (∀ d : K₂, J₂ d)
   let b : B → Ω := fun p => (∏ k : K₁, t k.1 (p.1 k)) * ∏ d : K₂, S.FF d.1.1 d.1.2 (p.2 d)
-  haveI : Finite B := inferInstance
-  letI : Fintype (Fin (n + 1) × B) := Fintype.ofFinite _
+  have : Finite B := inferInstance
+  let : Fintype (Fin (n + 1) × B) := Fintype.ofFinite _
   obtain ⟨p₀, hp₀⟩ : ∃ p, b p ≠ 0 := by
     choose κ hκ using fun d : K₂ => Function.ne_iff.1 d.2
     exact ⟨(fun k => k.2.some, κ), mul_ne_zero (Finset.prod_ne_zero_iff.2 fun k _ => ht _ _)
@@ -155,8 +155,8 @@ theorem GlobalTheory.Poinc.exists_admissible_projective_theta_model : ∀ (o Ω 
     (b := fun q : ∀ d : K₂, J₂ d => ∏ d : K₂, S.FF d.1.1 d.1.2 (q d)) hb
   obtain ⟨π, hπ⟩ := hc.exists_isHom (M' := Y) (φ := AlgHom.id o Ω) (SegreModel.hasDiv_left hD)
   refine ⟨Y, π, U₀, EE, FinalForm, hπ, ?_, ⟨hO, fun T c' _ h => ?_⟩, hE, fun k hk => ?_⟩
-  · haveI := M₁.sep
-    haveI : IsProper (π ≫ M₁.s) := by
+  · have := M₁.sep
+    have : IsProper (π ≫ M₁.s) := by
       rw [hπ.inducedModelMorphism_comp_structureMap]
       obtain ⟨m, j, hj, hs⟩ := hO.proj
       rw [← hs]

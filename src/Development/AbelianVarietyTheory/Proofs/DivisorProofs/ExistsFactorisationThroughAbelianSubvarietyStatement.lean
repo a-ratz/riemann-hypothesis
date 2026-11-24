@@ -172,14 +172,14 @@ theorem exists_grpObj_of_image :
     ∀ (K : Type) [Field K] (A B : AbVar K) (f : A ⟶ B) (Z : Over (Sp K)) (p : A.X ⟶ Z) (i : Z ⟶ B.X), p ≫ i = f.hom → Surjective p.left → IsClosedImmersion i.left → GeometricallyIntegral Z.hom → ∃ _ : GrpObj Z, IsMonHom p ∧ IsMonHom i := by
   intro K _ A B f Z p i hf hp hi hZ
   have hmono : Mono i := Over.mono_of_mono_left i
-  haveI : IsIntegral Z.left := GeometricallyIntegral.isIntegral_of_subsingleton Z.hom
-  haveI := B.smooth
-  haveI : Smooth B.X.hom := SmoothOfRelativeDimension.smooth B.dim _
-  haveI : LocallyOfFiniteType Z.hom := by rw [← Over.w i]; infer_instance
-  haveI : IsLocallyNoetherian Z.left := LocallyOfFiniteType.isLocallyNoetherian Z.hom
-  haveI : IsReduced (Z ⊗ Z).left := (inferInstance : IsReduced (pullback Z.hom Z.hom))
-  haveI : MorphismProperty.IsStableUnderComposition @Surjective :=
-    ⟨fun f g hf hg => by haveI := hf; haveI := hg; infer_instance⟩
+  have : IsIntegral Z.left := GeometricallyIntegral.isIntegral_of_subsingleton Z.hom
+  have := B.smooth
+  have : Smooth B.X.hom := SmoothOfRelativeDimension.smooth B.dim _
+  have : LocallyOfFiniteType Z.hom := by rw [← Over.w i]; infer_instance
+  have : IsLocallyNoetherian Z.left := LocallyOfFiniteType.isLocallyNoetherian Z.hom
+  have : IsReduced (Z ⊗ Z).left := (inferInstance : IsReduced (pullback Z.hom Z.hom))
+  have : MorphismProperty.IsStableUnderComposition @Surjective :=
+    ⟨fun f g hf hg => by have := hf; have := hg; infer_instance⟩
   have hpp : Surjective (p ⊗ₘ p).left :=
     MorphismProperty.pullbackMap (P := @Surjective) hp hp (Over.w p).symm (Over.w p).symm
   have hinv : ι[A.X] ≫ f.hom = f.hom ≫ ι[B.X] := by
@@ -192,7 +192,7 @@ theorem exists_grpObj_of_image :
     rw [← Category.assoc, hf, Category.assoc, hf, hinv])
   have h1 : (η[A.X] ≫ p) ≫ i = η[B.X] := by rw [Category.assoc, hf, IsMonHom.one_hom]
   have h1a : η[A.X] ≫ p ≫ i = η[B.X] := by rw [← Category.assoc, h1]
-  letI M : MonObj Z :=
+  let M : MonObj Z :=
     { one := η[A.X] ≫ p
       mul := m
       one_mul := by
@@ -212,7 +212,7 @@ theorem exists_grpObj_of_image :
           _ = ((α_ Z Z Z).hom ≫ Z ◁ m ≫ m) ≫ i := by
               simp only [Category.assoc, hm, ← id_tensorHom, tensorHom_comp_tensorHom_assoc, Category.id_comp,
                 Category.comp_id] }
-  letI G : GrpObj Z :=
+  let G : GrpObj Z :=
     { inv := v
       left_inv := by
         rw [← cancel_mono i, Category.assoc]
@@ -269,7 +269,7 @@ namespace GlobalTheory
 
 theorem grpObj_smooth_of_geometricallyReduced : ∀ (K : Type) [Field K] (G : Over (Sp K)) [GrpObj G], LocallyOfFiniteType G.hom → GeometricallyReduced G.hom → Smooth G.hom := by
   intro K _ G _ h1 h2
-  letI : GrpObj (Over.mk G.hom) := ‹GrpObj G›
+  let : GrpObj (Over.mk G.hom) := ‹GrpObj G›
   exact smooth_of_grpObj (f := G.hom)
 
 end GlobalTheory
@@ -295,7 +295,7 @@ theorem exists_factor_abelianSubvariety : ∀ (K : Type) [Field K] (A B : AbVar 
   intro K _ A B f
   obtain ⟨Z, p, i, hpi, hp, hi, hg⟩ := GlobalTheory.T.exists_geometricallyIntegral_image_of_hom K A B f
   obtain ⟨hG, hpm, him⟩ := GlobalTheory.T.exists_subgroupScheme_of_geometricallyIntegral_image K A B f Z p i hpi hp hi hg
-  letI := hG
+  let := hG
   have hmono : Mono i := by
     have : Mono i.left := inferInstance
     exact Over.mono_of_mono_left i

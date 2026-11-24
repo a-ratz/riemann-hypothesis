@@ -75,7 +75,7 @@ variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algeb
 
 private theorem even_im_hermitian_sub {Δ : K} (h : IsLoc O Δ) {p : O} (hp : Irreducible p) {x : K} (hx : x ≠ 0) :
     EvenVal O x ∨ EvenVal O (x * algebraMap O K p) := by
-  haveI := h.frac
+  have := h.frac
   have hp0 : algebraMap O K p ≠ 0 := fun e =>
     hp.ne_zero ((IsFractionRing.injective O K) (e.trans (map_zero _).symm))
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := O) x
@@ -111,8 +111,8 @@ private theorem sq_lift {Δ : K} (h : IsLoc O Δ) (u : Oˣ)
 private theorem nonsq_mul {Δ : K} (h : IsLoc O Δ) (u v : Oˣ) (hu : ¬ IsSquare (u : O))
     (hv : ¬ IsSquare (v : O)) : IsSquare ((u * v : Oˣ) : O) := by
   classical
-  haveI := h.fin
-  haveI := Fintype.ofFinite (IsLocalRing.ResidueField O)
+  have := h.fin
+  have := Fintype.ofFinite (IsLocalRing.ResidueField O)
   apply sq_lift h
   have a := quadraticChar_neg_one_iff_not_isSquare.2 (fun e => hu (sq_lift h u e))
   have b := quadraticChar_neg_one_iff_not_isSquare.2 (fun e => hv (sq_lift h v e))
@@ -126,7 +126,7 @@ private theorem Nm.ofSq (D : K) {u : O} (hu : IsSquare u) : Nm D (algebraMap O K
 
 private theorem key {Δ : K} (h : IsLoc O Δ) {D x y : K} (hD : D ≠ 0) (hx : x ≠ 0) (hy : y ≠ 0)
     (nx : ¬ Nm D x) (ny : ¬ Nm D y) : Nm D (x * y) := by
-  haveI := h.frac
+  have := h.frac
   obtain ⟨p, hp⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hp0 : algebraMap O K p ≠ 0 := fun e =>
     hp.ne_zero ((IsFractionRing.injective O K) (e.trans (map_zero _).symm))
@@ -163,8 +163,8 @@ private theorem key {Δ : K} (h : IsLoc O Δ) {D x y : K} (hD : D ≠ 0) (hx : x
     convert h2 using 1
     ring
 
-private theorem hs_pos {D x : K} (h : Nm D x) : hs D x = 1 := if_pos h
-private theorem hs_neg {D x : K} (h : ¬ Nm D x) : hs D x = -1 := if_neg h
+private theorem hs_pos {D x : K} (h : Nm D x) : hs D x = 1 := ite_eq_left h
+private theorem hs_neg {D x : K} (h : ¬ Nm D x) : hs D x = -1 := ite_eq_right h
 
 end UpperTheory.V.Z.Sym.Loc.admissible_trace_regular
 

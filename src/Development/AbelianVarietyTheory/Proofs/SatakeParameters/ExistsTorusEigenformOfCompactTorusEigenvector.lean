@@ -95,7 +95,7 @@ theorem exists_eigenform {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (hl :
     have h2 : x ∈ fixed ρ' H := fun t => by
       rw [hρ', hxH t t.2, ← Units.smul_def, inv_smul_smul]; simp
     exact hx ((Submodule.disjoint_def.1 hc.disjoint) x h2 h1)
-  haveI := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
+  have := ((hasFiniteLength_iff_wellFounded ρ).1 hl).1
   obtain ⟨M, hM, hTM⟩ := (eq_top_or_exists_le_coatom T).resolve_left hT
   have hi := isIrreducible_subQuot hM.covBy_top
   let p : (⊤ : Subrepresentation ρ).toRepresentation.IntertwiningMap (subQuot ⊤ M) :=
@@ -132,9 +132,9 @@ variable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem secondCountableTopology_units : SecondCountableTopology kˣ := by
   have : SecondCountableTopology k := by
-    letI := IsTopologicalAddGroup.rightUniformSpace k
-    haveI := isUniformAddGroup_of_addCommGroup (G := k)
-    letI : (Valued.v (R := k)).RankOne :=
+    let := IsTopologicalAddGroup.rightUniformSpace k
+    have := isUniformAddGroup_of_addCommGroup (G := k)
+    let : (Valued.v (R := k)).RankOne :=
       { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
         strictMono' := IsRankLeOne.nonempty.some.strictMono.comp MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
     open scoped Valued in
@@ -153,7 +153,7 @@ theorem isSmoothChar_torusChar {n : ℕ} {θ : Fin n → kˣ →* ℂˣ} (hθ : 
 
 theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (ρ : Representation ℂ (Fin n → kˣ) V) (x : V) (θ : Fin n → kˣ →* ℂˣ), IsSmooth ρ → HasFiniteLength ρ → (∀ i, IsSmoothChar (θ i)) → x ≠ 0 → (∀ t ∈ torusO k (Fin n), ρ t x = (torusChar θ t : ℂ) • x) → ∃ (ψ : Fin n → kˣ →* ℂˣ) (l : V →ₗ[ℂ] ℂ), l ≠ 0 ∧ (∀ t y, l (ρ t y) = (torusChar ψ t : ℂ) * l y) ∧ ∀ i (u : kˣ), valuation k (u : k) = 1 → ψ i u = θ i u := by
   intro k _ _ _ _ n V _ _ ρ x θ hρ hl hθ hx hxH
-  haveI := secondCountableTopology_units k
+  have := secondCountableTopology_units k
   obtain ⟨μ, l, hl0, hle, hμ⟩ := exists_eigenform hρ hl (SmGL.UnramFixed.isCompact_torusO k (Fin n))
     (isSmoothChar_torusChar hθ) hx hxH
   refine ⟨fun i => μ.comp (MonoidHom.mulSingle (fun _ => kˣ) i), l, hl0, fun t y => ?_, fun i u hu => ?_⟩

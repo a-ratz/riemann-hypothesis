@@ -72,11 +72,11 @@ theorem UpperTheory.V.LDataCardLeFinrank.levelLeIne :
       KStar.TotallyRealRoots.levelGroup l N (KStar.TotallyRealRoots.fieldSubgroup N K φ.fieldRange ⊓ KStar.TotallyRealRoots.levelInertia l N) ≤
         UpperTheory.V.LDataCardLeFinrank.ineImage F l A := by
   intro F Ω _ _ _ _ _ N _ K _ _ _ φ l _ v A hv hA u hu
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ F Ω
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, inferInstance⟩
   obtain ⟨h, ⟨hF, hI⟩, hh⟩ := KStar.TotallyRealRoots.mem_levelGroup.mp hu
   have hl : A.valuation (l : Ω) < 1 := by
     have := (hA (l : 𝓞 F)).mpr hv
@@ -94,7 +94,7 @@ theorem UpperTheory.V.LDataCardLeFinrank.levelLeIne :
       have e : σ.toRingEquiv ζ = ζ := hfixm ζ hζ
       rw [e, h1, Units.val_one]
       rcases Nat.lt_or_ge 1 (N / l ^ N.factorization l) with hm | hm
-      · haveI : Fact (1 < N / l ^ N.factorization l) := ⟨hm⟩
+      · have : Fact (1 < N / l ^ N.factorization l) := ⟨hm⟩
         rw [ZMod.val_one, pow_one]
       · have hm1 : N / l ^ N.factorization l = 1 := by omega
         rw [hm1, pow_one] at hζ
@@ -172,18 +172,18 @@ private theorem aux (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (
     Function.Surjective (cls ℚ Ω N) ∧
       ∀ (l : ℕ) [Fact l.Prime] (A : ValuationSubring Ω), A.valuation (l : Ω) < 1 →
         KStar.TotallyRealRoots.princ l (N.factorization l) ≤ (Ine (F := ℚ) A ⊓ (cls ℚ Ω N).ker).map (cycZ ℚ Ω l) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   let ι : K →ₐ[ℚ] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra K Ω := ι.toRingHom.toAlgebra
-  haveI : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-  haveI : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) K
-  haveI : IsAlgClosure K Ω := IsAlgClosure.mk ‹_› ‹_›
+  let : Algebra K Ω := ι.toRingHom.toAlgebra
+  have : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+  have : Algebra.IsAlgebraic K Ω := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  have : IsAlgClosure K Ω := IsAlgClosure.mk ‹_› ‹_›
   have hζK := IsCyclotomicExtension.zeta_spec N ℚ K
   set ζ := IsCyclotomicExtension.zeta N ℚ K
   have hζ : IsPrimitiveRoot (algebraMap K Ω ζ) N :=

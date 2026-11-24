@@ -190,7 +190,7 @@ variable {R : Type} [CommRing R] [IsDomain R] {P : Type} [AddCommGroup P] [Modul
 
 theorem finrank_tensor_eq (F F' : Type) [Field F] [Field F'] [Algebra R F] [Algebra R F'] :
     Module.finrank F (F ⊗[R] P) = Module.finrank F' (F' ⊗[R] P) := by
-  haveI : Module.FinitePresentation R P := Module.finitePresentation_of_projective R P
+  have : Module.FinitePresentation R P := Module.finitePresentation_of_projective R P
   have hc : ∀ a b : PrimeSpectrum R, Module.rankAtStalk (R := R) P a = Module.rankAtStalk (R := R) P b :=
     fun a b => Module.isLocallyConstant_rankAtStalk.apply_eq_of_preconnectedSpace a b
   have h1 := Module.rankAtStalk_baseChange (R := R) (M := P) (S := F) ⊥
@@ -237,7 +237,7 @@ theorem pow_val_intCast {G : Type} [CommGroup G] {m : ℕ} [NeZero m] {g : G} (h
 theorem injective_of_isBaseChange {R K L Ω : Type} [CommRing R] [IsDomain R] [Field K] [Algebra R K]
     [IsFractionRing R K] [AddCommGroup L] [Module R L] [AddCommGroup Ω] [Module K Ω] [Module R Ω]
     [IsScalarTower R K Ω] {j : Module.Dual R L →ₗ[R] Ω} (hj : IsBaseChange K j) : Function.Injective j := by
-  haveI := (isLocalizedModule_iff_isBaseChange (nonZeroDivisors R) K j).2 hj
+  have := (isLocalizedModule_iff_isBaseChange (nonZeroDivisors R) K j).2 hj
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro w hw
   obtain ⟨c, hc⟩ := (IsLocalizedModule.eq_zero_iff (nonZeroDivisors R) j).1 hw
@@ -287,11 +287,11 @@ end Group
 theorem reducesTo_of_isHTChartOf : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [IsDomain O] [Algebra O C] (hv : v.Integers O) (hp : v (p : C) < 1) (hO : IsAdicComplete (Ideal.span {(p : O)}) O) (E : Type) [Field E] [NumberField E] (c : E ≃+* E) (R K : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Field K] [Algebra R K] [IsFractionRing R K] [Algebra R O] (n N : ℕ) (Ω : Type) [AddCommGroup Ω] [Module K Ω] [Module R Ω] [IsScalarTower R K Ω] (D : HTChart R K c p n N Ω) (La : Type) [AddCommGroup La] [Module (𝓞 E) La] (EF : La →ₗ[ℤ] La →ₗ[ℤ] ℤ) (u : Fin N → La) (hu : IsPolLattice c p EF u) (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (hG : Smooth G.hom) (x : Spec (CommRingCat.of R) ⟶ S) (Γ₀ : QFGroup R (LevGrp La p n)) (i : Γ₀.G.left ⟶ G.left) (hi : Γ₀.IsTorsionAlong G x (p ^ n) i) (L : Type) [AddCommGroup L] [Module R L] (M : LieModel G x L) (act : 𝓞 E → (G ⟶ G)) (ρ : 𝓞 E →+* Module.End R L) (hρ : M.IsActOf act ρ) (j : Module.Dual R L →ₗ[R] Ω) (hj : IsBaseChange K j) (π : Multiplicative (Fin N → 𝓞 E) →* LevGrp La p n) (ζ₀ : Rˣ) (X : TorsTower p G (Spec.map (CommRingCat.ofHom (algebraMap R O)) ≫ x) La) (F : (X.Γ n).G.left ⟶ Γ₀.G.left) (L' : Type) [AddCommGroup L'] [Module O L'] (M' : LieModel G (Spec.map (CommRingCat.ofHom (algebraMap R O)) ≫ x) L') (ρ' : 𝓞 E →+* Module.End O L') (hρ' : M'.IsActOf act ρ') (ζ : ℕ → Oˣ) (κ : O) (P : HTPoint C O c κ N (C ⊗[ℤ] La) (C ⊗[O] Module.Dual O L')), IsHTChartOf D Γ₀ i M ρ j π ζ₀ → (∀ z, π (Multiplicative.ofAdd z) = lev p n (∑ k, z k • u k)) → (∀ z z', D.e z z' = ((EF (∑ k, z k • u k) (∑ k, z' k • u k) : ℤ) : ZMod (p ^ n))) → (X.Γ n).IsBaseChange Γ₀ (algebraMap R O) F → F ≫ i = X.i n → algebraMap R O (ζ₀ : R) = (ζ n : O) → ζ n ^ p ^ n = 1 → IsPointOf p (X.IsDer M') EF ζ ρ' u P → ∃ io : D.om →ₛₗ[algebraMap R O] (C ⊗[O] Module.Dual O L'), D.ReducesTo (algebraMap R O) P io := by
   intro p _ C _ _ _ v O _ _ _ hv hp hO E _ _ c R K _ _ _ _ _ _ _ n N Ω _ _ _ _ D La _ _ EF u hu S G _ _ hG x Γ₀ i hi
     L _ _ M act ρ hρ j hj π ζ₀ X F L' _ _ M' ρ' hρ' ζ κ P hD hπ he hbc hF hζ hζn hP
-  haveI := hG
-  haveI : NeZero (p ^ n) := ⟨(pow_pos (Fact.out : p.Prime).pos n).ne'⟩
-  haveI : Finite (LevGrp La p n) := finite_lev p hu.finite n
-  letI : Module R L' := Module.compHom L' (algebraMap R O)
-  haveI : IsScalarTower R O L' := ⟨fun r o l => by
+  have := hG
+  have : NeZero (p ^ n) := ⟨(pow_pos (Fact.out : p.Prime).pos n).ne'⟩
+  have : Finite (LevGrp La p n) := finite_lev p hu.finite n
+  let : Module R L' := Module.compHom L' (algebraMap R O)
+  have : IsScalarTower R O L' := ⟨fun r o l => by
     show (r • o) • l = algebraMap R O r • (o • l)
     rw [Algebra.smul_def, mul_smul]⟩
   obtain ⟨β₀, hβ₀, hβs, -⟩ := PositivityTheory.HtPt.Htat.lie_bc S G R O x L L' M M'
@@ -331,8 +331,8 @@ theorem reducesTo_of_isHTChartOf : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Fiel
     · rw [LinearMap.range_eq_map, ← hs, Submodule.map_span, Submodule.span_le]
       rintro _ ⟨_, ⟨w, rfl⟩, rfl⟩
       exact Submodule.subset_span ⟨eq w, hioe w⟩
-  · letI : Algebra R C := ((algebraMap O C).comp (algebraMap R O)).toAlgebra
-    haveI : IsScalarTower R O C := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  · let : Algebra R C := ((algebraMap O C).comp (algebraMap R O)).toAlgebra
+    have : IsScalarTower R O C := IsScalarTower.of_algebraMap_eq fun _ => rfl
     exact finrank_chain hj hDb
   · intro a y
     obtain ⟨w, rfl⟩ := eq.surjective y
@@ -448,7 +448,7 @@ theorem finrank_eq_rankAtStalk {A Q : Type} [CommRing A] [IsDomain A] [AddCommGr
     [Module.Finite A Q] [Module.Projective A Q] (P : PrimeSpectrum A) :
     Module.finrank A Q = Module.rankAtStalk Q P := by
   have hbc := TensorProduct.isBaseChange A Q (FractionRing A)
-  haveI := Module.finitePresentation_of_projective A Q
+  have := Module.finitePresentation_of_projective A Q
   rw [LieRank.finrank_eq_of_isBaseChange_fractionRing _ hbc,
     LieRank.finrank_of_isBaseChange _ hbc (IsLocalRing.closedPoint (FractionRing A))]
   exact (Module.isLocallyConstant_rankAtStalk (R := A) (M := Q)).apply_eq_of_preconnectedSpace _ _
@@ -459,8 +459,8 @@ theorem finrank_lie_eq (S : Scheme.{0}) (G : Over S) [GrpObj G] [Smooth G.hom]
     (M : LieModel G x L) (M' : LieModel G (spMap (algebraMap R O) ≫ x) L') :
     Module.finrank O L' = Module.finrank R L := by
   obtain ⟨hf, hp⟩ := PositivityTheory.HtPt.Htat.lie_fin S G R x L M
-  letI : Module R L' := Module.compHom L' (algebraMap R O)
-  haveI : IsScalarTower R O L' := ⟨fun a b c => by
+  let : Module R L' := Module.compHom L' (algebraMap R O)
+  have : IsScalarTower R O L' := ⟨fun a b c => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
   obtain ⟨j, hj⟩ := LieRank.exists_lift G x M M'
@@ -503,7 +503,7 @@ theorem reduces_at_point (hPt : PointHT) (E : Type) [Field E] [NumberField E] [I
       (io : Dc.om →ₛₗ[algebraMap R O] (C ⊗[O] Module.Dual O L')), Dc.ReducesTo (algebraMap R O) P io := by
   subst hz
   have hppos : ∀ m, 0 < p ^ m := fun m => pow_pos (Fact.out : p.Prime).pos m
-  haveI : CharZero O := charZero_of_injective_ringHom hinj
+  have : CharZero O := charZero_of_injective_ringHom hinj
   obtain ⟨X, hX, hXi⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.tower_exists E H D S t p O _ I
   have hroot : ∀ m, ∃ w : Oˣ, algebraMap O (FractionRing O) w = (I.ζ (p ^ m) : (FractionRing O)ˣ) := fun m =>
     exists_unit_of_pow _ (p ^ m) (hppos m) (I.ζ_prim _ (hppos m)).pow_eq_one
@@ -535,8 +535,8 @@ theorem reduces_at_point (hPt : PointHT) (E : Type) [Field E] [NumberField E] [I
     have e2 : gb = I.ev (p ^ m) b := Over.OverMorphism.ext (hgb.trans (hX m b))
     rw [e1, e2, map_zpow, hU]
     exact I.isom (p ^ m) (hppos m) a b
-  haveI : Module.Finite ℤ D.La := hu.finite
-  haveI := finite_levGrp D.La p n (Fact.out : p.Prime).pos
+  have : Module.Finite ℤ D.La := hu.finite
+  have := finite_levGrp D.La p n (Fact.out : p.Prime).pos
   have hSep : IsSeparated t.G.hom := t.semi.separated
   obtain ⟨F, hF1, hF2⟩ := PositivityTheory.HtPt.Htat.torsion_bc R (LevGrp D.La p n) Γ₀ S t.G x (p ^ n) i hi hSep O (algebraMap R O)
     (X.Γ n) (X.i n) (X.tors n) (FractionRing R) (algebraMap R _) (RingHom.id _) f
@@ -552,7 +552,7 @@ theorem reduces_at_point (hPt : PointHT) (E : Type) [Field E] [NumberField E] [I
   obtain ⟨L', iA, iM, ⟨M'⟩⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists S t.G O (spMap (algebraMap R O) ≫ x)
   obtain ⟨ρ', hρ', -⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists_unique_act S t.G O (spMap (algebraMap R O) ≫ x) L' M' (𝓞 E)
     t.act.act t.act.hom t.act.one t.act.mul t.act.add
-  haveI hsm : Smooth t.G.hom := t.semi.smooth
+  have hsm : Smooth t.G.hom := t.semi.smooth
   have hrank' : 2 * Module.finrank O L' = Module.finrank ℤ D.La := by
     rw [finrank_lie_eq S t.G R O x L L' M M']; exact hrank
   obtain ⟨hκ1, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.isHTConst_of_isCp C v O hv p R (algebraMap R O) κ hp hκ

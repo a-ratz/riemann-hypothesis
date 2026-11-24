@@ -178,8 +178,8 @@ theorem exists_form_basis {L : Type} [Field L] (y : (Σ k, ι k) → Ω) (φ : L
     ∃ (j : ℕ) (w : Fin d → MRing ι), 1 ≤ j ∧ (∀ i, IsMultiHomog (w i) (fun _ => j)) ∧
       ∀ a : Fin d → L, ∑ i, φ (a i) * aeval y (w i) = 0 → a = 0 := by
   classical
-  letI := φ.toAlgebra
-  haveI : Module.Finite L Ω := Module.finite_of_finrank_pos (by omega)
+  let := φ.toAlgebra
+  have : Module.Finite L Ω := Module.finite_of_finrank_pos (by omega)
   set r : (Σ k, ι k) → Ω := fun p => y p * (y ⟨p.1, c p.1⟩)⁻¹ with hr
   let B : Subalgebra L Ω := Algebra.adjoin L (Set.range r)
   have hrB : ∀ g : MRing ι, aeval r g ∈ B := by
@@ -282,8 +282,8 @@ theorem eq_zero_of_trace {L : Type} [Field L] [CharZero L] (φ : L →+* Ω) (d 
     (hd : letI := φ.toAlgebra; Module.finrank L Ω = d) (hd0 : 0 < d) (f : Fin d → Ω)
     (hf : ∀ a : Fin d → L, ∑ i, φ (a i) * f i = 0 → a = 0) (x : Ω)
     (hx : letI := φ.toAlgebra; ∀ i, Algebra.trace L Ω (x * f i) = 0) : x = 0 := by
-  letI := φ.toAlgebra
-  haveI : Module.Finite L Ω := Module.finite_of_finrank_pos (by omega)
+  let := φ.toAlgebra
+  have : Module.Finite L Ω := Module.finite_of_finrank_pos (by omega)
   have hli : LinearIndependent L f := by
     rw [Fintype.linearIndependent_iff]
     intro a ha i
@@ -343,8 +343,8 @@ theorem exists_small_basis : GlobalTheory.CompanionTheory.Ar.Top.Given → ∀ (
   have hq0 : (0 : ℝ) < (q n : ℝ) ^ Top.dimFl (CMType H) (Dw.p + Dw.q) := pow_pos (by exact_mod_cast (hq n).1) _
   have hgp : 0 < geomDeg (mCoordIdeal (T.M B b).y) M (Top.dimFl (CMType H) (Dw.p + Dw.q)) := by
     exact (div_pos_iff_of_pos_right hq0).1 hn2
-  haveI : CharZero (T.M B b).Ω := charZero_of_injective_ringHom (o.toTowerOrigin.Or B b).𝔐.cst.injective
-  haveI : CharZero (Om Z) := RingHom.charZero Rd.φ
+  have : CharZero (T.M B b).Ω := charZero_of_injective_ringHom (o.toTowerOrigin.Or B b).𝔐.cst.injective
+  have : CharZero (Om Z) := RingHom.charZero Rd.φ
   obtain ⟨k, hk1, e, he, he0⟩ := exists_section_of_nef hIn (T.M B b).y _ M (T.M B b).arith (T.M B b).birational hn1 hgp
   have hrel := GlobalTheory.CompanionTheory.Ar.PB.NefPolProof.exists_ne_zero_of_relevant (T.M B b).y (T.M B b).arith.2.1.2.2
   choose cc hcc using hrel
@@ -370,7 +370,7 @@ theorem exists_small_basis : GlobalTheory.CompanionTheory.Ar.Top.Given → ∀ (
     have hpos : 0 < M.h z := M.pos z hz.1
     have hsum : Cb i ≤ ∑ i, Cb i := Finset.single_le_sum (fun i _ => hCb0 i) (Finset.mem_univ i)
     have hexp : Real.exp (Cb i) ≤ (Real.exp ((∑ i, Cb i) / τ)) ^ τ := by
-      rw [← Real.exp_nat_mul, mul_div_cancel₀ _ hτr.ne']
+      rw [← Real.exp_natCast_mul, mul_div_cancel₀ _ hτr.ne']
       exact Real.exp_le_exp.2 hsum
     show _ ≤ _ * (Real.exp ((q n : ℝ) * t) * M.h z) ^ τ
     rw [hqt, mul_pow]

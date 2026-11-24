@@ -99,7 +99,7 @@ theorem exists_pow_rel (K : Type) [Field K] [NumberField K] (x : KeyIn K) :
   obtain ⟨N, hN, κ, hH, hF, hU, -⟩ := GlobalTheory.keyFormulaPow_and_keyDegree.1
   refine ⟨N x.P.g, κ K x, hN _, (κ K x).ne_zero, ?_⟩
   intro R K' _ _ _ _ _ _ f x' a d hPB hInt
-  haveI : CharZero K' := (RingHom.charZero_iff f.injective).1 inferInstance
+  have : CharZero K' := (RingHom.charZero_iff f.injective).1 inferInstance
   obtain ⟨th', hth', v', hv', M, xR, hth'eq, hv'eq, hMdet, hPBR⟩ := hInt
   have hFx := hF K K' f x x' hPB
   have hHx := hH K' x'.P x'.g_pos x'.rig x'.rig_gen x'.th x'.th_ne x'.v x'.basis th' hth' v' hv' a M hth'eq hv'eq

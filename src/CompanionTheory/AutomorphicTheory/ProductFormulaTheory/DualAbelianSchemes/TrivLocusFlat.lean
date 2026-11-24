@@ -129,8 +129,8 @@ theorem h1Le : CompanionTheory.ObstructionTrivialLocus.H1StructureDimLe := by
   have hHopfLe := GlobalTheory.CompanionTheory.HopfLe.hopfLeSt hCx hDict hLow
   classical
   intro k _ A _ g hA hsm
-  haveI : AlgebraicGeometry.IsProper A.hom := ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme.proper (self := hA)
-  haveI : CompactSpace A.left := AlgebraicGeometry.QuasiCompact.compactSpace_of_compactSpace A.hom
+  have : AlgebraicGeometry.IsProper A.hom := ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme.proper (self := hA)
+  have : CompactSpace A.left := AlgebraicGeometry.QuasiCompact.compactSpace_of_compactSpace A.hom
   obtain ⟨P, _, _, ⟨S⟩⟩ := GlobalTheory.CompanionTheory.Hodge.WedgeField.exists_finite_sys A.hom
   have hfield : IsField k := Field.toIsField k
   have hq : MainStatements.Hodge.AllQIso (MainStatements.Hodge.resSys A.hom S) := hDesc k A.left A.hom inferInstance P S
@@ -148,11 +148,11 @@ theorem h1Le : CompanionTheory.ObstructionTrivialLocus.H1StructureDimLe := by
   let b := Module.Basis.ofVectorSpace k (GlobalTheory.CechDR.HO1 A.hom)
   have hemb : ∀ e : Fin (g + 1) ↪ Module.Basis.ofVectorSpaceIndex k (GlobalTheory.CechDR.HO1 A.hom), False :=
     fun e => hn _ (b.linearIndependent.comp e e.injective)
-  haveI : Finite (Module.Basis.ofVectorSpaceIndex k (GlobalTheory.CechDR.HO1 A.hom)) := by
+  have : Finite (Module.Basis.ofVectorSpaceIndex k (GlobalTheory.CechDR.HO1 A.hom)) := by
     by_contra hinf
     rw [not_finite_iff_infinite] at hinf
     exact hemb (Fin.valEmbedding.trans (Infinite.natEmbedding _))
-  haveI hfin : Module.Finite k (GlobalTheory.CechDR.HO1 A.hom) := Module.Finite.of_basis b
+  have hfin : Module.Finite k (GlobalTheory.CechDR.HO1 A.hom) := Module.Finite.of_basis b
   refine ⟨hfin, ?_⟩
   rw [Module.finrank_eq_nat_card_basis b]
   by_contra hlt
@@ -248,9 +248,9 @@ open GlobalTheory.TrivRep in
 theorem exists_ideal_locTriv_noeth : ∀ (R : Type) [CommRing R] [IsNoetherianRing R] (B : Over (Spec (CommRingCat.of R))) [GrpObj B], IsAbelianScheme B → ∀ F : LB B.left, F.IsLB → ∃ I : Ideal R, ∀ (R' : Type) [CommRing R'] (g : R →+* R') (X' : Scheme.{0}) (π : X' ⟶ B.left) (f' : X' ⟶ Spec (CommRingCat.of R')), IsPullback π f' B.hom (Spec.map (CommRingCat.ofHom g)) → ((∀ p : Spec (CommRingCat.of R'), ∃ U : (Spec (CommRingCat.of R')).Opens, p ∈ U ∧ Triv ((F.pull π).pull (f' ⁻¹ᵁ U).ι)) ↔ I ≤ RingHom.ker g) := by
   intro R _ _ B _ hB F hF
   have hG : GlobalFnsSt := GlobalTheory.globalFns_holds
-  haveI := hB.proper
-  haveI := hB.geomConnected
-  haveI : Smooth B.hom := hB.smooth
+  have := hB.proper
+  have := hB.geomConnected
+  have : Smooth B.hom := hB.smooth
   have hP : Nonempty (Perf B.hom F) := GlobalTheory.ProperFinite.nonempty_perf_of_isProper B.hom hF
   have hFInv : (pw F (-1)).IsLB := by
     refine ⟨hF.cover, ?_, ?_⟩
@@ -281,11 +281,11 @@ theorem exists_ideal_locTriv_noeth : ∀ (R : Type) [CommRing R] [IsNoetherianRi
       · rcases subsingleton_or_nontrivial S with _ | _
         · exact fun a _ => Subsingleton.elim _ _
         obtain ⟨m, hm⟩ := Ideal.exists_maximal S
-        letI := Ideal.Quotient.field m
+        let := Ideal.Quotient.field m
         let g' := (Ideal.Quotient.mk m).comp g
         refine (hU (a := ⟨RingHom.ker g', RingHom.ker_isPrime g'⟩) (hu.map (Ideal.Quotient.mk m)).ne_zero ?_).elim
         exact ⟨S ⧸ m, inferInstance, g', _, _, _, rfl, IsPullback.of_hasPullback _ _, ht.comp B.hom F S g _ _⟩
-      · haveI : Subsingleton S := subsingleton_of_zero_eq_one
+      · have : Subsingleton S := subsingleton_of_zero_eq_one
           ((h (Submodule.mem_top (x := 1))).symm.trans (map_one g))
         exact GlobalTheory.TrivRep.trivOn_of_subsingleton B.hom F S g)
   refine ⟨I, fun S _ g X' π f' h => ?_⟩
@@ -322,7 +322,7 @@ theorem exists_closed_locTriv_noeth : ∀ (S : Scheme.{0}) (A Y : Over S) [GrpOb
     (GlobalTheory.TrivSubscheme.LocTrivOver (snd A Y).left F)
     GlobalTheory.TrivSubscheme.LocTrivOver.comp GlobalTheory.TrivSubscheme.locTrivOver_of_affine
     (fun U => by
-      haveI : IsNoetherianRing Γ(Y.left, U) := IsLocallyNoetherian.component_noetherian U
+      have : IsNoetherianRing Γ(Y.left, U) := IsLocallyNoetherian.component_noetherian U
       let t : Spec (CommRingCat.of Γ(Y.left, U)) ⟶ S := U.2.fromSpec ≫ Y.hom
       have h₁ : IsPullback (pullback.fst A.hom t) (pullback.snd A.hom t) A.hom (U.2.fromSpec ≫ Y.hom) :=
         IsPullback.of_hasPullback _ _
@@ -418,10 +418,10 @@ theorem isRegular_fibre (k E : Type) [Field k] [CommRing E] [Algebra k E] (g : �
     (hA : IsArtinianRing (E ⧸ Ideal.span (Set.range f))) (Q : Ideal E) [Q.IsPrime]
     (hQ : Ideal.span (Set.range f) ≤ Q) :
     IsRegular (Localization.AtPrime Q) (List.ofFn fun i => algebraMap E (Localization.AtPrime Q) (f i)) := by
-  haveI : IsRegularRing k := GroundTheory.Arith.SchemeCoh.isRegularRing_of_smooth_field k k
-  haveI : Algebra.IsStandardSmooth k E :=
+  have : IsRegularRing k := GroundTheory.Arith.SchemeCoh.isRegularRing_of_smooth_field k k
+  have : Algebra.IsStandardSmooth k E :=
     Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth g
-  haveI hreg : IsRegularLocalRing (Localization.AtPrime Q) :=
+  have hreg : IsRegularLocalRing (Localization.AtPrime Q) :=
     GroundTheory.Arith.SchemeCoh.isRegularLocalRing_localization_of_smooth k E Q
   set I : Ideal E := Ideal.span (Set.range f) with hI
   have hmaxOf : ∀ P : Ideal E, P.IsPrime → I ≤ P → P.IsMaximal := by
@@ -429,18 +429,18 @@ theorem isRegular_fibre (k E : Type) [Field k] [CommRing E] [Algebra k E] (g : �
     have hker : RingHom.ker (Ideal.Quotient.mk I) ≤ P := by
       rw [Ideal.mk_ker]
       exact hIP
-    haveI : (P.map (Ideal.Quotient.mk I)).IsPrime :=
+    have : (P.map (Ideal.Quotient.mk I)).IsPrime :=
       Ideal.map_isPrime_of_surjective Ideal.Quotient.mk_surjective hker
-    haveI : (P.map (Ideal.Quotient.mk I)).IsMaximal := IsArtinianRing.isMaximal_of_isPrime _
+    have : (P.map (Ideal.Quotient.mk I)).IsMaximal := IsArtinianRing.isMaximal_of_isPrime _
     have hc : (P.map (Ideal.Quotient.mk I)).comap (Ideal.Quotient.mk I) = P := by
       rw [Ideal.comap_map_of_surjective _ Ideal.Quotient.mk_surjective, ← RingHom.ker_eq_comap_bot,
         sup_eq_left.mpr hker]
     rw [← hc]
     exact Ideal.comap_isMaximal_of_surjective _ Ideal.Quotient.mk_surjective
-  haveI hQmax : Q.IsMaximal := hmaxOf Q inferInstance hQ
+  have hQmax : Q.IsMaximal := hmaxOf Q inferInstance hQ
   obtain ⟨φ, hφ⟩ := Algebra.IsStandardSmoothOfRelativeDimension.exists_etale_mvPolynomial g k E
-  letI := φ.toAlgebra
-  haveI : Algebra.Etale (MvPolynomial (Fin g) k) E := hφ
+  let := φ.toAlgebra
+  have : Algebra.Etale (MvPolynomial (Fin g) k) E := hφ
   have hht := GlobalTheory.StabFlat.height_of_etale_mvPolynomial k E g Q
   set ys := List.ofFn fun i => algebraMap E (Localization.AtPrime Q) (f i) with hys
   have hofList : Ideal.ofList ys = I.map (algebraMap E (Localization.AtPrime Q)) := by
@@ -531,8 +531,8 @@ theorem exists_localization_fibre (R C : Type) [CommRing R] [CommRing C] [Algebr
     intro r hr
     rw [Ideal.mem_comap, hRB]
     exact (IsLocalization.AtPrime.to_map_mem_maximal_iff B q _).mpr hr
-  haveI : Nontrivial (B ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr (fun h => (IsLocalRing.maximalIdeal.isMaximal B).ne_top (top_le_iff.mp (h ▸ hJ)))
-  haveI : IsLocalRing (B ⧸ J) := IsLocalRing.of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
+  have : Nontrivial (B ⧸ J) := Ideal.Quotient.nontrivial_iff.mpr (fun h => (IsLocalRing.maximalIdeal.isMaximal B).ne_top (top_le_iff.mp (h ▸ hJ)))
+  have : IsLocalRing (B ⧸ J) := IsLocalRing.of_surjective' (Ideal.Quotient.mk J) Ideal.Quotient.mk_surjective
   let cA : C →ₐ[R] B ⧸ J := (Ideal.Quotient.mkₐ R J).comp (IsScalarTower.toAlgHom R C B)
   have hcA : ∀ c, cA c = Ideal.Quotient.mk J (algebraMap C B c) := fun c => rfl
   have h1 : p ≤ RingHom.ker (algebraMap R (B ⧸ J)) := fun r hr =>
@@ -547,9 +547,9 @@ theorem exists_localization_fibre (R C : Type) [CommRing R] [CommRing C] [Algebr
   let θ : p.Fiber C →ₐ[R] B ⧸ J := Algebra.TensorProduct.productMap hA cA
   have hθ : ∀ c, θ ((1 : p.ResidueField) ⊗ₜ[R] c) = cA c := fun c => by
     simp [θ]
-  letI : Algebra (p.Fiber C) (B ⧸ J) := θ.toRingHom.toAlgebra
+  let : Algebra (p.Fiber C) (B ⧸ J) := θ.toRingHom.toAlgebra
   let Q : Ideal (p.Fiber C) := (maximalIdeal (B ⧸ J)).comap (algebraMap (p.Fiber C) (B ⧸ J))
-  haveI hQ : Q.IsPrime := inferInstance
+  have hQ : Q.IsPrime := inferInstance
   have hunit : ∀ t : C, t ∉ q → ((1 : p.ResidueField) ⊗ₜ[R] t : p.Fiber C) ∈ Q.primeCompl := by
     intro t ht h
     have h4 : θ ((1 : p.ResidueField) ⊗ₜ[R] t) ∈ maximalIdeal (B ⧸ J) := h
@@ -655,7 +655,7 @@ theorem flat_localization (R C : Type) [CommRing R] [IsNoetherianRing R] [CommRi
   have : Algebra.IsStandardSmooth R C := Algebra.IsStandardSmoothOfRelativeDimension.isStandardSmooth g
   by_cases hq : Ideal.span (Set.range f) ≤ q
   swap
-  · obtain ⟨x, hx, hxq⟩ := SetLike.not_le_iff_exists.mp hq
+  · obtain ⟨x, hx, hxq⟩ := IsConcreteLE.not_le_iff_exists.mp hq
     have hu : IsUnit (algebraMap C (Localization.AtPrime q) x) :=
       IsLocalization.map_units (M := q.primeCompl) _ ⟨x, hxq⟩
     have htop := Ideal.eq_top_of_isUnit_mem _ (Ideal.mem_map_of_mem (algebraMap C (Localization.AtPrime q)) hx) hu
@@ -668,7 +668,7 @@ theorem flat_localization (R C : Type) [CommRing R] [IsNoetherianRing R] [CommRi
   let p := q.under R
   let B := Localization.AtPrime q
   let A := Localization.AtPrime p
-  letI : Algebra A B := Localization.AtPrime.algebraOfLiesOver p q
+  let : Algebra A B := Localization.AtPrime.algebraOfLiesOver p q
   have : IsNoetherianRing C := Algebra.FiniteType.isNoetherianRing R C
   have : IsNoetherianRing A := IsLocalization.isNoetherianRing p.primeCompl A inferInstance
   have : IsNoetherianRing B := IsLocalization.isNoetherianRing q.primeCompl B inferInstance
@@ -695,8 +695,8 @@ theorem flat_localization (R C : Type) [CommRing R] [IsNoetherianRing R] [CommRi
         rintro _ ⟨i, rfl⟩
         exact hcQ _ (hq (Ideal.subset_span ⟨i, rfl⟩)))
     rw [← isWeaklyRegular_map_algebraMap_iff (B ⧸ p.map (algebraMap R B))]
-    haveI i1 := RingHomInvPair.of_ringEquiv e
-    haveI i2 := RingHomInvPair.symm (e : Localization.AtPrime Q →+* (B ⧸ p.map (algebraMap R B)))
+    have i1 := RingHomInvPair.of_ringEquiv e
+    have i2 := RingHomInvPair.symm (e : Localization.AtPrime Q →+* (B ⧸ p.map (algebraMap R B)))
       (e.symm : (B ⧸ p.map (algebraMap R B)) →+* Localization.AtPrime Q)
     have h2 := (LinearEquiv.isWeaklyRegular_congr' e.toSemilinearEquiv _).mp hreg.1
     convert h2 using 1
@@ -780,15 +780,15 @@ theorem exists_level [IsNoetherianRing R] (hA : IsAbelianScheme A) {C : Type} [C
       (hN : N.IsLB) (w : spMap i ≫ tD = t), IsNoetherianRing D ∧
       cls M hM = evc hN (fst A _) (snd A _ ≫ (Over.homMk (spMap i) w : Over.mk t ⟶ Over.mk tD)) := by
   obtain ⟨ψ, rfl⟩ : ∃ ψ : R →+* C, spMap ψ = t := ⟨(Spec.preimage t).hom, by simp [spMap]⟩
-  letI := ψ.toAlgebra
-  haveI := hA.proper
+  let := ψ.toAlgebra
+  have := hA.proper
   have H : IsPullback (fst A (Over.mk (spMap ψ))).left (snd A (Over.mk (spMap ψ))).left A.hom
       (spMap (algebraMap R C)) := IsPullback.of_hasPullback _ _
   obtain ⟨D, hD, N, hN, h⟩ := GlobalTheory.CompanionTheory.Ar.Approx.lb_descends_fg R C A.left _ A.hom _ _ inferInstance inferInstance H M hM
   have w : spMap D.val.toRingHom ≫ spMap (algebraMap R D) = spMap ψ := by
     rw [spMap, spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
     rfl
-  haveI : Algebra.FiniteType R D := (Subalgebra.fg_iff_finiteType D).1 hD
+  have : Algebra.FiniteType R D := (Subalgebra.fg_iff_finiteType D).1 hD
   refine ⟨D, inferInstance, D.val.toRingHom, spMap (algebraMap R D), N, hN, w,
     Algebra.FiniteType.isNoetherianRing R D, ?_⟩
   refine (cls_eq_iff hM (pull_isLB hN _)).2 (h _ ?_ ?_)
@@ -834,8 +834,8 @@ theorem exists_additive_level (hA : IsAbelianScheme A) {C D : Type} [CommRing C]
     ∃ (D₁ : Type) (_ : CommRing D₁) (j : D →+* D₁) (i₁ : D₁ →+* C), IsNoetherianRing D₁ ∧ i₁.comp j = i ∧
       IsAdditive (ev N (fst A (Over.mk (spMap j ≫ tD)))
         (snd A _ ≫ (Over.homMk (spMap j) rfl : Over.mk (spMap j ≫ tD) ⟶ Over.mk tD))) := by
-  letI := i.toAlgebra
-  haveI := hA.proper
+  let := i.toAlgebra
+  have := hA.proper
   let T₀ : Over (Sp R) := Over.mk tD
   let u : Over.mk (spMap i ≫ tD) ⟶ T₀ := Over.homMk (spMap i) rfl
   let τ : A ⊗ (A ⊗ T₀) ⟶ T₀ := snd A _ ≫ snd A T₀
@@ -844,11 +844,11 @@ theorem exists_additive_level (hA : IsAbelianScheme A) {C D : Type} [CommRing C]
     inferInstanceAs (QuasiCompact (pullback.snd A.hom T.hom))
   have q₂ : ∀ T : Over (Sp R), QuasiSeparated (snd A T).left := fun T ↦
     inferInstanceAs (QuasiSeparated (pullback.snd A.hom T.hom))
-  haveI : QuasiCompact pB := by
+  have : QuasiCompact pB := by
     have := q₁ T₀
     have := q₁ (A ⊗ T₀)
     exact inferInstanceAs (QuasiCompact ((snd A (A ⊗ T₀)).left ≫ (snd A T₀).left))
-  haveI : QuasiSeparated pB := by
+  have : QuasiSeparated pB := by
     have := q₂ T₀
     have := q₂ (A ⊗ T₀)
     exact inferInstanceAs (QuasiSeparated ((snd A (A ⊗ T₀)).left ≫ (snd A T₀).left))
@@ -871,7 +871,7 @@ theorem exists_additive_level (hA : IsAbelianScheme A) {C D : Type} [CommRing C]
   obtain ⟨s, H₁⟩ := GlobalTheory.exists_finset_lbIso_adjoin pB _ _ hE hF H
   let D₁ := Algebra.adjoin D (s : Set C)
   let j : D →+* D₁ := algebraMap D D₁
-  haveI : Algebra.FiniteType D D₁ := (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_adjoin_finset s)
+  have : Algebra.FiniteType D D₁ := (Subalgebra.fg_iff_finiteType _).1 (Subalgebra.fg_adjoin_finset s)
   refine ⟨D₁, inferInstance, j, D₁.val.toRingHom, Algebra.FiniteType.isNoetherianRing D _,
     RingHom.ext fun x ↦ rfl, ?_⟩
   let f₁ := pullback.fst pB (spMap (algebraMap D D₁))
@@ -992,7 +992,7 @@ theorem exists_point (hA : IsAbelianScheme A) {P : LB (A ⊗ B).left} (hP : P.Is
   let j : ∀ i, Ti i ⟶ T := fun i ↦ Over.homMk (𝒰.f i) rfl
   have hN : ∀ i, (ev M (fst A (Ti i)) (snd A _ ≫ j i)).IsLB := fun i ↦ pull_isLB hM _
   have loc : ∀ i, ∃ x : Ti i ⟶ B, cls _ (hN i) = evc hP (fst A _) (snd A _ ≫ x) := fun i ↦ by
-    haveI : IsAffine (Ti i).left := inferInstanceAs (IsAffine (𝒰.X i))
+    have : IsAffine (Ti i).left := inferInstanceAs (IsAffine (𝒰.X i))
     exact exists_point_of_isAffine hA hP U (hN i) (isAdditive_ev hM hadd _)
   choose x hx using loc
   have val : ∀ i {Y : Over (Sp R)} (a : Y ⟶ A) (t : Y ⟶ Ti i), evc hM a (t ≫ j i) = evc hP a (t ≫ x i) :=
@@ -1415,9 +1415,9 @@ theorem flat_piece (hCI : CIFlat) {S Y Z : Scheme.{0}} (s : Y ⟶ S) (i : Z ⟶ 
     (hs : RingHom.IsStandardSmoothOfRelativeDimension g (s.appLE U V e).hom)
     (f : Fin g → Γ(Y, V)) (hf : Ideal.span (Set.range f) = RingHom.ker (i.app V).hom) :
     ((i ≫ s).appLE U (i ⁻¹ᵁ V) e').hom.Flat := by
-  letI : Algebra Γ(S, U) Γ(Y, V) := (s.appLE U V e).hom.toAlgebra
+  let : Algebra Γ(S, U) Γ(Y, V) := (s.appLE U V e).hom.toAlgebra
   have hs' : Algebra.IsStandardSmoothOfRelativeDimension g Γ(S, U) Γ(Y, V) := hs.toAlgebra
-  letI : Algebra Γ(S, U) Γ(Z, i ⁻¹ᵁ V) := ((i ≫ s).appLE U (i ⁻¹ᵁ V) e').hom.toAlgebra
+  let : Algebra Γ(S, U) Γ(Z, i ⁻¹ᵁ V) := ((i ≫ s).appLE U (i ⁻¹ᵁ V) e').hom.toAlgebra
   have hcomp : (i ≫ s).appLE U (i ⁻¹ᵁ V) e' = s.appLE U V e ≫ i.app V := by
     rw [Scheme.Hom.app_eq_appLE, Scheme.Hom.appLE_comp_appLE]
   let π : Γ(Y, V) →ₐ[Γ(S, U)] Γ(Z, i ⁻¹ᵁ V) :=
@@ -1472,18 +1472,18 @@ theorem flat_of_gens (hCI : CIFlat) {S Y Z : Scheme.{0}} [IsLocallyNoetherian S]
       RingHom.Flat.holdsForLocalizationAway).1).2 fun z => ?_
   obtain ⟨U, hU, V, hV, hy, e, hs⟩ :=
     SmoothOfRelativeDimension.exists_isStandardSmoothOfRelativeDimension (n := g) (f := s) (i z)
-  haveI : IsNoetherianRing Γ(S, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  haveI : IsNoetherianRing Γ(Y, V) := by
-    letI := (s.appLE U V e).hom.toAlgebra
+  have : IsNoetherianRing Γ(S, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have : IsNoetherianRing Γ(Y, V) := by
+    let := (s.appLE U V e).hom.toAlgebra
     have h1 : Algebra.IsStandardSmoothOfRelativeDimension g Γ(S, U) Γ(Y, V) := hs.toAlgebra
     have h2 : Algebra.IsStandardSmooth Γ(S, U) Γ(Y, V) := h1.isStandardSmooth
     have h3 : Algebra.FiniteType Γ(S, U) Γ(Y, V) := inferInstance
     exact Algebra.FiniteType.isNoetherianRing Γ(S, U) _
   let P := hV.primeIdealOf ⟨i z, hy⟩
   let p := P.asIdeal
-  haveI : p.IsPrime := P.isPrime
+  have : p.IsPrime := P.isPrime
   have hI : RingHom.ker (i.app V).hom ≤ p := ker_le_prime i hV z hy
-  haveI : IsNoetherianRing (Localization.AtPrime p) := IsLocalization.isNoetherianRing p.primeCompl _ ‹_›
+  have : IsNoetherianRing (Localization.AtPrime p) := IsLocalization.isNoetherianRing p.primeCompl _ ‹_›
   have hne : (RingHom.ker (i.app V).hom).map (algebraMap Γ(Y, V) (Localization.AtPrime p)) ≠ ⊤ := by
     intro ht
     have hle : (RingHom.ker (i.app V).hom).map (algebraMap Γ(Y, V) (Localization.AtPrime p)) ≤
@@ -1494,7 +1494,7 @@ theorem flat_of_gens (hCI : CIFlat) {S Y Z : Scheme.{0}} [IsLocallyNoetherian S]
     exact (IsLocalRing.maximalIdeal.isMaximal _).ne_top (top_le_iff.1 hle)
   obtain ⟨f, hf⟩ := H V hV (Localization.AtPrime p) (algebraMap _ _) hne
   obtain ⟨h, hp, hh⟩ := spread (RingHom.ker (i.app V).hom) p g f hf
-  haveI := hV.isLocalization_basicOpen h
+  have := hV.isLocalization_basicOpen h
   obtain ⟨f', hf'⟩ := hh Γ(Y, Y.basicOpen h)
   have hV' := hV.basicOpen h
   have hker : (RingHom.ker (i.app V).hom).map (algebraMap Γ(Y, V) Γ(Y, Y.basicOpen h)) =
@@ -1531,13 +1531,13 @@ theorem few_gens (hF : FewEquations) {S : Scheme.{0}} (A Y Z : Over S) [GrpObj A
     (O : Type) [CommRing O] [IsLocalRing O] [IsNoetherianRing O] (φ : Γ(Y.left, V) →+* O)
     (hne : (RingHom.ker (i.left.app V).hom).map φ ≠ ⊤) :
     ∃ f : Fin g → O, Ideal.span (Set.range f) = (RingHom.ker (i.left.app V).hom).map φ := by
-  haveI : IsClosedImmersion i.left := hi.1
+  have : IsClosedImmersion i.left := hi.1
   let t : Sp O ⟶ Y.left := spMap φ ≫ hV.fromSpec
   let τ : Sp O ⟶ S := t ≫ Y.hom
   have hG := isGrpPullback_pullback A τ
   have habO : IsAbelianScheme ((Over.pullback τ).obj A) :=
     { comm := by
-        haveI := hab.comm
+        have := hab.comm
         exact GlobalTheory.PolPull.isCommMonObj_of_isGrpPullback hG
       smooth := MorphismProperty.of_isPullback (P := @Smooth) hG.1 hab.smooth
       proper := MorphismProperty.of_isPullback (P := @IsProper) hG.1 hab.proper
@@ -1595,9 +1595,9 @@ theorem few_gens (hF : FewEquations) {S : Scheme.{0}} (A Y Z : Over S) [GrpObj A
 
 theorem trivLocusFlat : FewEquations → CIFlat → TrivLocusFlat := by
   intro hF hCI S _ A Y Z _ g hab hsmA hsmY N hN i hi hqf
-  haveI : IsClosedImmersion i.left := hi.1
+  have : IsClosedImmersion i.left := hi.1
   have e : i.left ≫ Y.hom = Z.hom := Over.w i
-  haveI : LocallyQuasiFinite (i.left ≫ Y.hom) := e ▸ hqf
+  have : LocallyQuasiFinite (i.left ≫ Y.hom) := e ▸ hqf
   have h := flat_of_gens hCI Y.hom i.left g
     (fun V hV O _ _ _ φ hne => few_gens hF A Y Z g hab hsmA N hN i hi hV O φ hne)
   exact e ▸ h

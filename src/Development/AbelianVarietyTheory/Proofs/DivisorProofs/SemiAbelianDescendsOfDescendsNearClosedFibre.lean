@@ -191,7 +191,7 @@ end GlobalTheory.Mum.DescGrp
 open GlobalTheory.Mum.DescGrp in
 theorem GlobalTheory.Mum.descGrpObj_of_pullback : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] (S : Scheme.{0}) (π : S ⟶ Sp R), IsProper π → Surjective π → IsIntegral S → ∀ (G' : Over S) [GrpObj G'] [IsCommMonObj G'] (G : Over (Sp R)) (β : G'.left ⟶ G.left), Smooth G.hom → IsPullback β G'.hom G.hom π → ∀ (m : G ⊗ G ⟶ G) (e : 𝟙_ (Over (Sp R)) ⟶ G) (i : G ⟶ G), (∀ (T : Over S) (x y : T ⟶ G') (x₀ y₀ : Over.mk (T.hom ≫ π) ⟶ G), x₀.left = x.left ≫ β → y₀.left = y.left ≫ β → (lift x₀ y₀ ≫ m).left = (x * y).left ≫ β) → (∀ (T : Over S), (toUnit (Over.mk (T.hom ≫ π)) ≫ e).left = (1 : T ⟶ G').left ≫ β) → (∀ (T : Over S) (x : T ⟶ G') (x₀ : Over.mk (T.hom ≫ π) ⟶ G), x₀.left = x.left ≫ β → (x₀ ≫ i).left = x⁻¹.left ≫ β) → ∃ (_ : GrpObj G) (_ : IsCommMonObj G), IsGrpPullback G' G π β := by
   intro R _ _ _ _ S π hP hS hI G' _ _ G β hsm hpb m e i hm he hi
-  haveI : Smooth G.hom := hsm
+  have : Smooth G.hom := hsm
   have f1 : Flat G.hom := inferInstance
   have f2 : Flat (G ⊗ G).hom := flat_prod2 G
   have f3 : Flat ((G ⊗ G) ⊗ G).hom := flat_prod3 G
@@ -219,9 +219,9 @@ theorem GlobalTheory.Mum.descGrpObj_of_pullback : ∀ (R : Type) [CommRing R] [I
   have a6 : (β_ G G).hom ≫ m = m := by
     refine ext_of_pts hP hS hI f2 _ _ (fun T P => ?_)
     rw [sh_comm, sh_id P m, hM, hM]
-    letI : CommMonoid (T ⟶ G') := Hom.commMonoid
+    let : CommMonoid (T ⟶ G') := Hom.commMonoid
     rw [_root_.mul_comm]
-  letI inst : GrpObj G :=
+  let inst : GrpObj G :=
     { one := e, mul := m, inv := i, one_mul := a1, mul_one := a2, mul_assoc := a3, left_inv := a4,
       right_inv := a5 }
   exact ⟨inst, ⟨a6⟩, hpb, fun T x y x₀ y₀ hx hy => by
@@ -435,8 +435,8 @@ end Pt
 
 theorem mul_descends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] (S : Scheme.{0}) (π : S ⟶ Sp R), IsProper π → Surjective π → IsIntegral S → ∀ (G' : Over S) [GrpObj G'] (G : Over (Sp R)) (β : G'.left ⟶ G.left), Smooth G.hom → IsPullback β G'.hom G.hom π → ∀ φ : (Over.pullback (pullback.fst π π)).obj G' ≅ (Over.pullback (pullback.snd π π)).obj G', IsMonHom φ.hom → pullback.fst G'.hom (pullback.fst π π) ≫ β = φ.hom.left ≫ pullback.fst G'.hom (pullback.snd π π) ≫ β → ∃ m : G ⊗ G ⟶ G, ∀ (T : Over S) (x y : T ⟶ G') (x₀ y₀ : Over.mk (T.hom ≫ π) ⟶ G), x₀.left = x.left ≫ β → y₀.left = y.left ≫ β → (lift x₀ y₀ ≫ m).left = (x * y).left ≫ β := by
   intro R _ _ _ _ S π hprop hsurj hint G' _ G β hsm hβ φ hφ hdat
-  haveI := hsm
-  haveI : Smooth (G ⊗ G).hom := inferInstanceAs (Smooth (pullback.fst G.hom G.hom ≫ G.hom))
+  have := hsm
+  have : Smooth (G ⊗ G).hom := inferInstanceAs (Smooth (pullback.fst G.hom G.hom ≫ G.hom))
   have hflat : Flat (G ⊗ G).hom := inferInstance
   let Z' : Over (Sp R) := Over.mk ((G' ⊗ G').hom ≫ π)
   let u : Z' ⟶ G := Over.homMk ((fst G' G').left ≫ β) (by
@@ -730,13 +730,13 @@ namespace GlobalTheory.Mum
 
 theorem torusExtension_of_descended : ∀ (R : Type) [CommRing R] (S : Scheme.{0}) (π : S ⟶ Sp R), LocallyOfFiniteType π → Surjective π → ∀ (G' : Over S) [GrpObj G'] (G : Over (Sp R)) [GrpObj G] (β : G'.left ⟶ G.left), IsGrpPullback G' G π β → (∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (t : Spec (.of Ω) ⟶ S), Nonempty (TorusExtension ((Over.pullback t).obj G'))) → ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (p : Spec (.of Ω) ⟶ Sp R), Nonempty (TorusExtension ((Over.pullback p).obj G)) := by
   intro R _ S π hlft hsurj G' _ G _ β h hG' Ω _ _ p
-  haveI := hlft
-  haveI := hsurj
+  have := hlft
+  have := hsurj
   obtain ⟨t, rfl⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective π p
   have h1 := (isGrpPullback_pullback G' t).comp h
   have h2 := isGrpPullback_pullback G (t ≫ π)
   obtain ⟨e, he, -⟩ := grpPullback_iso h1 h2
-  haveI := he
+  have := he
   exact ⟨torusExtOfIso e (hG' Ω t).some⟩
 
 end GlobalTheory.Mum
@@ -790,7 +790,7 @@ theorem exists_semiAbelian_descent : ∀ (R : Type) [CommRing R] [IsDomain R] [I
   obtain ⟨e, he⟩ := GlobalTheory.T.group_unit_descends_proper_surjection R S π hp hs hi G' G β hpb φ hφ hc
   obtain ⟨i, hiv⟩ := GlobalTheory.T.group_inverse_descends_proper_surjection R S π hp hs hi G' G β hsm hpb φ hφ hc
   obtain ⟨g, c, hP⟩ := GlobalTheory.T.descended_comm_group_of_pullback_proper_surjection R S π hp hs hi G' G β hsm hpb m e i hm he hiv
-  haveI := hG.quasiCompact
+  have := hG.quasiCompact
   refine ⟨g, c, ⟨c, hsm, GlobalTheory.T.isSeparated_of_isPullback_universallyClosed_surjective' R S π inferInstance hs G' G β hpb hG.separated,
     quasiCompact_of_isPullback π G' G β hpb,
     GlobalTheory.T.geometricallyConnected_of_isPullback_surjective_lft R S π inferInstance hs G' G β hpb hG.geomConnected,

@@ -70,7 +70,7 @@ def NearModerate : Prop :=
 
 theorem nearAbs_eq_zero (d : InfinitePlace B.I.F → ℝ) (x : B.I.GA)
     (h : ∀ γ, IsNear B d (epN B) x γ → γ = 1) : nearAbs B d x = 0 := by
-  haveI : IsEmpty (nearNe B d x) := ⟨fun γ => γ.2.2 (h γ.1 γ.2.1)⟩
+  have : IsEmpty (nearNe B d x) := ⟨fun γ => γ.2.2 (h γ.1 γ.2.1)⟩
   simp [nearAbs]
 
 end GlobalTheory.IndefiniteRowSideFullHecke.NearNonzeroTerms

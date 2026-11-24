@@ -110,7 +110,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.omBd :
         AutomorphicForm.height (((δ : G1 K (2 + 2)) * x : G1 K (2 + 2)) : AdelicGLn.AdelicGL K (2 + 2)))
         ⟨0, by rintro _ ⟨δ, rfl⟩; exact (height_pos _).le⟩ ⟨γ, hγ⟩
     have h7 : C * Real.exp (4 * T + 20 * (C + s)) ^ c = A * Real.exp (((4 * c : ℕ) : ℝ) * T) := by
-      rw [hA, ← Real.exp_nat_mul, mul_assoc, ← Real.exp_add]
+      rw [hA, ← Real.exp_natCast_mul, mul_assoc, ← Real.exp_add]
       congr 2
       push_cast
       ring

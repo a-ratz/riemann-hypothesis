@@ -181,7 +181,7 @@ open GlobalTheory.MixModel
 variable {D : D7}
 
 theorem trace_nondeg (z : AE D) (h : ∀ w : AE D, Algebra.trace (AF D.host.F) (AE D) (w * z) = 0) : z = 0 := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   obtain ⟨e0, he0⟩ := GlobalTheory.RatAnnih.tensor_rat (R := AF D.host.F) z fun e => ⟨0, by rw [map_zero]; exact h _⟩
   subst he0
   by_cases hne : e0 = 0
@@ -239,7 +239,7 @@ end GlobalTheory.PerfectCompl
 
 theorem GlobalTheory.PerfectCompl.exists_dual_complement : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.rank) (Fin a) D.host.E) (Q : Matrix (Fin b) (Fin V.rank) D.host.E), P.rank = a → Q.rank = b → ∀ (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∃ (P' : Matrix (Fin W.rank) (Fin a) D.host.E) (Q' : Matrix (Fin b) (Fin V.rank) D.host.E), (∀ x : WO V W, ∃ s : Mx D a b, ∀ y : Mx D a b, symplO V W (x - GlobalTheory.IsoMean.emb V W P' Q' s) (GlobalTheory.IsoMean.emb V W P Q y) = 0) ∧ (∀ s : Mx D a b, (∀ y : Mx D a b, symplO V W (GlobalTheory.IsoMean.emb V W P' Q' s) (GlobalTheory.IsoMean.emb V W P Q y) = 0) → s = 0) ∧ (∀ s : Mx D a b, (∀ γ ∈ GlobalTheory.MixModel.ratMx D a b, ψ (symplO V W (GlobalTheory.IsoMean.emb V W P' Q' s) (GlobalTheory.IsoMean.emb V W P Q γ)) = 1) ↔ s ∈ GlobalTheory.MixModel.ratMx D a b) ∧ (∀ γ ∈ GlobalTheory.MixModel.ratMx D a b, (∀ s : Mx D a b, ψ (symplO V W (GlobalTheory.IsoMean.emb V W P' Q' s) (GlobalTheory.IsoMean.emb V W P Q γ)) = 1) → γ = 0) := by
   intro D V W a b P Q hP hQ ψ hψ
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   obtain ⟨L, hL⟩ := GlobalTheory.PerfectCompl.exists_left_inv P hP
   obtain ⟨L', hL'⟩ := GlobalTheory.PerfectCompl.exists_left_inv Qᵀ (by rw [Matrix.rank_transpose]; exact hQ)
   have hR : Q * L'ᵀ = 1 := by
@@ -385,19 +385,19 @@ theorem iterInt_continuous_periodic : ∀ (D : D7) (V W : HSp D) (a b k : ℕ) (
     have hγ' : γ ∈ ratL W V := by rw [GlobalTheory.MixModel.ratL_eq]; exact hγ
     rw [← hper γ hγ' u]
     exact hM _ hγK
-  haveI : SecondCountableTopology (Mx D 1 k) := (GlobalTheory.MixModel.lattice_Mx D 1 k).2.2.1
-  haveI : SecondCountableTopology (Mx D a b) := (GlobalTheory.MixModel.lattice_Mx D a b).2.2.1
-  haveI : BorelSpace (Mx D 1 k) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have : SecondCountableTopology (Mx D 1 k) := (GlobalTheory.MixModel.lattice_Mx D 1 k).2.2.1
+  have : SecondCountableTopology (Mx D a b) := (GlobalTheory.MixModel.lattice_Mx D a b).2.2.1
+  have : BorelSpace (Mx D 1 k) := ⟨rfl⟩
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
 
   have hY : μ 𝓨 < ⊤ := by rw [hμ1]; exact ENNReal.one_lt_top
   have hZ : η 𝓩 < ⊤ := by
     obtain ⟨hg, -, hsc, -, hd, K', hK', hK'cov⟩ := GlobalTheory.MixModel.lattice_Mx D 1 k
-    haveI : Countable (GlobalTheory.MixModel.ratMx D 1 k) :=
+    have : Countable (GlobalTheory.MixModel.ratMx D 1 k) :=
       TopologicalSpace.separableSpace_iff_countable.mp inferInstance
     exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact _ hK' hK'cov η h𝓩
-  haveI : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ]; exact hY⟩
-  haveI : IsFiniteMeasure (η.restrict 𝓩) := ⟨by rw [Measure.restrict_apply_univ]; exact hZ⟩
+  have : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ]; exact hY⟩
+  have : IsFiniteMeasure (η.restrict 𝓩) := ⟨by rw [Measure.restrict_apply_univ]; exact hZ⟩
 
   have hIc : Continuous (fun p : Mx D a b × Mx D 1 k => ∫ y in 𝓨, T (f₁ p.1 + f₂ p.2 + f₃ y) ∂μ) := by
     set_option synthInstance.maxHeartbeats 200000 in
@@ -485,24 +485,24 @@ theorem smear : ∀ (D : D7) (V W : HSp D) (a b : ℕ) (P : Matrix (Fin W.rank) 
   obtain ⟨hHaar, -, h1⟩ := hμ
   obtain ⟨-, -, s1, -, -, -⟩ := GlobalTheory.MixModel.lattice_Mx D a b
   obtain ⟨-, -, s2, -, -, K, hK, hcov⟩ := GlobalTheory.MixModel.lattice_Mx D W.rank V.rank
-  haveI := s1
-  haveI := s2
-  haveI : FirstCountableTopology (WO V W) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology (WO V W)
-  haveI : BorelSpace (Mx D a b) := ⟨rfl⟩
-  haveI : BorelSpace (WO V W) := ⟨rfl⟩
-  haveI hfμ : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
-  haveI : Countable D.host.E := by
-    haveI : FiniteDimensional ℚ D.host.E := inferInstance
+  have := s1
+  have := s2
+  have : FirstCountableTopology (WO V W) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology (WO V W)
+  have : BorelSpace (Mx D a b) := ⟨rfl⟩
+  have : BorelSpace (WO V W) := ⟨rfl⟩
+  have hfμ : IsFiniteMeasure (μ.restrict 𝓨) := ⟨by rw [Measure.restrict_apply_univ, h1]; exact ENNReal.one_lt_top⟩
+  have : Countable D.host.E := by
+    have : FiniteDimensional ℚ D.host.E := inferInstance
     exact (Module.finBasis ℚ D.host.E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin W.rank) (Fin V.rank) D.host.E) :=
+  have : Countable (Matrix (Fin W.rank) (Fin V.rank) D.host.E) :=
     inferInstanceAs (Countable (Fin W.rank → Fin V.rank → D.host.E))
-  haveI : Countable (ratL W V) := (Set.countable_range _).to_subtype
+  have : Countable (ratL W V) := (Set.countable_range _).to_subtype
   have hνF : ν 𝓕 < ⊤ := by
     have hcov' : ∀ x : WO V W, ∃ γ ∈ ratL W V, γ + x ∈ K := hcov
     exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (ratL W V) hK hcov' ν h𝓕
-  haveI hfν : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hνF⟩
-  haveI : SFinite (ν.restrict 𝓕) := @instSFiniteOfSigmaFinite _ _ _ (@IsFiniteMeasure.toSigmaFinite _ _ _ hfν)
-  haveI : SFinite (μ.restrict 𝓨) := @instSFiniteOfSigmaFinite _ _ _ (@IsFiniteMeasure.toSigmaFinite _ _ _ hfμ)
+  have hfν : IsFiniteMeasure (ν.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ]; exact hνF⟩
+  have : SFinite (ν.restrict 𝓕) := @instSFiniteOfSigmaFinite _ _ _ (@IsFiniteMeasure.toSigmaFinite _ _ _ hfν)
+  have : SFinite (μ.restrict 𝓨) := @instSFiniteOfSigmaFinite _ _ _ (@IsFiniteMeasure.toSigmaFinite _ _ _ hfμ)
   obtain ⟨C, hC⟩ := exists_bound hψ hG
   obtain ⟨C', hC'⟩ := exists_bound hψ hG'
   set Φ : Mx D a b × WO V W → ℂ := fun p => heisO ψ V W (GlobalTheory.IsoMean.emb V W P Q p.1) G p.2 * star (G' p.2) with hΦ

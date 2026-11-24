@@ -156,7 +156,7 @@ theorem exists_bound_short (n : ℕ) (hn : n ≠ 0) {N : ℤ} (hN : N ≠ 0) :
   have hM0 : N * D * 2 ≠ 0 := by positivity
   refine ⟨(2 * n : ℕ) * (|((N * D * 2 : ℤ) : ℝ)| + 1) ^ 2, ?_⟩
   intro V _ _ _ h Λ hV hs hfg hsp hO hdual
-  letI : Module ℚ V := Module.compHom V (algebraMap ℚ E)
+  let : Module ℚ V := Module.compHom V (algebraMap ℚ E)
   have : IsScalarTower ℚ E V := IsScalarTower.of_compHom ℚ E V
   have : Module.Finite ℤ Λ := Module.Finite.iff_fg.2 hfg
   have : HasUniqueDiv V := .of_module_rat V

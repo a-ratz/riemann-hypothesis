@@ -72,7 +72,7 @@ theorem _root_.GlobalTheory.DriftUnitary.continuous_orbit {r : ℕ} (X : _root_.
       (fun τ => ((g : X.Ψ → GL (Fin r) ℂ) τ : Matrix (Fin r) (Fin r) ℂ)) x0 := by
   unfold _root_.ReciprocityTheory.ChartRestriction.G.FD.Data.lmulC
   refine continuous_pi fun τ => ?_
-  exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtype_val)).matrix_mul
+  exact (Units.continuous_val.comp ((continuous_apply τ).comp continuous_subtypeVal)).matrix_mul
     continuous_const
 
 open NumberField MeasureTheory Topology in

@@ -68,7 +68,7 @@ theorem finite_of_resAlg (h : ResAlg E τ q ε) : Finite E := by
   positivity
 
 theorem nontrivial_of_resAlg (h : ResAlg E τ q ε) : Nontrivial E := by
-  haveI := finite_of_resAlg h
+  have := finite_of_resAlg h
   apply Finite.one_lt_card_iff_nontrivial.1
   rw [h.card]
   have := h.one_lt
@@ -101,7 +101,7 @@ theorem card_fx (h : ResAlg E τ q ε) : Nat.card (Fx τ) = q := by
 
 theorem exists_idem (h : ResAlg E τ q ε) (hf : ¬ IsField E) :
     ∃ e : E, e * e = e ∧ τ e = 1 - e := by
-  haveI := nontrivial_of_resAlg h
+  have := nontrivial_of_resAlg h
   obtain ⟨a, ha0, hau⟩ : ∃ a : E, a ≠ 0 ∧ ¬ IsUnit a := by
     by_contra hc
     push_neg at hc
@@ -139,7 +139,7 @@ theorem exists_idem (h : ResAlg E τ q ε) (hf : ¬ IsField E) :
 theorem card_axes {F : Type} [Finite F] (z : F) :
     Nat.card {p : F × F // p.1 = z ∨ p.2 = z} + 1 = 2 * Nat.card F := by
   classical
-  haveI := Fintype.ofFinite F
+  have := Fintype.ofFinite F
   rw [Nat.card_eq_fintype_card, Nat.card_eq_fintype_card, Fintype.card_subtype]
   have h1 : (Finset.univ.filter fun p : F × F => p.1 = z ∨ p.2 = z)
       = (({z} : Finset F) ×ˢ (Finset.univ : Finset F)) ∪ ((Finset.univ : Finset F) ×ˢ ({z} : Finset F)) := by
@@ -202,14 +202,14 @@ theorem card_zero_split (h : ResAlg E τ q ε) {e : E} (he : e * e = e) (hτ : �
   have hcard : Nat.card {p : Fx τ × Fx τ // p.1 = zeroFx τ ∨ p.2 = zeroFx τ}
       = Nat.card {a : E // a * τ a = 0} :=
     Nat.card_congr ((Equiv.ofBijective g hg).subtypeEquiv hz)
-  haveI := finite_of_resAlg h
+  have := finite_of_resAlg h
   rw [← hcard, card_axes, card_fx h]
 
 theorem card_norm_zero : ∀ (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ) (ε : ℤ), ResAlg E τ q ε →
     (Nat.card {a : E // a * τ a = 0} : ℤ) = q * (1 + ε) - ε := by
   intro E _ τ q ε h
   rcases h.eps with ⟨rfl, hf⟩ | ⟨rfl, hf⟩
-  · haveI : IsDomain E := hf.isDomain
+  · have : IsDomain E := hf.isDomain
     have hu : ∀ a : {a : E // a * τ a = 0}, a = ⟨0, by simp⟩ := by
       rintro ⟨a, ha⟩
       apply Subtype.ext
@@ -219,7 +219,7 @@ theorem card_norm_zero : ∀ (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ) 
         rw [h0, map_zero] at this
         exact this.symm
     have h1 : Nat.card {a : E // a * τ a = 0} = 1 := by
-      haveI : Unique {a : E // a * τ a = 0} := ⟨⟨⟨0, by simp⟩⟩, hu⟩
+      have : Unique {a : E // a * τ a = 0} := ⟨⟨⟨0, by simp⟩⟩, hu⟩
       exact Nat.card_unique
     rw [h1]
     simp

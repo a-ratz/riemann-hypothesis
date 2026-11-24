@@ -81,7 +81,7 @@ theorem exists_clear {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum
   set S := hfin.toFinset with hS
   have memS : ∀ Q, Q ∈ S ↔ 1 < Valued.v (y Q) := by
     intro Q
-    rw [hS, Set.Finite.mem_toFinset, Set.mem_setOf_eq, HeightOneSpectrum.mem_adicCompletionIntegers, not_le]
+    rw [hS, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, HeightOneSpectrum.mem_adicCompletionIntegers, not_le]
   have hPS : P ∉ S := fun h => absurd hP (not_le.2 ((memS P).1 h))
   let m : HeightOneSpectrum (𝓞 E) → ℕ := fun Q => (WithZero.log (Valued.v (y Q))).toNat
   let J : Ideal (𝓞 E) := ∏ Q ∈ S, Q.asIdeal ^ m Q
@@ -104,7 +104,7 @@ theorem exists_clear {E : Type} [Field E] [NumberField E] (P : HeightOneSpectrum
       · exact P.isPrime.le_of_pow_le hle
     have h2 : Q = P := HeightOneSpectrum.ext (Q.isMaximal.eq_of_le P.isPrime.ne_top h1)
     exact hPS (h2 ▸ hQ)
-  obtain ⟨s, hsJ, hsP⟩ := SetLike.not_le_iff_exists.1 hJ
+  obtain ⟨s, hsJ, hsP⟩ := IsConcreteLE.not_le_iff_exists.1 hJ
   refine ⟨s, hsP, fun Q => ?_⟩
   rw [map_mul, vAlg, HeightOneSpectrum.valuation_of_algebraMap]
   by_cases hQ : Q ∈ S

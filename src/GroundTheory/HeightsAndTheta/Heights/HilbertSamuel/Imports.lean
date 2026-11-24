@@ -85,7 +85,7 @@ theorem ArithmeticVolumeDimensionOne.proof (hG6 : ArithmeticVolumeBigDimensionOn
   · intro dg dh g' h z hg hh hdeg heq hz
     have hle := hsmall dg dh g' h z hg hh (by rw [constShift_a]; exact hdeg) heq hz
     have e : Real.exp (-(n * η)) = Real.exp (-η) ^ n := by
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       ring_nf
     refine hle.trans (le_of_eq ?_)
     rw [constShift_h, mul_pow, e]

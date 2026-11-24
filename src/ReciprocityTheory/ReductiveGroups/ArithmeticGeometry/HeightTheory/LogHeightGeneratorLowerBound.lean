@@ -81,7 +81,7 @@ theorem logHeight_generator_lower_bound (hd : d.AxH 𝒜) (h : d.S1) (c : ι) {p
   · have hm := (d.good_primes_properties hd h c).2.1 p hp hg
     have := ReciprocityTheory.MultiplicativeHeights.Closed.sphere_height_lower_bound K (d.D + 1) (d.N + 1) _ (d.gen p) (Nat.succ_pos _) h0 hm
     rw [Fin.sum_univ_succ] at this
-    simp only [Fin.succ_ne_zero, if_false, if_true, Nat.cast_zero, zero_mul, zero_add,
+    simp only [Fin.succ_ne_zero, ite_false, ite_true, Nat.cast_zero, zero_mul, zero_add,
       Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at this
     convert this using 2
     ring

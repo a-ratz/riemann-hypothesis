@@ -65,10 +65,10 @@ theorem bijective_linearCombination_iff_localizedModule_map {R R' S S' : Type} [
       Function.Bijective (LocalizedModule.map (Submonoid.powers f) (Fintype.linearCombination R v)) := by
   let gM : (Fin r → R) →ₗ[R] (Fin r → R') :=
     LinearMap.pi (fun k => (Algebra.linearMap R R') ∘ₗ LinearMap.proj k)
-  haveI : IsLocalizedModule (Submonoid.powers f) gM :=
+  have : IsLocalizedModule (Submonoid.powers f) gM :=
     IsLocalizedModule.pi (Submonoid.powers f) (fun _ : Fin r => Algebra.linearMap R R')
   let gS : S →ₗ[R] S' := (IsScalarTower.toAlgHom R S S').toLinearMap
-  haveI : IsLocalizedModule (Submonoid.powers f) gS := inferInstance
+  have : IsLocalizedModule (Submonoid.powers f) gS := inferInstance
   let φ : (Fin r → R') →ₗ[R] S' :=
     (Fintype.linearCombination R' (fun k => algebraMap S S' (v k))).restrictScalars R
   have hcomm : φ ∘ₗ gM = gS ∘ₗ Fintype.linearCombination R v := by
@@ -92,28 +92,28 @@ theorem coord_basicOpen_bijective_iff : ∀ (A B : Type) [CommRing A] [CommRing 
     Function.Bijective (GlobalTheory.HilbAff.coord A B e σ y (Z.basicOpen f)) ↔
       Function.Bijective (LocalizedModule.map (Submonoid.powers f) (GlobalTheory.HilbAff.coord A B e σ y W)) := by
   intro A B _ _ _ N r e σ Z y W f
-  haveI : IsFinite (subStr A B y) := y.2.2.1
+  have : IsFinite (subStr A B y) := y.2.2.1
   have hV : IsAffineOpen (subStr A B y ⁻¹ᵁ (W : Z.Opens)) := W.2.preimage _
   have hle : subStr A B y ⁻¹ᵁ Z.basicOpen f ≤ subStr A B y ⁻¹ᵁ (W : Z.Opens) :=
     fun _ h => Z.basicOpen_le f h
   have hpre : subStr A B y ⁻¹ᵁ Z.basicOpen f =
       y.2.1.subscheme.basicOpen ((subStr A B y).app W f) := Scheme.preimage_basicOpen _ f
-  letI i1 : Algebra Γ(Z, W) Γ(Z, Z.basicOpen f) :=
+  let i1 : Algebra Γ(Z, W) Γ(Z, Z.basicOpen f) :=
     (Z.presheaf.map (homOfLE (Z.basicOpen_le f)).op).hom.toAlgebra
-  letI i2 : Algebra (Sec A B y W) (Sec A B y (Z.basicOpen f)) :=
+  let i2 : Algebra (Sec A B y W) (Sec A B y (Z.basicOpen f)) :=
     (y.2.1.subscheme.presheaf.map (homOfLE hle).op).hom.toAlgebra
-  letI i3 : Algebra Γ(Z, W) (Sec A B y (Z.basicOpen f)) :=
+  let i3 : Algebra Γ(Z, W) (Sec A B y (Z.basicOpen f)) :=
     ((algebraMap (Sec A B y W) (Sec A B y (Z.basicOpen f))).comp
       (algebraMap Γ(Z, W) (Sec A B y W))).toAlgebra
-  haveI : IsScalarTower Γ(Z, W) (Sec A B y W) (Sec A B y (Z.basicOpen f)) :=
+  have : IsScalarTower Γ(Z, W) (Sec A B y W) (Sec A B y (Z.basicOpen f)) :=
     IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower Γ(Z, W) Γ(Z, Z.basicOpen f) (Sec A B y (Z.basicOpen f)) :=
+  have : IsScalarTower Γ(Z, W) Γ(Z, Z.basicOpen f) (Sec A B y (Z.basicOpen f)) :=
     IsScalarTower.of_algebraMap_eq' (by
       ext a
       exact (congr($((subStr A B y).naturality (homOfLE (Z.basicOpen_le f)).op) a)).symm)
-  haveI : IsLocalization.Away f Γ(Z, Z.basicOpen f) :=
+  have : IsLocalization.Away f Γ(Z, Z.basicOpen f) :=
     W.2.isLocalization_of_eq_basicOpen f (homOfLE (Z.basicOpen_le f)) rfl
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (Sec A B y W) (Submonoid.powers f))
+  have : IsLocalization (Algebra.algebraMapSubmonoid (Sec A B y W) (Submonoid.powers f))
       (Sec A B y (Z.basicOpen f)) := by
     rw [Algebra.algebraMapSubmonoid, Submonoid.map_powers]
     exact hV.isLocalization_of_eq_basicOpen _ (homOfLE hle) hpre

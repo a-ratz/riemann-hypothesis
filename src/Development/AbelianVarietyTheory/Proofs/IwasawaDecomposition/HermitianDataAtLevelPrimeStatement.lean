@@ -155,7 +155,7 @@ theorem dia_mul_stab (S : StepLevel F E σ J T f bad) (δ : UPts σ J (FiniteAde
     (v : HeightOneSpectrum (𝓞 F)) (hv : (T : 𝓞 F) ∈ v.asIdeal) (k : ℤ) (hδ : IsDia S v hv k δ) (κ : S.U) :
     δ.1 * κ.1 ∈ stabGL (latS (F := F) (FiniteAdeleRing (𝓞 F) F)
         (tensInt (F := F) (FiniteAdeleRing (𝓞 F) F) (intOE E) (intAd F)) S.Lb) := by
-  haveI := S.Lb_fin
+  have := S.Lb_fin
   refine (GlobalTheory.LatticeStabLocal.mem_stabGL_adele_iff S.Lb _).2 fun w => ?_
   rw [map_mul]
   refine mul_mem ?_ (Subgroup.mem_inf.1 (S.Uloc_lev w (((S.U_eq _).1 κ.2).2 w))).2
@@ -228,7 +228,7 @@ theorem lat_eq_of_move (S : StepLevel F E σ J T f bad) (L L' : Submodule (𝓞 
 
     simp only [← map_mul, ← map_sum] at h1
     rw [← hfc] at h1
-    haveI : Nontrivial (FiniteAdeleRing (𝓞 F) F) := by
+    have : Nontrivial (FiniteAdeleRing (𝓞 F) F) := by
       obtain ⟨M, hM⟩ := Ideal.exists_maximal (𝓞 F)
       let v : HeightOneSpectrum (𝓞 F) :=
         ⟨M, hM.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hM (NumberField.RingOfIntegers.not_isField F)⟩
@@ -675,7 +675,7 @@ theorem dnCl_of_tie {B : Base} {X : PreX B.toPre} (I : TC B X) (hOk : I.Ok) (hP 
       AdOf H u i c (((I.rec7 l Z).fm u).dn i v c g) (gx i hi γ₀) v := by
   refine ⟨⟨?_, ?_, ?_, ?_⟩, GlobalTheory.T.adelic_relation_classes_coordinates I hOk hP l Z H F hS hC u i hi v c _ γ₀ hAd⟩
   · intro q hq hq1 hq2
-    haveI := hq.isPrime
+    have := hq.isPrime
     let Q : HeightOneSpectrum (𝓞 (I.rec7 l Z).host.E) :=
       ⟨q, hq.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hq (RingOfIntegers.not_isField _)⟩
     have hu : Q.under (𝓞 (I.rec7 l Z).host.F) ≠ ((F u).atT.eV v).1 := fun h =>
@@ -1064,7 +1064,7 @@ theorem upCl_of_crd (A : AtTTied u) (P : ∀ i hi, LvTied u A i hi) (i : ℕ) (h
     dual_co D.sp.cm (D.sp.X i) (rankN D i hi) (D.clsLat u i c')
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · intro q hq hP hc
-    haveI := hq.isPrime
+    have := hq.isPrime
     let q' : HeightOneSpectrum (𝓞 D.host.E) :=
       ⟨q, hq.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hq (RingOfIntegers.not_isField D.host.E)⟩
     apply Submodule.map_injective_of_injective inj
@@ -1255,7 +1255,7 @@ theorem ga_eq_gam_mv : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Law
   have h' : B.embLL _ * φ ((I.perIn u I.mu0).tilC c) (frMul B.fields.emb B.embLL ((I.stp u I.mu0 B.R.m).gam (I.perIn u I.mu0).b0 ((I.stp u I.mu0 B.R.m).mv (I.perIn u I.mu0).b0 ((I.perIn u I.mu0).tilPt c)))⁻¹ (frMul B.fields.emb B.embLL g y)) = _ * φ ((I.perIn u I.mu0).tilC c) y := h
   have hy : frMul B.fields.emb B.embLL ((I.stp u I.mu0 B.R.m).gam (I.perIn u I.mu0).b0 ((I.stp u I.mu0 B.R.m).mv (I.perIn u I.mu0).b0 ((I.perIn u I.mu0).tilPt c)))⁻¹ (frMul B.fields.emb B.embLL g y) = y := by
     by_contra hne
-    simp only [φ, if_neg hne, if_pos, mul_zero, mul_one] at h'
+    simp only [φ, ite_eq_right hne, ite_eq_left, mul_zero, mul_one] at h'
     exact Units.ne_zero _ h'.symm
   exact congrArg Units.val (eq_of_frMul (show B.fields.Tau from (I.rec7 l Z).eTau.symm 1) _ _ _ _ _ hy)
 
@@ -1292,9 +1292,9 @@ theorem gam_ext : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pi
   have hi := (GlobalTheory.Mem.Col2.TC.spaces_in_coordinates I hOk hP l Z).2.2.1
   have ini : ∀ y : Fin (B.R.N B.R.m - 1) → B.fields.E, iniH (N_m_succ B.R) (iXc (I.rec7 l Z) y) = y := fun y => by
     funext j
-    exact (hi y _).trans (dif_pos j.2)
+    exact (hi y _).trans (dite_eq_left j.2)
   have las : ∀ y : Fin (B.R.N B.R.m - 1) → B.fields.E, iXc (I.rec7 l Z) y (Br.iL (N_m_succ B.R)) = 0 := fun y =>
-    (hi y _).trans (dif_neg (lt_irrefl _))
+    (hi y _).trans (dite_eq_right (lt_irrefl _))
   refine ⟨fun y => ext_vec (N_m_succ B.R) ?_ ?_, ext_vec (N_m_succ B.R) ?_ ?_⟩
   · refine ((l.per u I.mu0).gam_ini b g _).trans ?_
     exact (congrArg _ (ini _)).trans (ini _).symm
@@ -1302,7 +1302,7 @@ theorem gam_ext : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pi
   · refine ((l.per u I.mu0).gam_ini b g _).trans ?_
     have z : iniH (E := B.fields.E) (N_m_succ B.R) (TC.z0 X u) = 0 := by
       funext j
-      exact if_neg (by have := j.2; show ¬ (j.1 + 1 = _); omega)
+      exact ite_eq_right (by have := j.2; show ¬ (j.1 + 1 = _); omega)
     exact (congrArg _ z).trans ((Matrix.mulVec_zero _).trans z.symm)
   · exact (l.per u I.mu0).gam_last b g _
 

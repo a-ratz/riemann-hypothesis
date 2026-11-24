@@ -944,8 +944,8 @@ theorem integral_sq_terms : ∀ (N₁ : ℕ), 2 ≤ N₁ → ∀ (V₁ : Type) [
             (val (t c) r z J ^ 2 * val (χt mu c) r z J ^ 2 * val D.sym (r ≫ (D.c (e mu)).left) z J *
               (val (τ₀ (e mu) (-e mu)) r z J)⁻¹ * (rigV D r z J ^ 2)⁻¹).val := by
   intro N₁ hN₁ V₁ _ _ _ hV hunit D hPE hTB X C _ e u mo hmo hT τ₀ m N s ε hs hτ hmo2
-  haveI : IsNoetherianRing V₁ := hV.1
-  haveI : IsIntegrallyClosed V₁ := hV.2.1
+  have : IsNoetherianRing V₁ := hV.1
+  have : IsIntegrallyClosed V₁ := hV.2.1
   have hN1 : 1 ≤ N₁ := by omega
   obtain ⟨th, g, b, w, hgb, ho, hcov, hw, hcoef, ⟨c₀, hc₀⟩, hbN, hfr, -⟩ := thetaTerms_integral D hN1 e _ hT
   obtain ⟨θ, hθ, -, hlamE, -, -⟩ := ThetaOne.main hV D

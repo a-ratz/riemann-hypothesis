@@ -170,8 +170,8 @@ theorem addition_level_two_mul :
   intro H1 H2 g τ hτ N hN f f' hf hf'
   have hN2 : 1 ≤ 2 * N := by omega
   have hle : thetaLevel (2 * N) τ ≤ _ := fun φ hφ => H2 g τ hτ (2 * N) hN2 φ hφ
-  haveI : FiniteDimensional ℂ (thetaLevel (2 * N) τ) := by
-    haveI := FiniteDimensional.span_of_finite ℂ (Set.finite_range
+  have : FiniteDimensional ℂ (thetaLevel (2 * N) τ) := by
+    have := FiniteDimensional.span_of_finite ℂ (Set.finite_range
       (fun (c : Fin g → Fin (2 * N)) (z : Fin g → ℂ) => theta (fun i => ((c i : ℕ) : ℝ) / (2 * N : ℕ)) 0 (((2 * N : ℕ) : ℂ) • z) (((2 * N : ℕ) : ℂ) • τ)))
     exact Submodule.finiteDimensional_of_le hle
   exact exists_sum_mul (thetaLevel (2 * N) τ) (thetaLevel (2 * N) τ)

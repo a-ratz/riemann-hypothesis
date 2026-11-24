@@ -77,7 +77,7 @@ theorem exists_field : ∀ (Z : Scheme.{0}) (U : Z.Opens), IsAffineOpen U → �
       (∀ a b, δ (a + b) = δ a + δ b) ∧ (∀ a b, δ (a * b) = a * δ b + b * δ a) ∧
       ∀ a, δ (resG X (X.basicOpen_le f) a) = resG X (X.basicOpen_le f) (d₀ a) := by
     intro f
-    haveI := hW.isLocalization_basicOpen f
+    have := hW.isLocalization_basicOpen f
     obtain ⟨δ, h1, h2, h3⟩ := GlobalTheory.LocDerExt.der_exists f (RingHom.id _)
       (fun a => resG X (X.basicOpen_le f) (d₀ a)) (fun a b => by simp only [hadd, map_add (f := _)])
       (fun a b => by simp only [hmul, map_add (f := _), map_mul, RingHom.id_apply]; rfl)
@@ -86,7 +86,7 @@ theorem exists_field : ∀ (Z : Scheme.{0}) (U : Z.Opens), IsAffineOpen U → �
   have compat : ∀ (f g : Γ(X, W₀)) (k : X.basicOpen g ≤ X.basicOpen f) (s : Γ(X, X.basicOpen f)),
       resG X k (δ f s) = δ g (resG X k s) := by
     intro f g k s
-    haveI := hW.isLocalization_basicOpen f
+    have := hW.isLocalization_basicOpen f
     refine GlobalTheory.LocDerExt.der_unique f (resG X k)
       (fun s => resG X k (δ f s)) (fun s => δ g (resG X k s)) (fun a b => ?_)
       (fun a b => ?_) (fun a => ?_) s
@@ -116,20 +116,20 @@ theorem exists_field : ∀ (Z : Scheme.{0}) (U : Z.Opens), IsAffineOpen U → �
   classical
   refine ⟨fun W s => if h : W ≤ W₀ then t W h s else 0, ⟨?_, ?_, ?_⟩, ?_⟩
   · intro W h a b
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     refine sep' X hW h _ _ (fun f k => ?_)
     rw [map_add (f := _), ht W h _ f k, ht W h _ f k, ht W h _ f k, map_add (f := _), δadd]
   · intro W h a b
-    simp only [dif_pos h]
+    simp only [dite_eq_left h]
     refine sep' X hW h _ _ (fun f k => ?_)
     rw [map_add (f := _), map_mul, map_mul, ht W h _ f k, ht W h _ f k, ht W h _ f k, map_mul, δmul]
   · intro W W' h' h a
-    simp only [dif_pos h, dif_pos (h'.trans h)]
+    simp only [dite_eq_left h, dite_eq_left (h'.trans h)]
     refine sep' X hW (h'.trans h) _ _ (fun f k => ?_)
     refine Eq.trans ?_ (GlobalTheory.LocDerExt.res_res X h' k _).symm
     rw [ht W' _ _ f k, ht W h a f (k.trans h'), GlobalTheory.LocDerExt.res_res X]
   · funext a
-    simp only [dif_pos (le_refl W₀)]
+    simp only [dite_eq_left (le_refl W₀)]
     refine sep' X hW le_rfl _ _ (fun f k => ?_)
     rw [ht W₀ _ _ f k, δres]
 

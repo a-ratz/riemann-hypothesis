@@ -664,9 +664,9 @@ theorem exists_resolved_modification : GlobalTheory.Published.Principalisation �
   intro hP F _ _ X X' W V _ _ _ sX n _ φ q sW i ℓ hsX hgc hφ hsW hqf hqs hw hi hℓ hℓi δ hδ N hN hNδ J v hv hgen
   obtain ⟨j₀, hj₀⟩ := hgen
   obtain ⟨o₀⟩ : Nonempty (Sp ℂ) := inferInstance
-  haveI : Nonempty V := ⟨v j₀ o₀⟩
-  haveI : IsIntegral V := isIntegral_of_isOpenImmersion i
-  haveI : Nonempty X := ⟨i (v j₀ o₀)⟩
+  have : Nonempty V := ⟨v j₀ o₀⟩
+  have : IsIntegral V := isIntegral_of_isOpenImmersion i
+  have : Nonempty X := ⟨i (v j₀ o₀)⟩
   have hpX : IsProper sX := ((isProjOver_iff_isProper_and_exists_isAmpleLB sX).1 hsX).1
   have hpX' : IsProper (φ ≫ sX) := ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hφ).1
   have hpW : IsProper sW := ((isProjOver_iff_isProper_and_exists_isAmpleLB sW).1 hsW).1
@@ -688,8 +688,8 @@ theorem exists_resolved_modification : GlobalTheory.Published.Principalisation �
     exact le_antisymm h₁ h₂
 
   obtain ⟨W', s, UW, hW', hsm, hpj, hUW, hiso⟩ := _root_.GlobalTheory.WeakRes.weak_resolution hP F W sW n hsW hdW
-  haveI := hW'
-  haveI := hiso
+  have := hW'
+  have := hiso
   have hηUW : genericPoint W ∈ UW := genericPoint_mem UW hUW
 
   let O : V.Opens := (ℓ ≫ q) ⁻¹ᵁ UW
@@ -724,9 +724,9 @@ theorem exists_resolved_modification : GlobalTheory.Published.Principalisation �
     rw [reassoc_of% hb, reassoc_of% hcf, hw, reassoc_of% hℓi, reassoc_of% he]
   obtain ⟨M, r, hMi, hrt, hrM⟩ :=
     _root_.GlobalTheory.CompHS.exists_modif_map_of_open hP F X (pullback q s) sX n (pullback.snd q s ≫ s ≫ sW) U r₀ inferInstance hsX ht hUne hr₀
-  haveI := hMi
+  have := hMi
   have hsep : IsSeparated sX := inferInstance
-  haveI : IsDominant M.opn.ι := ⟨show Dense (Set.range M.opn.ι) by rw [Scheme.Opens.range_ι]; exact M.dense⟩
+  have : IsDominant M.opn.ι := ⟨show Dense (Set.range M.opn.ι) by rw [Scheme.Opens.range_ι]; exact M.dense⟩
   have hσ : r ≫ pullback.fst q s ≫ φ = M.σ := by
     refine ext_of_isDominant_of_isSeparated sX ?_ M.opn.ι ?_
     · simp only [Category.assoc]
@@ -765,8 +765,8 @@ theorem exists_resolved_modification : GlobalTheory.Published.Principalisation �
       rw [reassoc_of% hrM]
       simp only [r₀, pullback.lift_snd, Category.assoc]
   choose d hd hzd using key
-  haveI : Nonempty UW.toScheme := ⟨⟨_, hηUW⟩⟩
-  haveI : IsIntegral UW.toScheme := isIntegral_of_isOpenImmersion UW.ι
+  have : Nonempty UW.toScheme := ⟨⟨_, hηUW⟩⟩
+  have : IsIntegral UW.toScheme := isIntegral_of_isOpenImmersion UW.ι
   have hgen' : ∀ j o, (z j ≫ f) o = genericPoint W' := fun j o => by
     have h₁ : d j o = genericPoint UW.toScheme := by
       apply UW.ι.isOpenEmbedding.injective
@@ -860,7 +860,7 @@ theorem lineBundleGlobalSectionsDim_nefPow_tensor_ample_isBigO : GlobalTheory.Pu
       induction D using ENat.recTopCoe with
       | top =>
         have h' : (⊤ : ℕ∞) ≤ (d : ℕ∞) := by exact_mod_cast hd
-        exact absurd (top_le_iff.1 h') (ENat.coe_ne_top d)
+        exact absurd (top_le_iff.1 h') (ENat.natCast_ne_top d)
       | coe n => exact ⟨n, rfl⟩
   have hed : e ≤ d := by
     rw [he] at hd
@@ -947,7 +947,7 @@ theorem cls_toLB_pull : ∀ (M W : Scheme.{0}) [IsIntegral M] [IsIntegral W] (f 
       rw [e0, LB.val_res, fnOf_resG]
       rfl
     rw [e, fnOf_app, fnOf_toLB_g]
-    simp only [Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+    simp only [Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
     rw [← map_mul, div_mul_cancel₀ _ (Units.ne_zero _)]
   rw [← cls_pull (isLB_toLB D₀) f hP.isLB, ← toPic_apply, hP.toPic_eq]
 
@@ -987,7 +987,7 @@ theorem isolated_in_fibre_of_etale_restrict :
   let z' : (f ⁻¹ᵁ U : M.Opens) := ⟨z, hz⟩
   obtain ⟨u, hu, huz⟩ := isDiscrete_iff_forall_mem_exists_isOpen.mp
     ((f ∣_ U).isDiscrete_preimage_singleton ((f ∣_ U) z')) z' rfl
-  refine ⟨⟨Subtype.val '' u, (f ⁻¹ᵁ U).isOpen.isOpenMap_subtype_val u hu⟩, ⟨z', ?_, rfl⟩, ?_⟩
+  refine ⟨⟨Subtype.val '' u, (f ⁻¹ᵁ U).isOpen.isOpenMap_subtypeVal u hu⟩, ⟨z', ?_, rfl⟩, ?_⟩
   · have : z' ∈ u ∩ (f ∣_ U) ⁻¹' {(f ∣_ U) z'} := by rw [huz]; rfl
     exact this.1
   · rintro y ⟨y', hy'u, rfl⟩ hy
@@ -1030,13 +1030,13 @@ namespace GlobalTheory.EtaleSep
 
 theorem sections_separate_fibre : GlobalTheory.Published.NadelVanishingAndNonKltDivisor → GlobalTheory.Published.NefNumerics → ∀ (M W : Scheme.{0}) [IsIntegral M] [IsIntegral W] (p : W ⟶ Sp ℂ) (f : M ⟶ W) [IsDominant f] (n : ℕ) [SmoothOfRelativeDimension n p] [SmoothOfRelativeDimension n (f ≫ p)], IsProjOver p → IsProjOver (f ≫ p) → 1 ≤ n → letI := algebraΓOfHom p; letI := algebraΓOfHom (f ≫ p); ∀ (K : CanonLB (f ≫ p) n) (N : LB W) (hN : N.IsLB) (N' B : LB M) (hN' : N'.IsLB) (hB : B.IsLB) (m : ℕ) (x : Sp ℂ ⟶ W) (U : W.Opens), IsNef ℂ N → IsBig ℂ N → IsNef ℂ (N.pull f) → IsBig ℂ (N.pull f) → IsNef ℂ N' → (n + 1).choose 2 < m → cls B hB = m • CechPic.pull f (cls N hN) + cls N' hN' → x ≫ p = 𝟙 _ → ⊤ ≤ x ⁻¹ᵁ U → Etale (f ∣_ U) → (∀ (Z : Closeds W) (e : ℕ), IsIrreducible (Z : Set W) → Set.range x ⊆ Z → 1 ≤ e → topologicalKrullDim (Z : Set W) = e → 0 < interNumRed ℂ Z fun _ : Fin e => N) → ∀ (J : Type) [Fintype J] (z : J → (Sp ℂ ⟶ M)), Function.Injective z → (∀ j, z j ≫ f = x) → ∀ (k : J → (tens K.bundle B).ι) (hk : ∀ j, ⊤ ≤ z j ⁻¹ᵁ (tens K.bundle B).U (k j)) (a : J → ℂ), (∀ g : H0 (f ≫ p) (tens K.bundle B) ⊤, ∑ j, a j * H0.val (z j) (k j) le_top (hk j) g = 0) → a = 0 := by
   intro hK hNN M W _ _ p f _ n _ _ hp hpM hn1
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom (f ≫ p)
+  let := algebraΓOfHom p
+  let := algebraΓOfHom (f ≫ p)
   intro K N hN N' B hN' hB m x U hNn hNb hNfn hNfb hN'n hm hBc hxp hxU hEt hpos J _ z hzi hz k hk a hrel
-  haveI : IsLocallyNoetherian W := by
-    haveI := SmoothOfRelativeDimension.smooth n p; exact LocallyOfFiniteType.isLocallyNoetherian p
-  haveI : IsLocallyNoetherian M := by
-    haveI := SmoothOfRelativeDimension.smooth n (f ≫ p); exact LocallyOfFiniteType.isLocallyNoetherian (f ≫ p)
+  have : IsLocallyNoetherian W := by
+    have := SmoothOfRelativeDimension.smooth n p; exact LocallyOfFiniteType.isLocallyNoetherian p
+  have : IsLocallyNoetherian M := by
+    have := SmoothOfRelativeDimension.smooth n (f ≫ p); exact LocallyOfFiniteType.isLocallyNoetherian (f ≫ p)
   set c₀ := (n + 1).choose 2 with hc₀def
   set pt : Sp ℂ := IsLocalRing.closedPoint ℂ with hpt
   set x₀ : W := x pt with hx₀
@@ -1105,7 +1105,7 @@ theorem sections_separate_fibre : GlobalTheory.Published.NadelVanishingAndNonKlt
 
   set UM : M.Opens := f ⁻¹ᵁ (U ⊓ U') with hUM
   have hEtM : Etale (UM.ι ≫ f) := by
-    haveI := hEt
+    have := hEt
     have hle : UM ≤ f ⁻¹ᵁ U := fun y hy => hy.1
     have e : UM.ι ≫ f = M.homOfLE hle ≫ (f ∣_ U) ≫ U.ι := by
       rw [morphismRestrict_ι, ← Category.assoc, Scheme.homOfLE_ι]
@@ -1177,7 +1177,7 @@ open GlobalTheory.ThickeningDetermines (secIdeal)
 
 theorem isProjOver_along {k : Type} [Field k] {X Z : Scheme.{0}} [Algebra k Γ(X, ⊤)] (hp : IsProjOver (strHom k (X := X)))
     (i : Z ⟶ X) [IsClosedImmersion i] : letI := algebraΓAlong k i; IsProjOver (strHom k (X := Z)) := by
-  letI := algebraΓAlong k i
+  let := algebraΓAlong k i
   obtain ⟨n, e, he, hs⟩ := hp
   exact ⟨n, i ≫ e, inferInstance, by rw [Category.assoc, hs, comp_strHom (appTop_algebraMap_along k i)]⟩
 
@@ -1197,7 +1197,7 @@ theorem dim_zeroScheme_le [IsIntegral X] [IsLocallyNoetherian X] {L : LB X} (hL 
 theorem globalSections_dim_le_div_add_restriction [IsIntegral X] (hp : IsProjOver (strHom k (X := X))) {L B : LB X} (hL : L.IsLB) (hB : B.IsLB) {t : L.Sec}
     (ht : t ≠ 0) : letI := algebraΓAlong k (secIdeal hL t).subschemeι
     lbH0 k B ≤ lbH0 k (LB.div B L) + lbH0 k (B.pull (secIdeal hL t).subschemeι) := by
-  letI := algebraΓAlong k (secIdeal hL t).subschemeι
+  let := algebraΓAlong k (secIdeal hL t).subschemeι
   have := isNoetherian_of_isProjOver hp
   have := (mono_cutHom_structureModule_iff hL t).2 ((sec_ne_zero_iff t).1 ht)
   have hF := finiteCohTwists_of_isProjOver (algebraMap_eq_strHom k X) (structureModule X) hp
@@ -1216,8 +1216,8 @@ end Cut
 theorem nef_pull (hN : GlobalTheory.Published.NefNumerics) {F E : Type} [Field F] [Field E] {X Y : Scheme.{0}} (pX : X ⟶ Sp F)
     (pY : Y ⟶ Sp E) (g : Y ⟶ X) (hX : IsProjOver pX) (hY : IsProjOver pY) (L : LB X)
     (hL : letI := algebraΓOfHom pX; IsNef F L) : letI := algebraΓOfHom pY; IsNef E (L.pull g) := by
-  letI := algebraΓOfHom pX
-  letI := algebraΓOfHom pY
+  let := algebraΓOfHom pX
+  let := algebraΓOfHom pY
   obtain ⟨hpp, A, hA⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB pX).1 hX
   obtain ⟨B, hB⟩ := exists_isAmpleLB_of_isProjOver hY
   have : IsProper (strHom F (X := X)) := by rw [strHom_eq (f := pX) fun _ => rfl]; exact hpp
@@ -1243,7 +1243,7 @@ theorem ampleAt_generic (hN : GlobalTheory.Published.NefNumerics) {F : Type} [Fi
   have hP : (lbPow (lbPow A q) 2).IsLB := isLB_lbPow hg.isLB 2
   obtain ⟨t, ht⟩ : HasNonzeroSec (lbPow (lbPow A q) 2) := hg.hasNonzeroSec.pow hg.isLB 2
   let ι := (secIdeal hP t).subschemeι
-  letI := algebraΓAlong F ι
+  let := algebraΓAlong F ι
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.NefGrowth.lineBundleGlobalSectionsDim_nefPow_tensor_ample_isBigO hN F _ n (isProjOver_along hp ι) (dim_zeroScheme_le hP ht hd.le)
     (L.pull ι) (A.pull ι) (hL.pull_of_isClosedImmersion ι (appTop_algebraMap_along F ι))
     (hA.pull_of_isClosedImmersion ι)
@@ -1282,8 +1282,8 @@ theorem ampleAt_of_isBig_pull (hN : GlobalTheory.Published.NefNumerics) {F : Typ
     (hdM : topologicalKrullDim M = n) (hp : IsProjOver p) (hq : IsProjOver (f ≫ p)) (hf : Surjective f)
     (hr : f.residueDegree (genericPoint M) ≠ 0) {L : LB W} (hL : letI := algebraΓOfHom p; IsNef F L)
     (hb : letI := algebraΓOfHom (f ≫ p); IsBig F (L.pull f)) : AmpleAt L (genericPoint W) := by
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom (f ≫ p)
+  let := algebraΓOfHom p
+  let := algebraΓOfHom (f ≫ p)
   obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_le' hn
   obtain ⟨r, A, hA, hle⟩ := _root_.GlobalTheory.GlobalSectionsPullback.globalSectionsDim_pullback_le_generically_finite F M W p f hp hq hf hr
   obtain ⟨-, c, hc, hm⟩ := (isBig_iff (fun _ => rfl) hq hdM).1 hb
@@ -1301,7 +1301,7 @@ theorem exists_etale_restrict {F : Type} [Field F] [CharZero F] {M W : Scheme.{0
     (p : W ⟶ Sp F) [LocallyOfFiniteType p] (f : M ⟶ W) [IsProper f] [Surjective f]
     (hr : f.residueDegree (genericPoint M) ≠ 0) : ∃ U : W.Opens, genericPoint W ∈ U ∧ Etale (f ∣_ U) := by
   have : IsLocallyNoetherian W := LocallyOfFiniteType.isLocallyNoetherian p
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   have : CharZero Γ(W, ⊤) := charZero_of_injective_algebraMap (algebraMap F Γ(W, ⊤)).injective
   have hη : f (genericPoint M) = genericPoint W := by
     have h := (genericPoint_spec M).image f.continuous
@@ -1310,8 +1310,8 @@ theorem exists_etale_restrict {F : Type} [Field F] [CharZero F] {M W : Scheme.{0
   obtain ⟨U, -, hU, hη', hU', -, hE, -⟩ :=
     GenFiniteEtale.exists_finite_etale_of_isProper f hη hr ⊤ trivial
   refine ⟨U, hη', ?_⟩
-  haveI : IsAffine U := hU
-  haveI : IsAffine (f ⁻¹ᵁ U) := hU'
+  have : IsAffine U := hU
+  have : IsAffine (f ⁻¹ᵁ U) := hU'
   rw [HasRingHomProperty.iff_of_isAffine (P := @Etale), morphismRestrict_appTop]
   have key : ∀ V : W.Opens, V = U → (f.app V).hom.Etale := fun V e => e ▸ hE
   exact (RingHom.Etale.respectsIso.cancel_right_isIso _ _).2 (key _ U.ι_image_top)
@@ -1334,7 +1334,7 @@ theorem sum_val_pull_eq_zero {F : Type} [Field F] [Algebra F ℂ] {Y : Scheme.{0
   let π : Z ⟶ Y := pullback.fst p (spMap (algebraMap F ℂ))
   let q : Z ⟶ Sp ℂ := pullback.snd p (spMap (algebraMap F ℂ))
   let S : LinSys F := ⟨Y, p, n, T, hT, 0, Fin.elim0⟩
-  letI := algebraΓOfHom q
+  let := algebraΓOfHom q
   obtain ⟨N, b, hb⟩ : ∃ (N : ℕ) (b : Fin N → T.Sec), ∀ t : (T.pull π).Sec, ∃ u : Fin N → ℂ,
       ∑ i, algebraMap ℂ Γ(Z, ⊤) (u i) • secPull (b i) π = t :=
     SectionsFieldChange.exists_pullSecs_spanning F ℂ S ⟨inferInstance, hp, hc, hn⟩
@@ -1427,7 +1427,7 @@ theorem separate_numberField (hK : GlobalTheory.Published.NadelVanishingAndNonKl
     (h : ∀ g : H0 (f ≫ p) (tens K.bundle B) ⊤, ∑ j, a j * H0.val (z j) (k j) le_top (hk j) g = 0) : a = 0 := by
   rcases isEmpty_or_nonempty J with hJ | ⟨⟨j₀⟩⟩
   · exact Subsingleton.elim _ _
-  letI : Algebra F ℂ := σ.toAlgebra
+  let : Algebra F ℂ := σ.toAlgebra
   let πW := pullback.fst p (spMap (algebraMap F ℂ))
   let pC := pullback.snd p (spMap (algebraMap F ℂ))
   let πM := pullback.fst (f ≫ p) (spMap (algebraMap F ℂ))
@@ -1441,9 +1441,9 @@ theorem separate_numberField (hK : GlobalTheory.Published.NadelVanishingAndNonKl
   have Hf : IsPullback πM fC f πW := IsPullback.of_bot HM' hf₁.symm HW
   obtain ⟨hWi, -, hWs, hWq, -⟩ := BaseChangeVariety.baseChange_props F ℂ W _ p pC πW n HW hWp hWc
   obtain ⟨hMi, -, hMs, hMq, -⟩ := BaseChangeVariety.baseChange_props F ℂ M _ (f ≫ p) (fC ≫ pC) πM n HM' hMp hMc
-  haveI := hWi; haveI := hMi; haveI := hWs; haveI := hMs
-  haveI : Surjective fC := MorphismProperty.of_isPullback (P := @Surjective) Hf inferInstance
-  haveI : IsAffineHom πW := MorphismProperty.of_isPullback (P := @IsAffineHom) HW.flip inferInstance
+  have := hWi; have := hMi; have := hWs; have := hMs
+  have : Surjective fC := MorphismProperty.of_isPullback (P := @Surjective) Hf inferInstance
+  have : IsAffineHom πW := MorphismProperty.of_isPullback (P := @IsAffineHom) HW.flip inferInstance
   let zC : J → (Sp ℂ ⟶ pullback (f ≫ p) (spMap (algebraMap F ℂ))) := fun j =>
     HM.lift (z j) (𝟙 _) (by rw [hzp j, Category.id_comp])
   have hz₁ : ∀ j, zC j ≫ πM = z j := fun j => HM.lift_fst _ _ _
@@ -1456,8 +1456,8 @@ theorem separate_numberField (hK : GlobalTheory.Published.NadelVanishingAndNonKl
     HW.hom_ext (by rw [hxW, hxW, hzf j j₀]) (by rw [hxp, hxp])
   have hπx : ∀ s, πW (x s) = (z j₀ ≫ f) s := fun s => congrArg (fun g => g s) (hxW j₀)
   obtain ⟨s₀⟩ : Nonempty (Sp ℂ) := inferInstance
-  letI := algebraΓOfHom pC
-  letI := algebraΓOfHom (fC ≫ pC)
+  let := algebraΓOfHom pC
+  let := algebraΓOfHom (fC ≫ pC)
   have hNC := LB.isLB_pull hN πW
   have hAx : AmpleAt (N.pull πW) (x s₀) :=
     AmplePull.ampleAt_pull W _ πW N hN (x s₀) (by rw [hπx]; exact (hzU j₀ s₀).2)
@@ -1538,12 +1538,12 @@ theorem generic_data (hNN : GlobalTheory.Published.NefNumerics) {F : Type} [Fiel
 
 theorem sections_separate_quotient_fibre : GlobalTheory.Published.NadelVanishingAndNonKltDivisor → GlobalTheory.Published.NefNumerics → GlobalTheory.Published.Principalisation → ∀ (F : Type) [Field F] [NumberField F] (σ : F →+* ℂ) (X X' W V : Scheme.{0}) [IsIntegral X] [IsIntegral X'] [IsIntegral W] (sX : X ⟶ Sp F) (n : ℕ) [SmoothOfRelativeDimension n sX] (φ : X' ⟶ X) (q : X' ⟶ W) (sW : W ⟶ Sp F) (i : V ⟶ X) (ℓ : V ⟶ X'), IsProjOver sX → GeometricallyConnected sX → 1 ≤ n → IsProjOver (φ ≫ sX) → IsProjOver sW → IsFinite q → Surjective q → q ≫ sW = φ ≫ sX → IsOpenImmersion i → IsOpenImmersion ℓ → ℓ ≫ φ = i → letI := algebraΓOfHom sX; ∀ (K : CanonLB sX n) (δ N' B : LB X) (hδ : δ.IsLB) (hN' : N'.IsLB) (hB : B.IsLB) (N : LB W) (hN : N.IsLB) (m : ℕ), CechPic.pull q (cls N hN) = CechPic.pull φ (cls δ hδ) → IsNef F δ → IsBig F δ → IsNef F N' → (n + 1).choose 2 < m → cls B hB = m • cls δ hδ + cls N' hN' → ∀ (J : Type) [Fintype J] (v : J → (Sp ℂ ⟶ V)), Function.Injective v → (∀ j, v j ≫ i ≫ sX = spMap σ) → (∀ j j', v j ≫ ℓ ≫ q = v j' ≫ ℓ ≫ q) → (∃ j, ∀ s, (v j ≫ i) s = genericPoint X) → ∀ (k : J → (tens K.bundle B).ι) (hk : ∀ j, ⊤ ≤ (v j ≫ i) ⁻¹ᵁ (tens K.bundle B).U (k j)) (a : J → ℂ), (∀ g : H0 sX (tens K.bundle B) ⊤, ∑ j, a j * H0.val (v j ≫ i) (k j) le_top (hk j) g = 0) → a = 0 := by
   intro hK hNN hPr F _ _ σ X X' W V _ _ _ sX n _ φ q sW i ℓ hXp hgc hn hφp hWp hqf hqs hcomm hi hℓ hℓφ
-  letI := algebraΓOfHom sX
+  let := algebraΓOfHom sX
   intro K δ N' B hδ hN' hB N hN m hpull hδn hδb hN'n hm hBc J _ v hv hvσ hvq hvgen k hk a hsum
-  haveI := hi
+  have := hi
   obtain ⟨W', hW'i, pW, U, M, f, NW, hNW, hMi, hWs, hWp', hWgc, hfp, hfs, hUne, hcls, z, hzU, hzσ, hzf, hzgen⟩ :=
     QuotSetup.exists_resolved_modification hPr F X X' W V sX n φ q sW i ℓ hXp hgc hφp hWp hqf hqs hcomm hi hℓ hℓφ δ hδ N hN hpull J v hvq hvgen
-  haveI := hW'i; haveI := hMi; haveI := hWs
+  have := hW'i; have := hMi; have := hWs
   have hUd : Dense (U : Set X) := U.isOpen.dense hUne
   have hMgc : GeometricallyConnected M.str :=
     Modif.geometricallyConnected_str F X sX U n M inferInstance hgc hUd
@@ -1554,7 +1554,7 @@ theorem sections_separate_quotient_fibre : GlobalTheory.Published.NadelVanishing
   have hδσb : (letI := algebraΓOfHom M.str; IsBig F (δ.pull M.σ)) := big_pull_modif sX n U M hUne δ hδb
   have hNWn : (letI := algebraΓOfHom pW; IsNef F NW) :=
     _root_.GlobalTheory.NefDescent.isNef_of_pull F M.X W' f pW M.str NW hNW (δ.pull M.σ) (LB.isLB_pull hδ M.σ) hfp hWp' M.proj hfs hcls hδσn
-  letI := algebraΓOfHom M.str
+  let := algebraΓOfHom M.str
   have hfNb : IsBig F (NW.pull f) := hδσb.of_cls_eq (LB.isLB_pull hNW f) hcls
   obtain ⟨hamp, UW, hgUW, het⟩ := generic_data hNN M.str pW f n hn hfp M.proj hWp' hfs NW hNWn hfNb
   let K' : CanonLB M.str n := CanonLB.all M.str n

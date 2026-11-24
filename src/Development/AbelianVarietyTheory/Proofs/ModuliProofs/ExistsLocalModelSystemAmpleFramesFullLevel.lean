@@ -475,7 +475,7 @@ theorem GlobalTheory.Models.exists_quotient_model : ∀ (E : Type) [Field E] [Nu
     rw [IsFinite.SpecMap_iff] at h2
     have : Module.Finite O' O := h2
     have : Algebra.IsIntegral O' O := inferInstance
-    exact Ideal.eq_bot_of_comap_eq_bot (R := O') hp
+    exact Ideal.eq_bot_of_under_eq_bot (R := O') hp
   have hpre : Function.Injective (pullback.fst s' (spMap β')) := by
     obtain ⟨-, -, hfr'⟩ := hβ'
     let _ := β'.toAlgebra
@@ -839,7 +839,7 @@ theorem exists_sabMap_iterate (Xo : Moduli D l) (r : Xo.X ⟶ Xo.X) (ν : SABMap
 theorem iterate_eq_id_of_fixes_fibre : Out.Laws → Out.Laws2 → Out.Laws3 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (S : ℕ) (β : RZ H S l.A →+* KA l) (C : Cpt Xo.s Xo.univ.t β) (r : Xo.X ≅ Xo.X) (ν : SABMap Xo.univ.t Xo.univ.t r.hom) (ρ : C.X ≅ C.X) (mu : SABMap C.t C.t ρ.hom), IsInc (RZ H S l.A).subtype (KA l).val.toRingHom β → 0 < S → (∃ e, l.A ∣ S ^ e) → C.j ≫ ρ.hom = r.hom ≫ C.j → C.m.φ ≫ mu.φ = ν.φ ≫ C.m.φ → r.hom ≫ Xo.s = Xo.s → (∀ x, (Xo.univ.eta x).left ≫ ν.φ = r.hom ≫ (Xo.univ.eta x).left) → ∀ g : D.La →ₗ[𝓞 E] D.La, (∀ x, (Xo.univ.etaA (g x)).left ≫ ν.φ = r.hom ≫ (Xo.univ.etaA x).left) → ∀ (k : Type) [Field k] [IsAlgClosed k] (x : Sp k ⟶ C.X), x ≫ ρ.hom = x → pullback.fst C.t.G.hom x ≫ mu.φ = pullback.fst C.t.G.hom x → (fun f : Xo.X ⟶ Xo.X => f ≫ r.hom)^[l.A] (𝟙 _) = 𝟙 _ := by
   intro h₁ h₂ h₃ E _ _ _ H D l Xo S β C r ν ρ mu hinc hS ⟨e, he⟩ hj hφ hr hη g hg k _ _ x hx hfib
   obtain ⟨⟨_, hded⟩, -, hfrac⟩ := (BaseRing.isDedFrac_RZ E H l S e hS he).2.2 β hinc
-  letI := β.toAlgebra
+  let := β.toAlgebra
   obtain ⟨hnoeth, -, -, hpre, hflat, hdom, hqc⟩ := genericPart_dense_proOpen (RZ H S l.A) (KA l) C.X Xo.X C.s C.jQ
     C.flat C.proj C.jQ_open C.jQ_dense
   have hd : IsDominant C.j := hdom
@@ -914,7 +914,7 @@ theorem Cpt.basic_of_isDedFrac (C : Cpt c t₀ β) (hβ : IsDedFrac β) :
     IsLocallyNoetherian C.X ∧ IsReduced C.X ∧ IsProper C.s ∧ IsPreimmersion C.j ∧ Flat C.j ∧ IsDominant C.j ∧
       QuasiCompact C.j ∧ C.j ≫ C.s = c ≫ spMap β := by
   obtain ⟨⟨_, _⟩, -, hfr⟩ := hβ
-  letI := β.toAlgebra
+  let := β.toAlgebra
   obtain ⟨h1, -, -, h2, h3, h4, h5⟩ :=
     GlobalTheory.genericPart_dense_proOpen O F C.X U C.s C.jQ C.flat C.proj C.jQ_open C.jQ_dense
   refine ⟨h1, ?_, ?_, h2, h3, h4, h5, ?_⟩
@@ -1325,11 +1325,11 @@ theorem exists_twist_of_fibre (hL : Out.Laws) (hL2 : Out.Laws2) (hL3 : Out.Laws3
   obtain ⟨rF, a₁, a₂, -, -, -, htr⟩ := hF c₀ c rfl
   obtain ⟨β, hβ⟩ := LevCover.exists_spMap (y ≫ X₁.s)
   obtain ⟨θ, hθ⟩ : ∃ θ : c.F →+* k, θ.comp (IntermediateField.inclusion c.le).toRingHom = β := by
-    letI : Algebra (KA l₁) k := β.toAlgebra
-    letI : Algebra (KA l₁) c.F := (IntermediateField.inclusion c.le).toRingHom.toAlgebra
-    haveI := c.fin
-    haveI : IsScalarTower ℚ (KA l₁) c.F := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
-    haveI : Algebra.IsAlgebraic (KA l₁) c.F := Algebra.IsAlgebraic.tower_top (K := ℚ) (KA l₁)
+    let : Algebra (KA l₁) k := β.toAlgebra
+    let : Algebra (KA l₁) c.F := (IntermediateField.inclusion c.le).toRingHom.toAlgebra
+    have := c.fin
+    have : IsScalarTower ℚ (KA l₁) c.F := IsScalarTower.of_algebraMap_eq' (Subsingleton.elim _ _)
+    have : Algebra.IsAlgebraic (KA l₁) c.F := Algebra.IsAlgebraic.tower_top (K := ℚ) (KA l₁)
     exact ⟨(IsAlgClosed.lift (R := KA l₁) (S := c.F) (M := k)).toRingHom,
       (IsAlgClosed.lift (R := KA l₁) (S := c.F) (M := k)).comp_algebraMap⟩
   have w : y ≫ X₁.s = spMap θ ≫ spMap (IntermediateField.inclusion c.le).toRingHom := by
@@ -1348,7 +1348,7 @@ theorem exists_finite_invariant {l : Level H} (Xo : Moduli D l) :
       ∀ x, Xo.univ.etaA (g x) = Xo.univ.etaA (g' x) := by
   obtain ⟨_, _⟩ := LevCover.datum_free D
   obtain ⟨κ, _, q, hq⟩ := LevCover.exists_finite_mod D.La l.A_pos
-  haveI : Nonempty D.La := ⟨0⟩
+  have : Nonempty D.La := ⟨0⟩
   refine ⟨κ → κ, inferInstance, fun g c => q (g (Function.invFun q c)), fun g g' h x => ?_⟩
   obtain ⟨c, hc⟩ := hq _ _ (Function.invFun_eq (f := q) ⟨x, rfl⟩)
   obtain ⟨c', hc'⟩ := hq _ _ (congrFun h (q x))
@@ -1387,7 +1387,7 @@ theorem finite_twistMonoid (τ : autOver r →* Aut X₁.univ.t.G.left)
     (mu : ∀ ω : autOver r, SABMap X₁.univ.t X₁.univ.t ω.1.asIso.hom) (hmu : ∀ ω, (mu ω).φ = (τ ω).asIso.hom) :
     Finite (twistMonoid τ) := by
   obtain ⟨κ, _, q, hq⟩ := exists_finite_invariant X₁
-  haveI := finite_fieldAut l₁
+  have := finite_fieldAut l₁
   have hch : ∀ ω : twistMonoid τ, ∃ (g : D.La →ₗ[𝓞 E] D.La) (σ : KA l₁ ≃+* KA l₁),
       SemiTwist X₁ ω.1.1.asIso.hom (τ ω.1).asIso.hom g σ.toRingHom := fun ω => by
     obtain ⟨g, σ, -, h⟩ := ω.2
@@ -1450,7 +1450,7 @@ theorem exists_level_quotient : Out.Laws → Out.Laws2 → Out.Laws3 → ∀ (E 
   choose mu hmu using hmu
   let S := twistMonoid τ
   have hS := exists_mem_twistMonoid hL hL2 hL3 hA hk hr hc τ hτ
-  haveI : Finite S := finite_twistMonoid τ mu hmu
+  have : Finite S := finite_twistMonoid τ mu hmu
   obtain ⟨T, hT⟩ := exists_subgroup_of_finite S
   refine ⟨T, inferInstance, Finite.of_injective (fun t : T => (⟨t.1, (hT _).1 t.2⟩ : S))
       fun a b h => Subtype.ext (congrArg (fun s : S => s.1) h),
@@ -1558,7 +1558,7 @@ theorem card_stab_ne_zero {X Y : Scheme.{0}} {Γ : Type} [Group Γ] [Finite Γ] 
         rw [map_inv]
         show x ≫ (ρ a).asIso.inv = x
         exact (Iso.comp_inv_eq (ρ a).asIso).mpr (show x ≫ (ρ a).asIso.hom = x from ha).symm }
-  haveI : Fact n.Prime := ⟨hn⟩
+  have : Fact n.Prime := ⟨hn⟩
   have hP : IsPGroup n P := fun g => ⟨J, Subtype.ext (h g.1 g.2)⟩
   obtain ⟨m, hm⟩ := IsPGroup.iff_card.mp hP
   have : Nat.card {g // x ≫ (ρ g).asIso.hom = x} = n ^ m := hm

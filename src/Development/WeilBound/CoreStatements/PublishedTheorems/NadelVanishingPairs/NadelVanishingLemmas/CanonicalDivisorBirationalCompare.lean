@@ -84,10 +84,10 @@ theorem isAt_of_through' {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X] {p
 
 theorem not_mem_supp_sub_pullCart : ∀ (k : Type) [Field k] [CharZero k] (Y₀ Y₁ : Scheme.{0}) [IsIntegral Y₀] [IsIntegral Y₁] [IsLocallyNoetherian Y₀] [IsLocallyNoetherian Y₁] (q : Y₀ ⟶ Sp k) (n : ℕ) (t : Y₁ ⟶ Y₀) [IsDominant t] [SmoothOfRelativeDimension n q] [SmoothOfRelativeDimension n (t ≫ q)] (U : Y₀.Opens), (U : Set Y₀).Nonempty → IsIso (t ∣_ U) → ∀ (η : RatForms q n), η ≠ 0 → ∀ (K₀ : CartierDiv Y₀) (K₁ : CartierDiv Y₁), IsDivOfForm K₀ η → IsDivOfForm K₁ (EtaleKlt.ratPull q t n η) → ∀ y : Y₁, t y ∈ U → y ∉ (K₁ - pullCart t K₀).supp := by
   intro k _ _ Y₀ Y₁ _ _ _ _ q n t _ _ _ U hU hiso η hη K₀ K₁ h₀ h₁ y hy
-  haveI : Smooth q := SmoothOfRelativeDimension.smooth n q
-  haveI : Smooth (t ≫ q) := SmoothOfRelativeDimension.smooth n (t ≫ q)
-  haveI : GlobalTheory.IsNormalScheme Y₀ := isNormalScheme_of_smooth' q
-  haveI : GlobalTheory.IsNormalScheme Y₁ := isNormalScheme_of_smooth' (t ≫ q)
+  have : Smooth q := SmoothOfRelativeDimension.smooth n q
+  have : Smooth (t ≫ q) := SmoothOfRelativeDimension.smooth n (t ≫ q)
+  have : GlobalTheory.IsNormalScheme Y₀ := isNormalScheme_of_smooth' q
+  have : GlobalTheory.IsNormalScheme Y₁ := isNormalScheme_of_smooth' (t ≫ q)
   have hbir := _root_.GlobalTheory.Discrepancy.functionFieldMap_bijective_of_isIso_restrict Y₀ Y₁ t U hU hiso
   have hpull : EtaleKlt.ratPull q t n η ≠ 0 := fun h =>
     hη ((_root_.GlobalTheory.EtaleKlt.ratPull_bijective_of_birational k Y₀ Y₁ q t hbir n).1 (h.trans (map_zero _).symm))

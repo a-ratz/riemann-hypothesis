@@ -126,7 +126,7 @@ theorem UpperTheory.eq_one_of_smul_place_eq_of_completionMap_surjective :
         ∀ σ : E ≃ₐ[F] E, σ • w = w → σ = 1 := by
   intro F E _ _ _ _ _ q w hs σ hσ
   have h : w.1 = σ • w.1 := (congrArg Subtype.val hσ).symm
-  haveI : w.1.asIdeal.LiesOver q.asIdeal := w.2
+  have : w.1.asIdeal.LiesOver q.asIdeal := w.2
   have hid : ∀ y, galHom σ w.1 w.1 h y = y := by
     intro y
     obtain ⟨a, rfl⟩ := hs y
@@ -243,8 +243,8 @@ private theorem mult_smul (σ : E ≃ₐ[F] E) (w : InfinitePlace E) : (σ • w
   have h : (σ • w).IsReal ↔ w.IsReal := InfinitePlace.isReal_smul_iff
   unfold InfinitePlace.mult
   by_cases hw : w.IsReal
-  · rw [if_pos (h.2 hw), if_pos hw]
-  · rw [if_neg (fun h' => hw (h.1 h')), if_neg hw]
+  · rw [ite_eq_left (h.2 hw), ite_eq_left hw]
+  · rw [ite_eq_right (fun h' => hw (h.1 h')), ite_eq_right hw]
 
 private theorem inf_prod (σ : E ≃ₐ[F] E) {n : ℕ} (g : AdelicGLn.AdelicGL E n) :
     (∏ w : InfinitePlace E, AutomorphicForm.locHeight (infAt w (mapGL n (galAd σ) g)) ^ w.mult) =
@@ -353,7 +353,7 @@ theorem UpperTheory.norm_coeff_zero_dvd_charpoly_le_adicCompletion :
         (∀ i j, ‖M i j‖ ≤ R) → ∀ p : (w.adicCompletion E)[X], p.Monic → p ∣ M.charpoly → ‖p.coeff 0‖ ≤ R ^ n := by
   intro E _ _ w n M R hR hM p hp hd
   classical
-  haveI : Infinite (w.adicCompletion E) :=
+  have : Infinite (w.adicCompletion E) :=
     Infinite.of_injective _ (algebraMap E (w.adicCompletion E)).injective
 
   let S : Finset (w.adicCompletion E) :=
@@ -539,7 +539,7 @@ private lemma nrm_unif {E : Type} [Field E] [NumberField E] (w : HeightOneSpectr
     have h3 := (Valuation.mem_integer_iff _ _).1 ((mem_valuationInteger_iff w _).2 hm)
     rw [map_inv₀] at h3
     have h0 : ValuativeRel.valuation (w.adicCompletion E) x ≠ 0 := (Valuation.ne_zero_iff _).2 hne
-    exact absurd h3 (not_le.2 ((one_lt_inv₀ (zero_lt_iff.2 h0)).2 hlt))
+    exact absurd h3 (not_le.2 ((one_lt_inv₀ (pos_iff_ne_zero.2 h0)).2 hlt))
   have hvne : Valued.v x ≠ 0 := (Valuation.ne_zero_iff _).2 hne
   have hN : 1 < Ideal.absNorm w.asIdeal := HeightOneSpectrum.one_lt_absNorm w
   have hN2 : (2 : ℝ) ≤ (Ideal.absNorm w.asIdeal : ℝ) := by exact_mod_cast hN

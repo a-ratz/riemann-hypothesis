@@ -225,7 +225,7 @@ theorem shortSmall (E : Type) [Field E] [NumberField E] [IsCMField E] (hfr : Fra
   have hsp : span E (Λ : Set V) = ⊤ := by
     rw [eq_top_iff, ← H.span]; exact span_mono fun x hx => hx.1
   obtain ⟨e, heΛ, heo, he⟩ := hk V h Λ N ν B hV H
-  letI : Module ℚ V := Module.compHom V (algebraMap ℚ E)
+  let : Module ℚ V := Module.compHom V (algebraMap ℚ E)
   have : IsScalarTower ℚ E V := IsScalarTower.of_compHom ℚ E V
   have : Module.Finite ℤ Λ := Module.Finite.iff_fg.2 hfg
   have : HasUniqueDiv V := .of_module_rat V

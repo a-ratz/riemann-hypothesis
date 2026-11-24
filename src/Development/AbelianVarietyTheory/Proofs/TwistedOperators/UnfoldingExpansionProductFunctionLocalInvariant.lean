@@ -191,7 +191,7 @@ theorem chart_val_eq_one {es : AE D} {PP : Pl D.host.E} (he : IsIdemAt es PP) {v
     rw [map_mul]
     by_cases hQ : Q = PP
     · subst hQ; rw [(GlobalTheory.StdFrames.cpt_of_isIdemAt he).1, one_mul, hy]
-    · rw [(GlobalTheory.StdFrames.cpt_of_isIdemAt he).2 Q hQ, zero_mul, map_zero]; exact zero_le'
+    · rw [(GlobalTheory.StdFrames.cpt_of_isIdemAt he).2 Q hQ, zero_mul, map_zero]; exact zero_le
   refine val_eq_one_of_le (key c hc) (key c' hc') ?_
   rw [← map_mul, ← map_mul, hcc, map_one, map_one]
 
@@ -240,7 +240,7 @@ theorem GlobalTheory.DetIdeleUnit.cpt_gdet_kapAt {D : D7} {T : Type} {L : LevCh 
   rw [mul_right_comm, inv_mul_cancel₀ ha, one_mul]
 
 theorem GlobalTheory.DetIdeleUnit.valued_eq_one_of_valuation {D : D7} {w : Pl D.host.E} (y : Kw w) (h : ValuativeRel.valuation (Kw w) y = 1) : Valued.v y = 1 := by
-  haveI : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
+  have : (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ))).Compatible := Valuation.Compatible.ofValuation _
   have e := ValuativeRel.isEquiv (ValuativeRel.valuation (Kw w)) (Valued.v : Valuation (Kw w) (WithZero (Multiplicative ℤ)))
   first
   | exact e.eq_one_iff_eq_one.1 h
@@ -383,20 +383,20 @@ theorem cpt_of_isIdemSum {P : Finset (Pl D.host.E)} {e : AE D} (he : IsIdemSum e
   rw [hs]
   have h : ∀ PP ∈ P, GlobalTheory.StdFrames.cpt Q (toEAf D (es PP)) = if PP = Q then 1 else 0 := fun PP hPP => by
     by_cases hQ : PP = Q
-    · subst hQ; rw [if_pos rfl]; exact (GlobalTheory.StdFrames.cpt_of_isIdemAt (hes PP hPP)).1
-    · rw [if_neg hQ]; exact (GlobalTheory.StdFrames.cpt_of_isIdemAt (hes PP hPP)).2 Q (Ne.symm hQ)
+    · subst hQ; rw [ite_eq_left rfl]; exact (GlobalTheory.StdFrames.cpt_of_isIdemAt (hes PP hPP)).1
+    · rw [ite_eq_right hQ]; exact (GlobalTheory.StdFrames.cpt_of_isIdemAt (hes PP hPP)).2 Q (Ne.symm hQ)
   calc _ = ∑ PP ∈ P, (if PP = Q then (1 : Q.adicCompletion D.host.E) else 0) := Finset.sum_congr rfl h
     _ = _ := by rw [Finset.sum_ite_eq']
 
 theorem cpt_one_of_isIdemSum {P : Finset (Pl D.host.E)} {e : AE D} (he : IsIdemSum e P) {Q : Pl D.host.E} (hQ : Q ∈ P) :
     GlobalTheory.StdFrames.cpt Q (toEAf D e) = 1 := by
   classical
-  rw [cpt_of_isIdemSum he, if_pos hQ]
+  rw [cpt_of_isIdemSum he, ite_eq_left hQ]
 
 theorem cpt_zero_of_isIdemSum {P : Finset (Pl D.host.E)} {e : AE D} (he : IsIdemSum e P) {Q : Pl D.host.E} (hQ : Q ∉ P) :
     GlobalTheory.StdFrames.cpt Q (toEAf D e) = 0 := by
   classical
-  rw [cpt_of_isIdemSum he, if_neg hQ]
+  rw [cpt_of_isIdemSum he, ite_eq_right hQ]
 
 theorem map_unitMix_of_zero {R S : Type*} [CommRing R] [CommRing S] (φ : R →+* S) (e x : R) (h : φ e = 0) :
     φ (e * x + (1 - e)) = 1 := by
@@ -566,7 +566,7 @@ theorem char_eq_prod_loc_of_tame : ∀ {D : D7} {c : (AE D)ˣ →* Circle} {χ :
         exact ⟨(hkT P hP).1, (hkT P hP).2.1⟩
       · rw [hxP, hT0 P hP, hk1 P hP]
         simp) (fun P hP => by
-      simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_or] at hP
+      simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_or] at hP
       rw [hxP, hT0 P hP.1]
       exact ⟨map_one _, hP.2⟩)
   rw [key, ← Finset.prod_subset hTS (fun P _ hP => by rw [hk1 P hP, map_one, Units.val_one])]
@@ -778,10 +778,10 @@ theorem offPart_fixes_vac : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     exact rankX_even D _
   have hmu : Formalism.IndefR.Fin.UnrOff e (L.mu t (j + 1 + 1)) := unrOff_mu_locPl G hL t ⟨j + 1, hj⟩ he
   have hchS : G.chrS (Pair.top t (j + 1)) = L.mu t (j + 1 + 1) := by
-    simp only [GridData.chrS, Formalism.IndefR.Lift.attChr, hnodd, if_false]
+    simp only [GridData.chrS, Formalism.IndefR.Lift.attChr, hnodd, ite_false]
     rfl
   have hchT : G.chrT (Pair.top t (j + 1)) = L.mu t (j + 1 + 1) := by
-    simp only [GridData.chrT, Formalism.IndefR.Lift.attChr, hnodd', if_false]
+    simp only [GridData.chrT, Formalism.IndefR.Lift.attChr, hnodd', ite_false]
     rfl
 
   have hfrS := isFrame_moved (S.N.latS (Pair.top t (j + 1))) (G.Λ (.top (j + 1))) (S.βp (j + 1))
@@ -898,7 +898,7 @@ theorem vac_high_law (hA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts}
   have hr0 : Even (G.V (.top (j + 1))).rank := by
     rw [GlobalTheory.FunObj.rank_top G (j := j + 1) (by omega)]; exact GlobalTheory.FunObj.rankX_even D (j + 1)
   have hTc : G.chrT (.top t (j + 1)) = L.mu t (j + 1 + 1) := by
-    simp only [GridData.chrT, Formalism.IndefR.Lift.attChr, GridData.chr, GridData.pT, Nat.not_odd_iff_even.2 hr1, if_false]
+    simp only [GridData.chrT, Formalism.IndefR.Lift.attChr, GridData.chr, GridData.pT, Nat.not_odd_iff_even.2 hr1, ite_false]
   have hc : ((splitFacO (G.chrS (.top t (j + 1) : Pair T)) (G.chrT (.top t (j + 1) : Pair T))
       (GlobalTheory.VecInv.detAt e hee (G.pS (.top t (j + 1) : Pair T)) (cutPart (e + cA D e) _ g))
       (GlobalTheory.VecInv.detAt e hee (G.pT (.top t (j + 1) : Pair T)) 1) : ℂ) *
@@ -1042,13 +1042,13 @@ theorem detAt_conjPt_eq_prod {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {
   · intro Q
     simp only [RingHom.map_add (f := _), RingHom.map_mul, RingHom.map_sub, RingHom.map_one, map_prod, hcomp, hloc]
     by_cases hQ : Q ∈ locPl G t
-    · rw [if_pos hQ, one_mul, sub_self, add_zero, Finset.prod_eq_single ⟨Q, hQ⟩]
+    · rw [ite_eq_left hQ, one_mul, sub_self, add_zero, Finset.prod_eq_single ⟨Q, hQ⟩]
       · rw [GlobalTheory.LFun.finSingle_self, det_kapAt_val]
       · intro b _ hb
         exact GlobalTheory.LFun.finSingle_ne (fun h => hb (Subtype.ext h.symm)) _
       · intro h
         exact absurd (Finset.mem_univ _) h
-    · rw [if_neg hQ, zero_mul, zero_add, sub_zero]
+    · rw [ite_eq_right hQ, zero_mul, zero_add, sub_zero]
       exact (Finset.prod_eq_one fun w _ => GlobalTheory.LFun.finSingle_ne (fun h => hQ (by rw [h]; exact w.2)) _).symm
 
 end GlobalTheory.TopLevelInv
@@ -1137,7 +1137,7 @@ theorem exists_under_eq {F E : Type} [Field F] [NumberField F] [Field E] [Number
   have hker : RingHom.ker (algebraMap (𝓞 F) (𝓞 E)) ≤ v.asIdeal := by
     rw [(RingHom.injective_iff_ker_eq_bot _).mp (FaithfulSMul.algebraMap_injective (𝓞 F) (𝓞 E))]
     exact bot_le
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQ, hQc⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral v.asIdeal hker
   have hQ0 : Q ≠ ⊥ := by
     rintro rfl
@@ -1151,7 +1151,7 @@ theorem exists_under_eq {F E : Type} [Field F] [NumberField F] [Field E] [Number
 theorem valuation_eq_one_iff {E : Type} [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E))
     (x : w.adicCompletion E) :
     ValuativeRel.valuation (w.adicCompletion E) x = 1 ↔ Valued.v x = 1 := by
-  haveI : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   exact (ValuativeRel.isEquiv (ValuativeRel.valuation (w.adicCompletion E))
     (Valued.v : Valuation (w.adicCompletion E) (WithZero (Multiplicative ℤ)))).eq_one_iff_eq_one
@@ -1266,7 +1266,7 @@ theorem chrS_top_prod_locIdele : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : C
     rw [GridData.chrS, hrank]
     simp [Formalism.IndefR.Lift.attChr, GridData.chr, Nat.not_odd_iff_even.2 (even_rankX D j)]
   have hE : ChrEq (L.mu t (j + 1)) (muBase L (j + 1) * L.xiH t) := by
-    have h1 : muBase L (j + 1) = L.C.mu0 ⟨j, by omega⟩ := dif_pos (by omega)
+    have h1 : muBase L (j + 1) = L.C.mu0 ⟨j, by omega⟩ := dite_eq_left (by omega)
     rw [h1]
     exact GlobalTheory.TowerCharRead.chrEq_mul (hL.mu0 ⟨j, by omega⟩) (hL.xi t)
   rw [hchr, map_prod]
@@ -1644,7 +1644,7 @@ theorem prod_edgeFactor_col {j : ℕ} (hj : j + 1 < Γ.m) (g : GL (Fin (Γ.rank 
     List.prod_eq_one, one_mul, ← List.prod_toFinset _ List.nodup_range, List.toFinset_range]
   · simp only [Function.comp, hf, Finset.prod_mul_distrib]
     rw [Finset.prod_eq_single j, Finset.prod_eq_single (j + 1)]
-    · simp only [if_true, Grid.kappa, Grid.blockChar, MonoidHom.div_apply]
+    · simp only [ite_true, Grid.kappa, Grid.blockChar, MonoidHom.div_apply]
       simp only [Units.val_div_eq_div_val, Units.val_inv_eq_inv_val]
       field_simp
     · intro b _ hb; simp [hb]
@@ -1777,7 +1777,7 @@ theorem local_invariant : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} 
       ← Finset.prod_mul_distrib]
     refine Finset.prod_congr rfl fun w _ => ?_
     rw [GlobalTheory.T.unfoldingColumnArgs_movedPoint_conj_atPlace S ht j hj k w.1 w.2 x]
-    haveI := (isUnitVol_unitVol w.1).1
+    have := (isUnitVol_unitVol w.1).1
     exact datum_colMove (Γ := locGrid G t w.1) one_le_sLen _ _ _ _ (isAdmissible_Tflip hL W S.B t Φ hde hc w.2) (β w) hj
       (givenLevel_col t w.1 j).le (kapAt_mem S hj hk w) _ _
   · rw [hzero x hx, hzero _ fun h => hx ⟨fun j' => (hhalf j').1 (h.1 j'), h.2⟩, mul_zero]

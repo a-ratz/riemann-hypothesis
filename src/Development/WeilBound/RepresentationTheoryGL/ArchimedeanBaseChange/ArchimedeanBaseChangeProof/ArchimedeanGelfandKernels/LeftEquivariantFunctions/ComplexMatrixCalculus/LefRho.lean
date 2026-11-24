@@ -142,7 +142,7 @@ theorem frIso' (_hF : MatrixFrechetDerivativeAtZeroLaws) (hA : Avg) : FrIso := b
   set T := sqQ lam * (C * Ring.inverse (sqQ lam)) with hT
   have hin : inner ℂ (T v) (T v) = inner ℂ v v := by
     rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.star_eq_adjoint,
-      ← ContinuousLinearMap.mul_apply, hTT, ContinuousLinearMap.one_apply]
+      ← mul_apply_eq_comp, hTT, one_apply_eq_self]
   have h3 : ‖T v‖ ^ 2 = ‖v‖ ^ 2 := by
     rw [← inner_self_eq_norm_sq (𝕜 := ℂ), ← inner_self_eq_norm_sq (𝕜 := ℂ), hin]
   exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).1 h3
@@ -151,7 +151,7 @@ theorem frCont' (hF : MatrixFrechetDerivativeAtZeroLaws) (hA : Avg) : FrCont := 
   intro n lam
   simp only [lefFr_eq]
   have h1 : ContinuousOn (fr0 (n := n) lam) (GLs n) := ((hF n lam).2.2).continuousOn
-  have h2 : Continuous fun k : UK n => fr0 lam k.1 := h1.comp_continuous continuous_subtype_val mem_GLs
+  have h2 : Continuous fun k : UK n => fr0 lam k.1 := h1.comp_continuous continuous_subtypeVal mem_GLs
   exact continuous_const.mul (((clm_continuous lam).comp h2).mul continuous_const)
 
 end PositivityTheory.RgBcC

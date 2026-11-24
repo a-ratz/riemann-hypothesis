@@ -192,7 +192,7 @@ theorem _root_.GlobalTheory.UnitaryHighestWeightUnique.intertwine_group {W₁ W�
     rw [hAc]
     exact _root_.GlobalTheory.UnitaryHighestWeight.deriv_left U₂ A₂ hadd₂ hd₂ (T v) s
   have heq := ODE_solution_unique_univ (v := fun _ => Ac) (s := fun _ => Set.univ)
-    (K := ‖Ac‖₊) (t₀ := 0) (fun _ => Ac.lipschitz.lipschitzOnWith)
+    (K := ‖Ac‖₊) (t₀ := 0) (fun _ => Ac.lipschitzWith.lipschitzOnWith)
     (fun s => ⟨hf s, Set.mem_univ _⟩) (fun s => ⟨hg s, Set.mem_univ _⟩) (by simp [h₁, h₂])
   exact congrFun heq t
 

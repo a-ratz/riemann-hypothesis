@@ -168,8 +168,8 @@ theorem up_split (v : Valuation k Γ) {r : Γ} (hr : r < 1) {n : ℕ} (β : Fin 
       (∀ i j, β i ≠ β j → m i j = 0) ∧ u = a * m := by
   classical
   let m : Matrix (Fin n) (Fin n) k := fun i j => if β i = β j then u i j else 0
-  have hmb : ∀ i j, β i ≠ β j → m i j = 0 := fun i j h => if_neg h
-  have hmu : ∀ i j, β i = β j → m i j = u i j := fun i j h => if_pos h
+  have hmb : ∀ i j, β i ≠ β j → m i j = 0 := fun i j h => ite_eq_right h
+  have hmu : ∀ i j, β i = β j → m i j = u i j := fun i j h => ite_eq_left h
   have hm0 : ∀ i j, j < i → m i j = 0 := by
     intro i j h
     by_cases hb : β i = β j
@@ -179,7 +179,7 @@ theorem up_split (v : Valuation k Γ) {r : Γ} (hr : r < 1) {n : ℕ} (β : Fin 
   have hdet : ∀ A : Matrix (Fin n) (Fin n) k, (∀ i j, j < i → A i j = 0) → (∀ i, A i i = 1) →
       A.det = 1 := by
     intro A h0 h1
-    rw [Matrix.det_of_upperTriangular (fun i j h => h0 i j h)]
+    rw [det_of_isUpperTriangular (fun i j h => h0 i j h)]
     simp [h1]
   have hmd : m.det = 1 := hdet m hm0 hm1
   have hud : u.det = 1 := hdet u hu0 hu1
@@ -193,7 +193,7 @@ theorem up_split (v : Valuation k Γ) {r : Γ} (hr : r < 1) {n : ℕ} (β : Fin 
       simp
   have hmU : IsUnit m.det := by simp [hmd]
   have huU : IsUnit u.det := by simp [hud]
-  haveI : Invertible m := Matrix.invertibleOfIsUnitDet m hmU
+  have : Invertible m := Matrix.invertibleOfIsUnitDet m hmU
   have hmw : m * m⁻¹ = 1 := Matrix.mul_nonsing_inv m hmU
   have hwm : m⁻¹ * m = 1 := Matrix.nonsing_inv_mul m hmU
   have hbu : BlockTriangular u β := by
@@ -304,7 +304,7 @@ theorem iwahori_block_upper_levi_lower : ∀ (k : Type) [Field k] [ValuativeRel 
   intro k _ _ _ _ N ϖ m β _ hϖ _ hm hβ g hg
   have hr : ValuativeRel.valuation k (ϖ ^ m) < 1 := by
     rw [map_pow]
-    exact pow_lt_one₀ zero_le' hϖ (by omega)
+    exact pow_lt_one₀ zero_le hϖ (by omega)
   exact factor (ValuativeRel.valuation k) hr β hβ g hg
 
 end GlobalTheory.CompanionTheory.BlockIwahoriUML
@@ -372,13 +372,13 @@ section
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem totallyDisconnected_GL (N : ℕ) : TotallyDisconnectedSpace (GL (Fin N) k) := by
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
-  haveI : NonarchimedeanAddGroup k := ⟨fun V hV => by
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : NonarchimedeanAddGroup k := ⟨fun V hV => by
     obtain ⟨s, hs⟩ := GlobalTheory.SplitWeil.exists_cball_subset hV
     exact ⟨⟨⟨⟨⟨GlobalTheory.SplitWeil.cball s, GlobalTheory.SplitWeil.add_mem_cball⟩, by simp [GlobalTheory.SplitWeil.cball]⟩,
       GlobalTheory.SplitWeil.neg_mem_cball⟩, GlobalTheory.SplitWeil.isOpen_cball s⟩, hs⟩⟩
-  haveI : TotallyDisconnectedSpace k := inferInstance
-  haveI : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) :=
+  have : TotallyDisconnectedSpace k := inferInstance
+  have : TotallyDisconnectedSpace (Matrix (Fin N) (Fin N) k) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin N → Fin N → k))
   exact ⟨isTotallyDisconnected_of_image (f := fun g : GL (Fin N) k => (g : Matrix (Fin N) (Fin N) k))
     Units.continuous_val.continuousOn Units.val_injective
@@ -412,7 +412,7 @@ theorem mem_Km_iff (N : ℕ) {m : ℕ} (hm : 1 ≤ m) (g : GL (Fin N) k) :
   have hint := Valuation.integer.integers (valuation k)
   have htlt : valuation k (((Zls.unifU k : kˣ) : k) ^ m) < 1 := by
     rw [map_pow]
-    exact pow_lt_one₀ zero_le' (val_unif_lt_one k) (by omega)
+    exact pow_lt_one₀ zero_le (val_unif_lt_one k) (by omega)
   have hcoe : ((Zls.unifU k : kˣ) : k) = ((Zls.unif k : 𝒪[k]) : k) := rfl
   constructor
   · rintro ⟨h, hker, rfl⟩
@@ -529,7 +529,7 @@ theorem conj_mem_Km {N m : ℕ} (hm : 1 ≤ m) (a : ℕ) {z : GL (Fin N) k} (hz 
   by_cases hi : (i : ℕ) < a <;> by_cases hj : (j : ℕ) < a
   · have e : ((Zls.unifU k ^ (-(Zls.omegaVec N a i)) : kˣ) : k) * (z : Matrix (Fin N) (Fin N) k) i j *
         ((Zls.unifU k ^ (Zls.omegaVec N a j) : kˣ) : k) = (z : Matrix (Fin N) (Fin N) k) i j := by
-      simp only [Zls.omegaVec, hi, hj, if_true, zpow_neg_one, zpow_one, Units.val_inv_eq_inv_val]
+      simp only [Zls.omegaVec, hi, hj, ite_true, zpow_neg_one, zpow_one, Units.val_inv_eq_inv_val]
       field_simp
     rw [e]
     exact hz i j
@@ -564,12 +564,12 @@ end
 
 theorem hecke_omega_jacquet : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (N : ℕ) (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V), IsSmooth π → ∀ m : ℕ, 1 ≤ m → ∀ (d : Fin 2 → ℕ) (hd : ∑ a, d a = N), 0 < d 0 → 0 < d 1 → ∀ T : Module.End ℂ (fixed π (Zls.Km k N m)), Zls.IsHeckeOp π m (Zls.diagPow k N (Zls.omegaVec N (d 0))) T → ∀ v : fixed π (Zls.Km k N m), (Submodule.Quotient.mk ((T v : fixed π (Zls.Km k N m)) : V) : Jacquet π (unipRad k (stdBlocks d hd))) = Submodule.Quotient.mk (π (Zls.diagPow k N (Zls.omegaVec N (d 0))) (v : V)) := by
   intro k _ _ _ _ N V _ _ π hπ m hm d hd hd0 hd1 T hT v
-  haveI := totallyDisconnected_GL (k := k) N
-  haveI : LocallyCompactSpace (GL (Fin N) k) := GlobalTheory.SplitFlip.locallyCompact_GL
+  have := totallyDisconnected_GL (k := k) N
+  have : LocallyCompactSpace (GL (Fin N) k) := GlobalTheory.SplitFlip.locallyCompact_GL
   have ht0 : (((Zls.unifU k : kˣ) : k) ^ m) ≠ 0 := pow_ne_zero _ (Zls.unifU k).ne_zero
   have htlt : valuation k (((Zls.unifU k : kˣ) : k) ^ m) < 1 := by
     rw [map_pow]
-    exact pow_lt_one₀ zero_le' (val_unif_lt_one k) (by omega)
+    exact pow_lt_one₀ zero_le (val_unif_lt_one k) (by omega)
   have hset : (Zls.Km k N m : Set (GL (Fin N) k)) =
       {g : GL (Fin N) k | ∀ i j, valuation k ((g : Matrix (Fin N) (Fin N) k) i j -
         (1 : Matrix (Fin N) (Fin N) k) i j) ≤ valuation k (((Zls.unifU k : kˣ) : k) ^ m)} :=

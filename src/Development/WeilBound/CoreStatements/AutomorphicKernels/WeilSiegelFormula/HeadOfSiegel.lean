@@ -876,7 +876,7 @@ theorem absThetaInt_lt_top_of_eq_zero {D : D7} (V : HSp D) (ν : Measure (GA D V
   have hc : ∀ h, GlobalTheory.SiegelFormula.absTheta V φ h = ‖φ 0‖ₑ := by
     intro h
     unfold GlobalTheory.SiegelFormula.absTheta
-    haveI : Unique (Matrix (Fin V.rank) (Fin 0) D.host.E) :=
+    have : Unique (Matrix (Fin V.rank) (Fin 0) D.host.E) :=
       inferInstanceAs (Unique (Fin V.rank → Fin 0 → D.host.E))
     rw [tsum_eq_single default (fun b hb => absurd (Subsingleton.elim b default) hb)]
     have h0 : GlobalTheory.SiegelFormula.invPt V h (default : Matrix (Fin V.rank) (Fin 0) D.host.E) = 0 := by
@@ -918,7 +918,7 @@ open GlobalTheory.CompanionTheory.SiegelAssembly
 theorem weilSiegelFormula_of_chapters_LI : GlobalTheory.Published.WeilThetaConvergence → GlobalTheory.Published.WeilEisensteinSiegelConvergence →
     PullSchLI → EisCells → ThetaOrbits → BigCell → GlobalTheory.Published.WeilSiegelFormula := by
   intro hTh hES hP hE hT hB D n V hn h2n ψ hψ χ hχ hη θ hθ μ 𝓕 hμ ω hω ν hν Φ
-  haveI := hν
+  have := hν
   have hw : 2 * Formalism.MainNotions.SchurIrreducible.wittIdx V ≤ V.rank := two_mul_wittIdx_le_rank V
   have hSet : HidaSetting D n V ψ χ θ μ ω := ⟨hn, h2n, hψ, hχ, hη, hθ, ⟨𝓕, hμ⟩, hω⟩
   have hconv := hES D n V hn h2n ψ hψ χ hχ hη θ hθ μ 𝓕 hμ ω hω Φ
@@ -993,7 +993,7 @@ theorem exists_integral_eq_mul {V V' : Type} [AddCommGroup V] [TopologicalSpace 
     (ν : Measure V) (hν : ν.IsAddHaarMeasure) (μ : Measure V') (hμ : μ.IsAddHaarMeasure) :
     ∃ c : ℂ, ∀ u : V' → ℂ, ∫ x, u (f x) ∂ν = c * ∫ y, u y ∂μ := by
   let e : V ≃+ V' := { toFun := f, invFun := g, left_inv := h1, right_inv := h2, map_add' := hadd }
-  haveI : (ν.map f).IsAddHaarMeasure := e.isAddHaarMeasure_map ν hc hc'
+  have : (ν.map f).IsAddHaarMeasure := e.isAddHaarMeasure_map ν hc hc'
   refine ⟨((Measure.addHaarScalarFactor (ν.map f) μ : ℝ) : ℂ), fun u => ?_⟩
   have h : ∫ y, u y ∂(ν.map f) = ∫ x, u (f x) ∂ν :=
     integral_map_equiv
@@ -1019,13 +1019,13 @@ theorem starN_hermE (V : HSp D) {r : ℕ} (ψ : AddChar (AF D.host.F) ℂ) (μ :
     ∃ c : ℂ, ∀ (Φ : (Fin r → Fin V.rank → AE D) → ℂ) (b : hermA D r),
       starN D.sp.cm.sig V.gram ψ dx Φ (hermE D r b) = c * Jt ψ V μ (fun y => Φ (untup y)) b := by
   obtain ⟨k1, k2, k3, -, -, -⟩ := lattice_Mx D V.rank r
-  haveI : IsTopologicalAddGroup (Mx D V.rank r) := k1
-  haveI : LocallyCompactSpace (Mx D V.rank r) := k2
-  haveI : SecondCountableTopology (Mx D V.rank r) := k3
-  haveI : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (Mx D V.rank r) := k1
+  have : LocallyCompactSpace (Mx D V.rank r) := k2
+  have : SecondCountableTopology (Mx D V.rank r) := k3
+  have : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
   obtain ⟨j1, -, -, i4, i5⟩ := Formalism.IndefR.Eqv.ae_facts D
-  haveI : BorelSpace (Fin V.rank → AE D) := Pi.borelSpace
-  haveI : BorelSpace (Fin r → Fin V.rank → AE D) := Pi.borelSpace
+  have : BorelSpace (Fin V.rank → AE D) := Pi.borelSpace
+  have : BorelSpace (Fin r → Fin V.rank → AE D) := Pi.borelSpace
   obtain ⟨c, hc⟩ := exists_integral_eq_mul (tupOf (D := D) (m := V.rank) (r := r)) untup untup_tupOf tupOf_untup
     (fun _ _ => rfl) (continuous_matrix fun i a => (continuous_apply i).comp (continuous_apply a))
     (continuous_pi fun a => continuous_pi fun i => continuous_id.matrix_elem i a) dx hdx μ hμ
@@ -1150,7 +1150,7 @@ theorem integrable_of_addEquiv {V V' : Type} [AddCommGroup V] [TopologicalSpace 
     (f : V' → ℂ) (hf : Integrable (fun b => f (g b)) μ) : Integrable f ν := by
   let e : V ≃+ V' := { toFun := g, invFun := k, left_inv := h1, right_inv := h2, map_add' := hadd }
   let h : V ≃ₜ V' := { toEquiv := e.toEquiv, continuous_toFun := hc, continuous_invFun := hc' }
-  haveI : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ hc hc'
+  have : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ hc hc'
   have hi : Integrable f (μ.map e) := (integrable_map_equiv h.toMeasurableEquiv f).2 hf
   rw [Measure.isAddLeftInvariant_eq_smul ν (μ.map e)]
   exact hi.smul_measure_nnreal
@@ -1162,14 +1162,14 @@ theorem integrable_of_hermE {r : ℕ} (lam : Measure (hermA D r)) (hlam : lam.Is
     (db : Measure (HermR (AF D.host.F) D.sp.cm.sig r)) (hdb : db.IsAddHaarMeasure)
     (f : HermR (AF D.host.F) D.sp.cm.sig r → ℂ) (hf : Integrable (fun b => f (hermE D r b)) lam) :
     Integrable f db := by
-  haveI : IsTopologicalAddGroup (Mx D r r) := inferInstanceAs (IsTopologicalAddGroup (Fin r → Fin r → AE D))
-  haveI i3 : SecondCountableTopology (Mx D r r) := inferInstanceAs (SecondCountableTopology (Fin r → Fin r → AE D))
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : BorelSpace (hermA D r) := Subtype.borelSpace _
-  haveI : SecondCountableTopology (HermR (AF D.host.F) D.sp.cm.sig r) :=
+  have : IsTopologicalAddGroup (Mx D r r) := inferInstanceAs (IsTopologicalAddGroup (Fin r → Fin r → AE D))
+  have i3 : SecondCountableTopology (Mx D r r) := inferInstanceAs (SecondCountableTopology (Fin r → Fin r → AE D))
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : BorelSpace (hermA D r) := Subtype.borelSpace _
+  have : SecondCountableTopology (HermR (AF D.host.F) D.sp.cm.sig r) :=
     @Topology.IsInducing.secondCountableTopology _ _ _ _ _ i3 Topology.IsInducing.subtypeVal
   exact integrable_of_addEquiv (hermE D r) (fun S => ⟨S.1, Matrix.ext fun a c => S.2 a c⟩) (fun _ => rfl)
-    (fun _ => rfl) (fun _ _ => rfl) (continuous_subtype_val.subtype_mk _) (continuous_subtype_val.subtype_mk _)
+    (fun _ => rfl) (fun _ _ => rfl) (continuous_subtypeVal.subtype_mk _) (continuous_subtypeVal.subtype_mk _)
     lam hlam db hdb f hf
 
 end PositivityTheory.PfWsf.Jab.WsInteg
@@ -1277,7 +1277,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
       hermOf (Fv F v) σ T hT - gramH hCM hJ (Fv F v) X ∈ latH σ b v n := by
     intro v hv
     by_contra hc
-    exact hv (hS (by simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq]; exact Or.inr hc))
+    exact hv (hS (by simp only [Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_ofPred_eq]; exact Or.inr hc))
   obtain ⟨ρ, U, hρ, hρs, hU, hUs, hI, hc, hbd, hlim⟩ := hS₁ S hS1
   have hΦSB : IsSchwartzBruhat (pureN φ A) := _root_.GlobalTheory.CompanionTheory.SiegelND.Coef.pureN_isSchwartzBruhat F E σ hCM M J hJ n h2n d b S φ A hφ hA hAl
   have hΦdx : Integrable (pureN φ A) dx := _root_.GlobalTheory.CompanionTheory.SiegelND.Coef.sb_integrable_selfDual F E σ hCM M J hJ n h2n ψ hψ dx hdx _ hΦSB
@@ -1329,8 +1329,8 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
     let A' : ∀ v : HeightOneSpectrum (𝓞 F), Set (Fin n → Fin M → Fv F v ⊗[F] E) := fun v =>
       if v ∈ S then A v ∩ {X | hermOf (Fv F v) σ T hT - gramH hCM hJ (Fv F v) X ∈ U k v} else A v
     have hA'S : ∀ v ∈ S, A' v = A v ∩ {X | hermOf (Fv F v) σ T hT - gramH hCM hJ (Fv F v) X ∈ U k v} :=
-      fun v hv => if_pos hv
-    have hA'n : ∀ v, v ∉ S → A' v = latV b v := fun v hv => (if_neg hv).trans (hAl v hv)
+      fun v hv => ite_eq_left hv
+    have hA'n : ∀ v, v ∉ S → A' v = latV b v := fun v hv => (ite_eq_right hv).trans (hAl v hv)
     have hmem : ∀ x : Fin n → Fin M → AF F ⊗[F] E,
         (projFin x ∈ boxFN A ∧ hermFin σ (hermOf (AF F) σ T hT - gramH hCM hJ (AF F) x) ∈ boxH σ b n S (U k)) ↔
           projFin x ∈ boxFN A' := by
@@ -1343,7 +1343,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
           show _ ∈ U k v
           rw [← h3 x v]
           exact h'.1 v hv
-        · rw [show A' v = A v from if_neg hv]
+        · rw [show A' v = A v from ite_eq_right hv]
           exact h v
       · intro h
         refine ⟨fun v => ?_, fun v hv => ?_, fun v hv => ?_⟩
@@ -1352,7 +1352,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
             rw [hA'S v hv] at this
             exact this.1
           · have := h v
-            rwa [show A' v = A v from if_neg hv] at this
+            rwa [show A' v = A v from ite_eq_right hv] at this
         · have := h v
           rw [hA'S v hv] at this
           rw [h3 x v]
@@ -1382,7 +1382,7 @@ theorem coefS_pure (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M : ℕ} (J : Ma
       intro v
       by_cases hv : v ∈ S
       · rw [hA'S v hv]; exact ((hV v).1 k).1
-      · rw [show A' v = A v from if_neg hv]
+      · rw [show A' v = A v from ite_eq_right hv]
         exact (_root_.GlobalTheory.CompanionTheory.SiegelND.Coef.finV_compactOpenN F E σ hCM M J hJ n h2n d b v (lam v) (hlam v) (m v) (hm v) _ (hu _) (A v) (hA v).1 (hA v).2).1
     have hfinA' : ∀ v, GlobalTheory.CompanionTheory.SW.coordW (Fv F v) b (lam v) n M (A' v) ≠ ⊤ := by
       intro v
@@ -1546,8 +1546,8 @@ theorem PositivityTheory.PfWsf.Hand.CoreH.coreH : ∀ (F E : Type) [Field F] [Nu
   let b := Module.finBasis F E
   obtain ⟨laminf, hinf⟩ := GlobalTheory.CompanionTheory.SW.StdEx.exists_isStdInf F
   choose lam hlam using GlobalTheory.CompanionTheory.SW.StdEx.exists_isStdV F
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F), BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   obtain ⟨minf, hminf⟩ := GlobalTheory.CompanionTheory.SW.Step.loc_families σ hCM J hJ (Ainf F) (GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1) b laminf hinf.1 n
   choose m hm using fun v => GlobalTheory.CompanionTheory.SW.Step.loc_families σ hCM J hJ (Fv F v) (GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v) b (lam v) (hlam v).1 n
   have hEu : GlobalTheory.CompanionTheory.SW.IsEulerProd b (GlobalTheory.CompanionTheory.SW.thetaMeas σ J μ 𝓕 {X | HeckeCharacterZeroLocus.SiegelWeilU.gramE σ J X = T}) 1

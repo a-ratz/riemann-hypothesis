@@ -97,7 +97,7 @@ theorem dg_mem_Kc {c : ℕ} {s : Fin n → kˣ} : dg s ∈ Kc k n c ↔ ∀ i, s
     refine mem_Uc.2 ⟨le_antisymm b ?_, a⟩
     have b2 : valuation k ((s i : k)⁻¹) ≤ 1 := by rw [← Units.val_inv_eq_inv_val]; exact b'
     rw [map_inv₀] at b2
-    exact (inv_le_one₀ (zero_lt_iff.2 (by simp))).1 b2
+    exact (inv_le_one₀ (pos_iff_ne_zero.2 (by simp))).1 b2
   · intro h
     refine mem_Kc_of (dg_mem_KO fun i => Uc_le_Uo k c (h i)) fun i j => ?_
     rw [dg, Matrix.sub_apply, val_diagT, diagonal_apply, Matrix.one_apply]

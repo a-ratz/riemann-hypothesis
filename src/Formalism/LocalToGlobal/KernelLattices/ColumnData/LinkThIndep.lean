@@ -70,13 +70,13 @@ open Formalism.MainNotions.TaylorLogMetric hiding admitted AdmittedStatements Al
 variable (D : Car)
 
 theorem star_conj (x : D.host.E) : (letI := D.host.cmStar; star x) = D.host.conj x := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   let ψ : D.host.E →+* ℂ := (IsAlgClosed.lift : D.host.E →ₐ[ℚ] ℂ).toRingHom
   apply ψ.injective
   have h2 : ψ (D.host.conj x) = starRingEnd ℂ (ψ x) :=
     (D.host.der.conj_iff ψ D.host.conj).mpr (by simp [Formalism.HC.HostRaw.conj]) x
   rw [h2]
-  haveI : IsCMField D.host.E := by
+  have : IsCMField D.host.E := by
     first
     | exact D.host.isCMField_hostE
     | exact D.host.der.cm

@@ -73,7 +73,7 @@ theorem map_eq_smul_of_scale {V W G : Type*}
   let ρ : Measure W := Measure.addHaar
   let ψ : V × W → V × W := Prod.map (fun v => t • v) id
   have hψ : Measurable ψ := (measurable_const_smul t).prodMap measurable_id
-  haveI : (μ.map Φ).IsAddHaarMeasure := Φ.isAddHaarMeasure_map μ
+  have : (μ.map Φ).IsAddHaarMeasure := Φ.isAddHaarMeasure_map μ
   have hc := Measure.isAddLeftInvariant_eq_smul (μ.map Φ) (ν.prod ρ)
   set c := Measure.addHaarScalarFactor (μ.map Φ) (ν.prod ρ) with hcdef
   have hπ : (μ.map Φ).map ψ = k • μ.map Φ := by
@@ -156,12 +156,12 @@ theorem map_scalar : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
       μ.map (fun x i => (show AdeleRing (𝓞 F) F from (θ t, 1)) * x i) =
         ENNReal.ofReal ((t ^ (Module.finrank ℚ F * Fintype.card ι))⁻¹) • μ := by
   intro F _ _ hF θ _ _ _ ι _ μ _ t ht
-  haveI := hF
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  letI : MeasurableSpace (FiniteAdeleRing (𝓞 F) F) := borel _
-  haveI : BorelSpace (FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
+  have := hF
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  let : MeasurableSpace (FiniteAdeleRing (𝓞 F) F) := borel _
+  have : BorelSpace (FiniteAdeleRing (𝓞 F) F) := ⟨rfl⟩
   have key := map_eq_smul_of_scale (coords F ι)
     (fun x i => (show AdeleRing (𝓞 F) F from (θ t, 1)) * x i) t ht.ne' ?_ μ
   · have hd : Module.finrank ℝ (ι → InfinitePlace F → ℝ) =

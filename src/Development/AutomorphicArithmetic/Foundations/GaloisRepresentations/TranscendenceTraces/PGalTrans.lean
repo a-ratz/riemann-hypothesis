@@ -111,20 +111,20 @@ private lemma eq_of_fixed (A L Ω : Type) [CommRing A] [IsDomain A] [IsIntegrall
       have := congrArg (fun f : A →+* Ω => f q) h
       simp only [RingHom.comp_apply, map_natCast] at this
       rw [← map_natCast (φ.comp (algebraMap A _)) q, hA, map_zero]
-    haveI : CharP Ω q := (CharP.charP_iff_prime_eq_zero hp).mpr hΩ
-    haveI : ExpChar Ω q := ExpChar.prime hp
+    have : CharP Ω q := (CharP.charP_iff_prime_eq_zero hp).mpr hΩ
+    have : ExpChar Ω q := ExpChar.prime hp
     exact iterateFrobenius_inj Ω q n h1
 
 theorem UpperTheory.Gal.TranscendenceTraces.galTrans_of : InvTrans → GalTrans := by
   intro hInv A L Ω _ _ _ _ _ _ _ _ _ _ φ φ' h
   let G := integralClosure A L ≃ₐ[A] integralClosure A L
-  haveI : Finite G :=
+  have : Finite G :=
     Finite.of_equiv _ (galRestrict A (FractionRing A) L (integralClosure A L)).toEquiv
   let A' := FixedPoints.subring (integralClosure A L) G
-  haveI : SMulCommClass G A' (integralClosure A L) := ⟨fun g a b => by
+  have : SMulCommClass G A' (integralClosure A L) := ⟨fun g a b => by
     change g • ((a : integralClosure A L) * b) = (a : integralClosure A L) * (g • b)
     rw [smul_mul', show g • (a : integralClosure A L) = a from a.2 g]⟩
-  haveI : Algebra.IsInvariant A' (integralClosure A L) G := ⟨fun b hb => ⟨⟨b, hb⟩, rfl⟩⟩
+  have : Algebra.IsInvariant A' (integralClosure A L) G := ⟨fun b hb => ⟨⟨b, hb⟩, rfl⟩⟩
   obtain ⟨g, hg⟩ := hInv A' (integralClosure A L) G Ω φ φ' (by
     ext a
     exact eq_of_fixed A L Ω φ φ' h a fun g => a.2 g)

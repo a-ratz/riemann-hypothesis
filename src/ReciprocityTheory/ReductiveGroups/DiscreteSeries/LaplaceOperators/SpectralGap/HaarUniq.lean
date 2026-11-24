@@ -54,17 +54,17 @@ open ReciprocityTheory.ChartRestriction.DS.Mult1
 
 theorem haarUniq2 : HaarUniq2Statement := by
   intro k r U μ ν hU hμ hν
-  haveI : Fact (Formalism.FourierDecayAlt.B2.IsClosedSubgroup U) := ⟨hU⟩
+  have : Fact (Formalism.FourierDecayAlt.B2.IsClosedSubgroup U) := ⟨hU⟩
   obtain ⟨hμs, hμ0, hμc, hμl⟩ := hμ
   obtain ⟨hνs, hν0, hνc, hνl⟩ := hν
   have hμc' : μ (HaarSigmaFiniteUniqueness.Aset U)ᶜ = 0 := hμc
   have hνc' : ν (HaarSigmaFiniteUniqueness.Aset U)ᶜ = 0 := hνc
-  haveI := hμs
-  haveI := hνs
-  haveI := HaarSigmaFiniteUniqueness.sigmaFinite_comap (U := U) μ
-  haveI := HaarSigmaFiniteUniqueness.sigmaFinite_comap (U := U) ν
-  haveI := HaarSigmaFiniteUniqueness.isMulLeftInvariant_comap μ hμc' hμl
-  haveI := HaarSigmaFiniteUniqueness.isMulLeftInvariant_comap ν hνc' hνl
+  have := hμs
+  have := hνs
+  have := HaarSigmaFiniteUniqueness.sigmaFinite_comap (U := U) μ
+  have := HaarSigmaFiniteUniqueness.sigmaFinite_comap (U := U) ν
+  have := HaarSigmaFiniteUniqueness.isMulLeftInvariant_comap μ hμc' hμl
+  have := HaarSigmaFiniteUniqueness.isMulLeftInvariant_comap ν hνc' hνl
   have hμ0' : μ.comap (Subtype.val : HaarSigmaFiniteUniqueness.Aset U → Formalism.QuantumDeterminants.Mt k r) ≠ 0 := by
     intro h
     apply hμ0

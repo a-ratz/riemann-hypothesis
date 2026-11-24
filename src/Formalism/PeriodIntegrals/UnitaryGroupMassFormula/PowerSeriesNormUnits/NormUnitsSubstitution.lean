@@ -287,7 +287,7 @@ theorem tendsto_coeff_pow {σ : Type*} {F : ℕ → MvPowerSeries σ ℂ_[p]} {f
   | succ n ih => intro e; simp only [pow_succ]; exact tendsto_coeff_mul ih hF e
 
 theorem continuous_zc : Continuous (zc (p := p)) :=
-  (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtype_val
+  (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtypeVal
 
 end PAdicPowerSeriesCoefficients
 

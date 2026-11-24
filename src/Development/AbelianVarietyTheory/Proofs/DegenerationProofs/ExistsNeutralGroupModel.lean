@@ -920,15 +920,15 @@ theorem exists_idem_of_rel {S : Type} [Finite S] [Nonempty S] (r : Setoid S) (T 
   let mul : Quotient r → Quotient r → Quotient r := fun a b => Quotient.mk r (f a.out b.out)
   have hm : ∀ a b, T a.out b.out (mul a b).out := fun a b =>
     resp _ _ _ _ (hf _ _) (r.symm (Quotient.mk_out _))
-  letI : Semigroup (Quotient r) :=
+  let : Semigroup (Quotient r) :=
     { mul := mul
       mul_assoc := fun a b c => by
         have := assoc _ _ _ _ _ _ _ (hm a b) (hm (mul a b) c) (hm b c) (hm a (mul b c))
         have h2 := Quotient.sound this
         rwa [Quotient.out_eq, Quotient.out_eq] at h2 }
-  letI : TopologicalSpace (Quotient r) := ⊥
-  haveI : DiscreteTopology (Quotient r) := ⟨rfl⟩
-  haveI : Nonempty (Quotient r) := ⟨Quotient.mk r (Classical.arbitrary S)⟩
+  let : TopologicalSpace (Quotient r) := ⊥
+  have : DiscreteTopology (Quotient r) := ⟨rfl⟩
+  have : Nonempty (Quotient r) := ⟨Quotient.mk r (Classical.arbitrary S)⟩
   obtain ⟨e, he⟩ := exists_idempotent_of_compact_t2_of_continuous_mul_left (M := Quotient r)
     (fun _ => continuous_of_discreteTopology)
   refine ⟨e.out, ?_⟩
@@ -1049,7 +1049,7 @@ theorem exists_birLaw : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsLocalRing 
   have hT : ∀ {i j k : S}, T i j k →
       GenIso ((M i).prod (M j)) ((M k).prod (M i)) (shear A true ≫ (β_ A A).hom) :=
     fun h => comp (hP (hI _) (hI _)) h (swp (hI _) (hI _))
-  haveI : Nonempty S := hne.to_subtype
+  have : Nonempty S := hne.to_subtype
   obtain ⟨e, he⟩ := exists_idem_of_rel r T
     (by
       intro i j

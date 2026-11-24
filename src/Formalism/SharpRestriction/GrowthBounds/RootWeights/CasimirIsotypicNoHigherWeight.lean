@@ -127,7 +127,7 @@ theorem cr_C_wt (E : GLOps n K V) (hR : SatisfiesGLRelations E) (mu : Fin n → 
       (2 : K) • E b a (E a b x) + ((mu a : K) - (mu b : K)) • x := by
     intro a b
     rw [v2rep_comm E hR a b b a x]
-    simp only [if_true, hx' a, hx' b, sub_smul, two_smul]
+    simp only [ite_true, hx' a, hx' b, sub_smul, two_smul]
     abel
   rw [e0, cr_sym, Finset.sum_congr rfl fun a _ => e1 a]
   have e3 : ∀ a b : Fin n, (if a < b then E a b (E b a x) + E b a (E a b x) else 0) =
@@ -273,10 +273,10 @@ private lemma casimir_apply_eq_smul_of_isHWV (E : GLOps n K V) (hR : SatisfiesGL
     intro a b
     rcases lt_trichotomy a b with h | rfl | h
     · have hc := congrArg (fun f : Module.End K V => f v) (hR a b b a)
-      rw [if_neg h.ne, if_pos h, sub_smul]
+      rw [ite_eq_right h.ne, ite_eq_left h, sub_smul]
       simpa [hv.2.2 a b h, hw] using hc
     · simp [hw, sq, mul_smul]
-    · rw [if_neg (ne_of_gt h), if_neg (not_lt.mpr h.le), hv.2.2 b a h, map_zero, zero_smul]
+    · rw [ite_eq_right (ne_of_gt h), ite_eq_right (not_lt.mpr h.le), hv.2.2 b a h, map_zero, zero_smul]
   have hs : (∑ a, ∑ b, (if a = b then (ν a : K) ^ 2 else if a < b then (ν a : K) - ν b else 0))
       = (cr_c ν : K) := by
     have split : ∀ a b, (if a = b then (ν a : K) ^ 2 else if a < b then (ν a : K) - ν b else 0)
@@ -346,7 +346,7 @@ private lemma casimir_apply_eq_smul_of_mem_iSup_isotypic (E : GLOps n K V) (hR :
     intro x hx
     rw [LinearMap.mem_ker]
     have h := casimir_apply_eq_smul_of_mem_isotypicPartIn E hR (Wx ν) ν x hx
-    rw [Set.mem_setOf_eq] at hν
+    rw [Set.mem_ofPred_eq] at hν
     rw [hν] at h
     simp [h]
   have h := LinearMap.mem_ker.mp (hle hz)

@@ -357,8 +357,8 @@ theorem liftO_of_liftAt (ℓ : ℕ) (hp : PD.p = ℓ) (hι : Function.Bijective 
       (Formalism.RepresentationBoundsCohomology.JL.mapH1 ρP ρQ ev hev) n := by
   let L1 := latOf e eO jP ι heO ρVP ρP hjP hjeqP hspP
   let L2 := latOf e eO jQ ι heO ρVQ ρQ hjQ hjeqQ hspQ
-  haveI := finDim_of_lat (Ow := Ow) (Qp := Qp) L1
-  haveI := finDim_of_lat (Ow := Ow) (Qp := Qp) L2
+  have := finDim_of_lat (Ow := Ow) (Qp := Qp) L1
+  have := finDim_of_lat (Ow := Ow) (Qp := Qp) L2
   have hons : Function.Surjective (trL e f0) := trL_onto (hspQ := hspQ) (hcomm := hcomm) hevs
   have heq : ∀ g v, trL e f0 (repL e ρVP ι g v) = repL e ρVQ ι g (trL e f0 v) := fun g v => hf0 (ι g) v
   have hcQ : ∀ y, Continuous fun g => repL e ρVQ ι g y := by
@@ -570,7 +570,7 @@ theorem liftCol_eve (eR : HeightOneSpectrum (𝓞 D.host.E) → ℕ) (hA : Trunc
     LiftCol i dc (Hfe₁ i dc r' χ) (Ff i dc r' χ iL)
       (fun l => Formalism.RepresentationBoundsCohomology.JL.mapH1 _ _ eve (Formalism.RepresentationBoundsCohomology.JL.ev_equiv r' χ (Γn i dc (K.colIdx i dc l)) ince v₁ eve heve))
       (fun n => eR (K.plOf i dc n)) := by
-  haveI := smulComm_O i (A := R') (V := V)
+  have := smulComm_O i (A := R') (V := V)
   intro l
   have hQ : ∀ (γ : ↥(Γn i dc (K.colIdx i dc l))) m,
       iL (resRep (uRep (D.nd.O i) (M := L) r' χ) (Γn i dc (K.colIdx i dc l)) γ m) =
@@ -626,11 +626,11 @@ theorem msCont_of (hr : TruncatedSeriesCountingIdentities.FamilyContinuous (D :=
   refine continuous_matrix fun a b => ?_
   have h1 : Continuous fun g : Br.G D.nbr i _ hn =>
       rTwO D.nd i r x ((Br.iota D.nbr i _ hn g : Gw D.nd (K.plOf i dc n)) : GE D.nd) a b :=
-    (hM.matrix_elem a b).comp (continuous_subtype_val.comp (Br.iota_cont D.nbr i _ hn))
+    (hM.matrix_elem a b).comp (continuous_subtypeVal.comp (Br.iota_cont D.nbr i _ hn))
   have h2 : Continuous fun y : D.nd.O i => (((D.nbr i _ hn).eO y : ↥(OL (D.nbr i _ hn).LL)) :
-      ↥(D.nbr i _ hn).LL.1) := continuous_subtype_val.comp (D.nbr i _ hn).eO_cont
+      ↥(D.nbr i _ hn).LL.1) := continuous_subtypeVal.comp (D.nbr i _ hn).eO_cont
   have h3 : Continuous fun y : ↥(D.nbr i _ hn).LL.1 => (TruncatedSeriesCountingIdentities.CoefExt.self i _ hn).inc y :=
-    Continuous.subtype_mk continuous_subtype_val _
+    Continuous.subtype_mk continuous_subtypeVal _
   exact h3.comp (h2.comp h1)
 
 end Cont
@@ -644,7 +644,7 @@ theorem fin_sel {LL V : Type} [Field LL] [AddCommGroup V] [Module LL V] [FiniteD
   obtain ⟨b, hbs, hspan, hli⟩ := exists_linearIndependent LL (Set.range f)
   have hfin : b.Finite := hli.setFinite
   have hpre : ∀ φ : b, ∃ p, f p = φ := fun φ => hbs φ.2
-  haveI : Fintype b := hfin.fintype
+  have : Fintype b := hfin.fintype
   let eb := Fintype.equivFin b
   refine ⟨Fintype.card b, fun a => (Classical.choose (hpre (eb.symm a))).1, fun v hv => h v fun i => ?_⟩
   have hb : ∀ φ ∈ b, φ v = 0 := by
@@ -915,7 +915,7 @@ theorem ideal_finite (δO : D.nd.O i) : Module.Finite (D.nd.O i) ↥(Ideal.span 
   Module.Finite.iff_fg.2 (Submodule.fg_span (Set.finite_singleton δO))
 
 theorem ideal_free [IsDiscreteValuationRing (D.nd.O i)] (δO : D.nd.O i) : Module.Free (D.nd.O i) ↥(Ideal.span {δO}) := by
-  haveI := ideal_finite i δO
+  have := ideal_finite i δO
   exact Module.free_of_finite_type_torsion_free'
 
 end Inst
@@ -929,7 +929,7 @@ variable {D : D7} (i : D.nd.Loc)
 
 theorem leftId_finite [Module.Finite (D.nd.O i) Dd.R'] (x : Dd.R') : Module.Finite (D.nd.O i) (K.LeftId (D.nd.O i) x) := by
   let S : Submodule (D.nd.O i) Dd.R' := (Submodule.span Dd.R' ({x} : Set Dd.R')).restrictScalars (D.nd.O i)
-  haveI : Module.Finite (D.nd.O i) S := Module.IsNoetherian.finite (D.nd.O i) S
+  have : Module.Finite (D.nd.O i) S := Module.IsNoetherian.finite (D.nd.O i) S
   let f : S ≃ₗ[D.nd.O i] K.LeftId (D.nd.O i) x :=
     { toFun := fun a => K.lmk (D.nd.O i) x a.1 a.2
       invFun := fun p => ⟨K.lv (D.nd.O i) x p, K.lv_mem (D.nd.O i) x p⟩
@@ -940,8 +940,8 @@ theorem leftId_finite [Module.Finite (D.nd.O i) Dd.R'] (x : Dd.R') : Module.Fini
   exact Module.Finite.equiv f
 
 theorem leftId_free [Module.Finite (D.nd.O i) Dd.R'] (x : Dd.R') : Module.Free (D.nd.O i) (K.LeftId (D.nd.O i) x) := by
-  haveI := leftId_finite i Dd x
-  haveI : NoZeroSMulDivisors (D.nd.O i) (K.LeftId (D.nd.O i) x) :=
+  have := leftId_finite i Dd x
+  have : NoZeroSMulDivisors (D.nd.O i) (K.LeftId (D.nd.O i) x) :=
     ⟨fun {c p} h => by
       by_cases hc : c = 0
       · exact Or.inl hc

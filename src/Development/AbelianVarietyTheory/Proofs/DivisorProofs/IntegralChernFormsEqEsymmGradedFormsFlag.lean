@@ -174,7 +174,7 @@ theorem exists_smooth_bump [T2Space M] (x : M) :
       refine ((hβ.comp_contDiffOn (A.contDiffOn_real_transition k i)).mono inter_subset_right).congr
         fun v hv => ?_
       have hv1 : (A.e k).symm v ∈ e.source := hv.2.2
-      simp only [Function.comp, ψ, if_pos hv1]
+      simp only [Function.comp, ψ, ite_eq_left hv1]
       rfl
     · refine ⟨(A.e k).target ∩ (A.e k).symm ⁻¹' Cᶜ,
         (A.e k).isOpen_inter_preimage_symm hCc.isClosed.isOpen_compl,
@@ -187,7 +187,7 @@ theorem exists_smooth_bump [T2Space M] (x : M) :
   · have ho : IsOpen (e.source ∩ e ⁻¹' Metric.ball (e x) (ε / 4)) :=
       e.isOpen_inter_preimage Metric.isOpen_ball
     filter_upwards [ho.mem_nhds ⟨hxe, Set.mem_preimage.mpr (Metric.mem_ball_self (by linarith))⟩] with w hw
-    simp only [ψ, if_pos hw.1]
+    simp only [ψ, ite_eq_left hw.1]
     exact β.one_of_mem_closedBall (Metric.ball_subset_closedBall hw.2)
 
 end GlobalTheory.CxForm.HolAtlas
@@ -243,7 +243,7 @@ theorem del_finset_sum {M : Type} [TopologicalSpace M] {n : ℕ} (A : GlobalTheo
   have hloc : ∀ w, A.loc (∑ j, α j) x.1.1 w = ∑ j, A.loc (α j) x.1.1 w := by
     intro w
     by_cases hw : w ∈ (A.e x.1.1).target
-    · simp only [GlobalTheory.CxForm.HolAtlas.loc, hw, dif_pos]
+    · simp only [GlobalTheory.CxForm.HolAtlas.loc, hw, dite_eq_left]
       exact Finset.sum_apply _ _ _
     · simp [GlobalTheory.CxForm.HolAtlas.loc, hw]
   have hx : x.crd ∈ (A.e x.1.1).target := x.ch.map_source x.2
@@ -256,7 +256,7 @@ theorem del_finset_sum {M : Type} [TopologicalSpace M] {n : ℕ} (A : GlobalTheo
     have e : (fun w => (GlobalTheory.CxForm.bas n).repr (A.loc (∑ j, α j) x.1.1 w) S) =
         fun w => ∑ j ∈ Finset.univ, (GlobalTheory.CxForm.bas n).repr (A.loc (α j) x.1.1 w) S := by
       funext w; rw [hloc, map_sum, Finsupp.finsetSum_apply]
-    rw [e, GlobalTheory.del_sum (fun j _ => hdiff j S), ContinuousLinearMap.sum_apply]
+    rw [e, GlobalTheory.del_sum (fun j _ => hdiff j S), sum_apply]
   rw [Finset.sum_apply]
   simp only [GlobalTheory.CxForm.HolAtlas.del, GlobalTheory.CxForm.delAt, GlobalTheory.CxForm.coefwise, key, Finset.sum_smul, Finset.mul_sum]
   conv_rhs => rw [Finset.sum_comm]
@@ -324,7 +324,7 @@ private theorem isForm_add' {α β : A.Fld}
     unfold _root_.GlobalTheory.CxForm.HolAtlas.loc at h1 h2
     refine (h1.add h2).congr ?_
     intro v hv
-    simp only [dif_pos hv]
+    simp only [dite_eq_left hv]
     erw [Pi.add_apply, map_add, Finsupp.add_apply]
   · intro x x' hx
     simp [ha.compat x x' hx, hb.compat x x' hx]
@@ -344,7 +344,7 @@ private theorem isForm_sub' {α β : A.Fld}
     unfold _root_.GlobalTheory.CxForm.HolAtlas.loc at h1 h2
     refine (h1.sub h2).congr ?_
     intro v hv
-    simp only [dif_pos hv]
+    simp only [dite_eq_left hv]
     erw [Pi.sub_apply, map_sub, Finsupp.sub_apply]
   · intro x x' hx
     simp [ha.compat x x' hx, hb.compat x x' hx]
@@ -485,7 +485,7 @@ theorem integral_eq_integral_chart_of_support : ∀ {M : Type} [TopologicalSpace
       rwa [(A.e i).right_inv ht] at this
     · have hl : A.loc α i v = 0 := by
         unfold loc
-        exact dif_neg ht
+        exact dite_eq_right ht
       simp only [hr, hl, dens_zero, Complex.zero_re]
   have hcon : ContinuousOn (r i) (A.e i).target :=
     Complex.continuous_re.comp_continuousOn ((hα.smooth i Finset.univ).continuousOn.div_const _)
@@ -714,7 +714,7 @@ theorem coefwise_del_sum_smul {n : ℕ} {ι : Type} [Fintype ι] {v : V n} (g : 
 
   rw [FormMul.repr_coefwise, e,
   del_sum (A := fun k x => g k x * (bas n).repr (Q k x) S) (fun k _ => (hg k).mul (hQ k S)),
-  ContinuousLinearMap.sum_apply, map_sum, Finsupp.finsetSum_apply]
+  sum_apply, map_sum, Finsupp.finsetSum_apply]
   refine Finset.sum_congr rfl fun k _ => ?_
   rw [del_mul (hg k) (hQ k S), map_add (f := _), map_smul, map_smul, Finsupp.add_apply, Finsupp.smul_apply, Finsupp.smul_apply,
     FormMul.repr_coefwise, smul_eq_mul, smul_eq_mul, add_comm]
@@ -767,7 +767,7 @@ theorem delAt_add {F G : V n → Alt n} {v : V n}
     simp only [coefwise, ← Finset.sum_add_distrib, ← add_smul]
     refine Finset.sum_congr rfl fun S _ => ?_
     simp only [map_add (f := _), Finsupp.add_apply]
-    rw [del_add (hF S) (hG S), ContinuousLinearMap.add_apply]
+    rw [del_add (hF S) (hG S), add_apply]
   simp only [delAt, key, mul_add, Finset.sum_add_distrib]
 
 theorem repr_ι (x : Fin n ⊕ Fin n → ℂ) (S : Finset (Fin (n + n))) :
@@ -793,7 +793,7 @@ theorem delAt_ι {u : V n → (Fin n ⊕ Fin n → ℂ)} {v : V n}
   have e : (fun x => (bas n).repr (ExteriorAlgebra.ι ℂ (u x)) S) = fun x =>
       ∑ i, u x i * (bas n).repr (ExteriorAlgebra.ι ℂ (Pi.single i 1)) S := funext fun x => repr_ι _ _
   rw [FormMul.repr_coefwise, repr_ι, e]
-  rw [del_sum (fun i _ => (hu i).mul_const _), ContinuousLinearMap.sum_apply]
+  rw [del_sum (fun i _ => (hu i).mul_const _), sum_apply]
   exact Finset.sum_congr rfl fun i _ => del_mul_const (hu i) _ _
 
 theorem sum_symm_dz_mul (s : Fin n → Fin n → ℂ) (hs : ∀ a b, s a b = s b a) :
@@ -855,10 +855,10 @@ theorem delAt_pull_fderiv_ι {φ : V n → V n} {v : V n} (hφ : ContDiffAt ℂ 
     funext i
     rcases i with b | b
     · simp only [Sum.elim_inl]
-      rw [del_sum (fun c _ => (hEr b c).mul_const _), ContinuousLinearMap.sum_apply]
+      rw [del_sum (fun c _ => (hEr b c).mul_const _), sum_apply]
       simp [del_mul_const (hEr _ _), hdel, Finset.sum_apply, Pi.single_apply, hs]
     · simp only [Sum.elim_inr]
-      rw [del_sum (fun c _ => (hEc b c).mul_const _), ContinuousLinearMap.sum_apply]
+      rw [del_sum (fun c _ => (hEc b c).mul_const _), sum_apply]
       simp [del_mul_const (hEc _ _), hdelc, Finset.sum_apply, Pi.single_apply]
   rw [hF, delAt_ι hu]
 
@@ -1349,7 +1349,7 @@ theorem integral_evalF_of_dbarCoh : ∀ (M : Type) [TopologicalSpace M] [T2Space
     abel
   have hdu : A.IsForm (A.dbar u) := (hc 1 u u hu hu).2.2.2.2.1
   have int1 : ∀ α : A.Fld, A.IsForm α → ∀ ε : ℤˣ, Integrable (fun _ : M => (1 : ℝ)) (A.part α ε) := fun α h ε => by
-    haveI := hfin α h ε
+    have := hfin α h ε
     exact integrable_const 1
   calc A.integral (evalF A w P) = wInt A (fun _ => 1) (evalF A w' P + A.dbar u) := by rw [wInt_one, e1]
     _ = wInt A (fun _ => 1) (evalF A w' P) + wInt A (fun _ => 1) (A.dbar u) :=
@@ -1411,7 +1411,7 @@ theorem isGramPair_ldPart (F : Type) [Field F] (σ : F →+* ℂ) (X : Var F) (�
     refine ⟨_, _, fun w => Matrix.diagonal fun i =>
       (((E.nonempty (under z)).choose * (E.nonempty (under y)).choose⁻¹) τ).map (ratVal · w) i i,
       hol, hol, ⟨?_, fun c hc a b => ?_⟩, ?_⟩
-    · rw [Matrix.det_diagonal, ← Matrix.det_of_lowerTriangular _ (fun i j hij => tri i j hij)]
+    · rw [Matrix.det_diagonal, ← Matrix.det_of_isLowerTriangular _ (fun i j hij => tri i j hij)]
       exact hol.1
     · by_cases hab : a = b
       · subst hab

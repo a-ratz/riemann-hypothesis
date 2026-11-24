@@ -104,13 +104,13 @@ theorem ncPairs_card_le {N : ℕ} (s : Fin N → Bool) :
             Finset.mem_coe] at hx ⊢
           cases h1 : s x.1 <;> cases h2 : s x.2 <;> simp_all
         · intro x hx y hy hxy
-          simp only [Finset.coe_filter, Set.mem_setOf_eq, Finset.mem_product, Finset.mem_univ,
+          simp only [Finset.coe_filter, Set.mem_ofPred_eq, Finset.mem_product, Finset.mem_univ,
             true_and] at hx hy
           obtain ⟨x1, x2⟩ := x
           obtain ⟨y1, y2⟩ := y
           dsimp only at hx hy hxy
-          cases h1 : s x1 <;> cases h2 : s y1 <;> simp only [h1, h2, Bool.false_eq_true, if_false,
-            if_true, Prod.mk.injEq] at hxy
+          cases h1 : s x1 <;> cases h2 : s y1 <;> simp only [h1, h2, Bool.false_eq_true, ite_false,
+            ite_true, Prod.mk.injEq] at hxy
           · rw [hxy.1, hxy.2]
           · exact absurd (hxy.1 ▸ hxy.2 ▸ hx.1 : y2 < y1) (lt_asymm hy.1)
           · exact absurd (hxy.1 ▸ hxy.2 ▸ hx.1 : y2 < y1) (lt_asymm hy.1)
@@ -170,7 +170,7 @@ private theorem prod_sub_of_lt_eq_facProd (N : ℕ) :
     rw [Finset.prod_filter]
     have e : ∀ b : Fin N, (if a < b then (((b : ℕ) : ℝ) - ((a : ℕ) : ℝ)) else 1) =
         (fun k : ℕ => if (a : ℕ) < k then ((k : ℝ) - ((a : ℕ) : ℝ)) else 1) (b : ℕ) := fun b => by
-      simp only [Fin.lt_iff_val_lt_val]
+      simp only [Fin.lt_def]
     rw [Finset.prod_congr rfl fun b _ => e b,
       Fin.prod_univ_eq_prod_range (fun k : ℕ => if (a : ℕ) < k then ((k : ℝ) - ((a : ℕ) : ℝ)) else 1) N,
       ← Finset.prod_filter]
@@ -359,7 +359,7 @@ theorem dsigEx_at (D : D7) (hd : dsigTie D) (ρ : D.what₂.Tau)
       IsDS (epsSH D.R) (lamSH D.R (D.hc ρ)) σ ∧
       IsFdeg ((D.s.cdScale _ (epsSH D.R) : ENNReal) • Formalism.REAL.muG (epsSH D.R)) σ (D.dsig ρ) := by
   obtain ⟨H, i1, i2, σ, hσ⟩ := hex
-  haveI : CompleteSpace H := hσ.1
+  have : CompleteSpace H := hσ.1
   obtain ⟨d, hd0, hdI⟩ := Formalism.MainNotions.BridgeCSchur.fdeg_of_DS _ σ hσ
   have hc : (0 : ℝ) < (D.s.cdScale _ (epsSH D.R) : ℝ) := D.s.cdScale_pos _ _
   have hF : IsFdeg ((D.s.cdScale _ (epsSH D.R) : ENNReal) • Formalism.REAL.muG (epsSH D.R)) σ

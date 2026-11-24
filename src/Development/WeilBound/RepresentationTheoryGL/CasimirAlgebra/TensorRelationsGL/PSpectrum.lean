@@ -165,7 +165,7 @@ theorem Kl_sum {V : Type} [AddCommGroup V] [Module ℂ V] (A B : Module.End ℂ 
     · exact hAB.eq.symm
     · rfl
   open scoped IsMulCommutative in
-  letI : IsMulCommutative (Algebra.adjoin ℂ ({A, B} : Set (Module.End ℂ V))) :=
+  let : IsMulCommutative (Algebra.adjoin ℂ ({A, B} : Set (Module.End ℂ V))) :=
     Algebra.isMulCommutative_adjoin ℂ (fun a ha b hb _ => hc a ha b hb)
   let a' : Algebra.adjoin ℂ ({A, B} : Set (Module.End ℂ V)) := ⟨A, Algebra.subset_adjoin (by simp)⟩
   let b' : Algebra.adjoin ℂ ({A, B} : Set (Module.End ℂ V)) := ⟨B, Algebra.subset_adjoin (by simp)⟩

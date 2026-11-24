@@ -122,7 +122,7 @@ theorem exists_proj (hpos : ∀ z : Fin g → ℂ, z ≠ 0 → 0 < (herm Hm z z)
   classical
   obtain ⟨s, hsV, hspan, hli⟩ := exists_linearIndependent ℂ (Set.range V)
   have hfin : s.Finite := (Set.finite_range V).subset hsV
-  haveI := hfin.fintype
+  have := hfin.fintype
   obtain ⟨c, hc⟩ := gram_surj Hm hpos (fun v : s => (v : Fin g → ℂ)) hli (fun v => herm Hm y v)
   have hmem : ∑ m : s, c m • (m : Fin g → ℂ) ∈ Submodule.span ℂ (Set.range V) :=
     Submodule.sum_mem _ fun m _ => Submodule.smul_mem _ _ (Submodule.subset_span (hsV m.2))

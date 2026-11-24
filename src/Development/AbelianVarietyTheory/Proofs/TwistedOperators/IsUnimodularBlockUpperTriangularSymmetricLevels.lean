@@ -90,7 +90,7 @@ omit [T2Space G] in
 theorem modular_aut (e : G ≃* G) (hc : Continuous e) (hc' : Continuous e.symm) (g : G) :
     Measure.modularCharacter (e g) = Measure.modularCharacter g := by
   let μ : Measure G := Measure.haar
-  haveI : (μ.map e).IsHaarMeasure := e.isHaarMeasure_map μ hc hc'
+  have : (μ.map e).IsHaarMeasure := e.isHaarMeasure_map μ hc hc'
   refine smul_inj (μ := μ.map e) ?_
   rw [← map_mul_right_eq, ← Measure.map_smul, ← map_mul_right_eq,
     Measure.map_map (measurable_mul_const _) hc.measurable, Measure.map_map hc.measurable (measurable_mul_const _)]
@@ -149,8 +149,8 @@ theorem modular_restrict {G : Type} [Group G] [TopologicalSpace G] [IsTopologica
       map_mul' := fun x y => Subtype.ext (by simp) }
   have : g' = e g := Subtype.ext h
   rw [this]
-  exact modular_aut e (Continuous.subtype_mk (hc.comp continuous_subtype_val) _)
-    (Continuous.subtype_mk (hc'.comp continuous_subtype_val) _) g
+  exact modular_aut e (Continuous.subtype_mk (hc.comp continuous_subtypeVal) _)
+    (Continuous.subtype_mk (hc'.comp continuous_subtypeVal) _) g
 
 section Mat
 
@@ -203,9 +203,9 @@ section Local
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem neBot_punctured : (𝓝[≠] (0 : k)).NeBot := by
-  letI := IsTopologicalAddGroup.rightUniformSpace k
-  haveI := isUniformAddGroup_of_addCommGroup (G := k)
-  letI : (Valued.v (R := k)).RankOne :=
+  let := IsTopologicalAddGroup.rightUniformSpace k
+  have := isUniformAddGroup_of_addCommGroup (G := k)
+  let : (Valued.v (R := k)).RankOne :=
   { hom' := IsRankLeOne.nonempty.some.emb (R := k).comp MonoidWithZeroHom.ValueGroup₀.embedding
     strictMono' := IsRankLeOne.nonempty.some.strictMono.comp
         MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
@@ -213,16 +213,16 @@ theorem neBot_punctured : (𝓝[≠] (0 : k)).NeBot := by
   exact NormedField.nhdsNE_neBot (0 : k)
 
 theorem neBot_units : (Filter.comap (Units.val : kˣ → k) (𝓝 0)).NeBot := by
-  haveI := neBot_punctured (k := k)
+  have := neBot_punctured (k := k)
   refine Filter.comap_neBot fun U hU => ?_
   obtain ⟨x, hx, hx0⟩ := Filter.nonempty_of_mem (inter_mem_nhdsWithin ({0}ᶜ : Set k) hU)
   exact ⟨Units.mk0 x hx, hx0⟩
 
 theorem infinite_field : Infinite k := by
-  haveI := neBot_punctured (k := k)
-  haveI := t2Space k
+  have := neBot_punctured (k := k)
+  have := t2Space k
   by_contra h
-  haveI : Finite k := not_infinite_iff_finite.1 h
+  have : Finite k := not_infinite_iff_finite.1 h
   exact (neBot_punctured (k := k)).ne (discreteTopology_iff_nhds_ne.1 inferInstance 0)
 
 variable {n : Type} [Fintype n] [DecidableEq n] {c : ℕ}
@@ -268,21 +268,21 @@ end Local
 
 theorem unimodular : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (c l : ℕ) (L : Fin c → ℕ) (_ : ∀ i, L (Fin.rev i) + L i = 2 * l) (S : Subgroup (GL (n ⊕ Fin c) k)) (_ : ∀ g : GL (n ⊕ Fin c) k, g ∈ S ↔ ∀ r s : n ⊕ Fin c, (r.isRight ∨ s.isRight) → Sum.elim (fun _ => l) L s ≤ Sum.elim (fun _ => l) L r → g.val r s = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r s) (m : Measure S), m.IsHaarMeasure → m.IsMulRightInvariant := by
   intro k _ _ _ _ _ _ n _ _ c l L hL S hS m hm
-  haveI := t2Space k
-  haveI := infinite_field (k := k)
-  haveI := neBot_units (k := k)
+  have := t2Space k
+  have := infinite_field (k := k)
+  have := neBot_units (k := k)
   obtain ⟨i1, i2, i3, -⟩ := volGL_haar k (n ⊕ Fin c) Measure.addHaar
   set lev : n ⊕ Fin c → ℕ := Sum.elim (fun _ => l) L with hlev
   have hcl : IsClosed (S : Set (GL (n ⊕ Fin c) k)) := by
     have : (S : Set (GL (n ⊕ Fin c) k)) = ⋂ (r) (s) (_ : r.isRight ∨ s.isRight) (_ : lev s ≤ lev r),
         {g | g.val r s = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r s} := by
       ext g
-      simp only [SetLike.mem_coe, hS, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, hS, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [this]
     refine isClosed_iInter fun r => isClosed_iInter fun s => isClosed_iInter fun _ => isClosed_iInter fun _ => ?_
     exact isClosed_eq (Units.continuous_val.matrix_elem r s) continuous_const
-  haveI : LocallyCompactSpace S := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology (S : Set (GL (n ⊕ Fin c) k))
+  have : LocallyCompactSpace S := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology S := TopologicalSpace.Subtype.secondCountableTopology (S : Set (GL (n ⊕ Fin c) k))
   have hX : ∀ x : GL n k, embX c x ∈ S := fun x => by
     rw [hS]
     intro r s hR _

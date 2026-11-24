@@ -61,7 +61,7 @@ theorem jacobi_congr {a b s : ℕ} (h : a ≡ b [MOD s]) : jacobiSym (a : ℤ) s
 theorem exists_jacobi_neg_one (m t : ℕ) (ht : Odd t) (hsq : Squarefree t) (h1 : 1 < t)
     (hc : t.Coprime m) : ∃ u : ℕ, u ≡ 1 [MOD m] ∧ jacobiSym (u : ℤ) t = -1 := by
   obtain ⟨p, hp, hpt⟩ := Nat.exists_prime_and_dvd (show t ≠ 1 by omega)
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   obtain ⟨t', rfl⟩ := hpt
   have ht0 : t' ≠ 0 := by
     rintro rfl
@@ -79,7 +79,7 @@ theorem exists_jacobi_neg_one (m t : ℕ) (ht : Odd t) (hsq : Squarefree t) (h1 
     (by rw [ZMod.ringChar_zmod_n]; exact hp2)
   obtain ⟨k, hk1, hk2⟩ := Nat.chineseRemainder (Nat.Coprime.mul_right hcp hpm) a.val 1
   refine ⟨k, Nat.ModEq.of_mul_left t' hk2, ?_⟩
-  haveI : NeZero t' := ⟨ht0⟩
+  have : NeZero t' := ⟨ht0⟩
   rw [jacobiSym.mul_right, jacobi_congr hk1, jacobi_congr (Nat.ModEq.of_mul_right m hk2),
     ← jacobiSym.legendreSym.to_jacobiSym p, (legendreSym.eq_neg_one_iff p).mpr (by simpa using ha)]
   simp
@@ -128,8 +128,8 @@ private theorem dvd_of_jacobiSym_agree_on_residue_class (m₀ s₁ s₂ : ℕ) (
   have hum : u ≡ 1 [MOD m₀] := Nat.ModEq.of_mul_right s₂ hu1
   have hus : u ≡ 1 [MOD s₂] := Nat.ModEq.of_mul_left m₀ hu1
   have hug : u ≡ 1 [MOD g] := Nat.ModEq.of_dvd (Nat.gcd_dvd_right s₁ s₂) hus
-  haveI : NeZero g := ⟨hg0⟩
-  haveI : NeZero a := ⟨ha0⟩
+  have : NeZero g := ⟨hg0⟩
+  have : NeZero a := ⟨ha0⟩
   have hJs : jacobiSym (u : ℤ) s₂ = 1 := by
     rw [jacobi_congr hus]
     simp

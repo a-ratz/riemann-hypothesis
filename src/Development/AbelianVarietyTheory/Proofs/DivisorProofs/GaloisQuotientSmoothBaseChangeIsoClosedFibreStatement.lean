@@ -97,7 +97,7 @@ theorem exists_maximalIdeal_pow_le_map_maximalIdeal (R : Type) [CommRing R] [IsL
     rw [Ideal.radical_eq_sInf]
     refine le_sInf ?_
     rintro P ⟨hIP, hP⟩
-    haveI := hP
+    have := hP
     have hc : P.comap (algebraMap R R') = maximalIdeal R := by
       apply le_antisymm
       · exact IsLocalRing.le_maximalIdeal (Ideal.IsPrime.comap (algebraMap R R')).ne_top
@@ -264,7 +264,7 @@ theorem affineChart_smooth : ∀ (R : Type) [CommRing R] (Y : Over (Sp R)), Smoo
   intro R _ Y hY W hW
   let alg : R →+* Γ(Y.left, W) :=
     (Y.hom.appLE ⊤ W (fun _ _ => trivial)).hom.comp (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom
-  letI : Algebra R Γ(Y.left, W) := alg.toAlgebra
+  let : Algebra R Γ(Y.left, W) := alg.toAlgebra
   have s₀ : hW.fromSpec ≫ Y.hom = spMap alg := by
     rw [← IsAffineOpen.SpecMap_appLE_fromSpec Y.hom (isAffineOpen_top _) hW (fun _ _ => trivial),
       IsAffineOpen.fromSpec_top, Scheme.isoSpec_Spec_inv, ← Spec.map_comp]; rfl
@@ -440,7 +440,7 @@ theorem thick_chart : ∀ (R' : Type) [CommRing R'] (I : Ideal R') (G' : Over (S
     exact outer.flip
   have sq : IsPullback je (spMap (Ideal.Quotient.mk ((I ^ (e + 1)).map (algebraMap R' C'))))
       (pullback.fst G'.hom (thick R' I e)) j := IsPullback.of_right big hje1 right
-  haveI hoi : IsOpenImmersion je := MorphismProperty.of_isPullback (P := @IsOpenImmersion) sq.flip inferInstance
+  have hoi : IsOpenImmersion je := MorphismProperty.of_isPullback (P := @IsOpenImmersion) sq.flip inferInstance
   refine ⟨je, hoi, ?_, sq, hje2⟩
   have h1 : sq.isoPullback.hom ≫ pullback.fst (pullback.fst G'.hom (thick R' I e)) j = je := sq.isoPullback_hom_fst
   have h2 : Set.range je = Set.range (pullback.fst (pullback.fst G'.hom (thick R' I e)) j) := by
@@ -727,10 +727,10 @@ theorem exists_smooth_away_of_quotient_pow_equiv : ∀ (R : Type) [CommRing R] [
       ((Algebra.TensorProduct.quotIdealMapEquivQuotTensor O J).symm.trans φ').trans
         (Algebra.TensorProduct.quotIdealMapEquivQuotTensor C J)
     exact Algebra.Smooth.of_equiv ψ
-  haveI := hq
-  haveI : Algebra.IsSmoothAt R q :=
+  have := hq
+  have : Algebra.IsSmoothAt R q :=
     isSmoothAt_of_smooth_quotient_pow R (maximalIdeal R) (maximalIdeal.isMaximal R).ne_top C hsm q hqm
-  haveI : Algebra.FinitePresentation R C := Algebra.FinitePresentation.of_finiteType.mp hC
+  have : Algebra.FinitePresentation R C := Algebra.FinitePresentation.of_finiteType.mp hC
   obtain ⟨g, hg, hs⟩ := Algebra.IsSmoothAt.exists_notMem_smooth R q
   exact ⟨g, hg, hs⟩
 
@@ -914,7 +914,7 @@ theorem mem_range_thick_of_finite {R R' : Type} [CommRing R] [IsLocalRing R] [Co
     have : P.asIdeal.comap ρ = maximalIdeal R := congrArg PrimeSpectrum.asIdeal hP
     rw [this]; infer_instance
   have := P.2
-  have h₂ : P.asIdeal.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' ρ hρ.to_isIntegral _ h₁
+  have h₂ : P.asIdeal.IsMaximal := Ideal.isMaximal_of_isIntegral_of_isMaximal_comap ρ hρ.to_isIntegral _ h₁
   have h₃ : P.asIdeal = maximalIdeal R' := eq_maximalIdeal h₂
   change P ∈ Set.range (PrimeSpectrum.comap (Ideal.Quotient.mk (maximalIdeal R' ^ (e + 1))))
   rw [range_comap_of_surjective _ _ Ideal.Quotient.mk_surjective, Ideal.mk_ker]
@@ -1068,7 +1068,7 @@ theorem isLocalization_tensor (R R' C' : Type) [CommRing R] [CommRing R'] [CommR
         fun _ _ => Commute.all _ _).toRingHom).toAlgebra
     IsLocalization (Submonoid.powers ((f * g) ⊗ₜ[R] (1 : R'))) (Localization.Away (algebraMap C C' (f * g))) := by
   set Φ := Algebra.TensorProduct.lift C.val (IsScalarTower.toAlgHom R R' C') fun _ _ => Commute.all _ _ with hΦdef
-  letI : Algebra (TensorProduct R C R') (Localization.Away (algebraMap C C' (f * g))) :=
+  let : Algebra (TensorProduct R C R') (Localization.Away (algebraMap C C' (f * g))) :=
     ((algebraMap C' _).comp Φ.toRingHom).toAlgebra
   have hΦ : ∀ c : C, Φ (c ⊗ₜ[R] (1 : R')) = algebraMap C C' c := fun c => by simp [Φ]
   have halg : ∀ t, algebraMap (TensorProduct R C R') (Localization.Away (algebraMap C C' (f * g))) t =
@@ -1112,13 +1112,13 @@ theorem exists_smooth_basicOpen_iso : ∀ (R R' : Type) [CommRing R] [CommRing R
     have : IsLocalization ((Submonoid.powers (f * g)).map (algebraMap C C')) A' := by
       rw [Submonoid.map_powers]; infer_instance
     exact CommRingCat.isPushout_of_isLocalization _ _ hφ (Submonoid.powers (f * g))
-  haveI : IsOpenImmersion (spMap (algebraMap C A)) := IsOpenImmersion.of_isLocalization (f * g)
+  have : IsOpenImmersion (spMap (algebraMap C A)) := IsOpenImmersion.of_isLocalization (f * g)
   have h₁ : IsPullback (spMap (algebraMap C' A') ≫ j) (spMap φ) π (spMap (algebraMap C A) ≫ l) :=
     (isPullback_SpecMap_of_isPushout _ _ _ _ hLoc).paste_horiz hP
   have hRing : IsPushout (CommRingCat.ofHom (algebraMap R A)) (CommRingCat.ofHom (algebraMap R R'))
       (CommRingCat.ofHom φ) (CommRingCat.ofHom (algebraMap R' A')) := by
     let Φ := Algebra.TensorProduct.lift C.val (IsScalarTower.toAlgHom R R' C') fun _ _ => Commute.all _ _
-    letI : Algebra (TensorProduct R C R') A' := ((algebraMap C' A').comp Φ.toRingHom).toAlgebra
+    let : Algebra (TensorProduct R C R') A' := ((algebraMap C' A').comp Φ.toRingHom).toAlgebra
     have hL := isLocalization_tensor R R' C' C f g hcok hker
     have Q1 := CommRingCat.isPushout_tensorProduct R C R'
     have : IsLocalization ((Submonoid.powers (f * g)).map
@@ -1152,10 +1152,10 @@ theorem exists_smooth_basicOpen_iso : ∀ (R R' : Type) [CommRing R] [CommRing R
       | exact (Scheme.comp_base_apply _ _ _).trans (congrArg l hw)
       | exact congrArg l hw
   · let B := Localization.Away (algebraMap C (Localization.Away g) f)
-    haveI : Algebra.Smooth R B := Algebra.Smooth.comp R (Localization.Away g) B
-    haveI : Algebra.Smooth R A :=
+    have : Algebra.Smooth R B := Algebra.Smooth.comp R (Localization.Away g) B
+    have : Algebra.Smooth R A :=
       Algebra.Smooth.of_equiv ((IsLocalization.algEquiv (Submonoid.powers (f * g)) B A).restrictScalars R)
-    haveI : Smooth (spMap (algebraMap R A)) :=
+    have : Smooth (spMap (algebraMap R A)) :=
       HasRingHomProperty.Spec_iff.mpr (RingHom.smooth_algebraMap.mpr inferInstance)
     let e := IsOpenImmersion.isoOfRangeEq (spMap (algebraMap C A) ≫ l)
       (spMap (algebraMap C A) ≫ l).opensRange.ι (by simp)

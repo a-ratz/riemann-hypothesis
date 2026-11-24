@@ -65,7 +65,7 @@ theorem sum_const_eq {d N : ℕ} (h : ∑ _ : Fin d, a = N) : N = d * a := by
 theorem stdBlocks_castAdd (h₁ : ∑ _ : Fin d₁, a = r) (H : ∑ _ : Fin (d₁ + d₂), a = r + s) (b : Fin d₁) (i : Fin a) :
     stdBlocks (fun _ : Fin (d₁ + d₂) => a) H ⟨Fin.castAdd d₂ b, i⟩ = Fin.castAdd s (stdBlocks (fun _ : Fin d₁ => a) h₁ ⟨b, i⟩) := by
   apply Fin.ext
-  rw [val_stdBlocks_const, Fin.coe_castAdd, Fin.coe_castAdd, val_stdBlocks_const]
+  rw [val_stdBlocks_const, Fin.val_castAdd, Fin.val_castAdd, val_stdBlocks_const]
 
 theorem stdBlocks_natAdd (h₁ : ∑ _ : Fin d₁, a = r) (h₂ : ∑ _ : Fin d₂, a = s) (H : ∑ _ : Fin (d₁ + d₂), a = r + s)
     (b : Fin d₂) (i : Fin a) :
@@ -96,7 +96,7 @@ theorem unip_col (x : BlockIx (r + s) r → R) (i : Fin (r + s)) (k : Fin r) :
   change ((1 : Matrix (Fin (r + s)) (Fin (r + s)) R) + nilM x) i (Fin.castAdd s k) = _
   rw [Matrix.add_apply]
   have h0 : nilM x i (Fin.castAdd s k) = 0 := by
-    simp only [nilM, Matrix.of_apply, Fin.coe_castAdd]
+    simp only [nilM, Matrix.of_apply, Fin.val_castAdd]
     rw [dite_eq_right]
     intro h
     exact absurd h.2 (not_le.2 k.isLt)
@@ -108,7 +108,7 @@ theorem unip_row (x : BlockIx (r + s) r → R) (k : Fin s) (j : Fin (r + s)) :
   change ((1 : Matrix (Fin (r + s)) (Fin (r + s)) R) + nilM x) (Fin.natAdd r k) j = _
   rw [Matrix.add_apply]
   have h0 : nilM x (Fin.natAdd r k) j = 0 := by
-    simp only [nilM, Matrix.of_apply, Fin.coe_natAdd]
+    simp only [nilM, Matrix.of_apply, Fin.val_natAdd]
     rw [dite_eq_right]
     intro h
     omega
@@ -118,7 +118,7 @@ theorem unip_lev_cc (x : BlockIx (r + s) r → R) (m : GL (Fin r) R × GL (Fin s
     ((unip x * lev R r s m : GL (Fin (r + s)) R) : Matrix _ _ R) (Fin.castAdd s i) (Fin.castAdd s j) = (m.1 : Matrix _ _ R) i j := by
   simp only [Units.val_mul, Matrix.mul_apply, Fin.sum_univ_add, unip_col, lev_nc, lev_cc, mul_zero,
     Finset.sum_const_zero, add_zero, Matrix.one_apply, Fin.castAdd_inj, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
 theorem unip_lev_nn (x : BlockIx (r + s) r → R) (m : GL (Fin r) R × GL (Fin s) R) (i j : Fin s) :
     ((unip x * lev R r s m : GL (Fin (r + s)) R) : Matrix _ _ R) (Fin.natAdd r i) (Fin.natAdd r j) = (m.2 : Matrix _ _ R) i j := by
@@ -129,7 +129,7 @@ theorem castAdd_or_natAdd (b : Fin (d₁ + d₂)) : (∃ c, b = Fin.castAdd d₂
   rcases lt_or_ge (b : ℕ) d₁ with h | h
   · exact Or.inl ⟨⟨b, h⟩, Fin.ext rfl⟩
   · refine Or.inr ⟨⟨b - d₁, by omega⟩, Fin.ext ?_⟩
-    simp only [Fin.coe_natAdd]
+    simp only [Fin.val_natAdd]
     omega
 
 theorem leviEmb_split (h₁ : ∑ _ : Fin d₁, a = r) (h₂ : ∑ _ : Fin d₂, a = s) (H : ∑ _ : Fin (d₁ + d₂), a = r + s)
@@ -141,7 +141,7 @@ theorem leviEmb_split (h₁ : ∑ _ : Fin d₁, a = r) (h₂ : ∑ _ : Fin d₂,
     intro c c' h
     have h1 := congrArg Fin.val h
     have h2 := c.isLt
-    simp only [Fin.coe_castAdd, Fin.coe_natAdd] at h1
+    simp only [Fin.val_castAdd, Fin.val_natAdd] at h1
     omega
   apply Units.ext
   ext p q
@@ -174,7 +174,7 @@ theorem unipRad_split (h₁ : ∑ _ : Fin d₁, a = r) (h₂ : ∑ _ : Fin d₂,
     rw [mem_parab_iff] at hg
     have hi' := i.isLt
     obtain ⟨i', rfl⟩ : ∃ i' : Fin s, i = Fin.natAdd r i' :=
-      ⟨⟨i - r, by omega⟩, Fin.ext (by simp only [Fin.coe_natAdd]; omega)⟩
+      ⟨⟨i - r, by omega⟩, Fin.ext (by simp only [Fin.val_natAdd]; omega)⟩
     obtain ⟨j', rfl⟩ : ∃ j' : Fin r, j = Fin.castAdd s j' := ⟨⟨j, hj⟩, rfl⟩
     obtain ⟨⟨c, i''⟩, rfl⟩ := (stdBlocks (fun _ : Fin d₂ => a) h₂).surjective i'
     obtain ⟨⟨c', j''⟩, rfl⟩ := (stdBlocks (fun _ : Fin d₁ => a) h₁).surjective j'
@@ -182,7 +182,7 @@ theorem unipRad_split (h₁ : ∑ _ : Fin d₁, a = r) (h₂ : ∑ _ : Fin d₂,
     apply hg
     have := c'.isLt
     rw [Fin.lt_def]
-    simp only [Fin.coe_castAdd, Fin.coe_natAdd]
+    simp only [Fin.val_castAdd, Fin.val_natAdd]
     omega
   obtain ⟨hvP, hvD⟩ := mem_unipRad.1 hv
   have hvP' := mem_parab_iff.1 hvP
@@ -196,7 +196,7 @@ theorem unipRad_split (h₁ : ∑ _ : Fin d₁, a = r) (h₂ : ∑ _ : Fin d₂,
       rw [← unip_lev_cc x m, ← hvm, ← stdBlocks_castAdd h₁ H, ← stdBlocks_castAdd h₁ H]
       apply hvP'
       rw [Fin.lt_def] at hβα ⊢
-      simpa only [Fin.coe_castAdd] using hβα
+      simpa only [Fin.val_castAdd] using hβα
     · intro α i j
       rw [← unip_lev_cc x m, ← hvm, ← stdBlocks_castAdd h₁ H, ← stdBlocks_castAdd h₁ H]
       exact hvD _ _ _
@@ -206,7 +206,7 @@ theorem unipRad_split (h₁ : ∑ _ : Fin d₁, a = r) (h₂ : ∑ _ : Fin d₂,
       rw [← unip_lev_nn x m, ← hvm, ← stdBlocks_natAdd h₁ h₂ H, ← stdBlocks_natAdd h₁ h₂ H]
       apply hvP'
       rw [Fin.lt_def] at hβα ⊢
-      simp only [Fin.coe_natAdd]
+      simp only [Fin.val_natAdd]
       omega
     · intro α i j
       rw [← unip_lev_nn x m, ← hvm, ← stdBlocks_natAdd h₁ h₂ H, ← stdBlocks_natAdd h₁ h₂ H]

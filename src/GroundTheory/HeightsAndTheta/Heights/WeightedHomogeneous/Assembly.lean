@@ -167,7 +167,7 @@ theorem ringKrullDim_le_of_fibreComponents (k : WithBot ℕ∞)
   let g : MvPolynomial σ ℤ →+* (MvPolynomial σ ℤ ⧸ P) ⧸ M :=
     (Ideal.Quotient.mk M).comp (Ideal.Quotient.mk P)
   have hg : Function.Surjective g := Ideal.Quotient.mk_surjective.comp Ideal.Quotient.mk_surjective
-  have hI := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' (g.comp C)
+  have hI := Ideal.isMaximal_comap_of_isIntegral_of_isMaximal (g.comp C)
     (MvPolynomial.comp_C_integral_of_surjective_of_isJacobsonRing g hg) ⊥
   obtain ⟨q, hq, hqI⟩ := (Ideal.isPrime_int_iff.mp hI.isPrime).resolve_left
     (Ring.ne_bot_of_isMaximal_of_not_isField hI Int.not_isField)

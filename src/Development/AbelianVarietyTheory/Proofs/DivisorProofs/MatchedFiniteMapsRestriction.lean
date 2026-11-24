@@ -58,7 +58,7 @@ theorem rank_SB_le (X : Type) [TopologicalSpace X] [SecondCountableTopology X] :
   classical
   set 𝓑 := TopologicalSpace.countableBasis X
   have hB := TopologicalSpace.isBasis_countableBasis X
-  haveI : Countable 𝓑 := (TopologicalSpace.countable_countableBasis X).to_subtype
+  have : Countable 𝓑 := (TopologicalSpace.countable_countableBasis X).to_subtype
   set S : Set (X → ℂ) := Set.range fun s : Finset 𝓑 => Set.indicator (⋃ b ∈ s, (b : Set X)) (1 : X → ℂ)
   have hS : S.Countable := Set.countable_range _
 
@@ -87,9 +87,9 @@ theorem rank_SB_le (X : Type) [TopologicalSpace X] [SecondCountableTopology X] :
     intro f hf
     obtain ⟨hlc, hcs⟩ := hf
     have hK : IsCompact (tsupport f) := hcs
-    haveI : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hK
+    have : CompactSpace (tsupport f) := isCompact_iff_compactSpace.1 hK
     have hfin0 : (Set.range fun x : tsupport f => f x).Finite :=
-      (hlc.comp_continuous continuous_subtype_val).range_finite
+      (hlc.comp_continuous continuous_subtypeVal).range_finite
     have hfin : (Set.range f).Finite := by
       refine (hfin0.insert 0).subset ?_
       rintro _ ⟨x, rfl⟩

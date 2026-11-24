@@ -57,7 +57,7 @@ theorem UpperTheory.eigenspace_comp_levelProjection_eq_inf_fixed :
   intro K _ _ n hn μ _ ν _ V a x P Uv hx
   obtain ⟨-, hmem, hp1, hp2, -⟩ := UpperTheory.ConvolutionTheory.Tf.commPrj K n μ (levOn P Uv)
   obtain ⟨m, hm, -⟩ := (UpperTheory.ConvolutionTheory.Tf.compatEx K n hn).2.1 μ ν
-  haveI := hm
+  have := hm
   have hcomm : ∀ h, Commute (Oinf μ ν a) (rhoF μ h) := fun h =>
     (UpperTheory.ConvolutionTheory.Tf.opAlg K n μ ν m).2.2.2.2.2.2.2.2 a h
   have hpres : ∀ v ∈ fixF μ (levOn P Uv), Oinf μ ν a v ∈ fixF μ (levOn P Uv) := fun v hv => by

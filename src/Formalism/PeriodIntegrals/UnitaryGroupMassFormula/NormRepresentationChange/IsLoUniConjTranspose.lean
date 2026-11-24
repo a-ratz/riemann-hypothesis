@@ -90,14 +90,14 @@ theorem sgUp_one {N : ℕ} : sgUp (1 : Matrix (Fin N) (Fin N) K) = 0 := by
   · rfl
 
 theorem det_upUni {N : ℕ} {U : Matrix (Fin N) (Fin N) K} (hU : IsUpUni U) : U.det = 1 := by
-  rw [Matrix.det_of_upperTriangular (fun i j h => (hU i j).1 h)]
+  rw [det_of_isUpperTriangular (fun i j h => (hU i j).1 h)]
   exact Finset.prod_eq_one fun i _ => (hU i i).2 rfl
 
 theorem isUpUni_inv {N : ℕ} {U : Matrix (Fin N) (Fin N) K} (hU : IsUpUni U) :
     IsUpUni U⁻¹ ∧ U * U⁻¹ = 1 := by
   have hdet : IsUnit U.det := by rw [det_upUni hU]; exact isUnit_one
   have hmul : U * U⁻¹ = 1 := Matrix.mul_nonsing_inv U hdet
-  haveI : Invertible U := Matrix.invertibleOfIsUnitDet U hdet
+  have : Invertible U := Matrix.invertibleOfIsUnitDet U hdet
   have htri : (U⁻¹).BlockTriangular id :=
     Matrix.blockTriangular_inv_of_blockTriangular (fun i j h => (hU i j).1 h)
   refine ⟨fun i j => ⟨fun h => htri h, fun h => ?_⟩, hmul⟩

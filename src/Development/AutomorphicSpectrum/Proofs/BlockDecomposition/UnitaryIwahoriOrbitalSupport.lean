@@ -74,7 +74,7 @@ theorem diagT_mem_iwGL {E : Type} [Field E] [NumberField E] [IsCMField E] (w : P
     · subst h
       rw [Matrix.diagonal_apply_eq, hρ]
     · rw [Matrix.diagonal_apply_ne _ h, map_zero]
-      exact zero_le'
+      exact zero_le
   refine ((GlobalTheory.CompanionTheory.IwEntries.iwGL_KGL_entries E w n _).1).2 ⟨hle τ hτ, ?_, ?_⟩
   · rw [← map_inv]
     exact hle _ hinv
@@ -142,7 +142,7 @@ theorem fU_diag : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E 
     rw [this]
     exact diagT_mem_iwGL w n τ hτ
   unfold fU
-  refine if_pos ⟨x, hx, κ * z, mul_mem hκ hz, ?_⟩
+  refine ite_eq_left ⟨x, hx, κ * z, mul_mem hκ hz, ?_⟩
   change x.1 * γ.1 * z.1 = x.1 * (b * tdiag ϖ (wexp n l) * b⁻¹) * ((b * GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin n) τ * b⁻¹) * z.1)
   rw [hγ, hfac]
   group

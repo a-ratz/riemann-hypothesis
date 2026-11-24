@@ -81,7 +81,7 @@ theorem exists_dual (m : V →ₗ[LL] W →ₗ[LL] LL)
       (∀ y, y ∈ T' ↔ ∀ x ∈ T, ∃ a, m x y = algebraMap O LL a) ∧
       (∀ x, x ∈ T ↔ ∀ y ∈ T', ∃ a, m x y = algebraMap O LL a) := by
   classical
-  haveI : Module.Finite O T := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite O T := Module.Finite.iff_fg.mpr hfg
   let b := Module.Free.chooseBasis O T
   let bV0 : Module.Free.ChooseBasisIndex O T → V := fun i => (b i : V)
   have hTspan : Submodule.span O (Set.range bV0) = T := by
@@ -121,7 +121,7 @@ theorem exists_dual (m : V →ₗ[LL] W →ₗ[LL] LL)
         Finsupp.single_apply]
       simp only [eq_comm])
     rw [this, Basis.coord_apply]
-  haveI : IsTorsionFree O LL := inferInstance
+  have : IsTorsionFree O LL := inferInstance
   refine ⟨Submodule.span O (Set.range f'), Submodule.fg_span (Set.finite_range _), ?_, ?_, ?_, ?_⟩
   · exact Module.Free.of_basis (Basis.span ((LinearIndependent.iff_fractionRing O LL).mpr f'.linearIndependent))
   · rw [Submodule.span_span_of_tower, f'.span_eq]
@@ -210,7 +210,7 @@ theorem exists_lattice : ∀ {G : Type} [Group G] [TopologicalSpace G] [CompactS
   intro G _ _ _ Qp LL O _ _ _ _ _ _ _ hO A
   classical
   obtain ⟨⟨hDom, hDVR, hFrac⟩, -, -, hTop, hOpen⟩ := hO
-  haveI := hDom; haveI := hDVR; haveI := hFrac; haveI := hTop
+  have := hDom; have := hDVR; have := hFrac; have := hTop
   have hinj : Function.Injective (algebraMap O LL) := IsFractionRing.injective O LL
 
   let e := Module.finBasis LL A.V
@@ -284,12 +284,12 @@ theorem exists_lattice : ∀ {G : Type} [Group G] [TopologicalSpace G] [CompactS
     refine Submodule.span_le.2 fun y hy => ?_
     simpa [f] using hbC y hy
   have hTfg : T.FG := Submodule.fg_of_fg_map_injective f hf (Submodule.FG.of_le hT₀fg hfT)
-  haveI : NoZeroSMulDivisors O A.V := ⟨fun {c x} h => by
+  have : NoZeroSMulDivisors O A.V := ⟨fun {c x} h => by
     rw [← algebraMap_smul LL c x] at h
     rcases smul_eq_zero.1 h with h | h
     · left; exact hinj (by rw [h, map_zero])
     · right; exact h⟩
-  haveI : Module.Finite O T := Module.Finite.iff_fg.mpr hTfg
+  have : Module.Finite O T := Module.Finite.iff_fg.mpr hTfg
   have hfree : Module.Free O T := Module.free_of_finite_type_torsion_free'
   have hspan : Submodule.span LL (T : Set A.V) = ⊤ := by
     rw [eq_top_iff, ← e.span_eq, Submodule.span_le]
@@ -327,8 +327,8 @@ theorem cyc_integral (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (L
 
 theorem stable_dual_lattices : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l) (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O] [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O → ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (m : A.V →ₗ[LL] A'.V →ₗ[LL] LL), IsDual1 (P.PD K) A.ρ A'.ρ m → ∃ (LA : Lattice (O := O) A.ρ) (LA' : Lattice (O := O) A'.ρ), IsDualLat1 (P.PD K) LA LA' m ∧ IsDualLat1 (P.PD K) LA' LA m.flip := by
   intro l _ P K LL _ _ _ O _ _ hO A A' m hm
-  haveI : FiniteDimensional ℚ_[l] K.1 := K.2
-  haveI : CompactSpace ↥(GK K) :=
+  have : FiniteDimensional ℚ_[l] K.1 := K.2
+  have : CompactSpace ↥(GK K) :=
     isCompact_iff_compactSpace.1 (IntermediateField.fixingSubgroup_isClosed K.1).isCompact
   obtain ⟨LA⟩ := _root_.GlobalTheory.StableLat.exists_lattice hO A
   obtain ⟨LA', h⟩ := _root_.GlobalTheory.DualLat.dualLattice_exists l P K LL O hO A A' m LA hm (cyc_integral l P K LL O hO)

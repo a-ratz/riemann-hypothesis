@@ -478,7 +478,7 @@ theorem mem_orth {U : Submodule E S.V} {v : S.V} : v ∈ orth S U ↔ ∀ x ∈ 
 theorem exists_mul_mem {Λ : Submodule (𝓞 E) S.V} (hΛ : Submodule.IsFullLattice E Λ) (v : S.V) :
     ∃ d : 𝓞 E, d ≠ 0 ∧ d • v ∈ Λ := by
   have hv : v ∈ Submodule.span E (Λ : Set S.V) := by
-    letI := hΛ
+    let := hΛ
     rw [Submodule.IsFullLattice.span_eq_top]; trivial
   obtain ⟨t, ht⟩ := multiple_mem_span_of_mem_localization_span (nonZeroDivisors (𝓞 E)) E _ v hv
   rw [Submodule.span_eq] at ht
@@ -977,7 +977,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (S : HSpace
     Formalism.MainNotions.hT_swap_zero (hrad x hx y hy)
   set M : Submodule (𝓞 E) S.V := Λ ⊓ toO S U with hM_def
   have hM : ∀ x, x ∈ M ↔ x ∈ Λ ∧ x ∈ U := fun x => Iff.rfl
-  haveI : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.mpr hΛ.fg
+  have : Module.Finite (𝓞 E) Λ := Module.Finite.iff_fg.mpr hΛ.fg
   have hMfg : M.FG := Submodule.FG.of_le_of_isNoetherian (T := Λ) inf_le_left
   have hint := int_pair hu
   have hUXA : U ≤ orth S (Xsp A) := fun y hy => by
@@ -1337,7 +1337,7 @@ theorem xLam_le_smul_sup_xLam :
   set N : Submodule (𝓞 E) S.V := Ideal.span {(g : 𝓞 E)} • Λ ⊔ XLam Λ F' with hN
   apply mem_of_forall_locP
   intro P
-  haveI := P.isPrime
+  have := P.isPrime
   by_cases hg : (g : 𝓞 E) ∈ P.asIdeal
   swap
   · refine (mem_localization_iff _ _ _).2 ⟨g, hg, Submodule.mem_sup_left ?_⟩
@@ -1474,7 +1474,7 @@ theorem seen_mono (D : D7) {T : D.host.E} (F : Fg D T) {N N' : LatV D} (h : N �
 
 theorem fixedHyp_full (D : D7) {T : D.host.E} (F : Fg D T) (Λ : LatV D)
     (hF : FixedHyp D Λ F) : Submodule.IsFullLattice D.host.E Λ := by
-  letI := hF.1
+  let := hF.1
   exact ⟨GlobalTheory.LoopC.Base.span_eq_top_of_unimodular (hS D).hT
     (hS D).herm (hS D).nondeg hF.1 hF.2.1⟩
 

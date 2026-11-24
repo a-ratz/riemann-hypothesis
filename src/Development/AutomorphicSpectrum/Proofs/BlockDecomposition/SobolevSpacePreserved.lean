@@ -85,7 +85,7 @@ theorem exists_mollifiers (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (
     ∃ φ : ℕ → Mat n → ℝ, (∀ k, IsTest (φ k)) ∧ (∀ k y, 0 ≤ φ k y) ∧
       (∀ k, ∫ y : G n, φ k y.val ∂μ = 1) ∧
       ∀ N ∈ 𝓝 (1 : G n), ∀ᶠ k in atTop, ∀ y : G n, φ k y.val ≠ 0 → y ∈ N := by
-  haveI : ProperSpace (Mat n) := FiniteDimensional.proper ℝ _
+  have : ProperSpace (Mat n) := FiniteDimensional.proper ℝ _
   have hemb := GlobalTheory.CompanionTheory.SobGL.HaarDom.isOpenEmbedding_valG n
   obtain ⟨r, hr0, hr⟩ : ∃ r > 0, Metric.closedBall (1 : Mat n) r ⊆ GLs n :=
     Metric.nhds_basis_closedBall.mem_iff.1 (isOpen_GLs.mem_nhds (one_mem_GLs n))
@@ -119,7 +119,7 @@ theorem exists_mollifiers (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (
     simpa using this
   have hpos : ∀ k, 0 < ∫ y : G n, b k y.val ∂μ := by
     intro k
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := (1 : G n)) (hcont k)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := (1 : G n)) (hcont k)
       (hcomp k) (fun y => (b k).nonneg) ?_
     simpa using (b k).one_of_mem_closedBall (x := (1 : Mat n)) (by simp [(b k).rIn_pos.le]) |>.symm ▸ one_ne_zero
   refine ⟨fun k x => (∫ y : G n, b k y.val ∂μ)⁻¹ * b k x, ?_, ?_, ?_, ?_⟩
@@ -479,7 +479,7 @@ theorem GlobalTheory.CompanionTheory.PresSobA.mol_differentiableAt :
   have hc1 : Continuous φ := hsm.continuous
   have hdφ : Differentiable ℝ φ := hsm.differentiable (by simp)
   have hcf : Continuous (fderiv ℝ φ) := hsm.continuous_fderiv (by simp)
-  haveI : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
+  have : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
   obtain ⟨B, hBn, hBs, hBc⟩ := local_compact_nhds (isOpen_GLs.mem_nhds hz)
   obtain ⟨S, hSc, hS⟩ := MolDiff.exists_compact_support hcs hsub hBc hBs
   have hinv : Continuous (fun u : G n => (u⁻¹ : G n).val) :=
@@ -493,7 +493,7 @@ theorem GlobalTheory.CompanionTheory.PresSobA.mol_differentiableAt :
   obtain ⟨C, hC⟩ := (hBc.prod hSc).exists_bound_of_continuousOn hg.continuousOn
   obtain ⟨C0, hC0⟩ := hc1.bounded_above_of_compact_support hcs
   have hxS : IntegrableOn (⇑x) S μ := by
-    haveI : IsFiniteMeasure (μ.restrict S) := ⟨by simpa using hSc.measure_lt_top⟩
+    have : IsFiniteMeasure (μ.restrict S) := ⟨by simpa using hSc.measure_lt_top⟩
     exact ((Lp.memLp x).restrict S).integrable (by norm_num)
   let bound : G n → ℝ := S.indicator fun u => max C C0 * ‖x u‖
   have hbi : Integrable bound μ := IntegrableOn.integrable_indicator (hxS.norm.const_mul _) hSc.measurableSet
@@ -624,7 +624,7 @@ theorem mol_bounded : ∀ (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (
     have h1 : eLpNorm (g • (x : G n → V)) 1 μ ≤ eLpNorm g 2 μ * eLpNorm x 2 μ :=
       eLpNorm_smul_le_mul_eLpNorm hg2.aestronglyMeasurable (Lp.aestronglyMeasurable x)
     have h2 : ∫ u, ‖g u • (x : G n → V) u‖ ∂μ = (eLpNorm (g • (x : G n → V)) 1 μ).toReal := by
-      rw [eLpNorm_one_eq_lintegral_enorm, integral_norm_eq_lintegral_enorm (hint x).1]
+      rw [eLpNorm_one_eq_lintegral_eNorm, integral_norm_eq_lintegral_eNorm (hint x).1]
       · rfl
       · exact (hmem x).aestronglyMeasurable
     calc ‖∫ u, g u • (x : G n → V) u ∂μ‖ ≤ ∫ u, ‖g u • (x : G n → V) u‖ ∂μ :=
@@ -693,7 +693,7 @@ theorem Mol_rR_eq (n : ℕ) [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Mea
     [μ.IsHaarMeasure] (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] [CompleteSpace V]
     (hU : Unimod) (φ : Mat n → ℝ) (h : G n) (x : Lp V 2 μ) (z : Mat n) :
     Mol μ φ (⇑(rR μ V h x)) z = Mol μ φ (⇑x) (z * h.val) := by
-  haveI := (hU n μ).1
+  have := (hU n μ).1
   have hm : MeasurePreserving (fun y : G n => y * h) μ μ := measurePreserving_mul_right μ h
   have he : MeasurableEmbedding (fun y : G n => y * h) := (Homeomorph.mulRight h).measurableEmbedding
   have h1 : Mol μ φ (⇑(rR μ V h x)) z = ∫ u : G n, φ (z * (u⁻¹ : G n).val) • x (u * h) ∂μ := by
@@ -789,7 +789,7 @@ variable {n : ℕ} [MeasurableSpace (G n)] [BorelSpace (G n)] (μ : Measure (G n
 
 theorem rR_cls_ae (hU : Unimod) {g : Mat n → V} (hg : MemLp (fun y : G n => g y.val) 2 μ) (h : G n) :
     rR μ V h (cls μ g) =ᵐ[μ] fun z => g (z.val * h.val) := by
-  haveI := (hU n μ).1
+  have := (hU n μ).1
   have hm : MeasurePreserving (fun y : G n => y * h) μ μ := measurePreserving_mul_right μ h
   have h1 := hm.quasiMeasurePreserving.ae_eq_comp (coe_cls μ hg)
   filter_upwards [rR_coe μ hU h (cls μ g), h1] with z hz1 hz2
@@ -877,7 +877,7 @@ theorem norm_cls_sq_eq {n : ℕ} [MeasurableSpace (G n)] {μ : Measure (G n)} {V
     (h : MemLp (fun y : G n => K y.val) 2 μ) :
     ‖cls μ K‖ ^ 2 = ∫ y : G n, ‖K y.val‖ ^ 2 ∂μ := by
   have h0 : 0 ≤ ∫ y : G n, ‖K y.val‖ ^ 2 ∂μ := integral_nonneg fun y => by positivity
-  have hc : cls μ K = h.toLp _ := dif_pos h
+  have hc : cls μ K = h.toLp _ := dite_eq_left h
   rw [hc, Lp.norm_toLp, h.eLpNorm_eq_integral_rpow_norm (by norm_num) (by norm_num)]
   simp only [ENNReal.toReal_ofNat, Real.rpow_two]
   rw [ENNReal.toReal_ofReal (by positivity), ← Real.rpow_natCast, ← Real.rpow_mul h0]

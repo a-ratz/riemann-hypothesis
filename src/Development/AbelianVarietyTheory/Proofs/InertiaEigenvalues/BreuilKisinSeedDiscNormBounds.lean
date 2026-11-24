@@ -73,7 +73,7 @@ theorem norm_iS_le (bk : BK K) (x : bk.S) : ‖bk.iS x‖ ≤ 1 :=
   norm_toDisc_le (l := l) (u := bk.ev X) (ρ := bk.ρ₀) (bk.ev x)
 
 theorem norm_iS_E (bk : BK K) : ‖bk.iS bk.E‖ ≤ (l : ℝ)⁻¹ := by
-  haveI := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l (Ainf l) (bk.ev X) bk.ρ₀).1
+  have := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l (Ainf l) (bk.ev X) bk.ρ₀).1
   have hE : bk.E = bk.Ep.eval₂ PowerSeries.C PowerSeries.X := (Polynomial.eval₂_C_X_eq_coe).symm
   rw [hE, Polynomial.hom_eval₂, Polynomial.eval₂_eq_sum_range, Finset.sum_range_succ]
   have hinv : (0 : ℝ) ≤ (l : ℝ)⁻¹ := by positivity

@@ -91,7 +91,7 @@ theorem UpperTheory.exists_splitBasis_conj_lattice_of_selfDual_frame :
   obtain rfl : L = GlobalTheory.TripleSpaceW.conjSub Λ := by
     ext y
     rw [hL, GlobalTheory.TripleSpaceW.mem_conjSub]
-  haveI := GlobalTheory.TripleSpaceW.conjSub_isFullLattice
+  have := GlobalTheory.TripleSpaceW.conjSub_isFullLattice
     (Formalism.IndefR.Fin.PDA.selfDual_isFullLattice S Λ hΛ)
   obtain ⟨b₀, hb₀⟩ : ∃ b : GL (Fin S.rank) (Fv D.host.F v),
       IsSplitBasis t (GlobalTheory.TripleSpaceW.conjSub Λ) b :=
@@ -317,7 +317,7 @@ private theorem ext_bas {F E : Type} [Field F] [NumberField F] [Field E] [Number
     ∃ bas : ∀ v : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Pl (F := F), GL (Fin n) (Fv F v), ∀ v : B.P, Q v (bas v) := by
   choose b hb using h
   refine ⟨fun v => if hv : v ∈ B.P then b ⟨v, hv⟩ else 1, fun v => ?_⟩
-  simp only [dif_pos v.2]
+  simp only [dite_eq_left v.2]
   exact hb v
 
 end UpperTheory.HermitianSkewLattice

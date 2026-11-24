@@ -60,12 +60,12 @@ theorem bijective_appTop_of_smooth_of_isProper_of_geometricallyConnected :
       GeometricallyConnected p → Function.Bijective p.appTop.hom := by
   intro K _ X p hs hp hg
 
-  haveI := hs
-  haveI := hp
-  haveI := hg
-  haveI : GeometricallyIntegral p :=
+  have := hs
+  have := hp
+  have := hg
+  have : GeometricallyIntegral p :=
     forall_geometricallyIntegral_of_smooth_of_geometricallyConnected X _ p hs hg
-  haveI : IsIso p.appTop := ProperFunctions.isIso_appTop_of_field p
+  have : IsIso p.appTop := ProperFunctions.isIso_appTop_of_field p
   exact ConcreteCategory.bijective_of_isIso p.appTop
 
 end GlobalTheory

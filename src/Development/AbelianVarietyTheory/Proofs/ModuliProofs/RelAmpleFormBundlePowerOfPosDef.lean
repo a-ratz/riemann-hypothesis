@@ -87,7 +87,7 @@ theorem exists_rat_eq_transpose_mul_diagonal_mul {n : ℕ} (A : Matrix (Fin n) (
     rw [Matrix.toBilin'_apply'] at h
     simpa only [v, Module.Basis.reindex_apply] using h
   let P : Matrix (Fin n) (Fin n) ℚ := Matrix.of fun i j => v i j
-  have hP : IsUnit P := Matrix.linearIndependent_rows_iff_isUnit.mp v.linearIndependent
+  have hP : IsUnit P := linearIndependent_row_iff_isUnit.mp v.linearIndependent
   have hPd : IsUnit P.det := (Matrix.isUnit_iff_isUnit_det P).mp hP
   have hdiag : P * A * Pᵀ = Matrix.diagonal fun i => v i ⬝ᵥ A *ᵥ v i := by
     ext i j

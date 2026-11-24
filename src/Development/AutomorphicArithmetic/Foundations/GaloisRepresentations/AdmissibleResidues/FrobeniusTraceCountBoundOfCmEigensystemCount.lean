@@ -177,7 +177,7 @@ private theorem normV_rat {p : ℕ} (hp : p.Prime) (w : HeightOneSpectrum (𝓞 
 private theorem exists_over (K : Type) [Field K] [NumberField K] (h2 : Module.finrank ℚ K = 2) {p : ℕ} (hp : p.Prime)
     (w : HeightOneSpectrum (𝓞 ℚ)) (hw : (p : 𝓞 ℚ) ∈ w.asIdeal) :
     ∃ (v : HeightOneSpectrum (𝓞 K)) (f : ℕ), v.under (𝓞 ℚ) = w ∧ (p : 𝓞 K) ∈ v.asIdeal ∧ 1 ≤ f ∧ f ≤ 2 ∧ normV v = p ^ f := by
-  haveI := w.isMaximal
+  have := w.isMaximal
   obtain ⟨Q, hQ, hL⟩ := Ideal.exists_maximal_ideal_liesOver_of_isIntegral (S := 𝓞 K) w.asIdeal
   have hpQ : (p : 𝓞 K) ∈ Q := by
     have : (p : 𝓞 ℚ) ∈ Q.under (𝓞 ℚ) := hL.over ▸ hw
@@ -200,7 +200,7 @@ private theorem exists_avoid {N : ℕ} (d : Fin (N + 1) → ℤ) (hd : ∀ i j, 
   · obtain ⟨j, hj⟩ := h
     refine ⟨j.succAbove, Fin.succAbove_right_injective, fun i hi => ?_⟩
     have := (hd _ _ (Fin.succAbove_ne j i)).isUnit_of_dvd' hi hj
-    exact (Nat.prime_iff_prime_int.1 hp).not_unit this
+    exact (Nat.prime_iff_prime_int.1 hp).not_isUnit this
   · exact ⟨Fin.succ, Fin.succ_injective _, fun i hi => h ⟨_, hi⟩⟩
 
 private theorem map_inv_inv (B : Multiset ℂ) : (B.map (·⁻¹)).map (·⁻¹) = B := by

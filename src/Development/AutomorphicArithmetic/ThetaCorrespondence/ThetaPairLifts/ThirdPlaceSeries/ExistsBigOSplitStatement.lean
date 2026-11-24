@@ -140,7 +140,7 @@ theorem heckePol_map (D : D7) (L : LocAll (lay0 D)) (i : (withLoc L).nd.Loc) (x 
   Polynomial.map_mul, Polynomial.map_C]
   congr 1
   refine Finset.sum_congr rfl fun k hk => ?_
-  simp only [GlobalTheory.CoefDuty.ptSys, if_pos (hgen k hk), map_mul, map_pow, map_neg, map_one, map_natCast]
+  simp only [GlobalTheory.CoefDuty.ptSys, ite_eq_left (hgen k hk), map_mul, map_pow, map_neg, map_one, map_natCast]
   rfl
 
 end GlobalTheory.OSplitBig
@@ -246,15 +246,15 @@ theorem exists_constituent_image : ∀ {Γ L : Type} [Group Γ] [Field L] {a n :
   set p : (Fin a → L) →ₗ[L] (Fin a → L) := V.subtype ∘ₗ Submodule.linearProjOfIsCompl V W' hc with hpdef
   have hpV : ∀ x, p x ∈ V := fun x => (Submodule.linearProjOfIsCompl V W' hc x).2
   have hpid : ∀ x ∈ V, p x = x := fun x hx =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left hc ⟨x, hx⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left hc ⟨x, hx⟩)
   have hp0 : ∀ x ∈ W', p x = 0 := fun x hx =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_right hc ⟨x, hx⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_right hc ⟨x, hx⟩)
   have hcomm : ∀ g v, p ((τ g : Matrix (Fin a) (Fin a) L).mulVec v) = (τ g : Matrix (Fin a) (Fin a) L).mulVec (p v) := by
     intro g v
     set q := v - p v
     have hq : q ∈ W' := by
-      rw [← Submodule.linearProjOfIsCompl_apply_eq_zero_iff hc, map_sub]
-      have := Submodule.linearProjOfIsCompl_apply_left hc ⟨p v, hpV v⟩
+      rw [← Submodule.projectionOnto_apply_eq_zero_iff hc, map_sub]
+      have := Submodule.projectionOnto_apply_left hc ⟨p v, hpV v⟩
       rw [this, sub_eq_zero]; rfl
     have hv : v = p v + q := by simp [q]
     conv_lhs => rw [hv]
@@ -442,7 +442,7 @@ theorem span_restrict_eq_top_of_isIrrSub_map {k Γ L : Type} [Field k] [Group Γ
     Submodule.span k (Set.range fun g =>
       (matRep ((Units.coeHom _).comp ρ) g).restrict (hW g)) = ⊤ := by
   classical
-  letI : Algebra k L := f.toAlgebra
+  let : Algebra k L := f.toAlgebra
   set τ := matRep ((Units.coeHom (Matrix (Fin a) (Fin a) k)).comp ρ) with hτ
   let r : Γ → Module.End k W := fun g => (τ g).restrict (hW g)
   have hr1 : r 1 = 1 := by
@@ -579,7 +579,7 @@ theorem matrix_system_nonzero_solution_descends {k L Γ : Type} [Field k] [Field
     C ≠ 0 → (∀ g, (A g).map f * C = C * (B g).map f) → Q.map f * C = 0 →
       ∃ X : Matrix (Fin a) (Fin b) k, X ≠ 0 ∧ (∀ g, A g * X = X * B g) ∧ Q * X = 0 := by
   intro hC hAB hQ
-  letI := f.toAlgebra
+  let := f.toAlgebra
   obtain ⟨i₀, j₀, hij⟩ : ∃ i j, C i j ≠ 0 := by
     by_contra h
     push_neg at h
@@ -776,7 +776,7 @@ theorem lift_rep_of_entries_in_image : ∀ {k L Γ : Type} [Field k] [Field L] [
       map_mul' := fun x y => hinj (by rw [map_mul, key, key, key, map_mul]; rfl) }
   refine ⟨MonoidHom.toHomUnits m, ?_⟩
   ext g i j
-  simp only [mapRep, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe]
+  simp only [mapRep, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass]
   rw [MonoidHom.coe_toHomUnits]
   exact congrFun (congrFun (key g) i) j
 
@@ -981,14 +981,14 @@ theorem finite_intCast_mem {K : Type} [Field K] [NumberField K] (N : ℤ) (hN : 
     rw [Ne, Ideal.span_singleton_eq_bot]; exact_mod_cast hN
   refine (Ideal.finite_factors h0).subset ?_
   intro v hv
-  simp only [Set.mem_setOf_eq] at hv ⊢
+  simp only [Set.mem_ofPred_eq] at hv ⊢
   rw [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   exact hv
 
 theorem exists_intCast_mem {K : Type} [Field K] [NumberField K] (q : HeightOneSpectrum (𝓞 K)) :
     ∃ n : ℤ, n ≠ 0 ∧ (n : 𝓞 K) ∈ q.asIdeal := by
   obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot q.ne_bot
-  have h := Ideal.comap_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral (R := ℤ) x)
+  have h := Ideal.under_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral (R := ℤ) x)
   obtain ⟨n, hn, hn0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h
   refine ⟨n, hn0, ?_⟩
   rw [Ideal.mem_comap, eq_intCast] at hn
@@ -1012,8 +1012,8 @@ theorem eigSet_restrict {μ : D.what₂.Tup} {j : ℕ} (X : MtReal D μ j) (l : 
     {c : PlE D.host → ℕ → ℂ} (hc : c ∈ EigSet X l Q) :
     (fun v k => if GenAt D l Q' v k then c v k else 0) ∈ EigSet X l Q' := by
   obtain ⟨-, y, hy, hy'⟩ := hc
-  refine ⟨fun v k hg => if_neg hg, y, hy, fun v k s ϖ hg hcj hu => ?_⟩
-  simp only [if_pos hg]
+  refine ⟨fun v k hg => ite_eq_right hg, y, hy, fun v k s ϖ hg hcj hu => ?_⟩
+  simp only [ite_eq_left hg]
   exact hy' v k s ϖ (genAt_mono hQ hg) hcj hu
 
 theorem eigSet_transport (M : MtFam D) {μ μ' : D.what₂.Tup} {j j' : ℕ} (hμ : μ = μ') (hj : j = j')
@@ -1117,7 +1117,7 @@ theorem ptSys_finite_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E →+* 
     split_ifs with hg
     · rfl
     · unfold ptSys
-      rw [if_neg]
+      rw [ite_eq_right]
       intro hg'
       apply hg
       have hg2 : GenAt D l (C.Q w) v k := by rw [← hl, ← hQ]; exact hg'
@@ -1176,12 +1176,12 @@ theorem exists_big_oSplit_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E �
   refine ⟨fun w => (Sy w).biUnion (SC w), ?_⟩
   intro L Sp hAut i x r hr
   obtain ⟨c, hcS, hc⟩ := hSy ((withLoc L).nd.w i) _ L Sp hAut i x rfl
-  haveI : Fact ((withLoc L).nd.l i).Prime := (withLoc L).nd.lPrime i
-  letI := (withLoc L).nd.dvrO i
-  letI := (withLoc L).nd.algO i
-  letI := (withLoc L).nd.finO i
-  letI := (withLoc L).nd.topO i
-  letI := (withLoc L).nd.trO i
+  have : Fact ((withLoc L).nd.l i).Prime := (withLoc L).nd.lPrime i
+  let := (withLoc L).nd.dvrO i
+  let := (withLoc L).nd.algO i
+  let := (withLoc L).nd.finO i
+  let := (withLoc L).nd.topO i
+  let := (withLoc L).nd.trO i
   refine hSC ((withLoc L).nd.w i) c ((withLoc L).nd.l i) ((withLoc L).nd.w_l i) ((withLoc L).nd.O i) ((withLoc L).nd.O_adic i) (Sp.iq i) ?_ ?_ r
     hr.1 hr.2.1 ?_
   · exact fun z => Sp.iq_alg i z
@@ -1217,7 +1217,7 @@ theorem exists_big_oSplit_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E �
       rfl
     refine (congrArg (fun f => (heckePol (withLoc L).nd i x hex.choose).map f) hio).trans ?_
     rw [heckePol_map D L i x _ hSO]
-    simp only [pw, dif_pos hex, sysPol]
+    simp only [pw, dite_eq_left hex, sysPol]
     congr 1
     refine Finset.sum_congr rfl fun k _ => ?_
     rw [hc _ hvA k]

@@ -79,7 +79,7 @@ theorem cosetIntegral_holds : CosetIntegral := by
     exact (Set.disjoint_singleton.mpr hxy).preimage _
   set S := Function.support f with hSdef
   have hS : S.Countable := hZ.summable.countable_support
-  haveI : Countable S := hS.to_subtype
+  have : Countable S := hS.to_subtype
   let B : S → Set G := fun i => A i.1
   have hBint : ∀ i : S, ∫ g in B i, F g ∂μ = f i.1 := by
     intro i

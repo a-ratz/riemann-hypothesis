@@ -121,7 +121,7 @@ theorem mul_upT_mem {x b : Mt n} (hx : x ∈ frDom Hm q) (hb : UpT b) : x * b �
     simp [hb.2 a c hca]
   have hdiag : ∀ k, b k k ≠ 0 := by
     have := hb.1
-    rw [Matrix.det_of_upperTriangular hbT] at this
+    rw [det_of_isUpperTriangular hbT] at this
     exact fun k => Finset.prod_ne_zero_iff.mp this k (Finset.mem_univ k)
   have e : -((x * b)ᴴ * Hm * (x * b)) =
       (b.map (starRingEnd ℂ))ᵀ * (-(xᴴ * Hm * x)) * (b.map (starRingEnd ℂ)).map (starRingEnd ℂ) := by
@@ -179,7 +179,7 @@ theorem isOpen_frDom (Hm : Mt n) (q : ℕ) : IsOpen (frDom Hm q) := by
   have e : frDom Hm q = {x : Mt n | x.det ≠ 0} ∩
       ⋂ i : Fin (n + 1), {x : Mt n | 0 < psgn q i * (lminor (-(xᴴ * Hm * x)) i).re} := by
     ext x
-    simp only [frDom, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [frDom, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [e]
   refine IsOpen.inter (isOpen_ne_fun continuous_id.matrix_det continuous_const) ?_
   refine isOpen_iInter_of_finite fun i => isOpen_lt continuous_const ?_

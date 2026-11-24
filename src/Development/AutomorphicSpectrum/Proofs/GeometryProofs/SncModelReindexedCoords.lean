@@ -116,19 +116,19 @@ theorem smooth_coords_of_denominators {Ω : Type} [Field Ω] [Algebra ℚ Ω] {S
     Algebra.Smooth ℚ S' ∧
       LinearIndependent S' (fun i => KaehlerDifferential.D ℚ S' (Subalgebra.inclusion hle (z i))) ∧
       Submodule.span S' (Set.range fun i => KaehlerDifferential.D ℚ S' (Subalgebra.inclusion hle (z i))) = ⊤ := by
-  letI : Algebra S S' := RingHom.toAlgebra (Subalgebra.inclusion hle : S →+* S')
-  haveI : IsScalarTower ℚ S S' := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Algebra.FiniteType ℚ S' := (Subalgebra.fg_iff_finiteType S').mp hfg
-  haveI : Algebra.FiniteType S S' := Algebra.FiniteType.of_restrictScalars_finiteType ℚ S S'
-  haveI : Algebra.FinitePresentation ℚ S := hS.finitePresentation
-  haveI : Algebra.FormallySmooth ℚ S := hS.formallySmooth
-  haveI : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℚ S
+  let : Algebra S S' := RingHom.toAlgebra (Subalgebra.inclusion hle : S →+* S')
+  have : IsScalarTower ℚ S S' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Algebra.FiniteType ℚ S' := (Subalgebra.fg_iff_finiteType S').mp hfg
+  have : Algebra.FiniteType S S' := Algebra.FiniteType.of_restrictScalars_finiteType ℚ S S'
+  have : Algebra.FinitePresentation ℚ S := hS.finitePresentation
+  have : Algebra.FormallySmooth ℚ S := hS.formallySmooth
+  have : IsNoetherianRing S := Algebra.FiniteType.isNoetherianRing ℚ S
   have hinj : Function.Injective (algebraMap S S') := fun a b h =>
     Subtype.ext (show (a : Ω) = b from congrArg (fun w : S' => (w : Ω)) h)
-  haveI : Algebra.FormallyEtale S S' := formallyEtale_of_denominators hinj fun q hq t => by
+  have : Algebra.FormallyEtale S S' := formallyEtale_of_denominators hinj fun q hq t => by
     obtain ⟨u, v, hu, hv⟩ := hden q hq t
     exact ⟨u, v, hu, Subtype.ext hv⟩
-  haveI : Algebra.FormallySmooth S S' :=
+  have : Algebra.FormallySmooth S S' :=
     (Algebra.FormallyEtale.iff_formallyUnramified_and_formallySmooth.mp inferInstance).2
   exact ⟨⟨Algebra.FormallySmooth.comp ℚ S S', Algebra.FinitePresentation.of_finiteType.mp inferInstance⟩,
     SncRes.coords_of_formallyEtale z h₁ h₂⟩
@@ -255,7 +255,7 @@ theorem exists_denominator {X X' : Scheme.{0}} {Ω : Type} [Field Ω] [CharZero 
       exact seg_ratio_mem y c S.toSubring hrS d)
     exact h hb
   let φ : B' →+* S' := (B'.val : B' →+* Ω).codRestrict S' fun b => hB'S' b b.2
-  haveI := hq
+  have := hq
   obtain ⟨p', ⟨hpc, hpu⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.chart_point_of_prime X' Ω ξ' ℤ _ (seg y') tie' c' hxc' (q.comap φ) inferInstance
   have hu' : ∀ b (hb : b ∈ B'), (⟨b, hB'S' b hb⟩ : S') ∉ q ↔ unitAt ξ' p' b := fun b hb => hpu ⟨b, hb⟩
   have hnot : ∀ (b b' : Ω) (hb : b ∈ S') (hb' : b' ∈ S'), b * b' = 1 → (⟨b, hb⟩ : S') ∉ q :=
@@ -341,7 +341,7 @@ theorem isSncModel_refine : ∀ (X X' : Scheme.{0}) (Ω : Type) [Field Ω] [Char
     (fun q hq t => exists_denominator g bk bx hq₀ tie tie' hy hreg c' hc' c hcc (hf l) hfl rfl hS' hle q hq t)
     z hli hspan
   refine ⟨hsm', ⟨fun i => Subalgebra.inclusion hle (z i), n, hn, hli', hspan', fun q hq => ?_⟩⟩
-  haveI := hq
+  have := hq
   have key := hbd (q.comap (Subalgebra.inclusion hle : _ →+* S')) inferInstance
   have hv : ∀ w : MRing J, MvPolynomial.aeval (bratio y' c')
       (MvPolynomial.rename (fun p : (Σ k, J k) => (⟨bk p.1, bx p.1 p.2⟩ : Σ k, J' k)) w) =

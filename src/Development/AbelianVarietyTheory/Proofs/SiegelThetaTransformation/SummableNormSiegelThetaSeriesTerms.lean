@@ -224,7 +224,7 @@ theorem summable_norm_thetaTerm : ∀ (κ ι : Type) [Fintype κ] [Fintype ι] [
     funext k i
     have h1 : (m k i : ℚ) / R = (n k i : ℚ) / R := congrFun (congrFun hmn k) i
     have : (R : ℚ) ≠ 0 := by positivity
-    exact_mod_cast (div_left_inj' this).1 h1
+    exact_mod_cast (div_left_inj₀ this).1 h1
   refine (he.summable_iff fun x hx => ?_).1 ?_
   · have : φ x = 0 := by
       by_contra h0

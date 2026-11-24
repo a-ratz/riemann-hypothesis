@@ -57,7 +57,7 @@ open Matrix Filter ReciprocityTheory.Gal UpperTheory.V.W UpperTheory.V.Pa UpperT
 private theorem UpperTheory.V.Pa.B2.odKill_char (l : ℕ) [Fact l.Prime] (K : Type) [Field K] [Finite K] [Algebra ℤ_[l] K] :
     (l : K) = 0 := by
   obtain ⟨q, hq⟩ := CharP.exists K
-  haveI := hq
+  have := hq
   have hx : (q : ℤ_[l]) ≠ 0 := Nat.cast_ne_zero.mpr (CharP.char_ne_zero_of_finite K q)
   have h1 := congrArg (algebraMap ℤ_[l] K) (PadicInt.unitCoeff_spec hx)
   rw [map_natCast, CharP.cast_eq_zero, map_mul, map_pow, map_natCast] at h1

@@ -109,8 +109,8 @@ omit [Algebra c.F K] in
 theorem nrmOf_anti (la : HeightOneSpectrum (𝓞 K)) {w w' : EReal} (hw : w ≠ ⊥) (h : w ≤ w') :
     nrmOf la w' ≤ nrmOf la w := by
   by_cases ht : w' = ⊤
-  · rw [ht, nrmOf, if_pos rfl]; exact nrmOf_nonneg _ _
-  rw [nrmOf, nrmOf, if_neg ht, if_neg (ne_top_of_le_ne_top ht h)]
+  · rw [ht, nrmOf, ite_eq_left rfl]; exact nrmOf_nonneg _ _
+  rw [nrmOf, nrmOf, ite_eq_right ht, ite_eq_right (ne_top_of_le_ne_top ht h)]
   exact Real.rpow_le_rpow_of_exponent_le (one_lt_absNorm_real la).le (neg_le_neg (EReal.toReal_le_toReal h hw ht))
 
 structure FinFr (y : FrPt Xo c K) (v : FinitePlace K) : Type 1 where
@@ -195,7 +195,7 @@ theorem ofReal_abs (a : F.T.Fr) :
   · rw [ha, map_zero, nval_zero, normOfOrd, EReal.top_mul_coe_of_pos (Real.log_pos h1)]
     simp
   rw [abs_apply, nval_of_ne ha, normOfOrd, ← EReal.coe_mul, ← EReal.coe_neg, EReal.exp_coe]
-  simp only [nrmOf, EReal.coe_ne_top, if_false, EReal.toReal_coe]
+  simp only [nrmOf, EReal.coe_ne_top, ite_false, EReal.toReal_coe]
   rw [Real.rpow_def_of_pos (by linarith)]
   congr 2
   ring
@@ -326,8 +326,8 @@ theorem fac_add {G G' : WTZ E} (hG : Even G.2) (hG' : Even G'.2) : F.fac x (G + 
 
 theorem nrm_eq {G : WTZ E} {f : Rul Xo c} (hf : f ∈ secZ Xo c (exZ Dw G)) :
     F.nrm x G f = F.fac x G * ‖τ (evR Xo c f y)‖ := by
-  haveI : IsLocalRing (CAt (baseEmb c τ)) := inferInstanceAs (IsLocalRing ℂ)
-  have e : rdU (U (baseEmb c τ)) f F.k F.z.1 = toC (evR Xo c f ((U (baseEmb c τ)).un F.k F.z)) := dif_pos F.z.2
+  have : IsLocalRing (CAt (baseEmb c τ)) := inferInstanceAs (IsLocalRing ℂ)
+  have e : rdU (U (baseEmb c τ)) f F.k F.z.1 = toC (evR Xo c f ((U (baseEmb c τ)).un F.k F.z)) := dite_eq_left F.z.2
   have e' : ∀ a b : CAt (baseEmb c τ), ‖toC (a * b)‖ = ‖toC a‖ * ‖toC b‖ := fun a b => norm_mul (toC a) (toC b)
   show _ * (‖rdU (U (baseEmb c τ)) f F.k F.z.1‖ * FD.Data.nfac _ _ _) = _
   rw [e, F.tri.evR_eq hf, e', norm_goodHom, fac]

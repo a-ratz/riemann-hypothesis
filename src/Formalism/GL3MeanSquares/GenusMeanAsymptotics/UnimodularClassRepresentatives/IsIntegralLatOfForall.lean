@@ -200,8 +200,8 @@ theorem Good.nonempty (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
     (hd : IsTotPosDef h) {S : VecSplit h h'} {L : Submodule (𝓞 K) V}
     (hL : Submodule.IsFullLattice K L) (hLi : Formalism.HermitianLatticesTheory.IsIntegralLat h L)
     {M : Submodule (𝓞 K) V'} (hM : Good F S L M) : (fibG S L M).Nonempty := by
-  letI := hL
-  letI := hM.isFullLattice hL
+  let := hL
+  let := hM.isFullLattice hL
   have h1 := card_fibG_eq_prod (F := F) (L := L) (Λ' := M) hK hF hs hd S inferInstance hLi inferInstance
   have h2 := tprod_natCast_ne_zero _ hM.2
   rw [← h1] at h2
@@ -243,7 +243,7 @@ theorem exists_locReps (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF 
     {M₀ : Submodule (𝓞 K) V'} (hM₀ : Good F S L M₀) (𝔭 : {𝔭 : Ideal (𝓞 F) // 𝔭.IsMaximal}) :
     ∃ s, IsLocReps S L 𝔭.1 s := by
   classical
-  letI := hL
+  let := hL
   obtain ⟨s', hs'⟩ := exists_fibReps (L := L) hK hs hd S inferInstance hLi
   let A : Set (Submodule (𝓞 K) V') :=
     {T | locF 𝔭.1 T = T ∧ IsIntegralAt 𝔭.1 h' T ∧ fibLoc S L 𝔭.1 T ≠ 0}

@@ -55,7 +55,7 @@ theorem finrank_le_of_subset_closure_range {l : ℕ} [Fact l.Prime] {E : Type} [
   let b := Module.finBasis ℚ E
   let S : Submodule ℚ_[l] (PadicAlgCl l) := Submodule.span ℚ_[l] (Set.range fun k => J (b k))
   have hfd : FiniteDimensional ℚ_[l] S := FiniteDimensional.span_of_finite _ (Set.finite_range _)
-  have hcl : IsClosed (S : Set (PadicAlgCl l)) := Submodule.closed_of_finiteDimensional S
+  have hcl : IsClosed (S : Set (PadicAlgCl l)) := Submodule.isClosed_of_finiteDimensional S
   have hsub : Set.range J ⊆ S := by
     rintro _ ⟨x, rfl⟩
 

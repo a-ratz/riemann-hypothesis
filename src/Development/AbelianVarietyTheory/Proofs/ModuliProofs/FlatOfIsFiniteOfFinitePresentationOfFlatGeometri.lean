@@ -164,7 +164,7 @@ theorem flat_of_flatOver_fields {X Y S : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ S)
       (fun k _ t => (H k t).target sq) ⟨_, rfl⟩
   obtain ⟨A, rfl⟩ := hA
   wlog hX : ∃ B, X = Spec B generalizing X
-  · haveI hX' : IsAffine X := isAffine_of_isAffineHom f
+  · have hX' : IsAffine X := isAffine_of_isAffineHom f
     rw [← MorphismProperty.cancel_left_of_respectsIso @Flat X.isoSpec.inv]
     exact this (X.isoSpec.inv ≫ f) inferInstance (by rw [Category.assoc]; infer_instance)
       (by rw [Category.assoc]; infer_instance)
@@ -176,17 +176,17 @@ theorem flat_of_flatOver_fields {X Y S : Scheme.{0}} (f : X ⟶ Y) (g : Y ⟶ S)
   rw [Flat.SpecMap_iff] at h1 ⊢
   rw [IsFinite.SpecMap_iff] at h2
   rw [HasRingHomProperty.Spec_iff (P := @LocallyOfFinitePresentation)] at hY h0
-  letI : Algebra R A := g.hom.toAlgebra
-  letI : Algebra A B := f.hom.toAlgebra
-  letI : Algebra R B := (g ≫ f).hom.toAlgebra
-  haveI : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Flat R B := h1
-  haveI : Module.Finite A B := h2
-  haveI : Algebra.FinitePresentation R A := hY
-  haveI : Algebra.FinitePresentation R B := h0
-  haveI : Algebra.FinitePresentation A B :=
+  let : Algebra R A := g.hom.toAlgebra
+  let : Algebra A B := f.hom.toAlgebra
+  let : Algebra R B := (g ≫ f).hom.toAlgebra
+  have : IsScalarTower R A B := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Flat R B := h1
+  have : Module.Finite A B := h2
+  have : Algebra.FinitePresentation R A := hY
+  have : Algebra.FinitePresentation R B := h0
+  have : Algebra.FinitePresentation A B :=
     Algebra.FinitePresentation.of_restrict_scalars_finitePresentation R A B
-  haveI : Module.FinitePresentation A B :=
+  have : Module.FinitePresentation A B :=
     Module.FinitePresentation.of_finite_of_finitePresentation A B
   refine flat_of_flat_fibres (R := R) (A := A) (B := B) fun k C _ _ _ t h e => ?_
   have sq := isPullback_SpecMap_of_isPushout _ _ _ _ (CommRingCat.isPushout_tensorProduct A C B)

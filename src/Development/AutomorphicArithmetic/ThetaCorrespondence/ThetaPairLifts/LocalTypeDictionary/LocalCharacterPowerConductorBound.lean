@@ -226,15 +226,15 @@ private theorem exists_qbar_embedding_lift {K : Type} [Field K] [NumberField K] 
     ∃ ψ : Formalism.MainNotions.TaylorLogMetric.Qbar →+* ℂ, ∃ hy : ι y ∈ Formalism.MainNotions.TaylorLogMetric.Qbar, ψ ⟨ι y, hy⟩ = τ y := by
   have hjmem : ∀ t : K, ι t ∈ Formalism.MainNotions.TaylorLogMetric.Qbar := fun t =>
     mem_algebraicClosure_iff.2 ((Algebra.IsAlgebraic.isAlgebraic (R := ℚ) t).algHom ι.toRatAlgHom)
-  haveI hQ : Algebra.IsAlgebraic ℚ Formalism.MainNotions.TaylorLogMetric.Qbar := algebraicClosure.isAlgebraic ℚ ℂ
+  have hQ : Algebra.IsAlgebraic ℚ Formalism.MainNotions.TaylorLogMetric.Qbar := algebraicClosure.isAlgebraic ℚ ℂ
   let j : K →+* Formalism.MainNotions.TaylorLogMetric.Qbar := ι.codRestrict Formalism.MainNotions.TaylorLogMetric.Qbar hjmem
-  letI : Algebra K Formalism.MainNotions.TaylorLogMetric.Qbar := j.toAlgebra
-  letI : Algebra K ℂ := τ.toAlgebra
-  haveI : IsScalarTower ℚ K Formalism.MainNotions.TaylorLogMetric.Qbar := IsScalarTower.of_algebraMap_eq fun r =>
+  let : Algebra K Formalism.MainNotions.TaylorLogMetric.Qbar := j.toAlgebra
+  let : Algebra K ℂ := τ.toAlgebra
+  have : IsScalarTower ℚ K Formalism.MainNotions.TaylorLogMetric.Qbar := IsScalarTower.of_algebraMap_eq fun r =>
     congrArg (fun f : ℚ →+* Formalism.MainNotions.TaylorLogMetric.Qbar => f r)
       (Subsingleton.elim (algebraMap ℚ Formalism.MainNotions.TaylorLogMetric.Qbar)
         ((algebraMap K Formalism.MainNotions.TaylorLogMetric.Qbar).comp (algebraMap ℚ K)))
-  haveI : Algebra.IsAlgebraic K Formalism.MainNotions.TaylorLogMetric.Qbar := Algebra.IsAlgebraic.tower_top (K := ℚ) K
+  have : Algebra.IsAlgebraic K Formalism.MainNotions.TaylorLogMetric.Qbar := Algebra.IsAlgebraic.tower_top (K := ℚ) K
   refine ⟨(IsAlgClosed.lift : Formalism.MainNotions.TaylorLogMetric.Qbar →ₐ[K] ℂ).toRingHom, hjmem y, ?_⟩
   exact (IsAlgClosed.lift : Formalism.MainNotions.TaylorLogMetric.Qbar →ₐ[K] ℂ).commutes y
 
@@ -505,11 +505,11 @@ theorem UpperTheory.haarVol_KO_le_resCard_pow_of_congruence_le :
     refine GlobalTheory.FunObj.GivenAdm.CongM.mul_left ?_ (fun i j => hh'.2 i j)
     intro i j
     have hij := congrFun (congrFun hgh i) j
-    simp only [red, dif_pos (hg'.1 i j), dif_pos (hh'.1 i j)] at hij
+    simp only [red, dite_eq_left (hg'.1 i j), dite_eq_left (hh'.1 i j)] at hij
     rw [Ideal.Quotient.eq] at hij
     have hv := (Model.val_le_iff_mem hϖ e _).1 hij
     simpa [Matrix.sub_apply] using hv
-  haveI := isHaarMeasure_haarVol hJo hJK
+  have := isHaarMeasure_haarVol hJo hJK
   have hNJ : haarVol J (glLatCong (ϖ ^ e) (GlobalTheory.SplitFlip.stdLat k A) : Set (GL A k)) ≤ 1 := by
     rw [← haarVol_self hJo hJK]
     exact measure_mono hN
@@ -584,7 +584,7 @@ theorem UpperTheory.Reformulated.B.SumRightInverse.sum_rightInv :
                       ∫ (g : G) in S, f g ∂μ = ∑ Q ∈ t, f (Quotient.out Q) * (↑(μ.real (↑K : Set G)) : ℂ) := by
   intro G _ _ _ _ _ μ _ K hK hμ S hS hSK
   classical
-  haveI : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
+  have : DiscreteTopology (G ⧸ K) := QuotientGroup.discreteTopology hK
   have hfin : ((QuotientGroup.mk : G → G ⧸ K) '' S).Finite :=
     (hS.image QuotientGroup.continuous_mk).finite_of_discrete
   let C : G ⧸ K → Set G := fun Q => (fun g => (Quotient.out Q)⁻¹ * g) ⁻¹' (K : Set G)
@@ -663,7 +663,7 @@ private theorem inv_small (g : GL A k) (c : k)
   set a := (g⁻¹).val i j with ha
   have ha0 : a ≠ 0 := by
     intro h; rw [h] at hlt; simp at hlt
-  have hv0 : 0 < valuation k a := zero_lt_iff.2 (by simpa using ha0)
+  have hv0 : 0 < valuation k a := pos_iff_ne_zero.2 (by simpa using ha0)
   have hd : valuation k a⁻¹ ≤ valuation k c := by
     rw [map_inv₀, inv_le_iff_one_le_mul₀' hv0]; exact hlt.le
   refine hdet (g.val - Matrix.single j i a⁻¹) (fun p q => ?_) ?_
@@ -708,7 +708,7 @@ open scoped Pointwise in
 theorem UpperTheory.unramified_character_invariant :
     ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] {A : Type} [Fintype A] [DecidableEq A] {K : Type} [Field K] (ι τ : K →+* ℂ) {J : Subgroup (GL A k)}, IsOpen (J : Set (GL A k)) → J ≤ GlobalTheory.SplitWeil.KO k A → ∀ (ν : kˣ →* ℂˣ) {ϖ : kˣ} {e : ℕ}, IsUnif ϖ → CondLE ϖ e ν → (∀ u, Un ι τ (ν u : ℂ)) → (∀ u : kˣ, apow u (1 / 2) ∈ Set.range ι) → ∀ (n : ℕ) (x : Matrix A A k), (∀ i j, valuation k (x i j) ≤ 1) → (∀ y : Matrix A A k, (∀ i j, valuation k (y i j - x i j) ≤ valuation k ((ϖ ^ e : kˣ) : k)) → y.det ≠ 0) → Sz ι τ (∫ g in {g : GL A k | ∀ i j, valuation k (g.val i j - x i j) ≤ valuation k ((ϖ ^ e : kˣ) : k)}, (ν (gdet g) : ℂ) * apow (gdet g) ((n : ℂ) / 2) ∂(haarVol J)) ((haarVol J).real (GlobalTheory.SplitWeil.KO k A : Set (GL A k))) := by
   intro k _ _ _ _ _ _ A _ _ K _ ι τ J hJo hJK ν ϖ e hϖ hcond hν hap n x hx hdet
-  haveI := isHaarMeasure_haarVol hJo hJK
+  have := isHaarMeasure_haarVol hJo hJK
   obtain ⟨hSc, hSo⟩ := GlobalTheory.GLBallInt.isCompact_isOpen_glBall x (ϖ ^ e) hdet
   set S := {g : GL A k | ∀ i j, valuation k (g.val i j - x i j) ≤ valuation k ((ϖ ^ e : kˣ) : k)} with hSdef
   set K' : Subgroup (GL A k) :=
@@ -883,7 +883,7 @@ theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (
     (n : ℕ) {φ : Matrix A A k → ℂ} (hφ : IsNatDatum ϖ e φ) {B : ℝ} (hB : ∀ X, Sz ι τ (φ X) B) :
     Sz ι τ (∫ g, φ g.val * (ν (gdet g) : ℂ) * apow (gdet g) ((n : ℂ) / 2) ∂(haarVol J))
       ((resCard k : ℝ) ^ (2 * e * Fintype.card A * Fintype.card A) * B) := by
-  haveI := isHaarMeasure_haarVol hJo hJK
+  have := isHaarMeasure_haarVol hJo hJK
   have hB0 : 0 ≤ B := (hB 0).nonneg
   set S : (A → A → Res k e) → Set (GL A k) := fun T =>
     {g | ∀ i j, valuation k ((g : Matrix A A k) i j - liftRes T i j) ≤ valuation k ((ϖ ^ e : kˣ) : k)} with hS
@@ -908,9 +908,9 @@ theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (
     by_cases hg : ∀ i j, (g : Matrix A A k) i j ∈ 𝒪[k]
     · obtain ⟨T0, hT0⟩ := exists_res_approx_of_entries_integral hϖ e (g : Matrix A A k) hg
       rw [Finset.sum_eq_single T0]
-      · rw [Set.indicator_apply, if_pos (show g ∈ S T0 from hT0), mul_assoc]
+      · rw [Set.indicator_apply, ite_eq_left (show g ∈ S T0 from hT0), mul_assoc]
       · intro T _ hT
-        rw [Set.indicator_apply, if_neg]
+        rw [Set.indicator_apply, ite_eq_right]
         intro hgT
         apply hT
         apply res_eq_of_liftRes_sub_valuation_le hϖ
@@ -944,7 +944,7 @@ theorem sz_zeta {A : Type} [Fintype A] [DecidableEq A] {J : Subgroup (GL A k)} (
         have hSy : S T = {g : GL A k | ∀ i j,
             valuation k ((g : Matrix A A k) i j - y i j) ≤ valuation k ((ϖ ^ e : kˣ) : k)} := by
           ext g
-          simp only [hS, Set.mem_setOf_eq]
+          simp only [hS, Set.mem_ofPred_eq]
           constructor
           · intro hg i j
             rw [show (g : Matrix A A k) i j - y i j =
@@ -1039,7 +1039,7 @@ theorem sz_phiA {A D : Type} [Fintype A] [DecidableEq A] [Fintype D] [DecidableE
     (P : Finset D) {Ψ : Matrix (Fin a') D k → ℂ} (hΨ : HasDepth ϖ e (blockLat ϖ e P) Ψ) {B : ℝ} (hB : ∀ Y, Sz ι τ (Ψ Y) B)
     (X : Matrix A D k) : Sz ι τ (phiA (haarVol J) σ ν ϖ e (blockLat ϖ e P) Ψ X)
       ((resCard k : ℝ) ^ (e * a' * Fintype.card D + 2 * e * a' * a') * B) := by
-  haveI := isHaarMeasure_haarVol hJo hJK
+  have := isHaarMeasure_haarVol hJo hJK
   have hB0 : 0 ≤ B := (hB 0).nonneg
   have hq : (1:ℝ) ≤ resCard k := one_le_q
   unfold phiA
@@ -1113,11 +1113,11 @@ theorem sz_phiA {A D : Type} [Fintype A] [DecidableEq A] [Fintype D] [DecidableE
         ∏ j, (((ϖ ^ e * blockUnits ϖ e P j) : kˣ) : k) := by
       simp [gdet, diagGL_val, Matrix.det_diagonal]
     rw [hp, map_prod]
-    apply Finset.prod_le_one'
+    apply Finset.prod_le_one
     intro j _
     by_cases hj : j ∈ P
     · simp [blockUnits, hj]
-    · simp only [blockUnits, hj, if_false, mul_one, Units.val_pow_eq_pow_val, map_pow]
+    · simp only [blockUnits, hj, ite_false, mul_one, Units.val_pow_eq_pow_val, map_pow]
       exact pow_le_one' ((Valuation.mem_integer_iff _ _).mp (IsUnif.mem hϖ)) _
   have hH : Sz ι τ (apow (gdet (κ * diagGL (fun j => ϖ ^ e * blockUnits ϖ e P j))) ((Fintype.card D : ℂ) / 2)) 1 :=
     sz_apow_of_le_one _ (habs _) _ hdh
@@ -1257,7 +1257,7 @@ private theorem additive_character_pow_conductor {W : G.Weil} {w : Pl D.host.E} 
     refine le_trans ?_ hx'
     rw [map_mul, map_mul, Units.val_pow_eq_pow_val, map_pow, Nat.cast_pow, map_pow, hu]
     gcongr
-    all_goals exact zero_le'
+    all_goals exact zero_le
   have hNx2 : valuation (Kw w) (((q ^ n : ℕ) : Kw w) * x) ≤ valuation (Kw w) 1 :=
     (e (((q ^ n : ℕ) : Kw w) * x) 1).2 (by rw [map_one]; exact hNx)
   have h1 : psiAt W w ((q ^ n) • x) = 1 := by
@@ -1275,7 +1275,7 @@ private theorem congruence_le_given_level {μ₀ : T} (hL : L.Is μ₀) {t : T} 
       refine le_trans (fun g hg => mem_KOne.2 fun a b => ((GivenAdm.mem_glLatCong.1 hg).2 a b).trans_lt ?_)
         (TypeDatum.KOne_le _)
       rw [Units.val_pow_eq_pow_val, map_pow]
-      exact pow_lt_one₀ zero_le' (isUnif_unifAt w ▸ uniformizer_lt_one) (by rw [depthAt]; omega)
+      exact pow_lt_one₀ zero_le (isUnif_unifAt w ▸ uniformizer_lt_one) (by rw [depthAt]; omega)
     · exact fun g hg => (GivenAdm.mem_glLatCong.1 hg).1
 private theorem local_grid_entries_unitary {K : Type} [Field K] {ι τ : K →+* ℂ} (t : T) (w : Pl D.host.E)
     (hmu : ∀ j x, Un ι τ ((L.C.mu0 j).loc w x : ℂ)) (hxi : ∀ x, Un ι τ ((L.xiH t).loc w x : ℂ))
@@ -1283,7 +1283,7 @@ private theorem local_grid_entries_unitary {K : Type} [Field K] {ι τ : K →+*
     {i j : ℕ} (hi : i < D.R.m) (hj : j < D.R.m) (u : (Kw w)ˣ) : Un ι τ ((locGrid G t w).nu i j u : ℂ) := by
   have e1 : (((locGrid G t w).nu i j u : ℂˣ) : ℂ) =
       ((L.C.mu0 ⟨j, hj⟩).loc w u : ℂ) * ((L.xiH t).loc w u : ℂ) * (((G.ch.chiH (D.R.m - i)).loc w u : ℂ))⁻¹ := by
-    simp only [Grid.nu, locGrid, muBase, dif_pos hj, MonoidHom.div_apply, Units.val_div_eq_div_val, div_eq_mul_inv]
+    simp only [Grid.nu, locGrid, muBase, dite_eq_left hj, MonoidHom.div_apply, Units.val_div_eq_div_val, div_eq_mul_inv]
     simp [HChar.loc]
   rw [e1]
   exact ((hmu _ _).mul (hxi _)).mul (hchi _ (by omega) (by omega) _).inv
@@ -1304,7 +1304,7 @@ theorem _root_.GlobalTheory.T.local_character_power_conductor_bound : _root_.Glo
   refine fun _ => ⟨0, fun CF _ => ⟨48, fun ε C hC => ⟨0, ?_⟩⟩⟩
   intro D large₂ _ _ Γ _ _ Pl0 T A Ks _ _ _ R F hS ch hch _ hF σ Φ w₀ z
   obtain ⟨w, hw⟩ := w₀
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hL : R.toLevCh.Is A.μ0 := hS.core.lev
   have hde := GlobalTheory.FlipIntegrand.pde_ne_q_of_setting hS
   have hc : ∀ P ∈ R.toLevCh.Q A.μ0, ((Ideal.absNorm D.host.ccK : ℕ) : 𝓞 D.host.E) ∉ P.asIdeal := hch.guard A.μ0

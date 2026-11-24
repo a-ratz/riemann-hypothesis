@@ -69,15 +69,15 @@ theorem exch {α β ι : Type*} [MeasurableSpace α] [MeasurableSpace β] [Count
     exact h
   have hint : Integrable (fun p => ∑' i, g i p) (μ.prod m) := by
     refine ⟨AEStronglyMeasurable.tsum fun i => (hi i).aestronglyMeasurable, ?_⟩
-    rw [hasFiniteIntegral_iff_enorm]
+    rw [hasFiniteIntegral_iff_eNorm]
     calc ∫⁻ p, ‖∑' i, g i p‖ₑ ∂(μ.prod m) ≤ ∫⁻ p, ∑' i, ‖g i p‖ₑ ∂(μ.prod m) :=
-          lintegral_mono fun p => enorm_tsum_le_tsum_enorm
+          lintegral_mono fun p => eNorm_tsum_le_tsum_eNorm
       _ = ∑' i, ∫⁻ p, ‖g i p‖ₑ ∂(μ.prod m) :=
-          lintegral_tsum fun i => (hi i).aestronglyMeasurable.enorm
+          lintegral_tsum fun i => (hi i).aestronglyMeasurable.eNorm
       _ = ∑' i, ENNReal.ofReal (∫ p, ‖g i p‖ ∂(μ.prod m)) := by
           congr 1
           funext i
-          rw [ofReal_integral_norm_eq_lintegral_enorm (hi i)]
+          rw [ofReal_integral_norm_eq_lintegral_eNorm (hi i)]
       _ = ENNReal.ofReal (∑' i, ∫ p, ‖g i p‖ ∂(μ.prod m)) :=
           (ENNReal.ofReal_tsum_of_nonneg (fun i => integral_nonneg fun p => norm_nonneg _) hs).symm
       _ < ⊤ := ENNReal.ofReal_lt_top

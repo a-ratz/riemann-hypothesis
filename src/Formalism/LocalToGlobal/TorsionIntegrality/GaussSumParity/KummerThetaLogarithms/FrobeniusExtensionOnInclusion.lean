@@ -228,9 +228,9 @@ def incAB : ringA l →+* ringB l := Subring.inclusion (ringA_le_ringB l)
 lemma incAB_coe (x : ringA l) : ((incAB l x : ringB l) : ℂ_[l]) = x := rfl
 
 lemma incAB_unif : IsUniformInducing (incAB l) := by
-  have h1 : IsUniformInducing ((↑) : ringB l → ℂ_[l]) := isUniformEmbedding_subtype_val.isUniformInducing
+  have h1 : IsUniformInducing ((↑) : ringB l → ℂ_[l]) := isUniformEmbedding_subtypeVal.isUniformInducing
   rw [← h1.of_comp_iff]
-  exact isUniformEmbedding_subtype_val.isUniformInducing
+  exact isUniformEmbedding_subtypeVal.isUniformInducing
 
 lemma incAB_dense : DenseRange (incAB l) := by
   unfold DenseRange
@@ -273,7 +273,7 @@ lemma frobenius_extension_congruence (hA : ∀ x ∈ ringA l, ‖x‖ ≤ 1)
     ‖sig1 σ0 hiso x - (x : ℂ_[l]) ^ l‖ ≤ (l : ℝ)⁻¹ := by
   refine (incAB_dense l).induction_on x ?_ ?_
   · exact isClosed_le
-      (continuous_norm.comp ((frobenius_extension_continuous σ0 hiso).sub (continuous_subtype_val.pow l))) continuous_const
+      (continuous_norm.comp ((frobenius_extension_continuous σ0 hiso).sub (continuous_subtypeVal.pow l))) continuous_const
   · intro a
     rw [frobenius_extension_on_inclusion, incAB_coe]
     obtain ⟨y, hy⟩ := hσ a
@@ -322,7 +322,7 @@ lemma jBK_surj (hB : ∀ x : ℂ_[l], x ∈ ringB l ↔ x ∈ MaximalUnramifiedE
 
 lemma jBK_away (hB : ∀ x : ℂ_[l], x ∈ ringB l ↔ x ∈ MaximalUnramifiedExtension l ∧ ‖x‖ ≤ 1) :
     @IsLocalization.Away (ringB l) _ (l : ringB l) (MaximalUnramifiedExtension l) _ (jBK hB).toAlgebra := by
-  letI := (jBK hB).toAlgebra
+  let := (jBK hB).toAlgebra
   refine ⟨?_, ?_, ?_⟩
   · rintro ⟨_, n, rfl⟩
     show IsUnit (jBK hB ((l : ringB l) ^ n))
@@ -341,8 +341,8 @@ lemma exists_ext (hB : ∀ x : ℂ_[l], x ∈ ringB l ↔ x ∈ MaximalUnramifie
     (g : ringB l →+* ℂ_[l]) (hg : ∀ x, g x ∈ ringB l) :
     ∃ σ : MaximalUnramifiedExtension l →+* MaximalUnramifiedExtension l, ∀ (x : MaximalUnramifiedExtension l) (hx : (x : ℂ_[l]) ∈ ringB l),
       (σ x : ℂ_[l]) = g ⟨x, hx⟩ := by
-  letI := (jBK hB).toAlgebra
-  haveI := jBK_away hB
+  let := (jBK hB).toAlgebra
+  have := jBK_away hB
   let ψ : ringB l →+* MaximalUnramifiedExtension l := (jBK hB).comp (g.codRestrict (ringB l) hg)
   have hu : IsUnit (ψ (l : ringB l)) := by
     rw [map_natCast]

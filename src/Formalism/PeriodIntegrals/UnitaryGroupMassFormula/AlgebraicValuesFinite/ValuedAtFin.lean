@@ -58,7 +58,7 @@ theorem valued_atFin (v : HeightOneSpectrum (𝓞 L)) (k : Lˣ) :
     Valued.v ((atFin v k : (v.adicCompletion L)ˣ) : v.adicCompletion L) = WithZero.exp (-ordF v k) := by
   unfold ordF
   rw [neg_neg, WithZero.exp_log ((Valuation.ne_zero_iff _).2 k.ne_zero)]
-  simp only [atFin, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+  simp only [atFin, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   first
   | exact HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v (k : L)
   | exact HeightOneSpectrum.valuedAdicCompletion_eq_valuation v (k : L)

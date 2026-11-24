@@ -78,7 +78,7 @@ private lemma homogeneousComponent_add_X_pow_mul {K : Type} [Field K] {N : ℕ} 
   rw [Finset.sum_eq_single n]
   · simp [add_comm]
   · intro i _ hi
-    rw [if_neg (by omega)]
+    rw [ite_eq_right (by omega)]
   · intro hn
     rw [Finset.mem_range, not_lt] at hn
     rw [homogeneousComponent_eq_zero n g (by omega), mul_zero, ite_self]
@@ -115,7 +115,7 @@ private lemma homogeneousComponent_mem_of_isPrime_of_X_pow_saturation {K : Type}
       rw [mem_support_iff, coeff_homogeneousComponent] at he
       have hdeg : e.degree = n := by
         by_contra hne
-        exact he (if_neg hne)
+        exact he (ite_eq_right hne)
       have he0 : e ≠ 0 := by
         rintro rfl
         simp at hdeg
@@ -166,12 +166,12 @@ private lemma exists_homogeneous_mem_of_X_pow_mul_mem_of_homogeneous {K : Type} 
       exact hle
     have hsplit : monomial e a =
         monomial (e - Finsupp.single j (mexp g j)) a * X j ^ mexp g j := by
-      rw [X_pow_eq_monomial, monomial_mul, mul_one, tsub_add_cancel_of_le hsingle]
+      rw [X_pow_eq_monomial, monomial_mul_monomial, mul_one, tsub_add_cancel_of_le hsingle]
     rw [hsplit, mul_assoc]
     exact I.mul_mem_left _ (hmexp g hgQ j)
   refine ⟨B + D, fun n hn h hQ hh => ?_⟩
   have hhn : h = homogeneousComponent n h := by
-    rw [homogeneousComponent_of_mem hh, if_pos rfl]
+    rw [homogeneousComponent_of_mem hh, ite_eq_left rfl]
   rw [← hG] at hQ
   obtain ⟨f, -, hf⟩ := Submodule.mem_span_finset.mp hQ
 

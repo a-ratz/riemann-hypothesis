@@ -50,7 +50,7 @@ theorem UpperTheory.mem_maximalCompact_and_congruent_of_mem_principalCongruence 
     ∀ i j, valuation (w.adicCompletion F) ((g.val - 1) i j) ≤ valuation (w.adicCompletion F) (M : w.adicCompletion F) := by
   intro F _ _ w n M g hg
   obtain ⟨k, hk, hkg⟩ := hg
-  haveI : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
+  have : (Valued.v : Valuation (w.adicCompletion F) (WithZero (Multiplicative ℤ))).Compatible :=
     Valuation.Compatible.ofValuation _
   have hint : ∀ x : UpperTheory.V.Af.Ohat F,
       valuation (w.adicCompletion F) (GlobalTheory.CuspRep.pLoc F w x.1) ≤ 1 := fun x => by

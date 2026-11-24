@@ -402,7 +402,7 @@ theorem isDedekindDomain_RZ (l : Level H) {S e : ℕ} (hS : 0 < S) (hA : l.A ∣
     ((KA l).val.toRingHom.comp (algebraMap (𝓞 (KA l)) (KA l))).codRestrict _ fun a =>
       mem_RZ_of_isIntegral l hS hA (a : KA l).2 ((hint _).mpr a.isIntegral_coe)
   have hφ : ∀ a, (φ a : ℂ) = ((a : KA l) : ℂ) := fun _ => rfl
-  letI : Algebra (𝓞 (KA l)) (RZ H S l.A) := φ.toAlgebra
+  let : Algebra (𝓞 (KA l)) (RZ H S l.A) := φ.toAlgebra
   have hS' : (S : ℂ) ≠ 0 := by exact_mod_cast hS.ne'
   have hi : (S : ℂ)⁻¹ ∈ RZ H S l.A := Subring.subset_closure (by simp)
   have : IsLocalization (Submonoid.powers (S : 𝓞 (KA l))) (RZ H S l.A) := by
@@ -431,7 +431,7 @@ theorem isDedFrac_RZ : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   intro E _ _ _ H l S e hS hA
   refine ⟨⟨Subring.inclusion (RZ_le_KA l S), fun _ => rfl⟩, finiteType_RZ H S l.A, fun β hβ => ?_⟩
   refine ⟨⟨inferInstance, isDedekindDomain_RZ l hS hA⟩, inferInstance, ?_⟩
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have hβ' : ∀ x, ((algebraMap (RZ H S l.A) (KA l) x : KA l) : ℂ) = x := hβ
   have hinj : Function.Injective (algebraMap (RZ H S l.A) (KA l)) := fun x y h =>
     Subtype.ext (by rw [← hβ' x, ← hβ' y, h])

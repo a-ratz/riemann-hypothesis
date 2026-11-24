@@ -123,7 +123,7 @@ theorem uniform_continuity_galois_group (hq : ((Ideal.absNorm P.asIdeal : ℕ) :
       rw [hJ, pow_two]
       exact Ideal.mul_mono_right hJ'
     exact hsq (Ideal.mem_span_singleton_self _)
-  obtain ⟨s, hsJ, hsP⟩ := SetLike.not_le_iff_exists.mp hJP
+  obtain ⟨s, hsJ, hsP⟩ := IsConcreteLE.not_le_iff_exists.mp hJP
   have hmem : s * r ∈ Ideal.span {((Ideal.absNorm P.asIdeal : ℕ) : 𝓞 E)} := by
     rw [hJ, mul_comm s r]
     exact Ideal.mul_mem_mul hr hsJ

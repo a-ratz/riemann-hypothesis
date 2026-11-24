@@ -86,7 +86,7 @@ theorem absFin_finite (D : D7) (x : (AE D)ˣ) :
   have a2 : Valued.v (((normV D v x)⁻¹ : (Fv D.host.F v)ˣ) : Fv D.host.F v) ≤ 1 := by rw [e2]; exact hh.2
   have hne : Valued.v ((normV D v x : (Fv D.host.F v)ˣ) : Fv D.host.F v) ≠ 0 := by
     simp
-  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (zero_lt_iff.mpr hne)] at a2
+  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.mpr hne)] at a2
   have : Valued.v ((normV D v x : (Fv D.host.F v)ˣ) : Fv D.host.F v) = 1 := le_antisymm a1 a2
   simp [absV, this]
 

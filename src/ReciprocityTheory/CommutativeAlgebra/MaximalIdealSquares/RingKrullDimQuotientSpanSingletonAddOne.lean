@@ -173,7 +173,7 @@ theorem eq_natCast_and_add_one_eq_of_le {a : WithBot ℕ∞} {d n : ℕ}
     | top =>
       exfalso
       have h2' : ((⊤ : ℕ∞) : WithBot ℕ∞) ≤ ((d : ℕ∞) : WithBot ℕ∞) := h2
-      exact absurd (WithBot.coe_le_coe.mp h2') (not_le.mpr (ENat.coe_lt_top d))
+      exact absurd (WithBot.coe_le_coe.mp h2') (not_le.mpr (ENat.natCast_lt_top d))
     | coe m =>
       have h1' : n ≤ m + 1 := by
         first
@@ -296,7 +296,7 @@ theorem quotient_span_singleton {R : Type*} [CommRing R]
     [IsRegularLocalRing R] {x : R} (hx : x ∈ IsLocalRing.maximalIdeal R)
     (hx2 : x ∉ IsLocalRing.maximalIdeal R ^ 2) :
     IsRegularLocalRing (R ⧸ Ideal.span ({x} : Set R)) := by
-  haveI := isLocalRing_quotient_span_singleton hx
+  have := isLocalRing_quotient_span_singleton hx
   have h := (spanFinrank_quotient_eq_and_ringKrullDim_add_one R hx hx2).1
   first
   | exact ⟨h⟩
@@ -306,7 +306,7 @@ theorem ringKrullDim_quotient_span_singleton_add_one {R : Type*} [CommRing R]
     [IsRegularLocalRing R] {x : R} (hx : x ∈ IsLocalRing.maximalIdeal R)
     (hx2 : x ∉ IsLocalRing.maximalIdeal R ^ 2) :
     ringKrullDim (R ⧸ Ideal.span ({x} : Set R)) + 1 = ringKrullDim R := by
-  haveI := isLocalRing_quotient_span_singleton hx
+  have := isLocalRing_quotient_span_singleton hx
   exact (spanFinrank_quotient_eq_and_ringKrullDim_add_one R hx hx2).2
 
 private theorem maximalIdeal_le_sq_of_finrank_cotangent_zero (R : Type*) [CommRing R] [IsLocalRing R]
@@ -363,7 +363,7 @@ theorem isDomain_of_forall_spanFinrank_lt (R : Type u) [CommRing R]
       | (norm_cast at h0'; omega)
     exact hsq (maximalIdeal_le_sq_of_finrank_cotangent_zero R (hlink.symm.trans h0))
   obtain ⟨x, hx, hx2, hxmin⟩ := exists_mem_maximalIdeal_notMem_sq_notMem_minimalPrimes R hsq hmin
-  haveI hR' : IsRegularLocalRing (R ⧸ Ideal.span ({x} : Set R)) := quotient_span_singleton hx hx2
+  have hR' : IsRegularLocalRing (R ⧸ Ideal.span ({x} : Set R)) := quotient_span_singleton hx hx2
   have h7 := spanFinrank_quotient_eq_and_ringKrullDim_add_one R hx hx2
   have hlt : Submodule.spanFinrank (maximalIdeal (R ⧸ Ideal.span ({x} : Set R))) < Submodule.spanFinrank (maximalIdeal R) := by
     have e : ((Submodule.spanFinrank (maximalIdeal (R ⧸ Ideal.span ({x} : Set R))) : ℕ) : WithBot ℕ∞) + 1 =
@@ -375,7 +375,7 @@ theorem isDomain_of_forall_spanFinrank_lt (R : Type u) [CommRing R]
     omega
   have hdom : IsDomain (R ⧸ Ideal.span ({x} : Set R)) := IH _ hlt
   have hprime : (Ideal.span ({x} : Set R)).IsPrime := (Ideal.Quotient.isDomain_iff_prime _).mp hdom
-  haveI := hprime
+  have := hprime
   obtain ⟨p, hp, hple⟩ := Ideal.exists_minimalPrimes_le (I := ⊥) (J := Ideal.span ({x} : Set R)) bot_le
   have hpp : p.IsPrime := isPrime_of_mem_minimalPrimes hp
   have hxp : x ∉ p := hxmin p hp

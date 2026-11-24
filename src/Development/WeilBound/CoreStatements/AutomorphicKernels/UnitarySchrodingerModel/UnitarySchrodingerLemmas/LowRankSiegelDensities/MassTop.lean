@@ -120,7 +120,7 @@ theorem gauss_const (hF : ringChar k ≠ 2) (ψ : AddChar k ℂ) (hψ : ψ ≠ 1
     (ht : t ≠ 0) :
     ∑ x, ψ (t * quadForm B x) = ∑ x, ψ (1 * quadForm B x) := by
   have h2 : (2 : k) ≠ 0 := Ring.two_ne_zero hF
-  letI : Invertible (2 : k) := invertibleOfNonzero h2
+  let : Invertible (2 : k) := invertibleOfNonzero h2
   obtain ⟨β, hβ⟩ : ∃ β : LinearMap.BilinForm k (ι → k), β = Matrix.toBilin' B := ⟨_, rfl⟩
   have hβapp : ∀ x y, β x y = x ⬝ᵥ (B *ᵥ y) := fun x y => by rw [hβ]; exact Matrix.toBilin'_apply' B x y
   have hsymm : β.IsSymm := by
@@ -213,7 +213,7 @@ theorem sharp (hF : ringChar k ≠ 2) (M : ℕ) (hM : Fintype.card ι = 2 * M) (
     have hall : ∑ t : k, ψ (-(t * s)) = 0 := by
       have hp := AddChar.IsPrimitive.of_ne_one hψ1
       have := AddChar.sum_mulShift (-s) hp
-      simp only [neg_eq_zero, hs, if_false] at this
+      simp only [neg_eq_zero, hs, ite_false] at this
       simpa [mul_neg] using this
     have hsplit : ψ (-((0 : k) * s)) + ∑ t ∈ Finset.univ.erase (0 : k), ψ (-(t * s)) =
         ∑ t, ψ (-(t * s)) := Finset.add_sum_erase Finset.univ (fun t : k => ψ (-(t * s))) (Finset.mem_univ (0 : k))

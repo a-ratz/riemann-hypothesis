@@ -124,7 +124,7 @@ theorem tot_le_size (w : WeightFamilies.Wt D j) :
 
 theorem spread_le {r : ℕ} (hr : 0 < r) (x : Fin r → ℝ) (A B : ℝ) (h1 : ∀ i, x i ≤ A) (h2 : ∀ i, -B ≤ x i) :
     (⨆ i, x i) - ⨅ i, x i ≤ A + B := by
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   have := ciSup_le h1
   have := le_ciInf h2
   linarith

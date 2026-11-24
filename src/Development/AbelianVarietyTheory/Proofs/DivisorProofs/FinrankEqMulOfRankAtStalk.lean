@@ -64,7 +64,7 @@ theorem finrank_eq_mul_of_rankAtStalk (K S T : Type*) [Field K] [CommRing S] [Ad
   obtain ⟨b⟩ := Module.nonempty_basis_of_flat_of_finrank_eq S T d
     (fun P => by
       have := P.isMaximal
-      letI := Ideal.Quotient.field P.asIdeal
+      let := Ideal.Quotient.field P.asIdeal
       have h1 := Module.rankAtStalk_baseChange (R := S) (M := T) (S := S ⧸ P.asIdeal) ⊥
       rw [Module.rankAtStalk_eq_finrank_of_free, h] at h1
       exact h1)
@@ -94,7 +94,7 @@ theorem finrank_comp_field {X Y : Scheme.{0}} (K : CommRingCat.{0}) (hK : IsFiel
   rw [← Spec.map_comp, Scheme.Hom.finrank_SpecMap_eq_finrank (f := f ≫ g) (hg1.comp hf1) (hf2.comp hg2),
     Scheme.Hom.finrank_SpecMap_eq_finrank hf1 hf2]
   rw [Scheme.Hom.finrank_SpecMap_eq_finrank hg1 hg2] at h
-  letI := hK.toField
+  let := hK.toField
   algebraize [f.hom, g.hom, (f ≫ g).hom]
   rw [← RingHom.algebraMap_toAlgebra g.hom, RingHom.finrank_algebraMap] at h
   rw [← RingHom.algebraMap_toAlgebra f.hom, ← RingHom.algebraMap_toAlgebra (f ≫ g).hom,

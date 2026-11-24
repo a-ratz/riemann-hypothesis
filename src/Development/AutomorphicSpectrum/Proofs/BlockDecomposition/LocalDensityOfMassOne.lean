@@ -285,7 +285,7 @@ theorem val_norm (h2 : Valued.v (2 : Fv F v) = 1) {D : Fv F v} (hD : Valued.v D 
   rcases lt_trichotomy (Valued.v a) (Valued.v c) with h | h | h
   · have h' : Valued.v (a * a) < Valued.v (D * (c * c)) := by
       rw [map_mul, map_mul, map_mul, hD, one_mul]
-      exact mul_lt_mul'' h h zero_le' zero_le'
+      exact mul_lt_mul'' h h zero_le zero_le
     rw [Valuation.map_sub_eq_of_lt_right _ h', max_eq_right h.le, map_mul, map_mul, hD, one_mul, sq]
   · by_cases hc : c = 0
     · have ha : a = 0 := by
@@ -322,7 +322,7 @@ theorem val_norm (h2 : Valued.v (2 : Fv F v) = 1) {D : Fv F v} (hD : Valued.v D 
       rw [e, map_mul, map_mul, heq, mul_one, ← h, max_self, h, sq]
   · have h' : Valued.v (D * (c * c)) < Valued.v (a * a) := by
       rw [map_mul, map_mul, map_mul, hD, one_mul]
-      exact mul_lt_mul'' h h zero_le' zero_le'
+      exact mul_lt_mul'' h h zero_le zero_le
     rw [Valuation.map_sub_eq_of_lt_left _ h', max_eq_left h.le, map_mul, sq]
 
 theorem rv_of_val (e : ℝ) (s : Fv F v) (k : ℕ) (hs : Valued.v s = WithZero.exp (-(k : ℤ))) :
@@ -340,9 +340,9 @@ theorem rv_of_val (e : ℝ) (s : Fv F v) (k : ℕ) (hs : Valued.v s = WithZero.e
   unfold rv
   rw [tsum_eq_sum (s := Finset.range (k + 1))]
   · refine Finset.sum_congr rfl fun i hi => ?_
-    rw [if_pos ⟨hs0, (key i).2 (by simpa [Nat.lt_succ_iff] using hi)⟩]
+    rw [ite_eq_left ⟨hs0, (key i).2 (by simpa [Nat.lt_succ_iff] using hi)⟩]
   · intro i hi
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨-, h⟩
     exact hi (by simpa [Nat.lt_succ_iff] using (key i).1 h)
 
@@ -352,7 +352,7 @@ theorem rv_of_not_int (e : ℝ) (s : Fv F v) (hs : s ∉ v.adicCompletionInteger
   rw [tsum_eq_sum (s := ∅)]
   · simp
   · intro i _
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨-, h⟩
     refine hs' (h.trans ?_)
     change WithZero.exp (-(i : ℤ)) ≤ WithZero.exp 0
@@ -481,7 +481,7 @@ theorem even_of_norm (h2 : Valued.v (2 : Fv F v) = 1) {D' j' : Fv F v} (vD : Val
     exact WithZero.exp_ne_zero h3
   rw [← WithZero.exp_log hM0, ← WithZero.exp_nsmul, WithZero.exp_inj] at e
   simp at e
-  exact (Int.even_coe_nat k).1 (by rw [Int.even_iff]; omega)
+  exact (Int.even_natCast k).1 (by rw [Int.even_iff]; omega)
 
 theorem mass_odd (h0 : b2 0 = 1) (h1 : b2 1 = δ) (hσ : σ δ = -δ) (hD : δ * δ = algebraMap F E D)
     (hj : J 0 0 = algebraMap F E j₀)
@@ -529,7 +529,7 @@ theorem mass_even (h0 : b2 0 = 1) (h1 : b2 1 = δ) (hσ : σ δ = -δ) (hD : δ 
   have key := hsc (Units.mkOfMulEqOne _ _ hxy) n (s / n) hnorm (IsUnit.mk0 _ (div_ne_zero hs0 hn0)) L hLm
   rw [mul_div_cancel₀ _ hn0, Units.val_mkOfMulEqOne] at key
   rw [key]
-  refine measure_congr (eventuallyEq_set.2 ?_)
+  refine measure_congr (eventuallyEqSet_iff.2 ?_)
   filter_upwards [ae_fib (m := m) h0 h1 hσ hD hj hfib (s / n)] with X hP
   obtain ⟨a, c, hac⟩ := cd_surj h0 h1 (X 0 0)
   have hN := hP a c hac
@@ -753,7 +753,7 @@ theorem mass_split (h0 : b2 0 = 1) (h1 : b2 1 = δ) (hσ : σ δ = -δ) (hD : δ
     change mulW _ X ∈ L ↔ _
     rw [wv_mem_iff h0 h1 h2 vt hL e0, HeightOneSpectrum.mem_adicCompletionIntegers,
       HeightOneSpectrum.mem_adicCompletionIntegers, map_mul, map_mul, map_inv₀, map_inv₀, hπ, hπ,
-      inv_mul_le_one₀ (zero_lt_iff.2 WithZero.exp_ne_zero), inv_mul_le_one₀ (zero_lt_iff.2 WithZero.exp_ne_zero)]
+      inv_mul_le_one₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero), inv_mul_le_one₀ (pos_iff_ne_zero.2 WithZero.exp_ne_zero)]
   have hae : ∀ᵐ X ∂(m (hermScal (Fv F v) σ s)), ∃ p q : Fv F v, X 0 0 = wv F δ t p q ∧
       Valued.v p * Valued.v q = WithZero.exp (-(k : ℤ)) := by
     filter_upwards [ae_fib (m := m) h0 h1 hσ hD hj hfib s] with X hP
@@ -763,7 +763,7 @@ theorem mass_split (h0 : b2 0 = 1) (h1 : b2 1 = δ) (hσ : σ δ = -δ) (hD : δ
     rw [wv_N ht h20 ht0] at e
     rw [← hs, ← e, map_mul, vj, one_mul, map_mul]
   have hU : m (hermScal (Fv F v) σ s) L = m (hermScal (Fv F v) σ s) (⋃ i ∈ Finset.range (k + 1), S i) := by
-    refine measure_congr (eventuallyEq_set.2 ?_)
+    refine measure_congr (eventuallyEqSet_iff.2 ?_)
     filter_upwards [hae] with X hX
     obtain ⟨p, q, hpq, hv⟩ := hX
     constructor
@@ -813,15 +813,15 @@ theorem locR : Scal → MassOne → LocR := by
   obtain ⟨v2, vD, vj, hlat⟩ := hv
   have hloc : IsLocR (Fv F v) := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
   have hh := GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm (Fv F v) d b (lam v) (hlam v).1
-  haveI hW := hh.2.1 1 1
-  haveI hH := hh.2.2 1
-  haveI hB := GlobalTheory.CompanionTheory.SW.Fact.borel_tup σ hcm (Fv F v) hloc 1 1
+  have hW := hh.2.1 1 1
+  have hH := hh.2.2 1
+  have hB := GlobalTheory.CompanionTheory.SW.Fact.borel_tup σ hcm (Fv F v) hloc 1 1
   have hfib : ∀ s, ∀ᵐ X ∂(m v (hermScal (Fv F v) σ s)),
       gramR (Fv F v) σ J X = (hermScal (Fv F v) σ s).1 := by
     intro s
@@ -829,9 +829,9 @@ theorem locR : Scal → MassOne → LocR := by
     exact hX.1
   have hmul : ∀ x : Fv F v ⊗[F] E, Measurable (mulW x) := by
     intro x
-    haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-    haveI : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
-    haveI : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul (Fv F v) _
+    have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+    have : ContinuousAdd (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousAdd (Fv F v) _
+    have : ContinuousSMul (Fv F v) (Fv F v ⊗[F] E) := IsModuleTopology.toContinuousSMul (Fv F v) _
     have hc : Continuous fun y : Fv F v ⊗[F] E => x * y :=
       IsModuleTopology.continuous_of_linearMap (LinearMap.mulLeft (Fv F v) x)
     refine Continuous.measurable ?_
@@ -883,8 +883,8 @@ theorem locR : Scal → MassOne → LocR := by
         have hk' : Valued.v s = WithZero.exp (-((2 * l : ℕ) : ℤ)) := by
           rw [hk, two_mul]
         obtain ⟨u, hu, e⟩ := mass_even h0 h1 hσ hD hj hfib hsc v2 vD vj hns hLm hL hk'
-        rw [e, hfin u hu, if_neg (by simp [Nat.even_add_one])]
-      · rw [mass_odd (L := latV b v) h0 h1 hσ hD hj hfib v2 vD vj hns hk hev, if_pos (by simpa [Nat.even_add_one] using hev)]
+        rw [e, hfin u hu, ite_eq_right (by simp [Nat.even_add_one])]
+      · rw [mass_odd (L := latV b v) h0 h1 hσ hD hj hfib v2 vD vj hns hk hev, ite_eq_left (by simpa [Nat.even_add_one] using hev)]
         simp
     · have hsq : IsSquare (algebraMap F (Fv F v) D) := by
         by_contra h

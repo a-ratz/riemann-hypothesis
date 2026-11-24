@@ -49,8 +49,8 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual Formalism.HC Recip
 
 private theorem cls_one {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {n M : ℕ} [NeZero n] (h : n ∣ M) {s : G ℚ Ω}
     (hs : ∀ ζ : Ω, ζ ^ M = 1 → s ζ = ζ) : Chr.cls ℚ Ω n s = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω n
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω n
   have h1 : s ζ = ζ := hs ζ (by obtain ⟨k, rfl⟩ := h; rw [pow_mul, hζ.pow_eq_one, one_pow])
   have h2 := Chr.cls_spec (k := ℚ) n s ζ hζ.pow_eq_one
   rw [h1] at h2
@@ -97,9 +97,9 @@ private theorem exists_character_of_dirichlet_data {Ω : Type} [Field Ω] [CharZ
       (∀ A, Raw.Away D.S A → Ine (F := ℚ) A ≤ χ.ker) ∧
       ∀ g, (∃ m' : ℕ, l.Coprime m' ∧ D.ψ g ^ m' = 1) → χ g = (D.om ^ (D.e + 3) * D.ξ * D.ψ) g := by
   obtain ⟨-, hpsi, -, hp1, ξ', ξ₀, -, -, -, hxi⟩ := hO
-  haveI := hp1
+  have := hp1
   have hlp : l.Prime := hl.out
-  haveI : NeZero l := ⟨hlp.ne_zero⟩
+  have : NeZero l := ⟨hlp.ne_zero⟩
   have hl2 : l ≠ 2 := hD.l_odd
   have hn0 : Fintype.card (ZMod N)ˣ ≠ 0 := Fintype.card_ne_zero
   obtain ⟨k, m, hlm, hnkm, hk⟩ := exp_ex hlp hn0

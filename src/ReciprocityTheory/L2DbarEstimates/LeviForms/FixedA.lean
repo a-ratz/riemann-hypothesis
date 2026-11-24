@@ -62,7 +62,7 @@ theorem fx_wint_eq_withDensity {M : Type*} [MeasurableSpace M] (n : ℕ) (z : M 
     (Filter.Eventually.of_forall fun x => ENNReal.ofReal_lt_top)]
   refine lintegral_congr fun x => ?_
   simp only [Pi.mul_apply, Function.comp]
-  rw [← ofReal_norm_eq_enorm, ← ENNReal.ofReal_pow (norm_nonneg _),
+  rw [← ofReal_norm, ← ENNReal.ofReal_pow (norm_nonneg _),
     ← ENNReal.ofReal_mul (Real.exp_pos _).le, mul_comm]
 
 theorem fx_lintegral_enorm_sq_eq {α : Type*} [MeasurableSpace α] (μ : Measure α) (F : α → ℂ) :

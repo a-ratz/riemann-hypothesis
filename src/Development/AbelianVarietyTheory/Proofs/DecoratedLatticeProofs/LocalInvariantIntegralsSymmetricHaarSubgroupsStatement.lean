@@ -105,21 +105,21 @@ namespace GlobalTheory.HaarR
 
 theorem finite_on_compacts_prodRFJ : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (c ρ : ℕ), 1 ≤ ρ → ρ < c → ∀ (ν : Measure k), ν.IsAddHaarMeasure → ∀ m : Measure (GL n k), m.IsHaarMeasure → IsFiniteMeasureOnCompacts (((m.prod (volN ν n c (ρ + 1))).prod (Measure.pi fun _ : n => ν)).map (prodRFJ ρ)) := by
   intro k _ _ _ _ _ _ n _ _ c ρ hp hpc ν hν m hm
-  haveI := GlobalTheory.SplitWeil.secondCountable k
-  haveI := GlobalTheory.SplitWeil.t2Space k
-  haveI : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
-  haveI := QuotLinear.finiteOnCompacts_volN (n := n) (c := c) (p := ρ + 1) ν
-  haveI : LocallyCompactSpace (N k n c (ρ + 1)) :=
+  have := GlobalTheory.SplitWeil.secondCountable k
+  have := GlobalTheory.SplitWeil.t2Space k
+  have : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
+  have := QuotLinear.finiteOnCompacts_volN (n := n) (c := c) (p := ρ + 1) ν
+  have : LocallyCompactSpace (N k n c (ρ + 1)) :=
     (QuotLinear.isClosed_N (k := k) (n := n) (c := c) (p := ρ + 1)).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (N k n c (ρ + 1)) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : IsLocallyFiniteMeasure (volN ν n c (ρ + 1)) := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
-  haveI : SigmaFinite (volN ν n c (ρ + 1)) := sigmaFinite_of_locallyFinite
-  haveI : IsLocallyFiniteMeasure ν := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
-  haveI : SigmaFinite ν := sigmaFinite_of_locallyFinite
+  have : SecondCountableTopology (N k n c (ρ + 1)) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : IsLocallyFiniteMeasure (volN ν n c (ρ + 1)) := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
+  have : SigmaFinite (volN ν n c (ρ + 1)) := sigmaFinite_of_locallyFinite
+  have : IsLocallyFiniteMeasure ν := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
+  have : SigmaFinite ν := sigmaFinite_of_locallyFinite
   set M := (m.prod (volN ν n c (ρ + 1))).prod (Measure.pi fun _ : n => ν) with hM
-  haveI : IsFiniteMeasureOnCompacts M := by rw [hM]; infer_instance
+  have : IsFiniteMeasureOnCompacts M := by rw [hM]; infer_instance
   refine ⟨fun K hK => ?_⟩
-  obtain ⟨D, hD, hD'⟩ := GlobalTheory.RootEx.ProperTriple.proper_triple k n c ρ hp hpc _ (hK.image continuous_subtype_val)
+  obtain ⟨D, hD, hD'⟩ := GlobalTheory.RootEx.ProperTriple.proper_triple k n c ρ hp hpc _ (hK.image continuous_subtypeVal)
   have hD2 : IsCompact ((fun w : GL n k × N k n c (ρ + 1) × (n → k) => ((w.1, w.2.1), w.2.2)) '' D) :=
     hD.image (by fun_prop)
   have hsub : prodRFJ ρ ⁻¹' K ⊆ (fun w : GL n k × N k n c (ρ + 1) × (n → k) => ((w.1, w.2.1), w.2.2)) '' D := by
@@ -188,7 +188,7 @@ theorem colE_inv_val_eq_zero (ρ : ℕ) (β : n → k) (t s : n ⊕ Fin c) (h : 
   rcases t with t | t <;> rcases s with s | s
   · exact absurd rfl h
   · simp only [colE, upU, Units.inv_mk, fromBlocks_apply₁₂, Matrix.neg_apply, Matrix.of_apply]
-    rw [if_neg, neg_zero]
+    rw [ite_eq_right, neg_zero]
     intro hs; apply h; simp [lev, hs]
   · simp [colE, upU]
   · have : t ≠ s := by rintro rfl; exact h rfl
@@ -347,7 +347,7 @@ theorem continuous_cjE (ρ : ℕ) (h1 : 1 ≤ ρ) (h2 : ρ < c) :
     Continuous fun x : (n → k) × N k n c (ρ + 1) => cjE ρ h1 h2 x.1 x.2 := by
   have hc := QuotStep.continuous_colE (k := k) (n := n) (c := c) (ρ + 1)
   refine Continuous.subtype_mk ?_ _
-  exact ((hc.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)).mul
+  exact ((hc.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)).mul
     (hc.comp continuous_fst).inv
 
 theorem continuous_prodRFJ (ρ : ℕ) : Continuous (prodRFJ (k := k) (n := n) (c := c) ρ) := by
@@ -355,7 +355,7 @@ theorem continuous_prodRFJ (ρ : ℕ) : Continuous (prodRFJ (k := k) (n := n) (c
   have hc := QuotStep.continuous_colE (k := k) (n := n) (c := c) (ρ + 1)
   refine Continuous.subtype_mk ?_ _
   exact ((he.comp (continuous_fst.comp continuous_fst)).mul
-    (continuous_subtype_val.comp (continuous_snd.comp continuous_fst))).mul (hc.comp continuous_snd)
+    (continuous_subtypeVal.comp (continuous_snd.comp continuous_fst))).mul (hc.comp continuous_snd)
 
 theorem continuous_invMulVec (β' : n → k) : Continuous fun g : GL n k => ((g⁻¹ : GL n k)).val *ᵥ β' :=
   (Units.continuous_val.comp continuous_inv).matrix_mulVec continuous_const
@@ -437,14 +437,14 @@ end Kinds
 theorem isMulLeftInvariant_map_prodRFJ : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (c ρ : ℕ), 1 ≤ ρ → ρ < c → ∀ (ν : Measure k), ν.IsAddHaarMeasure → ∀ m : Measure (GL n k), m.IsHaarMeasure → (((m.prod (volN ν n c (ρ + 1))).prod (Measure.pi fun _ : n => ν)).map (prodRFJ ρ)).IsMulLeftInvariant := by
   intro k _ _ _ _ _ _ n _ _ c ρ h1 h2 ν hν m hm
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
-  haveI : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
-  haveI : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
-  haveI : SecondCountableTopology (GL n k) := GlobalTheory.SplitFlip.secondCountable_GL
-  haveI : SecondCountableTopology (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.secondCountable_GL
-  haveI : LocallyCompactSpace (GL n k) := GlobalTheory.SplitFlip.locallyCompact_GL
-  haveI hVH : (volN ν n c (ρ + 1)).IsHaarMeasure :=
+  have : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
+  have : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
+  have : SecondCountableTopology (GL n k) := GlobalTheory.SplitFlip.secondCountable_GL
+  have : SecondCountableTopology (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.secondCountable_GL
+  have : LocallyCompactSpace (GL n k) := GlobalTheory.SplitFlip.locallyCompact_GL
+  have hVH : (volN ν n c (ρ + 1)).IsHaarMeasure :=
     (GlobalTheory.RootEx.VolN.volN_haar_and_modulus k n c (ρ + 1) (by omega) (by omega) ν).2.2.1
-  haveI : SFinite (volN ν n c (ρ + 1)) := by rw [GlobalTheory.RootEx.VolN.volN_eq]; infer_instance
+  have : SFinite (volN ν n c (ρ + 1)) := by rw [GlobalTheory.RootEx.VolN.volN_eq]; infer_instance
   have hf : Measurable (prodRFJ (k := k) (n := n) (c := c) ρ) := (continuous_prodRFJ ρ).measurable
   refine ⟨fun h => ?_⟩
   obtain ⟨r, hr, β', he⟩ := ((FourierJacobiGroup.mem_RFJ_iff k n c ρ h1 h2).1 h.1).1 h.2
@@ -546,9 +546,9 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem continuous_gpart (p : ℕ) : Continuous (gpart (k := k) (n := n) (c := c) (p := p)) := by
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · refine continuous_pi fun i => continuous_pi fun j => ?_
-    exact (GlobalTheory.RootEx.VolN.continuous_entry (Sum.inl i) (Sum.inl j)).comp continuous_subtype_val
+    exact (GlobalTheory.RootEx.VolN.continuous_entry (Sum.inl i) (Sum.inl j)).comp continuous_subtypeVal
   · refine continuous_pi fun i => continuous_pi fun j => ?_
-    exact (GlobalTheory.RootEx.VolN.continuous_entry (Sum.inl i) (Sum.inl j)).comp (continuous_subtype_val.inv)
+    exact (GlobalTheory.RootEx.VolN.continuous_entry (Sum.inl i) (Sum.inl j)).comp (continuous_subtypeVal.inv)
 
 def prodRHomeo (p : ℕ) : GL n k × N k n c p ≃ₜ R k n c p where
   toFun := prodR p
@@ -573,17 +573,17 @@ open RDecomp
 
 theorem finite_r : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (c p : ℕ), 1 ≤ p → p ≤ c → ∀ (ν : Measure k), ν.IsAddHaarMeasure → ∀ m : Measure (GL n k), m.IsHaarMeasure → IsFiniteMeasureOnCompacts ((m.prod (volN ν n c p)).map (prodR p)) := by
   intro k _ _ _ _ _ _ n _ _ c p _ _ ν hν m hm
-  haveI := hν
-  haveI := hm
+  have := hν
+  have := hm
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
-  haveI : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
-  haveI : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
-  haveI : SecondCountableTopology (GL n k) := GlobalTheory.SplitFlip.secondCountable_GL
-  haveI : SecondCountableTopology (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.secondCountable_GL
-  haveI : LocallyCompactSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.locallyCompact_GL
-  haveI : (volN ν n c p).IsHaarMeasure := GlobalTheory.RootEx.VolN.isHaarMeasure_volN ν p
-  haveI : LocallyCompactSpace (N k n c p) := (GlobalTheory.RootEx.VolN.isClosed_N p).locallyCompactSpace
-  haveI : SecondCountableTopology (N k n c p) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
+  have : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
+  have : SecondCountableTopology (GL n k) := GlobalTheory.SplitFlip.secondCountable_GL
+  have : SecondCountableTopology (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.secondCountable_GL
+  have : LocallyCompactSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.locallyCompact_GL
+  have : (volN ν n c p).IsHaarMeasure := GlobalTheory.RootEx.VolN.isHaarMeasure_volN ν p
+  have : LocallyCompactSpace (N k n c p) := (GlobalTheory.RootEx.VolN.isClosed_N p).locallyCompactSpace
+  have : SecondCountableTopology (N k n c p) := TopologicalSpace.Subtype.secondCountableTopology _
   have e : ⇑(prodRHomeo (k := k) (n := n) (c := c) p) = prodR p := rfl
   rw [← e]
   exact Measure.IsFiniteMeasureOnCompacts.map _ (prodRHomeo p)
@@ -633,19 +633,19 @@ open GlobalTheory.HaarR
 
 theorem GlobalTheory.HaarR.map_prodR_isMulLeftInvariant : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (c p : ℕ), 1 ≤ p → p ≤ c → ∀ (ν : Measure k), ν.IsAddHaarMeasure → ∀ m : Measure (GL n k), m.IsHaarMeasure → ((m.prod (volN ν n c p)).map (prodR p)).IsMulLeftInvariant := by
   intro k _ _ _ _ _ _ n _ _ c p h1 hp ν hν m hm
-  haveI := hν
-  haveI := hm
-  haveI : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
-  haveI : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
+  have := hν
+  have := hm
+  have : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
+  have : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
   obtain ⟨hNc, -, hH, -, -⟩ := GlobalTheory.RootEx.VolN.volN_haar_and_modulus k n c p h1 hp ν
-  haveI := hH
-  haveI : LocallyCompactSpace (N k n c p) := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (N k n c p) := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : SigmaFinite m := inferInstance
-  haveI : SigmaFinite (volN ν n c p) := inferInstance
+  have := hH
+  have : LocallyCompactSpace (N k n c p) := hNc.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (N k n c p) := TopologicalSpace.Subtype.secondCountableTopology _
+  have : SigmaFinite m := inferInstance
+  have : SigmaFinite (volN ν n c p) := inferInstance
   have hE : Continuous (embX c : GL n k → GL (n ⊕ Fin c) k) := GlobalTheory.RootEx.QuotStep.continuous_embX
   have hφ : Measurable (prodR (k := k) (n := n) (c := c) p) :=
-    (Continuous.subtype_mk ((hE.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)) _).measurable
+    (Continuous.subtype_mk ((hE.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)) _).measurable
   have hmulJ : ∀ g : R k n c p, Measurable (fun y : R k n c p => g * y) :=
     fun g => (continuous_const_mul g).measurable
   have hmulH : ∀ g : GL n k, Measurable (fun y : GL n k => g * y) := fun g => (continuous_const_mul g).measurable
@@ -767,7 +767,7 @@ theorem rootExchangeEmbedGL_mem_integralGL {k : Type} [Field k] [ValuativeRel k]
 theorem prodR_preimage_KO : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : Type) [Fintype n] [DecidableEq n] (c p : ℕ), prodR (k := k) (n := n) (c := c) p ⁻¹' {x | (x : GL (n ⊕ Fin c) k) ∈ KO k (n ⊕ Fin c)} = (KO k n : Set (GL n k)) ×ˢ {u : N k n c p | (u : GL (n ⊕ Fin c) k) ∈ KO k (n ⊕ Fin c)} := by
   intro k _ _ _ _ n _ _ c p
   ext ⟨g, u⟩
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, prodR_coe, Set.mem_prod, SetLike.mem_coe]
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, prodR_coe, Set.mem_prod, SetLike.mem_coe]
   constructor
   · intro h
     obtain ⟨h1, h2⟩ := (GlobalTheory.SplitFlip.mem_KO_iff _).1 h
@@ -971,7 +971,7 @@ open GlobalTheory.HaarFJInt in
 theorem GlobalTheory.HaarFJInt.prodRFJ_preimage_KO : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : Type) [Fintype n] [DecidableEq n] (c ρ : ℕ), ρ < c → prodRFJ (k := k) (n := n) (c := c) ρ ⁻¹' {x | (x : GL (n ⊕ Fin c) k) ∈ KO k (n ⊕ Fin c)} = ((KO k n : Set (GL n k)) ×ˢ {u : N k n c (ρ + 1) | (u : GL (n ⊕ Fin c) k) ∈ KO k (n ⊕ Fin c)}) ×ˢ {β : n → k | ∀ i, β i ∈ 𝒪[k]} := by
   intro k _ _ _ _ n _ _ c ρ hρ
   ext ⟨⟨g, u⟩, β⟩
-  simp only [Set.mem_preimage, Set.mem_setOf_eq, prodRFJ_coe, Set.mem_prod, SetLike.mem_coe]
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq, prodRFJ_coe, Set.mem_prod, SetLike.mem_coe]
   rw [mem_KO_iff_prod hρ g u u.2 β, and_assoc]
 end
 end -- clump:auto
@@ -1023,43 +1023,43 @@ theorem eq_of_mass_one {G : Type} [TopologicalSpace G] [Group G] [IsTopologicalG
   have h := Measure.isMulLeftInvariant_eq_smul κ μ
   set a := Measure.haarScalarFactor κ μ
   have h1 : (a : ℝ≥0∞) = 1 := by
-    rw [h, Measure.smul_apply, hS, ENNReal.smul_def, smul_eq_mul, mul_one] at hκ
+    rw [h, smul_apply, hS, ENNReal.smul_def, smul_eq_mul, mul_one] at hκ
     exact hκ
   have : a = 1 := by exact_mod_cast h1
   rw [h, this, one_smul]
 
 theorem quot_int_haar : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k), IsUnitVol ν → ∀ (n : Type) [Fintype n] [DecidableEq n] (c ρ : ℕ) (m : Measure (GL n k)) (G : Measure (GL (n ⊕ Fin c) k)), m.IsHaarMeasure → G.IsHaarMeasure → m (KO k n) = 1 → (c + 1 = 2 * ρ → ∀ μR : Measure (R k n c ρ), μR.IsHaarMeasure → μR {x | x.1 ∈ KO k (n ⊕ Fin c)} = 1 → μR.IsInvInvariant ∧ ∀ f z, IsQuotInt ν m G ρ f z → IsQuotIntL1 μR G f z) ∧ (1 ≤ ρ → c = 2 * ρ → ∀ μR : Measure (RFJ k n c ρ), μR.IsHaarMeasure → μR {x | x.1 ∈ KO k (n ⊕ Fin c)} = 1 → μR.IsInvInvariant ∧ ∀ f z, IsQuotIntFJ ν m G ρ f z → IsQuotIntL1 μR G f z) := by
   intro k _ _ _ _ _ _ ν hν n _ _ c ρ m G hm hG hmK
-  haveI := hν.1
+  have := hν.1
   obtain ⟨_, _⟩ := GlobalTheory.SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
-  haveI : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
-  haveI : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
+  have : BorelSpace (GL n k) := GlobalTheory.SplitFlip.borel_GL
+  have : BorelSpace (GL (n ⊕ Fin c) k) := GlobalTheory.SplitFlip.borel_GL
   have hKO : ∀ (S : Subgroup (GL (n ⊕ Fin c) k)), MeasurableSet {x : S | (x : GL (n ⊕ Fin c) k) ∈ KO k (n ⊕ Fin c)} :=
-    fun S => (GlobalTheory.SplitFlip.isOpen_KO.preimage continuous_subtype_val).measurableSet
+    fun S => (GlobalTheory.SplitFlip.isOpen_KO.preimage continuous_subtypeVal).measurableSet
   have hFint : ∀ F ∈ SB (GL (n ⊕ Fin c) k), Integrable F G := fun F hF => hF.1.continuous.integrable_of_hasCompactSupport hF.2
   have hFS : ∀ (S : Subgroup (GL (n ⊕ Fin c) k)), IsClosed (S : Set (GL (n ⊕ Fin c) k)) → ∀ (μS : Measure S),
       μS.IsHaarMeasure → ∀ F ∈ SB (GL (n ⊕ Fin c) k), ∀ h, Integrable (fun r : S => F (r * h)) μS := by
     intro S hS μS _ F hF h
-    exact (hF.1.continuous.comp (continuous_subtype_val.mul continuous_const)).integrable_of_hasCompactSupport
+    exact (hF.1.continuous.comp (continuous_subtypeVal.mul continuous_const)).integrable_of_hasCompactSupport
       ((hF.2.comp_homeomorph (Homeomorph.mulRight h)).comp_isClosedEmbedding hS.isClosedEmbedding_subtypeVal)
   refine ⟨fun hc μR hR hRK => ?_, fun h1 hc μR hR hRK => ?_⟩
   · have h1 : 1 ≤ ρ := by omega
     have h2 : ρ ≤ c := by omega
     obtain ⟨hNc, hcl, hNH, -, -⟩ := GlobalTheory.RootEx.VolN.volN_haar_and_modulus k n c ρ h1 h2 ν
-    haveI : LocallyCompactSpace (N k n c ρ) := hNc.locallyCompactSpace
-    haveI := hNH
-    haveI : LocallyCompactSpace (R k n c ρ) := hcl.locallyCompactSpace
-    haveI := hR
-    haveI := hm
-    haveI := GlobalTheory.T.levyProductMap_haar_isMulLeftInvariant k n c ρ h1 h2 ν hν.1 m hm
-    haveI := GlobalTheory.T.levyProductMap_haar_finiteOnCompacts k n c ρ h1 h2 ν hν.1 m hm
+    have : LocallyCompactSpace (N k n c ρ) := hNc.locallyCompactSpace
+    have := hNH
+    have : LocallyCompactSpace (R k n c ρ) := hcl.locallyCompactSpace
+    have := hR
+    have := hm
+    have := GlobalTheory.T.levyProductMap_haar_isMulLeftInvariant k n c ρ h1 h2 ν hν.1 m hm
+    have := GlobalTheory.T.levyProductMap_haar_finiteOnCompacts k n c ρ h1 h2 ν hν.1 m hm
     have hmeas : Measurable (prodR (k := k) (n := n) (c := c) ρ) :=
       (Continuous.subtype_mk ((GlobalTheory.RootEx.QuotStep.continuous_embX.comp continuous_fst).mul
-        (continuous_subtype_val.comp continuous_snd)) _).measurable
+        (continuous_subtypeVal.comp continuous_snd)) _).measurable
     have hκ : (m.prod (volN ν n c ρ)).map (prodR ρ) = μR := by
       refine eq_of_mass_one _ μR _ hRK ((Measure.map_apply hmeas (hKO (R k n c ρ))).trans ?_)
       rw [GlobalTheory.T.levyProductMap_preimage_integralGL, Measure.prod_prod, hmK, GlobalTheory.T.rootExchangeUnipotentHaar_integralPoints_eq_one k n c ρ h1 h2 ν hν, one_mul]
-    haveI : μR.IsMulRightInvariant := GlobalTheory.LevelUnimod.unimodular k n c ρ (fun i => i.val + 1)
+    have : μR.IsMulRightInvariant := GlobalTheory.LevelUnimod.unimodular k n c ρ (fun i => i.val + 1)
       (fun i => by simp [Fin.rev]; omega) (R k n c ρ)
       (GlobalTheory.RootEx.ParabolicEntries.mem_R_iff_and_mem_RFJ_iff k n c ρ).1 μR hR
     refine ⟨GlobalTheory.SemiHaar.invInv_of_rightInv μR, ?_⟩
@@ -1067,7 +1067,7 @@ theorem quot_int_haar : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     have hi := hFS _ hcl μR hR F hF
     refine ⟨F, hFint F hF, hi, fun h => ?_, hz⟩
     have hc' : Continuous fun r : R k n c ρ => F (r * h) :=
-      hF.1.continuous.comp (continuous_subtype_val.mul continuous_const)
+      hF.1.continuous.comp (continuous_subtypeVal.mul continuous_const)
     have hp : Integrable (fun q => F ((prodR (k := k) (n := n) (c := c) ρ q : GL (n ⊕ Fin c) k) * h)) (m.prod (volN ν n c ρ)) := by
       have := hi h
       rw [← hκ] at this
@@ -1076,10 +1076,10 @@ theorem quot_int_haar : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     rfl
   · have h2 : ρ < c := by omega
     obtain ⟨hNc, -, hNH, -, -⟩ := GlobalTheory.RootEx.VolN.volN_haar_and_modulus k n c (ρ + 1) (by omega) (by omega) ν
-    haveI : LocallyCompactSpace (N k n c (ρ + 1)) := hNc.locallyCompactSpace
-    haveI := hNH
-    haveI := hm
-    haveI := hR
+    have : LocallyCompactSpace (N k n c (ρ + 1)) := hNc.locallyCompactSpace
+    have := hNH
+    have := hm
+    have := hR
     have hmem := (GlobalTheory.RootEx.ParabolicEntries.mem_R_iff_and_mem_RFJ_iff k n c ρ).2 h1 h2
     have hcl : IsClosed (RFJ k n c ρ : Set (GL (n ⊕ Fin c) k)) := by
       have e : (RFJ k n c ρ : Set (GL (n ⊕ Fin c) k)) = ⋂ r : n ⊕ Fin c, ⋂ s : n ⊕ Fin c,
@@ -1087,7 +1087,7 @@ theorem quot_int_haar : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
             Sum.elim (fun _ => 2 * ρ + 1) (fun i : Fin c => 2 * (i.val + 1)) s ≤
               Sum.elim (fun _ => 2 * ρ + 1) (fun i : Fin c => 2 * (i.val + 1)) r →
             g.val r s = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r s} := by
-        ext g; simp only [SetLike.mem_coe, hmem, Set.mem_iInter, Set.mem_setOf_eq]
+        ext g; simp only [SetLike.mem_coe, hmem, Set.mem_iInter, Set.mem_ofPred_eq]
       rw [e]
       refine isClosed_iInter fun r => isClosed_iInter fun s => ?_
       by_cases hrs : (r.isRight ∨ s.isRight) ∧ Sum.elim (fun _ => 2 * ρ + 1) (fun i : Fin c => 2 * (i.val + 1)) s ≤
@@ -1097,21 +1097,21 @@ theorem quot_int_haar : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
               Sum.elim (fun _ => 2 * ρ + 1) (fun i : Fin c => 2 * (i.val + 1)) r →
             g.val r s = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r s} =
             {g : GL (n ⊕ Fin c) k | g.val r s = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r s} := by
-          ext g; simp only [Set.mem_setOf_eq]; exact ⟨fun h => h hrs.1 hrs.2, fun h _ _ => h⟩
+          ext g; simp only [Set.mem_ofPred_eq]; exact ⟨fun h => h hrs.1 hrs.2, fun h _ _ => h⟩
         rw [this]
         exact isClosed_eq (GlobalTheory.RootEx.VolN.continuous_entry r s) continuous_const
       · have : {g : GL (n ⊕ Fin c) k | (r.isRight ∨ s.isRight) →
             Sum.elim (fun _ => 2 * ρ + 1) (fun i : Fin c => 2 * (i.val + 1)) s ≤
               Sum.elim (fun _ => 2 * ρ + 1) (fun i : Fin c => 2 * (i.val + 1)) r →
             g.val r s = (1 : Matrix (n ⊕ Fin c) (n ⊕ Fin c) k) r s} = Set.univ := by
-          ext g; simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]; exact fun a b => absurd ⟨a, b⟩ hrs
+          ext g; simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]; exact fun a b => absurd ⟨a, b⟩ hrs
         rw [this]; exact isClosed_univ
-    haveI : LocallyCompactSpace (RFJ k n c ρ) := hcl.locallyCompactSpace
-    haveI := GlobalTheory.T.isMulLeftInvariant_map_levyProductMapToFourierJacobi k n c ρ h1 h2 ν hν.1 m hm
-    haveI := GlobalTheory.T.fourierJacobiProductMap_haar_finiteOnCompacts k n c ρ h1 h2 ν hν.1 m hm
+    have : LocallyCompactSpace (RFJ k n c ρ) := hcl.locallyCompactSpace
+    have := GlobalTheory.T.isMulLeftInvariant_map_levyProductMapToFourierJacobi k n c ρ h1 h2 ν hν.1 m hm
+    have := GlobalTheory.T.fourierJacobiProductMap_haar_finiteOnCompacts k n c ρ h1 h2 ν hν.1 m hm
     have hmeas : Measurable (prodRFJ (k := k) (n := n) (c := c) ρ) :=
       (Continuous.subtype_mk (((GlobalTheory.RootEx.QuotStep.continuous_embX.comp (continuous_fst.comp continuous_fst)).mul
-        (continuous_subtype_val.comp (continuous_snd.comp continuous_fst))).mul
+        (continuous_subtypeVal.comp (continuous_snd.comp continuous_fst))).mul
         ((GlobalTheory.RootEx.QuotStep.continuous_colE (ρ + 1)).comp continuous_snd)) _).measurable
     have hκ : ((m.prod (volN ν n c (ρ + 1))).prod (Measure.pi fun _ : n => ν)).map (prodRFJ ρ) = μR := by
       refine eq_of_mass_one _ μR _ hRK ((Measure.map_apply hmeas (hKO (RFJ k n c ρ))).trans ?_)
@@ -1120,14 +1120,14 @@ theorem quot_int_haar : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       rw [GlobalTheory.T.levyProductMapToFourierJacobi_preimage_integralGL k n c ρ h2, Measure.prod_prod, Measure.prod_prod, hmK, GlobalTheory.T.rootExchangeUnipotentHaar_integralPoints_eq_one k n c (ρ + 1) (by omega) (by omega) ν hν, hpi,
         Measure.pi_pi, hν.2]
       simp
-    haveI : μR.IsMulRightInvariant := GlobalTheory.LevelUnimod.unimodular k n c (2 * ρ + 1) (fun i => 2 * (i.val + 1))
+    have : μR.IsMulRightInvariant := GlobalTheory.LevelUnimod.unimodular k n c (2 * ρ + 1) (fun i => 2 * (i.val + 1))
       (fun i => by simp [Fin.rev]; omega) (RFJ k n c ρ) hmem μR hR
     refine ⟨GlobalTheory.SemiHaar.invInv_of_rightInv μR, ?_⟩
     rintro f z ⟨F, hF, hf, hz⟩
     have hi := hFS _ hcl μR hR F hF
     refine ⟨F, hFint F hF, hi, fun h => ?_, hz⟩
     have hc' : Continuous fun r : RFJ k n c ρ => F (r * h) :=
-      hF.1.continuous.comp (continuous_subtype_val.mul continuous_const)
+      hF.1.continuous.comp (continuous_subtypeVal.mul continuous_const)
     have hp : Integrable (fun q => F ((prodRFJ (k := k) (n := n) (c := c) ρ q : GL (n ⊕ Fin c) k) * h))
         ((m.prod (volN ν n c (ρ + 1))).prod (Measure.pi fun _ : n => ν)) := by
       have := hi h

@@ -136,7 +136,7 @@ variable {O : Type} [Ring O]
 theorem isRAct_pullback {H T : Scheme.{0}} (g : T ⟶ H) (AH : Over H) [GrpObj AH] (act : O → (AH ⟶ AH))
     (h : IsRAct AH act) : IsRAct ((Over.pullback g).obj AH) (fun a => (Over.pullback g).map (act a)) := by
   refine ⟨fun a => ?_, ?_, fun a b => ?_, fun a b => ?_⟩
-  · haveI := h.1 a
+  · have := h.1 a
     infer_instance
   · dsimp only
     rw [h.2.1]
@@ -149,7 +149,7 @@ theorem isRAct_pullback {H T : Scheme.{0}} (g : T ⟶ H) (AH : Over H) [GrpObj A
 theorem isRAct_conj {T : Scheme.{0}} {B C : Over T} [GrpObj B] [GrpObj C] (e : B ≅ C) [IsMonHom e.hom]
     (act : O → (C ⟶ C)) (h : IsRAct C act) : IsRAct B (fun a => e.hom ≫ act a ≫ e.inv) := by
   refine ⟨fun a => ?_, ?_, fun a b => ?_, fun a b => ?_⟩
-  · haveI := h.1 a
+  · have := h.1 a
     infer_instance
   · simp only [h.2.1, Category.id_comp, Iso.hom_inv_id]
   · simp only [h.2.2.1, Category.assoc, Iso.inv_hom_id_assoc]
@@ -193,7 +193,7 @@ theorem formallyUnramified_actRep : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A]
     have h' : IsGrpPullback ((Over.pullback g).obj Rp.AH) A f (pullback.fst Rp.AH.hom g ≫ Rp.φ) :=
       ((isGrpPullback_pullback Rp.AH g).comp Rp.pb).congr hgf rfl
     obtain ⟨e, he, heφ⟩ := grpPullback_iso hAT h'
-    haveI := he
+    have := he
     have hie : e.inv.left ≫ e.hom.left = 𝟙 _ := by rw [← Over.comp_left, e.inv_hom_id, Over.id_left]
     let χ : AT.left ⟶ Rp.AH.left := e.hom.left ≫ pullback.fst Rp.AH.hom g
     let v : O → (AT ⟶ AT) := fun a ↦ e.hom ≫ (Over.pullback g).map (Rp.act a) ≫ e.inv
@@ -223,7 +223,7 @@ theorem formallyUnramified_actRep : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A]
     have hε : Spec.map q = Spec.map (CommRingCat.ofHom ε.toRingHom) ≫ j := by
       rw [← Spec.map_comp]
       congr 1
-    haveI : IsIso (CommRingCat.ofHom ε.toRingHom) := ε.toCommRingCatIso.isIso_hom
+    have : IsIso (CommRingCat.ofHom ε.toRingHom) := ε.toCommRingCatIso.isIso_hom
     rw [hε, Category.assoc, Category.assoc] at hi
     exact (cancel_epi _).1 hi
   have hχ : pullback.fst AT.hom j ≫ χ₁ = pullback.fst AT.hom j ≫ χ₂ := by
@@ -231,8 +231,8 @@ theorem formallyUnramified_actRep : ∀ (S : Scheme.{0}) (A : Over S) [GrpObj A]
     · rw [Category.assoc, Category.assoc, hχ₁φ, hχ₂φ]
     · rw [Category.assoc, Category.assoc, hpb₁.1.w, hpb₂.1.w, pullback.condition_assoc, pullback.condition_assoc, hj]
   have hv : ∀ a, v₁ a = v₂ a := fun a ↦ by
-    haveI := hR₁.1 a
-    haveI := hR₂.1 a
+    have := hR₁.1 a
+    have := hR₂.1 a
     refine GlobalTheory.NilRigidity.eq_of_pullback_quotient_eq I hI AT AT hAbT (v₁ a) (v₂ a) ?_
     apply Over.OverMorphism.ext
     apply pullback.hom_ext

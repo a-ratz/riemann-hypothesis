@@ -56,9 +56,9 @@ namespace GlobalTheory.SplitWeil.FourierSurj
 
 theorem hat_surjective : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (n : Type) [Fintype n] [DecidableEq n] (ψ : AddChar k Circle) (_ : Continuous ψ) (_ : ψ ≠ 1) (ν : Measure k) (_ : IsSelfDual ψ ν), (∀ Φ₀ : SB (n → k), hat ψ ν Φ₀.1 ∈ SB (n → k)) ∧ ∀ g : SB (n → k), ∃ Φ₀ : SB (n → k), hat ψ ν Φ₀.1 = g.1 := by
   intro k _ _ _ _ _ _ n _ _ ψ hc h1 ν hν
-  haveI := hν.1
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := hν.1
+  have := secondCountable k
+  have := t2Space k
   have key := FourierPi.fourier_pi k n ψ hc h1 ν hν
   have hhat : ∀ f : (n → k) → ℂ,
       hat ψ ν f = fun y : n → k => ∫ x, f x * (ψ (x ⬝ᵥ y) : ℂ) ∂(Measure.pi fun _ => ν) := by

@@ -169,7 +169,7 @@ lemma raise_lower (hL : IsKLieAct act) {a b : Ix p q} (hab : posC a b) {κ : Ix 
     act (Eab a b) (act (Eab b a) y) =
       act (Eab b a) (act (Eab a b) y) + (((κ a : ℚ) : ℂ) - ((κ b : ℚ) : ℂ)) • y := by
   rw [lie_apply hL (isKC_Eab (same_of_pos hab)) (isKC_Eab (same_of_pos' hab)), Eab_mul, Eab_mul,
-    if_pos rfl, if_pos rfl, map_sub, LinearMap.sub_apply, mem_wt.1 hy, mem_wt.1 hy, sub_smul]
+    ite_eq_left rfl, ite_eq_left rfl, map_sub, LinearMap.sub_apply, mem_wt.1 hy, mem_wt.1 hy, sub_smul]
 
 def pair (l μ : Ix p q → ℚ) : ℚ := ∑ x, l x * μ x
 
@@ -204,7 +204,7 @@ lemma casVal_eq (μ : Ix p q → ℚ) : casVal μ = pair μ μ + pair (rho p q) 
   have h : ∀ a b : Ix p q, (if posC a b then μ a - μ b else 0) =
       (if posC a b then 1 else 0) * μ a - (if posC a b then 1 else 0) * μ b := by
     intro a b; split_ifs <;> simp
-  simp only [casVal, pair, rho, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+  simp only [casVal, pair, rho, Finset.sum_add_distrib, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
     Finset.sum_mul, sub_mul, Finset.sum_sub_distrib]
   congr 1
   rw [Finset.sum_comm (f := fun x c => (if posC c x then (1 : ℚ) else 0) * μ x),
@@ -310,31 +310,31 @@ lemma unitK_comm (hL : IsKLieAct act) {a b : Ix p q} (hab : sameBlock a b) (c d 
     act (Eab a b) * unitK act c d - unitK act c d * act (Eab a b) =
       (if b = c then unitK act a d else 0) - (if d = a then unitK act c b else 0) := by
   by_cases hcd : sameBlock c d
-  · rw [unitK, if_pos hcd, ← hL _ _ (isKC_Eab hab) (isKC_Eab hcd), Eab_mul, Eab_mul, map_sub]
+  · rw [unitK, ite_eq_left hcd, ← hL _ _ (isKC_Eab hab) (isKC_Eab hcd), Eab_mul, Eab_mul, map_sub]
     congr 1
     · split_ifs with h
       · subst h
-        rw [unitK, if_pos]
+        rw [unitK, ite_eq_left]
         cases a <;> cases b <;> cases d <;> simp_all [sameBlock]
       · simp
     · split_ifs with h
       · subst h
-        rw [unitK, if_pos]
+        rw [unitK, ite_eq_left]
         cases c <;> cases b <;> cases d <;> simp_all [sameBlock]
       · simp
   · have h1 : (if b = c then unitK act a d else 0) = 0 := by
       split_ifs with h
       · subst h
-        rw [unitK, if_neg]
+        rw [unitK, ite_eq_right]
         cases a <;> cases b <;> cases d <;> simp_all [sameBlock]
       · rfl
     have h2 : (if d = a then unitK act c b else 0) = 0 := by
       split_ifs with h
       · subst h
-        rw [unitK, if_neg]
+        rw [unitK, ite_eq_right]
         cases c <;> cases b <;> cases d <;> simp_all [sameBlock]
       · rfl
-    rw [h1, h2, unitK, if_neg hcd]
+    rw [h1, h2, unitK, ite_eq_right hcd]
     simp
 
 lemma casK_comm (hL : IsKLieAct act) {a b : Ix p q} (hab : sameBlock a b) :
@@ -356,7 +356,7 @@ lemma casK_comm (hL : IsKLieAct act) {a b : Ix p q} (hab : sameBlock a b) :
   rw [Commute, SemiconjBy, ← sub_eq_zero, casK, Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
   simp only [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib, h]
   simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true, Finset.sum_ite_irrel, Finset.sum_const_zero]
+    Finset.mem_univ, ite_true, Finset.sum_ite_irrel, Finset.sum_const_zero]
   abel
 
 lemma unitK_mem {S : Submodule ℂ V} (hS : KStable act S) (a b : Ix p q) {x : V} (hx : x ∈ S) :
@@ -386,11 +386,11 @@ lemma casK_mod (hL : IsKLieAct act) {S : Submodule ℂ V} (hS : KStable act S) {
   · rcases same_tri hab with rfl | h | h
     · have h1 : ¬ posC a a := fun h => posC_ne h rfl
       simp [unitK, hab, h1, mem_wt.1 hx a, mul_smul]
-    · rw [unitK, unitK, if_pos hab, if_pos (same_of_pos' h), raise_lower hL h hx, if_neg (posC_ne h),
-        if_pos h]
+    · rw [unitK, unitK, ite_eq_left hab, ite_eq_left (same_of_pos' h), raise_lower hL h hx, ite_eq_right (posC_ne h),
+        ite_eq_left h]
       simpa using hS _ (isKC_Eab (same_of_pos' h)) _ (he a b h)
-    · rw [unitK, unitK, if_pos hab, if_pos (same_of_pos h), if_neg (posC_ne h).symm,
-        if_neg (posC_asymm h)]
+    · rw [unitK, unitK, ite_eq_left hab, ite_eq_left (same_of_pos h), ite_eq_right (posC_ne h).symm,
+        ite_eq_right (posC_asymm h)]
       simpa using hS _ (isKC_Eab hab) _ (he b a h)
   · have h1 : a ≠ b := by rintro rfl; exact hab (same_refl a)
     have h2 : ¬ posC a b := fun h => hab (same_of_pos h)
@@ -451,13 +451,13 @@ lemma hw_of_ker (hL : IsKLieAct act) {W : Submodule ℂ V} [FiniteDimensional �
   by_contra hne
   set Y := W ⊓ LinearMap.ker ((casK act - ((casVal μ : ℚ) : ℂ) • 1) ^ n) with hY
   have hYs : KStable act Y := stable_inf hW (stable_ker hL _ _)
-  haveI : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le inf_le_left
   obtain ⟨ν, h1, h2, h3⟩ := exists_max hL hYs ⊥ (fun ν => Below μ ν)
     (fun ν c d hcd h l hl => by
       rw [pair_root]; linarith [h l hl, hl c d hcd])
     ⟨μ + root a b, fun l hl => by rw [pair_root]; linarith [hl a b hab], fun hle =>
       hne (hle ⟨hYs _ (isKC_Eab (same_of_pos hab)) _ ⟨hx.1, hk⟩, shift hL (same_of_pos hab) hx.2⟩)⟩
-  obtain ⟨w, hw, h0⟩ := SetLike.not_le_iff_exists.1 h2
+  obtain ⟨w, hw, h0⟩ := IsConcreteLE.not_le_iff_exists.1 h2
   have hhw : IsHW act ν w := ⟨h0, mem_hw.2 ⟨mem_wt.1 hw.2, h3 w hw⟩⟩
   exact (casVal_lt (fun c d hcd => hw_dominant hL hYs hw.1 hhw hcd) hμ h1).ne'
     (casVal_of_ker hL hhw hw.1.2)
@@ -471,11 +471,11 @@ lemma le_of_hw (hL : IsKLieAct act) {W : Submodule ℂ V} [FiniteDimensional ℂ
     push Not at hh
     exact hn fun x hx => (iSup_le fun μ => hh μ trivial : (⨆ μ, W ⊓ wtSub act μ) ≤ S)
       (decomp hW hx (hd x hx)))
-  obtain ⟨x, hx, hxS⟩ := SetLike.not_le_iff_exists.1 h2
+  obtain ⟨x, hx, hxS⟩ := IsConcreteLE.not_le_iff_exists.1 h2
   have hμ : ∀ a b, posC a b → ∃ k : ℕ, μ a - μ b = k := fun a b hab =>
     dominant hL hW hS hx hxS hab (h3 x hx a b hab)
   set Y := W ⊓ wtSub act μ with hY
-  haveI : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le inf_le_left
+  have : FiniteDimensional ℂ Y := Submodule.finiteDimensional_of_le inf_le_left
   set T : Module.End ℂ V := casK act - ((casVal μ : ℚ) : ℂ) • 1 with hT
   have hTY : ∀ y ∈ Y, T y ∈ Y := fun y hy =>
     Y.sub_mem ⟨casK_mem hW hy.1, casK_wt hL hy.2⟩ (Y.smul_mem _ hy)
@@ -593,7 +593,7 @@ lemma gen_irred (hL : IsKLieAct act) {W : Submodule ℂ V} [FiniteDimensional �
   rw [or_iff_not_imp_left]
   intro h0
   have hUW : U ≤ W := hle.trans (gen_le hvW hW)
-  haveI : FiniteDimensional ℂ U := Submodule.finiteDimensional_of_le hUW
+  have : FiniteDimensional ℂ U := Submodule.finiteDimensional_of_le hUW
   obtain ⟨ν, w, hwU, hw⟩ := exists_hw hL hU (fun x hx => hd x (hUW hx)) h0
   obtain ⟨s, rfl⟩ := Submodule.mem_span_singleton.1 (hw_unique hL hW hvW hv (hle hwU) hw).2
   exact (U.smul_mem_iff (left_ne_zero_of_smul hw.1)).1 hwU
@@ -612,7 +612,7 @@ lemma exists_max_image_of_bddAbove_finrank (W : Submodule ℂ V) [FiniteDimensio
   have e : (U'.comap W.subtype).map W.subtype = U' := by
     rw [Submodule.map_comap_subtype, inf_eq_right.2 h1]
   have h4 : A ≤ U'.comap W.subtype := Submodule.map_le_iff_le_comap.1 h2
-  have h5 := hmax (U'.comap W.subtype) (by rw [Set.mem_setOf_eq, e]; exact h3)
+  have h5 := hmax (U'.comap W.subtype) (by rw [Set.mem_ofPred_eq, e]; exact h3)
   rw [← e]
   exact Submodule.map_mono (eq_of_le_of_not_lt h4 h5).ge
 

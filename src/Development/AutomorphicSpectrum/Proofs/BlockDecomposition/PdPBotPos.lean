@@ -78,7 +78,7 @@ theorem chart_mor : ∀ {O A : Type} [CommRing O] [CommRing A] [Algebra O A] {I 
       (∀ f, ev cA.D cA.inV f = Ideal.Quotient.mk _ (eA (1 ⊗ₜ f))) →
       ∃ e₀ : cO.D ⟶ ((nmO γ q).mor 0).obj cA.D, ∀ f, e₀.φ (eO (1 ⊗ₜ f)) = eA (1 ⊗ₜ f) := by
   intro O A _ _ _ I γ X q V d cV
-  letI a0 : Algebra O Γ(X, V) := (strV q V).toAlgebra
+  let a0 : Algebra O Γ(X, V) := (strV q V).toAlgebra
   intro cO cA eO eA hO hA hvO hvA
   have hptT : pt (((nmO γ q).mor 0).obj cA.D) = pt cA.D := Category.comp_id _
   have hT : InU V (((nmO γ q).mor 0).obj cA.D) := by
@@ -381,11 +381,11 @@ theorem main : ∀ {O A G : Type} [CommRing O] [CommRing A] [Algebra O A] [CommR
   have t_act : ∀ (i : Fin m) (h : u ≤ (i : ℕ) ∧ (i : ℕ) < v) (a : S.N i ⊗[O] G),
       t i (LinearEquiv.lTensor (S.N i) (θ i h.1 h.2) a) = a := by
     intro i h a
-    simp only [t, dif_pos h]
+    simp only [t, dite_eq_left h]
     exact (LinearEquiv.lTensor (S.N i) (θ i h.1 h.2)).symm_apply_apply a
   have t_inact : ∀ (i : Fin m), ¬ (u ≤ (i : ℕ) ∧ (i : ℕ) < v) → t i = 0 := by
     intro i h
-    simp only [t, dif_neg h]
+    simp only [t, dite_eq_right h]
   let T : (∀ i, S.N i ⊗[O] M i) →+ (∀ i, S.N i ⊗[O] G) :=
     { toFun := fun w i => t i (w i)
       map_zero' := by funext i; simp
@@ -418,7 +418,7 @@ theorem main : ∀ {O A G : Type} [CommRing O] [CommRing A] [Algebra O A] [CommR
       rw [← ha, t_act i h] at h2
       rw [← ha, h2, map_zero]
       rfl
-    · haveI := h0 i h
+    · have := h0 i h
       exact subsingleton_tmul _
   have surj : Function.Surjective φ := by
     intro y
@@ -438,7 +438,7 @@ theorem main : ∀ {O A G : Type} [CommRing O] [CommRing A] [Algebra O A] [CommR
     rw [Pi.sub_apply, T_apply, sub_eq_zero]
     by_cases h : u ≤ (i : ℕ)
     · have h' : u ≤ (i : ℕ) ∧ (i : ℕ) < v := ⟨h, hi⟩
-      simp only [w, dif_pos h']
+      simp only [w, dite_eq_left h']
       exact t_act i h' _
     · rw [t_inact i (by omega), hzu i (by omega)]
       rfl
@@ -458,7 +458,7 @@ theorem main : ∀ {O A G : Type} [CommRing O] [CommRing A] [Algebra O A] [CommR
       exact hT _
     rw [hf i n y h.1 h.2 hx, φ_apply]
     exact congrArg π (Subtype.ext (by simp only [hTs, hs]))
-  · haveI := h0 i h
+  · have := h0 i h
     rw [Subsingleton.elim x 0, TensorProduct.tmul_zero, Pi.single_zero, map_zero, hf0]
 
 end GlobalTheory.CompanionTheory.GrPiece
@@ -505,7 +505,7 @@ theorem sub_of_bot (a b : IdF F) (T : C) (h : a.S T = ⊥) : Subsingleton (sqM a
   exact (show (x.1 : F.obj T ⧸ b.S T) = 0 from hx).trans (show (y.1 : F.obj T ⧸ b.S T) = 0 from hy).symm
 
 theorem sub_of_top (a b : IdF F) (T : C) (h : b.S T = ⊤) : Subsingleton (sqM a b T) := by
-  haveI : Subsingleton (F.obj T ⧸ b.S T) := Ideal.Quotient.subsingleton_iff.2 h
+  have : Subsingleton (F.obj T ⧸ b.S T) := Ideal.Quotient.subsingleton_iff.2 h
   exact ⟨fun x y => Subtype.ext (Subsingleton.elim _ _)⟩
 
 theorem pi_ex (a b : IdF F) (T : C) {Y : Type} [CommRing Y] {P Q : Ideal Y} (e : Y ≃+* F.obj T)
@@ -575,9 +575,9 @@ theorem chart_tens : ∀ {O A : Type} [CommRing O] [CommRing A] [Algebra O A] {I
         fun i n x => ((smO γ q l s {V}).sqC (S.ν i n) (ha i n) (hb i n)).τ ⟨cA.D, hD'⟩
           (((sq (sFil (TO q l s {V}) (t - c - i)) (sFil (TO q l s {V}) (t - i))).map e).hom x) := by
   intro O A _ _ _ I γ l s m S X q V d cV
-  letI a0 : Algebra O Γ(X, V) := (strV q V).toAlgebra
+  let a0 : Algebra O Γ(X, V) := (strV q V).toAlgebra
   intro cO cA eO eA hD hD' e hiO hiA he c t hc ha hb
-  haveI hF : Module.Flat O Γ(X, V) := GlobalTheory.CompanionTheory.ChartAlg.flat_of_etale cV.t cV.etale
+  have hF : Module.Flat O Γ(X, V) := GlobalTheory.CompanionTheory.ChartAlg.flat_of_etale cV.t cV.etale
   have hQ : ∀ T, TO q l s {V} T → InU V T := by
     rintro T ⟨-, V', rfl, h⟩
     exact h

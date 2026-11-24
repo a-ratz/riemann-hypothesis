@@ -315,9 +315,9 @@ theorem eventually_isUnit {x y z α β γ : B} (h : IsUnit (α * x + β * y + γ
     ∀ᶠ t : ℕ in cofinite, IsUnit (x * t ^ 2 + y * t + z) := by
   have key : ∀ m : MaximalSpectrum B, ∀ᶠ t : ℕ in cofinite, x * t ^ 2 + y * t + z ∉ m.asIdeal := by
     intro m
-    haveI := m.isMaximal
-    letI := Ideal.Quotient.field m.asIdeal
-    haveI : CharZero (B ⧸ m.asIdeal) := algebraRat.charZero _
+    have := m.isMaximal
+    let := Ideal.Quotient.field m.asIdeal
+    have : CharZero (B ⧸ m.asIdeal) := algebraRat.charZero _
     let π := Ideal.Quotient.mk m.asIdeal
     let p : Polynomial (B ⧸ m.asIdeal) :=
       Polynomial.C (π x) * Polynomial.X ^ 2 + Polynomial.C (π y) * Polynomial.X + Polynomial.C (π z)
@@ -327,7 +327,7 @@ theorem eventually_isUnit {x y z α β γ : B} (h : IsUnit (α * x + β * y + γ
       have h3 : π z = 0 := by simpa [p] using congrArg (AddMonoidAlgebra.coeff · 0) h0
       have := (h.map π).ne_zero
       simp [h1, h2, h3] at this
-    refine ((Polynomial.finite_setOf_isRoot hp).preimage
+    refine ((Polynomial.finite_setOfPred_isRoot hp).preimage
       (Nat.cast_injective (R := B ⧸ m.asIdeal)).injOn).subset fun t ht => ?_
     have := Ideal.Quotient.eq_zero_iff_mem.2 (not_not.1 ht)
     simpa [p, π] using this
@@ -505,7 +505,7 @@ theorem modular_involution (T : G →* G) (hc : Continuous T) (hT : ∀ x, T (T 
     Measure.modularCharacter (T g) = Measure.modularCharacter g := by
   let e : G ≃* G := { T with invFun := T, left_inv := hT, right_inv := hT }
   let μ : Measure G := Measure.haar
-  haveI : (μ.map T).IsHaarMeasure := e.isHaarMeasure_map μ hc hc
+  have : (μ.map T).IsHaarMeasure := e.isHaarMeasure_map μ hc hc
   refine smul_inj (μ := μ.map T) ?_
   rw [← map_mul_right_eq, ← Measure.map_smul _ hc.measurable.aemeasurable, ← map_mul_right_eq,
     Measure.map_map (measurable_mul_const _) hc.measurable, Measure.map_map hc.measurable (measurable_mul_const _)]
@@ -526,7 +526,7 @@ theorem modular_compact (K : Subgroup G) (ho : IsOpen (K : Set G)) (hc : IsCompa
   exact_mod_cast h3
 
 theorem map_inv_eq (μ : Measure G) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] : μ.inv = μ := by
-  haveI : μ.inv.IsHaarMeasure :=
+  have : μ.inv.IsHaarMeasure :=
     { toIsFiniteMeasureOnCompacts := inferInstance
       toIsMulLeftInvariant := inferInstance
       toIsOpenPosMeasure := inferInstance }
@@ -567,7 +567,7 @@ theorem exists_involution [TopologicalSpace A] [IsTopologicalRing A] (hc : Conti
   have hc₀ : Continuous T₀ := Units.continuous_iff.2 ⟨hcv, by
     simp only [← map_inv]
     exact hcv.comp continuous_inv⟩
-  refine ⟨(T₀.comp (UJ σ J).subtype).codRestrict _ hmem, (hc₀.comp continuous_subtype_val).subtype_mk _,
+  refine ⟨(T₀.comp (UJ σ J).subtype).codRestrict _ hmem, (hc₀.comp continuous_subtypeVal).subtype_mk _,
     fun x => Subtype.ext (Units.ext ?_), fun g g' h => Subtype.ext (Units.ext ?_)⟩
   · show M * (M * (mat x).map σ * M.map σ).map σ * M.map σ = mat x
     rw [Matrix.map_mul, Matrix.map_mul, hσσ, hσσ, ← Matrix.mul_assoc, ← Matrix.mul_assoc, hM', Matrix.one_mul,
@@ -586,7 +586,7 @@ theorem exists_split (a : Af F) : ∃ (R : Type) (_ : CommRing R) (_ : Algebra F
   classical
   let S := {v : HeightOneSpectrum (𝓞 F) | a v ∉ v.adicCompletionIntegers F}
   have hS : S.Finite := Filter.eventually_cofinite.1 a.2
-  haveI : Finite S := hS.to_subtype
+  have : Finite S := hS.to_subtype
   let p : Af F →ₐ[F] (∀ v : S, v.1.adicCompletion F) :=
     { toFun := fun x v => x v.1
       map_one' := rfl
@@ -599,7 +599,7 @@ theorem exists_split (a : Af F) : ∃ (R : Type) (_ : CommRing R) (_ : Algebra F
       filter_upwards [hS.compl_mem_cofinite] with v hv
       rw [dite_eq_right hv]
       exact zero_mem _⟩
-  have hs : ∀ y, p (s y) = y := fun y => funext fun v => dif_pos v.2
+  have hs : ∀ y, p (s y) = y := fun y => funext fun v => dite_eq_left v.2
   have hs1 : ∀ v, s 1 v = if v ∈ S then 1 else 0 := fun v => by
     show dite _ _ _ = _
     split_ifs <;> rfl
@@ -637,12 +637,12 @@ theorem exists_split_tensor (σ : E →ₐ[F] E) {δ : E} (hδ : δ ≠ 0) (hσ�
     (map_ne_zero_iff _ (IsFractionRing.injective _ _)).2 (Finset.prod_ne_zero_iff.2 fun k _ => hd0 k)
   obtain ⟨R, _, _, p, e, hR, hp, hpe, hker, hint⟩ :=
     exists_split (algebraMap F (Af F) (algebraMap (𝓞 F) F (∏ k, d k))⁻¹)
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  letI : Algebra R (E ⊗[F] R) := Algebra.TensorProduct.rightAlgebra
-  haveI : Module.Finite R (E ⊗[F] R) :=
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  let : Algebra R (E ⊗[F] R) := Algebra.TensorProduct.rightAlgebra
+  have : Module.Finite R (E ⊗[F] R) :=
     Module.Finite.equiv (Algebra.TensorProduct.commRight F R E).toLinearEquiv
-  haveI : IsArtinianRing (E ⊗[F] R) := IsArtinianRing.of_finite R _
-  letI : Algebra ℚ (E ⊗[F] R) := ((inclE (F := F) R).comp (algebraMap ℚ E)).toAlgebra
+  have : IsArtinianRing (E ⊗[F] R) := IsArtinianRing.of_finite R _
+  let : Algebra ℚ (E ⊗[F] R) := ((inclE (F := F) R).comp (algebraMap ℚ E)).toAlgebra
   refine ⟨E ⊗[F] R, inferInstance, sigR σ R, (Algebra.TensorProduct.map (AlgHom.id F E) p).toRingHom,
     1 ⊗ₜ e, fun y => ?_, Algebra.TensorProduct.map_surjective _ _ Function.surjective_id hp, ?_, fun y hy => ?_, ?_,
     generic_of_semilocal (δ := inclE R δ) (hδ.isUnit.map _) ?_, fun k => ?_⟩
@@ -756,13 +756,13 @@ theorem finite_unimodular (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure]
 theorem adelic_unimodular : ∀ (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure] [SigmaFinite μf], (∀ g : I.GA, Measure.map (fun x => g * x) (I.muA μf) = I.muA μf) ∧ (∀ g : I.GA, Measure.map (fun x => x * g) (I.muA μf) = I.muA μf) ∧ Measure.map (fun x : I.GA => x⁻¹) (I.muA μf) = I.muA μf ∧ (∀ g : I.Gf, Measure.map (fun x => x * g) μf = μf) ∧ ∀ U : Set I.GA, IsOpen U → U.Nonempty → 0 < I.muA μf U := by
   intro I μf _ _
   obtain ⟨_, _, _, -⟩ := GlobalTheory.CongTop.adelic_topology I
-  haveI : μf.IsMulRightInvariant := ⟨finite_unimodular I μf⟩
-  haveI : ∀ v, (Formalism.REAL.muG (I.ε v)).IsMulRightInvariant := fun v => ⟨Formalism.REAL.indefinite_unitary_unimodular _ _⟩
-  haveI : ∀ v, (Formalism.REAL.muG (I.ε v)).IsHaarMeasure := fun v => by unfold Formalism.REAL.muG; infer_instance
-  haveI : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := Measure.pi.isHaarMeasure _
-  haveI : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsMulRightInvariant := Measure.pi.isMulRightInvariant _
-  haveI : (I.muA μf).IsHaarMeasure := Measure.prod.instIsHaarMeasure _ _
-  haveI : (I.muA μf).IsMulRightInvariant := Measure.prod.instIsMulRightInvariant
+  have : μf.IsMulRightInvariant := ⟨finite_unimodular I μf⟩
+  have : ∀ v, (Formalism.REAL.muG (I.ε v)).IsMulRightInvariant := fun v => ⟨Formalism.REAL.indefinite_unitary_unimodular _ _⟩
+  have : ∀ v, (Formalism.REAL.muG (I.ε v)).IsHaarMeasure := fun v => by unfold Formalism.REAL.muG; infer_instance
+  have : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsHaarMeasure := Measure.pi.isHaarMeasure _
+  have : (Measure.pi fun v => Formalism.REAL.muG (I.ε v)).IsMulRightInvariant := Measure.pi.isMulRightInvariant _
+  have : (I.muA μf).IsHaarMeasure := Measure.prod.instIsHaarMeasure _ _
+  have : (I.muA μf).IsMulRightInvariant := Measure.prod.instIsMulRightInvariant
   exact ⟨map_mul_left_eq_self _, map_mul_right_eq_self _, map_inv_eq _, finite_unimodular I μf,
     fun U hU hne => hU.measure_pos _ hne⟩
 

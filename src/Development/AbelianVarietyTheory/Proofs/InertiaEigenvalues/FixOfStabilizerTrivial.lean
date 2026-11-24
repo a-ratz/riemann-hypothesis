@@ -57,8 +57,8 @@ theorem fix_of_stabilizer_trivial {l : ℕ} [Fact l.Prime] {E : Type} [Field E] 
     (c : E →+* PadicAlgCl l) (P : Ideal (𝓞 E)) (hc : ∀ x : 𝓞 E, x ∈ P ↔ ‖c (x : E)‖ < 1)
     (hP : ∀ σ : E ≃ₐ[ℚ] E, σ • P = P → σ = 1) (τ : PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l) (x : E) :
     τ (c x) = c x := by
-  letI : Algebra E (PadicAlgCl l) := c.toAlgebra
-  haveI : IsScalarTower ℚ E (PadicAlgCl l) :=
+  let : Algebra E (PadicAlgCl l) := c.toAlgebra
+  have : IsScalarTower ℚ E (PadicAlgCl l) :=
     IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
   let φ : E →ₐ[ℚ] PadicAlgCl l := ((τ : PadicAlgCl l →+* PadicAlgCl l).comp c).toRatAlgHom
   let σ : E ≃ₐ[ℚ] E := φ.restrictNormal' E
@@ -76,7 +76,7 @@ theorem fix_of_stabilizer_trivial {l : ℕ} [Fact l.Prime] {E : Type} [Field E] 
 theorem eq_bot_of_subset_closure {l : ℕ} [Fact l.Prime] (K : IntermediateField ℚ_[l] (PadicAlgCl l))
     (S : Set (PadicAlgCl l)) (hK : (K : Set (PadicAlgCl l)) ⊆ closure S)
     (hS : ∀ (τ : PadicAlgCl l ≃ₐ[ℚ_[l]] PadicAlgCl l), ∀ y ∈ S, τ y = y) : K = ⊥ := by
-  haveI : IsGalois ℚ_[l] (PadicAlgCl l) := IsAlgClosure.isGalois _ _
+  have : IsGalois ℚ_[l] (PadicAlgCl l) := IsAlgClosure.isGalois _ _
   refine eq_bot_iff.2 fun y hy => (InfiniteGalois.mem_bot_iff_fixed y).2 fun τ => ?_
   have hc : Continuous τ :=
     (AddMonoidHomClass.isometry_of_norm τ fun x => (spectralNorm_eq_of_equiv τ x).symm).continuous
@@ -92,14 +92,14 @@ theorem mem_place_iff (D : D7) (i : D.nd.Loc) (w : HeightOneSpectrum (𝓞 D.hos
   have hj : 0 < ‖(D.nbr i w hw).j y‖ := norm_pos_iff.2 ((_root_.map_ne_zero _).2 hy)
   have h := D.nbr_ind i w hw y⁻¹
   rw [← ValuationSubring.valuation_le_one_iff, map_inv₀, map_inv₀, norm_inv, inv_le_one₀ hj,
-    inv_le_one₀ (zero_lt_iff.2 ((_root_.map_ne_zero _).2 hy))] at h
+    inv_le_one₀ (pos_iff_ne_zero.2 ((_root_.map_ne_zero _).2 hy))] at h
   rw [← not_le, ← not_le, h]
 
 theorem degree_one : ∀ (D : D7) (i : D.nd.Loc) (k : Fin 2), D.nd.l i = D.host.g k → (placesOver D.host.E (D.nd.l i)).ncard = 2 * D.R.f ∧ ∀ w (hw : w ∈ placesOver D.host.E (D.nd.l i)), finrank ℚ_[D.nd.l i] (Br.Kw D.nbr i w hw) = 1 := by
   intro D i k hk
   have hs : (placesOver D.host.E (D.nd.l i)).ncard = finrank ℚ D.host.E := by
     rw [hk]; exact D.nd.g_split k
-  haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
+  have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   refine ⟨?_, fun w hw => ?_⟩
   · have h1 : finrank ℚ D.host.E = 4 * D.R.ord := D.host.finrank_cmField
     have h5 : D.R.f = 2 * D.R.ord := rfl

@@ -477,11 +477,11 @@ open WCont GlobalTheory.HWL.InvCont
 
 theorem exists_cocycle_solution_conv : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let W := (HW l).W K s LL h; ∀ (r m k : ℕ) (J : Multiset ℕ) (G Pm Pm' : Matrix (Fin r) (Fin r) (AA K LL)) (y z : Fin r → AA K LL), let Λ : AA K LL := (J.map fun j => (W.φA ^ j) W.Q).prod; let γL : LetA ↥LL.1 (Module.finrank ℚ_[l] ↥(K0 K)) → LetA ↥LL.1 (Module.finrank ℚ_[l] ↥(K0 K)) := fun a i => PowerSeries.subst (PowerSeries.map (algebraMap ↥(OL LL) ↥LL.1) (W.γ₀ W.gam PowerSeries.X)) (a i); (∀ i j, (G - 1) i j ∈ Ideal.span {(letπ : AA K LL)}) → Pm * Pm' = (W.Q ^ k) • (1 : Matrix (Fin r) (Fin r) (AA K LL)) → (W.γA W.gam W.Q ^ m) • (Pm * G.map W.φA) = (W.Q ^ m) • (G * Pm.map (W.γA W.gam)) → (∀ j, z j ∈ Ideal.span {(letπ : AA K LL)}) → (W.Q ^ m * Λ) • G.mulVec (fun j => W.γA W.gam (y j)) - (W.Q ^ m * W.γA W.gam Λ) • y = (Λ * W.γA W.gam Λ) • (Pm.mulVec (fun j => W.φA (z j)) - (W.Q ^ m) • z) → ∃ (w : Fin r → LetA ↥LL.1 (Module.finrank ℚ_[l] ↥(K0 K))) (p : ℕ), (∀ j i, PowerSeries.constantCoeff (w j i) = 0) ∧ (∀ j i, GlobalTheory.HWL.Conv (GlobalTheory.HWL.logS LL ^ p * w j i)) ∧ (G.map GlobalTheory.HWL.toLL).mulVec (fun j => γL (w j)) - w = fun j => GlobalTheory.HWL.toLL (z j) := by
   intro D HW l _ K s LL h W r m k J G Pm Pm' y z Λ γL hG hP hGP hz hy
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   have hle : K0 K ≤ K.1 := inf_le_left
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) := FiniteDimensional.of_injective
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) := FiniteDimensional.of_injective
     (IntermediateField.inclusion hle).toLinearMap (IntermediateField.inclusion_injective hle)
-  haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
+  have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   obtain ⟨χ, -, hφ, hγ, -, hQ, hu, -⟩ := GlobalTheory.NL.CycRing.rings_cyclotomic D HW l K s LL h
   have eφ : W.φA = letφ (phi l ↥(OL LL)) := congrArg letφ hφ
   have eγ : W.γA W.gam = letγ (act l ↥(OL LL) (χ W.gam : ℤ_[l])) := congrArg letγ (hγ _)
@@ -547,7 +547,7 @@ theorem eq_zero_of_fixed {L ι : Type} [Field L] [Fintype ι] [DecidableEq ι] (
       have h3 := congrArg constantCoeff h2
 
       simp only [map_sum, map_mul, map_pow, hG, constantCoeff_algHom γ h0, ite_mul, one_mul, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true] at h3
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true] at h3
       have h4 : constantCoeff (e i) = 0 := by
         have : constantCoeff (e i) * (constantCoeff z ^ (k + 1) - 1) = 0 := by linear_combination h3
         exact (mul_eq_zero.mp this).resolve_right (sub_ne_zero.mpr (h1 ▸ hu (k + 1) k.succ_pos))
@@ -756,7 +756,7 @@ theorem exists_val (hinj : Function.Injective inclR) (gA : G → (RA →ₐ[O] R
   obtain ⟨w', hw'⟩ := ((Module.End.isUnit_iff _).mp (hτ.map (actS T.V B))).2
     (∑ j, actS T.V B (Dc.J (a j)) (x j))
   refine ⟨w', fun g z' hz => ?_⟩
-  letI : Module (LL ⊗[Qp] B) (T.V ⊗[Qp] B) := Module.compHom _ (actS (LL := LL) T.V B).toRingHom
+  let : Module (LL ⊗[Qp] B) (T.V ⊗[Qp] B) := Module.compHom _ (actS (LL := LL) T.V B).toRingHom
   have key := div_unit
     (Algebra.TensorProduct.map (AlgHom.id Qp LL) ((PD.actB g).toAlgHom.restrictScalars Qp)).toRingHom
     (actVB PD T.ρ g).toAddMonoidHom

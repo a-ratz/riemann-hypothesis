@@ -99,7 +99,7 @@ theorem finite_support_and_sum_ord_eq_zero : ∀ (k F : Type) [Field k] [IsAlgCl
       · have hB' : v ∉ B := by
           show ¬ v.1 x⁻¹ < 1
           rw [map_inv₀, not_lt]
-          exact (one_le_inv₀ (zero_lt_iff.2 h0)).2 h.le
+          exact (one_le_inv₀ (pos_iff_ne_zero.2 h0)).2 h.le
         rw [Set.indicator_of_mem (show v ∈ A from h), Set.indicator_of_notMem hB', sub_zero]
       · have e : ord v x = 0 := by unfold ord; rw [h, WithZero.log_one, neg_zero]
         rw [e, Set.indicator_of_notMem (show v ∉ A from fun h' => by change v.1 x < 1 at h'; rw [h] at h'; exact lt_irrefl _ h'),

@@ -1057,9 +1057,9 @@ theorem moduli_of_family (hL : Out.Laws) (hL2 : Out.Laws2)
       IsPullback p sX sU (spMap (algebraMap o (KA l))) := ⟨_, _, _, IsPullback.of_hasPullback _ _⟩
   have hqX : IsQProjOver sX := isQProjOver_of_isPullback_spMap _ sq hq
   have hlft : LocallyOfFiniteType sX := lft_of_qproj hqX
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian sX
-  haveI : FiniteDimensional ℚ (KA l) := finiteDimensional_KA l
-  haveI : Algebra.IsAlgebraic ℚ (KA l) := Algebra.IsAlgebraic.of_finite ℚ (KA l)
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian sX
+  have : FiniteDimensional ℚ (KA l) := finiteDimensional_KA l
+  have : Algebra.IsAlgebraic ℚ (KA l) := Algebra.IsAlgebraic.of_finite ℚ (KA l)
   obtain ⟨tX, htX⟩ := tObj_pull o g l.A J b U X sU (sX ≫ spMap (algebraMap o (KA l))) p tU sq.w
   obtain ⟨τX, hτX⟩ := exists_isPEL_of_tmap E H D g J a bas l.A o b ρ U X sU
     (sX ≫ spMap (algebraMap o (KA l))) tU tX τU p sq.w htX hτ
@@ -1074,7 +1074,7 @@ theorem moduli_of_family (hL : Out.Laws) (hL2 : Out.Laws2)
   refine ⟨{ X := X, s := sX, qproj := hqX, smooth := ?_, univ := ob, rep := ?_, unram := ?_ }⟩
   · refine smoothOfRelativeDimension_of_dim_of_directions_le (KA l) X sX D.dim hlft ?_ ?_
     · intro R _ _ x hx _ q hq'
-      haveI : IsOpenImmersion (x ≫ sq.isoPullback.hom) := inferInstance
+      have : IsOpenImmersion (x ≫ sq.isoPullback.hom) := inferInstance
       exact dim_generic_chart sU _ hdim R (x ≫ sq.isoPullback.hom) q hq'
     · intro K' _ _ r β x hxs hdir
       have hρsq : ρ ^ 2 = -(H.d : o) := by
@@ -1086,7 +1086,7 @@ theorem moduli_of_family (hL : Out.Laws) (hL2 : Out.Laws2)
       obtain ⟨t1, ht1⟩ := tObj_pull o g l.A J b X _ (sX ≫ spMap (algebraMap o (KA l))) _ x tX hb
       obtain ⟨τ1, hτ1⟩ := exists_isPEL_of_tmap E H D g J a bas l.A o b ρ X _
         (sX ≫ spMap (algebraMap o (KA l))) _ tX t1 τX x hb ht1 hτX
-      haveI : CharZero K' := charZero_of_hom (spMap β)
+      have : CharZero K' := charZero_of_hom (spMap β)
       refine _root_.GlobalTheory.PelTangent.tangent_le_dim hL hL2 hth E H D g J a w w' bas l.A o b ρ K' r (β.comp (algebraMap o (KA l))) t1 τ1
         hw hw' hρsq hτ1 ?_
       intro lam t' h1 h2
@@ -1162,7 +1162,7 @@ theorem GlobalTheory.ZM.exists_moduli_prime_power_level : Out.Laws → Out.Laws2
   subst hA
   have hM' := hM.symm
   subst hM'
-  haveI := har.1
+  have := har.1
   have hemρ : em ρ = H.rt0 := by rw [← hem, hρ]; rfl
   have h3n : 3 ≤ n := by
     have h2 := hn.two_le
@@ -1176,9 +1176,9 @@ theorem GlobalTheory.ZM.exists_moduli_prime_power_level : Out.Laws → Out.Laws2
   obtain ⟨F⟩ := hj₂ j hj2 o b em _ D.dim har hGd
   obtain ⟨hqU, -, hredU, hinjU⟩ := T.thetaClosureOpenFamily_qproj_flat_reduced_ext hL hL2 o _ n (n ^ j) J b em _ Mat κ F hoddN
   have hqU' : IsQProjOver (F.U.ι ≫ F.Y.s) := hqU.resolve_right (not_not.mpr inferInstance)
-  haveI := hredU
-  haveI := lft_of_qproj hqU'
-  haveI : IsLocallyNoetherian F.U.toScheme := LocallyOfFiniteType.isLocallyNoetherian (F.U.ι ≫ F.Y.s)
+  have := hredU
+  have := lft_of_qproj hqU'
+  have : IsLocallyNoetherian F.U.toScheme := LocallyOfFiniteType.isLocallyNoetherian (F.U.ι ≫ F.Y.s)
   obtain ⟨τU, hτU⟩ := _root_.GlobalTheory.PELFamily.exists_isPEL_of_dense hL hL2 hth E H D _ J a bas w w' hpq hbas hw hw' hgen _ o b em ρ F.U.toScheme
     (F.U.ι ≫ F.Y.s) F.univ hemρ har.2.2 F.dense
   refine moduli_of_family hL hL2 hth D a w w' bas hbas hw hw' hgen _
@@ -1188,12 +1188,12 @@ theorem GlobalTheory.ZM.exists_moduli_prime_power_level : Out.Laws → Out.Laws2
   refine hj₃ j hj3 o b em _ D.dim har hGd F S s' t hS ?_ ?_
   · refine Dense.mono ?_ dense_univ
     intro p _
-    haveI := hch _ (S.fromSpecResidueField p)
+    have := hch _ (S.fromSpecResidueField p)
     exact ⟨_, inferInstance, S.fromSpecResidueField p,
       ⟨IsLocalRing.closedPoint _, Scheme.fromSpecResidueField_apply p _⟩,
       _root_.GlobalTheory.PELFrom.fromC_of_isPEL hL hL2 E H D _ J a w w' bas hpq hbas hw hw' hgen (n ^ j) o b em ρ hemρ har S s' t τ hP _ _⟩
   · intro K _ _ x t' hT
-    haveI := hch K x
+    have := hch K x
     obtain ⟨K₀, _, β, i, e, t₀, tx, tc, -, -, htx, htx0, htc0, hC⟩ :=
       _root_.GlobalTheory.PELFrom.fromC_of_isPEL hL hL2 E H D _ J a w w' bas hpq hbas hw hw' hgen (n ^ j) o b em ρ hemρ har S s' t τ hP K x
     have s1 := (hGd.shape tc hC).1
@@ -1429,7 +1429,7 @@ theorem zeta_eq_pow {n m : ℕ} (hm : 0 < m) (h : n ∣ m) : zeta n = zeta m ^ (
   have hc : 0 < c := Nat.pos_of_mul_pos_left hm
   have hn' : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hn.ne'
   have hc' : (c : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hc.ne'
-  rw [Nat.mul_div_cancel_left c hn, zeta, zeta, ← Complex.exp_nat_mul]
+  rw [Nat.mul_div_cancel_left c hn, zeta, zeta, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   field_simp
@@ -1472,15 +1472,15 @@ theorem finiteDimensional_KA (l : Level H) : FiniteDimensional ℚ (KA l) := by
 
 theorem finite_of_numberField {K K' : Type} [Field K] [Field K'] [CharZero K] [CharZero K']
     [FiniteDimensional ℚ K'] (j : K →+* K') : j.Finite := by
-  letI := j.toAlgebra
+  let := j.toAlgebra
   exact Module.Finite.of_restrictScalars_finite ℚ K K'
 
 theorem etale_of_numberField {K K' : Type} [Field K] [Field K'] [CharZero K] [CharZero K']
     [FiniteDimensional ℚ K'] (j : K →+* K') : Etale (spMap j) := by
-  letI := j.toAlgebra
-  haveI : Module.Finite K K' := finite_of_numberField j
-  haveI : Algebra.FormallyEtale K K' := Algebra.FormallyEtale.of_isSeparable K K'
-  haveI : Algebra.FinitePresentation K K' := Algebra.FinitePresentation.of_finiteType.mp inferInstance
+  let := j.toAlgebra
+  have : Module.Finite K K' := finite_of_numberField j
+  have : Algebra.FormallyEtale K K' := Algebra.FormallyEtale.of_isSeparable K K'
+  have : Algebra.FinitePresentation K K' := Algebra.FinitePresentation.of_finiteType.mp inferInstance
   have : Algebra.Etale K K' := ⟨inferInstance, inferInstance⟩
   exact (HasRingHomProperty.Spec_iff (P := @Etale)).mpr this
 
@@ -1494,7 +1494,7 @@ theorem nonempty_levelQuot : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P
   intro hL hL2 hTh E _ _ _ H D l l₂ Xo₂ hpq hdvd
   have hA : l.A ∣ l₂.A := hdvd.2.2
   obtain ⟨jK, hj, hjρ, hjζ⟩ := exists_inclusion hA
-  haveI := finiteDimensional_KA l₂
+  have := finiteDimensional_KA l₂
   obtain ⟨Ga, _, _, ρ, ν, h1, hmul, hν1, hνmul, hover, hlow, hfree, htrans⟩ :=
     GlobalTheory.LevelGroup.exists_group_action hL hL2 E H D l l₂ Xo₂ jK hpq hdvd hj
   have hq : IsQProjOver (Xo₂.s ≫ spMap jK) :=
@@ -1505,9 +1505,9 @@ theorem nonempty_levelQuot : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P
   have hqY : IsQProjOver sY := _root_.GlobalTheory.GaloisQuotient.isQProjOver_of_isGaloisCover (KA l) _ Y π sY Ga ρ hG hsep hft (by rw [hπ]; exact hq)
   have hsm : SmoothOfRelativeDimension D.dim (π ≫ sY) := by
     rw [hπ]
-    haveI := Xo₂.smooth
-    haveI : Etale (spMap jK) := etale_of_numberField jK
-    haveI : SmoothOfRelativeDimension 0 (spMap jK) := inferInstance
+    have := Xo₂.smooth
+    have : Etale (spMap jK) := etale_of_numberField jK
+    have : SmoothOfRelativeDimension 0 (spMap jK) := inferInstance
     have := smoothOfRelativeDimension_comp D.dim 0 Xo₂.s (spMap jK)
     rwa [Nat.add_zero] at this
   have hsY : SmoothOfRelativeDimension D.dim sY := _root_.GlobalTheory.SmoothDescent.smoothOfRelativeDimension_of_etale_cover (KA l) _ Y π sY _ hG.etale hG.onto hft hsm

@@ -50,10 +50,10 @@ private theorem eval_comm {A E σ : Type} [CommRing A] [Ring E] [Algebra A E] (f
     ∃ φ : MvPolynomial σ A →ₐ[A] E, ∀ i, φ (MvPolynomial.X i) = f i := by
   classical
   let S := Algebra.adjoin A (Set.range f)
-  letI : IsMulCommutative S := Algebra.isMulCommutative_adjoin A (by
+  let : IsMulCommutative S := Algebra.isMulCommutative_adjoin A (by
     rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩ _
     exact h i j)
-  letI : CommRing S := { S.toRing with mul_comm := fun x y => mul_comm' x y }
+  let : CommRing S := { S.toRing with mul_comm := fun x y => mul_comm' x y }
   refine ⟨S.val.comp (MvPolynomial.aeval fun i => (⟨f i, Algebra.subset_adjoin ⟨i, rfl⟩⟩ : S)), fun i => ?_⟩
   simp
 

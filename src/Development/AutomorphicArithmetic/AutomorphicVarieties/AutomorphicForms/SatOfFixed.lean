@@ -59,10 +59,10 @@ theorem hasFixed_of_sum {G V W : Type} [Group G] [TopologicalSpace G] [IsTopolog
   open GlobalTheory.OrbitAvg in
   by_contra hn
   obtain ⟨x, hx0, hx⟩ := hf
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have hfi : ∀ y, (stab σ K y).FiniteIndex := fun y => by
-    have ho : IsOpen (stab σ K y : Set K) := (hσ y).preimage continuous_subtype_val
-    haveI := (stab σ K y).quotient_finite_of_isOpen ho
+    have ho : IsOpen (stab σ K y : Set K) := (hσ y).preimage continuous_subtypeVal
+    have := (stab σ K y).quotient_finite_of_isOpen ho
     exact Subgroup.finiteIndex_of_finite_quotient
   have hz : ∀ y, avg σ K y = 0 := fun y => by
     by_contra h0
@@ -71,12 +71,12 @@ theorem hasFixed_of_sum {G V W : Type} [Group G] [TopologicalSpace G] [IsTopolog
     rw [← h] at hz'
     refine Submodule.iSup_induction _ (motive := fun z => (stab ρ K z).FiniteIndex ∧ avg ρ K z = 0) hz' ?_ ?_ ?_
     · rintro ⟨f, hf⟩ _ ⟨y, rfl⟩
-      haveI := hfi y
+      have := hfi y
       have hle : stab σ K y ≤ stab ρ K (f y) := fun l hl => by
         rw [mem_stab] at hl ⊢
         rw [← hf, hl]
       refine ⟨Subgroup.finiteIndex_of_le hle, ?_⟩
-      haveI := Fintype.ofFinite (K ⧸ stab σ K y)
+      have := Fintype.ofFinite (K ⧸ stab σ K y)
       have := congrArg f (hz y)
       rw [avg_eq ρ K hle, ← map_zero f, ← this]
 

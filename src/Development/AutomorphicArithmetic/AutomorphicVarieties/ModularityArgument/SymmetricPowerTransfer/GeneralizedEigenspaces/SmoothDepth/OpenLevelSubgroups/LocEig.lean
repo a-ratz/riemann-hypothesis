@@ -86,14 +86,14 @@ private theorem antitone_mem : ∀ {n : ℕ} (M : AddSubmonoid (Fin n → ℤ)),
         intro i hi
         rw [Finset.sum_range_succ]
         by_cases h : i ≤ m
-        · rw [ih i h, if_pos (by omega)]
+        · rw [ih i h, ite_eq_left (by omega)]
           ring
         · obtain rfl : i = m + 1 := by omega
-          rw [if_neg (by omega), Finset.sum_eq_zero]
+          rw [ite_eq_right (by omega), Finset.sum_eq_zero]
           · simp
           · intro j hj
             have := Finset.mem_range.1 hj
-            rw [if_neg (by omega)]
+            rw [ite_eq_right (by omega)]
     have key : a = (A N) • (1 : Fin (N + 1) → ℤ) + ∑ j ∈ Finset.range N, (A j - A (j + 1)).toNat • fund (N + 1) (j + 1) := by
       funext i
       have hi : A i = a i := by
@@ -130,10 +130,10 @@ private theorem u_operator_torus_eigen {G : Type} [Group G] (I : Iwa G) {A M : T
     refine ⟨t⁻¹ * x * t, by simpa using I.T_N t⁻¹ (inv_mem ht) x hx, ?_⟩
     show t * (t⁻¹ * x * t) * t⁻¹ = x
     group
-  haveI : Subsingleton (I.N ⧸ (I.Nconj t).subgroupOf I.N) := by
+  have : Subsingleton (I.N ⧸ (I.Nconj t).subgroupOf I.N) := by
     rw [h]
     exact QuotientGroup.subsingleton_quotient_top
-  letI := Unique.mk' (I.N ⧸ (I.Nconj t).subgroupOf I.N)
+  let := Unique.mk' (I.N ⧸ (I.Nconj t).subgroupOf I.N)
   rw [Iwa.uOp, finsum_unique, map_mul, Module.End.mul_apply, hc, map_smul, hv _ (SetLike.coe_mem _)]
 
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {n : ℕ}
@@ -175,9 +175,9 @@ private theorem mu_fund (ψ : Fin n → kˣ →* ℂˣ) (j : ℕ) :
   rw [torusChar_apply, Units.coe_prod, psEig, Finset.prod_filter]
   refine Finset.prod_congr rfl fun i _ => ?_
   by_cases h : (i : ℕ) < j
-  · simp only [fund, if_pos h, zpow_one]
+  · simp only [fund, ite_eq_left h, zpow_one]
     exact mu_unif ψ i
-  · simp [fund, if_neg h]
+  · simp [fund, ite_eq_right h]
 
 private theorem diagT_inj : Function.Injective (diagT k (Fin n)) := by
   intro s t h

@@ -589,9 +589,9 @@ theorem relIndex_span_eq_norm {n : ℕ} (b c : Module.Basis (Fin n) F V)
       (Submodule.span (𝓞 F) (Set.range c)).toAddSubgroup : ℕ) : ℚ) =
       |Algebra.norm ℚ (c.det b)| := by
   classical
-  letI : Module ℚ V := Module.compHom V (algebraMap ℚ F)
-  haveI : IsScalarTower ℚ F V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  haveI : Module.Free F V := Module.Free.of_basis b
+  let : Module ℚ V := Module.compHom V (algebraMap ℚ F)
+  have : IsScalarTower ℚ F V := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  have : Module.Free F V := Module.Free.of_basis b
   rw [AddSubgroup.relIndex_eq_abs_det _ _ h _ _ (span_eq_closure b) (span_eq_closure c)]
   set f : V →ₗ[F] V := (c.equiv b (Equiv.refl _)).toLinearMap with hf
   have h1 : (b : Fin n → V) = f ∘ c := by ext i; simp [hf]

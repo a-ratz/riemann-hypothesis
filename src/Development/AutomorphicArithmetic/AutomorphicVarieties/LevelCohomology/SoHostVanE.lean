@@ -135,7 +135,7 @@ theorem UpperTheory.V.X.So.soCoc :
       have h3 := congrArg c.O.val h0
       rw [map_mul, map_mul, map_pow, map_one, AlgHom.commutes] at h3
       exact h3)
-    (fun g => (z g : PadicAlgCl l)) (continuous_subtype_val.comp hcz)
+    (fun g => (z g : PadicAlgCl l)) (continuous_subtypeVal.comp hcz)
     (fun g h => by exact_mod_cast congrArg Subtype.val (hz g h))
     (fun A => cob_up c.O _ z _ (h1 A)) (fun A hA => cob_up c.O _ z _ (h2 A hA))
   exact cob_down c.O _ z m hm
@@ -387,12 +387,12 @@ theorem UpperTheory.V.X.So.locKill :
     simpa [hd₂, sub_eq_zero] using h
   obtain ⟨hM0fin, ⟨r₀, -, hr₀k⟩, -⟩ :=
     So.levFacts l O d₂ hd₂0 (O ⧸ Ideal.span {d₂}) ⟨LinearEquiv.refl O _⟩
-  haveI := hM0fin
-  haveI : NeZero (l ^ r₀) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI : Module (ZMod (l ^ r₀)) (O ⧸ Ideal.span {d₂}) := AddCommGroup.zmodModule hr₀k
+  have := hM0fin
+  have : NeZero (l ^ r₀) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : Module (ZMod (l ^ r₀)) (O ⧸ Ideal.span {d₂}) := AddCommGroup.zmodModule hr₀k
   obtain ⟨ι₀, -, hι₀rng, -⟩ :=
     So.dualEmb l O d₂ hd₂0 r₀ (O ⧸ Ideal.span {d₂}) ⟨LinearEquiv.refl O _⟩
-  haveI hTfin : Finite (TDual (ZMod (l ^ r₀)) (O ⧸ Ideal.span {d₂})) := by
+  have hTfin : Finite (TDual (ZMod (l ^ r₀)) (O ⧸ Ideal.span {d₂})) := by
     unfold TDual Module.Dual
     exact Finite.of_injective
       (fun f : (O ⧸ Ideal.span {d₂}) →ₗ[ZMod (l ^ r₀)] ZMod (l ^ r₀) => (f : (O ⧸ Ideal.span {d₂}) → ZMod (l ^ r₀)))
@@ -401,9 +401,9 @@ theorem UpperTheory.V.X.So.locKill :
     Nat.card (TDual (ZMod (l ^ r₀)) (O ⧸ Ideal.span {d₂})), ?_⟩
   intro a M _ _ _ _ ρ hρ
   obtain ⟨hMfin, ⟨r, hr, hrk⟩, hMt⟩ := So.levFacts l O a hρ.ne M hρ.cyc
-  haveI := hMfin
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI : Module (ZMod (l ^ r)) M := AddCommGroup.zmodModule hrk
+  have := hMfin
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : Module (ZMod (l ^ r)) M := AddCommGroup.zmodModule hrk
   set ρZ := lkRepZ (l ^ r) ρ with hρZ
   have hρZapp : ∀ g m, ρZ g m = ρ g m := fun g m => rfl
   let ρG : Representation O (G k Ω) M :=
@@ -419,7 +419,7 @@ theorem UpperTheory.V.X.So.locKill :
       rfl
     unfold ReciprocityTheory.Gal.ContAction
     rw [hf]
-    exact hcG.comp (continuous_subtype_val.prodMap continuous_id)
+    exact hcG.comp (continuous_subtypeVal.prodMap continuous_id)
   let τ : Representation (ZMod (l ^ r)) (Dec (F := k) A) (TDual (ZMod (l ^ r)) M) :=
     { toFun := fun g => ((cycMod k Ω l r (g : G k Ω) : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)) • (ρZ g⁻¹).dualMap
       map_one' := by
@@ -481,7 +481,7 @@ theorem UpperTheory.V.X.So.locKill :
     rw [← h1, ← h2]
     exact congrArg ι₀ h
   obtain ⟨-, ⟨e1⟩, -⟩ := So.scal O (ZMod (l ^ r)) (Dec (F := k) A) M ρ ρZ (fun g m => rfl)
-  haveI := hH1f
+  have := hH1f
   refine ⟨Finite.of_equiv _ e1.symm.toEquiv, ?_⟩
   rw [Nat.card_congr e1.toEquiv, hEq, hH2]
   exact Nat.mul_le_mul hB1 hB2
@@ -498,17 +498,17 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.
 
 theorem UpperTheory.V.X.So.locTors : LocalFiniteness → LocalTateDuality → LocalEulerChar → ∀ (k Ω : Type) [Field k] [NumberField k] [Field Ω] [Algebra k Ω] [IsAlgClosure k Ω] (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] (ψ : G k Ω →* Oˣ), IsOpen (ψ.ker : Set (G k Ω)) → ∀ n : ℤ, n ≠ 0 → n ≠ 1 → ∀ (v : HeightOneSpectrum (𝓞 k)) (A : ValuationSubring Ω), IsPlaceOver A v → ((l : ℕ) : 𝓞 k) ∉ v.asIdeal → ∀ z : G k Ω → O, Coc (ψ * chiO k Ω l O ^ n) z → Alg.AdicCont (maximalIdeal O) z → CobOn (ψ * chiO k Ω l O ^ n) z (Dec (F := k) A) := by
   intro lf lt le k Ω _ _ _ _ _ l hl O _ _ _ _ _ ψ ho n h0 h1 v A hA hv z hz hc
-  haveI : CharZero O := charZero_of_injective_algebraMap (dvrFacts l O).1
+  have : CharZero O := charZero_of_injective_algebraMap (dvrFacts l O).1
   have hl0 : (l : O) ≠ 0 := Nat.cast_ne_zero.2 hl.out.ne_zero
   have hlm : (l : O) ∈ maximalIdeal O := by
-    haveI := (dvrFacts l O).2.2.1
+    have := (dvrFacts l O).2.2.1
     rw [← map_natCast (algebraMap ℤ_[l] O)]
     exact map_nonunit _ _ PadicInt.p_nonunit
   obtain ⟨B, hB⟩ := So.locKill lf lt le k Ω l O ψ ho n h0 h1 v A hA hv
   obtain ⟨g, hg, hne⟩ := So.decNe k Ω l O ψ ho n h0 v A hA
   obtain ⟨a, ha, m, hm⟩ := So.cobLim O (Dec (F := k) A) ((ψ * chiO k Ω l O ^ n).comp (Dec (F := k) A).subtype) l B hl0 hlm
     ⟨⟨g, hg⟩, hne⟩ (fun r => hB _ _ _ (isLev_lev (pow_ne_zero r hl0) _)) (fun g => z g) (fun g h => hz g h)
-    fun N => (hc N).comp_continuous continuous_subtype_val
+    fun N => (hc N).comp_continuous continuous_subtypeVal
   exact ⟨a, ha, m, fun g hg => hm ⟨g, hg⟩ trivial⟩
 end -- clump:auto
 end -- clump:auto
@@ -601,7 +601,7 @@ theorem UpperTheory.V.X.So.lineNeg :
     (fun g => z (F.π g)) hz' (fun k => (hc k).comp_continuous hπc) (fun v hv => by
       obtain rfl : v = F.vl.1 := pl_uniq hl.out hv hF.vl
       refine ⟨A F.vl, hF.isOver _, So.cobIndex c.O _ _ _ hz' (UnitaryThreeInertia.eta4 Ω).ker _ ?_ ?_⟩
-      · haveI : (UnitaryThreeInertia.eta4 Ω).ker.FiniteIndex := ⟨by rw [Subgroup.index_ker]; exact Nat.card_pos.ne'⟩
+      · have : (UnitaryThreeInertia.eta4 Ω).ker.FiniteIndex := ⟨by rw [Subgroup.index_ker]; exact Nat.card_pos.ne'⟩
         exact Subgroup.FiniteIndex.index_ne_zero
       · obtain ⟨y, hy⟩ := hD hj
         refine ⟨1, one_ne_zero, y, fun g hg => ?_⟩
@@ -666,7 +666,7 @@ theorem UpperTheory.V.X.So.lineZero :
           intro u w
           simp [hadd u.1 w.1 u.2, ofAdd_add] }
     have hlc : IsLocallyConstant χ := by
-      exact ((hcont N).comp_continuous (continuous_subtype_val (p := fun x => x ∈ F.η.ker))).comp
+      exact ((hcont N).comp_continuous (continuous_subtypeVal (p := fun x => x ∈ F.η.ker))).comp
         Multiplicative.ofAdd
     have hχ : χ = 1 := by
       refine hCl _ χ hlc ?_
@@ -814,9 +814,9 @@ theorem UpperTheory.V.X.So.vanEOf :
   simp only [z, Fin.rev_rev] at e0 e0' e1 e1'
   simp only [U3.cob, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, U3.adRep_baseLift_apply, X, Matrix.of_apply, Fin.rev_rev]
   by_cases hη : F.η g = 1
-  · simp only [hη, if_true] at e0 e0' e1 e1' ⊢
+  · simp only [hη, ite_true] at e0 e0' e1 e1' ⊢
     linear_combination e0 - e0' + e1 + e1'
-  · simp only [hη, if_false] at e0 e0' e1 e1' ⊢
+  · simp only [hη, ite_false] at e0 e0' e1 e1' ⊢
     linear_combination e0 - e0' + e1 + e1'
 end -- clump:auto
 end -- clump:auto

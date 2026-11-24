@@ -174,7 +174,7 @@ theorem countU_of (a : ℕ) (Y : TupV (E := E) v n a) (hM : MeasU σ J ψ v Λ a
     {x : lamA v Λ a | (x : TupV (E := E) v n a) ∈ NearT v σ J ϖ (gramR (Fv F v) σ J Y)}
     (by
       rintro x hx y ⟨Z, hZ, hZe⟩
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [AddSubgroup.coe_add, ← hZe]
       exact nearT_add σ J v Λ hSD hϖ _ _ _ x.2 hZ hx)
   have himg : ((↑) : lamA v Λ a → TupV (E := E) v n a) ''

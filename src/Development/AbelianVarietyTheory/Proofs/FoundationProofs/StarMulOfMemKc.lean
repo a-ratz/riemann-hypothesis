@@ -232,9 +232,9 @@ theorem sum_sum_ite_lt (m : ℕ) (s : ℕ → ℝ) :
   | zero => simp
   | succ m ih =>
     rw [Finset.sum_range_succ, Finset.sum_eq_zero (s := Finset.range (m + 1))
-      (fun j hj => if_neg (by have := Finset.mem_range.1 hj; omega)), add_zero]
+      (fun j hj => ite_eq_right (by have := Finset.mem_range.1 hj; omega)), add_zero]
     simp only [Finset.sum_range_succ, Finset.sum_add_distrib, ih]
-    rw [Finset.sum_congr rfl (fun i hi => if_pos (Finset.mem_range.1 hi)), Finset.sum_add_distrib]
+    rw [Finset.sum_congr rfl (fun i hi => ite_eq_left (Finset.mem_range.1 hi)), Finset.sum_add_distrib]
     simp only [Finset.sum_const, Finset.card_range, nsmul_eq_mul]
     push_cast; ring
 
@@ -255,7 +255,7 @@ theorem polJ_le_exp (B : Matrix (Fin p) (Fin q) ℂ) : polJ (pOf B) ≤
     rw [abs_of_nonneg (by linarith [h0 i])] at a1 a2
     calc _ ≤ Real.exp (2 * s i) * Real.exp (s i) ^ (2 * D) :=
           mul_le_mul a1 (pow_le_pow_left₀ (hs _) a2 _) (pow_nonneg (hs _) _) (Real.exp_pos _).le
-      _ = _ := by rw [← Real.exp_nat_mul, ← Real.exp_add]; push_cast; ring_nf
+      _ = _ := by rw [← Real.exp_natCast_mul, ← Real.exp_add]; push_cast; ring_nf
   have hB : (∏ i ∈ Finset.range m, ∏ j ∈ Finset.range m,
       if i < j then (shc (s i - s j) * shc (s i + s j)) ^ 2 else 1) ≤
       Real.exp (4 * (((m : ℝ) - 1) * ∑ i ∈ Finset.range m, s i)) := by
@@ -271,7 +271,7 @@ theorem polJ_le_exp (B : Matrix (Fin p) (Fin q) ℂ) : polJ (pOf B) ≤
       rw [abs_of_nonneg (by linarith [h0 i, h0 j])] at a2
       calc _ ≤ (Real.exp (s i + s j) * Real.exp (s i + s j)) ^ 2 :=
             pow_le_pow_left₀ (mul_nonneg (hs _) (hs _)) (mul_le_mul a1 a2 (hs _) (Real.exp_pos _).le) 2
-        _ = _ := by rw [← Real.exp_add, ← Real.exp_nat_mul]; push_cast; ring_nf
+        _ = _ := by rw [← Real.exp_add, ← Real.exp_natCast_mul]; push_cast; ring_nf
     · simp
   refine (mul_le_mul hA hB (Finset.prod_nonneg fun i _ => Finset.prod_nonneg fun j _ => by
     split_ifs <;> positivity) (Real.exp_pos _).le).trans (le_of_eq ?_)

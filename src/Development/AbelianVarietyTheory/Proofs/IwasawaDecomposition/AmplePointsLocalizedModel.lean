@@ -78,7 +78,7 @@ theorem eq_of_specializes {Y : Scheme.{0}} {A : Type} [CommRing A] [IsDomain A] 
   rw [Scheme.Hom.comp_apply] at h ⊢
   obtain ⟨r, hr, rfl⟩ := generalizing_of_stalk ξ hf h
   have hw : (jK A w).asIdeal = ⊥ := by
-    haveI : (PrimeSpectrum.asIdeal w).IsPrime := PrimeSpectrum.isPrime w
+    have : (PrimeSpectrum.asIdeal w).IsPrime := PrimeSpectrum.isPrime w
     have hw₀ : PrimeSpectrum.asIdeal w = ⊥ := Ideal.eq_bot_of_prime _
     ext x
     change algebraMap A (FractionRing A) x ∈ PrimeSpectrum.asIdeal w ↔ _
@@ -149,12 +149,12 @@ theorem exists_generic_point (O F : Type) [CommRing O] [IsDedekindDomain O] [Fie
     ∃ y : Sp (FractionRing A) ⟶ U, y ≫ jQ ≫ pullback.fst _ _ = jK A ≫ ξ₀ := by
   obtain ⟨v, v1⟩ := exists_generic_fibre (F := F) s hs ξ₀ hfl
   obtain ⟨hN, hC, -⟩ := GlobalTheory.genericPart_dense_proOpen O F X U s jQ hs hp hj hd
-  haveI : IsNoetherian X := {}
+  have : IsNoetherian X := {}
   have hb0 : IsPreimmersion (spMap (algebraMap O F)) :=
     IsPreimmersion.of_isLocalization (R := CommRingCat.of O) (S := F) (nonZeroDivisors O)
-  haveI h1 : IsPreimmersion (pullback.fst s (spMap (algebraMap O F))) :=
+  have h1 : IsPreimmersion (pullback.fst s (spMap (algebraMap O F))) :=
     MorphismProperty.of_isPullback (P := @IsPreimmersion) (IsPullback.of_hasPullback _ _).flip hb0
-  haveI hNs : TopologicalSpace.NoetherianSpace ↥(pullback s (spMap (algebraMap O F))) :=
+  have hNs : TopologicalSpace.NoetherianSpace ↥(pullback s (spMap (algebraMap O F))) :=
     (pullback.fst s (spMap (algebraMap O F))).isEmbedding.isInducing.noetherianSpace
   have hr : Set.range v ⊆ Set.range jQ := by
     rintro _ ⟨w, rfl⟩

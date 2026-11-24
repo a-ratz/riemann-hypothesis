@@ -64,7 +64,7 @@ private theorem UpperTheory.V.AlgebraTools.Conn.etaleCohomology_simplicialCochai
   have him : PrimeSpectrum.comap (Ideal.Quotient.mk a) '' ((PrimeSpectrum.zeroLocus
       ((I.map (Ideal.Quotient.mk a) : Ideal (R ⧸ a)) : Set (R ⧸ a)))ᶜ) =
       PrimeSpectrum.zeroLocus (a : Set R) \ PrimeSpectrum.zeroLocus (I : Set R) := by
-    rw [hpre, ← Set.preimage_compl, Set.image_preimage_eq_inter_range, hr, Set.diff_eq,
+    rw [hpre, ← Set.preimage_compl, Set.image_preimage_eq_inter_range, hr, Set.sdiff_eq,
       Set.inter_comm]
   rw [← him]
   unfold IsConnected

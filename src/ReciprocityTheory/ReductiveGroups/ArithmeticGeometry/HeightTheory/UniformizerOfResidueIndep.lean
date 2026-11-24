@@ -146,15 +146,15 @@ theorem PlaceTrivialOrPositive (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (p : Ideal 
     exact d.val_algebraMap_eq_zero c p w hw a ha
   obtain ⟨j0, hw0, hint, hx0, hq⟩ := d.exists_integral_base hd c (d.Wres c w)
   have htr := trdeg_residue_le d.D (hd.trdeg c) (d.Wres c w) hvK a0 ha0 hva0
-  letI iWV : Algebra (IsLocalRing.ResidueField (vRing (d.Wres c w)))
+  let iWV : Algebra (IsLocalRing.ResidueField (vRing (d.Wres c w)))
       (IsLocalRing.ResidueField (vRing w)) := resAlg (F := Ω c) w
-  letI iRW := resAlg (F := K) (d.Wres c w)
-  letI iRV : Algebra (IsLocalRing.ResidueField ((vRing (d.Wres c w)).comap (algebraMap K (Ω c))))
+  let iRW := resAlg (F := K) (d.Wres c w)
+  let iRV : Algebra (IsLocalRing.ResidueField ((vRing (d.Wres c w)).comap (algebraMap K (Ω c))))
       (IsLocalRing.ResidueField (vRing w)) :=
     ((algebraMap (IsLocalRing.ResidueField (vRing (d.Wres c w))) (IsLocalRing.ResidueField (vRing w))).comp
       (algebraMap (IsLocalRing.ResidueField ((vRing (d.Wres c w)).comap (algebraMap K (Ω c))))
         (IsLocalRing.ResidueField (vRing (d.Wres c w))))).toAlgebra
-  haveI : IsScalarTower (IsLocalRing.ResidueField ((vRing (d.Wres c w)).comap (algebraMap K (Ω c))))
+  have : IsScalarTower (IsLocalRing.ResidueField ((vRing (d.Wres c w)).comap (algebraMap K (Ω c))))
       (IsLocalRing.ResidueField (vRing (d.Wres c w))) (IsLocalRing.ResidueField (vRing w)) :=
     IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   let t' : TVar d.D d.N → vRing w := fun e => ⟨d.sH c (X e), (hw.2 (X e)).1⟩
@@ -247,7 +247,7 @@ theorem PlaceTrivialOrPositive (hd : d.AxH 𝒜) (h : d.S1) (c : ι) (p : Ideal 
   let k1 := IntermediateField.adjoin (IsLocalRing.ResidueField ((vRing (d.Wres c w)).comap (algebraMap K (Ω c))))
     {r | ∃ j, ∃ h : ratio (Ω := Ω c) (d.w j c) (d.w j0 c) ∈ vRing (d.Wres c w),
       r = IsLocalRing.residue (vRing (d.Wres c w)) ⟨_, h⟩}
-  letI ik1 : Algebra k1 (IsLocalRing.ResidueField (vRing w)) :=
+  let ik1 : Algebra k1 (IsLocalRing.ResidueField (vRing w)) :=
     ((algebraMap (IsLocalRing.ResidueField (vRing (d.Wres c w))) (IsLocalRing.ResidueField (vRing w))).comp
       (algebraMap k1 (IsLocalRing.ResidueField (vRing (d.Wres c w))))).toAlgebra
   have hk1le := (trdeg_le_of_injective k1.val Subtype.val_injective).trans htr

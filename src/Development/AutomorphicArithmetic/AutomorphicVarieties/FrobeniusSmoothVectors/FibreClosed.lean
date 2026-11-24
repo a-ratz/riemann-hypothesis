@@ -64,8 +64,8 @@ private theorem fibre_closed {B A : Type} [CommRing B] [CommRing A] [Algebra B A
     have e := Ideal.IsMaximal.eq_of_le ‹m.IsMaximal› (Ideal.IsPrime.comap (algebraMap B A)).ne_top hm
     rw [← e]
     infer_instance
-  letI := Ideal.Quotient.field (p.asIdeal.comap (algebraMap B A))
-  haveI : IsJacobsonRing (A ⧸ p.asIdeal) :=
+  let := Ideal.Quotient.field (p.asIdeal.comap (algebraMap B A))
+  have : IsJacobsonRing (A ⧸ p.asIdeal) :=
     isJacobsonRing_of_finiteType (A := B ⧸ p.asIdeal.comap (algebraMap B A))
   have hbot : (⊥ : Ideal (A ⧸ p.asIdeal)).jacobson = ⊥ :=
     isJacobsonRing_iff_prime_eq.1 ‹_› ⊥ Ideal.isPrime_bot
@@ -76,8 +76,8 @@ private theorem fibre_closed {B A : Type} [CommRing B] [CommRing A] [Algebra B A
     fun h => hf0 (Ideal.mem_sInf.2 h)
   push_neg at hf1
   obtain ⟨J, ⟨-, hJ⟩, hfJ⟩ := hf1
-  haveI := hJ
-  haveI := hJ.isPrime
+  have := hJ
+  have := hJ.isPrime
   have hle : p.asIdeal ≤ J.comap (Ideal.Quotient.mk p.asIdeal) := fun a ha => by
     rw [Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.2 ha]
     exact J.zero_mem
@@ -93,8 +93,8 @@ theorem UpperTheory.V.Fr.jac :
   intro l _ O _ _ _ _ F C₀ n hF hn S C hC U hU hne
   obtain ⟨-, -, -, -, hft, -, -⟩ := gr_A hF hn S
   obtain ⟨hco, hmax⟩ := co_B hF hn S
-  haveI := hco
-  haveI : S.mB.IsMaximal := hmax ▸ IsLocalRing.maximalIdeal.isMaximal S.B
+  have := hco
+  have : S.mB.IsMaximal := hmax ▸ IsLocalRing.maximalIdeal.isMaximal S.B
   obtain ⟨p, ⟨hpC, hpU⟩, hpm, hpT⟩ := hne
   have hO : IsOpen {x : PrimeSpectrum S.A | ¬ S.u.triP ≤ x.asIdeal} :=
     (PrimeSpectrum.isClosed_zeroLocus (S.u.triP : Set S.A)).isOpen_compl

@@ -237,8 +237,8 @@ theorem UpperTheory.Esk.diagonal_terms_contribution_proof : UpperTheory.Esk.B1a 
   obtain ⟨hcount, -, hpres, -, -, -, -, -⟩ := hE0a F I Gf D hyp.ax
   obtain ⟨-, hconj, hmeas, -, hsupp, hreg⟩ := hE0c F I Gf ι D k a hyp
   obtain ⟨hsfP, -, hB1g⟩ := hB1a
-  haveI := hsfP
-  haveI : Countable (PG F) := hcount
+  have := hsfP
+  have : Countable (PG F) := hcount
   have hu : ∀ z : D.Xs, D.kk k a γ (ω, z) = D.Te a γ.out (D.rep ω) *
       ∏ i, (q1 (k i) ((z : X I) i) (D.r i γ.out • (z : X I) i) * j1 (k i) (D.r i γ.out) ((z : X I) i)) := by
     intro z
@@ -291,7 +291,7 @@ theorem UpperTheory.Esk.diagonal_terms_contribution_proof : UpperTheory.Esk.B1a 
     rfl
   have hsm : ∀ h : GL (Fin 2) ℝ, Continuous (fun w : P => h • w) := fun h => (hB1g h).1
   have hyco : Continuous (yco g0) :=
-    Continuous.subtype_mk (Complex.continuous_im.comp (continuous_subtype_val.comp (hsm g0⁻¹))) _
+    Continuous.subtype_mk (Complex.continuous_im.comp (continuous_subtypeVal.comp (hsm g0⁻¹))) _
   have hfpr : Continuous (fpr g0) := (hsm g0).comp (hB5a.2.2.comp (continuous_const.prodMk hyco))
   have hpm : Measurable (proj g0 v : X I → X I) := (continuous_id.update v (hfpr.comp (continuous_apply v))).measurable
   have hactS : ∀ (δ : S) (z : D.Xs) (i : I), (δ • z : X I) i = D.r i (δ : PG F).out • (z : X I) i :=
@@ -353,9 +353,9 @@ theorem UpperTheory.Esk.diagonal_terms_contribution_proof : UpperTheory.Esk.B1a 
     rw [hy']
   obtain ⟨hcoc, hjne, hq, -⟩ := hB1b
   have hs0 : IsOpen {y : ℝ | y ≠ 0} := isOpen_compl_singleton
-  haveI : LocallyCompactSpace {y : ℝ // y ≠ 0} := hs0.locallyCompactSpace
-  haveI : IsFiniteMeasureOnCompacts (Measure.comap (Subtype.val : {y : ℝ // y ≠ 0} → ℝ) volume) :=
-    .comap' _ continuous_subtype_val (MeasurableEmbedding.subtype_coe hs0.measurableSet)
+  have : LocallyCompactSpace {y : ℝ // y ≠ 0} := hs0.locallyCompactSpace
+  have : IsFiniteMeasureOnCompacts (Measure.comap (Subtype.val : {y : ℝ // y ≠ 0} → ℝ) volume) :=
+    .comap' _ continuous_subtypeVal (MeasurableEmbedding.subtypeVal hs0.measurableSet)
   have hfac : ∀ x y, fac v (E (x, y)) = φ x := by
     rintro x ⟨y, hy⟩
     rw [← hφeq x y hy, hEapp]

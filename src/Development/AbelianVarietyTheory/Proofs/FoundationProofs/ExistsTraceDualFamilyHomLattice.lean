@@ -51,14 +51,14 @@ open scoped BigOperators
 namespace GlobalTheory.HomDual
 
 theorem conj_conj (D : D7) (x : D.host.E) : D.host.conj (D.host.conj x) = x := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h : ∀ x : D.host.E, star x = D.host.conj x := bridge_star_holds D.R D.host
   rw [← h, ← h, star_star]
 
 theorem pairing_mem (D : D7) {N : ℕ} {L : Submodule (𝓞 D.host.E) (Fin N → D.host.E)} (hL : SD D L)
     {u x : Fin N → D.host.E} (hu : u ∈ L) (hx : x ∈ L) :
     ∃ c : 𝓞 D.host.E, (c : D.host.E) = ∑ b, D.host.conj (u b) * x b := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h : ∀ x : D.host.E, star x = D.host.conj x := bridge_star_holds D.R D.host
   obtain ⟨c, hc⟩ := (hL.2.2 x).1 hx u hu
   refine ⟨c, hc.trans ?_⟩
@@ -68,8 +68,8 @@ theorem exists_resolution (D : D7) {N : ℕ} {L : Submodule (𝓞 D.host.E) (Fin
     (hL : SD D L) : ∃ (m : ℕ) (v w : Fin m → Fin N → D.host.E), (∀ i, v i ∈ L) ∧ (∀ i, w i ∈ L) ∧
       ∀ (u : Fin N → D.host.E) (a : Fin N),
         u a = ∑ i, (∑ b, u b * D.host.conj (w i b)) * v i a := by
-  letI := D.host.cmStar
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  let := D.host.cmStar
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have h : ∀ x : D.host.E, star x = D.host.conj x := bridge_star_holds D.R D.host
   have h' : ∀ x : D.host.E, ReciprocityTheory.ChartRestriction.G.FD.cc x = D.host.conj x := h
   have hh : ∀ x y : Fin N → D.host.E,

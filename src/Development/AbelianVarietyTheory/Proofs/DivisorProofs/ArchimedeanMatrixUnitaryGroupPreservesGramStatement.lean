@@ -64,7 +64,7 @@ namespace GlobalTheory.ArchUnit
 theorem gram_archM : ∀ (D : D7) (V : Formalism.BasicNotions.TH.HSp D) (τ : D.host.E →+* ℂ) (θ : Ainf D.host.F ⊗[D.host.F] D.host.E →+* ℂ),
     Formalism.MainNotions.StandardLattice.IsInfEmb τ θ → ∀ g : GA D V, gram τ (-(V.gram)ᵀ) (archM V θ g) = (-(V.gram)ᵀ).map τ := by
   intro D V τ θ hθ g
-  haveI : IsTotallyReal D.host.F := D.sp.cm.totReal
+  have : IsTotallyReal D.host.F := D.sp.cm.totReal
   have hu := GlobalTheory.MarkUnit.infMat_unitary D.sp.cm.sig V.gram τ
     (fun x => IsCMField.complexEmbedding_complexConj D.host.E τ x) θ hθ g
   have hm : archM V θ g = Formalism.MainNotions.StandardLattice.infMat D.sp.cm.sig V.gram θ g := rfl

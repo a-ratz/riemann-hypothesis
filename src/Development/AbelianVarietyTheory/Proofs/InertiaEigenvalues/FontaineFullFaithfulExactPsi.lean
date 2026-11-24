@@ -121,16 +121,16 @@ theorem phi_basis_of_tie {W : LocWach PD LL O v n} (E : EtTie W RA RW inclR φR 
     (hφ : Function.Surjective φR) (hunits : ∀ x : W.EE, IsUnit (E.ioE x) → IsUnit x)
     (T : LocLat G Qp LL O) (hTfree : Module.Free O ↥T.L.T) (hTfin : Module.Finite O ↥T.L.T) :
     ∃ (r : ℕ) (b b' : Module.Basis (Fin r) W.EE (W.DD T)), ∀ j, b' j = W.φD T (b j) := by
-  haveI hfreeD : Module.Free W.EE (W.DD T) := (W.DD_free T).1
+  have hfreeD : Module.Free W.EE (W.DD T) := (W.DD_free T).1
   have hrk : finrank W.EE (W.DD T) = finrank O ↥T.L.T := (W.DD_free T).2
   obtain ⟨d0⟩ : Nonempty (Basis (Fin (finrank O ↥T.L.T)) RW (TW RW T)) :=
     ⟨Algebra.TensorProduct.basis RW (Module.finBasis O ↥T.L.T)⟩
-  haveI hfin : Module.Finite W.EE (W.DD T) := by
+  have hfin : Module.Finite W.EE (W.DD T) := by
     rcases Nat.eq_zero_or_pos (finrank W.EE (W.DD T)) with h0 | h0
-    · haveI : IsEmpty (Fin (finrank O ↥T.L.T)) := by rw [← hrk, h0]; infer_instance
+    · have : IsEmpty (Fin (finrank O ↥T.L.T)) := by rw [← hrk, h0]; infer_instance
       have hz : ∀ x : W.DD T, x = 0 := fun x => E.jD_inj T (by
         rw [map_zero, ← d0.sum_repr (E.jD T x)]; simp)
-      haveI : Subsingleton (W.DD T) := ⟨fun x y => by rw [hz x, hz y]⟩
+      have : Subsingleton (W.DD T) := ⟨fun x y => by rw [hz x, hz y]⟩
       infer_instance
     · exact Module.finite_of_finrank_pos h0
   obtain ⟨r, hr⟩ : ∃ r, r = finrank W.EE (W.DD T) := ⟨_, rfl⟩
@@ -193,7 +193,7 @@ theorem phi_basis_of_tie {W : LocWach PD LL O v n} (E : EtTie W RA RW inclR φR 
 end Generic
 
 theorem φRW_onto {l : ℕ} [Fact l.Prime] (LL : FinExt l) : Function.Surjective (φRW LL) := by
-  haveI := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).1
+  have := (GlobalTheory.TiltAlgClosed.isAlgClosed_tilt_and_valuationRing l).1
   have h : Function.Surjective (frobW l) :=
     WittVector.map_surjective (frobenius (Cb l) l) fun x =>
       IsAlgClosed.exists_pow_nat_eq x (Fact.out : l.Prime).pos
@@ -203,7 +203,7 @@ theorem φRW_onto {l : ℕ} [Fact l.Prime] (LL : FinExt l) : Function.Surjective
 
 theorem phi_basis : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let W := (HW l).W K s LL h; ∀ T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL), ∃ (r : ℕ) (b b' : Module.Basis (Fin r) W.EE (W.DD T)), ∀ j, b' j = W.φD T (b j) := by
   intro D HW F l _ K s LL h W T
-  haveI : Nontrivial W.EE := W.EE_inj.nontrivial
+  have : Nontrivial W.EE := W.EE_inj.nontrivial
   exact phi_basis_of_tie ((F l).E K s LL h).tie (φRW_onto LL)
     (GlobalTheory.IoInj.ioE_injective_saturated_inter l (D.loc l) (D.locA l) K s LL h _ _ _
       (GlobalTheory.NL.ioW (HW l) (F l) h (GlobalTheory.NL.Holds.laws (HW l) (F l) h))).2.1
@@ -375,7 +375,7 @@ theorem GlobalTheory.FontaineFullyFaithful.exists_latHom {G : Type} [Group G] [T
     (T T' : LocLat G Qp LL O) (F0 : ↥T.L.T →ₗ[O] ↥T'.L.T)
     (hF0 : ∀ g t, F0 (T.actT g t) = T'.actT g (F0 t)) :
     ∃ F : LatHom T.L T'.L, ∀ t : ↥T.L.T, F.f (t : T.V) = ((F0 t : ↥T'.L.T) : T'.V) := by
-  haveI := T.L.free
+  have := T.L.free
   let bT := Module.Free.chooseBasis O ↥T.L.T
   let v : Module.Free.ChooseBasisIndex O ↥T.L.T → T.V := fun i => (bT i : T.V)
   have hliO : LinearIndependent O v :=
@@ -409,7 +409,7 @@ theorem GlobalTheory.FontaineFullyFaithful.exists_latHom {G : Type} [Group G] [T
       exact h1)
     intro x
     exact LinearMap.congr_fun this x
-  haveI : ContinuousSMul LL T'.V := IsModuleTopology.toContinuousSMul LL T'.V
+  have : ContinuousSMul LL T'.V := IsModuleTopology.toContinuousSMul LL T'.V
   refine ⟨LatHom.mk Ff hequiv (IsModuleTopology.continuous_of_linearMap Ff) (fun x hx => ?_), hFT⟩
   have h2 : Ff x = _ := hFT ⟨x, hx⟩
   rw [h2]
@@ -428,13 +428,13 @@ theorem GlobalTheory.FontaineFullyFaithful.exists_extension {O E R D D' M P : Ty
     ∃ ft : R ⊗[O] M →ₗ[R] P, ∀ x, ft (j x) = j' (f x) := by
   classical
   rcases subsingleton_or_nontrivial R with hR | hR
-  · haveI := Module.subsingleton R P
+  · have := Module.subsingleton R P
     exact ⟨0, fun x => Subsingleton.elim _ _⟩
-  haveI : Nontrivial E := io.domain_nontrivial
-  haveI : Module.Finite E D := by
+  have : Nontrivial E := io.domain_nontrivial
+  have : Module.Finite E D := by
     rcases Nat.eq_zero_or_pos (Module.finrank O M) with h0 | hp
-    · haveI : Subsingleton M := (Module.finBasisOfFinrankEq O M h0).repr.injective.subsingleton
-      haveI : Subsingleton D := hinj.subsingleton
+    · have : Subsingleton M := (Module.finBasisOfFinrankEq O M h0).repr.injective.subsingleton
+      have : Subsingleton D := hinj.subsingleton
       infer_instance
     · exact Module.finite_of_finrank_pos (hr ▸ hp)
   let b := Module.finBasisOfFinrankEq E D hr
@@ -477,10 +477,10 @@ theorem GlobalTheory.FontaineFullyFaithful.exists_extension_tie {G : Type} [Grou
     [Algebra O R] {inclR : RA →ₐ[O] R} {φR : R →ₐ[O] R} {gR : G → (R →ₐ[O] R)} {πA : RA}
     (E : EtTie W RA R inclR φR gR πA) (T T' : LocLat G Qp LL O) (f : W.DD T →ₗ[W.EE] W.DD T') :
     ∃ ft : TW R T →ₗ[R] TW R T', ∀ x, ft (E.jD T x) = E.jD T' (f x) := by
-  haveI : Nontrivial O := (algebraMap O LL).domain_nontrivial
-  haveI := T.L.free
-  haveI : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
-  haveI := (W.DD_free T).1
+  have : Nontrivial O := (algebraMap O LL).domain_nontrivial
+  have := T.L.free
+  have : Module.Finite O ↥T.L.T := Module.Finite.iff_fg.mpr T.L.fg
+  have := (W.DD_free T).1
   exact GlobalTheory.FontaineFullyFaithful.exists_extension (W.DD_free T).2 E.ioE.toRingHom (E.jD T).toAddMonoidHom
     (E.jD T').toAddMonoidHom (E.jD_smul T) (E.jD_smul T') (E.jD_inj T) (E.jD_span T) f
 
@@ -570,7 +570,7 @@ private theorem GlobalTheory.FontaineFullyFaithful.main_tie {G : Type} [Group G]
 
 theorem GlobalTheory.FontaineFullyFaithful.main : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let W := (HW l).W K s LL h; ∀ (T T' : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (f : W.DD T →ₗ[W.EE] W.DD T'), (∀ x, f (W.φD T x) = W.φD T' (f x)) → (∀ g x, f (W.γD T g x) = W.γD T' g (f x)) → ∃! F : LatHom T.L T'.L, ∀ x, W.map F x = f x := by
   intro D HW F l _ K s LL h W T T' f hφ hγ
-  haveI := GlobalTheory.FontaineFullyFaithful.isFractionRing_OL l LL
+  have := GlobalTheory.FontaineFullyFaithful.isFractionRing_OL l LL
   exact GlobalTheory.FontaineFullyFaithful.main_tie ((F l).E K s LL h).tie T T' f hφ hγ
     (fun y hy => ((GlobalTheory.WittTensorFixed.main l K LL T').2.1 y).1 hy) (GlobalTheory.WittTensorFixed.main l K LL T').2.2
 end -- clump:auto

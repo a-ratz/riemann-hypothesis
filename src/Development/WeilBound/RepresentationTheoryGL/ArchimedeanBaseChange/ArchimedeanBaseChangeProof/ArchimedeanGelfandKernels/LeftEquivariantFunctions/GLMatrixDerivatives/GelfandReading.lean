@@ -98,7 +98,7 @@ theorem eq_of_mul_conj {Z : Type} {F : Mat n → Z}
 
 theorem cone_mem_GLs {σ : (Fin n × Fin n → ℝ) → Mat n} (hσ2 : ∀ v ∈ cone n, σ v * (σ v)ᴴ = hOf v) {v}
     (hv : v ∈ cone n) : σ v ∈ GLs n := by
-  simp only [GLs, Set.mem_setOf_eq]
+  simp only [GLs, Set.mem_ofPred_eq]
   intro hdet
   have hp : PosDef (hOf v) := hv
   have hu := (Matrix.isUnit_iff_isUnit_det _).mp hp.isUnit

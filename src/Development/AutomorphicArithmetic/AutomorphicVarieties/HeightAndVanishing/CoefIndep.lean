@@ -105,10 +105,10 @@ theorem UpperTheory.V.Base.qoExt :
     rcases mul_eq_zero.mp hx with h | h
     · exact (u.isUnit.map (algebraMap O O')).ne_zero h
     · exact hϖ' (pow_eq_zero_iff'.mp h).1
-  haveI : FaithfulSMul O O' := (faithfulSMul_iff_algebraMap_injective O O').mpr hinj
-  haveI : Module.Finite O O' := Module.Finite.of_restrictScalars_finite ℤ_[l] O O'
-  haveI : Module.Free O O' := Module.free_of_finite_type_torsion_free'
-  haveI : IsLocalHom (algebraMap O O') := inferInstance
+  have : FaithfulSMul O O' := (faithfulSMul_iff_algebraMap_injective O O').mpr hinj
+  have : Module.Finite O O' := Module.Finite.of_restrictScalars_finite ℤ_[l] O O'
+  have : Module.Free O O' := Module.free_of_finite_type_torsion_free'
+  have : IsLocalHom (algebraMap O O') := inferInstance
   have hf : Module.length O' (O' ⧸ Ideal.map (algebraMap O O') (IsLocalRing.maximalIdeal O)) * eO l O =
       eO l O' := by
     obtain ⟨n, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hlO hϖ
@@ -119,10 +119,10 @@ theorem UpperTheory.V.Base.qoExt :
       IsDiscreteValuationRing.addVal_pow,
       (IsDiscreteValuationRing.addVal_eq_zero_iff).mpr (u.isUnit.map _), zero_add, nsmul_eq_mul,
       mul_comm]
-  letI : Module O (QO l O') := TensorProduct.leftModule
-  haveI : IsScalarTower O O' (QO l O') :=
+  let : Module O (QO l O') := TensorProduct.leftModule
+  have : IsScalarTower O O' (QO l O') :=
     (inferInstance : IsScalarTower O O' (TensorProduct ℤ_[l] O' (QZ l)))
-  haveI : IsScalarTower ℤ_[l] O (QO l O') :=
+  have : IsScalarTower ℤ_[l] O (QO l O') :=
     (inferInstance : IsScalarTower ℤ_[l] O (TensorProduct ℤ_[l] O' (QZ l)))
   let j : QO l O →ₗ[O] QO l O' :=
     TensorProduct.AlgebraTensorModule.map (Algebra.linearMap O O') LinearMap.id
@@ -140,7 +140,7 @@ theorem UpperTheory.V.Base.qoExt :
     intro g m
     simp only [twist₂, scalRep, MonoidHom.coe_mk, OneHom.coe_mk, LinearMap.smul_apply, LinearMap.id_coe,
       id_eq, map_smul, MonoidHom.coe_comp, Function.comp_apply, Units.coe_map,
-      RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+      RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     rw [algebraMap_smul]
   refine ⟨?_, ?_⟩
   · rw [selBase O G (QO l O) (twist₂ l θ) O' (QO l O') _ j hj hcomp U 𝒟, mul_assoc, hf]
@@ -170,34 +170,34 @@ private theorem enat_cmp {a a' x x' : ℕ∞} (h : a' * x = a * x') (hx : x ≠ 
     | coe b =>
       exfalso
       rw [ENat.top_mul hx'] at h
-      exact ENat.coe_ne_top _ (by exact_mod_cast h)
+      exact ENat.natCast_ne_top _ (by exact_mod_cast h)
   | coe a =>
     induction a' using ENat.recTopCoe with
     | top =>
       exfalso
       rw [ENat.top_mul hx] at h
-      exact ENat.coe_ne_top _ (by exact_mod_cast h.symm)
+      exact ENat.natCast_ne_top _ (by exact_mod_cast h.symm)
     | coe b =>
       have h' : b * x = a * x' := by exact_mod_cast h
       refine ⟨by simp, ?_⟩
-      simp only [ENat.toNat_coe]
+      simp only [ENat.toNat_natCast]
       rw [div_eq_div_iff hx0 hx0']
       exact_mod_cast h'.symm
 
 private theorem eO_ne {l : ℕ} [Fact l.Prime] (c : Coef l) : eO l c.O ≠ 0 ∧ eO l c.O ≠ ⊤ := by
   obtain ⟨-, -, -, -, -, h0, hle, -⟩ := dvrFacts l c.O
-  exact ⟨h0, ne_top_of_le_ne_top (ENat.coe_ne_top _) hle⟩
+  exact ⟨h0, ne_top_of_le_ne_top (ENat.natCast_ne_top _) hle⟩
 
 private theorem coef_le (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] (l : ℕ) [Fact l.Prime] (c c' : Coef l)
     (hle : c.O ≤ c'.O) (N : ℕ) [NeZero N] (e : ℕ) (ψ : DirichletCharacter c.O N) (ψ' : DirichletCharacter c'.O N)
     (hψ : ∀ a : ZMod N, ((ψ a : c.O) : PadicAlgCl l) = ((ψ' a : c'.O) : PadicAlgCl l)) :
     (Vlen Ω c e ψ = ⊤ ↔ Vlen Ω c' e ψ' = ⊤) ∧ Vn Ω c e ψ = Vn Ω c' e ψ' := by
-  haveI := c.dvr
-  haveI := c'.dvr
-  haveI := c.fin
-  haveI := c'.fin
-  letI : Algebra c.O c'.O := (Subalgebra.inclusion hle).toRingHom.toAlgebra
-  haveI : IsScalarTower ℤ_[l] c.O c'.O := IsScalarTower.of_algebraMap_eq (fun x => Subtype.ext rfl)
+  have := c.dvr
+  have := c'.dvr
+  have := c.fin
+  have := c'.fin
+  let : Algebra c.O c'.O := (Subalgebra.inclusion hle).toRingHom.toAlgebra
+  have : IsScalarTower ℤ_[l] c.O c'.O := IsScalarTower.of_algebraMap_eq (fun x => Subtype.ext rfl)
   have hcoe : ∀ y : c.O, ((algebraMap c.O c'.O y : c'.O) : PadicAlgCl l) = (y : PadicAlgCl l) := fun y => rfl
   set θ : Formalism.ConjugateSelfDual.G ℚ Ω →* c.O ˣ := (Chr.dirG ℚ Ω ψ)⁻¹ * chiO ℚ Ω l c.O ^ (-(e : ℤ)) with hθ
   obtain ⟨hq, -⟩ := qoExt l (Formalism.ConjugateSelfDual.G ℚ Ω) c.O c'.O θ ⊤ (shaFam ℚ Ω (l * N))
@@ -207,11 +207,11 @@ private theorem coef_le (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosure ℚ �
     have h1 : (Units.map (algebraMap c.O c'.O : c.O →* c'.O)) (Chr.dirG ℚ Ω ψ g) = Chr.dirG ℚ Ω ψ' g := by
       apply Units.ext
       apply Subtype.ext
-      simp only [Units.coe_map, MonoidHom.coe_coe, hcoe]
+      simp only [Units.coe_map, MonoidHom.coe_ofClass, hcoe]
       exact hψ _
     have h2 : (Units.map (algebraMap c.O c'.O : c.O →* c'.O)) (chiO ℚ Ω l c.O g) = chiO ℚ Ω l c'.O g := by
       apply Units.ext
-      simp only [chiO, Units.coe_map, MonoidHom.coe_comp, Function.comp_apply, MonoidHom.coe_coe]
+      simp only [chiO, Units.coe_map, MonoidHom.coe_comp, Function.comp_apply, MonoidHom.coe_ofClass]
       exact (IsScalarTower.algebraMap_apply ℤ_[l] c.O c'.O _).symm
     simp only [hθ, MonoidHom.comp_apply, MonoidHom.mul_apply, MonoidHom.inv_apply, MonoidHom.zpow_apply, map_mul, map_inv, map_zpow, h1, h2]
   erw [hmap] at hq

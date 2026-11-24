@@ -57,8 +57,8 @@ theorem fvalP_eq_FK (D : D7) (L : SizeData₂ D) (j p : ℕ) :
       fin_cases i <;> simp
   unfold FvalP FK
   by_cases h : ∃ i, p = D.host.g i
-  · rw [if_pos (hg.mpr h), if_pos h]
-  · rw [if_neg (fun h' => h (hg.mp h')), if_neg h]
+  · rw [ite_eq_left (hg.mpr h), ite_eq_left h]
+  · rw [ite_eq_right (fun h' => h (hg.mp h')), ite_eq_right h]
 
 theorem Fval_eq_FK : ∀ (D : D7) (L : SizeData₂ D) (j : ℕ) (v : D.what₂.places.Pl),
     Fval L j v = FK L.sc D j (D.what₂.places.resChar v) := by
@@ -69,7 +69,7 @@ theorem resChar_eq_plc (D : D7) (w : D.what₂.places.Pl) :
     D.what₂.places.resChar w = Formalism.EigenvalueLevelCeiling.plc (D.plEq w) := by
   have hp : (D.what₂.places.resChar w).Prime := D.what₂.places.resChar_prime w
   have hmem := Formalism.L2.Col.att_resChar_mem D.what₂.places D.plEq D.val_eq w
-  haveI : Nontrivial (𝓞 D.what₂.LL ⧸ (D.plEq w).asIdeal) :=
+  have : Nontrivial (𝓞 D.what₂.LL ⧸ (D.plEq w).asIdeal) :=
     Ideal.Quotient.nontrivial_iff.2 (D.plEq w).isPrime.ne_top
   have h0 : ((D.what₂.places.resChar w : ℕ) : 𝓞 D.what₂.LL ⧸ (D.plEq w).asIdeal) = 0 := by
     have := (Ideal.Quotient.eq_zero_iff_mem).mpr hmem

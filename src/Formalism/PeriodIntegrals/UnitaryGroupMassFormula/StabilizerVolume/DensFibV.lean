@@ -61,15 +61,15 @@ section Local
 variable (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F))
 
 theorem countable_numberField : Countable F :=
-  Finsupp.Countable.of_moduleFinite (R := ℚ)
+  Countable.of_moduleFinite (R := ℚ)
 
 theorem separableSpace_Fv : TopologicalSpace.SeparableSpace (Fv F v) := by
-  haveI := countable_numberField F
+  have := countable_numberField F
   exact ⟨⟨Set.range (algebraMap F (Fv F v)), Set.countable_range _,
     HeightOneSpectrum.denseRange_algebraMap F v⟩⟩
 
 theorem secondCountable_Fv : SecondCountableTopology (Fv F v) := by
-  haveI := separableSpace_Fv F v
+  have := separableSpace_Fv F v
   exact UniformSpace.secondCountable_of_separable (Fv F v)
 
 theorem locallyCompact_Fv : LocallyCompactSpace (Fv F v) := by

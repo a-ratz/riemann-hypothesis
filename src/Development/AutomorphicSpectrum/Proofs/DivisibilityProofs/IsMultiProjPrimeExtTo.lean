@@ -171,8 +171,8 @@ theorem dim_le (P : Ideal (MRing ι ℤ)) :
 
 theorem trdeg_eq (hP : P.IsPrime) (hC : P.comap (C : ℤ →+* MRing ι ℤ) = ⊥) :
     Algebra.trdeg (ZP p) (MRing ι (ZP p) ⧸ extTo (ZP p) P) = Algebra.trdeg ℤ (MRing ι ℤ ⧸ P) := by
-  haveI : (extTo (ZP p) P).IsPrime := isPrime_extTo p hP hC
-  haveI := hP
+  have : (extTo (ZP p) P).IsPrime := isPrime_extTo p hP hC
+  have := hP
   have hφ : Function.Injective (quotHom p P) :=
     Ideal.quotientMap_injective' (comap_extTo p hP hC).le
   let _ : Algebra (MRing ι ℤ ⧸ P) (MRing ι (ZP p) ⧸ extTo (ZP p) P) := (quotHom p P).toAlgebra
@@ -237,7 +237,7 @@ theorem dim_le_trdeg [Fintype K] [∀ k, Fintype (ι k)] (hP : P.IsPrime)
     (hC : P.comap (C : ℤ →+* MRing ι ℤ) = ⊥) :
     ringKrullDim (MRing ι ℤ ⧸ P) ≤
       (((Algebra.trdeg ℤ (MRing ι ℤ ⧸ P)).toENat + 1 : ℕ∞) : WithBot ℕ∞) := by
-  haveI := hP
+  have := hP
   have hinj : Function.Injective (algebraMap ℤ (MRing ι ℤ ⧸ P)) := by
     refine (injective_iff_map_eq_zero (algebraMap ℤ (MRing ι ℤ ⧸ P))).2 fun a ha => ?_
     have h : (C a : MRing ι ℤ) ∈ P := Ideal.Quotient.eq_zero_iff_mem.1 (by simpa using ha)
@@ -245,7 +245,7 @@ theorem dim_le_trdeg [Fintype K] [∀ k, Fintype (ι k)] (hP : P.IsPrime)
     rw [hC] at h'
     exact (Submodule.mem_bot _).1 h'
   refine (ringKrullDim_le_iff_isMaximal_height_le _).2 fun N hN => ?_
-  haveI : N.IsPrime := hN.isPrime
+  have : N.IsPrime := hN.isPrime
   have key := DimensionInequality.full.{0, 0} ℤ (MRing ι ℤ ⧸ P) hinj N
   have key' := OrderHomClass.mono Cardinal.toENat key
   rw [map_add (f := _), map_add (f := _), Cardinal.toENat_ofENat, Cardinal.toENat_ofENat] at key'

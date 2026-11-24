@@ -131,8 +131,8 @@ private theorem reps_int {X : Type} [TopologicalSpace X] [CompactSpace X] [Topol
     [MeasurableSpace X] [BorelSpace X] (ν : Measure X) [IsFiniteMeasure ν] (a : X → ℂ) (ha : Continuous a) (u : X → G1 K n) (hu : Continuous u)
     {v : LL μ} {φ : G1 K n → ℂ} (hφ : Continuous φ) (hv : Reps μ v φ) :
     Reps μ (∫ k, a k • rightRegularRep (Gam K n) μ (u k) v ∂ν) fun y => ∫ k, a k * φ (y * u k) ∂ν := by
-  letI := TopologicalSpace.metrizableSpaceMetric X
-  haveI : TopologicalSpace.SeparableSpace (Set.univ : Set X) := inferInstance
+  let := TopologicalSpace.metrizableSpaceMetric X
+  have : TopologicalSpace.SeparableSpace (Set.univ : Set X) := inferInstance
   let s : ℕ → SimpleFunc X X := fun i => SimpleFunc.approxOn id measurable_id Set.univ (Classical.arbitrary X) (Set.mem_univ _) i
   have hs : ∀ k, Tendsto (fun i => s i k) atTop (𝓝 k) := fun k =>
     SimpleFunc.tendsto_approxOn measurable_id (Set.mem_univ _) (by simp)
@@ -173,8 +173,8 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.ptPi :
       (∀ i n q, C.Pi μ i n q v = 0 → ∀ x, ∫ m, conj (KT.psi n q n m) * φ (x * C.un i m) ∂μK = 0) ∧
       ∀ (κ : Measure (archCompact K 2)) (p : archCompact K 2 → ℂ), IdemA κ p → (pOp μ κ p v = v ↔ FixA κ p φ) := by
   intro K _ _ _ ι _ C μ _ v φ hφ hv
-  haveI : TopologicalSpace.MetrizableSpace U2 := inferInstance
-  haveI : CompactSpace U2 := inferInstance
+  have : TopologicalSpace.MetrizableSpace U2 := inferInstance
+  have : CompactSpace U2 := inferInstance
   have hcu : ∀ i, Continuous (C.un i) := fun i => by
     have hm : Continuous (fun x : U2 => (Pi.mulSingle i x : ι → U2)) := by
       refine continuous_pi fun j => ?_
@@ -183,10 +183,10 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.ptPi :
         simpa using continuous_id'
       · simpa [Pi.mulSingle_eq_of_ne h] using continuous_const
     unfold Co.un arc1
-    exact continuous_archP.comp (continuous_subtype_val.comp ((C.Φ 2).symm.continuous.comp hm))
-  have hca : Continuous (arc1 : archCompact K 2 → G1 K 2) := continuous_archP.comp continuous_subtype_val
-  haveI : TopologicalSpace.MetrizableSpace (archCompact K 2) := (C.Φ 2).toHomeomorph.isEmbedding.metrizableSpace
-  haveI : CompactSpace (archCompact K 2) := (C.Φ 2).toHomeomorph.symm.compactSpace
+    exact continuous_archP.comp (continuous_subtypeVal.comp ((C.Φ 2).symm.continuous.comp hm))
+  have hca : Continuous (arc1 : archCompact K 2 → G1 K 2) := continuous_archP.comp continuous_subtypeVal
+  have : TopologicalSpace.MetrizableSpace (archCompact K 2) := (C.Φ 2).toHomeomorph.isEmbedding.metrizableSpace
+  have : CompactSpace (archCompact K 2) := (C.Φ 2).toHomeomorph.symm.compactSpace
   refine ⟨fun i n q h0 x => ?_, fun κ p hp => ?_⟩
   · have hT : Continuous (T n q) := continuous_const.mul (Complex.continuous_conj.comp (KT.continuous_psi n q n))
     have hr := reps_int μK (T n q) hT (C.un i) (hcu i) hφ hv
@@ -206,7 +206,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.EA.ptPi :
     simp only [T, mul_assoc] at hx
     rw [integral_const_mul] at hx
     exact (mul_eq_zero.1 hx).resolve_left (inv_ne_zero hN)
-  · haveI := hp.haar.prob
+  · have := hp.haar.prob
     have hr : Reps μ (pOp μ κ p v) fun y => ∫ k, p k * φ (y * arc1 k) ∂κ := reps_int κ p hp.cont arc1 hca hφ hv
     have hc : Continuous fun y => ∫ k, p k * φ (y * arc1 k) ∂κ :=
       cont_int κ _ (hp.cont.comp continuous_snd |>.mul (hφ.comp (continuous_fst.mul (hca.comp continuous_snd))))

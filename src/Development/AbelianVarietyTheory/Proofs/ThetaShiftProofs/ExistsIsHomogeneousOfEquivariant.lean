@@ -282,12 +282,12 @@ theorem gen_isRelPrime {τ τ' : ι} (h : τ ≠ τ') :
     IsRelPrime (gen m L τ).det (gen m L τ').det := by
   classical
   by_cases h0 : m τ = 0
-  · haveI : IsEmpty (Fin (m τ)) := by rw [h0]; infer_instance
+  · have : IsEmpty (Fin (m τ)) := by rw [h0]; infer_instance
     rw [Matrix.det_isEmpty]; exact isRelPrime_one_left
   · have hi : Irreducible (gen m L τ).det := irreducible_det' h0 _ (inj_block m τ)
     rw [hi.isRelPrime_iff_not_dvd]
     intro hd
-    haveI : Nonempty (Fin (m τ)) := ⟨⟨0, Nat.pos_of_ne_zero h0⟩⟩
+    have : Nonempty (Fin (m τ)) := ⟨⟨0, Nat.pos_of_ne_zero h0⟩⟩
     have := map_dvd (eval₂Hom (RingHom.id L)
       (fun p : Lt m => (fun t => if t = τ then (0 : Matrix (Fin (m t)) (Fin (m t)) L) else 1)
         p.1 p.2.1 p.2.2)) hd
@@ -348,7 +348,7 @@ theorem Equivariant.det_pow_dvd {a : ι × ℕ → ℕ} {f : S} (hf : Equivarian
     (gen m L τ₀).det ^ N ∣ P := by
   classical
   by_cases h0 : m τ₀ = 0
-  · haveI : IsEmpty (Fin (m τ₀)) := by rw [h0]; infer_instance
+  · have : IsEmpty (Fin (m τ₀)) := by rw [h0]; infer_instance
     rw [Matrix.det_isEmpty, one_pow]; exact one_dvd _
   let l : Fin (m τ₀) := ⟨m τ₀ - 1, by omega⟩
   have hl : ∀ i, i ≤ l := fun i => by
@@ -393,7 +393,7 @@ theorem Equivariant.det_pow_dvd {a : ι × ℕ → ℕ} {f : S} (hf : Equivarian
     · subst h; exact hl' i (hij.trans_le (hl j)).ne
     · rw [hne τ h]
   have hdetb : (b τ₀).det = b τ₀ l l := by
-    rw [Matrix.det_of_lowerTriangular _ (fun i j hij => hb τ₀ i j hij), Finset.prod_eq_single l]
+    rw [Matrix.det_of_isLowerTriangular _ (fun i j hij => hb τ₀ i j hij), Finset.prod_eq_single l]
     · intro i _ hi; rw [hrow _ _ (hl' i hi), Matrix.one_apply_eq]
     · simp
   have hc : (∏ τ, ∏ i, b τ i i ^ a (τ, (i : ℕ))) = b τ₀ l l ^ a (τ₀, (l : ℕ)) := by
@@ -467,7 +467,7 @@ theorem Equivariant.isHomogeneous {a : ι × ℕ → ℕ} {Q : MvPolynomial (Lt 
     rw [map_mul, map_pow, mul_comm]
     exact key
   have k3 := coeff_scale Q (∑ τ, ∑ i : Fin (m τ), a (τ, (i : ℕ)))
-  rw [k2, Polynomial.coeff_C_mul_X_pow, if_pos rfl] at k3
+  rw [k2, Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl] at k3
   rw [k3]
   exact homogeneousComponent_isHomogeneous _ _
 
@@ -495,7 +495,7 @@ open NumberField ReciprocityTheory.ChartRestriction.G.Geo.Tor Formalism.L2.Pj in
 theorem exists_isHomogeneous_of_equivariant :
     ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (K : Type) [Field K] (a : (E →+* ℂ) × ℕ → ℕ) (f : ArcS Dw K), (∀ (T : Type) [Field T] (φ ψ : ArcS Dw K →+* T) (b : ∀ τ : E →+* ℂ, Matrix (Fin (Dw.mult τ)) (Fin (Dw.mult τ)) T), (∀ g : LaurentSeries K, φ (algebraMap (MvPolynomial (ArcLt Dw) (LaurentSeries K)) _ (MvPolynomial.C g)) = ψ (algebraMap (MvPolynomial (ArcLt Dw) (LaurentSeries K)) _ (MvPolynomial.C g))) → (∀ τ i j, i < j → b τ i j = 0) → (∀ τ i k, ψ (arcX Dw K τ i k) = ∑ j, b τ i j * φ (arcX Dw K τ j k)) → ψ f = (∏ τ, ∏ i, b τ i i ^ a (τ, (i : ℕ))) * φ f) → ∃ P : MvPolynomial (ArcLt Dw) (LaurentSeries K), algebraMap _ (ArcS Dw K) P = f ∧ P.IsHomogeneous (∑ τ : E →+* ℂ, ∑ i : Fin (Dw.mult τ), a (τ, (i : ℕ))) := by
   intro E _ _ _ H Dw K _ a f hf
-  haveI : IsLocalization.Away (∏ τ, (gen Dw.mult (LaurentSeries K) τ).det) (ArcS Dw K) :=
+  have : IsLocalization.Away (∏ τ, (gen Dw.mult (LaurentSeries K) τ).det) (ArcS Dw K) :=
     (inferInstance : IsLocalization.Away (arcDet Dw K) (ArcS Dw K))
   exact Equivariant.exists_isHomogeneous (m := Dw.mult) (L := LaurentSeries K) hf
 

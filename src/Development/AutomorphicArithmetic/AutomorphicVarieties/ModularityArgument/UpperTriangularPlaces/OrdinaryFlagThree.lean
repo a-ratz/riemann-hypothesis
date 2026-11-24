@@ -78,7 +78,7 @@ private theorem chars_of_tri {H k : Type} [Group H] [Field k] (T : H →* GL (Fi
 private theorem theta_upper {k : Type} [Field k] (b : GL (Fin 3) k) (hb : b.val.BlockTriangular id) :
     (theta b).val.BlockTriangular id ∧ ∀ i, (theta b).val i i = (b.val i.rev i.rev)⁻¹ := by
   have hc : ((b⁻¹ : GL (Fin 3) k)).val.BlockTriangular id := by
-    haveI : Invertible b.val := ⟨(b⁻¹ : GL (Fin 3) k).val, Units.inv_mul b, Units.mul_inv b⟩
+    have : Invertible b.val := ⟨(b⁻¹ : GL (Fin 3) k).val, Units.inv_mul b, Units.mul_inv b⟩
     rw [Matrix.coe_units_inv]
     exact Matrix.blockTriangular_inv_of_blockTriangular hb
   have hd : ∀ i, ((b⁻¹ : GL (Fin 3) k)).val i i = (b.val i i)⁻¹ := fun i => by
@@ -167,9 +167,9 @@ namespace UpperTheory.V.Z.Keep.OrdinaryFlagThree
 
 private theorem cls_of_fix {Ω K : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] [Field K] [NumberField K] [Algebra K Ω] (N : ℕ) [NeZero N]
     (s : G K Ω) (h : ∀ ζ : Ω, ζ ^ N = 1 → s ζ = ζ) : Chr.cls ℚ Ω N (galEmb ℚ K Ω s) = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero ((N : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne N)⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω N
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero ((N : ℕ) : Ω) := ⟨Nat.cast_ne_zero.mpr (NeZero.ne N)⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω N
   have h1 := Chr.cls_spec N (galEmb ℚ K Ω s) ζ hζ.pow_eq_one
   rw [galEmb_apply, h ζ hζ.pow_eq_one] at h1
   nth_rewrite 1 [← pow_one ζ] at h1

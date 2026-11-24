@@ -57,7 +57,7 @@ namespace GlobalTheory.JR.Hyp
 theorem pt_pt_eq_reflect : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ) (x : A.K) (ν : Measure A.K), SelfDual ν (Hyp.kx A ψ x) → ∀ Φ : A.K × A.K → ℂ, IsTest Φ → Hyp.pt A ν ψ x (Hyp.pt A ν ψ x Φ) = fun p => Φ (p.1, -p.2) := by
   intro F E _ _ _ _ _ A ψ x ν hsd Φ hΦ
 
-  haveI : T2Space A.K := by
+  have : T2Space A.K := by
     let e := (Module.finBasis F A.K).equivFun
     have he : Continuous e := IsModuleTopology.continuous_of_linearMap e.toLinearMap
     first

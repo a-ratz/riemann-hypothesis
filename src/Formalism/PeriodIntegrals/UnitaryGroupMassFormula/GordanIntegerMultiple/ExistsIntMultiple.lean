@@ -118,15 +118,15 @@ theorem mem_gcone_insert {n : ℕ} {ι : Type*} [DecidableEq ι] {s : Finset ι}
     · rcases Finset.mem_insert.1 hi with h | h
       · subst h
         show 0 ≤ (if i = i then t else c i)
-        rw [if_pos rfl]
+        rw [ite_eq_left rfl]
         exact ht
       · show 0 ≤ (if i = w then t else c i)
-        rw [if_neg (ne_of_mem_of_not_mem h hw)]
+        rw [ite_eq_right (ne_of_mem_of_not_mem h hw)]
         exact hc i h
     · show x = ∑ j ∈ insert w s, (if j = w then t else c j) • f j
-      rw [Finset.sum_insert hw, if_pos rfl]
+      rw [Finset.sum_insert hw, ite_eq_left rfl]
       have hs : ∑ j ∈ s, (if j = w then t else c j) • f j = ∑ j ∈ s, c j • f j :=
-        Finset.sum_congr rfl fun j hj => by rw [if_neg (ne_of_mem_of_not_mem hj hw)]
+        Finset.sum_congr rfl fun j hj => by rw [ite_eq_right (ne_of_mem_of_not_mem hj hw)]
       rw [hs, ← hx]
       abel
 

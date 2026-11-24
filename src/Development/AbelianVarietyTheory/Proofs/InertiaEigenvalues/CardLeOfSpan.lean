@@ -64,7 +64,7 @@ theorem card_le_of_span {k R N : Type} [Field k] [CommRing R] [Algebra k R] [Add
     apply h0
     have h1 : ε * ε = ε := hε
     linear_combination (-ε) * hc - c * h1
-  haveI : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
+  have : Nontrivial (R ⧸ I) := Ideal.Quotient.nontrivial_iff.2 hI
   let Θ : R ⊗[k] N →ₗ[R] (R ⧸ I) ⊗[k] N := AlgebraTensorModule.map (Algebra.linearMap R (R ⧸ I)) LinearMap.id
   have h1 : algebraMap R (R ⧸ I) ε = 1 := by
     rw [eq_comm, ← map_one (algebraMap R (R ⧸ I))]

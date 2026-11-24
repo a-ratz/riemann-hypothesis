@@ -156,7 +156,7 @@ theorem _root_.GlobalTheory.Sandwich.HodgeTateBound.bound : ∀ (p : ℕ) [Fact 
         D.Lie ⊓ D.Tsub τ ≤
           D.W τ) := by
   intro p _ C _ _ _ v O _ _ _ _ hv ε hε Λ _ _ h D
-  haveI : IsDomain (_root_.GlobalTheory.Sandwich.Ainf p O) := _root_.GlobalTheory.AinfXi.isDomain_ainf hv
+  have : IsDomain (_root_.GlobalTheory.Sandwich.Ainf p O) := _root_.GlobalTheory.AinfXi.isDomain_ainf hv
   have hker := _root_.GlobalTheory.AinfXi.ker_theta hv ε hε
   have hξ := _root_.GlobalTheory.AinfXi.xi_nzd hv ε hε
   have hsurj : Function.Surjective (WittVector.fontaineTheta O p) := _root_.ReciprocityTheory.PGsh.Ainf.theta_surj p O hv

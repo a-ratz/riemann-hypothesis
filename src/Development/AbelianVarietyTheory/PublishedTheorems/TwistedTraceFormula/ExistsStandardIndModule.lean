@@ -270,7 +270,7 @@ theorem detOn_pos {g : UJ ε} {U : Submodule ℂ (Fin n → ℂ)} (h : ∀ y ∈
 theorem IsSplit.detOn_succ (hW : IsIsoFlag ε j W) {x : Fin a → ℝ} {t : UJ ε} (ht : IsSplit ε W x t) (i : Fin a) :
     detOn (uMat t) (W i.succ) = detOn (uMat t) (W i.castSucc) * Real.exp (j i * x i) := by
   rw [detOn_step (hW.2.1 (Fin.castSucc_lt_succ (i := i)).le) (hW.2.2.1 i) (fun y hy => (ht.1 _ y hy).1) (ht.2.1 i),
-    Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le, Real.exp_nat_mul]
+    Complex.norm_real, Real.norm_of_nonneg (Real.exp_pos _).le, Real.exp_natCast_mul]
 
 theorem detOn_flagN (hW : IsIsoFlag ε j W) {u : UJ ε} (hu : u ∈ flagN ε W) (i : Fin (a + 1)) :
     detOn (uMat u) (W i) = 1 := by

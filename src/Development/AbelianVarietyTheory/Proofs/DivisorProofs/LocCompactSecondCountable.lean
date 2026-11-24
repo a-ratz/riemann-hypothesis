@@ -63,9 +63,9 @@ variable {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] {n : �
 theorem locCompact_secondCountable [CompleteSpace L] {ϖ : L} {σ : L →+* L} {q : ℕ} (h : IsUnramInv ϖ σ q) :
     LocallyCompactSpace L ∧ SecondCountableTopology L := by
   obtain ⟨-, hv, -, hϖ, -, hq, hcard⟩ := h
-  haveI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
+  have : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).IsNontrivial :=
     ⟨ϖ, by rw [hϖ]; exact WithZero.coe_ne_zero, by rw [hϖ, ← WithZero.coe_one, ne_eq, WithZero.coe_inj]; decide⟩
-  letI : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
+  let : (Valued.v : Valuation L (WithZero (Multiplicative ℤ))).RankOne :=
     Valuation.IsRankOneDiscrete.rankOne _ (e := 2) (by norm_num)
   have hp := (Valued.integer.properSpace_iff_completeSpace_and_isDiscreteValuationRing_integer_and_finite_residueField
     (K := L)).2 ⟨inferInstance, (Valued.v : Valuation L _).valuationSubring_isDiscreteValuationRing,
@@ -81,13 +81,13 @@ theorem distribHaarChar_eq [CompleteSpace L] [LocallyCompactSpace L] {ϖ : L} {�
     (h : IsUnramInv ϖ σ q) (u : Lˣ) : (distribHaarChar L u : ℝ) = (q : ℝ) ^ (-2 * ordL (u : L)) := by
   have hq : q ≠ 0 := by have := h.2.2.2.2.2.1; omega
   have hq' : (q : ℝ) ≠ 0 := by exact_mod_cast hq
-  haveI := (locCompact_secondCountable h).2
+  have := (locCompact_secondCountable h).2
   borelize L
   let μ : Measure L := Measure.addHaar
   have key : ∀ k K : ℤ, k ≤ K → μ.real (ordBall L k) = (q : ℝ) ^ (2 * (K - k)) * μ.real (ordBall L K) := by
     intro k K hk
     have e := relIndex_ordBall h hk
-    haveI : ((ordBall L K).addSubgroupOf (ordBall L k)).FiniteIndex :=
+    have : ((ordBall L K).addSubgroupOf (ordBall L k)).FiniteIndex :=
       ⟨ne_of_eq_of_ne e (pow_ne_zero _ (pow_ne_zero _ hq))⟩
     have := GlobalTheory.BaseModule.addRelIndex_mul_measure (ordBall L K) (ordBall L k) (ordBall_mono hk)
       (isOpen_vball h.2.2.2.1 K).measurableSet μ

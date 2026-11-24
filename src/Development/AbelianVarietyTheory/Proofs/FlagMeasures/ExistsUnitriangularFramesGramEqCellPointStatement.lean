@@ -70,12 +70,12 @@ theorem upUni_inv_facts {U : Matrix (Fin N) (Fin N) K} (hU : IsUpUni U) :
     IsUpUni U⁻¹ ∧ U * U⁻¹ = 1 ∧ U⁻¹ * U = 1 := by
   have hbt : U.BlockTriangular id := fun i j hij => (hU i j).1 hij
   have hdet : U.det = 1 := by
-    rw [Matrix.det_of_upperTriangular hbt]
+    rw [Matrix.det_of_isUpperTriangular hbt]
     exact Finset.prod_eq_one fun i _ => (hU i i).2 rfl
   have hu : IsUnit U.det := by rw [hdet]; exact isUnit_one
   have h1 : U * U⁻¹ = 1 := Matrix.mul_nonsing_inv U hu
   have h2 : U⁻¹ * U = 1 := Matrix.nonsing_inv_mul U hu
-  letI := Matrix.invertibleOfIsUnitDet U hu
+  let := Matrix.invertibleOfIsUnitDet U hu
   have hbt' : U⁻¹.BlockTriangular id := Matrix.blockTriangular_inv_of_blockTriangular hbt
   refine ⟨fun i j => ⟨fun hij => hbt' hij, fun hij => ?_⟩, h1, h2⟩
   subst hij
@@ -94,7 +94,7 @@ theorem loUni_inv_facts {L : Matrix (Fin N) (Fin N) K} (hL : IsLoUni L) :
   obtain ⟨h0, -, -⟩ := upUni_inv_facts hT
   have hbt : L.transpose.BlockTriangular id := fun i j hij => (hT i j).1 hij
   have hdet : L.det = 1 := by
-    rw [← Matrix.det_transpose, Matrix.det_of_upperTriangular hbt]
+    rw [← Matrix.det_transpose, Matrix.det_of_isUpperTriangular hbt]
     exact Finset.prod_eq_one fun i _ => (hT i i).2 rfl
   have hu : IsUnit L.det := by rw [hdet]; exact isUnit_one
   refine ⟨fun i j => ?_, Matrix.mul_nonsing_inv L hu, Matrix.nonsing_inv_mul L hu⟩

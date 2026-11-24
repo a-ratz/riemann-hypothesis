@@ -129,7 +129,7 @@ theorem exists_hom [TopologicalSpace R] [IsTopologicalRing R] (σ : R →+* R) (
       show Continuous fun g : Matrix n n R => 1 + a * (g - 1) * b
       exact continuous_const.add ((continuous_const.matrix_mul (continuous_id.sub continuous_const)).matrix_mul
         continuous_const)
-    exact (Continuous.units_map _ h1).comp (continuous_subtype_val.comp continuous_subtype_val)
+    exact (Continuous.units_map _ h1).comp (continuous_subtypeVal.comp continuous_subtypeVal)
   have hU : ∀ g, φ₀ g ∈ UJ σ J' := fun g => cj_unitary σ e he hσ a b hab hea J J' hJ _ g.1.2
   let φ₁ : kerU σ p J →* UJ σ J' := φ₀.codRestrict _ hU
   have hK : ∀ g, φ₁ g ∈ kerU σ p J' := by
@@ -326,7 +326,7 @@ theorem qFin_sig (D : D7) (x : AF D.host.F ⊗[D.host.F] D.host.E) :
   (congrArg (swapAE D) (map_sig (sndA D.host.F) D.sp.cm.sig x)).trans (comm_sig D.sp.cm.sig _)
 
 theorem topRing (D : D7) : IsTopologicalRing (AF D.host.F ⊗[D.host.F] D.host.E) := by
-  haveI : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AF D.host.F ⊗[D.host.F] D.host.E) := ⟨rfl⟩
   exact IsModuleTopology.isTopologicalRing (AF D.host.F) _
 
 theorem finE_val {D : D7} (V : HSp D) (g : GA D V) : (finE V g).val = (matHom V g).val.map (qFin D) := by
@@ -335,7 +335,7 @@ theorem finE_val {D : D7} (V : HSp D) (g : GA D V) : (finE V g).val = (matHom V 
 
 theorem exists_finIso : ∀ {D : D7} (V V' : HSp D) (j : Matrix (Fin V'.rank) (Fin V.rank) (EAf D)) (j' : Matrix (Fin V.rank) (Fin V'.rank) (EAf D)), HMul.hMul j j' = 1 → HMul.hMul j' j = 1 → HMul.hMul (HMul.hMul (Formalism.UG.cT (Formalism.UG.sigR D.sp.cm.sig (Formalism.L2.Herm.Af D.host.F)) j) (V'.gram.map (Formalism.UG.inclE (F := D.host.F) (Formalism.L2.Herm.Af D.host.F)))) j = V.gram.map (Formalism.UG.inclE (F := D.host.F) (Formalism.L2.Herm.Af D.host.F)) → ∃ Φ : GfC V ≃ₜ* GfC V', ∀ g : GfC V, HMul.hMul (finE V' (Φ g : GA D V')).val j = HMul.hMul j (finE V (g : GA D V)).val := by
   intro D V V' j j' h1 h2 hJ
-  haveI := topRing D
+  have := topRing D
   rw [← gram_map, ← gram_map] at hJ
   have key := exists_iso (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR (AF D.host.F) D.sp.cm.sig)
     (Formalism.UG.sigR D.sp.cm.sig (Formalism.L2.Herm.Af D.host.F)) (pInf D) (qFin D) (proj_inj D) (proj_surj D) (pInf_sig D) (qFin_sig D)

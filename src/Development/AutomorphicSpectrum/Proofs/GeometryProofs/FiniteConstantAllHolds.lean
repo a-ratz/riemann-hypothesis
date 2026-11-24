@@ -245,7 +245,7 @@ theorem constClosed_of_isGeom {F : Type} [Field F] {Ω : Type} [Field Ω] {O : T
     (hfr : ∀ x : F, ∃ a b : O, b ≠ 0 ∧ x * β b = β a)
     (hg : ∀ x : Ω, (∃ f : Polynomial F, f ≠ 0 ∧ f.eval₂ inc x = 0) → x ∈ Set.range inc) :
     @ConstClosed O Ω _ _ (inc.comp β).toAlgebra := by
-  letI : Algebra O Ω := (inc.comp β).toAlgebra
+  let : Algebra O Ω := (inc.comp β).toAlgebra
   intro a ha
   obtain ⟨f, hf0, hfa⟩ := ha
   obtain ⟨y, rfl⟩ := hg a ⟨f.map β, (Polynomial.map_ne_zero_iff hβ).2 hf0, by
@@ -271,10 +271,10 @@ theorem finConstAll : FinConstAll := by
   have hdvd : ϖ ∣ ((p : ℕ) : O) := dvd_prime β κ hnorm hϖ
   obtain ⟨hprop, hnormal, hover, hgf, hfd, hrk, hrk'⟩ :=
     GlobalTheory.T.proper_normal_compactification E H D l Xo c O β Y U Z τ hβ hfr hτ
-  letI : Algebra O Z.Ω := (Z.inc.comp β).toAlgebra
-  haveI := hfd
-  haveI := hprop
-  haveI : CharZero Z.Ω := (RingHom.charZero_iff Z.inc.injective).1 inferInstance
+  let : Algebra O Z.Ω := (Z.inc.comp β).toAlgebra
+  have := hfd
+  have := hprop
+  have : CharZero Z.Ω := (RingHom.charZero_iff Z.inc.injective).1 inferInstance
   let σ : E →+* Z.Ω := Z.inc.comp (τ.codRestrict c.F.toSubfield (c.conj τ) : E →+* c.F)
   let σ' : E →+* Z.Ω := Z.inc.comp
     ((ComplexEmbedding.conjugate τ).codRestrict c.F.toSubfield (c.conj _) : E →+* c.F)

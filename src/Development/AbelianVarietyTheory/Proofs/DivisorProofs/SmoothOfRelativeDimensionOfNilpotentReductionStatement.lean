@@ -90,7 +90,7 @@ theorem smoothOfRelativeDimension_of_reduction : ∀ (R R₀ : Type) [CommRing R
     subst hn
     exact ⟨W, hx, hW⟩
   choose W hW hd using key
-  haveI : IsZariskiLocalAtSource (@SmoothOfRelativeDimension.{0} g) :=
+  have : IsZariskiLocalAtSource (@SmoothOfRelativeDimension.{0} g) :=
     HasRingHomProperty.instIsZariskiLocalAtSource
   refine IsZariskiLocalAtSource.of_iSup_eq_top (P := @SmoothOfRelativeDimension g) W ?_ hd
   exact top_unique fun x _ => TopologicalSpace.Opens.mem_iSup.2 ⟨x, hW x⟩

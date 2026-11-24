@@ -523,7 +523,7 @@ private theorem od_dec {K : Type} [Field K] {X : Type} [CommRing X] [Algebra (Po
   simp only [odOf, Submodule.coe_add, Submodule.coe_smul, Matrix.add_apply, Matrix.smul_apply, Matrix.of_apply]
   by_cases hij : ((i : ℕ) < a ↔ (j : ℕ) < a)
   · simp [hij, (od_iff _).1 Y.2 i j hij]
-  · simp only [hij, if_false]
+  · simp only [hij, ite_false]
     rw [← hb i j, hcd i j, map_add (f := _), Algebra.smul_def, map_mul]
 
 end SlopeTestRemainingChoices
@@ -897,7 +897,7 @@ theorem UpperTheory.V.Pa.B2.genTrick :
           simpa using dvd_add hdiv h2
   let N := LinearMap.range φ
   let Q := N ⧸ LinearMap.range (LinearMap.lsmul A N (t ^ e))
-  haveI : Finite Q := Finite.of_surjective _ (Submodule.mkQ_surjective _)
+  have : Finite Q := Finite.of_surjective _ (Submodule.mkQ_surjective _)
   have hsurj : Function.Surjective (Ideal.Quotient.mk (Ideal.span {t ^ e})) :=
     Ideal.Quotient.mk_surjective
   let sec := Function.surjInv hsurj
@@ -972,8 +972,8 @@ private theorem kill_low {X : Type} [CommRing X] {n : ℕ} (Z : Matrix (Fin n) (
       · intro a _ ha
         rcases lt_or_gt_of_ne ha with h | h
         · simp [hB i a h]
-        · have h1 := Fin.lt_iff_val_lt_val.mp h
-          have h2 := Fin.lt_iff_val_lt_val.mp hij
+        · have h1 := Fin.lt_def.mp h
+          have h2 := Fin.lt_def.mp hij
           have hz := ih a j (lt_trans hij h) (by omega)
           calc d ^ k * (B i a * Z a j * B' j j) = B i a * (d ^ k * Z a j) * B' j j := by ring
             _ = 0 := by rw [hz]; ring
@@ -985,7 +985,7 @@ private theorem kill_low {X : Type} [CommRing X] {n : ℕ} (Z : Matrix (Fin n) (
         · rcases lt_or_ge a i with ha | ha
           · simp [hB i a ha]
           · have hba : b < a := lt_of_lt_of_le (lt_trans h hij) ha
-            have h1 := Fin.lt_iff_val_lt_val.mp h
+            have h1 := Fin.lt_def.mp h
             have h2 := Fin.le_iff_val_le_val.mp ha
             have hz := ih a b hba (by omega)
             calc d ^ k * (B i a * Z a b * B' b j) = B i a * (d ^ k * Z a b) * B' b j := by ring
@@ -998,7 +998,7 @@ private theorem kill_low {X : Type} [CommRing X] {n : ℕ} (Z : Matrix (Fin n) (
 private theorem fin_quot (K : Type) [Field K] [Finite K] (s : ℕ) :
     Finite (PowerSeries K ⧸ Ideal.span {(PowerSeries.X : PowerSeries K) ^ s}) := by
   classical
-  haveI : Finite (Polynomial.degreeLT K s) :=
+  have : Finite (Polynomial.degreeLT K s) :=
     Finite.of_equiv _ (Polynomial.degreeLTEquiv K s).toEquiv.symm
   refine Finite.of_surjective (fun q : Polynomial.degreeLT K s =>
     Ideal.Quotient.mk (Ideal.span {(PowerSeries.X : PowerSeries K) ^ s}) ((q : Polynomial K) : PowerSeries K)) ?_
@@ -1128,13 +1128,13 @@ private theorem low_ann {l : ℕ} [Fact l.Prime] {F : GFrame l} {n : ℕ} (x : N
     · rw [hdg g i, hdg g⁻¹ j, ← map_mul, ← map_one (algebraMap x.A X), ← map_sub]
       apply map_dvd
       have hf : fac v i j = (x.ψ v i g : PowerSeries x.K) * (x.ψ v j g⁻¹ : PowerSeries x.K) - 1 := by
-        simp only [fac, dif_neg hij']
+        simp only [fac, dite_eq_right hij']
         rfl
       rw [← hf]
       exact (Finset.dvd_prod_of_mem (fun j => fac v i j) (Finset.mem_univ j)).trans
         ((Finset.dvd_prod_of_mem (fun i => ∏ j, fac v i j) (Finset.mem_univ i)).trans
           (Finset.dvd_prod_of_mem (fun v => ∏ i, ∏ j, fac v i j) (Finset.mem_univ v)))
-  have hji := Fin.lt_iff_val_lt_val.mp hij
+  have hji := Fin.lt_def.mp hij
   have key := kill_low (x.wiX X v * M * x.wX X v) (algebraMap x.A X d0) H n i j hij (by omega)
   rw [map_pow]
   exact key
@@ -1143,12 +1143,12 @@ theorem UpperTheory.V.Pa.B2.H0_local_card_bounded_of_cls_ker_le_ker :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (n : ℕ) (x : NP G0.frame n), ∃ C : ℕ, ∀ (G : Glob l L) (h : G.Hom G0) (e : ℕ) (D : Dat x.A (plOf G)), IsOd h x (x.Am e) D → ∀ v, Nat.card (H0 (D.Q (inV G v)).ρ) ≤ Nat.card x.K ^ C := by
   intro l _ L G0 n x
   obtain ⟨a, ha, hann⟩ := low_ann x
-  haveI hfa : Finite (PowerSeries x.K ⧸ Ideal.span {(a : PowerSeries x.K)}) := fin_quot' x.K a ha
+  have hfa : Finite (PowerSeries x.K ⧸ Ideal.span {(a : PowerSeries x.K)}) := fin_quot' x.K a ha
   refine ⟨Nat.card (PowerSeries x.K ⧸ Ideal.span {(a : PowerSeries x.K)}) ^ (n * n), ?_⟩
   intro G h e D hD v
-  haveI hfe : Finite (PowerSeries x.K ⧸ Ideal.span {(PowerSeries.X : PowerSeries x.K) ^ e}) :=
+  have hfe : Finite (PowerSeries x.K ⧸ Ideal.span {(PowerSeries.X : PowerSeries x.K) ^ e}) :=
     fin_quot x.K e
-  haveI hfe' : Finite (x.Am e) := hfe
+  have hfe' : Finite (x.Am e) := hfe
   let w := inV G v
   let Zm : D.M.X → Matrix (Fin n) (Fin n) (x.Am e) := fun m =>
     x.wiX (x.Am e) v * (hD.e m : Matrix (Fin n) (Fin n) (x.Am e)) * x.wX (x.Am e) v
@@ -1186,7 +1186,7 @@ theorem UpperTheory.V.Pa.B2.H0_local_card_bounded_of_cls_ker_le_ker :
     rw [← hch q1, ← hch q2, ← sub_eq_zero, ← map_sub, hker, hZsub]
     intro i j hij
     have h3 := congrArg (fun f => ((f i j : S) : x.Am e)) hq
-    simp only [φ, dif_pos hij] at h3
+    simp only [φ, dite_eq_left hij] at h3
     rw [Matrix.sub_apply, h3, sub_self]
   have hK : 1 < Nat.card x.K := Finite.one_lt_card
   calc Nat.card (ReciprocityTheory.Gal.H0 (D.Q (inV G v)).ρ) ≤ Nat.card (Fin n → Fin n → S) :=
@@ -1602,7 +1602,7 @@ private theorem finAm (K : Type) [Field K] [Finite K] (m : ℕ) :
   rw [Finset.sum_eq_single ⟨n, hn⟩]
   · simp
   · intro b _ hb
-    rw [if_neg]
+    rw [ite_eq_right]
     intro e
     exact hb (Fin.ext e.symm)
   · simp
@@ -1683,17 +1683,17 @@ theorem obstructionBound_of_duality : ObstructionBoundFromDuality := by
   obtain ⟨Cd, hCd⟩ := dualBound l L G0 n x
   have hres : Nat.card (ResidueField x.A) = Nat.card x.K :=
     Nat.card_congr PowerSeries.residueFieldOfPowerSeries.toEquiv
-  haveI : Finite (ResidueField x.A) := Finite.of_equiv _ PowerSeries.residueFieldOfPowerSeries.toEquiv.symm
+  have : Finite (ResidueField x.A) := Finite.of_equiv _ PowerSeries.residueFieldOfPowerSeries.toEquiv.symm
   have hzero : ∀ e, algebraMap x.A (x.Am e) (x.t ^ e) = 0 := fun e =>
     Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.mem_span_singleton_self _)
-  haveI : ∀ e, Finite (x.Am e) := fun e => finAm x.K e
+  have : ∀ e, Finite (x.Am e) := fun e => finAm x.K e
   refine ⟨C0 + Cn + Ch * Fintype.card L.Vl + 2 * Cd, fun m => ?_⟩
   filter_upwards [hCn m] with N hNm
   intro z hz
   obtain ⟨dvN, hAN⟩ := hN N
   obtain ⟨D, ⟨o⟩⟩ := odEx l L (T.GN N) G0 (T.h N) n x (x.Am m) ⟨m, hzero m⟩
   obtain ⟨ξ, hξ⟩ := transl l L (T.GN N) G0 (T.h N) n x k (x.Am m) D (k.g + 1) z hl ⟨m, hzero m⟩ o hAN.ur hz
-  haveI : Finite D.H2LocalConditions := (odCount l L (T.GN N) G0 (T.h N) n x (x.Am m) D d dvN hl o hAN).1
+  have : Finite D.H2LocalConditions := (odCount l L (T.GN N) G0 (T.h N) n x (x.Am m) D d dvN hl o hAN).1
   have hbound : ∀ e ≤ m, Nat.card (D.H2LocalConditions ⧸ LinearMap.range (LinearMap.lsmul x.A D.H2LocalConditions (x.t ^ e))) ≤
       Nat.card (ResidueField x.A) ^ (k.g * e + (C0 + Cn + Ch * Fintype.card L.Vl + 2 * Cd)) := by
     intro e he
@@ -1703,7 +1703,7 @@ theorem obstructionBound_of_duality : ObstructionBoundFromDuality := by
     obtain ⟨D2, ⟨o2⟩⟩ := odEx l L (T.GN N) G0 (T.h N) n x (x.Am e) ⟨e, hzero e⟩
     obtain ⟨D0, ⟨o0⟩⟩ := odEx l L G0 G0 (Glob.Hom.refl G0) n x (x.Am e) ⟨e, hzero e⟩
     obtain ⟨hf2, hc2, hcnt⟩ := odCount l L (T.GN N) G0 (T.h N) n x (x.Am e) D2 d dvN hl o2 hAN
-    haveI := hf2
+    have := hf2
     have hs := step o o1 o2 hAN (x.t ^ e) hc2 uf ug uk ur i1 i2 i3 i4 i5 i6 i7
     have hck := hAN.ck _ D2 (odKill _ _ _ _ _ _ x _ _ o2).1
     have hsel := hNm e he D2 D0 o2 o0 (hA0.fin _ D0.M (odKill _ _ _ _ _ _ x _ _ o0).1).1
@@ -1728,7 +1728,7 @@ theorem obstructionBound_of_duality : ObstructionBoundFromDuality := by
           ring
   have hkill : ∀ y : D.H2LocalConditions, x.t ^ m • y = 0 := smul_H2_local_eq_zero_of_smul_eq_zero D _ (smul_eq_zero_of_algebraMap_eq_zero_of_isOd o _ (hzero m))
   obtain ⟨c, hcu, hc⟩ := genTrick x.A D.H2LocalConditions x.t k.g (C0 + Cn + Ch * Fintype.card L.Vl + 2 * Cd) m
-    PowerSeries.X_irreducible hkill hbound (fun i => Submodule.Quotient.mk (ξ i))
+    PowerSeries.irreducible_X hkill hbound (fun i => Submodule.Quotient.mk (ξ i))
   refine ⟨c, hcu, ?_⟩
   have hmem : ↑(∑ i, (x.t ^ (C0 + Cn + Ch * Fintype.card L.Vl + 2 * Cd) * c i) • ξ i) ∈ D.selmerSecondCoboundaries := by
     have hsum : (∑ i, (x.t ^ (C0 + Cn + Ch * Fintype.card L.Vl + 2 * Cd) * c i) • ξ i) =

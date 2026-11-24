@@ -130,8 +130,8 @@ theorem chv_rt (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsCharAF D.host.F ψ) (b�
 
 theorem chv_continuous (ψ : AddChar (AF D.host.F) ℂ) (hψ : IsCharAF D.host.F ψ) (b₀ : HermE D ρ) :
     Continuous (fun v : Mx D ρ p × Mx D ρ p => chv ψ b₀ v.1 v.2) := by
-  haveI : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := (Formalism.IndefR.Eqv.ae_facts D).1
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have ht : Continuous (trA (D := D)) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D))
   have hc : Continuous (cA D) := GlobalTheory.FockCompare.ThetaCont.continuous_conj

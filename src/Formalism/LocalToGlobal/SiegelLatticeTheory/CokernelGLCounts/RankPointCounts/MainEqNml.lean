@@ -206,12 +206,12 @@ theorem occ_iffG (νL νB : X.B.I.Ginf → Measure X.B.I.Ginf) (ng : PN.Pts D.ho
   constructor
   · rintro ⟨t, h1, h2, h3, h4, h5⟩
     have e : t ∈ (Y.tO u u).genSet := by
-      simp only [genT, Formalism.FourierDecayAlt.PB.Terms.ngSet, Formalism.FourierDecayAlt.PB.Terms.genSet, Set.mem_setOf_eq, not_not] at h1 ⊢
+      simp only [genT, Formalism.FourierDecayAlt.PB.Terms.ngSet, Formalism.FourierDecayAlt.PB.Terms.genSet, Set.mem_ofPred_eq, not_not] at h1 ⊢
       exact h1
     exact ⟨t, ⟨e, h2, h3, h4⟩, h5⟩
   · rintro ⟨t, ⟨h1, h2, h3, h4⟩, h5⟩
     have e : t ∈ (genT (Y.tO u u)).ngSet := by
-      simp only [genT, Formalism.FourierDecayAlt.PB.Terms.ngSet, Formalism.FourierDecayAlt.PB.Terms.genSet, Set.mem_setOf_eq, not_not] at h1 ⊢
+      simp only [genT, Formalism.FourierDecayAlt.PB.Terms.ngSet, Formalism.FourierDecayAlt.PB.Terms.genSet, Set.mem_ofPred_eq, not_not] at h1 ⊢
       exact h1
     exact ⟨t, e, h2, h3, h4, h5⟩
 
@@ -255,7 +255,7 @@ theorem nmlInvG_of (hL : NmlLine) (hI : NmlInt) (hS : NmlSep) : Formalism.L2.SG.
       OccTG Y u c γ (pick ν) ∧ nmlOf Y u u (pick ν) = ν := by
     intro ν hν
     have h := (occ_iffG Y u νL νB ng c γ ν).1 hν
-    simp only [hpick, dif_pos h]
+    simp only [hpick, dite_eq_left h]
     exact h.choose_spec
   refine ⟨J, J', 1, 1, fun ν => (coefA Y u u t0 (pick ν), coefA' Y u u t0 (pick ν)), hJ, hJ', one_ne_zero,
     one_ne_zero, fun ν hν => ?_, fun ν₁ ν₂ h₁ h₂ hκ => ?_, ?_, ?_⟩

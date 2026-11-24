@@ -77,7 +77,7 @@ theorem exists_sum_of_ker (hF : IsField F) {A B A' B' : Type} [AddCommGroup A] [
     (t : A ⊗[F] B) (h₁ : d₁.rTensor B t = 0) (h₂ : d₂.lTensor A t = 0) :
     ∃ (n : ℕ) (a : Fin n → A) (b : Fin n → B), (∀ i, d₁ (a i) = 0) ∧ (∀ i, d₂ (b i) = 0) ∧
       t = ∑ i, a i ⊗ₜ[F] b i := by
-  letI := hF.toField
+  let := hF.toField
   obtain ⟨s, rfl⟩ := (Module.Flat.rTensor_exact B (LinearMap.exact_subtype_ker_map d₁) t).1 h₁
   have h₃ : d₂.lTensor (LinearMap.ker d₁) s = 0 := by
     apply Module.Flat.rTensor_preserves_injective_linearMap (M := B') (LinearMap.ker d₁).subtype
@@ -165,7 +165,7 @@ theorem exists_sum_of_compatible (hF : IsField F) {A' : P → P → Type} {B' : 
 
 theorem eq_zero_of_linearIndependent (hF : IsField F) {C : Type} [AddCommGroup C] [Module F C] {n : ℕ} (a : Fin n → ∀ p, A p)
     (ha : LinearIndependent F a) (b : Fin n → C) (h : ∀ p, ∑ i, a i p ⊗ₜ[F] b i = 0) (k : Fin n) : b k = 0 := by
-  letI := hF.toField
+  let := hF.toField
   have e : ∑ i, a i ⊗ₜ[F] (fun _ : Unit => b i) = 0 :=
     pi_tensor_ext (B := fun _ : Unit => C) _ fun p q => by simpa [map_sum] using h p
   obtain ⟨l, hl⟩ := (Finsupp.linearCombination F a).exists_leftInverse_of_injective

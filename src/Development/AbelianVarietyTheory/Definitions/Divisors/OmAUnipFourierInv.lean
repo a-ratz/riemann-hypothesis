@@ -105,7 +105,7 @@ theorem sum_psi {ϖ : kˣ} (hϖ : IsUnif ϖ) {ψ : AddChar k Circle} (hψ : HasC
   split_ifs with h
   · subst h; simp
   set x : k := (((ϖ ^ e)⁻¹ : kˣ) : k) * (((Quotient.out s : 𝒪[k]) : k) - ((Quotient.out s' : 𝒪[k]) : k)) with hx
-  have h0 : 0 < valuation k ((ϖ ^ e : kˣ) : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k ((ϖ ^ e : kˣ) : k) := pos_iff_ne_zero.2 (by simp)
   have hvx : valuation k x = (valuation k ((ϖ ^ e : kˣ) : k))⁻¹ *
       valuation k ((Quotient.out s - Quotient.out s' : 𝒪[k]) : k) := by
     rw [hx, map_mul, Units.val_inv_eq_inv_val, map_inv₀]; rfl
@@ -119,7 +119,7 @@ theorem sum_psi {ϖ : kˣ} (hϖ : IsUnif ϖ) {ψ : AddChar k Circle} (hψ : HasC
   obtain ⟨y, hy, hy'⟩ := hx1
   have hx0 : x ≠ 0 := by
     rintro H
-    rw [H, map_zero, le_zero_iff, map_eq_zero] at hy
+    rw [H, map_zero, nonpos_iff_eq_zero, map_eq_zero] at hy
     exact hy' (by simp [hy])
   have hr : y / x ∈ 𝒪[k] := by
     rw [Valuation.mem_integer_iff, map_div₀]; exact div_le_one_of_le₀ hy zero_le
@@ -152,7 +152,7 @@ theorem sum_invFourierSum {ϖ : kˣ} (hϖ : IsUnif ϖ) {ψ : AddChar k Circle} (
     ext i j; by_cases h : j ∈ P <;> simp [setCols, h]
   have h2 : ∀ T : A → P → Res (k := k) e, ∀ i, ∀ j ∈ P, setCols P X (liftRes T) i j ∈ 𝒪[k] := fun T i j h => by
     simpa [setCols, h] using liftRes_mem T i ⟨j, h⟩
-  simp only [GlobalTheory.SplitFlip.invFourierSum_apply, if_pos (h2 _), h1, Finset.sum_mul]
+  simp only [GlobalTheory.SplitFlip.invFourierSum_apply, ite_eq_left (h2 _), h1, Finset.sum_mul]
   rw [Finset.sum_comm]
   have h3 : ∀ S T : A → P → Res (k := k) e,
       (ψ (-pairCols P (setCols P X (liftRes T)) ((ϖ ^ e)⁻¹ • liftRes S)) : ℂ) *
@@ -190,7 +190,7 @@ theorem sum_invFourierSum {ϖ : kˣ} (hϖ : IsUnif ϖ) {ψ : AddChar k Circle} (
     · subst h; simp [← pow_mul, mul_comm]
     · obtain ⟨i, hi⟩ := Function.ne_iff.1 h
       obtain ⟨j, hj⟩ := Function.ne_iff.1 hi
-      exact Finset.prod_eq_zero (Finset.mem_univ i) (Finset.prod_eq_zero (Finset.mem_univ j) (if_neg hj))
+      exact Finset.prod_eq_zero (Finset.mem_univ i) (Finset.prod_eq_zero (Finset.mem_univ j) (ite_eq_right hj))
   simp only [mul_assoc, h3, ← Finset.mul_sum, h4]
   simp [mul_comm]
 

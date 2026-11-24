@@ -137,7 +137,7 @@ lemma exp_pi_int (n : ℤ) :
   have e : (Real.pi : ℂ) * Complex.I * (((n : ℤ) : ℝ) : ℂ) = (n : ℂ) * ((Real.pi : ℂ) * Complex.I) := by
     push_cast
     ring
-  rw [e, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [e, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
   split_ifs with h
   · exact h.neg_one_zpow
   · exact (Int.not_even_iff_odd.mp h).neg_one_zpow

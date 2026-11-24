@@ -96,8 +96,8 @@ theorem _root_.GlobalTheory.SimMb.exists_left_inv (g : D.La →ₗ[𝓞 E] D.La)
     (hg : ∀ x, g x ∈ l.Mb • (⊤ : Submodule (𝓞 E) D.La) → x ∈ l.Mb • (⊤ : Submodule (𝓞 E) D.La)) :
     ∃ h : D.La →ₗ[𝓞 E] D.La, ∀ x, h (g x) - x ∈ l.Mb • (⊤ : Submodule (𝓞 E) D.La) := by
   classical
-  haveI := D.fin
-  haveI := D.proj
+  have := D.fin
+  have := D.proj
   set P := l.Mb • (⊤ : Submodule (𝓞 E) D.La) with hP
   have hgP : P ≤ P.comap g := by
     rw [hP, Submodule.smul_le]

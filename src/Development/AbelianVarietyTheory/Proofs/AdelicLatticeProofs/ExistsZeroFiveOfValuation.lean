@@ -129,9 +129,9 @@ lemma val_bf_sq_le (h2 : (2 : K) ≠ 0) (v : Valuation K ℤᵐ⁰)
     rw [sub_sub_cancel_left, Valuation.map_neg, map_div₀, map_mul, map_mul, map_pow,
       mul_div_assoc]
     have h1 : v (qf a x) * v (qf a y) / v (bf a x y) ^ 2 < 1 :=
-      (div_lt_one₀ (pow_pos (zero_lt_iff.mpr hvb) 2)).mpr hlt
+      (div_lt_one₀ (pow_pos (pos_iff_ne_zero.mpr hvb) 2)).mpr hlt
     calc v 4 * (v (qf a x) * v (qf a y) / v (bf a x y) ^ 2) < v 4 * 1 :=
-          mul_lt_mul_of_pos_left h1 (zero_lt_iff.mpr hv4)
+          mul_lt_mul_of_pos_left h1 (pos_iff_ne_zero.mpr hv4)
       _ = v 4 := mul_one _)
   set t := (-bf a x y + bf a x y * s) / (2 * qf a x) with ht
   have h0 : qf a (t • x + y) = 0 := by
@@ -178,11 +178,11 @@ lemma val_det_le (h2 : (2 : K) ≠ 0) (v : Valuation K ℤᵐ⁰)
   have hε : v (((Equiv.Perm.sign σ : ℤˣ) : ℤ) : K) = 1 := by
     rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with h | h <;> simp [h]
   rw [map_mul, hε, one_mul, map_prod]
-  apply le_of_pow_le_pow_left₀ (n := 2) two_ne_zero zero_le'
+  apply le_of_pow_le_pow_left₀ (n := 2) two_ne_zero zero_le
   rw [← Finset.prod_pow]
   calc ∏ i, v (Matrix.of (fun i j => bf a (P i) (P j)) (σ i) i) ^ 2
       ≤ ∏ i, (v (qf a (P (σ i))) * v (qf a (P i))) :=
-        Finset.prod_le_prod' fun i _ => val_bf_sq_le h2 v hsq a han _ _
+        Finset.prod_le_prod fun i _ => val_bf_sq_le h2 v hsq a han _ _
     _ = (∏ i, v (qf a (P i))) ^ 2 := by
         rw [Finset.prod_mul_distrib, Equiv.prod_comp σ (fun i => v (qf a (P i))), sq]
 
@@ -218,7 +218,7 @@ lemma exists_basis (h2 : (2 : K) ≠ 0) (v : Valuation K ℤᵐ⁰)
     ⟨WithZero.log (v (∏ i, 2 * a i)), by
       rintro z ⟨P, hP, rfl⟩
       rw [WithZero.log_le_log hD (hprod P hP), le_div_iff₀
-        (pow_pos (zero_lt_iff.mpr ((Valuation.ne_zero_iff v).mpr hP)) 2)]
+        (pow_pos (pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff v).mpr hP)) 2)]
       exact val_det_le h2 v hsq a han P⟩
     ⟨_, 1, by simp, rfl⟩
   refine ⟨P, hrow P hP, fun c j => ?_⟩
@@ -237,10 +237,10 @@ lemma exists_basis (h2 : (2 : K) ≠ 0) (v : Valuation K ℤᵐ⁰)
     Finset.prod_congr rfl fun i hi => by rw [Matrix.updateRow_ne (Finset.ne_of_mem_erase hi)]
   rw [e] at h
   have hR : 0 < ∏ i ∈ Finset.univ.erase j, v (qf a (P i)) :=
-    zero_lt_iff.mpr (Finset.prod_ne_zero_iff.mpr fun i _ =>
+    pos_iff_ne_zero.mpr (Finset.prod_ne_zero_iff.mpr fun i _ =>
       (Valuation.ne_zero_iff v).mpr (hrow P hP i))
-  have hd : 0 < v P.det ^ 2 := pow_pos (zero_lt_iff.mpr ((Valuation.ne_zero_iff v).mpr hP)) 2
-  have hcj : 0 < v (c j) ^ 2 := pow_pos (zero_lt_iff.mpr ((Valuation.ne_zero_iff v).mpr hc)) 2
+  have hd : 0 < v P.det ^ 2 := pow_pos (pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff v).mpr hP)) 2
+  have hcj : 0 < v (c j) ^ 2 := pow_pos (pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff v).mpr hc)) 2
   rw [map_mul, mul_pow, ← div_div, div_le_div_iff_of_pos_right hd, le_div_iff₀ hcj,
     mul_right_comm, mul_le_mul_iff_left₀ hR, mul_comm] at h
   exact h
@@ -289,14 +289,14 @@ theorem exists_zero_five_of_valuation {K : Type*} [Field K] (h2 : (2 : K) ≠ 0)
   obtain ⟨t, ht⟩ := exists_scale v hv (hP i) (hP k) hk
   set w := qf a (P i) with hw
   have hw0 : w ≠ 0 := hP i
-  have hvw : 0 < v w := zero_lt_iff.mpr ((Valuation.ne_zero_iff v).mpr hw0)
+  have hvw : 0 < v w := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff v).mpr hw0)
   have hq : ∀ x, v (qf a x) = v w → v (qf a x / w) ≤ 1 := by
     intro x hx
     rw [map_div₀, hx, div_self hvw.ne']
   have hb : ∀ x y, v (qf a x) = v w → v (qf a y) = v w → v (bf a x y / w) ≤ 1 := by
     intro x y hx hy
     rw [map_div₀, div_le_one₀ hvw]
-    apply le_of_pow_le_pow_left₀ (n := 2) two_ne_zero zero_le'
+    apply le_of_pow_le_pow_left₀ (n := 2) two_ne_zero zero_le
     have := val_bf_sq_le h2 v hsq a han x y
     rwa [hx, hy, ← sq] at this
   have h0 : v (qf a (P i)) = v w := rfl
@@ -320,7 +320,7 @@ theorem exists_zero_five_of_valuation {K : Type*} [Field K] (h2 : (2 : K) ≠ 0)
   set c : Fin 5 → K := Pi.single i (x 0) + Pi.single j (x 1 * s) + Pi.single k (x 2 * t) with hc
   have hsum : ∑ p, c p • P p = x 0 • P i + x 1 • s • P j + x 2 • t • P k := by
     simp only [hc, Pi.add_apply, add_smul, Finset.sum_add_distrib, Pi.single_apply, ite_smul,
-      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, if_true, smul_smul]
+      zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ite_true, smul_smul]
   have hlt : v (qf a (∑ p, c p • P p)) < v w := by
     rw [← div_lt_one₀ hvw, ← map_div₀]
     convert hx using 2

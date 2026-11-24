@@ -352,7 +352,7 @@ variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableS
 theorem mem_R_split (L : LocE F E) (g : SplitG L) (mu : MeasureTheory.Measure E) (x : E) :
     x ∈ (⟨L, some g, mu⟩ : Model F E).R ↔ g.e x ∈ Formalism.FourierDecayAlt.I.orderR (𝒪[F]) (g.q : F) := by
   simp only [Model.R, Subring.mem_comap, Subring.mem_map, RingHom.mem_eqLocus, Formalism.FourierDecayAlt.I.orderR,
-    Set.mem_setOf_eq, RingHom.comp_apply]
+    Set.mem_ofPred_eq, RingHom.comp_apply]
   constructor
   · rintro ⟨⟨u, v⟩, huv, hx⟩
     have hx' : g.e x = ((u : F), (v : F)) := hx.symm
@@ -452,7 +452,7 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableSpace E]
 
 theorem finite_E (M : Model F E) : Module.Finite F E := by
-  haveI := M.L.free
+  have := M.L.free
   exact Module.finite_of_finrank_pos (by rw [M.L.rank]; norm_num)
 
 theorem top_of_OK (M : Model F E) (hOK : M.OK) : IsTopologicalRing E := by
@@ -848,7 +848,7 @@ theorem measure_eq_relIndex_mul (mu : Measure E) [mu.IsAddLeftInvariant] (H A : 
   classical
   have : CompactSpace A := isCompact_iff_compactSpace.1 hA
   have hfin : Finite (A ⧸ H.addSubgroupOf A) :=
-    AddSubgroup.quotient_finite_of_isOpen _ (hH.preimage continuous_subtype_val)
+    AddSubgroup.quotient_finite_of_isOpen _ (hH.preimage continuous_subtypeVal)
   have := Fintype.ofFinite (A ⧸ H.addSubgroupOf A)
   have hidx : H.relIndex A = Fintype.card (A ⧸ H.addSubgroupOf A) := by
     rw [AddSubgroup.relIndex, AddSubgroup.index, Nat.card_eq_fintype_card]
@@ -955,8 +955,8 @@ variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] [MeasurableS
 theorem datum_of_OK (M : Model F E) (hOK : M.OK) :
     haveI := top_of_OK M hOK; A5.LocalDatum E M.R M.psiR := by
   obtain ⟨hO, hC, hU⟩ := R_top M hOK
-  haveI := top_of_OK M hOK
-  haveI := finite_E M
+  have := top_of_OK M hOK
+  have := finite_E M
   have hart : IsArtinianRing E := by
     first
       | exact IsArtinianRing.of_finite F E

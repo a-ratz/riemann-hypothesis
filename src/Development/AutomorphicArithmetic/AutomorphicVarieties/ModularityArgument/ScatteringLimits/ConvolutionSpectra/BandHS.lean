@@ -169,10 +169,10 @@ private theorem trEq (J : L V ≃ₗᵢ[ℂ] H) (a b : ℝ) {k k' : ℝ → V �
   have h1 := isHS J a b hk hY
   have h2 := (isHS J a b hk' hY').adjoint
   let c := stdHilbertBasis ℂ H
-  haveI : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by simp⟩
-  haveI : ProperSpace V := FiniteDimensional.proper ℂ V
-  haveI : TopologicalSpace.SeparableSpace H := J.surjective.denseRange.separableSpace J.continuous
-  haveI := cnt c.orthonormal
+  have : Fact ((2 : ENNReal) ≠ ⊤) := ⟨by simp⟩
+  have : ProperSpace V := FiniteDimensional.proper ℂ V
+  have : TopologicalSpace.SeparableSpace H := J.surjective.denseRange.separableSpace J.continuous
+  have := cnt c.orthonormal
   have s1 := (isTraceClass_comp h1 h2).hasSum_trace c
   have ci : ∀ {f : ℝ → ℝ}, Continuous f → IntegrableOn f (Ioc a b) := fun hf => hf.integrableOn_Icc.mono_set Ioc_subset_Icc_self
   have cg : ∀ m, Continuous fun y => ⟪ContinuousLinearMap.adjoint (k y) (c m), ContinuousLinearMap.adjoint (k' y) (c m)⟫_ℂ := fun m => (contAdj hk _).inner (contAdj hk' _)

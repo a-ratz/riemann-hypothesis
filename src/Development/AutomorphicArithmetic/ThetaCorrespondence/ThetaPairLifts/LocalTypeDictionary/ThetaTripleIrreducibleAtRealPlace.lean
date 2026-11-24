@@ -161,7 +161,7 @@ theorem restr_of {s ξ₀ ξ : ∀ i, N i} (h0 : Restr s ξ₀) (S : Finset ι) 
   by_cases hS : i ∈ S
   · exact Or.inr hS
   · left
-    simp only [Set.mem_setOf_eq] at hi ⊢
+    simp only [Set.mem_ofPred_eq] at hi ⊢
     rwa [h i hS] at hi
 
 theorem fin_mono (s ξ₀ : ∀ i, N i) {S T : Finset ι} (h : S ⊆ T) : fin s ξ₀ S ≤ fin s ξ₀ T := by
@@ -374,12 +374,12 @@ theorem GlobalTheory.rtens_irreducible : ∀ {ι : Type} [DecidableEq ι] (N : �
     · simp [ξ₀, h]
   have h0 : Formalism.MainNotions.KudlaSiegelWeil.Restr s ξ₀ := hs.subset fun i hi => by
     by_contra h
-    simp only [Set.mem_setOf_eq] at h hi
+    simp only [Set.mem_ofPred_eq] at h hi
     exact hi (by simp [ξ₀, h])
   have hfinS : ∀ ξ, Formalism.MainNotions.KudlaSiegelWeil.Restr s ξ → ∃ S : Finset ι, ∀ i ∉ S, ξ i = ξ₀ i := by
     intro ξ hξ
     refine ⟨(hξ.union h0).toFinset, fun i hi => ?_⟩
-    simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hi
+    simp only [Set.Finite.mem_toFinset, Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hi
     rw [hi.1, hi.2]
   have hall : ∀ x : GlobalTheory.SmallThetaModules.RTens s, ∃ S, x ∈ GlobalTheory.RestrTensIrr.fin s ξ₀ S := by
     intro x
@@ -574,13 +574,13 @@ theorem exists_lie_of_frame {k d r s : ℕ} (e : Fin k ≃ Fin d) (H : Matrix (F
       ext i j
       simp
     have e2 : NormedSpace.exp (φ (t • Z)) = φ (NormedSpace.exp (t • Z)) := by
-      letI : NormedRing (Mat r s) := Matrix.linftyOpNormedRing
-      letI : NormedAlgebra ℂ (Mat r s) := Matrix.linftyOpNormedAlgebra
-      letI : NormedAlgebra ℚ (Mat r s) := NormedAlgebra.restrictScalars ℚ ℂ (Mat r s)
-      letI : NormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedRing
-      letI : NormedAlgebra ℂ (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedAlgebra
-      letI : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
-      haveI : CompleteSpace (Mat r s) := FiniteDimensional.complete ℂ _
+      let : NormedRing (Mat r s) := Matrix.linftyOpNormedRing
+      let : NormedAlgebra ℂ (Mat r s) := Matrix.linftyOpNormedAlgebra
+      let : NormedAlgebra ℚ (Mat r s) := NormedAlgebra.restrictScalars ℚ ℂ (Mat r s)
+      let : NormedRing (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedRing
+      let : NormedAlgebra ℂ (Matrix (Fin d) (Fin d) ℂ) := Matrix.linftyOpNormedAlgebra
+      let : NormedAlgebra ℚ (Matrix (Fin d) (Fin d) ℂ) := NormedAlgebra.restrictScalars ℚ ℂ _
+      have : CompleteSpace (Mat r s) := FiniteDimensional.completeSpace ℂ _
       exact (NormedSpace.map_exp φ hcont _).symm
     rw [e1, e2, hφ]
     have e3 : ∀ A : Matrix (Fin k) (Fin k) ℂ,
@@ -1014,7 +1014,7 @@ theorem theta_triple_piT_irreducible : GlobalTheory.Published.HoweDualityReal �
   have hξ : D.host.xi0 ≠ 0 := by
     intro h0
     have hlt := hg.lt
-    haveI : Nonempty (Fin (W.rank + W₁.rank)) := ⟨⟨0, by omega⟩⟩
+    have : Nonempty (Fin (W.rank + W₁.rank)) := ⟨⟨0, by omega⟩⟩
     rw [h.JX, h0, zero_smul] at dW
     exact dW (Matrix.det_zero)
   have hone : GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU W 1 h.JW 1 = 1 := by
@@ -1037,8 +1037,8 @@ theorem theta_triple_piT_irreducible : GlobalTheory.Published.HoweDualityReal �
       obtain ⟨q, hq⟩ := Onto.exists_factor T _ (fun x hx => hinj x (hS hx)) (liftPure Γ.M R.p Rf.p (vacIm Γ Rf))
       exact ⟨q, fun Ψ hΨ => by rw [← hTh Ψ (hS hΨ)]; exact hq Ψ hΨ⟩
     have H' := GlobalTheory.T.weil_model_projection_factorisation _ _ _ Γ.M Bs.ψ hM _ R.p _ Rf.p (vacIm Γ Rf) (Filter.Eventually.of_forall fun _ => rfl)
-    have e1 : mapA ψ e Bs Γ R Rf = H.choose := dif_pos H
-    have e2 : liftPure Γ.M R.p Rf.p (vacIm Γ Rf) = H'.choose := dif_pos H'
+    have e1 : mapA ψ e Bs Γ R Rf = H.choose := dite_eq_left H
+    have e2 : liftPure Γ.M R.p Rf.p (vacIm Γ Rf) = H'.choose := dite_eq_left H'
     rw [e1]
     refine (H.choose_spec _ hmem).trans ?_
     rw [e2]
@@ -1048,7 +1048,7 @@ theorem theta_triple_piT_irreducible : GlobalTheory.Published.HoweDualityReal �
     by_contra k
     exact (hm.fin.sph v k).2 hv
   obtain ⟨hrank, hδ, r, s, C, hC, hred⟩ := _root_.GlobalTheory.TripleAssembly.Irred.theta_triple_irreducible_at_real_place hP hT
-  haveI := hm.real.nontriv
+  have := hm.real.nontriv
   refine ⟨nontrivial_tensor _ hfin0 hm.fin.nontriv R.Pi, fun N hNf hNl => ?_⟩
   have h1V : ∀ v, (1 : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UA D.sp.cm.sig Γ.V.J) ∈
       GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.UAt D.sp.cm.sig Γ.V (GlobalTheory.AdelicU.evFin D.host.F v) := fun v u _ => by

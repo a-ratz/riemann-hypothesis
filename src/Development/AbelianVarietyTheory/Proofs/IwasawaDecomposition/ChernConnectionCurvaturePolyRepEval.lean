@@ -125,7 +125,7 @@ theorem PolyRep.mdbar_lie {A : E → Mat m ℂ} {u : E} (h : ∀ τ, MContDiffAt
   ext i j
   simp only [mdbar_apply, PolyRep.lie, Matrix.of_apply]
   rw [dbar_sum fun v _ => (differentiableAt_const _).fun_mul ((h v.1).diff v.2.1 v.2.2),
-    ContinuousLinearMap.sum_apply]
+    sum_apply]
   refine Finset.sum_congr rfl fun v _ => ?_
   rw [dbar_mul (differentiableAt_const _) ((h v.1).diff v.2.1 v.2.2)]
   simp

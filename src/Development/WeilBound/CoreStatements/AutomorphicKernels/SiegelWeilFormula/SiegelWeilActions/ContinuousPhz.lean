@@ -66,7 +66,7 @@ theorem isClosed_diagonal_stabiliser (d : SD σ) : IsClosed (par2 σ d.Y : Set d
     Set.ext fun p => mem_stabiliser_iff_frame_lower_block hb p
   rw [hset]
   have hm : Continuous (mat2 (σ := σ) (Y := d.Y)) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have hc : Continuous fun p : d.G => inFrame d.b p :=
     (continuous_const.matrix_mul hm).matrix_mul continuous_const
   exact isClosed_eq (continuous_matrix fun i j => hc.matrix_elem (Sum.inr i) (Sum.inl j)) continuous_const

@@ -138,14 +138,14 @@ theorem exists_approx_idempotent {K L : Type} [Field K] [NumberField K] [Field L
     ∃ z : 𝓞 L, z ∉ la.asIdeal ∧ ∀ la' : HeightOneSpectrum (𝓞 L), la' ≠ la →
       la'.asIdeal.under (𝓞 K) = p.asIdeal → z ∈ la'.asIdeal ^ N := by
   set S : Set (HeightOneSpectrum (𝓞 L)) := {la' | la' ≠ la ∧ la'.asIdeal.under (𝓞 K) = p.asIdeal}
-  haveI := p.isMaximal
+  have := p.isMaximal
   have hfin : S.Finite := by
     refine ((IsDedekindDomain.primesOver_finite p.asIdeal (𝓞 L)).preimage
       (f := HeightOneSpectrum.asIdeal) ?_).subset ?_
     · intro a _ b _ h; exact HeightOneSpectrum.ext h
     · intro la' h
       exact ⟨la'.isPrime, ⟨h.2.symm⟩⟩
-  haveI := la.isPrime
+  have := la.isPrime
   have hw : ∀ la' ∈ S, ∃ w : 𝓞 L, w ∈ la'.asIdeal ^ N ∧ w ∉ la.asIdeal := by
     intro la' h
     by_contra hc
@@ -189,7 +189,7 @@ theorem valuation_mul_different_le_one : ∀ (K L : Type) [Field K] [NumberField
     fun i => exists_not_mem_mul_mem p _ (hx (bs i))
   choose s hsp r hr using hloc
   set s0 : 𝓞 K := ∏ i, s i with hs0
-  haveI := p.isPrime
+  have := p.isPrime
   have hs0p : s0 ∉ p.asIdeal := by
     rw [hs0, Ideal.IsPrime.prod_mem_iff]
     rintro ⟨i, _, hi⟩

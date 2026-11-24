@@ -100,7 +100,7 @@ theorem exists_stalkDer (s : Z ⟶ X) (z : Z) (W₀ : X.Opens) (h₀ : s z ∈ W
     exact congrArg (E U) e'
   have ex : ∀ x : X.presheaf.stalk (s z), ∃ (W : X.Opens) (f : Γ(X, W)), W ≤ W₀ ∧ s z ∈ W ∧ gs (𝟙 X) (s z) W f = x := by
     intro x
-    obtain ⟨U, m, f, e⟩ := X.presheaf.germ_exist x
+    obtain ⟨U, m, f, e⟩ := X.presheaf.exists_germ_eq x
     refine ⟨U ⊓ W₀, resG X inf_le_left f, inf_le_right, ⟨m, h₀⟩, ?_⟩
     rw [gs_res (𝟙 X) (s z) inf_le_left ⟨m, h₀⟩, gs_eq (𝟙 X) (s z) U m]
     exact e

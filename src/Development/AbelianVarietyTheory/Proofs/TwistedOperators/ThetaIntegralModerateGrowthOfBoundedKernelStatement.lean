@@ -268,11 +268,11 @@ theorem opNorm_reindex_le {n m : Type} [Fintype n] [DecidableEq n] [Fintype m] [
   let c : EuclideanSpace ℂ m → EuclideanSpace ℂ n := fun z => WithLp.toLp 2 fun i => z (e i)
   let c' : EuclideanSpace ℂ n → EuclideanSpace ℂ m := fun z => WithLp.toLp 2 fun j => z (e.symm j)
   have hc : ∀ z, ‖c z‖₊ = ‖z‖₊ := fun z => by
-    simp only [EuclideanSpace.nnnorm_eq, c]
+    simp only [EuclideanSpace.nnNorm_eq, c]
     congr 1
     exact Equiv.sum_comp e (fun j => ‖z j‖₊ ^ 2)
   have hc' : ∀ z, ‖c' z‖₊ = ‖z‖₊ := fun z => by
-    simp only [EuclideanSpace.nnnorm_eq, c']
+    simp only [EuclideanSpace.nnNorm_eq, c']
     congr 1
     exact Equiv.sum_comp e.symm (fun j => ‖z j‖₊ ^ 2)
   have h : Matrix.toEuclideanCLM (n := m) (𝕜 := ℂ) (reindex e e y) x =
@@ -405,8 +405,8 @@ theorem conjU_conjInv (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E
 theorem continuous_conjInv (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (h : J = (-1 : D.host.E) • V.gram) :
     Continuous (conjInv V h) := by
   refine Continuous.subtype_mk (Units.continuous_iff.2 ⟨?_, ?_⟩) _
-  · exact (Units.continuous_val.comp continuous_subtype_val).matrix_map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.continuous_conj D)
-  · exact (Units.continuous_coe_inv.comp continuous_subtype_val).matrix_map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.continuous_conj D)
+  · exact (Units.continuous_val.comp continuous_subtypeVal).matrix_map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.continuous_conj D)
+  · exact (Units.continuous_coe_inv.comp continuous_subtypeVal).matrix_map (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.continuous_conj D)
 
 def conjHomeo (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (h : J = (-1 : D.host.E) • V.gram) :
     GA D V ≃ₜ GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.UB J where
@@ -419,7 +419,7 @@ def conjHomeo (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E} (h : J
 
 theorem measurableEmbedding_conjU (V : HSp D) {J : Matrix (Fin V.rank) (Fin V.rank) D.host.E}
     (h : J = (-1 : D.host.E) • V.gram) : MeasurableEmbedding (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.conjU V (-1) h) := by
-  haveI : BorelSpace (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.UB J) := ⟨rfl⟩
+  have : BorelSpace (GlobalTheory.IndefiniteRowSideFullHecke.UnitaryConjugation.UB J) := ⟨rfl⟩
   exact (conjHomeo V h).measurableEmbedding
 
 end GlobalTheory.ModGrowth

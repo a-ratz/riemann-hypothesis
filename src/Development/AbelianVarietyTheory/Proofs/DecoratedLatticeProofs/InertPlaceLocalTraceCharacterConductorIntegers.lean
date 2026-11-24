@@ -90,7 +90,7 @@ theorem ringHom_eq_id_of_int (f : w.adicCompletion E →+* w.adicCompletion E)
     rw [hz', map_mul, map_pow, hft, Valuation.map_mul, Valuation.map_pow]
     refine mul_le_of_le_one_right' (h2 _ ?_)
     rw [map_div₀, map_pow]
-    exact div_le_one_of_le₀ hz zero_le'
+    exact div_le_one_of_le₀ hz zero_le
   have hcont : Continuous f := by
     refine continuous_of_continuousAt_zero f (Metric.tendsto_nhds.2 fun ε hε => ?_)
     have h1' : ‖t‖ < 1 := Valued.toNormedField.norm_lt_one_iff.2 ht1
@@ -154,7 +154,7 @@ theorem isPrimeIdem_tensAt (hw : IsInertAt D.host.F D.host.E v w) (h : w.under (
     map_one, one_mul]
   show _ ↔ ¬ (Valued.v (algebraMap D.host.E (w.adicCompletion D.host.E) (x : D.host.E)⁻¹) ≤ 1)
   have h0 : w.valuation D.host.E (x : D.host.E) ≠ 0 := (map_ne_zero _).2 (RingOfIntegers.coe_ne_zero_iff.2 hx)
-  rw [GlobalTheory.Idele.valued_algebraMap, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 h0),
+  rw [GlobalTheory.Idele.valued_algebraMap, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 h0),
     HeightOneSpectrum.valuation_lt_one_iff_mem]
 
 end Cond

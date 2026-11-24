@@ -280,7 +280,7 @@ theorem finite_constituents {π : Representation ℂ G V} (h : HasFiniteLength �
       exact IrrRep.cl_eq_iff.2 ⟨a.symm.trans b⟩
     refine ((ih T hT.lt).union h2.finite).subset fun c hc => ?_
     by_contra hn
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hn
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hn
     exact hc (by rw [jhMult_of_le c.rep.irr hT.le, hn.1, hn.2, add_zero])
   simpa only [jhMult_congr_right _ (topEquiv π)] using key ⊤
 
@@ -294,7 +294,7 @@ theorem cls_apply (π : Representation ℂ G V) (h : HasFiniteLength π) (c : Ir
 theorem cls_apply_cl (π : Representation ℂ G V) (h : HasFiniteLength π) (σ : IrrRep G) :
     ∃ r : ℕ, jhMult σ.ρ π = r ∧ cls π h σ.cl = r := by
   obtain ⟨φ⟩ := σ.nonempty_equiv_rep
-  exact ⟨_, (ENat.coe_toNat (jhMult_ne_top σ.irr h)).symm, by rw [cls_apply, jhMult_congr_left φ]⟩
+  exact ⟨_, (ENat.natCast_toNat (jhMult_ne_top σ.irr h)).symm, by rw [cls_apply, jhMult_congr_left φ]⟩
 
 theorem cls_congr {π : Representation ℂ G V} {τ : Representation ℂ G W} (φ : π.Equiv τ)
     (h : HasFiniteLength π) (h' : HasFiniteLength τ) : cls π h = cls τ h' := by
@@ -326,11 +326,11 @@ theorem cls_irr (σ : IrrRep G) (h : HasFiniteLength σ.ρ) : cls σ.ρ h = Fins
 
 theorem IrrRep.hasFiniteLength (σ : IrrRep G) : HasFiniteLength σ.ρ := by
   have φ := Subrepresentation.subrepresentationSubmoduleOrderIso (ρ := σ.ρ)
-  haveI : IsSimpleOrder (Subrepresentation σ.ρ) := σ.irr
-  haveI : Finite (Subrepresentation σ.ρ) := IsSimpleOrder.instFinite
-  haveI : Finite (Submodule (MonoidAlgebra ℂ G) σ.ρ.asModule) := Finite.of_equiv _ φ.toEquiv
+  have : IsSimpleOrder (Subrepresentation σ.ρ) := σ.irr
+  have : Finite (Subrepresentation σ.ρ) := IsSimpleOrder.instFinite
+  have : Finite (Submodule (MonoidAlgebra ℂ G) σ.ρ.asModule) := Finite.of_equiv _ φ.toEquiv
   exact isFiniteLength_iff_isNoetherian_isArtinian.2
-    ⟨isNoetherian_iff'.2 Finite.to_wellFoundedGT, Finite.to_wellFoundedLT⟩
+    ⟨isNoetherian_iff.2 Finite.to_wellFoundedGT, Finite.to_wellFoundedLT⟩
 
 end Groth
 

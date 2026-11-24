@@ -91,9 +91,9 @@ private theorem quotient_out_mem_dc_iff {G : Type} [Group G] (U : Subgroup G) (c
 theorem UpperTheory.V.Z.Sym.So.uFMul :
     UpperTheory.V.Z.Sym.So.UFMul := by
   intro G V _ _ _ U a b ha hb hab huf φ hφ
-  haveI : Fintype (MulAction.orbit U (a : G ⧸ U)) := Set.Finite.fintype ha
-  haveI : Fintype (MulAction.orbit U (b : G ⧸ U)) := Set.Finite.fintype hb
-  haveI : Fintype (MulAction.orbit U ((a * b : G) : G ⧸ U)) := Set.Finite.fintype hab
+  have : Fintype (MulAction.orbit U (a : G ⧸ U)) := Set.Finite.fintype ha
+  have : Fintype (MulAction.orbit U (b : G ⧸ U)) := Set.Finite.fintype hb
+  have : Fintype (MulAction.orbit U ((a * b : G) : G ⧸ U)) := Set.Finite.fintype hab
   funext g
   rw [dcF_sum U a _ g, dcF_sum U (a * b) φ g]
   simp only [dcF_sum U b φ]

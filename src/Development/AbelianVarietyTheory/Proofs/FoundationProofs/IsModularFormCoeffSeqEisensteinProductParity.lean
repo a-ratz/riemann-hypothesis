@@ -102,7 +102,7 @@ theorem zmf_mf_sum {ι : Type*} (s : Finset ι) (k L : ℕ) (χ : ℤ → ℂ) (
 
 theorem zm_fun_mf : ∀ (k N l m : ℕ) (ε θ ν : DirichletCharacter ℂ N) (f : ZMod (l ^ m) → ℂ), 3 ≤ k → Odd k → 0 < N → l.Prime → 1 ≤ m → ¬ l ∣ N → ε = θ⁻¹ * ν → ν (-1) = -θ (-1) → (∀ x, f (-x) = θ (-1) * f x) → MF k (N * l ^ (m + 1)) (ch ε) (Zm k l (hat θ) (ch ν) (fun A d => f ((A : ZMod (l ^ m)) * (d : ZMod (l ^ m))⁻¹))) := by
   intro k N l m ε θ ν f hk hodd hN hl hm hlN hε hν hf
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
   set φ : ℂ := ((l ^ m).totient : ℂ) with hφ
   have hφ0 : φ ≠ 0 := by
     rw [hφ]; exact_mod_cast (Nat.totient_pos.2 (Nat.pos_of_ne_zero (pow_ne_zero _ hl.ne_zero))).ne'

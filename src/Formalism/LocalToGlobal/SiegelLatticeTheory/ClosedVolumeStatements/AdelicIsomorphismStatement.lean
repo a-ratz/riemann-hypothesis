@@ -175,7 +175,7 @@ theorem kinf_iff (hR : PI.AdBridgeSteps.RealK) (I : AutInst) (e : I.GA ≃ₜ* H
         (fun h => hP ((Matrix.isUnit_iff_isUnit_det _).mpr h))
       have hU : IsUnit (uMat (x.1 v)) := Units.isUnit _
       rw [hu, h0, zero_mul, zero_mul] at hU
-      haveI : Subsingleton (Matrix (Fin I.n) (Fin I.n) ℂ) :=
+      have : Subsingleton (Matrix (Fin I.n) (Fin I.n) ℂ) :=
         subsingleton_of_zero_eq_one (isUnit_zero_iff.mp hU)
       exact hP (by rw [Subsingleton.elim (I.P v) 1]; exact isUnit_one)
     have hk : Formalism.REAL.inUJ (I.ε v) (uMat (x.1 v)) := (x.1 v).2
@@ -333,7 +333,7 @@ theorem adBridgeGF_main (I : AutInst) : AdBridgeGF I := by
       | exact e.apply_symm_apply h
       | simp
     refine ⟨e.symm h, ?_, hs⟩
-    simp only [Formalism.MainNotions.S.AutInst.GFset, Set.mem_setOf_eq]
+    simp only [Formalism.MainNotions.S.AutInst.GFset, Set.mem_ofPred_eq]
     refine ⟨γ, hγ, fun v => ?_, ?_⟩
     · rw [(he (e.symm h)).1 v, hs]
       unfold ofHAInf

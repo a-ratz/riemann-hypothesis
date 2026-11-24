@@ -166,9 +166,9 @@ theorem exists_continuousMulEquiv_adelic : ∀ (I : AutInst), ∃ e : I.Gf ≃�
   have hone : (1 : I.Gf) ∈ I.Kset := by
     have h1 : (1 : I.Gf) ∈ (K0 : Set I.Gf) := K0.one_mem
     rwa [hK0] at h1
-  haveI : IsModuleTopology (Af I.F) (Af I.F ⊗[I.F] I.E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Af I.F ⊗[I.F] I.E) := IsModuleTopology.isTopologicalRing (Af I.F) _
-  haveI : IsTopologicalGroup (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA (Af I.F) I.cm.sig I.J) :=
+  have : IsModuleTopology (Af I.F) (Af I.F ⊗[I.F] I.E) := ⟨rfl⟩
+  have : IsTopologicalRing (Af I.F ⊗[I.F] I.E) := IsModuleTopology.isTopologicalRing (Af I.F) _
+  have : IsTopologicalGroup (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA (Af I.F) I.cm.sig I.J) :=
     inferInstanceAs (IsTopologicalGroup (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HR (Af I.F) I.cm.sig I.J))
   obtain ⟨KH, hKH, hKHo, hKHc⟩ := GlobalTheory.Mem.Vol.StabGroup.exists_compact_open_stab I.F I.E I.cm.sig I.n I.J I.L
     I.L_fg I.L_span
@@ -231,7 +231,7 @@ theorem exists_continuousMulEquiv_adelic : ∀ (I : AutInst), ∃ e : I.Gf ≃�
     have hmatc : Continuous (fun h : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA (Af I.F) I.cm.sig I.J =>
         ((Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.HA.mat (Af I.F) I.cm.sig I.J h : GL (Fin I.n) (Af I.F ⊗[I.F] I.E)) :
           Matrix (Fin I.n) (Fin I.n) (Af I.F ⊗[I.F] I.E))) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have h1 := hmatc.continuousAt (x := 1) |>.preimage_mem_nhds hN
     filter_upwards [h1, hKHo.mem_nhds KH.one_mem] with h hh hk
     apply hgW

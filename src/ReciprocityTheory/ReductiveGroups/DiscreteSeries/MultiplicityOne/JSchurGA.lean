@@ -88,7 +88,7 @@ theorem PG_mul_apply (k r : ℕ) (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r +
     (PG k r * M) i j = dG k r i * M i j + cG k r i * M (Fin.rev i) j := by
   first
     | simp only [Matrix.mul_apply, PG, add_mul, Finset.sum_add_distrib, ite_mul, zero_mul,
-        Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+        Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
 
 theorem val_rev_eq_sub (k r : ℕ) (i : Fin (2 * r + k + 1)) : (Fin.rev i).val = 2 * r + k - i.val := by
   have := i.isLt
@@ -298,7 +298,7 @@ private theorem isClosedEmbedding_umat (k r : ℕ) :
     first
       | exact continuous_id.prodMk (MulOpposite.continuous_op.comp h0)
   have hc : Continuous (fun u : Formalism.REAL.UJ (epsG k r) => Formalism.MainNotions.S.umat u) :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   have he : IsInducing (fun u : Formalism.REAL.UJ (epsG k r) => Units.embedProduct _ (u : (Mat k r)ˣ)) := by
     first
       | exact Units.isInducing_embedProduct.comp IsInducing.subtypeVal
@@ -361,7 +361,7 @@ theorem psiM_mul (u v : Formalism.REAL.UJ (epsG k r)) : psiM k r (u * v) = psiM 
   rw [psiM_eq, psiM_eq, psiM_eq, hm]
   simp only [Matrix.mul_assoc, hPP]
 
-theorem continuous_psiM (k r : ℕ) : Continuous (psiM k r) := (conjPG k r).continuous.comp (Units.continuous_val.comp continuous_subtype_val)
+theorem continuous_psiM (k r : ℕ) : Continuous (psiM k r) := (conjPG k r).continuous.comp (Units.continuous_val.comp continuous_subtypeVal)
 
 theorem measurableEmbedding_psiG (k r : ℕ) : MeasurableEmbedding (psiG k r) := (isClosedEmbedding_psiG k r).measurableEmbedding
 
@@ -417,9 +417,9 @@ theorem nuG_finite {μ : Measure (Mt k r)} (hμ : IsHaarOn (GV k r) μ) : IsFini
 
 theorem nuG_eq_smul {μ : Measure (Mt k r)} (hμ : IsHaarOn (GV k r) μ) :
     ∃ c : ℝ≥0, c ≠ 0 ∧ nuG μ = c • Formalism.REAL.muG (epsG k r) := by
-  haveI := nuG_left hμ
-  haveI := nuG_finite hμ
-  haveI hHaar : (Formalism.REAL.muG (epsG k r)).IsHaarMeasure := by
+  have := nuG_left hμ
+  have := nuG_finite hμ
+  have hHaar : (Formalism.REAL.muG (epsG k r)).IsHaarMeasure := by
     first
       | infer_instance
       | (unfold Formalism.REAL.muG; infer_instance)
@@ -433,26 +433,26 @@ theorem nuG_eq_smul {μ : Measure (Mt k r)} (hμ : IsHaarOn (GV k r) μ) :
 private theorem nuG_isOpenPosMeasure {μ : Measure (Mt k r)} (hμ : IsHaarOn (GV k r) μ) :
     (nuG μ).IsOpenPosMeasure := by
   obtain ⟨c, hc, he⟩ := nuG_eq_smul hμ
-  haveI hHaar : (Formalism.REAL.muG (epsG k r)).IsHaarMeasure := by
+  have hHaar : (Formalism.REAL.muG (epsG k r)).IsHaarMeasure := by
     first
       | infer_instance
       | (unfold Formalism.REAL.muG; infer_instance)
   constructor
   intro U hU hne
-  rw [he, Measure.smul_apply]
+  rw [he, smul_apply]
   have h0 := hU.measure_ne_zero (Formalism.REAL.muG (epsG k r)) hne
   first
     | exact smul_ne_zero hc h0
 
 open scoped Pointwise in
 theorem nuG_inv {μ : Measure (Mt k r)} (hμ : IsHaarOn (GV k r) μ) : (nuG μ).IsInvInvariant := by
-  haveI := nuG_left hμ
-  haveI := nuG_finite hμ
-  haveI := nuG_isOpenPosMeasure hμ
-  haveI hH : (nuG μ).IsHaarMeasure :=
+  have := nuG_left hμ
+  have := nuG_finite hμ
+  have := nuG_isOpenPosMeasure hμ
+  have hH : (nuG μ).IsHaarMeasure :=
     { toIsFiniteMeasureOnCompacts := inferInstance, toIsMulLeftInvariant := inferInstance,
       toIsOpenPosMeasure := inferInstance }
-  haveI hR : (nuG μ).IsMulRightInvariant := by
+  have hR : (nuG μ).IsMulRightInvariant := by
     constructor
     intro u
     refine nuG_map_eq_of_psiG_comm hμ _ (continuous_mul_const u).measurable (Formalism.FourierDecayAlt.B.rmulF (psiM k r u)) ?_
@@ -462,10 +462,10 @@ theorem nuG_inv {μ : Measure (Mt k r)} (hμ : IsHaarOn (GV k r) μ) : (nuG μ).
       exact continuous_id.matrix_mul continuous_const
     · rw [Formalism.FourierDecayAlt.B.rmulF, of_psiG, psiG, psiM_mul]
       try rfl
-  haveI hFi : IsFiniteMeasureOnCompacts (nuG μ).inv := by
+  have hFi : IsFiniteMeasureOnCompacts (nuG μ).inv := by
     first
       | infer_instance
-  haveI hLi : (nuG μ).inv.IsMulLeftInvariant := by infer_instance
+  have hLi : (nuG μ).inv.IsMulLeftInvariant := by infer_instance
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, (nuG μ).inv = c • nuG μ :=
     ⟨_, Measure.isMulLeftInvariant_eq_smul _ _⟩
   obtain ⟨K, hK, hK1⟩ := exists_compact_mem_nhds (1 : Formalism.REAL.UJ (epsG k r))
@@ -479,7 +479,7 @@ theorem nuG_inv {μ : Measure (Mt k r)} (hμ : IsHaarOn (GV k r) μ) : (nuG μ).
     rw [Set.union_inv, inv_inv, Set.union_comm]
   have h2 : nuG μ (K ∪ K⁻¹) = (c : ℝ≥0∞) * nuG μ (K ∪ K⁻¹) := by
     have h1 : (nuG μ).inv (K ∪ K⁻¹) = nuG μ (K ∪ K⁻¹) := by rw [Measure.inv_apply, hSinv]
-    rw [hc, Measure.smul_apply] at h1
+    rw [hc, smul_apply] at h1
     first
       | exact h1.symm
       | (rw [ENNReal.smul_def] at h1; exact h1.symm)
@@ -539,9 +539,9 @@ theorem schur_GV [CompleteSpace H] [Nontrivial H] {μ : Measure (Mt k r)} (hμ :
       Integrable (fun g : Mt k r => ⟪w, σ (Matrix.of g) v⟫_ℂ * star ⟪w', σ (Matrix.of g) v'⟫_ℂ) μ ∧
       ∫ g : Mt k r, ⟪w, σ (Matrix.of g) v⟫_ℂ * star ⟪w', σ (Matrix.of g) v'⟫_ℂ ∂μ =
         ⟪v', v⟫_ℂ * ⟪w, w'⟫_ℂ / (d : ℂ) := by
-  haveI := nuG_left hμ
-  haveI := nuG_inv hμ
-  haveI := nuG_openPos hμ
+  have := nuG_left hμ
+  have := nuG_inv hμ
+  have := nuG_openPos hμ
   obtain ⟨d, hd, h⟩ := Formalism.MainNotions.BridgeCSchur.schur_orth (sqRep_psiG hμ hU hS) (irr_psiG hI)
   refine ⟨d, hd, fun v w v' w' => ?_⟩
   obtain ⟨hi, he⟩ := h v w v' w'

@@ -90,9 +90,9 @@ def extNe {ι : Type} [DecidableEq ι] (a : ι) (y : {i // i ≠ a} → ℂ) : �
 theorem measurable_extNe {ι : Type} [DecidableEq ι] (a : ι) : Measurable (extNe a) := by
   refine Measurable.of_eval fun j => ?_
   by_cases h : j ≠ a
-  · simp only [extNe, dif_pos h]
+  · simp only [extNe, dite_eq_left h]
     exact measurable_pi_apply _
-  · simp only [extNe, dif_neg h]
+  · simp only [extNe, dite_eq_right h]
     exact measurable_const
 
 theorem measurePreserving_of_card (n : ℕ) : ∀ (ι : Type) [Fintype ι] [DecidableEq ι], Fintype.card ι = n →
@@ -102,7 +102,7 @@ theorem measurePreserving_of_card (n : ℕ) : ∀ (ι : Type) [Fintype ι] [Deci
   induction n with
   | zero =>
     intro ι _ _ hcard r g _ _
-    haveI : IsEmpty ι := Fintype.card_eq_zero_iff.1 hcard
+    have : IsEmpty ι := Fintype.card_eq_zero_iff.1 hcard
     have : (fun x : ι → ℂ => fun i => x i + g i x) = id := by
       funext x i
       exact isEmptyElim i
@@ -110,7 +110,7 @@ theorem measurePreserving_of_card (n : ℕ) : ∀ (ι : Type) [Fintype ι] [Deci
     exact MeasurePreserving.id _
   | succ n ih =>
     intro ι _ _ hcard r g hg hdep
-    haveI : Nonempty ι := Fintype.card_pos_iff.1 (by omega)
+    have : Nonempty ι := Fintype.card_pos_iff.1 (by omega)
 
     obtain ⟨a, -, ha⟩ := Finset.exists_max_image Finset.univ r Finset.univ_nonempty
     have hja : ∀ i j, r j < r i → j ≠ a := by
@@ -128,9 +128,9 @@ theorem measurePreserving_of_card (n : ℕ) : ∀ (ι : Type) [Fintype ι] [Deci
         intro j y z hyz
         refine hdep j _ _ fun l hl => ?_
         by_cases h : l ≠ a
-        · simp only [extNe, dif_pos h]
+        · simp only [extNe, dite_eq_left h]
           exact hyz ⟨l, h⟩ hl
-        · simp only [extNe, dif_neg h])
+        · simp only [extNe, dite_eq_right h])
     let e := MeasurableEquiv.piEquivPiSubtypeProd (fun _ : ι => ℂ) (fun j => j ≠ a)
     have he : MeasurePreserving e volume volume :=
       volume_preserving_piEquivPiSubtypeProd (fun _ : ι => ℂ) (fun j => j ≠ a)

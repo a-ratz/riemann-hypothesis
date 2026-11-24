@@ -57,7 +57,7 @@ private theorem finite_span_of_killed {K X : Type} {d : ℕ} (ρ : K → Matrix 
     funext g
     have := h x (by simpa [A, Finsupp.linearCombination_apply] using hx) g
     simpa [B, Finsupp.linearCombination_apply, Finsupp.sum_apply'] using this
-  haveI : FiniteDimensional ℂ ((K →₀ ℂ) ⧸ LinearMap.ker A) :=
+  have : FiniteDimensional ℂ ((K →₀ ℂ) ⧸ LinearMap.ker A) :=
     Module.Finite.equiv A.quotKerEquivRange.symm
   have hr : LinearMap.range ((LinearMap.ker A).liftQ B hAB) = Submodule.span ℂ (Set.range ψ) := by
     rw [Submodule.range_liftQ]

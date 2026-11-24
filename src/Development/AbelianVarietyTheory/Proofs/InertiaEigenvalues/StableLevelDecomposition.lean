@@ -110,7 +110,7 @@ theorem orbitSpan_finiteDimensional (L : Subgroup (GL (Fin N) (Af E))) (hL : IsC
   classical
   obtain ⟨t, ht⟩ := hL.elim_finite_subcover (fun l : GL (Fin N) (Af E) => {m | finRep E N (l⁻¹ * m) ψ = ψ})
     (fun l => hψ.level.preimage (continuous_const_mul l⁻¹))
-    (fun m _ => Set.mem_iUnion.2 ⟨m, by simp only [Set.mem_setOf_eq, inv_mul_cancel, map_one]; rfl⟩)
+    (fun m _ => Set.mem_iUnion.2 ⟨m, by simp only [Set.mem_ofPred_eq, inv_mul_cancel, map_one]; rfl⟩)
   have := hψ.kfin
   refine Submodule.finiteDimensional_of_le
     (S₂ := t.sup fun l => (Submodule.span ℂ (Set.range fun k => cptRep E N k ψ)).map (finRep E N l))
@@ -143,10 +143,10 @@ theorem exists_proj {μ : Measure (GA E N)} [μ.IsHaarMeasure] {W : Submodule �
     (S : Submodule ℂ (Sm E N)) (hSW : S ≤ W) [FiniteDimensional ℂ S] :
     ∃ p : W →ₗ[ℂ] W, (∀ x, (p x).1 ∈ S) ∧
       ∀ x y : W, y.1 ∈ S → inner ℂ (toL2ₗ μ W h x - toL2ₗ μ W h (p x)) (toL2ₗ μ W h y) = 0 := by
-  haveI : FiniteDimensional ℂ (S.comap W.subtype) :=
+  have : FiniteDimensional ℂ (S.comap W.subtype) :=
     (Submodule.comapSubtypeEquivOfLe hSW).symm.finiteDimensional
   let e := Submodule.equivMapOfInjective (toL2ₗ μ W h) hF (S.comap W.subtype)
-  haveI : FiniteDimensional ℂ ((S.comap W.subtype).map (toL2ₗ μ W h)) := e.finiteDimensional
+  have : FiniteDimensional ℂ ((S.comap W.subtype).map (toL2ₗ μ W h)) := e.finiteDimensional
   have e1 : ∀ z, toL2ₗ μ W h ((e.symm z : S.comap W.subtype) : W) = (z : L2 (latticeGL E N) μ) := fun z => by
     have := Submodule.coe_equivMapOfInjective_apply (toL2ₗ μ W h) hF (S.comap W.subtype) (e.symm z)
     rw [LinearEquiv.apply_symm_apply] at this
@@ -197,8 +197,8 @@ theorem exists_levelType_part : ∀ (E : Type) [Field E] [NumberField E] [_root_
   have hF := toL2ₗ_injective h fun φ hφ => ContAut.continuous_of_isOpen_stab E N φ (hA φ hφ).level
   have hSJ : orbitSpan L ψ.1 ≤ J := orbitSpan_le hJ L hψ
   have hSW := hSJ.trans hJW
-  haveI := orbitSpan_finiteDimensional L hLc ψ.1 (hA _ ψ.2)
-  haveI : FiniteDimensional ℂ (orbitSpan L ψ.1 ⊓ typePart L ρ : Submodule ℂ (Sm E N)) :=
+  have := orbitSpan_finiteDimensional L hLc ψ.1 (hA _ ψ.2)
+  have : FiniteDimensional ℂ (orbitSpan L ψ.1 ⊓ typePart L ρ : Submodule ℂ (Sm E N)) :=
     Submodule.finiteDimensional_of_le inf_le_left
   obtain ⟨p, hpS, hp⟩ := exists_proj h hF (orbitSpan L ψ.1) hSW
   obtain ⟨q, hqQ, hq⟩ := exists_proj h hF (orbitSpan L ψ.1 ⊓ typePart L ρ) (inf_le_left.trans hSW)

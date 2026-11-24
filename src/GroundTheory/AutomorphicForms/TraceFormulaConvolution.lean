@@ -121,7 +121,7 @@ omit [IsTopologicalGroup G] [LocallyCompactSpace G] [SecondCountableTopology G] 
   [BorelSpace G] in
 theorem finite_setOf_mem_of_isCompact [IsTopologicalGroup G] {C : Set G} (hC : IsCompact C) :
     {δ : Γ | (δ : G) ∈ C}.Finite := by
-  have hcl : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discrete
+  have hcl : IsClosed (Γ : Set G) := Subgroup.isClosed_of_discreteTopology
   exact (hcl.isClosedEmbedding_subtypeVal.isProperMap.isCompact_preimage hC).finite_of_discrete
 
 section Kernel

@@ -76,7 +76,7 @@ theorem UpperTheory.V.KH.cardStep :
   have h2 : g.ker.index ≤ Nat.card C := by
     rw [AddSubgroup.index_ker]
     exact Finite.card_subtype_le _
-  haveI hfin1 : Finite g.ker := by
+  have hfin1 : Finite g.ker := by
     rw [hker]
     exact Finite.of_surjective _ f.rangeRestrict_surjective
   have hpos1 : 0 < Nat.card g.ker := Nat.card_pos
@@ -151,10 +151,10 @@ theorem UpperTheory.V.KH.orbStep :
           | h b =>
             congr 1
             exact Quotient.sound ((hrel a b).2 (Quotient.exact hpq))
-    haveI : Finite (MulAction.orbitRel.Quotient G X) := hO.1
-    haveI : Finite (Option (MulAction.orbitRel.Quotient G (Uᶜ : SubMulAction G X))) :=
+    have : Finite (MulAction.orbitRel.Quotient G X) := hO.1
+    have : Finite (Option (MulAction.orbitRel.Quotient G (Uᶜ : SubMulAction G X))) :=
       Finite.of_injective F hF
-    haveI : Finite (MulAction.orbitRel.Quotient G (Uᶜ : SubMulAction G X)) :=
+    have : Finite (MulAction.orbitRel.Quotient G (Uᶜ : SubMulAction G X)) :=
       Finite.of_injective some (Option.some_injective _)
     refine ⟨inferInstance, ?_⟩
     have h2 := Nat.card_le_card_of_injective F hF
@@ -189,7 +189,7 @@ theorem UpperTheory.V.KH.permEmpty :
     | h a =>
       induction b using groupHomology_induction_on with
       | h b => rw [Subsingleton.elim a b]
-  haveI := hH
+  have := hH
   exact ⟨Finite.of_subsingleton, (Finite.card_le_one_iff_subsingleton).2 hH⟩
 end -- clump:auto
 end -- clump:auto
@@ -244,14 +244,14 @@ theorem UpperTheory.V.KH.permSplit :
       by_cases hx : x ∈ U
       · rw [show x = ((⟨x, hx⟩ : U) : X) from rfl, Finsupp.mapDomain_apply_of_injective Subtype.val_injective,
           Finsupp.subtypeDomain_apply]
-      · rw [Finsupp.mapDomain_notin_range _ _ (by rintro ⟨u, rfl⟩; exact hx u.2)]
+      · rw [Finsupp.mapDomain_of_notMem_range _ _ (by rintro ⟨u, rfl⟩; exact hx u.2)]
         have hxV : x ∈ V := (hUV x).2 hx
         have h1 := DFunLike.congr_fun hy0 ⟨x, hxV⟩
         simp only [Finsupp.subtypeDomain_apply, Finsupp.coe_zero, Pi.zero_apply] at h1
         exact h1.symm
     · rintro ⟨u, rfl⟩
       ext ⟨x, hx⟩
-      rw [Finsupp.subtypeDomain_apply, Finsupp.mapDomain_notin_range _ _ ?_]
+      rw [Finsupp.subtypeDomain_apply, Finsupp.mapDomain_of_notMem_range _ _ ?_]
       · simp
       · rintro ⟨w, rfl⟩
         exact ((hUV _).1 hx) w.2
@@ -311,7 +311,7 @@ theorem UpperTheory.V.KH.kill :
     ∀ (S : Type) [Group S] [Finite S] (j : ℕ) (z : HZ S (j + 1)), Nat.card S • z = 0 := by
   intro S _ _ j z
   classical
-  haveI : Fintype S := Fintype.ofFinite S
+  have : Fintype S := Fintype.ofFinite S
   let v : S →₀ ℤ := ∑ s : S, Finsupp.single s 1
   have hv : ∀ g : S, perm S S g v = v := by
     intro g
@@ -337,7 +337,7 @@ theorem UpperTheory.V.KH.kill :
     ring
   have hsub : Subsingleton (groupHomology (permRep S S) (j + 1)) := by
     obtain ⟨e⟩ := shapiro S S (1 : S) (j + 1)
-    haveI : Subsingleton (MulAction.stabilizer S (1 : S)) := by
+    have : Subsingleton (MulAction.stabilizer S (1 : S)) := by
       constructor
       rintro ⟨a, ha⟩ ⟨b, hb⟩
       have ha' : a * 1 = 1 := ha
@@ -439,7 +439,7 @@ theorem UpperTheory.V.KH.permTrans :
   intro G X _ _ _ _ s j hs
   obtain ⟨x⟩ := ‹Nonempty X›
   obtain ⟨hfin, hcard⟩ := hs x
-  haveI := hfin
+  have := hfin
   obtain ⟨e⟩ := shapiro G X x (j + 1)
   have h1 := finGroup (MulAction.stabilizer G x) j
   have hpos : 0 < Nat.card (MulAction.stabilizer G x) := Nat.card_pos
@@ -473,9 +473,9 @@ theorem UpperTheory.V.KH.permCard :
   induction A with
   | zero =>
     intro X _ hO _ hs
-    haveI : IsEmpty X := ⟨fun x => by
+    have : IsEmpty X := ⟨fun x => by
       obtain ⟨hf, hc⟩ := hO
-      haveI : Nonempty (MulAction.orbitRel.Quotient G X) := ⟨Quotient.mk'' x⟩
+      have : Nonempty (MulAction.orbitRel.Quotient G X) := ⟨Quotient.mk'' x⟩
       have := Nat.card_pos (α := MulAction.orbitRel.Quotient G X)
       omega⟩
     exact hempty 0 X hs

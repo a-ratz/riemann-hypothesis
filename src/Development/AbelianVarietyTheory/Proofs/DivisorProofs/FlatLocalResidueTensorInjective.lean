@@ -83,26 +83,26 @@ theorem exists_surj_pi_quot_pow_ker_eq {A M : Type} [CommRing A] [IsDedekindDoma
       exact (Ideal.Quotient.eq_zero_iff_mem.2 (by simp)).symm
     · intro x
       simp
-  haveI : P.IsPrime := hP.isPrime
+  have : P.IsPrime := hP.isPrime
   have hPr : P ^ r ≠ ⊤ := by
     intro h
     exact hP.ne_top (eq_top_iff.mpr (h ▸ Ideal.pow_le_self hr.ne'))
-  haveI : Nontrivial (A ⧸ P ^ r) := Ideal.Quotient.nontrivial_iff.2 hPr
+  have : Nontrivial (A ⧸ P ^ r) := Ideal.Quotient.nontrivial_iff.2 hPr
   let Ap := Localization.AtPrime P
   let φ : Ap →ₐ[A] A ⧸ P ^ r := IsLocalization.liftAlgHom (M := P.primeCompl)
     (f := Ideal.Quotient.mkₐ A (P ^ r)) fun u ↦
       Ideal.Quotient.isUnit_mk_pow_of_notMem _ (Ideal.mem_primeCompl_iff.mp u.prop)
-  letI : Algebra Ap (A ⧸ P ^ r) := φ.toRingHom.toAlgebra
-  haveI : IsScalarTower A Ap (A ⧸ P ^ r) := IsScalarTower.of_algebraMap_eq fun a ↦ (φ.commutes a).symm
+  let : Algebra Ap (A ⧸ P ^ r) := φ.toRingHom.toAlgebra
+  have : IsScalarTower A Ap (A ⧸ P ^ r) := IsScalarTower.of_algebraMap_eq fun a ↦ (φ.commutes a).symm
 
-  haveI : Module.Free Ap (Ap ⊗[A] M) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free Ap (Ap ⊗[A] M) := Module.free_of_flat_of_isLocalRing
   have hle := Ideal.primeCompl_le_nonZeroDivisors P
   have hAp : Module.finrank Ap (Ap ⊗[A] M) = d := by
     rw [IsLocalization.finrank_eq Ap P.primeCompl hle,
       IsLocalizedModule.finrank_eq P.primeCompl (TensorProduct.mk A Ap M 1) hle, hd]
   let e0 := TensorProduct.AlgebraTensorModule.cancelBaseChange A Ap (A ⧸ P ^ r) (A ⧸ P ^ r) M
-  haveI : Module.Free (A ⧸ P ^ r) ((A ⧸ P ^ r) ⊗[A] M) := Module.Free.of_equiv e0
-  haveI : Module.Finite (A ⧸ P ^ r) ((A ⧸ P ^ r) ⊗[A] M) := inferInstance
+  have : Module.Free (A ⧸ P ^ r) ((A ⧸ P ^ r) ⊗[A] M) := Module.Free.of_equiv e0
+  have : Module.Finite (A ⧸ P ^ r) ((A ⧸ P ^ r) ⊗[A] M) := inferInstance
   have hB : Module.finrank (A ⧸ P ^ r) ((A ⧸ P ^ r) ⊗[A] M) = d := by
     rw [← e0.finrank_eq, Module.finrank_baseChange, hAp]
   let e : (A ⧸ P ^ r) ⊗[A] M ≃ₗ[A ⧸ P ^ r] (Fin d → A ⧸ P ^ r) :=
@@ -229,15 +229,15 @@ variable {p : ℕ} [Fact p.Prime]
 theorem projective_La_int (D : Datum p) :
     letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
     Module.Projective (𝓞 D.F) D.La := by
-  letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
-  haveI := D.freeLa
-  haveI := D.finLa
+  let : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  have := D.freeLa
+  have := D.finLa
   have htor : Submodule.torsion (𝓞 D.F) D.La = ⊥ := by
     rw [eq_bot_iff]
     intro x hx
     obtain ⟨a, hax⟩ := (Submodule.mem_torsion_iff x).1 hx
     have ha0 : (a : 𝓞 D.F) ≠ 0 := nonZeroDivisors.ne_zero a.2
-    have hne := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) ha0 (Ideal.mem_span_singleton_self (a : 𝓞 D.F))
+    have hne := Ideal.under_ne_bot_of_integral_mem (R := ℤ) ha0 (Ideal.mem_span_singleton_self (a : 𝓞 D.F))
       (Algebra.IsIntegral.isIntegral (R := ℤ) (a : 𝓞 D.F))
     obtain ⟨e, he, he0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
     rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at he
@@ -251,7 +251,7 @@ theorem projective_La_int (D : Datum p) :
     rcases smul_eq_zero.1 h1 with h | h
     · exact absurd h he0
     · exact (Submodule.mem_bot _).2 h
-  haveI : Module.Finite (𝓞 D.F) D.La := Module.Finite.of_restrictScalars_finite ℤ (𝓞 D.F) D.La
+  have : Module.Finite (𝓞 D.F) D.La := Module.Finite.of_restrictScalars_finite ℤ (𝓞 D.F) D.La
   have : Module.Flat (𝓞 D.F) D.La := (IsDedekindDomain.flat_iff_torsion_eq_bot).2 htor
   have := Module.finitePresentation_of_finite (𝓞 D.F) D.La
   exact Module.Flat.projective_of_finitePresentation
@@ -273,7 +273,7 @@ namespace GlobalTheory.UPel.HT.EtLev
 theorem mem_smul_top_iff_wSub {p : ℕ} [Fact p.Prime] (D : Datum p) (w0 : Ideal (𝓞 D.F)) (r : ℕ) (x : D.La) :
     letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
     x ∈ (w0 ^ r) • (⊤ : Submodule (𝓞 D.F) D.La) ↔ x ∈ wSub D w0 r := by
-  letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  let : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
   constructor
   · intro hx
     refine Submodule.smul_induction_on hx (fun c hc z _ => ?_) (fun u v hu hv => add_mem hu hv)
@@ -296,10 +296,10 @@ theorem latQuot_free : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Da
       (∀ (c : 𝓞 D.F) (x : D.La), g (algebraMap (𝓞 D.F) D.O c • x) = Ideal.Quotient.mk (w0 ^ r) c • g x) ∧
       ∀ x, g x = 0 ↔ x ∈ GlobalTheory.UPel.HT.EtLev.wSub D w0 r := by
   intro p _ D w0 r hw
-  letI iL : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
-  haveI := projective_La_int D
-  haveI := D.finLa
-  haveI : Module.Finite (𝓞 D.F) D.La := Module.Finite.of_restrictScalars_finite ℤ (𝓞 D.F) D.La
+  let iL : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  have := projective_La_int D
+  have := D.finLa
+  have : Module.Finite (𝓞 D.F) D.La := Module.Finite.of_restrictScalars_finite ℤ (𝓞 D.F) D.La
   obtain ⟨g, hs, hk⟩ := GlobalTheory.T.exists_surjective_pi_quotient_pow_ker_eq w0 hw r _ (GlobalTheory.T.finrank_La_ringOfIntegers' D)
   refine ⟨g.toAddMonoidHom, hs, fun c x => ?_, fun x => ?_⟩
   · show g (c • x) = _

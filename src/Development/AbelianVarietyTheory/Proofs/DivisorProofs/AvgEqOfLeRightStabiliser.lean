@@ -50,8 +50,8 @@ namespace GlobalTheory.BCT
 theorem avg_eq_of_le_rStab : ∀ (H : Type) [Group H] (u : H → ℂ) (S : Subgroup H), S ≤ rStab u → S.index ≠ 0 →
     avg u = (S.index : ℂ)⁻¹ * ∑ᶠ q : H ⧸ S, u q.out := by
   intro H _ u S hS hi
-  haveI : S.FiniteIndex := ⟨hi⟩
-  haveI : (rStab u).FiniteIndex := Subgroup.finiteIndex_of_le hS
+  have : S.FiniteIndex := ⟨hi⟩
+  have : (rStab u).FiniteIndex := Subgroup.finiteIndex_of_le hS
   have hRi : (rStab u).index ≠ 0 := Subgroup.FiniteIndex.index_ne_zero
   have hu : ∀ x : H, u ((QuotientGroup.mk x : H ⧸ rStab u).out) = u x := by
     intro x
@@ -63,12 +63,12 @@ theorem avg_eq_of_le_rStab : ∀ (H : Type) [Group H] (u : H → ℂ) (S : Subgr
     intro q
     conv_lhs => rw [← QuotientGroup.out_eq' q]
     rfl
-  haveI : Fintype (H ⧸ S) := Fintype.ofFinite _
-  haveI : Fintype (H ⧸ rStab u) := Fintype.ofFinite _
-  haveI : Finite ((rStab u) ⧸ S.subgroupOf (rStab u)) := by
+  have : Fintype (H ⧸ S) := Fintype.ofFinite _
+  have : Fintype (H ⧸ rStab u) := Fintype.ofFinite _
+  have : Finite ((rStab u) ⧸ S.subgroupOf (rStab u)) := by
     have : Finite ((H ⧸ rStab u) × (rStab u) ⧸ S.subgroupOf (rStab u)) := Finite.of_equiv _ e
     exact Finite.prod_right (H ⧸ rStab u)
-  haveI : Fintype ((rStab u) ⧸ S.subgroupOf (rStab u)) := Fintype.ofFinite _
+  have : Fintype ((rStab u) ⧸ S.subgroupOf (rStab u)) := Fintype.ofFinite _
   have hsum : ∑ᶠ q : H ⧸ S, u q.out =
       (S.relIndex (rStab u) : ℂ) * ∑ᶠ p : H ⧸ rStab u, u p.out := by
     rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype]

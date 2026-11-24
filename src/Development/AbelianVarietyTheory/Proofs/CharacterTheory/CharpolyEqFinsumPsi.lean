@@ -54,10 +54,10 @@ theorem charpoly_eq_finsum_psi (F : Type) [Field F] [Finite F] (V : Type) [AddCo
     s (LinearMap.charpoly g) =
       ∑ᶠ W : {W : Submodule F V // ∀ x ∈ W, g x ∈ W}, psi s W.1 (g.restrict W.2) := by
   classical
-  haveI : Finite V := Module.finite_of_finite F
-  haveI : Finite (Submodule F V) := Finite.of_injective _ (SetLike.coe_injective (A := Submodule F V))
-  haveI := Fintype.ofFinite {W : Submodule F V // ∀ x ∈ W, g x ∈ W}
-  haveI := Fintype.ofFinite {W : Submodule F V // W ≠ ⊤ ∧ ∀ x ∈ W, g x ∈ W}
+  have : Finite V := Module.finite_of_finite F
+  have : Finite (Submodule F V) := Finite.of_injective _ (SetLike.coe_injective (A := Submodule F V))
+  have := Fintype.ofFinite {W : Submodule F V // ∀ x ∈ W, g x ∈ W}
+  have := Fintype.ofFinite {W : Submodule F V // W ≠ ⊤ ∧ ∀ x ∈ W, g x ∈ W}
   let T : {W : Submodule F V // ∀ x ∈ W, g x ∈ W} := ⟨⊤, fun _ _ => Submodule.mem_top⟩
   have hT : psi s T.1 (g.restrict T.2) = psi s V g := by
     rw [← psi_conj F s T.1 V Submodule.topEquiv (g.restrict T.2)]

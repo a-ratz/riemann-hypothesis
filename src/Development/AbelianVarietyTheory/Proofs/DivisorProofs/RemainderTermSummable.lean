@@ -67,16 +67,16 @@ theorem free_baseChange_quot (K : Type) [Field K] [NumberField K] (L : Type) [Ad
       ((𝓞 K ⧸ Ideal.span {((ℓ ^ j : ℕ) : 𝓞 K)}) ⊗[𝓞 K] L) := by
   set I := Ideal.span {((ℓ ^ j : ℕ) : 𝓞 K)}
   let P : Ideal ℤ := Ideal.span {(ℓ : ℤ)}
-  haveI : P.IsPrime :=
+  have : P.IsPrime :=
     (Ideal.span_singleton_prime (by exact_mod_cast hℓ.ne_zero)).mpr (Nat.prime_iff_prime_int.mp hℓ)
   have hP0 : P ≠ ⊥ := by simp [P, hℓ.ne_zero]
   let T := Algebra.algebraMapSubmonoid (𝓞 K) P.primeCompl
   have hT : T ≤ nonZeroDivisors (𝓞 K) :=
     map_le_nonZeroDivisors_of_injective _ (FaithfulSMul.algebraMap_injective ℤ (𝓞 K))
       P.primeCompl_le_nonZeroDivisors
-  haveI : IsDomain (Localization T) := IsLocalization.isDomain_of_le_nonZeroDivisors _ hT
-  haveI : IsDedekindDomain (Localization T) := IsLocalization.isDedekindDomain (𝓞 K) hT _
-  haveI : IsPrincipalIdealRing (Localization T) :=
+  have : IsDomain (Localization T) := IsLocalization.isDomain_of_le_nonZeroDivisors _ hT
+  have : IsDedekindDomain (Localization T) := IsLocalization.isDedekindDomain (𝓞 K) hT _
+  have : IsPrincipalIdealRing (Localization T) :=
     IsDedekindDomain.isPrincipalIdealRing_localization_over_prime (𝓞 K) P hP0
   have hunit : ∀ t : T, IsUnit (Ideal.Quotient.mk I (t : 𝓞 K)) := by
     rintro ⟨_, z, hz, rfl⟩
@@ -92,13 +92,13 @@ theorem free_baseChange_quot (K : Type) [Field K] [NumberField K] (L : Type) [Ad
       linear_combination this
     rw [← map_mul, this, map_sub, map_one, map_mul, Ideal.Quotient.eq_zero_iff_mem.mpr hmem, mul_zero,
       sub_zero]
-  letI : Algebra (Localization T) (𝓞 K ⧸ I) := (IsLocalization.lift hunit).toAlgebra
-  haveI : IsScalarTower (𝓞 K) (Localization T) (𝓞 K ⧸ I) :=
+  let : Algebra (Localization T) (𝓞 K ⧸ I) := (IsLocalization.lift hunit).toAlgebra
+  have : IsScalarTower (𝓞 K) (Localization T) (𝓞 K ⧸ I) :=
     IsScalarTower.of_algebraMap_eq fun c => by
       rw [RingHom.algebraMap_toAlgebra, IsLocalization.lift_eq, Ideal.Quotient.algebraMap_eq]
-  haveI : Module.Flat (Localization T) (Localization T ⊗[𝓞 K] L) := Module.Flat.baseChange _ _ _
-  haveI : Module.IsTorsionFree (Localization T) (Localization T ⊗[𝓞 K] L) := Module.Flat.isTorsionFree
-  haveI : Module.Free (Localization T) (Localization T ⊗[𝓞 K] L) := Module.free_of_finite_type_torsion_free'
+  have : Module.Flat (Localization T) (Localization T ⊗[𝓞 K] L) := Module.Flat.baseChange _ _ _
+  have : Module.IsTorsionFree (Localization T) (Localization T ⊗[𝓞 K] L) := Module.Flat.isTorsionFree
+  have : Module.Free (Localization T) (Localization T ⊗[𝓞 K] L) := Module.free_of_finite_type_torsion_free'
   exact Module.Free.of_equiv
     (TensorProduct.AlgebraTensorModule.cancelBaseChange (𝓞 K) (Localization T) (𝓞 K ⧸ I) (𝓞 K ⧸ I) L)
 
@@ -115,11 +115,11 @@ theorem card_quot_int (L : Type) [AddCommGroup L] [Module.Free ℤ L] [Module.Fi
     (hn : 2 ≤ n) :
     Nat.card (L ⧸ (Ideal.span {((n : ℕ) : ℤ)} • ⊤ : Submodule ℤ L)) = n ^ Module.finrank ℤ L := by
   rw [← Nat.card_congr (TensorProduct.quotTensorEquivQuotSMul L (Ideal.span {((n : ℕ) : ℤ)})).toEquiv]
-  haveI : NeZero n := ⟨by omega⟩
-  haveI : Fact (1 < n) := ⟨by omega⟩
+  have : NeZero n := ⟨by omega⟩
+  have : Fact (1 < n) := ⟨by omega⟩
   have hA : Nat.card (ℤ ⧸ Ideal.span {((n : ℕ) : ℤ)}) = n := by
     rw [Nat.card_congr (Int.quotientSpanNatEquivZMod n).toEquiv, Nat.card_zmod]
-  haveI : Nontrivial (ℤ ⧸ Ideal.span {((n : ℕ) : ℤ)}) := (Int.quotientSpanNatEquivZMod n).nontrivial
+  have : Nontrivial (ℤ ⧸ Ideal.span {((n : ℕ) : ℤ)}) := (Int.quotientSpanNatEquivZMod n).nontrivial
   rw [card_eq_pow_finrank (ℤ ⧸ Ideal.span {((n : ℕ) : ℤ)}), Module.finrank_baseChange, hA]
 
 theorem card_ringOfIntegers_quot (K : Type) [Field K] [NumberField K] (n : ℕ) :
@@ -144,22 +144,22 @@ theorem quot_equiv_pi_pos (K : Type) [Field K] [NumberField K] (L : Type) [AddCo
     Nonempty ((Fin r → 𝓞 K ⧸ Ideal.span {((ℓ ^ j : ℕ) : 𝓞 K)}) ≃ₗ[𝓞 K ⧸ Ideal.span {((ℓ ^ j : ℕ) : 𝓞 K)}]
       L ⧸ (Ideal.span {((ℓ ^ j : ℕ) : 𝓞 K)} • ⊤ : Submodule (𝓞 K) L)) := by
   set I := Ideal.span {((ℓ ^ j : ℕ) : 𝓞 K)}
-  haveI : Module.Finite (𝓞 K) L := Module.Finite.of_restrictScalars_finite ℤ (𝓞 K) L
+  have : Module.Finite (𝓞 K) L := Module.Finite.of_restrictScalars_finite ℤ (𝓞 K) L
   have hn : 2 ≤ ℓ ^ j := by
     calc 2 ≤ ℓ := hℓ.two_le
       _ ≤ ℓ ^ j := Nat.le_self_pow hj.ne' ℓ
   have hd : 0 < Module.finrank ℚ K := Module.finrank_pos
   have hcardA := card_ringOfIntegers_quot K (ℓ ^ j)
-  haveI : Finite (𝓞 K ⧸ I) := Nat.finite_of_card_ne_zero (by rw [hcardA]; positivity)
-  haveI : Nontrivial (𝓞 K ⧸ I) := by
+  have : Finite (𝓞 K ⧸ I) := Nat.finite_of_card_ne_zero (by rw [hcardA]; positivity)
+  have : Nontrivial (𝓞 K ⧸ I) := by
     rw [← Finite.one_lt_card_iff_nontrivial]
     rw [hcardA]
     exact Nat.one_lt_pow hd.ne' (by omega)
-  haveI := free_baseChange_quot K L ℓ hℓ j
+  have := free_baseChange_quot K L ℓ hℓ j
   let e1 : ((𝓞 K ⧸ I) ⊗[𝓞 K] L) ≃ₗ[𝓞 K ⧸ I] L ⧸ (I • ⊤ : Submodule (𝓞 K) L) :=
     (TensorProduct.quotTensorEquivQuotSMul L I).extendScalarsOfSurjective Ideal.Quotient.mk_surjective
-  haveI : Module.Free (𝓞 K ⧸ I) (L ⧸ (I • ⊤ : Submodule (𝓞 K) L)) := Module.Free.of_equiv e1
-  haveI : Module.Finite (𝓞 K ⧸ I) (L ⧸ (I • ⊤ : Submodule (𝓞 K) L)) := Module.Finite.equiv e1
+  have : Module.Free (𝓞 K ⧸ I) (L ⧸ (I • ⊤ : Submodule (𝓞 K) L)) := Module.Free.of_equiv e1
+  have : Module.Finite (𝓞 K ⧸ I) (L ⧸ (I • ⊤ : Submodule (𝓞 K) L)) := Module.Finite.equiv e1
   have hM := card_eq_pow_finrank (𝓞 K ⧸ I) (L ⧸ (I • ⊤ : Submodule (𝓞 K) L))
   have hM2 : Nat.card (L ⧸ (I • ⊤ : Submodule (𝓞 K) L)) = (ℓ ^ j) ^ (r * Module.finrank ℚ K) := by
     rw [← hr, ← card_quot_int L (ℓ ^ j) hn, ← restrictScalars_span_smul_top K L (ℓ ^ j)]
@@ -181,8 +181,8 @@ theorem quot_equiv_pi (K : Type) [Field K] [NumberField K] (L : Type) [AddCommGr
       L ⧸ (Ideal.span {((ℓ ^ j : ℕ) : 𝓞 K)} • ⊤ : Submodule (𝓞 K) L)) := by
   rcases Nat.eq_zero_or_pos j with rfl | hj
   · have hI : Ideal.span {((ℓ ^ 0 : ℕ) : 𝓞 K)} = ⊤ := by simp
-    haveI : Subsingleton (𝓞 K ⧸ Ideal.span {((ℓ ^ 0 : ℕ) : 𝓞 K)}) := Ideal.Quotient.subsingleton_iff.mpr hI
-    haveI : Subsingleton (L ⧸ (Ideal.span {((ℓ ^ 0 : ℕ) : 𝓞 K)} • ⊤ : Submodule (𝓞 K) L)) := by
+    have : Subsingleton (𝓞 K ⧸ Ideal.span {((ℓ ^ 0 : ℕ) : 𝓞 K)}) := Ideal.Quotient.subsingleton_iff.mpr hI
+    have : Subsingleton (L ⧸ (Ideal.span {((ℓ ^ 0 : ℕ) : 𝓞 K)} • ⊤ : Submodule (𝓞 K) L)) := by
       rw [hI, Submodule.top_smul]
       exact Submodule.Quotient.subsingleton_iff.mpr rfl
     exact ⟨LinearEquiv.ofSubsingleton _ _⟩
@@ -212,10 +212,10 @@ theorem torsion_points_free : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
   obtain ⟨β, hβ⟩ : ∃ β : R →+* k, x ≫ s = spMap β :=
     ⟨(Spec.preimage (x ≫ s)).hom, by simp [spMap]⟩
   obtain ⟨I, -⟩ := o.geom k x β hβ
-  letI : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
-  haveI := D.freeLa
-  haveI := D.finLa
-  haveI := isTorsionFree_of_free_int D.F D.La
+  let : Module (𝓞 D.F) D.La := Module.compHom D.La (algebraMap (𝓞 D.F) D.O)
+  have := D.freeLa
+  have := D.finLa
+  have := isTorsionFree_of_free_int D.F D.La
   obtain ⟨e⟩ := quot_equiv_pi D.F D.La (D.m * D.n) D.rankLa ℓ hℓ j
   have hpos : 0 < ℓ ^ j := pow_pos hℓ.pos j
   have hcop : (ℓ ^ j).Coprime p :=

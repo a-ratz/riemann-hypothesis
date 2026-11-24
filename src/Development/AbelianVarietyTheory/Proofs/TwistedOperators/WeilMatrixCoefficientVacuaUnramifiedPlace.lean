@@ -1101,9 +1101,9 @@ open NumberField IsDedekindDomain
 theorem natCast_mem_of_prime_dvd_absNorm {K : Type} [Field K] [NumberField K]
     (w : HeightOneSpectrum (RingOfIntegers K)) {q : ℕ} (hq : Nat.Prime q)
     (hd : q ∣ Ideal.absNorm w.asIdeal) : (q : RingOfIntegers K) ∈ w.asIdeal := by
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : w.asIdeal.IsPrime := w.isPrime
-  haveI : Finite (RingOfIntegers K ⧸ w.asIdeal) :=
+  have : Fact q.Prime := ⟨hq⟩
+  have : w.asIdeal.IsPrime := w.isPrime
+  have : Finite (RingOfIntegers K ⧸ w.asIdeal) :=
     Ideal.finiteQuotientOfFreeOfNeBot w.asIdeal w.ne_bot
   have hc : q ∣ Nat.card (RingOfIntegers K ⧸ w.asIdeal) := by
     rwa [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hd
@@ -1273,17 +1273,17 @@ theorem isSelfDualC_frameLat {D : D7} (V : HSp D) : IsSelfDualC V (frameLat V) :
 
 theorem isUnram_host (D : D7) (v : HeightOneSpectrum (𝓞 D.host.F)) : Formalism.MainNotions.SchurIrreducible.IsUnram (E := D.host.E) v := by
   have hu : Algebra.Unramified (𝓞 D.host.F) (𝓞 D.host.E) := by
-    haveI := D.host.isCMField_hostE
+    have := D.host.isCMField_hostE
     exact GlobalTheory.PlaceComp.unramified (E := D.host.E) D.sp.cm
   rw [GlobalTheory.LFun.isUnram_iff]
   intro P hP
-  haveI := P.isPrime
-  haveI : Algebra.IsUnramifiedAt (𝓞 D.host.F) P.asIdeal :=
+  have := P.isPrime
+  have : Algebra.IsUnramifiedAt (𝓞 D.host.F) P.asIdeal :=
     Algebra.unramified_iff_forall.1 hu ⟨P.asIdeal, P.isPrime⟩
   have hle : (P.asIdeal.under (𝓞 D.host.F)).map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ P.asIdeal :=
     Ideal.map_comap_le
   have h1 : Ideal.ramificationIdx' (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal = 1 := by
-    letI := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal
+    let := Localization.AtPrime.algebraOfLiesOver (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal
     exact (Ideal.IsDedekindDomain.ramificationIdx'_eq_one_iff P.ne_bot hle).2
       ((Algebra.isUnramifiedAt_iff_map_eq (𝓞 D.host.F) (P.asIdeal.under (𝓞 D.host.F)) P.asIdeal).1 ‹_›).2
   have hv : P.asIdeal.under (𝓞 D.host.F) = v.asIdeal := by rw [← hP]; rfl
@@ -1358,7 +1358,7 @@ theorem vac_coef : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (
     fun a f₁ f₂ h₁ h₂ => ?_⟩
   · intro ϖ hϖ d t ht k₁ hk₁ k₂ hk₂
     have hν : ν (e.symm (k₁ * t * k₂)) = ((val χS w : ℂˣ) : ℂ) ^ (∑ i, d i) := by
-      simp only [ν, if_pos hs]
+      simp only [ν, ite_eq_left hs]
       rw [locChar_eq hom lam w₀ Om hL hlam hsq hs hw₁ h]
       exact detval D T χS v w h (hunr w h).1 e he ϖ hϖ d t ht k₁ hk₁ k₂ hk₂
     have hI : I (e.symm (k₁ * t * k₂)) = qV D.host.E w ^ (S.rank * (∑ i, |d i|).toNat) :=
@@ -1378,7 +1378,7 @@ theorem vac_coef : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (
     ring
   · intro d t ht k₁ hk₁ k₂ hk₂
     have hns : ¬ IsSplit (E := D.host.E) v := not_isSplit_of_isInertAt hw
-    have hν : ν (e.symm (k₁ * t * k₂)) = 1 := if_neg hns
+    have hν : ν (e.symm (k₁ * t * k₂)) = 1 := ite_eq_right hns
     have hI : I (e.symm (k₁ * t * k₂)) = qV D.host.E w ^ (S.rank * (∑ i, max (d i) 0).toNat) :=
       GlobalTheory.T.index_moved_homLattice_inertPlace D S T v w h hw c ϖ e hϖ he d t ht k₁ hk₁ k₂ hk₂
     have hval := val_inert D χS S.rank hom.resS v w hw (hunr w h).1
@@ -1400,10 +1400,10 @@ theorem vac_coef : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (
       (ν a * (lam (I a))⁻¹) * l2 μ 𝓕 (g₁ : WO S T → ℂ) (g₂ : WO S T → ℂ)
     by_cases hs : IsSplit (E := D.host.E) v
     · rw [hn.1 hs, l2_smul, hc]
-      simp only [ν, if_pos hs, I]
+      simp only [ν, ite_eq_left hs, I]
       ring
     · rw [hn.2 (hin₁ hs) (hunr w₁ hw₁).1 (hunr w₁ hw₁).2, hc]
-      simp only [ν, if_neg hs, I]
+      simp only [ν, ite_eq_right hs, I]
       ring
 
 end GlobalTheory.VacCoef

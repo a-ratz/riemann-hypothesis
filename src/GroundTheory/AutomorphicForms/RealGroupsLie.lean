@@ -178,7 +178,7 @@ structure IsExpLieAlgebra (G : Subgroup 𝔸ˣ) (𝔤 : Submodule ℝ 𝔸) : Pr
     U ⊆ (expPartialHomeomorph ℝ 𝔸).source ∧ ∀ X ∈ U, expUnit ℝ 𝔸 X ∈ G → X ∈ 𝔤
 
 theorem continuous_val_val (G : Subgroup 𝔸ˣ) : Continuous (fun x : G => ((x : 𝔸ˣ) : 𝔸)) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 namespace IsExpLieAlgebra
 
@@ -217,7 +217,7 @@ noncomputable def expG (X : 𝔤) : G := ⟨expUnit ℝ 𝔸 X, h.expUnit_mem X 
 @[simp] theorem coe_expG (X : 𝔤) : ((h.expG X : 𝔸ˣ) : 𝔸) = exp (X : 𝔸) := rfl
 
 theorem continuous_expG : Continuous h.expG :=
-  ((continuous_expUnit ℝ 𝔸).comp continuous_subtype_val).subtype_mk _
+  ((continuous_expUnit ℝ 𝔸).comp continuous_subtypeVal).subtype_mk _
 
 theorem symm_mem_lie {x : G} (hx : ((x : 𝔸ˣ) : 𝔸) ∈ h.nhdOne) : (𝔢).symm ((x : 𝔸ˣ) : 𝔸) ∈ 𝔤 := by
   apply h.mem_of_mem_nhd (h.symm_mem_nhd hx)

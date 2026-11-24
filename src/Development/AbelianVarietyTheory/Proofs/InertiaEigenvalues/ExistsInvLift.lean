@@ -98,7 +98,7 @@ theorem coe_sum_fin {R : Type} [CommRing R] {e : ℕ} (c : Fin e → R) :
 
 theorem exists_div (s : bk.S) : ∃ (q : bk.S) (c : Fin bk.Ep.natDegree → Wq l bk.a),
     s = bk.E * q + ∑ i, C (c i) * X ^ (i : ℕ) := by
-  haveI : IsAdicComplete (Ideal.span {(l : Wq l bk.a)}) (Wq l bk.a) := WittVector.isAdicCompleteIdealSpanP
+  have : IsAdicComplete (Ideal.span {(l : Wq l bk.a)}) (Wq l bk.a) := WittVector.isAdicCompleteIdealSpanP
   have hdist : bk.Ep.IsDistinguishedAt (Ideal.span {(l : Wq l bk.a)}) :=
     { mem := fun {i} hi => Ideal.mem_span_singleton.2 (bk.dvd_coeff i hi)
       monic := bk.monic }

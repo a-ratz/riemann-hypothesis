@@ -70,7 +70,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.component :
       rw [hbot]
       exact bot_le)
     exact ⟨Q, hQ, hQp, hQc⟩
-  · haveI : FaithfulSMul Λ (T ⧸ P) := by
+  · have : FaithfulSMul Λ (T ⧸ P) := by
       rw [faithfulSMul_iff_algebraMap_injective]
       intro a b hab
       rw [IsScalarTower.algebraMap_apply Λ T (T ⧸ P), IsScalarTower.algebraMap_apply Λ T (T ⧸ P)] at hab
@@ -94,17 +94,17 @@ section -- clump:auto
 theorem UpperTheory.V.Pr.dimOf :
     UpperTheory.V.Pr.DimOf := by
   intro O Λ B _ _ _ _ _ _ _ φ J m ⟨e⟩ hfin htf Z hZ
-  haveI : NoZeroDivisors O := IsDomain.to_noZeroDivisors O
-  haveI : IsPrincipalIdealRing O := IsDiscreteValuationRing.toIsPrincipalIdealRing
-  haveI : IsNoetherianRing O := PrincipalIdealRing.isNoetherianRing
-  haveI : IsLocalRing O := IsDiscreteValuationRing.toIsLocalRing
-  haveI : NoZeroDivisors (MvPowerSeries (Fin m) O) := inferInstance
-  haveI : Nontrivial (MvPowerSeries (Fin m) O) := inferInstance
-  haveI : IsDomain (MvPowerSeries (Fin m) O) := NoZeroDivisors.to_isDomain _
-  haveI : IsDomain Λ := e.toMulEquiv.isDomain
-  letI : Algebra Λ (B ⧸ J) := ((Ideal.Quotient.mk J).comp φ).toAlgebra
-  haveI : Module.Finite Λ (B ⧸ J) := hfin
-  haveI : Algebra.IsIntegral Λ (B ⧸ J) := Algebra.IsIntegral.of_finite Λ (B ⧸ J)
+  have : NoZeroDivisors O := IsDomain.to_noZeroDivisors O
+  have : IsPrincipalIdealRing O := IsDiscreteValuationRing.toIsPrincipalIdealRing
+  have : IsNoetherianRing O := PrincipalIdealRing.isNoetherianRing
+  have : IsLocalRing O := IsDiscreteValuationRing.toIsLocalRing
+  have : NoZeroDivisors (MvPowerSeries (Fin m) O) := inferInstance
+  have : Nontrivial (MvPowerSeries (Fin m) O) := inferInstance
+  have : IsDomain (MvPowerSeries (Fin m) O) := NoZeroDivisors.to_isDomain _
+  have : IsDomain Λ := e.toMulEquiv.isDomain
+  let : Algebra Λ (B ⧸ J) := ((Ideal.Quotient.mk J).comp φ).toAlgebra
+  have : Module.Finite Λ (B ⧸ J) := hfin
+  have : Algebra.IsIntegral Λ (B ⧸ J) := Algebra.IsIntegral.of_finite Λ (B ⧸ J)
   have hJZ : J ≤ Z := hZ.1.2
   have hZ' := hZ
   rw [Ideal.minimalPrimes_eq_comap] at hZ'

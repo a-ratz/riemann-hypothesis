@@ -68,7 +68,7 @@ private lemma isCoprime_add_sub_mul_pow_factorial {j N : ℤ} (hj : IsCoprime j 
   rw [Int.isCoprime_iff_gcd_eq_one, Int.gcd_eq_natAbs, Int.natAbs_natCast]
   apply Nat.coprime_of_dvd
   intro p hp hpν hpn
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hν : ((j + (1 - j) * N ^ n.factorial : ℤ) : ZMod p) = 0 := by
     rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
     exact Int.natCast_dvd.mpr hpν
@@ -93,7 +93,7 @@ open AlgebraicGeometry CategoryTheory Limits MonoidalCategory CartesianMonoidalC
 open scoped CategoryTheory.Obj in
 private lemma zmod_pow_eq_pow_factorial_of_dvd {n : ℕ} (hn : 0 < n) (x : ZMod n) {c : ℕ}
     (hc : n.factorial ∣ c) (hc0 : 0 < c) : x ^ c = x ^ n.factorial := by
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   have key : ∀ a t : ℕ, a ≤ n → 0 < t → t ≤ n → x ^ (a + t) = x ^ a → x ^ c = x ^ n.factorial := by
     intro a t ha ht htn h
     have hstep : ∀ k, a ≤ k → x ^ (k + t) = x ^ k := by
@@ -130,7 +130,7 @@ theorem _root_.GlobalTheory.TateRoot.exists_tateIso_zeta_eq : ∀ (E : Type) [Fi
     0 < N → IsPrimitiveRoot z N → ∃ I' : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.TateIso D k Q act e, (I'.ζ N : k) = z := by
   intro E _ _ _ H D l k _ Q _ act e I N z hN hz
   have hζ : IsPrimitiveRoot ((I.ζ N : kˣ) : k) N := IsPrimitiveRoot.coe_units_iff.mpr (I.ζ_prim N hN)
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   obtain ⟨i, -, hi⟩ := hζ.eq_pow_of_pow_eq_one hz.pow_eq_one
   have hcop : IsCoprime (i : ℤ) N := by
     rw [Nat.isCoprime_iff_coprime]
@@ -142,8 +142,8 @@ theorem _root_.GlobalTheory.TateRoot.exists_tateIso_zeta_eq : ∀ (E : Type) [Fi
     refine ⟨_root_.GlobalTheory.LevelTwist.twist I g hν, ?_⟩
     rw [_root_.GlobalTheory.LevelTwist.twist_ζ, _root_.GlobalTheory.LevelTwist.zeta_zpow_congr I hN hg, zpow_natCast, Units.val_pow_eq_pow_val, hi]
   rcases Nat.eq_zero_or_pos (D.p + D.q) with hpq | hpq
-  · haveI := D.proj
-    haveI := D.fin
+  · have := D.proj
+    have := D.fin
     have hsub : Subsingleton D.La := Module.finrank_zero_iff.mp (by rw [D.rank]; exact hpq)
     let g : _root_.ReciprocityTheory.ChartRestriction.G.Geo.Tor.Sim D :=
       { f := fun _ => LinearMap.id

@@ -281,10 +281,10 @@ theorem UpperTheory.adelic_rep_bounded_of_subgroup_bounded :
   classical
   unfold UpperTheory.V.Af.BA.BddSub
   intro G _ S hS hB
-  haveI := hS
+  have := hS
   unfold UpperTheory.V.Af.CohB.Bdd at hB ⊢
   obtain ⟨c, hc⟩ := hB
-  haveI : Finite (Quotient (QuotientGroup.rightRel S)) :=
+  have : Finite (Quotient (QuotientGroup.rightRel S)) :=
     Finite.of_equiv _ (QuotientGroup.quotientRightRelEquivQuotientLeftRel S).symm
   have hrank : ∀ B : Rep.{0,0,0} ℂ S, Module.rank ℂ ↑(Rep.coind S.subtype B) ≤
       (Nat.card (Quotient (QuotientGroup.rightRel S)) : Cardinal) * Module.rank ℂ ↑B := by
@@ -386,16 +386,16 @@ theorem UpperTheory.adelic_rep_dimension_bounded :
     rw [hg]
   have hst : ∀ (p : ℕ) (t : K.Tup p), Finite ↥(MulAction.stabilizer Γ t) := by
     intro p t
-    haveI := hstab0 (K.re (fun _ : Fin 1 => (0 : Fin (p+1))) t)
+    have := hstab0 (K.re (fun _ : Fin 1 => (0 : Fin (p+1))) t)
     have hle : MulAction.stabilizer Γ t ≤
         MulAction.stabilizer Γ (K.re (fun _ : Fin 1 => (0 : Fin (p+1))) t) :=
       fun g hg => hre _ t g hg
     exact Finite.of_injective _ (Subgroup.inclusion_injective hle)
   refine ⟨hst, ?_⟩
   obtain ⟨R, hRfin, hR⟩ := hfin
-  haveI : Finite ↥R := hRfin.to_subtype
+  have : Finite ↥R := hRfin.to_subtype
   let V : K.Tup 1 → K.Tup 0 := fun r => K.re (fun _ : Fin 1 => (0 : Fin 2)) r
-  haveI : ∀ r : ↥R, Finite ↥(MulAction.stabilizer Γ (V r.1)) := fun r => hstab0 _
+  have : ∀ r : ↥R, Finite ↥(MulAction.stabilizer Γ (V r.1)) := fun r => hstab0 _
   refine ⟨Nat.card (Σ r : ↥R, ↥(MulAction.stabilizer Γ (V r.1))), ?_⟩
   intro p hp t ht
   let v : K.Tup 0 := K.re (fun _ : Fin 1 => (0 : Fin (p+1))) t
@@ -412,7 +412,7 @@ theorem UpperTheory.adelic_rep_dimension_bounded :
   have hk : ∀ j, k (rsel j) • v = V (rsel j).1 := by
     intro j
     have hex : ∃ g : Γ, g • v = V (rsel j).1 := ⟨gsel j, hgv j⟩
-    have hkj : k (rsel j) = Classical.choose hex := dif_pos hex
+    have hkj : k (rsel j) = Classical.choose hex := dite_eq_left hex
     rw [hkj]
     exact Classical.choose_spec hex
   have hmem : ∀ j, gsel j * (k (rsel j))⁻¹ ∈ MulAction.stabilizer Γ (V (rsel j).1) := by
@@ -506,7 +506,7 @@ theorem UpperTheory.bddFix_of_bounded_complex :
     UpperTheory.V.Af.BA.BddCx → UpperTheory.V.Af.BA.GoodRe → UpperTheory.V.Af.BA.ActRe → UpperTheory.V.Af.BA.SpanRe → UpperTheory.V.Af.BA.OrbRe → UpperTheory.V.Af.BA.MinStab → UpperTheory.V.Af.BA.BddFix := by
   intro hB hGood hAct hSpan hOrb hMin L _ _ _ N σ hσ
   obtain ⟨x, hx1, hx2⟩ := hAct L N σ hσ
-  letI := x
+  let := x
   obtain ⟨hFC, hS0, hA⟩ := UpperTheory.V.ConeExtensionAcyclic.acyc_simp (hGood L N σ hσ)
   let K : Cx (Fix N σ) (UpperTheory.V.ConeExtensionAcyclic.Vert (qr L N)) :=
     { S := UpperTheory.V.ConeExtensionAcyclic.simp (qr L N) (Tr L N)
@@ -551,7 +551,7 @@ theorem UpperTheory.bddFix_of_bounded_complex :
     have hsp' : UpperTheory.V.KT.Spans (UpperTheory.V.KT.minVec hh) := by
       rw [hmv]
       exact hsp
-    haveI := hMin L N hh hRy hsp'
+    have := hMin L N hh hRy hsp'
     refine Finite.of_injective
       (β := MulAction.stabilizer (UpperTheory.V.KT.Gm L N) (UpperTheory.V.KT.minVec hh))
       (fun g => ⟨((g.1 : Fix N σ) : UpperTheory.V.KT.Gm L N), ?_⟩) ?_
@@ -604,13 +604,13 @@ theorem UpperTheory.bounded_complex_of_bounded_simplicial_complex :
     UpperTheory.V.Af.BA.BddCx → UpperTheory.V.Af.BA.BddComplex := by
   intro H L _ _ _ N
   refine H (KT.Gm L N) (KT.Vx L N) (cxK L N) (fun m => ConeExtensionAcyclic.sx_exact L N m) (fun p => ?_) (fun t => ?_)
-  · haveI : Finite (MulAction.orbitRel.Quotient (KT.Gm L N) ((cxK L N).Tup p)) := (KT.orb L N p).1
+  · have : Finite (MulAction.orbitRel.Quotient (KT.Gm L N) ((cxK L N).Tup p)) := (KT.orb L N p).1
     refine ⟨Set.range (fun c : MulAction.orbitRel.Quotient (KT.Gm L N) ((cxK L N).Tup p) => Quotient.out c),
       Set.finite_range _, fun x => ?_⟩
     obtain ⟨g, hg⟩ := MulAction.orbitRel_apply.1
       (Quotient.exact (Quotient.out_eq (Quotient.mk (MulAction.orbitRel (KT.Gm L N) ((cxK L N).Tup p)) x)))
     exact ⟨g, _, hg.symm⟩
-  · haveI := KT.stabfin L N (t.1 0)
+  · have := KT.stabfin L N (t.1 0)
     refine Finite.of_injective (fun g : MulAction.stabilizer (KT.Gm L N) t =>
       (⟨g.1, congrFun (congrArg Subtype.val g.2) 0⟩ : MulAction.stabilizer (KT.Gm L N) (t.1 0))) fun g k e => ?_
     exact Subtype.ext (Subtype.mk.inj e)
@@ -743,8 +743,8 @@ theorem UpperTheory.coind_retract_of_finite_index :
   classical
   unfold UpperTheory.V.Af.BA.CoindRetract
   intro G _ S hS A
-  haveI := hS
-  haveI : Fintype (G ⧸ S) := Fintype.ofFinite _
+  have := hS
+  have : Fintype (G ⧸ S) := Fintype.ofFinite _
   have hn : (Fintype.card (G ⧸ S) : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
   let P : A →ₗ[ℂ] Representation.coindV S.subtype (Rep.res S.subtype A).ρ :=
     { toFun := fun a => ⟨fun g => A.ρ g a, fun s g => by
@@ -916,7 +916,7 @@ theorem UpperTheory.exists_CM_extension :
     UpperTheory.V.Af.BA.ExCM := by
   intro F _ _ _
   let ψ : F →+* ℂ := (IsAlgClosed.lift : F →ₐ[ℚ] ℂ).toRingHom
-  haveI hfact : Fact (∀ r : F, r ^ 2 ≠ -1 + 0 * r) := by
+  have hfact : Fact (∀ r : F, r ^ 2 ≠ -1 + 0 * r) := by
     refine ⟨fun r hr => ?_⟩
     have h2 : ψ r * ψ r = -1 := by
       rw [← map_mul, ← pow_two, hr]
@@ -928,7 +928,7 @@ theorem UpperTheory.exists_CM_extension :
       simpa using this
     rw [h4] at h2
     norm_num at h2
-  haveI hNF : NumberField (QuadraticAlgebra F (-1) 0) :=
+  have hNF : NumberField (QuadraticAlgebra F (-1) 0) :=
     { to_charZero := inferInstance
       to_finiteDimensional := Module.Finite.trans F (QuadraticAlgebra F (-1) 0) }
   have hωω : (ω : QuadraticAlgebra F (-1) 0) * ω = -1 := by
@@ -1062,7 +1062,7 @@ theorem UpperTheory.ext_vanishing_of_resolution_endo :
   intro Γ _ P e he q hq A
   have h2 : IsZero (groupCohomology A q) :=
     (isZero_yoneda (R := ℂ) A P e he q hq).of_iso (groupCohomologyIso A q P)
-  haveI := ModuleCat.subsingleton_of_isZero h2
+  have := ModuleCat.subsingleton_of_isZero h2
   exact rank_subsingleton' ℂ _
 end -- clump:auto
 end -- clump:auto
@@ -1078,7 +1078,7 @@ private theorem fixOrb_reps {Z T : Type} (f : Z → T) (W : Set Z) (h : (f '' W)
   classical
   rcases W.eq_empty_or_nonempty with hW | ⟨w, hw⟩
   · exact ⟨∅, by simp, Set.finite_empty, by simp [hW]⟩
-  · haveI : Nonempty Z := ⟨w⟩
+  · have : Nonempty Z := ⟨w⟩
     refine ⟨Function.invFunOn f W '' (f '' W), ?_, h.image _, ?_⟩
     · rintro _ ⟨_, ⟨z, hz, rfl⟩, rfl⟩
       exact Function.invFunOn_mem ⟨z, hz, rfl⟩
@@ -1108,10 +1108,10 @@ theorem UpperTheory.fixedOrbits_finite_representatives :
   let bb : Z → Z := fun z => if hz : z ∈ W then (hb z hz).choose else z
   let hh : Z → G := fun z => if hz : z ∈ W then (hb z hz).choose_spec.2.choose else 1
   have bbB : ∀ z ∈ W, bb z ∈ B1 := fun z hz => by
-    simp only [bb, dif_pos hz]
+    simp only [bb, dite_eq_left hz]
     exact (hb z hz).choose_spec.1
   have hhb : ∀ z ∈ W, hh z • bb z = z := fun z hz => by
-    simp only [bb, hh, dif_pos hz]
+    simp only [bb, hh, dite_eq_left hz]
     exact (hb z hz).choose_spec.2.choose_spec
   have hcoc : ∀ z ∈ W, (hh z)⁻¹ * σ (hh z) ∈ MulAction.stabilizer G (bb z) := by
     intro z hz
@@ -1165,7 +1165,7 @@ theorem UpperTheory.good_real_form_of_real_part_of_real_involution :
   · intro h hh
     obtain ⟨S, hS, hev⟩ := G.locFin _ (hpoly h hh)
     refine ⟨S, hS, ?_⟩
-    have := (continuous_subtype_val.tendsto h).eventually hev
+    have := (continuous_subtypeVal.tendsto h).eventually hev
     filter_upwards [this] with h' hh' y hy
     rw [qr_apply, ← hqc]
     exact hh' y hy
@@ -1187,7 +1187,7 @@ theorem UpperTheory.good_real_form_of_real_part_of_real_involution :
     rw [qr_apply, hk']
     have h2' : 1 ≤ q k (sLat σ (y : Lat L N)) := h2
     linarith
-  · exact G.closed.preimage continuous_subtype_val
+  · exact G.closed.preimage continuous_subtypeVal
   · intro c hc k hk
     exact G.smul_mem c hc _ hk
   · intro h hh
@@ -1261,7 +1261,7 @@ theorem UpperTheory.minimal_vector_stabilizer_property :
     by_contra hn
     exact (hev.self_of_nhds y hn).ne' hy
   obtain ⟨A, hA, hcol⟩ := exbasis L N _ hsp
-  haveI : Finite (minVec h) := hfin.to_subtype
+  have : Finite (minVec h) := hfin.to_subtype
   have hmem : ∀ (g : MulAction.stabilizer (Gm L N) (minVec h)) (a : Fin N),
       (g.1 • (fun i => A i a : Lat L N)) ∈ minVec h := fun g a => by
     have h1 : g.1 • minVec h = minVec h := g.2
@@ -1336,7 +1336,7 @@ theorem UpperTheory.orbRe_of_minimal_vector_stabilizer :
         have := hSpan L N σ hσ p t ht
         unfold Spans spanL at *
         refine top_le_iff.1 (this ▸ Submodule.span_mono (Set.image_mono fun y hy => hy 0))
-      haveI := hStab L N _ (hRy (t 0)) hs
+      have := hStab L N _ (hRy (t 0)) hs
       have hle : MulAction.stabilizer (Gm L N) (fun j => minVec (t j).1.1) ≤
           MulAction.stabilizer (Gm L N) (minVec (t 0).1.1) := fun g hg => congrFun hg 0
       exact Finite.of_injective _ (Subgroup.inclusion_injective hle))
@@ -1418,7 +1418,7 @@ theorem UpperTheory.perm_split_fin_succ :
   refine ⟨?_, fun k => cycle_range_conjugate_succAbove i j τ k⟩
   show ((Equiv.Perm.sign (F (i, τ)) : ℤ) : _) = _
   simp only [F, map_mul, map_inv, Fin.sign_cycleRange,
-    Equiv.Perm.decomposeFin.symm_sign, if_pos rfl, one_mul, inv_pow, Int.units_inv_eq_self]
+    Equiv.Perm.decomposeFin.symm_sign, ite_eq_left rfl, one_mul, inv_pow, Int.units_inv_eq_self]
   push_cast
   ring
 end -- clump:auto
@@ -1435,7 +1435,7 @@ theorem UpperTheory.permutation_module_homology_rank :
     UpperTheory.V.Af.BA.RankHomPerm := by
   intro Γ X _ _ h
   obtain ⟨R, hR, hRx⟩ := h
-  haveI := hR.fintype
+  have := hR.fintype
   refine ⟨Fintype.card R, fun A => ?_⟩
   let Φ : (PC Γ X ⟶ A) →ₗ[ℂ] (R → A) :=
     { toFun := fun φ r => φ.hom (Finsupp.single (r : X) 1)
@@ -1490,7 +1490,7 @@ private theorem UpperTheory.Reformulated.B.Qe19.fixed_lift {Γ : Type} [Group Γ
     (b : B) (hb : ∀ h ∈ H, B.ρ h b = b) :
     ∃ a : A, (∀ h ∈ H, A.ρ h a = a) ∧ (Rep.Hom.hom f) a = b := by
   classical
-  haveI := Fintype.ofFinite H
+  have := Fintype.ofFinite H
   obtain ⟨a, ha⟩ := hf b
   have hc : (Fintype.card H : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr Fintype.card_ne_zero
   refine ⟨(Fintype.card H : ℂ)⁻¹ • ∑ k : H, A.ρ k a, ?_, ?_⟩
@@ -1515,7 +1515,7 @@ theorem UpperTheory.Reformulated.B.Qe19.pins_of_closed_subgroup_padic_character_
   have h1 : ∀ x : X, ∃ a : A, (∀ h ∈ MulAction.stabilizer Γ x, A.ρ h a = a) ∧
       (Rep.Hom.hom f) a = φ x := by
     intro x
-    haveI := hfin x
+    have := hfin x
     refine UpperTheory.Reformulated.B.Qe19.fixed_lift _ A B f hf (φ x) ?_
     intro h hh
     rw [← hφ, MulAction.mem_stabilizer_iff.mp hh]

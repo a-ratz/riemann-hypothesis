@@ -339,7 +339,7 @@ theorem yLoc_of
     refine ⟨?_, inferInstance, ?_⟩
     · exact Module.Finite.of_injective ((Ymod Dd.r Dd.χ Dd.E).subtype.restrictScalars (D.nd.O i)) Subtype.val_injective
     · exact ⟨Continuous.subtype_mk (f := fun q : (D.nd.O i) × (Ymod Dd.r Dd.χ Dd.E) => q.1 • (q.2 : Dd.R'))
-        (continuous_fst.smul (continuous_subtype_val.comp continuous_snd)) _⟩
+        (continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)) _⟩
   obtain ⟨a, ha, hka⟩ : ∃ a : D.nd.O i, a ≠ 0 ∧ ∀ y : Ymod Dd.r Dd.χ Dd.E, a • ψ y = 0 := by
     obtain ⟨t, ht⟩ := hfg.fg.fg_top
     choose f hf0 hf using fun y : Ymod Dd.r Dd.χ Dd.E => htors (ψ y)
@@ -389,7 +389,7 @@ theorem yLoc_of
     rw [map_mul, map_natCast] at hz
     exact (IsLocalRing.mem_maximalIdeal _).1 (l_mem_max) (isUnit_of_mul_isUnit_left hz)
   have continuous_alg : Continuous (algebraMap ℤ_[D.nd.l i] (D.nd.O i)) := by
-    haveI := isLocalHom_alg
+    have := isLocalHom_alg
     exact continuous_of_isLocalHom (ReciprocityTheory.ChartRestriction.T2.padicCoeff_padicInt (p := D.nd.l i)).adic (D.nd.O_adic i) _
   have compact_O : CompactSpace (D.nd.O i) := by
     obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' ℤ_[D.nd.l i] (D.nd.O i)
@@ -422,7 +422,7 @@ theorem yLoc_of
         exact h1
     have : IsClosed ({0} : Set (D.nd.O i)) := by
       rw [h0]; exact isClosed_iInter hclosed
-    haveI : T1Space (D.nd.O i) := IsTopologicalAddGroup.t1Space _ this
+    have : T1Space (D.nd.O i) := IsTopologicalAddGroup.t1Space _ this
     infer_instance
   have padicCoeff_O : ReciprocityTheory.ChartRestriction.T2.PadicCoeff (D.nd.l i) (D.nd.O i) :=
     ⟨D.nd.trO i, compact_O, t2Space_nd_O, D.nd.O_adic i, l_mem_max, l_ne_zero⟩
@@ -444,7 +444,7 @@ theorem yLoc_of
         rw [← hz', map_smul, hka]
       rw [map_sub, sub_eq_zero] at h1
       exact h1
-  exact h.comp_continuous continuous_subtype_val
+  exact h.comp_continuous continuous_subtypeVal
 
 end Loc
 

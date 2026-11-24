@@ -100,7 +100,7 @@ variable {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Algebra F Ω]
 theorem exists_prime_mem (v : HeightOneSpectrum (𝓞 F)) :
     ∃ p : ℕ, p.Prime ∧ ((p : ℕ) : 𝓞 F) ∈ v.asIdeal := by
   have hmax := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field v.asIdeal
   have hfin : Finite (𝓞 F ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ v.ne_bot
   obtain ⟨p, hp⟩ := CharP.exists (𝓞 F ⧸ v.asIdeal)
   refine ⟨p, CharP.char_is_prime (𝓞 F ⧸ v.asIdeal) p, ?_⟩
@@ -167,8 +167,8 @@ theorem exists_qcm [IsTotallyReal F] [IsAlgClosure F Ω] (d : F) (δ : Ω) (hδ 
   have halg : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   have hint : IsIntegral F δ := (halg.isAlgebraic δ).isIntegral
   let K : IntermediateField F Ω := IntermediateField.adjoin F {δ}
-  haveI : FiniteDimensional F K := IntermediateField.adjoin.finiteDimensional hint
-  haveI : NumberField K := NumberField.of_module_finite F K
+  have : FiniteDimensional F K := IntermediateField.adjoin.finiteDimensional hint
+  have : NumberField K := NumberField.of_module_finite F K
   let y : K := IntermediateField.AdjoinSimple.gen F δ
   have hy : algebraMap K Ω y = δ := rfl
   have hy2 : y ^ 2 = algebraMap F K d := by
@@ -194,14 +194,14 @@ theorem exists_qcm [IsTotallyReal F] [IsAlgClosure F Ω] (d : F) (δ : Ω) (hδ 
   have hdeg : (minpoly F δ).natDegree = 2 := by omega
   have hrk : Module.finrank F K = 2 := by
     rw [← hdeg]; exact IntermediateField.adjoin.finrank hint
-  haveI : IsTotallyComplex K := by
+  have : IsTotallyComplex K := by
     refine ⟨fun w => ?_⟩
     rw [← InfinitePlace.not_isReal_iff_isComplex]
     intro hw
     have h3 := hd ((InfinitePlace.embedding_of_isReal hw).comp (algebraMap F K))
     rw [RingHom.comp_apply, ← hy2, map_pow] at h3
     exact absurd h3 (not_lt.2 (sq_nonneg _))
-  haveI : Algebra.IsQuadraticExtension F K := { finrank_eq_two' := hrk }
+  have : Algebra.IsQuadraticExtension F K := { finrank_eq_two' := hrk }
   exact ⟨⟨K, inferInstance, IsCMField.ofCMExtension F K, hrk⟩, rfl⟩
 
 end GlobalTheory.ExSplitCM
@@ -209,10 +209,10 @@ end GlobalTheory.ExSplitCM
 open GlobalTheory.ExSplitCM in
 theorem GlobalTheory.RealGal.exists_infinite_qcm_split_ram : ∀ (F Ω : Type) [Field F] [NumberField F] [IsTotallyReal F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (T : HeightOneSpectrum (𝓞 F) → Prop), (∀ᶠ u in Filter.cofinite, T u) → ∀ (v : HeightOneSpectrum (𝓞 F)) (A : ValuationSubring Ω), IsPlaceOver A v → {Q : QCM F Ω | Dec (F := F) A ≤ (res F Ω ↥Q.K).range ∧ ∃ (u : HeightOneSpectrum (𝓞 F)) (A' : ValuationSubring Ω), T u ∧ IsPlaceOver A' u ∧ ¬ Ine (F := F) A' ≤ (res F Ω ↥Q.K).range}.Infinite := by
   intro F Ω _ _ _ _ _ _ T hT v A hA
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
   have halg : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
   obtain ⟨q, hq, hqv⟩ := exists_prime_mem v
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   have hsq : ∀ p : ℕ, ∃ δ : Ω, δ ^ 2 = -(p : Ω) := fun p =>
     IsAlgClosed.exists_pow_nat_eq (-(p : Ω)) two_pos
   choose δ hδ using hsq
@@ -224,9 +224,9 @@ theorem GlobalTheory.RealGal.exists_infinite_qcm_split_ram : ∀ (F Ω : Type) [
       refine ((Set.finite_singleton 2).union ?_).union (finite_primes_of_finite (Filter.eventually_cofinite.1 hT))
       exact (Nat.divisors (discr F).natAbs).finite_toSet.subset fun p hp =>
         Nat.mem_divisors.2 ⟨hp, Int.natAbs_ne_zero.2 (discr_ne_zero F)⟩
-    refine ((GlobalTheory.T.infinite_primes_neg_square_padic q).diff hbad).mono ?_
+    refine ((GlobalTheory.T.infinite_primes_neg_square_padic q).sdiff hbad).mono ?_
     rintro p ⟨⟨hp, hs⟩, hn⟩
-    simp only [Set.mem_union, Set.mem_singleton_iff, Set.mem_setOf_eq, not_or, not_and, not_exists] at hn
+    simp only [Set.mem_union, Set.mem_singleton_iff, Set.mem_ofPred_eq, not_or, not_and, not_exists] at hn
     refine ⟨hp, hs, hn.1.1, fun h => hn.1.2 (Int.natCast_dvd.1 h), fun u hu => ?_⟩
     by_contra hTu
     exact hn.2 hp u hTu hu

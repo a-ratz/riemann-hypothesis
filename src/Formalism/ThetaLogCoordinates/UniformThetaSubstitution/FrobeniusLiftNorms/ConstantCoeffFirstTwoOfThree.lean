@@ -201,7 +201,7 @@ private theorem coeff_g0F_ne_lemma {p n : ℕ} (h : PowerSeries.coeff n (g0F K p
   obtain ⟨j, -, hj⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
   by_cases hn : n = p * (p ^ 2) ^ j
   · exact ⟨j, hn⟩
-  · exact absurd (if_neg hn) hj
+  · exact absurd (ite_eq_right hn) hj
 
 private theorem coeff_lgF_ne_lemma_2 {p n : ℕ} (h : PowerSeries.coeff n (lgF K p) ≠ 0) :
     ∃ j, n = (p ^ 2) ^ j := by
@@ -209,7 +209,7 @@ private theorem coeff_lgF_ne_lemma_2 {p n : ℕ} (h : PowerSeries.coeff n (lgF K
   obtain ⟨j, -, hj⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
   by_cases hn : n = (p ^ 2) ^ j
   · exact ⟨j, hn⟩
-  · exact absurd (if_neg hn) hj
+  · exact absurd (ite_eq_right hn) hj
 
 theorem support_ok_g_zero_log {p : ℕ} (hp : 2 ≤ p) : SuppOK p (at1 0 (g0F K p) * at1 1 (lgF K p)) := by
   intro n hn
@@ -382,7 +382,7 @@ private theorem coeff_g0F_at_lemma_2 {K : Type} [Field K] {p : ℕ} (hp : 2 ≤ 
 private theorem coeff_g0F_one_lemma_3 {K : Type} [Field K] {p : ℕ} (hp : 2 ≤ p) :
     PowerSeries.coeff 1 (g0F K p) = 0 := by
   rw [g0F, PowerSeries.coeff_mk]
-  refine Finset.sum_eq_zero fun j _ => if_neg ?_
+  refine Finset.sum_eq_zero fun j _ => ite_eq_right ?_
   intro h
   have h1 : 1 ≤ (p ^ 2) ^ j := Nat.one_le_pow _ _ (pow_pos (by omega : 0 < p) 2)
   nlinarith

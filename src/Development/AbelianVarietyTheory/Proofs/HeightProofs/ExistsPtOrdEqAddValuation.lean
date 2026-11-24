@@ -110,7 +110,7 @@ theorem addVal_eq_of_associated_loc {O A : Type} [CommRing O] [IsDomain O] [IsDi
 
 theorem exists_pt_ord_eq_addValuation : ∀ (O A : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CommRing A] [Algebra O A] (ϖ : O), IsUnif (A := A) ϖ → ∀ [∀ ζ : Pts O A, IsDVRAt ζ] (u : AddValuation A (WithTop ℤ)), (∀ a ∈ As O A, 0 ≤ u a) → 0 < u (algebraMap O A ϖ) → (∃ a, u a = 1) → ∃ ζ : Pts O A, ∀ a, ord ϖ ζ a = u a := by
   intro O A _ _ _ _ _ ϖ h hD u h0 hϖ h1
-  haveI hP := valCentreOn_isPrime (As O A) u h0
+  have hP := valCentreOn_isPrime (As O A) u h0
   have hcm : ((valCentreOn (As O A) u h0).comap (algebraMap O (As O A))).IsMaximal := by
     have hle : IsLocalRing.maximalIdeal O ≤
         (valCentreOn (As O A) u h0).comap (algebraMap O (As O A)) := by
@@ -126,9 +126,9 @@ theorem exists_pt_ord_eq_addValuation : ∀ (O A : Type) [CommRing O] [IsDomain 
   have hz : ∀ s : As O A, s ∉ ζ.asIdeal → u (s : A) = 0 := fun s hs =>
     le_antisymm (not_lt.1 hs) (h0 _ s.2)
   refine ⟨ζ, ?_⟩
-  haveI : IsDVRAt ζ := hD ζ
-  haveI : IsDomain (Loc ζ) := IsDVRAt.isDomain
-  haveI : IsDiscreteValuationRing (Loc ζ) := IsDVRAt.isDVR
+  have : IsDVRAt ζ := hD ζ
+  have : IsDomain (Loc ζ) := IsDVRAt.isDomain
+  have : IsDiscreteValuationRing (Loc ζ) := IsDVRAt.isDVR
   obtain ⟨p, hp⟩ := IsDiscreteValuationRing.exists_irreducible (Loc ζ)
   obtain ⟨⟨π, t⟩, hπt⟩ := IsLocalization.surj ζ.asIdeal.primeCompl p
   have hπ : Irreducible (algebraMap (As O A) (Loc ζ) π) := by

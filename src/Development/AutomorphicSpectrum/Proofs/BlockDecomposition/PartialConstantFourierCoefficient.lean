@@ -82,13 +82,13 @@ theorem continuous_adjMx : Continuous (adj : Mx D ρ p → Mx D p ρ) :=
 theorem continuous_bT (hn : ρ + p = n) :
     Continuous fun u : hermA D ρ × Mx D ρ p × hermA D p => bT hn u.1 u.2.1 u.2.2 := by
   have h1 : Continuous fun u : hermA D ρ × Mx D ρ p × hermA D p => (u.1 : Mx D ρ ρ) :=
-    continuous_subtype_val.comp continuous_fst
+    continuous_subtypeVal.comp continuous_fst
   have h2 : Continuous fun u : hermA D ρ × Mx D ρ p × hermA D p => u.2.1 :=
     continuous_fst.comp continuous_snd
   have h3 : Continuous fun u : hermA D ρ × Mx D ρ p × hermA D p => adj u.2.1 :=
     continuous_adjMx.comp h2
   have h4 : Continuous fun u : hermA D ρ × Mx D ρ p × hermA D p => (u.2.2 : Mx D p p) :=
-    continuous_subtype_val.comp (continuous_snd.comp continuous_snd)
+    continuous_subtypeVal.comp (continuous_snd.comp continuous_snd)
   have hbl : Continuous fun u : hermA D ρ × Mx D ρ p × hermA D p =>
       bl hn (u.1 : Mx D ρ ρ) u.2.1 (adj u.2.1) (u.2.2 : Mx D p p) := by
     unfold bl
@@ -141,15 +141,15 @@ theorem continuous_pm (hn : ρ + p = n) (m : Meas D ρ p) {ψ : AddChar (AF D.ho
       rw [Measure.restrict_apply_univ, hz1]; exact ENNReal.one_lt_top
     have hμf : m.μ.restrict m.𝓕 Set.univ < ⊤ := by
       rw [Measure.restrict_apply_univ, hμ1]; exact ENNReal.one_lt_top
-    haveI : IsFiniteMeasure (m.lz.restrict m.𝓖) := ⟨hlz⟩
-    haveI : IsFiniteMeasure (m.μ.restrict m.𝓕) := ⟨hμf⟩
+    have : IsFiniteMeasure (m.lz.restrict m.𝓖) := ⟨hlz⟩
+    have : IsFiniteMeasure (m.μ.restrict m.𝓕) := ⟨hμf⟩
     have hrz : (m.lz.restrict m.𝓖 Set.univ).toReal = 1 := by
       rw [Measure.restrict_apply_univ, hz1, ENNReal.toReal_one]
     have hrμ : (m.μ.restrict m.𝓕 Set.univ).toReal = 1 := by
       rw [Measure.restrict_apply_univ, hμ1, ENNReal.toReal_one]
-    haveI : OpensMeasurableSpace (Mx D ρ ρ) := ⟨le_rfl⟩
-    haveI : OpensMeasurableSpace (Mx D ρ p) := ⟨le_rfl⟩
-    haveI : OpensMeasurableSpace (hermA D ρ) := by
+    have : OpensMeasurableSpace (Mx D ρ ρ) := ⟨le_rfl⟩
+    have : OpensMeasurableSpace (Mx D ρ p) := ⟨le_rfl⟩
+    have : OpensMeasurableSpace (hermA D ρ) := by
       apply Subtype.opensMeasurableSpace
     have hb0 : bT hn (0 : hermA D ρ) (0 : Mx D ρ p) (0 : hermA D p) = 0 := by
       simpa using bT_add hn (0 : hermA D ρ) 0 (0 : Mx D ρ p) 0 (0 : hermA D p) 0
@@ -393,22 +393,22 @@ theorem GlobalTheory.CompanionTheory.PcFc.mean_blocks : ∀ {D : D7} {n ρ p : �
   obtain ⟨hz1, hz2, hz3⟩ := m.hz
   obtain ⟨hx1, hx2, hx3⟩ := m.hμ
   have lat := fun a b => (open GlobalTheory.MixPer GlobalTheory.Grow GlobalTheory.Unf in lattice_Mx D a b)
-  haveI : ∀ a b, IsTopologicalAddGroup (Mx D a b) := fun a b => (lat a b).1
-  haveI : ∀ a b, LocallyCompactSpace (Mx D a b) := fun a b => (lat a b).2.1
-  haveI : ∀ a b, SecondCountableTopology (Mx D a b) := fun a b => (lat a b).2.2.1
-  haveI : ∀ a b, T2Space (Mx D a b) := fun a b => (lat a b).2.2.2.1
-  haveI : ∀ a b, BorelSpace (Mx D a b) := fun a b => ⟨rfl⟩
-  haveI : ∀ r, IsTopologicalAddGroup (hermA D r) := fun r => inferInstance
-  haveI : ∀ r, BorelSpace (hermA D r) := fun r => Subtype.borelSpace _
-  haveI : ∀ r, SecondCountableTopology (hermA D r) := fun r => Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : ∀ r, T2Space (hermA D r) := fun r => Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : ∀ r, LocallyCompactSpace (hermA D r) := fun r => (GlobalTheory.CompanionTheory.HermVol.isClosed_hermA (D := D) (r := r)).locallyCompactSpace
+  have : ∀ a b, IsTopologicalAddGroup (Mx D a b) := fun a b => (lat a b).1
+  have : ∀ a b, LocallyCompactSpace (Mx D a b) := fun a b => (lat a b).2.1
+  have : ∀ a b, SecondCountableTopology (Mx D a b) := fun a b => (lat a b).2.2.1
+  have : ∀ a b, T2Space (Mx D a b) := fun a b => (lat a b).2.2.2.1
+  have : ∀ a b, BorelSpace (Mx D a b) := fun a b => ⟨rfl⟩
+  have : ∀ r, IsTopologicalAddGroup (hermA D r) := fun r => inferInstance
+  have : ∀ r, BorelSpace (hermA D r) := fun r => Subtype.borelSpace _
+  have : ∀ r, SecondCountableTopology (hermA D r) := fun r => Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : ∀ r, T2Space (hermA D r) := fun r => Topology.IsEmbedding.subtypeVal.t2Space
+  have : ∀ r, LocallyCompactSpace (hermA D r) := fun r => (GlobalTheory.CompanionTheory.HermVol.isClosed_hermA (D := D) (r := r)).locallyCompactSpace
   have cH : ∀ r, Countable (ratHerm D r) := fun r => by
-    haveI : DiscreteTopology (ratHerm D r) := (GlobalTheory.CompanionTheory.HermVol.isCoLat_herm (D := D) (r := r)).1
-    haveI : SecondCountableTopology (ratHerm D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
+    have : DiscreteTopology (ratHerm D r) := (GlobalTheory.CompanionTheory.HermVol.isCoLat_herm (D := D) (r := r)).1
+    have : SecondCountableTopology (ratHerm D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
     exact TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI := cH n
-  haveI : Countable ((ratHerm D p).prod ((ratMx D ρ p).prod (ratHerm D ρ))) :=
+  have := cH n
+  have : Countable ((ratHerm D p).prod ((ratMx D ρ p).prod (ratHerm D ρ))) :=
     Function.Injective.countable (f := fun u => (⟨blk (D := D) hn u.1, (blk_rat hn u.1).2 u.2⟩ : ratHerm D n))
       fun u v h => Subtype.ext ((blk hn).injective (congrArg Subtype.val h))
   obtain ⟨K, hK, hcov⟩ := (GlobalTheory.CompanionTheory.HermVol.isCoLat_herm (D := D) (r := n)).2
@@ -417,8 +417,8 @@ theorem GlobalTheory.CompanionTheory.PcFc.mean_blocks : ∀ {D : D7} {n ρ p : �
     obtain ⟨γ, hγ, hk⟩ := hcov b
     rw [← hper γ hγ b]
     exact hC _ hk
-  haveI : (m.μ.prod m.lz).IsAddHaarMeasure := inferInstance
-  haveI : (lp.prod (m.μ.prod m.lz)).IsAddHaarMeasure := inferInstance
+  have : (m.μ.prod m.lz).IsAddHaarMeasure := inferInstance
+  have : (lp.prod (m.μ.prod m.lz)).IsAddHaarMeasure := inferInstance
   have hin : m.μ.prod m.lz (m.𝓕 ×ˢ m.𝓖) = 1 := by rw [Measure.prod_prod, hx3, hz3, one_mul]
   have hc : Continuous fun u => Φ (blk (D := D) hn u) := hΦ.comp (blk hn).continuous
   have prodDomain {A B : Type} [AddGroup A] [AddGroup B] [MeasurableSpace A] [MeasurableSpace B]
@@ -545,7 +545,7 @@ theorem bT_zero_mem_ratHerm (hn : ρ + p = n) {γ : hermA D p} (hγ : γ ∈ rat
     rw [← hη]
     rfl
   simp only [bT, AddSubgroup.coe_zero, h0, bl, AddMonoidHom.mapMatrix_apply, Matrix.map_apply, Matrix.submatrix_apply,
-    RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe]
+    RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass]
   rcases (finSumFinEquiv.trans (finCongr hn)).symm i with i' | i' <;>
     rcases (finSumFinEquiv.trans (finCongr hn)).symm j with j' | j' <;>
     simp [hij]
@@ -587,7 +587,7 @@ theorem chn_eq (ψ : AddChar (AF D.host.F) ℂ) (β : HermE D n) (b : hermA D n)
     chn ψ β b = ψ (-GlobalTheory.CompanionTheory.FourierN.pr β.1 b.1) := rfl
 
 theorem chn_cont {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (β : HermE D n) : Continuous (chn ψ β) :=
-  hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr β.1).neg.comp continuous_subtype_val)
+  hψ.1.comp ((GlobalTheory.CompanionTheory.FourierN.continuous_pr β.1).neg.comp continuous_subtypeVal)
 
 theorem chn_per {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (β : HermE D n) : IsPer (chn ψ β) := fun γ hγ x => by
   rw [chn_eq, chn_eq, show (γ + x).1 = γ.1 + x.1 from rfl, GlobalTheory.CompanionTheory.FourierN.pr_add_right, neg_add, AddChar.map_add_eq_mul,

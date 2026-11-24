@@ -92,8 +92,8 @@ theorem exists_scalar (C : Cover T j σ) (hσ : C.σ₂.comp C.inc = σ) (y : Fr
         y₂.x = F₂.u i₂ P₂ → GlobalTheory.GeoLevel.NormPin F i P y → GlobalTheory.GeoLevel.NormPin F₂ i₂ P₂ y₂ → ‖t‖ = 1) ∧
       ∀ (n : ℕ) (a : (D.host.E →+* ℂ) × ℕ → ℕ), ∀ f ∈ sec (T.Q.Xo j) T.Q.c a n, ∀ f₂ : Rul C.d.Xo₂ C.d.c₂,
         C.IsPull f f₂ → toC (evR C.d.Xo₂ C.d.c₂ f₂ y₂) = t ^ n * toC (evR (T.Q.Xo j) T.Q.c f y) := by
-  letI a₂ : Algebra C.d.c₂.F (CAt (midEmb C)) := RingHom.toAlgebra (R := C.d.c₂.F) (S := CAt (midEmb C)) C.σ₂
-  letI a₀ : Algebra T.Q.c.F (CAt (midEmb C)) := RingHom.toAlgebra (R := T.Q.c.F) (S := CAt (midEmb C)) σ
+  let a₂ : Algebra C.d.c₂.F (CAt (midEmb C)) := RingHom.toAlgebra (R := C.d.c₂.F) (S := CAt (midEmb C)) C.σ₂
+  let a₀ : Algebra T.Q.c.F (CAt (midEmb C)) := RingHom.toAlgebra (R := T.Q.c.F) (S := CAt (midEmb C)) σ
   have hov : AlgOver T.Q.c C.c' C.hle (CAt (midEmb C)) := fun a => DFunLike.congr_fun hσ a
   have hc : ∀ a : C.c'.F, algebraMap C.d.c₂.F (CAt (midEmb C)) (C.d.eF a) = algebraMap C.c'.F (CAt (midEmb C)) a :=
     fun _ => rfl
@@ -144,8 +144,8 @@ theorem comp_over_comp_norm : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, For
     obtain ⟨P₂, -, p₂, u₂, -, N₂⟩ := hP₂ _ ⟨x, hx⟩
     exact hn _ _ _ _ _ F F₂ _ _ P P₂ p p₂ u u₂ (N hd') (N₂ hd)
   · have e : rdU (T.U j σ) f (T.dict j σ h₀).1 x' =
-        toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un (T.dict j σ h₀).1 ⟨x', hx'⟩)) := dif_pos hx'
+        toC (evR (T.Q.Xo j) T.Q.c f ((T.U j σ).un (T.dict j σ h₀).1 ⟨x', hx'⟩)) := dite_eq_left hx'
     rw [e]
-    exact (dif_pos hx).trans (hr n a f hf f₂ hp)
+    exact (dite_eq_left hx).trans (hr n a f hf f₂ hp)
 
 end GlobalTheory.CoverFrameMod

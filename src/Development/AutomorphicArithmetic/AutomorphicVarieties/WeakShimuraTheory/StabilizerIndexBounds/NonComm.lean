@@ -173,7 +173,7 @@ theorem UpperTheory.V.AlgebraTools.monomialOfComm :
     by_contra hij
     have h1 := congrArg (fun v => b.repr v j) (h.symm.trans ha')
     simp only [map_smul, Module.Basis.repr_self, Finsupp.smul_apply, Finsupp.single_apply, hij,
-      if_true, if_false, smul_eq_mul, mul_one, mul_zero] at h1
+      ite_true, ite_false, smul_eq_mul, mul_one, mul_zero] at h1
     apply hne g i
     rw [h, h1, zero_smul]
   let F : G →* Function.End (Fin n) :=
@@ -230,30 +230,30 @@ private theorem exists_subring_hom_algebraicClosure_of_injective (B K k : Type) 
     ∃ (C : Subring K) (ρ : C →+* AlgebraicClosure k) (hC : ∀ b, j b ∈ C),
       (∀ b, ρ ⟨j b, hC b⟩ = algebraMap k (AlgebraicClosure k) (φ b)) ∧
       ∀ p : B[X], p.Monic → ∀ z : K, (p.map j).IsRoot z → z ∈ C := by
-  letI : Algebra B K := j.toAlgebra
+  let : Algebra B K := j.toAlgebra
   let C := integralClosure B K
   have hCj : ∀ b, (algebraMap B C b : K) = j b := fun b => rfl
   have hinj : Function.Injective (algebraMap B C) := by
     intro a c h
     apply hj
     rw [← hCj, ← hCj, h]
-  haveI : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
+  have : (RingHom.ker φ).IsPrime := RingHom.ker_isPrime φ
   obtain ⟨Q, -, hQ, hQc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (R := B) (S := C)
     (RingHom.ker φ) ⊥ (by
       intro b hb
       rw [Ideal.mem_comap, Ideal.mem_bot, ← (algebraMap B C).map_zero] at hb
       rw [hinj hb, RingHom.mem_ker, φ.map_zero])
   rw [Ideal.under_def] at hQc
-  haveI := hQ
-  haveI hQ' : (Q.comap (algebraMap B C)).IsPrime := by
+  have := hQ
+  have hQ' : (Q.comap (algebraMap B C)).IsPrime := by
     rw [hQc]
     infer_instance
   let R := B ⧸ Q.comap (algebraMap B C)
   let S := C ⧸ Q
   let M := AlgebraicClosure k
-  haveI hRd : IsDomain R := Ideal.Quotient.isDomain _
-  haveI : Nontrivial R := hRd.toNontrivial
-  haveI : IsDomain S := Ideal.Quotient.isDomain _
+  have hRd : IsDomain R := Ideal.Quotient.isDomain _
+  have : Nontrivial R := hRd.toNontrivial
+  have : IsDomain S := Ideal.Quotient.isDomain _
   let f : R →+* k := Ideal.Quotient.lift _ φ (fun b hb => by
     rw [hQc] at hb
     exact hb)
@@ -262,7 +262,7 @@ private theorem exists_subring_hom_algebraicClosure_of_injective (B K k : Type) 
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective x
     rw [Ideal.Quotient.eq_zero_iff_mem, hQc]
     exact hx
-  letI : Algebra R M := ((algebraMap k M).comp f).toAlgebra
+  let : Algebra R M := ((algebraMap k M).comp f).toAlgebra
   have hRS : Function.Injective (algebraMap R S) := by
     refine (injective_iff_map_eq_zero _).2 (fun x hx => ?_)
     obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -270,10 +270,10 @@ private theorem exists_subring_hom_algebraicClosure_of_injective (B K k : Type) 
     exact hx
   have hRM : Function.Injective (algebraMap R M) :=
     (algebraMap k M).injective.comp hf
-  haveI : Module.IsTorsionFree R S := Module.isTorsionFree_iff_algebraMap_injective.2 hRS
-  haveI : Module.IsTorsionFree R M := Module.isTorsionFree_iff_algebraMap_injective.2 hRM
-  haveI hI : Algebra.IsIntegral R S := Algebra.IsIntegral.quotient
-  haveI : Algebra.IsAlgebraic R S := hI.isAlgebraic
+  have : Module.IsTorsionFree R S := Module.isTorsionFree_iff_algebraMap_injective.2 hRS
+  have : Module.IsTorsionFree R M := Module.isTorsionFree_iff_algebraMap_injective.2 hRM
+  have hI : Algebra.IsIntegral R S := Algebra.IsIntegral.quotient
+  have : Algebra.IsAlgebraic R S := hI.isAlgebraic
   let L : S →ₐ[R] M := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -498,7 +498,7 @@ theorem UpperTheory.V.Ws.exists_noncommuting_images_in_finiteIndex_normal_subgro
       ∀ (Z : Subgroup G) [Z.Normal] (u : G), u ∈ Z → (∀ d : ℕ, 0 < d → (r u ^ d).charpoly.Separable) →
       ∀ N : Subgroup Z, N.Normal → N.FiniteIndex → ∃ g ∈ N, ∃ h ∈ N, r g * r h ≠ r h * r g := by
   intro K k B G _ _ _ _ _ r j φ χ hj hpoly hspan hst Z _ u huZ hsep N hN hfi
-  haveI := hN
+  have := hN
   by_contra hcon
   push_neg at hcon
   have hd0 : 0 < N.index := Nat.pos_of_ne_zero Subgroup.FiniteIndex.index_ne_zero

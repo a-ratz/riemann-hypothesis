@@ -148,7 +148,7 @@ variable {l}
 
 theorem mem_clW {S : Set (WCb l)} {x : WCb l} :
     x ∈ clW l S ↔ ∀ k : ℕ, ∃ y ∈ S, (l : WCb l) ^ k ∣ x - y := by
-  simp only [clW, Set.mem_setOf_eq, Ideal.mem_span_singleton]
+  simp only [clW, Set.mem_ofPred_eq, Ideal.mem_span_singleton]
 
 def clAlg (S : Subalgebra ℤ_[l] (WCb l)) : Subalgebra ℤ_[l] (WCb l) where
   carrier := clW l S
@@ -182,7 +182,7 @@ theorem εroot_sub_one_not_unit {P : LocPrime l} (AI : LocAinf l P) (s : ℕ) : 
   intro h
   have h1 := (h.pow (l ^ s)).map (PreTilt.coeff 0)
   rw [sub_pow_char_pow, εroot_pow, one_pow, map_sub, AI.ε_coeff, AI.ζ_zero, map_one, map_one, sub_self] at h1
-  haveI : Nontrivial (ModP (OC l) l) := CharP.nontrivial_of_char_ne_one (Fact.out : l.Prime).ne_one
+  have : Nontrivial (ModP (OC l) l) := CharP.nontrivial_of_char_ne_one (Fact.out : l.Prime).ne_one
   exact not_isUnit_zero h1
 
 private theorem coeff_mem {A : Type} [CommRing A] [Algebra ℤ_[l] A] (S : Subalgebra ℤ_[l] A) {a : A}

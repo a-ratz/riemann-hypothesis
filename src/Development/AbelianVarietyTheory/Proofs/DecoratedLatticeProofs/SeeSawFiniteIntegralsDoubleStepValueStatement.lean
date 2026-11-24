@@ -110,7 +110,7 @@ theorem normAt_exists : ∀ (D : D7) (V : HSp D) (R : Subgroup (GA D V)), IsClos
 
   let T := R.subgroupOf (grpAt V (· ∈ Q))
   let S' : Set T := {g | InK V L (· ∈ Q) g.1.1}
-  have hS'o : IsOpen S' := hSo.preimage continuous_subtype_val
+  have hS'o : IsOpen S' := hSo.preimage continuous_subtypeVal
   have hS'c : IsCompact S' := by
     rw [(Topology.IsInducing.subtypeVal.comp Topology.IsInducing.subtypeVal).isCompact_iff]
     convert hKc.inter_right hR using 1
@@ -947,12 +947,12 @@ theorem cell_collapse : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : 
     rw [e1, e2] at H
     exact H
 
-  haveI : LocallyCompactSpace (GfC (c.V (j + 1 + 1))) := hfc₂.locallyCompactSpace
-  haveI := hc.μf (j + 1 + 1)
-  haveI := hc.ρB (j + 1 + 1) σ (idx_step h)
-  haveI := invB
+  have : LocallyCompactSpace (GfC (c.V (j + 1 + 1))) := hfc₂.locallyCompactSpace
+  have := hc.μf (j + 1 + 1)
+  have := hc.ρB (j + 1 + 1) σ (idx_step h)
+  have := invB
   have hBcl' : IsClosed (((besGrp (c.bes (j + 1 + 1) σ (idx_step h)).d (c.bes (j + 1 + 1) σ (idx_step h)).o).subgroupOf
-      (GfC (c.V (j + 1 + 1))) : Subgroup _) : Set (GfC (c.V (j + 1 + 1)))) := hBcl.preimage continuous_subtype_val
+      (GfC (c.V (j + 1 + 1))) : Subgroup _) : Set (GfC (c.V (j + 1 + 1)))) := hBcl.preimage continuous_subtypeVal
   have huniq : ∀ (Φ : GfC (c.V (j + 1 + 1)) → ℂ) (z₁ z₂ : ℂ), IsQuotIntL1 (c.ρB (j + 1 + 1) σ (idx_step h))
       (c.μf (j + 1 + 1)) Φ z₁ → IsQuotIntL1 (c.ρB (j + 1 + 1) σ (idx_step h)) (c.μf (j + 1 + 1)) Φ z₂ → z₁ = z₂ :=
     fun Φ z₁ z₂ h1 h2 => IsQuotIntL1.unique hBcl' h1 h2
@@ -974,7 +974,7 @@ theorem cell_collapse : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : 
   have hfo_spec : ∀ y (hy : y ∈ GfC (c.V (j + 1))), IsQuotIntL1 (c.ρB (j + 1 + 1) σ (idx_step h)) (c.μf (j + 1 + 1))
       (fun g => F y g.1) (fo y) := by
     intro y hy
-    have e : fo y = (hex ⟨y, hy⟩).choose := dif_pos hy
+    have e : fo y = (hex ⟨y, hy⟩).choose := dite_eq_left hy
     rw [e]
     exact (hex ⟨y, hy⟩).choose_spec
   have hleft : ∀ r ∈ jacGrp (c.jac j (σ + 1) h).d, r ∈ GfC (c.V (j + 1)) → ∀ g ∈ GfC (c.V (j + 1)), fo (r * g) = fo g := by
@@ -1116,8 +1116,8 @@ theorem seeSaw_iteratedIntegrand_vacuumForm_base_points_alt : ∀ (D : D7) (c : 
     rw [hp]
     ring
   obtain ⟨f₁, h1, h2⟩ := hI
-  haveI := hright₁ _ (hc.μf (j + 1))
-  haveI := hright₂ _ (hc.μf (j + 1 + 1))
+  have := hright₁ _ (hc.μf (j + 1))
+  have := hright₂ _ (hc.μf (j + 1 + 1))
   set B₁ : GfC (c.V (j + 1)) := ⟨v.b (j + 1), hv.b (j + 1)⟩ with hB₁
   set B₂ : GfC (c.V (j + 1 + 1)) := ⟨v.b (j + 1 + 1), hv.b (j + 1 + 1)⟩ with hB₂
   refine ⟨fun q => (w.sc j * w.sc (j + 1)) * f₁ (q * B₁⁻¹), ?_, fun q => ?_⟩

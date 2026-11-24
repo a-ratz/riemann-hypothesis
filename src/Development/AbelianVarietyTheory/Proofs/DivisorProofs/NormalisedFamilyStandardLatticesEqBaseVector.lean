@@ -110,7 +110,7 @@ theorem detId_std (D : D7) (N : ℕ) : TaylorLogMetric.detId D (StandardLattices
   · exact Submodule.one_le.2 (Submodule.subset_span ⟨1, fun v hv => by simpa using hv, Matrix.det_one.symm⟩)
 
 theorem chi_one (D : D7) (χ : TaylorLogMetric.IdE D → ℂ) (h : TaylorLogMetric.IsChi D χ) : χ 1 = 1 := by
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have h1 := h.2 1
   rw [Submodule.one_eq_span]
   simpa using h1
@@ -124,7 +124,7 @@ variable (D : D7) (T : TaylorLogMetric.Tor D) {N N' : ℕ}
 theorem Iop_self (A : AddSubgroup (TaylorLogMetric.VC D N N')) :
     ∃ x ∈ A, ∀ G : TaylorLogMetric.VC D N N' → ℂ, TaylorLogMetric.Iop D T A A G = fun z => TaylorLogMetric.al D T x * TaylorLogMetric.U D T x G z := by
   have htop : A.addSubgroupOf A = ⊤ := AddSubgroup.addSubgroupOf_self A
-  haveI hsub : Subsingleton (A ⧸ A.addSubgroupOf A) := by
+  have hsub : Subsingleton (A ⧸ A.addSubgroupOf A) := by
     rw [htop]; exact QuotientAddGroup.subsingleton_quotient_top
   let q0 : A ⧸ A.addSubgroupOf A := QuotientAddGroup.mk 0
   refine ⟨((Quotient.out q0 : A) : TaylorLogMetric.VC D N N'), Subtype.property _, fun G => ?_⟩
@@ -163,7 +163,7 @@ theorem inv_op (x : TaylorLogMetric.VC D N N') (G : TaylorLogMetric.VC D N N' �
 theorem eNat_std : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (dl : ℂ) (B : Base D cc dl) (χ : TaylorLogMetric.IdE D → ℂ), TaylorLogMetric.IsChi D χ → B.VecP χ → ∀ a b : ℕ, Even a → Even b → TaylorLogMetric.admitted D a b (StandardLatticesGL3.stdL D a) (StandardLatticesGL3.stdL D b) ∧ B.eNat χ a b (StandardLatticesGL3.stdL D a) (StandardLatticesGL3.stdL D b) = B.thZero a b := by
   intro D cc dl B χ hχ hV a b ha hb
   have hA : TaylorLogMetric.admitted D a b (StandardLatticesGL3.stdL D a) (StandardLatticesGL3.stdL D b) := by
-    letI := D.host.cmStar
+    let := D.host.cmStar
     exact ⟨ha, hb, isSD_pi _ a, isSD_pi _ b⟩
   refine ⟨hA, ?_⟩
   obtain ⟨x, hx, hI⟩ := Iop_self D B.tor (TaylorLogMetric.La D B.tor (StandardLatticesGL3.stdL D a) (StandardLatticesGL3.stdL D b))

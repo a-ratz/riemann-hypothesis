@@ -108,7 +108,7 @@ theorem exists_ball_trivial {K : Type} [Field K] [Valued K (WithZero (Multiplica
   obtain ⟨γ, hγ⟩ := Valued.mem_nhds_zero.1 hnhds
   set c := MonoidWithZeroHom.ValueGroup₀.embedding γ.1 with hc_def
   have hc0 : c ≠ 0 := by
-    have := MonoidWithZeroHom.ValueGroup₀.embedding_strictMono (zero_lt_iff.2 γ.ne_zero)
+    have := MonoidWithZeroHom.ValueGroup₀.embedding_strictMono (pos_iff_ne_zero.2 γ.ne_zero)
     rw [map_zero] at this
     exact this.ne'
 

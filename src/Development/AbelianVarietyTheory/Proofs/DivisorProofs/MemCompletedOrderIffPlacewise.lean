@@ -67,7 +67,7 @@ theorem exists_approx {S : Set (Af E)} {z : Af E} (hz : z ∈ closure S) {n : OF
       {y : Af E | ∀ w, Valued.v (y w) ≤ 1}) :=
     isOpen_integral.preimage (continuous_const.mul (continuous_const.sub continuous_id))
   obtain ⟨x, hx, hxS⟩ := mem_closure_iff.1 hz _ ho (fun w => by
-    simp only [sub_self, mul_zero, zero_coord, map_zero, zero_le'])
+    simp only [sub_self, mul_zero, zero_coord, map_zero, zero_le])
   refine ⟨x, hxS, _, hx, ?_⟩
   rw [iota, ← mul_assoc, ← map_mul, mul_inv_cancel₀ hn0, map_one, one_mul, add_sub_cancel]
 

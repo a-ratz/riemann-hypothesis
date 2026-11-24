@@ -84,8 +84,8 @@ theorem _root_.GlobalTheory.KS.exists_derivation_extend_of_formallySmooth :
       map_mul' := fun a b => by ext <;> simp [hmul] <;> ring
       map_zero' := by ext <;> simp [h0]
       map_add' := fun a b => by ext <;> simp [hadd] }
-  letI : Algebra R (TrivSqZeroExt C C) := ψ.toAlgebra
-  letI : Algebra R C := (φ.comp (algebraMap R B)).toAlgebra
+  let : Algebra R (TrivSqZeroExt C C) := ψ.toAlgebra
+  let : Algebra R C := (φ.comp (algebraMap R B)).toAlgebra
   let g : TrivSqZeroExt C C →ₐ[R] C :=
     { (TrivSqZeroExt.fstHom C C C).toRingHom with
       commutes' := fun r => by

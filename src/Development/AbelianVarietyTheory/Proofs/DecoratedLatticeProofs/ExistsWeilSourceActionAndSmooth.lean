@@ -90,7 +90,7 @@ theorem isSrc_exists_isSmoothRep : ∀ (k : Type) [Field k] [ValuativeRel k] [To
     continuous_id.prodMk continuous_const
   convert hO.preimage hc using 1
   ext g
-  simp only [Set.mem_setOf_eq, Set.mem_preimage]
+  simp only [Set.mem_ofPred_eq, Set.mem_preimage]
   rw [← hρ' g Φ]
   exact Subtype.ext_iff
 

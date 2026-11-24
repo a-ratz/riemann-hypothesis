@@ -126,11 +126,11 @@ theorem UpperTheory.V.Z.Sym.Al.isoCopy :
       exact hsep x fun i => congrFun hx i
     have hNs : IsSemisimpleModule (MonoidAlgebra ℂ H) ν.asModule :=
       IsSemisimpleModule.of_injective _ hinj
-    haveI : Nontrivial ν.asModule := hN
+    have : Nontrivial ν.asModule := hN
     obtain ⟨S, hS⟩ := IsAtomic.exists_atom (Submodule (MonoidAlgebra ℂ H) ν.asModule)
     rw [← isSimpleModule_iff_isAtom] at hS
-    haveI := hS
-    haveI := IsSimpleModule.nontrivial (MonoidAlgebra ℂ H) S
+    have := hS
+    have := IsSimpleModule.nontrivial (MonoidAlgebra ℂ H) S
     obtain ⟨s, hs⟩ := exists_ne (0 : S)
     obtain ⟨i, hi⟩ : ∃ i, Q i s ≠ 0 := by
       by_contra hc
@@ -140,7 +140,7 @@ theorem UpperTheory.V.Z.Sym.Al.isoCopy :
     have hj : Function.Injective ((Q i).comp S.subtype) :=
       (LinearMap.injective_or_eq_zero _).resolve_right hne
     let e1 := LinearEquiv.ofInjective _ hj
-    haveI : IsSimpleModule (MonoidAlgebra ℂ H) (LinearMap.range ((Q i).comp S.subtype)) := IsSimpleModule.congr e1.symm
+    have : IsSimpleModule (MonoidAlgebra ℂ H) (LinearMap.range ((Q i).comp S.subtype)) := IsSimpleModule.congr e1.symm
     obtain ⟨e2⟩ := hiso (LinearMap.range ((Q i).comp S.subtype))
     let G : τ.asModule →ₗ[MonoidAlgebra ℂ H] ν.asModule :=
       S.subtype.comp (e1.symm.toLinearMap.comp e2.symm.toLinearMap)
@@ -149,7 +149,7 @@ theorem UpperTheory.V.Z.Sym.Al.isoCopy :
     intro h0
     have : IsSimpleModule (MonoidAlgebra ℂ H) τ.asModule :=
       (Representation.irreducible_iff_isSimpleModule_asModule τ).1 hτ
-    haveI := IsSimpleModule.nontrivial (MonoidAlgebra ℂ H) τ.asModule
+    have := IsSimpleModule.nontrivial (MonoidAlgebra ℂ H) τ.asModule
     obtain ⟨t, ht⟩ := exists_ne (0 : τ.asModule)
     have hG : G t = 0 := LinearMap.congr_fun h0 t
     have : (e1.symm (e2.symm t) : S) = 0 := Subtype.ext hG

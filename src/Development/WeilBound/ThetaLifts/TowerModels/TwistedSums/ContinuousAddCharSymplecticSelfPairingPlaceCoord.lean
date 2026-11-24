@@ -65,7 +65,7 @@ theorem continuous_psi_symp_atPlace : ∀ {F E : Type} [Field F] [NumberField F]
   intro F E _ _ _ _ _ σ ψ hψ n d JA JB o v M _ g
   have ht : ∀ m : M, Continuous (fun a : M → v.adicCompletionIntegers F =>
       GlobalTheory.EmbChart.atPlace v (a m : Fv F v)) :=
-    fun m => (GlobalTheory.VacAny.continuous_atPlace v).comp (continuous_subtype_val.comp (continuous_apply m))
+    fun m => (GlobalTheory.VacAny.continuous_atPlace v).comp (continuous_subtypeVal.comp (continuous_apply m))
   refine hψ.comp ?_
   delta GlobalTheory.WeilM.symp GlobalTheory.WeilM.hTens
 

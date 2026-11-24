@@ -76,7 +76,7 @@ theorem ratF_injective (V : HSp D) : Function.Injective (Bridge.ratF V) := by
       rw [this]
       simp [inclR]
     have hi : Function.Injective (inclR (F := D.host.F) (E := D.host.E) (Af D.host.F)) := by
-      haveI : Nontrivial (Af D.host.F) := Formalism.L2.DIV.af_nontrivial D.host.F
+      have : Nontrivial (Af D.host.F) := Formalism.L2.DIV.af_nontrivial D.host.F
       exact Algebra.TensorProduct.includeRight_injective (RingHom.injective _)
     apply hi
     rw [← h3, h1]
@@ -124,7 +124,7 @@ theorem weight_match (hFm : ∀ x, Fm x ∈ Bridge.AdForms ι ρ J χ) (hread : 
     · intro c a _ ha
       rw [map_smul]; exact Submodule.smul_mem _ c ha⟩
   have hU : U = ⊤ := by
-    haveI := X.wt.irr
+    have := X.wt.irr
     refine (eq_bot_or_eq_top U).resolve_left fun hb => h₀ (X.real_inj ?_)
     rw [map_zero]
     funext g

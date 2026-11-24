@@ -78,7 +78,7 @@ theorem exists_smul_eq_zero {N : Type} [AddCommGroup N] [Module A N] [Module.Fin
     have h2 : Subsingleton (L ⊗[k] (k ⊗[A] N)) :=
       (TensorProduct.AlgebraTensorModule.cancelBaseChange A k L L N).toEquiv.subsingleton
     exact (Module.FaithfullyFlat.subsingleton_tensorProduct_iff_right k L).1 h2
-  rw [Module.mem_support_iff_of_finite, SetLike.not_le_iff_exists] at hp
+  rw [Module.mem_support_iff_of_finite, IsConcreteLE.not_le_iff_exists] at hp
   obtain ⟨a, ha, ha'⟩ := hp
   exact ⟨a, ha', Module.mem_annihilator.1 ha⟩
 

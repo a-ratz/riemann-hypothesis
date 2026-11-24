@@ -67,7 +67,7 @@ private theorem arith {a V E : ℕ} {s L X : ℝ} {C : ℕ} (ha : a ≤ V) (hV :
     linarith
 
 private theorem l_mem {l : ℕ} [hl : Fact l.Prime] (c : Coef l) : ((l : ℕ) : c.O) ∈ maximalIdeal c.O := by
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (UpperTheory.V.Base.dvrFacts l c.O).2.2.1
   have h : ((l : ℕ) : ℤ_[l]) ∈ maximalIdeal ℤ_[l] := by
     rw [PadicInt.maximalIdeal_eq_span_p]
     exact Ideal.mem_span_singleton_self _

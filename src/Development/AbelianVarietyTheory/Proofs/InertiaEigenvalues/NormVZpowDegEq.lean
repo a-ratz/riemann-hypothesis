@@ -61,7 +61,7 @@ theorem normV_zpow_deg_eq {K L Ω : Type} [Field Ω] [Field K] [NumberField K] [
     {v : HeightOneSpectrum (𝓞 K)} {v' : HeightOneSpectrum (𝓞 L)} {h : IsPlaceOver A v} {h' : IsPlaceOver A v'}
     (σ' : Weil h') (σ : Weil h) (hσ : ∀ z : Ω, (σ : G K Ω) z = (σ' : G L Ω) z) :
     ((normV v' : ℕ) : ℝ) ^ deg σ' = ((normV v : ℕ) : ℝ) ^ deg σ := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed K
   obtain ⟨a, b, ha⟩ := σ'.2
   obtain ⟨c, d, hc⟩ := σ.2
   rw [deg_eq ha, deg_eq hc]

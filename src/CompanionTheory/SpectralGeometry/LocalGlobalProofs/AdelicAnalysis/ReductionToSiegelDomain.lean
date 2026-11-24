@@ -102,13 +102,13 @@ theorem exists_bezout {A : FractionalIdeal (𝓞 F)⁰ F} (hA : A ≠ 0) {p q : 
     calc A * A⁻¹ = (FractionalIdeal.spanSingleton _ p + FractionalIdeal.spanSingleton _ q) * A⁻¹ := by
           rw [← h]
       _ = _ := add_mul _ _ _
-  rw [h2, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_add, Submodule.add_eq_sup,
+  rw [h2, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_add, Submodule.add_eq_sup,
     Submodule.mem_sup] at h1
   obtain ⟨s, hs, t, ht, hst⟩ := h1
-  obtain ⟨s', hs', rfl⟩ := FractionalIdeal.mem_singleton_mul.1 (FractionalIdeal.mem_coe.1 hs)
-  obtain ⟨t', ht', rfl⟩ := FractionalIdeal.mem_singleton_mul.1 (FractionalIdeal.mem_coe.1 ht)
+  obtain ⟨s', hs', rfl⟩ := FractionalIdeal.mem_singleton_mul.1 (FractionalIdeal.mem_coeToSubmodule.1 hs)
+  obtain ⟨t', ht', rfl⟩ := FractionalIdeal.mem_singleton_mul.1 (FractionalIdeal.mem_coeToSubmodule.1 ht)
   refine ⟨t', ht', -s', ?_, ?_⟩
-  · exact FractionalIdeal.mem_coe.1 (neg_mem (FractionalIdeal.mem_coe.2 hs'))
+  · exact FractionalIdeal.mem_coeToSubmodule.1 (neg_mem (FractionalIdeal.mem_coeToSubmodule.2 hs'))
   · linear_combination hst
 
 theorem exists_adapted {A : FractionalIdeal (𝓞 F)⁰ F} (hA : A ≠ 0) {p q : F}
@@ -116,12 +116,12 @@ theorem exists_adapted {A : FractionalIdeal (𝓞 F)⁰ F} (hA : A ≠ 0) {p q :
     ∃ g : SL(2, F), Adapted A g ∧ g 1 0 = p ∧ g 1 1 = q := by
   obtain ⟨a, ha, b, hb, hab⟩ := exists_bezout hA h
   have hp : p ∈ A := by
-    rw [h, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_add, Submodule.add_eq_sup]
-    exact Submodule.mem_sup_left (FractionalIdeal.mem_coe.2
+    rw [h, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_add, Submodule.add_eq_sup]
+    exact Submodule.mem_sup_left (FractionalIdeal.mem_coeToSubmodule.2
       (FractionalIdeal.mem_spanSingleton_self _ _))
   have hq : q ∈ A := by
-    rw [h, ← FractionalIdeal.mem_coe, FractionalIdeal.coe_add, Submodule.add_eq_sup]
-    exact Submodule.mem_sup_right (FractionalIdeal.mem_coe.2
+    rw [h, ← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_add, Submodule.add_eq_sup]
+    exact Submodule.mem_sup_right (FractionalIdeal.mem_coeToSubmodule.2
       (FractionalIdeal.mem_spanSingleton_self _ _))
   refine ⟨⟨!![a, b; p, q], by simpa [Matrix.det_fin_two] using hab⟩, ?_, by simp, by simp⟩
   refine ⟨?_, ?_, ?_, ?_⟩ <;> simpa
@@ -242,7 +242,7 @@ theorem GlobalTheory.CompanionTheory.SW.Core.exists_finset_row_completion :
     if h : ∃ r, Adapted (A g) r then h.choose else 1
   have hr : ∀ g, (∃ r, Adapted (A g) r) → Adapted (A g) (r g) := by
     intro g h
-    simp only [r, dif_pos h]
+    simp only [r, dite_eq_left h]
     exact h.choose_spec
   refine ⟨Finset.univ.image r, ∑ g, (Ideal.absNorm (J g : Ideal (𝓞 F)) : ℝ), ?_⟩
   intro c d hcd
@@ -638,7 +638,7 @@ theorem balanced_lower {ι : Type} [Fintype ι] (z : ι → ℝ) (hz : ∀ i, 0 
     rw [hq, le_div_iff₀ hκ]
     have := hbal w v
     linarith
-  haveI : Nonempty ι := ⟨w⟩
+  have : Nonempty ι := ⟨w⟩
   have hcard : Fintype.card ι ≠ 0 := Fintype.card_ne_zero
   have hp : ∏ i, z i ≤ q ^ Fintype.card ι := by
     calc ∏ i, z i ≤ ∏ _i : ι, q :=
@@ -745,7 +745,7 @@ theorem reduction : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
     rw [prod_sq_embedding hF ρ hρ]
     have h := (NumberField.isUnit_iff_norm (x := (u : 𝓞 F))).1 u.isUnit
     have h' : |((Algebra.norm ℚ ((u : 𝓞 F) : F) : ℚ) : ℝ)| = 1 := by
-      rw [RingOfIntegers.coe_norm] at h
+      rw [NumberField.RingOfIntegers.coe_norm] at h
       exact_mod_cast h
     rw [← sq_abs, h', one_pow]
   have hprod : P ≤ ∏ w, (mob ρ (r * k) τ w).im := by

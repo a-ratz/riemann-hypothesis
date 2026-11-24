@@ -89,10 +89,10 @@ theorem map_mul_left_eq_of_mulVec (R : Type) [CommRing R] [TopologicalSpace R] [
     (μ : @Measure (Matrix (Fin n) (Fin m) R) (borel _))
     (hμ : @Measure.IsAddHaarMeasure (Matrix (Fin n) (Fin m) R) _ _ (borel _) μ) :
     @Measure.map _ _ (borel _) (borel _) (fun x : Matrix (Fin n) (Fin m) R => A * x) μ = μ := by
-  letI mM : MeasurableSpace (Matrix (Fin n) (Fin m) R) := borel _
-  haveI bM : BorelSpace (Matrix (Fin n) (Fin m) R) := ⟨rfl⟩
-  letI mP : MeasurableSpace (Fin m → Fin n → R) := borel _
-  haveI bP : BorelSpace (Fin m → Fin n → R) := ⟨rfl⟩
+  let mM : MeasurableSpace (Matrix (Fin n) (Fin m) R) := borel _
+  have bM : BorelSpace (Matrix (Fin n) (Fin m) R) := ⟨rfl⟩
+  let mP : MeasurableSpace (Fin m → Fin n → R) := borel _
+  have bP : BorelSpace (Fin m → Fin n → R) := ⟨rfl⟩
   let e := matrixColumns R n m
   have he : Continuous e := continuous_pi fun j => continuous_pi fun i =>
     (continuous_apply j).comp (continuous_apply i)
@@ -100,7 +100,7 @@ theorem map_mul_left_eq_of_mulVec (R : Type) [CommRing R] [TopologicalSpace R] [
     (continuous_apply i).comp (continuous_apply j)
   let φ : (Fin n → R) →+ (Fin n → R) := A.mulVecLin.toAddMonoidHom
   have hφ : Continuous φ := Continuous.matrix_mulVec continuous_const continuous_id
-  haveI hν : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
+  have hν : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
   have key := map_pi_eq_of_map_addHaar_eq (Fin n → R) φ hφ hA m (μ.map e) hν
   have hΦ : Continuous (fun (x : Fin m → Fin n → R) i => φ (x i)) :=
     continuous_pi fun i => hφ.comp (continuous_apply i)
@@ -210,8 +210,8 @@ namespace GlobalTheory
 theorem actO_map_haar : ∀ (D : D7) (S T : HSp D) (g : GA D S) (h : GA D T) (μ : Measure (WO S T)),
     μ.IsAddHaarMeasure → μ.map (actO S T g h) = μ := by
   intro D S T g h μ hμ
-  haveI : BorelSpace (Mx D T.rank S.rank) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have : BorelSpace (Mx D T.rank S.rank) := ⟨rfl⟩
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   have hL : Continuous (fun x : Mx D T.rank S.rank =>
       (HMul.hMul (mt T h) (x : Matrix (Fin T.rank) (Fin S.rank) (AE D)) : Mx D T.rank S.rank)) :=
     continuous_const.matrix_mul continuous_id
@@ -293,10 +293,10 @@ theorem integral_om_actO_continuous : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
   intro D ψ S T χS χT om hom X _ _ _ _ μ _ p c K hp hc hcb hK hpK f hf
   obtain ⟨C, hC⟩ := hcb
   obtain ⟨i1, i2, i3, -, -, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : IsTopologicalAddGroup (WO S T) := i1
-  haveI : LocallyCompactSpace (WO S T) := i2
-  haveI : SecondCountableTopology (WO S T) := i3
-  haveI : FirstCountableTopology (WO S T) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
+  have : IsTopologicalAddGroup (WO S T) := i1
+  have : LocallyCompactSpace (WO S T) := i2
+  have : SecondCountableTopology (WO S T) := i3
+  have : FirstCountableTopology (WO S T) := TopologicalSpace.SecondCountableTopology.to_firstCountableTopology _
   have hG : Continuous fun z : (GA D S × GA D T) × WO S T => om z.1 f (actO S T z.1.1 z.1.2 z.2) :=
     (GlobalTheory.Unf.jointCont_all D ψ S T χS χT om hom f hf).comp (continuous_fst.prodMk (continuous_actO_pair S T))
   have hFc : ∀ w, Continuous fun x => c x * om (p x) f (actO S T (p x).1 (p x).2 w) := fun w =>
@@ -321,12 +321,12 @@ theorem integral_om_actO_continuous : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
 theorem lintegral_om_actO_le : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : WRep S T), IsWeilDatumO ψ S T χS χT om → ∀ (ν : Measure (WO S T)), ν.IsAddHaarMeasure → ∀ (K : Set (GA D S × GA D T)) (N : Set (WO S T)), IsCompact K → IsCompact N → ∃ B : ENNReal, B ≠ ⊤ ∧ ∀ h, IsThetaFunO ψ S T h → ∀ ε : ℝ, (∀ w, ‖h w‖ ≤ ε) → ∀ q ∈ K, ∫⁻ w in N, ‖om q h (actO S T q.1 q.2 w)‖ₑ ∂ν ≤ B * ENNReal.ofReal ε := by
   intro D ψ S T χS χT om hom ν hν K N hK hN
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : IsTopologicalAddGroup (WO S T) := i1
-  haveI : LocallyCompactSpace (WO S T) := i2
-  haveI : SecondCountableTopology (WO S T) := i3
-  haveI : T2Space (WO S T) := i4
-  haveI : DiscreteTopology (ratL T S) := i5
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (WO S T) := i1
+  have : LocallyCompactSpace (WO S T) := i2
+  have : SecondCountableTopology (WO S T) := i3
+  have : T2Space (WO S T) := i4
+  have : DiscreteTopology (ratL T S) := i5
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   have := Formalism.IndefR.PHeisFC.countable_ratL T S
   have : MeasurableConstVAdd (ratL T S) (WO S T) := ⟨fun c => (continuous_const.add continuous_id).measurable⟩
   have : VAddInvariantMeasure (ratL T S) (WO S T) ν := ⟨fun c s _ => measure_preimage_add ν (c : WO S T) s⟩
@@ -343,7 +343,7 @@ theorem lintegral_om_actO_le : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S 
   have hH : IsThetaFunO ψ S T H := hom.om_pres q h hh
   have hψ : ∀ a, ‖ψ a‖ = 1 := hom.std.1.2.1
   have ha : Measurable (actO S T q.1 q.2) := (continuous_actO_pair S T).comp (continuous_const.prodMk continuous_id) |>.measurable
-  have hHm : Measurable fun w => ‖H w‖ₑ := hH.cont.enorm.measurable
+  have hHm : Measurable fun w => ‖H w‖ₑ := hH.cont.eNorm.measurable
 
   have s1 : ∫⁻ w in N, ‖H (actO S T q.1 q.2 w)‖ₑ ∂ν ≤ ∫⁻ w in K', ‖H w‖ₑ ∂ν := by
     calc ∫⁻ w in N, ‖H (actO S T q.1 q.2 w)‖ₑ ∂ν
@@ -361,8 +361,8 @@ theorem lintegral_om_actO_le : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S 
     obtain ⟨ξ, rfl⟩ := hγ
     have e := hH.quasi ξ w
     simp only [ratW] at e
-    rw [show ((incA D).toAddMonoidHom.mapMatrix ξ : WO S T) = ξ.map (incA D) from rfl, e, enorm_mul]
-    rw [← ofReal_norm_eq_enorm (ψ _), hψ, ENNReal.ofReal_one, one_mul]
+    rw [show ((incA D).toAddMonoidHom.mapMatrix ξ : WO S T) = ξ.map (incA D) from rfl, e, eNorm_mul]
+    rw [← ofReal_norm (ψ _), hψ, ENNReal.ofReal_one, one_mul]
 
   have s3 : ∫⁻ w in Formalism.IndefR.PHeisFC.FD T S, ‖H w‖ₑ ∂ν ≤
       ν (Formalism.IndefR.PHeisFC.FD T S) * ENNReal.ofReal ε := by
@@ -374,7 +374,7 @@ theorem lintegral_om_actO_le : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S 
         ≤ ∫⁻ _w in Formalism.IndefR.PHeisFC.FD T S, ENNReal.ofReal ε ^ 2 ∂ν := by
           refine lintegral_mono fun w => ?_
           gcongr
-          rw [← ofReal_norm_eq_enorm]
+          rw [← ofReal_norm]
           exact ENNReal.ofReal_le_ofReal (hε w)
       _ = _ := by rw [setLIntegral_const, mul_comm]
   calc ∫⁻ w in N, ‖om q h (actO S T q.1 q.2 w)‖ₑ ∂ν ≤ n * (ν (Formalism.IndefR.PHeisFC.FD T S) * ENNReal.ofReal ε) :=
@@ -398,10 +398,10 @@ theorem theta_sub' {D : D7} {ψ : AddChar (AF D.host.F) ℂ} {S T : HSp D} {f g 
 theorem average_kills_theta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : WRep S T), IsWeilDatumO ψ S T χS χT om → ∀ (X : Type) [TopologicalSpace X] [MeasurableSpace X] [BorelSpace X] [SecondCountableTopology X] (μ : Measure X) [IsFiniteMeasure μ] (p : X → GA D S × GA D T) (c : X → ℂ) (K : Set (GA D S × GA D T)), Continuous p → Continuous c → (∃ C : ℝ, ∀ x, ‖c x‖ ≤ C) → IsCompact K → (∀ᵐ x ∂μ, p x ∈ K) → ∀ M : Submodule ℂ (WO S T → ℂ), (∀ g ∈ M, IsThetaFunO ψ S T g) → (∀ g ∈ M, ∀ w, heisO ψ S T w g ∈ M) → (∀ g ∈ M, ∫ x, c x * om (p x) g 0 ∂μ = 0) → ∀ f, IsThetaFunO ψ S T f → GlobalTheory.IndefiniteRowSideFullHecke.ConjugateAdjointDagger.UnifLimit M f → ∫ x, c x * om (p x) f 0 ∂μ = 0 := by
   intro D ψ S T χS χT om hom X _ _ _ _ μ _ p c K hp hc hcb hK hpK M hMt hMh hM0 f hf hfl
   obtain ⟨i1, i2, i3, i4, -, -⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : LocallyCompactSpace (WO S T) := i2
-  haveI : SecondCountableTopology (WO S T) := i3
-  haveI : T2Space (WO S T) := i4
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
+  have : LocallyCompactSpace (WO S T) := i2
+  have : SecondCountableTopology (WO S T) := i3
+  have : T2Space (WO S T) := i4
+  have : BorelSpace (WO S T) := ⟨rfl⟩
   let ν : Measure (WO S T) := Measure.addHaar
   have hν : ν.IsAddHaarMeasure := by infer_instance
   let F : (WO S T → ℂ) → X → WO S T → ℂ := fun h x w => c x * om (p x) h (actO S T (p x).1 (p x).2 w)
@@ -442,13 +442,13 @@ theorem average_kills_theta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T
     have hpt : ∀ w, ‖Φ w‖ₑ ≤ ∫⁻ x, G w x ∂μ := by
       intro w
       rw [hΦw w]
-      refine (enorm_integral_le_lintegral_enorm _).trans (lintegral_mono fun x => ?_)
-      simp only [F, G, enorm_mul]
+      refine (eNorm_integral_le_lintegral_eNorm _).trans (lintegral_mono fun x => ?_)
+      simp only [F, G, eNorm_mul]
       gcongr
-      rw [← ofReal_norm_eq_enorm]
+      rw [← ofReal_norm]
       exact ENNReal.ofReal_le_ofReal (hC x)
     have hGm : AEMeasurable (Function.uncurry G) ((ν.restrict N).prod μ) := by
-      have := (hjc _ hht).enorm
+      have := (hjc _ hht).eNorm
       exact (measurable_const.mul this.measurable).aemeasurable
     calc ∫⁻ w in N, ‖Φ w‖ₑ ∂ν ≤ ∫⁻ w in N, ∫⁻ x, G w x ∂μ ∂ν := lintegral_mono fun w => hpt w
       _ = ∫⁻ x, ∫⁻ w in N, G w x ∂ν ∂μ := lintegral_lintegral_swap hGm
@@ -468,7 +468,7 @@ theorem average_kills_theta : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T
     rw [ENNReal.ofReal_zero, mul_zero] at hT
     exact le_antisymm (ge_of_tendsto hT (eventually_nhdsWithin_of_forall fun δ hδ => hbound δ hδ)) (zero_le)
   have hae : ∀ᵐ w ∂(ν.restrict N), ‖Φ w‖ₑ = 0 :=
-    (lintegral_eq_zero_iff' hcont.enorm.measurable.aemeasurable).1 hzero
+    (lintegral_eq_zero_iff' hcont.eNorm.measurable.aemeasurable).1 hzero
   rw [hΦ0]
   by_contra hne
   have hU : IsOpen {w | Φ w ≠ 0} := isOpen_ne_fun hcont continuous_const

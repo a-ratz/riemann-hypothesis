@@ -119,16 +119,16 @@ theorem exists_basicOpen_isFrame_dOn : ∀ (k : Type) [Field k] (X : Scheme.{0})
     ext a
     exact hgerm _
   have hfe : letI := ρ.toAlgebra; Algebra.FormallyEtale Γ(X, X.basicOpen s) (X.presheaf.stalk x₀) := by
-    letI := ρ.toAlgebra
-    haveI := hWaff.isLocalization_stalk ⟨x₀, hxs⟩
+    let := ρ.toAlgebra
+    have := hWaff.isLocalization_stalk ⟨x₀, hxs⟩
     exact Algebra.FormallyEtale.of_isLocalization (hWaff.primeIdealOf ⟨x₀, hxs⟩).asIdeal.primeCompl
   have h1 : IsFreeGen (X.presheaf.stalk x₀) (TopForm.formMap n ρ hρα (TopForm.resForm hsV ω)) := by
-    letI := (algX p (X.basicOpen s)).toAlgebra
-    letI := ((X.presheaf.germ U.1 x₀ hx).hom.comp (algX p U.1)).toAlgebra
-    letI := ρ.toAlgebra
-    haveI : IsScalarTower k Γ(X, X.basicOpen s) (X.presheaf.stalk x₀) :=
+    let := (algX p (X.basicOpen s)).toAlgebra
+    let := ((X.presheaf.germ U.1 x₀ hx).hom.comp (algX p U.1)).toAlgebra
+    let := ρ.toAlgebra
+    have : IsScalarTower k Γ(X, X.basicOpen s) (X.presheaf.stalk x₀) :=
       IsScalarTower.of_algebraMap_eq' hρα.symm
-    haveI : Algebra.FormallyEtale Γ(X, X.basicOpen s) (X.presheaf.stalk x₀) := hfe
+    have : Algebra.FormallyEtale Γ(X, X.basicOpen s) (X.presheaf.stalk x₀) := hfe
     exact hωW.gen.of_isBaseChange (isBaseChange_exteriorPower
       (KaehlerDifferential.isBaseChange_of_formallyEtale k Γ(X, X.basicOpen s) (X.presheaf.stalk x₀)) n)
   have h2 : IsFreeGen (X.presheaf.stalk x₀)
@@ -358,11 +358,11 @@ theorem logDet_local_eq_unit_mul_prod :
         refine derivation_prod_eq_zero_of_forall _ _ _ fun j hj => ?_
         have hne : e j ≠ e j0 := fun h => (Finset.ne_of_mem_erase hj) (e.injective h)
         show dd (e j0) (φ (x (e j))) = 0
-        rw [hδ, if_neg hne]
+        rw [hδ, ite_eq_right hne]
       have hone : dd (e j0) (r j0) = 1 := by
         show dd (e j0) (φ (x (e j0))) = 1
-        rw [hδ, if_pos rfl]
-      have hmv : hm (e j0) = r j0 := if_pos hi
+        rw [hδ, ite_eq_left rfl]
+      have hmv : hm (e j0) = r j0 := ite_eq_left hi
       have : hm (e j0) * dd (e j0) g = g := by
         conv_lhs => rw [hsplit]
         rw [Derivation.leibniz, hrest, hone, hmv, smul_zero, zero_add, smul_eq_mul, mul_one, ← hsplit]
@@ -372,7 +372,7 @@ theorem logDet_local_eq_unit_mul_prod :
         refine derivation_prod_eq_zero_of_forall _ _ _ fun j hj => ?_
         have hne : e j ≠ i := fun h => hi (Finset.mem_map.mpr ⟨j, hj, h⟩)
         show dd i (φ (x (e j))) = 0
-        rw [hδ, if_neg hne]
+        rw [hδ, ite_eq_right hne]
       rw [this, mul_zero]
       exact Ideal.zero_mem _
   have hE : ∀ i, ∀ f ∈ I.map φ, E i f ∈ I.map φ := by
@@ -408,11 +408,11 @@ theorem logDet_local_eq_unit_mul_prod :
       have := _root_.GlobalTheory.dvd_derivation_of_mem_span_prod_params R m r hrsp J (D' k) hgk j hj
       obtain ⟨c, hc⟩ := this
       refine ⟨c, ?_⟩
-      have hmv : hm (e j) = r j := if_pos hl
+      have hmv : hm (e j) = r j := ite_eq_left hl
       rw [hmv, ← hc]
       exact (hD'a k (x (e j))).symm
     · refine ⟨φ (b k (x l)), ?_⟩
-      have hmv : hm l = 1 := if_neg hl
+      have hmv : hm l = 1 := ite_eq_right hl
       rw [hmv, one_mul]
   choose M hM using hdiv
 
@@ -440,7 +440,7 @@ theorem logDet_local_eq_unit_mul_prod :
       congr 1
       ext l; simp
     rw [this, Finset.prod_map]
-  haveI : IsDomain R := ReciprocityTheory.AnForm.R.isDomain_of_isRegularLocalRing
+  have : IsDomain R := ReciprocityTheory.AnForm.R.isDomain_of_isRegularLocalRing
   have hprime : ∀ j, Prime (r j) := ReciprocityTheory.AnForm.R.prime_of_regular_params r hrsp.1 hrsp.2
   have hg0 : g ≠ 0 := Finset.prod_ne_zero_iff.mpr fun j _ => (hprime j).ne_zero
   have hMN : (Matrix.of M).det * (Matrix.of N).transpose.det = 1 := by
@@ -500,9 +500,9 @@ theorem stalk_snc : ∀ (X : Scheme.{0}) (I : X.IdealSheafData), ReciprocityTheo
   intro X I hI U x hx
   obtain ⟨hreg, U₁, hx₁, n, f, J, hR, hI₁⟩ := hI x
   refine ⟨hreg, ?_⟩
-  letI : Algebra Γ(X, U.1) (X.presheaf.stalk x) :=
+  let : Algebra Γ(X, U.1) (X.presheaf.stalk x) :=
     TopCat.Presheaf.algebra_section_stalk X.presheaf ⟨x, hx⟩
-  haveI hloc := U.2.isLocalization_stalk ⟨x, hx⟩
+  have hloc := U.2.isLocalization_stalk ⟨x, hx⟩
   have halg : ∀ r : Γ(X, U.1), algebraMap Γ(X, U.1) (X.presheaf.stalk x) r =
       (X.presheaf.germ U.1 x hx).hom r := fun r => rfl
   have key : ∀ i : Fin n, ∃ (a : Γ(X, U.1)) (t : Γ(X, U.1)),
@@ -563,18 +563,18 @@ theorem GlobalTheory.LogPole.exists_coord_logDet : ∀ (E : Type) [Field E] [Num
     rw [TopForm.resForm_dOn] at h'
     simpa only [LB.resG_resG] using h'
   obtain ⟨hreg, m, a, J, hRsp, hIa⟩ := _root_.GlobalTheory.SncStalk.stalk_snc TF.Y.X (LogKS.boundary TF.Y) TF.snc U x₀ hx₀
-  haveI := TF.smooth
+  have := TF.smooth
   obtain ⟨hfp, hfree, hfin, hrank⟩ := _root_.GlobalTheory.SmoothStalk.smooth_stalk c.F TF.Y.X TF.Y.s Dw.dim U x₀ hx₀
-  letI : Algebra c.F Γ(TF.Y.X, U.1) := (algX TF.Y.s U.1).toAlgebra
-  letI : Algebra Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀) :=
+  let : Algebra c.F Γ(TF.Y.X, U.1) := (algX TF.Y.s U.1).toAlgebra
+  let : Algebra Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀) :=
     TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf ⟨x₀, hx₀⟩
-  letI : Algebra c.F (TF.Y.X.presheaf.stalk x₀) :=
+  let : Algebra c.F (TF.Y.X.presheaf.stalk x₀) :=
     ((TF.Y.X.presheaf.germ U.1 x₀ hx₀).hom.comp (algX TF.Y.s U.1)).toAlgebra
-  haveI : IsScalarTower c.F Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀) :=
+  have : IsScalarTower c.F Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI hloc := U.2.isLocalization_stalk ⟨x₀, hx₀⟩
-  haveI : IsNoetherianRing Γ(TF.Y.X, U.1) := Algebra.FiniteType.isNoetherianRing c.F _
-  haveI : IsNoetherianRing (TF.Y.X.presheaf.stalk x₀) :=
+  have hloc := U.2.isLocalization_stalk ⟨x₀, hx₀⟩
+  have : IsNoetherianRing Γ(TF.Y.X, U.1) := Algebra.FiniteType.isNoetherianRing c.F _
+  have : IsNoetherianRing (TF.Y.X.presheaf.stalk x₀) :=
     IsLocalization.isNoetherianRing (U.2.primeIdealOf ⟨x₀, hx₀⟩).asIdeal.primeCompl _ inferInstance
   have h3 := _root_.GlobalTheory.exists_coords_extending_regularParams c.F Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀)
     (U.2.primeIdealOf ⟨x₀, hx₀⟩).asIdeal Dw.dim hrank m a hRsp

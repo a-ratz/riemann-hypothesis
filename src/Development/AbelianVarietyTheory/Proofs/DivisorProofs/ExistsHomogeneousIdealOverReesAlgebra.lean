@@ -58,7 +58,7 @@ theorem homogeneousComponent_mul_of_homogeneous_left {S : Type} [CommRing S] {k 
     {P : MvPolynomial σ S} (hP : P.IsHomogeneous k) (Q : MvPolynomial σ S) :
     homogeneousComponent n (P * Q) = if k ≤ n then P * homogeneousComponent (n - k) Q else 0 := by
   classical
-  letI := MvPolynomial.gradedAlgebra (σ := σ) (R := S)
+  let := MvPolynomial.gradedAlgebra (σ := σ) (R := S)
   have h := DirectSum.coe_decompose_mul_of_left_mem (homogeneousSubmodule σ S) (a := P) (b := Q) n
     ((mem_homogeneousSubmodule k P).2 hP)
   have e : ∀ (m : ℕ) (T : MvPolynomial σ S),

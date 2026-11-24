@@ -107,7 +107,7 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
   classical
   set p := v.asIdeal with hpdef
   have hp0 : p ≠ ⊥ := v.ne_bot
-  haveI hpm : p.IsMaximal := v.isMaximal
+  have hpm : p.IsMaximal := v.isMaximal
   have hmap0 : Ideal.map (algebraMap (𝓞 F) (𝓞 E)) p ≠ ⊥ := Ideal.map_ne_bot_of_ne_bot hp0
   have hunr : ∀ w : HeightOneSpectrum (𝓞 E), w.asIdeal.LiesOver p →
       Algebra.IsUnramifiedAt (𝓞 F) w.asIdeal := by
@@ -131,8 +131,8 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
     rw [← hmapfib, Finset.card_map]
   have he : ∀ P ∈ fib F E v, p.ramificationIdx' P.asIdeal = 1 := by
     intro P hP
-    haveI := hlies P hP
-    haveI := hunr P (hlies P hP)
+    have := hlies P hP
+    have := hunr P (hlies P hP)
     rw [Ideal.ramificationIdx'_eq_ramificationIdx' p P.asIdeal hmap0]
     exact Ideal.ramificationIdx_eq_one _ _
   have hsum : ∑ P ∈ fib F E v, p.inertiaDeg' P.asIdeal = 2 := by
@@ -144,11 +144,11 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
   have hnorm : ∀ P ∈ fib F E v,
       Ideal.absNorm P.asIdeal = Ideal.absNorm p ^ p.inertiaDeg' P.asIdeal := by
     intro P hP
-    haveI := hlies P hP
+    have := hlies P hP
     exact Ideal.absNorm_eq_pow_inertiaDeg'_of_liesOver P.asIdeal p hpm.isPrime hp0
   have hfpos : ∀ P ∈ fib F E v, 0 < p.inertiaDeg' P.asIdeal := by
     intro P hP
-    haveI := hlies P hP
+    have := hlies P hP
     exact Ideal.inertiaDeg'_pos p P.asIdeal
   have hcard_le : (fib F E v).card ≤ 2 := by
     rw [← hsum, Finset.card_eq_sum_ones]
@@ -168,7 +168,7 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
       rw [ha, Finset.sum_singleton] at hsum
       exact hsum
     have hmapa : Ideal.map (algebraMap (𝓞 F) (𝓞 E)) p = a.asIdeal := by
-      haveI := hlies a hamem
+      have := hlies a hamem
       have hle : Ideal.map (algebraMap (𝓞 F) (𝓞 E)) p ≤ a.asIdeal :=
         Ideal.map_le_of_le_comap (le_of_eq (Ideal.LiesOver.over))
       obtain ⟨J, hJ⟩ := Ideal.dvd_iff_le.mpr hle
@@ -188,7 +188,7 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
       GlobalTheory.InertField.isField_of_inert F E h2 v (by rw [hmapa]; exact a.isPrime)
     have heSp : PositivityTheory.SiegelWeilFormula.Gen.eSp E v = -1 := by
       unfold PositivityTheory.SiegelWeilFormula.Gen.eSp
-      exact if_pos hfield
+      exact ite_eq_left hfield
     rw [ha, Finset.prod_singleton, hnorm a hamem, haf, heSp, natCast_pow_cpow]
     ring
   · obtain ⟨a, b, hab, hfab⟩ := Finset.card_eq_two.mp hc
@@ -208,7 +208,7 @@ theorem local_factor (h2 : Module.finrank F E = 2) (v : HeightOneSpectrum (𝓞 
     have hnf := GlobalTheory.SplitPlace.not_isField_of_split F E h2 v hsplit
     have heSp : PositivityTheory.SiegelWeilFormula.Gen.eSp E v = 1 := by
       unfold PositivityTheory.SiegelWeilFormula.Gen.eSp
-      exact if_neg hnf
+      exact ite_eq_right hnf
     rw [hfab, Finset.prod_pair hab, hnorm a hamem, hnorm b hbmem, ha1, hb1, heSp, pow_one]
     ring
 

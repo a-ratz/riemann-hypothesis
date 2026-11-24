@@ -80,7 +80,7 @@ theorem etale_eval₂_res : ∀ (X Y : Scheme.{0}) (q : Y ⟶ X) (ι : Type) (U 
   have h3 : (resG X hU').Etale := GlobalTheory.TopForm.etale_resG hU hU'a hU'
   have h4 : (MvPolynomial.map (σ := ι) (resG X hU')).Etale := by
     algebraize [resG X hU']
-    letI := MvPolynomial.algebraMvPolynomial (σ := ι) (R := Γ(X, U)) (S := Γ(X, U'))
+    let := MvPolynomial.algebraMvPolynomial (σ := ι) (R := Γ(X, U)) (S := Γ(X, U'))
     exact RingHom.Etale.isStableUnderBaseChange Γ(X, U) Γ(X, U') (MvPolynomial ι Γ(X, U)) (MvPolynomial ι Γ(X, U')) h3
   have h5 : (MvPolynomial.eval₂Hom (q.appLE U' W' hW'U').hom (fun a ↦ resG Y hW' (N a))).comp
       (MvPolynomial.map (resG X hU')) = (resG Y hW').comp (MvPolynomial.eval₂Hom (q.appLE U W hWU).hom N) := by
@@ -158,23 +158,23 @@ theorem isFrame_etale : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) (p : X ⟶ S
   have hU'a : IsAffineOpen U' := hx.affine
   have hC := _root_.GlobalTheory.EtaleRestrict.etale_eval₂_res X Y q ι U U' hU' hU hU'a W W' hW' hW hW'a hWU hW'U' N hN
   obtain ⟨bR, hbR⟩ := _root_.GlobalTheory.TopForm.FrameBasis.exists_basis_of_isFrame k X p m ‹_› U' _ hx
-  haveI : Finite ι := Finite.of_injective (fun a ↦ o.symm (Sum.inr a))
+  have : Finite ι := Finite.of_injective (fun a ↦ o.symm (Sum.inr a))
     (fun a b h ↦ Sum.inr_injective (o.symm.injective h))
-  letI : Algebra k Γ(X, U') := (algX p U').toAlgebra
-  letI : Algebra k Γ(Y, W') := (algX (q ≫ p) W').toAlgebra
-  letI : Algebra Γ(X, U') Γ(Y, W') := (q.appLE U' W' hW'U').hom.toAlgebra
-  haveI : IsScalarTower k Γ(X, U') Γ(Y, W') :=
+  let : Algebra k Γ(X, U') := (algX p U').toAlgebra
+  let : Algebra k Γ(Y, W') := (algX (q ≫ p) W').toAlgebra
+  let : Algebra Γ(X, U') Γ(Y, W') := (q.appLE U' W' hW'U').hom.toAlgebra
+  have : IsScalarTower k Γ(X, U') Γ(Y, W') :=
     IsScalarTower.of_algebraMap_eq' (appLE_comp_algX' p q hW'U').symm
   let φ := MvPolynomial.eval₂Hom (q.appLE U' W' hW'U').hom (fun a ↦ resG Y hW' (N a))
-  letI : Algebra (MvPolynomial ι Γ(X, U')) Γ(Y, W') := φ.toAlgebra
-  haveI : IsScalarTower Γ(X, U') (MvPolynomial ι Γ(X, U')) Γ(Y, W') :=
+  let : Algebra (MvPolynomial ι Γ(X, U')) Γ(Y, W') := φ.toAlgebra
+  have : IsScalarTower Γ(X, U') (MvPolynomial ι Γ(X, U')) Γ(Y, W') :=
     IsScalarTower.of_algebraMap_eq fun r ↦ by
       change _ = φ (MvPolynomial.C r)
       simp [φ]; rfl
-  haveI : Algebra.Etale (MvPolynomial ι Γ(X, U')) Γ(Y, W') := hC
+  have : Algebra.Etale (MvPolynomial ι Γ(X, U')) Γ(Y, W') := hC
   obtain ⟨⟨bT, hbT⟩, hsm⟩ := GlobalTheory.EtaleCoordJacobian.exists_basis_of_etale Γ(X, U') Γ(Y, W') ι
-  haveI := hsm
-  haveI : Subsingleton (Algebra.H1Cotangent Γ(X, U') Γ(Y, W')) :=
+  have := hsm
+  have : Subsingleton (Algebra.H1Cotangent Γ(X, U') Γ(Y, W')) :=
     Algebra.FormallySmooth.subsingleton_h1Cotangent
   have hinj : Function.Injective (KaehlerDifferential.mapBaseChange k Γ(X, U') Γ(Y, W')) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]

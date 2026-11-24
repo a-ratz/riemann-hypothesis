@@ -415,7 +415,7 @@ theorem trH_res {J : Type} [Group J] [TopologicalSpace J] (φ : J →* G) (hφ :
   rfl
 
 theorem mem_H1ur_iff (J : Subgroup G) (x : H1 ρ) : x ∈ H1ur ρ J ↔ trH ρ ρ' h x ∈ H1ur ρ' J := by
-  have hJ : Continuous J.subtype := continuous_subtype_val
+  have hJ : Continuous J.subtype := continuous_subtypeVal
   change resH1 ρ J.subtype hJ x = 0 ↔ resH1 ρ' J.subtype hJ (trH ρ ρ' h x) = 0
   rw [← trH_res, AddEquiv.map_eq_zero_iff]
 
@@ -432,7 +432,7 @@ theorem mem_selAll_iff {F Ω Λ O M : Type} [Field F] [NumberField F] [Field Ω]
     (x : H1 ρ) :
     x ∈ Formalism.GaloisCohomology.SelAll ρ A (Formalism.GaloisCohomology.bkCond ρ A l Sig L) ↔
       trH ρ ρ' h x ∈ Formalism.GaloisCohomology.SelAll ρ' A (Formalism.GaloisCohomology.bkCond ρ' A l Sig L') := by
-  have hJ : ∀ v, Continuous (Dec (F := F) (A.1 v)).subtype := fun _ => continuous_subtype_val
+  have hJ : ∀ v, Continuous (Dec (F := F) (A.1 v)).subtype := fun _ => continuous_subtypeVal
   refine (mem_Sel ρ _ hJ _ _).trans (Iff.trans (forall_congr' fun v => ?_) (mem_Sel ρ' _ hJ _ _).symm)
   rw [← trH_res]
   unfold Formalism.GaloisCohomology.bkCond
@@ -542,7 +542,7 @@ theorem bk_le : bk bkP i s k ψ v ≤ Submodule.span (X.Ok i k) (intSet bkP i s 
   refine Submodule.span_mono ?_
   rintro x ⟨z, c, y, hc, hy, hz, rfl⟩
   let Bw := bkP.br i v hv
-  haveI := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK Bw.Kw
+  have := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK Bw.Kw
   obtain ⟨n, hn⟩ := GlobalTheory.BlochKatoIntegralScalars.exists_pow_mul_mem_OL Bw.LL c hc.1.1
   let f : ↥(DecV N v) → Fin D.R.r → X.O0 i := fun g j => Bw.eO.symm ⟨_, hn (Bw.e g) j⟩
   have hf : ∀ g j, Bw.toLL (f g j) = (X.l i : Bw.LL.1) ^ n * c (Bw.e g) j := by
@@ -727,7 +727,7 @@ theorem twisted_selmer_lengths_eq_determinant_valuation : ∀ (D : Formalism.Bas
     SelmerLengthsByDeterminant bkP := by
   intro D N X bkP i s M ι _ P d Q _ hA _ a Φ hC F hF k u ψ hu hψ
   obtain ⟨e, he⟩ := hC
-  letI : Module (abelian₂ X i M ι) (KmodO (X.Ok i k)) := Module.compHom _ (lamChar i k u hu)
+  let : Module (abelian₂ X i M ι) (KmodO (X.Ok i k)) := Module.compHom _ (lamChar i k u hu)
   have htr : TrivAbove ψ (X.l i) := fun v hv A hvA σ hσ => by
     rw [hψ]
     exact Finset.prod_eq_one fun q _ => by rw [(hA.2.2 q).2.2.1 v hv A hvA σ hσ]; simp

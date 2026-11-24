@@ -92,7 +92,7 @@ theorem modu_finite (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum 
     ext y
     rw [Set.mem_smul_set_iff_inv_smul_mem, WithZero.exp_log hv, SetLike.mem_coe,
       HeightOneSpectrum.mem_adicCompletionIntegers, Units.smul_def, smul_eq_mul, map_mul,
-      Units.val_inv_eq_inv_val, map_inv₀, IsUnit.unit_spec, inv_mul_le_iff₀ (zero_lt_iff.2 hv), mul_one]
+      Units.val_inv_eq_inv_val, map_inv₀, IsUnit.unit_spec, inv_mul_le_iff₀ (pos_iff_ne_zero.2 hv), mul_one]
     simp
   have e2 : {y : Fv F v | ∀ i, (ContinuousLinearEquiv.funUnique Unit (Fv F v) (Fv F v)).symm y i ∈
       v.adicCompletionIntegers F} = (v.adicCompletionIntegers F : Set (Fv F v)) := by
@@ -127,7 +127,7 @@ theorem distribHaarChar_pi_real (ι : Type) [Fintype ι] (u : (ι → ℝ)ˣ) :
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [Measure.addHaar_smul]
     rw [Module.finrank_self, pow_one, Real.volume_Icc, sub_zero, ENNReal.ofReal_one, mul_one,
-      ← Real.enorm_eq_ofReal_abs]
+      ← Real.eNorm_eq_ofReal_abs]
     rfl
 
 theorem modu_infinite (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (x : Ainf F) (hx : IsUnit x) :

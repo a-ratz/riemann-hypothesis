@@ -88,7 +88,7 @@ theorem exists_bound_of_isCompact (w : Pl E) {K : Set (w.adicCompletion E)} (hK 
   have hcov : K ⊆ ⋃ m : ℕ, U m := by
     intro x _
     rcases eq_or_ne (Valued.v x) 0 with h0 | h0
-    · exact Set.mem_iUnion.2 ⟨0, by simp only [U, Set.mem_setOf_eq, h0]; exact zero_le'⟩
+    · exact Set.mem_iUnion.2 ⟨0, by simp only [U, Set.mem_ofPred_eq, h0]; exact zero_le⟩
     · refine Set.mem_iUnion.2 ⟨(WithZero.log (Valued.v x)).toNat, ?_⟩
       show Valued.v x ≤ _
       conv_lhs => rw [← WithZero.exp_log h0]
@@ -133,6 +133,6 @@ theorem bound_charpoly_nrmL : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     have hne : Valued.v (((nrmL n w y)⁻¹).val.det) ≠ 0 := fun h => by
       rw [h, mul_zero] at hv; exact zero_ne_one hv
     rw [eq_inv_of_mul_eq_one_left hv]
-    exact inv_anti₀ (zero_lt_iff.2 hne) h1
+    exact inv_anti₀ (pos_iff_ne_zero.2 hne) h1
 
 end GlobalTheory.LocBound

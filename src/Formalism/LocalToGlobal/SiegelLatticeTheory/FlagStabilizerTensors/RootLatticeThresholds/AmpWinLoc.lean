@@ -169,7 +169,7 @@ theorem map_muNl (hθ : 0 < θ) : (muNl C τ (vOf X τ)).map (eT C τ (vOf X τ)
   have h3 := (muNB_haar (D := D) hθ).2.2.1
   rw [ae_iff]
   refine measure_mono_null (fun x hx => ?_) h3
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   intro hN
   obtain ⟨hU, -⟩ := hN
   exact hx (uh_sub_range C τ hU)
@@ -181,7 +181,7 @@ theorem map_muHl : (muHl C u τ (vOf X τ)).map (eT C τ (vOf X τ)) = C.muW u �
   have h3 := (C.muW_haar u τ).2.2.1
   rw [ae_iff]
   refine measure_mono_null (fun x hx => ?_) h3
-  simp only [Set.mem_setOf_eq] at hx ⊢
+  simp only [Set.mem_ofPred_eq] at hx ⊢
   intro hW
   obtain ⟨hU, -⟩ := hW
   exact hx (uh_sub_range C τ hU)
@@ -192,8 +192,8 @@ theorem sf_muNl (hθ : 0 < θ) : SigmaFinite (muNl C τ (vOf X τ)) := by
   exact (muNB_haar (D := D) hθ).1
 
 theorem sf_muHl : SigmaFinite (muHl C u τ (vOf X τ)) := by
-  haveI : IsFiniteMeasure (C.muW u τ) := ⟨by rw [C.muW_one u τ]; exact ENNReal.one_lt_top⟩
-  haveI : IsFiniteMeasure (muHl C u τ (vOf X τ)) := ⟨by
+  have : IsFiniteMeasure (C.muW u τ) := ⟨by rw [C.muW_one u τ]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (muHl C u τ (vOf X τ)) := ⟨by
     unfold muHl
     rw [(eT_emb C τ (vOf X τ)).comap_apply]
     exact lt_of_le_of_lt (measure_mono (Set.subset_univ _)) (measure_lt_top _ _)⟩
@@ -311,7 +311,7 @@ theorem invOn_mulMap : QPK.InvOn (QPK.mulMap (muNl C τ (vOf X τ)) (muHl C u τ
       Sset D.R.k D.R.rS (zB X (C.Qi τ) u τ)} =
       QPK.prodSet (Formalism.L2.SG.Pf.WuDec.Nloc X u (vOf X τ)) (Formalism.L2.SG.Pf.WuDec.Hfix X u (vOf X τ)) := by
     ext γ
-    rw [Set.mem_setOf_eq, Formalism.L2.SG.Pf.LocF.local_dictionary_all D X θ C u τ γ, Formalism.L2.SG.Pf.WuDec.NHloc_eq]
+    rw [Set.mem_ofPred_eq, Formalism.L2.SG.Pf.LocF.local_dictionary_all D X θ C u τ γ, Formalism.L2.SG.Pf.WuDec.NHloc_eq]
   rw [heq, ← hset]
   exact hμS
 
@@ -344,7 +344,7 @@ theorem loc_id {β : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) → ℝ≥0∞} (h�
   obtain ⟨hz, hTz⟩ := Formalism.L2.SG.Pf.zTr C u τ
   have hT : 0 < Tz D.R.k D.R.rS (zB X (C.Qi τ) u τ) := by rw [hTz]; exact Tr_pos D u
   set g : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) → ℝ≥0∞ := fun y => β y * ‖X.Wloc u (vOf X τ) y‖ₑ ^ 2 with hg_def
-  have hgm : Measurable g := hβm.mul ((X.Wloc_cont u (vOf X τ)).enorm.measurable.pow_const 2)
+  have hgm : Measurable g := hβm.mul ((X.Wloc_cont u (vOf X τ)).eNorm.measurable.pow_const 2)
   set f : Mt D.R.k D.R.rS → ℝ≥0∞ := Function.extend e g 0 with hf_def
   have hfm : Measurable f := he.measurable_extend hgm measurable_const
   have hfe : ∀ γ, f (e γ) = g γ := fun γ => he.injective.extend_apply g 0 γ
@@ -383,7 +383,7 @@ theorem loc_id {β : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) → ℝ≥0∞} (h�
         Formalism.L2.SG.Pf.WuDec.mul_mem_Sloc X u _ (Formalism.L2.SG.Pf.WuDec.Nloc_sub X u _ hm)
           (Formalism.L2.SG.Pf.WuDec.Hloc_sub X u _ hh')
       show β (m * h * γx) * ‖X.Wloc u (vOf X τ) (m * h * γx)‖ₑ ^ 2 = _
-      rw [← enorm_norm (X.Wloc u (vOf X τ) (m * h * γx)), Formalism.L2.SG.Pf.WuDec.norm_Wloc_inv X u _ hs, enorm_norm]
+      rw [← eNorm_norm (X.Wloc u (vOf X τ) (m * h * γx)), Formalism.L2.SG.Pf.WuDec.norm_Wloc_inv X u _ hs, eNorm_norm]
     rw [lintegral_congr_ae hin, lintegral_mul_const _ (show Measurable (fun a => β (a * γx)) from hβm.comp (measurable_mul_const γx)), hβ1 γx, one_mul]
     have hw : wT C u τ (Matrix.of (e γx)) = X.Wloc u (vOf X τ) γx := Formalism.L2.SG.Pf.WuBL.wT_at C u τ γx
     rw [hw]

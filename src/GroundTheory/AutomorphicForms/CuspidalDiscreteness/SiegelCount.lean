@@ -210,8 +210,8 @@ theorem exists_encard_le_siegel {ω : Set (AdelicGLn.AdelicGL K n)} (hω : IsCom
         (Q ×ˢ Q)) with hQ'_def
   have hQ' : IsCompact Q' := by
     refine (isCompact_maxCompact.prod (hQ.prod hQ)).image ?_
-    exact (((continuous_fst.mul (continuous_subtype_val.comp (continuous_fst.comp
-      continuous_snd))).mul (continuous_subtype_val.comp (continuous_snd.comp
+    exact (((continuous_fst.mul (continuous_subtypeVal.comp (continuous_fst.comp
+      continuous_snd))).mul (continuous_subtypeVal.comp (continuous_snd.comp
         continuous_snd)).inv).mul continuous_fst.inv)
   set 𝒦 : Set (FiniteAdeleRing (𝓞 K) K) := ⋃ i : Fin n, ⋃ j : Fin n,
     (fun p : AdelicGLn.AdelicGL K n × AdelicGLn.AdelicGL K n =>

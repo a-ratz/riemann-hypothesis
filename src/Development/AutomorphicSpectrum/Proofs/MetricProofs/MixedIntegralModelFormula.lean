@@ -409,7 +409,7 @@ theorem lintegral_absFibre_eq {e : ℕ} {X : Type} [TopologicalSpace X] (A : Fin
   have hgt : ∀ j, goodT A q j =ᵐ[volume] (A.chart j).target := by
     intro j
     refine ae_eq_set.mpr ⟨?_, hTn j⟩
-    have : goodT A q j \ (A.chart j).target = ∅ := Set.diff_eq_empty.mpr fun u hu => hu.1
+    have : goodT A q j \ (A.chart j).target = ∅ := Set.sdiff_eq_empty.mpr fun u hu => hu.1
     rw [this]
     exact measure_empty
   have hAE : ∀ j, AEMeasurable (h j) (volume.restrict (A.chart j).target) := by
@@ -444,7 +444,7 @@ theorem lintegral_absFibre_eq {e : ℕ} {X : Type} [TopologicalSpace X] (A : Fin
       ∫⁻ y, ENNReal.ofReal (fibSum (goodT A q j) (Qj j) (h' j) y) =
         ∫⁻ u in goodT A q j, ENNReal.ofReal (h' j u) := fun j =>
     lintegral_fibSum_open (isOpen_goodT A q j) (fun u hu => hu.2) (fun u => abs_nonneg _)
-      ((hm' j).comp measurable_subtype_coe) (hfinj j)
+      ((hm' j).comp measurable_subtypeVal) (hfinj j)
   have hsame : ∀ᵐ y, ∀ j, fibSum (goodT A q j) (Qj j) (h j) y =
       fibSum (goodT A q j) (Qj j) (h' j) y := by
     refine ae_all_iff.mpr fun j => ?_
@@ -589,7 +589,7 @@ theorem aemeasurable_fibSum_of_nonneg {O : Set (Fin e → ℂ)} (hO : IsOpen O)
     {h : (Fin e → ℂ) → ℝ} (hh : ∀ u, 0 ≤ h u) (hm : Measurable h)
     (hfin : ∀ᵐ y, (O ∩ Q ⁻¹' {y}).Finite) : AEMeasurable (fibSum O Q h) := by
   have h1 := (LintegralFibSum.lintegral_fibSum_open hO hQ hh
-    (hm.comp measurable_subtype_coe) hfin).1
+    (hm.comp measurable_subtypeVal) hfin).1
   refine h1.ennreal_toReal.congr (Eventually.of_forall fun y => ?_)
   exact ENNReal.toReal_ofReal (LintegralFibSum.fibSum_nonneg _ _ hh y)
 

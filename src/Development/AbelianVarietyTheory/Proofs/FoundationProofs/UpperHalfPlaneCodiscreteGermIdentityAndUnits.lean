@@ -86,7 +86,7 @@ theorem codiscreteWithin_Hs_neBot : (Filter.codiscreteWithin Hs).NeBot := by
 
 theorem eqOn_zero_of_germ_eq_zero {a : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) (h0 : (a : Mero) = 0) :
     ∀ z ∈ Hs, a z = 0 := by
-  haveI := codiscreteWithin_Hs_neBot
+  have := codiscreteWithin_Hs_neBot
   have han : AnalyticOnNhd ℂ a Hs := ha.analyticOnNhd isOpen_Hs
   rcases han.eqOn_zero_or_eventually_ne_zero_of_preconnected isPreconnected_Hs with h | h
   · exact fun z hz => h hz
@@ -96,7 +96,7 @@ theorem eqOn_zero_of_germ_eq_zero {a : ℂ → ℂ} (ha : DifferentiableOn ℂ a
     exact hz1 hz2
 
 theorem germ_main : Nontrivial Mero ∧ (∀ a b : ℂ → ℂ, DifferentiableOn ℂ a Hs → DifferentiableOn ℂ b Hs → (a : Mero) = (b : Mero) → ∀ z ∈ Hs, a z = b z) ∧ ∀ a : ℂ → ℂ, DifferentiableOn ℂ a Hs → (a : Mero) ≠ 0 → (∀ᶠ z in Filter.codiscreteWithin Hs, a z ≠ 0) ∧ IsUnit (a : Mero) := by
-  haveI := codiscreteWithin_Hs_neBot
+  have := codiscreteWithin_Hs_neBot
   refine ⟨inferInstance, ?_, ?_⟩
   · intro a b ha hb hab z hz
     have h0 : ((a - b : ℂ → ℂ) : Mero) = 0 := by

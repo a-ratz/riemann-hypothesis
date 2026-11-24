@@ -185,12 +185,12 @@ theorem prB_pr (i : Fin j) : DegPre.prB D' F ≫ pD.pw.pr i = (TF (R := R) F ◁
 
 theorem shift_pr (x : D'.X) (i : Fin j) : (DegPre.prB D' F * cP D' _ x) ≫ pD.pw.pr i =
     (TF (R := R) F ◁ pD.pw.pr i) ≫ (DegPre.prB D F * cP D _ (pD.xe x i)) := by
-  haveI := pD.pw.hom i
+  have := pD.pw.hom i
   rw [MonObj.mul_comp, MonObj.comp_mul, prB_pr, cPoint_pr, comp_cP]
 
 theorem famφ_pr (α' : D'.X) (i : Fin j) (a : Fin 4) :
     DegPre.famφ D' F α' a ≫ (pD.pw.pr i).left = prB pD F i ≫ DegPre.famφ D F (pD.xe α' i) a := by
-  haveI := pD.pw.hom i
+  have := pD.pw.hom i
   fin_cases a
   · exact congrArg (fun q => q.left) (prB_pr pD F i)
   · exact congrArg (fun q => q.left) (shift_pr pD F α' i)
@@ -209,7 +209,7 @@ theorem trF_pr (mu : D'.X) (i : Fin j) : (DegPre.trF D' F mu).left ≫ prB pD F 
     exact shift_pr pD F mu i
 
 theorem zF_pr (i : Fin j) : (DegPre.zF D' F).left ≫ prB pD F i = (DegPre.zF D F).left := by
-  haveI := pD.pw.hom i
+  have := pD.pw.hom i
   refine congrArg (fun q => q.left) (?_ : DegPre.zF D' F ≫ (TF (R := R) F ◁ pD.pw.pr i) = DegPre.zF D F)
   apply CartesianMonoidalCategory.hom_ext
   · simp [DegPre.zF]

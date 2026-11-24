@@ -1492,10 +1492,10 @@ theorem polarisation_squares_agree_at_level : GlobalFnsSt → ∀ (R : Type) [Co
     exact h
   have inv := GlobalTheory.T.square_comparison_torus_invariant hG R I hI D D' A A' G hS U U' wL hwL (GlobalTheory.T.square_iso_carries_square_cubical hG R I hI D D' A A' G hS U U' wL hwL)
     (GlobalTheory.T.square_iso_respects_symmetry_pointwise hG R I hI D D' A A' G hS U U' wL hwL) e β hβ hq u hu sqrel
-  haveI := (U'.gt e).q_flat
-  haveI := (U'.gt e).q_surj
-  haveI := (U'.gt e).q_affine
-  haveI := (U.gt e).q_hom
+  have := (U'.gt e).q_flat
+  have := (U'.gt e).q_surj
+  have := (U'.gt e).q_affine
+  have := (U.gt e).q_hom
   have hql : (U'.gt e).q.left ≫ β.hom.left = (U.gt e).q.left := congrArg (·.left) hq
   obtain ⟨v, hv, hv'⟩ := LevelComparison.exists_iso_descend (U'.gt e).q.left (fstG I e D'.toPre.P.A).left
     (β.hom.left ≫ (fstG I e D.toPre.P.A).left) (p := (U.gt e).pG.left) (p' := (U'.gt e).pG.left)

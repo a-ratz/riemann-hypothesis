@@ -63,7 +63,7 @@ theorem freeP_map_mono (R : Type) [CommRing R] {P Q : PSh} (f : P ⟶ Q) [Mono f
   exact Finsupp.mapDomain_injective hu
 
 theorem free_map_mono (R : Type) [CommRing R] {P Q : PSh} (f : P ⟶ Q) [Mono f] : Mono ((free R).map f) := by
-  haveI := freeP_map_mono R f
+  have := freeP_map_mono R f
   exact (presheafToSheaf _ _).map_mono ((freeP R).map f)
 
 theorem res_comp {R : Type} [CommRing R] {F : Shv R} {W V U : Scheme.{0}} (k : W ⟶ V) (g : V ⟶ U) (a : Sec F U) :
@@ -159,7 +159,7 @@ theorem loc_kill {R : Type} [CommRing R] {P Q : PSh} (f : P ⟶ Q)
     intro x hx
     have hy : ∃ x' ∈ d.support, f.app (op W) x' = f.app (op W) x := ⟨x, hx, rfl⟩
     show _ = h (f.app (op W) x)
-    simp only [h, dif_pos hy]
+    simp only [h, dite_eq_left hy]
     exact hk (⟨x, hx⟩, ⟨hy.choose, hy.choose_spec.1⟩) hy.choose_spec.2.symm
   rw [e, Finsupp.mapDomain_comp, hd, Finsupp.mapDomain_zero]
 
@@ -195,8 +195,8 @@ open GlobalTheory.EtC.FreeMonoEpi in
 theorem free_map_mono_epi_iso : ∀ (R : Type) [CommRing R] {P Q : PSh} (f : P ⟶ Q), (Mono f → Mono ((free R).map f)) ∧ ((∀ U (y : Q.obj (op U)), Loc U fun V g => ∃ x, f.app (op V) x = Q.map g.op y) → Epi ((free R).map f)) ∧ ((∀ U (y : Q.obj (op U)), Loc U fun V g => ∃ x, f.app (op V) x = Q.map g.op y) → (∀ U (x x' : P.obj (op U)), f.app (op U) x = f.app (op U) x' → Loc U fun _ g => P.map g.op x = P.map g.op x') → IsIso ((free R).map f)) := by
   intro R _ P Q f
   refine ⟨fun _ => free_map_mono R f, free_map_epi R f, fun hs hi => ?_⟩
-  haveI := free_map_epi R f hs
-  haveI := free_map_mono_of_loc R f hi
+  have := free_map_epi R f hs
+  have := free_map_mono_of_loc R f hi
   exact isIso_of_mono_of_epi _
 
 end GlobalTheory.EtC

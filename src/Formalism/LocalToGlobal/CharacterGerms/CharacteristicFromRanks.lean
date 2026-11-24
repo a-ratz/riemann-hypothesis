@@ -186,7 +186,7 @@ theorem even_val_succ {d : ℕ} [NeZero d] (hd : Even d) (b : ZMod d) :
     obtain ⟨k, hk⟩ := hd
     have := NeZero.ne d
     omega
-  haveI : Fact (1 < d) := ⟨by omega⟩
+  have : Fact (1 < d) := ⟨by omega⟩
   rw [ZMod.val_add, ZMod.val_one]
   have hb := ZMod.val_lt b
   rcases Nat.lt_or_ge (b.val + 1) d with h | h

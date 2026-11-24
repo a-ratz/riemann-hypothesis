@@ -103,7 +103,7 @@ variable {F L : Type} [Field F] [Field L] [Algebra F L] in
 private lemma valuation_lt_one_iff_inv_not_mem' {L : Type} [Field L] (U : ValuationSubring L)
     (y : L) (h0 : y ≠ 0) : U.valuation y < 1 ↔ y⁻¹ ∉ U := by
   rw [← U.valuation_le_one_iff, map_inv₀, not_le,
-    one_lt_inv₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 h0))]
+    one_lt_inv₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 h0))]
 
 open scoped MatrixGroups TensorProduct in
 open Matrix in
@@ -149,7 +149,7 @@ private lemma exists_normalized_integral_relation {F L : Type} [Field F] [Field 
   have hlt : ∀ j, k < j → w j < w k := by
     intro j hj
     by_cases hcj : c j = 0
-    · simp only [w, hcj, map_zero]; exact zero_lt_iff.2 hwk
+    · simp only [w, hcj, map_zero]; exact pos_iff_ne_zero.2 hwk
     · refine lt_of_le_of_ne (hle j) fun h => ?_
       have hjn : j ≤ n := by
         by_contra h'
@@ -159,9 +159,9 @@ private lemma exists_normalized_integral_relation {F L : Type} [Field F] [Field 
       exact absurd (T.le_max' j hjT) (by omega)
   refine ⟨n, k, fun j => c j / c k, hkn, fun j => ?_, fun j hj => ?_, div_self hck, ?_⟩
   · rw [← U.valuation_le_one_iff, map_div₀, map_div₀]
-    exact div_le_one_of_le₀ (hle j) zero_le'
+    exact div_le_one_of_le₀ (hle j) zero_le
   · rw [map_div₀, map_div₀]
-    exact (div_lt_one₀ (zero_lt_iff.2 hwk)).2 (hlt j hj)
+    exact (div_lt_one₀ (pos_iff_ne_zero.2 hwk)).2 (hlt j hj)
   · have h0 : Polynomial.aeval x p = 0 := minpoly.aeval F x
     rw [Polynomial.aeval_eq_sum_range] at h0
     have : ∑ j ∈ Finset.range (n + 1), algebraMap F L (c j / c k) * x ^ j =
@@ -229,7 +229,7 @@ private lemma valuation_sum_lower_div_pow_eq_one_and_lt_one {L : Type} [Field L]
     calc U'.valuation (a j) * U'.valuation x⁻¹ ^ (k - j) ≤ 1 * U'.valuation x⁻¹ ^ (k - j) := by
           gcongr
       _ = U'.valuation x⁻¹ ^ (k - j) := one_mul _
-      _ < 1 := pow_lt_one₀ zero_le' hxinv' (by omega)
+      _ < 1 := pow_lt_one₀ zero_le hxinv' (by omega)
 
 open scoped MatrixGroups TensorProduct in
 open Matrix in
@@ -318,9 +318,9 @@ theorem _root_.GlobalTheory.KZ.ES.exists_conj_of_same_trace : ∀ (F L : Type) [
   have hS₁ : S ≤ W₁.toSubring := fun y hy => by simpa using (hy 1).1
   have hS₂ : S ≤ W₂.toSubring := fun y hy => by simpa using (hy 1).2
   let A := FixedPoints.subring S (L ≃ₐ[F] L)
-  haveI : Algebra.IsInvariant A S (L ≃ₐ[F] L) :=
+  have : Algebra.IsInvariant A S (L ≃ₐ[F] L) :=
     (Algebra.isInvariant_iff _ _ _).2 fun b hb => ⟨⟨b, hb⟩, rfl⟩
-  haveI : SMulCommClass (L ≃ₐ[F] L) A S := ⟨fun g a s => by
+  have : SMulCommClass (L ≃ₐ[F] L) A S := ⟨fun g a s => by
     rw [Algebra.smul_def, Algebra.smul_def, smul_mul']
     exact congrArg (· * g • s) (a.2 g)⟩
   have hcentre : ∀ (W : ValuationSubring L) (h : S ≤ W.toSubring) (s : S),

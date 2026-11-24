@@ -97,7 +97,7 @@ theorem hsVec_surjective :
   refine ⟨∑ i, (innerSL ℂ (stdOrthonormalBasis ℂ Wq i)).smulRight (WithLp.ofLp v i), ?_⟩
   first
   | (ext j
-     simp [hsVec, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smulRight_apply, OrthonormalBasis.inner_eq_ite,
+     simp [hsVec, sum_apply, ContinuousLinearMap.smulRight_apply, OrthonormalBasis.inner_eq_ite,
        ite_smul, Finset.sum_ite_eq, Finset.sum_ite_eq'])
   | (apply WithLp.ofLp_injective
      funext j
@@ -289,7 +289,7 @@ theorem lieOr_lie (v : List (Mat k r)) : ∀ X ∈ lieOr v, inLie k r X := by
 
 theorem lieOr_eq {v : List (Mat k r)} (h : ∀ X ∈ v, inLie k r X) : lieOr v = v := by
   unfold lieOr
-  rw [if_pos h]
+  rw [ite_eq_left h]
 
 theorem lieOr_len (v : List (Mat k r)) : (lieOr v).length ≤ v.length := by
   unfold lieOr
@@ -356,7 +356,7 @@ theorem adjOp_apply (D : RealPlaceData k r Wp Wq) (Θ : DiffOp k r Wp Wq) (hS : 
     apply List.map_congr_left
     intro uv huv
     have hsub : ∀ X ∈ uv.2, inLie k r X := fun X hX => hlie X ((splits_mem _ uv huv).2.1 X hX)
-    simp only [Function.comp_apply, adjTerm, lieOr_eq hsub, ContinuousLinearMap.smul_apply]
+    simp only [Function.comp_apply, adjTerm, lieOr_eq hsub, smul_apply]
   have gen : ∀ L : DiffOp k r Wp Wq, (∀ T ∈ L, T ∈ Θ) →
       ((L.flatMap fun T => (splits T.word.reverse).map (adjTerm T)).map
         fun T' : DTerm k r Wp Wq => T'.coef g (Rw T'.word f g)).sum =

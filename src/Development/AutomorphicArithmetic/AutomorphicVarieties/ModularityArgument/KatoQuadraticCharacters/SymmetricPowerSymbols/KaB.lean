@@ -52,7 +52,7 @@ open GlobalTheory.KZ GlobalTheory.K4 UpperTheory.V.Z.Kato.Sym
 theorem UpperTheory.V.Z.Kato.Sym.kaB :
     UpperTheory.V.Z.Kato.Sym.KaB := by
   intro Ω _ _ _ ε X m hm θ u hu hθ
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   obtain ⟨hprim, hrep, huniq, hcoc, hmul, hequiv, -⟩ := lgB Ω ε X m hm
   have hio : ∀ {x : X.K}, x ≠ 0 → io X x ≠ 0 := fun hx => (map_ne_zero (io X)).mpr hx
   have hne : ∀ {y : Kb X} {w : X.K}, w ≠ 0 → y ^ m = io X w → y ≠ 0 := by
@@ -98,7 +98,7 @@ theorem UpperTheory.V.Z.Kato.Sym.kaB :
       have h1 := (B.valuation_le_one_iff y).mpr hy1
       have h2 := (B.valuation_le_one_iff _).mpr hy2
       rw [map_inv₀] at h2
-      have hpos : 0 < B.valuation y := zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hy0)
+      have hpos : 0 < B.valuation y := pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hy0)
       exact le_antisymm h1 ((inv_le_one₀ hpos).mp h2)
     have hWu : (B.comap (io X)).valuation u = 1 := hU.2 _ hOv
     have hu1 : u ∈ B.comap (io X) := ((B.comap (io X)).valuation_le_one_iff u).mp hWu.le

@@ -147,7 +147,7 @@ theorem q_line (hσ : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.
     (x : Fin M → R ⊗[F] E) :
     ∃ c : R, ∀ t : R, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.qR R σ J (x + t • fun i => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR R (y0 i)) =
       algebraMap F R a * t ^ 2 + c * t + Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.qR R σ J x := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   set y : Fin M → R ⊗[F] E := fun i => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR R (y0 i) with hy
   have hs : ∀ e : E, Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.sigR R σ (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR R e) = Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR R (σ e) := fun e => rfl
   have hyy : Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.hR R σ J y y = algebraMap R (R ⊗[F] E) (algebraMap F R a) := by
@@ -210,7 +210,7 @@ theorem null_nonunit {G : Type} [AddCommGroup G] [MeasurableSpace G] [Measurable
   have sub : {X | ¬ IsUnit (f X)} ⊆ ⋃ w, {X | coord F (f X) w = 0} := by
     intro X hX
     by_contra hc
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, not_exists] at hc
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, not_exists] at hc
     apply hX
     have h1 : IsUnit (coord F (f X)) := Pi.isUnit_iff.2 fun w => isUnit_iff_ne_zero.2 (hc w)
     exact (isUnit_map_iff (coord F) _).1 h1
@@ -221,27 +221,27 @@ end Coord
 
 theorem null_sets : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 1 ≤ M → ∀ (μ : Measure (Fin 1 → Fin M → Ainf F ⊗[F] E)) (ν : Measure (Ainf F)), μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → ν {c | ¬ IsUnit c} = 0 ∧ μ {X | ¬ IsUnit ((fun X : Fin 1 → Fin M → Ainf F ⊗[F] E => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.qR (Ainf F) σ J (X 0)) X)} = 0 := by
   intro F E _ _ _ _ _ σ hσ M J hJ hM μ ν hμ hν
-  haveI : IsTotallyReal F := hσ.1
+  have : IsTotallyReal F := hσ.1
   obtain ⟨hR1, hLC, hSC, hT2, -⟩ := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
-  haveI := hR1
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
-  haveI hB : BorelSpace (Ainf F) := ⟨rfl⟩
+  have := hR1
+  have := hLC
+  have := hSC
+  have := hT2
+  have hB : BorelSpace (Ainf F) := ⟨rfl⟩
   obtain ⟨p1, p2, p3, p4, -, p6, -, p8, -, p10⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
-  haveI := p1
-  haveI := p2
-  haveI := p3
-  haveI := p4
-  haveI hB2 := p8 1 M
-  haveI : IsModuleTopology (Ainf F) (Ainf F ⊗[F] E) := GlobalTheory.CompanionTheory.SW.TopK.isModTop (Ainf F)
-  haveI : ContinuousSMul (Ainf F) (Ainf F ⊗[F] E) := IsModuleTopology.toContinuousSMul (Ainf F) _
+  have := p1
+  have := p2
+  have := p3
+  have := p4
+  have hB2 := p8 1 M
+  have : IsModuleTopology (Ainf F) (Ainf F ⊗[F] E) := GlobalTheory.CompanionTheory.SW.TopK.isModTop (Ainf F)
+  have : ContinuousSMul (Ainf F) (Ainf F ⊗[F] E) := IsModuleTopology.toContinuousSMul (Ainf F) _
   have hc := fun w => GlobalTheory.CompanionTheory.SW.NullSets.continuous_coord F w
   refine ⟨?_, ?_⟩
   · refine null_nonunit F ν id (fun w => (hc w).measurable) (diag F) (continuous_diag F).measurable ?_
     intro x w
     refine (Set.finite_singleton (-RealCoord.coord F x w)).subset fun t ht => ?_
-    simp only [Set.mem_setOf_eq, id, map_add (f := _), Pi.add_apply, coord_diag] at ht
+    simp only [Set.mem_ofPred_eq, id, map_add (f := _), Pi.add_apply, coord_diag] at ht
     simp only [Set.mem_singleton_iff]
     linarith
   · obtain ⟨y0, a, ha, hy0⟩ := GlobalTheory.HermLineZeros.exists_anisotropic hσ hM hJ
@@ -262,8 +262,8 @@ theorem null_sets : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
         have := congrArg (fun p => _root_.AddMonoidAlgebra.coeff (M := ℕ) p 2) h0
         simp [Polynomial.coeff_X, Polynomial.coeff_C] at this
         exact ha this
-      refine (Polynomial.finite_setOf_isRoot hne).subset fun t ht => ?_
-      simp only [Set.mem_setOf_eq] at ht
+      refine (Polynomial.finite_setOfPred_isRoot hne).subset fun t ht => ?_
+      simp only [Set.mem_ofPred_eq] at ht
       have e : (diag F t • y + x 0) = x 0 + diag F t • y := add_comm _ _
       have e2 : (fun _ : Fin 1 => diag F t • y) + x = fun i => (fun _ : Fin 1 => diag F t • y) i + x i := rfl
       rw [e2] at ht
@@ -363,7 +363,7 @@ theorem finprod_eq_indicator {F E : Type} [Field F] [NumberField F] [Field E] [A
       refine (hfin.union S.finite_toSet).subset ?_
       intro w hw
       by_contra hc
-      simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not, Finset.mem_coe] at hc
+      simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not, Finset.mem_coe] at hc
       apply hw
       simp only [hS w hc.2]
       exact Set.indicator_of_mem hc.1 _
@@ -374,9 +374,9 @@ theorem GlobalTheory.CompanionTheory.SW.EulerPos.euler_pos : ∀ (F E : Type) [F
   intro F E _ _ _ _ _ σ hCM d b n M I minf m hEu hm cinf c hc Φ Φi Φf Φv hΦi hpure hpos hprod
   classical
   obtain ⟨hpi, hpf, hpv, hlat, -⟩ := GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d b n M
-  haveI := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_af F E σ hCM n M
-  haveI := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_ainf F E σ hCM n M
-  haveI : ∀ v, BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) :=
+  have := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_af F E σ hCM n M
+  have := GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_ainf F E σ hCM n M
+  have : ∀ v, BorelSpace (Fin n → Fin M → Fv F v ⊗[F] E) :=
     fun v => GlobalTheory.CompanionTheory.SW.PureMeas.borelSpace_fv F E σ hCM n M v
   obtain ⟨hfin, hsum, S₀, hEP⟩ := hEu
   obtain ⟨-, -, -, -, -, -, -, S₁, hS₁⟩ := GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F cinf cinf c c hc hc
@@ -404,7 +404,7 @@ theorem GlobalTheory.CompanionTheory.SW.EulerPos.euler_pos : ∀ (F E : Type) [F
     · simp [Set.indicator_of_notMem hX]
   have hBfin : ∀ v, ∫⁻ X, φ v X ∂(m v) ≠ ⊤ := by
     intro v
-    haveI := hm v
+    have := hm v
     have hi : Integrable (Φv v) (m v) :=
       (hcv v).integrable_of_hasCompactSupport (hpure.1 v).2
     exact hi.re.lintegral_lt_top.ne
@@ -491,21 +491,21 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
   intro F E _ _ _ _ _ σ hσ M J hJ R _ _ _ _ _ hR μ ν hμ hν hνu hμu fib hfib m hm c hc
   classical
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hR
-  haveI := hTR
-  haveI := hLC
-  haveI := hSC
-  haveI := hT2
+  have := hTR
+  have := hLC
+  have := hSC
+  have := hT2
   obtain ⟨hTK, hLK, hSK, hTK2, -, -, -, hBor, -, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
-  haveI := hTK
-  haveI := hLK
-  haveI := hSK
-  haveI := hTK2
-  haveI := hBor 1 M
+  have := hTK
+  have := hLK
+  have := hSK
+  have := hTK2
+  have := hBor 1 M
   obtain ⟨hL, hS2, hT, hB, hg⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R 1
-  haveI := hL
-  haveI := hS2
-  haveI := hT
-  haveI := hB
+  have := hL
+  have := hS2
+  have := hT
+  have := hB
   obtain ⟨g, hgc, hgf⟩ := hg M J hJ
   obtain ⟨hf1, hf2, hf3⟩ := hfib
   let q : (Fin 1 → Fin M → R ⊗[F] E) → R := fun X => Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.qR R σ J (X 0)
@@ -528,7 +528,7 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
     exact h.map (Algebra.TensorProduct.includeLeftRingHom : R →+* R ⊗[F] E)
   have hU : {X | IsUnit (gramR R σ J X).det} = {X | IsUnit (q X)} := by
     ext X
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [hgf X, hdet, hq]
   have hUnull : μ ({X | IsUnit (gramR R σ J X).det}ᶜ) = 0 := by
     rw [hU]
@@ -540,12 +540,12 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
     if IsUnit (OneHerm.hermHalf R σ S) then fib (OneHerm.hermHalf R σ S) else 0
   have hm'u : ∀ s : R, IsUnit s → m' (hermScal R σ s) = fib s := by
     intro s hs
-    simp only [m', OneHerm.hermHalf_hermScal R hσ, hs, if_true]
+    simp only [m', OneHerm.hermHalf_hermScal R hσ, hs, ite_true]
   have hm' : IsGramFib R σ J 1 μ (ν.map (hermScal R σ)) m' := by
     refine ⟨?_, ?_, ?_⟩
     · intro S
       by_cases hS : IsUnit (OneHerm.hermHalf R σ S)
-      · have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS, if_true]
+      · have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS, ite_true]
         rw [this]
         refine measure_mono_null ?_ (hf1 (OneHerm.hermHalf R σ S))
         intro X hX hX'
@@ -557,7 +557,7 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
         · change IsUnit (gramR R σ J X).det
           rw [hgf X, hdet, ← hq, hqX]
           exact hS
-      · have : m' S = 0 := by simp only [m', hS, if_false]
+      · have : m' S = 0 := by simp only [m', hS, ite_false]
         rw [this]
         rfl
     · intro φ hφ
@@ -577,7 +577,7 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
       obtain ⟨hi, hcont⟩ := hf3 φ hφ hφc (Set.subset_univ _)
       refine ⟨fun S hS => ?_, ?_⟩
       · have hS' : IsUnit (OneHerm.hermHalf R σ S) := (hdet S).mp hS
-        have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS', if_true]
+        have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS', ite_true]
         rw [this]
         exact hi _ hS'
       · have hmaps : Set.MapsTo (OneHerm.hermHalf R σ) {S : HermR R σ 1 | IsUnit (S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)).det} {c | IsUnit c} :=
@@ -585,7 +585,7 @@ theorem GlobalTheory.CompanionTheory.SW.QTie.fib_eq_gramFib : ∀ (F E : Type) [
         refine (hcont.comp (OneHerm.continuous_hermHalf R σ).continuousOn hmaps).congr ?_
         intro S hS
         have hS' : IsUnit (OneHerm.hermHalf R σ S) := (hdet S).mp hS
-        have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS', if_true]
+        have : m' S = fib (OneHerm.hermHalf R σ S) := by simp only [m', hS', ite_true]
         simp only [this, Function.comp]
   have := GlobalTheory.CompanionTheory.SW.GramFib.fibre_unique F E σ hσ M J hJ R hR 1 μ (ν.map (hermScal R σ)) m hμ hν' hm m' hm'
     (hermScal R σ c)
@@ -625,7 +625,7 @@ theorem loc (hcm : IsCMExt F E σ) {M : ℕ} {J : Matrix (Fin M) (Fin M) E} (hJ 
   have hμ : (a • coordW R b lam 1 M).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul _ ha
   have hν : (c • lam).IsAddHaarMeasure := Measure.IsAddHaarMeasure.nnreal_smul _ hc
   have hmap : (c • lam).map (hermScal R σ) = c • coordHerm R σ b lam 1 := by
-    haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+    have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
     rw [Measure.map_smul, (hermScal_main F E σ hcm R d b).2.2 lam hlam]
     exact (OneHerm.continuous_hermScal R σ).measurable.aemeasurable
   have G := Rescale.isGramFib_rescale F E σ hcm M J hJ R hR 1 _ _ m hW1 (hH 1) hm a c ha hc
@@ -649,8 +649,8 @@ theorem sw1b2 (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [
   obtain ⟨⟨li, hli⟩, hl⟩ := StdEx.exists_std F
   choose lv hlv using hl
   obtain ⟨hex, hfd⟩ := haar_fundamental_exist F E σ hcm' M J hJ'
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have Ri := isLocR_Ainf F hcm'.1
   have Rv := LocFv.isLocR_Fv F
   refine ⟨CharEx.exists_isCharAF F, fun ψ hψ => ⟨hex, fun μ hμ => ⟨(hfd μ hμ).1, fun 𝓕 h𝓕 => ?_⟩⟩⟩

@@ -127,8 +127,8 @@ theorem pair_eq {r : ℕ} (pr : Fin r → (B' ⟶ B)) (hpr : ∀ i, IsMonHom (pr
     (∏ k : Fin 4, h (GlobalTheory.PolDeg.lamPts (fst B' B' ≫ pr j) (snd B' B' ≫ pr i) k) ^ Oε k) ^ w *
     (∏ k : Fin 4, ∏ I : ULift.{0} (Finset (Fin 2)),
       h ((psum B' (x2 B') I.down).left ≫ tensφ pr ((i, j), k)) ^ ((-1) ^ (2 - I.down.card) * Oε k)) ^ (-w) := by
-  haveI := hpr i
-  haveI := hpr j
+  have := hpr i
+  have := hpr j
   refine (prod_zpow_mul (U := U) _ (Sum.elim thε (Sum.elim thε thε)) (-w)).trans ?_
   rw [Fintype.prod_sum_type, Fintype.prod_sum_type]
   simp only [Sum.elim_inl, Sum.elim_inr]

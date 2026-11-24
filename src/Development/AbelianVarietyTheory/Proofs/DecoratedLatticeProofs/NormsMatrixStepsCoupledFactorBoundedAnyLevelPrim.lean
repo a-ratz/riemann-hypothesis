@@ -496,9 +496,9 @@ theorem factor_eq_exp {a : ℕ} (nu : DomWeight a) (y : ℕ → ℚ) (b : ℕ) (
   set s := GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.size nu
   have hpos : (0 : ℝ) < 2 * (s : ℝ) + 2 := by positivity
   have e1 : (Real.exp L)⁻¹ ^ s = Real.exp (-((s : ℝ) * L)) := by
-    rw [← Real.exp_neg, ← Real.exp_nat_mul]; congr 1; ring
+    rw [← Real.exp_neg, ← Real.exp_natCast_mul]; congr 1; ring
   have e2 : (2 * (s : ℝ) + 2) ^ (2 * (a * b)) = Real.exp (2 * ((a : ℝ) * b) * Real.log (2 * (s : ℝ) + 2)) := by
-    conv_lhs => rw [← Real.exp_log hpos, ← Real.exp_nat_mul]
+    conv_lhs => rw [← Real.exp_log hpos, ← Real.exp_natCast_mul]
     congr 1; push_cast; ring
   rw [e1, e2, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add]
   congr 1; ring
@@ -511,13 +511,13 @@ theorem sq_le_exp (C A g T : ℕ) (G r L : ℝ) (hG : 1 ≤ G) (hT : 1 ≤ T) (h
   have hx : (0 : ℝ) < 2 * (g : ℝ) * r + 1 := by positivity
   have h8 : (0 : ℝ) < 8 + 32 * (g : ℝ) * (r / 2) := by positivity
   have e1 : Real.exp ((g : ℝ) * Real.log (8 + 32 * (g : ℝ) * (r / 2))) = 8 ^ g * (2 * (g : ℝ) * r + 1) ^ g := by
-    rw [Real.exp_nat_mul, Real.exp_log h8, ← mul_pow]; congr 1; ring
+    rw [Real.exp_natCast_mul, Real.exp_log h8, ← mul_pow]; congr 1; ring
   have e2 : Real.exp (2 * (((C : ℝ) + 4) * A * Real.log (G * T))) = (G * T) ^ (2 * (C * A)) * (G * T) ^ (8 * A) := by
     rw [← pow_add]
-    conv_rhs => rw [← Real.exp_log (show (0 : ℝ) < G * T by linarith), ← Real.exp_nat_mul]
+    conv_rhs => rw [← Real.exp_log (show (0 : ℝ) < G * T by linarith), ← Real.exp_natCast_mul]
     congr 1; push_cast; ring
   have e3 : Real.exp (L / 2) ^ 2 = Real.exp L := by
-    rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    rw [← Real.exp_natCast_mul]; congr 1; push_cast; ring
   rw [Real.exp_add, Real.exp_add, e1, e2, mul_pow, mul_pow, mul_pow, e3, Real.sq_sqrt (by positivity), ← pow_mul, ← pow_mul]
   have b1 : G ^ (C * A * 2) ≤ (G * T) ^ (2 * (C * A)) := by
     rw [mul_comm (C * A) 2]
@@ -840,7 +840,7 @@ theorem smallDatum_xiCpl1_sharp : ∀ (CY : ℝ) (D : D7) (N : NumDatum) (X : Fi
       frsF sel mu r P x ∈ r.deco.1.at P.1 ↔ x ∈ stdAt X.E (N.R.N j) P.1 := by
     intro j r P x
     have hP := hrow P.1 P.2
-    simp only [frsF, hP, dif_pos]
+    simp only [frsF, hP, dite_eq_left]
     exact (GlobalTheory.ColNorms.liftFr_lifts X.E _ _ _ r.deco ⟨P.1, hP⟩).1 x
   have key := @GlobalTheory.ColNorms.DatOne.smallDatum_of_frames X.E X.K _ _ _ _ _ _ (Pr.vT u) _ _ (rowSG Pr sel mu) (fun a b => Classical.propDecidable (a = b))
     p₀.deco.1 p.deco (frsF sel mu p₀) (frsF sel mu p) (hfr p₀) (hfr p) (Pr.T u * (Pr.g 0 * Pr.g 1))
@@ -949,7 +949,7 @@ theorem locSmall_locTop (hm : R.m = m2 + 2) (hc : cst.Ok) (hs : cst.sharp = true
     rw [map_mul, norm_mul]
     refine mul_le_one₀ ?_ (norm_nonneg _) ?_
     · unfold PhiTop
-      rw [if_pos hP, hs, if_pos rfl]
+      rw [ite_eq_left hP, hs, ite_eq_left rfl]
       have hq0 : Formalism.L2.Col.qOf P.1 ≠ 0 := fun h0 => P.1.ne_bot (Ideal.absNorm_eq_zero_iff.1 h0)
       have hN : ∀ j, R.N j = R.k + j * R.t + j := fun j => by unfold Ranks.N; ring
       have h0 : Formalism.L2.Col.cOf R (m2 + 1) = 0 := by unfold Formalism.L2.Col.cOf; omega
@@ -961,7 +961,7 @@ theorem locSmall_locTop (hm : R.m = m2 + 2) (hc : cst.Ok) (hs : cst.sharp = true
       · rw [hN]; omega
       · unfold Ranks.r; omega
     · unfold ftY
-      rw [if_pos hP]
+      rw [ite_eq_left hP]
       split_ifs with h
       · refine (norm_psi hc P ?_ σ).le
         have he : IntAt P.1 ((epsSg : ℤ) : X.E) := intCast_mem (intRing P.1) _
@@ -1231,7 +1231,7 @@ theorem unfolding_smallHomFunction_levelPrime_bounded (hq : (Formalism.L2.Col.qO
         have h' := intAt_zpow_mono (v := 1) (by
           unfold LocE.scE
           dsimp only
-          rw [if_neg (by omega), if_neg (by omega)]
+          rw [ite_eq_right (by omega), ite_eq_right (by omega)]
           omega) h
         rwa [zpow_one, mul_comm] at h'
       have h2 : ‖σ (psi (-Loc.chArg y))‖ ^ q = 1 := by rw [← norm_pow, ← map_pow, hpsi _ h1, map_one, norm_one]
@@ -1355,7 +1355,7 @@ theorem locSmall_XiAt_sharp : ∃ C : ℕ, ∀ (CY : ℝ) (D : D7) (N : NumDatum
   have hs' := hI.stabG (i + 1) be P hP
   replace hom := hom (hI.stabG i al P hP) hs'
   unfold lamYat at hom hs'
-  rw [if_pos hP] at hom hs'
+  rw [ite_eq_left hP] at hom hs'
   have hE := unfolding_smallHomFunction_levelPrime_bounded hq (c' := cOf N.R i) (c := cOf N.R (i + 1)) (by unfold cOf; omega) cst.A cst.B (cst.psi P)
     (fun a ha => by
       have := GlobalTheory.GO.ChRoot.psi_root hI.cst_ok P a (by rwa [hI.depthG P hP, pow_one])
@@ -1369,7 +1369,7 @@ theorem locSmall_XiAt_sharp : ∃ C : ℕ, ∀ (CY : ℝ) (D : D7) (N : NumDatum
     have h1 := (norm_volN_inv_le (K := X.K) _ _ σ).trans (Nat.cast_le.2
       (relIndex_le hg2 N.R.k N.R.rS N.R.r N.R.t (N.R.N (i + 1)) (cOf N.R (i + 1)) _ hs'))
     unfold Jat lamYat
-    rw [if_pos hP, if_pos hP, if_pos hsharp]
+    rw [ite_eq_left hP, ite_eq_left hP, ite_eq_left hsharp]
     refine (mul_le_mul h1 (hE.2.2 σ x) (norm_nonneg _) (Nat.cast_nonneg _)).trans ?_
     rw [Nat.cast_pow, ← pow_add]
     refine pow_le_pow_right₀ hq1 ?_
@@ -1571,7 +1571,7 @@ theorem comp_opLe {S₀ S S₁ : GSD K} {Y : Cpl S} (A : CplKer S₀ S S₁ Y) (
     (h1 : ∀ d₀ d, ∀ y ∈ Y.ys d, OpLe S₀ S v (A.k1 d₀ d y) t₁) (h2 : ∀ d d₁, ∀ y ∈ Y.ys d, OpLe S S₁ v (A.k2 d y d₁) t₂)
     (d₀ : S₀.D) (d₁ : S₁.D) : OpLe S₀ S₁ v ((A.comp hS S.outSec).k d₀ d₁) (h ^ 2 * ny ^ 2 * t₁ * t₂) := by
   intro x
-  letI := hS.fintypeCl
+  let := hS.fintypeCl
   have hc' : ((Finset.univ : Finset S.Cl).card : ℝ) ≤ h := by
     rwa [Finset.card_univ, ← Nat.card_eq_fintype_card]
   have hx := sq_nonneg' p₀ x
@@ -1605,7 +1605,7 @@ theorem comp_opLe {S₀ S S₁ : GSD K} {Y : Cpl S} (A : CplKer S₀ S S₁ Y) (
 theorem appOf_le {S S' : GSD K} (A : ClsKer S S') (hS : S.Ok) (v : InfinitePlace K) {t h : ℝ} (hh : 0 ≤ h)
     (p' : PosAt S' v) (hc : (Nat.card S.Cl : ℝ) ≤ h) (hA : ∀ d d', OpLe S S' v (A.k d d') t) (φ : S.D → S.V) (d' : S'.D) :
     (S'.pairAt v (A.appOf hS S.outSec φ d') (A.appOf hS S.outSec φ d')).re ≤ h * (t * (S.ipAt hS v φ φ).re) := by
-  letI := hS.fintypeCl
+  let := hS.fintypeCl
   have hc' : ((Finset.univ : Finset S.Cl).card : ℝ) ≤ h := by
     rwa [Finset.card_univ, ← Nat.card_eq_fintype_card]
   unfold ClsKer.appOf
@@ -1617,7 +1617,7 @@ theorem appOf_le {S S' : GSD K} (A : ClsKer S S') (hS : S.Ok) (v : InfinitePlace
 
 theorem cpl_le : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (Q : KerChain K) (v : InfinitePlace K) (t₁ t₂ h₀ h h₁ ny : ℝ), 0 ≤ t₁ → 0 ≤ t₂ → 0 ≤ h₀ → 0 ≤ h → 0 ≤ h₁ → 0 ≤ ny → (∀ b, PosAt ((Q.F Q.n).mem b) v) → PosAt Q.S v → PosAt Q.S₁ v → (∀ b, (Nat.card ((Q.F Q.n).mem b).Cl : ℝ) ≤ h₀) → (Nat.card Q.S.Cl : ℝ) ≤ h → (Nat.card Q.S₁.Cl : ℝ) ≤ h₁ → (∀ d, ((Q.Y.ys d).ncard : ℝ) ≤ ny) → (∀ b d₀ d, ∀ y ∈ Q.Y.ys d, OpLe ((Q.F Q.n).mem b) Q.S v ((Q.cp b).k1 d₀ d y) t₁) → (∀ b d d₁, ∀ y ∈ Q.Y.ys d, OpLe Q.S Q.S₁ v ((Q.cp b).k2 d y d₁) t₂) → ∀ φ : (Q.F Q.n).Forms, (Q.S₁.ipAt Q.hS₁ v (Q.cpl φ) (Q.cpl φ)).re ≤ (Fintype.card (Q.F Q.n).β : ℝ) * h₀ * h ^ 2 * h₁ * ny ^ 2 * t₁ * t₂ * (famIpAt (Q.F Q.n) (Q.hF Q.n) v φ φ).re := by
   intro K _ _ _ Q v t₁ t₂ h₀ h h₁ ny ht₁ ht₂ hh₀ hh hh₁ hny p₀ _ p₁ c₀ c c₁ hy k1 k2 φ
-  letI := Q.hS₁.fintypeCl
+  let := Q.hS₁.fintypeCl
   have hc' : ((Finset.univ : Finset Q.S₁.Cl).card : ℝ) ≤ h₁ := by
     rwa [Finset.card_univ, ← Nat.card_eq_fintype_card]
   set M : ℝ := (Fintype.card (Q.F Q.n).β : ℝ) * (h₀ * (h ^ 2 * ny ^ 2 * t₁ * t₂ *
@@ -1765,7 +1765,7 @@ theorem ipAt_self_nonneg (h : S.Ok) (hp : PosAt S v) (φ : S.D → S.V) : 0 ≤ 
 theorem ipAt_self_le (h : S.Ok) (hp : PosAt S v) (φ : S.D → S.V) (B : ℝ)
     (hB : ∀ d, (S.pairAt v (φ d) (φ d)).re ≤ B) : (S.ipAt h v φ φ).re ≤ (Nat.card S.Cl : ℝ) * B := by
   rw [ipAt_re]
-  letI := h.fintypeCl
+  let := h.fintypeCl
   calc _ ≤ ∑ _c : S.Cl, B := Finset.sum_le_sum fun c _ => by
         have h0 := pairAt_self_nonneg S v hp (φ (S.outSec.rep c))
         exact ((mul_le_mul_of_nonneg_right (inv_nat_le_one _) h0).trans (by rw [one_mul])).trans (hB _)
@@ -1777,7 +1777,7 @@ theorem appOf_le {S' : GSD K} (A : ClsKer S S') (h : S.Ok) (hp : PosAt S v) (hp'
     (φ : S.D → S.V) (d' : S'.D) (hA : ∀ d, OpLe S S' v (A.k d d') t) :
     (S'.pairAt v (A.appOf h S.outSec φ d') (A.appOf h S.outSec φ d')).re ≤
       (Nat.card S.Cl : ℝ) * (t * (S.ipAt h v φ φ).re) := by
-  letI := h.fintypeCl
+  let := h.fintypeCl
   unfold ClsKer.appOf
   refine (pairAt_sum_le S' v hp' _ _).trans ?_
   rw [Finset.card_univ, Nat.card_eq_fintype_card, ipAt_re, Finset.mul_sum _ _ t]
@@ -1928,7 +1928,7 @@ theorem factors_leS : GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.Bl
         have h2 := hk i (i + 1) rfl (by omega) _ (frsF sel mu p) _ (frsF sel mu p') ⟨p.deco.2.lat, p.deco.2.uni⟩
           ⟨p'.deco.2.lat, p'.deco.2.uni⟩ _ (hdat CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H i hi al be p p') M hM ρ x
         have e : (Q.kk i al be).k p p' = matK W Ch sel mu cst I (chTh W Ch sel mu cst (ambOf s B χ cD) u (N.R.m - 2)) i al be p p' := by
-          exact congrArg (fun k : ClsKer _ _ => k.k p p') (dif_pos (show i < N.R.m - 2 by omega))
+          exact congrArg (fun k : ClsKer _ _ => k.k p p') (dite_eq_left (show i < N.R.m - 2 by omega))
         rw [e]
         exact (hsq (W.lamTrue u (i + 1)) _).trans_le (h2.trans_eq (congrArg _ (hsq (W.lamTrue u i) _).symm))) φ
     refine h1.trans (mul_le_mul_of_nonneg_right ?_ (hfam i φ))
@@ -1955,7 +1955,7 @@ theorem factors_leS : GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.Bl
           ((_root_.GlobalTheory.Core.Ht2.DatOneS.smallDatum_xiCpl1_sharp CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H al p₀ p Y).mono hone) M hM ρ x
         have e : (Q.cp al).k1 p₀ p Y = kerOf (stepC W Ch sel mu cst (ambOf s B χ cD) u (N.R.m - 2) (W.lamTrue u (N.R.m - 2 + 1)))
             (Sall sel mu u) (cAof sel mu cst) (cBof sel mu cst u) p₀.deco.1.N (frsF sel mu p₀) p.deco.1.N (frsF sel mu p)
-            (XiCpl1 Ch sel mu cst I (N.R.m - 2) al p₀ p Y) := if_pos hYm
+            (XiCpl1 Ch sel mu cst I (N.R.m - 2) al p₀ p Y) := ite_eq_left hYm
         rw [e]
         exact (hsq (W.lamTrue u (N.R.m - 2 + 1)) _).trans_le
           (h2.trans_eq (congrArg _ (hsq (W.lamTrue u (N.R.m - 2)) _).symm))) (by
@@ -1965,7 +1965,7 @@ theorem factors_leS : GlobalTheory.IndefiniteRowSideFullHecke.PaddedLastEntry.Bl
           ((_root_.GlobalTheory.Core.Ht2.LastDatumS.smallDatum_xiCpl2_sharp CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H p d Y hYm).mono hone) M hM ρ x
         have e : (Q.cp al).k2 p Y d = kerOf (stepC W Ch sel mu cst (ambOf s B χ cD) u (N.R.m - 2 + 1) (W.lamTrue u N.R.m))
             (Sall sel mu u) (cAof sel mu cst) (cBof sel mu cst u) p.deco.1.N (frsF sel mu p) (tilQ sel mu u d).1.N
-            (frsT sel mu u d) (XiCpl2 Ch sel mu cst (N.R.m - 2) p Y d) := if_pos hYm
+            (frsT sel mu u d) (XiCpl2 Ch sel mu cst (N.R.m - 2) p Y d) := ite_eq_left hYm
         rw [e]
         exact (hsq (W.lamTrue u N.R.m) _).trans_le
           (h2.trans_eq (congrArg _ (hsq (W.lamTrue u (N.R.m - 2 + 1)) _).symm))) φ

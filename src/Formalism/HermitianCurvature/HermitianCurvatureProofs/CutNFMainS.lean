@@ -289,9 +289,9 @@ theorem measurable_nPt_bigPt (k r : ℕ) (TT : ℝ) :
   simp only [nPt_bigPt_eq]
   refine Finset.measurable_prod _ fun i _ => ?_
   by_cases h : 1 + (i : ℕ) = r + 1
-  · simp only [h, if_true]
+  · simp only [h, ite_true]
     exact ((Complex.continuous_normSq.measurable.comp (measurable_pi_apply _)).sub_const _).pow_const _
-  · simp only [h, if_false]
+  · simp only [h, ite_false]
     have hm : Measurable (fun c : Fin (r + 1) → ℂ => ‖c i‖) := continuous_norm.measurable.comp (measurable_pi_apply i)
     exact hm.pow_const _
 
@@ -575,7 +575,7 @@ theorem perp_eq_zero {z v : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hzn 
     have hd := Formalism.FourierDecayAlt.P.Dx2.DF.decomp (k := k) (r := r) y
     set α : ℂ := herm (Hpk k r) (Formalism.FourierDecayAlt.P.Dx2.DF.Wb y) z / herm (Hpk k r) z z with hα
     have hWb : inWb k r (Formalism.FourierDecayAlt.P.Dx2.DF.Wb y) := by
-      intro i hi; simp only [Formalism.FourierDecayAlt.P.Dx2.DF.Wb]; rw [if_neg (by omega)]
+      intro i hi; simp only [Formalism.FourierDecayAlt.P.Dx2.DF.Wb]; rw [ite_eq_right (by omega)]
     have hx : inWb k r (Formalism.FourierDecayAlt.P.Dx2.DF.Wb y - α • z) := inWb_sub hWb (inWb_smul _ hz)
     have hxz : herm (Hpk k r) (Formalism.FourierDecayAlt.P.Dx2.DF.Wb y - α • z) z = 0 := by
       rw [hb_sub_left, hb_smul_left, hα, div_mul_cancel₀ _ hzz, sub_self]
@@ -618,7 +618,7 @@ theorem pW_inWb (hz : inWb k r z) (u : Fin (2 * r + k + 1) → ℂ) : inWb k r (
   unfold pW
   rw [Formalism.FourierDecayAlt.P.Dx2.DF.prW_eq]
   refine inWb_sub ?_ (inWb_smul _ hz)
-  intro i hi; simp only [Formalism.FourierDecayAlt.P.Dx2.DF.Wb]; rw [if_neg (by omega)]
+  intro i hi; simp only [Formalism.FourierDecayAlt.P.Dx2.DF.Wb]; rw [ite_eq_right (by omega)]
 
 theorem pW_perp (hzz : herm (Hpk k r) z z ≠ 0) (u : Fin (2 * r + k + 1) → ℂ) :
     herm (Hpk k r) (pW k r z u) z = 0 := by
@@ -1074,7 +1074,7 @@ theorem typeNormMeas_of_typeComm_houseMeas (hTC : TypeComm) (hHM : HouseMeas) : 
 
   have hD0 : MeasurableSet D0 := by
     have ho1 : IsOpen {c : Fin (P.r + 1) → ℂ | ∀ i, c i ≠ 0} := by
-      simp only [Set.setOf_forall]
+      simp only [Set.ofPred_forall]
       exact isOpen_iInter_of_finite fun i => isOpen_ne_fun (continuous_apply i) continuous_const
     have ho2 : IsOpen {c : Fin (P.r + 1) → ℂ | TT < Complex.normSq (c (Fin.last P.r))} :=
       isOpen_lt continuous_const (Complex.continuous_normSq.comp (continuous_apply _))
@@ -1112,7 +1112,7 @@ theorem typeNormMeas_of_typeComm_houseMeas (hTC : TypeComm) (hHM : HouseMeas) : 
     have hf : ContinuousOn f U := p.T.base.π_cont
     have hH' : Measurable (fun u => (Matrix.of.symm (H u) : Fin (2 * P.r + P.k + 1) → Fin (2 * P.r + P.k + 1) → ℂ)) :=
       hHm
-    have hr : Continuous (U.restrict f) := hf.restrict
+    have hr : Continuous (U.restrict f) := hf.domRestrict
     exact hr.measurable.comp (hH'.subtype_mk (h := fun u => hHU u))
   have hA1 : AEStronglyMeasurable (fun c => p.T.base.π (H (wq p c))) (volume.restrict D0) :=
     (hπH.comp_aemeasurable (hwq.aemeasurable hD0)).aestronglyMeasurable
@@ -1137,7 +1137,7 @@ theorem typeNormMeas_of_typeComm_houseMeas (hTC : TypeComm) (hHM : HouseMeas) : 
   · rw [Set.indicator_of_mem hcD, h1 c hcD]
   · rw [Set.indicator_of_notMem hcD, h2 c hc hcD, ContinuousLinearMap.comp_zero]
     unfold B.hsVec
-    simp only [ContinuousLinearMap.zero_apply]
+    simp only [zero_apply]
     symm
     rw [norm_eq_zero]
     first

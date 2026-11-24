@@ -150,7 +150,7 @@ theorem grpRecord_tr (s : SameGrp a b) (h : R.grp_record) : letI := alg b iK; (r
   · exact (by with_unfolding_all exact ((h4 g (s.back kv)) :))
 
 theorem isGrp_tr (s : SameGrp a b) (h : R.IsGrp F) : letI := alg b iK; (real b R).IsGrp (face b F) := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case red_R => exact (by with_unfolding_all exact (h.red_R :))
   case red_L => exact (by with_unfolding_all exact (h.red_L :))
@@ -159,7 +159,7 @@ theorem isGrp_tr (s : SameGrp a b) (h : R.IsGrp F) : letI := alg b iK; (real b R
   case chiW => exact (by with_unfolding_all exact (h.chiW :))
 
 theorem baseW_tr (s : SameGrp a b) (h : R.BaseW F) : letI := alg b iK; (real b R).BaseW (face b F) := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case lev => exact (by with_unfolding_all exact ((levIs_tr b h.lev) :))
   case grp => exact (by with_unfolding_all exact ((isGrp_tr b s h.grp) :))
@@ -255,7 +255,7 @@ variable {R : RealDat3 a.D A Ks} {F : Face3 a.D A}
 
 
 theorem weakCharInertPart_realAdelicDataTransport (s : SameGrp a b) (h : R.WeakCharacterisation F) : letI := alg b iK; (real3 b R).WeakCharacterisation (face3 b F) := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case base => exact (by with_unfolding_all exact ((baseW_tr b s h.base) :))
   case inert => exact (by with_unfolding_all exact ((isInert_tr b h.inert) :))
@@ -274,7 +274,7 @@ theorem weakCharInertPart_realAdelicDataTransport (s : SameGrp a b) (h : R.WeakC
   case allPl => exact (by with_unfolding_all exact (h.allPl :))
 
 theorem pins_tr (s : SameGrp a b) {cG : G0 R.Pg a.D.R.r ≃* G0g a.D.nd} (h : Pins R F cG) : letI := alg b iK; Pins (real3 b R) (face3 b F) ((by with_unfolding_all exact ((cG.trans s.iso) :))) := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case char => exact (by with_unfolding_all exact ((weakCharInertPart_realAdelicDataTransport b s h.char) :))
   case keep => exact (by with_unfolding_all exact ((keep_tr b s h.keep) :))
@@ -282,7 +282,7 @@ theorem pins_tr (s : SameGrp a b) {cG : G0 R.Pg a.D.R.r ≃* G0g a.D.nd} (h : Pi
   case trSem => exact (by with_unfolding_all exact (cast (congrArg (fun P : type_of% (R.TrISem F) => (∃ tr, P tr ∧ SepWith A tr) → P A.trI ∧ A.fam3.TrISep) (trISem_eq b R F)) h.trSem :))
 
 theorem holds_tr (h : Holds R F) : letI := alg b iK; Holds (real3 b R) (face3 b F) := by
-  letI := alg b iK
+  let := alg b iK
   constructor
   case prim => exact (by with_unfolding_all exact ((primRows3_tr b h.prim) :))
   case aux => exact (by with_unfolding_all exact ((realAdelicInertTransport_furtherRows b h.aux) :))

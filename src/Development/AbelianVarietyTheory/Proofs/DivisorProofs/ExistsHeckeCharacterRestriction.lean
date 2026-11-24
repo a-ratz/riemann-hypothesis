@@ -88,7 +88,7 @@ theorem sign_char_trivial_on_congruence : ∀ (F : Type) [Field F] [NumberField 
 
   have hK : {u : (AdeleRing (𝓞 F) F)ˣ | φ u = 1} ∈ 𝓝 (1 : (AdeleRing (𝓞 F) F)ˣ) := by
     have hopen : IsOpen {z : Circle | 0 < (z : ℂ).re} :=
-      isOpen_lt continuous_const (Complex.continuous_re.comp continuous_subtype_val)
+      isOpen_lt continuous_const (Complex.continuous_re.comp continuous_subtypeVal)
     have h1 : φ ⁻¹' {z : Circle | 0 < (z : ℂ).re} ∈ 𝓝 (1 : (AdeleRing (𝓞 F) F)ˣ) :=
       hφ.continuousAt.preimage_mem_nhds (hopen.mem_nhds (by simp [map_one]))
     refine Filter.mem_of_superset h1 fun u hu => ?_
@@ -263,9 +263,9 @@ theorem exists_open_congruence_subgroup : ∀ (F E : Type) [Field F] [NumberFiel
       ∀ x ∈ U, ∃ s ∈ HeckeCharacterZeroLocus.ThmBIn.intAE F E,
         HeckeCharacterZeroLocus.ThmBIn.finPart F E (x : AdeleRing (𝓞 F) F ⊗[F] E) = 1 + (m : FiniteAdeleRing (𝓞 F) F ⊗[F] E) * s := by
   intro F E _ _ _ _ _ σ m hm
-  haveI : IsModuleTopology (HeckeCharacterZeroLocus.ThmBIn.AF F) (HeckeCharacterZeroLocus.ThmBIn.AE F E) := ⟨rfl⟩
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (HeckeCharacterZeroLocus.ThmBIn.AE F E) := IsModuleTopology.isTopologicalRing (HeckeCharacterZeroLocus.ThmBIn.AF F) _
+  have : IsModuleTopology (HeckeCharacterZeroLocus.ThmBIn.AF F) (HeckeCharacterZeroLocus.ThmBIn.AE F E) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (HeckeCharacterZeroLocus.ThmBIn.AE F E) := IsModuleTopology.isTopologicalRing (HeckeCharacterZeroLocus.ThmBIn.AF F) _
   obtain ⟨Φ, hΦc, -, hint⟩ := GlobalTheory.HeckeInhabitant.exists_fin (F := F) (E := E)
   have hm0 : (m : E) ≠ 0 := Nat.cast_ne_zero.2 hm.ne'
   let c : FiniteAdeleRing (𝓞 F) F ⊗[F] E := HeckeCharacterZeroLocus.ThmBIn.finPart F E (HeckeCharacterZeroLocus.ThmBIn.incA F E (m : E)⁻¹)
@@ -306,7 +306,7 @@ theorem exists_open_congruence_subgroup : ∀ (F E : Type) [Field F] [NumberFiel
         ∀ P, Valued.v (Φ ((y - 1) * HeckeCharacterZeroLocus.ThmBIn.incA F E (m : E)⁻¹) P) ≤ 1} := (hO.preimage hΦc).preimage hcont
     convert h1 using 1
     ext y
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [← hint, map_mul, map_sub, map_one]
   have hσ : ∀ y, (Algebra.TensorProduct.map (AlgHom.id (AdeleRing (𝓞 F) F) (AdeleRing (𝓞 F) F)) σ) y
       = HeckeCharacterZeroLocus.ThmBIn.cA σ y := fun y => by
@@ -395,8 +395,8 @@ theorem sq_eq_one (z : Circle) (h : z * z = 1) : z = 1 ∨ z = -1 := by
 theorem exists_coord {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (w : InfinitePlace F) : ∃ θ : AF F ⊗[F] E →+* ℂ, Continuous θ ∧
       ∀ a : AF F, θ (algebraMap (AF F) (AF F ⊗[F] E) a) = InfinitePlace.Completion.extensionEmbedding w (a.1 w) := by
-  letI : Algebra F ℂ := w.embedding.toAlgebra
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  let : Algebra F ℂ := w.embedding.toAlgebra
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
   let τ : E →ₐ[F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -411,7 +411,7 @@ theorem exists_coord {F E : Type} [Field F] [NumberField F] [Field E] [NumberFie
     exact InfinitePlace.Completion.extensionEmbedding_coe w (WithAbs.toAbs _ x)⟩
   let θ : AF F ⊗[F] E →+* ℂ := (Algebra.TensorProduct.productMap g τ).toRingHom
   have hθ : ∀ a x, θ (a ⊗ₜ[F] x) = g0 a * τ x := fun a x => rfl
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
   refine ⟨θ, ?_, fun a => ?_⟩
   · refine IsModuleTopology.continuous_of_ringHom (R := AF F) θ ?_
     have : Continuous g0 := (InfinitePlace.Completion.isometry_extensionEmbedding w).continuous.comp
@@ -484,7 +484,7 @@ theorem exists_arch_sign_char : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
       ∀ b : (AdeleRing (𝓞 F) F)ˣ, (b : AdeleRing (𝓞 F) F).2 = 1 → ψ (ideleMap F E b) = η b := by
   intro F E _ _ _ _ _ σ hcm η _ hsq
   classical
-  haveI : IsTotallyReal F := hcm.1
+  have : IsTotallyReal F := hcm.1
   choose θ hθc hθ using fun w : InfinitePlace F => exists_coord (F := F) (E := E) w
   let c : InfinitePlace F → Circle := fun w => η (archIdele F (Pi.mulSingle w (-1)))
   let g : InfinitePlace F → ((AF F ⊗[F] E)ˣ →* Circle) := fun w => if c w = 1 then 1 else normChar (θ w)
@@ -502,8 +502,8 @@ theorem exists_arch_sign_char : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
     split_ifs <;> simp
   have hgc : ∀ w, Continuous (g w) := fun w => by
     by_cases h : c w = 1
-    · simp only [g, h, if_true]; exact continuous_const
-    · simp only [g, h, if_false]; exact continuous_normChar _ (hθc w)
+    · simp only [g, h, ite_true]; exact continuous_const
+    · simp only [g, h, ite_false]; exact continuous_normChar _ (hθc w)
   have happ : ∀ x, (∏ w, g w) x = ∏ w, g w x := fun x => MonoidHom.finsetProd_apply _ _ _
   have hc2 : ∀ w, c w = 1 ∨ c w = -1 := fun w => sq_eq_one _ (by simp only [c]; rw [← map_mul]; exact hsq _)
   refine ⟨∏ w, g w, ?_, fun b => ?_, fun b hb => ?_⟩
@@ -513,17 +513,17 @@ theorem exists_arch_sign_char : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
     rw [happ, ← Finset.prod_mul_distrib]
     refine Finset.prod_eq_one fun w _ => ?_
     by_cases h : c w = 1
-    · simp only [g, h, if_true, MonoidHom.one_apply, mul_one]
-    · simp only [g, h, if_false]
+    · simp only [g, h, ite_true, MonoidHom.one_apply, mul_one]
+    · simp only [g, h, ite_false]
       rw [hval]; split_ifs <;> simp
   · rw [happ, eta_eq_prod η hsq b hb]
     refine Finset.prod_congr rfl fun w _ => ?_
     by_cases h : c w = 1
-    · simp only [g, h, if_true, MonoidHom.one_apply]
+    · simp only [g, h, ite_true, MonoidHom.one_apply]
       change 1 = if _ then c w else 1
       rw [h]; split_ifs <;> rfl
     · have h' : c w = -1 := (hc2 w).resolve_left h
-      simp only [g, h, if_false]
+      simp only [g, h, ite_false]
       rw [hval]
       change _ = if _ then c w else 1
       rw [h']
@@ -595,7 +595,7 @@ theorem mem_range_of_fixed : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ k : E, σ k = k → ∃ k₀ : F, algebraMap F E k₀ = k := by
   intro F E _ _ _ _ _ σ hcm k hk
   obtain ⟨-, htc, h2, hconj⟩ := hcm
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
   obtain ⟨x, hx⟩ : ∃ x : E, σ x ≠ x := by
     by_contra hc
     push_neg at hc
@@ -641,7 +641,7 @@ theorem base_congr_of_tmul : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       s ∈ HeckeCharacterZeroLocus.ThmBIn.intAE F E → y ⊗ₜ[F] (1 : E) = 1 + ((2 * m : ℕ) : FiniteAdeleRing (𝓞 F) F ⊗[F] E) * s →
       ∃ t ∈ HeckeCharacterZeroLocus.ThmBIn.intAf F, y = 1 + (m : FiniteAdeleRing (𝓞 F) F) * t := by
   intro F E _ _ _ _ _ h2 y m s hs he
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
   let A := FiniteAdeleRing (𝓞 F) F
   let T : A ⊗[F] E →ₗ[F] A :=
     TensorProduct.lift ((LinearMap.mul F A).compl₂ ((Algebra.linearMap F A) ∘ₗ (Algebra.trace F E)))
@@ -715,9 +715,9 @@ theorem norm_algebraMap_sq (F E : Type) [Field F] [NumberField F] [Field E] [Num
     (h2 : Module.finrank F E = 2) (b : AF F) :
     Algebra.norm (AF F) (algebraMap (AF F) (AF F ⊗[F] E) b) = b * b := by
   obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
-  haveI : Nontrivial (AF F) :=
+  have : Nontrivial (AF F) :=
     ((Pi.evalRingHom (fun u : InfinitePlace F => u.Completion) w).comp (RingHom.fst (InfiniteAdeleRing F) (FiniteAdeleRing (𝓞 F) F))).domain_nontrivial
-  haveI : StrongRankCondition (AF F) := commRing_strongRankCondition _
+  have : StrongRankCondition (AF F) := commRing_strongRankCondition _
   rw [Algebra.norm_algebraMap, Module.finrank_baseChange, h2, pow_two]
 
 theorem sq_eq_one_circle (z : Circle) (h : z * z = 1) : z = 1 ∨ z = -1 := by
@@ -727,7 +727,7 @@ theorem sq_eq_one_circle (z : Circle) (h : z * z = 1) : z = 1 ∨ z = -1 := by
   · exact Or.inr (Circle.ext (by rw [h4]; simp))
 
 theorem continuous_toUnits : Continuous (Circle.toUnits : Circle → ℂˣ) :=
-  Units.continuous_iff.2 ⟨continuous_subtype_val, (continuous_subtype_val.comp (continuous_inv : Continuous fun x : Circle => x⁻¹)).congr fun x => Circle.coe_inv x⟩
+  Units.continuous_iff.2 ⟨continuous_subtypeVal, (continuous_subtypeVal.comp (continuous_inv : Continuous fun x : Circle => x⁻¹)).congr fun x => Circle.coe_inv x⟩
 
 end GlobalTheory.CMHeckeEta
 
@@ -745,8 +745,8 @@ theorem exists_hecke_of_eta (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     change (b : AF F) * b = Algebra.norm (AF F) (algebraMap (AF F) (AF F ⊗[F] E) (b : AF F))
     rw [norm_algebraMap_sq F E h2]
   obtain ⟨ψ, hψc, hψ2, hψη⟩ := exists_arch_sign_char F E σ hcm η hη.1 hsq
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ _ _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   have hmapc : Continuous (ideleMap F E) := by
     have : Continuous (algebraMap (AF F) (AF F ⊗[F] E)) :=
       IsModuleTopology.continuous_of_linearMap (Algebra.linearMap (AF F) (AF F ⊗[F] E))
@@ -798,7 +798,7 @@ theorem exists_hecke_of_eta (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       set u : E := (k : E) / σ (k : E) with hu
       have hxq : ((x / C x : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E) = HeckeCharacterZeroLocus.ThmBIn.incA F E u := by
         rw [hq']
-        simp only [Units.coe_map, MonoidHom.coe_coe, Units.val_div_eq_div_val]
+        simp only [Units.coe_map, MonoidHom.coe_ofClass, Units.val_div_eq_div_val]
         rfl
       rw [hxq] at hse
       have hM0 : (M : E) ≠ 0 := by exact_mod_cast (show M ≠ 0 by omega)

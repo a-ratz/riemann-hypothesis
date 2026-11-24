@@ -83,7 +83,7 @@ theorem hausdorffMeasure_pointOf_preimage_null (h : HermNorm n) {d : ℝ} (hd : 
   let F := LinearMap.toContinuousLinearMap E.symm.toLinearMap
   refine measure_mono_null (t := F '' S) (fun y hy => ⟨E y, hy, ?_⟩) ?_
   · simp [F]
-  · exact le_zero_iff.1 ((F.lipschitz.hausdorffMeasure_image_le hd S).trans (by rw [hS, mul_zero]))
+  · exact nonpos_iff_eq_zero.1 ((F.lipschitzWith.hausdorffMeasure_image_le hd S).trans (by rw [hS, mul_zero]))
 
 theorem frameDeriv_basisFun (j : Fin n) (g : MvPolynomial (Fin n) ℂ) :
     frameDeriv (EuclideanSpace.basisFun (Fin n) ℂ) j g = pderiv j g := by

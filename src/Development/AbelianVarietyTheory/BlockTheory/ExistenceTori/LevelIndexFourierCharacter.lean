@@ -101,8 +101,8 @@ abbrev ConjCl : Type := D.La ⧸ (conjHalf l • (⊤ : Submodule (𝓞 E) D.La)
 
 theorem finite_quot (I : Ideal (𝓞 E)) (hI : (l.M : 𝓞 E) ∈ I) :
     Finite (D.La ⧸ (I • (⊤ : Submodule (𝓞 E) D.La))) := by
-  haveI := D.fin
-  haveI : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
+  have := D.fin
+  have : Module.Finite ℤ D.La := Module.Finite.trans (𝓞 E) D.La
   have hM : (l.M : ℤ) ≠ 0 := by have := l.three_le; omega
   refine Module.finite_of_fg_torsion _ fun x => ⟨⟨(l.M : ℤ), mem_nonZeroDivisors_of_ne_zero hM⟩, ?_⟩
   obtain ⟨y, rfl⟩ := Submodule.Quotient.mk_surjective _ x
@@ -162,7 +162,7 @@ theorem zeta_level_mem (c : Coeff l) : zeta l.M ∈ c.F := by
   have hM' : l.M' ≠ 0 := Nat.lcm_ne_zero hM l.A_pos.ne'
   have hk0 : k ≠ 0 := by rintro rfl; simp at hk; exact hM' hk
   have : zeta l.M = zeta l.M' ^ k := by
-    rw [zeta, zeta, ← Complex.exp_nat_mul, hk]
+    rw [zeta, zeta, ← Complex.exp_natCast_mul, hk]
     congr 1
     have : (k : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hk0
     have : (l.M : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hM

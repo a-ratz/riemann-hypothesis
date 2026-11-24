@@ -153,11 +153,11 @@ namespace GlobalTheory.CuspType
 theorem exists_type : ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum (𝓞 E)) (a l : ℕ), l.Prime → (l : 𝓞 E) ∈ w.asIdeal → 1 ≤ a → ∀ N ∈ nhds (1 : GL (Fin a) (w.adicCompletion E)), ∀ m₀ : ℕ, ∃ m : ℕ, m₀ ≤ m ∧ ∃ (J : Subgroup (GL (Fin a) (w.adicCompletion E))) (lam : J →* Multiplicative (ZMod (l ^ m))), IsOpen (J : Set (GL (Fin a) (w.adicCompletion E))) ∧ IsCompact (J : Set (GL (Fin a) (w.adicCompletion E))) ∧ (J : Set (GL (Fin a) (w.adicCompletion E))) ⊆ N ∧ (∀ g ∈ J, IsOfFinOrder g → g = 1) ∧ IsOpen (lam.ker : Set J) ∧ ∀ ζ : ℂˣ, ζ ^ (l ^ m) = 1 → ζ ≠ 1 → ∀ (σ : SmIrr (GL (Fin a) (w.adicCompletion E))) (v : σ.V), v ≠ 0 → (∀ g : J, σ.ρ g v = ((ζ ^ (Multiplicative.toAdd (lam g)).val : ℂˣ) : ℂ) • v) → GlobalTheory.SmGL.IsCuspidal σ.ρ := by
   intro E _ _ w a l hl hlw ha N hN m₀
   classical
-  haveI : CharZero (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
-  haveI : CharZero (w.adicCompletionIntegers E) :=
+  have : CharZero (w.adicCompletionIntegers E) :=
     (algebraMap (w.adicCompletionIntegers E) (w.adicCompletion E)).charZero
-  haveI : Finite (IsLocalRing.ResidueField (w.adicCompletionIntegers E)) :=
+  have : Finite (IsLocalRing.ResidueField (w.adicCompletionIntegers E)) :=
     Formalism.UG.P.glint_finite_residueField w
   have hlR : ¬ IsUnit (l : w.adicCompletionIntegers E) := by
     rw [HeightOneSpectrum.adicCompletionIntegers.isUnit_iff_valued_eq_one]
@@ -208,7 +208,7 @@ theorem exists_type : ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpe
     let J₂ := (Matrix.GeneralLinearGroup.map (n := Fin a)
       (Ideal.Quotient.mk (Ideal.span {(l : w.adicCompletionIntegers E) ^ (2 * m)}))).ker.map ι
     refine Subgroup.isOpen_mono (H₁ := J₂.comap (K₀.map ι).subtype) ?_
-      ((hOC (2 * m)).1.preimage continuous_subtype_val)
+      ((hOC (2 * m)).1.preimage continuous_subtypeVal)
     intro y hy
     obtain ⟨g₀, hg₀, hgy⟩ := Subgroup.mem_map.1 (Subgroup.mem_comap.1 hy)
     obtain ⟨x, hx⟩ := exists_eq_one_add_smul _ g₀ hg₀
@@ -222,8 +222,8 @@ theorem exists_type : ∀ (E : Type) [Field E] [NumberField E] (w : HeightOneSpe
       Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul, hφ0, ofAdd_zero]
   ·
     intro ζ hζ hζ1 σ v hv hev
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
-    haveI : Fact (1 < l ^ m) := ⟨Nat.one_lt_pow (by omega) hl.one_lt⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ hl.ne_zero⟩
+    have : Fact (1 < l ^ m) := ⟨Nat.one_lt_pow (by omega) hl.one_lt⟩
     refine ⟨σ.smooth, fun s d e' he => ?_⟩
     obtain ⟨W, hW0, hWT, hWcrit⟩ := _root_.GlobalTheory.UnipFlag.exists_sub (w.adicCompletion E) a s d e' he
     refine _root_.GlobalTheory.jacquet_subsingleton_of_char_nontrivial_on_conj (GL (Fin a) (w.adicCompletion E)) σ.V σ.ρ σ.irred

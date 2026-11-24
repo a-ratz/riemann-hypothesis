@@ -69,8 +69,8 @@ open UpperTheory.V.W
 private theorem jr_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [IsLocalRing O]
     [IsAdicComplete (maximalIdeal O) O] [Finite (ResidueField O)] [CharP (ResidueField O) l] :
     ∃ τ : ResidueField O →* O, ∀ x, residue O (τ x) = x := by
-  haveI : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
-  haveI : PerfectRing (ResidueField O) l := inferInstance
+  have : CharP (O ⧸ maximalIdeal O) l := inferInstanceAs (CharP (ResidueField O) l)
+  have : PerfectRing (ResidueField O) l := inferInstance
   let j : ResidueField O →+* Perfection (O ⧸ maximalIdeal O) l :=
     Perfection.lift l (ResidueField O) (O ⧸ maximalIdeal O) (RingHom.id (ResidueField O))
   have hj : ∀ x, Perfection.coeff (O ⧸ maximalIdeal O) l 0 (j x) = x := fun x => by
@@ -82,8 +82,8 @@ private theorem jr_teich_ex (l : ℕ) [Fact l.Prime] (O : Type) [CommRing O] [Is
 private theorem jr_isTeich {l : ℕ} [hl : Fact l.Prime] {F : GFrame l} (c : Coef l) {n : ℕ} (r : Resid F c.O n) :
     ∃ t, r.IsTeich t ∧ ∀ i g, r.chib i g = 1 → t i g = 1 := by
   obtain ⟨hc, hfin, hlm, -⟩ := UpperTheory.V.abelian₂.dvr_finite l c.O
-  haveI : Finite (ResidueField c.O) := hfin
-  haveI : CharP (ResidueField c.O) l := by
+  have : Finite (ResidueField c.O) := hfin
+  have : CharP (ResidueField c.O) l := by
     refine (CharP.charP_iff_prime_eq_zero hl.out).2 ?_
     rw [← map_natCast (residue c.O), residue_eq_zero_iff]
     exact hlm

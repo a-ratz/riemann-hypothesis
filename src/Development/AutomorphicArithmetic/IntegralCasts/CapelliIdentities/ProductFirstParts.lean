@@ -76,7 +76,7 @@ private theorem UpperTheory.Reformulated.B.product_first_partition.span_mul_eq {
   rw [Submodule.mul_def]
   congr 1
   ext X
-  simp only [Set.mem_setOf_eq, Set.mem_mul, SetLike.mem_coe, eq_comm]
+  simp only [Set.mem_ofPred_eq, Set.mem_mul, SetLike.mem_coe, eq_comm]
 
 private theorem UpperTheory.Reformulated.B.product_first_partition.tensorLat_eq {R K : Type} [CommRing R] [CommRing K] [Algebra R K]
     {S : Type} [Fintype S] [DecidableEq S] {k n : ℕ}
@@ -110,7 +110,7 @@ theorem UpperTheory.Reformulated.B.product_first_partition.tensor_onto :
   intro R K _ _ _ S _ _ k n A B M h
   rw [UpperTheory.Reformulated.B.product_first_partition.span_mul_eq, UpperTheory.Reformulated.B.product_first_partition.tensorLat_eq, UpperTheory.Reformulated.B.product_first_partition.tensorLat_eq,
     UpperTheory.Reformulated.B.product_first_partition.tensorLat_eq, ← Finset.prod_mul_distrib]
-  refine Finset.prod_le_prod' fun s _ => ?_
+  refine Finset.prod_le_prod fun s _ => ?_
   rw [← Submodule.map_mul]
   refine Submodule.map_mono ?_
   rw [← UpperTheory.Reformulated.B.product_first_partition.span_mul_eq]

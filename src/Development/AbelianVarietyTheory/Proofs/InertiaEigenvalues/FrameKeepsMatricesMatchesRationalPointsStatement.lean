@@ -104,8 +104,8 @@ theorem ratMatch_fwd {V : HSp D} (hF : D.host.F = maximalRealSubfield D.host.E) 
     ∃ γ' : Formalism.L2.Theta.GQ V, Bridge.ratF V γ' = frameEquiv P γ := by
 
   have key := entry_of_ratF hF P hId
-  haveI : Nontrivial (Af D.host.F) := Formalism.L2.DIV.af_nontrivial D.host.F
-  haveI : Nontrivial (ReciprocityTheory.Aut.AFplus D.host.E) := Formalism.L2.DIV.af_nontrivial (maximalRealSubfield D.host.E)
+  have : Nontrivial (Af D.host.F) := Formalism.L2.DIV.af_nontrivial D.host.F
+  have : Nontrivial (ReciprocityTheory.Aut.AFplus D.host.E) := Formalism.L2.DIV.af_nontrivial (maximalRealSubfield D.host.E)
   have hinjR : Function.Injective (inclR (F := D.host.F) (E := D.host.E) (Af D.host.F)) :=
     Algebra.TensorProduct.includeRight_injective (RingHom.injective _)
   have hinjL : Function.Injective (Algebra.TensorProduct.includeLeftRingHom :
@@ -165,8 +165,8 @@ theorem ratMatch_bwd {V : HSp D} (hF : D.host.F = maximalRealSubfield D.host.E) 
     ∃ γ : ReciprocityTheory.Aut.GQ D.host.E V.rank, Bridge.ratF V γ' = frameEquiv P γ := by
 
   have key := entry_of_ratF hF P hId
-  haveI : Nontrivial (Af D.host.F) := Formalism.L2.DIV.af_nontrivial D.host.F
-  haveI : Nontrivial (ReciprocityTheory.Aut.AFplus D.host.E) := Formalism.L2.DIV.af_nontrivial (maximalRealSubfield D.host.E)
+  have : Nontrivial (Af D.host.F) := Formalism.L2.DIV.af_nontrivial D.host.F
+  have : Nontrivial (ReciprocityTheory.Aut.AFplus D.host.E) := Formalism.L2.DIV.af_nontrivial (maximalRealSubfield D.host.E)
   have hinjR : Function.Injective (inclR (F := D.host.F) (E := D.host.E) (Af D.host.F)) :=
     Algebra.TensorProduct.includeRight_injective (RingHom.injective _)
   have hinjL : Function.Injective (Algebra.TensorProduct.includeLeftRingHom :

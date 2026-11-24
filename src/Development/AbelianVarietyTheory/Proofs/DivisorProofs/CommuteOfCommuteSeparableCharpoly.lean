@@ -75,7 +75,7 @@ private theorem isUnit_of_eigenvector_columns_of_injective {L : Type} [Field L] 
     (y : Matrix (Fin n) (Fin n) L) (μ : Fin n → L) (hμ : Function.Injective μ)
     (v : Fin n → Fin n → L) (hv0 : ∀ j, v j ≠ 0) (hv : ∀ j, y *ᵥ v j = μ j • v j) :
     IsUnit (Matrix.of fun i j => v j i) := by
-  rw [← Matrix.linearIndependent_cols_iff_isUnit]
+  rw [← linearIndependent_col_iff_isUnit]
   exact Module.End.eigenvectors_linearIndependent' (Matrix.toLin' y) μ hμ v
     (fun j => ⟨Module.End.mem_eigenspace_iff.mpr (by simpa using hv j), hv0 j⟩)
 

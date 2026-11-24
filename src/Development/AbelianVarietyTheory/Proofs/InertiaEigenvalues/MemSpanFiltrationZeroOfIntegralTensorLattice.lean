@@ -124,7 +124,7 @@ theorem mem_span_filD_zero_of_integral : ∀ (l : ℕ) [Fact l.Prime] (O K : Typ
   intro l _ O K _ _ _ _ _ _ _ T C w hw
   classical
   obtain ⟨z, hz⟩ := hw
-  haveI := T.L.free
+  have := T.L.free
   let bT := Module.Free.chooseBasis O ↥T.L.T
   have hw' : w = (TensorProduct.equivFinsuppOfBasisRight bT w).sum fun j r => r ⊗ₜ[O] bT j := by
     rw [← TensorProduct.equivFinsuppOfBasisRight_symm_apply, LinearEquiv.symm_apply_apply]

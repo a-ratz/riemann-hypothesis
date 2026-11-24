@@ -224,7 +224,7 @@ theorem weilIs_grpPullback_of_commute : ∀ (S S' : Scheme.{0}) (G : Over S) (G'
   refine forall_congr' fun p => exists_congr fun V => and_congr_right fun _ => ?_
   let V₀ : (Over.mk (T.hom ≫ f)).left.Opens := V
   let τ : (overRes V).left ⟶ (overRes V₀).left := 𝟙 V.toScheme
-  haveI : IsIso τ := inferInstanceAs (IsIso (𝟙 V.toScheme))
+  have : IsIso τ := inferInstanceAs (IsIso (𝟙 V.toScheme))
   have hτ : τ ≫ (overRes V₀).hom = (overRes V).hom ≫ f := (Category.id_comp _).trans (Category.assoc _ _ _).symm
   have mv : ∀ {a : T ⟶ G'} {a₀ : Over.mk (T.hom ≫ f) ⟶ G}, a₀.left = a.left ≫ φ →
       τ ≫ (overResι V₀ ≫ a₀).left = (overResι V ≫ a).left ≫ φ := fun {a a₀} e =>

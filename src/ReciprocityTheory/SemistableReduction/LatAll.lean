@@ -275,8 +275,8 @@ theorem approxB_split {K : Type} [Field K] [NumberField K] {r p : ℕ} (hp : p �
       ∑ k : {j : Fin r // ¬ (j : ℕ) < p}, g k.1 • T (v (a0 (e k))) = 0 := by
     rw [← hg, ← Fintype.sum_subtype_add_sum_subtype (fun j : Fin r => (j : ℕ) < p)]
     congr 1
-    · exact Finset.sum_congr rfl fun k _ => by simp only [dif_pos k.2]
-    · exact Finset.sum_congr rfl fun k _ => by simp only [dif_neg k.2]; rfl
+    · exact Finset.sum_congr rfl fun k _ => by simp only [dite_eq_left k.2]
+    · exact Finset.sum_congr rfl fun k _ => by simp only [dite_eq_right k.2]; rfl
   have hBorth : ∀ k' : ApproxPosIdx r p,
       S.h (l k'.1) (∑ k : {j : Fin r // ¬ (j : ℕ) < p}, g k.1 • T (v (a0 (e k)))) = 0 := by
     intro k'
@@ -385,10 +385,10 @@ theorem approxBasis_holds (hG : ApproxGraphStatement) : ApproxStatement := by
   obtain ⟨la, hla⟩ : ∃ la : Fin r → Fin r → K, la = fun j : Fin r => if h : (j : ℕ) < p then l0 j
       else Δ • v (a ⟨j, h⟩) - ∑ k', coef (v (a ⟨j, h⟩)) k' • l0 k'.1 := ⟨_, rfl⟩
   have hla_pos : ∀ (j : Fin r) (h : (j : ℕ) < p), la j = l0 j := fun j h => by
-    rw [hla]; simp only [dif_pos h]
+    rw [hla]; simp only [dite_eq_left h]
   have hla_neg : ∀ (j : Fin r) (h : ¬ (j : ℕ) < p), la j =
       Δ • v (a ⟨j, h⟩) - ∑ k', coef (v (a ⟨j, h⟩)) k' • l0 k'.1 := fun j h => by
-    rw [hla]; simp only [dif_neg h]
+    rw [hla]; simp only [dite_eq_right h]
   have hli' : LinearIndependent K la := by rw [hla]; exact hli
   have horth' : ∀ (k : Fin r), (k : ℕ) < p → ∀ j : Fin r, ¬ (j : ℕ) < p →
       S.h (l0 k) (la j) = 0 := fun k hk j hj => by
@@ -397,7 +397,7 @@ theorem approxBasis_holds (hG : ApproxGraphStatement) : ApproxStatement := by
     intro i
     rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]
     have hu : IsUnit (Matrix.of la) :=
-      (Matrix.linearIndependent_rows_iff_isUnit (A := Matrix.of la)).mp hli'
+      (linearIndependent_row_iff_isUnit (A := Matrix.of la)).mp hli'
     exact (map_ne_zero (σ i)).mpr ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
   have hcomb : ∀ i (w : Fin r → ℂ),
       Q i *ᵥ ∑ j, w j • embVec (σ i) (la j) = ∑ j, w j • (Q i *ᵥ embVec (σ i) (la j)) := by
@@ -721,7 +721,7 @@ theorem bwp_ext_poly {σ : Type*} [Fintype σ] [DecidableEq σ] (k : ℕ) (g D :
       refine Finset.sum_congr rfl (fun c hc => ?_)
       rw [Polynomial.eval_mul, Polynomial.eval_C, ← hQ _ c (ht c hc)]
       congr 1
-      simp only [Pc, dif_neg (hSz c hc)]
+      simp only [Pc, dite_eq_right (hSz c hc)]
       rw [← hP _ _ (hSz c hc) t (by rw [add_right_comm]; exact ht c hc), add_right_comm]
     have hbad : ∀ S : Finset ℂ, (∀ c ∈ S, D (z + c • w) ≠ 0) →
         {t : ℂ | ∃ c ∈ S, D ((z + t • e) + c • w) = 0}.Finite := by
@@ -742,7 +742,7 @@ theorem bwp_ext_poly {σ : Type*} [Fintype σ] [DecidableEq σ] (k : ℕ) (g D :
     have hS0a : ∀ c ∈ S0, D (z + c • w) ≠ 0 := fun c hc h => hS0z c hc h
     have hRR : R S0 = R S1 := by
       refine bwp_poly_eq_of_eval_eq_off _ _ _ ((hbad S0 hS0a).union (hbad S1 hS1a)) (fun t ht => ?_)
-      simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_exists, not_and] at ht
+      simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_exists, not_and] at ht
       rw [← key S0 hS0 hS0a t ht.1, ← key S1 hS1 hS1a t ht.2]
     rw [hRR, key S1 hS1 hS1a t0 hS1b]
   obtain ⟨F, hF⟩ := bwp_sepPoly k G hsep
@@ -807,7 +807,7 @@ theorem bwp_finite_det_line {p : ℕ} (z v : Fin p × Fin p → ℂ) (hz : (bwpM
     rw [h, Polynomial.eval_zero] at h0
     simpa using h0.symm
   refine (bwp_finite_eval_eq_zero hΛ0).subset fun t ht => ?_
-  simp only [Set.mem_setOf_eq] at ht ⊢
+  simp only [Set.mem_ofPred_eq] at ht ⊢
   rw [hΛ]
   exact ht
 
@@ -815,7 +815,7 @@ theorem bwp_finite_det_id_line {p : ℕ} (z : Fin p × Fin p → ℂ) :
     {s : ℂ | (bwpMat (z + s • bwpId p)).det = 0}.Finite := by
   have hne : (-bwpMat z).charpoly ≠ 0 := (Matrix.charpoly_monic _).ne_zero
   refine (bwp_finite_eval_eq_zero hne).subset fun s hs => ?_
-  simp only [Set.mem_setOf_eq] at hs ⊢
+  simp only [Set.mem_ofPred_eq] at hs ⊢
   rw [Matrix.charpoly, ← Polynomial.coe_evalRingHom, RingHom.map_det]
   convert hs using 2
   ext i j
@@ -1006,7 +1006,7 @@ theorem bwPoly_holds (hH : LemmaHStatement) (hE : ∀ n, ReciprocityTheory.L2Dba
     refine Finset.sum_congr rfl (fun j _ => ?_)
     rw [Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow, Polynomial.eval_X, mul_comm]
   have hc := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q (∑ i, a i)) hΦ
-  simp only [Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow, if_pos rfl] at hc
+  simp only [Polynomial.finsetSum_coeff, Polynomial.coeff_C_mul_X_pow, ite_eq_left rfl] at hc
   rw [Finset.sum_ite_eq] at hc
   split_ifs at hc with hk
   · exact hc.symm
@@ -1038,7 +1038,7 @@ theorem exists_entire_of_finite_growth (f : ℂ → ℂ) (B : Set ℂ) (A : ℝ)
     ∃ g : ℂ → ℂ, Differentiable ℂ g ∧ ∀ t ∉ B, g t = f t := by
   classical
   let g : ℂ → ℂ := fun t => if t ∈ B then limUnder (𝓝[≠] t) f else f t
-  refine ⟨g, fun c => ?_, fun t ht => if_neg ht⟩
+  refine ⟨g, fun c => ?_, fun t ht => ite_eq_right ht⟩
   by_cases hc : c ∈ B
   · have hU : IsOpen (B \ {c})ᶜ := (hB.sdiff).isClosed.isOpen_compl
     set s : Set ℂ := (B \ {c})ᶜ ∩ ball c 1 with hs
@@ -1071,7 +1071,7 @@ theorem exists_entire_of_finite_growth (f : ℂ → ℂ) (B : Set ℂ) (A : ℝ)
   · have hO : IsOpen Bᶜ := hB.isClosed.isOpen_compl
     refine (hf.differentiableAt (hO.mem_nhds hc)).congr_of_eventuallyEq ?_
     filter_upwards [hO.mem_nhds hc] with t ht
-    exact if_neg ht
+    exact ite_eq_right ht
 
 theorem onePolyGrowth_holds : OnePolyGrowthStatement := by
   intro f B A k hB hf hb

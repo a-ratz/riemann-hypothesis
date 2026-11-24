@@ -64,7 +64,7 @@ namespace UpperTheory.Reformulated.B.P6.r24a
 theorem quadratic_form_smul_re {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (Q : V →L[ℝ] V →L[ℝ] ℂ) (c : ℝ) (x : V) :
     (Q (c • x) (c • x)).re = c ^ 2 * (Q x x).re := by
-  simp only [map_smul, ContinuousLinearMap.smul_apply, Complex.smul_re, smul_eq_mul]
+  simp only [map_smul, smul_apply, Complex.smul_re, smul_eq_mul]
   ring
 
 theorem inv_norm_smul_mem_sphere {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]

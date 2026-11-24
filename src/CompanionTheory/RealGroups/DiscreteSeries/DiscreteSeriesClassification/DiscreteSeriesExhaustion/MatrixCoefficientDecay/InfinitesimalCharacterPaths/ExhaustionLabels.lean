@@ -342,7 +342,7 @@ theorem lint_lt_top {f : ℝ → ℂ} {h w : Fin n → ℝ → ℂ} {C s : ℝ}
     ∫⁻ t in Set.Ioi (0 : ℝ), ‖f t‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (-2 * s * t)) < ⊤ := by
   set G : Fin n → ℝ → ℝ≥0∞ := fun k t => ‖h k t‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (-2 * (s - 1) * t)) with hG
   have hmeas : ∀ k, Measurable (G k) := fun k =>
-    (((hh k).measurable.enorm).pow_const 2).mul
+    (((hh k).measurable.eNorm).pow_const 2).mul
       (ENNReal.measurable_ofReal.comp (by fun_prop))
   have hpt : ∀ t ∈ Set.Ioi (0 : ℝ), ‖f t‖ₑ ^ 2 * ENNReal.ofReal (Real.exp (-2 * s * t)) ≤
       ENNReal.ofReal ((n : ℝ) * C ^ 2) * ∑ k, G k t := by
@@ -360,7 +360,7 @@ theorem lint_lt_top {f : ℝ → ℂ} {h w : Fin n → ℝ → ℂ} {C s : ℝ}
         simp only [card_univ, Fintype.card_fin] at this
         exact (pow_le_pow_left₀ (norm_nonneg _) h2 2).trans this
       have h4 : Real.exp (-2 * (s - 1) * t) = Real.exp (t) ^ 2 * Real.exp (-2 * s * t) := by
-        rw [← Real.exp_nat_mul, ← Real.exp_add]
+        rw [← Real.exp_natCast_mul, ← Real.exp_add]
         congr 1
         push_cast
         ring
@@ -522,7 +522,7 @@ theorem step_left (hc : IsCoefFam ε X c) (z : ℂ) (i : ι) (j : Fin n) :
       split_ifs with h
       · rw [h]
       · simp
-    rw [sum_congr rfl fun c' _ => e c', Finset.sum_ite_eq' univ j, if_pos (mem_univ j)]
+    rw [sum_congr rfl fun c' _ => e c', Finset.sum_ite_eq' univ j, ite_eq_left (mem_univ j)]
     calc ∑ d, M j d * stepCoef X z (c i) d u g
         = ∑ k, (∑ d, M j d * g d k) * c i (incl X z u k) g := by
           simp only [stepCoef_apply, Finset.mul_sum, Finset.sum_mul]

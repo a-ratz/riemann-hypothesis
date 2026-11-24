@@ -95,7 +95,7 @@ theorem proof : PullSectionIntegralInt.Statement := by
     intro k h0
     obtain ⟨i0, hi0⟩ := hrel k
     have := hc k i0
-    rw [h0, map_zero, le_zero_iff, map_eq_zero] at this
+    rw [h0, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
     exact hi0 this
   have hratio : ∀ p : Σ k, ι k, y p / y ⟨p.1, c p.1⟩ ∈ V := by
     intro p

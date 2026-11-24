@@ -135,17 +135,17 @@ variable (F κ) in
 theorem exists_form (ψ : AddChar (AF F) ℂ) : ∃ l ∈ (adeleClass F).adm (κ ⊕ κ),
     (∀ x y : κ → AF F, ∀ φ ∈ schA F (κ ⊕ κ), l (schr ψ (Sum.elim x x, Sum.elim y (-y)) φ) = l φ) ∧
       ∃ (B : SInf F (κ ⊕ κ)), ∃ G ∈ SB (κ ⊕ κ → Af F), l (pureA F B G) ≠ 0 := by
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
   borelize (κ → Af F)
   let X := κ → mixedEmbedding.mixedSpace F
   borelize X
   let μ : Measure X := Measure.addHaar
   let ν : Measure (κ → Af F) := Measure.addHaar
-  haveI : MeasurableAdd X := ContinuousAdd.measurableAdd
-  haveI : MeasurableAdd (κ → Af F) := ContinuousAdd.measurableAdd
-  haveI : (μ.prod ν).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure μ ν
+  have : MeasurableAdd X := ContinuousAdd.measurableAdd
+  have : MeasurableAdd (κ → Af F) := ContinuousAdd.measurableAdd
+  have : (μ.prod ν).IsAddHaarMeasure := Measure.prod.instIsAddHaarMeasure μ ν
   let k : ((κ ⊕ κ → AF F) → ℂ) →ₗ[ℂ] (X × (κ → Af F) → ℂ) :=
     LinearMap.funLeft ℂ ℂ fun p => Sum.elim (SeminormBoundRestriction.pt p.1 p.2) (SeminormBoundRestriction.pt p.1 p.2)
   let N : Submodule ℂ ((κ ⊕ κ → AF F) → ℂ) :=
@@ -219,13 +219,13 @@ theorem exists_form (ψ : AddChar (AF F) ℂ) : ∃ l ∈ (adeleClass F).adm (κ
         exact hB _
       simp only [this]
       rw [integral_complex_ofReal, ofReal_ne_zero]
-      exact ((hr.mul hr).integral_pos_of_hasCompactSupport_nonneg_nonzero hr'.mul_left (fun _ => mul_self_nonneg _)
+      exact ((hr.mul hr).integral_pos_of_hasCompactSupport_nonneg_ne_zero hr'.mul_left (fun _ => mul_self_nonneg _)
         (x := 0) (by simp [hr0])).ne'
     · have : ∀ b, boxFun (fun x => ((‖g x‖ : ℝ) : ℂ)) (fun x => ((‖g x‖ : ℝ) : ℂ)) (Sum.elim b b) =
           ((‖g b‖ * ‖g b‖ : ℝ) : ℂ) := fun b => (ofReal_mul _ _).symm
       simp only [this]
       rw [integral_complex_ofReal, ofReal_ne_zero]
-      exact ((hg.1.continuous.norm.mul hg.1.continuous.norm).integral_pos_of_hasCompactSupport_nonneg_nonzero
+      exact ((hg.1.continuous.norm.mul hg.1.continuous.norm).integral_pos_of_hasCompactSupport_nonneg_ne_zero
         hg.2.norm.mul_left (fun _ => mul_self_nonneg _) (x := y) (by simp [hy])).ne'
 
 end PositivityTheory.RL.Up
@@ -254,7 +254,7 @@ variable {β ι : Type} [Fintype β] [DecidableEq β] [Fintype ι] [DecidableEq 
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem exp_conj' (C : Matrix β ι ℂ) (C' : Matrix ι β ℂ) (h1 : C * C' = 1) (h2 : C' * C = 1) (Y : Matrix ι ι ℂ) :
     NormedSpace.exp (C * Y * C') = C * NormedSpace.exp Y * C' := by
-  have : CompleteSpace (Matrix ι ι ℂ) := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix ι ι ℂ) := FiniteDimensional.completeSpace ℝ _
   let φ : Matrix ι ι ℂ →+* Matrix β β ℂ :=
     { toFun := fun X => C * X * C'
       map_one' := by rw [Matrix.mul_one, h1]
@@ -268,8 +268,8 @@ theorem exp_conj' (C : Matrix β ι ℂ) (C' : Matrix ι β ℂ) (h1 : C * C' = 
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem exp_blocks (Z Z' : Matrix β β ℂ) :
     NormedSpace.exp (Matrix.fromBlocks Z 0 0 Z') = Matrix.fromBlocks (NormedSpace.exp Z) 0 0 (NormedSpace.exp Z') := by
-  have : CompleteSpace (Matrix β β ℂ) := FiniteDimensional.complete ℝ _
-  have : @CompleteSpace (Matrix β β ℂ × Matrix β β ℂ) PseudoMetricSpace.toUniformSpace := FiniteDimensional.complete ℝ _
+  have : CompleteSpace (Matrix β β ℂ) := FiniteDimensional.completeSpace ℝ _
+  have : @CompleteSpace (Matrix β β ℂ × Matrix β β ℂ) PseudoMetricSpace.toUniformSpace := FiniteDimensional.completeSpace ℝ _
   let φ : Matrix β β ℂ × Matrix β β ℂ →+* Matrix (β ⊕ β) (β ⊕ β) ℂ :=
     { toFun := fun X => Matrix.fromBlocks X.1 0 0 X.2
       map_one' := Matrix.fromBlocks_one
@@ -415,8 +415,8 @@ theorem exists_dbl {γ γ' : Multiplicative ℝ →* UG (cA σ) JB} (h : γ ∈ 
       map_mul' := fun X X' => by simp [Matrix.fromBlocks_multiply] }
   let δ0 : Multiplicative ℝ →* GL (β ⊕ β) (AE F E) := (Units.map φ).comp (MulEquiv.prodUnits.symm.toMonoidHom.comp
     (((UG (cA σ) JB).subtype.comp γ).prod ((UG (cA σ) JB).subtype.comp γ')))
-  have c1 : Continuous fun t => (γ t).1 := continuous_subtype_val.comp h.1
-  have c2 : Continuous fun t => (γ' t).1 := continuous_subtype_val.comp h'.1
+  have c1 : Continuous fun t => (γ t).1 := continuous_subtypeVal.comp h.1
+  have c2 : Continuous fun t => (γ' t).1 := continuous_subtypeVal.comp h'.1
   have hc : Continuous δ0 := Units.continuous_iff.2
     ⟨(Units.continuous_val.comp c1).matrix_fromBlocks continuous_const continuous_const (Units.continuous_val.comp c2),
      (Units.continuous_coe_inv.comp c1).matrix_fromBlocks continuous_const continuous_const
@@ -514,7 +514,7 @@ theorem box_D (hdd : IsDblCoord (cA σ) (-1) JA JB d dd) {D Dd} (hD : IsD d D) (
   have e1 : L1 (fun i => evI F ((Sum.elim (d.e u).1 0 : κ ⊕ κ → AF F) i)) = fun i => evI F ((d.e u).1 i) := rfl
   have e2 : L2 (fun i => evI F ((Sum.elim (d.e u).1 0 : κ ⊕ κ → AF F) i)) = 0 := funext fun _ => Der.evI_zero
   rw [hDd _ (at_cols hu fun _ _ => smul_zero _), hD u hu, hdd, h2, hB, map_zero]
-  simp only [Prod.fst_zero, Prod.snd_zero, neg_zero, ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [Prod.fst_zero, Prod.snd_zero, neg_zero, add_apply, smul_apply,
     ContinuousLinearMap.comp_apply, e1, e2, map_zero, Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, Pi.zero_apply,
     Der.evI_zero, mul_zero, Finset.sum_const_zero, add_zero, smul_eq_mul, Function.comp_apply]
   show _ + f' (x ∘ Sum.inr) * fderiv ℝ f (x ∘ Sum.inl) _ - _ = _
@@ -649,7 +649,7 @@ theorem tele_lim (j : V →ₗ[𝕜] B) (L : ℝ → V →ₗ[𝕜] V) (μ : ℝ
           rw [add_comm]
           exact Real.add_one_le_exp _
       _ = _ := by
-          rw [← Real.exp_nat_mul]
+          rw [← Real.exp_natCast_mul]
           congr 1
           field_simp
   simp only [Function.comp_apply, div_inv_eq_mul]
@@ -712,7 +712,7 @@ theorem delta_zero {G : Type} [Group G] [TopologicalSpace G] (A : G →* (Sch l 
       filter_upwards [eventually_gt_atTop 0] with n hn
       have hn' : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne'
       have e : cexp (d * ((n : ℝ)⁻¹ : ℝ)) ^ n = cexp d := by
-        rw [← Complex.exp_nat_mul]
+        rw [← exp_natCast_mul]
         congr 1
         push_cast
         field_simp
@@ -724,7 +724,7 @@ theorem delta_zero {G : Type} [Group G] [TopologicalSpace G] (A : G →* (Sch l 
     have h8 : T (schwartzToL2 l f) ≠ 0 := fun h => hj (inner_self_eq_zero.1 h)
     exact mul_right_cancel₀ h8 (h7.trans (one_mul _).symm)
   · filter_upwards [h1, h2] with t a1 a2
-    simp only [k0, map_one, ContinuousLinearMap.one_apply, ofReal_zero, mul_zero, Complex.exp_zero] at a1 a2
+    simp only [k0, map_one, one_apply_eq_self, ofReal_zero, mul_zero, Complex.exp_zero] at a1 a2
     refine ⟨fun v => ?_, ?_⟩
     · obtain ⟨n, hn⟩ := hc (k t)
       show ‖schwartzToL2 l (A (k t) v)‖ ≤ _ * ‖schwartzToL2 l v‖
@@ -775,7 +775,7 @@ theorem exists_avg (S : ℝ → Sch l →L[ℂ] Sch l) (hc : ∀ t, Conf (S t)) 
     by_contra h
     push Not at h
     have h3 := hI 0
-    simp only [S0, ContinuousLinearMap.one_apply] at h3
+    simp only [S0, one_apply_eq_self] at h3
     refine h2 (h3.unique ((hasDerivAt_const (0 : ℝ) (0 : ℂ)).congr_of_eventuallyEq ?_))
     filter_upwards [Icc_mem_nhds (show (-1 : ℝ) < 0 by norm_num) (show (0 : ℝ) < 1 by norm_num)] with t ht using h t ht
   let m : Sch l →ₗ[ℂ] ℂ :=
@@ -823,7 +823,7 @@ theorem strong (S : ℝ → Sch l →L[ℂ] Sch l) (Q : Sch l →L[ℂ] Sch l) (
     refine NormedSpace.norm_le_dual_bound ℂ _ (by positivity) fun φ => ?_
     have := taylor2 _ _ _ (hd (φ ∘L schwartzToL2 l) f) (hd (φ ∘L schwartzToL2 l) (Q f)) (M := ‖φ‖ * M) (fun v hv =>
       (φ.le_opNorm _).trans (mul_le_mul_of_nonneg_left (hM v hv) (norm_nonneg _))) ht
-    simp only [S0, ContinuousLinearMap.one_apply, ContinuousLinearMap.comp_apply] at this
+    simp only [S0, one_apply_eq_self, ContinuousLinearMap.comp_apply] at this
     simp only [map_sub, map_smul, smul_eq_mul]
     linarith
   rw [hasDerivAt_iff_isLittleO_nhds_zero]
@@ -845,12 +845,12 @@ theorem dif_mul {U U' : ℝ → Sch l →L[ℂ] Sch l} {Q Q' : Sch l →L[ℂ] S
     filter_upwards [Icc_mem_nhds (show (-1 : ℝ) < 0 by norm_num) (show (0 : ℝ) < 1 by norm_num)] with t ht
     have := hC t ht (U' t f - f - (t : ℂ) • Q' f)
     rw [map_sub (schwartzToL2 l), map_sub (schwartzToL2 l), map_smul (schwartzToL2 l), real_smul_L2_coe] at this
-    simp only [zero_add, U0', ContinuousLinearMap.one_apply, ofReal_zero, zero_smul, sub_self, map_zero, smul_zero,
+    simp only [zero_add, U0', one_apply_eq_self, ofReal_zero, zero_smul, sub_self, map_zero, smul_zero,
       sub_zero]
     exact this
   have a2 := ((hasDerivAt_id (0 : ℝ)).ofReal_comp).smul (h (Q' f))
   refine (((a1.add (h f)).add a2).congr_deriv (by simp [U0])).congr_of_eventuallyEq (.of_forall fun t => ?_)
-  simp only [Pi.add_apply, Pi.smul_apply', id, map_sub, map_smul, ContinuousLinearMap.mul_apply]
+  simp only [Pi.add_apply, Pi.smul_apply', id, map_sub, map_smul, mul_apply_eq_comp]
   abel
 
 variable [DecidableEq l]
@@ -868,13 +868,13 @@ theorem Im.one : Im (1 : Matrix (l ⊕ l) (l ⊕ l) ℝ) 1 := ⟨fun _ => rfl, f
 theorem Im.mul {s s' : Matrix (l ⊕ l) (l ⊕ l) ℝ} {U U' : Sch l →L[ℂ] Sch l} (h : Im s U) (h' : Im s' U') :
     Im (s * s') (U * U') :=
   ⟨fun f => (h.1 _).trans (h'.1 f), fun w f => by
-    rw [ContinuousLinearMap.mul_apply, h'.2, h.2, mulVec_mulVec]
+    rw [mul_apply_eq_comp, h'.2, h.2, mulVec_mulVec]
     rfl⟩
 
 theorem Im.inv {s s' : Matrix (l ⊕ l) (l ⊕ l) ℝ} {U : (Sch l →L[ℂ] Sch l)ˣ} (h : Im s U.1) (hs : s * s' = 1) :
     Im s' U⁻¹.1 := by
-  have e : ∀ f, U.1 (U⁻¹.1 f) = f := fun f => by rw [← ContinuousLinearMap.mul_apply, Units.mul_inv]; rfl
-  have e' : ∀ f, U⁻¹.1 (U.1 f) = f := fun f => by rw [← ContinuousLinearMap.mul_apply, Units.inv_mul]; rfl
+  have e : ∀ f, U.1 (U⁻¹.1 f) = f := fun f => by rw [← mul_apply_eq_comp, Units.mul_inv]; rfl
+  have e' : ∀ f, U⁻¹.1 (U.1 f) = f := fun f => by rw [← mul_apply_eq_comp, Units.inv_mul]; rfl
   refine ⟨fun f => by rw [← h.1, e], fun w f => ?_⟩
   have := h.2 (s' *ᵥ w) (U⁻¹.1 f)
   rw [mulVec_mulVec, hs, one_mulVec, e] at this
@@ -957,7 +957,7 @@ theorem line (hL : LocalLift) {X : Matrix (l ⊕ l) (l ⊕ l) ℝ} (hX : X ∈ L
     obtain ⟨h1, h2, h3⟩ := Vi t ht
     obtain ⟨b, hb⟩ := hS t ⟨V t, W t, ContinuousLinearMap.ext h1, ContinuousLinearMap.ext h2⟩ (Im.of_impl h3)
     have : c t = b := by
-      simp only [c, hb, ContinuousLinearMap.smul_apply, map_smul, smul_eq_mul]
+      simp only [c, hb, smul_apply, map_smul, smul_eq_mul]
       exact mul_div_cancel_right₀ _ hne
     rw [this, hb]
   refine ⟨deriv c 0 + a, fun T f => ?_⟩
@@ -965,7 +965,7 @@ theorem line (hL : LocalLift) {X : Matrix (l ⊕ l) (l ⊕ l) ℝ} (hX : X ∈ L
   · simp [c0, V0]
     ring
   · filter_upwards [ev] with t ht
-    rw [ht, ContinuousLinearMap.smul_apply, map_smul, smul_eq_mul]
+    rw [ht, smul_apply, map_smul, smul_eq_mul]
 
 end PositivityTheory.ThKR
 
@@ -1003,7 +1003,7 @@ def expU (Z : 𝔸) : 𝔸ˣ :=
     by rw [← NormedSpace.exp_add_of_commute (Commute.refl Z).neg_left, neg_add_cancel, NormedSpace.exp_zero]⟩
 
 theorem expU_add (Z : 𝔸) (s t : ℝ) : expU ((s + t) • Z) = expU (s • Z) * expU (t • Z) := by
-  letI : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
+  let : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   refine Units.ext ?_
   show NormedSpace.exp _ = NormedSpace.exp _ * NormedSpace.exp _
   rw [add_smul, NormedSpace.exp_add_of_commute (((Commute.refl Z).smul_left s).smul_right t)]
@@ -1136,7 +1136,7 @@ theorem scalar_lie {𝔸 : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [Com
     ∃ ζ : 𝔸 →ₗ[ℝ] ℂ, (∀ Z (h : Z ∈ 𝔤) (T : Sch l →L[ℂ] ℂ) f,
         HasDerivAt (fun t : ℝ => T (A ⟨expU (t • Z), hS _ (𝔤.smul_mem t h)⟩ f)) (T (quad (ρ Z) f + ζ Z • f)) 0) ∧
       ∀ X ∈ 𝔤, ∀ Y ∈ 𝔤, ζ (X * Y - Y * X) = 0 := by
-  letI : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
+  let : NormedAlgebra ℚ 𝔸 := NormedAlgebra.restrictScalars ℚ ℝ 𝔸
   let ex : 𝔤 → S := fun Z => ⟨expU Z.1, hS _ Z.2⟩
   have ex0 : ∀ Z : 𝔤, ex ((0 : ℝ) • Z) = 1 := fun Z => Subtype.ext (by rw [zero_smul]; exact expU_zero)
   have exm : ∀ (Z : 𝔤) (a b : ℝ), ex ((a + b) • Z) = ex (a • Z) * ex (b • Z) := fun Z a b => Subtype.ext (expU_add Z.1 a b)
@@ -1144,7 +1144,7 @@ theorem scalar_lie {𝔸 : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [Com
   have conf : ∀ g, Conf (A g) := fun g => by
     obtain ⟨U, h⟩ := hU g
     obtain ⟨c, hc⟩ := hA g U h
-    exact ⟨‖c‖, fun f => by rw [hc, ContinuousLinearMap.smul_apply, map_smul, norm_smul, h.1]⟩
+    exact ⟨‖c‖, fun f => by rw [hc, smul_apply, map_smul, norm_smul, h.1]⟩
   have A0 : ∀ Z : 𝔤, A (ex ((0 : ℝ) • Z)) = 1 := fun Z => by rw [ex0, map_one]
   have Am : ∀ (Z : 𝔤) (a b : ℝ), A (ex ((a + b) • Z)) = A (ex (a • Z)) * A (ex (b • Z)) := fun Z a b => by
     rw [exm, map_mul]
@@ -1193,8 +1193,8 @@ theorem scalar_lie {𝔸 : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [Com
         simp [add_comm]
       rw [← map_smul, e]
       congr 1
-      simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.neg_apply, ContinuousLinearMap.smul_apply,
-        ContinuousLinearMap.one_apply]
+      simp only [add_apply, neg_apply, smul_apply,
+        one_apply_eq_self]
       module
   let ζ0 : 𝔤 →ₗ[ℝ] ℂ :=
     { toFun := z
@@ -1224,7 +1224,7 @@ theorem scalar_lie {𝔸 : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [Com
       exact this
     refine uniq _ _ ?_
     have h1 := hz ⟨Y, hY⟩ (T0 ∘L A g) (A g⁻¹ f0)
-    have i1 : A g (A g⁻¹ f0) = f0 := by rw [← ContinuousLinearMap.mul_apply, ← map_mul, mul_inv_cancel, map_one]; rfl
+    have i1 : A g (A g⁻¹ f0) = f0 := by rw [← mul_apply_eq_comp, ← map_mul, mul_inv_cancel, map_one]; rfl
     obtain ⟨U, h⟩ := hU g
     obtain ⟨c, hc⟩ := hA g U h
     have h2 := h.quad (sympl_of_mem (hρ g)) (s' := ρ g⁻¹.1.1) (by
@@ -1233,7 +1233,7 @@ theorem scalar_lie {𝔸 : Type} [NormedRing 𝔸] [NormedAlgebra ℝ 𝔸] [Com
     have h4 : A g * quad (ρ Y) = quad (ρ (g.1.1 * Y * g⁻¹.1.1)) * A g := by
       rw [hc, smul_mul_assoc, mul_smul_comm, h2, map_mul, map_mul]
     have h5 : A g (quad (ρ Y) (A g⁻¹ f0)) = quad (ρ (g.1.1 * Y * g⁻¹.1.1)) f0 := by
-      rw [← ContinuousLinearMap.mul_apply, h4, ContinuousLinearMap.mul_apply, i1]
+      rw [← mul_apply_eq_comp, h4, mul_apply_eq_comp, i1]
     simp only [e, map_mul A]
     refine h1.congr_deriv ?_
     rw [ContinuousLinearMap.comp_apply, map_add (A g), map_smul (A g), h5, i1]
@@ -1260,13 +1260,13 @@ theorem mid2 (hL : LocalLift) (K : W → Matrix β β ℂ) (hK : ∀ w, (K w)ᴴ
       ∃ h : ∀ t, (γ t).1 ∈ HS K ρ, ∀ (T : Sch l →L[ℂ] ℂ) f, HasDerivAt (fun t => T (A ⟨(γ t).1, h t⟩ f))
         (T (quad (ρ Z) f + (∑ w, c w * (Z w).trace) • f)) 0 := by
   have hρc : Continuous ρ := ρ.toLinearMap.continuous_of_finiteDimensional
-  letI : NormedRing (Matrix β β ℂ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix β β ℂ) := Matrix.linftyOpNormedAlgebra
-  letI : NormedRing (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Matrix β β ℂ) := FiniteDimensional.complete ℝ _
-  letI : NormedAlgebra ℚ (Matrix β β ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
-  letI : NormedAlgebra ℚ (Matrix (l ⊕ l) (l ⊕ l) ℝ) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedRing (Matrix β β ℂ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix β β ℂ) := Matrix.linftyOpNormedAlgebra
+  let : NormedRing (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Matrix (l ⊕ l) (l ⊕ l) ℝ) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Matrix β β ℂ) := FiniteDimensional.completeSpace ℝ _
+  let : NormedAlgebra ℚ (Matrix β β ℂ) := NormedAlgebra.restrictScalars ℚ ℝ _
+  let : NormedAlgebra ℚ (Matrix (l ⊕ l) (l ⊕ l) ℝ) := NormedAlgebra.restrictScalars ℚ ℝ _
   have hpi : ∀ (Z : W → Matrix β β ℂ) w, NormedSpace.exp Z w = NormedSpace.exp (Z w) := fun Z w => Pi.coe_exp Z w
   have hS : ∀ Z ∈ LG K, expU Z ∈ SG K := fun Z hZ => funext fun w => by
     have := exp_preserves (Y := Z w) (J := K w) (congrFun hZ w)
@@ -1456,12 +1456,12 @@ theorem main2 (hLL : LocalLift) (h : IsCMExt F E σ) {ψ : AddChar (AF F) ℂ} (
       exact this
     refine ⟨z, fun f gf hgf => ?_⟩
     have := hz (U.1 f) gf hgf
-    rw [← ContinuousLinearMap.mul_apply, Units.inv_mul, ContinuousLinearMap.one_apply] at this
-    rw [this, ContinuousLinearMap.smul_apply, map_smul]
+    rw [← mul_apply_eq_comp, Units.inv_mul, one_apply_eq_self] at this
+    rw [this, smul_apply, map_smul]
     funext x
     simp [pureA, mul_assoc]
   let inc : HS K ρ →* SG K := Subgroup.inclusion inf_le_left
-  have incc : Continuous inc := continuous_subtype_val.subtype_mk _
+  have incc : Continuous inc := continuous_subtypeVal.subtype_mk _
   have ex : ∀ g : HS K ρ, ∃ A : Sch (Fin n) →L[ℂ] Sch (Fin n),
       ∀ f, ∀ gf ∈ SB (κ → Af F), om (ι (inc g)) (pureA F (c.P f) gf) = pureA F (c.P (A f)) gf := fun g => by
     obtain ⟨U, hU⟩ := g.2.2
@@ -1513,8 +1513,8 @@ theorem main2 (hLL : LocalLift) (h : IsCMExt F E σ) {ψ : AddChar (AF F) ℂ} (
   · rw [ContinuousLinearMap.comp_apply, hq]
     congr 1
 
-    simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.sum_apply, ContinuousLinearMap.add_apply,
-    ContinuousLinearMap.mul_apply, map_add, map_smul, map_sum, hD.P c (hu _), hD.P c (hv _), c.P_P']
+    simp only [smul_apply, sum_apply, add_apply,
+    mul_apply_eq_comp, map_add, map_smul, map_sum, hD.P c (hu _), hD.P c (hv _), c.P_P']
   · show l (om (γ (Multiplicative.ofAdd t)) _) = T (c.P (A0 ⟨(γ0 t).1, hγ0 t⟩ (c.P' f)))
     rw [← hT, ← hA0 _ _ gf hgf, c.P_P', e0]
     rfl
@@ -1609,7 +1609,7 @@ theorem lieSecond2 (hM : LocalLift) : GlobalTheory.RealLift.DerEx → GlobalTheo
       have B0 : B 0 = 1 := (hB 0).trans (by
         show f 0 * f 0 = 1
         rw [f0, mul_one])
-      simp only [LinearMap.proj_apply, eB, ef, SchwartzMap.add_apply, SchwartzMap.smul_apply, SchwartzMap.sum_apply,
+      simp only [LinearMap.proj_apply, eB, ef, add_apply, smul_apply, sum_apply,
         bb _ _ (hu _) (hv _), bb _ _ (hv _) (hu _), f0, B0, mul_one, smul_eq_mul, add_right_inj, trace_blocks,
         Matrix.trace_zero, add_zero, tr] at h3
       exact h3.symm
@@ -1671,7 +1671,7 @@ theorem lieSecond2 (hM : LocalLift) : GlobalTheory.RealLift.DerEx → GlobalTheo
           ‖piInf (τ w) (Matrix.det (γ (Multiplicative.ofAdd t)).1.1)‖) ^ m w = _
         have he : piInf (τ w) (Matrix.det (γ (Multiplicative.ofAdd t)).1.1) =
             cexp (t * (Y w).trace) := hdet t w
-        rw [he, n1, ofReal_one, div_one, ← Complex.exp_int_mul]
+        rw [he, n1, ofReal_one, div_one, ← exp_intCast_mul]
         congr 1
         push_cast
         ring

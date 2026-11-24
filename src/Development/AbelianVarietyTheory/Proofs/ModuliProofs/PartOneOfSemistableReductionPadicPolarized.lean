@@ -232,7 +232,7 @@ theorem arc_abLocus_of_traitData : Laws → Laws2 → ∀ (E : Type) [Field E] [
   intro _ _ E _ _ _ H D l Xo c W₀ Y O' _ _ _ b a ϖ hb y χ hχ hT
   have hN : IsNoetherianRing O' := by
     rcases hb with h | h
-    · letI := h.1.toField; infer_instance
+    · let := h.1.toField; infer_instance
     · have := h.1; infer_instance
   have hc : CharZero (PowerSeries O') := charZero_of_injective_ringHom (PowerSeries.C_injective (R := O'))
   obtain ⟨pt, hpt⟩ := exists_jK_eq_bot (PowerSeries O')
@@ -271,7 +271,7 @@ theorem arc_abLocus_of_traitData : Laws → Laws2 → ∀ (E : Type) [Field E] [
     refine closedPoint_notMem Y a _ _ _ hA ?_
     have hcl' : spMap io (IsLocalRing.closedPoint W') = IsLocalRing.closedPoint W := by
       refine PrimeSpectrum.ext (IsLocalRing.eq_maximalIdeal ?_)
-      exact Ideal.isMaximal_comap_of_isIntegral_of_isMaximal' io hfin.to_isIntegral (IsLocalRing.maximalIdeal W')
+      exact Ideal.isMaximal_comap_of_isIntegral_of_isMaximal io hfin.to_isIntegral (IsLocalRing.maximalIdeal W')
     have e : (spMap io ≫ spMap φ ≫ χ) (IsLocalRing.closedPoint W') = χ x :=
       (Scheme.Hom.comp_apply _ _ _).trans ((congrArg (spMap φ ≫ χ) hcl').trans
         ((Scheme.Hom.comp_apply _ _ _).trans (congrArg χ hcl)))
@@ -285,7 +285,7 @@ theorem arc_abLocus_of_traitData : Laws → Laws2 → ∀ (E : Type) [Field E] [
     change z.asIdeal.comap (PowerSeries.C (R := O')) = ⊥
     have hzp := z.isPrime
     rcases hb with h | h
-    · letI := h.1.toField
+    · let := h.1.toField
       exact Ideal.eq_bot_of_prime _
     · have := h.1
       by_contra hne
@@ -476,7 +476,7 @@ theorem arc_clause : DVR.TwistBaseChangeStatement → Laws → Laws2 → Laws3 �
   refine ⟨χ, fun χ' => ⟨fun h => h ▸ ⟨c1, c2, c3, c4⟩, fun ⟨d1, _, d3, d4⟩ => ?_⟩, fun hirr y' ev hs hr hd hC hXv => ?_⟩
   · have hpid : IsPrincipalIdealRing O' ∧ IsLocalRing O' := by
       rcases hB with ⟨h, -⟩ | ⟨h, -⟩
-      · letI := h.toField
+      · let := h.toField
         exact ⟨inferInstance, inferInstance⟩
       · exact ⟨inferInstance, inferInstance⟩
     obtain ⟨_, _⟩ := hpid
@@ -489,7 +489,7 @@ theorem arc_clause : DVR.TwistBaseChangeStatement → Laws → Laws2 → Laws3 �
       exact this)
     exact GlobalTheory.T.model_points_eq_of_same_degeneration_data h1 h2 h3 h4 h5 E H D l Xo c W₀ Y O' b a (PowerSeries O') (Ideal.span {PowerSeries.X})
       (PowerSeries.C (R := O')) PowerSeries.X ⟨inferInstance, inferInstance, inferInstance, inferInstance⟩
-      (fun h => PowerSeries.X_prime.not_unit (Ideal.span_singleton_eq_top.1 h)) PowerSeries.C_injective
+      (fun h => PowerSeries.prime_X.not_isUnit (Ideal.span_singleton_eq_top.1 h)) PowerSeries.C_injective
       χ' χ y' y hy' hχ.symm d1 c1 d4 c4
   · rcases hB with ⟨-, rfl⟩ | ⟨hdvr, -, hc⟩
     · exact absurd isUnit_one hirr.not_isUnit
@@ -625,7 +625,7 @@ theorem isNormalScheme_of_flat_preimmersion {U X : Scheme.{0}} (j : U ⟶ X) [Is
   have hf : (j.stalkMap x).hom.Flat := Flat.stalkMap j x
   have hs : Function.Surjective (j.stalkMap x).hom := j.stalkMap_surjective x
   have hi : Function.Injective (j.stalkMap x).hom := by
-    letI := (j.stalkMap x).hom.toAlgebra
+    let := (j.stalkMap x).hom.toAlgebra
     have : Module.Flat (X.presheaf.stalk (j x)) (U.presheaf.stalk x) := hf
     have : IsLocalHom (algebraMap (X.presheaf.stalk (j x)) (U.presheaf.stalk x)) :=
       inferInstanceAs (IsLocalHom (j.stalkMap x).hom)
@@ -705,23 +705,23 @@ theorem exists_join {O : Type} [CommRing O] {U : Scheme.{0}} (σ : U ⟶ Sp O) {
 theorem exists_join_scheme : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (U : Scheme.{0}) (F O : Type) [Field F] [CommRing O] (c : U ⟶ Sp F) (t : SAB H U) (β : O →+* F) (I : Type) [Finite I] [Nonempty I] (R : I → Type) [∀ i, CommRing (R i)] (a : I → O) (b : ∀ i, O →+* R i) (ω : ∀ i, R i →+* F) (C : ∀ i, Cpt c t (ω i)), IsDedFrac β → (∀ i, IsDedFrac (ω i) ∧ (ω i).comp (b i) = β ∧ @IsLocalization.Away O _ (a i) (R i) _ (b i).toAlgebra) → Ideal.span (Set.range a) = ⊤ → CharZero O → ∃ (X : Scheme.{0}) (s : X ⟶ Sp O) (jQ : U ⟶ pullback s (spMap β)) (f : ∀ i, pullback s (spMap (b i)) ⟶ (C i).X), ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X ∧ IsProjOver s ∧ Flat s ∧ jQ ≫ pullback.snd _ _ = c ∧ IsOpenImmersion jQ ∧ Dense (Set.range jQ) ∧ ∀ i, f i ≫ (C i).s = pullback.snd _ _ ∧ (∀ g : U ⟶ pullback s (spMap (b i)), g ≫ pullback.fst _ _ = jQ ≫ pullback.fst _ _ → g ≫ f i = (C i).j) ∧ ∀ x : ↥(pullback s (spMap (b i))), f i x ∈ Set.range (C i).j → pullback.fst s (spMap (b i)) x ∈ Set.range (jQ ≫ pullback.fst s (spMap β)) := by
   intro E _ _ _ H U F O _ _ c t β I _ _ R _ a b ω C hβ hR _ _
   obtain ⟨⟨_, _⟩, _, hfr⟩ := hβ
-  letI := β.toAlgebra
+  let := β.toAlgebra
   have hβ : algebraMap O F = β := rfl
   have hcl : ∀ i, ∃ (X' : Scheme.{0}) (s' : X' ⟶ Sp O) (κ : (C i).X ⟶ X'), IsProjOver s' ∧
       IsPullback κ (C i).s s' (spMap (b i)) := fun i => by
-    letI := (b i).toAlgebra
+    let := (b i).toAlgebra
     have := (hR i).2.2
     exact GlobalTheory.ProjClosure.exists_projective_closure O (R i) (a i) (C i).X (C i).s (C i).proj
   choose X' s' κ hs' hk using hcl
   have hbo : ∀ i, IsOpenImmersion (spMap (b i)) := fun i => by
-    letI := (b i).toAlgebra
+    let := (b i).toAlgebra
     have := (hR i).2.2
     exact IsOpenImmersion.of_isLocalization (a i)
   have hko : ∀ i, IsOpenImmersion (κ i) := fun i => MorphismProperty.of_isPullback (hk i).flip (hbo i)
   have hj : ∀ i, IsPreimmersion (C i).j ∧ Flat (C i).j ∧ QuasiCompact (C i).j ∧ QuasiCompact (κ i) :=
     fun i => by
       obtain ⟨⟨⟨_, _⟩, _, hfr⟩, _, _⟩ := hR i
-      letI := (ω i).toAlgebra
+      let := (ω i).toAlgebra
       obtain ⟨-, -, -, h1, h2, -, h3⟩ := GlobalTheory.genericPart_dense_proOpen (R i) F (C i).X U (C i).s (C i).jQ
         (C i).flat (C i).proj (C i).jQ_open (C i).jQ_dense
       exact ⟨h1, h2, h3, MorphismProperty.of_isPullback (hk i).flip inferInstance⟩
@@ -983,13 +983,13 @@ theorem exists_pull {S S' : Scheme.{0}} (f : S' ⟶ S) (t : SAB H S) :
 
 theorem isOpenImmersion_away {O R : Type} [CommRing O] [CommRing R] (a : O) (b : O →+* R)
     (h : @IsLocalization.Away O _ a R _ b.toAlgebra) : IsOpenImmersion (spMap b) := by
-  letI := b.toAlgebra
+  let := b.toAlgebra
   exact IsOpenImmersion.of_isLocalization (R := O) (S := R) a
 
 theorem mem_range_away {O R : Type} [CommRing O] [CommRing R] (a : O) (b : O →+* R)
     (h : @IsLocalization.Away O _ a R _ b.toAlgebra) (x : Sp O) (hx : a ∉ x.asIdeal) :
     x ∈ Set.range (spMap b) := by
-  letI := b.toAlgebra
+  let := b.toAlgebra
   have := PrimeSpectrum.localization_away_comap_range R a
   have h2 : (x : PrimeSpectrum O) ∈ Set.range (PrimeSpectrum.comap (algebraMap O R)) := by
     rw [this]; exact hx
@@ -1014,10 +1014,10 @@ theorem exists_join_of_models : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsD
     _root_.GlobalTheory.JoinModels.exists_join_scheme E H U F O c t β I R a b ω C hβ hω hspan hchar
   have hpo : IsPreimmersion (jQ ≫ pullback.fst s (spMap β)) ∧ Flat (jQ ≫ pullback.fst s (spMap β)) ∧
       IsDominant (jQ ≫ pullback.fst s (spMap β)) ∧ QuasiCompact (jQ ≫ pullback.fst s (spMap β)) := by
-    letI := β.toAlgebra
+    let := β.toAlgebra
     exact (genericPart_dense_proOpen O F X U s jQ hflat hproj hopen hdense).2.2.2
   have hβp : IsPreimmersion (spMap β) := by
-    letI := β.toAlgebra
+    let := β.toAlgebra
     exact IsPreimmersion.of_isLocalization (R := CommRingCat.of O) (S := F) (nonZeroDivisors O)
   have hfp : IsPreimmersion (pullback.fst s (spMap β)) :=
     MorphismProperty.of_isPullback (P := @IsPreimmersion) (IsPullback.of_hasPullback _ _).flip hβp
@@ -1119,7 +1119,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 theorem isLocalization_away {S A : ℕ} (hS : 0 < S) (b : RZ H 1 A →+* RZ H S A)
     (hb : IsInc (RZ H 1 A).subtype (RZ H S A).subtype b) :
     @IsLocalization.Away (RZ H 1 A) _ (S : RZ H 1 A) (RZ H S A) _ b.toAlgebra := by
-  letI := b.toAlgebra
+  let := b.toAlgebra
   have hS' : (S : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hS.ne'
   have hb' : ∀ x, ((b x : RZ H S A) : ℂ) = x := hb
   have key : ∀ z ∈ RZ H S A, ∃ (n : ℕ) (a : RZ H 1 A), z * (S : ℂ) ^ n = a := by
@@ -1455,11 +1455,11 @@ theorem nonempty_siegelFamily (L1 : Out.Laws) (L2 : Out.Laws2)
   have hζ : b.ζ ^ N' ^ 2 = 1 := by
     refine Units.ext (har.2.2 ?_)
     rw [Units.val_pow_eq_pow_val, map_pow, (b.prim ℂ em).pow_eq_one, Units.val_one, map_one]
-  haveI : IsDedekindDomain o := har.1
-  haveI : CharZero o := RingHom.charZero em
+  have : IsDedekindDomain o := har.1
+  have : CharZero o := RingHom.charZero em
   obtain ⟨hq, hflat, hred, htan⟩ := GlobalTheory.T.thetaClosureOpenFamily_qproj_flat_reduced_ext L1 L2 o g n N' J b em _ Mat κ F hodd
   obtain ⟨hqc, hft⟩ := finiteType_of_isQProjOver (hq.resolve_right (not_not.2 inferInstance))
-  haveI : IsLocallyNoetherian F.U.toScheme := LocallyOfFiniteType.isLocallyNoetherian (F.U.ι ≫ F.Y.s)
+  have : IsLocallyNoetherian F.U.toScheme := LocallyOfFiniteType.isLocallyNoetherian (F.U.ι ≫ F.Y.s)
   obtain ⟨c, hc, hsharp⟩ := _root_.GlobalTheory.SharpFamily.exists_isSharp_of_dense L1 L2 L3 h g W J a bas hW hbas hu _ o b em _ _ F.univ hk F.dense
 
   have pull : ∀ (S : Scheme.{0}) (s : S ⟶ Sp o) (c' : SiegPre h (N' ^ 2) (b.ζ : o) s) (t : TObj g (N' ^ 2) J b s)
@@ -1497,7 +1497,7 @@ theorem nonempty_siegelFamily (L1 : Out.Laws) (L2 : Out.Laws2)
     obtain ⟨t, ht⟩ := _root_.GlobalTheory.SiegelPower.exists_tObj_isSharp L1 L2 h g W J a bas hW hbas _ o b _ _ (restrictBase j hj c₁) hk hk3 hζ hp₀
     have hfrom := _root_.GlobalTheory.SharpFrom.fromC_sharpClass L1 L2 h g W J a w w' bas hW hbas hw hw' hu N' o b em har _ _ t _ hp₀ ht C
       (spMap (algebraMap O C))
-    haveI : IsDomain O := hO.1.isDomain _
+    have : IsDomain O := hO.1.isDomain _
     have hdense : Dense (fromSet em (SharpClass (b := b) W a bas em) t) := by
       have hd : DenseRange (PrimeSpectrum.comap (algebraMap O C)) := by
         rw [PrimeSpectrum.denseRange_comap_iff_ker_le_nilRadical, (RingHom.injective_iff_ker_eq_bot _).1 hO.1]

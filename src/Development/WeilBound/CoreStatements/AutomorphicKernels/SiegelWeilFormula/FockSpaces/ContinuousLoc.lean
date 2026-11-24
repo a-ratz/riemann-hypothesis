@@ -104,21 +104,21 @@ end Split
 
 theorem intFact : IntFact := by
   intro F E _ _ _ _ _ σ d R w ν hν
-  haveI := hν.1
+  have := hν.1
   obtain ⟨i1, i2, i3, i4⟩ := (PositivityTheory.ThKCT.ideleTop F E).1
-  haveI : BorelSpace (AE F E) := ⟨rfl⟩
-  haveI : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
-  haveI : LocallyCompactSpace (Mx F E d.m d.n) := inferInstanceAs (LocallyCompactSpace (Fin d.m → Fin d.n → AE F E))
-  haveI : SecondCountableTopology (Mx F E d.m d.n) :=
+  have : BorelSpace (AE F E) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
+  have : LocallyCompactSpace (Mx F E d.m d.n) := inferInstanceAs (LocallyCompactSpace (Fin d.m → Fin d.n → AE F E))
+  have : SecondCountableTopology (Mx F E d.m d.n) :=
     inferInstanceAs (SecondCountableTopology (Fin d.m → Fin d.n → AE F E))
-  haveI : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
+  have : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
   have hcl : IsClosed ((cmpW d w : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)) :=
     isClosed_eq (Place.continuous_cw d w) continuous_const
-  haveI : LocallyCompactSpace (cmpW d w) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (cmpW d w) :=
+  have : LocallyCompactSpace (cmpW d w) := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (cmpW d w) :=
     TopologicalSpace.Subtype.secondCountableTopology ((cmpW d w : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n))
-  haveI : BorelSpace (cmpW d w) := Subtype.borelSpace (fun x' => x' ∈ ((cmpW d w : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)))
-  haveI := volume_isAddHaar d.m d.n
+  have : BorelSpace (cmpW d w) := Subtype.borelSpace (fun x' => x' ∈ ((cmpW d w : AddSubgroup (Mx F E d.m d.n)) : Set (Mx F E d.m d.n)))
+  have := volume_isAddHaar d.m d.n
   obtain ⟨s, hsc, hs1, hs2, hsa, -⟩ := Place.exists_sec d.cm d.B.emb
   set fr : Matrix (Fin d.m) (Fin d.m) ℂ := (R.fr w).1 with hfr
   let U : (Fin d.m → Fin d.n → ℂ) → Matrix (Fin d.m) (Fin d.n) ℂ := fun u => fr * Matrix.of fun b j => star (u b j)
@@ -126,11 +126,11 @@ theorem intFact : IntFact := by
   have cw_sW : ∀ u, d.cw w (sW u) = U u := fun u => by
     ext i j
     show piInf (d.B.emb w) (s _) = U u i j
-    rw [hs1, if_pos rfl]
+    rw [hs1, ite_eq_left rfl]
   have cw_sW' : ∀ u w', w' ≠ w → d.cw w' (sW u) = 0 := fun u w' h => by
     ext i j
     show piInf (d.B.emb w') (s _) = 0
-    rw [hs1, if_neg h]
+    rw [hs1, ite_eq_right h]
   have fin_sW : ∀ u, finOne F • sW u = 0 := fun u => by
     ext i j
     show finOne F • s _ = 0
@@ -161,8 +161,8 @@ theorem intFact : IntFact := by
     funext w'
     show _ = (if w' = w then U u i j else 0) + (if w' = w then U v i j else 0)
     by_cases h : w' = w
-    · rw [if_pos h, if_pos h, if_pos h, U_add]; rfl
-    · rw [if_neg h, if_neg h, if_neg h, add_zero]
+    · rw [ite_eq_left h, ite_eq_left h, ite_eq_left h, U_add]; rfl
+    · rw [ite_eq_right h, ite_eq_right h, ite_eq_right h, add_zero]
   have hU : Continuous U := by
     simp only [U]
     exact continuous_const.matrix_mul (continuous_pi fun b => continuous_pi fun j =>
@@ -190,7 +190,7 @@ theorem intFact : IntFact := by
       map_add' := fun p q => by
         show sW (p.1 + q.1) + (p.2.1 + q.2.1) = sW p.1 + p.2.1 + (sW q.1 + q.2.1)
         rw [sW_add]; abel
-      continuous_toFun := (hsW.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd)
+      continuous_toFun := (hsW.comp continuous_fst).add (continuous_subtypeVal.comp continuous_snd)
       continuous_invFun := (continuous_loc d R w).prodMk
         ((continuous_id.sub (hsW.comp (continuous_loc d R w))).subtype_mk _) }
   obtain ⟨C, hC, hg⟩ := integral_split ν (volume : Measure (Fin d.m → Fin d.n → ℂ)) (Measure.addHaar : Measure (cmpW d w)) Φ

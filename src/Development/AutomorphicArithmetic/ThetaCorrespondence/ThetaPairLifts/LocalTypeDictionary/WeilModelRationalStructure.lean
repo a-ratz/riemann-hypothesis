@@ -109,10 +109,10 @@ theorem subst_mem_fg : ∀ {D : Formalism.BasicNotions.D7} {a b : ℕ} (τ : For
       unfold GlobalTheory.IndefiniteRowSideFullHecke.RaisingLoweringOperators.subst
       rw [MvPolynomial.aeval_X]
       by_cases hv : v.1 = τ
-      · rw [if_pos hv]
+      · rw [ite_eq_left hv]
         refine Submodule.sum_mem _ fun l _ => Submodule.sum_mem _ fun m _ => Submodule.smul_mem _ _ ?_
         exact Submodule.subset_span (Set.mem_insert_of_mem _ ⟨(l, m), rfl⟩)
-      · rw [if_neg hv]
+      · rw [ite_eq_right hv]
         exact Submodule.subset_span (Set.mem_insert _ _)) P
   exact ⟨V, hV, fun g k => hV' (g, k)⟩
 
@@ -147,7 +147,7 @@ theorem sub_mem_of_path {Q Z : Type} [AddCommGroup Q] [Module ℂ Q] (E : Q →�
   rw [← Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iff]
   intro l hl
   let U : Submodule ℂ Q := V ⊔ V.map L
-  haveI : FiniteDimensional ℂ U := Module.Finite.iff_fg.2 (hV.sup (hV.map L))
+  have : FiniteDimensional ℂ U := Module.Finite.iff_fg.2 (hV.sup (hV.map L))
   have h1 : ∀ t, p t ∈ U := fun t => Submodule.mem_sup_left (hp t)
   have h2 : ∀ t, L (p t) ∈ U := fun t => Submodule.mem_sup_right ⟨_, hp t, rfl⟩
   let ev : Z → (U →ₗ[ℂ] ℂ) := fun z => (LinearMap.proj z) ∘ₗ E ∘ₗ U.subtype
@@ -420,7 +420,7 @@ theorem thO_inj {D : D7} {m d : ℕ} {Y : GlobalTheory.IndefiniteRowSideFullHeck
     {Φ Φ' : (Fin m × Fin d → AF D.host.F) → ℂ} (hΦ : Φ ∈ GlobalTheory.WeilM.schA D.host.F (Fin m × Fin d))
     (hΦ' : Φ' ∈ GlobalTheory.WeilM.schA D.host.F (Fin m × Fin d))
     (h : GlobalTheory.TripleRead.thO Mo ψ G (Equiv.refl _) Φ = GlobalTheory.TripleRead.thO Mo ψ G (Equiv.refl _) Φ') : Φ = Φ' := by
-  letI := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.invTwo (F := D.host.F)
+  let := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.invTwo (F := D.host.F)
   refine eq_of_theta_schr inferInstance hψ.1 hΦ hΦ' fun w => ?_
   have hGH : G.map (incA D) * (G⁻¹).map (incA D) = 1 := by
     rw [← Matrix.map_mul, Matrix.mul_nonsing_inv _ hG.isUnit, Matrix.map_one _ (map_zero _) (map_one _)]

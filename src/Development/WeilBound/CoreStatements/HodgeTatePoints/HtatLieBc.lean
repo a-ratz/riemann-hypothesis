@@ -67,9 +67,9 @@ theorem lie_bc : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (R R' : Type) [Com
   · have := hj e
     simp only [Category.comp_id] at this
     exact this
-  · haveI : Smooth G.hom := hsm
-    letI : Module R E' := Module.compHom E' (algebraMap R R')
-    haveI : IsScalarTower R R' E' := ⟨fun a c v => by
+  · have : Smooth G.hom := hsm
+    let : Module R E' := Module.compHom E' (algebraMap R R')
+    have : IsScalarTower R R' E' := ⟨fun a c v => by
       show (a • c) • v = algebraMap R R' a • c • v
       rw [Algebra.smul_def, mul_smul]⟩
     let β : E →ₗ[R] E' :=

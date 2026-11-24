@@ -73,7 +73,7 @@ theorem isOpen_connectedComponent_of_noetherianSpace {X : Type u} [TopologicalSp
   have h : (connectedComponent x)ᶜ =
       ⋃ Z ∈ {Z ∈ irreducibleComponents X | ¬ Z ⊆ connectedComponent x}, Z := by
     ext y
-    simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
+    simp only [Set.mem_compl_iff, Set.mem_iUnion, Set.mem_ofPred_eq, exists_prop]
     constructor
     · intro hy
       exact ⟨irreducibleComponent y, ⟨irreducibleComponent_mem_irreducibleComponents y,
@@ -108,7 +108,7 @@ theorem exists_grpObj_of_mono_of_fac (n : A ⟶ N) [Mono n] (e : 𝟙_ C ⟶ A) 
       ext <;> simp
   have hm'' : m ≫ n = (fst _ _ ≫ n) * (snd _ _ ≫ n) := by simpa using hm' (𝟙 _)
   have hi' : i ≫ n = n⁻¹ := by rw [hi, Hom.inv_def]
-  letI : GrpObj A :=
+  let : GrpObj A :=
     { one := e
       mul := m
       inv := i

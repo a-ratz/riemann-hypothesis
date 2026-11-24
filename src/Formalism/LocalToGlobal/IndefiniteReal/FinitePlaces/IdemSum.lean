@@ -82,7 +82,7 @@ theorem twoSplitIdem (D : D7) : TwoSplitIdem D := by
   have hker : RingHom.ker (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) ≤ v.asIdeal := by
     rw [(RingHom.injective_iff_ker_eq_bot _).mp hinj]
     exact bot_le
-  haveI := v.isMaximal
+  have := v.isMaximal
   obtain ⟨Q, hQm, hQ⟩ := Ideal.exists_ideal_over_maximal_of_isIntegral v.asIdeal hker
   have hQ0 : Q ≠ ⊥ := by
     rintro rfl

@@ -445,7 +445,7 @@ theorem UpperTheory.V.Cj.S.stabSp :
     have := hl _ ⟨φ, hφ, rfl⟩ u (hle hu) g
     rw [UpperTheory.V.Fb.finEmb_eq] at this
     exact this
-  · haveI := UpperTheory.V.Af.Fin.formsFinite E a _ hb
+  · have := UpperTheory.V.Af.Fin.formsFinite E a _ hb
     exact Module.Finite.equiv (Submodule.equivMapOfInjective _ (UpperTheory.V.Cm.smEq E a).injective _).symm
   · exact (UpperTheory.V.Cm.isAutForm_iff φ).2 (UpperTheory.isAutomorphicForm_of_bdd_submodule E a _ hb _ ⟨φ, hφ, rfl⟩)
   · rintro (⟨t, u⟩ | ⟨⟨w, hw⟩, h, hh⟩) φ ⟨hφ, hφ'⟩
@@ -640,7 +640,7 @@ private theorem biSimple {E : Type} [Field E] [NumberField E] {a : ℕ} {V : Typ
 theorem UpperTheory.V.Cj.S.tauSat :
     UpperTheory.V.Cj.S.TauSat := by
   intro E _ _ _ a τ v hv
-  haveI := GlobalTheory.CompanionTheory.SatAe.secondCountable_GL (E := E) (a := a)
+  have := GlobalTheory.CompanionTheory.SatAe.secondCountable_GL (E := E) (a := a)
   rcases τ with @⟨V, _, _, ρ, hs, hi⟩
   change V at v
   have hr := rank_le_aleph0_of_irred hs hi hv
@@ -730,7 +730,7 @@ theorem cuspSupport_of (hS : Step) (hT : SuppTwist) (hA : SuppAdd) (hC : SuppCus
     let B : Pl E → Multiset ℂˣ := fun w =>
       if h : ∃ B, HasSatGL w (locOf τ.ρ w) B ∧ IsSatVecGL w (locOf τ.ρ w) v B then h.choose else 0
     have h2 : ∀ᶠ w in Filter.cofinite, HasSatGL w (locOf τ.ρ w) (B w) ∧ IsSatVecGL w (locOf τ.ρ w) v (B w) :=
-      h1.mono fun w h => by simp only [B, dif_pos h]; exact h.choose_spec
+      h1.mono fun w h => by simp only [B, dite_eq_left h]; exact h.choose_spec
     have he : Eig (j v) m B :=
       ⟨h0, haut v, hcap v, h2.mono fun w h => h.2.map j (fun g y => hfin _ y) h0⟩
     obtain ⟨ι, _, n, π, μ, c1, c2, c3, c4, c5, c6⟩ :=

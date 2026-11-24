@@ -520,8 +520,8 @@ theorem weil_act {k : ℕ} (hk : 1 ≤ k) (a : Λ) {z s : Pts A.A} (hz : z ^ k =
     weil A k (z ≫ o.act a) s = weil A k z (s ≫ o.act (star a)) := by
   have hG : Out.GlobalFnsSt := GlobalTheory.lawsFieldsSeparately.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hC : Out.CubeSt := GlobalTheory.lawsFieldsSeparately.2.2.2.2.2.2.1
-  haveI := o.toRingAct.hom a
-  haveI := o.toRingAct.hom (star a)
+  have := o.toRingAct.hom a
+  have := o.toRingAct.hom (star a)
   have hz' : (z ≫ o.act a) ^ k = 1 := by
     have h3 := map_pow (actPts o.toRingAct _ a) z k
     rw [hz, map_one] at h3

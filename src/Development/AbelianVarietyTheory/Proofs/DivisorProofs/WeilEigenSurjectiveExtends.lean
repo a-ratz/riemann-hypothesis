@@ -95,7 +95,7 @@ theorem surjective_arch : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
 
   rw [map_sum]
   have hs : (∑ i, ei ((cs i / c) • f i)) x = ∑ i, (cs i / c) * ei (f i) x := by
-    rw [SchwartzMap.sum_apply]
+    rw [sum_apply]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [map_smul]; rfl
   rw [hs]

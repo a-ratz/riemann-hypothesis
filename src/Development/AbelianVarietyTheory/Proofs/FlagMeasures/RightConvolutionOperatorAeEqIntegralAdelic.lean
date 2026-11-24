@@ -93,11 +93,11 @@ theorem integrable_prod_restrict [SFinite ν] [SFinite μ] (K : X → Y → ℂ)
     rw [Lp.norm_def] at h3
     rw [← ENNReal.ofReal_toReal (Lp.eLpNorm_ne_top (r g))]
     exact ENNReal.ofReal_le_ofReal h3
-  rw [hasFiniteIntegral_iff_enorm, lintegral_prod_symm _ hm.enorm]
+  rw [hasFiniteIntegral_iff_eNorm, lintegral_prod_symm _ hm.eNorm]
   calc ∫⁻ g, ∫⁻ x, ‖φ g * K x g‖ₑ ∂(ν.restrict s) ∂μ ≤ ∫⁻ g, ‖φ g‖ₑ * M ∂μ := by
         refine lintegral_mono fun g => ?_
-        simp only [enorm_mul]
-        rw [lintegral_const_mul' _ _ enorm_ne_top]
+        simp only [eNorm_mul]
+        rw [lintegral_const_mul' _ _ eNorm_ne_top]
         exact mul_le_mul' le_rfl (hb g)
     _ = (∫⁻ g, ‖φ g‖ₑ ∂μ) * M := lintegral_mul_const' _ _ hMfin
     _ < ⊤ := ENNReal.mul_lt_top hφ.2 hMfin.lt_top

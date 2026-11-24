@@ -121,9 +121,9 @@ theorem contDiff_of_heis_closed : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ),
   intro D ψ hψ S T V hc hd f hf k L hL hLf u
   obtain ⟨⟨θ, hθ⟩, -⟩ := GlobalTheory.Ker.exists_infFam_and_stdChar D
   obtain ⟨σ, h⟩ := GlobalTheory.RealLineAt.exists_inverse_chart hθ
-  haveI : IsTopologicalAddGroup (Formalism.L2.Theta.AE D) := IsTopologicalRing.to_topologicalAddGroup
-  haveI : IsTopologicalAddGroup (WO S T) := Pi.topologicalAddGroup
-  haveI : ContinuousAdd (WO S T) := inferInstance
+  have : IsTopologicalAddGroup (Formalism.L2.Theta.AE D) := IsTopologicalRing.isTopologicalAddGroup
+  have : IsTopologicalAddGroup (WO S T) := Pi.isTopologicalAddGroup
+  have : ContinuousAdd (WO S T) := inferInstance
   let P : ((Fin k → ℝ) → ℂ) → Prop := fun F => ∃ f ∈ V, F = fun t => f (u + L t)
   refine contDiff_of_partials P ?_ ?_ _ ⟨f, hf, rfl⟩
   · rintro _ ⟨f, hf, rfl⟩

@@ -179,9 +179,9 @@ theorem IsTransport.map_eq (hσ : IsCMExt F E σ) {J₀ J J' : Matrix (Fin M) (F
     (h : IsTransport σ J₀ J μ) (h' : IsTransport σ J₀ J' μ') {P : GL (Fin M) E} (hP : J' = act (σ : E →+* E) J P)
     (e : HA (AF F) σ J ≃* HA (AF F) σ J') (he : ∀ g, FrameRel J J' (P : Matrix (Fin M) (Fin M) E) g (e g)) :
     μ.map e = μ' := by
-  haveI := h.isHaar
+  have := h.isHaar
   obtain ⟨d, hd⟩ := GlobalTheory.HermLineZeros.exists_conj_ne hσ
-  haveI : μ.IsMulRightInvariant :=
+  have : μ.IsMulRightInvariant :=
     GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_adelic σ (GlobalTheory.HermLineZeros.conj_invol hσ) (δ := σ d - d)
       (sub_ne_zero.2 hd) (by rw [map_sub, GlobalTheory.HermLineZeros.conj_invol hσ, neg_sub]) hJ μ
   obtain ⟨P₁, e₁, hJ₁, he₁, hμ⟩ := h
@@ -499,10 +499,10 @@ theorem Quad.finite {V : Type} [AddCommGroup V] [Module E V] {g : V → E} (h : 
     have h2 := congrArg (fun q => _root_.AddMonoidAlgebra.coeff (M := ℕ) q 2) h0
     simp [p, Polynomial.coeff_X, Polynomial.coeff_C] at h1 h2
     tauto
-  have := (Polynomial.finite_setOf_isRoot hp).preimage
+  have := (Polynomial.finite_setOfPred_isRoot hp).preimage
     (f := fun t : ℕ => (t : E)) (Nat.cast_injective.injOn)
   refine this.subset fun t ht => ?_
-  simp only [Set.mem_setOf_eq, hb] at ht
+  simp only [Set.mem_ofPred_eq, hb] at ht
   simpa [p] using ht
 
 theorem quad_hform {V : Type} [AddCommGroup V] [Module E V] {n : ℕ} (J : Matrix (Fin n) (Fin n) E)
@@ -521,11 +521,11 @@ theorem exists_three {V : Type} [AddCommGroup V] [Module E V] {g₁ g₂ g₃ : 
   obtain ⟨w, hw⟩ := e₃
   obtain ⟨t, ht⟩ := ((h₁.finite (v := v) (Or.inl hu)).union
     (h₂.finite (u := u) (Or.inr hv))).exists_notMem
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or] at ht
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or] at ht
   obtain ⟨t', ht'⟩ := ((h₁.finite (v := w) (Or.inl ht.1)).union
     ((h₂.finite (v := w) (Or.inl ht.2)).union
       (h₃.finite (u := u + (t : E) • v) (Or.inr hw)))).exists_notMem
-  simp only [Set.mem_union, Set.mem_setOf_eq, not_or] at ht'
+  simp only [Set.mem_union, Set.mem_ofPred_eq, not_or] at ht'
   exact ⟨_, ht'⟩
 
 def Adj (s : E →+* E) {n : ℕ} (a : E) (J₁ : Matrix (Fin (n + 1)) (Fin (n + 1)) E) (a' : E)
@@ -606,7 +606,7 @@ def pot (s : E →+* E) (C : ∀ n : ℕ, E → Matrix (Fin n) (Fin n) E → Γ)
 theorem pot_succ (C : ∀ n : ℕ, E → Matrix (Fin n) (Fin n) E → Γ) {n : ℕ}
     {J : Matrix (Fin (n + 1)) (Fin (n + 1)) E}
     (h : ∃ p : E × Matrix (Fin n) (Fin n) E, Cong s J (blk p.1 p.2)) :
-    pot s C (n + 1) J = C n h.choose.1 h.choose.2 * pot s C n h.choose.2 := dif_pos h
+    pot s C (n + 1) J = C n h.choose.1 h.choose.2 * pot s C n h.choose.2 := dite_eq_left h
 
 theorem exists_blk [CharZero E] (hs : ∀ x, s (s x) = x) {n : ℕ}
     {J : Matrix (Fin (n + 1)) (Fin (n + 1)) E} (hJ : HN s J) :
@@ -692,11 +692,11 @@ theorem cob_two [CharZero E] (hs : ∀ x, s (s x) = x) (C : ∀ n : ℕ, E → M
   refine ⟨fun n J => if 2 ≤ n then A n J / (C n 1 J * C (n + 1) 1 (blk 1 J)) else 1,
     fun n J K hJ h => ?_, fun n J a J' hn hJ h => ?_⟩
   · by_cases hn : 2 ≤ n
-    · simp only [hn, if_true]; exact inv n J K hn hJ h
-    · simp only [hn, if_false]
+    · simp only [hn, ite_true]; exact inv n J K hn hJ h
+    · simp only [hn, ite_false]
   · have hn' : 2 ≤ n + 1 := by omega
     have g := h.hn hs hJ
-    simp only [hn, hn', if_true]
+    simp only [hn, hn', ite_true]
     rw [inv _ _ _ hn' hJ h, hA2 n _ a J' g (Cong.refl _), h1 _ 1 _ _ (by omega) (ho (ho g)) (sw g)]
     have q1 := h2 n 1 a a 1 J' hn (ho g) (hs1 g) (bin_swap _ _)
     have q2 := h2 (n + 1) 1 a a 1 (blk 1 J') hn' (ho (hs1 g)) (hs1 (hs1 g)) (bin_swap _ _)
@@ -873,7 +873,7 @@ theorem weil_formula : ∀ (G X : Type) [Group G] [TopologicalSpace G] [IsTopolo
   have : SigmaFinite μ' := inferInstance
   have hae : ∀ᵐ y ∂ν, ∃ g : G, g • x₀ = y := hnull
   have hΦ : Measurable fun p : X × MulAction.stabilizer G x₀ => s₀ p.1 * (p.2 : G) :=
-    (hs₀m.comp measurable_fst).mul (measurable_subtype_coe.comp measurable_snd)
+    (hs₀m.comp measurable_fst).mul (measurable_subtypeVal.comp measurable_snd)
   set μ : Measure G := (ν.prod μ').map
     (fun p : X × MulAction.stabilizer G x₀ => s₀ p.1 * (p.2 : G)) with hμ
   have key0 : ∀ f : G → ℝ≥0∞, Measurable f →
@@ -981,7 +981,7 @@ theorem exists_unique_stepRel : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
       if h : ∃ g : HA (AF F) σ J, g • ratTup (F := F) (AF F) x = y then h.choose else 1
     have ht : ∀ y, (∃ g : HA (AF F) σ J, g • ratTup (F := F) (AF F) x = y) →
         t y • ratTup (F := F) (AF F) x = y := fun y hy => by
-      simp only [t, dif_pos hy]
+      simp only [t, dite_eq_left hy]
       exact hy.choose_spec
     exact Measure.ext_of_lintegral _ fun f hf => (k₁ f hf t ht).trans (k₂ f hf t ht).symm
 
@@ -1019,7 +1019,7 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E]
 
 theorem isCompact_integers (v : HeightOneSpectrum (𝓞 F)) :
     IsCompact (v.adicCompletionIntegers F : Set (Fv F v)) := by
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F v
   exact isCompact_iff_compactSpace.2 this
 
 theorem isOpen_integers (v : HeightOneSpectrum (𝓞 F)) :
@@ -1030,7 +1030,7 @@ theorem intV_eq {d : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum 
     intV b v = coordHomeo b (Fv F v) ⁻¹'
       (Set.univ.pi fun _ => (v.adicCompletionIntegers F : Set (Fv F v))) := by
   ext y
-  simp only [intV, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_imp_iff]
+  simp only [intV, Set.mem_ofPred_eq, Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_imp_iff]
   rfl
 
 theorem isCompact_intV {d : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 F)) :
@@ -1061,7 +1061,7 @@ def intVK {d : ℕ} (b : Module.Basis (Fin d) F E) (v : HeightOneSpectrum (𝓞 
 
 theorem nonempty_stdMeas (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] (d : ℕ) (b : Module.Basis (Fin d) F E) : Nonempty (StdMeas b) := by
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   exact ⟨{
     lamI := Measure.addHaar
     lamV := fun v => Measure.addHaarMeasure (intVK b v)
@@ -1347,7 +1347,7 @@ theorem GlobalTheory.GaugeEx.stepRel_basis : ∀ (F E : Type) [Field F] [NumberF
     let τ : E →+* ℂ := (IsAlgClosed.lift : E →ₐ[ℚ] ℂ).toRingHom
     apply τ.injective
     rw [hCM.2.2.2 τ, hCM.2.2.2 τ, star_star]
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hCM.2.2.1
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hCM.2.2.1
   have hSD₂ : StepData σ J₂ x₂ a B₂ J₂' := by
     subst hJ₂ hJ₂'
     exact stepData_basis σ hσ P Q hSD hx hB
@@ -1429,18 +1429,18 @@ theorem GlobalTheory.GaugeEx.stepRel_basis : ∀ (F E : Type) [Field F] [NumberF
   have hQm : Measurable eQ := hcQ.1.measurable
   have h2m : Measurable e₂.symm := by
     have hm : Measurable fun k : HA (AF F) σ J₂' => ((e₂.symm k : Hstab (AF F) σ J₂ x₂) : HA (AF F) σ J₂) :=
-      (continuous_subtype_val.comp hc₂.2).measurable
+      (continuous_subtypeVal.comp hc₂.2).measurable
     exact hm.subtype_mk
   have hesm : Measurable e.symm := by
     have hm : Measurable fun k : HA (AF F) σ J' => ((e.symm k : Hstab (AF F) σ J x) : HA (AF F) σ J) :=
-      (hcP.2.comp (continuous_subtype_val.comp (hc₂.2.comp hcQ.1))).measurable
+      (hcP.2.comp (continuous_subtypeVal.comp (hc₂.2.comp hcQ.1))).measurable
     exact hm.subtype_mk
   have hin : ∀ c : HA (AF F) σ J₂,
       Measurable fun h' : Hstab (AF F) σ J₂ x₂ => f (c * (h' : HA (AF F) σ J₂)) :=
-    fun c => hf.comp ((continuous_const_mul c).measurable.comp measurable_subtype_coe)
+    fun c => hf.comp ((continuous_const_mul c).measurable.comp measurable_subtypeVal)
   have hin1 : ∀ c : HA (AF F) σ J,
       Measurable fun h' : Hstab (AF F) σ J x => f (eP (c * (h' : HA (AF F) σ J))) :=
-    fun c => hf.comp (hPm.comp ((continuous_const_mul c).measurable.comp measurable_subtype_coe))
+    fun c => hf.comp (hPm.comp ((continuous_const_mul c).measurable.comp measurable_subtypeVal))
   have hin2 : ∀ c : HA (AF F) σ J₂,
       Measurable fun k : HA (AF F) σ J₂' => f (c * ((e₂.symm k : Hstab (AF F) σ J₂ x₂) : HA (AF F) σ J₂)) :=
     fun c => (hin c).comp h2m
@@ -1507,7 +1507,7 @@ theorem smul_haar_inj {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     (μ.measure_pos_of_nonempty_interior ⟨1, mem_interior_iff_mem_nhds.2 hK1⟩).ne'
   have htop : μ K ≠ ⊤ := hK.measure_lt_top.ne
   have h2 := congrArg (fun m : Measure G => m K) h
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
   exact ENNReal.coe_injective ((ENNReal.mul_left_inj hpos htop).1 h2)
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
@@ -1527,17 +1527,17 @@ theorem exists_const (hσ : IsCMExt F E σ) {d : ℕ} {b : Module.Basis (Fin d) 
       ∀ M J x a B J', 2 ≤ M → StepData σ J x a B J' →
         StepRel s σ J x a B J' ((c M J x B : ℝ≥0) • G.μ (M + 1) J) (G.μ M J') := by
   classical
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
   have key : ∀ (M : ℕ) (J : Matrix (Fin (M + 1)) (Fin (M + 1)) E) (x : Fin 1 → Fin (M + 1) → E)
       (a : F) (B : Matrix (Fin (M + 1)) (Fin M) E) (J' : Matrix (Fin M) (Fin M) E),
       2 ≤ M → StepData σ J x a B J' →
       ∃ u : ℝ≥0ˣ, StepRel s σ J x a B J' ((u : ℝ≥0) • G.μ (M + 1) J) (G.μ M J') := by
     intro M J x a B J' hM hS
-    haveI : (G.μ M J').IsHaarMeasure := hG M J' hS.2.2.2.2.2
-    haveI : (G.μ (M + 1) J).IsHaarMeasure := hG (M + 1) J hS.1
+    have : (G.μ M J').IsHaarMeasure := hG M J' hS.2.2.2.2.2
+    have : (G.μ (M + 1) J).IsHaarMeasure := hG (M + 1) J hS.1
     obtain ⟨⟨μ, hμ, hrel⟩, -⟩ :=
       _root_.GlobalTheory.GaugeEx.exists_unique_stepRel F E σ hσ d b s M J x a B J' (G.μ M J') hM hS inferInstance
-    haveI := hμ
+    have := hμ
     refine ⟨Units.mk0 (Measure.haarScalarFactor μ (G.μ (M + 1) J))
       (Measure.haarScalarFactor_pos_of_isHaarMeasure _ _).ne', ?_⟩
     rw [Units.val_mk0, ← Measure.isMulLeftInvariant_eq_smul]
@@ -1550,7 +1550,7 @@ theorem exists_const (hσ : IsCMExt F E σ) {d : ℕ} {b : Module.Basis (Fin d) 
       StepData σ J x a B J' ∧ StepRel s σ J x a B J' ((u : ℝ≥0) • G.μ (M + 1) J) (G.μ M J') := by
     obtain ⟨u, hu⟩ := key M J x a B J' hM hS
     exact ⟨u, a, J', hM, hS, hu⟩
-  simp only [dif_pos hex]
+  simp only [dite_eq_left hex]
   obtain ⟨a₀, J₀, -, hS₀, hR₀⟩ := hex.choose_spec
   obtain ⟨rfl, rfl⟩ := stepData_unique hS₀ hS
   exact hR₀
@@ -1591,12 +1591,12 @@ theorem exists_std_family (hσ : IsCMExt F E σ) {d : ℕ} {b : Module.Basis (Fi
     have hHaar₂ : (G.μ M J₂').IsHaarMeasure := hH M J₂' hS₂.2.2.2.2.2
     have huniq := (_root_.GlobalTheory.GaugeEx.exists_unique_stepRel F E σ hσ _ b s M J₂ x₂ a B₂ J₂' (G.μ M J₂') hM hS₂ hHaar₂).2 _ _
       hR₃ hR₂
-    haveI : (G.μ (M + 1) J₂).IsHaarMeasure := hH (M + 1) J₂ hS₂.1
+    have : (G.μ (M + 1) J₂).IsHaarMeasure := hH (M + 1) J₂ hS₂.1
     exact Units.ext (smul_haar_inj _ huniq)
   case coc =>
     intro M J x₁ x₂ a₁ a₂ B₁ B₂ J₁ J₂ y₁ y₂ b₁ b₂ C₁ C₂ J₀ hM h1 h1' h2 h2' hBC
-    haveI : (G.μ M J₀).IsHaarMeasure := hH M J₀ h1'.2.2.2.2.2
-    haveI : (G.μ (M + 1 + 1) J).IsHaarMeasure := hH _ J h1.1
+    have : (G.μ M J₀).IsHaarMeasure := hH M J₀ h1'.2.2.2.2.2
+    have : (G.μ (M + 1 + 1) J).IsHaarMeasure := hH _ J h1.1
     have r1 := (hc (M + 1) J x₁ a₁ B₁ J₁ (by omega) h1).smul hσ h1 (c M J₁ y₁ C₁ : ℝ≥0)
     have r2 := (hc (M + 1) J x₂ a₂ B₂ J₂ (by omega) h2).smul hσ h2 (c M J₂ y₂ C₂ : ℝ≥0)
     have heq := _root_.GlobalTheory.GaugeSquare.square F E σ hσ _ b s M J x₁ x₂ a₁ a₂ B₁ B₂ J₁ J₂ y₁ y₂ b₁ b₂ C₁ C₂ J₀
@@ -1609,8 +1609,8 @@ theorem exists_std_family (hσ : IsCMExt F E σ) {d : ℕ} {b : Module.Basis (Fi
 
 theorem exists_isGauge_of_isCMExt (hσ : IsCMExt F E σ) : ∃ G : GaugeFam F E σ, G.IsGauge := by
   classical
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
-  haveI : IsTotallyReal F := hσ.1
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
+  have : IsTotallyReal F := hσ.1
   obtain ⟨s⟩ := _root_.GlobalTheory.GaugeEx.StdExist.nonempty_stdMeas F E _ (Module.finBasis F E)
   obtain ⟨G, α, hH, hB, hαinv, hstep⟩ := exists_std_family hσ s
   obtain ⟨κ, hκ0, hκ⟩ := _root_.GlobalTheory.GaugeEx.isXbetaMeasure_iff_smul_std F E σ hσ _ _ s
@@ -1622,7 +1622,7 @@ theorem exists_isGauge_of_isCMExt (hσ : IsCMExt F E σ) : ∃ G : GaugeFam F E 
     rw [hK]; simp only [Finset.prod_range_succ (n := M + 1)]; ring
   refine ⟨⟨fun M J => (K M * α M J : ℝ≥0) • G.μ M J⟩, ?_, ?_, ?_⟩
   · intro M J hJ
-    haveI : (G.μ M J).IsHaarMeasure := hH M J hJ
+    have : (G.μ M J).IsHaarMeasure := hH M J hJ
     exact Measure.IsHaarMeasure.nnreal_smul _ (mul_ne_zero (hK0 M) (α M J).ne_zero)
   · intro M J J' P hJ hJ'
     obtain ⟨⟨e, he⟩, hmap⟩ := hB M J J' P hJ hJ'

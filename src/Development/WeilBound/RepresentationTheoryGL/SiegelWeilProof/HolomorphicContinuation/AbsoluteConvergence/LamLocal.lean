@@ -88,12 +88,12 @@ theorem lam_local (hBH : BanachHol) (hFL : FactorL) (hG : GlobData ε c sL ρ G 
   obtain ⟨L, hL⟩ := hFL G (invSub Γ) l C hCc (fun F hF => hF.1)
     (fun a F hF F' hF' => hG.Λadd l hl a F F' hF.1 hF'.1 hF.2 hF'.2)
     (fun F hF M hM => hCb F M hF.1 hF.2 hM)
-  haveI : CompactSpace C := isCompact_iff_compactSpace.mp hCc
+  have : CompactSpace C := isCompact_iff_compactSpace.mp hCc
   have hEcont : ∀ z ∈ U, Continuous (E z) := by
     intro z hzU
     exact hEc.comp_continuous (continuous_const.prodMk continuous_id) (fun g => ⟨hzU, mem_univ g⟩)
   obtain ⟨Φ, hΦd, hΦ⟩ := hBH C U (fun z x => E z x) hUo
-    (hEc.comp (continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)).continuousOn
+    (hEc.comp (continuous_fst.prodMk (continuous_subtypeVal.comp continuous_snd)).continuousOn
       (fun y hy => ⟨hy.1, mem_univ _⟩))
     (fun x => hEh x)
   have hfeq : ∀ z ∈ U, l (E z) = L (Φ z) := by

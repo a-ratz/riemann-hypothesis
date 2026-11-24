@@ -130,7 +130,7 @@ namespace GlobalTheory.Core.Rk.HaarStep
 
 theorem integral_openOff_insert : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDualC A L → ∀ (m : Measure (GA D A)), m.IsHaarMeasure → ∀ (Sf : Finset (FinPl D)) (v : FinPl D), v ∉ Sf → ∀ μ : Measure (Gv A v), μ.IsHaarMeasure → μ (stabLoc D.sp.cm.sig A.gram L v) = 1 → ∀ (S' : Finset (FinPl D)), (∀ u, u ∈ S' ↔ u = v ∨ u ∈ Sf) → ∀ F : GA D A → ℂ, IntegrableOn F (openOff A L S') m → ∫ g in openOff A L S', F g ∂m = ∫ x in openOff A L Sf, (∫ y, F (x * (emb D.sp.cm.sig A.gram v (proj D.sp.cm.sig A.gram v x))⁻¹ * emb D.sp.cm.sig A.gram v y) ∂μ) ∂m := by
   intro D A L hL m hm Sf v hv μ hμ hK S' hS' F hF
-  haveI : Submodule.IsFullLattice D.host.E L := GlobalTheory.AdIsom.selfDual_isFullLattice hL
+  have : Submodule.IsFullLattice D.host.E L := GlobalTheory.AdIsom.selfDual_isFullLattice hL
   have hne : ∀ u, u ∉ S' → u ≠ v := fun u hu h => hu ((hS' u).2 (Or.inl h))
   have memU : ∀ x, x ∈ openOff A L Sf ↔ x ∈ openOff A L S' ∧
       proj D.sp.cm.sig A.gram v x ∈ stabLoc D.sp.cm.sig A.gram L v := by
@@ -241,7 +241,7 @@ theorem integral_openOff_insert : ∀ (D : D7) (A : HSp D) (L : Lat A), IsSelfDu
     refine (integrable_prod_iff hf₂m).2 ⟨Filter.Eventually.of_forall fun w => ?_, ?_⟩
     · rw [slice w]
       refine (integrable_indicator_iff (hCm _)).2 ?_
-      haveI : IsFiniteMeasure (μ.restrict
+      have : IsFiniteMeasure (μ.restrict
           {y : Gv A v | (proj D.sp.cm.sig A.gram v w)⁻¹ * y ∈ stabLoc D.sp.cm.sig A.gram L v}) :=
         isFiniteMeasure_restrict.2 (by rw [hμC]; exact ENNReal.one_ne_top)
       exact integrable_const _
@@ -457,7 +457,7 @@ theorem measurableSet_openOff {D : D7} (A : HSp D) (L : Lat A) (hL : IsSelfDualC
     MeasurableSet (openOff A L S) := by
   have : BorelSpace (GA D A) := ⟨rfl⟩
   have : Countable (FinPl D) := GlobalTheory.AdelicUnitaryTop.countable_heightOneSpectrum D.host.F
-  haveI := GlobalTheory.ProjXCols.selfDual_isFullLattice A L hL
+  have := GlobalTheory.ProjXCols.selfDual_isFullLattice A L hL
   have e : openOff A L S = ⋂ v, ⋂ (_ : v ∉ S),
       (proj D.sp.cm.sig A.gram v) ⁻¹' (stabLoc D.sp.cm.sig A.gram L v : Set _) := by
     ext g; simp [openOff]
@@ -469,7 +469,7 @@ theorem monotone_openOff {D : D7} (A : HSp D) (L : Lat A) : Monotone (openOff A 
   fun _ _ h _ hg v hv => hg v fun h' => hv (h h')
 
 theorem iUnion_openOff {D : D7} (A : HSp D) (L : Lat A) (hL : IsSelfDualC A L) : ⋃ S, openOff A L S = Set.univ := by
-  haveI := GlobalTheory.ProjXCols.selfDual_isFullLattice A L hL
+  have := GlobalTheory.ProjXCols.selfDual_isFullLattice A L hL
   refine Set.eq_univ_of_forall fun g => ?_
   have h := Filter.eventually_cofinite.1 (eventually_proj_mem_stabLoc D.sp.cm.sig A.gram L g)
   exact Set.mem_iUnion.2 ⟨h.toFinset, fun v hv => by_contra fun h' => hv (h.mem_toFinset.2 h')⟩

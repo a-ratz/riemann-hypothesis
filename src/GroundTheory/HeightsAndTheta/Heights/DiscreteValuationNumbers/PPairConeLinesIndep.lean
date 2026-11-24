@@ -68,7 +68,7 @@ noncomputable section
 theorem PairConeLinesIndep.formMatrix_isUnit {Ω E : Type} [Field Ω] [AddCommGroup E] [Module Ω E] {N : ℕ}
     (e : Module.Basis (Fin N) Ω E) (ψ : Fin N → Module.Dual Ω E) (hψ : LinearIndependent Ω ψ) :
     IsUnit (Matrix.of fun i j => ψ i (e j)) := by
-  rw [← Matrix.linearIndependent_rows_iff_isUnit]
+  rw [← Matrix.linearIndependent_row_iff_isUnit]
   have h := hψ.map' e.dualBasis.equivFun.toLinearMap e.dualBasis.equivFun.ker
   have hrows : (Matrix.of fun i j => ψ i (e j)).row = ⇑e.dualBasis.equivFun ∘ ψ := by
     funext i

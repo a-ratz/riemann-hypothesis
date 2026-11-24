@@ -226,13 +226,13 @@ theorem isMultiHomog_X_single [DecidableEq K] (k : K) (i : ι k) :
     rw [Finset.sum_eq_single i]
     · simp
     · intro j _ hj
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro h
       exact hj (by simpa using h.symm)
     · simp
   · rw [Pi.single_eq_of_ne hb]
     refine Finset.sum_eq_zero fun j _ => ?_
-    rw [Finsupp.single_apply, if_neg]
+    rw [Finsupp.single_apply, ite_eq_right]
     intro h
     exact hb (congrArg Sigma.fst h).symm
 
@@ -270,7 +270,7 @@ theorem exists_hasVal_norm_le_supMet :
   intro K _ ι _ Ω _ y 𝕜 _ _ z hz A ev a s hs H
   have hc : ∀ k, ∃ c : ι k, ∀ i, ‖z ⟨k, i⟩‖ ≤ ‖z ⟨k, c⟩‖ := fun k => by
     obtain ⟨i0, -⟩ := hz.1 k
-    haveI : Nonempty (ι k) := ⟨i0⟩
+    have : Nonempty (ι k) := ⟨i0⟩
     exact Finite.exists_max (fun i => ‖z ⟨k, i⟩‖)
   choose c hc using hc
   have hzc : ∀ k, z ⟨k, c k⟩ ≠ 0 := fun k h0 => by
@@ -381,7 +381,7 @@ private theorem norm_le_one_of_isIntegral_int' {q : ℕ} [Fact q.Prime]
 
 theorem exists_isometric_embedding : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (l : Level H) (c : Coeff l) (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e₀ : ℕ) (p : ℕ) [Fact p.Prime], OverLa la T.V io e₀ → T.FinRes → (p : 𝓞 c.F) ∈ la.asIdeal → ∃ ι : T.Fr →+* PadicAlgCl p, ∀ x, ‖ι x‖ = FinRd.absT p la T e₀ x := by
   intro E _ _ _ H l c la T io e₀ p _ hOver hFin hp
-  haveI : Finite (IsLocalRing.ResidueField T.V) := hFin
+  have : Finite (IsLocalRing.ResidueField T.V) := hFin
   obtain ⟨q, hq, K₀, eK, eV, hfin, he⟩ := GlobalTheory.exists_ringEquiv_integralClosure_padicInt T.V T.Fr
   let ι : T.Fr →+* PadicAlgCl q := (K₀.val : K₀ →+* PadicAlgCl q).comp eK.toRingHom
   have hιapp : ∀ x, ι x = ((eK x : K₀) : PadicAlgCl q) := fun x => rfl
@@ -471,7 +471,7 @@ theorem exists_isometric_embedding : ∀ (E : Type) [Field E] [NumberField E] [I
         nlinarith
       have hk : (1 : ℝ) ≤ (vV T.V x⁻¹ : ℝ) := by
         have h := hAy
-        simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, if_neg hy0] at h
+        simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, ite_eq_right hy0] at h
         by_contra hlt
         push_neg at hlt
         have hk0 : vV T.V x⁻¹ ≤ 0 := by
@@ -484,7 +484,7 @@ theorem exists_isometric_embedding : ∀ (E : Type) [Field E] [NumberField E] [I
         have := Real.one_le_rpow hp1.le hexp
         linarith
       have hAN : GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT p la T e₀ x⁻¹ ^ (e₀ * ramOverZ la) ≤ (p : ℝ)⁻¹ := by
-        simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, if_neg hy0]
+        simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, ite_eq_right hy0]
         rw [← Real.rpow_natCast, ← Real.rpow_mul (by positivity), ← Real.rpow_neg_one]
         apply Real.rpow_le_rpow_of_exponent_le hp1.le
         have : -((vV T.V x⁻¹ : ℝ) / ((e₀ : ℝ) * (ramOverZ la : ℝ))) * ((e₀ * ramOverZ la : ℕ) : ℝ)
@@ -515,7 +515,7 @@ theorem exists_isometric_embedding : ∀ (E : Type) [Field E] [NumberField E] [I
   have hz := GlobalTheory.GeoTie.ReadExt.norm_eq_zpow T ι hiff hπ
   have hvp : (vV T.V (p : T.Fr) : ℝ) = (e₀ : ℝ) * (ramOverZ la : ℝ) := by
     have h := hpF
-    simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, if_neg hpF0] at h
+    simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, ite_eq_right hpF0] at h
     have h2 := congrArg Real.log h
     rw [Real.log_rpow (by positivity), Real.log_inv] at h2
     have hlog : 0 < Real.log p := Real.log_pos hp1
@@ -545,7 +545,7 @@ theorem exists_isometric_embedding : ∀ (E : Type) [Field E] [NumberField E] [I
   · subst hx
     simp [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT]
   · rw [hz x hx, hrval]
-    simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, if_neg hx]
+    simp only [GlobalTheory.CompanionTheory.Ar.Rec.FinRd.absT, ite_eq_right hx]
     rw [← Real.rpow_intCast, ← Real.rpow_mul (by positivity)]
     congr 1
     ring
@@ -771,7 +771,7 @@ variable {O : Type} [CommRing O] {β : O →+* c.F} {Y : Model Xo c β} {S : Fin
 theorem linked_of_birOn {r : ℕ} {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {e : Comp Xo c → Rul Xo c}
     (hC : CompLaws U h e) (Rd : Reading Fr h Z) {a : WZ E} {N : ℕ} {g : Fin (N + 1) → Rul Xo c}
     (hg : ∀ j, g j ∈ GlobalTheory.CompanionTheory.Ar.Rec.secZ Xo c a) (hB : BirOn h Z g) : FinTr.Linked Rd := by
-  letI := Small.cstAlg Or
+  let := Small.cstAlg Or
   exact frame_of_birOn hC.genT Fr.y₀ (FinTr.phiAlg Rd) Rd.t (fun a f hf => Rd.rd_eq a f hf)
     (indicators hC) hg hB
 
@@ -821,7 +821,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Plug.FinTr
 
 theorem ev_genValue_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → ∀ (Z : Comp Xo c) (ex : Ix Dw → ℤ) (f : Rul Xo c), f ∈ GlobalTheory.AllWt.secZ Xo c ex → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (A : Subring (Om Z)) (ev : A →+* T.Fr), FinTr.RegAt h Z io A ev y.1 → evI y f ≠ 0 → ∀ hb : evC h Z f ∈ A, ev ⟨_, hb⟩ ≠ 0 := by
   intro E _ _ _ H Dw l Xo c r U h e hL Z ex f hf T io y A ev hR hy hb h0
-  letI := io.toAlgebra
+  let := io.toAlgebra
   obtain ⟨-, q, φ, ψ, yq, z, t, h1, h2, h3, h4⟩ := hR
   have hg : evC h Z f = φ (f q yq) :=
     ReciprocityTheory.ChartRestriction.G.PullbackSections.evalAt_eq_of _ _ hL.evalWD f hf.1 q φ yq (genFr h Z) h1
@@ -1034,7 +1034,7 @@ theorem range_le (T : CDVR) (hT : T.FinRes) (ι : T.Fr →+* PadicAlgCl p) (N : 
   have hp1 : (1 : ℝ) < p := by exact_mod_cast hp.out.one_lt
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible T.V
   choose rep hrep using IsLocalRing.residue_surjective (R := T.V)
-  haveI : Finite (IsLocalRing.ResidueField T.V) := hT
+  have : Finite (IsLocalRing.ResidueField T.V) := hT
   let f : T.V →+* PadicAlgCl p := ι.comp (algebraMap T.V T.Fr)
   have hle : ∀ a, ‖f a‖ ≤ 1 := fun a => by
     by_cases h : algebraMap T.V T.Fr a = 0
@@ -1077,8 +1077,8 @@ theorem range_le (T : CDVR) (hT : T.FinRes) (ι : T.Fr →+* PadicAlgCl p) (N : 
       rw [this, norm_mul, pow_succ']
       exact mul_le_mul_of_nonneg_left hab (norm_nonneg _)
   have hcl : IsClosed (L : Set (PadicAlgCl p)) := by
-    haveI : FiniteDimensional ℚ_[p] L.toSubalgebra.toSubmodule := hL
-    exact L.toSubalgebra.toSubmodule.closed_of_finiteDimensional
+    have : FiniteDimensional ℚ_[p] L.toSubalgebra.toSubmodule := hL
+    exact L.toSubalgebra.toSubmodule.isClosed_of_finiteDimensional
   have hV : ∀ a, f a ∈ L := fun a => by
     refine hcl.closure_subset (Metric.mem_closure_iff.2 fun ε hε => ?_)
     obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hε hlt
@@ -1099,7 +1099,7 @@ theorem ext (T : CDVR) (hT : T.FinRes) (ι : T.Fr →+* PadicAlgCl p) (N : ℝ) 
   obtain ⟨S, hS, hSL⟩ := range_le T hT ι N hN hι
   let L := IntermediateField.adjoin ℚ_[p] (S ∪ Set.range z)
   haveI : Finite (S ∪ Set.range z : Set _) := (hS.union (Set.finite_range z)).to_subtype
-  haveI hL : FiniteDimensional ℚ_[p] L :=
+  have hL : FiniteDimensional ℚ_[p] L :=
     IntermediateField.finiteDimensional_adjoin fun x _ => Algebra.IsIntegral.isIntegral x
   have hιL := hSL L hL (fun x hx => IntermediateField.subset_adjoin _ _ (Or.inl hx))
   obtain ⟨T₀, j, hfin, -, hLj, hnorm⟩ := FinRd.Pt.exists_cdvr L
@@ -1173,8 +1173,8 @@ attribute [-instance] GlobalTheory.CompHt.fintypePsi
 theorem _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_root_origin_bound : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (h : GenFrEx Xo c) (e : Comp Xo c → Rul Xo c), CompLaws U h e → Ref.UnifAll Xo c → ∀ (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (SS : Finset ℕ) (RM : Top.RootModel (CMType H) (Dw.p + Dw.q)) (Sys : PB.AnSys (Top.dimFl (CMType H) (Dw.p + Dw.q)) (Option (RootIx Dw))) (Fx : FixedData Y Sys) (Or : RootOrigin Y SS RM Fx) (Fr : Small.GenFrame Or) (Z : Comp Xo c) (Rd : Reading Fr h Z), Or.𝔐.OmVB → (∀ p : ℕ, p.Prime → (p : ℤ) ∣ discr E → p ∈ SS) → FinTr.Linked Rd → ∀ B₁ : Finset RM.Ω, ∃ (B₂ : Finset RM.Ω) (B₃ : Finset (Om Z)), ∀ (A : Subring RM.Ω), (↑B₁ : Set RM.Ω) ⊆ A → (↑B₂ : Set RM.Ω) ⊆ A → ∀ (A' : Subring (Om Z)), (↑B₃ : Set (Om Z)) ⊆ A' → ∀ (p : ℕ) [Fact p.Prime] (ev₁ : A →+* PadicAlgCl p), (∀ x, IsAlgebraic ℤ (ev₁ x)) → ∀ (la : HeightOneSpectrum (𝓞 c.F)) (T : CDVR) (io : c.F →+* T.Fr) (e₀ : ℕ) (y : IntFr Xo c T io) (ι : T.Fr →+* PadicAlgCl p) (ev : A' →+* T.Fr), (p : 𝓞 c.F) ∈ la.asIdeal → OverLa la T.V io e₀ → y.IsAlg → (∀ x, ‖ι x‖ = FinRd.absT p la T e₀ x) → FinTr.RegAt h Z io A' ev y.1 → (∀ a : A', ∃ ha : Rd.φ a ∈ A, ev₁ ⟨_, ha⟩ = ι (ev a)) → ∃ z ∈ Small.algPts p (mCoordIdeal RM.y), ∃ rec : RootIx Dw → ℝ, (∀ b (hb : b ∈ A), b ∈ B₁ → Small.HasVal RM.y 0 b z (ev₁ ⟨b, hb⟩)) ∧ (∀ r', 0 < rec r' ∧ |Real.log (Small.supMet (RM.xdeg r') z) - Real.log (rec r')| ≤ (if p ∈ SS then 1 / ((p : ℝ) - 1) + (if p = 2 then 1 else 0) + (padicValInt p (discr E) : ℝ) / Module.finrank ℚ E else 0) * Real.log p) ∧ ∀ (a : WZ E) (n' : Option (RootIx Dw) → ℤ), (∀ j, (n' j : ℝ) = RM.coef (towerWt Dw a) 0 j) → ∀ f ∈ Rec.secZ Xo c a, ∃ v, Small.HasVal RM.y (Top.combLine (RM.line 1) n').a (Fr.rd f * (∏ r', Or.e r' ^ (-n' (some r')))) z v ∧ ∀ s : ℝ, nval T.V e₀ (evI y f) = ((ramOverZ la * s : ℝ) : EReal) → ‖v‖ = (p : ℝ) ^ (-s) * ∏ r', rec r' ^ n' (some r') := by
   intro hG E _ _ _ _ H Dw l Xo c r U h e hL hUn O _ β Y SS RM Sys Fx Or Fr Z Rd hOm hram hLk B₁
   classical
-  haveI : CharZero RM.Ω := charZero_of_injective_ringHom Or.𝔐.cst.injective
-  letI aΩ : Algebra c.F RM.Ω := Small.cstAlg Or
+  have : CharZero RM.Ω := charZero_of_injective_ringHom Or.𝔐.cst.injective
+  let aΩ : Algebra c.F RM.Ω := Small.cstAlg Or
   obtain ⟨B, hB⟩ := GlobalTheory.T.root_origin_frame_height E H Dw l Xo c O β Y SS RM Sys Fx Or Fr
   obtain ⟨w, tl, hw, htl⟩ := hLk
   have hy0 : ∀ k, ∃ i, RM.y ⟨k, i⟩ ≠ 0 := fun k => by
@@ -1186,7 +1186,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_root_origin_bound 
     Finset.univ.image (fun x : Σ k : RM.K, RM.ι k × RM.ι k => RM.y ⟨x.1, x.2.1⟩ / RM.y ⟨x.1, x.2.2⟩) ∪
     Finset.univ.image fun k => (((tl k)⁻¹ : RM.Ωˣ) : RM.Ω))
   refine ⟨B₂, ∅, fun A _ hA A' _ p _ ev₁ halg la T io e₀ y ι ev hp ho hy hι hReg hφ => ?_⟩
-  letI aT : Algebra c.F T.Fr := io.toAlgebra
+  let aT : Algebra c.F T.Fr := io.toAlgebra
   obtain ⟨hcst, q', φ', ψ', yq', z', t', hq1, hq2, hq3, hq4⟩ := hReg
   have hcA : ∀ a : c.F, ∃ ha : Or.𝔐.cst a ∈ A, ev₁ ⟨_, ha⟩ = ι (io a) := fun a => by
     obtain ⟨ha, e1⟩ := hcst a
@@ -1213,7 +1213,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_root_origin_bound 
   have hN : (0 : ℝ) < (e₀ : ℝ) * (ramOverZ la : ℝ) :=
     mul_pos (by exact_mod_cast ho.1) (by exact_mod_cast hram0)
   obtain ⟨T₀, j, iT, r₀, L, hfin, hr₀, hj, hv₀, hzL, hLj, hnorm⟩ := ModelDimension.Read.ext T hy ι _ hN
-    (fun x hx => by rw [hι]; unfold FinRd.absT; rw [if_neg hx]) z
+    (fun x hx => by rw [hι]; unfold FinRd.absT; rw [ite_eq_right hx]) z
   let A₃ : Subring RM.Ω := (j.range.comap ev₁).map A.subtype
   have hA₃ : ∀ x, x ∈ A₃ ↔ ∃ hx : x ∈ A, ∃ b, j b = ev₁ ⟨x, hx⟩ := fun x =>
     ⟨by rintro ⟨a, ⟨b, hb⟩, rfl⟩; exact ⟨a.2, b, hb⟩, fun ⟨hx, b, hb⟩ => ⟨⟨x, hx⟩, ⟨b, hb⟩, rfl⟩⟩
@@ -1230,8 +1230,8 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_root_origin_bound 
   obtain ⟨y₀, φT, hφT, hy₀⟩ := GlobalTheory.T.integralFramedPoint_baseChange_stable E H Dw l Xo c T T₀ io y iT r₀ hr₀ (fun a _ => hv₀ a)
   have ho₀ : OverLa la T₀.V (iT.comp io) (r₀ * e₀) := ho.bc iT hr₀ hv₀
   obtain ⟨T₂, φV, φ₂, r₂, yy, τ, hfe, hbc, hyA, hτ⟩ := hUn la T₀ (iT.comp io) _ ho₀ y₀ hfin
-  letI a0 : Algebra c.F T₀.Fr := (iT.comp io).toAlgebra
-  letI a2 : Algebra c.F T₂.Fr := (φ₂.comp (iT.comp io)).toAlgebra
+  let a0 : Algebra c.F T₀.Fr := (iT.comp io).toAlgebra
+  let a2 : Algebra c.F T₂.Fr := (φ₂.comp (iT.comp io)).toAlgebra
   have hφT' : ∀ x, φT x = iT x := fun x => RingHom.congr_fun hφT x
   let φ₂A : T₀.Fr →ₐ[c.F] T₂.Fr := { φ₂ with commutes' := fun _ => rfl }
   have hLaw := (GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1
@@ -1268,8 +1268,8 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.uniform_all_root_origin_bound 
     rw [e1, e2]
     unfold FinRd.absT
     by_cases hx : ev₀ ⟨x, h23 x.2⟩ = 0
-    · rw [hx, map_zero, map_zero, norm_zero, if_pos rfl]
-    · rw [if_neg ((map_ne_zero φ₂).2 hx), hnorm _ hx, hfe.2.2.2.2.2]
+    · rw [hx, map_zero, map_zero, norm_zero, ite_eq_left rfl]
+    · rw [ite_eq_right ((map_ne_zero φ₂).2 hx), hnorm _ hx, hfe.2.2.2.2.2]
       have hr2 : (r₂ : ℝ) ≠ 0 := by exact_mod_cast hfe.2.2.2.2.1.ne'
       push_cast
       congr 2
@@ -1332,11 +1332,11 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   intro hG E _ _ _ _ H Dw l Xo c r U h e hL hUn Y _ T o B b Fr Z Rd u s hs f hf hfZ hev p la hp hla v hv
   obtain ⟨⟨q, T₀, io, e₀, ho, y, hy, η, hη, rfl⟩, rfl⟩ := hv
   show _ ≤ nval T₀.V e₀ (evI y f)
-  haveI hpf : Fact p.Prime := ⟨hp⟩
+  have hpf : Fact p.Prime := ⟨hp⟩
   by_cases hy0 : evI y f = 0
   · rw [hy0, nval_zero]; exact le_top
   have hon : (letI := io.toAlgebra; GlobalTheory.AllWt.LiesOn Z y.1) := by
-    letI := io.toAlgebra
+    let := io.toAlgebra
     by_contra hc
     exact hy0 (GlobalTheory.AllWt.mem_suppOn.1 hfZ T₀.Fr y.1 ((GlobalTheory.AllWt.liesOff_iff Z y.1).2 hc))
   have hLk := GlobalTheory.T.good_origin_model_component_bound hG E H Dw l Xo c r U h e hL Y T o _ _ Y _ _ _ _ (o.toTowerOrigin.Or B b) Fr Z Rd
@@ -1355,9 +1355,9 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hfinr : 0 < (letI := Rd.φ.toAlgebra; Module.finrank (Om Z) RM.Ω) := by
     rw [Rd.deg]; exact Test.deg_pos Ow
   have hfin : (letI := Rd.φ.toAlgebra; FiniteDimensional (Om Z) RM.Ω) := by
-    letI := Rd.φ.toAlgebra
+    let := Rd.φ.toAlgebra
     exact Module.finite_of_finrank_pos hfinr
-  haveI : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
+  have : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
   obtain ⟨Btr, hTr⟩ := _root_.GlobalTheory.CompanionTheory.TraceSpec.trace_specialisation (Om Z) RM.Ω Rd.φ (B₁ ∪ B₂) x hfin
   obtain ⟨T', io', e', y', A', ev, ho', hy', hval, hB, -, halg, hreg⟩ :=
     GlobalTheory.T.weight_section_component_value hG E H Dw l Xo c r U h e hL Y Z u f hf (Btr ∪ B₃) la T₀ io e₀ ho y hy hon hy0
@@ -1490,10 +1490,10 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hex : Cθ ≤ if p ∈ o.toTowerOrigin.S B then exTwo E p else 0 := by
     rw [hCθ]
     split_ifs with h1' h2'
-    · simp only [exTwo, GlobalTheory.CovHt.htEx, if_pos h2', padicValInt, Nat.padicValNat_def]
+    · simp only [exTwo, GlobalTheory.CovHt.htEx, ite_eq_left h2', padicValInt, Nat.padicValNat_def]
       have : (0 : ℝ) ≤ (multiplicity p (discr E).natAbs : ℝ) / Module.finrank ℚ E := by positivity
       linarith
-    · simp only [exTwo, GlobalTheory.CovHt.htEx, if_neg h2', padicValInt, Nat.padicValNat_def]
+    · simp only [exTwo, GlobalTheory.CovHt.htEx, ite_eq_right h2', padicValInt, Nat.padicValNat_def]
       have : (0 : ℝ) ≤ (multiplicity p (discr E).natAbs : ℝ) / Module.finrank ℚ E := by positivity
       linarith
     · exact le_rfl

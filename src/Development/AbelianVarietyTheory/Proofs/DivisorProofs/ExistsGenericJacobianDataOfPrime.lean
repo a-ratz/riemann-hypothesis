@@ -106,7 +106,7 @@ theorem exists_det_ne_zero_of_rows_separating :
       simp [Matrix.row, hs]
     rw [this]
     exact hli.comp e e.injective
-  have hu := Matrix.linearIndependent_rows_iff_isUnit.mp hrows
+  have hu := Matrix.linearIndependent_row_iff_isUnit.mp hrows
   exact ((Matrix.isUnit_iff_isUnit_det _).mp hu).ne_zero
 
 end GlobalTheory

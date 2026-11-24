@@ -116,7 +116,7 @@ variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSp
 
 theorem inner_star_mul (F : FCalc H M Ω T) (x : H) (a b : C₀(ℝ, ℂ)) :
     ⟪F.Φ (star a * b) x, x⟫_ℂ = ⟪F.Φ b x, F.Φ a x⟫_ℂ := by
-  rw [F.map_mul, F.map_star, ContinuousLinearMap.mul_apply,
+  rw [F.map_mul, F.map_star, mul_apply_eq_comp,
     ContinuousLinearMap.adjoint_inner_left]
 
 theorem core (F : FCalc H M Ω T) (c : ℝ) (x : H)
@@ -147,7 +147,7 @@ theorem core (F : FCalc H M Ω T) (c : ℝ) (x : H)
     have a1 := inner_star_mul F x r r
     have a2 := inner_star_mul F x f h
     have a3 := inner_star_mul F x f f
-    rw [hid, map_sub, map_smul, ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
+    rw [hid, map_sub, map_smul, sub_apply, smul_apply,
       inner_sub_left, inner_smul_left, a2, a3, Complex.conj_ofReal,
       inner_self_eq_norm_sq_to_K, inner_self_eq_norm_sq_to_K] at a1
     rw [hΩ, hv]
@@ -237,7 +237,7 @@ theorem absCut : AbsCut := by
   obtain ⟨f, δ, R, hδ, h1, h2, hfg⟩ := approx c g hg (e / (2 * (‖x‖ + 1))) (by positivity)
   have hz := core F c x hyp f δ R hδ h1 h2
   have hsplit : F.Φ g x = F.Φ (g - f) x := by
-    rw [map_sub, ContinuousLinearMap.sub_apply, hz, sub_zero]
+    rw [map_sub, sub_apply, hz, sub_zero]
   have hb : ‖F.Φ (g - f) x‖ ≤ 2 * (e / (2 * (‖x‖ + 1))) * ‖x‖ :=
     ((F.Φ (g - f)).le_opNorm x).trans
       (mul_le_mul_of_nonneg_right ((F.norm_le _).trans hfg) (norm_nonneg _))
@@ -360,7 +360,7 @@ theorem exists_bdd (hd : Dense (M : Set H)) (hs : ∀ x y : M, ⟪(Ω x : H), y�
     nlinarith
   let Z₁ : M →L[ℂ] H := Z₀.mkContinuous 1 hb
   refine ⟨Z₁.extend M.subtypeL, fun x v hv => ?_⟩
-  have h := Z₁.extend_eq (e := M.subtypeL) (by simpa using hd.denseRange_val) isUniformEmbedding_subtype_val.isUniformInducing x
+  have h := Z₁.extend_eq (e := M.subtypeL) (by simpa using hd.denseRange_subtypeVal) isUniformEmbedding_subtypeVal.isUniformInducing x
   have hv' : T₀ x = v := Subtype.ext hv.symm
   simp only [Submodule.subtypeL_apply] at h
   rw [h]
@@ -410,7 +410,7 @@ theorem bdd_mul (hd : Dense (M : Set H)) (hs : ∀ x y : M, ⟪(Ω x : H), y⟫_
     have hTa : ((Ω u - I • u : M) : H) = T ((Ω v - I • v : M) : H) := by
       simp [← res_omega h3 h4 v u hu, hu]
     have h1 : Z x = ((Ω v - I • v : M) : H) := by simpa using hZ x v hv
-    rw [ContinuousLinearMap.mul_apply, h1, hA _ _ hTa, ← hv, ← hvu]
+    rw [mul_apply_eq_comp, h1, hA _ _ hTa, ← hv, ← hvu]
     simp only [map_sub, map_smul, Submodule.coe_sub, Submodule.coe_smul]
     have : I • I • (u : H) = -(u : H) := by rw [smul_smul]; simp
     rw [smul_sub, this]
@@ -420,7 +420,7 @@ theorem bdd_mul (hd : Dense (M : Set H)) (hs : ∀ x y : M, ⟪(Ω x : H), y⟫_
     have hTa : ((Ω u + I • u : M) : H) = T ((Ω v + I • v : M) : H) := by
       simp [← res_omega h3 h4 v u hu, hu]
     have h1 : ContinuousLinearMap.adjoint Z x = ((Ω v + I • v : M) : H) := by simpa using hA x v hv
-    rw [ContinuousLinearMap.mul_apply, h1, hZ _ _ hTa, ← hv, ← hvu]
+    rw [mul_apply_eq_comp, h1, hZ _ _ hTa, ← hv, ← hvu]
     simp only [map_add (f := _), map_smul, Submodule.coe_add, Submodule.coe_smul]
     have : I • I • (u : H) = -(u : H) := by rw [smul_smul]; simp
     rw [smul_add, this]
@@ -431,7 +431,7 @@ theorem bdd_mul (hd : Dense (M : Set H)) (hs : ∀ x y : M, ⟪(Ω x : H), y⟫_
     have a := hZ ⟨x, hx⟩ v hv
     have b := hA ⟨x, hx⟩ v hv
     simp only [] at a b
-    simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, a, b]
+    simp only [sub_apply, smul_apply, a, b]
     rw [← hv.trans rfl]
     module
 
@@ -442,7 +442,7 @@ theorem bdd_omega (hd : Dense (M : Set H)) (hs : ∀ x y : M, ⟪(Ω x : H), y�
     Z ((Ω v : H) + I • (v : H)) = v := by
   have hA := bdd_adjoint hd hs h3 h4 Z hZ (v + Ω (Ω v)) v (by simpa using (h4 v).symm)
   have h2 := (bdd_mul hd hs h3 h4 Z hZ).2.1
-  rw [← hA, ← ContinuousLinearMap.mul_apply, h2]
+  rw [← hA, ← mul_apply_eq_comp, h2]
   simpa using h4 v
 
 theorem bdd_comm (hd : Dense (M : Set H)) (hs : ∀ x y : M, ⟪(Ω x : H), y⟫_ℂ = ⟪(x : H), Ω y⟫_ℂ)
@@ -475,14 +475,14 @@ theorem bdd_comm (hd : Dense (M : Set H)) (hs : ∀ x y : M, ⟪(Ω x : H), y⟫
     obtain ⟨p, hp, -⟩ := hS x
     obtain ⟨s, hs1, hs2⟩ := hS v
     have := hST x p v s hp hv hs1
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, ← hp, hZ _ _ this, hZ _ _ hv,
+    rw [mul_apply_eq_comp, mul_apply_eq_comp, ← hp, hZ _ _ this, hZ _ _ hv,
       map_sub, map_smul, hs2, hs1]
   · refine key _ _ fun x => ?_
     obtain ⟨v, hv, -⟩ := h3 x
     obtain ⟨p, hp, -⟩ := hS x
     obtain ⟨s, hs1, hs2⟩ := hS v
     have := hST x p v s hp hv hs1
-    rw [ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, ← hp, hA _ _ this, hA _ _ hv,
+    rw [mul_apply_eq_comp, mul_apply_eq_comp, ← hp, hA _ _ this, hA _ _ hv,
       map_add, map_smul, hs2, hs1]
 
 end Ops2
@@ -547,7 +547,7 @@ theorem lift_cont (K : Set ℂ) (hK : ∀ z ∈ K, z - conj z = (-2 * I) * (conj
   intro z0 hz0
   by_cases h0 : z0 = 0
   · subst h0
-    rw [← continuousWithinAt_diff_self]
+    rw [← continuousWithinAt_sdiff_self]
     have h1 : Tendsto (fun z => g (yOf z)) (𝓝[K \ {0}] 0) (𝓝 0) :=
       g.zero_at_infty'.comp (tendsto_yOf K hK)
     have h2 : lift g 0 = 0 := by simp [lift]
@@ -630,7 +630,7 @@ theorem abs_calc (Z : A) (hn : IsStarNormal Z) (hsp : Z - star Z = (-2 * I) • 
         ring_nf
         simp
         ring
-      simp only [lift, h0, if_false, hg]
+      simp only [lift, h0, ite_false, hg]
       rw [Complex.ofReal_inv, h5, map_inv₀]
       field_simp
   · intro g h hh
@@ -646,7 +646,7 @@ theorem abs_calc (Z : A) (hn : IsStarNormal Z) (hsp : Z - star Z = (-2 * I) • 
     by_cases h0 : z = 0
     · simp [lift, h0]
     · have h3 := circ_inv h0 (hK z hz)
-      simp only [lift, h0, if_false, hh, smul_eq_mul]
+      simp only [lift, h0, ite_false, hh, smul_eq_mul]
       have h4 : z * ((yOf z : ℂ) + I) = 1 := by
         rw [← h3]
         exact mul_inv_cancel₀ h0
@@ -668,14 +668,14 @@ theorem absFC : PositivityTheory.RgBcC.Fc.AbsFC := by
   have hsp : Z - star Z = (-2 * I) • (star Z * Z) := by rw [hstar, m1, m3]
   obtain ⟨Φ, p1, p2, p3, p4, p5, p6⟩ := abs_calc Z hn hsp
   have hinj : Function.Injective Z := fun x y hxy => res_inj hd hs h3 h4 (by
-    rw [← m1, ContinuousLinearMap.mul_apply, ContinuousLinearMap.mul_apply, hxy])
+    rw [← m1, mul_apply_eq_comp, mul_apply_eq_comp, hxy])
   refine ⟨⟨Φ, p1, fun g => ?_, p3, fun g hg => ?_, ?_, ?_⟩⟩
   · rw [p2, ContinuousLinearMap.star_eq_adjoint]
   · rw [p4 g hg, hstar, m1]
   · intro g h hh x v hv
     have e1 := congrArg (fun A : H →L[ℂ] H => A x) (p5 g h hh)
-    simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.add_apply,
-      ContinuousLinearMap.smul_apply, ← hv] at e1
+    simp only [mul_apply_eq_comp, add_apply,
+      smul_apply, ← hv] at e1
     have e2 := bdd_omega hd hs h3 h4 Z hZ v
     have e3 := hinj (e1.trans e2.symm)
     exact (add_right_cancel e3).symm
@@ -917,7 +917,7 @@ theorem isOpen_GLs' : IsOpen (GLs n) := by
 
 theorem val_mem_mul {y : Mat n} (hy : y ∈ GLs n) (h : G n) : y * h.val ∈ GLs n := by
   have hm := val_mem_GLs h
-  simp only [GLs, Set.mem_setOf_eq, Matrix.det_mul] at *
+  simp only [GLs, Set.mem_ofPred_eq, Matrix.det_mul] at *
   exact mul_ne_zero hy hm
 
 theorem sob_memLp {f : Mat n → V} (h : Sob μ f) : MemLp (fun y : G n => f y.val) 2 μ := h.2 []
@@ -1132,7 +1132,7 @@ theorem sob_transl (hLg : LgFacts) (hU : Unimod) (hR : RCalc) (hOps : SobOps) (h
 
 theorem rR_norm (hU : Unimod) (h : G n) (x : Lp V 2 μ) : ‖rR μ V h x‖ = ‖x‖ := by
   have hmp : MeasurePreserving (fun y : G n => y * h) μ μ := by
-    haveI := (hU n μ).1
+    have := (hU n μ).1
     exact measurePreserving_mul_right μ h
   unfold rR
   rw [dite_eq_left hmp]
@@ -1236,7 +1236,7 @@ theorem concT : ConcT := by
     have hadj : ContinuousLinearMap.adjoint (rR μ V h) = rR μ V h⁻¹ := by
       ext1 x
       have := congrArg (fun S : Lp V 2 μ →L[ℂ] Lp V 2 μ => S (rR μ V h⁻¹ x)) h1
-      simp only [ContinuousLinearMap.mul_apply, hinv1, ContinuousLinearMap.one_apply] at this
+      simp only [mul_apply_eq_comp, hinv1, one_apply_eq_self] at this
       exact this
     have h2 : rR μ V h * ContinuousLinearMap.adjoint (rR μ V h) = 1 := by
       rw [hadj]
@@ -1285,9 +1285,9 @@ open PositivityTheory.RgBcC
 open PositivityTheory.RgBcC.Fc
 
 theorem val_emb (n : ℕ) : IsOpenEmbedding (Units.val : G n → Mat n) := by
-  letI := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
-  letI := Matrix.linftyOpNormedAlgebra (n := Fin n) (R := ℂ) (α := ℂ)
-  haveI : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.complete ℂ _
+  let := Matrix.linftyOpNormedRing (n := Fin n) (α := ℂ)
+  let := Matrix.linftyOpNormedAlgebra (n := Fin n) (R := ℂ) (α := ℂ)
+  have : CompleteSpace (Matrix (Fin n) (Fin n) ℂ) := FiniteDimensional.completeSpace ℂ _
   exact Units.isOpenEmbedding_val
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
@@ -1335,10 +1335,10 @@ theorem cpt_of {n : ℕ} {V : Type} [Zero V] (hL : LgFacts) {K : Set (G n)} (hK 
 
 theorem denseD : DenseD := by
   intro n _ _ μ _ V _ _ hL
-  haveI : SecondCountableTopology (Mat n) := inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
-  haveI : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
-  haveI : SecondCountableTopology (G n) := (val_emb n).isInducing.secondCountableTopology
-  haveI : LocallyCompactSpace (G n) := (val_emb n).locallyCompactSpace
+  have : SecondCountableTopology (Mat n) := inferInstanceAs (SecondCountableTopology (Fin n → Fin n → ℂ))
+  have : LocallyCompactSpace (Mat n) := inferInstanceAs (LocallyCompactSpace (Fin n → Fin n → ℂ))
+  have : SecondCountableTopology (G n) := (val_emb n).isInducing.secondCountableTopology
+  have : LocallyCompactSpace (G n) := (val_emb n).locallyCompactSpace
   intro x
   refine (mem_closure_iff_nhds_basis Metric.nhds_basis_closedBall).2 fun ε hε => ?_
   have hp : (2 : ℝ≥0∞) ≠ ⊤ := by norm_num
@@ -1512,7 +1512,7 @@ theorem exists_inverse_of_coercive {H D : Type} [NormedAddCommGroup H] [InnerPro
         (∀ u v, ⟪U u, v⟫_ℂ = ⟪u, U' v⟫_ℂ) → (∀ u, U (ι u) = ι (U₀ u)) →
         (∀ u, U' (ι u) = ι (U₀' u)) → (∀ u, B (U₀ u) = U (B u)) →
         (∀ u, B (U₀' u) = U' (B u)) → U * T = T * U := by
-  letI core : PreInnerProductSpace.Core ℂ D :=
+  let core : PreInnerProductSpace.Core ℂ D :=
     { inner := fun u v => ⟪B u, ι v⟫_ℂ
       conj_inner_symm := fun x y => by
         show (starRingEnd ℂ) ⟪B y, ι x⟫_ℂ = ⟪B x, ι y⟫_ℂ
@@ -1524,8 +1524,8 @@ theorem exists_inverse_of_coercive {H D : Type} [NormedAddCommGroup H] [InnerPro
       smul_left := fun x y r => by
         show ⟪B (r • x), ι y⟫_ℂ = (starRingEnd ℂ) r * ⟪B x, ι y⟫_ℂ
         rw [map_smul, inner_smul_left] }
-  letI sn : SeminormedAddCommGroup D := InnerProductSpace.Core.toSeminormedAddCommGroup (c := core)
-  letI ips : InnerProductSpace ℂ D := InnerProductSpace.ofCore core
+  let sn : SeminormedAddCommGroup D := InnerProductSpace.Core.toSeminormedAddCommGroup (c := core)
+  let ips : InnerProductSpace ℂ D := InnerProductSpace.ofCore core
   have hι : ∀ u : D, ‖ι u‖ ≤ ‖u‖ := fun u => by
     have h : ‖u‖ ^ 2 = (⟪B u, ι u⟫_ℂ).re := @norm_sq_eq_re_inner ℂ D _ sn ips u
     exact (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).1 (h ▸ hpos u)
@@ -1929,7 +1929,7 @@ theorem wvAlg : WvAlg := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · have h2 : Even 2 := ⟨1, rfl⟩
     have h0 : Even 0 := ⟨0, rfl⟩
-    simp only [PositivityTheory.RgBcC.Fc.wv, PositivityTheory.RgBcC.Fc.chj, h2, h0, if_true, hsq, pow_zero, one_mul]
+    simp only [PositivityTheory.RgBcC.Fc.wv, PositivityTheory.RgBcC.Fc.chj, h2, h0, ite_true, hsq, pow_zero, one_mul]
     first
       | ring
       | (simp [hsq]; ring_nf)

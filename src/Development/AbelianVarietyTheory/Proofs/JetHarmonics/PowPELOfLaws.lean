@@ -64,7 +64,7 @@ namespace GlobalTheory.PowGerm
 theorem powPEL_of_laws : Laws → Laws2 → Laws3 → Laws4 → Laws5 → TwistBaseChangeStatement → PowPELF := by
   intro h₁ h₂ h₃ h₄ h₅ hT E _ _ _ H Dw l Xo c n T io y _ C P _ g g' _ _ _ _ _ π π' _ _ _ _ _ F _ _ _ _ _ _ v ϖ hϖ _ I Q hQ
     D' A' G' _ _ pD pA pG U' PU _ oD' hx hB
-  letI := H.starRing
+  let := H.starRing
   have hA : AdmBase T.V (maximalIdeal T.V) := ⟨inferInstance, inferInstance, inferInstance, inferInstance⟩
   obtain ⟨oA', hoA, t', P', hP'⟩ :=
     GlobalTheory.exists_pelUnif_of_unifPow h₁ h₂ h₄ hT T.V E H C.I.G P n D' A' G' pD pA pG U' PU oD' hx hB

@@ -56,17 +56,17 @@ theorem sFinite_vol : ∀ (D : D7) (ρ m : ℕ) (vb : VolM D ρ m) (vU : VolU D 
   intro D ρ m vb vU
   constructor
   · obtain ⟨i1, i2, i3, -⟩ := lattice_Mx D ρ m
-    haveI : IsTopologicalAddGroup (Mx D ρ m) := i1
-    haveI : LocallyCompactSpace (Mx D ρ m) := i2
-    haveI : SecondCountableTopology (Mx D ρ m) := i3
-    haveI : vb.μ.IsAddHaarMeasure := vb.covol.1
-    haveI : SigmaFinite vb.μ := Measure.IsAddHaarMeasure.sigmaFinite _
+    have : IsTopologicalAddGroup (Mx D ρ m) := i1
+    have : LocallyCompactSpace (Mx D ρ m) := i2
+    have : SecondCountableTopology (Mx D ρ m) := i3
+    have : vb.μ.IsAddHaarMeasure := vb.covol.1
+    have : SigmaFinite vb.μ := Measure.IsAddHaarMeasure.sigmaFinite _
     infer_instance
   · obtain ⟨i1, i2, -⟩ := GlobalTheory.UnitU.topology D ρ
-    haveI : LocallyCompactSpace (UX D ρ) := i1
-    haveI : SecondCountableTopology (UX D ρ) := i2
-    haveI : vU.ν.IsHaarMeasure := vU.unit.1
-    haveI : SigmaFinite vU.ν := Measure.IsHaarMeasure.sigmaFinite _
+    have : LocallyCompactSpace (UX D ρ) := i1
+    have : SecondCountableTopology (UX D ρ) := i2
+    have : vU.ν.IsHaarMeasure := vU.unit.1
+    have : SigmaFinite vU.ν := Measure.IsHaarMeasure.sigmaFinite _
     infer_instance
 
 end GlobalTheory.Unf

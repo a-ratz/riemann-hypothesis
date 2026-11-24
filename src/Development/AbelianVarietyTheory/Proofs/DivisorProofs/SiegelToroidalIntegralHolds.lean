@@ -431,12 +431,12 @@ theorem descSt5 : GlobalTheory.SiegJoin.DescSt5 := by
   intro g _ φ n hn _ F Z z i d S π j _ BD hB hC
   obtain ⟨J, -, -, -, ⟨hN, -⟩, hP, hD, -⟩ := hB
   have hn0 : n ≠ 0 := by omega
-  haveI : IsDedekindDomain (cycAway n) := (arBase_cycAway n hn0).1
-  haveI : IsProper (π ≫ z) := GlobalTheory.SchemeWords.isProper_of_isProjOver hP
-  haveI : IsNoetherianRing (CommRingCat.of (cycAway n)) := inferInstanceAs (IsNoetherianRing (cycAway n))
-  haveI : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ z)
-  haveI : CompactSpace S := QuasiCompact.compactSpace_of_compactSpace (π ≫ z)
-  haveI : AlgebraicGeometry.IsNoetherian S := {}
+  have : IsDedekindDomain (cycAway n) := (arBase_cycAway n hn0).1
+  have : IsProper (π ≫ z) := GlobalTheory.SchemeWords.isProper_of_isProjOver hP
+  have : IsNoetherianRing (CommRingCat.of (cycAway n)) := inferInstanceAs (IsNoetherianRing (cycAway n))
+  have : IsLocallyNoetherian S := LocallyOfFiniteType.isLocallyNoetherian (π ≫ z)
+  have : CompactSpace S := QuasiCompact.compactSpace_of_compactSpace (π ≫ z)
+  have : AlgebraicGeometry.IsNoetherian S := {}
   have hj : IsDominant j := ⟨hD⟩
   have hd : SmoothOfRelativeDimension g F.univ.A.hom :=
     GlobalTheory.SiegSharpCover.smoothDim F.univ (by omega) (cycBase hn0).ζ.isUnit (isUnit_natCast hn0)
@@ -503,7 +503,7 @@ theorem GlobalTheory.ChartAbelian.mem_abLocus_of_mem_range : ∀ (g n : ℕ) (F 
         rw [hq']
         have e : (spMap gT ≫ ξ) (IsLocalRing.closedPoint T) = ξ p := by rw [← hcl]; rfl
         rw [e]; exact hp
-    haveI := hT
+    have := hT
     let yT : Sp T ⟶ F.X := IsOpenImmersion.lift j (spMap gT ≫ ξ) hr
     have hyT : yT ≫ j = spMap gT ≫ ξ := IsOpenImmersion.lift_fac _ _ _
     have hyK : spMap (algebraMap T K) ≫ yT = y := by
@@ -582,7 +582,7 @@ theorem essFiniteType_int_stalk (n : ℕ) (X : Scheme.{0}) (s : X ⟶ Sp (cycAwa
   let p : PrimeSpectrum (cycAway n) := s x
   have h2 : (algebraMap (cycAway n) ((Spec.structureSheaf (cycAway n)).presheaf.stalk p)).EssFiniteType :=
     RingHom.essFiniteType_algebraMap.2 (Algebra.EssFiniteType.of_isLocalization _ p.asIdeal.primeCompl)
-  haveI := finiteType_cycAway n
+  have := finiteType_cycAway n
   have h3 : (algebraMap ℤ (cycAway n)).EssFiniteType := RingHom.essFiniteType_algebraMap.2 inferInstance
   have h4 := (h3.comp h2).comp h1
   rw [← RingHom.essFiniteType_algebraMap]
@@ -608,24 +608,24 @@ theorem preChart_of_isEtaleCompletion : ∀ g : ℕ, 1 ≤ g → ∀ φ : InvFun
   obtain ⟨hsa, hab, hgen, hmum, hbase⟩ := hF
   obtain ⟨hreg, hch, -, -, hrel, -⟩ := GlobalTheory.TChart.Taut.isRegularLocalRing_and_isRelParam g n φ hn C
   obtain ⟨hmono, hrk, hcone, hdef, -⟩ := GlobalTheory.TChart.Taut.monomial_chart g n φ (by omega) C
-  haveI : IsProper (π ≫ z) := by
+  have : IsProper (π ≫ z) := by
     obtain ⟨N, ιP, hιP, e⟩ := hP
     rw [← e]
-    haveI := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str (cycAway n) N
+    have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str (cycAway n) N
     infer_instance
-  haveI : S.IsSeparated := ⟨by
+  have : S.IsSeparated := ⟨by
     rw [← terminal.comp_from (π ≫ z)]
     infer_instance⟩
-  haveI : Algebra.EssFiniteType ℤ (S.presheaf.stalk (ξ (closedPoint C.R))) :=
+  have : Algebra.EssFiniteType ℤ (S.presheaf.stalk (ξ (closedPoint C.R))) :=
     essFiniteType_int_stalk n S (π ≫ z) _
-  haveI : IsNoetherianRing C.R := C.compl.1
+  have : IsNoetherianRing C.R := C.compl.1
   have hc : IsAdicComplete (maximalIdeal C.R) C.R := C.compl.2.1
   have hξ : ξ ≫ π ≫ z = spMap C.b := eq_of_jK_comp_eq (by
     rw [← hbase, ← Category.assoc, ← hy, Category.assoc, ← Category.assoc j, hji, hiz])
   have hrad := GlobalTheory.EtaleCompletionRadical.isRadical_map_of_isEtaleCompletion _ _ (Scheme.stalkClosedPointTo ξ).hom hc het hfu
   obtain ⟨hb₁, hb₂⟩ := GlobalTheory.BdEqChart.boundary_eq g n F S j C.R C.b ξ G₁ y ((Over.pullback (jK C.R)).obj G₁)
     (pullback.fst G₁.hom (jK C.R)) α₁ hsa (isGrpPullback_pullback G₁ (jK C.R)) hgen hy hrad C.m C.t hrel hab
-  haveI : Module.Free ℤ C.Q.X := Module.Free.of_equiv C.e.toIntLinearEquiv.symm
+  have : Module.Free ℤ C.Q.X := Module.Free.of_equiv C.e.toIntLinearEquiv.symm
   have hnat : ∀ k, ∃ c : ℕ, φ.evalZ ((n : ℤ) • C.δ k) = c := fun k =>
     (hφ C.Q.X hrk).exists_nat (Submodule.smul_mem _ _ (hcone.mem k)) fun w =>
       mul_nonneg (Int.natCast_nonneg n) (hcone.nonneg k w)
@@ -1012,15 +1012,15 @@ theorem exists_norm {K Ω : Type} [Field K] [Field Ω] (κ : K →+* Ω) {σ : �
     ∃ (d : ℕ) (ν : K), 1 ≤ d ∧ ν ≠ 0 ∧ ∀ (R : Type) [CommRing R] (φ : R →+* K) (tr : K),
       ((κ.comp φ).IsIntegralElem (κ tr * σ) → φ.IsIntegralElem (tr ^ d * ν)) ∧
       ((κ.comp φ).IsIntegralElem (κ tr * σ)⁻¹ → φ.IsIntegralElem (tr ^ d * ν)⁻¹) := by
-  letI := κ.toAlgebra
+  let := κ.toAlgebra
   let E := IntermediateField.adjoin K {σ}
   have : FiniteDimensional K E := IntermediateField.adjoin.finiteDimensional hσ
   let s : E := IntermediateField.AdjoinSimple.gen K σ
   have key : ∀ (R : Type) [CommRing R] (φ : R →+* K) (x : E), (κ.comp φ).IsIntegralElem (x : Ω) →
       φ.IsIntegralElem (Algebra.norm K x) := by
     intro R _ φ x ⟨P, hP, e⟩
-    letI := φ.toAlgebra
-    letI := ((algebraMap K E).comp φ).toAlgebra
+    let := φ.toAlgebra
+    let := ((algebraMap K E).comp φ).toAlgebra
     have : IsScalarTower R K E := .of_algebraMap_eq fun _ => rfl
     refine Algebra.isIntegral_norm (R := R) K ⟨P, hP, (algebraMap E Ω).injective ?_⟩
     rw [Polynomial.hom_eval₂, map_zero]
@@ -1419,21 +1419,21 @@ theorem GlobalTheory.SiegJoin.siegelToroidalPolCharts_of_steps5
     GlobalTheory.Published.SiegelToroidalPolCharts := by
   intro g hg φ hφ hφ' n hn ho
   have hn0 : n ≠ 0 := by omega
-  haveI : IsNoetherianRing (cycAway n) := by haveI := (GlobalTheory.SiegelTor.arBase_cycAway n hn0).1; infer_instance
+  have : IsNoetherianRing (cycAway n) := by have := (GlobalTheory.SiegelTor.arBase_cycAway n hn0).1; infer_instance
   obtain ⟨F⟩ := hF g n hg hn ho
   obtain ⟨Z, z, i, OZ, hMA⟩ := hMin g hg n hn ho F
   have hMA' := hMA
   obtain ⟨o', _, β, S', s', U, c, π', G', _, e', _, N', ⟨hTh, hZp, hZn, hiz, hid, hOZ, hOZa⟩, -⟩ := hMA'
   obtain ⟨d, J, S, π, j, BD, hd, hJ, hV, hBl, hP, hj, hjd, hji, hjpre, hBD, hVj, k₀, hk₀⟩ :=
     hPoin g hg n hn ho F Z z i hTh OZ hOZ hOZa φ hφ
-  haveI := hj
+  have := hj
   have hBlow : BlowAt F z i φ d π j BD := ⟨J, hd, hJ, hV, hBl, hP, hjd, hji, hjpre, hBD, hVj⟩
   obtain ⟨hsm, hpre⟩ := hChart g hg φ hφ hφ' n hn ho F Z z i OZ d S π j BD hMA hBlow
   obtain ⟨G, _, e, hGs, hGd, hGe, hGab⟩ :=
     hDesc g hg φ n hn ho F Z z i d S π j BD hBlow hpre
-  haveI := hsm
-  haveI : Smooth (π ≫ z) := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) _
-  haveI : QuasiSeparated G.hom := by haveI := hGs.separated; infer_instance
+  have := hsm
+  have : Smooth (π ≫ z) := SmoothOfRelativeDimension.smooth (g * (g + 1) / 2) _
+  have : QuasiSeparated G.hom := by have := hGs.separated; infer_instance
   obtain ⟨a, N, ha, hN, hiso⟩ := GlobalTheory.T.hodgeBundle_power_iso_minimalSiegelCompactification g n F Z z i OZ S π j G e hMA
     (fun x => ⟨hBl.1.isDomain_stalk x, hBl.1.isIntegrallyClosed_stalk x⟩) hP hjd hji hGs hGd hGe
   obtain ⟨N'', hN'', hgen, k, hk⟩ := GlobalTheory.T.exists_globallyGenerated_ample_power_toroidalPullback (cycAway n) Z S z π OZ (hodge G g) (GlobalTheory.CechPic.dual BD.lb) a N

@@ -80,7 +80,7 @@ theorem UpperTheory.hasDerivAt_whittakerPeriod_oneParameter :
   intro E _ _ _ D f c X g c0 cadd cd hf hl ⟨B, hB⟩
   obtain ⟨C, hC, hsub⟩ := cover
   have hfin : adeleMeasurePi ℚ (FS2 ℚ) < ⊤ := (measure_mono hsub).trans_lt hC.measure_lt_top
-  haveI : IsFiniteMeasure ((adeleMeasurePi ℚ).restrict (FS2 ℚ)) := ⟨by simpa using hfin⟩
+  have : IsFiniteMeasure ((adeleMeasurePi ℚ).restrict (FS2 ℚ)) := ⟨by simpa using hfin⟩
   have hn := cont_nE' D
   have hψ : Continuous fun u : Fin 2 → A ℚ => ψ (u 1) := continuous_ψ.comp (continuous_apply 1)
   have hF : ∀ h : GL (Fin 2) (A E), Continuous fun u : Fin 2 → A ℚ => f.1 (nE D u * h) * ψ (u 1) :=

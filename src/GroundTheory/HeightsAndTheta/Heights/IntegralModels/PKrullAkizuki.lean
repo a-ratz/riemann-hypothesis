@@ -70,7 +70,7 @@ theorem noetherian_and_dimensionLEOne
     have hx : IsAlgebraic R x :=
       Subalgebra.isAlgebraic_iff_isAlgebraic_val.mpr (halg.isAlgebraic _)
     obtain ⟨b, hb, hb0⟩ :=
-      Submodule.exists_mem_ne_zero_of_ne_bot (Ideal.comap_ne_bot_of_algebraic_mem hx0 hxI hx)
+      Submodule.exists_mem_ne_zero_of_ne_bot (Ideal.under_ne_bot_of_algebraic_mem hx0 hxI hx)
     exact ⟨b, hb0, hb⟩
   refine ⟨(isNoetherianRing_iff_ideal_fg S).mpr fun I => ?_, ⟨fun {P} hP0 hP => ?_⟩⟩
   · rcases eq_or_ne I ⊥ with rfl | hI

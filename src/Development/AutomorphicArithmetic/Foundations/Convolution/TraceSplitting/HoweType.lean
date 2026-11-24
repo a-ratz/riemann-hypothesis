@@ -161,7 +161,7 @@ theorem exists_box_subset_of_mem_nhds_zero {p q : ℕ} {S : Set (Matrix (Fin p) 
       refine ⟨r' * y, hrs ?_, mul_ne_zero (by simpa using hr') hy⟩
       show valuation k (r' * y) < valuation k y
       rw [map_mul]
-      exact mul_lt_of_lt_one_left (zero_lt_iff.mpr hr) hr1
+      exact mul_lt_of_lt_one_left (pos_iff_ne_zero.mpr hr) hr1
     exact (eventually_mem_nhdsWithin.and (hev.filter_mono (nhdsWithin_le_nhds (s := {0}ᶜ)))).exists
   obtain ⟨d, hd0, hd1, hdu⟩ := hne
   refine ⟨Units.mk0 d hd0, by simpa using hd1.le, fun X hX => hI fun i _ => hut i fun j _ => hdu i j (hX i j)⟩
@@ -245,7 +245,7 @@ theorem UpperTheory.V.Z.Tf.L4.howeBall :
   intro E _ _ _ _ n ϖ hϖ c ρ hρ
   have h1 : valuation E (ϖ : E) < 1 := by rw [hϖ]; exact uniformizer_lt_one
   have h0 : 0 < valuation E (ϖ : E) := by rw [hϖ]; exact uniformizer_pos
-  haveI : MulArchimedean (ValueGroupWithZero E) := isRankLeOne_iff_mulArchimedean.1 inferInstance
+  have : MulArchimedean (ValueGroupWithZero E) := isRankLeOne_iff_mulArchimedean.1 inferInstance
   obtain ⟨N, hN⟩ := exists_pow_lt₀ h1 (Units.mk0 ρ hρ.ne')
   refine ⟨N + |c| * n, fun a ha g hg i j => (hg i j).trans ?_⟩
   rw [Units.val_zpow_eq_zpow_val, map_zpow₀]
@@ -291,7 +291,7 @@ private theorem UpperTheory.V.Z.Tf.L4.psiInv_shift {E : Type} [Field E] [Valuati
     [IsNonarchimedeanLocalField E] {ψ : AddChar E Circle} {c c' : Eˣ} (h : HasConductor ψ c) (s : E) (hs : s ≠ 0)
     (hc : valuation E s * valuation E (c' : E) = valuation E (c : E)) : HasConductor (ψ.mulShift s) c' := by
   intro x
-  have hv : 0 < valuation E s := by simpa [zero_lt_iff] using hs
+  have hv : 0 < valuation E s := by simpa [pos_iff_ne_zero] using hs
   have h2 : valuation E x ≤ valuation E (c' : E) ↔ valuation E (s * x) ≤ valuation E (c : E) := by
     rw [← hc, map_mul, mul_le_mul_iff_right₀ hv]
   rw [h2, ← h (s * x)]
@@ -350,7 +350,7 @@ theorem UpperTheory.V.Z.Tf.L4.psiInv :
     exact this.1 hr1
   obtain ⟨e, he⟩ := psiInv_exists_zpow E ϖ hϖ (Units.mk0 _ hR0)
   rw [Units.val_mk0] at he
-  have hϖ0 : 0 < valuation E (ϖ : E) := by simp [zero_lt_iff]
+  have hϖ0 : 0 < valuation E (ϖ : E) := by simp [pos_iff_ne_zero]
   have hϖ1 : valuation E (ϖ : E) < 1 := hϖ ▸ uniformizer_lt_one
   have he0 : 0 < e := by
     rw [he] at hR1
@@ -384,7 +384,7 @@ theorem UpperTheory.V.Z.Tf.L4.charDual :
   obtain ⟨b, hb⟩ := GlobalTheory.LocGL.exists_eq_mulShift h0.continuous h0.ne_one h.continuous
   have hb0 : b ≠ 0 := fun e0 => h.ne_one (by rw [hb, e0, AddChar.mulShift_zero])
   have hv : ∀ x, ψ x = ψ₀ (b * x) := fun x => by rw [hb, AddChar.mulShift_apply]
-  have hvb : 0 < valuation E b := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hb0)
+  have hvb : 0 < valuation E b := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hb0)
   have key : ∀ x : E, valuation E x ≤ valuation E ((ϖ ^ e : Eˣ) : E) ↔ valuation E (b * x) ≤ valuation E ((ϖ ^ d : Eˣ) : E) := fun x => by
     rw [← h x, ← h0 (b * x)]
     refine ⟨fun H y hy => ?_, fun H y hy => ?_⟩
@@ -395,7 +395,7 @@ theorem UpperTheory.V.Z.Tf.L4.charDual :
       rwa [hv, mul_inv_cancel_left₀ hb0] at this
     · rw [hv]
       exact H _ (by rw [map_mul, map_mul]; exact mul_le_mul_right hy _)
-  have hve : 0 < valuation E ((ϖ ^ e : Eˣ) : E) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _))
+  have hve : 0 < valuation E ((ϖ ^ e : Eˣ) : E) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _))
   have h1 := (key _).1 le_rfl
   have h2 := (key (b⁻¹ * ((ϖ ^ d : Eˣ) : E))).2 (by rw [mul_inv_cancel_left₀ hb0])
   rw [map_mul, map_inv₀, inv_mul_le_iff₀ hvb] at h2
@@ -657,7 +657,7 @@ private theorem Js_pow (k : ℕ) (i j : Fin n) : (Js E n ^ k) i j = if (i : ℕ)
     · rw [Finset.sum_eq_single ⟨j + k, by omega⟩]
       · simp; omega
       · intro b _ hb
-        rw [if_neg (c := (b : ℕ) = j + k) fun e => hb (Fin.ext e), mul_zero]
+        rw [ite_eq_right (c := (b : ℕ) = j + k) fun e => hb (Fin.ext e), mul_zero]
       · simp
     · refine Finset.sum_eq_zero fun b _ => ?_
       split_ifs <;> first | omega | simp
@@ -706,10 +706,10 @@ variable [TopologicalSpace E] [IsNonarchimedeanLocalField E]
 private theorem sep {V : Type} [AddCommGroup V] [Module E V] [Module 𝒪[E] V] [IsScalarTower 𝒪[E] E V] (S : Set V) (hS : S.Finite)
     (ht : Submodule.span E S = ⊤) (D : V) (hD : D ∉ Submodule.span 𝒪[E] S) :
     ∃ φ : V →ₗ[E] E, (∀ x ∈ S, valuation E (φ x) ≤ 1) ∧ 1 < valuation E (φ D) := by
-  haveI : (Submodule.span 𝒪[E] S).IsLattice E := Submodule.IsLattice.of_fg E (Submodule.fg_span hS)
-  haveI : (Submodule.span 𝒪[E] S).IsFullLattice E := ⟨by rw [Submodule.span_span_of_tower, ht]⟩
-  haveI : Module.Free 𝒪[E] (Submodule.span 𝒪[E] S) := Submodule.IsLattice.free E _
-  haveI : Module.Finite 𝒪[E] (Submodule.span 𝒪[E] S) := Submodule.IsLattice.finite E _
+  have : (Submodule.span 𝒪[E] S).IsLattice E := Submodule.IsLattice.of_fg E (Submodule.fg_span hS)
+  have : (Submodule.span 𝒪[E] S).IsFullLattice E := ⟨by rw [Submodule.span_span_of_tower, ht]⟩
+  have : Module.Free 𝒪[E] (Submodule.span 𝒪[E] S) := Submodule.IsLattice.free E _
+  have : Module.Finite 𝒪[E] (Submodule.span 𝒪[E] S) := Submodule.IsLattice.finite E _
   let b := Module.Free.chooseBasis 𝒪[E] (Submodule.span 𝒪[E] S)
   let c := b.extendOfIsFullLattice E
   have hc : ∀ i, c i = b i := fun i => by simp [c]
@@ -809,7 +809,7 @@ theorem not_intertwine (p : Eˣ) (hp : valuation E (p : E) < 1) (ψ : AddChar E 
   generalize hT : ((W * Js E _ * U - Js E _) * X).trace = T at h3
   have hv : valuation E ((p : E) * p) < valuation E (p * T) := by
     rw [show (p : E) * T = p * p * ((p : E)⁻¹ * T) by field_simp, map_mul _ (p * p : E)]
-    exact lt_mul_of_one_lt_right (zero_lt_iff.2 (by simp)) h3
+    exact lt_mul_of_one_lt_right (pos_iff_ne_zero.2 (by simp)) h3
   obtain ⟨y, hy, hy1⟩ := hψ _ hv
   have hx0 : (p : E) * T ≠ 0 := fun e => by rw [e, map_zero] at hv; exact not_lt_zero hv
   have ht : valuation E (y / (p * T) * p) * 1 ≤ valuation E (p : E) := by
@@ -875,7 +875,7 @@ theorem UpperTheory.V.Z.Tf.L4.lowFix :
       ∃ a₀ : ℤ, ∀ a ≥ a₀, ∀ b ∈ howeSet n ϖ a (2 * a - d), (∀ i j : Fin n, i < j → (b : Matrix (Fin n) (Fin n) E) i j = 0) → b ∈ U := by
   intro E _ _ _ _ n ϖ hϖ d U hU
   have hlt : valuation E (ϖ : E) < 1 := hϖ ▸ uniformizer_lt_one
-  have hpos : 0 < valuation E (ϖ : E) := zero_lt_iff.2 (by simp)
+  have hpos : 0 < valuation E (ϖ : E) := pos_iff_ne_zero.2 (by simp)
   rw [(lowFix_emb E n).nhds_eq_comap, Filter.mem_comap] at hU
   obtain ⟨T, hT, hTU⟩ := hU
   have hc : Continuous (fun A : Fin n → Fin n → E => (Matrix.of A + 1 : Matrix (Fin n) (Fin n) E)) :=
@@ -977,12 +977,12 @@ theorem UpperTheory.V.Z.Tf.L4.ulFact :
   let I : Ideal 𝒪[E] :=
     { carrier := {z | valuation E (z : E) ≤ valuation E ((ϖ ^ a : Eˣ) : E)}
       add_mem' := fun {y z} h h' => by
-        rw [Set.mem_setOf_eq] at h h' ⊢
+        rw [Set.mem_ofPred_eq] at h h' ⊢
         rw [Subring.coe_add]
         exact Valuation.map_add_le _ h h'
       zero_mem' := by simp
       smul_mem' := fun r z h => by
-        rw [Set.mem_setOf_eq] at h ⊢
+        rw [Set.mem_ofPred_eq] at h ⊢
         rw [smul_eq_mul, Subring.coe_mul, map_mul]
         simpa using mul_le_mul' (show valuation E (r : E) ≤ 1 from r.2) h }
   have hI : ∀ z : 𝒪[E], z ∈ I ↔ valuation E (z : E) ≤ valuation E ((ϖ ^ a : Eˣ) : E) := fun _ => Iff.rfl
@@ -1007,7 +1007,7 @@ theorem UpperTheory.V.Z.Tf.L4.ulFact :
   have hU0 : ∀ i j, j < i → U i j = 0 := fun i j h => by simp [U, x0 i j h]
   have hU1 : ∀ i, U i i = 1 := fun i => by simp [U, x1, hwi]
   have hdet : U.det ≠ 0 := by
-    rw [Matrix.det_of_upperTriangular (fun i j h => hU0 i j h)]
+    rw [Matrix.det_of_isUpperTriangular (fun i j h => hU0 i j h)]
     simp [hU1]
   let u : GL (Fin n) E := Matrix.GeneralLinearGroup.mkOfDetNeZero U hdet
   have hUB : U * B = (x : Matrix (Fin n) (Fin n) E) := by
@@ -1073,12 +1073,12 @@ private theorem avg {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (C : Subgr
     (θ : G → ℂ) (hθ : Continuous θ) (hmul : ∀ a ∈ C, ∀ b ∈ C, θ (a * b) = θ a * θ b) (l : V →ₗ[ℂ] ℂ) (v : V)
     (S : Set G) (hS : IsOpen S) (h1 : 1 ∈ S) (hv : ∀ c ∈ C, θ c * l (ρ c⁻¹ v) = if c ∈ S then 1 else 0) :
     ∃ l' : V →ₗ[ℂ] ℂ, (∀ c ∈ C, ∀ w, l' (ρ c w) = θ c * l' w) ∧ l' v = 1 := by
-  haveI : CompactSpace C := isCompact_iff_compactSpace.1 hC
-  letI : MeasurableSpace C := borel C
-  haveI : BorelSpace C := ⟨rfl⟩
+  have : CompactSpace C := isCompact_iff_compactSpace.1 hC
+  let : MeasurableSpace C := borel C
+  have : BorelSpace C := ⟨rfl⟩
   let μ : Measure C := Measure.haar
   have hc : ∀ w, Continuous fun c : C => θ c * l (ρ (c : G)⁻¹ w) := fun w =>
-    (hθ.comp continuous_subtype_val).mul ((cont_coeff hρ l w).comp continuous_subtype_val.inv)
+    (hθ.comp continuous_subtypeVal).mul ((cont_coeff hρ l w).comp continuous_subtypeVal.inv)
   have hi : ∀ w, Integrable (fun c : C => θ c * l (ρ (c : G)⁻¹ w)) μ := fun w =>
     (hc w).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   let L : V →ₗ[ℂ] ℂ :=
@@ -1100,7 +1100,7 @@ private theorem avg {ρ : Representation ℂ G V} (hρ : IsSmooth ρ) (C : Subgr
     funext x
     simp only [Subgroup.coe_mul, Subtype.coe_mk]
     rw [hmul c hc x x.2, ← mul_apply_eq_comp, ← map_mul, mul_inv_rev, inv_mul_cancel_right, mul_assoc]
-  have hT : IsOpen ((Subtype.val : C → G) ⁻¹' S) := hS.preimage continuous_subtype_val
+  have hT : IsOpen ((Subtype.val : C → G) ⁻¹' S) := hS.preimage continuous_subtypeVal
   have hLv : L v = (μ.real ((Subtype.val : C → G) ⁻¹' S) : ℂ) := by
     change ∫ x : C, θ x * l (ρ (x : G)⁻¹ v) ∂μ = _
     have : (fun x : C => θ x * l (ρ (x : G)⁻¹ v)) = ((Subtype.val : C → G) ⁻¹' S).indicator fun _ => (1 : ℂ) := by
@@ -1239,22 +1239,22 @@ theorem exists_scale (X : Finset k) :
     intro x
     by_cases h : valuation k x ≤ 1
     · simp [f, h]
-    · simp only [f, dif_neg h, Units.val_inv_eq_inv_val, Units.val_mk0, map_inv₀]
+    · simp only [f, dite_eq_right h, Units.val_inv_eq_inv_val, Units.val_mk0, map_inv₀]
       push Not at h
       exact inv_le_one_of_one_le₀ h.le
   have hf2 : ∀ x, valuation k ((f x : kˣ) * x) ≤ 1 := by
     intro x
     by_cases h : valuation k x ≤ 1
     · simpa [f, h] using h
-    · simp only [f, dif_neg h, Units.val_inv_eq_inv_val, Units.val_mk0]
+    · simp only [f, dite_eq_right h, Units.val_inv_eq_inv_val, Units.val_mk0]
       rw [inv_mul_cancel₀ (hne x h), map_one]
   refine ⟨∏ x ∈ X, f x, ?_, fun y hy => ?_⟩
   · rw [Units.coe_prod, map_prod]
-    exact Finset.prod_le_one' fun x _ => hf1 x
+    exact Finset.prod_le_one fun x _ => hf1 x
   · rw [Units.coe_prod, ← Finset.mul_prod_erase X (fun x => ((f x : kˣ) : k)) hy, mul_assoc, mul_comm, mul_assoc,
       map_mul]
     have h1 : valuation k (∏ x ∈ X.erase y, ((f x : kˣ) : k)) ≤ 1 := by
-      rw [map_prod]; exact Finset.prod_le_one' fun x _ => hf1 x
+      rw [map_prod]; exact Finset.prod_le_one fun x _ => hf1 x
     calc valuation k (∏ x ∈ X.erase y, ((f x : kˣ) : k)) * valuation k (y * (f y : k))
         ≤ 1 * 1 := by gcongr; rw [mul_comm]; exact hf2 y
       _ = 1 := one_mul 1
@@ -1267,7 +1267,7 @@ theorem isClosed_unipB : IsClosed (unipB k (Fin m) : Set (GL (Fin m) k)) := by
       (⋂ i : Fin m, ⋂ j : Fin m, {g : GL (Fin m) k | j < i → (g : Matrix (Fin m) (Fin m) k) i j = 0}) ∩
         ⋂ i : Fin m, {g : GL (Fin m) k | (g : Matrix (Fin m) (Fin m) k) i i = 1} := by
     ext g
-    simp only [SetLike.mem_coe, mem_unipB, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+    simp only [SetLike.mem_coe, mem_unipB, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
   rw [e]
   refine (isClosed_iInter fun i => isClosed_iInter fun j => ?_).inter (isClosed_iInter fun i => isClosed_eq (hc i i) continuous_const)
   by_cases hji : j < i
@@ -1432,7 +1432,7 @@ private theorem conj_mem (ϖ : Eˣ) (a c : ℤ) (g : GL (Fin n) E) :
       Bd (valuation E ((ϖ ^ a : Eˣ) : E)) ((g : Matrix (Fin n) (Fin n) E) - 1) := by
   refine forall_congr' fun i => forall_congr' fun j => ?_
   rw [conj_sub, add_comm a, _root_.zpow_add, Units.val_mul, map_mul, map_mul, Matrix.sub_apply]
-  exact mul_le_mul_iff_right₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _)))
+  exact mul_le_mul_iff_right₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _)))
 
 private theorem conj_sd (ϖ : Eˣ) (c : ℤ) (g : GL (Fin n) E) :
     GlobalTheory.Whittaker.superDiag (diagT E (Fin n) (fun i => ϖ ^ (c * (i : ℕ))) * g * (diagT E (Fin n) (fun i => ϖ ^ (c * (i : ℕ))))⁻¹) =
@@ -1474,9 +1474,9 @@ theorem UpperTheory.ConvolutionTheory.Loc.howeInj :
       rwa [e, inv_inv] at this
     have hp : valuation E ((ϖ ^ a : Eˣ) : E) < 1 := by
       rw [Units.val_zpow_eq_zpow_val, map_zpow₀, hϖ]
-      exact zpow_lt_one₀ (zero_lt_iff.2 uniformizer_ne_zero) uniformizer_lt_one (by omega)
+      exact zpow_lt_one₀ (pos_iff_ne_zero.2 uniformizer_ne_zero) uniformizer_lt_one (by omega)
     obtain ⟨k, h1, h2, h3⟩ := not_intertwine (ϖ ^ a) hp (ψ.mulShift ((ϖ ^ (-c) : Eˣ) : E)) (fun x hx => by
-      have h0 : 0 < valuation E ((ϖ ^ (-c) : Eˣ) : E) := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _))
+      have h0 : 0 < valuation E ((ϖ ^ (-c) : Eˣ) : E) := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 (Units.ne_zero _))
       have h4 : ¬ valuation E (((ϖ ^ (-c) : Eˣ) : E) * x) ≤ valuation E ((ϖ ^ (2 * a - c) : Eˣ) : E) := by
         rw [show 2 * a - c = -c + (a + a) by ring, _root_.zpow_add, _root_.zpow_add, Units.val_mul, Units.val_mul, map_mul, map_mul _ ((ϖ ^ (-c) : Eˣ) : E),
           mul_le_mul_iff_right₀ h0]
@@ -1531,7 +1531,7 @@ private theorem ball_sub_nhds (k : Type) [Field k] [ValuativeRel k] [Topological
     ∃ ρ : ValueGroupWithZero k, 0 < ρ ∧ ball n ρ ⊆ N := by
   obtain ⟨d, -, h⟩ := GlobalTheory.GamMul.NearOne.one_add_small_near_one k n N hN
   refine ⟨valuation k (d : k), ?_, fun g hg => ?_⟩
-  · exact zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 d.ne_zero)
+  · exact pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 d.ne_zero)
   · obtain ⟨A, hA, hAN, -⟩ := h ((g : Matrix (Fin n) (Fin n) k) - 1) (fun i j => hg i j)
     have e : A = g := Units.ext (by rw [hA]; simp)
     exact e ▸ hAN
@@ -1586,13 +1586,13 @@ theorem UpperTheory.ConvolutionTheory.T.howeType :
     UpperTheory.ConvolutionTheory.T.HoweType := by
   intro F E _ _ _ _ _ _ _ _ σ hσ _ n _ μ _ V hV v w hw N hN
   obtain ⟨iA, iV, iFD, iG, s, -, -, -, hgal, -⟩ := UpperTheory.V.Z.Tf.Orb.placeData F E σ hσ v w hw
-  haveI : CharZero (v.adicCompletion F) := algebraRat.charZero _
+  have : CharZero (v.adicCompletion F) := algebraRat.charZero _
   obtain ⟨π, hπ, -⟩ : ∃! π : GlobalTheory.CuspRep.CuspSub E n,
       UpperTheory.ConvolutionTheory.Dp.Carries μ π V :=
     UpperTheory.ConvolutionTheory.Dp.exCusp E n μ V hV
   obtain ⟨hl, -, -, -⟩ := UpperTheory.V.Z.Tf.Orb.gLTop (w.1.adicCompletion E) n
-  letI : MeasurableSpace (Gw n w.1) := borel _
-  haveI : BorelSpace (Gw n w.1) := ⟨rfl⟩
+  let : MeasurableSpace (Gw n w.1) := borel _
+  have : BorelSpace (Gw n w.1) := ⟨rfl⟩
   obtain ⟨⟨τ, hτ⟩, -, -⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds E n μ V w.1 MeasureTheory.Measure.haar hV
   have hloc : (UpperTheory.CBC.Cusp.cx π).locComp w.1 τ :=
     (UpperTheory.ConvolutionTheory.Dp.locIff E n μ π V hπ w.1 τ).2 ((occursIff E n μ V hV w.1 τ).1 hτ)
@@ -1605,7 +1605,7 @@ theorem UpperTheory.ConvolutionTheory.T.howeType :
     let K : Subrepresentation τ.ρ := ⟨LinearMap.ker f, fun g x hx => by
       rw [LinearMap.mem_ker] at hx ⊢
       rw [hfe, hx, map_zero]⟩
-    haveI := τ.irred
+    have := τ.irred
     rcases eq_bot_or_eq_top K with h | h
     · refine LinearMap.ker_eq_bot.1 ?_
       exact congrArg Subrepresentation.toSubmodule h

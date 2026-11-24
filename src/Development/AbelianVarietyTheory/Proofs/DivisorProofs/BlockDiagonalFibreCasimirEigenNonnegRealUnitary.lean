@@ -111,8 +111,8 @@ theorem cas_diag_unitOn (ι M : Type) [Fintype ι] [DecidableEq ι] [AddCommGrou
     · rw [Module.End.mul_apply]
       exact hst a b h _ (hst b a h.symm x hx)
     · simp
-  haveI : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hne
-  haveI : FiniteDimensional ℂ U := hfin
+  have : Nontrivial U := Submodule.nontrivial_iff_ne_bot.mpr hne
+  have : FiniteDimensional ℂ U := hfin
   let g : Module.End ℂ U := (cas s F).restrict hcU
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue g
   obtain ⟨w, hw'⟩ := hc.exists_hasEigenvector

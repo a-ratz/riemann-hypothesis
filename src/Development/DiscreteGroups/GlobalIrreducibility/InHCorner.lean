@@ -81,19 +81,19 @@ theorem conj_U (j : ℕ) (hj : j + 1 < m + 1) (g : GL (Fin (m + 1)) k) (hg : InH
   by_cases hq : q = c
   · rw [hq, hrow c, Matrix.one_apply_eq, mul_one]
     by_cases hp : p < c
-    · rw [if_pos ⟨rfl, hp⟩]
+    · rw [ite_eq_left ⟨rfl, hp⟩]
       refine Finset.sum_congr rfl fun r _ => ?_
       by_cases hr : r < c
-      · rw [if_pos ⟨rfl, hr⟩, if_pos hr]
-      · rw [if_neg (fun h => hr h.2), if_neg hr]; simp
-    · rw [if_neg (fun h => hp h.2)]
+      · rw [ite_eq_left ⟨rfl, hr⟩, ite_eq_left hr]
+      · rw [ite_eq_right (fun h => hr h.2), ite_eq_right hr]; simp
+    · rw [ite_eq_right (fun h => hp h.2)]
       refine Finset.sum_eq_zero fun r _ => ?_
       by_cases hr : r < c
       · rw [hlow p r hp hr, zero_mul]
-      · rw [if_neg (fun h => hr h.2), mul_zero]
+      · rw [ite_eq_right (fun h => hr h.2), mul_zero]
   · rw [hrow q, Matrix.one_apply_ne (Ne.symm hq), mul_zero]
     refine Finset.sum_eq_zero fun r _ => ?_
-    rw [if_neg (fun h => hq h.1), mul_zero]
+    rw [ite_eq_right (fun h => hq h.1), mul_zero]
 
 theorem decomp (j : ℕ) (hj : j < m + 1) (M : GL (Fin (m + 1)) k) (hM : InH (j + 1) M)
     (hrow : ∀ q, (M : Matrix (Fin (m + 1)) (Fin (m + 1)) k) ⟨j, hj⟩ q = (1 : Matrix (Fin (m + 1)) (Fin (m + 1)) k) ⟨j, hj⟩ q) :
@@ -110,9 +110,9 @@ theorem decomp (j : ℕ) (hj : j < m + 1) (M : GL (Fin (m + 1)) k) (hM : InH (j 
     by_cases hqj : q = jj
     · rw [hqj, Matrix.one_apply_eq, mul_one]
       by_cases hp : p < jj
-      · rw [if_pos ⟨rfl, hp⟩, Matrix.one_apply_ne (ne_of_lt hp)]
+      · rw [ite_eq_left ⟨rfl, hp⟩, Matrix.one_apply_ne (ne_of_lt hp)]
         simp only [y, Pi.neg_apply]; ring
-      · rw [if_neg (fun h => hp h.2), add_zero]
+      · rw [ite_eq_right (fun h => hp h.2), add_zero]
         by_cases hpe : p = jj
         · rw [hpe]; exact hrow jj
         · refine hM p jj (fun h => hp ?_)

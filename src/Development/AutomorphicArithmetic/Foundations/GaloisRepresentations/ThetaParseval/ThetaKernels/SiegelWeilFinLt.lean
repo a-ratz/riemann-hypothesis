@@ -219,10 +219,10 @@ theorem hg_sch_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {νf : M
     · funext k
       show (d.crd (d.cmb (c u y)) k).2 = y k
       rw [_root_.PositivityTheory.SiegelWeilFormula.KFock.crd_cmb'_k]
-  haveI := hνf
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI : BorelSpace (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d) := Pi.borelSpace
+  have := hνf
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : BorelSpace (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d) := Pi.borelSpace
   have hint : ∀ g' ∈ SB (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d), Integrable (fun y => g' y * star (g y)) νf := by
     intro g' hg''
     have hc : Continuous (fun y => g' y * star (g y)) :=
@@ -243,7 +243,7 @@ theorem hg_sch_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {νf : M
         fun u => ?_⟩⟩
       · simp only [e, mul_assoc]
         exact (hint g' hg'').const_mul _
-      · simp only [e, mul_assoc, integral_const_mul, SchwartzMap.smul_apply,
+      · simp only [e, mul_assoc, integral_const_mul, smul_apply,
           SchwartzMap.compCLMOfContinuousLinearEquiv_apply, Function.comp_apply, ContinuousLinearEquiv.trans_apply,
           smul_eq_mul]
         ring
@@ -254,14 +254,14 @@ theorem hg_sch_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {νf : M
       refine ⟨fun u => ?_, k1 + k2, fun u => ?_⟩
       · simp only [Pi.add_apply, add_mul]
         exact (i1 u).add (i2 u)
-      · simp only [Pi.add_apply, add_mul, SchwartzMap.add_apply, e1, e2]
+      · simp only [Pi.add_apply, add_mul, add_apply, e1, e2]
         rw [integral_add (i1 u) (i2 u)]
     | smul a Φ _ h =>
       obtain ⟨i1, k1, e1⟩ := h
       refine ⟨fun u => ?_, a • k1, fun u => ?_⟩
       · simp only [Pi.smul_apply, smul_eq_mul, mul_assoc]
         exact (i1 u).const_mul a
-      · simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, SchwartzMap.smul_apply, e1, integral_const_mul]
+      · simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, smul_apply, e1, integral_const_mul]
   obtain ⟨-, h, eh⟩ := key (f ∘ d.cmb) hf
   refine ⟨h, funext fun u => ?_⟩
   rw [eh u]
@@ -294,7 +294,7 @@ theorem arc_apply_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (X : 
 theorem norm_arc_sq_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (X : Mx F E d.m d.n) :
     ‖_root_.PositivityTheory.SiegelWeilFormula.KFP.arc_k R X‖ ^ 2 = ∑ w, ∑ a, ∑ j, ‖R.loc w X a j‖ ^ 2 := by
   rw [EuclideanSpace.norm_sq_eq]
-  simp only [Fintype.sum_prod_type, Fintype.sum_bool, _root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.arc_apply_k, if_true, Bool.false_eq_true, if_false,
+  simp only [Fintype.sum_prod_type, Fintype.sum_bool, _root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.arc_apply_k, ite_true, Bool.false_eq_true, ite_false,
     Real.norm_eq_abs, sq_abs]
   refine Finset.sum_congr rfl fun w _ => Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun j _ => ?_
   rw [Complex.sq_norm, Complex.normSq_apply]
@@ -313,10 +313,10 @@ def lin_k (a : Fin d.m) (j : Fin d.n) (b : Bool) : PX d.m d.n :=
 theorem evX_lin_k (a : Fin d.m) (j : Fin d.n) (b : Bool) (z : Fin d.m → Fin d.n → ℂ) :
     evX (_root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.lin_k (d := d) a j b) z = ((if b then (z a j).re else (z a j).im : ℝ) : ℂ) := by
   cases b
-  · simp only [_root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.lin_k, evX, Bool.false_eq_true, if_false, map_mul, map_sub, MvPolynomial.eval_C, MvPolynomial.eval_X,
-      if_true]
+  · simp only [_root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.lin_k, evX, Bool.false_eq_true, ite_false, map_mul, map_sub, MvPolynomial.eval_C, MvPolynomial.eval_X,
+      ite_true]
     apply Complex.ext <;> simp <;> ring
-  · simp only [_root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.lin_k, evX, if_true, Bool.false_eq_true, if_false, map_mul, map_add (f := _), MvPolynomial.eval_C,
+  · simp only [_root_.PositivityTheory.SiegelWeilFormula.KFP.OswGen.lin_k, evX, ite_true, Bool.false_eq_true, ite_false, map_mul, map_add (f := _), MvPolynomial.eval_C,
       MvPolynomial.eval_X]
     apply Complex.ext <;> simp <;> ring
 theorem fP_mul_k (P Q : PX d.m d.n) (u : Fin d.m → Fin d.n → ℂ) : fP (P * Q) u = evX P u * fP Q u := by
@@ -458,10 +458,10 @@ theorem mem_fock_of_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {ν
     funext i
     show gg i y = 0
     exact image_eq_zero_of_notMem_tsupport (f := gg i) fun h => hyK (Set.mem_iUnion.2 ⟨i, h⟩)
-  haveI := hνf
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  haveI : BorelSpace (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d) := Pi.borelSpace
+  have := hνf
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have : SecondCountableTopology (Af F) := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
+  have : BorelSpace (_root_.PositivityTheory.SiegelWeilFormula.KFP.Yf_k d) := Pi.borelSpace
   let ψ : (Fin N → ℂ) → _root_.PositivityTheory.SiegelWeilFormula.KFP.Vw_k d → ℂ := fun c u => ∑ i, a i * (φ i (L.symm (Zc u)) * c i)
   have hterm : ∀ c ∈ Vals, (fun X => ψ c (_root_.PositivityTheory.SiegelWeilFormula.KFP.arc_k R X) * {y | Φv y = c}.indicator (fun _ => (1 : ℂ)) (_root_.PositivityTheory.SiegelWeilFormula.KFP.fin_k d X)) ∈ R.fock := by
     intro c hc
@@ -521,7 +521,7 @@ theorem mem_fock_of_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) {ν
     · have hmemK : _root_.PositivityTheory.SiegelWeilFormula.KFP.fin_k d X ∈ K := hfib_sub _ h0 rfl
       have hmemt : Φv (_root_.PositivityTheory.SiegelWeilFormula.KFP.fin_k d X) ∈ t := by
         have := ht hmemK
-        simp only [Set.mem_iUnion, Set.mem_setOf_eq] at this
+        simp only [Set.mem_iUnion, Set.mem_ofPred_eq] at this
         obtain ⟨c, hct, hc⟩ := this
         rw [hc]
         exact hct
@@ -628,7 +628,7 @@ theorem cw_inFrame_prod'_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d
 theorem dZ_cw_rot'_k (R : _root_.PositivityTheory.SiegelWeilFormula.RD_k d) (t : ℝ) (w : InfinitePlace F) :
     dZ d.n R.ζ * d.cw w (inFrame d.b (_root_.PositivityTheory.SiegelWeilFormula.KFP.rot_k R t)) = yrotM d.n (R.sg w) t * dZ d.n R.ζ := by
   rw [_root_.PositivityTheory.SiegelWeilFormula.KFP.rot_k, _root_.PositivityTheory.SiegelWeilFormula.KFP.cw_inFrame_prod'_k R (fun w => yrot d.n (R.sg w) t) w _ (Finset.nodup_toList _),
-    if_pos (Finset.mem_toList.2 (Finset.mem_univ w)), R.at_w, mR_yrot]
+    ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ w)), R.at_w, mR_yrot]
 end PositivityTheory.SiegelWeilFormula.KFP
 end
 end
@@ -888,15 +888,15 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 theorem memLp_schM_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (ν : Measure (Mx F E d.m d.n)) (hν : ν.IsAddHaarMeasure) {f : Mx F E d.m d.n → ℂ}
     (hf : f ∈ d.schM) : MemLp f 2 ν := by
   obtain ⟨i1, i2, i3, i4⟩ := (PositivityTheory.ThKCT.ideleTop F E).1
-  haveI : BorelSpace (AE F E) := ⟨rfl⟩
-  haveI : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
-  haveI : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
-  haveI : BorelSpace (AF F) := ⟨rfl⟩
-  haveI : BorelSpace (Fin d.m × Fin d.n × Fin 2 → AF F) := Pi.borelSpace
+  have : BorelSpace (AE F E) := ⟨rfl⟩
+  have : BorelSpace (Mx F E d.m d.n) := inferInstanceAs (BorelSpace (Fin d.m → Fin d.n → AE F E))
+  have : IsTopologicalAddGroup (Mx F E d.m d.n) := inferInstanceAs (IsTopologicalAddGroup (Fin d.m → Fin d.n → AE F E))
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : BorelSpace (AF F) := ⟨rfl⟩
+  have : BorelSpace (Fin d.m × Fin d.n × Fin 2 → AF F) := Pi.borelSpace
   let e : (Fin d.m × Fin d.n × Fin 2 → AF F) ≃ᵐ Mx F E d.m d.n := (_root_.PositivityTheory.SiegelWeilFormula.KFock.cmbE_k d).toHomeomorph.toMeasurableEquiv
-  haveI : (Measure.map e.symm ν).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν (_root_.PositivityTheory.SiegelWeilFormula.KFock.cmbE_k d).symm
+  have : (Measure.map e.symm ν).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν (_root_.PositivityTheory.SiegelWeilFormula.KFock.cmbE_k d).symm
   have h1 : MemLp (f ∘ e) 2 (Measure.map e.symm ν) := by
     have hf' : f ∘ d.cmb ∈ schA F (Fin d.m × Fin d.n × Fin 2) := Submodule.mem_comap.mp hf
     exact memLpSchA _ BorelSpace.measurable_eq _ inferInstance hf'
@@ -1091,7 +1091,7 @@ theorem line_data_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hU 
   · rw [Complex.norm_exp]
     simp
   · intro j hj h
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff] at h
+    rw [← Complex.exp_natCast_mul, Complex.exp_eq_one_iff] at h
     obtain ⟨k, hk⟩ := h
     have h3 : -(j : ℝ) = 2 * Real.pi * k := by
       have := congrArg Complex.im hk
@@ -1403,7 +1403,7 @@ theorem uniq_k : _root_.PositivityTheory.SiegelWeilFormula.TW.Uniq_k := by
     have hm : d.dd.rho d.B.ψ w (S0' φ) ∈ schA F d.κ :=
       GlobalTheory.HeisSchA.schr_mem_schA d.B.ψ hψ _ _ (hop.pres' φ hφ)
     rw [← h1, hop.left _ hm]
-  letI : MeasurableSpace (d.κ → AF F) := borel _
+  let : MeasurableSpace (d.κ → AF F) := borel _
   obtain ⟨hμ, hint⟩ := _root_.PositivityTheory.SiegelWeilFormula.KTunit.map_haar_k d τ ν hν
   obtain ⟨c, hc⟩ := translation_invariant_functional_haar d.B.ψ hψ d.κ (ν.map (_root_.PositivityTheory.SiegelWeilFormula.KTunit.cmap_k d τ)) hμ (Λ ∘ₗ S0') (hop.adm' Λ hΛ) (by
     intro a φ hφ
@@ -1615,13 +1615,13 @@ theorem ek_eq_k (d : _root_.PositivityTheory.SiegelWeilFormula.SD_k σ) (q : _ro
   show _ = (1 : AF F) ⊗ₜ[F] _
   by_cases h : (i, j) = (i0, j0)
   · obtain ⟨rfl, rfl⟩ := Prod.mk.inj h
-    rw [if_pos rfl, Finset.sum_eq_single k0]
+    rw [ite_eq_left rfl, Finset.sum_eq_single k0]
     · simp
     · intro b _ hb
       have : ((i, j, k0) : _root_.PositivityTheory.SiegelWeilFormula.TBij_k.Adp.Ix d) ≠ (i, j, b) := fun e => hb (by simp at e; exact e.symm)
       simp [this]
     · simp
-  · rw [if_neg h, TensorProduct.tmul_zero]
+  · rw [ite_eq_right h, TensorProduct.tmul_zero]
     refine Finset.sum_eq_zero fun k _ => ?_
     have : ((i0, j0, k0) : _root_.PositivityTheory.SiegelWeilFormula.TBij_k.Adp.Ix d) ≠ (i, j, k) := fun e => h (by simp at e; rw [e.1, e.2.1])
     simp [this]

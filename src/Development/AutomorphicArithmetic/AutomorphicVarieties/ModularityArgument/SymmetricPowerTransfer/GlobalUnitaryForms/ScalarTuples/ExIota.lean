@@ -115,7 +115,7 @@ private theorem index_range_mulLeft_ne_zero {Λ : Type} [Ring Λ] [IsDomain Λ] 
     (y : Λ) (hy : y ≠ 0) : (AddMonoidHom.mulLeft y).range.index ≠ 0 := by
   obtain ⟨m, hm, t, ht⟩ := exists_int_eq_mul_of_ne_zero_lattice y hy
   show Nat.card (Λ ⧸ (AddMonoidHom.mulLeft y).range.toIntSubmodule) ≠ 0
-  haveI : Finite (Λ ⧸ (AddMonoidHom.mulLeft y).range.toIntSubmodule) := by
+  have : Finite (Λ ⧸ (AddMonoidHom.mulLeft y).range.toIntSubmodule) := by
     apply Module.finite_of_fg_torsion
     intro q
     refine ⟨⟨m, mem_nonZeroDivisors_of_ne_zero hm⟩, ?_⟩
@@ -148,7 +148,7 @@ private theorem short_lattice (Λ : Type) [Ring Λ] [IsDomain Λ] [Module.Free �
       (AddMonoidHom.mulLeft y).range.index ≠ 0 ∧ (AddMonoidHom.mulLeft y).range.index ≤ C * I.index := by
   classical
   let b := Module.Free.chooseBasis ℤ Λ
-  haveI : Nonempty (Module.Free.ChooseBasisIndex ℤ Λ) := b.index_nonempty
+  have : Nonempty (Module.Free.ChooseBasisIndex ℤ Λ) := b.index_nonempty
   have hr0 : Fintype.card (Module.Free.ChooseBasisIndex ℤ Λ) ≠ 0 := Fintype.card_ne_zero
   let T : Module.Free.ChooseBasisIndex ℤ Λ → Module.Free.ChooseBasisIndex ℤ Λ →
       Module.Free.ChooseBasisIndex ℤ Λ → ℤ := fun i k l => b.repr (b i * b l) k
@@ -167,8 +167,8 @@ private theorem short_lattice (Λ : Type) [Ring Λ] [IsDomain Λ] [Module.Free �
       have h2 : Nat.find hex - 1 + 1 = Nat.find hex := by omega
       rw [h2] at h1
       exact not_lt.mp h1
-  haveI : I.FiniteIndex := ⟨hI⟩
-  letI : Fintype (Λ ⧸ I) := Fintype.ofFinite _
+  have : I.FiniteIndex := ⟨hI⟩
+  let : Fintype (Λ ⧸ I) := Fintype.ofFinite _
   let φ : (Module.Free.ChooseBasisIndex ℤ Λ → Fin (m + 1)) → Λ ⧸ I :=
     fun c => QuotientAddGroup.mk (∑ i, ((c i : ℕ) : ℤ) • b i)
   have hcard : Fintype.card (Λ ⧸ I) < Fintype.card (Module.Free.ChooseBasisIndex ℤ Λ → Fin (m + 1)) := by
@@ -254,7 +254,7 @@ private theorem short_abs {D M Γ G : Type} [Ring D] [IsDomain D] [CharZero D] [
     (hdense : ∀ r ∈ R, ∀ n : ℕ, n ≠ 0 → ∃ x : D, ∃ r' ∈ R, r = j x + n * r') :
     ∃ N : ℕ, N ≠ 0 ∧ ∀ g : G, ∃ γ : Γ, (ψ (g⁻¹ * ι γ) : M) ∈ R ∧ (N : M) * ψ ((ι γ)⁻¹ * g) ∈ R := by
   classical
-  haveI : Module.Free ℤ (R.comap j) := Module.free_of_finite_type_torsion_free'
+  have : Module.Free ℤ (R.comap j) := Module.free_of_finite_type_torsion_free'
   obtain ⟨C, hC⟩ := short_lattice (R.comap j)
   refine ⟨C.factorial, Nat.factorial_ne_zero C, ?_⟩
   have core : ∀ h : G, (ψ h : M) ∈ R → ∀ k : ℕ, k ≠ 0 → (k : M) * (ψ h⁻¹ : M) ∈ R →
@@ -286,7 +286,7 @@ private theorem short_abs {D M Γ G : Type} [Ring D] [IsDomain D] [CharZero D] [
       exact R.mul_mem hk' s.2
     have hJidx : J.index ≠ 0 := by
       show Nat.card ((R.comap j) ⧸ J.toIntSubmodule) ≠ 0
-      haveI : Finite ((R.comap j) ⧸ J.toIntSubmodule) := by
+      have : Finite ((R.comap j) ⧸ J.toIntSubmodule) := by
         apply Module.finite_of_fg_torsion
         intro q
         refine ⟨⟨(k : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hk)⟩, ?_⟩
@@ -404,7 +404,7 @@ theorem cls_abs_unit {D M Γ G : Type} [Ring D] [IsDomain D] [CharZero D] [Ring 
     exact R.sub_mem (hγ1 g) (R.mul_mem (natCast_mem R N) hr')
   choose xf rf hrf hxf using hx
   let P : Submodule ℤ (R.comap j) := LinearMap.range ((N : ℤ) • LinearMap.id)
-  haveI hfin : Finite ((R.comap j) ⧸ P) := by
+  have hfin : Finite ((R.comap j) ⧸ P) := by
     apply Module.finite_of_fg_torsion
     intro q
     refine ⟨⟨(N : ℤ), mem_nonZeroDivisors_of_ne_zero (by exact_mod_cast hN0)⟩, ?_⟩
@@ -414,7 +414,7 @@ theorem cls_abs_unit {D M Γ G : Type} [Ring D] [IsDomain D] [CharZero D] [Ring 
       show (N : ℤ) • (Submodule.Quotient.mk z : (R.comap j) ⧸ P) = 0
       rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero]
       exact ⟨z, rfl⟩
-  letI := Fintype.ofFinite ((R.comap j) ⧸ P)
+  let := Fintype.ofFinite ((R.comap j) ⧸ P)
   let qf : G → (R.comap j) ⧸ P := fun g => Submodule.Quotient.mk (xf g)
   let rep : (R.comap j) ⧸ P → G := fun q =>
     if h : ∃ g, qf g = q then (ι (γf h.choose))⁻¹ * h.choose else 1
@@ -423,7 +423,7 @@ theorem cls_abs_unit {D M Γ G : Type} [Ring D] [IsDomain D] [CharZero D] [Ring 
   obtain ⟨g', hg'⟩ : ∃ g', g' = hex.choose := ⟨_, rfl⟩
   have hq : qf g' = qf g := hg' ▸ hex.choose_spec
   have hrep : rep (qf g) = (ι (γf g'))⁻¹ * g' := by
-    simp only [rep, dif_pos hex, hg']
+    simp only [rep, dite_eq_left hex, hg']
   refine ⟨γf g, rep (qf g), Finset.mem_image_of_mem _ (Finset.mem_univ _),
     (rep (qf g))⁻¹ * ((ι (γf g))⁻¹ * g), ?_, by group⟩
   rw [hrep]
@@ -704,7 +704,7 @@ theorem relIndex_normOneLevel_maximalCompact_ne_zero (D : Dat Δ) (h : D.Ok) : D
     · exact hgL v
   have hMne : M.relIndex L ≠ 0 := by
     rw [hM]
-    haveI : Finite (D.Sg : Set (Pl F)) := D.Sg.finite_toSet.to_subtype
+    have : Finite (D.Sg : Set (Pl F)) := D.Sg.finite_toSet.to_subtype
     apply Subgroup.relIndex_iInf_ne_zero
     rintro ⟨v, hv⟩
     rw [Subgroup.relIndex_comap]
@@ -752,10 +752,10 @@ private theorem fSv_apply_ne_zero_of_fs_ne_zero (D : Dat Δ) (t : Dat.Par F) (g 
   intro w hw
   rw [Function.mem_mulSupport] at hw
   by_contra hc
-  simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hc
   apply hw
   unfold Dat.fSv
-  rw [if_neg hc.1]
+  rw [ite_eq_right hc.1]
   simp [one, hc.2]
 
 
@@ -783,7 +783,7 @@ theorem finS_test : ∀ (F : Type) [Field F] [NumberField F] (Δ : F) (D : Dat �
       unfold SA at hy
       rw [Subgroup.mem_iInf] at hy
       have hyv : ((y : DA Δ) : ∀ v, ↥(DX (cv v Δ))) v ∈ SU (cv v Δ) := hy v
-      haveI : (SU (cv v Δ)).Normal := by
+      have : (SU (cv v Δ)).Normal := by
         unfold SU
         infer_instance
       simp only [Subgroup.coe_mul, Subgroup.coe_inv, Pi.mul_apply, Pi.inv_apply]
@@ -804,7 +804,7 @@ theorem finS_test : ∀ (F : Type) [Field F] [NumberField F] (Δ : F) (D : Dat �
       rw [((hD.sig v.1 v.2).S_inv (t v.1) (ht v.1 v.2) _ hjm _).2]
       have hne := fSv_apply_ne_zero_of_fs_ne_zero D t _ hq v.1
       unfold Dat.fSv at hne
-      rw [if_pos v.2] at hne
+      rw [ite_eq_left v.2] at hne
       exact hne
     · intro q1 hq1 q2 hq2 heq
       rw [← QuotientGroup.out_eq' q1, ← QuotientGroup.out_eq' q2, QuotientGroup.eq, hB.U]
@@ -819,7 +819,7 @@ theorem finS_test : ∀ (F : Type) [Field F] [NumberField F] (Δ : F) (D : Dat �
         intro q hq hv
         have hne := fSv_apply_ne_zero_of_fs_ne_zero D t _ hq v
         unfold Dat.fSv at hne
-        rw [if_neg hv] at hne
+        rw [ite_eq_right hv] at hne
         simpa [one] using hne
       have key : (((x⁻¹ * ↑(Quotient.out q1) * x : DA Δ) : ∀ v, ↥(DX (cv v Δ))) v)⁻¹ *
           ((x⁻¹ * ↑(Quotient.out q2) * x : DA Δ) : ∀ v, ↥(DX (cv v Δ))) v ∈ D.J2v v := by

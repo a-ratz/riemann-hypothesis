@@ -297,10 +297,10 @@ private theorem isClosed_setOf_of_mem_UH_Hpk (k r : ℕ) :
   exact isClosed_eq hc continuous_const
 
 theorem Tm_emb (C : Choice X θ) (τ : D.what₂.Tau) : MeasurableEmbedding (Tm C τ) := by
-  haveI : BorelSpace (Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) := ⟨rfl⟩
+  have : BorelSpace (Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) := ⟨rfl⟩
   have hcont : Continuous (Tm C τ) := by
     have h : Continuous fun x : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) => Qics C τ * ((x : (Matrix (Fin X.B.I.n) (Fin X.B.I.n) ℂ)ˣ) : Matrix (Fin X.B.I.n) (Fin X.B.I.n) ℂ) * Qcs C τ :=
-      (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtype_val)).matrix_mul
+      (continuous_const.matrix_mul (Units.continuous_val.comp continuous_subtypeVal)).matrix_mul
         continuous_const
     exact h
   have hrange : Set.range (Tm C τ) = {m | Matrix.of m ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS)} := by
@@ -327,7 +327,7 @@ theorem Tm_emb (C : Choice X θ) (τ : D.what₂.Tau) : MeasurableEmbedding (Tm 
       (by first | exact Matrix.mul_eq_one_comm.mp (hl m) | exact mul_eq_one_comm.mp (hl m) | exact Matrix.mul_eq_one_symm (hl m) | exact (Matrix.mul_eq_one_comm_of_equiv (Equiv.refl _)).mp (hl m)), hl m⟩, hUJ m⟩
   have hv : Continuous fun m : Set.range (Tm C τ) => Qcs C τ * Matrix.of m.1 * Qics C τ := by
     have h0 : Continuous fun m : Set.range (Tm C τ) => (Matrix.of m.1 : Matrix (Fin (2 * D.R.rS + D.R.k + 1))
-        (Fin (2 * D.R.rS + D.R.k + 1)) ℂ) := continuous_subtype_val
+        (Fin (2 * D.R.rS + D.R.k + 1)) ℂ) := continuous_subtypeVal
     exact (continuous_const.matrix_mul h0).matrix_mul continuous_const
   have hg : Continuous g := by
     apply Continuous.subtype_mk
@@ -376,7 +376,7 @@ theorem comap_lint (C : Choice X θ) (τ : D.what₂.Tau) {μ : Measure (Formali
   have hae : ∀ᵐ m ∂μ, m ∈ Set.range (Tm C τ) := by
     rw [ae_iff]
     refine measure_mono_null (fun m hm => ?_) hμ
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     exact fun h => hm (mem_range_Tm C τ h)
   rw [← hE.lintegral_map, hE.map_comap, Measure.restrict_eq_self_of_ae_mem hae]
 
@@ -399,7 +399,7 @@ theorem sFinite_comap (C : Choice X θ) (τ : D.what₂.Tau) {μ : Measure (Form
           conv_lhs => rw [← sum_sfiniteSeq μ]
           rw [Measure.sum_apply _ (hE.measurableSet_image.mpr hs)]
           simp only [hE.comap_apply]
-       haveI : ∀ n, IsFiniteMeasure ((sfiniteSeq μ n).comap (Tm C τ)) := fun n =>
+       have : ∀ n, IsFiniteMeasure ((sfiniteSeq μ n).comap (Tm C τ)) := fun n =>
          ⟨by rw [hE.comap_apply _ Set.univ]; exact measure_lt_top _ _⟩
        rw [h]
        infer_instance)
@@ -447,7 +447,7 @@ theorem quot_conc {μG μS ν : Measure (Formalism.QuantumDeterminants.Mt D.R.k 
     · first | rw [Set.indicator_of_not_mem hx] | rw [Set.indicator_of_notMem hx]
       first | exact zero_le | exact zero_le _ | positivity
   rw [← h, lintegral_indicator_const hSm] at hle
-  exact (mul_eq_zero.mp (le_zero_iff.mp hle)).resolve_left hne
+  exact (mul_eq_zero.mp (nonpos_iff_eq_zero.mp hle)).resolve_left hne
 
 theorem weil_J (C : Choice X θ) (τ : D.what₂.Tau) {μS ν : Measure (Formalism.QuantumDeterminants.Mt D.R.k D.R.rS)}
     (hq : Formalism.MainNotions.S.IsQuotMeas (muGB X (Qcs C τ) (Qics C τ) τ) μS ν)
@@ -497,13 +497,13 @@ theorem inv_comap (C : Choice X θ) (τ : D.what₂.Tau) {μS : Measure (Formali
     (hS0 : μS {m | Matrix.of m ∉ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS)} = 0)
     (hinv : μS.map Formalism.FourierDecayAlt.B2.invM = μS) :
     (μS.comap (Tm C τ)).map (fun x => x⁻¹) = μS.comap (Tm C τ) := by
-  haveI : BorelSpace (Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) := ⟨rfl⟩
+  have : BorelSpace (Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) := ⟨rfl⟩
   have hE := Tm_emb C τ
   have hinvm : Measurable (fun x : Formalism.REAL.UJ (X.B.I.ε (vOf X τ)) => x⁻¹) := continuous_inv.measurable
   have hae : ∀ᵐ m ∂μS, m ∈ Set.range (Tm C τ) := by
     rw [ae_iff]
     refine measure_mono_null (fun m hm => ?_) hS0
-    simp only [Set.mem_setOf_eq] at hm ⊢
+    simp only [Set.mem_ofPred_eq] at hm ⊢
     exact fun h => hm (mem_range_Tm C τ h)
   have hc : (Tm C τ ∘ fun x => x⁻¹) = Formalism.FourierDecayAlt.B2.invM ∘ Tm C τ := funext fun x => Tm_inv C τ x
   rw [← hE.comap_map ((μS.comap (Tm C τ)).map fun x => x⁻¹), Measure.map_map hE.measurable hinvm, hc,

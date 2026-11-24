@@ -155,7 +155,7 @@ theorem UpperTheory.Gal.FiniteEtaleModels.lIdx_holds :
     exact isCompact_iff_compactSpace.1 K1.compact
   have ho : IsOpen (((L.KN N).subgroupOf (L.KN 1) : Subgroup (L.KN 1)) : Set (L.KN 1)) := by
     rw [← hKN]
-    exact KN.K.isOpen.preimage continuous_subtype_val
+    exact KN.K.isOpen.preimage continuous_subtypeVal
   have hf : Finite ((L.KN 1) ⧸ (L.KN N).subgroupOf (L.KN 1)) :=
     Subgroup.quotient_finite_of_isOpen _ ho
   exact Nat.card_pos.ne'
@@ -184,12 +184,12 @@ theorem UpperTheory.Gal.FiniteEtaleModels.lCount_holds :
   have hℓ1 : ℓ ≫ pullback.fst π sB = Sigma.desc fun _ : I => f := pullback.lift_fst _ _ h
   have hℓ2 : ℓ ≫ pullback.snd π sB =
       Sigma.desc fun c : I => kc c ≫ Sigma.ι (fun _ : B => Y') (cls c) := pullback.lift_snd _ _ h
-  haveI := hsF
-  haveI := hsE
-  haveI : IsFinite (pullback.fst π sB) := inferInstance
-  haveI : Etale (pullback.fst π sB) := inferInstance
-  haveI : IsFinite (ℓ ≫ pullback.fst π sB) := by rw [hℓ1]; exact hdF
-  haveI : Etale (ℓ ≫ pullback.fst π sB) := by rw [hℓ1]; exact hdE
+  have := hsF
+  have := hsE
+  have : IsFinite (pullback.fst π sB) := inferInstance
+  have : Etale (pullback.fst π sB) := inferInstance
+  have : IsFinite (ℓ ≫ pullback.fst π sB) := by rw [hℓ1]; exact hdF
+  have : Etale (ℓ ≫ pullback.fst π sB) := by rw [hℓ1]; exact hdE
   refine ⟨IsFinite.of_comp ℓ (pullback.fst π sB), Etale.of_comp ℓ (pullback.fst π sB), ?_⟩
   intro K _ _ x
   obtain ⟨⟨b, y'⟩, hb⟩ := (hpt B Y' K).2 (x ≫ pullback.snd π sB)
@@ -283,7 +283,7 @@ open UpperTheory.Gal.FiniteEtaleModels
 theorem UpperTheory.Gal.FiniteEtaleModels.lSigPt_holds :
     LSigPt := by
   intro I W Ω _
-  haveI : Unique (sp Ω) := inferInstanceAs (Unique (PrimeSpectrum Ω))
+  have : Unique (sp Ω) := inferInstanceAs (Unique (PrimeSpectrum Ω))
   constructor
   · rintro ⟨i, x⟩ ⟨j, x'⟩ h
     have h' : x ≫ Sigma.ι (fun _ : I => W) i = x' ≫ Sigma.ι (fun _ : I => W) j := h
@@ -333,9 +333,9 @@ theorem UpperTheory.Gal.FiniteEtaleModels.lPts_holds :
       X.tr M M g a b ≫ X.tr M M g' a' b' =
         X.tr M M (g' * g) (ad _ (K₀.mul_mem hg' hg)).1 (ad _ (K₀.mul_mem hg' hg)).2 :=
     fun g g' hg hg' a b a' b' => X.tr_mul _ _ _ _ _ _ _ _ _ _ _
-  haveI := X.onto M N a b
-  haveI := X.fin M N a b
-  haveI := X.etale M N a b
+  have := X.onto M N a b
+  have := X.fin M N a b
+  have := X.etale M N a b
   obtain ⟨x₀, hx₀⟩ := GlobalTheory.GeomSurj.exists_lift_of_surjective (X.tr M N 1 a b) z
   obtain ⟨x₁, hx₁⟩ := hQ1.onto Ω y' (z ≫ X.q N)
     (by rw [← Category.assoc, hy', Category.assoc, hπ, ← Category.assoc])
@@ -495,7 +495,7 @@ theorem desc_sq {I B : Type} {W Z Y Y' : Scheme.{0}} (cls : I → B) (f : I → 
     (h : ∀ c, f c ≫ π = kc c ≫ t (cls c)) :
     Sigma.desc f ≫ π = (Sigma.desc fun c : I => kc c ≫ Sigma.ι (fun _ : B => Y') (cls c)) ≫ Sigma.desc t := by
   refine Limits.Sigma.hom_ext _ _ fun c => ?_
-  simp only [Limits.Sigma.ι_desc_assoc, Limits.Sigma.ι_desc, Category.assoc, h]
+  simp only [Sigma.ι_comp_desc_assoc, Sigma.ι_comp_desc, Category.assoc, h]
 
 
 theorem liesAbs_of (hP : LPts) (hC : LCount) (hI : LIdx) (hS : SigmaFEt) : LiesAbs := by
@@ -517,12 +517,12 @@ theorem liesAbs_of (hP : LPts) (hC : LCount) (hI : LIdx) (hS : SigmaFEt) : LiesA
     rw [← Subgroup.relIndex_mul_relIndex _ _ _ (g j).le (g j).le_one] at h1
     exact left_ne_zero_of_mul h1
   have hK0 : K₀.relIndex (g j).K ≠ 0 := fun h0 => hNK (Subgroup.relIndex_eq_zero_of_le_left hN h0)
-  haveI : Finite (g j).I := by
-    haveI : ((L.KN (N : ℕ)).subgroupOf (g j).K).FiniteIndex := ⟨hNK⟩
+  have : Finite (g j).I := by
+    have : ((L.KN (N : ℕ)).subgroupOf (g j).K).FiniteIndex := ⟨hNK⟩
     show Finite (↥(g j).K ⧸ (L.KN (N : ℕ)).subgroupOf (g j).K)
     infer_instance
-  haveI : Finite (↥(g j).K ⧸ K₀.subgroupOf (g j).K) := by
-    haveI : (K₀.subgroupOf (g j).K).FiniteIndex := ⟨hK0⟩
+  have : Finite (↥(g j).K ⧸ K₀.subgroupOf (g j).K) := by
+    have : (K₀.subgroupOf (g j).K).FiniteIndex := ⟨hK0⟩
     infer_instance
   have hm0 : (T.X.K (T.lev (g j).M)).relIndex ((g j).K ⊓ K₁) ≠ 0 := by
     have hle1 : T.X.K (T.lev (g j).M) ≤ (g j).K ⊓ K₁ := by
@@ -568,12 +568,12 @@ theorem liesAbs_of (hP : LPts) (hC : LCount) (hI : LIdx) (hS : SigmaFEt) : LiesA
     Nat.card (↥(g j).K ⧸ K₀.subgroupOf (g j).K) * d, (T.X.K (T.lev (g j).M)).relIndex ((g j).K ⊓ K₁),
     hS C.Y Y' s d _ hs, ?_, Nat.pos_of_ne_zero hm0, _, hsq, ?_, ?_⟩
   · refine Limits.Sigma.hom_ext _ _ fun b => ?_
-    simp only [Limits.Sigma.ι_desc_assoc, tb, htb1]
+    simp only [Sigma.ι_comp_desc_assoc, tb, htb1]
   · refine Limits.Sigma.hom_ext _ _ fun c => ?_
     show Limits.Sigma.ι _ c ≫ (Limits.Sigma.desc fun c => kc c ≫ Limits.Sigma.ι (fun _ : ↥(g j).K ⧸ K₀.subgroupOf (g j).K => Y') (cls c)) ≫ Limits.Sigma.desc tb =
       Limits.Sigma.ι _ c ≫ (Limits.Sigma.desc fun c : (g j).I => T.X.tr (T.lev (g j).M) (T.lev N) ((g j).h * ↑(Quotient.out c)) (aH _ (Quotient.out c).2) (bH _ (Quotient.out c).2)) ≫ C.π
-    rw [Limits.Sigma.ι_desc_assoc, Category.assoc, Limits.Sigma.ι_desc]
-    erw [Limits.Sigma.ι_desc_assoc]
+    rw [Sigma.ι_comp_desc_assoc, Category.assoc, Sigma.ι_comp_desc]
+    erw [Sigma.ι_comp_desc_assoc]
     have e : (g j).h * ↑(Quotient.out (cls c)) * u c = (g j).h * ↑(Quotient.out c) := by
       show (g j).h * ↑(Quotient.out (cls c)) * ((↑(Quotient.out (cls c)) : G.GAf)⁻¹ * ↑(Quotient.out c)) = _
       rw [_root_.mul_assoc, _root_.mul_inv_cancel_left]

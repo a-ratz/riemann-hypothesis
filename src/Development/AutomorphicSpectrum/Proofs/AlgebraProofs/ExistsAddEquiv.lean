@@ -301,7 +301,7 @@ theorem gp_polAV : HodgeTateDatumStatement → ∀ (p : ℕ) [Fact p.Prime] (C :
       [Fintype N] [DecidableEq N] (pt : N → (sp (R₀ := R) R ⟶ P.A)), IsTorsPts P.A p pt →
       GenAF p (torsFun C T pt) ⊥ ∧ IsTight v p (torsFun C T pt) := by
   intro hHT p _ C _ _ _ v R _ _ hint hp hc P T N _ _ _ pt hpt
-  letI : Algebra ℤ_[p] R := (Av.zpLift p R hc).toAlgebra
+  let : Algebra ℤ_[p] R := (Av.zpLift p R hc).toAlgebra
   obtain ⟨-, cp, US, H, pt₀, h₀, hT⟩ := hHT p C v R hint hp hc P
   obtain ⟨e, he⟩ := Av.exists_addEquiv h₀ hpt
   have key := _root_.GlobalTheory.CompanionTheory.Ar.GR.polarisedAF p P.g C v R ℤ_[p] AlgEquiv.refl cp US H

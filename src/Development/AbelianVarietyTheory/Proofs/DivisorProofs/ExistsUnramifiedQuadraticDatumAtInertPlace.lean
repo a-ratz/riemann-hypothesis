@@ -96,7 +96,7 @@ private lemma mem_span_pow_iff_valuation_le_exp_neg_one_pow (p : w.adicCompletio
     exact mul_le_of_le_one_right' hb
   · intro ha
     have hpos : (0 : WithZero (Multiplicative ℤ)) < WithZero.exp (-1 : ℤ) ^ n :=
-      zero_lt_iff.2 (pow_ne_zero _ WithZero.exp_ne_zero)
+      pos_iff_ne_zero.2 (pow_ne_zero _ WithZero.exp_ne_zero)
     have hb : Valued.v ((a : w.adicCompletion E) / (p : w.adicCompletion E) ^ n) ≤ 1 := by
       rw [map_div₀, map_pow, hp]
       exact (div_le_one₀ hpos).2 ha
@@ -196,7 +196,7 @@ private lemma isAdicComplete_maximalIdeal_adicCompletionIntegers (ϖ : w.adicCom
         rw [Valuation.restrict_le_iff, map_pow]
         exact hpow n a
       rw [hset]
-      refine (Valued.isOpen_closedBall _ ?_).preimage continuous_subtype_val
+      refine (Valued.isOpen_closedBall _ ?_).preimage continuous_subtypeVal
       intro h0
       have h1 : Valued.v (ϖ ^ n) = 0 := by
         rw [← Valuation.embedding_restrict, h0, map_zero]

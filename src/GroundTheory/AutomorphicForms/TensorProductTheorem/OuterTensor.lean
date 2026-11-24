@@ -135,8 +135,8 @@ theorem isIrreducible_outerTensor {ρ₁ : Representation ℂ M₁ V₁} {ρ₂ 
     (hschur : ∀ T : End ℂ V₂, (∀ m, T * ρ₂ m = ρ₂ m * T) → ∃ c : ℂ, T = c • 1) :
     (outerTensor ρ₁ ρ₂).IsIrreducible := by
   classical
-  haveI := hirr₁
-  haveI := hirr₂
+  have := hirr₁
+  have := hirr₂
   set ρ := outerTensor ρ₁ ρ₂
   have hnt₁ := nontrivial_of_irreducible hirr₁
   have hnt₂ := nontrivial_of_irreducible hirr₂

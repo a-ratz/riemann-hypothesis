@@ -220,12 +220,12 @@ theorem exists_eigenvector (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
     ∃ z : X a, z ≠ 0 ∧ ∀ g ∈ KO k (m a),
       ρ a g z = ((χ (Matrix.GeneralLinearGroup.det g) : ℂˣ) : ℂ) • z := by
   by_contra hne
-  haveI : CompactSpace (KO k (m a)) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
+  have : CompactSpace (KO k (m a)) := isCompact_iff_compactSpace.1 GlobalTheory.SplitFlip.isCompact_KO
   let i := (KO k (m a)).subtype
   let ψ : KO k (m a) →* ℂˣ := χ.comp (Matrix.GeneralLinearGroup.det.comp i)
   have hψ : IsSmoothChar ψ :=
-    hχ.comp _ (Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtype_val)
-  have h1 := exists_kill ((ρ a).comp i) ψ (isSmooth_comp (hρ a) i continuous_subtype_val) hψ
+    hχ.comp _ (Matrix.GeneralLinearGroup.continuous_det.comp continuous_subtypeVal)
+  have h1 := exists_kill ((ρ a).comp i) ψ (isSmooth_comp (hρ a) i continuous_subtypeVal) hψ
     fun z hz => by
       by_contra h
       exact hne ⟨z, h, fun g hg => hz ⟨g, hg⟩⟩

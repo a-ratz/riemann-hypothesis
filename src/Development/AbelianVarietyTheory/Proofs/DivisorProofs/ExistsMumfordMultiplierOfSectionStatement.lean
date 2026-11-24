@@ -611,9 +611,9 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase
     rw [DVR.trF_eq, DVR.tr_pr, DVR.comp_cP]
   have M1 : aK ≫ DegPre.trF D.toPre (FractionRing R) (h mu) ≫ DegPre.prB D.toPre (FractionRing R) =
       DegPre.trF D.toPre (FractionRing R) mu ≫ DegPre.prB D.toPre (FractionRing R) ≫ a := by
-    haveI := hma
+    have := hma
     rw [trpr, MonObj.comp_mul, aK_pr, DVR.comp_cP, ← Category.assoc, trpr, MonObj.mul_comp, cPh]
-  haveI := hma
+  have := hma
   have z₁ : DegPre.zF D.toPre (FractionRing R) ≫ fst _ _ = 𝟙 _ := lift_fst _ _
   have z₂ : DegPre.zF D.toPre (FractionRing R) ≫ DegPre.prB D.toPre (FractionRing R) = 1 := lift_snd _ _
   have M2 : DegPre.zF D.toPre (FractionRing R) ≫ aK = DegPre.zF D.toPre (FractionRing R) := by
@@ -1296,7 +1296,7 @@ theorem GlobalTheory.TwFam.exists_prod_family : ∀ (R : Type) [CommRing R] [IsD
     refine ((hfs e).prod (hgs e)).subset ?_
     intro q hq
     by_contra hc
-    simp only [Set.mem_prod, Set.mem_setOf_eq, not_and_or, not_not] at hc
+    simp only [Set.mem_prod, Set.mem_ofPred_eq, not_and_or, not_not] at hc
     exact hq (hpV q e hc)
   obtain ⟨F, hFs, hFsm⟩ := GlobalTheory.T.exists_adicSum_twistedSectionFamily_tendsToZero R hadm D a n'' j'' (D.toPre.X × D.toPre.X) (fun q => q.1 + q.2) p hps
   refine ⟨F, hFsm, ?_, ?_⟩

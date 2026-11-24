@@ -762,8 +762,8 @@ private theorem isOpen_lemma_2 : IsOpen (𝒪[K] : Set K) := by
 
 private theorem trace_cont_lemma_3 (hcont : Continuous (algebraMap ℚ_[l] K)) :
     Continuous (Algebra.trace ℚ_[l] K) := by
-  haveI := t2_lemma (K := K)
-  haveI : ContinuousSMul ℚ_[l] K := ⟨by
+  have := t2_lemma (K := K)
+  have : ContinuousSMul ℚ_[l] K := ⟨by
     simp only [Algebra.smul_def]
     exact (hcont.comp continuous_fst).mul continuous_snd⟩
   exact LinearMap.continuous_of_finiteDimensional _
@@ -775,7 +775,7 @@ private theorem int_lemma_4 (hcont : Continuous (algebraMap ℚ_[l] K)) (z : ℚ
   let w : ℤ_[l] := ⟨z, hz⟩
   have key : algebraMap ℚ_[l] K (w : ℚ_[l]) ∈ 𝒪[K] := by
     refine PadicInt.denseRange_natCast.induction_on w ?_ ?_
-    · exact hcl.preimage (hcont.comp continuous_subtype_val)
+    · exact hcl.preimage (hcont.comp continuous_subtypeVal)
     · intro n
       rw [PadicInt.coe_natCast, map_natCast]
       exact natCast_mem _ n
@@ -866,16 +866,16 @@ private theorem main_lemma_9 {K : Type} [Field K] [ValuativeRel K] [TopologicalS
   let I : Ideal 𝒪[K] :=
     { carrier := {c | P l ((c : K) * t⁻¹)}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq] at *
+        simp only [Set.mem_ofPred_eq] at *
         push_cast
         rw [add_mul]
         exact P_add_mem l ha hb
       zero_mem' := by
-        simp only [Set.mem_setOf_eq]
+        simp only [Set.mem_ofPred_eq]
         intro b
         simp
       smul_mem' := fun c a ha => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul] at *
+        simp only [Set.mem_ofPred_eq, smul_eq_mul] at *
         have h := mul_mem_dual₂ l ha c
         have e : ((c * a : 𝒪[K]) : K) * t⁻¹ = (a : K) * t⁻¹ * (c : K) := by
           push_cast
@@ -932,8 +932,8 @@ private theorem main_lemma_9 {K : Type} [Field K] [ValuativeRel K] [TopologicalS
 
 theorem existsDifferentGenerator : FpDual := by
   intro K _ _ _ l _ _ hK _ hcont hfin
-  haveI := hK
-  haveI := hfin
+  have := hK
+  have := hfin
   exact main_lemma_9 l hcont
 
 end PI.LocDualGen.FpD
@@ -1119,9 +1119,9 @@ end Main
 
 theorem unramified_dual_generator : PI.LocDualGen.W.FpDualUnram := by
   intro K _ _ _ l _ _ hlf _ hcont _ huni a
-  haveI := hlf
-  haveI := charP_res K l huni
-  letI := algRes K l
+  have := hlf
+  have := charP_res K l huni
+  let := algRes K l
   obtain ⟨z, hz⟩ := exists_trace_unit K l hcont huni
   constructor
   · intro H
@@ -1282,8 +1282,8 @@ theorem integral_mem_nhds_and_subset_compact_of_finrank_two [Module.Free K V] (h
     ∃ _ : K × K ≃ₜ V, (O : Set V) ∈ 𝓝 (0 : V) ∧ ∃ C : Set V, IsCompact C ∧ (O : Set V) ⊆ C := by
   classical
   obtain ⟨θ, d, hθr, hθ, hd0, hdO⟩ := exists_sq (K := K) (V := V) hr
-  haveI : Module.Finite K V := Module.finite_of_finrank_pos (by rw [hr]; norm_num)
-  haveI : Nontrivial V := Module.nontrivial_of_finrank_pos (R := K) (by rw [hr]; norm_num)
+  have : Module.Finite K V := Module.finite_of_finrank_pos (by rw [hr]; norm_num)
+  have : Nontrivial V := Module.nontrivial_of_finrank_pos (R := K) (by rw [hr]; norm_num)
   have hθi : IsIntegral 𝒪[K] θ := by
     refine IsIntegral.of_pow (n := 2) (by norm_num) ?_
     rw [pow_two, hθ]
@@ -1317,8 +1317,8 @@ theorem integral_mem_nhds_and_subset_compact_of_finrank_two [Module.Free K V] (h
   obtain ⟨e, he⟩ : ∃ e : (K × K) ≃ₗ[K] V,
       ∀ p, e p = algebraMap K V p.1 + algebraMap K V p.2 * θ :=
     ⟨LinearEquiv.ofBijective L (show Function.Bijective L from ⟨hinj, hsurj⟩), fun p => hL p⟩
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd (R := K) (A := V)
-  haveI : ContinuousSMul K V := IsModuleTopology.toContinuousSMul (R := K) (A := V)
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd (R := K) (A := V)
+  have : ContinuousSMul K V := IsModuleTopology.toContinuousSMul (R := K) (A := V)
   obtain ⟨h, hh⟩ : ∃ h : K × K ≃ₜ V, ∀ p, h p = e p :=
     ⟨{ toEquiv := e.toEquiv
        continuous_toFun := IsModuleTopology.continuous_of_linearMap e.toLinearMap
@@ -1395,16 +1395,16 @@ end Some
 
 theorem target : PI.LocHaarRR.Target := by
   intro F E _ _ _ _ _ sig p A hred
-  haveI := A.lf
-  haveI := A.top
-  haveI := A.borel
-  haveI := A.char0
-  haveI := A.free
-  haveI : IsTopologicalAddGroup A.Ep := IsModuleTopology.topologicalAddGroup A.Fp A.Ep
-  haveI := sigmaCompactSpace_lf A.Fp
+  have := A.lf
+  have := A.top
+  have := A.borel
+  have := A.char0
+  have := A.free
+  have : IsTopologicalAddGroup A.Ep := IsModuleTopology.isTopologicalAddGroup A.Fp A.Ep
+  have := sigmaCompactSpace_lf A.Fp
   rcases hs : A.split with _ | sg
   · obtain ⟨H, h0, C, hC, hOC⟩ := integral_mem_nhds_and_subset_compact_of_finrank_two A.rank A.O A.O_def
-    haveI : SigmaCompactSpace A.Ep := H.symm.isClosedEmbedding.sigmaCompactSpace
+    have : SigmaCompactSpace A.Ep := H.symm.isClosedEmbedding.sigmaCompactSpace
     have hR : PI.LocHaarRR.RR A = (A.O : Set A.Ep) := by simp [PI.LocHaarRR.RR, hs]
     rw [hR]
     exact exists_haar_of_subgroup A.O.toAddSubgroup h0 hC hOC
@@ -1414,7 +1414,7 @@ theorem target : PI.LocHaarRR.Target := by
     let H : A.Fp × A.Fp ≃ₜ A.Ep := homeoOfLin sg.e.symm.toLinearEquiv
     have hH : ∀ y, sg.e (H y) = y := fun y => sg.e.apply_symm_apply y
     have hH' : ∀ x, H (sg.e x) = x := fun x => sg.e.symm_apply_apply x
-    haveI : SigmaCompactSpace A.Ep := H.symm.isClosedEmbedding.sigmaCompactSpace
+    have : SigmaCompactSpace A.Ep := H.symm.isClosedEmbedding.sigmaCompactSpace
     have hq0 : (sg.q : A.Fp) ≠ 0 := fun h => sg.q_irr.ne_zero (Subtype.ext h)
     let Q : Set A.Fp := (fun y : A.Fp => (sg.q : A.Fp) * y) '' (𝒪[A.Fp] : Set A.Fp)
     have hQ : IsOpen Q := (Homeomorph.mulLeft₀ (sg.q : A.Fp) hq0).isOpenMap _ (isOpen_integer' _)

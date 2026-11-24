@@ -87,7 +87,7 @@ theorem finite_quot [CompactSpace G] (hc : ∀ a b : G, a * b = b * a) {W : Subg
 
 theorem index_pos [CompactSpace G] (hc : ∀ a b : G, a * b = b * a) {W : Subgroup G}
     (hW : IsOpen (W : Set G)) : 0 < W.index := by
-  haveI := finite_quot hc hW
+  have := finite_quot hc hW
   exact Nat.pos_of_ne_zero Subgroup.index_ne_zero_of_finite
 
 variable {s : G}
@@ -106,8 +106,8 @@ theorem mem_zpowers_quot (hs : Dense (Subgroup.zpowers s : Set G)) {W : Subgroup
 theorem zpow_mem_iff [CompactSpace G] (hc : ∀ a b : G, a * b = b * a)
     (hs : Dense (Subgroup.zpowers s : Set G)) {W : Subgroup G} (hW : IsOpen (W : Set G)) (z : ℤ) :
     s ^ z ∈ W ↔ (W.index : ℤ) ∣ z := by
-  haveI := normal_of_comm hc W
-  haveI := finite_quot hc hW
+  have := normal_of_comm hc W
+  have := finite_quot hc hW
   have hord : orderOf (QuotientGroup.mk' W s) = W.index := by
     rw [orderOf_eq_card_of_forall_mem_zpowers (mem_zpowers_quot hs hW)]
     rfl
@@ -117,7 +117,7 @@ theorem zpow_mem_iff [CompactSpace G] (hc : ∀ a b : G, a * b = b * a)
 theorem exists_pow [CompactSpace G] (hc : ∀ a b : G, a * b = b * a)
     (hs : Dense (Subgroup.zpowers s : Set G)) {W : Subgroup G} (hW : IsOpen (W : Set G)) (g : G) :
     ∃ j : ℕ, g⁻¹ * s ^ j ∈ W := by
-  haveI := normal_of_comm hc W
+  have := normal_of_comm hc W
   obtain ⟨k, hk⟩ := Subgroup.mem_zpowers_iff.mp (mem_zpowers_quot hs hW (g : G ⧸ W))
   rw [← map_zpow, QuotientGroup.mk'_apply] at hk
   have hgk : g⁻¹ * s ^ k ∈ W := QuotientGroup.eq.mp hk.symm

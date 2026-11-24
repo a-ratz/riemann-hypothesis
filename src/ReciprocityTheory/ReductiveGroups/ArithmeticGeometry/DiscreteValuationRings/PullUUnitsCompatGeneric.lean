@@ -67,7 +67,7 @@ private lemma res_res_lemma {S : Scheme.{0}} {U V W : S.Opens} (h1 : V ≤ U) (h
     rw [← Functor.map_comp]
     rfl
   ext
-  simp only [res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [← hc]
   rfl
 
@@ -80,7 +80,7 @@ private lemma res_pullU_res_eq_res_pullU {S T : Scheme.{0}} (h : T ⟶ S) {U V :
     rw [← Category.assoc, hn, Category.assoc, ← Functor.map_comp]
     rfl
   ext
-  simp only [res, pullU, Units.coe_map, MonoidHom.coe_coe]
+  simp only [res, pullU, Units.coe_map, MonoidHom.coe_ofClass]
   exact congrArg (fun φ => φ.hom t.val) key
 
 lemma pullU_units_compat_generic (h : Z ⟶ Y) {Ui Uj : Y.Opens} {Wi Wj : Z.Opens} (hi : Wi ≤ h ⁻¹ᵁ Ui)

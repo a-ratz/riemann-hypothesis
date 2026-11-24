@@ -68,11 +68,11 @@ theorem dc_of_comm (hA : ActDer) (hI : IBPAct) (hK : KapEquiv) (hKZ : KerZero) (
     (hke : ∀ y ∈ GLs n, ∀ k₂ : Matrix.unitaryGroup (Fin n) ℂ, k (y * k₂.1) = k y * E.ρ k₂)
     (hD : ∀ f ∈ CE E, act μ E k (DC ε Fr f) 1 = DC ε Fr (act μ E k f) 1) :
     ∀ y ∈ GLs n, kapL ε Fr k y = kapR ε Fr k y := by
-  haveI := FiniteDimensional.complete ℂ E.V
+  have := FiniteDimensional.completeSpace ℂ E.V
   obtain ⟨cL, cR, heq⟩ := hK n lam E Fr ε ι S Γ T hC k hks hke
   have hz := hKZ n μ E (fun y => kapL ε Fr k y - kapR ε Fr k y) (cL.sub cR)
     (fun y hy k₂ => by simp only [(heq y hy k₂).1, (heq y hy k₂).2, sub_mul]) (fun f hf hfc => by
-      simp only [ContinuousLinearMap.sub_apply]
+      simp only [sub_apply]
       rw [integral_sub (int_of_cpt hL μ _ f cL hf.1.continuousOn hfc) (int_of_cpt hL μ _ f cR hf.1.continuousOn hfc),
         ← kapL_int hA hU hL Fr ε μ k hks hkc f hf.1 hfc, ← kapR_int hI hU hR hL Fr ε μ k hks hkc f hf.1 hfc, hD f hf,
         sub_self])

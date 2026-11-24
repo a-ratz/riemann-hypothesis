@@ -314,7 +314,7 @@ theorem exists_mem_forall_notMem_coeIdeal_mul {R K : Type} [CommRing R] [IsDedek
       rintro ⟨Q, hQ, hQP⟩
       have : Q = P := (hS Q (Finset.mem_insert_of_mem hQ)).eq_of_le hP.ne_top hQP
       exact hPS (this ▸ hQ)
-    obtain ⟨e, heS, heP⟩ := SetLike.not_le_iff_exists.mp hnle
+    obtain ⟨e, heS, heP⟩ := IsConcreteLE.not_le_iff_exists.mp hnle
     have key : ∀ (Q : Ideal R) (x : R), x ∈ Q →
         x • b ∈ (Q : FractionalIdeal (nonZeroDivisors R) K) * c := by
       intro Q x hx
@@ -373,9 +373,9 @@ theorem exists_add_mul_notMem_of_maximal_ge {R : Type*} [CommRing R] [IsDedekind
     (h : ∀ p : Ideal R, p.IsMaximal → J ≤ p → n ∈ p → x ∉ p) :
     ∃ s : R, ∀ p : Ideal R, p.IsMaximal → J ≤ p → x + n * s ∉ p := by
   classical
-  haveI : Fintype {p : Ideal R // p ∣ J} := UniqueFactorizationMonoid.fintypeSubtypeDvd J hJ
+  have : Fintype {p : Ideal R // p ∣ J} := UniqueFactorizationMonoid.fintypeSubtypeDvd J hJ
   let ι := {p : Ideal R // p.IsMaximal ∧ J ≤ p}
-  haveI : Finite ι := Finite.of_injective
+  have : Finite ι := Finite.of_injective
     (fun p : ι => (⟨p.1, Ideal.dvd_iff_le.2 p.2.2⟩ : {p : Ideal R // p ∣ J}))
     (fun a b hab => Subtype.ext (Subtype.mk.inj hab))
   have hc : Pairwise fun i j : ι => IsCoprime i.1 j.1 := by
@@ -387,14 +387,14 @@ theorem exists_add_mul_notMem_of_maximal_ge {R : Type*} [CommRing R] [IsDedekind
   refine ⟨s, fun p hp hJp hmem => ?_⟩
   have h1 := Ideal.Quotient.eq.1 (hs ⟨p, hp, hJp⟩)
   by_cases hx : x ∈ p
-  · simp only [hx, if_true] at h1
+  · simp only [hx, ite_true] at h1
     have h2 : n * s ∈ p := by simpa using p.sub_mem hmem hx
     have h3 : n ∈ p := by
       have := p.sub_mem h2 (p.mul_mem_left n h1)
       have e : n * s - n * (s - 1) = n := by ring
       rwa [e] at this
     exact h p hp hJp h3 hx
-  · simp only [hx, if_false, sub_zero] at h1
+  · simp only [hx, ite_false, sub_zero] at h1
     apply hx
     simpa using p.sub_mem hmem (p.mul_mem_left n h1)
 
@@ -482,9 +482,9 @@ theorem exists_basis_latSpanV_eq_of_finrank_two (F E : Type) [Field F] [NumberFi
       (c : Submodule (𝓞 E) E).restrictScalars (𝓞 F) =
         latSpanV (Fin.snoc (α := fun _ => FractionalIdeal (nonZeroDivisors (𝓞 F)) F) (fun _ => 1) b) e := by
   have hL := fractionalIdeal_restrictScalars_isLattice_of_tower F E c hc
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hE
+  have : FiniteDimensional F E := Module.finite_of_finrank_eq_succ hE
   have hfull : Submodule.IsFullLattice F ((c : Submodule (𝓞 E) E).restrictScalars (𝓞 F)) := by
-    letI := hL
+    let := hL
     refine ⟨?_⟩
     apply top_le_iff.mp
     intro z _
@@ -1345,7 +1345,7 @@ theorem countable_and_exists_domain (F E : Type) [Field F] [NumberField F] [Fiel
   have hK3 : OpensMeasurableSpace K := inferInstance
   obtain ⟨s, hs, hex⟩ := @exists_measurableSet_unique_smul_mem_of_discrete K _ _ hK1 hK2 _ hK3
     (Subgroup.subgroupOf (G := HA (AF F) σ J) (HFinIn (AF F) σ J) K)
-    ((Subtype.val : K → HA (AF F) σ J) ⁻¹' t) (ht.preimage continuous_subtype_val) ht1
+    ((Subtype.val : K → HA (AF F) σ J) ⁻¹' t) (ht.preimage continuous_subtypeVal) ht1
     (fun γ hγ hγV => Subtype.ext (htone _ (Subgroup.mem_subgroupOf.1 hγ) hγV))
   exact ⟨s, IsFundamentalDomain.mk' hs.nullMeasurableSet hex⟩
 
@@ -1478,7 +1478,7 @@ theorem nsub_cocompact : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     refine and_congr (forall_congr' fun a => ?_) (forall_congr' fun x => imp_congr Iff.rfl ?_)
     · have := mem_spanR_iff (F := F) (AF F) P.e {b | b < a} (lin (AF F) σ J g (ratV (F := F) (AF F) (P.e a)) - ratV (F := F) (AF F) (P.e a))
       rw [this, hlin]
-      simp only [Set.mem_setOf_eq, not_lt]
+      simp only [Set.mem_ofPred_eq, not_lt]
       rfl
     · have := mem_spanR_iff (F := F) (AF F) P.e Set.univ (lin (AF F) σ J g x - x)
       rw [this, hlin]

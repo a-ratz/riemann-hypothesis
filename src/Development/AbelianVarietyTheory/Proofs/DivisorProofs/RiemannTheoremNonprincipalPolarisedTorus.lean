@@ -113,8 +113,8 @@ theorem lattice_hom_finite_image_of_trivial_on_multiples :
     DiscreteTopology Λ → Submodule.span ℝ (Λ : Set (Fin g → ℂ)) = ⊤ → (∀ z w, e (z + w) = e z * e w) → 0 < N →
     (∀ l ∈ Λ, e ((N : ℂ) • l) = 1) → (e '' (Λ : Set (Fin g → ℂ))).Finite := by
   intro g Λ G _ e N hd hspan hadd hN hker
-  haveI := hd
-  haveI : IsZLattice ℝ Λ := ⟨hspan⟩
+  have := hd
+  have : IsZLattice ℝ Λ := ⟨hspan⟩
   let b := Module.Free.chooseBasis ℤ Λ
   let f : (Module.Free.ChooseBasisIndex ℤ Λ → Fin N) → G :=
     fun a => e (∑ i, ((a i : ℕ) : ℤ) • ((b i : Λ) : Fin g → ℂ))
@@ -256,7 +256,7 @@ theorem GlobalTheory.riemann_polarised_torus : ∀ (g : ℕ) (Λ : Submodule ℤ
     have hs : {z | ⊤ ≤ (exA z).left ⁻¹ᵁ U} =
         (fun z => (N : ℂ)⁻¹ • z) ⁻¹' {w | ⊤ ≤ (u.ex w).left ⁻¹ᵁ (ψ.left ⁻¹ᵁ U)} := by
       ext z
-      simp only [exA, he, Over.comp_left, Scheme.Hom.comp_preimage, Set.mem_setOf_eq, Set.mem_preimage]
+      simp only [exA, he, Over.comp_left, Scheme.Hom.comp_preimage, Set.mem_ofPred_eq, Set.mem_preimage]
     have hv : (fun z => valAt' (exA z).left U f) =
         (fun w => valAt' (u.ex w).left (ψ.left ⁻¹ᵁ U) ((ψ.left.app U).hom f)) ∘ (fun z => (N : ℂ)⁻¹ • z) := by
       funext z

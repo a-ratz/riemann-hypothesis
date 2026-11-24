@@ -193,7 +193,7 @@ theorem PositivityTheory.Rg.BcB.G3.finPol2_pf : FinPol2 := by
     obtain ⟨y, hy, e₁, e₂⟩ := hp w hw
     rw [← e₁, ← e₂]
     by_cases hg : good w
-    · simp only [g₁, g₂, if_pos hg, inv_one]
+    · simp only [g₁, g₂, ite_eq_left hg, inv_one]
       have hy' : y ∈ (GlobalTheory.LFun.KGL w (n := a)).prod (GlobalTheory.LFun.KGL w (n := b)) := by
         have hy2 := hy
         rw [show φ w = _ from hg] at hy2
@@ -201,7 +201,7 @@ theorem PositivityTheory.Rg.BcB.G3.finPol2_pf : FinPol2 := by
         exact hy2 (Set.indicator_of_notMem hc _)
       exact ⟨GlobalTheory.BCT.GeoFin.charpoly_nrmL_integral E a w (isLevel_KGL hU a w) y.1 hy'.1,
         GlobalTheory.BCT.GeoFin.charpoly_nrmL_integral E b w (isLevel_KGL hU b w) y.2 hy'.2⟩
-    · simp only [g₁, g₂, if_neg hg]
+    · simp only [g₁, g₂, ite_eq_right hg]
       have hyt : y ∈ tsupport (φ w) := subset_tsupport _ hy
       exact ⟨hγ₁ w y.1 ⟨y, hyt, rfl⟩, hγ₂ w y.2 ⟨y, hyt, rfl⟩⟩
   exact ⟨⟨h₁, fun w hw => (key w hw).1⟩, ⟨h₂, fun w hw => (key w hw).2⟩⟩
@@ -258,7 +258,7 @@ theorem PositivityTheory.Rg.BcB.G3.absSum_pf : PositivityTheory.Rg.BcB.G3.AbsSum
       · apply hWF v hvS
         intro heq
         apply hv1
-        rw [hgood v hvS hvU _ (hcA v), if_pos heq]
+        rw [hgood v hvS hvU _ (hcA v), ite_eq_left heq]
     rw [finprod_mem_eq_prod_of_subset _ hsupp hFS]
     rw [← Finset.prod_sdiff hUF]
     have hrest : ∀ v ∈ F \ U, f v (loc c v) = if loc c v = o v then 1 else 0 := by
@@ -275,8 +275,8 @@ theorem PositivityTheory.Rg.BcB.G3.absSum_pf : PositivityTheory.Rg.BcB.G3.AbsSum
         rw [Finset.mem_sdiff] at hv
         exact h v (hFS hv.1) hv.2
     by_cases hc' : ∀ v ∈ S, v ∉ U → loc c v = o v
-    · rw [if_pos (hiff.mpr hc'), if_pos hc', one_mul]
-    · rw [if_neg (fun h => hc' (hiff.mp h)), if_neg hc', zero_mul]
+    · rw [ite_eq_left (hiff.mpr hc'), ite_eq_left hc', one_mul]
+    · rw [ite_eq_right (fun h => hc' (hiff.mp h)), ite_eq_right hc', zero_mul]
   let zmap : C → ((v : U) → A v.1) := fun c v =>
     if h : loc c v.1 ∈ A v.1 then ⟨loc c v.1, h⟩ else ⟨o v.1, ho v.1⟩
   let yz : ((v : U) → A v.1) → (∀ v, L v) := fun z v => if h : v ∈ U then (z ⟨v, h⟩).1 else o v
@@ -312,7 +312,7 @@ theorem PositivityTheory.Rg.BcB.G3.absSum_pf : PositivityTheory.Rg.BcB.G3.AbsSum
     rw [hkey c hcD] at hne
     by_contra hcG
     apply hne
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h; exact hcG ⟨hcD, h⟩
   refine ⟨hGfin.subset (fun c hc => hsuppG c hc.1 hc.2), ?_⟩
   have hsum1 : (∑ᶠ c : C, if c ∈ D then ∏ᶠ v ∈ S, f v (loc c v) else 0) =
@@ -322,7 +322,7 @@ theorem PositivityTheory.Rg.BcB.G3.absSum_pf : PositivityTheory.Rg.BcB.G3.AbsSum
       intro c hc
       rw [Set.Finite.mem_toFinset] at hc
       obtain ⟨hcD, hcG⟩ := hc
-      rw [if_pos hcD, hkey c hcD, if_pos hcG, ← Finset.prod_coe_sort U (fun v => f v (loc c v))]
+      rw [ite_eq_left hcD, hkey c hcD, ite_eq_left hcG, ← Finset.prod_coe_sort U (fun v => f v (loc c v))]
       apply Finset.prod_congr rfl
       intro v _
       dsimp only [zmap]
@@ -331,8 +331,8 @@ theorem PositivityTheory.Rg.BcB.G3.absSum_pf : PositivityTheory.Rg.BcB.G3.AbsSum
       rw [Function.mem_support] at hc
       rw [Set.Finite.coe_toFinset]
       by_cases hcD : c ∈ D
-      · rw [if_pos hcD] at hc; exact hsuppG c hcD hc
-      · rw [if_neg hcD] at hc; exact absurd rfl hc
+      · rw [ite_eq_left hcD] at hc; exact hsuppG c hcD hc
+      · rw [ite_eq_right hcD] at hc; exact absurd rfl hc
   have hmem : ∀ z c, (c ∈ hGfin.toFinset ∧ zmap c = z) ↔ (c ∈ D ∧ ∀ v ∈ S, loc c v = yz z v) := by
     intro z c
     rw [Set.Finite.mem_toFinset]
@@ -379,17 +379,17 @@ theorem PositivityTheory.Rg.BcB.G3.absSum_pf : PositivityTheory.Rg.BcB.G3.AbsSum
     intro v
     rw [finsum_eq_sum_of_support_subset _ (s := (A v).toFinset) ?_,
       Finset.sum_set_coe (f := fun l => f v l)]
-    · exact Finset.sum_congr rfl (fun l hl => if_pos (Set.mem_toFinset.mp hl))
+    · exact Finset.sum_congr rfl (fun l hl => ite_eq_left (Set.mem_toFinset.mp hl))
     · intro l hl
       rw [Function.mem_support] at hl
       rw [Set.coe_toFinset]
       by_contra h
-      exact hl (if_neg h)
+      exact hl (ite_eq_right h)
   have hR1 : ∀ v, v ∈ S → v ∉ U → (∑ᶠ l : L v, if l ∈ A v then f v l else 0) = 1 := by
     intro v hvS hvU
     rw [hR, Finset.sum_set_coe (f := fun l => f v l),
       Finset.sum_congr rfl (fun l hl => hgood v hvS hvU l (Set.mem_toFinset.mp hl)), Finset.sum_ite_eq',
-      if_pos (Set.mem_toFinset.mpr (ho v))]
+      ite_eq_left (Set.mem_toFinset.mpr (ho v))]
   rw [← Fintype.prod_sum (fun (v : U) (l : A v.1) => f v.1 l.1)]
   rw [finprod_mem_eq_prod_of_subset _ (t := U) ?_ ?_]
   · rw [← Finset.prod_coe_sort U]
@@ -799,7 +799,7 @@ theorem mem_Kf (h : Good Q) {x : AdjoinRoot Q} : x ∈ Kf Q h ↔ sig Q h x = x 
 theorem totReal (h : Good Q) : IsTotallyReal (Kf Q h) := by
   refine ⟨fun w => ?_⟩
   rw [InfinitePlace.isReal_iff, ComplexEmbedding.isReal_iff]
-  letI : Algebra (Kf Q h) ℂ := w.embedding.toAlgebra
+  let : Algebra (Kf Q h) ℂ := w.embedding.toAlgebra
   let ψ : AdjoinRoot Q →ₐ[Kf Q h] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -842,7 +842,7 @@ theorem finrank_KL (h : Good Q) {s : E} (hs : s ≠ 0) (hsc : IsCMField.complexC
     exact this
   have hne1 : Module.finrank (Kf Q h) (AdjoinRoot Q) ≠ 1 := by
     intro h1
-    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_nonzero' (1 : AdjoinRoot Q) one_ne_zero).1 h1 (AdjoinRoot.of Q s)
+    obtain ⟨c, hc⟩ := (finrank_eq_one_iff_of_ne_zero' (1 : AdjoinRoot Q) one_ne_zero).1 h1 (AdjoinRoot.of Q s)
     rw [Algebra.smul_def, mul_one] at hc
     have hm : AdjoinRoot.of Q s ∈ Kf Q h := hc ▸ c.2
     rw [mem_Kf, hσS] at hm
@@ -856,8 +856,8 @@ theorem finrank_KL (h : Good Q) {s : E} (hs : s ≠ 0) (hsc : IsCMField.complexC
 theorem finrank_Kf (h : Good Q) {s : E} (hs : s ≠ 0) (hsc : IsCMField.complexConj E s = -s) :
     Module.finrank (maximalRealSubfield E) (Kf Q h) = Q.natDegree := by
   have h1 := Module.finrank_mul_finrank (maximalRealSubfield E) E (AdjoinRoot Q)
-  haveI : IsScalarTower (maximalRealSubfield E) (Kf Q h) (AdjoinRoot Q) := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : Module.Free (maximalRealSubfield E) (Kf Q h) := Module.Free.of_divisionRing _ _
+  have : IsScalarTower (maximalRealSubfield E) (Kf Q h) (AdjoinRoot Q) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : Module.Free (maximalRealSubfield E) (Kf Q h) := Module.Free.of_divisionRing _ _
   have h2 := (letI : Module.Free (Kf Q h) (AdjoinRoot Q) := Module.Free.of_divisionRing _ _; Module.finrank_mul_finrank (maximalRealSubfield E) (Kf Q h) (AdjoinRoot Q))
   rw [Algebra.IsQuadraticExtension.finrank_eq_two (maximalRealSubfield E) E,
     (AdjoinRoot.powerBasis (Fact.out : Irreducible Q).ne_zero).finrank, AdjoinRoot.powerBasis_dim] at h1
@@ -905,7 +905,7 @@ theorem avg_const {H : Type} [Group H] (c : ℂ) : avg (fun _ : H => c) = c := b
     ext k; simp [GlobalTheory.TwOrbConj.mem_rStab]
   unfold avg
   rw [hR, Subgroup.index_top]
-  haveI : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
+  have : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
   rw [finsum_eq_single _ (1 : H ⧸ (⊤ : Subgroup H)) (fun q hq => absurd (Subsingleton.elim q 1) hq)]
   simp
 
@@ -934,8 +934,8 @@ theorem summand_eq {G : Type} [Group G] [TopologicalSpace G] (θ : G →* G) (K 
   unfold GlobalTheory.TwOrbConj.summand
   rw [ind_const θ K hKθ y x, avg_const]
   by_cases hm : x⁻¹ * y * θ x ∈ K
-  · rw [Set.indicator_of_mem (show _ ∈ (K : Set G) from hm), if_pos hm]; simp
-  · rw [Set.indicator_of_notMem (show _ ∉ (K : Set G) from hm), if_neg hm]; simp
+  · rw [Set.indicator_of_mem (show _ ∈ (K : Set G) from hm), ite_eq_left hm]; simp
+  · rw [Set.indicator_of_notMem (show _ ∉ (K : Set G) from hm), ite_eq_right hm]; simp
 
 end PositivityTheory.Rg.BcB.G3.GenUnitP
 
@@ -954,7 +954,7 @@ theorem PositivityTheory.Rg.BcB.G3.genUnit_pf : PositivityTheory.Rg.BcB.G3.GenUn
     le_inf ((Subgroup.closure_le _).2 fun t ht => ht.1)
       ((Subgroup.closure_le _).2 fun t ht => hcptK t ht.1 ht.2)
   have hval : GlobalTheory.TwOrbConj.summand θ K z ((K : Set G).indicator 1) 1 = 1 := by
-    rw [PositivityTheory.Rg.BcB.G3.GenUnitP.summand_eq θ K hKθ z 1, if_pos (by simpa using hzK),
+    rw [PositivityTheory.Rg.BcB.G3.GenUnitP.summand_eq θ K hKθ z 1, ite_eq_left (by simpa using hzK),
       GlobalTheory.TwOrbConj.map_conj_self K (K.one_mem), (Subgroup.relIndex_eq_one).2 hcpt]
     simp
   rw [GlobalTheory.TwOrbConj.twOrb_eq, finsum_eq_single _ (DoubleCoset.mk (twCent θ z) K 1)]
@@ -1095,9 +1095,9 @@ theorem PositivityTheory.Rg.BcB.G3.locDict_pf (h1 : ClsNorm) (h2 : ClsOnto) (h3 
     exact pow_eq_zero_iff (n := 2) (by norm_num) |>.1 this
   by_cases hw : IsSplitAt w
   ·
-    have hthL : thL n w = MonoidHom.id _ := by simp only [thL, if_pos hw]
+    have hthL : thL n w = MonoidHom.id _ := by simp only [thL, ite_eq_left hw]
     have hy' : y.val.charpoly = atPl w (δ * thE E n δ).val.charpoly := by
-      have := hy; simp only [nrmL, if_pos hw] at this; exact this
+      have := hy; simp only [nrmL, ite_eq_left hw] at this; exact this
     refine ⟨fun _ _ => 1, fun t => ⟨fun _ => ?_, fun _ => ?_⟩⟩
     · intro i u
       obtain ⟨r, hr⟩ := h6 E s d hs0 hsc hd w hw
@@ -1125,7 +1125,7 @@ theorem PositivityTheory.Rg.BcB.G3.locDict_pf (h1 : ClsNorm) (h2 : ClsOnto) (h3 
       have hN := h1 E n _ hinv δ s hs0 hsc (∀ i, K i) _ ρ.toRingHom hfr t
       have hloc : locEl n w (pt δ ρ.toRingHom t) =
           GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) (δ * thE E n δ) := by
-        simp only [locEl, if_pos hw, thE, hN]
+        simp only [locEl, ite_eq_left hw, thE, hN]
       have hc1 : y.val.charpoly = (locEl n w (pt δ ρ.toRingHom t)).val.charpoly := by
         rw [hloc, hy']
         change _ = (((δ * thE E n δ).val).map (algebraMap E (w.adicCompletion E))).charpoly
@@ -1168,7 +1168,7 @@ theorem PositivityTheory.Rg.BcB.G3.locDict_pf (h1 : ClsNorm) (h2 : ClsOnto) (h3 
     have hy' : (y * thetaGL n (cj w) y).val.charpoly = (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) δ *
         thetaGL n (cj w) (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) δ)).val.charpoly := by
       rw [hNδ]
-      have := hy; simp only [nrmL, if_neg hw] at this; exact this
+      have := hy; simp only [nrmL, ite_eq_right hw] at this; exact this
     have hs0' : algebraMap E (w.adicCompletion E) s ≠ 0 := (_root_.map_ne_zero _).2 hs0
     have hsc' : cj w (algebraMap E (w.adicCompletion E) s) = -algebraMap E (w.adicCompletion E) s := by
       rw [hcE, hsc, map_neg]
@@ -1183,11 +1183,11 @@ theorem PositivityTheory.Rg.BcB.G3.locDict_pf (h1 : ClsNorm) (h2 : ClsOnto) (h3 
     have hpt : locEl n w (pt δ ρ.toRingHom t) = pt (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) δ)
         (ρ'.comp Φ.symm.toRingHom) T := by
       apply Units.ext
-      simp only [locEl, if_neg hw, pt]
+      simp only [locEl, ite_eq_right hw, pt]
       change ((ρ t * δ.val).map (algebraMap E (w.adicCompletion E))) =
         ρ' (Φ.symm (T : _)) * (δ.val.map (algebraMap E (w.adicCompletion E)))
       rw [hT, RingEquiv.symm_apply_apply, hρ'1, Matrix.map_mul]
-    have hthL : thL n w = thetaGL n (cj w) := by simp only [thL, if_neg hw]
+    have hthL : thL n w = thetaGL n (cj w) := by simp only [thL, ite_eq_right hw]
     rw [hpt, hthL]
     have step1 : (∃ g, pt (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) δ) (ρ'.comp Φ.symm.toRingHom) T =
         g⁻¹ * y * thetaGL n (cj w) g) ↔ ∃ g, pt (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) δ)
@@ -1240,7 +1240,7 @@ theorem nrmL_mem {E : Type} [Field E] [NumberField E] [IsCMField E] (hU : Unr E)
   unfold nrmL
   split_ifs with hs
   · exact hz
-  · have : thetaGL n (cj w) z = thL n w z := by unfold thL; rw [if_neg hs]
+  · have : thetaGL n (cj w) z = thL n w z := by unfold thL; rw [ite_eq_right hs]
     rw [this]
     exact (GlobalTheory.LFun.KGL w (n := n)).mul_mem hz (hKθ _ hz)
 
@@ -1249,11 +1249,11 @@ theorem commute_nrmL {E : Type} [Field E] [NumberField E] [IsCMField E] (hU : Un
   obtain ⟨-, hinv, -⟩ := GlobalTheory.BCT.ThBasic.twist_basic E hU n w
   have ht' : t * z = z * thL n w t := ht
   by_cases hs : IsSplitAt w
-  · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
-    have hn1 : nrmL n w z = z := by unfold nrmL; rw [if_pos hs]
+  · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
+    have hn1 : nrmL n w z = z := by unfold nrmL; rw [ite_eq_left hs]
     rw [hn1]; rw [hθ1] at ht'; simpa using ht'
   · have hn1 : nrmL n w z = z * thL n w z := by
-      unfold nrmL; rw [if_neg hs]; unfold thL; rw [if_neg hs]
+      unfold nrmL; rw [ite_eq_right hs]; unfold thL; rw [ite_eq_right hs]
     rw [hn1]
     calc t * (z * thL n w z) = z * thL n w t * thL n w z := by rw [← mul_assoc, ht']
       _ = z * thL n w (t * z) := by simp only [map_mul, mul_assoc]
@@ -1275,8 +1275,8 @@ theorem PositivityTheory.Rg.BcB.G3.locGood_pf : LocGood := by
   have hNK := nrmL_mem hU n w z hzK
   refine ⟨fun g hg => ?_, fun t ht hc => ?_, fun y hyK hy => ?_⟩
   · by_cases hs : IsSplitAt w
-    · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
-      have hn1 : nrmL n w z = z := by unfold nrmL; rw [if_pos hs]
+    · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
+      have hn1 : nrmL n w z = z := by unfold nrmL; rw [ite_eq_left hs]
       rw [hn1] at hgood₀
       rw [hθ1] at hg
       obtain ⟨t, ht, k, hk, rfl⟩ := GlobalTheory.SplitUniq.splitUniq E n w z g hzK hgood₀ hg
@@ -1809,7 +1809,7 @@ theorem unit_pair_of_support (h1 : LocGood) (h2 : GenUnit) (h3 : Supp) : Unit2 :
     exact ⟨(g1, g2), Prod.ext hg1 hg2⟩
   refine ⟨?_, fun hyK => hconjK y hyK hy1 hy2⟩
   by_cases hex : ∃ g, y = g⁻¹ * z * θ g
-  · rw [if_pos hex]
+  · rw [ite_eq_left hex]
     obtain ⟨g, rfl⟩ := hex
     refine h2 _ θ K z ?_ hzK ?_ ?_ g
     · intro k hk
@@ -1828,7 +1828,7 @@ theorem unit_pair_of_support (h1 : LocGood) (h2 : GenUnit) (h3 : Supp) : Unit2 :
       have e1 : t.1 * z.1 = z.1 * thL a w t.1 := congrArg Prod.fst ht'
       have e2 : t.2 * z.2 = z.2 * thL b w t.2 := congrArg Prod.snd ht'
       exact Subgroup.mem_prod.2 ⟨hB1 t.1 e1 (Unit2P.isCompact_fst t hc), hB2 t.2 e2 (Unit2P.isCompact_snd t hc)⟩
-  · rw [if_neg hex]
+  · rw [ite_eq_right hex]
     by_contra hne
     obtain ⟨g, hg⟩ := h3 _ θ K y _ hne
     have hmem : g⁻¹ * y * θ g ∈ K := by

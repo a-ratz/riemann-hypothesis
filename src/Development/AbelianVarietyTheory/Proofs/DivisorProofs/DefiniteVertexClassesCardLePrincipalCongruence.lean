@@ -424,11 +424,11 @@ theorem colLat_inv_mulVec_int {K : Type} [Field K] [NumberField K] {n : ℕ} (fr
   let M : Submodule (𝓞 K) (Fin n → K) :=
     { carrier := {x | ∀ i, (fr⁻¹.val *ᵥ x) i ∈ Formalism.UG.intOE K}
       add_mem' := fun {a b} ha hb i => by
-        simp only [Set.mem_setOf_eq, Matrix.mulVec_add, Pi.add_apply] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, Matrix.mulVec_add, Pi.add_apply] at ha hb ⊢
         exact add_mem (ha i) (hb i)
       zero_mem' := fun i => by simp
       smul_mem' := fun c a ha i => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have : fr⁻¹.val *ᵥ (c • a) = (algebraMap (𝓞 K) K c) • (fr⁻¹.val *ᵥ a) := by
           rw [← Matrix.mulVec_smul, algebraMap_smul]
         rw [this, Pi.smul_apply, smul_eq_mul]
@@ -460,11 +460,11 @@ theorem hatL_colLat_coord_int {D : D7} {n : ℕ} (fr : GL (Fin n) D.host.E) (y :
   let M : Submodule S (Fin n → Lev.EAf D) :=
     { carrier := {y | ∀ i, (P *ᵥ y) i ∈ S}
       add_mem' := fun {a b} ha hb i => by
-        simp only [Set.mem_setOf_eq, Matrix.mulVec_add, Pi.add_apply] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, Matrix.mulVec_add, Pi.add_apply] at ha hb ⊢
         exact add_mem (ha i) (hb i)
       zero_mem' := fun i => by simp
       smul_mem' := fun c a ha i => by
-        simp only [Set.mem_setOf_eq] at ha ⊢
+        simp only [Set.mem_ofPred_eq] at ha ⊢
         have : P *ᵥ (c • a) = (c : Lev.EAf D) • (P *ᵥ a) := by
           rw [← Matrix.mulVec_smul]; rfl
         rw [this, Pi.smul_apply, smul_eq_mul]

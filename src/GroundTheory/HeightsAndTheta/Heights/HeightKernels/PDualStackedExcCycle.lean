@@ -293,7 +293,7 @@ theorem DualStackedExcCycle.proof (hR : DualStackedExcReduced.Statement) : DualS
     rw [hLu, hLg] at hmul
     have hft : C (a t) * graphFirst t ∈ E := hBE (first_mem_base b' a t)
     rw [divCycle_of_mem (hsupp _ hft (first_not_mem b' (ha t))), e2, multAt_eq_toNat, hmul]
-    rw [← Nat.cast_one (R := ℕ∞), ← Nat.cast_add, ENat.toNat_coe]
+    rw [← Nat.cast_one (R := ℕ∞), ← Nat.cast_add, ENat.toNat_natCast]
     push_cast
     ring
   ·

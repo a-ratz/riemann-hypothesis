@@ -86,10 +86,10 @@ theorem UpperTheory.global_cohomology_finite_set :
   obtain ⟨σ, a, n, hσa, hn, han⟩ := hσ
   have hM : ∀ m : M, (l ^ 1) • m = 0 := fun m => by
     rw [pow_one, ← Nat.cast_smul_eq_nsmul k, CharP.cast_eq_zero, zero_smul]
-  letI : Module (ZMod (l ^ 1)) M := AddCommGroup.zmodModule hM
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ 1)
+  let : Module (ZMod (l ^ 1)) M := AddCommGroup.zmodModule hM
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : NeZero (l ^ 1) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ 1)
   obtain ⟨μ, hμ⟩ := GlobalTheory.Published.PoitouTate.exists_lift_cycMod (F := ℚ) (Ω := Ω) (l := l) (r := 1) hS
   obtain ⟨inv, -, h⟩ := hPT ℚ Ω l 1 (Or.inl hl) Nat.one_pos ζ hζ
   have hex := (h S hS A hA μ hμ M (GlobalTheory.Published.zmodRep (l ^ 1) ρ) hρ).1

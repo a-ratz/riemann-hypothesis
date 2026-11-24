@@ -367,7 +367,7 @@ theorem finG_cls {F : Type} [Field F] [NumberField F] [IsTotallyReal F] {Δ : F}
   have hΔ : Δ ≠ 0 := by
     rintro rfl
     simp at h0
-  haveI : Fact (∀ r : F, r ^ 2 ≠ Δ + 0 * r) := ⟨fun r hr => by
+  have : Fact (∀ r : F, r ^ 2 ≠ Δ + 0 * r) := ⟨fun r hr => by
     rw [zero_mul, add_zero] at hr
     rw [← hr, map_pow] at h0
     exact absurd (sq_nonneg _) (not_le.2 h0)⟩
@@ -784,7 +784,7 @@ theorem finG_stab [IsTotallyReal F] (hneg : ∀ σ : F →+* ℝ, σ Δ < 0) (ι
 theorem finG_stab' {D : Dat Δ} {V : Type} [AddCommGroup V] [Module ℂ V] {ch : F → ℂ} {B : Base (U3 Δ) (GA Δ) V} {s : B.Tw}
     (hD : D.Ok) (hB : D.IsBG ch B s) (g : GA Δ) :
     B.Γ₀.relIndex ((B.U.map (MulAut.conj g).toMonoidHom).comap B.ι) ≠ 0 := by
-  haveI := hD.real
+  have := hD.real
   have hfin := finG_stab hD.neg B.ι hB.ι g
   rw [hB.Γ₀, Subgroup.relIndex_bot_left]
   have hsub : (((B.U.map (MulAut.conj g).toMonoidHom).comap B.ι : Subgroup (U3 Δ)) : Set (U3 Δ)) ⊆
@@ -808,7 +808,7 @@ theorem finG_stab' {D : Dat Δ} {V : Type} [AddCommGroup V] [Module ℂ V] {ch :
     · have hJ : D.Jv v = KU (Ov v) (cv v Δ) := by simp [Dat.Jv, hs]
       rw [hJ] at hv
       exact hv
-  haveI : Finite ((B.U.map (MulAut.conj g).toMonoidHom).comap B.ι) := (hfin.subset hsub).to_subtype
+  have : Finite ((B.U.map (MulAut.conj g).toMonoidHom).comap B.ι) := (hfin.subset hsub).to_subtype
   exact Nat.card_ne_zero.mpr ⟨inferInstance, inferInstance⟩
 
 end UpperTheory.V.Z.Sym.Glob
@@ -936,10 +936,10 @@ theorem finG_fGv_inv (hD : D.Ok) {t : Dat.Par F} (ht : D.Cone t) (v : Pl F) (u :
     D.fGv t v (u * y) = D.fGv t v y ∧ D.fGv t v (y * theta _ u) = D.fGv t v y := by
   by_cases hv : v ∈ D.Sg
   · rw [finG_Jv_of_mem hv] at hu
-    simp only [Dat.fGv, hv, if_true]
+    simp only [Dat.fGv, hv, ite_true]
     exact (hD.sig v hv).G_inv (t v) (ht v hv) u hu y
   · rw [finG_Jv_of_not_mem hv] at hu
-    simp only [Dat.fGv, hv, if_false]
+    simp only [Dat.fGv, hv, ite_false]
     have hθ : theta _ u ∈ KU (Ov v) (cv v Δ) := (finG_theta_mem_KU u).mpr hu
     constructor
     · rw [Subgroup.mul_mem_cancel_left _ hu]
@@ -955,7 +955,7 @@ theorem finG_fGv_ne_zero {t : Dat.Par F} {g : GA Δ} (h : D.FG t g ≠ 0) (v : P
   apply ((D.Sg.finite_toSet).union hfin).subset
   intro w hw
   by_contra hc
-  simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at hc
+  simp only [Set.mem_union, Finset.mem_coe, Set.mem_ofPred_eq, not_or, not_not] at hc
   apply hw
   simp [Dat.fGv, hc.1, hc.2, one]
 
@@ -1061,7 +1061,7 @@ section -- clump:auto
 theorem UpperTheory.V.Z.Sym.Glob.finG :
     UpperTheory.V.Z.Sym.Glob.FinG := by
   intro F _ _ Δ D hD V _ _ ch B s hB
-  haveI := hD.real
+  have := hD.real
   refine ⟨⟨?_, finG_stab' hD hB⟩, finG_test hD hB⟩
   rw [hB.U]
   exact finG_cls_of hD B.ι (finG_cls hD.neg B.ι hB.ι)

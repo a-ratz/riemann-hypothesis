@@ -85,8 +85,8 @@ theorem finiteDimensional_fixed_openSubgroup_GLw : ∀ (E : Type) [Field E] [Num
     ∀ (n : ℕ) (w : Pl E) (σ : SmIrr (GLw n w)) (U : Subgroup (GLw n w)), IsOpen (U : Set (GLw n w)) →
       FiniteDimensional ℂ (fixed σ.ρ U) := by
   intro E _ _ _ n w σ U hU
-  letI := GlobalTheory.LocalData.complRel w
-  haveI := GlobalTheory.LocalData.isLocalField w
+  let := GlobalTheory.LocalData.complRel w
+  have := GlobalTheory.LocalData.isLocalField w
   have hadm : IsAdmissible σ.ρ :=
     GlobalTheory.FourClauses.irreducibleAdmissibleGL (w.adicCompletion E) n σ.V σ.ρ σ.smooth σ.irred
   obtain ⟨ho, hc⟩ := GlobalTheory.LFun.SatCompare.isOpen_isCompact_KGL (E := E) w n

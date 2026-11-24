@@ -391,7 +391,7 @@ theorem exists_isLinW_at : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type)
   have hwM : ∀ z, wM z = GlobalTheory.LatVac.locCo M.co v (U 0 (Q z)) := fun _ => rfl
   have hform := fun (x u : Matrix (Fin n) (Fin d) (AE F E)) (hx : At (evFin F v) x) =>
     (locCo_form M.co v x u).trans (evFin_symp hcm X W hX hY t b c x u hx)
-  haveI : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F _).injective
+  have : CharZero (Fv F v) := charZero_of_injective_algebraMap (algebraMap F _).injective
   have hψc : Continuous (GlobalTheory.LatVac.psiAt B.ψ v) := GlobalTheory.SchrSB.continuous_psiAt B.ψ hstd.1 v
   have hψne : GlobalTheory.LatVac.psiAt B.ψ v ≠ 1 := GlobalTheory.PsiNontriv.psiAt_ne_one B.ψ hstd v
   obtain ⟨ι, hbij, htr, hmu⟩ := _root_.GlobalTheory.SvNAnyChar.stoneVonNeumann_any_char (GlobalTheory.LatVac.psiAt B.ψ v) hψc hψne wT wM

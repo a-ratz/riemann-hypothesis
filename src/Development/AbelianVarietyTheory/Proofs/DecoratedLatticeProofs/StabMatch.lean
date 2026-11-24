@@ -972,7 +972,7 @@ theorem smul_eX_mem_iff (X : HidaSetting D) (i : Fin D.R.rS) (c : D.host.E) :
   constructor
   · intro hc
     have := hT_fY_mem X i hc
-    rwa [map_smul, smul_eq_mul, hT_swap, X.ef, if_pos rfl, star_one, mul_one] at this
+    rwa [map_smul, smul_eq_mul, hT_swap, X.ef, ite_eq_left rfl, star_one, mul_one] at this
   · intro hc
     rw [X.Lam_split]
     exact Submodule.mem_sup_left (Submodule.mem_sup_left (Submodule.subset_span ⟨i, c, hc, rfl⟩))
@@ -982,7 +982,7 @@ theorem smul_fY_mem_iff (X : HidaSetting D) (i : Fin D.R.rS) (c : D.host.E) :
   constructor
   · intro hc
     have := hT_eX_mem X i hc
-    rwa [map_smul, smul_eq_mul, X.ef, if_pos rfl, mul_one] at this
+    rwa [map_smul, smul_eq_mul, X.ef, ite_eq_left rfl, mul_one] at this
   · intro hc
     rw [X.Lam_split]
     exact Submodule.mem_sup_right (Submodule.subset_span ⟨i, c, hc, rfl⟩)
@@ -1040,14 +1040,14 @@ theorem latS_rescaled_frame : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.Hida
     show (B.d.qX *ᵥ y) i • (fun r => B.d.e r i) ∈ latS D
     rw [colE, hq]
     by_cases hs : GlobalTheory.Core.SBesEx.scl μ lam i = 0
-    · rw [hs, zero_mul]; exact FractionalIdeal.mem_coe.mp (zero_mem _)
+    · rw [hs, zero_mul]; exact FractionalIdeal.mem_coeToSubmodule.mp (zero_mem _)
     · rw [← mul_assoc, mul_inv_cancel₀ hs, one_mul]; exact hT_fY_mem X i hY
   · have hq : (B.d.qY *ᵥ y) i = star (GlobalTheory.Core.SBesEx.scl μ lam i) * (VS D).hT (X.eX i) Y := by
       rw [hqY, hcol_e, hdot, hyY, GlobalTheory.Core.SBesEx.cY_isom D X h hId Y (X.eX i)]
     show (B.d.qY *ᵥ y) i • (fun r => B.d.e' r i) ∈ latS D
     rw [colE', hq]
     by_cases hs : star (GlobalTheory.Core.SBesEx.scl μ lam i) = 0
-    · rw [hs, _root_.inv_zero, zero_mul]; exact FractionalIdeal.mem_coe.mp (zero_mem _)
+    · rw [hs, _root_.inv_zero, zero_mul]; exact FractionalIdeal.mem_coeToSubmodule.mp (zero_mem _)
     · rw [← mul_assoc, inv_mul_cancel₀ hs, one_mul]; exact hT_eX_mem X i hY
 
 end GlobalTheory.Core.Mi.LatMatch
@@ -1197,7 +1197,7 @@ theorem selfDual_core_monoAt (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S 
   ·
     refine Submodule.fg_of_fg_map_injective _ hinj ?_
     have hLfg : L.FG := hL.1.fg
-    haveI : IsNoetherian (𝓞 D.host.E) L := isNoetherian_of_fg_of_noetherian L hLfg
+    have : IsNoetherian (𝓞 D.host.E) L := isNoetherian_of_fg_of_noetherian L hLfg
     have hle : (coreLat d L).map ((Matrix.mulVecLin d.i₀).restrictScalars (𝓞 D.host.E)) ≤ L :=
       Submodule.map_comap_le _ _
     have h1 : (((coreLat d L).map ((Matrix.mulVecLin d.i₀).restrictScalars (𝓞 D.host.E))).comap L.subtype).FG :=

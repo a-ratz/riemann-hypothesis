@@ -72,14 +72,14 @@ theorem single_key (R S : Type) [CommRing R] [CommRing S] (φ : R →+* S) (F : 
 theorem RestrRes_of (hex : LateralTheory.EtaleFoundations.EtaleSheafShortComplexExactIffLocallyLifts) (hres : LateralTheory.EtaleFoundations.EtaleInjectiveResolutionBasicProperties) :
     LateralTheory.KummerTheory.BockCut.RestrRes := by
   intro R S _ _ φ F
-  haveI := restr_preservesHomology hex R S φ
+  have := restr_preservesHomology hex R S φ
   let M := (restr φ).mapHomologicalComplex (ComplexShape.up ℤ)
   let T : Cx R := M.obj (res S F)
   let σ : SemiMap (res S F) T :=
     { app := fun U s => AddMonoidHom.mk' (fun a => (show Sec (T.X s) U from a)) (fun _ _ => rfl)
       nat := fun _ _ _ => rfl
       comm := fun _ _ _ _ => rfl }
-  haveI : QuasiIso (resAug F) := (hres S F).2.2.2.1
+  have : QuasiIso (resAug F) := (hres S F).2.2.2.1
   have hq2 : QuasiIso (M.map (resAug F)) :=
     HomologicalComplex.quasiIso_map_of_preservesHomology (resAug F) (restr φ)
   let e := (HomologicalComplex.singleMapHomologicalComplex (restr φ) (ComplexShape.up ℤ) 0).inv.app F

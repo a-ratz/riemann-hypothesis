@@ -178,7 +178,7 @@ theorem exists_nthRoot : ∀ (E : Type) [Field E] [NumberField E] (P : HeightOne
     rw [one_pow]
     have hA1 : A - 1 = 0 := Matrix.ext fun i j => by
       have h := hA i j
-      rwa [mul_zero, Valuation.map_zero, le_zero_iff, Valuation.zero_iff] at h
+      rwa [mul_zero, Valuation.map_zero, nonpos_iff_eq_zero, Valuation.zero_iff] at h
     exact (sub_eq_zero.1 hA1).symm
   have hn0 : (n : P.adicCompletion E) ≠ 0 := Nat.cast_ne_zero.2 hn.ne'
   set s : P.adicCompletion E := (n : P.adicCompletion E) ^ 2 * c with hs

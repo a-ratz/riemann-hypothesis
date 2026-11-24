@@ -189,7 +189,7 @@ theorem goal1 (τ : Representation K G T)
     (by rw [hw, finrank_top, Module.finrank_fin_fun])
   let c : Matrix (Fin (finrank K (LinearMap.range ε))) (Fin (finrank K (LinearMap.range ε))) K :=
     Matrix.of fun i j => φ (τ (δ i) (ε (τ (γ j) v)))
-  have hc : IsUnit c := Matrix.linearIndependent_rows_iff_isUnit.mp hδ
+  have hc : IsUnit c := Matrix.linearIndependent_row_iff_isUnit.mp hδ
   have hcd : IsUnit c.det := (Matrix.isUnit_iff_isUnit_det c).mp hc
   refine ⟨γ, δ, c, hcd.ne_zero, ?_, ?_, ?_⟩
   · intro i j

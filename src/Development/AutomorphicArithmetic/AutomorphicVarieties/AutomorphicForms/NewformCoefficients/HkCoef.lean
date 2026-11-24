@@ -46,7 +46,7 @@ open NumberField IsDedekindDomain Formalism.ConjugateSelfDual UpperTheory.V.Sd
 private theorem le_asIdeal_of_normV_dvd_absNorm (w : Pl ℚ) (𝔪 : Ideal (𝓞 ℚ)) (h𝔪 : 𝔪 ≠ ⊥)
     (hd : normV w ∣ Ideal.absNorm 𝔪) : 𝔪 ≤ w.asIdeal := by
   obtain ⟨hp, hspan, -, -⟩ := UpperTheory.V.Af.Nf.places w
-  haveI : Fact (normV w).Prime := ⟨hp⟩
+  have : Fact (normV w).Prime := ⟨hp⟩
   by_contra h
   have htop : w.asIdeal ⊔ 𝔪 = ⊤ := by
     by_contra hne
@@ -54,7 +54,7 @@ private theorem le_asIdeal_of_normV_dvd_absNorm (w : Pl ℚ) (𝔪 : Ideal (𝓞
   obtain ⟨a, ha, b, hb, hab⟩ := Submodule.mem_sup.mp (htop ▸ Submodule.mem_top : (1 : 𝓞 ℚ) ∈ w.asIdeal ⊔ 𝔪)
   have hne : Ideal.absNorm 𝔪 ≠ 0 := by rwa [Ne, Ideal.absNorm_eq_zero_iff]
   rw [Ideal.absNorm_apply, Submodule.cardQuot_apply] at hd hne
-  haveI : Finite (𝓞 ℚ ⧸ 𝔪) := Nat.finite_of_card_ne_zero hne
+  have : Finite (𝓞 ℚ ⧸ 𝔪) := Nat.finite_of_card_ne_zero hne
   obtain ⟨y, hy⟩ := exists_prime_addOrderOf_dvd_card' (G := 𝓞 ℚ ⧸ 𝔪) (normV w) hd
   obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y
   have hpx : ((normV w : ℕ) : 𝓞 ℚ) * x ∈ 𝔪 := by
@@ -99,7 +99,7 @@ private theorem chiI_eq_of_conductor_eq_zero (ω : Formalism.L2.Host.HChar ℚ) 
     fun v => Associates.irreducible_mk.mpr v.irreducible
   unfold chiI
   rw [finprod_eq_single _ w]
-  · simp only [hc, if_true]
+  · simp only [hc, ite_true]
     unfold ordI
     rw [Associates.count_self (hirr w), pow_one]
   · intro v hv

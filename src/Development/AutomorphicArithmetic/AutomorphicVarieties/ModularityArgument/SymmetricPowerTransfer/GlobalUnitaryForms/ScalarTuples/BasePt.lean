@@ -167,11 +167,11 @@ private theorem hasse {F : Type} [Field F] [NumberField F] {Δ : F} (D : Dat Δ)
       simp only [map_sub, map_mul, map_pow, map_one, map_ofNat, RingHom.comp_apply] at h1 h2
       nlinarith [sq_nonneg (2 * σ a - σ (algebraMap F E τ))]
     · let v : Pl F := w.under (𝓞 F)
-      haveI : w.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
+      have : w.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
       have hf : ∀ x : F, KStar.Choice.complMap v w (cv v x) = cv w (algebraMap F E x) :=
         KStar.Choice.complMap_algebraMap v w
       unfold hs
-      rw [if_pos]
+      rw [ite_eq_left]
       by_cases hv : v ∈ D.Sg
       · obtain ⟨s, hs⟩ := h.split v hv
         have e := congrArg (KStar.Choice.complMap v w) hs
@@ -181,7 +181,7 @@ private theorem hasse {F : Type} [Field F] [NumberField F] {Δ : F} (D : Dat Δ)
           rintro h0
           rw [h0, mul_zero, map_eq_zero, map_eq_zero] at e
           exact hΔ e
-        haveI : CharZero (Kv w) := algebraRat.charZero _
+        have : CharZero (Kv w) := algebraRat.charZero _
         refine ⟨(cv w a + 1) / 2, (cv w a - 1) / (2 * r), ?_⟩
         rw [e]
         field_simp
@@ -192,19 +192,19 @@ private theorem hasse {F : Type} [Field F] [NumberField F] {Δ : F} (D : Dat Δ)
         rw [hf, ← map_pow, ha, map_sub, map_mul, map_one]
   unfold hs at key
   by_contra hn
-  rw [if_neg hn] at key
+  rw [ite_eq_right hn] at key
   norm_num at key
 
 private theorem d_ex {F : Type} [Field F] [NumberField F] {Δ : F} (D : Dat Δ) (h : D.Ok) (τ : F) (hτ : IsCM τ)
     (hi : ∀ v ∉ D.Sg, cv v τ ∈ (algebraMap (Ov v) (Kv v)).range) (σ : F →+* ℝ) :
     ∃ d : EL Δ τ, d * sigL d = ofE Δ (ω : Etau F τ) := by
   have hΔ : Δ ≠ 0 := fun h0 => by simpa [h0] using h.neg σ
-  haveI : Fact (∀ r : F, r ^ 2 ≠ -1 + τ * r) := ⟨fun r hr => by
+  have : Fact (∀ r : F, r ^ 2 ≠ -1 + τ * r) := ⟨fun r hr => by
     have h1 := hτ σ
     have h2 := congrArg σ hr
     simp only [map_sub, map_add (f := _), map_neg, map_mul, map_pow, map_one, map_ofNat] at h1 h2
     nlinarith [sq_nonneg (2 * σ r - σ τ)]⟩
-  haveI : NumberField (Etau F τ) := NumberField.of_module_finite F _
+  have : NumberField (Etau F τ) := NumberField.of_module_finite F _
   obtain ⟨x, y, hxy⟩ := hasse D h τ hτ hi hΔ (Etau F τ) ω (by ext <;> simp [pow_two, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one])
   exact norm_of_sq x y hxy
 
@@ -283,14 +283,14 @@ open UpperTheory.V.Z.Sym.Glob.GlobalDataExistence in
 theorem UpperTheory.V.Z.Sym.Glob.datEx :
     UpperTheory.V.Z.Sym.Glob.DatEx := by
   intro F _ _ Δ D h τ hτ hi
-  haveI := h.real
+  have := h.real
   obtain ⟨w⟩ : Nonempty (InfinitePlace F) := inferInstance
   let σ : F →+* ℝ := InfinitePlace.embedding_of_isReal (IsTotallyReal.isReal w)
   obtain ⟨d, hd⟩ := d_ex D h τ hτ hi σ
   have hp := posF h.neg hτ d
   refine ⟨d, _, ⟨fun h0 => by simpa [h0] using hτ σ, one_ne_zero, hd, ?_, ?_, ?_⟩, hp⟩
-  · haveI : Module.Finite F (EL Δ τ) := Module.Finite.trans (Lsq F Δ) _
-    haveI : IsArtinianRing (EL Δ τ) := IsArtinianRing.of_finite F _
+  · have : Module.Finite F (EL Δ τ) := Module.Finite.trans (Lsq F Δ) _
+    have : IsArtinianRing (EL Δ τ) := IsArtinianRing.of_finite F _
     refine IsArtinianRing.isUnit_iff_mem_nonZeroDivisors.2 (mem_nonZeroDivisors_iff_left.2 fun x hx => ?_)
     by_contra h0
     have := hp (0, x) (fun e => h0 (congrArg Prod.snd e)) σ
@@ -330,7 +330,7 @@ private theorem ev_mul {O K : Type} [CommRing O] [Field K] [Algebra O K] {x y : 
 
 theorem UpperTheory.V.Z.Sym.Loc.kappa : UpperTheory.V.Z.Sym.Loc.Kappa := by
   intro O K _ _ _ _ _ Δ τ L hreg c hc lam hl hX z hz j χ hj hχ
-  haveI := L.frac
+  have := L.frac
   have HL := hsLaw O K Δ L
   have hc0 : c ≠ 0 := by
     rintro rfl
@@ -395,7 +395,7 @@ theorem UpperTheory.V.Z.Sym.Loc.kappa : UpperTheory.V.Z.Sym.Loc.Kappa := by
       HL.2.1 Δ _ L.even (ev_unit hXu), show -2 * c = 2 * -c by ring, hsMul O K Δ L _ _ _ hreg L.two_ne (neg_ne_zero.2 hc0)]
     have e2 : hs (τ ^ 2 - 4) 2 * hs (τ ^ 2 - 4) (algebraMap O K (r * (r + 2))) = 1 := by
       rw [← hsMul O K Δ L _ _ _ hreg L.two_ne hX0]
-      exact if_pos ⟨algebraMap O K w, 0, by rw [← map_pow, hw, map_mul, map_ofNat]; ring⟩
+      exact ite_eq_left ⟨algebraMap O K w, 0, by rw [← map_pow, hw, map_mul, map_ofNat]; ring⟩
     linear_combination (hs (τ ^ 2 - 4) (-c) * gOrb O j χ a) * e2
   · by_cases he : EvenVal O (2 + τ)
     · obtain ⟨ε, s, hs0, e⟩ := id he
@@ -434,7 +434,7 @@ theorem UpperTheory.V.Z.Sym.Loc.kappa : UpperTheory.V.Z.Sym.Loc.Kappa := by
         2 + τ + QuadraticAlgebra.trace l₁ = algebraMap O K X →
         kapSum O c (dLam lam z) 1 = eps τ lam * (hs (τ ^ 2 - 4) (-c) * gOrb O j χ z) := fun l₁ X i1 n1 hXu eX => by
       refine red l₁ n1 (eX ▸ (hXu.map _).ne_zero) _ ?_
-      rw [val l₁ n1 1 1 (caseG O K Δ τ L hD c hce l₁ i1 n1 z hz) ⟨1, if_pos ⟨1, 0, by simp⟩⟩, eps, eX, GV.1 ⟨h1.unit, ep⟩, GV.2.1 hD,
+      rw [val l₁ n1 1 1 (caseG O K Δ τ L hD c hce l₁ i1 n1 z hz) ⟨1, ite_eq_left ⟨1, 0, by simp⟩⟩, eps, eX, GV.1 ⟨h1.unit, ep⟩, GV.2.1 hD,
         HL.2.1 _ _ hDe (ev_unit hXu), HL.2.1 _ _ L.even (ev_unit hXu), HL.2.1 _ _ hDe (ev_neg hce)]
       simp
     by_cases hu : IsUnit (2 + τ₀ + 2 * x)
@@ -494,17 +494,17 @@ private theorem hs_sq {K : Type} [Field K] (h2 : (2 : K) ≠ 0) {d : K} (hd : d 
   obtain ⟨r, rfl⟩ := hs'
   have hr : r ≠ 0 := fun h => hd (by simp [h])
   unfold hs
-  rw [if_pos]
+  rw [ite_eq_left]
   exact ⟨(x + 1) / 2, (x - 1) / (2 * r), by field_simp; ring⟩
 
 private theorem hs_pos (d x : ℝ) (hx : 0 < x) : hs d x = 1 := by
   unfold hs
-  rw [if_pos]
+  rw [ite_eq_left]
   exact ⟨Real.sqrt x, 0, by rw [Real.sq_sqrt hx.le]; ring⟩
 
 private theorem hs_neg (d x : ℝ) (hd : d < 0) (hx : x < 0) : hs d x = -1 := by
   unfold hs
-  rw [if_neg]
+  rw [ite_eq_right]
   rintro ⟨a, b, h⟩
   nlinarith [sq_nonneg a, sq_nonneg b]
 
@@ -514,7 +514,7 @@ private theorem normL {K : Type} [Field K] (Δ : K) (x : Lsq K Δ) : QuadraticAl
 private theorem hs_iff {K : Type} [Field K] (Δ x : K) : (∃ lam : Lsq K Δ, QuadraticAlgebra.norm lam = x) → hs Δ x = 1 := by
   rintro ⟨lam, hl⟩
   unfold hs
-  rw [if_pos ⟨lam.re, lam.im, by rw [← normL, hl]⟩]
+  rw [ite_eq_left ⟨lam.re, lam.im, by rw [← normL, hl]⟩]
 
 private theorem hs_iff' {K : Type} [Field K] (Δ x : K) (h : hs Δ x = 1) : ∃ lam : Lsq K Δ, QuadraticAlgebra.norm lam = x := by
   unfold hs at h
@@ -649,7 +649,7 @@ private theorem ae_unit {F : Type} [Field F] [NumberField F] {x : F} (hx : x ≠
     intro y
     simp only [Filter.eventually_cofinite, HeightOneSpectrum.mem_adicCompletionIntegers, not_le]
     refine (HeightOneSpectrum.Support.finite (𝓞 F) y).subset fun v hv => ?_
-    simp only [Set.mem_setOf_eq] at hv
+    simp only [Set.mem_ofPred_eq] at hv
     show 1 < v.valuation F y
     have e : Valued.v (cv v y) = v.valuation F y :=
       HeightOneSpectrum.valuedAdicCompletion_eq_valuation' v y
@@ -748,7 +748,7 @@ end UpperTheory.V.Z.Sym.Glob
 theorem UpperTheory.V.Z.Sym.Glob.basePt :
     UpperTheory.V.Z.Sym.Glob.BasePt := by
   intro F _ _ Δ D hD
-  haveI := hD.real
+  have := hD.real
   refine ⟨(-1 : ℝ) ^ Fintype.card (F →+* ℝ), ?_⟩
   intro τ hτ hspl hi
   obtain ⟨w⟩ : Nonempty (NumberField.InfinitePlace F) := inferInstance

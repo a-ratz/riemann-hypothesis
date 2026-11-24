@@ -212,7 +212,7 @@ theorem locInd_eq_stdInd (d : 𝓞 F) (hd : d ≠ 0) (a : κ → Af F) (v : Pl (
   unfold locInd stdInd
   congr 1
   ext y
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   refine forall_congr' fun i => ?_
   constructor
   · intro h
@@ -245,19 +245,19 @@ theorem ind_eq_finprod (d : 𝓞 F) (hd : d ≠ 0) (a z : κ → Af F) :
   have hloc : ∀ v : Pl (F := F), (locInd d a v fun i => evalV F v (z i)) =
       if ∀ i, algebraMap F (Fv F v) ((d : F)⁻¹) * (evalV F v (z i) - evalV F v (a i)) ∈
         v.adicCompletionIntegers F then 1 else 0 := fun v => by
-    simp only [locInd, Set.indicator_apply, Set.mem_setOf_eq, Pi.one_apply]
+    simp only [locInd, Set.indicator_apply, Set.mem_ofPred_eq, Pi.one_apply]
   have hmem : z - a ∈ levSub (κ := κ) d ↔ ∀ v : Pl (F := F), ∀ i, algebraMap F (Fv F v) ((d : F)⁻¹) *
       (evalV F v (z i) - evalV F v (a i)) ∈ v.adicCompletionIntegers F := by
     rw [mem_levSub_iff]
     simp only [Pi.sub_apply, map_sub]
   by_cases h : z - a ∈ levSub (κ := κ) d
-  · rw [if_pos h]
+  · rw [ite_eq_left h]
     refine (finprod_eq_one_of_forall_eq_one fun v => ?_).symm
-    rw [hloc, if_pos (hmem.1 h v)]
-  · rw [if_neg h]
+    rw [hloc, ite_eq_left (hmem.1 h v)]
+  · rw [ite_eq_right h]
     obtain ⟨v, hv⟩ := not_forall.1 (mt hmem.2 h)
     refine (finprod_eq_zero _ v ?_ hfin).symm
-    rw [hloc, if_neg hv]
+    rw [hloc, ite_eq_right hv]
 
 theorem exists_place : Nonempty (Pl (F := F)) := by
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (𝓞 F)
@@ -277,7 +277,7 @@ theorem coset_restrProd (c : ℂ) (d : 𝓞 F) (hd : d ≠ 0) (a : κ → Af F) 
     · exact Submodule.smul_mem _ _ (locInd_mem_SB d hd a v)
     · exact locInd_mem_SB d hd a v
   · filter_upwards [eventually_locInd d hd a, (Set.finite_singleton v₀).eventually_cofinite_notMem] with v hv hv0
-    rw [if_neg (by simpa using hv0), hv]
+    rw [ite_eq_right (by simpa using hv0), hv]
   · have hfin : (Function.mulSupport fun v : Pl F => locInd d a v fun i => evalV F v (z i)).Finite :=
       finite_mulSupport_locInd d hd a z
     have e : (fun v : Pl F => (if v = v₀ then c • locInd d a v else locInd d a v) fun i => evalV F v (z i)) =
@@ -286,9 +286,9 @@ theorem coset_restrProd (c : ℂ) (d : 𝓞 F) (hd : d ≠ 0) (a : κ → Af F) 
     have hfin0 : (Function.mulSupport fun v : Pl F => if v = v₀ then c else 1).Finite := by
       refine (Set.finite_singleton v₀).subset fun v hv => ?_
       by_contra hv'
-      exact hv (if_neg hv')
+      exact hv (ite_eq_right hv')
     rw [e, finprod_mul_distrib hfin0 hfin, ← ind_eq_finprod d hd a z,
-      finprod_eq_single _ v₀ fun v hv => if_neg hv, if_pos rfl]
+      finprod_eq_single _ v₀ fun v hv => ite_eq_right hv, ite_eq_left rfl]
 
 end GlobalTheory.SBRestrProd
 
@@ -418,7 +418,7 @@ theorem prod_decomp {X Y : Type} [TopologicalSpace X] [TopologicalSpace Y] (h : 
     intro y hy
     have : s y = φ := by
       by_contra hne
-      exact hy (if_neg hne)
+      exact hy (ite_eq_right hne)
     exact hsne y (this ▸ hφ0)
   have hsum : ∀ x y, h (x, y) = ∑ φ ∈ t', φ x * bb φ y := by
     intro x y
@@ -636,7 +636,7 @@ theorem remainder_bound (T : 𝓢(V, ℂ) →L[ℂ] 𝓢(W, E)) (f : 𝓢(V × V
   have h1 : ‖T (sliceCLM x' g) z‖ ≤ q g := SchwartzMap.norm_le_seminorm ℂ _ _
   have h2 : q g ≤ (C : ℝ) * (s.sup (schwartzSeminormFamily ℂ (V × V') ℂ)) g := by
     have := hC g
-    simpa [Seminorm.smul_apply, NNReal.smul_def] using this
+    simpa [smul_apply, NNReal.smul_def] using this
   have h3 : (s.sup (schwartzSeminormFamily ℂ (V × V') ℂ)) g ≤ (∑ i ∈ s, |D i|) * ‖v‖ ^ 2 := by
     apply Seminorm.finset_sup_apply_le (by positivity)
     intro i hi
@@ -658,7 +658,7 @@ theorem opFst_add_decomp (T : 𝓢(V, ℂ) →L[ℂ] 𝓢(W, E)) (f : 𝓢(V × 
   rw [opFst_apply, sliceCLM_add_eq]
   conv_lhs => rw [show SchwartzMap.compSubConstCLM ℂ (-((0 : V), v)) f
       = (SchwartzMap.compSubConstCLM ℂ (-((0 : V), v)) f - f - lineSnd v f) + f + lineSnd v f by abel]
-  simp only [map_add (f := _), SchwartzMap.add_apply]
+  simp only [map_add (f := _), add_apply]
 
 theorem hasFDerivAt_opFst [FiniteDimensional ℝ V'] (T : 𝓢(V, ℂ) →L[ℂ] 𝓢(W, E)) (f : 𝓢(V × V', ℂ))
     (y : W) (x' : V') :
@@ -682,7 +682,7 @@ theorem hasFDerivAt_opFst [FiniteDimensional ℝ V'] (T : 𝓢(V, ℂ) →L[ℂ]
         simpa using this
       exact (hcont.tendsto y).comp this
     filter_upwards [(Metric.tendsto_nhds.mp ht) c hc] with p hp
-    rw [← ContinuousLinearMap.sub_apply]
+    rw [← sub_apply]
     calc _ ≤ ‖dSndCLM T f (y + p.1, x') - dSndCLM T f (y, x')‖ * ‖p.2‖ :=
           ContinuousLinearMap.le_opNorm _ _
       _ ≤ c * ‖p‖ := by
@@ -708,7 +708,7 @@ theorem hasFDerivAt_opFst [FiniteDimensional ℝ V'] (T : 𝓢(V, ℂ) →L[ℂ]
   obtain ⟨w, v⟩ := p
   simp only [Prod.mk_add_mk]
   rw [opFst_add_decomp]
-  simp only [opFst_apply, dSndCLM_apply, ContinuousLinearMap.add_apply,
+  simp only [opFst_apply, dSndCLM_apply, add_apply,
     ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd']
   abel
 
@@ -820,7 +820,7 @@ theorem exists_sup_bound (A : 𝓢(X, F) →L[ℂ] 𝓢(Y, G)) (s : Finset (ℕ 
   obtain ⟨t, C, -, hC⟩ := Seminorm.bound_of_continuous (schwartz_withSeminorms ℂ X F)
     ((s.sup (schwartzSeminormFamily ℂ Y G)).comp A.toLinearMap)
     ((continuous_finset_sup_schwartz s).comp A.continuous)
-  exact ⟨t, C, C.2, fun f => by simpa [Seminorm.comp_apply, Seminorm.smul_apply, NNReal.smul_def] using hC f⟩
+  exact ⟨t, C, C.2, fun f => by simpa [Seminorm.comp_apply, smul_apply, NNReal.smul_def] using hC f⟩
 
 theorem sup_apply_mono {s t : Finset (ℕ × ℕ)} (h : s ⊆ t) (f : 𝓢(X, F)) :
     (s.sup (schwartzSeminormFamily ℂ X F)) f ≤ (t.sup (schwartzSeminormFamily ℂ X F)) f :=
@@ -1087,7 +1087,7 @@ theorem exists_partL_pureA : ∀ {F : Type} [Field F] [NumberField F] {κ κ₁ 
       ∀ f : SInf F (κ ⊕ κ'), partL e (pureA F f g) = pureA F (P f) g₁ := by
   intro F _ _ κ κ₁ κ' _ _ _ e he
   classical
-  haveI : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
+  have : T2Space (Af F) := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField F
   obtain ⟨ei, ev, hSB, hstd, hpure⟩ := he
   let eq₀ : (κ ⊕ κ' → mixedEmbedding.mixedSpace F) ≃L[ℝ] (κ → mixedEmbedding.mixedSpace F) × (κ' → mixedEmbedding.mixedSpace F) :=
     (LinearEquiv.sumArrowLequivProdArrow κ κ' ℝ _).toContinuousLinearEquiv

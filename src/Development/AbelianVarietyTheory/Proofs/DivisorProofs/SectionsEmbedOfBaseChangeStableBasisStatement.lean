@@ -71,11 +71,11 @@ theorem embedsBy_fA_of_isBCBasis (Rg : Type) [CommRing Rg] (B : Over (Sp Rg)) [G
   have hspan := (hb Rg t b' hb').2
   have hE := GlobalTheory.AmpleSpan.embedsBy_baseAt B hM hVA (isAffineOpen_top (Sp Rg)) t b' hspan
   have hS := fun i => GlobalTheory.SpanFrame.secScal_of_isPullSec B hM (k : ℤ) (homAt t) (hb' i)
-  haveI : IsIso (homAt t) := by
+  have : IsIso (homAt t) := by
     haveI : IsIso ((Over.forget _).map (homAt t)) := by change IsIso t; infer_instance
     exact isIso_of_reflects_iso (homAt t) (Over.forget _)
-  haveI : IsIso (homAt t ▷ B).left := inferInstanceAs (IsIso ((Over.forget _).map (homAt t ▷ B)))
-  haveI : IsAffine (baseAt t).left := inferInstanceAs (IsAffine (Spec (CommRingCat.of Rg)))
+  have : IsIso (homAt t ▷ B).left := inferInstanceAs (IsIso ((Over.forget _).map (homAt t ▷ B)))
+  have : IsAffine (baseAt t).left := inferInstanceAs (IsAffine (Spec (CommRingCat.of Rg)))
   have hw : (homAt t ▷ B).left ≫ fA B = (fst (baseAt t) B).left ≫ 𝟙 _ := by
     have e1 := Over.w (homAt t ▷ B)
     have e2 := Over.w (fst (baseAt t) B)

@@ -148,16 +148,16 @@ section Top
 variable {σ : E →ₐ[F] E} {nS nT : ℕ} {JS : Matrix (Fin nS) (Fin nS) E} {JT : Matrix (Fin nT) (Fin nT) E} {xi0 : E}
 
 theorem isTopologicalRing_AEF : IsTopologicalRing (AEF F E) := by
-  haveI : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
   exact IsModuleTopology.isTopologicalRing (AF F) _
 
 theorem continuous_trace_AEF : Continuous (Algebra.trace (AF F) (AEF F E)) := by
-  haveI : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
+  have : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
   exact IsModuleTopology.continuous_of_linearMap _
 
 theorem continuous_cAF : Continuous (cAF (F := F) (E := E) σ) := by
-  haveI : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
-  haveI := isTopologicalRing_AEF (F := F) (E := E)
+  have : IsModuleTopology (AF F) (AEF F E) := ⟨rfl⟩
+  have := isTopologicalRing_AEF (F := F) (E := E)
   let L : AEF F E →ₗ[AF F] AEF F E :=
     { toFun := cAF σ
       map_add' := map_add _
@@ -166,7 +166,7 @@ theorem continuous_cAF : Continuous (cAF (F := F) (E := E) σ) := by
   exact IsModuleTopology.continuous_of_linearMap L
 
 theorem continuous_symplOHF_left (y : WOF F E nS nT) : Continuous fun x => symplOHF σ JS JT xi0 x y := by
-  haveI := isTopologicalRing_AEF (F := F) (E := E)
+  have := isTopologicalRing_AEF (F := F) (E := E)
   have ht := continuous_trace_AEF (F := F) (E := E)
   unfold symplOHF symplOF hOF
   refine continuous_const.mul (ht.comp (continuous_const.mul ?_))
@@ -175,7 +175,7 @@ theorem continuous_symplOHF_left (y : WOF F E nS nT) : Continuous fun x => sympl
   exact continuous_const.mul ((continuous_apply a).comp (continuous_apply d))
 
 theorem continuous_symplOHF_right (x : WOF F E nS nT) : Continuous fun y => symplOHF σ JS JT xi0 x y := by
-  haveI := isTopologicalRing_AEF (F := F) (E := E)
+  have := isTopologicalRing_AEF (F := F) (E := E)
   have ht := continuous_trace_AEF (F := F) (E := E)
   have hc := continuous_cAF (F := F) (E := E) (σ := σ)
   unfold symplOHF symplOF hOF
@@ -215,9 +215,9 @@ theorem nonarch_pi {ι : Type} {G : ι → Type} [∀ i, AddGroup (G i)] [∀ i,
 
 variable (F) in
 theorem nonarch_Af : NonarchimedeanAddGroup (Af F) := by
-  haveI : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
+  have : ∀ v : HeightOneSpectrum (𝓞 F), NonarchimedeanAddGroup (v.adicCompletionIntegers F) := fun v =>
     nonarch_of_isInducing (v.adicCompletionIntegers F).subtype.toAddMonoidHom Topology.IsInducing.subtypeVal
-  haveI := nonarch_pi (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
+  have := nonarch_pi (G := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletionIntegers F)
   let f : (∀ v : HeightOneSpectrum (𝓞 F), v.adicCompletionIntegers F) →+ FiniteAdeleRing (𝓞 F) F :=
     { toFun := RestrictedProduct.structureMap (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
         (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) Filter.cofinite
@@ -228,7 +228,7 @@ theorem nonarch_Af : NonarchimedeanAddGroup (Af F) := by
 
 theorem exists_openAddSubgroup_psi_fin (ψ : AddChar (AF F) ℂ) (hψ : Continuous ψ) :
     ∃ K : OpenAddSubgroup (Af F), ∀ y ∈ K, ψ (pairA F 0 y) = 1 := by
-  haveI := nonarch_Af F
+  have := nonarch_Af F
   have hι : Continuous fun y : Af F => pairA F 0 y := continuous_const.prodMk continuous_id
   have hW : {y : Af F | ‖ψ (pairA F 0 y) - 1‖ < 1 / 2} ∈ nhds (0 : Af F) := by
     refine (isOpen_lt ((hψ.comp hι).sub continuous_const).norm continuous_const).mem_nhds ?_
@@ -273,7 +273,7 @@ theorem isThetaFunOF_heisOF : ∀ (F E : Type) [Field F] [NumberField F] [Field 
         IsThetaFunOF σ JS JT ξ₀ B.ψ (heisOF σ JS JT ξ₀ B.ψ w₀ f) := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT ξ₀ w₀ f hf
   have hψ : Continuous B.ψ := hB.std.1
-  haveI := isTopologicalRing_AEF (F := F) (E := E)
+  have := isTopologicalRing_AEF (F := F) (E := E)
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro γ w
     simp only [heisOF]

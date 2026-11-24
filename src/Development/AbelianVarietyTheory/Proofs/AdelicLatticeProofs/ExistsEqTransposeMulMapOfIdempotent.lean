@@ -83,7 +83,7 @@ theorem binary_form_universal {k : Type u_1} [Field k] [Finite k] {a n : k}
   by_cases h2 : ringChar k = 2
   · obtain ⟨r, hr⟩ := FiniteField.isSquare_of_char_two h2 u
     exact ⟨r, 0, by rw [hr]; ring⟩
-  · letI := Fintype.ofFinite k
+  · let := Fintype.ofFinite k
     have hodd : Fintype.card k % 2 = 1 := FiniteField.odd_card_of_char_ne_two h2
     have h2' : (2 : k) ≠ 0 := Ring.two_ne_zero h2
     have hD' : -(a ^ 2 - 4 * n) ≠ 0 := neg_ne_zero.mpr hD
@@ -124,7 +124,7 @@ theorem exists_shear (G : Matrix ι ι R) (p : ι) (τ : ι → R) (hτ : τ p =
   · simp only [Matrix.mul_apply, transpose_apply, map_apply, Matrix.add_apply, vecMulVec_apply,
       Matrix.one_apply, Pi.single_apply, map_add, map_mul, apply_ite c, map_one, map_zero,
       add_mul, mul_add, ite_mul, mul_ite, one_mul, zero_mul, mul_one, mul_zero,
-      Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      Finset.sum_add_distrib, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     ring
 
 
@@ -206,7 +206,7 @@ theorem exists_congr_insert (hc : ∀ x, c (c x) = x)
     refine ⟨P, hP, fun a ha b hb => ?_⟩
     rw [h]
     rcases Finset.mem_insert.1 ha with rfl | ha
-    · simp only [if_true, if_neg hb, map_neg, map_mul, hG]
+    · simp only [ite_true, ite_eq_right hb, map_neg, map_mul, hG]
       linear_combination (-G a b) * hv'
     · have hap : p ≠ a := fun h => hp (h ▸ ha)
       simp [hs a ha b hb, hs a ha p hap]
@@ -376,7 +376,7 @@ theorem exists_norm_eq_of_henselian (c : R →+* R) (hc : ∀ x, c (c x) = x)
     {u : R} (hcu : c u = u) (hu : IsUnit u) : ∃ x, x * c x = u := by
   rcases subsingleton_or_nontrivial R with hR | hR
   · exact ⟨0, Subsingleton.elim _ _⟩
-  haveI := QuadraticEtale.isIntegral_of_involution c hc hfix
+  have := QuadraticEtale.isIntegral_of_involution c hc hfix
   have hunit : ∀ r : R₀, IsUnit (algebraMap R₀ R r) → IsUnit r := by
     intro r hr
     by_contra h

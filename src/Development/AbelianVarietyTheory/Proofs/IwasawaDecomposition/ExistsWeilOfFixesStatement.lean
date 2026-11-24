@@ -80,7 +80,7 @@ open GlobalTheory.WeilRestrict Polynomial
 theorem card_le_of_forall_pow_eq {F : Type*} [Field F] [Finite F] {m : ℕ} (hm : 1 < m)
     (h : ∀ x : F, x ^ m = x) : Nat.card F ≤ m := by
   classical
-  haveI := Fintype.ofFinite F
+  have := Fintype.ofFinite F
   have hdeg : (X : F[X]).natDegree < (X ^ m : F[X]).natDegree := by
     rw [natDegree_X, natDegree_X_pow]; exact hm
   have hp : (X ^ m - X : F[X]) ≠ 0 := by
@@ -140,9 +140,9 @@ theorem exists_weil_of_fixes : ∀ (E K Ω : Type) [Field E] [NumberField E] [Fi
       have e : algebraMap K Ω ((x ^ (normV w ^ n) - x : 𝓞 K) : K) =
           (algebraMap K Ω x) ^ (normV w ^ n) - algebraMap K Ω x := by simp
       rw [e]; exact this
-    haveI : W.asIdeal.IsMaximal := W.isMaximal
-    letI : Field (𝓞 K ⧸ W.asIdeal) := Ideal.Quotient.field _
-    haveI : Finite (𝓞 K ⧸ W.asIdeal) := W.asIdeal.finiteQuotientOfFreeOfNeBot W.ne_bot
+    have : W.asIdeal.IsMaximal := W.isMaximal
+    let : Field (𝓞 K ⧸ W.asIdeal) := Ideal.Quotient.field _
+    have : Finite (𝓞 K ⧸ W.asIdeal) := W.asIdeal.finiteQuotientOfFreeOfNeBot W.ne_bot
     have hall : ∀ y : 𝓞 K ⧸ W.asIdeal, y ^ (normV w ^ n) = y := by
       intro y
       obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective y

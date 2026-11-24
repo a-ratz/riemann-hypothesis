@@ -60,15 +60,15 @@ theorem massH_pos {D : D7} (X : HidaSetting D) (u : D.what₂.Word) :
     Formalism.L2.SG.Pf.MassDataX.kCompactOpen_holds X u
   show 0 < massCl (MassDataMassesW.GamH X u) (MassDataMassesW.KH X u)
   unfold massCl
-  haveI := hC
-  letI : Fintype (DoubleCoset.Quotient (G := ↥(Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)))
+  have := hC
+  let : Fintype (DoubleCoset.Quotient (G := ↥(Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)))
       (MassDataMassesW.GamH X u : Set ↥(Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)))
       (MassDataMassesW.KH X u : Set ↥(Hsub (Af X.B.I.F) X.B.I.cm.sig X.B.I.J (frameOf X u)))) :=
     Fintype.ofFinite _
   rw [finsum_eq_sum_of_fintype]
   apply Finset.sum_pos
   · intro c _
-    haveI := hS (Quotient.out c)
+    have := hS (Quotient.out c)
     apply inv_pos.mpr
     exact_mod_cast Nat.card_pos
   · exact Finset.univ_nonempty_iff.mpr ⟨Quot.mk _ 1⟩
@@ -76,7 +76,7 @@ theorem massH_pos {D : D7} (X : HidaSetting D) (u : D.what₂.Word) :
 theorem finrank_Vpi_pos {D : D7} (X : HidaSetting D) (u : D.what₂.Word) : 0 < Module.finrank ℂ (X.Vpi u) := by
   classical
   have hx : ∀ v, ∃ y : X.Vloc u v, y ≠ 0 := fun v => by
-    haveI := (X.piLoc_type u v).1
+    have := (X.piLoc_type u v).1
     exact exists_ne 0
   choose x hx using hx
   have hne : X.tensU u x ≠ 0 := by

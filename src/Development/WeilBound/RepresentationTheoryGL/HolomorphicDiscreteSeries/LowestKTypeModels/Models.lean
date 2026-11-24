@@ -100,13 +100,13 @@ theorem isom_of {ε' : Fin n → Bool} {H H' : Type} [NormedAddCommGroup H] [Inn
     (fun S hS hst => irr_of hirr S hS fun k => hst _ ⟨k, rfl⟩) (ContinuousLinearMap.adjoint j ∘L j) (by
       rintro _ ⟨k, rfl⟩
       refine ContinuousLinearMap.ext fun x => ext_inner_left ℂ fun y => ?_
-      simp only [ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.adjoint_inner_right]
+      simp only [mul_apply_eq_comp, ContinuousLinearMap.comp_apply, ContinuousLinearMap.adjoint_inner_right]
       rw [hj]
       have e1 : ⟪j y, ρ k (j x)⟫_ℂ = ⟪ρ k⁻¹ (j y), j x⟫_ℂ := by rw [hρ.adj, inv_inv]
       rw [e1, ← hj, ← ContinuousLinearMap.adjoint_inner_right, u_adj hU, inv_inv])
   refine ⟨c, fun x => ?_⟩
-  rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.comp_apply, hc, ContinuousLinearMap.smul_apply,
-    ContinuousLinearMap.one_apply, inner_smul_right]
+  rw [← ContinuousLinearMap.adjoint_inner_right, ← ContinuousLinearMap.comp_apply, hc, smul_apply,
+    one_apply_eq_self, inner_smul_right]
 
 end PositivityTheory.RgHe.LowestKTypeUnitIntegral
 end -- clump:auto
@@ -130,8 +130,8 @@ open Formalism.REAL Formalism.MainNotions.S PositivityTheory.UnitaryDecompositio
 
 theorem lowestKTypeModel : Seed := by
   intro n ε lam ε' mu e hG H H' _ _ _ _ _ _ π σ ν hν hπ hσ ⟨j, hj0, hj⟩ κ hK w hw hw1
-  haveI := hν
-  haveI := inv_inv_of_haar ν
+  have := hν
+  have := inv_inv_of_haar ν
   have hm := coef_int hG.two hG.hc' hσ hG.gap' ν hw hw1
   refine ⟨hm, ?_⟩
   have hρ := uRep_emb hG.fits hπ.2.2.1
@@ -256,14 +256,14 @@ theorem lowestKTypeModel : Seed := by
     linear_combination -hb2
   have hq' : ⟪η, ξ0⟫_ℂ = ((r ^ 2 / κ : ℝ) : ℂ) := by rw [← inner_conj_symm, hq, Complex.conj_ofReal]
   refine ⟨((r⁻¹ : ℝ) : ℂ) • j', η, fun x => ?_, fun h x => ?_, hηs, ?_, fun a => ?_⟩
-  · rw [ContinuousLinearMap.smul_apply, norm_smul, Complex.norm_real, Real.norm_of_nonneg (inv_pos.2 hr).le, hnj,
+  · rw [smul_apply, norm_smul, Complex.norm_real, Real.norm_of_nonneg (inv_pos.2 hr).le, hnj,
       ← mul_assoc, inv_mul_cancel₀ hr.ne', one_mul]
-  · simp only [ContinuousLinearMap.smul_apply, map_smul]
+  · simp only [smul_apply, map_smul]
     rw [hj'1]
-  · rw [ContinuousLinearMap.smul_apply, ← hξ0d, inner_smul_right, hq']
+  · rw [smul_apply, ← hξ0d, inner_smul_right, hq']
     have : (0 : ℝ) < r ^ 2 / κ := div_pos (by positivity) hK.1
     exact mul_ne_zero (by exact_mod_cast (inv_pos.2 hr).ne') (by exact_mod_cast this.ne')
-  · rw [ContinuousLinearMap.smul_apply, ← hξ0d, inner_smul_right, inner_smul_left, hq', Complex.conj_ofReal, ← h7]
+  · rw [smul_apply, ← hξ0d, inner_smul_right, inner_smul_left, hq', Complex.conj_ofReal, ← h7]
     have hr0 : (r : ℂ) ≠ 0 := by exact_mod_cast hr.ne'
     push_cast
     field_simp
@@ -302,8 +302,8 @@ theorem models_holds : Models := by
   have hbig' : 2 * (n : ℝ) < 200 * ((n : ℝ) + 1) ^ 3 := by linarith
   constructor
   · rintro ⟨H0, H0', i1, i2, i3, i4, π0, σ0, hπ0, hσ0, j0, hj00, hj0⟩ H H' _ _ _ _ _ _ π σ hπ hσ
-    haveI := hπ0.1
-    haveI := hσ0.1
+    have := hπ0.1
+    have := hσ0.1
     obtain ⟨UG, hUG⟩ := (ReciprocityTheory.ChartRestriction.DS.G2.discrete_series_props_large_gap (n + 1) ε lam hG.hc _ hG.gap hbig H0 π0 hπ0).2.2.2.2 H π hπ
     obtain ⟨UH, hUH⟩ := (ReciprocityTheory.ChartRestriction.DS.G2.discrete_series_props_large_gap n ε' mu hG.hc' _ hG.gap' hbig' H0' σ0 hσ0).2.2.2.2 H' σ hσ
     refine ⟨(UG : H0 →L[ℂ] H).comp (j0.comp (UH.symm : H' →L[ℂ] H0')), fun h0 => hj00 ?_, fun h x => ?_⟩
@@ -331,8 +331,8 @@ theorem models_holds : Models := by
       have h1 : 8 * (n : ℝ) * (ReciprocityTheory.ChartRestriction.DS.S7.q0 ε' : ℝ) ≤ 8 * (n : ℝ) * (n : ℝ) :=
         mul_le_mul_of_nonneg_left this (by positivity)
       nlinarith))
-    haveI := hπ.1
-    haveI := hσ.1
+    have := hπ.1
+    have := hσ.1
     exact ⟨H, H', i1, i2, i1', i2', π, σ, hπ, hσ, hO H H' π σ hπ hσ⟩
 
 end PositivityTheory.RgHe.LowestKTypeUnitIntegral

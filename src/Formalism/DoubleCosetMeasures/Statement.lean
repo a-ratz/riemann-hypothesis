@@ -183,17 +183,17 @@ theorem isUpUni_mul {n : ℕ} {x y : Matrix (Fin n) (Fin n) K} (hx : IsUpUni x)
   · intro h; exact absurd (Finset.mem_univ a) h
 
 theorem isLowUni_det {n : ℕ} {x : Matrix (Fin n) (Fin n) K} (hx : IsLowUni x) : x.det = 1 := by
-  rw [Matrix.det_of_lowerTriangular x hx.1]
+  rw [det_of_isLowerTriangular x hx.1]
   simp [hx.2]
 
 theorem isUpUni_det {n : ℕ} {x : Matrix (Fin n) (Fin n) K} (hx : IsUpUni x) : x.det = 1 := by
-  rw [Matrix.det_of_upperTriangular hx.1]
+  rw [det_of_isUpperTriangular hx.1]
   simp [hx.2]
 
 theorem isLowUni_inv {n : ℕ} {x : Matrix (Fin n) (Fin n) K} (hx : IsLowUni x) :
     IsLowUni x⁻¹ := by
   have hu : IsUnit x.det := by rw [isLowUni_det K hx]; exact isUnit_one
-  letI := Matrix.invertibleOfIsUnitDet x hu
+  let := Matrix.invertibleOfIsUnitDet x hu
   have hT : x⁻¹.IsLowerTriangular := Matrix.blockTriangular_inv_of_blockTriangular hx.1
   refine ⟨hT, fun a => ?_⟩
   have h := congrFun (congrFun (Matrix.nonsing_inv_mul x hu) a) a
@@ -208,7 +208,7 @@ theorem isLowUni_inv {n : ℕ} {x : Matrix (Fin n) (Fin n) K} (hx : IsLowUni x) 
 theorem isUpUni_inv {n : ℕ} {x : Matrix (Fin n) (Fin n) K} (hx : IsUpUni x) :
     IsUpUni x⁻¹ := by
   have hu : IsUnit x.det := by rw [isUpUni_det K hx]; exact isUnit_one
-  letI := Matrix.invertibleOfIsUnitDet x hu
+  let := Matrix.invertibleOfIsUnitDet x hu
   have hT : x⁻¹.IsUpperTriangular := Matrix.blockTriangular_inv_of_blockTriangular hx.1
   refine ⟨hT, fun a => ?_⟩
   have h := congrFun (congrFun (Matrix.nonsing_inv_mul x hu) a) a

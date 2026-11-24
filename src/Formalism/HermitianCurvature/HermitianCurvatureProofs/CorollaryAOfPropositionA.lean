@@ -403,7 +403,7 @@ theorem corA_of_propA (hPA : PropA) : CorA := by
     linarith
   have hD : S.Dstar = R * S.du := by rw [hR, div_mul_cancel₀ _ hdu]
   have hG2e : Real.exp X ^ 2 = Real.exp (2 * X) := by
-    rw [← Real.exp_nat_mul]; norm_num
+    rw [← Real.exp_natCast_mul]; norm_num
   have hRb : Real.exp (2 * X) / C0 ≤ R ∧ R ≤ Real.exp (2 * X) * C0 := by
     obtain ⟨c1, c2⟩ := hCh
     rw [hG2e, hD] at c1 c2

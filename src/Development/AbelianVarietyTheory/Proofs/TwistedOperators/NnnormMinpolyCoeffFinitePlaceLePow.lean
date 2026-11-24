@@ -71,7 +71,7 @@ theorem nnnorm_coeff_minpoly_le (F E : Type) [Field F] [NumberField F] [Field E]
     (x : E) (v : HeightOneSpectrum (𝓞 F)) (j : ℕ) :
     ‖algebraMap F (v.adicCompletion F) ((minpoly F x).coeff j)‖₊ ≤
       max 1 (absFin F v ((1 : v.adicCompletion F) ⊗ₜ[F] x)) ^ Module.finrank F E := by
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   set M := max 1 (absFin F v ((1 : v.adicCompletion F) ⊗ₜ[F] x)) with hMdef
   have hM : 1 ≤ M := le_max_left _ _
   have hint : IsIntegral F x := Algebra.IsIntegral.isIntegral x

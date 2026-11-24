@@ -60,7 +60,7 @@ theorem cLL_unit_interval_le : ∀ (l h N v : ℕ) (U : Finset ℤ) (U' : Set �
     LocalSituation.cLL l (LocalSituation.mN l 1 (h + h)) v U' 0 1 ≤ 5 + Nat.log l (2 * h) + N * (4 + 2 * Nat.log l (2 * h)) := by
   classical
   intro l h N v U U' hl hN hU hcard hb hv
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   unfold LocalSituation.cLL LocalSituation.mN LocalSituation.rI LocalSituation.n0 at *
   set L := Nat.log l (2 * h) with hL
   set n0 := sInf {n | h + h ≤ l ^ n * (l - 1)} with hn0
@@ -97,7 +97,7 @@ theorem cLL_unit_interval_le : ∀ (l h N v : ℕ) (U : Finset ℤ) (U' : Set �
       rw [Function.mem_support] at hu
       by_contra hnot
       have hnU' : u ∉ U' := fun h' => hnot (Finset.mem_coe.mpr (hU h'))
-      exact hu (by simp only [finsum_eq_if, if_neg hnU'])
+      exact hu (by simp only [finsum_eq_if, ite_eq_right hnU'])
   have hNL : 1 ≤ N * (4 + 2 * L) := by
     have := Nat.mul_le_mul hN (show 1 ≤ 4 + 2 * L by omega)
     omega
@@ -130,7 +130,7 @@ theorem window_cLL_of_jumps_level_one (S : LocalSituation.Sit) (Y : LocLat S.G S
   choose U hUc hUb hUj using hU
   have hpos : 0 < finrank S.Qp S.K := finrank_pos
   have hfin : Finite (S.K →ₐ[S.Qp] S.LL) := Nat.finite_of_card_ne_zero (by omega)
-  letI : Fintype (S.K →ₐ[S.Qp] S.LL) := Fintype.ofFinite _
+  let : Fintype (S.K →ₐ[S.Qp] S.LL) := Fintype.ofFinite _
   have hsub : LocalSituation.Jset S Y ⊆ ((Finset.univ.biUnion U : Finset ℤ) : Set ℤ) := by
     intro a ha
     obtain ⟨τ, hτ⟩ := GlobalTheory.HubLoc.jump_of_total S.PD Y.ρ hcard a ha
@@ -166,8 +166,8 @@ theorem cH0all_le_of_jumps_at_embeddings : ∀ (LT : LocTheory) (HW : HWOf LT) (
   have e2 := h2 hK
   have hv : padicValNat l (finrank ℚ_[l] ↥(Ks K (LocalSituation.mN l 1 (h + h)))) - padicValNat l (finrank ℚ_[l] ↥K.1) ≤
       LocalSituation.mN l 1 (h + h) - 1 := by omega
-  haveI : CharZero (LocalSituation.sit LT HW l (AI l) K 1 LL hs).Qp := (inferInstance : CharZero ℚ_[l])
-  haveI : FiniteDimensional (LocalSituation.sit LT HW l (AI l) K 1 LL hs).Qp (LocalSituation.sit LT HW l (AI l) K 1 LL hs).K :=
+  have : CharZero (LocalSituation.sit LT HW l (AI l) K 1 LL hs).Qp := (inferInstance : CharZero ℚ_[l])
+  have : FiniteDimensional (LocalSituation.sit LT HW l (AI l) K 1 LL hs).Qp (LocalSituation.sit LT HW l (AI l) K 1 LL hs).K :=
     (inferInstance : FiniteDimensional ℚ_[l] ↥K.1)
   exact window_cLL_of_jumps_level_one (LocalSituation.sit LT HW l (AI l) K 1 LL hs) T l h r n _ hl hcard hn hr hv hU
 

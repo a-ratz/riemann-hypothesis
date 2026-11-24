@@ -205,7 +205,7 @@ theorem finite_isIrreducibleComponentOfSupport {X : Scheme.{u}} [TopologicalSpac
     refine ⟨hirr, ?_⟩
     intro T' hT' hle
     have h1 : IsIrreducible (Subtype.val '' T' : Set ↥X) :=
-      hT'.image _ continuous_subtype_val.continuousOn
+      hT'.image _ continuous_subtypeVal.continuousOn
     have h2 : (Subtype.val '' T' : Set ↥X) ⊆ (D.support : Set X) := by
       rintro _ ⟨t, _, rfl⟩
       exact t.2

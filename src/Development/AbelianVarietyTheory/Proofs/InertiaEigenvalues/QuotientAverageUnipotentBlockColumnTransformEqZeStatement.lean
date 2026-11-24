@@ -114,7 +114,7 @@ theorem posM_eq_of_support {ι : Type} [Fintype ι] {p : ι → Fin a × Fin a} 
     rw [Finset.sum_eq_single t]
     · simp [ht]
     · intro t' _ ht'
-      rw [if_neg]
+      rw [ite_eq_right]
       rintro ⟨e1, e2⟩
       exact ht' (hp (by rw [ht]; exact Prod.ext e1 e2))
     · simp
@@ -123,7 +123,7 @@ theorem posM_eq_of_support {ι : Type} [Fintype ι] {p : ι → Fin a × Fin a} 
       exact h (hM i k h1)
     rw [h0]
     refine Finset.sum_eq_zero fun t _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     rintro ⟨e1, e2⟩
     exact h ⟨t, Prod.ext e1 e2⟩
 
@@ -312,7 +312,7 @@ theorem avg_sum_index : ∀ (E : Type) [Field E] [NumberField E] (ι κ : Type) 
     refine ⟨?_, K₁ ×ˢ K₂, hK₁.prod hK₂, fun x => ?_⟩
     · let f : ↥((ratV E ι).prod (ratV E κ)) → ratV E ι × ratV E κ := fun p => (⟨p.1.1, p.2.1⟩, ⟨p.1.2, p.2.2⟩)
       have hf : Continuous f :=
-        (continuous_subtype_val.fst.subtype_mk _).prodMk (continuous_subtype_val.snd.subtype_mk _)
+        (continuous_subtypeVal.fst.subtype_mk _).prodMk (continuous_subtypeVal.snd.subtype_mk _)
       refine DiscreteTopology.of_continuous_injective hf fun p q h => ?_
       have e₁ := congrArg (fun r => (r.1 : ι → Ad E)) h
       have e₂ := congrArg (fun r => (r.2 : κ → Ad E)) h
@@ -452,7 +452,7 @@ theorem dot_col {r m : ℕ} (hr : r ≤ m) (z : HiIx a r (m + 1) → Ad E) (y : 
     simp only [Function.comp, e, Sum.elim_inl]
   · have : (eLast a (m + 1) t : E) = 0 := by
       simp only [eLast]
-      rw [if_neg]
+      rw [ite_eq_right]
       omega
     simp [this]
 

@@ -1120,9 +1120,9 @@ theorem vr_ne_zero (v : VCom c) (hv : v.Is) (j : ℕ) (hj : j < D.R.m) (hμ : (c
   have h1 : 0 < (c.μf j).real {g | g.1 ∈ v.K j} := by
     exact real_pos_of_open_compact (c.μf j) hSo hSc ⟨1, hS1⟩
   have hT : IsClosed (((R.subgroupOf (GfC (c.V j))) : Subgroup _) : Set (GfC (c.V j))) :=
-    hR.preimage continuous_subtype_val
+    hR.preimage continuous_subtypeVal
   have h2 : 0 < ρ.real {g | g.1.1 ∈ v.K j} := by
-    exact real_pos_of_open_compact ρ (hSo.preimage continuous_subtype_val)
+    exact real_pos_of_open_compact ρ (hSo.preimage continuous_subtypeVal)
       (hT.isClosedEmbedding_subtypeVal.isCompact_preimage hSc) ⟨1, hS1⟩
   unfold VCom.vr
   exact_mod_cast (div_pos h1 h2).ne'

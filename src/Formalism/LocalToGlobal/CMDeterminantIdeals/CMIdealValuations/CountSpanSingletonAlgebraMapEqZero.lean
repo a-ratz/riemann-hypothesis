@@ -111,7 +111,7 @@ variable {F : Type} [Field F] [NumberField F]
 private lemma count_coeIdeal_eq_zero_of_not_le (v : HeightOneSpectrum (𝓞 F)) {J : Ideal (𝓞 F)} (h : ¬ J ≤ v.asIdeal) :
     FractionalIdeal.count F v (J : FractionalIdeal (𝓞 F)⁰ F) = 0 := by
   have hJ : J ≠ 0 := fun h0 => h (h0 ▸ bot_le)
-  rw [FractionalIdeal.count_coe F v hJ]
+  rw [FractionalIdeal.count_coeIdeal F v hJ]
   by_contra hne
   have hne' : (Associates.mk v.asIdeal).count (Associates.mk J).factors ≠ 0 := by exact_mod_cast hne
   exact h (Ideal.dvd_iff_le.mp ((Associates.count_ne_zero_iff_dvd hJ v.irreducible).mp hne'))
@@ -124,7 +124,7 @@ lemma not_le_of_count_eq_zero (v : HeightOneSpectrum (𝓞 F)) {J : Ideal (𝓞 
   intro hle
   have hne : (Associates.mk v.asIdeal).count (Associates.mk J).factors ≠ 0 :=
     (Associates.count_ne_zero_iff_dvd hJ v.irreducible).mpr (Ideal.dvd_iff_le.mpr hle)
-  rw [FractionalIdeal.count_coe F v hJ] at h
+  rw [FractionalIdeal.count_coeIdeal F v hJ] at h
   exact hne (by exact_mod_cast h)
 
 lemma exists_split_of_isLocGen (v : HeightOneSpectrum (𝓞 F)) {c : F} {I : FractionalIdeal (𝓞 F)⁰ F} (hI : I ≠ 0)
@@ -152,7 +152,7 @@ lemma exists_split_of_isLocGen (v : HeightOneSpectrum (𝓞 F)) {c : F} {I : Fra
     rw [hDJ, FractionalIdeal.count_mul F v (inv_ne_zero hS0) hJ0, FractionalIdeal.count_inv] at this
     omega
   have hSnn : ∀ w : HeightOneSpectrum (𝓞 F), 0 ≤ FractionalIdeal.count F w S := by
-    intro w; rw [hS, ← FractionalIdeal.coeIdeal_span_singleton]; exact FractionalIdeal.count_coe_nonneg F w _
+    intro w; rw [hS, ← FractionalIdeal.coeIdeal_span_singleton]; exact FractionalIdeal.count_coeIdeal_nonneg F w _
   have hPw : ∀ w : HeightOneSpectrum (𝓞 F), w ≠ v → FractionalIdeal.count F w P = 0 := fun w hw =>
     FractionalIdeal.count_maximal_coprime F w (Ne.symm hw)
   have hPk0 : P ^ (-k) ≠ 0 := zpow_ne_zero _ hP0
@@ -174,7 +174,7 @@ lemma exists_split_of_isLocGen (v : HeightOneSpectrum (𝓞 F)) {c : F} {I : Fra
     refine ⟨Y, hY, not_le_of_count_eq_zero v ?_ ?_⟩
     · intro hbot; rw [hbot, FractionalIdeal.coeIdeal_bot] at hY; exact hY0 hY.symm
     · rw [hY, hcnt v, hP, FractionalIdeal.count_self, hXk]; ring
-  obtain ⟨A, hA, hAv⟩ := cnt _ hJ0 (fun w => FractionalIdeal.count_coe_nonneg F w J) rfl
+  obtain ⟨A, hA, hAv⟩ := cnt _ hJ0 (fun w => FractionalIdeal.count_coeIdeal_nonneg F w J) rfl
   obtain ⟨B, hB, hBv⟩ := cnt _ hS0 hSnn hSk
   refine ⟨A, B, hAv, hBv, ?_⟩
   have hI : I = C * D := by rw [hD, ← mul_assoc, mul_inv_cancel₀ hC, one_mul]
@@ -216,7 +216,7 @@ lemma locMap_eq :
 lemma coe_bcI (I : FractionalIdeal (𝓞 K)⁰ K) :
     ((bcI (K1 := K1) I : FractionalIdeal (𝓞 K1)⁰ K1) : Submodule (𝓞 K1) K1) =
       Submodule.span (𝓞 K1) (algebraMap K K1 '' {x | x ∈ I}) := by
-  rw [bcI, FractionalIdeal.coe_extended_eq_span, locMap_eq]
+  rw [bcI, FractionalIdeal.coeToSubmodule_extended_eq_span, locMap_eq]
   rfl
 
 lemma eq_bcI {L : MLine K} {L1 : MLine K1} (h : IsBaseChangeLine L L1) : L1.I = bcI L.I := by
@@ -244,7 +244,7 @@ lemma finrank_int_eq : Module.finrank (𝓞 K) (𝓞 K1) = Module.finrank K K1 :
   have h1 := IsLocalization.finrank_eq (R := 𝓞 K) K (N := K1) (𝓞 K)⁰ le_rfl
   have hloc : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 K1) (𝓞 K)⁰) K1 :=
     IsIntegralClosure.isLocalization (𝓞 K) K K1 (𝓞 K1)
-  haveI : IsLocalizedModule (𝓞 K)⁰ (IsScalarTower.toAlgHom (𝓞 K) (𝓞 K1) K1).toLinearMap :=
+  have : IsLocalizedModule (𝓞 K)⁰ (IsScalarTower.toAlgHom (𝓞 K) (𝓞 K1) K1).toLinearMap :=
     (isLocalizedModule_iff_isLocalization).mpr hloc
   have h2 := IsLocalizedModule.finrank_eq (𝓞 K)⁰ (IsScalarTower.toAlgHom (𝓞 K) (𝓞 K1) K1).toLinearMap le_rfl
   rw [h1, h2]
@@ -280,7 +280,7 @@ lemma absNorm_bcI (I : FractionalIdeal (𝓞 K)⁰ K) :
 
 lemma card_fibre (σ : K →+* ℂ) :
     Nat.card {σ1 : K1 →+* ℂ // σ1.comp (algebraMap K K1) = σ} = Module.finrank K K1 := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   have e : {σ1 : K1 →+* ℂ // σ1.comp (algebraMap K K1) = σ} ≃ (K1 →ₐ[K] ℂ) :=
     { toFun := fun s => { s.1 with commutes' := fun r => congrArg (fun g : K →+* ℂ => g r) s.2 }
       invFun := fun f => ⟨f.toRingHom, by ext r; exact f.commutes r⟩
@@ -338,7 +338,7 @@ theorem local_generator_base_change : LocGenBaseChange := by
   have hc1 : algebraMap K K1 c ≠ 0 := (map_ne_zero _).mpr hc.1
   have hmap : ∀ X : Ideal (𝓞 K), ¬ X ≤ p.asIdeal → ¬ X.map (algebraMap (𝓞 K) (𝓞 K1)) ≤ p1.asIdeal := by
     intro X hX hle
-    obtain ⟨x, hxX, hxp⟩ := SetLike.not_le_iff_exists.mp hX
+    obtain ⟨x, hxX, hxp⟩ := IsConcreteLE.not_le_iff_exists.mp hX
     exact hxp ((hp x).mpr (hle (Ideal.mem_map_of_mem _ hxX)))
   have hne : ∀ X : Ideal (𝓞 K), ¬ X ≤ p.asIdeal →
       ((X.map (algebraMap (𝓞 K) (𝓞 K1)) : Ideal (𝓞 K1)) : FractionalIdeal (𝓞 K1)⁰ K1) ≠ 0 := by

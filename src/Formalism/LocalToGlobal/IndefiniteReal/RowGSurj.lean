@@ -558,7 +558,7 @@ theorem rowG_surj (t : T) : Function.Surjective (I.X.rowMat I.cg false t).mulVec
 
 theorem epM_idem (hρ : I.PRho) (P : Subgroup G) (ψ : P →* Kˣ) : I.epM P ψ * I.epM P ψ = I.epM P ψ := by
   obtain ⟨h1, hm, -⟩ := hρ s hH
-  letI : Fintype P := Fintype.ofFinite P
+  let : Fintype P := Fintype.ofFinite P
   have hmul : ∀ h k : P, ((((ψ h)⁻¹ : Kˣ) : K) • I.ρf (h : G)) * ((((ψ k)⁻¹ : Kˣ) : K) • I.ρf (k : G)) =
       (((ψ (h * k))⁻¹ : Kˣ) : K) • I.ρf ((h * k : P) : G) := by
     intro h k

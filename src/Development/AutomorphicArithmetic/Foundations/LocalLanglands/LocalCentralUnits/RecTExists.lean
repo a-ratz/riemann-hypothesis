@@ -111,7 +111,7 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
   {A : ValuationSubring Ω} {w : HeightOneSpectrum (𝓞 E)} {h : IsPlaceOver A w}
 
 theorem sumList_perm {l l' : List (WD h)} (hp : l.Perm l') : sumList l = sumList l' := by
-  haveI : LeftCommutative (WD.lpSum (h := h)) :=
+  have : LeftCommutative (WD.lpSum (h := h)) :=
     ⟨fun a b c => by rw [← WD.lpSum_assoc, WD.lpSum_comm a b, WD.lpSum_assoc]⟩
   exact hp.foldr_eq _
 
@@ -124,7 +124,7 @@ end GlobalTheory.LocLanglands.LangExt
 open GlobalTheory.LocLanglands.LangExt in
 theorem GlobalTheory.LocLanglands.exists_isLExt : LanglandsExhaustionGL → LanglandsMultisegments → ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (w : HeightOneSpectrum (𝓞 E)) (h : IsPlaceOver A w) (r : IrrGL (k := w.adicCompletion E) → WD h), (∃ rc, IsLExt r rc) ∧ ∀ rc, IsLExt r rc → ∀ x : IrrGL (k := w.adicCompletion E), x.IsCusp → rc x = r x := by
   intro hX hM E Ω _ _ _ _ _ A w h r
-  haveI : CharZero (w.adicCompletion E) := LangExt.charZero_adicCompletion
+  have : CharZero (w.adicCompletion E) := LangExt.charZero_adicCompletion
   refine ⟨⟨fun x => segSum r (Classical.choose (hX (w.adicCompletion E) x)).toList, ?_⟩, ?_⟩
   · intro l x hl
     have hm := Classical.choose_spec (hX (w.adicCompletion E) x)
@@ -293,7 +293,7 @@ theorem iso_sp_dual (n : ℕ) : (WDRep.sp h n).dual.Iso (WDRep.sp h n) := by
       LinearMap.neg_apply, LinearMap.dualMap_apply, shiftEnd_single, shiftEnd_apply]
     by_cases hi : 1 ≤ (i : ℕ)
     · have hr : (i.rev : ℕ) + 1 < n := by rw [Fin.val_rev]; omega
-      rw [dite_eq_left hr, if_pos hi]
+      rw [dite_eq_left hr, ite_eq_left hi]
       have he : (⟨(i.rev : ℕ) + 1, hr⟩ : Fin n) = (⟨(i : ℕ) - 1, by omega⟩ : Fin n).rev := by
         ext; simp only [Fin.val_rev]; omega
       rw [he]
@@ -301,7 +301,7 @@ theorem iso_sp_dual (n : ℕ) : (WDRep.sp h n).dual.Iso (WDRep.sp h n) := by
       simp only [hk, Nat.add_sub_cancel, pow_succ]
       ring
     · have hr : ¬ (i.rev : ℕ) + 1 < n := by rw [Fin.val_rev]; omega
-      rw [dite_eq_right hr, if_neg hi]
+      rw [dite_eq_right hr, ite_eq_right hi]
       simp
 
 namespace WDClass
@@ -398,7 +398,7 @@ private theorem summand_dual (H : CuspT a ha r) {Δ Δ' : Segment (w.adicComplet
     (hg : GoodCusp Δ.first) (hd : SegDual Δ Δ') :
     ((r Δ'.first).lpTw (((Δ'.len : ℝ) - 1) / 2)).lpChar (WD.lpSp (h := h) Δ'.len) =
       (((r Δ.first).lpTw (((Δ.len : ℝ) - 1) / 2)).lpChar (WD.lpSp (h := h) Δ.len)).lpDual := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨hl, hD⟩ := hd
   have hc : (Δ.first.nu ((Δ.len : ℂ) - 1)).IsCusp := Δ.isCusp_first.nu _
   have hgn : GoodCusp (Δ.first.nu ((Δ.len : ℂ) - 1)) := by
@@ -427,7 +427,7 @@ end UpperTheory.Zero.LLC
 theorem UpperTheory.Zero.LLC.extDual :
     UpperTheory.Zero.LLC.ExtDual := by
   intro E Ω _ _ _ _ _ A w h a ha r rc H hE n π π' hg hπ
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨𝔪, h𝔪⟩ := UpperTheory.Zero.LLC.Pr.exh _ (cls π)
   have hL : IsL ((𝔪.toList : List _) : Multiset (Segment (w.adicCompletion E))) (cls π).rep := by
     rw [Multiset.coe_toList]; exact h𝔪
@@ -880,7 +880,7 @@ theorem UpperTheory.Zero.LLC.extInj :
   have hgy : ∀ Δ ∈ my.toList, g (f Δ) = some Δ := by
     intro Δ hΔ
     have hp : ∃ Δ' ∈ my.toList, f Δ' = f Δ := ⟨Δ, hΔ, rfl⟩
-    simp only [g, dif_pos hp]
+    simp only [g, dite_eq_left hp]
     exact congrArg some (key _ _ (hgood Δ hΔ) hp.choose_spec.2)
   have hgx : ∀ Δ ∈ mx.toList, g (f Δ) = some Δ := by
     intro Δ hΔ
@@ -1094,7 +1094,7 @@ private theorem rc_tw_of_segments {a : Weil h →* (w.adicCompletion E)ˣ} (ha :
     (χ : (w.adicCompletion E)ˣ →* ℂˣ) (hχ : IsSmoothChar χ)
     (hr : ∀ Δ ∈ l, r (Δ.first.tw χ hχ) = (r Δ.first).lpTwist (χ.comp a) (ha.smooth hχ)) :
     rc (x.tw χ hχ) = (rc x).lpTwist (χ.comp a) (ha.smooth hχ) := by
-  haveI : CharZero (w.adicCompletion E) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion E) := algebraRat.charZero _
   obtain ⟨-, hs, ht, -⟩ := GlobalTheory.T.weil_deligne_sum_twist_compat E Ω A w h
   have h2 := GlobalTheory.T.isLanglandsClassification_twist_multisegment _ (l : Multiset (Segment (w.adicCompletion E))) x χ hχ hx
   rw [hL l x hx, hL (l.map fun Δ : Segment _ => Δ.tw χ hχ) (x.tw χ hχ) h2, segSum, segSum, hs, List.map_map, List.map_map]
@@ -1107,7 +1107,7 @@ end UpperTheory.Zero.LLC
 theorem UpperTheory.Zero.LLC.extTw :
     UpperTheory.Zero.LLC.ExtTw := by
   intro E Ω _ _ _ _ _ A w h a ha r rc H hL
-  haveI : CharZero (w.adicCompletion E) := algebraRat.charZero _
+  have : CharZero (w.adicCompletion E) := algebraRat.charZero _
   refine ⟨fun x s => ?_, fun x χ hχ hg => ?_⟩
   · obtain ⟨𝔪, h𝔪⟩ := UpperTheory.Zero.LLC.Pr.exh _ x
     obtain ⟨l, rfl⟩ := Quotient.exists_rep 𝔪

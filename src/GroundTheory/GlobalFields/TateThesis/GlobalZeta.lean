@@ -71,7 +71,7 @@ theorem continuous_of_mem_schwartzBruhat {F : 𝔸[K] → ℂ} (hF : F ∈ schwa
   | smul c G _ hG => exact hG.const_smul c
 
 theorem continuous_ideleModule_val : Continuous fun x : IdeleGroup K ↦ (ideleModule K x : ℝ) :=
-  continuous_subtype_val.comp continuous_ideleModule
+  continuous_subtypeVal.comp continuous_ideleModule
 
 theorem infiniteZetaBound_nonneg (σ : ℝ) (k : ℕ) (a : (InfiniteAdeleRing K)ˣ) :
     0 ≤ infiniteZetaBound σ k a :=
@@ -115,7 +115,7 @@ theorem exists_bound_schwartzBruhatTensor (φ : 𝓢(mixedSpace K, ℂ))
   unfold schwartzBruhatTensor
   by_cases hb : (b : FiniteAdeleRing (𝓞 K) K) ∈ idealFiniteAdeles L
   · have hfz : finiteZetaBound L σ b = finiteModule (ofFinite b) ^ σ := by
-      rw [finiteZetaBound, if_pos hb]
+      rw [finiteZetaBound, ite_eq_left hb]
     rw [hfz, ideleModule_rpow_eq, norm_mul]
     have hgM : ‖g (x : 𝔸[K]).2‖ ≤ max M 0 := (hM _).trans (le_max_left _ _)
     have hfm : 0 ≤ finiteModule (ofFinite b) ^ σ := by
@@ -190,7 +190,7 @@ def globalZeta (f : 𝔸[K] → ℂ) (χ : HeckeCharacter K) (s : ℂ) : ℂ :=
 theorem continuous_zetaIntegrand {F : 𝔸[K] → ℂ} (hF : Continuous F) (χ : HeckeCharacter K)
     (s : ℂ) :
     Continuous fun x : IdeleGroup K ↦ F x * (χ.toIdele x : ℂ) * ((ideleModule K x : ℝ) : ℂ) ^ s :=
-  ((hF.comp Units.continuous_val).mul (continuous_subtype_val.comp χ.continuous_toIdele)).mul
+  ((hF.comp Units.continuous_val).mul (continuous_subtypeVal.comp χ.continuous_toIdele)).mul
     ((Complex.continuous_ofReal.comp continuous_ideleModule_val).cpow continuous_const
       fun x ↦ Complex.ofReal_mem_slitPlane.2 (ideleModule K x).2)
 

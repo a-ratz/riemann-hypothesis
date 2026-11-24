@@ -119,7 +119,7 @@ theorem psiV_span (y : Fin X.B.I.n → ℂ) : ∃ c : Fin X.B.I.n → ℂ, y = �
 theorem cplx_comb {ι : Type} [Fintype ι] (g : ι → (VS D).V) (U : Submodule D.host.E (VS D).V) (c : ι → ℂ)
     (hc : ∀ p ∈ U, ∑ i, c i * embS D (X.pl v) ((VS D).hT p (g i)) = 0) :
     ∑ i, c i • psiV X v (g i) ∈ spanAt X v (perpS (VS D) U ⊓ Submodule.span D.host.E (Set.range g)) := by
-  letI : Algebra D.host.E ℂ := (embS D (X.pl v)).toAlgebra
+  let : Algebra D.host.E ℂ := (embS D (X.pl v)).toAlgebra
   let b := Module.Basis.ofVectorSpace D.host.E ℂ
   let J := Finset.univ.biUnion (fun i : ι => (b.repr (c i)).support)
   let s : Module.Basis.ofVectorSpaceIndex D.host.E ℂ → ι → D.host.E := fun j i => b.repr (c i) j

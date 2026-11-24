@@ -140,7 +140,7 @@ namespace GlobalTheory.AdForm.LevLift
 
 theorem exists_mem_U_finM : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), ∀ (u : B.Word) (a : I.ι) (Ch : ℕ → Type) (A : TwDat I l Z u a Ch), A.Is → ∀ (i : ℕ) (hi : i ≤ B.R.m) (β : Ch i) (z : (A.K i hi β).lev.U), ∃ w : A.U i β, z.1.1 = finM _ (rankN (I.rec7 l Z) i hi) w.1 := by
   intro B X I _ _ l Z u a Ch A hA i hi β z
-  letI := tensTopL (F := (I.rec7 l Z).host.F) (E := (I.rec7 l Z).host.E)
+  let := tensTopL (F := (I.rec7 l Z).host.F) (E := (I.rec7 l Z).host.E)
     (FiniteAdeleRing (𝓞 (I.rec7 l Z).host.F) (I.rec7 l Z).host.F)
   obtain ⟨e, he⟩ := GlobalTheory.FinPartIso.exists_finIso (I.rec7 l Z) ((I.rec7 l Z).sp.X i) _ (rankN (I.rec7 l Z) i hi)
   obtain ⟨g, hg⟩ := e.toMulEquiv.surjective ⟨z.1, (((A.K i hi β).lev.U_eq z.1).1 z.2).1⟩
@@ -312,11 +312,11 @@ theorem exists_level_elt_all : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
           · exact (hbP r s).trans hexp
           · exact (conj_bound (I.rec7 l Z).sp.cm hgr hzU P.1 _ hexp1 hbP r s).trans hexp
         · rw [hoff Q hQ, sub_self, Valuation.map_zero]
-          exact zero_le'
+          exact zero_le
       · obtain ⟨γ, hγ⟩ := hz4
         exact ⟨γ, fun r s => by rw [← hγ r s, mul_one]⟩
     · refine ⟨1, map_one _, fun Q => Or.inl (by rw [map_one, map_one]), fun Q r s => ?_, fun h => absurd h hP⟩
-      rw [map_one, map_one, sub_self, Valuation.map_zero]; exact zero_le'
+      rw [map_one, map_one, sub_self, Valuation.map_zero]; exact zero_le
   choose zf hzf1 hzf2 hzf3 hzf4 using hsel
   have hpair : ∀ (Q : HeightOneSpectrum (𝓞 B.fields.E)) (P P' : SBof I a), P ≠ P' → cP Q (ι (zf P)) = 1 ∨ cP Q (ι (zf P')) = 1 := by
     intro Q P P' hne
@@ -354,7 +354,7 @@ theorem exists_level_elt_all : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
         simp [Ne.symm h]
   obtain ⟨w, hw⟩ : ∃ w : S.U, w = ((Finset.univ : Finset (SBof I a)).toList.map zf).prod := ⟨_, rfl⟩
   have hwP : ∀ P : SBof I a, cP P.1 (ι w) = cP P.1 (ι (zf P)) := fun P => by
-    rw [hw, hlistP _ (Finset.nodup_toList _) P, if_pos (Finset.mem_toList.2 (Finset.mem_univ _))]
+    rw [hw, hlistP _ (Finset.nodup_toList _) P, ite_eq_left (Finset.mem_toList.2 (Finset.mem_univ _))]
   have hchiw : S.chi w = 1 := by
     rw [hw, map_list_prod]
     refine List.prod_eq_one fun x hx => ?_
@@ -378,7 +378,7 @@ theorem exists_level_elt_all : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
     rcases map_prod_cases zf ((cP Q).comp ι) (hpair Q) _ (Finset.nodup_toList _) with h | ⟨P, -, h⟩
     · rw [← hw] at h
       change cP Q (ι w) = _ at h
-      rw [h, sub_self, Valuation.map_zero]; exact zero_le'
+      rw [h, sub_self, Valuation.map_zero]; exact zero_le
     · rw [← hw] at h
       change cP Q (ι w) = _ at h
       rw [h]; exact hzf3 P Q r s
@@ -626,7 +626,7 @@ theorem actO_deep : ∀ (D : D7) (S T : HSp D) {a b : ℕ} (ha : S.rank = a) (hb
     have hL := hN P
     have hL0 : Valued.v (((d * (k * K) : ℕ)) : P.adicCompletion D.host.E) ≠ 0 := fun h0 => by
       rw [h0] at hL
-      exact WithZero.exp_ne_zero (le_antisymm hL zero_le')
+      exact WithZero.exp_ne_zero (le_antisymm hL zero_le)
     have h2 : Valued.v (((d * (k * K) : ℕ)) : P.adicCompletion D.host.E) * Valued.v (φ (t₀ i j)) ≤
         Valued.v (((d * (k * K) : ℕ)) : P.adicCompletion D.host.E) * 1 := by
       rw [mul_one]; exact hmv.trans hL
@@ -697,11 +697,11 @@ theorem det_sub_one_le {K Γ : Type} [Field K] [LinearOrderedCommGroupWithZero �
   let J : Ideal v.integer :=
     { carrier := {z | v (z : K) ≤ ε}
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, Subring.coe_add] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, Subring.coe_add] at ha hb ⊢
         exact (v.map_add _ _).trans (max_le ha hb)
       zero_mem' := by simp
       smul_mem' := fun c z hz => by
-        simp only [Set.mem_setOf_eq, smul_eq_mul, Subring.coe_mul, map_mul] at hz ⊢
+        simp only [Set.mem_ofPred_eq, smul_eq_mul, Subring.coe_mul, map_mul] at hz ⊢
         calc v (c : K) * v (z : K) ≤ 1 * ε := mul_le_mul' c.2 hz
           _ = ε := one_mul ε }
   have hint : ∀ r s, v (M r s) ≤ 1 := by
@@ -757,7 +757,7 @@ theorem exists_depth (E : Type) [Field E] [NumberField E] (K : ℕ) (hK : 0 < K)
   · refine lt_of_le_of_lt (WithZero.exp_le_exp.2 ?_) (hm P)
     have := hS P hP
     omega
-  · rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not, hval] at hP
+  · rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not, hval] at hP
     refine lt_of_lt_of_eq ?_ hP.symm
     rw [← WithZero.exp_zero, WithZero.exp_lt_exp]
     omega
@@ -885,7 +885,7 @@ theorem exists_root_same_value : ∀ (D : D7) (c : (AE D)ˣ →* Circle), IsHeck
       rw [map_mul, map_mul, map_sub, map_one]
       calc Valued.v (φ d - 1) * Valued.v (φ hK)
           < Valued.v ((2 * N : ℕ) : P.adicCompletion D.host.E) * Valued.v (φ hK) :=
-            mul_lt_mul_of_pos_right (lt_of_le_of_lt (hloc P) (hN₀ P)) (zero_lt_iff.2 hKpos)
+            mul_lt_mul_of_pos_right (lt_of_le_of_lt (hloc P) (hN₀ P)) (pos_iff_ne_zero.2 hKpos)
         _ = 1 := by rw [mul_comm, hvK]
     refine ⟨ht1, ?_⟩
     change Valued.v (φ ((1 + d) * h2)) = 1
@@ -1549,7 +1549,7 @@ theorem isFrame_one_std {F E : Type} [Field F] [NumberField F] [Field E] [Number
   · intro x
     simp only [inv_one, Units.val_one, Matrix.one_mulVec, IsEmpty.forall_iff, iff_true]
     rw [Subsingleton.elim x 0]; exact zero_mem _
-  · haveI : NeZero n := ⟨hn.ne'⟩
+  · have : NeZero n := ⟨hn.ne'⟩
     have e : Formalism.L2.Col.stdLat E n = baseLb E n ∅ := by
       ext x
       rw [rll_mem_baseLb]
@@ -1655,7 +1655,7 @@ theorem actO_isHalf {D : D7} {S T : HSp D} (g : GA D S) (h : GA D T) (e : AE D) 
 theorem coe_stdLat {D : D7} (n : ℕ) :
     ((Formalism.L2.Col.stdLat D.host.E n : Submodule (𝓞 D.host.E) (Fin n → D.host.E)) : Set (Fin n → D.host.E)) = intVec D n := by
   ext x
-  simp only [SetLike.mem_coe, intVec, Set.mem_setOf_eq]
+  simp only [SetLike.mem_coe, intVec, Set.mem_ofPred_eq]
   rw [Formalism.L2.Col.stdLat, Submodule.mem_pi]
   refine forall_congr' fun k => ?_
   simp only [Set.mem_univ, true_implies, Submodule.mem_one]

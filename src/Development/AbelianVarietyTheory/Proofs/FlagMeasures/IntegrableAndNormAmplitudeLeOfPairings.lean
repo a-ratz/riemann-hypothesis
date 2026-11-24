@@ -65,7 +65,7 @@ theorem rankOne_integral {X : Type} [MeasurableSpace X] (ν : Measure X)
       ∫⁻ x, ENNReal.ofReal (‖⟪v, f x⟫_ℂ‖ * ‖⟪w, g x⟫_ℂ‖) ∂ν ≤ ENNReal.ofReal K) :
     Integrable (fun x => (innerSL ℂ (g x)).smulRight (f x)) ν ∧
       ‖∫ x, (innerSL ℂ (g x)).smulRight (f x) ∂ν‖ ≤ K := by
-  haveI := FiniteDimensional.complete ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wp
   set T : X → (Wq →L[ℂ] Wp) := fun x => (innerSL ℂ (g x)).smulRight (f x) with hT
   set e := stdOrthonormalBasis ℂ Wp
   set b := stdOrthonormalBasis ℂ Wq
@@ -144,7 +144,7 @@ private theorem measurableSet_of_isOpen' (k r : ℕ) : MeasurableSet {x : Mt k r
 
 theorem integrable_and_norm_ampJ_le : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] {Wq : Type} [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (ν : Measure (Mt k r)) (Φ : Mat k r → Wp) (Φ' : Mat k r → Wq) (γ : Mat k r) (c K : ℝ), γ ∈ GG k r → ν {x | Matrix.of x ∉ GG k r} = 0 → ContinuousOn Φ (GG k r) → ContinuousOn Φ' (GG k r) → 0 < c → 0 ≤ K → (∀ (v : Wp) (w : Wq), ‖v‖ = 1 → ‖w‖ = 1 → ∫⁻ x, ENNReal.ofReal (‖⟪v, Φ (γ * Matrix.of x)⟫_ℂ‖ * ‖⟪w, Φ' (Matrix.of x)⟫_ℂ‖) ∂ν ≤ ENNReal.ofReal K) → Integrable (fun x => (innerSL ℂ (Φ' (Matrix.of x))).smulRight (Φ (γ * Matrix.of x))) ν ∧ ‖(haveI := FiniteDimensional.complete ℂ Wp; ampJ ν c Φ Φ' γ)‖ ≤ K / c := by
   intro k r Wp _ _ _ Wq _ _ _ ν Φ Φ' γ c K hγ hν hΦ hΦ' hc hK h
-  haveI := FiniteDimensional.complete ℂ Wp
+  have := FiniteDimensional.completeSpace ℂ Wp
   have hof : Continuous (fun x : Mt k r => (Matrix.of x : Mat k r)) := continuous_id
   have hS := measurableSet_of_isOpen' k r
   have hae : ν.restrict {x : Mt k r | Matrix.of x ∈ GG k r} = ν :=

@@ -133,7 +133,7 @@ theorem exists_basis_of_finite : ∀ (R F : Type) [CommRing R] [IsDomain R] [IsN
   intro R F _ _ _ _ _ c₀ hc p hp hp1 T hT
   classical
   let B := Localization.AtPrime p
-  haveI := GlobalTheory.isDiscreteValuationRing_of_height_eq_one p hp1 B
+  have := GlobalTheory.isDiscreteValuationRing_of_height_eq_one p hp1 B
   have hu : ∀ y : p.primeCompl, IsUnit (c₀ y) := fun y => IsUnit.mk0 _ fun h =>
     y.2 (((injective_iff_map_eq_zero c₀).mp hc _ h) ▸ p.zero_mem)
   let l : B →+* F := IsLocalization.lift hu
@@ -146,12 +146,12 @@ theorem exists_basis_of_finite : ∀ (R F : Type) [CommRing R] [IsDomain R] [IsN
     have h0 : c₀ r = 0 := by rw [← hl, ← e, map_mul, hz, zero_mul]
     rw [(injective_iff_map_eq_zero c₀).mp hc _ h0, map_zero] at e
     exact (IsLocalization.map_units B s).mul_left_eq_zero.mp e
-  letI : Algebra B F := l.toAlgebra
+  let : Algebra B F := l.toAlgebra
   have hsm : ∀ (z : B) (v : F), z • v = l z * v := fun _ _ => rfl
-  haveI : FaithfulSMul B F := (faithfulSMul_iff_algebraMap_injective B F).mpr hli
+  have : FaithfulSMul B F := (faithfulSMul_iff_algebraMap_injective B F).mpr hli
   let E := Submodule.span B T
-  haveI : Module.Finite B E := Module.Finite.span_of_finite B hT
-  haveI : Module.Free B E := inferInstance
+  have : Module.Finite B E := Module.Finite.span_of_finite B hT
+  have : Module.Free B E := inferInstance
   let e := Module.finBasis B E
   have clear : ∀ {ι : Type} [Finite ι] (z : ι → B), ∃ t, t ∉ p ∧ ∃ g : ι → R,
       ∀ i, c₀ (g i) = c₀ t * l (z i) := fun z => by
@@ -167,7 +167,7 @@ theorem exists_basis_of_finite : ∀ (R F : Type) [CommRing R] [IsDomain R] [IsN
       (Subtype.ext (by simpa [hsm, hl] using hr))
     funext j
     exact (injective_iff_map_eq_zero _).mp hinj _ (this j)
-  · haveI : Finite T := hT
+  · have : Finite T := hT
     obtain ⟨t, ht, g, hg⟩ := clear
       fun z : T × Fin (Module.finrank B E) => e.repr ⟨z.1, Submodule.subset_span z.1.2⟩ z.2
     refine ⟨t, ht, fun v hv => ⟨fun j => g (⟨v, hv⟩, j), ?_⟩⟩
@@ -181,9 +181,9 @@ theorem span_test : ∀ (R₁ F₁ : Type) [CommRing R₁] [IsDomain R₁] [IsNo
   have hle : S ≤ nonZeroDivisors R₁ := fun y hy =>
     mem_nonZeroDivisors_of_ne_zero fun h => hS (h ▸ hy)
   let A := Localization S
-  haveI : IsDomain A := IsLocalization.isDomain_of_le_nonZeroDivisors A hle
-  haveI : IsNoetherianRing A := IsLocalization.isNoetherianRing S A inferInstance
-  haveI : IsIntegrallyClosed A := isIntegrallyClosed_of_isLocalization A S hle
+  have : IsDomain A := IsLocalization.isDomain_of_le_nonZeroDivisors A hle
+  have : IsNoetherianRing A := IsLocalization.isNoetherianRing S A inferInstance
+  have : IsIntegrallyClosed A := isIntegrallyClosed_of_isLocalization A S hle
   have hinj := IsLocalization.injective A hle
   have hdvd : ∀ j, algebraMap R₁ A a ∣ algebraMap R₁ A (g j) := fun j => by
     refine GlobalTheory.dvd_of_forall_height_eq_one ((map_ne_zero_iff _ hinj).mpr ha) fun Q hQ h1 haQ => ?_
@@ -258,7 +258,7 @@ theorem mem_spanBy_of_forall_height_one : ∀ (R R₁ F F₁ : Type) [CommRing R
     choose w hw hw' using hw'
     exact ⟨s, N, g, w, hs, hw, by simp only [hw', e]⟩
   choose s N g w hs hw he using H
-  haveI : Finite G := hG
+  have : Finite G := hG
   let T : Set F := Set.range (fun i => c₀ f ^ M * u i) ∪ ⋃ q : G, Set.range (w q)
   have hT : T.Finite := (Set.finite_range _).union (Set.finite_iUnion fun q => Set.finite_range _)
   have hTW : T ⊆ W := by
@@ -410,7 +410,7 @@ theorem liftBaseChange_injective (hc₀ : Function.Injective (algebraMap R F)) (
     obtain ⟨e, he⟩ : a i ∣ d := Finset.dvd_prod_of_mem a (Finset.mem_univ i)
     rw [he, mul_comm, mul_smul]
     exact Submodule.smul_mem _ _ (ha i)
-  haveI : Fintype s := Fintype.ofFinite s
+  have : Fintype s := Fintype.ofFinite s
   set B := Submodule.span R (Set.range fun j : s => g j)
   set y : R₁ ⊗[R] B := ∑ i : S, (i : R₁ × F).1 ⊗ₜ ⟨d • g i, hdg i⟩
   have hy : B.subtype.baseChange R₁ y = d • ∑ i ∈ S, i.1 ⊗ₜ i.2 := by
@@ -439,12 +439,12 @@ theorem GlobalTheory.Desc.spanBy_image_inter : ∀ (R R₁ F F₁ : Type) [CommR
     (∀ r, ∀ a ∈ M, c₀ r * a ∈ M) → (0 : F) ∈ N → (∀ a ∈ N, ∀ b ∈ N, a + b ∈ N) → (∀ r, ∀ a ∈ N, c₀ r * a ∈ N) →
     spanBy c₁ (θ '' (M ∩ N)) = spanBy c₁ (θ '' M) ∩ spanBy c₁ (θ '' N) := by
   intro R R₁ F F₁ _ _ _ _ _ ρ c₀ c₁ θ hρ hc₀ hcomp hLD M N hM0 hMa hMs hN0 hNa hNs
-  letI : Algebra R R₁ := ρ.toAlgebra
-  letI : Algebra R F := c₀.toAlgebra
-  letI : Algebra R₁ F₁ := c₁.toAlgebra
-  letI : Algebra R F₁ := (c₁.comp ρ).toAlgebra
-  haveI : IsScalarTower R R₁ F₁ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : Module.Flat R R₁ := hρ
+  let : Algebra R R₁ := ρ.toAlgebra
+  let : Algebra R F := c₀.toAlgebra
+  let : Algebra R₁ F₁ := c₁.toAlgebra
+  let : Algebra R F₁ := (c₁.comp ρ).toAlgebra
+  have : IsScalarTower R R₁ F₁ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : Module.Flat R R₁ := hρ
   let θa : F →ₐ[R] F₁ := { θ with commutes' := fun r => RingHom.congr_fun hcomp r }
   let MS : Submodule R F :=
     { carrier := M, add_mem' := fun ha hb => hMa _ ha _ hb, zero_mem' := hM0,
@@ -477,11 +477,11 @@ namespace GlobalTheory.Desc
 theorem height_comap_eq_one_of_flat_of_mem {R R₁ : Type} [CommRing R] [IsDomain R] [IsNoetherianRing R]
     [CommRing R₁] [IsNoetherianRing R₁] (ρ : R →+* R₁) (hρ : ρ.Flat) {f : R} (hf : f ≠ 0)
     (q : Ideal R₁) [q.IsPrime] (hq : q.height = 1) (hfq : ρ f ∈ q) : (q.comap ρ).height = 1 := by
-  letI := ρ.toAlgebra
-  haveI : Module.Flat R R₁ := hρ
-  haveI : Algebra.HasGoingDown R R₁ := Algebra.HasGoingDown.of_flat
-  haveI : (q.comap ρ).IsPrime := Ideal.comap_isPrime ρ q
-  haveI : q.LiesOver (q.comap ρ) := ⟨rfl⟩
+  let := ρ.toAlgebra
+  have : Module.Flat R R₁ := hρ
+  have : Algebra.HasGoingDown R R₁ := Algebra.HasGoingDown.of_flat
+  have : (q.comap ρ).IsPrime := Ideal.comap_isPrime ρ q
+  have : q.LiesOver (q.comap ρ) := ⟨rfl⟩
   have h := Ideal.height_eq_height_add_of_liesOver_of_hasGoingDown (q.comap ρ) q
   have hle : (q.comap ρ).height ≤ 1 := by rw [← hq, h]; exact le_self_add
   refine le_antisymm hle ?_
@@ -523,7 +523,7 @@ theorem spanBy_sections_eq_of_flat : ∀ (R R₁ F F₁ : Type) [CommRing R] [Is
       have hSP : ∀ p ∈ S, p ∈ P := fun p hp => hS p (Finset.mem_insert_of_mem hp)
       have e : {u | u ∈ V₀ ∧ ∀ p ∈ insert a S, u ∈ W p.asIdeal} =
           {u | u ∈ V₀ ∧ ∀ p ∈ S, u ∈ W p.asIdeal} ∩ W a.asIdeal := by
-        ext u; simp only [Finset.mem_insert, Set.mem_setOf_eq, Set.mem_inter_iff,
+        ext u; simp only [Finset.mem_insert, Set.mem_ofPred_eq, Set.mem_inter_iff,
           forall_eq_or_imp]; tauto
       rw [e, _root_.GlobalTheory.Desc.spanBy_image_inter R R₁ F F₁ ρ c₀ c₁ θ hρ hc₀ hcomm hlin {u | u ∈ V₀ ∧ ∀ p ∈ S, u ∈ W p.asIdeal} (W a.asIdeal)
         ⟨hV0, fun p hp => hW0 p.asIdeal p.2 (hSP p hp).2⟩
@@ -532,18 +532,18 @@ theorem spanBy_sections_eq_of_flat : ∀ (R R₁ F F₁ : Type) [CommRing R] [Is
         (fun r a' ha' => ⟨hVsmul r a' ha'.1, fun p hp =>
           (hWcl p.asIdeal p.2 (hSP p hp).1 (hSP p hp).2).2.1 r a' (ha'.2 p hp)⟩)
         (hW0 a.asIdeal a.2 haP.2) hadd hsmul, ih hSP]
-      ext x; simp only [Finset.mem_insert, Set.mem_setOf_eq, Set.mem_inter_iff,
+      ext x; simp only [Finset.mem_insert, Set.mem_ofPred_eq, Set.mem_inter_iff,
         forall_eq_or_imp]; tauto
   have hS := key hP.toFinset (fun p hp => hP.mem_toFinset.mp hp)
   have e1 : {u | u ∈ V₀ ∧ ∀ p : Ideal R, p.IsPrime → p.height = 1 → f ∈ p → u ∈ W p} =
       {u | u ∈ V₀ ∧ ∀ p ∈ hP.toFinset, u ∈ W p.asIdeal} := by
     ext u
-    simp only [Set.mem_setOf_eq, Set.Finite.mem_toFinset, hPdef]
+    simp only [Set.mem_ofPred_eq, Set.Finite.mem_toFinset, hPdef]
     exact and_congr_right fun _ => ⟨fun h p hp => h p.asIdeal p.2 hp.1 hp.2,
       fun h p hp h1 hfp => h ⟨p, hp⟩ ⟨h1, hfp⟩⟩
   rw [e1, hS]
   ext x
-  simp only [Set.mem_inter_iff, Set.mem_setOf_eq, Set.Finite.mem_toFinset, hPdef]
+  simp only [Set.mem_inter_iff, Set.mem_ofPred_eq, Set.Finite.mem_toFinset, hPdef]
   refine and_congr_right fun hx => ?_
   have hxr : x ∈ spanBy c₁ (Set.range θ) := spanBy_mono c₁ (Set.image_subset_range θ V₀) hx
   have hd : ∃ d : R₁, d ≠ 0 ∧ c₁ d * x ∈ spanBy c₁ (Set.range θ) := ⟨1, one_ne_zero, by simpa⟩
@@ -641,7 +641,7 @@ theorem height_of_vert {S : Type} [CommRing S] [IsDomain S] {X : Scheme.{0}} (p 
   have h2 : Order.coheight z ≤ 1 := le_of_eq (by exact_mod_cast h1)
   have h3 := coheight_le_one p (Flat.generalizingMap p) z h2
   rw [← idealHeight_eq_coheight] at h3
-  haveI := (p z).isPrime
+  have := (p z).isPrime
   refine le_antisymm h3 (Order.one_le_iff_ne_zero.2 fun h => ?_)
   rw [Ideal.height_eq_zero_iff_eq_bot] at h
   have := hz.2
@@ -652,8 +652,8 @@ theorem exists_vert_le {S : Type} [CommRing S] [IsDomain S] {X : Scheme.{0}} [Is
     (p : X ⟶ Sp S) [IsDominant p] {f : S} (hf : f ≠ 0) (x : X) (hfx : f ∈ (p x).asIdeal) :
     ∃ z : X, Vert p f z ∧ (p z).asIdeal ≤ (p x).asIdeal := by
   obtain ⟨U, hU, hx, -⟩ := exists_isAffineOpen_mem_and_subset (x := x) (U := ⊤) trivial
-  haveI : Nonempty U := ⟨⟨x, hx⟩⟩
-  haveI : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
+  have : Nonempty U := ⟨⟨x, hx⟩⟩
+  have : IsNoetherianRing Γ(X, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
   obtain ⟨φ, hφ⟩ := Spec.map_surjective (hU.fromSpec ≫ p)
   have key : ∀ (g : S) (q : PrimeSpectrum Γ(X, U)), g ∈ (p (hU.fromSpec q)).asIdeal ↔ φ.hom g ∈ q.asIdeal := by
     intro g q
@@ -676,7 +676,7 @@ theorem exists_vert_le {S : Type} [CommRing S] [IsDomain S] {X : Scheme.{0}} [Is
   have hle : Ideal.span {φ.hom f} ≤ (hU.primeIdealOf ⟨x, hx⟩).asIdeal :=
     (Ideal.span_singleton_le_iff_mem _).2 ((key' f ⟨x, hx⟩).1 hfx)
   obtain ⟨Q, hQ, hQx⟩ := Ideal.exists_minimalPrimes_le hle
-  haveI hQp : Q.IsPrime := hQ.1.1
+  have hQp : Q.IsPrime := hQ.1.1
   have haQ : φ.hom f ∈ Q := hQ.1.2 (Ideal.mem_span_singleton_self _)
   have h1 : Q.height ≤ 1 := Ideal.height_le_one_of_isPrincipal_of_mem_minimalPrimes _ Q hQ
   have h0 : Q.height ≠ 0 := by
@@ -692,8 +692,8 @@ theorem exists_vert_le {S : Type} [CommRing S] [IsDomain S] {X : Scheme.{0}} [Is
   have hP : hU.primeIdealOf z = P :=
     hU.fromSpec.isOpenEmbedding.injective (hU.fromSpec_primeIdealOf z)
   clear_value z
-  letI := X.presheaf.algebra_section_stalk z
-  haveI := hU.isLocalization_stalk z
+  let := X.presheaf.algebra_section_stalk z
+  have := hU.isLocalization_stalk z
   refine ⟨z.1, ⟨?_, (key' f z).2 (by rw [hP]; exact haQ)⟩, fun g hg => ?_⟩
   · have := IsLocalization.AtPrime.ringKrullDim_eq_height (hU.primeIdealOf z).asIdeal
       (X.presheaf.stalk (z : X))
@@ -708,12 +708,12 @@ theorem exists_vert_over {S : Type} [CommRing S] [IsDomain S] [IsNoetherianRing 
     [IsLocallyNoetherian X] (p : X ⟶ Sp S) (e : Sp S ⟶ X) (he : e ≫ p = 𝟙 _) {f : S} (hf : f ≠ 0)
     (q : Ideal S) [hq : q.IsPrime] (h1 : q.height = 1) (hfq : f ∈ q) : ∃ z : X, Vert p f z ∧ (p z).asIdeal = q := by
   have hpe : ∀ y : Sp S, p (e y) = y := fun y => by rw [← Scheme.Hom.comp_apply, he]; rfl
-  haveI : IsDominant p := ⟨Function.Surjective.denseRange fun y => ⟨e y, hpe y⟩⟩
+  have : IsDominant p := ⟨Function.Surjective.denseRange fun y => ⟨e y, hpe y⟩⟩
   let y : Sp S := (⟨q, hq⟩ : PrimeSpectrum S)
   obtain ⟨z, hz, hle⟩ := exists_vert_le p hf (e y) (by rw [hpe]; exact hfq)
   rw [hpe] at hle
   refine ⟨z, hz, ?_⟩
-  haveI := (p z).isPrime
+  have := (p z).isPrime
   refine Ideal.eq_of_le_of_height_le (I := (p z).asIdeal) (J := q) hle ?_
   rw [h1]
   refine Order.one_le_iff_ne_zero.2 fun h => ?_
@@ -751,10 +751,10 @@ theorem W_closed (σ : Setup) (x : Sp σ.R) :
 
 theorem sec_eq_spanBy : ∀ (σ : Setup) (x : Sp σ.R) (k : ℕ), Sec (σ.D₁ x) k = spanBy (GlobalTheory.Desc.cst (σ.C x).G.hom) (σ.θ x '' σ.N k) := by
   intro σ x k
-  haveI := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing (σ.C x).R).2
-  haveI : Smooth (σ.C x).G.hom := (σ.C x).semi.smooth
-  haveI : IsLocallyNoetherian (σ.C x).G.left := LocallyOfFiniteType.isLocallyNoetherian (σ.C x).G.hom
-  haveI : IsProper σ.A.hom := σ.ab.proper
+  have := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing (σ.C x).R).2
+  have : Smooth (σ.C x).G.hom := (σ.C x).semi.smooth
+  have : IsLocallyNoetherian (σ.C x).G.left := LocallyOfFiniteType.isLocallyNoetherian (σ.C x).G.hom
+  have : IsProper σ.A.hom := σ.ab.proper
   let e : Sp (σ.C x).R ⟶ (σ.C x).G.left := (η[(σ.C x).G] : 𝟙_ _ ⟶ (σ.C x).G).left
   have he : e ≫ (σ.C x).G.hom = 𝟙 _ := Over.w (η[(σ.C x).G] : 𝟙_ _ ⟶ (σ.C x).G)
   have hρ := injective_of_flat _ (σ.flat x)

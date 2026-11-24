@@ -76,7 +76,7 @@ theorem tan_coef {V K : Type} [CommRing V] [CommRing K] [Algebra V K] {d : ℕ} 
 
 theorem chartJetTan_holds : ChartJetTanSt Xo c := by
   intro T io y I d FT actT tgT uvecT xT hb hc hu
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hid : IsGrpPullback I.G.G I.G.G (𝟙 _) (𝟙 _) := ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, fun T x y x₀ y₀ hx hy =>
     (mul_left_congr (Category.comp_id _) x₀ y₀ x y (hx.trans (Category.comp_id _)) (hy.trans (Category.comp_id _))).trans
       (Category.comp_id _).symm⟩
@@ -110,7 +110,7 @@ theorem chartJetTan_holds : ChartJetTanSt Xo c := by
 
 theorem chartJetBasis_holds (hF : FrTanBasisSt Xo c) : ChartJetBasisSt Xo c := by
   intro T io y I d FT actT tgT uvecT xT hb hc hu
-  letI := io.toAlgebra
+  let := io.toAlgebra
   have hid : IsGrpPullback I.G.G I.G.G (𝟙 _) (𝟙 _) := ⟨IsPullback.of_horiz_isIso ⟨by simp⟩, fun T x y x₀ y₀ hx hy =>
     (mul_left_congr (Category.comp_id _) x₀ y₀ x y (hx.trans (Category.comp_id _)) (hy.trans (Category.comp_id _))).trans
       (Category.comp_id _).symm⟩

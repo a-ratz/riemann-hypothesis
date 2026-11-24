@@ -86,7 +86,7 @@ def boundSub (he : ∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) �
 
 theorem exists_bound (x : K.E) : ∃ m : ℤ, Valued.v (e x) ≤ WithZero.exp m := by
   by_cases h : Valued.v (e x) = 0
-  · exact ⟨0, by rw [h]; exact zero_le'⟩
+  · exact ⟨0, by rw [h]; exact zero_le⟩
   · exact ⟨(Valued.v (e x)).log, (WithZero.exp_log h).ge⟩
 
 theorem exists_unif (he : ∀ x, x ∈ (algebraMap K.O K.E).range ↔ Valued.v (e x) ≤ 1) :
@@ -171,7 +171,7 @@ theorem GlobalTheory.IntMatBound.isIntegral_iff_bounded : ∀ (K : UQ) {L : Type
       rintro _ hx
       obtain ⟨k, rfl⟩ := Submonoid.mem_closure_singleton.1 hx
       exact hmem _ (hm k)
-    haveI := isNoetherian_of_fg_of_noetherian S hSfg
-    haveI := isNoetherian_of_le hle
+    have := isNoetherian_of_fg_of_noetherian S hSfg
+    have := isNoetherian_of_le hle
     have hfg : (Subalgebra.toSubmodule (Algebra.adjoin K.O {M})).FG := Module.Finite.iff_fg.mp inferInstance
     exact IsIntegral.of_mem_of_fg _ hfg M (Algebra.self_mem_adjoin_singleton K.O M)

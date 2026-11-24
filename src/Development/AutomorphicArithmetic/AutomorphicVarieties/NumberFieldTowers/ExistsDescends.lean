@@ -118,7 +118,7 @@ private theorem exists_qz_ne_zero_annihilators_of_ne_zero (l : ℕ) [Fact l.Prim
       rw [h0, pow_zero, one_smul] at hr
       exact hm hr
     obtain ⟨ι, hinj, hrange, hlin⟩ := zmodToQZ l r
-    haveI : Fact (1 < l ^ r) := ⟨Nat.one_lt_pow hr0 hl1⟩
+    have : Fact (1 < l ^ r) := ⟨Nat.one_lt_pow hr0 hl1⟩
     have hι0 : ι 0 = 0 := by simpa using hlin 0 0
     refine ⟨ι 1, fun h => one_ne_zero (hinj (h.trans hι0.symm)), ?_⟩
     have hx : (l : ℤ_[l]) ^ r • ι 1 = 0 := by
@@ -132,7 +132,7 @@ private theorem exists_qz_ne_zero_annihilators_of_ne_zero (l : ℕ) [Fact l.Prim
       rw [← Nat.add_sub_cancel' hle, pow_add, mul_comm, mul_smul, hx, smul_zero]
   · push_neg at hex
     obtain ⟨ι, hinj, hrange, hlin⟩ := zmodToQZ l 1
-    haveI : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl1⟩
+    have : Fact (1 < l ^ 1) := ⟨by rw [pow_one]; exact hl1⟩
     have hι0 : ι 0 = 0 := by simpa using hlin 0 0
     refine ⟨ι 1, fun h => one_ne_zero (hinj (h.trans hι0.symm)), ?_⟩
     intro a ha
@@ -152,7 +152,7 @@ theorem UpperTheory.V.Tower.qzSep :
   let f := K.liftQ (LinearMap.toSpanSingleton ℤ_[l] M m) le_rfl
   let g := K.liftQ (LinearMap.toSpanSingleton ℤ_[l] (QZ l) x) hle
   have hf : Function.Injective f := LinearMap.ker_eq_bot.mp (K.ker_liftQ_eq_bot _ _ le_rfl)
-  haveI := UpperTheory.V.PropA.qzInj l
+  have := UpperTheory.V.PropA.qzInj l
   obtain ⟨h, hh⟩ := Module.Injective.out f hf g
   refine ⟨h, ?_⟩
   have h1 := hh (K.mkQ 1)
@@ -179,7 +179,7 @@ private theorem le_dual (l : ℕ) [Fact l.Prime] (N : Type) [AddCommGroup N] [Mo
       LinearMap.ker (LinearMap.lcomp ℤ_[l] (QZ l) (OrderDual.ofDual p).subtype)) ?_
   intro a b hab
   change OrderDual.ofDual b < OrderDual.ofDual a at hab
-  obtain ⟨hle, m, hmp, hmq⟩ := SetLike.lt_iff_le_and_exists.mp hab
+  obtain ⟨hle, m, hmp, hmq⟩ := IsConcreteLE.lt_iff_le_and_exists.mp hab
   refine lt_of_le_of_ne ?_ ?_
   · intro φ hφ
     rw [LinearMap.mem_ker] at hφ ⊢
@@ -213,7 +213,7 @@ private theorem exact_dual (l : ℕ) [Fact l.Prime] {N : Type} [AddCommGroup N] 
 private theorem simple_dual (l : ℕ) [hl : Fact l.Prime]
     (N : Type) [AddCommGroup N] [Module ℤ_[l] N] [hN : IsSimpleModule ℤ_[l] N] :
     IsSimpleModule ℤ_[l] (N →ₗ[ℤ_[l]] QZ l) := by
-  haveI : Nontrivial N := IsSimpleModule.nontrivial ℤ_[l] N
+  have : Nontrivial N := IsSimpleModule.nontrivial ℤ_[l] N
   have hnu : (l : ℤ_[l]) ∈ nonunits ℤ_[l] :=
     (IsLocalRing.mem_maximalIdeal _).mp
       (by rw [PadicInt.maximalIdeal_eq_span_p]; exact Ideal.mem_span_singleton_self _)
@@ -236,7 +236,7 @@ private theorem simple_dual (l : ℕ) [hl : Fact l.Prime]
   obtain ⟨s, hs⟩ := exists_ne (0 : N)
   obtain ⟨φ0, hφ0⟩ := qzSep l N s hs
   obtain ⟨ι, hιinj, hιrange, hιsmul⟩ := zmodToQZ l 1
-  haveI : Fact (Nat.Prime (l ^ 1)) := ⟨by rw [pow_one]; exact hl.out⟩
+  have : Fact (Nat.Prime (l ^ 1)) := ⟨by rw [pow_one]; exact hl.out⟩
   have hrange : ∀ φ : N →ₗ[ℤ_[l]] QZ l, ∃ a, ι a = φ s := by
     intro φ
     refine (hιrange (φ s)).mpr ?_
@@ -261,7 +261,7 @@ private theorem simple_dual (l : ℕ) [hl : Fact l.Prime]
     ext x
     obtain ⟨c, rfl⟩ := hspan s hs x
     rw [map_smul, LinearMap.smul_apply, map_smul, ← hb, ← ha, hb', hιsmul, smul_comm]
-  haveI : Nontrivial (N →ₗ[ℤ_[l]] QZ l) := ⟨⟨φ0, 0, fun h => hφ0 (by rw [h]; rfl)⟩⟩
+  have : Nontrivial (N →ₗ[ℤ_[l]] QZ l) := ⟨⟨φ0, 0, fun h => hφ0 (by rw [h]; rfl)⟩⟩
   refine { eq_bot_or_eq_top := fun P => ?_ }
   by_cases h : P = ⊥
   · exact Or.inl h
@@ -278,7 +278,7 @@ theorem UpperTheory.V.Tower.lenDual :
   by_cases hM : IsFiniteLength ℤ_[l] M
   · induction hM with
     | @of_subsingleton M' _ _ _ =>
-      haveI : Subsingleton (M' →ₗ[ℤ_[l]] QZ l) :=
+      have : Subsingleton (M' →ₗ[ℤ_[l]] QZ l) :=
         ⟨fun f g => LinearMap.ext fun x => by rw [Subsingleton.elim x 0, map_zero, map_zero]⟩
       simp [Module.length_eq_zero]
     | @of_simple_quotient M' _ _ N _ _ ih =>
@@ -347,7 +347,7 @@ theorem UpperTheory.V.Tower.existsGen :
         rw [Subgroup.map_le_iff_le_comap]
         intro x hx
         have hx' := h hx
-        simp only [gamU, levU, qExp, if_pos hl, Subgroup.mem_inf] at hx'
+        simp only [gamU, levU, qExp, ite_eq_left hl, Subgroup.mem_inf] at hx'
         exact hx'.2
     · exact Or.inl hl
   obtain ⟨γ', hγ', hle⟩ := UpperTheory.V.Kum.existsGen l (U.map (cycZ k Ω l)) hclosed hc
@@ -523,7 +523,7 @@ private theorem exists_level_pow_dvd_of_not_finOrder (l : ℕ) [hl : Fact l.Prim
     apply Units.ext
     rw [hw, hm, Units.val_one]
   have hom : (orderOf w : ℤ) ∣ m := orderOf_dvd_iff_zpow_eq_one.mpr hwm
-  haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  have : NeZero (l ^ j) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
   have hcard : orderOf w ∣ (l ^ j).totient := by
     rw [← ZMod.card_units_eq_totient]
     exact orderOf_dvd_card
@@ -554,12 +554,12 @@ private theorem exists_open_subgroup_cycZ_trivial_mod_pow (F Ω : Type) [Field F
     (l : ℕ) [hl : Fact l.Prime] (j : ℕ) :
     ∃ H : Subgroup (G F Ω), IsOpen (H : Set (G F Ω)) ∧
       ∀ g ∈ H, PadicInt.toZModPow j ((cycZ F Ω l g : ℤ_[l]ˣ) : ℤ_[l]) = 1 := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr hl.out.ne_zero⟩
-  haveI : NeZero (l ^ j) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω (l ^ j)
-  haveI : FiniteDimensional F (IntermediateField.adjoin F ({ζ} : Set Ω)) :=
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed F
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap F Ω).injective
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.mpr hl.out.ne_zero⟩
+  have : NeZero (l ^ j) := ⟨pow_ne_zero _ hl.out.ne_zero⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω (l ^ j)
+  have : FiniteDimensional F (IntermediateField.adjoin F ({ζ} : Set Ω)) :=
     IntermediateField.adjoin.finiteDimensional (Algebra.IsIntegral.isIntegral ζ)
   refine ⟨(IntermediateField.adjoin F ({ζ} : Set Ω)).fixingSubgroup,
     IntermediateField.fixingSubgroup_isOpen _, fun g hg => ?_⟩
@@ -597,14 +597,14 @@ theorem UpperTheory.V.Kum.vanishCyc :
       exact h1
     exact this
   obtain ⟨E, hE, hEW⟩ := (krullTopology_mem_nhds_one_iff F Ω W).mp (hWo.mem_nhds hW1)
-  haveI := hE
+  have := hE
   have hN : IsOpen (E.fixingSubgroup : Set (G F Ω)) := IntermediateField.fixingSubgroup_isOpen E
   have hNφ : ∀ y : Uinf F Ω l, y.1 ∈ E.fixingSubgroup → φ y = 0 := by
     intro y hy
     have : y ∈ Subtype.val ⁻¹' W := hEW hy
     rw [hWeq] at this
     exact this
-  haveI : Finite (G F Ω ⧸ E.fixingSubgroup) := Subgroup.quotient_finite_of_isOpen _ hN
+  have : Finite (G F Ω ⧸ E.fixingSubgroup) := Subgroup.quotient_finite_of_isOpen _ hN
   obtain ⟨d, hd0, -, hdN⟩ := Subgroup.exists_pow_mem_of_index_ne_zero (Subgroup.index_ne_zero_of_finite (H := E.fixingSubgroup)) γ
   obtain ⟨a, d', hd'l, hdd⟩ := Nat.exists_eq_pow_mul_and_not_dvd hd0.ne' l hl.out.ne_one
   obtain ⟨j, hj⟩ := exists_level_pow_dvd_of_not_finOrder l (cycZ F Ω l γ) hγ a
@@ -701,19 +701,19 @@ private theorem ext_of_prod {Γ R M : Type} [Group Γ] [TopologicalSpace Γ] [Is
     intro p
     rw [hz]
     exact hwd _ _ (by rw [hf, hs])
-  haveI : CompactSpace C := isCompact_iff_compactSpace.mp hC.isCompact
-  haveI : CompactSpace U := isCompact_iff_compactSpace.mp hU.isCompact
+  have : CompactSpace C := isCompact_iff_compactSpace.mp hC.isCompact
+  have : CompactSpace U := isCompact_iff_compactSpace.mp hU.isCompact
   have hfc : Continuous f := by
     have : f = fun p : C × U => p.1.1 * p.2.1 := funext hf
     rw [this]
-    exact (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)
+    exact (continuous_subtypeVal.comp continuous_fst).mul (continuous_subtypeVal.comp continuous_snd)
   have hfs : Function.Surjective f := fun g => ⟨s g, by rw [hf, hs]⟩
   have hq : Topology.IsQuotientMap f := hfc.isClosedMap.isQuotientMap hfc hfs
   have hzc : Continuous z := by
     rw [hq.continuous_iff]
     have : z ∘ f = fun p : C × U => ρ p.1.1 (φ p.2) := funext hzf
     rw [this]
-    exact hρ.comp ((continuous_subtype_val.comp continuous_fst).prodMk (hφ.comp continuous_snd))
+    exact hρ.comp ((continuous_subtypeVal.comp continuous_fst).prodMk (hφ.comp continuous_snd))
   have hzU : ∀ u : U, z u.1 = φ u := by
     intro u
     have h1 := hzf (⟨1, C.one_mem⟩, u)
@@ -780,7 +780,7 @@ theorem UpperTheory.V.Kum.extCocycle :
       rw [h2]
       exact Subgroup.one_mem _
     exact KStar.TotallyRealRoots.nu_ne_top KStar.TotallyRealRoots.isOpen_galImage hn.ne' htop
-  haveI hN : (Uinf F Ω l).Normal := by
+  have hN : (Uinf F Ω l).Normal := by
     show (⊤ ⊓ (cycZ F Ω l).ker).Normal
     infer_instance
   have hUc : IsClosed ((Uinf F Ω l : Subgroup (G F Ω)) : Set (G F Ω)) := by
@@ -832,7 +832,7 @@ private theorem UpperTheory.V.Kum.decCob {F Ω : Type} [Field F] [NumberField F]
     {A : ValuationSubring Ω} (hv : v ∈ Above F l) (hA : IsPlaceOver A v) {z : G F Ω → QZ l}
     (hz : z ∈ Z1 (qzG F Ω l e)) (h0 : ∀ g ∈ Dec (F := F) A, cycZ F Ω l g = 1 → z g = 0) :
     ∃ m, ∀ g ∈ Dec (F := F) A, z g = qzG F Ω l e g m - m := by
-  haveI : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.mp (isClosed_Dec A).isCompact
+  have : CompactSpace (Dec (F := F) A) := isCompact_iff_compactSpace.mp (isClosed_Dec A).isCompact
   let χ : Dec (F := F) A →* ℤ_[l]ˣ := (cycZ F Ω l).comp (Dec (F := F) A).subtype
   let ρ : Representation ℤ_[l] (Dec (F := F) A) (QZ l) := (qzG F Ω l e).comp (Dec (F := F) A).subtype
   have hV : IsClosed (decImage F l A : Set ℤ_[l]ˣ) := Subgroup.isClosed_of_isOpen _ (isOpen_decImage hv hA)
@@ -853,13 +853,13 @@ private theorem UpperTheory.V.Kum.decCob {F Ω : Type} [Field F] [NumberField F]
   obtain ⟨γ, hγ, hγχ⟩ := Subgroup.mem_map.mp hγ'V
   have hq : Continuous fun p : G F Ω × QZ l => qzG F Ω l e p.1 p.2 := contAction_qzG e
   have hpm : Continuous fun p : Dec (F := F) A × QZ l => ((p.1 : G F Ω), p.2) :=
-    (continuous_subtype_val.comp continuous_fst).prodMk continuous_snd
+    (continuous_subtypeVal.comp continuous_fst).prodMk continuous_snd
   have hρc0 := hq.comp hpm
   have hρc : ReciprocityTheory.Gal.ContAction ρ := by
     unfold ReciprocityTheory.Gal.ContAction
     refine hρc0.congr fun p => ?_
     simp only [ρ, Function.comp_apply, MonoidHom.comp_apply, Subgroup.coe_subtype]
-  have hχc0 := (continuous_cycZ F Ω l).comp (continuous_subtype_val (p := fun g : G F Ω => g ∈ Dec (F := F) A))
+  have hχc0 := (continuous_cycZ F Ω l).comp (continuous_subtypeVal (p := fun g : G F Ω => g ∈ Dec (F := F) A))
   have hχc : Continuous χ := by
     refine hχc0.congr fun g => ?_
     simp only [χ, Function.comp_apply, MonoidHom.comp_apply, Subgroup.coe_subtype]
@@ -903,7 +903,7 @@ private theorem UpperTheory.V.Kum.decCob {F Ω : Type} [Field F] [NumberField F]
     rw [← hx]
     simp only [sub_smul, one_smul]
   have hzr : (fun g : Dec (F := F) A => z g) ∈ Z1 ρ := by
-    refine ⟨hz.1.comp continuous_subtype_val, fun a b => ?_⟩
+    refine ⟨hz.1.comp continuous_subtypeVal, fun a b => ?_⟩
     have := hz.2 a b
     simp only [ρ, MonoidHom.comp_apply, Subgroup.coe_subtype, Subgroup.coe_mul]
     exact this
@@ -1045,10 +1045,10 @@ theorem UpperTheory.V.Tower.dinfTransport :
   let e : cycU l U' ≃* cycU l U := ((cycU l U').equivMapOfInjective φ₀ hi).trans (MulEquiv.subgroupCongr hU)
   have he : ∀ u, (e u).1 = φ₀ u.1 := fun _ => rfl
   have he' : ∀ u, φ₀ (e.symm u).1 = u.1 := fun u => by rw [← he, MulEquiv.apply_symm_apply]
-  have c1 : Continuous e.toMonoidHom := (hc.comp continuous_subtype_val).subtype_mk _
+  have c1 : Continuous e.toMonoidHom := (hc.comp continuous_subtypeVal).subtype_mk _
   have c2 : Continuous e.symm.toMonoidHom := by
     refine continuous_induced_rng.2 (hemb.continuous_iff.2 ?_)
-    exact continuous_subtype_val.congr fun u => (he' u).symm
+    exact continuous_subtypeVal.congr fun u => (he' u).symm
   refine ⟨{ toFun := fun ψ => ⟨ψ.1 ∘ e.toMonoidHom, dt_mem σ N e.toMonoidHom c1 (fun u x => hφ u.1 x) ψ.2⟩
             map_add' := fun _ _ => rfl
             map_smul' := fun _ _ => rfl
@@ -1264,7 +1264,7 @@ theorem UpperTheory.V.Tower.dinfTors :
   · classical
     have hC : IsClosed ((cycU l U : Subgroup (G k Ω)) : Set (G k Ω)) :=
       hU.inter (isClosed_singleton.preimage (continuous_cycZ k Ω l))
-    haveI : CompactSpace (cycU l U) := isCompact_iff_compactSpace.mp hC.isCompact
+    have : CompactSpace (cycU l U) := isCompact_iff_compactSpace.mp hC.isCompact
     have hfin := IsLocallyConstant.range_finite φ.2.1
     choose r hr using hQ
     refine ⟨∑ q ∈ hfin.toFinset, r q, ?_⟩
@@ -1383,17 +1383,17 @@ variable {l : ℕ} [Fact l.Prime] {L₀ : Type} [Field L₀] [NumberField L₀] 
 theorem step0 (hμ : HasMuQ l L₀) {γ : G L₀ Ω} (hγ : IsGen l ⊤ γ) {e : ℤ} (he : e ≠ 0) (m : ℕ) (L₁ : Type) [Field L₁]
     [NumberField L₁] [Algebra L₀ L₁] (hL : IsLayer l m L₀ L₁) :
     shaInv L₁ l e = cokerLen (xTw l l (⊤ : Subgroup (G L₀ Ω)) e γ ^ l ^ m - 1) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L₀
-  haveI : FiniteDimensional L₀ L₁ := Module.Finite.of_restrictScalars_finite ℚ L₀ L₁
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed L₀
+  have : FiniteDimensional L₀ L₁ := Module.Finite.of_restrictScalars_finite ℚ L₀ L₁
   let j : L₁ →ₐ[L₀] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-  letI : Algebra L₁ Ω := j.toRingHom.toAlgebra
-  haveI : IsScalarTower L₀ L₁ Ω := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
-  haveI : Algebra.IsAlgebraic L₀ Ω := IsAlgClosure.isAlgebraic
-  haveI : IsAlgClosure L₁ Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := L₀) L₁⟩
+  let : Algebra L₁ Ω := j.toRingHom.toAlgebra
+  have : IsScalarTower L₀ L₁ Ω := IsScalarTower.of_algebraMap_eq fun x => (j.commutes x).symm
+  have : Algebra.IsAlgebraic L₀ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosure L₁ Ω := ⟨inferInstance, Algebra.IsAlgebraic.tower_top (K := L₀) L₁⟩
   obtain ⟨D⟩ := Formalism.GaloisCohomology.ldataExists L₁ Ω l
   have hμ₁ : HasMuQ l L₁ := by
     obtain ⟨ζ, hζ⟩ := hμ

@@ -313,7 +313,7 @@ theorem isAdmissible_finRep : GlobalTheory.Published.HarishChandraFinite → ∀
       simpa [σ] using this
   obtain ⟨y, hy, hy0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hk
   have ho := GlobalTheory.PartDims.isOpen_stab hs hQ hy
-  haveI := GlobalTheory.PartDims.isTopologicalGroup_GA V
+  have := GlobalTheory.PartDims.isTopologicalGroup_GA V
   rcases hhom with h | h
   · obtain ⟨f, hf, hf0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot h
     exact GlobalTheory.KapIsot.isAdmissible_of hirr hy0 ho hf hf0
@@ -323,7 +323,7 @@ theorem isAdmissible_finRep : GlobalTheory.Published.HarishChandraFinite → ∀
     have hK' : IsOpen ((K.map Φ.toMulEquiv.toMonoidHom : Subgroup (GfC V')) : Set (GfC V')) := by
       rw [Subgroup.coe_map]
       exact Φ.toHomeomorph.isOpenMap _ hK
-    haveI := GlobalTheory.CuspDec.finiteDimensional_fixed (M := M') hP hθ _ hK'
+    have := GlobalTheory.CuspDec.finiteDimensional_fixed (M := M') hP hθ _ hK'
     refine Submodule.finiteDimensional_of_le (S₂ := allMaps θ M' ⊓ GlobalTheory.PRep.fixed (finRep M') (K.map Φ.toMulEquiv.toMonoidHom))
       fun x hx => ⟨hx.1, GlobalTheory.CuspDec.mem_fixed.2 fun k hk => ?_⟩
     obtain ⟨k0, hk0, rfl⟩ := Subgroup.mem_map.1 hk
@@ -451,7 +451,7 @@ namespace GlobalTheory.RepCount
 
 theorem iSup_range_homInto_inf_killed_eq_bot : ∀ (H S0 X : Type) [Group H] [AddCommGroup S0] [Module ℂ S0] [AddCommGroup X] [Module ℂ X] (σ0 : Representation ℂ H S0) (ρ : Representation ℂ H X) (C : Submodule ℂ X) (I : Set (MonoidAlgebra ℂ H)), σ0.IsIrreducible → killed σ0 I = ⊥ → ((⨆ f ∈ homInto σ0 ρ C, LinearMap.range f) ⊓ killed ρ I : Submodule ℂ X) = ⊥ := by
   intro H S0 X _ _ _ _ _ σ0 ρ C I hirr hk
-  haveI hS : IsSimpleModule (MonoidAlgebra ℂ H) σ0.asModule :=
+  have hS : IsSimpleModule (MonoidAlgebra ℂ H) σ0.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule σ0).1 hirr
   let N : Submodule (MonoidAlgebra ℂ H) ρ.asModule :=
     ⨆ (f : S0 →ₗ[ℂ] X) (hf : f ∈ homInto σ0 ρ C), LinearMap.range (modMap f hf.2)
@@ -460,7 +460,7 @@ theorem iSup_range_homInto_inf_killed_eq_bot : ∀ (H S0 X : Type) [Group H] [Ad
     rcases LinearMap.injective_or_eq_zero (modMap f hf.2) with hi | h0
     · exact le_sSup ⟨(LinearEquiv.ofInjective _ hi).symm⟩
     · rw [h0, LinearMap.range_zero]; exact bot_le
-  haveI : IsSemisimpleModule (MonoidAlgebra ℂ H) N :=
+  have : IsSemisimpleModule (MonoidAlgebra ℂ H) N :=
     IsSemisimpleModule.of_injective _ (Submodule.inclusion_injective hN)
   have hiso : IsIsotypicOfType (MonoidAlgebra ℂ H) N σ0.asModule :=
     (IsIsotypicOfType.isotypicComponent _ _ _).of_injective _ (Submodule.inclusion_injective hN)
@@ -543,9 +543,9 @@ open GlobalTheory.RepCount in
 theorem iso_of_hom_into_sum : ∀ (H S0 S X : Type) [Group H] [AddCommGroup S0] [Module ℂ S0] [AddCommGroup S] [Module ℂ S] [AddCommGroup X] [Module ℂ X] (σ0 : Representation ℂ H S0) (σ : Representation ℂ H S) (ρ : Representation ℂ H X) (C : Submodule ℂ X), σ0.IsIrreducible → σ.IsIrreducible → ∀ f ∈ homInto σ ρ (⨆ g ∈ homInto σ0 ρ C, LinearMap.range g), f ≠ 0 → Nonempty (σ.asModule ≃ₗ[MonoidAlgebra ℂ H] σ0.asModule) := by
   intro H S0 S X _ _ _ _ _ _ _ σ0 σ ρ C h0 h1 f hf hne
   let R := MonoidAlgebra ℂ H
-  haveI : IsSimpleModule R σ0.asModule :=
+  have : IsSimpleModule R σ0.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule σ0).mp h0
-  haveI : IsSimpleModule R σ.asModule :=
+  have : IsSimpleModule R σ.asModule :=
     (Representation.irreducible_iff_isSimpleModule_asModule σ).mp h1
 
   let N' : Submodule R ρ.asModule :=
@@ -583,7 +583,7 @@ theorem iso_of_hom_into_sum : ∀ (H S0 S X : Type) [Group H] [AddCommGroup S0] 
       apply ρ.asModuleEquiv.injective; simp [F, modMap_apply]
     rw [← this]; exact hx
   let e := LinearEquiv.ofInjective F hFi
-  haveI : IsSimpleModule R (LinearMap.range F) := IsSimpleModule.congr e.symm
+  have : IsSimpleModule R (LinearMap.range F) := IsSimpleModule.congr e.symm
   obtain ⟨e'⟩ := isIsotypicOfType_submodule_iff.mp
     (IsIsotypicOfType.isotypicComponent R ρ.asModule σ0.asModule) (LinearMap.range F) hle
   exact ⟨e.trans e'⟩
@@ -1029,7 +1029,7 @@ theorem finrank_isotL_transfer (hHC : GlobalTheory.Published.HarishChandraFinite
   have fW := (GlobalTheory.PartDims.finrank_comap (hC.models.HW i (sg0 D A)) hWle).2
   rw [eY'] at hfin ⊢
   rw [eW'] at fW ⊢
-  haveI := GlobalTheory.PartDims.isTopologicalGroup_GA (Yc D 0)
+  have := GlobalTheory.PartDims.isTopologicalGroup_GA (Yc D 0)
   have hne : Nontrivial π.S := Submodule.nontrivial_iff_ne_bot.2 π.ne
   have hirr : Representation.IsIrreducible (((GlobalTheory.OccRowVec.finRep π).comp (GlobalTheory.KapIsot.eqv PY).symm.toMonoidHom) : Representation ℂ (GfC (Yc D 0)) π.S) := by
     refine GlobalTheory.KapIsot.isIrreducible_of fun U hU => GlobalTheory.OccRowVec.finRep_irr π U fun g x hx => ?_

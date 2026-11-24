@@ -83,7 +83,7 @@ private theorem charPol_chars {a : Weil h →* (w.adicCompletion E)ˣ} {ha : IsL
     {rc : IrrGL (k := w.adicCompletion E) → WD h} (H : LawsT a ha rc) (x : IrrGL (k := w.adicCompletion E)) {n : ℕ}
     (ξ : Fin n → ((w.adicCompletion E)ˣ →* ℂˣ)) (hξ : ∀ j, IsSmoothChar (ξ j)) (hs : HasSupport x.rep (chars ξ hξ))
     (hu : Unlinked (chars ξ hξ)) (g : Weil h) : (rc x).charPol g = ∏ j, (X - C ((ξ j (a g) : ℂˣ) : ℂ)) := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨𝔪, hm⟩ := Pr.exh (w.adicCompletion E) x
   have he : chars ξ hξ = msupp 𝔪 :=
     GlobalTheory.LocGL.SupportUnique.hasSupport_unique GlobalTheory.RecT.geometricLemma_holds GlobalTheory.bernsteinZelevinskyFiniteness_holds
@@ -142,7 +142,7 @@ private theorem rec_eq_sat (hn : 1 ≤ n) (π : CuspSub E n) {w : HeightOneSpect
     {h : IsPlaceOver A w} {σ : SmIrr (GL (Fin n) (w.adicCompletion E))} (hσ : π.IsLocComp w σ) {B : Multiset ℂˣ}
     (hB : (CG.mk π).HasSat w B) {rc : IrrGL (k := w.adicCompletion E) → WD h} (hrc : IsRecT h rc)
     (hP : PlainTor (IrrGL.of σ.ρ σ.smooth σ.irred)) (hm : (rc (algNorm σ)).mono0) : rc (algNorm σ) = satWD h n B := by
-  haveI : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
+  have : CharZero (w.adicCompletion E) := charZero_of_injective_algebraMap (algebraMap E _).injective
   obtain ⟨a, ha, hL⟩ := hrc
   obtain ⟨α, hα, hS⟩ := GlobalTheory.LFun.SphComp.hasSatake_of_isLocComp π ((CG.hasSat_mk π w B).1 hB) hσ
   have hBσ : GlobalTheory.LFun.HasSatGL w σ.ρ B := hα ▸ _root_.GlobalTheory.LFun.SatBridge.hasSatGL_of_hasSatake E w n _ σ.ρ α hS

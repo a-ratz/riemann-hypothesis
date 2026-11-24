@@ -289,16 +289,16 @@ theorem theta_exists (h : IsCMExt F E σ) : ∃ θ : 𝓞 E,
     (∀ q : QE (E := E) v, ∃ a0 a1 : 𝓞 F ⧸ v.asIdeal,
       q = algebraMap _ (QE (E := E) v) a0 + algebraMap _ (QE (E := E) v) a1 * Ideal.Quotient.mk (IE (E := E) v) θ) := by
   classical
-  haveI : Finite (𝓞 F ⧸ v.asIdeal) := finite_res v
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : Finite (𝓞 F ⧸ v.asIdeal) := finite_res v
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
   have hcard : Nat.card (QE (E := E) v) = Nat.card (𝓞 F ⧸ v.asIdeal) ^ 2 := card_QE σ v h
   have hk : 1 < Nat.card (𝓞 F ⧸ v.asIdeal) := Finite.one_lt_card
   have hpos : Nat.card (QE (E := E) v) ≠ 0 := by
     rw [hcard]
     positivity
-  haveI : Finite (QE (E := E) v) := Nat.finite_of_card_ne_zero hpos
-  haveI : Nontrivial (QE (E := E) v) := by
+  have : Finite (QE (E := E) v) := Nat.finite_of_card_ne_zero hpos
+  have : Nontrivial (QE (E := E) v) := by
     rw [← Finite.one_lt_card_iff_nontrivial, hcard]
     nlinarith
   have hx : ∃ x : QE (E := E) v, x ∉ Set.range (algebraMap (𝓞 F ⧸ v.asIdeal) (QE (E := E) v)) := by
@@ -348,8 +348,8 @@ theorem theta_indep (h : IsCMExt F E σ) (θ : 𝓞 E)
       a0 = 0 ∧ a1 = 0 := by
   classical
   intro a0 a1 h0
-  haveI : v.asIdeal.IsMaximal := v.isMaximal
-  letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+  have : v.asIdeal.IsMaximal := v.isMaximal
+  let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
   have hθ : ∀ f : F, algebraMap F E f ≠ (θ : E) := by
     intro f hf
     have hint : IsIntegral ℤ f := (isIntegral_algHom_iff ((algebraMap F E).toIntAlgHom)

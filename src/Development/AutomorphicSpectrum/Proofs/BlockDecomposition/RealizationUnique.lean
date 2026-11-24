@@ -91,7 +91,7 @@ theorem rho_unique {Λ A B K : Type} [CommRing Λ] [CommRing A] [CommRing B] [Fi
     (C : Chain.{1} Λ A B K) (hC : C.Good) {j : ℕ} (x : ∀ n, C.S n j)
     (f f' : Module.Dual K (C.V j) →+ B) : C.Rho x f → C.Rho x f' → f = f' := by
   rintro ⟨hfs, e, z, hz, hzb⟩ ⟨hfs', e', z', hz', hzb'⟩
-  haveI := hC.fin j
+  have := hC.fin j
   have hw : C.b j (((C.ℓ : A) ^ e) • z' - ((C.ℓ : A) ^ e') • z) = 0 := by
     apply hC.sep
     intro n

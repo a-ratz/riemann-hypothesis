@@ -49,7 +49,7 @@ namespace GlobalTheory.WpFam
 
 theorem ch_eq_exp_pow_val (N : ℕ) (j : ZMod N) :
     ch N j = Complex.exp (2 * Real.pi * Complex.I / N) ^ j.val := by
-  rw [ch, ← Complex.exp_nat_mul]; congr 1; ring
+  rw [ch, ← Complex.exp_natCast_mul]; congr 1; ring
 
 theorem exists_unit_zetaAct : ∀ (N : ℕ) [NeZero N] (g : ℂ ≃+* ℂ), ∃ a : (ZMod N)ˣ, ZetaAct g N a := by
   intro N _ g

@@ -67,14 +67,14 @@ theorem ncard_primesOver_eq_two {F E : Type} [Field F] [NumberField F] [Field E]
     (v : HeightOneSpectrum (𝓞 F)) (hpv : (p : 𝓞 F) ∈ v.asIdeal) :
     (v.asIdeal.primesOver (𝓞 E)).ncard = 2 := by
   classical
-  haveI := v.isMaximal
+  have := v.isMaximal
   have hs := Ideal.sum_ramification_inertia (𝓞 E) F E (p := v.asIdeal) v.ne_bot
   rw [h2] at hs
   rw [← hs, ← IsDedekindDomain.coe_primesOverFinset v.ne_bot, Set.ncard_coe_finset, Finset.card_eq_sum_ones]
   refine Finset.sum_congr rfl fun q hq => ?_
   rw [IsDedekindDomain.mem_primesOverFinset_iff v.ne_bot] at hq
-  haveI := hq.1
-  haveI := hq.2
+  have := hq.1
+  have := hq.2
   have hpq : (p : 𝓞 E) ∈ q := by
     simpa using (Ideal.mem_of_liesOver q v.asIdeal (p : 𝓞 F)).1 hpv
   have hle : Ideal.map (algebraMap (𝓞 F) (𝓞 E)) v.asIdeal ≤ q := Ideal.map_le_iff_le_comap.2 (Ideal.LiesOver.over (P := q) (p := v.asIdeal)).le
@@ -89,7 +89,7 @@ theorem ncard_primesOver_eq_two {F E : Type} [Field F] [NumberField F] [Field E]
   have hf : v.asIdeal.inertiaDeg' q = 1 := by
     have hcomap : Ideal.comap (algebraMap (𝓞 F) (𝓞 E)) q = v.asIdeal := (Ideal.LiesOver.over (P := q) (p := v.asIdeal)).symm
     rw [Ideal.inertiaDeg', dite_eq_left hcomap]
-    letI : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
+    let : Field (𝓞 F ⧸ v.asIdeal) := Ideal.Quotient.field _
     have hfin : Module.Finite (𝓞 F ⧸ v.asIdeal) (𝓞 E ⧸ q) := inferInstance
     have := Module.natCard_eq_pow_finrank (K := 𝓞 F ⧸ v.asIdeal) (V := 𝓞 E ⧸ q)
     rw [hcF, hcE] at this

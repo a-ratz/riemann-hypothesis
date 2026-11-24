@@ -220,13 +220,13 @@ def swapR : (E ⊗[F] InfiniteAdeleRing F) →ₗ[InfiniteAdeleRing F] (Infinite
 theorem exists_infinite_equiv :
     ∃ j : (Ainf F ⊗[F] E) ≃+* InfiniteAdeleRing E, Continuous j ∧ Continuous j.symm ∧
       ∀ x : E, j ((1 : Ainf F) ⊗ₜ[F] x) = algebraMap E (InfiniteAdeleRing E) x := by
-  letI tB : TopologicalSpace (E ⊗[F] InfiniteAdeleRing F) := moduleTopology (InfiniteAdeleRing F) _
-  haveI : IsModuleTopology (InfiniteAdeleRing F) (E ⊗[F] InfiniteAdeleRing F) := ⟨rfl⟩
-  haveI : IsModuleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E) := ⟨rfl⟩
-  haveI := IsModuleTopology.toContinuousAdd (InfiniteAdeleRing F) (E ⊗[F] InfiniteAdeleRing F)
-  haveI := IsModuleTopology.toContinuousSMul (InfiniteAdeleRing F) (E ⊗[F] InfiniteAdeleRing F)
-  haveI := IsModuleTopology.toContinuousAdd (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E)
-  haveI := IsModuleTopology.toContinuousSMul (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E)
+  let tB : TopologicalSpace (E ⊗[F] InfiniteAdeleRing F) := moduleTopology (InfiniteAdeleRing F) _
+  have : IsModuleTopology (InfiniteAdeleRing F) (E ⊗[F] InfiniteAdeleRing F) := ⟨rfl⟩
+  have : IsModuleTopology (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E) := ⟨rfl⟩
+  have := IsModuleTopology.toContinuousAdd (InfiniteAdeleRing F) (E ⊗[F] InfiniteAdeleRing F)
+  have := IsModuleTopology.toContinuousSMul (InfiniteAdeleRing F) (E ⊗[F] InfiniteAdeleRing F)
+  have := IsModuleTopology.toContinuousAdd (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E)
+  have := IsModuleTopology.toContinuousSMul (InfiniteAdeleRing F) (InfiniteAdeleRing F ⊗[F] E)
   have hL : Continuous (swapL (F := F) (E := E)) := IsModuleTopology.continuous_of_linearMap _
   have hR : Continuous (swapR (F := F) (E := E)) := IsModuleTopology.continuous_of_linearMap _
   let h := GroundTheory.Global.InfinitePlace.tensorInfiniteAdeleRingHomeomorph (K := F) (L := E)
@@ -266,8 +266,8 @@ theorem exists_hchar (χ : (AF F ⊗[F] E)ˣ →* Circle) (hχ : IsHecke F E χ)
   let u : Neutral.B1.Ideles E →* (AF F ⊗[F] E)ˣ := Units.map Φ.symm.toRingHom.toMonoidHom
   have hu : Continuous u := Continuous.units_map _ hΦc
   have ht : Continuous (Circle.toUnits : Circle →* ℂˣ) :=
-    Units.continuous_iff.2 ⟨continuous_subtype_val, by
-      have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtype_val.comp continuous_inv
+    Units.continuous_iff.2 ⟨continuous_subtypeVal, by
+      have h : Continuous fun z : Circle => ((z⁻¹ : Circle) : ℂ) := continuous_subtypeVal.comp continuous_inv
       refine h.congr fun z => ?_
       simp⟩
   have hdiag : ∀ k : Eˣ, u (Neutral.B1.diagUnits E k) = Units.map (inclR (F := F) (AF F)).toMonoidHom k := fun k =>
@@ -370,15 +370,15 @@ theorem exists_idealVal_eq {ξ : Chr F E} (hξ : IsHecke F E ξ) (hu : ∀ᶠ w 
       inv_mem' := by
         rintro _ ⟨a, ha, rfl⟩
         exact ⟨a⁻¹, inv_ne_zero ha, GlobalTheory.EulerIdeal.idealVal_inv ξ a⟩ }
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   have h1 : H ≤ rootsOfUnity n ℂ := by
     rintro _ ⟨a, -, rfl⟩
     unfold idealVal
     rw [finprod_eq_prod_of_mulSupport_subset _ (s := (GlobalTheory.SqStepIdeal.mulSupport_finite (val ξ) a).toFinset) (by simp)]
     exact Subgroup.prod_mem _ fun w _ => Subgroup.zpow_mem _ ((mem_rootsOfUnity _ _).2 (hv w)) _
-  haveI : Finite H := Finite.of_injective _ (Subgroup.inclusion_injective h1)
+  have : Finite H := Finite.of_injective _ (Subgroup.inclusion_injective h1)
   have hc : 0 < Nat.card H := Nat.card_pos
-  haveI : NeZero (Nat.card H) := ⟨hc.ne'⟩
+  have : NeZero (Nat.card H) := ⟨hc.ne'⟩
   have h2 : H ≤ rootsOfUnity (Nat.card H) ℂ := fun z hz => by
     rw [mem_rootsOfUnity]
     have := congrArg Subtype.val (pow_card_eq_one' (x := (⟨z, hz⟩ : H)))
@@ -583,7 +583,7 @@ theorem exists_partner : ∀ (D : D7) (S : HSp D) (Λ : Submodule (𝓞 D.host.E
     rw [this, ← GlobalTheory.PlaneSplit.mem_range_iff]
     simp [RingHom.mem_range, eq_comm]
   have hfu : Algebra.FormallyUnramified (𝓞 D.host.F) (𝓞 D.host.E) := by
-    haveI := GlobalTheory.HeckeAdjoint.unramified_host D; infer_instance
+    have := GlobalTheory.HeckeAdjoint.unramified_host D; infer_instance
   obtain ⟨θ, hθ⟩ := GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified D.host.F D.host.E σ
     (GlobalTheory.AdelicU.isCMExt_host D) hfu
   have hcx0 : co x ≠ 0 := fun h => hx0 (co.injective (by rw [h, map_zero]))
@@ -718,7 +718,7 @@ open ReciprocityTheory.ChartRestriction.G GlobalTheory.Inertia
 theorem exists_isotropic_of_negIdx : ∀ (D : D7) (S : HSp D) (k : ℕ), NegIdx S k → 1 ≤ k → k + 1 ≤ S.rank → 3 ≤ S.rank →
     ∃ x : S.V, x ≠ 0 ∧ S.hT x x = 0 := by
   intro D S k hS hk1 hk2 hn
-  letI : IsCMField D.host.E := D.host.isCMField_hostE
+  let : IsCMField D.host.E := D.host.isCMField_hostE
   have hst : ∀ x : D.host.E, star x = FD.cc x := fun _ => rfl
 
   have hsig : ∀ φ : D.host.E →+* ℂ, Formalism.UG.HasSignature (S.gram.map φ) (S.rank - k) k := by
@@ -1444,8 +1444,8 @@ theorem IsSum.exists_bases (hCM : IsCMExt F E σ) (B : Base F E) {n₁ : ℕ} {Y
     (parts_eq_zero hxx hyy hxy hyx' horth hinj) (hprim v).1 (hprim v).2 (eL ▸ hb v)
   refine ⟨x, y, 𝔟, fun v => if h : v ∈ B.P then βY ⟨v, h⟩ else 1, ⟨hxx, hyy, hxy, horth, hg, hlow, hsplit, hinj⟩, h𝔟,
     fun v => ?_, fun v i => ?_⟩
-  · simp only [dif_pos v.2]; exact (hβY v).1
-  · simp only [dif_pos v.2]; exact (hβY v).2 i
+  · simp only [dite_eq_left v.2]; exact (hβY v).1
+  · simp only [dite_eq_left v.2]; exact (hβY v).2 i
 
 theorem IsSum.adapt_herm (hCM : IsCMExt F E σ) {B : Base F E} {n n₁ : ℕ} (hn : n = n₁ + 2) {Y : Spc F E n} {Y₁ : Spc F E n₁}
     {x₀ y₀ : Fin n → E} {ι : Matrix (Fin n) (Fin n₁) E} (h : IsSum σ Y Y₁ x₀ y₀ ι) {r s r₁ s₁ : ℕ} (hY : Y.IsHerm σ B r s)
@@ -1858,7 +1858,7 @@ theorem seesaw_first_reduction : _root_.GlobalTheory.FunPr.ThetaLocalInputs → 
   intro D T Lc sc G μ₀ C x b hL hy hd hf W S hψ hN i j p q A A' WW X lam e hX hF he
   obtain ⟨B', WW₁, Y, hY, hst⟩ := hy W S hψ hN i j p q A A' WW X hX
   obtain ⟨c, hc⟩ := hf W S hψ hN i j p q A B' WW₁ Y hY
-  haveI : Nonempty T := ⟨μ₀⟩
+  have : Nonempty T := ⟨μ₀⟩
   refine ⟨A, B', WW₁, Y, c, hY, hc.isConst, hc.1, fun t => ?_⟩
   obtain ⟨Bs, bb, Γ, Γ₁, H, H', R, R₁, d, d₁, k, k₁, hfit, hb, hV, hp, hq, hH, hH', hd0, hd10, hk⟩ :=
     hd W S hψ hN i j p q A A' WW B' WW₁ X Y lam c e hX hY hst hF hc he t

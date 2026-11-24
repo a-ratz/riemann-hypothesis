@@ -164,7 +164,7 @@ variable {X : TopCat.{u}} in
 theorem _root_.GlobalTheory.Flasque.isFlasque_of_injective (I : TopCat.Sheaf AddCommGrpCat.{u} X) [hI : Injective I] :
     I.IsFlasque := by
   let I' : Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u} := I
-  haveI : Injective I' := hI
+  have : Injective I' := hI
   refine ⟨fun {U V} i => ?_⟩
   rw [AddCommGrpCat.epi_iff_surjective]
   intro s
@@ -205,7 +205,7 @@ theorem _root_.GlobalTheory.Flasque.subsingleton_H'_of_isFlasque (F : TopCat.She
     [hF : F.IsFlasque] (n : ℕ) (U : Opens X) : Subsingleton (F.H' (n + 1) U) := by
   let Y : TopCat.Sheaf AddCommGrpCat.{u} X :=
     _root_.GlobalTheory.Flasque.freeSheaf (Opens.grothendieckTopology X) U
-  letI : HasExt.{w} (TopCat.Sheaf AddCommGrpCat.{u} X) := ‹HasExt.{w} (Sheaf _ _)›
+  let : HasExt.{w} (TopCat.Sheaf AddCommGrpCat.{u} X) := ‹HasExt.{w} (Sheaf _ _)›
   suffices h : ∀ x : Ext.{w} Y F (n + 1), x = 0 from ⟨fun a b => (h a).trans (h b).symm⟩
   induction n generalizing F with
   | zero =>
@@ -229,7 +229,7 @@ theorem _root_.GlobalTheory.Flasque.subsingleton_H'_of_isFlasque (F : TopCat.She
     intro x
     have hS := _root_.GlobalTheory.Flasque.injectiveShortComplex_shortExact F
     obtain ⟨x₃, rfl⟩ := Ext.covariant_sequence_exact₁ Y hS x (Ext.eq_zero_of_injective _) rfl
-    haveI : (_root_.GlobalTheory.Flasque.injectiveShortComplex F).X₃.IsFlasque :=
+    have : (_root_.GlobalTheory.Flasque.injectiveShortComplex F).X₃.IsFlasque :=
       TopCat.Sheaf.IsFlasque.of_shortExact_of_isFlasque₁₂ hS
     rw [ih _ x₃, Ext.zero_comp]
 

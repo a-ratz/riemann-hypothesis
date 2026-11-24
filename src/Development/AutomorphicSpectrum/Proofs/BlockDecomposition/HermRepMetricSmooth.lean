@@ -249,7 +249,7 @@ theorem isSmoothHerm_of_isHermRep (m : ℕ) (n : Fin (m + 1) → ℕ) (M : HermL
     rw [this]
     exact isOpen_iInter_of_finite fun k => isOpen_ne_fun (continuous_apply _) continuous_const
   have hmc : ∀ z ∈ T, ∀ k, ∃ i, z ⟨k, i⟩ ≠ 0 := fun z hz k => ⟨c k, hz k⟩
-  haveI : Nonempty (CxPts (mpStr ℤ m n) σ₀) :=
+  have : Nonempty (CxPts (mpStr ℤ m n) σ₀) :=
     ⟨(Under.existsUnique_isUnder m n z₀ (hmc z₀ hc)).exists.choose⟩
   let s : ((Σ k, Bk n k) → ℂ) → CxPts (mpStr ℤ m n) σ₀ := fun z => Classical.epsilon fun y => IsUnder y z
   have hs : ∀ z, (∀ k, z ⟨k, c k⟩ ≠ 0) → IsUnder (s z) z := fun z hz =>

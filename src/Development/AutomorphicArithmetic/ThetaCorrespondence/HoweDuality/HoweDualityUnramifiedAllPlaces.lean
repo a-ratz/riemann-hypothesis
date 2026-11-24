@@ -130,7 +130,7 @@ theorem at_mul_left {x : Matrix (Fin n) (Fin d) (_root_.GlobalTheory.IndefiniteR
 
 theorem continuous_mat_line_left (γ : Multiplicative ℝ →* UA σ X.J) (hγ : Continuous γ) :
     Continuous fun t : ℝ => mat (γ (Multiplicative.ofAdd t)) :=
-  Units.continuous_val.comp (continuous_subtype_val.comp (hγ.comp continuous_ofAdd))
+  Units.continuous_val.comp (continuous_subtypeVal.comp (hγ.comp continuous_ofAdd))
 
 theorem mat_mul_left (g h : UA σ X.J) : mat (g * h) = mat g * mat h := rfl
 
@@ -163,14 +163,14 @@ theorem opRl_zero (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ X.J) : 
 theorem opRl_add (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ X.J) (s t : ℝ) :
     opRl M γ (s + t) = opRl M γ s * opRl M γ t := by
   refine ContinuousLinearMap.ext fun w => ?_
-  rw [ContinuousLinearMap.mul_apply, opRl_apply, opRl_apply, opRl_apply,
+  rw [mul_apply_eq_comp, opRl_apply, opRl_apply, opRl_apply,
     opLl_apply M (mat (γ (Multiplicative.ofAdd t))) w,
     opLl_archCo M _ (at_mul_left (at_lift M.co w) _),
     opLl_apply, ofAdd_add, map_mul, mat_mul_left, Matrix.mul_assoc]
 
 theorem continuous_opRl (M : Model σ X W) (γ : Multiplicative ℝ →* UA σ X.J) (hγ : Continuous γ) :
     Continuous (opRl M γ) := by
-  haveI : IsTopologicalRing (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := IsModuleTopology.isTopologicalRing (AF F) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))
+  have : IsTopologicalRing (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) := IsModuleTopology.isTopologicalRing (AF F) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))
   refine continuous_clm_apply.2 fun w => ?_
   simp only [opRl_apply, opLl_apply]
   exact (continuous_archCo M).comp ((continuous_mat_line_left γ hγ).matrix_mul continuous_const)
@@ -181,14 +181,14 @@ theorem archCo_orbit_smooth_left : ∀ {F E : Type} [Field F] [NumberField F] [F
     ∃ u' : Matrix (Fin n) (Fin d) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), At (evI F) u' ∧
       HasDerivAt (fun t : ℝ => GlobalTheory.HeisOrbit.archCo M.co (mat (γ (Multiplicative.ofAdd t)) * u)) (GlobalTheory.HeisOrbit.archCo M.co u') 0 := by
   intro F E _ _ _ _ _ σ n d X W M γ hγ u hu
-  haveI : CompleteSpace ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F)) :=
-    FiniteDimensional.complete ℝ _
-  haveI : FiniteDimensional ℝ (((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))
+  have : CompleteSpace ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F)) :=
+    FiniteDimensional.completeSpace ℝ _
+  have : FiniteDimensional ℝ (((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))
       →L[ℝ] ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))) :=
     ContinuousLinearMap.finiteDimensional
   have hcomp : CompleteSpace (((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))
       →L[ℝ] ((Fin n × Fin d → mixedEmbedding.mixedSpace F) × (Fin n × Fin d → mixedEmbedding.mixedSpace F))) :=
-    FiniteDimensional.complete ℝ _
+    FiniteDimensional.completeSpace ℝ _
   have hs : ContDiff ℝ ∞ (opRl M γ) :=
     @GlobalTheory.contDiff_of_continuous_oneParameter _ _ _ hcomp (opRl M γ) (continuous_opRl M γ hγ.1) (opRl_zero M γ)
       (opRl_add M γ)
@@ -244,13 +244,13 @@ theorem GlobalTheory.ArchLineAct.intertwine_pair_left : ∀ (F E : Type) [Field 
   have hmat1 : mat (1 : UA σ X.J) = 1 := rfl
   refine ⟨fun t => GlobalTheory.ArchLineAct.archMap M.co (L t), fun w => ?_, fun s t => ?_, ?_, fun t p q f g hg => ?_⟩
   · have hm : Continuous fun t : ℝ => (mat (γ (Multiplicative.ofAdd t))) :=
-      (Units.continuous_val.comp (continuous_subtype_val.comp (hγ.1.comp continuous_ofAdd)))
+      (Units.continuous_val.comp (continuous_subtypeVal.comp (hγ.1.comp continuous_ofAdd)))
     set u := M.co.e.symm (GlobalTheory.ArchLineAct.archLift w.1, GlobalTheory.ArchLineAct.archLift w.2) with hu
     let Ru : Matrix (Fin n) (Fin n) (AE F E) →ₗ[AF F] Matrix (Fin n) (Fin d) (AE F E) :=
       { toFun := fun x => x * u, map_add' := fun x y => Matrix.add_mul x y u,
         map_smul' := fun c x => Matrix.smul_mul c x u }
     let K := M.co.e.toLinearMap ∘ₗ Ru
-    haveI : IsModuleTopology (AF F) (Matrix (Fin n) (Fin n) (AE F E)) :=
+    have : IsModuleTopology (AF F) (Matrix (Fin n) (Fin n) (AE F E)) :=
       inferInstanceAs (IsModuleTopology (AF F) (Fin n → Fin n → AE F E))
     have hK : Continuous K := IsModuleTopology.continuous_of_linearMap K
     have hc : Continuous fun t : ℝ => M.co.e (L t u) := hK.comp hm
@@ -355,7 +355,7 @@ theorem continuous_apply : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     refine ⟨g (fun i => (xh i).2) • ((BoundedContinuousFunction.evalCLM ℂ x).comp
       (SchwartzMap.toBoundedContinuousFunctionCLM ℂ _ ℂ)), fun h => ?_⟩
     show pureA F (⇑h) g xh = _
-    simp only [pureA, hxh, ContinuousLinearMap.smul_apply, ContinuousLinearMap.comp_apply,
+    simp only [pureA, hxh, smul_apply, ContinuousLinearMap.comp_apply,
       BoundedContinuousFunction.evalCLM_apply, SchwartzMap.toBoundedContinuousFunctionCLM_apply, smul_eq_mul]
     exact mul_comm _ _
   have hφ : pureA F (⇑f) g₀ ∈ (adeleClass F).sp κ := Submodule.subset_span ⟨f, g₀, hg₀, rfl⟩
@@ -430,7 +430,7 @@ theorem integral_norm_sq_eq_pair_left : ∀ (F E : Type) [Field F] [NumberField 
   change ∫⁻ x, ‖om (γ (Multiplicative.ofAdd t), 1) (tens (evI F) f r) x‖ₑ ^ 2 ∂μA = _ at hU
   rw [hAct] at hU
   have h1 := ((hc (T t f)).symm.trans hU).trans (hc f)
-  haveI := opensMeasurable F (Fin n × Fin d)
+  have := opensMeasurable F (Fin n × Fin d)
   rw [integral_sq_eq μ (T t f).continuous, integral_sq_eq μ f.continuous, (ENNReal.mul_right_inj hc0 hct).1 h1]
 
 end GlobalTheory.ArchimedeanUnitaryL2
@@ -569,7 +569,7 @@ theorem vacX : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
   obtain ⟨A, hAc, hAadd, hA0, hAint⟩ := _root_.GlobalTheory.ArchLineAct.intertwine_pair_left F E σ hcm n d X W M ψ χX χW om hstd hXh hXd hWs hWd hrX hrW hhX hhW hwe γ hγ T hTa
   have hC := _root_.GlobalTheory.ArchLineContPairLeft.continuous_apply F E σ hcm n d X W M ψ χX χW om hstd hXh hXd hWs hWd hrX hrW hhX hhW hwe γ hγ T hTa
   obtain ⟨J₀, hJ, hvac⟩ := _root_.GlobalTheory.FockPair.exists_fock_cx F E σ hcm n d X W M ψ χX χW om hstd hXh hXd hWs hWd hrX hrW hhX hhW hwe τ hcX hcW f₀ hf₀
-  haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   obtain ⟨hsm, k, qs, qs', cs, c, hd⟩ := GlobalTheory.T.weilOneParam_moves_fockVacuum_smoothly (V := Fin n × Fin d → mixedEmbedding.mixedSpace F)
     MeasureTheory.Measure.addHaar (GlobalTheory.GaussLine.pairInf F (Fin n × Fin d))
     (GlobalTheory.GaussLine.pairInf_nondeg F _) T h1 h0 hU A hAc hAadd hA0 hAint hC J₀ hJ f₀ hvac
@@ -580,7 +580,7 @@ theorem vacX : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
   refine ⟨(∑ i, cs i • m (qs i) (m (qs' i) f₀ hf₀P) (hmP _ _ _)) + c • f₀,
     add_mem (sum_mem fun i _ => Submodule.smul_mem _ _ (hmP _ _ _)) (Submodule.smul_mem _ _ hf₀P), fun x => ?_⟩
   convert hd x using 1
-  simp only [SchwartzMap.add_apply, SchwartzMap.sum_apply, SchwartzMap.smul_apply, smul_eq_mul, hmE]
+  simp only [add_apply, sum_apply, smul_apply, smul_eq_mul, hmE]
   congr 1
   refine Finset.sum_congr rfl fun i _ => ?_
   ring
@@ -646,7 +646,7 @@ theorem heisX : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
   have h4 := GlobalTheory.HeisOrbit.DOpDeriv.dOp_hasDerivAt (fun t => T t f) (fun t => (GlobalTheory.HeisOrbit.archCo M.co (mat (γ (Multiplicative.ofAdd t)) * u)).1)
     (fun t => (GlobalTheory.HeisOrbit.archCo M.co (mat (γ (Multiplicative.ofAdd t)) * u)).2) f' _ _ hsm hf'd hP hQ x
   simp only [hφ0, hT0] at h4
-  rw [SchwartzMap.add_apply, hg₁, hg₂]
+  rw [add_apply, hg₁, hg₂]
   exact h4.congr_of_eventuallyEq (Filter.Eventually.of_forall fun t => hrel t x)
 
 theorem lie_deriv_polX : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ →
@@ -681,7 +681,7 @@ theorem lie_deriv_polX : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
         rintro f g ⟨hf, hf1, f', hf', hf2⟩ ⟨hg, hg1, g', hg', hg2⟩
         refine ⟨add_mem hf hg, by simpa using hf1.add hg1, f' + g', add_mem hf' hg', fun x => ?_⟩
         show HasDerivAt (fun t => T t (f + g) x) ((f' + g') x) 0
-        simp only [map_add (f := _), SchwartzMap.add_apply]
+        simp only [map_add (f := _), add_apply]
         exact (hf2 x).add (hg2 x)
       smul_mem' := by
         rintro c f ⟨hf, hf1, f', hf', hf2⟩
@@ -1397,7 +1397,7 @@ theorem UpperTheory.Lit.HoweDuality.kerVp :
     rw [map_zero] at e
     exact e.symm
   · intro hK
-    haveI := hM.fin.nontriv v
+    have := hM.fin.nontriv v
     obtain ⟨y, hy⟩ := exists_ne (0 : Rf.Pi v)
     have hmem : y ∈ Submodule.map (Rf.p' v) (SB (Fin a' × Fin (a + a') → Fv F v)) := by
       rw [hM.fin.onto' v]
@@ -1772,14 +1772,14 @@ theorem stageVp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
     obtain ⟨m, f, φ, rfl⟩ := GlobalTheory.HoweGlobalPair.decomp t
     refine ⟨T, hT, 0, m, Fin.elim0, Fin.elim0, fun j => ((f j : ↥(G.M'.Pol Bs.ψ Bs.emb)) : SInf F (Fin a' × Fin (a + a'))),
       fun j v => if h : v ∈ T then ((φ j ⟨v, h⟩ : ↥(SB _)) : (Fin a' × Fin (a + a') → Fv F v) → ℂ) else G.M'.vac v,
-      fun j => Fin.elim0 j, fun j => ⟨(f j).2, fun v => ?_, fun v hv => by simp only [dif_neg hv]⟩, ?_, ?_, ?_⟩
+      fun j => Fin.elim0 j, fun j => ⟨(f j).2, fun v => ?_, fun v hv => by simp only [dite_eq_right hv]⟩, ?_, ?_, ?_⟩
     · by_cases h : v ∈ T
-      · simp only [dif_pos h]; exact (φ j ⟨v, h⟩).2
-      · simp only [dif_neg h]; exact (hg.hM'.vac v).1
+      · simp only [dite_eq_left h]; exact (φ j ⟨v, h⟩).2
+      · simp only [dite_eq_right h]; exact (hg.hM'.vac v).1
     · simp
     · set_option synthInstance.maxHeartbeats 100000 in
       rw [map_sum]
-      exact Finset.sum_congr rfl fun j _ => hL _ _ _ (fun v h => by simp only [dif_pos h]) (fun v h => by simp only [dif_neg h])
+      exact Finset.sum_congr rfl fun j _ => hL _ _ _ (fun v h => by simp only [dite_eq_left h]) (fun v h => by simp only [dite_eq_right h])
     · set_option synthInstance.maxHeartbeats 100000 in
       rw [LinearMap.mem_ker, map_sum] at ht0
       rw [Fin.sum_univ_zero, ← ht0]

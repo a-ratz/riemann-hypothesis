@@ -91,7 +91,7 @@ variable {σ J}
 
 theorem exists_of_mem_sup {v : HeightOneSpectrum (𝓞 F)} {W : Subgroup (GAd σ J)} {x : GAd σ J}
     (h : x ∈ (emb σ J v).range ⊔ W) : ∃ y, ∃ w ∈ W, x = emb σ J v y * w := by
-  haveI := normal_emb σ J v
+  have := normal_emb σ J v
   have h' : x ∈ ((((emb σ J v).range ⊔ W : Subgroup (GAd σ J))) : Set (GAd σ J)) := h
   rw [Subgroup.normal_mul] at h'
   obtain ⟨_, ⟨y, rfl⟩, w, hw, rfl⟩ := Set.mem_mul.1 h'
@@ -221,8 +221,8 @@ theorem mem_range_of_sigma_eq (h : IsCMExt F E σ) {y : E} (hy : σ y = y) : y �
 theorem isTotDef_of_posDef (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : CompanionTheory.Rg.Fl.IsPosDef σ J) :
     Formalism.UG.IsTotDef σ J := by
   refine ⟨h.1, fun ι => Or.inl fun x hx => ?_⟩
-  letI : Algebra F ℂ := (Complex.ofRealHom.comp ι).toAlgebra
-  haveI : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
+  let : Algebra F ℂ := (Complex.ofRealHom.comp ι).toAlgebra
+  have : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.of_finite F E
   let τ : E →ₐ[F] ℂ := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -259,7 +259,7 @@ theorem isTotDef_of_posDef (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Compa
 theorem mulVec_fv (h : IsCMExt F E σ) (γ : GRat σ J) (x : Fin n → E) :
     (Formalism.MainNotions.StandardLattice.finMat σ J (ratEmb σ J γ)).mulVec (fun i => (1 : Af F) ⊗ₜ[F] x i) =
       fun i => (1 : Af F) ⊗ₜ[F] ((γ.1 : Matrix (Fin n) (Fin n) E).mulVec x) i := by
-  letI := cmStarRing h
+  let := cmStarRing h
   have e := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.StabFin.finMat_rat σ J γ.1 (ratEmb σ J γ) rfl
   rw [e]
   funext i
@@ -292,7 +292,7 @@ theorem finite_level_rat (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Compani
   let f : {γ : GRat σ J | ratEmb σ J γ ∈ levelOpen σ J L} → Formalism.UG.level (σ : E →+* E) J L :=
     fun γ => ⟨γ.1.1, γ.1.2, fun x => stab_of_mem_levelOpen h γ.2 x⟩
   have hf : Function.Injective f := fun a b e => Subtype.ext (Subtype.ext (congrArg (fun y : Formalism.UG.level (σ : E →+* E) J L => y.1) e))
-  haveI := Finite.of_injective f hf
+  have := Finite.of_injective f hf
   exact Set.toFinite _
 
 theorem exists_class_cover (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : CompanionTheory.Rg.Fl.IsPosDef σ J)
@@ -301,7 +301,7 @@ theorem exists_class_cover (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Compa
   classical
   have hfg : L.FG := Submodule.IsLattice.fg (A := E) L
   have hsp : Submodule.span E (L : Set (Fin n → E)) = ⊤ := Submodule.IsFullLattice.span_eq_top
-  letI := cmStarRing h
+  let := cmStarRing h
   let c : E ≃ₐ[F] E := AlgEquiv.ofAlgHom σ σ (AlgHom.ext (sigma_invol h)) (AlgHom.ext (sigma_invol h))
   have hcs : ∀ x, c x = σ x := fun _ => rfl
   have hG : GlobalTheory.UnRep.IsHermForm c Jᵀ := by
@@ -391,7 +391,7 @@ theorem isSep_of_posDef (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Companio
     (hKc : IsCompact (K : Set (GLoc σ J v))) : CompanionTheory.Rg.Fl.IsSep K := by
   classical
   intro S
-  haveI : Submodule.IsFullLattice E (stdLattice E n) := isLattice_stdLattice
+  have : Submodule.IsFullLattice E (stdLattice E n) := isLattice_stdLattice
   set L := stdLattice E n with hL
   have hB := finite_level_rat h hJ hp L
   obtain ⟨T₁, hT₁⟩ := exists_class_cover h hJ hp L
@@ -401,15 +401,15 @@ theorem isSep_of_posDef (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Companio
     S.finite_toSet.isCompact_biUnion fun y _ => hKc.image (by fun_prop)
   have hfin := finite_local hB hKc hC
   obtain ⟨u, hu⟩ : ∃ u : HeightOneSpectrum (𝓞 F), u ≠ v := by
-    haveI := GlobalTheory.HTPlaceLeaf.infinite_places F
+    have := GlobalTheory.HTPlaceLeaf.infinite_places F
     exact exists_ne v
   let B : Set (GLoc σ J u) := ratLoc σ J u '' ({δ : GRat σ J | ratEmb σ J δ ∈ (emb σ J v).range ⊔ W₀ ∧
     ratLoc σ J v δ ∈ C} \ {1})
-  have hBfin : B.Finite := (hfin.subset Set.diff_subset).image _
+  have hBfin : B.Finite := (hfin.subset Set.sdiff_subset).image _
   have h1B : (1 : GLoc σ J u) ∉ B := by
     rintro ⟨δ, hδ, e⟩
     exact hδ.2 (ratLoc_injective σ J u (e.trans (map_one _).symm))
-  haveI := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ J u
+  have := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ J u
   obtain ⟨O, hO⟩ := NonarchimedeanGroup.is_nonarchimedean _ (hBfin.isClosed.isOpen_compl.mem_nhds h1B)
   set W : Subgroup (GAd σ J) := W₀ ⊓ (O : Subgroup (GLoc σ J u)).comap (proj σ J u) with hW
   have hWW₀ : W ≤ W₀ := inf_le_left
@@ -432,7 +432,7 @@ theorem isSep_of_posDef (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hp : Companio
     exact ⟨γ, a * t, Finset.mem_image₂_of_mem ha ht, w, hw, by simp only [mul_assoc]⟩
   · have hCx : IsCompact ((fun k => x.out * k * x.out⁻¹) '' (K : Set (GLoc σ J v))) := hKc.image (by fun_prop)
     have hD := finite_local hB hKc hCx
-    haveI : Finite (ratLoc σ J v '' {δ : GRat σ J | ratEmb σ J δ ∈ (emb σ J v).range ⊔ (levelOpen σ J L ⊓
+    have : Finite (ratLoc σ J v '' {δ : GRat σ J | ratEmb σ J δ ∈ (emb σ J v).range ⊔ (levelOpen σ J L ⊓
         K.comap (proj σ J v)) ∧ ratLoc σ J v δ ∈ (fun k => x.out * k * x.out⁻¹) '' (K : Set (GLoc σ J v))}) :=
       (hD.image _).to_subtype
     refine Finite.of_injective (β := ratLoc σ J v '' {δ : GRat σ J | ratEmb σ J δ ∈ (emb σ J v).range ⊔

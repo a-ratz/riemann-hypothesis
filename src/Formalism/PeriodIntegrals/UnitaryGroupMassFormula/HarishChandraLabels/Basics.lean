@@ -177,7 +177,7 @@ theorem simple_irreducible : SimpleIrr := by
       have h1 : (𝟙 τ : τ ⟶ τ) = 0 := basics_hom_ext (LinearMap.ext fun v => Subsingleton.elim _ _)
       exact ((Simple.mono_isIso_iff_nonzero (𝟙 τ)).1 inferInstance) h1
     refine ⟨hnt, fun W hW => ?_⟩
-    haveI : Mono (basicsIncl τ W hW) := basics_mono_of_inj _ (fun a b h => Subtype.ext h)
+    have : Mono (basicsIncl τ W hW) := basics_mono_of_inj _ (fun a b h => Subtype.ext h)
     by_cases h0 : basicsIncl τ W hW = 0
     · left
       rw [Submodule.eq_bot_iff]
@@ -185,7 +185,7 @@ theorem simple_irreducible : SimpleIrr := by
       have := congrArg (fun k => basicsLin k (⟨v, hv⟩ : W)) h0
       exact this
     · right
-      haveI := (Simple.mono_isIso_iff_nonzero (basicsIncl τ W hW)).2 h0
+      have := (Simple.mono_isIso_iff_nonzero (basicsIncl τ W hW)).2 h0
       rw [Submodule.eq_top_iff']
       intro v
       obtain ⟨w, hw⟩ := surj_of_iso (basicsIncl τ W hW) v

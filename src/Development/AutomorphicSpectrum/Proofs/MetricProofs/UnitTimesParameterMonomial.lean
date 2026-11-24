@@ -89,8 +89,8 @@ theorem map_ptIdeal_eq_maximalIdeal_ordAff {m : ℕ} (I : Ideal (MvPolynomial (F
 
 theorem exponent_eq_order_polynomial : ∀ (m e : ℕ) (I : Ideal (MvPolynomial (Fin m) ℂ)) (t : Fin m → ℂ) (r : Fin e → MvPolynomial (Fin m) ℂ) (Jf : Finset (Fin e)) (g : MvPolynomial (Fin m) ℂ) (u : (locRing I t)ˣ) (mm : Fin e → ℕ), (∀ h ∈ I, eval t h = 0) → IsRegularLocalRing (locRing I t) → ringKrullDim (locRing I t) = e → Ideal.span (Set.range fun l => algebraMap _ (locRing I t) (r l)) = Ideal.map (algebraMap _ (locRing I t)) (ptIdeal t) → algebraMap _ (locRing I t) g = u * ∏ i ∈ Jf, algebraMap _ (locRing I t) (r i) ^ mm i → ∀ i ∈ Jf, ∀ n : ℕ, (∃ s ∉ SncRes.Par.chPrime I t (r i), s * g ∈ SncRes.Par.chPrime I t (r i) ^ n ⊔ I) ↔ n ≤ mm i := by
   intro m e I t r Jf g u mm hI hreg hdim hspan hg i hi n
-  haveI := hreg
-  haveI hdom : IsDomain (locRing I t) := isDomain_of_isRegularLocalRing
+  have := hreg
+  have hdom : IsDomain (locRing I t) := isDomain_of_isRegularLocalRing
   have hu := IrreducibleComponentPreimages.isUnit_algebraMap_locRing_iff I t hI
   have hmax := map_ptIdeal_eq_maximalIdeal_ordAff I t hI
   have hspan' := hspan.trans hmax
@@ -119,7 +119,7 @@ theorem exponent_eq_order_polynomial : ∀ (m e : ℕ) (I : Ideal (MvPolynomial 
       rcases hp.dvd_or_dvd hd with h | h
       · exact hs' h
       rcases hp.dvd_or_dvd h with h | h
-      · exact hp.not_unit (isUnit_of_dvd_unit h u.isUnit)
+      · exact hp.not_isUnit (isUnit_of_dvd_unit h u.isUnit)
       · obtain ⟨j, hj, hd'⟩ := (Prime.dvd_finsetProd_iff hp _).mp h
         have hd'' := hp.dvd_of_dvd_pow hd'
         have hji : j ≠ i := (Finset.mem_erase.mp hj).1
@@ -139,7 +139,7 @@ theorem exponent_eq_order_polynomial : ∀ (m e : ℕ) (I : Ideal (MvPolynomial 
       have h1 : algebraMap _ (locRing I t) (r i) ∣ algebraMap _ (locRing I t) (c * b) :=
         Ideal.mem_span_singleton.mp (Ideal.mem_comap.mp hmem)
       have h2 := (hu (c * b)).mpr (by rw [map_mul]; exact mul_ne_zero hc hb)
-      exact hp.not_unit (isUnit_of_dvd_unit h1 h2)
+      exact hp.not_isUnit (isUnit_of_dvd_unit h1 h2)
     · have hri : r i ∈ SncRes.Par.chPrime I t (r i) :=
         Ideal.mem_comap.mpr (Ideal.mem_span_singleton_self _)
       have hpow : c * a * ∏ j ∈ Jf, r j ^ mm j ∈ SncRes.Par.chPrime I t (r i) ^ n := by

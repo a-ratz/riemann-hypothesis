@@ -451,7 +451,7 @@ theorem exists_scale_of_bdd {ι : Type*} (N : ι → ℝ) (t a : ℝ) (ht : 0 < 
   by_cases h : ∃ i, N i ≤ a
   · obtain ⟨i₀, hi₀⟩ := h
     have hbdd : BddBelow (Set.range N) := ⟨t, by rintro _ ⟨i, rfl⟩; exact hN i⟩
-    haveI : Nonempty ι := ⟨i₀⟩
+    have : Nonempty ι := ⟨i₀⟩
     have hl : t ≤ ⨅ i, N i := le_ciInf hN
     have hle : ∀ i, ⨅ i, N i ≤ N i := fun i => ciInf_le hbdd i
     refine ⟨min (2 * ⨅ i, N i) a, lt_min (by linarith) ha, min_le_right _ _, fun i => ?_, ?_⟩

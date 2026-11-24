@@ -67,10 +67,10 @@ noncomputable def psi (n : ℕ) (q : ℤ) (i : ℕ) (k : U2) : ℂ :=
     (k : Matrix (Fin 2) (Fin 2) ℂ).det ^ q
 
 theorem continuous_entry (a b : Fin 2) : Continuous fun k : U2 => (k : Matrix (Fin 2) (Fin 2) ℂ) a b :=
-  (continuous_apply b).comp ((continuous_apply a).comp continuous_subtype_val)
+  (continuous_apply b).comp ((continuous_apply a).comp continuous_subtypeVal)
 
 theorem continuous_det : Continuous fun k : U2 => (k : Matrix (Fin 2) (Fin 2) ℂ).det :=
-  continuous_subtype_val.matrix_det
+  continuous_subtypeVal.matrix_det
 
 theorem continuous_psi (n : ℕ) (q : ℤ) (i : ℕ) : Continuous (psi n q i) := by
   unfold psi
@@ -122,8 +122,8 @@ theorem psi_tC_mul (n : ℕ) (q : ℤ) {i : ℕ} (hi : i ≤ n) (a b : ℝ) (k :
       (Complex.exp (a * I) * Complex.exp (b * I)) * (k : Matrix (Fin 2) (Fin 2) ℂ).det := by
     rw [Matrix.UnitaryGroup.mul_val, Matrix.det_mul, coe_tC, Matrix.det_fin_two_of]; ring
   simp only [psi, h00, h10, hdet]
-  rw [mul_pow, mul_pow, mul_zpow, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul,
-    ← Complex.exp_add, ← Complex.exp_int_mul]
+  rw [mul_pow, mul_pow, mul_zpow, ← exp_natCast_mul, ← exp_natCast_mul,
+    ← Complex.exp_add, ← exp_intCast_mul]
   have hc : (((n - i : ℕ) : ℂ)) = (n : ℂ) - i := by push_cast [Nat.cast_sub hi]; ring
   have e : Complex.exp (I * ((((i : ℝ) + q) * a + ((n : ℝ) - i + q) * b : ℝ) : ℂ)) =
       Complex.exp (↑i * (↑a * I)) * Complex.exp (↑(n - i) * (↑b * I)) *

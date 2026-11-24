@@ -65,7 +65,7 @@ theorem smoothOfRelativeDimension_genericFibre_of_affine :
   let x : Spec R ⟶ X := X.affineOpenCover.f i
   have hx : IsOpenImmersion x := X.affineOpenCover.map_prop i
   let φ : CommRingCat.of o ⟶ R := Spec.preimage (x ≫ s)
-  letI : Algebra o R := φ.hom.toAlgebra
+  let : Algebra o R := φ.hom.toAlgebra
   have hφ : x ≫ s = spMap (algebraMap o R) := (Spec.map_preimage (x ≫ s)).symm
   have H := h R x hx hφ
   have sq := isPullback_SpecMap_of_isPushout _ _ _ _

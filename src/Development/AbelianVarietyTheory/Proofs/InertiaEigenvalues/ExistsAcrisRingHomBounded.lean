@@ -281,7 +281,7 @@ theorem exists_acris_to_disc : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk :
   intro l _ K bk
   obtain ⟨-, hL, hθ⟩ := _root_.GlobalTheory.BSP.RhoZeroNormBounds.seed_norms l K bk
   let B := unitBall l (bk.ev X) bk.ρ₀
-  haveI : IsAdicComplete (Ideal.span {(l : B)}) B := isAdicComplete_unitBall hL
+  have : IsAdicComplete (Ideal.span {(l : B)}) B := isAdicComplete_unitBall hL
   let f0 : Per.Acris0 l →+* B :=
     ((locMap bk).comp (Per.Acris0 l).val.toRingHom).codRestrict B
       (fun y => norm_locMap_acris0 hL hθ y y.2)

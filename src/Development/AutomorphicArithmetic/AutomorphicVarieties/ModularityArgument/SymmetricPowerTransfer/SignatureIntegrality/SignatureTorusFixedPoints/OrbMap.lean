@@ -137,8 +137,8 @@ theorem UpperTheory.V.Z.Sym.Sig.orbMap :
     intro g
     rw [map_mul, map_mul, map_inv, hθ]
   refine ⟨?_, ?_, ?_⟩
-  · letI : MulAction T (G ⧸ U'.comap e) := MulAction.compHom _ ι
-    letI : MulAction T (G' ⧸ U') := MulAction.compHom _ (e.comp ι)
+  · let : MulAction T (G ⧸ U'.comap e) := MulAction.compHom _ ι
+    let : MulAction T (G' ⧸ U') := MulAction.compHom _ (e.comp ι)
     unfold UpperTheory.V.Z.Sym.orb
     refine UpperTheory.V.Z.Sym.Sig.wcount_congr C hC
       (Equiv.ofBijective _ (UpperTheory.V.Z.Sym.Sig.qmap_bij e he U')) ?_ _ _ ?_ ?_

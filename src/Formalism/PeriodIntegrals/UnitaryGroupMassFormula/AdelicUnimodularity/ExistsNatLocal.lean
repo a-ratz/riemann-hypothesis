@@ -116,8 +116,8 @@ def cls (M : ℕ) (a : FiniteAdeleRing (𝓞 F) F) : Bad F M → F :=
   fun v => (exists_close v.1 ((M : F)⁻¹) (a v.1)).choose
 
 theorem countable_cls (M : ℕ) : Countable (Bad F M → F) := by
-  haveI : Finite (Bad F M) := (HeightOneSpectrum.Support.finite (𝓞 F) ((M : F)⁻¹)).to_subtype
-  haveI : Countable F := countable_field F
+  have : Finite (Bad F M) := (HeightOneSpectrum.Support.finite (𝓞 F) ((M : F)⁻¹)).to_subtype
+  have : Countable F := countable_field F
   infer_instance
 
 theorem cls_eq {M : ℕ} (hM : 0 < M) {a a' : FiniteAdeleRing (𝓞 F) F}

@@ -64,7 +64,7 @@ variable {E : Type} [Field E] [NumberField E] [StarRing E] {S : HSpace E} {r : �
 theorem e_mem_locP {F : LFlag S r T} (hF : IsFixedConv Λ g F) (P : HeightOneSpectrum (𝓞 E))
     (hg : (g : 𝓞 E) ∈ P.asIdeal) (a : Fin r) :
     F.fl.e a ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal (XLam Λ F)) := by
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨c, -, hc1, hloc⟩ := hF.1 P
   rw [hloc]
   refine ⟨1, P.asIdeal.primeCompl.one_mem, ?_⟩
@@ -76,7 +76,7 @@ theorem xlam_le_locP {F : LFlag S r T} (hF : IsFixedConv Λ g F) (P : HeightOneS
     (hg : (g : 𝓞 E) ∈ P.asIdeal) {N : Submodule (𝓞 E) S.V}
     (hN : ∀ a, F.fl.e a ∈ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal N)) :
     XLam Λ F ≤ (haveI := P.isPrime; Formalism.HermitianLatticesTheory.localization₂ P.asIdeal N) := by
-  haveI := P.isPrime
+  have := P.isPrime
   obtain ⟨c, -, hc1, hloc⟩ := hF.1 P
 
   have hspan : Submodule.span (𝓞 E) (Set.range fun a => c a • F.fl.e a) ≤ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal N := by
@@ -111,7 +111,7 @@ theorem xlam_le {F : LFlag S r T} {F' : LFlag S r T'} (hAdm : IsAdmissible Λ g 
   obtain ⟨ξ, hlow, -, hmod⟩ := hAdm
   apply le_of_forall_localization_le
   intro P
-  haveI := P.isPrime
+  have := P.isPrime
   have hmono : ∀ {A B : Submodule (𝓞 E) S.V}, A ≤ B →
       Formalism.HermitianLatticesTheory.localization₂ P.asIdeal A ≤ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal B :=
     fun hAB _ ⟨s, hs, hx⟩ => ⟨s, hs, hAB hx⟩
@@ -154,7 +154,7 @@ theorem xlam_le' {F : LFlag S r T} {F' : LFlag S r T'} (hAdm : IsAdmissible Λ g
   obtain ⟨ξ, hlow, hdiag, hmod⟩ := hAdm
   apply le_of_forall_localization_le
   intro P
-  haveI := P.isPrime
+  have := P.isPrime
   have hmono : ∀ {A B : Submodule (𝓞 E) S.V}, A ≤ B →
       Formalism.HermitianLatticesTheory.localization₂ P.asIdeal A ≤ Formalism.HermitianLatticesTheory.localization₂ P.asIdeal B :=
     fun hAB _ ⟨s, hs, hx⟩ => ⟨s, hs, hAB hx⟩

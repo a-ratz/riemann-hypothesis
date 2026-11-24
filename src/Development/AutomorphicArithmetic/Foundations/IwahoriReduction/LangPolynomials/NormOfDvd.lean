@@ -57,9 +57,9 @@ private theorem exists_natCast_add_mul_of_frobenius_fixed {R : Type} [CommRing R
     (σ : R ≃+* R) (hpr : Prime (p : R)) (hfrob : ∀ x : R, σ x - x ^ p ∈ Ideal.span {(p : R)})
     (x : R) (hx : σ x = x) : ∃ a : ℕ, ∃ y : R, x = a + p * y ∧ σ y = y := by
   classical
-  haveI : NeZero p := ⟨hp.out.ne_zero⟩
-  haveI : (Ideal.span {(p : R)}).IsPrime := (Ideal.span_singleton_prime hpr.ne_zero).mpr hpr
-  haveI : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (mem_nonunits_iff.mpr hpr.not_unit)
+  have : NeZero p := ⟨hp.out.ne_zero⟩
+  have : (Ideal.span {(p : R)}).IsPrime := (Ideal.span_singleton_prime hpr.ne_zero).mpr hpr
+  have : CharP (R ⧸ Ideal.span {(p : R)}) p := CharP.quotient R p (mem_nonunits_iff.mpr hpr.not_isUnit)
   let K := R ⧸ Ideal.span {(p : R)}
   let π : R →+* K := Ideal.Quotient.mk _
   let f : ZMod p →+* K := ZMod.castHom (dvd_refl p) K
@@ -118,8 +118,8 @@ theorem UpperTheory.Kd.C7.pFixAbs :
   intro R _ p _ _ σ hσ x hx
   obtain ⟨hdom, hpr, hcomp, hfrob, -⟩ := hσ
   classical
-  haveI := hdom
-  haveI := hcomp
+  have := hdom
+  have := hcomp
   have step : ∀ y : {y : R // σ y = y}, ∃ a : ℕ, ∃ y' : {y : R // σ y = y}, y.1 = a + p * y'.1 := by
     intro y
     obtain ⟨a, y', h1, h2⟩ := exists_natCast_add_mul_of_frobenius_fixed p σ hpr hfrob y.1 y.2
@@ -227,8 +227,8 @@ private theorem fin_lemma_3 {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : Valuati
   have hlK : ((l : ℕ) : IsLocalRing.ResidueField A) = 0 := by
     rw [← map_natCast (IsLocalRing.residue A), IsLocalRing.residue_eq_zero_iff, A.valuation_lt_one_iff]
     simpa using hl
-  haveI : CharP (IsLocalRing.ResidueField A) l := (CharP.charP_iff_prime_eq_zero hp.out).2 hlK
-  letI : Algebra (ZMod l) (IsLocalRing.ResidueField A) := ZMod.algebra _ l
+  have : CharP (IsLocalRing.ResidueField A) l := (CharP.charP_iff_prime_eq_zero hp.out).2 hlK
+  let : Algebra (ZMod l) (IsLocalRing.ResidueField A) := ZMod.algebra _ l
   obtain ⟨Q, hQ0, hQ⟩ := (IsFractionRing.isAlgebraic_iff ℤ ℚ Ω).2 halg
   have hc0 : Q.content ≠ 0 := by
     rwa [Ne, Polynomial.content_eq_zero_iff]
@@ -263,9 +263,9 @@ private theorem fin_lemma_3 {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : Valuati
       change IsLocalRing.residue A (Polynomial.aeval a Q.primPart) = 0
       rw [hQ'A, map_zero])
   have hint : IsIntegral (ZMod l) (IsLocalRing.residue A a) := IsAlgebraic.isIntegral (⟨Q2, hQ2, hev⟩ : IsAlgebraic (ZMod l) (IsLocalRing.residue A a))
-  haveI := IntermediateField.adjoin.finiteDimensional hint
-  haveI : Finite (IntermediateField.adjoin (ZMod l) {IsLocalRing.residue A a}) := Module.finite_of_finite (ZMod l)
-  letI := Fintype.ofFinite (IntermediateField.adjoin (ZMod l) {IsLocalRing.residue A a})
+  have := IntermediateField.adjoin.finiteDimensional hint
+  have : Finite (IntermediateField.adjoin (ZMod l) {IsLocalRing.residue A a}) := Module.finite_of_finite (ZMod l)
+  let := Fintype.ofFinite (IntermediateField.adjoin (ZMod l) {IsLocalRing.residue A a})
   refine ⟨Fintype.card (IntermediateField.adjoin (ZMod l) {IsLocalRing.residue A a}), Fintype.one_lt_card, ?_, ?_⟩
   · have h0 := FiniteField.cast_card_eq_zero (IntermediateField.adjoin (ZMod l) {IsLocalRing.residue A a})
     have h1 : ((Fintype.card (IntermediateField.adjoin (ZMod l) {IsLocalRing.residue A a}) : ℕ) : IsLocalRing.ResidueField A) = 0 := by
@@ -319,8 +319,8 @@ open Polynomial IsLocalRing in
 theorem UpperTheory.Kd.C7.residue_field_teichmuller_lift_exists :
     UpperTheory.Kd.C7.FixedIntegersMonicHasRootModPrime := by
   intro l _ hl2 Ω _ _ _ A hA P hP hdeg
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
   have hl : A.valuation (l : Ω) < 1 := by
     obtain ⟨pl, hpl, hlpl⟩ := hA
     unfold IsPlaceOver at hpl
@@ -588,8 +588,8 @@ private theorem Gd.cl_complete [CompleteSpace K] (h : Gd p i) :
 
 private theorem Gd.ext_hom [CompleteSpace K] (h : Gd p i) (φ : S →+* S) :
     ∃ τ : Cl i →+* Cl i, Continuous τ ∧ ∀ y, τ (inc i y) = inc i (φ y) := by
-  letI : PseudoMetricSpace S := PseudoMetricSpace.induced (inc i) inferInstance
-  haveI : CompleteSpace (Cl i) := closed_Cl.completeSpace_coe
+  let : PseudoMetricSpace S := PseudoMetricSpace.induced (inc i) inferInstance
+  have : CompleteSpace (Cl i) := closed_Cl.completeSpace_coe
   have hi : Isometry (inc i) := fun _ _ => rfl
   have hf : UniformContinuous ((inc i).comp φ) := by
     refine (LipschitzWith.mk_one fun a b => ?_).uniformContinuous
@@ -680,7 +680,7 @@ theorem pFrEx3 : SFrEx := by
     PadicInt.denseRange_intCast.induction_on z (closed_Cl.preimage hac) fun n => by
       rw [map_intCast]
       exact intCast_mem _ n
-  letI : Algebra ℤ_[l] (Cl i) := (a.codRestrict _ ham).toAlgebra
+  let : Algebra ℤ_[l] (Cl i) := (a.codRestrict _ ham).toAlgebra
   obtain ⟨σ, c, e⟩ := h.ext_equiv (actE hd)
   have hφ : ∀ y, actE hd y - y ^ l ∈ Ideal.span {(l : R0 A)} := fun y => by
     by_contra hy

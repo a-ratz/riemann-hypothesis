@@ -73,8 +73,8 @@ private lemma isChr_one {G : Type} [Group G] [TopologicalSpace G] (J : Subgroup 
 private lemma exists_local_level (μ : Measure (normOneGL (K := K) (n := n))) [μ.IsHaarMeasure] (V : Submodule ℂ (LL μ))
     (hV : IsSummand μ V) (w : Pl K) :
     ∃ U : Subgroup (Gw n w), CO U ∧ U ≤ GLnLocal.integralGL (w.adicCompletion K) n ∧ V ⊓ fixL μ w U ≠ ⊥ := by
-  letI : MeasurableSpace (Gw n w) := borel _
-  haveI : BorelSpace (Gw n w) := ⟨rfl⟩
+  let : MeasurableSpace (Gw n w) := borel _
+  have : BorelSpace (Gw n w) := ⟨rfl⟩
   let P : TopologicalSpace.PositiveCompacts (Gw n w) :=
     { carrier := GLnLocal.integralGL (w.adicCompletion K) n
       isCompact' := GLnLocal.isCompact_integralGL _ n
@@ -109,8 +109,8 @@ theorem UpperTheory.ConvolutionTheory.T.levelEx :
   choose U₀ hU₀ hU₀le hU₀ne using fun w : Pl K => exists_local_level μ V hV w
   let J : ∀ w : Pl K, Subgroup (Gw n w) := fun w =>
     if w ∈ S then U₀ w else GLnLocal.integralGL (w.adicCompletion K) n
-  have hJin : ∀ w ∈ S, J w = U₀ w := fun w hw => if_pos hw
-  have hJout : ∀ w, w ∉ S → J w = GLnLocal.integralGL (w.adicCompletion K) n := fun w hw => if_neg hw
+  have hJin : ∀ w ∈ S, J w = U₀ w := fun w hw => ite_eq_left hw
+  have hJout : ∀ w, w ∉ S → J w = GLnLocal.integralGL (w.adicCompletion K) n := fun w hw => ite_eq_right hw
   have hco : ∀ w, CO (J w) := fun w => by
     by_cases hw : w ∈ S
     · rw [hJin w hw]; exact hU₀ w

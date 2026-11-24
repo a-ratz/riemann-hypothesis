@@ -65,8 +65,8 @@ namespace GlobalTheory.ValInj
 theorem eq_zero_of_val_eq_zero : ∀ (A : Over (Sp ℂ)) [GrpObj A] (g : ℕ) (L : LB A.left) (u : HolUnif A L g), IsAbelianScheme A →
     ∀ (U : A.left.Opens) (b : Γ(A.left, U)), (∀ z ∈ pre u.ex U, val u.ex U b z = 0) → b = 0 := by
   intro A _ g L u hA U b hb
-  haveI : Smooth A.hom := hA.smooth
-  haveI : IsReduced A.left := isReduced_of_smooth A.hom
+  have : Smooth A.hom := hA.smooth
+  have : IsReduced A.left := isReduced_of_smooth A.hom
   refine GlobalTheory.ComplexPoints.eq_of_valAt'_eq A.hom U b 0 fun x hx hxU => ?_
   obtain ⟨z, hz⟩ := u.ex_onto (Over.homMk x hx)
   have hzx : (u.ex z).left = x := by rw [hz]; rfl

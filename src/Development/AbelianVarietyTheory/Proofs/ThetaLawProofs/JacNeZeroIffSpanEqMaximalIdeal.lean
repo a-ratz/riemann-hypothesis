@@ -217,7 +217,7 @@ theorem valT_specMap_fromSpecStalk {X : Scheme.{0}} {y : X} {U : X.Opens} (hy : 
   have ht : ⊤ ≤ X.fromSpecStalk y ⁻¹ᵁ U := (Scheme.preimage_eq_top_of_closedPoint_mem (X.fromSpecStalk y)
     (by rwa [Scheme.fromSpecStalk_closedPoint])).ge
   have ht' : ⊤ ≤ (Spec.map φ ≫ X.fromSpecStalk y) ⁻¹ᵁ U := fun q _ => ht (x := Spec.map φ q) trivial
-  refine (dif_pos ht').trans ?_
+  refine (dite_eq_left ht').trans ?_
   have h1 : (X.fromSpecStalk y).appLE U ⊤ ht ≫ (Scheme.ΓSpecIso (X.presheaf.stalk y)).hom =
       X.presheaf.germ U y hy := by
     rw [Scheme.Hom.appLE, Scheme.fromSpecStalk_app hy]
@@ -240,7 +240,7 @@ theorem det_ne_zero_iff_span_germ_eq [LocallyOfFiniteType G.hom] (hv : IsLieBasi
       Ideal.span (Set.range fun i => (G.left.presheaf.germ U _ hU).hom (f i)) =
         maximalIdeal (G.left.presheaf.stalk (z.left p)) := by
   have : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
-  letI : Algebra K (G.left.presheaf.stalk (z.left p)) :=
+  let : Algebra K (G.left.presheaf.stalk (z.left p)) :=
     (Spec.preimage (G.left.fromSpecStalk (z.left p) ≫ G.hom)).hom.toAlgebra
   let j : sp (R₀ := K) (G.left.presheaf.stalk (z.left p)) ⟶ G :=
     Over.homMk (G.left.fromSpecStalk (z.left p)) (Spec.map_preimage _).symm

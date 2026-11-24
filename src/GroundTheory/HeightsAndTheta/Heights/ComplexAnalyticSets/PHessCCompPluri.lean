@@ -88,7 +88,7 @@ theorem HessCCompPluri.fderiv_fderiv_comp_apply {E : Type*} [NormedAddCommGroup 
         (deriv (deriv F) (L z) • fderiv ℝ L z).smulRight (fderiv ℝ L z)) z :=
     hc.smul hdL.hasFDerivAt
   rw [heq.fderiv_eq, hs.fderiv]
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply,
+  simp only [add_apply, smul_apply,
     ContinuousLinearMap.smulRight_apply, smul_eq_mul]
   ring
 

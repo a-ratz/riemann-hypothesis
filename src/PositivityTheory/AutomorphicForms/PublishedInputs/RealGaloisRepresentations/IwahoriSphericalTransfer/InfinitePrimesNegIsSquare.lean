@@ -116,7 +116,7 @@ theorem infinite_primes_neg_isSquare : ∀ (q : ℕ) [Fact q.Prime], {p : ℕ | 
   intro q _
   have hq0 : (8 * q) ≠ 0 := by
     have := (Fact.out : q.Prime).pos; omega
-  haveI : NeZero (8 * q) := ⟨hq0⟩
+  have : NeZero (8 * q) := ⟨hq0⟩
   have hu : IsUnit (-1 : ZMod (8 * q)) := isUnit_one.neg
   refine (Nat.infinite_setOfPred_prime_and_eq_mod hu).mono ?_
   rintro p ⟨hp, hpe⟩

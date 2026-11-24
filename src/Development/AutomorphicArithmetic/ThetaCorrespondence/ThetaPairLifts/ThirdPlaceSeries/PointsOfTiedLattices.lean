@@ -334,7 +334,7 @@ theorem muInt_of_charTied : ∀ (D : D7) (C : Formalism.L2.Host.CharFrame D) (nc
   let j : Fin D.R.m := ⟨D.nd.j i - 1, by omega⟩
   have hjj : j.1 + 1 = D.nd.j i := by simp only [j]; omega
   have hmu := hT.muC i j hjj
-  haveI : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
+  have : IsTotallyComplex D.host.E := D.sp.cm.cmUnram.1
   obtain ⟨n, hn, ho⟩ := Tp.xi_fin (D.nd.mu i)
   have hinf : (Tp.tup (D.nd.mu i) j).HasInfQ (Formalism.L2.Host.embPsi D.host) (fun g => -Formalism.L2.Host.eExp D j g) :=
     (C.isMu0 j).inf.mul_triv (GlobalTheory.TypeValues.inf_eq_one _ hn ho)
@@ -462,7 +462,7 @@ end Local
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 theorem split_param_of_typeBlock : ∀ (R : Ranks) (H : Host R) (what₂ : Rows.Data R) (N : NData R H what₂) (A : NAut N) (T : WDTie N A) (S : Reading T) (i : N.Loc) (w : PlE H) (hw : IsSplitPl H w), BlockSplitAll H.E → _root_.GlobalTheory.SplitRead.LawsAlt S → SuppLaws S → TypeBlock S i w hw → (∀ σ ∈ Ine (F := H.E) (N.plOm.1 w), A.inePol (A.locG (A.muC i) w) σ = X - C (iotaO N A i (chi1 N i σ))) → ∀ P : A.AV i, (A.inePol (A.locV i P w) (N.gam0 i w)).rootMultiplicity (iotaO N A i (chi1 N i (N.gam0 i w))) ≤ R.t → ∃ a b : A.LP w, A.locV i P w = A.lpSum a b ∧ A.lpDim a = R.r ∧ A.lpDim b = R.t ∧ A.mono0 b ∧ ∀ σ ∈ Ine (F := H.E) (N.plOm.1 w), A.inePol b σ = (X - C (iotaO N A i (chi1 N i σ))) ^ R.t := by
   intro R H what₂ N A T S i w hw hB hL hS hT hchi P hm
-  haveI : CharZero (w.adicCompletion H.E) := charZero_compl w
+  have : CharZero (w.adicCompletion H.E) := charZero_compl w
   obtain ⟨v, hv, hvb⟩ := hT.2 P
   have hμ := (S i w hw).mu_ok.1
   rw [T.inePol w _ _ (N.locNd_chebotarevPlace_mem i w), (S i w hw).locV, WD.inePol_of_mem_Ine _ (N.locNd_chebotarevPlace_mem i w)] at hm
@@ -586,7 +586,7 @@ theorem exists_under_in_qPl : ∀ (D : D7) (χ : HChar D.host.E) (w : PlE D.host
   have hne : w.asIdeal.comap (algebraMap (𝓞 (maximalRealSubfield D.host.E)) (𝓞 D.host.E)) ≠ ⊥ := by
     obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot w.ne_bot
     have hint : IsIntegral ℤ x := Algebra.IsIntegral.isIntegral x
-    exact Ideal.comap_ne_bot_of_integral_mem hx0 hx (hint.tower_top)
+    exact Ideal.under_ne_bot_of_integral_mem hx0 hx (hint.tower_top)
   let v : HeightOneSpectrum (𝓞 (maximalRealSubfield D.host.E)) :=
     { asIdeal := w.asIdeal.comap (algebraMap (𝓞 (maximalRealSubfield D.host.E)) (𝓞 D.host.E))
       isPrime := Ideal.comap_isPrime _ _
@@ -768,7 +768,7 @@ theorem exists_parahoric_char : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
     exact hP.chr _ _ (lift_triv g) d (by rw [loc_lift]; exact hd)
   · apply Subgroup.isOpen_of_mem_nhds
     have hc : Continuous fun g : paraSub s r J χ ξ hP => NG.detDD s r g.1 :=
-      (continuous_detDD s r).comp continuous_subtype_val
+      (continuous_detDD s r).comp continuous_subtypeVal
     have h1 : NG.detDD s r ((1 : paraSub s r J χ ξ hP) : GL (Fin n) _) = 1 := detDD_one s r
     obtain ⟨π, hπ⟩ := s.v.valuation_exists_uniformizer (maximalRealSubfield L)
     set a : s.v.adicCompletion (maximalRealSubfield L) := ((π : maximalRealSubfield L) : s.v.adicCompletion (maximalRealSubfield L)) ^ N
@@ -780,13 +780,13 @@ theorem exists_parahoric_char : ∀ (L : Type) [Field L] [NumberField L] [IsCMFi
         Valued.v (x - 1) < WithZero.exp (-(N : ℤ))} ∈ nhds (1 : s.v.adicCompletion (maximalRealSubfield L)) := by
       refine Valued.mem_nhds.2 ⟨Units.mk0 (Valued.v.restrict a) (by rwa [ne_eq, Valuation.restrict_eq_zero_iff]), ?_⟩
       intro y hy
-      simp only [Set.mem_setOf_eq, Units.val_mk0] at hy ⊢
+      simp only [Set.mem_ofPred_eq, Units.val_mk0] at hy ⊢
       rw [← ha]
       exact (Valuation.restrict_lt_iff _).1 hy
     have hpre := hc.tendsto 1 (by rw [h1]; exact hnhds)
     refine Filter.mem_of_superset hpre ?_
     intro g hg
-    simp only [Set.mem_preimage, Set.mem_setOf_eq] at hg
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hg
     have hne : NG.detDD s r g.1 ≠ 0 := by
       intro h0
       rw [h0, zero_sub, Valuation.map_neg, Valuation.map_one] at hg
@@ -894,9 +894,9 @@ theorem eq_comp {L : Type} [Field L] [NumberField L] [IsCMField L] (s : SplitPla
         Valued.v ((x : s.v.adicCompletion (maximalRealSubfield L)) - 1) < Valued.v z} := by
       have h1 := (Valued.isOpen_ball (s.v.adicCompletion (maximalRealSubfield L)) (Valued.v.restrict z)).preimage
         (Units.continuous_val.sub (continuous_const (y := (1 : s.v.adicCompletion (maximalRealSubfield L)))))
-      simpa only [Set.preimage_setOf_eq, Valuation.restrict_lt_iff, Pi.sub_apply] using h1
+      simpa only [Set.preimage_ofPred_eq, Valuation.restrict_lt_iff, Pi.sub_apply] using h1
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1) (Filter.mem_of_superset (hU.mem_nhds ?_) fun x hx => ?_)
-    · simp only [Set.mem_setOf_eq, Units.val_one, sub_self, map_zero, hz]
+    · simp only [Set.mem_ofPred_eq, Units.val_one, sub_self, map_zero, hz]
       exact WithZero.exp_pos
     · have hx' : Valued.v ((x : s.v.adicCompletion (maximalRealSubfield L)) - 1) < Valued.v z := hx
       exact hN x (by rw [← hz]; exact hx'.le)

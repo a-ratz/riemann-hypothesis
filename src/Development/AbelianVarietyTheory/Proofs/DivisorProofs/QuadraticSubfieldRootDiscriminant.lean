@@ -57,7 +57,7 @@ theorem finrank_eq_two_of_adjoin_sqrt_eq_top (K : Type) [Field K] [NumberField K
     (hx : x ^ 2 = (a : K)) (hadj : IntermediateField.adjoin ℚ {x} = ⊤) (hsf : Squarefree a) (h1 : a ≠ 1) :
     Module.finrank ℚ K = 2 := by
   have hirr : Irreducible (X ^ 2 - C (a : ℚ)) :=
-    X_pow_sub_C_irreducible_of_prime Nat.prime_two (Formalism.HF.P.quad_not_sq_rat a hsf h1)
+    irreducible_X_pow_sub_C_of_prime Nat.prime_two (Formalism.HF.P.quad_not_sq_rat a hsf h1)
   have hmon : (X ^ 2 - C (a : ℚ)).Monic := monic_X_pow_sub_C _ two_ne_zero
   have hev : aeval x (X ^ 2 - C (a : ℚ)) = 0 := by simp [hx]
   have hmin : minpoly ℚ x = X ^ 2 - C (a : ℚ) :=

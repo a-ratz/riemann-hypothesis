@@ -121,7 +121,7 @@ theorem Bump.zero (D : G → ℂ) (hD : Continuous D) (g : G) (h : ∀ V ∈ �
     rw [mul_div_right_comm]
     simp
   have := hη.cont
-  refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) (by fun_prop) hη.cpt.mul_left (fun y => ?_)
+  refine (Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) (by fun_prop) hη.cpt.mul_left (fun y => ?_)
     (by simp [h0, hη.one])).ne' h1
   by_cases hy : y ∈ tsupport η
   · exact mul_nonneg (hη.sub hy).le (hη.nonneg y)

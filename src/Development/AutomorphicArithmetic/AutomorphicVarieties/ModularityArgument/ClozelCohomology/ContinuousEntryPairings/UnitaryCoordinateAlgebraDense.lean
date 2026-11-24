@@ -58,7 +58,7 @@ theorem continuous_entry (τ : E →+* ℂ) (i j : Fin n) :
     ((InfinitePlace.Completion.isometryEquivComplexOfIsComplex (IsTotallyComplex.isComplex w)).continuous.comp
       (continuous_apply w)).comp continuous_fst
   have h3 : Continuous fun x : infU E n => (x.1.1.val : Matrix (Fin n) (Fin n) (Ad E)) i j :=
-    (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).matrix_elem i j
+    (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).matrix_elem i j
   exact h1.comp (h2.comp h3)
 
 

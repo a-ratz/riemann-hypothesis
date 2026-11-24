@@ -49,8 +49,8 @@ open scoped nonZeroDivisors Pointwise
 theorem UpperTheory.V.ML.ineTau :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (q : ℕ), q.Prime → (∀ A : ValuationSubring Ω, Over A q → ∀ b : (ZMod q)ˣ, ∃ t ∈ Ine (F := ℚ) A, Lifts q b t) ∧ ∃ τ : G ℚ Ω, IsTau q τ := by
   intro Ω _ _ _ q hq
-  haveI : Fact q.Prime := ⟨hq⟩
-  haveI : NeZero q := ⟨hq.ne_zero⟩
+  have : Fact q.Prime := ⟨hq⟩
+  have : NeZero q := ⟨hq.ne_zero⟩
   have hall : ∀ x : (ZMod q)ˣ, x ∈ B3.pPart q q := by
     intro x
     unfold B3.pPart

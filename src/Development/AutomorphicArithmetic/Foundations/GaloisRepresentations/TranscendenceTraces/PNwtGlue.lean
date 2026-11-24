@@ -60,22 +60,22 @@ theorem UpperTheory.Gal.TranscendenceTraces.nwtGlue_of :
   choose A w hopen hmem hw using h
   have hl : ∀ (Ω : Type) [Field Ω] (z : gp Ω ⟶ Z), ∃ l : gp Ω ⟶ (A (pt (z ≫ p))).V, l ≫ (A (pt (z ≫ p))).v = z := by
     intro Ω _ z
-    haveI := hopen (pt (z ≫ p))
+    have := hopen (pt (z ≫ p))
     exact lift_ex _ z (hmem _)
   choose l hlv using hl
   let W : Wt Z := fun Ω _ _ z => w (pt (z ≫ p)) Ω (l Ω z)
   have hcomap : ∀ t, W.comap (A t).v = w t := by
     intro t
     funext Ω _ _ z
-    haveI := hopen t
-    haveI := hopen (pt ((z ≫ (A t).v) ≫ p))
+    have := hopen t
+    have := hopen (pt ((z ≫ (A t).v) ≫ p))
     exact hAg p (A _) (A t) (w _) (w t) (hw _) (hw t) Ω (l Ω (z ≫ (A t).v)) z (hlv Ω _)
   refine ⟨W, hLoc p W fun s => ⟨A s, hopen s, hmem s, ?_⟩, ?_⟩
   · rw [hcomap s]
     exact (hw s).1
   · intro Ω _ _ z hz
     set s := pt (z ≫ p) with hs
-    haveI := hopen s
+    have := hopen s
     have hz' : GenPt (pt (l Ω z ≫ (A s).r)) := by
       rw [← hGen.2.1 (A s).u, ← pt_comp, Category.assoc, ← (A s).pb.w, ← Category.assoc, hlv Ω z]
       exact hz

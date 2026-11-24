@@ -87,7 +87,7 @@ theorem exists_compact_infinite :
     ∃ K : Set (InfiniteAdeleRing F), IsCompact K ∧
       ∀ a : InfiniteAdeleRing F, ∃ y : 𝓞 F, a - algebraMap F (InfiniteAdeleRing F) y ∈ K := by
   obtain ⟨C, hC⟩ := exists_bound_sub_integer F
-  haveI := properSpace_completion F
+  have := properSpace_completion F
   refine ⟨Set.pi Set.univ fun v : InfinitePlace F => Metric.closedBall (0 : v.Completion) (1 + C v),
     isCompact_univ_pi fun v => isCompact_closedBall _ _, fun a => ?_⟩
   have hU : IsOpen (X := InfiniteAdeleRing F)
@@ -110,7 +110,7 @@ theorem exists_compact_infinite :
 
 theorem isCompact_integral :
     IsCompact {a : FiniteAdeleRing (𝓞 F) F | ∀ v, a v ∈ v.adicCompletionIntegers F} := by
-  haveI := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F
+  have := GlobalTheory.AdelicUnitaryTop.compactSpace_adicCompletionIntegers F
   have h := isCompact_range (RestrictedProduct.isEmbedding_structureMap
     (R := fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
     (A := fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F)))

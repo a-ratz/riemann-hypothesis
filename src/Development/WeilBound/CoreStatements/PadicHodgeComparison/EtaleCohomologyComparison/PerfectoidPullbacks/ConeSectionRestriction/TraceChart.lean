@@ -268,7 +268,7 @@ theorem core (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) (v : Valuation L �
       rw [← h1, inv_pow, inv_mul_cancel_left₀ (pow_ne_zero _ hc0)]
     rw [h2]
     exact mul_le_of_le_one_right' (hS y)
-  have hcinv : 1 ≤ c⁻¹ := (one_le_inv₀ (zero_lt_iff.2 hc0)).2 hc1.le
+  have hcinv : 1 ≤ c⁻¹ := (one_le_inv₀ (pos_iff_ne_zero.2 hc0)).2 hc1.le
   have hdesc : ∀ m : ℕ, (∀ x : S, v (E (ι x)) ≤ (c⁻¹) ^ m) → ∀ x : S, v (E (ι x)) ≤ 1 := by
     intro m
     induction m with
@@ -331,12 +331,12 @@ theorem trace_radical (π : R) (hπ : Irreducible π) (y z : integralClosure R L
   have h1 : Function.Injective (algebraMap R L) := by
     rw [IsScalarTower.algebraMap_eq R F L]
     exact (algebraMap F L).injective.comp (IsFractionRing.injective R F)
-  haveI : FaithfulSMul R L := by
+  have : FaithfulSMul R L := by
     rw [faithfulSMul_iff_algebraMap_injective]
     exact h1
-  haveI : Module.Finite R (integralClosure R L) := IsIntegralClosure.finite R F L (integralClosure R L)
-  haveI : Module.Free R (integralClosure R L) := IsIntegralClosure.module_free R F L (integralClosure R L)
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid (integralClosure R L) (nonZeroDivisors R)) L :=
+  have : Module.Finite R (integralClosure R L) := IsIntegralClosure.finite R F L (integralClosure R L)
+  have : Module.Free R (integralClosure R L) := IsIntegralClosure.module_free R F L (integralClosure R L)
+  have : IsLocalization (Algebra.algebraMapSubmonoid (integralClosure R L) (nonZeroDivisors R)) L :=
     IsIntegralClosure.isLocalization R F L (integralClosure R L)
   have htr : Algebra.trace F L (y : L) = algebraMap R F (Algebra.trace R (integralClosure R L) y) :=
     Algebra.trace_localization (Rₘ := F) (Sₘ := L) R (nonZeroDivisors R) y
@@ -374,7 +374,7 @@ theorem mem_prime (π : R) (hπ : Irreducible π) (P : Ideal (integralClosure R 
     algebraMap R _ π ∈ P := by
   have hne : P.comap (algebraMap R (integralClosure R L)) ≠ ⊥ := by
     obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hP
-    exact Ideal.comap_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral x)
+    exact Ideal.under_ne_bot_of_integral_mem hx0 hx (Algebra.IsIntegral.isIntegral x)
   have hmax : (P.comap (algebraMap R (integralClosure R L))).IsMaximal :=
     Ideal.IsPrime.isMaximal inferInstance hne
   have heq := IsLocalRing.eq_maximalIdeal hmax
@@ -386,10 +386,10 @@ theorem mem_prime (π : R) (hπ : Irreducible π) (P : Ideal (integralClosure R 
 include F in
 theorem isPID_integralClosure : IsPrincipalIdealRing (integralClosure R L) := by
   classical
-  haveI : IsDedekindDomain (integralClosure R L) :=
+  have : IsDedekindDomain (integralClosure R L) :=
     IsIntegralClosure.isDedekindDomain R F L (integralClosure R L)
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
-  haveI := faithful_integralClosure (R := R) (F := F) (L := L)
+  have := faithful_integralClosure (R := R) (F := F) (L := L)
   have hπ0 : algebraMap R (integralClosure R L) π ≠ 0 :=
     (map_ne_zero_iff _ (FaithfulSMul.algebraMap_injective R (integralClosure R L))).mpr hπ.ne_zero
   apply IsPrincipalIdealRing.of_finite_primes
@@ -400,7 +400,7 @@ theorem isPID_integralClosure : IsPrincipalIdealRing (integralClosure R L) := by
   by_cases hb : P = ⊥
   · exact Set.mem_insert_iff.mpr (Or.inl hb)
   · refine Set.mem_insert_iff.mpr (Or.inr ?_)
-    haveI : P.IsPrime := hP
+    have : P.IsPrime := hP
     refine ⟨⟨P, hP, hb⟩, ?_, rfl⟩
     show P ∣ Ideal.span {algebraMap R (integralClosure R L) π}
     rw [Ideal.dvd_span_singleton]
@@ -466,8 +466,8 @@ theorem valuation_bounds (hnat : ∀ n : ℕ, n ≠ 0 → IsUnit (n : R)) (π : 
       algebraMap (integralClosure R L) L (algebraMap R _ π * s)) :
     (∀ x : integralClosure R L, P.valuation L (E' (algebraMap _ L x)) ≤ 1) ∧
     (I ≤ P.asIdeal → ∀ x : integralClosure R L, P.valuation L (E' (algebraMap _ L x)) < 1) := by
-  haveI := faithful_integralClosure (R := R) (F := F) (L := L)
-  haveI : Module.Finite R (integralClosure R L) := IsIntegralClosure.finite R F L (integralClosure R L)
+  have := faithful_integralClosure (R := R) (F := F) (L := L)
+  have : Module.Finite R (integralClosure R L) := IsIntegralClosure.finite R F L (integralClosure R L)
   obtain ⟨ϖ, hϖ⟩ := (IsPrincipalIdealRing.principal P.asIdeal).principal
   have hπ0 : algebraMap R (integralClosure R L) π ≠ 0 :=
     (map_ne_zero_iff _ (FaithfulSMul.algebraMap_injective R (integralClosure R L))).mpr hπ.ne_zero
@@ -538,9 +538,9 @@ private theorem val_det_le_lemma_2 {n K Γ : Type*} [Fintype n] [DecidableEq n] 
   refine v.map_sum_le (fun σ _ => ?_)
   rcases Int.units_eq_one_or (Equiv.Perm.sign σ) with hs | hs
   · rw [hs, one_smul, map_prod]
-    exact Finset.prod_le_one' (fun i _ => h _ _)
+    exact Finset.prod_le_one (fun i _ => h _ _)
   · rw [hs, Units.neg_smul, one_smul, Valuation.map_neg, map_prod]
-    exact Finset.prod_le_one' (fun i _ => h _ _)
+    exact Finset.prod_le_one (fun i _ => h _ _)
 
 private theorem val_det_lt_lemma_3 {n K Γ : Type*} [Fintype n] [DecidableEq n] [CommRing K]
     [LinearOrderedCommGroupWithZero Γ] (v : Valuation K Γ) (A : Matrix n n K)
@@ -572,12 +572,12 @@ theorem trace_jac_dvr {n : Type*} [Fintype n] [DecidableEq n]
     (c : L) (hc : IsIntegral R c) (b : n → L) (hb : ∀ l, IsIntegral R (b l)) :
     ∃ r : R, algebraMap R F r = Algebra.trace F L (c * (Matrix.of fun k l => E k (b l)).det) := by
   classical
-  haveI : IsDedekindDomain (integralClosure R L) :=
+  have : IsDedekindDomain (integralClosure R L) :=
     IsIntegralClosure.isDedekindDomain R F L (integralClosure R L)
-  haveI : IsFractionRing (integralClosure R L) L :=
+  have : IsFractionRing (integralClosure R L) L :=
     IsIntegralClosure.isFractionRing_of_finite_extension R F L (integralClosure R L)
-  haveI : IsPrincipalIdealRing (integralClosure R L) := isPID_integralClosure (F := F)
-  haveI := faithful_integralClosure (R := R) (F := F) (L := L)
+  have : IsPrincipalIdealRing (integralClosure R L) := isPID_integralClosure (F := F)
+  have := faithful_integralClosure (R := R) (F := F) (L := L)
   have hπS : algebraMap R (integralClosure R L) π ≠ 0 :=
     (map_ne_zero_iff _ (FaithfulSMul.algebraMap_injective R (integralClosure R L))).mpr hπ.ne_zero
   have hsc : ∀ r : R, algebraMap R L r = algebraMap (integralClosure R L) L (algebraMap R _ r) :=
@@ -765,7 +765,7 @@ theorem finite_frac {A B F L : Type*} [CommRing A] [IsDomain A] [CommRing B] [Is
     obtain ⟨t, -, rfl⟩ := hx
     have h1 : IsIntegral A t := IsIntegral.of_finite A t
     exact (h1.algebraMap (B := L)).tower_top
-  haveI : FiniteDimensional F W :=
+  have : FiniteDimensional F W :=
     IntermediateField.finiteDimensional_adjoin hint
   have hB : ∀ x : B, algebraMap B L x ∈ W := by
     intro x
@@ -830,11 +830,11 @@ theorem at_prime_abs {P L F R n : Type*} [CommRing P] [IsDomain P] [IsNoetherian
   have hmem : ∀ s, s ∈ p ↔ π ∣ s := fun s => by rw [hp, Ideal.mem_span_singleton]
   have hmemM : ∀ s, s ∈ p.primeCompl ↔ ¬ π ∣ s := fun s => by
     rw [Ideal.mem_primeCompl_iff, hmem]
-  haveI : IsDomain R := IsLocalization.isDomain_of_le_nonZeroDivisors R
+  have : IsDomain R := IsLocalization.isDomain_of_le_nonZeroDivisors R
     p.primeCompl_le_nonZeroDivisors
-  haveI : IsNoetherianRing R := IsLocalization.isNoetherianRing p.primeCompl R inferInstance
-  haveI : IsLocalRing R := IsLocalization.AtPrime.isLocalRing R p
-  haveI : IsFractionRing R F :=
+  have : IsNoetherianRing R := IsLocalization.isNoetherianRing p.primeCompl R inferInstance
+  have : IsLocalRing R := IsLocalization.AtPrime.isLocalRing R p
+  have : IsFractionRing R F :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization p.primeCompl R F
   have hmax : IsLocalRing.maximalIdeal R = Ideal.span {algebraMap P R π} := by
     rw [← IsLocalization.AtPrime.map_eq_maximalIdeal p R, hp, Ideal.map_span, Set.image_singleton]
@@ -847,7 +847,7 @@ theorem at_prime_abs {P L F R n : Type*} [CommRing P] [IsDomain P] [IsNoetherian
     rw [IsLocalRing.isField_iff_maximalIdeal_eq, hmax]
     simpa using hπR0
   have hprin : (IsLocalRing.maximalIdeal R).IsPrincipal := ⟨⟨_, hmax⟩⟩
-  haveI : IsDiscreteValuationRing R := by
+  have : IsDiscreteValuationRing R := by
     have h5 := (IsDiscreteValuationRing.TFAE R hnf).out 1 5
     exact h5.2 hprin
   have hirr : Irreducible (algebraMap P R π) :=
@@ -940,8 +940,8 @@ theorem main_abs (hinj : Function.Injective (algebraMap P A))
     obtain ⟨f, g, hg, hfg⟩ := hloc a
     refine ⟨f, g, hne g hg, ?_⟩
     rw [IsScalarTower.algebraMap_apply P A F g, IsScalarTower.algebraMap_apply P A F f, ← map_mul, hfg]
-  haveI : IsFractionRing P F := by
-    haveI : FaithfulSMul P F := (faithfulSMul_iff_algebraMap_injective P F).2 hPF_inj
+  have : IsFractionRing P F := by
+    have : FaithfulSMul P F := (faithfulSMul_iff_algebraMap_injective P F).2 hPF_inj
     refine IsFractionRing.of_field P F (fun z => ?_)
     obtain ⟨a, a', -, rfl⟩ := IsFractionRing.div_surjective (A := A) z
     obtain ⟨f, g, hg, e1⟩ := hloc' a
@@ -959,12 +959,12 @@ theorem main_abs (hinj : Function.Injective (algebraMap P A))
     intro π hπ hπu
     obtain ⟨j, fj, hfj, hj⟩ := hjac π hπ
     set p : Ideal P := Ideal.span {π} with hp
-    haveI hpp : p.IsPrime := (Ideal.span_singleton_prime hπ.ne_zero).2 hπ
+    have hpp : p.IsPrime := (Ideal.span_singleton_prime hπ.ne_zero).2 hπ
     let R : Subalgebra P F :=
       Localization.subalgebra.ofField F p.primeCompl p.primeCompl_le_nonZeroDivisors
-    haveI : IsScalarTower R F L := inferInstance
-    haveI : IsScalarTower P R L := inferInstance
-    haveI : IsLocalization.AtPrime R p := inferInstance
+    have : IsScalarTower R F L := inferInstance
+    have : IsScalarTower P R L := inferInstance
+    have : IsLocalization.AtPrime R p := inferInstance
     have hr : ∀ a : A, algebraMap A L a ∈ (algebraMap R L).range := by
       intro a
       obtain ⟨f, g, hg, hfg⟩ := hloc a
@@ -1045,22 +1045,22 @@ theorem deriv_aeval_mv {K L : Type*} [Field K] [Field L] [Algebra K L] {d : ℕ}
 theorem trace_jacobian_mem : ∀ (K : Type) [Field K] [CharZero K] (d : ℕ) (A : Type) [CommRing A] [IsDomain A] [Algebra K A] (t : Fin d → A), Function.Injective (MvPolynomial.aeval t : MvPolynomial (Fin d) K →ₐ[K] A) → (∀ a : A, ∃ f g : MvPolynomial (Fin d) K, IsUnit (MvPolynomial.aeval t g) ∧ a * MvPolynomial.aeval t g = MvPolynomial.aeval t f) → ∀ (B : Type) [CommRing B] [IsDomain B] [Algebra A B] [Algebra K B] [IsScalarTower K A B] [Module.Finite A B], Function.Injective (algebraMap A B) → ∀ (F L : Type) [Field F] [Field L] [Algebra A F] [IsFractionRing A F] [Algebra B L] [IsFractionRing B L] [Algebra F L] [Algebra A L] [IsScalarTower A F L] [IsScalarTower A B L] [Algebra K L] [IsScalarTower K B L] (D : Fin d → Derivation K L L), (∀ k j, D k (algebraMap A L (t j)) = if k = j then 1 else 0) → ∀ (c : B) (b : Fin d → B), ∃ a : A, algebraMap A F a = Algebra.trace F L (algebraMap B L c * (Matrix.of fun k l => D k (algebraMap B L (b l))).det) := by
   intro K _ _ d A _ _ _ t ht hloc B _ _ _ _ _ _ hAB F L _ _ _ _ _ _ _ _ _ _ _ _ D hD c b
   classical
-  letI : Algebra (MvPolynomial (Fin d) K) A := (MvPolynomial.aeval t).toRingHom.toAlgebra
-  letI : Algebra (MvPolynomial (Fin d) K) F :=
+  let : Algebra (MvPolynomial (Fin d) K) A := (MvPolynomial.aeval t).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial (Fin d) K) F :=
     ((algebraMap A F).comp (MvPolynomial.aeval t).toRingHom).toAlgebra
-  letI : Algebra (MvPolynomial (Fin d) K) L :=
+  let : Algebra (MvPolynomial (Fin d) K) L :=
     ((algebraMap A L).comp (MvPolynomial.aeval t).toRingHom).toAlgebra
-  haveI : IsScalarTower (MvPolynomial (Fin d) K) A F := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower (MvPolynomial (Fin d) K) F L := IsScalarTower.of_algebraMap_eq (fun x => by
+  have : IsScalarTower (MvPolynomial (Fin d) K) A F := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower (MvPolynomial (Fin d) K) F L := IsScalarTower.of_algebraMap_eq (fun x => by
     show algebraMap A L _ = algebraMap F L (algebraMap A F _)
     exact IsScalarTower.algebraMap_apply A F L _)
-  haveI : IsScalarTower K A L := IsScalarTower.of_algebraMap_eq (fun x => by
+  have : IsScalarTower K A L := IsScalarTower.of_algebraMap_eq (fun x => by
     rw [IsScalarTower.algebraMap_apply K B L, IsScalarTower.algebraMap_apply K A B,
       ← IsScalarTower.algebraMap_apply A B L])
-  haveI : FiniteDimensional F L := finite_frac (A := A) (B := B)
-  haveI : CharZero A := (RingHom.charZero_iff (algebraMap K A).injective).1 inferInstance
-  haveI : CharZero F := (RingHom.charZero_iff (IsFractionRing.injective A F)).1 inferInstance
-  haveI : Algebra.IsSeparable F L := inferInstance
+  have : FiniteDimensional F L := finite_frac (A := A) (B := B)
+  have : CharZero A := (RingHom.charZero_iff (algebraMap K A).injective).1 inferInstance
+  have : CharZero F := (RingHom.charZero_iff (IsFractionRing.injective A F)).1 inferInstance
+  have : Algebra.IsSeparable F L := inferInstance
   have hτ : ∀ f : MvPolynomial (Fin d) K, algebraMap (MvPolynomial (Fin d) K) L f =
       MvPolynomial.aeval (fun i => algebraMap A L (t i)) f := by
     intro f
@@ -1199,15 +1199,15 @@ theorem trace_chart (t : Fin (n + 1) → Rˣ) (S : Finset (Fin (n + 2))) (u : Fi
   have hιne : ∀ r : R, r ≠ 0 → algebraMap R (FractionRing R) r ≠ 0 := fun r hr h =>
     hr (hι (h.trans (map_zero _).symm))
 
-  letI : Algebra (torusS K t S) B' := (Subalgebra.inclusion hTB).toRingHom.toAlgebra
-  haveI : IsScalarTower K (torusS K t S) B' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra (torusS K t S) B' := (Subalgebra.inclusion hTB).toRingHom.toAlgebra
+  have : IsScalarTower K (torusS K t S) B' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hAB : Function.Injective (algebraMap (torusS K t S) B') := Subalgebra.inclusion_injective hTB
   let f : B' →ₐ[torusS K t S] R := { B'.val with commutes' := fun _ => rfl }
-  haveI : Algebra.IsIntegral (torusS K t S) B' :=
+  have : Algebra.IsIntegral (torusS K t S) B' :=
     ⟨fun b => (isIntegral_algHom_iff f Subtype.val_injective).mp (hInt b b.2)⟩
-  haveI : Algebra.FiniteType K B' := Subalgebra.fg_iff_finiteType B' |>.mp hFG
-  haveI : Algebra.FiniteType (torusS K t S) B' := Algebra.FiniteType.of_restrictScalars_finiteType K _ _
-  haveI : Module.Finite (torusS K t S) B' := Algebra.IsIntegral.finite
+  have : Algebra.FiniteType K B' := Subalgebra.fg_iff_finiteType B' |>.mp hFG
+  have : Algebra.FiniteType (torusS K t S) B' := Algebra.FiniteType.of_restrictScalars_finiteType K _ _
+  have : Module.Finite (torusS K t S) B' := Algebra.IsIntegral.finite
 
   let ψ : torusS K t S →+* fldF K t :=
     { toFun := fun a => ⟨algebraMap R (FractionRing R) a, torus_mem_fldF t S a a.2⟩
@@ -1215,7 +1215,7 @@ theorem trace_chart (t : Fin (n + 1) → Rˣ) (S : Finset (Fin (n + 2))) (u : Fi
       map_mul' := fun a b => Subtype.ext (map_mul _ (a : R) b)
       map_zero' := Subtype.ext (map_zero _)
       map_add' := fun a b => Subtype.ext (map_add _ (a : R) b) }
-  letI : Algebra (torusS K t S) (fldF K t) := ψ.toAlgebra
+  let : Algebra (torusS K t S) (fldF K t) := ψ.toAlgebra
   have hψ : ∀ a : torusS K t S, ((algebraMap (torusS K t S) (fldF K t) a : fldF K t) : FractionRing R) =
       algebraMap R (FractionRing R) a := fun _ => rfl
   have hψinj : Function.Injective (algebraMap (torusS K t S) (fldF K t)) := fun a b h =>
@@ -1251,15 +1251,15 @@ theorem trace_chart (t : Fin (n + 1) → Rˣ) (S : Finset (Fin (n + 2))) (u : Fi
       refine ⟨x1 * y1, x2 * y2, by simpa using mul_ne_zero hx2 hy2, ?_⟩
       simp only [Subalgebra.coe_mul, map_mul]
       rw [div_mul_div_comm]
-  haveI : FaithfulSMul (torusS K t S) (fldF K t) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hψinj
-  haveI : IsFractionRing (torusS K t S) (fldF K t) := IsFractionRing.of_field _ _ fun z => by
+  have : FaithfulSMul (torusS K t S) (fldF K t) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hψinj
+  have : IsFractionRing (torusS K t S) (fldF K t) := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨x, y, hy, hz⟩ := hQ z z.2
     refine ⟨x, y, Subtype.ext ?_⟩
     rw [IntermediateField.coe_div, hψ, hψ, ← hz]
 
   have hBL : Function.Injective (algebraMap B' (FractionRing R)) := fun a b h => Subtype.ext (hι h)
-  haveI : FaithfulSMul B' (FractionRing R) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hBL
-  haveI : IsFractionRing B' (FractionRing R) := IsFractionRing.of_field _ _ fun z => by
+  have : FaithfulSMul B' (FractionRing R) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hBL
+  have : IsFractionRing B' (FractionRing R) := IsFractionRing.of_field _ _ fun z => by
     obtain ⟨r, s, hs, rfl⟩ := IsFractionRing.div_surjective (A := R) z
     obtain ⟨b1, hb1, b1', hb1', hb1'0, hr⟩ := hFrac r
     obtain ⟨b2, hb2, b2', hb2', hb2'0, hs'⟩ := hFrac s
@@ -1271,9 +1271,9 @@ theorem trace_chart (t : Fin (n + 1) → Rˣ) (S : Finset (Fin (n + 2))) (u : Fi
     rw [div_eq_div_iff (hιne _ hs0) hden, ← map_mul, ← map_mul, ← hr, ← hs']
     congr 1
     ring
-  haveI : IsScalarTower (torusS K t S) (fldF K t) (FractionRing R) :=
+  have : IsScalarTower (torusS K t S) (fldF K t) (FractionRing R) :=
     IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower (torusS K t S) B' (FractionRing R) := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower (torusS K t S) B' (FractionRing R) := IsScalarTower.of_algebraMap_eq fun _ => rfl
 
   choose Dl hDl using fun k => frac_deriv (E k)
   have hDu : ∀ k j, Dl k (algebraMap (torusS K t S) (FractionRing R) (u j)) = if k = j then 1 else 0 := by

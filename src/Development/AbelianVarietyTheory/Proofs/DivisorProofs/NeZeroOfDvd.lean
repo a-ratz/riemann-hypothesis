@@ -246,7 +246,7 @@ theorem coefficientReduction_firstChernClass_tateTwist : ∀ (Q q : ℕ) [NeZero
   have hq0 : q ≠ 0 := by
     rintro rfl
     exact NeZero.ne Q (Nat.eq_zero_of_zero_dvd hqQ)
-  haveI : NeZero q := ⟨hq0⟩
+  have : NeZero q := ⟨hq0⟩
   have hUnit : Inv q E := fun U hU => by
     obtain ⟨k, hk⟩ := hqQ
     have := hE U hU
@@ -840,9 +840,9 @@ theorem flatS_tens : ∀ (R : Type) [CommRing R] {I J T : Cx R} (τ : Pair I J T
     rw [op_comp, Functor.map_comp, ModuleCat.hom_comp, LinearMap.comp_apply]
     exact h''
   · intro U hU
-    haveI : ∀ p : {p : ℤ × ℤ // p.1 + p.2 = w}, Module.Flat (ULift.{1} R) ((PI p.1.1).obj (op U)) := fun p => fI _ U hU
-    haveI : ∀ p : {p : ℤ × ℤ // p.1 + p.2 = w}, Module.Flat (ULift.{1} R) ((PJ p.1.2).obj (op U)) := fun p => fJ _ U hU
-    haveI : ∀ p : {p : ℤ × ℤ // p.1 + p.2 = w},
+    have : ∀ p : {p : ℤ × ℤ // p.1 + p.2 = w}, Module.Flat (ULift.{1} R) ((PI p.1.1).obj (op U)) := fun p => fI _ U hU
+    have : ∀ p : {p : ℤ × ℤ // p.1 + p.2 = w}, Module.Flat (ULift.{1} R) ((PJ p.1.2).obj (op U)) := fun p => fJ _ U hU
+    have : ∀ p : {p : ℤ × ℤ // p.1 + p.2 = w},
         Module.Flat (ULift.{1} R) ((PI p.1.1).obj (op U) ⊗[ULift.{1} R] (PJ p.1.2).obj (op U)) := fun p => inferInstance
     exact Module.Flat.directSum
 
@@ -956,7 +956,7 @@ namespace GlobalTheory.EtC.ScalarExt
 theorem semiMap_op_eq_of_flat_res : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ (k : ℤ) {T : Cx (ZMod Q)} (e : ∀ U : Scheme.{0}, Prim Q Γ(U, ⊤) → Sec (T.X 0) U), IsTwRes Q k T e → (∀ t, FlatS (T.X t)) → ∀ σ σ' : SemiMap T (res _ (tw q k)), (∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)), σ.app U 0 (e U ζ) = σ'.app U 0 (e U ζ)) → ∀ (E : Spc) (n : ℤ) (x : CohomologyClass ((chains (ZMod Q)).obj E) T n), σ.op.app E n x = σ'.op.app E n x := by
   intro Q q _ h k T e hT hflat σ σ' hσ E n x
   obtain ⟨hge, ε, hqi, hεe⟩ := hT
-  haveI := hge
+  have := hge
   have hl := zmod_semilinear h σ
   have hl' := zmod_semilinear h σ'
   let εb : sgl ((ext (ZMod.castHom h (ZMod q))).obj (tw Q k)) ⟶ (extCx (ZMod.castHom h (ZMod q))).obj T :=
@@ -964,16 +964,16 @@ theorem semiMap_op_eq_of_flat_res : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ 
       (tw Q k)).inv ≫ (extCx (ZMod.castHom h (ZMod q))).map ε
   have hq2 : QuasiIso ((extCx (ZMod.castHom h (ZMod q))).map ε) :=
     _root_.GlobalTheory.EtC.RedQis.quasiIso_extCx_of_flat Q q h (tw Q k) T (GlobalTheory.T.tateTwistSheaf_isLocallyFlat Q k) hflat ε hqi
-  haveI : IsIso ((HomologicalComplex.singleMapHomologicalComplex (ext (ZMod.castHom h (ZMod q))) (ComplexShape.up ℤ) 0).app
+  have : IsIso ((HomologicalComplex.singleMapHomologicalComplex (ext (ZMod.castHom h (ZMod q))) (ComplexShape.up ℤ) 0).app
       (tw Q k)).inv := Iso.isIso_inv _
   have hq1 : QuasiIso ((HomologicalComplex.singleMapHomologicalComplex (ext (ZMod.castHom h (ZMod q))) (ComplexShape.up ℤ) 0).app
       (tw Q k)).inv := quasiIso_of_isIso _
-  haveI : QuasiIso εb := quasiIso_comp (hφ := hq1) (hφ' := hq2) _ _
-  haveI : (res (ZMod q) (tw q k)).IsKInjective :=
+  have : QuasiIso εb := quasiIso_comp (hφ := hq1) (hφ' := hq2) _ _
+  have : (res (ZMod q) (tw q k)).IsKInjective :=
     inferInstanceAs ((injectiveResolution (tw q k)).cochainComplex.IsKInjective)
-  haveI : (res (ZMod q) (tw q k)).IsStrictlyGE 0 :=
+  have : (res (ZMod q) (tw q k)).IsStrictlyGE 0 :=
     inferInstanceAs ((injectiveResolution (tw q k)).cochainComplex.IsStrictlyGE 0)
-  haveI : IsIso (sglι (tw Q k)) := by unfold sglι; exact Iso.isIso_inv _
+  have : IsIso (sglι (tw Q k)) := by unfold sglι; exact Iso.isIso_inv _
   have he : ∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)), σ.app U 0 (Sec.map (ε.f 0) (Sec.map (sglι (tw Q k)) (twGen k ζ))) =
       σ'.app U 0 (Sec.map (ε.f 0) (Sec.map (sglι (tw Q k)) (twGen k ζ))) := fun U ζ => by
     rw [hεe]; exact hσ U ζ
@@ -1094,7 +1094,7 @@ theorem semiMap_cup : ∀ (S R : Type) [CommRing S] [CommRing R] {I J T : Cx S} 
 theorem reduction_cup : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ (E : Spc) {n m i j : ℤ} (a : Ht Q E n i) (b : Ht Q E m j),
     red Q q E _ _ (cup Q a b) = cup q (red Q q E _ _ a) (red Q q E _ _ b) := by
   intro Q q _ hqQ E n m i j a b
-  haveI : NeZero q := ⟨by rintro rfl; exact NeZero.ne Q (zero_dvd_iff.mp hqQ)⟩
+  have : NeZero q := ⟨by rintro rfl; exact NeZero.ne Q (zero_dvd_iff.mp hqQ)⟩
   obtain ⟨T, τ, hτ⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod Q) (res _ (tw Q i)) (res _ (tw Q j))
   obtain ⟨u, hu, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod Q) τ hτ).1 (twPair Q i j) (𝟙 _) (𝟙 _)
   have hcup : cup Q a b = cpush _ u _ (τ.cup E rfl a b) := by
@@ -1152,7 +1152,7 @@ theorem val_one_smul {q : ℕ} [NeZero q] {M : Type*} [AddCommGroup M] [Module (
   · subst hq
     have : Subsingleton M := Module.subsingleton (ULift.{1} (ZMod 1)) M
     exact Subsingleton.elim _ _
-  · haveI : Fact (1 < q) := ⟨by have := NeZero.ne q; omega⟩
+  · have : Fact (1 < q) := ⟨by have := NeZero.ne q; omega⟩
     rw [ZMod.val_one, one_smul]
 
 theorem resGen_zero_eq {q : ℕ} [NeZero q] {U : Scheme.{0}} (ζ ξ : Prim q Γ(U, ⊤)) : resGen 0 ζ = resGen 0 ξ := by
@@ -1169,7 +1169,7 @@ end GlobalTheory.EtC.RedUnit
 
 theorem GlobalTheory.EtC.red_one : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ E : Spc, Inv Q E → red Q q E 0 0 (one Q E) = one q E := by
   intro Q q _ hqQ E hE
-  haveI : NeZero q := ⟨fun h => by subst h; exact NeZero.ne Q (Nat.eq_zero_of_zero_dvd hqQ)⟩
+  have : NeZero q := ⟨fun h => by subst h; exact NeZero.ne Q (Nat.eq_zero_of_zero_dvd hqQ)⟩
   have hEq : Inv q E := fun U hU => by
     obtain ⟨k, hk⟩ := hqQ
     have := hE U hU
@@ -1332,10 +1332,10 @@ theorem op_eq : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ (i : ℤ) (ρ ρ' : 
   have e1 := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective _ _ (extπ (ZMod.castHom hq (ZMod q)) (res _ (tw Q i))) ρ u hu).1 E n x
   have e2 := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective _ _ (extπ (ZMod.castHom hq (ZMod q)) (res _ (tw Q i))) ρ' u' hu').1 E n x
   have hε := GlobalTheory.T.extendScalars_tateTwistResolution_hom_ext_augmentation Q q hq i _ u u' (fun U ζ => by rw [← hu, ← hu', h])
-  haveI := _root_.GlobalTheory.EtC.ExtQis.quasiIso_extAug Q q hq i
-  haveI : (res (ZMod q) (tw q i)).IsKInjective :=
+  have := _root_.GlobalTheory.EtC.ExtQis.quasiIso_extAug Q q hq i
+  have : (res (ZMod q) (tw q i)).IsKInjective :=
     inferInstanceAs ((injectiveResolution (tw q i)).cochainComplex.IsKInjective)
-  haveI : (res (ZMod q) (tw q i)).IsStrictlyGE 0 :=
+  have : (res (ZMod q) (tw q i)).IsStrictlyGE 0 :=
     inferInstanceAs ((injectiveResolution (tw q i)).cochainComplex.IsStrictlyGE 0)
   obtain ⟨H⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective (ZMod q) _ _ (res _ (tw q i)) (extAug (ZMod.castHom hq (ZMod q)) (tw Q i))).2 u u' hε
   have e3 := ((GlobalTheory.T.hypercohomologyPullbackPushforward_functorial (ZMod q)).2.2.2.2 u u' ⟨H⟩ ((chains (ZMod q)).obj E) n).2
@@ -1408,7 +1408,7 @@ namespace GlobalTheory.EtC.RedCoef
 
 theorem a11 : GlobalTheory.EtC.A11 := by
   intro Q q _ hqQ E
-  haveI : NeZero q := neZero_of_dvd hqQ
+  have : NeZero q := neZero_of_dvd hqQ
   refine ⟨fun a b => _root_.GlobalTheory.EtC.RedCup.reduction_cup Q q hqQ E a b, fun hE => ⟨GlobalTheory.T.tateTwistCoefficientReduction_unitClass Q q hqQ E hE, fun L => _root_.GlobalTheory.EtC.RedChern.coefficientReduction_firstChernClass_tateTwist Q q hqQ E hE L⟩,
     fun n i a => ?_, fun r hr n i a => ?_⟩
   · have hgen : ∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)),
@@ -1417,7 +1417,7 @@ theorem a11 : GlobalTheory.EtC.A11 := by
       refine GlobalTheory.T.tateTwistReductionResolutionMap_generator Q Q dvd_rfl i U ζ ζ ?_
       rw [Nat.div_self (Nat.pos_of_ne_zero (NeZero.ne Q)), pow_one]
     exact (_root_.GlobalTheory.EtC.RedUniq.op_eq Q Q dvd_rfl i _ _ hgen E n a).trans (semiId_op _ E n a)
-  · haveI : NeZero r := neZero_of_dvd hr
+  · have : NeZero r := neZero_of_dvd hr
     have hrQ : r ∣ Q := hr.trans hqQ
     have hgen : ∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)),
         (semiComp (redMap Q q i) (redMap q r i)).app U 0 (resGen i ζ) = (redMap Q r i).app U 0 (resGen i ζ) := by

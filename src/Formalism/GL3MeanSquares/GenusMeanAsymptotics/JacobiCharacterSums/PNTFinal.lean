@@ -274,9 +274,9 @@ theorem sum_excI_le {M : ℕ} [NeZero M] (e : Option (DirichletCharacter ℂ M �
   rcases e with _ | ⟨χ₁, β₁⟩
   · simp [excI]
   · have h : (∑ χ : DirichletCharacter ℂ M, excI (some (χ₁, β₁)) χ) = excI (some (χ₁, β₁)) χ₁ :=
-      Finset.sum_eq_single χ₁ (fun b _ hb => if_neg hb) (fun h => absurd (Finset.mem_univ _) h)
+      Finset.sum_eq_single χ₁ (fun b _ hb => ite_eq_right hb) (fun h => absurd (Finset.mem_univ _) h)
     rw [h]
-    exact (if_pos rfl).le
+    exact (ite_eq_left rfl).le
 
 theorem excW_le_one {M : ℕ} (e : Option (DirichletCharacter ℂ M × ℝ)) (χ : DirichletCharacter ℂ M) (ρ : ℂ) :
     excW e χ ρ ≤ 1 := by
@@ -297,7 +297,7 @@ theorem sum_excW_le {M : ℕ} (e : Option (DirichletCharacter ℂ M × ℝ)) (χ
   · simp [excW, excI]
   · simp only [excW, excI]
     by_cases h : χ = χ₁
-    · simp only [h, true_and, if_true]
+    · simp only [h, true_and, ite_true]
       have : ∀ ρ ∈ Z, (((if ρ = (β₁ : ℂ) then 1 else 0 : ℕ) : ℝ)) * y ^ (ρ.re - 1)
           = if ρ = (β₁ : ℂ) then y ^ (ρ.re - 1) else 0 := by
         intro ρ _; split_ifs <;> simp
@@ -319,7 +319,7 @@ theorem excT_sub_le {M : ℕ} [NeZero M] (hM : 3 ≤ M) (e : Option (DirichletCh
     simp only [excW, excI, excT]
     by_cases h : χ = χ₁
     · subst h
-      simp only [true_and, if_true]
+      simp only [true_and, ite_true]
       have : ∀ ρ ∈ Z, (((if ρ = (β₁ : ℂ) then 1 else 0 : ℕ) : ℂ)) * (y : ℂ) ^ ρ / ρ
           = if ρ = (β₁ : ℂ) then (y : ℂ) ^ ρ / ρ else 0 := by
         intro ρ _; split_ifs <;> simp
@@ -370,8 +370,8 @@ theorem one_char {M : ℕ} [NeZero M] (hM : 3 ≤ M) (e : Option (DirichletChara
       exact Finset.sum_congr rfl (fun ρ _ => by ring)
     rw [this]
     by_cases hχ : χ = 1
-    · simp only [if_pos hχ]; ring
-    · simp only [if_neg hχ]; ring
+    · simp only [ite_eq_left hχ]; ring
+    · simp only [ite_eq_right hχ]; ring
   have h2 : ‖∑ ρ ∈ Z, ((m ρ : ℂ) - (excW e χ ρ : ℂ)) * (y : ℂ) ^ ρ / ρ‖
       ≤ 2 * y * ∑ ρ ∈ Z, ((m ρ : ℝ) - (excW e χ ρ : ℝ)) * y ^ (ρ.re - 1) := by
     rw [Finset.mul_sum]
@@ -770,7 +770,7 @@ theorem rangeA_one_char (c C cA : ℝ)
   · rw [hsome]
     by_cases hχ : χ = χ₁
     · subst hχ
-      rw [if_pos rfl, ← sub_add]
+      rw [ite_eq_left rfl, ← sub_add]
       by_cases hr : InRegion cZ M (β₁ : ℂ)
       · have h0 := H' {β₁} (rangeA_excZeros_single M hM2 χ β₁ he hr)
         simp only [Finset.sum_singleton] at h0
@@ -800,7 +800,7 @@ theorem rangeA_one_char (c C cA : ℝ)
             exact (Prod.mk.inj this).1
           exact absurd this.symm hχ))
       simp only [Finset.sum_empty, add_zero] at h0
-      rw [if_neg hχ, sub_zero]
+      rw [ite_eq_right hχ, sub_zero]
       linarith
 
 theorem psi_relative_near_range : PsiRelA := by
@@ -1220,11 +1220,11 @@ theorem differenced_explicit_formula : SharpenS := by
   have hP : ‖(c : ℂ) * ((if χ = 1 then ((Real.log ((1 + δ) * y) - 1 : ℝ) : ℂ) else 0) -
       (if χ = 1 then ((Real.log y - 1 : ℝ) : ℂ) else 0)) - (if χ = 1 then (y : ℂ) else 0)‖ ≤ δ * y := by
     by_cases hχ : χ = 1
-    · simp only [hχ, if_true]
+    · simp only [hχ, ite_true]
       rw [← Complex.ofReal_sub, ← Complex.ofReal_mul, ← Complex.ofReal_sub, Complex.norm_real,
         Real.norm_eq_abs]
       exact sharp_log_term hy0 hδ
-    · simp only [hχ, if_false]
+    · simp only [hχ, ite_false]
       simp; positivity
   have hlog1 : 1 ≤ Real.log (2 * y) := by
     rw [Real.le_log_iff_exp_le (by linarith)]

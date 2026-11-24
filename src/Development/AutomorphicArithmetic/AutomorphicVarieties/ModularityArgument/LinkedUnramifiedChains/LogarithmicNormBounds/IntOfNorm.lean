@@ -72,9 +72,9 @@ private theorem loc_of_int {O R A : Type} [CommRing O] [CommRing R] [IsLocalRing
     [Nontrivial A] [Algebra O A] [Algebra.IsIntegral O A] (f : R →ₐ[O] A) : IsLocalHom f := by
   let g : R →+* f.range := f.rangeRestrict
   have hg : Function.Surjective g := f.rangeRestrict_surjective
-  haveI : IsLocalRing f.range := IsLocalRing.of_surjective' g hg
+  have : IsLocalRing f.range := IsLocalRing.of_surjective' g hg
   have hl : IsLocalHom g := IsLocalHom.of_surjective _ hg
-  haveI : Algebra.IsIntegral f.range A := Algebra.IsIntegral.tower_top (R := O)
+  have : Algebra.IsIntegral f.range A := Algebra.IsIntegral.tower_top (R := O)
   have h2 : IsLocalHom (algebraMap f.range A) := Algebra.IsIntegral.isLocalHom _ _
   exact ⟨fun x hx => hl.map_nonunit x (h2.map_nonunit (g x) hx)⟩
 
@@ -97,10 +97,10 @@ private theorem factor {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [CommRin
     (f : R →ₐ[c.O] PadicAlgCl l) (hf : IsLocPt f) :
     ∃ (A : Subalgebra c.O (PadicAlgCl l)) (h : IsDiscreteValuationRing A) (_ : Module.Finite c.O A) (f' : R →ₐ[c.O] A),
       IsAdicComplete (@maximalIdeal A _ h.toIsLocalRing) A ∧ ∀ x, (f' x : PadicAlgCl l) = f x := by
-  haveI := (UpperTheory.V.abelian₂.dvr_finite l c.O).1
+  have := (UpperTheory.V.abelian₂.dvr_finite l c.O).1
   obtain ⟨E, hE⟩ := Loc.ptFin (l := l) R ((TrivSqZeroExt.inlAlgHom c.O _ _).comp f) hf
   have hE' : ∀ a, f a ∈ E.1 := fun a => (hE a).1
-  haveI := E.2
+  have := E.2
   obtain ⟨h1, h2, -⟩ := UpperTheory.V.abelian₂.dvr_intClosure l E.1
   let j : E.1 →ₐ[ℤ_[l]] PadicAlgCl l := E.1.val.restrictScalars ℤ_[l]
   have hj : Function.Injective j := Subtype.val_injective
@@ -111,8 +111,8 @@ private theorem factor {l : ℕ} [Fact l.Prime] {c : Coef l} {R : Type} [CommRin
   let A : Subalgebra c.O (PadicAlgCl l) := { B.toSubsemiring with algebraMap_mem' := fun a => f.commutes a ▸ hB _ }
   have d1 : IsDiscreteValuationRing B := IsDiscreteValuationRing.RingEquivClass.isDiscreteValuationRing e
   have d2 : Module.Finite ℤ_[l] B := Module.Finite.equiv e.toLinearEquiv
-  haveI : Module.Finite ℤ_[l] A := d2
-  haveI d3 : IsDiscreteValuationRing A := d1
+  have : Module.Finite ℤ_[l] A := d2
+  have d3 : IsDiscreteValuationRing A := d1
   exact ⟨A, d3, Module.Finite.of_restrictScalars_finite ℤ_[l] c.O A, f.codRestrict A hB, (UpperTheory.V.abelian₂.dvr_finite l A).1,
     fun _ => rfl⟩
 

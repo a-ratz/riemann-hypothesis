@@ -218,7 +218,7 @@ theorem central_character_local_holds : CcLoc := by
     refine lt_of_le_of_ne Ideal.mul_le_left fun h => ?_
     have : ccE D cc * P.asIdeal = ccE D cc * ⊤ := by rw [h, Ideal.mul_top]
     exact P.isPrime.ne_top (mul_left_cancel₀ hI this)
-  obtain ⟨γ, hγI, hγP⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨γ, hγI, hγP⟩ := IsConcreteLE.exists_of_lt hlt
   have hγ0 : γ ≠ 0 := by rintro rfl; exact hγP (Submodule.zero_mem _)
   obtain ⟨J, hJ⟩ : ccE D cc ∣ Ideal.span {γ} :=
     Ideal.dvd_iff_le.2 ((Ideal.span_singleton_le_iff_mem _).2 hγI)
@@ -227,7 +227,7 @@ theorem central_character_local_holds : CcLoc := by
     apply hγP
     have : Ideal.span {γ} ≤ ccE D cc * P.asIdeal := by rw [hJ]; exact Ideal.mul_mono_right hJ'
     exact this (Ideal.mem_span_singleton_self γ)
-  obtain ⟨t, htJ, htP⟩ := SetLike.not_le_iff_exists.1 hJP
+  obtain ⟨t, htJ, htP⟩ := IsConcreteLE.not_le_iff_exists.1 hJP
   refine ⟨γ, hγ0, hγI, t, htP, fun c hc => ?_⟩
   have : t * c ∈ Ideal.span {γ} := by rw [hJ, mul_comm t c]; exact Ideal.mul_mem_mul hc htJ
   obtain ⟨o, ho⟩ := Ideal.mem_span_singleton'.1 this

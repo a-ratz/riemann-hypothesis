@@ -99,7 +99,7 @@ theorem locK_eq_one (D : D7) (H : Formalism.L2.Host.HChar D.host.E) (PP : Pl D.h
     show PP.valuation D.host.E (algebraMap (𝓞 D.host.E) D.host.E (a - (s : 𝓞 D.host.E))) < 1
     rw [map_sub, ← h, ← sub_one_mul, map_mul, hsv, mul_one]
     exact hk
-  haveI : PP.asIdeal.IsMaximal := PP.isMaximal
+  have : PP.asIdeal.IsMaximal := PP.isMaximal
   have hms : (Ideal.Quotient.mk PP.asIdeal (s : 𝓞 D.host.E) : kP PP) ≠ 0 := by
     rw [Ne, Ideal.Quotient.eq_zero_iff_mem]; exact hs
   obtain ⟨b, hb⟩ := Ideal.Quotient.exists_inv hms

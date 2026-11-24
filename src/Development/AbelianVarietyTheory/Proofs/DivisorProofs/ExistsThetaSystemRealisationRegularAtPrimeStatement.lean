@@ -158,8 +158,8 @@ theorem exists_real_of_univBasis_eq (hL : Laws) [ArithBase o Ω] (R : Subalgebra
         spMap (Subalgebra.inclusion h).toRingHom ≫ (x₀ i₁ ^ (S.r * S.N)).left ∧
       (ρ.pt (Pi.single (.inr i) 1)).left ≫ φ =
         spMap (Subalgebra.inclusion h).toRingHom ≫ (x₀ i₂ ^ (S.r * S.N)).left := by
-  haveI := isNoetherian_of_fg fg
-  haveI : IsAffine (baseOver (Sp R)).left := inferInstanceAs (IsAffine (Sp R))
+  have := isNoetherian_of_fg fg
+  have : IsAffine (baseOver (Sp R)).left := inferInstanceAs (IsAffine (Sp R))
   have hn2 : 2 ≤ n := hp.two_le
   have hn1 : 1 ≤ n := by omega
   have hm1 : 1 ≤ n ^ k := Nat.one_le_pow _ _ hn1
@@ -172,7 +172,7 @@ theorem exists_real_of_univBasis_eq (hL : Laws) [ArithBase o Ω] (R : Subalgebra
   have hMo : Odd (n ^ j * (n ^ k) ^ 2) := hM ▸ ho.pow
   let f : o →+* Γ((baseOver (Sp R)).left, ⊤) := (Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom.comp (algebraMap o R)
   have hf : Function.Injective f := fn_injective.comp (algebraMap_injective R)
-  haveI : Nontrivial Γ((baseOver (Sp R)).left, ⊤) := (fn_injective (R := R)).nontrivial
+  have : Nontrivial Γ((baseOver (Sp R)).left, ⊤) := (fn_injective (R := R)).nontrivial
   have un : ∀ q e : ℕ, q = n ^ e → IsUnit (q : Γ(Sp R, ⊤)) := fun q e hq => by
     have := (hu.pow e).map f
     rw [map_pow, map_natCast] at this
@@ -284,13 +284,13 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem GlobalTheory.ThetaRealAt.exists_thetaSys_real_at : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (R : Subalgebra o Ω), R.FG → (∀ x : Ω, ∃ a ∈ R, ∃ b ∈ R, x = a / b) → ∀ (𝔭 : Ideal R), 𝔭.IsPrime → ∀ (P : PolAV (Sp R)) (n k j : ℕ) (ze : oˣ), n.Prime → Odd n → 2 ≤ k → 1 ≤ j → IsUnit (n : o) → HypS P.A P.L → ∀ lev : Out.Level P ((n ^ j * (n ^ k) ^ 2) ^ 2) (unitOn (Units.map (algebraMap o R).toMonoidHom ze)), ∃ (S : ThetaSys o Ω) (ρ : S.Real) (h : R ≤ S.R) (φ : ρ.P.A.left ⟶ P.A.left), (∀ x ∈ S.R, ∃ a b : R, b ∉ 𝔭 ∧ x = (a : Ω) / (b : Ω)) ∧ S.ζ = ze ∧ S.N = (n ^ k) ^ 2 ∧ S.r = n ^ j ∧ S.g = P.g ∧ IsGrpPullback ρ.P.A P.A (spMap (Subalgebra.inclusion h).toRingHom) φ ∧ LBIso ρ.P.L (P.L.pull φ) ∧ ∀ (i : Fin S.g) (i₁ i₂ : Fin (2 * P.g)), (i₁ : ℕ) = i → (i₂ : ℕ) = i + P.g → (ρ.pt (Pi.single (.inl i) 1)).left ≫ φ = spMap (Subalgebra.inclusion h).toRingHom ≫ (lev.pt i₁ ^ (S.r * S.N)).left ∧ (ρ.pt (Pi.single (.inr i) 1)).left ≫ φ = spMap (Subalgebra.inclusion h).toRingHom ≫ (lev.pt i₂ ^ (S.r * S.N)).left := by
   intro o Ω _ _ _ _ R fg frac 𝔭 h𝔭 P n k j ze hp ho hk hj hu hS lev
   obtain ⟨hL, hL₂⟩ := GlobalTheory.abelianSchemeLaws_all
-  haveI := GlobalTheory.ThetaReal.isNoetherian_of_fg fg
+  have := GlobalTheory.ThetaReal.isNoetherian_of_fg fg
   let p : Sp R := (⟨𝔭, h𝔭⟩ : PrimeSpectrum R)
   obtain ⟨V₁, m₁, b₁, hb₁⟩ := GlobalTheory.ThetaReal.exists_univBasis hL₂.secBaseChangeAny P 1 le_rfl p
   obtain ⟨V₂, m₂, b₂, hb₂⟩ := GlobalTheory.ThetaReal.exists_univBasis hL₂.secBaseChangeAny P ((n ^ k) ^ 2)
     (Nat.one_le_pow _ _ (Nat.one_le_pow _ _ hp.pos)) p
   obtain ⟨R', h, fg', hloc, τ, hτ⟩ := GlobalTheory.ThetaRealAt.exists_fg_at R fg 𝔭 (V₁ ⊓ V₂) ⟨m₁, m₂⟩
-  haveI := GlobalTheory.ThetaReal.isNoetherian_of_fg fg'
+  have := GlobalTheory.ThetaReal.isNoetherian_of_fg fg'
   obtain ⟨P', φ, hg, hφ, hiso⟩ := exists_isPolFibre hL.polBaseChange (Subalgebra.inclusion h).toRingHom P
   have hiso' := LBIso.symm hiso
   have w : ∀ (V : (Sp R).Opens) (hV : V₁ ⊓ V₂ ≤ V), (τ ≫ (Sp R).homOfLE hV) ≫ (overRes (T := baseOver (Sp R)) V).hom =
@@ -304,7 +304,7 @@ theorem GlobalTheory.ThetaRealAt.exists_thetaSys_real_at : ∀ (o Ω : Type) [Co
     (congrArg (fun q => q.hom (algebraMap o R ze))
       (Scheme.ΓSpecIso_inv_naturality (CommRingCat.ofHom (Subalgebra.inclusion h).toRingHom))).symm
     ((GlobalTheory.ThetaReal.prim_iff R' ze _).2 ((GlobalTheory.ThetaReal.prim_iff R ze _).1 lev.prim)) lev
-  haveI hU : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
+  have hU : Unique (Fin (1 ^ P.g)) := by rw [one_pow]; infer_instance
   let e := finCongr (congrArg (((n ^ k) ^ 2) ^ ·) hg)
   obtain ⟨S, ρ, h₀, φ₀, hSR, rest⟩ := GlobalTheory.ThetaRealAt.exists_real_of_univBasis_eq hL R' fg' (fun x => by
       obtain ⟨a, ha, b, hb, e⟩ := frac x

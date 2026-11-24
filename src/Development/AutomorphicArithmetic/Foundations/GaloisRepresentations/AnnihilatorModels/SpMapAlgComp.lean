@@ -103,7 +103,7 @@ end UpperTheory.Gal.crystallineComparison.Mod
 private theorem exists_integer_mul_eq_of_valuation_le {V B Λ : Type} [CommRing V] [CommRing B] [Algebra V B] [CommRing Λ] [Algebra V Λ]
     {A : Over (Sp V)} (i : algPt V B ⟶ A) [Mono i] {φ ψ : B →ₐ[V] Λ}
     (h : spMap φ.toRingHom ≫ i.left = spMap ψ.toRingHom ≫ i.left) : φ = ψ := by
-  haveI := Over.mono_left_of_mono i
+  have := Over.mono_left_of_mono i
   have h1 := Mod.spMap_inj' ((cancel_mono i.left).mp h)
   ext x
   exact RingHom.congr_fun h1 x
@@ -125,17 +125,17 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.infW_of :
   obtain ⟨B, _, _, hBfin, hBfree, hBrank, i, hi, hiP⟩ := hRA
   obtain ⟨B', _, _, hB'fin, _, _, i', hi', hiP'⟩ := hRA'
   obtain ⟨hcardB, ε₀, hInf0, htrans⟩ := hRP κ A P hSub B i hi hiP
-  haveI : (RingHom.ker ε₀.toRingHom).IsPrime := RingHom.ker_isPrime _
+  have : (RingHom.ker ε₀.toRingHom).IsPrime := RingHom.ker_isPrime _
   have hq := hRH κ B ε₀ htrans
   rw [hBrank, hcardB, hcard] at hq
   have hq' : Module.finrank κ (Localization.AtPrime (RingHom.ker ε₀.toRingHom)) = p ^ f :=
     (Nat.eq_of_mul_eq_mul_right hd (hq.trans (mul_comm _ _))).symm
   obtain ⟨j, hj⟩ : InSub i' i := (hiP' _ i).mpr (hle _ i ((hiP _ i).mp ⟨𝟙 _, Category.id_comp _⟩))
   obtain ⟨π, hπ⟩ := Mod.pt_alg j
-  haveI : Mono j := mono_of_mono_fac hj
-  haveI := Over.mono_left_of_mono j
+  have : Mono j := mono_of_mono_fac hj
+  have := Over.mono_left_of_mono j
   have hπs : Function.Surjective π := Mod.surj_of_mono π (by rw [← hπ]; infer_instance)
-  haveI := Over.mono_left_of_mono i'
+  have := Over.mono_left_of_mono i'
   have hiL : i.left = spMap π.toRingHom ≫ i'.left := by rw [← hj, Over.comp_left, hπ]
   obtain ⟨ν', hν'⟩ := (inSub_iff_exists_algHom_factor i' g).mp ((hiP' _ g).mpr hP'g)
   have hInf0' : Inf (ε₀.comp π) i' := by

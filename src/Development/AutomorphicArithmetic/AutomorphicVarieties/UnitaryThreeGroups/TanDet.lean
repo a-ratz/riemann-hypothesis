@@ -139,9 +139,9 @@ private theorem tan_isCoc (F : R →ₐ[O] DualNumber κ) (r : Γ →* GG (m := 
         ((r g).left⁻¹).val.map (dualFst F) := rfl
   rw [e, tanCoc_eq, tanCoc_eq, tanCoc_eq, map_mul, SemidirectProduct.mul_left, lder_mul]
   rcases Int.units_eq_one_or (r g).right with hs | hs
-  · rw [hs, sgnAct_one, if_pos rfl]
+  · rw [hs, sgnAct_one, ite_eq_left rfl]
   · rw [hs, sgnAct_neg_one, lder_theta]
-    simp only [hne, if_false]
+    simp only [hne, ite_false]
 
 private theorem tan_mul (F : R →ₐ[O] DualNumber κ) (r : Γ →* GG (m := 3) (R := R)) (g : Γ) :
     tanCoc F r g * (push (dualFst F) r g).mat = (r g).mat.map (sndL F) := by
@@ -347,8 +347,8 @@ private theorem span_top {O Γ : Type} [CommRing O] [IsLocalRing O] [Group Γ] [
       rw [Algebra.smul_def, map_mul]; ring
     rw [e]
     exact T.add_mem (h2 _ (map_nonunit (algebraMap O U.R) a ha) _ hb) (hO _)
-  letI : Module (ResidueField O) (U.R ⧸ T) := htor.module
-  haveI : IsScalarTower O (ResidueField O) (U.R ⧸ T) := htor.isScalarTower
+  let : Module (ResidueField O) (U.R ⧸ T) := htor.module
+  have : IsScalarTower O (ResidueField O) (U.R ⧸ T) := htor.isScalarTower
   obtain ⟨x₀, hx₀⟩ : ∃ x₀, x₀ ∉ T := by
     by_contra h
     exact hT (eq_top_iff.2 fun x _ => by_contra fun hx => h ⟨x, hx⟩)
@@ -370,7 +370,7 @@ private theorem span_top {O Γ : Type} [CommRing O] [IsLocalRing O] [Group Γ] [
     rw [e, map_sub, map_add (f := _), map_add (f := _), hδ _ (h2 _ ha _ hb), hδ _ (hO _), map_smul, map_smul, ra, rb,
       Algebra.smul_def, Algebra.smul_def]
     ring
-  haveI := (co_res O).2
+  have := (co_res O).2
   let F₀ : U.R →ₐ[O] DualNumber (ResidueField O) := (TrivSqZeroExt.inlAlgHom O _ _).comp (res O U.R)
   let F₁ : U.R →ₐ[O] DualNumber (ResidueField O) :=
     { toFun := fun x => TrivSqZeroExt.inl (res O U.R x) + TrivSqZeroExt.inr (δ x)

@@ -58,17 +58,17 @@ theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Pi.aeEq_pf :
     Basic → AeEq := by
   intro _ E _ _ _ n D f g I hf hg hfi hgi hI hae x hx
   by_contra hne
-  haveI : BorelSpace (H E n 0) := ⟨rfl⟩
+  have : BorelSpace (H E n 0) := ⟨rfl⟩
   set S : Set (H E n 0) := {y | ldet y ∈ I ∧ f y ≠ g y} with hS
   have hSo : IsOpen S :=
     (hI.preimage continuous_ldet).inter (isOpen_ne_fun hf hg)
   have hSx : S.Nonempty := ⟨x, hx, hne⟩
-  haveI : Countable (ratH E n 0) := DiscreteGroups.T1.G.Dcy.countable_ratH'
-  haveI : D.μ.IsMulLeftInvariant := D.haar.1
-  haveI : D.μ.IsOpenPosMeasure := D.haar.2.2.1
-  haveI : MeasurableConstSMul (ratH E n 0) (H E n 0) :=
+  have : Countable (ratH E n 0) := DiscreteGroups.T1.G.Dcy.countable_ratH'
+  have : D.μ.IsMulLeftInvariant := D.haar.1
+  have : D.μ.IsOpenPosMeasure := D.haar.2.2.1
+  have : MeasurableConstSMul (ratH E n 0) (H E n 0) :=
     ⟨fun γ => (continuous_const.mul continuous_id : Continuous fun y : H E n 0 => (γ : H E n 0) * y).measurable⟩
-  haveI : SMulInvariantMeasure (ratH E n 0) (H E n 0) D.μ :=
+  have : SMulInvariantMeasure (ratH E n 0) (H E n 0) D.μ :=
     ⟨fun γ s _ => measure_preimage_mul D.μ (γ : H E n 0) s⟩
   have key : ∀ (δ : ratH E n 0) (y : H E n 0), y ∈ S → (δ : H E n 0) * y ∈ S := by
     intro δ y hy

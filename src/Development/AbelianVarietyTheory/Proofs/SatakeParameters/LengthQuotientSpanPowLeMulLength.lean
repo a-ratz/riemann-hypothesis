@@ -53,7 +53,7 @@ theorem length_quotient_span_pow_le (O : Type) [CommRing O] (p : O) (n : ℕ) :
   induction n with
   | zero =>
     rw [pow_zero, Ideal.span_singleton_one]
-    haveI : Subsingleton (O ⧸ (⊤ : Ideal O)) := Ideal.Quotient.subsingleton_iff.mpr rfl
+    have : Subsingleton (O ⧸ (⊤ : Ideal O)) := Ideal.Quotient.subsingleton_iff.mpr rfl
     rw [Module.length_eq_zero]
     exact bot_le
   | succ n ih =>

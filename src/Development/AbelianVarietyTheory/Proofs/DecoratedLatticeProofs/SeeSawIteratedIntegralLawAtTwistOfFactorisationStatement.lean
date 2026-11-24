@@ -595,18 +595,18 @@ theorem exists_eq_sum_indicator {G : Type} [Group G] {M : Type} [AddCommMonoid M
     have hrep : ∀ t, dc R K t = dc R K t0 → rep t = hS.choose := by
       intro t ht
       have hSt : S t = S t0 := by simp only [S, ht]
-      simp only [rep, hSt, dif_pos hS]
+      simp only [rep, hSt, dite_eq_left hS]
     have hxt1 : x ∈ dc R K hS.choose := by rw [ht1dc]; exact hxt0
     rw [Finset.sum_eq_single hS.choose]
     · have hc1 : c hS.choose = φ hS.choose := by
         simp only [c]
-        rw [if_pos ⟨ht1T, hrep _ ht1dc⟩]
+        rw [ite_eq_left ⟨ht1T, hrep _ ht1dc⟩]
       rw [Set.indicator_of_mem hxt1, hc1, hinv hxt1]
     · intro t _ hne
       by_cases hxt : x ∈ dc R K t
       · have hc0 : c t = 0 := by
           simp only [c]
-          rw [if_neg]
+          rw [ite_eq_right]
           rintro ⟨-, h⟩
           exact hne (h.symm.trans (hrep t (hdc_eq hxt hxt0)))
         rw [Set.indicator_of_mem hxt, hc0]
@@ -652,7 +652,7 @@ theorem quotientIntegral_oneDoubleCoset_eq_mul_value (G : Type) [Group G] [Topol
   have hemb : Topology.IsClosedEmbedding (Subtype.val : R → G) := hR.isClosedEmbedding_subtypeVal
 
   have hAo : ∀ h : G, IsOpen {r : R | t⁻¹ * ((r : G) * h) ∈ K} := fun h =>
-    hKo.preimage (continuous_const.mul (continuous_subtype_val.mul continuous_const))
+    hKo.preimage (continuous_const.mul (continuous_subtypeVal.mul continuous_const))
   have hAc : ∀ h : G, IsCompact {r : R | t⁻¹ * ((r : G) * h) ∈ K} := fun h => by
     have h1 : IsCompact ((fun g : G => t⁻¹ * (g * h)) ⁻¹' (K : Set G)) := by
       have e : (fun g : G => t⁻¹ * (g * h)) ⁻¹' (K : Set G) = (fun g => t * g * h⁻¹) '' (K : Set G) := by
@@ -910,10 +910,10 @@ theorem iterated_integral_product_groups : ∀ (A₁ : Type) [Group A₁] [Topol
     a₁ b₁ a₂ b₂ r₁ s₁ r₂ s₂ p₁ p₂ ha₁ hb₁ ha₂ hb₂ hr₁ hs₁ hr₂ hs₂ hir₁ his₁ hir₂ his₂ hp₁ hp₂ K₁ L₁ K₂ L₂
     hK₁ hL₁ hK₂ hL₂ f hfy hfx hfl hTx hTy g z hg hz
   classical
-  haveI : LocallyCompactSpace R₁ := hR₁.locallyCompactSpace
-  haveI : LocallyCompactSpace S₁ := hS₁.locallyCompactSpace
-  haveI : LocallyCompactSpace R₂ := hR₂.locallyCompactSpace
-  haveI : LocallyCompactSpace S₂ := hS₂.locallyCompactSpace
+  have : LocallyCompactSpace R₁ := hR₁.locallyCompactSpace
+  have : LocallyCompactSpace S₁ := hS₁.locallyCompactSpace
+  have : LocallyCompactSpace R₂ := hR₂.locallyCompactSpace
+  have : LocallyCompactSpace S₂ := hS₂.locallyCompactSpace
 
   let P : (A₁ × B₁ → A₂ × B₂ → ℂ) → Prop := fun F => ∃ (G : A₁ → A₂ → ℂ) (Z : ℂ),
     (∀ x y, Iter2 s₁ b₁ s₂ b₂ (fun x' y' => F (x, x') (y, y')) (G x y)) ∧ Iter2 r₁ a₁ r₂ a₂ G Z ∧
@@ -1091,7 +1091,7 @@ theorem isCO_iSup_map (V : HSp D) {r : ℕ} (k : Fin r → Type) [∀ i, Field (
       exact hmem g
     rw [hset]
     exact isOpen_iInter_of_finite fun i =>
-      (hL i).1.preimage ((GlobalTheory.FixLev.continuous_locHom _ _ _).comp continuous_subtype_val)
+      (hL i).1.preimage ((GlobalTheory.FixLev.continuous_locHom _ _ _).comp continuous_subtypeVal)
   · rw [Subtype.isCompact_iff]
     have himg : (((↑) : GlobalTheory.FinPl.grpAt V P → GA D V) ''
         ((H.subgroupOf (GlobalTheory.FinPl.grpAt V P) : Subgroup _) : Set (GlobalTheory.FinPl.grpAt V P))) =
@@ -1167,8 +1167,8 @@ namespace GlobalTheory.QVal
 theorem quotient_integral_of_subsingleton {G : Type} [Group G] [MeasurableSpace G] [Subsingleton G] {R : Subgroup G}
     (μR : Measure R) (μG : Measure G) (hR : μR Set.univ = 1) (hG : μG Set.univ = 1) (f : G → ℂ) :
     IsQuotIntL1 μR μG f (f 1) := by
-  haveI : IsProbabilityMeasure μR := ⟨hR⟩
-  haveI : IsProbabilityMeasure μG := ⟨hG⟩
+  have : IsProbabilityMeasure μR := ⟨hR⟩
+  have : IsProbabilityMeasure μG := ⟨hG⟩
   have hc : ∀ x, f x = f 1 := fun x => by rw [Subsingleton.elim x 1]
   have hf : f = fun _ => f 1 := funext hc
   refine ⟨fun _ => f 1, integrable_const _, fun _ => integrable_const _, fun h => ?_, ?_⟩
@@ -1191,10 +1191,10 @@ theorem aconv_nil' {G : Type} [AddMonoid G] : aconv ([] : List (G →₀ ℂ)) =
 
 theorem comb_single_zero' (S' T : HSp D) (u : WO S' T → ℂ) :
     comb ψ S' T (Finsupp.single 0 1) u = u := by
-  simp [comb, Finsupp.support_single_ne_zero _ one_ne_zero, heisO_zero_eq]
+  simp [comb, Finsupp.support_single _ one_ne_zero, heisO_zero_eq]
 
 theorem trc_single_one' {V : HSp D} (u : GA D V → ℂ) : trc (Finsupp.single 1 1) u = u := by
-  simp only [trc, Finsupp.support_single_ne_zero (1 : GA D V) (one_ne_zero (α := ℂ)), Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
+  simp only [trc, Finsupp.support_single (1 : GA D V) (one_ne_zero (α := ℂ)), Finset.sum_singleton, Finsupp.single_eq_same, one_smul]
   funext x
   show u (x * 1) = u x
   rw [mul_one]
@@ -1216,11 +1216,11 @@ theorem valQr_zero : ∀ D : D7, ValQr D 0 := by
   intro D ψ _ σ S Q _ μ₁ ρ₁ μ₂ ρ₂ hN c₁ c₂ f₁ f₂ φ f g h₁ h₂ _
   obtain ⟨-, -, -, -, e1, e2, e3, e4⟩ := hN
   have hP : ¬ ∃ v, places Q v := fun ⟨_, i, _⟩ => i.elim0
-  haveI : Subsingleton (GlobalTheory.FinPl.grpAt S.J.W (places Q)) := by
+  have : Subsingleton (GlobalTheory.FinPl.grpAt S.J.W (places Q)) := by
     rw [grpAt_eq_bot S.J.W hP]; infer_instance
-  haveI : Subsingleton (GlobalTheory.FinPl.grpAt S.B'.V (places Q)) := by
+  have : Subsingleton (GlobalTheory.FinPl.grpAt S.B'.V (places Q)) := by
     rw [grpAt_eq_bot S.B'.V hP]; infer_instance
-  simp only [IsEmpty.forall_iff, Set.setOf_true] at e1 e2 e3 e4
+  simp only [IsEmpty.forall_iff, Set.ofPred_true] at e1 e2 e3 e4
   refine ⟨fun x => integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ x.1 1, ?_, fun q => ?_⟩
   · have := quotient_integral_of_subsingleton ρ₁ μ₁ e2 e1 (fun x => integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ x.1 1)
     simpa [value_zero_eq] using this
@@ -1507,10 +1507,10 @@ theorem valQr_succ (D : D7) (r : ℕ) (IH : ValQr D r) : ValQr D (r + 1) := by
   obtain ⟨v1, v2, v3⟩ := GlobalTheory.T.doubleThetaStep_integrand_invariant_at_succ_places D ψ hψ σ S r Q hinj c₁ c₂ f₁ f₂ φ f g h₁ h₂ hH
   obtain ⟨n1, n2⟩ := GlobalTheory.T.doubleThetaStep_integrand_finite_doubleCosets D ψ hψ σ S r Q hinj c₁ c₂ f₁ f₂ φ f g h₁ h₂ hH
   apply hred (integrand Q c₁ c₂ f₁ f₂ φ f g h₁ h₂)
-  haveI := lc₁
-  haveI := lc₂
-  haveI : BorelSpace (GL ((Q 0).n₁ ⊕ Fin ((Q 0).c + 1 + 1)) (Q 0).k) := GlobalTheory.SplitFlip.borel_GL
-  haveI : BorelSpace (GL ((Q 0).n₂ ⊕ Fin ((Q 0).c + 1)) (Q 0).k) := GlobalTheory.SplitFlip.borel_GL
+  have := lc₁
+  have := lc₂
+  have : BorelSpace (GL ((Q 0).n₁ ⊕ Fin ((Q 0).c + 1 + 1)) (Q 0).k) := GlobalTheory.SplitFlip.borel_GL
+  have : BorelSpace (GL ((Q 0).n₂ ⊕ Fin ((Q 0).c + 1)) (Q 0).k) := GlobalTheory.SplitFlip.borel_GL
   exact GlobalTheory.T.haar_measure_quotient_group_product _ _ _ _ _ _ _ _ cl₁ cl₃ cl₂ cl₄ μ₁' m₁ μ₂' m₂ ρ₁' s₁ ρ₂' s₂ p₁ p₂ a1 b1 a3 b5 a2 b3 a4 b7 i₁ i₃ i₂ i₄
     e₁ e₂ _ _ _ _ co₁ (Q 0).co₁ co₂ (Q 0).co₂ (pint Q c₁ c₂ f₁ f₂ φ f g h₁ h₂) v1 v2 v3 n1 n2
     (fun x y => innerVal Q c₁ c₂ f₁ f₂ φ f g h₁ h₂ x.1 y.1) _

@@ -156,7 +156,7 @@ theorem smoothOfRelativeDimension_of_isRegularLocalRing {F : Type} [Field F] [Pe
   let x : Spec R ⟶ X := X.affineOpenCover.f i
   have hx : IsOpenImmersion x := X.affineOpenCover.map_prop i
   let φ : CommRingCat.of F ⟶ R := Spec.preimage (x ≫ f)
-  letI : Algebra F R := φ.hom.toAlgebra
+  let : Algebra F R := φ.hom.toAlgebra
   have hφ : x ≫ f = spMap (algebraMap F R) := (Spec.map_preimage (x ≫ f)).symm
   change SmoothOfRelativeDimension n (x ≫ f)
   rw [hφ]

@@ -77,15 +77,15 @@ def ptGrid (W : G.Weil) (g : Gc D.what₂.Tau (rowSizes D)) (i : ℕ) : GA D (G.
 
 theorem ptTop_lt (W : G.Weil) (g : Gc D.what₂.Tau (rowSizes D)) {n : ℕ} (h : n < D.R.m) :
     ptTop W g n = (kappa W g).1 ⟨n, h⟩ := by
-  simp only [ptTop, dif_pos h]
+  simp only [ptTop, dite_eq_left h]
 
 theorem ptTop_m (W : G.Weil) (g : Gc D.what₂.Tau (rowSizes D)) : ptTop W g D.R.m = kappaTop W g := by
-  simp only [ptTop, lt_irrefl, dif_neg (lt_irrefl _), not_false_eq_true]
+  simp only [ptTop, lt_irrefl, dite_eq_right (lt_irrefl _), not_false_eq_true]
   rfl
 
 theorem ptGrid_le (W : G.Weil) (g : Gc D.what₂.Tau (rowSizes D)) {i : ℕ} (h : i < D.R.m + 1) :
     ptGrid W g i = (kappa W g).2 ⟨i, h⟩ := by
-  simp only [ptGrid, dif_pos h]
+  simp only [ptGrid, dite_eq_left h]
 
 end Points
 

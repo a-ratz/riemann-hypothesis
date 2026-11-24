@@ -200,9 +200,9 @@ namespace GlobalTheory.Mum
 theorem genericEnd_extends : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ f : (Over.pullback (jK R)).obj G ⟶ (Over.pullback (jK R)).obj G, IsMonHom f → ∃ g : G ⟶ G, IsMonHom g ∧ (Over.pullback (jK R)).map g = f := by
   intro R _ _ _ hR G _ _ hG f hf
   obtain ⟨⟨hN, -, hIC, -⟩, -⟩ := hR
-  haveI := hN
-  haveI := hIC
-  haveI := hf
+  have := hN
+  have := hIC
+  have := hf
   obtain ⟨g, ⟨hg, hg'⟩, -⟩ := GlobalTheory.Published.SemiAbelianHomExtension.fractionField GlobalTheory.semiAbelianHomExtension_holds R
     (FractionRing R) G G hG hG f
   exact ⟨g, hg, hg'⟩
@@ -310,7 +310,7 @@ theorem exists_oLinear_of_oAct : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
     funext χ; simp
   have mul : ∀ a b : O, g (a * b) = g b ≫ g a := by
     intro a b
-    haveI := hg a; haveI := hg b
+    have := hg a; have := hg b
     refine L2 _ _ _ _ (hg (a * b)) inferInstance (hgA (a * b)) ?_
     have := actsAs_comp U.toUnifPre (hgA b) (hgA a)
     rw [o.onB.map_mul]
@@ -318,7 +318,7 @@ theorem exists_oLinear_of_oAct : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
     funext χ; simp [star_mul, mul_smul]
   have add : ∀ a b : O, g (a + b) = padd G (g a) (g b) := by
     intro a b
-    haveI := hg a; haveI := hg b
+    have := hg a; have := hg b
     have hp : IsMonHom (padd G (g a) (g b)) := by unfold padd; infer_instance
     refine L2 _ _ _ _ (hg (a + b)) hp (hgA (a + b)) ?_
     have := actsAs_padd U.toUnifPre (hgA a) (hgA b)
@@ -330,7 +330,7 @@ theorem exists_oLinear_of_oAct : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLoc
   let fA : O → (A.A ⟶ A.A) := fun a => U.gen.inv ≫ F.map (g a) ≫ U.gen.hom
   let oA : A.OAct O :=
     { act := fA
-      hom := fun a => by haveI := hg a; dsimp [fA]; infer_instance
+      hom := fun a => by have := hg a; dsimp [fA]; infer_instance
       map_one := by simp [fA, F, one]
       map_mul := fun a b => by simp [fA, F, mul]
       map_add := fun a b => by

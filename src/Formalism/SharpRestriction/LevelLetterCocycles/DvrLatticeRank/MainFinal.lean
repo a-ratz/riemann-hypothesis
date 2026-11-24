@@ -126,7 +126,7 @@ theorem match_fil (I D Oth : Submodule LL X) [FiniteDimensional LL ↥I] [Finite
   have hmap : D.map Oth.mkQ ≤ I.map Oth.mkQ := by
     calc D.map Oth.mkQ ≤ (I ⊔ Oth).map Oth.mkQ := Submodule.map_mono hDI
       _ = I.map Oth.mkQ := hsupmap I
-  haveI hfin : FiniteDimensional LL ↥(I.map Oth.mkQ) := by
+  have hfin : FiniteDimensional LL ↥(I.map Oth.mkQ) := by
     first
       | infer_instance
       | exact Module.Finite.map I Oth.mkQ
@@ -485,7 +485,7 @@ theorem LV_smulO (K : ℕ) (o : O) (x : W.DD T) (hx : W.Q ^ K • W.φD T x ∈ 
   rw [finsum_eq_single _ 0]
   · simp
   · intro j hj
-    rw [PowerSeries.coeff_C, if_neg hj, zero_smul]
+    rw [PowerSeries.coeff_C, ite_eq_right hj, zero_smul]
 
 variable {Pt : ZMod n → LL → (K →ₐ[Qp] LL) → Prop}
 
@@ -515,7 +515,7 @@ theorem levN_val (hp4 : Formalism.MainNotions.DeltaInvariantLattices.p4 W Pt T) 
       ring
     have hcoef : PowerSeries.coeff (k - Nat.find hex) ((W.lev c ζ W.Q) ^ (k - Nat.find hex)) =
         PowerSeries.coeff 1 (W.lev c ζ W.Q) ^ (k - Nat.find hex) := by
-      rw [hB', mul_pow, PowerSeries.coeff_X_pow_mul', if_pos le_rfl, Nat.sub_self,
+      rw [hB', mul_pow, PowerSeries.coeff_X_pow_mul', ite_eq_left le_rfl, Nat.sub_self,
         PowerSeries.coeff_zero_eq_constantCoeff_apply, map_pow, PowerSeries.coeff_succ_X_mul,
         PowerSeries.coeff_zero_eq_constantCoeff_apply]
     rw [e1, map_pow, hcoef, smul_smul, ← pow_sub₀ _ hc1 hk0]
@@ -796,7 +796,7 @@ theorem count (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] {
           rw [Finset.mem_Ico] at ha
           refine hmult0 a (fun h => ?_) (fun h => ?_)
           · rw [hup] at h
-            simp only [deep, if_true, Set.mem_Icc] at h
+            simp only [deep, ite_true, Set.mem_Icc] at h
             omega
           · rw [Set.mem_Icc] at h
             omega
@@ -815,7 +815,7 @@ theorem count (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] {
         rw [Finset.mem_Ico]
         omega
       · rw [hup] at h
-        simp only [deep, if_true, Set.mem_Icc] at h
+        simp only [deep, ite_true, Set.mem_Icc] at h
         rw [Finset.mem_Ico] at ha
         omega
       · exact hna (by rw [Finset.mem_Icc]; exact h)
@@ -830,7 +830,7 @@ theorem count (τ : K →ₐ[Qp] LL) [FiniteDimensional LL ↥(DdRE PD ρ τ)] {
         rw [Finset.mem_Ico]
         omega
       · rw [hdn] at h
-        simp only [deep, Bool.false_eq_true, if_false, Set.mem_Icc] at h
+        simp only [deep, Bool.false_eq_true, ite_false, Set.mem_Icc] at h
         rw [Finset.mem_Ico] at ha
         omega
       · exact hna (by rw [Finset.mem_Icc]; exact h)
@@ -978,7 +978,7 @@ theorem jumps_sub {G : Type} [Group G] {Qp K₀ K : Type} [Field Qp] [Field K₀
     JumpsInV PD ρ τ (Set.Icc (-((bτ + S : ℕ) : ℤ)) ((bτ + S : ℕ) : ℤ)) := by
   intro a hJ
   rcases hj a hJ with h | h
-  · simp only [deep, Bool.false_eq_true, if_false, Set.mem_Icc] at h
+  · simp only [deep, Bool.false_eq_true, ite_false, Set.mem_Icc] at h
     rw [Set.mem_Icc]
     push_cast
     omega
@@ -1205,13 +1205,13 @@ theorem embeddings_card_le_degree (D : D7) (HW : HWOf D.loc) {l : ℕ} [Fact l.P
     ∃ τs : Finset (↥K.1 →ₐ[ℚ_[l]] ↥LL.1), (∀ τ ζ, Formalism.MainNotions.DeltaInvariantLattices.ptK D.loc HW hG c ζ τ → τ ∈ τs) ∧
       τs.card ≤ finrank ↥(K0 K) ↥K.1 := by
   classical
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  haveI : Finite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := by
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : Finite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := by
     apply Nat.finite_of_card_ne_zero
     rw [GenPf.natCard_emb K LL hG]
     exact (Module.finrank_pos (R := ℚ_[l]) (M := ↥K.1)).ne'
-  haveI := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
-  haveI : FiniteDimensional ↥(K0 K) ↥K.1 := Module.Finite.right ℚ_[l] ↥(K0 K) ↥K.1
+  have := Fintype.ofFinite (↥K.1 →ₐ[ℚ_[l]] ↥LL.1)
+  have : FiniteDimensional ↥(K0 K) ↥K.1 := Module.Finite.right ℚ_[l] ↥(K0 K) ↥K.1
   refine ⟨Finset.univ.filter (fun τ => Formalism.MainNotions.DeltaInvariantLattices.OverLetter ((HW l).W K 1 LL hG) τ c),
     fun τ ζ hpt => Finset.mem_filter.2 ⟨Finset.mem_univ _, u3upPf_pt_over D HW hG c ζ τ hpt⟩, ?_⟩
   have h := kapPiPf_card ((HW l).W K 1 LL hG) c

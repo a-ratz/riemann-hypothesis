@@ -72,7 +72,7 @@ theorem continuous_twist (τ : E →+* ℂ) : Continuous (twist τ) := by
   · exact Complex.continuous_conj
 
 theorem twist_embedding (w : InfinitePlace E) : twist w.embedding = RingHom.id ℂ := by
-  unfold twist; rw [if_pos (by rw [InfinitePlace.mk_embedding])]
+  unfold twist; rw [ite_eq_left (by rw [InfinitePlace.mk_embedding])]
 
 theorem coord_eq (τ : E →+* ℂ) (z : Cinf E) : coord τ z = twist τ (z (InfinitePlace.mk τ)) := by
   unfold coord twist; split_ifs <;> rfl
@@ -175,7 +175,7 @@ theorem mem_embU (τ : E →+* ℂ) (u : Matrix.unitaryGroup (Fin n) ℂ) :
   refine ⟨pFin_infGL _, ?_⟩
   refine Subgroup.mem_iInf.2 fun τ' => Subgroup.mem_iInf.2 fun h => MonoidHom.mem_ker.2 ?_
   refine Units.ext (Matrix.ext fun i j => ?_)
-  rw [cEmb_infGL, coord_eq, yG_apply, if_neg h, twist_one_apply]
+  rw [cEmb_infGL, coord_eq, yG_apply, ite_eq_right h, twist_one_apply]
   rfl
 
 def inv (τ : E →+* ℂ) (u : Matrix.unitaryGroup (Fin n) ℂ) : embU n τ :=
@@ -186,7 +186,7 @@ def fwd (τ : E →+* ℂ) (x : embU n τ) : Matrix.unitaryGroup (Fin n) ℂ := 
 theorem fwd_inv (τ : E →+* ℂ) (u : Matrix.unitaryGroup (Fin n) ℂ) : fwd τ (inv τ u) = u := by
   refine Subtype.ext (Matrix.ext fun i j => ?_)
   change (cEmb τ ⟨_, infGL_yG_mem_UA τ u⟩).val i j = _
-  rw [cEmb_infGL, coord_eq, yG_apply, if_pos rfl, twist_twist]
+  rw [cEmb_infGL, coord_eq, yG_apply, ite_eq_left rfl, twist_twist]
   rfl
 
 theorem inv_fwd (τ : E →+* ℂ) (x : embU n τ) : inv τ (fwd τ x) = x := by
@@ -232,7 +232,7 @@ theorem continuous_coord (τ : E →+* ℂ) : Continuous (coord τ) := by
 theorem continuous_fwd (τ : E →+* ℂ) : Continuous (fwd τ : embU n τ → Matrix.unitaryGroup (Fin n) ℂ) := by
   refine Continuous.subtype_mk ?_ _
   change Continuous fun x : embU n τ => (x.1.1.val).map (fun a => coord τ (pInf E a))
-  exact (Units.continuous_val.comp (continuous_subtype_val.comp continuous_subtype_val)).matrix_map
+  exact (Units.continuous_val.comp (continuous_subtypeVal.comp continuous_subtypeVal)).matrix_map
     ((continuous_coord τ).comp continuous_pInf')
 
 theorem continuous_sInf : Continuous (sInf E) :=
@@ -251,7 +251,7 @@ theorem continuous_inv (τ : E →+* ℂ) : Continuous (inv τ : Matrix.unitaryG
   refine Continuous.subtype_mk (Continuous.subtype_mk ?_ _) _
   refine Units.continuous_iff.2 ⟨?_, ?_⟩
   · change Continuous fun u : Matrix.unitaryGroup (Fin n) ℂ => phi τ (u : Matrix (Fin n) (Fin n) ℂ)
-    exact (continuous_phi τ).comp continuous_subtype_val
+    exact (continuous_phi τ).comp continuous_subtypeVal
   · have e : ∀ u : Matrix.unitaryGroup (Fin n) ℂ,
         ((infGL E n (yG τ (GlobalTheory.Branching.unitaryIncl n u)))⁻¹ : GL (Fin n) (Ad E)).val =
           phi τ (star (u : Matrix (Fin n) (Fin n) ℂ)) := fun u => by
@@ -260,7 +260,7 @@ theorem continuous_inv (τ : E →+* ℂ) : Continuous (inv τ : Matrix.unitaryG
     change Continuous fun u : Matrix.unitaryGroup (Fin n) ℂ =>
       ((infGL E n (yG τ (GlobalTheory.Branching.unitaryIncl n u)))⁻¹ : GL (Fin n) (Ad E)).val
     simp only [e]
-    exact (continuous_phi τ).comp (continuous_star.comp continuous_subtype_val)
+    exact (continuous_phi τ).comp (continuous_star.comp continuous_subtypeVal)
 
 def equiv (τ : E →+* ℂ) : embU n τ ≃ₜ* Matrix.unitaryGroup (Fin n) ℂ where
   toFun := fwd τ

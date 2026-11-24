@@ -85,12 +85,12 @@ theorem complementGroup_fixes_frameSpan {g : S.GLV} (hg : g ∈ S.H0) {x : S.V} 
 
 theorem X_le : S.X ≤ S.ME := by
   refine le_trans (Submodule.span_mono (Set.image_mono fun i hi => ?_)) le_sup_left
-  simp only [Set.mem_setOf_eq] at hi ⊢
+  simp only [Set.mem_ofPred_eq] at hi ⊢
   omega
 
 theorem X'_le : S.X' ≤ S.ME := by
   refine le_trans (Submodule.span_mono (Set.image_mono fun i hi => ?_)) le_sup_right
-  simp only [Set.mem_setOf_eq] at hi ⊢
+  simp only [Set.mem_ofPred_eq] at hi ⊢
   omega
 
 theorem hermitianOrthogonalComplement_mapsTo_of_mem_stabilizer (Y : Submodule E S.V) (hY : Y ≤ S.ME) {g : S.GLV} (hg : g ∈ S.H0) {y : S.V}
@@ -190,7 +190,7 @@ theorem exists_unitri (g : Fin (r + 1) → S.V) (φ : S.GLV) (h : ∀ b : Fin (r
   · have hne : i ≠ j := (ne_of_lt hij).symm
     have h0 : c j i = 0 := hc0 j i fun hi => by
       have := Fin.lt_def.1 hij
-      simp only [Set.mem_setOf_eq] at hi
+      simp only [Set.mem_ofPred_eq] at hi
       omega
     simp [h0, hne]
   · have h0 : c i i = 0 := hc0 i i fun hi => lt_irrefl (i : ℕ) hi

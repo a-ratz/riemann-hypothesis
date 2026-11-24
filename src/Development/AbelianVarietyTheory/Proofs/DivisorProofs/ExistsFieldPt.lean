@@ -95,8 +95,8 @@ theorem transfer (σ : Setup) (E : Emb σ) (hC : σ.Common) (x x' : Sp σ.R) (Ω
   obtain ⟨R', _, _, _, a, b, v, H, _, _, πa, πb, θa, θb, -, -, hab, -, hva, hvb, -, -, ⟨pa, -⟩, ⟨pb, -⟩, fa, fb, hθ⟩ :=
     hC x x' Ω u u' hk (sp_inj h)
   have key : πa ≫ E.emb x = πb ≫ E.emb x' := by
-    haveI := E.sep
-    haveI := isDominant_gp H.left
+    have := E.sep
+    have := isDominant_gp H.left
     obtain ⟨w, -⟩ := E.openIn x
     obtain ⟨w', -⟩ := E.openIn x'
     refine ext_of_isDominant_of_isSeparated E.p ?_ (gp H.left) ?_

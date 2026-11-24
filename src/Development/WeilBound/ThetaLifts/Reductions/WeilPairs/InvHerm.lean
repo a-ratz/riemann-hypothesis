@@ -156,7 +156,7 @@ theorem cont : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
   obtain ⟨l, hl, hl'⟩ := _root_.GlobalTheory.LagrThetaAdm.exists_admitted_eq_diagonalLagrangian_thetaIntegral_alt F E σ B hB nS nT JT _ _ _ co hrat ν 𝓕 hν h𝓕
   let a : GAF σ (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT) →
       UG (cA σ) (incM F (GlobalTheory.WeilSchrodinger.DblTargetF.dblG JT)ᵀ) := fun h => ⟨matHomF σ _ h, mem_UG h⟩
-  have ha : Continuous a := Continuous.subtype_mk continuous_subtype_val _
+  have ha : Continuous a := Continuous.subtype_mk continuous_subtypeVal _
   refine ((hc l hl Φ hΦ).comp (ha.prodMk (continuous_const (y := 1)))).congr fun h => ?_
   obtain ⟨h1, h2⟩ := hom (a h) 1 1 h rfl (by
     rw [inv_one]

@@ -170,9 +170,9 @@ theorem exists_split {A B C : Submodule (𝓞 E) (Fin n → E)} (hA : Submodule.
     (h1 : z ∈ hat F (A : Set (Fin n → E))) (h2 : z ∈ hat F (B : Set (Fin n → E)))
     (h3 : fv F v - z ∈ hat F (C : Set (Fin n → E))) : ∃ x, x ∈ A ∧ x ∈ B ∧ v - x ∈ C := by
   have hM : Submodule.IsFullLattice E ((A ⊓ B) ⊓ C : Submodule (𝓞 E) (Fin n → E)) := by
-    letI := hA
-    letI := hB
-    letI := hC
+    let := hA
+    let := hB
+    let := hC
     infer_instance
   obtain ⟨x, hx⟩ := (hat_rational_points_and_approx F E n _ hM.fg hM.span_eq_top).2.2.1 z
   refine ⟨x, ?_, ?_, ?_⟩
@@ -374,7 +374,7 @@ theorem hLat_split (V : HSp D) {e : AE D} (he : IsSplitIdem D e) {h h' : GA D V}
     obtain ⟨-, -, hfg, hsp, -⟩ := GlobalTheory.Member.latHat_eq_hat_and_gram D V
     obtain ⟨Λ, hΛ, h1, h2, -⟩ := GlobalTheory.AdLat.exists_lattice_latOf D.host.F D.host.E V.rank (GlobalTheory.Member.latC V) g.1 hfg hsp
     rw [SetLike.coe_injective ((GlobalTheory.RepsCompare.coe_hLat V g).trans hΛ.symm)]
-    letI : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
+    let : Submodule.IsLattice D.host.E Λ := Submodule.IsLattice.of_fg D.host.E h1
     exact { span_eq_top := h2 }
   refine exists_split (F := D.host.F) (hLat _) (hLat _)
     (hLat _) (z := finPart D t • fv D.host.F v) ?_ (hst _ _ hv') ?_
@@ -398,7 +398,7 @@ theorem exists_conj {n : ℕ} (B : Submodule (𝓞 D.host.E) (Fin n → D.host.E
   refine ⟨⟨⟨⟨{v | (fun j => star (v j)) ∈ B}, fun {a b} ha hb => ?_⟩, ?_⟩, fun c v hv => ?_⟩, fun _ => Iff.rfl⟩
   · have := B.add_mem ha hb
     convert this using 1
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     congr! 1
     funext j; exact star_add _ _
   · change (fun j => star ((0 : Fin n → D.host.E) j)) ∈ B

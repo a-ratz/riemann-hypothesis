@@ -105,8 +105,8 @@ private theorem polar_of_lift (hP : Hypotheses₂) {K Ω : Type} [Field K] [Numb
     (ι : Qbar l ≃+* ℂ) (r : G ℚ Ω →* GL (Fin 2) (Qbar l)) (wt : ℤ) (θ : G ℚ Ω →* (Qbar l)ˣ) (π : TR.CuspSub ℚ 2)
     (Q : CuspSub K 2) (hBC : Br.IsBC0 π Q) (hC : AttC ι (r.comp (Bc.res ℚ Ω K)) Q) (hθ : IsCycWt l wt θ) (hd : DualTw r θ) :
     ∃ χ, GlobalTheory.ContraPair.PolarizedPair Q χ := by
-  haveI : IsScalarTower ℚ (maximalRealSubfield K) Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  haveI : IsAlgClosure (maximalRealSubfield K) Ω :=
+  have : IsScalarTower ℚ (maximalRealSubfield K) Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  have : IsAlgClosure (maximalRealSubfield K) Ω :=
     ⟨IsAlgClosure.isAlgClosed K, Algebra.IsAlgebraic.trans (maximalRealSubfield K) K Ω⟩
   have hθ' : IsCycWt l (wt + (((2 : ℕ) : ℤ) - 1))
       (θ.comp (Bc.res ℚ Ω (maximalRealSubfield K)) * cycBar (maximalRealSubfield K) Ω l ^ (((2 : ℕ) : ℤ) - 1)) := by

@@ -266,12 +266,12 @@ end Abstract
 theorem finite_nonunit {F : Type} [Field F] {E : Type} [CommRing E] [Algebra F E] [Module.Finite F E]
     (p : Polynomial E) (τ : E) (h : IsUnit (p.eval τ)) : {t : F | ¬ IsUnit (p.eval (algebraMap F E t))}.Finite := by
   classical
-  haveI : IsArtinianRing E := IsArtinianRing.of_finite F E
-  have hmax : {m : Ideal E | m.IsMaximal}.Finite := IsArtinianRing.setOf_isMaximal_finite E
+  have : IsArtinianRing E := IsArtinianRing.of_finite F E
+  have hmax : {m : Ideal E | m.IsMaximal}.Finite := IsArtinianRing.setOfPred_isMaximal_finite E
   have key : ∀ m : Ideal E, m.IsMaximal → {t : F | p.eval (algebraMap F E t) ∈ m}.Finite := by
     intro m hm
-    haveI := hm
-    letI : Field (E ⧸ m) := Ideal.Quotient.field m
+    have := hm
+    let : Field (E ⧸ m) := Ideal.Quotient.field m
     obtain ⟨q, hq⟩ : ∃ q : Polynomial (E ⧸ m), q = p.map (Ideal.Quotient.mk m) := ⟨_, rfl⟩
     have hev : ∀ z : E, q.eval (Ideal.Quotient.mk m z) = Ideal.Quotient.mk m (p.eval z) := by
       intro z
@@ -284,7 +284,7 @@ theorem finite_nonunit {F : Type} [Field F] {E : Type} [CommRing E] [Algebra F E
     have hinj : Function.Injective ((Ideal.Quotient.mk m).comp (algebraMap F E)) := RingHom.injective _
     refine ((q.roots.toFinset.finite_toSet).preimage hinj.injOn).subset ?_
     intro t ht
-    simp only [Set.mem_setOf_eq] at ht
+    simp only [Set.mem_ofPred_eq] at ht
     simp only [Set.mem_preimage, Finset.mem_coe, Multiset.mem_toFinset, RingHom.comp_apply]
     rw [Polynomial.mem_roots hq0, Polynomial.IsRoot, hev]
     exact Ideal.Quotient.eq_zero_iff_mem.mpr ht
@@ -309,7 +309,7 @@ theorem finite_nonunit_matrix {F : Type} [Field F] {E : Type} [CommRing E] [Alge
   · rw [hev]
     exact (Matrix.isUnit_iff_isUnit_det _).mp h
   · intro t ht
-    simp only [Set.mem_setOf_eq] at ht ⊢
+    simp only [Set.mem_ofPred_eq] at ht ⊢
     rw [hev]
     exact fun hu => ht ((Matrix.isUnit_iff_isUnit_det _).mpr hu)
 
@@ -363,7 +363,7 @@ theorem triv_of_cell {F : Type} [Field F] [Infinite F] {E : Type} [CommRing E] [
       rw [h0, hef, mul_one]
       exact htwo x hxu)
     obtain ⟨s, hs⟩ := ((hN.union hD).union (hI.union hII)).infinite_compl.nonempty
-    simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hs
+    simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hs
     obtain ⟨⟨hNs, hDs⟩, hIs, hIIs⟩ := hs
     obtain ⟨N, hNdef⟩ : ∃ N : Matrix β β E, N = (x + 1) + algebraMap F E s • (x - 1) := ⟨_, rfl⟩
     obtain ⟨D, hDdef⟩ : ∃ D : Matrix β β E, D = (x + 1) + algebraMap F E s • (-(x - 1)) := ⟨_, rfl⟩
@@ -446,7 +446,7 @@ theorem triv_of_cell {F : Type} [Field F] [Infinite F] {E : Type} [CommRing E] [
   have S2 := finE 1 (-ξ) 0 (by simp)
   have S3 := finE 1 ξ 0 (by simp)
   obtain ⟨t, ht⟩ := ((S1.union S2).union S3).infinite_compl.nonempty
-  simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at ht
+  simp only [Set.mem_compl_iff, Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at ht
   obtain ⟨⟨ht1, ht2⟩, ht3⟩ := ht
   obtain ⟨w, hw⟩ : ∃ w : E, w = 1 + -ξ * algebraMap F E t := ⟨_, rfl⟩
   obtain ⟨cw, hcw⟩ : ∃ cw : E, cw = 1 + ξ * algebraMap F E t := ⟨_, rfl⟩
@@ -493,8 +493,8 @@ theorem char_trivial : ∀ (F : Type) [Field F] [CharZero F] [Invertible (2 : F)
   intro F _ _ _ E _ _ c ξ β ν _ _ _ _ J Cy hQ hH hL lam hpar
   classical
   obtain ⟨b, -, -⟩ := hQ.basis
-  haveI : Module.Finite F E := Module.Finite.of_basis b
-  haveI : Infinite F := Infinite.of_injective (Nat.cast : ℕ → F) Nat.cast_injective
+  have : Module.Finite F E := Module.Finite.of_basis b
+  have : Infinite F := Infinite.of_injective (Nat.cast : ℕ → F) Nat.cast_injective
   obtain ⟨hJh, hJdet⟩ := hH
   obtain ⟨hCy, Cx, M, hCx, hPM, hMP⟩ := hL
   obtain ⟨Ji, hJi⟩ : ∃ Ji : Matrix β β E, Ji = J⁻¹ := ⟨_, rfl⟩

@@ -101,8 +101,8 @@ theorem theta_hypothesis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   classical
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   obtain ⟨hfin, hsum, S₀, hS₀⟩ := hE
   obtain ⟨S₁, hS₁⟩ := _root_.GlobalTheory.CompanionTheory.SW.PureH.pure_h F E σ hCM M J hJ t ht d b
   refine ⟨S₀ ∪ S₁, fun S hS φinf φ Ψinf Ψ hφinf hφ hΨinf hΨ hG h => ?_⟩
@@ -118,18 +118,18 @@ theorem theta_hypothesis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   simp_rw [hi]
   have hmψ : ∀ v, Measurable (fun Y : Fin n → Fin M → Fv F v ⊗[F] E => if v ∈ S then φ v (actW (Fv F v) σ _ (g v) (consTup Y)) else (latV b v).indicator 1 (actW (Fv F v) σ _ (g v) (consTup Y))) := fun v => by
     by_cases hv : v ∈ S
-    · simp only [hv, if_true]; exact (hφ v).comp (hmv v)
-    · simp only [hv, if_false]; exact (measurable_one.indicator (hlatm v)).comp (hmv v)
+    · simp only [hv, ite_true]; exact (hφ v).comp (hmv v)
+    · simp only [hv, ite_false]; exact (measurable_one.indicator (hlatm v)).comp (hmv v)
   have hsplit : ∏ v ∈ S ∪ Sh, ∫⁻ X, (if v ∈ S then φ v (actW (Fv F v) σ _ (g v) (consTup X)) else (latV b v).indicator 1 (actW (Fv F v) σ _ (g v) (consTup X))) ∂(m v) =
       (∏ v ∈ S, Ψ v (actW (Fv F v) σ _ (g v) (fun _ : Fin 1 => Fin.cons 1 (fun _ => 0)))) *
         ((∏ v ∈ Sh \ S, (latV b v).indicator 1 (actW (Fv F v) σ _ (g v) (fun _ : Fin 1 => Fin.cons 1 (fun _ => 0)))) * ∏ v ∈ Sh \ S, m v (latV b v)) := by
     rw [Finset.union_comm, ← Finset.sdiff_union_self_eq_union, Finset.prod_union Finset.sdiff_disjoint, mul_comm, ← Finset.prod_mul_distrib]
     congr 1
     · refine Finset.prod_congr rfl fun v hv => ?_
-      simp only [hv, if_true]; exact (hΨ v (g v)).symm
+      simp only [hv, ite_true]; exact (hΨ v (g v)).symm
     · refine Finset.prod_congr rfl fun v hv => ?_
       have hvS : v ∉ S := (Finset.mem_sdiff.1 hv).2
-      simp only [hvS, if_false]
+      simp only [hvS, ite_false]
       have e1 : ∫⁻ X, (latV b v).indicator 1 (actW (Fv F v) σ _ (g v) (consTup X)) ∂(m v) =
           m v {X | actW (Fv F v) σ _ (g v) (consTup X) ∈ latV b v} := by
         have : (fun X : Fin n → Fin M → Fv F v ⊗[F] E => (latV b v).indicator (1 : (Fin (n + 1) → Fin (M + 1) → Fv F v ⊗[F] E) → ℝ≥0∞) (actW (Fv F v) σ _ (g v) (consTup X))) =
@@ -167,8 +167,8 @@ theorem blockOne_step : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   classical
   have hLi : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
-  haveI hBi : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
+  have hBi : BorelSpace (Ainf F) := ⟨rfl⟩
+  have hBv : ∀ v, BorelSpace (Fv F v) := fun v => ⟨rfl⟩
   have hta : algebraMap F E t ≠ 0 := by simpa using ht
   obtain ⟨hdetb, hhermb, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.BlockAlg.block_alg F E σ hCM M J t
   have hJ' : IsHermND σ (blockOne (algebraMap F E t) J) :=

@@ -277,7 +277,7 @@ local notation "φ" => WittVector.frobeniusEquiv p 𝒪♭
 
 theorem xi_sub_pow_mem (ε : 𝒪♭) :
     AInf.xi (K := K) ε - ((φ).symm (AInf.mu ε)) ^ (p - 1) ∈ Ideal.span {(p : AInf K p)} := by
-  haveI := IsPerfectoidField.isDomain_preTilt (K := K) p
+  have := IsPerfectoidField.isDomain_preTilt (K := K) p
   rw [mem_span_p_iff_coeff_zero_eq_zero, ← WittVector.constantCoeff_apply,
     AInf.frobeniusEquiv_symm_mu, AInf.xi]
 

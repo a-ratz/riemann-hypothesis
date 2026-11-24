@@ -100,7 +100,7 @@ theorem integral_eq_finClSum_avg : ∀ {D : D7} (V : HSp D), (∀ φ : D.host.E 
   have hS' : V'.SigOK := fun τ => GlobalTheory.Proof.GenusMassSignature.hasSignature_of_posDef (hV τ)
   have hD' : V'.IsDefinite := fun τ => Or.inl rfl
   have hGc : IsCompact (GinfC V : Set (GA D V)) := Formalism.IndefR.Eqv.isCompact_GinfC (V := V') hS' hD'
-  haveI : CompactSpace (GinfC V) := isCompact_iff_compactSpace.1 hGc
+  have : CompactSpace (GinfC V) := isCompact_iff_compactSpace.1 hGc
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
   have hLC := hT.1
   have hSC := hT.2.1
@@ -109,14 +109,14 @@ theorem integral_eq_finClSum_avg : ∀ {D : D7} (V : HSp D), (∀ φ : D.host.E 
   have hC := hT.2.2.2.2.2.2
   have hHaar := hμ.1.1
   have hfin0 : Finite (FinCl V K'') := (finite_finCl_and_gamOrd V K'' hV hK'').1
-  letI : Fintype (FinCl V K'') := Fintype.ofFinite _
+  let : Fintype (FinCl V K'') := Fintype.ofFinite _
 
   let κ : Measure (GinfC V) := Measure.haarMeasure (⊤ : TopologicalSpace.PositiveCompacts (GinfC V))
-  haveI hκH : κ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
+  have hκH : κ.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
   have hκ1 : κ Set.univ = 1 := by
     have := Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (GinfC V)))
     simpa using this
-  haveI : IsProbabilityMeasure κ := ⟨hκ1⟩
+  have : IsProbabilityMeasure κ := ⟨hκ1⟩
   refine ⟨hfin0, κ, hκH, inferInstance, ?_⟩
 
   let e := finEquiv V
@@ -153,7 +153,7 @@ theorem integral_eq_finClSum_avg : ∀ {D : D7} (V : HSp D), (∀ φ : D.host.E 
       Subtype.val '' {γ : GQ V | (z c)⁻¹ * (γ : GA D V) * z c ∈ J} := by
     intro c
     ext γ
-    simp only [Set.mem_setOf_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
+    simp only [Set.mem_ofPred_eq, Set.mem_image, Subtype.exists, exists_and_right, exists_eq_right]
     exact ⟨fun h => ⟨h.1, h.2⟩, fun ⟨h, h'⟩ => ⟨h, h'⟩⟩
   have hfin : ∀ c, {γ : GA D V | γ ∈ GQ V ∧ (z c)⁻¹ * γ * z c ∈ J}.Finite := fun c =>
     him c ▸ (hfinΓ c).image _
@@ -164,7 +164,7 @@ theorem integral_eq_finClSum_avg : ∀ {D : D7} (V : HSp D), (∀ φ : D.host.E 
   have hrt : ∀ w : GinfC V, MeasurePreserving (· * (GinfC V).subtype w) μ μ := fun w =>
     measurePreserving_mul_right_of_mem μ J hJo hJ0 hJtop (hinfJ w.2)
   obtain ⟨-, heq⟩ := integral_eq_sum_avg (GA D V) μ (GQ V) J (Lev.levA V K'') 𝓕 hμ.2 hJo hJtop (GinfC V) κ
-    (GinfC V).subtype continuous_subtype_val hrt hdec hcomm (FinCl V K'') z hu hfin Φ hcont hl hr
+    (GinfC V).subtype continuous_subtypeVal hrt hdec hcomm (FinCl V K'') z hu hfin Φ hcont hl hr
   rw [heq, Finset.mul_sum, finsum_eq_sum_of_fintype]
   refine Finset.sum_congr rfl fun c _ => ?_
   have hcard : Nat.card (classGroupAt V K'' (y c)) = gamOrd V K'' (Quotient.out c) := by

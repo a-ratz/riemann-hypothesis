@@ -83,7 +83,7 @@ private lemma exists_prime_liesOver_absNorm_eq_pow (K : Type) [Field K] [NumberF
   · have hpr : Prime ((g.natAbs : ℕ) : ℤ) := by
       rw [Int.natCast_natAbs]
       exact hprime.abs
-    haveI : P.asIdeal.LiesOver (Ideal.span {((g.natAbs : ℕ) : ℤ)}) :=
+    have : P.asIdeal.LiesOver (Ideal.span {((g.natAbs : ℕ) : ℤ)}) :=
       ⟨by rw [Int.span_natAbs, Ideal.span_singleton_generator]⟩
     exact ⟨_, (Ideal.absNorm_eq_pow_inertiaDeg P.asIdeal hpr).trans (by rw [Int.natAbs_natCast])⟩
 
@@ -104,17 +104,17 @@ theorem _root_.GlobalTheory.summable_inv_absNorm_of_not_prime :
     · obtain ⟨P₀, -, rfl⟩ := hr
       have hspan : Ideal.span {((q P₀.1 : ℕ) : ℤ)} ≠ ⊥ := by
         simpa using (hq P₀.1).ne_zero
-      haveI hsp : (Ideal.span {((q P₀.1 : ℕ) : ℤ)}).IsPrime :=
+      have hsp : (Ideal.span {((q P₀.1 : ℕ) : ℤ)}).IsPrime :=
         (Ideal.span_singleton_prime (by simpa using (hq P₀.1).ne_zero)).mpr
           (Nat.prime_iff_prime_int.mp (hq P₀.1))
-      haveI : (Ideal.span {((q P₀.1 : ℕ) : ℤ)}).IsMaximal := hsp.isMaximal hspan
+      have : (Ideal.span {((q P₀.1 : ℕ) : ℤ)}).IsMaximal := hsp.isMaximal hspan
       calc (T.filter fun P => q P.1 = q P₀.1).card
           ≤ (IsDedekindDomain.primesOverFinset (Ideal.span {((q P₀.1 : ℕ) : ℤ)}) (𝓞 K)).card := by
             refine Finset.card_le_card_of_injOn (fun P => P.1.asIdeal) ?_ ?_
             · intro P hP
               rw [Finset.mem_coe, IsDedekindDomain.mem_primesOverFinset_iff hspan]
               have hPq := (Finset.mem_filter.mp hP).2
-              haveI := hlies P.1
+              have := hlies P.1
               exact ⟨P.1.isPrime, by rw [← hPq]; infer_instance⟩
             · intro P _ P' _ h
               exact Subtype.ext (HeightOneSpectrum.ext h)

@@ -138,7 +138,7 @@ theorem Deco.Ok.be_sum {d : Deco E n ST SG} (hd : d.Ok) (w : SG) {ι : Type} (s 
 private theorem mk_mul_reduction_eq_mk {P : HeightOneSpectrum (𝓞 E)} {a : E} {r s : 𝓞 E} (hs : s ∉ P.asIdeal)
     (hrs : algebraMap (𝓞 E) E s * a = algebraMap (𝓞 E) E r) :
     Ideal.Quotient.mk P.asIdeal s * redP P a = Ideal.Quotient.mk P.asIdeal r := by
-  haveI : P.asIdeal.IsMaximal := P.isMaximal
+  have : P.asIdeal.IsMaximal := P.isMaximal
   have hs0 : Ideal.Quotient.mk P.asIdeal s ≠ 0 := fun h0 => hs (Ideal.Quotient.eq_zero_iff_mem.mp h0)
   obtain ⟨b, hb⟩ := Ideal.Quotient.exists_inv hs0
   have hex : ∃ c : 𝓞 E ⧸ P.asIdeal, ∃ r s : 𝓞 E, s ∉ P.asIdeal ∧
@@ -158,7 +158,7 @@ private theorem mk_mul_reduction_eq_mk {P : HeightOneSpectrum (𝓞 E)} {a : E} 
     ← map_mul (Ideal.Quotient.mk P.asIdeal) s r', key, map_mul]
 
 theorem yIntAt_inv {P : HeightOneSpectrum (𝓞 E)} {a : E} (ha : IntAt P a) (h : redP P a ≠ 0) : IntAt P a⁻¹ := by
-  haveI : P.asIdeal.IsPrime := P.isPrime
+  have : P.asIdeal.IsPrime := P.isPrime
   obtain ⟨r, s, hs, hrs⟩ := ha
   have hr : r ∉ P.asIdeal := by
     intro hr
@@ -193,7 +193,7 @@ theorem yInt_smul_mem {P : HeightOneSpectrum (𝓞 E)} {N : Submodule (𝓞 E) (
 
 theorem Deco.Ok.be_int_smul {d : Deco E n ST SG} (hd : d.Ok) (w : SG) {a : E} (ha : IntAt w.1 a) {x : Sp E n} (hx : x ∈ d.at w.1) :
     d.be w (a • x) = redP w.1 a • d.be w x := by
-  haveI : w.1.asIdeal.IsPrime := w.1.isPrime
+  have : w.1.asIdeal.IsPrime := w.1.isPrime
   have hax : a • x ∈ d.at w.1 := yInt_smul_mem ha hx
   obtain ⟨r, s, hs, hrs⟩ := ha
   have e : s • (a • x) = r • x := by
@@ -208,7 +208,7 @@ theorem Deco.Ok.be_int_smul {d : Deco E n ST SG} (hd : d.Ok) (w : SG) {a : E} (h
 
 theorem Deco.Ok.hasLift {d : Deco E n ST SG} (hd : d.Ok) (w : SG) : d.HasLift w := by
   classical
-  haveI : w.1.asIdeal.IsPrime := w.1.isPrime
+  have : w.1.asIdeal.IsPrime := w.1.isPrime
   choose y hyN hyb using fun i : Fin n => hd.be_surj w (Pi.single i 1)
   have hNat : ∀ z ∈ d.N, z ∈ d.at w.1 := fun z hz => by
     show ∃ t ∈ w.1.asIdeal.primeCompl, t • z ∈ d.N
@@ -309,7 +309,7 @@ theorem Deco.Ok.hasLift {d : Deco E n ST SG} (hd : d.Ok) (w : SG) : d.HasLift w 
         smul_left_injective E (fun hzero => hx₀ (e.map_eq_zero_iff.mp hzero)) (congrArg Subtype.val hab)
       exact RingOfIntegers.not_isField E
         (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))
-    letI := hfull
+    let := hfull
     rw [← LinearMap.range_eq_top, eq_top_iff,
       ← Submodule.IsFullLattice.span_eq_top (A := E) (M := d.N), Submodule.span_le]
     intro z hz

@@ -351,7 +351,7 @@ theorem exists_initial_completion :
     ⟨IsFractionRing.lift hinj, fun x => IsFractionRing.lift_algebraMap hinj x⟩
   refine ⟨{ V := AdicCompletion (IsLocalRing.maximalIdeal (la.valuationSubringAtPrime K)) (la.valuationSubringAtPrime K) }, io₀, ?_, ?_, ?_⟩
   · exact overLa_one_of_irreducible io₀ (algebraMap (la.valuationSubringAtPrime K) (AdicCompletion (IsLocalRing.maximalIdeal (la.valuationSubringAtPrime K)) (la.valuationSubringAtPrime K))) (fun x => (hio₀ x).symm) hπ hpπ
-  · haveI : Finite (IsLocalRing.ResidueField (la.valuationSubringAtPrime K)) :=
+  · have : Finite (IsLocalRing.ResidueField (la.valuationSubringAtPrime K)) :=
       Finite.of_equiv _ (IsLocalization.AtPrime.equivQuotMaximalIdeal la.asIdeal (la.valuationSubringAtPrime K)).toEquiv
     exact Finite.of_surjective _ (AdicCompletion.residueField_map_bijective (la.valuationSubringAtPrime K)).2
   intro T io e hT

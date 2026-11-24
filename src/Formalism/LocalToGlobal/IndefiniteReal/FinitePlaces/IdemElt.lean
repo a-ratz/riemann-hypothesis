@@ -72,7 +72,7 @@ theorem coe_starO (x : 𝓞 D.host.E) : ((starO x : 𝓞 D.host.E) : D.host.E) =
 
 theorem fixed_int (y : 𝓞 D.host.E) (hy : star (y : D.host.E) = y) :
     ∃ f : 𝓞 D.host.F, algebraMap D.host.F D.host.E (f : D.host.F) = (y : D.host.E) := by
-  haveI : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
+  have : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
   have hmem : (y : D.host.E) ∈ NumberField.maximalRealSubfield D.host.E := by
     rw [NumberField.mem_maximalRealSubfield_iff]
     intro φ
@@ -128,7 +128,7 @@ theorem emb_exists (v : HeightOneSpectrum (𝓞 D.host.F)) (b : D.host.E) (t N :
     (hr : r₁ ^ 2 - (t : v.adicCompletion D.host.F) * r₁ + (N : v.adicCompletion D.host.F) = 0) :
     ∃ ι : D.host.E →ₐ[D.host.F] v.adicCompletion D.host.F, ι b = r₁ ∧ Algebra.adjoin D.host.F {b} = ⊤ := by
   classical
-  haveI : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
+  have : NumberField.IsCMField D.host.E := D.host.isCMField_hostE
   have hfix : ∀ x : D.host.E, star x = x → ∃ f : D.host.F, algebraMap D.host.F D.host.E f = x := by
     intro x hx
     have hmem : x ∈ NumberField.maximalRealSubfield D.host.E := by

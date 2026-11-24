@@ -70,7 +70,7 @@ theorem dvr_of_span_maximal {S : Type*} [CommRing S] [IsNoetherianRing S] (π : 
     ∃ _ : IsDomain S, IsDiscreteValuationRing S ∧ Irreducible π := by
   have huniq : ∀ M : Ideal S, M.IsMaximal → M = Ideal.span {π} := fun M hM =>
     (hmax.eq_of_le hM.ne_top ((Ideal.span_singleton_le_iff_mem _).2 (hall M hM))).symm
-  haveI : IsLocalRing S := IsLocalRing.of_unique_max_ideal ⟨_, hmax, huniq⟩
+  have : IsLocalRing S := IsLocalRing.of_unique_max_ideal ⟨_, hmax, huniq⟩
   have hm : IsLocalRing.maximalIdeal S = Ideal.span {π} := huniq _ inferInstance
   have hfac : ∀ a : S, a ≠ 0 → ∃ (k : ℕ) (u : S), IsUnit u ∧ a = π ^ k * u := by
     intro a ha
@@ -105,7 +105,7 @@ theorem dvr_of_span_maximal {S : Type*} [CommRing S] [IsNoetherianRing S] (π : 
     have : u ∈ IsLocalRing.maximalIdeal S := hu
     rw [hm, Ideal.mem_span_singleton] at this
     exact h2 (by rw [pow_succ]; exact mul_dvd_mul_left _ this)
-  haveI : NoZeroDivisors S := ⟨fun {a b} hab => by
+  have : NoZeroDivisors S := ⟨fun {a b} hab => by
     by_contra hcon
     push_neg at hcon
     obtain ⟨k, u, hu, rfl⟩ := hfac a hcon.1
@@ -114,13 +114,13 @@ theorem dvr_of_span_maximal {S : Type*} [CommRing S] [IsNoetherianRing S] (π : 
     refine ⟨k + l, ?_⟩
     have : π ^ (k + l) * (u * v) = 0 := by rw [← hab]; ring
     exact ((hu.mul hv).mul_left_eq_zero).1 this⟩
-  haveI : IsDomain S := NoZeroDivisors.to_isDomain S
+  have : IsDomain S := NoZeroDivisors.to_isDomain S
   have hπ0 : π ≠ 0 := fun h => hnil (h ▸ IsNilpotent.zero)
   have hnf : ¬ IsField S := by
     rw [IsLocalRing.isField_iff_maximalIdeal_eq, hm, Ideal.span_singleton_eq_bot]
     exact hπ0
   have hp : (IsLocalRing.maximalIdeal S).IsPrincipal := ⟨⟨π, hm⟩⟩
-  haveI : IsDiscreteValuationRing S := ((IsDiscreteValuationRing.TFAE S hnf).out 1 5).2 hp
+  have : IsDiscreteValuationRing S := ((IsDiscreteValuationRing.TFAE S hnf).out 1 5).2 hp
   exact ⟨inferInstance, inferInstance, (IsDiscreteValuationRing.irreducible_iff_uniformizer π).2 hm⟩
 
 theorem irreducible_X_pow_sub_param (K : Type*) [Field K] (N : ℕ) (hN : 1 ≤ N) :
@@ -136,13 +136,13 @@ theorem irreducible_X_pow_sub_param (K : Type*) [Field K] (N : ℕ) (hN : 1 ≤ 
       have hi' : i ≠ N := by
         have : i < N := by exact_mod_cast hi
         omega
-      rw [coeff_sub, coeff_X_pow, if_neg hi', coeff_C]
+      rw [coeff_sub, coeff_X_pow, ite_eq_right hi', coeff_C]
       split_ifs
       · simp
       · simp
     · rw [degree_X_pow_sub_C (by omega)]
       exact_mod_cast hN
-    · rw [coeff_sub, coeff_X_pow, if_neg (by omega), coeff_C, if_pos rfl, zero_sub, neg_mem_iff,
+    · rw [coeff_sub, coeff_X_pow, ite_eq_right (by omega), coeff_C, ite_eq_left rfl, zero_sub, neg_mem_iff,
         Ideal.span_singleton_pow, Ideal.mem_span_singleton, PowerSeries.X_pow_dvd_iff]
       intro h
       have := h 1 (by norm_num)
@@ -188,8 +188,8 @@ theorem dvr_of_generators {R S F : Type*} [CommRing R] [IsDomain R] [IsDiscreteV
     (hgen : Algebra.adjoin R {x, y} = ⊤) (φ : R →+* F) (hφ : φ ℓ = 0) (hN : N ≠ 0)
     (hirr : Irreducible (X ^ N - C (φ q))) :
     ∃ _ : IsDomain S, IsDiscreteValuationRing S ∧ Irreducible (x - 1) := by
-  haveI : Nontrivial S := hinj.nontrivial
-  haveI : IsNoetherianRing S := IsNoetherianRing.of_finite R S
+  have : Nontrivial S := hinj.nontrivial
+  have : IsNoetherianRing S := IsNoetherianRing.of_finite R S
   have hm : IsLocalRing.maximalIdeal R = Ideal.span {(ℓ : R)} :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer _).1 hp
   have hdvd : (x - 1) ∣ (ℓ : S) := by
@@ -210,8 +210,8 @@ theorem dvr_of_generators {R S F : Type*} [CommRing R] [IsDomain R] [IsDiscreteV
       have : (ℓ : R) ∈ M.comap (algebraMap R S) := by
         rw [hc, hm]; exact Ideal.mem_span_singleton_self _
       simpa using this
-    haveI : IsDomain (S ⧸ M) := Ideal.Quotient.isDomain M
-    haveI : CharP (S ⧸ M) ℓ := by
+    have : IsDomain (S ⧸ M) := Ideal.Quotient.isDomain M
+    have : CharP (S ⧸ M) ℓ := by
       refine (CharP.charP_iff_prime_eq_zero Fact.out).2 ?_
       rw [← map_natCast (Ideal.Quotient.mk M), Ideal.Quotient.eq_zero_iff_mem]
       exact hpM
@@ -231,7 +231,7 @@ theorem dvr_of_generators {R S F : Type*} [CommRing R] [IsDomain R] [IsDiscreteV
   have hne : Ideal.span {x - 1} ≠ ⊤ := fun h =>
     hM.ne_top (top_le_iff.1 (h ▸ (Ideal.span_singleton_le_iff_mem _).2 (hall M hM)))
   set J : Ideal S := Ideal.span {x - 1} with hJ
-  haveI : Nontrivial (S ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hne
+  have : Nontrivial (S ⧸ J) := Ideal.Quotient.nontrivial_iff.2 hne
   have hkF : ∀ a ∈ IsLocalRing.maximalIdeal R, φ a = 0 := by
     intro a ha
     rw [hm] at ha
@@ -255,7 +255,7 @@ theorem dvr_of_generators {R S F : Type*} [CommRing R] [IsDomain R] [IsDiscreteV
     refine Monic.irreducible_of_irreducible_map φ' f (monic_X_pow_sub_C _ hN) ?_
     have : φ' (IsLocalRing.residue R q) = φ q := rfl
     simpa [f, this] using hirr
-  haveI : Fact (Irreducible f) := ⟨hf⟩
+  have : Fact (Irreducible f) := ⟨hf⟩
   have hroot : f.eval₂ ψ (Ideal.Quotient.mk J y) = 0 := by
     simp only [f, eval₂_sub, eval₂_pow, eval₂_X_pow, eval₂_X, eval₂_C, hψ]
     rw [← map_pow, hy, sub_self]
@@ -309,9 +309,9 @@ theorem isDVR_On : ∀ (p : ℕ) [Fact p.Prime] (n : ℕ), 1 ≤ n →
   obtain ⟨b, hb⟩ := _root_.GlobalTheory.K5.OnFree.on_free p (m + 1)
   obtain ⟨φ, hφq, hφp⟩ := exists_red p
   have hpos : 0 < p ^ (m + 1) := pow_pos hpr.out.pos _
-  haveI : Module.Finite (O0 p) (On p (m + 1)) := Module.Finite.of_basis b
-  haveI : Module.Free (O0 p) (On p (m + 1)) := Module.Free.of_basis b
-  haveI : Nontrivial (On p (m + 1)) :=
+  have : Module.Finite (O0 p) (On p (m + 1)) := Module.Finite.of_basis b
+  have : Module.Free (O0 p) (On p (m + 1)) := Module.Free.of_basis b
+  have : Nontrivial (On p (m + 1)) :=
     nontrivial_of_ne _ _ (b.ne_zero (⟨0, Nat.totient_pos.2 hpos⟩, ⟨0, hpos⟩))
   refine dvr_of_generators (R := O0 p) p m (p ^ (m + 1)) hp
     (FaithfulSMul.algebraMap_injective _ _) (xn p (m + 1)) (yn p (m + 1)) (qO p) ?_ ?_ ?_ φ hφp

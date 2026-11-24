@@ -164,9 +164,9 @@ theorem measurable_normPt : Measurable (normPt : (J → ℂ) → J → ℂ) := b
   have hG : Measurable G := by
     refine measurable_from_prod_countable_left fun k => ?_
     by_cases hk : k < Fintype.card J
-    · simp only [G, hk, dif_pos]
+    · simp only [G, hk, dite_eq_left]
       exact ((measurable_pi_apply _).inv).smul measurable_id
-    · simp only [G, hk, dif_neg, not_false_eq_true]
+    · simp only [G, hk, dite_eq_right, not_false_eq_true]
       exact measurable_id
   have : (normPt : (J → ℂ) → J → ℂ) = G ∘ fun z => (z, idx z) := by
     funext z
@@ -336,7 +336,7 @@ theorem symMeasure_compl_pts (d : HSMDatum D Ω κ) : symMeasure d (pts (coordId
   have hm := measurable_symPt d
   have hc : Measurable (conjPt ∘ symPt d) := continuous_conjPt.measurable.comp hm
   have hS := (measurableSet_pts d.x).compl
-  rw [symMeasure, Measure.smul_apply, Measure.add_apply, Measure.map_apply hm hS, Measure.map_apply hc hS]
+  rw [symMeasure, smul_apply, add_apply, Measure.map_apply hm hS, Measure.map_apply hc hS]
   have h1 : symPt d ⁻¹' (pts (coordIdeal ℤ d.x))ᶜ = ∅ := by
     ext y
     simp [symPt_mem_pts d y]

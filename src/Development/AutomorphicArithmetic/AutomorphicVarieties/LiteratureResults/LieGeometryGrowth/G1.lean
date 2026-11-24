@@ -111,7 +111,7 @@ private theorem aux {F : Type} [NormedAddCommGroup F] [NormedSpace ℂ F] {q : �
 theorem UpperTheory.V.Lit.Geo.cutBd :
     CutBd := by
   intro E _ _ _ a Ξ q u η ζ h g s b M M' hM _ hb hs hl hη hd X
-  rw [AlternatingMap.sub_apply, map_sub, Pi.sub_apply, h]
+  rw [sub_apply, map_sub, Pi.sub_apply, h]
   exact aux _ _ _ _ (fun i => ‖UpperTheory.V.Lit.Dr.hv (X i)‖) s b M M' (fun _ => norm_nonneg _) hM hb hs
     (fun i => hl _) (hη.imp id fun hη i => hη _) (hd X)
 end -- clump:auto
@@ -161,7 +161,7 @@ theorem UpperTheory.V.Lit.Geo.bdCompact :
   obtain ⟨K, hK, hR⟩ := (qhtFacts E a).2.2.2 R
   have hb : ∀ X : Fin q → Herm E a, ∃ c : ℝ, ∀ g ∈ K, ‖ev (α X) (retractOne g : KernelIndexFullLattice.G1 E a).1‖ ≤ c := fun X =>
     hK.exists_bound_of_continuousOn
-      ((cont_ev hU (hα.val X)).comp (continuous_subtype_val.comp continuous_retractOne)).continuousOn
+      ((cont_ev hU (hα.val X)).comp (continuous_subtypeVal.comp continuous_retractOne)).continuousOn
   choose c hc using hb
   refine ⟨B * ∑ X ∈ T, |c X|, by positivity, fun g hg => hT α g _ (by positivity) fun X hX => ?_⟩
   obtain ⟨γ, t, h⟩ := hR g hg
@@ -347,7 +347,7 @@ private theorem d_step {Γ V S : Type} [Group Γ] [NormedAddCommGroup V] [Normed
 private theorem corr_sub {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {a : ℕ} (ho : IsOpen (cone E a))
     (U : Subgroup (GL (Fin a) (Af E))) (Ξ : AlgRep E a) {q : ℕ} {α β : Co Ξ q} {w w' : (geo ho U Ξ).Om q}
     (h : Corr U Ξ α w.1) (h' : Corr U Ξ β w'.1) : Corr U Ξ (α - β) (w - w').1 := fun g x X => by
-  rw [AlternatingMap.sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, ← h g x X, ← h' g x X]
+  rw [sub_apply, map_sub, Pi.sub_apply, Matrix.mulVec_sub, ← h g x X, ← h' g x X]
   rfl
 
 theorem UpperTheory.V.Lit.Geo.oneStep :
@@ -443,7 +443,7 @@ theorem UpperTheory.V.Lit.Geo.prim :
         refine (hgr _).mono ?_
         have h1 := hqf (g * infGL E a h) (K + (n + 1) * c + C) (by have := hnear g t ht h hh; linarith)
         have h2 := pow_le_pow_left₀ (zero_le_one.trans (hq _)) h1 N
-        rw [← Real.exp_nat_mul] at h2
+        rw [← Real.exp_natCast_mul] at h2
         refine (mul_le_mul (le_exp_self' C') h2 (pow_nonneg (zero_le_one.trans (hq _)) _) (Real.exp_pos _).le).trans ?_
         rw [← Real.exp_add]
         refine Real.exp_le_exp.2 ?_
@@ -658,8 +658,8 @@ private theorem cut_lip : ∃ M : NNReal, LipschitzWith M Real.smoothTransition 
         (eventually_gt_nhds (not_le.1 h)).mono fun y hy => Real.smoothTransition.one_of_one_le hy.le
       rw [e.deriv_eq, deriv_const]
   obtain ⟨C, hC⟩ := (hs.continuous_deriv le_rfl).bounded_above_of_compact_support hc
-  exact ⟨C.toNNReal, lipschitzWith_of_nnnorm_deriv_le (hs.differentiable (by simp)) fun x => by
-    rw [← NNReal.coe_le_coe, coe_nnnorm]
+  exact ⟨C.toNNReal, lipschitzWith_of_nnNorm_deriv_le (hs.differentiable (by simp)) fun x => by
+    rw [← NNReal.coe_le_coe, coe_nnNorm]
     exact (hC x).trans (Real.le_coe_toNNReal C)⟩
 
 private noncomputable def cutRe (R : ℝ) (z : ℂ) : ℝ := Real.smoothTransition (R + 1 - z.re)
@@ -768,7 +768,7 @@ private theorem exp_bound (D C c : ℝ) (hD : 0 ≤ D) (hc : 0 < c) :
     rw [this, le_div_iff₀ hc]
     linarith
   have h5 : x ^ N = Real.exp (N * Real.log x) := by
-    rw [Real.exp_nat_mul, Real.exp_log hx0]
+    rw [Real.exp_natCast_mul, Real.exp_log hx0]
   rw [h5, ← Real.exp_add]
   refine Real.exp_le_exp.2 ?_
   have h6 : D * |C| / c * Real.log x ≤ N * Real.log x := mul_le_mul_of_nonneg_right hN hl

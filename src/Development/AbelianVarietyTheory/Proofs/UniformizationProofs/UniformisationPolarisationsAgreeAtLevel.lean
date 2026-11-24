@@ -267,10 +267,10 @@ theorem polarisations_agree_at_level : GlobalFnsSt → ∀ (R : Type) [CommRing 
     (U.w_gen e) (U'.w_gen e) hwL
   have inv := GlobalTheory.T.genMaps_linCombIso_of_semiAbelian hG R I hI D D' A A' G hS U U' wL he hwL hrig
     (rigidified_iso_respects_cube_and_symmetry hG R I hI D D' A A' G hS U U' wL he hwL hrig) e β hβ hq u hu hu'
-  haveI := (U'.gt e).q_flat
-  haveI := (U'.gt e).q_surj
-  haveI := (U'.gt e).q_affine
-  haveI := (U.gt e).q_hom
+  have := (U'.gt e).q_flat
+  have := (U'.gt e).q_surj
+  have := (U'.gt e).q_affine
+  have := (U.gt e).q_hom
   have hql : (U'.gt e).q.left ≫ β.hom.left = (U.gt e).q.left := congrArg (·.left) hq
   obtain ⟨v, hv, hv'⟩ := LevelComparison.exists_iso_descend (U'.gt e).q.left (fstG I e D'.toPre.P.A).left
     (β.hom.left ≫ (fstG I e D.toPre.P.A).left) (p := (U.gt e).pG.left) (p' := (U'.gt e).pG.left)

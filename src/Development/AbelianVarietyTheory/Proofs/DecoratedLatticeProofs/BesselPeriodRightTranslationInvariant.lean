@@ -113,14 +113,14 @@ theorem inner_left {ρ : ℕ} (B : BesLev D ρ) (ψ : AddChar (AF D.host.F) ℂ)
 
 theorem map_mul_right {ρ : ℕ} (B : BesLev D ρ) (a : GA D B.A) : B.vA.μ.map (· * a) = B.vA.μ := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.A
-  haveI := B.vA.haar
+  have := B.vA.haar
   obtain ⟨K, hK, hcov⟩ := B.cpt
   exact Formalism.L2.SG.CovariantRepresentation.haar_map_mul_right_of_lattice B.vA.μ (GQ B.A) hK hcov a
 
 theorem setIntegral_mul_right {ρ : ℕ} (B : BesLev D ρ) (G : GA D B.A → ℂ) (hG : ∀ γ ∈ GQ B.A, ∀ h, G (γ * h) = G h)
     (a : GA D B.A) : ∫ h in B.vA.𝓕, G (h * a) ∂B.vA.μ = ∫ h in B.vA.𝓕, G h ∂B.vA.μ := by
   obtain ⟨i1, i2, i3, i4, i5, i6, i7⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D B.A
-  haveI := B.vA.haar
+  have := B.vA.haar
   have hmp : MeasurePreserving (· * a) B.vA.μ B.vA.μ := ⟨measurable_mul_const a, map_mul_right B a⟩
   have hmp' : MeasurePreserving (· * a⁻¹) B.vA.μ B.vA.μ := ⟨measurable_mul_const a⁻¹, map_mul_right B a⁻¹⟩
   rw [← hmp.setIntegral_image_emb (measurableEmbedding_mulRight a) G B.vA.𝓕, Set.image_mul_right]

@@ -78,7 +78,7 @@ private theorem UpperTheory.Reformulated.B.Qe15.compositum (K κ₁ κ₂ : Type
     [Algebra K κ₁] [Algebra K κ₂] :
     ∃ (κ : Type) (_ : Field κ) (j₁ : κ₁ →+* κ) (j₂ : κ₂ →+* κ),
       ∀ x : K, j₁ (algebraMap K κ₁ x) = j₂ (algebraMap K κ₂ x) := by
-  haveI : Nontrivial (κ₁ ⊗[K] κ₂) := inferInstance
+  have : Nontrivial (κ₁ ⊗[K] κ₂) := inferInstance
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (κ₁ ⊗[K] κ₂)
   refine ⟨(κ₁ ⊗[K] κ₂) ⧸ m, Ideal.Quotient.field m,
     (Ideal.Quotient.mk m).comp
@@ -98,16 +98,16 @@ theorem UpperTheory.Reformulated.B.Qe15.common_field :
       ∃ (κ : Type) (x : Field κ) (j₁ : κ₁ →+* κ) (j₂ : κ₂ →+* κ), j₁.comp f₁ = j₂.comp f₂ := by
   intro B κ₁ κ₂ _ _ _ f₁ f₂ h
   let D := B ⧸ RingHom.ker f₁
-  haveI : (RingHom.ker f₁).IsPrime := RingHom.ker_isPrime f₁
-  haveI : IsDomain D := Ideal.Quotient.isDomain _
+  have : (RingHom.ker f₁).IsPrime := RingHom.ker_isPrime f₁
+  have : IsDomain D := Ideal.Quotient.isDomain _
   let g₁ : D →+* κ₁ := RingHom.kerLift f₁
   have hg₁ : Function.Injective g₁ := RingHom.kerLift_injective f₁
   let g₂ : D →+* κ₂ := (RingHom.kerLift f₂).comp (Ideal.quotEquivOfEq h).toRingHom
   have hg₂ : Function.Injective g₂ :=
     (RingHom.kerLift_injective f₂).comp (Ideal.quotEquivOfEq h).injective
   let K := FractionRing D
-  letI : Algebra K κ₁ := (IsFractionRing.lift (K := K) hg₁).toAlgebra
-  letI : Algebra K κ₂ := (IsFractionRing.lift (K := K) hg₂).toAlgebra
+  let : Algebra K κ₁ := (IsFractionRing.lift (K := K) hg₁).toAlgebra
+  let : Algebra K κ₂ := (IsFractionRing.lift (K := K) hg₂).toAlgebra
   have e₁ : ∀ b : B, algebraMap K κ₁ (algebraMap D K (Ideal.Quotient.mk _ b)) = f₁ b := fun b =>
     (IsFractionRing.lift_algebraMap hg₁ _).trans (RingHom.kerLift_mk f₁ b)
   have e₂ : ∀ b : B, algebraMap K κ₂ (algebraMap D K (Ideal.Quotient.mk _ b)) = f₂ b := fun b =>
@@ -272,7 +272,7 @@ private theorem eq_bot_of_forall_isNilpotent_of_isSemisimple {R : Type*} [Ring R
 theorem UpperTheory.V.Pa.BC.ss_descend :
     ∀ (κ κ' E : Type) [Field κ] [Field κ'] [Algebra κ κ'] [Ring E] [Algebra κ E] [Module.Finite κ E], IsSemisimpleRing (κ' ⊗[κ] E) → IsSemisimpleRing E := by
   intro κ κ' E _ _ _ _ _ _ hT
-  haveI : IsArtinianRing E := IsArtinianRing.of_finite κ E
+  have : IsArtinianRing E := IsArtinianRing.of_finite κ E
   rw [IsArtinianRing.isSemisimpleRing_iff_jacobson, eq_bot_iff]
   intro x hx
   rw [Submodule.mem_bot]
@@ -418,8 +418,8 @@ theorem UpperTheory.V.Pa.BC.nonSS_field :
   · rw [RingHom.ker_comp_of_injective _ j₂.injective, hf']
   · intro hss
     apply hns
-    letI : Algebra κ K := j₁.toAlgebra
-    haveI := fin_quot I (f.comp φ) hs
+    let : Algebra κ K := j₁.toAlgebra
+    have := fin_quot I (f.comp φ) hs
     obtain ⟨e⟩ := UpperTheory.V.Pa.BC.grp_quot_bc κ K G (MonoidAlgebra.mapRingHom G (f.comp φ) '' I)
     have him : MonoidAlgebra.mapRingHom G (algebraMap κ K) '' (MonoidAlgebra.mapRingHom G (f.comp φ) '' I)
         = MonoidAlgebra.mapRingHom G ((j₂.comp f').comp φ') '' I := by

@@ -168,7 +168,7 @@ theorem crit (S : Finset (HeightOneSpectrum (𝓞 F))) (e : AF F ⊗[F] E) (h1 :
   have he : ∀ k, φ k e = 1 := hφ e (by
     rintro (w | ⟨v, hv⟩)
     · exact h1 w
-    · exact (h2 v).trans (if_pos hv))
+    · exact (h2 v).trans (ite_eq_left hv))
   refine ⟨m, Ω, fld, φ, he, fun z => ⟨fun h k => ?_, fun h => ?_⟩⟩
   · have h' := h.map (φ k)
     rw [map_add (f := _), map_sub, map_mul, map_one, he, sub_self, zero_add, one_mul] at h'
@@ -177,15 +177,15 @@ theorem crit (S : Finset (HeightOneSpectrum (𝓞 F))) (e : AF F ⊗[F] E) (h1 :
     have hI : ∀ w, IsUnit (compInf F E w z) := fun w => hz (.inl w)
     have hS : ∀ v (h : v ∈ S), IsUnit (compFin F E v z) := fun v h => hz (.inr ⟨v, h⟩)
     obtain ⟨x, hxf, hxi⟩ := exists_adele (E := E) S
-      (fun v => if h : v ∈ S then (hS v h).unit⁻¹ else 1) (fun v hv => dif_neg hv) (fun w => (hI w).unit⁻¹)
+      (fun v => if h : v ∈ S then (hS v h).unit⁻¹ else 1) (fun v hv => dite_eq_right hv) (fun w => (hI w).unit⁻¹)
     refine isUnit_iff_exists_inv.2 ⟨x, GlobalTheory.AdelicU.Supp.adTens_eq_one' (fun w => ?_) fun v => ?_⟩
     · rw [map_mul, map_add (f := _), map_sub, map_mul, map_one, h1, hxi, sub_self, zero_add, one_mul]
       exact (hI w).mul_val_inv
     · rw [map_mul, map_add (f := _), map_sub, map_mul, map_one, h2, hxf]
       by_cases hv : v ∈ S
-      · simp only [if_pos hv, dif_pos hv, sub_self, zero_add, one_mul]
+      · simp only [ite_eq_left hv, dite_eq_left hv, sub_self, zero_add, one_mul]
         exact (hS v hv).mul_val_inv
-      · simp [if_neg hv, dif_neg hv]
+      · simp [ite_eq_right hv, dite_eq_right hv]
 
 end Glue
 
@@ -253,7 +253,7 @@ lemma isOpen_bar [IsTopologicalGroup G] {N : Type} [TopologicalSpace N] {P : Sub
   have : (QuotientGroup.mk : G → G ⧸ P) ⁻¹' {q : G ⧸ P | rp q ∈ Ω ∧ τ (rp q) ∈ U}
       = (fun g : G => g⁻¹) ⁻¹' (Ω ∩ τ ⁻¹' U) := by
     ext g
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, Set.mem_inter_iff]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, Set.mem_inter_iff]
     rw [rp_mk_mem_iff hl' g]
     obtain ⟨p, hp, e⟩ := rp_mk P g
     refine and_congr_right fun hg => ?_
@@ -284,7 +284,7 @@ lemma measurable_coord [IsTopologicalGroup G] {N : Type} [AddCommGroup N] [Topol
 
 theorem cellFormula_of_invM (hI : InvM) : CellFormula := by
   intro G _ _ _ _ _ _ P _ _ h mu hs ν hν N _ _ _ _ _ _ _ _ lam _ Ω τ w nb hc hInv hh hnull
-  haveI : IsFiniteMeasure ν := hν.1
+  have : IsFiniteMeasure ν := hν.1
   have ρc : Continuous fun y => h (w * nb y) := hs.cont.comp (continuous_const.mul hc.nbCont)
   have ρpos : ∀ y, 0 < h (w * nb y) := fun y => hs.pos _
   let D : N → ℝ≥0 := fun y => (1 / h (w * nb y)).toNNReal
@@ -333,7 +333,7 @@ theorem cellFormula_of_invM (hI : InvM) : CellFormula := by
       linarith
     rw [hD]
     ring
-  haveI hinv : lam'.IsAddLeftInvariant := by
+  have hinv : lam'.IsAddLeftInvariant := by
     refine ⟨fun a => Measure.ext fun S hS => ?_⟩
     rw [Measure.map_apply (measurable_const_add a) hS]
     have hS' : MeasurableSet ((fun y => a + y) ⁻¹' S) := measurable_const_add a hS
@@ -350,7 +350,7 @@ theorem cellFormula_of_invM (hI : InvM) : CellFormula := by
       hi.comp (measurable_const_add a)
     rw [← lintegral_indicator_one hS', ← lintegral_indicator_one hS, hi', hlin _ hi2, hlin _ hi]
     exact hshift a _ hi
-  haveI : IsLocallyFiniteMeasure lam' := IsLocallyFiniteMeasure.withDensity_coe Dc
+  have : IsLocallyFiniteMeasure lam' := IsLocallyFiniteMeasure.withDensity_coe Dc
   have e := Measure.isAddLeftInvariant_eq_smul lam' lam
   refine ⟨Measure.addHaarScalarFactor lam' lam, fun f hf hoc => ?_⟩
   rw [← e]
@@ -468,8 +468,8 @@ theorem continuous_div_rp {P : Subgroup G} {h : G → ℝ} {f : G → ℂ} (hc :
 
 theorem exists_repr [T2Space G] (P : Subgroup G) [MeasurableSpace (G ⧸ P)] [BorelSpace (G ⧸ P)]
     (h : G → ℝ) (mu : (G → ℂ) → ℂ) (S : Setup P h mu) : ∃ ν, Repr P h mu ν := by
-  haveI : CompactSpace (G ⧸ P) := compact_quot S.cocpt
-  haveI : IsClosed (P : Set G) := S.closed
+  have : CompactSpace (G ⧸ P) := compact_quot S.cocpt
+  have : IsClosed (P : Set G) := S.closed
   let Λ : C(G ⧸ P, ℂ) →ₗ[ℂ] ℂ :=
     { toFun := fun F => mu (secOf P h F)
       map_add' := fun F F' => by
@@ -794,7 +794,7 @@ theorem few_roots {m p M : ℕ} {Ω : Fin m → Type} [∀ i, Field (Ω i)] [∀
     calc _ ≤ P.roots.toFinset.card := by
           refine Finset.card_le_card_of_injOn (fun j => ((t j : ℚ) : Ω i)) ?_ ?_
           · intro j hj
-            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_setOf_eq] at hj
+            simp only [Finset.coe_filter, Finset.mem_univ, true_and, Set.mem_ofPred_eq] at hj
             simp only [Finset.coe_sort_coe, Finset.mem_coe, Multiset.mem_toFinset]
             rw [Polynomial.mem_roots hP0, Polynomial.IsRoot.def, hev]
             exact hj
@@ -806,7 +806,7 @@ theorem few_roots {m p M : ℕ} {Ω : Fin m → Type} [∀ i, Field (Ω i)] [∀
   have hsub : {j | ¬ ∀ i, Matrix.det (A i - ((t j : ℚ) : Ω i) • B i) ≠ 0} ⊆
       ((Finset.univ.biUnion fun i => Finset.univ.filter fun j => Matrix.det (A i - ((t j : ℚ) : Ω i) • B i) = 0 : Finset (Fin M)) : Set (Fin M)) := by
     intro j hj
-    simp only [Set.mem_setOf_eq, not_forall, not_not] at hj
+    simp only [Set.mem_ofPred_eq, not_forall, not_not] at hj
     obtain ⟨i, hi⟩ := hj
     simp only [Finset.coe_biUnion, Set.mem_iUnion]
     exact ⟨i, by simp, by simpa using hi⟩
@@ -986,7 +986,7 @@ theorem few_core (mu : (G D p → ℂ) → ℂ) (h : G D p → ℝ) (nb : hermA 
     have hset : {j | x * (w * nb (lineS e he2 hce Y hY (incA D (t j : D.host.E)) (cA_incA_rat _)).1 * w⁻¹) ∉ cell e} =
         {j | ¬ ∀ i, Matrix.det ((φ i).mapMatrix (cB x) - ((t j : ℚ) : Ω i) • (φ i).mapMatrix (dB x * Y)) ≠ 0} := by
       ext j
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [memI]
       refine not_congr (forall_congr' fun i => ?_)
       have : φ i (incA D (t j : D.host.E)) = ((t j : ℚ) : Ω i) :=
@@ -1485,10 +1485,10 @@ theorem tendsto_sAd (S : Finset (HeightOneSpectrum (𝓞 F))) (q : ℕ → F)
     intro v
     by_cases hv : v ∈ S
     · refine (hf v hv).congr fun k => ?_
-      exact (if_pos hv).symm
+      exact (ite_eq_left hv).symm
     · refine tendsto_const_nhds.congr fun k => ?_
       show (0 : v.adicCompletion F) = _
-      exact (if_neg hv).symm
+      exact (ite_eq_right hv).symm
   have h2 := ((RestrictedProduct.continuous_inclusion (cofinite_le S)).tendsto 0).comp h1
   refine Tendsto.prodMk_nhds (tendsto_pi_nhds.2 hi) h2
 
@@ -1514,13 +1514,13 @@ theorem tensor_key {E : Type} [Field E] [Algebra F E] (S : Finset (HeightOneSpec
     exact one_tmul_algebraMap (A := w.Completion) _
   · refine ring_hom_mul_sub_eq_zero (compFin F E v) _ _ _ _ (hf v) ?_
     by_cases hv : v ∈ S
-    · rw [if_pos hv, mul_one]
-      have h : evFin F v (sAd S q) = algebraMap F (v.adicCompletion F) q := if_pos hv
+    · rw [ite_eq_left hv, mul_one]
+      have h : evFin F v (sAd S q) = algebraMap F (v.adicCompletion F) q := ite_eq_left hv
       show (1 : v.adicCompletion F) ⊗ₜ[F] _ = evFin F v (sAd S q) ⊗ₜ[F] (1 : E)
       rw [h]
       exact one_tmul_algebraMap _
-    · rw [if_neg hv, mul_zero]
-      have h : evFin F v (sAd S q) = 0 := if_neg hv
+    · rw [ite_eq_right hv, mul_zero]
+      have h : evFin F v (sAd S q) = 0 := ite_eq_right hv
       show 0 = evFin F v (sAd S q) ⊗ₜ[F] (1 : E)
       rw [h, TensorProduct.zero_tmul]
 
@@ -1592,10 +1592,10 @@ theorem muCell_of (hR : Riesz) (hN : NullC) (hF : CellFormula) (hA : CellAlg) (h
   intro D p mu hmu nb hnb w hw
   refine ⟨∅, fun S _ e he lam hlam => ?_⟩
   obtain ⟨hG2, hGlc, hGsc, hH2, hHlc, hHsc, hHb⟩ := hT D p e
-  haveI := hlam
+  have := hlam
   obtain ⟨h, hSet, hRho, hKh, hInv⟩ := hS D p mu hmu
-  letI : MeasurableSpace (G D p ⧸ P D p) := borel _
-  haveI : BorelSpace (G D p ⧸ P D p) := ⟨rfl⟩
+  let : MeasurableSpace (G D p ⧸ P D p) := borel _
+  have : BorelSpace (G D p ⧸ P D p) := ⟨rfl⟩
   obtain ⟨ν, hν⟩ := hR (G D p) (P D p) h mu hSet
   obtain ⟨τ, hcell, -, hmm⟩ := hA D p nb hnb w hw S e he
   have hfew : Few (P D p) h mu (cell e) :=

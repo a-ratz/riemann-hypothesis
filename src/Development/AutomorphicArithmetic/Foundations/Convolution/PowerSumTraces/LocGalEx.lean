@@ -283,7 +283,7 @@ theorem UpperTheory.ConvolutionTheory.C.locGalEx :
     · exact Or.inl h1
     · right
       intro τ
-      haveI : Fact (Module.finrank F E).Prime := ⟨hp⟩
+      have : Fact (Module.finrank F E).Prime := ⟨hp⟩
       exact mem_zpowers_of_prime_card (IsGalois.card_aut_eq_finrank F E) h1
   have hloc := sOf_isLocGal σ w hw n
   refine ⟨hw, sOf σ w hw n, hloc, fun μ _ θ hθ => ?_⟩
@@ -310,8 +310,8 @@ theorem UpperTheory.ConvolutionTheory.C.locGalEx :
     · have e := hint (s.symm g) (f x)
       rw [s.apply_symm_apply, ← hf] at e
       exact e
-  letI : MeasurableSpace (Gw n w.1) := borel _
-  haveI : BorelSpace (Gw n w.1) := ⟨rfl⟩
+  let : MeasurableSpace (Gw n w.1) := borel _
+  have : BorelSpace (Gw n w.1) := ⟨rfl⟩
   obtain ⟨-, h2, -⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds E n μ V w.1 Measure.haar hV
   obtain ⟨J⟩ := h2 τ' τ hocc' hocc
   refine ⟨J.toLinearEquiv, fun g x => ?_⟩

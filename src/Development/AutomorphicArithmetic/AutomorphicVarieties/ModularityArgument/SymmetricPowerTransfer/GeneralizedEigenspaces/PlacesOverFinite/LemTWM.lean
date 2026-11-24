@@ -199,7 +199,7 @@ private theorem exists_above {F L Ω : Type} [Field F] [NumberField F] [Field L]
     ext x
     rw [← hA x, IsScalarTower.algebraMap_apply F L Ω]
     exact (hP (algebraMap (𝓞 F) (𝓞 L) x)).symm
-  haveI : ((IsLocalRing.maximalIdeal A).comap φ).LiesOver v.asIdeal := ⟨hu.symm⟩
+  have : ((IsLocalRing.maximalIdeal A).comap φ).LiesOver v.asIdeal := ⟨hu.symm⟩
   exact ⟨⟨(IsLocalRing.maximalIdeal A).comap φ, inferInstance, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot _⟩,
     HeightOneSpectrum.ext hu, hP⟩
 
@@ -218,9 +218,9 @@ private theorem normV_under' {K K' : Type} [Field K] [NumberField K] [Field K'] 
 private theorem normV_le {K : Type} [Field K] [NumberField K] (w : HeightOneSpectrum (𝓞 K)) {q : ℕ} (hq : 1 < q)
     (h : ∀ x : 𝓞 K, x - x ^ q ∈ w.asIdeal) : normV w ≤ q := by
   have := w.isMaximal
-  letI : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
+  let : Field (𝓞 K ⧸ w.asIdeal) := Ideal.Quotient.field _
   have : Finite (𝓞 K ⧸ w.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ w.ne_bot
-  letI := Fintype.ofFinite (𝓞 K ⧸ w.asIdeal)
+  let := Fintype.ofFinite (𝓞 K ⧸ w.asIdeal)
   have e : normV w = Fintype.card (𝓞 K ⧸ w.asIdeal) := Nat.card_eq_fintype_card
   rw [e]
   by_contra hlt
@@ -268,8 +268,8 @@ theorem UpperTheory.V.Af.Tw.frobSplit :
     have h4 : resG F L Ω s (algebraMap L Ω x) = algebraMap L Ω x := s.commutes x
     rw [h4] at h3
     simpa using h3
-  haveI := v.isMaximal
-  haveI := w.isPrime
+  have := v.isMaximal
+  have := w.isPrime
   have hf : w.asIdeal.inertiaDeg (𝓞 F) = 1 := by
     rw [normV_under' (K := F) w, hwv] at hle
     have h5 : 0 < w.asIdeal.inertiaDeg (𝓞 F) := Ideal.inertiaDeg_pos _ _
@@ -279,10 +279,10 @@ theorem UpperTheory.V.Af.Tw.frobSplit :
   have hl : ∀ u : HeightOneSpectrum (𝓞 L), u.under (𝓞 F) = v → u.asIdeal ∈ v.asIdeal.primesOver (𝓞 L) :=
     fun u hu => ⟨u.isPrime, ⟨(congrArg HeightOneSpectrum.asIdeal hu).symm⟩⟩
   have he : w.asIdeal.ramificationIdx (𝓞 F) = 1 := by
-    haveI : w.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨rfl⟩
+    have : w.asIdeal.LiesOver (w.under (𝓞 F)).asIdeal := ⟨rfl⟩
     rw [← Ideal.ramificationIdx'_eq_ramificationIdx _ _ (w.under (𝓞 F)).ne_bot]
     exact hur w hwv
-  haveI := (IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 L)).fintype
+  have := (IsDedekindDomain.primesOver_finite v.asIdeal (𝓞 L)).fintype
   have hsum := Ideal.sum_ramification_inertia_eq_finrank v.asIdeal (𝓞 L)
   rw [← IsFractionRing.finrank_eq (𝓞 F) F (𝓞 L) L, h2] at hsum
   obtain ⟨⟨Q, hQ, hQv⟩, hne, h1, hall⟩ := two_of_sum _
@@ -572,7 +572,7 @@ theorem UpperTheory.V.Af.Tw.kron :
   intro K _ _
   refine ⟨NumberField.Units.torsionOrder K, ?_, ?_⟩
   · intro l hl hno
-    haveI : Fact (Nat.Prime l) := ⟨hl⟩
+    have : Fact (Nat.Prime l) := ⟨hl⟩
     rw [Nat.coprime_comm, hl.coprime_iff_not_dvd]
     intro hdvd
     obtain ⟨g, hg⟩ := exists_prime_orderOf_dvd_card' (G := NumberField.Units.torsion K) l hdvd
@@ -635,8 +635,8 @@ private theorem loc (K : Type) [Field K] [NumberField K] {N : ℕ} (hN : N ≠ 0
     apply hN
     have := congrArg (fun r : v.adicCompletionIntegers K => (r : v.adicCompletion K)) h
     simpa using this
-  haveI := Formalism.UG.P.glint_finite_quotient_of_dvr inferInstance I hI
-  haveI : Finite (v.adicCompletionIntegers K ⧸ I)ˣ :=
+  have := Formalism.UG.P.glint_finite_quotient_of_dvr inferInstance I hI
+  have : Finite (v.adicCompletionIntegers K ⧸ I)ˣ :=
     Finite.of_injective (fun u : (v.adicCompletionIntegers K ⧸ I)ˣ => (u : v.adicCompletionIntegers K ⧸ I))
       (fun a b h => Units.ext h)
   refine ⟨Nat.card (v.adicCompletionIntegers K ⧸ I)ˣ, Nat.card_pos, ?_⟩
@@ -691,7 +691,7 @@ theorem levPow : LevPow := by
   rw [hpow]
   by_cases hv : v ∈ hfin.toFinset
   · exact hM v _ hu1 _ (Finset.dvd_prod_of_mem M hv)
-  · rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, Ideal.dvd_span_singleton] at hv
+  · rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, Ideal.dvd_span_singleton] at hv
     have hlt := (HeightOneSpectrum.valuation_lt_one_iff_mem (K := K) v (N : 𝓞 K)).not.2 hv
     have hle := HeightOneSpectrum.valuation_le_one (K := K) v (N : 𝓞 K)
     have h2 := PI.IntAdCpctOpenWork.valued_algebraMap v (N : K)
@@ -805,8 +805,8 @@ theorem UpperTheory.V.Af.Tw.splitIso :
   intro F L _ _ _ _ _ h2 w w' hne hunder
   classical
   set v := HeightOneSpectrum.under (𝓞 F) w with hv
-  haveI hw : w.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
-  haveI hw' : w'.asIdeal.LiesOver v.asIdeal := ⟨(congrArg HeightOneSpectrum.asIdeal hunder).symm⟩
+  have hw : w.asIdeal.LiesOver v.asIdeal := ⟨rfl⟩
+  have hw' : w'.asIdeal.LiesOver v.asIdeal := ⟨(congrArg HeightOneSpectrum.asIdeal hunder).symm⟩
   have hsum := sum_ramificationIdx_mul_inertiaDeg L v
   rw [h2] at hsum
   have hpos : ∀ u : PlacesOver L v, 1 ≤ (u : HeightOneSpectrum (𝓞 L)).asIdeal.ramificationIdx (𝓞 F) *
@@ -881,7 +881,7 @@ private theorem exists_local (F L : Type) [Field F] [NumberField F] [Field L] [N
     rwa [map_natCast] at this
   obtain ⟨w, w', hw, hne, hw', hin⟩ : ∃ w w' : HeightOneSpectrum (𝓞 L), w.under (𝓞 F) = v ∧ w' ≠ w ∧
       w'.under (𝓞 F) = w.under (𝓞 F) ∧ w ∈ Φ := by
-    haveI := v.isPrime
+    have := v.isPrime
     obtain ⟨⟨P, hP, hP'⟩⟩ := (inferInstance : Nonempty (v.asIdeal.primesOver (𝓞 L)))
     let u : HeightOneSpectrum (𝓞 L) := ⟨P, hP, Ideal.ne_bot_of_liesOver_of_ne_bot v.ne_bot P⟩
     have hu : u.under (𝓞 F) = v := HeightOneSpectrum.ext hP'.over.symm
@@ -945,14 +945,14 @@ theorem UpperTheory.V.Af.Tw.unrAE :
     UpperTheory.V.Af.Tw.UnrAE := by
   unfold UpperTheory.V.Af.Tw.UnrAE
   intro F L _ _ _ _ _
-  letI := FractionRing.liftAlgebra (𝓞 F) (FractionRing (𝓞 L))
-  haveI : Algebra.IsSeparable (FractionRing (𝓞 F)) (FractionRing (𝓞 L)) := inferInstance
+  let := FractionRing.liftAlgebra (𝓞 F) (FractionRing (𝓞 L))
+  have : Algebra.IsSeparable (FractionRing (𝓞 F)) (FractionRing (𝓞 L)) := inferInstance
   have hD0 : differentIdeal (𝓞 F) (𝓞 L) ≠ ⊥ := differentIdeal_ne_bot (A := 𝓞 F) (B := 𝓞 L)
   have hfin := Ideal.finite_factors (R := 𝓞 L) (I := differentIdeal (𝓞 F) (𝓞 L)) hD0
   rw [Filter.eventually_cofinite]
   refine (hfin.image (HeightOneSpectrum.under (𝓞 F))).subset ?_
   intro v hv
-  simp only [Set.mem_setOf_eq] at hv
+  simp only [Set.mem_ofPred_eq] at hv
   unfold UpperTheory.V.Af.Tw.Unr at hv
   push_neg at hv
   obtain ⟨w, rfl, he⟩ := hv
@@ -963,7 +963,7 @@ theorem UpperTheory.V.Af.Tw.unrAE :
       w.asIdeal ^ 2 := by
     by_contra h
     exact he (Ideal.ramificationIdx'_spec (by rwa [pow_one]) h)
-  haveI := (HeightOneSpectrum.under (𝓞 F) w).isMaximal
+  have := (HeightOneSpectrum.under (𝓞 F) w).isMaximal
   have hdvd := pow_sub_one_dvd_differentIdeal (A := 𝓞 F) (P := w.asIdeal) (e := 2)
     (hp := (HeightOneSpectrum.under (𝓞 F) w).ne_bot) (hP := Ideal.dvd_iff_le.mpr h2)
   simpa using hdvd
@@ -1026,8 +1026,8 @@ theorem UpperTheory.V.Af.Tw.verGroup :
     rw [e1, kmul _ (R.mul_mem hc hx') _ (R.inv_mem hc), kmul _ hc _ hx', kinv _ hc,
       mul_inv_cancel_comm]
   let f : Γ → B := fun γ => if γ ∈ R then k γ * k (g0 * γ * g0⁻¹) else k (γ * γ)
-  have fin : ∀ γ, γ ∈ R → f γ = k γ * k (g0 * γ * g0⁻¹) := fun γ h => if_pos h
-  have fout : ∀ γ, γ ∉ R → f γ = k (γ * γ) := fun γ h => if_neg h
+  have fin : ∀ γ, γ ∈ R → f γ = k γ * k (g0 * γ * g0⁻¹) := fun γ h => ite_eq_left h
+  have fout : ∀ γ, γ ∉ R → f γ = k (γ * γ) := fun γ h => ite_eq_right h
   have fmul : ∀ x y, f (x * y) = f x * f y := by
     intro x y
     by_cases hx : x ∈ R <;> by_cases hy : y ∈ R
@@ -1158,7 +1158,7 @@ private theorem ideleExt_of (hG : Glue) (hP : LevPow) (hK : Kron) (hΦ : PhiPart
           ∀ (w : HeightOneSpectrum (𝓞 L)) (x : (w.adicCompletion L)ˣ), IsUnitAt w x →
             (((l : ℕ) : 𝓞 L) ∉ w.asIdeal → ψ (localIdele L w x) = 1) ∧ (w ∉ Φ → ψ (localIdele L w x) ^ k = 1) := by
   have hl0 : l ≠ 0 := by omega
-  haveI : IsCMExtension F L := ⟨hF, inferInstance, { finrank_eq_two' := h2 }⟩
+  have : IsCMExtension F L := ⟨hF, inferInstance, { finrank_eq_two' := h2 }⟩
   obtain ⟨p, hp, p1, p2, p3⟩ := hΦ F L h2 l hl0 Φ hT
   obtain ⟨M, hM, hMu⟩ := hP L l hl0
   obtain ⟨n, -, hnu⟩ := hK L

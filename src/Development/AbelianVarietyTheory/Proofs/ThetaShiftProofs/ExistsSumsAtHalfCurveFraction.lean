@@ -108,8 +108,8 @@ theorem exists_halfRing_point {O : Type} [CommRing O] (s : Z ⟶ Sp O) [LocallyO
   have hval : ∀ {A : Type} [CommRing A] (x : Sp A ⟶ Z), ⊤ ≤ x ⁻¹ᵁ V → ∀ a : O,
       valR x V (ρ a) = valR (x ≫ s) ⊤ ((Scheme.ΓSpecIso (CommRingCat.of O)).inv.hom a) :=
     fun x hx a => valR_appLE x s ⊤ V le_top _ hx
-  letI := ρ.toAlgebra
-  haveI : Algebra.FiniteType O Γ(Z, V) := hρ
+  let := ρ.toAlgebra
+  have : Algebra.FiniteType O Γ(Z, V) := hρ
   obtain ⟨T, hT, ψ, hψ, hψb⟩ := exists_factor_halfRing_over (S := O) b (evalHom y V hyV)
     (RingHom.ext fun a => by
       have := hval y hyV a
@@ -150,7 +150,7 @@ def halfCurve {T : ℝ} (yT : Sp (halfRing T) ⟶ Z) (w : ℂ) : Sp ℂ ⟶ Z :=
   else spMap (ev T (((T + 1 : ℝ) : ℂ) * Complex.I) (by simp) : halfRing T →+* ℂ) ≫ yT
 
 theorem halfCurve_eq {T : ℝ} (yT : Sp (halfRing T) ⟶ Z) {w : ℂ} (hw : T < w.im) :
-    halfCurve yT w = spMap (ev T w hw : halfRing T →+* ℂ) ≫ yT := dif_pos hw
+    halfCurve yT w = spMap (ev T w hw : halfRing T →+* ℂ) ≫ yT := dite_eq_left hw
 
 theorem halfCurve_comp {T : ℝ} {Z' : Scheme.{0}} (yT : Sp (halfRing T) ⟶ Z) (j : Z ⟶ Z') (w : ℂ) :
     halfCurve (yT ≫ j) w = halfCurve yT w ≫ j := by

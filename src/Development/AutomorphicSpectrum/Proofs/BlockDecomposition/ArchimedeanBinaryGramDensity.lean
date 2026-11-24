@@ -102,8 +102,8 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 variable (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R]
 
 theorem continuous_hermScal [IsTopologicalRing R] : Continuous (hermScal R σ) := by
-  haveI : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
-  haveI : ContinuousAdd (R ⊗[F] E) := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
+  have : IsModuleTopology R (R ⊗[F] E) := ⟨rfl⟩
+  have : ContinuousAdd (R ⊗[F] E) := IsModuleTopology.toContinuousAdd R (R ⊗[F] E)
   have h1 : Continuous fun r : R => r ⊗ₜ[F] (1 : E) := by
     have : (fun r : R => r ⊗ₜ[F] (1 : E)) = (Algebra.linearMap R (R ⊗[F] E) : R → R ⊗[F] E) := by
       funext r
@@ -117,7 +117,7 @@ theorem continuous_qR (htr : Continuous (Algebra.trace R (R ⊗[F] E))) [IsTopol
     Continuous (qR R σ) := by
   unfold qR
   refine continuous_const.mul (htr.comp ?_)
-  exact (continuous_subtype_val.matrix_elem 0 0)
+  exact (continuous_subtypeVal.matrix_elem 0 0)
 
 variable [MeasurableSpace R] [BorelSpace R]
 
@@ -125,8 +125,8 @@ theorem coordHerm_qR (h : IsCMExt F E σ) [IsTopologicalRing R] [SecondCountable
     (htr : Continuous (Algebra.trace R (R ⊗[F] E)))
     {d : ℕ} (b : Module.Basis (Fin d) F E) (lam : Measure R) [SigmaFinite lam] {V : Set R}
     (hV : MeasurableSet V) : coordHerm R σ b lam 1 {S | qR R σ S ∈ V} = lam V := by
-  haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
-  haveI : IsEmpty {p : Fin 1 × Fin 1 // p.1 < p.2} :=
+  have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+  have : IsEmpty {p : Fin 1 × Fin 1 // p.1 < p.2} :=
     ⟨fun p => by
       have h1 := p.2
       have h2 : p.1.1 = p.1.2 := Subsingleton.elim _ _
@@ -173,7 +173,7 @@ theorem coordHerm_eq_map (h : IsCMExt F E σ) [IsTopologicalRing R] [SecondCount
     (htr : Continuous (Algebra.trace R (R ⊗[F] E)))
     {d : ℕ} (b : Module.Basis (Fin d) F E) (lam : Measure R) [SigmaFinite lam] :
     coordHerm R σ b lam 1 = Measure.map (hermScal R σ) lam := by
-  haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+  have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
   have hm : Measurable (hermScal R σ (F := F) (E := E)) := (continuous_hermScal R).measurable
   ext A hA
   rw [Measure.map_apply hm hA, ← coordHerm_qR R h htr b lam (hm hA)]
@@ -184,7 +184,7 @@ theorem coordHerm_eq_map (h : IsCMExt F E σ) [IsTopologicalRing R] [SecondCount
 theorem measurableEmbedding_hermScal (h : IsCMExt F E σ) [IsTopologicalRing R]
     (htr : Continuous (Algebra.trace R (R ⊗[F] E))) :
     MeasurableEmbedding (hermScal R σ (F := F) (E := E)) := by
-  haveI : BorelSpace (HermR R σ 1) := ⟨rfl⟩
+  have : BorelSpace (HermR R σ 1) := ⟨rfl⟩
   let e : R ≃ᵐ HermR R σ 1 :=
     { toFun := hermScal R σ
       invFun := qR R σ
@@ -215,26 +215,26 @@ theorem fibre_integral (R : Type) [CommRing R] [Algebra F R] [TopologicalSpace R
     ENNReal.ofReal (∫ s, (∫ X, φ X ∂(m (hermScal R σ s))) ∂lam) =
       ∫⁻ X, ENNReal.ofReal (φ X) ∂(coordW R b lam 1 M) := by
   obtain ⟨h1, h2, h3, h4, -⟩ := id hloc
-  haveI := h1
-  haveI := h2
-  haveI := h3
-  haveI := h4
-  haveI := hlam
+  have := h1
+  have := h2
+  have := h3
+  have := h4
+  have := hlam
   obtain ⟨iTR, iLC, iSC, iT2, -, htr, -, iB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ h R
-  haveI := iB 1 M
-  haveI := iTR
-  haveI := iLC
-  haveI := iSC
-  haveI := iT2
+  have := iB 1 M
+  have := iTR
+  have := iLC
+  have := iSC
+  have := iT2
   obtain ⟨jLC, jSC, jT2, jB, hlift⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ h R 1
-  haveI := jB
+  have := jB
   obtain ⟨g, hg, hgram⟩ := hlift M J hJ
   have hunits : IsOpenEmbedding (Units.val : (R ⊗[F] E)ˣ → R ⊗[F] E) := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ h R hloc
   set B : Set (HermR R σ 1) := {S | IsUnit (S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)).det} with hBdef
   set U : Set (Fin 1 → Fin M → R ⊗[F] E) := {X | IsUnit (gramR R σ J X).det} with hUdef
   have hB : IsOpen B := by
     have hdet : Continuous fun S : HermR R σ 1 => (S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)).det :=
-      Continuous.matrix_det continuous_subtype_val
+      Continuous.matrix_det continuous_subtypeVal
     have hset : B = (fun S : HermR R σ 1 => (S : Matrix (Fin 1) (Fin 1) (R ⊗[F] E)).det) ⁻¹'
         Set.range (Units.val : (R ⊗[F] E)ˣ → R ⊗[F] E) := by
       ext S
@@ -332,7 +332,7 @@ theorem fibre_integral_test : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   (∀ s : Ainf F, ∫⁻ X, ENNReal.ofReal (φ X) ∂(mi (hermScal (Ainf F) σ s)) = ENNReal.ofReal (∫ X, φ X ∂(mi (hermScal (Ainf F) σ s)))) ∧
   ENNReal.ofReal (∫ s, (∫ X, φ X ∂(mi (hermScal (Ainf F) σ s))) ∂li) = ∫⁻ X, ENNReal.ofReal (φ X) ∂(coordW (Ainf F) b li 1 2) := by
   intro F E _ _ _ _ _ σ hσ J hJ d b li hli mi hfib φ hφ hφc hφ0 hφU
-  haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+  have : BorelSpace (Ainf F) := ⟨rfl⟩
   exact fibre_integral (Ainf F) (GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1) hσ hJ b li hli.1 mi hfib φ hφ hφc hφ0 hφU
 
 end GlobalTheory.CompanionTheory.SW.ArchFibre

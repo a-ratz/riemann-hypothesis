@@ -87,7 +87,7 @@ theorem mem_primeOf_prPbar {σ : E →ₐ[F] E}
   | smul c x _ hx =>
     have hc : Valued.v (prPbar φ c) ≤ 1 := ((hφ.2.2 c).1 c.2).2
     rw [smul_eq_mul, Subring.coe_mul, map_mul, map_mul]
-    exact mul_lt_one_of_nonneg_of_lt_one_right hc zero_le' hx
+    exact mul_lt_one_of_nonneg_of_lt_one_right hc zero_le hx
 
 theorem exists_max {ι : Type} (g : ι → WithZero (Multiplicative ℤ)) (t : WithZero (Multiplicative ℤ))
     (ht : t ≠ 0) (hb : ∀ y, t * g y ≤ 1) (y₁ : ι) (h₁ : g y₁ ≠ 0) : ∃ y₀, ∀ y, g y ≤ g y₀ := by
@@ -98,7 +98,7 @@ theorem exists_max {ι : Type} (g : ι → WithZero (Multiplicative ℤ)) (t : W
       omega⟩ ⟨_, y₁, (WithZero.exp_log h₁).symm⟩
   refine ⟨y₀, fun y => ?_⟩
   by_cases hy : g y = 0
-  · rw [hy]; exact zero_le'
+  · rw [hy]; exact zero_le
   · rw [hy₀, ← WithZero.exp_log hy, WithZero.exp_le_exp]
     exact hn _ ⟨y, (WithZero.exp_log hy).symm⟩
 
@@ -457,9 +457,9 @@ theorem mem_of_count {Λ Λ' : Submodule (𝓞 E) (Fin k → E)} (hfin : Module.
     (hker : ∀ v h (x : locLat v Λ'), x.1 ∈ locLat v Λ → ψ v h x = 0) :
     ∀ v h (x : locLat v Λ'), ψ v h x = 0 → x.1 ∈ locLat v Λ := by
   classical
-  haveI : Finite {v : HeightOneSpectrum (𝓞 F) // (T : 𝓞 F) ∈ v.asIdeal} :=
+  have : Finite {v : HeightOneSpectrum (𝓞 F) // (T : 𝓞 F) ∈ v.asIdeal} :=
     Nat.finite_of_card_ne_zero (hpl ▸ hf)
-  haveI := Fintype.ofFinite {v : HeightOneSpectrum (𝓞 F) // (T : 𝓞 F) ∈ v.asIdeal}
+  have := Fintype.ofFinite {v : HeightOneSpectrum (𝓞 F) // (T : 𝓞 F) ∈ v.asIdeal}
   let Ψ : Λ'.toAddSubgroup →+ ∀ p : {v : HeightOneSpectrum (𝓞 F) // (T : 𝓞 F) ∈ v.asIdeal}, Q p.1 p.2 :=
     { toFun := fun x p => ψ p.1 p.2 ⟨loc p.1 x.1, loc_mem p.1 (Λ := Λ') x.2⟩
       map_zero' := funext fun p => by
@@ -770,7 +770,7 @@ theorem nsmul_mem (L : ColLevel R F E sp gp C A clsLat) : ∀ x ∈ dualLb L, A.
   rwa [Nat.cast_smul_eq_nsmul] at this
 
 theorem finite_dualLb (L : ColLevel R F E sp gp C A clsLat) : Module.Finite (𝓞 E) (dualLb L) := by
-  haveI := L.Lb_fin
+  have := L.Lb_fin
   let φ : dualLb L →ₗ[𝓞 E] L.Lb :=
     LinearMap.codRestrict _ (A.T • (dualLb L).subtype) (fun x => nsmul_mem L x.1 x.2)
   refine Module.Finite.of_injective φ fun x y h => Subtype.ext ?_
@@ -827,7 +827,7 @@ theorem exists_local (L : ColLevel R F E sp gp C A clsLat)
       show prPbar s ((e₁ hs • x₀.1) i) = 0
       rw [map_smul_vec, prPbar_e₁, zero_mul]⟩
   have hsur1 : Function.Surjective (L.fT v hv) := by
-    haveI : Fact (Nat.card (L.fM v hv)).Prime := ⟨(L.fM_card v hv).symm ▸ A.T_prime⟩
+    have : Fact (Nat.card (L.fM v hv)).Prime := ⟨(L.fM_card v hv).symm ▸ A.T_prime⟩
     rcases (LinearMap.range (L.fT v hv)).toAddSubgroup.eq_bot_or_eq_top_of_prime_card with h | h
     · have : L.fT v hv x₀ ∈ (LinearMap.range (L.fT v hv)).toAddSubgroup := ⟨x₀, rfl⟩
       rw [h] at this
@@ -942,7 +942,7 @@ theorem exists_overLattice (L : ColLevel R F E sp gp C A clsLat)
   have hLN : L.Lb ≤ N := le_overLat L _
   have hNL : N ≤ dualLb L := overLat_le L _
   have hfin : Module.Finite (𝓞 E) N := by
-    haveI := finite_dualLb L
+    have := finite_dualLb L
     exact Module.Finite.of_injective (Submodule.inclusion hNL) (Submodule.inclusion_injective hNL)
   have hspan : Submodule.span E (N : Set (Fin R.k → E)) = ⊤ :=
     top_le_iff.1 (L.Lb_span ▸ Submodule.span_mono hLN)

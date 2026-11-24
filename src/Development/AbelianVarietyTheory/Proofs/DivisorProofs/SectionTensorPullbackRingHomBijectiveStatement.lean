@@ -62,7 +62,7 @@ namespace GlobalTheory.HilbAff
 theorem theta_bijective (A B : Type) [CommRing A] [CommRing B] [Algebra A B] {T : Scheme.{0}}
     (g : T ⟶ Spec (CommRingCat.of A)) (U : T.affineOpens) :
     Function.Bijective (theta A B g U) := by
-  letI := (secAlg A g U).toAlgebra
+  let := (secAlg A g U).toAlgebra
   let W : (pullback (str A B) g).Opens := pullback.snd (str A B) g ⁻¹ᵁ (U : T.Opens)
   have H := IsPullback.of_hasPullback (str A B) g
   have po := (isIso_pushoutSection_iff H (US := ⊤) (UT := (U : T.Opens)) (UX := ⊤) (UY := W)

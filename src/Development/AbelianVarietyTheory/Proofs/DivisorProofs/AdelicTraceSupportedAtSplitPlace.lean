@@ -90,7 +90,7 @@ theorem add_conj_eq_trace {σ : E →ₐ[F] E} (h : IsCMExt F E σ) (x : E) :
     x + σ x = algebraMap F E (Algebra.trace F E x) := by
   classical
   have hc := h.2.1
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨h.2.2.1⟩
   let s : E ≃ₐ[F] E := AlgEquiv.ofAlgHom σ σ (by ext y; simp [GlobalTheory.AdelicU.cm_conj_conj h])
     (by ext y; simp [GlobalTheory.AdelicU.cm_conj_conj h])
   have hs : (1 : E ≃ₐ[F] E) ≠ s := by
@@ -110,7 +110,7 @@ theorem trace_at_split : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
     Algebra.trace (AF F) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) z =
       GlobalTheory.LatVac.liftV v (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piW τ z + GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.piW (τ.comp σ) z) := by
   intro F E _ _ _ _ _ σ hcm v τ z hz
-  haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hcm.2.2.1]; norm_num)
+  have : FiniteDimensional F E := Module.finite_of_finrank_pos (by rw [hcm.2.2.1]; norm_num)
   set l : AF F := GlobalTheory.LatVac.liftV v 1 with hl
   have hz1 : z = l • z := by
     have h0 := hz (1 - l) (by rw [map_sub, map_one, hl, GlobalTheory.LatVac.evFin_liftV, sub_self])

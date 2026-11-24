@@ -305,7 +305,7 @@ def torusPt {C : Type} [CommRing C] [Algebra A C] (χ : Multiplicative X →* C)
 
 theorem torusPt_mul {C : Type} [CommRing C] [Algebra A C] (χ χ' : Multiplicative X →* C) :
     torusPt A X (χ * χ') = torusPt A X χ * torusPt A X χ' := by
-  letI : Algebra (ULift.{0} ℤ) C := ULift.algebra' ℤ C
+  let : Algebra (ULift.{0} ℤ) C := ULift.algebra' ℤ C
   have h : WithConv.toConv (AddMonoidAlgebra.lift (ULift.{0} ℤ) C X (χ * χ')) =
       WithConv.toConv (AddMonoidAlgebra.lift (ULift.{0} ℤ) C X χ) *
         WithConv.toConv (AddMonoidAlgebra.lift (ULift.{0} ℤ) C X χ') := by
@@ -321,7 +321,7 @@ theorem torusPt_fst {C : Type} [CommRing C] [Algebra A C] (χ : Multiplicative X
       (∀ x, φ (AddMonoidAlgebra.single x 1) = χ (Multiplicative.ofAdd x)) ∧
       (torusPt A X χ).left ≫ pullback.fst (splitTorusAff ZU X).hom (toZ _) =
         Spec.map (CommRingCat.ofHom φ) := by
-  letI : Algebra (ULift.{0} ℤ) C := ULift.algebra' ℤ C
+  let : Algebra (ULift.{0} ℤ) C := ULift.algebra' ℤ C
   refine ⟨(AddMonoidAlgebra.lift (ULift.{0} ℤ) C X χ).toRingHom, fun x => by simp, ?_⟩
   refine (pullback_map_fst _ _).trans ?_
   erw [pullback.lift_fst_assoc]
@@ -360,8 +360,8 @@ theorem spm_torusPt {C D : Type} [CommRing C] [Algebra A C] [CommRing D] [Algebr
 open scoped AlgebraMonoidAlgebra in
 theorem isIso_torusPt_of :
     IsIso (torusPt A X (AddMonoidAlgebra.of A X)).left := by
-  letI : Algebra ZU.{0} A := ULift.algebra' ℤ A
-  haveI : IsScalarTower ZU.{0} (AddMonoidAlgebra ZU.{0} X) (AddMonoidAlgebra A X) :=
+  let : Algebra ZU.{0} A := ULift.algebra' ℤ A
+  have : IsScalarTower ZU.{0} (AddMonoidAlgebra ZU.{0} X) (AddMonoidAlgebra A X) :=
     ⟨fun r a b => by
       obtain ⟨n⟩ := r
       show (n • a) • b = n • (a • b)
@@ -429,7 +429,7 @@ theorem exists_chart [IsLocalRing A] (B : Over (Spec (CommRingCat.of A))) [GrpOb
   obtain ⟨R, i, hi, hx, -⟩ := Scheme.exists_affine_mem_range_and_range_subset
     (X := B.left) (x := e.left (IsLocalRing.closedPoint A)) (U := ⊤) trivial
   obtain ⟨ρ, hρ⟩ := Spec.map_surjective (i ≫ B.hom)
-  letI : Algebra A R := ρ.hom.toAlgebra
+  let : Algebra A R := ρ.hom.toAlgebra
   let j : sp A R ⟶ B := Over.homMk i hρ.symm
   have hr : Set.range e.left ⊆ Set.range i := by
     rintro _ ⟨x, rfl⟩
@@ -527,7 +527,7 @@ theorem splitTorus_hom_eq_one_of_nilpotent (A : Type) [CommRing A] [IsLocalRing 
     rw [pow_succ, hn] at this
     simpa [sub_eq_zero] using this
   rw [hφε, pt_one j ε hε] at hφ
-  haveI := isIso_torusPt_of A X
+  have := isIso_torusPt_of A X
   have h1 : t ≫ f = t ≫ toUnit _ ≫ η[B] := hφ.symm.trans (MonObj.comp_one t).symm
   apply Over.OverMorphism.ext
   rw [← cancel_epi t.left, ← Over.comp_left, h1, ← Over.comp_left]

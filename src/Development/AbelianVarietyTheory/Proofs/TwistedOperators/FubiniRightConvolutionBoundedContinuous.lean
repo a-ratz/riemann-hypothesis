@@ -64,10 +64,10 @@ theorem fubini_right_convolution_bounded_continuous
     Integrable (fun h : H => α h * ∫ x in 𝓕, ψ x * φ (x * (h : G)) ∂μ) m ∧
     ∫ x in 𝓕, ψ x * (∫ h, α h * φ (x * (h : G)) ∂m) ∂μ
       = ∫ h, α h * (∫ x in 𝓕, ψ x * φ (x * (h : G)) ∂μ) ∂m := by
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by simpa [Measure.restrict_apply_univ] using h𝓕⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by simpa [Measure.restrict_apply_univ] using h𝓕⟩
   set F : G → H → ℂ := fun x h => ψ x * (α h * φ (x * (h : G))) with hFdef
   have hcont : Continuous (fun p : G × H => ψ p.1 * φ (p.1 * (p.2 : G))) :=
-    (hψ.comp continuous_fst).mul (hφ.comp (continuous_fst.mul (continuous_subtype_val.comp continuous_snd)))
+    (hψ.comp continuous_fst).mul (hφ.comp (continuous_fst.mul (continuous_subtypeVal.comp continuous_snd)))
   have hmeas : AEStronglyMeasurable (Function.uncurry F) ((μ.restrict 𝓕).prod m) := by
     have h1 : AEStronglyMeasurable (fun p : G × H => ψ p.1 * φ (p.1 * (p.2 : G))) ((μ.restrict 𝓕).prod m) :=
       hcont.aestronglyMeasurable

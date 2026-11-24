@@ -112,7 +112,7 @@ private theorem hecke_eq_sum {G : Type} [Group G] (K : Subgroup G) (h : G → �
     rw [Finset.sum_image (fun a _ b _ e => Quotient.out_injective e)]
     have hsupp : (Function.support fun q : G ⧸ K => h q.out • ρ q.out x) ⊆ hfin.toFinset := by
       intro q hq
-      simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+      simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
       intro h0
       exact hq (by simp [h0])
     have hsum : heckeVec ρ K h x = ∑ q ∈ hfin.toFinset, h q.out • ρ q.out x :=

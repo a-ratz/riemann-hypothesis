@@ -54,7 +54,7 @@ open scoped ComplexOrder
 theorem _root_.GlobalTheory.CompanionTheory.Relay.gram_det_ne_zero_local_basis_cofinite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (I : Type) [Fintype I] [DecidableEq I] (e : I → D.La), Fintype.card I = D.p + D.q → LinearIndependent (𝓞 E) e → (gramE D e).det ≠ 0 ∧ {ℓ : Nat.Primes | ¬ IsLocBasis (𝓞 E) ℓ e}.Finite := by
   classical
   intro E _ _ _ H D I _ _ e hcard hli
-  haveI := D.fin
+  have := D.fin
   have T : ∀ (c : 𝓞 E) (x y : D.La), Algebra.trace ℚ E (algebraMap (𝓞 E) E c * sesq D x y) = ((D.EF (c • x) y : ℤ) : ℚ) := by
     intro c x y
     have key : ∀ j, Algebra.trace ℚ E (algebraMap (𝓞 E) E (RingOfIntegers.basis E j) * sesq D x y) = ((D.EF (RingOfIntegers.basis E j • x) y : ℤ) : ℚ) := by
@@ -63,7 +63,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.gram_det_ne_zero_local_basis_c
         intro k
         rw [← HT.LatBasic.trace_dualInt k j, ← map_intCast (algebraMap ℚ E), mul_left_comm, ← Algebra.smul_def, map_smul, smul_eq_mul, mul_comm (algebraMap (𝓞 E) E _), ← NumberField.integralBasis_apply]
 
-      simp only [sesq, Finset.mul_sum, map_sum, hterm, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [sesq, Finset.mul_sum, map_sum, hterm, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       exact mul_one _
     conv_lhs => rw [← (RingOfIntegers.basis E).sum_repr c]
     conv_rhs => rw [← (RingOfIntegers.basis E).sum_repr c]

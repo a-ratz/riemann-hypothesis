@@ -185,7 +185,7 @@ theorem zE_nxt (j : Fin J) : zE J ((toData Dt).nxt j) = zE J j + 1 := by
 theorem zE_prv (j : Fin J) : zE J ((toData Dt).aux₃ j) = zE J j - 1 := by
   have h : (toData Dt).aux₃ j = j - 1 := by
     apply Fin.ext
-    rw [Fin.coe_sub, Fin.val_one']
+    rw [Fin.val_sub, Fin.val_one']
     show (j.val + J - 1) % J = (J - 1 % J + j.val) % J
     rcases Nat.lt_or_ge 1 J with hJ | hJ
     · rw [Nat.mod_eq_of_lt hJ]
@@ -257,7 +257,7 @@ theorem mem_chain (j : Fin J) (i : Fin (Dt.nch (zE J j))) (x : PlaneGramData.ML 
 
 theorem mem_T (j : Fin J) (m : Fin r) (x : PlaneGramData.TL J Dt.nL r) :
     x ∈ Dt.TSet (zE J j) m ↔ gO Dt x ∈ (toData Dt).Tset j m := by
-  simp only [PlaneGramData.SignedChainData.TSet, Set.mem_union, Set.mem_setOf_eq]
+  simp only [PlaneGramData.SignedChainData.TSet, Set.mem_union, Set.mem_ofPred_eq]
   rcases x with ⟨k, l | m''⟩
   · show _ ↔ (Sum.inl ⟨k, l⟩ : (toData Dt).OL) ∈ (toData Dt).Tset j m
     simp only [TwistData.Tset, TwistData.LLj, Finset.mem_union, Finset.mem_image, Finset.mem_filter,
@@ -307,7 +307,7 @@ theorem mem_link (j : Fin J) (m : Fin r) (x : PlaneGramData.ML J Dt.nL r) :
     show _ ↔ (Sum.inl ⟨k, l⟩ : (toData Dt).ML) ∈ (toData Dt).Yset j m
     simp only [TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw, TwistData.mtp, Finset.mem_union,
       Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro ((⟨m'', h⟩ | ⟨l', h⟩) | ⟨m1, h1, h2, h⟩)
       · cases h
@@ -330,7 +330,7 @@ theorem mem_link (j : Fin J) (m : Fin r) (x : PlaneGramData.ML J Dt.nL r) :
     show _ ↔ (Sum.inr (Sum.inl ((zE J).symm k, m')) : (toData Dt).ML) ∈ (toData Dt).Yset j m
     simp only [TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw, TwistData.mtp, Finset.mem_union,
       Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro ((⟨m'', h⟩ | ⟨l', h⟩) | ⟨m1, h1, h2, h⟩) <;> cases h
     · rintro ((⟨a, h⟩ | ⟨b, hb, h⟩) | ⟨a, -, h⟩) <;> cases h
@@ -338,7 +338,7 @@ theorem mem_link (j : Fin J) (m : Fin r) (x : PlaneGramData.ML J Dt.nL r) :
     show _ ↔ (Sum.inr (Sum.inr (Sum.inl ((zE J).symm k, m'))) : (toData Dt).ML) ∈ (toData Dt).Yset j m
     simp only [TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw, TwistData.mtp, Finset.mem_union,
       Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro ((⟨m'', h⟩ | ⟨l', h⟩) | ⟨m1, h1, h2, h⟩)
       · obtain ⟨hk, rfl⟩ := PlaneGramData.ML.wc.inj h
@@ -356,7 +356,7 @@ theorem mem_link (j : Fin J) (m : Fin r) (x : PlaneGramData.ML J Dt.nL r) :
     show _ ↔ (Sum.inr (Sum.inr (Sum.inr ((zE J).symm k, m'))) : (toData Dt).ML) ∈ (toData Dt).Yset j m
     simp only [TwistData.Yset, TwistData.wSet, TwistData.LLj, TwistData.mb, TwistData.mw, TwistData.mtp, Finset.mem_union,
       Finset.mem_image, Finset.mem_filter, Finset.mem_univ, true_and]
-    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_setOf_eq]
+    simp only [PlaneGramData.SignedChainData.linkML, Set.mem_union, Set.mem_ofPred_eq]
     constructor
     · rintro ((⟨m'', h⟩ | ⟨l', h⟩) | ⟨m1, h1, h2, h⟩)
       · cases h
@@ -439,7 +439,7 @@ theorem sum_single_inj {α β : Type} [DecidableEq α] (u : α → β) (hu : Fun
   refine ⟨fun v0 => ?_, fun x hx => ?_⟩
   · simp [Finsupp.finsetSum_apply, Finsupp.single_apply, hu.eq_iff]
   · simp only [Finsupp.finsetSum_apply, Finsupp.single_apply]
-    exact Finset.sum_eq_zero fun v _ => if_neg fun h => hx ⟨v, h⟩
+    exact Finset.sum_eq_zero fun v _ => ite_eq_right fun h => hx ⟨v, h⟩
 
 theorem liftVar_inj : Function.Injective Dt.liftVar := by
   rintro ⟨⟨j, l | m⟩, a⟩ ⟨⟨j', l' | m'⟩, a'⟩ h
@@ -509,9 +509,9 @@ theorem digit_comm (ρ : (toData Dt).Tau → Fin r → ℕ) (F : MvPolynomial (P
   refine Finset.sum_congr rfl fun mo _ => ?_
   rw [coeff_rename_mapDomain _ (gO_inj Dt)]
   by_cases hd : Dt.digOK (fun x => ρ ((zE J).symm x.1.1, x.1.2) x.2) mo
-  · rw [if_pos ((inClass_iff Dt ρ mo).2 hd), if_pos hd, map_mul, rename_C, lift_mono,
+  · rw [ite_eq_left ((inClass_iff Dt ρ mo).2 hd), ite_eq_left hd, map_mul, rename_C, lift_mono,
       C_mul_monomial, mul_one]
-  · rw [if_neg (fun h => hd ((inClass_iff Dt ρ mo).1 h)), if_neg hd]
+  · rw [ite_eq_right (fun h => hd ((inClass_iff Dt ρ mo).1 h)), ite_eq_right hd]
 
 theorem dO_gO (x : PlaneGramData.TL J Dt.nL r) : (toData Dt).dO (gO Dt x) = Dt.d x := by
   rcases x with ⟨j, l | m⟩
@@ -556,12 +556,12 @@ theorem dLL_eq (j : Fin J) : (toData Dt).dLL j = Dt.dLL (zE J j) := by
   unfold TwistData.dLL TwistData.LLj PlaneGramData.SignedChainData.dLL
   rw [Finset.sum_filter, Fintype.sum_sigma, Finset.sum_eq_single (zE J j)]
   · refine Finset.sum_congr rfl fun l _ => ?_
-    rw [if_pos]
+    rw [ite_eq_left]
     show (zE J).symm (zE J j) = j
     exact RingEquiv.symm_apply_apply _ _
   · intro k _ hk
     refine Finset.sum_eq_zero fun l _ => ?_
-    rw [if_neg]
+    rw [ite_eq_right]
     intro h
     apply hk
     have h' : (zE J).symm k = j := h
@@ -578,7 +578,7 @@ theorem vQ_unit (S : G.UniformizedDVR p O) (u : O) (hu : IsUnit u) : vQ p S (alg
   have h1 := IsFractionRing.injective O (G.KK O) hs
   have key : G.ordW (algebraMap O (G.KK O) u) = 0 := by
     unfold G.ordW
-    rw [if_neg hx]
+    rw [ite_eq_right hx]
     simp only
     rw [← h1, IsDiscreteValuationRing.addVal_mul, ← hu.unit_spec,
       IsDiscreteValuationRing.addVal_eq_zero_of_unit, zero_add, sub_self]

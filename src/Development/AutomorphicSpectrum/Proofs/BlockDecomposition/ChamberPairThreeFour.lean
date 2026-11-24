@@ -103,7 +103,7 @@ lemma differentiable_aff_line (α β γ : ℝ) (p v : ℂ × ℂ) :
 
 lemma mem_tube_chg {Ω : Set (ℝ × ℝ)} {α₁ β₁ γ₁ α₂ β₂ γ₂ : ℝ} {l : ℂ × ℂ} :
     l ∈ tube (chgR α₁ β₁ γ₁ α₂ β₂ γ₂ ⁻¹' Ω) ↔ chg α₁ β₁ γ₁ α₂ β₂ γ₂ l ∈ tube Ω := by
-  simp only [tube, Set.mem_setOf_eq, Set.mem_preimage, chg, chgR, aff_re]
+  simp only [tube, Set.mem_ofPred_eq, Set.mem_preimage, chg, chgR, aff_re]
 
 lemma chg_line (α₁ β₁ γ₁ α₂ β₂ γ₂ : ℝ) (p v : ℂ × ℂ) (τ : ℂ) :
     chg α₁ β₁ γ₁ α₂ β₂ γ₂ (p + τ • v) = chg α₁ β₁ γ₁ α₂ β₂ γ₂ p +
@@ -304,21 +304,21 @@ def chamberPairThreeFour (M : ℝ) : Set (ℝ × ℝ) := {x | x.1 + 2 * x.2 < -M
 def chamberPairFourLast (M : ℝ) : Set (ℝ × ℝ) := {x | x.2 < -M ∧ x.1 < -M}
 
 lemma mem_Om1 {N r : ℝ} {x : ℝ × ℝ} : x ∈ Om1 N r ↔ r < N - x.1 ∧ r < x.1 + 2 * x.2 + 2 - N := by
-  simp only [Om1, Set.mem_preimage, chgR, affR, coneC, Set.mem_setOf_eq]
+  simp only [Om1, Set.mem_preimage, chgR, affR, coneC, Set.mem_ofPred_eq]
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
 
 lemma mem_Om2 {N r : ℝ} {x : ℝ × ℝ} : x ∈ Om2 N r ↔ r < N - x.1 - x.2 ∧ r < x.2 + 1 := by
-  simp only [Om2, Set.mem_preimage, chgR, affR, coneA, Set.mem_setOf_eq]
+  simp only [Om2, Set.mem_preimage, chgR, affR, coneA, Set.mem_ofPred_eq]
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
 
 lemma mem_Om3 {N r : ℝ} {x : ℝ × ℝ} :
     x ∈ Om3 N r ↔ r < 2 * N - 1 - x.1 - 2 * x.2 ∧ r < 2 * N - 1 - x.1 := by
-  simp only [Om3, Set.mem_preimage, chgR, affR, coneC, Set.mem_setOf_eq]
+  simp only [Om3, Set.mem_preimage, chgR, affR, coneC, Set.mem_ofPred_eq]
   constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
 
 lemma mem_Om4 {N r : ℝ} {x : ℝ × ℝ} :
     x ∈ Om4 N r ↔ (r < N - 1 - x.2 ∧ r < 2 * N - 1 - x.2 - x.1) ∧ x.1 < 1 / 2 := by
-  simp only [Om4, Set.mem_inter_iff, Set.mem_preimage, chgR, affR, coneI, Set.mem_setOf_eq]
+  simp only [Om4, Set.mem_inter_iff, Set.mem_preimage, chgR, affR, coneI, Set.mem_ofPred_eq]
   constructor <;> rintro ⟨⟨h₁, h₂⟩, h₃⟩ <;> refine ⟨⟨?_, ?_⟩, h₃⟩ <;> linarith
 
 lemma isOpen_hp (α β γ r : ℝ) : IsOpen {x : ℝ × ℝ | r < affR α β γ x} :=
@@ -331,7 +331,7 @@ lemma convex_hp (α β γ r : ℝ) : Convex ℝ {x : ℝ × ℝ | r < affR α β
   have h := convex_halfSpace_gt hl (r - γ)
   have e : {x : ℝ × ℝ | r < affR α β γ x} = {w : ℝ × ℝ | r - γ < α * w.1 + β * w.2} := by
     ext x
-    simp only [Set.mem_setOf_eq, affR]
+    simp only [Set.mem_ofPred_eq, affR]
     constructor <;> intro h' <;> linarith
   rw [e]
   exact h
@@ -364,7 +364,7 @@ lemma isOpen_convex_Om3 (N r : ℝ) : IsOpen (Om3 N r) ∧ Convex ℝ (Om3 N r) 
 lemma isOpen_convex_Om4 (N r : ℝ) : IsOpen (Om4 N r) ∧ Convex ℝ (Om4 N r) := by
   have h := open_convex2 (Ω := {x : ℝ × ℝ | r < N - 1 - x.2 ∧ r < 2 * N - 1 - x.2 - x.1})
     0 (-1) (N - 1) (-1) (-1) (2 * N - 1) r fun x => by
-      simp only [affR, Set.mem_setOf_eq]
+      simp only [affR, Set.mem_ofPred_eq]
       constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith
   have h' := (isOpen_hp (-1) 0 (1 / 2) 0)
   have h'' := (convex_hp (-1) 0 (1 / 2) 0)
@@ -372,7 +372,7 @@ lemma isOpen_convex_Om4 (N r : ℝ) : IsOpen (Om4 N r) ∧ Convex ℝ (Om4 N r) 
       {x | 0 < affR (-1) 0 (1 / 2) x} := by
     ext x
     rw [mem_Om4]
-    simp only [affR, Set.mem_inter_iff, Set.mem_setOf_eq]
+    simp only [affR, Set.mem_inter_iff, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨h₁, h₂⟩; exact ⟨h₁, by linarith⟩
     · rintro ⟨h₁, h₂⟩; exact ⟨h₁, by linarith⟩
@@ -381,35 +381,35 @@ lemma isOpen_convex_Om4 (N r : ℝ) : IsOpen (Om4 N r) ∧ Convex ℝ (Om4 N r) 
 
 lemma isOpen_chamberPairOneTwo (M : ℝ) : IsOpen (chamberPairOneTwo M) :=
   (open_convex2 (-1) 0 0 1 1 0 M fun x => by
-    simp only [chamberPairOneTwo, affR, Set.mem_setOf_eq]
+    simp only [chamberPairOneTwo, affR, Set.mem_ofPred_eq]
     constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith).1
 
 lemma isOpen_V12 (M : ℝ) : IsOpen (chamberPairTwoThree M) :=
   (open_convex2 (-1) (-1) 0 1 2 0 M fun x => by
-    simp only [chamberPairTwoThree, affR, Set.mem_setOf_eq]
+    simp only [chamberPairTwoThree, affR, Set.mem_ofPred_eq]
     constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith).1
 
 lemma isOpen_V23 (M : ℝ) : IsOpen (chamberPairThreeFour M) :=
   (open_convex2 (-1) (-2) 0 0 1 0 M fun x => by
-    simp only [chamberPairThreeFour, affR, Set.mem_setOf_eq]
+    simp only [chamberPairThreeFour, affR, Set.mem_ofPred_eq]
     constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith).1
 
 lemma isOpen_V34 (M : ℝ) : IsOpen (chamberPairFourLast M) :=
   (open_convex2 0 (-1) 0 (-1) 0 0 M fun x => by
-    simp only [chamberPairFourLast, affR, Set.mem_setOf_eq]
+    simp only [chamberPairFourLast, affR, Set.mem_ofPred_eq]
     constructor <;> rintro ⟨h₁, h₂⟩ <;> constructor <;> linarith).1
 
 lemma nonempty_V01 (M : ℝ) : (chamberPairOneTwo M).Nonempty :=
-  ⟨(-M - 1, 2 * M + 2), by simp only [chamberPairOneTwo, Set.mem_setOf_eq]; constructor <;> linarith⟩
+  ⟨(-M - 1, 2 * M + 2), by simp only [chamberPairOneTwo, Set.mem_ofPred_eq]; constructor <;> linarith⟩
 
 lemma nonempty_V12 (M : ℝ) : (chamberPairTwoThree M).Nonempty :=
-  ⟨(-3 * M - 3, 2 * M + 2), by simp only [chamberPairTwoThree, Set.mem_setOf_eq]; constructor <;> linarith⟩
+  ⟨(-3 * M - 3, 2 * M + 2), by simp only [chamberPairTwoThree, Set.mem_ofPred_eq]; constructor <;> linarith⟩
 
 lemma nonempty_V23 (M : ℝ) : (chamberPairThreeFour M).Nonempty :=
-  ⟨(-3 * M - 3, M + 1), by simp only [chamberPairThreeFour, Set.mem_setOf_eq]; constructor <;> linarith⟩
+  ⟨(-3 * M - 3, M + 1), by simp only [chamberPairThreeFour, Set.mem_ofPred_eq]; constructor <;> linarith⟩
 
 lemma nonempty_V34 (M : ℝ) : (chamberPairFourLast M).Nonempty :=
-  ⟨(-M - 1, -M - 1), by simp only [chamberPairFourLast, Set.mem_setOf_eq]; constructor <;> linarith⟩
+  ⟨(-M - 1, -M - 1), by simp only [chamberPairFourLast, Set.mem_ofPred_eq]; constructor <;> linarith⟩
 
 lemma exists_midpoint (N r : ℝ) (x : ℝ × ℝ) :
     ∃ a ∈ coneI r, ∃ b ∈ Om3 N r, x = midpoint ℝ a b := by
@@ -423,7 +423,7 @@ lemma exists_midpoint (N r : ℝ) (x : ℝ × ℝ) :
   have h₄ := abs_nonneg (r + 1 - 2 * N + 2 * u)
   have h₅ := abs_nonneg (r + 1 - 2 * N + 2 * u + 4 * v - 2 * B)
   refine ⟨(A, B), ?_, (2 * u - A, 2 * v - B), ?_, ?_⟩
-  · simp only [coneI, Set.mem_setOf_eq]
+  · simp only [coneI, Set.mem_ofPred_eq]
     constructor <;> linarith
   · rw [mem_Om3]
     simp only
@@ -552,7 +552,7 @@ theorem core (hId : IdTube) (hTC : TubeChain) (N R : ℝ) (hR : |N| + 1 ≤ R)
     refine ⟨chamberPairOneTwo (100 * R), isOpen_chamberPairOneTwo _, nonempty_V01 _, ?_, ?_⟩
     · rintro x ⟨h₁, h₂⟩
       refine ⟨?_, mem_Om1.2 ⟨?_, ?_⟩⟩
-      · simp only [coneI, Set.mem_setOf_eq]
+      · simp only [coneI, Set.mem_ofPred_eq]
         constructor <;> linarith
       all_goals linarith
     · intro l hl g

@@ -159,7 +159,7 @@ theorem exists_compl_proj (ρ : Representation ℂ H W) (B : W →ₗ⋆[ℂ] W 
     intro u hu k
     show ρ (k : H) u = ((1 : ℂˣ) : ℂ) • u
     simp [hu k k.2]
-  haveI : FiniteDimensional ℂ (Z.toSubmodule ⊓ GlobalTheory.PRep.fixed ρ K : Submodule ℂ W) :=
+  have : FiniteDimensional ℂ (Z.toSubmodule ⊓ GlobalTheory.PRep.fixed ρ K : Submodule ℂ W) :=
     Submodule.finiteDimensional_of_le inf_le_right
   obtain ⟨m, hmM, hm⟩ := exists_orth_proj B hdef (Z.toSubmodule ⊓ GlobalTheory.PRep.fixed ρ K) v
   refine ⟨m, hmM.1, fun z hz => ?_⟩

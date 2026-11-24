@@ -102,7 +102,7 @@ theorem leftInv_integral [dt.IsMulRightInvariant] (f : H → ℂ) :
 
 theorem measurable_fiber [SFinite dt] {f : H → ℝ≥0∞} (hf : Measurable f) :
     Measurable fun x => ∫⁻ t : T, f (t * x) ∂dt :=
-  (hf.comp ((measurable_subtype_coe.comp measurable_fst).mul measurable_snd)).lintegral_prod_left'
+  (hf.comp ((measurable_subtypeVal.comp measurable_fst).mul measurable_snd)).lintegral_prod_left'
 
 theorem IsQuotMeasure.eq_map {ν : Measure (Quot T)} (h : IsQuotMeasure T dt dh ν) {b : H → ℝ≥0∞}
     (hb : Measurable b) (h1 : ∀ x, ∫⁻ t : T, b (t * x) ∂dt = 1) : ν = (dh.withDensity b).map (mk T) := by
@@ -118,8 +118,8 @@ variable [LocallyCompactSpace H] [T2Space H]
 
 theorem exists_bruhat (hT : IsClosed (T : Set H)) (dt : Measure T) [dt.IsHaarMeasure] [dt.IsMulRightInvariant] :
     ∃ b : H → ℝ≥0∞, Measurable b ∧ ∀ x, ∫⁻ t : T, b (t * x) ∂dt = 1 := by
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
-  haveI := GlobalTheory.SqIntRep.isInvInvariant_of_unimodular dt
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
+  have := GlobalTheory.SqIntRep.isInvInvariant_of_unimodular dt
   exact GlobalTheory.exists_bruhat_function_closedEmbedding H T T.subtype hT.isClosedEmbedding_subtypeVal dt
 
 variable (hT : IsClosed (T : Set H)) [dt.IsHaarMeasure] [dt.IsMulRightInvariant]
@@ -137,12 +137,12 @@ theorem IsQuotMeasure.eq_quotMeas {ν : Measure (Quot T)} (h : IsQuotMeasure T d
 variable (dt dh) in
 theorem isQuotMeasure_quotMeas [SFinite dh] [dh.IsMulLeftInvariant] : IsQuotMeasure T dt dh (quotMeas T dt dh) := by
   obtain ⟨b, hb, h1⟩ := exists_bruhat hT dt
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
-  haveI := GlobalTheory.SqIntRep.isInvInvariant_of_unimodular dt
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
+  have := GlobalTheory.SqIntRep.isInvInvariant_of_unimodular dt
   have key : ∀ S : Subgroup H, S = T.subtype.range → ∃ ν : Measure (Quot S),
       ∀ f : H → ℝ≥0∞, Measurable f → ∫⁻ g, f g ∂dh = ∫⁻ q, ∫⁻ t : T, f (t * q.out) ∂dt ∂ν := by
     rintro S rfl
-    exact GlobalTheory.exists_isQuotientMeasure_of_bruhatFunction H T T.subtype measurable_subtype_coe dh dt b hb h1
+    exact GlobalTheory.exists_isQuotientMeasure_of_bruhatFunction H T T.subtype measurable_subtypeVal dh dt b hb h1
   obtain ⟨ν, hν⟩ := key T (T.range_subtype).symm
   exact IsQuotMeasure.quotMeas hν
 
@@ -150,7 +150,7 @@ variable [SFinite dh] [dh.IsMulLeftInvariant]
 
 theorem measurePreserving_rmul_quotMeas [dh.IsMulRightInvariant] (g : H) :
     MeasurePreserving (rmul T g) (quotMeas T dt dh) (quotMeas T dt dh) := by
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
   have hm : Measurable (rmul T g) := measurable_from_quotient.2 (measurable_mk.comp (measurable_mul_const g))
   refine ⟨hm, IsQuotMeasure.eq_quotMeas hT fun f hf => ?_⟩
   have hi := leftInv_lintegral (dt := dt) f
@@ -162,12 +162,12 @@ theorem measurePreserving_rmul_quotMeas [dh.IsMulRightInvariant] (g : H) :
 theorem weil_integral {f : H → ℂ} (hf : Integrable f dh) :
     (∀ᵐ q ∂quotMeas T dt dh, Integrable (fun t : T => f (t * q.out)) dt) ∧
       HasQuotInt T dt dh (fun x => ∫ t : T, f (t * x) ∂dt) (∫ g, f g ∂dh) := by
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
   obtain ⟨b, hb, h1⟩ := exists_bruhat hT dt
   have hW := isQuotMeasure_quotMeas dt dh hT
   have hν := hW.eq_map hb h1
   have hΦ : Measurable fun p : H × T => (p.2 : H) * p.1 :=
-    (measurable_subtype_coe.comp measurable_snd).mul measurable_fst
+    (measurable_subtypeVal.comp measurable_snd).mul measurable_fst
   have hP : MeasurePreserving (fun p : H × T => (p.2 : H) * p.1) ((dh.withDensity b).prod dt) dh := by
     refine ⟨hΦ, Measure.ext_of_lintegral _ fun φ hφ => ?_⟩
     have hi := leftInv_lintegral (dt := dt) φ
@@ -184,7 +184,7 @@ theorem weil_integral {f : H → ℂ} (hf : Integrable f dh) :
     filter_upwards [(lintegral_eq_zero_iff (measurable_descend (leftInv_lintegral (dt := dt) _)
       (measurable_fiber (measurable_one.indicator hNm)))).1 h2.symm] with q hq
     have h3 := (lintegral_eq_zero_iff (f := fun t : T => N.indicator (1 : H → ℝ≥0∞) (t * q.out))
-      ((measurable_one.indicator hNm).comp (measurable_subtype_coe.mul_const _))).1 hq
+      ((measurable_one.indicator hNm).comp (measurable_subtypeVal.mul_const _))).1 hq
     filter_upwards [h3] with t ht
     by_contra hne
     simp [Set.indicator_of_mem (hN hne)] at ht
@@ -197,11 +197,11 @@ theorem weil_integral {f : H → ℂ} (hf : Integrable f dh) :
   have e : descend T (fun x => ∫ t : T, f (t * x) ∂dt) =ᵐ[quotMeas T dt dh]
       descend T fun x => ∫ t : T, f' (t * x) ∂dt := hae.mono fun q hq => integral_congr_ae hq
   refine ⟨?_, Integrable.congr ?_ e.symm, ?_⟩
-  · have h2 := hW _ hm.measurable.enorm
-    have h3 := ae_lt_top (measurable_descend (leftInv_lintegral (dt := dt) _) (measurable_fiber hm.measurable.enorm))
+  · have h2 := hW _ hm.measurable.eNorm
+    have h3 := ae_lt_top (measurable_descend (leftInv_lintegral (dt := dt) _) (measurable_fiber hm.measurable.eNorm))
       (h2 ▸ hf'.2.ne :)
     filter_upwards [hae, h3] with q hq h4
-    exact Integrable.congr ⟨(hm.comp_measurable (measurable_subtype_coe.mul_const _)).aestronglyMeasurable, h4⟩ hq.symm
+    exact Integrable.congr ⟨(hm.comp_measurable (measurable_subtypeVal.mul_const _)).aestronglyMeasurable, h4⟩ hq.symm
   · rw [hν, integrable_map_measure hD measurable_mk.aemeasurable]
     exact hI.integral_prod_left.congr (.of_forall fun x => (hi.descend_mk x).symm)
   · rw [quotInt, integral_congr_ae e, hν, integral_map measurable_mk.aemeasurable hD, integral_congr_ae hff]
@@ -211,9 +211,9 @@ theorem weil_integral {f : H → ℂ} (hf : Integrable f dh) :
 
 theorem quotMeas_image_lt_top [IsFiniteMeasureOnCompacts dh] {C : Set H} (hC : IsCompact C) :
     quotMeas T dt dh (mk T '' C) < ∞ := by
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
   obtain ⟨U, hU, hU1⟩ := exists_compact_mem_nhds (1 : T)
-  have hK : IsCompact (((↑) : T → H) '' U * C) := (hU.image continuous_subtype_val).mul hC
+  have hK : IsCompact (((↑) : T → H) '' U * C) := (hU.image continuous_subtypeVal).mul hC
   have hm : Measurable ((((↑) : T → H) '' U * C).indicator (1 : H → ℝ≥0∞)) := measurable_one.indicator hK.measurableSet
   have hi := leftInv_lintegral (dt := dt) ((((↑) : T → H) '' U * C).indicator (1 : H → ℝ≥0∞))
   have h1 := mul_meas_ge_le_lintegral₀ (μ := quotMeas T dt dh)
@@ -224,7 +224,7 @@ theorem quotMeas_image_lt_top [IsFiniteMeasureOnCompacts dh] {C : Set H} (hC : I
     (Measure.measure_pos_of_mem_nhds dt hU1).ne'
   refine (measure_mono ?_).trans_lt h3
   rintro _ ⟨x, hx, rfl⟩
-  rw [mem_setOf_eq, hi.descend_mk, ← lintegral_indicator_one hU.measurableSet]
+  rw [mem_ofPred_eq, hi.descend_mk, ← lintegral_indicator_one hU.measurableSet]
   refine lintegral_mono fun t => ?_
   by_cases ht : t ∈ U
   · rw [indicator_of_mem ht, indicator_of_mem (Set.mul_mem_mul (mem_image_of_mem _ ht) hx)]; rfl
@@ -301,7 +301,7 @@ instance isMulRightInvariant_map (μ : Measure H) [μ.IsMulRightInvariant] : (μ
 include hT in
 theorem quotMeas_map :
     quotMeas T' (dt.map (subEquiv e h)) (dh.map e) = (quotMeas T dt dh).map (quotMap e h) := by
-  haveI : LocallyCompactSpace T := hT.locallyCompactSpace
+  have : LocallyCompactSpace T := hT.locallyCompactSpace
   have hT' : IsClosed (T' : Set H') := by
     convert hT.preimage (map_continuous e.symm) using 1
     ext x
@@ -314,7 +314,7 @@ theorem quotMeas_map :
   refine ((lintegral_map (measurable_descend hi (measurable_fiber hf)) hm).trans (lintegral_congr fun q => ?_)).symm
   conv_lhs => rw [← Quotient.out_eq q]
   refine (hi.descend_mk (e q.out)).trans ?_
-  rw [lintegral_map (f := fun t : T' => f (t * e q.out)) (hf.comp (measurable_subtype_coe.mul_const _))
+  rw [lintegral_map (f := fun t : T' => f (t * e q.out)) (hf.comp (measurable_subtypeVal.mul_const _))
     (map_continuous (subEquiv e h)).measurable]
   simp only [map_mul]
   rfl
@@ -400,18 +400,18 @@ theorem isProperOrbit_of_isClosed [LocallyCompactSpace H] [SecondCountableTopolo
     (h : IsClosed (range fun x : H => x⁻¹ * γ * x)) : IsProperOrbit (cent γ) γ := by
   intro K hK
   let X := range fun x : H => x⁻¹ * γ * x
-  letI : MulAction H X :=
+  let : MulAction H X :=
     { smul := fun g y => ⟨g * y * g⁻¹, by
         obtain ⟨_, x, rfl⟩ := y
         exact ⟨x * g⁻¹, by group⟩⟩
       one_smul := fun y => Subtype.ext (show 1 * y.1 * 1⁻¹ = y by group)
       mul_smul := fun a b y => Subtype.ext (show a * b * y.1 * (a * b)⁻¹ = a * (b * y.1 * b⁻¹) * a⁻¹ by group) }
-  haveI : ContinuousSMul H X :=
+  have : ContinuousSMul H X :=
     ⟨Continuous.subtype_mk (f := fun p : H × X => p.1 * p.2.1 * p.1⁻¹) (by fun_prop) _⟩
-  haveI : MulAction.IsPretransitive H X := ⟨by
+  have : MulAction.IsPretransitive H X := ⟨by
     rintro ⟨_, x, rfl⟩ ⟨_, y, rfl⟩
     exact ⟨y⁻¹ * x, Subtype.ext (show y⁻¹ * x * (x⁻¹ * γ * x) * (y⁻¹ * x)⁻¹ = y⁻¹ * γ * y by group)⟩⟩
-  haveI : LocallyCompactSpace X := h.locallyCompactSpace
+  have : LocallyCompactSpace X := h.locallyCompactSpace
   let o : X := ⟨γ, 1, by simp⟩
   have ho : IsOpenMap fun g : H => g • o := isOpenMap_smul_of_sigmaCompact o
   have hK' : IsCompact (((↑) : X → H) ⁻¹' K) := h.isClosedEmbedding_subtypeVal.isCompact_preimage hK

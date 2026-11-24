@@ -66,8 +66,8 @@ theorem isPIsog_pullMor {S S' : Scheme.{0}} {s : S ⟶ Sp R} {f : S' ⟶ S} {o o
     {o₁ o₁' : Obj b N (f ≫ s)} (n : ObjMap o₁ o f) (n' : ObjMap o₁' o' f) {c : ℕ} {ψ : o.A ⟶ o'.A}
     (hψ : IsPIsog c o o' ψ) : IsPIsog c o₁ o₁' (pullMor n.cart n'.cart ψ) := by
   obtain ⟨hc, hmon, hact, heta, ⟨hpol⟩, ψ', hmon', h1, h2⟩ := hψ
-  haveI := hmon
-  haveI := hmon'
+  have := hmon
+  have := hmon'
   have hl := pullMor_left n.cart n'.cart ψ
   set pm := pullMor n.cart n'.cart ψ with hpm
   refine ⟨hc, isMonHom_pullMor _ _ _, ?_, ?_, ?_, pullMor n'.cart n.cart ψ', isMonHom_pullMor _ _ _,

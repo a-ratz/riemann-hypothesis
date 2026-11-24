@@ -89,7 +89,7 @@ private theorem ev_tower {G : GDatum} {k Q : Type} [Field k] [Group Q] {act : G.
 
 theorem UpperTheory.trace_eta_identity : UpperTheory.Gal.Int.Geo.TrEta := by
   intro p _ D G L R _ _ gb h X s N' N o' o ψ hT n c' c hN' hN x y hxy
-  haveI : IsMonHom ψ := hT.1
+  have : IsMonHom ψ := hT.1
   have h3' := N'.2.1
   have h3 := N.2.1
   have hn : 0 < n := Nat.pos_of_ne_zero (by rintro rfl; rw [zero_mul] at hN'; omega)

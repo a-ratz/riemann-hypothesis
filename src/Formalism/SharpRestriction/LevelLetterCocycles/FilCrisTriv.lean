@@ -346,7 +346,7 @@ theorem fil_pull [FiniteDimensional Qp LL] (W : LocWach PD LL O v n)
     (h2 : IsCrys PD T₂.ρ) (hY : IsCrys PD Y.ρ) (u : ℤ) (hu : 1 ≤ u) (τ₀ : K₀ →ₐ[Qp] LL)
     {ν : Y.V ⊗[Qp] B} (hν : ν ∈ FilCris PD Y.ρ u ⊓ DcrisL PD Y.ρ τ₀) :
     ∃ μ ∈ FilCris PD T₂.ρ u ⊓ DcrisL PD T₂.ρ τ₀, crisMap B ι.f μ = ν := by
-  haveI : FiniteDimensional Qp W.one.V := Module.Finite.trans LL W.one.V
+  have : FiniteDimensional Qp W.one.V := Module.Finite.trans LL W.one.V
   obtain ⟨hνF, hνL⟩ := Submodule.mem_inf.1 hν
   rw [FilCris, Submodule.mem_inf] at hνF
   obtain ⟨hνD, hνV⟩ := hνF

@@ -74,7 +74,7 @@ theorem VanishNearPoint.proof (hOpen : FiniteMapOpen.Statement) : VanishNearPoin
   have hf0 : Ideal.Quotient.mk J f ≠ 0 := by
     rwa [Ne, Ideal.Quotient.eq_zero_iff_mem]
   obtain ⟨h, hh, hh0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot
-    (Ideal.comap_ne_bot_of_integral_mem hf0 (Ideal.mem_span_singleton_self _) hint)
+    (Ideal.under_ne_bot_of_integral_mem hf0 (Ideal.mem_span_singleton_self _) hint)
   rw [Ideal.mem_comap, Ideal.mem_span_singleton'] at hh
   obtain ⟨a, ha⟩ := hh
   obtain ⟨q, rfl⟩ := Ideal.Quotient.mk_surjective a

@@ -142,9 +142,9 @@ theorem GlobalTheory.K5.mem_towerAlg_of_fixed :
       ∀ (T : Tower p Ω) (x : (integralClosure (O0 p) Ω)),
         (∀ g ∈ ⨅ n, Gn T n, g (x : Ω) = x) → x ∈ towerAlg T := by
   intro p _ Ω _ _ h T x hx
-  haveI := h.clo
-  haveI := h.alg
-  haveI : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo h
+  have := h.clo
+  have := h.alg
+  have : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo h
   rw [_root_.GlobalTheory.towerAlg_mem_iff p Ω T x]
   set B := Algebra.adjoin (O0 p) (Set.range T.ζ ∪ Set.range T.qq)
   obtain ⟨b, hb, c, hc, hc0, hbc⟩ := GlobalTheory.mem_adjoin_div_of_fixed (O0 p) Ω h.inj
@@ -277,11 +277,11 @@ theorem exists_trData_towerAlg : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field
   obtain ⟨v, hvint, hvinv, hp0, hp1, hS⟩ := _root_.GlobalTheory.ValuationAlmostSeparation.exists_valuation_almostSep p Ω hp2 hclo T
   obtain ⟨U, -, hUfin, hUfix, hUsep⟩ := hS (F.image Subtype.val)
   obtain ⟨n, a, b, c, hsep, hc⟩ := hUsep (v p) hp1
-  haveI := hUfin
-  haveI : Fintype (↥(⨅ n, Gn T n) ⧸ U) := Fintype.ofFinite _
+  have := hUfin
+  have : Fintype (↥(⨅ n, Gn T n) ⧸ U) := Fintype.ofFinite _
   have hvinv' : ∀ (g : ↥(⨅ n, Gn T n)) (x : Ω), v (g • x) = v x := fun g x => hvinv g x
   have hc0 : c ≠ 0 := by
-    rintro rfl; rw [map_zero] at hc; exact (not_lt_zero' hc)
+    rintro rfl; rw [map_zero] at hc; exact (not_lt_zero hc)
   have hvc : 0 < v c := lt_of_le_of_lt (by positivity) hc
 
   have hpfix : ∀ (g : ↥(⨅ n, Gn T n)), g • (p : Ω) = p := fun g => by

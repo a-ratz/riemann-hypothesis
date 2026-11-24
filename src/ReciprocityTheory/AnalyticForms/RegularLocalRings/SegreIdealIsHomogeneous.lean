@@ -175,7 +175,7 @@ theorem segreIdeal_isHomogeneous {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP
     (segreIdeal P).IsHomogeneous (homogeneousSubmodule ((k : K) → ι k) ℂ) := by
   classical
   obtain ⟨S, hS, rfl⟩ := hP
-  letI := MvPolynomial.weightedGradedAlgebra ℂ (fun q : Σ k, ι k => (Pi.single q.1 1 : K → ℕ))
+  let := MvPolynomial.weightedGradedAlgebra ℂ (fun q : Σ k, ι k => (Pi.single q.1 1 : K → ℕ))
   have hPh : (Ideal.span S).IsHomogeneous
       (weightedHomogeneousSubmodule ℂ (fun q : Σ k, ι k => (Pi.single q.1 1 : K → ℕ))) := by
     apply Ideal.homogeneous_span
@@ -206,7 +206,7 @@ theorem segreIdeal_isHomogeneous {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP
     by_cases h : n = m
     · subst h
       simp
-    · rw [if_neg, if_neg h]
+    · rw [ite_eq_right, ite_eq_right h]
       intro he
       obtain ⟨k⟩ := ‹Nonempty K›
       exact h (congrFun he k)
@@ -246,7 +246,7 @@ def chartOpen {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdea
 theorem chartOpen_cover {P : Ideal (MvPolynomial (Σ k, ι k) ℂ)} (hP : IsMultiHomogIdeal P)
     (x : projX P hP) : ∃ p, x ∈ (chartOpen hP p).1 := by
   classical
-  letI := segreGraded hP
+  let := segreGraded hP
   by_contra hcon
   push_neg at hcon
   have hall : ∀ p, segreW P p ∈ x.asHomogeneousIdeal := by

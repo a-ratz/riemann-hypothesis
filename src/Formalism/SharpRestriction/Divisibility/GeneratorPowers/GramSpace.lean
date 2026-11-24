@@ -179,7 +179,7 @@ theorem repro_sigma (b : Basis ι ℤ Y) (β : SymB cj Y) (σ : E →+* ℂ) (y 
   simp_rw [hj]
   simp_rw [← mul_assoc, ← Finset.sum_mul]
   have ho := ortho σ σ
-  simp only [if_true, integralBasis_apply] at ho
+  simp only [ite_true, integralBasis_apply] at ho
   have : ∑ j, conj (σ (ed E j)) * star (σ (RingOfIntegers.basis E j : E)) = 1 := by
     have := congrArg conj ho
 
@@ -375,7 +375,7 @@ theorem halfTrace_holds : HalfTraceStatement := by
       rw [hJskew, Matrix.neg_mulVec, neg_dotProduct, ← hu, dotProduct_comm] at h1
       have h2 : u ⬝ᵥ ev i = 0 := by linarith
       rw [dotProduct_comm]; exact h2
-    have hv1 : ev i ⬝ᵥ ev i = 1 := by rw [hort, if_pos rfl]
+    have hv1 : ev i ⬝ᵥ ev i = 1 := by rw [hort, ite_eq_left rfl]
     have hu0 : u ≠ 0 := by
       intro h0
       have : ev i = 0 := hJinj _ (by rw [← hu, h0])
@@ -394,7 +394,7 @@ theorem halfTrace_holds : HalfTraceStatement := by
     have hbes : ∑ j, lam j * ((ev j ⬝ᵥ ev i) ^ 2 * (u ⬝ᵥ u) + (ev j ⬝ᵥ u) ^ 2) ≤
         ∑ j, lam j * (u ⬝ᵥ u) := by
       refine Finset.sum_le_sum fun j _ => mul_le_mul_of_nonneg_left ?_ (hlam0 j)
-      exact bessel2 (ev j) (ev i) u (by rw [hort, if_pos rfl]) hv1 hvu huu
+      exact bessel2 (ev j) (ev i) u (by rw [hort, ite_eq_left rfl]) hv1 hvu huu
     simp only [mul_add, Finset.sum_add_distrib] at hbes
     rw [hsum1, ← hq2, hq1, ← Finset.sum_mul, ← htr] at hbes
     nlinarith
@@ -452,7 +452,7 @@ theorem etil_mem (ν : Y →ₗ[ℤ] ℤ) (a : Y) : etil ν a ∈ Dinv E := by
   unfold etil
   refine Submodule.sum_mem _ fun k _ => ?_
   rw [← zsmul_eq_mul]
-  exact zsmul_mem (FractionalIdeal.mem_coe.mpr (ed_mem k)) _
+  exact zsmul_mem (FractionalIdeal.mem_coeToSubmodule.mpr (ed_mem k)) _
 
 private theorem pos_lemma {cj : E → E} (hcj : ∀ (φ : E →+* ℂ) (z : E), φ (cj z) = star (φ z))
     (l : SymB cj Y →ₗ[ℝ] ℝ)
@@ -656,10 +656,10 @@ theorem lower_bound {cj : E → E} (hcj : ∀ (φ : E →+* ℂ) (z : E), φ (cj
         Complex.conj_im, Complex.ofReal_re, Complex.ofReal_im] <;> ring
   have htmem : t ∈ Dinv E * Dinv E := by
     rw [ht]
-    refine FractionalIdeal.mem_coe.mp (Submodule.sum_mem _ fun i _ => Submodule.add_mem _ ?_ ?_)
-    · exact FractionalIdeal.mem_coe.mpr (FractionalIdeal.mul_mem_mul (etil_mem ν (x i))
+    refine FractionalIdeal.mem_coeToSubmodule.mp (Submodule.sum_mem _ fun i _ => Submodule.add_mem _ ?_ ?_)
+    · exact FractionalIdeal.mem_coeToSubmodule.mpr (FractionalIdeal.mul_mem_mul (etil_mem ν (x i))
         (cj_mem_Dinv hcj (etil_mem ν (x' i))))
-    · exact FractionalIdeal.mem_coe.mpr (FractionalIdeal.mul_mem_mul
+    · exact FractionalIdeal.mem_coeToSubmodule.mpr (FractionalIdeal.mul_mem_mul
         (cj_mem_Dinv hcj (etil_mem ν (x i))) (etil_mem ν (x' i)))
   have ht0 : t ≠ 0 := by
     intro h0
@@ -1154,7 +1154,7 @@ theorem finiteShort_holds : FiniteShortStatement := by
   set M : ℤ := ⌈A * (1 + B)⌉ with hM
   refine (Set.Finite.pi (t := fun _ : Fin d => Set.Icc (-M) M) fun _ => Set.finite_Icc _ _).subset ?_
   intro c hc
-  simp only [Set.mem_setOf_eq] at hc
+  simp only [Set.mem_ofPred_eq] at hc
   simp only [Set.mem_pi, Set.mem_univ, true_implies]
   intro i
   set cv : Fin d → ℝ := fun i => (c i : ℝ) with hcv

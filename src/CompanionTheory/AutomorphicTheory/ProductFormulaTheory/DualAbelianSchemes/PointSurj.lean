@@ -302,7 +302,7 @@ theorem exists_affine_cover_finite_closed_points : ∀ (X : Scheme.{0}) [Compact
     intro x
     have hx : x.1 ∈ (F \ {x.1})ᶜ := fun h => h.2 rfl
     obtain ⟨_, ⟨W, hW, rfl⟩, hxW, hWo⟩ := X.isBasis_affineOpens.exists_subset_of_mem_open hx
-      (hcl _ Set.diff_subset).isOpen_compl
+      (hcl _ Set.sdiff_subset).isOpen_compl
     refine ⟨W, hW, hxW, fun y hy hyW => ?_⟩
     by_contra hne
     exact hWo hyW ⟨hy, hne⟩
@@ -319,7 +319,7 @@ theorem exists_affine_cover_finite_closed_points : ∀ (X : Scheme.{0}) [Compact
       obtain ⟨_, ⟨U, hU, rfl⟩, hyU, hUo⟩ := X.isBasis_affineOpens.exists_subset_of_mem_open hy'
         (hcl F subset_rfl).isOpen_compl
       exact Set.mem_iUnion.2 ⟨⟨U, hU, fun x hx hxU => hUo hxU hx⟩, hyU⟩)
-  haveI : Fintype F := hF.fintype
+  have : Fintype F := hF.fintype
 
   let V' : Option (F ⊕ s) → X.Opens := fun a => match a with
     | none => ⊥
@@ -440,8 +440,8 @@ theorem cech_fibre_acyclic : ∀ {k : Type} [Field k] {X T Z : Scheme.{0}} (a : 
   obtain ⟨χ, rfl⟩ : ∃ χ : R →+* k, Spec.map (CommRingCat.ofHom χ) = s :=
     ⟨(Spec.preimage s).hom, by simp⟩
   have Hx : IsPullback (π ≫ p) f a (t ≫ b) := Hy.paste_horiz H
-  haveI : Flat f := MorphismProperty.of_isPullback (P := @Flat) Hx inferInstance
-  haveI : IsSeparated f := MorphismProperty.of_isPullback (P := @IsSeparated) Hx inferInstance
+  have : Flat f := MorphismProperty.of_isPullback (P := @Flat) Hx inferInstance
+  have : IsSeparated f := MorphismProperty.of_isPullback (P := @IsSeparated) Hx inferInstance
   have hM := LB.isLB_pull hG π
   have hI := GlobalTheory.MumfordSupport.isAffineOpen_biInf_of_isSeparated f hD
   have Hs := IsPullback.of_hasPullback f (Spec.map (CommRingCat.ofHom χ))
@@ -456,7 +456,7 @@ theorem cech_fibre_acyclic : ∀ {k : Type} [Field k] {X T Z : Scheme.{0}} (a : 
   rw [hs] at Hu
   obtain ⟨u, hu⟩ : ∃ u : F ⟶ X, u = π' ≫ π ≫ p := ⟨_, rfl⟩
   rw [← hu] at Hu
-  haveI : IsIso u := Hu.isIso_fst_of_isIso
+  have : IsIso u := Hu.isIso_fst_of_isIso
   have hua : u ≫ a = g := Hu.w.trans (Category.comp_id _)
   have he : u ≫ σ = π' ≫ π := by
     refine H.hom_ext ?_ ?_
@@ -618,7 +618,7 @@ theorem cechComplex_sliceFst_singleton_acyclic_of_trunc₂ : ∀ {ν κ : Type} 
     refine ⟨fun a ha b hb c hc => ?_⟩
     have h1 := Finset.card_le_card hc.1
     have h2 := Finset.card_le_card hc.2
-    simp only [Set.mem_setOf_eq] at ha hb ⊢
+    simp only [Set.mem_ofPred_eq] at ha hb ⊢
     omega
   let P₁ := partsIn (inlEmb ν κ) (inrEmb ν κ) {s : Finset ν | s.Nonempty} {t : Finset κ | 2 ≤ t.card}
   let P := partsIn (inlEmb ν κ) (inrEmb ν κ) {s : Finset ν | s.Nonempty} {t : Finset κ | t.Nonempty}
@@ -632,7 +632,7 @@ theorem cechComplex_sliceFst_singleton_acyclic_of_trunc₂ : ∀ {ν κ : Type} 
         2 ≤ (part (inrEmb ν κ) u).card ∨ (part (inrEmb ν κ) u).card = 1 := by
       rw [← Finset.card_pos]
       omega
-    simp only [P, P₁, P₂, mem_partsIn, Set.mem_setOf_eq]
+    simp only [P, P₁, P₂, mem_partsIn, Set.mem_ofPred_eq]
     tauto
   have hd : ∀ s ∈ P₁, s ∉ P₂ := by
     intro u hu hu'
@@ -689,7 +689,7 @@ theorem cechComplex_sliceFst_singleton_acyclic_of_trunc₂ : ∀ {ν κ : Type} 
         intro s t hst x
         by_cases hs : s.Nonempty
         · have ht : t.Nonempty := isUpperSet_nonempty hst hs
-          simp only [dif_pos hs, dif_pos ht, LinearEquiv.coe_coe]
+          simp only [dite_eq_left hs, dite_eq_left ht, LinearEquiv.coe_coe]
           exact suppEquiv_res hst hs ht x
         · have := subsingleton_supp B ordConnected_nonempty hs
           rw [Subsingleton.elim x 0]
@@ -697,7 +697,7 @@ theorem cechComplex_sliceFst_singleton_acyclic_of_trunc₂ : ∀ {ν κ : Type} 
     have hi : IsIso (GlobalTheory.cechComplexMap incl) :=
       GlobalTheory.isIso_cechComplexMap _ fun s hs => by
         change Function.Bijective ⇑(if h : s.Nonempty then (suppEquiv B ordConnected_nonempty h).toLinearMap else 0)
-        rw [dif_pos hs]
+        rw [dite_eq_left hs]
         exact (suppEquiv B ordConnected_nonempty hs).bijective
     exact GlobalTheory.cubeHomologySuccIsoCech _ (subsingleton_trunc₁_empty B) n ≪≫
       HomologicalComplex.homologyMapIso (@asIso _ _ _ _ _ hi) n

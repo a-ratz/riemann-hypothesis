@@ -132,11 +132,11 @@ theorem UpperTheory.Gal.productCup_of_system.actsLin_of :
       { carrier := {m | Acts (F := F) K τ a m 0}
         add_mem' := fun {m m'} hm hm' => by simpa using (hadd m m' 0 0 hm hm').1
         zero_mem' := by
-          simp only [Set.mem_setOf_eq, Acts]
+          simp only [Set.mem_ofPred_eq, Acts]
           intro w _
           simp
         smul_mem' := fun c m hm => by
-          simp only [Set.mem_setOf_eq, Acts] at hm ⊢
+          simp only [Set.mem_ofPred_eq, Acts] at hm ⊢
           intro w hw
           rw [map_smul, LinearMap.smul_apply, map_smul, hm w hw]
           simp }

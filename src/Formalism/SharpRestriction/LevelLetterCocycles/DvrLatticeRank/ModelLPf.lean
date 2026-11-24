@@ -383,7 +383,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] {Qp K₀ K : Type} [Field Qp]
 
 theorem expS_neg (ζ : LL) {m : ℕ} (a : Fin m → LetA O n) (y : Fin m → W.DD T) {i : ℤ} (hi : i < 0) :
     expS W T c ζ a y i = 0 := by
-  simp [expS, serC, if_neg (show ¬ (0 ≤ i) by omega)]
+  simp [expS, serC, ite_eq_right (show ¬ (0 ≤ i) by omega)]
 
 theorem ind_fil (τ : K →ₐ[Qp] LL) (U : PowerSeries LL) (hU : PowerSeries.constantCoeff U ≠ 0)
     {g : ℤ → T.V ⊗[Qp] BdR} {m₀ : ℤ} (hg : MLG.Bdd g m₀)
@@ -556,7 +556,7 @@ theorem lev_Eat_simple (D : D7) (HW : HWOf D.loc) (l : ℕ) [Fact l.Prime] (hl :
     simpa using h
   have hmem : (D.loc l).ζQ 1 ∈ Ks K 1 := by
     show (D.loc l).ζQ 1 ∈ K0 K ⊔ IntermediateField.adjoin ℚ_[l] {x : Om l | x ^ (l ^ 1) = 1}
-    exact SetLike.le_def.mp le_sup_right (IntermediateField.subset_adjoin ℚ_[l] _ (by simpa using hz))
+    exact IsConcreteLE.le_iff.mp le_sup_right (IntermediateField.subset_adjoin ℚ_[l] _ (by simpa using hz))
   have hζ : τs ⟨_, hmem⟩ = ζ := hIs2 ⟨_, hmem⟩ rfl
   have hζl : ζ ^ l = 1 := by
     have h1 : (⟨_, hmem⟩ : ↥(Ks K 1)) ^ l = 1 := Subtype.ext (by simpa using hz)
@@ -659,7 +659,7 @@ theorem flat_compHom {O LL X : Type*} [CommRing O] [IsDomain O] [IsDedekindDomai
     [Algebra O LL] (hinj : Function.Injective (algebraMap O LL)) [AddCommGroup X] [Module LL X] :
     letI : Module O X := Module.compHom X (algebraMap O LL)
     Module.Flat O X := by
-  letI : Module O X := Module.compHom X (algebraMap O LL)
+  let : Module O X := Module.compHom X (algebraMap O LL)
   rw [IsDedekindDomain.flat_iff_torsion_eq_bot, eq_bot_iff]
   intro x hx
   rw [Submodule.mem_torsion_iff] at hx
@@ -842,7 +842,7 @@ theorem expS_wd [IsDomain O] [IsDedekindDomain O] (hinj : Function.Injective (al
     (h : ∑ j, algebraMap (LetA O n) W.EE ((letE c : LetA O n) * a j) ⊗ₜ[O] mkL W T π' c (y j) (hy j) =
       ∑ k, algebraMap (LetA O n) W.EE ((letE c : LetA O n) * b k) ⊗ₜ[O] mkL W T π' c (z k) (hz k)) :
     expS W T c ζ a y = expS W T c ζ b z := by
-  haveI : Module.Flat O (XO BdR T) := flat_compHom (X := XO BdR T) hinj
+  have : Module.Flat O (XO BdR T) := flat_compHom (X := XO BdR T) hinj
   have key := expwd_core (IsScalarTower.toAlgHom O (LetA O n) W.EE).toLinearMap
     (fun x y hxy => W.EE_inj hxy) (valQ Ct T hP π' hπ) (muL (W := W) T c ζ)
     (fun j => (letE c : LetA O n) * a j) (fun j => mkL W T π' c (y j) (hy j))
@@ -899,7 +899,7 @@ theorem rec_WD (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpO
   have hp : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
   have hprim : IsPrimitiveRoot ζ l := framepf_pt_prim D HW hG c ζ τ hpt
   have hprim' : IsPrimitiveRoot ζ ((D.loc l).PD K).p := by rw [hp]; exact hprim
-  haveI : IsDiscreteValuationRing ↥(OL LL) := GenPf.isDVR (D.loc l) LL
+  have : IsDiscreteValuationRing ↥(OL LL) := GenPf.isDVR (D.loc l) LL
   have hinj : Function.Injective (algebraMap ↥(OL LL) ↥LL.1) := Subtype.val_injective
   obtain ⟨-, -, -, h4W, -⟩ := hA.1 l K 1 LL hG
   have hone : ∃ j : ℕ, IsPrimitiveRoot (1 : ↥LL.1) (((D.loc l).PD K).p ^ j) := ⟨0, by simp⟩

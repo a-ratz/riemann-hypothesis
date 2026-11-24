@@ -60,7 +60,7 @@ theorem denseRange_of_isAlgClosed_padicAlgCl (l : ℕ) [Fact l.Prime] (Ω : Type
     [IsAlgClosed Ω] (j : Ω →+* PadicAlgCl l) : DenseRange j := by
   rw [Metric.denseRange_iff]
   intro a δ δpos
-  haveI : CharZero Ω := j.charZero
+  have : CharZero Ω := j.charZero
   have hint : IsIntegral ℚ_[l] a := (Algebra.IsAlgebraic.isAlgebraic a).isIntegral
   set f : ℚ_[l][X] := minpoly ℚ_[l] a with hf
   have fmon : f.Monic := minpoly.monic hint

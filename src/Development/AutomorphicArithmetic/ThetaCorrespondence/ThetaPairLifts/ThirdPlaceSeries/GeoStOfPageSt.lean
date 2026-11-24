@@ -284,20 +284,20 @@ theorem nusOf_eq_nuN {D : D7} (B : WeightFamilies.Prov D) {j : ℕ} (w : WeightF
     rw [← hch, mul_div_assoc]
     congr 1
     by_cases e0 : resCharOf la = D.host.g 0
-    · rw [if_pos e0, e0]
-    · rw [if_neg e0]
+    · rw [ite_eq_left e0, e0]
+    · rw [ite_eq_right e0]
       have e1 : resCharOf la = D.host.g 1 := by
         generalize Classical.choose hc = i at hch
         fin_cases i
         · exact absurd hch e0
         · exact hch
-      rw [if_pos e1, e1]
+      rw [ite_eq_left e1, e1]
   · rw [dite_eq_right hc]
     have e0 : ¬ resCharOf la = D.host.g 0 := fun e =>
       hc ⟨0, (H1algLink.prime_mem_iff la (D.host.g_prime 0)).2 e⟩
     have e1 : ¬ resCharOf la = D.host.g 1 := fun e =>
       hc ⟨1, (H1algLink.prime_mem_iff la (D.host.g_prime 1)).2 e⟩
-    rw [if_neg e0, if_neg e1]
+    rw [ite_eq_right e0, ite_eq_right e1]
     congr 2
     unfold DepPage.cP DepPage.IsRam
     rw [hq1, hdd, hvd, hsm, show ringChar (𝓞 B.KO ⧸ la.asIdeal) = resCharOf la from rfl]
@@ -305,22 +305,22 @@ theorem nusOf_eq_nuN {D : D7} (B : WeightFamilies.Prov D) {j : ℕ} (w : WeightF
       (UpperTheory.cmDatum_natCast_mem_heightOneSpectrum_iff D.host.toHostRaw B.KO la).1
     simp only [hS, H1algLink.prime_mem_iff la hq, H1algLink.prime_mem_iff la hd]
     by_cases a2 : resCharOf la ∈ D.host.small
-    · rw [if_pos a2, if_pos (Or.inl a2)]
+    · rw [ite_eq_left a2, ite_eq_left (Or.inl a2)]
       unfold c2 vdOf
-      rw [if_pos a2, Int.ceil_toNat, ← Nat.cast_mul, Nat.ceil_natCast]
-    · rw [if_neg a2]
+      rw [ite_eq_left a2, Int.ceil_toNat, ← Nat.cast_mul, Nat.ceil_natCast]
+    · rw [ite_eq_right a2]
       by_cases b : resCharOf la = D.host.q ∨ resCharOf la = D.host.d
-      · rw [if_pos b, if_pos (Or.inr b)]
+      · rw [ite_eq_left b, ite_eq_left (Or.inr b)]
         unfold Formalism.MainNotions.DIV.Cons.cHalf vdOf
-        rw [if_neg a2, Int.ceil_toNat]
+        rw [ite_eq_right a2, Int.ceil_toNat]
         congr 2
         ring
-      · rw [if_neg b, if_neg (fun h => h.elim a2 b)]
+      · rw [ite_eq_right b, ite_eq_right (fun h => h.elim a2 b)]
         simp
 
 theorem nusOf_eq_ram_mul_nuStarAt : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice' D L) (Tp : ParamsT D L Pm) (hK : DV.KapDef D) (T : Top D) (h : LawsP T) (EX : ErrX D) (j : ℕ), InR D j → letI := T.Q.H.starRing; ∀ la : HeightOneSpectrum (𝓞 T.Q.c.F), nusOf (recB h.toLawsCore) (lR Tp hK j) (fun la' => (nuW (T.Q.Xo j) T.Q.c la' T.Q.l.M (wtA (lR Tp hK j)) Tp.nWn).toReal / (ramOverZ la' : ℝ)) la = (ramOverZ la : ℝ) * nuStarAt (Xo := T.Q.Xo j) (c := T.Q.c) (depOf T.toCore EX Tp hK) la j := by
   intro D L Pm Tp hK T h EX j hj la
-  letI := T.Q.H.starRing
+  let := T.Q.H.starRing
   refine (nusOf_eq_nuN (recB h.toLawsCore) (lR Tp hK j) _ la (depOf T.toCore EX Tp hK).Q rfl rfl rfl rfl rfl rfl).trans ?_
   rw [← GlobalTheory.WeightExponents.DF_wtA h.pins hj (lR Tp hK j)]
   rfl
@@ -365,7 +365,7 @@ theorem isLattice_of_spanK {F K : Type} [Field F] [NumberField F] [Field K] [Num
       rintro _ ⟨x, hx, rfl⟩
       exact mem_spanK z hx
     exact Submodule.fg_of_fg_map_injective ((coordMap z).restrictScalars (𝓞 F)) hinj (h1.of_le h2)
-  letI := Submodule.IsLattice.of_fg F hfg
+  let := Submodule.IsLattice.of_fg F hfg
   refine ⟨?_⟩
   · refine Submodule.baseChange_injective (A := K) ?_
     rw [Submodule.baseChange_top, Submodule.baseChange_span, eq_top_iff]
@@ -391,7 +391,7 @@ theorem exists_rem_of_concl {D : D7} {B : WeightFamilies.Prov D} {P6 : ModuliInt
           (lix v (cut W (spanK z (B.Mlat j ka : Set _))) (cut W (spanK z {F | X.inc ka F ∈ X.Theta S ka wL wF T})) : ℝ) ≤
             ((ramOver (K := B.KO) v * e : ℕ) : ℝ) * (Module.finrank K W : ℝ) + r v := by
   have hM' := isLattice_of_spanK z _ hM
-  letI := hM'
+  let := hM'
   have hn : X.rk ka (B.Mlat j ka) = n := by
     unfold WeightAlgebra.PJ.rk
     rw [Submodule.IsFullLattice.span_eq_top, finrank_top]
@@ -399,7 +399,7 @@ theorem exists_rem_of_concl {D : D7} {B : WeightFamilies.Prov D} {P6 : ModuliInt
     rw [Module.finrank_baseChange, Module.finrank_fin_fun] at this
     exact this.symm
   let Q : Formalism.MainNotions.Gaps.LocalGlobalPassage.Run D B P6 := ⟨j, X, S, ka, wL, wF, T, nus, X.rk ka (B.Mlat j ka) * a * b * c * d⟩
-  letI : Submodule.IsFullLattice B.KO Q.M0 := hM'
+  let : Submodule.IsFullLattice B.KO Q.M0 := hM'
   obtain ⟨r, h0, h1, h2, h3⟩ := Formalism.MainNotions.Gaps.LocalGlobalPassage.l2 Q (fun la => Formalism.MainNotions.Gaps.LocalGlobalPassage.l1 la)
     (fun la => Formalism.MainNotions.Gaps.LocalGlobalPassage.l1b la) (fun la => Formalism.MainNotions.Gaps.LocalGlobalPassage.l1c la) (by first | exact hM' | exact hM'.toIsLattice) hC
   have hβ : Q.β = (n : ℝ) * (a * b * c * d) := by
@@ -1442,7 +1442,7 @@ theorem leaves_sup_span_data : ∀ CK : ℝ, ∃ x₁ : ℝ, ∀ (D : D7) (G : T
   have h3 : LeafSup O ∧ LeafSpan O ∧ LeafLemmaS O := by
     refine leaves_sup_span_lemmaS_of_formTieK GlobalTheory.chartIndependence_unconditional D L Pm Tp hK hinj EX _ _ _ _ _ c O
       fun v i => ?_
-    letI : Algebra (r.used v).full.J.Q.c.F D.what₂.LL := inst
+    let : Algebra (r.used v).full.J.Q.c.F D.what₂.LL := inst
     obtain ⟨a1, a2, a3⟩ := lat_span_of_hypC _ _ (hrun v (hok.laws v).p hinj _ (inR_succ i)).1
     exact ⟨(r.used v).full, (hok.laws v).p, _, inR_succ i, ownAt D v, inst, z i, act i, fun g => r.lev i (mirIncl R g),
       (ht v i).1.toFormTieK, (ht v i).1.act_eq, hok.laws v, hok.xiRat v i, hok.cover v i, ownAt_pos D v, a1, a2, a3⟩

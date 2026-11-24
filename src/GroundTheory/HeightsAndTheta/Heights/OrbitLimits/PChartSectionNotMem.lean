@@ -115,7 +115,7 @@ theorem ringKrullDim_ker_coneMap (𝔮 : Ideal (MvPolynomial (Σ k, ι k) ℂ)) 
   let κ : (MvPolynomial (Σ k, ι k) ℂ ⧸ RingHom.ker θ) →ₐ[ℂ] MvPolynomial K (MvPolynomial (Σ k, ι k) ℂ ⧸ 𝔮) :=
     Ideal.kerLiftAlg θ
   have hκ : Function.Injective κ := Ideal.kerLiftAlg_injective θ
-  letI : Algebra (MvPolynomial (Σ k, ι k) ℂ ⧸ RingHom.ker θ) (MvPolynomial K (MvPolynomial (Σ k, ι k) ℂ ⧸ 𝔮)) :=
+  let : Algebra (MvPolynomial (Σ k, ι k) ℂ ⧸ RingHom.ker θ) (MvPolynomial K (MvPolynomial (Σ k, ι k) ℂ ⧸ 𝔮)) :=
     κ.toRingHom.toAlgebra
   have : IsScalarTower ℂ (MvPolynomial (Σ k, ι k) ℂ ⧸ RingHom.ker θ) (MvPolynomial K (MvPolynomial (Σ k, ι k) ℂ ⧸ 𝔮)) :=
     IsScalarTower.of_algebraMap_eq fun c => (κ.commutes c).symm

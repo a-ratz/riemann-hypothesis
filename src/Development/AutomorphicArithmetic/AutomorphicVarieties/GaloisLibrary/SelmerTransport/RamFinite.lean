@@ -136,14 +136,14 @@ theorem UpperTheory.V.Base.ramFinite :
       ∀ (N : ℕ) [NeZero N] [IsCyclotomicExtension {N} E E'] (A : ValuationSubring Ω), ¬ A.valuation (N : Ω) < 1 →
         galOf k E Ω ⊓ Ine (F := k) A ≤ galOf k E' Ω := by
   intro k E E' Ω _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap k Ω).injective
   refine ⟨?_, fun N _ hc A hA σ hσ x => ?_⟩
   · choose d hd0 hd using fun α : 𝓞 E' => fix_int (k := k) (Ω := Ω) α
     have hfin : ∀ i, {v : HeightOneSpectrum (𝓞 E) |
         v.asIdeal ∣ Ideal.span {((d (RingOfIntegers.basis E' i) : ℤ) : 𝓞 E)}}.Finite := fun i =>
       Ideal.finite_factors (by simpa using hd0 _)
     refine ⟨(Set.finite_iUnion hfin).toFinset, fun v hv A hA σ hσ x => ?_⟩
-    simp only [Set.Finite.mem_toFinset, Set.mem_iUnion, Set.mem_setOf_eq, not_exists, Ideal.dvd_span_singleton] at hv
+    simp only [Set.Finite.mem_toFinset, Set.mem_iUnion, Set.mem_ofPred_eq, not_exists, Ideal.dvd_span_singleton] at hv
     have h : (σ.toRingEquiv.toRingHom.comp (algebraMap E' Ω)).toRatAlgHom.toLinearMap =
         (algebraMap E' Ω).toRatAlgHom.toLinearMap := (integralBasis E').ext fun i => by
       rw [integralBasis_apply]

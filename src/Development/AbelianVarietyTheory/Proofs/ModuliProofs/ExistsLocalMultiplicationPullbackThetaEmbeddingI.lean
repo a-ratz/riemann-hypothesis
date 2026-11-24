@@ -71,11 +71,11 @@ theorem of_parts
   intro l1 l2 o _ g N' J b S s t m R _ x v hm h2 hth p
   have hodd : Odd N' := hth.1
   have hdvd : m ∣ N' := (dvd_pow_self m two_ne_zero).trans hm
-  haveI : NeZero (N' ^ 2) := ⟨pow_ne_zero 2 hodd.pos.ne'⟩
+  have : NeZero (N' ^ 2) := ⟨pow_ne_zero 2 hodd.pos.ne'⟩
   obtain ⟨R', _, φ, σ, hφ, hp, hE⟩ := hex l1 l2 o g N' J b S s t m R x hodd hdvd p
   refine ⟨R', inferInstance, φ, σ, hφ, hp, hE, ?_⟩
   refine hfib R' (Ix g (N' ^ 2)) _ _ _ σ (LB.isLB_linComb t.isLB _ _) ?_ ?_
-  · haveI := t.ab.proper
+  · have := t.ab.proper
     exact inferInstanceAs (IsProper (pullback.fst (spMap φ ≫ x) t.A.hom))
   · intro K _ _ y
     let h : Over.mk (spMap y ≫ spMap φ ≫ x) ⟶ Over.mk (spMap φ ≫ x) := Over.homMk (spMap y) rfl

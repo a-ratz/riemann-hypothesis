@@ -224,7 +224,7 @@ theorem det_unip (n : ℕ) (v : Multiplicative (Fin n → k)) :
       subst h
       exact absurd hij' (not_lt.2 (Fin.le_last i))
     simp [unip, colMat, hj, one_apply, hij'.ne']
-  rw [Matrix.det_of_upperTriangular htri]
+  rw [det_of_isUpperTriangular htri]
   refine Finset.prod_eq_one fun i _ => ?_
   induction i using Fin.lastCases with
   | last => simp [unip, colMat]

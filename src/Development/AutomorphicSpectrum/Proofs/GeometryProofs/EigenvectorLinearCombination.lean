@@ -96,10 +96,10 @@ theorem isEigVec_comb : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonO
     (fun y => IsTanAt G x y ∧ ∀ a, y ≫ act.act a = LieTangent.epsScale x (σ a) ≫ y)
   · rintro y z ⟨hy, hy'⟩ ⟨hz, hz'⟩
     refine ⟨LieTangent.isTanAt_mul hy hz, fun a => ?_⟩
-    haveI := act.hom a
+    have := act.hom a
     rw [MonObj.mul_comp, hy', hz', MonObj.comp_mul]
   · refine ⟨LieTangent.isTanAt_one, fun a => ?_⟩
-    haveI := act.hom a
+    have := act.hom a
     rw [MonObj.one_comp, MonObj.comp_one]
   · intro y hy
     obtain ⟨i, rfl⟩ := List.mem_ofFn.mp hy

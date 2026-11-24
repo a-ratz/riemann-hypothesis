@@ -217,7 +217,7 @@ theorem datum_placesA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
     · rw [Set.indicator_of_mem (mem_halfPt.2 hu), Finset.prod_congr rfl fun w hw =>
         (congrArg _ ((hco w).2.2.1 u).symm).trans ((hv w hw).2 _ ((hh w hw).2.2.2.2 u).1)]
       by_cases hl : mapV e u ∈ latV G i j ∧ mapW e u ∈ latW G i j
-      · rw [if_pos ⟨hl.1, hu.1⟩, if_pos ⟨hl.2, hu.2⟩, mul_one, mul_one]
+      · rw [ite_eq_left ⟨hl.1, hu.1⟩, ite_eq_left ⟨hl.2, hu.2⟩, mul_one, mul_one]
         exact Finset.prod_congr rfl fun w hw => Set.indicator_of_mem (((hh w hw).2.2.2.2 u).2.2 hl.1 hl.2) _
       · have : ∃ w ∈ locPl G t, ofMaps e (atPl w 1 • mapV e u, atPl w 1 • mapW e u) ∉ latPt e (w.under (𝓞 D.host.F)) := by
           by_contra! hall
@@ -226,12 +226,12 @@ theorem datum_placesA : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G
         obtain ⟨w, hw, hn⟩ := this
         rw [Finset.prod_eq_zero hw (Set.indicator_of_notMem hn _)]
         rcases not_and_or.1 hl with hl | hl
-        · rw [if_neg fun h => hl h.1, zero_mul, mul_zero]
-        · rw [if_neg fun h : _ ∧ IsHalf ε (mapW e u) => hl h.1, mul_zero, mul_zero]
+        · rw [ite_eq_right fun h => hl h.1, zero_mul, mul_zero]
+        · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapW e u) => hl h.1, mul_zero, mul_zero]
     · rw [Set.indicator_of_notMem (mt mem_halfPt.1 hu)]
       rcases not_and_or.1 hu with hl | hl
-      · rw [if_neg fun h => hl h.2, zero_mul, mul_zero]
-      · rw [if_neg fun h : _ ∧ IsHalf ε (mapW e u) => hl h.2, mul_zero, mul_zero]
+      · rw [ite_eq_right fun h => hl h.2, zero_mul, mul_zero]
+      · rw [ite_eq_right fun h : _ ∧ IsHalf ε (mapW e u) => hl h.2, mul_zero, mul_zero]
   have hR := GlobalTheory.InductLagr.rel_of_vac Γ.M W.ψ hstd hG (locPl G t) (fun w => w.under (𝓞 D.host.F)) (Good.under_injOn hL G t) _
     (fun w => mixHalf e (atPl w 1)) (fun w => mixHalf e (cA D (atPl w 1))) (mixCo B t e) ι (halfPt e ε) R (c • f₀)
     (fun w hw => hι w hw) (fun w hw u hu => ⟨(hh w hw).1 u hu, mem_halfPt.2 (hA w hw u hu)⟩) (fun w hw => (hh w hw).2.1)
@@ -519,7 +519,7 @@ end Mix
 
 theorem mem_SB_of_isNatDatum {k A C : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     [Fintype A] [Fintype C] {ϖ : kˣ} {n : ℕ} {Φ : Matrix A C k → ℂ} (h : IsNatDatum ϖ n Φ) : Φ ∈ GlobalTheory.WeilM.SB (Matrix A C k) := by
-  have h0 : 0 < ValuativeRel.valuation k ((ϖ ^ n : kˣ) : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < ValuativeRel.valuation k ((ϖ ^ n : kˣ) : k) := pos_iff_ne_zero.2 (by simp)
   refine ⟨(IsLocallyConstant.iff_exists_open Φ).2 fun x =>
       ⟨{x' | ∀ r s, (x' - x) r s / ((ϖ ^ n : kˣ) : k) ∈ (ValuativeRel.valuation k).integer}, ?_, fun r s => by simp,
       fun x' hx' => ?_⟩,
@@ -559,8 +559,8 @@ theorem local_match (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (t : T) (i j :
       ∀ n Φ, depthAt G w ≤ n → IsNatDatum (unifAt w) n Φ → ∀ φ ∈ GlobalTheory.WeilM.SB _, ∀ φ' ∈ GlobalTheory.WeilM.SB _,
         ι φ = flipAt W t i j w n Φ → ι' φ' = Φ → Rf.p v φ = Rf.p' v φ' := by
   classical
-  letI := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.measFv v
-  haveI := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.borelFv v
+  let := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.measFv v
+  have := GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.borelFv v
   have hT := hm.triple
   have hvT : v ∈ X.T := (hti.2.2.1 v).2 ⟨w, hw, hv⟩
   let v' : Bs.P := ⟨v, hT.chars.sub hvT⟩
@@ -601,9 +601,9 @@ theorem local_match (hL : L.Is μ₀) (W : G.Weil) (B : Frames G) (t : T) (i j :
       rw [GlobalTheory.T.tensorSymplecticForm_at_split_finite_place hT.base.cm Γ.V' Γ.W hT.geo.hV'.herm hT.geo.hW.skew W.ψ (Bs.τ v') (Γ.V'.bas v) (Γ.W.bas v) x u hx hu, neg_sub]
   have h1 := GivenAdm.givenLevel_open hL hw ((i : ℕ), (j : ℕ))
   have h2 := isOpen_map_invT h1.1 h1.2
-  haveI hμ := isHaarMeasure_haarVol h2.1 h2.2
-  haveI := isHaarMeasure_haarVol (k := Kw w) (n := Fin (spW₁ G i j).rank) isOpen_KO le_rfl
-  haveI := isHaarMeasure_haarVol (k := Fv D.host.F v) (n := Fin (spW₁ G i j).rank) isOpen_KO le_rfl
+  have hμ := isHaarMeasure_haarVol h2.1 h2.2
+  have := isHaarMeasure_haarVol (k := Kw w) (n := Fin (spW₁ G i j).rank) isOpen_KO le_rfl
+  have := isHaarMeasure_haarVol (k := Fv D.host.F v) (n := Fin (spW₁ G i j).rank) isOpen_KO le_rfl
   obtain ⟨l₂, hl₂, z₂⟩ := GlobalTheory.T.zetaIdentity_persists_row_column_changes (Kw w) _ _ (rankW G t i j w) _ _ _ _ (finCongr (rankW₁ G t i j w)) (colsEq t e w) finSumFinEquiv
     (stdSplit ((locGrid G t w).rank_square i j)) (haarVol (KO (Kw w) _)) (haarVol ((givenLevel G t w (i, j)).map invT))
     (unifAt w) ((locGrid G t w).nu i j) 1 g g' cc hg
@@ -645,7 +645,7 @@ theorem exists_tiedBoth (hL : L.Is μ₀) (W : G.Weil) (t : T) (i j : Fin D.R.m)
   classical
   obtain ⟨e, Bs, Γ, X, om, om', h, hT, hti⟩ := GlobalTheory.T.exists_thetaTripleOfSquareGrid_latticeCompatible hL W t i j hst M hM
   have hsd := (node_isV G hL (X := .grid i j) ⟨i.2.le, j.2.le⟩).sd
-  haveI hlat := GlobalTheory.TripleSpaceW.conjSub_isFullLattice
+  have hlat := GlobalTheory.TripleSpaceW.conjSub_isFullLattice
     (GlobalTheory.FunObj.selfDual_isFullLattice _ _ hsd)
   let bas := fun v : Bs.P => Classical.choose
     (exists_isSplitBasis (Bs.τ v) (GlobalTheory.TripleSpaceW.conjSub (G.Λ (.grid i j))) (isCMExt_host D))

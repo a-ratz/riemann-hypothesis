@@ -124,7 +124,7 @@ theorem UpperTheory.Gal.G3.pGalClosD :
     have hinj' : ∀ (Ω' : Type) [Field Ω'] (x' : UpperTheory.Gal.G3.sp Ω' ⟶ UpperTheory.Gal.G3.sp Ω),
         Function.Injective fun j => x' ≫ yy j := by
       intro Ω' _ x' i j hij
-      haveI := UpperTheory.Gal.G3.epi_of_field x'
+      have := UpperTheory.Gal.G3.epi_of_field x'
       have h1 : yy i = yy j := (cancel_epi x').1 hij
       have h2 := Subtype.val_injective h1
       exact Fin.cast_injective _ (e.symm.injective h2)

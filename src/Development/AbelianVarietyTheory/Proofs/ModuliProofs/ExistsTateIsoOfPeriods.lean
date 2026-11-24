@@ -81,7 +81,7 @@ theorem rt_val (n : ℕ) (x : ℤ) : (rt n x : ℂ) = Complex.exp (-(2 * Real.pi
 
 theorem rt_mul (n : ℕ) (x y : ℤ) : rt n (x * y) = rt n x ^ y := by
   apply Units.ext
-  rw [Units.val_zpow_eq_zpow_val, rt_val, rt_val, ← Complex.exp_int_mul]
+  rw [Units.val_zpow_eq_zpow_val, rt_val, rt_val, ← Complex.exp_intCast_mul]
   congr 1
   push_cast
   ring
@@ -100,7 +100,7 @@ theorem rt_congr {n : ℕ} (hn : 0 < n) {x y : ℤ} (h : (n : ℤ) ∣ x - y) : 
 theorem rt_pow {n m : ℕ} (hm : 0 < m) (x : ℤ) : rt (n * m) x ^ m = rt n x := by
   apply Units.ext
   have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
-  rw [Units.val_pow_eq_pow_val, rt_val, rt_val, ← Complex.exp_nat_mul]
+  rw [Units.val_pow_eq_pow_val, rt_val, rt_val, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   rw [← div_div, mul_div_cancel₀ _ hm']
@@ -119,7 +119,7 @@ theorem pre_injective {k : Type} [Field k] (β : ℂ →+* k) (A : Over (Sp ℂ)
     simpa using Over.w (toUnit (Over.mk (spMap β)))
   have hf : Flat (spMap β) := by
     rw [Flat.SpecMap_iff]
-    letI := β.toAlgebra
+    let := β.toAlgebra
     exact (inferInstance : Module.Flat ℂ k)
   have hs : Surjective (spMap β) := ⟨fun p => ⟨default, Subsingleton.elim (α := PrimeSpectrum ℂ) _ _⟩⟩
   have : Epi (spMap β) := Flat.epi_of_flat_of_surjective _

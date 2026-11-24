@@ -439,7 +439,7 @@ theorem evY_thv (hC : CjEx) {w : Pl E} (hw : ¬ IsSplitAt w) (a b : ℕ)
   have h : ∀ n (g : GL (Fin n) (Av (w.under (𝓞 (maximalRealSubfield E))))),
       GeneralLinearGroup.map (evR hw).toRingHom (thetaGL n (cjv _) g) =
         thL n w (GeneralLinearGroup.map (evR hw).toRingHom g) := fun n g => by
-    rw [thL, if_neg hw]
+    rw [thL, ite_eq_right hw]
     exact GlobalTheory.ThetaPull.map_thetaGL _ _ _ (cjv_apply hC hw) g
   exact Prod.ext (h a y.1) (h b y.2)
 
@@ -502,8 +502,8 @@ theorem cj_algebraMap {E : Type} [Field E] [NumberField E] [IsCMField E] {w : Pl
 theorem nrmL_locEl {E : Type} [Field E] [NumberField E] [IsCMField E] (n : ℕ) (w : Pl E) (δ : GL (Fin n) E) :
     nrmL n w (locEl n w δ) = GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) (δ * thE E n δ) := by
   by_cases h : IsSplitAt w
-  · simp only [nrmL, locEl, if_pos h]
-  · simp only [nrmL, locEl, if_neg h]
+  · simp only [nrmL, locEl, ite_eq_left h]
+  · simp only [nrmL, locEl, ite_eq_right h]
     rw [map_mul]
     congr 1
     exact (GlobalTheory.ThetaPull.map_thetaGL (algebraMap E (w.adicCompletion E)) _ (GlobalTheory.BCT.cj w)
@@ -869,12 +869,12 @@ theorem eventually_one (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E)
     split_ifs with hs
     · exact hy
     · have h2 : thetaGL n (cj w) (locEl n w δ) = thL n w (locEl n w δ) := by
-        unfold thL; rw [if_neg hs]
+        unfold thL; rw [ite_eq_right hs]
       rw [h2]; exact mul_mem hy (hKθ _ hy)
   refine ⟨hy, fun g hg => ?_, fun t ht hc => ?_⟩
   · by_cases hs : IsSplitAt w
-    · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
-      have hn1 : nrmL n w (locEl n w δ) = locEl n w δ := by unfold nrmL; rw [if_pos hs]
+    · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
+      have hn1 : nrmL n w (locEl n w δ) = locEl n w δ := by unfold nrmL; rw [ite_eq_left hs]
       rw [hn1] at hgood'
       rw [hθ1] at hg ⊢
       obtain ⟨t, ht, k, hk, rfl⟩ := GlobalTheory.T.integral_conj_etale_mem_centralizer_mul_integralGL E n w _ g hy hgood' hg
@@ -884,11 +884,11 @@ theorem eventually_one (hU : Unr E) (n : ℕ) (δ : GL (Fin n) E)
   · refine GlobalTheory.T.mem_maxCompactGL_of_commute_etale_charpoly_bounded E n w (nrmL n w (locEl n w δ)) t hNK hgood' ?_ hc
     have ht' : t * locEl n w δ = locEl n w δ * thL n w t := ht
     by_cases hs : IsSplitAt w
-    · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [if_pos hs]
-      have hn1 : nrmL n w (locEl n w δ) = locEl n w δ := by unfold nrmL; rw [if_pos hs]
+    · have hθ1 : thL n w = MonoidHom.id _ := by unfold thL; rw [ite_eq_left hs]
+      have hn1 : nrmL n w (locEl n w δ) = locEl n w δ := by unfold nrmL; rw [ite_eq_left hs]
       rw [hn1]; rw [hθ1] at ht'; simpa using ht'
     · have hn1 : nrmL n w (locEl n w δ) = locEl n w δ * thL n w (locEl n w δ) := by
-        unfold nrmL; rw [if_neg hs]; unfold thL; rw [if_neg hs]
+        unfold nrmL; rw [ite_eq_right hs]; unfold thL; rw [ite_eq_right hs]
       rw [hn1]
       calc t * (locEl n w δ * thL n w (locEl n w δ))
           = locEl n w δ * thL n w t * thL n w (locEl n w δ) := by rw [← mul_assoc, ht']
@@ -1088,7 +1088,7 @@ theorem fv_eq {S : Set (Pl E)} (hS : IsSection S) (φ₁ φ₂ : ∀ w : Pl E, G
     (hw : w.1 ∈ S) (y : Yv a b v) :
     fv S φ₁ φ₂ v y = φ₁ w.1 (evw w y) * if IsSplitAt w.1 then φ₂ w.1 (evw w (thv a b v y)) else 1 := by
   unfold fv
-  rw [finprod_eq_single _ w, finprod_eq_if, if_pos hw]
+  rw [finprod_eq_single _ w, finprod_eq_if, ite_eq_left hw]
   intro u hu
   have hn : u.1 ∉ S := by
     intro h
@@ -1097,7 +1097,7 @@ theorem fv_eq {S : Set (Pl E)} (hS : IsSection S) (φ₁ φ₂ : ∀ w : Pl E, G
     obtain ⟨z, -, hz⟩ := hS w.1
     have e : u.1.under (𝓞 (maximalRealSubfield E)) = w.1.under (𝓞 (maximalRealSubfield E)) := u.2.trans w.2.symm
     exact (hz _ ⟨h, e⟩).trans (hz _ ⟨hw, rfl⟩).symm
-  rw [finprod_eq_if, if_neg hn]
+  rw [finprod_eq_if, ite_eq_right hn]
 
 theorem evw_pv_rat (v : PlF E) (w : Above v) (δ₁ : GL (Fin a) E) (δ₂ : GL (Fin b) E) :
     evw w (pv a b v (ratF E a δ₁, ratF E b δ₂)) = (ratW a w.1 δ₁, ratW b w.1 δ₂) := by
@@ -1118,11 +1118,11 @@ theorem locConds_inert (hC : CjEx) (hU : Unr E) {S : Set (Pl E)} (hS : IsSection
     LocConds (thv a b v) (Kv a b v) (pv a b v (ratF E a δ₁, ratF E b δ₂)) (fv S φ₁ φ₂ v) := by
   obtain ⟨e, he, hθ, hK⟩ := inert_iso hC E a b v w hns
   refine transport_loc e _ ((thL a w.1).prodMap (thL b w.1)) _ (K2 a b w.1) _ _ (φ₁ w.1) hθ hK (fun x => ?_) ?_
-  · rw [fv_eq hS φ₁ φ₂ v w hw, if_neg hns, mul_one, he]
+  · rw [fv_eq hS φ₁ φ₂ v w hw, ite_eq_right hns, mul_one, he]
   obtain ⟨K', hKo, hKle, hH, -⟩ := test_facts h₁
   have hloc : e (pv a b v (ratF E a δ₁, ratF E b δ₂)) = (locEl a w.1 δ₁, locEl b w.1 δ₂) := by
     rw [he, evw_pv_rat]
-    simp only [locEl, if_neg hns, ratW]
+    simp only [locEl, ite_eq_right hns, ratW]
   rw [hloc]
   have s₁ := sep_locEl hC E a w.1 δ₁ he₁
   have s₂ := sep_locEl hC E b w.1 δ₂ he₂
@@ -1182,7 +1182,7 @@ theorem locConds_split (hC : CjEx) (hU : Unr E) {S : Set (Pl E)} (hS : IsSection
   obtain ⟨hσc, hσ, hσK⟩ := sg_facts E a b w.1
   refine transport_loc e _ (swTw (sgP a b w.1)) _ ((K2 a b w.1).prod (K2 a b w.1)) _ _
     (fun y => φ₁ w.1 y.1 * φ₂ w.1 (sgP a b w.1 y.2)) hθ hK (fun x => ?_) ?_
-  · rw [fv_eq hS φ₁ φ₂ v w hw, if_pos hs, ← he, ← he, hθ]
+  · rw [fv_eq hS φ₁ φ₂ v w hw, ite_eq_left hs, ← he, ← he, hθ]
     rfl
   obtain ⟨K₁, hKo₁, -, hH₁, -⟩ := test_facts h₁
   obtain ⟨K₂, hKo₂, -, hH₂, -⟩ := test_facts h₂
@@ -1196,8 +1196,8 @@ theorem locConds_split (hC : CjEx) (hU : Unr E) {S : Set (Pl E)} (hS : IsSection
   have hG := _root_.GlobalTheory.CompanionTheory.LocGoodProof.locGood E hU a b w.1 (locEl a w.1 δ₁, locEl b w.1 δ₂) s₁ s₂
   have hL := (GlobalTheory.CompanionTheory.TwistOrbit.locSupp E hU a b w.1 (locEl a w.1 δ₁, locEl b w.1 δ₂) s₁ s₂).1
   have hid : (thL a w.1).prodMap (thL b w.1) = MonoidHom.id _ := by
-    have e₁ : thL a w.1 = MonoidHom.id _ := by rw [thL, if_pos hs]
-    have e₂ : thL b w.1 = MonoidHom.id _ := by rw [thL, if_pos hs]
+    have e₁ : thL a w.1 = MonoidHom.id _ := by rw [thL, ite_eq_left hs]
+    have e₂ : thL b w.1 = MonoidHom.id _ := by rw [thL, ite_eq_left hs]
     rw [e₁, e₂]
     rfl
   rw [hid, ← hN] at hG hL
@@ -1213,10 +1213,10 @@ theorem unitConds_inert (hC : CjEx) {S : Set (Pl E)} (hS : IsSection S)
     UnitConds (thv a b v) (Kv a b v) (pv a b v (ratF E a δ₁, ratF E b δ₂)) (fv S φ₁ φ₂ v) := by
   obtain ⟨e, he, hθ, hK⟩ := inert_iso hC E a b v w hns
   refine transport_unit e _ ((thL a w.1).prodMap (thL b w.1)) _ (K2 a b w.1) _ _ (φ₁ w.1) hθ hK (fun x => ?_) ?_
-  · rw [fv_eq hS φ₁ φ₂ v w hw, if_neg hns, mul_one, he]
+  · rw [fv_eq hS φ₁ φ₂ v w hw, ite_eq_right hns, mul_one, he]
   have hloc : e (pv a b v (ratF E a δ₁, ratF E b δ₂)) = (locEl a w.1 δ₁, locEl b w.1 δ₂) := by
     rw [he, evw_pv_rat]
-    simp only [locEl, if_neg hns, ratW]
+    simp only [locEl, ite_eq_right hns, ratW]
   rw [hloc]
   refine ⟨hφ, hy.1, hy.2.2, fun g hg => ?_⟩
   obtain ⟨t, ht, hk⟩ := hy.2.1 g hg
@@ -1246,15 +1246,15 @@ theorem unitConds_split (hC : CjEx) {S : Set (Pl E)} (hS : IsSection S)
   obtain ⟨hσc, hσ, hσK⟩ := sg_facts E a b w.1
   refine transport_unit e _ (swTw (sgP a b w.1)) _ ((K2 a b w.1).prod (K2 a b w.1)) _ _
     (fun y => φ₁ w.1 y.1 * φ₂ w.1 (sgP a b w.1 y.2)) hθ hK (fun x => ?_) ?_
-  · rw [fv_eq hS φ₁ φ₂ v w hw, if_pos hs, ← he, ← he, hθ]
+  · rw [fv_eq hS φ₁ φ₂ v w hw, ite_eq_left hs, ← he, ← he, hθ]
     rfl
   rw [hr]
   have hN : (ratW a w.1 δ₁, ratW b w.1 δ₂) * sgP a b w.1 (ratW a w.1 (GeneralLinearGroup.map (IsCMField.complexConj E).toRingEquiv.toRingHom δ₁),
     ratW b w.1 (GeneralLinearGroup.map (IsCMField.complexConj E).toRingEquiv.toRingHom δ₂)) = (locEl a w.1 δ₁, locEl b w.1 δ₂) :=
     Prod.ext (norm_split E a w.1 δ₁ hs) (norm_split E b w.1 δ₂ hs)
   have hid : (thL a w.1).prodMap (thL b w.1) = MonoidHom.id _ := by
-    have e₁ : thL a w.1 = MonoidHom.id _ := by rw [thL, if_pos hs]
-    have e₂ : thL b w.1 = MonoidHom.id _ := by rw [thL, if_pos hs]
+    have e₁ : thL a w.1 = MonoidHom.id _ := by rw [thL, ite_eq_left hs]
+    have e₂ : thL b w.1 = MonoidHom.id _ := by rw [thL, ite_eq_left hs]
     rw [e₁, e₂]
     rfl
   rw [hid, ← hN] at hy

@@ -233,8 +233,8 @@ theorem embed_of (hH : PartH) (h1 : RelFacts) (h2 : PartA) (h3 : RelOnto) (h4 : 
     simp [hn X]
   obtain ⟨X, i, hX⟩ := hX
   refine ⟨{ toFun := fun v => cmp i (J v X)
-            map_add' := fun x y => by rw [map_add (f := _), AlternatingMap.add_apply, map_add (f := _)]
-            map_smul' := fun c x => by rw [map_smul, AlternatingMap.smul_apply, map_smul]; rfl },
+            map_add' := fun x y => by rw [map_add (f := _), add_apply, map_add (f := _)]
+            map_smul' := fun c x => by rw [map_smul, smul_apply, map_smul]; rfl },
     fun e0 => hX (LinearMap.congr_fun e0 v), fun g v => ?_, fun v => (M3 _ (J2 v) X i).1,
     fun v t => ⟨by simpa using (hm t).1, (M3 _ (J2 v) X i).2 t⟩⟩
   change cmp i (J _ X) = finRep E a g (cmp i (J v X))

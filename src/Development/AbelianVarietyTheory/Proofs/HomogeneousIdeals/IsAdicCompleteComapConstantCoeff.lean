@@ -302,8 +302,8 @@ theorem map_comap_constantCoeff_le {S : Type*} [CommRing S] [Algebra A S] (J : I
 
 theorem continuous_adicTopology_of_map_le {S : Type*} [CommRing S] (J : Ideal S) (φ : A →+* S)
     (h : I.map φ ≤ J) : @Continuous A S I.adicTopology J.adicTopology φ := by
-  letI : WithIdeal A := ⟨I⟩
-  letI : WithIdeal S := ⟨J⟩
+  let : WithIdeal A := ⟨I⟩
+  let : WithIdeal S := ⟨J⟩
   exact (WithIdeal.uniformContinuous_of_map_le (f := φ) h).continuous
 
 end Complete

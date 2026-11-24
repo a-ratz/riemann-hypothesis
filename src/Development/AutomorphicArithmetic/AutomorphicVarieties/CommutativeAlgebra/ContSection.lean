@@ -61,15 +61,15 @@ private theorem chain_stab {R : Type} [CommRing R] [IsLocalRing R] [IsNoetherian
     have h1 : (a : R) * (x : R) ∈ maximalIdeal R * K := Ideal.mul_mem_mul a.2 x.2
     rw [hK] at h1
     simpa using h1
-  letI : Module (R ⧸ maximalIdeal R) K := hT.module
-  haveI : IsScalarTower R (R ⧸ maximalIdeal R) K := hT.isScalarTower
-  haveI : Module.Finite R K := Module.Finite.iff_fg.mpr (IsNoetherian.noetherian K)
-  haveI : Module.Finite (R ⧸ maximalIdeal R) K :=
+  let : Module (R ⧸ maximalIdeal R) K := hT.module
+  have : IsScalarTower R (R ⧸ maximalIdeal R) K := hT.isScalarTower
+  have : Module.Finite R K := Module.Finite.iff_fg.mpr (IsNoetherian.noetherian K)
+  have : Module.Finite (R ⧸ maximalIdeal R) K :=
     Module.Finite.of_restrictScalars_finite R _ _
-  letI : Field (R ⧸ maximalIdeal R) := Ideal.Quotient.field _
-  haveI : IsArtinianRing (R ⧸ maximalIdeal R) := inferInstance
-  haveI : IsArtinian (R ⧸ maximalIdeal R) K := isArtinian_of_fg_of_artinian'
-  haveI : IsArtinian R K := isArtinian_of_surjective_algebraMap (R := R ⧸ maximalIdeal R)
+  let : Field (R ⧸ maximalIdeal R) := Ideal.Quotient.field _
+  have : IsArtinianRing (R ⧸ maximalIdeal R) := inferInstance
+  have : IsArtinian (R ⧸ maximalIdeal R) K := isArtinian_of_fg_of_artinian'
+  have : IsArtinian R K := isArtinian_of_surjective_algebraMap (R := R ⧸ maximalIdeal R)
     (Ideal.Quotient.mk_surjective (I := maximalIdeal R))
   let G : ℕ → Submodule R K := fun n => Submodule.comap (Submodule.subtype K) (F n)
   have hG : Antitone G := fun a b h => Submodule.comap_mono (hF h)
@@ -142,7 +142,7 @@ theorem UpperTheory.V.Alg.cont_section :
     intro a b h k hk
     have H : (maximalIdeal R ^ b).restrictScalars O ≤ (maximalIdeal R ^ a).restrictScalars O :=
       fun z hz => Ideal.pow_le_pow_right h hz
-    exact ⟨hk.1, SetLike.le_def.1 (sup_le_sup_left H (W.part j)) hk.2⟩
+    exact ⟨hk.1, IsConcreteLE.le_iff.1 (sup_le_sup_left H (W.part j)) hk.2⟩
   obtain ⟨N1, hN1⟩ := chain_stab (RingHom.ker p) hker F hFanti (fun n k hk => hk.1)
   have hclosed : ∀ k, k ∈ RingHom.ker p →
       k ∈ W.part j ⊔ (maximalIdeal R ^ N1).restrictScalars O → k ∈ W.part j := by

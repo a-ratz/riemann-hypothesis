@@ -176,7 +176,7 @@ theorem exists_spec_of_finite_surjective {R : Type} [CommRing R] [IsDomain R] {X
     [IsFinite f] [Surjective f] :
     ∃ (C : Type) (_ : CommRing C) (φ : R →+* C) (g : Sp C ⟶ X),
       Function.Injective φ ∧ φ.Finite ∧ g ≫ f = spMap φ := by
-  haveI : IsAffine X := isAffine_of_isAffineHom f
+  have : IsAffine X := isAffine_of_isAffineHom f
   let ψ : CommRingCat.of R ⟶ Γ(X, ⊤) := Spec.preimage (X.isoSpec.inv ≫ f)
   have hψ : Spec.map ψ = X.isoSpec.inv ≫ f := Spec.map_preimage _
   refine ⟨Γ(X, ⊤), inferInstance, ψ.hom, X.isoSpec.inv, ?_, ?_, ?_⟩
@@ -196,15 +196,15 @@ namespace GlobalTheory.HalfPt
 
 theorem exists_half_point : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (B : Over (Sp R)) [GrpObj B] [IsCommMonObj B] (a : 𝟙_ (Over (Sp R)) ⟶ B), IsCN R → IsAbelianScheme B → ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (b : Over.mk (spMap ρ) ⟶ B), IsCN R' ∧ Function.Injective ρ ∧ ρ.Finite ∧ IsLocalHom ρ ∧ b ^ 2 = toUnit _ ≫ a := by
   intro R _ _ _ B _ _ a hCN hAb
-  haveI : IsNoetherianRing R := hCN.1
+  have : IsNoetherianRing R := hCN.1
   obtain ⟨hfin, -⟩ := _root_.GlobalTheory.MulFiniteFlat.isFinite_and_flat_mul (Sp R) B hAb 2 (by norm_num)
   have hsurj := _root_.GlobalTheory.SemiAbSurj.surjective_pow (Sp R) B (GlobalTheory.isSemiAbelian_of_isAbelianScheme B hAb) 2 two_ne_zero
   let m : B.left ⟶ B.left := ((𝟙 B) ^ 2 : B ⟶ B).left
   let s : Sp R ⟶ B.left := a.left
-  haveI : IsFinite m := hfin
-  haveI : Surjective m := hsurj
-  haveI : IsFinite (pullback.snd m s) := inferInstance
-  haveI : Surjective (pullback.snd m s) := inferInstance
+  have : IsFinite m := hfin
+  have : Surjective m := hsurj
+  have : IsFinite (pullback.snd m s) := inferInstance
+  have : Surjective (pullback.snd m s) := inferInstance
   obtain ⟨C, _, φ, g, hinj, hφf, hg⟩ := exists_spec_of_finite_surjective (pullback.snd m s)
   obtain ⟨R', _, _, _, ρ, σ, hCN', hρi, hρf, hρl, hσ⟩ := GlobalTheory.T.exists_complete_normal_local_cover_of_finite_hom R C φ hCN hinj hφf
   have hsB : s ≫ B.hom = 𝟙 (Sp R) := Over.w a
@@ -679,7 +679,7 @@ end GlobalTheory.PolDeg.SymPol
 open GlobalTheory.PolDeg.SymPol GlobalTheory.CechPic in
 theorem GlobalTheory.PolDeg.exists_symmetric_pol : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (Q : Data R), IsCN R → ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (P : PolAV (Sp R')) (β : P.A.left ⟶ Q.B.left) (β₂ : (G2 P.A).left ⟶ (G2 Q.B).left), IsCN R' ∧ Function.Injective ρ ∧ ρ.Finite ∧ IsLocalHom ρ ∧ IsGrpPullback P.A Q.B (spMap ρ) β ∧ IsSquare β β₂ ∧ (letI := P.isAb.comm; LBIso (abelian₂ P.A P.L) ((abelian₂ Q.B Q.M.L).pull β₂)) := by
   intro R _ _ _ Q hR
-  haveI := hR.1
+  have := hR.1
   have hM := Q.M.isLB
   have hΘ : ∃ t : LB.Gen (Theta Q.B Q.M.L), t.IsGen := ⟨Q.cub.t, Q.cub.isGen⟩
   obtain ⟨a, ha⟩ := GlobalTheory.T.primitive_bundle_eq_translate_ample_noetherian_local R Q.B Q.g Q.M.L _ Q.isAb Q.smoothDim hM Q.ample Q.ktriv hΘ
@@ -688,7 +688,7 @@ theorem GlobalTheory.PolDeg.exists_symmetric_pol : ∀ (R : Type) [CommRing R] [
   rw [cls_linComb hM, cls_linComb hM, Fin.sum_univ_two, Fin.sum_univ_two] at ea
   simp only [Matrix.cons_val_zero, Matrix.cons_val_one, one_smul, add_left_inj] at ea
   obtain ⟨R', _, _, _, ρ, b, hR', hinj, hfin, hloc, hb⟩ := GlobalTheory.T.exists_halving_point_abelianScheme_finite_ext R Q.B a hR Q.isAb
-  haveI := hR'.1
+  have := hR'.1
   have h := isGrpPullback_pullback Q.B (spMap ρ)
   have hA : IsAbelianScheme ((Over.pullback (spMap ρ)).obj Q.B) := by
     have := Q.isAb.comm
@@ -701,7 +701,7 @@ theorem GlobalTheory.PolDeg.exists_symmetric_pol : ∀ (R : Type) [CommRing R] [
     exact ⟨hc, MorphismProperty.of_isPullback (P := @Smooth) h.1 Q.isAb.smooth,
       MorphismProperty.of_isPullback (P := @IsProper) h.1 Q.isAb.proper,
       MorphismProperty.of_isPullback (P := @GeometricallyConnected) h.1 Q.isAb.geomConnected⟩
-  haveI := hA.comm
+  have := hA.comm
   obtain ⟨b', hb'⟩ := exists_half h a b hb
   have hM' := pull_isLB hM (pullback.fst Q.B.hom (spMap ρ))
   have hid := (cls_eq_iff hM' hM').1 rfl

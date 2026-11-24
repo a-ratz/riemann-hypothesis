@@ -630,11 +630,11 @@ theorem exists_isDef_lift_dualNumber : ∀ {E : Type} [Field E] [NumberField E] 
       rw [hφ, ← Category.assoc, hred, ← Category.assoc, X.pt_snd, frX_snd]
     have h2 : (GlobalTheory.FlagTan.red c K).toRingHom.comp φ = algebraMap c.F K :=
       congrArg CommRingCat.Hom.hom (Spec.map_injective h1)
-    haveI : FiniteDimensional ℚ c.F := c.fin
-    haveI : Algebra.IsSeparable ℚ c.F := inferInstance
-    haveI : Algebra.FormallyUnramified ℚ c.F := Algebra.FormallyUnramified.of_isSeparable ℚ c.F
-    haveI : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
-    haveI : Algebra.FormallyUnramified ℤ c.F := Algebra.FormallyUnramified.comp ℤ ℚ c.F
+    have : FiniteDimensional ℚ c.F := c.fin
+    have : Algebra.IsSeparable ℚ c.F := inferInstance
+    have : Algebra.FormallyUnramified ℚ c.F := Algebra.FormallyUnramified.of_isSeparable ℚ c.F
+    have : Algebra.FormallyUnramified ℤ ℚ := Algebra.FormallyUnramified.of_isLocalization (nonZeroDivisors ℤ)
+    have : Algebra.FormallyUnramified ℤ c.F := Algebra.FormallyUnramified.comp ℤ ℚ c.F
     have h3 := Algebra.FormallyUnramified.ext' (R := ℤ) (A := c.F) (B := DualNumber K)
       (GlobalTheory.FlagTan.red c K).toRingHom hnil φ.toIntAlgHom (algebraMap c.F (DualNumber K)).toIntAlgHom
       (fun x => by
@@ -650,7 +650,7 @@ theorem exists_isDef_lift_dualNumber : ∀ {E : Type} [Field E] [NumberField E] 
   obtain ⟨g, hgl, hgd, hc⟩ := (GlobalTheory.Frames.frBor_iff_frChg P'' Q t).1 ht
   have hdet : ∀ τ, IsUnit ((g τ).map (GlobalTheory.FlagTan.cst c K)).det := fun τ => by
     have h0 : IsUnit (g τ).det := by
-      rw [Matrix.det_of_lowerTriangular (g τ) fun i j hij => hgl τ i j hij]
+      rw [Matrix.det_of_isLowerTriangular (g τ) fun i j hij => hgl τ i j hij]
       exact IsUnit.prod_univ_iff.2 fun i => by rw [hgd]; exact Units.isUnit _
     have := h0.map (GlobalTheory.FlagTan.cst c K).toRingHom
     rwa [RingHom.map_det] at this
@@ -695,11 +695,11 @@ theorem exists_coords_derivs {k A : Type} [CommRing k] [CommRing A] {α : k →+
     ∃ (x : Fin D → A) (d : Fin D → A →+ A),
       (∀ c a b, d c (a * b) = a * d c b + b * d c a) ∧
       ∀ a c, d c (x a) = if a = c then 1 else 0 := by
-  letI := α.toAlgebra
-  haveI : Algebra.IsStandardSmoothOfRelativeDimension D k A := h
+  let := α.toAlgebra
+  have : Algebra.IsStandardSmoothOfRelativeDimension D k A := h
   obtain ⟨ι, σ, _, _, P, hP⟩ := ‹Algebra.IsStandardSmoothOfRelativeDimension D k A›.out
-  letI := Fintype.ofFinite ι
-  letI := Fintype.ofFinite σ
+  let := Fintype.ofFinite ι
+  let := Fintype.ofFinite σ
   have hc : Fintype.card ((Set.range P.map)ᶜ : Set ι) = D := by
     rw [Fintype.card_compl_set, Set.card_range_of_injective P.map_inj, ← hP]
     simp [Algebra.Presentation.dimension]
@@ -1178,7 +1178,7 @@ theorem exists_local (hP : GlobalTheory.Published.AbelianDeRham)
   have hAu : IsUnit A.det := by
     by_contra h
     obtain ⟨m, hm, hdm⟩ := exists_max_ideal_of_mem_nonunits h
-    letI := Ideal.Quotient.field m
+    let := Ideal.Quotient.field m
     exact hne (Ideal.Quotient.mk m) (Ideal.Quotient.eq_zero_iff_mem.2 hdm)
   let a : Γ(M.X, W') := M.K.jacobian i hW'i g * ↑(hAu.unit⁻¹)
   have hinv : ∀ {K : Type} [Field K] (ψ : Γ(M.X, W') →+* K), ψ A.det * ψ ↑(hAu.unit⁻¹) = 1 := fun ψ => by
@@ -1227,8 +1227,8 @@ theorem exists_local (hP : GlobalTheory.Published.AbelianDeRham)
 
 theorem exists_regular_ksRel : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {Dw : Datum H} {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {Y : Model Xo c (RingHom.id c.F)} {X : GlobalTheory.FlagMod.FlagCover Y} {Z : Comp Xo c} (M : Modif (str₀ X Z) (U₀ X Z) (GlobalTheory.FlagTan.dimFlag Dw)), GlobalTheory.Published.AbelianDeRham → (∀ (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K), GlobalTheory.FlagTan.KSIso (GlobalTheory.FlagTan.psiSet H) y) → ∀ (i : M.K.bundle.ι) (k : X.F.J) (W : M.X.Opens), IsAffineOpen W → W ≤ ksOpen M i k → ∃ a : Γ(M.X, W), ∀ (K : Type) [Field K] (z : Sp K ⟶ M.X) (hz : ⊤ ≤ z ⁻¹ᵁ W), KSRel M i k z (GlobalTheory.FlagMod.ev z W hz a) := by
   intro E _ _ _ H Dw l Xo c Y X Z M hP hKS i k W _ hW
-  haveI : Smooth M.str := SmoothOfRelativeDimension.smooth (dimFlag Dw) M.str
-  haveI : IsReduced M.X := isReduced_of_smooth M.str
+  have : Smooth M.str := SmoothOfRelativeDimension.smooth (dimFlag Dw) M.str
+  have : IsReduced M.X := isReduced_of_smooth M.str
   exact glue_field_cover W (fun L _ z x => KSRel M i k z x) (exists_local M hP hKS i k W hW)
 
 end GlobalTheory.CompHS
@@ -1445,7 +1445,7 @@ theorem isUnit_ger_of_ev {Z : Scheme.{0}} {V : Z.Opens} (a : Γ(Z, V)) (y : Z) (
   rw [← GlobalTheory.FlagMod.ev_res _ hWV (GlobalTheory.FlagMod.le_preimage_comp _ (GlobalTheory.FlagMod.tau_le hW le_rfl)),
     GlobalTheory.FlagMod.ev_spMap_tau] at hne
   have hnm : resG Z hWV a ∈ p.asIdeal.primeCompl := fun hm => hne (Ideal.algebraMap_residueField_eq_zero.2 hm)
-  letI := Z.presheaf.algebra_section_stalk (⟨y, hyW⟩ : W)
+  let := Z.presheaf.algebra_section_stalk (⟨y, hyW⟩ : W)
   have := hW.isLocalization_stalk ⟨y, hyW⟩
   have hu := (IsLocalization.AtPrime.isUnit_to_map_iff (Z.presheaf.stalk y) p.asIdeal (resG Z hWV a)).2 hnm
   rw [← ger_resG hWV y hyW]
@@ -1457,8 +1457,8 @@ theorem canId_nonempty : GlobalTheory.Published.AbelianDeRham → ∀ (E : Type)
     (∀ (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K), GlobalTheory.FlagTan.KSIso (GlobalTheory.FlagTan.psiSet H) y) →
     Nonempty (CanId M) := by
   intro hdR E _ _ _ H Dw l Xo c Y X Z M hKS
-  haveI : Smooth M.str := SmoothOfRelativeDimension.smooth (dimFlag Dw) M.str
-  haveI : IsReduced M.X := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isReduced_of_smooth M.str
+  have : Smooth M.str := SmoothOfRelativeDimension.smooth (dimFlag Dw) M.str
+  have : IsReduced M.X := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isReduced_of_smooth M.str
   have hBLB : (LB.div M.K.bundle ((L₀ X Z (FlagTan.kap Dw)).pull M.σ)).IsLB :=
     LB.isLB_div M.K.isLB (LB.isLB_pull ((common₀ X Z).isLB _) M.σ)
   have hloc : ∀ t : M.K.bundle.ι × X.F.J, ∃ a : Γ(M.X, ksOpen M t.1 t.2), ∀ (K : Type) [Field K]

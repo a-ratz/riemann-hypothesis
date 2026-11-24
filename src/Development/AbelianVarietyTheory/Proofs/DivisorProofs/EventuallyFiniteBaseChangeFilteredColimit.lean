@@ -107,7 +107,7 @@ theorem finite_of_relations {n : ℕ} {L : Type} [Fintype L] (φ : MvPolynomial 
       ∑ l, G i l * MvPolynomial.map (algebraMap R S) (rel l)) :
     Module.Finite S (S ⊗[R] A) := by
   have hψ := bcPres_surjective (S := S) φ hφ
-  haveI : Algebra.FiniteType S (S ⊗[R] A) := Algebra.FiniteType.of_surjective _ hψ
+  have : Algebra.FiniteType S (S ⊗[R] A) := Algebra.FiniteType.of_surjective _ hψ
   have hint : ∀ i, IsIntegral S (bcPres (S := S) φ (X i)) := by
     intro i
     refine ⟨q i, hq i, ?_⟩
@@ -115,7 +115,7 @@ theorem finite_of_relations {n : ℕ} {L : Type} [Fintype L] (φ : MvPolynomial 
     rw [← Polynomial.aeval_def, Polynomial.aeval_algHom_apply, hG i, map_sum]
     refine Finset.sum_eq_zero (fun l _ => ?_)
     rw [map_mul, bcPres_map, hrel, TensorProduct.tmul_zero, mul_zero]
-  haveI : Algebra.IsIntegral S (S ⊗[R] A) := by
+  have : Algebra.IsIntegral S (S ⊗[R] A) := by
     constructor
     intro x
     obtain ⟨P, rfl⟩ := hψ x
@@ -236,8 +236,8 @@ theorem eventually_finite_baseChange : ∀ (J : Type) [SmallCategory J] [IsFilte
       ext x; simp [rel]
     rw [this, hs]
     rfl
-  letI : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
-  haveI : Algebra.IsIntegral c.pt (c.pt ⊗[F.obj j] A) := Algebra.IsIntegral.of_finite _ _
+  let : Algebra (F.obj j) c.pt := (c.ι.app j).hom.toAlgebra
+  have : Algebra.IsIntegral c.pt (c.pt ⊗[F.obj j] A) := Algebra.IsIntegral.of_finite _ _
   have hint : ∀ i, IsIntegral c.pt (bcPres (S := c.pt) φ (X i)) :=
     fun i => Algebra.IsIntegral.isIntegral _
   choose p hpm hp0 using hint
@@ -297,7 +297,7 @@ theorem eventually_finite_baseChange : ∀ (J : Type) [SmallCategory J] [IsFilte
         MvPolynomial.coeff_mem_coeffs _ (MvPolynomial.mem_support_iff.1 hm)⟩)
     · rw [MvPolynomial.notMem_support_iff.1 hm, map_zero]
   refine ⟨k₂, f₁ ≫ g₂, fun k f => ?_⟩
-  letI : Algebra (F.obj j) (F.obj k) := (F.map ((f₁ ≫ g₂) ≫ f)).hom.toAlgebra
+  let : Algebra (F.obj j) (F.obj k) := (F.map ((f₁ ≫ g₂) ≫ f)).hom.toAlgebra
   have hrel : ∀ l, φ (rel l) = 0 := fun l =>
     (RingHom.mem_ker).1 (hker ▸ Ideal.subset_span ⟨l, rfl⟩ : rel l ∈ RingHom.ker φ)
   refine finite_of_relations φ hφ rel hrel (fun i => (q i).map (F.map (g₂ ≫ f)).hom)

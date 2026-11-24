@@ -102,7 +102,7 @@ theorem isLocalization_of_data {T T' : C} (l : T ⟶ T') (b : F.obj T) (h1 : IsU
     (h3 : ∀ x : F.obj T, mp F l x = 0 → ∃ n : ℕ, b ^ n * x = 0) :
     letI : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
     IsLocalization.Away b (F.obj T') := by
-  letI : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
+  let : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
   refine ⟨?_, fun z ↦ ?_, fun {x y} e ↦ ?_⟩
   · rintro ⟨_, n, rfl⟩
     change IsUnit (mp F l (b ^ n))
@@ -148,10 +148,10 @@ theorem ker_key {T : C} (c x : TrivSqZeroExt (F.obj T) Ω[F.obj T⁄R]) (m₁ m�
 theorem hasLoc_omExt (H : Desc.HasLoc F) : Desc.HasLoc (omExt F) := by
   intro T c
   obtain ⟨T', l, h1, h2, h3, h4⟩ := H T c.fst
-  letI : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
-  haveI : IsScalarTower R (F.obj T) (F.obj T') :=
+  let : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
+  have : IsScalarTower R (F.obj T) (F.obj T') :=
     IsScalarTower.of_algebraMap_eq fun r ↦ ((mp F l).commutes r).symm
-  haveI := isLocalization_of_data F l c.fst h1 h2 h3
+  have := isLocalization_of_data F l c.fst h1 h2 h3
   have hp : ∀ ω, p1 F l ω = KaehlerDifferential.map R R (F.obj T) (F.obj T') ω :=
     SemiHom.oneFormMap_eq_kaehlerDifferential_map _ fun _ ↦ rfl
   have hs : ∀ (a : F.obj T) (η : Ω[F.obj T'⁄R]), a • η = mp F l a • η := fun a η ↦

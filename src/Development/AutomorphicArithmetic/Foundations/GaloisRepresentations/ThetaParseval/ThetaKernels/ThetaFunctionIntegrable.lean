@@ -85,9 +85,9 @@ theorem contDiff_deriv_heisOF_line_k : ∀ (F E : Type) [Field F] [NumberField F
         show L' (Fin.init (u + v)) + L (u (Fin.last k) + v (Fin.last k)) = _
         rw [show Fin.init (u + v) = Fin.init u + Fin.init v from rfl, map_add (f := _), map_add (f := _)]
         abel }
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : ContinuousAdd (WOF F E nS nT) := inferInstanceAs (ContinuousAdd (Fin nT → Fin nS → AF F ⊗[F] E))
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : ContinuousAdd (WOF F E nS nT) := inferInstanceAs (ContinuousAdd (Fin nT → Fin nS → AF F ⊗[F] E))
   have hM : Continuous M := (hL'.comp hi).add (hL.comp (continuous_apply _))
   have hM0 : ∀ v, (M v).map (finPartF F E) = 0 := fun v => by
     show (L' (Fin.init v) + L (v (Fin.last k))).map (finPartF F E) = 0

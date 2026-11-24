@@ -145,9 +145,9 @@ theorem exists_gens {𝔪 : Ideal (𝓞 E)} (h0 : 𝔪 ≠ ⊥) : ∀ (r : ℕ) 
     have h3 := Submodule.mem_map_of_mem (f := ι) (hsp h2)
     rw [← e2, Submodule.map_sup, Submodule.map_smul'', Submodule.map_span] at h3
     rw [← sub_add_cancel v w]
-    refine add_mem (SetLike.le_def.1 (sup_le_sup (Submodule.span_mono ?_)
+    refine add_mem (IsConcreteLE.le_iff.1 (sup_le_sup (Submodule.span_mono ?_)
       (Submodule.smul_mono le_rfl (Submodule.map_comap_le _ _))) h3)
-      (SetLike.le_def.1 (sup_le_sup_right (Submodule.span_mono ?_) _) hw)
+      (IsConcreteLE.le_iff.1 (sup_le_sup_right (Submodule.span_mono ?_) _) hw)
     · rintro _ ⟨_, ⟨i, rfl⟩, rfl⟩
       exact ⟨i.succ, rfl⟩
     · rintro _ rfl
@@ -232,9 +232,9 @@ namespace GlobalTheory.Dict.Move
 
 theorem exists_pow_le {E : Type} [Field E] [NumberField E] (𝔪 : Ideal (𝓞 E)) {d : 𝓞 E} (hd : d ≠ 0) :
     ∃ N : ℕ, ∃ t, IsCoprime (Ideal.span {t}) 𝔪 ∧ ∀ b ∈ 𝔪 ^ N, t * b ∈ Ideal.span {d} := by
-  haveI : Finite (𝓞 E ⧸ Ideal.span {d}) :=
+  have : Finite (𝓞 E ⧸ Ideal.span {d}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hd)
-  haveI : IsArtinianRing (𝓞 E ⧸ Ideal.span {d}) := isArtinian_of_finite
+  have : IsArtinianRing (𝓞 E ⧸ Ideal.span {d}) := isArtinian_of_finite
   obtain ⟨N, hN⟩ := IsArtinian.monotone_stabilizes (R := 𝓞 E ⧸ Ideal.span {d}) (M := 𝓞 E ⧸ Ideal.span {d})
     ⟨fun n => OrderDual.toDual ((𝔪 ^ n).map (Ideal.Quotient.mk (Ideal.span {d}))),
       fun a b h => Ideal.map_mono (Ideal.pow_le_pow_right h)⟩
@@ -272,7 +272,7 @@ theorem isUnit_cols {𝔪 : Ideal (𝓞 E)} (h1 : 𝔪 ≠ ⊤) {L : Lt E r} (hf
     intro v hv
     have := Submodule.span_le_restrictScalars (𝓞 E) E _ (hN v hv)
     exact (Submodule.smul_mem_iff _ hs0).1 this
-  exact Matrix.linearIndependent_cols_iff_isUnit.1 hli
+  exact linearIndependent_col_iff_isUnit.1 hli
 
 theorem exists_cong (D : SW.Level X) {L : Lt E r} {u : Fin r → Fin r → E} (hL : SelfD X L)
     (h : L ≤ Submodule.span (𝓞 E) (Set.range u) ⊔ D.𝔪 • L) :
@@ -298,7 +298,7 @@ theorem exists_cong (D : SW.Level X) {L : Lt E r} {u : Fin r → Fin r → E} (h
       Matrix.mulVec, dotProduct, ← e]
     rw [← Finset.sum_sub_distrib, Finset.smul_sum, Finset.sum_comm]
     refine Finset.sum_congr rfl fun j _ => ?_
-    rw [Finset.sum_eq_single k (fun k' _ hk => by rw [if_neg (Ne.symm hk), mul_zero]) (by simp), if_pos rfl]
+    rw [Finset.sum_eq_single k (fun k' _ hk => by rw [ite_eq_right (Ne.symm hk), mul_zero]) (by simp), ite_eq_left rfl]
     change (s : E) * _ = _
     ring
   rw [e2]
@@ -534,8 +534,8 @@ theorem GlobalTheory.Dict.exists_components_tied : ∀ (E : Type) [Field E] [Num
   · rw [AdmX, eq_top_iff]
     refine hb.ge.trans (sup_le_sup_right (Submodule.span_mono ?_) _)
     rintro _ ⟨i, rfl⟩
-    exact ⟨Fin.castLE hn i, Or.inr (hU.1 ▸ i.2), dif_pos i.2⟩
-  · have e : (if h : ((Fin.castLE hn i : Fin n) : ℕ) < r then b ⟨Fin.castLE hn i, h⟩ else 0) = b i := dif_pos i.2
+    exact ⟨Fin.castLE hn i, Or.inr (hU.1 ▸ i.2), dite_eq_left i.2⟩
+  · have e : (if h : ((Fin.castLE hn i : Fin n) : ℕ) < r then b ⟨Fin.castLE hn i, h⟩ else 0) = b i := dite_eq_left i.2
     beta_reduce
     rw [e, ← Nat.cast_smul_eq_nsmul (𝓞 E)]
     exact hcg k i

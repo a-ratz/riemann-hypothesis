@@ -219,7 +219,7 @@ theorem fullObj_of_cover : Out.Laws → ∀ (E : Type) [Field E] [NumberField E]
     (e := fun m z z' c => Out.WeilIs t.G t.PP.L m z z' (unitOn c)) hinj honto
     (fun c z => (Category.assoc g z (t.act.act c)).symm)
     (fun c => by
-      haveI := t.act.hom c
+      have := t.act.hom c
       exact MonObj.one_comp (t.act.act c))
     (fun m z z' c => weilIs_fieldExt_iff S t.G k Ω i x t.PP.L m z z' c
       ⟨inferInstance, t.semi.smooth, hp, t.semi.geomConnected⟩ t.PP.isLB) J
@@ -292,7 +292,7 @@ theorem IsBas.iff_det {n : ℕ} {e b : Fin n → M} (he : IsBas R e) (P : Matrix
 theorem exists_trait_ring (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsNoetherianRing A] [CharZero A] :
     ∃ (W : Type) (_ : CommRing W) (_ : IsDomain W) (_ : IsLocalRing W) (φ : A →+* W), CDvr W ∧ IsLocalHom φ := by
   by_cases h : IsField A
-  · letI := h.toField
+  · let := h.toField
     refine ⟨PowerSeries A, inferInstance, inferInstance, inferInstance, PowerSeries.C, ⟨inferInstance, ?_, ?_⟩,
       inferInstance⟩
     · rw [PowerSeries.maximalIdeal_eq_span_X]; infer_instance
@@ -1062,7 +1062,7 @@ theorem relAmple_of_polarised_at_points : ∀ (E : Type) [Field E] [NumberField 
   have hflat : Flat t.G.hom := by
     first
       | exact inferInstance
-      | (haveI := t.semi.smooth; infer_instance)
+      | (have := t.semi.smooth; infer_instance)
   refine relAmple_of_pointwise t.G t.PP.L t.PP.isLB hproj (fun p => ?_)
   obtain ⟨S', f, t', m, hp, hA, -⟩ := hpt p
   refine ⟨S', f, t'.G, m.cm.F, t'.PP.L, m.cart.1, t'.PP.isLB, ?_, hp, hA⟩

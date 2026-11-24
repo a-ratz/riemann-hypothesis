@@ -632,7 +632,7 @@ theorem exists_dual_pos {M : Type} [AddCommGroup M] [Module.Finite ℤ M] {m : �
     have h5 := congrArg (fun f => f k) h3
     simp [h4] at h5
     exact nonZeroDivisors.ne_zero ha h5
-  haveI : Module.IsTorsionFree ℤ ((M ⧸ p) ⧸ Submodule.torsion ℤ (M ⧸ p)) :=
+  have : Module.IsTorsionFree ℤ ((M ⧸ p) ⧸ Submodule.torsion ℤ (M ⧸ p)) :=
     Submodule.isTorsionFree_iff_torsion_eq_bot.2 Submodule.QuotientTorsion.torsion_eq_bot
   obtain ⟨f, hf, hf0⟩ := Submodule.exists_dual_map_eq_bot_of_notMem hx inferInstance
   let g : M →ₗ[ℤ] ℤ := f ∘ₗ p.mkQ
@@ -722,8 +722,8 @@ theorem GlobalTheory.Poinc.Sep.values_of_elements : ∀ (O : Type) [CommRing O] 
     have h2 : (0 : ℝ) ≤ ((∑ u, Φ.δ y k (mv u) (mv u) : ℤ) : ℝ) := by
       exact_mod_cast Finset.sum_nonneg fun u _ => Φ.nonneg y k _
     exact_mod_cast (mul_nonneg hcW0.le h2).trans h1
-  haveI : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
-  haveI hp : (RingHom.ker ev).IsPrime := RingHom.ker_isPrime ev
+  have : IsNoetherianRing (Φ.V y) := (Φ.cn y).1
+  have hp : (RingHom.ker ev).IsPrime := RingHom.ker_isPrime ev
   have hOp : ∀ h ∈ O', h ∈ maximalIdeal (Φ.V y) → h ∈ RingHom.ker ev := fun h hh hm =>
     RingHom.mem_ker.2 ((hO' h hh).2 hm)
   have hg₀0 : g₀ ≠ 0 := by

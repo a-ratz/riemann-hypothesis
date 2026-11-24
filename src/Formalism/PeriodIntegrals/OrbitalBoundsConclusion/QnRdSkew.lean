@@ -219,7 +219,7 @@ lemma integrable_of_contOn (hGc : IsClosed G) (hconc : μ Gᶜ = 0)
     (hfin : ∀ K : Set (Fin n → Fin n → ℂ), IsCompact K → μ K < ⊤) {φ : Matrix (Fin n) (Fin n) ℂ → ℂ}
     (hφ : ContinuousOn φ G) {K : Set (Matrix (Fin n) (Fin n) ℂ)} (hK : IsCompact K)
     (hz : ∀ g ∈ G, g ∉ K → φ g = 0) : Integrable (fun x : Fin n → Fin n → ℂ => φ (Matrix.of x)) μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨hfin⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨hfin⟩
   have hSc : IsCompact {x : Fin n → Fin n → ℂ | Matrix.of x ∈ K ∩ G} := hK.inter_right hGc
   have hcont : ContinuousOn (fun x : Fin n → Fin n → ℂ => φ (Matrix.of x))
       {x : Fin n → Fin n → ℂ | Matrix.of x ∈ K ∩ G} :=

@@ -224,9 +224,9 @@ theorem transport : ∀ (Ks LL WL C H G X : Type) [Field Ks] [Field LL] [Algebra
     ∃ A' : X → Submodule ℂ (GlobalTheory.DefRead.VC σ WL), DirectSum.IsInternal A' ∧
       ∀ (h : H) (y : X), ∀ v ∈ A' y, GlobalTheory.DefRead.twBC σ ρ0 χ (φ h) v ∈ A' (h • y) := by
   intro Ks LL WL C H G X _ _ _ _ _ _ _ _ _ _ _ _ _ _ σ WK n b _ hliK hspK hliL hspL e ρ0 χ act he φ A hA hinv
-  letI : Algebra Ks ℂ := (σ.comp (algebraMap Ks LL)).toAlgebra
-  letI : Algebra LL ℂ := σ.toAlgebra
-  haveI : IsScalarTower Ks LL ℂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra Ks ℂ := (σ.comp (algebraMap Ks LL)).toAlgebra
+  let : Algebra LL ℂ := σ.toAlgebra
+  have : IsScalarTower Ks LL ℂ := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   obtain ⟨A', h1, h2⟩ := transport_general (X := X) WK n b hliK hspK hliL hspL e (fun g => ρ0 g) act he
     (fun g => σ (((χ g)⁻¹ : LLˣ) : LL)) φ A hA hinv
   exact ⟨A', h1, fun h y v hv => by rw [twBC_apply]; exact h2 h y v hv⟩
@@ -256,12 +256,12 @@ theorem exists_poly {g : ℕ} (hg : g.Prime) : ∃ Q : Polynomial ℤ,
   have e : ((g : Polynomial ℤ) * Polynomial.X * 1 * F) = Polynomial.C (g : ℤ) * (Polynomial.X * F) := by
     simp [mul_assoc]
   simp only [Polynomial.coeff_X_add_one_pow, one_pow, Polynomial.coeff_add, Polynomial.coeff_X_pow, e, Polynomial.coeff_C_mul,
-    Nat.choose_one_right, if_neg hg1] at h1
+    Nat.choose_one_right, ite_eq_right hg1] at h1
   have h2 : (Polynomial.X * F).coeff 1 = F.coeff 0 := Polynomial.coeff_X_mul F 0
   rw [h2, Polynomial.coeff_one] at h1
   have h3 : F.coeff 0 = 1 := by
     have hg0 : (g : ℤ) ≠ 0 := by exact_mod_cast hg.ne_zero
-    simp only [one_ne_zero, if_false, add_zero, zero_add] at h1
+    simp only [one_ne_zero, ite_false, add_zero, zero_add] at h1
     exact (mul_eq_left₀ hg0).1 h1.symm
   refine ⟨F.divX, ?_⟩
   have h4 : F = 1 + Polynomial.X * F.divX := by
@@ -460,7 +460,7 @@ theorem sub_mem_smul_top_of_level (E : Type) [Field E] [NumberField E] (La Λ Q 
     obtain ⟨b', hb'⟩ := (hψ _).1 hd
     have : ((G - 1) ^ m) l = z + n • b' := by rw [← hb']; abel
     rw [this]; exact Submodule.add_mem _ hz (hnW I hJI b')
-  haveI := hfin; haveI := htf
+  have := hfin; have := htf
   let Gr : Module.End (𝓞 E) W := G.restrict hGW
   have hGr : ∀ y : W, ((Gr y : W) : Λ) = G y := fun y => rfl
   have hGr1 : ∀ y : W, (((Gr - 1) y : W) : Λ) = (G - 1) y := fun y => rfl
@@ -511,7 +511,7 @@ theorem free_of_unip_one (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
   have hM0 : 0 < l.M := by have := l.three_le; omega
   obtain ⟨Λ, _, _, F, ψ, hfin, htf, hFN, hψadd, hψlin, hψker, hψonto, hψF⟩ :=
     GlobalTheory.T.periodLattice_action_of_finiteOrder_automorphism E P act θ N l.M hθ hN hθN hcomm hM0
-  letI := P.isAb.comm
+  let := P.isAb.comm
   letI : Module (𝓞 E) (Additive (𝟙_ (Over (Sp ℂ)) ⟶ P.A)) := GlobalTheory.FreeLev.ptModule P act
   let evL : Dw.La →ₗ[𝓞 E] Additive (𝟙_ (Over (Sp ℂ)) ⟶ P.A) :=
     { toFun := fun a => Additive.ofMul (ev a)
@@ -949,9 +949,9 @@ theorem indep_part (m : B →ₐ[K] Module.End K W) : iSupIndep (part (L := L) m
 
 theorem iSup_part [IsSepClosed L] [Algebra.Etale K B] (m : B →ₐ[K] Module.End K W) : ⨆ χ, part (L := L) m χ = ⊤ := by
   classical
-  haveI : Module.Finite L (L ⊗[K] B) := Algebra.FormallyUnramified.finite_of_free L _
-  haveI : IsArtinianRing (L ⊗[K] B) := isArtinian_of_tower L inferInstance
-  letI : Fintype (PrimeSpectrum (L ⊗[K] B)) := Fintype.ofFinite _
+  have : Module.Finite L (L ⊗[K] B) := Algebra.FormallyUnramified.finite_of_free L _
+  have : IsArtinianRing (L ⊗[K] B) := isArtinian_of_tower L inferInstance
+  let : Fintype (PrimeSpectrum (L ⊗[K] B)) := Fintype.ofFinite _
   let e := Algebra.FormallyEtale.equivPiOfIsSepClosed L (L ⊗[K] B)
   let M : L ⊗[K] B →ₐ[L] Module.End L (L ⊗[K] W) :=
     Algebra.TensorProduct.lift (Algebra.ofId L _) ((Module.End.baseChangeHom K L W).comp m)
@@ -988,8 +988,8 @@ theorem split_of_free [IsSepClosed L] [Algebra.Etale K B] (m : B →ₐ[K] Modul
       (∀ (h : G) (y : X), h • y = y → h = 1) ∧ DirectSum.IsInternal A ∧
       ∀ (h : G) (y : X), ∀ v ∈ A y, (T h).baseChange L v ∈ A (h • y) := by
   classical
-  haveI : Module.Finite K B := Algebra.FormallyUnramified.finite_of_free K _
-  letI act : MulAction G (B →ₐ[K] L) :=
+  have : Module.Finite K B := Algebra.FormallyUnramified.finite_of_free K _
+  let act : MulAction G (B →ₐ[K] L) :=
     { smul := fun g χ => χ.comp (τ g⁻¹)
       one_smul := fun χ => by
         show χ.comp (τ 1⁻¹) = χ
@@ -1014,7 +1014,7 @@ theorem split_complex [Algebra.Etale K B] (σ : K →+* ℂ) (m : B →ₐ[K] Mo
     ∃ (X : Type) (_ : Fintype X) (_ : DecidableEq X) (_ : MulAction G X) (A : X → Submodule ℂ (GlobalTheory.DefRead.VC σ W)),
       (∀ (h : G) (y : X), h • y = y → h = 1) ∧ DirectSum.IsInternal A ∧
       ∀ (h : G) (y : X), ∀ v ∈ A y, GlobalTheory.DefRead.bcLin σ (T h) v ∈ A (h • y) := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   exact split_of_free (L := ℂ) m τ T hT fun g χ hχ => hf g χ.toRingHom χ.commutes (AlgHom.congr_fun hχ)
 
 end Alg
@@ -1088,9 +1088,9 @@ theorem fnRule_zero : fnRule (0 : Γ(Xo.XF c, ⊤)) = 0 := by
   simp only [fnAt, map_zero]
 
 theorem finite_strK (hq : Dw.q = 0) : IsFinite (strK (Xo := Xo) (c := c)) := by
-  haveI := GlobalTheory.FlatLine.DefinitePoint.etale_strK Xo c hq
-  haveI := CompFin.quasiCompact_alt Xo
-  haveI : LocallyQuasiFinite (strK (Xo := Xo) (c := c)) := by
+  have := GlobalTheory.FlatLine.DefinitePoint.etale_strK Xo c hq
+  have := CompFin.quasiCompact_alt Xo
+  have : LocallyQuasiFinite (strK (Xo := Xo) (c := c)) := by
     refine ⟨fun {U} hU {V} hV e => ?_⟩
     have h₁ := (strK (Xo := Xo) (c := c)).formallyUnramified_appLE hU hV e
     have h₂ := (strK (Xo := Xo) (c := c)).finiteType_appLE hU hV e
@@ -1099,11 +1099,11 @@ theorem finite_strK (hq : Dw.q = 0) : IsFinite (strK (Xo := Xo) (c := c)) := by
   exact IsFinite.of_locallyQuasiFinite _
 
 theorem isAffine_XF (hq : Dw.q = 0) : IsAffine (Xo.XF c) := by
-  haveI := finite_strK (Xo := Xo) (c := c) hq
+  have := finite_strK (Xo := Xo) (c := c) hq
   exact isAffine_of_isAffineHom (strK (Xo := Xo) (c := c))
 
 theorem etale_cst (hq : Dw.q = 0) : (cst Xo c).Etale := by
-  haveI := isAffine_XF (Xo := Xo) (c := c) hq
+  have := isAffine_XF (Xo := Xo) (c := c) hq
   have h := (HasRingHomProperty.iff_of_isAffine (P := @Etale) (f := strK (Xo := Xo) (c := c))).1
     (GlobalTheory.FlatLine.DefinitePoint.etale_strK Xo c hq)
   exact RingHom.Etale.stableUnderComposition _ _
@@ -1135,9 +1135,9 @@ theorem split_rules (hq : Dw.q = 0) (hL : ActLev (Xo := Xo) c lev) (hF : GlobalT
     ∃ (X : Type) (_ : Fintype X) (_ : DecidableEq X) (_ : MulAction G X) (A : X → Submodule ℂ (GlobalTheory.DefRead.VC σ W)),
       (∀ (h : G) (y : X), h • y = y → h = 1) ∧ DirectSum.IsInternal A ∧
       ∀ (h : G) (y : X), ∀ v ∈ A y, GlobalTheory.DefRead.bcLin σ (T h) v ∈ A (h • y) := by
-  haveI := isAffine_XF (Xo := Xo) (c := c) hq
-  letI : Algebra c.F Γ(Xo.XF c, ⊤) := (cst Xo c).toAlgebra
-  haveI : Algebra.Etale c.F Γ(Xo.XF c, ⊤) := etale_cst hq
+  have := isAffine_XF (Xo := Xo) (c := c) hq
+  let : Algebra c.F Γ(Xo.XF c, ⊤) := (cst Xo c).toAlgebra
+  have : Algebra.Etale c.F Γ(Xo.XF c, ⊤) := etale_cst hq
   choose r hr hr' using exists_map hL
   have hact : ∀ g b, actLev c lev g (fnRule b) = fnRule ((r g).appTop.hom b) := fun g b => by
     funext p y
@@ -1178,7 +1178,7 @@ theorem split_rules (hq : Dw.q = 0) (hL : ActLev (Xo := Xo) c lev) (hF : GlobalT
   · show (T g (m b f) : Rul Xo c) = fnRule (t g b) * T g f
     rw [hT, hT, ht]
     rfl
-  · letI : Algebra c.F ℂ := σ.toAlgebra
+  · let : Algebra c.F ℂ := σ.toAlgebra
     obtain ⟨x, hx⟩ := exists_pt χ
     have hx0 : x ≫ strK = spMap (algebraMap c.F ℂ) := eq_of_fnAt fun b => by
       obtain ⟨k, rfl⟩ : ∃ k, toΓ c.F k = b :=
@@ -1357,7 +1357,7 @@ theorem halfH_acts_freely_on_internal_sum_decomposition : _root_.GlobalTheory.Co
   have a2 := ha2 x hx (le_trans (le_max_right _ _) hle) ι p hp i hi hp (GlobalTheory.BadCount.Inh.halfH (Fm.D x ι) k)
     (((p.R.eG.trans p.cG).symm.toMonoidHom).comp (GlobalTheory.BadCount.Inh.halfH (Fm.D x ι) k).subtype) a1
   obtain ⟨X, hX, hdX, hact, A, hfr, hint, hperm⟩ := a2
-  letI := ((p.R.toRealDat.FW i)).towKs
+  let := ((p.R.toRealDat.FW i)).towKs
   obtain ⟨n, b, hbW, hbK, hbsK, hbL, hbsL⟩ := p.fw.ks i
   have hK := (p.rhoGeo i).1 (fun g f hf => _root_.GlobalTheory.DefHalf.keeps_alt p i hp.1 g f hf)
   have he : ∀ g f, (((p.fw.e i) (_root_.GlobalTheory.DefHalf.groupActionOnCoefficients p i hp.1 g f) : (p.R.FW i).WK) : Fin (p.R.nW i) → (Fm.D x ι).what₂.LL) =
@@ -1563,7 +1563,7 @@ namespace GlobalTheory.DefRead
 theorem bcLin_sub_smul_apply {K W : Type} [Field K] [AddCommGroup W] [Module K W] (σ : K →+* ℂ)
     (f : W →ₗ[K] W) (a : K) (v : VC σ W) :
     bcLin σ (f - a • LinearMap.id) v = bcLin σ f v - σ a • v := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   revert v
   show ∀ v : ℂ ⊗[K] W, LinearMap.baseChange ℂ (f - a • LinearMap.id) v = LinearMap.baseChange ℂ f v - σ a • v
   intro v
@@ -1574,7 +1574,7 @@ theorem bcLin_sub_smul_apply {K W : Type} [Field K] [AddCommGroup W] [Module K W
 theorem bcLin_sum_smul {K W G : Type} [Field K] [AddCommGroup W] [Module K W] [Fintype G] (σ : K →+* ℂ)
     (f : G → W →ₗ[K] W) (a : G → K) :
     bcLin σ (∑ g, a g • f g) = ∑ g, σ (a g) • bcLin σ (f g) := by
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   show LinearMap.baseChangeHom K ℂ W W (∑ g, a g • f g) = ∑ g, σ (a g) • LinearMap.baseChange ℂ (f g)
 
   rw [map_sum]
@@ -1599,7 +1599,7 @@ theorem finrank_eig_twBC : ∀ (K W G : Type) [Field K] [AddCommGroup W] [Module
         LinearMap.ker (Representation.asAlgebraHom (GlobalTheory.DefRead.twBC σ ρ0 χ) (∑ g, MonoidAlgebra.single g (σ (c g)))) :
           Submodule ℂ (GlobalTheory.DefRead.VC σ W)) := by
   intro K W G _ _ _ _ _ _ σ ρ0 χ J μ c
-  letI : Algebra K ℂ := σ.toAlgebra
+  let : Algebra K ℂ := σ.toAlgebra
   set a : J → W →ₗ[K] W := fun p => ρ0 p - ((χ p * μ p : Kˣ) : K) • LinearMap.id with ha
   have hker : ∀ p : J, LinearMap.ker (twBC σ ρ0 χ (p : G) -
       ((((Units.map σ.toMonoidHom).comp μ) p : ℂˣ) : ℂ) • LinearMap.id) = LinearMap.ker (bcLin σ (a p)) := by
@@ -1803,7 +1803,7 @@ theorem point_read_alt (p : PtAt ex Csz) (i : Fin D.R.m) (hp : _root_.GlobalTheo
   · obtain ⟨X, hX, hXd, hact, A, hf, hA, hc⟩ := hfree k
     let f : (GlobalTheory.BadCount.Inh.halfH D k).comap (MonoidHom.id (G0g D.nd)) →* GlobalTheory.BadCount.Inh.halfH D k :=
       { toFun := fun h => ⟨h.1, h.2⟩, map_one' := rfl, map_mul' := fun _ _ => rfl }
-    letI : MulAction ((GlobalTheory.BadCount.Inh.halfH D k).comap (MonoidHom.id (G0g D.nd))) X := MulAction.compHom X f
+    let : MulAction ((GlobalTheory.BadCount.Inh.halfH D k).comap (MonoidHom.id (G0g D.nd))) X := MulAction.compHom X f
     refine ⟨X, hX, hXd, this, A, fun h y hy => ?_, hA, fun h y v hv => hc (f h) y v hv⟩
     have := hf (f h) y hy
     exact Subtype.ext (congrArg Subtype.val this)

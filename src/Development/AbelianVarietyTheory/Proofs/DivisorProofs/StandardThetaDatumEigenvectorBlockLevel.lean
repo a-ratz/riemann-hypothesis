@@ -153,7 +153,7 @@ namespace GlobalTheory.PowIdem
 theorem exists_period {M : Type*} [Monoid M] [Finite M] (y : M) :
     ∃ i p : ℕ, 0 < p ∧ i + p ≤ Nat.card M ∧ y ^ (i + p) = y ^ i := by
   classical
-  haveI := Fintype.ofFinite M
+  have := Fintype.ofFinite M
   obtain ⟨a, b, hab, h⟩ := Fintype.exists_ne_map_eq_of_card_lt
     (fun i : Fin (Nat.card M + 1) => y ^ (i : ℕ)) (by simp [Nat.card_eq_fintype_card])
   have ha := a.isLt
@@ -187,7 +187,7 @@ theorem finite_quot (D : D7) (N : ℕ) (hN : 0 < N) :
   let ι : 𝓞 D.host.E →+* OhE D :=
     ((inc D).comp (algebraMap (𝓞 D.host.E) D.host.E)).codRestrict _
       fun x => GlobalTheory.CongApprox.inc_mem_OhE D x
-  haveI : Finite (𝓞 D.host.E ⧸ Ideal.span {(N : 𝓞 D.host.E)}) :=
+  have : Finite (𝓞 D.host.E ⧸ Ideal.span {(N : 𝓞 D.host.E)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hN.ne')
   refine Finite.of_surjective (Ideal.quotientMap (I := Ideal.span {(N : 𝓞 D.host.E)})
     (Ideal.span {(N : OhE D)}) ι ?_) ?_
@@ -250,7 +250,7 @@ theorem exists_idem : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)), 𝔪 ≠ ⊥ 
       (Ideal.Quotient.mk (Ideal.span {(N : OhE D)}) ys) ^ (k + j * (R N).factorial) =
         (Ideal.Quotient.mk (Ideal.span {(N : OhE D)}) ys) ^ k := by
     intro N hN k j hk
-    haveI := finite_quot D N hN
+    have := finite_quot D N hN
     exact pow_add_mul_factorial _ _ (hR N) k j hk
   have he : ∀ N : ℕ, R N ≤ e N := by
     intro N

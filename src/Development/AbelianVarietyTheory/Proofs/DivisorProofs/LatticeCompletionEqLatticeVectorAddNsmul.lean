@@ -66,7 +66,7 @@ theorem exists_int_valued_sub_le (w : HeightOneSpectrum ℤ) {x : w.adicCompleti
   set c' : w.adicCompletion ℚ := algebraMap ℚ (w.adicCompletion ℚ) c
   have hc' : c' ≠ 0 := by
     simp only [c', ne_eq, map_eq_zero_iff _ (algebraMap ℚ (w.adicCompletion ℚ)).injective]; exact hc0
-  have hpos : (0 : WithZero (Multiplicative ℤ)) < Valued.v c' := zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hc')
+  have hpos : (0 : WithZero (Multiplicative ℤ)) < Valued.v c' := pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hc')
   have hU : IsOpen ((fun y => (y - x) / c') ⁻¹' (w.adicCompletionIntegers ℚ : Set (w.adicCompletion ℚ))) :=
     (Valued.isOpen_valuationSubring _).preimage ((continuous_id.sub continuous_const).div_const c')
   obtain ⟨k, hk⟩ := (denseRange_algebraMap (K := ℚ) w).exists_mem_open hU
@@ -126,7 +126,7 @@ theorem exists_int_add_prime_mul (l : ℕ) (hl : l.Prime) (hlp : l ≠ p) (a : A
     have hne : v.1.valuation ℚ (l : ℚ) ≠ 0 := (Valuation.ne_zero_iff _).2 hlq0
     by_cases hv : v = v0
     · subst hv
-      rw [mul_inv_le_iff₀ (zero_lt_iff.2 hne), _root_.one_mul]
+      rw [mul_inv_le_iff₀ (pos_iff_ne_zero.2 hne), _root_.one_mul]
       exact hz
     · have hnot : (l : ℤ) ∉ v.1.asIdeal := by
         intro hm

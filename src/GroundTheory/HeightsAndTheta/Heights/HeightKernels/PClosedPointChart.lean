@@ -189,7 +189,7 @@ theorem ClosedPointChart.proof (hU : ClosedPointUnitSection.Statement) : ClosedP
     intro u
     apply W.mem_of_valuation_le_one
     rw [map_div₀]
-    exact (div_le_one₀ (zero_lt_iff.mpr ((Valuation.ne_zero_iff _).mpr hyt))).mpr
+    exact (div_le_one₀ (pos_iff_ne_zero.mpr ((Valuation.ne_zero_iff _).mpr hyt))).mpr
       (ht u (Finset.mem_univ _))
   have hchartW : ∀ x ∈ chartRingZ y (fun _ => t), x ∈ W := by
     intro x hx

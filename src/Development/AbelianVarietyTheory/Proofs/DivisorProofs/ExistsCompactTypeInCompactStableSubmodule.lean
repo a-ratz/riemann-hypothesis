@@ -103,7 +103,7 @@ theorem exists_smooth_equivariant {n : ℕ} {ε : Fin n → Bool} {B : Type} [No
   have hint : Integrable (fun g : UJ ε => φ (toM g) • σ (toM g)) μ := by simpa using hint' 1 hone
   have hψi : Integrable (fun g : UJ ε => φ (toM g)) μ := hψ.integrable_of_hasCompactSupport hψc
   have hpos : 0 < ∫ g : UJ ε, φ (toM g) ∂μ :=
-    hψ.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) hψc (fun g => hφ0 _)
+    hψ.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) hψc (fun g => hφ0 _)
       (by show φ 1 ≠ 0; rw [hφ1]; exact one_ne_zero)
   set c := ∫ g : UJ ε, φ (toM g) ∂μ with hc
   set A := ∫ g : UJ ε, φ (toM g) • σ (toM g) ∂μ with hA
@@ -297,7 +297,7 @@ theorem rdV_skewK (hs : SmoothOnGV ε π) (h1 : π 1 = 1) (hiso : ∀ g ∈ Kset
       ⟨(π (NormedSpace.exp ((t : ℂ) • X))).toLinearMap, hiso _ (exp_memK hX t)⟩ x y
   rw [hc] at h
   have h0 := h.unique (hasDerivAt_const (0 : ℝ) _)
-  simp only [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, h1, ContinuousLinearMap.one_apply] at h0
+  simp only [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, h1, one_apply_eq_self] at h0
   linear_combination h0
 
 theorem exists_derived (hs : SmoothOnGV ε π) (h1 : π 1 = 1)
@@ -320,7 +320,7 @@ theorem exists_derived (hs : SmoothOnGV ε π) (h1 : π 1 = 1)
       rw [cpart2, cpart2, conj_single hab, conj_single hab.symm, add_comm]
     have e3 := (rdLinV n _ _ π π _ _ (-1) 0 1 hs hs h1'.1 h1'.1 hone).2.1
     simp only [EabV, EcV, e1, e2, e3, ContinuousLinearMap.coe_coe,
-      ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, inner_add_left, inner_add_right,
+      add_apply, smul_apply, inner_add_left, inner_add_right,
       inner_smul_left, inner_smul_right]
     have s1 := rdV_skewK hs h1 hiso h1' x y
     have s2 := rdV_skewK hs h1 hiso h2' x y
@@ -477,7 +477,7 @@ theorem exists_minimal (S : Submodule ℂ H) [FiniteDimensional ℂ S] (hS : IsK
   refine ⟨S', hle, hne, hst, fun T hT hTs => ?_⟩
   by_contra hcon
   push Not at hcon
-  haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hle
+  have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hle
   exact hmin T ⟨hT.trans hle, hcon.1, hTs⟩ (Submodule.finrank_lt_finrank_of_lt (lt_of_le_of_ne hT hcon.2))
 
 theorem proj_comm (hσ : IsURepOn (UJset ε) σ) (S : Submodule ℂ H) [FiniteDimensional ℂ S]
@@ -505,7 +505,7 @@ theorem exists_smooth_restrict (hσ : IsURepOn (UJset ε) σ) (S : Submodule ℂ
     (hS : IsKStableOn ε σ S) :
     ∃ π : Matrix (Fin n) (Fin n) ℂ → (S →L[ℂ] S), SmoothOnGV ε π ∧ π 1 = 1 ∧
       (∀ k ∈ Kset ε, ∀ x, inUJ ε x → π (k * x) = π k * π x) ∧ ∀ k ∈ Kset ε, ∀ v : S, (π k v : H) = σ k v := by
-  haveI : CompleteSpace S := FiniteDimensional.complete ℂ S
+  have : CompleteSpace S := FiniteDimensional.completeSpace ℂ S
   let b : Matrix (Fin n) (Fin n) ℂ → (S →L[ℂ] S) := fun g => S.orthogonalProjection ∘L σ g ∘L S.subtypeL
   have hb : ∀ g (v : S), (b g v : H) = S.starProjection (σ g v) := fun g v => rfl
   have hbK : ∀ k ∈ Kset ε, ∀ v : S, (b k v : H) = σ k v := fun k hk v => by
@@ -518,7 +518,7 @@ theorem exists_smooth_restrict (hσ : IsURepOn (UJset ε) σ) (S : Submodule ℂ
     continuousOn_clm_apply.2 fun v => S.orthogonalProjection.continuous.comp_continuousOn (hσ.2.2 v)
   have hmul : ∀ k ∈ Kset ε, ∀ g, inUJ ε g → b (k * g) = b k * b g := fun k hk g hg => by
     ext v
-    rw [ContinuousLinearMap.mul_apply, hbK k hk, hb, hb, hσ.1.2 k ((kFacts n ε).1 k hk) g hg,
+    rw [mul_apply_eq_comp, hbK k hk, hb, hb, hσ.1.2 k ((kFacts n ε).1 k hk) g hg,
       ContinuousLinearMap.comp_apply, proj_comm hσ S hS hk]
   obtain ⟨F, hF, hF1, hFK⟩ := exists_smooth_equivariant hb1 hcont
   have hone : inUJ ε (1 : Matrix (Fin n) (Fin n) ℂ) := by simp [inUJ]
@@ -534,8 +534,8 @@ theorem exists_kType : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAdd
     IsKStableOn ε σ S → S ≠ ⊥ → ∃ (μ : Fin n → ℝ) (S' : Submodule ℂ H), S' ≤ S ∧ IsKTypeOf ε σ μ S' := by
   intro n ε H _ _ σ hσ S _ hS h0
   obtain ⟨S', hle, hne, hst, hmin⟩ := exists_minimal S hS h0
-  haveI : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hle
-  haveI : Nontrivial S' := Submodule.nontrivial_iff_ne_bot.2 hne
+  have : FiniteDimensional ℂ S' := Submodule.finiteDimensional_of_le hle
+  have : Nontrivial S' := Submodule.nontrivial_iff_ne_bot.2 hne
   obtain ⟨π, hs, h1, hK, hπ⟩ := exists_smooth_restrict hσ S' hst
   have hiso : ∀ g ∈ Kset ε, ∀ v, ‖π g v‖ = ‖v‖ := fun g hg v => by
     rw [Submodule.coe_norm, hπ g hg, hσ.2.1 g ((kFacts n ε).1 g hg), Submodule.coe_norm]

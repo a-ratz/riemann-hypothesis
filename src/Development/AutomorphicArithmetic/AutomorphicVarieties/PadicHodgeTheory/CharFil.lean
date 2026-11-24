@@ -160,7 +160,7 @@ private theorem exists_split [IsTopologicalRing E] (K : FinExt l) (μ : ↥(GK K
       split_ifs <;> simp)) i
   obtain ⟨M, hM⟩ := exists_matrixHom (chRep μ) e hint
   obtain ⟨W, hW, hWg⟩ := exists_witt_matrix (p := l) (AI.actT.comp (GK K).subtype)
-    (fun y m hm hy => (continuous_subtype_val.tendsto (1 : ↥(GK K))).eventually
+    (fun y m hm hy => (continuous_subtypeVal.tendsto (1 : ↥(GK K))).eventually
       (eventually_actT_eq AI y m hm hy)) M
     (continuous_pi fun i => continuous_pi fun j => continuous_induced_rng.2 (by
       have h := (IsModuleTopology.continuous_of_linearMap (e.coord i)).comp (hμ.mul (continuous_const (y := e j)))
@@ -203,7 +203,7 @@ omit [FiniteDimensional ℚ_[l] E] in
 private theorem cont_cycA [IsTopologicalRing E] (w : ℤ) : Continuous fun g : GQ l => ((cycA l l E g ^ w : Eˣ) : E) := by
   have h1 : Continuous (algebraMap ℤ_[l] E) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] E]
-    exact (IsModuleTopology.continuous_of_linearMap (Algebra.linearMap ℚ_[l] E)).comp continuous_subtype_val
+    exact (IsModuleTopology.continuous_of_linearMap (Algebra.linearMap ℚ_[l] E)).comp continuous_subtypeVal
   have h2 : Continuous fun g : GQ l => cyc l l g ^ w := (cycFacts l l).1.zpow w
   refine (h1.comp (Units.continuous_val.comp h2)).congr fun g => ?_
   exact congrArg Units.val (map_zpow (Units.map (algebraMap ℤ_[l] E : ℤ_[l] →* E)) (cyc l l g) w)
@@ -217,7 +217,7 @@ private theorem gk_case [IsTopologicalRing E] (K : FinExt l) (κ : ↥(GK K) →
   let μ : ↥(GK K) →* Eˣ := κ * ((cycA l l E).comp (GK K).subtype) ^ (-w)
   have hμ : ∀ g, μ g = κ g * cycA l l E g ^ (-w) := fun _ => rfl
   obtain ⟨n, e, W, W', hWW, hW, hW', hg⟩ := exists_split K μ
-    (hκ.mul ((cont_cycA (-w)).comp continuous_subtype_val))
+    (hκ.mul ((cont_cycA (-w)).comp continuous_subtypeVal))
     (fun g hg => by rw [hμ, hI g hg, zpow_neg, mul_inv_cancel])
   set t := GlobalTheory.IndefiniteRowSideFullHecke.DualExactSequence.tdR (PP l) K
   have ht : (t : Bdr l) = ((PP l).PD K).ι ((PP l).PD K).t := rfl
@@ -235,7 +235,7 @@ private theorem gk_case [IsTopologicalRing E] (K : FinExt l) (κ : ↥(GK K) →
     have h1 : chRep μ g (e k) = (((PP l).χQ g ^ (-w) : ℚ_[l]ˣ) : ℚ_[l]) • chRep κ g (e k) := by
       change (μ g : E) * e k = _ • ((κ g : E) * e k)
       rw [hμ, cycA_val, ← map_zpow, Algebra.smul_def, Units.val_mul, Units.coe_map]
-      simp only [MonoidHom.coe_coe]
+      simp only [MonoidHom.coe_ofClass]
       ring
     rw [GlobalTheory.DRDual.act_zpow _ t ht, hχ, h1, map_smul, Finsupp.smul_apply, smul_eq_mul, map_mul, Algebra.smul_def]
     ring
@@ -249,7 +249,7 @@ theorem UpperTheory.V.Loc.charFil :
   have hφU : IsOpenEmbedding (φ.comp U.subtype) := hφ.comp hU.isOpenEmbedding_subtypeVal
   have hc : ContAction (chRep κ) := (hκ.comp continuous_fst).mul continuous_snd
   have hcU : ContAction ((chRep κ).comp U.subtype : Representation E U E) :=
-    (hκ.comp (continuous_subtype_val.comp continuous_fst)).mul continuous_snd
+    (hκ.comp (continuous_subtypeVal.comp continuous_fst)).mul continuous_snd
   refine ⟨((isCrys_isDR_restrict_openSubgroup φ hφ _ hc).2 U hU).2.2 ((isCrys_isDR_restrict_openSubgroup _ hφU _ hcU).1 (crUnr _ hφU _ hcU w fun g hg x => ?_)),
     fun i => ?_⟩
   · change (κ g : E) • x = _
@@ -268,7 +268,7 @@ theorem UpperTheory.V.Loc.charFil :
   have key : ∀ y ∈ Ddr φ (chRep κ), (i ≤ -w → y ∈ FilT E E i) ∧ (-w < i → y ∈ FilT E E i → y = 0) := by
     intro y hy
     rw [hF]
-    refine gk_case K κ' (hκ.comp (continuous_subtype_val.comp he)) w (fun g hg => ?_) y ?_ i
+    refine gk_case K κ' (hκ.comp (continuous_subtypeVal.comp he)) w (fun g hg => ?_) y ?_ i
     · have := hw (e.symm g) (e.symm g).2 (by rw [hf']; exact (memIK K g).1 hg)
       rw [hf'] at this
       exact this

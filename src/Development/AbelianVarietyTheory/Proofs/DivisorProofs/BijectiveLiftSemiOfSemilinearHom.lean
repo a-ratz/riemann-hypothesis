@@ -49,10 +49,10 @@ namespace GlobalTheory
 
 theorem kaehler_liftSemi_bijective : ∀ (R R' : Type) [CommRing R] [CommRing R'] [Algebra R R'] (B B' : Type) [CommRing B] [CommRing B'] [Algebra R B] [Algebra R' B'] (α : B →+* B') (h : SemiHom (algebraMap R R') α) (f : B →ₛₗ[algebraMap R R'] B'), (∀ b, f b = α b) → Function.Bijective (liftSemi f) → Function.Bijective (liftSemi h.m1) := by
   intro R R' _ _ _ B B' _ _ _ _ α h f hf hb
-  letI : Algebra B B' := α.toAlgebra
-  letI : Algebra R B' := ((algebraMap R' B').comp (algebraMap R R')).toAlgebra
-  haveI : IsScalarTower R R' B' := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
-  haveI : IsScalarTower R B B' := IsScalarTower.of_algebraMap_eq fun r ↦ (h.map_algebraMap r).symm
+  let : Algebra B B' := α.toAlgebra
+  let : Algebra R B' := ((algebraMap R' B').comp (algebraMap R R')).toAlgebra
+  have : IsScalarTower R R' B' := IsScalarTower.of_algebraMap_eq fun _ ↦ rfl
+  have : IsScalarTower R B B' := IsScalarTower.of_algebraMap_eq fun r ↦ (h.map_algebraMap r).symm
   let g : B →ₗ[R] B' := (IsScalarTower.toAlgHom R B B').toLinearMap
   have e1 : ⇑(g.liftBaseChange R') = ⇑(liftSemi f) := by
     funext x
@@ -60,7 +60,7 @@ theorem kaehler_liftSemi_bijective : ∀ (R R' : Type) [CommRing R] [CommRing R'
     | zero => simp
     | tmul x b => simp [g, hf]; rfl
     | add x y hx hy => rw [map_add (f := _), map_add (f := _), hx, hy]
-  haveI : Algebra.IsPushout R R' B B' :=
+  have : Algebra.IsPushout R R' B B' :=
     ⟨IsBaseChange.of_equiv (LinearEquiv.ofBijective (g.liftBaseChange R') (e1 ▸ hb)) fun n ↦ by simp [g]⟩
   have e2 : ∀ ω : Ω[B⁄R], h.m1 ω = KaehlerDifferential.map R R' B B' ω := by
     intro ω

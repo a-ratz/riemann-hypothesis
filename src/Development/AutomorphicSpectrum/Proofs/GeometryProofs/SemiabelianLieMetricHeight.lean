@@ -200,13 +200,13 @@ theorem bdd_of_integral {S : Scheme.{0}} {β : Type} {F : Filter β} {p : β →
   have hr : (P.map ψ).IsRoot (ev U (p i) h t) := by
     rw [Polynomial.IsRoot.def, Polynomial.eval_map, hψ, ← Polynomial.hom_eval₂, h0, map_zero]
   have hb := Polynomial.IsRoot.norm_lt_cauchyBound hm.ne_zero hr
-  rw [Polynomial.cauchyBound, hm.leadingCoeff, nnnorm_one, div_one, hP.natDegree_map] at hb
+  rw [Polynomial.cauchyBound, hm.leadingCoeff, nnNorm_one, div_one, hP.natDegree_map] at hb
   have hnn : 0 ≤ ∑ k ∈ Finset.range P.natDegree, |C (P.coeff k)| := Finset.sum_nonneg fun _ _ => abs_nonneg _
   have hs : (Finset.range P.natDegree).sup (fun k => ‖(P.map ψ).coeff k‖₊) ≤
       (⟨∑ k ∈ Finset.range P.natDegree, |C (P.coeff k)|, hnn⟩ : NNReal) := by
     refine Finset.sup_le fun k hk => ?_
     refine NNReal.coe_le_coe.1 ?_
-    rw [coe_nnnorm, Polynomial.coeff_map]
+    rw [coe_nnNorm, Polynomial.coeff_map]
     exact ((hi k hk h).trans (le_abs_self _)).trans
       (Finset.single_le_sum (f := fun k => |C (P.coeff k)|) (fun _ _ => abs_nonneg _) hk)
   have := hb.le.trans (add_le_add hs le_rfl)
@@ -240,7 +240,7 @@ theorem limit {S : Scheme.{0}} {W : S.Opens} (hW : IsAffineOpen W) (F : Ultrafil
     ∃ z, (F : Filter _) ≤ @nhds _ (anTop S) z := by
   classical
   let val : Γ(S, W) → (Sp ℂ ⟶ S) → ℂ := fun t z => if h : centre z ∈ W then ev W z h t else 0
-  have hval : ∀ t z (h : centre z ∈ W), val t z = ev W z h t := fun t z h => dif_pos h
+  have hval : ∀ t z (h : centre z ∈ W), val t z = ev W z h t := fun t z h => dite_eq_left h
   have hconv : ∀ t, ∃ a, Tendsto (val t) F (𝓝 a) := by
     intro t
     obtain ⟨C, hC⟩ := hb t
@@ -540,12 +540,12 @@ namespace PositivityTheory.Xgn.FiniteSurjectivePointLift
 
 theorem exists_ringHom (L A : Type) [Field L] [CommRing A] [Nontrivial A] (φ : L →+* A) (hφ : φ.Finite) :
     ∃ ψ : A →+* AlgebraicClosure L, ψ.comp φ = algebraMap L (AlgebraicClosure L) := by
-  letI := φ.toAlgebra
-  haveI : Module.Finite L A := hφ
+  let := φ.toAlgebra
+  have : Module.Finite L A := hφ
   obtain ⟨m, hm⟩ := Ideal.exists_maximal A
-  letI := Ideal.Quotient.field m
-  haveI : Module.Finite L (A ⧸ m) := inferInstance
-  haveI : Algebra.IsAlgebraic L (A ⧸ m) := inferInstance
+  let := Ideal.Quotient.field m
+  have : Module.Finite L (A ⧸ m) := inferInstance
+  have : Algebra.IsAlgebraic L (A ⧸ m) := inferInstance
   let j : (A ⧸ m) →ₐ[L] AlgebraicClosure L := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -558,14 +558,14 @@ theorem exists_ringHom (L A : Type) [Field L] [CommRing A] [Nontrivial A] (φ : 
 theorem exists_point (L : Type) [Field L] (P : Scheme.{0}) [Nonempty P] (g : P ⟶ Spec (CommRingCat.of L))
     [IsFinite g] : ∃ x : Spec (CommRingCat.of (AlgebraicClosure L)) ⟶ P,
       x ≫ g = Spec.map (CommRingCat.ofHom (algebraMap L (AlgebraicClosure L))) := by
-  haveI hA : IsAffine P := isAffine_of_isAffineHom g
+  have hA : IsAffine P := isAffine_of_isAffineHom g
   have hfin : (g.appTop).hom.Finite := g.finite_app ⊤ (isAffineOpen_top _)
   let φ : L →+* Γ(P, ⊤) := ((Scheme.ΓSpecIso (CommRingCat.of L)).inv ≫ g.appTop).hom
   have hφ : φ.Finite := by
     refine RingHom.Finite.comp hfin ?_
     exact RingHom.Finite.of_surjective _
       (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso (CommRingCat.of L)).inv).2
-  haveI : Nonempty (⊤ : P.Opens) := ⟨⟨Classical.arbitrary P, trivial⟩⟩
+  have : Nonempty (⊤ : P.Opens) := ⟨⟨Classical.arbitrary P, trivial⟩⟩
   obtain ⟨ψ, hψ⟩ := exists_ringHom L Γ(P, ⊤) φ hφ
   refine ⟨Spec.map (CommRingCat.ofHom ψ) ≫ P.isoSpec.inv, ?_⟩
   rw [Category.assoc, ← Scheme.isoSpec_inv_naturality, Scheme.isoSpec_Spec_inv]
@@ -579,9 +579,9 @@ end PositivityTheory.Xgn.FiniteSurjectivePointLift
 theorem PositivityTheory.Xgn.finite_surjective_point_lift : ∀ (Z' Z : Scheme.{0}) (π : Z' ⟶ Z), IsFinite π → Surjective π → ∀ (L : Type) [Field L] (zZ : Sp L ⟶ Z),
     ∃ x : Sp (AlgebraicClosure L) ⟶ Z', x ≫ π = spMap (algebraMap L (AlgebraicClosure L)) ≫ zZ := by
   intro Z' Z π hfin hsurj L _ zZ
-  haveI : Surjective (pullback.snd π zZ) := inferInstance
+  have : Surjective (pullback.snd π zZ) := inferInstance
   obtain ⟨p, -⟩ := (pullback.snd π zZ).surjective (IsLocalRing.closedPoint L)
-  haveI : Nonempty ↥(pullback π zZ) := ⟨p⟩
+  have : Nonempty ↥(pullback π zZ) := ⟨p⟩
   obtain ⟨x, hx⟩ := FiniteSurjectivePointLift.exists_point L (pullback π zZ) (pullback.snd π zZ)
   refine ⟨x ≫ pullback.fst π zZ, ?_⟩
   rw [Category.assoc, pullback.condition, ← Category.assoc, hx]
@@ -626,7 +626,7 @@ theorem core_sum {V : Type*} [AddCommGroup V] [Module ℂ V] (c : InnerProductSp
     (e : Fin n → V) (w : Fin n → ℂ) :
     c.inner (∑ a, w a • e a) (∑ a, w a • e a)
       = star w ⬝ᵥ ((Matrix.of fun a b => c.inner (e a) (e b)) *ᵥ w) := by
-  letI : PreInnerProductSpace.Core ℂ V := c.toCore
+  let : PreInnerProductSpace.Core ℂ V := c.toCore
   have hl : ∀ (s : Finset (Fin n)) (f : Fin n → V) (y : V),
       c.inner (∑ a ∈ s, f a) y = ∑ a ∈ s, c.inner (f a) y := by
     intro s f y
@@ -723,10 +723,10 @@ theorem reduced_sub {S : Scheme.{0}} (Z : TopologicalSpace.Closeds S) :
     have h : ((Scheme.IdealSheafData.vanishingIdeal Z).ideal U).IsRadical := by
       rw [Scheme.IdealSheafData.vanishingIdeal_ideal]
       exact PrimeSpectrum.isRadical_vanishingIdeal _
-    haveI : _root_.IsReduced (Γ(S, U) ⧸ (Scheme.IdealSheafData.vanishingIdeal Z).ideal U) :=
+    have : _root_.IsReduced (Γ(S, U) ⧸ (Scheme.IdealSheafData.vanishingIdeal Z).ideal U) :=
       (Ideal.isRadical_iff_quotient_reduced _).mp h
     infer_instance
-  haveI : ∀ i, IsReduced ((Scheme.IdealSheafData.vanishingIdeal Z).subschemeCover.openCover.X i) := hU
+  have : ∀ i, IsReduced ((Scheme.IdealSheafData.vanishingIdeal Z).subschemeCover.openCover.X i) := hU
   exact IsReduced.of_openCover _ (Scheme.IdealSheafData.vanishingIdeal Z).subschemeCover.openCover
 
 theorem le_ker {S Y : Scheme.{0}} (Z : TopologicalSpace.Closeds S) (g : Y ⟶ S) [QuasiCompact g]
@@ -758,13 +758,13 @@ theorem PositivityTheory.Xgn.exists_integral_closed_subscheme_of_irreducible : �
   have hrange : Set.range I.subschemeι = F := by
     rw [Scheme.IdealSheafData.range_subschemeι, Scheme.IdealSheafData.coe_support_vanishingIdeal]
     rfl
-  haveI : IsReduced I.subscheme := IntegralClosedSubscheme.reduced_sub Zc
-  haveI : IrreducibleSpace I.subscheme := by
-    haveI : IrreducibleSpace (Set.range I.subschemeι) := by
+  have : IsReduced I.subscheme := IntegralClosedSubscheme.reduced_sub Zc
+  have : IrreducibleSpace I.subscheme := by
+    have : IrreducibleSpace (Set.range I.subschemeι) := by
       rw [← isIrreducible_iff_irreducibleSpace, hrange]
       exact hirr
     exact I.subschemeι.isEmbedding.toHomeomorph.irreducibleSpace_iff.mpr this
-  haveI : IsIntegral I.subscheme := isIntegral_of_irreducibleSpace_of_isReduced _
+  have : IsIntegral I.subscheme := isIntegral_of_irreducibleSpace_of_isReduced _
   refine ⟨I.subscheme, inferInstance, I.subschemeι, inferInstance, hrange, ?_⟩
   intro k _ x hx
   have hsub : Set.range x ⊆ Zc := by
@@ -937,8 +937,8 @@ theorem killsOver_comp {u : splitTorus S X ⟶ G} {Y : AddSubgroup X} {B C : Typ
 theorem killsOver_descent [IsSeparated G.hom] {u : splitTorus S X ⟶ G} {Y : AddSubgroup X} {κ k : Type}
     [Field κ] [Field k] (c : κ →+* k) {b : Sp κ ⟶ S} (h : KillsOver u Y (spMap c ≫ b)) : KillsOver u Y b := by
   intro A _ g t ht
-  letI := g.toAlgebra
-  letI := c.toAlgebra
+  let := g.toAlgebra
+  let := c.toAlgebra
   let i : A →+* (A ⊗[κ] k) := Algebra.TensorProduct.includeLeftRingHom
   let j : k →+* (A ⊗[κ] k) := (Algebra.TensorProduct.includeRight : k →ₐ[κ] (A ⊗[κ] k)).toRingHom
   have hi : Function.Injective i :=
@@ -962,7 +962,7 @@ theorem false_of_killsOver {u : splitTorus S X ⟶ G} {K : Type} [Field K] (b : 
     (ψ : X →+ ZMod l) (hψ : Function.Surjective ψ) (hk : KillsOver u ψ.ker b)
     (hinj : ∀ (A : Type) [CommRing A] (g : K →+* A) (t : Over.mk (spMap g ≫ b) ⟶ splitTorus S X),
       t ≫ u = 1 → t = 1) : False := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   obtain ⟨t, ht⟩ := exists_charVal (X := X) (spMap (algebraMap K (AddMonoidAlgebra K (ZMod l))) ≫ b)
     (MonoidHom.toHomUnits ((AddMonoidAlgebra.of K (ZMod l)).comp (AddMonoidHom.toMultiplicative ψ)))
   have ht' : ∀ χ, charVal t χ = AddMonoidAlgebra.single (ψ χ) 1 := ht
@@ -992,8 +992,8 @@ theorem killsOver_of_residue [IsSeparated G.hom] {u : splitTorus S X ⟶ G} [IsM
     have hne : m ^ (n + 1 + 1) ≠ ⊤ := fun htop =>
       (IsLocalRing.maximalIdeal.isMaximal R).ne_top (Ideal.pow_eq_top_iff.1 htop |>.elim id (by simp))
     let q := Ideal.Quotient.mk (m ^ (n + 1 + 1))
-    haveI : Nontrivial (R ⧸ m ^ (n + 1 + 1)) := Ideal.Quotient.nontrivial_iff.2 hne
-    haveI : IsLocalRing (R ⧸ m ^ (n + 1 + 1)) :=
+    have : Nontrivial (R ⧸ m ^ (n + 1 + 1)) := Ideal.Quotient.nontrivial_iff.2 hne
+    have : IsLocalRing (R ⧸ m ^ (n + 1 + 1)) :=
       IsLocalRing.of_surjective' q Ideal.Quotient.mk_surjective
     let I : Ideal (R ⧸ m ^ (n + 1 + 1)) := (m ^ (n + 1)).map q
     have hI : I ^ 2 = ⊥ := by
@@ -1029,7 +1029,7 @@ theorem lie_injective : ∀ (Z : Scheme.{0}) [IsIntegral Z] [IsLocallyNoetherian
     killsOver_descent f.hom (hx ▸ hk)
   obtain ⟨V, hV, hA, hdom⟩ := GroundTheory.Heights₂.Heights.Model.DominatingDVRScheme.proof Z z hzg
   let jv : Z.presheaf.stalk z →+* V := (algebraMap (Z.presheaf.stalk z) Z.functionField).codRestrict V hA
-  haveI : IsLocalHom jv := ⟨fun a ha => by
+  have : IsLocalHom jv := ⟨fun a ha => by
     by_contra hna
     exact ((hdom a).2 ((IsLocalRing.mem_maximalIdeal a).2 hna)) ha⟩
   let b : Sp V ⟶ Z := spMap jv ≫ Z.fromSpecStalk z
@@ -1119,7 +1119,7 @@ theorem half [Module.Free ℤ X] [Module.Finite ℤ X]
     have := congrArg (fun f => AddMonoidAlgebra.coeff f (φ (a + b))) h5
     simp [AddMonoidAlgebra.coeff_single, Finsupp.single_apply, Ne.symm hne] at this
   refine ⟨AddMonoidHom.mk' φ hadd, fun A _ g θ => ?_⟩
-  letI : Algebra k A := g.toAlgebra
+  let : Algebra k A := g.toAlgebra
   have h := key A θ
   have e : (((AddMonoidAlgebra.lift k A X θ : AddMonoidAlgebra k X →ₐ[k] A) :
         AddMonoidAlgebra k X →+* A) : AddMonoidAlgebra k X →* A).comp ρ =
@@ -1205,10 +1205,10 @@ theorem exists_pullback_ext {k Ω : Type} [Field k] [Field Ω] (f : Sp Ω ⟶ Sp
     ∃ T' : TorusExtension ((Over.pullback f).obj G), ∀ (W : Over (Sp Ω)) (p : W ⟶ (Over.pullback f).obj G)
       (p₀ : Over.mk (W.hom ≫ f) ⟶ G), p₀.left = p.left ≫ pullback.fst G.hom f →
       ((letI := T'.grpB; p ≫ T'.q = 1) ↔ (letI := T.grpB; p₀ ≫ T.q = 1)) := by
-  letI := T.grpB
-  letI := T.addCommGroup
-  haveI := T.q_hom
-  haveI := T.i_hom
+  let := T.grpB
+  let := T.addCommGroup
+  have := T.q_hom
+  have := T.i_hom
   obtain ⟨e, he, -⟩ := GlobalTheory.splitTorus_baseChange (Sp k) (Sp Ω) f T.X
   have hq := GlobalTheory.SS.isPullback_overPullback_map_left f T.q
   refine ⟨{ X := T.X
@@ -1249,7 +1249,7 @@ theorem exists_pullback_ext {k Ω : Type} [Field k] [Field Ω] (f : Sp Ω ⟶ Sp
       apply Over.OverMorphism.ext
       change (p.left ≫ ((Over.pullback f).map T.q).left) ≫ pullback.fst T.B.hom f = p₀.left ≫ T.q.left
       rw [hp, Category.assoc, Category.assoc, hq.w]
-    letI iB : GrpObj ((Over.pullback f).obj T.B) := inferInstance
+    let iB : GrpObj ((Over.pullback f).obj T.B) := inferInstance
     change p ≫ (Over.pullback f).map T.q = 1 ↔ p₀ ≫ T.q = 1
     rw [← e1]
     exact (MulEquiv.map_eq_one_iff _).symm
@@ -1257,8 +1257,8 @@ theorem exists_pullback_ext {k Ω : Type} [Field k] [Field Ω] (f : Sp Ω ⟶ Sp
 theorem ker_iff {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] (T : TorusExtension G) {W : Over (Sp k)}
     (p : W ⟶ G) : (letI := T.grpB; p ≫ T.q = 1) ↔
       (letI := T.addCommGroup; ∃ t : W ⟶ splitTorus (Sp k) T.X, t ≫ T.i = p) := by
-  letI := T.grpB
-  letI := T.addCommGroup
+  let := T.grpB
+  let := T.addCommGroup
   constructor
   · intro hp
     exact ⟨T.isKernel.lift p (toUnit _) hp, T.isKernel.lift_fst _ _ _⟩
@@ -1289,11 +1289,11 @@ theorem PositivityTheory.Xgn.torus_uniformization_compare : ∀ (X Z' : Scheme.{
       (_ : spMap (g.comp (algebraMap L k)) = b') (t : Over.mk b ⟶ splitTorus Z' Xc) (t' : Over.mk b' ⟶ splitTorus (Sp L) τ.X),
       (∀ χ, charVal t' χ = charVal t (e χ)) → (t ≫ u).left ≫ Φ = (t' ≫ τ.i).left ≫ φ := by
   intro X Z' G _ G' _ ρ Φ hΦ Xc _ _ _ u _ L k _ _ _ x zL hx GK _ φ hφ τ hinj hker
-  letI := τ.addCommGroup
-  letI := τ.grpB
-  haveI := τ.free
-  haveI := τ.finite
-  haveI := τ.i_hom
+  let := τ.addCommGroup
+  let := τ.grpB
+  have := τ.free
+  have := τ.finite
+  have := τ.i_hom
   have hm : Mono τ.i := ⟨fun a b hab => τ.isKernel.hom_ext hab (toUnit_unique _ _)⟩
   let s : Sp k ⟶ Sp L := spMap (algebraMap L k)
   have hπ := isGrpPullback_pullback GK s
@@ -1480,7 +1480,7 @@ theorem exists_bounds (X : Type) [TopologicalSpace X] (K : Set X) (m : Type) [Fi
   have hfc := continuousOn_re_star_dotProduct_mulVec hH T
   have hfpos : ∀ x ∈ K, ∀ w ∈ T, 0 < (star w ⬝ᵥ (H x *ᵥ w)).re := by
     intro x hx w hw
-    rw [hT, Set.mem_setOf_eq] at hw
+    rw [hT, Set.mem_ofPred_eq] at hw
     have hw0 : w ≠ 0 := by
       rintro rfl
       simp at hw
@@ -1686,8 +1686,8 @@ theorem gram_bound (X : Scheme.{0}) (Ω : Type) [Field Ω] (K : Type) [Fintype K
       rw [hvv, hv', e]
     simp only [H, this]
   have hcont := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.gramAt_continuous_anTop X Ω K J y ξ hall hT G Li M h Z' ρ G' Φ hP Xc u r (fun a => β a) H hH
-  letI := anTop Z'
-  haveI := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.compact_of_finite_generic X Ω K J y ξ hall hT Z' f hf
+  let := anTop Z'
+  have := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.compact_of_finite_generic X Ω K J y ξ hall hT Z' f hf
   obtain ⟨C, hC, hb⟩ := GlobalTheory.CompanionTheory.GramCompact.exists_bounds (Sp ℂ ⟶ Z') Set.univ (Fin r) H isCompact_univ
     hcont.continuousOn (fun zc _ => _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.GramPos.gramAt_posDef_of_diff_injective X Ω K J y ξ G Li M h Z' ρ G' Φ hP Xc u r β zc (Mz zc) (hMz zc)
       (hinj zc _ (hMz zc)) (vv zc) (hvv zc))
@@ -1725,22 +1725,22 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
   intro hFC X Ω _ K _ J _ y ξ hall hT G _ _ hG Li _ _ M h Z _ i hi
   have hfin := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.closure_finiteType_over_int X Ω K J y ξ hall hT
   obtain ⟨hq1, hq2, hq3, hq4⟩ := xq_facts X hfin
-  haveI := hG.smooth
-  haveI := hG.separated
+  have := hG.smooth
+  have := hG.separated
   let s : Z ⟶ Sp ℚ := i ≫ XQ.snd X
-  haveI : LocallyOfFiniteType s := inferInstance
-  haveI : QuasiCompact s := inferInstance
+  have : LocallyOfFiniteType s := inferInstance
+  have : QuasiCompact s := inferInstance
   let io : Z ⟶ X := i ≫ XQ.fst X
   have hGZ : IsSemiAbelian ((Over.pullback io).obj G) := IsSemiAbelian.pullback io G hG
   obtain ⟨Z', hZ', π, G', hG', φ', Xc, _, _, _, u, U, hπf, hπs, hnorm, hpb, hu, hU, hpt⟩ :=
     _root_.GlobalTheory.CompanionTheory.Ar.StratOpen.strat_open hFC Z s ((Over.pullback io).obj G) hGZ
   let f : Z' ⟶ XQ X := π ≫ i
-  haveI hff : IsFinite f := inferInstance
+  have hff : IsFinite f := inferInstance
   have hP : IsGrpPullback G' G (f ≫ XQ.fst X) (φ' ≫ pullback.fst G.hom io) := by
     have := isGrpPullback_comp (isGrpPullback_pullback G io) hpb
     simpa [f, io, CategoryTheory.Category.assoc] using this
-  haveI : IsLocallyNoetherian Z' := LocallyOfFiniteType.isLocallyNoetherian f
-  haveI : IsSeparated G'.hom := by
+  have : IsLocallyNoetherian Z' := LocallyOfFiniteType.isLocallyNoetherian f
+  have : IsSeparated G'.hom := by
     have h1 : IsSeparated ((Over.pullback io).obj G).hom := (IsSemiAbelian.separated (G := (Over.pullback io).obj G))
     exact MorphismProperty.of_isPullback (P := @IsSeparated) hpb.1 h1
   obtain ⟨r, ⟨β⟩⟩ := exists_dual_basis Xc
@@ -1753,7 +1753,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
     (fun zc Mz hMz δ hδ => hinj0 ℂ zc Mz hMz δ hδ) r β
   refine ⟨U, C, hU, hC, ?_⟩
   intro L _ _ z GK _ φ τ hGK zZ hzZ hzU
-  letI := τ.addCommGroup
+  let := τ.addCommGroup
   let Lb := AlgebraicClosure L
   obtain ⟨x, hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.exists_lift_algClosure Z' Z π hπf hπs L zZ
   have hxρ : x ≫ f ≫ XQ.fst X = spMap (algebraMap L Lb) ≫ (spMap (algebraMap (𝓞 L) L) ≫ z) := by
@@ -1769,7 +1769,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
   obtain ⟨hi1, hi2⟩ := hpt Lb x hxU
   obtain ⟨e, he⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.torus_stratum_cocharacters_compare X Z' G G' (f ≫ XQ.fst X) _ hP Xc u L Lb x _ hxρ GK φ hGK τ hi1 hi2
   refine ⟨r, β.map (dualEquiv e), fun MT hMT B MB hF ε hε σ w => ?_⟩
-  letI : Algebra L ℂ := σ.toAlgebra
+  let : Algebra L ℂ := σ.toAlgebra
   let σ' : Lb →+* ℂ := (IsAlgClosed.lift : Lb →ₐ[L] ℂ).toRingHom
   have hσ' : σ'.comp (algebraMap L Lb) = σ := by
     ext a
@@ -1845,7 +1845,7 @@ theorem goodAt_mono {X : Scheme.{0}} {Ω : Type} [Field Ω] {K : Type} [Fintype 
     {M : LieModel G ξ Li} (h : LieMetric M y) {C C' : ℝ} (hC : 1 ≤ C) (hCC : C ≤ C') {L : Type} [Field L] [NumberField L]
     {z : Sp (𝓞 L) ⟶ X} {GK : Over (Sp L)} [GrpObj GK] {φ : GK.left ⟶ G.left} {τ : TorusExtension GK}
     (hg : GoodAt h C z φ τ) : GoodAt h C' z φ τ := by
-  letI := τ.addCommGroup
+  let := τ.addCommGroup
   obtain ⟨r, bs, hb⟩ := hg
   refine ⟨r, bs, fun MT hMT B MB hF ε hε σ w => ?_⟩
   obtain ⟨h1, h2⟩ := hb MT hMT B MB hF ε hε σ w

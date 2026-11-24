@@ -266,8 +266,8 @@ theorem exists_real_idele_flow (F E : Type) [Field F] [NumberField F] [Field E] 
       (map_zero (InfinitePlace.Completion.ringEquivRealOfIsReal (IsTotallyReal.isReal w)).symm) x
   let ι : AF F →* AF F ⊗[F] E := (algebraMap (AF F) (AF F ⊗[F] E)).toMonoidHom
   have hι : Continuous ι := by
-    haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-    haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
+    have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+    have := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
     exact IsModuleTopology.continuous_of_linearMap (Algebra.linearMap (AF F) (AF F ⊗[F] E))
   let d : ℕ := Fintype.card (InfinitePlace F)
   have hd : (d : ℝ) ≠ 0 := Nat.cast_ne_zero.2 Fintype.card_ne_zero
@@ -282,15 +282,15 @@ theorem exists_real_idele_flow (F E : Type) [Field F] [NumberField F] [Field E] 
     exact congrArg _ (Units.ext (show Real.exp _ = Real.exp _ * Real.exp _ by rw [← Real.exp_add, add_div]))
   · have h1 : Algebra.norm (AF F) (Units.map (ι.comp ρ) (u t)).1 = ρ (u t) ^ 2 := by
       change Algebra.norm (AF F) (algebraMap (AF F) (AF F ⊗[F] E) (ρ (u t))) = _
-      haveI : Nontrivial (AF F) := (evInf F (Classical.arbitrary _)).toRingHom.domain_nontrivial
+      have : Nontrivial (AF F) := (evInf F (Classical.arbitrary _)).toRingHom.domain_nontrivial
       rw [Algebra.norm_algebraMap, Module.finrank_baseChange, h.2.2.1]
     have h2 : ∀ v, evFin F v (ρ (u t)) = 1 := fun v => rfl
-    have h3 : ∀ w : InfinitePlace F, w.mult = 1 := fun w => if_pos (IsTotallyReal.isReal w)
+    have h3 : ∀ w : InfinitePlace F, w.mult = 1 := fun w => ite_eq_left (IsTotallyReal.isReal w)
     simp only [GlobalTheory.Doubling.absE_apply, GlobalTheory.Doubling.absEv_unitFin, GlobalTheory.Doubling.absEw_unitInf, h1, map_pow, h2, h3,
-      one_pow, nnnorm_one, finprod_one, mul_one, pow_one, NNReal.coe_prod, coe_nnnorm, norm_pow, hn,
+      one_pow, nnNorm_one, finprod_one, mul_one, pow_one, NNReal.coe_prod, coe_nnNorm, norm_pow, hn,
       Finset.prod_const, Finset.card_univ]
     change (‖Real.exp (t / (2 * d))‖ ^ 2) ^ d = _
-    rw [Real.norm_of_nonneg (Real.exp_pos _).le, ← pow_mul, ← Real.exp_nat_mul]
+    rw [Real.norm_of_nonneg (Real.exp_pos _).le, ← pow_mul, ← Real.exp_natCast_mul]
     congr 1
     push_cast
     field_simp
@@ -613,7 +613,7 @@ theorem GlobalTheory.ResidueEisenstein.exists_isFlowJ : ∀ (F E : Type) [Field 
       apply Units.ext
       change Matrix.det (Matrix.diagonal fun _ : Fin (r + 1) => (l (s / ((r + 1 : ℕ) : ℝ))).1) = _
       rw [Matrix.det_diagonal, Finset.prod_const, Finset.card_univ, Fintype.card_fin, Units.val_pow_eq_pow_val]
-    rw [this, map_pow, NNReal.coe_pow, labs, ← Real.exp_nat_mul, mul_div_cancel₀ _ hd]
+    rw [this, map_pow, NNReal.coe_pow, labs, ← Real.exp_natCast_mul, mul_div_cancel₀ _ hd]
 
 end
 end -- clump:auto
@@ -806,7 +806,7 @@ theorem isFundamentalDomain_stdDom_prod {G₁ G₂ : Type} [Group G₁] [Topolog
 theorem measure_fundamentalDomain_prod_lt_top : ∀ (G₁ G₂ : Type) [Group G₁] [TopologicalSpace G₁] [IsTopologicalGroup G₁] [LocallyCompactSpace G₁] [SecondCountableTopology G₁] [T2Space G₁] [MeasurableSpace G₁] [BorelSpace G₁] [Group G₂] [TopologicalSpace G₂] [IsTopologicalGroup G₂] [LocallyCompactSpace G₂] [SecondCountableTopology G₂] [T2Space G₂] [MeasurableSpace G₂] [BorelSpace G₂] (Γ₁ : Subgroup G₁) (Γ₂ : Subgroup G₂) [DiscreteTopology Γ₁] [DiscreteTopology Γ₂], (∀ μ : Measure G₁, μ.IsHaarMeasure → ∀ 𝓕, IsFundamentalDomain Γ₁ 𝓕 μ → μ 𝓕 ≠ ⊤) → (∀ μ : Measure G₂, μ.IsHaarMeasure → ∀ 𝓕, IsFundamentalDomain Γ₂ 𝓕 μ → μ 𝓕 ≠ ⊤) → ∀ μ : Measure (G₁ × G₂), μ.IsHaarMeasure → ∀ 𝓕, IsFundamentalDomain (Γ₁.prod Γ₂) 𝓕 μ → μ 𝓕 < ⊤ := by
   intro G₁ G₂ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ Γ₁ Γ₂ _ _ h₁ h₂ μ hμ 𝓕 h𝓕
   have hd := GlobalTheory.isFundamentalDomain_stdDom_prod Γ₁ Γ₂ μ
-  haveI : Countable (Γ₁.prod Γ₂) := by
+  have : Countable (Γ₁.prod Γ₂) := by
     have : Function.Injective (fun γ : Γ₁.prod Γ₂ => ((⟨(γ : G₁ × G₂).1, (Subgroup.mem_prod.1 γ.2).1⟩ : Γ₁),
       (⟨(γ : G₁ × G₂).2, (Subgroup.mem_prod.1 γ.2).2⟩ : Γ₂))) := by
       rintro ⟨⟨a, b⟩, _⟩ ⟨⟨c, d⟩, _⟩ h
@@ -816,7 +816,7 @@ theorem measure_fundamentalDomain_prod_lt_top : ∀ (G₁ G₂ : Type) [Group G�
   rw [h𝓕.measure_eq hd]
   have hp : (Measure.haar : Measure G₁).prod (Measure.haar : Measure G₂) |>.IsHaarMeasure := inferInstance
   rw [Measure.isMulLeftInvariant_eq_smul μ ((Measure.haar : Measure G₁).prod (Measure.haar : Measure G₂)),
-    Measure.smul_apply, Measure.prod_prod, ENNReal.smul_def, smul_eq_mul]
+    smul_apply, Measure.prod_prod, ENNReal.smul_def, smul_eq_mul]
   have a₁ := h₁ Measure.haar inferInstance _ (GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom Γ₁ Measure.haar)
   have a₂ := h₂ Measure.haar inferInstance _ (GlobalTheory.AutomorphicL2Unitary.isFundamentalDomain_stdDom Γ₂ Measure.haar)
   exact ENNReal.mul_lt_top ENNReal.coe_lt_top (ENNReal.mul_lt_top a₁.lt_top a₂.lt_top)
@@ -863,10 +863,10 @@ theorem finvol_tens : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     [BorelSpace (GL (Fin k) (AF F ⊗[F] E))] (ν : Measure (GL (Fin k) (AF F ⊗[F] E)))
     (D : Set (GL (Fin k) (AF F ⊗[F] E))), ν.IsHaarMeasure → IsFundamentalDomain (latR F E k) D ν → ν D ≠ ⊤ := by
   intro F E _ _ _ _ _ _ k _ _ ν D hν hD
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
   let f := (glTens F E k).toHomeomorph.toMeasurableEquiv
   let μ : Measure (GlobalTheory.CuspRep.GA E k) := ν.map f
-  haveI : μ.IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map ν (glTens F E k)
+  have : μ.IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map ν (glTens F E k)
   have hq : Measure.QuasiMeasurePreserving f.symm μ ν :=
     (MeasurePreserving.mk f.symm.measurable (f.map_symm_map)).quasiMeasurePreserving
   have hD' : IsFundamentalDomain (GlobalTheory.UnitaryBC.latticeGL E k) (f '' D) μ :=
@@ -876,7 +876,7 @@ theorem finvol_tens : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   have h1 : ν D = μ (f '' D) := by
     rw [f.map_apply, f.preimage_image]
   rw [h1, ← GlobalTheory.AutomorphicL2Unitary.quotMeasure_univ hD']
-  haveI := (GlobalTheory.CovolGL.finvol E k μ).1
+  have := (GlobalTheory.CovolGL.finvol E k μ).1
   exact measure_ne_top _ _
 
 end GlobalTheory.GLOneVol
@@ -947,9 +947,9 @@ theorem GlobalTheory.finiteCovolume_kernel : ∀ (G : Type) [Group G] [Topologic
   have hcl : IsClosed (H : Set G) := by
     have : (H : Set G) = s ⁻¹' {0} := by ext g; exact hH g
     rw [this]; exact isClosed_singleton.preimage hs
-  haveI : LocallyCompactSpace H := hcl.locallyCompactSpace
-  haveI : SigmaCompactSpace H := hcl.sigmaCompactSpace
-  haveI : SigmaFinite π := inferInstance
+  have : LocallyCompactSpace H := hcl.locallyCompactSpace
+  have : SigmaCompactSpace H := hcl.sigmaCompactSpace
+  have : SigmaFinite π := inferInstance
   set φ : H × ℝ ≃ₜ G := GlobalTheory.KernelCovolume.splitHomeo hs hsa hc hca hsc hH with hφdef
   have hφ : ∀ p : H × ℝ, φ p = (p.1 : G) * c p.2 := fun p => rfl
   set μ0 : Measure (H × ℝ) := π.prod volume with hμ0
@@ -960,7 +960,7 @@ theorem GlobalTheory.finiteCovolume_kernel : ∀ (G : Type) [Group G] [Topologic
     simp only [hφ, Subgroup.coe_mul, hca, mul_assoc]
     rw [← mul_assoc (c r) (p.1 : G), hcc r, mul_assoc]
 
-  haveI : (Subgroup.zpowers (c 1)).Normal := ⟨fun n hn g => by
+  have : (Subgroup.zpowers (c 1)).Normal := ⟨fun n hn g => by
     obtain ⟨k, rfl⟩ := Subgroup.mem_zpowers_iff.1 hn
     have hcomm : Commute ((c 1) ^ k) g := (Commute.zpow_left (hcc 1 g) k)
     rw [hcomm.symm.eq, mul_assoc, mul_inv_cancel, mul_one]
@@ -978,9 +978,9 @@ theorem GlobalTheory.finiteCovolume_kernel : ∀ (G : Type) [Group G] [Topologic
       (Subgroup.mem_sup_right (Subgroup.zpow_mem_zpowers _ _))
 
   have hνHaar : ν.IsHaarMeasure := by
-    haveI : IsFiniteMeasureOnCompacts ν := Measure.IsFiniteMeasureOnCompacts.map μ0 φ
-    haveI : ν.IsOpenPosMeasure := φ.continuous.isOpenPosMeasure_map φ.surjective
-    haveI : ν.IsMulLeftInvariant := ⟨fun g => by
+    have : IsFiniteMeasureOnCompacts ν := Measure.IsFiniteMeasureOnCompacts.map μ0 φ
+    have : ν.IsOpenPosMeasure := φ.continuous.isOpenPosMeasure_map φ.surjective
+    have : ν.IsMulLeftInvariant := ⟨fun g => by
       obtain ⟨p0, rfl⟩ := φ.surjective g
       ext A hA
       rw [Measure.map_apply (measurable_const_mul _) hA, hνapp, hνapp]
@@ -1160,18 +1160,18 @@ end Help
 
 theorem glOne_finvol : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (k : ℕ), LocallyCompactSpace ((absE F E).comp (Matrix.GeneralLinearGroup.det : GL (Fin k) (AF F ⊗[F] E) →* (AF F ⊗[F] E)ˣ)).ker ∧ SecondCountableTopology ((absE F E).comp (Matrix.GeneralLinearGroup.det : GL (Fin k) (AF F ⊗[F] E) →* (AF F ⊗[F] E)ˣ)).ker ∧ DiscreteTopology ((bc (inclR (F := F) (AF F)) : GL (Fin k) E →* GL (Fin k) (AF F ⊗[F] E)).range.subgroupOf ((absE F E).comp (Matrix.GeneralLinearGroup.det : GL (Fin k) (AF F ⊗[F] E) →* (AF F ⊗[F] E)ˣ)).ker) ∧ ∀ [MeasurableSpace (GL (Fin k) (AF F ⊗[F] E))] [BorelSpace (GL (Fin k) (AF F ⊗[F] E))] (π : Measure ((absE F E).comp (Matrix.GeneralLinearGroup.det : GL (Fin k) (AF F ⊗[F] E) →* (AF F ⊗[F] E)ˣ)).ker) (DM : Set ((absE F E).comp (Matrix.GeneralLinearGroup.det : GL (Fin k) (AF F ⊗[F] E) →* (AF F ⊗[F] E)ˣ)).ker), π.IsHaarMeasure → IsFundamentalDomain ((bc (inclR (F := F) (AF F)) : GL (Fin k) E →* GL (Fin k) (AF F ⊗[F] E)).range.subgroupOf ((absE F E).comp (Matrix.GeneralLinearGroup.det : GL (Fin k) (AF F ⊗[F] E) →* (AF F ⊗[F] E)ˣ)).ker) DM π → π DM ≠ ⊤ := by
   intro F E _ _ _ _ _ σ hCM k
-  haveI : IsTotallyComplex E := hCM.2.1
+  have : IsTotallyComplex E := hCM.2.1
   obtain ⟨hTR, hT2⟩ := GlobalTheory.StdPar.ring_facts (F := F) (E := E)
   set H := ((absE F E).comp (Matrix.GeneralLinearGroup.det : GL (Fin k) (AF F ⊗[F] E) →* (AF F ⊗[F] E)ˣ)).ker with hHdef
   set Γ := (bc (inclR (F := F) (AF F)) : GL (Fin k) E →* GL (Fin k) (AF F ⊗[F] E)).range with hΓdef
   have hemb := (glTens F E k).toHomeomorph.isClosedEmbedding
-  haveI : LocallyCompactSpace (GL (Fin k) (AF F ⊗[F] E)) := hemb.locallyCompactSpace
-  haveI : SecondCountableTopology (GL (Fin k) (AF F ⊗[F] E)) := hemb.isEmbedding.secondCountableTopology
-  haveI : T2Space (GL (Fin k) (AF F ⊗[F] E)) := hemb.isEmbedding.t2Space
+  have : LocallyCompactSpace (GL (Fin k) (AF F ⊗[F] E)) := hemb.locallyCompactSpace
+  have : SecondCountableTopology (GL (Fin k) (AF F ⊗[F] E)) := hemb.isEmbedding.secondCountableTopology
+  have : T2Space (GL (Fin k) (AF F ⊗[F] E)) := hemb.isEmbedding.t2Space
   have hcont : Continuous fun g : GL (Fin k) (AF F ⊗[F] E) => absE F E (Matrix.GeneralLinearGroup.det g) :=
     GlobalTheory.Doubling.continuous_absE.comp Matrix.GeneralLinearGroup.continuous_det
   have hcl : IsClosed (H : Set (GL (Fin k) (AF F ⊗[F] E))) := isClosed_eq hcont continuous_const
-  haveI : LocallyCompactSpace H := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : LocallyCompactSpace H := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
   have hΓH : Γ ≤ H := by
     rintro _ ⟨γ, rfl⟩
     change absE F E (Matrix.GeneralLinearGroup.det _) = 1
@@ -1181,14 +1181,14 @@ theorem glOne_finvol : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   refine ⟨inferInstance, inferInstance, ?_, ?_⟩
   · exact DiscreteTopology.of_continuous_injective
       (f := fun x : Γ.subgroupOf H => (⟨x.1.1, hΓΛ x.2⟩ : latR F E k))
-      ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)
+      ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)
       (fun x y h => by
         apply Subtype.ext; apply Subtype.ext
         exact congrArg (fun z : latR F E k => (z : GL (Fin k) (AF F ⊗[F] E))) h)
   · intro _ _ π DM hπ hDM
     rcases Nat.eq_zero_or_pos k with rfl | hk
-    · haveI : Subsingleton H := inferInstance
-      haveI : CompactSpace H := inferInstance
+    · have : Subsingleton H := inferInstance
+      have : CompactSpace H := inferInstance
       exact ((measure_mono (Set.subset_univ DM)).trans_lt (isCompact_univ.measure_lt_top)).ne
     obtain ⟨a, ha, hs⟩ := _root_.GlobalTheory.GLOneVol.log_absE_det_cR F E k hk
     let s : GL (Fin k) (AF F ⊗[F] E) → ℝ := fun g => Real.log (absE F E (Matrix.GeneralLinearGroup.det g) : ℝ) / a
@@ -1289,8 +1289,8 @@ theorem exists_prod_equiv {G B : Type} [Group G] [TopologicalSpace G] [IsTopolog
   · simp
   · simp only [Prod.fst_mul, Prod.snd_mul, hmm, Subgroup.coe_mul]
     rw [mul_assoc, mul_assoc, ← mul_assoc (q.1 : G), hc _ q.1.2, mul_assoc]
-  · exact ((continuous_subtype_val.comp continuous_fst).subtype_mk _).mul (hm.comp continuous_snd)
-  · exact ((continuous_subtype_val.comp (continuous_id.mul (hm.comp hπ).inv)).subtype_mk _).prodMk hπ
+  · exact ((continuous_subtypeVal.comp continuous_fst).subtype_mk _).mul (hm.comp continuous_snd)
+  · exact ((continuous_subtypeVal.comp (continuous_id.mul (hm.comp hπ).inv)).subtype_mk _).prodMk hπ
 
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}
 
@@ -1461,11 +1461,11 @@ theorem leviOne_last_prod : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     refine Continuous.subtype_mk ?_ _
     refine Units.continuous_iff.2 ⟨?_, ?_⟩
     · show Continuous fun a : A => adMat F P * (matHom _ σ J (a : GAd σ J)).1 * adMat F X
-      exact (continuous_const.matrix_mul (GlobalTheory.StdPar.continuous_mat.comp continuous_subtype_val)).matrix_mul continuous_const
+      exact (continuous_const.matrix_mul (GlobalTheory.StdPar.continuous_mat.comp continuous_subtypeVal)).matrix_mul continuous_const
     · show Continuous fun a : A => adMat F P * (matHom _ σ J ((a⁻¹ : A) : GAd σ J)).1 * adMat F X
-      exact (continuous_const.matrix_mul (GlobalTheory.StdPar.continuous_mat.comp (continuous_subtype_val.comp continuous_inv))).matrix_mul
+      exact (continuous_const.matrix_mul (GlobalTheory.StdPar.continuous_mat.comp (continuous_subtypeVal.comp continuous_inv))).matrix_mul
         continuous_const
-  have hmc : Continuous mm := (hlv.cont.comp continuous_subtype_val).subtype_mk _
+  have hmc : Continuous mm := (hlv.cont.comp continuous_subtypeVal).subtype_mk _
   have hmm : ∀ a b, mm (a * b) = mm a * mm b := fun a b => Subtype.ext (map_mul lv _ _)
   have hππ : ∀ a b, π (a * b) = π a * π b := by
     intro a b
@@ -1529,8 +1529,8 @@ namespace GlobalTheory.ResidueEisenstein
 theorem finCovol_leviOne_last : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (r : ℕ) (X Y : Matrix (Fin n) (Fin (r + 1)) E), IsCMExt F E σ → IsHermND σ J → IsWittFrame σ J X Y → ∀ (π : Measure (GlobalTheory.StdPar.leviOne σ J X Y {Fin.last r})) (DM : Set (GlobalTheory.StdPar.leviOne σ J X Y {Fin.last r})), π.IsHaarMeasure → IsFundamentalDomain ((ratPts σ J).subgroupOf (GlobalTheory.StdPar.leviOne σ J X Y {Fin.last r})) DM π → π DM ≠ ⊤ := by
   intro F E _ _ _ _ _ σ n J r X Y hcm hJ hW π DM hπ hDM
   obtain ⟨m, Z, J₀, hF⟩ := _root_.GlobalTheory.FrameExt.exists_fr F E σ n J r X Y hcm hJ hW
-  letI : MeasurableSpace (GL (Fin (r + 1)) (AF F ⊗[F] E)) := borel _
-  haveI : BorelSpace (GL (Fin (r + 1)) (AF F ⊗[F] E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin (r + 1)) (AF F ⊗[F] E)) := borel _
+  have : BorelSpace (GL (Fin (r + 1)) (AF F ⊗[F] E)) := ⟨rfl⟩
   obtain ⟨_, _⟩ := GlobalTheory.StdPar.ring_facts (F := F) (E := E)
   set A := (GlobalTheory.SphEis.fixG σ J X ⊓ GlobalTheory.SphEis.fixG σ J Y : Subgroup (GAd σ J)) with hA
   set G₁ := ((absE F E).comp (Matrix.GeneralLinearGroup.det : GL (Fin (r + 1)) (AF F ⊗[F] E) →* (AF F ⊗[F] E)ˣ)).ker
@@ -1541,21 +1541,21 @@ theorem finCovol_leviOne_last : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have hclA : IsClosed (A : Set (GAd σ J)) :=
     (isClosed_eq (GlobalTheory.StdPar.continuous_mat.matrix_mul continuous_const) continuous_const).inter
       (isClosed_eq (GlobalTheory.StdPar.continuous_mat.matrix_mul continuous_const) continuous_const)
-  haveI : LocallyCompactSpace A := hclA.locallyCompactSpace
-  haveI : LocallyCompactSpace (GlobalTheory.StdPar.leviOne σ J X Y {Fin.last r}) :=
+  have : LocallyCompactSpace A := hclA.locallyCompactSpace
+  have : LocallyCompactSpace (GlobalTheory.StdPar.leviOne σ J X Y {Fin.last r}) :=
     (GlobalTheory.StdPar.isClosed_levi _ hcm hJ hW).2.locallyCompactSpace
-  haveI := hlc
-  haveI := hsc
-  haveI := hdisc
-  haveI : DiscreteTopology ΓA := DiscreteTopology.of_continuous_injective
+  have := hlc
+  have := hsc
+  have := hdisc
+  have : DiscreteTopology ΓA := DiscreteTopology.of_continuous_injective
     (f := fun x : ΓA => (⟨(x.1 : GAd σ J), x.2⟩ : ratPts σ J))
-    ((continuous_subtype_val.comp continuous_subtype_val).subtype_mk _)
+    ((continuous_subtypeVal.comp continuous_subtypeVal).subtype_mk _)
     (fun a b h => by
       apply Subtype.ext; apply Subtype.ext
       exact congrArg (fun y : ratPts σ J => (y : GAd σ J)) h)
-  haveI : Countable (ΓA.prod ΓG) := by
-    haveI : Countable ΓA := inferInstance
-    haveI : Countable ΓG := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : Countable (ΓA.prod ΓG) := by
+    have : Countable ΓA := inferInstance
+    have : Countable ΓG := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
     exact Function.Injective.countable (f := fun x : ΓA.prod ΓG => ((⟨x.1.1, x.2.1⟩ : ΓA), (⟨x.1.2, x.2.2⟩ : ΓG)))
       (fun a b h => Subtype.ext (Prod.ext (congrArg (fun q => (q.1 : A)) h) (congrArg (fun q => (q.2 : G₁)) h)))
   refine GlobalTheory.SphEis.covolume_ne_top_of_continuousMulEquiv (A × G₁) _ φ (ΓA.prod ΓG) _ (fun g => ?_)
@@ -1644,8 +1644,8 @@ theorem measure_shell_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hmod := _root_.GlobalTheory.ResidueEisenstein.ModConj.modulus_conj_flow F E σ n J r X Y hD.cm hD.herm hD.witt b hb ν hν
   obtain ⟨π, DM, hSL⟩ := _root_.GlobalTheory.ResidueEisenstein.semiLat_frameGrp F E σ n J r X Y hD.cm hD.herm hD.witt ν DN hν hDN hone
   obtain ⟨C, hC, hslab⟩ := _root_.GlobalTheory.ResidueEisenstein.slab_subset F E σ n J r X Y L a h hD b hb
-  haveI : Countable (ratPts σ J) := inferInstance
-  haveI : Countable ((ratPts σ J ⊓ GlobalTheory.StdPar.frameStab σ J X ⊤) : Subgroup (GAd σ J)) :=
+  have : Countable (ratPts σ J) := inferInstance
+  have : Countable ((ratPts σ J ⊓ GlobalTheory.StdPar.frameStab σ J X ⊤) : Subgroup (GAd σ J)) :=
     Function.Injective.countable (Subgroup.inclusion_injective
       (inf_le_left : ratPts σ J ⊓ GlobalTheory.StdPar.frameStab σ J X ⊤ ≤ ratPts σ J))
   obtain ⟨B, hB, hsh⟩ := GlobalTheory.ResLine.modulus_mul_measure_shell_le (GAd σ J) _ _ _ ν π DN DM hSL μ D hμ hFD C hC

@@ -77,7 +77,7 @@ theorem conj_theta_tmul_one [IsTotallyReal F] {τ : E →+* ℂ} {w : InfinitePl
 theorem theta_sigR {σ : E →ₐ[F] E} (hσ : IsCMExt F E σ) {τ : E →+* ℂ} {w : InfinitePlace F}
     (hw : w.embedding = τ.comp (algebraMap F E)) {θ : Ainf F ⊗[F] E →+* ℂ} (h : IsInfEmbF τ θ)
     (y : Ainf F ⊗[F] E) : θ (sigR (Ainf F) σ y) = starRingEnd ℂ (θ y) := by
-  haveI : IsTotallyReal F := hσ.1
+  have : IsTotallyReal F := hσ.1
   induction y using TensorProduct.induction_on with
   | zero => simp
   | add a b ha hb => simp only [map_add (f := _), ha, hb]
@@ -153,7 +153,7 @@ theorem psi_symplOHF_iotaVF : ∀ (F E : Type) [Field F] [NumberField F] [Field 
         Complex.exp (Real.pi * Complex.I * ((star v ⬝ᵥ HMF JS JT ξ₀ (fun w : InfinitePlace F => (B.emb w).1) *ᵥ u).im : ℂ)) := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hJS hJT ξ₀ hξ hσξ θ hθ ι hι u v
   have hσ := hB.cm
-  haveI : IsTotallyReal F := hσ.1
+  have : IsTotallyReal F := hσ.1
   have hψ := GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood F E σ B hB
   have hw : ∀ w : InfinitePlace F, w.embedding = (B.emb w).1.comp (algebraMap F E) := fun w => (B.emb w).2.symm
   set s := symplOHF σ JS JT ξ₀ (iotaVF ι u) (iotaVF ι v) with hs

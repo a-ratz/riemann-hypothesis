@@ -43,9 +43,9 @@ theorem UpperTheory.solvable_polarized_restriction :
     UpperTheory.V.Af.Sol.PolRes := by
   intro K M Ω _ _ _ _ _ _ _ _ _ _ _ l _ ι n r h
   obtain ⟨F₀, i1, i2, i3, i4, i5, i6, hF, μ, c, P, hμ, hs, hc, hp⟩ := h
-  letI : Algebra F₀ M := ((algebraMap K M).comp (algebraMap F₀ K)).toAlgebra
-  haveI : IsScalarTower F₀ K M := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : IsScalarTower F₀ M Ω := by
+  let : Algebra F₀ M := ((algebraMap K M).comp (algebraMap F₀ K)).toAlgebra
+  have : IsScalarTower F₀ K M := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : IsScalarTower F₀ M Ω := by
     refine IsScalarTower.of_algebraMap_eq (fun x => ?_)
     simp [RingHom.algebraMap_toAlgebra, IsScalarTower.algebraMap_apply F₀ K Ω,
       IsScalarTower.algebraMap_apply K M Ω]

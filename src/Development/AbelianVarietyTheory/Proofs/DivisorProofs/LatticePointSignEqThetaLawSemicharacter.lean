@@ -118,7 +118,7 @@ theorem exists_abstract_value {G R : Type} [AddCommGroup G] [AddCommGroup R] (ψ
     have := ha (x + y)
     rwa [hl, hr, hr, ha, ha, zero_add, add_zero] at this
   let χ : G → ℂ := fun x => if h : ∃ l ∈ L, K (x - l) then ψ (B (p h.choose) h.choose) else 0
-  have hn : ∀ x, (¬ ∃ l ∈ L, K (x - l)) → χ x = 0 := fun x h => dif_neg h
+  have hn : ∀ x, (¬ ∃ l ∈ L, K (x - l)) → χ x = 0 := fun x h => dite_eq_right h
   have hy : ∀ x, ∀ l ∈ L, K (x - l) → χ x = ψ (B (p l) l) := fun x l hl' hk => by
     have h : ∃ l ∈ L, K (x - l) := ⟨l, hl', hk⟩
     have e : h.choose = l := by
@@ -333,7 +333,7 @@ theorem sign_of_exp (t : ℝ)
     (h : Complex.exp (-(Real.pi : ℂ) * Complex.I * t) = 1 ∨ Complex.exp (-(Real.pi : ℂ) * Complex.I * t) = -1) :
     (-1 : ℂ) ^ (round t) = Complex.exp (-(Real.pi : ℂ) * Complex.I * t) := by
   have h2 : Complex.exp (2 * (-(Real.pi : ℂ) * Complex.I * t)) = 1 := by
-    rw [show (2 : ℂ) = ((2 : ℕ) : ℂ) by norm_num, Complex.exp_nat_mul]
+    rw [show (2 : ℂ) = ((2 : ℕ) : ℂ) by norm_num, Complex.exp_natCast_mul]
     rcases h with h | h <;> rw [h] <;> norm_num
   obtain ⟨n, hn⟩ := Complex.exp_eq_one_iff.1 h2
   have hπ : (2 * (Real.pi : ℂ) * Complex.I) ≠ 0 := by
@@ -350,7 +350,7 @@ theorem sign_of_exp (t : ℝ)
   have e1 : (-1 : ℂ) ^ (-n) = (-1) ^ n := by rw [_root_.zpow_neg, ← _root_.inv_zpow, inv_neg, inv_one]
   have e2 : -(Real.pi : ℂ) * Complex.I * (((-n : ℤ) : ℝ) : ℂ) = n * ((Real.pi : ℂ) * Complex.I) := by
     push_cast; ring
-  rw [e1, e2, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [e1, e2, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
 
 theorem host_facts (D : D7) : (Ideal.absNorm D.host.ccK : D.host.E) ≠ 0 ∧ D.host.sqrtMinusD ≠ 0 ∧
     D.host.xi0 * D.host.sqrtMinusD = -1 / (Ideal.absNorm D.host.ccK : D.host.E) ∧ star D.host.xi0 = -D.host.xi0 := by

@@ -105,7 +105,7 @@ theorem hat_invF {N : ℕ} [NeZero N] (a : ℤ → ℂ) (ha : ∀ x, a (x + N) =
   simp_rw [AddChar.sum_mulShift _ (ZMod.isPrimitive_stdAddChar N)]
   simp_rw [ZMod.card, Nat.cast_ite, Nat.cast_zero, sub_eq_zero, mul_ite, mul_zero]
   rw [Finset.sum_ite_eq Finset.univ (d : ZMod N) (fun x => a (x.val : ℤ) * (N : ℂ))]
-  simp only [Finset.mem_univ, if_true]
+  simp only [Finset.mem_univ, ite_true]
   rw [← per_val a ha d]
   field_simp
 
@@ -139,7 +139,7 @@ end
 open GlobalTheory.EisPer in
 theorem GlobalTheory.eis_periodic_weights : ∀ (j L₁ L₂ : ℕ) (a b χ₁ χ₂ : ℤ → ℂ), 1 ≤ j → 0 < L₁ → 0 < L₂ → a 0 = 0 → (∀ x, a (x + L₁) = a x) → (∀ x, b (x + L₂) = b x) → (∀ d : ℤ, IsCoprime d (L₁ * L₂ : ℕ) → (∀ x, a (x * d) = χ₁ d * a x) ∧ ∀ x, b (x * d) = χ₂ d * b x) → χ₁ (-1) * χ₂ (-1) = (-1) ^ j → ∃ c : ℂ, MF j (L₁ * L₂) (fun d => χ₁ d * χ₂ d) (eis j c a b) := by
   intro j L₁ L₂ a b χ₁ χ₂ hj hL₁ hL₂ ha0 ha hb hχ hpar
-  haveI : NeZero L₁ := ⟨hL₁.ne'⟩
+  have : NeZero L₁ := ⟨hL₁.ne'⟩
   have hhat : hat (invF (N := L₁) a) = a := funext (hat_invF a ha)
   obtain ⟨c, hc, -⟩ := _root_.GlobalTheory.EisForm.eis_latF_mf j L₁ L₂ b χ₁ χ₂ (invF (N := L₁) a) hj hL₁ hL₂
     (by rw [hhat]; exact ha0) hb

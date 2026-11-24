@@ -168,9 +168,9 @@ lemma continuous_monoInner_rep {n : ℕ} {a b : Fin (N + 1) →₀ ℕ} (ha : a.
       (continuous_norm.comp (continuous_apply j)).pow 2)
   unfold monoInner
   refine Continuous.div ?_ ?_ ?_
-  · exact (Complex.continuous_conj.comp ((continuous_eval _).comp continuous_subtype_val)).mul
-      ((continuous_eval _).comp continuous_subtype_val)
-  · exact Complex.continuous_ofReal.comp ((hc.comp continuous_subtype_val).pow _)
+  · exact (Complex.continuous_conj.comp ((continuous_eval _).comp continuous_subtypeVal)).mul
+      ((continuous_eval _).comp continuous_subtypeVal)
+  · exact Complex.continuous_ofReal.comp ((hc.comp continuous_subtypeVal).pow _)
   · intro v
     exact_mod_cast (pow_pos (euclideanNorm_pos v.2) _).ne'
 
@@ -212,7 +212,7 @@ theorem integral_monoInner_eq_zero {a b : Fin (N + 1) →₀ ℕ} (hab : a ≠ b
   set u : Circle := Circle.exp θ with hu
   have hlam : starRingEnd ℂ (u : ℂ) ^ p * (u : ℂ) ^ q = -1 := by
     have hqp : ((q : ℂ) - p) ≠ 0 := sub_ne_zero.mpr (by exact_mod_cast (Ne.symm hk))
-    rw [hu, Circle.coe_exp, ← Complex.exp_conj, ← Complex.exp_nat_mul, ← Complex.exp_nat_mul,
+    rw [hu, Circle.coe_exp, ← Complex.exp_conj, ← Complex.exp_natCast_mul, ← Complex.exp_natCast_mul,
       ← Complex.exp_add]
     have h1 : (θ : ℂ) * ((q : ℂ) - p) = Real.pi := by
       rw [hθ]
@@ -240,7 +240,7 @@ theorem integral_monoInner_eq_zero {a b : Fin (N + 1) →₀ ℕ} (hab : a ≠ b
         (u : ℂ) ^ m k.succ * eval (CP.chartVec 0 z) (monomial m (1 : ℂ)) := fun m z => by
     rw [eval_chartVec_monomial, eval_chartVec_monomial]
     simp only [hT, mul_pow, Finset.prod_mul_distrib, hc, ite_pow, one_pow, Finset.prod_ite_eq',
-      Finset.mem_univ, if_true]
+      Finset.mem_univ, ite_true]
 
   set G : (Fin N → ℂ) → ℂ := fun z =>
     (CP.fsVolumeDensity 0 z : ℂ) * monoInner a.degree a b (CP.chartVec 0 z) with hG
@@ -507,7 +507,7 @@ theorem integral_pairVal (k l : Fin r) :
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [integral_finsetSum _ fun j _ => hi i j]
   simp only [integral_const_mul, integral_monoInner_ex, mul_ite, mul_zero, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   push_cast
   ring
 
@@ -522,7 +522,7 @@ theorem integral_pairVal_conj (k l : Fin r) :
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [integral_finsetSum _ fun j _ => hi i j]
   simp only [integral_const_mul, integral_monoInner_ex, mul_ite, mul_zero, Finset.sum_ite_eq,
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
   push_cast
   ring
 

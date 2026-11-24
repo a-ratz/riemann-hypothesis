@@ -335,14 +335,14 @@ theorem hostThickExists : HostThickExists := by
     have h : (Real.exp a / (8 * L)) ^ S ≤ (d : ℝ) ^ S := by gcongr
     rwa [div_pow, div_le_iff₀ (by positivity)] at h
   have hQS : Real.exp a ^ S = Real.exp (x - y - 3) := by
-    rw [← Real.exp_nat_mul, mul_comm, haS]
+    rw [← Real.exp_natCast_mul, mul_comm, haS]
   have hn_eq : (n : ℝ) = Real.exp a ^ S * L * Real.exp 3 := by
     rw [hQS, ← eL, ← Real.exp_add, ← Real.exp_add, ← en]
     congr 1
     ring
   have hprod : Real.exp 3 * (8 * L) ^ S * S * Real.exp a ^ 2 ≤ Real.exp (32 * s) := by
     have hP : ((8 : ℝ) * L) ^ S ≤ Real.exp (S * (7 + y)) := by
-      rw [Real.exp_nat_mul]
+      rw [Real.exp_natCast_mul]
       gcongr
     have hSe : (S : ℝ) ≤ Real.exp S := by linarith [Real.add_one_le_exp (S : ℝ)]
     have hQ2 : Real.exp a ^ 2 = Real.exp (2 * a) := by rw [sq, ← Real.exp_add, two_mul]

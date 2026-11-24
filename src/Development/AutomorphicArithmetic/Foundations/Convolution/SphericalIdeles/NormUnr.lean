@@ -91,7 +91,7 @@ theorem UpperTheory.ConvolutionTheory.Sph.normUnr :
   intro F E _ _ _ _ _ _ η hη v hu x hx
   obtain ⟨⟨w, hw⟩⟩ := GroundTheory.Global.nonempty_placesOver E v
   obtain rfl : GroundTheory.Global.AdeleBaseChange.below F w = v := (GroundTheory.Global.AdeleBaseChange.below_eq_iff w v).2 hw
-  haveI := hw
+  have := hw
   have he : w.asIdeal.ramificationIdx (𝓞 F) = 1 :=
     Algebra.isUnramifiedAt_iff_of_isDedekindDomain.1 (hu ⟨w, hw⟩)
   have hxu : x ∈ (Submonoid.ofClass ((GroundTheory.Global.AdeleBaseChange.below F w).adicCompletionIntegers F)).units := by

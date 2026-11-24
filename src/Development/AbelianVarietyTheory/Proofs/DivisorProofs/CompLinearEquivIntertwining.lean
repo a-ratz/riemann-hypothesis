@@ -73,7 +73,7 @@ theorem IsPeriod.comp_linearEquiv (O : Type) [Ring O] (bar : O → O) (D : PLat 
         obtain ⟨x, hx⟩ := z.2
         exact ⟨x, by rw [← hx, ev, h.symm_apply_apply]⟩⟩
     have hc : Continuous f :=
-      Continuous.subtype_mk (h.symm.toLinearMap.continuous_of_finiteDimensional.comp continuous_subtype_val) _
+      Continuous.subtype_mk (h.symm.toLinearMap.continuous_of_finiteDimensional.comp continuous_subtypeVal) _
     have hi : Function.Injective f := fun a b e => Subtype.ext (h.symm.injective (congrArg Subtype.val e))
     exact DiscreteTopology.of_continuous_injective hc hi
   · have e : Set.range (h.toLinearMap.toAddMonoidHom.comp P) = (h.toLinearMap.restrictScalars ℝ) '' Set.range P := by

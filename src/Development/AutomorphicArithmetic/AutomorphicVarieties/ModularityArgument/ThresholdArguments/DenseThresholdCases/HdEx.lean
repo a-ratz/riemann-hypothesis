@@ -124,9 +124,9 @@ private theorem re_art {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algeb
     {a : Weil h →* (w.adicCompletion E)ˣ} (ha : IsLocalArtin h a) {M : Type} [CommGroup M]
     (ψ : Dec (F := E) A →* M) (hψ : IsOpen (ψ.ker : Set (Dec (F := E) A))) {x y : Weil h} (hxy : a x = a y) :
     ψ (Subgroup.inclusion (Weil_le_Dec h) x) = ψ (Subgroup.inclusion (Weil_le_Dec h) y) := by
-  haveI : CompactSpace (Dec (F := E) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
-  haveI : Finite (Dec (F := E) A ⧸ ψ.ker) := ψ.ker.quotient_finite_of_isOpen hψ
-  haveI : Finite ψ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ψ).toEquiv
+  have : CompactSpace (Dec (F := E) A) := isCompact_iff_compactSpace.1 (isClosed_Dec A).isCompact
+  have : Finite (Dec (F := E) A ⧸ ψ.ker) := ψ.ker.quotient_finite_of_isOpen hψ
+  have : Finite ψ.range := Finite.of_equiv _ (QuotientGroup.quotientKerEquivRange ψ).toEquiv
   let ι := Subgroup.inclusion (Weil_le_Dec h)
   by_contra hne
   have h1 : ψ.rangeRestrict (ι (x * y⁻¹)) ≠ 1 := fun h1 => hne (by
@@ -145,13 +145,13 @@ private theorem re_art {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algeb
 private theorem re_eps {l : ℕ} [Fact l.Prime] (c : Coef l) {H : Type} [Group H] [TopologicalSpace H] [IsTopologicalGroup H]
     (ε : H →* ℤ_[l]ˣ) (hε : Continuous ε) :
     IsOpen (((Units.map ((algebraMap c.O (ResidueField c.O)).comp (algebraMap ℤ_[l] c.O)).toMonoidHom).comp ε).ker : Set H) := by
-  haveI : FaithfulSMul ℤ_[l] c.O := by
+  have : FaithfulSMul ℤ_[l] c.O := by
     rw [faithfulSMul_iff_algebraMap_injective]
     intro x y hxy
     have h1 : algebraMap ℤ_[l] (PadicAlgCl l) x = algebraMap ℤ_[l] (PadicAlgCl l) y := congrArg Subtype.val hxy
     rw [IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l], IsScalarTower.algebraMap_apply ℤ_[l] ℚ_[l] _ y] at h1
     exact Subtype.ext ((algebraMap ℚ_[l] (PadicAlgCl l)).injective h1)
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := inferInstance
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := inferInstance
   have hc : Continuous fun g => ‖((ε g : ℤ_[l]ˣ) : ℤ_[l]) - 1‖ := by fun_prop
   refine Subgroup.isOpen_of_mem_nhds _ (g := 1)
     (Filter.mem_of_superset ((isOpen_lt hc continuous_const (g := fun _ => 1)).mem_nhds (by simp)) fun g hg => ?_)
@@ -214,7 +214,7 @@ theorem UpperTheory.V.Hi.exists_is_res_of_residual_rep_and_type :
     have e1 := re_art ha (r.psib v i) (r.psib_open v i) (hx.trans hy.symm)
     have e2 := re_art ha ((hset Q τ₀).epsV (ResidueField c.O) v)
       (re_eps c ((cycZ L Ω l).comp (Dec (F := L) (s.A v.1)).subtype)
-        ((continuous_cycZ L Ω l).comp continuous_subtype_val)) (hx.trans hy.symm)
+        ((continuous_cycZ L Ω l).comp continuous_subtypeVal)) (hx.trans hy.symm)
     exact congrArg₂ (fun u t : (ResidueField c.O)ˣ => u * t ^ (i : ℕ)) e1 e2
   choose b1 hb1 using H1
   choose b2 hb2 using H2
@@ -273,11 +273,11 @@ private theorem th_char (ha : IsLocalArtin h a) {R : Type} [CommRing R] [IsCNL R
       ∀ N, ∃ c, ∀ d, c ≤ d → ∀ y ∈ Uc _ d, (χ y : R) - 1 ∈ maximalIdeal R ^ N := by
   let f := ψ.comp (Subgroup.inclusion (Weil_le_Dec h))
   have key : ∀ N, ∃ c, ∀ d, c ≤ d → ∀ σ, a σ ∈ Uc _ d → (f σ : R) - 1 ∈ maximalIdeal R ^ N := fun N => by
-    haveI : Finite (R ⧸ maximalIdeal R) := IsCNL.finite
-    haveI : Finite (R ⧸ maximalIdeal R ^ N) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
+    have : Finite (R ⧸ maximalIdeal R) := IsCNL.finite
+    have : Finite (R ⧸ maximalIdeal R ^ N) := Ideal.finite_quotient_pow (IsNoetherian.noetherian _) N
     obtain ⟨c, hc⟩ := th_fin ha ((Units.map (Ideal.Quotient.mk (maximalIdeal R ^ N)).toMonoidHom).comp f) (by
       have := ((hψ N).comp_continuous (f := fun σ : Ine (F := F) A => Subgroup.inclusion (Weil_le_Dec h) (ineIncl h σ))
-        (continuous_subtype_val.subtype_mk _)) {1}
+        (continuous_subtypeVal.subtype_mk _)) {1}
       exact (congrArg IsOpen (Set.ext fun σ => Units.ext_iff)).mpr this)
     exact ⟨c, fun d hd σ hσ => Ideal.Quotient.eq.1 (congrArg Units.val (hc d hd σ hσ))⟩
   have hk : a.ker ≤ f.ker := fun σ hσ => by
@@ -386,9 +386,9 @@ theorem UpperTheory.V.Hi.exists_theta_is_weight_of_lam_obj :
     _root_.GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis → ∀ (l : ℕ) [Fact l.Prime] (L Ω : Type) [Field L] [NumberField L] [IsCMField L] [Field Ω] [Algebra L Ω] [IsAlgClosure L Ω] (s : HidaSetting l L Ω) (n : ℕ), 1 ≤ n →
     ∀ (V : s.Lev) (Q : QData V) (c : Coef l), ∀ (m : ℕ) (τ₀ : KT n (wt s) →* GL (Fin m) c.O), ∀ (r : Resid V.frame c.O n) (Λ : LamObj r), ∃ θ : (hset Q τ₀).X.I.T →* Λ.Λˣ, IsTheta Q τ₀ Λ θ ∧ (hset Q τ₀).IsWt θ := by
   intro H l _ L Ω _ _ _ _ _ _ s n hn V Q c m τ₀ r Λ
-  haveI : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
-  haveI : IsLocalHom (algebraMap ℤ_[l] c.O) := (abelian₂.dvr_finite l c.O).2.2.2.2.2
-  haveI : IsCNL Λ.Λ := IsCNL.ofCO c.O Λ.Λ
+  have : Finite (ResidueField c.O) := (abelian₂.dvr_finite l c.O).2.1
+  have : IsLocalHom (algebraMap ℤ_[l] c.O) := (abelian₂.dvr_finite l c.O).2.2.2.2.2
+  have : IsCNL Λ.Λ := IsCNL.ofCO c.O Λ.Λ
   choose ψ hψ hκ using Λ.inert
   have ha : ∀ v : V.frame.Vl, IsLocalArtin (s.hw v.1) (artOf (s.hw v.1)) := fun v =>
     Classical.epsilon_spec (_root_.UpperTheory.V.Z.Win.T2.laArtinLit' H (s.hw v.1))
@@ -396,7 +396,7 @@ theorem UpperTheory.V.Hi.exists_theta_is_weight_of_lam_obj :
     th_char' (ha v) (ψ v i) ((hset Q τ₀).epsV Λ.Λ v) (hψ v i).cont
       (th_eps ((algebraMap c.O Λ.Λ).comp (algebraMap ℤ_[l] c.O))
         (e := fun g : Dec (F := L) (s.A v.1) => (cycZ L Ω l g : ℤ_[l]))
-        (Units.continuous_val.comp ((continuous_cycZ L Ω l).comp continuous_subtype_val))) i
+        (Units.continuous_val.comp ((continuous_cycZ L Ω l).comp continuous_subtypeVal))) i
   obtain ⟨θ, h1, h2⟩ := th_torus n (fun v : V.frame.Vl => s.w v.1) χ hc
   refine ⟨θ, fun v i x g hg y e1 e2 => ?_, h2, fun K => th_free _ _ _ (neatU l L Ω s n hn V Q c m τ₀ K)⟩
   have e3 := hχ v i x g e1

@@ -63,8 +63,8 @@ theorem emb_surjective (hw : (p : 𝓞 F) ∈ w.asIdeal) (h2 : (p : 𝓞 F) ∉ 
   have hp0 : (p : K) ≠ 0 := Nat.cast_ne_zero.2 hp.out.ne_zero
   have hres : ∀ a : 𝓞 F, ∃ m : ℤ, a - m ∈ w.asIdeal := by
     intro a
-    haveI := Formalism.BasicNotions.Examples₂.LocF.finite_quot w
-    letI := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
+    have := Formalism.BasicNotions.Examples₂.LocF.finite_quot w
+    let := Fintype.ofFinite (𝓞 F ⧸ w.asIdeal)
     have hc : Fintype.card (𝓞 F ⧸ w.asIdeal) = p := by
       rw [← hN, Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]
     obtain ⟨z, hz⟩ := (ZMod.ringEquivOfPrime (𝓞 F ⧸ w.asIdeal) hp.out hc).surjective (Ideal.Quotient.mk _ a)
@@ -91,7 +91,7 @@ theorem emb_surjective (hw : (p : 𝓞 F) ∈ w.asIdeal) (h2 : (p : 𝓞 F) ∉ 
       have := Valuation.map_add_lt _ ha h1
       rwa [map_sub, map_sub, map_intCast, map_intCast, sub_add_sub_cancel] at this
     refine ⟨m, (y - m) / p, ?_, by rw [mul_div_cancel₀ _ hp0, add_sub_cancel]⟩
-    rw [map_div₀, div_le_one₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hp0))]
+    rw [map_div₀, div_le_one₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hp0))]
     refine le_trans ?_ hvp
     by_cases h0 : Valued.v (y - m) = 0
     · rw [h0]; exact zero_le
@@ -106,10 +106,10 @@ theorem emb_surjective (hw : (p : 𝓞 F) ∈ w.asIdeal) (h2 : (p : 𝓞 F) ∉ 
       obtain ⟨m, z, hz, e⟩ := ih
       obtain ⟨m', z', hz', e'⟩ := step z hz
       exact ⟨m + p ^ n * m', z', hz', by rw [e, e', Int.cast_add, Int.cast_mul, Int.cast_pow, Int.cast_natCast]; ring⟩
-  letI := (Formalism.BasicNotions.Examples₂.LocF.emb w p hw).toAlgebra
+  let := (Formalism.BasicNotions.Examples₂.LocF.emb w p hw).toAlgebra
   have : ContinuousSMul ℚ_[p] K := continuousSMul_of_algebraMap _ _ (Formalism.BasicNotions.Examples₂.LocF.emb_cont w p hw)
   have hcl : IsClosed (Set.range (Formalism.BasicNotions.Examples₂.LocF.emb w p hw)) :=
-    (LinearMap.range (Algebra.linearMap ℚ_[p] K)).closed_of_finiteDimensional
+    (LinearMap.range (Algebra.linearMap ℚ_[p] K)).isClosed_of_finiteDimensional
   have hlt := Formalism.BasicNotions.Examples₂.LocF.norm_l_lt w p hw
   have hint : ∀ y : K, ‖y‖ ≤ 1 → y ∈ Set.range (Formalism.BasicNotions.Examples₂.LocF.emb w p hw) := by
     intro y hy
@@ -179,12 +179,12 @@ theorem emb_le {F : Type} [Field F] [NumberField F] (w : HeightOneSpectrum (𝓞
     (f : ℚ_[p] →+* w.adicCompletion F) (hf : Continuous f) (t : ℚ_[p]) (ht : ‖t‖ ≤ 1) : ‖f t‖ ≤ 1 := by
   have hd : DenseRange (Int.cast : ℤ → ℤ_[p]) := PadicInt.denseRange_intCast
   refine hd.induction_on (p := fun z : ℤ_[p] => ‖f z‖ ≤ 1) ⟨t, ht⟩
-    (isClosed_le (hf.comp continuous_subtype_val).norm continuous_const) fun m => ?_
+    (isClosed_le (hf.comp continuous_subtypeVal).norm continuous_const) fun m => ?_
   simpa using Formalism.BasicNotions.Examples₂.LocF.norm_int_le w m
 
 theorem exists_pull {D : D7} (I : Ident D) (k v) {n : ℕ} (π : Rep.{0} ℂ (GL (Fin n) ℚ_[D.host.g k]))
     (h : GlobalTheory.SerSys.IrrSm π) : ∃ σ, Nonempty (π ≅ pull I k v σ) := by
-  letI := (I.i k v).toRingHom.toAlgebra
+  let := (I.i k v).toRingHom.toAlgebra
   have : ContinuousSMul ℚ_[D.host.g k] ((D.naut.plGw k v).adicCompletion D.host.E) :=
     continuousSMul_of_algebraMap _ _ (I.cont k v)
   let el : ℚ_[D.host.g k] ≃ₗ[ℚ_[D.host.g k]] (D.naut.plGw k v).adicCompletion D.host.E :=

@@ -91,7 +91,7 @@ lemma HasGen.add {F G : (Y ⟶ X) →₀ ℤ} (hF : HasGen L F) (hG : HasGen L G
     intro Z U V W h1 h2 x
     ext
     first
-      | (simp only [res, Units.coe_map, MonoidHom.coe_coe]
+      | (simp only [res, Units.coe_map, MonoidHom.coe_ofClass]
          rw [← RingHom.comp_apply, ← CommRingCat.hom_comp, ← Functor.map_comp]
          rfl)
       | (simp [res, ← Functor.map_comp_apply])

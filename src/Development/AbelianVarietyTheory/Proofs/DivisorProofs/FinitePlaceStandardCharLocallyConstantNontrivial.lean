@@ -56,7 +56,7 @@ theorem psiLoc_addChar_locallyConstant_ne_one :
       have : (psiLocChar w : w.adicCompletion E → ℂ) = fun x => ((GroundTheory.Global.localAdelicChar E w x : Circle) : ℂ) := by
         funext x; exact GlobalTheory.JSW.WhitModel.psiLoc_eq w x
       rw [this]
-      exact continuous_subtype_val.comp (GroundTheory.Global.continuous_localAdelicChar w)
+      exact continuous_subtypeVal.comp (GroundTheory.Global.continuous_localAdelicChar w)
     exact GlobalTheory.SchrSBFin.isLocallyConstant_addChar _ hc
   · intro h
     apply GroundTheory.Global.localAdelicChar_ne_one (K := E) (v := w)

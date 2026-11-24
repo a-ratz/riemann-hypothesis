@@ -110,7 +110,7 @@ variable [MeasurableSpace k] [BorelSpace k]
 theorem fourier_eq_zero_pi (μ : Measure (n → k)) [μ.IsAddRightInvariant] (h : HasConductor ψ c) {s : kˣ}
     {f : (n → k) → ℂ} (hs : ∀ t ∈ box n s, ∀ x, f (x + t) = f x) {y : n → k} (hy : y ∉ box n (c * s⁻¹)) :
     ∫ x, f x * (ψ (x ⬝ᵥ y) : ℂ) ∂μ = 0 := by
-  haveI := secondCountable k
+  have := secondCountable k
   obtain ⟨i, hi⟩ : ∃ i, y i ∉ cball (c * s⁻¹) := by
     by_contra hne
     push Not at hne
@@ -135,7 +135,7 @@ theorem fourier_indicator_pi (μ : Measure (n → k)) [μ.IsAddRightInvariant] (
     (x : n → k) :
     ∫ y, (box n (c * s⁻¹)).indicator (fun _ => (1 : ℂ)) y * (ψ (y ⬝ᵥ x) : ℂ) ∂μ =
       (box n s).indicator (fun _ => (μ.real (box n (c * s⁻¹)) : ℂ)) x := by
-  haveI := secondCountable k
+  have := secondCountable k
   by_cases hx : x ∈ box n s
   · rw [Set.indicator_of_mem hx]
     have : ∀ y, (box n (c * s⁻¹)).indicator (fun _ => (1 : ℂ)) y * (ψ (y ⬝ᵥ x) : ℂ) =
@@ -166,7 +166,7 @@ theorem fourier_indicator_pi (μ : Measure (n → k)) [μ.IsAddRightInvariant] (
 theorem fourier_mem_SB (μ : Measure (n → k)) [μ.IsAddRightInvariant] (h : HasConductor ψ c)
     {f : (n → k) → ℂ} (hf : f ∈ SB (n → k)) :
     (fun y : n → k => ∫ x, f x * (ψ (x ⬝ᵥ y) : ℂ) ∂μ) ∈ SB (n → k) := by
-  haveI := t2Space k
+  have := t2Space k
   obtain ⟨s, hs⟩ := exists_box_invariant hf
   refine ⟨(IsLocallyConstant.iff_eventually_eq _).mpr fun y => ?_,
     HasCompactSupport.intro (isCompact_box (c * s⁻¹)) fun y hy => fourier_eq_zero_pi μ h hs hy⟩
@@ -189,8 +189,8 @@ theorem fourier_inversion_pi (μ : Measure (n → k)) [μ.IsAddHaarMeasure] (h :
     {f : (n → k) → ℂ} (hf : f ∈ SB (n → k)) :
     ∃ s : kˣ, ∫ y, (∫ x, f x * (ψ (x ⬝ᵥ y) : ℂ) ∂μ) ∂μ =
       ((μ.real (box n s) * μ.real (box n (c * s⁻¹)) : ℝ) : ℂ) * f 0 := by
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := secondCountable k
+  have := t2Space k
   obtain ⟨s, hs⟩ := exists_box_invariant hf
   refine ⟨s, ?_⟩
   set e : (n → k) → ℂ := (box n (c * s⁻¹)).indicator (fun _ => (1 : ℂ)) with he
@@ -206,7 +206,7 @@ theorem fourier_inversion_pi (μ : Measure (n → k)) [μ.IsAddHaarMeasure] (h :
   have hint : Integrable (Function.uncurry fun y x => f x * (e y * (ψ (y ⬝ᵥ x) : ℂ))) (μ.prod μ) := by
     have h2 := (hei.mul_prod hfi).mul_bdd (c := 1) (g := fun q : (n → k) × (n → k) => (ψ (q.1 ⬝ᵥ q.2) : ℂ))
       (Continuous.aestronglyMeasurable
-        (continuous_subtype_val.comp (h.continuous.comp continuous_dot)))
+        (continuous_subtypeVal.comp (h.continuous.comp continuous_dot)))
       (Filter.Eventually.of_forall fun q => (Circle.norm_coe _).le)
     refine h2.congr (Filter.Eventually.of_forall fun q => ?_)
     simp only [Function.uncurry]
@@ -228,8 +228,8 @@ theorem fourier_inversion_pi (μ : Measure (n → k)) [μ.IsAddHaarMeasure] (h :
 
 theorem vol_mul_vol_dual {ν : Measure k} (h : HasConductor ψ c) (hν : IsSelfDual ψ ν) (s : kˣ) :
     ν.real (cball s) * ν.real (cball (c * s⁻¹)) = 1 := by
-  haveI := hν.1
-  haveI := t2Space k
+  have := hν.1
+  have := t2Space k
   have hcl : IsClopen (cball (1 : kˣ)) := ⟨(isCompact_cball 1).isClosed, isOpen_cball 1⟩
   have hf : (cball (1 : kˣ)).indicator (fun _ => (1 : ℂ)) ∈ SB k := by
     refine ⟨(IsLocallyConstant.iff_eventually_eq _).mpr fun x => ?_,
@@ -250,9 +250,9 @@ theorem fourier_pi_of_conductor {ν : Measure k} (h : HasConductor ψ c) (hν : 
     {f : (n → k) → ℂ} (hf : f ∈ SB (n → k)) :
     (fun y : n → k => ∫ x, f x * (ψ (x ⬝ᵥ y) : ℂ) ∂(Measure.pi fun _ => ν)) ∈ SB (n → k) ∧
       ∫ y : n → k, (∫ x, f x * (ψ (x ⬝ᵥ y) : ℂ) ∂(Measure.pi fun _ => ν)) ∂(Measure.pi fun _ => ν) = f 0 := by
-  haveI := hν.1
-  haveI := secondCountable k
-  haveI := t2Space k
+  have := hν.1
+  have := secondCountable k
+  have := t2Space k
   refine ⟨fourier_mem_SB _ h hf, ?_⟩
   obtain ⟨s, hs⟩ := fourier_inversion_pi (Measure.pi fun _ : n => ν) h hf
   have hb : ∀ r : kˣ, (Measure.pi fun _ : n => ν).real (box n r) = ν.real (cball r) ^ Fintype.card n := by

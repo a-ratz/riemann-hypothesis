@@ -114,7 +114,7 @@ theorem hom_one : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog (1 : Rec
   intro m hm k
   have : m = 0 := by
     by_contra h
-    rw [mem_support_iff, coeff_one, if_neg (Ne.symm h)] at hm
+    rw [mem_support_iff, coeff_one, ite_eq_right (Ne.symm h)] at hm
     exact hm rfl
   subst this
   simp
@@ -405,7 +405,7 @@ theorem flHeight_nonneg_dominant : Inputs → ∀ (II : IntersectionSystem), IsF
     refine Finset.sum_congr rfl fun w _ => ?_
     by_cases hw : ∀ j, ((w j).2 : ℕ) + 1 < N
     · congr 1
-      exact Finset.prod_congr rfl fun j _ => (if_pos (hw j)).symm
+      exact Finset.prod_congr rfl fun j _ => (ite_eq_left (hw j)).symm
     · push_neg at hw
       obtain ⟨j, hj⟩ := hw
       rw [hzero w j (not_lt.2 hj), zero_mul, zero_mul]
@@ -550,7 +550,7 @@ private theorem II_fsHerm_yDeg_eq_zero_of_ne (II : IntersectionSystem) (hII : Is
     have hfinL : ∃ D : ℕ, Algebra.trdeg ℤ
         (Subfield.closure (coneRatios (yFl Ψ N) (FlagArithVar.leadIdx Ψ N))) = D := by
       have hs : (coneRatios (yFl Ψ N) (FlagArithVar.leadIdx Ψ N)).Finite := Set.finite_range _
-      haveI : Algebra.EssFiniteType ℚ
+      have : Algebra.EssFiniteType ℚ
           (IntermediateField.adjoin ℚ (coneRatios (yFl Ψ N) (FlagArithVar.leadIdx Ψ N))) :=
         IntermediateField.essFiniteType_iff.mpr (IntermediateField.fg_adjoin_of_finite hs)
       have hlt := _root_.trdeg_lt_aleph0 ℚ

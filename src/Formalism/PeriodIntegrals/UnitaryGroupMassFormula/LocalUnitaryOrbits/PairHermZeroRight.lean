@@ -197,11 +197,11 @@ def IdxHO (a : ℕ) : Prop :=
 theorem sdVolH_of_top (a : ℕ) (hC : CondV σ J ψ v) (hT : TopH σ v a) (hD : DualH σ J ψ v a)
     (hI : IdxHO σ v a) : SdVolH σ J ψ v a := by
   intro hS hU hν ϖ hϖ
-  haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   have hϖ0 := unif_ne_zero v hϖ
   have hd0 := dV_ne_zero v
   have hνsd : SdHerm F E σ (Fv F v) (psiV F ψ v) a (dT σ ψ v a) := by
-    simp only [dT, dif_pos hν]
+    simp only [dT, dite_eq_left hν]
     exact hν.choose_spec
   have := hνsd.1
   set ν := dT σ ψ v a with hνdef

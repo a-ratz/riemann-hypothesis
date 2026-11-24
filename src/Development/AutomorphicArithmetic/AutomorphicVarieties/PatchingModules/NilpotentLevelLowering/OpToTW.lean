@@ -307,16 +307,16 @@ private theorem psLin_span {A κ : Type} [CommRing A] (d : ℕ) (s : Finset κ) 
       · have h' : ¬ (Finsupp.single a d ≤ e) := by
           rw [Finsupp.single_le_iff]
           omega
-        rw [if_neg h']
+        rw [ite_eq_right h']
         show _ = 0 + (if e a < d then MvPowerSeries.coeff e f else 0)
-        rw [if_pos h, zero_add]
+        rw [ite_eq_left h, zero_add]
       · have h' : Finsupp.single a d ≤ e := by
           rw [Finsupp.single_le_iff]
           omega
-        rw [if_pos h']
+        rw [ite_eq_left h']
         show _ = 1 * MvPowerSeries.coeff (e - Finsupp.single a d + Finsupp.single a d) f +
           (if e a < d then MvPowerSeries.coeff e f else 0)
-        rw [if_neg h, tsub_add_cancel_of_le h', one_mul, add_zero]
+        rw [ite_eq_right h, tsub_add_cancel_of_le h', one_mul, add_zero]
     rw [hfr]
     refine Ideal.add_mem _ (Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨a, rfl⟩)) (ih r ?_)
     intro e he
@@ -395,7 +395,7 @@ theorem UpperTheory.V.Pa.Lev.psLin :
         have := he i (Finset.mem_univ i)
         show e i ≤ d - 1
         omega
-      rw [map_sub, MvPolynomial.coeff_coe, MvPowerSeries.coeff_trunc', if_pos hle, sub_self]
+      rw [map_sub, MvPolynomial.coeff_coe, MvPowerSeries.coeff_trunc', ite_eq_left hle, sub_self]
     have h1 := psLin_small act ((maximalIdeal Λ) ^ k) d m hd1 _ hr
     have h2 := psLin_small act' ((maximalIdeal Λ) ^ k) d (φ m) hd2 _ hr
     have h3 := Submodule.smul_top_le_comap_smul_top ((maximalIdeal Λ) ^ k) φ h1
@@ -451,7 +451,7 @@ private theorem psm_prec_pi {R : Type} [CommRing R] (I : Ideal R) [IsPrecomplete
 private theorem psm_prec_finite {R M : Type} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Finite R M] (I : Ideal R) [IsPrecomplete I R] : IsPrecomplete I M := by
   obtain ⟨r, π, hπ⟩ := Module.Finite.exists_fin' R M
-  haveI := psm_prec_pi I r
+  have := psm_prec_pi I r
   rw [← AdicCompletion.of_surjective_iff]
   intro y
   obtain ⟨z, rfl⟩ := AdicCompletion.map_surjective I hπ y
@@ -461,12 +461,12 @@ private theorem psm_prec_finite {R M : Type} [CommRing R] [AddCommGroup M] [Modu
 private theorem psm_ev {R S σ : Type} [CommRing R] [CommRing S] [Finite σ] (m : Ideal S) [IsAdicComplete m S]
     (f : R →+* S) (a : σ → S) (ha : ∀ s, a s ∈ m.radical) :
     ∃ F : MvPowerSeries σ R →+* S, (∀ x, F (MvPowerSeries.C x) = f x) ∧ ∀ s, F (MvPowerSeries.X s) = a s := by
-  letI : UniformSpace R := ⊥
-  haveI : DiscreteUniformity R := ⟨rfl⟩
-  letI : WithIdeal S := ⟨m⟩
+  let : UniformSpace R := ⊥
+  have : DiscreteUniformity R := ⟨rfl⟩
+  let : WithIdeal S := ⟨m⟩
   have hm : IsAdic m := rfl
   obtain ⟨h1, h2⟩ := hm.isAdicComplete_iff.1 inferInstance
-  haveI : IsLinearTopology S S := Ideal.isLinearTopology m
+  have : IsLinearTopology S S := Ideal.isLinearTopology m
   have hf : Continuous f := continuous_of_discreteTopology
   have hE : MvPowerSeries.HasEval a := by
     refine ⟨fun s => ?_, by simp⟩
@@ -507,11 +507,11 @@ private theorem psm_abs {Λ A B M κ : Type} [CommRing Λ] [IsLocalRing Λ] [IsN
     (hι : Function.Injective ι) (hg : ∀ c, ι (g c) = algebraMap Λ _ c) (b : κ → B)
     (hb : topNil (maximalIdeal Λ) (fun i => ι (b i)) = ⊤) :
     ∃ F : MvPowerSeries κ A →+* B, (∀ x, F (MvPowerSeries.C x) = f x) ∧ ∀ s, F (MvPowerSeries.X s) = b s := by
-  letI : Algebra Λ B := g.toAlgebra
+  let : Algebra Λ B := g.toAlgebra
   let ι' : B →ₐ[Λ] Module.End Λ M := { ι with commutes' := hg }
-  haveI : Module.Finite Λ B := Module.Finite.of_injective ι'.toLinearMap hι
-  haveI : IsPrecomplete (maximalIdeal Λ) B := psm_prec_finite _
-  haveI : IsAdicComplete ((maximalIdeal Λ).map (algebraMap Λ B)) B :=
+  have : Module.Finite Λ B := Module.Finite.of_injective ι'.toLinearMap hι
+  have : IsPrecomplete (maximalIdeal Λ) B := psm_prec_finite _
+  have : IsAdicComplete ((maximalIdeal Λ).map (algebraMap Λ B)) B :=
     { toIsHausdorff := IsHausdorff.map_algebraMap_iff.2 inferInstance
       toIsPrecomplete := IsPrecomplete.map_algebraMap_iff.2 inferInstance }
   refine psm_ev ((maximalIdeal Λ).map (algebraMap Λ B)) f b fun s => psm_rad _ ι' hι _ fun x => ?_
@@ -526,7 +526,7 @@ theorem UpperTheory.V.Pa.Lev.psModule :
     rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩
     intro _
     exact hT i j)
-  letI : CommRing B := { (inferInstance : Ring B) with mul_comm := fun x y => hcomm.is_comm.comm x y }
+  let : CommRing B := { (inferInstance : Ring B) with mul_comm := fun x y => hcomm.is_comm.comm x y }
   let ι : B →+* Module.End Λ M :=
     { toFun := fun x => (x : Module.End A M).restrictScalars Λ
       map_one' := rfl
@@ -566,7 +566,7 @@ private theorem spLoc_pow {Λ B M : Type} [CommRing Λ] [IsLocalRing Λ] [CommRi
   set J := Module.annihilator B M ⊔ (maximalIdeal Λ ^ k).map (algebraMap Λ B) with hJ
   have hmax : ∀ p : Ideal B, p.IsPrime → J ≤ p → p.IsMaximal := by
     intro p hp hJp
-    haveI : Algebra.IsIntegral Λ (B ⧸ p) := by
+    have : Algebra.IsIntegral Λ (B ⧸ p) := by
       constructor
       intro x
       obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective x
@@ -746,8 +746,8 @@ private theorem spLoc_alg (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianR
   classical
   let t : Fin q × Fin n → MSplitAlg P n :=
     fun p => MSplitAlg.root P n p.1 p.2 - algebraMap R _ (ut p.1 p.2)
-  haveI hRco : IsCO R R := spLoc_co R
-  haveI hMco : IsCO R (MvPowerSeries (Fin q × Fin n) R) := co_mvps R R (Fin q × Fin n)
+  have hRco : IsCO R R := spLoc_co R
+  have hMco : IsCO R (MvPowerSeries (Fin q × Fin n) R) := co_mvps R R (Fin q × Fin n)
   have hmk : Function.Surjective (Sp.mk P ut) := Ideal.Quotient.mkₐ_surjective R _
   have hψt : ∀ p, ψ (t p) = Sp.mk P ut (MvPowerSeries.X p) := by
     intro p
@@ -765,9 +765,9 @@ private theorem spLoc_alg (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianR
       have h := Localization.AtPrime.under_maximalIdeal (I := N)
       rw [← h] at hy
       exact hy
-    haveI : IsNoetherian (Localization.AtPrime N) (Localization.AtPrime N) :=
+    have : IsNoetherian (Localization.AtPrime N) (Localization.AtPrime N) :=
       isNoetherian_of_tower R inferInstance
-    haveI hLco : IsCO R (Localization.AtPrime N) := by
+    have hLco : IsCO R (Localization.AtPrime N) := by
       refine { complete := hcompl, isLocalHom := hloc, res_surj := ?_ }
       intro x
       obtain ⟨y, rfl⟩ := hsurj x
@@ -796,22 +796,22 @@ private theorem spLoc_alg (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianR
         ring)
     simpa using DFunLike.congr_fun h x
   by_cases hnt : Nontrivial (Sp P ut)
-  · haveI := hnt
-    haveI hSco : IsCO R (Sp P ut) :=
+  · have := hnt
+    have hSco : IsCO R (Sp P ut) :=
       co_quot R (MvPowerSeries (Fin q × Fin n) R) (Sp P ut) (Sp.mk P ut) hmk
-    haveI : IsLocalHom (algebraMap R (Sp P ut)) := hSco.isLocalHom
+    have : IsLocalHom (algebraMap R (Sp P ut)) := hSco.isLocalHom
     have hXmax : ∀ p, Sp.mk P ut (MvPowerSeries.X p) ∈ maximalIdeal (Sp P ut) := by
       intro p
       rw [← res_eq_zero_iff R, res_map, res_eq_zero_iff, IsLocalRing.mem_maximalIdeal,
         mem_nonunits_iff, MvPowerSeries.isUnit_iff_constantCoeff]
       simp
     let N : Ideal (MSplitAlg P n) := (maximalIdeal (Sp P ut)).comap ψ
-    haveI hNprime : N.IsPrime := Ideal.comap_isPrime _ _
+    have hNprime : N.IsPrime := Ideal.comap_isPrime _ _
     have hNR : N.comap (algebraMap R (MSplitAlg P n)) = maximalIdeal R := by
       ext x
       rw [Ideal.mem_comap, Ideal.mem_comap, AlgHom.commutes, ← Ideal.mem_comap,
         IsLocalRing.maximalIdeal_comap]
-    haveI hNmax : N.IsMaximal :=
+    have hNmax : N.IsMaximal :=
       Ideal.isMaximal_of_isIntegral_of_isMaximal_under (R := R) N
         (by
           change (N.comap (algebraMap R (MSplitAlg P n))).IsMaximal
@@ -872,7 +872,7 @@ private theorem spLoc_alg (R : Type) [CommRing R] [IsLocalRing R] [IsNoetherianR
       exact Subsingleton.elim _ _
     · simp only [Submodule.zero_mem, not_true_eq_false, false_iff]
       intro hmt
-      haveI := hm
+      have := hm
       obtain ⟨F', -⟩ := key m hmt
       have h01 : (1 : Localization.AtPrime m) = 0 := by
         rw [← map_one F', ← map_zero F', Subsingleton.elim (1 : Sp P ut) 0]
@@ -883,7 +883,7 @@ theorem UpperTheory.V.Pa.Lev.spLoc :
   intro Λ _ _ _ _ B M _ _ _ _ _ _ _ _ _ _ _ q n P ut hmon hdeg
   classical
   obtain ⟨b, -⟩ := mSplitAlg_basis (Fin q) n B P hmon hdeg
-  haveI : Module.Finite B (MSplitAlg P n) := Module.Finite.of_basis b
+  have : Module.Finite B (MSplitAlg P n) := Module.Finite.of_basis b
   let π : MSplitAlg P n →ₐ[B] Sp P ut :=
     MSplitAlg.lift P n (Sp.u P ut) (fun j => (Core.spRoots B q n P ut j).1)
   have hπ : ∀ j i, π (MSplitAlg.root P n j i) = Sp.u P ut j i :=
@@ -892,7 +892,7 @@ theorem UpperTheory.V.Pa.Lev.spLoc :
   refine ⟨π, hπ, hsurj, e, he, hker, ?_⟩
   let t : Fin q × Fin n → MSplitAlg P n :=
     fun p => MSplitAlg.root P n p.1 p.2 - algebraMap B _ (ut p.1 p.2)
-  haveI : Module.Finite B M := Module.Finite.of_restrictScalars_finite Λ B M
+  have : Module.Finite B M := Module.Finite.of_restrictScalars_finite Λ B M
   obtain ⟨e', he', hem', htop⟩ := topNil_eq_idem B (MSplitAlg P n) (Fin q × Fin n) t
   have hee : e = e' := spLoc_idem he he' (fun m hm => (hem m hm).trans (hem' m hm).symm)
   subst hee
@@ -984,9 +984,9 @@ theorem nilPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ]
         intro r m hm
         show e (r • m) = r • m
         rw [heR, show e m = m from hm] }
-  haveI : IsNoetherian Λ M := isNoetherian_of_isNoetherianRing_of_finite Λ M
-  haveI hfin : Module.Finite Λ Ns := by
-    haveI := isNoetherian_submodule' (Ns.restrictScalars Λ)
+  have : IsNoetherian Λ M := isNoetherian_of_isNoetherianRing_of_finite Λ M
+  have hfin : Module.Finite Λ Ns := by
+    have := isNoetherian_submodule' (Ns.restrictScalars Λ)
     exact inferInstanceAs (Module.Finite Λ (Ns.restrictScalars Λ))
   let Tn : τ → Module.End R Ns := fun s =>
     { toFun := fun x => ⟨T s x, show e (T s x) = T s x by rw [heT, show e x = x from x.2]⟩
@@ -1033,8 +1033,8 @@ theorem nilPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ]
     rw [heq] at hin
     exact hin
   obtain ⟨act, hact⟩ := psModule Λ R Ns τ Tn hTn htop
-  letI modP : Module (MvPowerSeries τ R) Ns := Module.compHom Ns act.toRingHom
-  haveI tow : IsScalarTower Λ (MvPowerSeries τ R) Ns := by
+  let modP : Module (MvPowerSeries τ R) Ns := Module.compHom Ns act.toRingHom
+  have tow : IsScalarTower Λ (MvPowerSeries τ R) Ns := by
     refine ⟨fun c f x => ?_⟩
     show act (c • f) x = c • act f x
     rw [← algebraMap_smul R c f, map_smul, LinearMap.smul_apply, algebraMap_smul]
@@ -1171,7 +1171,7 @@ theorem del_gen {l q n : ℕ} (hl : l.Prime) {a : Fin q → ℕ} (S : Submonoid 
     (h : ∀ p, (Pi.mulSingle p (Multiplicative.ofAdd 1) : Del l n a) ∈ S) (g : Del l n a) : g ∈ S := by
   rw [← Finset.univ_prod_mulSingle g]
   refine Submonoid.prod_mem S fun p _ => ?_
-  haveI : NeZero (l ^ a p.1) := ⟨pow_ne_zero _ hl.ne_zero⟩
+  have : NeZero (l ^ a p.1) := ⟨pow_ne_zero _ hl.ne_zero⟩
   have hg : g p = (Multiplicative.ofAdd (1 : ZMod (l ^ a p.1))) ^ (Multiplicative.toAdd (g p)).val := by
     rw [← ofAdd_nsmul, nsmul_one, ZMod.natCast_zmod_val]
     rfl
@@ -1286,7 +1286,7 @@ theorem quotPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ
     obtain ⟨n, rfl⟩ := J.mkQ_surjective x
     rw [hj, hκ, hpi]
   · intro v
-    haveI : Module.Finite Λ W := Module.Finite.of_surjective (tr.restrictScalars Λ) hsurj
+    have : Module.Finite Λ W := Module.Finite.of_surjective (tr.restrictScalars Λ) hsurj
     let T : σ ⊕ σ → Module.End Λ M := fun s =>
       (act1 (MvPolynomial.X s - MvPolynomial.C (Sum.elim ut 0 s))).restrictScalars Λ
     let T' : σ ⊕ σ → Module.End Λ W :=
@@ -1485,8 +1485,8 @@ theorem spPart {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianRing Λ] 
         φ (ψ v) = act f v := by
   obtain ⟨π, hπ1, hπ2, e, he1, he2, he3⟩ := spLoc Λ B M q n P ub hm hd
   obtain ⟨φ, ψ, h1, h2, h3, h4⟩ := h
-  haveI : Module.Finite B (MSplitAlg P n) := module_finite_mSplitAlg_of_monic P hm
-  haveI : Module.Finite B (Sp P ub) := Module.Finite.of_surjective π.toLinearMap hπ2
+  have : Module.Finite B (MSplitAlg P n) := module_finite_mSplitAlg_of_monic P hm
+  have : Module.Finite B (Sp P ub) := Module.Finite.of_surjective π.toLinearMap hπ2
   obtain ⟨ι, hι⟩ := tensSec (M := M) π hπ2 e he1 he2
   set Pt := π.toLinearMap.rTensor M with hPtdef
   have hsurj : Function.Surjective Pt := LinearMap.rTensor_surjective M (g := π.toLinearMap) hπ2
@@ -1650,8 +1650,8 @@ private theorem opCore {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianR
         (∀ t z, φ (θ t • z) = t • φ z) ∧ (∀ (t : MvPowerSeries ((Fin q × Fin n) ⊕ (Fin q × Fin n)) R) z, ψ (t • z) = θ t • ψ z) ∧
         (∀ z, φ (ψ z) = ev (MvPolynomial.rename Sum.inl f) • z) ∧
         ∀ z, ψ (φ z) = θ (ev (MvPolynomial.rename Sum.inl f)) • z := by
-  letI : Module Λ W := Module.compHom W (algebraMap Λ R)
-  haveI : IsScalarTower Λ R W := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module Λ W := Module.compHom W (algebraMap Λ R)
+  have : IsScalarTower Λ R W := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   obtain ⟨N, _, _, _, _, i, pr, hpi, hC, hX, hr, hc⟩ := nilPart (Λ := Λ)
     (fun p => act1 (MvPolynomial.X p - MvPolynomial.C (Sum.elim ut 0 p))) fun _ _ => (Commute.all _ _).map act1
   have hinj : Function.Injective i := Function.LeftInverse.injective hpi
@@ -1689,7 +1689,7 @@ private theorem opCore {Λ : Type} [CommRing Λ] [IsLocalRing Λ] [IsNoetherianR
       rw [map_mul, map_mul, map_mul, map_mul, hb, MvPolynomial.rename_X, evX, map_add (f := _), θC, θl, ηX p.1 p.2, Sp.u, map_add (f := _),
         Sum.elim_inl, ← hub p.1 p.2]
       rfl
-  haveI : Module.Finite Λ N := Module.Finite.of_surjective pr fun x => ⟨_, hpi x⟩
+  have : Module.Finite Λ N := Module.Finite.of_surjective pr fun x => ⟨_, hpi x⟩
   let I : Submodule (MvPowerSeries ((Fin q × Fin n) ⊕ (Fin q × Fin n)) R) N := Ideal.span (Set.range fun p => s (MvPowerSeries.X p)) • ⊤
   have hy : ∀ p (x : N ⧸ I), (MvPowerSeries.X (.inr p) : MvPowerSeries ((Fin q × Fin n) ⊕ (Fin q × Fin n)) R) • x = 0 :=
     fun p x => by
@@ -1777,21 +1777,21 @@ private theorem kill_ren {R σ τ : Type} [CommRing R] [Finite τ] (z : MvPowerS
     rintro ⟨y, hy⟩
     refine h (Finsupp.ext fun a => ?_)
     have h1 := DFunLike.congr_fun hy (Function.Embedding.inl a)
-    rw [Finsupp.embDomain_apply_self, Finsupp.mapDomain_notin_range _ _ (by simp)] at h1
+    rw [Finsupp.embDomain_apply_self, Finsupp.mapDomain_of_notMem_range _ _ (by simp)] at h1
     exact h1.symm
 
 theorem UpperTheory.V.Pa.Lev.opToTW :
     ∀ (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] [Algebra ℤ_[l] O] (n : ℕ) (r : Resid G0.frame O n) (B : Type) [CommRing B] [Algebra O B] [IsCO O B] (u : Pair r B) (J : Ideal B) (D : ℕ) (b : TWBase u J Empty D) (G : Glob l L) (h : G.Hom G0) (q N : ℕ) (A : OpMod b h q N) (Nq : Fin q → ℕ) (ph ta : Fin q → G.G₀) (ex : ℕ) (ut : Fin q → Fin n → O), OpRel A Nq ph ta ex → ∃ A' : TWRing b h ut N, Nonempty (TWMaps Nq ph ta A' ex) := by
   intro l hl L G0 O _ _ _ hO _ n r B _ _ _ u J D b G h q N A Nq ph ta ex ut rel
-  haveI := hO.complete
-  haveI := hO.finite
-  haveI := hO.char
-  haveI : IsCO O (abelian₂ O Empty D) := co_mvps O O _
-  haveI : IsAdicComplete (maximalIdeal (abelian₂ O Empty D)) (abelian₂ O Empty D) := IsCO.complete (O := O)
-  haveI : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)
-  haveI : IsCO O (MvPowerSeries ((Fin q × Fin n) ⊕ (Fin q × Fin n)) A.R) := co_mvps O A.R _
-  haveI := A.fin1
-  haveI := b.fin
+  have := hO.complete
+  have := hO.finite
+  have := hO.char
+  have : IsCO O (abelian₂ O Empty D) := co_mvps O O _
+  have : IsAdicComplete (maximalIdeal (abelian₂ O Empty D)) (abelian₂ O Empty D) := IsCO.complete (O := O)
+  have : IsAdicComplete (maximalIdeal B) B := IsCO.complete (O := O)
+  have : IsCO O (MvPowerSeries ((Fin q × Fin n) ⊕ (Fin q × Fin n)) A.R) := co_mvps O A.R _
+  have := A.fin1
+  have := b.fin
   have hloc : ∀ x ∈ maximalIdeal (abelian₂ O Empty D), b.lam x ∈ maximalIdeal B := fun x hx => by
     rwa [← res_eq_zero_iff O, res_map, res_eq_zero_iff]
   have hβ : A.β.comp (IsScalarTower.toAlgHom O (abelian₂ O Empty D) A.R) = b.lam := by
@@ -1804,9 +1804,9 @@ theorem UpperTheory.V.Pa.Lev.opToTW :
       · show A.β (algebraMap _ A.R _) = _
         rw [A.segmentWeightExponent, b.segmentWeightExponent, map_sub, map_mul, map_one, AlgHom.commutes, ← A.β_pair.2]
         rfl
-  letI : Algebra (abelian₂ O Empty D) B := b.lam.toRingHom.toAlgebra
-  haveI : IsScalarTower (abelian₂ O Empty D) B b.M := IsScalarTower.of_algebraMap_smul fun c m => (b.smul_lam c m).symm
-  haveI : IsLocalHom (algebraMap (abelian₂ O Empty D) B) := ⟨fun x hx => by
+  let : Algebra (abelian₂ O Empty D) B := b.lam.toRingHom.toAlgebra
+  have : IsScalarTower (abelian₂ O Empty D) B b.M := IsScalarTower.of_algebraMap_smul fun c m => (b.smul_lam c m).symm
+  have : IsLocalHom (algebraMap (abelian₂ O Empty D) B) := ⟨fun x hx => by
     by_contra hn
     exact hloc x hn hx⟩
   have hlm : (l : abelian₂ O Empty D) ∈ maximalIdeal (abelian₂ O Empty D) := by

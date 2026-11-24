@@ -159,7 +159,7 @@ theorem det_blkU {r m : ℕ} (y : UnipotentBlockColumnIndex a r m → Ad E) : Ge
   refine Units.ext ?_
   rw [GeneralLinearGroup.val_det_apply, Units.val_one]
   change (1 + posM Subtype.val y : Matrix (Fin a) (Fin a) (Ad E)).det = 1
-  rw [Matrix.det_of_upperTriangular]
+  rw [det_of_isUpperTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
     rw [Matrix.add_apply, posM, Matrix.sum_apply, Finset.sum_eq_zero, add_zero, Matrix.one_apply_eq]
     intro t _
@@ -199,7 +199,7 @@ theorem enorm_rsPsi_row (ℓ : Fin a) (G : GA E a → ℂ) (Φ : (Fin a → Cinf
   change ‖G (g * sInv ℓ g) * conj (G (g * sInv ℓ g)) * Φ (yInf ℓ g) * _‖ₑ * _ = _
   by_cases hm : ((fun i => pFin E (g.val ℓ i)) - η) ∈ latt a J
   · rw [Set.indicator_of_mem hm, Set.indicator_of_mem hm]
-    simp only [Pi.one_apply, mul_one, one_mul, enorm_eq_nnnorm, key', ENNReal.coe_pow]
+    simp only [Pi.one_apply, mul_one, one_mul, eNorm_eq_nnNorm, key', ENNReal.coe_pow]
     rfl
   · rw [Set.indicator_of_notMem hm, Set.indicator_of_notMem hm]
     simp
@@ -248,7 +248,7 @@ theorem ratMirU_zero (E : Type) [Field E] [NumberField E] (a : ℕ) : ratMirU E 
 theorem measurable_wW (ℓ : Fin a) (J : (FractionalIdeal (𝓞 E)⁰ E)ˣ) (η : Fin a → Af E) (x : ℝ) :
     Measurable (wW ℓ J η x : GA E a → ℝ≥0) := by
   have hcd : Continuous fun g : GA E a => (ideleModule E (GeneralLinearGroup.det g) : ℝ) :=
-    continuous_subtype_val.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
+    continuous_subtypeVal.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
   have hr : Continuous fun g : GA E a => (fun i => pFin E (g.val ℓ i)) - η :=
     Continuous.sub (continuous_pi fun i => (continuous_snd : Continuous (pFin E)).comp
       (Units.continuous_val.matrix_elem ℓ i : Continuous fun g : GA E a => g.val ℓ i)) continuous_const
@@ -274,7 +274,7 @@ theorem GlobalTheory.RSUnfold.lintegral_theta_eq_whit : ∀ (E : Type) [Field E]
     rw [GlobalTheory.JSW.word_nil] at h
     rw [← hφF]
     exact h
-  haveI : DiscreteTopology (ratMirU E a (a - 1)) := GlobalTheory.MirTower.discrete_of_le_range (Subgroup.map_le_range _ _)
+  have : DiscreteTopology (ratMirU E a (a - 1)) := GlobalTheory.MirTower.discrete_of_le_range (Subgroup.map_le_range _ _)
   have := GlobalTheory.CuspRep.CuspidalL2GL.secondCountableTopology_GA E a
   obtain ⟨𝓕P, h𝓕P⟩ := GlobalTheory.FundDomDiscrete.exists_isFundamentalDomain (ratMirU E a (a - 1)) μ
   have hℓ' : (⟨a - 1, Nat.sub_lt ha Nat.one_pos⟩ : Fin a) = ℓ := Fin.ext (by simp only; omega)
@@ -283,14 +283,14 @@ theorem GlobalTheory.RSUnfold.lintegral_theta_eq_whit : ∀ (E : Type) [Field E]
     intro γ g
     rw [map_mul, map_mul, GlobalTheory.ShortVecDecay.ideleModule_det_rat, one_mul]
   have hcd : Continuous fun g : GA E a => (ideleModule E (GeneralLinearGroup.det g) : ℝ) :=
-    continuous_subtype_val.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
+    continuous_subtypeVal.comp (continuous_ideleModule.comp GeneralLinearGroup.continuous_det)
   have hmeas : ∀ v : Fin a → E, Measurable fun g : GA E a =>
       ‖GlobalTheory.RSTheta.rsPsi ℓ F F Φ J η g (Matrix.vecMul (fun i => algebraMap E (Ad E) (v i)) g.val)‖ₑ *
         ENNReal.ofReal ((ideleModule E (GeneralLinearGroup.det g) : ℝ) ^ x) := by
     intro v
     have hv : Continuous fun g : GA E a => Matrix.vecMul (fun i => algebraMap E (Ad E) (v i)) g.val :=
       continuous_const.matrix_vecMul Units.continuous_val
-    exact (((GlobalTheory.RSTheta.continuous_rsPsi hB.cont hB.cont hΦc hΦt J η).comp (continuous_id.prodMk hv)).enorm.measurable).mul
+    exact (((GlobalTheory.RSTheta.continuous_rsPsi hB.cont hB.cont hΦc hΦt J η).comp (continuous_id.prodMk hv)).eNorm.measurable).mul
       (ENNReal.measurable_ofReal.comp (hcd.measurable.pow_const x))
   have e1 := _root_.GlobalTheory.ThetaUnfold.lintegral_theta_unfold E a ha μ 𝓕 𝓕P h𝓕 h𝓕P
     (fun g y => ‖GlobalTheory.RSTheta.rsPsi ℓ F F Φ J η g y‖ₑ * ENNReal.ofReal ((ideleModule E (GeneralLinearGroup.det g) : ℝ) ^ x))

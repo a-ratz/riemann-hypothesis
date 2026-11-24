@@ -296,7 +296,7 @@ theorem eq_constPt_of {R k : Type} [CommRing R] [Field k] (x : Sp (DualNumber k)
 theorem eq_constPt_field {F k : Type} [Field F] [CharZero F] [Algebra.IsAlgebraic ℚ F] [Field k]
     (x : Sp (DualNumber k) ⟶ Sp F) : x = constPt x := by
   refine eq_constPt_of x fun φ => ?_
-  letI : Algebra ℚ (DualNumber k) := (φ.comp (algebraMap ℚ F)).toAlgebra
+  let : Algebra ℚ (DualNumber k) := (φ.comp (algebraMap ℚ F)).toAlgebra
   have : Algebra.FormallyUnramified ℚ F := Algebra.FormallyUnramified.of_isSeparable ℚ F
   have := Algebra.FormallyUnramified.ext' (R := ℚ) (A := F) (B := DualNumber k)
     (TrivSqZeroExt.fstHom k k k).toRingHom ⟨2, TrivSqZeroExt.kerIdeal_sq k k⟩ φ.toRatAlgHom

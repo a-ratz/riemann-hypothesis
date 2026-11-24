@@ -201,15 +201,15 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 theorem secondCountable_GL : SecondCountableTopology (GL (Fin a) (Af E)) := by
-  haveI := Formalism.L2.Fam.ThC.sc_Af E
-  haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (Af E)) :=
+  have := Formalism.L2.Fam.ThC.sc_Af E
+  have : SecondCountableTopology (Matrix (Fin a) (Fin a) (Af E)) :=
     inferInstanceAs (SecondCountableTopology (Fin a → Fin a → Af E))
-  haveI : SecondCountableTopology (Matrix (Fin a) (Fin a) (Af E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin a) (Fin a) (Af E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.secondCountableTopology
   exact Units.isEmbedding_embedProduct.secondCountableTopology
 
 theorem rank_cuspSub (π : CuspSub E a) : Module.rank ℂ π.V ≤ Cardinal.aleph0 := by
-  haveI := secondCountable_GL (E := E) (a := a)
+  have := secondCountable_GL (E := E) (a := a)
   refine rank_le_of_simple π.V (act (E := E) (a := a)) π.ne_bot (fun W hW hs => π.irred W hW hs) fun x hx => ?_
   have hcusp := (π.cusp x hx).1
   have hk := hcusp.kfin

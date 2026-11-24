@@ -133,7 +133,7 @@ theorem hasDerivAt_mixS_extX {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D
     (M : ℝ →+ WO S T) (hM : IsRealDir T S M) (x : Mx D T.rank ρ) (w : WO S₀ T) :
     HasDerivAt (fun t : ℝ => (_root_.I195MixedCoordinates_bf5641df9836f7a59c2c5fdd.source d) T ψ μ 𝓕 (heisO ψ S T (M t) f) x w)
       ((_root_.I195MixedCoordinates_bf5641df9836f7a59c2c5fdd.source d) T ψ μ 𝓕 (GlobalTheory.OrientedHeis.dLine ψ S T M f) x w) 0 := by
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) :=
+  have : IsFiniteMeasure (μ.restrict 𝓕) :=
     ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
   obtain ⟨K, hK⟩ := GlobalTheory.OrientedHeis.theta_bounded hψ (GlobalTheory.OrientedHeis.theta_dLine hθ hψ hM hf)
   have e2 : GlobalTheory.OrientedHeis.dLine ψ S T M f = heisO ψ S T (M 0) (GlobalTheory.OrientedHeis.dLine ψ S T M f) := by

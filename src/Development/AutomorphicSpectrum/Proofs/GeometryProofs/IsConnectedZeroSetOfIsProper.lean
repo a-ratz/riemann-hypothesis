@@ -136,7 +136,7 @@ theorem isConnected_closed {Z : Scheme.{0}} {O : Type} [CommRing O] [IsNoetheria
     (f : Z ⟶ Spec (CommRingCat.of O)) [IsProper f]
     (h : Function.Bijective (f.appTop.hom.comp (Scheme.ΓSpecIso (CommRingCat.of O)).inv.hom)) :
     _root_.IsConnected (f ⁻¹' {IsLocalRing.closedPoint O}) := by
-  letI : Z.Over (Spec (.of O)) := ⟨f⟩
+  let : Z.Over (Spec (.of O)) := ⟨f⟩
   have : IsProper (Z ↘ Spec (.of O)) := (inferInstance : IsProper f)
   exact isConnected_closedFibre_of_surj (A := O) (X := Z) h
     (fun x hx => formalFunctions_mem_range (IsLocalRing.maximalIdeal O) (isCoherent_unit Z) 0 hx 0)
@@ -146,7 +146,7 @@ end PositivityTheory.Xgn.SpecialFibreConnected
 open PositivityTheory.Xgn.SpecialFibreConnected in
 theorem PositivityTheory.Xgn.zero_set_special_fibre_connected : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra O Ω] (s : X ⟶ Spec (CommRingCat.of O)) [IsProper s] (ϖ : O), Irreducible ϖ → Function.Injective (algebraMap O Ω) → ξ ≫ s = Spec.map (CommRingCat.ofHom (algebraMap O Ω)) → IsCptGen ξ → ConstClosed O Ω → _root_.IsConnected (zeroSet ξ (algebraMap O Ω ϖ)) := by
   intro X Ω _ ξ O _ _ _ _ s _ ϖ hϖ hinj hs hg hc
-  haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
+  have : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian s
   obtain ⟨U, hU, hcl, hint⟩ := cpt_open_integral X Ω ξ hg
   have hrange : Set.range ξ ⊆ Set.range U.ι := by
     rintro _ ⟨z, rfl⟩
@@ -155,7 +155,7 @@ theorem PositivityTheory.Xgn.zero_set_special_fibre_connected : ∀ (X : Scheme.
     exact (hU _).2 specializes_rfl
   let η : Spec (CommRingCat.of Ω) ⟶ U.toScheme := IsOpenImmersion.lift U.ι ξ hrange
   have hη : η ≫ U.ι = ξ := IsOpenImmersion.lift_fac _ _ _
-  haveI : IsClosedImmersion U.ι := IsClosedImmersion.of_isPreimmersion _ (by rwa [Scheme.Opens.range_ι])
+  have : IsClosedImmersion U.ι := IsClosedImmersion.of_isPreimmersion _ (by rwa [Scheme.Opens.range_ι])
   have hsp : ∀ q : U.toScheme, η (IsLocalRing.closedPoint Ω) ⤳ q := fun q => by
     rw [← U.ι.isOpenEmbedding.isInducing.specializes_iff]
     have e : U.ι (η (IsLocalRing.closedPoint Ω)) = genPt ξ :=

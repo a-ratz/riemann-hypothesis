@@ -152,6 +152,6 @@ theorem splitk : ∀ (D : D7) (X : Fields) (s : Seam D X) (ϖ : 𝓞 X.E) (p : �
       have u3 : IsUnit (algebraMap ℤ (𝓞 X.E) (p : ℤ)) := by
         simpa [hN] using u1.mul u2
       have := Algebra.IsIntegral.isLocalHom ℤ (𝓞 X.E)
-      exact (Nat.prime_iff_prime_int.1 hp).not_unit (isUnit_of_map_unit _ _ u3)
+      exact (Nat.prime_iff_prime_int.1 hp).not_isUnit (isUnit_of_map_unit _ _ u3)
 
 end GlobalTheory.MomT.SplitK

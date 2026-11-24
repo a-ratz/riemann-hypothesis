@@ -153,7 +153,7 @@ theorem val_eval_eq_zero {Ω U σ : Type} [Field Ω] [Field U] [Algebra Ω U]
     (P : MvPolynomial σ Ω) (hP : ∀ β, 0 ≤ w (algebraMap Ω U (P.coeff β))) (α : σ →₀ ℕ)
     (h1 : P.coeff α = 1) :
     w (MvPolynomial.aeval t P) = 0 := by
-  letI := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) (algebraMap Ω U)
+  let := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) (algebraMap Ω U)
 
   have hc : ∀ β, P.coeff β ∈ (vRing w).comap (algebraMap Ω U) := fun β =>
     ValuationSubring.mem_comap.2 ((mem_iff_lemma w _).2 (hP β))
@@ -333,9 +333,9 @@ theorem indep_u {K Ω U τ : Type} [Field K] [NumberField K] [Field Ω] [Field U
     AlgebraicIndependent (ResidueField (((vRing w).comap (algebraMap Ω U)).comap (algebraMap K Ω)))
       (fun j => residue (vRing w) (u j)) := by
   classical
-  letI _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) (algebraMap Ω U)
-  letI _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra ((vRing w).comap (algebraMap Ω U)) (algebraMap K Ω)
-  letI : Algebra (ResidueField (((vRing w).comap (algebraMap Ω U)).comap (algebraMap K Ω)))
+  let _iW := ReciprocityTheory.MultiplicativeHeights.residueAlgebra (vRing w) (algebraMap Ω U)
+  let _io := ReciprocityTheory.MultiplicativeHeights.residueAlgebra ((vRing w).comap (algebraMap Ω U)) (algebraMap K Ω)
+  let : Algebra (ResidueField (((vRing w).comap (algebraMap Ω U)).comap (algebraMap K Ω)))
       (ResidueField (vRing w)) :=
     ((algebraMap _ (ResidueField (vRing w))).comp
       (algebraMap _ (ResidueField ((vRing w).comap (algebraMap Ω U))))).toAlgebra

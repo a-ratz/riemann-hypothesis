@@ -94,7 +94,7 @@ theorem exists_coord_padic : ∀ (D : D7) (T : ℕ) [Fact T.Prime] (w : Formalis
     rw [show ((p : Fv D.host.F v)) = algebraMap (Ov D v) (Fv D.host.F v) p from rfl, hp]
     simp
   subst hpT
-  haveI : CharZero (Fv D.host.F v) :=
+  have : CharZero (Fv D.host.F v) :=
     charZero_of_injective_ringHom (algebraMap D.host.F (v.adicCompletion D.host.F)).injective
   have hc1 : Nat.card (IsLocalRing.ResidueField 𝒪[Fv D.host.F v]) = T := by
     rw [← hT, ← hcard]
@@ -135,7 +135,7 @@ open GlobalTheory.MixPer
 theorem exists_char : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (p : SplitPt D k) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∃ χ : AddChar k Circle, p.IsChar ψ χ ∧ Continuous χ := by
   intro D k _ _ _ _ p ψ hψ
   have hn : ∀ x : AF D.host.F, ‖ψ x‖ = 1 := hψ.1.2.1
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have htr : Continuous (Algebra.trace (AF D.host.F) (AE D)) :=
     IsModuleTopology.continuous_of_linearMap _
   have hc : Continuous fun a : k => psiE ψ (p.sec a) := hψ.1.1.comp (htr.comp p.cont_sec)
@@ -149,7 +149,7 @@ theorem exists_splitPt_frame_char : ∀ (D : D7), (∀ (k : Type) [Field k] [Val
   intro D
   refine ⟨?_, ?_⟩
   · intro k _ _ _ _ _ _ T hT hcard hirr w e hw he hN hsq
-    haveI := Fact.mk hT
+    have := Fact.mk hT
     obtain ⟨φ, hφ, hφs, hφO⟩ := _root_.GlobalTheory.QpChar.exists_ringEquiv_padic k T hcard hirr
     obtain ⟨v, pr, sec, hab, h1, h2, hpr, hsec, hint⟩ := _root_.GlobalTheory.FinPl.SplitQT.exists_coord_padic D T w e hw he hN hsq
     refine ⟨⟨v, e, he, hab, φ.toRingHom.comp pr, sec.comp φ.symm.toRingHom.toAddMonoidHom, ?_, ?_, ?_, ?_, ?_⟩, rfl⟩

@@ -151,7 +151,7 @@ theorem rootCoords_eq (z : Fin (2 * r + k + 1) → ℂ) (p : Point ℂ (r + 1)) 
     have h1 := ((mem_rootPat p q.1.1 q.1.2).1 q.2).1
     have h2 := q.1.2.isLt
     rw [Fin.lt_def] at h1; omega
-  simp only [rootCoords, flagMat, Bm, Matrix.of_apply, dif_pos hq]
+  simp only [rootCoords, flagMat, Bm, Matrix.of_apply, dite_eq_left hq]
   rfl
 
 theorem measurable_rootCoords (z : Fin (2 * r + k + 1) → ℂ) (p : Point ℂ (r + 1)) :
@@ -205,16 +205,16 @@ theorem root_conj {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : 
   funext q
   have e := congrFun (congrFun key q.1.2) (permOf p q.1.1)
   rw [Matrix.mul_apply, Matrix.mul_apply, Finset.sum_eq_single q.1.1, Finset.sum_eq_single (permOf p q.1.2)] at e
-  · simp only [hm, permOf_invol, if_true, conjTranspose_apply] at e
+  · simp only [hm, permOf_invol, ite_true, conjTranspose_apply] at e
     simp only [Function.comp, rotation_apply, cjE_apply, rootCoords_eq]
     show Bm k r z m q.1.1 q.1.2 = star (d (permOf p q.1.2) / d (permOf p q.1.1)) *
       star (Bm k r z' ρ (permOf p q.1.2) (permOf p q.1.1))
     rw [← star_mul', div_mul_eq_mul_div, ← e, mul_div_cancel_right₀ _ (hd _), star_star]
   · intro j _ hj
-    rw [hm, if_neg (fun e' => hj (by rw [e', permOf_invol])), zero_mul]
+    rw [hm, ite_eq_right (fun e' => hj (by rw [e', permOf_invol])), zero_mul]
   · simp
   · intro j _ hj
-    rw [hm, permOf_invol, if_neg hj, mul_zero]
+    rw [hm, permOf_invol, ite_eq_right hj, mul_zero]
   · simp
 
 end jacobian
@@ -252,7 +252,7 @@ theorem amp_at_root (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : GoodW D τ
     obtain ⟨μ, h1, -, h3⟩ := GlobalTheory.Amp.RootQuot.exists_root_haar hk hz hz' hTz hTz' p hg hZ hG0
     refine (_root_.GlobalTheory.SnMass.RootUniq.rootMeas_unique D W.z W.z' γ p q _ μ' hz hz' hTz hTz' hγ hGf hka
       ⟨n, hn, n', hn', g, e, hZ, ENNReal.ofReal _ • μ, ?_, by rw [Measure.map_smul _ (measurable_rootCoords _ _).aemeasurable, h3], rfl⟩ hroot).1
-    rw [Measure.smul_apply, h1.2.2.1, smul_zero]
+    rw [smul_apply, h1.2.2.1, smul_zero]
   obtain ⟨n, hn, n', hn', g, rfl, hZ, μ₀, h0, h1, rfl⟩ := hroot
   have hg : g ∈ UH (Hpk D.R.k D.R.rS) := by
     have e : g = n⁻¹ * (n * g * n') * n'⁻¹ := by
@@ -272,7 +272,7 @@ theorem amp_at_root (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : GoodW D τ
   set μ : Measure (Mt D.R.k D.R.rS) := ENNReal.ofReal θ' • μ₀ with hμ
   have hH : B.IsHaarOn (C6.Rset g⁻¹) μ := by
     refine ⟨?_, ?_, ?_, ?_, ?_⟩
-    · rw [Measure.smul_apply, hH₀.conc, smul_zero]
+    · rw [smul_apply, hH₀.conc, smul_zero]
     · intro a ha
       have hcont : Continuous (lmulM a : Mt D.R.k D.R.rS → Mt D.R.k D.R.rS) :=
         continuous_const.matrix_mul continuous_id
@@ -282,12 +282,12 @@ theorem amp_at_root (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : GoodW D τ
         continuous_id.matrix_mul continuous_const
       rw [Measure.map_smul _ hcont.measurable.aemeasurable, hH₀.right a ha]
     · intro K hK
-      rw [Measure.smul_apply, smul_eq_mul]
+      rw [smul_apply, smul_eq_mul]
       exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top (hH₀.finite_compact K hK)
     · intro h0
       apply hH₀.ne_zero
       have h1 := Measure.measure_univ_eq_zero.2 h0
-      rw [Measure.smul_apply, smul_eq_mul] at h1
+      rw [smul_apply, smul_eq_mul] at h1
       exact Measure.measure_univ_eq_zero.1 ((mul_eq_zero.1 h1).resolve_left (ENNReal.ofReal_pos.2 hθ').ne')
   obtain ⟨ν, hν⟩ := exists_orbQuot L ENNReal.ofReal_ne_top hg hH (by positivity)
     (hI₀.smul_measure ENNReal.ofReal_ne_top)
@@ -353,7 +353,7 @@ theorem amp_at_root (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : GoodW D τ
       exact bessel_unip hds hB' (psi_ne _ _ _) hv ((nSubgroup _ _).2.2 _ hn') hx
     rw [e1, e2]
     ext u
-    simp only [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, ContinuousLinearMap.smul_apply,
+    simp only [ContinuousLinearMap.smulRight_apply, innerSL_apply_apply, smul_apply,
       inner_smul_left, smul_smul, Complex.star_def]
     congr 1
     ring
@@ -412,8 +412,8 @@ theorem ae_cellData (hk : 1 ≤ k) (L : LocBessel k r) (μG : Measure (Mt k r))
     rw [Matrix.diagonal_apply]
     show _ = if i = j then _ else _
     by_cases h : i = j
-    · rw [if_pos h, if_pos h, h]
-    · rw [if_neg h, if_neg h]
+    · rw [ite_eq_left h, ite_eq_left h, h]
+    · rw [ite_eq_right h, ite_eq_right h]
 
 theorem isOrbQuot_smul {L : LocBessel k r} {g : MatKR k r} {μR : Measure (Mt k r)} {ν : Measure (PairSp k r)} {t : ℝ}
     (h : IsOrbQuot L g (ENNReal.ofReal t • μR) ν) : IsOrbQuot L g μR (ENNReal.ofReal t • ν) := by
@@ -486,8 +486,8 @@ theorem exists_coef (hH : GlobalTheory.GapIn.Hyp) {Cg cb Cu cT CT C0 Cn : ℝ} (
       ∀ γ μR νR ν, CellData (toBessel D τ w w' θ W lam' A hW hA hT hT') W.μG γ μR νR ν →
         νR {x | Matrix.of x ∉ UH (Hpk D.R.k D.R.rS)} = 0 →
         A.J νR γ = OrbInt (toBessel D τ w w' θ W lam' A hW hA hT hT') f γ ν := by
-  haveI := FiniteDimensional.complete ℂ W.Wp
-  haveI := FiniteDimensional.complete ℂ W.Wq
+  have := FiniteDimensional.completeSpace ℂ W.Wp
+  have := FiniteDimensional.completeSpace ℂ W.Wq
   have hv1 : 1 ≤ D.host.v := hZ.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hv : 0 < D.host.v := by linarith
   have hka : 0 < D.host.ka := div_pos Real.pi_pos hv

@@ -392,7 +392,7 @@ open Matrix in
 variable {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} in
 theorem _root_.GlobalTheory.KZ.ES.Scal.lev_and_scalar : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : _root_.GlobalTheory.KZ.Tower Ω ε), ∀ m : ℕ, 0 < m → (∀ g ∈ ({!![(m : ℤ), 0; 0, 1], !![1, 0; 0, (m : ℤ)], !![1, 1; 0, (m : ℤ)]} : Set (Matrix (Fin 2) (Fin 2) ℤ)), _root_.GlobalTheory.KZ.ES.Lev X m (X.sl (_root_.GlobalTheory.KZ.toGQ g) X.jK)) ∧ ∀ γ : SL(2, ℤ), (∀ g ∈ ({!![(m : ℤ), 0; 0, 1], !![1, 0; 0, (m : ℤ)], !![1, 1; 0, (m : ℤ)]} : Set (Matrix (Fin 2) (Fin 2) ℤ)), X.sl (_root_.GlobalTheory.KZ.ofSL γ) (X.sl (_root_.GlobalTheory.KZ.toGQ g) X.jK) = X.sl (_root_.GlobalTheory.KZ.toGQ g) X.jK) → (_root_.GlobalTheory.KZ.en γ 0 1 : ZMod m) = 0 ∧ (_root_.GlobalTheory.KZ.en γ 1 0 : ZMod m) = 0 ∧ (_root_.GlobalTheory.KZ.en γ 0 0 : ZMod m) = _root_.GlobalTheory.KZ.en γ 1 1 := by
   intro Ω _ _ _ ε X m hm
-  haveI : NeZero m := ⟨hm.ne'⟩
+  have : NeZero m := ⟨hm.ne'⟩
   have hm' : (0 : ℤ) < m := by exact_mod_cast hm
   have hd1 : 0 < (!![(m : ℤ), 0; 0, 1]).det := by rw [Matrix.det_fin_two_of]; simpa using hm'
   have hd2 : 0 < (!![1, 0; 0, (m : ℤ)]).det := by rw [Matrix.det_fin_two_of]; simpa using hm'

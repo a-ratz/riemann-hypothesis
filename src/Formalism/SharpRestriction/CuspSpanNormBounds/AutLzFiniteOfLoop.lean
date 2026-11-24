@@ -83,7 +83,7 @@ namespace Formalism.MainNotions.S.Lem.Comparison₂
 
 theorem one_mem_NLam {D : D7} (Λ : Submodule (𝓞 D.host.E) (VS D).V) {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) :
     (1 : (VS D).V ≃ₗ[D.host.E] (VS D).V) ∈ NLam Λ F := by
-  simp only [NLam, IsAutLam, Set.mem_setOf_eq]
+  simp only [NLam, IsAutLam, Set.mem_ofPred_eq]
   refine ⟨⟨?_, ?_⟩, fun j x _ => by simp, fun x _ => by simp⟩
   · exact (Formalism.HermitianLatticesTheory.isom _).one_mem
   · ext x
@@ -121,7 +121,7 @@ theorem card_le_cntCl {α ι : Type} (X : Set α) (R : α → α → Prop) (hR :
 
 theorem one_mem_NLam (D : D7) (Λ : LatV D) {T : D.host.E} (F : LFlag (D.sp.Y 0) D.R.rS T) :
     (LinearEquiv.refl D.host.E (hS D).V) ∈ NLam Λ F := by
-  simp only [NLam, IsAutLam, Set.mem_setOf_eq]
+  simp only [NLam, IsAutLam, Set.mem_ofPred_eq]
   refine ⟨⟨?_, ?_⟩, fun j x _ => by simp, fun x _ => by simp⟩
   · first
       | exact (Formalism.HermitianLatticesTheory.isom _).one_mem

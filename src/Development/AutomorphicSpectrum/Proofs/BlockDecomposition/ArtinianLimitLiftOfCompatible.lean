@@ -180,11 +180,11 @@ theorem exists_compatible : ∀ (W : Type) [CommRing W] (S : Sys.{1} W),
     ∃ z : S.lim, ∀ n, z.1 n - y n ∈ N n := by
   intro W _ S hA N y hN hy
   have h0 : ∃ x, x ∈ stable S N y 0 := by
-    haveI := hA 0
+    have := hA 0
     exact stable_nonempty hN hy 0
   have hs : ∀ n (x : S.M n), x ∈ stable S N y n →
       ∃ x' ∈ stable S N y (n + 1), S.r n x' = x := fun n x hx => by
-    haveI := hA (n + 1)
+    have := hA (n + 1)
     exact stable_surj hN hy hx
   let f : ∀ n, {x : S.M n // x ∈ stable S N y n} := fun n =>
     Nat.rec (motive := fun n => {x : S.M n // x ∈ stable S N y n})

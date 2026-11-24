@@ -185,13 +185,13 @@ theorem finsum_apply_eq (ι : H →* G) (ρ : Representation ℂ H V) (K : Subgr
   · rw [LinearMap.sum_apply,
       Finset.sum_congr rfl (g := fun _ => φ y) ?_, Finset.sum_const, ← Nat.card_eq_card_finite_toFinset]
     intro h hh
-    rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hh
-    rw [if_pos hh, ← hφ.1 h x, ← hφ.2 _ hh (ι h * x), mul_inv_cancel_left]
+    rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hh
+    rw [ite_eq_left hh, ← hφ.1 h x, ← hφ.2 _ hh (ι h * x), mul_inv_cancel_left]
   · intro h hh
     rw [Function.mem_support] at hh
-    rw [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    rw [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     by_contra hc
-    exact hh (if_neg hc)
+    exact hh (ite_eq_right hc)
 
 theorem card_eq (ι : H →* G) (hι : Function.Injective ι) (K : Subgroup G) (x : G) (h₀ : H) {k₀ : G}
     (hk₀ : k₀ ∈ K) :
@@ -242,7 +242,7 @@ theorem secM_self (ι : H →* G) (hι : Function.Injective ι) (ρ : Representa
 theorem secM_off (ι : H →* G) (ρ : Representation ℂ H V) (K : Subgroup G) (x y : G) (v : V)
     (hy : ∀ h : H, (ι h * x)⁻¹ * y ∉ K) : secM ι ρ K x v y = 0 := by
   rw [secM_apply']
-  simp only [hy, if_false, finsum_zero, LinearMap.zero_apply, smul_zero]
+  simp only [hy, ite_false, finsum_zero, LinearMap.zero_apply, smul_zero]
 
 end GlobalTheory.BCT.TraceBlocks.Decomp
 
@@ -250,13 +250,13 @@ end GlobalTheory.BCT.TraceBlocks.Decomp
 open GlobalTheory.BCT.TraceBlocks.Decomp in
 theorem GlobalTheory.BCT.TraceBlocks.eqvM_eq_finsum_secM : ∀ (G H V : Type) [Group G] [Group H] [AddCommGroup V] [Module ℂ V] (ι : H →* G), Function.Injective ι → ∀ (ρ : Representation ℂ H V) (K' : Subgroup G), Finite (DoubleCoset.Quotient (ι.range : Set G) (K' : Set G)) → (∀ x : G, Finite (ι.range ⊓ K'.map (MulAut.conj x).toMonoidHom : Subgroup G)) → ∀ φ ∈ eqvM ι ρ K', ∑ᶠ q : DoubleCoset.Quotient (ι.range : Set G) (K' : Set G), secM ι ρ K' (Quotient.out q) (φ (Quotient.out q)) = φ := by
   intro G H V _ _ _ _ ι hι ρ K' hQ hS φ hφ
-  haveI := Fintype.ofFinite (DoubleCoset.Quotient (ι.range : Set G) (K' : Set G))
+  have := Fintype.ofFinite (DoubleCoset.Quotient (ι.range : Set G) (K' : Set G))
   funext y
   rw [finsum_eq_sum_of_fintype, Finset.sum_apply, Finset.sum_eq_single (DoubleCoset.mk ι.range K' y)]
   · obtain ⟨g, hg, k₀, hk₀, hy⟩ := (@DoubleCoset.eq _ _ ι.range K'
       (Quotient.out (DoubleCoset.mk ι.range K' y)) y).mp (DoubleCoset.out_eq' _)
     obtain ⟨h₀, rfl⟩ := hg
-    haveI := hS (Quotient.out (DoubleCoset.mk ι.range K' y))
+    have := hS (Quotient.out (DoubleCoset.mk ι.range K' y))
     have key := secM_self ι hι ρ K' hφ (Quotient.out (DoubleCoset.mk ι.range K' y)) h₀ hk₀
     rw [← hy] at key
     exact key
@@ -301,7 +301,7 @@ open GlobalTheory.BCT.StabFin in
 theorem GlobalTheory.BCT.finite_ratFinU_inf_conj_globLev_anyRank : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (n : ℕ) (S : Set (Pl E)), IsSection S → ∀ (K' : ∀ w : Pl E, Subgroup (UL n w)), IsLevelFam (fun w : Pl E => MonoidHom.id (UL n w)) (KL n) K' → ∀ x : finU (E := E) (n := n), Finite (ratFinU E n ⊓ (globLev S K').map (MulAut.conj x).toMonoidHom : Subgroup (finU (E := E) (n := n))) := by
   intro E _ _ _ _ n S hS K' hK x
   obtain ⟨d, hd, hC⟩ := GlobalTheory.T.exists_bounded_denominator_definiteUnitary_conjugate E n S hS x
-  haveI : Finite {z : E | (∀ w : HeightOneSpectrum (𝓞 E), (d : w.adicCompletion E) * algebraMap E (w.adicCompletion E) z ∈
+  have : Finite {z : E | (∀ w : HeightOneSpectrum (𝓞 E), (d : w.adicCompletion E) * algebraMap E (w.adicCompletion E) z ∈
       w.adicCompletionIntegers E) ∧ ∀ τ : E →+* ℂ, ‖τ z‖ ≤ 1} := (GlobalTheory.T.finite_numberField_bdd_denom_conj_norm_le_one E d hd).to_subtype
   have hrat := (GlobalTheory.BCT.FinPart.finPt_props E n).2.2
   let γ : ↥(ratFinU E n ⊓ (globLev S K').map (MulAut.conj x).toMonoidHom) → UE E n :=
@@ -415,13 +415,13 @@ theorem GlobalTheory.BCT.finite_globFn_ne_zero : ∀ (E : Type) [Field E] [Numbe
   have inK : ∀ x : finU (E := E) (n := n), globFn S f x ≠ 0 → ∀ w ∈ S, w ∉ F →
       toSub (UL n w) (cLoc w (x : UA E n)) ∈ K' w := by
     intro x hx w hwS hwF
-    simp only [hF, Set.mem_setOf_eq, not_not] at hwF
+    simp only [hF, Set.mem_ofPred_eq, not_not] at hwF
     have h := key x hx w hwS
     rw [hwF.2] at h
     rw [hwF.1]
     by_contra hc
     exact h (Set.indicator_of_notMem hc _)
-  haveI : Finite ↥(F ∩ S) := (hFfin.inter_of_left S).to_subtype
+  have : Finite ↥(F ∩ S) := (hFfin.inter_of_left S).to_subtype
   let Φ : finU (E := E) (n := n) ⧸ globLev S K' → ∀ w : ↥(F ∩ S), UL n w.1 ⧸ K' w.1 := fun q w =>
     (toSub (UL n w.1) (cLoc w.1 (q.out : UA E n)) : UL n w.1 ⧸ K' w.1)
   refine Set.Finite.of_injOn (f := Φ)
@@ -483,7 +483,7 @@ theorem finite_support_conj_points : ∀ (G H : Type) [Group G] [Group H] (ι : 
     (Set.finite_coe_iff.mp hfin).preimage hι.injOn
   refine Set.Finite.of_finite_fibers (fun h : H => ((x⁻¹ * ι h * x : G) : G ⧸ K')) (hT.subset ?_) ?_
   · rintro _ ⟨h, hh, rfl⟩
-    simp only [Set.mem_setOf_eq] at hh ⊢
+    simp only [Set.mem_ofPred_eq] at hh ⊢
     rwa [key]
   · rintro _ ⟨h0, -, rfl⟩
     refine (hL.image (fun k => h0 * k)).subset ?_
@@ -555,7 +555,7 @@ theorem levOp_secM_apply_self : ∀ (G H V : Type) [Group G] [Group H] [AddCommG
   have hin : ∀ q ∈ hS.toFinset, (∑ᶠ h : H, if (ι h * x)⁻¹ * (x * q.out) ∈ K' then ρ h else 0) =
       ∑ h ∈ hT.toFinset, if (((x⁻¹ * ι h * x : G) : G ⧸ K') = q) then ρ h else 0 := by
     intro q hq
-    simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hq
+    simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hq
     rw [finsum_eq_sum_of_support_subset (s := hT.toFinset)]
     · exact Finset.sum_congr rfl fun h _ => by simp only [hcond]
     · intro h hh
@@ -569,7 +569,7 @@ theorem levOp_secM_apply_self : ∀ (G H V : Type) [Group G] [Group H] [AddCommG
   simp only [LinearMap.sum_apply, Finset.sum_apply, ite_apply, LinearMap.zero_apply, Finset.smul_sum]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun h hh => ?_
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hh
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq] at hh
   have : ∀ q ∈ hS.toFinset, F q.out • ((stabCard ι K' x : ℂ))⁻¹ • (if (((x⁻¹ * ι h * x : G) : G ⧸ K') = q) then ρ h else 0) v
       = if (((x⁻¹ * ι h * x : G) : G ⧸ K') = q) then ((stabCard ι K' x : ℂ))⁻¹ • F (x⁻¹ * ι h * x) • ρ h v else 0 := by
     intro q _
@@ -577,8 +577,8 @@ theorem levOp_secM_apply_self : ∀ (G H V : Type) [Group G] [Group H] [AddCommG
     · rw [← e, hout, smul_comm]
     · simp only [LinearMap.zero_apply, smul_zero]
   rw [Finset.sum_congr rfl this, Finset.sum_ite_eq]
-  rw [if_pos]
-  simp only [Set.Finite.mem_toFinset, Set.mem_setOf_eq, hout]
+  rw [ite_eq_left]
+  simp only [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, hout]
   exact hh
 
 end GlobalTheory.BCT.TraceBlocks
@@ -701,7 +701,7 @@ theorem trOn_eqvM (ι : H →* G) (hι : Function.Injective ι) (ρ : Representa
   have hmaps := GlobalTheory.T.heckeOperator_preserves_equivariantRightInvariant G H V ι ρ K K' F hF
   unfold trOn
   rw [dite_eq_left hmaps]
-  haveI : Fintype (DoubleCoset.Quotient (ι.range : Set G) (K' : Set G)) := Fintype.ofFinite _
+  have : Fintype (DoubleCoset.Quotient (ι.range : Set G) (K' : Set G)) := Fintype.ofFinite _
   set T := levOp (rightReg ℂ G V) K K' F LinearMap.id with hT
   set M := eqvM ι ρ K' with hM
   let x : DoubleCoset.Quotient (ι.range : Set G) (K' : Set G) → G := fun q => Quotient.out q
@@ -718,7 +718,7 @@ theorem trOn_eqvM (ι : H →* G) (hι : Function.Injective ι) (ρ : Representa
   have h1 : ∀ φ : M, φ = ∑ q, s q (e q φ) := fun φ => by
     conv_lhs => rw [← LinearMap.id_apply (R := ℂ) φ, ← hid]
     simp
-  haveI : Module.Finite ℂ M := by
+  have : Module.Finite ℂ M := by
     refine Module.Finite.of_injective (LinearMap.pi e) fun a b hab => ?_
     rw [h1 a, h1 b]
     refine Finset.sum_congr rfl fun q _ => ?_
@@ -738,7 +738,7 @@ theorem trOn_eqvM (ι : H →* G) (hι : Function.Injective ι) (ρ : Representa
   have hfin := GlobalTheory.T.finite_rationalPoints_conj_in_support G H ι hι K' F hR hsupp (x q) (hst _)
   have hsub : ∀ {β : Type} [AddCommMonoid β] (g : H → β), (∀ h, F ((x q)⁻¹ * ι h * x q) = 0 → g h = 0) →
       Function.support g ⊆ hfin.toFinset := fun g hg h hh => by
-    simp only [Set.Finite.coe_toFinset, Set.mem_setOf_eq]
+    simp only [Set.Finite.coe_toFinset, Set.mem_ofPred_eq]
     exact fun h0 => hh (hg h h0)
   have hA : e q ∘ₗ T.restrict hmaps ∘ₗ s q = ((K'.relIndex K : ℕ) : ℂ)⁻¹ • ((stabCard ι K' (x q) : ℂ))⁻¹ •
       ∑ h ∈ hfin.toFinset, F ((x q)⁻¹ * ι h * x q) • ρ h := by
@@ -771,7 +771,7 @@ theorem finPtHom_injective : Function.Injective (finPtHom (E := E) (n := n)) := 
   obtain ⟨w⟩ : Nonempty (HeightOneSpectrum (𝓞 E)) := by
     obtain ⟨P, hP⟩ := Ideal.exists_maximal (𝓞 E)
     exact ⟨⟨P, hP.isPrime, Ring.ne_bot_of_isMaximal_of_not_isField hP (RingOfIntegers.not_isField E)⟩⟩
-  haveI : Nontrivial (Af E) := (pLoc E w).domain_nontrivial
+  have : Nontrivial (Af E) := (pLoc E w).domain_nontrivial
   apply Subtype.ext
   apply Units.ext
   ext i j

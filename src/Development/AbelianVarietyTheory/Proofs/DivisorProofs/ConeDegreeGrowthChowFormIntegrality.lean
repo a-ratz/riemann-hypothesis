@@ -152,18 +152,18 @@ theorem exists_extend_of_ker_le {R B Ω : Type*} [CommRing R] [CommRing B]
     [Algebra R B] [Algebra.IsIntegral R B] [Field Ω] [IsAlgClosed Ω]
     (φ : R →+* Ω) (h : RingHom.ker (algebraMap R B) ≤ RingHom.ker φ) :
     ∃ ψ : B →+* Ω, ψ.comp (algebraMap R B) = φ := by
-  haveI := RingHom.ker_isPrime φ
+  have := RingHom.ker_isPrime φ
   obtain ⟨Q, -, hQ, hQP⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := B)
     (RingHom.ker φ) ⊥ h
-  haveI : Q.LiesOver (RingHom.ker φ) := ⟨hQP.symm⟩
-  letI : Algebra (R ⧸ RingHom.ker φ) Ω := (RingHom.kerLift φ).toAlgebra
-  haveI : FaithfulSMul (R ⧸ RingHom.ker φ) Ω :=
+  have : Q.LiesOver (RingHom.ker φ) := ⟨hQP.symm⟩
+  let : Algebra (R ⧸ RingHom.ker φ) Ω := (RingHom.kerLift φ).toAlgebra
+  have : FaithfulSMul (R ⧸ RingHom.ker φ) Ω :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (RingHom.kerLift_injective φ)
-  haveI : Module.IsTorsionFree (R ⧸ RingHom.ker φ) Ω := FaithfulSMul.to_isTorsionFree _ _
-  haveI : Module.IsTorsionFree (R ⧸ RingHom.ker φ) (B ⧸ Q) := FaithfulSMul.to_isTorsionFree _ _
-  haveI : Algebra.IsIntegral (R ⧸ RingHom.ker φ) (B ⧸ Q) :=
+  have : Module.IsTorsionFree (R ⧸ RingHom.ker φ) Ω := FaithfulSMul.to_isTorsionFree _ _
+  have : Module.IsTorsionFree (R ⧸ RingHom.ker φ) (B ⧸ Q) := FaithfulSMul.to_isTorsionFree _ _
+  have : Algebra.IsIntegral (R ⧸ RingHom.ker φ) (B ⧸ Q) :=
     Algebra.IsIntegral.tower_top (R := R)
-  haveI : Algebra.IsAlgebraic (R ⧸ RingHom.ker φ) (B ⧸ Q) := Algebra.IsIntegral.isAlgebraic
+  have : Algebra.IsAlgebraic (R ⧸ RingHom.ker φ) (B ⧸ Q) := Algebra.IsIntegral.isAlgebraic
   let σ : (B ⧸ Q) →ₐ[R ⧸ RingHom.ker φ] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -177,10 +177,10 @@ theorem exists_extend_apply_eq {R B Ω : Type*} [CommRing R] [IsDomain R] [IsInt
     [Field Ω] [IsAlgClosed Ω] (ψ : R →+* Ω) (u : B) (t : Ω)
     (ht : (minpoly R u).eval₂ ψ t = 0) :
     ∃ φ : B →+* Ω, φ.comp (algebraMap R B) = ψ ∧ φ u = t := by
-  letI : Algebra R[X] B := (aeval u : R[X] →ₐ[R] B).toRingHom.toAlgebra
-  haveI : IsScalarTower R R[X] B :=
+  let : Algebra R[X] B := (aeval u : R[X] →ₐ[R] B).toRingHom.toAlgebra
+  have : IsScalarTower R R[X] B :=
     IsScalarTower.of_algebraMap_eq fun x => ((aeval u : R[X] →ₐ[R] B).commutes x).symm
-  haveI : Algebra.IsIntegral R[X] B := Algebra.IsIntegral.tower_top (R := R)
+  have : Algebra.IsIntegral R[X] B := Algebra.IsIntegral.tower_top (R := R)
   obtain ⟨φ, hφ⟩ := exists_extend_of_ker_le (B := B) (eval₂RingHom ψ t) (fun f hf => by
     obtain ⟨g, rfl⟩ := minpoly.isIntegrallyClosed_dvd
       (Algebra.IsIntegral.isIntegral (R := R) u) (p := f) hf
@@ -214,7 +214,7 @@ theorem exists_eventually_norm_le {R B : Type*} [CommRing R] [CommRing B] [Algeb
   have hr : (G.map ((evalRingHom s).comp Ψ)).IsRoot (φ b) := by
     rw [IsRoot, eval_map, ← hφ, ← hom_eval₂, hGb, map_zero]
   have h2 := hr.norm_lt_cauchyBound hm.ne_zero
-  rw [cauchyBound, hm.leadingCoeff, nnnorm_one, div_one, hG.natDegree_map] at h2
+  rw [cauchyBound, hm.leadingCoeff, nnNorm_one, div_one, hG.natDegree_map] at h2
   have h3 : ((Finset.range G.natDegree).sup
       (fun i => ‖(G.map ((evalRingHom s).comp Ψ)).coeff i‖₊) : NNReal) ≤
       ∑ i ∈ Finset.range G.natDegree, (‖(Ψ (G.coeff i)).eval 0‖₊ + 1) := by
@@ -251,7 +251,7 @@ theorem exists_small_of_curve {R B : Type*} [CommRing R] [IsDomain R] [IsIntegra
       positivity))
   have h2 : ∀ᶠ s in 𝓝[≠] (0 : ℂ), ¬ (Ψ r).IsRoot s :=
     nhdsNE_le_cofinite _ (eventually_cofinite.2 (by
-      simpa using (Ψ r).finite_setOf_isRoot hr))
+      simpa using (Ψ r).finite_setOfPred_isRoot hr))
   obtain ⟨s, hs2, hs1, hs3⟩ := (h2.and
     ((h1.and (eventually_all.2 hM)).filter_mono nhdsWithin_le_nhds)).exists
   obtain ⟨t, ht, htε⟩ := exists_root_norm_lt (hF.map ((evalRingHom s).comp Ψ)) hε (by
@@ -271,11 +271,11 @@ theorem exists_complex_point_norm_lt_of_not_isUnit :
         ‖φ u‖ < ε ∧ ∀ i, ‖φ (w i)‖ ≤ M := by
   intro K B _ _ _ _ _ σ n w u q hu hq
   obtain ⟨d, g, hinj, hint⟩ := exists_integral_inj_algHom_of_fg K B
-  letI := g.toRingHom.toAlgebra
-  haveI : Algebra.IsIntegral (MvPolynomial (Fin d) K) B := ⟨hint⟩
-  haveI : FaithfulSMul (MvPolynomial (Fin d) K) B :=
+  let := g.toRingHom.toAlgebra
+  have : Algebra.IsIntegral (MvPolynomial (Fin d) K) B := ⟨hint⟩
+  have : FaithfulSMul (MvPolynomial (Fin d) K) B :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 hinj
-  haveI : Nontrivial (B ⧸ Ideal.span {u}) :=
+  have : Nontrivial (B ⧸ Ideal.span {u}) :=
     Ideal.Quotient.nontrivial_iff.2 (by rwa [Ne, Ideal.span_singleton_eq_top])
   obtain ⟨p₀, hp₀⟩ := exists_ringHom_extend_of_finiteType K (B ⧸ Ideal.span {u}) ℂ σ
   let p : B →+* ℂ := p₀.comp (Ideal.Quotient.mk _)
@@ -283,7 +283,7 @@ theorem exists_complex_point_norm_lt_of_not_isUnit :
     change p₀ (Ideal.Quotient.mk _ u) = 0
     rw [Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_span_singleton_self u), map_zero]
   obtain ⟨r, hr, c, hc⟩ :=
-    (Algebra.IsIntegral.isIntegral (R := MvPolynomial (Fin d) K) q).isAlgebraic.exists_nonzero_dvd
+    (Algebra.IsIntegral.isIntegral (R := MvPolynomial (Fin d) K) q).isAlgebraic.exists_ne_zero_dvd
       (mem_nonZeroDivisors_of_ne_zero hq)
   obtain ⟨z, hz⟩ : ∃ z : Fin d → ℂ, MvPolynomial.eval z (MvPolynomial.map σ r) ≠ 0 := by
     by_contra! h
@@ -341,13 +341,13 @@ theorem exists_ne_zero_mul_mem_of_isIntegral_of_fraction (K R B : Type) [Field K
       ∃ s : R, algebraMap R B c * x = algebraMap R B s := by
   let L := FractionRing R
   let M := FractionRing B
-  haveI : FaithfulSMul R B := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
-  haveI hfin : Module.Finite R (integralClosure R L) := finite_integralClosure_dedekind K R L L
+  have : FaithfulSMul R B := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
+  have hfin : Module.Finite R (integralClosure R L) := finite_integralClosure_dedekind K R L L
   have hfg : (Subalgebra.toSubmodule (integralClosure R L)).FG :=
     Module.Finite.iff_fg.mp hfin
   obtain ⟨c, hc, h⟩ := exists_common_denominator_of_fg _ hfg
   refine ⟨c, hc, fun x hx ⟨r, s, hr, hrs⟩ => ?_⟩
-  letI : Algebra L M := FractionRing.liftAlgebra R M
+  let : Algebra L M := FractionRing.liftAlgebra R M
   let φ : L →ₐ[R] M := IsScalarTower.toAlgHom R L M
   have hφ : Function.Injective φ := φ.toRingHom.injective
   have hB : Function.Injective (algebraMap B M) := IsFractionRing.injective B M
@@ -500,10 +500,10 @@ theorem not_lt_of_isChowFormInt {P : Ideal (MvPolynomial (Fin N) K)} {D D' δ δ
   rw [map_zero, map_zero, eval_map, ← aeval_def]
   obtain ⟨y, hy, hP, hu⟩ := (h'.zero_iff _).1 (aeval_eq_zero_of_block h'
     (fun v => if hv : (v.1 : ℕ) < D + 1 then u (⟨v.1, hv⟩, v.2) else 0) (Fin.last _)
-    (fun j => dif_neg (by simp; omega)))
+    (fun j => dite_eq_right (by simp; omega)))
   refine (h.zero_iff u).2 ⟨y, hy, hP, fun i => ?_⟩
   have := hu ⟨i, by omega⟩
-  simpa only [dif_pos i.2] using this
+  simpa only [dite_eq_left i.2] using this
 
 theorem exists_X_notMem {P : Ideal (MvPolynomial (Fin N) K)} {D δ : ℕ}
     {f : MvPolynomial (Fin (D + 1) × Fin N) K} (h : IsChowFormInt P D δ f) : ∃ j, X j ∉ P := by
@@ -569,7 +569,7 @@ theorem degree_eq_coeff (D : ℕ) : ∀ (K : Type) [Field K] [CharZero K] (P : I
     obtain ⟨hEp, hl⟩ := _root_.GlobalTheory.ExtPrime.isPrime_map_and_generic_form_notMem K L N P hp
     obtain ⟨Q, hQ, hIQ, hsat⟩ := _root_.GlobalTheory.Chow.exists_prime_saturation_generic_section K L N P hp fun u => by
       obtain ⟨y, hy, h1, h2⟩ := (h.zero_iff _).1 (aeval_eq_zero_of_block h
-        (fun v => if v.1 = 0 then u v.2 else 0) (Fin.last _) (fun j => if_neg (by simp)))
+        (fun v => if v.1 = 0 then u v.2 else 0) (Fin.last _) (fun j => ite_eq_right (by simp)))
       exact ⟨y, hy, h1, by simpa using h2 0⟩
     obtain ⟨f', hf'⟩ := _root_.GlobalTheory.ChowSpec.exists_isChowFormInt_generic_section K L N P D δ f hP h
     have hlin : (∑ j : Fin N, C (algebraMap (MvPolynomial (Fin N) K) L (X j)) * X j :

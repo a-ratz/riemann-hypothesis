@@ -82,7 +82,7 @@ private theorem rigid_irred_of_multiplicity_one {H : Type*} [NormedAddCommGroup 
   have : FiniteDimensional ℂ V := hV.1
   set VH : Submodule ℂ H := V.map D.subtype with hVH
   have : FiniteDimensional ℂ VH := inferInstance
-  have : CompleteSpace VH := FiniteDimensional.complete ℂ VH
+  have : CompleteSpace VH := FiniteDimensional.completeSpace ℂ VH
   have hSo : ∀ g ∈ UJset ε, ∀ x ∈ Sᗮ, σ g x ∈ Sᗮ := by
     intro g hg
     obtain ⟨g', hg', hgg⟩ := UnitaryGroupOfForm.inv_mem_UJ hg

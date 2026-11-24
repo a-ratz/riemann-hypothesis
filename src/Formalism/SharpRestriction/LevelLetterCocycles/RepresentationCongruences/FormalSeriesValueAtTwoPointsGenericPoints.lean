@@ -41,7 +41,7 @@ theorem natCast_unit_mul {l : ℕ} [hp : Fact l.Prime] (hl : (l : O) ∈ IsLocal
   obtain ⟨m, hm⟩ := (fun {p n : ℕ} => _root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat p n)) (p := l) (n := n)
   have hnd : ¬ l ∣ m := by
     rintro ⟨c, rfl⟩
-    apply pow_succ_padicValNat_not_dvd (p := l) hn
+    apply pow_succ_multiplicity_not_dvd (p := l) hn
     exact ⟨c, by rw [pow_succ, mul_assoc]; simpa only [Nat.padicValNat_def] using hm⟩
   have hu := isUnit_natCast_sp_complex_sections hl ((Nat.Prime.coprime_iff_not_dvd hp.out).mpr hnd)
   refine ⟨hu.unit, ?_⟩
@@ -57,7 +57,7 @@ theorem natCast_ne_zero' {l : ℕ} [Fact l.Prime] (hl : (l : O) ∈ IsLocalRing.
 
 theorem addVal_l {l : ℕ} (hl0 : (l : O) ≠ 0) :
     IsDiscreteValuationRing.addVal O (l : O) = ((IsDiscreteValuationRing.addVal O (l : O)).toNat : ℕ∞) := by
-  exact (ENat.coe_toNat ((IsDiscreteValuationRing.addVal_eq_top_iff).not.mpr hl0)).symm
+  exact (ENat.natCast_toNat ((IsDiscreteValuationRing.addVal_eq_top_iff).not.mpr hl0)).symm
 
 theorem addVal_natCast {l : ℕ} [Fact l.Prime] (hl : (l : O) ∈ IsLocalRing.maximalIdeal O)
     (hl0 : (l : O) ≠ 0) {n : ℕ} (hn : n ≠ 0) :
@@ -66,7 +66,7 @@ theorem addVal_natCast {l : ℕ} [Fact l.Prime] (hl : (l : O) ∈ IsLocalRing.ma
   obtain ⟨v, hv⟩ := natCast_unit_mul hl hn
   rw [hv, AddValuation.map_mul, AddValuation.map_pow, IsDiscreteValuationRing.addVal_eq_zero_of_unit, zero_add]
   obtain ⟨k, hk⟩ : ∃ k : ℕ, IsDiscreteValuationRing.addVal O (l : O) = k := ⟨_, addVal_l hl0⟩
-  rw [hk, ENat.toNat_coe, nsmul_eq_mul]
+  rw [hk, ENat.toNat_natCast, nsmul_eq_mul]
   push_cast
   ring
 
@@ -74,7 +74,7 @@ theorem l_unit_mul {ϖ : O} (hϖ : Irreducible ϖ) {l : ℕ} (hl0 : (l : O) ≠ 
     ∃ v : Oˣ, (l : O) = v * ϖ ^ (IsDiscreteValuationRing.addVal O (l : O)).toNat := by
   obtain ⟨n, v, hv⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hl0 hϖ
   refine ⟨v, ?_⟩
-  rw [IsDiscreteValuationRing.addVal_def _ v hϖ n hv, ENat.toNat_coe]
+  rw [IsDiscreteValuationRing.addVal_def _ v hϖ n hv, ENat.toNat_natCast]
   exact hv
 
 private lemma order_unit_mul_X_pow_lemma_3 {K : Type*} [Field K] {w : K⟦X⟧} (hw : IsUnit w) (n : ℕ) :
@@ -96,7 +96,7 @@ theorem dist_of_map_eq {f : O⟦X⟧} {w : (IsLocalRing.ResidueField O)⟦X⟧} 
   · unfold IsDist
     intro h0
     rw [h0, PowerSeries.order_zero] at hord
-    exact ENat.top_ne_coe n hord
+    exact ENat.top_ne_natCast n hord
   · unfold wdeg
     rw [hord]
     rfl
@@ -122,7 +122,7 @@ theorem addVal_coef (hl : (l : O) ∈ IsLocalRing.maximalIdeal O) (hl0 : (l : O)
   have hc : a.choose i ≠ 0 := (Nat.choose_pos hi).ne'
   rw [AddValuation.map_mul, addVal_natCast hl hl0 hc, AddValuation.map_pow]
   obtain ⟨k, hk⟩ : ∃ k : ℕ, IsDiscreteValuationRing.addVal O (l : O) = k := ⟨_, addVal_l hl0⟩
-  rw [hk, ENat.toNat_coe, nsmul_eq_mul]
+  rw [hk, ENat.toNat_natCast, nsmul_eq_mul]
   push_cast
   ring
 

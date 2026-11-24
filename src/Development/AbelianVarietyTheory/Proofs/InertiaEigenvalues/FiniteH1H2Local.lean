@@ -80,7 +80,7 @@ theorem exists_injective_zmod_addMonoidHom {a n : ℕ} (hn : n ≠ 0) (h : a ∣
   obtain ⟨k, rfl⟩ := h
   have ha : a ≠ 0 := left_ne_zero_of_mul hn
   have hk : k ≠ 0 := right_ne_zero_of_mul hn
-  haveI : NeZero a := ⟨ha⟩
+  have : NeZero a := ⟨ha⟩
   refine ⟨ZMod.lift a ⟨zmultiplesHom (ZMod (a * k)) (k : ZMod (a * k)), ?_⟩, ?_⟩
   · simp only [zmultiplesHom_apply, natCast_zsmul, nsmul_eq_mul]
     rw [← Nat.cast_mul, ZMod.natCast_self]
@@ -96,15 +96,15 @@ theorem exists_injective_zmod_addMonoidHom {a n : ℕ} (hn : n ≠ 0) (h : a ∣
 
 theorem mk_lt_mk_addMonoidHom_zmod_prime (p : ℕ) [hp : Fact p.Prime] (V : Type) [AddCommGroup V]
     (hV : ∀ x : V, p • x = 0) [Infinite V] : #V < #(V →+ ZMod p) := by
-  haveI : NeZero p := ⟨hp.out.ne_zero⟩
-  letI : Module (ZMod p) V := AddCommGroup.zmodModule hV
+  have : NeZero p := ⟨hp.out.ne_zero⟩
+  let : Module (ZMod p) V := AddCommGroup.zmodModule hV
   let b := Module.Basis.ofVectorSpace (ZMod p) V
   set ι := Module.Basis.ofVectorSpaceIndex (ZMod p) V
   have hι : Infinite ι := by
     by_contra h
     rw [not_infinite_iff_finite] at h
-    haveI := h
-    haveI : Finite V := Finite.of_equiv _ b.equivFun.toEquiv.symm
+    have := h
+    have : Finite V := Finite.of_equiv _ b.equivFun.toEquiv.symm
     exact not_finite V
   have hV1 : #V = #ι := by
     rw [b.repr.toEquiv.cardinal_eq, mk_finsupp_of_infinite, max_eq_left]
@@ -124,14 +124,14 @@ theorem mk_lt_mk_addMonoidHom_zmod (n : ℕ) : ∀ (A : Type) [AddCommGroup A],
   intro A _ hA hn hinf
   rcases eq_or_ne n 1 with rfl | h1
   · exfalso
-    haveI : Subsingleton A := ⟨fun x y => by
+    have : Subsingleton A := ⟨fun x y => by
       have hx : x = 0 := by simpa using hA x
       have hy : y = 0 := by simpa using hA y
       rw [hx, hy]⟩
     exact not_finite A
   obtain ⟨p, hp, m, rfl⟩ : ∃ p, p.Prime ∧ ∃ m, n = p * m :=
     ⟨n.minFac, Nat.minFac_prime h1, n / n.minFac, (Nat.mul_div_cancel' (Nat.minFac_dvd n)).symm⟩
-  haveI := Fact.mk hp
+  have := Fact.mk hp
   have hm : m ≠ 0 := right_ne_zero_of_mul hn
   let f : A →+ A := AddMonoidHom.mk' (fun x => p • x) (fun x y => nsmul_add x y p)
   let P : AddSubgroup A := f.range
@@ -145,7 +145,7 @@ theorem mk_lt_mk_addMonoidHom_zmod (n : ℕ) : ∀ (A : Type) [AddCommGroup A],
   · rcases hQle.lt_or_eq with hQlt | hQeq
     · exact absurd hmul (ne_of_gt (mul_lt_of_lt hAinf hQlt hPlt))
 
-    · letI : Infinite (A ⧸ P) := Cardinal.infinite_iff.mpr (hQeq ▸ hAinf)
+    · let : Infinite (A ⧸ P) := Cardinal.infinite_iff.mpr (hQeq ▸ hAinf)
       have hQp : ∀ y : A ⧸ P, p • y = 0 := by
         intro y
         obtain ⟨x, rfl⟩ := QuotientAddGroup.mk_surjective y
@@ -158,7 +158,7 @@ theorem mk_lt_mk_addMonoidHom_zmod (n : ℕ) : ∀ (A : Type) [AddCommGroup A],
           mk_addMonoidHom_le_of_surjective_of_injective (QuotientAddGroup.mk' P)
             (QuotientAddGroup.mk_surjective) ι hι
 
-  · letI : Infinite P := Cardinal.infinite_iff.mpr (hPeq ▸ hAinf)
+  · let : Infinite P := Cardinal.infinite_iff.mpr (hPeq ▸ hAinf)
     have hPm : ∀ y : P, m • y = 0 := by
       rintro ⟨_, x, rfl⟩
       apply Subtype.ext
@@ -202,13 +202,13 @@ theorem finite_of_perfect_pairing_zmod : ∀ (n : ℕ) [NeZero n] (A B C : Type)
     by_contra hA
     rw [not_finite_iff_infinite] at hA
     have h1 := key A B b hbf hA
-    haveI : Infinite B := Cardinal.infinite_iff.mpr ((aleph0_le_mk A).trans h1.le)
+    have : Infinite B := Cardinal.infinite_iff.mpr ((aleph0_le_mk A).trans h1.le)
     exact lt_asymm h1 (key B A b.flip hbff inferInstance)
   have hB : Finite B := by
     by_contra hB
     rw [not_finite_iff_infinite] at hB
     have h1 := key B A b.flip hbff hB
-    haveI : Infinite A := Cardinal.infinite_iff.mpr ((aleph0_le_mk B).trans h1.le)
+    have : Infinite A := Cardinal.infinite_iff.mpr ((aleph0_le_mk B).trans h1.le)
     exact not_finite A
   exact ⟨hA, hB⟩
 
@@ -228,19 +228,19 @@ namespace GlobalTheory
 
 theorem finite_H1_H2_of_localTateDuality : LocalTateDualityK → ∀ (l : ℕ) [Fact l.Prime] (K : IntermediateField ℚ_[l] (PadicAlgCl l)), FiniteDimensional ℚ_[l] K → ∀ (r : ℕ) (M : Type) [AddCommGroup M] [Module (ZMod (l ^ r)) M] [Finite M] [TopologicalSpace M] [DiscreteTopology M] (rho : Representation (ZMod (l ^ r)) (GK l K) M), 0 < r → ContAction rho → Finite (H1 rho) ∧ Finite (H2 rho) := by
   intro hT l _ K hK r M _ _ _ _ _ rho hr hrho
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   obtain ⟨hC, -, h11, h11f, h20⟩ := hT l K hK r M rho hr hrho
   obtain ⟨e⟩ := hC
-  haveI hCfin : Finite (H2 ((charRep (cycK l K r)).comp (MonoidHom.id (GK l K)))) :=
+  have hCfin : Finite (H2 ((charRep (cycK l K r)).comp (MonoidHom.id (GK l K)))) :=
     Finite.of_equiv _ e.toEquiv.symm
   have hAB := _root_.GlobalTheory.finite_of_perfect_pairing_zmod (l ^ r) _ _ _ _ ⟨e⟩ h11 h11f
   refine ⟨hAB.2, ?_⟩
-  haveI : Finite (TDual (ZMod (l ^ r)) M) :=
+  have : Finite (TDual (ZMod (l ^ r)) M) :=
     Finite.of_injective (fun φ : TDual (ZMod (l ^ r)) M => (φ : M → ZMod (l ^ r)))
       DFunLike.coe_injective
-  haveI : Finite (H0 ((twDual (cycK l K r) rho).comp (MonoidHom.id (GK l K)))) :=
+  have : Finite (H0 ((twDual (cycK l K r) rho).comp (MonoidHom.id (GK l K)))) :=
     Subtype.finite
-  haveI : Finite (H0 ((twDual (cycK l K r) rho).comp (MonoidHom.id (GK l K))) →ₗ[ZMod (l ^ r)]
+  have : Finite (H0 ((twDual (cycK l K r) rho).comp (MonoidHom.id (GK l K))) →ₗ[ZMod (l ^ r)]
       H2 ((charRep (cycK l K r)).comp (MonoidHom.id (GK l K)))) :=
     Finite.of_injective (fun f => (f : _ → _)) DFunLike.coe_injective
   exact Finite.of_injective _ h20.1

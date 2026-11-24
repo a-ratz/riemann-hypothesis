@@ -174,7 +174,7 @@ theorem fdc_hc_add {μ : Fin n → ℝ} {s : Fin n} (hμ : IsHCParam μ) (hs : S
     exact hm
 
 theorem fdc_w_ne {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) : T.w ≠ 0 := by
-  letI := T.instNACG
+  let := T.instNACG
   intro h
   have h1 := T.w_norm
   rw [h, norm_zero] at h1
@@ -227,7 +227,7 @@ theorem fdcD_eq {ε : Fin n → Bool} {μ : Fin n → ℝ} {h : ℝ} (hμ : IsHC
 theorem fdcGood_of_isDS {ε : Fin n → Bool} {μ : Fin n → ℝ} {H : Type} [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hσ : Formalism.MainNotions.S.IsDS ε μ σ) :
     ∃ d, Formalism.MainNotions.S.IsFdeg (muCD ε) σ d := by
-  haveI : CompleteSpace H := hσ.1
+  have : CompleteSpace H := hσ.1
   obtain ⟨d, hd⟩ := Formalism.MainNotions.BridgeCSchur.fdeg_of_DS μ σ hσ
   exact isFdeg_muCD hd
 
@@ -832,7 +832,7 @@ theorem fdc_cd {ε : Fin n → Bool} (hp : 1 ≤ pOf ε) (hq : 1 ≤ qOf ε) {la
     let T : KType ε (lowK ε (lamT lam t)) := (HW.kType_exists ε _ hμ).some
     obtain ⟨m, hm, hP⟩ := fdc_model hp hq hμ hg hh' T
     obtain ⟨d, H, i1, i2, σ, hDS, hd⟩ := fdc_ds_exists hp hq hμ hg hh'
-    haveI : CompleteSpace H := hDS.1
+    have : CompleteSpace H := hDS.1
     obtain ⟨j, hiso, hk, -, hform⟩ := anyF hDS hstd hP
     have hΨ : ∀ z : PCoord ε → ℂ, PsiM T m (NormedSpace.exp (pmat z)) = fF ε (lamT lam t) T (pmat z) := by
       intro z
@@ -868,7 +868,7 @@ theorem fdCons_muG (n : ℕ) (ε : Fin n → Bool) : ∃ c : ℝ, 0 < c ∧
       (∀ μ : Fin n → ℝ, IsHCParam μ → GapAtLeast ε μ h →
         ∃ (T : KType ε (lowK ε μ)) (Ψ : Matrix (Fin n) (Fin n) ℂ → (T.V →L[ℂ] T.V)), IsPsiFor ε μ T Ψ) →
       v ≠ 0 → Formalism.MainNotions.S.fdegOf (Formalism.REAL.muG ε) σ v = c * Formalism.QuantumDeterminants.fdegHC lam := by
-  haveI := muCD_isHaar ε
+  have := muCD_isHaar ε
   let κ := Measure.haarScalarFactor (muCD ε) (Formalism.REAL.muG ε)
   have hκpos : (0 : ℝ) < κ :=
     NNReal.coe_pos.mpr (Measure.haarScalarFactor_pos_of_isHaarMeasure (muCD ε) (Formalism.REAL.muG ε))

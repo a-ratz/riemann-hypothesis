@@ -258,12 +258,12 @@ variable {R : Type} [CommRing R] [IsDomain R] {I : Ideal R} {D : DegData R I}
   {G : Over (Spec (CommRingCat.of R))} [GrpObj G] [IsCommMonObj G]
 
 lemma flat_G (U : UnifPre I D A G) : Flat G.hom := by
-  haveI := U.smooth
+  have := U.smooth
   exact AlgebraicGeometry.instFlatOfSmooth _
 
 lemma flat_B : Flat D.toPre.P.A.hom := by
-  haveI := D.toPre.P.smoothDim
-  haveI : AlgebraicGeometry.Smooth D.toPre.P.A.hom :=
+  have := D.toPre.P.smoothDim
+  have : AlgebraicGeometry.Smooth D.toPre.P.A.hom :=
     AlgebraicGeometry.SmoothOfRelativeDimension.smooth D.toPre.P.g _
   exact AlgebraicGeometry.instFlatOfSmooth _
 

@@ -159,15 +159,15 @@ theorem modular_eq_one {k S : Type} [Field k] [Infinite k] [CommRing S] [Topolog
 variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] {N : ℕ}
 
 theorem countable_latticeGL : Countable (latticeGL E N) := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin N) (Fin N) E) := inferInstanceAs (Countable (Fin N → Fin N → E))
-  haveI : Countable (GL (Fin N) E) := Units.val_injective.countable
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (Matrix (Fin N) (Fin N) E) := inferInstanceAs (Countable (Fin N → Fin N → E))
+  have : Countable (GL (Fin N) E) := Units.val_injective.countable
   let f : FreeGroup (Option (GL (Fin N) E)) →* GA E N :=
     FreeGroup.lift fun o => o.elim (splitCentre E N 1) (ratGL E N)
   have h : latticeGL E N ≤ f.range := sup_le
     (by rintro _ ⟨γ, rfl⟩; exact ⟨.of (some γ), FreeGroup.lift_apply_of⟩)
     (Subgroup.zpowers_le.2 ⟨.of none, FreeGroup.lift_apply_of⟩)
-  haveI : Countable (FreeGroup (Option (GL (Fin N) E))) := Quot.mk_surjective.countable
+  have : Countable (FreeGroup (Option (GL (Fin N) E))) := Quot.mk_surjective.countable
   exact ((Set.countable_range f).mono h).to_subtype
 
 theorem left_latticeGL {φ : Sm E N} (h : IsAutForm φ) (h' : IsSqInt φ.1) :
@@ -189,23 +189,23 @@ theorem isUnitarisable_of_isLocCompGL : ∀ (E : Type) [Field E] [NumberField E]
     (V : Submodule ℂ (Sm E N)), IsDiscrete V → ∀ (w : HeightOneSpectrum (𝓞 E)) (σ : LocIrr w N),
     IsLocCompGL V w σ → IsUnitarisable σ.ρ := by
   intro E _ _ _ N V hV w σ ⟨f, h0, hf, hρ⟩
-  letI : MeasurableSpace (GA E N) := borel _
-  haveI : BorelSpace (GA E N) := ⟨rfl⟩
-  haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
-  haveI : LocallyCompactSpace (Matrix (Fin N) (Fin N) (Ad E)) :=
+  let : MeasurableSpace (GA E N) := borel _
+  have : BorelSpace (GA E N) := ⟨rfl⟩
+  have := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele E
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField E
+  have : LocallyCompactSpace (Matrix (Fin N) (Fin N) (Ad E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin N → Fin N → Ad E))
-  haveI : LocallyCompactSpace (Matrix (Fin N) (Fin N) (Ad E))ᵐᵒᵖ :=
+  have : LocallyCompactSpace (Matrix (Fin N) (Fin N) (Ad E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : LocallyCompactSpace (GA E N) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology (Matrix (Fin N) (Fin N) (Ad E)) :=
+  have : LocallyCompactSpace (GA E N) := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology (Matrix (Fin N) (Fin N) (Ad E)) :=
     inferInstanceAs (SecondCountableTopology (Fin N → Fin N → Ad E))
-  haveI : SecondCountableTopology (Matrix (Fin N) (Fin N) (Ad E))ᵐᵒᵖ :=
+  have : SecondCountableTopology (Matrix (Fin N) (Fin N) (Ad E))ᵐᵒᵖ :=
     MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : SecondCountableTopology (GA E N) := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI := countable_latticeGL (E := E) (N := N)
-  haveI : Infinite (w.adicCompletion E) := .of_injective _ (algebraMap E _).injective
+  have : SecondCountableTopology (GA E N) := Units.isEmbedding_embedProduct.secondCountableTopology
+  have := countable_latticeGL (E := E) (N := N)
+  have : Infinite (w.adicCompletion E) := .of_injective _ (algebraMap E _).injective
   have hinj : Function.Injective f := by
     rcases ((GlobalTheory.CuspRep.isIrreducible_iff _).1 σ.irred).2 (LinearMap.ker f) (fun g v hv => by
       rw [LinearMap.mem_ker] at hv ⊢

@@ -94,7 +94,7 @@ theorem g_cellPt (hZ : Cells A π g κ) (ht : FlagCellFrameChangeTriangular hZ) 
   rw [Category.assoc, e]
   have hspan : Ideal.span (Set.range (φ ∘ plk (uvec (A.cv k.1) k.2) en.2.1)) = ⊤ := by
     rw [Set.range_comp, ← Ideal.map_span, hu, Ideal.map_top]
-  letI : GradedAlgebra (MvPolynomial.homogeneousSubmodule (Fin (plN A.N en.1 + 1)) c.F) := MvPolynomial.gradedAlgebra
+  let : GradedAlgebra (MvPolynomial.homogeneousSubmodule (Fin (plN A.N en.1 + 1)) c.F) := MvPolynomial.gradedAlgebra
   have hmap : spMap φ ≫ pt (MvPolynomial.C.comp ((A.alpha k.1).comp (RingHom.id c.F)))
       (plk (uvec (A.cv k.1) k.2) en.2.1) hu =
       pt (φ.comp (MvPolynomial.C.comp ((A.alpha k.1).comp (RingHom.id c.F))))

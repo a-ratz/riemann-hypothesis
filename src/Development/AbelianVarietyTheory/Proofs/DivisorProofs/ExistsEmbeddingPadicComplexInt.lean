@@ -86,7 +86,7 @@ theorem exists_injective_of_isIntegral {A B O C : Type} [CommRing A] [IsDomain A
       @_root_.DivisionSemiring.to_moduleIsTorsionFree,
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   have hker : RingHom.ker (ψ : B →+* C) = ⊥ := by
-    apply Ideal.eq_bot_of_comap_eq_bot (R := A)
+    apply Ideal.eq_bot_of_under_eq_bot (R := A)
     ext a
     rw [Ideal.mem_comap, RingHom.mem_ker, Ideal.mem_bot,
       show (ψ : B →+* C) (algebraMap A B a) = algebraMap A C a from ψ.commutes a]
@@ -144,7 +144,7 @@ theorem exists_injective_of_integral {A B O C : Type} [CommRing A] [IsDomain A] 
 theorem exists_embedding_padicComplexInt :
     ∀ T : CDVR, T.FinRes → ∃ (p : ℕ) (_ : Fact p.Prime) (k : T.Fr →+* ℂ_[p]) (kO : T.V →+* 𝓞_ℂ_[p]), ∀ a, algebraMap 𝓞_ℂ_[p] ℂ_[p] (kO a) = k (algebraMap T.V T.Fr a) := by
   intro T hT
-  haveI : Finite (IsLocalRing.ResidueField T.V) := hT
+  have : Finite (IsLocalRing.ResidueField T.V) := hT
   obtain ⟨p, hp, _, hfin⟩ := GlobalTheory.exists_padicInt_algebra_finite T.V
   have hinj : Function.Injective (algebraMap ℤ_[p] T.V) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]

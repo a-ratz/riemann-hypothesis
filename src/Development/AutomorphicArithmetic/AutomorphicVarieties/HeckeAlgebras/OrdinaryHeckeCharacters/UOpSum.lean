@@ -55,7 +55,7 @@ theorem UpperTheory.V.Hi.uOpSum :
   classical
   have hfin : Finite (I.N ⧸ (I.Nconj a).subgroupOf I.N) :=
     Nat.finite_of_card_ne_zero (I.fin_N a ha)
-  letI : Fintype (I.N ⧸ (I.Nconj a).subgroupOf I.N) := Fintype.ofFinite _
+  let : Fintype (I.N ⧸ (I.Nconj a).subgroupOf I.N) := Fintype.ofFinite _
   have key : ∀ x y : I.N, (QuotientGroup.mk x : I.N ⧸ (I.Nconj a).subgroupOf I.N) = QuotientGroup.mk y ↔
       (x : G)⁻¹ * y ∈ I.Nconj a := by
     intro x y

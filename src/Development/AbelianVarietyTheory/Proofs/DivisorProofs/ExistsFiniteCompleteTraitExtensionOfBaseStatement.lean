@@ -58,19 +58,19 @@ theorem exists_finite_trait_extension : ∀ (R W R₁ : Type) [CommRing R] [IsDo
   obtain ⟨hWd, hWc, hW0⟩ := hW
   obtain ⟨-, hρi, hρf⟩ := hρ
 
-  letI : Algebra W Ω := ((algebraMap (FractionRing W) Ω).comp (algebraMap W (FractionRing W))).toAlgebra
-  haveI : IsScalarTower W (FractionRing W) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra W Ω := ((algebraMap (FractionRing W) Ω).comp (algebraMap W (FractionRing W))).toAlgebra
+  have : IsScalarTower W (FractionRing W) Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hWΩ : Function.Injective (algebraMap W Ω) :=
     (algebraMap (FractionRing W) Ω).injective.comp (IsFractionRing.injective W (FractionRing W))
-  haveI : FaithfulSMul W Ω := (faithfulSMul_iff_algebraMap_injective W Ω).2 hWΩ
-  haveI : Algebra.IsAlgebraic W Ω :=
+  have : FaithfulSMul W Ω := (faithfulSMul_iff_algebraMap_injective W Ω).2 hWΩ
+  have : Algebra.IsAlgebraic W Ω :=
     (IsFractionRing.comap_isAlgebraic_iff (A := W) (K := FractionRing W) (C := Ω)).mpr inferInstance
 
-  letI : Algebra R R₁ := ρ.toAlgebra
-  haveI : Module.Finite R R₁ := hρf
-  letI : Algebra R W := φ.toAlgebra
-  letI : Algebra R Ω := ((algebraMap W Ω).comp φ).toAlgebra
-  haveI : IsScalarTower R W Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra R R₁ := ρ.toAlgebra
+  have : Module.Finite R R₁ := hρf
+  let : Algebra R W := φ.toAlgebra
+  let : Algebra R Ω := ((algebraMap W Ω).comp φ).toAlgebra
+  have : IsScalarTower R W Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let f₀ : R₁ →+* Ω := e.comp (algebraMap R₁ (FractionRing R₁))
   have hf₀ : ∀ r, f₀ (ρ r) = algebraMap W Ω (φ r) := he
   let f : R₁ →ₐ[R] Ω := { f₀ with commutes' := fun r => hf₀ r }
@@ -96,7 +96,7 @@ theorem exists_finite_trait_extension : ∀ (R W R₁ : Type) [CommRing R] [IsDo
   let iw : W →+* W₁ := algebraMap W W₁
   let φ₁ : R₁ →+* W₁ := f₀.codRestrict W₁ hin
   have hiwinj : Function.Injective iw := fun a b h => hWΩ (congrArg Subtype.val h)
-  haveI : CharZero W₁ := charZero_of_injective_ringHom hiwinj
+  have : CharZero W₁ := charZero_of_injective_ringHom hiwinj
   have hcomp : φ₁.comp ρ = iw.comp φ := by
     ext r; exact hf₀ r
   have hφ₁inj : Function.Injective φ₁ := fun a b h => by
@@ -108,13 +108,13 @@ theorem exists_finite_trait_extension : ∀ (R W R₁ : Type) [CommRing R] [IsDo
     have hP : ((maximalIdeal W₁).comap φ₁).comap ρ = maximalIdeal R := by
       rw [Ideal.comap_comap, hcomp, ← Ideal.comap_comap, h1, h2]
     have hmax : ((maximalIdeal W₁).comap φ₁).IsMaximal :=
-      Ideal.isMaximal_of_isIntegral_of_isMaximal_comap' ρ (RingHom.Finite.to_isIntegral hρf) _
+      Ideal.isMaximal_of_isIntegral_of_isMaximal_comap ρ (RingHom.Finite.to_isIntegral hρf) _
         (by rw [hP]; infer_instance)
     exact ((local_hom_tfae φ₁).out 1 5).mpr (IsLocalRing.eq_maximalIdeal hmax)
-  haveI : Algebra.IsAlgebraic W₁ Ω := Algebra.IsAlgebraic.extendScalars hiwinj
-  haveI : Module.IsTorsionFree W₁ Ω :=
+  have : Algebra.IsAlgebraic W₁ Ω := Algebra.IsAlgebraic.extendScalars hiwinj
+  have : Module.IsTorsionFree W₁ Ω :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr Subtype.val_injective
-  haveI : Module.IsTorsionFree W₁ (AlgebraicClosure (FractionRing W₁)) :=
+  have : Module.IsTorsionFree W₁ (AlgebraicClosure (FractionRing W₁)) :=
     Module.isTorsionFree_iff_algebraMap_injective.mpr (by
       rw [IsScalarTower.algebraMap_eq W₁ (FractionRing W₁) (AlgebraicClosure (FractionRing W₁))]
       exact (algebraMap (FractionRing W₁) _).injective.comp (IsFractionRing.injective W₁ (FractionRing W₁)))

@@ -66,8 +66,8 @@ theorem UpperTheory.V.Stick.splitProd :
   have hdvd : ∏ t, conjI M K (RingHom.ker π) t ∣ Ideal.span {(p : 𝓞 K)} := by
     apply Fintype.prod_dvd_of_coprime
     · intro s t hst
-      haveI := (hfact s).2.1
-      haveI := (hfact t).2.1
+      have := (hfact s).2.1
+      have := (hfact t).2.1
       exact Ideal.isCoprime_of_isMaximal (fun h => hst (hinj h))
     · intro t
       rw [Ideal.dvd_iff_le, Ideal.span_le, Set.singleton_subset_iff]

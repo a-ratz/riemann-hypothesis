@@ -82,9 +82,9 @@ theorem map_withDensity_of_jacobian_gen {E : Type*} [NormedAddCommGroup E] [Norm
 theorem map_withDensity_of_jacobian : ∀ (p q : ℕ) (J : (Fin p → Fin q → ℂ) → ℝ) (ψ : (Fin p → Fin q → ℂ) → (Fin p → Fin q → ℂ)), Continuous J → Continuous ψ → Function.Bijective ψ → (∀ B, ∃ P : (Fin p → Fin q → ℂ) →L[ℝ] (Fin p → Fin q → ℂ), HasFDerivAt ψ P B ∧ |P.det| * J (ψ B) = J B) → Measure.map ψ (volume.withDensity fun B => ENNReal.ofReal (J B)) = volume.withDensity fun B => ENNReal.ofReal (J B) := by
 
   intro p q J ψ _ hψ hb h
-  haveI hrow : (volume : Measure (Fin q → ℂ)).IsAddHaarMeasure := by
+  have hrow : (volume : Measure (Fin q → ℂ)).IsAddHaarMeasure := by
     rw [volume_pi]; infer_instance
-  haveI hall : (volume : Measure (Fin p → Fin q → ℂ)).IsAddHaarMeasure := by
+  have hall : (volume : Measure (Fin p → Fin q → ℂ)).IsAddHaarMeasure := by
     rw [volume_pi]; exact Measure.pi.isAddHaarMeasure _
   exact map_withDensity_of_jacobian_gen (volume : Measure (Fin p → Fin q → ℂ)) J ψ hψ hb h
 

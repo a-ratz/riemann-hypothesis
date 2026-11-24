@@ -452,7 +452,7 @@ theorem fineJac_step (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ :
   have hinj := _root_.GlobalTheory.CompanionTheory.SegTerm.term_injective hA Δ
   have hset : {e : Fin Δ.len ≃ Fin Δ.len | ∀ a, dec Δ a = Δ.term (e a)} = {Fin.revPerm} := by
     ext e
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · intro h
       exact Equiv.ext fun a => (hinj (h a)).symm

@@ -98,7 +98,7 @@ theorem rk_lift (hK : Function.Bijective (algebraMap K₀ K)) (σ : K₀ →ₐ[
   refine ⟨σ.comp (e.symm : K →ₐ[Qp] K₀), ?_⟩
   ext x
   have hx : (IsScalarTower.toAlgHom Qp K₀ K) x = e x := rfl
-  simp only [AlgHom.comp_apply, hx, AlgEquiv.coe_algHom, AlgEquiv.symm_apply_apply]
+  simp only [AlgHom.comp_apply, hx, AlgEquiv.coe_toAlgHom, AlgEquiv.symm_apply_apply]
 
 variable [NeZero n] (W : LocWach PD LL O v n)
 

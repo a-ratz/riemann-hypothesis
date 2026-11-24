@@ -220,7 +220,7 @@ theorem isClosed_boxF (hA : ∀ v, IsCompact (A v)) : IsClosed (boxF A) := by
     exact ⟨fun h => Set.mem_iInter.2 h, fun h => Set.mem_iInter.1 h⟩
   rw [h]
   refine isClosed_iInter fun v => ?_
-  haveI : T2Space (Fv F v ⊗[F] E) := (PureSB.coordH (Fv F v) b).isEmbedding.t2Space
+  have : T2Space (Fv F v ⊗[F] E) := (PureSB.coordH (Fv F v) b).isEmbedding.t2Space
   exact (hA v).isClosed.preimage (continuous_projV v b)
 
 theorem isOpen_boxF (hA : ∀ v, IsOpen (A v)) (hS : ∀ v, v ∉ S → A v = latV b v) : IsOpen (boxF A) := by
@@ -233,7 +233,7 @@ theorem isOpen_boxF (hA : ∀ v, IsOpen (A v)) (hS : ∀ v, v ∉ S → A v = la
         ⋂ a, ⋂ i, ⋂ k, (fun X : Fin n → Fin M → Af F ⊗[F] E => PureSB.coordH (Af F) b (X a i) k) ⁻¹'
           {y : Af F | ∀ v, v ∉ S → y v ∈ v.adicCompletionIntegers F} := by
       ext X
-      simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
     rw [e]
     refine isOpen_iInter_of_finite fun a => isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun k => ?_
     have hc : Continuous fun X : Fin n → Fin M → Af F ⊗[F] E => PureSB.coordH (Af F) b (X a i) k :=

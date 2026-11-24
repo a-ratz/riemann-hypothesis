@@ -126,7 +126,7 @@ lemma ch_one {n : ℕ} {d : ℤ} (h : IsCoprime d (n : ℤ)) : ch (1 : Dirichlet
   MulChar.one_apply (isUnit_of_isCoprime h)
 
 lemma ch_dvd {l : ℕ} (hl : l.Prime) (ψ : DirichletCharacter ℂ l) {d : ℤ} (h : (l : ℤ) ∣ d) : ch ψ d = 0 := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have : (d : ZMod l) = 0 := (ZMod.intCast_zmod_eq_zero_iff_dvd d l).2 h
   simp only [ch, this]; exact MulChar.map_zero ψ
 
@@ -230,7 +230,7 @@ lemma good_ne (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (ψ : DirichletCh
     ring
   have hEn : ∀ c' : ℂ, ∀ n, n ≠ 0 → (eis (e + 1) c₁ (hat φ) fun _ => 1) n = κ * (eis (e + 1) c' (fun y => ch ψ⁻¹ y * hat ⇑(θ * χ) y) fun _ => 1) n := by
     intro c' n hn
-    simp only [eis, if_neg hn, Finset.mul_sum, hhat]
+    simp only [eis, ite_eq_right hn, Finset.mul_sum, hhat]
     exact Finset.sum_congr rfl (fun _ _ => by ring)
   have hκ0 : κ ≠ 0 := by
     intro h0
@@ -259,7 +259,7 @@ end GlobalTheory.DepletedValue
 namespace GlobalTheory.DepletedValue
 
 lemma ch_one_of_not_dvd {l : ℕ} (hl : l.Prime) {d : ℤ} (h : ¬ (l : ℤ) ∣ d) : ch (1 : DirichletCharacter ℂ l) d = 1 := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have h' : (d : ZMod l) ≠ 0 := fun h0 => h ((ZMod.intCast_zmod_eq_zero_iff_dvd d l).1 h0)
   exact MulChar.one_apply h'.isUnit
 
@@ -276,7 +276,7 @@ lemma good_one (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (φ : DirichletC
         (eis (e + 1) c' (fun y => ch (1 : DirichletCharacter ℂ l)⁻¹ y * hat ⇑(θ * χ) y) fun _ => 1)) ∧
       lam B c (mul (eis e c₀ (ch (1 : DirichletCharacter ℂ l)) (ch θ))
         (eis (e + 1) c' (fun y => ch (1 : DirichletCharacter ℂ l)⁻¹ y * hat ⇑(θ * χ) y) fun _ => 1)) ≠ 0 := by
-  haveI : Fact l.Prime := ⟨hl⟩
+  have : Fact l.Prime := ⟨hl⟩
   have hcop : N.Coprime l := (Nat.coprime_comm.mp ((Nat.Prime.coprime_iff_not_dvd hl).2 hlN))
   have hlZ : IsCoprime (l : ℤ) (N : ℤ) := Nat.isCoprime_iff_coprime.mpr hcop.symm
   have hNZ : IsCoprime (N : ℤ) (l : ℤ) := Nat.isCoprime_iff_coprime.mpr hcop
@@ -309,7 +309,7 @@ lemma good_one (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (φ : DirichletC
     rcases eq_or_ne n 0 with rfl | hn
     · simp [hBsdef, eis, Vo]
     · rw [Pi.add_apply, Pi.smul_apply, smul_eq_mul, neg_mul (et * (l : ℂ) ^ e) (Vo l Bs n), ← hVpart n hn, hBsdef]
-      simp only [eis, if_neg hn, hinv]
+      simp only [eis, ite_eq_right hn, hinv]
       rw [← sub_eq_add_neg, ← Finset.sum_sub_distrib]
       refine Finset.sum_congr rfl (fun p _ => ?_)
       by_cases h : (l : ℤ) ∣ (p.1 : ℤ)
@@ -341,7 +341,7 @@ lemma good_one (e N l : ℕ) (χ θ : DirichletCharacter ℂ N) (φ : DirichletC
         ch θ' l * (l : ℂ) * eis (e + 1) c'' (fun x => if (l : ℤ) ∣ x then hat ⇑θ' x else 0) (fun _ => 1) n - ch θ' l * Bs n := by
       rw [hV, Pi.add_apply, Pi.smul_apply, Pi.smul_apply, smul_eq_mul, smul_eq_mul, pow_succ]; ring
     rw [hsplit, hBsdef]
-    simp only [eis, if_neg hn, Finset.mul_sum, ← Finset.sum_sub_distrib, hhatE]
+    simp only [eis, ite_eq_right hn, Finset.mul_sum, ← Finset.sum_sub_distrib, hhatE]
     refine Finset.sum_congr rfl (fun p _ => ?_)
     split_ifs <;> ring
   have hRmf : MF (e + 1) (N * l) (ch φ⁻¹) ((ch θ' l * (et * (l : ℂ) ^ (e + 1))) • Vo l Bs + (-ch θ' l) • Bs) := by
@@ -435,8 +435,8 @@ namespace GlobalTheory.EisM.RightRepU
 
 theorem rrep (L l : ℕ) (hl : l.Prime) (hlL : l ∣ L) (hL : 0 < L) :
     RRep L (DU L l) (fun j : Fin l => (repL L l (some j)).adjugate) := by
-  haveI := Fact.mk hl
-  haveI : NeZero l := ⟨hl.ne_zero⟩
+  have := Fact.mk hl
+  have : NeZero l := ⟨hl.ne_zero⟩
   have hpr : Prime (l:ℤ) := Nat.prime_iff_prime_int.mp hl
   have hlpos : (0:ℤ) < l := by exact_mod_cast hl.pos
   simp only [RRep, adj_repL]
@@ -665,7 +665,7 @@ theorem repL_LRep : ∀ L q : ℕ, q.Prime → ¬ q ∣ L → LRep L (DT L q) (r
   have hq0 : (q : ℤ) ≠ 0 := by exact_mod_cast hq.ne_zero
   have hqZ : Prime (q : ℤ) := Nat.prime_iff_prime_int.mp hq
   have hqLZ : ¬ (q : ℤ) ∣ L := by exact_mod_cast hqL
-  haveI := Fact.mk hq
+  have := Fact.mk hq
   refine ⟨?_, ?_, ?_⟩
   · rintro ⟨γ, i⟩ -
     refine ⟨?_, ?_⟩
@@ -926,7 +926,7 @@ theorem qExpansionFunction_coeffHeckeVOperator_eq_tsum (l : ℕ) (hl : 0 < l) (a
     simpa [hl.ne'] using h
   rw [← hinj.tsum_eq]
   · congr 1; ext m
-    simp only [dvd_mul_right, if_true, Nat.mul_div_cancel_left m hl]
+    simp only [dvd_mul_right, ite_true, Nat.mul_div_cancel_left m hl]
     congr 2; push_cast; ring
   · intro n hn
     by_cases h : l ∣ n
@@ -989,7 +989,7 @@ namespace GlobalTheory.EisM
 
 theorem eigF_of_prim : ∀ (k N l : ℕ) (χ : DirichletCharacter ℂ N) (g : ℕ → ℂ) (ρ : ℍ → ℝ) (α β : ℂ), 1 ≤ k → 0 < N → l.Prime → ¬ l ∣ N → Prim k N χ g → Wt (N * l) ρ → α + β = χ⁻¹ l * g l → α * β = χ⁻¹ l * (l : ℂ) ^ (k - 1) → ∃ (B : ℕ) (c : ℕ → ℂ), EigF k N l χ⁻¹ (fun q => χ⁻¹ q * g q) α B c ∧ ∀ a, MF k (N * l) (ch χ⁻¹) a → lam B c a = pet k ρ (qs (Vo l fun n => conj (g n))) (qs a) - β / (l : ℂ) ^ k * pet k ρ (qs fun n => conj (g n)) (qs a) := by
   intro k N l χ g ρ α β hk hN hl hlN hg hρ hab hαβ
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   set h : ℕ → ℂ := fun n => conj (g n) with hh_def
   have hNl : 0 < N * l := Nat.mul_pos hN hl.pos
   have hdvd : N ∣ N * l := dvd_mul_right N l
@@ -1105,7 +1105,7 @@ theorem norm_one_of_pow {R : Type*} [NormedDivisionRing R] {z : R} {n : ℕ} (hn
 
 theorem char_inv_facts {N : ℕ} (hN : 0 < N) (χ : DirichletCharacter ℂ N) (l : ℕ) (hl : l.Coprime N) :
     (χ⁻¹ (l : ZMod N)) ^ N.totient = 1 ∧ χ⁻¹ (l : ZMod N) * χ (l : ZMod N) = 1 := by
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hu : IsUnit (l : ZMod N) := (ZMod.isUnit_iff_coprime l N).2 hl
   constructor
   · obtain ⟨v, hv⟩ := hu
@@ -1243,7 +1243,7 @@ theorem zv_ch_changeLevel_mul {N l : ℕ} (cop : N.Coprime l) (A : DirichletChar
 
 theorem zv_root {N l : ℕ} (hN : 0 < N) (cop : l.Coprime N) (θ : DirichletCharacter ℂ N) :
     ∃ n : ℕ, 0 < n ∧ (θ (l : ZMod N)) ^ n = 1 := by
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   refine ⟨Fintype.card (ZMod N)ˣ, Fintype.card_pos, ?_⟩
   rw [← ZMod.coe_unitOfCoprime l cop, ← map_pow, ← Units.val_pow_eq_pow_val, pow_card_eq_one, Units.val_one, map_one]
 
@@ -1275,7 +1275,7 @@ theorem eigF_value_ne_zero : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃
     apply hθχ
     ext a
     obtain ⟨k, hk1, hk2⟩ := Nat.chineseRemainder cop (a : ZMod N).val 1
-    haveI : NeZero N := ⟨hN.ne'⟩
+    have : NeZero N := ⟨hN.ne'⟩
     have hkN : ((k : ℕ) : ZMod N) = a := by
       rw [(ZMod.natCast_eq_natCast_iff _ _ _).mpr hk1, ZMod.natCast_zmod_val]
     have hkl : ((k : ℕ) : ZMod l) = 1 := by

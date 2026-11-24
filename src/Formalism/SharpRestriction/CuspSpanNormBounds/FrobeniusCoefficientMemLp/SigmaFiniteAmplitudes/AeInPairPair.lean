@@ -59,8 +59,8 @@ open Formalism.BasicNotions Formalism.QuantumDeterminants Formalism.MainNotions.
 variable {k r : ℕ}
 
 theorem ae_inPair_pair (L : LocBessel k r) : ∀ᵐ p ∂(pairMeas L), InPair L p := by
-  haveI := L.hμW.1.1
-  haveI := L.hμW'.1.1
+  have := L.hμW.1.1
+  have := L.hμW'.1.1
   have hW := ae_mem_sk L.hμW.1
   have hW' := ae_mem_sk L.hμW'.1
   have hN : ∀ᵐ x ∂L.μN, of x ∈ Nset k r := ae_mem_haarLieN _
@@ -108,7 +108,7 @@ theorem ae_inPair_nu (L : LocBessel k r) {γ : Matrix (Fin (2 * r + k + 1)) (Fin
     by_cases hx : x ∈ {p : PairSp k r | ¬ InPair L p}
     · rw [Set.indicator_of_mem hx]
       exact key x hx
-    · simp only [Set.indicator, hx, if_false]
+    · simp only [Set.indicator, hx, ite_false]
       exact zero_le
   rw [lintegral_indicator_const hB] at h2
   rw [ae_iff]
@@ -140,7 +140,7 @@ theorem ae_uh_nuR {μG : Measure (Mt k r)} {γ : Matrix (Fin (2 * r + k + 1)) (F
   have mulUH : ∀ s x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ,
       s ∈ UH (Hpk k r) → s * x ∈ UH (Hpk k r) → x ∈ UH (Hpk k r) := by
     intro s x hs hsx
-    simp only [UH, Set.mem_setOf_eq] at hs hsx ⊢
+    simp only [UH, Set.mem_ofPred_eq] at hs hsx ⊢
     rw [Matrix.conjTranspose_mul] at hsx
     calc xᴴ * Hpk k r * x = xᴴ * (sᴴ * Hpk k r * s) * x := by rw [hs]
       _ = xᴴ * sᴴ * Hpk k r * (s * x) := by simp only [Matrix.mul_assoc]
@@ -166,7 +166,7 @@ theorem ae_uh_nuR {μG : Measure (Mt k r)} {γ : Matrix (Fin (2 * r + k + 1)) (F
     by_cases hx : x ∈ {x : Mt k r | of x ∉ UH (Hpk k r)}
     · rw [Set.indicator_of_mem hx]
       exact key x hx
-    · simp only [Set.indicator, hx, if_false]
+    · simp only [Set.indicator, hx, ite_false]
       exact zero_le
   rw [lintegral_indicator_const hB] at h2
   rw [ae_iff]

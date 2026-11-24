@@ -153,7 +153,7 @@ theorem minorIJ_self_of_triangular (B : Matrix (Fin N) (Fin N) R) (hB : B.BlockT
   have ht : (B.submatrix (C.orderEmbOfFin rfl) (C.orderEmbOfFin rfl)).BlockTriangular id := by
     intro x y hxy
     exact hB ((C.orderEmbOfFin rfl).strictMono hxy)
-  rw [Matrix.det_of_upperTriangular ht, prod_mem_eq_prod_enum C (fun c => B c c)]
+  rw [det_of_isUpperTriangular ht, prod_mem_eq_prod_enum C (fun c => B c c)]
   rfl
 
 theorem mem_stepCols_block {N j : ℕ} {i c : Fin N} (hj : j ≤ N) (hc : c ∈ stepCols N j i) :

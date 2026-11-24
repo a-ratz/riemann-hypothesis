@@ -141,7 +141,7 @@ theorem heisLine_deriv_finite_span : ∀ (F E : Type) [Field F] [NumberField F] 
       ∑ j, (b.repr (fun i => evI F (y i)) j : ℂ) • B j f := by
     ext z
     rw [heisD_apply, fderiv_basis b f z v, mult_basis b y z, Finset.sum_mul]
-    simp only [SchwartzMap.add_apply, SchwartzMap.sum_apply, SchwartzMap.smul_apply, smul_eq_mul, A, B,
+    simp only [add_apply, sum_apply, smul_apply, smul_eq_mul, A, B,
       ContinuousLinearMap.coe_coe, SchwartzMap.lineDerivOp_apply_eq_fderiv]
     congr 1
     refine Finset.sum_congr rfl fun j _ => ?_

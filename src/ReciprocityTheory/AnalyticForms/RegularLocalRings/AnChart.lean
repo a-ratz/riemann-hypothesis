@@ -102,12 +102,12 @@ theorem hasFDerivAt_mvPolynomial_eval {n : ℕ} (Q : MvPolynomial (Fin n) ℂ) (
           x i • ∑ j, MvPolynomial.eval x (MvPolynomial.pderiv j p) •
             ContinuousLinearMap.proj (R := ℂ) (φ := fun _ : Fin n => ℂ) j := by
       refine ContinuousLinearMap.ext fun v => ?_
-      simp only [ContinuousLinearMap.coe_sum', Finset.sum_apply, ContinuousLinearMap.coe_smul',
-        Pi.smul_apply, ContinuousLinearMap.proj_apply, ContinuousLinearMap.add_apply, smul_eq_mul,
+      simp only [FunLike.coe_sum, Finset.sum_apply, FunLike.coe_smul,
+        Pi.smul_apply, ContinuousLinearMap.proj_apply, add_apply, smul_eq_mul,
         Derivation.leibniz, MvPolynomial.pderiv_X, map_add, MvPolynomial.smul_eval, MvPolynomial.eval_X,
         Pi.single_apply]
       simp only [add_mul, Finset.sum_add_distrib, mul_ite, mul_one, mul_zero, ite_mul, zero_mul,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.mul_sum]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.mul_sum]
       simp only [MvPolynomial.eval_mul, MvPolynomial.eval_X]
       have hs : ∑ j, MvPolynomial.eval x (if i = j then p else 0) * v j = MvPolynomial.eval x p * v i := by
         simp [apply_ite, ite_mul, Finset.sum_ite_eq]

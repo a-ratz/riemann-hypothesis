@@ -182,10 +182,10 @@ theorem exists_integral_form : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsC
     rw [← Category.assoc, spec_comp, ← IsScalarTower.algebraMap_eq]
   obtain ⟨EA, _, _, ⟨MA⟩⟩ := lieModel_exists X G A (spMap (algebraMap (𝓞 L) A) ≫ z)
   obtain ⟨EL, _, _, ⟨ML⟩⟩ := lieModel_exists X G L (spMap (algebraMap (𝓞 L) L) ≫ z)
-  letI : Module (𝓞 L) EA := Module.compHom EA (algebraMap (𝓞 L) A)
-  haveI : IsScalarTower (𝓞 L) A EA := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
-  letI : Module (𝓞 L) EL := Module.compHom EL (algebraMap (𝓞 L) L)
-  haveI : IsScalarTower (𝓞 L) L EL := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module (𝓞 L) EA := Module.compHom EA (algebraMap (𝓞 L) A)
+  have : IsScalarTower (𝓞 L) A EA := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
+  let : Module (𝓞 L) EL := Module.compHom EL (algebraMap (𝓞 L) L)
+  have : IsScalarTower (𝓞 L) L EL := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   obtain ⟨j₀, hj₀⟩ := exists_transport (algebraMap (𝓞 L) A) rfl MB MA
   obtain ⟨k, hk⟩ := exists_transport (algebraMap A L) hzz MA ML
   let j : B.carrier →ₗ[𝓞 L] EA :=
@@ -206,8 +206,8 @@ theorem exists_integral_form : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsC
     rw [h1, h2, ← Category.assoc, spec_dualMap, ← IsScalarTower.algebraMap_eq]
   have hbA : IsBaseChange A j := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange X G (𝓞 L) A z B.carrier EA MB MA j hj
   have hbL : IsBaseChange L jL := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange X G (𝓞 L) L z B.carrier EL MB ML jL hjL
-  haveI : IsLocalizedModule 𝔭.primeCompl j := (isLocalizedModule_iff_isBaseChange 𝔭.primeCompl A j).2 hbA
-  haveI : IsLocalizedModule (nonZeroDivisors (𝓞 L)) jL :=
+  have : IsLocalizedModule 𝔭.primeCompl j := (isLocalizedModule_iff_isBaseChange 𝔭.primeCompl A j).2 hbA
+  have : IsLocalizedModule (nonZeroDivisors (𝓞 L)) jL :=
     (isLocalizedModule_iff_isBaseChange (nonZeroDivisors (𝓞 L)) L jL).2 hbL
   have hinj : Function.Injective jL := fun x y hxy => by
     obtain ⟨c, hc⟩ := (IsLocalizedModule.eq_iff_exists (nonZeroDivisors (𝓞 L)) jL).1 hxy
@@ -312,9 +312,9 @@ theorem lie_transport_induction [Smooth G.hom] (c : R →+* R') {x : Sp R ⟶ S}
     (base : ∀ e, P (j e)) (smul : ∀ (s : R') n, P n → P (s • n))
     (add : ∀ n n', P n → P n' → P (n + n')) (n : E') : P n := by
   subst h
-  letI : Algebra R R' := c.toAlgebra
-  letI : Module R E' := Module.compHom E' c
-  haveI : IsScalarTower R R' E' := ⟨fun a b v => by
+  let : Algebra R R' := c.toAlgebra
+  let : Module R E' := Module.compHom E' c
+  have : IsScalarTower R R' E' := ⟨fun a b v => by
     change (c a * b) • v = c a • (b • v)
     rw [mul_smul]⟩
   let jl : E →ₗ[R] E' :=
@@ -590,7 +590,7 @@ theorem core (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (K : Typ
     rw [hD] at e''
     exact sub_eq_zero.1 e''
   have hsup : ∀ k, (⨆ i, v (w ⟨k, i⟩)) = v (w ⟨k, c k⟩) := fun k => by
-    haveI : Nonempty (J k) := ⟨c k⟩
+    have : Nonempty (J k) := ⟨c k⟩
     exact le_antisymm (ciSup_le (hmax k)) (le_ciSup (f := fun i => v (w ⟨k, i⟩)) (Set.finite_range _).bddAbove (c k))
   have hvC : v C = (v (m : L))⁻¹ * locRatio a w c₀ v := by
     have : v τ = locRatio a w c₀ v := by
@@ -682,9 +682,9 @@ theorem coord_size : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶
   have hle : (FinitePlace.maximalIdeal v).asIdeal.primeCompl ≤ nonZeroDivisors (𝓞 L) :=
     Ideal.primeCompl_le_nonZeroDivisors _
   let A := Localization.subalgebra.ofField L _ hle
-  haveI : IsLocalization.AtPrime A (FinitePlace.maximalIdeal v).asIdeal :=
+  have : IsLocalization.AtPrime A (FinitePlace.maximalIdeal v).asIdeal :=
     inferInstanceAs (IsLocalization (FinitePlace.maximalIdeal v).asIdeal.primeCompl A)
-  haveI : IsLocalRing A := IsLocalization.AtPrime.isLocalRing A (FinitePlace.maximalIdeal v).asIdeal
+  have : IsLocalRing A := IsLocalization.AtPrime.isLocalRing A (FinitePlace.maximalIdeal v).asIdeal
   obtain ⟨h1, h2⟩ := place_local L v A
   exact core X Ω ξ K J y G Li M V r b₀ m i a e₀ hchar hgen hcoord hm hb₀ hS hdeg L w z hw B MB F₁ hF₁ c₀ hc₀ φ hφ v
     (FinitePlace.maximalIdeal v).asIdeal A (place_one L v) h1 h2

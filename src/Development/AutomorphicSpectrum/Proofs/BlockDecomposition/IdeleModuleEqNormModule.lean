@@ -100,8 +100,8 @@ theorem map_smul_pi (n : ℕ) (a : IdeleGroup K) :
   have h2 : (Measure.pi fun _ : Fin n ↦ c • adeleMeasure K) =
       c ^ n • Measure.pi fun _ : Fin n ↦ adeleMeasure K := by
     refine pi_eq fun s hs ↦ ?_
-    rw [Measure.smul_apply, pi_pi, ENNReal.smul_def, smul_eq_mul]
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [smul_apply, pi_pi, ENNReal.smul_def, smul_eq_mul]
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul]
     rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin,
       ENNReal.coe_pow]
   rw [h1, h2]
@@ -119,7 +119,7 @@ theorem ideleModule_ideleEmbedding (x : IdeleGroup K) :
   set μ : Measure (Fin n → 𝔸[K]) := Measure.pi fun _ ↦ adeleMeasure K with hμ
   set ν : Measure 𝔸[L] := μ.map e.symm with hν
   have hms : Measurable e.symm := hcs.measurable
-  haveI : ν.IsAddHaarMeasure :=
+  have : ν.IsAddHaarMeasure :=
     isAddHaarMeasure_map _ e.symm.toLinearMap.toAddMonoidHom hcs e.symm.surjective
       h.symm.isClosedEmbedding.tendsto_cocompact
   set X := ideleEmbedding K L x with hX
@@ -155,7 +155,7 @@ theorem ideleModule_ideleEmbedding (x : IdeleGroup K) :
   swap
   · exact hsmL.aemeasurable
   have h2 := congrArg (fun m : Measure 𝔸[L] ↦ m S) h1
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h2
   rw [mul_left_comm] at h2
   have hne : (C : ℝ≥0∞) * adeleMeasure L S ≠ 0 := mul_ne_zero hC0 hpos
   have hnt : (C : ℝ≥0∞) * adeleMeasure L S ≠ ⊤ := ENNReal.mul_ne_top ENNReal.coe_ne_top htop
@@ -217,7 +217,7 @@ theorem map_involution_eq {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTo
     [LocallyCompactSpace G] [MeasurableSpace G] [BorelSpace G]
     (e : G ≃ₜ+ G) (he2 : ∀ x, e (e x) = x) (ν : Measure G) [ν.IsAddHaarMeasure] [SecondCountableTopology G] :
     ν.map e = ν := by
-  haveI : (ν.map e).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν e
+  have : (ν.map e).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map ν e
   obtain ⟨b, hb⟩ : ∃ b : ℝ≥0, ν.map e = b • ν :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul (ν.map e) ν⟩
   have he : Measurable e := e.continuous.measurable
@@ -230,7 +230,7 @@ theorem map_involution_eq {G : Type} [AddCommGroup G] [TopologicalSpace G] [IsTo
   have hfin : ν K ≠ ∞ := hK.measure_lt_top.ne
   have hbb : b * b = 1 := by
     have h3 : ((b * b : ℝ≥0) • ν) K = ((1 : ℝ≥0) • ν) K := by rw [← h2, one_smul]
-    simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
+    simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h3
     exact_mod_cast (ENNReal.mul_left_inj hpos hfin).1 h3
   have hb1 : b = 1 := by
     have := (mul_self_eq_one_iff (a := (b : ℝ))).1 (by exact_mod_cast hbb)
@@ -283,7 +283,7 @@ theorem ideleModule_conj : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
         (Units.map (sigR (AF F) σ).toMonoidHom x)) : ℝ) =
       (IdeleGroup.ideleModule E (GroundTheory.BlockD.ThmBHecke.ideleEquiv F E x) : ℝ) := by
   intro F E _ _ _ _ _ σ hcm x
-  letI : MeasurableSpace 𝔸[E] := measurableSpace_adeleRing E
+  let : MeasurableSpace 𝔸[E] := measurableSpace_adeleRing E
   set a := GroundTheory.BlockD.ThmBHecke.ideleEquiv F E x with ha
   set a' := GroundTheory.BlockD.ThmBHecke.ideleEquiv F E (Units.map (sigR (AF F) σ).toMonoidHom x) with ha'
   set e := conjE hcm with he
@@ -311,7 +311,7 @@ theorem ideleModule_conj : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hpos : ν K ≠ 0 := (Measure.measure_pos_of_mem_nhds ν hK0).ne'
   have hfin : ν K ≠ ∞ := hK.measure_lt_top.ne
   have h3 := congrArg (fun m : Measure 𝔸[E] => m K) h2
-  simp only [Measure.smul_apply, smul_eq_mul] at h3
+  simp only [smul_apply, smul_eq_mul] at h3
   have h4 := (ENNReal.mul_left_inj hpos hfin).1 h3
   have h5 := (ENNReal.ofReal_eq_ofReal_iff (inv_nonneg.2 (IdeleGroup.ideleModule E a).2.le)
     (inv_nonneg.2 (IdeleGroup.ideleModule E a').2.le)).1 h4

@@ -317,7 +317,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.nearCore :
     rw [IsTwRegSemisimple, hN1]
     exact hγE
   obtain ⟨D, hD, hDs⟩ := orbProper k E σ hgen n _ hreg _ hφ.2
-  haveI : ValuativeExtension k k := ⟨fun {_ _} => Iff.rfl⟩
+  have : ValuativeExtension k k := ⟨fun {_ _} => Iff.rfl⟩
   obtain ⟨a1, a2, a3, -⟩ := untwist k n μk γ
   obtain ⟨D', hD', hDs'⟩ := orbProper k k 1 a1 n γ (a3 hγ) _ hf.2
   have hKo' : IsOpen ((K.comap (incl : GL (Fin n) k →* GL (Fin n) E) : Subgroup (GL (Fin n) k)) : Set (GL (Fin n) k)) :=
@@ -473,7 +473,7 @@ private theorem small [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLoc
     rw [map_one, map_one, map_one] at this
     exact lt_of_not_ge fun h => (not_le.2 h1) (this.1 h)
   obtain ⟨m, hm⟩ := exists_pow_lt₀ h2 (Units.mk0 s hs)
-  refine ⟨valuation k (x ^ m), zero_lt_iff.2 (by simpa using fun h => absurd h h0), fun g hg i j => ?_⟩
+  refine ⟨valuation k (x ^ m), pos_iff_ne_zero.2 (by simpa using fun h => absurd h h0), fun g hg i j => ?_⟩
   have e : ((incl g : GL (Fin n) E) : Matrix (Fin n) (Fin n) E) i j - (1 : Matrix (Fin n) (Fin n) E) i j =
       algebraMap k E ((g : Matrix (Fin n) (Fin n) k) i j - (1 : Matrix (Fin n) (Fin n) k) i j) := by
     rw [map_sub]
@@ -496,7 +496,7 @@ theorem UpperTheory.ConvolutionTheory.Loc.nearUp :
         ∃ φ ∈ SB (GL (Fin n) E), Match σ μE μk φ f := by
   intro k E _ _ _ _ _ _ _ _ _ _ _ _ _ σ hgen n _ _ _ _ μE μk hμE hμk
   classical
-  haveI : CharZero E := charZero_of_injective_algebraMap (algebraMap k E).injective
+  have : CharZero E := charZero_of_injective_algebraMap (algebraMap k E).injective
   obtain ⟨hc, -, hb⟩ := bridge k E σ
   have hj := (hb n).2.2.2.1
   obtain ⟨_, _, _, -⟩ := gLTop E n
@@ -548,9 +548,9 @@ theorem UpperTheory.ConvolutionTheory.Loc.nearUp :
     simp only [id, mul_inv_rev, mul_assoc]
   have h1 : ∀ z ∈ U, φ (p z) = a z := fun z hz => by
     have h : ∃ z' ∈ U, p z' = p z := ⟨z, hz, rfl⟩
-    simp only [φ, dif_pos h]
+    simp only [φ, dite_eq_left h]
     exact wd _ h.choose_spec.1 _ hz h.choose_spec.2
-  have h2 : ∀ g, g ∉ p '' U → φ g = 0 := fun g h => dif_neg h
+  have h2 : ∀ g, g ∉ p '' U → φ g = 0 := fun g h => dite_eq_right h
   have ho : IsOpen (p '' U) := by
     rw [isOpen_iff_mem_nhds]
     rintro _ ⟨⟨κ, u⟩, ⟨hκ, hu⟩, rfl⟩
@@ -602,10 +602,10 @@ theorem UpperTheory.ConvolutionTheory.Loc.placeUp :
         ∃ φ ∈ SB (GL (Fin n) (w.1.adicCompletion E)), PositivityTheory.Rg.Tf.Geo.Match (incFin E v) (galFin σ v) (Module.finrank F E) mE mF 1 (fun g => φ (mapGL n (Pi.evalRingHom (fun w : PlacesOver E v => w.1.adicCompletion E) w) g)) f := by
   intro F E _ _ _ _ _ _ σ hσ v w hw n _ _ _ _ mE mF hE hF
   obtain ⟨iA, iV, iF, iG, s, hs, hrk, hinc, hgal, -⟩ := UpperTheory.V.Z.Tf.Orb.placeData_holds F E σ hσ v w hw
-  letI : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
-  haveI : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (w.1.adicCompletion E)) := borel _
+  have : BorelSpace (GL (Fin n) (w.1.adicCompletion E)) := ⟨rfl⟩
   obtain ⟨hH, hM⟩ := UpperTheory.V.Z.Tf.Orb.placeOfLocal_holds F E σ hσ v w hw s hs hrk hinc hgal n mE mF hE hF
-  haveI : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
+  have : CharZero (v.adicCompletion F) := charZero_of_injective_algebraMap (algebraMap F (v.adicCompletion F)).injective
   obtain ⟨ρ, hρ, h⟩ := UpperTheory.ConvolutionTheory.Loc.nearUp (v.adicCompletion F) (w.1.adicCompletion E) s hs n _ mF hH hF
   refine ⟨ρ, hρ, fun f hf hsup => ?_⟩
   obtain ⟨φ, hφ, hm⟩ := h f hf hsup
@@ -898,7 +898,7 @@ private theorem matchAt_scale {σ : E ≃ₐ[F] E} {n : ℕ} {v : HeightOneSpect
   exact match_scale _ _ _ _ _ ha _ _ (h mE mF h1 h2 h3 h4)
 
 private theorem t2Space_generalLinearGroup_completionsOver (n : ℕ) (v : HeightOneSpectrum (𝓞 F)) : T2Space (GL (Fin n) (CompletionsOver E v)) := by
-  haveI : ∀ u : PlacesOver E v, T2Space (GL (Fin n) (u.1.adicCompletion E)) :=
+  have : ∀ u : PlacesOver E v, T2Space (GL (Fin n) (u.1.adicCompletion E)) :=
     fun u => (GLnLocal.isLocallyProfinite (u.1.adicCompletion E) n).2.2.1
   exact (piGL (R := fun w : PlacesOver E v => w.1.adicCompletion E) (n := n)).isEmbedding.t2Space
 
@@ -906,10 +906,10 @@ private theorem pack_nonsplit [IsGalois F E] (σ : E ≃ₐ[F] E) (hσ : ∀ τ 
     (v : HeightOneSpectrum (𝓞 F)) (w : PlacesOver E v) (hw : ∀ w' : PlacesOver E v, w' = w)
     (U₀ : Subgroup (GL (Fin n) (v.adicCompletion F))) (hU₀ : IsOpen (U₀ : Set (GL (Fin n) (v.adicCompletion F)))) :
     ∃ φ f c UE UF, Pack σ n v U₀ φ f c UE UF := by
-  letI : MeasurableSpace (GL (Fin n) (CompletionsOver E v)) := borel _
-  haveI : BorelSpace (GL (Fin n) (CompletionsOver E v)) := ⟨rfl⟩
-  letI : MeasurableSpace (GL (Fin n) (v.adicCompletion F)) := borel _
-  haveI : BorelSpace (GL (Fin n) (v.adicCompletion F)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (CompletionsOver E v)) := borel _
+  have : BorelSpace (GL (Fin n) (CompletionsOver E v)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (v.adicCompletion F)) := borel _
+  have : BorelSpace (GL (Fin n) (v.adicCompletion F)) := ⟨rfl⟩
   obtain ⟨mE, mF, hE, hF, -, -, hM⟩ := UpperTheory.ConvolutionTheory.T.matchOne F E σ n v
   obtain ⟨ρ, hρ, hup⟩ := UpperTheory.ConvolutionTheory.Loc.placeUp F E σ hσ v w hw n mE mF hE hF
   obtain ⟨UF, hc, ho, h0, hI, hb⟩ := small_level n U₀ hU₀ (ball_nhds n ρ hρ)
@@ -921,7 +921,7 @@ private theorem pack_nonsplit [IsGalois F E] (σ : E ≃ₐ[F] E) (hσ : ∀ τ 
   refine ⟨_, _, 1, (B.toSubgroup ⊓ GLnLocal.integralGL (w.1.adicCompletion E) n).comap (GM.cmp w), UF,
     ⟨⟨hφ₀.1.comp_continuous hcont, ?_, t1, t2⟩, ⟨?_, ?_, ho, hI⟩, ⟨?_, fun u hu g => ind_left UF hu g⟩,
       hM 1 _ _ hm, one_ne_zero, h0, rfl⟩⟩
-  · haveI := t2Space_generalLinearGroup_completionsOver (E := E) n v
+  · have := t2Space_generalLinearGroup_completionsOver (E := E) n v
     have hK := compact_ev_one (n := n) (R := fun w : PlacesOver E v => w.1.adicCompletion E) w hw _ hφ₀.2
     exact HasCompactSupport.intro' hK hK.isClosed
       fun g hg => (show φ₀ _ = 0 from image_eq_zero_of_notMem_tsupport hg)
@@ -937,13 +937,13 @@ private theorem pack_split [IsGalois F E] (σ : E ≃ₐ[F] E) (hσ : ∀ τ : E
     (hm : Module.finrank F E = m + 1) (n : ℕ) (v : HeightOneSpectrum (𝓞 F)) (w₀ : PlacesOver E v) (hv : GM.Split E v)
     (U₀ : Subgroup (GL (Fin n) (v.adicCompletion F))) (hU₀ : IsOpen (U₀ : Set (GL (Fin n) (v.adicCompletion F)))) :
     ∃ φ f c UE UF, Pack σ n v U₀ φ f c UE UF := by
-  letI : MeasurableSpace (GL (Fin n) (CompletionsOver E v)) := borel _
-  haveI : BorelSpace (GL (Fin n) (CompletionsOver E v)) := ⟨rfl⟩
-  letI iF : MeasurableSpace (GL (Fin n) (v.adicCompletion F)) := borel _
-  haveI bF : BorelSpace (GL (Fin n) (v.adicCompletion F)) := ⟨rfl⟩
+  let : MeasurableSpace (GL (Fin n) (CompletionsOver E v)) := borel _
+  have : BorelSpace (GL (Fin n) (CompletionsOver E v)) := ⟨rfl⟩
+  let iF : MeasurableSpace (GL (Fin n) (v.adicCompletion F)) := borel _
+  have bF : BorelSpace (GL (Fin n) (v.adicCompletion F)) := ⟨rfl⟩
   obtain ⟨UF, hc, ho, h0, hI, -⟩ := small_level n U₀ hU₀ Filter.univ_mem
   obtain ⟨t1, t2⟩ := ind_test UF hc ho
-  haveI := t2Space_generalLinearGroup_completionsOver (E := E) n v
+  have := t2Space_generalLinearGroup_completionsOver (E := E) n v
   have hsl := fun u : PlacesOver E v => UpperTheory.ConvolutionTheory.L1.splitLoc F E v u (hv u) n
   have he₀ := fun u : PlacesOver E v => (hsl u).1
   choose e he using he₀
@@ -1011,7 +1011,7 @@ private theorem pack_split [IsGalois F E] (σ : E ≃ₐ[F] E) (hσ : ∀ τ : E
         (show _ ∉ (B (w i) : Set (GL (Fin n) ((w i).1.adicCompletion E))) from fun hh => hg ((hB (w i) g).1 hh)) _
   rw [hfun, cvAll_ind mF UF ho.measurableSet m] at hMA
   obtain ⟨g1, g2, g3, g4⟩ := GLnLocal.isLocallyProfinite (v.adicCompletion F) n
-  haveI := hF
+  have := hF
   have hpos : mF.real (UF : Set (GL (Fin n) (v.adicCompletion F))) ≠ 0 := by
     have a1 : mF (UF : Set (GL (Fin n) (v.adicCompletion F))) ≠ 0 := ho.measure_ne_zero mF ⟨1, one_mem UF⟩
     have a2 : mF (UF : Set (GL (Fin n) (v.adicCompletion F))) ≠ ⊤ := hc.measure_lt_top.ne
@@ -1067,25 +1067,25 @@ theorem locUp : UpperTheory.ConvolutionTheory.T.LocUp := by
     UF := fun v => if v ∈ S then UF₁ v else if v = q then GLnLocal.iwahori (v.adicCompletion F) n
       else GLnLocal.integralGL (v.adicCompletion F) n
     test := fun v hv => by
-      simp only [if_pos hv]
+      simp only [ite_eq_left hv]
       exact (hP v).1
     lev := fun v hv => by
-      simp only [if_pos hv]
+      simp only [ite_eq_left hv]
       exact (hP v).2.1
     inv := fun v hv => by
-      simp only [if_pos hv]
+      simp only [ite_eq_left hv]
       exact (hP v).2.2.1
     mat := fun v hv => by
-      simp only [if_pos hv]
+      simp only [ite_eq_left hv]
       exact (hP v).2.2.2.1
     at_q := by
-      simp only [if_neg hq, dif_pos, if_true]
+      simp only [ite_eq_right hq, dite_eq_left, ite_true]
       refine ⟨trivial, trivial, fun g => ?_, trivial⟩
       simp [iwG, Subgroup.mem_iInf]
     off := fun v hv hvq => by
-      simp only [if_neg hv, dif_neg hvq, if_neg hvq]
+      simp only [ite_eq_right hv, dite_eq_right hvq, ite_eq_right hvq]
       exact ⟨trivial, trivial, hunit v, trivial⟩ }, rfl, fun v hv => ?_⟩
-  simp only [if_pos hv]
+  simp only [ite_eq_left hv]
   exact ⟨(hP v).2.2.2.2.1, (hP v).2.2.2.2.2.1, (hP v).2.2.2.2.2.2⟩
 
 end UpperTheory.ConvolutionTheory.T

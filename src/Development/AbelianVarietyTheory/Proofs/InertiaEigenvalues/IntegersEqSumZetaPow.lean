@@ -114,7 +114,7 @@ theorem norm_aeval_of_norm_eq (K : FinExt l) (N : ℕ) (π : Om l)
     apply Finset.sum_subset supp_subset_range_natDegree_succ
     intro i _ hi
     rw [notMem_support_iff.1 hi, zero_smul]
-  have h6 := IsUltrametricDist.nnnorm_sum_eq_sup_of_pairwise_ne hpw
+  have h6 := IsUltrametricDist.nnNorm_sum_eq_sup_of_pairwise_ne hpw
   rw [hs] at h6
   obtain ⟨i, hi, hi'⟩ := Finset.exists_mem_eq_sup p.support (support_nonempty.2 hp)
     (fun i => ‖p.coeff i • π ^ i‖₊)
@@ -255,7 +255,7 @@ theorem term_le (K : FinExt l) (i : ℕ) (hi : 2 ≤ i) (ζ : Om l) (hζ : IsPri
       (((nc * l - c : ℤ) : ℝ)) / ((l : ℝ) ^ (i - 1) * ((l : ℝ) - 1)) :=
     le_antisymm ((Real.rpow_le_rpow_left_iff hl).1 heq.le) ((Real.rpow_le_rpow_left_iff hl).1 heq.ge)
   have h2 : nb * (l : ℤ) - b = nc * l - c := by
-    exact_mod_cast (div_left_inj' hD.ne').1 h1
+    exact_mod_cast (div_left_inj₀ hD.ne').1 h1
   have hb' : b < l := Finset.mem_range.1 hb
   have hc' : c < l := Finset.mem_range.1 hc
   have key : (nb - nc) * (l : ℤ) = b - c := by rw [sub_mul]; linarith

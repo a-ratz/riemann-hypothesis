@@ -74,7 +74,7 @@ theorem not_dvd_different {E : Type} [Field E] [NumberField E] {p : ℕ} (hp : p
     rw [Ideal.span_le, Set.singleton_subset_iff]
     show algebraMap ℤ (𝓞 E) (p : ℤ) ∈ Q
     simpa using hpQ
-  haveI := hlies P hP hm
+  have := hlies P hP hm
   have hnorm := Ideal.absNorm_eq_pow_inertiaDeg' P hp
   have hne1 : Ideal.absNorm P ≠ 1 := by
     rw [Ne, Ideal.absNorm_eq_one_iff]; exact hP.ne_top

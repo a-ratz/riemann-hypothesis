@@ -156,7 +156,7 @@ theorem sum_X_pderiv_detS (h : Q ≤ S) (b b' : Fin Q) :
     · simp [pderiv_X, Pi.single_apply, hi]
   simp_rw [hrow]
   rw [Finset.sum_eq_single b]
-  · simp only [if_true]
+  · simp only [ite_true]
     split_ifs with hb
     · subst hb
       congr 1
@@ -238,9 +238,9 @@ theorem key (h : Q ≤ S) (k' : ℕ) (a : Fin P) (b : Fin Q) (G : Mdl P Q) :
     simp only [smul_eq_mul, nsmul_eq_mul, Prod.mk.injEq, Sum.inr.injEq, and_true]
     by_cases hb : b0 = b
     · subst hb
-      simp only [if_true]
+      simp only [ite_true]
       ring
-    · simp only [hb, if_false]
+    · simp only [hb, ite_false]
       ring
   have hT1 : ∑ c : Fin S, ∑ b0 : Fin Q, X ((Sum.inr b0, Sum.inr c) : Ln P Q 0 S) * (∑ a0 : Fin P, X (Sum.inl a0, Sum.inr c) *
       aeval m (pderiv (a0, b) (pderiv (a, b0) G))) * D ^ k' =
@@ -258,7 +258,7 @@ theorem key (h : Q ≤ S) (k' : ℕ) (a : Fin P) (b : Fin Q) (G : Mdl P Q) :
     simp_rw [← Finset.mul_sum]
     have e : ∀ b0 : Fin Q, ∑ c : Fin S, X ((Sum.inr b0, Sum.inr c) : Ln P Q 0 S) * pderiv ((Sum.inr b, Sum.inr c) : Ln P Q 0 S) D =
         if b0 = b then D else 0 := fun b0 => by rw [hDdef]; exact sum_X_pderiv_detS h b b0
-    simp only [e, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    simp only [e, mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, ite_true]
     rcases k' with _ | k
     · simp
     · rw [Nat.add_sub_cancel, pow_succ]; ring

@@ -80,7 +80,7 @@ theorem cycK_eq_of_prim {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[p] 
   exact (sub_eq_zero.1 h0).symm
 
 theorem exists_prim (p : ℕ) [Fact p.Prime] (n : ℕ) : ∃ ζ : PadicAlgCl p, IsPrimitiveRoot ζ (p ^ n) :=
-  HasEnoughRootsOfUnity.exists_primitiveRoot _ _
+  HasEnoughRootsOfUnity.exists_isPrimitiveRoot _ _
 
 variable {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 
@@ -88,7 +88,7 @@ theorem finite_quot [Finite (IsLocalRing.ResidueField O)] {ϖ : O} (hϖ : Irredu
     Finite (O ⧸ Ideal.span {ϖ ^ k}) := by
   have hI : Ideal.span {ϖ} = IsLocalRing.maximalIdeal O :=
     ((IsDiscreteValuationRing.irreducible_iff_uniformizer ϖ).1 hϖ).symm
-  haveI : Finite (O ⧸ Ideal.span {ϖ}) := by
+  have : Finite (O ⧸ Ideal.span {ϖ}) := by
     rw [hI]; exact (inferInstance : Finite (IsLocalRing.ResidueField O))
   rw [← Ideal.span_singleton_pow]
   exact Ideal.finite_quotient_pow (IsNoetherian.noetherian _) k
@@ -149,15 +149,15 @@ theorem h2_bounded_cyclotomic : Formalism.GaloisCohomology.LocalTateDualityK →
     intro h0; apply hσ; ext; rw [Units.val_one]; exact sub_eq_zero.1 h0
   obtain ⟨c, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hw hϖ
   obtain ⟨s, hs⟩ := Ideal.mem_span_singleton'.1 hpϖ
-  haveI hQ := finite_quot hϖ c
+  have hQ := finite_quot hϖ c
   refine ⟨(p ^ c) ^ ((p ^ c) ^ Nat.card (O ⧸ Ideal.span {ϖ ^ c})), ?_⟩
   intro n hn h
-  letI := GlobalTheory.ShapeNeg.levZ (M := M) p n h
+  let := GlobalTheory.ShapeNeg.levZ (M := M) p n h
   obtain ⟨x₀, hx₀⟩ := lev_cyclic eM hϖ n
   have hkn : ∀ y : Lev M (ϖ ^ n), (ϖ ^ n) • y = 0 := fun y => Lev.ext (by
     rw [Lev.val_smul, Lev.smul_val, Lev.val_zero])
-  haveI : Finite (Lev M (ϖ ^ n)) := by
-    haveI := finite_quot hϖ n
+  have : Finite (Lev M (ϖ ^ n)) := by
+    have := finite_quot hϖ n
     refine Finite.of_surjective (fun q : O ⧸ Ideal.span {ϖ ^ n} => q.out • x₀) (fun y => ?_)
     obtain ⟨t, rfl⟩ := hx₀ y
     exact ⟨Ideal.Quotient.mk _ t, out_smul n (hkn x₀) t⟩
@@ -231,7 +231,7 @@ theorem h2_bounded_cyclotomic : Formalism.GaloisCohomology.LocalTateDualityK →
     have h1 := congrArg Subtype.val (congrFun hG (Ideal.Quotient.mk _ t))
     simp only [G] at h1
     rwa [hq a t, hq a' t] at h1
-  haveI : Finite A := Finite.of_injective G hGinj
+  have : Finite A := Finite.of_injective G hGinj
   have hAcard : Nat.card A ≤ (p ^ c) ^ Nat.card (O ⧸ Ideal.span {ϖ ^ c}) :=
     (Nat.card_le_card_of_injective G hGinj).trans (by rw [Nat.card_fun]; exact Nat.pow_le_pow_left hT _)
   let F : H2 ((levRepZ p n h ρ).comp (MonoidHom.id _)) → (A → T) := fun f a =>

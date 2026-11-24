@@ -97,7 +97,7 @@ open GlobalTheory.ChernLinRel in
 theorem GlobalTheory.ChernLinRel.sum_chernInt_eq_zero : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp k), IsProjOver p → ∀ (σ : k →+* ℂ) (D : ℕ) (J : Type) [Fintype J] (a : J → ℝ) (N : J → HermLB p), (∀ (c : AlgChart p σ D), ∀ y ∈ c.e.source, ∑ j, a j * c.chernDens ((N j).φ σ) y = 0) → ∀ (S : Set (CxPts p σ)) (g : CxPts p σ → ℝ), (∀ j, ((N j).φ σ).ChernIntegrableOn D S g) → ∑ j, a j * ((N j).φ σ).chernInt D S g = 0 := by
   intro k _ X p hp σ D J _ a N hlin S g hint
   classical
-  haveI := CxPts.secondCountableTopology_of_isProjOver σ hp
+  have := CxPts.secondCountableTopology_of_isProjOver σ hp
   set P : J → ℤˣ → Measure (CxPts p σ) := fun j ε => ((N j).φ σ).chernPart D ε with hPdef
   let ap : J → ℝ := fun j => max (a j) 0
   let an : J → ℝ := fun j => max (-a j) 0
@@ -124,7 +124,7 @@ theorem GlobalTheory.ChernLinRel.sum_chernInt_eq_zero : ∀ (k : Type) [CommRing
         ENNReal.ofReal (w j) * ENNReal.ofReal (-1 * c.chernDens ((N j).φ σ) (c.e.symm v))) (volume.restrict (c.e '' A)) :=
       fun j _ => ((hm j 1).const_mul _).add ((hm j (-1)).const_mul _)
     rw [lintegral_finsetSum' _ hm2]
-    simp only [μ, Measure.coe_finsetSum, Finset.sum_apply, Measure.add_apply, Measure.smul_apply, smul_eq_mul]
+    simp only [μ, FunLike.coe_sum, Finset.sum_apply, add_apply, smul_apply, smul_eq_mul]
     refine Finset.sum_congr rfl fun j _ => ?_
     rw [lintegral_add_left' ((hm j 1).const_mul _), lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
       lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, hP, hP]
@@ -137,7 +137,7 @@ theorem GlobalTheory.ChernLinRel.sum_chernInt_eq_zero : ∀ (k : Type) [CommRing
     have h0 : ∀ j (ε : ℤˣ), P j ε Uᶜ = 0 := fun j ε =>
       Weight.chernPart_eq_zero ε hUo.measurableSet.compl fun c =>
         Set.disjoint_compl_right_iff_subset.2 (Set.subset_iUnion (fun c : AlgChart p σ D => c.e.source) c)
-    simp [μ, Measure.coe_finsetSum, Finset.sum_apply, Measure.add_apply, Measure.smul_apply, h0]
+    simp [μ, FunLike.coe_sum, Finset.sum_apply, add_apply, smul_apply, h0]
 
   have hbal : μ ap an = μ an ap := by
     obtain ⟨T, hTc, hT⟩ := TopologicalSpace.isOpen_iUnion_countable (fun c : AlgChart p σ D => c.e.source)
@@ -453,8 +453,8 @@ theorem exists_functional_archInt : ∀ (k : Type) [CommRing k] (Y : Scheme.{0})
   intro k _ Y _ q hq e ι _ L M r hr hint
   classical
   have := hq.finite
-  haveI : Finite (k →+* ℂ) := .of_equiv _ (RingHom.equivIntAlgHom k ℂ).symm
-  letI := Fintype.ofFinite (k →+* ℂ)
+  have : Finite (k →+* ℂ) := .of_equiv _ (RingHom.equivIntAlgHom k ℂ).symm
+  let := Fintype.ofFinite (k →+* ℂ)
   refine GlobalTheory.MixFun.exists_linear_of_rel (fun n : ι → ℤ => lin (fun i => (n i : ℝ)) ^ e)
     (fun n => (comb L n).archInt M e hr) ?_
   intro c hc

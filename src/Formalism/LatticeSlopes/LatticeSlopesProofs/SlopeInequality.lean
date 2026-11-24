@@ -69,9 +69,9 @@ private theorem finrank_int_eq_finrank_real_span {E : Type*} [NormedAddCommGroup
       map_smul' := fun _ _ => rfl
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl }
-  haveI : DiscreteTopology L₀ := by
+  have : DiscreteTopology L₀ := by
     refine DiscreteTopology.of_continuous_injective (f := e) ?_ e.injective
-    exact Continuous.subtype_mk (continuous_subtype_val.comp continuous_subtype_val) _
+    exact Continuous.subtype_mk (continuous_subtypeVal.comp continuous_subtypeVal) _
   have himg : (Submodule.span ℝ (L : Set E)).subtype '' (L₀ : Set _) = (L : Set E) := by
     ext x
     constructor
@@ -79,7 +79,7 @@ private theorem finrank_int_eq_finrank_real_span {E : Type*} [NormedAddCommGroup
       exact hy
     · intro hx
       exact ⟨⟨x, hsub x hx⟩, hx, rfl⟩
-  haveI : IsZLattice ℝ L₀ := by
+  have : IsZLattice ℝ L₀ := by
     refine ⟨?_⟩
     apply Submodule.map_injective_of_injective (Submodule.span ℝ (L : Set E)).injective_subtype
     rw [Submodule.map_span, himg, Submodule.map_top, Submodule.range_subtype]
@@ -161,9 +161,9 @@ theorem slopeInequality_of (h : SlopeLeMuMax.{v}) : SlopeInequality.{u, v} := by
   have hNM : N ≤ M := by
     rintro _ ⟨x, rfl⟩
     exact (φ x).2
-  haveI : DiscreteTopology L := hL
-  haveI : DiscreteTopology M := hM
-  haveI : DiscreteTopology N :=
+  have : DiscreteTopology L := hL
+  have : DiscreteTopology M := hM
+  have : DiscreteTopology N :=
     DiscreteTopology.of_continuous_injective (continuous_inclusion hNM)
       (Submodule.inclusion_injective hNM)
   let e : L ≃ₗ[ℤ] N := LinearEquiv.ofInjective g ginj
@@ -196,7 +196,7 @@ theorem slopeInequality_of (h : SlopeLeMuMax.{v}) : SlopeInequality.{u, v} := by
   have hrkN : rk N = r := by
     show Module.finrank ℤ N = Module.finrank ℤ L
     exact e.finrank_eq.symm
-  haveI : Nontrivial L := Submodule.nontrivial_iff_ne_bot.mpr hne
+  have : Nontrivial L := Submodule.nontrivial_iff_ne_bot.mpr hne
   have hrpos : 0 < r := Module.finrank_pos
 
   let b := Module.finBasis ℤ L

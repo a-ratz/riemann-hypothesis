@@ -70,7 +70,7 @@ private theorem Kc_le {F : Type} [Field F] [NumberField F] {c : Pl F → ℕ} {k
   refine ⟨⟨A, B, hinj ?_, hinj ?_⟩, ?_, ?_⟩
   · rw [map_mul, map_one, hA, hB, Units.mul_inv]
   · rw [map_mul, map_one, hA, hB, Units.inv_mul]
-  · haveI : Subsingleton (UpperTheory.V.Af.Ohat F ⧸ Ideal.span {((1 : ℕ) : ↥(UpperTheory.V.Af.Ohat F))}) :=
+  · have : Subsingleton (UpperTheory.V.Af.Ohat F ⧸ Ideal.span {((1 : ℕ) : ↥(UpperTheory.V.Af.Ohat F))}) :=
       Ideal.Quotient.subsingleton_iff.2 (by simp)
     ext i j
     exact Subsingleton.elim _ _

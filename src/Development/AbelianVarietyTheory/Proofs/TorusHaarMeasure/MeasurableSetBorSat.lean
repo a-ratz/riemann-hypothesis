@@ -83,14 +83,14 @@ theorem measurableSet_borSat {r : ℕ} (X : Data E r) {C : Set (Frame X.Ψ r)} (
       mat p.1 τ) a c = 0}
   have hm : ∀ τ : X.Ψ, Continuous fun y : Frame X.Ψ r => mat y τ := fun τ => continuous_apply τ
   have hT : IsClosed T := by
-    simp only [T, Set.setOf_forall]
+    simp only [T, Set.ofPred_forall]
     refine isClosed_iInter fun τ => isClosed_iInter fun a => isClosed_iInter fun c =>
       isClosed_iInter fun _ => isClosed_eq ?_ continuous_const
-    exact (((((hm τ).comp (continuous_subtype_val.comp continuous_snd)).matrix_adjugate).matrix_mul
+    exact (((((hm τ).comp (continuous_subtypeVal.comp continuous_snd)).matrix_adjugate).matrix_mul
       continuous_const).matrix_mul ((hm τ).comp continuous_fst)).matrix_elem a c
   have hT' : IsClosed (Prod.fst '' T) := isClosedMap_fst_of_compactSpace T hT
   have hU : IsOpen {y : Frame X.Ψ r | ∀ τ, (mat y τ).det ≠ 0} := by
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     exact isOpen_iInter_of_finite fun τ => isOpen_ne_fun (hm τ).matrix_det continuous_const
   have heq : borSat X C = {y : Frame X.Ψ r | ∀ τ, (mat y τ).det ≠ 0} ∩ Prod.fst '' T := by
     ext y

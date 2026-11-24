@@ -96,10 +96,10 @@ theorem exists_pow_mul_eq {E : Type} [Field E] {r : ℕ} (A : Matrix (Fin r) (Fi
   let S := Subalgebra.centralizer E ({A} : Set (Matrix (Fin r) (Fin r) E))
   have hmem : ∀ a : Matrix (Fin r) (Fin r) E, a ∈ S ↔ a * A = A * a := by
     intro a; rw [Subalgebra.mem_centralizer_iff]; simp [eq_comm]
-  letI : CommRing S := { (inferInstance : Ring S) with
+  let : CommRing S := { (inferInstance : Ring S) with
     mul_comm := fun a b => Subtype.ext (GlobalTheory.CommSep.commute_of_commute_separable E r A hs a b
       ((hmem a).1 a.2) ((hmem b).1 b.2)) }
-  haveI : IsArtinianRing S := IsArtinianRing.of_finite E S
+  have : IsArtinianRing S := IsArtinianRing.of_finite E S
   obtain ⟨n, w, hw⟩ := IsArtinian.exists_pow_succ_smul_dvd (R := S) (M := S) ⟨z, (hmem z).2 hz⟩ 1
   refine ⟨n, w, (hmem w).1 w.2, ?_⟩
   have := congrArg Subtype.val hw
@@ -209,7 +209,7 @@ theorem isoIdem : ∀ (E : Type) [Field E] [StarRing E] (r : ℕ) (A₀ : Matrix
   have hrank : f.rank < (f + g).rank := by
     simp only [← Matrix.finrank_range_mulVecLin]
     apply Submodule.finrank_lt_finrank_of_lt
-    rw [SetLike.lt_iff_le_and_exists]
+    rw [IsConcreteLE.lt_iff_le_and_exists]
     constructor
     · have h1 : (f + g) * f = f := by rw [add_mul, hff, hgf, add_zero]
       calc LinearMap.range f.mulVecLin = LinearMap.range ((f + g) * f).mulVecLin := by rw [h1]
@@ -248,14 +248,14 @@ namespace GlobalTheory
 
 theorem mul_star_anisotropic_proper : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (V : Submodule E (Matrix (Fin r) (Fin r) E)), (∀ z ∈ V, z * star z = 0 → z = 0) → ∀ B : Set (Matrix (Fin r) (Fin r) E), IsCompact B → IsCompact {z : Matrix (Fin r) (Fin r) E | z ∈ V ∧ z * star z ∈ B} := by
   intro F E _ _ _ _ hU r V hV B hB
-  letI : NormedAddCommGroup (Matrix (Fin r) (Fin r) E) := Matrix.normedAddCommGroup
-  letI : NormedSpace E (Matrix (Fin r) (Fin r) E) := Matrix.normedSpace
-  haveI : LocallyCompactSpace E := hU.lcE
-  haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
-  haveI : ProperSpace (Matrix (Fin r) (Fin r) E) := FiniteDimensional.proper E _
+  let : NormedAddCommGroup (Matrix (Fin r) (Fin r) E) := Matrix.normedAddCommGroup
+  let : NormedSpace E (Matrix (Fin r) (Fin r) E) := Matrix.normedSpace
+  have : LocallyCompactSpace E := hU.lcE
+  have : ProperSpace E := ProperSpace.of_locallyCompactSpace E
+  have : ProperSpace (Matrix (Fin r) (Fin r) E) := FiniteDimensional.proper E _
   have hsE : Continuous (star : E → E) :=
     AddMonoidHomClass.continuous_of_bound (starAddEquiv : E ≃+ E) 1 (fun x => by simp [hU.norm_star])
-  haveI : ContinuousStar E := ⟨hsE⟩
+  have : ContinuousStar E := ⟨hsE⟩
   have hQc : Continuous fun z : Matrix (Fin r) (Fin r) E => z * star z :=
     continuous_id.mul continuous_star
   have hQs : ∀ (d : E) (z : Matrix (Fin r) (Fin r) E), (d • z) * star (d • z) = (d * star d) • (z * star z) := by
@@ -263,7 +263,7 @@ theorem mul_star_anisotropic_proper : ∀ (F E : Type) [NontriviallyNormedField 
     rw [star_smul, smul_mul_smul_comm]
   have hnd : ∀ d : E, ‖d * star d‖ = ‖d‖ ^ 2 := by
     intro d; rw [norm_mul, hU.norm_star, sq]
-  have hVc : IsClosed (V : Set (Matrix (Fin r) (Fin r) E)) := Submodule.closed_of_finiteDimensional V
+  have hVc : IsClosed (V : Set (Matrix (Fin r) (Fin r) E)) := Submodule.isClosed_of_finiteDimensional V
   obtain ⟨k, hk⟩ := NormedField.exists_one_lt_norm E
   set A : Set (Matrix (Fin r) (Fin r) E) := {w | w ∈ V ∧ ‖k‖⁻¹ ≤ ‖w‖ ∧ ‖w‖ ≤ 1} with hA
   have hAc : IsCompact A := by
@@ -351,7 +351,7 @@ theorem normsec : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
   have memR' : ∀ m ∈ R, m * A₀ = A₀ * m := by
     intro m hm
     exact ((Subring.mem_centralizer_iff.1 hm) A₀ rfl).symm
-  letI : CommRing R := { (inferInstance : Ring R) with
+  let : CommRing R := { (inferInstance : Ring R) with
     mul_comm := fun a b => Subtype.ext (hcomm a.1 b.1 (memR' _ a.2) (memR' _ b.2)) }
   let V : Submodule E (Matrix (Fin r) (Fin r) E) :=
     { carrier := {z | z * A₀ = A₀ * z ∧ z * e = z}
@@ -388,7 +388,7 @@ theorem normsec : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
       (hP₁.prod (hP₂.image MulOpposite.continuous_op))
     convert this using 1
     ext s
-    simp only [Set.mem_setOf_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod]
+    simp only [Set.mem_ofPred_eq, Set.mem_preimage, Units.embedProduct_apply, Set.mem_prod]
     rw [MulOpposite.op_injective.mem_set_image]
   rintro t ht ⟨m, hmM, hm⟩
   set T : Matrix (Fin r) (Fin r) E := (t : Matrix (Fin r) (Fin r) E) with hT
@@ -559,19 +559,19 @@ theorem isCompact_units_image {X : Type} [TopologicalSpace X] {P : Set X} (hP : 
     ∃ C : Set (GL (Fin r) k), IsCompact C ∧
       ∀ x ∈ P, ∃ c ∈ C, (c : Matrix (Fin r) (Fin r) k) = f x := by
   classical
-  haveI : CompactSpace P := isCompact_iff_compactSpace.mp hP
+  have : CompactSpace P := isCompact_iff_compactSpace.mp hP
   let φ : P → GL (Fin r) k := fun x =>
     ⟨f x, (f x)⁻¹, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr (hdet x x.2)),
       Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr (hdet x x.2))⟩
   have hφ : Continuous φ := by
     rw [Units.continuous_iff]
-    refine ⟨hf.comp continuous_subtype_val, ?_⟩
+    refine ⟨hf.comp continuous_subtypeVal, ?_⟩
     show Continuous fun x : P => (f x)⁻¹
     have : (fun x : P => (f x)⁻¹) = fun x : P => ((f x).det)⁻¹ • (f x).adjugate := by
       funext x; rw [Matrix.inv_def, Ring.inverse_eq_inv']
     rw [this]
-    exact ((hf.comp continuous_subtype_val).matrix_det.inv₀ fun x => hdet x.1 x.2).smul
-      (hf.comp continuous_subtype_val).matrix_adjugate
+    exact ((hf.comp continuous_subtypeVal).matrix_det.inv₀ fun x => hdet x.1 x.2).smul
+      (hf.comp continuous_subtypeVal).matrix_adjugate
   exact ⟨Set.range φ, isCompact_range hφ, fun x hx => ⟨φ ⟨x, hx⟩, ⟨_, rfl⟩, rfl⟩⟩
 
 theorem gl_orbit_cpt (A₀ : Matrix (Fin r) (Fin r) k) (hs : A₀.charpoly.Separable)
@@ -702,7 +702,7 @@ theorem unitary_orbit_cpt (hN : ∀ (F E : Type) [NontriviallyNormedField F] [No
       g.1 * A₀ * star g.1 ∈ Z → ∃ c ∈ C, ∃ t : Matrix.unitaryGroup (Fin r) E,
         t.1 * A₀ = A₀ * t.1 ∧ g = c * t := by
   classical
-  haveI : ContinuousStar E := ⟨by
+  have : ContinuousStar E := ⟨by
     have h := AddMonoidHomClass.isometry_of_norm (starAddEquiv (R := E))
       (fun x => Unram.norm_star (F := F) x)
     exact h.continuous⟩

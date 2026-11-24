@@ -200,7 +200,7 @@ theorem measurableSet_dcoset (Γ K : Subgroup G) [Countable Γ] (hK : Measurable
     MeasurableSet (dcoset Γ K g) := by
   have : dcoset Γ K g = ⋃ γ : Γ, (fun y => ((γ : G) * g)⁻¹ * y) ⁻¹' (K : Set G) := by
     ext x
-    simp only [dcoset, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe]
+    simp only [dcoset, Set.mem_ofPred_eq, Set.mem_iUnion, Set.mem_preimage, SetLike.mem_coe]
     constructor
     · rintro ⟨γ, hγ, k, hk, rfl⟩
       exact ⟨⟨γ, hγ⟩, by simpa [mul_assoc] using hk⟩
@@ -223,7 +223,7 @@ theorem tsum_indicator_eq (Γ K : Subgroup G) (g x : G) :
     refine tsum_congr fun γ => ?_
     have e : g⁻¹ * ((γ : G) * δ⁻¹ * (δ * g * k)) = g⁻¹ * γ * g * k := by group
     simp only [Set.indicator, Set.mem_preimage, Subgroup.smul_def, smul_eq_mul, Equiv.coe_mulRight,
-      Subgroup.coe_mul, Subgroup.coe_inv, SetLike.mem_coe, Pi.one_apply, Set.mem_setOf_eq, e,
+      Subgroup.coe_mul, Subgroup.coe_inv, SetLike.mem_coe, Pi.one_apply, Set.mem_ofPred_eq, e,
       K.mul_mem_cancel_right hk]
   · rw [Set.indicator_of_notMem hx, mul_zero, ENNReal.tsum_eq_zero]
     intro γ
@@ -350,7 +350,7 @@ theorem norm_levFn {n : ℕ} (β x : GL (Fin n) (Lev.EAf D)) (L : LevDat D.host.
 theorem isOpen_level (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank) :
     IsOpen (((lev D.sp.cm V.gram β L).comap (Lev.finE V) : Subgroup (GA D V)) : Set (GA D V)) := by
   classical
-  haveI : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
+  have : IsTopologicalGroup (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA _ _
   refine Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_
   filter_upwards [GlobalTheory.ThetaIntegrand.eventually_princ V β (L.Pg ∪ L.Q)] with κ hh
   obtain ⟨h1, h2, h3⟩ := hh
@@ -406,10 +406,10 @@ theorem integral_eq_classSum (V : HSp D) (β : GL (Fin V.rank) (Lev.EAf D)) (L :
     (hΦ : ∀ γ ∈ GQ V, ∀ k, Lev.finE V k ∈ lev D.sp.cm V.gram β L → ∀ x, Φ (γ * x * k) = Φ x) :
     ∫ x in 𝓕, Φ x ∂ν =
       ∑ j, ((Nat.card (Bridge.stab (Bridge.ratF V) (grpOf V β L) (y j)) : ℂ))⁻¹ * Φ (finLift V (y j)) := by
-  haveI := hν.1.1
-  haveI : MeasurableMul (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableMulHA _ _
-  haveI : BorelSpace (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA _ _
-  haveI : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
+  have := hν.1.1
+  have : MeasurableMul (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.measurableMulHA _ _
+  have : BorelSpace (GA D V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA _ _
+  have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma _ _
   have e : (grpOf V β L).comap (finHom V).rangeRestrict = (lev D.sp.cm V.gram β L).comap (Lev.finE V) :=
     Subgroup.ext fun k => mem_grpOf V β L k
   refine integral_eq_classSum_of_hom (finHom V).rangeRestrict (GQ V) (grpOf V β L) ν ?_ ?_ hy _

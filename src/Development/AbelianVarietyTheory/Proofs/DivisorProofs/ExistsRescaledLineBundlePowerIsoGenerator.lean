@@ -259,7 +259,7 @@ theorem exists_rescaled_gen : ∀ {T X Z₀ Z₁ Z₂ : Scheme.{0}} (L : LB Z₁
     rw [← div_eq_mul_inv, ← div_eq_mul_inv, div_eq_div_iff_mul_eq_mul]
     apply Units.ext
     simp only [Units.val_mul, Units.val_pow_eq_pow_val, val_res, a, A, B, Units.coe_map,
-      RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, res_appLE]
+      RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, res_appLE]
     exact alg _ _ _ _ _ _ _ _ k rB rA ra
   obtain ⟨v, hv⟩ := glue_units Wo hcov u hcomp
   refine ⟨⟨fun p => res (show (LB.div (powPull M g (k : ℤ)) (powPull L f (k : ℤ))).U p ≤ π ⁻¹ᵁ ⊤ from fun _ _ => trivial) (pullU π ⊤ v) * α₀.s p⟩, ?_, ?_⟩

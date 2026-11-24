@@ -77,7 +77,7 @@ theorem exists_selfDual_frames : ∀ (D : D7) (S : HSp D) (L₀ : GlobalTheory.F
       unfold IntIn at h1 ⊢
       rw [hother _ hne]
       exact h1
-  haveI := Fintype.ofFinite I
+  have := Fintype.ofFinite I
   obtain ⟨L, hL, h⟩ := key Finset.univ
   exact ⟨L, hL, fun i => h i (Finset.mem_univ i)⟩
 

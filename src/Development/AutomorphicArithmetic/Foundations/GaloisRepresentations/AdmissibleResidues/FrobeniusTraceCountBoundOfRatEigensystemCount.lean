@@ -334,7 +334,7 @@ theorem eisenstein_trace_difference_log_bound :
     rw [Real.log_le_iff_le_exp hX0]
     have hexp : Real.exp (2 * (e : ℝ) * Real.log q + 1) = ((q : ℝ) ^ e) ^ 2 * Real.exp 1 := by
       rw [Real.exp_add, show 2 * (e : ℝ) * Real.log q = ((2 * e : ℕ) : ℝ) * Real.log q by push_cast; ring,
-        Real.exp_nat_mul, Real.exp_log hQ0]
+        Real.exp_natCast_mul, Real.exp_log hQ0]
       ring
     rw [hexp]
     have hX : ‖(q : ℂ) ^ e * (t - eis3 q e z)‖ ≤
@@ -370,8 +370,8 @@ private theorem norm_natCast_qbar_eq_one_of_not_dvd (l q : ℕ) [Fact l.Prime] (
 theorem frobenius_trace_norm_nonzero_log_bound :
     ∀ (q e : ℕ), 7 ≤ q → 1 ≤ e → ∀ (D : TrData q e) (Orb : Type) [Fintype Orb] (z : Orb → ℂ), (∀ o, ∃ k : ℕ, 0 < k ∧ z o ^ k = 1) → (∀ σ : ℂ ≃+* ℂ, ∃ u : Orb ≃ Orb, ∀ o, z (u o) = σ (z o)) → ∃ NN : ℤ, NN ≠ 0 ∧ Real.log |(NN : ℝ)| ≤ Fintype.card Orb * Nat.card D.S * (2 * e * Real.log q + 1) ∧ ∀ (l : ℕ) [Fact l.Prime], ¬ l ∣ q → ∀ (ι : Qbar l ≃+* ℂ) (Γ : Type) [Group Γ] (g : Γ) (admitted : (Γ →* GL (Fin 3) (Qbar l)) → Prop), D.Classifies ι g admitted → ∀ X : Orb → Finset (Γ →* GL (Fin 3) (Qbar l)), (∀ o, ∀ ρ ∈ X o, admitted ρ) → (∀ o, ∀ ρ ∈ X o, ∀ ρ' ∈ X o, RepIso ρ ρ' → ρ = ρ') → (∀ o, ∀ ρ ∈ X o, (ρ g : Matrix (Fin 3) (Fin 3) (Qbar l)).trace ≠ ι.symm (eis3 q e (z o))) ∧ ‖((NN : ℤ) : Qbar l)‖ ≤ ∏ o, ∏ ρ ∈ X o, ‖(ρ g : Matrix (Fin 3) (Fin 3) (Qbar l)).trace - ι.symm (eis3 q e (z o))‖ := by
   intro q e hq he D Orb _ z hz hσ
-  haveI := D.fin
-  haveI : Fintype D.S := Fintype.ofFinite _
+  have := D.fin
+  have : Fintype D.S := Fintype.ofFinite _
   have hq0 : (q : ℂ) ≠ 0 := by exact_mod_cast (show q ≠ 0 by omega)
   let F : Orb → D.S → ℂ := fun o s => (q : ℂ) ^ e * (D.t s - eis3 q e (z o))
   have hF : ∀ o s, D.t s ≠ eis3 q e (z o) ∧ IsIntegral ℤ (F o s) ∧
@@ -580,9 +580,9 @@ theorem rootSum :
       Nat.card {x : (D i).S × Multiset ℂ // Multiset.map (fun x => x ^ f i) x.2 = (D i).β x.1}
         ≤ 2 ^ n * Nat.card (D i).S := by
     intro i
-    haveI := (D i).fin
-    haveI : Fintype (D i).S := Fintype.ofFinite _
-    haveI : ∀ s, Finite {B : Multiset ℂ // Multiset.map (fun x => x ^ f i) B = (D i).β s} :=
+    have := (D i).fin
+    have : Fintype (D i).S := Fintype.ofFinite _
+    have : ∀ s, Finite {B : Multiset ℂ // Multiset.map (fun x => x ^ f i) B = (D i).β s} :=
       fun s => (hfib i s).1
     let E := Equiv.subtypeProdEquivSigmaSubtype
       (fun (s : (D i).S) (B : Multiset ℂ) => Multiset.map (fun x => x ^ f i) B = (D i).β s)
@@ -590,7 +590,7 @@ theorem rootSum :
     rw [Nat.card_congr E, Nat.card_sigma]
     calc _ ≤ ∑ _s : (D i).S, 2 ^ n := Finset.sum_le_sum fun s _ => (hfib i s).2
       _ = _ := by rw [Finset.sum_const, Finset.card_univ, smul_eq_mul, Nat.card_eq_fintype_card, mul_comm]
-  haveI : ∀ i, Finite {x : (D i).S × Multiset ℂ // Multiset.map (fun x => x ^ f i) x.2 = (D i).β x.1} :=
+  have : ∀ i, Finite {x : (D i).S × Multiset ℂ // Multiset.map (fun x => x ^ f i) x.2 = (D i).β x.1} :=
     fun i => (hT i).1
   refine ⟨⟨(i : I) × {x : (D i).S × Multiset ℂ // Multiset.map (fun x => x ^ f i) x.2 = (D i).β x.1} × Bool,
       inferInstance, fun x => x.2.1.1.2, ?_, ?_, ?_, ?_, ?_⟩, ?_, id, Function.injective_id, fun _ => rfl⟩

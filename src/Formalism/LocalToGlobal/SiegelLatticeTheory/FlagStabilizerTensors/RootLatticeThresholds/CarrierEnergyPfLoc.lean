@@ -194,8 +194,8 @@ theorem hilbertSchmidt_double_coset_invariant (u u' : D.what₂.Word) (v : Infin
     (hs : InS (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u)) (uMat s))
     (hs' : InS (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u')) (uMat s')) :
     hs2 (JvX X u u' v (s * g * s'⁻¹)) = hs2 (JvX X u u' v g) := by
-  haveI := FiniteDimensional.complete ℂ (X.Vloc u v)
-  haveI := FiniteDimensional.complete ℂ (X.Vloc u' v)
+  have := FiniteDimensional.completeSpace ℂ (X.Vloc u v)
+  have := FiniteDimensional.completeSpace ℂ (X.Vloc u' v)
   obtain ⟨A, hA⟩ := wloc_unit X u v s hs
   obtain ⟨B, hB⟩ := wloc_unit X u' v s' hs'
   unfold JvX Formalism.L2.SG.RealObj.Jv
@@ -206,7 +206,7 @@ theorem hilbertSchmidt_double_coset_invariant (u u' : D.what₂.Word) (v : Infin
 
 theorem jvX_meas (u u' : D.what₂.Word) (v : InfinitePlace X.B.I.F) :
     Measurable (fun g => hs2 (JvX X u u' v g)) := by
-  haveI := FiniteDimensional.complete ℂ (X.Vloc u v)
+  have := FiniteDimensional.completeSpace ℂ (X.Vloc u v)
   have hF : Continuous (fun p : Formalism.REAL.UJ (X.B.I.ε v) × Formalism.REAL.UJ (X.B.I.ε v) =>
       Formalism.L2.SG.TermOp.rk1 (X.Wloc u v p.2) (X.Wloc u' v (p.1⁻¹ * p.2))) :=
     Formalism.L2.SG.RealObj.RankOneTensors.continuous_rankOneOperator ((X.Wloc_cont u v).comp continuous_snd)

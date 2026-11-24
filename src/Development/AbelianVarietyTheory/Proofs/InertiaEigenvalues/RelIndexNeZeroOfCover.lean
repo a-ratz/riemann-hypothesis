@@ -86,7 +86,7 @@ variable {G : Type*} [Group G]
 theorem relIndex_ne_zero_of_cover {H K : Subgroup G} (F : Finset G) (hF : ∀ κ ∈ K, ∃ f ∈ F, f⁻¹ * κ ∈ H)
     (hle : H ≤ K) : H.relIndex K ≠ 0 := by
   classical
-  haveI : Finite (K ⧸ H.subgroupOf K) := by
+  have : Finite (K ⧸ H.subgroupOf K) := by
     let φ : F → K ⧸ H.subgroupOf K := fun f =>
       if h : (f : G) ∈ K then ((⟨f, h⟩ : K) : K ⧸ H.subgroupOf K) else ((1 : K) : K ⧸ H.subgroupOf K)
     refine Finite.of_surjective φ (fun q => ?_)
@@ -97,7 +97,7 @@ theorem relIndex_ne_zero_of_cover {H K : Subgroup G} (F : Finset G) (hF : ∀ κ
         have := K.mul_mem κ.2 (K.inv_mem (hle hfκ))
         simpa using this
       refine ⟨⟨f, hf⟩, ?_⟩
-      simp only [φ, dif_pos hfK]
+      simp only [φ, dite_eq_left hfK]
       exact QuotientGroup.eq.2 (by simpa [Subgroup.mem_subgroupOf] using hfκ)
   show (H.subgroupOf K).index ≠ 0
   exact Subgroup.index_ne_zero_of_finite
@@ -105,8 +105,8 @@ theorem relIndex_ne_zero_of_cover {H K : Subgroup G} (F : Finset G) (hF : ∀ κ
 theorem exists_cosetReps {H K : Subgroup G} (hle : H ≤ K) (hne : H.relIndex K ≠ 0) :
     ∃ F : Finset G, (∀ u ∈ F, u ∈ K) ∧ (∀ κ ∈ K, ∃! u, u ∈ F ∧ u⁻¹ * κ ∈ H) ∧ F.card = H.relIndex K := by
   classical
-  haveI : (H.subgroupOf K).FiniteIndex := ⟨hne⟩
-  haveI : Fintype (K ⧸ H.subgroupOf K) := Fintype.ofFinite _
+  have : (H.subgroupOf K).FiniteIndex := ⟨hne⟩
+  have : Fintype (K ⧸ H.subgroupOf K) := Fintype.ofFinite _
   let o : K ⧸ H.subgroupOf K → G := fun q => ((Quotient.out q : K) : G)
   have ho : Function.Injective o := by
     intro q q' h
@@ -132,7 +132,7 @@ theorem exists_cosetReps {H K : Subgroup G} (hle : H ≤ K) (hne : H.relIndex K 
 
 theorem norm_eq_one_of_relIndex {J K : Subgroup G} (hle : K ≤ J) (hne : K.relIndex J ≠ 0) (χ : J →* ℂˣ)
     (hχ : ∀ κ (h : κ ∈ K), χ ⟨κ, hle h⟩ = 1) (κ : J) : ‖((χ κ : ℂˣ) : ℂ)‖ = 1 := by
-  haveI : (K.subgroupOf J).FiniteIndex := ⟨hne⟩
+  have : (K.subgroupOf J).FiniteIndex := ⟨hne⟩
   obtain ⟨i, j, hij, e⟩ :=
     Finite.exists_ne_map_eq_of_infinite (fun i : ℕ => ((κ ^ i : J) : J ⧸ K.subgroupOf J))
   have hmem : ((κ ^ i)⁻¹ * κ ^ j : J) ∈ K.subgroupOf J := QuotientGroup.eq.1 e

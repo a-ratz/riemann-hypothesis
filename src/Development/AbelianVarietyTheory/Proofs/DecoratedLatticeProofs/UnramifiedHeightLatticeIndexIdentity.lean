@@ -84,7 +84,7 @@ theorem relIndex_maxIdeal (L : AddSubgroup k) (hL : ∀ x, x ∈ L ↔ valuation
   have hk : L.comap f = g.ker := by
     ext y
     simp only [AddSubgroup.mem_comap, AddMonoidHom.mem_ker, g, RingHom.toAddMonoidHom_eq_coe,
-      AddMonoidHom.coe_coe, IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal,
+      AddMonoidHom.coe_ofClass, IsLocalRing.residue_eq_zero_iff, IsLocalRing.mem_maximalIdeal,
       mem_nonunits_iff, Valuation.Integer.not_isUnit_iff_valuation_lt_one, hL]
     rfl
   have hs : Function.Surjective g := Ideal.Quotient.mk_surjective
@@ -112,11 +112,11 @@ theorem comap_mulLeft_le_pow (ϖ : kˣ) (hϖ : valuation k (ϖ : k) ≤ 1) (a : 
   intro x hx
   rw [mem_comap_mulLeft L hL] at hx ⊢
   rw [Units.val_mul, Units.val_pow_eq_pow_val, mul_assoc, map_mul, map_pow]
-  exact lt_of_le_of_lt (mul_le_of_le_one_left zero_le' (pow_le_one₀ zero_le' hϖ)) hx
+  exact lt_of_le_of_lt (mul_le_of_le_one_left zero_le (pow_le_one₀ zero_le hϖ)) hx
 
 theorem relIndex_unif (ϖ : kˣ) (hϖ : valuation k (ϖ : k) = uniformizer k) :
     (L.comap (AddMonoidHom.mulLeft ((ϖ⁻¹ : kˣ) : k))).relIndex L = resCard k := by
-  have hpos : 0 < valuation k (ϖ : k) := zero_lt_iff.2 (by simp)
+  have hpos : 0 < valuation k (ϖ : k) := pos_iff_ne_zero.2 (by simp)
   have e : L = (𝒪[k]).toAddSubgroup.comap (AddMonoidHom.mulLeft ((ϖ⁻¹ : kˣ) : k)) := by
     ext x
     rw [hL]

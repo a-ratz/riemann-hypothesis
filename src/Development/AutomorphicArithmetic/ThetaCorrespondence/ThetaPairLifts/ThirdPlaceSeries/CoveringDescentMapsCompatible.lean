@@ -189,7 +189,7 @@ theorem comap_val_finite {K B : Type} [Field K] [CommRing B] [Algebra K B] (A : 
   have hf : Function.Injective f := fun a b hab => by
     have h := congrArg (fun z : C => (z : B)) hab
     exact Subtype.ext (Subtype.ext h)
-  haveI : FiniteDimensional K (C.comap A.val.toLinearMap) := Module.Finite.of_injective f hf
+  have : FiniteDimensional K (C.comap A.val.toLinearMap) := Module.Finite.of_injective f hf
   exact ⟨inferInstance, LinearMap.finrank_le_finrank_of_injective hf⟩
 
 theorem finrank_span_le_of_map {K B : Type} [Field K] [CommRing B] [Algebra K B] (A : Subalgebra K B)
@@ -377,7 +377,7 @@ theorem hasGram_norm_sum_le {K V : Type} [Field K] [NumberField K] [AddCommGroup
     (hτ : ∀ y, N (InfinitePlace.mk σ).embedding y = N σ y) {ι : Type} (s : Finset ι) (y : ι → V) :
     N σ (∑ i ∈ s, y i) ≤ ∑ i ∈ s, N σ (y i) ∧ ∀ z, 0 ≤ N σ z := by
   obtain ⟨⟨n, ⟨b, X⟩, hbX⟩⟩ := hN
-  letI : StarRing K := starRingOfComm
+  let : StarRing K := starRingOfComm
   let Φ : V →+ EuclideanSpace ℂ (Fin n) :=
     { toFun := fun y => (WithLp.equiv 2 (Fin n → ℂ)).symm (Formalism.HermitianLatticesTheory.fcoord b X (InfinitePlace.mk σ) y)
       map_zero' := by rw [Formalism.HermitianLatticesTheory.fcoord_zero]; rfl
@@ -563,7 +563,7 @@ theorem antitone_smul_hodgeWt {s : ℤ} (hs : 0 ≤ s) (τ : Psi H) : Antitone (
 
 theorem gap_smul_hodgeWt (hp : 1 ≤ Dw.p) (hq : 1 ≤ Dw.q) (s : ℤ) (τ : Psi H) : gap ((s • hodgeWt Dw) τ) (Dw.p - 1) = s := by
   have h : Dw.p - 1 + 1 < Dw.p + Dw.q := by omega
-  simp only [gap, dif_pos h, hodgeWt, CompHt.barWt, Pi.smul_apply, smul_eq_mul]
+  simp only [gap, dite_eq_left h, hodgeWt, CompHt.barWt, Pi.smul_apply, smul_eq_mul]
   split_ifs <;> omega
 
 theorem size_smul_hodgeWt {s : ℤ} (hs : 0 ≤ s) :
@@ -649,7 +649,7 @@ theorem exists_short_integral_vector : _root_.GlobalTheory.CovTop.PublishedHodge
     have h1 : (Nat.card (grpHR fr) : ℝ) ≤ (Y.d.l₂.M : ℝ) ^ (2 * (D.R.f * D.R.r)) ^ 2 := by
       exact_mod_cast (Subgroup.card_le_card_group _).trans hcard
     refine h1.trans ((pow_le_pow_left₀ (by positivity) ((Real.le_exp_log _).trans (Real.exp_le_exp.2 hM)) _).trans ?_)
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     push_cast
     exact le_of_eq (by congr 1; ring)
   have haZ : (D.R.f : ℝ) * D.R.r ≤ D.R.f * D.R.r * Lb := le_mul_of_one_le_right (by positivity) hL
@@ -684,7 +684,7 @@ theorem exists_short_integral_vector : _root_.GlobalTheory.CovTop.PublishedHodge
     exact ⟨k₁, fun γ f g h => (k₂ γ f g h).2⟩
   · refine (mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right (pow_le_pow_left₀ (by positivity) hcard' 2)
       (by positivity)) (by positivity)).trans ?_
-    rw [← Real.exp_nat_mul, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add, Real.exp_le_exp]
+    rw [← Real.exp_natCast_mul, ← Real.exp_add, ← Real.exp_add, ← Real.exp_add, Real.exp_le_exp]
     have h1 := mul_le_mul_of_nonneg_left (hw 3 (by norm_num)) hC₁
     have h2 := mul_le_mul_of_nonneg_left (hw 3 (by norm_num)) hC₃
     have h4 := hw 2 (by norm_num)

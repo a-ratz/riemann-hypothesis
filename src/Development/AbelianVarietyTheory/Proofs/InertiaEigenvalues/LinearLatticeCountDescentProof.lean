@@ -179,14 +179,14 @@ theorem isLocalRing_of_finite (O : Type) [CommRing O] [IsLocalRing O] [IsNoether
     [IsAdicComplete (IsLocalRing.maximalIdeal O) O] [Finite (IsLocalRing.ResidueField O)]
     (R : Type) [CommRing R] [IsDomain R] [Algebra O R] [Module.Finite O R] : IsLocalRing R := by
   set J : Ideal R := (IsLocalRing.maximalIdeal O).map (algebraMap O R) with hJ
-  haveI : IsPrecomplete (IsLocalRing.maximalIdeal O) R := precomplete_of_finite O _ R
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal O) R := {}
-  haveI : IsAdicComplete J R := (IsAdicComplete.map_algebraMap_iff _ R).2 inferInstance
-  haveI hH : HenselianRing R J := IsAdicComplete.henselianRing R J
-  haveI : Finite (O ⧸ IsLocalRing.maximalIdeal O) := ‹Finite (IsLocalRing.ResidueField O)›
-  haveI : Module.Finite (O ⧸ IsLocalRing.maximalIdeal O) (R ⧸ J) :=
+  have : IsPrecomplete (IsLocalRing.maximalIdeal O) R := precomplete_of_finite O _ R
+  have : IsAdicComplete (IsLocalRing.maximalIdeal O) R := {}
+  have : IsAdicComplete J R := (IsAdicComplete.map_algebraMap_iff _ R).2 inferInstance
+  have hH : HenselianRing R J := IsAdicComplete.henselianRing R J
+  have : Finite (O ⧸ IsLocalRing.maximalIdeal O) := ‹Finite (IsLocalRing.ResidueField O)›
+  have : Module.Finite (O ⧸ IsLocalRing.maximalIdeal O) (R ⧸ J) :=
     Module.Finite.of_restrictScalars_finite O _ _
-  haveI : Finite (R ⧸ J) := Module.finite_of_finite (O ⧸ IsLocalRing.maximalIdeal O)
+  have : Finite (R ⧸ J) := Module.finite_of_finite (O ⧸ IsLocalRing.maximalIdeal O)
   have hjac : ∀ y ∈ J, IsUnit (1 + y) := by
     intro y hy
     exact Ideal.isUnit_of_sub_one_mem_jacobson (1 + y) (by simpa using hH.jac hy)
@@ -269,8 +269,8 @@ theorem odd_of_involution (k : Type) [Field k] [Finite k] (τ : k →+* k) (hτ 
   have has : a ^ (q ^ f) = a := by
     have : q ^ f = (q ^ 2) ^ g := by rw [hg, ← pow_mul, two_mul]
     rw [this, hpow]
-  haveI : Fintype k := Fintype.ofFinite k
-  haveI : Fintype F := Fintype.ofFinite F
+  have : Fintype k := Fintype.ofFinite k
+  have : Fintype F := Fintype.ofFinite F
   have hcF : Fintype.card F = q ^ f := by rw [← hcard, Nat.card_eq_fintype_card]
   have h1s : 1 < q ^ f := by rw [← hcF]; exact Fintype.one_lt_card
   have haF : a ∉ (F : Set k).toFinset := by
@@ -332,9 +332,9 @@ theorem exists_fixed_odd (K : UQ) (L : Type) [Field L] [Algebra K.E L] [Algebra 
     intro x
     rw [IsScalarTower.algebraMap_apply K.O K.E L, hc, ← hcO, ← IsScalarTower.algebraMap_apply]
   let R := integralClosure K.O L
-  haveI : Module.Finite K.O R := IsIntegralClosure.finite K.O K.E L R
-  haveI : IsDedekindDomain R := IsIntegralClosure.isDedekindDomain K.O K.E L R
-  haveI : IsLocalRing R := isLocalRing_of_finite K.O R
+  have : Module.Finite K.O R := IsIntegralClosure.finite K.O K.E L R
+  have : IsDedekindDomain R := IsIntegralClosure.isDedekindDomain K.O K.E L R
+  have : IsLocalRing R := isLocalRing_of_finite K.O R
   have injL : Function.Injective (algebraMap K.O L) := by
     rw [IsScalarTower.algebraMap_eq K.O K.E L]
     exact (algebraMap K.E L).injective.comp (IsFractionRing.injective K.O K.E)
@@ -342,12 +342,12 @@ theorem exists_fixed_odd (K : UQ) (L : Type) [Field L] [Algebra K.E L] [Algebra 
     intro x y h
     apply injL
     rw [IsScalarTower.algebraMap_apply K.O R L, h, ← IsScalarTower.algebraMap_apply]
-  haveI : FaithfulSMul K.O R := (faithfulSMul_iff_algebraMap_injective _ _).2 injR
-  haveI : Module.IsTorsionFree K.O R := inferInstance
+  have : FaithfulSMul K.O R := (faithfulSMul_iff_algebraMap_injective _ _).2 injR
+  have : Module.IsTorsionFree K.O R := inferInstance
   have hnf : ¬ IsField R := fun h =>
     IsDiscreteValuationRing.not_isField K.O
       ((Algebra.IsIntegral.isField_iff_isField injR).2 h)
-  haveI : IsDiscreteValuationRing R :=
+  have : IsDiscreteValuationRing R :=
     ((IsDiscreteValuationRing.TFAE R hnf).out 3 1).1 ‹IsDedekindDomain R›
   have hint : ∀ x : R, τ (x : L) ∈ R := by
     intro x
@@ -357,8 +357,8 @@ theorem exists_fixed_odd (K : UQ) (L : Type) [Field L] [Algebra K.E L] [Algebra 
   have htt : ∀ x, t (t x) = x := fun x => Subtype.ext (by rw [ht, ht, hτ])
   have htO : ∀ x : K.O, t (algebraMap K.O R x) = algebraMap K.O R (c x) :=
     fun x => Subtype.ext (hτO x)
-  haveI : IsLocalHom t := ⟨fun x hx => by simpa [htt] using hx.map t⟩
-  haveI : IsLocalHom (algebraMap K.O R) := inferInstance
+  have : IsLocalHom t := ⟨fun x hx => by simpa [htt] using hx.map t⟩
+  have : IsLocalHom (algebraMap K.O R) := inferInstance
   obtain ⟨a, b, hab, hnm⟩ := K.c_res
   have hb : c a = b := IsFractionRing.injective K.O K.E (by rw [hcO, hab])
   have hδ : algebraMap K.O R a - t (algebraMap K.O R a) ∉ IsLocalRing.maximalIdeal R := by
@@ -391,9 +391,9 @@ theorem exists_fixed_odd (K : UQ) (L : Type) [Field L] [Algebra K.E L] [Algebra 
   have hp0 : p ≠ 0 := by
     rintro rfl
     exact IsDiscreteValuationRing.not_a_field R (by rw [hm]; simp)
-  haveI : (IsLocalRing.maximalIdeal R).LiesOver (IsLocalRing.maximalIdeal K.O) := inferInstance
-  haveI : CharZero K.O := RingHom.charZero (algebraMap K.O K.E)
-  haveI : PerfectField (FractionRing K.O) := inferInstance
+  have : (IsLocalRing.maximalIdeal R).LiesOver (IsLocalRing.maximalIdeal K.O) := inferInstance
+  have : CharZero K.O := RingHom.charZero (algebraMap K.O K.E)
+  have : PerfectField (FractionRing K.O) := inferInstance
   set f := (IsLocalRing.maximalIdeal R).inertiaDeg K.O with hf
   have hN : Ideal.span {Algebra.intNorm K.O R p} = IsLocalRing.maximalIdeal K.O ^ f := by
     rw [← Ideal.relNorm_singleton, ← hm]
@@ -405,9 +405,9 @@ theorem exists_fixed_odd (K : UQ) (L : Type) [Field L] [Algebra K.E L] [Algebra 
   have hf' : f = Module.finrank (IsLocalRing.ResidueField K.O) (IsLocalRing.ResidueField R) := by
     rw [hf, Ideal.inertiaDeg_eq_of_isMaximal (IsLocalRing.maximalIdeal K.O)]
     rfl
-  haveI : Module.Finite (IsLocalRing.ResidueField K.O) (IsLocalRing.ResidueField R) :=
+  have : Module.Finite (IsLocalRing.ResidueField K.O) (IsLocalRing.ResidueField R) :=
     inferInstance
-  haveI : Finite (IsLocalRing.ResidueField R) :=
+  have : Finite (IsLocalRing.ResidueField R) :=
     Module.finite_of_finite (IsLocalRing.ResidueField K.O)
   have hcard : Nat.card (IsLocalRing.ResidueField R) = (K.q ^ 2) ^ f := by
     rw [hf', ← K.card_res]
@@ -418,7 +418,7 @@ theorem exists_fixed_odd (K : UQ) (L : Type) [Field L] [Algebra K.E L] [Algebra 
     · intro x
       obtain ⟨x, rfl⟩ := IsLocalRing.residue_surjective x
       rw [IsLocalRing.ResidueField.map_residue, IsLocalRing.ResidueField.map_residue, htt]
-    · haveI := Fintype.ofFinite (IsLocalRing.ResidueField K.O)
+    · have := Fintype.ofFinite (IsLocalRing.ResidueField K.O)
       have h1 := FiniteField.pow_card (IsLocalRing.residue K.O a)
       rw [← Nat.card_eq_fintype_card, K.card_res] at h1
       rw [← IsLocalRing.ResidueField.map_residue (algebraMap K.O R), ← map_pow, h1]
@@ -449,14 +449,14 @@ theorem exists_plus_eta_norm (K : UQ) (B : InvAlg K) (f : B.A) (hf : IsIdempoten
       linear_combination (-s) * hff
     · intro h
       exact ⟨y, by linear_combination -h⟩
-  haveI : I.IsMaximal := by
+  have : I.IsMaximal := by
     rw [Ideal.isMaximal_iff]
     refine ⟨by rw [hI]; simpa using hf0, fun J x hIJ hx hxJ => ?_⟩
     obtain ⟨z, hz⟩ := hfield x (fun h => hx ((hI x).2 h))
     have h1 : 1 - x * z ∈ J := hIJ ((hI _).2 (by linear_combination -hz))
     have := J.add_mem h1 (J.mul_mem_right z hxJ)
     simpa using this
-  letI : Field (B.A ⧸ I) := Ideal.Quotient.field I
+  let : Field (B.A ⧸ I) := Ideal.Quotient.field I
   have hle : I ≤ I.comap (B.σ : B.A →+* B.A) := by
     intro y hy
     rw [Ideal.mem_comap, hI]
@@ -642,10 +642,10 @@ theorem exists_isPre (K : UQ) (B : InvAlg K) (hP : B.P.Separable) :
       rw [hττ m]
       by_cases h1 : enc m ≤ enc (τ m) <;> by_cases h2 : enc (τ m) ≤ enc m
       · have h3 : m = τ m := enc.injective (le_antisymm h1 h2)
-        rw [if_pos h2, if_pos h1]
+        rw [ite_eq_left h2, ite_eq_left h1]
         exact h3.symm
-      · rw [if_neg h2, if_pos h1]
-      · rw [if_pos h2, if_neg h1]
+      · rw [ite_eq_right h2, ite_eq_left h1]
+      · rw [ite_eq_left h2, ite_eq_right h1]
       · exact (le_total (enc m) (enc (τ m))).elim (fun h => absurd h h1) (fun h => absurd h h2)
   have rep_rep : ∀ m, rep (rep m) = rep m := by
     intro m
@@ -700,9 +700,9 @@ theorem exists_isPre (K : UQ) (B : InvAlg K) (hP : B.P.Separable) :
     exact hf.complete
   · refine ⟨f i.1, (hF _).1, (hF _).2.1, (hF _).2.2, fun hi => ?_, fun hi => ?_⟩
     · have hi' : τ i.1 = i.1 := (Finset.mem_filter.mp hi).2
-      exact ⟨by rw [hsum i, if_pos hi'], by rw [hτ, hi']⟩
+      exact ⟨by rw [hsum i, ite_eq_left hi'], by rw [hτ, hi']⟩
     · have hi' : τ i.1 ≠ i.1 := fun h => hi (Finset.mem_filter.mpr ⟨Finset.mem_univ _, h⟩)
-      exact ⟨by rw [hτ]; exact hf.ortho (Ne.symm hi'), by rw [hsum i, if_neg hi', hτ]⟩
+      exact ⟨by rw [hτ]; exact hf.ortho (Ne.symm hi'), by rw [hsum i, ite_eq_right hi', hτ]⟩
 
 theorem isPre_of_separable : ∀ (K : UQ) (B : InvAlg K), B.P.Separable →
     ∃ (ι : Type) (_ : Fintype ι) (e : ι → B.A) (S : Finset ι), IsPre B e S := fun K B hP => exists_isPre K B hP
@@ -738,7 +738,7 @@ theorem sum_powerset_neg_one_pow_inter {ι : Type} [DecidableEq ι] (S J : Finse
   rw [h2]
   split_ifs with hJe
   · subst hJe
-    simp only [Finset.notMem_empty, if_false, Finset.prod_const]
+    simp only [Finset.notMem_empty, ite_false, Finset.prod_const]
     norm_num
   · obtain ⟨j, hj⟩ := Finset.nonempty_iff_ne_empty.2 hJe
     exact Finset.prod_eq_zero (hJ hj) (by simp [hj])
@@ -825,7 +825,7 @@ theorem sum_chi_ell_cl : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype ι] [D
       (chi B e I x : ℝ) * h I) →
     ∀ I ⊆ S, ∑ᶠ k : B.Cl, (chi B e I k.rep : ℝ) * ℓ k.rep = (Nat.card B.Cl : ℝ) / 2 ^ S.card * h I := by
   intro K B ι _ _ e π S hF hfin ℓ h hyp I₀ h₀
-  haveI := Fintype.ofFinite B.Cl
+  have := Fintype.ofFinite B.Cl
   have inv : ∀ x, B.Plus x → (2 : ℝ) ^ S.card * ℓ x = ∑ I ∈ S.powerset, (chi B e I x : ℝ) * h I := by
     intro x hx
     calc (2 : ℝ) ^ S.card * ℓ x
@@ -833,7 +833,7 @@ theorem sum_chi_ell_cl : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype ι] [D
           rw [Finset.sum_eq_single ∅]
           · simp [sum_powerset_neg_one_pow_inter S ∅ (Finset.empty_subset _)]
           · intro J hJ hJe
-            rw [sum_powerset_neg_one_pow_inter S J (Finset.mem_powerset.1 hJ), if_neg hJe, zero_mul]
+            rw [sum_powerset_neg_one_pow_inter S J (Finset.mem_powerset.1 hJ), ite_eq_right hJe, zero_mul]
           · intro hn; exact absurd (Finset.empty_mem_powerset S) hn
       _ = ∑ I ∈ S.powerset, ∑ J ∈ S.powerset, (-1 : ℝ) ^ (J ∩ I).card * ℓ ((∏ j ∈ J, π j) * x) := by
           simp_rw [Finset.sum_mul]; exact Finset.sum_comm
@@ -856,7 +856,7 @@ theorem sum_chi_ell_cl : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype ι] [D
     _ = ((2 : ℝ) ^ S.card)⁻¹ * ∑ I ∈ S.powerset, h I * (if I = I₀ then (Fintype.card B.Cl : ℝ) else 0) := by
         rw [Finset.sum_congr rfl fun I hI => by rw [orth I hI]]
     _ = (Fintype.card B.Cl : ℝ) / 2 ^ S.card * h I₀ := by
-        simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_powerset.2 h₀, if_true]
+        simp only [mul_ite, mul_zero, Finset.sum_ite_eq', Finset.mem_powerset.2 h₀, ite_true]
         ring
 
 end GlobalTheory.UnitLemma.Desc
@@ -974,15 +974,15 @@ theorem HH_eq_alternating_GG : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype 
     refine finsum_congr fun M => ?_
     have hD : InDual B 1 M ↔ ∀ z ∈ M, Algebra.trace K.E B.A z ∈ (algebraMap K.O K.E).range := by
       simp only [InDual, one_mul]
-    simp only [Set.indicator, Set.mem_setOf_eq, hterm0, indM, indD, ← hD]
+    simp only [Set.indicator, Set.mem_ofPred_eq, hterm0, indM, indD, ← hD]
     by_cases h1 : M ∈ B.Lin
     · by_cases h2 : v ∈ M
       · by_cases h3 : InDual B 1 M
-        · rw [if_pos h1, if_pos h2, if_pos h3, if_pos ⟨h1, h2, hD.1 h3⟩]; ring
-        · rw [if_pos h1, if_pos h2, if_neg h3, if_neg (fun h => h3 (hD.2 h.2.2))]; ring
-      · rw [if_pos h1, if_neg h2, zero_mul, mul_zero]
-        exact (if_neg (fun h => h2 h.2.1)).symm
-    · rw [if_neg h1, if_neg (fun h => h1 h.1)]
+        · rw [ite_eq_left h1, ite_eq_left h2, ite_eq_left h3, ite_eq_left ⟨h1, h2, hD.1 h3⟩]; ring
+        · rw [ite_eq_left h1, ite_eq_left h2, ite_eq_right h3, ite_eq_right (fun h => h3 (hD.2 h.2.2))]; ring
+      · rw [ite_eq_left h1, ite_eq_right h2, zero_mul, mul_zero]
+        exact (ite_eq_right (fun h => h2 h.2.1)).symm
+    · rw [ite_eq_right h1, ite_eq_right (fun h => h1 h.1)]
   have hexp : HH B π I (S \ I) u 1 = ∑ p ∈ I.powerset ×ˢ (S \ I).powerset,
       (-1 : ℚ) ^ p.1.card * (-1 : ℚ) ^ p.2.card *
         HH B π ∅ ∅ ((∏ j ∈ p.1, π j) * u) ((∏ j ∈ p.2, π j) * 1) := by
@@ -1324,7 +1324,7 @@ theorem sum_formula {K : UQ} (B : InvAlg K) {ι : Type} [Fintype ι] [DecidableE
     push_cast
     ring
   refine ⟨lim1 I hI, ?_⟩
-  haveI : Finite B.Cl := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K B hB.2
+  have : Finite B.Cl := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K B hB.2
   exact _root_.GlobalTheory.UnitLemma.Desc.sum_chi_ell_cl K B ι e π S hF this ℓ h key I hI
 
 theorem linearDescent : LinearDescent := by

@@ -121,7 +121,7 @@ theorem cyclic_of_card_ker_le [Finite (IsLocalRing.ResidueField O)] {ϖ : O} (h�
       have : (Submodule.Quotient.mk y : F ⧸ LinearMap.range g) = 0 := Subsingleton.elim _ _
       exact Submodule.mem_sup_right ((Submodule.Quotient.mk_eq_zero _).1 this)
     · rw [not_subsingleton_iff_nontrivial] at hs
-      haveI : Finite (F ⧸ LinearMap.range g) :=
+      have : Finite (F ⧸ LinearMap.range g) :=
         Finite.of_surjective _ (Submodule.Quotient.mk_surjective _)
       obtain ⟨xb, hxb⟩ := exists_ne (0 : F ⧸ LinearMap.range g)
       obtain ⟨x, rfl⟩ := Submodule.Quotient.mk_surjective _ xb

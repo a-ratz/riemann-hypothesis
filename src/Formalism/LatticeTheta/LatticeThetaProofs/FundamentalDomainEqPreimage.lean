@@ -76,7 +76,7 @@ theorem integral_fundamentalDomain_eq (e : Module.Basis ι ℝ V) (H : V → ℂ
   let ψ : V ≃ᵐ (ι → ℝ) := e.equivFunL.toHomeomorph.toMeasurableEquiv
   have hψ : (ψ : V → ι → ℝ) = e.equivFunL := rfl
   set ν : Measure (ι → ℝ) := Measure.map ψ (volume : Measure V) with hνdef
-  haveI : ν.IsAddHaarMeasure := by
+  have : ν.IsAddHaarMeasure := by
     rw [hνdef, hψ]; exact e.equivFunL.isAddHaarMeasure_map volume
   have hν : ν = ν.addHaarScalarFactor volume • volume := Measure.isAddLeftInvariant_eq_smul ν volume
   have hbox : ν (boxIco ι) = volume (ZSpan.fundamentalDomain e) := by

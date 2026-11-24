@@ -249,7 +249,7 @@ theorem continuous_of_isSmooth_of_isKFinite {φ : AdelicGLn.AdelicGL K n → ℂ
     simp only [F, e, Function.comp_apply, mul_assoc]
     rw [infEmb_mul_finEmb, mul_inv_cancel_left]
   have hslice : Continuous (archSlice φ g₀) := by
-    letI := (isExpLieAlgebra K n).chartedSpace
+    let := (isExpLieAlgebra K n).chartedSpace
     exact (hs.1 g₀).continuous
   have hF : ContinuousAt F (e g₀) := by
     have hFeq : F =ᶠ[𝓝 (e g₀)] fun p => archSlice φ g₀ (archEquiv K n p.1) := by

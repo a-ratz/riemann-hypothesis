@@ -112,7 +112,7 @@ theorem DegZeroLocNoetherian.proof (h : DegZeroLocQuot.Statement.{u}) :
             simp [hk]
           · simp
         rw [hcs, map_pow, ← mul_pow, div_mul_cancel₀ _ (hφ _ fun hm => hv x.1 (hPW hm))]
-      rw [← mul_one (1 : F), ← monomial_mul, map_mul, map_mul, ih, map_add (f := _), hcadd, map_mul, hs]
+      rw [← mul_one (1 : F), ← monomial_mul_monomial, map_mul, map_mul, ih, map_add (f := _), hcadd, map_mul, hs]
       ring
 
   have hhom : ∀ (b : K → ℕ) (f : MRing ι F), IsMultiHomog f b → φ f = e f * φ (c b) := by

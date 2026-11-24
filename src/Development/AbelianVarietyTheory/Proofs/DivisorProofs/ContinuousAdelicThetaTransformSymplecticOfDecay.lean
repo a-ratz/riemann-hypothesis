@@ -57,7 +57,7 @@ theorem continuous_thV : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) [Inv
   intro F _ _ N _ ψ hF hψ Φ hΦ
   obtain ⟨hc, ⟨K, hK, hKz⟩, hdec⟩ := hΦ
   obtain ⟨hψc, hψn, -, -⟩ := hψ
-  haveI : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
+  have : LocallyCompactSpace (AF F) := GlobalTheory.AdelicUnitaryTop.locallyCompact_adele F
   obtain ⟨k, hk⟩ := GlobalTheory.SumMaj.summable_majorant F N hF K hK
   obtain ⟨C, hC⟩ := hdec k
   have hC0 : 0 ≤ C :=

@@ -150,7 +150,7 @@ theorem mem_Kq_iff (x : B.host.E) : x ∈ B.fields.Kq ↔ x ∈ B.host.K := by
 
 theorem fields_ok : B.fields.Ok := by
   have hcm : IsCMField B.host.E := B.host.isCMField_hostE
-  letI := B.host.cmStar
+  let := B.host.cmStar
   have cm := host_cmData B.R B.host
   have hinj : ∀ {φ ψ : B.host.E →+* B.LL}, B.embLL.comp φ = B.embLL.comp ψ → φ = ψ := fun h =>
     RingHom.ext fun x => B.embLL.injective (RingHom.congr_fun h x)
@@ -193,7 +193,7 @@ theorem fields_ok : B.fields.Ok := by
       rw [← hg, embLL_comp_embBar B ⟨_, h'⟩]
       show _ = B.host.emb (g * B.R.cc * B.R.cc)
       rw [mul_assoc, hcc, mul_one]
-  · letI : Algebra B.host.E B.LL := B.embE.toAlgebra
+  · let : Algebra B.host.E B.LL := B.embE.toAlgebra
     exact isTotallyComplex_of_algebra B.host.E B.LL
   · let e : B.fields.Kq ≃+* B.host.K :=
       RingEquiv.subringCongr (s := B.fields.Kq.toSubring) (t := B.host.K.toSubfield.toSubring)

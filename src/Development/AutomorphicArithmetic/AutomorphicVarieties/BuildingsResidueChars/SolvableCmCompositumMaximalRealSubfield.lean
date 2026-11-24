@@ -86,7 +86,7 @@ private theorem rcsup_cm_of_pair {K : Type} [Field K] [NumberField K] [_root_.Nu
   have hrk : Module.finrank (maximalRealSubfield K) K = 2 := by
     rw [Module.finrank_eq_card_basis (Module.Basis.mk hli hsp)]
     simp
-  haveI : Algebra.IsQuadraticExtension (maximalRealSubfield K) K := { finrank_eq_two' := hrk }
+  have : Algebra.IsQuadraticExtension (maximalRealSubfield K) K := { finrank_eq_two' := hrk }
   exact {}
 
 theorem UpperTheory.solvable_cm_compositum_maximalRealSubfield :
@@ -103,7 +103,7 @@ theorem UpperTheory.solvable_cm_compositum_maximalRealSubfield :
     | add x y _ _ hx hy => exact add_mem (hx trivial) (hy trivial)
     | mul x y _ _ hx hy => exact mul_mem (hx trivial) (hy trivial)
   · right
-    haveI : IsTotallyComplex M' := isTotallyComplex_of_algebra M M'
+    have : IsTotallyComplex M' := isTotallyComplex_of_algebra M M'
     obtain ⟨x, hx⟩ : ∃ x : M, IsCMField.complexConj M x ≠ x := by
       by_contra h
       apply IsCMField.complexConj_ne_one M

@@ -81,9 +81,9 @@ theorem GlobalTheory.WeilContF.slice_bounds : ∀ (F E : Type) [Field F] [Number
       ∀ᶠ p in nhds p0, ∀ x : κ → mixedEmbedding.mixedSpace F,
         ‖x‖ ^ k * ‖iteratedFDeriv ℝ n (fun x => om p Φ (GlobalTheory.WeilCont.adeleJoin F x y)) x‖ ≤ C := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ hσ χS χT cS cT rS rT ω hω JA JB ξ hJA hJB κ _ co hco om htr Φ hΦ y p0 k n
-  haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
-  haveI : MeasurableAdd (mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
-  haveI : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure :=
+  have : BorelSpace (κ → mixedEmbedding.mixedSpace F) := Pi.borelSpace
+  have : MeasurableAdd (mixedEmbedding.mixedSpace F) := ContinuousAdd.measurableAdd
+  have : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)).IsAddHaarMeasure :=
     MeasureTheory.Measure.pi.isAddHaarMeasure _
   have hI := _root_.GlobalTheory.TransportHeisF.pres_impl F E σ B hB nS nT JS JT hS hT ξ₀ hξ hσ χS χT cS cT rS rT ω hω JA JB ξ hJA hJB κ co hco om htr
   have hU := _root_.GlobalTheory.WeilUnitaryTransportF.isUnitaryOn_transportF F E σ B hB nS nT JS JT hS hT ξ₀ hξ hσ χS χT cS cT rS rT ω hω JA JB ξ hJA hJB κ co hco om htr

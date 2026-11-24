@@ -468,7 +468,7 @@ theorem main : ∀ (D : D7) (k : Fin 2) (w w' : PlE D.host) (c : D.nd.Om ≃+* D
     Formalism.CyclotomicNorms.rootsBar (GlobalTheory.WeilDeligne.WD.lab (D.ntypes.teichC k) γ' x') =
       (Formalism.CyclotomicNorms.rootsBar (GlobalTheory.WeilDeligne.WD.lab (D.ntypes.teichC k) γ x)).map (·⁻¹) := by
   intro D k w w' c hs hc x x' n b b' hx hx' _ hb γ γ' hγ
-  haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
+  have : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
   subst hx'
   rw [lab_eq D.host.conj.toRingEquiv c hs hc b b' hb (D.ntypes.teichC k) hγ, hx]
   exact LabDual.rootsBar_lab_lpDual _ _ _ _ _ _ _ _ x
@@ -625,7 +625,7 @@ theorem depthZero_tame_alt : _root_.GlobalTheory.NRows.ThetaLocalInputsAlt → �
   obtain ⟨c, hc1, hc2, hc3⟩ := hγ2 k v w' hc
   have hw'g : w' ∈ placesOver D.host.E (D.host.g k) := by
     have h0 := D.naut.plGw_over k v
-    simp only [placesOver, Set.mem_setOf_eq] at h0 ⊢
+    simp only [placesOver, Set.mem_ofPred_eq] at h0 ⊢
     exact (hc _ _ (by simp)).1 h0
   rw [hγ3 k w' hw'g, hγ3 k _ (D.naut.plGw_over k v), hγ1 k v]
   obtain ⟨s, hs⟩ := GlobalTheory.SplitPlaceOfFixed.exists_splitPlace_plGw D ⟨k, v⟩

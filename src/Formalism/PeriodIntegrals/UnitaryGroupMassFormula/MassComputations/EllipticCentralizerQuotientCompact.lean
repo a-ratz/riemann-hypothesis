@@ -59,7 +59,7 @@ theorem prod_rect_of_ne_zero {α β : Type*} [MeasurableSpace α] [MeasurableSpa
   have hν : SFinite ν := by
     by_contra hν
     exact h0 (Measure.prod_eq_zero_of_not_sfinite hν)
-  letI : SFinite ν := hν
+  let : SFinite ν := hν
   exact Measure.prod_prod s t
 
 theorem tauF_eq_comm {D : D7} (X : HidaSetting D) (y : AF X.B.I.F ⊗[X.B.I.F] X.B.I.E) :
@@ -103,7 +103,7 @@ theorem continuous_toInf_of (hS : SplitIso) : Continuous (X.toInf hb) := by
     (continuous_id.prodMk continuous_const)))
 
 theorem measurable_toInf_of (hS : SplitIso) : Measurable (X.toInf hb) := by
-  haveI : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
   exact (continuous_toInf_of X hb hS).measurable
 
 theorem measurableSet_image_toInf (hS : SplitIso) {FdN : Set X.B.I.Ginf} (hF : MeasurableSet FdN) :
@@ -135,7 +135,7 @@ theorem measurableSet_image_toInf (hS : SplitIso) {FdN : Set X.B.I.Ginf} (hF : M
       have := congrArg Φ hp
       rw [show Φ (ψ y) = (y, 1) from Φ.apply_symm_apply _, hΦ] at this
       exact (congrArg Prod.fst this).symm
-  haveI : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
   rw [hset]
   exact (continuous_fst.comp hψc).measurable hF
 
@@ -143,9 +143,9 @@ end Split
 
 theorem elliptic_centralizer_quotient_compact (hKo : KCompactOpen) : N4 := by
   intro hS D X hb u FdN hT hTie hF
-  haveI : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
-  haveI : BorelSpace (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
-  haveI : BorelSpace (HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : BorelSpace (HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : BorelSpace (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
+  have : BorelSpace (HA (AF X.B.I.F) X.B.I.cm.sig X.B.I.J) := ⟨rfl⟩
   obtain ⟨e, he⟩ := hS X.B.I.cm.sig X.B.I.J
   have hc : Continuous (splitA X.B.I.cm.sig X.B.I.J) := by rw [← he]; exact e.continuous_toFun
   have hm : Measurable (splitA X.B.I.cm.sig X.B.I.J) :=
@@ -157,7 +157,7 @@ theorem elliptic_centralizer_quotient_compact (hKo : KCompactOpen) : N4 := by
   have hFd : FdA X hb u FdN = Subtype.val ⁻¹' (splitA X.B.I.cm.sig X.B.I.J ⁻¹'
       ((X.toInf hb '' FdN) ×ˢ (KX X : Set (HA (Af X.B.I.F) X.B.I.cm.sig X.B.I.J)))) := by
     ext n
-    simp only [FdA, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_prod, Set.mem_image]
+    simp only [FdA, mem_ofPred_eq, Set.mem_preimage, Set.mem_prod, Set.mem_image]
     constructor
     · rintro ⟨s, hs, h1, h2⟩
       exact ⟨⟨s, hs, h1.symm⟩, h2⟩
@@ -170,14 +170,14 @@ theorem elliptic_centralizer_quotient_compact (hKo : KCompactOpen) : N4 := by
     intro h
     have h' := congrArg (fun μ => μ Set.univ) h
     simp only [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ,
-      Measure.map_apply measurable_subtype_coe MeasurableSet.univ, Measure.coe_zero, Pi.zero_apply] at h'
+      Measure.map_apply measurable_subtypeVal MeasurableSet.univ, FunLike.coe_zero, Pi.zero_apply] at h'
     exact (isOpen_univ.measure_ne_zero (X.measW u).μN Set.univ_nonempty) h'
   rw [hFd]
-  erw [← Measure.map_apply measurable_subtype_coe (hm hRm)]
+  erw [← Measure.map_apply measurable_subtypeVal (hm hRm)]
   rw [← Measure.map_apply hm hRm]
   change ((amb (X.measW u).μN).map (splitA X.B.I.cm.sig X.B.I.J)) _ = _
   rw [hN, prod_rect_of_ne_zero _ _ h0 hTm hKm, (hTie.2.2.2 u).1,
     Measure.map_apply (measurable_toInf_of X hb hS) hTm, Set.preimage_image_eq _ (toInf_injective X hb hS),
-    Measure.map_apply measurable_subtype_coe hKm]
+    Measure.map_apply measurable_subtypeVal hKm]
 
 end MassDataMassesW

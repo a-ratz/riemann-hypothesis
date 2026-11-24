@@ -160,8 +160,8 @@ theorem prod_mem (T : PlTie X P) {δ : X.E} (hδ : star δ * δ = 1) :
   rw [← Equiv.prod_comp T.pos, Fintype.prod_sigma]
   refine Subring.prod_mem _ fun v _ => ?_
   have hS := P.setting v
-  haveI := hS.frac_alt
-  haveI := hS.frac_O
+  have := hS.frac_alt
+  have := hS.frac_O
   have hδ0 : δ ≠ 0 := by rintro rfl; simp at hδ
   have hst : star δ⁻¹ = δ := by
     rw [star_inv₀]; exact (eq_inv_of_mul_eq_one_right hδ).symm
@@ -192,7 +192,7 @@ theorem prod_mem (T : PlTie X P) {δ : X.E} (hδ : star δ * δ = 1) :
   choose t ht using key
   rw [Finset.prod_congr rfl fun s _ => ht s, Finset.prod_mul_distrib, ← map_prod]
   have hsum : ∑ s : Fin (P.n' v), (a * (-1) ^ s.val : ℤ) = 0 := by
-    rw [← Finset.mul_sum, Fin.sum_univ_eq_sum_range (fun i => (-1 : ℤ) ^ i), neg_one_geom_sum, if_pos hS.even, mul_zero]
+    rw [← Finset.mul_sum, Fin.sum_univ_eq_sum_range (fun i => (-1 : ℤ) ^ i), neg_one_geom_sum, ite_eq_left hS.even, mul_zero]
   have hprod : ∀ (S : Finset (Fin (P.n' v))), ∏ s ∈ S, (p : Kf) ^ (a * (-1) ^ s.val : ℤ) =
       (p : Kf) ^ (∑ s ∈ S, (a * (-1) ^ s.val : ℤ)) := by
     intro S
@@ -273,7 +273,7 @@ structure ChiLift (c : ℤ) where
 
 theorem exists_chi (hp : p.Prime) (c : ℤ) : ∃ χ : S.G →* Oˣ,
     ∀ g, algebraMap O Kf (χ g : O) = T.eK ((Y.chr g : X.Kˣ) : X.K) * T.detTw c (Y.u g) := by
-  haveI := (P.setting ⟨0, T.nV_pos_of_prime hp⟩).frac_O
+  have := (P.setting ⟨0, T.nV_pos_of_prime hp⟩).frac_O
   have hinj := IsFractionRing.injective O Kf
   have hmem : ∀ g : S.G, ∃ y : O, algebraMap O Kf y = T.eK ((Y.chr g : X.Kˣ) : X.K) * T.detTw c (Y.u g) := by
     intro g

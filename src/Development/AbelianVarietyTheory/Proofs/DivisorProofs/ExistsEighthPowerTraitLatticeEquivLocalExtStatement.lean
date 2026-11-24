@@ -127,14 +127,14 @@ end GlobalTheory.Poinc.EighthPow
 open GlobalTheory.Poinc.EighthPow in
 theorem GlobalTheory.Poinc.EighthPow.main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], GlobalTheory.Mum.Base R → IsDiscreteValuationRing R → ∀ (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (D : DegData R (maximalIdeal R)) (A : PolAV (Sp (FractionRing R))) (U : Unif (maximalIdeal R) D A G) (G' : Over (Sp R)) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (D' : DegData R (maximalIdeal R)) (A' : PolAV (Sp (FractionRing R))) (U' : Unif (maximalIdeal R) D' A' G') (W : Matrix (Fin 8) (Fin 8) ℤ), IsE8 W → ∀ (pr : Fin 8 → (A'.A ⟶ A.A)), (∀ a, IsMonHom (pr a)) → (∀ (T' : Over (Sp (FractionRing R))) (y : Fin 8 → (T' ⟶ A.A)), ∃! z : T' ⟶ A'.A, ∀ a, z ≫ pr a = y a) → LBIso A'.L (LB.LinComb (abelian₂ A.A A.L) (K := Fin 8 × Fin 8) (fun ab => (lift (pr ab.1) (pr ab.2)).left) (fun ab => W ab.1 ab.2)) → ∀ (ϖ : R) (β : LinearMap.BilinForm ℤ D.toPre.X), (∀ a b, β a b = β b a) → (∀ a, 0 ≤ β a a) → (∀ a b' (x : (FractionRing R)ˣ), GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.IsTauCoord D.toPre a b' x → ∃ u : Rˣ, (x : FractionRing R) = algebraMap R (FractionRing R) (u : R) * algebraMap R (FractionRing R) ϖ ^ (β a b')) → ∃ e : D'.toPre.X ≃+ (Fin 8 → D.toPre.X), (∀ y r, PsiCoord D'.toPre y r → 0 ≤ qW W β (e y) ∧ Associated r (ϖ ^ (qW W β (e y)).toNat)) ∧ ∀ (a b : Fin 8) (f : G' ⟶ G') (f₁ : A'.A ⟶ A'.A) (m : D'.toPre.X →+ D'.toPre.X), IsMonHom f → MatEnd pr a b f₁ → (Over.pullback (jK R)).map f ≫ U'.gen.hom = U'.gen.hom ≫ f₁ → EndChar U' f m → ∀ y, MatRel W a b (e y) (e (m y)) := by
   intro R _ _ _ hRb hdvr G _ _ hG D A U G' _ _ hG' D' A' U' W hW pr hpr huniv hL ϖ β hs hp hτ
-  haveI := hdvr
+  have := hdvr
   have hext : ∀ v, ∃ p : G' ⟶ G, IsMonHom p ∧
       (Over.pullback (jK R)).map p ≫ U.gen.hom = U'.gen.hom ≫ pr v := by
     intro v
     have h1 := U'.gen_hom
     have h2 := U.gen_hom
     have : IsMonHom U.gen.symm.hom := by show IsMonHom U.gen.inv; infer_instance
-    haveI := hpr v
+    have := hpr v
     obtain ⟨F, ⟨hF, hFe⟩, -⟩ := GlobalTheory.semiAbelian_hom_extends_uniquely_dvr R (FractionRing R) G' G hG' hG
       (U'.gen.hom ≫ pr v ≫ U.gen.symm.hom) inferInstance
     refine ⟨F, hF, ?_⟩
@@ -171,8 +171,8 @@ theorem GlobalTheory.Poinc.EighthPow.main : ∀ (R : Type) [CommRing R] [IsDomai
         set_option synthInstance.maxHeartbeats 100000 in
           rw [map_sum]; simp [hmc]
       have hR : ∑ w, c w (t' w) = c b (Mq (e y) a) := by
-        rw [Finset.sum_eq_single b (fun w _ hw => by simp only [t', if_neg hw, map_zero]) (by simp)]
-        simp only [t', if_pos rfl]
+        rw [Finset.sum_eq_single b (fun w _ hw => by simp only [t', ite_eq_right hw, map_zero]) (by simp)]
+        simp only [t', ite_eq_left rfl]
       rw [hL, hR]
     have hkey : Mq (e (m y)) = t' := Φ.injective (by rw [he, hmy])
     intro v
@@ -257,8 +257,8 @@ theorem exists_pull_unif : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F :
   have hsqB : IsSquare (κ ≫ T.α) α₂B := ⟨pullback.lift_fst _ _ _, pullback.lift_snd _ _ _⟩
   obtain ⟨D', A', U', ε, L, hLl, hL, hΛ, hc⟩ := TraitUniq.pull T hRC h hinj hl hK _ _
     (isGrpPullback_pullback T.G (spMap h)) κ hκ hκβ α₂B hsqB
-  haveI := U'.gen_hom
-  haveI : IsMonHom U'.gen.symm.hom := inferInstanceAs (IsMonHom U'.gen.inv)
+  have := U'.gen_hom
+  have : IsMonHom U'.gen.symm.hom := inferInstanceAs (IsMonHom U'.gen.inv)
   have hgi := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_of_iso U'.gen.symm
   have hα' := (hgi.comp hα).congr (Category.id_comp _) rfl
   let H : G2 A'.A ⟶ G2 ((Over.pullback (jK R)).obj ((Over.pullback (spMap h)).obj T.G)) :=
@@ -304,7 +304,7 @@ theorem exists_pull_unif : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F :
     obtain ⟨u, hu⟩ := hm.tau (fun i y z => by fin_cases i; exact T.symm (ε y) (ε z))
       (Fin.forall_fin_one.2 hϖ) c₂ c₃ c₁
     simp only [Fin.prod_univ_one, Matrix.cons_val_zero, LinearMap.compl₁₂_apply,
-      AddMonoidHom.coe_toIntLinearMap, AddMonoidHom.coe_coe] at hu
+      AddMonoidHom.coe_toIntLinearMap, AddMonoidHom.coe_ofClass] at hu
     refine ⟨u₀ * u, ?_⟩
     have key : algebraMap R (FractionRing R) (u₀ : R) * algebraMap R (FractionRing R) r₁ *
         (algebraMap R (FractionRing R) r₂)⁻¹ * (algebraMap R (FractionRing R) r₃)⁻¹ =

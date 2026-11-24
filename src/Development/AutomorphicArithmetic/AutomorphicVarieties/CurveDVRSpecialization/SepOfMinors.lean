@@ -91,7 +91,7 @@ private lemma exists_weight {ι : Type} [Finite ι] (x : ι → κˣ) (hx : ∀ 
     · apply hx i c.natAbs (Int.natAbs_pos.mpr hc')
       rw [h, _root_.zpow_neg, inv_eq_one, zpow_natCast] at h1
       exact h1
-  haveI : Infinite (FractionRing ℤ) :=
+  have : Infinite (FractionRing ℤ) :=
     Infinite.of_injective (algebraMap ℤ (FractionRing ℤ)) (IsFractionRing.injective ℤ _)
   obtain ⟨f, hf⟩ := Module.exists_dual_forall_apply_ne_zero (K := FractionRing ℤ)
     (fun i => (LocalizedModule.mk (Additive.ofMul (x i)) 1 :

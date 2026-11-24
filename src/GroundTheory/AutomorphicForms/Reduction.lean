@@ -99,7 +99,7 @@ theorem exists_norm_det_infAt_bounds {ω : Set (AdelicGLn.AdelicGL K n)} (hω : 
           c₁ ≤ ‖(infAt w g : Matrix (Fin n) (Fin n) w.Completion).det‖ ∧
             ‖(infAt w g : Matrix (Fin n) (Fin n) w.Completion).det‖ ≤ c₂ := by
   obtain ⟨B₁, B₂, hB₁, hB₁₂, hB⟩ := exists_pos_bounds hω (f := fun b => (ideleModule K (AdelicGLn.det K n b) : ℝ))
-    (continuous_subtype_val.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det K n)))
+    (continuous_subtypeVal.comp (continuous_ideleModule.comp (AdelicGLn.continuous_det K n)))
     (fun b _ => (ideleModule K (AdelicGLn.det K n b)).2)
   obtain ⟨m, M, hm, hmM', hmM⟩ := exists_pos_bounds hω
     (f := fun b => ‖(infAt w b : Matrix (Fin n) (Fin n) w.Completion).det‖)
@@ -190,8 +190,8 @@ theorem isCompact_siegelSet_part {ω : Set (AdelicGLn.AdelicGL K n)} (hω : IsCo
       exact isCompact_Icc
     · simp only [Set.ofPred_forall]
       exact isClosed_iInter fun i => isClosed_iInter fun j => isClosed_iInter fun _ =>
-        isClosed_le (continuous_const.mul (continuous_subtype_val.comp (continuous_apply j)))
-          (continuous_subtype_val.comp (continuous_apply i))
+        isClosed_le (continuous_const.mul (continuous_subtypeVal.comp (continuous_apply j)))
+          (continuous_subtypeVal.comp (continuous_apply i))
   · exact (continuous_fst.mul ((continuous_diagUnits n).comp (continuous_pi fun i =>
       continuous_posIdele_subtype.comp ((continuous_apply i).comp (continuous_fst.comp continuous_snd))))).mul
       (continuous_snd.comp continuous_snd)
@@ -250,7 +250,7 @@ theorem isFiniteMeasure_quotientMeasure (μ : Measure (normOneGL (K := K) (n := 
     infer_instance
   obtain ⟨ω, hω, hωB, t, ht, hsieg⟩ := exists_siegelSet (K := K) n
   set D : Set (normOneGL (K := K) (n := n)) := Subtype.val ⁻¹' siegelSet n ω t with hDdef
-  have hDm : MeasurableSet D := measurable_subtype_coe (measurableSet_siegelSet hω t)
+  have hDm : MeasurableSet D := measurable_subtypeVal (measurableSet_siegelSet hω t)
   have hcover : RightCosetSpace.mk (rationalGLOne (K := K) (n := n)) '' D = univ := by
     refine eq_univ_of_forall fun q => ?_
     obtain ⟨x, rfl⟩ := RightCosetSpace.mk_surjective _ q

@@ -71,20 +71,20 @@ variable {G H : Type} [CommGroup G] [TopologicalSpace G] [IsTopologicalGroup G] 
   [CommGroup H] [TopologicalSpace H] [IsTopologicalGroup H] [LocallyCompactSpace H] [T2Space H]
 
 private theorem exists_extend (R : Subgroup H) (f : R →* ℂˣ) : ∃ g : H →* ℂˣ, ∀ x : R, g x = f x := by
-  haveI : DivisibleBy (Additive ℂˣ) ℤ := divisibleByOfSMulRightSurj (Additive ℂˣ) ℤ fun {k} hk x => by
+  have : DivisibleBy (Additive ℂˣ) ℤ := divisibleByOfSMulRightSurj (Additive ℂˣ) ℤ fun {k} hk x => by
     have hk' : (k : ℂ) ≠ 0 := Int.cast_ne_zero.2 hk
     have hx : ((Additive.toMul x : ℂˣ) : ℂ) ≠ 0 := Units.ne_zero _
     refine ⟨Additive.ofMul (Units.mk0 (Complex.exp (Complex.log (Additive.toMul x : ℂˣ) / k)) (Complex.exp_ne_zero _)), ?_⟩
     apply Additive.toMul.injective
     apply Units.ext
     change ((Units.mk0 (Complex.exp (Complex.log (Additive.toMul x : ℂˣ) / k)) (Complex.exp_ne_zero _) ^ k : ℂˣ) : ℂ) = _
-    rw [Units.val_zpow_eq_zpow_val, Units.val_mk0, ← Complex.exp_int_mul, mul_div_cancel₀ _ hk', Complex.exp_log hx]
+    rw [Units.val_zpow_eq_zpow_val, Units.val_mk0, ← Complex.exp_intCast_mul, mul_div_cancel₀ _ hk', Complex.exp_log hx]
   have hI := AddCommGrpCat.injective_of_divisible (Additive ℂˣ)
   let i : AddCommGrpCat.of (Additive R) ⟶ AddCommGrpCat.of (Additive H) :=
     AddCommGrpCat.ofHom (MonoidHom.toAdditive R.subtype)
   let j : AddCommGrpCat.of (Additive R) ⟶ AddCommGrpCat.of (Additive ℂˣ) :=
     AddCommGrpCat.ofHom (MonoidHom.toAdditive f)
-  haveI : CategoryTheory.Mono i := (AddCommGrpCat.mono_iff_injective i).2 fun a b h => by
+  have : CategoryTheory.Mono i := (AddCommGrpCat.mono_iff_injective i).2 fun a b h => by
     exact Additive.toMul.injective (Subtype.ext (Additive.ofMul.injective h))
   refine ⟨MonoidHom.toAdditive.symm (CategoryTheory.Injective.factorThru j i).hom, fun x => ?_⟩
   have := CategoryTheory.Injective.comp_factorThru j i
@@ -94,7 +94,7 @@ theorem exists_lift (n : G →* H) (hn : Continuous n) (ho : IsOpen (n.range : S
     (hψ : Continuous ψ) (hk : n.ker ≤ ψ.ker) : ∃ χ : H →* ℂˣ, Continuous χ ∧ ∀ g, χ (n g) = ψ g := by
   have hs : Function.Surjective n.rangeRestrict := n.rangeRestrict_surjective
   have hc : Continuous n.rangeRestrict := hn.subtype_mk _
-  haveI : LocallyCompactSpace n.range := ho.locallyCompactSpace
+  have : LocallyCompactSpace n.range := ho.locallyCompactSpace
   have hop : IsOpenMap n.rangeRestrict := MonoidHom.isOpenMap_of_sigmaCompact _ hs hc
   have hq := hop.isQuotientMap hc hs
   let f : n.range →* ℂˣ := n.rangeRestrict.liftOfSurjective hs ⟨ψ, by rwa [MonoidHom.ker_rangeRestrict]⟩
@@ -104,7 +104,7 @@ theorem exists_lift (n : G →* H) (hn : Continuous n) (ho : IsOpen (n.range : S
   obtain ⟨χ, hχ⟩ := exists_extend n.range f
   refine ⟨χ, continuous_of_continuousAt_one χ ?_, fun g => ?_⟩
   · have h1 : ContinuousOn χ (n.range : Set H) := by
-      rw [continuousOn_iff_continuous_restrict]
+      rw [continuousOn_iff_continuous_domRestrict]
       exact hfc.congr fun x => (hχ x).symm
     exact h1.continuousAt (ho.mem_nhds (one_mem _))
   · exact (hχ (n.rangeRestrict g)).trans (hf g)
@@ -117,7 +117,7 @@ variable {E : Type} [Field E] [NumberField E]
 
 private theorem gal_eq (hE : Module.finrank ℚ E = 2) :
     ∃ c : E ≃ₐ[ℚ] E, c ≠ 1 ∧ c * c = 1 ∧ ∀ g : E ≃ₐ[ℚ] E, g = 1 ∨ g = c := by
-  haveI := (isGalois_isCyclic_of_finrank_eq_two (K := ℚ) (L := E) hE).1
+  have := (isGalois_isCyclic_of_finrank_eq_two (K := ℚ) (L := E) hE).1
   have hcard : Nat.card (E ≃ₐ[ℚ] E) = 2 := by rw [IsGalois.card_aut_eq_finrank, hE]
   obtain ⟨c, hc, hx⟩ := (Nat.card_eq_two_iff' (1 : E ≃ₐ[ℚ] E)).1 hcard
   have hc1 : c ≠ 1 := hc
@@ -131,9 +131,9 @@ theorem exists_galois_quotient_of_ideleNorm_eq_one_quadratic (hE : Module.finran
     ∃ (c : E ≃ₐ[ℚ] E) (y : IdeleGroup E), z = y * (c • y)⁻¹ := by
   open scoped NumberField.AdeleRing in
   classical
-  haveI := (isGalois_isCyclic_of_finrank_eq_two (K := ℚ) (L := E) hE).1
+  have := (isGalois_isCyclic_of_finrank_eq_two (K := ℚ) (L := E) hE).1
   obtain ⟨c, hc1, hcc, hall⟩ := gal_eq hE
-  haveI : FiniteDimensional ℚ E := inferInstance
+  have : FiniteDimensional ℚ E := inferInstance
   have huniv : (Finset.univ : Finset (E ≃ₐ[ℚ] E)) = {1, c} := by
     ext g
     simpa using hall g
@@ -195,7 +195,7 @@ theorem normChar_of_inv (hE : Module.finrank ℚ E = 2) (ψ : HChar E)
     (h : ∀ (c : E ≃ₐ[ℚ] E) (z : IdeleGroup E), ψ.1 (c • z) = ψ.1 z) :
     ∃ χ : HChar ℚ, ∀ z : IdeleGroup E, ψ.1 z = χ.1 (ideleNorm ℚ E z) := by
   obtain ⟨hG, hC⟩ := isGalois_isCyclic_of_finrank_eq_two (K := ℚ) (L := E) hE
-  haveI : IsAbelianGalois ℚ E := { }
+  have : IsAbelianGalois ℚ E := { }
   let ψ' : IdeleClassGroup E →* ℂˣ := QuotientGroup.lift _ ψ.1 (by
     rintro _ ⟨k, rfl⟩
     exact ψ.2.2 k)

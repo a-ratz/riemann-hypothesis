@@ -124,20 +124,20 @@ theorem exists_thG_of_polFib_field : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G
   obtain ⟨ρ', hρ', hr⟩ := exists_rigidificationPullbackCompatibleIso hp hw hL hL₁ hρ
   let T := baseOver (Sp K)
   let τ : T.left ⟶ (Over.mk x).left := 𝟙 (Sp K)
-  haveI : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
+  have : IsIso τ := inferInstanceAs (IsIso (𝟙 (Sp K)))
   have hτ : τ ≫ (Over.mk x).hom = T.hom ≫ x := rfl
   obtain ⟨q, hq, hqm⟩ := exists_torsion_down hp τ hτ p hpm
   let e := (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.symm
   have hu : IsUnit (m : Γ(Spec (CommRingCat.of K), ⊤)) := by
     rw [← map_natCast e]
     exact (IsUnit.mk0 _ hK).map e
-  haveI : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
+  have : Subsingleton T.left := inferInstanceAs (Subsingleton (PrimeSpectrum K))
   obtain ⟨z₀⟩ : Nonempty T.left := inferInstanceAs (Nonempty (PrimeSpectrum K))
   obtain ⟨V, hV, U, hU⟩ := (hLaw.symLift _ P (m ^ 2) hm.pow (by rw [Nat.cast_pow]; exact hu.pow 2) T q hqm).1 z₀
   obtain rfl : V = ⊤ := eq_top_iff.2 fun y _ => by rwa [Subsingleton.elim y z₀]
   let T' : Over (Sp K) := overRes (T := T) ⊤
   let j₀ : T' ⟶ T := overResι (T := T) ⊤
-  haveI : IsIso j₀.left := inferInstanceAs (IsIso (Sp K).topIso.hom)
+  have : IsIso j₀.left := inferInstanceAs (IsIso (Sp K).topIso.hom)
   let τ' : T'.left ⟶ (Over.mk x).left := j₀.left ≫ τ
   have hτ' : τ' ≫ (Over.mk x).hom = T'.hom ≫ x := by
     rw [Category.assoc, hτ, ← Category.assoc, Over.w j₀]
@@ -172,22 +172,22 @@ theorem fixedField_ker_toPerm_finite_isGalois_finrank_dvd (Ω K : Type) [Field �
     FiniteDimensional Ω (IntermediateField.fixedField φ.ker) ∧
       IsGalois Ω (IntermediateField.fixedField φ.ker) ∧
       Module.finrank Ω (IntermediateField.fixedField φ.ker) ∣ n.factorial := by
-  haveI : Algebra.IsAlgebraic Ω K := IsAlgClosure.isAlgebraic
-  haveI : Normal Ω K := IsAlgClosure.normal Ω K
-  haveI : IsGalois Ω K := ⟨⟩
+  have : Algebra.IsAlgebraic Ω K := IsAlgClosure.isAlgebraic
+  have : Normal Ω K := IsAlgClosure.normal Ω K
+  have : IsGalois Ω K := ⟨⟩
   set E : IntermediateField Ω K := fixedField φ.ker with hE
-  have hHF : φ.ker ≤ E.fixingSubgroup := (IntermediateField.le_iff_le _ _).1 le_rfl
+  have hHF : φ.ker ≤ E.fixingSubgroup := (le_fixedField_iff_le_fixingSubgroup _ _).1 le_rfl
   have hker : φ.ker.index ∣ n.factorial := by
     rw [Subgroup.index_ker]
     have h := Subgroup.card_subgroup_dvd_card φ.range
     rwa [Nat.card_perm, Nat.card_fin] at h
   have hF : E.fixingSubgroup.index ∣ n.factorial :=
     (Subgroup.index_dvd_of_le hHF).trans hker
-  haveI : E.fixingSubgroup.FiniteIndex :=
+  have : E.fixingSubgroup.FiniteIndex :=
     ⟨fun h => (Nat.factorial_pos n).ne' (Nat.eq_zero_of_zero_dvd (h ▸ hF))⟩
   have hopen : IsOpen (E.fixingSubgroup : Set (K ≃ₐ[Ω] K)) :=
     Subgroup.isOpen_of_isClosed_of_finiteIndex _ (InfiniteGalois.fixingSubgroup_isClosed E)
-  haveI hfin : FiniteDimensional Ω E := (InfiniteGalois.isOpen_iff_finite E).1 hopen
+  have hfin : FiniteDimensional Ω E := (InfiniteGalois.isOpen_iff_finite E).1 hopen
   have hnorm : E.fixingSubgroup.Normal := by
     constructor
     intro σ hσ g
@@ -205,7 +205,7 @@ theorem fixedField_ker_toPerm_finite_isGalois_finrank_dvd (Ω K : Type) [Field �
     change g (σ (g⁻¹ x)) = x
     rw [h2]
     exact g.apply_symm_apply x
-  haveI hgal : IsGalois Ω E := (InfiniteGalois.normal_iff_isGalois E).1 hnorm
+  have hgal : IsGalois Ω E := (InfiniteGalois.normal_iff_isGalois E).1 hnorm
   refine ⟨hfin, hgal, ?_⟩
   rw [IntermediateField.finrank_eq_fixingSubgroup_index]
   exact hF
@@ -314,7 +314,7 @@ theorem thList_galois : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonO
     (GlobalTheory.UMin.FibMove.polFib_move S S G L G L (𝟙 S) (𝟙 G.left) hL hL hp hid g _ y).2 _ i h
   let K := AlgebraicClosure Ω
   let ι₀ : Ω →+* K := algebraMap Ω K
-  haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap Ω K).injective
+  have : CharZero K := charZero_of_injective_algebraMap (algebraMap Ω K).injective
   have hm0 : m ≠ 0 := hm.pos.ne'
   have hmK : (m : K) ≠ 0 := Nat.cast_ne_zero.2 hm0
   have hPK : PolFib G L g (spMap ι₀ ≫ x) := fibBase x ι₀ hP
@@ -343,7 +343,7 @@ theorem thList_galois : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonO
     have e2 := congrArg (fun f => f.left) e
     simp only [Over.comp_left] at e2
     exact Over.OverMorphism.ext (sp_cancel inc _ _ e2)
-  haveI : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω Ω').injective
+  have : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω Ω').injective
   have hm' : (m : Ω') ≠ 0 := Nat.cast_ne_zero.2 hm0
   have hP' : PolFib G L g (spMap j ≫ x) := fibBase x j hP
   choose c' hc' using fun a => GlobalTheory.UMin.exists_thG_of_polFib_field S G L ρ hL hρ g m Ω' (spMap j ≫ x) (SecAt.pull G L θ j) (pt' a) hm hm' hP' (htor a)

@@ -142,8 +142,8 @@ theorem compositum_finite_normal_isPGroup (K K' Ω : Type) [Field K] [Field K'] 
       map_zero' := rfl
       map_add' := fun _ _ => rfl
       commutes' := fun _ => rfl }
-  letI : Algebra L E := i.toRingHom.toAlgebra
-  haveI : IsScalarTower K L E := IsScalarTower.of_algebraMap_eq fun x => (i.commutes x).symm
+  let : Algebra L E := i.toRingHom.toAlgebra
+  have : IsScalarTower K L E := IsScalarTower.of_algebraMap_eq fun x => (i.commutes x).symm
   let r : (E ≃ₐ[K'] E) →* (E ≃ₐ[K] E) :=
     { toFun := fun g => g.restrictScalars K
       map_one' := rfl
@@ -460,7 +460,7 @@ theorem exists_stage {S : Type} [CommRing S] [IsDomain S] [Algebra V S] [Faithfu
   set q := Nat.card (ResidueField V) with hq
   have hI := isIntegral_of_gen hS
   choose F hF hF' using fun x : S => exists_level (V := V) (q := q) (x := x) (hS ▸ Algebra.mem_top)
-  have hf : 1 ≤ ∏ x ∈ s, F x := Finset.one_le_prod' fun x _ => hF x
+  have hf : 1 ≤ ∏ x ∈ s, F x := Finset.one_le_prod fun x _ => hF x
   set f := ∏ x ∈ s, F x with hfdef
   have hT : {t : S | t ^ q ^ f = t} ⊆ Teich q S := fun t ht => ⟨f, hf, ht⟩
   have hfin : {t : S | t ^ q ^ f = t}.Finite := by
@@ -917,7 +917,7 @@ open SpecialCount
 
 theorem frobenius_on_integral_torsion : ∀ (W R Ω : Type) [CommRing W] [CommRing R] [IsDomain R] [IsLocalRing R] [Field Ω] [Algebra W R] [Algebra R Ω] [Algebra W Ω] [IsScalarTower W R Ω], Function.Injective (algebraMap R Ω) → IsAlgClosed (IsLocalRing.ResidueField R) → ∀ (p r l : ℕ), p.Prime → CharP (IsLocalRing.ResidueField R) p → 1 ≤ r → l.Prime → IsUnit (l : R) → (∀ c : IsLocalRing.ResidueField R, ∃ m, 1 ≤ m ∧ c ^ ((p ^ r) ^ m) = c) → ∀ ψ : Ω →+* Ω, (∀ w : W, ψ (algebraMap W Ω w) = algebraMap W Ω w) → (∀ x : R, ∃ y : R, algebraMap R Ω y = ψ (algebraMap R Ω x) ∧ y - x ^ (p ^ r) ∈ IsLocalRing.maximalIdeal R) → ∀ (G : Over (Sp W)) [GrpObj G], SmConn G → ∀ g : ℕ, SmoothOfRelativeDimension g G.hom → ∀ L : LB ((Over.pullback (spMap ((IsLocalRing.residue R).comp (algebraMap W R)))).obj G).left, AmpleCub ((Over.pullback (spMap ((IsLocalRing.residue R).comp (algebraMap W R)))).obj G) L → ∀ (M : Type) [CommGroup M] (θ : M ≃* (Over.mk (spMap (algebraMap W Ω)) ⟶ G)) (Ψ : MulAut M), (∀ x, (θ (Ψ x)).left = spMap ψ ≫ (θ x).left) → ∃ (t a m C : ℕ) (Q : Polynomial ℤ) (H U : Subgroup M), 1 ≤ m ∧ (∀ x, x ∈ H ↔ ∃ s : Sp R ⟶ G.left, s ≫ G.hom = spMap (algebraMap W R) ∧ spMap (algebraMap R Ω) ≫ s = (θ x).left) ∧ (∀ n, Nat.card {x : H // x ^ l ^ n = 1} ≤ C * l ^ (n * (t + 2 * a)) ∧ Nat.card {x : U // x ^ l ^ n = 1} ≤ C * l ^ (n * t)) ∧ (∀ β : ℂ, Polynomial.aeval β Q = 0 → ‖β‖ < (((p ^ r) ^ m : ℕ) : ℝ)) ∧ (∀ n, ∀ x ∈ U, x ^ l ^ n = 1 → (Ψ ^ m) x = x ^ ((p ^ r) ^ m)) ∧ (∀ n, ∀ x ∈ H, x ^ l ^ n = 1 → ∏ j ∈ Finset.range (Q.natDegree + 1), ((Ψ ^ m : MulAut M)^[j] x) ^ Q.coeff j ∈ U) ∧ (g ≤ t + a → Nonempty (TorusExtension ((Over.pullback (spMap ((IsLocalRing.residue R).comp (algebraMap W R)))).obj G))) := by
   intro W R Ω _ _ _ _ _ _ _ _ _ hi hac p r l hp hch hr hl hlu hfin ψ hψW hψR G _ hG g hg L hL M _ θ Ψ hΨ
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨σ, hσ, hσ'⟩ := exists_restrict hi (p ^ r) ψ hψR
   have hσW : ∀ w, σ (algebraMap W R w) = algebraMap W R w := fun w => hi (by
     rw [hσ, ← IsScalarTower.algebraMap_apply, hψW])
@@ -1332,7 +1332,7 @@ theorem isSemiAbelian_of_rational_torsion (V K : Type) [CommRing V] [Field K] [C
       rw [map_div₀, hj', hj', div_eq_iff hb0]
       exact hab.symm⟩)
   have hcard := (_root_.GlobalTheory.torsion_points_galois_module K P Ω l hl).1
-  haveI := P.isAb.comm
+  have := P.isAb.comm
   have hψ : (φ ^ f).toRingEquiv.toRingHom.comp (j'.comp i) = j'.comp i := by
     refine IsLocalization.ringHom_ext (nonZeroDivisors W) ?_
     rw [RingHom.comp_assoc, hjW]
@@ -1351,7 +1351,7 @@ theorem isSemiAbelian_of_rational_torsion (V K : Type) [CommRing V] [Field K] [C
   rw [← map_pow, ← pow_mul] at hU hHU
   have hqq : (p ^ (r₀ * f)) ^ m = (p ^ r₀) ^ (f * m) := by rw [pow_mul, ← pow_mul _ f m]
   rw [hqq] at hU hQ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
   have hg : P.g ≤ t + a := by
     refine _root_.GlobalTheory.SS.Weight.le_add_of_torsion (Over.mk (spMap (algebraMap K Ω)) ⟶ P.A) Ω l ((p ^ r₀) ^ (f * m)) P.g t a c C hl h3
       (Nat.cast_ne_zero.2 hl.ne_zero) ?_ hc hcard e he (act σ) (act (φ ^ (f * m))) (hpair _) (hrel _)
@@ -1366,7 +1366,7 @@ theorem isSemiAbelian_of_rational_torsion (V K : Type) [CommRing V] [Field K] [C
       rw [← hy', ← hs₂, ← Category.assoc, ← Spec.map_comp, ← CommRingCat.ofHom_comp, hj0]
   have hproper : IsProper ((Over.pullback (spMap (algebraMap W L))).obj G).hom := by
     obtain ⟨ε, -⟩ := hmod
-    haveI := P.isAb.proper
+    have := P.isAb.proper
     rw [← Over.w ε.hom]
     have : IsProper ((Over.pullback (spMap (algebraMap K L))).obj P.A).hom :=
       inferInstanceAs (IsProper (pullback.snd _ _))
@@ -1396,7 +1396,7 @@ theorem potentialSemistable_rational_lTorsion_any_closure (V K : Type) [CommRing
     PotModel V K P.A (fun _ _ _ G _ => IsSemiAbelian G) := by
   classical
   obtain ⟨R, _, σ, φ, hSH, hloc, hres, hW, hσ, hφ, hζ, hL⟩ := _root_.GlobalTheory.SS.exists_maxUnramified_frobenius_tame V K hfin l hl hlu Ω _ rfl
-  letI := Fintype.ofFinite (IsLocalRing.ResidueField V)
+  let := Fintype.ofFinite (IsLocalRing.ResidueField V)
   obtain ⟨p, hpV⟩ := CharP.exists (IsLocalRing.ResidueField V)
   obtain ⟨r₀, hp, hq⟩ := FiniteField.card (IsLocalRing.ResidueField V) p
   rw [← Nat.card_eq_fintype_card] at hq
@@ -1409,16 +1409,16 @@ theorem potentialSemistable_rational_lTorsion_any_closure (V K : Type) [CommRing
   have hRΩ : Function.Injective (algebraMap R Ω) := Subtype.val_injective
   have hVR : Function.Injective (algebraMap V R) := fun a b h => hVΩ (congrArg Subtype.val h)
   obtain ⟨K', _, _, hSH⟩ : ∃ (K' : Type) (_ : Field K') (_ : Algebra R K'), SH R K' := ⟨_, _, _, hSH⟩
-  haveI : IsFractionRing R K' := hSH.2.2.2
+  have : IsFractionRing R K' := hSH.2.2.2
   obtain ⟨jK, hjK'⟩ := exists_lift_frac (K := K) ((algebraMap R K').comp (algebraMap V R))
     ((IsFractionRing.injective R K').comp hVR)
-  letI : Algebra K K' := jK.toAlgebra
+  let : Algebra K K' := jK.toAlgebra
   have hcomp : (algebraMap R K').comp (algebraMap V R) = (algebraMap K K').comp (algebraMap V K) := hjK'.symm
   obtain ⟨s, c, hc, hgeo⟩ := _root_.GlobalTheory.NeutralLevel.exists_level_model V K R K' hSH hcomp P
   obtain ⟨W, hWd, hs, hWc, hWf, hWl, f, hf, hfix⟩ := hW s
   obtain ⟨G, _, L, _, _, _, _, hG, hcW, hmod, hdim, ⟨N, hN⟩, hext⟩ := hgeo W hWd hs hWl
   have hlR : IsUnit (l : R) := by simpa using hlu.map (algebraMap V R)
-  haveI : IsLocalHom (algebraMap W R) := hWl
+  have : IsLocalHom (algebraMap W R) := hWl
   have hsemi : IsSemiAbelian G :=
     isSemiAbelian_of_rational_torsion V K l hl h3 P Ω htors W L R K' Subtype.val_injective hRΩ hcW
       (IsScalarTower.algebraMap_eq V K Ω) hSH.2.2.1 hlR p r₀ f hp hpR r₀.2 hf hres σ φ (fun w => hfix w.1 w.2) hφ hζ
@@ -1610,10 +1610,10 @@ theorem finiteDimensional_of_finite_of_isFractionRing (V K W L : Type) [CommRing
     [IsFractionRing W L] [Module.Finite V W]
     (e : (algebraMap W L).comp (algebraMap V W) = (algebraMap K L).comp (algebraMap V K)) :
     FiniteDimensional K L := by
-  letI : Algebra V L := ((algebraMap W L).comp (algebraMap V W)).toAlgebra
-  haveI : IsScalarTower V W L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  haveI : IsScalarTower V K L := IsScalarTower.of_algebraMap_eq' e
-  haveI : FaithfulSMul V W := by
+  let : Algebra V L := ((algebraMap W L).comp (algebraMap V W)).toAlgebra
+  have : IsScalarTower V W L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  have : IsScalarTower V K L := IsScalarTower.of_algebraMap_eq' e
+  have : FaithfulSMul V W := by
     rw [faithfulSMul_iff_algebraMap_injective]
     have h : Function.Injective ((algebraMap W L).comp (algebraMap V W)) := by
       rw [e]; exact (algebraMap K L).injective.comp (IsFractionRing.injective V K)
@@ -1630,7 +1630,7 @@ theorem exists_ringHom_integralClosure (p : ℕ) [Fact p.Prime] (K : Intermediat
       ∃ (τ : L →+* K') (f : W →+* integralClosure ℤ_[p] K'),
         τ.comp (algebraMap K L) = (IntermediateField.inclusion h).toRingHom ∧
         τ.comp (algebraMap W L) = (algebraMap (integralClosure ℤ_[p] K') K').comp f := by
-  haveI := finiteDimensional_of_finite_of_isFractionRing _ K W L e
+  have := finiteDimensional_of_finite_of_isFractionRing _ K W L e
   let σ : L →ₐ[K] PadicAlgCl p := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -1642,18 +1642,18 @@ theorem exists_ringHom_integralClosure (p : ℕ) [Fact p.Prime] (K : Intermediat
   have hτ : τ.comp (algebraMap K L) = (IntermediateField.inclusion h).toRingHom :=
     RingHom.ext fun x => Subtype.ext (σ.commutes x)
   have hK' : FiniteDimensional ℚ_[p] K' := by
-    letI : Algebra ℚ_[p] L := ((algebraMap K L).comp (algebraMap ℚ_[p] K)).toAlgebra
-    haveI : IsScalarTower ℚ_[p] K L := IsScalarTower.of_algebraMap_eq fun _ => rfl
-    haveI : Module.Finite ℚ_[p] L := Module.Finite.trans K L
+    let : Algebra ℚ_[p] L := ((algebraMap K L).comp (algebraMap ℚ_[p] K)).toAlgebra
+    have : IsScalarTower ℚ_[p] K L := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have : Module.Finite ℚ_[p] L := Module.Finite.trans K L
     let τ' : L →ₐ[ℚ_[p]] K' := { τ with commutes' := fun x => Subtype.ext (σ.commutes (algebraMap ℚ_[p] K x)) }
     refine Module.Finite.of_surjective τ'.toLinearMap ?_
     rintro ⟨_, x, rfl⟩
     exact ⟨x, rfl⟩
   have hint : ∀ w : W, IsIntegral ℤ_[p] (τ (algebraMap W L w)) := fun w => by
     have h₁ : (algebraMap (integralClosure ℤ_[p] K) W).IsIntegralElem w := Algebra.IsIntegral.isIntegral w
-    letI alg : Algebra (integralClosure ℤ_[p] K) K' :=
+    let alg : Algebra (integralClosure ℤ_[p] K) K' :=
       ((IntermediateField.inclusion h).toRingHom.comp (algebraMap (integralClosure ℤ_[p] K) K)).toAlgebra
-    haveI tower : IsScalarTower ℤ_[p] (integralClosure ℤ_[p] K) K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
+    have tower : IsScalarTower ℤ_[p] (integralClosure ℤ_[p] K) K' := IsScalarTower.of_algebraMap_eq fun _ => rfl
     have h₂ := h₁.map (τ.comp (algebraMap W L))
     rw [RingHom.comp_assoc, e, ← RingHom.comp_assoc, hτ] at h₂
     change IsIntegral (integralClosure ℤ_[p] K) (τ (algebraMap W L w)) at h₂
@@ -1662,7 +1662,7 @@ theorem exists_ringHom_integralClosure (p : ℕ) [Fact p.Prime] (K : Intermediat
 
 theorem exists_semiAbelian_model_padic_polAV : ∀ (p : ℕ) [Fact p.Prime] (K : IntermediateField ℚ_[p] (PadicAlgCl p)) [FiniteDimensional ℚ_[p] K] (P : Out.PolAV (Sp K)), ∃ (K' : IntermediateField ℚ_[p] (PadicAlgCl p)) (h : K ≤ K'), FiniteDimensional ℚ_[p] K' ∧ ∃ (G : Over (Sp (integralClosure ℤ_[p] K'))) (_ : GrpObj G), IsSemiAbelian G ∧ ∃ φ : pullback G.hom (spMap (algebraMap (integralClosure ℤ_[p] K') K')) ⟶ P.A.left, IsGrpPullback ((Over.pullback (spMap (algebraMap (integralClosure ℤ_[p] K') K'))).obj G) P.A (spMap (IntermediateField.inclusion h).toRingHom) φ := by
   intro p _ K _ P
-  haveI := GlobalTheory.DiscEval.isAdicComplete_integralClosure K
+  have := GlobalTheory.DiscEval.isAdicComplete_integralClosure K
   obtain ⟨W, L, _, _, _, _, _, _, _, _, e, hfin, -, -, G, _, ⟨i, hi⟩, hG⟩ :=
     _root_.GlobalTheory.SemiPol.potModel_semiAbelian (integralClosure ℤ_[p] K) K (GlobalTheory.DiscEval.finite_residueField_integralClosure K) P
   obtain ⟨K', h, hK', τ, f, hτ, hf⟩ := exists_ringHom_integralClosure p K W L e

@@ -344,16 +344,16 @@ theorem ytEmbW_of {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver
     (hE : EmbRW i dc r Dd hw) (hL : LineW i r hw) : YtEmbW i dc r Dd hw := by
   obtain ⟨mA, xs, φ, hφ, heq⟩ := hE
   obtain ⟨x₀, v₀, hv₀, hfix⟩ := hL
-  haveI hK : NoZeroSMulDivisors (D.nd.O i) (FractionRing (D.nd.O i)) := by
+  have hK : NoZeroSMulDivisors (D.nd.O i) (FractionRing (D.nd.O i)) := by
     first
     | exact inferInstance
     | exact ⟨fun {c x} h => by
         rw [Algebra.smul_def, mul_eq_zero] at h
         exact h.imp_left (fun h' => (map_eq_zero_iff _ (IsFractionRing.injective _ _)).1 h')⟩
-  haveI hM : NoZeroSMulDivisors (D.nd.O i)
+  have hM : NoZeroSMulDivisors (D.nd.O i)
       (Dd.X' → Matrix (Fin D.R.nV) (Fin D.R.nV) (FractionRing (D.nd.O i))) :=
     inferInstanceAs (NoZeroSMulDivisors (D.nd.O i) (Dd.X' → Fin D.R.nV → Fin D.R.nV → FractionRing (D.nd.O i)))
-  haveI : NoZeroSMulDivisors (D.nd.O i) ↥Dd.R' :=
+  have : NoZeroSMulDivisors (D.nd.O i) ↥Dd.R' :=
     Function.Injective.noZeroSMulDivisors Subtype.val Subtype.val_injective rfl (fun _ _ => rfl)
   have h := embY_of (r := Dd.r) (χ := Dd.χ) (E := Dd.E) (Dw := Dw i dc (idx i dc w)) (eG := eW i dc hw)
     (Ms := MsW i r hw) (xsA := xs) (φA := φ) (hφA := hφ) (heqA := heq) (x₀ := x₀) (v₀ := v₀) (hv₀ := hv₀)
@@ -523,7 +523,7 @@ theorem embRW_of {T : Subalgebra (D.nd.O i) (D.nd.X i → D.nd.O i)} {π : D.nd.
         show e ((Λ (e.symm c • untr e v)) q.1 a q.2) = c * e ((Λ (untr e v)) q.1 a q.2)
         rw [smulK]
         simp [Pi.smul_apply, Matrix.smul_apply, smul_eq_mul, map_mul] }
-  haveI : FiniteDimensional (↥(TruncatedSeriesCountingIdentities.CoefExt.self i w hw).LL.1) (TrV e (MK (O := D.nd.O i) Dd.R')) :=
+  have : FiniteDimensional (↥(TruncatedSeriesCountingIdentities.CoefExt.self i w hw).LL.1) (TrV e (MK (O := D.nd.O i) Dd.R')) :=
     finDim_of_lat (Ow := ↥(OL (TruncatedSeriesCountingIdentities.CoefExt.self i w hw).LL)) (Qp := ℚ_[D.nd.l i])
       (latOf e (selfO i hw) mkK (eW i dc hw).symm.toMonoidHom (heS i hw) (locRep ρP) ρP mkK_inj
         (fun γ m => (locRep_mkK _ γ m).symm) mkK_span)
@@ -664,7 +664,7 @@ theorem orbC_dat (n : ℕ) :
       (KLat.Dat Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (K.Aw i dc) hK hε hM n).ρT' := by
   intro hn v
   have hι : Continuous fun g : Br.G D.nbr i _ hn => ((Br.iota D.nbr i _ hn g : _) : GE D.nd) :=
-    continuous_subtype_val.comp (Br.iota_cont D.nbr i _ hn)
+    continuous_subtypeVal.comp (Br.iota_cont D.nbr i _ hn)
   have hf : (fun g => repL (eK (D.nbr i _ hn))
       (KLat.Dat Dd.r Dd.χ (RepresentationBoundsCohomology.blk D.R) Dd.ρk (epsU D.nd i) (K.Aw i dc) hK hε hM n).ρT' (Br.iota D.nbr i _ hn) g v) =
       fun g => (Font.phiW i dc n hn).symm (fun a => ∑ b, eK (D.nbr i _ hn) (algebraMap (D.nd.O i) (FractionRing (D.nd.O i))
@@ -777,11 +777,11 @@ theorem locC_du_cont (hc : TruncatedSeriesCountingIdentities.FamilyContinuous i 
     (hw : w ∈ placesOver D.host.E (D.nd.l i)) (C : TruncatedSeriesCountingIdentities.CoefExt D i w hw) (x : D.nd.X i) :
     Continuous ⇑(TruncatedSeriesCountingIdentities.locC C (rDuO D.nd i r x)) := by
   have hinc : Continuous (TruncatedSeriesCountingIdentities.CoefExt.inc C) :=
-    continuous_induced_rng.2 (by exact continuous_subtype_val)
+    continuous_induced_rng.2 (by exact continuous_subtypeVal)
   have h1 : Continuous fun g : Br.G D.nbr i w hw =>
       rDuO D.nd i r x ((Br.iota D.nbr i w hw g : _) : GE D.nd) :=
-    (rDuO_cont i r hc x).comp (continuous_subtype_val.comp (Br.iota_cont D.nbr i w hw))
-  exact ((h1.matrix_map (D.nbr i w hw).eO_cont).matrix_map continuous_subtype_val).matrix_map hinc
+    (rDuO_cont i r hc x).comp (continuous_subtypeVal.comp (Br.iota_cont D.nbr i w hw))
+  exact ((h1.matrix_map (D.nbr i w hw).eO_cont).matrix_map continuous_subtypeVal).matrix_map hinc
 
 end Ms
 
@@ -905,8 +905,8 @@ theorem rowTieIn_of
     | (have hD' := hD
        obtain ⟨-, -, -, -, -, -, hr', -, hsm, -, -, hχ, -⟩ := hD'
        have hFF := idempotent_part_finite_and_free (hD := hD) ..
-       haveI := hFF.1
-       haveI := hFF.2
+       have := hFF.1
+       have := hFF.2
        intro n _ hn
        exact rowSub_at (hr' := hr') (hsm := hsm) (hχ := hχ) (hn := hn) ..)
   · first
@@ -1008,7 +1008,7 @@ theorem trC_Z1D' (z : coZ1s (resRep (uRep O' (M := M) r χ) Dw)) (hz : IsLocally
   refine ⟨(hz.comp_continuous heG).comp Cd.u, fun g h => ?_⟩
   have hc0 := z.2
   unfold coZ1s at hc0
-  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq] at hc0
+  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_ofPred_eq] at hc0
   have hc : (z : Dw → M) (eG.symm g * eG.symm h) =
       (z : Dw → M) (eG.symm g) + uElt r χ ((eG.symm g : Dw) : GG) • (z : Dw → M) (eG.symm h) :=
     hc0 _ _
@@ -1425,8 +1425,8 @@ theorem epsL_cont {w : HeightOneSpectrum (𝓞 D.host.E)} (hw : w ∈ placesOver
     funext h
     rw [eO_sE i dc (cycW_of i dc) hw, MulEquiv.apply_symm_apply, map_pow]
   rw [he]
-  exact continuous_subtype_val.comp ((D.nbr i w hw).eO_cont.comp
-    ((sE_cont i c').comp (continuous_subtype_val.comp (eW_symm_cont i dc hw))))
+  exact continuous_subtypeVal.comp ((D.nbr i w hw).eO_cont.comp
+    ((sE_cont i c').comp (continuous_subtypeVal.comp (eW_symm_cont i dc hw))))
 
 variable [∀ k, IsScalarTower Dd.T' Dd.R' (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k)]
 
@@ -1622,8 +1622,8 @@ section Inputs
 theorem wildTriv_holds : Formalism.MainNotions.N.WildTriv := by
   intro E Ω _ _ _ _ _ l hl v A hA hv M _ φ hker htors σ hσ
   unfold IsPlaceOver at hA
-  haveI := v.isPrime
-  haveI : Finite (𝓞 E ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
+  have := v.isPrime
+  have : Finite (𝓞 E ⧸ v.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot v.asIdeal v.ne_bot
   obtain ⟨p, hp⟩ : ∃ p, CharP (𝓞 E ⧸ v.asIdeal) p := ⟨ringChar _, ringChar.charP _⟩
   have hpp : p.Prime := CharP.char_is_prime (𝓞 E ⧸ v.asIdeal) p
   have hpv : ((p : ℕ) : 𝓞 E) ∈ v.asIdeal := by
@@ -1672,7 +1672,7 @@ theorem theorem_n5_from_inputs (g1 : TruncatedSeriesCountingIdentities.admG1 i r
   refine Final.theorem_n5_of_open_b (i := i) (r := r) (ρ := ρ) (π := π) (dc := dc) (lenRow := lenRow) (e' := e') (cB := cB)
     g1 g2 g3 g5x g6 bk bka ct dcm font fin a51 unr (selfGood_rec i) ?_ hROW hLIFT hTB
   intro _ _ hTB' _ g0 eB e₁ s Dd _ hD hc hT hrk
-  haveI : ∀ k, IsScalarTower Dd.T' Dd.R' (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k) := by
+  have : ∀ k, IsScalarTower Dd.T' Dd.R' (blockRestrictedRepresentationType (RepresentationBoundsCohomology.blk D.R) Dd.ρk k) := by
     intro k
     refine ⟨fun f a m => ?_⟩
     have hD' := hD

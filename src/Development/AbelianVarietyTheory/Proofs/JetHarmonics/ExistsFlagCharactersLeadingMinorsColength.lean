@@ -131,7 +131,7 @@ theorem exists_flag_characters (C : Type) [Field C] (v : Valuation C NNReal) (O 
     simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, h3] at h2 ⊢
     exact h2
   obtain ⟨ι, -, hι⟩ := charThm C v O hv s N M c hc hspan
-  haveI : IsDomain O := Function.Injective.isDomain _ hv.hom_inj
+  have : IsDomain O := Function.Injective.isDomain _ hv.hom_inj
   have hfull := char_len hv M ι s le_rfl (hι s le_rfl)
   rw [hom] at hfull
   have hxe := hasLen_unique hv hlen hfull

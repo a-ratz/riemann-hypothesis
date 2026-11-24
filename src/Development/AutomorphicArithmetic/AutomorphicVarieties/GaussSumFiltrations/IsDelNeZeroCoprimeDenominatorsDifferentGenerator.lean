@@ -105,7 +105,7 @@ theorem exists_place {p : ℕ} (hp : p.Prime) : ∃ w : HeightOneSpectrum (𝓞 
     have h1 := hu.map (Algebra.norm ℤ (S := 𝓞 F))
     rw [← map_natCast (algebraMap ℤ (𝓞 F)) p, Algebra.norm_algebraMap,
       isUnit_pow_iff (Module.finrank_pos (R := ℤ) (M := 𝓞 F)).ne'] at h1
-    exact (Nat.prime_iff_prime_int.1 hp).not_unit h1
+    exact (Nat.prime_iff_prime_int.1 hp).not_isUnit h1
   obtain ⟨M, hM, hle⟩ := Ideal.exists_le_maximal _ hne
   have hmem : ((p : ℕ) : 𝓞 F) ∈ M := hle (Ideal.mem_span_singleton_self _)
   refine ⟨⟨M, hM.isPrime, ?_⟩, hmem⟩
@@ -119,7 +119,7 @@ theorem coe_diff_ne : (↑(differentIdeal ℤ (𝓞 F)) : FractionalIdeal (𝓞 
 
 theorem count_diff (w : HeightOneSpectrum (𝓞 F)) :
     FractionalIdeal.count F w (↑(differentIdeal ℤ (𝓞 F)) : FractionalIdeal (𝓞 F)⁰ F) = (ordI w (differentIdeal ℤ (𝓞 F)) : ℤ) :=
-  FractionalIdeal.count_coe F w diff_ne
+  FractionalIdeal.count_coeIdeal F w diff_ne
 
 theorem mem_diff_iff (x : F) : x ∈ (↑(differentIdeal ℤ (𝓞 F)) : FractionalIdeal (𝓞 F)⁰ F) ↔
     ∀ w : HeightOneSpectrum (𝓞 F), w.valuation F x ≤ WithZero.exp (-(ordI w (differentIdeal ℤ (𝓞 F)) : ℤ)) := by

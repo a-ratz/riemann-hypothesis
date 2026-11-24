@@ -99,7 +99,7 @@ theorem adInner_self_pos [Fintype I] (hy : Bridge.IsReps ι J y) (hs : ∀ i, Fi
       by_contra h
       exact hcon ⟨i, h⟩)
   refine Finset.sum_pos' (fun j _ => by positivity) ⟨i, Finset.mem_univ _, ?_⟩
-  haveI := hs i
+  have := hs i
   have h1 : (0 : ℝ) < (Nat.card (Bridge.stab ι J (y i)) : ℝ) := by exact_mod_cast Nat.card_pos
   have h2 : 0 < ‖F (y i)‖ := norm_pos_iff.2 hi
   positivity
@@ -210,7 +210,7 @@ theorem factor_mem {I : Type} [Fintype I] {k : I → Type} [∀ a, CommRing (k a
     (h : ∀ g : ∀ a, GL (Fin r) (k a), (∏ a, ((c a (Matrix.GeneralLinearGroup.det (g a)) : ℂˣ) : ℂ)) ∈ S)
     (a : I) (u : (k a)ˣ) : ((c a u : ℂˣ) : ℂ) ∈ S := by
   classical
-  haveI : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, hr⟩⟩
   obtain ⟨g, hg⟩ := Matrix.GeneralLinearGroup.det_surjective (n := Fin r) (R := k a) u
   have h1 := h (Pi.mulSingle a g)
   rw [Finset.prod_eq_single a] at h1

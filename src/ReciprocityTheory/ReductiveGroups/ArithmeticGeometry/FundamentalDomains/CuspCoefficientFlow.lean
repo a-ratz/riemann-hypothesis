@@ -127,7 +127,7 @@ theorem diffOn_param_bdd {K : Set (ι → ℝ)} (hKv : volume K < ⊤)
     DifferentiableOn ℂ (fun x => ∫ t in K, G (A t x) * e t) U := by
   intro x0 hx0
   obtain ⟨ρ, hρ, C, hsub, hC⟩ := hbd x0 hx0
-  haveI : IsFiniteMeasure (volume.restrict K) := isFiniteMeasure_restrict.mpr hKv.ne
+  have : IsFiniteMeasure (volume.restrict K) := isFiniteMeasure_restrict.mpr hKv.ne
   have hballU : ball x0 ρ ⊆ U := ball_subset_closedBall.trans hsub
   have hslice : ∀ t, DifferentiableOn ℂ (fun z => G (A t z)) U := fun t =>
     hG.comp (A t).differentiable.differentiableOn (fun z hz => hAU t z hz)
@@ -147,8 +147,8 @@ theorem diffOn_param_bdd {K : Set (ι → ℝ)} (hKv : volume K < ⊤)
       (volume.restrict K) := by
     rw [hF'eq]
     refine he.aestronglyMeasurable.smul ?_
-    letI : MeasurableSpace (F →L[ℂ] ℂ) := borel _
-    haveI : BorelSpace (F →L[ℂ] ℂ) := ⟨rfl⟩
+    let : MeasurableSpace (F →L[ℂ] ℂ) := borel _
+    have : BorelSpace (F →L[ℂ] ℂ) := ⟨rfl⟩
     have hm : Measurable (fderiv ℂ G) := measurable_fderiv ℂ G
     have h1 : AEStronglyMeasurable (fun t => fderiv ℂ G (A t x0)) (volume.restrict K) :=
       (hm.comp (hAx x0).measurable).aestronglyMeasurable

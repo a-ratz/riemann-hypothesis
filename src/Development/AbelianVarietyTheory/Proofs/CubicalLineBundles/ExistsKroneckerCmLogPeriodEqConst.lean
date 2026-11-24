@@ -55,8 +55,8 @@ theorem exists_kronecker_logOm_eq : ∀ (D : D7) (Q : Par D), Q.PinHost → ∀ 
     ∃ (_ : NeZero Q.H.d) (χ : DirichletCharacter ℂ Q.H.d),
       IsKroneckerChar χ ∧ (GlobalTheory.CM.logOm D.host.E χ).re = large₂.logOm := by
   intro D Q hp large₂
-  haveI : Fact D.host.d.Prime := ⟨D.host.hyp.2.1⟩
-  haveI : NeZero D.host.d := ⟨D.host.hyp.2.1.ne_zero⟩
+  have : Fact D.host.d.Prime := ⟨D.host.hyp.2.1⟩
+  have : NeZero D.host.d := ⟨D.host.hyp.2.1.ne_zero⟩
   have hd : D.host.d % 4 = 3 := by
     have := Q.H.d_mod
     rw [hp.1] at this

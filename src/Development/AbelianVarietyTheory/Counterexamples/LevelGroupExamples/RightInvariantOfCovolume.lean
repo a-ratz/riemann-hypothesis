@@ -121,7 +121,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
 theorem _root_.GlobalTheory.AutQuotCheck.rightInvariant_of_covolume (μ : Measure G) [μ.IsHaarMeasure] {F : Set G}
     (h : IsFundamentalDomain Γ F μ) (h0 : μ F ≠ 0) (h1 : μ F ≠ ⊤) (g : G) :
     μ.map (· * g) = μ := by
-  haveI := Measure.isHaarMeasure_map_mul_right μ g
+  have := Measure.isHaarMeasure_map_mul_right μ g
   have hc := Measure.isMulLeftInvariant_eq_smul (μ.map (· * g)) μ
   have hF' : IsFundamentalDomain Γ ((· * g) ⁻¹' F) μ :=
     h.preimage_of_equiv (quasiMeasurePreserving_mul_right μ g) Function.bijective_id
@@ -131,7 +131,7 @@ theorem _root_.GlobalTheory.AutQuotCheck.rightInvariant_of_covolume (μ : Measur
       MeasurableEquiv.map_apply]
     exact hF'.measure_eq h
   have hc1 : (μ.map (· * g)).haarScalarFactor μ = 1 := by
-    rw [hc, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at hmeas
+    rw [hc, smul_apply, ENNReal.smul_def, smul_eq_mul] at hmeas
     exact ENNReal.coe_eq_one.mp ((ENNReal.mul_eq_right h0 h1).mp hmeas)
   rw [hc, hc1, one_smul]
 

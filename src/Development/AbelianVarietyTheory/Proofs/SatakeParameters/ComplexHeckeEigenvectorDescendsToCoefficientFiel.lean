@@ -61,8 +61,8 @@ theorem eig_descends : ∀ (D : D7) (M : Formalism.L2.MtFam D) (B : Formalism.L2
   intro D M B j w μ h1 h2 hμ φ hφ κ y hy hgen
   subst hμ
   classical
-  haveI := Formalism.L2.finite_chooseBasisIndex (D := D) j w
-  haveI := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
+  have := Formalism.L2.finite_chooseBasisIndex (D := D) j w
+  have := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
   let b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j)
   have hjb := D.what₂.jMt_basis (D.what₂.muTw w) j b
   let bC := Module.Basis.mk hjb.1 hjb.2.ge

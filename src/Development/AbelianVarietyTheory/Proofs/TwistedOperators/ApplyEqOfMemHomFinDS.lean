@@ -129,8 +129,8 @@ theorem exists_clm_of_inner_eq {ι H K : Type} [NormedAddCommGroup H] [InnerProd
     have : Dense ((Submodule.span ℂ (Set.range v) : Submodule ℂ H) : Set H) :=
       (Submodule.dense_iff_topologicalClosure_eq_top).2 hd
     rw [← hrange] at this
-    exact this.denseRange_val
-  have hui : IsUniformInducing e := isUniformEmbedding_subtype_val.isUniformInducing
+    exact this.denseRange_subtypeVal
+  have hui : IsUniformInducing e := isUniformEmbedding_subtypeVal.isUniformInducing
   refine ⟨A0.extend e, fun i => ?_⟩
   have h1 : p (Finsupp.single i 1) = v i := by simp [p]
   have h2 : p' (Finsupp.single i 1) = v' i := by simp [p']
@@ -152,7 +152,7 @@ theorem apply_eq_of_mem_homFinDS {D : D7} {V : HSp D} {S : D.what₂.Tau → SPa
       T (σ (toFin V g) w) (fun τ => dsRep M τ (projArch D.sp.cm.sig V.gram (placeOf D τ) g) (y τ)) := by
   classical
   have hm := mem_homTensorPi.1 h
-  conv_lhs => rw [← toInf_mul_toFin g, map_mul, ContinuousLinearMap.mul_apply]
+  conv_lhs => rw [← toInf_mul_toFin g, map_mul, mul_apply_eq_comp]
   have h1 : ρ (toFin V g : GA D V) (T w y) = T (σ (toFin V g) w) y := (hm.2.1 (toFin V g) w y).symm
   rw [h1]
   exact GlobalTheory.T.infinitePart_act_discreteSeriesHom_factorwise D V S M X ρ U _ (h.1 _) g y
@@ -189,7 +189,7 @@ theorem exists_homIn_extend : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SP
 
   have hbe : ∀ x y, bePi (T' x) (T' y) = conj c * bePi (T x) (T y) := fun x y => by
     have : bePi (T' x) (T' y) = bePi (T x) (T (c • y)) := hCB x y
-    rw [this, map_smul, bePi, bePi, ContinuousMultilinearMap.smul_apply, inner_smul_left]
+    rw [this, map_smul, bePi, bePi, smul_apply, inner_smul_left]
   have hinner : ∀ q r : W × (∀ τ, M.H τ), ⟪T' q.1 q.2, T' r.1 r.2⟫_ℂ = conj c * ⟪T q.1 q.2, T r.1 r.2⟫_ℂ := by
     rintro ⟨w, y⟩ ⟨w', y'⟩
     rw [inner_eq_bePi hδ hρ (hTw' w') (hTw' w), inner_eq_bePi hδ hπ (hTw w') (hTw w), hbe, mul_assoc]

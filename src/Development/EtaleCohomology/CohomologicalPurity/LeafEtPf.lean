@@ -56,7 +56,7 @@ theorem etale_main (n : ℕ) (R A ι : Type) [CommRing R] [CommRing A] [Algebra 
     (MvPolynomial.eval₂Hom (algebraMap R A) z).Etale := by
   rcases subsingleton_or_nontrivial A with hA0 | hA0
   · exact ChartCut.etale_of_subsingleton _
-  letI : Algebra (MvPolynomial ι R) A := (MvPolynomial.aeval z).toRingHom.toAlgebra
+  let : Algebra (MvPolynomial ι R) A := (MvPolynomial.aeval z).toRingHom.toAlgebra
   have : IsScalarTower R (MvPolynomial ι R) A :=
     IsScalarTower.of_algebraMap_eq fun r => (MvPolynomial.aeval_C z r).symm
   have := hA
@@ -71,7 +71,7 @@ theorem etale_main (n : ℕ) (R A ι : Type) [CommRing R] [CommRing A] [Algebra 
     rw [← LinearMap.range_eq_top, eq_top_iff, ← hspan, Submodule.span_le]
     rintro _ ⟨k, rfl⟩
     exact ⟨_, hD k⟩
-  haveI hΩ : Subsingleton Ω[A⁄MvPolynomial ι R] := by
+  have hΩ : Subsingleton Ω[A⁄MvPolynomial ι R] := by
     refine subsingleton_of_forall_eq 0 fun ω => ?_
     obtain ⟨w, rfl⟩ := map_surjective R (MvPolynomial ι R) A ω
     obtain ⟨u, rfl⟩ := hsurj w
@@ -87,7 +87,7 @@ theorem etale_main (n : ℕ) (R A ι : Type) [CommRing R] [CommRing A] [Algebra 
     exact linearIndependent_of_top_le_span_of_card_eq_finrank hspan.ge (hn.trans hfin.symm)
   have hinj : Function.Injective (mapBaseChange R (MvPolynomial ι R) A) :=
     LinearMap.injective_of_linearIndependent b.span_eq hli
-  haveI hH1 : Subsingleton (Algebra.H1Cotangent (MvPolynomial ι R) A) := by
+  have hH1 : Subsingleton (Algebra.H1Cotangent (MvPolynomial ι R) A) := by
     refine subsingleton_of_forall_eq 0 fun h => ?_
     have h1 : Algebra.H1Cotangent.δ R (MvPolynomial ι R) A h = 0 := by
       apply hinj

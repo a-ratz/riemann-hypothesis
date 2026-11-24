@@ -138,7 +138,7 @@ theorem exists_point {D : D7} {H : Geo.Tor.Host D.host.E} {Dw : Datum H} {l : Ge
       IsVac (U.X (dict h).1) Dc.bas (H.w0 : D.host.E) (tens (stdL D.host.E V.rank) (U.X (dict h).1).Λ) v ∧
       (∀ z : Fin V.rank → Fin g → ℂ, ∏ b, ϑ (z b) = κ' * thA (U.X (dict h).1) Dc.bas Dc.idx v (dict h).2 z) ∧
       Reads θ V W hr (U.X (dict h).1) Dc.bas Dc.idx (om (1, γ * h) f₀) ((cst (dict h).1 * mu h * κ') • v) (dict h).2 := by
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   obtain ⟨Wt⟩ := nonempty_uw (U := Formalism.L2.PjFree.Unf.ofPj U) hU
   obtain ⟨hon, γ, hat, hma⟩ := hmk Wt h
   have hn : Even V.rank := hD.2
@@ -216,8 +216,8 @@ theorem geo_value (hT : TieIn T R κ v₀) (O : OMDat T.toCore R i Tp tup)
       evR (T.Q.Xo ((i : ℕ) + 1)) O.c' f y = c0 * ((R.xi (tup t) xk : Circle) : ℂ) * κ' *
         clsSum (inC O.c') X Dc.hr Dc.bas Dc.idx Dc.eL (O.w t) (O.La t) (O.Nc t) (O.gam t) (O.vol t) (O.ep t)
           (fun j => O.io (xs j)) X.Λ v Y x := by
-  letI : Algebra O.c'.F ℂ := (inC O.c').toAlgebra
-  letI : Algebra (O.dδ t).c₂.F ℂ := ((inC O.c').comp ((O.dδ t).eF.symm : (O.dδ t).c₂.F →+* O.c'.F)).toAlgebra
+  let : Algebra O.c'.F ℂ := (inC O.c').toAlgebra
+  let : Algebra (O.dδ t).c₂.F ℂ := ((inC O.c').comp ((O.dδ t).eF.symm : (O.dδ t).c₂.F →+* O.c'.F)).toAlgebra
   intro y B hB hϑ
   have halg : ∀ s : O.c'.F, algebraMap (O.dδ t).c₂.F ℂ ((O.dδ t).eF s) = algebraMap O.c'.F ℂ s := fun s => rfl
   obtain ⟨hlev, hA₂, hnab⟩ := hP.cov t

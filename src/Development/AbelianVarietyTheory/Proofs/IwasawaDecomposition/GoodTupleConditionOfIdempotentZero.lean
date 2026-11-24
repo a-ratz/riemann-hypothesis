@@ -196,7 +196,7 @@ theorem exists_transversal {S : Type} [Fintype S] (c : S → S) (hc : ∀ x, c (
     {n : ℕ} (hn : Fintype.card S = 2 * n) :
     ∃ e : Fin n → S, Function.Injective e ∧ ∀ i j, c (e i) ≠ e j := by
   classical
-  letI : LinearOrder S := LinearOrder.lift' (Fintype.equivFin S) (Fintype.equivFin S).injective
+  let : LinearOrder S := LinearOrder.lift' (Fintype.equivFin S) (Fintype.equivFin S).injective
   let T : Finset S := Finset.univ.filter fun x => x < c x
   have h1 : T.card = Tᶜ.card := by
     refine Finset.card_bij (fun x _ => c x) ?_ ?_ ?_
@@ -911,12 +911,12 @@ theorem unipSer_sum (K : Type) [Field K] [Finite K] (r : ℕ) (A : Type) [Ring A
       ⟨_, Formalism.CyclotomicNorms.Sqf.monicOf_coeffs f hf.1 hf.2.1⟩
   refine ⟨hfin.toFinset, fun f => hfin.mem_toFinset, ?_⟩
   unfold unipSer
-  rw [Finset.sum_ite_eq', if_pos]
+  rw [Finset.sum_ite_eq', ite_eq_left]
   exact hfin.mem_toFinset.2 ⟨(monic_unip r).1, (monic_unip r).2, unip_coeff_zero K r⟩
 
 theorem unipSer_of_squarefree {K : Type} [Field K] {r : ℕ} (hr : 2 ≤ r) (A : Type) [Ring A] {f : K[X]}
     (hf : Squarefree f) : unipSer K r A f = 0 := by
-  refine if_neg fun h => ?_
+  refine ite_eq_right fun h => ?_
   have h1 : IsUnit (X - 1 : K[X]) := hf _ (by rw [h, ← sq]; exact pow_dvd_pow _ hr)
   have h2 := natDegree_eq_zero_of_isUnit h1
   have h3 := (monic_unip (K := K) 1).2
@@ -1037,12 +1037,12 @@ theorem exists_nStage_of_rows (B : Base) (C : Cols B) (W : RowsRest B C) (L : Lo
     ∃ N : NStage B C W, N.toLocStage = L := by
   have hsp := fun k => (GlobalTheory.HostSplit.split_of_one_mod B.R B.host _ (B.host.g_prime k) (B.g_cond k)).1
   let nd : NData B.R B.host W.what₂ := nData B.host W.what₂ hsha hsp rfl
-  haveI : IsEmpty nd.Loc := inferInstanceAs (IsEmpty Empty)
+  have : IsEmpty nd.Loc := inferInstanceAs (IsEmpty Empty)
   choose pl h1 h2 h3 using fun k => exists_places B.host (B.host.g_prime k) (hsp k)
   choose tg htg using fun (k : Fin 2) (v : nd.PlG k) =>
     GlobalTheory.TameInertiaGen.exists_tameGenAt B.host.E nd.Om (pl k v) (nd.plOm.1 (pl k v)) (nd.plOm.2 _)
   let tw := nTw B.LL0 nd
-  haveI : IsEmpty tw.Tw := inferInstanceAs (IsEmpty Empty)
+  have : IsEmpty tw.Tw := inferInstanceAs (IsEmpty Empty)
   let T := nTypes nd pl h1 h2 h3 B.g_cond B.BB_disj tg htg
   have hT : T.e0 = 0 := idempotent_good_tuples_eq_zero T fun k f hf =>
     @unipSer_of_squarefree _ (@ZMod.instField _ ⟨B.host.g_prime k⟩) _ (two_le_r B.R) _ _ f hf

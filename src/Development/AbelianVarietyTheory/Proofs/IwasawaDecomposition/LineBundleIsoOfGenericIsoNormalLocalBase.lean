@@ -62,8 +62,8 @@ open scoped CategoryTheory.Obj
 
 theorem GlobalTheory.lbIso_of_generic_normal_local : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], IsNoetherianRing R → IsIntegrallyClosed R → ∀ (H : Scheme.{0}) (p : H ⟶ Sp R) (e : Sp R ⟶ H), Smooth p → QuasiCompact p → GeometricallyIntegral p → e ≫ p = 𝟙 _ → ∀ L M : LB H, L.IsLB → M.IsLB → LBIso (L.pull (pullback.fst p (jK R))) (M.pull (pullback.fst p (jK R))) → LBIso L M := by
   intro R _ _ _ hN hI H p e hs _ hg he L M hL hM h
-  haveI : IsNoetherianRing R := hN
-  haveI : IsIntegrallyClosed R := hI
+  have : IsNoetherianRing R := hN
+  have : IsIntegrallyClosed R := hI
   have hD := LB.isLB_div hM hL
   have h₁ : IsPreimmersion (jK R) := IsPreimmersion.of_isLocalization (nonZeroDivisors R)
   have h₂ : Flat (jK R) := by

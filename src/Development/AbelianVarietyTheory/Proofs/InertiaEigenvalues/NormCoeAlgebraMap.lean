@@ -241,7 +241,7 @@ theorem exists_gam_gamK_torsion :
         refine Finset.card_le_card_of_injOn (fun g : Γ => PadicInt.toZMod ((g : ℤ_[l]ˣ) : ℤ_[l]))
           ?_ ?_
         · intro g _
-          simp only [Finset.coe_erase, Finset.coe_univ, Set.mem_diff, Set.mem_univ,
+          simp only [Finset.coe_erase, Finset.coe_univ, Set.mem_sdiff, Set.mem_univ,
             Set.mem_singleton_iff, true_and, Finset.mem_erase, Finset.mem_univ, and_true]
           exact ((g : ℤ_[l]ˣ).isUnit.map PadicInt.toZMod).ne_zero
         · intro g hg h hh hgh

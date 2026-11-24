@@ -326,7 +326,7 @@ theorem level_integrand_split_point (L : R.LevelData (Pr (RadSp k r z z' π π')
   rw [hq]
   simp only [levelIntegrand]
   rw [weight_coordinate_split l ((coordinateSplit l).symm (t, q.1)), glue_coordinate_split l c]
-  simp only [MeasurableEquiv.apply_symm_apply, Fin.coe_castSucc, Fin.val_succ, level_product_act_succ]
+  simp only [MeasurableEquiv.apply_symm_apply, Fin.val_castSucc, Fin.val_succ, level_product_act_succ]
   push_cast
   ring
 
@@ -378,7 +378,7 @@ theorem level_integral_formula_top (hT : TopIdent (S := S) P z z' π π' μ L st
   have hf : levelIntegrand L st w (Fin.last P.r) x y c = fun q => topDens L st w x y c (Matrix.of q.2) := by
     funext q
     simp only [levelIntegrand, Fin.val_last, level_product_of_ge L w P.r le_rfl, act_one_hermitian_curvature, glue_last_level]
-    haveI : IsEmpty {l : Fin P.r // P.r ≤ l.val} := ⟨fun l => by have := l.1.isLt; have := l.2; omega⟩
+    have : IsEmpty {l : Fin P.r // P.r ≤ l.val} := ⟨fun l => by have := l.1.isLt; have := l.2; omega⟩
     rw [Fintype.prod_empty]
     simp
   have hT' := integral_top_level_point μ (fun q : Cf P.r (Fin.last P.r) × Mt P.k P.r => topDens L st w x y c (Matrix.of q.2))
@@ -421,7 +421,7 @@ private lemma densNonneg_S_consequence (hN : TopDensNonneg (S := S) P z z' π π
   unfold levelIntegrand
   by_cases h0 : ∀ j, q.1 j ≠ 0
   · have hg : glue i c q.1 ∈ OmX P.r := by
-      simp only [OmX, Set.mem_setOf_eq]
+      simp only [OmX, Set.mem_ofPred_eq]
       intro l
       unfold glue
       split_ifs with h
@@ -447,7 +447,7 @@ theorem level_integral_formula_step (hN : TopDensNonneg (S := S) P z z' π π' L
   have hEs := MeasurePreserving.symm (coordinateSplitAssoc lf) hE
   have hupd : ∀ t : ℂ, t ≠ 0 → Function.update c lf t ∈ OmX P.r := by
     intro t ht
-    simp only [OmX, Set.mem_setOf_eq] at hc ⊢
+    simp only [OmX, Set.mem_ofPred_eq] at hc ⊢
     intro j
     by_cases hj : j = lf
     · subst hj
@@ -574,7 +574,7 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q Fo
 theorem isClosed_nonneg_complex : IsClosed {z : ℂ | 0 ≤ z} := by
   have h : {z : ℂ | 0 ≤ z} = {z : ℂ | 0 ≤ z.re} ∩ {z : ℂ | z.im = 0} := by
     ext z
-    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Complex.le_def, Complex.zero_re, Complex.zero_im]
+    simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Complex.le_def, Complex.zero_re, Complex.zero_im]
     constructor
     · rintro ⟨h1, h2⟩; exact ⟨h1, h2.symm⟩
     · rintro ⟨h1, h2⟩; exact ⟨h1, h2.symm⟩
@@ -655,7 +655,7 @@ theorem nonneg_all_levels {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSp
     apply mul_nonneg
     · exact Complex.zero_le_real.mpr (by positivity)
     · have hn : (l.succ).val + n = P.r := by
-        simp only [Fin.coe_castSucc] at hi
+        simp only [Fin.val_castSucc] at hi
         simp only [Fin.val_succ]
         omega
       exact ih l.succ hn _ (update_mem_OmX hc l ht) _ (hSI w hw l x hx)
@@ -889,7 +889,7 @@ theorem herClassesCpt_of_parts (hT : HerCptTopAll) (hSF : StepFormCptAll) : HerC
   intro Wp Wq _ _ _ _ _ _ S _ _ P z z' π π' X μ L st l0 D A mm hD hl1 hl2 hz hz' hπ hπ' _ _
   obtain ⟨hSD, hFI⟩ := hSF Wp Wq S P z z' π π' X μ L st l0 D hD hl1 hl2 hz hz' hπ hπ'
   set K := herKc S P z z' π π' L st l0 D with hKdef
-  haveI : SFinite μ := sfinite_of_isHaarOn _ μ hD.2.1
+  have : SFinite μ := sfinite_of_isHaarOn _ μ hD.2.1
   have hAdj : AdjTop (S := S) P z z' π π' μ L st K l0 :=
     adjTop_cpt P z z' π π' X μ L st K l0 hD (hT Wp Wq S P z z' π π' X μ L st l0 D hD hl1 hl2 hz hz' hπ hπ')
   have hTI := topIdentFromParts (S := S) P z z' π π' X μ L st K l0 hD

@@ -57,7 +57,7 @@ theorem sw_bump {X : Type} [TopologicalSpace X] [T2Space X] (A : Submodule ℂ (
   obtain ⟨b, hbA, hb0, hb1⟩ := hA.bump (tsupport f) hc.isCompact
   refine ⟨b, hbA, hb0, fun ε hε => ?_⟩
   have hbK : IsCompact (tsupport b) := (hA.cc b hbA).2.isCompact
-  haveI : CompactSpace (tsupport b) := isCompact_iff_compactSpace.mp hbK
+  have : CompactSpace (tsupport b) := isCompact_iff_compactSpace.mp hbK
   let S : StarSubalgebra ℂ C(tsupport b, ℂ) :=
     { carrier := {u | ∃ a ∈ A, ∃ c : ℂ, ∀ x : tsupport b, u x = a x + c}
       mul_mem' := by
@@ -83,10 +83,10 @@ theorem sw_bump {X : Type} [TopologicalSpace X] [T2Space X] (A : Submodule ℂ (
     intro p q hpq
     obtain ⟨a, ha, hne⟩ := hA.sep p.1 q.1 (fun h => hpq (Subtype.ext h))
     have hac := (hA.cc a ha).1
-    refine ⟨_, ⟨⟨fun x => a x.1, hac.comp continuous_subtype_val⟩, ⟨a, ha, 0, fun x => by simp⟩, rfl⟩, ?_⟩
+    refine ⟨_, ⟨⟨fun x => a x.1, hac.comp continuous_subtypeVal⟩, ⟨a, ha, 0, fun x => by simp⟩, rfl⟩, ?_⟩
     exact hne
   have htop := ContinuousMap.starSubalgebra_topologicalClosure_eq_top_of_separatesPoints S hsep
-  let fK : C(tsupport b, ℂ) := ⟨fun x => f x.1, hf.comp continuous_subtype_val⟩
+  let fK : C(tsupport b, ℂ) := ⟨fun x => f x.1, hf.comp continuous_subtypeVal⟩
   have hfmem : fK ∈ closure (S : Set C(tsupport b, ℂ)) := by
     have : fK ∈ S.topologicalClosure := by rw [htop]; trivial
     exact this
@@ -295,7 +295,7 @@ theorem dens_seq {X N : Type} [TopologicalSpace X] [T2Space X] [LocallyCompactSp
         Tendsto (fun j => ∫ z, f z ∂m j) atTop (𝓝 (∫ x, ∫ z, f z * k x z ∂σ ∂lam))) ∧
       ∀ (C : Set X) (ε : ℝ) (j : ℕ), (∀ z ∈ C, z ∈ Y → G j z ≤ ε) → 0 ≤ ε → ∀ f : X → ℝ, Integrable f σ →
         (∀ z, 0 ≤ f z) → (∀ z ∈ Y, z ∉ C → f z = 0) → ∫ z, f z ∂m j ≤ ε * ∫ z, f z ∂σ := by
-  haveI := hσ
+  have := hσ
   have hYae : ∀ᵐ z ∂σ, z ∈ Y := by
     rw [ae_iff]; exact hσY
   let H : ℕ → X → ℂ := fun j z => ∫ x, g j x * k x z ∂lam
@@ -315,7 +315,7 @@ theorem dens_seq {X N : Type} [TopologicalSpace X] [T2Space X] [LocallyCompactSp
   have hle : ∀ j, σ.withDensity (r j) ≤ B j • σ := by
     intro j
     refine Measure.le_iff.2 fun s hs => ?_
-    rw [withDensity_apply _ hs, Measure.smul_apply, smul_eq_mul, ← setLIntegral_const]
+    rw [withDensity_apply _ hs, smul_apply, smul_eq_mul, ← setLIntegral_const]
     refine lintegral_mono fun z => ENNReal.ofReal_le_ofReal ?_
     exact (Complex.re_le_norm _).trans (H_bd (g j) (hg j).1 hk1 z)
   have hBt : ∀ j, B j ≠ ∞ := fun j => ENNReal.ofReal_ne_top
@@ -331,7 +331,7 @@ theorem dens_seq {X N : Type} [TopologicalSpace X] [T2Space X] [LocallyCompactSp
     rw [h1, h2, Complex.real_smul, mul_comm]
   refine ⟨fun j => σ.withDensity (r j), fun j => ⟨fun K hK => ?_⟩, fun j => ?_, hint, hint, ?_, ?_⟩
   · refine ((hle j) K).trans_lt ?_
-    simp only [Measure.smul_apply, smul_eq_mul]
+    simp only [smul_apply, smul_eq_mul]
     exact ENNReal.mul_lt_top (hBt j).lt_top hK.measure_lt_top
   · exact withDensity_absolutelyContinuous σ _ hσY
   · intro f hf hT
@@ -558,7 +558,7 @@ theorem dens_main (hP : PositivityTheory.Rg.Rsw.L.PosExt) : PositivityTheory.Rg.
       exact (hK.image Θ.symm.continuous).measure_lt_top
     have hsm : IsFiniteMeasureOnCompacts (κ • ν) := by
       refine ⟨fun K hK => ?_⟩
-      simp only [Measure.smul_apply]
+      simp only [smul_apply]
       exact ENNReal.mul_lt_top ENNReal.coe_lt_top hK.measure_lt_top
     refine huniq _ _ hmap hsm fun f hf => ?_
     obtain ⟨h1, h2⟩ := hΘ f hf

@@ -84,7 +84,7 @@ private theorem inv_mul_scal_entry_zero_zero_eq {K : Type} [Field K] {Δ : K} {z
 
 theorem UpperTheory.V.Z.Sym.Loc.fzdLaw : UpperTheory.V.Z.Sym.Loc.FzdLaw := by
   intro O K _ _ _ _ _ Δ hL χ hχ
-  haveI := hL.frac
+  have := hL.frac
   refine ⟨?_, ?_⟩
   · intro g hg
     rw [fZD, dite_eq_right]

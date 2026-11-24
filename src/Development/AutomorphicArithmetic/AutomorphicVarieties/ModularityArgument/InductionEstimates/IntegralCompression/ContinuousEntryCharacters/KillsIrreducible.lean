@@ -71,7 +71,7 @@ private lemma kills_irreducible {G H : Type*} [Group G] [TopologicalSpace G] [No
   have hclρ : IsClosed (ρ : Set H) := by
     have he : (ρ : Set H) = (τ : Set H) ∩ ⋂ g, {x | P (π g x) = 0} := by
       ext x
-      simp only [SetLike.mem_coe, hmem, Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+      simp only [SetLike.mem_coe, hmem, Set.mem_inter_iff, Set.mem_iInter, Set.mem_ofPred_eq]
     rw [he]
     exact hcl.inter (isClosed_iInter fun g => isClosed_eq (P.continuous.comp (π g).continuous) continuous_const)
   have hinvρ : ∀ g, ∀ x ∈ ρ, π g x ∈ ρ := fun h x hx =>

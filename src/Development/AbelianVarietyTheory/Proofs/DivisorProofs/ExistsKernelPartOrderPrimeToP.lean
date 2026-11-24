@@ -67,7 +67,7 @@ theorem kerPow_one {k : Type} [Field k] {A B : AbVar k} (f : A ⟶ B) :
 theorem exists_kerPow_primePow {k : Type} [Field k] {A B : AbVar k} (f : A ⟶ B) (q e : ℕ) (hq : q.Prime) :
     ∃ (H : Type) (_ : CommRing H) (_ : Algebra k H) (i : ptOver k H ⟶ A.X),
       KerPow f (q ^ e) H i ∧ ∃ j : ℕ, Module.finrank k H = q ^ j := by
-  haveI : Fact q.Prime := ⟨hq⟩
+  have : Fact q.Prime := ⟨hq⟩
   obtain ⟨G, -, ⟨tA⟩⟩ := GlobalTheory.AVTower.exists_tower q k A
   obtain ⟨G', -, ⟨tB⟩⟩ := GlobalTheory.AVTower.exists_tower q k B
   refine ⟨_, inferInstance, inferInstance, kerPt tA tB f e, kerPow_kerPt tA tB f e, ?_⟩

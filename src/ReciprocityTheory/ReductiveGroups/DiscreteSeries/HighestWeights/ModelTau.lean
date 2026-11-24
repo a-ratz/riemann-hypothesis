@@ -199,7 +199,7 @@ theorem Vsp_le_polyK (ε : Fin n → Bool) (m : Fin n → ℤ) : ∃ D : ℕ, Vs
 
 theorem finiteDimensional_Vsp (ε : Fin n → Bool) (m : Fin n → ℤ) : FiniteDimensional ℂ (Vsp ε m) := by
   obtain ⟨D, hD⟩ := Vsp_le_polyK ε m
-  haveI : FiniteDimensional ℂ (polyK ε D) := by
+  have : FiniteDimensional ℂ (polyK ε D) := by
     unfold polyK
     infer_instance
   exact Submodule.finiteDimensional_of_le hD
@@ -243,12 +243,12 @@ theorem hasDerivAt_of_mem_Vsp (ε : Fin n → Bool) (m : Fin n → ℤ) {f : KG 
        unfold kcurve
        rw [dite_eq_left hX, Classical.choose_spec (exists_curve ε hX) t, Complex.coe_smul]
     simp only [hk]
-    letI iR : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
-    letI : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
-    letI : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℝ ℂ _
+    let iR : NormedRing (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedRing
+    let : NormedAlgebra ℂ (Matrix (Fin n) (Fin n) ℂ) := Matrix.linftyOpNormedAlgebra
+    let : NormedAlgebra ℝ (Matrix (Fin n) (Fin n) ℂ) := NormedAlgebra.restrictScalars ℝ ℂ _
     haveI : @CompleteSpace (Matrix (Fin n) (Fin n) ℂ)
         (@PseudoMetricSpace.toUniformSpace _ (@MetricSpace.toPseudoMetricSpace _ (@NormedRing.toMetricSpace _ iR))) := by
-      exact FiniteDimensional.complete ℂ _
+      exact FiniteDimensional.completeSpace ℂ _
     have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
     rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
     exact h
@@ -727,7 +727,7 @@ theorem pre_kStable_of_stable (W : Submodule ℂ V)
       have := ((ContinuousLinearMap.apply ℂ V v).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt (0 : ℝ) hd
       simpa [Function.comp_def] using this
     rw [hasDerivAt_iff_tendsto_slope] at hdv
-    have hcl : IsClosed (W : Set V) := W.closed_of_finiteDimensional
+    have hcl : IsClosed (W : Set V) := W.isClosed_of_finiteDimensional
     refine hcl.mem_of_tendsto hdv (Filter.Eventually.of_forall fun t => ?_)
     rw [slope_def_module, SetLike.mem_coe]
     exact Submodule.smul_of_tower_mem W _ (W.sub_mem (hW _ v hv) (hW _ v hv))
@@ -856,24 +856,24 @@ theorem tauC_one (ε : Fin n → Bool) (m : Fin n → ℤ) : tauC ε m 1 = 1 := 
 theorem tauC_mul (ε : Fin n → Bool) (m : Fin n → ℤ) (k₁ k₂ : KG ε) :
     tauC ε m (k₁ * k₂) = tauC ε m k₁ * tauC ε m k₂ := by
   refine ContinuousLinearMap.ext fun f => MV.ext ?_
-  rw [tauC_fn, rtr_mul, ContinuousLinearMap.mul_apply, tauC_fn, tauC_fn]
+  rw [tauC_fn, rtr_mul, mul_apply_eq_comp, tauC_fn, tauC_fn]
 
 theorem tauC_inner (ε : Fin n → Bool) (m : Fin n → ℤ) (k : KG ε) (f g : MV ε m) :
     inner ℂ (tauC ε m k f) (tauC ε m k g) = inner ℂ f g := by
   show mvInner _ _ = mvInner _ _
   unfold mvInner
   simp only [tauC_fn]
-  haveI := muK_rightInvariant ε
+  have := muK_rightInvariant ε
   exact MeasureTheory.integral_mul_right_eq_self (fun x => starRingEnd ℂ (f.fn x) * g.fn x) k
 
 theorem tauC_mem_unitary (ε : Fin n → Bool) (m : Fin n → ℤ) (k : KG ε) : tauC ε m k ∈ unitary (MV ε m →L[ℂ] MV ε m) := by
   have hinv : ∀ f, tauC ε m k (tauC ε m k⁻¹ f) = f := by
     intro f
-    rw [← ContinuousLinearMap.mul_apply, ← tauC_mul, mul_inv_cancel, tauC_one]
+    rw [← mul_apply_eq_comp, ← tauC_mul, mul_inv_cancel, tauC_one]
     rfl
   have hinv' : ∀ f, tauC ε m k⁻¹ (tauC ε m k f) = f := by
     intro f
-    rw [← ContinuousLinearMap.mul_apply, ← tauC_mul, inv_mul_cancel, tauC_one]
+    rw [← mul_apply_eq_comp, ← tauC_mul, inv_mul_cancel, tauC_one]
     rfl
   have hadj : star (tauC ε m k) = tauC ε m k⁻¹ := by
     rw [ContinuousLinearMap.star_eq_adjoint]
@@ -886,9 +886,9 @@ theorem tauC_mem_unitary (ε : Fin n → Bool) (m : Fin n → ℤ) (k : KG ε) :
     | rw [unitary.mem_iff, hadj]
   constructor
   · ext f
-    rw [ContinuousLinearMap.mul_apply, hinv', ContinuousLinearMap.one_apply]
+    rw [mul_apply_eq_comp, hinv', one_apply_eq_self]
   · ext f
-    rw [ContinuousLinearMap.mul_apply, hinv, ContinuousLinearMap.one_apply]
+    rw [mul_apply_eq_comp, hinv, one_apply_eq_self]
 
 def mvFnL (ε : Fin n → Bool) (m : Fin n → ℤ) : MV ε m →ₗ[ℂ] (KG ε → ℂ) where
   toFun f := f.fn
@@ -992,7 +992,7 @@ theorem dTau_fn (ε : Fin n → Bool) (m : Fin n → ℤ) (Z : Matrix (Fin n) (F
   unfold dTau
   rw [cextL_apply]
   unfold cext
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, MV.fn_add, MV.fn_smul,
+  simp only [add_apply, smul_apply, MV.fn_add, MV.fn_smul,
     Pi.add_apply, Pi.smul_apply, smul_eq_mul, derOp_fn_eq_deriv_kcurve]
   rfl
 

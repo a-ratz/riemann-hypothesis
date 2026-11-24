@@ -70,7 +70,7 @@ theorem isEnum_unique {n : ℕ} {S : SPar} {l l' : Fin n → ℝ} {e e' : Fin n 
     ext x; constructor
     · rintro ⟨a, rfl⟩; obtain ⟨b, hb, -⟩ := key a; exact ⟨b, by rw [hq, hq', hb]⟩
     · rintro ⟨a, rfl⟩; obtain ⟨b, hb⟩ := key' a; exact ⟨b, by rw [hq, hq', hb]⟩
-  have hl : l = l' := (ha.range_inj ha').1 hr
+  have hl : l = l' := (ha.range_inj_of_wellFoundedGT ha').1 hr
   refine ⟨hl, funext fun a => ?_⟩
   obtain ⟨b, hb, he⟩ := key a
   have : l' b = l' a := by rw [hq' b, hb, ← hq a, hl]
@@ -137,7 +137,7 @@ theorem blattner_inj {p q : ℕ} {l l' : Ix p q → ℚ} (h : IsParam l) (h' : I
 
 theorem hasParam_zero {T : GrpData 0 0} (R : DSRep T) (lam : Ix 0 0 → ℚ) : HasParam R lam := by
   refine ⟨?_, fun μ v _ => by simp [vogan]⟩
-  haveI := R.nontriv
+  have := R.nontriv
   obtain ⟨x, hx⟩ := exists_ne (0 : R.U.H)
   have hfin : Finite T.G := by
     have hinj : Function.Injective fun g : T.G => ((T.sq g : ℂˣ) : ℂ) := by

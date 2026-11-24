@@ -200,7 +200,7 @@ theorem injective_of_charZero (E : Type) [Field E] [NumberField E] {L : Type} [F
     (g : 𝓞 E →+* L) : Function.Injective g := by
   refine (injective_iff_map_eq_zero g).2 fun x hx => ?_
   by_contra h
-  have hne := Ideal.comap_ne_bot_of_integral_mem (R := ℤ) (I := RingHom.ker g) h
+  have hne := Ideal.under_ne_bot_of_integral_mem (R := ℤ) (I := RingHom.ker g) h
     (RingHom.mem_ker.2 hx) (Algebra.IsIntegral.isIntegral x)
   apply hne
   rw [eq_bot_iff]
@@ -654,7 +654,7 @@ private theorem finite_setOf_not_isLatOf (C : ACurve K) {Λ : C.I → AddSubgrou
   intro i hi
   by_contra hni
   apply hi
-  simp only [Set.mem_union, Set.mem_iUnion, Set.mem_setOf_eq, not_or, not_exists, not_lt,
+  simp only [Set.mem_union, Set.mem_iUnion, Set.mem_ofPred_eq, not_or, not_exists, not_lt,
     not_not] at hni
   obtain ⟨⟨h0, h1⟩, h2⟩ := hni
   unfold IsLatOf at h0 ⊢
@@ -690,9 +690,9 @@ theorem subDeg_step [FiniteDimensional K V] (C : ACurve K) {Λ : C.I → AddSubg
       rw [SetLike.mem_coe, hWdef, β.mem_span_image]
       intro l hl
       rw [Finset.mem_coe, Finsupp.mem_support_iff] at hl
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       by_contra hls
-      exact hl (tri i k l hk (Fin.lt_iff_val_lt_val.mpr (by simp only [Set.mem_setOf_eq] at hk; omega)))
+      exact hl (tri i k l hk (Fin.lt_def.mpr (by simp only [Set.mem_ofPred_eq] at hk; omega)))
     · rw [Module.finrank_eq_card_basis δ, Module.finrank_eq_card_basis γ]
   choose δ hδ1 hδ2 hδ3 using fun i => step_basis (b i) hs (hbi i)
   have hlat : ∀ i, IsLatOf C i (δ i) (sub C Λ W i) :=
@@ -705,7 +705,7 @@ theorem subDeg_step [FiniteDimensional K V] (C : ACurve K) {Λ : C.I → AddSubg
       rw [Module.Basis.toMatrix_apply, ← hγ2, hδ1]
     · intro k l hlk
       rw [Module.Basis.toMatrix_apply, ← hγ2, hδ1]
-      exact tri i _ _ (by simp) (Fin.lt_iff_val_lt_val.mpr (by simpa using hlk))
+      exact tri i _ _ (by simp) (Fin.lt_def.mpr (by simpa using hlk))
   have hne : ∀ i, ∏ k : Fin s, β.repr (b i (Fin.castLE hs k)) (Fin.castLE hs k) ≠ 0 := by
     intro i
     rw [← hD]
@@ -779,7 +779,7 @@ theorem subDeg_succ [FiniteDimensional K V] (C : ACurve K) {Λ : C.I → AddSubg
     apply (fin1.union fin0).subset
     intro i hi
     by_contra hc
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not, hprod, map_mul] at hc
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not, hprod, map_mul] at hc
     obtain ⟨h1, h2⟩ := hc
     rw [h2, one_mul] at h1
     exact hi h1
@@ -831,7 +831,7 @@ theorem exists_base {S : Scheme.{0}} {G : Over S} [GrpObj G] {A R : Type} [CommR
       (Smooth G.hom → ∀ (n : ℕ) (b : Module.Basis (Fin n) A E),
         ∃ b' : Module.Basis (Fin n) R F, ∀ k, b' k = j (b k)) := by
   subst hz
-  letI := φ.toAlgebra
+  let := φ.toAlgebra
   obtain ⟨j, h1, h2, h3⟩ := PositivityTheory.HtPt.Htat.lie_bc S G A R x E F M N
   refine ⟨j, fun e => Over.OverMorphism.ext (h1 e), h2, fun hs n b => ?_⟩
   exact ⟨Module.Basis.mk (h3 hs n b).1 (h3 hs n b).2.ge, fun k => Module.Basis.mk_apply _ _ _⟩
@@ -1105,7 +1105,7 @@ theorem gr_deg : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRin
       have h1 : b s ∈ flagStep Ω b (s + 1) := Submodule.subset_span ⟨s, Nat.lt_succ_self _, rfl⟩
       have e : {k : Fin r | (k : ℕ) < s + 1} = insert s {k : Fin r | (k : ℕ) < s} := by
         ext k
-        simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Fin.ext_iff]
+        simp only [Set.mem_ofPred_eq, Set.mem_insert_iff, Fin.ext_iff]
         omega
       rw [hb, flagStep, e, Set.image_insert_eq, Submodule.mem_span_insert] at h1
       obtain ⟨t, y, hy, h1⟩ := h1
@@ -1393,7 +1393,7 @@ theorem curve_in_cpt : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (C
     have h1 := Val.mul hr v1
     rw [div_mul_div_cancel₀ (ne_zero_of_le hle hd.ne_zero)] at h1
     have h2 := LieTangent.valAt_unique hξ h1 v2
-    rw [← mul_div_assoc, div_left_inj' (hc k)] at h2
+    rw [← mul_div_assoc, div_left_inj₀ (hc k)] at h2
     exact h2.symm
 
 end PositivityTheory.HtPt.Ci
@@ -1458,7 +1458,7 @@ theorem exists_homog_val {w : (Σ k, J k) → K} {c : ∀ k, J k} (hc : ∀ k, w
     refine ⟨0, C a, fun m hm k => ?_, rfl⟩
     have : m = 0 := by
       by_contra h
-      exact mem_support_iff.1 hm (by rw [coeff_C, if_neg (Ne.symm h)])
+      exact mem_support_iff.1 hm (by rw [coeff_C, ite_eq_right (Ne.symm h)])
     simp [this]
   | add f g hf hg =>
     obtain ⟨N, f', h1, h2⟩ := hf
@@ -1504,7 +1504,7 @@ theorem isFunctionField_of_dim {p : ℕ} [Fact p.Prime] [Algebra (ZMod p) K] {w 
     have hchar : CharP (MRing J ⧸ W) p := (CharP.charP_iff_prime_eq_zero Fact.out).2 (by
       rw [← map_natCast (Ideal.Quotient.mk W), Ideal.Quotient.eq_zero_iff_mem]; exact hp)
     let _ := ZMod.algebra (MRing J ⧸ W) p
-    haveI : FaithfulSMul (ZMod p) (MRing J ⧸ W) :=
+    have : FaithfulSMul (ZMod p) (MRing J ⧸ W) :=
       (faithfulSMul_iff_algebraMap_injective _ _).2 (RingHom.injective _)
     have : IsScalarTower ℤ (ZMod p) (MRing J ⧸ W) := IsScalarTower.of_algebraMap_eq' (RingHom.ext_int _ _)
     have : Algebra.FiniteType (ZMod p) (MRing J ⧸ W) :=
@@ -1635,7 +1635,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Conj.GapThreshold
 theorem ent_of_lt {T : Type} [Fintype T] {N : ℕ} (mu : GlobalTheory.CompanionTheory.Ar.Top.Wt T N) (τ : T) {i : ℕ} (h : i < N) :
     GlobalTheory.CompanionTheory.Ar.Top.ent mu τ i = mu τ ⟨i, h⟩ := by
   unfold GlobalTheory.CompanionTheory.Ar.Top.ent
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 theorem abs_le_norm {T : Type} [Fintype T] {N : ℕ} (mu : GlobalTheory.CompanionTheory.Ar.Top.Wt T N) (τ : T) (i : Fin N) :
     |mu τ i| ≤ ‖mu‖ := by
@@ -1687,7 +1687,7 @@ theorem lmuNum_eq_sum {T : Type} [Fintype T] {N j : ℕ} (mu : GlobalTheory.Comp
     intro τ
     rw [← Fin.sum_univ_eq_sum_range (fun i => -GlobalTheory.CompanionTheory.Ar.Top.ent mu τ i * xx τ i) N]
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [hxx, dif_pos i.isLt, ent_of_lt mu τ i.isLt]
+    simp only [hxx, dite_eq_left i.isLt, ent_of_lt mu τ i.isLt]
   rw [Fintype.sum_prod_type, ← Finset.sum_neg_distrib]
   refine Finset.sum_congr rfl fun τ _ => ?_
   rw [hrow τ, ← Finset.sum_range_add_sum_Ico _ hjN.le, Finset.sum_Ico_eq_sum_range, neg_add]
@@ -1697,7 +1697,7 @@ theorem lmuNum_eq_sum {T : Type} [Fintype T] {N j : ℕ} (mu : GlobalTheory.Comp
     have hij : i < j := Finset.mem_range.1 hi
     have hiN : i < N := by omega
     have hx' := hx τ ⟨i, hiN⟩ hij
-    simp only [hxx, dif_pos hiN, Nat.add_sub_cancel, hx']
+    simp only [hxx, dite_eq_left hiN, Nat.add_sub_cancel, hx']
     ring
   · rw [← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun m hm => ?_
@@ -1706,7 +1706,7 @@ theorem lmuNum_eq_sum {T : Type} [Fintype T] {N j : ℕ} (mu : GlobalTheory.Comp
     have hy' := hy τ ⟨j + m, hiN⟩ (by simp)
     have e1 : N - 1 - (j + m) + 1 = N - j - m := by omega
     have e2 : N - 1 - (j + m) = N - j - m - 1 := by omega
-    simp only [hxx, dif_pos hiN, Nat.add_sub_cancel, hy']
+    simp only [hxx, dite_eq_left hiN, Nat.add_sub_cancel, hy']
     rw [e1, e2]
     ring
 
@@ -1792,7 +1792,7 @@ theorem unitAt_of_isUnit {q : Cpt ξ} {a : regAt ξ q} (h : IsUnit a) : unitAt �
 
 theorem unitAt_int_of_fibre [CharZero Ω] {p : ℕ} (hp : p.Prime) (q : Cpt ξ) (hq : InFibre ξ p q) {d : ℤ}
     (hd : ¬ (p : ℤ) ∣ d) : unitAt ξ q (d : Ω) := by
-  haveI := EigSplit.isLocalRing_regAt q
+  have := EigSplit.isLocalRing_regAt q
   obtain ⟨a, b, hab⟩ := ((Nat.prime_iff_prime_int.1 hp).coprime_iff_not_dvd).2 hd
   have hP : ¬ IsUnit ((p : ℕ) : regAt ξ q) := fun h => hq (by simpa using unitAt_of_isUnit h)
   have h1 : ((a : regAt ξ q) * (p : regAt ξ q)) + (b : regAt ξ q) * (d : regAt ξ q) = 1 := by
@@ -1869,12 +1869,12 @@ namespace GlobalTheory.CompanionTheory.Ar.Conj
 open ModelNefness GlobalTheory.CompanionTheory.Ar.Top in
 theorem m2Model_of_m2Curve : CurveSemiAbelianConjecture → RootLineDeRhamModel := by
   intro hC Ψ _ N M j p E _ _ _ H D hp hp2 hj hjN mu hdom hthr Wi hW
-  haveI : Fact p.Prime := ⟨hp⟩
+  have : Fact p.Prime := ⟨hp⟩
   obtain ⟨hprime, hPW, hchar, hdim⟩ := hW
-  haveI : CharZero M.Ω := charZero_of_isArithVar M.arith
+  have : CharZero M.Ω := charZero_of_isArithVar M.arith
   obtain ⟨K, _, _, _, w, hwW, hbir, hwk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Crv.Field.curve_field M.K M.ι Wi p hprime hchar hdim
   obtain ⟨C, hFF, hne, hv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FF.places_form_curve (ZMod p) K
-  haveI : CharP K p := charP_of_injective_algebraMap (algebraMap (ZMod p) K).injective p
+  have : CharP K p := charP_of_injective_algebraMap (algebraMap (ZMod p) K).injective p
   obtain ⟨z, Y, h₀, h, hco, hfib⟩ := _root_.GlobalTheory.CompanionTheory.Relay.curve_through_coordinates D.X M.Ω D.ξ M.K M.ι M.y D.tie K C w
     (by rw [hwW]; exact hPW) hwk
   obtain ⟨hz, hi⟩ := hfib p (CharP.cast_eq_zero K p)
@@ -1894,8 +1894,8 @@ theorem m2Model_of_m2Curve : CurveSemiAbelianConjecture → RootLineDeRhamModel 
   have hconst : ∀ i (c : algebraicClosure (ZMod p) K), C.v i (algebraMap _ K c) ≤ 1 := fun i c =>
     hv i _ (mem_algebraicClosure_iff.1 c.2)
   obtain ⟨Vz, _, _, ⟨Mz⟩⟩ := lieModel_exists D.X D.t.G K z
-  haveI : Smooth D.t.G.hom := D.t.semi.smooth
-  haveI : FiniteDimensional K Vz := (_root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective D.X D.t.G K z Vz Mz).1
+  have : Smooth D.t.G.hom := D.t.semi.smooth
+  have : FiniteDimensional K Vz := (_root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective D.X D.t.G K z Vz Mz).1
   obtain ⟨rz, hrz, -⟩ := lieModel_exists_unique_act D.X D.t.G K z Vz Mz (𝓞 E) D.t.act.act D.t.act.hom
     D.t.act.one D.t.act.mul D.t.act.add
   have hreg : ∀ q ∈ {q | InFibre D.ξ p q}, ∀ s a, D.σ s a ∈ regAt D.ξ q := fun q hq s a => D.reg q hq s a

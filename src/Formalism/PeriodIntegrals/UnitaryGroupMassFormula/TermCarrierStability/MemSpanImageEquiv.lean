@@ -172,7 +172,7 @@ theorem fixedConv_tr (Λ : Submodule (𝓞 E) S.V) (g : ℕ) (hΛ : Tr γ Λ Λ)
   refine ⟨fun P => ?_, fun c hc => ?_⟩
   · obtain ⟨c, hc0, hc1, hloc⟩ := h1 P
     refine ⟨c, hc0, hc1, ?_⟩
-    haveI := P.isPrime
+    have := P.isPrime
     have hs : Set.range (fun a => c a • F₂.fl.e a) = γ '' Set.range (fun a => c a • x.fl.e a) := by
       rw [← Set.range_comp]
       congr 1

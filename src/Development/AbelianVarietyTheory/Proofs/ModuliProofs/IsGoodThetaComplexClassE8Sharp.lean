@@ -154,8 +154,8 @@ theorem exists_proj (P P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P.A P.L P.g) (u�
     ∃ pr : I → (P.A ⟶ P₀.A), (∀ i, IsMonHom (pr i)) ∧ (∀ i z, u₀.ex (fun j => z (σ (i, j))) = u.ex z ≫ pr i) ∧
       ∀ (T : Over (Sp ℂ)) (y : I → (T ⟶ P₀.A)), ∃! x : T ⟶ P.A, ∀ i, x ≫ pr i = y i := by
   classical
-  letI := P.isAb.comm
-  letI := P₀.isAb.comm
+  let := P.isAb.comm
+  let := P₀.isAb.comm
   let R : I → (Fin P.g → ℂ) →ₗ[ℂ] (Fin P₀.g → ℂ) := fun i => LinearMap.funLeft ℂ ℂ fun j => σ (i, j)
   let S : I → (Fin P₀.g → ℂ) →ₗ[ℂ] (Fin P.g → ℂ) := fun i =>
     LinearMap.pi fun a => if (σ.symm a).1 = i then LinearMap.proj (σ.symm a).2 else 0
@@ -176,8 +176,8 @@ theorem exists_proj (P P₀ : Out.PolAV (Sp ℂ)) (u : HolUnif P.A P.L P.g) (u�
     rw [hRS]
     split_ifs
     exacts [hz, u₀.Λ.zero_mem]).exists
-  haveI := fun i => (hpr i).1
-  haveI := fun i => (hinc i).1
+  have := fun i => (hpr i).1
+  have := fun i => (hinc i).1
   have e1 : ∀ i, inc i ≫ pr i = 𝟙 _ := fun i =>
     hom_ext_of_lin laws laws2 hc hT P₀ P₀ u₀ u₀ LinearMap.id _ _ (fun z => by
       rw [← Category.assoc, ← (hinc i).2, ← (hpr i).2, hRS]; simp) (fun z => by simp) inferInstance
@@ -705,7 +705,7 @@ theorem lbIso_linComb_lam_of_appellHumbert : Out.Laws → Out.Laws2 → (∀ (S 
       exact (CubeValues.le_preimage_wchart _ P₀.L _ (j uv)).1 (hj' uv) I
   dsimp only [withFrame]
   change u.fr i z * ∏ uv : Fin 8 × Fin 8, _ = u.fr i (z + l) * ∏ uv : Fin 8 × Fin 8, _
-  simp only [hst, mul_zpow, Finset.prod_mul_distrib, ← Complex.exp_int_mul, ← Complex.exp_sum]
+  simp only [hst, mul_zpow, Finset.prod_mul_distrib, ← Complex.exp_intCast_mul, ← Complex.exp_sum]
   rw [ah_step hu l i z hi, hχ, ← Complex.exp_add, hH, hH, ← sum_symmetrise W fun a b => hermForm H₀ (R a z) (R b l),
     ← sum_symmetrise W fun a b => hermForm H₀ (R a l) (R b l), ← Fintype.sum_prod_type' fun a b =>
       (W a b : ℂ) * ((hermForm H₀ (R a l) (R b l)).im : ℂ), Finset.mul_sum, Finset.mul_sum, Finset.mul_sum,
@@ -749,7 +749,7 @@ theorem form_act {h : ℕ} (G A : Matrix (Fin 8) (Fin 8) ℤ) (x : Fin 8 → Fin
   exact Finset.sum_comm
 
 theorem exp_pi_I_int (n : ℤ) : Complex.exp (Real.pi * Complex.I * (n : ℂ)) = (-1) ^ n := by
-  rw [_root_.mul_comm, Complex.exp_int_mul, Complex.exp_pi_mul_I]
+  rw [_root_.mul_comm, Complex.exp_intCast_mul, Complex.exp_pi_mul_I]
 
 theorem hermForm_eq_sum {g h : ℕ} (Hm : Matrix (Fin g) (Fin g) ℂ) (H₀ : Matrix (Fin h) (Fin h) ℂ)
     (G : Matrix (Fin 8) (Fin 8) ℤ) (R : Fin 8 → ((Fin g → ℂ) →ₗ[ℂ] (Fin h → ℂ))) (s : Set (Fin g → ℂ))
@@ -829,8 +829,8 @@ theorem sharpClass_of_unif : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P
     rw [hχ x l hx.symm, hEF, form_act, hw, ← exp_pi_I_int, ← hx]
     simp [hRQ, im_hermForm_per hs hp]
   have hL := _root_.GlobalTheory.lbIso_linComb_lam_of_appellHumbert laws laws2 hc hT W t.pol u Hm χ' P₀ u₀ _ χ₀ pr R hAH hAH₀ hpru hform hchi
-  letI := P₀.isAb.comm
-  haveI := hpr
+  let := P₀.isAb.comm
+  have := hpr
   refine ⟨c, hcP, fun i => pr i ≫ φ.inv, fun i => inferInstanceAs (IsMonHom (pr i ≫ φ.inv)), fun T y => ?_, ?_, fun j i => ?_, fun i v => ?_⟩
   · simp only [← Category.assoc, Iso.comp_inv_eq]
     exact hprod T fun i => y i ≫ φ.hom
@@ -842,7 +842,7 @@ theorem sharpClass_of_unif : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P
       Category.comp_id] at this
     exact this
   · obtain ⟨F, hF, hFa⟩ := hact j
-    haveI := t.hom j
+    have := t.hom j
     have hRF : ∀ z, R i (F z) = ∑ v, a j i v • R v z := fun z => by
       have : ((R i ∘ₗ F).restrictScalars ℝ) = (∑ v, a j i v • R v).restrictScalars ℝ :=
         LinearMap.ext_on_range Qspan fun x => by
@@ -905,7 +905,7 @@ theorem exists_equiv_pi_range_of_matrixUnits {R M n : Type} [CommRing R] [AddCom
       rw [hf]
       obtain ⟨z, hz⟩ := (y u).2
 
-      simp only [map_sum, hpq, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+      simp only [map_sum, hpq, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
       rw [← hz, hP]
   exact ⟨LinearEquiv.ofBijective f hb, hf, fun x => (hs x).symm⟩
 
@@ -925,8 +925,8 @@ theorem matrixUnits_apply {La : Type} [AddCommGroup La]
       simp only [Matrix.single_mul_single_same, Matrix.sum_apply, Matrix.single_apply, Matrix.one_apply, mul_one]
       by_cases hij : i = j
       · subst hij; simp
-      · rw [if_neg hij]
-        refine Finset.sum_eq_zero fun u _ => if_neg ?_
+      · rw [ite_eq_right hij]
+        refine Finset.sum_eq_zero fun u _ => ite_eq_right ?_
         rintro ⟨rfl, rfl⟩; exact hij rfl
     simp only [← Module.End.mul_apply, ← map_mul]
 
@@ -1094,7 +1094,7 @@ theorem polarised_lattice_eighth_power :
           obtain ⟨x, hx⟩ := z.2
           exact ⟨x, by rw [← hx, hQ₀]⟩⟩
         exact DiscreteTopology.of_continuous_injective (f := f)
-          ((Jl.continuous_of_finiteDimensional.comp continuous_subtype_val).subtype_mk _)
+          ((Jl.continuous_of_finiteDimensional.comp continuous_subtypeVal).subtype_mk _)
           fun a b hab => Subtype.ext (hJinj (congrArg (fun z : Q.range => (z : Fin g → ℂ)) hab)),
       by
         rw [eq_top_iff]
@@ -1204,11 +1204,11 @@ theorem exists_matrix_action {n : ℕ} (pr : Fin n → (A ⟶ B)) (hpr : ∀ u, 
     simp only [GrpObj.comp_zpow]
   refine ⟨α, hα, fun m => ⟨?_, ?_⟩, ?_, ?_, ?_⟩
   · refine hext _ _ _ fun u => ?_
-    haveI := hpr
+    have := hpr
     rw [Category.assoc, hα', MonObj.one_eq_one]
     simp [MonObj.one_comp]
   · refine hext _ _ _ fun u => ?_
-    haveI := hpr
+    have := hpr
     rw [Category.assoc, hα', MonObj.mul_eq_mul]
     simp only [MonObj.comp_mul, MonObj.mul_comp, tensorHom_fst, tensorHom_snd, Category.assoc, hα', mul_zpow,
       Finset.prod_mul_distrib]
@@ -1228,7 +1228,7 @@ theorem exists_matrix_action {n : ℕ} (pr : Fin n → (A ⟶ B)) (hpr : ∀ u, 
     exact Finset.prod_congr rfl fun v _ => by rw [mul_comm]
   · intro m m'
     refine hext _ _ _ fun u => ?_
-    haveI := hpr
+    have := hpr
     rw [MonObj.mul_comp, hα, hα, hα, ← Finset.prod_mul_distrib]
     simp only [Matrix.add_apply, zpow_add]
 end Mat
@@ -1253,7 +1253,7 @@ theorem ex_eq_iff (z w : Fin g → ℂ) : u.ex z = u.ex w ↔ z - w ∈ u.Λ := 
   exact mul_eq_right
 
 theorem lift_unique {F F' : (Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)} (h : ∀ z, u.ex (F z) = u.ex (F' z)) : F = F' := by
-  haveI := u.discrete
+  have := u.discrete
   exact sub_eq_zero.1 (linear_eq_zero_of_mem u.Λ (F - F') fun z => (ex_eq_iff u _ _).1 (h z))
 
 theorem exists_lattice_action {R La : Type} [Ring R] [AddCommGroup La] (Q : La →+ (Fin g → ℂ))
@@ -1263,7 +1263,7 @@ theorem exists_lattice_action {R La : Type} [Ring R] [AddCommGroup La] (Q : La �
     ∃ r : R →+* Module.End ℤ La, ∀ m x, F m (Q x) = Q (r m x) := by
   have hmem : ∀ m x, F m (Q x) ∈ Q.range := by
     intro m x
-    haveI := hm m
+    have := hm m
     rw [← hΛ, ← u.ker, hF, (u.ker _).2 ((hΛ _).2 ⟨x, rfl⟩), MonObj.one_comp]
   choose f hf using hmem
   have F1 : F 1 = LinearMap.id := lift_unique u fun z => by rw [hF, h1]; simp
@@ -1459,7 +1459,7 @@ theorem GlobalTheory.exists_periods_of_sharpClass : Out.Laws → Out.Laws2 → (
   refine ⟨τ, m, Q, Hm, ⟨hτ1, hτ2⟩, ?_, hQ, hpol', ?_⟩
   · let ξ : ℂˣ := Units.mk0 (Complex.exp (-(2 * Real.pi * Complex.I) / k)) (Complex.exp_ne_zero _)
     have hξ : ∀ n : ℤ, ((ξ ^ n : ℂˣ) : ℂ) = Complex.exp (-(2 * Real.pi * Complex.I) * (n : ℂ) / k) := fun n => by
-      rw [Units.val_zpow_eq_zpow_val, Units.val_mk0, ← Complex.exp_int_mul]
+      rw [Units.val_zpow_eq_zpow_val, Units.val_mk0, ← Complex.exp_intCast_mul]
       congr 1
       ring
     have hζ : ∀ n : ℤ, ((Units.map em.toMonoidHom b.ζ ^ n : ℂˣ) : ℂ) = em (b.ζ : o) ^ n := fun n => by
@@ -1519,7 +1519,7 @@ theorem exists_hom_representatives {ν : Type} [Fintype ν] (k : ℕ) (hk : k �
     ∃ (r : ℕ) (s : Fin r → ((ν → ℤ) →+ (ν → ℤ))), (∀ i, P (s i)) ∧
       ∀ m, P m → ∃ i, ∀ x, ∃ y, m x = s i x + k • y := by
   classical
-  haveI : NeZero k := ⟨hk⟩
+  have : NeZero k := ⟨hk⟩
   obtain ⟨r, s, hs, hm⟩ := exists_representatives
     (fun (m : (ν → ℤ) →+ (ν → ℤ)) (p q : ν) => ((m (Pi.single p 1) q : ℤ) : ZMod k)) P
   refine ⟨r, s, hs, fun m hP => ?_⟩
@@ -1556,7 +1556,7 @@ theorem exp_sum_eq (k : ℕ) (ζ : ℂ) (hζ : ζ ≠ 0) (G p q : Fin 8 → Fin 
   have h1 : ∀ n : ℤ, Complex.exp (-(2 * Real.pi * Complex.I) * (n : ℂ) / k)
       = Complex.exp (-(2 * Real.pi * Complex.I) / k) ^ n := by
     intro n
-    rw [← Complex.exp_int_mul]; congr 1; ring
+    rw [← Complex.exp_intCast_mul]; congr 1; ring
   rw [h1, zpow_finset_sum _ (Complex.exp_ne_zero _), zpow_finset_sum _ hζ]
   refine Finset.prod_congr rfl fun u _ => ?_
   rw [zpow_finset_sum _ (Complex.exp_ne_zero _), zpow_finset_sum _ hζ]
@@ -1709,7 +1709,7 @@ theorem goodClass_sharpClass : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) 
       show ∑ v, a w u v • x v + ∑ v, a w' u v • x v = x u
       rw [← Finset.sum_add_distrib]
       simp only [← add_smul, h1, Matrix.one_apply, ite_smul, one_smul, zero_smul,
-        Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     · intro x y
       rw [hEF, hEF]
       exact tensor_form_adjoint _ _ _ hadj x y

@@ -79,7 +79,7 @@ theorem exists_nsmul_mem_cpt {X : Type*} [AddCommGroup X] [TopologicalSpace X] [
     (K : Set X) (hK : IsCompact K) (hKs : ∀ y ∈ K, ∀ n : ℕ, n • y ∈ K) (H : AddSubgroup X)
     (hH : IsOpen (H : Set X)) : ∃ m : ℕ, 0 < m ∧ ∀ y ∈ K, m • y ∈ H := by
   classical
-  haveI : DiscreteTopology (X ⧸ H) := QuotientAddGroup.discreteTopology hH
+  have : DiscreteTopology (X ⧸ H) := QuotientAddGroup.discreteTopology hH
   have hSfin : ((fun y : X => (y : X ⧸ H)) '' K).Finite :=
     (hK.image QuotientAddGroup.continuous_mk).finite_of_discrete
   have hord : ∀ y ∈ K, IsOfFinAddOrder (y : X ⧸ H) := by

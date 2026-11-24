@@ -106,16 +106,16 @@ def tau (σ : L →+* L) (M : Matrix (Fin n) (Fin n) L) : Matrix (Fin n) (Fin n)
   fun i j => σ (M (Fin.rev j) (Fin.rev i))
 
 theorem antiJ_self_rev (i : Fin n) : antiJ L n i (Fin.rev i) = 1 :=
-  if_pos (by have := i.2; rw [Fin.val_rev]; omega)
+  ite_eq_left (by have := i.2; rw [Fin.val_rev]; omega)
 
 theorem antiJ_rev_self (i : Fin n) : antiJ L n (Fin.rev i) i = 1 :=
-  if_pos (by have := i.2; rw [Fin.val_rev]; omega)
+  ite_eq_left (by have := i.2; rw [Fin.val_rev]; omega)
 
 theorem antiJ_ne {i k : Fin n} (h : k ≠ Fin.rev i) : antiJ L n i k = 0 :=
-  if_neg fun e => h (Fin.ext (by have := i.2; rw [Fin.val_rev]; omega))
+  ite_eq_right fun e => h (Fin.ext (by have := i.2; rw [Fin.val_rev]; omega))
 
 theorem antiJ_ne' {j k : Fin n} (h : k ≠ Fin.rev j) : antiJ L n k j = 0 :=
-  if_neg fun e => h (Fin.ext (by have := j.2; rw [Fin.val_rev]; omega))
+  ite_eq_right fun e => h (Fin.ext (by have := j.2; rw [Fin.val_rev]; omega))
 
 theorem antiJ_mul (M : Matrix (Fin n) (Fin n) L) (i j : Fin n) :
     (antiJ L n * M) i j = M (Fin.rev i) j := by
@@ -138,8 +138,8 @@ theorem antiJ_mul_self : antiJ L n * antiJ L n = 1 := by
   rw [antiJ_mul, Matrix.one_apply]
   by_cases h : i = j
   · subst h
-    rw [antiJ_rev_self, if_pos rfl]
-  · rw [antiJ_ne (fun e => h (by simpa using e.symm)), if_neg h]
+    rw [antiJ_rev_self, ite_eq_left rfl]
+  · rw [antiJ_ne (fun e => h (by simpa using e.symm)), ite_eq_right h]
 
 theorem tau_eq (σ : L →+* L) (M : Matrix (Fin n) (Fin n) L) :
     tau σ M = antiJ L n * cT σ M * antiJ L n := by
@@ -282,7 +282,7 @@ theorem continuous_sigma {σ : L →+* L} (hv : ∀ x, Valued.v (σ x) = Valued.
   rw [ContinuousAt, map_zero]
   refine ((Valued.hasBasis_nhds_zero L _).tendsto_iff (Valued.hasBasis_nhds_zero L _)).2 fun γ _ =>
     ⟨γ, trivial, fun x hx => ?_⟩
-  rwa [Set.mem_setOf_eq, show Valued.v.restrict (σ x) = Valued.v.restrict x from (Valuation.restrict_inj _).2 (hv x)]
+  rwa [Set.mem_ofPred_eq, show Valued.v.restrict (σ x) = Valued.v.restrict x from (Valuation.restrict_inj _).2 (hv x)]
 
 theorem isClosed_GU {σ : L →+* L} (hv : ∀ x, Valued.v (σ x) = Valued.v x) :
     IsClosed ((GU σ n : Subgroup (GL (Fin n) L)) : Set (GL (Fin n) L)) := by
@@ -347,11 +347,11 @@ theorem iwahoriU : PositivityTheory.SphericalProduct.IwahoriU := by
     (isClosed_btSub _).inter (isClosed_btSub _)
   refine ⟨{ N := upSub.subgroupOf (GU σ n), Nm := lowSub.subgroupOf (GU σ n),
             T := diagSub.subgroupOf (GU σ n), J := IwU σ n
-            isOpen_J := isOpen_IwGL.preimage continuous_subtype_val
+            isOpen_J := isOpen_IwGL.preimage continuous_subtypeVal
             isCompact_J := isCompact_IwU h
-            isClosed_N := cN.preimage continuous_subtype_val
-            isClosed_Nm := cNm.preimage continuous_subtype_val
-            isClosed_alt := cT'.preimage continuous_subtype_val
+            isClosed_N := cN.preimage continuous_subtypeVal
+            isClosed_Nm := cNm.preimage continuous_subtypeVal
+            isClosed_alt := cT'.preimage continuous_subtypeVal
             norm_N := fun t ht => norm_subgroupOf (norm_tri _ (Subgroup.mem_subgroupOf.1 ht).1)
             norm_Nm := fun t ht => norm_subgroupOf (norm_tri _ (Subgroup.mem_subgroupOf.1 ht).2)
             fact_low := fun x hx => desc_low hϖ hx

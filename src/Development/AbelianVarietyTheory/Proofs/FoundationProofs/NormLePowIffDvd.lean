@@ -70,13 +70,13 @@ theorem GlobalTheory.Coef.norm_le_norm_pow_iff_dvd :
   set e := (UpperTheory.V.Base.eO l c.O).toNat with he_def
   have hEtop : UpperTheory.V.Base.eO l c.O ≠ ⊤ := by
     rw [he]; exact fun h => hl0 (IsDiscreteValuationRing.addVal_eq_top_iff.1 h)
-  have hEcast : UpperTheory.V.Base.eO l c.O = (e : ℕ∞) := (ENat.coe_toNat hEtop).symm
+  have hEcast : UpperTheory.V.Base.eO l c.O = (e : ℕ∞) := (ENat.natCast_toNat hEtop).symm
   have hepos : e ≠ 0 := by
     intro h0; apply he0; rw [hEcast, h0]; rfl
   have hxtop : IsDiscreteValuationRing.addVal c.O x ≠ ⊤ :=
     fun h => hx (IsDiscreteValuationRing.addVal_eq_top_iff.1 h)
   set v := (IsDiscreteValuationRing.addVal c.O x).toNat with hv_def
-  have hvcast : IsDiscreteValuationRing.addVal c.O x = (v : ℕ∞) := (ENat.coe_toNat hxtop).symm
+  have hvcast : IsDiscreteValuationRing.addVal c.O x = (v : ℕ∞) := (ENat.natCast_toNat hxtop).symm
   have hlpos : (0 : ℝ) < (l : ℝ)⁻¹ := inv_pos.2 (Nat.cast_pos.2 (Fact.out : l.Prime).pos)
   have hllt : (l : ℝ)⁻¹ < 1 := inv_lt_one_of_one_lt₀ (Nat.one_lt_cast.2 (Fact.out : l.Prime).one_lt)
   rw [norm_pow, hlnorm, ← IsDiscreteValuationRing.addVal_le_iff_dvd, IsDiscreteValuationRing.addVal_pow,

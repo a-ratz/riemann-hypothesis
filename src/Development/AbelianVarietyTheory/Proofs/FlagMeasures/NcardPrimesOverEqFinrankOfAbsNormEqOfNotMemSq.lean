@@ -62,8 +62,8 @@ theorem ncard_primesOver_eq_finrank_of_absNorm_eq_of_not_mem_sq :
   have hpZ : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
   have hp0 : Ideal.span {(p : ℤ)} ≠ ⊥ := by
     simpa [Ideal.span_singleton_eq_bot] using hp.ne_zero
-  haveI hpr : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hpZ.ne_zero).mpr hpZ
-  haveI hmax : (Ideal.span {(p : ℤ)}).IsMaximal := hpr.isMaximal hp0
+  have hpr : (Ideal.span {(p : ℤ)}).IsPrime := (Ideal.span_singleton_prime hpZ.ne_zero).mpr hpZ
+  have hmax : (Ideal.span {(p : ℤ)}).IsMaximal := hpr.isMaximal hp0
   have hsum := Ideal.sum_ramification_inertia (𝓞 E) ℚ E (p := Ideal.span {(p : ℤ)}) hp0
   rw [← hsum, ← IsDedekindDomain.coe_primesOverFinset hp0 (𝓞 E), Set.ncard_coe_finset,
     Finset.card_eq_sum_ones]

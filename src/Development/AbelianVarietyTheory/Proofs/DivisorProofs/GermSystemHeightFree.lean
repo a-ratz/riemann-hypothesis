@@ -119,25 +119,25 @@ theorem card_kerW_eq_pow : ∀ {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type}
     Finite {g : Over.mk y ⟶ o.A // g ≫ ψ = 1 ∧ KilledBy o w g} →
     ∃ j' : ℕ, Nat.card {g : Over.mk y ⟶ o.A // g ≫ ψ = 1 ∧ KilledBy o w g} = Ideal.absNorm w ^ j' := by
   intro p _ D R _ b S N s o o' ψ hψ hl w hw k _ y hfin
-  haveI := hψ
+  have := hψ
   let K := kerWSubWvs o o' ψ hl w (Over.mk y)
   let e : K ≃ {g : Over.mk y ⟶ o.A // g ≫ ψ = 1 ∧ KilledBy o w g} :=
     { toFun := fun x => ⟨x.1.toMul, x.2⟩
       invFun := fun g => ⟨Additive.ofMul g.1, g.2⟩
       left_inv := fun _ => rfl
       right_inv := fun _ => rfl }
-  haveI : Finite K := Finite.of_equiv _ e.symm
+  have : Finite K := Finite.of_equiv _ e.symm
   have htor : Module.IsTorsionBySet (𝓞 D.F) K (w : Set (𝓞 D.F)) := by
     intro x a
     apply Subtype.ext
     show Additive.ofMul (x.1.toMul ≫ o.act.act (algebraMap _ _ a.1)) = Additive.ofMul 1
     rw [x.2.2 a.1 a.2]
-  letI := Ideal.Quotient.field w
-  letI : Module (𝓞 D.F ⧸ w) K := htor.module
+  let := Ideal.Quotient.field w
+  let : Module (𝓞 D.F ⧸ w) K := htor.module
   have hne : w ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hw (NumberField.RingOfIntegers.not_isField D.F)
-  haveI : Finite (𝓞 D.F ⧸ w) := Ideal.finiteQuotientOfFreeOfNeBot w hne
-  letI := Fintype.ofFinite (𝓞 D.F ⧸ w)
-  letI := Fintype.ofFinite K
+  have : Finite (𝓞 D.F ⧸ w) := Ideal.finiteQuotientOfFreeOfNeBot w hne
+  let := Fintype.ofFinite (𝓞 D.F ⧸ w)
+  let := Fintype.ofFinite K
   refine ⟨Module.finrank (𝓞 D.F ⧸ w) K, ?_⟩
   rw [← Nat.card_congr e, Nat.card_eq_fintype_card, Module.card_eq_pow_finrank (K := 𝓞 D.F ⧸ w),
     Ideal.absNorm_apply, Submodule.cardQuot_apply, Nat.card_eq_fintype_card]

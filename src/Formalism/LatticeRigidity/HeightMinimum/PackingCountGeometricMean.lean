@@ -62,8 +62,8 @@ theorem card_le_of_separated {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
     (hbd : ∀ x ∈ S, ‖g x‖ ≤ R) :
     (S.card : ℝ) ≤ (1 + 2 * R / lam) ^ finrank ℝ E := by
   classical
-  letI : MeasurableSpace E := borel E
-  haveI : BorelSpace E := ⟨rfl⟩
+  let : MeasurableSpace E := borel E
+  have : BorelSpace E := ⟨rfl⟩
   set μ : Measure E := Measure.addHaar with hμ
   have hr : 0 < lam / 2 := by positivity
   have hR2 : 0 < R + lam / 2 := by positivity

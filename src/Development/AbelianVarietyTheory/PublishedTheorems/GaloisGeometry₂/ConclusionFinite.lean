@@ -75,7 +75,7 @@ theorem eq_lpOfChar (x : WD h) (hx : x.lpDim = 1) (ξ : Weil h →* ℂˣ) (hξ 
   have h1 : ∀ (f : End ℂ (Fin 1 → ℂ)) (c : ℂ), f.HasEigenvalue c → ∀ v, f v = c • v := by
     intro f c hc v
     obtain ⟨u, hu⟩ := hc.exists_hasEigenvector
-    obtain ⟨d, rfl⟩ := (finrank_eq_one_iff_of_nonzero' (K := ℂ) u hu.2).mp (by simp) v
+    obtain ⟨d, rfl⟩ := (finrank_eq_one_iff_of_ne_zero' (K := ℂ) u hu.2).mp (by simp) v
     rw [map_smul, hu.apply_eq_smul, smul_comm]
   refine WD.sound ⟨LinearEquiv.refl ℂ _, fun σ v => ?_, fun v => ?_⟩
   · have h2 := he σ
@@ -107,7 +107,7 @@ theorem mem_eig_wdPst {LL : FinExt l} {V : Type} [AddCommGroup V] [Module ↥LL.
   have huv := Test.apply_eq_of_nilpotent hd hv _ hk
   have hu1 : u = 1 := by
     refine Units.ext (LinearMap.ext fun y => ?_)
-    obtain ⟨d, rfl⟩ := (finrank_eq_one_iff_of_nonzero' (K := ℂ) _ hv).mp hd y
+    obtain ⟨d, rfl⟩ := (finrank_eq_one_iff_of_ne_zero' (K := ℂ) _ hv).mp hd y
     rw [map_smul, huv]; rfl
   have he : (wdRep P ι Bw h hj ρ).ρ σ (wdMk P ι ρ x) = ι (s : Om l) • wdMk P ι ρ x := by
     have h1 := LinearMap.congr_fun (hu σ) (wdMk P ι ρ x)

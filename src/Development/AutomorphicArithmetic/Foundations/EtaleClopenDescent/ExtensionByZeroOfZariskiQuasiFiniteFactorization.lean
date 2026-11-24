@@ -74,14 +74,14 @@ private theorem UpperTheory.integralClosure_finite_of_finiteType_perfect (k : Ty
     [CommRing B] [IsDomain B] [Algebra k B] [Algebra.FiniteType k B] [Field L] [Algebra B L]
     [FaithfulSMul B L] [Algebra.EssFiniteType B L] :
     Module.Finite B (integralClosure B L) := by
-  letI : Algebra (FractionRing B) L := FractionRing.liftAlgebra B L
-  haveI : IsScalarTower B (FractionRing B) L := FractionRing.isScalarTower_liftAlgebra B L
-  haveI : Algebra.EssFiniteType (FractionRing B) L :=
+  let : Algebra (FractionRing B) L := FractionRing.liftAlgebra B L
+  have : IsScalarTower B (FractionRing B) L := FractionRing.isScalarTower_liftAlgebra B L
+  have : Algebra.EssFiniteType (FractionRing B) L :=
     Algebra.EssFiniteType.of_comp B (FractionRing B) L
   let M := algebraicClosure (FractionRing B) L
-  haveI : FiniteDimensional (FractionRing B) M :=
+  have : FiniteDimensional (FractionRing B) M :=
     GlobalTheory.finiteDimensional_algebraicClosure_of_essFiniteType (FractionRing B) L
-  haveI : Module.Finite B (integralClosure B M) :=
+  have : Module.Finite B (integralClosure B M) :=
     GlobalTheory.NormFin.finite_integralClosure_of_perfectField k B (FractionRing B) M
   let g : M →ₐ[B] L := M.val.restrictScalars B
   have hg : Function.Injective g := Subtype.val_injective
@@ -106,18 +106,18 @@ theorem UpperTheory.module_finite_integralClosure_of_finiteType_perfect :
     ∀ (k : Type) [Field k] [PerfectField k] (A L : Type) [CommRing A] [Algebra k A] [Algebra.FiniteType k A] [Field L] [Algebra A L] [Algebra.EssFiniteType A L], Module.Finite A (integralClosure A L) := by
   intro k _ _ A L _ _ _ _ _ _
   let I := RingHom.ker (algebraMap A L)
-  letI : Algebra (A ⧸ I) L := (RingHom.kerLift (algebraMap A L)).toAlgebra
-  haveI : IsScalarTower A (A ⧸ I) L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : FaithfulSMul (A ⧸ I) L :=
+  let : Algebra (A ⧸ I) L := (RingHom.kerLift (algebraMap A L)).toAlgebra
+  have : IsScalarTower A (A ⧸ I) L := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : FaithfulSMul (A ⧸ I) L :=
     (faithfulSMul_iff_algebraMap_injective (A ⧸ I) L).mpr (RingHom.kerLift_injective _)
-  haveI : I.IsPrime := RingHom.ker_isPrime (algebraMap A L)
-  haveI : IsDomain (A ⧸ I) := Ideal.Quotient.isDomain I
-  haveI : Algebra.FiniteType k (A ⧸ I) :=
+  have : I.IsPrime := RingHom.ker_isPrime (algebraMap A L)
+  have : IsDomain (A ⧸ I) := Ideal.Quotient.isDomain I
+  have : Algebra.FiniteType k (A ⧸ I) :=
     Algebra.FiniteType.of_surjective (Ideal.Quotient.mkₐ k I) Ideal.Quotient.mk_surjective
-  haveI : Algebra.EssFiniteType (A ⧸ I) L := Algebra.EssFiniteType.of_comp A (A ⧸ I) L
-  haveI : Module.Finite A (A ⧸ I) :=
+  have : Algebra.EssFiniteType (A ⧸ I) L := Algebra.EssFiniteType.of_comp A (A ⧸ I) L
+  have : Module.Finite A (A ⧸ I) :=
     Module.Finite.of_surjective (Ideal.Quotient.mkₐ A I).toLinearMap Ideal.Quotient.mk_surjective
-  haveI : Module.Finite (A ⧸ I) (integralClosure (A ⧸ I) L) :=
+  have : Module.Finite (A ⧸ I) (integralClosure (A ⧸ I) L) :=
     UpperTheory.integralClosure_finite_of_finiteType_perfect k (A ⧸ I) L
   exact GlobalTheory.finite_integralClosure_of_finite_tower A (A ⧸ I) L
 end -- clump:auto
@@ -137,18 +137,18 @@ theorem UpperTheory.isFinite_fromNormalization_of_perfectField :
   rw [isFinite_iff]
   refine ⟨inferInstance, fun U hU => ?_⟩
   rw [f.fromNormalization_app hU]
-  letI := (f.app U).hom.toAlgebra
+  let := (f.app U).hom.toAlgebra
   have h : Module.Finite Γ(T, U) (integralClosure Γ(T, U) Γ(D, f ⁻¹ᵁ U)) := by
     rcases (f ⁻¹ᵁ U).1.eq_empty_or_nonempty with hE | hN
     · have hb : f ⁻¹ᵁ U = ⊥ := SetLike.ext' hE
-      haveI : Subsingleton Γ(D, f ⁻¹ᵁ U) :=
+      have : Subsingleton Γ(D, f ⁻¹ᵁ U) :=
         CommRingCat.subsingleton_of_isTerminal (D.sheaf.isTerminalOfEqEmpty hb)
       infer_instance
     · obtain ⟨x, hx⟩ := hN
       obtain ⟨V, hV, hxV, hVle⟩ :=
         (TopologicalSpace.Opens.isBasis_iff_nbhd.mp D.isBasis_affineOpens) hx
-      haveI : Nonempty V := ⟨⟨x, hxV⟩⟩
-      haveI : Nonempty (f ⁻¹ᵁ U) := ⟨⟨x, hx⟩⟩
+      have : Nonempty V := ⟨⟨x, hxV⟩⟩
+      have : Nonempty (f ⁻¹ᵁ U) := ⟨⟨x, hx⟩⟩
       have hkt : (t.appLE ⊤ U (by simp)).hom.FiniteType :=
         LocallyOfFiniteType.finiteType_appLE t (isAffineOpen_top _) hU (by simp)
       let kA : k →+* Γ(T, U) :=
@@ -156,9 +156,9 @@ theorem UpperTheory.isFinite_fromNormalization_of_perfectField :
       have hkA : kA.FiniteType :=
         hkt.comp (RingHom.FiniteType.of_surjective _
           (Scheme.ΓSpecIso (CommRingCat.of k)).commRingCatIsoToRingEquiv.symm.surjective)
-      letI : Algebra k Γ(T, U) := kA.toAlgebra
-      haveI : Algebra.FiniteType k Γ(T, U) := hkA
-      haveI : IsNoetherianRing Γ(T, U) := Algebra.FiniteType.isNoetherianRing k Γ(T, U)
+      let : Algebra k Γ(T, U) := kA.toAlgebra
+      have : Algebra.FiniteType k Γ(T, U) := hkA
+      have : IsNoetherianRing Γ(T, U) := Algebra.FiniteType.isNoetherianRing k Γ(T, U)
       have heq : (D.germToFunctionField (f ⁻¹ᵁ U)).hom.comp (f.app U).hom =
           (D.germToFunctionField V).hom.comp (f.appLE U V hVle).hom := by
         rw [← CommRingCat.hom_comp, ← CommRingCat.hom_comp]
@@ -166,12 +166,12 @@ theorem UpperTheory.isFinite_fromNormalization_of_perfectField :
         simp [Scheme.Hom.appLE]
       let φ : Γ(T, U) →+* D.functionField :=
         (D.germToFunctionField V).hom.comp (f.appLE U V hVle).hom
-      letI : Algebra Γ(T, U) D.functionField := φ.toAlgebra
+      let : Algebra Γ(T, U) D.functionField := φ.toAlgebra
       have h1 : (D.germToFunctionField V).hom.EssFiniteType := GlobalTheory.essFiniteType_germ hV _ _
       have h2 : (f.appLE U V hVle).hom.EssFiniteType :=
         (LocallyOfFiniteType.finiteType_appLE f hU hV hVle).essFiniteType
-      haveI : Algebra.EssFiniteType Γ(T, U) D.functionField := h2.comp h1
-      haveI := UpperTheory.module_finite_integralClosure_of_finiteType_perfect k Γ(T, U) D.functionField
+      have : Algebra.EssFiniteType Γ(T, U) D.functionField := h2.comp h1
+      have := UpperTheory.module_finite_integralClosure_of_finiteType_perfect k Γ(T, U) D.functionField
       let ψ : Γ(D, f ⁻¹ᵁ U) →ₐ[Γ(T, U)] D.functionField :=
         { (D.germToFunctionField (f ⁻¹ᵁ U)).hom with
           commutes' := fun a => by
@@ -238,8 +238,8 @@ theorem UpperTheory.exists_specializes_lift_generic_base_change :
     ∀ (R Ω : Type) [CommRing R] [IsDomain R] [Field Ω] [Algebra R Ω], Function.Injective (algebraMap R Ω) → ∀ {W : Scheme.{0}} (w : W ⟶ Sp R) (y' : ↑(pullback w (Spec.map (CommRingCat.ofHom (algebraMap R Ω))))) (x : W), x ⤳ (pullback.fst w (Spec.map (CommRingCat.ofHom (algebraMap R Ω)))) y' → ∃ x' : ↑(pullback w (Spec.map (CommRingCat.ofHom (algebraMap R Ω)))), x' ⤳ y' ∧ (pullback.fst w (Spec.map (CommRingCat.ofHom (algebraMap R Ω)))) x' = x := by
   intro R Ω _ _ _ _ hinj W w y' x hx
   have hRK : Function.Injective (algebraMap R (FractionRing R)) := IsFractionRing.injective R _
-  letI : Algebra (FractionRing R) Ω := (IsFractionRing.lift hinj : FractionRing R →+* Ω).toAlgebra
-  haveI : IsPreimmersion (Spec.map (CommRingCat.ofHom (algebraMap R (FractionRing R)))) :=
+  let : Algebra (FractionRing R) Ω := (IsFractionRing.lift hinj : FractionRing R →+* Ω).toAlgebra
+  have : IsPreimmersion (Spec.map (CommRingCat.ofHom (algebraMap R (FractionRing R)))) :=
     IsPreimmersion.of_isLocalization (nonZeroDivisors R)
   have hcomp : (algebraMap (FractionRing R) Ω).comp (algebraMap R (FractionRing R)) =
       algebraMap R Ω := IsLocalization.lift_comp _
@@ -300,12 +300,12 @@ theorem UpperTheory.mem_range_of_proper_generic_fibre_separated :
   have hw : w ≫ ι = U'.ι ≫ π := IsOpenImmersion.lift_fac _ _ _
   have hjw : jU ≫ w = q := by
     rw [← cancel_mono ι, Category.assoc, hw, ← Category.assoc, hjUf, hq]
-  haveI : IsSeparated (w ≫ ι) := by rw [hw]; infer_instance
-  haveI : IsSeparated w := IsSeparated.of_comp w ι
+  have : IsSeparated (w ≫ ι) := by rw [hw]; infer_instance
+  have : IsSeparated w := IsSeparated.of_comp w ι
   let m : C ⟶ pullback w g := pullback.lift (v ≫ jU) c (by rw [Category.assoc, hjw, hpb.w])
   have hm : m ≫ pullback.snd w g = c := pullback.lift_snd _ _ _
-  haveI : UniversallyClosed (m ≫ pullback.snd w g) := by rw [hm]; infer_instance
-  haveI : UniversallyClosed m := UniversallyClosed.of_comp_of_isSeparated m (pullback.snd w g)
+  have : UniversallyClosed (m ≫ pullback.snd w g) := by rw [hm]; infer_instance
+  have : UniversallyClosed m := UniversallyClosed.of_comp_of_isSeparated m (pullback.snd w g)
   have hleft : IsPullback m v (pullback.fst w g) jU := by
     refine IsPullback.of_right ?_ (pullback.lift_fst _ _ _) (IsPullback.of_hasPullback w g).flip
     rw [hm, hjw]
@@ -377,19 +377,19 @@ private theorem UpperTheory.affine_opens_same_krullDim (k : Type) [Field k] {Y :
     change ((Scheme.ΓSpecIso (CommRingCat.of k)).hom ≫ (Scheme.ΓSpecIso (CommRingCat.of k)).inv).hom y = y
     simp
   have eT : (⊤ : Y.Opens) ≤ t ⁻¹ᵁ ⊤ := le_top
-  haveI : Nonempty (⊤ : Y.Opens) := ⟨⟨Nonempty.some (inferInstance : Nonempty Y), trivial⟩⟩
+  have : Nonempty (⊤ : Y.Opens) := ⟨⟨Nonempty.some (inferInstance : Nonempty Y), trivial⟩⟩
   let φ : k →+* Y.functionField := (Y.germToFunctionField ⊤).hom.comp ((t.appLE ⊤ ⊤ eT).hom.comp iso)
-  letI : Algebra k Y.functionField := φ.toAlgebra
+  let : Algebra k Y.functionField := φ.toAlgebra
   refine ⟨((Algebra.trdeg k Y.functionField).toENat : WithBot ℕ∞), ?_⟩
   intro U hU hne
   have eU : U ≤ t ⁻¹ᵁ ⊤ := le_top
-  letI : Algebra k Γ(Y, U) := ((t.appLE ⊤ U eU).hom.comp iso).toAlgebra
-  haveI : Algebra.FiniteType k Γ(Y, U) := by
+  let : Algebra k Γ(Y, U) := ((t.appLE ⊤ U eU).hom.comp iso).toAlgebra
+  have : Algebra.FiniteType k Γ(Y, U) := by
     have h1 : (t.appLE ⊤ U eU).hom.FiniteType :=
       t.finiteType_appLE (isAffineOpen_top _) hU eU
     exact h1.comp (RingHom.FiniteType.of_surjective _ hiso)
-  haveI : IsFractionRing Γ(Y, U) Y.functionField := functionField_isFractionRing_of_isAffineOpen Y U hU
-  haveI : IsScalarTower k Γ(Y, U) Y.functionField := by
+  have : IsFractionRing Γ(Y, U) Y.functionField := functionField_isFractionRing_of_isAffineOpen Y U hU
+  have : IsScalarTower k Γ(Y, U) Y.functionField := by
     apply IsScalarTower.of_algebraMap_eq
     intro x
     change φ x = (Y.germToFunctionField U).hom ((t.appLE ⊤ U eU).hom (iso x))
@@ -481,12 +481,12 @@ private theorem smooth_of {B D Y S : Scheme.{0}} (j : D ⟶ Y) [IsOpenImmersion 
   have hs : Smooth ((π ∣_ V) ≫ V.ι) := by
     rw [morphismRestrict_ι, e]
     infer_instance
-  haveI hloc : IsZariskiLocalAtTarget @Smooth.{0} :=
+  have hloc : IsZariskiLocalAtTarget @Smooth.{0} :=
     HasRingHomProperty.instIsZariskiLocalAtTarget _
-  haveI : MorphismProperty.RespectsIso @Smooth.{0} :=
+  have : MorphismProperty.RespectsIso @Smooth.{0} :=
     MorphismProperty.respectsIso_of_isStableUnderComposition
       (fun _ _ f (_ : IsIso f) => inferInstance)
-  haveI : MorphismProperty.HasOfPostcompProperty @Smooth.{0} @IsOpenImmersion.{0} :=
+  have : MorphismProperty.HasOfPostcompProperty @Smooth.{0} @IsOpenImmersion.{0} :=
     hasOfPostcompProperty_isOpenImmersion_of_morphismRestrict _
       (fun f U hf => IsZariskiLocalAtTarget.restrict hf U)
   exact MorphismProperty.of_postcomp (W := @Smooth.{0}) (W' := @IsOpenImmersion.{0}) _ V.ι
@@ -500,9 +500,9 @@ theorem UpperTheory.Cb.extension_by_zero_of_zariski_quasi_finite_factorization :
   intro k _ _ X p _ Ω _ _ R B b _ ι _ hιb C0 C1 C2 c0 γ1 γ2 e hc0 hc1 hc2 he D0 D1 D2 q d1 d2 f
     v0 v1 v2 hf hs0 hq0 hsm0 hs1 hq1 hsm1 hs2 hq2 hsm2 hI0 hI1 hI2 hlqf hd1 hd2 hP0 hP1 hP2
     hc10 hc21 hve
-  haveI hsq0 : Smooth q := SmoothOfRelativeDimension.smooth 1 q
-  haveI hsq1 : Smooth (d1 ≫ q) := SmoothOfRelativeDimension.smooth 1 _
-  haveI hsq2 : Smooth (d2 ≫ d1 ≫ q) := SmoothOfRelativeDimension.smooth 1 _
+  have hsq0 : Smooth q := SmoothOfRelativeDimension.smooth 1 q
+  have hsq1 : Smooth (d1 ≫ q) := SmoothOfRelativeDimension.smooth 1 _
+  have hsq2 : Smooth (d2 ≫ d1 ≫ q) := SmoothOfRelativeDimension.smooth 1 _
   have hcond : (q ≫ ι) ≫ b = f ≫ p := by rw [Category.assoc, hιb, hf]
   let F0 : D0 ⟶ pullback b p := pullback.lift (q ≫ ι) f hcond
   have hF0f : F0 ≫ pullback.fst b p = q ≫ ι := pullback.lift_fst _ _ _
@@ -513,41 +513,41 @@ theorem UpperTheory.Cb.extension_by_zero_of_zariski_quasi_finite_factorization :
     apply pullback.hom_ext
     · rw [hF0f, Category.assoc, pullback.lift_fst, pullback.lift_fst_assoc]
     · rw [hF0s, Category.assoc, pullback.lift_snd, pullback.lift_snd_assoc, Category.comp_id]
-  haveI : LocallyQuasiFinite F0 := by rw [hF0m]; infer_instance
-  haveI : QuasiCompact ι := MorphismProperty.of_postcomp (W := @QuasiCompact)
+  have : LocallyQuasiFinite F0 := by rw [hF0m]; infer_instance
+  have : QuasiCompact ι := MorphismProperty.of_postcomp (W := @QuasiCompact)
     (W' := @QuasiSeparated) ι b inferInstance (by rw [hιb]; infer_instance)
-  haveI : LocallyOfFiniteType F0 := by
+  have : LocallyOfFiniteType F0 := by
     have : LocallyOfFiniteType (F0 ≫ pullback.fst b p) := by rw [hF0f]; infer_instance
     exact locallyOfFiniteType_of_comp F0 (pullback.fst b p)
-  haveI : QuasiCompact F0 := MorphismProperty.of_postcomp (W := @QuasiCompact)
+  have : QuasiCompact F0 := MorphismProperty.of_postcomp (W := @QuasiCompact)
     (W' := @QuasiSeparated) F0 (pullback.fst b p) inferInstance (by rw [hF0f]; infer_instance)
-  haveI : IsSeparated F0 := MorphismProperty.of_postcomp (W := @IsSeparated)
+  have : IsSeparated F0 := MorphismProperty.of_postcomp (W := @IsSeparated)
     (W' := ⊤) F0 (pullback.fst b p) trivial (by rw [hF0f]; infer_instance)
   obtain ⟨Y0, g0, j0, hg0, hj0, hjg0, hY0, hdn0⟩ := stage k (pullback.fst b p ≫ b) F0
   obtain ⟨π, hπ⟩ : ∃ π' : Y0 ⟶ B, π' = g0 ≫ pullback.fst b p := ⟨_, rfl⟩
-  haveI : IsProper π := by rw [hπ]; infer_instance
+  have : IsProper π := by rw [hπ]; infer_instance
   have hw0 : j0 ≫ π = q ≫ ι := by rw [hπ, ← Category.assoc, hjg0, hF0f]
-  haveI : LocallyOfFiniteType d1 := locallyOfFiniteType_of_comp d1 q
+  have : LocallyOfFiniteType d1 := locallyOfFiniteType_of_comp d1 q
   have hF1 : (d1 ≫ j0) ≫ π = (d1 ≫ q) ≫ ι := by rw [Category.assoc, hw0, Category.assoc]
-  haveI : QuasiCompact (d1 ≫ j0) := MorphismProperty.of_postcomp (W := @QuasiCompact)
+  have : QuasiCompact (d1 ≫ j0) := MorphismProperty.of_postcomp (W := @QuasiCompact)
     (W' := @QuasiSeparated) _ π inferInstance (by rw [hF1]; infer_instance)
-  haveI : IsSeparated (d1 ≫ j0) := MorphismProperty.of_postcomp (W := @IsSeparated)
+  have : IsSeparated (d1 ≫ j0) := MorphismProperty.of_postcomp (W := @IsSeparated)
     (W' := ⊤) _ π trivial (by rw [hF1]; infer_instance)
   obtain ⟨Y1, g1, j1, hg1, hj1, hjg1, hY1, hdn1⟩ := stage k (π ≫ b) (d1 ≫ j0)
   have hw1 : j1 ≫ g1 ≫ π = (d1 ≫ q) ≫ ι := by rw [← Category.assoc, hjg1, hF1]
-  haveI : LocallyOfFiniteType d2 := locallyOfFiniteType_of_comp d2 (d1 ≫ q)
+  have : LocallyOfFiniteType d2 := locallyOfFiniteType_of_comp d2 (d1 ≫ q)
   have hF2 : (d2 ≫ j1) ≫ g1 ≫ π = (d2 ≫ d1 ≫ q) ≫ ι := by
     rw [Category.assoc, hw1]
     simp only [Category.assoc]
-  haveI : QuasiCompact (d2 ≫ j1) := MorphismProperty.of_postcomp (W := @QuasiCompact)
+  have : QuasiCompact (d2 ≫ j1) := MorphismProperty.of_postcomp (W := @QuasiCompact)
     (W' := @QuasiSeparated) _ (g1 ≫ π) inferInstance (by rw [hF2]; infer_instance)
-  haveI : IsSeparated (d2 ≫ j1) := MorphismProperty.of_postcomp (W := @IsSeparated)
+  have : IsSeparated (d2 ≫ j1) := MorphismProperty.of_postcomp (W := @IsSeparated)
     (W' := ⊤) _ (g1 ≫ π) trivial (by rw [hF2]; infer_instance)
   obtain ⟨Y2, g2, j2, hg2, hj2, hjg2, hY2, hdn2⟩ := stage k ((g1 ≫ π) ≫ b) (d2 ≫ j1)
   have hw2 : j2 ≫ g2 ≫ g1 ≫ π = (d2 ≫ d1 ≫ q) ≫ ι := by rw [← Category.assoc, hjg2, hF2]
-  haveI := hc0.2.1
-  haveI := hc1.2.1
-  haveI := hc2.2.1
+  have := hc0.2.1
+  have := hc1.2.1
+  have := hc2.2.1
   have hinj : Function.Injective (algebraMap R Ω) := fun x y hxy => Subtype.ext hxy
   have hpl0 := UpperTheory.mem_range_of_proper_generic_fibre_separated R Ω hinj ι π j0 hdn0 q hw0 c0 v0 hP0
   have hpl1 := UpperTheory.mem_range_of_proper_generic_fibre_separated R Ω hinj ι (g1 ≫ π) j1 hdn1 (d1 ≫ q) hw1 (γ1 ≫ c0) v1 hP1

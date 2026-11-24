@@ -361,7 +361,7 @@ theorem tensor_weight_kill_holds : TensorWeightKill := by
     intro τ
     by_cases h : τ = a
     · subst h
-      simp only [Function.update_self, chainB, if_neg ha]
+      simp only [Function.update_self, chainB, ite_eq_right ha]
       exact hp _
     · rw [Function.update_of_ne h]
       have h1 := hx τ
@@ -379,9 +379,9 @@ theorem chain_monotone_holds : ChainMono := by
   have h1 := hx τ
   simp only [chainB] at h1 ⊢
   by_cases h : τ ∈ s
-  · rw [if_pos (hss h)]
+  · rw [ite_eq_left (hss h)]
     trivial
-  · rw [if_neg h] at h1
+  · rw [ite_eq_right h] at h1
     split_ifs
     · trivial
     · exact h1
@@ -505,7 +505,7 @@ theorem theorem_w_central_of_simple_quotients (hSS : SimpleSubquotOfPower) (hIso
       rw [hc]
       exact hkill _ (hex a)
     have hc : cTau T2 ex c' a = c' a := by
-      simp only [cTau, haT, if_true]
+      simp only [cTau, haT, ite_true]
       omega
     rw [hc]
     let E : Submodule A (⨂[O] τ, Nb τ) :=
@@ -612,9 +612,9 @@ theorem dualWeyl_module_finite (O : Type) [CommRing O] [IsNoetherianRing O] (r n
 theorem finite_quotient_of_pow_smul_mem (O : Type) [CommRing O] [IsNoetherianRing O] (V : Type) [AddCommGroup V]
     [Module O V] [Module.Finite O V] (l : O) (J : ℕ) (U : Submodule O V)
     (hfin : Finite (O ⧸ Ideal.span {l})) (hU : ∀ x : V, l ^ J • x ∈ U) : Finite (V ⧸ U) := by
-  haveI : Finite (O ⧸ (Ideal.span {l}) ^ J) :=
+  have : Finite (O ⧸ (Ideal.span {l}) ^ J) :=
     Ideal.finite_quotient_pow (IsNoetherian.noetherian (Ideal.span {l})) J
-  haveI : Finite (V ⧸ ((Ideal.span {l}) ^ J • ⊤ : Submodule O V)) :=
+  have : Finite (V ⧸ ((Ideal.span {l}) ^ J • ⊤ : Submodule O V)) :=
     Module.finite_of_finite (O ⧸ (Ideal.span {l}) ^ J)
   have hle : ((Ideal.span {l}) ^ J • ⊤ : Submodule O V) ≤ U := by
     rw [Submodule.smul_le]
@@ -629,7 +629,7 @@ theorem theorem_w_top_of_simple_quotients (hSS : SimpleSubquotOfPower) (hIso : S
   intro hD O _ _ _ A _ _ G _ Γ K jK ι _ _ l N k t h lam T2 j q xm xp ecl ex i _ _ T _ _ _ _ S ϖ n₀ e Λ L
     _ _ _ _ _ hwt hT
   obtain ⟨hl, hu, hfin, hdvd, hh, ht, hshape, hecl, hex, hstab, he, hHS, hHN, hclass, hhw, hIN1⟩ := hT
-  haveI : ∀ τ : ι, Module.Finite O (dualWeyl O N N (res N (lam τ))) :=
+  have : ∀ τ : ι, Module.Finite O (dualWeyl O N N (res N (lam τ))) :=
     fun τ => dualWeyl_module_finite O N N _
   let pr : ∀ τ : ι, (Fin N → ℕ) →
       dualWeyl O N N (res N (lam τ)) →ₗ[O] dualWeyl O N N (res N (lam τ)) := fun τ w =>
@@ -639,7 +639,7 @@ theorem theorem_w_top_of_simple_quotients (hSS : SimpleSubquotOfPower) (hIso : S
     LA.la_incl_R_of_Z O N N le_rfl (res N (lam τ)) l (ex τ) hu (hex τ) x x.2
   have hNoe : IsNoetherian O (NablaT O N lam) := inferInstance
   have hArt : IsArtinian O (NablaT O N lam ⧸ tensSub (deltaIn O N lam)) := by
-    haveI := finite_quotient_of_pow_smul_mem O (NablaT O N lam) (l : O) (∑ τ, ex τ) (tensSub (deltaIn O N lam)) hfin
+    have := finite_quotient_of_pow_smul_mem O (NablaT O N lam) (l : O) (∑ τ, ex τ) (tensSub (deltaIn O N lam)) hfin
       (tensor_reduction_holds O ι _ (deltaIn O N lam) (l : O) ex hexO)
     exact isArtinian_of_finite
   have he' : ∀ τ w (x : NablaT O N lam), e τ w • x = atFactor τ (pr τ w) x := by

@@ -99,9 +99,9 @@ abbrev zComm (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) : CommRin
   { (inferInstance : Ring Z) with mul_comm := fun a b => Subtype.ext (hZ.1 _ a.2 _ b.2) }
 
 theorem isSemisimpleRing (Z : Subalgebra k (Matrix (Fin n) (Fin n) k)) (hZ : CR Z) : IsSemisimpleRing Z := by
-  letI := zComm Z hZ
-  haveI : IsReduced Z := hZ.2
-  haveI : IsArtinianRing Z := IsArtinianRing.of_finite k Z
+  let := zComm Z hZ
+  have : IsReduced Z := hZ.2
+  have : IsArtinianRing Z := IsArtinianRing.of_finite k Z
   exact IsArtinianRing.isSemisimpleRing_of_isReduced Z
 
 theorem idem_trace [CharZero k] {e : Matrix (Fin n) (Fin n) k} (he : e * e = e) (ht : trace e = 0) : e = 0 := by
@@ -118,7 +118,7 @@ theorem idem_trace [CharZero k] {e : Matrix (Fin n) (Fin n) k} (he : e * e = e) 
 
 theorem trB_nondeg [CharZero k] {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} (hZ : CR Z)
     {w : Matrix (Fin n) (Fin n) k} (hw : w ∈ Bz Z) (h : ∀ b ∈ Bz Z, trace (b * w) = 0) : w = 0 := by
-  haveI : IsSemisimpleRing Z := isSemisimpleRing Z hZ
+  have : IsSemisimpleRing Z := isSemisimpleRing Z hZ
   have hw' : ∀ a ∈ Z, a * w = w * a := hw
   have mext : ∀ A B : Matrix (Fin n) (Fin n) k, (∀ v, A *ᵥ v = B *ᵥ v) → A = B := fun A B h =>
     Matrix.toLin'.injective (LinearMap.ext fun v => by simpa [Matrix.toLin'_apply] using h v)
@@ -170,7 +170,7 @@ theorem trB_nondeg [CharZero k] {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} (h
 
 theorem trZ_nondeg [CharZero k] {Z : Subalgebra k (Matrix (Fin n) (Fin n) k)} (hZ : CR Z)
     {c : Matrix (Fin n) (Fin n) k} (hc : c ∈ Z) (h : ∀ b ∈ Z, trace (b * c) = 0) : c = 0 := by
-  haveI : IsSemisimpleRing Z := isSemisimpleRing Z hZ
+  have : IsSemisimpleRing Z := isSemisimpleRing Z hZ
   set c' : Z := ⟨c, hc⟩ with hc'
   obtain ⟨g, hg⟩ := exists_reg (R := Z) (M := Z) (LinearMap.mulRight Z c')
   have h1 := LinearMap.congr_fun hg 1

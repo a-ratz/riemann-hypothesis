@@ -97,11 +97,11 @@ theorem arith_of_trdeg {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype 
 theorem trdeg_lt {Ω : Type} [Field Ω] [CharZero Ω] (L' L : Subfield Ω) (h : L' ≤ L) (t : Ω) (ht : t ∈ L)
     (σ : ℕ → Ω →+* Ω) (hσ : ∀ n, ∀ x ∈ L', σ n x = x) (hinj : Function.Injective fun n => σ n t) (D : ℕ)
     (hD : Algebra.trdeg ℤ L = (D : Cardinal)) : ∃ d < D, Algebra.trdeg ℤ L' = (d : Cardinal) := by
-  letI : Algebra L' L := (Subfield.inclusion h).toAlgebra
-  haveI : IsScalarTower ℤ L' L := IsScalarTower.of_algebraMap_eq' (RingHom.ext_int _ _)
-  haveI : FaithfulSMul ℤ L' := (faithfulSMul_iff_algebraMap_injective ℤ L').mpr Int.cast_injective
-  haveI : FaithfulSMul L' L := (faithfulSMul_iff_algebraMap_injective L' L).mpr (algebraMap L' L).injective
-  haveI : Algebra.Transcendental L' L := by
+  let : Algebra L' L := (Subfield.inclusion h).toAlgebra
+  have : IsScalarTower ℤ L' L := IsScalarTower.of_algebraMap_eq' (RingHom.ext_int _ _)
+  have : FaithfulSMul ℤ L' := (faithfulSMul_iff_algebraMap_injective ℤ L').mpr Int.cast_injective
+  have : FaithfulSMul L' L := (faithfulSMul_iff_algebraMap_injective L' L).mpr (algebraMap L' L).injective
+  have : Algebra.Transcendental L' L := by
     refine ⟨⟨t, ht⟩, ?_⟩
     rintro ⟨p, hp0, hp⟩
     have h1 : Polynomial.eval₂ L'.subtype t p = 0 := by

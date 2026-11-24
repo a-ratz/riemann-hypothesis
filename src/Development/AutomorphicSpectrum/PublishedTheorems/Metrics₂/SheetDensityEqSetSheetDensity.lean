@@ -94,7 +94,7 @@ end Integral
 theorem mcPts_eq_conePts {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] (P : Ideal (MRing ι)) :
     mcPts P = ReciprocityTheory.AnForm.R.conePts (P.map (map (Int.castRingHom ℂ) : MRing ι →+* MRingOver ℂ ι)) := by
   ext z
-  simp only [mcPts, ReciprocityTheory.AnForm.R.conePts, Set.mem_setOf_eq]
+  simp only [mcPts, ReciprocityTheory.AnForm.R.conePts, Set.mem_ofPred_eq]
   refine and_congr_right fun _ => ⟨fun h f hf => ?_, fun h f hf => h _ (Ideal.mem_map_of_mem _ hf)⟩
   have hle : P ≤ Ideal.comap (map (Int.castRingHom ℂ) : MRing ι →+* MRingOver ℂ ι)
       (RingHom.ker (eval z)) :=

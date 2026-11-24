@@ -610,7 +610,7 @@ theorem contAction_twDual_C {F Ω : Type} [Field F] [NumberField F] [Field Ω] [
     rw [h2]
     exact GlobalTheory.Published.PoitouTate.continuous_cycMod
   have hρ' : Continuous fun p : GS Ω (S : Set (HeightOneSpectrum (𝓞 F))) × M => ρ p.1 p.2 := hρ
-  haveI : Fintype M := Fintype.ofFinite M
+  have : Fintype M := Fintype.ofFinite M
   show Continuous fun p : GS Ω (S : Set (HeightOneSpectrum (𝓞 F))) × TDual (ZMod (l ^ r)) M =>
     twDual μ ρ p.1 p.2
   rw [continuous_prod_of_discrete_right]
@@ -1166,14 +1166,14 @@ theorem nineAdd_core (Kf : FiniteSubfield)
     (hρ : ContAction ρ) (d : FoundData Kf S l r ζ Av μ M ρ) :
     NineAdd (loc0 S Av ρ) (tr0 S Av μ (invAt S Av μ hμ inv) ρ) (loc1 S Av ρ)
       (tr1 S Av μ (invAt S Av μ hμ inv) ρ hρ) (loc2 S Av ρ) (tr2 S Av μ (invAt S Av μ hμ inv) ρ) := by
-  haveI := d.isDiscrete
-  haveI : Finite d.A := Finite.of_equiv M d.eM.toEquiv
-  haveI hDd : IsDiscreteRep (dualRep (gsRoots (K := Kf) (S : Set (HeightOneSpectrum (𝓞 Kf.1))) (l ^ r)) d.A) := isDiscreteRep_dualRep _ _
-  haveI hDv : ∀ v : S, IsDiscreteRep (Rep.res (gsFinFamily (S : Set (HeightOneSpectrum (𝓞 Kf.1))) d.ιs ⟨v.1, Finset.mem_coe.2 v.2⟩).toMonoidHom
+  have := d.isDiscrete
+  have : Finite d.A := Finite.of_equiv M d.eM.toEquiv
+  have hDd : IsDiscreteRep (dualRep (gsRoots (K := Kf) (S : Set (HeightOneSpectrum (𝓞 Kf.1))) (l ^ r)) d.A) := isDiscreteRep_dualRep _ _
+  have hDv : ∀ v : S, IsDiscreteRep (Rep.res (gsFinFamily (S : Set (HeightOneSpectrum (𝓞 Kf.1))) d.ιs ⟨v.1, Finset.mem_coe.2 v.2⟩).toMonoidHom
       (dualRep (gsRoots (K := Kf) (S : Set (HeightOneSpectrum (𝓞 Kf.1))) (l ^ r)) d.A)) :=
     fun v => isDiscreteRep_res_dualRep_of_finite _ _ _
   have hρ' : ContAction (twDual μ ρ) := contAction_twDual_C S μ hμ ρ hρ
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero r (Fact.out : l.Prime).ne_zero⟩
   have hSN : ∀ v : HeightOneSpectrum (𝓞 Kf.1), (((l ^ r : ℕ) : ℕ) : 𝓞 Kf.1) ∈ v.asIdeal →
       v ∈ (S : Set (HeightOneSpectrum (𝓞 Kf.1))) := by
     intro v hv

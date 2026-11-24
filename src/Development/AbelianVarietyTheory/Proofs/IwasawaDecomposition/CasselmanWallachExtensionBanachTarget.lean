@@ -139,8 +139,8 @@ private theorem isKFin_add {n : ℕ} {ε : Fin n → Bool} {H : Type} [NormedAdd
   obtain ⟨S, hS, hvS, hSK⟩ := hv
   obtain ⟨S', hS', hwS, hSK'⟩ := hw
   refine ⟨S ⊔ S', ?_, Submodule.add_mem_sup hvS hwS, ?_⟩
-  · haveI := hS
-    haveI := hS'
+  · have := hS
+    have := hS'
     infer_instance
   · unfold IsKStableOn at hSK hSK' ⊢
     intro g hg x hx
@@ -196,8 +196,8 @@ theorem casselmanWallach_banach : GlobalTheory.Published.CasselmanWallach → �
   intro hCW n ε H _ _ _ σ hσ E _ _ _ ρ hρ T₀ hK hd
   unfold GlobalTheory.Published.CasselmanWallach at hCW
   obtain ⟨hcl, p, π, dπ, hsm, hπ, hdπ, hp0⟩ := _root_.GlobalTheory.TypeSum.SmoothFrechet.smooth_frechet_rep n ε E ρ hρ
-  haveI : IsUniformAddGroup (Fam ε ρ) := (Fam ε ρ).toAddSubgroup.isUniformAddGroup
-  haveI : CompleteSpace (Fam ε ρ) := hcl.completeSpace_coe
+  have : IsUniformAddGroup (Fam ε ρ) := (Fam ε ρ).toAddSubgroup.isUniformAddGroup
+  have : CompleteSpace (Fam ε ρ) := hcl.completeSpace_coe
   have hG : IsUnit (Formalism.REAL.Jm ε) := GlobalTheory.SmVec.gram_unit (ε := ε) (P := 1) isUnit_one (by simp)
   have happ : ∀ (L₁ L₂ : List (Mx n)) (x : H), Dw σ (L₁ ++ L₂) x = Dw σ L₁ (Dw σ L₂ x) :=
     fun L₁ L₂ x => GlobalTheory.SmVec.word_append (π := σ) L₁ L₂ x

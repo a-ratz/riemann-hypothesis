@@ -74,7 +74,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.AdelicUnitaryGroups (tensNU)
 variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
 
 theorem continuous_compFinV (v : HeightOneSpectrum (𝓞 F)) : Continuous (compFin F E v) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   exact GlobalTheory.AutFunCompare.continuous_tensNU (E := E) (evFin F v).toLinearMap (map_mul (evFin F v))
     ((RestrictedProduct.continuous_eval v).comp continuous_snd)
 
@@ -144,9 +144,9 @@ theorem box₁ {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) {K : Set (AE D)}
   refine ⟨K', hK', fun x hx hex => hmem x (fun w => ⟨e * x, hex, ?_⟩) (fun v => ?_)⟩
   · rw [map_mul, he.1 w, one_mul]
   · by_cases hv : v ∈ S
-    · simp only [if_pos hv]
-      exact ⟨e * x, hex, by rw [map_mul, he.2 v, if_pos hv, one_mul]⟩
-    · simp only [if_neg hv]
+    · simp only [ite_eq_left hv]
+      exact ⟨e * x, hex, by rw [map_mul, he.2 v, ite_eq_left hv, one_mul]⟩
+    · simp only [ite_eq_right hv]
       exact hx v hv
 
 theorem boxM {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) {K : Set (Mx D a b)} (hK : IsCompact K) :
@@ -164,7 +164,7 @@ theorem boxP {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) {K : Set (Mx D a b
 
 theorem cv_eq_zero {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) {N : Mx D a b} (hN : e • N = N) {v : Pl D}
     (hv : v ∉ S) (i : Fin a) (j : Fin b) : cv D v (N i j) = 0 := by
-  rw [← hN, Matrix.smul_apply, smul_eq_mul, map_mul, he.2 v, if_neg hv, zero_mul]
+  rw [← hN, Matrix.smul_apply, smul_eq_mul, map_mul, he.2 v, ite_eq_right hv, zero_mul]
 
 theorem intOff_iff {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) {x x' : Mx D a b} (h : e • (x' - x) = x' - x) :
     IntOff S x' ↔ IntOff S x := by

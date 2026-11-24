@@ -71,14 +71,14 @@ theorem lintegral_unfold (μ : Measure G) [μ.IsMulLeftInvariant] (Γ Δ : Subgr
     {𝓕 𝓕' : Set G} (h𝓕 : IsFundamentalDomain Γ 𝓕 μ) (h𝓕' : IsFundamentalDomain Δ 𝓕' μ)
     (f : G → ℝ≥0∞) (hf : ∀ δ ∈ Δ, ∀ g, f (δ * g) = f g) (hm : AEMeasurable f μ) :
     ∫⁻ g in 𝓕, ∑' i, f (r i * g) ∂μ = ∫⁻ g in 𝓕', f g ∂μ := by
-  haveI : Countable ι := Function.Injective.countable (f := fun i => e (1, i))
+  have : Countable ι := Function.Injective.countable (f := fun i => e (1, i))
     fun i j h => by simpa using congrArg Prod.snd (e.injective h)
-  haveI : Countable Δ := Function.Injective.countable (f := fun δ => e (δ, (e.symm 1).2))
+  have : Countable Δ := Function.Injective.countable (f := fun δ => e (δ, (e.symm 1).2))
     fun i j h => by simpa using congrArg Prod.fst (e.injective h)
-  haveI : MeasurableConstSMul Γ G := ⟨fun γ => measurable_const_mul (γ : G)⟩
-  haveI : MeasurableConstSMul Δ G := ⟨fun γ => measurable_const_mul (γ : G)⟩
-  haveI : SMulInvariantMeasure Γ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
-  haveI : SMulInvariantMeasure Δ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
+  have : MeasurableConstSMul Γ G := ⟨fun γ => measurable_const_mul (γ : G)⟩
+  have : MeasurableConstSMul Δ G := ⟨fun γ => measurable_const_mul (γ : G)⟩
+  have : SMulInvariantMeasure Γ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
+  have : SMulInvariantMeasure Δ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
   have hset : ∀ (δ : Δ) (i : ι), (δ • (r i • 𝓕) ∩ 𝓕' : Set G) = 𝓕' ∩ e (δ, i) • 𝓕 := by
     intro δ i
     ext x
@@ -111,7 +111,7 @@ theorem lintegral_unfold (μ : Measure G) [μ.IsMulLeftInvariant] (Γ Δ : Subgr
 theorem isFundamentalDomain_iUnion (μ : Measure G) [μ.IsMulLeftInvariant] (Γ Δ : Subgroup G) [Countable Γ]
     (r : ι → G) (e : Δ × ι ≃ Γ) (he : ∀ p, (e p : G) = p.1 * r p.2)
     {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ 𝓕 μ) : IsFundamentalDomain Δ (⋃ i, r i • 𝓕) μ := by
-  haveI : Countable ι := Function.Injective.countable (f := fun i => e (1, i))
+  have : Countable ι := Function.Injective.countable (f := fun i => e (1, i))
     fun i j h => by simpa using congrArg Prod.snd (e.injective h)
   have hset : ∀ (δ : Δ) (i : ι), (δ • (r i • 𝓕) : Set G) = e (δ, i) • 𝓕 := by
     intro δ i
@@ -136,26 +136,26 @@ theorem integral_unfold {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [
     (hfin : ∫⁻ g in 𝓕, ∑' i, ‖f (r i * g)‖ₑ ∂μ ≠ ⊤) :
     (∀ᵐ g ∂μ.restrict 𝓕, Summable fun i => ‖f (r i * g)‖) ∧ IntegrableOn (fun g => ∑' i, f (r i * g)) 𝓕 μ ∧
       IntegrableOn f 𝓕' μ ∧ ∫ g in 𝓕, ∑' i, f (r i * g) ∂μ = ∫ g in 𝓕', f g ∂μ := by
-  haveI : Countable ι := Function.Injective.countable (f := fun i => e (1, i))
+  have : Countable ι := Function.Injective.countable (f := fun i => e (1, i))
     fun i j h => by simpa using congrArg Prod.snd (e.injective h)
-  haveI : Countable Δ := Function.Injective.countable (f := fun δ => e (δ, (e.symm 1).2))
+  have : Countable Δ := Function.Injective.countable (f := fun δ => e (δ, (e.symm 1).2))
     fun i j h => by simpa using congrArg Prod.fst (e.injective h)
-  haveI : SMulInvariantMeasure Δ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
+  have : SMulInvariantMeasure Δ G μ := ⟨fun γ s _ => measure_preimage_mul μ (γ : G) s⟩
   have hS := isFundamentalDomain_iUnion μ Γ Δ r e he h𝓕
   have hf' : ∀ (δ : Δ) (g : G), f (δ • g) = f g := fun δ g => hf δ δ.2 g
   have hmi : ∀ i, AEStronglyMeasurable (fun g => f (r i * g)) (μ.restrict 𝓕) := fun i =>
     (hm.comp_quasiMeasurePreserving (measurePreserving_mul_left μ (r i)).quasiMeasurePreserving).restrict
   have hI : IntegrableOn f 𝓕' μ := ⟨hm.restrict, by
-    have := lintegral_unfold μ Γ Δ r e he h𝓕 h𝓕' (fun g => ‖f g‖ₑ) (fun δ h g => by rw [hf δ h]) hm.enorm
+    have := lintegral_unfold μ Γ Δ r e he h𝓕 h𝓕' (fun g => ‖f g‖ₑ) (fun δ h g => by rw [hf δ h]) hm.eNorm
     exact lt_top_iff_ne_top.2 (this ▸ hfin)⟩
   have hr : ∀ i, (r i • 𝓕 : Set G) = e (1, i) • 𝓕 := fun i => by
     rw [Subgroup.smul_def, he]; simp
   refine ⟨?_, ⟨AEStronglyMeasurable.tsum hmi, ?_⟩, hI, ?_⟩
-  · filter_upwards [ae_lt_top' (AEMeasurable.tsum fun i => (hmi i).enorm) hfin] with g hg
+  · filter_upwards [ae_lt_top' (AEMeasurable.tsum fun i => (hmi i).eNorm) hfin] with g hg
     have := ENNReal.summable_toReal hg.ne
     simpa using this
-  · exact lt_of_le_of_lt (lintegral_mono fun x => enorm_tsum_le_tsum_enorm) hfin.lt_top
-  · rw [integral_tsum hmi (by rwa [← lintegral_tsum fun i => (hmi i).enorm]), h𝓕'.setIntegral_eq hS hf',
+  · exact lt_of_le_of_lt (lintegral_mono fun x => eNorm_tsum_le_tsum_eNorm) hfin.lt_top
+  · rw [integral_tsum hmi (by rwa [← lintegral_tsum fun i => (hmi i).eNorm]), h𝓕'.setIntegral_eq hS hf',
       integral_iUnion_ae (fun i => h𝓕.nullMeasurableSet.smul (r i))
         (fun i j hij => by
           simp only [Function.onFun, hr]
@@ -206,9 +206,9 @@ theorem ratGL_injective : Function.Injective (ratGL E a) := fun _ _ h => by
     (congrArg (fun z : GA E a => (z : Matrix (Fin a) (Fin a) (Ad E)) i j) h)
 
 theorem countable_range_ratGL : Countable (ratGL E a).range := by
-  haveI : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
-  haveI : Countable (Matrix (Fin a) (Fin a) E) := inferInstanceAs (Countable (Fin a → Fin a → E))
-  haveI : Countable (GL (Fin a) E) := Units.val_injective.countable
+  have : Countable E := (Module.finBasis ℚ E).equivFun.injective.countable
+  have : Countable (Matrix (Fin a) (Fin a) E) := inferInstanceAs (Countable (Fin a → Fin a → E))
+  have : Countable (GL (Fin a) E) := Units.val_injective.countable
   exact (ratGL E a).rangeRestrict_surjective.countable
 
 theorem exists_transversal {v : Fin a → E} (hv : v ≠ 0) {P : Subgroup (GL (Fin a) E)}
@@ -252,7 +252,7 @@ theorem lintegral_tsum_vecMul (F : GA E a → (Fin a → Ad E) → ℝ≥0∞) (
     (hm : AEMeasurable (fun g : GA E a => F g ((algebraMap E (Ad E) ∘ v) ᵥ* g.val)) μ) :
     ∫⁻ g in 𝓕, ∑' ξ : {ξ : Fin a → E // ξ ≠ 0}, F g ((algebraMap E (Ad E) ∘ ξ.1) ᵥ* g.val) ∂μ =
       ∫⁻ g in 𝓕', F g ((algebraMap E (Ad E) ∘ v) ᵥ* g.val) ∂μ := by
-  haveI := countable_range_ratGL (E := E) (a := a)
+  have := countable_range_ratGL (E := E) (a := a)
   obtain ⟨γ, e, hγ, he⟩ := exists_transversal hv hP
   have := lintegral_unfold μ _ _ (fun ξ => ratGL E a (γ ξ)) e he h𝓕 h𝓕' _
     (by rintro _ ⟨δ, hδ, rfl⟩ g; simp only [vecMul_ratGL_mul, hF, (hP _).1 hδ]) hm
@@ -267,7 +267,7 @@ theorem integral_tsum_vecMul {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ
     IntegrableOn (fun g => F g ((algebraMap E (Ad E) ∘ v) ᵥ* g.val)) 𝓕' μ ∧
     ∫ g in 𝓕, ∑' ξ : {ξ : Fin a → E // ξ ≠ 0}, F g ((algebraMap E (Ad E) ∘ ξ.1) ᵥ* g.val) ∂μ =
       ∫ g in 𝓕', F g ((algebraMap E (Ad E) ∘ v) ᵥ* g.val) ∂μ := by
-  haveI := countable_range_ratGL (E := E) (a := a)
+  have := countable_range_ratGL (E := E) (a := a)
   obtain ⟨γ, e, hγ, he⟩ := exists_transversal hv hP
   have := integral_unfold μ _ _ (fun ξ => ratGL E a (γ ξ)) e he h𝓕 h𝓕' _
     (by rintro _ ⟨δ, hδ, rfl⟩ g; simp only [vecMul_ratGL_mul, hF, (hP _).1 hδ]) hm

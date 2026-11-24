@@ -73,7 +73,7 @@ theorem absNorm_eq_of_two_over {F E : Type} [Field F] [NumberField F] [Field E] 
     rw [Ideal.mul_eq_inf_of_coprime cop]; exact le_inf m1 m2
   have hd := map_dvd Ideal.absNorm (Ideal.dvd_iff_le.2 hle)
   rw [map_mul, Ideal.absNorm_algebraMap, ← f1, ← f2, ← pow_add,
-    ← Algebra.IsAlgebraic.finrank_of_isFractionRing (𝓞 F) F (𝓞 E) E, h2] at hd
+    ← IsFractionRing.finrank_eq (𝓞 F) F (𝓞 E) E, h2] at hd
   have hq : 1 < Ideal.absNorm p := by
     rcases Nat.lt_or_ge 1 (Ideal.absNorm p) with h' | h'
     · exact h'

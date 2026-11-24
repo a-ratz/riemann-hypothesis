@@ -101,9 +101,9 @@ theorem integral_mul_star_eq {X : Type} [MeasurableSpace X] (ν : Measure X) [Is
 theorem scalar_eq : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∀ (S T : HSp D) (μ : Measure (WO S T)) (𝓕 : Set (WO S T)), μ.IsAddHaarMeasure → IsAddFundamentalDomain (ratL T S) 𝓕 μ → ∀ M : Module.End ℂ (WO S T → ℂ), (∀ f, IsThetaFunO ψ S T f → IsThetaFunO ψ S T (M f)) → (∀ f, IsThetaFunO ψ S T f → ∫⁻ w in 𝓕, ‖M f w‖ₑ ^ 2 ∂μ = ∫⁻ w in 𝓕, ‖f w‖ₑ ^ 2 ∂μ) → ∀ f f', IsThetaFunO ψ S T f → IsThetaFunO ψ S T f' → ∫ x in 𝓕, M f x * star (M f' x) ∂μ = ∫ x in 𝓕, f x * star (f' x) ∂μ := by
   intro D ψ hψ S T μ 𝓕 hμ h𝓕 M hM hn f f' hf hf'
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D T S
-  haveI : BorelSpace (WO S T) := ⟨rfl⟩
-  haveI : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
+  have : BorelSpace (WO S T) := ⟨rfl⟩
+  have : Countable (ratL T S) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by
     rw [Measure.restrict_apply_univ]
     exact GlobalTheory.measure_addFundamentalDomain_lt_top_of_cocompact (G := WO S T) (ratL T S) hK hKc μ h𝓕⟩
   let Θ : Submodule ℂ (WO S T → ℂ) :=

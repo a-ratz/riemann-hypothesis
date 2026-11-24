@@ -65,14 +65,14 @@ theorem pow_mod_eq {M : Type*} [Monoid M] {w : M} {N : ℕ} (h : w ^ N = 1) (a :
 
 theorem ch_eq_pow (N : ℕ) (j : ZMod N) :
     ch N j = Complex.exp (2 * Real.pi * Complex.I * (((1 : ℚ) / N : ℚ) : ℂ)) ^ j.val := by
-  rw [ch, ← Complex.exp_nat_mul]
+  rw [ch, ← Complex.exp_natCast_mul]
   congr 1
   push_cast
   ring
 
 theorem main : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (s : Ω ≃ₐ[ℚ] Ω) (N : ℕ), 0 < N → (∃ d : ℤ, s (eOm ε (1 / N)) = eOm ε (1 / N) ^ d) ∧ ∀ d : ℤ, s (eOm ε (1 / N)) = eOm ε (1 / N) ^ d → ∃ u : (ZMod N)ˣ, (u : ZMod N) = d ∧ ∀ g : ℂ ≃+* ℂ, (∀ x, g (ε x) = ε (s x)) → ZetaAct g N u := by
   intro Ω _ _ _ ε s N hN
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   obtain ⟨_, hval, _, _, hprim, _⟩ := _root_.GlobalTheory.FNRoots.main Ω ε
   set ζ := eOm ε (1 / N) with hζ
   have hp : IsPrimitiveRoot ζ N := hprim N hN

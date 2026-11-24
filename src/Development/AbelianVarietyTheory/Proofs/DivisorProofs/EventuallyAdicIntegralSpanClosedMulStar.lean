@@ -83,7 +83,7 @@ theorem isIntB_mul_star_eventually : ∀ (C : Type) [Ring C] [Algebra ℚ C] [Fi
       (∀ y z, IsIntB v b y → IsIntB v b z → IsIntB v b (y * z)) ∧
       (∀ y, IsIntB v b y → IsIntB v b (starT σ (v.adicCompletion ℚ) y).unop) := by
   intro C _ _ _ σ κ b
-  haveI : Fintype κ := FiniteDimensional.fintypeBasisIndex b
+  have : Fintype κ := FiniteDimensional.fintypeBasisIndex b
   have hc : ∀ᶠ v : HeightOneSpectrum ℤ in Filter.cofinite, ∀ t : κ × κ × κ,
       algebraMap ℚ (v.adicCompletion ℚ) (b.repr (b t.1 * b t.2.1) t.2.2) ∈ v.adicCompletionIntegers ℚ :=
     Filter.eventually_all.2 fun t => rat_mem_adicCompletionIntegers_eventually _
@@ -92,7 +92,7 @@ theorem isIntB_mul_star_eventually : ∀ (C : Type) [Ring C] [Algebra ℚ C] [Fi
     Filter.eventually_all.2 fun t => rat_mem_adicCompletionIntegers_eventually _
   have hfin := Filter.eventually_cofinite.1 (hc.and hs)
   refine ⟨hfin.toFinset, fun v hv => ?_⟩
-  rw [Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_not] at hv
+  rw [Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_not] at hv
   obtain ⟨hcv, hsv⟩ := hv
   refine ⟨fun y z hy hz k => ?_, fun y hy k => ?_⟩
   · set_option synthInstance.maxHeartbeats 100000 in

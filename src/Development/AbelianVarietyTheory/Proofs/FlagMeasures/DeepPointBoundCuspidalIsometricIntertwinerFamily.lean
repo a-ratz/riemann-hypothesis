@@ -647,7 +647,7 @@ open scoped Matrix.Norms.L2Operator in
 theorem opNorm_exp_le {n : ℕ} (hn : 1 ≤ n) (A : Matrix (Fin n) (Fin n) ℂ) :
     ‖NormedSpace.exp A‖ ≤ Real.exp ‖A‖ := by
   have h1 : ‖(1 : Matrix (Fin n) (Fin n) ℂ)‖ = 1 := GlobalTheory.LeastVar.opN_one hn
-  haveI : NormOneClass (Matrix (Fin n) (Fin n) ℂ) := ⟨h1⟩
+  have : NormOneClass (Matrix (Fin n) (Fin n) ℂ) := ⟨h1⟩
   have h := NormedSpace.expSeries_hasSum_exp (𝕂 := ℂ) A
   have h' := NormedSpace.expSeries_hasSum_exp (𝕂 := ℝ) ‖A‖
   rw [Real.exp_eq_exp_ℝ]
@@ -709,11 +709,11 @@ theorem half_truncatedLeastLatticeSize_le_unipotentNeighbourhood : ∀ (I : AutI
     exact Real.exp_le_exp.2 (neg_le_neg hs)
   have ht : 0 ≤ tau1 I x := by
     obtain ⟨-, hfg, hspan, -, -⟩ := _root_.GlobalTheory.PointLattice.lamX_selfDual I x
-    haveI := (GlobalTheory.Count.FrameMajorant.frames_give_majorants I x).1
+    have := (GlobalTheory.Count.FrameMajorant.frames_give_majorants I x).1
     have hx := (GlobalTheory.Count.FrameMajorant.frames_give_majorants I x).2.2.2.2
     have hne : lamX I x ≠ ⊥ := by
       intro h
-      haveI : Nonempty (Fin I.n) := ⟨⟨0, hn⟩⟩
+      have : Nonempty (Fin I.n) := ⟨⟨0, hn⟩⟩
       rw [h] at hspan
       simp at hspan
     have h3 := (sizeMu I.E _ _ (bas I) (frm I x) (fun w => (hx w).1) (lamX I x) hfg hne).2.2.2.1
@@ -804,9 +804,9 @@ theorem norm_le_of_cusp (I : AutInst) (μf : Measure I.Gf) [μf.IsHaarMeasure] [
   obtain ⟨-, -, -, -, hpos⟩ := _root_.GlobalTheory.AdelicUnimod.adelic_unimodular I μf
   obtain ⟨hT2, hLC, hSC, -, -, -, hKg⟩ := GlobalTheory.CongTop.adelic_topology I
   obtain ⟨hKo, ⟨K, hK⟩, -⟩ := hKg g hg
-  haveI := hT2
-  haveI := hLC
-  haveI := hSC
+  have := hT2
+  have := hLC
+  have := hSC
 
   have hU : {u : I.Gf | x.2⁻¹ * u * x.2 ∈ I.Kg g} ∈ nhds (1 : I.Gf) := by
     refine hKo.preimage ((continuous_const.mul continuous_id).mul continuous_const) |>.mem_nhds ?_
@@ -1198,9 +1198,9 @@ theorem unipotent_orbit_cover : ∀ (I : AutInst) (x : I.GA) (g q : ℕ), 1 ≤ 
 
   obtain ⟨τ', hτ'⟩ : ∃ f : ℕ → ℝ, f = fun i => if h : i < a then τ ⟨i, h⟩ else 1 / 2 := ⟨_, rfl⟩
   have hτ'lt : ∀ i (h : i < a), τ' i = τ ⟨i, h⟩ := by
-    intro i h; rw [hτ']; exact dif_pos h
+    intro i h; rw [hτ']; exact dite_eq_left h
   have hτ'ge : ∀ i, a ≤ i → τ' i = 1 / 2 := by
-    intro i h; rw [hτ']; exact dif_neg (not_lt.2 h)
+    intro i h; rw [hτ']; exact dite_eq_right (not_lt.2 h)
   have hpos : ∀ i ≤ a, 0 < τ' i := by
     intro i _
     rcases lt_or_ge i a with h | h

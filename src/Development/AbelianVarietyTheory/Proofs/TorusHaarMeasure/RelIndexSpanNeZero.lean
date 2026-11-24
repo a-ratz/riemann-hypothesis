@@ -67,10 +67,10 @@ theorem _root_.GlobalTheory.SpanIndex.relIndex_span_ne_zero : (∀ (r : ℕ) (X 
   have hK : X.Λ.toAddSubgroup ⊓ V.toAddSubgroup = M.toAddSubgroup := rfl
   rw [hK]
   have hMfg : M.FG := by
-    haveI : IsNoetherian (𝓞 E) X.Λ := isNoetherian_of_fg_of_noetherian X.Λ X.Λ_fg
+    have : IsNoetherian (𝓞 E) X.Λ := isNoetherian_of_fg_of_noetherian X.Λ X.Λ_fg
     exact Submodule.FG.of_le_of_isNoetherian inf_le_left
-  haveI : Module.Finite (𝓞 E) M := Module.Finite.iff_fg.mpr hMfg
-  haveI : Module.Finite ℤ (M ⧸ N.comap M.subtype) := Module.Finite.trans (𝓞 E) _
+  have : Module.Finite (𝓞 E) M := Module.Finite.iff_fg.mpr hMfg
+  have : Module.Finite ℤ (M ⧸ N.comap M.subtype) := Module.Finite.trans (𝓞 E) _
   have htors : Module.IsTorsion ℤ (M ⧸ N.comap M.subtype) := by
     intro q
     induction q using Submodule.Quotient.induction_on with
@@ -93,7 +93,7 @@ theorem _root_.GlobalTheory.SpanIndex.relIndex_span_ne_zero : (∀ (r : ℕ) (X 
       change y • v ∈ N
       rw [hsum]
       exact Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ (Submodule.subset_span ⟨a, rfl⟩)
-  haveI : Finite (M ⧸ N.comap M.subtype) := Module.finite_of_fg_torsion _ htors
+  have : Finite (M ⧸ N.comap M.subtype) := Module.finite_of_fg_torsion _ htors
   exact AddSubgroup.index_ne_zero_of_finite (hH := this)
 
 end GlobalTheory.SpanIndex

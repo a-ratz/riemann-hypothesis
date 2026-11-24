@@ -289,7 +289,7 @@ theorem exists_normal_subgroup (hKc : IsCompact (K : Set G)) (hKo : IsOpen (K : 
   have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
   refine Subgroup.quotient_finite_of_isOpen _ ?_
   rw [Subgroup.coe_subgroupOf]
-  exact N.isOpen.preimage continuous_subtype_val
+  exact N.isOpen.preimage continuous_subtypeVal
 
 end Average
 

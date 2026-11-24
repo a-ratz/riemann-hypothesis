@@ -441,7 +441,7 @@ private lemma splitForm_mulVec_apply_eq_sgn_mul_sig (k r : ℕ) (u : Fin (2 * r 
     (i : Fin (2 * r + k + 1)) :
     (_root_.Formalism.QuantumDeterminants.Hpk k r *ᵥ u) i = _root_.Formalism.QuantumDeterminants.GBasic.sgn k r i * u (_root_.Formalism.QuantumDeterminants.GBasic.sig k r i) := by
   simp only [Matrix.mulVec, dotProduct, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_eq, ite_mul, zero_mul, Finset.sum_ite_eq',
-    Finset.mem_univ, if_true]
+    Finset.mem_univ, ite_true]
 
 open Matrix MeasureTheory Finset in
 open scoped InnerProductSpace ENNReal in
@@ -613,12 +613,12 @@ theorem lintegral_prod_pow_le_of_moments : ∀ (Ω : Type) [MeasurableSpace Ω] 
     have hum : ∀ a, AEMeasurable (u a) ν := fun a => by
       by_cases ha : a ∈ s
       · simpa [u, ha] using hρm a
-      · simp only [u, ha, if_false]; exact aemeasurable_const
+      · simp only [u, ha, ite_false]; exact aemeasurable_const
     have hint : ∀ a, ∫⁻ x, ENNReal.ofReal (u a x ^ N * Ph x) ∂ν ≤ ENNReal.ofReal (Rr ^ N) := by
       intro a
       by_cases ha : a ∈ s
       · simpa [u, ha] using hbd a
-      · simp only [u, ha, if_false]
+      · simp only [u, ha, ite_false]
         have hRN : (0:ℝ) ≤ Rr ^ N := pow_nonneg hR0 _
         simp_rw [ENNReal.ofReal_mul hRN]
         rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
@@ -1251,7 +1251,7 @@ theorem two_sided_moments_gap : GlobalTheory.GapIn.Hyp → ∀ Cg cb Cu cT CT C0
   intro hH Cg cb Cu cT CT C0
   refine ⟨2 * |Cg| + 2 + |CT| + 10 * max 2 Cu, by positivity, ?_⟩
   intro D large₂ C' Cl hCl hZ τ w W hW A hA q hq
-  haveI := FiniteDimensional.complete ℂ W.Wp
+  have := FiniteDimensional.completeSpace ℂ W.Wp
   obtain ⟨-, -, hb, hm, -, -, -, hmk, hv, -, hka, hvb, hg, hgb, hCg, -, hT, -⟩ :=
     GlobalTheory.Amp.RangeModel.sizes_of D large₂ C' Cl Cg cb Cu cT CT C0 (rd_le_b D large₂ C' Cl Cg cb Cu cT CT C0 hCl hZ) hZ
   have hTT := hypTT_self D large₂ C' Cl Cg cb Cu cT CT C0 hZ w
@@ -1319,7 +1319,7 @@ theorem two_sided_moments_gap : GlobalTheory.GapIn.Hyp → ∀ Cg cb Cu cT CT C0
     rw [← hx]; rfl
   have hfr : 0 < Module.finrank ℂ W.Wp := by
     obtain ⟨_, _, -, hρ⟩ := g3
-    haveI := hρ.1
+    have := hρ.1
     exact Module.finrank_pos
   have hne0 : l2SG νq (fun g => A.B (R0.σ t (R0.σ g A.v0))) ≠ 0 := by
     rw [← e1, hA9]; exact (ENNReal.ofReal_pos.2 (by positivity)).ne'

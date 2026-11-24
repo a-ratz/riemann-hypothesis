@@ -583,7 +583,7 @@ theorem integral_rightCoset_fun_eq_finsum (G Λ : Type) [Group G] [TopologicalSp
       exact (integrable_indicator_iff (hfibM l)).2 (by
         by_cases hl : l ∈ Set.range π
         · obtain ⟨g, rfl⟩ := hl
-          haveI : IsFiniteMeasure (μ.restrict (π ⁻¹' {π g})) := ⟨by simp [hfib1 g]⟩
+          have : IsFiniteMeasure (μ.restrict (π ⁻¹' {π g})) := ⟨by simp [hfib1 g]⟩
           exact integrable_const _
         · have : π ⁻¹' {l} = ∅ := by
             ext x; simp only [Set.mem_preimage, Set.mem_singleton_iff, Set.mem_empty_iff_false, iff_false]
@@ -619,7 +619,7 @@ theorem integral_rightCoset_fun_eq_finsum (G Λ : Type) [Group G] [TopologicalSp
             · obtain ⟨_, hsupp⟩ := hF h
               rcases hs (π g) with h0 | h1
               · exact absurd h0 hsupp
-              · rw [← ofReal_norm_eq_enorm, h1]; simp
+              · rw [← ofReal_norm, h1]; simp
             · exact bot_le
     obtain ⟨n, hn⟩ := ENNReal.exists_nat_gt hfin.ne
     obtain ⟨F, hFS, hFc⟩ := Set.Infinite.exists_subset_card_eq (hS : S.Infinite) n
@@ -676,7 +676,7 @@ theorem norm_le_iff_valuation_le (K : UQ) {E : Type} [NormedField E] (φ : K.E �
   have hφb : φ b ≠ 0 := by simpa using hb
   have hvb : v b ≠ 0 := (Valuation.ne_zero_iff v).2 hb
   rw [← div_le_one₀ (norm_pos_iff.2 hφb), ← norm_div, ← map_div₀, hball, ← hint, map_div₀,
-    div_le_one₀ (zero_lt_iff.2 hvb)]
+    div_le_one₀ (pos_iff_ne_zero.2 hvb)]
 
 theorem norm_eq_iff_valuation_eq (K : UQ) {E : Type} [NormedField E] (φ : K.E ≃+* E)
     (hball : ∀ y : K.E, ‖φ y‖ ≤ 1 ↔ y ∈ (algebraMap K.O K.E).range) (a b : K.E) :
@@ -725,7 +725,7 @@ theorem eta_eq_uq_eta : ∀ (K : UQ) (F E : Type) [NontriviallyNormedField F] [N
   by_cases hx : x = 0
   · subst hx
     simp only [map_zero, WithZero.log_zero, neg_zero, zpow_zero, Rat.cast_one]
-    rw [if_pos ⟨0, by simp⟩]
+    rw [ite_eq_left ⟨0, by simp⟩]
   set z := φ.symm (algebraMap F E x) with hz
   have hz0 : z ≠ 0 := by simpa [z] using hx
   have hvz : v z ≠ 0 := (Valuation.ne_zero_iff v).2 hz0
@@ -1013,7 +1013,7 @@ theorem integrandG {φ : K.E ≃+* E} (hi : ∀ y : K.E, ‖φ y‖ ≤ 1 ↔ y 
   simp only [← fun i => congrFun y3 i, iota_mem hi] at h3
   unfold wG unitG
   rw [h1, h2, h3, hom]
-  simp only [Set.indicator, Set.mem_setOf_eq, y4', norm_zero, zero_le_one, and_true, Pi.one_apply]
+  simp only [Set.indicator, Set.mem_ofPred_eq, y4', norm_zero, zero_le_one, and_true, Pi.one_apply]
   split_ifs <;> simp
 
 theorem tw_fixed {n : ℕ} {φ : K.E ≃+* E} (hs : ∀ y, φ (K.c y) = star (φ y))
@@ -1063,10 +1063,10 @@ theorem orbG_eq {φ : K.E ≃+* E} (hs : ∀ y, φ (K.c y) = star (φ y))
     (hY : mapGl (iota F φ) Y = Yb e (LinearMap.mulLeft K.E B.g) u (Algebra.trace K.E B.A)) :
     orbG M (unitG _ F) Y = ((B.GG u : ℚ) : ℂ) := by
   classical
-  letI := M.mG
-  haveI := M.bG
-  haveI := GlobalTheory.JR.gl_unimodular F E _ M
-  haveI : IsUltrametricDist F := Unram.ultraF E
+  let := M.mG
+  have := M.bG
+  have := GlobalTheory.JR.gl_unimodular F E _ M
+  have : IsUltrametricDist F := Unram.ultraF E
   have h := GlobalTheory.integral_rightCoset_fun_eq_finsum (GL (Fin (finrank K.E B.A)) F) (Submodule K.O B.A) M.μG (glO _ F)
     (MeasExist.isOpen_glO _ F) M.volG
     (fun γ => lat K.O (tw e (Matrix.GeneralLinearGroup.map (iota F φ) γ)))
@@ -1085,7 +1085,7 @@ theorem orbG_eq {φ : K.E ≃+* E} (hs : ∀ y, φ (K.c y) = star (φ y))
     funext fun γ => integrandG B hi u _ _ (by rw [mapGl_act, hY, Yb_tw]), h, InvAlg.GG]
   refine Eq.trans ?_ ((Rat.castHom ℂ).toAddMonoidHom.map_finsum_of_injective Rat.cast_injective _).symm
   refine finsum_congr fun L => ?_
-  simp only [range_piG B hs e he L, finsum_eq_if, wG, InvAlg.Lin, Set.mem_setOf_eq]
+  simp only [range_piG B hs e he L, finsum_eq_if, wG, InvAlg.Lin, Set.mem_ofPred_eq]
   split_ifs <;> simp_all
 
 def toGLU {n : ℕ} (φ : K.E ≃+* E) : Matrix.unitaryGroup (Fin n) E →* GL (Fin n) K.E :=
@@ -1125,7 +1125,7 @@ theorem integrandU {n : ℕ} {φ : K.E ≃+* E} (hi : ∀ y : K.E, ‖φ y‖ �
   simp only [RingEquiv.toRingHom_eq_coe, RingHom.coe_coe, RingEquiv.apply_symm_apply] at h1 h2
   unfold wU unitU
   rw [h1, h2]
-  simp only [Set.indicator, Set.mem_setOf_eq, y4', norm_zero, zero_le_one, and_true, Pi.one_apply]
+  simp only [Set.indicator, Set.mem_ofPred_eq, y4', norm_zero, zero_le_one, and_true, Pi.one_apply]
   split_ifs <;> rfl
 
 theorem herm_add_left (x a b c : B.A) : B.herm x (a + b) c = B.herm x a c + B.herm x b c := by
@@ -1170,10 +1170,10 @@ theorem orbU_eq {φ : K.E ≃+* E} (hs : ∀ y, φ (K.c y) = star (φ y))
     (hX : mapGl φ.symm.toRingHom X.toGl = Yb e (LinearMap.mulLeft K.E B.g) w l) :
     orbU M (unitU _ F E) X = (B.UU x w : ℂ) := by
   classical
-  letI := M.mU
-  haveI := M.bU
-  haveI := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E _).2 M
-  haveI : IsUltrametricDist E := Unram.ultraE F
+  let := M.mU
+  have := M.bU
+  have := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E _).2 M
+  have : IsUltrametricDist E := Unram.ultraE F
   have hm : ∀ (γ : Matrix.unitaryGroup (Fin (finrank K.E B.A)) E) i j, φ ((toGLU φ γ).val i j) = γ.1 i j :=
     fun γ i j => φ.apply_symm_apply _
   have h := GlobalTheory.integral_rightCoset_fun_eq_finsum (Matrix.unitaryGroup (Fin (finrank K.E B.A)) E) (Submodule K.O B.A) M.μU (uO _ E)
@@ -1198,7 +1198,7 @@ theorem orbU_eq {φ : K.E ≃+* E} (hs : ∀ y, φ (K.c y) = star (φ y))
   rw [hc]
   refine Eq.trans ?_ ((Nat.castAddMonoidHom ℂ).map_finsum_of_injective Nat.cast_injective _).symm
   refine finsum_congr fun L => ?_
-  simp only [range_piU B hs hx e he L, finsum_eq_if, wU, InvAlg.X, Set.mem_setOf_eq]
+  simp only [range_piU B hs hx e he L, finsum_eq_if, wU, InvAlg.X, Set.mem_ofPred_eq]
   split_ifs with h1 h2 h3 h4 h5
   · simp
   · exact absurd ⟨⟨h1.1, h2.1, h1.2⟩, h2.2⟩ h3

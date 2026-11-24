@@ -82,7 +82,7 @@ def diagOf (F : FiniteSubfield) : F.1ˣ →* IdeleLimit :=
 theorem diagOf_map {F E : FiniteSubfield} (h : F ≤ E) (u : F.1ˣ) :
     letI := algebraOfLE h
     diagOf E (Units.map (algebraMap F.1 E.1).toMonoidHom u) = diagOf F u := by
-  letI := algebraOfLE h
+  let := algebraOfLE h
   change of E (IdeleGroup.diagonal E.1 _) = of F (IdeleGroup.diagonal F.1 u)
   rw [← ideleEmbedding_diagonal]
   exact of_ideleMap h _
@@ -92,8 +92,8 @@ theorem diagOf_eq_of_unitsIncl_eq {F F' : FiniteSubfield} (u : F.1ˣ) (u' : F'.1
   let M : FiniteSubfield := ⟨F.1 ⊔ F'.1, inferInstance⟩
   have hM : F ≤ M := show F.1 ≤ F.1 ⊔ F'.1 from le_sup_left
   have hM' : F' ≤ M := show F'.1 ≤ F.1 ⊔ F'.1 from le_sup_right
-  letI := algebraOfLE hM
-  letI := algebraOfLE hM'
+  let := algebraOfLE hM
+  let := algebraOfLE hM'
   rw [← diagOf_map hM, ← diagOf_map hM']
   congr 1
   apply unitsIncl_injective M

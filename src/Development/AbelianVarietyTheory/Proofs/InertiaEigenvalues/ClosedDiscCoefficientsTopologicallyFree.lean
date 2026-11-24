@@ -139,7 +139,7 @@ theorem disc_expand (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (A : Typ
       (∀ i x y, cD i (j x * y) = x * cD i y) ∧ (∀ i y, ‖cD i y‖ ≤ ‖y‖)) (y : Disc l (s X) ρ) :
     Filter.Tendsto (fun i => cD i y) Filter.cofinite (nhds 0) ∧
       HasSum (fun i => j (cD i y) * toDisc l (s X) ρ (TB.b i)) y := by
-  haveI := ultra l (s X) ρ
+  have := ultra l (s X) ρ
   obtain ⟨hc1, hc2, hc3⟩ := hc
   refine (denseRange_ofPre l (s X) ρ).induction_on y
     (isClosed_expand j hj.norm_le cD hc3 _ fun i => norm_toDisc_le _) fun p => ?_
@@ -361,7 +361,7 @@ theorem disc_coefficients : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK
   intro l _ K bk A _ s ι TB ρ h0 h1 j hj
   obtain ⟨cD, hc1, hc2, hc3⟩ := _root_.GlobalTheory.BSP.exists_discCoeff l K bk A s ι TB ρ h0 h1 j hj
   have hs := _root_.GlobalTheory.BSP.DiscExpand.disc_expand l K bk A s ι TB ρ h0 h1 j hj cD ⟨hc1, hc2, hc3⟩
-  haveI : IsUltrametricDist (Disc l (s X) ρ) := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l A (s X) ρ).1
+  have : IsUltrametricDist (Disc l (s X) ρ) := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l A (s X) ρ).1
   have hb : ∀ (x : bk.DS ρ) (i : ι), ‖j x * toDisc l (s X) ρ (TB.b i)‖ ≤ ‖x‖ := fun x i =>
     (norm_mul_le _ _).trans ((mul_le_mul (hj.norm_le x) (norm_toDisc_le _) (norm_nonneg _)
       (norm_nonneg _)).trans (mul_one _).le)

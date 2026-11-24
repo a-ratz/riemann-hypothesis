@@ -65,7 +65,7 @@ theorem continuous_iotaM : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
   intro k _ _ _ _ n
   have hemb : Continuous (GlobalTheory.BZMir.glEmb k (n + 1)) :=
     Continuous.units_map _ (GlobalTheory.CompanionTheory.LeibPhi.continuous_glEmbMat_comp (n + 1) continuous_id)
-  exact continuous_induced_rng.2 (hemb.comp continuous_subtype_val)
+  exact continuous_induced_rng.2 (hemb.comp continuous_subtypeVal)
 
 end GlobalTheory.CompanionTheory.LeibPhi
 

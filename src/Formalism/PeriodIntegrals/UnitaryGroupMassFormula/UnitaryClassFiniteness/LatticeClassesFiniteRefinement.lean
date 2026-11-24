@@ -156,7 +156,7 @@ theorem hform_trace_pos (σ : E →+* E) (hst : ∀ a : E, star a = σ a)
     (hσ : ∀ τ : E →+* ℂ, ∀ a : E, τ (σ a) = starRingEnd ℂ (τ a))
     (J : Matrix (Fin n) (Fin n) E) (hJ : ∀ τ : E →+* ℂ, (J.map τ).PosDef)
     (x : Fin n → E) (hx : x ≠ 0) : 0 < Algebra.trace ℚ E (hform J x x) := by
-  haveI : Nonempty (E →ₐ[ℚ] ℂ) := ⟨IsAlgClosed.lift⟩
+  have : Nonempty (E →ₐ[ℚ] ℂ) := ⟨IsAlgClosed.lift⟩
   have key : ∀ τ : E →ₐ[ℚ] ℂ, 0 < τ (hform J x x) := by
     intro τ
     have hτσ : ∀ a : E, τ (σ a) = star (τ a) := fun a => by
@@ -281,7 +281,7 @@ end Covol
 theorem hermLatFin_main : HermLatFin := by
   intro E _ _ n σ J T hσ hJ hT
   classical
-  letI : StarRing E := starOf σ (sigma_invol σ hσ)
+  let : StarRing E := starOf σ (sigma_invol σ hσ)
   have hst : ∀ a : E, star a = σ a := fun _ => rfl
   have hJs : ∀ i j, star (J i j) = J j i := fun i j => herm_hermitian σ hσ J hJ i j
   have hs := hform_isSymm J hJs

@@ -373,10 +373,10 @@ theorem exists_fnOf_eq_of_algebraic {F : Type} [Field F] {X : Scheme.{0}} [IsInt
     [GlobalTheory.IsNormalScheme X] (p : X ⟶ Sp F) (U : X.Opens) (hU : genericPoint X ∈ U)
     {a : X.functionField} (ha : ∃ P : Polynomial F, P ≠ 0 ∧ P.eval₂ (Cartier.constFn p) a = 0) :
     ∃ s : Γ(X, U), fnOf U hU s = a := by
-  haveI : Nonempty U := ⟨⟨_, hU⟩⟩
-  letI := (algX p U).toAlgebra
-  letI : Algebra F X.functionField := (Cartier.constFn p).toAlgebra
-  haveI : IsScalarTower F Γ(X, U) X.functionField :=
+  have : Nonempty U := ⟨⟨_, hU⟩⟩
+  let := (algX p U).toAlgebra
+  let : Algebra F X.functionField := (Cartier.constFn p).toAlgebra
+  have : IsScalarTower F Γ(X, U) X.functionField :=
     IsScalarTower.of_algebraMap_eq' (fnOf_comp_algX p U hU).symm
   obtain ⟨P, hP, hPa⟩ := ha
   have hint : IsIntegral F a := (show IsAlgebraic F a from
@@ -421,7 +421,7 @@ theorem descent : ∀ (F : Type) [Field F] (W V : Scheme.{0}) [IsIntegral W] [Is
   have hφt : φ (s - algX pW ⊤ c) = 0 := by
     rw [map_sub, ← RingHom.comp_apply φ, hφ, hc, sub_self]
   have hinv : ∃ Q : Polynomial F, Q ≠ 0 ∧ Q.eval₂ (Cartier.constFn pW) (a - Cartier.constFn pW c)⁻¹ = 0 := by
-    letI : Algebra F W.functionField := (Cartier.constFn pW).toAlgebra
+    let : Algebra F W.functionField := (Cartier.constFn pW).toAlgebra
     have h1 : IsAlgebraic F a :=
       ⟨P, hP, by rw [Polynomial.aeval_def, RingHom.algebraMap_toAlgebra]; exact hPa⟩
     have h2 : IsAlgebraic F (a - Cartier.constFn pW c) :=
@@ -585,7 +585,7 @@ theorem isHom_apply_eq {F Ω Ω' : Type} [Field F] [Field Ω] [Algebra F Ω] [Fi
 
 theorem keepsRad_of_flagCpt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (F : Type) [Field F] (e : F ≃+* c.F) (C : FlagCpt Z e) (X : Var F) (j : X.X ⟶ gen Z), IsOpenImmersion j → j ≫ genStr Z ≫ spMap e.toRingHom = X.str → ∀ (f : C.Y.X ⟶ X.X), f ≫ j = C.π → ∀ (f₀ : EigFrame Z (constF e X) (genericPt X ≫ j ≫ genι Z)) (Eb : Fr (ratOf X) Dw.mult 0) (A₀ : Mat Dw.mult X.Fn), Tied e X j f₀ Eb A₀ → (∀ (K : Type) [Field K] [IsAlgClosed K] (χ : c.F →+* K) (x : Sp K ⟶ X.X), x ≫ j ≫ genStr Z = spMap χ → ∀ g : EigFrame Z χ (x ≫ j ≫ genι Z), ∃! p : Sp K ⟶ C.Y.X, p ≫ f = x ∧ C.Carries p g) → ∀ (φ : X.Fn →ₐ[F] C.Y.Fn), (ratOf X).IsHom (ratOf C.Y) φ f → KeepsRad (ratOf X) (ratOf C.Y) φ f := by
   intro E _ _ _ H Dw l Xo c O _ β Z F _ e C X j hj hjs f hf f₀ Eb A₀ hT hlift φ hφ
-  haveI : CharZero F := RingHom.charZero e.toRingHom
+  have : CharZero F := RingHom.charZero e.toRingHom
   obtain ⟨Y', φ', f', S', -, hR⟩ := tower _ (ratOf X) X.dim Eb (good_ratOf X) (fun _ => Nat.zero_le _) rfl
   change Y'.X ⟶ X.X at f'
   obtain ⟨h, hh, hbij⟩ := _root_.GlobalTheory.ShFam.ClsMap.main E H Dw l Xo c O β Z F e C X j hj hjs f hf f₀ Eb A₀ hT hlift Y' φ' f' S' hR

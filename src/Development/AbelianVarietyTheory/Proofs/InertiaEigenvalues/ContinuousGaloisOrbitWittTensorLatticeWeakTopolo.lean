@@ -72,7 +72,7 @@ theorem continuous_frac_act {A K G : Type} [CommRing A] [IsDomain A] [ValuationR
     (ho : ∀ (x a : A) (g₀ : G), a ≠ 0 → ∀ᶠ g in 𝓝 g₀, ¬ (τ g x - τ g₀ x ∣ a)) :
     letI : Valued K (ValuationRing.ValueGroup A K) := Valued.mk' (ValuationRing.valuation A K)
     Continuous fun p : G × K => σ p.1 p.2 := by
-  letI V : Valued K (ValuationRing.ValueGroup A K) := Valued.mk' (ValuationRing.valuation A K)
+  let V : Valued K (ValuationRing.ValueGroup A K) := Valued.mk' (ValuationRing.valuation A K)
   have hle : ∀ x y : K, Valued.v x ≤ Valued.v y ↔ ∃ c : A, algebraMap A K c * y = x := by
     intro x y
     change (∃ c : A, c • y = x) ↔ _
@@ -153,17 +153,17 @@ theorem continuous_orbit_twTop :
       Continuous fun g : ↥(GK K) => TWact (AI.gRW LL (g : GQ l)) T g y := by
   intro l _ P AI K LL T d b y
 
-  letI := zlMod T
-  haveI := zlTower T
-  letI tC : TopologicalSpace (Cb l) := cbTop l
-  letI tW : TopologicalSpace (WCb l) := wTop l
-  haveI hWr : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
+  let := zlMod T
+  have := zlTower T
+  let tC : TopologicalSpace (Cb l) := cbTop l
+  let tW : TopologicalSpace (WCb l) := wTop l
+  have hWr : IsTopologicalRing (WCb l) := GlobalTheory.WeakTop.isTopologicalRing_witt
   have hW : Continuous (algebraMap ℤ_[l] (WCb l)) :=
     GlobalTheory.WeakTop.continuous_padicInt_witt (zlW l (Cb l))
   have ha : Continuous fun q : GQ l × WCb l => (AI.actWCbHom q.1).toAlgHom q.2 :=
     GlobalTheory.WeakTop.continuous_map_witt (fun g : GQ l => (autCb l (AI.actT g)).toRingHom)
       (continuous_autCb_cbTop AI)
-  haveI := LL.2
+  have := LL.2
   have hc : ∀ c : ℤ_[l], algebraMap ↥(OL LL) ↥LL.1 (algebraMap ℤ_[l] ↥(OL LL) c) =
       algebraMap ℚ_[l] ↥LL.1 (algebraMap ℤ_[l] ℚ_[l] c) := fun c =>
     (IsScalarTower.algebraMap_apply ℤ_[l] ↥(OL LL) ↥LL.1 c).symm.trans
@@ -173,7 +173,7 @@ theorem continuous_orbit_twTop :
     hemb.continuous_iff.2 (GlobalTheory.Cyc.continuous_coord_lat hc T b (b j) i)
   have h2 : ∀ w : WCb l, Continuous fun g : ↥(GK K) => (AI.actWCbHom (g : GQ l)).toAlgHom w := fun w =>
     Continuous.comp (g := fun q : GQ l × WCb l => (AI.actWCbHom q.1).toAlgHom q.2)
-      (f := fun g : ↥(GK K) => ((g : GQ l), w)) ha (continuous_subtype_val.prodMk continuous_const)
+      (f := fun g : ↥(GK K) => ((g : GQ l), w)) ha (continuous_subtypeVal.prodMk continuous_const)
   have hs : ∀ i, Continuous fun g : ↥(GK K) => ∑ j, algebraMap ℤ_[l] (WCb l) (b.repr (T.actT g (b j)) i) *
       (AI.actWCbHom (g : GQ l)).toAlgHom (GlobalTheory.WeakTop.coords (WCb l) ↥(OL LL) b y j) := fun i =>
     continuous_finsetSum _ fun j _ => (hW.comp (hρ i j)).mul (h2 _)

@@ -339,10 +339,10 @@ theorem jvMat_mem (v : InfinitePlace E) (u : UN N) : jvMat v u.1 ∈ Matrix.unit
   simp only [Matrix.mul_apply, Matrix.star_apply, jvMat, Matrix.of_apply, Finset.sum_apply, Pi.mul_apply,
     Pi.star_apply, Matrix.one_apply]
   by_cases hw : w = v
-  · simp only [hw, if_true]
+  · simp only [hw, ite_true]
     rw [hij]
     split_ifs <;> rfl
-  · simp only [hw, if_false]
+  · simp only [hw, ite_false]
     by_cases h : i = j
     · subst h; simp
     · simp [h]
@@ -609,7 +609,7 @@ theorem mem_ktype_space_along_chart (W : Submodule ℂ (Kinf E N → ℂ)) (v : 
     (hs : φ ∈ Sm E N) (hφ : ∀ g, (fun k : Kinf E N => φ (g * infGL E N (Unitary.toUnits k))) ∈ W) (g : GA E N)
     {y : Mat N} (hy : y ∈ GLs N) : (fun u : UN N => Bridge.along v g φ (y * u.1)) ∈ S0 W v := by
   refine ⟨(contDiffOn_along v hs g).continuousOn.comp_continuous
-    ((GlobalTheory.CompanionTheory.RCalc.mulL y).continuous.comp continuous_subtype_val : Continuous fun u : UN N => y * u.1)
+    ((GlobalTheory.CompanionTheory.RCalc.mulL y).continuous.comp continuous_subtypeVal : Continuous fun u : UN N => y * u.1)
     fun u => GlobalTheory.CompanionTheory.RCalc.mul_mem_GLs hy (GlobalTheory.CompanionTheory.RCalc.unitary_mem_GLs u), fun u' => ?_⟩
   set Y := Matrix.GeneralLinearGroup.mkOfDetNeZero y hy
   refine ⟨fun k => φ ((g * infP N (Pi.mulSingle v (Y * Unitary.toUnits u'))) * infGL E N (Unitary.toUnits k)),
@@ -971,8 +971,8 @@ theorem continuous_toUnitsU (N : ℕ) :
     Continuous (fun u : Matrix.unitaryGroup (Fin N) ℂ => (Unitary.toUnits u : G N)) := by
   rw [Units.continuous_iff]
   constructor
-  · exact continuous_subtype_val
-  · exact continuous_star.comp continuous_subtype_val
+  · exact continuous_subtypeVal
+  · exact continuous_star.comp continuous_subtypeVal
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {N : ℕ}
 
@@ -1040,7 +1040,7 @@ theorem local_repro (hK : KerEx) (hM : MultAlg) (hB : Bridge.BridgeSt) (W : Subm
     ⟨1, fun _ => 1, fun _ => [], fun _ => g, fun _ => k, fun _ => ⟨hg, hk⟩, fun y _ => by simp,
       fun χ => by simp [zVal]⟩
   have hact := (hM N μ0 (Mv W hW v) k k _ _ T T hmult hmult).2.2.2
-  have : CompleteSpace (Mv W hW v).V := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (Mv W hW v).V := FiniteDimensional.completeSpace ℂ _
   set b : G N → (Mv W hW v).V := fun y =>
     (InnerProductSpace.toDual ℂ (Mv W hW v).V).symm ((evL W hW v 1).comp (k y.val)) with hbdef
   have hb : ∀ y w, ⟪b y, w⟫_ℂ = toFun W v (k y.val w) 1 := fun y w => by
@@ -1179,7 +1179,7 @@ theorem reproEx (hK : KerEx) (hM : MultAlg) (hB : Bridge.BridgeSt) : ReproEx := 
       (U0 : Set (GA E N)) ∩ pInfH N ⁻¹' C ⊆ D := fun C hC =>
     ⟨splitGA N '' (C ×ˢ (K0 : Set _)), (hC.prod hK0c).image (splitGA N).continuous, fun y hy =>
       ⟨(pInfH N y, gFin y), ⟨hy.2, hy.1⟩, (hsplit y).symm⟩⟩
-  haveI := ReproA.pi_isHaar (ι := InfinitePlace E) μ0
+  have := ReproA.pi_isHaar (ι := InfinitePlace E) μ0
   obtain ⟨c, hc, hcF⟩ := ReproA.haar_restrict_eq ν (Measure.pi fun _ : InfinitePlace E => μ0) (pInfH N)
     (continuous_pInfH N) (infPH N) hσ U0 hU0o hσU hprop
   set A : (InfinitePlace E → G N) → ℂ := fun t => ∏ v, a v (t v) with hAdef

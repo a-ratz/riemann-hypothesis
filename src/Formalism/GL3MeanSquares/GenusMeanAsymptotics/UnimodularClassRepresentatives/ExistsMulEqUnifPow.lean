@@ -248,7 +248,7 @@ theorem exists_mul_eq_unif_pow {𝔭 : Ideal (𝓞 F)} (h𝔭 : 𝔭.IsMaximal) 
     exact h𝔭.ne_top
   obtain ⟨𝔟, hb, hnd⟩ := (FiniteMultiplicity.of_not_isUnit hun hc').exists_eq_pow_mul_and_not_dvd
   rw [Ideal.dvd_iff_le] at hnd
-  obtain ⟨s, hsb, hsp⟩ := SetLike.not_le_iff_exists.mp hnd
+  obtain ⟨s, hsb, hsp⟩ := IsConcreteLE.not_le_iff_exists.mp hnd
   set m := multiplicity 𝔭 (Ideal.span {(n : 𝓞 F)}) with hm
   have h1 : π ^ m * s ∈ Ideal.span {(n : 𝓞 F)} := by
     rw [hb]
@@ -403,7 +403,7 @@ theorem relIndex_matL (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) (hF :
         rw [Matrix.single_apply_same, mul_left_comm, hfd, pow_add]
         ring
       · refine ⟨0, (pK K 𝔭 (k + c)).zero_mem, ?_⟩
-        rw [Matrix.single_apply, if_neg h, mul_zero, mul_zero]
+        rw [Matrix.single_apply, ite_eq_right h, mul_zero, mul_zero]
     obtain ⟨w, hw, e⟩ := hle h1 i j
     rw [one_mul, one_mul, Matrix.single_apply_same] at e
     obtain ⟨b, hb, rfl⟩ := (mem_pK_iff_unif h𝔭 hπ hπ').1 hw

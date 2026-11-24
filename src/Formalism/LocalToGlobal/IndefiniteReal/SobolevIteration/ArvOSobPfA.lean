@@ -115,7 +115,7 @@ theorem append_line {N d : ℕ} (r : Fin N → ℝ) (t : Fin d → ℝ) (i : Fin
   · have hne : (Fin.natAdd N j : Fin (N + d)) ≠ Fin.castAdd d i := by
       intro h
       have := congrArg Fin.val h
-      simp only [Fin.coe_natAdd, Fin.coe_castAdd] at this
+      simp only [Fin.val_natAdd, Fin.val_castAdd] at this
       omega
     simp [Pi.single_apply, hne]
 
@@ -144,7 +144,7 @@ theorem pd_append {N d : ℕ} (f : (Fin (N + d) → ℝ) → E) (hf : Differenti
   simp only [OrbStPf.pd]
   have hg : Differentiable ℝ (fun r : Fin N → ℝ => Fin.append r t) :=
     (contDiff_infty_iff_fderiv.1 (contDiff_append_left t)).1
-  rw [fderiv_comp' r (hf _) (hg r), ContinuousLinearMap.comp_apply]
+  rw [fderiv_fun_comp r (hf _) (hg r), ContinuousLinearMap.comp_apply]
   congr 1
   have h1 : HasDerivAt (fun s : ℝ => Fin.append (r + s • (Pi.single i 1 : Fin N → ℝ)) t)
       (fderiv ℝ (fun r : Fin N → ℝ => Fin.append r t) r (Pi.single i 1)) 0 := by
@@ -196,7 +196,7 @@ theorem foldCont_holds : FoldCont := by
     intro t
     have hv := (smooth_oneProd hπ hw Y hY t)
     have h0 := hval _ hv.1 0
-    simp only [zero_smul, NormedSpace.exp_zero, hπ.1, ContinuousLinearMap.one_apply] at h0
+    simp only [zero_smul, NormedSpace.exp_zero, hπ.1, one_apply_eq_self] at h0
     have e : OrbStPf.orb π Z (π (oneProd Y t) w) 0 = fun r => OrbStPf.orb π W w 0 (Fin.append r t) := by
       funext r
       have hA : (List.ofFn fun i => NormedSpace.exp (r i • Z i)).prod ∈ Formalism.QuantumDeterminants.UH G :=

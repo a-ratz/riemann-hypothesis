@@ -121,7 +121,7 @@ theorem exists_const (B : (∀ i, E i) → W → (∀ i, E i) → W → ℂ) (w�
     ∃ c : ℂ, ∀ v w v' w', B v w v' w' = c * ((∏ i, ⟪v i, v' i⟫_ℂ) * ⟪w, w'⟫_ℂ) := by
   by_cases hall : ∀ i, Nontrivial (E i)
   · have he : ∀ i, ∃ e : E i, ‖e‖ = 1 := fun i => by
-      haveI := hall i
+      have := hall i
       exact exists_norm_eq (E i) zero_le_one
     choose e he using he
     have hee : ∀ i, ⟪e i, e i⟫_ℂ = 1 := fun i => inner_self_eq_one_of_norm_eq_one' (he i)
@@ -170,7 +170,7 @@ theorem exists_const (B : (∀ i, E i) → W → (∀ i, E i) → W → ℂ) (w�
     rw [hw, hs Finset.univ v v' (by simp) (by simp)]
     ring
   · obtain ⟨i, hi⟩ := not_forall.mp hall
-    haveI : Subsingleton (E i) := not_nontrivial_iff_subsingleton.mp hi
+    have : Subsingleton (E i) := not_nontrivial_iff_subsingleton.mp hi
     refine ⟨0, fun v w v' w' => ?_⟩
     obtain ⟨c, hc⟩ := h1 w w' i v v'
     have k := hc (v i) (v' i)

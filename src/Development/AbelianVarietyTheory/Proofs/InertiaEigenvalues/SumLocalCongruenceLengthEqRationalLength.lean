@@ -400,13 +400,13 @@ theorem fg_inf_sup_of_isCompl (K V : Type) [Field K] [NumberField K] [AddCommGro
   let q : V →ₗ[𝓞 K] V := p.restrictScalars (𝓞 K)
   have hpU : ∀ x, p x ∈ U := fun x => (Submodule.linearProjOfIsCompl U U' h x).2
   have hpl : ∀ x ∈ U, p x = x := fun x hx =>
-    congrArg Subtype.val (Submodule.linearProjOfIsCompl_apply_left h ⟨x, hx⟩)
+    congrArg Subtype.val (Submodule.projectionOnto_apply_left h ⟨x, hx⟩)
   have hpr : ∀ x ∈ U', p x = 0 := fun x hx => by
-    have := (Submodule.linearProjOfIsCompl_apply_eq_zero_iff h).2 hx
+    have := (Submodule.projectionOnto_apply_eq_zero_iff h).2 hx
     show ((Submodule.linearProjOfIsCompl U U' h x : U) : V) = 0
     exact congrArg Subtype.val this
   have hsub : ∀ x, x - p x ∈ U' := fun x => by
-    rw [← Submodule.linearProjOfIsCompl_apply_eq_zero_iff h]
+    rw [← Submodule.projectionOnto_apply_eq_zero_iff h]
     have h1 : p (x - p x) = 0 := by rw [map_sub, hpl _ (hpU x), sub_self]
     have h2 : ((Submodule.linearProjOfIsCompl U U' h (x - p x) : U) : V) = 0 := h1
     exact_mod_cast h2
@@ -507,7 +507,7 @@ theorem finiteLength_projection_quotient :
       rw [this]
       exact Submodule.sub_mem _ (Submodule.mem_sup_left hl) (Submodule.mem_sup_right (hπB l))
   have hfg : up.FG := hmap ▸ hL.map π
-  haveI : Module.Finite O up := Module.Finite.iff_fg.mpr hfg
+  have : Module.Finite O up := Module.Finite.iff_fg.mpr hfg
   have htors : Module.IsTorsion O (↥up ⧸ (L ⊓ G.restrictScalars O).comap up.subtype) := by
     intro q
     induction q using Submodule.Quotient.induction_on with
@@ -614,12 +614,12 @@ theorem part_projector_mem_adjoin :
     · exact ⟨1, fun h' => absurd h h', fun h1 => hmax.ne_top ((Ideal.eq_top_iff_one _).2 h1)⟩
     · have : ¬ NCov.cls φ ≤ NCov.cls ψ0 := fun hle =>
         h ((NCov.cls_isMaximal φ).eq_of_le hmax.ne_top hle)
-      obtain ⟨s, hs1, hs2⟩ := SetLike.not_le_iff_exists.1 this
+      obtain ⟨s, hs1, hs2⟩ := IsConcreteLE.not_le_iff_exists.1 this
       exact ⟨s, fun _ => hs1, hs2⟩
   choose s hsin hsout using hs
   set FA := F.filter (fun ψ => NCov.cls ψ = NCov.cls ψ0)
   set FB := F.filter (fun ψ => NCov.cls ψ ≠ NCov.cls ψ0)
-  letI : IsMulCommutative (Algebra.adjoin O S) :=
+  let : IsMulCommutative (Algebra.adjoin O S) :=
     Algebra.isMulCommutative_adjoin O (fun a ha b hb _ => hS a ha b hb)
   open scoped IsMulCommutative in
   obtain ⟨f, hfdef⟩ : ∃ f : Algebra.adjoin O S, f = ∏ φ ∈ FB, s φ := ⟨_, rfl⟩
@@ -714,8 +714,8 @@ theorem form_gen_span {L V M ι : Type} [Field L] [AddCommGroup V] [Module L V] 
     (hb : LinearIndependent ℂ (fun i => j (b i)) ∧ Submodule.span ℂ (Set.range fun i => j (b i)) = ⊤)
     (T : Finset M) (hT : Submodule.span ℂ (T : Set M) = ⊤) (hsub : ∀ x ∈ T, x ∈ Set.range j) :
     {x | j x ∈ T}.Finite ∧ Submodule.span L {x | j x ∈ T} = ⊤ := by
-  haveI : Finite ι := hb.1.finite
-  haveI := Fintype.ofFinite ι
+  have : Finite ι := hb.1.finite
+  have := Fintype.ofFinite ι
   let B : Module.Basis ι ℂ M := Module.Basis.mk hb.1 hb.2.ge
   have hB : ∀ i, B i = j (b i) := fun i => by simp [B]
   have key : ∀ l : V →ₗ[L] L, ∃ l' : M →ₗ[ℂ] ℂ, ∀ x, l' (j x) = σ (l x) := fun l => by
@@ -810,7 +810,7 @@ theorem exists_proj (T : NormalizedLocalCompatibility D M) (hstd : HeckeStdTw T.
     ∃ t ∈ heckeAlg T.B j w, (∀ x ∈ NCov.part (heckeAlg T.B j w) I, t x = x) ∧
       ∀ x ∈ NCov.off (heckeAlg T.B j w) I, t x = 0 := by
   obtain ⟨hfd, -⟩ := finrank_V T.B j w
-  haveI := hfd
+  have := hfd
   obtain ⟨hS, hsplit, hint⟩ := gens_hypsTw T.B hstd h1 h2 (Or.inl hw)
   exact _root_.GlobalTheory.part_projector_mem_adjoin (T.B.Oc j w) (FractionRing (T.B.Oc j w)) (T.B.V j w) (heckeGens T.B j w) hS hsplit hint
     (latLoc T.B j w) (latLoc_fg T.B j w) (latLoc_span T.B j w)
@@ -823,7 +823,7 @@ theorem main : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCompatibility D M)
   classical
   intro D M T j w h1 h2 hw hstd hl y
   obtain ⟨hfd, -⟩ := finrank_V T.B j w
-  haveI := hfd
+  have := hfd
   obtain ⟨hS, hsplit, hint⟩ := gens_hypsTw T.B hstd h1 h2 (Or.inl hw)
   have hinj := IsFractionRing.injective (T.B.Oc j w) (FractionRing (T.B.Oc j w))
   choose tp htp hpart hoff using exists_proj T hstd h1 h2 hw hl
@@ -843,7 +843,7 @@ theorem main : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCompatibility D M)
 
     have ex : ∀ i (h : i ∈ D.nd.locs j w), ∃ z, z ∈ D.nd.MtIn i ∧ T.Psi j w i h z = tp (T.mx j w i) y := by
       intro i h
-      haveI := RingHomInvPair.of_ringEquiv (T.phO j w i h)
+      have := RingHomInvPair.of_ringEquiv (T.phO j w i h)
       have hm : tp (T.mx j w i) y ∈ NCov.latPart (heckeAlg T.B j w) (latC T.B j w) (T.mx j w i) := by
         refine Submodule.mem_inf.2 ⟨(proj_facts (hc _) _ (hpart _) (hoff _) y).1, ?_⟩
         exact Submodule.mem_sup_left (alg_stable T.B hl _ (htp _) y hy)
@@ -876,7 +876,7 @@ theorem main : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCompatibility D M)
         exact part_le_off _ hne (proj_facts (hc _) _ (hpart _) (hoff _) y).1
   · rintro ⟨z, hz, rfl⟩
     refine Submodule.sum_mem _ fun i _ => ?_
-    haveI := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
+    have := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
     refine hlp (T.mx j w i.1) _ ?_
     rw [← map_psiO_MtIn T hstd i.2]
     exact Submodule.mem_map_of_mem (hz i.1)
@@ -943,7 +943,7 @@ private theorem exists_integral_inverse_coefficients {K : Type} [Field K] [Numbe
     exact hk₀ ((FractionalIdeal.spanFinset_eq_zero.1 h) k₀ (Finset.mem_univ _))
   have h1 : (1 : K) ∈ (I : Submodule (𝓞 K) K) *
       ((I⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K) := by
-    rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ hI]
+    rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ hI]
     exact (FractionalIdeal.mem_one_iff _).2 ⟨1, map_one _⟩
   have key : ∃ β : Fin n → K,
       (∀ j, β j ∈ ((I⁻¹ : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) : Submodule (𝓞 K) K)) ∧
@@ -965,10 +965,10 @@ private theorem exists_integral_inverse_coefficients {K : Type} [Field K] [Numbe
   obtain ⟨β, hβI, hβ1⟩ := key
   refine ⟨β, fun j k => ?_, fun k => by rw [← hβ1, mul_one]⟩
   have hck : c k ∈ I := by
-    rw [← FractionalIdeal.mem_coe, hIc]
+    rw [← FractionalIdeal.mem_coeToSubmodule, hIc]
     exact Submodule.subset_span ⟨k, rfl⟩
   obtain ⟨r, hr⟩ := (FractionalIdeal.mem_one_iff _).1
-    ((FractionalIdeal.mem_inv_iff hI).1 (FractionalIdeal.mem_coe.1 (hβI j)) (c k) hck)
+    ((FractionalIdeal.mem_inv_iff hI).1 (FractionalIdeal.mem_coeToSubmodule.1 (hβI j)) (c k) hck)
   exact ⟨r, hr⟩
 
 open NumberField IsDedekindDomain Module in
@@ -1303,16 +1303,16 @@ open Formalism.L2.Col TensorProduct
 
 theorem lenUnit_span_eq_lenUW : ∀ (K : Type) [Field K] [NumberField K] (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] (e : K →+* FractionRing O) (V V' : Type) [AddCommGroup V] [Module K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] [FiniteDimensional K V] [AddCommGroup V'] [Module (FractionRing O) V'] [Module O V'] [IsScalarTower O (FractionRing O) V'] (iV : V →ₛₗ[e] V') (ι : Type) (b : Basis ι K V), LinearIndependent (FractionRing O) (fun a => iV (b a)) → (∀ a : 𝓞 K, e (a : K) ∈ (algebraMap O (FractionRing O)).range) → ∀ (w : HeightOneSpectrum (𝓞 K)) (l : ℕ), l.Prime → (l : 𝓞 K) ∈ w.asIdeal → (∀ a : 𝓞 K, ∀ z : O, algebraMap O (FractionRing O) z = e (a : K) → (a ∈ w.asIdeal ↔ ¬ IsUnit z)) → ∀ (A B : Submodule (𝓞 K) V), A.FG → B ≤ A → lenUnit (O := O) l (↥(Submodule.span O (iV '' (A : Set V))) ⧸ (Submodule.span O (iV '' (B : Set V))).comap (Submodule.span O (iV '' (A : Set V))).subtype) = Formalism.L2.Col.lenUW w A B := by
   intro K _ _ O _ _ _ e V V' _ _ _ _ _ _ _ _ _ iV ι b hli he w l hl hlw hw A B _ _
-  letI : Algebra (Ow w) O := (owHom e he w hw).toAlgebra
-  letI : Algebra K (FractionRing O) := e.toAlgebra
-  haveI : IsScalarTower (Ow w) K (FractionRing O) := IsScalarTower.of_algebraMap_eq fun x => by
+  let : Algebra (Ow w) O := (owHom e he w hw).toAlgebra
+  let : Algebra K (FractionRing O) := e.toAlgebra
+  have : IsScalarTower (Ow w) K (FractionRing O) := IsScalarTower.of_algebraMap_eq fun x => by
     rw [IsScalarTower.algebraMap_apply (Ow w) O (FractionRing O)]
     exact algebraMap_owHom e he w hw x
-  haveI : FaithfulSMul (Ow w) O :=
+  have : FaithfulSMul (Ow w) O :=
     (faithfulSMul_iff_algebraMap_injective _ _).2 (owHom_injective e he w hw)
-  haveI : IsLocalHom (algebraMap (Ow w) O) := owHom_isLocalHom e he w hw
-  letI : Module K V' := Module.compHom V' e
-  haveI : IsScalarTower K (FractionRing O) V' := ⟨fun c x y => by
+  have : IsLocalHom (algebraMap (Ow w) O) := owHom_isLocalHom e he w hw
+  let : Module K V' := Module.compHom V' e
+  have : IsScalarTower K (FractionRing O) V' := ⟨fun c x y => by
     show (c • x) • y = e c • (x • y)
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
@@ -1363,7 +1363,7 @@ theorem lenUnit_span_eq_lenUW : ∀ (K : Type) [Field K] [NumberField K] (O : Ty
   have hpos := GlobalTheory.ramificationIdx_maximalIdeal_pos (Ow w) O
   unfold lenUnit lenUW
   rw [hlen, hden]
-  simp only [ENat.toNat_mul, ENat.toNat_coe]
+  simp only [ENat.toNat_mul, ENat.toNat_natCast]
   push_cast
   exact mul_div_mul_right _ _ (by exact_mod_cast hpos.ne')
 
@@ -1394,7 +1394,7 @@ theorem iV_eq_sum_Psi : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCompatibi
   classical
   intro D M T j w h1 h2 hw hstd y
   obtain ⟨hfd, -⟩ := finrank_V T.B j w
-  haveI := hfd
+  have := hfd
   obtain ⟨hS, hsplit, hint⟩ := gens_hypsTw T.B hstd h1 h2 (Or.inl hw)
   have hinj := IsFractionRing.injective (T.B.Oc j w) (FractionRing (T.B.Oc j w))
   rw [← sub_eq_zero]
@@ -1480,7 +1480,7 @@ def gK (T : NormalizedLocalCompatibility D M) {j : ℕ} {w : D.what₂.places.Pl
 theorem mem_gK (T : NormalizedLocalCompatibility D M) {j : ℕ} {w : D.what₂.places.Pl} (i : {i // i ∈ D.nd.locs j w})
     (Y : Set (D.nd.X i.1)) (z : T.B.V j w) :
     z ∈ gK T i Y ↔ ∃ y ∈ D.nd.eigSum i.1 Y, T.Psi j w i.1 i.2 y = z := by
-  haveI : RingHomSurjective (T.phK j w i.1 i.2).toRingHom := ⟨(T.phK j w i.1 i.2).surjective⟩
+  have : RingHomSurjective (T.phK j w i.1 i.2).toRingHom := ⟨(T.phK j w i.1 i.2).surjective⟩
   unfold gK
   exact Submodule.mem_map
 
@@ -1505,7 +1505,7 @@ theorem length_loc (T : NormalizedLocalCompatibility D M) {j : ℕ} {w : D.what�
     qLen ((gK T i ↑(D.nd.Zgood i.1)).restrictScalars (T.B.Oc j w)) (lO T i)
       ((gK T i (↑(D.nd.Zgood i.1))ᶜ).restrictScalars (T.B.Oc j w)) =
     Module.length (D.nd.O i.1) (↥(D.nd.MtUp i.1) ⧸ (D.nd.MtLow i.1).comap (D.nd.MtUp i.1).subtype) := by
-  haveI := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
+  have := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
   unfold qLen
   rw [← map_rs_gK, ← map_rs_gK]
   unfold lO
@@ -1586,9 +1586,9 @@ theorem sum_etaLoc_eq_etaRat : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCo
 
   obtain ⟨hint, hlw, hunit⟩ := _root_.GlobalTheory.NLocPlace.ec_int_resChar_unit D M T.B j w
   have hfinI := finite_chooseBasisIndex (D := D) j w
-  haveI := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
+  have := Fintype.ofFinite (Module.Free.ChooseBasisIndex D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j))
   let b := Module.Free.chooseBasis D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j)
-  haveI : FiniteDimensional D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := Module.Finite.of_basis b
+  have : FiniteDimensional D.what₂.LL (D.what₂.MtL (D.what₂.muTw w) j) := Module.Finite.of_basis b
   have hb := T.B.iV_basis j w b
   have hjinj : Function.Injective (D.what₂.jMt (D.what₂.muTw w) j) := by
     have hli := (D.what₂.jMt_basis (D.what₂.muTw w) j b).1
@@ -1634,7 +1634,7 @@ theorem sum_etaLoc_eq_etaRat : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCo
     rw [hup, hlow, hlatC]
 
   obtain ⟨hfd, -⟩ := finrank_V T.B j w
-  haveI := hfd
+  have := hfd
   obtain ⟨hS, -, -⟩ := gens_hypsTw T.B hstd h1 h2 (Or.inl hw)
   have hinjK := IsFractionRing.injective (T.B.Oc j w) (FractionRing (T.B.Oc j w))
   have hpart : ∀ (i : {i // i ∈ D.nd.locs j w}) (Y : Set (D.nd.X i.1)),
@@ -1716,7 +1716,7 @@ theorem sum_etaLoc_eq_etaRat : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCo
     fun i hi => Submodule.disjoint_def.2 fun x hx hx' => Submodule.disjoint_def.1 (hdisGB i hi) x hx hx'
   have hLle : ∀ i ∈ F, lO T i ≤ (GK i).restrictScalars (T.B.Oc j w) ⊔ (BK i).restrictScalars (T.B.Oc j w) := by
     intro i _ z hz
-    haveI := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
+    have := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
     unfold lO at hz
     obtain ⟨y, -, rfl⟩ := Submodule.mem_map.1 hz
     have hy : y ∈ D.nd.eigSum i.1 ↑(D.nd.Zgood i.1) ⊔ D.nd.eigSum i.1 (↑(D.nd.Zgood i.1))ᶜ := by
@@ -1732,7 +1732,7 @@ theorem sum_etaLoc_eq_etaRat : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCo
     constructor
     · rintro ⟨μ, hμ⟩
       have hch : ∀ i : {i // i ∈ D.nd.locs j w}, ∃ z ∈ D.nd.MtIn i.1, T.Psi j w i.1 i.2 z = μ i := fun i => by
-        haveI := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
+        have := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
         obtain ⟨z, hz, e⟩ := Submodule.mem_map.1 (μ i).2
         exact ⟨z, hz, e⟩
       choose zf hzf hzf' using hch
@@ -1748,7 +1748,7 @@ theorem sum_etaLoc_eq_etaRat : ∀ (D : D7) (M : MtFam D) (T : NormalizedLocalCo
         exact (hzf' i).symm
     · rintro ⟨z, hz, rfl⟩
       refine ⟨fun i => ⟨T.Psi j w i.1 i.2 (z i.1), ?_⟩, rfl⟩
-      haveI := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
+      have := RingHomInvPair.of_ringEquiv (T.phO j w i.1 i.2)
       exact Submodule.mem_map_of_mem (f := psiO T i.2) (hz i.1)
   have asum : qLen (F.sup (fun i => (GK i).restrictScalars (T.B.Oc j w))) (F.sup (lO T))
       (F.sup (fun i => (BK i).restrictScalars (T.B.Oc j w))) =

@@ -439,7 +439,7 @@ theorem ahFactor_trivial_of_theta : ∀ (g : ℕ) (Λ : Submodule ℤ (Fin g →
   have hnorm : ∀ l ∈ Λ, ∀ z, ‖θ (z + l)‖ = ‖θ z‖ := fun l hl z => by
     rw [hper ⟨l, hl⟩ z, norm_mul, hχ, _root_.one_mul]
   obtain ⟨s, b, hfin, hbΛ⟩ := GlobalTheory.ThetaLiouville.exists_basis_in Λ hΛ
-  haveI : Fintype s := Fintype.ofFinite s
+  have : Fintype s := Fintype.ofFinite s
   have hspan : ∀ x ∈ Submodule.span ℤ (Set.range b), x ∈ Λ := by
     intro x hx
     induction hx using Submodule.span_induction with

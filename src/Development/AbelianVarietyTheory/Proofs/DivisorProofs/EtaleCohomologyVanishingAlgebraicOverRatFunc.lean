@@ -238,7 +238,7 @@ private theorem exists_ne_zero_homogeneous_zero_of_forall_subfield {F K : Type} 
     ∃ x : Fin n → K, x ≠ 0 ∧ MvPolynomial.eval x f = 0 := by
   classical
   set E := IntermediateField.adjoin F (f.coeffs : Set K) with hE
-  haveI : FiniteDimensional F E := IntermediateField.finiteDimensional_adjoin
+  have : FiniteDimensional F E := IntermediateField.finiteDimensional_adjoin
     (fun x _ => Algebra.IsIntegral.isIntegral x)
   obtain ⟨fE, hfE⟩ : f ∈ Set.range (MvPolynomial.map (algebraMap E K)) := by
     rw [MvPolynomial.mem_range_map_iff_coeffs_subset]
@@ -455,7 +455,7 @@ private theorem exists_ne_zero_polynomial_zero_of_homogeneous {k : Type} [Field 
     rw [Finset.sum_eq_single j]
     · simp
     · intro b _ hb
-      rw [if_neg]
+      rw [ite_eq_right]
       intro h
       exact hb (Fin.ext h.symm)
     · simp
@@ -544,11 +544,11 @@ theorem cdp_le_one_of_ne_char (k K Ω : Type) [Field k] [IsAlgClosed k] [Field K
   obtain ⟨e⟩ := nonempty_zmod_addEquiv_rootsOfUnity K Ω hp hpK
   have h := cdp_le_of_forall_openSubgroup hp (galRootsOfUnity.{0} K Ω p) e 1 (fun U => by
     let E := fixedField (U : Subgroup (Ω ≃ₐ[K] Ω))
-    letI : Algebra (RatFunc k) E := ((algebraMap K E).comp (algebraMap (RatFunc k) K)).toAlgebra
-    haveI : IsScalarTower (RatFunc k) K E := IsScalarTower.of_algebraMap_eq' rfl
-    haveI : Algebra.IsAlgebraic K E := inferInstance
-    haveI : Algebra.IsAlgebraic (RatFunc k) E := Algebra.IsAlgebraic.trans (RatFunc k) K E
-    haveI : IsGalois E Ω := IsGalois.tower_top_of_isGalois K E Ω
+    let : Algebra (RatFunc k) E := ((algebraMap K E).comp (algebraMap (RatFunc k) K)).toAlgebra
+    have : IsScalarTower (RatFunc k) K E := IsScalarTower.of_algebraMap_eq' rfl
+    have : Algebra.IsAlgebraic K E := inferInstance
+    have : Algebra.IsAlgebraic (RatFunc k) E := Algebra.IsAlgebraic.trans (RatFunc k) K E
+    have : IsGalois E Ω := IsGalois.tower_top_of_isGalois K E Ω
     have hB : Subsingleton (cohomology (Rep.res (U : Subgroup (Ω ≃ₐ[K] Ω)).subtype
         (galUnits.{0} K Ω)) 2) := by
       have := subsingleton_brauer k E Ω
@@ -556,7 +556,7 @@ theorem cdp_le_one_of_ne_char (k K Ω : Type) [Field k] [IsAlgClosed k] [Field K
     have h1 : Subsingleton (cohomology (Rep.res (U : Subgroup (Ω ≃ₐ[K] Ω)).subtype
         (galUnits.{0} K Ω)) 1) := ModuleCat.subsingleton_of_isZero (isZero_H1_open K Ω U)
     have hS := kummerSequenceRes_shortExact (Ksep := Ω) p (U : Subgroup (Ω ≃ₐ[K] Ω)) hpK
-    haveI : Subsingleton (cohomology (kummerSequenceRes (K := K) (Ksep := Ω) p
+    have : Subsingleton (cohomology (kummerSequenceRes (K := K) (Ksep := Ω) p
         (U : Subgroup (Ω ≃ₐ[K] Ω))).X₂ (1 + 1)) := hB
     exact (cohomologyMap_f_injective_of_subsingleton hS 1 h1).subsingleton)
   exact_mod_cast h
@@ -681,7 +681,7 @@ theorem subsingleton_cohomology_two_trivial_zmod [IsSepClosed Ω] :
   have hS := artinSchreierSequence_shortExact E Ω p
   have h1 : Subsingleton (cohomology (artinSchreierSequence E Ω p).X₃ 1) :=
     subsingleton_cohomology_galAddInt E Ω one_ne_zero
-  haveI : Subsingleton (cohomology (artinSchreierSequence E Ω p).X₂ (1 + 1)) :=
+  have : Subsingleton (cohomology (artinSchreierSequence E Ω p).X₂ (1 + 1)) :=
     subsingleton_cohomology_galAddInt E Ω (n := 2) two_ne_zero
   exact (cohomologyMap_f_injective_of_subsingleton hS 1 h1).subsingleton
 
@@ -689,16 +689,16 @@ end Sequence
 
 theorem cdp_le_one_of_char_eq (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] [IsSepClosure K Ω]
     (p : ℕ) (hp : p.Prime) (hpK : (p : K) = 0) : cdp p (Ω ≃ₐ[K] Ω) ≤ 1 := by
-  haveI : Fact p.Prime := ⟨hp⟩
-  haveI : CharP K p := (CharP.charP_iff_prime_eq_zero hp).2 hpK
-  haveI : CharP Ω p := charP_of_injective_algebraMap (algebraMap K Ω).injective p
-  haveI : IsSepClosed Ω := IsSepClosure.sep_closed K
+  have : Fact p.Prime := ⟨hp⟩
+  have : CharP K p := (CharP.charP_iff_prime_eq_zero hp).2 hpK
+  have : CharP Ω p := charP_of_injective_algebraMap (algebraMap K Ω).injective p
+  have : IsSepClosed Ω := IsSepClosure.sep_closed K
   have h := cdp_le_of_forall_openSubgroup hp
     (Rep.trivial (ULift.{0} ℤ) (Ω ≃ₐ[K] Ω) (ULift.{0} (ZMod p))) AddEquiv.ulift.symm 1 (fun U => by
       let E := fixedField (U : Subgroup (Ω ≃ₐ[K] Ω))
-      haveI : IsGalois E Ω := IsGalois.tower_top_of_isGalois K E Ω
+      have : IsGalois E Ω := IsGalois.tower_top_of_isGalois K E Ω
       have h2 := subsingleton_cohomology_two_trivial_zmod E Ω p
-      haveI : IsDiscreteRep (Rep.res (U : Subgroup (Ω ≃ₐ[K] Ω)).subtype
+      have : IsDiscreteRep (Rep.res (U : Subgroup (Ω ≃ₐ[K] Ω)).subtype
           (Rep.trivial (ULift.{0} ℤ) (Ω ≃ₐ[K] Ω) (ULift.{0} (ZMod p)))) :=
         isDiscreteRep_res_subtype _ _
       let f : Rep.res (galFixedFieldEquivOpen U).toMonoidHom
@@ -706,7 +706,7 @@ theorem cdp_le_one_of_char_eq (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω] 
             (Rep.trivial (ULift.{0} ℤ) (Ω ≃ₐ[K] Ω) (ULift.{0} (ZMod p)))) ⟶
           Rep.trivial (ULift.{0} ℤ) (Ω ≃ₐ[E] Ω) (ULift.{0} (ZMod p)) :=
         Rep.ofHom ⟨LinearMap.id, fun σ => LinearMap.ext fun x => rfl⟩
-      haveI := isIso_cohomologyMapAlong_of_mulEquiv (galFixedFieldEquivOpen U)
+      have := isIso_cohomologyMapAlong_of_mulEquiv (galFixedFieldEquivOpen U)
         (continuous_galFixedFieldEquivOpen U) (continuous_galFixedFieldEquivOpen_symm U) f
         Function.bijective_id 2
       exact (asIso (cohomologyMapAlong (galFixedFieldEquivOpen U).toMonoidHom
@@ -786,7 +786,7 @@ theorem gaugeSplitting_holds : C1 := by
     intro h0
     have : (q : K) = 0 := by rw [← map_natCast f q, h0, map_zero]
     exact hq.ne_zero this
-  haveI : NeZero (q : k) := ⟨hqk⟩
+  have : NeZero (q : k) := ⟨hqk⟩
   obtain ⟨ζ, hζ⟩ := IsAlgClosed.exists_root (Polynomial.cyclotomic q k)
     (Polynomial.degree_cyclotomic_pos q k hq0).ne'
   have hζk : IsPrimitiveRoot ζ q := (Polynomial.isRoot_cyclotomic_iff).1 hζ

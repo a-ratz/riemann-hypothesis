@@ -486,7 +486,7 @@ private theorem vol_prod_fin_apply_eq_sum_preimage (z : M → V n) (hz : IsLocal
 private theorem vol_prod_fin_eq_sum_map_prodMk (z : M → V n) (hz : IsLocalHomeomorph z) (p : ℕ) :
     vol n (fun q : M × Fin p => z q.1) = ∑ i : Fin p, (vol n z).map (fun x => (x, i)) := by
   ext A hA
-  rw [vol_prod_fin_apply_eq_sum_preimage z hz p A hA, MeasureTheory.Measure.coe_finsetSum, Finset.sum_apply]
+  rw [vol_prod_fin_apply_eq_sum_preimage z hz p A hA, FunLike.coe_sum, Finset.sum_apply]
   exact Finset.sum_congr rfl fun i _ => (Measure.map_apply measurable_prodMk_right hA).symm
 
 private theorem map_prodMk_right_vol_le_vol_prod_fin (z : M → V n) (hz : IsLocalHomeomorph z) (p : ℕ) (i : Fin p) :
@@ -870,7 +870,7 @@ private theorem isLocalHomeomorph_fun_prod_fin_fst (n : ℕ) (z : M → V n) (hz
           subst hj
           rfl
         right_inv := fun x => rfl
-        continuous_toFun := continuous_fst.comp continuous_subtype_val
+        continuous_toFun := continuous_fst.comp continuous_subtypeVal
         continuous_invFun := Continuous.subtype_mk (by fun_prop) fun x => by simp }
     exact H.isOpenEmbedding
   exact hz.comp hfst

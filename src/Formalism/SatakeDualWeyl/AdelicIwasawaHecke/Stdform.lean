@@ -171,8 +171,8 @@ end Stdform
 theorem stdform_ext {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E] (ι : F →+* ℝ) :
     ∃ τ : E →+* ℂ, τ.comp (algebraMap F E) = (algebraMap ℝ ℂ).comp ι := by
-  letI : Algebra F ℂ := ((algebraMap ℝ ℂ).comp ι).toAlgebra
-  haveI : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.tower_top (K := ℚ) F
+  let : Algebra F ℂ := ((algebraMap ℝ ℂ).comp ι).toAlgebra
+  have : Algebra.IsAlgebraic F E := Algebra.IsAlgebraic.tower_top (K := ℚ) F
   refine ⟨(IsAlgClosed.lift : E →ₐ[F] ℂ).toRingHom, ?_⟩
   ext x
   exact (IsAlgClosed.lift : E →ₐ[F] ℂ).commutes x

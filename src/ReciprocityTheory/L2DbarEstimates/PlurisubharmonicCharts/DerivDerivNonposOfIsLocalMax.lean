@@ -159,7 +159,7 @@ private theorem wirtinger_wirtingerBar_ofReal_lemma_2 {f : ReciprocityTheory.L2D
     filter_upwards [ReciprocityTheory.L2DbarEstimates.eventually_differentiableAt_of_contDiffAt hf] with y hy
     rw [ReciprocityTheory.L2DbarEstimates.wdb, ReciprocityTheory.L2DbarEstimates.fderiv_ofReal_apply hy, ReciprocityTheory.L2DbarEstimates.fderiv_ofReal_apply hy, div_eq_inv_mul]
   rw [ReciprocityTheory.L2DbarEstimates.wd_congr hE, ReciprocityTheory.L2DbarEstimates.wd, hG.fderiv]
-  simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
+  simp only [smul_apply, add_apply,
     ContinuousLinearMap.comp_apply, Complex.ofRealCLM_apply, ContinuousLinearMap.flip_apply, smul_eq_mul]
   push_cast
   linear_combination
@@ -189,7 +189,7 @@ private theorem bilinear_apply_sum_sum (T : ReciprocityTheory.L2DbarEstimates.V 
     T (∑ j, v j) (∑ k, w k) = ∑ j, ∑ k, T (v j) (w k) := by
   have h : ∀ a : ReciprocityTheory.L2DbarEstimates.V n, T (∑ j, v j) a = ∑ j, T (v j) a := fun a => by
     set_option synthInstance.maxHeartbeats 100000 in
-      rw [map_sum, ContinuousLinearMap.sum_apply]
+      rw [map_sum, sum_apply]
   rw [h]
   exact Finset.sum_congr rfl fun j _ => map_sum (T (v j)) w Finset.univ
 
@@ -205,8 +205,8 @@ theorem leviV_re_eq {f : V n → ℝ} {x : V n} (hf : ContDiffAt ℝ 2 f x) (ξ 
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
-  simp only [map_add (f := _), map_sub, map_smul, ContinuousLinearMap.add_apply, ContinuousLinearMap.sub_apply,
-    ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [map_add (f := _), map_sub, map_smul, add_apply, sub_apply,
+    smul_apply, smul_eq_mul]
   ring
 
 theorem leviV_re_nonpos_of_isLocalMax {f : V n → ℝ} {x : V n} (hf : ContDiffAt ℝ 2 f x)
@@ -237,7 +237,7 @@ theorem leviV_ofReal_add {f g : V n → ℝ} {x : V n} (hf : ContDiffAt ℝ 2 f 
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
-  simp only [ContinuousLinearMap.add_apply]
+  simp only [add_apply]
   push_cast
   ring
 
@@ -255,7 +255,7 @@ theorem leviV_ofReal_const_mul {f : V n → ℝ} {x : V n} (c : ℝ) (hf : ContD
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun k _ => ?_
-  simp only [ContinuousLinearMap.smul_apply, smul_eq_mul]
+  simp only [smul_apply, smul_eq_mul]
   push_cast
   ring
 

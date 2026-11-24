@@ -78,7 +78,7 @@ theorem integral_map_addEquiv (e : V ≃+ V') (hc : Continuous e) (hc' : Continu
 theorem selfDual_map_addEquiv (e : V ≃+ V') (hc : Continuous e) (hc' : Continuous e.symm)
     {μ : Measure V} {χ : V → V → ℂ} {χ' : V' → V' → ℂ} (h : SelfDual μ χ)
     (hχ : ∀ x y, χ' (e x) (e y) = χ x y) : SelfDual (μ.map e) χ' := by
-  haveI := h.1
+  have := h.1
   let H : V ≃ₜ V' := { toEquiv := e.toEquiv, continuous_toFun := hc, continuous_invFun := hc' }
   let M : V ≃ᵐ V' := H.toMeasurableEquiv
   have hM : (μ.map e) = μ.map M := rfl
@@ -142,7 +142,7 @@ theorem continuous_tupOf : Continuous (tupOf (D := D) (m := m) (r := r)) :=
 
 theorem borel_tup : BorelSpace (Fin r → Fin m → AE D) := by
   obtain ⟨-, -, -, i4, i5⟩ := Formalism.IndefR.Eqv.ae_facts D
-  haveI : BorelSpace (Fin m → AE D) := Pi.borelSpace
+  have : BorelSpace (Fin m → AE D) := Pi.borelSpace
   exact Pi.borelSpace
 
 theorem hR_tup (V : HSp D) (x y : Mx D V.rank r) (a b : Fin r) :
@@ -168,8 +168,8 @@ theorem sdW_map (V : HSp D) {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.h
     {𝓕 : Set (Mx D V.rank r)} (hμ : IsCovolOne (ratMx D V.rank r) μ 𝓕) :
     SdW D.host.F D.host.E D.sp.cm.sig V.rank V.gram (AF D.host.F) ψ r (μ.map tupInv) := by
   obtain ⟨i1, -, -, -, -, -⟩ := lattice_Mx D V.rank r
-  haveI : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
-  haveI : BorelSpace (Fin r → Fin V.rank → AE D) := borel_tup
+  have : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
+  have : BorelSpace (Fin r → Fin V.rank → AE D) := borel_tup
   obtain ⟨j1, -⟩ := Formalism.IndefR.Eqv.ae_facts D
   exact selfDual_map_of (χ' := fun X Y => ψ (BR (AF D.host.F) D.sp.cm.sig V.gram X Y)) tupInv tupOf tupOf_tupInv
     tupInv_tupOf tupInv_add continuous_tupInv continuous_tupOf
@@ -192,10 +192,10 @@ theorem hermTo_hermFrom (S : HermR (AF D.host.F) D.sp.cm.sig r) : hermTo (hermFr
 theorem hermTo_add (x y : hermA D r) : hermTo (x + y) = hermTo x + hermTo y := rfl
 
 theorem continuous_hermTo : Continuous (hermTo (D := D) (r := r)) :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 
 theorem continuous_hermFrom : Continuous (hermFrom (D := D) (r := r)) :=
-  continuous_subtype_val.subtype_mk _
+  continuous_subtypeVal.subtype_mk _
 
 def trF (a b : Mx D r r) : AF D.host.F := Algebra.trace (AF D.host.F) (AE D) (Matrix.trace (a * b))
 
@@ -248,7 +248,7 @@ theorem adj_mem_rat {γ : Mx D r r} (h : γ ∈ ratMx D r r) : adj γ ∈ ratMx 
 theorem pairH_annih {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) :
     (∀ x : hermA D r, (∀ γ ∈ ratHerm D r, pairH ψ γ x = 1) ↔ x ∈ ratHerm D r) ∧
       ∀ γ ∈ ratHerm D r, (∀ x, pairH ψ γ x = 1) → γ = 0 := by
-  haveI : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
+  have : Module.Finite D.host.F D.host.E := Module.finite_of_finrank_pos (by rw [D.sp.cm.deg2]; norm_num)
   obtain ⟨h1, h2⟩ := GlobalTheory.GramAnnih.ratMx_annihilator D r r 1 isHermND_one ψ hψ
   refine ⟨fun x => ⟨fun h => ?_, fun hx γ hγ => ?_⟩, fun γ hγ h => ?_⟩
   · refine AddSubgroup.mem_comap.2 ((h1 x.1).1 fun γ hγ => ?_)
@@ -295,21 +295,21 @@ theorem sdHerm_map {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ)
     {𝓖 : Set (hermA D r)} (hl : IsCovolOneH lam 𝓖) :
     SdHerm D.host.F D.host.E D.sp.cm.sig (AF D.host.F) ψ r (lam.map hermTo) := by
   obtain ⟨i1, i2, i3, i4, -, -⟩ := lattice_Mx D r r
-  haveI : IsTopologicalAddGroup (Mx D r r) := i1
-  haveI : LocallyCompactSpace (Mx D r r) := i2
-  haveI : SecondCountableTopology (Mx D r r) := i3
-  haveI : T2Space (Mx D r r) := i4
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : SecondCountableTopology (hermA D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : T2Space (hermA D r) := Topology.IsEmbedding.subtypeVal.t2Space
-  haveI : LocallyCompactSpace (hermA D r) := (GlobalTheory.CompanionTheory.HermVol.isClosed_hermA (D := D) (r := r)).locallyCompactSpace
-  haveI : BorelSpace (hermA D r) := Subtype.borelSpace _
-  haveI : IsTopologicalAddGroup (Matrix (Fin r) (Fin r) (AE D)) := i1
-  haveI : BorelSpace (HermR (AF D.host.F) D.sp.cm.sig r) := ⟨rfl⟩
+  have : IsTopologicalAddGroup (Mx D r r) := i1
+  have : LocallyCompactSpace (Mx D r r) := i2
+  have : SecondCountableTopology (Mx D r r) := i3
+  have : T2Space (Mx D r r) := i4
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : SecondCountableTopology (hermA D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : T2Space (hermA D r) := Topology.IsEmbedding.subtypeVal.t2Space
+  have : LocallyCompactSpace (hermA D r) := (GlobalTheory.CompanionTheory.HermVol.isClosed_hermA (D := D) (r := r)).locallyCompactSpace
+  have : BorelSpace (hermA D r) := Subtype.borelSpace _
+  have : IsTopologicalAddGroup (Matrix (Fin r) (Fin r) (AE D)) := i1
+  have : BorelSpace (HermR (AF D.host.F) D.sp.cm.sig r) := ⟨rfl⟩
   obtain ⟨hd, K, hK, hKc⟩ := GlobalTheory.CompanionTheory.HermVol.isCoLat_herm (D := D) (r := r)
   obtain ⟨h1, h2⟩ := pairH_annih (r := r) hψ
-  haveI := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
-  haveI : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
+  have := isTopologicalRing_tens (F := D.host.F) (E := D.host.E) (R := AF D.host.F)
+  have : IsModuleTopology (AF D.host.F) (AE D) := ⟨rfl⟩
   have ht : Continuous (Algebra.trace (AF D.host.F) (AE D)) :=
     IsModuleTopology.continuous_of_linearMap (Algebra.trace (AF D.host.F) (AE D))
   have hsd : SelfDual lam (pairH ψ) := by
@@ -317,7 +317,7 @@ theorem sdHerm_map {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ)
       h1 h2 lam 𝓖 hl.1 hl.2.1 hl.2.2
     · unfold trF
       exact hψ.1.comp (continuous_const.mul (ht.comp
-        ((continuous_subtype_val.matrix_mul continuous_const).matrix_trace)))
+        ((continuous_subtypeVal.matrix_mul continuous_const).matrix_trace)))
     · rw [trF_comm]
     · change ψ (_ * trF (x.1 + x'.1) y.1) = _
       rw [trF_add_left, mul_add, AddChar.map_add_eq_mul]
@@ -344,16 +344,16 @@ theorem whit_eq_coefN : ∀ (D : D7) (r : ℕ) (V : HSp D) (ψ : AddChar (AF D.h
     fun φ β => ?_⟩
   obtain ⟨i1, -, i3, -, -, -⟩ := lattice_Mx D r r
   obtain ⟨k1, -, -, -, -, -⟩ := lattice_Mx D V.rank r
-  haveI : IsTopologicalAddGroup (Mx D r r) := i1
-  haveI : IsTopologicalAddGroup (Mx D V.rank r) := k1
-  haveI : SecondCountableTopology (Mx D r r) := i3
-  haveI : BorelSpace (Mx D r r) := ⟨rfl⟩
-  haveI : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
-  haveI : SecondCountableTopology (hermA D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
-  haveI : BorelSpace (hermA D r) := Subtype.borelSpace _
-  haveI : IsTopologicalAddGroup (Matrix (Fin r) (Fin r) (AE D)) := i1
-  haveI : BorelSpace (HermR (AF D.host.F) D.sp.cm.sig r) := ⟨rfl⟩
-  haveI : BorelSpace (Fin r → Fin V.rank → AE D) := borel_tup
+  have : IsTopologicalAddGroup (Mx D r r) := i1
+  have : IsTopologicalAddGroup (Mx D V.rank r) := k1
+  have : SecondCountableTopology (Mx D r r) := i3
+  have : BorelSpace (Mx D r r) := ⟨rfl⟩
+  have : BorelSpace (Mx D V.rank r) := ⟨rfl⟩
+  have : SecondCountableTopology (hermA D r) := Topology.IsInducing.subtypeVal.secondCountableTopology
+  have : BorelSpace (hermA D r) := Subtype.borelSpace _
+  have : IsTopologicalAddGroup (Matrix (Fin r) (Fin r) (AE D)) := i1
+  have : BorelSpace (HermR (AF D.host.F) D.sp.cm.sig r) := ⟨rfl⟩
+  have : BorelSpace (Fin r → Fin V.rank → AE D) := borel_tup
   obtain ⟨j1, -⟩ := Formalism.IndefR.Eqv.ae_facts D
   unfold W coefN
   rw [integral_map_of (hermTo (D := D) (r := r)) hermFrom hermFrom_hermTo hermTo_hermFrom hermTo_add continuous_hermTo continuous_hermFrom]

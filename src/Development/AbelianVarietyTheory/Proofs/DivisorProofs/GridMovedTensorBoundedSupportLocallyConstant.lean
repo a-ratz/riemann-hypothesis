@@ -175,12 +175,12 @@ theorem GlobalTheory.MovedBound.moved_bounded_locConst : ∀ {k : Type} [Field k
     let δ' : G.Args := fun b => if b ∈ oppositePath G.m then G.moveArgs .one g δ b else 0
     have h1 : T (G.moveArgs .one g (z + δ)) = T (G.moveArgs .one g z + δ') := by
       refine hT.1 fun b hb => ?_
-      simp only [Set.mem_setOf_eq] at hb
+      simp only [Set.mem_ofPred_eq] at hb
       simp [δ', hb, hmv, Matrix.mul_add, Matrix.add_mul]
     have h2 : T (G.moveArgs .one g z + δ') = T (G.moveArgs .one g z) := by
       refine hT.2.2 _ _ fun b => ?_
       by_cases hb : b ∈ oppositePath G.m
-      · simp only [δ', hb, if_true]
+      · simp only [δ', hb, ite_true]
         obtain ⟨h1, -, h3, -⟩ := hn0 b (List.mem_toFinset.2 hb)
         have hd : ∀ r s, valuation k (δ b r s) ≤ u ^ (2 * n0 + e) := fun r s => by
           rw [← val_unitsPow]; exact hδ b hb r s
@@ -198,6 +198,6 @@ theorem GlobalTheory.MovedBound.moved_bounded_locConst : ∀ {k : Type} [Field k
         rw [map_mul, val_unitsPow_inv]
         calc (u ^ e)⁻¹ * valuation k (G.moveArgs .one g δ b i j) ≤ (u ^ e)⁻¹ * u ^ e := mul_le_mul' le_rfl (hbd i j)
           _ = 1 := inv_mul_cancel₀ (pow_ne_zero _ hu0)
-      · simp only [δ', hb, if_false]
+      · simp only [δ', hb, ite_false]
         exact zero_mem _
     simp only [moved, Grid.pathAct, h1, h2]

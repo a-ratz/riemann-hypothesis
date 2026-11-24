@@ -198,13 +198,13 @@ theorem adjoint_comp_isometry : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
 theorem topL_mul {κ : Type} [CommRing κ] {n r : ℕ} (hrn : r ≤ n) (A : Matrix (Fin n) (Fin r) κ) (B : Matrix (Fin r) (Fin r) κ) :
     topL r (A * B) = topL r A * B := by
   ext i j
-  simp only [topL, Matrix.mul_apply, dif_pos (And.intro (lt_of_lt_of_le i.2 hrn) j.2), i.2, j.2, true_and,
+  simp only [topL, Matrix.mul_apply, dite_eq_left (And.intro (lt_of_lt_of_le i.2 hrn) j.2), i.2, j.2, true_and,
     lt_of_lt_of_le i.2 hrn, Fin.is_lt, dite_true]
 
 theorem topL_of {κ : Type} [Zero κ] {n r : ℕ} (hrn : r ≤ n) (A : Matrix (Fin n) (Fin r) κ) :
     topL r A = Matrix.of fun b a => A (Fin.castLE hrn b) a := by
   ext i j
-  simp only [topL, dif_pos (And.intro (lt_of_lt_of_le i.2 hrn) j.2), Matrix.of_apply]
+  simp only [topL, dite_eq_left (And.intro (lt_of_lt_of_le i.2 hrn) j.2), Matrix.of_apply]
   rfl
 
 theorem image_eq_range {α : Type} {n r : ℕ} (hrn : r ≤ n) (x : Fin n → α) :
@@ -241,7 +241,7 @@ theorem exists_const_eq_inv_char : ∀ (E : Type) [Field E] [NumberField E] [IsC
   let u : ∀ P : Pl E, (kP P)ˣ := fun P =>
     if h : IsUnit (topL (Dw.p + Dw.q) (Matrix.of fun b a => ρ P a (X₀ b))).det then h.unit else 1
   have hu : ∀ P ∈ Q, ((u P : (kP P)ˣ) : kP P) = (topL (Dw.p + Dw.q) (Matrix.of fun b a => ρ P a (X₀ b))).det :=
-    fun P hP => by simp only [u, dif_pos (hX₀u P hP), IsUnit.unit_spec]
+    fun P hP => by simp only [u, dite_eq_left (hX₀u P hP), IsUnit.unit_spec]
   refine ⟨u, fun x => ?_⟩
   split_ifs with h
   ·
@@ -499,8 +499,8 @@ theorem psi_value (V : HSp D) {l : Level H} {Xo : Moduli Dw l} {c : Coeff l} {n 
     (by unfold latGHat; rw [hu, GlobalTheory.TwistTie.gLat_one]) (fun b _ => hlift b) z z' hz'.1
   have h2 : toC (evR d.Xo₂ d.c₂ d.cδ z') = (((ψ k : c.Fˣ) : c.F) : ℂ) * toC (evR d.Xo₂ d.c₂ d.cδ z) ∧
       toC (evR d.Xo₂ d.c₂ d.cδ z) ≠ 0 := by
-    letI : Field (CAt (c.F.val.toRingHom.comp (d.eF.symm : d.c₂.F →+* c.F))) := inferInstanceAs (Field ℂ)
-    haveI : IsAlgClosed (CAt (c.F.val.toRingHom.comp (d.eF.symm : d.c₂.F →+* c.F))) := inferInstanceAs (IsAlgClosed ℂ)
+    let : Field (CAt (c.F.val.toRingHom.comp (d.eF.symm : d.c₂.F →+* c.F))) := inferInstanceAs (Field ℂ)
+    have : IsAlgClosed (CAt (c.F.val.toRingHom.comp (d.eF.symm : d.c₂.F →+* c.F))) := inferInstanceAs (IsAlgClosed ℂ)
     exact ⟨hψ k s ρ hs (fun a => ⟨s.f d.l₂.A a - a, by rw [hA₂, one_smul]⟩) hρ hk _ z z' hz'.1, hne _ z⟩
   exact mul_right_cancel₀ h2.2 (h2.1.symm.trans h1)
 
@@ -670,10 +670,10 @@ end
 theorem hatC_eq_datum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (n : ℕ) (d : DeltaDat Xo c n), d.IsLev → ∀ (ph : (Fin n → LaJ Xo c d) → c.F) (ψ : (LaI Xo c d ≃ₗ[𝓞 E] LaI Xo c d) →* c.Fˣ) (xJ : Fin n → LaJ Xo c d), d.PhiPin ph ψ xJ → ∀ (x₀ : Fin n → Dw.La) (ζ : ℂ) (φc : (Fin n → LevQc Dw d.l₂) → ℂ), (∀ z : Fin n → Dw.La, φc (fun b => Submodule.Quotient.mk (d.pd • x₀ b + l.M • z b)) = ζ * ((ph (fun b => Submodule.Quotient.mk (z b)) : c.F) : ℂ)) → (∀ x : Fin n → Dw.La, φc (fun b => Submodule.Quotient.mk (x b)) ≠ 0 → ∀ b, x b - d.pd • x₀ b ∈ (Mfr l • ⊤ : Submodule (𝓞 E) Dw.La)) → GlobalTheory.AdTh.hatC d.l₂ φc = fun q => ζ * ((d.eF.symm (d.w x₀ q) : c.F) : ℂ) := by
   intro E _ _ _ H Dw l Xo c n d hd ph ψ xJ hpin x₀ ζ φc hval hsupp
   funext q
-  haveI := finite_laJ d hd
-  haveI := GlobalTheory.AdTh.PairModel.finite_levQc Dw d.l₂
-  haveI := Fintype.ofFinite (Fin n → LaJ Xo c d)
-  haveI := Fintype.ofFinite (Fin n → LevQc Dw d.l₂)
+  have := finite_laJ d hd
+  have := GlobalTheory.AdTh.PairModel.finite_levQc Dw d.l₂
+  have := Fintype.ofFinite (Fin n → LaJ Xo c d)
+  have := Fintype.ofFinite (Fin n → LevQc Dw d.l₂)
   have hM₂ : d.l₂.M ≠ 0 := by have := d.l₂.three_le; omega
   have he : zeta d.l₂.M ^ d.l₂.M = 1 := (Complex.isPrimitiveRoot_exp _ hM₂).pow_eq_one
   have he0 : zeta d.l₂.M ≠ 0 := Complex.exp_ne_zero _
@@ -782,7 +782,7 @@ theorem mem_of_rho_eq_zero (hτ : ∀ t, τ (τ t) = t) {S U : Finset (Pl E)} (h
     rw [Ideal.prod_eq_iInf_of_pairwise_isCoprime fun x _ y _ h => HeightOneSpectrum.isCoprime_of_ne _ _ h]
     simp only [Submodule.mem_iInf]
     intro P hP
-    rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_one, τ.apply_symm_apply, map_sub, map_one, ht P (hSU hP), if_pos hP,
+    rw [← Ideal.Quotient.eq_zero_iff_mem, map_sub, map_one, τ.apply_symm_apply, map_sub, map_one, ht P (hSU hP), ite_eq_left hP,
       sub_self]
   have h3 := Ideal.mem_map_of_mem (τ : 𝓞 E →+* 𝓞 E) h2
   rw [show (τ : 𝓞 E →+* 𝓞 E) (τ (1 - τ.symm t)) = 1 - τ.symm t from hτ _] at h3
@@ -795,8 +795,8 @@ include hs in
 theorem rank_eq {n : ℕ} {P : Pl E} (N : Submodule (𝓞 E) La) (hN : ∀ x ∈ N, ∀ a, ρ P a x = 0)
     (hon : ∀ t : Fin r → kP P, ∃ x, ∀ a, ρ P a x = t a) (x : Fin n → La)
     (hx : Submodule.span (𝓞 E) (Set.range x) ⊔ N = ⊤) : (Matrix.of fun b a => ρ P a (x b)).rank = r := by
-  haveI := P.isMaximal
-  letI : Field (kP P) := Ideal.Quotient.field _
+  have := P.isMaximal
+  let : Field (kP P) := Ideal.Quotient.field _
   have h : Submodule.span (kP P) (Set.range (Matrix.of fun b a => ρ P a (x b)).row) = ⊤ := by
     refine eq_top_iff.2 fun t _ => ?_
     obtain ⟨y, hy⟩ := hon t
@@ -862,7 +862,7 @@ theorem psi_value_full {D : D7} (T : Full D) (hT : LawsFull T) (j : ℕ) (hj : I
 theorem res_mem {D : D7} {ξ : Formalism.L2.Host.HChar D.host.E} {P : Pl D.host.E} {c : (kP P)ˣ →* ℂˣ} (h : IsRes ξ P c) (K : Set ℂ)
     (hK : ∀ x, ((ξ.1 x : ℂˣ) : ℂ) ∈ K) (u : (kP P)ˣ) : ((c u : ℂˣ) : ℂ) ∈ K := by
   obtain ⟨a, ha⟩ := Ideal.Quotient.mk_surjective (u : kP P)
-  haveI := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
+  have := Ideal.Quotient.nontrivial_iff.2 P.isPrime.ne_top
   have h0 : (a : D.host.E) ≠ 0 := fun h0 => u.ne_zero (by
     rw [← ha, RingOfIntegers.coe_eq_zero_iff.1 h0, map_zero])
   rw [h a (Units.mk0 _ h0) u rfl ha.symm]
@@ -1044,12 +1044,12 @@ theorem datum_eq_hat_free : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
   · rw [← Units.coe_prod]
     have : IsOfFinOrder (∏ P ∈ Q, (ξR P (u P))⁻¹) := Finset.prod_induction _ _ (fun _ _ => IsOfFinOrder.mul) IsOfFinOrder.one
       fun P _ => by
-        haveI : Finite (kP P) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
+        have : Finite (kP P) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
         exact ((ξR P).isOfFinOrder (isOfFinOrder_of_finite _)).inv
     obtain ⟨m, hm, h⟩ := isOfFinOrder_iff_pow_eq_one.1 this
     exact ⟨m, hm, by rw [← Units.val_pow_eq_pow_val, h, Units.val_one]⟩
   · refine GlobalTheory.CoverTransform.hatC_eq_datum _ _ _ _ _ _ _ d hd ph ψ xJ hpin x₀ _ φc (fun z => ?_) fun x hx b => ?_
-    · rw [hφ, ← hu z, omegaFree, if_pos, one_mul]
+    · rw [hφ, ← hu z, omegaFree, ite_eq_left, one_mul]
       · convert topDatum_congr Q ξR _ _ fun P hP => Matrix.ext fun b a => ?_
         rw [Matrix.of_apply, Matrix.of_apply, map_add (f := _), rho_eq_zero T.Q.H.bar ρ hs (hQI P hP) hbb (hpmem _), zero_add, map_nsmul,
           AddMonoidHom.nsmul_apply]
@@ -1060,7 +1060,7 @@ theorem datum_eq_hat_free : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
     · rw [hφ, omegaFree] at hx
       have h1 : ∀ P ∈ R.Pg, (Matrix.of fun b a => ρ P a (x b)) = y₀ P := by
         by_contra h
-        exact hx (by rw [if_neg h, zero_mul])
+        exact hx (by rw [ite_eq_right h, zero_mul])
       rw [Mfr, hMb]
       refine mem_of_rho_eq_zero T.Q.H.bar ρ hs hbb Finset.subset_union_left hk0 _ fun P hP a => ?_
       rw [map_sub, sub_eq_zero]

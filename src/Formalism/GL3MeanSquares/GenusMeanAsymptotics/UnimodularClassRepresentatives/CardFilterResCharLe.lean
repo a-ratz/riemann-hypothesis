@@ -66,11 +66,11 @@ theorem span_resChar (P : Ideal (𝓞 K)) : Ideal.span {(resChar P : ℤ)} = P.u
 
 theorem under_ne_bot {P : Ideal (𝓞 K)} (hP : P.IsMaximal) : P.under ℤ ≠ ⊥ := by
   intro h
-  have hPb : P = ⊥ := Ideal.eq_bot_of_comap_eq_bot h
+  have hPb : P = ⊥ := Ideal.eq_bot_of_under_eq_bot h
   exact Ring.ne_bot_of_isMaximal_of_not_isField hP (NumberField.RingOfIntegers.not_isField K) hPb
 
 theorem under_isMaximal {P : Ideal (𝓞 K)} (hP : P.IsMaximal) : (P.under ℤ).IsMaximal := by
-  haveI := hP
+  have := hP
   exact Ideal.IsMaximal.under ℤ P
 
 theorem resChar_prime {P : Ideal (𝓞 K)} (hP : P.IsMaximal) : (resChar P).Prime := by
@@ -90,7 +90,7 @@ theorem exists_absNorm_eq_pow {P : Ideal (𝓞 K)} (hP : P.IsMaximal) :
     ∃ k : ℕ, 1 ≤ k ∧ Ideal.absNorm P = resChar P ^ k := by
 
   have hp := resChar_prime hP
-  haveI : P.LiesOver (Ideal.span {((resChar P : ℕ) : ℤ)}) := ⟨span_resChar P⟩
+  have : P.LiesOver (Ideal.span {((resChar P : ℕ) : ℤ)}) := ⟨span_resChar P⟩
   have h1 := Ideal.absNorm_eq_pow_inertiaDeg P (Nat.prime_iff_prime_int.mp hp)
   rw [show (((resChar P : ℕ) : ℤ)).natAbs = resChar P by simp] at h1
   refine ⟨_, ?_, h1⟩
@@ -130,7 +130,7 @@ theorem card_filter_resChar_le (s : Finset {P : Ideal (𝓞 K) // P.IsMaximal}) 
     have hJ : Ideal.span {((n : ℕ) : ℤ)} = P0.1.under ℤ := by
       rw [← hP0]
       exact span_resChar P0.1
-    haveI : (Ideal.span {((n : ℕ) : ℤ)}).IsMaximal := by
+    have : (Ideal.span {((n : ℕ) : ℤ)}).IsMaximal := by
       rw [hJ]
       exact under_isMaximal P0.2
     have hJne : Ideal.span {((n : ℕ) : ℤ)} ≠ ⊥ := by

@@ -85,7 +85,7 @@ theorem eq_bot_of_comap_eq_bot {K R S : Type} [Field K] [CommRing R] [CommRing S
   have halg := trdeg_eq_zero_iff.1 h0
   by_contra hne
   obtain ⟨x, hx, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
-  exact Ideal.comap_ne_bot_of_algebraic_mem hx0 hx (halg.1 x) hp
+  exact Ideal.under_ne_bot_of_algebraic_mem hx0 hx (halg.1 x) hp
 
 theorem eq_genericPoint_iff {X : Scheme.{0}} [IsIntegral X] {R : CommRingCat.{0}} [IsDomain R]
     (j : Spec R ⟶ X) [IsOpenImmersion j] (p : Spec R) :
@@ -113,8 +113,8 @@ theorem eq_genericPoint_of_apply_eq {K : Type} [Field K] {X Y : Scheme.{0}} [IsI
   have : IsIntegral (Spec S) := isIntegral_of_isOpenImmersion k
   have : IsDomain R := (affine_isIntegral_iff R).1 inferInstance
   have : IsDomain S := (affine_isIntegral_iff S).1 inferInstance
-  letI : Algebra K R := α.hom.toAlgebra
-  letI : Algebra K S := (α ≫ φ).hom.toAlgebra
+  let : Algebra K R := α.hom.toAlgebra
+  let : Algebra K S := (α ≫ φ).hom.toAlgebra
   have hR := trdeg_eq_of_smoothOfRelativeDimension K Y s g hY R j hj hα.symm
   have hS := trdeg_eq_of_smoothOfRelativeDimension K X (f ≫ s) g hX S k hk (by
     rw [← reassoc_of% hw, ← hα, ← Spec.map_comp]; rfl)

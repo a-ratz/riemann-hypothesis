@@ -178,7 +178,7 @@ theorem measurable_pi {d : HypDec B W t} (hn : W.rank + t = n) (I : IkD d n)
   have e1 : SecondCountableTopologyEither I.l.K (Par D n t W) := ⟨Or.inr h2⟩
   have o1 : OpensMeasurableSpace (I.l.K × Par D n t W) := Prod.opensMeasurableSpace
   have hc : Continuous fun p : I.l.K × Par D n t W => ac B ((p.1 : GA D B)⁻¹) (zp d hn x₀ p.2) :=
-    (continuous_ac B).comp (((continuous_subtype_val.comp continuous_fst).inv).prodMk
+    (continuous_ac B).comp (((continuous_subtypeVal.comp continuous_fst).inv).prodMk
       ((continuous_zp d hn x₀).comp continuous_snd))
   exact hc.measurable
 

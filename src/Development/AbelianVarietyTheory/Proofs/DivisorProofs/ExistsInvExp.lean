@@ -68,7 +68,7 @@ attribute [local instance] Over.cartesianMonoidalCategory
 theorem epi_pow_of_isAbelianScheme (S : Scheme.{0}) (A : Over S) [GrpObj A] (hA : IsAbelianScheme A)
     (k : ℕ) (hk : 0 < k) : Epi ((𝟙 A) ^ k) := by
   obtain ⟨h1, h2, h3⟩ := GlobalTheory.UPel.HT.SiegUniqBase.flat_surjective_qc_pow S A hA k hk
-  haveI : Epi ((𝟙 A) ^ k).left := Flat.epi_of_flat_of_surjective _
+  have : Epi ((𝟙 A) ^ k).left := Flat.epi_of_flat_of_surjective _
   exact (Over.forget S).epi_of_epi_map this
 
 end GlobalTheory.UPel.HT.MulEpi
@@ -228,9 +228,9 @@ theorem square_dual {S' : Scheme.{0}} {A B : Over S} {A' B' : Over S'} [GrpObj A
     (h₂ : ψ' ≫ χ' = (𝟙 A') ^ c) (h₃ : χ' ≫ ψ' = (𝟙 B') ^ c) (sq : φ ≫ ψ.left = ψ'.left ≫ φ') :
     φ' ≫ χ.left = χ'.left ≫ φ := by
   obtain ⟨hfl, hsu, hqc⟩ := GlobalTheory.UPel.HT.SiegUniqBase.flat_surjective_qc_pow S' B' hB c hc
-  haveI : Epi ((𝟙 B') ^ c).left := Flat.epi_of_flat_of_surjective _
-  haveI : Epi (χ'.left ≫ ψ'.left) := by rw [← Over.comp_left, h₃]; infer_instance
-  haveI : Epi ψ'.left := epi_of_epi χ'.left ψ'.left
+  have : Epi ((𝟙 B') ^ c).left := Flat.epi_of_flat_of_surjective _
+  have : Epi (χ'.left ≫ ψ'.left) := by rw [← Over.comp_left, h₃]; infer_instance
+  have : Epi ψ'.left := epi_of_epi χ'.left ψ'.left
   rw [← cancel_epi ψ'.left, ← Category.assoc, ← sq, Category.assoc, ← Over.comp_left, h₁, ← pow_left_comm h,
     ← h₂, Over.comp_left, Category.assoc]
 
@@ -276,10 +276,10 @@ theorem dual_clauses {s : S ⟶ Sp R} {c : ℕ} {o o' : Obj b N s} {ψ : o.A ⟶
       Nonempty (LBIso (Hecke.lbPow o'.P c) (o.P.pull (sq2 ψ'))) := by
   have hc := hψ.pos
   refine ⟨fun a => ?_, fun x => ?_, ⟨?_⟩⟩
-  · haveI := GlobalTheory.UPel.HT.MulEpi.epi_pow_of_isAbelianScheme S o'.A o'.ab c hc
-    haveI : Epi (ψ' ≫ ψ) := by rw [h₂]; infer_instance
-    haveI : Epi ψ := epi_of_epi ψ' ψ
-    haveI := o.act.hom a
+  · have := GlobalTheory.UPel.HT.MulEpi.epi_pow_of_isAbelianScheme S o'.A o'.ab c hc
+    have : Epi (ψ' ≫ ψ) := by rw [h₂]; infer_instance
+    have : Epi ψ := epi_of_epi ψ' ψ
+    have := o.act.hom a
     rw [← cancel_epi ψ, ← Category.assoc, ← hψ.2.2.1, Category.assoc, h₁, ← Category.assoc, h₁, MonObj.comp_pow,
       MonObj.pow_comp, Category.comp_id, Category.id_comp]
   · rw [hψ.2.2.2.1, Category.assoc, h₁, MonObj.comp_pow, Category.comp_id, eta_nsmul]

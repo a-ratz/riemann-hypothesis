@@ -189,7 +189,7 @@ theorem lintegral_chart_le (A : WeightedAtlas n Y ι La) (i : ι) (y0 : Y) {W : 
     calc ∫⁻ v in φ ⁻¹' B ∩ W, ENNReal.ofReal (Real.exp (A.ph A.kap i (e.symm v)))
         ≤ ∫⁻ _ in φ ⁻¹' B ∩ W, c := setLIntegral_mono' hm (fun v hv => hc v hv.2)
       _ = ν (φ ⁻¹' B) := by
-        rw [setLIntegral_const, Measure.smul_apply, Measure.restrict_apply (hφ hB), smul_eq_mul,
+        rw [setLIntegral_const, smul_apply, Measure.restrict_apply (hφ hB), smul_eq_mul,
           mul_comm]
   set Φ : Y → ℝ≥0∞ := U.piecewise (fun x => ψ (e x)) (fun _ => 0) with hΦdef
   have hΦ : Measurable Φ :=

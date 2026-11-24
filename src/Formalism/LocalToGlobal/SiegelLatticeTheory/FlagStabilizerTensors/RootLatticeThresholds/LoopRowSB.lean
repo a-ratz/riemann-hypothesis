@@ -665,7 +665,7 @@ theorem leadMinor_r (B : Matrix (Fin (r + 1)) (Fin (r + 1)) E) :
 theorem gram_det_eq (F : FlagG S r T) (F' : FlagG S r T') (hB : (Zhat F F').det ≠ 0) :
     ∃ s : E, s * s = 1 ∧ (gramCat F F').det = s * Gflag F F' := by
   set B := Zhat F F' with hBdef
-  letI : Invertible B := invertibleOfIsUnitDet B (isUnit_iff_ne_zero.2 hB)
+  let : Invertible B := invertibleOfIsUnitDet B (isUnit_iff_ne_zero.2 hB)
   set P : Matrix (Fin (r + 1) ⊕ Fin (r + 1)) (Fin (r + 1) ⊕ Fin (r + 1)) E := Matrix.fromBlocks 0 1 1 0 with hP
   have hPP : P * P = 1 := by
     rw [hP, Matrix.fromBlocks_multiply]; simp [Matrix.fromBlocks_one]
@@ -727,12 +727,12 @@ def aaF (D : D7) (a : Fin (D.R.rS + 1)) : FractionalIdeal (nonZeroDivisors (𝓞
 
 theorem aaF_castSucc (a : Fin D.R.rS) : aaF D (Fin.castSucc a) = ddS D ^ (-((D.R.rS : ℤ) - (a : ℕ))) := by
   unfold aaF
-  rw [if_pos (by simp)]
+  rw [ite_eq_left (by simp)]
   simp
 
 theorem aaF_last : aaF D (Fin.last D.R.rS) = 1 := by
   unfold aaF
-  rw [if_neg (by simp)]
+  rw [ite_eq_right (by simp)]
 
 theorem ddS_ne_zero : ddS D ≠ 0 := by
   unfold ddS
@@ -1000,8 +1000,8 @@ abbrev idS (I : Ideal (𝓞 E)) : AddSubgroup E :=
 theorem idS_eq_map (I : Ideal (𝓞 E)) :
     idS I = I.toAddSubgroup.map (algebraMap (𝓞 E) E).toAddMonoidHom := by
   ext x
-  simp only [idS, Submodule.mem_toAddSubgroup, FractionalIdeal.mem_coe, FractionalIdeal.mem_coeIdeal,
-    AddSubgroup.mem_map, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe]
+  simp only [idS, Submodule.mem_toAddSubgroup, FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_coeIdeal,
+    AddSubgroup.mem_map, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_ofClass]
 
 theorem relIndex_pi_idS {ι : Type} [Fintype ι] (I : ι → Ideal (𝓞 E)) :
     (AddSubgroup.pi Set.univ (fun i => idS (I i))).relIndex
@@ -1102,11 +1102,11 @@ theorem den_ne (J : FractionalIdeal (𝓞 E)⁰ E) : algebraMap (𝓞 E) E (J.de
 theorem mem_num_iff (J : FractionalIdeal (𝓞 E)⁰ E) (y : E) :
     y ∈ ((J.num : Ideal (𝓞 E)) : FractionalIdeal (𝓞 E)⁰ E) ↔
       ∃ c ∈ J, algebraMap (𝓞 E) E (J.den : 𝓞 E) * c = y := by
-  rw [← FractionalIdeal.mem_coe, FractionalIdeal.coe_coeIdeal, IsLocalization.coeSubmodule,
+  rw [← FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.coeToSubmodule_coeIdeal, IsLocalization.coeSubmodule,
     ← FractionalIdeal.den_mul_self_eq_num]
   change y ∈ (J.den : 𝓞 E) • (J : Submodule (𝓞 E) E) ↔ _
   rw [Submodule.mem_smul_pointwise_iff_exists]
-  simp only [Algebra.smul_def, FractionalIdeal.mem_coe]
+  simp only [Algebra.smul_def, FractionalIdeal.mem_coeToSubmodule]
 
 theorem map_diag_piF (J : Fin e → FractionalIdeal (𝓞 E)⁰ E) :
     (piF J).map (((diagC (fun j => algebraMap (𝓞 E) E ((J j).den : 𝓞 E)) fun j => den_ne (J j) :
@@ -1192,7 +1192,7 @@ theorem psL_eq_map (u : Fin e → S.V) (I : Fin e → FractionalIdeal (𝓞 E)�
     · rw [Pi.single_apply]
       split_ifs with h
       · subst h; exact hx
-      · exact FractionalIdeal.mem_coe.1 ((I i : Submodule (𝓞 E) E).zero_mem)
+      · exact FractionalIdeal.mem_coeToSubmodule.1 ((I i : Submodule (𝓞 E) E).zero_mem)
     · show j_iota u (Pi.single j x) = x • u j
       rw [j_iota_apply]
       simp [Pi.single_apply]

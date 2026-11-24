@@ -733,8 +733,8 @@ theorem fin_of_charts {R : Type} [CommRing R] (x : Sp R ⟶ S) {J : Type} [Finit
     have hu' : IsUnit (algebraMap R (Localization.Away g'.1) (f (ix g))) :=
       unit_of_dvd ((hix g).trans h)
     obtain ⟨e, he⟩ := exists_equiv (R := R) (ptAt x g'.1) (m (ix g) _ hu') (m (ix g') _ (unit_of_dvd (hix g')))
-    haveI := cmap_loc h ht
-    haveI hcr := _root_.GlobalTheory.CompanionTheory.LocHom.isLocalizedModule_compRight_away R (P (ix g)) (Localization.Away g.1) (Localization.Away g'.1) (f (ix g)) t
+    have := cmap_loc h ht
+    have hcr := _root_.GlobalTheory.CompanionTheory.LocHom.isLocalizedModule_compRight_away R (P (ix g)) (Localization.Away g.1) (Localization.Away g'.1) (f (ix g)) t
       (unit_of_dvd (hix g)) (cmap h) (cmap_loc h ht)
     have hrr : r = (e : _ →ₗ[R] _) ∘ₗ LinearMap.compRight R (cmap h).toLinearMap := by
       refine LinearMap.ext fun y => pt_left_inj (m (ix g') _ (unit_of_dvd (hix g'))) ?_
@@ -752,13 +752,13 @@ theorem fin_of_charts {R : Type} [CommRing R] (x : Sp R ⟶ S) {J : Type} [Finit
       (m i _ (unit_of_dvd (dvd_refl (f i))))
     exact ⟨e, trivial⟩
   choose e _ using hcmp
-  haveI : ∀ i, Module.Finite (Localization.Away (f i)) (P i →ₗ[R] Localization.Away (f i)) :=
+  have : ∀ i, Module.Finite (Localization.Away (f i)) (P i →ₗ[R] Localization.Away (f i)) :=
     fun i => (_root_.GlobalTheory.CompanionTheory.Ggeo.HomDual.finite_projective_hom R (P i) (f i)).1
-  haveI : ∀ i, Module.Projective (Localization.Away (f i)) (P i →ₗ[R] Localization.Away (f i)) :=
+  have : ∀ i, Module.Projective (Localization.Away (f i)) (P i →ₗ[R] Localization.Away (f i)) :=
     fun i => (_root_.GlobalTheory.CompanionTheory.Ggeo.HomDual.finite_projective_hom R (P i) (f i)).2
   refine _root_.GlobalTheory.CompanionTheory.Ggeo.finite_projective_of_isLocalizedModule_cover R E J f hf (fun i => P i →ₗ[R] Localization.Away (f i))
     (fun i => (e i : _ →ₗ[R] _) ∘ₗ ρ ⟨f i, i, dvd_rfl⟩) fun i => ?_
-  haveI := hloc i
+  have := hloc i
   exact IsLocalizedModule.of_linearEquiv _ _ _
 
 end GlobalTheory.CompanionTheory.Ar.LieFin

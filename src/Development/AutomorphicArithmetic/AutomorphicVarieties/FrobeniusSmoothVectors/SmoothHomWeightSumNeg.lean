@@ -100,10 +100,10 @@ private theorem lc_hom {k G : Type} [Group G] [TopologicalSpace G] [IsTopologica
 theorem UpperTheory.smoothHom_weight_sum_neg :
     ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [IsCoef l O] {F : Frame l (ResidueField O)} {C₀ : ℕ} {n : ℕ}, F.Ok C₀ → (n = 2 ∨ n = 3) → ∀ (S : Space O F n) (Q : Type) [CommRing Q] [Nontrivial Q] [Algebra (ResidueField O) Q] (ρ : NRep F n Q), ρ.IsBar (algebraMap (ResidueField O) Q) → ρ.triM = ⊥ → (∀ i j, IsLocallyConstant fun g => ρ.r g i j) → ∃ ξ : S.A →+* Q, S.FPt ξ ∧ S.u.map ξ = ρ := by
   intro l _ O _ _ _ _ F C₀ n hF hn S Q _ _ _ ρ hbar htri hlc
-  letI : IsCO O (ResidueField O) := (co_res O).1
-  letI : Algebra O Q := ((algebraMap (ResidueField O) Q).comp (algebraMap O (ResidueField O))).toAlgebra
-  haveI : IsScalarTower O (ResidueField O) Q := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
-  haveI : CompactSpace F.G0 := by
+  let : IsCO O (ResidueField O) := (co_res O).1
+  let : Algebra O Q := ((algebraMap (ResidueField O) Q).comp (algebraMap O (ResidueField O))).toAlgebra
+  have : IsScalarTower O (ResidueField O) Q := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  have : CompactSpace F.G0 := by
     have hc : IsCompact (F.del.ker : Set F.Γ) := (Subgroup.isClosed_of_isOpen _ hF.del_open).isCompact
     exact isCompact_iff_compactSpace.1 hc
   have hres : ∀ c : ResidueField O, res O (ResidueField O) c = c := by
@@ -144,7 +144,7 @@ theorem UpperTheory.smoothHom_weight_sum_neg :
     · refine ⟨fun v i g => ((F.Ψ (F.loc v g) ^ w n i : (ResidueField O)ˣ) : ResidueField O),
         fun v i => ⟨fun N => ?_, fun g => hres _⟩, fun v i g => (hbar.2 v i g).symm⟩
       have hcont : Continuous (F.loc v) :=
-        continuous_subtype_val.comp (hF.loc_cont v)
+        continuous_subtypeVal.comp (hF.loc_cont v)
       exact (hΨ.comp_continuous hcont).comp
         (fun u => Ideal.Quotient.mk (maximalIdeal (ResidueField O) ^ N)
           ((u ^ w n i : (ResidueField O)ˣ) : ResidueField O))

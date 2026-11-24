@@ -108,10 +108,10 @@ theorem sum_ceil_off_le {E : Type} [Field E] [NumberField E] {I : Type} [Fintype
     by_cases h : c_vp 𝔣 l = 0
     · left
       unfold n_vp
-      rw [if_pos h]
+      rw [ite_eq_left h]
     · right
       unfold n_vp
-      rw [if_neg h]
+      rw [ite_eq_right h]
       rfl
   have hn0 : ∀ l, 0 ≤ n_vp d s κ 𝔣 l := by
     intro l
@@ -144,7 +144,7 @@ theorem sum_ceil_off_le {E : Type} [Field E] [NumberField E] {I : Type} [Fintype
     · rfl
     · have h0 : n_vp d s κ 𝔣 l = 0 := by
         unfold n_vp
-        rw [if_pos (not_not.mp h)]
+        rw [ite_eq_left (not_not.mp h)]
       simp [h0]
   have hsubS : S.filter (fun l => c_vp 𝔣 l ≠ 0) ⊆ S := Finset.filter_subset _ _
   have hcA : ∑ l ∈ S.filter (fun l => c_vp 𝔣 l ≠ 0), c_vp 𝔣 l * Real.log l ≤ A := by
@@ -175,7 +175,7 @@ theorem sum_ceil_off_le {E : Type} [Field E] [NumberField E] {I : Type} [Fintype
     · rw [ha l hlS]
       simp
     · unfold delta_vp
-      haveI : Fact l.Prime := ⟨hS l hlS⟩
+      have : Fact l.Prime := ⟨hS l hlS⟩
       rw [padicValInt.eq_zero_of_not_dvd hnd]
       simp
   have hmain := sum_ceil_nl_le (S.filter (fun l => c_vp 𝔣 l ≠ 0)) (n_vp d s κ 𝔣) (c_vp 𝔣)
@@ -244,8 +244,8 @@ theorem n_vp_log_le (d s : ℕ) (κ : I → ℕ) (𝔣 : Ideal (GlobalTheory.CMV
   have hΛ : 0 ≤ Λ := hl.trans hlΛ
   unfold n_vp
   by_cases h : c_vp 𝔣 l = 0
-  · rw [if_pos h, zero_mul]; positivity
-  · rw [if_neg h]
+  · rw [ite_eq_left h, zero_mul]; positivity
+  · rw [ite_eq_right h]
     unfold Formalism.PairingDivisionLocalBalance.nl
     exact linear_combination_log_bound_real_inequality _ _ _ _ _ _ (by positivity) (by positivity) (by split_ifs <;> norm_num) (by split_ifs <;> norm_num) hl hcΛ hlΛ
 
@@ -527,7 +527,7 @@ theorem denSum (hZ : GlobalTheory.IndefiniteRowSideFullHecke.ZetaValueIdeals.Zet
     (fun l hl h => D.host.der.discr_primes.1 l hl h) (A := large₂.sc.L / 100) (hrd1.trans hrd2) hrd2
 
   have hfF : Module.finrank ℚ (maximalRealSubfield D.host.E) = D.R.f := Formalism.MainNotions.J.finrank_F_eq D
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hkf := two_s_f_le large₂ hR.size i j hs2
   have h16 : 16 ≤ Module.finrank ℚ (maximalRealSubfield D.host.E) * (2 * s) := by
     rw [hfF]

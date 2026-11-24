@@ -163,7 +163,7 @@ theorem holShape_of_overK (R : RealDat D A Ks) (i : Fin D.R.m) {σ : D.what₂.L
       (R.MW i σ).ε ρ a = decide ((a : ℕ) < (D.R.sigW ((i : ℕ) + 1)).1) := fun ρ a => by
     have he := (R.MW i σ).enum ρ
     unfold Links.parAt at he
-    rw [if_pos (((labels_overK σ).1 hσ).2 ρ)] at he
+    rw [ite_eq_left (((labels_overK σ).1 hσ).2 ρ)] at he
     rw [← hs ρ]
     exact GlobalTheory.HolDict.isEnum_holPar_kapW _ (rank_Wc i) (by rw [hs ρ]; exact hr) he a
   have hc : ∀ ρ, Formalism.QuantumDeterminants.IsHCParam ((R.MW i σ).lam ρ) := fun ρ => by
@@ -181,8 +181,8 @@ theorem proj_apply (R : RealDat D A Ks) (hg : R.models_gW) (i : Fin D.R.m) (σ :
     (v : (R.MW i σ).Vec) :
     (R.HW i σ).e ((∑ g, RealDat.eC (A := A) σ g • R.gW i σ g) t) v = R.eWf i σ ((R.HW i σ).e t v) := by
 
-  simp only [RealDat.eWf, gaL, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, MultilinearMap.sum_apply,
-  MultilinearMap.smul_apply, hg i σ, postOn_apply]
+  simp only [RealDat.eWf, gaL, LinearMap.sum_apply, LinearMap.smul_apply, map_sum, map_smul, sum_apply,
+  smul_apply, hg i σ, postOn_apply]
   rfl
 
 

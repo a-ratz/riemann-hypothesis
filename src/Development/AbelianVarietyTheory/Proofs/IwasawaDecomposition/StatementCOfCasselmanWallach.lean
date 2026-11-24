@@ -207,9 +207,9 @@ def frameM (m : ℕ) : Matrix (Fin (m + 2)) (Fin (m + 2)) ℤ :=
   Matrix.of fun i j => if j = 0 then 1 else if j = 1 then (i.val : ℤ) else if i = j then 1 else 0
 
 theorem det_frameM (m : ℕ) : (frameM m).det = 1 := by
-  rw [Matrix.det_of_lowerTriangular]
+  rw [Matrix.det_of_isLowerTriangular]
   · refine Finset.prod_eq_one fun i _ => ?_
-    simp only [frameM, Matrix.of_apply, if_true]
+    simp only [frameM, Matrix.of_apply, ite_true]
     split_ifs with h1 h2
     · rfl
     · rw [h2]; rfl
@@ -287,7 +287,7 @@ theorem exists_class (m r : ℕ) (hr : 2 ≤ r) (s : SplitPlace L) {p : ℕ} (hp
       · rw [Pi.single_eq_of_ne hl, sub_zero]
         exact hlow l 0 (by simp; omega) (by simpa using Fin.pos_iff_ne_zero.2 hl))
     rw [Finset.sum_eq_single 0 (fun l _ hl => by rw [Pi.single_eq_of_ne hl, mul_zero]) (by simp)] at h3
-    simp only [hA, frameM, Matrix.of_apply, if_true, Int.cast_one, mul_one, Pi.single_eq_same] at h3
+    simp only [hA, frameM, Matrix.of_apply, ite_true, Int.cast_one, mul_one, Pi.single_eq_same] at h3
     let ζ : 𝓞 L := ⟨_, hint i (σ i)⟩
     have eζ : algebraMap (𝓞 L) L ζ = (c : Matrix _ _ L) i (σ i) := rfl
     have hζ : IsOfFinOrder ζ := by
@@ -316,7 +316,7 @@ theorem exists_class (m r : ℕ) (hr : 2 ≤ r) (s : SplitPlace L) {p : ℕ} (hp
     simp only [Pi.add_apply, mul_add, Finset.sum_add_distrib] at h3
     rw [Finset.sum_eq_single 0 (fun l _ hl => by rw [Pi.single_eq_of_ne hl, mul_zero]) (by simp),
       Finset.sum_eq_single 1 (fun l _ hl => by rw [Pi.single_eq_of_ne hl, mul_zero]) (by simp)] at h3
-    simp only [hA, frameM, Matrix.of_apply, if_true, if_neg h10, Int.cast_one, mul_one, one_mul, Pi.single_eq_same,
+    simp only [hA, frameM, Matrix.of_apply, ite_true, ite_eq_right h10, Int.cast_one, mul_one, one_mul, Pi.single_eq_same,
       hone, map_one] at h3
     convert h3 using 2
     push_cast
@@ -712,7 +712,7 @@ theorem finrank_typeSp_cx : ∀ (L : Type) [Field L] [NumberField L] [IsCMField 
   intro L _ _ _ n K _ e W W' _ _ _ _ ρ ρ' J χ hW hN hfin
   classical
   obtain ⟨ι, _, _, b, b', hM⟩ := hW
-  letI : Algebra K ℂ := e.toAlgebra
+  let : Algebra K ℂ := e.toAlgebra
   let β := Module.Basis.ofVectorSpace K ℂ
   let ω := coordCx e b b'
   have hωc : ∀ w i, b'.equivFun (ω w) i = e (b.equivFun w i) := fun w i => coordCx_coord e b b' w i
@@ -1097,21 +1097,21 @@ theorem mem_para_of_eig : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
     intro i j
     rw [Matrix.one_apply]; split_ifs
     · rw [map_one]
-    · rw [map_zero]; exact zero_le'
+    · rw [map_zero]; exact zero_le
   have hGint : ∀ i j, Gmat h.val i0 j0 t i j ∈ O := by
     intro i j
     rw [hOv, G_apply]
     refine (Valuation.map_add _ _ _).trans (max_le (hone i j) ?_)
     split_ifs
     · rw [map_mul]; exact mul_le_one' (hent _ _) htv
-    · rw [map_zero]; exact zero_le'
+    · rw [map_zero]; exact zero_le
   have hPint : ∀ i j, Pmat h.val i0 j0 t i j ∈ O := by
     intro i j
     rw [hOv, P_apply]
     refine (Valuation.map_add _ _ _).trans (max_le (hone i j) ?_)
     split_ifs
     · rw [map_mul]; exact mul_le_one' htv (hent _ _)
-    · rw [map_zero]; exact zero_le'
+    · rw [map_zero]; exact zero_le
   have hdG : (Gmat h.val i0 j0 t).det = a := by rw [det_G, hth]
   have hdP : (Pmat h.val i0 j0 t).det = a := by rw [det_P, hth]
   let Gg := Matrix.GeneralLinearGroup.mkOfDetNeZero (Gmat h.val i0 j0 t) (by rw [hdG]; exact ha0)
@@ -1130,14 +1130,14 @@ theorem mem_para_of_eig : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
     intro i j hi hj
     have hji : j ≠ i0 := fun e => by rw [e] at hj; omega
     have hij : i ≠ j := fun e => by rw [e] at hi; omega
-    rw [hgl', G_apply, if_neg hji, Matrix.one_apply_ne hij, add_zero, map_zero]
+    rw [hgl', G_apply, ite_eq_right hji, Matrix.one_apply_ne hij, add_zero, map_zero]
     exact zero_lt_one
   have hpP : NG.ParaRT s r (s.loc n p) := by
     refine ⟨mem_GLint_of O _ (fun i j => by rw [hpl]; exact hPint i j) (by rw [hpl, hdP]; exact hdinv), ?_⟩
     intro i j hi hj
     have hij0 : i ≠ j0 := fun e => by rw [e] at hi; omega
     have hij : i ≠ j := fun e => by rw [e] at hi; omega
-    rw [hpl, P_apply, if_neg hij0, Matrix.one_apply_ne hij, add_zero, map_zero]
+    rw [hpl, P_apply, ite_eq_right hij0, Matrix.one_apply_ne hij, add_zero, map_zero]
     exact zero_lt_one
   have hgJ : g ∈ J := (hJ g hgT).2 hgP
   have hpJ : p ∈ J := (hJ p hpT).2 hpP
@@ -1402,7 +1402,7 @@ theorem pulls_eq_zpow : ∀ (D : D7) (i : D.ntw.Tw) (k : ℕ) (b b' : Bool) (v v
     rw [h1, map_one, ← map_one ι'] at h2'
     rw [hι' h2', zpow_one, hι h2]
   · have hN : 0 < D.ntw.l i ^ k := pow_pos hl.pos k
-    haveI : NeZero (D.ntw.l i ^ k) := ⟨hN.ne'⟩
+    have : NeZero (D.ntw.l i ^ k) := ⟨hN.ne'⟩
     have hζ := D.ntw.zk_prim i k
     have he : IsPrimitiveRoot (ρ.emb z) (D.ntw.l i ^ k) := hz.map_of_injective ρ.emb.injective
     have he' : IsPrimitiveRoot (ρ'.emb z) (D.ntw.l i ^ k) := hz.map_of_injective ρ'.emb.injective
@@ -1671,7 +1671,7 @@ theorem exists_form {η : HChar D.host.E} {J : Subgroup (GAf D.host.E D.R.nV)} (
   obtain ⟨k, ⟨v⟩⟩ := hG.2.2
   obtain ⟨h1, s, hs⟩ := hG.1 k v
   obtain ⟨g, hg⟩ := GlobalTheory.T.exists_class_trivial_stabiliser_at_typePlace D k s (hs ▸ h1)
-  haveI : Nontrivial W := by
+  have : Nontrivial W := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     have := hρ
@@ -1828,10 +1828,10 @@ theorem exists_data (hG : IsGalois ℚ ↥D.LL0) (s : D.what₂.places.Pl → D.
   have h1 : ∀ v, ReadsAt (s v) (b v) v ∧ ∃ (ρ : Reading (s v) (k v) (b v) v)
       (ψ : D.ntw.RCG (s v) (Q v) →* (D.ntw.Ok (s v) (k v))ˣ), ρ.Pulls ψ (ψ₀ v) ∧ twPack D (s v) (b v) (Q v) (k v) ψ = p (o v) := fun v => by
     by_cases h2 : o v = v
-    · have e : b v = b₀ v := if_pos h2
+    · have e : b v = b₀ v := ite_eq_left h2
       rw [e, h2]
       exact ⟨hb v, unpack (hp v).1 (hp v).2.1 (hp v).2.2.1 (hp v).2.2.2⟩
-    · have e : b v = !b₀ (D.what₂.places.conj v) := if_neg h2
+    · have e : b v = !b₀ (D.what₂.places.conj v) := ite_eq_right h2
       have h3 := (hb (D.what₂.places.conj v)).conj hG
       have h4 := (hp (D.what₂.places.conj v)).1.conj hG
       rw [D.what₂.places.conj_conj] at h3 h4
@@ -1843,8 +1843,8 @@ theorem exists_data (hG : IsGalois ℚ ↥D.LL0) (s : D.what₂.places.Pl → D.
   refine ⟨b, ρ, ψ, hr, h2, fun w hne => ?_, fun v => by rw [h3, h3, (ho v).2]⟩
   simp only [b, (ho w).2, D.what₂.places.conj_conj]
   rcases (ho w).1 with h | h
-  · rw [if_neg (by rw [h]; exact hne.symm), if_pos h]
-  · rw [if_pos h, if_neg (by rw [h]; exact hne), Bool.not_not]
+  · rw [ite_eq_right (by rw [h]; exact hne.symm), ite_eq_left h]
+  · rw [ite_eq_left h, ite_eq_right (by rw [h]; exact hne), Bool.not_not]
 
 abbrev kMap {i : D.ntw.Tw} {k : ℕ} {b : Bool} {v : D.what₂.places.Pl} (ρ : Reading i k b v) : NX.Kk D i k →+* FractionRing ρ.Oe :=
   IsFractionRing.map (K := FractionRing (D.ntw.Ok i k)) (L := FractionRing ρ.Oe) ρ.inj
@@ -1866,7 +1866,7 @@ theorem rank_of_levEq {μ : D.what₂.Tup} {j' : ℕ} (m : MtReal D μ j') (X : 
     {Q : Finset (PlE D.host)} {ψ : G D.host.E D.nd.Om →* (D.ntw.Ok i k)ˣ} (hA : NX.AdmTw D i k Q ψ) (j : Fin D.R.m)
     (e : NX.Kk D i k →+* ℂ) (h : LevEq m.J m.χ (cell X b hA j).J (cx e (cell X b hA j).χ)) (hw : CellWt m X b hA j e) :
     Module.finrank D.what₂.LL (D.what₂.MtL μ j') = Module.finrank (NX.Kk D i k) (D.nexp.MtV i (j.1 + 1) b k Q ψ) := by
-  haveI : FiniteDimensional (NX.Kk D i k) (D.nexp.MtV i (j.1 + 1) b k Q ψ) := by
+  have : FiniteDimensional (NX.Kk D i k) (D.nexp.MtV i (j.1 + 1) b k Q ψ) := by
     obtain ⟨S, hS⟩ := D.nexp.MtLat_fg i (j.1 + 1) b k Q ψ
     refine ⟨S, ?_⟩
     rw [← D.nexp.MtLat_span i (j.1 + 1) b k Q ψ, ← hS, Submodule.span_span_of_tower]

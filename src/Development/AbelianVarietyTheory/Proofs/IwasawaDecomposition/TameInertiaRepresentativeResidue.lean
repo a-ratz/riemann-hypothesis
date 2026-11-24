@@ -98,13 +98,13 @@ theorem exists_nat_sub_mem {E : Type} [Field E] [NumberField E] (P : HeightOneSp
     (hN : normV P = g) (hgP : ((g : ℕ) : 𝓞 E) ∈ P.asIdeal) (u : 𝓞 E) :
     ∃ a : ℕ, a < g ∧ u - (a : 𝓞 E) ∈ P.asIdeal := by
   have hgp : g.Prime := Fact.out
-  haveI := P.isMaximal
-  letI : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field _
-  haveI : CharP (𝓞 E ⧸ P.asIdeal) g := by
+  have := P.isMaximal
+  let : Field (𝓞 E ⧸ P.asIdeal) := Ideal.Quotient.field _
+  have : CharP (𝓞 E ⧸ P.asIdeal) g := by
     rw [CharP.charP_iff_prime_eq_zero hgp, ← map_natCast (Ideal.Quotient.mk P.asIdeal)]
     exact Ideal.Quotient.eq_zero_iff_mem.2 hgP
   have hcard : Nat.card (𝓞 E ⧸ P.asIdeal) = g := hN
-  haveI : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hgp.ne_zero)
+  have : Finite (𝓞 E ⧸ P.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact hgp.ne_zero)
   let f : ZMod g →+* 𝓞 E ⧸ P.asIdeal := ZMod.castHom (dvd_refl g) _
   have hsurj : Function.Surjective f :=
     (Function.Injective.bijective_of_nat_card_le f.injective (by rw [hcard, Nat.card_zmod])).2
@@ -121,8 +121,8 @@ end GlobalTheory.TameRes
 open GlobalTheory.TameRes in
 theorem GlobalTheory.tameRep_residue : ∀ (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAlgClosure E Ω] (A : ValuationSubring Ω) (P : HeightOneSpectrum (𝓞 E)) (g : ℕ) [Fact g.Prime], IsPlaceOver (F := E) A P → normV P = g → ((g : ℕ) : 𝓞 E) ∈ P.asIdeal → ((g : ℕ) : 𝓞 E) ∉ P.asIdeal ^ 2 → ∀ (κ : IsLocalRing.ResidueField A ≃+* Formalism.CyclotomicNorms.Fbar g) (σ : G E Ω) (ζ : ℕ → Formalism.CyclotomicNorms.Fbar g), σ ∈ Ine (F := E) A → IsGenSys ζ → TameCoupled A κ σ ζ → (∀ A' : ValuationSubring Ω, IsPlaceOver (F := E) A' P → σ ∈ Ine (F := E) A' → σ ≠ 1 → A' = A) → ∀ u : 𝓞 E, NX.TameRep P 1 σ u → ∃ a : ℕ, a.Coprime g ∧ u - (a : 𝓞 E) ∈ P.asIdeal ∧ algebraMap (ZMod g) (Formalism.CyclotomicNorms.Fbar g) (a : ZMod g) = ζ 1 := by
   intro E Ω _ _ _ _ _ A P g _ hAP hN hgP hgP2 κ σ ζ hσ hζ hT huniq u hu
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have hgp : g.Prime := Fact.out
   have hg2 : 2 ≤ g := hgp.two_le
   have hgΩ : ((g : ℕ) : Ω) ≠ 0 := Nat.cast_ne_zero.mpr hgp.ne_zero

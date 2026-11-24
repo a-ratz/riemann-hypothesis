@@ -128,7 +128,7 @@ theorem lintegral_compact_le {G : Type} [AddCommGroup G] [TopologicalSpace G] [I
   classical
   have hKK : IsCompact (K - K) := by
     rw [sub_eq_add_neg]; exact hK.add hK.neg
-  have hfin := tendsto_cofinite_cocompact_iff.1 (Γ.tendsto_coe_cofinite_of_discrete ⟨‹_›⟩) _ hKK
+  have hfin := tendsto_cofinite_cocompact_iff.1 (Γ.tendsto_coe_cofinite_of_isDiscrete ⟨‹_›⟩) _ hKK
   refine ⟨hfin.toFinset.card, fun φ hφ hp => ?_⟩
   have hm : Measurable (K.indicator φ) := hφ.indicator hK.measurableSet
   rw [← lintegral_indicator hK.measurableSet, h𝓕.lintegral_eq_tsum'', ← lintegral_tsum, ← lintegral_const_mul _ hφ]
@@ -482,8 +482,8 @@ theorem cube_bound (hom : IsWeilDatumO ψ S T χS χT om) (hc : Chart θ σ) {N 
   refine ⟨c * M, by positivity, fun p φ hφ hl B hB => ?_⟩
   have hF := hom.om_pres p φ hφ
   have en : ∀ z : ℂ, ENNReal.ofReal (‖z‖ ^ 2) = ‖z‖ₑ ^ 2 := fun z => by
-    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm_eq_enorm]
-  have hm : Measurable fun w : WA T S => ‖om p φ w‖ₑ ^ 2 := hF.cont.measurable.enorm.pow_const 2
+    rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]
+  have hm : Measurable fun w : WA T S => ‖om p φ w‖ₑ ^ 2 := hF.cont.measurable.eNorm.pow_const 2
   have a1 := hreal _ hm fun w hw => by
     rw [hιπ] at hw ⊢
     rw [← en, ← en, hl w hw]

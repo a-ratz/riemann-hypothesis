@@ -63,8 +63,8 @@ namespace UpperTheory.V.Lib
 
 private theorem move {F : Type} [Field F] [Countable F] (l : ℕ) [Fact l.Prime] (f : F →+* ℂ) (g : F →+* PadicAlgCl l) :
     ∃ ι : PadicAlgCl l ≃+* ℂ, ∀ a, ι.symm (f a) = g a := by
-  letI := f.toAlgebra
-  letI := g.toAlgebra
+  let := f.toAlgebra
+  let := g.toAlgebra
   obtain ⟨ι₀⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex l
   obtain ⟨e, he⟩ := GlobalTheory.PadicComplexIso.exists_ringEquiv_over F ℂ (PadicAlgCl l) Cardinal.mk_le_aleph0
     (Cardinal.mk_complex ▸ Cardinal.aleph0_lt_continuum) (Cardinal.mk_congr ι₀.symm.toEquiv)
@@ -113,7 +113,7 @@ theorem isIntegral_of_norm_le (x : ℂ) (h : ∀ (l : ℕ) [Fact l.Prime] (ι : 
     obtain ⟨ι₀⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex 2
     have ht : Transcendental ℚ (ι₀.symm x + ((1 / 4 : ℚ) : PadicAlgCl 2)) := fun h1 => hx (by
       have h2 : IsAlgebraic ℚ (ι₀.symm x) := by
-        simpa using h1.sub (isAlgebraic_rat ℚ (1 / 4 : ℚ))
+        simpa using h1.sub (isAlgebraic_ratCast ℚ (1 / 4 : ℚ))
       simpa using h2.algHom ι₀.toRingHom.toRatAlgHom)
     obtain ⟨ι, hι⟩ := move_transc 2 hx ht
     have h1 := h 2 ι
@@ -131,10 +131,10 @@ theorem isIntegral_of_norm_le (x : ℂ) (h : ∀ (l : ℕ) [Fact l.Prime] (ι : 
   have hc : ∀ i, (minpoly ℚ x).coeff i ∈ Set.range (algebraMap ℤ ℚ) := by
     intro i
     set q := (minpoly ℚ x).coeff i with hq
-    refine ⟨q.num, Rat.coe_int_num_of_den_eq_one ?_⟩
+    refine ⟨q.num, Rat.intCast_num_of_den_eq_one ?_⟩
     by_contra hd
     obtain ⟨l, hl, hld⟩ := Nat.exists_prime_and_dvd hd
-    haveI := Fact.mk hl
+    have := Fact.mk hl
     let S : Subring (PadicAlgCl l) := (NormedField.valuation (K := PadicAlgCl l)).integer
     have hS : ∀ y, y ∈ S ↔ ‖y‖ ≤ 1 := fun y => Iff.rfl
     have h1 : (minpoly ℚ x).map (algebraMap ℚ (PadicAlgCl l)) ∈ lifts S.subtype := by

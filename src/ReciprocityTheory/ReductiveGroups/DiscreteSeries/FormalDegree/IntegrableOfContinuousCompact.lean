@@ -87,10 +87,10 @@ theorem leading_minor_exp_re_pos {ε : Fin n → Bool} (y : PCoord ε → ℂ) {
 
 theorem continuous_leading_minor (i : ℕ) : Continuous (fun A : Matrix (Fin n) (Fin n) ℂ => Del A i) := by
   by_cases h : i ≤ n
-  · simp only [Del, dif_pos h]
+  · simp only [Del, dite_eq_left h]
     first
     | exact (continuous_id.matrix_submatrix _ _).matrix_det
-  · simp only [Del, dif_neg h]
+  · simp only [Del, dite_eq_right h]
     exact continuous_const
 
 section
@@ -137,12 +137,12 @@ theorem continuous_potential_conj {ε : Fin n → Bool} (lam : Fin n → ℝ) (z
 private theorem continuous_pmat {ε : Fin n → Bool} : Continuous (fun y : PCoord ε → ℂ => pmat y) := by
   refine continuous_pi fun a => continuous_pi fun b => ?_
   by_cases h1 : b < a ∧ ε a ≠ ε b
-  · simp only [pmat, dif_pos h1]
+  · simp only [pmat, dite_eq_left h1]
     exact continuous_apply _
   · by_cases h2 : a < b ∧ ε b ≠ ε a
-    · simp only [pmat, dif_neg h1, dif_pos h2]
+    · simp only [pmat, dite_eq_right h1, dite_eq_left h2]
       exact (continuous_apply _).star
-    · simp only [pmat, dif_neg h1, dif_neg h2]
+    · simp only [pmat, dite_eq_right h1, dite_eq_right h2]
       exact continuous_const
 
 theorem continuous_potential_conj_prod {ε : Fin n → Bool} (lam : Fin n → ℝ) :
@@ -156,12 +156,12 @@ theorem continuous_potential_pmat {ε : Fin n → Bool} (lam : Fin n → ℝ) :
   have hpm : Continuous (fun y : PCoord ε → ℂ => pmat y) := by
     refine continuous_pi fun a => continuous_pi fun b => ?_
     by_cases h1 : b < a ∧ ε a ≠ ε b
-    · simp only [pmat, dif_pos h1]
+    · simp only [pmat, dite_eq_left h1]
       exact continuous_apply _
     · by_cases h2 : a < b ∧ ε b ≠ ε a
-      · simp only [pmat, dif_neg h1, dif_pos h2]
+      · simp only [pmat, dite_eq_right h1, dite_eq_left h2]
         exact (continuous_apply _).star
-      · simp only [pmat, dif_neg h1, dif_neg h2]
+      · simp only [pmat, dite_eq_right h1, dite_eq_right h2]
         exact continuous_const
   exact continuous_potential_comp lam hpm (fun y => ⟨y, rfl⟩)
 
@@ -183,11 +183,11 @@ theorem KType_norm_op_apply {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KTyp
 
 theorem KType_continuous_op {ε : Fin n → Bool} {Λ : Fin n → ℝ} (T : KType ε Λ) :
     Continuous (fun k => T.op k) := by
-  exact continuous_subtype_val.comp T.cont
+  exact continuous_subtypeVal.comp T.cont
 
 theorem integrable_dk_of_continuous {ε : Fin n → Bool} {E : Type*} [NormedAddCommGroup E] {g : KG ε → E} (hg : Continuous g) :
     Integrable g (dk ε) := by
-  letI := (dk_props ε).1
+  let := (dk_props ε).1
   rw [← integrableOn_univ]
   exact hg.continuousOn.integrableOn_compact isCompact_univ
 
@@ -222,11 +222,11 @@ theorem inner_fF_eq_integral {ε : Fin n → Bool} (lam : Fin n → ℝ) {Λ : F
       (((KType_continuous_op T).mul continuous_const).mul ((KType_continuous_op T).comp continuous_inv))
   have hv : Continuous (fun k : KG ε => (((Real.exp (-Ph lam (toMK k⁻¹ * pmat z * toMK k)) : ℝ) : ℂ) •
       (T.op k * projW T * T.op k⁻¹)) v) := hFc.clm_apply continuous_const
-  rw [fF_eq_integral, ContinuousLinearMap.smul_apply, inner_smul_right,
+  rw [fF_eq_integral, smul_apply, inner_smul_right,
     ContinuousLinearMap.integral_apply (integrable_dk_of_continuous hFc) v, ← integral_inner (integrable_dk_of_continuous hv) u]
   congr 1
   refine integral_congr_ae (ae_of_all _ fun k => ?_)
-  simp only [ContinuousLinearMap.smul_apply, conj_projection_apply, inner_smul_right]
+  simp only [smul_apply, conj_projection_apply, inner_smul_right]
 
 theorem norm_inner_fF_le_half_sq_add_integral {ε : Fin n → Bool} (lam : Fin n → ℝ) {Λ : Fin n → ℝ} (T : KType ε Λ) (z : PCoord ε → ℂ)
     (u v : T.V) :
@@ -287,7 +287,7 @@ theorem lemma6b {ε : Fin n → Bool} {lam : Fin n → ℝ} (T : KType ε (lowK 
       ‖⟪stdOrthonormalBasis ℂ T.V i, T.op k T.w⟫_ℂ‖ ^ 2) := fun i =>
     (hfc.pow 2).mul ((continuous_const.inner (hop.clm_apply continuous_const)).norm.pow 2)
   have hsq : ∀ x : ℝ, Real.exp (-x) ^ 2 = Real.exp (-2 * x) := fun x => by
-    rw [← Real.exp_nat_mul]
+    rw [← Real.exp_natCast_mul]
     congr 1
     push_cast
     ring

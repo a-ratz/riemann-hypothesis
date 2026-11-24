@@ -88,7 +88,7 @@ theorem eq_zero_of_sum_apply_eq_zero (σ : Representation ℂ G S) (π : Represe
     (hb : ∀ i g s, b i (σ g s) = π g (b i s)) (J : Finset ι) :
     ∀ t : ι → S, ∑ j ∈ J, b j (t j) = 0 → ∀ j ∈ J, t j = 0 := by
   classical
-  haveI : IsSimpleOrder (Subrepresentation σ) := hirr
+  have : IsSimpleOrder (Subrepresentation σ) := hirr
   induction J using Finset.induction_on with
   | empty => intro t _ j hj; simp at hj
   | insert a J ha ih =>
@@ -261,7 +261,7 @@ theorem exists_irreducible_of_fixed {π : Representation ℂ G V} {K : Subgroup 
     ∃ (S : Subrepresentation π) (u : V), u ∈ S.toSubmodule ∧ u ≠ 0 ∧ u ∈ fixed π K ∧
       S.toRepresentation.IsIrreducible ∧ FiniteDimensional ℂ (fixed S.toRepresentation K) := by
   classical
-  haveI := hfin
+  have := hfin
   have hfinM : ∀ M : Submodule ℂ V, M ≤ W → FiniteDimensional ℂ ↥(M ⊓ fixed π K) :=
     fun M hM => Submodule.finiteDimensional_of_le (inf_le_inf_right (fixed π K) hM)
   have hex : ∃ n, ∃ M : Submodule ℂ V, (∀ g, ∀ ⦃x⦄, x ∈ M → π g x ∈ M) ∧ M ≤ W ∧ M ≠ ⊥ ∧
@@ -272,7 +272,7 @@ theorem exists_irreducible_of_fixed {π : Representation ℂ G V} {K : Subgroup 
     intro M hMinv hMW hMne
     rw [hM0d]
     exact Nat.find_min' hex ⟨M, hMinv, hMW, hMne, rfl⟩
-  haveI := hfinM M0 hM0W
+  have := hfinM M0 hM0W
   let S1 : Submodule ℂ V := Submodule.span ℂ {x | ∃ g, ∃ y ∈ M0 ⊓ fixed π K, x = π g y}
   have hS1inv : ∀ g, ∀ ⦃x⦄, x ∈ S1 → π g x ∈ S1 := by
     intro g x hx
@@ -346,7 +346,7 @@ theorem exists_irreducible_of_fixed {π : Representation ℂ G V} {K : Subgroup 
       rw [mem_fixed_iff_forall] at hy ⊢
       intro k hk
       exact congrArg Subtype.val (hy k hk)
-    haveI : FiniteDimensional ℂ ↥((fixed S.toRepresentation K).map S1.subtype) :=
+    have : FiniteDimensional ℂ ↥((fixed S.toRepresentation K).map S1.subtype) :=
       Submodule.finiteDimensional_of_le hle
     exact LinearEquiv.finiteDimensional
       (Submodule.equivMapOfInjective S1.subtype Subtype.val_injective _).symm
@@ -432,7 +432,7 @@ theorem exists_fixed_of_ne_bot (ρ : Representation ℂ (G × H) V) (hi : ρ.IsI
     refine (le_iSup T 1) ⟨a, ha, ?_⟩
     show ρ (1, 1) a = a
     rw [Prod.mk_one_one, map_one, Module.End.one_apply]
-  haveI : IsSimpleOrder (Subrepresentation ρ) := hi
+  have : IsSimpleOrder (Subrepresentation ρ) := hi
   let SB : Subrepresentation ρ := ⟨B, hBinv⟩
   have hSB : SB = ⊤ := by
     rcases IsSimpleOrder.eq_bot_or_eq_top SB with h | h
@@ -453,7 +453,7 @@ end Product
 
 theorem exists_irreducible_sub_inl : ∀ {G H V : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G] [Group H] [TopologicalSpace H] [IsTopologicalGroup H] [AddCommGroup V] [Module ℂ V], (∀ U ∈ 𝓝 (1 : G), ∃ K : Subgroup G, IsOpen (K : Set G) ∧ IsCompact (K : Set G) ∧ (K : Set G) ⊆ U) → (∀ U ∈ 𝓝 (1 : H), ∃ K : Subgroup H, IsOpen (K : Set H) ∧ IsCompact (K : Set H) ∧ (K : Set H) ⊆ U) → ∀ ρ : Representation ℂ (G × H) V, IsAdmissible ρ → ρ.IsIrreducible → ∃ (K : Subgroup G) (S : Subrepresentation (ρ.comp (MonoidHom.inl G H))) (u : V), IsOpen (K : Set G) ∧ IsCompact (K : Set G) ∧ u ∈ S.toSubmodule ∧ u ≠ 0 ∧ (∀ x ∈ K, ρ (x, 1) u = u) ∧ S.toRepresentation.IsIrreducible ∧ FiniteDimensional ℂ (fixed S.toRepresentation K) := by
   intro G H V _ _ _ _ _ _ _ _ hG hH ρ hadm hi
-  haveI : IsSimpleOrder (Subrepresentation ρ) := hi
+  have : IsSimpleOrder (Subrepresentation ρ) := hi
   obtain ⟨v, hv0⟩ : ∃ v : V, v ≠ 0 := by
     by_contra hcon
     push_neg at hcon
@@ -502,7 +502,7 @@ theorem exists_irreducible_sub_inl : ∀ {G H V : Type} [Group G] [TopologicalSp
   have hprodC : IsCompact ((K1.prod K2 : Subgroup (G × H)) : Set (G × H)) := by
     rw [Subgroup.coe_prod]
     exact hK1c.prod hK2c
-  haveI hfprod : FiniteDimensional ℂ ↥(fixed ρ (K1.prod K2)) := hadm.2 _ hprodO hprodC
+  have hfprod : FiniteDimensional ℂ ↥(fixed ρ (K1.prod K2)) := hadm.2 _ hprodO hprodC
   have hfin : FiniteDimensional ℂ ↥(W ⊓ fixed (ρ.comp (MonoidHom.inl G H)) K1) := by
     refine Submodule.finiteDimensional_of_le (S₂ := fixed ρ (K1.prod K2)) ?_
     rintro x ⟨hxW0, hxK0⟩
@@ -560,7 +560,7 @@ theorem finiteDimensional_of_smInd_fixed {G W : Type} [Group G] [TopologicalSpac
   let pick : G → H := fun x => if h : S x then h.choose else 1
   have pick_spec : ∀ x, S x → ((pick x : H) : G)⁻¹ * x ∈ K := by
     intro x h
-    simp only [pick, dif_pos h]
+    simp only [pick, dite_eq_left h]
     exact h.choose_spec
   let F : A →ₗ[ℂ] (G → W) := LinearMap.pi fun x =>
     if S x then (σ (pick x)).comp A.subtype else 0
@@ -690,7 +690,7 @@ variable {G H V X : Type} [Group G] [Group H] [AddCommGroup V] [Module ℂ V] [A
 
 theorem eq_top_of_stable {ρ : Representation ℂ G V} (hi : ρ.IsIrreducible) (T : Submodule ℂ V)
     (hT : ∀ g, ∀ x ∈ T, ρ g x ∈ T) (h0 : T ≠ ⊥) : T = ⊤ := by
-  haveI : IsSimpleOrder (Subrepresentation ρ) := hi
+  have : IsSimpleOrder (Subrepresentation ρ) := hi
   rcases eq_bot_or_eq_top (⟨T, hT⟩ : Subrepresentation ρ) with h | h
   · exact absurd (congrArg Subrepresentation.toSubmodule h) h0
   · exact congrArg Subrepresentation.toSubmodule h
@@ -703,7 +703,7 @@ theorem schur {σ : Representation ℂ G X} (hi : σ.IsIrreducible) (K : Subgrou
     simp only [MonoidHom.one_apply, Units.val_one, one_smul] at h ⊢
     rw [← hA, h]
   let B : Module.End ℂ (fixed σ K) := A.restrict hst
-  haveI : Nontrivial (fixed σ K) := ⟨⟨⟨u, hu⟩, 0, fun h => hu0 (congrArg Subtype.val h)⟩⟩
+  have : Nontrivial (fixed σ K) := ⟨⟨⟨u, hu⟩, 0, fun h => hu0 (congrArg Subtype.val h)⟩⟩
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue B
   obtain ⟨w, hw⟩ := hc.exists_hasEigenvector
   refine ⟨c, ?_⟩
@@ -895,7 +895,7 @@ theorem isAdmissible_homRep {X : Type} [AddCommGroup X] [Module ℂ X] {ρ : Rep
       rw [Subgroup.coe_prod]; exact hKo.prod hKo'
     have hcp : IsCompact ((K.prod K' : Subgroup (G × H)) : Set (G × H)) := by
       rw [Subgroup.coe_prod]; exact hKc.prod hKc'
-    haveI := ha.2 _ hop hcp
+    have := ha.2 _ hop hcp
     let L : fixed (homRep ρ σ) K' →ₗ[ℂ] fixed ρ (K.prod K') :=
       LinearMap.codRestrict _
         ((LinearMap.applyₗ u : (X →ₗ[ℂ] V) →ₗ[ℂ] V) ∘ₗ (homSp ρ σ).subtype ∘ₗ (fixed (homRep ρ σ) K').subtype)
@@ -1020,7 +1020,7 @@ theorem exists_piTensor_equiv : ∀ (s : ℕ) (Γ : Fin s → Type) [∀ a, Grou
   | zero =>
     intro Γ _ _ _ _ V _ _ ρ _ hi
     refine ⟨fun a => a.elim0, ?_⟩
-    haveI : Subsingleton (∀ a : Fin 0, Γ a) := inferInstance
+    have : Subsingleton (∀ a : Fin 0, Γ a) := inferInstance
     obtain ⟨f⟩ := exists_linearEquiv_of_subsingleton hi
     have h1 : ∀ (g : ∀ a : Fin 0, Γ a) (v : V), ρ g v = v := fun g v => by
       rw [Subsingleton.elim g 1, map_one]; rfl

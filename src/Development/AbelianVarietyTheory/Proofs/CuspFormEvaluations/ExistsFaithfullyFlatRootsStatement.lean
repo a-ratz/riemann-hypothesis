@@ -67,7 +67,7 @@ theorem exists_lift {X Y : Scheme.{0}} (f : X ⟶ Y) [IsFinite f] [Flat f] [Surj
     (S : Type) [CommRing S] (t : Sp S ⟶ Y) :
     ∃ (B : Type) (_ : CommRing B) (φ : S →+* B) (w : Sp B ⟶ X),
       φ.FaithfullyFlat ∧ w ≫ f = spMap φ ≫ t := by
-  haveI : IsAffine (pullback t f) := isAffine_of_isAffineHom (pullback.fst t f)
+  have : IsAffine (pullback t f) := isAffine_of_isAffineHom (pullback.fst t f)
   let e := (pullback t f).isoSpec
   obtain ⟨ψ, hψ⟩ := Spec.map_surjective (e.inv ≫ pullback.fst t f)
   have hff : ψ.hom.FaithfullyFlat := by
@@ -104,12 +104,12 @@ end FlatRoots
 theorem exists_faithfullyFlat_roots :
     Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (S : Type) [CommRing S] (x0 : Sp S ⟶ Xo.X) (N k : ℕ), 0 < N → 0 < k → ∀ (J : Type) [Fintype J] (t : J → (ptO Xo x0 ⟶ Xo.univ.t.G)), (∀ i, t i ^ k = 1) → ∃ (B : Type) (_ : CommRing B) (φ : S →+* B) (w : J → (ptO Xo (spMap φ ≫ x0) ⟶ Xo.univ.t.G)), φ.FaithfullyFlat ∧ ∀ i, (w i ^ N).left = spMap φ ≫ (t i).left := by
   intro hL E _ _ _ H Dw l Xo S _ x0 N k hN _ J _ t _
-  haveI := UnivPol.isLocallyNoetherian Xo
+  have := UnivPol.isLocallyNoetherian Xo
   obtain ⟨h1, h2, h3, -⟩ := hL.mulN _ (UnivPol.pol Xo) N hN
   let m : Xo.univ.t.G ⟶ Xo.univ.t.G := (𝟙 Xo.univ.t.G) ^ N
-  haveI : IsFinite m.left := h1
-  haveI : Flat m.left := h2
-  haveI : Surjective m.left := h3
+  have : IsFinite m.left := h1
+  have : Flat m.left := h2
+  have : Surjective m.left := h3
   obtain ⟨B, _, φ, hφ, h⟩ := FlatRoots.exists_lifts m.left S J (fun i => (t i).left) Finset.univ
   choose w hw using fun i => h i (Finset.mem_univ i)
   have hb : ∀ i, w i ≫ Xo.univ.t.G.hom = spMap φ ≫ x0 := fun i => by

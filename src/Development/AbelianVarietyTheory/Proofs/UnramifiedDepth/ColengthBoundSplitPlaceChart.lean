@@ -130,12 +130,12 @@ private theorem range_idem {O : Type} [CommRing O] [IsLocalRing O] {g : ℕ} (P 
     show Matrix.mulVecLin P ∘ₗ Matrix.mulVecLin P = _
     rw [← Matrix.mulVecLin_mul, h]
   have hp := LinearMap.IsIdempotentElem.isProj_range _ hf
-  haveI : Module.Projective O (LinearMap.range (Matrix.mulVecLin P)) :=
+  have : Module.Projective O (LinearMap.range (Matrix.mulVecLin P)) :=
     Module.Projective.of_split (LinearMap.range (Matrix.mulVecLin P)).subtype hp.codRestrict (by
       ext x : 1
       exact hp.codRestrict_apply_cod x)
-  haveI : Module.Free O (LinearMap.range (Matrix.mulVecLin P)) := Module.free_of_flat_of_isLocalRing
-  haveI : Module.Projective O (LinearMap.ker (Matrix.mulVecLin P)) := by
+  have : Module.Free O (LinearMap.range (Matrix.mulVecLin P)) := Module.free_of_flat_of_isLocalRing
+  have : Module.Projective O (LinearMap.ker (Matrix.mulVecLin P)) := by
     have hq := LinearMap.IsIdempotentElem.isProj_range _ hf.one_sub
     have : LinearMap.range (1 - Matrix.mulVecLin P) = LinearMap.ker (Matrix.mulVecLin P) :=
       (LinearMap.IsIdempotentElem.ker_eq_range_one_sub hf).symm
@@ -143,17 +143,17 @@ private theorem range_idem {O : Type} [CommRing O] [IsLocalRing O] {g : ℕ} (P 
     exact Module.Projective.of_split (LinearMap.ker (Matrix.mulVecLin P)).subtype hq.codRestrict (by
       ext x : 1
       exact hq.codRestrict_apply_cod x)
-  haveI : Module.Finite O (LinearMap.ker (Matrix.mulVecLin P)) := by
+  have : Module.Finite O (LinearMap.ker (Matrix.mulVecLin P)) := by
     rw [LinearMap.IsIdempotentElem.ker_eq_range_one_sub hf]
     infer_instance
-  haveI : Module.Free O (LinearMap.ker (Matrix.mulVecLin P)) := Module.free_of_flat_of_isLocalRing
+  have : Module.Free O (LinearMap.ker (Matrix.mulVecLin P)) := Module.free_of_flat_of_isLocalRing
   refine ⟨_, ?_, rfl, ⟨(Module.finBasis O _).equivFun⟩⟩
   rw [← hp.trace, ← Matrix.toLin'_apply', Matrix.trace_toLin'_eq]
 
 theorem range_idempotent_equiv_sum_eigDim : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] (OE : Type) [CommRing OE] [IsDedekindDomain OE] [CharZero OE] [Module.Free ℤ OE] [Module.Finite ℤ OE] [StarRing OE] (g : ℕ) (ρ : (ℤ_[p] ⊗[ℤ] OE) →+* Matrix (Fin g) (Fin g) O) (e : ℤ_[p] ⊗[ℤ] OE), e * e = e → ∀ (n : ℕ) (t : Fin n ≃ Emb (O := O) e), Nonempty (LinearMap.range (Matrix.mulVecLin (ρ e)) ≃ₗ[O] (Fin (∑ j, eigDim C (fun a : OE => ρ (1 ⊗ₜ[ℤ] a)) ((algebraMap O C).comp ((t j : Emb (O := O) e) : OE →+* O))) → O)) := by
   intro p _ C _ _ _ v O _ _ hv _ _ _ OE _ _ _ _ _ _ g ρ e he n t
-  haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
-  haveI : ValuationRing O := ValuationRing.of_integers v hv
+  have : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
+  have : ValuationRing O := ValuationRing.of_integers v hv
   have hP : ρ e * ρ e = ρ e := by rw [← map_mul, he]
   obtain ⟨r, htr, -, hne⟩ := range_idem (ρ e) hP
   have hPC : (ρ e).map (algebraMap O C) * (ρ e).map (algebraMap O C) = (ρ e).map (algebraMap O C) := by
@@ -308,11 +308,11 @@ theorem abelian_coker_bound : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] 
   let s : Emb (O := O) w.e ≃ Emb (O := O) w.bar :=
     { toFun := fun τ => ⟨τ.1.comp c, by
         have := τ.2
-        simp only [Emb, Set.mem_setOf_eq] at this ⊢
+        simp only [Emb, Set.mem_ofPred_eq] at this ⊢
         rw [(hstar τ.1 w.bar).1, hbar', this]⟩
       invFun := fun τ => ⟨τ.1.comp c, by
         have := τ.2
-        simp only [Emb, Set.mem_setOf_eq] at this ⊢
+        simp only [Emb, Set.mem_ofPred_eq] at this ⊢
         rw [(hstar τ.1 w.e).1, hbar, this]⟩
       left_inv := fun τ => Subtype.ext (hcc τ.1)
       right_inv := fun τ => Subtype.ext (hcc τ.1) }
@@ -1227,7 +1227,7 @@ theorem lattice_ineq_integers : ∀ (C : Type) [Field C] [IsAlgClosed C] (v : Va
 
       simp only [F, freeMat, Matrix.mulVec, dotProduct, Matrix.of_apply, Fintype.sum_prod_type,
       Finset.sum_apply, Pi.smul_apply, smul_eq_mul, map_sum, map_mul, map_pow, ite_mul, zero_mul,
-      Finset.sum_ite_eq, Finset.mem_univ, if_true, Finset.mul_sum]
+      Finset.sum_ite_eq, Finset.mem_univ, ite_true, Finset.mul_sum]
       rw [Finset.sum_comm]
       exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
     ext x
@@ -1347,7 +1347,7 @@ private theorem lav_num (P D c cw X : ℝ) (n rm vd q : ℝ) (rp rm' h : ℕ) (h
 theorem colength_bound_linDat : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C], v.Integers O → ∀ [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [Algebra ℤ_[p] O] (OE : Type) [CommRing OE] [IsDedekindDomain OE] [CharZero OE] [Module.Free ℤ OE] [Module.Finite ℤ OE] [StarRing OE] (cp : O), HodgeTateSetting p v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp → ∀ (g : ℕ) (H : HodgeTateDatum p g v O (ℤ_[p] ⊗[ℤ] OE) (sigE p OE) cp) (d r m : ℕ) (A : Matrix (Fin d) (Fin r) O) (B : Matrix (Fin g) (Fin d) O) (ρG : OE →+* Matrix (Fin d) (Fin d) O) (N : OE →+* Matrix (Fin r) (Fin r) ℤ) (s : Fin m → Fin d → O), LinDat H A B ρG N s → ∀ (w : Place p OE) (t : Fin w.n ≃ Emb (O := O) w.e) (vd : ℝ), HasVd p v w t vd → ∀ (rp rm : ℕ) (W : Fin w.n → Fin rp → Fin d → O), (∀ j, EigB ρG ((t j : Emb (O := O) w.e) : OE →+* O) (W j)) → (∀ τ ∈ Emb (O := O) w.bar, ∃ W' : Fin rm → Fin d → O, EigB ρG τ W') → ∃ xs : Fin w.n → NNReal, (∀ j, HasLen v O ((Fin rp → O) ⧸ Submodule.span O (Set.range fun k => Pdiv.ChartF.res (W j) (s k))) (xs j)) ∧ v (algebraMap O C (p : O)) ^ ((w.n : ℝ) * rm * (1 / ((p : ℝ) - 1) + vd / 2)) ≤ ∏ j, xs j := by
   intro p _ C _ _ _ v O _ _ hv _ _ _ OE _ _ _ _ _ _ cp hU g H d r m A B ρG N s hL w t vd hvd rp rm W hW hW'
   have hp0 : 0 < v (algebraMap O C (p : O)) := by
-    rw [map_natCast, zero_lt_iff, Ne, map_eq_zero]
+    rw [map_natCast, pos_iff_ne_zero, Ne, map_eq_zero]
     exact_mod_cast (Fact.out : p.Prime).ne_zero
   have hp1 : v (algebraMap O C (p : O)) < 1 :=
     lt_of_le_of_ne (hv.map_le_one _) fun h =>
@@ -1428,7 +1428,7 @@ theorem colength_bound_linDat : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C
         (by rw [Submodule.ker_mkQ]; exact Submodule.fg_span (Set.finite_range _)))
     exact ⟨y, hy, hmono _ _ (Submodule.factor hle) _ _ (Submodule.factor_surjective hle) (hx j) hy⟩
   choose xs hxs1 hxs2 using hxs
-  refine ⟨xs, hxs1, le_trans ?_ (Finset.prod_le_prod' fun j _ => hxs2 j)⟩
+  refine ⟨xs, hxs1, le_trans ?_ (Finset.prod_le_prod fun j _ => hxs2 j)⟩
   rw [← NNReal.coe_le_coe, NNReal.coe_rpow]
   refine lav_num _ _ c cw _ _ _ _ _ rp rm h rfl (by exact_mod_cast hp0) (by exact_mod_cast hp1.le) hvd0 hD hh
     hcwb (by exact_mod_cast hcc) (NNReal.coe_nonneg _) ?_

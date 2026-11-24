@@ -113,8 +113,8 @@ def entO (a : 𝓞 E) (e e' : Fin (chD Ch.ch)) : X.O :=
 
 theorem alg_entO (a : 𝓞 E) (e e' : Fin (chD Ch.ch)) :
     algebraMap X.O X.C (entO Ch X a e e') = dActX Ch X a e e' := by
-  letI := io.toAlgebra
-  letI : Algebra T.Fr X.C := X.ιF.toAlgebra
+  let := io.toAlgebra
+  let : Algebra T.Fr X.C := X.ιF.toAlgebra
   rw [entO, ← X.comp]
   show _ = coeff _ (Ch.ch.B.actK X.C a e)
   unfold FB.actK
@@ -123,8 +123,8 @@ theorem alg_entO (a : 𝓞 E) (e e' : Fin (chD Ch.ch)) :
 
 theorem dActX_apply (a : 𝓞 E) (e e' : Fin (chD Ch.ch)) :
     dActX Ch X a e e' = X.ιF (letI := io.toAlgebra; dAct T.Fr Ch.ch.B a e e') := by
-  letI := io.toAlgebra
-  letI : Algebra T.Fr X.C := X.ιF.toAlgebra
+  let := io.toAlgebra
+  let : Algebra T.Fr X.C := X.ιF.toAlgebra
   show coeff _ (Ch.ch.B.actK X.C a e) = X.ιF (coeff _ (Ch.ch.B.actK T.Fr a e))
   unfold FB.actK
   rw [coeff_map, coeff_map]
@@ -134,8 +134,8 @@ theorem dActX_mulVec_lieVec (hst : ∀ a : 𝓞 E, star a = H.bar a) (φ : 𝓞 
     (hφ : ∀ a : 𝓞 E, algebraMap T.V T.Fr (φ a) = io (embK c τ a)) (a : 𝓞 E) (i : Fin (Dw.mult τ)) :
     (dActX Ch X a).mulVec (lieVec Ch X ⟨τ, i⟩) = jX X (φ a) • lieVec Ch X ⟨τ, i⟩ := by
   obtain rfl := GlobalTheory.PowGerm.starSt E H inst hst
-  letI := H.starRing
-  letI := io.toAlgebra
+  let := H.starRing
+  let := io.toAlgebra
   have h := GlobalTheory.PowGerm.eigDirSt E H Dw l Xo c T io y Ch a ⟨τ, i⟩
   funext e
   have h3 := congrArg X.ιF (congrFun h e)

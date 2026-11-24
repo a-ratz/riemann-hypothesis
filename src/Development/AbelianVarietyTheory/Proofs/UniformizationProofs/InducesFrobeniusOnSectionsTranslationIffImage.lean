@@ -117,8 +117,8 @@ theorem indAt_translT_iff : LL → AllUF fun {R} _ _ {I} {D} {A} {G} _ _ U F _ _
     exact e₂ ▸ e₁
   · intro H
     refine ⟨lift_fst _ _, fun w₀ hw₀ => (key w₀).2 ?_⟩
-    haveI : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (PrimeSpectrum F))
-    haveI : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (PrimeSpectrum F))
+    have : Subsingleton (TFK (R := R) F).left := inferInstanceAs (Subsingleton (PrimeSpectrum F))
+    have : Nonempty (TFK (R := R) F).left := inferInstanceAs (Nonempty (PrimeSpectrum F))
     obtain ⟨θ, rfl⟩ := BoxTheta.exists_theta hL.1.kerPow A hN x (H w₀ hw₀).1
     obtain ⟨w, hw, h⟩ := (H w₀ hw₀).2 θ rfl
     exact ⟨θ.φ, w, θ.isGen, hw, h⟩

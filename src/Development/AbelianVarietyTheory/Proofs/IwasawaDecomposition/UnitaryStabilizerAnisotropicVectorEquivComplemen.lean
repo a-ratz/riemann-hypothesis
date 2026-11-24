@@ -315,7 +315,7 @@ theorem frameStep : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
         ((HA.mat R σ J' (e g) : GL (Fin M) (R ⊗[F] E)) : Matrix (Fin M) (Fin M) (R ⊗[F] E)) := by
       simp only [fun g => hfor _ _ (he g)]
       exact (continuous_const.matrix_mul
-        ((continuous_mat R σ J).comp continuous_subtype_val)).matrix_mul continuous_const
+        ((continuous_mat R σ J).comp continuous_subtypeVal)).matrix_mul continuous_const
     have c2 : Continuous fun g : HA R σ J' =>
         ((HA.mat R σ J (e.symm g) : GL (Fin (M + 1)) (R ⊗[F] E)) :
         Matrix (Fin (M + 1)) (Fin (M + 1)) (R ⊗[F] E)) := by

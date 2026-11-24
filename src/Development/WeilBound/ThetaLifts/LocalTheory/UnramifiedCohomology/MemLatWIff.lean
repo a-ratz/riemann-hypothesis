@@ -342,9 +342,9 @@ theorem iwaLoc {B : Base F E} (hB : B.IsGood σ) {Y : Spc F E n} {r s : ℕ} (hY
     ∃ p ∈ UAt σ Y (evFin F v), ∃ k ∈ KAt σ Y v, ∃ t : (AE F E)ˣ,
       mat p *ᵥ GlobalTheory.ThK.incV F x = t.1 • GlobalTheory.ThK.incV F x ∧ g = p * k := by
   obtain ⟨ξ, hξ, hJ, hL⟩ := exists_selfDual hB hY v
-  haveI := hB.unram
+  have := hB.unram
   obtain ⟨θ, hθ⟩ := GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified F E σ hB.cm inferInstance
-  haveI : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
+  have : Y.L.IsFullLattice E := hY.elim (·.lat) (·.lat)
   obtain ⟨g', rfl⟩ := bk_surj hξ Y.J g
   obtain ⟨q, k, ⟨t, ht⟩, hk, e⟩ := core hB.cm hθ hJ Y.L (unramAt hB v)
     ((isEmpty_or_nonempty _).symm.imp_right (inert_of_local F E σ B hB v)) hL hx (by

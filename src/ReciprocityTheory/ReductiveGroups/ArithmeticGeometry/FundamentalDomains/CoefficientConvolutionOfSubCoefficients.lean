@@ -315,13 +315,13 @@ theorem scaledPeriod_mem_sum (la la' : Wt X.Ψ r) (j : Fin (Fintype.card X.Ψ)) 
 theorem fj_eq_zero_of_not_freq (la : Wt X.Ψ r) (ξ : Fin r → E) (ν : X.Ψ → ℝ) (P : Frame X.Ψ r → ℂ)
     (x : Frame X.Ψ r) (h : ¬ ∀ p ∈ X.periods la, ∃ k : ℤ, 2 * ∑ τ, ν τ * p τ = k) :
     X.fj la ξ ν P x = 0 := by
-  rw [Data.fj, if_neg h]
+  rw [Data.fj, ite_eq_right h]
 
 private lemma diag_ne_lemma {b : Frame X.Ψ r} (hb : b ∈ Bor X.Ψ r) (τ : X.Ψ) (i : Fin r) :
     b τ i i ≠ 0 := by
   obtain ⟨hdet, htri⟩ := hb τ
   have ht : (mat b τ).BlockTriangular id := fun a c h => htri a c h
-  rw [Matrix.det_of_upperTriangular ht] at hdet
+  rw [det_of_isUpperTriangular ht] at hdet
   exact Finset.prod_ne_zero_iff.mp hdet i (Finset.mem_univ i)
 
 theorem sec_mul {la la' : Wt X.Ψ r} {P Q : Frame X.Ψ r → ℂ} (hP : X.IsSec la P) (hQ : X.IsSec la' Q) :
@@ -440,7 +440,7 @@ theorem Om_open (ξ : Fin r → E) {x : Frame X.Ψ r} (hx : x ∈ X.dom) (ω : F
   have hO : Om ξ x ω = ⋂ (τ : X.Ψ), ⋂ (i : Fin (r + 1)), {b | 0 < psgn X.p0 i * (lminor (gram τ.1 X.Gm (mat x τ) +
         ((2 * X.c τ * ∑ j, b j * ω j τ : ℝ) : ℂ) • rk1 X ξ τ (mat x τ)) i).re} := by
     ext b
-    simp only [Om, admissibleImaginary, Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Om, admissibleImaginary, Set.mem_ofPred_eq, Set.mem_iInter]
   rw [hO]
   exact isOpen_iInter_of_finite fun τ => isOpen_iInter_of_finite fun i =>
     isOpen_lt continuous_const (hc τ i)
@@ -497,7 +497,7 @@ private lemma flowmv_lemma_28 (ξ : Fin r → E) (τ : X.Ψ) (s : ℂ) (p : Fin 
   funext a
   simp only [Matrix.mulVec, dotProduct, Data.flowMat, Matrix.of_apply, sub_mul,
     Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ,
-    if_true, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, hermC, Data.emb]
+    ite_true, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, hermC, Data.emb]
   congr 1
   simp only [Finset.mul_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun b _ => Finset.sum_congr rfl fun k _ => ?_
@@ -562,7 +562,7 @@ theorem flow_mem_of_tube {ξ : Fin r → E} (hξ : herm X.Gm ξ ξ = 0) {x : Fra
 theorem zero_mem_Om {ξ : Fin r → E} (hξ : herm X.Gm ξ ξ = 0) {x : Frame X.Ψ r} (hx : x ∈ X.dom)
     (ω : Fin (Fintype.card X.Ψ) → X.Ψ → ℝ) : (0 : Fin (Fintype.card X.Ψ) → ℝ) ∈ Om ξ x ω := by
   show (fun τ => ∑ j, (0 : Fin (Fintype.card X.Ψ) → ℝ) j * ω j τ) ∈ admissibleImaginary X ξ x
-  simp only [admissibleImaginary, Set.mem_setOf_eq, Pi.zero_apply, zero_mul, Finset.sum_const_zero, mul_zero,
+  simp only [admissibleImaginary, Set.mem_ofPred_eq, Pi.zero_apply, zero_mul, Finset.sum_const_zero, mul_zero,
     Complex.ofReal_zero, zero_smul, add_zero]
   intro τ i
   exact (hx τ).2 i

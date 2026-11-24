@@ -64,7 +64,7 @@ variable {B : Type} [CommRing B] {J : Ideal B}
 theorem fil_mul_le (δ : DividedPowers J) (a c : ℕ) :
     GlobalTheory.PDA.fil δ a * GlobalTheory.PDA.fil δ c ≤ GlobalTheory.PDA.fil δ (a + c) := by
   unfold GlobalTheory.PDA.fil
-  rw [Ideal.span_mul_span']
+  rw [Ideal.span_mul_span]
   refine Ideal.span_mono ?_
   rintro _ ⟨_, ⟨l, hl, hn, rfl⟩, _, ⟨m, hm, hk, rfl⟩, rfl⟩
   refine ⟨l ++ m, ?_, ?_, ?_⟩

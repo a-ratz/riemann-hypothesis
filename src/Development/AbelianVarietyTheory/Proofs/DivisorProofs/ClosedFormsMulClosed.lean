@@ -135,14 +135,14 @@ theorem delAt_mul {v : V n} {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt 
     (hG : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (G x) S) v) :
     ∃ y : Alt n, delAt (fun x => F x * G x) v = delAt F v * G v + y * delAt G v :=
   sum_mul_leibniz (fun a => Pi.single (.inl a) 1) (fun a f => del f v (coordVec a))
-    (fun a f hf => by rw [del_sum (fun p _ => hf p), ContinuousLinearMap.sum_apply])
+    (fun a f hf => by rw [del_sum (fun p _ => hf p), sum_apply])
     (fun a f g hf hg => del_mul hf hg _) (fun a c => by rw [del_const]; rfl) hF hG
 
 theorem dbarAt_mul {v : V n} {F G : V n → Alt n} (hF : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (F x) S) v)
     (hG : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (G x) S) v) :
     ∃ y : Alt n, dbarAt (fun x => F x * G x) v = dbarAt F v * G v + y * dbarAt G v :=
   sum_mul_leibniz (fun a => Pi.single (.inr a) 1) (fun a f => dbar f v (coordVec a))
-    (fun a f hf => by rw [dbar_sum (fun p _ => hf p), ContinuousLinearMap.sum_apply])
+    (fun a f hf => by rw [dbar_sum (fun p _ => hf p), sum_apply])
     (fun a f g hf hg => dbar_mul hf hg _) (fun a c => by rw [dbar_const]; rfl) hF hG
 
 variable {M : Type} [TopologicalSpace M]

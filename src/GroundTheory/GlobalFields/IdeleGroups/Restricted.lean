@@ -96,7 +96,7 @@ theorem continuous_unitsEquiv (hBopen : ∀ i, IsOpen (B i : Set (R i))) :
     rw [_root_.RestrictedProduct.continuous_rng_of_principal]
     refine continuous_pi fun i ↦ ?_
     exact (Units.continuous_map (f := _root_.RestrictedProduct.evalMonoidHom R i)
-      (_root_.RestrictedProduct.continuous_eval i)).comp continuous_subtype_val
+      (_root_.RestrictedProduct.continuous_eval i)).comp continuous_subtypeVal
   have hFU : ContinuousOn (_root_.RestrictedProduct.unitsEquiv R (B := B) (𝓕 := cofinite)) U := by
     rw [continuousOn_iff_continuous_domRestrict]
     exact (_root_.RestrictedProduct.continuous_inclusion hT).comp hG

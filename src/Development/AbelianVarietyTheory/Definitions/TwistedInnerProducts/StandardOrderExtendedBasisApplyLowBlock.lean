@@ -658,7 +658,7 @@ theorem mem_latOf_typeFrame [ValuativeRel k] (ϖ : kˣ) (ord : ι ≃ n ⊕ Fin 
     simp [fromBlocks_multiply, diagonal_mul_diagonal]
   rw [mem_latOf, e, Sum.forall, fromBlocks_mulVec]
   refine and_congr (by simp) (forall_congr' fun i => ?_)
-  have : 0 < valuation k ((ϖ : k) ^ (i.val + 1)) := by simp [zero_lt_iff]
+  have : 0 < valuation k ((ϖ : k) ^ (i.val + 1)) := by simp [pos_iff_ne_zero]
   simp only [zero_mulVec, zero_add, Sum.elim_inr, mulVec_diagonal, Valuation.mem_integer_iff, map_mul, map_inv₀,
     Function.comp]
   rw [inv_mul_le_one₀ this]
@@ -797,7 +797,7 @@ theorem integrable_hat [ν.IsAddHaarMeasure] (hψ : Continuous ψ) {f : (n → k
   have := secondCountable k
   have := t2Space k
   refine Continuous.integrable_of_hasCompactSupport (hf.1.continuous.mul ?_) hf.2.mul_right
-  exact continuous_subtype_val.comp (hψ.comp (by fun_prop))
+  exact continuous_subtypeVal.comp (hψ.comp (by fun_prop))
 
 
 omit [MeasurableSpace k] [BorelSpace k] in

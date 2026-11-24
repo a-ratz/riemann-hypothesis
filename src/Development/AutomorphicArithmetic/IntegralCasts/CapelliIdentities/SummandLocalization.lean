@@ -146,13 +146,13 @@ private theorem UpperTheory.Reformulated.B.SummandLocalization.exists_proj {R K 
   have hM : Submodule.span K (M : Set (V ⧸ X)) = ⊤ := by
     have h : (M : Set (V ⧸ X)) = X.mkQ '' (L : Set V) := rfl
     rw [h, ← Submodule.map_span, hL.span_eq_top, Submodule.map_top, Submodule.range_mkQ]
-  haveI : Module.Finite R M := Module.Finite.iff_fg.2 (hL.fg.map q)
-  haveI : Module.IsTorsionFree R (V ⧸ X) := Module.IsTorsionFree.trans_faithfulSMul R K (V ⧸ X)
-  haveI : Module.FinitePresentation R M := Module.finitePresentation_of_finite R M
-  haveI : Module.Projective R M := Module.Flat.projective_of_finitePresentation
+  have : Module.Finite R M := Module.Finite.iff_fg.2 (hL.fg.map q)
+  have : Module.IsTorsionFree R (V ⧸ X) := Module.IsTorsionFree.trans_faithfulSMul R K (V ⧸ X)
+  have : Module.FinitePresentation R M := Module.finitePresentation_of_finite R M
+  have : Module.Projective R M := Module.Flat.projective_of_finitePresentation
   have hsurj : Function.Surjective (q.submoduleMap L) := LinearMap.submoduleMap_surjective q L
   obtain ⟨s, hs⟩ := Module.projective_lifting_property (q.submoduleMap L) LinearMap.id hsurj
-  haveI := UpperTheory.Reformulated.B.SummandLocalization.lattice_isLocalizedModule M hM
+  have := UpperTheory.Reformulated.B.SummandLocalization.lattice_isLocalizedModule M hM
   have hb : IsBaseChange K M.subtype := IsLocalizedModule.isBaseChange (nonZeroDivisors R) K M.subtype
   let σ : (V ⧸ X) →ₗ[K] V := hb.lift (L.subtype ∘ₗ s)
   have hσ : ∀ m : M, σ m = (s m : V) := fun m => hb.lift_eq (L.subtype ∘ₗ s) m

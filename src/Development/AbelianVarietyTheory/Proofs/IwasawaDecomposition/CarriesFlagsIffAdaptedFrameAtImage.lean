@@ -57,13 +57,13 @@ variable {ι : Type} {m : ι → ℕ} {K : Type} [Field K]
 
 theorem par_of_tri {h : Mat m K} (hd : ∀ τ i, h τ i i ≠ 0) (hl : ∀ τ i k, i < k → h τ i k = 0) : Par m ⊤ h := fun τ => by
   have hdet : (h τ).det ≠ 0 := by
-    rw [Matrix.det_of_lowerTriangular (h τ) fun i j hij => hl τ i j hij]
+    rw [Matrix.det_of_isLowerTriangular (h τ) fun i j hij => hl τ i j hij]
     exact Finset.prod_ne_zero_iff.2 fun i _ => hd τ i
   exact ⟨fun _ _ => trivial, hdet, trivial, fun i j _ hij => hl τ i j hij⟩
 
 theorem Par.diag_ne {O : Subring K} {h : Mat m K} (hp : Par m O h) (τ : ι) (i : Fin (m τ)) : h τ i i ≠ 0 := by
   have := hp.det_ne τ
-  rw [Matrix.det_of_lowerTriangular (h τ) fun a b hab => (hp τ).2.2.2 a b a.2 hab] at this
+  rw [Matrix.det_of_isLowerTriangular (h τ) fun a b hab => (hp τ).2.2.2 a b a.2 hab] at this
   exact Finset.prod_ne_zero_iff.1 this i (Finset.mem_univ i)
 
 end Tri

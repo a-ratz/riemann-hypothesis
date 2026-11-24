@@ -74,9 +74,9 @@ theorem exists_notMem_smul_D_mem_span (k K : Type) [Field k] [Field K] [Algebra 
     (P : Ideal B) [P.IsPrime] :
     ∃ (f : B) (u : Fin d → B), f ∉ P ∧
       ∀ v : B, f • D k B v ∈ Submodule.span B (Set.range fun j => D k B (u j)) := by
-  haveI : Algebra.FormallyEtale B K := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors B)
+  have : Algebra.FormallyEtale B K := Algebra.FormallyEtale.of_isLocalization (nonZeroDivisors B)
   have hinj : Function.Injective (algebraMap B K) := IsFractionRing.injective B K
-  haveI : FaithfulSMul B K := (faithfulSMul_iff_algebraMap_injective B K).2 hinj
+  have : FaithfulSMul B K := (faithfulSMul_iff_algebraMap_injective B K).2 hinj
   have hrk : Module.finrank B Ω[B⁄k] = d := by
     rw [← hd, (KaehlerDifferential.isBaseChange_of_formallyEtale k B K).finrank_eq]
   have hfib : Module.finrank P.ResidueField (P.ResidueField ⊗[B] Ω[B⁄k]) = d := by
@@ -108,8 +108,8 @@ theorem exists_notMem_smul_D_mem_span (k K : Type) [Field k] [Field K] [Algebra 
   obtain ⟨s, hs, hspan, hli⟩ := exists_linearIndependent P.ResidueField (Set.range g)
   let bs : Module.Basis s P.ResidueField (P.ResidueField ⊗[B] Ω[B⁄k]) :=
     Module.Basis.mk hli (by rw [Subtype.range_coe, hspan, hg])
-  haveI : Finite s := Module.Finite.finite_basis bs
-  letI : Fintype s := Fintype.ofFinite s
+  have : Finite s := Module.Finite.finite_basis bs
+  let : Fintype s := Fintype.ofFinite s
   have hcard : Fintype.card s = d := by rw [← Module.finrank_eq_card_basis bs, hfib]
   let bF := bs.reindex (Fintype.equivFinOfCardEq hcard)
   have hu : ∀ j, ∃ v, g v = bF j := by

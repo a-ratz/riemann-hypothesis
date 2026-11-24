@@ -63,7 +63,7 @@ private theorem fgHom_part1 {G : Type} [Group G] [TopologicalSpace G] [IsTopolog
     (hG : TopFG G) (Z : Type) [Group Z] [Finite Z] :
     {f : G →* Z | IsOpen (f.ker : Set G)}.Finite := by
   obtain ⟨s, hsf, hs⟩ := hG
-  haveI : Finite s := hsf.to_subtype
+  have : Finite s := hsf.to_subtype
   refine Set.Finite.of_finite_image (f := fun f : G →* Z => fun x : s => f x) (Set.toFinite _) ?_
   intro f hf f' hf' h
   have hle : f.ker ⊓ f'.ker ≤ f.eqLocus f' := by
@@ -82,7 +82,7 @@ private theorem fgHom_part2 {G : Type} [Group G] [TopologicalSpace G]
     (hG : TopFG G) (M : Type) [AddCommGroup M] [Finite M] [DistribMulAction G M] :
     {c : G → M | IsLocallyConstant c ∧ ∀ g h, c (g * h) = c g + g • c h}.Finite := by
   obtain ⟨s, hsf, hs⟩ := hG
-  haveI : Finite s := hsf.to_subtype
+  have : Finite s := hsf.to_subtype
   refine Set.Finite.of_finite_image (f := fun c : G → M => fun x : s => c x) (Set.toFinite _) ?_
   intro c hc c' hc' h
   have one : ∀ d : G → M, (∀ g h, d (g * h) = d g + g • d h) → d 1 = 0 := by
@@ -123,7 +123,7 @@ private theorem fgHom_part3 {G : Type} [Group G] [TopologicalSpace G] [IsTopolog
   have h1 := (fgHom_part1 hG (Equiv.Perm (Fin n))).prod (Set.finite_univ (α := Fin n))
   refine (h1.image fun p => (MulAction.stabilizer (Equiv.Perm (Fin n)) p.2).comap p.1).subset ?_
   rintro H ⟨hH, hi⟩
-  haveI : H.FiniteIndex := ⟨hi ▸ hn⟩
+  have : H.FiniteIndex := ⟨hi ▸ hn⟩
   have e : (G ⧸ H) ≃ Fin n := Finite.equivFinOfCardEq hi
   refine ⟨(e.permCongrHom.toMonoidHom.comp (MulAction.toPermHom G (G ⧸ H)), e ((1 : G) : G ⧸ H)),
     ⟨?_, trivial⟩, ?_⟩

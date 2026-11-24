@@ -116,12 +116,12 @@ theorem repsP : PositivityTheory.RgUd.T.Nil.Orb.Reps (k := k) := by
   classical
   intro n Z hZ c hc
   obtain ⟨M, _, L, _, hL, R, o, hF⟩ := PositivityTheory.RgUd.T.Nil.Orb.BReps.exists_frames Z hZ.1 hZ.2
-  haveI := hL
+  have := hL
   let typ : ∀ (N : Matrix (Fin n) (Fin n) k) (v : Fin n → k),
       PositivityTheory.RgUd.T.Nil.Orb.BReps.Frame Z M L R o N v →
       (M → Fin (n + 1) → Fin (n + 1) → Fin (n + 1)) := fun N v F m ℓ σ =>
     ⟨Nat.card {a : F.ι m // F.l m a = (ℓ : ℕ) ∧ F.s m a = (σ : ℕ)}, by
-      haveI := F.fι m
+      have := F.fι m
       exact Nat.lt_succ_of_le ((Finite.card_subtype_le _).trans (F.card_le m))⟩
   let Good : (M → Fin (n + 1) → Fin (n + 1) → Fin (n + 1)) → Prop := fun θ =>
     ∃ q : Sp k n, q.1 ∈ Bz Z ∧ IsNilpotent (q.1 - c) ∧ q.2 ≠ 0 ∧
@@ -133,7 +133,7 @@ theorem repsP : PositivityTheory.RgUd.T.Nil.Orb.Reps (k := k) := by
     rw [Finset.mem_image] at hp
     obtain ⟨θ, hθ, rfl⟩ := hp
     have hG : Good θ := (Finset.mem_filter.1 hθ).2
-    simp only [dif_pos hG]
+    simp only [dite_eq_left hG]
     obtain ⟨h1, h2, h3, F, -⟩ := Classical.choose_spec hG
     refine ⟨h1, h2, h3, ?_⟩
     obtain ⟨P, w, hPw, hA⟩ := PositivityTheory.RgUd.T.Nil.Orb.BReps.grade_of_frame F
@@ -150,7 +150,7 @@ theorem repsP : PositivityTheory.RgUd.T.Nil.Orb.Reps (k := k) := by
     have hG : Good (typ _ _ F) := ⟨(x, v), hx, hnil, hv, F, rfl⟩
     refine ⟨Classical.choose hG, ?_, ?_⟩
     · rw [Finset.mem_image]
-      exact ⟨typ _ _ F, Finset.mem_filter.2 ⟨Finset.mem_univ _, hG⟩, dif_pos hG⟩
+      exact ⟨typ _ _ F, Finset.mem_filter.2 ⟨Finset.mem_univ _, hG⟩, dite_eq_left hG⟩
     · obtain ⟨h1, h2, h3, F', hF'⟩ := Classical.choose_spec hG
       obtain ⟨g, hgZ, hgN, hgv⟩ := PositivityTheory.RgUd.T.Nil.Orb.BReps.conj_of_frames F' F (by
         intro m ℓ σ hℓ hσ
@@ -384,7 +384,7 @@ theorem stepH : StepModH k := by
   have hU₁o : IsOpen U₁ := by
     have e : U₁ = UU ∩ ⋃ h : GzS Z, (fun q => act (h : GL (Fin n) k) q) ⁻¹' U := by
       ext q
-      simp only [U₁, UU, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iUnion, Set.mem_preimage]
+      simp only [U₁, UU, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iUnion, Set.mem_preimage]
       constructor
       · rintro ⟨h2, h, hh, hq⟩
         exact ⟨h2, ⟨h, hh⟩, hq⟩
@@ -1260,7 +1260,7 @@ theorem modul_eqT (hratio : RatioP k n) (Z : Subalgebra k (Matrix (Fin n) (Fin n
       simp only [Set.mem_preimage, SetLike.mem_coe, hKdef, Subgroup.mem_inf]
       exact ⟨fun hh => hh.1, fun hh => ⟨hh, h.2⟩⟩
     rw [this]
-    exact (isOpen_congruenceSubgroup k n m).preimage continuous_subtype_val
+    exact (isOpen_congruenceSubgroup k n m).preimage continuous_subtypeVal
   · rw [hKdef, Subgroup.coe_inf]
     exact (isCompact_congruenceSubgroup k n m).inter_right (isClosed_Gz Z)
   · have : ((↑) : GzS Z → GL (Fin n) k) ⁻¹' ((K ⊓ K' : Subgroup (GL (Fin n) k)) : Set (GL (Fin n) k)) =
@@ -1272,9 +1272,9 @@ theorem modul_eqT (hratio : RatioP k n) (Z : Subalgebra k (Matrix (Fin n) (Fin n
       rw [memK', hKdef, Subgroup.mem_inf, Subgroup.mem_inf]
       exact ⟨fun hh => ⟨hh.1.1, hh.2.1⟩, fun hh => ⟨⟨hh.1, h.2⟩, ⟨hh.2, h2⟩⟩⟩
     rw [this]
-    exact ((isOpen_congruenceSubgroup k n m).preimage continuous_subtype_val).inter
+    exact ((isOpen_congruenceSubgroup k n m).preimage continuous_subtypeVal).inter
       ((isOpen_congruenceSubgroup k n m).preimage
-        ((continuous_const.mul continuous_subtype_val).mul continuous_const))
+        ((continuous_const.mul continuous_subtypeVal).mul continuous_const))
   · intro a ha b hb
     refine ⟨K.mul_mem (K.mul_mem ha hb.1) (K.inv_mem ha), ?_⟩
     have hb2 : g⁻¹ * b * g ∈ K := (memK' K g b).1 hb.2
@@ -1424,7 +1424,7 @@ theorem modBoundT (hT : PositivityTheory.RgUd.TP.TraceForm k) : ModBound (k := k
   have hτ : PositivityTheory.RgUd.TP.Nil.Orb.Mod.IsTau Z τ := ⟨h1, h2⟩
   have hR : PositivityTheory.RgUd.T.Nil.Orb.BModbound.RatioP k n :=
     fun V γ hγ φ X Y hX hY => PositivityTheory.RgUd.T.Nil.Orb.BModbound.ratio V γ hγ φ X Y hX hY
-  haveI : Infinite k := PositivityTheory.RgUd.TP.Nil.Orb.Mod.infinite_local
+  have : Infinite k := PositivityTheory.RgUd.TP.Nil.Orb.Mod.infinite_local
   have hxB : p.1 - c ∈ Bz Z := by
     intro a ha
     rw [mul_sub, sub_mul, hp a ha, hZ.1 a ha c hc]
@@ -1492,7 +1492,7 @@ theorem modBoundT (hT : PositivityTheory.RgUd.TP.TraceForm k) : ModBound (k := k
         have hn : IsNilpotent (⟨p.1 - c, hxZ⟩ : Z) := by
           obtain ⟨j, hj⟩ := hnil
           exact ⟨j, Subtype.ext (by simpa using hj)⟩
-        haveI := hZ.2
+        have := hZ.2
         have h5 := hn.eq_zero
         simpa using congrArg Subtype.val h5
       have hCle : Subalgebra.toSubmodule

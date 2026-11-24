@@ -69,7 +69,7 @@ theorem coe_traceDualIdeal (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
 theorem coeToSubmodule_traceDualIdeal (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
     ((traceDualIdeal K I : FractionalIdeal (𝓞 K)⁰ K) : Submodule (𝓞 K) K) =
       Submodule.traceDual ℤ ℚ (I : Submodule (𝓞 K) K) :=
-  FractionalIdeal.coe_dual ℤ ℚ I.ne_zero
+  FractionalIdeal.coeToSubmodule_dual ℤ ℚ I.ne_zero
 
 theorem traceDualIdeal_eq (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
     (traceDualIdeal K I : FractionalIdeal (𝓞 K)⁰ K) =
@@ -121,7 +121,7 @@ theorem covolume_idealLattice_selfDualMeasure (I : (FractionalIdeal (𝓞 K)⁰ 
   have hF : IsAddFundamentalDomain (idealLattice K I)
       (ZSpan.fundamentalDomain (fractionalIdealLatticeBasis K I)) (selfDualMeasure K) :=
     (fundamentalDomain_idealLattice K I).mono Measure.smul_absolutelyContinuous
-  rw [ZLattice.covolume_eq_measure_fundamentalDomain _ _ hF, selfDualMeasure, measureReal_def, Measure.smul_apply, smul_eq_mul, ENNReal.toReal_mul,
+  rw [ZLattice.covolume_eq_measure_fundamentalDomain _ _ hF, selfDualMeasure, measureReal_def, _root_.smul_apply, smul_eq_mul, ENNReal.toReal_mul,
     ← measureReal_def, h, ENNReal.toReal_pow, ENNReal.toReal_ofNat, inv_pow]
   field_simp
 

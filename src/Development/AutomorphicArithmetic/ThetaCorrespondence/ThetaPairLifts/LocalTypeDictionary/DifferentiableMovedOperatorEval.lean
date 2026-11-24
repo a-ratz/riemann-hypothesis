@@ -93,8 +93,8 @@ theorem differentiable_Iop' {D : D7} {T : Tor D} {N N' : ℕ} (A B : AddSubgroup
   unfold Iop
   by_cases h : (A.addSubgroupOf B).index = 0
   · simp [h]
-  · haveI : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h
-    haveI := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
+  · have : Finite (B ⧸ A.addSubgroupOf B) := Nat.finite_of_card_ne_zero h
+    have := Fintype.ofFinite (B ⧸ A.addSubgroupOf B)
     simp only [finsum_eq_sum_of_fintype]
     exact (Differentiable.fun_sum fun q _ => (differentiable_U' _ hG).const_mul _).const_mul _
 

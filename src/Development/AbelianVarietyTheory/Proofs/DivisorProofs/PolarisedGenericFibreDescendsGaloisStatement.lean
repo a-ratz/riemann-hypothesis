@@ -236,8 +236,8 @@ namespace GlobalTheory
 
 theorem galois_of_finite_generating_automorphisms : ∀ (K K' : Type) [Field K] [Field K'] (i : K →+* K'), i.Finite → ∀ (Γ : Type) [Finite Γ] (s : Γ → (K' ≃+* K')), (∀ g x, s g (i x) = i x) → (∀ y : K', (∀ g, s g y = y) → y ∈ i.range) → (letI := i.toAlgebra; IsGalois K K') ∧ ∀ σ : K' ≃+* K', (∀ x, σ (i x) = i x) → σ ∈ Submonoid.closure (Set.range s) := by
   intro K K' _ _ i hfin Γ _ s hs hfix
-  letI := i.toAlgebra
-  haveI : FiniteDimensional K K' := hfin
+  let := i.toAlgebra
+  have : FiniteDimensional K K' := hfin
   let t : Γ → (K' ≃ₐ[K] K') := fun g => AlgEquiv.ofRingEquiv (f := s g) (hs g)
   let H : Subgroup (K' ≃ₐ[K] K') := Subgroup.closure (Set.range t)
   have hH : IntermediateField.fixedField H = ⊥ := by
@@ -300,9 +300,9 @@ theorem lbIso_pull_comp_self {X : Scheme.{0}} {L : LB X} (hL : L.IsLB) (a b : X 
 
 theorem exists_lb_descent_of_finite_aut : ∀ (K K' : Type) [Field K] [Field K'] (i : K →+* K'), i.Finite → ∀ (Γ : Type) [Finite Γ] (s : Γ → (K' ≃+* K')), (∀ g x, s g (i x) = i x) → (∀ y : K', (∀ g, s g y = y) → y ∈ i.range) → ∀ (A : Over (Sp K)) [GrpObj A] (A' : Over (Sp K')) [GrpObj A'] (φ : A'.left ⟶ A.left), IsAbelianScheme A → IsGrpPullback A' A (spMap i) φ → ∀ L' : LB A'.left, L'.IsLB → (∀ g, ∃ ψ : A'.left ⟶ A'.left, ψ ≫ φ = φ ∧ ψ ≫ A'.hom = A'.hom ≫ spMap (s g).toRingHom ∧ LBIso L' (L'.pull ψ)) → ∃ L : LB A.left, L.IsLB ∧ LBIso L' (L.pull φ) := by
   intro K K' _ _ i hfin Γ _ s hs hfix A _ A' _ φ hA hp L' hL' hinv
-  letI : Algebra K K' := i.toAlgebra
+  let : Algebra K K' := i.toAlgebra
   obtain ⟨hgal, hgen⟩ := _root_.GlobalTheory.galois_of_finite_generating_automorphisms K K' i hfin Γ s hs hfix
-  haveI : FiniteDimensional K K' := hfin
+  have : FiniteDimensional K K' := hfin
   have hc0 := GlobalTheory.ZM.DwModel.isGaloisCover_field K K'
   have hfixσ : ∀ σ : K' ≃ₐ[K] K', ∀ x, (σ : K' ≃+* K') (i x) = i x := fun σ x => σ.commutes x
   have hσi : ∀ σ : K' ≃ₐ[K] K', spMap (σ : K' →+* K') ≫ spMap i = spMap i := fun σ => by
@@ -409,7 +409,7 @@ theorem fixed_mem_range : ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommRing 
   classical
   intro R R' _ _ _ _ ρ hρ hG y hy
   obtain ⟨hfin, hinv⟩ := hG
-  letI : Fintype (Gal ρ) := Fintype.ofFinite _
+  let : Fintype (Gal ρ) := Fintype.ofFinite _
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective (A := R') y
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
   set P : R' := ∏ σ ∈ (Finset.univ : Finset (Gal ρ)).erase 1, σ.1 b with hP
@@ -481,16 +481,16 @@ namespace GlobalTheory.Mum.GenDesc
 
 theorem fracMap_finite : ∀ (R R' : Type) [CommRing R] [IsDomain R] [CommRing R'] [IsDomain R'] (ρ : R →+* R') (hρ : Function.Injective ρ), ρ.Finite → (fracMap ρ hρ).Finite := by
   intro R R' _ _ _ _ ρ hρ hfin
-  letI : Algebra R R' := ρ.toAlgebra
-  haveI : Module.Finite R R' := hfin
+  let : Algebra R R' := ρ.toAlgebra
+  have : Module.Finite R R' := hfin
   have hinj : Function.Injective (algebraMap R R') := hρ
-  haveI : FaithfulSMul R R' := (faithfulSMul_iff_algebraMap_injective R R').mpr hinj
-  letI : Algebra (FractionRing R) (FractionRing R') := FractionRing.liftAlgebra R (FractionRing R')
-  haveI : IsScalarTower R (FractionRing R) (FractionRing R') :=
+  have : FaithfulSMul R R' := (faithfulSMul_iff_algebraMap_injective R R').mpr hinj
+  let : Algebra (FractionRing R) (FractionRing R') := FractionRing.liftAlgebra R (FractionRing R')
+  have : IsScalarTower R (FractionRing R) (FractionRing R') :=
     FractionRing.isScalarTower_liftAlgebra R (FractionRing R')
-  haveI : IsLocalization (Algebra.algebraMapSubmonoid R' (nonZeroDivisors R)) (FractionRing R') :=
+  have : IsLocalization (Algebra.algebraMapSubmonoid R' (nonZeroDivisors R)) (FractionRing R') :=
     inferInstance
-  haveI : Module.Finite (FractionRing R) (FractionRing R') :=
+  have : Module.Finite (FractionRing R) (FractionRing R') :=
     Module.Finite.of_isLocalization R R' (nonZeroDivisors R)
   have heq : fracMap ρ hρ = algebraMap (FractionRing R) (FractionRing R') := by
     refine IsLocalization.ringHom_ext (nonZeroDivisors R) (RingHom.ext fun r => ?_)
@@ -642,7 +642,7 @@ open GlobalTheory.Mum
 theorem polarisedGeneric : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], Base R → ∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsLocalRing R'] (ρ : R →+* R'), FinExt ρ → IsGal ρ → ∀ (D : DegData R (maximalIdeal R)) (D' : DegData R' (maximalIdeal R')) (hD : IsPullDeg ρ D.toPre D'.toPre) (A' : PolAV (Sp (FractionRing R'))) (G' : Over (Sp R')) [GrpObj G'] [IsCommMonObj G'], IsSemiAbelian G' → ∀ (U' : Unif (maximalIdeal R') D' A' G'), ∀ (a : GalAct ρ hD U') (G : Over (Sp R)) [GrpObj G] [IsCommMonObj G] (β : G'.left ⟶ G.left), IsSemiAbelian G → IsGrpPullback G' G (spMap ρ) β → (∀ σ, a.act σ ≫ β = β) → ∃ (A : PolAV (Sp (FractionRing R))) (gen : (Over.pullback (jK R)).obj G ≅ A.A) (κ : pullback G'.hom (jK R') ⟶ pullback G.hom (jK R)), IsMonHom gen.hom ∧ κ ≫ pullback.fst _ _ = pullback.fst _ _ ≫ β ∧ LBIso (U'.LG.L.pull (pullback.fst G'.hom (jK R'))) (A.L.pull (κ ≫ gen.hom.left)) := by
   intro R _ _ _ _ R' _ _ _ ρ hfin hgal D D' hD A' G' _ _ _ U' a G _ _ β hG hpb hinv
   have hρ : Function.Injective ρ := hfin.2.1
-  haveI := hgal.1
+  have := hgal.1
   have hκ := GlobalTheory.T.isGrpPullback_genericFibre_fractionFieldMap R R' ρ hρ G' G β hpb
   let L' := U'.LG.L.pull (pullback.fst G'.hom (jK R'))
   have hL' : L'.IsLB := pull_isLB U'.LG.isLB _

@@ -212,7 +212,7 @@ theorem mean_eq_lint : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     have e : {X : Fin 1 → Fin 1 → AF F ⊗[F] E | ∀ v, projV v (projFin X) ∈ A v} =
         (⋂ v ∈ S, (fun X => projV v (projFin X)) ⁻¹' A v) ∩ intOff b S := by
       ext X
-      simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, intOff]
+      simp only [Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter, Set.mem_preimage, intOff]
       refine ⟨fun h => ⟨fun v _ => h v, fun v hv => hAoff v hv ▸ h v⟩, fun h v => ?_⟩
       by_cases hv : v ∈ S
       · exact h.1 v hv
@@ -239,7 +239,7 @@ theorem mean_eq_lint : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   · simp only [hterm]
     rw [← PositivityTheory.PlacePermOperatorBicommutantSpan.theta_lint F E σ hcm 1 J hJ μ 𝓕 hμ h𝓕 1 _ Φ hΦ, mean, ← lintegral_indicator hQ]
     refine lintegral_congr fun X => ?_
-    simp only [hΦd, Psi, Set.indicator, Set.mem_setOf_eq]
+    simp only [hΦd, Psi, Set.indicator, Set.mem_ofPred_eq]
   · simp only [hterm]
     exact Measurable.tsum fun X => hΦ.comp (ac.comp (continuous_inv.prodMk continuous_const)).measurable
 
@@ -273,14 +273,14 @@ theorem count : PositivityTheory.Rg.Mass.Equi → ∀ (F : Type) [Field F] [Numb
   intro hEq F _ _ hF θ hθ li lam hli hlam ι _ K hK
   obtain ⟨_, _, _, _, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
   have : BorelSpace (Ainf F) := ⟨rfl⟩
-  haveI := hli.1
+  have := hli.1
   obtain ⟨f, hf1, -, hfc, hf01⟩ := exists_continuous_one_zero_of_isCompact
     (hK.union (isCompact_singleton (x := (0 : ι → Ainf F)))) isClosed_empty (Set.disjoint_empty _)
   have hL := hEq F hF θ hθ li lam hli hlam ι ∅ (f : (ι → Ainf F) → ℝ) (fun _ _ => 0) f.continuous hfc (by simp)
   simp only [Finset.prod_empty, mul_one] at hL
   set L := ∫ y, f y ∂(Measure.pi fun _ : ι => li) with hLdef
   have hLpos : 0 < L := by
-    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_nonzero f.continuous hfc (fun x => (hf01 x).1)
+    refine Continuous.integral_pos_of_hasCompactSupport_nonneg_ne_zero f.continuous hfc (fun x => (hf01 x).1)
       (x := 0) ?_
     rw [hf1 (Or.inr rfl)]
     exact one_ne_zero
@@ -471,7 +471,7 @@ theorem norm_inv_unit (F : Type) [Field F] [NumberField F] (hF : IsTotallyReal F
     ‖((n⁻¹ : (InfiniteAdeleRing F)ˣ) : InfiniteAdeleRing F)‖ =
       ((∏ w : InfinitePlace F, ‖(n : InfiniteAdeleRing F) w‖₊)⁻¹ : ℝ≥0) := by
   have hmult : ∀ w : InfinitePlace F, w.mult = 1 := fun w => by
-    rw [InfinitePlace.mult, if_pos (hF.isReal w)]
+    rw [InfinitePlace.mult, ite_eq_left (hF.isReal w)]
   have hw : ∀ w : InfinitePlace F,
       ‖((n⁻¹ : (InfiniteAdeleRing F)ˣ) : InfiniteAdeleRing F) w‖ =
         ‖(n : InfiniteAdeleRing F) w‖⁻¹ := fun w => by
@@ -481,7 +481,7 @@ theorem norm_inv_unit (F : Type) [Field F] [NumberField F] (hF : IsTotallyReal F
     rw [norm_mul, norm_one] at h2
     exact eq_inv_of_mul_eq_one_left h2
   rw [InfiniteAdeleRing.norm_def]
-  simp only [hmult, pow_one, hw, NNReal.coe_inv, NNReal.coe_prod, coe_nnnorm]
+  simp only [hmult, pow_one, hw, NNReal.coe_inv, NNReal.coe_prod, coe_nnNorm]
   rw [Finset.prod_inv_distrib]
 
 section Borel
@@ -500,7 +500,7 @@ theorem infinite_adele_haar_scaling_by_unit (F : Type) [Field F] [NumberField F]
   rw [h, Measure.map_smul, map_mul_left_infiniteAdeleMeasure, smul_comm, norm_inv_unit F hF n,
     ENNReal.ofReal_coe_nnreal]
   · rfl
-  · letI := hm
+  · let := hm
     exact (continuous_const_mul (n : InfiniteAdeleRing F)).measurable.aemeasurable
 
 end Borel
@@ -651,7 +651,7 @@ theorem nnnorm_eq_distribHaarChar (F : Type) [Field F] [NumberField F]
     rw [dite_eq_right hva, NumberField.FinitePlace.norm_def, WithZeroMulInt.toNNReal_neg_apply _ hva]
     push_cast
     rw [WithZero.toAdd_unzero_eq_log]
-  rw [habs, ← coe_nnnorm, ENNReal.ofReal_coe_nnreal] at h
+  rw [habs, ← coe_nnNorm, ENNReal.ofReal_coe_nnreal] at h
   exact (ENNReal.coe_injective h).symm
 
 theorem map_mul_left (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F))
@@ -698,7 +698,7 @@ private theorem UpperTheory.Reformulated.B.FactorConjugationCancel.exists_factor
     [IsTopologicalAddGroup G] [LocallyCompactSpace G] [SecondCountableTopology G]
     [MeasurableSpace G] [BorelSpace G] (m : G ≃ₜ+ G) (ν : Measure G) [ν.IsAddHaarMeasure] :
     ∃ a : NNReal, Measure.map (⇑m : G → G) ν = a • ν := by
-  haveI : (Measure.map (⇑m : G → G) ν).IsAddHaarMeasure := m.isAddHaarMeasure_map ν
+  have : (Measure.map (⇑m : G → G) ν).IsAddHaarMeasure := m.isAddHaarMeasure_map ν
   exact ⟨_, Measure.isAddLeftInvariant_eq_smul _ ν⟩
 
 theorem UpperTheory.Reformulated.B.FactorConjugationCancel.map_eq_of_conj :
@@ -778,10 +778,10 @@ theorem pi_map_mul {R ι : Type} [Fintype ι] [CommRing R] [MeasurableSpace R] (
     (f : R → R) (hf : Measurable f) (c : ℝ≥0) (h : lam.map f = c • lam) :
     (Measure.pi fun _ : ι => lam).map (fun t i => f (t i)) =
       (c ^ Fintype.card ι) • Measure.pi fun _ : ι => lam := by
-  haveI : SigmaFinite (lam.map f) := by rw [h]; infer_instance
+  have : SigmaFinite (lam.map f) := by rw [h]; infer_instance
   rw [Measure.pi_map_pi (fun _ => hf.aemeasurable)]
   refine Measure.pi_eq fun s hs => ?_
-  simp only [h, Measure.smul_apply, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul,
+  simp only [h, smul_apply, Measure.pi_pi, ENNReal.smul_def, smul_eq_mul,
     Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, ENNReal.coe_pow]
 
 theorem sigR_sigR {F E : Type} [Field F] [Field E] [Algebra F E] (R : Type) [CommRing R] [Algebra F R]
@@ -841,14 +841,14 @@ theorem map_coordW_unit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     simpa using this.symm
   subst hd
   obtain ⟨iTR, iLC, iSC, iT2, hsc, -, hK', hB, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
-  haveI := iTR
-  haveI := iLC
-  haveI := iSC
-  haveI := iT2
-  haveI := hB 1 1
-  haveI := hlam
+  have := iTR
+  have := iLC
+  have := iSC
+  have := iT2
+  have := hB 1 1
+  have := hlam
   have hK : IsHomeomorph (cK (F := F) (E := E) R b) := hK' 2 b
-  haveI hν : (coordW R b lam 1 1).IsAddHaarMeasure :=
+  have hν : (coordW R b lam 1 1).IsAddHaarMeasure :=
     (_root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm R 2 b lam hlam).2.1 1 1
   have hinv := sigR_sigR R σ (conj_conj σ hcm)
   set π : Measure (Fin 1 × Fin 1 × Fin 2 → R) := Measure.pi fun _ => lam with hπ
@@ -920,8 +920,8 @@ namespace GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.CoordLat
 theorem coordW_latV_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), (∀ v, IsStdV v (lam v)) → ∀ v, coordW (Fv F v) b (lam v) 1 1 (latV b v) = 1 := by
   intro F E _ _ _ _ _ σ hσ d b lam hlam v
   obtain ⟨t1, t2, t3, t4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI := (hlam v).1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have := (hlam v).1
   have hK : IsHomeomorph (GlobalTheory.CompanionTheory.SW.WBox.cK (F := F) (E := E) (Fv F v) b) :=
     (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)).2.2.2.2.2.2.1 d b
   have mv := GlobalTheory.CompanionTheory.SW.WBox.map_coordW (Fv F v) hK (lam v) 1 1
@@ -1026,7 +1026,7 @@ theorem md_eq (hF : IsTotallyReal F) (n : (AF F)ˣ) (T : Finset (HeightOneSpectr
   rw [finprod_eq_prod_of_mulSupport_subset _ hsub]
   congr 1
   refine Finset.prod_congr rfl fun w _ => ?_
-  rw [InfinitePlace.mult, if_pos (hF.isReal w), pow_one]
+  rw [InfinitePlace.mult, ite_eq_left (hF.isReal w), pow_one]
 
 end Comp
 
@@ -1103,7 +1103,7 @@ theorem Psi_eq {F E : Type} [Field F] [NumberField F] [Field E] [Algebra F E] (�
     have e1 : ((1 : Af F) v) ⊗ₜ[F] (1 : E) = (1 : Fv F v ⊗[F] E) := rfl
     rw [e1, mul_one]
     rfl
-  simp only [Psi, Set.indicator, Set.mem_setOf_eq, hI, hV]
+  simp only [Psi, Set.indicator, Set.mem_ofPred_eq, hI, hV]
   split_ifs <;> simp
 
 theorem equi_unit : PositivityTheory.Rg.Mass.Equi → ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (J : Matrix (Fin 1) (Fin 1) E), IsHermND σ J → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (li : Measure (Ainf F)) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), IsStdInf li → (∀ v, IsStdV v (lam v)) → ∀ θ : ℝ →+* Ainf F, Continuous θ → ∀ r, IsRay θ r → ∀ (S : Finset (HeightOneSpectrum (𝓞 F))) (φ : (Fin 1 → Fin 1 → Ainf F ⊗[F] E) → ℝ) (A : ∀ v : HeightOneSpectrum (𝓞 F), Set (Fin 1 → Fin 1 → Fv F v ⊗[F] E)), IsTest σ J b S φ A → ∀ (y : (AF F ⊗[F] E)ˣ) (n : (AF F)ˣ), IsNm σ y n → (∀ᶠ ε : ℝ in 𝓝[>] 0, Th φ A (y * ofF (r ε)) ≠ ⊤) → Tendsto (fun ε : ℝ => ENNReal.ofReal (ε ^ (2 * Module.finrank ℚ F)) * Th φ A (y * ofF (r ε))) (𝓝[>] 0) (𝓝 ((ENNReal.ofReal (md n))⁻¹ * vol b li lam S φ A)) := by
@@ -1123,8 +1123,8 @@ theorem equi_unit : PositivityTheory.Rg.Mass.Equi → ∀ (F E : Type) [Field F]
   have : ∀ v, SecondCountableTopology (Fv F v) := fun v => (Rv v).2.2.1
   have : ∀ v, T2Space (Fv F v) := fun v => (Rv v).2.2.2.1
   have : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
-  haveI := hli.1
-  haveI : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
+  have := hli.1
+  have : ∀ v, (lam v).IsAddHaarMeasure := fun v => (hlam v).1
   have hKi : IsHomeomorph (cK (F := F) (E := E) (Ainf F) b) := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Ainf F)).2.2.2.2.2.2.1 2 b
   have hKv : ∀ v, IsHomeomorph (cK (F := F) (E := E) (Fv F v) b) := fun v =>
     (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Fv F v)).2.2.2.2.2.2.1 2 b
@@ -1183,7 +1183,7 @@ theorem equi_unit : PositivityTheory.Rg.Mass.Equi → ∀ (F E : Type) [Field F]
       (Measure.map_apply (Hv v).measurable (hAco v).2.measurableSet).symm
     rw [hψd]
     simp only []
-    rw [integral_indicator_one ((hcl v).isOpen.measurableSet), measureReal_def, e1, mHv v, Measure.smul_apply,
+    rw [integral_indicator_one ((hcl v).isOpen.measurableSet), measureReal_def, e1, mHv v, smul_apply,
       ENNReal.toReal_smul, NNReal.smul_def, smul_eq_mul]
   have hfinV : ∀ v, coordW (Fv F v) b (lam v) 1 1 (A v) ≠ ⊤ := fun v => by
     have := hHaarV v
@@ -1450,8 +1450,8 @@ theorem ideleModule_bounded_on_compact : ∀ (K : Type) [Field K] [NumberField K
           · exact (Valued.toNormedField.norm_le_one_iff).2
               ((HeightOneSpectrum.mem_adicCompletionIntegers (R := 𝓞 K) K v).1 (hS ha v hv))
       _ = ∏ v ∈ S, (if v ∈ S then max (Bf v) 1 else 1) :=
-          (Finset.prod_subset Finset.subset_union_right fun v _ hv => if_neg hv).symm
-      _ = ∏ v ∈ S, max (Bf v) 1 := Finset.prod_congr rfl fun v hv => if_pos hv
+          (Finset.prod_subset Finset.subset_union_right fun v _ hv => ite_eq_right hv).symm
+      _ = ∏ v ∈ S, max (Bf v) 1 := Finset.prod_congr rfl fun v hv => ite_eq_left hv
   exact mul_le_mul h1 h2 (IdeleGroup.finiteModule_pos a).le
     (Finset.prod_nonneg fun _ _ => by positivity)
 
@@ -1728,11 +1728,11 @@ theorem lside : PositivityTheory.Rg.Mass.Equi → LSide := by
   obtain ⟨⟨_, _, _⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨_, _, _, _, -, -, -, hB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (AF F)
   have hG := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hcm 1 J hJ (AF F)
-  haveI : IsTopologicalGroup (HA (AF F) σ J) := hG.1
-  haveI : LocallyCompactSpace (HA (AF F) σ J) := hG.2.1
-  haveI : SecondCountableTopology (HA (AF F) σ J) := hG.2.2.1
-  haveI : T2Space (HA (AF F) σ J) := hG.2.2.2.1
-  haveI : BorelSpace (HA (AF F) σ J) := hG.2.2.2.2.1
+  have : IsTopologicalGroup (HA (AF F) σ J) := hG.1
+  have : LocallyCompactSpace (HA (AF F) σ J) := hG.2.1
+  have : SecondCountableTopology (HA (AF F) σ J) := hG.2.2.1
+  have : T2Space (HA (AF F) σ J) := hG.2.2.2.1
+  have : BorelSpace (HA (AF F) σ J) := hG.2.2.2.2.1
   have hfin : μ 𝓕 < ⊤ := ((_root_.GlobalTheory.CompanionTheory.SW.finVol_unitaryGroup F E σ hcm 1 J hJ).2 μ hμ).2 𝓕 h𝓕
   have : μ.IsHaarMeasure := hμ
   let Γ : Subgroup (HA (AF F) σ J) := HFinIn (AF F) σ J

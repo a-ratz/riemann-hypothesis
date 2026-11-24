@@ -124,7 +124,7 @@ theorem zeta_pow_div {m n : ℕ} (hn : 0 < n) (h : m ∣ n) : zeta n ^ (n / m) =
   have hk : 0 < k := Nat.pos_of_mul_pos_left hn
   rw [Nat.mul_div_cancel_left k hm]
   unfold zeta
-  rw [← Complex.exp_nat_mul]
+  rw [← Complex.exp_natCast_mul]
   congr 1
   have hm' : (m : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hm.ne'
   have hk' : (k : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hk.ne'

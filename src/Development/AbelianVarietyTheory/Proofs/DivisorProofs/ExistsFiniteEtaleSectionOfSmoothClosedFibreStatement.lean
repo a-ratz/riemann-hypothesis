@@ -76,9 +76,9 @@ theorem exists_finExt_etale_of_isSeparable : ∀ (R : Type) [CommRing R] [IsDoma
       σ.comp ((algebraMap (ResidueField R) k').comp (residue R)) = (residue R').comp ρ := by
   intro R _ _ _ hR k' _ _ _ _
   obtain ⟨hN, -, hIC, hC⟩ := hR
-  haveI := hN; haveI := hIC; haveI := hC
+  have := hN; have := hIC; have := hC
   obtain ⟨A, _, _, hfin, het, hloc, ⟨ε⟩⟩ := GlobalTheory.exists_etale_lift_of_isSeparable R k'
-  haveI : IsLocalHom (algebraMap R A) :=
+  have : IsLocalHom (algebraMap R A) :=
     ((local_hom_tfae (algebraMap R A)).out 1 5).mpr (comap_eq_maximalIdeal_of_finite _)
   have hm : (maximalIdeal R).map (algebraMap R A) = maximalIdeal A :=
     Algebra.FormallyUnramified.map_maximalIdeal
@@ -89,10 +89,10 @@ theorem exists_finExt_etale_of_isSeparable : ∀ (R : Type) [CommRing R] [IsDoma
       rw [IsUnit.mem_submonoid_iff]
       by_contra h
       exact hy ((IsLocalRing.mem_maximalIdeal y).mpr h))
-  haveI : IsDomain A := e.toMulEquiv.isDomain
-  haveI : IsIntegrallyClosed A := IsIntegrallyClosed.of_equiv e.toRingEquiv.symm
-  haveI : IsNoetherian R A := inferInstance
-  haveI : IsNoetherianRing A := isNoetherian_of_tower R inferInstance
+  have : IsDomain A := e.toMulEquiv.isDomain
+  have : IsIntegrallyClosed A := IsIntegrallyClosed.of_equiv e.toRingEquiv.symm
+  have : IsNoetherian R A := inferInstance
+  have : IsNoetherianRing A := isNoetherian_of_tower R inferInstance
   let g2 : ResidueField R ⊗[R] A →ₐ[R] ResidueField A :=
     Algebra.TensorProduct.lift (IsScalarTower.toAlgHom R (ResidueField R) (ResidueField A))
       (IsScalarTower.toAlgHom R A (ResidueField A)) (fun _ _ => Commute.all _ _)
@@ -102,7 +102,7 @@ theorem exists_finExt_etale_of_isSeparable : ∀ (R : Type) [CommRing R] [IsDoma
     RingHom.etale_algebraMap.mpr het, ?_⟩
   · have := GlobalTheory.isAdicComplete_map_of_finite (maximalIdeal R) A
     rwa [hm] at this
-  · haveI : Module.Free R A := Module.free_of_flat_of_isLocalRing
+  · have : Module.Free R A := Module.free_of_flat_of_isLocalRing
     intro x y hxy
     rw [← sub_eq_zero]
     have h0 : (x - y) • (1 : A) = 0 := by
@@ -110,7 +110,7 @@ theorem exists_finExt_etale_of_isSeparable : ∀ (R : Type) [CommRing R] [IsDoma
     exact (smul_eq_zero.mp h0).resolve_right one_ne_zero
   · ext r
     simp only [RingHom.comp_apply, σ, AlgEquiv.coe_toRingEquiv, RingEquiv.toRingHom_eq_coe,
-      RingHom.coe_coe, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes, AlgHom.toRingHom_eq_coe]
+      RingHom.coe_coe, AlgEquiv.coe_toRingEquiv, AlgEquiv.commutes, AlgHom.toRingHom_eq_coe]
     change g2 (algebraMap (ResidueField R) (ResidueField R ⊗[R] A) (residue R r)) = _
     rw [Algebra.TensorProduct.algebraMap_apply]
     simp [g2]

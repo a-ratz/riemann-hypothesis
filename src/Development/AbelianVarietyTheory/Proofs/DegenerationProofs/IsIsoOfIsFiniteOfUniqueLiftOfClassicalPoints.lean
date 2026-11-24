@@ -70,20 +70,20 @@ namespace GlobalTheory
 theorem exists_ringHom_extend_of_isIntegral_of_injective {R B Ω : Type*} [CommRing R] [CommRing B]
     [Algebra R B] [Algebra.IsIntegral R B] [FaithfulSMul R B] [Field Ω] [IsAlgClosed Ω]
     (φ : R →+* Ω) : ∃ ψ : B →+* Ω, ψ.comp (algebraMap R B) = φ := by
-  haveI := RingHom.ker_isPrime φ
+  have := RingHom.ker_isPrime φ
   obtain ⟨Q, -, hQ, hQP⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (S := B)
     (RingHom.ker φ) ⊥ (by
       rw [(show Ideal.under _ ⊥ = ⊥ from Ideal.comap_bot_of_injective _ (FaithfulSMul.algebraMap_injective R B))]
       exact bot_le)
-  haveI : Q.LiesOver (RingHom.ker φ) := ⟨hQP.symm⟩
-  letI : Algebra (R ⧸ RingHom.ker φ) Ω := (RingHom.kerLift φ).toAlgebra
-  haveI : FaithfulSMul (R ⧸ RingHom.ker φ) Ω :=
+  have : Q.LiesOver (RingHom.ker φ) := ⟨hQP.symm⟩
+  let : Algebra (R ⧸ RingHom.ker φ) Ω := (RingHom.kerLift φ).toAlgebra
+  have : FaithfulSMul (R ⧸ RingHom.ker φ) Ω :=
     (faithfulSMul_iff_algebraMap_injective _ _).mpr (RingHom.kerLift_injective φ)
-  haveI : Module.IsTorsionFree (R ⧸ RingHom.ker φ) Ω := FaithfulSMul.to_isTorsionFree _ _
-  haveI : Module.IsTorsionFree (R ⧸ RingHom.ker φ) (B ⧸ Q) := FaithfulSMul.to_isTorsionFree _ _
-  haveI : Algebra.IsIntegral (R ⧸ RingHom.ker φ) (B ⧸ Q) :=
+  have : Module.IsTorsionFree (R ⧸ RingHom.ker φ) Ω := FaithfulSMul.to_isTorsionFree _ _
+  have : Module.IsTorsionFree (R ⧸ RingHom.ker φ) (B ⧸ Q) := FaithfulSMul.to_isTorsionFree _ _
+  have : Algebra.IsIntegral (R ⧸ RingHom.ker φ) (B ⧸ Q) :=
     Algebra.IsIntegral.tower_top (R := R)
-  haveI : Algebra.IsAlgebraic (R ⧸ RingHom.ker φ) (B ⧸ Q) := Algebra.IsIntegral.isAlgebraic
+  have : Algebra.IsAlgebraic (R ⧸ RingHom.ker φ) (B ⧸ Q) := Algebra.IsIntegral.isAlgebraic
   let σ : (B ⧸ Q) →ₐ[R ⧸ RingHom.ker φ] Ω := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -104,8 +104,8 @@ theorem bijective_algebraMap_of_subsingleton_algHom {R A : Type*} [CommRing R] [
   have hRL : Function.Injective (algebraMap R L) := by
     rw [IsScalarTower.algebraMap_eq R K L]
     exact (algebraMap K L).injective.comp (IsFractionRing.injective R K)
-  haveI : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective _ _).mpr hRL
-  haveI : Module.IsTorsionFree R L := FaithfulSMul.to_isTorsionFree _ _
+  have : FaithfulSMul R L := (faithfulSMul_iff_algebraMap_injective _ _).mpr hRL
+  have : Module.IsTorsionFree R L := FaithfulSMul.to_isTorsionFree _ _
   have hex : ∀ Q : Ideal A, Q.IsPrime → Q.comap (algebraMap R A) = ⊥ →
       ∃ σ : A →ₐ[R] L, RingHom.ker σ = Q := by
     intro Q hQ hQ0
@@ -116,8 +116,8 @@ theorem bijective_algebraMap_of_subsingleton_algHom {R A : Type*} [CommRing R] [
         rw [Ideal.mem_comap, ← Ideal.Quotient.eq_zero_iff_mem]
         exact hr
       rwa [hQ0, Ideal.mem_bot] at this
-    haveI : FaithfulSMul R (A ⧸ Q) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
-    haveI : Module.IsTorsionFree R (A ⧸ Q) := FaithfulSMul.to_isTorsionFree R _
+    have : FaithfulSMul R (A ⧸ Q) := (faithfulSMul_iff_algebraMap_injective _ _).mpr hinj
+    have : Module.IsTorsionFree R (A ⧸ Q) := FaithfulSMul.to_isTorsionFree R _
     let σ₀ : (A ⧸ Q) →ₐ[R] L := (by
       refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
       solve_by_elim* (maxDepth := 2) only [*,
@@ -127,7 +127,7 @@ theorem bijective_algebraMap_of_subsingleton_algHom {R A : Type*} [CommRing R] [
       set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
       intro a ha
       by_contra h
-      obtain ⟨r, hr, c, hc⟩ := (Algebra.IsIntegral.isIntegral (R := R) a).isAlgebraic.exists_nonzero_dvd
+      obtain ⟨r, hr, c, hc⟩ := (Algebra.IsIntegral.isIntegral (R := R) a).isAlgebraic.exists_ne_zero_dvd
         (mem_nonZeroDivisors_of_ne_zero h)
       apply hr
       apply hRL
@@ -176,14 +176,14 @@ theorem exists_ne_zero_forall_exists_two_lifts {R A : Type*} [CommRing R] [IsDom
     rw [IsScalarTower.algebraMap_eq R K L]
     exact (algebraMap K L).injective.comp (IsFractionRing.injective R K)
   let B := integralClosure R L
-  haveI : FaithfulSMul R B := (faithfulSMul_iff_algebraMap_injective _ _).mpr
+  have : FaithfulSMul R B := (faithfulSMul_iff_algebraMap_injective _ _).mpr
     fun r s h => hRL congr(($h).1)
   let c (ρ : A →ₐ[R] L) : A →ₐ[R] B :=
     ρ.codRestrict B fun a => (Algebra.IsIntegral.isIntegral (R := R) a).map ρ
   obtain ⟨a, ha⟩ := DFunLike.ne_iff.mp hne
   have hb : c σ a - c τ a ≠ 0 := fun h => ha congr(($(sub_eq_zero.mp h)).1)
   obtain ⟨r, hr, d, hd⟩ :=
-    (Algebra.IsIntegral.isIntegral (R := R) (c σ a - c τ a)).isAlgebraic.exists_nonzero_dvd
+    (Algebra.IsIntegral.isIntegral (R := R) (c σ a - c τ a)).isAlgebraic.exists_ne_zero_dvd
       (mem_nonZeroDivisors_of_ne_zero hb)
   refine ⟨r, hr, fun Ω _ _ O φ hφ => ?_⟩
   obtain ⟨χ, hχ⟩ := exists_ringHom_extend_of_isIntegral_of_injective (B := B) (O.subtype.comp φ)
@@ -230,7 +230,7 @@ theorem isIso_of_isFinite_of_unique_lift_of_classical_points :
   intro X _ π _ _ hN W _ hW f _ hgen x U hx hU huniq
   have hN' : ∀ y : X, IsIntegrallyClosed (X.presheaf.stalk y) := fun y => (hN y).2
   obtain ⟨V, hV, hxV, -⟩ := exists_isAffineOpen_mem_and_subset (U := ⊤) (x := x) trivial
-  haveI hVne : Nonempty V := ⟨⟨x, hxV⟩⟩
+  have hVne : Nonempty V := ⟨⟨x, hxV⟩⟩
   have hV' : IsAffineOpen (f ⁻¹ᵁ V) := hV.preimage f
   have hηV : genericPoint X ∈ V :=
     ((genericPoint_spec X).mem_open_set_iff V.isOpen).mpr ⟨x, trivial, hxV⟩
@@ -239,10 +239,10 @@ theorem isIso_of_isFinite_of_unique_lift_of_classical_points :
     rw [hgen w hw]
     exact hηV
   obtain ⟨w₁, hw₁, -⟩ := exists_mem_genericPoints_specializes hW.some
-  haveI : Nonempty (f ⁻¹ᵁ V) := ⟨⟨w₁, hgenV w₁ hw₁⟩⟩
-  letI := (f.app V).hom.toAlgebra
-  haveI : Module.Finite Γ(X, V) Γ(W, f ⁻¹ᵁ V) := f.finite_app V hV
-  haveI := isIntegrallyClosed_sections_of_stalks hN' hV
+  have : Nonempty (f ⁻¹ᵁ V) := ⟨⟨w₁, hgenV w₁ hw₁⟩⟩
+  let := (f.app V).hom.toAlgebra
+  have : Module.Finite Γ(X, V) Γ(W, f ⁻¹ᵁ V) := f.finite_app V hV
+  have := isIntegrallyClosed_sections_of_stalks hN' hV
   have hsq : Spec.map (f.app V) ≫ hV.fromSpec = hV'.fromSpec ≫ f := by
     rw [Scheme.Hom.app_eq_appLE]
     exact IsAffineOpen.SpecMap_appLE_fromSpec f hV hV' le_rfl
@@ -269,7 +269,7 @@ theorem isIso_of_isFinite_of_unique_lift_of_classical_points :
     change φ.hom r ∈ ((gPt p) t).asIdeal
     rw [h0]
     exact zero_mem _
-  haveI : CharZero Γ(X, V) := by
+  have : CharZero Γ(X, V) := by
     obtain ⟨p, _, φ, -⟩ := hpt 1 one_ne_zero
     exact φ.hom.charZero
   have hbij : Function.Bijective (algebraMap Γ(X, V) Γ(W, f ⁻¹ᵁ V)) := by
@@ -309,14 +309,14 @@ theorem isIso_of_isFinite_of_unique_lift_of_classical_points :
     apply Subtype.ext
     exact (morphismRestrict_base_coe f V _).trans (((hgen w hw).trans (hgen w₁ hw₁).symm).trans
       (morphismRestrict_base_coe f V ⟨w₁, hgenV w₁ hw₁⟩).symm)
-  haveI : IrreducibleSpace W := by
+  have : IrreducibleSpace W := by
     rw [irreducibleSpace_def]
     have h : closure ({w₁} : Set W) = ⊤ := by
       refine Set.eq_univ_of_forall fun w => ?_
       obtain ⟨w₀, hw₀, h₀⟩ := exists_mem_genericPoints_specializes w
       exact specializes_iff_mem_closure.mp (hsub w₀ hw₀ ▸ h₀)
     exact h ▸ isIrreducible_singleton.closure
-  haveI : IsIntegral W := isIntegral_of_irreducibleSpace_of_isReduced W
+  have : IsIntegral W := isIntegral_of_irreducibleSpace_of_isReduced W
   exact isIso_of_isFinite_of_birational f hN' V hVne
 
 end GlobalTheory

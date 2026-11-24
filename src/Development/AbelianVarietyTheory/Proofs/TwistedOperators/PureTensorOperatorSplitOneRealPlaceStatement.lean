@@ -197,10 +197,10 @@ theorem exists_repOp_tensor_eq_mul {L : Submodule (𝓞 E) (Fin n → E)} [Submo
   have := hμ.haar_loc
   have := hμ.haar
   obtain ⟨ν, hν⟩ := (existsUnique_isRestrictedProdFin σ J L μf hμ.eventually_eq_one).exists
-  haveI : ν.IsHaarMeasure := (isRestrictedProdFin_iff.1 hν).2.1
+  have : ν.IsHaarMeasure := (isRestrictedProdFin_iff.1 hν).2.1
   have hmap := hμ.map_archFin hν
   let μa' := Function.update μa w (Measure.dirac 1)
-  haveI : ∀ u, SigmaFinite (μa' u) := sigmaFinite_update μa w 1
+  have : ∀ u, SigmaFinite (μa' u) := sigmaFinite_update μa w 1
   let ρ := (Measure.pi μa').prod ν
   let fa' : ∀ u, GArch σ J u → ℂ := Function.update fa w (fun _ => 1)
   let Ψ : (∀ u, GArch σ J u) × GFin σ J → ℂ := fun z => (∏ u, fa' u (z.1 u)) * tensorFin σ J ff z.2
@@ -223,7 +223,7 @@ theorem exists_repOp_tensor_eq_mul {L : Submodule (𝓞 E) (Fin n → E)} [Submo
     (fun v => hΨint.aestronglyMeasurable.smul (hπ'.continuous_apply v).aestronglyMeasurable)
   refine ⟨repOp π' ρ Ψ, fun x => ?_, ?_⟩
   · ext v
-    simp only [ContinuousLinearMap.mul_apply]
+    simp only [mul_apply_eq_comp]
     rw [(hQ _).2, (hQ v).2, ← ContinuousLinearMap.integral_comp_comm _ (hQ v).1]
     congr 1
     funext g
@@ -231,13 +231,13 @@ theorem exists_repOp_tensor_eq_mul {L : Submodule (𝓞 E) (Fin n → E)} [Submo
     congr 1
     change (π (killAt σ J w g)) (π (embArch σ J w x) v) =
       (π (embArch σ J w x)) (π (killAt σ J w g) v)
-    rw [← ContinuousLinearMap.mul_apply, ← ContinuousLinearMap.mul_apply, ← map_mul, ← map_mul,
+    rw [← mul_apply_eq_comp, ← mul_apply_eq_comp, ← map_mul, ← map_mul,
       commute_embArch_killAt]
   · have hfc := continuous_of_mem_ccAd (tensor_mem_ccAd hfa hff)
     set f := tensor σ J fa ff with hfdef
     let e := archFinEquiv σ J
     ext v
-    rw [ContinuousLinearMap.mul_apply, hπ.repOp_apply hfc.1 hfc.2, hπw.repOp_apply (hcfa w) (hfa w).1, (hQ v).2]
+    rw [mul_apply_eq_comp, hπ.repOp_apply hfc.1 hfc.2, hπw.repOp_apply (hcfa w) (hfa w).1, (hQ v).2]
     let Fn : (∀ u, GArch σ J u) × GFin σ J → H := fun y => f (e.symm y) • π (e.symm y) v
     have hFc : Continuous Fn :=
       (hfc.1.comp e.symm.continuous).smul ((hπ.continuous_apply v).comp e.symm.continuous)
@@ -291,7 +291,7 @@ theorem exists_repOp_tensor_eq_mul {L : Submodule (𝓞 E) (Fin n → E)} [Submo
             simp [Function.update_of_ne hu'])]
         ring
       change f (e.symm (Function.update a w x, b)) • π (e.symm (Function.update a w x, b)) v = _
-      rw [hf, hg, map_mul, mul_smul, ContinuousLinearMap.mul_apply, map_smul]
+      rw [hf, hg, map_mul, mul_smul, mul_apply_eq_comp, map_smul]
       rfl
     rw [h1, ← hT.map_eq, integral_map hT.measurable.aemeasurable (hT.map_eq ▸ hFc.aestronglyMeasurable),
       integral_prod _ (by

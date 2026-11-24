@@ -92,7 +92,7 @@ theorem nCoordHaar_of (hC : NChart) (hU : NUniq) : NCoordHaar := by
     · intro h0
       rw [Measure.map_eq_zero_iff hΦ.measurable.aemeasurable] at h0
       exact isOpen_univ.measure_ne_zero (volume : Measure (CSp m d)) Set.univ_nonempty
-        (by rw [h0, Measure.coe_zero, Pi.zero_apply])
+        (by rw [h0, FunLike.coe_zero, Pi.zero_apply])
     · rw [Measure.map_apply hΦ.measurable]
       · have : Φ ⁻¹' {x | Matrix.of x ∉ Formalism.QuantumDeterminants.Nset k r} = ∅ := by
           ext t

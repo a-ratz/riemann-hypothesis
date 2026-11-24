@@ -183,8 +183,8 @@ theorem exists_forms {O : Type} [CommRing O] {N : ℕ} {X : Scheme.{0}} (e : X �
       rw [← TopologicalSpace.Opens.coe_iSup, iSup_chart, TopologicalSpace.Opens.coe_top]
     rw [h1]
     exact isCompact_iUnion fun i => (isAffineOpen_chart O N i).isCompact
-  haveI : CompactSpace (PSpace O N) := ⟨hcpt⟩
-  haveI : CompactSpace X := hemb.compactSpace
+  have : CompactSpace (PSpace O N) := ⟨hcpt⟩
+  have : CompactSpace X := hemb.compactSpace
   obtain ⟨t, ht⟩ := (isCompact_univ (X := X)).elim_finite_subcover
     (fun x => ((e ⁻¹ᵁ Proj.basicOpen (grading O N) (F x) : X.Opens) : Set X))
     (fun x => (e ⁻¹ᵁ Proj.basicOpen (grading O N) (F x)).isOpen)

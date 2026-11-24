@@ -233,7 +233,7 @@ theorem torsion_reduction_trivial (S : StepLevel F E σ J T f bad) (G : GLoc F E
     refine ⟨fun hqp => ?_, ?_⟩
     · have h1 := hInJ.1 p q (by
         unfold blkOf
-        rw [if_pos (lt_of_lt_of_le q.2 ha), if_pos (lt_of_lt_of_le p.2 ha)]
+        rw [ite_eq_left (lt_of_lt_of_le q.2 ha), ite_eq_left (lt_of_lt_of_le p.2 ha)]
         exact hqp)
       rw [hred] at h1
       exact h1
@@ -558,7 +558,7 @@ theorem level_places_prime_to_type (A : AtTTied u) (v : (D.mem u).A.vT) : (A.eV 
 
 theorem rank_zero_le_type_level : D.R.N 0 ≤ aOf D.R 0 := by
   unfold aOf
-  rw [if_pos (by have := D.R.two_le_m; omega)]
+  rw [ite_eq_left (by have := D.R.two_le_m; omega)]
   simp [Ranks.N]
 
 theorem fixed_class_mem_level_general (K : ClsTied u 0 (Nat.zero_le _)) (G : GLoc D.host.F D.host.E (sigD D) D.host.g)
@@ -588,7 +588,7 @@ theorem fixed_class_mem_level_general (K : ClsTied u 0 (Nat.zero_le _)) (G : GLo
         bc (inclE (F := D.host.F) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) (g⁻¹ ^ N0)
       rw [hzp N0]; group
     obtain ⟨s, hs⟩ := hmem
-    haveI := hS c
+    have := hS c
     rw [Subsingleton.elim s 1, map_one] at hs
     exact (congrArg Subtype.val hs).symm
   have hcop : ∀ (i : Fin 2) (j N : ℕ), Nat.Coprime N (D.host.g i) → (g⁻¹ ^ j) ^ N = 1 → g⁻¹ ^ j = 1 := by
@@ -725,7 +725,7 @@ theorem rational_stabiliser_trivial (Tf : FormsTied D u) (hS : Formalism.MainNot
     γ = 1 := by
   have hr := ((Tf.cls 0 (Nat.zero_le _)).stabI_range c ⟨γ, hγ⟩).2 hm
   obtain ⟨s, hs⟩ := hr
-  haveI := hS c
+  have := hS c
   rw [Subsingleton.elim s 1, map_one] at hs
   exact (congrArg Subtype.val hs).symm
 
@@ -764,7 +764,7 @@ theorem forms_level_zero_linear_equiv (Tf : FormsTied D u) (hS : Formalism.MainN
     · intro h; exact Subtype.ext h
   by_cases hne : Nonempty ((D.mem u).C.cls 0)
   · obtain ⟨c0⟩ := hne
-    haveI := (D.mem u).A.Mu0_fd
+    have := (D.mem u).A.Mu0_fd
     have hinj : Function.Injective ((Φ0.symm : ((D.mem u).C.cls 0 → levelZeroValues Tf) →ₗ[ℂ] (D.mem u).A.Mu0) ∘ₗ
         LinearMap.single ℂ (fun _ => levelZeroValues Tf) c0) := by
       rw [LinearMap.coe_comp]
@@ -772,14 +772,14 @@ theorem forms_level_zero_linear_equiv (Tf : FormsTied D u) (hS : Formalism.MainN
       intro a b h
       have := congrFun h c0
       simpa using this
-    haveI : FiniteDimensional ℂ (levelZeroValues Tf) := FiniteDimensional.of_injective _ hinj
+    have : FiniteDimensional ℂ (levelZeroValues Tf) := FiniteDimensional.of_injective _ hinj
     refine ⟨Module.finrank ℂ (levelZeroValues Tf),
       Φ0.trans (LinearEquiv.piCongrRight fun _ => (Module.finBasis ℂ (levelZeroValues Tf)).equivFun), fun φ c => ?_⟩
     rw [← hΦ0]
     simp only [LinearEquiv.trans_apply, LinearEquiv.piCongrRight_apply]
     exact (Module.finBasis ℂ (levelZeroValues Tf)).equivFun.map_eq_zero_iff
-  · haveI : IsEmpty ((D.mem u).C.cls 0) := not_nonempty_iff.1 hne
-    haveI : Subsingleton (D.mem u).A.Mu0 := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
+  · have : IsEmpty ((D.mem u).C.cls 0) := not_nonempty_iff.1 hne
+    have : Subsingleton (D.mem u).A.Mu0 := ⟨fun a b => Subtype.ext (Subsingleton.elim _ _)⟩
     exact ⟨0, LinearEquiv.ofSubsingleton _ _, fun φ c => isEmptyElim c⟩
 
 def t2xR (v : (D.mem u).A.vT) : ((D.mem u).A.Fv v)ˣ →* Module.End ℂ (D.mem u).A.Mu0 where
@@ -948,7 +948,7 @@ theorem free_rank_model_of_free_action (A : ColumnsAtT R C) {H : Type} [CommGrou
     (hfree : ∀ (g : A.vT → H) (c : C.cls 0), g • c = c → g = 1)
     (hρ : ∀ v a (φ : A.Mu0), ((ρ (Pi.mulSingle v (e v a)) φ : A.Mu0) : C.cls 0 → C.Y 0 → ℂ) = A.rhoT v a φ.1) :
     Nonempty (FreeRankModel A) := by
-  letI := productMulActionFirstFactor (A.vT → H) (MulAction.orbitRel.Quotient (A.vT → H) (C.cls 0) × Fin d)
+  let := productMulActionFirstFactor (A.vT → H) (MulAction.orbitRel.Quotient (A.vT → H) (C.cls 0) × Fin d)
   refine ⟨⟨H, (A.vT → H) × (MulAction.orbitRel.Quotient (A.vT → H) (C.cls 0) × Fin d), e,
     orbitDecompositionLinearEquiv Φ ρ hmono hfree, ?_, ?_⟩⟩
   · intro g x h
@@ -964,9 +964,9 @@ end ModelOf
 
 theorem free_rank_model_of_diamonds (Tf : FormsTied D u) (hS : Formalism.MainNotions.product_first_zeroth_parts.admS D u) (hE : DiamondElementsExist Tf) :
     Nonempty (FreeRankModel (D.mem u).A) := by
-  haveI : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
+  have : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
   obtain ⟨d, Φ, hΦ⟩ := forms_level_zero_linear_equiv Tf hS
-  letI : MulAction ((D.mem u).A.vT → (ZMod (D.mem u).A.T)ˣ) ((D.mem u).C.cls 0) := MulAction.ofEndHom (t2xAc Tf hE)
+  let : MulAction ((D.mem u).A.vT → (ZMod (D.mem u).A.T)ˣ) ((D.mem u).C.cls 0) := MulAction.ofEndHom (t2xAc Tf hE)
   refine free_rank_model_of_free_action (D.mem u).A (fun v => t2xU v) Φ (t2xRho Tf hE) ?_ ?_ ?_
   · intro g c φ h
     rw [hΦ] at h ⊢
@@ -1060,7 +1060,7 @@ theorem induced_lattice_map_sz (B Wh : HLat K) (Ψ : ((∀ i, G i) → Wh.V) →
     (U : Submodule K B.V) (hU : U = (RamFun.ramFun K G Wh.V).map Ψ) :
     (T2.piL (T2.SzIdx G) Wh.L).map ((Ψ ∘ₗ T2.kronMap K Wh.V (T2.szVec G)).restrictScalars (𝓞 K)) =
       B.L ⊓ U.restrictScalars (𝓞 K) := by
-  haveI : FiniteDimensional K Wh.V := Module.Finite.of_basis Wh.b
+  have : FiniteDimensional K Wh.V := Module.Finite.of_basis Wh.b
   ext x
   constructor
   · rintro ⟨F, hF, rfl⟩
@@ -1096,7 +1096,7 @@ theorem slope_ramified_induced (B Wh : HLat K) (hB : FrameOK B) (hW : Wh.Good) (
     (withL B (B.L ⊓ U.restrictScalars (𝓞 K))).mu =
       B.mu - Real.log (((T2.szGram G).det : ℤ) : ℝ) / (Fintype.card (T2.SzIdx G) : ℝ) := by
   have := T2.nonempty_SzIdx G h2
-  haveI : Nonempty (∀ i, G i) := ⟨1⟩
+  have : Nonempty (∀ i, G i) := ⟨1⟩
   have hinj : Function.Injective (Ψ ∘ₗ T2.kronMap K Wh.V (T2.szVec G)) :=
     hΨ.comp (T2.kron_szVec_injective G)
   have e1 := T2.kron_mu B Wh hB hW hW0 (Ψ ∘ₗ T2.kronMap K Wh.V (T2.szVec G)) hinj
@@ -1172,7 +1172,7 @@ theorem induced_of_slice (B : HLat K) (hB : B.Good) (hB0 : B.L ≠ ⊥)
         (∀ v F F', majAt B.b B.X v (Ψ F) (Ψ F') = ∑ a, majAt Wh.b Wh.X v (F a) (F' a)) ∧
         B.L = (T2.piL (∀ i, G i) Wh.L).map (Ψ.restrictScalars (𝓞 K)) ∧
         (⨅ i, LinearMap.ker (t2sNm B ρ i)) = (RamFun.ramFun K G Wh.V).map Ψ := by
-  haveI : Module.Finite K B.V := Module.Finite.of_basis B.b
+  have : Module.Finite K B.V := Module.Finite.of_basis B.b
   have hsub : Function.Injective W.subtype := Subtype.val_injective
   obtain ⟨hX, hm, -⟩ := pull_spec1 B (Module.finBasis K W) W.subtype hB.1 hsub
   set Ψ := t2sPsi B ρ W with hΨ
@@ -1245,10 +1245,10 @@ theorem induced_of_slice (B : HLat K) (hB : B.Good) (hB0 : B.L ≠ ⊥)
     rw [hs]
     refine Finset.sum_congr rfl fun g _ => ?_
     rw [Finset.sum_eq_single g]
-    · rw [horth, if_pos rfl, hm]
+    · rw [horth, ite_eq_left rfl, hm]
       rfl
     · intro h _ hgh
-      rw [horth, if_neg (Ne.symm hgh)]
+      rw [horth, ite_eq_right (Ne.symm hgh)]
     · simp
   ·
     ext x
@@ -1535,7 +1535,7 @@ theorem group_action_eq_unit_action [Fact (D.mem u).A.T.Prime] (Tf : FormsTied D
 
 theorem group_acts_freely_classes' (Tf : FormsTied D u) (hS : Formalism.MainNotions.product_first_zeroth_parts.admS D u) (hE : DiamondElementsExist Tf) (g : ∀ v, t2sG D u v)
     (c : (D.mem u).C.cls 0) (h : t2sAc Tf hE g c = c) : g = 1 := by
-  haveI : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
+  have : Fact (D.mem u).A.T.Prime := ⟨(D.mem u).A.T_prime⟩
   have h1 := group_acts_freely_classes Tf hS hE (t2sPc g) c (by rw [← group_action_eq_unit_action]; exact h)
   exact t2sPc.injective (h1.trans (map_one _).symm)
 
@@ -1557,12 +1557,12 @@ theorem restriction_rational_form (Tf : FormsTied D u) (hS : Formalism.MainNotio
   · rw [(D.fm u).Fi_zero, mem_forms_level_zero_iff Tf hS]
     intro c
     by_cases hc : S c
-    · simp only [hc, if_true]; exact h0 c
-    · simp only [hc, if_false]; exact (levelZeroValues Tf).zero_mem
+    · simp only [hc, ite_true]; exact h0 c
+    · simp only [hc, ite_false]; exact (levelZeroValues Tf).zero_mem
   · by_cases hc : S c
-    · simp only [hc, if_true]; exact hr.2 c
+    · simp only [hc, ite_true]; exact hr.2 c
     · refine ⟨0, zero_mem _, fun z => ?_⟩
-      simp only [hc, if_false, map_zero, Pi.zero_apply]
+      simp only [hc, ite_false, map_zero, Pi.zero_apply]
 
 theorem lattice_level_zero_ne_bot (Tf : FormsTied D u) (hS : Formalism.MainNotions.product_first_zeroth_parts.admS D u) : ((D.fm u).lat 0).L ≠ ⊥ := by
   intro h0
@@ -1697,7 +1697,7 @@ theorem slice_map_bijective (hS : Formalism.MainNotions.product_first_zeroth_par
         have h1 := class_rep_group_elem_spec Tf hE (t2sAc Tf hE g⁻¹ c)
         rw [h, ← group_action_mul, mul_inv_cancel, map_one, t2sRep_ac] at h1
         exact hc h1.symm
-      simp only [hne, if_false, map_zero]
+      simp only [hne, ite_false, map_zero]
     refine ⟨fun g => ⟨_, hmem g⟩, ?_⟩
     apply (D.fm u).emb_inj 0
     funext c
@@ -1818,8 +1818,8 @@ theorem slice_summands_orthogonal (hS : Formalism.MainNotions.product_first_zero
   intro v g h x y
   by_cases hgh : g = h
   · subst hgh
-    rw [if_pos rfl, group_rep_majorant_isometry hI Tf hE]
-  · rw [if_neg hgh]
+    rw [ite_eq_left rfl, group_rep_majorant_isometry hI Tf hE]
+  · rw [ite_eq_right hgh]
     apply hO
     intro c
     by_cases hc : g = t2sH Tf hE c

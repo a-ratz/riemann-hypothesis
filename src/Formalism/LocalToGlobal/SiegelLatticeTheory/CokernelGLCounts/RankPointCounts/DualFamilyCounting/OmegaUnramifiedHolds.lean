@@ -53,10 +53,10 @@ theorem unramAt_of_cm {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     (hc : Formalism.BasicNotions.CMData F E) (v : HeightOneSpectrum (𝓞 F)) : UnramAt (E := E) v := by
   intro P hP hP0 _
   classical
-  haveI : Algebra.IsQuadraticExtension F E := ⟨hc.deg2⟩
+  have : Algebra.IsQuadraticExtension F E := ⟨hc.deg2⟩
   let c : Gal(E/F) := AlgEquiv.ofRingEquiv (f := starRingAut) (fun r => (hc.fixed (algebraMap F E r)).2 ⟨r, rfl⟩)
-  haveI : P.LiesOver (P.under (𝓞 F)) := ⟨rfl⟩
-  have hp0 : P.under (𝓞 F) ≠ ⊥ := Ideal.IsIntegral.comap_ne_bot (𝓞 F) hP0
+  have : P.LiesOver (P.under (𝓞 F)) := ⟨rfl⟩
+  have hp0 : P.under (𝓞 F) ≠ ⊥ := Ideal.IsIntegral.under_ne_bot (𝓞 F) hP0
   have hcard : Nat.card (P.inertia Gal(E/F)) = P.ramificationIdx (𝓞 F) := by
     rw [Ideal.card_inertia_eq_ramificationIdxIn (G := Gal(E/F)) (P.under (𝓞 F)) P,
       Ideal.ramificationIdxIn_eq_ramificationIdx (P.under (𝓞 F)) P Gal(E/F)]
@@ -65,7 +65,7 @@ theorem unramAt_of_cm {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
     first
       | (rw [IsGalois.card_aut_eq_finrank]; exact hc.deg2)
       | (rw [Nat.card_eq_fintype_card, IsGalois.card_aut_eq_finrank]; exact hc.deg2)
-  haveI : Fact (Nat.card Gal(E/F)).Prime := ⟨by rw [hG]; exact Nat.prime_two⟩
+  have : Fact (Nat.card Gal(E/F)).Prime := ⟨by rw [hG]; exact Nat.prime_two⟩
   have htop : P.inertia Gal(E/F) = ⊤ := by
     rcases Subgroup.eq_bot_or_eq_top_of_prime_card (P.inertia Gal(E/F)) with h | h
     · exfalso

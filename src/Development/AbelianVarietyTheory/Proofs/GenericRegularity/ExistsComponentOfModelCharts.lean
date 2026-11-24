@@ -90,7 +90,7 @@ theorem exists_comp_of_charts : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   intro E _ _ _ H Dw l Xo c σ r U hU h k
   obtain ⟨hL, -, -, hA⟩ := evLaws_genFr_atlas E H Dw l Xo c
   obtain ⟨x₀, hx₀⟩ := (GlobalTheory.frames_isConnected E r (U.X k)).nonempty
-  letI : Field (CAt σ) := inferInstanceAs (Field ℂ)
+  let : Field (CAt σ) := inferInstanceAs (Field ℂ)
   obtain ⟨C₀, ψ₀, z₀, t₀, hz₀, hb₀⟩ := hA h (CAt σ) (U.un k ⟨x₀, hx₀⟩)
   refine ⟨C₀.Z, fun x C ψ z t hz hb => ?_⟩
   by_contra hne

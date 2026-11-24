@@ -107,7 +107,7 @@ theorem discMod_finite [FiniteDimensional K V] {h : V →ₗ⋆[K] V →ₗ[K] K
     rw [mem_ker_toDisc]
     have h1 : a • (y : V) ∈ locF 𝔭 (T ⊔ M) := hr (Submodule.smul_mem_smul ha y.2)
     exact prO_locF hc.symm hp (mem_of_isLatIn hT) (mem_of_isLatIn hM) h1
-  haveI := LIOrb.finite_quot hN₀ h𝔭 r
+  have := LIOrb.finite_quot hN₀ h𝔭 r
   refine Finite.of_surjective (((extP K 𝔭) ^ r • ⊤ : Submodule (𝓞 K) ↥(locF 𝔭 N₀)).liftQ
     (toDisc h hc.symm T (locF 𝔭 N₀) 𝔭 hiW) hker) ?_
   intro d

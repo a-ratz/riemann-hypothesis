@@ -403,7 +403,7 @@ theorem bound_main : Bound k := by
     GroundTheory.Automorphic.GLnLocal.isOpen_congruenceSubgroup k (d + d) (m0 + 1)
   have hKc : IsCompact (K : Set (GL (Fin (d + d)) k)) :=
     GroundTheory.Automorphic.GLnLocal.isCompact_congruenceSubgroup k (d + d) (m0 + 1)
-  haveI hfd : FiniteDimensional ℂ (fixed (parInd (blk2 d) τ) K) := hadm.2 K hKo hKc
+  have hfd : FiniteDimensional ℂ (fixed (parInd (blk2 d) τ) K) := hadm.2 K hKo hKc
   set Z := Zt d t with hZ
   set H := (K.map (MulAut.conj Z).toMonoidHom).subgroupOf K with hH
   have hHo : IsOpen (H : Set K) := by
@@ -420,10 +420,10 @@ theorem bound_main : Bound k := by
     have ho : IsOpen ((K.map (MulAut.conj Z).toMonoidHom : Subgroup _) : Set (GL (Fin (d + d)) k)) := by
       rw [e]
       exact hKo.preimage (by fun_prop)
-    exact ho.preimage continuous_subtype_val
-  haveI : CompactSpace K := isCompact_iff_compactSpace.1 hKc
-  haveI : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
-  letI : Fintype (K ⧸ H) := Fintype.ofFinite _
+    exact ho.preimage continuous_subtypeVal
+  have : CompactSpace K := isCompact_iff_compactSpace.1 hKc
+  have : Finite (K ⧸ H) := Subgroup.quotient_finite_of_isOpen H hHo
+  let : Fintype (K ⧸ H) := Fintype.ofFinite _
   have hfixV : ∀ y ∈ fixed (parInd (blk2 d) τ) K, ∀ κ ∈ K, parInd (blk2 d) τ κ y = y := by
     intro y hy κ hκ
     simpa using hy ⟨κ, hκ⟩
@@ -940,7 +940,7 @@ theorem complementary_of (h : Signature) : Complementary := by
   intro G V _ _ _ _ _ K₀ hK₀o hK₀c F hF hall h0 s hs
   have hsm : IsSmooth (F 0) := (hall 0 le_rfl).2.1
   have hirr : (F s).IsIrreducible := (hall s hs).2.2.1
-  haveI := irr_nontrivial hirr
+  have := irr_nontrivial hirr
   obtain ⟨H, hH0, hHh, hHi⟩ := exists_herm (hall s hs).2.2.2
   obtain ⟨B₀, hB₀h, hB₀p, hB₀i⟩ := h0
   have key : ∀ K : Subgroup G, IsOpen (K : Set G) → K ≤ K₀ → fixed (F 0) K ≠ ⊥ →
@@ -948,7 +948,7 @@ theorem complementary_of (h : Signature) : Complementary := by
     intro K hKo hKle hW
     have hKc : IsCompact (K : Set G) := hK₀c.of_isClosed_subset (Subgroup.isClosed_of_isOpen K hKo) hKle
     set W := fixed (F 0) K with hWdef
-    haveI : FiniteDimensional ℂ W := (hall 0 le_rfl).1.2 K hKo hKc
+    have : FiniteDimensional ℂ W := (hall 0 le_rfl).1.2 K hKo hKc
     set e := idem hsm hKc with he
     have hconst : ∀ t, ∀ x ∈ K, F t x = F 0 x := fun t x hx => hF.const t x (hKle hx)
     have hker : ∀ t (C : V →ₗ[ℂ] V →ₛₗ[starRingEnd ℂ] ℂ), (∀ g v w, C (F t g v) (F t g w) = C v w) →
@@ -1043,7 +1043,7 @@ theorem complementary_of (h : Signature) : Complementary := by
       have hw : (⟨e w, idem_mem hsm hKc _⟩ : W) = w := Subtype.ext (idem_of_mem hsm hKc w.2)
       rw [← hw]
       exact hmem w (hSt ▸ Submodule.mem_top)
-    haveI : Nontrivial W := (Submodule.nontrivial_iff_ne_bot).2 hW
+    have : Nontrivial W := (Submodule.nontrivial_iff_ne_bot).2 hW
     have hresne : ∀ t (C : V →ₗ[ℂ] V →ₛₗ[starRingEnd ℂ] ℂ), (∀ g v w, C (F t g v) (F t g w) = C v w) →
         (F t).IsIrreducible → C ≠ 0 → resF C W ≠ 0 := by
       intro t C hCi hi hC0 h0'
@@ -1463,7 +1463,7 @@ theorem smooth_of_equiv [TopologicalSpace G] {π : Representation ℂ G V} {σ :
   intro w
   have e : {g : G | σ g w = w} = {g : G | π g (E.toLinearEquiv.symm w) = E.toLinearEquiv.symm w} := by
     ext g
-    simp only [Set.mem_setOf_eq]
+    simp only [Set.mem_ofPred_eq]
     rw [← intw_symm E]
     exact ⟨fun h => by rw [h], fun h => E.toLinearEquiv.symm.injective h⟩
   rw [e]
@@ -1472,7 +1472,7 @@ theorem smooth_of_equiv [TopologicalSpace G] {π : Representation ℂ G V} {σ :
 theorem admissible_of_equiv [TopologicalSpace G] {π : Representation ℂ G V} {σ : Representation ℂ G W} (E : π.Equiv σ)
     (h : IsAdmissible π) : IsAdmissible σ := by
   refine ⟨smooth_of_equiv E h.1, fun K hK hc => ?_⟩
-  haveI := h.2 K hK hc
+  have := h.2 K hK hc
   have hle : fixed σ K ≤ (fixed π K).map E.toLinearEquiv.toLinearMap := by
     intro w hw
     refine ⟨E.toLinearEquiv.symm w, ?_, E.toLinearEquiv.apply_symm_apply w⟩
@@ -1573,7 +1573,7 @@ theorem someRed_of (h1 : Complementary) (h2 : Compact k) (h3 : Bound k) (h4 : He
   obtain ⟨t, -, ht⟩ := GlobalTheory.CentralExponent.exists_nabs_lt_one k
   have hω1 : ‖(ω t : ℂ)‖ = 1 := by
     obtain ⟨B, b1, b2, b3⟩ := hu
-    haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
+    have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
     obtain ⟨v, hv⟩ := exists_ne (0 : x.2.rep.V)
     have e := b3 (Matrix.GeneralLinearGroup.scalar (Fin x.1) t) v v
     rw [hω t v, B.map_smul, LinearMap.smul_apply, (B _).map_smulₛₗ, smul_eq_mul, smul_eq_mul, ← mul_assoc,
@@ -1608,7 +1608,7 @@ theorem someRed_of (h1 : Complementary) (h2 : Compact k) (h3 : Bound k) (h4 : He
     by_contra hW
     rw [not_nontrivial_iff_subsingleton] at hW
     have hi := irr_of_equiv (hFe s).some (irr_of_equiv (hE s).symm (hirr s hs0))
-    haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hi
+    have := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible hi
     obtain ⟨f, f', hff⟩ := exists_pair_ne (IndSp (blk2 d) (twist τ (chi k d s)))
     exact hff (Subtype.ext (Subtype.ext (funext fun _ => Subsingleton.elim _ _)))
   have hb := h3 d _ (twist τ (chi k d s))
@@ -1696,7 +1696,7 @@ theorem hasSesq_of {G V V₁ V₂ : Type} [Group G] [TopologicalSpace G] [IsTopo
   have hΦ : ∀ v, Φ v = e₂ (φ0 (e₁ v)) := fun _ => rfl
   have hΦb : Function.Injective Φ := (e₂.toLinearEquiv.injective.comp hφb.1).comp e₁.toLinearEquiv.injective
   have hΦi : ∀ g v, Φ (π g v) = contra π g (Φ v) := fun g v => by rw [hΦ, hΦ, eqv e₁, hφi, eqv e₂]
-  haveI := nontriv _ hi
+  have := nontriv _ hi
   refine ⟨LinearMap.mk₂'ₛₗ (RingHom.id ℂ) (starRingEnd ℂ) (fun v w => (Φ w : Module.Dual ℂ V) v)
     (fun v v' w => map_add _ v v') (fun c v w => map_smul _ c v)
     (fun v w w' => by rw [map_add (f := _)]; rfl) (fun c v w => by rw [map_smulₛₗ]; rfl), ?_, ?_⟩

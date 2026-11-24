@@ -103,7 +103,7 @@ theorem comp_eq_of_marked {Xo : Moduli Dw l₂} {c : Coeff l₂} [inst : Algebra
     (hx' : x' ∈ X.dom) {y y' : FrPt Xo c ℂ} (A : AnFib X bas idx e x L y) (A' : AnFib X bas idx e x' L y')
     (hk : A.Marked mk) (hk' : A'.Marked mk) : y.x ≫ t = y'.x ≫ t := by
   obtain ⟨σ, rfl⟩ : ∃ σ : c.F →+* ℂ, inst = σ.toAlgebra := ⟨algebraMap c.F ℂ, Algebra.algebra_ext _ _ fun _ => rfl⟩
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   let ρ : KA l := (baseKA l).ρ
   let u : KA l := (1 + ρ) / (1 - ρ)
   let g₀ : Γ(Xo.XF c, ⊤) := (pullback.fst _ _ ≫ t : Xo.XF c ⟶ Sp (KA l)).appTop.hom (toΓ (KA l) u)
@@ -146,9 +146,9 @@ theorem exists_lift_of_reached {Xo : Moduli Dw l} {c : Coeff l} {n : ℕ} (d : D
   obtain ⟨A₃, ex₃, rd₃, mk₃, hm₃, hmk₃, ho₃⟩ := MarkLift.anFib_lift_ex E H Dw l Xo c n d hk hlev r g X bas idx e x L y A
     hsym hx hL y₃ h₃ mk hmk
   rcases Nat.eq_zero_or_pos (Dw.p + Dw.q) with h0 | hpq
-  · haveI := Dw.fin
-    haveI := Dw.proj
-    haveI : Subsingleton Dw.La := Module.finrank_zero_iff.1 (Dw.rank.trans h0)
+  · have := Dw.fin
+    have := Dw.proj
+    have : Subsingleton Dw.La := Module.finrank_zero_iff.1 (Dw.rank.trans h0)
     have : mk₂ = mk₃ := LinearMap.ext fun a => by rw [Subsingleton.elim a 0, map_zero, map_zero]
     exact ⟨y₃, A₃, h₃, this ▸ hmk₃, rd₃⟩
   obtain ⟨hd, hM, hc, hI, hI', hE, hlift, hrest⟩ := id hlev
@@ -281,7 +281,7 @@ end GlobalTheory.ClsVal.Const
 open GlobalTheory.ClsVal.Const in
 theorem GlobalTheory.ClsVal.rdU_eq_const_mul_clsSum : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (r : ℕ) (U : Formalism.L2.PjFree.Unf Xo c σ r), GoodEmb c σ → Formalism.L2.PjFree.IsUnf U → 1 ≤ r → l.A = 1 → ∀ (W : UW U) (k : U.Comp) (n : ℕ) (a : (E →+* ℂ) × ℕ → ℕ), Dom a n → ∀ (Dc : Dic Dw c σ (U.X k) W.g Dw.p n a), Dc.e = W.e → ∀ v : TF n W.g, IsVac (U.X k) Dc.bas (H.w0 : E) (tens (stdL E n) (U.X k).Λ) v → ∃ C : ℂ, (∀ x ∈ (U.X k).dom, IsUnitFr (U.X k) x → ∀ (θ : (Fin W.g → ℂ) → ℂ) (κ : ℂ), IsTheta1 (U.X k) Dc.bas Dc.idx (H.w0 : E) x (U.X k).Λ θ → MeanOne (U.X k) Dc.bas Dc.idx x (U.X k).Λ θ → (∀ z : Fin n → Fin W.g → ℂ, ∏ b, θ (z b) = κ * thA (U.X k) Dc.bas Dc.idx v x z) → ‖κ‖ = ‖C‖) ∧ C ≠ 0 ∧ ∀ (d : DeltaDat Xo c n) [Algebra d.c₂.F ℂ], (∀ t : c.F, algebraMap d.c₂.F ℂ (d.eF t) = σ t) → d.IsLev → d.l₂.A = 1 → (∃ _ : StarRing (𝓞 E), IsNab d.Xo₂ d.c₂ d.nab₂) → ∀ cv : (Dw.La →ₗ[𝓞 E] (Fin r → E)) → ℂ, (∀ mk, ‖cv mk‖ = 1) → CvIs d (U.X k) Dc.bas Dc.idx W.e (U.X k).Λ cv → ∀ mk₂ : Dw.La →ₗ[𝓞 E] (Fin r → E), IsMark d.l₂ (U.X k).Λ mk₂ → MarkOver l d.l₂ (U.X k).Λ (W.mark k) mk₂ → (Dw.p = Dw.q → (∀ h : KA l ≤ KA d.l₂, d.r ≫ Xo.s = d.Xo₂.s ≫ Geo.Tor.spMap (IntermediateField.inclusion h).toRingHom) ∨ ∃ (x₀ : (U.X k).dom) (y₂ : FrPt d.Xo₂ d.c₂ ℂ) (A₂ : AnFib (U.X k) Dc.bas Dc.idx W.e x₀ (U.X k).Λ y₂), (letI : Algebra c.F ℂ := σ.toAlgebra; FrOver d y₂ (unC U k x₀)) ∧ A₂.Marked mk₂) → ∀ (Cl : Type) [Fintype Cl] (w : Cl → (Fin n → LevQ Dw d.l₂) → c.F) (La : Cl → GenLat E n) (Nc gam : Cl → ℕ) (vol : c.F) (ep : Cl → c.F) (Vs : Type) [AddCommGroup Vs] [Module c.F Vs] (io : Vs →ₗ[c.F] MvPolynomial (LtN Dw n) c.F) (xs : Cl → Vs), LatsOK d.l₂.M La Nc → (∀ j, io (xs j) ∈ HHa Dw.mult n c.F ComplexEmbedding.conjugate (InPsi H) (fun τ i => a (τ, i))) → ∀ Y : Cl → (Fin n → LevQ Dw d.l₂) → Matrix (Fin n) (Fin r) E, (∀ j, IsRoots d.l₂ (U.X k).Λ mk₂ (Nc j) (Y j)) → ∀ f ∈ sec Xo c a n, IsThClsD Xo c d w La Nc gam vol ep io xs f → ∀ x ∈ (U.X k).dom, Formalism.L2.PjFree.rdU U f k x = C * cv mk₂ * clsSum σ (U.X k) Dc.hr Dc.bas Dc.idx Dc.eL w La Nc gam vol ep (fun j => io (xs j)) (U.X k).Λ v Y x := by
   intro hCI E _ _ _ H Dw l Xo c σ r U hσ hU hr1 hA1 W k n a hdom Dc hDe v hv
-  letI : Algebra c.F ℂ := σ.toAlgebra
+  let : Algebra c.F ℂ := σ.toAlgebra
   have hn : Even n := hdom.2
   obtain ⟨-, hL, hmk, -⟩ := uw_lattice E H Dw l Xo c σ r U hσ hU hr1 W k
   have hw : IsIntegral ℤ (H.w0 : E) := H.w0.isIntegral_coe
@@ -344,7 +344,7 @@ theorem GlobalTheory.ClsVal.rdU_eq_const_mul_clsSum : Formalism.MainNotions.Modu
     have hval := _root_.GlobalTheory.ClsVal.evR_eq_clsSum hCI E H Dw l Xo c n d halg hnab r _ _ Dc.bas Dc.idx W.e x _ _ y₂ A₂ hy₂ Dc.sympl hx hL
       _ Dc.hr Dc.eL hU.1 hn (hDe ▸ Dc.dir_eq) θ v _ (hrd θ hθ) hv hprod mk₂ hmk₂ hA₂ Cl w La Nc gam vol ep Vs io xs a
       hlat hP Y hY f hcls
-    have hrd' : Formalism.L2.PjFree.rdU U f k x = evR Xo c f (unC U k ⟨x, hx⟩) := dif_pos hx
+    have hrd' : Formalism.L2.PjFree.rdU U f k x = evR Xo c f (unC U k ⟨x, hx⟩) := dite_eq_left hx
     rw [hcv x hx y₂ A₂ mk₂ hmk₂ hA₂] at hval
     rw [hrd', hval, mul_comm (cv mk₂), _root_.mul_assoc]
     rfl

@@ -125,39 +125,39 @@ variable (μ₀ : Measure (ι → F)) [μ₀.IsAddHaarMeasure]
 
 theorem map_mul_left_comap (g : G) :
     map (g * ·) (μ₀.comap C.toFun) = (C.leftModulus g)⁻¹ • μ₀.comap C.toFun := by
-  haveI : SecondCountableTopology F := by
-    letI := IsTopologicalAddGroup.rightUniformSpace F
-    haveI := isUniformAddGroup_of_addCommGroup (G := F)
-    letI : (Valued.v (R := F)).RankOne :=
+  have : SecondCountableTopology F := by
+    let := IsTopologicalAddGroup.rightUniformSpace F
+    have := isUniformAddGroup_of_addCommGroup (G := F)
+    let : (Valued.v (R := F)).RankOne :=
       { hom' := ValuativeRel.IsRankLeOne.nonempty.some.emb (R := F).comp
           MonoidWithZeroHom.ValueGroup₀.embedding
         strictMono' := ValuativeRel.IsRankLeOne.nonempty.some.strictMono.comp
           MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
     open scoped Valued in
-    haveI : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+    have : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
     exact secondCountable_of_proper
   ext s hs
   rw [map_apply (continuous_const_mul g).measurable hs, C.measurableEmbedding.comap_apply,
-    Measure.smul_apply, C.measurableEmbedding.comap_apply, image_preimage_mul_left,
+    smul_apply, C.measurableEmbedding.comap_apply, image_preimage_mul_left,
     ← distribHaarChar_mul, map_inv, ENNReal.smul_def, smul_eq_mul]
   rfl
 
 theorem map_mul_right_comap (h : G) :
     map (· * h) (μ₀.comap C.toFun) = (C.rightModulus h)⁻¹ • μ₀.comap C.toFun := by
-  haveI : SecondCountableTopology F := by
-    letI := IsTopologicalAddGroup.rightUniformSpace F
-    haveI := isUniformAddGroup_of_addCommGroup (G := F)
-    letI : (Valued.v (R := F)).RankOne :=
+  have : SecondCountableTopology F := by
+    let := IsTopologicalAddGroup.rightUniformSpace F
+    have := isUniformAddGroup_of_addCommGroup (G := F)
+    let : (Valued.v (R := F)).RankOne :=
       { hom' := ValuativeRel.IsRankLeOne.nonempty.some.emb (R := F).comp
           MonoidWithZeroHom.ValueGroup₀.embedding
         strictMono' := ValuativeRel.IsRankLeOne.nonempty.some.strictMono.comp
           MonoidWithZeroHom.ValueGroup₀.embedding_strictMono }
     open scoped Valued in
-    haveI : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
+    have : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
     exact secondCountable_of_proper
   ext s hs
   rw [map_apply (continuous_mul_const h).measurable hs, C.measurableEmbedding.comap_apply,
-    Measure.smul_apply, C.measurableEmbedding.comap_apply, image_preimage_mul_right,
+    smul_apply, C.measurableEmbedding.comap_apply, image_preimage_mul_right,
     ← distribHaarChar_mul, map_inv, ENNReal.smul_def, smul_eq_mul]
   rfl
 
@@ -179,7 +179,7 @@ theorem eq_of_smul_comap_eq {a b : ℝ≥0} (h : a • μ₀.comap C.toFun = b �
     (C.comap_pos_of_isOpen μ₀ isOpen_interior ⟨1, mem_interior_iff_mem_nhds.2 hK1⟩).trans_le
       (measure_mono interior_subset)
   have h' := congrArg (fun ν : Measure G => ν K) h
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h'
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h'
   exact ENNReal.coe_injective ((ENNReal.mul_left_inj hpos.ne'
     (C.comap_lt_top_of_isCompact μ₀ hK).ne).1 h')
 
@@ -239,7 +239,7 @@ theorem leftModulus_eq_one_of_preimage {g : G} {s : Set G} (hs : MeasurableSet s
     (hgs : (g * ·) ⁻¹' s = s) (h0 : μ₀.comap C.toFun s ≠ 0) (hT : μ₀.comap C.toFun s ≠ ∞) :
     C.leftModulus g = 1 := by
   have e := congrArg (fun ν : Measure G => ν s) (C.map_mul_left_comap μ₀ g)
-  simp only [map_apply (continuous_const_mul g).measurable hs, hgs, Measure.smul_apply,
+  simp only [map_apply (continuous_const_mul g).measurable hs, hgs, smul_apply,
     ENNReal.smul_def, smul_eq_mul] at e
   have : ((C.leftModulus g)⁻¹ : ℝ≥0) = 1 := by
     have := (ENNReal.mul_eq_right h0 hT).1 e.symm
@@ -250,7 +250,7 @@ theorem rightModulus_eq_one_of_preimage {h : G} {s : Set G} (hs : MeasurableSet 
     (hhs : (· * h) ⁻¹' s = s) (h0 : μ₀.comap C.toFun s ≠ 0) (hT : μ₀.comap C.toFun s ≠ ∞) :
     C.rightModulus h = 1 := by
   have e := congrArg (fun ν : Measure G => ν s) (C.map_mul_right_comap μ₀ h)
-  simp only [map_apply (continuous_mul_const h).measurable hs, hhs, Measure.smul_apply,
+  simp only [map_apply (continuous_mul_const h).measurable hs, hhs, smul_apply,
     ENNReal.smul_def, smul_eq_mul] at e
   have : ((C.rightModulus h)⁻¹ : ℝ≥0) = 1 := by
     have := (ENNReal.mul_eq_right h0 hT).1 e.symm
@@ -305,7 +305,7 @@ theorem map_withDensity_of_scale {X : Type*} [MeasurableSpace X] {T : X → X} (
     {ν : Measure X} {ρ : X → ℝ≥0∞} (hρ : Measurable ρ) {a b : ℝ≥0} (hν : map T ν = a • ν)
     (hρT : ∀ x, ρ x = b * ρ (T x)) : map T (ν.withDensity ρ) = (a * b) • ν.withDensity ρ := by
   ext s hs
-  rw [map_apply hT hs, withDensity_apply _ (hT hs), Measure.smul_apply, withDensity_apply _ hs,
+  rw [map_apply hT hs, withDensity_apply _ (hT hs), smul_apply, withDensity_apply _ hs,
     ← lintegral_indicator (hT hs), ← lintegral_indicator hs]
   have h1 : (T ⁻¹' s).indicator ρ = fun x => (b : ℝ≥0∞) * s.indicator ρ (T x) := by
     funext x

@@ -84,7 +84,7 @@ theorem stX_ok (a : I.ι) : (I.stX a).Ok := by
   · exact stepY_fin_orb (ST := ∅) y Unit (fun _ => Λ) (fun _ => Θ) (fun _ => True) hX
       (fun _ => levQX_finiteIndex I.sel (I.tup a)) (fun _ _ => Set.finite_singleton _)
   · intro b p
-    haveI : Finite (autO p.1.1.deco.1.N) := by
+    have : Finite (autO p.1.1.deco.1.N) := by
       first
       | exact autO_finite (posStar_of_ok hX) p.1.1.deco.full_lattice
       | exact autO_finite (posStar_of_ok hX) p.1.1.deco.full_lattice.toIsLattice

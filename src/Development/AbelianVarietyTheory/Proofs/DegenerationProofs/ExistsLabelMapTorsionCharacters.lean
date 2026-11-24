@@ -87,7 +87,7 @@ theorem pow_eq_one_of_qkAdd {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} 
     [Algebra (FractionRing R) F] (hB : D.TauBimult) {k : ℕ} {M : Type} [Group M] (f : QkPt D F k → M)
     (heq : ∀ q q', QkPt.Equiv D F q q' → f q = f q') (hadd : ∀ q q' q'', QkAdd q q' q'' → f q'' = f q * f q')
     (q : QkPt D F k) : f q ^ k = 1 := by
-  letI := TorusExt.gtGroup D F
+  let := TorusExt.gtGroup D F
   let iota : D.X →+ GtPtF D F := AddMonoidHom.mk' (fun x => (TorusExt.exists_iota hB x).choose) fun x x' => by
     obtain ⟨b, v⟩ := (TorusExt.isIota_iff_val _ _).1 (TorusExt.exists_iota (F := F) hB x).choose_spec
     obtain ⟨b', v'⟩ := (TorusExt.isIota_iff_val _ _).1 (TorusExt.exists_iota (F := F) hB x').choose_spec
@@ -127,7 +127,7 @@ theorem pow_eq_one_of_qkAdd {R : Type} [CommRing R] [IsDomain R] {D : DegPre R} 
 
 theorem exists_labelMap : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real) (p : ℕ) [Fact p.Prime] (y₀ : S.R →+* PadicAlgCl p) (u : ρ.UTest p y₀), ∃ yy : S.Gam →+ u.D.toPre.X ⧸ (nsmulAddMonoidHom (S.r * S.N) : u.D.toPre.X →+ u.D.toPre.X).range, Function.Surjective yy ∧ (∀ (a : S.Gam) (pk : QkPt u.D.toPre (PadicAlgCl p) (S.r * S.N)) (x : TFK (R := u.V) (PadicAlgCl p) ⟶ u.A.A), QkToAkU u.U.toUnifPre (PadicAlgCl p) (S.r * S.N) pk x → x.left ≫ u.φ = spMap y₀ ≫ (ρ.pt a).left → yy a = QuotientAddGroup.mk pk.y) := by
   intro L _ hU o Ω _ _ _ _ S ρ p _ y₀ u
-  haveI : CharZero u.V := ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V _)).charZero
+  have : CharZero u.V := ((algebraMap (FractionRing u.V) (PadicAlgCl p)).comp (algebraMap u.V _)).charZero
   have hk : 1 ≤ S.r * S.N := Nat.mul_pos S.r_pos (by have := S.N_ge; omega)
   obtain ⟨f, hrel, honto, heq, hadd, -⟩ := hU u.V u.complete u.A u.G u.D u.U (PadicAlgCl p) (S.r * S.N) hk
   obtain ⟨xx, hxx, hsurj⟩ := exists_lift_points u.cart (TFK (R := u.V) (PadicAlgCl p)) ρ.pt ρ.pt_add
@@ -152,7 +152,7 @@ theorem exists_labelMap : Laws → Laws2 → UTorsSt → ∀ (o Ω : Type) [Comm
   let F := PadicAlgCl p
   let R := u.V
   let k := S.r * S.N
-  letI := TorusExt.gtGroup D F
+  let := TorusExt.gtGroup D F
   let iota : D.X →+ GtPtF D F := AddMonoidHom.mk' (fun x => (TorusExt.exists_iota hB x).choose) fun x x' => by
     obtain ⟨b, v⟩ := (TorusExt.isIota_iff_val _ _).1 (TorusExt.exists_iota (F := F) hB x).choose_spec
     obtain ⟨b', v'⟩ := (TorusExt.isIota_iff_val _ _).1 (TorusExt.exists_iota (F := F) hB x').choose_spec

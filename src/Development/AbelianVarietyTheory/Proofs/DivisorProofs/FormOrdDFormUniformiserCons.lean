@@ -66,11 +66,11 @@ theorem formOrd_dForm_uniformiser_cons : ∀ {k K : Type} [Field k] [CharZero k]
     congr 1
     funext i
     cases i using Fin.cases <;> rfl
-  letI := E.const.toAlgebra
-  letI := c.toAlgebra
-  haveI : IsScalarTower k E.ring K := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : Algebra.EssFiniteType k E.ring := E.essFiniteType
-  haveI := formallySmooth_of_isRegularLocalRing_of_perfectField k E.ring
+  let := E.const.toAlgebra
+  let := c.toAlgebra
+  have : IsScalarTower k E.ring K := IsScalarTower.of_algebraMap_eq' rfl
+  have : Algebra.EssFiniteType k E.ring := E.essFiniteType
+  have := formallySmooth_of_isRegularLocalRing_of_perfectField k E.ring
   obtain ⟨t', ht'⟩ := IsDiscreteValuationRing.exists_irreducible E.ring
   obtain ⟨m, z, b, -, hb⟩ := exists_basis_kaehler_uniformiser k ht'
   have h1 := trdeg_eq_of_basis_kaehler k K b

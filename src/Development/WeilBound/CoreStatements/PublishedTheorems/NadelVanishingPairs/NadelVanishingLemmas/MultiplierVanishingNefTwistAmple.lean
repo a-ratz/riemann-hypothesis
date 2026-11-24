@@ -205,8 +205,8 @@ namespace GlobalTheory.NumPull
 
 theorem isNef_pull_of_isProjOver : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) (p : X ⟶ Sp k) (s : Y ⟶ X), IsProjOver p → ∀ N : LB X, (letI := algebraΓOfHom p; IsNef k N) → (letI := algebraΓOfHom (s ≫ p); IsNef k (N.pull s)) := by
   intro k _ X Y p s hp N hN
-  letI := algebraΓOfHom p
-  letI := algebraΓOfHom (s ≫ p)
+  let := algebraΓOfHom p
+  let := algebraΓOfHom (s ≫ p)
   have : IsProper p := ((isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hp).1
   refine ⟨pull_isLB hN.isLB s, fun C hC => ?_⟩
   rcases interNumRed_pull_curve p s C hC with h | ⟨C', hC', d, hd⟩
@@ -306,12 +306,12 @@ open KaehlerDifferential TensorProduct
 theorem finrank_and_linearIndependent_D_unit_mul : ∀ (R B K : Type) [CommRing R] [CommRing B] [Field K] [Algebra R B] [Algebra B K] (d : ℕ) (t : Fin d → B), (MvPolynomial.eval₂Hom (algebraMap R B) t).Etale → Module.finrank K (K ⊗[B] Ω[B⁄R]) = d ∧ ∀ (ι : Type) (e : ι ↪ Fin d) (u : ι → Bˣ), (∀ i, algebraMap B K (t (e i)) = 0) → LinearIndependent K (fun i => (1 : K) ⊗ₜ[B] KaehlerDifferential.D R B ((u i : B) * t (e i))) := by
   intro R B K _ _ _ _ _ d t h
   have key : ∃ b : Module.Basis (Fin d) B Ω[B⁄R], ∀ i, b i = D R B (t i) := by
-    letI : Algebra (MvPolynomial (Fin d) R) B := (MvPolynomial.eval₂Hom (algebraMap R B) t).toAlgebra
-    haveI : IsScalarTower R (MvPolynomial (Fin d) R) B :=
+    let : Algebra (MvPolynomial (Fin d) R) B := (MvPolynomial.eval₂Hom (algebraMap R B) t).toAlgebra
+    have : IsScalarTower R (MvPolynomial (Fin d) R) B :=
       IsScalarTower.of_algebraMap_eq fun r => by
         change algebraMap R B r = MvPolynomial.eval₂Hom (algebraMap R B) t (MvPolynomial.C r)
         simp
-    haveI : Algebra.Etale (MvPolynomial (Fin d) R) B := h
+    have : Algebra.Etale (MvPolynomial (Fin d) R) B := h
     obtain ⟨⟨b, hb⟩, _⟩ := GlobalTheory.EtaleCoordJacobian.exists_basis_of_etale R B (Fin d)
     refine ⟨b, fun i => ?_⟩
     rw [hb]
@@ -326,7 +326,7 @@ theorem finrank_and_linearIndependent_D_unit_mul : ∀ (R B K : Type) [CommRing 
   have hfun : (fun i => (1 : K) ⊗ₜ[B] KaehlerDifferential.D R B ((u i : B) * t (e i))) =
       (fun i => Units.map (algebraMap B K : B →* K) (u i)) • (fun i => b' (e i)) := by
     funext i
-    simp only [Pi.smul_apply', Units.smul_def, Units.coe_map, MonoidHom.coe_coe, b',
+    simp only [Pi.smul_apply', Units.smul_def, Units.coe_map, MonoidHom.coe_ofClass, b',
       Module.Basis.baseChange_apply, hb]
     rw [Derivation.leibniz, tmul_add, tmul_smul, tmul_smul, ← algebraMap_smul K (u i : B),
       ← algebraMap_smul K (t (e i)), ht, zero_smul, add_zero]
@@ -384,32 +384,32 @@ theorem chart_desc : ∀ (R R' : Type) [CommRing R] [CommRing R'] (φ : R →+* 
     · simp [Scheme.Hom.app_eq_appLE]
     · simp [Qcqs.baseRingHom]
   let K := X'.residueField y
-  letI : Algebra R R' := φ.toAlgebra
-  letI : Algebra R Γ(X, U) := (cstOn f U).toAlgebra
-  letI : Algebra R' Γ(X', π ⁻¹ᵁ U) := (cstOn f' (π ⁻¹ᵁ U)).toAlgebra
-  letI : Algebra Γ(X, U) Γ(X', π ⁻¹ᵁ U) := (π.app U).hom.toAlgebra
-  letI : Algebra R Γ(X', π ⁻¹ᵁ U) := ((cstOn f' (π ⁻¹ᵁ U)).comp φ).toAlgebra
-  letI : Algebra Γ(X', π ⁻¹ᵁ U) Γ(X', W) := (resG X' hWU).toAlgebra
-  letI : Algebra R' Γ(X', W) := (cstOn f' W).toAlgebra
-  letI : Algebra Γ(X', W) K := (X'.evaluation W y hyW).hom.toAlgebra
-  letI : Algebra Γ(X, U) K :=
+  let : Algebra R R' := φ.toAlgebra
+  let : Algebra R Γ(X, U) := (cstOn f U).toAlgebra
+  let : Algebra R' Γ(X', π ⁻¹ᵁ U) := (cstOn f' (π ⁻¹ᵁ U)).toAlgebra
+  let : Algebra Γ(X, U) Γ(X', π ⁻¹ᵁ U) := (π.app U).hom.toAlgebra
+  let : Algebra R Γ(X', π ⁻¹ᵁ U) := ((cstOn f' (π ⁻¹ᵁ U)).comp φ).toAlgebra
+  let : Algebra Γ(X', π ⁻¹ᵁ U) Γ(X', W) := (resG X' hWU).toAlgebra
+  let : Algebra R' Γ(X', W) := (cstOn f' W).toAlgebra
+  let : Algebra Γ(X', W) K := (X'.evaluation W y hyW).hom.toAlgebra
+  let : Algebra Γ(X, U) K :=
     ((X'.evaluation W y hyW).hom.comp ((resG X' hWU).comp (π.app U).hom)).toAlgebra
-  haveI : IsScalarTower R R' Γ(X', π ⁻¹ᵁ U) := .of_algebraMap_eq fun r ↦ rfl
+  have : IsScalarTower R R' Γ(X', π ⁻¹ᵁ U) := .of_algebraMap_eq fun r ↦ rfl
   have e2 : ∀ r : R, (π.app U).hom (cstOn f U r) = cstOn f' (π ⁻¹ᵁ U) (φ r) := fun r => by
     have h1 := Qcqs.app_baseRingHom π f U r
     have h2 : Qcqs.baseRingHom (π ≫ f) (π ⁻¹ᵁ U) r = Qcqs.baseRingHom f' (π ⁻¹ᵁ U) (φ r) := by
       rw [H.w, Qcqs.baseRingHom_comp_SpecMap]; rfl
     exact h1.trans h2
-  haveI : IsScalarTower R Γ(X, U) Γ(X', π ⁻¹ᵁ U) := .of_algebraMap_eq fun r ↦ (e2 r).symm
-  haveI : Algebra.IsPushout R R' Γ(X, U) Γ(X', π ⁻¹ᵁ U) := by
+  have : IsScalarTower R Γ(X, U) Γ(X', π ⁻¹ᵁ U) := .of_algebraMap_eq fun r ↦ (e2 r).symm
+  have : Algebra.IsPushout R R' Γ(X, U) Γ(X', π ⁻¹ᵁ U) := by
     have po'' : IsPushout (CommRingCat.ofHom (algebraMap R Γ(X, U))) (CommRingCat.ofHom (algebraMap R R'))
         (CommRingCat.ofHom (algebraMap Γ(X, U) Γ(X', π ⁻¹ᵁ U)))
         (CommRingCat.ofHom (algebraMap R' Γ(X', π ⁻¹ᵁ U))) := po'
     exact (CommRingCat.isPushout_iff_isPushout.mp po'').symm
-  haveI : IsScalarTower R' Γ(X', π ⁻¹ᵁ U) Γ(X', W) := .of_algebraMap_eq fun r ↦
+  have : IsScalarTower R' Γ(X', π ⁻¹ᵁ U) Γ(X', W) := .of_algebraMap_eq fun r ↦
     (Qcqs.baseRingHom_res f' hWU r).symm
-  haveI : Algebra.FormallyEtale Γ(X', π ⁻¹ᵁ U) Γ(X', W) := by
-    haveI : Algebra.Etale Γ(X', π ⁻¹ᵁ U) Γ(X', W) := resG_etale X' _ _ hWU hU' hW
+  have : Algebra.FormallyEtale Γ(X', π ⁻¹ᵁ U) Γ(X', W) := by
+    have : Algebra.Etale Γ(X', π ⁻¹ᵁ U) Γ(X', W) := resG_etale X' _ _ hWU hU' hW
     infer_instance
 
   let t : Fin d → Γ(X', W) := fun a => resG X' hWC (C'.t a)
@@ -576,7 +576,7 @@ theorem relSnc_of_sameDiv : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (f : X 
   have hG : (((G i)⁻¹ : Γ(X, W)ˣ) : Γ(X, W)) * (G i : Γ(X, W)) = 1 := Units.inv_mul _
   have hG' : (G i : Γ(X, W)) = resG X (hWca i) ((L i).g (C.c i) (a i) : Γ(X, (L i).U (C.c i) ⊓ (L i).U (a i))) *
       resG X (hWU i) (v i : Γ(X, U i)) := by
-    simp only [G, Units.val_mul, Units.coe_map, MonoidHom.coe_coe, RingHom.toMonoidHom_eq_coe]
+    simp only [G, Units.val_mul, Units.coe_map, MonoidHom.coe_ofClass, RingHom.toMonoidHom_eq_coe]
   show _ = ((Units.map (resG X hWC).toMonoidHom (C.u i) * (G i)⁻¹ : Γ(X, W)ˣ) : Γ(X, W)) * _
   rw [Units.val_mul, Units.coe_map]
   rw [hG'] at hG
@@ -692,7 +692,7 @@ theorem SameDiv.trans_of_isLB : ∀ (X : Scheme.{0}) (L M N : LB X) (σ : L.Sec)
   simp only [map_mul, resG_resG_sameDiv] at c e₁' e₂'
   refine ⟨U₁ ⊓ U₂, i, k, inf_le_left.trans hi, inf_le_right.trans hk,
     res inf_le_left u₁ * res hV (M.g j j') * res inf_le_right u₂, ⟨hx₁, hx₂⟩, ?_⟩
-  simp only [Units.val_mul, res, Units.coe_map, MonoidHom.coe_coe]
+  simp only [Units.val_mul, res, Units.coe_map, MonoidHom.coe_ofClass]
   rw [e₁', c, e₂']
   simp only [resG, mul_assoc]
 
@@ -736,8 +736,8 @@ theorem sum_smul_f {X' : Scheme.{0}} {R' : Type} [CommRing R'] (f' : X' ⟶ Sp R
 
 theorem exists_sum_secPull : ∀ (R R' : Type) [CommRing R] [CommRing R'] (φ : R →+* R') (X X' : Scheme.{0}) (f : X ⟶ Sp R) (f' : X' ⟶ Sp R') (π : X' ⟶ X) [QuasiCompact f] [IsSeparated f] (L : LB X), φ.Flat → IsPullback π f' f (spMap φ) → L.IsLB → ∀ σ : (L.pull π).Sec, ∃ (n : ℕ) (c : Fin n → R') (τ : Fin n → L.Sec), ∀ i, σ.f i = ∑ a, cstOn f' _ (c a) * (Cartier.secPull (τ a) π).f i := by
   intro R R' _ _ φ X X' f f' π _ _ L hφ H hL σ
-  letI := φ.toAlgebra
-  haveI : Module.Flat R R' := hφ
+  let := φ.toAlgebra
+  have : Module.Flat R R' := hφ
   have H' : IsPullback π f' f (Spec.map (CommRingCat.ofHom (algebraMap R R'))) := H
   have : CompactSpace X := QuasiCompact.compactSpace_of_compactSpace f
   have := GlobalTheory.isAffineHom_diagonal_of_isSeparated f
@@ -1038,7 +1038,7 @@ theorem isUnit_toAdjInv {k : Type} [Field k] (R : Subring k) (a : R) (ha : (a : 
 
 theorem finiteType_adjInv {k : Type} [Field k] (R : Subring k) (hR : Algebra.FiniteType ℤ R) (a : k) :
     Algebra.FiniteType ℤ (adjInv R a) := by
-  haveI := hR
+  have := hR
   have hP : Algebra.FiniteType ℤ (Polynomial R) := inferInstance
   exact @Algebra.FiniteType.of_surjective _ _ _ _ _ _ _ _ hP
     (Polynomial.eval₂RingHom R.subtype a⁻¹).rangeRestrict.toIntAlgHom
@@ -1056,14 +1056,14 @@ namespace GlobalTheory.ModelSnc
 
 theorem exists_model_relSnc : ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X ⟶ Sp k) (d : ℕ), IsProper f → ∀ (s : ℕ) (L : Fin s → LB X) (σ : ∀ i, (L i).Sec) (h : RelSnc f d L σ) (M : LB X) (hM : M.IsLB), ∃ (R : Subring k) (X₁ : Scheme.{0}) (f₁ : X₁ ⟶ Sp R) (π : X ⟶ X₁) (L₁ : Fin s → LB X₁) (σ₁ : ∀ i, (L₁ i).Sec) (h₁ : RelSnc f₁ d L₁ σ₁) (M₁ : LB X₁) (hM₁ : M₁.IsLB), Algebra.FiniteType ℤ R ∧ IsProper f₁ ∧ IsPullback π f f₁ (spMap R.subtype) ∧ (∀ i, cls (L i) (h.isLB i) = CechPic.pull π (cls (L₁ i) (h₁.isLB i))) ∧ cls M hM = CechPic.pull π (cls M₁ hM₁) := by
   intro k _ X f d hf s L σ h M hM
-  haveI : SmoothOfRelativeDimension d f := _root_.GlobalTheory.LogPair.smooth_of_relSnc k X f d s L σ h
+  have : SmoothOfRelativeDimension d f := _root_.GlobalTheory.LogPair.smooth_of_relSnc k X f d s L σ h
   have hsm : Smooth f := SmoothOfRelativeDimension.smooth d f
   obtain ⟨R, X₁, f₁, π, L₁, σ₁, h₁, M₁, hM₁, hR, hsm₁, hpr₁, hpb, hcl, hsame, hclM⟩ :=
     _root_.GlobalTheory.LogPair.exists_model_with_sections k X f hsm hf s L σ h.isLB M hM
   have hX : RelSnc f d (fun i => (L₁ i).pull π) (fun i => Cartier.secPull (σ₁ i) π) :=
     _root_.GlobalTheory.LogPair.relSnc_of_sameDiv k X f d s L σ _ _ h (fun i => pull_isLB (h₁ i) π) hsame
-  haveI := hsm₁
-  haveI := hpr₁
+  have := hsm₁
+  have := hpr₁
   obtain ⟨a, ha, hsp⟩ := _root_.GlobalTheory.LogPair.relSnc_spread R k R.subtype X₁ X f₁ f π d s L₁ σ₁ hpb h₁ hX
   set R' := adjInv R (a : k)
   set χ := toAdjInv R (a : k)
@@ -1082,7 +1082,7 @@ theorem exists_model_relSnc : ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X �
   have hpb' : IsPullback π' f g (spMap R'.subtype) := by
     refine IsPullback.of_right ?_ hg' hρ
     rw [hπ', ← hcomp]; exact hpb
-  haveI : IsProper g := inferInstance
+  have : IsProper g := inferInstance
   refine ⟨R', pullback f₁ (spMap χ), g, π', fun i => (L₁ i).pull ρ, fun i => Cartier.secPull (σ₁ i) ρ, hZ,
     M₁.pull ρ, pull_isLB hM₁ ρ, finiteType_adjInv R hR _, inferInstance, hpb', fun i => ?_, ?_⟩
   · rw [hcl i, ← hπ', pull_comp]; rfl
@@ -1109,8 +1109,8 @@ theorem vanishing_ample_snc_charZero : ∀ (k : Type) [Field k] [CharZero k] (X 
   have hprop : IsProper f := GlobalTheory.SchemeWords.isProper_of_isProjOver hproj
   obtain ⟨R, X₁, f₁, π, L₁, σ₁, h₁, M₁, hM₁, hft, hprop₁, hpb, hL, hMc⟩ :=
     _root_.GlobalTheory.ModelSnc.exists_model_relSnc k X f d hprop s L σ h M hM
-  haveI : SmoothOfRelativeDimension d f₁ := _root_.GlobalTheory.LogPair.smooth_of_relSnc R X₁ f₁ d s L₁ σ₁ h₁
-  haveI : IsProper f₁ := hprop₁
+  have : SmoothOfRelativeDimension d f₁ := _root_.GlobalTheory.LogPair.smooth_of_relSnc R X₁ f₁ d s L₁ σ₁ h₁
+  have : IsProper f₁ := hprop₁
   obtain ⟨K₁⟩ := (CanonLB.nonempty : Nonempty (CanonLB f₁ d))
   obtain ⟨A₁, hA₁, hA₁c⟩ := cls_surj (r • cls M₁ hM₁ - r • cls K₁.bundle K₁.isLB -
     ∑ i, b i • cls (L₁ i) (h₁.isLB i))
@@ -1161,14 +1161,14 @@ private theorem regAt_of_ord_eq_zero_of_normal {X : Scheme.{0}} [IsIntegral X] [
     (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X)
     {z : X} (hz : Order.coheight z = 1) {f : X.functionField} (hf : f ≠ 0)
     (h0 : Scheme.ord f z = 0) : RegAt z f := by
-  haveI : Ring.KrullDimLE 1 (X.presheaf.stalk z) := krullDimLE_of_coheight_le hz.le
+  have : Ring.KrullDimLE 1 (X.presheaf.stalk z) := krullDimLE_of_coheight_le hz.le
   obtain ⟨hD, hI⟩ := hN z
   have hnf : ¬ IsField (X.presheaf.stalk z) := by
     intro hF
     have h1 := ringKrullDim_stalk_eq_coheight z
     rw [ringKrullDim_eq_zero_of_isField hF, hz] at h1
     norm_num at h1
-  haveI : Ring.DimensionLEOne (X.presheaf.stalk z) :=
+  have : Ring.DimensionLEOne (X.presheaf.stalk z) :=
     ⟨fun hne hp => hp.isMaximal_of_ne_bot hne⟩
   have hDD : IsDedekindDomain (X.presheaf.stalk z) :=
     (isDedekindDomain_iff _ X.functionField).mpr
@@ -1209,7 +1209,7 @@ private theorem regAt_of_ord_eq_zero_of_normal {X : Scheme.{0}} [IsIntegral X] [
 private theorem cartierDiv_eff_of_mult_eq_zero {X : Scheme.{0}} [IsIntegral X] [IsLocallyNoetherian X]
     (hN : ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X) (E : CartierDiv X)
     (h : ∀ z, E.mult z = 0) : E.Eff := by
-  haveI : GlobalTheory.IsNormalScheme X := ⟨fun x => (hN x).1, fun x => (hN x).2⟩
+  have : GlobalTheory.IsNormalScheme X := ⟨fun x => (hN x).1, fun x => (hN x).2⟩
   rw [CartierDiv.eff_iff]
   intro x g hg
   apply GlobalTheory.Discrepancy.regAt_of_forall_coheight_eq_one
@@ -1238,7 +1238,7 @@ private theorem cartierDiv_mult_nonneg_of_eff {X : Scheme.{0}} [IsIntegral X] [I
       rintro rfl
       simp only [map_zero] at ha
       exact g.ne_zero ha.symm
-    haveI : Ring.KrullDimLE 1 (X.presheaf.stalk z) := krullDimLE_of_coheight_le hz.le
+    have : Ring.KrullDimLE 1 (X.presheaf.stalk z) := krullDimLE_of_coheight_le hz.le
     rw [Scheme.le_ord_iff hz g.ne_zero, ← ha]
     have := Ring.ordFrac_ge_one_of_ne_zero (R := X.presheaf.stalk z) (K := X.functionField) ha0
     simpa [Scheme.ordHom] using this
@@ -1355,12 +1355,12 @@ open GlobalTheory.LogResVanish in
 theorem GlobalTheory.Discrepancy.vanishing_logRes_floor : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (n : ℕ), IsProjOver p → ∀ (η : RatForms p n) (m : ℕ) (G : CartierDiv X) (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (s : Y ⟶ X) [IsDominant s] (K : CartierDiv Y) (B : Closeds Y) (F : CartierDiv Y), η ≠ 0 → 0 < m → IsLogRes p n η m G s K B → (∀ z, F.mult z = (pullCart s G - m • K).mult z / (m : ℤ)) → ∀ (N M T : LB X) (hN : N.IsLB) (hM : M.IsLB) (r : ℕ) (hT : letI := algebraΓOfHom p; IsNef k T), 0 < r → cls T (letI := algebraΓOfHom p; hT.isLB) = (m * r) • cls N hN - r • toPic G - m • cls M hM → (letI := algebraΓOfHom p; IsNef k M) → ∀ (a : ℕ) (Fd : CartierDiv Y) (A : LB Y) (hA : IsAmpleLB A), (0 < a ∧ Fd.Eff ∧ Fd.supp ≤ B ∧ a • CechPic.pull s (cls M hM) = cls A hA.isLB + toPic Fd) → ∀ (Q : LB Y) (hQ : Q.IsLB), cls Q hQ = CechPic.pull s (cls N hN) - toPic F → ∀ i, 0 < i → Subsingleton (coh (twist (GlobalTheory.structureModule Y) Q) i) := by
   intro k _ _ X _ p n hp η m G Y _ _ s _ K B F hη hm h hF N M T hN hM r hT hr hTc hMn a Fd A hA hAF Q hQ hQc i hi
   obtain ⟨ha, hFd, hFdB, hAc⟩ := hAF
-  have hTlb : T.IsLB := by letI := algebraΓOfHom p; exact hT.isLB
-  haveI := h.smooth
-  haveI : Smooth (s ≫ p) := SmoothOfRelativeDimension.smooth n (s ≫ p)
-  haveI : GlobalTheory.IsNormalScheme Y := GlobalTheory.isNormalScheme_of_smooth (s ≫ p)
-  haveI : CompactSpace Y := compactSpace_of_projOver h.proj
-  haveI : Infinite k := Infinite.of_injective (Nat.cast : ℕ → k) Nat.cast_injective
+  have hTlb : T.IsLB := by let := algebraΓOfHom p; exact hT.isLB
+  have := h.smooth
+  have : Smooth (s ≫ p) := SmoothOfRelativeDimension.smooth n (s ≫ p)
+  have : GlobalTheory.IsNormalScheme Y := GlobalTheory.isNormalScheme_of_smooth (s ≫ p)
+  have : CompactSpace Y := compactSpace_of_projOver h.proj
+  have : Infinite k := Infinite.of_injective (Nat.cast : ℕ → k) Nat.cast_injective
   have hm0 : (m : ℤ) ≠ 0 := by exact_mod_cast hm.ne'
 
   set Γ := pullCart s G - m • K with hΓ
@@ -1383,7 +1383,7 @@ theorem GlobalTheory.Discrepancy.vanishing_logRes_floor : ∀ (k : Type) [Field 
     (sup_le ((supp_nsmul_le _ _).trans hRB) ((supp_nsmul_le _ _).trans hFdB))
 
   have hAm : IsAmpleLB (lbPow A m) := (isAmpleLB_pow_iff hA.isLB hm).2 hA
-  letI := algebraΓOfHom (s ≫ p)
+  let := algebraΓOfHom (s ≫ p)
   have hTp : IsNef k (T.pull s) := _root_.GlobalTheory.NumPull.isNef_pull_of_isProjOver k X Y p s hp T hT
   have hMp : IsNef k (M.pull s) := _root_.GlobalTheory.NumPull.isNef_pull_of_isProjOver k X Y p s hp M hMn
   obtain ⟨P, hP, hPc⟩ := cls_surj (b • cls (T.pull s) hTp.isLB + (m * (b - a)) • cls (M.pull s) hMp.isLB)
@@ -1606,7 +1606,7 @@ def cubeDiv (hL : L.IsLB) (σ : LB.Sec (lbZPow L 1)) (c : ℕ) {V : X.Opens}
 theorem cubeDiv_comp (hL : L.IsLB) (σ : LB.Sec (lbZPow L 1)) (c : ℕ) {V : X.Opens}
     (hV : V ≤ nonzeroLocus σ) : cubeDiv F U hL σ c hV ≫ cechCubeMap ℤ V U (powMap F hL σ c) =
       cechCubeRes ℤ (twistZ F L c) (cechOpen_mono (le_top (a := V)) fun _ => le_rfl) := by
-  haveI := isIso_cechCubeMap_powMap F U hL σ c hV
+  have := isIso_cechCubeMap_powMap F U hL σ c hV
   simp [cubeDiv]
 
 theorem cubeDiv_app (hL : L.IsLB) (σ : LB.Sec (lbZPow L 1)) (c : ℕ) {V : X.Opens}
@@ -1619,8 +1619,8 @@ theorem cechCubeMap_mul_comp_cubeDiv (hL : L.IsLB) (σ : LB.Sec (lbZPow L 1)) (j
     (h : c + j = d) (h' : (c : ℤ) + (j : ℤ) * 1 = d) {V : X.Opens} (hV : V ≤ nonzeroLocus σ) :
     cechCubeMap ℤ ⊤ U (mulSecOfEq F (zpowSec σ j) h') ≫ cubeDiv F U hL σ d hV =
       cubeDiv F U hL σ c hV := by
-  haveI := isIso_cechCubeMap_powMap F U hL σ c hV
-  haveI := isIso_cechCubeMap_powMap F U hL σ d hV
+  have := isIso_cechCubeMap_powMap F U hL σ c hV
+  have := isIso_cechCubeMap_powMap F U hL σ d hV
   unfold cubeDiv
   rw [← Category.assoc, cechCubeRes_naturality, Category.assoc]
   congr 1
@@ -1698,8 +1698,8 @@ theorem subsingleton_cohOn_nonzeroLocus_of_eventually_twist : ∀ (X : Scheme.{0
   intro X _ _ F _ L hL σ i h
   obtain ⟨κ, hκ, T, c, hT, -, hTc, hcov⟩ :=
     Twist.exists_finite_affine_chart_cover hL (W := ⊤) (isCompact_univ (X := X))
-  letI : Fintype κ := Fintype.ofFinite κ
-  letI : LinearOrder κ := LinearOrder.lift' (Fintype.equivFin κ) (Fintype.equivFin κ).injective
+  let : Fintype κ := Fintype.ofFinite κ
+  let : LinearOrder κ := LinearOrder.lift' (Fintype.equivFin κ) (Fintype.equivFin κ).injective
   have hsep : ∀ s : Finset κ, s.Nonempty → IsAffineOpen (⨅ a ∈ s, T a) :=
     (cech_computes_coh_of_affine_cover.{0, 0, 0} X ℤ).1 (Or.inl inferInstance) κ T hT
   have hc : ⨆ a, T a = ⊤ := eq_top_iff.2 hcov
@@ -1716,12 +1716,12 @@ theorem subsingleton_cohOn_nonzeroLocus_of_eventually_twist : ∀ (X : Scheme.{0
   have eV := cechHEquivCohOn ℤ hVc (cechAcyclicMod_of_isAffineOpen hV F) i
   have hZ : IsZero (cechH ℤ F (nonzeroLocus σ) T i) := by
     refine isZero_cechH_nonzeroLocus_of_eventually_twist X F L hL σ T hsep i (h.mono fun k hk => ?_)
-    haveI hq : (twistZ F L k).IsQuasicoherent := Twist.isQuasicoherent_twist (Twist.isLB_lbZPow hL k)
+    have hq : (twistZ F L k).IsQuasicoherent := Twist.isQuasicoherent_twist (Twist.isLB_lbZPow hL k)
     have e2 := cechHEquivCoh ℤ hc hsep (twistZ F L k) i
-    haveI : Subsingleton (coh (twistZ F L k) i) := by rw [Twist.twistZ_natCast]; exact hk
-    haveI : Subsingleton (cechH ℤ (twistZ F L k) ⊤ T i) := e2.injective.subsingleton
+    have : Subsingleton (coh (twistZ F L k) i) := by rw [Twist.twistZ_natCast]; exact hk
+    have : Subsingleton (cechH ℤ (twistZ F L k) ⊤ T i) := e2.injective.subsingleton
     exact ModuleCat.isZero_of_subsingleton _
-  haveI : Subsingleton (cechH ℤ F (nonzeroLocus σ) T i) := ModuleCat.subsingleton_of_isZero hZ
+  have : Subsingleton (cechH ℤ F (nonzeroLocus σ) T i) := ModuleCat.subsingleton_of_isZero hZ
   exact eV.symm.injective.subsingleton
 
 end GlobalTheory
@@ -1844,7 +1844,7 @@ private theorem passage_cohOn_lemma {X Y : Scheme.{0}} (s : Y ⟶ X) (F : Y.Modu
     rw [TopologicalSpace.Opens.mem_iSup] at hy' ⊢
     exact hy'
   let φ := cechCubePushforwardIso V U (R := ℤ) F (g := s) (fun r => by simp)
-  haveI : IsIso (cechComplexMap φ.hom) :=
+  have : IsIso (cechComplexMap φ.hom) :=
     isIso_cechComplexMap _ (fun t _ => ConcreteCategory.bijective_of_isIso (φ.hom.app t))
   let e1 := cechAbHEquivH' hV (cechAcyclicMod_iff.1 hP) n
   let e2 := cechAbHEquivH' hV' (cechAcyclicMod_iff.1 hF) n
@@ -1855,7 +1855,7 @@ private theorem passage_cohOn_lemma {X Y : Scheme.{0}} (s : Y ⟶ X) (F : Y.Modu
 
 theorem GlobalTheory.passage_down_of_twist_vanishing : ∀ (X Y : Scheme.{0}) [CompactSpace X] [X.IsSeparated] [CompactSpace Y] [Y.IsSeparated] (s : Y ⟶ X) (F : Y.Modules) [F.IsQuasicoherent] (H : LB X), IsAmpleLB H → (∀ j, 0 < j → ∀ᶠ c : ℕ in atTop, Subsingleton (coh (twist F (lbPow (H.pull s) c)) j)) → (∀ i, Nonempty (coh ((Scheme.Modules.pushforward s).obj F) i ≃+ coh F i)) ∧ ∀ U : X.Opens, IsAffineOpen U → ∀ j, 0 < j → Subsingleton (cohOn F (s ⁻¹ᵁ U) j) := by
   intro X Y _ _ _ _ s F _ H hH hvan
-  haveI : SheafOfModules.IsQuasicoherent ((Scheme.Modules.pushforward s).obj F) :=
+  have : SheafOfModules.IsQuasicoherent ((Scheme.Modules.pushforward s).obj F) :=
     GlobalTheory.QCoh.isQuasicoherent_pushforward s F
   have key : ∀ V : X.Opens, IsCompact (V : Set X) → ∀ n,
       Nonempty (cohOn ((Scheme.Modules.pushforward s).obj F) V n ≃+ cohOn F (s ⁻¹ᵁ V) n) := by
@@ -1874,7 +1874,7 @@ theorem GlobalTheory.passage_down_of_twist_vanishing : ∀ (X Y : Scheme.{0}) [C
   · obtain ⟨f⟩ := key ⊤ (by rw [TopologicalSpace.Opens.coe_top]; exact isCompact_univ) i
     exact ⟨f⟩
   · obtain ⟨f⟩ := key U hU.isCompact j
-    haveI : Subsingleton (cohOn ((Scheme.Modules.pushforward s).obj F) U j) := by
+    have : Subsingleton (cohOn ((Scheme.Modules.pushforward s).obj F) U j) := by
       refine subsingleton_cohOn_of_cechAcyclic (ι := Unit) (U := fun _ => U)
         (le_iSup (fun _ : Unit => U) ()) ?_ (by rw [Fintype.card_unit]; exact hj)
       refine cechAcyclicMod_of_isAffineOpen (isAffineOpen_cechOpen_of_le (fun _ => le_rfl) ?_) _
@@ -1910,7 +1910,7 @@ end GlobalTheory.LogResVanish
 open GlobalTheory.LogResVanish in
 theorem GlobalTheory.vanishing_logRes_pushforward_and_local : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (n : ℕ), IsProjOver p → ∀ (η : RatForms p n) (m : ℕ) (G : CartierDiv X) (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (s : Y ⟶ X) [IsDominant s] (K : CartierDiv Y) (B : Closeds Y) (F : CartierDiv Y), η ≠ 0 → 0 < m → IsLogRes p n η m G s K B → (∀ z, F.mult z = (pullCart s G - m • K).mult z / (m : ℤ)) → ∀ (N M T : LB X) (hN : N.IsLB) (hM : M.IsLB) (r : ℕ) (hT : letI := algebraΓOfHom p; IsNef k T), 0 < r → cls T (letI := algebraΓOfHom p; hT.isLB) = (m * r) • cls N hN - r • toPic G - m • cls M hM → (letI := algebraΓOfHom p; IsNef k M) → ∀ (a : ℕ) (Fd : CartierDiv Y) (A : LB Y) (hA : IsAmpleLB A), (0 < a ∧ Fd.Eff ∧ Fd.supp ≤ B ∧ a • CechPic.pull s (cls M hM) = cls A hA.isLB + toPic Fd) → (∀ i, 0 < i → Subsingleton (coh (twist ((Scheme.Modules.pushforward s).obj (twist (GlobalTheory.structureModule Y) (toLB (-F)))) N) i)) ∧ ∀ U : X.Opens, IsAffineOpen U → ∀ j, 0 < j → Subsingleton (cohOn (twist (twist (GlobalTheory.structureModule Y) (toLB (-F))) (N.pull s)) (s ⁻¹ᵁ U) j) := by
   intro k _ _ X _ p n hp η m G Y _ _ s _ K B F hη hm hres hF N M T hN hM r hT hr hcl hMnef a Fd A hA hAF
-  letI := algebraΓOfHom p
+  let := algebraΓOfHom p
   obtain ⟨H, hH⟩ := exists_isAmpleLB_of_isProjOver hp
   have hHl : H.IsLB := hH.isLB
   have : CompactSpace X := hH.compactSpace

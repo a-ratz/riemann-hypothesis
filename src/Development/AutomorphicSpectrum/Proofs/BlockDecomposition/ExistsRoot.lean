@@ -224,7 +224,7 @@ end Main
 
 theorem fKum (hR : RootPow) (hL : LcLog) : FKum := by
   intro hN l _ H r K M D D' π hBC C _ G Λ n
-  haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   have hb : ∀ c, ∃ b : SU (Ao G c) ⟶ D'.Y, b ≫ π = gU (Ao G c) ≫ Λ.p c ∧
       b ≫ D'.f = geomPt M (Ao G c) (G.obj c).2 := fun c =>
     hBC.2.1 _ _ _ (by rw [Category.assoc, Λ.hp, geomPt_fst])

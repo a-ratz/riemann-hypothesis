@@ -79,7 +79,7 @@ theorem smooth_dsig (hσ : IsURepOn (GG k r) σ) {v : H} (hv : IsSmoothVec (k :=
     hU.preimage hc.continuous, hp, hF.comp hc.contDiffOn (fun x hx => hx), ?_⟩
   intro g hgU hgH
   have := hE ((1 : Mat k r), g) hgU gg_one hgH
-  simp only [hσ.1.1, ContinuousLinearMap.one_apply] at this
+  simp only [hσ.1.1, one_apply_eq_self] at this
   exact this
 
 theorem lie_conj {g Y : Mat k r} (hg : g ∈ GG k r) (hY : InLieHpk k r Y) :
@@ -184,7 +184,7 @@ theorem DD_stable (hσ : IsURepOn (GG k r) σ) (w : H) {g : Mat k r} (hg : g ∈
 
 theorem mem_DD_self (hσ : IsURepOn (GG k r) σ) (w : H) : w ∈ DD σ w := by
   have := mem_DD σ w (gg_one (k := k) (r := r))
-  rwa [hσ.1.1, ContinuousLinearMap.one_apply] at this
+  rwa [hσ.1.1, one_apply_eq_self] at this
 
 theorem DD_dense (hσ : IsURepOn (GG k r) σ) (hirr : IsIrredOn (GG k r) σ) {w : H} (hw : w ≠ 0) :
     Dense (DD σ w : Set H) := by

@@ -73,7 +73,7 @@ theorem isStalk_affine : ∀ (A : Type) [CommRing A] (O : Type) [CommRing O]
   have hφ : φ.hom.Etale := by
     rw [← hjφ] at hj
     exact (HasRingHomProperty.Spec_iff (P := @Etale)).mp hj
-  letI : Algebra A O := ((algebraMap A' O).comp φ.hom).toAlgebra
+  let : Algebra A O := ((algebraMap A' O).comp φ.hom).toAlgebra
   refine ⟨this, hSH, ?_, ?_⟩
   · exact isIndEtale_comp_etale φ.hom hφ (algebraMap A' O) hind
   · rw [← hjφ, ← Spec.map_comp]

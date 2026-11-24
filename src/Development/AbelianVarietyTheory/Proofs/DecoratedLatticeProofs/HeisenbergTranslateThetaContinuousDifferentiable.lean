@@ -73,22 +73,22 @@ def supN (φ : WO S T → ℂ) : ℝ≥0∞ := ⨆ w, ‖φ w‖ₑ
 theorem enorm_le_supN (φ : WO S T → ℂ) (w : WO S T) : ‖φ w‖ₑ ≤ supN φ := le_iSup (fun w => ‖φ w‖ₑ) w
 
 theorem supN_add_le (φ φ' : WO S T → ℂ) : supN (φ + φ') ≤ supN φ + supN φ' :=
-  iSup_le fun w => (enorm_add_le _ _).trans (add_le_add (enorm_le_supN φ w) (enorm_le_supN φ' w))
+  iSup_le fun w => (eNorm_add_le _ _).trans (add_le_add (enorm_le_supN φ w) (enorm_le_supN φ' w))
 
 theorem supN_smul (c : ℂ) (φ : WO S T → ℂ) : supN (c • φ) = ‖c‖ₑ * supN φ := by
-  simp only [supN, Pi.smul_apply, smul_eq_mul, enorm_mul, ENNReal.mul_iSup]
+  simp only [supN, Pi.smul_apply, smul_eq_mul, eNorm_mul, ENNReal.mul_iSup]
 
 theorem supN_heisO (hψ : IsStdChar D ψ (-1)) (u : WO S T) (φ : WO S T → ℂ) : supN (heisO ψ S T u φ) = supN φ := by
   unfold supN heisO
   have e : ∀ w, ‖ψ (symplOH S T w u) * φ (w + u)‖ₑ = ‖φ (w + u)‖ₑ := fun w => by
-    rw [enorm_mul, ← ofReal_norm_eq_enorm (ψ _), hψ.1.2.1, ENNReal.ofReal_one, one_mul]
+    rw [eNorm_mul, ← ofReal_norm (ψ _), hψ.1.2.1, ENNReal.ofReal_one, one_mul]
   simp only [e]
   exact (Equiv.addRight u).iSup_comp (g := fun w => ‖φ w‖ₑ)
 
 theorem supN_ne_top (hψ : IsStdChar D ψ (-1)) {φ : WO S T → ℂ} (h : IsThetaFunO ψ S T φ) : supN φ ≠ ⊤ := by
   obtain ⟨C, hC⟩ := theta_bounded hψ h
   refine ne_top_of_le_ne_top (ENNReal.ofReal_ne_top (r := C)) (iSup_le fun w => ?_)
-  rw [← ofReal_norm_eq_enorm]
+  rw [← ofReal_norm]
   exact ENNReal.ofReal_le_ofReal (hC w)
 
 theorem heisO_sub' (u : WO S T) (φ φ' : WO S T → ℂ) : heisO ψ S T u (φ - φ') = heisO ψ S T u φ - heisO ψ S T u φ' := by
@@ -96,7 +96,7 @@ theorem heisO_sub' (u : WO S T) (φ φ' : WO S T → ℂ) : heisO ψ S T u (φ -
 
 theorem supN_le_ofReal {φ : WO S T → ℂ} {C : ℝ} (h : ∀ w, ‖φ w‖ ≤ C) : supN φ ≤ ENNReal.ofReal C :=
   iSup_le fun w => by
-    rw [← ofReal_norm_eq_enorm]
+    rw [← ofReal_norm]
     exact ENNReal.ofReal_le_ofReal (h w)
 
 theorem tendsto_supN_heisO (hψ : IsStdChar D ψ (-1)) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f) :
@@ -115,7 +115,7 @@ theorem tendsto_supN_heisO (hψ : IsStdChar D ψ (-1)) {f : WO S T → ℂ} (hf 
   obtain ⟨γ, hγ, hw⟩ := hc w
   rw [← theta_norm_periodic hψ (theta_sub (GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ hf u) hf) γ hγ w]
   have := h u hu _ hw
-  rw [GlobalTheory.OrientedHeis.heisO_zero, Set.mem_setOf_eq, dist_eq_norm] at this
+  rw [GlobalTheory.OrientedHeis.heisO_zero, Set.mem_ofPred_eq, dist_eq_norm] at this
   exact this.le
 
 def rem (ψ : AddChar (AF D.host.F) ℂ) (L : ℝ →+ WO S T) (t : ℝ) (f : WO S T → ℂ) : WO S T → ℂ :=
@@ -186,10 +186,10 @@ theorem eq_zero_of_tendsto (hθ : IsInfFam θ) (hψ : IsStdChar D ψ (-1)) {L : 
     rwa [map_zero, GlobalTheory.OrientedHeis.heisO_zero] at this
   · refine EMetric.tendstoUniformly_iff.2 fun ε hε => ?_
     filter_upwards [h1.eventually (gt_mem_nhds hε)] with i hi s
-    rw [edist_comm, edist_eq_enorm_sub]
+    rw [edist_comm, eDist_eq_eNorm_sub]
     refine lt_of_le_of_lt ?_ hi
     rw [← supN_heisO hψ (L s), heisO_sub']
-    simpa only [enorm_eq_nnnorm, Pi.sub_apply] using enorm_le_supN (heisO ψ S T (L s) (dLine ψ S T L (h i)) - heisO ψ S T (L s) Λ) p
+    simpa only [eNorm_eq_nnNorm, Pi.sub_apply] using enorm_le_supN (heisO ψ S T (L s) (dLine ψ S T L (h i)) - heisO ψ S T (L s) Λ) p
   · refine tendsto_iff_edist_tendsto_0.2
       (tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds h0 (fun _ => zero_le) fun i => ?_)
     rw [edist_zero_right, ← supN_heisO hψ (L s)]
@@ -283,8 +283,8 @@ theorem tendsto_word_heisO (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ)
     have hua := GlobalTheory.ThetaClosed.isThetaFunO_heisO_all hψ ha
     have hc : Filter.Tendsto (fun u : WO S T => ‖ccA θ a u‖ₑ) (𝓝 0) (𝓝 0) := by
       have := ((continuous_cc hθ a.1 (Matrix.single a.2.1 a.2.2.1 (if a.2.2.2 then Complex.I else 1))).tendsto
-        (0 : WO S T)).enorm
-      rwa [cc_zero, enorm_zero] at this
+        (0 : WO S T)).eNorm
+      rwa [cc_zero, eNorm_zero] at this
     have ht := (ih ha).add (ENNReal.Tendsto.mul hc
       (Or.inr (by simpa using supN_ne_top hψ (theta_word hψ hθ l hf)))
       ((ih hf).add_const (supN (wordAct (heisDer ψ θ) l f))) (Or.inr ENNReal.zero_ne_top))
@@ -359,7 +359,7 @@ theorem tendsto_word_rem (hψ : IsStdChar D ψ (-1)) (hθ : IsInfFam θ) {L : �
         (𝓝[≠] 0) (𝓝 0) := by
     intro l c f g hf hg h
     have ht := h.add (ENNReal.Tendsto.const_mul (a := ‖c‖ₑ) ((tendsto_word_heisO hψ hθ l hf).comp hL0)
-      (Or.inr enorm_ne_top))
+      (Or.inr eNorm_ne_top))
     rw [mul_zero, add_zero] at ht
     refine tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds ht (fun _ => zero_le) fun t => ?_
     beta_reduce

@@ -161,7 +161,7 @@ theorem exists_ext (hπ0 : π ≠ 0) (hπS : ι π ∈ S) (hw : 1 ≤ w π)
   have hf : ∀ x m l, C x m l → min (f x) (m : ℤ) = min (w l) (m : ℤ) := by
     intro x m l hC
     by_cases h : ∃ ml : ℕ × L, C x ml.1 ml.2 ∧ w ml.2 < (ml.1 : ℤ)
-    · have e : f x = w h.choose.2 := dif_pos h
+    · have e : f x = w h.choose.2 := dite_eq_left h
       obtain ⟨h1, h2⟩ := h.choose_spec
       rw [e]
       generalize h.choose = ml at h1 h2
@@ -172,7 +172,7 @@ theorem exists_ext (hπ0 : π ≠ 0) (hπS : ι π ∈ S) (hw : 1 ≤ w π)
         dsimp only at h2 ⊢
         have : w l' = w l := by grind
         rw [this]
-    · have e : f x = ⊤ := dif_neg h
+    · have e : f x = ⊤ := dite_eq_right h
       have : ¬ w l < (m : ℤ) := fun h' => h ⟨(m, l), hC, h'⟩
       rw [e, min_eq_right le_top, min_eq_right (not_lt.1 this)]
   have hι : ∀ l, f (ι l) = w l := fun l =>
@@ -275,12 +275,12 @@ theorem mem_integralClosure_of_mem_span (l : L)
       ((fun b : L => (1 : F') ⊗ₜ[F] b) '' (integralClosure R L : Set L))) :
     l ∈ integralClosure R L := by
   classical
-  haveI := integralClosure.isDedekindDomain R F L
-  haveI := integralClosure.isFractionRing_of_finite_extension (A := R) F L
-  haveI : FaithfulSMul R L :=
+  have := integralClosure.isDedekindDomain R F L
+  have := integralClosure.isFractionRing_of_finite_extension (A := R) F L
+  have : FaithfulSMul R L :=
     (faithfulSMul_iff_algebraMap_injective R L).2 (ValPl.algebraMap_OL_injective (F := F))
-  haveI := IsIntegralClosure.module_free R F L (integralClosure R L)
-  haveI := IsIntegralClosure.isLocalization R F L (integralClosure R L)
+  have := IsIntegralClosure.module_free R F L (integralClosure R L)
+  have := IsIntegralClosure.isLocalization R F L (integralClosure R L)
   let b := Module.Free.chooseBasis R (integralClosure R L)
   let bL := b.localizationLocalization F (nonZeroDivisors R) L
   let bA := Algebra.TensorProduct.basis F' bL
@@ -338,8 +338,8 @@ end PlaceExt
 open PlaceExt in
 theorem exists_unique_place_baseChange : ∀ (R R' F F' : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [CommRing R'] [IsDomain R'] [IsDiscreteValuationRing R'] [Algebra R R'] [Module.Flat R R'] [IsLocalHom (algebraMap R R')] [Field F] [Algebra R F] [IsFractionRing R F] [Field F'] [Algebra R' F'] [IsFractionRing R' F'] [Algebra F F'] [Algebra R F'] [IsScalarTower R F F'] [IsScalarTower R R' F'], Ideal.map (algebraMap R R') (IsLocalRing.maximalIdeal R) = IsLocalRing.maximalIdeal R' → Function.Surjective (IsLocalRing.ResidueField.map (algebraMap R R')) → ∀ (L : Type) [Field L] [Algebra F L] [FiniteDimensional F L] [Algebra.IsSeparable F L] [Algebra R L] [IsScalarTower R F L], (∀ x : F' ⊗[F] L, IsIntegral R' x ↔ x ∈ Submodule.span R' ((fun b : L => (1 : F') ⊗ₜ[F] b) '' (integralClosure R L : Set L))) → ∃ w' : ValPl.PlacesOver R L → AddValuation (F' ⊗[F] L) (WithTop ℤ), (∀ w (g : L), w' w ((1 : F') ⊗ₜ[F] g) = w.1 g) ∧ (∀ x : F' ⊗[F] L, IsIntegral R' x ↔ ∀ w, 0 ≤ w' w x) ∧ (∀ w (x : F' ⊗[F] L), 0 ≤ w' w x → ∃ g : L, 0 ≤ w.1 g ∧ 0 < w' w (x - (1 : F') ⊗ₜ[F] g)) ∧ ∀ (w : ValPl.PlacesOver R L) (u : AddValuation (F' ⊗[F] L) (WithTop ℤ)), (∀ g : L, u ((1 : F') ⊗ₜ[F] g) = w.1 g) → (∀ r : R', 0 ≤ u (algebraMap R' F' r ⊗ₜ[F] (1 : L))) → u = w' w := by
   intro R R' F F' _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hmax hres L _ _ _ _ _ _ hB
-  haveI := integralClosure.isDedekindDomain R F L
-  haveI := integralClosure.isFractionRing_of_finite_extension (A := R) F L
+  have := integralClosure.isDedekindDomain R F L
+  have := integralClosure.isFractionRing_of_finite_extension (A := R) F L
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
   have hϖ' : Irreducible (algebraMap R R' ϖ) :=
     (IsDiscreteValuationRing.irreducible_iff_uniformizer _).2 (PlaceExt.maximalIdeal_eq_span hmax hϖ)

@@ -87,11 +87,11 @@ theorem isClosed_keeps (ε : Fin n → Bool) (S : Submodule ℂ (Fin n → ℂ))
   have hset : {g : S7.UJ ε | Keeps (S7.toM g) S} =
       ⋂ v ∈ S, {g : S7.UJ ε | S7.toM g *ᵥ v ∈ S} := by
     ext g
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     exact keeps_iff_forall_mem (g : (Matrix (Fin n) (Fin n) ℂ)ˣ) S
   rw [hset]
   refine isClosed_biInter fun v _ => ?_
-  have hS : IsClosed (S : Set (Fin n → ℂ)) := S.closed_of_finiteDimensional
+  have hS : IsClosed (S : Set (Fin n → ℂ)) := S.isClosed_of_finiteDimensional
   have hc : Continuous fun g : S7.UJ ε => S7.toM g *ᵥ v :=
     (S7.continuous_toM ε).matrix_mulVec continuous_const
   exact IsClosed.preimage hc hS

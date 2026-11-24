@@ -59,11 +59,11 @@ theorem UpperTheory.frame_criterion_projection :
     apply Subgroup.topologicalClosure_minimal _ _ hclosed
     apply Subgroup.normalClosure_le_normal
     intro t ht
-    simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_compl_iff] at ht
+    simp only [Set.mem_iUnion, Set.mem_ofPred_eq, Set.mem_compl_iff] at ht
     obtain ⟨v, hv, A, hA, ht⟩ := ht
     rw [hS] at hv
     unfold UpperTheory.V.W.HidaSetting.S at hv
-    simp only [Set.mem_setOf_eq, not_or] at hv
+    simp only [Set.mem_ofPred_eq, not_or] at hv
     obtain ⟨hl, hSt, -⟩ := hv
     have hMv := fun hM => hSt ((x.St v).2 ⟨hM, hl⟩)
     have hti : galEmb ℚ (W.Lp L) Ω t ∈ Ine A := (galEmb_mem_Ine A t).2 ht
@@ -96,7 +96,7 @@ theorem UpperTheory.frame_criterion_projection :
     show k.p (toUpl Ω L s.c) = Φ.c
     rw [h2, hpc]
   refine ⟨π, ?_, ?_, ?_, ?_⟩
-  · exact (hπtc.comp continuous_subtype_val).subtype_mk _
+  · exact (hπtc.comp continuous_subtypeVal).subtype_mk _
   · intro g
     rfl
   · intro y0

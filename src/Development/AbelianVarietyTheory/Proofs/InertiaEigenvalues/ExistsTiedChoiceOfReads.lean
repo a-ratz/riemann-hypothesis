@@ -169,8 +169,8 @@ end ChoiceOf
 theorem readsAt_of_tie {C : NChoice D} (h : NChTie D C) (w : D.what₂.places.Pl) : ReadsAt (C.twI w) (C.sd w) w := by
   intro x
   obtain ⟨φ, hφ⟩ := exists_intMap (sideEmb (C.twI w) (C.sd w))
-  haveI := isLocalHom_phiK (C.twI w) (C.k' w)
-  haveI := C.Oe_loc w
+  have := isLocalHom_phiK (C.twI w) (C.k' w)
+  have := C.Oe_loc w
   have h1 : C.embW w ((x : ↥D.LL0) : D.what₂.LL) = algebraMap (C.Oe w) (FractionRing (C.Oe w))
       (algebraMap _ (C.Oe w) (BlochKatoReduction.Gen.phiK D.ntw (C.twI w) (C.k' w) (φ x))) := by
     have h2 := h.embedding_baseField_condition w x (φ x) 1 one_ne_zero (by rw [map_one, mul_one, hφ]; rfl)
@@ -190,7 +190,7 @@ theorem readsAt_of_tie {C : NChoice D} (h : NChTie D C) (w : D.what₂.places.Pl
     rw [map_zero, eq_comm, map_eq_zero_iff _ (IsFractionRing.injective _ _)] at h1
     simp [h1]
   have h3 : 0 < D.what₂.places.val w x' ↔ ¬ 0 ≤ D.what₂.places.val w x'⁻¹ := by
-    rw [val_pos_iff, val_nonneg_iff, map_inv₀, not_le, one_lt_inv₀ (zero_lt_iff.2 (by simpa using hx))]
+    rw [val_pos_iff, val_nonneg_iff, map_inv₀, not_le, one_lt_inv₀ (pos_iff_ne_zero.2 (by simpa using hx))]
   have hu : algebraMap (C.Oe w) (FractionRing (C.Oe w)) u ≠ 0 := h1 ▸ (map_ne_zero _).2 hx
   rw [h3, C.embW_w, map_inv₀, h1, not_iff_not]
   constructor

@@ -112,7 +112,7 @@ private theorem fd_order {F : Type*} [FunLike F ℍ ℂ] {Γ : Subgroup (GL (Fin
 
 private theorem fd_norm {F : Type*} [FunLike F ℍ ℂ] {Γ : Subgroup (GL (Fin 2) ℝ)} {k : ℤ} [ModularFormClass F Γ k]
     [Γ.IsArithmetic] (f : F) : (ModularForm.norm 𝒮ℒ f : ℍ → ℂ) =O[atImInfty] (f : ℍ → ℂ) := by
-  letI := Fintype.ofFinite ((𝒮ℒ) ⧸ Γ.subgroupOf 𝒮ℒ)
+  let := Fintype.ofFinite ((𝒮ℒ) ⧸ Γ.subgroupOf 𝒮ℒ)
   classical
   have hb : ∀ q : (𝒮ℒ) ⧸ Γ.subgroupOf 𝒮ℒ,
       SlashInvariantForm.quotientFunc (𝒢 := Γ) (k := k) f q =O[atImInfty] (fun _ => (1 : ℂ)) := by
@@ -163,17 +163,17 @@ theorem UpperTheory.V.Sd.finDim :
       { toFun := fun f i => (qExpansion 1 f).coeff i
         map_add' := fun f g => by
           ext i
-          simp only [CuspForm.coe_add, ModularForm.qExpansion_add one_pos hΓ f g, map_add (f := _),
+          simp only [FunLike.coe_add, ModularForm.qExpansion_add one_pos hΓ f g, map_add (f := _),
             Pi.add_apply]
         map_smul' := fun c f => by
           ext i
-          simp only [CuspForm.coe_smul, ModularForm.qExpansion_smul one_pos hΓ c f,
+          simp only [FunLike.coe_smul, ModularForm.qExpansion_smul one_pos hΓ c f,
             PowerSeries.coeff_smul, smul_eq_mul, Pi.smul_apply, RingHom.id_apply] }
     refine Module.Finite.of_injective L fun f g hfg => ?_
     have hfg0 : f - g = 0 := hm (f - g) fun n hn => by
       have hc := congrFun hfg ⟨n, hn⟩
       simp only [L, LinearMap.coe_mk, AddHom.coe_mk] at hc
-      rw [CuspForm.coe_sub, ModularForm.qExpansion_sub one_pos hΓ f g, map_sub, hc, sub_self]
+      rw [FunLike.coe_sub, ModularForm.qExpansion_sub one_pos hΓ f g, map_sub, hc, sub_self]
     exact sub_eq_zero.mp hfg0
   · rcases Nat.eq_zero_or_pos n with rfl | hn
     · exact CuspFormClass.qExpansion_coeff_zero f one_pos hΓ

@@ -175,7 +175,7 @@ theorem flowMat_mulVec_eq (τ : X.Ψ) (s : ℂ) (v : Fin r → ℂ) : X.flowMat 
   funext a
   simp only [Data.flowMat, mulVec, dotProduct, of_apply, Pi.add_apply, Pi.smul_apply,
     smul_eq_mul, hermC, Data.emb, sub_mul, Finset.sum_sub_distrib, ite_mul, one_mul, zero_mul,
-    Finset.sum_ite_eq, Finset.mem_univ, if_true]
+    Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [sub_eq_add_neg]
   congr 1
   simp only [Finset.mul_sum, Finset.sum_mul, ← Finset.sum_neg_distrib]
@@ -723,10 +723,10 @@ theorem exists_isAdapted (hs : IsSympl X bas) {ξ : Fin r → E} (hξ : herm X.G
   let J : Submodule ℤ (Fin g ⊕ Fin g → ℤ) :=
     { carrier := {m | (bas m : Fin r → E) ∈ Submodule.span E {ξ}}
       add_mem' := fun {u v} hu hv => by
-        rw [Set.mem_setOf_eq, map_add (f := _)]; exact add_mem hu hv
+        rw [Set.mem_ofPred_eq, map_add (f := _)]; exact add_mem hu hv
       zero_mem' := by simp
       smul_mem' := fun k u hu => by
-        rw [Set.mem_setOf_eq, map_zsmul, AddSubgroupClass.coe_zsmul]; exact zsmul_mem hu k }
+        rw [Set.mem_ofPred_eq, map_zsmul, AddSubgroupClass.coe_zsmul]; exact zsmul_mem hu k }
   have hJ (m) : m ∈ J ↔ (bas m : Fin r → E) ∈ Submodule.span E {ξ} := Iff.rfl
   have hω (u v : Fin g ⊕ Fin g → ℤ) :
       standardAltForm (fun _ : Fin g => (1 : ℤ)) u v = omegaStd u v := by

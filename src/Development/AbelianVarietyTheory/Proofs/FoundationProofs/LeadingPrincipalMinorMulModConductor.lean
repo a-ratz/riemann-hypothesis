@@ -60,7 +60,7 @@ theorem triv_of_val_le {χ : kˣ →* ℂˣ} {x y : k} (h : valuation k y ≤ va
 
 theorem triv_zero (χ : kˣ →* ℂˣ) : Triv χ (0 : k) := by
   intro u _ hle
-  rw [map_zero, le_zero_iff, map_eq_zero, sub_eq_zero] at hle
+  rw [map_zero, nonpos_iff_eq_zero, map_eq_zero, sub_eq_zero] at hle
   have : u = 1 := Units.ext hle
   simp [this]
 
@@ -124,7 +124,7 @@ theorem GlobalTheory.PsType.minor_mul_mod : ∀ (k : Type) [Field k] [ValuativeR
     intro a ha i j hi hj
     have hj' : m < j := not_le.1 hj
     have hlt : (m : ℕ) + 1 < n := lt_of_le_of_lt (Nat.succ_le_of_lt (Fin.lt_def.1 hj')) j.2
-    have hnx : nxt ψ m = ψ ⟨(m : ℕ) + 1, hlt⟩ := dif_pos hlt
+    have hnx : nxt ψ m = ψ ⟨(m : ℕ) + 1, hlt⟩ := dite_eq_left hlt
     have h1 := ha.2 i j (lt_of_le_of_lt hi hj')
     rw [hχ, hnx]
     exact hψ i m ⟨(m : ℕ) + 1, hlt⟩ j hi (Fin.le_def.2 (Nat.le_succ _))

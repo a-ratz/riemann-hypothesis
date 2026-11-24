@@ -132,7 +132,7 @@ theorem exists_shift {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum
   have ha0 : (Valued.v a : WithZero (Multiplicative ℤ)) ≠ 0 := by rw [ha]; exact WithZero.exp_ne_zero
   refine ⟨a, by simpa using ha0, fun x => ?_⟩
   have h := hn (a * x)
-  rw [← ha, map_mul, mul_le_iff_le_one_right (zero_lt_iff.2 ha0)] at h
+  rw [← ha, map_mul, mul_le_iff_le_one_right (pos_iff_ne_zero.2 ha0)] at h
   simpa only [HeightOneSpectrum.mem_adicCompletionIntegers, mul_assoc] using h
 
 theorem exists_pair {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) {κ : Type} [Fintype κ]

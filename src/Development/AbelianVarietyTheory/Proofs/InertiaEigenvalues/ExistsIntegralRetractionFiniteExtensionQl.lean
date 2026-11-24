@@ -153,7 +153,7 @@ theorem exists_integral_retraction : ∀ (l : ℕ) [Fact l.Prime] (LL LL' : FinE
     ∃ r : ↥LL'.1 →ₗ[ℚ_[l]] ↥LL.1, (∀ a x, r (incl hL a * x) = a * r x) ∧ r 1 = 1 ∧
       (∀ x ∈ OL LL', r x ∈ OL LL) := by
   intro l _ LL LL' hL
-  letI : Algebra ↥LL.1 ↥LL'.1 := (incl hL).toRingHom.toAlgebra
+  let : Algebra ↥LL.1 ↥LL'.1 := (incl hL).toRingHom.toAlgebra
   have hmap : ∀ y : ↥LL.1, algebraMap ↥LL.1 ↥LL'.1 y = incl hL y := fun _ => rfl
   have : IsScalarTower ℚ_[l] ↥LL.1 ↥LL'.1 := IsScalarTower.of_algebraMap_eq fun q => by
     rw [hmap, AlgHom.commutes]

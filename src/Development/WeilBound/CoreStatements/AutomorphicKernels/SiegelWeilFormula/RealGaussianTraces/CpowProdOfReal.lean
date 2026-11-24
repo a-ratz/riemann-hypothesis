@@ -356,8 +356,8 @@ private theorem exists_schwartz_prod_gs {ι : Type} [Fintype ι] {M n : ℕ} (c 
     ∑ i, ∑ a, ∑ j, (-c i) • ((re3 i a j).smulRight (re3 i a j) + (im3 i a j).smulRight (im3 i a j))
   have hB : ∀ x, B x x = -∑ i, c i * ∑ a, ∑ j, ‖x i a j‖ ^ 2 := by
     intro x
-    simp only [B, ContinuousLinearMap.sum_apply, ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.add_apply, ContinuousLinearMap.smulRight_apply, hre, him, smul_eq_mul]
+    simp only [B, sum_apply, smul_apply,
+      add_apply, ContinuousLinearMap.smulRight_apply, hre, him, smul_eq_mul]
     rw [← Finset.sum_neg_distrib]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
@@ -481,10 +481,10 @@ theorem jt_eq (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF F) �
     jtR (Ainf F) σ J (psiInf F ψ) μ (phiInf θ l fr g P) b =
       (cμ : ℂ) * ∏ i, secN (ε i) (2 * Real.pi * |l i|) (2 * Real.pi * l i) (P i) (herm (ybAll σ θ g b i)) := by
   classical
-  haveI : IsTotallyReal F := hCM.1
-  haveI := secondCountable_tens (F := F) (E := E)
-  haveI := borel_tens (F := F) (E := E)
-  haveI := borel_herm (F := F) (E := E) σ n
+  have : IsTotallyReal F := hCM.1
+  have := secondCountable_tens (F := F) (E := E)
+  have := borel_tens (F := F) (E := E)
+  have := borel_herm (F := F) (E := E) σ n
   have hme : MeasurableEmbedding (eC : (Fin n → Fin M → Ainf F ⊗[F] E) → (ι → Fin M → Fin n → ℂ)) :=
     eC.toHomeomorph.measurableEmbedding
   unfold jtR
@@ -522,10 +522,10 @@ theorem integral_whI (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (
       ∫ b, whI (Ainf F) σ J (psiInf F ψ) μ (phiInf θ l fr g P) (nuInf θ g) T.1 z b ∂ν =
         (cb : ℂ) * (cμ : ℂ) * ∏ i, ∫ y, fw (ε i) (l i) (P i) (ygAll σ θ g T i) (z - ((M : ℂ) - n) / 2) y := by
   classical
-  haveI : IsTotallyReal F := hCM.1
-  haveI := secondCountable_tens (F := F) (E := E)
-  haveI := borel_tens (F := F) (E := E)
-  haveI := borel_herm (F := F) (E := E) σ n
+  have : IsTotallyReal F := hCM.1
+  have := secondCountable_tens (F := F) (E := E)
+  have := borel_tens (F := F) (E := E)
+  have := borel_herm (F := F) (E := E) σ n
   have hme : MeasurableEmbedding (eb : HermR (Ainf F) σ n → (ι → WR.E n)) := eb.toHomeomorph.measurableEmbedding
   set G : (ι → WR.E n) → ℂ := fun y => (cμ : ℂ) * ∏ i, fw (ε i) (l i) (P i) (ygAll σ θ g T i) (z - ((M : ℂ) - n) / 2) (y i)
     with hG
@@ -547,14 +547,14 @@ theorem isOpen_unitDet (σ : E →ₐ[F] E) (ψ : AddChar (AF F) ℂ) {ι : Type
   have h : {S : HermR (Ainf F) σ n | IsUnit (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).det} =
       ⋂ i, {S : HermR (Ainf F) σ n | ((S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).map (θ i)).det ≠ 0} := by
     ext S
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     rw [isUnit_iff_th σ ψ θ l hP]
     refine forall_congr' fun i => ?_
     rw [RingHom.map_det]
     rfl
   rw [h]
   exact isOpen_iInter_of_finite fun i => isOpen_ne_fun
-    ((continuous_subtype_val.matrix_map (hP.cont i)).matrix_det) continuous_const
+    ((continuous_subtypeVal.matrix_map (hP.cont i)).matrix_det) continuous_const
 
 theorem dens_box (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF F) ℂ) {ι : Type} [Fintype ι]
     (θ : ι → (Ainf F ⊗[F] E →+* ℂ)) (l : ι → ℝ) (hP : IsPlaces σ ψ θ l) {M n : ℕ} (J : Matrix (Fin M) (Fin M) E)
@@ -571,17 +571,17 @@ theorem dens_box (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF F
     ∫ Y in gramR (Ainf F) σ J ⁻¹' (Subtype.val '' (eg ⁻¹' Set.univ.pi K)), phiInf θ l fr g P Y ∂μ =
       ∫ S in eg ⁻¹' Set.univ.pi K, c * ∏ i, gg i (eg S i) ∂ν := by
   classical
-  haveI : IsTotallyReal F := hCM.1
-  haveI := secondCountable_tens (F := F) (E := E)
-  haveI := borel_tens (F := F) (E := E)
-  haveI := borel_herm (F := F) (E := E) σ n
+  have : IsTotallyReal F := hCM.1
+  have := secondCountable_tens (F := F) (E := E)
+  have := borel_tens (F := F) (E := E)
+  have := borel_herm (F := F) (E := E) σ n
   have hmeC : MeasurableEmbedding (eC : (Fin n → Fin M → Ainf F ⊗[F] E) → (ι → Fin M → Fin n → ℂ)) :=
     eC.toHomeomorph.measurableEmbedding
   have hmeg : MeasurableEmbedding (eg : HermR (Ainf F) σ n → (ι → WR.E n)) := eg.toHomeomorph.measurableEmbedding
-  haveI hsf1 : SigmaFinite (volume : Measure (Fin M → Fin n → ℂ)) := by
+  have hsf1 : SigmaFinite (volume : Measure (Fin M → Fin n → ℂ)) := by
     have : (volume : Measure (Fin M → Fin n → ℂ)) = Measure.pi fun _ => volume := rfl
     rw [this]; infer_instance
-  haveI hsf2 : SigmaFinite (volume : Measure (WR.E n)) := by
+  have hsf2 : SigmaFinite (volume : Measure (WR.E n)) := by
     have : (volume : Measure (WR.E n)) = Measure.pi fun _ => volume := rfl
     rw [this]; infer_instance
   set A : ι → Set (Fin M → Fin n → ℂ) := fun i => gramX (ε i) ⁻¹' (herm '' K i) with hA
@@ -609,17 +609,17 @@ theorem dens_box (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (ψ : AddChar (AF F
 theorem realWhitAll_of (hWR : WR.WRSt) : RealWhitAll := by
   intro F E _ _ _ _ _ σ hCM M J hJ n ψ hψ ι _ θ l hP ε fr hfr g P μ ν hμ hν
   classical
-  haveI : IsTotallyReal F := hCM.1
-  haveI := secondCountable_tens (F := F) (E := E)
-  haveI := borel_tens (F := F) (E := E)
-  haveI := borel_herm (F := F) (E := E) σ n
+  have : IsTotallyReal F := hCM.1
+  have := secondCountable_tens (F := F) (E := E)
+  have := borel_tens (F := F) (E := E)
+  have := borel_herm (F := F) (E := E) σ n
   obtain ⟨eC, heC⟩ := exists_crdHomeo σ hCM ψ θ l hP fr g
   obtain ⟨eb, heb⟩ := exists_ybHomeo σ hCM ψ θ l hP g
   obtain ⟨eg, heg⟩ := exists_ygHomeo σ hCM ψ θ l hP g
-  haveI := haar_volE ι n
-  haveI := haar_volW ι M n
-  haveI : μ.IsAddHaarMeasure := hμ.1
-  haveI : ν.IsAddHaarMeasure := hν.1
+  have := haar_volE ι n
+  have := haar_volW ι M n
+  have : μ.IsAddHaarMeasure := hμ.1
+  have : ν.IsAddHaarMeasure := hν.1
   obtain ⟨cμ, hcμ0, hcμ⟩ := exists_map_eq_smul (volume : Measure (ι → Fin M → Fin n → ℂ)) μ eC
   obtain ⟨cb, hcb0, hcb⟩ := exists_map_eq_smul (volume : Measure (ι → WR.E n)) ν eb
   obtain ⟨cg, hcg0, hcg⟩ := exists_map_eq_smul (volume : Measure (ι → WR.E n)) ν eg
@@ -672,7 +672,7 @@ theorem realWhitAll_of (hWR : WR.WRSt) : RealWhitAll := by
     linear_combination (cμ : ℂ) * h2
   have hB : IsOpen {S : HermR (Ainf F) σ n | IsUnit (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).det} :=
     isOpen_unitDet σ ψ θ l hP n
-  haveI : T2Space (HermR (Ainf F) σ n) := eg.toHomeomorph.symm.t2Space
+  have : T2Space (HermR (Ainf F) σ n) := eg.toHomeomorph.symm.t2Space
   have hGd : ContinuousOn (fun S : HermR (Ainf F) σ n => c * ∏ i, gg i (eg S i))
       {S : HermR (Ainf F) σ n | IsUnit (S : Matrix (Fin n) (Fin n) (Ainf F ⊗[F] E)).det} := by
     refine continuousOn_const.mul (continuousOn_finsetProd _ fun i _ => ?_)

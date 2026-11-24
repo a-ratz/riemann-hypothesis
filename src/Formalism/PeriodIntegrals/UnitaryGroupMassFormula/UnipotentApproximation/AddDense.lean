@@ -244,7 +244,7 @@ theorem exists_small (v : HeightOneSpectrum R) {U : Set (v.adicCompletion K)}
     ∃ r : R, r ≠ 0 ∧ ∀ y : v.adicCompletion K, Valued.v y ≤ v.intValuation r → y ∈ U := by
   obtain ⟨γ, hγ⟩ := Valued.mem_nhds_zero.mp hU
   have hpos : (0 : WithZero (Multiplicative ℤ)) < MonoidWithZeroHom.ValueGroup₀.embedding γ.1 := by
-    have := MonoidWithZeroHom.ValueGroup₀.embedding_strictMono (zero_lt_iff.mpr γ.ne_zero)
+    have := MonoidWithZeroHom.ValueGroup₀.embedding_strictMono (pos_iff_ne_zero.mpr γ.ne_zero)
     simpa using this
   obtain ⟨k, hk⟩ := WithZero.exists_exp_neg_natCast_lt hpos.ne'
   have hI : v.asIdeal ^ k ≠ ⊥ := by
@@ -266,7 +266,7 @@ theorem exists_small_finset (s : Finset (HeightOneSpectrum R)) (U : ∀ v : Heig
   refine le_trans hy ?_
   rw [map_prod, ← Finset.mul_prod_erase s _ hv]
   apply mul_le_of_le_one_right'
-  apply Finset.prod_le_one'
+  apply Finset.prod_le_one
   intro w _
   first
   | exact v.intValuation_le_one (r w)

@@ -576,7 +576,7 @@ end GlobalTheory.SepReal.LieWords
 open GlobalTheory.SepReal.LieWords in
 theorem GlobalTheory.SepReal.lieBound : LieBound := by
   intro m ε lam B hm hc hgap hB H _ _ π hDS v₀ hv₀
-  haveI : CompleteSpace H := hDS.1
+  have : CompleteSpace H := hDS.1
   have hU : IsURepOn (UJset ε) π := hDS.2.2.1
   have hm' : (3 : ℝ) ≤ m := by exact_mod_cast hm
   have hgap2 : ∀ a b : Fin m, ε a ≠ ε b → 2 * (m : ℝ) < |lam a - lam b| := by

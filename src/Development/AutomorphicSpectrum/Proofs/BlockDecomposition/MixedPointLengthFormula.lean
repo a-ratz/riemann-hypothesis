@@ -115,20 +115,20 @@ theorem isMultiHomog_C (c : ℤ) : IsMultiHomog (C c : MRing ι) 0 := fun m hm k
   classical
   have hm0 : m = 0 := by
     by_contra h
-    exact (MvPolynomial.mem_support_iff.1 hm) (by rw [coeff_C, if_neg (Ne.symm h)])
+    exact (MvPolynomial.mem_support_iff.1 hm) (by rw [coeff_C, ite_eq_right (Ne.symm h)])
   simp [hm0]
 
 open Classical in
 theorem isMultiHomog_X (p : Σ k, ι k) : IsMultiHomog (X p : MRing ι) (Pi.single p.1 1) := fun m hm k => by
   classical
-  rw [X, support_monomial, if_neg one_ne_zero, Finset.mem_singleton] at hm
+  rw [X, support_monomial, ite_eq_right one_ne_zero, Finset.mem_singleton] at hm
   subst hm
   obtain ⟨l, i⟩ := p
   by_cases hk : k = l
   · subst hk
     simp [Finsupp.single_apply]
   · have : ∀ j : ι k, (Finsupp.single (⟨l, i⟩ : Σ k, ι k) 1) ⟨k, j⟩ = 0 := fun j => by
-      rw [Finsupp.single_apply, if_neg]
+      rw [Finsupp.single_apply, ite_eq_right]
       intro e
       exact hk (congrArg Sigma.fst e).symm
     simp [this, Pi.single_apply, hk]
@@ -311,11 +311,11 @@ theorem length_mul_log [Finite Ω] (y : (Σ k, ι k) → Ω) (c c₀ : ∀ k, ι
   let E : (MRing ι ⧸ (mCoordIdeal y ⊔ chartI c)) ≃+* Ω :=
     (Ideal.quotEquivOfEq (ker_chartMap y c hc).symm).trans
       (RingHom.quotientKerEquivOfSurjective (f := (chartMap y c).toRingHom) (chartMap_surjective y c c₀ hc h₁ hy))
-  letI := ZMod.algebra Ω p
+  let := ZMod.algebra Ω p
   have hZ : Function.Surjective (algebraMap ℤ (ZMod p)) := by
     rw [algebraMap_int_eq]
     exact ZMod.ringHom_surjective _
-  haveI : Module.Finite (ZMod p) Ω := Module.Finite.of_finite
+  have : Module.Finite (ZMod p) Ω := Module.Finite.of_finite
   rw [E.toIntAlgEquiv.toLinearEquiv.length_eq, Module.length_eq_of_surjective hZ, Module.length_eq_rank,
     Cardinal.toNat_toENat]
   have hcard : Nat.card Ω = p ^ Module.finrank (ZMod p) Ω := by
@@ -349,7 +349,7 @@ theorem ptLen : GlobalTheory.CompanionTheory.MixZ.PtLen := by
   have hxc : IsClosed ({i z} : Set (MP ℤ m n)) := by
     have := i.isClosedEmbedding.isClosedMap _ hzc
     simpa using this
-  haveI : Finite ((MP ℤ m n).residueField (i z)) :=
+  have : Finite ((MP ℤ m n).residueField (i z)) :=
     GlobalTheory.finite_residueField_of_isClosed_of_locallyOfFiniteType_int (mpStr ℤ m n) (i z) hxc
   have hcard : Nat.card (X.residueField z) = Nat.card ((MP ℤ m n).residueField (i z)) := by
     have hs : Function.Surjective (i.residueFieldMap z).hom := by
@@ -359,7 +359,7 @@ theorem ptLen : GlobalTheory.CompanionTheory.MixZ.PtLen := by
       exact ⟨IsLocalRing.residue _ c, rfl⟩
     exact (Nat.card_congr (Equiv.ofBijective _ ⟨(i.residueFieldMap z).hom.injective, hs⟩)).symm
   obtain ⟨p, hp⟩ := CharP.exists ((MP ℤ m n).residueField (i z))
-  haveI : Fact p.Prime := ⟨CharP.char_is_prime ((MP ℤ m n).residueField (i z)) p⟩
+  have : Fact p.Prime := ⟨CharP.char_is_prime ((MP ℤ m n).residueField (i z)) p⟩
   have hrel := (isMultiProjPrime_ptIdeal m n (i z)).2.2
   have hy0 : ∀ k, ptCoord (i z) ⟨k, (hrel k).choose⟩ ≠ 0 := by
     intro k h0

@@ -169,7 +169,7 @@ theorem exists_isAttachedHodgeS_conj_mapRep (hO : OrbHom k) (hZ : CR Z) {τ : Fi
   have hred : IsReduced (Sx D x₀) := by
     refine ⟨fun a ha => Subtype.ext ?_⟩
     exact n0 a.1 ((memSpan a.1).1 a.2) (ha.map (Sx D x₀).val)
-  letI : CommRing (Sx D x₀) := cr_commRing ⟨hcomm, hred⟩
+  let : CommRing (Sx D x₀) := cr_commRing ⟨hcomm, hred⟩
   choose vOf hvOf using fun a : Sx D x₀ => (memS a.1).1 a.2
   have key : ∀ (a : Sx D x₀) v, lc s0 v = a.1 → lc s (vOf a) = lc s v := by
     intro a v hv

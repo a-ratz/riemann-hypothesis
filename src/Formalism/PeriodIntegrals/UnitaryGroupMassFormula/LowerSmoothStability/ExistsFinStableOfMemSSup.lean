@@ -69,8 +69,8 @@ theorem finStable_directed (G : Set ι) (ρ : ι → H →L[ℂ] H) :
     DirectedOn (· ≤ ·) (FinStable G ρ) := by
   intro S hS T hT
   refine ⟨S ⊔ T, ⟨?_, ?_⟩, le_sup_left, le_sup_right⟩
-  · haveI := hS.1
-    haveI := hT.1
+  · have := hS.1
+    have := hT.1
     infer_instance
   · intro g hg x hx
     obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.mp hx

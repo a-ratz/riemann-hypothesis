@@ -94,9 +94,9 @@ theorem mass_of_subgroup [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measur
     (hI : ∀ r : 𝓞 F, r ∈ I ↔ ι r ∈ H) (hI0 : I ≠ ⊥) :
     lf (H : Set (A F)) = ((Ideal.absNorm I : ℝ≥0∞))⁻¹ := by
   obtain ⟨-, -, -, -, hOo, hd, hint, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI : IsTopologicalRing (A F) := inferInstance
+  have : IsTopologicalRing (A F) := inferInstance
   have : Finite (𝓞 F ⧸ I) := Ideal.finiteQuotientOfFreeOfNeBot I hI0
-  haveI := Fintype.ofFinite (𝓞 F ⧸ I)
+  have := Fintype.ofFinite (𝓞 F ⧸ I)
   let rep : (𝓞 F ⧸ I) → 𝓞 F := fun t => Quotient.out t
   have hrep : ∀ t, Ideal.Quotient.mk I (rep t) = t := fun t => Ideal.Quotient.mk_out t
   let C : (𝓞 F ⧸ I) → Set (A F) := fun t => (fun x => x - ι (rep t)) ⁻¹' (H : Set (A F))
@@ -204,7 +204,7 @@ theorem scale_unit [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F
   have hc : ∀ t : Set (A F), MeasurableSet t → lf ((fun x => (a : A F) * x) '' t) =
       (k : ℝ≥0∞) * lf t := by
     intro t ht
-    rw [hval t ht, hk, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul]
+    rw [hval t ht, hk, smul_apply, ENNReal.smul_def, smul_eq_mul]
   rw [hc s hs, hc _ hOo.measurableSet, h1, mul_one]
 
 theorem mass_mul_int [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F))

@@ -201,7 +201,7 @@ theorem maximal_compact_facts : KFacts := by
     have hcl : IsClosed (Kset ε) := by
       have : Kset ε = {g | gᴴ * g = 1} ∩ {g | g * Jm ε = Jm ε * g} := by
         ext g
-        simp only [Kset, Set.mem_setOf_eq, Set.mem_inter_iff, f1alg_unit_iff]
+        simp only [Kset, Set.mem_ofPred_eq, Set.mem_inter_iff, f1alg_unit_iff]
       rw [this]
       exact (isClosed_eq (continuous_id.matrix_conjTranspose.matrix_mul continuous_id) continuous_const).inter
         (isClosed_eq (continuous_id.matrix_mul continuous_const) (continuous_const.matrix_mul continuous_id))

@@ -145,7 +145,7 @@ theorem exists_mem_closed_fibre (V : Type) [CommRing V] [IsDomain V] [IsDiscrete
     GlobalTheory.forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ inferInstance inferInstance
   have hmax : (IsLocalRing.maximalIdeal V ^ (0 + 1)).IsMaximal := by
     rw [zero_add, pow_one]; infer_instance
-  letI := Ideal.Quotient.field (IsLocalRing.maximalIdeal V ^ (0 + 1))
+  let := Ideal.Quotient.field (IsLocalRing.maximalIdeal V ^ (0 + 1))
   have : IsIntegral (pullback G.hom (thick V (IsLocalRing.maximalIdeal V) 0)) :=
     GeometricallyIntegral.geometrically_isIntegral (thick V (IsLocalRing.maximalIdeal V) 0) _ _
       (IsPullback.of_hasPullback G.hom (thick V (IsLocalRing.maximalIdeal V) 0))
@@ -194,7 +194,7 @@ theorem exists_valuationRing (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A
   have inj : Function.Injective (algebraMap A (AlgebraicClosure (FractionRing A))) := by
     rw [IsScalarTower.algebraMap_eq A (FractionRing A)]
     exact (algebraMap (FractionRing A) _).injective.comp (IsFractionRing.injective A _)
-  letI := ((algebraMap A (AlgebraicClosure (FractionRing A))).codRestrict O.toSubring h).toAlgebra
+  let := ((algebraMap A (AlgebraicClosure (FractionRing A))).codRestrict O.toSubring h).toAlgebra
   refine Module.Flat.flat_iff_torsion_eq_bot_of_isBezout.2 (eq_bot_iff.2 ?_)
   rintro x ⟨⟨a, ha⟩, e⟩
   have e' : algebraMap A (AlgebraicClosure (FractionRing A)) a * x.1 = 0 := congrArg Subtype.val e
@@ -236,7 +236,7 @@ theorem relAmple_of_fibres : Laws → Laws2 → ∀ (A : Type) [CommRing A] [IsD
   let t : Spec (CommRingCat.of O) ⟶ Spec (CommRingCat.of A) := Spec.map (CommRingCat.ofHom g)
   let π := pullback.fst B.hom t
   have ht : Function.Surjective t := by
-    letI := g.toAlgebra
+    let := g.toAlgebra
     have : Module.Flat A O := hg
     have : IsLocalHom (algebraMap A O) := hl
     have : Module.FaithfullyFlat A O := Module.FaithfullyFlat.of_flat_of_isLocalHom

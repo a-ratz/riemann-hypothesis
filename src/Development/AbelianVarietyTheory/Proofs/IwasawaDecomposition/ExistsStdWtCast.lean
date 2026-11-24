@@ -119,7 +119,7 @@ lemma isWtOfPar_eq {N n : ℕ} (h : N = n) {lam : DomWeight N} {S : SPar} (hS : 
     obtain ⟨s, hs'⟩ := hm i
     have : s = true := hs _ hs'
     rwa [this] at hs'
-  have e : c = c' := (hc.range_inj hc').1 ((key c hc hm2).trans (key c' hc' hm').symm)
+  have e : c = c' := (hc.range_inj_of_wellFoundedGT hc').1 ((key c hc hm2).trans (key c' hc' hm').symm)
   rw [hw, e]
   rfl
 
@@ -355,7 +355,7 @@ theorem mem_iff_swap (hL : ∀ x, x ∈ L ↔ ∀ i, x i ∈ Set.range (algebraM
     funext j
     rw [hw]
 
-    simp only [Formalism.UG.bc, Units.coe_map, MonoidHom.coe_coe, Matrix.mulVec, dotProduct, map_sum, map_mul]
+    simp only [Formalism.UG.bc, Units.coe_map, MonoidHom.coe_ofClass, Matrix.mulVec, dotProduct, map_sum, map_mul]
     rw [← e.symm.sum_comp]
     refine Finset.sum_congr rfl fun k _ => ?_
     simp [Matrix.reindexAlgEquiv_apply, Matrix.reindex_apply, Formalism.UG.inclE]

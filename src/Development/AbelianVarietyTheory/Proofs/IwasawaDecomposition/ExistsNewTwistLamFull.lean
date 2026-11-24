@@ -272,8 +272,8 @@ theorem GlobalTheory.TwInputs.tauG_read (hGAR : GlobalTheory.Published.GlobalArt
     ∀ y : ↥D.LL0, embLL0 D y = (((cf.mu0 j).locK (NX.pG D ⟨k, v⟩) (Units.mk0 (u : D.host.E) hu0) : ℂˣ) : ℂ) →
       ((Bs.exp.tauG i (j.1 + 1) b ⟨k, v⟩ x : (FractionRing (D.ntw.O i))ˣ) : FractionRing (D.ntw.O i)) = sideEmb D.ntw i b y := by
   have hgp : (D.host.g k).Prime := D.host.g_prime k
-  haveI : Fact (D.host.g k).Prime := ⟨hgp⟩
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : Fact (D.host.g k).Prime := ⟨hgp⟩
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   obtain ⟨art, ha⟩ := hGAR D.host.E D.nd.Om
   obtain ⟨ρ⟩ := GlobalTheory.Triple.Reading.nonempty (X := D.ntw) i b
   obtain ⟨n, hn⟩ := GlobalTheory.TwChiGal.firstTwistCharacter_eq_ladic_heckeCharacter D cf Bs.chiD Bs.chi Bs.eta_eq Bs.ringSpec_normalisedCharacter_eq Bs.del_eq hV art ha i b ρ j
@@ -295,7 +295,7 @@ theorem GlobalTheory.TwInputs.tauG_read (hGAR : GlobalTheory.Published.GlobalArt
     apply (D.naut.plGw k v).isPrime.ne_top
     rw [Ideal.eq_top_iff_one, ← hac]
     exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ h1) (Ideal.mul_mem_left _ _ hgw)
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
   obtain ⟨π, hπ⟩ := IsAlgClosed.exists_pow_nat_eq
     (algebraMap D.host.E D.nd.Om (((D.host.g k : ℕ) : 𝓞 D.host.E) : D.host.E))
     (show 0 < normV (D.naut.plGw k v) - 1 by omega)
@@ -325,7 +325,7 @@ theorem GlobalTheory.TwInputs.tauG_read (hGAR : GlobalTheory.Published.GlobalArt
   have hex : ∃ s : Formalism.ConjugateSelfDual.G D.host.E D.nd.Om, NX.TameRep (D.naut.plGw k v) 1 s u := ⟨σ, hTR⟩
   have e2 : NX.tameVal (D.ntw.chi1 i (j.1 + 1) b) (D.naut.plGw k v) 1 u = D.ntw.chi1 i (j.1 + 1) b σ := by
     unfold NX.tameVal
-    rw [dif_pos hex]
+    rw [dite_eq_left hex]
     refine _root_.GlobalTheory.TameTau.char_eq_of_tameRep_congr (D.naut.plGw k v) (D.ntw.twistBaseCoefficientRing_isAdic i) _ (D.ntw.twistCharacterFamily_continuous i (j.1 + 1) b) (by omega) hm
       (fun A hA s hs => ?_) _ _ u u hex.choose_spec hTR (by rw [sub_self]; exact zero_mem _)
     rw [hN]
@@ -360,9 +360,9 @@ theorem GlobalTheory.TwInputs.exists_tau_family : GlobalTheory.Published.GlobalA
           sideEmb D.ntw i b ((t x : (↥D.LL0)ˣ) : ↥D.LL0) := by
     rintro j ⟨k, v⟩
     have hgp : (D.host.g k).Prime := D.host.g_prime k
-    haveI : Fact (D.host.g k).Prime := ⟨hgp⟩
+    have : Fact (D.host.g k).Prime := ⟨hgp⟩
     obtain ⟨p, hpg, hp⟩ := Nat.exists_infinite_primes (D.host.g k + 1)
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     obtain ⟨⟨w, hw⟩⟩ := Formalism.BasicNotions.Examples₂.PlOver.plNe D p
     obtain ⟨i₀, hi, -⟩ := Bs.cover w
     have hk : D.ntw.l i₀ ≠ D.host.g k := by rw [hi, hw]; omega
@@ -396,7 +396,7 @@ theorem GlobalTheory.TwInputs.exists_tau_family : GlobalTheory.Published.GlobalA
   intro i j b kv x h1 h2 hl
   obtain ⟨j', rfl⟩ : ∃ j', j = j' + 1 := ⟨j - 1, by omega⟩
   have h : j' + 1 - 1 < D.R.m := by omega
-  simp only [dif_pos h]
+  simp only [dite_eq_left h]
   exact ht ⟨j', h⟩ kv i b x hl
 
 end
@@ -419,7 +419,7 @@ theorem surj_conj (D : D7) {B : Type} [CommGroup B] (χ : G D.host.E D.nd.Om →
     {P P' : PlE D.host} (hPP : IsConjPl D.host P P')
     (hs : ∀ A : ValuationSubring D.nd.Om, IsPlaceOver A P → ∀ b : B, ∃ σ ∈ Ine (F := D.host.E) A, χ σ = b)
     (A : ValuationSubring D.nd.Om) (hA' : IsPlaceOver A P') (b : B) : ∃ σ ∈ Ine (F := D.host.E) A, χ σ = b := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have hst : ∀ x : D.host.E, IsCMField.complexConj D.host.E x = D.host.conj x :=
     Formalism.BasicNotions.bridge_star_holds D.R D.host
   obtain ⟨⟨j, hj⟩, -⟩ := D.ntw.cc_cm
@@ -610,7 +610,7 @@ theorem exists_rechar : ∀ (D : D7) (i : D.ntw.Tw) (j : ℕ) (b : Bool) (k : �
       ∀ z : (M.sp (NX.pG D kv)).v.adicCompletionIntegers (maximalRealSubfield D.host.E),
       Valued.v (z : (M.sp (NX.pG D kv)).v.adicCompletion (maximalRealSubfield D.host.E)) < 1 → M.redG kv z = 0 := by
     intro kv z hz
-    haveI : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
+    have : Fact (D.host.g kv.1).Prime := ⟨D.host.g_prime kv.1⟩
     exact i_red_zero _ (M.redG kv) z hz
   have hdet : ∀ (s : SplitPlace D.host.E) (κ : GAf D.host.E D.R.nV), κ ∈ Umax D.host.E D.R.nV →
       NX.InParah s.v D.R.r (NX.locM s κ) → Valued.v (NX.detT D.R.r (NX.locM s κ)) = 1 := fun s κ hU hp =>
@@ -661,7 +661,7 @@ theorem exists_rechar : ∀ (D : D7) (i : D.ntw.Tw) (j : ℕ) (b : Bool) (k : �
     rw [hχ, Units.val_mul, M.chi_eq κ h, hc, Units.coe_prod,
       Finset.prod_congr rfl fun kv _ => gVal_rechar D i k b kv (M.sp (NX.pG D kv)) (M.redG kv) (τ kv) (τ' kv) _
         (isUnit_red _ _ _ (hdet _ _ h1 (h2 kv).1)), Finset.prod_mul_distrib]
-    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe]
+    simp only [Units.coe_map, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass]
     ring
 
 end GlobalTheory.LevelRechar
@@ -978,13 +978,13 @@ def cutTop (h : p) (R M : Type) [CommRing R] [AddCommGroup M] [Module R M] : ↥
 theorem cut_free [IsDomain R] [IsPrincipalIdealRing R] [Module.Free R M] [Module.Finite R M] : Module.Free R ↥(cut p R M) := by
   by_cases h : p
   · exact Module.Free.of_equiv (cutTop h R M).symm
-  · haveI := cut_subsingleton (R := R) (M := M) h
+  · have := cut_subsingleton (R := R) (M := M) h
     infer_instance
 
 theorem cut_finite [Module.Finite R M] : Module.Finite R ↥(cut p R M) := by
   by_cases h : p
   · exact Module.Finite.equiv (cutTop h R M).symm
-  · haveI := cut_subsingleton (R := R) (M := M) h
+  · have := cut_subsingleton (R := R) (M := M) h
     infer_instance
 
 theorem cut_split [IsDomain R] [Module.Free R M] [Module.Finite R M] [Module.Free R ↥(cut p R M)] [Module.Finite R ↥(cut p R M)]
@@ -995,7 +995,7 @@ theorem cut_split [IsDomain R] [Module.Free R M] [Module.Finite R M] [Module.Fre
   · have e : (cutTop h R M).conj (cutEnd p f) = f := LinearMap.ext fun _ => rfl
     rw [← LinearEquiv.charpoly_conj (cutTop h R M), e]
     exact hf
-  · haveI := cut_subsingleton (R := R) (M := M) h
+  · have := cut_subsingleton (R := R) (M := M) h
     refine ⟨0, ?_⟩
     have h1 : LinearMap.charpoly (cutEnd p f) = 1 := by
       rw [← (LinearMap.charpoly_monic _).natDegree_eq_zero, LinearMap.charpoly_natDegree]
@@ -1049,7 +1049,7 @@ theorem cut_comap_span (S : Set V) (h0 : (0 : V) ∈ S) :
     (Submodule.span R S).comap (cutVal p R K V) = Submodule.span R (Subtype.val ⁻¹' S : Set ↥(cut p K V)) := by
   by_cases h : p
   · exact (Submodule.span_preimage_eq (f := cutVal p R K V) ⟨0, h0⟩ fun x _ => ⟨⟨x, fun hn => absurd h hn⟩, rfl⟩).symm
-  · haveI := cut_subsingleton (R := K) (M := V) h
+  · have := cut_subsingleton (R := K) (M := V) h
     exact Subsingleton.elim _ _
 
 theorem cut_span_top (S : Set M) (h0 : (0 : M) ∈ S) (hS : Submodule.span R S = ⊤) :
@@ -1057,7 +1057,7 @@ theorem cut_span_top (S : Set M) (h0 : (0 : M) ∈ S) (hS : Submodule.span R S =
   by_cases h : p
   · rw [← Submodule.comap_top (cut p R M).subtype, ← hS]
     exact (Submodule.span_preimage_eq (f := (cut p R M).subtype) ⟨0, h0⟩ fun x _ => ⟨⟨x, fun hn => absurd h hn⟩, rfl⟩)
-  · haveI := cut_subsingleton (R := R) (M := M) h
+  · have := cut_subsingleton (R := R) (M := M) h
     exact Subsingleton.elim _ _
 
 theorem cut_range {G : Type} [Group G] (ρ : G →* (V ≃ₗ[K] V)) (a : MonoidAlgebra K G) (U : Subgroup G) (ψ : U → K)
@@ -1082,7 +1082,7 @@ theorem cut_range {G : Type} [Group G] (ρ : G →* (V ≃ₗ[K] V)) (a : Monoid
       exact ⟨⟨y, fun hn => absurd h hn⟩, (h2 _).2 hy, Subtype.ext ((cut_lift ρ a _).trans e)⟩
     · rintro ⟨y, hy, e⟩
       exact ⟨y.1, (h2 _).1 hy, (cut_lift ρ a y).symm.trans (congrArg Subtype.val e)⟩
-  · haveI := cut_subsingleton (R := K) (M := V) h
+  · have := cut_subsingleton (R := K) (M := V) h
     exact Subsingleton.elim _ _
 
 end Generic

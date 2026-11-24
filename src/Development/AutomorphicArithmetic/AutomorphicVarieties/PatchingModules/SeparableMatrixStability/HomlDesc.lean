@@ -51,7 +51,7 @@ theorem UpperTheory.V.Pa.homl_desc :
     ∀ (l : ℕ) [Fact l.Prime] (Γ Γ' : Type) [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ] [TotallyDisconnectedSpace Γ] [Group Γ'] [TopologicalSpace Γ'] [IsTopologicalGroup Γ'] [CompactSpace Γ'] [TotallyDisconnectedSpace Γ'] (f : Γ →* Γ') (H : Subgroup Γ'), Continuous f → Function.Surjective f → Finite (HomL l (H.comap f)) → Finite (HomL l H) ∧ Nat.card (HomL l H) ≤ Nat.card (HomL l (H.comap f)) := by
   intro l _ Γ Γ' _ _ _ _ _ _ _ _ _ _ f H hf hsurj hfin
   let g : (H.comap f) →* H := f.subgroupComap H
-  have hg : Continuous g := (hf.comp continuous_subtype_val).subtype_mk _
+  have hg : Continuous g := (hf.comp continuous_subtypeVal).subtype_mk _
   have hgs : Function.Surjective g := by
     rintro ⟨y, hy⟩
     obtain ⟨x, rfl⟩ := hsurj y

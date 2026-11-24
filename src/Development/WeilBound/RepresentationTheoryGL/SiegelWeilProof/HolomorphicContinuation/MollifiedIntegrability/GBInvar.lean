@@ -129,7 +129,7 @@ theorem two_le_top' : (2 : WithTop ℕ∞) ≤ ((⊤ : ℕ∞) : WithTop ℕ∞)
 
 theorem dd_swap {g : Mc n → ℂ} {U : Set (Mc n)} (hU : IsOpen U) (hg : ContDiffOn ℂ (⊤ : ℕ∞) g U)
     (a b : Mc n) {x : Mc n} (hx : x ∈ U) : dd b (dd a g) x = dd a (dd b g) x := by
-  letI : IsNormableSpace ℂ (Mc n) := ⟨⟨normSeminorm ℂ (Mc n), norm_withSeminorms ℂ (Mc n)⟩⟩
+  let : IsNormableSpace ℂ (Mc n) := ⟨⟨normSeminorm ℂ (Mc n), norm_withSeminorms ℂ (Mc n)⟩⟩
   have hc : ContDiffAt ℂ (⊤ : ℕ∞) g x := hg.contDiffAt (hU.mem_nhds hx)
   have hsymm : IsSymmSndFDerivAt ℂ g x :=
     hc.isSymmSndFDerivAt (by rw [minSmoothness_of_isRCLikeNormedField]; exact two_le_top')

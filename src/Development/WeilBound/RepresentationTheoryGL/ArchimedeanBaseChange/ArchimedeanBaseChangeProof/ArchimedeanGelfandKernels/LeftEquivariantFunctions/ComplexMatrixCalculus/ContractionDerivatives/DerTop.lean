@@ -166,7 +166,7 @@ theorem key (y : abelian₂ n) : ContDiff ℂ ∞ (F y) ∧
       exact contDiff_const
     · rw [hF]
       exact hasFDerivAt_const _ _
-    · rw [ContinuousLinearMap.zero_apply, Dop_algebraMap, map_zero]
+    · rw [zero_apply, Dop_algebraMap, map_zero]
   · rintro x z ⟨hxc, Lx, hxd, hxL⟩ ⟨hzc, Lz, hzd, hzL⟩
     have hF : F (x + z) = fun g => F x g + F z g := by
       funext g
@@ -177,14 +177,14 @@ theorem key (y : abelian₂ n) : ContDiff ℂ ∞ (F y) ∧
       exact hxc.add hzc
     · rw [hF]
       exact hxd.add hzd
-    · rw [ContinuousLinearMap.add_apply, hxL, hzL, map_add (f := _), map_add (f := _)]
+    · rw [add_apply, hxL, hzL, map_add (f := _), map_add (f := _)]
   · rintro x m ⟨hxc, Lx, hxd, hxL⟩
     rw [F_ι_mul]
     have hd := (Phi n).hasFDerivAt_of_bilinear (mvL m).hasFDerivAt hxd
     have hc : ContDiff ℂ ∞ (fun g => Phi n (mvL m g) (F x g)) :=
       ContDiff.clm_apply ((Phi n).contDiff.comp (mvL m).contDiff) hxc
     refine ⟨hc, _, hd, fun B => ?_⟩
-    rw [ContinuousLinearMap.add_apply, ContinuousLinearMap.precompR_apply, ContinuousLinearMap.compL_apply,
+    rw [add_apply, ContinuousLinearMap.precompR_apply, ContinuousLinearMap.compL_apply,
       ContinuousLinearMap.comp_apply, ContinuousLinearMap.precompL_apply, mvL_apply, mvL_apply, mv_one', F_one,
       hxL, Phi_apply, Phi_apply, LinearEquiv.symm_apply_apply, LinearEquiv.symm_apply_apply, Dop_ι_mul, map_add,
       add_comm]

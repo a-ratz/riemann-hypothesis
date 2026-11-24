@@ -427,8 +427,8 @@ theorem eq_one_of_sums {C X : Type} [NontriviallyNormedField C] [IsUltrametricDi
   have hmC : (m : C) ≠ 0 := by
     intro h; rw [h, norm_zero] at hm; exact zero_ne_one hm
   have hm0 : m ≠ 0 := by rintro rfl; simp at hmC
-  haveI : NeZero (m : C) := ⟨hmC⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C m
+  have : NeZero (m : C) := ⟨hmC⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot C m
   have hT' : Filter.Tendsto (fun χ => w * (τ (Multiplicative.ofAdd χ) : C) * T χ) Filter.cofinite (nhds 0) := by
     rw [tendsto_zero_iff_norm_tendsto_zero] at hT ⊢
     simpa only [norm_mul, norm_char hm0 hτ, mul_one, mul_zero] using hT.const_mul ‖w‖
@@ -822,9 +822,9 @@ theorem class_sum_eq [IsAlgClosed K] {M : ℕ} (hM : ‖(M : K)‖ = 1) (σ : X 
     rw [h, norm_zero] at hM
     exact zero_ne_one hM
   have hp : 0 < M := Nat.pos_of_ne_zero (by rintro rfl; simp at h0)
-  haveI : NeZero (M : K) := ⟨h0⟩
-  haveI : NeZero M := ⟨hp.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K M
+  have : NeZero (M : K) := ⟨h0⟩
+  have : NeZero M := ⟨hp.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K M
   obtain ⟨hf, h1, -⟩ := fourier_extraction_tsum_class K X M ζ hp hM hζ σ hσ α
   obtain ⟨-, h2, -⟩ := fourier_extraction_tsum_class K X' M ζ hp hM hζ σ' hσ' α'
   have hc : M ^ finrank ℤ X = M ^ finrank ℤ X' := by
@@ -833,7 +833,7 @@ theorem class_sum_eq [IsAlgClosed K] {M : ℕ} (hM : ‖(M : K)‖ = 1) (σ : X 
   have hc' : (M : K) ^ finrank ℤ X = (M : K) ^ finrank ℤ X' := by exact_mod_cast congrArg (Nat.cast : ℕ → K) hc
   rw [← finsum_comp E hE] at h2
   simp only [hα, hs] at h2
-  haveI := Fintype.ofFinite {t : Multiplicative X →* Kˣ // t ^ M = 1}
+  have := Fintype.ofFinite {t : Multiplicative X →* Kˣ // t ^ M = 1}
   rw [finsum_eq_sum_of_fintype] at h1 h2
   apply mul_left_cancel₀ (pow_ne_zero (finrank ℤ X') h0)
   rw [← h2, ← hc', mul_left_comm, ← h1, Finset.mul_sum]
@@ -1363,7 +1363,7 @@ theorem rank_le (μ : Match N N' n) (hn : 1 < n) {k : ℕ} (hk : k = n ^ 1)
     AddSubgroup.index_range_nsmul N.X k
   have h2 : Nat.card (N'.X ⧸ (nsmulAddMonoidHom k : N'.X →+ N'.X).range) = k ^ Module.finrank ℤ N'.X :=
     AddSubgroup.index_range_nsmul N'.X k
-  haveI : Finite (N'.X ⧸ (nsmulAddMonoidHom k : N'.X →+ N'.X).range) :=
+  have : Finite (N'.X ⧸ (nsmulAddMonoidHom k : N'.X →+ N'.X).range) :=
     Nat.finite_of_card_ne_zero (by rw [h2]; positivity)
   rw [← Nat.pow_le_pow_iff_right hk1, ← h1, ← h2]
   refine card_le_of_rel (fun a b => ∃ p p', μ.r k p p' ∧ a = QuotientAddGroup.mk p.1.1.toAdd ∧
@@ -1389,7 +1389,7 @@ theorem tors_le (μ : Match N N' n) (hn : 1 < n) {k a a' : ℕ} (hk : k = n ^ 1)
     rw [Nat.card_congr e.toEquiv, Nat.card_congr Multiplicative.toAdd, Nat.card_fun]; simp
   have h2 : Nat.card (powMonoidHom k : N'.Gt →* N'.Gt).ker = k ^ a' := by
     rw [Nat.card_congr e'.toEquiv, Nat.card_congr Multiplicative.toAdd, Nat.card_fun]; simp
-  haveI : Finite (powMonoidHom k : N'.Gt →* N'.Gt).ker :=
+  have : Finite (powMonoidHom k : N'.Gt →* N'.Gt).ker :=
     Nat.finite_of_card_ne_zero (by rw [h2]; positivity)
   rw [← Nat.pow_le_pow_iff_right hk1, ← h1, ← h2]
   refine card_le_of_rel (fun x x' => μ.r k (ofG x.1 x.2) (ofG x'.1 x'.2)) (fun x => ?_) ?_

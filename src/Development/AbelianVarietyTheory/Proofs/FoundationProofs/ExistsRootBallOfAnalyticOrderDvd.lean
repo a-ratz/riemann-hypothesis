@@ -98,7 +98,7 @@ theorem exists_root_of_ne_zero (g : ℂ → ℂ) (m : ℕ) (c : ℂ) (R : ℝ) (
     exact (((hL z hz).differentiableAt.div_const (m : ℂ)).cexp).differentiableWithinAt
   · intro z hz
     have hm' : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
-    rw [← Complex.exp_nat_mul, mul_div_cancel₀ _ hm', hexp z hz]
+    rw [← Complex.exp_natCast_mul, mul_div_cancel₀ _ hm', hexp z hz]
 
 end GlobalTheory.KZ.RootDisc
 
@@ -115,7 +115,7 @@ theorem exists_root_disc : ∀ (h : ℂ → ℂ) (m : ℕ) (c : ℂ) (R : ℝ), 
   have htop : ∀ u : U, meromorphicOrderAt h u ≠ ⊤ := by
     rintro ⟨u, hu⟩
     obtain ⟨k, hk⟩ := hord u hu
-    rw [(hh u hu).meromorphicOrderAt_eq, hk, ENat.map_coe]
+    rw [(hh u hu).meromorphicOrderAt_eq, hk, ENat.map_natCast]
     exact WithTop.coe_ne_top
   have hfin : (MeromorphicOn.divisor h U).support.Finite := (MeromorphicOn.divisor h U).finiteSupport (isCompact_closedBall c R)
   obtain ⟨g, hg, hgne, hgeq⟩ := hmer.extract_zeros_poles htop hfin
@@ -125,7 +125,7 @@ theorem exists_root_disc : ∀ (h : ℂ → ℂ) (m : ℕ) (c : ℂ) (R : ℝ), 
     intro u hu
     obtain ⟨k, hk⟩ := hord u hu
     refine ⟨k, ?_⟩
-    rw [hd, MeromorphicOn.divisor_apply hmer hu, (hh u hu).meromorphicOrderAt_eq, hk, ENat.map_coe, WithTop.untop₀_coe]
+    rw [hd, MeromorphicOn.divisor_apply hmer hu, (hh u hu).meromorphicOrderAt_eq, hk, ENat.map_natCast, WithTop.untop₀_coe]
   let kk : ℂ → ℕ := fun u => (d u).toNat / m
   have hkk : ∀ u ∈ U, d u = ((m * kk u : ℕ) : ℤ) := by
     intro u hu

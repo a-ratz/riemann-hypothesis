@@ -88,11 +88,11 @@ private theorem prin_irr {n : ℕ} (χ : Fin n → kˣ →* ℂˣ) (hχ : ∀ i,
   have hnt {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
       [Module ℂ W] {σ : Representation ℂ G W} {ρ : Representation ℂ G V}
       (h : IsSubquotient σ ρ) (hW : Nontrivial W) : Nontrivial V := by
-    letI := hW
+    let := hW
     obtain ⟨S, f, hf⟩ := h
     have := hf.nontrivial
     exact Subtype.val_injective.nontrivial (α := S.toSubmodule)
-  letI := hnt (GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries
+  let := hnt (GlobalTheory.PermPrin.isSubquotient_multiProd_prinSeries
     (Equiv.sigmaUnique (Fin n) fun _ => Fin 1) χ) hMnt
   have heq {G V W : Type} [Group G] [AddCommGroup V] [Module ℂ V] [AddCommGroup W]
       [Module ℂ W] {σ : Representation ℂ G W} {ρ : Representation ℂ G V}
@@ -100,7 +100,7 @@ private theorem prin_irr {n : ℕ} (χ : Fin n → kˣ →* ℂˣ) (hχ : ∀ i,
     obtain ⟨S, f, hf⟩ := h
     obtain ⟨y, hy⟩ := exists_ne (0 : W)
     obtain ⟨v, rfl⟩ := hf y
-    haveI : IsSimpleOrder (Subrepresentation ρ) := hρ
+    have : IsSimpleOrder (Subrepresentation ρ) := hρ
     rcases eq_bot_or_eq_top S with rfl | rfl
     · exact absurd (by rw [show v = 0 from Subtype.ext v.2, map_zero]) hy
     let F : ρ.IntertwiningMap σ := f.comp (topEquiv ρ).symm.toIntertwiningMap

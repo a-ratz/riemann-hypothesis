@@ -50,7 +50,7 @@ namespace GlobalTheory.BadCount
 theorem embReg_of_free_permuted_summands : ∀ (K Γ V X : Type) [Field K] [Group Γ] [Finite Γ] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Fintype X] [DecidableEq X] (ρ : Representation K Γ V) (H : Subgroup Γ) [MulAction H X], (∀ (h : H) (x : X), h • x = x → h = 1) → ∀ (A : X → Submodule K V), DirectSum.IsInternal A → (∀ (h : H) (x : X), ∀ v ∈ A x, ρ h v ∈ A (h • x)) → ∃ n : ℕ, EmbReg ρ H n ∧ n * Nat.card H = finrank K V := by
   intro K Γ V X _ _ _ _ _ _ _ _ ρ H _ hfree A hA hmap
   classical
-  haveI : Fintype H := Fintype.ofFinite H
+  have : Fintype H := Fintype.ofFinite H
   have hinv : ∀ (g : Γ) (v : V), ρ g⁻¹ (ρ g v) = v := by
     intro g v
     rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
@@ -101,7 +101,7 @@ theorem embReg_of_free_permuted_summands : ∀ (K Γ V X : Type) [Field K] [Grou
     rwa [inv_smul_smul] at this
 
   let O := MulAction.orbitRel.Quotient H X
-  haveI : Fintype O := Fintype.ofFinite O
+  have : Fintype O := Fintype.ofFinite O
   let β : H × O → X := fun p => p.1 • p.2.out
   have hβ : Function.Bijective β := by
     constructor

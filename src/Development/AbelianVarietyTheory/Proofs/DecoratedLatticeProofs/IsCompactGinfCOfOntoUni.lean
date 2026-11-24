@@ -98,7 +98,7 @@ theorem isCompact_ginfC_of_ontoUni (D : D7) (θ : InfFam D) (V : HSp D) (B : D.w
   let Ψ : (D.what₂.Tau → unitaryGroup (Fin V.rank) ℂ) → GA D V := fun u => Formalism.IndefR.Eqv.famH D V _ (hU u)
   have hg : Continuous fun u : (D.what₂.Tau → unitaryGroup (Fin V.rank) ℂ) =>
       fun τ => B τ * (u τ : Matrix (Fin V.rank) (Fin V.rank) ℂ) * (B τ)⁻¹ :=
-    continuous_pi fun τ => (continuous_const.matrix_mul (continuous_subtype_val.comp (continuous_apply τ))).matrix_mul
+    continuous_pi fun τ => (continuous_const.matrix_mul (continuous_subtypeVal.comp (continuous_apply τ))).matrix_mul
       continuous_const
   have hΨ : Continuous Ψ := by
     refine continuous_induced_rng.2 (Units.continuous_iff.2 ⟨?_, ?_⟩)
@@ -122,33 +122,33 @@ namespace GlobalTheory.SeeSaw
 theorem integral_eq_classSum : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (B : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ), IsInfFam θ → OntoUni (fun k : GinfC V => inB θ V B k.1) → BorelSpace (GinfC V) ∧ CompactSpace (GinfC V) ∧ (∀ g ∈ GfC V, ∀ k ∈ GinfC V, g * k = k * g) ∧ ∃ ν : Measure (GinfC V), IsProbabilityMeasure ν ∧ ν.IsMulLeftInvariant ∧ ∀ (v : Vol V) (U : Subgroup (GA D V)) (cl : Type) [Fintype cl] (h : cl → GA D V), IsReps V U h → 0 < volLev v U ∧ (∀ a, 0 < stabOrd U (h a)) ∧ ∀ Φ : GA D V → ℂ, Continuous Φ → (∀ γ ∈ GQ V, ∀ g, Φ (γ * g) = Φ g) → (∀ κ ∈ U, ∀ g, Φ (g * κ) = Φ g) → ∫ g in v.𝓕, Φ g ∂v.μ = (volLev v U : ℂ) * ∑ a, ((stabOrd U (h a) : ℕ) : ℂ)⁻¹ * ∫ k, Φ (h a * k.1) ∂ν := by
   intro D θ V B hθ hr
   have hT := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D V
-  haveI := hT.1
-  haveI := hT.2.1
-  haveI := hT.2.2.1
-  haveI := hT.2.2.2.1
-  haveI := hT.2.2.2.2.1
-  haveI := hT.2.2.2.2.2.1
-  haveI := hT.2.2.2.2.2.2
+  have := hT.1
+  have := hT.2.1
+  have := hT.2.2.1
+  have := hT.2.2.2.1
+  have := hT.2.2.2.2.1
+  have := hT.2.2.2.2.2.1
+  have := hT.2.2.2.2.2.2
   have hK : IsCompact (GinfC V : Set (GA D V)) := isCompact_ginfC_of_ontoUni D θ V B hθ hr
-  haveI : CompactSpace (GinfC V) := isCompact_iff_compactSpace.mp hK
-  haveI : BorelSpace (GinfC V) := Subtype.borelSpace _
+  have : CompactSpace (GinfC V) := isCompact_iff_compactSpace.mp hK
+  have : BorelSpace (GinfC V) := Subtype.borelSpace _
   have hcf : ∀ {a b : GA D V}, a ∈ GinfC V → b ∈ GfC V → a * b = b * a := fun ha hb =>
     Formalism.IndefR.Eqv.Act.comm_inf_fin ha hb
   refine ⟨inferInstance, inferInstance, fun g hg k hk => (hcf hk hg).symm, ?_⟩
   let ν : Measure (GinfC V) := Measure.haarMeasure ⊤
-  haveI : IsProbabilityMeasure ν :=
+  have : IsProbabilityMeasure ν :=
     ⟨by simpa using (Measure.haarMeasure_self (K₀ := (⊤ : TopologicalSpace.PositiveCompacts (GinfC V))))⟩
   refine ⟨ν, inferInstance, inferInstance, ?_⟩
   intro v U cl _ h hU
-  haveI := v.haar
-  haveI : v.μ.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V v.μ v.haar
-  haveI : (GinfC V).Normal := inferInstanceAs ((finHom V).ker.Normal)
+  have := v.haar
+  have : v.μ.IsMulRightInvariant := GlobalTheory.AdelicPointsUnimod.isMulRightInvariant_of_isHaarMeasure D V v.μ v.haar
+  have : (GinfC V).Normal := inferInstanceAs ((finHom V).ker.Normal)
   let K : Subgroup (GA D V) := GinfC V ⊔ U
   have hKset : (K : Set (GA D V)) = {g | ∃ k ∈ GinfC V, ∃ κ ∈ U, g = k * κ} := by
     show ((GinfC V ⊔ U : Subgroup (GA D V)) : Set (GA D V)) = _
     rw [Subgroup.normal_mul]
     ext g
-    simp only [Set.mem_mul, SetLike.mem_coe, Set.mem_setOf_eq]
+    simp only [Set.mem_mul, SetLike.mem_coe, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨k, hk, κ, hκ, rfl⟩
       exact ⟨k, hk, κ, hκ, rfl⟩
@@ -190,7 +190,7 @@ theorem integral_eq_classSum : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (B : D.w
     intro i
     have hC : IsCompact ((fun y => h i * y * (h i)⁻¹) '' (K : Set (GA D V))) :=
       hKc.image ((continuous_const.mul continuous_id).mul continuous_const)
-    have hcl : IsClosed (GQ V : Set (GA D V)) := Subgroup.isClosed_of_discrete
+    have hcl : IsClosed (GQ V : Set (GA D V)) := Subgroup.isClosed_of_discreteTopology
     have hTc : IsCompact (((↑) : GQ V → GA D V) ⁻¹' ((fun y => h i * y * (h i)⁻¹) '' (K : Set (GA D V)))) :=
       hcl.isClosedEmbedding_subtypeVal.isCompact_preimage hC
     refine (hTc.finite_of_discrete.image Subtype.val).subset ?_
@@ -218,7 +218,7 @@ theorem integral_eq_classSum : ∀ (D : D7) (θ : InfFam D) (V : HSp D) (B : D.w
     exact (Set.ncard_pos (hfin a)).mpr ⟨1, (GQ V).one_mem, by simpa using K.one_mem⟩
   intro Φ hΦc hΦl hΦr
   obtain ⟨-, he⟩ := GlobalTheory.integral_fundamentalDomain_eq_sum_doubleCoset_avg (GA D V) v.μ (GQ V) K U v.𝓕 v.fund hKo hKfin
-    (GinfC V) ν (GinfC V).subtype continuous_subtype_val
+    (GinfC V) ν (GinfC V).subtype continuous_subtypeVal
     (fun k hk => by
       obtain ⟨a, ha, κ, hκ, rfl⟩ := (hmemK _).1 hk
       exact ⟨κ, hκ, ⟨a, ha⟩, hcf ha (hU.le hκ)⟩)

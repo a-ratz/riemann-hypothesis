@@ -66,8 +66,8 @@ theorem exists_equiv_map_lattice {O K U U' : Type} [CommRing O] [IsDomain O] [Is
   have key : ∀ {V : Type} [AddCommGroup V] [Module K V] [Module O V] [IsScalarTower O K V] (C : Submodule O V)
       [C.IsFullLattice K], ∃ c : Module.Basis (Fin (Module.finrank K V)) K V, Submodule.span O (Set.range c) = C := by
     intro V _ _ _ _ C _
-    haveI := Submodule.IsLattice.free K C
-    haveI := Submodule.IsLattice.finite K C
+    have := Submodule.IsLattice.free K C
+    have := Submodule.IsLattice.finite K C
     let c₀ := Module.finBasis O C
     let c₁ := c₀.extendOfIsFullLattice K
     have hn : Module.finrank K V = Module.finrank O C := by
@@ -120,13 +120,13 @@ theorem exists_semilinear {L V O K U : Type} [Field L] [AddCommGroup V] [Module 
     rw [heq]
     exact h1 (b₀ i)
   let A : Submodule O (Fin (Module.finrank L V) → K) := Submodule.span O (f₀ '' S)
-  haveI : A.IsFullLattice K :=
+  have : A.IsFullLattice K :=
     { toIsLattice := Submodule.IsLattice.of_fg _ (Submodule.fg_span (hS.image _))
       span_eq_top := by rw [show A = Submodule.span O (f₀ '' S) from rfl, Submodule.span_span_of_tower, hf₀ S hspan] }
   obtain ⟨g, hg⟩ := exists_equiv_map_lattice (K := K) A B (by rw [← h]; simp)
   refine ⟨g.toLinearMap.comp f₀, fun ι b => ?_, ?_⟩
-  · haveI : Finite ι := Module.Finite.finite_basis b
-    haveI := Fintype.ofFinite ι
+  · have : Finite ι := Module.Finite.finite_basis b
+    have := Fintype.ofFinite ι
     have h1 : Submodule.span K (Set.range fun i => (g.toLinearMap.comp f₀) (b i)) = ⊤ := by
       have h2 : (Set.range fun i => (g.toLinearMap.comp f₀) (b i)) = g.toLinearMap '' (f₀ '' Set.range b) := by
         rw [← Set.range_comp, ← Set.range_comp]; rfl
@@ -142,8 +142,8 @@ theorem form_gen {L V M ι : Type} [Field L] [AddCommGroup V] [Module L V] [AddC
     (hb : LinearIndependent ℂ (fun i => j (b i)) ∧ Submodule.span ℂ (Set.range fun i => j (b i)) = ⊤)
     (T : Finset M) (hT : Submodule.span ℂ (T : Set M) = ⊤) (hsub : ∀ x ∈ T, x ∈ Set.range j) :
     Module.Finite L V ∧ {x | j x ∈ T}.Finite ∧ Submodule.span L {x | j x ∈ T} = ⊤ := by
-  haveI : Finite ι := hb.1.finite
-  haveI := Fintype.ofFinite ι
+  have : Finite ι := hb.1.finite
+  have := Fintype.ofFinite ι
   let B : Module.Basis ι ℂ M := Module.Basis.mk hb.1 hb.2.ge
   have hB : ∀ i, B i = j (b i) := fun i => by simp [B]
   have key : ∀ l : V →ₗ[L] L, ∃ l' : M →ₗ[ℂ] ℂ, ∀ x, l' (j x) = σ (l x) := fun l => by
@@ -179,9 +179,9 @@ theorem baseChange_lattice {A B V : Type} [CommRing A] [IsDomain A] [CommRing B]
     (hspan : Submodule.span (FractionRing A) (Λ : Set V) = ⊤) :
     Module.finrank (FractionRing B) (FractionRing B ⊗[A] V) = Module.finrank (FractionRing A) V ∧
       (Submodule.span B ((TensorProduct.mk A (FractionRing B) V 1) '' (Λ : Set V))).IsFullLattice (FractionRing B) := by
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinj
-  letI : Algebra (FractionRing A) (FractionRing B) := FractionRing.liftAlgebra A (FractionRing B)
-  haveI : IsScalarTower A (FractionRing A) (FractionRing B) := FractionRing.isScalarTower_liftAlgebra A (FractionRing B)
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hinj
+  let : Algebra (FractionRing A) (FractionRing B) := FractionRing.liftAlgebra A (FractionRing B)
+  have : IsScalarTower A (FractionRing A) (FractionRing B) := FractionRing.isScalarTower_liftAlgebra A (FractionRing B)
   refine ⟨?_, { toIsLattice := Submodule.IsLattice.of_fg _ ?_, span_eq_top := ?_ }⟩
   · rw [← (TensorProduct.AlgebraTensorModule.cancelBaseChange A (FractionRing A) (FractionRing B) (FractionRing B) V).finrank_eq,
       Module.finrank_baseChange, (NChoice.fracEquiv A V).finrank_eq]
@@ -220,9 +220,9 @@ theorem twOK_one (i : X.Tw) (k : ℕ) : IntegralHeckeForms.TwOK i k ∅ (1 : G D
 theorem th_fg (h : IntegralHeckeForms.admT4 Y E) (i : X.Tw) (hi : X.NonzeroIndexPlace i) (j : ℕ) (hj : j ∈ Finset.Icc 1 D.R.m) (b : Bool) :
     (IntegralHeckeForms.Th Y i j b (IntegralHeckeForms.SgJ Y E i j b)).FG := by
   have h1 := h i hi j hj b 0 ∅ 1 (twOK_one i 0) _ subset_rfl
-  haveI := X.Ok_fin i 0
-  haveI : FaithfulSMul (X.O i) (X.Ok i 0) := (faithfulSMul_iff_algebraMap_injective _ _).2 (X.Ok_inj i 0)
-  haveI : Module.FaithfullyFlat (X.O i) (X.Ok i 0) := Module.FaithfullyFlat.of_flat_of_isLocalHom
+  have := X.Ok_fin i 0
+  have : FaithfulSMul (X.O i) (X.Ok i 0) := (faithfulSMul_iff_algebraMap_injective _ _).2 (X.Ok_inj i 0)
+  have : Module.FaithfullyFlat (X.O i) (X.Ok i 0) := Module.FaithfullyFlat.of_flat_of_isLocalHom
   have h2 : (((Y.MtLat i j b 0 ∅ 1).map (Y.thP i j b 0 ∅ 1)).restrictScalars (X.O i)).FG :=
     ((Y.MtLat_fg i j b 0 ∅ 1).map _).restrictScalars
   let m := TensorProduct.mk (X.O i) (X.Ok i 0) (Y.Fm i j b) 1

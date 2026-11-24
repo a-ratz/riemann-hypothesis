@@ -343,7 +343,7 @@ theorem codim_pf : Codim := by
     refine ⟨b, hb, ?_⟩
     have hz : A.mkQ a = 0 := by simpa [Submodule.Quotient.mk_eq_zero] using ha
     simp only [f, LinearMap.comp_apply, ← hab, map_add (f := _), hz, zero_add]
-  haveI : FiniteDimensional k (B.map A.mkQ) :=
+  have : FiniteDimensional k (B.map A.mkQ) :=
     Module.Finite.map B A.mkQ
   have h1 : Module.finrank k (LinearMap.range f) ≤ Module.finrank k (B.map A.mkQ) :=
     Submodule.finrank_mono hrange
@@ -375,7 +375,7 @@ theorem UpperTheory.Gal.Gen.cover_pf :
   have ho : IsOpen (((lev K w₀ (J 0)).subgroupOf (finU (E := E) (n := a)) : Subgroup (finU (E := E) (n := a))) : Set (finU (E := E) (n := a))) := by
     refine Subgroup.isOpen_of_mem_nhds _ (g := 1) ?_
     obtain ⟨N, hN, h1, hNC⟩ := hlev.isOpen
-    refine Filter.mem_of_superset ((hN.preimage continuous_subtype_val).mem_nhds h1) fun y hy => ?_
+    refine Filter.mem_of_superset ((hN.preimage continuous_subtypeVal).mem_nhds h1) fun y hy => ?_
     exact Subgroup.mem_subgroupOf.2 (hNC ⟨hy, y.2⟩)
   obtain ⟨S, hS⟩ := GlobalTheory.DefU.ClassFin.classSet_finite E a _ ho
   refine ⟨S, fun n => ?_⟩
@@ -675,7 +675,7 @@ theorem fixVec_pf : FixVec := by
   let act : H → (V ⧸ U) →ₗ[ZMod l] (V ⧸ U) :=
     fun h => U.mapQ U (ρ h) (fun u hu => hU h u hu)
   have act_mk : ∀ (h : H) (v : V), act h (U.mkQ v) = U.mkQ (ρ h v) := fun h v => rfl
-  letI : MulAction H (V ⧸ U) :=
+  let : MulAction H (V ⧸ U) :=
     { smul := fun h x => act h x
       one_smul := by
         intro x
@@ -690,8 +690,8 @@ theorem fixVec_pf : FixVec := by
         rw [act_mk, act_mk, act_mk]
         simp }
   have smul_def : ∀ (h : H) (x : V ⧸ U), h • x = act h x := fun h x => rfl
-  haveI : Nontrivial (V ⧸ U) := Submodule.Quotient.nontrivial_iff.2 hne
-  haveI : Finite (V ⧸ U) := Finite.of_surjective U.mkQ U.mkQ_surjective
+  have : Nontrivial (V ⧸ U) := Submodule.Quotient.nontrivial_iff.2 hne
+  have : Finite (V ⧸ U) := Finite.of_surjective U.mkQ U.mkQ_surjective
   have hcard : l ∣ Nat.card (V ⧸ U) := by
     rw [Module.natCard_eq_pow_finrank (K := ZMod l), Nat.card_zmod]
     exact dvd_pow_self l Module.finrank_pos.ne'
@@ -757,7 +757,7 @@ open MeasureTheory GroundTheory.Automorphic GroundTheory.Automorphic.Spherical U
 private theorem qInv_props (F : Type) [Field F] [ValuativeRel F] [TopologicalSpace F]
     [IsNonarchimedeanLocalField F] : 0 ≤ ((qF F : ℝ))⁻¹ ∧ ((qF F : ℝ))⁻¹ < 1 := by
   have h : 1 < qF F := by
-    haveI := fintypeResidue' (F := F)
+    have := fintypeResidue' (F := F)
     exact Finite.one_lt_card
   have h' : (1 : ℝ) < (qF F : ℝ) := by exact_mod_cast h
   exact ⟨by positivity, inv_lt_one_of_one_lt₀ h'⟩
@@ -800,10 +800,10 @@ theorem UpperTheory.Gal.Gen.gammaInt_pf :
       simp
     by_cases h0 : l = 0
     · subst h0
-      rw [if_pos rfl, halfModulus_zero, one_mul, if_pos]
+      rw [ite_eq_left rfl, halfModulus_zero, one_mul, ite_eq_left]
       rw [hd0, mul_one]
       exact mul_mem hk₁ hk₂
-    · rw [if_neg h0, mul_zero, if_neg]
+    · rw [ite_eq_right h0, mul_zero, ite_eq_right]
       intro hg
       have hk : k₁⁻¹ * (k₁ * Cartan.diagPow F n l * k₂) * k₂⁻¹ ∈ GLnLocal.integralGL F n :=
         mul_mem (mul_mem (inv_mem hk₁) hg) (inv_mem hk₂)
@@ -1008,7 +1008,7 @@ theorem UpperTheory.Gal.Gen.levelEx_pf :
     rintro _ ⟨x, _, rfl⟩
     exact x.2
   have hCc : IsCompact (C : Set (UA E a)) := by
-    have h := hK0c.image (continuous_subtype_val (p := fun x => x ∈ finU (E := E) (n := a)))
+    have h := hK0c.image (continuous_subtypeVal (p := fun x => x ∈ finU (E := E) (n := a)))
     exact h
   have hCo : ∃ N : Set (UA E a), IsOpen N ∧ 1 ∈ N ∧ N ∩ finU (E := E) (n := a) ⊆ C := by
     obtain ⟨t, ht, hte⟩ := isOpen_induced_iff.1 hK0o
@@ -1199,12 +1199,12 @@ end
 theorem UpperTheory.Gal.Gen.powNhds_pf :
     UpperTheory.Gal.Gen.PowNhds := by
   intro E _ _ w a N hN V hV
-  letI : NontriviallyNormedField (w.adicCompletion E) :=
+  let : NontriviallyNormedField (w.adicCompletion E) :=
     Valued.toNontriviallyNormedField _ (WithZero (Multiplicative ℤ))
-  haveI : CharZero (w.adicCompletion E) :=
+  have : CharZero (w.adicCompletion E) :=
     charZero_of_injective_algebraMap (algebraMap E (w.adicCompletion E)).injective
-  letI : NormedRing (Matrix (Fin a) (Fin a) (w.adicCompletion E)) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra (w.adicCompletion E) (Matrix (Fin a) (Fin a) (w.adicCompletion E)) :=
+  let : NormedRing (Matrix (Fin a) (Fin a) (w.adicCompletion E)) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra (w.adicCompletion E) (Matrix (Fin a) (Fin a) (w.adicCompletion E)) :=
     Matrix.linftyOpNormedAlgebra
   haveI : @CompleteSpace (Matrix (Fin a) (Fin a) (w.adicCompletion E))
       (@Matrix.linftyOpNormedRing (Fin a) (w.adicCompletion E) _ _ _).toUniformSpace :=
@@ -1275,11 +1275,11 @@ theorem UpperTheory.Gal.Gen.ratFin_pf :
   intro E _ _ _ a
   refine ⟨?_, ?_⟩
   · intro Z hZ
-    haveI : DiscreteTopology (ratGL E a).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E a
+    have : DiscreteTopology (ratGL E a).range := GroundTheory.Automorphic.AdelicGLn.discreteTopology_rationalGL E a
     set_option synthInstance.maxHeartbeats 200000 in
-    have hcl : IsClosed (((ratGL E a).range : Subgroup (GA E a)) : Set (GA E a)) := Subgroup.isClosed_of_discrete
+    have hcl : IsClosed (((ratGL E a).range : Subgroup (GA E a)) : Set (GA E a)) := Subgroup.isClosed_of_discreteTopology
     let K : Set (GA E a) := Subtype.val '' Z
-    have hK : IsCompact K := hZ.image continuous_subtype_val
+    have hK : IsCompact K := hZ.image continuous_subtypeVal
     have hKG : IsCompact (K ∩ ((ratGL E a).range : Set (GA E a))) := hK.inter_right hcl
     let t : Set (ratGL E a).range := {x | (x : GA E a) ∈ K}
     have himg : Subtype.val '' t = K ∩ ((ratGL E a).range : Set (GA E a)) := by
@@ -1482,7 +1482,7 @@ theorem UpperTheory.Gal.Gen.smoothAt_pf :
   let p : GL (Fin a) (w₀.adicCompletion E) → finU (E := E) (n := a) := fun y =>
     ⟨(e.symm y).1, (Subgroup.mem_inf.1 (e.symm y).2).1⟩
   have hp : Continuous p :=
-    Continuous.subtype_mk (continuous_subtype_val.comp e.symm.continuous) _
+    Continuous.subtype_mk (continuous_subtypeVal.comp e.symm.continuous) _
   have hp1 : p 1 = 1 := by
     apply Subtype.ext
     simp [p]
@@ -1568,7 +1568,7 @@ open MeasureTheory GroundTheory.Automorphic.Spherical UpperTheory.Gal.Gen
 theorem UpperTheory.Gal.Gen.stepCore_pf :
     UpperTheory.Gal.Gen.AlgC → UpperTheory.Gal.Gen.Codim → UpperTheory.Gal.Gen.PartFacts → UpperTheory.Gal.Gen.StepCore := by
   intro hAlg hCod hPF E _ _ _ l _ ι a W C C' hCfin H _ _ hH lam hsurj hC'C hker ℓ hinf hright haut P hfd hcard f hf
-  letI : Fintype H := Fintype.ofFinite H
+  let : Fintype H := Fintype.ofFinite H
   have hex : ∀ φ : H → ℂ, ∃ F : algForms W, ∀ v g, F.1 v g = φ (ℓ g) * f.1 v g := fun φ =>
     GlobalTheory.T.exists_algebraicModularForm_mul_archInvariant E a W f (fun g => φ (ℓ g)) (haut φ) (fun g x hx => by simp only [hinf g x hx])
   choose Ψ₀ hΨ₀ using hex
@@ -1635,12 +1635,12 @@ theorem UpperTheory.Gal.Gen.step_pf :
   obtain ⟨n, hfd, hcard⟩ := hCG E a w₀ hs K hK J hJ W S Φ hS
   obtain ⟨lv0, mem0, inJ0, -, sec0, tr0⟩ := hLev E a w₀ hs K hK (J 0) (hJ.isOpen 0) (hJ.compact 0)
   obtain ⟨-, memn, inJn, -, -, -⟩ := hLev E a w₀ hs K hK (J n) (hJ.isOpen n) (hJ.compact n)
-  haveI hnorm : ((J n).subgroupOf (J 0)).Normal := ⟨fun x hx g => by
+  have hnorm : ((J n).subgroupOf (J 0)).Normal := ⟨fun x hx g => by
     rw [Subgroup.mem_subgroupOf] at hx ⊢
     simpa using hJ.normal n g.1 g.2 x.1 hx⟩
-  haveI : CompactSpace (J 0) := isCompact_iff_compactSpace.1 (hJ.compact 0)
-  haveI hfin : Finite (J 0 ⧸ (J n).subgroupOf (J 0)) :=
-    Subgroup.quotient_finite_of_isOpen _ ((hJ.isOpen n).preimage continuous_subtype_val)
+  have : CompactSpace (J 0) := isCompact_iff_compactSpace.1 (hJ.compact 0)
+  have hfin : Finite (J 0 ⧸ (J n).subgroupOf (J 0)) :=
+    Subgroup.quotient_finite_of_isOpen _ ((hJ.isOpen n).preimage continuous_subtypeVal)
   have hp : IsPGroup l (J 0 ⧸ (J n).subgroupOf (J 0)) := by
     intro q
     obtain ⟨x, rfl⟩ := QuotientGroup.mk_surjective q
@@ -1819,8 +1819,8 @@ theorem UpperTheory.Gal.Gen.tyStep_pf :
   intro hLev hEll hKer hCS hTw E _ _ _ l _ ι a w₀ hs K hK W J hJo hJc htf m θ f hf
   classical
   obtain ⟨hLvl, -, hC, -, -, -⟩ := hLev E a w₀ hs K hK J hJo hJc
-  haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
-  haveI : Finite (Multiplicative (ZMod (l ^ m))) :=
+  have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : Finite (Multiplicative (ZMod (l ^ m))) :=
     inferInstanceAs (Finite (ZMod (l ^ m)))
   let lam : (lev K w₀ J) →* Multiplicative (ZMod (l ^ m)) :=
     θ.comp (((cLoc w₀).comp (lev K w₀ J).subtype).codRestrict J fun c => hC c.1 c.2)

@@ -62,7 +62,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Cusp.Dict.TangentDim
 
 theorem ringHom_injective {E : Type} [Field E] [NumberField E] (s : 𝓞 E →+* ℂ) : Function.Injective s := by
   rw [RingHom.injective_iff_ker_eq_bot]
-  apply Ideal.eq_bot_of_comap_eq_bot (R := ℤ)
+  apply Ideal.eq_bot_of_under_eq_bot (R := ℤ)
   ext n
   simp [Ideal.mem_comap, RingHom.mem_ker]
 

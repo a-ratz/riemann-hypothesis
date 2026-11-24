@@ -58,9 +58,9 @@ instance tagMx (m n : ℕ) : IsTopologicalAddGroup (Mx D m n) :=
   inferInstanceAs (IsTopologicalAddGroup (Fin m → Fin n → AE D))
 
 theorem countable_ratMx (m n : ℕ) : Countable (ratMx D m n) := by
-  haveI : Countable D.host.E :=
+  have : Countable D.host.E :=
     Countable.of_equiv _ (Module.finBasis ℚ D.host.E).equivFun.symm.toEquiv
-  haveI : Countable (Matrix (Fin m) (Fin n) D.host.E) :=
+  have : Countable (Matrix (Fin m) (Fin n) D.host.E) :=
     inferInstanceAs (Countable (Fin m → Fin n → D.host.E))
   unfold ratMx
   have hs : Function.Surjective (fun x : Matrix (Fin m) (Fin n) D.host.E =>

@@ -84,7 +84,7 @@ theorem UpperTheory.V.Z.Tf.Orb.quotConj :
   obtain ⟨s2, i2, -⟩ := hC G H' hH' hc' μ' h2
   have key : ∀ f : G → ℝ≥0∞, Measurable f → ∫⁻ h : H, f (y⁻¹ * h * y) ∂μ = ∫⁻ h : H', f h ∂μ' := fun f hf => by
     rw [← lintegral_map hf (g := fun x : H => y⁻¹ * (x : G) * y) (by fun_prop), hm,
-      lintegral_map hf (g := fun x : H' => (x : G)) measurable_subtype_coe]
+      lintegral_map hf (g := fun x : H' => (x : G)) measurable_subtypeVal]
   by_cases hex : ∃ ρ, IsQuotNormaliser H μ ρ
   · obtain ⟨ρ, hρ⟩ := hex
     have hρ' : IsQuotNormaliser H' μ' fun g => ρ (y * g) := ⟨hρ.1.comp (measurable_const_mul y), fun g => by

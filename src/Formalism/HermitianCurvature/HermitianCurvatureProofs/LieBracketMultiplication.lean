@@ -232,7 +232,7 @@ variable {k r : ℕ} {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [Fini
 theorem pi_exp_add (hT : Qr.Trotter) (hM : Qr.TrotterMx) (hP : Qr.PiExp) (hπ : Qr.IsRepW k r z π) {X Y : Mx k r}
     (hX : InLieW k r z X) (hY : InLieW k r z Y) (t : ℝ) :
     π (NormedSpace.exp ((t : ℂ) • (X + Y))) = NormedSpace.exp (t • (dOp π X + dOp π Y)) := by
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hX' := lie_smul hX t
   have hY' := lie_smul hY t
   have h1 := hM _ ((t : ℂ) • X) ((t : ℂ) • Y)
@@ -258,7 +258,7 @@ theorem qr_dOpLin_of (hT : Formalism.FourierDecayAlt.Qr.Trotter) (hM : Formalism
     Formalism.FourierDecayAlt.Qr.DOpLin := by
   intro W _ _ _ k r z π hπ X Y hX hY
   refine ⟨?_, fun s => LieBracketMultiplication.dOp_smul hπ hX s⟩
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) (dOp π X + dOp π Y) (0 : ℝ)
   rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
   have e : (fun t : ℝ => π (NormedSpace.exp ((t : ℂ) • (X + Y)))) =
@@ -312,7 +312,7 @@ variable {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [FiniteDimensiona
 
 theorem op_hasDeriv (A B : W →L[ℂ] W) :
     HasDerivAt (fun s : ℝ => NormedSpace.exp (s • A) * B * NormedSpace.exp (s • (-A))) (A * B - B * A) 0 := by
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have ha := hasDerivAt_exp_smul_const (𝕂 := ℝ) A (0 : ℝ)
   have hb := hasDerivAt_exp_smul_const (𝕂 := ℝ) (-A) (0 : ℝ)
   have h := (ha.mul_const B).mul hb

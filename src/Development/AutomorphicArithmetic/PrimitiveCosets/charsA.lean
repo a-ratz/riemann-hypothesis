@@ -292,7 +292,7 @@ theorem UpperTheory.Comparison₂.charsA :
       exact hk (zero_kept Λ φ H.toHostRaw)
     rw [(prim_read φ H ell hL ψ).1 hne]
     have hb := chr_bounded Λ φ H.toHostRaw ψ hP hk
-    haveI := (H.toHostRaw.prim (chr φ ψ)).ne
+    have := (H.toHostRaw.prim (chr φ ψ)).ne
     exact hE.bdL _ hb _ _ (H.toHostRaw.isPrimOf_prim _)
 end -- clump:auto
 end -- clump:auto

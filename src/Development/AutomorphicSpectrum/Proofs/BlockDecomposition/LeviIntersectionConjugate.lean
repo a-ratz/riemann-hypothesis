@@ -201,13 +201,13 @@ theorem GlobalTheory.CompanionTheory.GeomCell.innerMat : ∀ (k : Type) [Field k
   rw [hL]
   by_cases hii : i = i'
   · subst hii
-    rw [if_pos ((key _ _).mpr (by rw [blk_apply, blk_apply])), ← hcell i j t, ← hcell i j' t',
+    rw [ite_eq_left ((key _ _).mpr (by rw [blk_apply, blk_apply])), ← hcell i j t, ← hcell i j' t',
       conj_apply_lemma, hcell i j t, hcell i j' t', leviEmb_apply_same, hrel]
     by_cases hjj : j = j'
     · subst hjj
       rw [leviEmb_apply_same, leviEmb_apply_same, hsw, hproj]
     · rw [leviEmb_apply_ne k e' p hjj, leviEmb_apply_ne k (f i) _ hjj]
-  · rw [if_neg (fun h => hii (by rw [key, blk_apply, blk_apply] at h; exact h)),
+  · rw [ite_eq_right (fun h => hii (by rw [key, blk_apply, blk_apply] at h; exact h)),
       leviEmb_apply_ne k e _ hii]
 end -- clump:auto
 end -- clump:auto
@@ -282,7 +282,7 @@ theorem levi_iso_homeo (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
         rw [← hs1, MulEquiv.apply_symm_apply]
       simp_rw [Function.comp_apply, h]
       exact (continuous_apply _).comp ((continuous_apply _).comp
-        ((Units.continuous_val (M := Matrix (Fin N) (Fin N) k)).comp continuous_subtype_val))
+        ((Units.continuous_val (M := Matrix (Fin N) (Fin N) k)).comp continuous_subtypeVal))
     · refine continuous_pi fun i => continuous_pi fun j => ?_
       have h : ∀ h : levi k N β, (((φ.symm h a)⁻¹ : GL (m a) k) : Matrix (m a) (m a) k) i j =
           (((h : GL (Fin N) k))⁻¹ : GL (Fin N) k) (e ⟨a, i⟩) (e ⟨a, j⟩) := by
@@ -290,7 +290,7 @@ theorem levi_iso_homeo (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
         rw [← hs2, MulEquiv.apply_symm_apply]
       simp_rw [h]
       exact (continuous_apply _).comp ((continuous_apply _).comp
-        ((Units.continuous_coe_inv (M := Matrix (Fin N) (Fin N) k)).comp continuous_subtype_val))
+        ((Units.continuous_coe_inv (M := Matrix (Fin N) (Fin N) k)).comp continuous_subtypeVal))
 
 end GlobalTheory.CompanionTheory.LeviCont
 end -- clump:auto
@@ -555,7 +555,7 @@ theorem valuation_det_eq_one {n : Type} [Fintype n] [DecidableEq n] (A : GL n k)
     rw [← map_inv]
     exact hdet _ h2
   rw [Units.val_inv_eq_inv_val, map_inv₀] at a2
-  exact le_antisymm a1 ((inv_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 (Units.ne_zero _)))).1 a2)
+  exact le_antisymm a1 ((inv_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 (Units.ne_zero _)))).1 a2)
 
 variable {α β' : Type} [Fintype α] [LinearOrder α] [Fintype β'] [LinearOrder β'] {N : ℕ}
   {m : α → Type} [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)]

@@ -90,7 +90,7 @@ theorem count_map (v : HeightOneSpectrum (𝓞 K)) (J : Ideal (𝓞 K)) (hJ : J 
     FractionalIdeal.count K v (J : FractionalIdeal (nonZeroDivisors (𝓞 K)) K) := by
   have hJ' : J.map (cO K) ≠ 0 := fun h =>
     hJ ((Ideal.map_eq_bot_iff_of_injective (cO K).injective).mp h)
-  rw [FractionalIdeal.count_coe K (conjPl v) hJ', FractionalIdeal.count_coe K v hJ]
+  rw [FractionalIdeal.count_coeIdeal K (conjPl v) hJ', FractionalIdeal.count_coeIdeal K v hJ]
   congr 1
   apply eq_of_forall_le_iff
   intro n
@@ -131,7 +131,7 @@ theorem vw_int (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) :
 
 theorem vw_int_nonneg (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) : 0 ≤ vw w (x : K) := by
   rw [vw_int]
-  exact FractionalIdeal.count_coe_nonneg K w _
+  exact FractionalIdeal.count_coeIdeal_nonneg K w _
 
 theorem vw_star_int (w : HeightOneSpectrum (𝓞 K)) (x : 𝓞 K) :
     vw w (star (x : K)) = vw (conjPl w) (x : K) := by

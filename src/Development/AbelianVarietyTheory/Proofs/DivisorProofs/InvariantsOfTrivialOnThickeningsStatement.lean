@@ -319,7 +319,7 @@ theorem map_sub_apply {A : Type} [CommRing A] (J : Ideal A) {M P : Type} [AddCom
 theorem main : ∀ (A : Type) [inst : CommRing A] [IsNoetherianRing A] (J : Ideal A) (N M : Type) [inst_2 : AddCommGroup N] [inst_3 : Module A N] [inst_4 : AddCommGroup M] [inst_5 : Module A M] [Module.Finite A M] (f : N →ₗ[A] M) (Γ : Type) [Finite Γ] (g : Γ → M →ₗ[A] M), Function.Injective (⇑f : N → M) → (∀ (x : M), x ∈ LinearMap.range f ↔ ∀ (σ : Γ), (g σ : M → M) x = x) → Function.Injective (⇑(AdicCompletion.map J f) : AdicCompletion J N → AdicCompletion J M) ∧ ∀ (y : AdicCompletion J M), y ∈ LinearMap.range (AdicCompletion.map J f) ↔ ∀ (σ : Γ), (AdicCompletion.map J (g σ) : AdicCompletion J M → AdicCompletion J M) y = y := by
   intro A _ _ J N M _ _ _ _ _ f Γ _ g hf hfix
   classical
-  haveI : Fintype Γ := Fintype.ofFinite Γ
+  have : Fintype Γ := Fintype.ofFinite Γ
   refine ⟨AdicCompletion.map_injective J hf, ?_⟩
 
   let φ : M →ₗ[A] (Γ → M) := LinearMap.pi (fun σ => g σ - LinearMap.id)
@@ -549,8 +549,8 @@ theorem flat_tensor_invariants (R R' O : Type) [CommRing R] [CommRing R'] [Algeb
       t ∈ Set.range (algebraMap O (TensorProduct R O R')) := by
   intro hinj hgal
   classical
-  haveI : Finite (GlobalTheory.Mum.Gal (algebraMap R R')) := hgal.1
-  haveI : Fintype (GlobalTheory.Mum.Gal (algebraMap R R')) := Fintype.ofFinite _
+  have : Finite (GlobalTheory.Mum.Gal (algebraMap R R')) := hgal.1
+  have : Fintype (GlobalTheory.Mum.Gal (algebraMap R R')) := Fintype.ofFinite _
   let incl : R →ₗ[R] R' := Algebra.linearMap R R'
   have hex : Function.Exact incl (galDiff R R') := by
     intro y
@@ -654,12 +654,12 @@ theorem ker_evalₐ {A : Type} [CommRing A] [IsNoetherianRing A] (J : Ideal A) (
 theorem completion_invariants_agree : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (R' : Type) [CommRing R'] [IsDomain R'] [Algebra R R'] [Module.Finite R R'], Function.Injective (algebraMap R R') → IsGal (algebraMap R R') → ∀ (C' : Type) [CommRing C'] [Algebra R C'] [Algebra R' C'] [IsScalarTower R R' C'] [Algebra.FiniteType R' C'] (act : Gal (algebraMap R R') →* (C' ≃ₐ[R] C')), (∀ σ r, act σ (algebraMap R' C' r) = algebraMap R' C' (σ.1 r)) → ∀ (O : Type) [CommRing O] [Algebra R O] [Module.Flat R O] [Algebra.FiniteType R O] (i : ∀ e : ℕ, O →ₐ[R] C' ⧸ (maximalIdeal R ^ (e + 1)).map (algebraMap R C')), (∀ e x y, Ideal.Quotient.mk _ y = i (e + 1) x → Ideal.Quotient.mk _ y = i e x) → (∀ e σ x y, Ideal.Quotient.mk _ y = i e x → Ideal.Quotient.mk _ (act σ y) = i e x) → (∀ e, Function.Surjective (Algebra.TensorProduct.lift (i e) ((Ideal.Quotient.mkₐ R _).comp (IsScalarTower.toAlgHom R R' C')) fun _ _ => Commute.all _ _) ∧ RingHom.ker (Algebra.TensorProduct.lift (i e) ((Ideal.Quotient.mkₐ R _).comp (IsScalarTower.toAlgHom R R' C')) fun _ _ => Commute.all _ _) = (maximalIdeal R ^ (e + 1)).map (algebraMap R (TensorProduct R O R'))) → ∀ C : Subalgebra R C', (∀ x, x ∈ C ↔ ∀ σ, act σ x = x) → Algebra.FiniteType R C → Module.Finite C C' → ∀ e : ℕ, ∃ gm : (O ⧸ (maximalIdeal R ^ (e + 1)).map (algebraMap R O)) ≃ₐ[R] (C ⧸ (maximalIdeal R ^ (e + 1)).map (algebraMap R C)), ∀ (x : O) (c : C), gm (Ideal.Quotient.mk _ x) = Ideal.Quotient.mk _ c → Ideal.Quotient.mk ((maximalIdeal R ^ (e + 1)).map (algebraMap R C')) (c : C') = i e x := by
   intro R _ _ _ hR R' _ _ _ _ hinj hgal C' _ _ _ _ _ act hact O _ _ _ _ i h1 h2 h3 C hC hCft hCfin e
   classical
-  haveI : IsNoetherianRing R := hR.1
-  haveI := hCft
-  haveI := hCfin
-  haveI : IsNoetherianRing C := Algebra.FiniteType.isNoetherianRing R C
-  haveI : IsNoetherianRing O := Algebra.FiniteType.isNoetherianRing R O
-  haveI : Finite (Gal (algebraMap R R')) := hgal.1
+  have : IsNoetherianRing R := hR.1
+  have := hCft
+  have := hCfin
+  have : IsNoetherianRing C := Algebra.FiniteType.isNoetherianRing R C
+  have : IsNoetherianRing O := Algebra.FiniteType.isNoetherianRing R O
+  have : Finite (Gal (algebraMap R R')) := hgal.1
   let T := TensorProduct R O R'
   let JC : Ideal C := (maximalIdeal R).map (algebraMap R C)
   let JO : Ideal O := (maximalIdeal R).map (algebraMap R O)
@@ -898,11 +898,11 @@ theorem finiteType_invariants_and_finite (R : Type) [CommRing R] [IsNoetherianRi
     (G : Type) [Group G] [Finite G] (act : G →* (C' ≃ₐ[R] C')) (C : Subalgebra R C')
     (hC : ∀ x, x ∈ C ↔ ∀ σ, act σ x = x) :
     Algebra.FiniteType R C ∧ Module.Finite C C' := by
-  letI : MulSemiringAction G C' := MulSemiringAction.compHom C' act
-  haveI : Algebra.IsInvariant C C' G := ⟨fun b hb => ⟨⟨b, (hC b).2 fun σ => hb σ⟩, rfl⟩⟩
-  haveI : Algebra.IsIntegral C C' := Algebra.IsInvariant.isIntegral C C' G
-  haveI : Algebra.FiniteType C C' := Algebra.FiniteType.of_restrictScalars_finiteType R C C'
-  haveI hfin : Module.Finite C C' := Algebra.IsIntegral.finite
+  let : MulSemiringAction G C' := MulSemiringAction.compHom C' act
+  have : Algebra.IsInvariant C C' G := ⟨fun b hb => ⟨⟨b, (hC b).2 fun σ => hb σ⟩, rfl⟩⟩
+  have : Algebra.IsIntegral C C' := Algebra.IsInvariant.isIntegral C C' G
+  have : Algebra.FiniteType C C' := Algebra.FiniteType.of_restrictScalars_finiteType R C C'
+  have hfin : Module.Finite C C' := Algebra.IsIntegral.finite
   refine ⟨⟨fg_of_fg_of_fg (A := R) (B := C) (C := C') Algebra.FiniteType.out
     hfin.fg_top Subtype.val_injective⟩, hfin⟩
 
@@ -1056,14 +1056,14 @@ namespace GlobalTheory.InvAlg
 
 theorem invariants_of_trivial_on_thickenings : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R], AdmBase R (maximalIdeal R) → ∀ (R' : Type) [CommRing R'] [IsDomain R'] [Algebra R R'] [Module.Finite R R'], Function.Injective (algebraMap R R') → IsGal (algebraMap R R') → ∀ (C' : Type) [CommRing C'] [Algebra R C'] [Algebra R' C'] [IsScalarTower R R' C'] [Algebra.FiniteType R' C'] (act : Gal (algebraMap R R') →* (C' ≃ₐ[R] C')), (∀ σ r, act σ (algebraMap R' C' r) = algebraMap R' C' (σ.1 r)) → ∀ (O : Type) [CommRing O] [Algebra R O] [Module.Flat R O] [Algebra.FiniteType R O] (i : ∀ e : ℕ, O →ₐ[R] C' ⧸ (maximalIdeal R ^ (e + 1)).map (algebraMap R C')), (∀ e x y, Ideal.Quotient.mk _ y = i (e + 1) x → Ideal.Quotient.mk _ y = i e x) → (∀ e σ x y, Ideal.Quotient.mk _ y = i e x → Ideal.Quotient.mk _ (act σ y) = i e x) → (∀ e, Function.Surjective (Algebra.TensorProduct.lift (i e) ((Ideal.Quotient.mkₐ R _).comp (IsScalarTower.toAlgHom R R' C')) fun _ _ => Commute.all _ _) ∧ RingHom.ker (Algebra.TensorProduct.lift (i e) ((Ideal.Quotient.mkₐ R _).comp (IsScalarTower.toAlgHom R R' C')) fun _ _ => Commute.all _ _) = (maximalIdeal R ^ (e + 1)).map (algebraMap R (TensorProduct R O R'))) → ∀ C : Subalgebra R C', (∀ x, x ∈ C ↔ ∀ σ, act σ x = x) → Algebra.FiniteType R C ∧ Module.Finite C C' ∧ ∃ f : C, f - 1 ∈ (maximalIdeal R).map (algebraMap R C) ∧ (∀ x : C', ∃ n : ℕ, (f : C') ^ n * x ∈ Set.range (Algebra.TensorProduct.lift C.val (IsScalarTower.toAlgHom R R' C') fun _ _ => Commute.all _ _)) ∧ (∀ t : TensorProduct R C R', Algebra.TensorProduct.lift C.val (IsScalarTower.toAlgHom R R' C') (fun _ _ => Commute.all _ _) t = 0 → ∃ n : ℕ, ((f ^ n) ⊗ₜ[R] (1 : R')) * t = 0) ∧ ∀ e, Nonempty ((O ⧸ (maximalIdeal R ^ (e + 1)).map (algebraMap R O)) ≃ₐ[R] (C ⧸ (maximalIdeal R ^ (e + 1)).map (algebraMap R C))) := by
   intro R _ _ _ hR R' _ _ _ _ hinj hGal C' _ _ _ _ _ act hact O _ _ _ _ i hi1 hi2 hi3 C hC
-  haveI : IsNoetherianRing R := hR.1
-  haveI : Finite (Gal (algebraMap R R')) := hGal.1
-  haveI : Algebra.FiniteType R C' := Algebra.FiniteType.trans (S := R') inferInstance inferInstance
+  have : IsNoetherianRing R := hR.1
+  have : Finite (Gal (algebraMap R R')) := hGal.1
+  have : Algebra.FiniteType R C' := Algebra.FiniteType.trans (S := R') inferInstance inferInstance
   obtain ⟨hft, hfin⟩ := _root_.GlobalTheory.finiteType_invariants_and_finite R C' (Gal (algebraMap R R')) act C hC
   have hg := GlobalTheory.T.completion_galoisInvariants_agree_mod_maxIdeal_pow R hR R' hinj hGal C' act hact O i hi1 hi2 hi3 C hC hft hfin
   choose gm hgc using hg
   obtain ⟨hs, hinj'⟩ := _root_.GlobalTheory.quot_tensor_level R (maximalIdeal R) R' C' O i hi3 C gm hgc
-  haveI : IsNoetherianRing C := Algebra.FiniteType.isNoetherianRing R C
+  have : IsNoetherianRing C := Algebra.FiniteType.isNoetherianRing R C
   obtain ⟨f, hf1, hf2, hf3⟩ := _root_.GlobalTheory.finite_alg_hom_ker_coker_killed_of_onto_mod_ideal C ((maximalIdeal R).map (algebraMap R C)) (TensorProduct R C R') C' _ hs hinj'
   have hL : ∀ t, Algebra.TensorProduct.lift (Algebra.ofId C C') (IsScalarTower.toAlgHom R R' C') (fun _ _ => Commute.all _ _) t = Algebra.TensorProduct.lift C.val (IsScalarTower.toAlgHom R R' C') (fun _ _ => Commute.all _ _) t := by
     intro t

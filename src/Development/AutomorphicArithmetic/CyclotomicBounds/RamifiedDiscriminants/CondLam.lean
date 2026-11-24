@@ -164,12 +164,12 @@ theorem UpperTheory.KR.two_ord_le_QS :
   set R := H.toHostRaw with hR
   have hsurj : Function.Surjective R.art := Der.art_surj R
   have hQS0 : R.QS ≠ 0 := R.QS_ne_zero
-  haveI : NeZero R.QS := ⟨hQS0⟩
+  have : NeZero R.QS := ⟨hQS0⟩
   have hcard : Nat.card φ.GG = 4 * φ.ord := φ.natCard_GG
   have h1 : φ.ord ≤ Nat.totient R.QS := by
     rcases Nat.eq_zero_or_pos φ.ord with h0 | hpos
     · rw [h0]; exact Nat.zero_le _
-    haveI : Finite φ.GG := Nat.finite_of_card_ne_zero (by omega)
+    have : Finite φ.GG := Nat.finite_of_card_ne_zero (by omega)
     set I := HostRaw.imgOne R R.QS with hI
     have hidx : I.index ≤ Nat.totient R.QS := by
       have hdvd : I.index ∣ (HostRaw.unitsOne R R.QS).index :=

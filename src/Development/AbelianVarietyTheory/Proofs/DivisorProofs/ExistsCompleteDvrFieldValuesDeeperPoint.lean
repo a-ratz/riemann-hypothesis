@@ -83,7 +83,7 @@ theorem exists_fg_values {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] [A
   have hnef : ((M.Z.basicOpen f : M.Z.Opens) : Set M.Z).Nonempty := ⟨z, hzf⟩
   have har : a ∈ M.ringOn (M.Z.basicOpen f) := RatModel.mem_ringOn.2 fun w hw => hfW hw
   obtain ⟨s, hs⟩ := (RatModel.mem_ringOn_iff_exists hnef).1 har
-  letI := hU.isLocalization_basicOpen f
+  let := hU.isLocalization_basicOpen f
   obtain ⟨n, r, hrn⟩ := IsLocalization.Away.surj f s
   have halg : ∀ g : Γ(M.Z, U), algebraMap Γ(M.Z, U) Γ(M.Z, M.Z.basicOpen f) g = resG M.Z (M.Z.basicOpen_le f) g :=
     fun _ => rfl
@@ -115,11 +115,11 @@ theorem exists_complete_dvr_values : ∀ (g n : ℕ) (F : SFam g n (zetaAway n))
   intro g n F W Z i X₁ _ _ _ _ _ _ _ ε₁ _ D p _ z₁ c y h V _ _ _ _ hc hV
   obtain ⟨R, _, hR, y₀, hval⟩ := GlobalTheory.ValField.exists_fg_values D.X.M (gPt p ≫ y)
   let κ : FractionRing V →+* PadicAlgCl p := algebraMap (FractionRing V) (PadicAlgCl p)
-  haveI : CharZero V := RingHom.charZero (κ.comp (algebraMap V (FractionRing V)))
+  have : CharZero V := RingHom.charZero (κ.comp (algebraMap V (FractionRing V)))
   have hQ := GlobalTheory.PadicUnitBall.padic_mem_range p V hc κ hV
   obtain ⟨W₂, i₁, i₂, i₃, hcW, -, fV, fK, κ', -, -, -, -, hκ', hunit, hy⟩ :=
     GlobalTheory.DvrFinExt.exists_finite_extension p V hc κ hV hQ R y₀
-  letI : Algebra (FractionRing W₂) (PadicAlgCl p) := κ'.toAlgebra
+  let : Algebra (FractionRing W₂) (PadicAlgCl p) := κ'.toAlgebra
   refine ⟨W₂, i₁, i₂, i₃, κ'.toAlgebra, hcW, hunit, fK, hκ', fun a ha => ?_⟩
   have hm := hval κ'.fieldRange (fun r => by obtain ⟨x, hx⟩ := hy r; exact ⟨x, hx⟩) a ha
   obtain ⟨x, hx⟩ := hm

@@ -123,7 +123,7 @@ theorem ConvergesAt.exists_eq_gaussNorm : ∃ n, ‖a n‖ * ρ ^ n = gaussNorm 
   refine ⟨m, le_antisymm (h.le_gaussNorm m) (gaussNorm_le fun n => ?_)⟩
   by_cases hn : n ∈ S
   · exact hm n hn
-  · simp only [S, Set.Finite.mem_toFinset, Set.mem_setOf_eq, not_le] at hn
+  · simp only [S, Set.Finite.mem_toFinset, Set.mem_ofPred_eq, not_le] at hn
     exact hn.le.trans (hm n0 hn0S)
 
 theorem gaussNorm_pos : 0 < gaussNorm a ρ := by
@@ -160,7 +160,7 @@ theorem weight_lt_of_highIndex_lt {n : ℤ} (hn : highIndex a ρ < n) :
 theorem ne_zero_of_mem_domSet {n : ℤ} (hn : n ∈ domSet a ρ) : a n ≠ 0 := by
   intro h0
   have := gaussNorm_pos hρ h ha
-  simp only [domSet, Set.mem_setOf_eq, h0, norm_zero, zero_mul] at hn
+  simp only [domSet, Set.mem_ofPred_eq, h0, norm_zero, zero_mul] at hn
   linarith
 
 end Attained

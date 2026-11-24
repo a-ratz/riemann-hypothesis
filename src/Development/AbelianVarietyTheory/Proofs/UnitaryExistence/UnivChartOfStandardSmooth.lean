@@ -72,10 +72,10 @@ theorem univChart_of_standardSmooth (G : Over (Spec (CommRingCat.of R))) [GrpObj
       spMap φ ≫ j = spMap φ' ≫ j → φ = φ') :
     ∃ x : ∀ m : ℕ, sp (R₀ := R) (JetR R (Fin n) m) ⟶ G, IsUnivChart G n x := by
   obtain ⟨g, hg⟩ := Algebra.IsStandardSmoothOfRelativeDimension.exists_etale_mvPolynomial n R S
-  letI : Algebra (MvPolynomial (Fin n) R) S := g.toRingHom.toAlgebra
-  haveI : IsScalarTower R (MvPolynomial (Fin n) R) S :=
+  let : Algebra (MvPolynomial (Fin n) R) S := g.toRingHom.toAlgebra
+  have : IsScalarTower R (MvPolynomial (Fin n) R) S :=
     IsScalarTower.of_algebraMap_eq fun r => (g.commutes r).symm
-  haveI : Algebra.Etale (MvPolynomial (Fin n) R) S := hg
+  have : Algebra.Etale (MvPolynomial (Fin n) R) S := hg
   have hπ : ∀ m : ℕ, ∃ π : S →ₐ[R] JetR R (Fin n) m, (jetAug R (Fin n) m).comp π = ε ∧
       ∀ i, π (sX (R := R) i) = algebraMap R _ (ε (sX (R := R) i)) + zR m i := fun m =>
     etale_exists (n := n) ε (jetAug R (Fin n) m) (ker_jetAug_nil (Fin n) m) _ (fun i => by
@@ -179,7 +179,7 @@ theorem exists_standardSmooth_chart (X : Over (Spec (CommRingCat.of R))) (n : �
         x ∈ Set.range j.left := by
   obtain ⟨B, j₀, hj₀, ⟨q, hq⟩, -⟩ := Scheme.exists_affine_mem_range_and_range_subset
     (X := X.left) (x := x) (U := ⊤) trivial
-  letI : Algebra R B := (Spec.preimage (j₀ ≫ X.hom)).hom.toAlgebra
+  let : Algebra R B := (Spec.preimage (j₀ ≫ X.hom)).hom.toAlgebra
   let j : sp (R₀ := R) B ⟶ X := Over.homMk j₀ (Spec.map_preimage (j₀ ≫ X.hom)).symm
   have h1 : SmoothOfRelativeDimension n (Spec.map (CommRingCat.ofHom (algebraMap R B))) := by
     have e : j₀ ≫ X.hom = Spec.map (CommRingCat.ofHom (algebraMap R B)) := Over.w j

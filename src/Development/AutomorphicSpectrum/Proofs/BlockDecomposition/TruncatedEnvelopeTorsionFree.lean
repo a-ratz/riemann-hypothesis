@@ -66,9 +66,9 @@ theorem tr_tf : ∀ {B : Type} [CommRing B] {J : Ideal B} (δ : DividedPowers J)
     · have h10 : (1 : B) = 0 := by
         have : (1 : B) ∈ fil δ 0 := by rw [h0]; trivial
         rwa [hs, Ideal.mem_bot] at this
-      haveI : Subsingleton B := subsingleton_of_zero_eq_one h10.symm
-      haveI : Subsingleton (pq B).P := Module.subsingleton B (pq B).P
-      haveI : Subsingleton ((pq B).P ⧸ fil (eta δ) (max 0 1)) :=
+      have : Subsingleton B := subsingleton_of_zero_eq_one h10.symm
+      have : Subsingleton (pq B).P := Module.subsingleton B (pq B).P
+      have : Subsingleton ((pq B).P ⧸ fil (eta δ) (max 0 1)) :=
         Ideal.Quotient.mk_surjective.subsingleton
       exact eq_bot_iff.2 fun x _ => (Ideal.mem_bot).2 (Subsingleton.elim x 0)
     · have e : fil (eta δ) s = fil (eta δ) (max s 1) := by rw [max_eq_left hpos]

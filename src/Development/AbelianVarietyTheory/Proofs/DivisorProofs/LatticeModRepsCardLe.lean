@@ -57,8 +57,8 @@ theorem lattice_mod_reps_card_le : ∀ (E : Type) [Field E] [NumberField E] [IsC
   classical
   let L : Submodule ℤ (Fin r → E) := Λ.restrictScalars ℤ
   have hLfg : L.FG := hfg.restrictScalars
-  haveI : Module.Finite ℤ L := Module.Finite.iff_fg.mpr hLfg
-  haveI : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
+  have : Module.Finite ℤ L := Module.Finite.iff_fg.mpr hLfg
+  have : Module.Free ℤ L := Module.free_of_finite_type_torsion_free'
   let ι := Module.Free.ChooseBasisIndex ℤ L
   let b := Module.Free.chooseBasis ℤ L
   have hli : LinearIndependent ℤ (fun i => (b i : Fin r → E)) :=

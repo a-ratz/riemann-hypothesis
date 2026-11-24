@@ -100,7 +100,7 @@ theorem eq_of_locM {S : Type} [CommRing S] [Algebra K S] {x y : S}
   rw [← sub_eq_zero]
   apply eq_zero_of_localization
   intro J hJ
-  haveI := hJ
+  have := hJ
   have hxy := h J hJ
   simp only [locM, IsScalarTower.coe_toAlgHom'] at hxy
   rw [map_sub, hxy, sub_self]
@@ -109,7 +109,7 @@ theorem evalWD_of_frChart (h : FrChart pts mapR) : EvalWD pts mapR := by
   intro f hf S _ _ p q φ ψ y z w hy hz
   apply eq_of_locM (K := K)
   intro m hm
-  haveI := hm
+  have := hm
   obtain ⟨A, u, c, hc⟩ := h S w m
   rw [chartAt_val hf hc hy, chartAt_val hf hc hz]
 
@@ -129,7 +129,7 @@ theorem wtAll_of_borChart [Fintype ι] (h : BorChart pts mapR borR) (e : ι → 
   rw [hv, hv']
   apply eq_of_locM (K := K)
   intro m hmax
-  haveI := hmax
+  have := hmax
   obtain ⟨A, u, c, c', B, uB, uB', tB, π, π', cB, hc, hc', hπ, hπ', hbB, e1, e2, e3⟩ := h S t y y' hb m
   rw [map_mul, chartAt_val hf hc' hm', chartAt_val hf hc hm]
   calc c' (f A u) = (cB.comp π') (f A u) := by rw [e2]

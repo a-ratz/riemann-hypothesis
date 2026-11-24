@@ -161,16 +161,16 @@ theorem isLocalRing_of_complete {S : Type} [CommRing S] [IsDomain S] (I : Ideal 
 theorem local_complete_of_finite (R S : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R]
     [IsAdicComplete (maximalIdeal R) R] [CommRing S] [IsDomain S] [Algebra R S] [Module.Finite R S] :
     ∃ _ : IsLocalRing S, IsAdicComplete (maximalIdeal S) S := by
-  haveI : IsNoetherianRing S := IsNoetherianRing.of_finite R S
-  haveI : IsPrecomplete (maximalIdeal R) S := precomplete_of_finite _ S
-  haveI : IsAdicComplete (maximalIdeal R) S := ⟨⟩
+  have : IsNoetherianRing S := IsNoetherianRing.of_finite R S
+  have : IsPrecomplete (maximalIdeal R) S := precomplete_of_finite _ S
+  have : IsAdicComplete (maximalIdeal R) S := ⟨⟩
   set I := (maximalIdeal R).map (algebraMap R S) with hI
-  haveI : IsAdicComplete I S := (IsAdicComplete.map_algebraMap_iff _ _).2 inferInstance
-  haveI : IsArtinianRing (S ⧸ I) := by
-    letI : Field (R ⧸ maximalIdeal R) := Ideal.Quotient.field _
-    haveI : Module.Finite (R ⧸ maximalIdeal R) (S ⧸ I) := Module.Finite.of_restrictScalars_finite R _ _
+  have : IsAdicComplete I S := (IsAdicComplete.map_algebraMap_iff _ _).2 inferInstance
+  have : IsArtinianRing (S ⧸ I) := by
+    let : Field (R ⧸ maximalIdeal R) := Ideal.Quotient.field _
+    have : Module.Finite (R ⧸ maximalIdeal R) (S ⧸ I) := Module.Finite.of_restrictScalars_finite R _ _
     exact IsArtinianRing.of_finite (R ⧸ maximalIdeal R) _
-  haveI hl : IsLocalRing S := isLocalRing_of_complete I
+  have hl : IsLocalRing S := isLocalRing_of_complete I
   refine ⟨hl, ?_⟩
   have hne : I ≠ ⊤ := by
     intro h
@@ -189,7 +189,7 @@ theorem local_complete_of_finite (R S : Type) [CommRing R] [IsLocalRing R] [IsNo
     simp only [map_mul, map_pow, map_sub, map_one]
     linear_combination -hy
   obtain ⟨k, hk⟩ := Ideal.exists_pow_le_of_le_radical_of_fg hrad (IsNoetherian.noetherian _)
-  haveI : IsPrecomplete (maximalIdeal S) S :=
+  have : IsPrecomplete (maximalIdeal S) S :=
     precomplete_of_pow_le I _ (le_maximalIdeal hne) k ((Ideal.pow_le_pow_right (Nat.le_succ k)).trans hk)
   exact ⟨⟩
 
@@ -198,23 +198,23 @@ theorem exists_normal (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (D : 
     ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (σ : D →+* R'),
       GlobalTheory.TorRef.IsCN R' ∧ Function.Injective ρ ∧ ρ.Finite ∧ IsLocalHom ρ ∧ σ.comp (algebraMap R D) = ρ := by
   obtain ⟨h1, h2, h3, h4⟩ := hR
-  letI : Algebra (FractionRing R) (FractionRing D) := FractionRing.liftAlgebra R (FractionRing D)
-  haveI : IsScalarTower R (FractionRing R) (FractionRing D) := FractionRing.isScalarTower_liftAlgebra R _
-  haveI : FiniteDimensional (FractionRing R) (FractionRing D) :=
+  let : Algebra (FractionRing R) (FractionRing D) := FractionRing.liftAlgebra R (FractionRing D)
+  have : IsScalarTower R (FractionRing R) (FractionRing D) := FractionRing.isScalarTower_liftAlgebra R _
+  have : FiniteDimensional (FractionRing R) (FractionRing D) :=
     Module.Finite.of_isLocalization R D (nonZeroDivisors R) (Rₚ := FractionRing R) (Sₚ := FractionRing D)
-  haveI : CharZero (FractionRing R) := IsFractionRing.charZero_of_isFractionRing R
-  haveI : Algebra.IsIntegral (FractionRing R) (FractionRing D) := Algebra.IsIntegral.of_finite _ _
-  haveI : Algebra.IsSeparable (FractionRing R) (FractionRing D) := Algebra.IsSeparable.of_integral _ _
+  have : CharZero (FractionRing R) := IsFractionRing.charZero_of_isFractionRing R
+  have : Algebra.IsIntegral (FractionRing R) (FractionRing D) := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsSeparable (FractionRing R) (FractionRing D) := Algebra.IsSeparable.of_integral _ _
   let S := integralClosure R (FractionRing D)
-  haveI : Module.Finite R S := IsIntegralClosure.finite R (FractionRing R) (FractionRing D) S
-  haveI : IsIntegrallyClosed S := integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing R)
+  have : Module.Finite R S := IsIntegralClosure.finite R (FractionRing R) (FractionRing D) S
+  have : IsIntegrallyClosed S := integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing R)
   have hL : Function.Injective (algebraMap R (FractionRing D)) := FaithfulSMul.algebraMap_injective R _
   have hS : Function.Injective (algebraMap R S) := fun a b h => hL (congrArg Subtype.val h)
-  haveI : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective _ _).2 hS
+  have : FaithfulSMul R S := (faithfulSMul_iff_algebraMap_injective _ _).2 hS
   obtain ⟨hl, hc⟩ := local_complete_of_finite R S
   let ψ : D →ₐ[R] FractionRing D := IsScalarTower.toAlgHom R D _
   let σ : D →ₐ[R] S := ψ.codRestrict S fun c => (Algebra.IsIntegral.isIntegral c).map ψ
-  haveI : Algebra.IsIntegral R S := Algebra.IsIntegral.of_finite _ _
+  have : Algebra.IsIntegral R S := Algebra.IsIntegral.of_finite _ _
   refine ⟨S, inferInstance, inferInstance, hl, algebraMap R S, σ.toRingHom,
     ⟨IsNoetherianRing.of_finite R S, inferInstance, hc, charZero_of_injective_algebraMap hS⟩, hS,
     RingHom.finite_algebraMap.2 inferInstance, Algebra.IsIntegral.isLocalHom R S, σ.comp_algebraMap⟩
@@ -223,8 +223,8 @@ theorem main (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (C : Type) [Co
     (hR : GlobalTheory.TorRef.IsCN R) (hφ : Function.Injective φ) (hfin : φ.Finite) :
     ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (σ : C →+* R'),
       GlobalTheory.TorRef.IsCN R' ∧ Function.Injective ρ ∧ ρ.Finite ∧ IsLocalHom ρ ∧ σ.comp φ = ρ := by
-  letI : Algebra R C := φ.toAlgebra
-  haveI : Module.Finite R C := hfin
+  let : Algebra R C := φ.toAlgebra
+  have : Module.Finite R C := hfin
   obtain ⟨P, -, hP, hPc⟩ := Ideal.exists_ideal_over_prime_of_isIntegral (R := R) (S := C) (⊥ : Ideal R) ⊥
     (by rw [Ideal.under_def, ← RingHom.ker_eq_comap_bot]; exact ((RingHom.injective_iff_ker_eq_bot _).1 hφ).le)
   have hD : Function.Injective (algebraMap R (C ⧸ P)) := by
@@ -235,7 +235,7 @@ theorem main (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (C : Type) [Co
       exact ha
     change a ∈ Ideal.under R P at this
     rwa [hPc] at this
-  haveI : FaithfulSMul R (C ⧸ P) := (faithfulSMul_iff_algebraMap_injective _ _).2 hD
+  have : FaithfulSMul R (C ⧸ P) := (faithfulSMul_iff_algebraMap_injective _ _).2 hD
   obtain ⟨R', i1, i2, i3, ρ, σ, h1, h2, h3, h4, h5⟩ := exists_normal R (C ⧸ P) hR
   exact ⟨R', i1, i2, i3, ρ, σ.comp (Ideal.Quotient.mk P), h1, h2, h3, h4, h5⟩
 

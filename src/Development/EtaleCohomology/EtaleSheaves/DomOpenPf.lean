@@ -97,7 +97,7 @@ theorem exists_frac (T D : Type) [CommRing T] [IsDomain T] [CommRing D] [IsDomai
     [Algebra.Etale T D] (hT : AIC T) (a : D) :
     ∃ s t : T, s ≠ 0 ∧ algebraMap T D s * a = algebraMap T D t := by
   classical
-  haveI := algClosed_of_AIC T hT
+  have := algClosed_of_AIC T hT
   let M := nonZeroDivisors T
   let S := Localization (Algebra.algebraMapSubmonoid D M)
   have hle : Algebra.algebraMapSubmonoid D M ≤ nonZeroDivisors D := by

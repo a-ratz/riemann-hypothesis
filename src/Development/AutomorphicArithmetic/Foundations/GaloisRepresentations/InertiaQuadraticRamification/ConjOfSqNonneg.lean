@@ -92,7 +92,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.mkQ :
     rw [map_sub, map_pow, aeval_X, aeval_C, hxa, sub_self]
   have hint : IsIntegral Y x := ⟨X ^ 2 - C (a : Y), monic_X_pow_sub_C _ two_ne_zero, heval⟩
   have hirr : Irreducible (X ^ 2 - C (a : Y) : Y[X]) := by
-    refine X_pow_sub_C_irreducible_of_prime Nat.prime_two (fun b hb => hg ?_)
+    refine irreducible_X_pow_sub_C_of_prime Nat.prime_two (fun b hb => hg ?_)
     have h2 : x ^ 2 = (algebraMap Y Ω b) ^ 2 := by rw [hxa, ← map_pow, hb]
     rcases sq_eq_sq_iff_eq_or_eq_neg.mp h2 with h | h
     · rw [h]; exact g.commutes b
@@ -102,8 +102,8 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.mkQ :
   have hdeg : (minpoly Y x).natDegree = 2 := by rw [hmin, natDegree_X_pow_sub_C _]
   have hfin : Module.finrank Y Y⟮x⟯ = 2 := by
     rw [IntermediateField.adjoin.finrank hint, hdeg]
-  haveI := IntermediateField.adjoin.finiteDimensional hint
-  haveI nf : NumberField Y⟮x⟯ := NumberField.of_module_finite Y _
+  have := IntermediateField.adjoin.finiteDimensional hint
+  have nf : NumberField Y⟮x⟯ := NumberField.of_module_finite Y _
   have hconj : x ∈ GlobalTheory.CMSub.conjStable Ω := by
     have hφ : ∀ φ : Ω →+* ℂ, (φ x) ^ 2 = (a : ℂ) := fun φ => by rw [← map_pow, hx, map_intCast]
     rcases le_total 0 a with ha | ha

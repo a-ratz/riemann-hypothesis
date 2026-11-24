@@ -95,7 +95,7 @@ theorem ae_mem [IsDomain k] [IsIntegral X] (hσ : Function.Injective σ) (c : Al
   let : Algebra (MvPolynomial (Fin D) k) Γ(X, c.U) := φ.toAlgebra
   have : Algebra.Etale (MvPolynomial (Fin D) k) Γ(X, c.U) := c.etale
   have h₁ := isAlgebraic_of_flat_of_formallyUnramified (MvPolynomial (Fin D) k) Γ(X, c.U)
-  obtain ⟨r, hr, b, hb⟩ := (h₁.isAlgebraic a).exists_nonzero_dvd (mem_nonZeroDivisors_of_ne_zero h0)
+  obtain ⟨r, hr, b, hb⟩ := (h₁.isAlgebraic a).exists_ne_zero_dvd (mem_nonZeroDivisors_of_ne_zero h0)
   have hr' : MvPolynomial.map σ r ≠ 0 :=
     (map_ne_zero_iff _ (MvPolynomial.map_injective σ hσ)).2 hr
   filter_upwards [ReciprocityTheory.MultiplicativeHeights.ae_eval_ne_zero_linear (volume : Measure (V D))
@@ -236,7 +236,7 @@ theorem semiPos_iff_pull : ∀ (k : Type) [CommRing k] (X X' : Scheme.{0}) (p : 
   refine forall_congr' fun σ => ?_
   have hσ : Function.Injective σ := by
     rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := ℤ) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := ℤ) ?_
     rw [Ideal.under_def, RingHom.comap_ker, ← RingHom.injective_iff_ker_eq_bot]
     exact RingHom.injective_int _
   have : Nonempty U.toScheme := hU.to_subtype

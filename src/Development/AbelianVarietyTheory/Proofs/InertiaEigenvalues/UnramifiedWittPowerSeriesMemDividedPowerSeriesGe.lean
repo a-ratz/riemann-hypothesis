@@ -71,7 +71,7 @@ theorem inclS_mem_SdSet (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero 
   refine ⟨fun n => ((n / e).factorial : Wq l a) * coeff n x, fun r => ?_, fun τ n => ?_⟩
   · rw [Filter.eventually_cofinite]
     refine (Set.finite_lt_nat (e * (l * r))).subset fun n hn => ?_
-    simp only [Set.mem_setOf_eq] at hn ⊢
+    simp only [Set.mem_ofPred_eq] at hn ⊢
     by_contra hlt
     apply hn
     have hle : l * r ≤ n / e := (Nat.le_div_iff_mul_le he).2 (by rw [mul_comm]; omega)

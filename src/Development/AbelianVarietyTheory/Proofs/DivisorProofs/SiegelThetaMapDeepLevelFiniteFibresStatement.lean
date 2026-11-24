@@ -115,11 +115,11 @@ theorem iso_of_sRel : ∀ (g n N : ℕ) (B : Type) [CommRing B] (ζ : B) (K : Ty
   obtain ⟨pr', hpr', huniv', ht, -, -⟩ := hsharp
   have w : φ ≫ c.A.hom = C.A.hom := by simpa using hpb.1.w
   let f : C.A ⟶ c.A := Over.homMk φ w
-  haveI : IsIso φ := hpb.1.isIso_fst_of_isIso
-  haveI : IsIso f := by
+  have : IsIso φ := hpb.1.isIso_fst_of_isIso
+  have : IsIso f := by
     have : IsIso ((Over.forget _).map f) := by simpa [f] using (inferInstance : IsIso φ)
     exact isIso_of_reflects_iso f (Over.forget _)
-  haveI hf : IsMonHom f := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isMonHom_of_mul f
+  have hf : IsMonHom f := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isMonHom_of_mul f
     (fun _ x y => GlobalTheory.AbelianLetters.mul_comp_of_isGrpPullback_id f hpb x y)
   obtain ⟨ψ, hψ, -⟩ := huniv t.A (fun u => pr' u ≫ f)
   obtain ⟨χ, hχ, -⟩ := huniv' Q.A (fun u => pr u ≫ inv f)
@@ -130,7 +130,7 @@ theorem iso_of_sRel : ∀ (g n N : ℕ) (B : Type) [CommRing B] (ζ : B) (K : Ty
       rw [Category.assoc, hψ, ← Category.assoc, hχ, Category.assoc, IsIso.inv_hom_id, Category.comp_id])
     (fun u => Category.id_comp _)
   have hm : ∀ u, IsMonHom (ψ ≫ pr u) := fun u => by
-    rw [hψ]; haveI := hpr' u; infer_instance
+    rw [hψ]; have := hpr' u; infer_instance
   have hψm : IsMonHom ψ := by
     refine ⟨(huniv _ fun u => η[Q.A] ≫ pr u).unique (fun u => ?_) fun _ => rfl,
       (huniv _ fun u => μ[t.A] ≫ ψ ≫ pr u).unique (fun u => Category.assoc _ _ _) fun u => ?_⟩
@@ -355,7 +355,7 @@ namespace GlobalTheory.ThetaFiniteIso
 
 theorem thetaPts_finite : ∀ (G N' : ℕ) (J : Type) (K : Type) [Field K] [IsAlgClosed K] (b : TBase K (N' ^ 2)) (Q : PolAV (Sp K)), Odd N' → 3 ≤ N' → ∃ V : Set (Ix G (N' ^ 2) → K), V.Finite ∧ ∀ t : TObj G (N' ^ 2) J b (𝟙 (Sp K)), (∃ φ : t.A ≅ Q.A, IsMonHom φ.hom ∧ LBIso t.L (Q.L.pull φ.hom.left)) → ∃ v ∈ V, t.HasTh (𝟙 _) v := by
   intro G N' J K _ _ b Q ho _
-  haveI : NeZero (N' ^ 2) := ⟨pow_ne_zero _ ho.pos.ne'⟩
+  have : NeZero (N' ^ 2) := ⟨pow_ne_zero _ ho.pos.ne'⟩
   let T : Over (Sp K) := Over.mk (𝟙 (Sp K))
   let T₀ : Over (Sp K) := Over.mk (T.hom ≫ 𝟙 (Sp K))
   let fn : K → Γ(T.left, ⊤) := fun c => (Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom c
@@ -364,7 +364,7 @@ theorem thetaPts_finite : ∀ (G N' : ℕ) (J : Type) (K : Type) [Field K] [IsAl
     (CartesianMonoidalCategory.isTerminalTensorUnit).uniqueUpToIso
       (IsTerminal.ofUniqueHom (fun Y => Over.homMk Y.hom (by simp [T₀, T]))
         (fun Y m => Over.OverMorphism.ext (by simpa [T₀, T] using Over.w m))) |>.symm
-  haveI hTor : Finite Tor := by
+  have hTor : Finite Tor := by
     have := GlobalTheory.AbTorsionFinite.finite_torsion K Q.A Q.isAb (N' ^ 2) (Nat.one_le_iff_ne_zero.2 (pow_ne_zero _ ho.pos.ne'))
     refine Finite.of_injective (fun y : Tor => (⟨e.inv ≫ y.1, by rw [← MonObj.comp_pow, y.2, MonObj.comp_one]⟩ :
       {x : 𝟙_ (Over (Spec (CommRingCat.of K))) ⟶ Q.A // x ^ (N' ^ 2) = 1})) ?_
@@ -373,7 +373,7 @@ theorem thetaPts_finite : ∀ (G N' : ℕ) (J : Type) (K : Type) [Field K] [IsAl
   let ch : (Ix G (N' ^ 2) → Tor) → (Ix G (N' ^ 2) → K) := fun l =>
     if h : ∃ v : Ix G (N' ^ 2) → K, IsThetaPt Q N' (fun a => (l a).1) (fun a => fn (v a)) then h.choose else 0
   refine ⟨Set.range ch, Set.finite_range ch, fun t ⟨φ, hφ, hw⟩ => ?_⟩
-  haveI := hφ
+  have := hφ
   let x : Ix G (N' ^ 2) → (T ⟶ t.pol.A) := fun a => (Over.homMk (𝟙 (Sp K)) (by simp [T]) : T ⟶ Out.baseOver (Sp K)) ≫ t.lab a
   have hk : ∀ a, x a ^ (N' ^ 2) = 1 := fun a => by
     exact (MonObj.comp_pow _ _ _).symm.trans ((congrArg (_ ≫ ·) (GlobalTheory.ThetaPtUp.lab_pow t a)).trans (MonObj.comp_one _))
@@ -397,7 +397,7 @@ theorem thetaPts_finite : ∀ (G N' : ℕ) (J : Type) (K : Type) [Field K] [IsAl
   obtain ⟨v, hv⟩ := GlobalTheory.FamRep.exists_hasTh_field GlobalTheory.firstFiveLaws.1 GlobalTheory.firstFiveLaws.2.1 ho t K (𝟙 _)
   have h : ∃ v : Ix G (N' ^ 2) → K, IsThetaPt Q N' (fun a => (l a).1) (fun a => fn (v a)) := ⟨v, (key v).1 hv⟩
   refine ⟨ch l, ⟨l, rfl⟩, (key _).2 ?_⟩
-  simp only [ch, dif_pos h]
+  simp only [ch, dite_eq_left h]
   exact h.choose_spec
 
 end GlobalTheory.ThetaFiniteIso
@@ -469,8 +469,8 @@ theorem finite_sharpOver : ∀ (g n : ℕ), 2 ≤ n → ∀ (F : SFam g n (zetaA
   have hN3 : 3 ≤ N := le_trans hN'3 (Nat.le_self_pow (by omega) N')
   have hNK : ((N : ℕ) : K) ≠ 0 := by
     rw [hN, hN', Nat.cast_pow, Nat.cast_pow]; exact pow_ne_zero _ (pow_ne_zero _ hℓK)
-  haveI : NeZero ((N : ℕ) : K) := ⟨hNK⟩
-  obtain ⟨z0, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K N
+  have : NeZero ((N : ℕ) : K) := ⟨hNK⟩
+  obtain ⟨z0, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K N
   have hz0 : z0 ≠ 0 := hz.ne_zero (by omega)
   let b : TBase K N := ⟨Units.mk0 z0 hz0, hNK.isUnit, fun K' _ β => hz.map_of_injective β.injective⟩
   have hbζ : b.ζ ^ N = 1 := Units.ext (by rw [Units.val_pow_eq_pow_val]; exact hz.pow_eq_one)
@@ -598,16 +598,16 @@ theorem finite_fibres : ∀ (ℓ : ℕ), ℓ.Prime → Odd ℓ → ∀ (g : ℕ)
     exact this.ne_zero
   have hl0 : ((ℓ : ℕ) : K) ≠ 0 := fun h0 => hm0 (by rw [Nat.cast_pow, h0, zero_pow (by omega)])
   have hpos : 0 < (ℓ ^ j) ^ 2 := pow_pos (pow_pos hℓ.pos _) _
-  haveI : NeZero (((ℓ ^ j) ^ 2 : ℕ) : K) := ⟨by rw [Nat.cast_pow]; exact pow_ne_zero _ hm0⟩
-  obtain ⟨z0, hz⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot K ((ℓ ^ j) ^ 2)
+  have : NeZero (((ℓ ^ j) ^ 2 : ℕ) : K) := ⟨by rw [Nat.cast_pow]; exact pow_ne_zero _ hm0⟩
+  obtain ⟨z0, hz⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot K ((ℓ ^ j) ^ 2)
   let eK := (Scheme.ΓSpecIso (CommRingCat.of K)).commRingCatIsoToRingEquiv.symm
   have hz' := hz.map_of_injective eK.injective
   set ze : Γ(Sp K, ⊤)ˣ := (hz'.isUnit hpos.ne').unit with hzedef
   have hze : IsPrimitiveRoot ze ((ℓ ^ j) ^ 2) := hz'.isUnit_unit hpos.ne'
   obtain ⟨⟨e, he⟩, -⟩ := (GlobalTheory.T.projectiveHomogeneousCoords_basic_properties).2.2 (cycAway n) K N (x ≫ f)
   obtain ⟨T, hT⟩ := GlobalTheory.T.thetaSymmetricFunctionsDegreeFactorial_scaled_finite K (N + 1) e
-  haveI := P.isAb.comm
-  haveI : NeZero ((ℓ ^ j) ^ 2) := ⟨hpos.ne'⟩
+  have := P.isAb.comm
+  have : NeZero ((ℓ ^ j) ^ 2) := ⟨hpos.ne'⟩
   refine (Set.finite_iUnion fun d : T × ((Fin (2 * (8 * g)) → ZMod ((ℓ ^ j) ^ 2)) → Fin (N + 1)) =>
     finite_thData hn F W hW ℓ (8 * g) j hℓ ho hj4 hbig K hl0 ze
       (fun a => GlobalTheory.ZH.fn ((d.1 : Fin (N + 1) → K) (d.2 a)))).subset ?_
@@ -623,7 +623,7 @@ theorem finite_fibres : ∀ (ℓ : ℕ), ℓ.Prime → Odd ℓ → ∀ (g : ℕ)
   rw [hy'] at hP1
   obtain ⟨a, ha0, ha⟩ := (GlobalTheory.T.projectiveHomogeneousCoords_field_determine_descend).2.1 (cycAway n) K N (x ≫ f) e (symTup cy) he hP1
   obtain ⟨mu, hmu0, hmuT⟩ := hT cy a ha0 ha
-  haveI := Q.isAb.comm
+  have := Q.isAb.comm
   obtain ⟨rigQ, hrigQ⟩ := Q.rigid
   have hQ : HasTh Q.A Q.L rigQ (ℓ ^ j) (𝟙 (Sp K)) cy := by
     rw [hasTh_iff] at hH ⊢

@@ -106,7 +106,7 @@ theorem finite_part (R K : Type*) [CommRing R] [IsDedekindDomain R] [Field K] [C
     rw [FiniteAdeleRing.isUnit_iff]
     refine ⟨fun v h0 => ?_, ?_⟩
     · have := hval v
-      rw [h0, map_zero, le_zero_iff, map_eq_zero] at this
+      rw [h0, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
       exact hu.1 v this
     · filter_upwards [hu.2, (E * (1 + s) + (1 - E) * (1 - s)).2] with v h1 h2
       exact le_antisymm h2 (h1 ▸ hval v)

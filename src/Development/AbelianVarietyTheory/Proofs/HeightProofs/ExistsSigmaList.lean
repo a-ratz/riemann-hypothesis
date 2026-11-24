@@ -169,7 +169,7 @@ lemma grow_inv' {A : Subalgebra ℂ (Module.End ℂ M)} {W : Submodule ℂ M} {c
 lemma grow_fd {A : Subalgebra ℂ (Module.End ℂ M)} {W : Submodule ℂ M} [FiniteDimensional ℂ W]
     (hW : W ≤ good A) : FiniteDimensional ℂ (grow A W) := by
   obtain ⟨s, hs⟩ : W.FG := (Submodule.fg_iff_finiteDimensional W).mpr inferInstance
-  haveI : ∀ y : s, FiniteDimensional ℂ (orb A (y : M)) := fun y => by
+  have : ∀ y : s, FiniteDimensional ℂ (orb A (y : M)) := fun y => by
     have hy : (y : M) ∈ W := by rw [← hs]; exact Submodule.subset_span y.2
     exact mem_good.mp (hW hy)
   have hle : grow A W ≤ ⨆ y : s, orb A (y : M) := grow_le.mpr (fun a ha x hx => by
@@ -183,7 +183,7 @@ lemma grow_fd {A : Subalgebra ℂ (Module.End ℂ M)} {W : Submodule ℂ M} [Fin
 lemma grow_good {A B : Subalgebra ℂ (Module.End ℂ M)} {W : Submodule ℂ M} (hW : W ≤ good B)
     (hcomm : ∀ a ∈ A, ∀ b ∈ B, a * b = b * a) : grow A W ≤ good B :=
   grow_le.mpr (fun a ha x hx => by
-    haveI : FiniteDimensional ℂ (orb B x) := mem_good.mp (hW hx)
+    have : FiniteDimensional ℂ (orb B x) := mem_good.mp (hW hx)
     have hle : orb B (a x) ≤ (orb B x).map a := orb_le.mpr (fun b hb => by
       have e : b (a x) = a (b x) := by
         rw [← mul_apply', ← mul_apply', hcomm a ha b hb]
@@ -199,7 +199,7 @@ theorem main : ∀ (M : Type) [inst : AddCommGroup M] [inst_1 : Module ℂ M] (�
       ∀ (i : ι), ∀ a ∈ A i, ∀ x ∈ W, (a : M → M) x ∈ W := by
   intro M _ _ ι _ A hcomm m hfin
   classical
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   have key : ∀ S : Finset ι, ∃ W : Submodule ℂ M, FiniteDimensional ℂ W ∧ m ∈ W ∧
       (∀ i ∈ S, ∀ a ∈ A i, ∀ x ∈ W, a x ∈ W) ∧ (∀ j, j ∉ S → W ≤ good (A j)) := by
     intro S
@@ -312,7 +312,7 @@ instance (V : HSp D) : FiniteDimensional ℝ (AlgInf V) :=
 theorem exp_algInf (V : HSp D) (X : AlgInf V) (τ : D.what₂.Tau) :
     (NormedSpace.exp X : AlgInf V) τ = NormedSpace.exp (X τ : Matrix (Fin V.rank) (Fin V.rank) ℂ) :=
   @Pi.coe_exp D.what₂.Tau (fun _ => Matrix (Fin V.rank) (Fin V.rank) ℂ) _ _ _
-    (fun _ => FiniteDimensional.complete ℝ _) X τ
+    (fun _ => FiniteDimensional.completeSpace ℝ _) X τ
 
 end Inst1
 

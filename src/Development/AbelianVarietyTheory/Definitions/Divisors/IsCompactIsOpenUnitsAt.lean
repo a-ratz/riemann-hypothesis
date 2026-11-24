@@ -155,13 +155,13 @@ theorem mem_unitsAt {v : Pl F} {l : (AE F E)ˣ} : l ∈ unitsAt E v ↔ l ∈ id
     compFin F E v l ∈ intLoc F E v ∧ compFin F E v (l⁻¹ : (AE F E)ˣ) ∈ intLoc F E v := Iff.rfl
 
 theorem isClosed_UAtSub (X : Spc F E n) (ev : AF F → R) : IsClosed (UAtSub σ X ev : Set (UA σ X.J)) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
-  haveI : T2Space (AE F E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
-  have hm : Continuous fun g : UA σ X.J => mat g := Units.continuous_val.comp continuous_subtype_val
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : T2Space (AE F E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
+  have hm : Continuous fun g : UA σ X.J => mat g := Units.continuous_val.comp continuous_subtypeVal
   change IsClosed {g : UA σ X.J | ∀ u, ev u = 0 → u • (mat g - 1) = 0}
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   exact isClosed_iInter fun u => isClosed_iInter fun _ =>
     isClosed_eq ((hm.sub continuous_const).const_smul u) continuous_const
 
@@ -169,12 +169,12 @@ theorem isCompact_KAt {X : Spc F E n} {K : Subgroup (UA σ X.J)} (hK : IsCompact
     IsCompact (KAt K ev : Set (UA σ X.J)) := hK.inter_right (isClosed_UAtSub X ev)
 
 theorem isClosed_idelesAt (ev : AF F → R) : IsClosed (idelesAt E ev : Set (AE F E)ˣ) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
-  haveI : T2Space (AE F E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : T2Space (AE F E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
   change IsClosed {l : (AE F E)ˣ | ∀ u, ev u = 0 → u • ((l : AE F E) - 1) = 0}
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   exact isClosed_iInter fun u => isClosed_iInter fun _ =>
     isClosed_eq ((Units.continuous_val.sub continuous_const).const_smul u) continuous_const
 
@@ -261,9 +261,9 @@ theorem absE_of_mem {v : Pl F} {l : (AE F E)ˣ} (hl : l ∈ idelesAt E (evFin F 
 theorem isCompact_isOpen_intLoc (v : Pl F) :
     IsCompact (intLoc F E v : Set (Fv F v ⊗[F] E)) ∧ IsOpen (intLoc F E v : Set (Fv F v ⊗[F] E)) := by
   classical
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (Fv F v ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (Fv F v ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
   let b := integralBasis E
   let φ : (Module.Free.ChooseBasisIndex ℤ (𝓞 E) → Fv F v) →ₗ[Fv F v] Fv F v ⊗[F] E :=
     Fintype.linearCombination (Fv F v) fun i => (1 : Fv F v) ⊗ₜ[F] b i
@@ -315,9 +315,9 @@ theorem isCompact_isOpen_intLoc (v : Pl F) :
 
 theorem isCompact_isOpen_unitsAt (v : Pl F) :
     IsCompact {l : idelesAt E (evFin F v) | l.1 ∈ unitsAt E v} ∧ IsOpen {l : idelesAt E (evFin F v) | l.1 ∈ unitsAt E v} := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (Fv F v ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
-  haveI : T2Space (Fv F v ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (Fv F v ⊗[F] E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : T2Space (Fv F v ⊗[F] E) := GlobalTheory.Doubling.t2Space_tensorProduct_finiteExtension
   have e : {l : idelesAt E (evFin F v) | l.1 ∈ unitsAt E v} =
       (idelesAtEquiv E v).toHomeomorph ⁻¹' ((intLoc F E v).toSubmonoid.units : Set _) := by
     ext l
@@ -342,18 +342,18 @@ def IsNormE (v : Pl F) (μ : Measure (idelesAt E (evFin F v))) : Prop :=
 
 theorem existsUnique_isNormK {K : Subgroup (UA σ X.J)} (hK : IsCompact (K : Set (UA σ X.J))) (ev : AF F → R) :
     ∃! μ, IsNormK K ev μ := by
-  haveI : CompactSpace (KAt K ev) := isCompact_iff_compactSpace.1 (isCompact_KAt hK ev)
-  haveI : BorelSpace (UA σ X.J) := ⟨rfl⟩
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : CompactSpace (KAt K ev) := isCompact_iff_compactSpace.1 (isCompact_KAt hK ev)
+  have : BorelSpace (UA σ X.J) := ⟨rfl⟩
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
   have h0 : IsNormK K ev (Measure.haarMeasure ⊤) :=
     ⟨Measure.isHaarMeasure_haarMeasure _, Measure.haarMeasure_self⟩
   refine ⟨_, h0, fun μ hμ => ?_⟩
-  haveI := hμ.1
-  haveI := h0.1
-  haveI : IsProbabilityMeasure μ := ⟨hμ.2⟩
-  haveI : IsProbabilityMeasure (Measure.haarMeasure (⊤ : TopologicalSpace.PositiveCompacts (KAt K ev))) := ⟨h0.2⟩
-  haveI : LocallyCompactSpace (KAt K ev) :=
+  have := hμ.1
+  have := h0.1
+  have : IsProbabilityMeasure μ := ⟨hμ.2⟩
+  have : IsProbabilityMeasure (Measure.haarMeasure (⊤ : TopologicalSpace.PositiveCompacts (KAt K ev))) := ⟨h0.2⟩
+  have : LocallyCompactSpace (KAt K ev) :=
     IsCompact.locallyCompactSpace_of_mem_nhds_of_group isCompact_univ (x := 1) univ_mem
   exact Measure.isHaarMeasure_eq_of_isProbabilityMeasure _ _
 
@@ -361,19 +361,19 @@ theorem existsUnique_isNormK {K : Subgroup (UA σ X.J)} (hK : IsCompact (K : Set
 variable (E) in
 theorem idelesAt_facts (ev : AF F → R) : IsTopologicalGroup (idelesAt E ev) ∧ LocallyCompactSpace (idelesAt E ev) ∧
     SecondCountableTopology (idelesAt E ev) ∧ T2Space (idelesAt E ev) ∧ BorelSpace (idelesAt E ev) := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
-  haveI := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
-  haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have := GlobalTheory.AdelicUnitaryTop.t2Space_adeleRing_numberField F
+  have := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   obtain ⟨e⟩ := GlobalTheory.AdelicUnitaryTop.nonempty_homeomorph (F := F) (E := E) (AF F)
-  haveI : LocallyCompactSpace (AE F E) := e.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AE F E) := e.secondCountableTopology
-  haveI : T2Space (AE F E) := e.isEmbedding.t2Space
-  haveI : LocallyCompactSpace (AE F E)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
-  haveI : SecondCountableTopology (AE F E)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
-  haveI : LocallyCompactSpace (AE F E)ˣ := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
-  haveI : SecondCountableTopology (AE F E)ˣ := Units.isEmbedding_embedProduct.secondCountableTopology
-  haveI : BorelSpace (AE F E)ˣ := ⟨rfl⟩
+  have : LocallyCompactSpace (AE F E) := e.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AE F E) := e.secondCountableTopology
+  have : T2Space (AE F E) := e.isEmbedding.t2Space
+  have : LocallyCompactSpace (AE F E)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isClosedEmbedding.locallyCompactSpace
+  have : SecondCountableTopology (AE F E)ᵐᵒᵖ := MulOpposite.opHomeomorph.symm.isEmbedding.secondCountableTopology
+  have : LocallyCompactSpace (AE F E)ˣ := Units.isClosedEmbedding_embedProduct.locallyCompactSpace
+  have : SecondCountableTopology (AE F E)ˣ := Units.isEmbedding_embedProduct.secondCountableTopology
+  have : BorelSpace (AE F E)ˣ := ⟨rfl⟩
   exact ⟨inferInstance, (isClosed_idelesAt ev).locallyCompactSpace, inferInstance, inferInstance, inferInstance⟩
 
 
@@ -396,18 +396,18 @@ theorem existsUnique_isNormE (v : Pl F) : ∃! μ, IsNormE E v μ := by
     ⟨⟨_, hc⟩, ⟨1, mem_interior_iff_mem_nhds.2 (ho.mem_nhds (one_mem (unitsAt E v)))⟩⟩
   have h0 : IsNormE E v (Measure.haarMeasure U) := ⟨Measure.isHaarMeasure_haarMeasure _, Measure.haarMeasure_self⟩
   refine ⟨_, h0, fun μ hμ => ?_⟩
-  haveI := hμ.1
-  haveI := h0.1
+  have := hμ.1
+  have := h0.1
   obtain ⟨c, -, hc⟩ := haar_idelesAt_eq_smul μ (Measure.haarMeasure U)
   have h1 := hμ.2
-  rw [hc, Measure.smul_apply, h0.2, ENNReal.smul_def, smul_eq_mul, mul_one, ENNReal.coe_eq_one] at h1
+  rw [hc, smul_apply, h0.2, ENNReal.smul_def, smul_eq_mul, mul_one, ENNReal.coe_eq_one] at h1
   rw [hc, h1, one_smul]
 
 theorem absE_of_mem_unitsAt {v : Pl F} {l : (AE F E)ˣ} (hl : l ∈ unitsAt E v) : absE F E l = 1 := by
-  haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  haveI : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
+  have : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
+  have : IsTopologicalRing (AE F E) := GlobalTheory.Doubling.isTopologicalRing_tens
   have hb : IsCompact (absE F E '' (Subtype.val '' {l : idelesAt E (evFin F v) | l.1 ∈ unitsAt E v})) :=
-    ((isCompact_isOpen_unitsAt v).1.image continuous_subtype_val).image GlobalTheory.Doubling.continuous_absE
+    ((isCompact_isOpen_unitsAt v).1.image continuous_subtypeVal).image GlobalTheory.Doubling.continuous_absE
   obtain ⟨C, hC⟩ := hb.bddAbove
   have key : ∀ m ∈ unitsAt E v, absE F E m ≤ 1 := fun m hm => by
     by_contra h
@@ -537,7 +537,7 @@ theorem locOpInf_rho (co : Darboux Bf κ) {ψ : AddChar (AF F) ℂ} (hψ : IsStd
   have hg : ⇑(GlobalTheory.HeisSchA.archS f (locV (co.e u).2) (locV (co.e u).1)
       (trP F κ (locV (co.e u).1) (locV (co.e u).2) / 2)) = schrF (trP F κ) (locV (co.e u).1, locV (co.e u).2) f := by
     funext y
-    rw [GlobalTheory.HeisSchA.archS_apply, GlobalTheory.Published.Metaplectic.eChar_apply, schrF, ContinuousLinearMap.neg_apply,
+    rw [GlobalTheory.HeisSchA.archS_apply, GlobalTheory.Published.Metaplectic.eChar_apply, schrF, neg_apply,
       GlobalTheory.HeisSchA.trL_apply]
     congr 2
     simp only [trP, dotProduct]

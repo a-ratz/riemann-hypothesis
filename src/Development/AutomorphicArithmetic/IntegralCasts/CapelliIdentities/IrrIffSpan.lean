@@ -60,7 +60,7 @@ private theorem UpperTheory.Reformulated.B.Qe4.subalgebra_eq_top {K V : Type*} [
     intro f _
     rw [Subsingleton.elim f 0]
     exact S.zero_mem
-  haveI : IsSimpleModule S V := by
+  have : IsSimpleModule S V := by
     refine { exists_pair_ne := ⟨⊥, ⊤, bot_ne_top⟩, eq_bot_or_eq_top := fun N => ?_ }
     rcases h (N.restrictScalars K) (fun s hs v hv => N.smul_mem (⟨s, hs⟩ : S) hv) with h1 | h1
     · exact Or.inl ((Submodule.restrictScalars_eq_bot_iff K S V).1 h1)

@@ -210,7 +210,7 @@ theorem exists_elim {κ : K → K'} {v : (Σ k, ι k) → (Σ k', ι' k')} {P' :
     intro h
     apply hgP
     rw [← hιB, ← haeval, hT, h, mul_zero]
-  obtain ⟨q, hq0, hq⟩ := hγ.exists_nonzero_coeff_and_aeval_eq_zero (mem_nonZeroDivisors_of_ne_zero hγne)
+  obtain ⟨q, hq0, hq⟩ := hγ.exists_coeff_ne_zero_and_aeval_eq_zero (mem_nonZeroDivisors_of_ne_zero hγne)
   obtain ⟨q₀, rfl⟩ := Polynomial.map_surjective (Ideal.Quotient.mk (imageZ v P')) Ideal.Quotient.mk_surjective q
   refine ⟨q₀.natDegree, fun i => q₀.coeff i, ?_, ?_⟩
   · intro h

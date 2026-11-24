@@ -103,14 +103,14 @@ theorem exists_family_near (K A : Type) [Field K] [NumberField K] [CommRing A] [
 
 theorem exists_countable_families : ∀ (K A : Type) [Field K] [NumberField K] [CommRing A] [IsDomain A] [Algebra K A] [Algebra.Smooth K A] (σ : K →+* ℂ), ∃ (ι : Type) (_ : Countable ι) (m : ι → ℕ) (B : ∀ i, Set (Fin (m i) → ℂ)) (φ : ∀ i, (Fin (m i) → ℂ) → (A →+* ℂ)), (∀ i, IsOpen (B i)) ∧ (∀ i, ∀ b ∈ B i, (φ i b).comp (algebraMap K A) = σ) ∧ (∀ i (a : A), DifferentiableOn ℂ (fun b => φ i b a) (B i)) ∧ (∀ ψ : A →+* ℂ, ψ.comp (algebraMap K A) = σ → ∃ i, ∃ b ∈ B i, φ i b = ψ) ∧ ∀ i, ∀ b ∈ B i, ∀ a : A, a ≠ 0 → ∃ᶠ b' in 𝓝 b, φ i b' a ≠ 0 := by
   intro K A _ _ _ _ _ _ σ
-  haveI : Countable K := Countable.of_equiv _ (Module.finBasis ℚ K).equivFun.symm.toEquiv
-  haveI : Countable A := by
+  have : Countable K := Countable.of_equiv _ (Module.finBasis ℚ K).equivFun.symm.toEquiv
+  have : Countable A := by
     obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1 (inferInstance : Algebra.FiniteType K A)
-    haveI : Countable (MvPolynomial (Fin n) K) := ReciprocityTheory.ChartRestriction.G.T0.NPB.countable_mvPoly
+    have : Countable (MvPolynomial (Fin n) K) := ReciprocityTheory.ChartRestriction.G.T0.NPB.countable_mvPoly
     exact hf.countable
   let X := {ψ : A →+* ℂ // ψ.comp (algebraMap K A) = σ}
-  letI : TopologicalSpace X := TopologicalSpace.induced (fun ψ => (ψ.1 : A → ℂ)) inferInstance
-  haveI : SecondCountableTopology X := TopologicalSpace.secondCountableTopology_induced X (A → ℂ) _
+  let : TopologicalSpace X := TopologicalSpace.induced (fun ψ => (ψ.1 : A → ℂ)) inferInstance
+  have : SecondCountableTopology X := TopologicalSpace.secondCountableTopology_induced X (A → ℂ) _
   choose m B φ U hU hB hσ hd hcov hne using fun x : X => exists_family_near K A σ x.1 x.2
   obtain ⟨t, ht, hcv⟩ := TopologicalSpace.countable_cover_nhds
     (f := fun x : X => (fun ψ : X => (ψ.1 : A → ℂ)) ⁻¹' U x)

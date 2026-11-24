@@ -109,7 +109,7 @@ theorem inv_tau_pow_le (I : AutInst) (hn : 1 ≤ I.n) (x g : I.GA) (hg : g.2 ∈
       Real.log_inv, Real.log_inv]
     exact Real.exp_le_exp.2 (by linarith)
   refine (pow_le_pow_left₀ (inv_pos.2 (hp _)).le h2 _).trans (le_of_eq ?_)
-  rw [mul_pow, ← Real.exp_nat_mul]
+  rw [mul_pow, ← Real.exp_natCast_mul]
   congr 2
   push_cast
   field_simp
@@ -293,7 +293,7 @@ theorem continuous_phe (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (hd : IsD
     intro v
     obtain ⟨-, ⟨-, -, ⟨-, -, hcont⟩, -⟩, -⟩ := hd v
     have hu : Continuous (fun g : UJ (B.I.ε v) => uMat g) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     have hin : ∀ g : UJ (B.I.ε v), uMat g ∈ UJset (B.I.ε v) := fun g => g.2
     have h1 : Continuous (fun g : UJ (B.I.ε v) => B.σ v (uMat g) (B.w v)) :=
       (hcont (B.w v)).comp_continuous hu hin

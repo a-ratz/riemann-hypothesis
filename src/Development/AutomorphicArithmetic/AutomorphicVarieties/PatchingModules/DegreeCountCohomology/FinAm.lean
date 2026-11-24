@@ -67,7 +67,7 @@ theorem UpperTheory.V.Pa.finAm :
     rw [← map_natCast (algebraMap x.A (x.Am m)), hA, map_zero]
   have hDD : (l : DD (x.Am m) g) = 0 := by
     rw [← map_natCast (DD.C (X := x.Am m) (g := g)), hAm, map_zero]
-  haveI := h1
+  have := h1
   have ht : (algebraMap x.A (x.Am m) x.t) ^ m = 0 := by
     rw [← map_pow, Ideal.Quotient.algebraMap_eq, Ideal.Quotient.eq_zero_iff_mem]
     exact Ideal.mem_span_singleton_self _

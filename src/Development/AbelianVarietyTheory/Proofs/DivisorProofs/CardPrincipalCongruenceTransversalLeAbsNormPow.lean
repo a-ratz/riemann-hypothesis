@@ -56,7 +56,7 @@ theorem GlobalTheory.card_congRep_le : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E
   classical
   obtain ⟨hne, hle⟩ := GlobalTheory.congLev_relIndex_le D 𝔪 h𝔪 a
   let Q := intG D a ⧸ (congLev D 𝔪 a).subgroupOf (intG D a)
-  haveI : Finite Q := Nat.finite_of_card_ne_zero hne
+  have : Finite Q := Nat.finite_of_card_ne_zero hne
   let f : R → Q := fun r => QuotientGroup.mk (⟨(r : GA D a), hR r r.2⟩ : intG D a)
   have hf : Function.Injective f := by
     rintro ⟨r, hr⟩ ⟨r', hr'⟩ h

@@ -104,7 +104,7 @@ private theorem exists_int_preimage_of_star_fixed (hF : IsFixF K F) (x : 𝓞 K)
 theorem exists_frac_of_fixed (hF : IsFixF K F) {P : Ideal (𝓞 K)} (hP : P.IsPrime) {a : K}
     (ha : a ∈ locRing P) (hfix : star a = a) :
     ∃ t s : 𝓞 F, s ∉ P.comap (algebraMap (𝓞 F) (𝓞 K)) ∧ a = toK K t / toK K s := by
-  haveI := hP
+  have := hP
   obtain ⟨r, s, hs, rfl⟩ := (WA.mem_locR_iff hP _).1 ha
   have hs1 : s ∉ P := Formalism.HermitianLatticesTheory.locBasic_hcompl_not_mem P s hs
   have hs2 : conjO K s ∉ P := Formalism.HermitianLatticesTheory.locBasic_hcompl_not_mem P _ (WA.conjO_mem_hcompl hs)
@@ -136,7 +136,7 @@ theorem exists_isUnif (hF : IsFixF K F) {P : Ideal (𝓞 K)}
       ∀ z : 𝓞 K, Dv (locRing P) π (algebraMap (𝓞 K) K z * π⁻¹) →
         z ∈ extP K (P.comap (algebraMap (𝓞 F) (𝓞 K))) ^ 2 := by
   have hPp : P.IsPrime := hP.isPrime
-  haveI := hPp
+  have := hPp
   have hPne : P ≠ ⊥ := (Ideal.bot_lt_of_maximal P (NumberField.RingOfIntegers.not_isField K)).ne'
   obtain ⟨x, hxP, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hPne
   have hcx : algebraMap (𝓞 K) K (conjO K x) = star (algebraMap (𝓞 K) K x) := rfl
@@ -162,7 +162,7 @@ theorem exists_isUnif (hF : IsFixF K F) {P : Ideal (𝓞 K)}
   have h𝔭top : P.comap (algebraMap (𝓞 F) (𝓞 K)) ≠ ⊤ := h𝔭max.ne_top
   have hlt := Ideal.pow_right_strictAnti (P.comap (algebraMap (𝓞 F) (𝓞 K))) h𝔭ne h𝔭top
     (show 1 < 2 by norm_num)
-  obtain ⟨π₀, hπ₀, hπ₀2⟩ := SetLike.exists_of_lt hlt
+  obtain ⟨π₀, hπ₀, hπ₀2⟩ := IsConcreteLE.exists_of_lt hlt
   replace hπ₀ : π₀ ∈ P.comap (algebraMap (𝓞 F) (𝓞 K)) := by simpa using hπ₀
   replace hπ₀2 : π₀ ∉ P.comap (algebraMap (𝓞 F) (𝓞 K)) ^ 2 := hπ₀2
   have hdvd : P.comap (algebraMap (𝓞 F) (𝓞 K)) ∣ Ideal.span {π₀} :=
@@ -173,7 +173,7 @@ theorem exists_isUnif (hF : IsFixF K F) {P : Ideal (𝓞 K)}
       rw [h𝔞, sq]
       exact Ideal.mul_mono_right hle
     exact hs (Ideal.mem_span_singleton_self π₀))
-  obtain ⟨c, hc𝔞, hc𝔭⟩ := SetLike.not_le_iff_exists.1 hnle
+  obtain ⟨c, hc𝔞, hc𝔭⟩ := IsConcreteLE.not_le_iff_exists.1 hnle
   have hA : ∀ z ∈ extP K (P.comap (algebraMap (𝓞 F) (𝓞 K))),
       ∃ w : 𝓞 K, algebraMap (𝓞 F) (𝓞 K) c * z = algebraMap (𝓞 F) (𝓞 K) π₀ * w := by
     intro z hz

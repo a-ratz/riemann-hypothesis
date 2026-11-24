@@ -77,7 +77,7 @@ def rationalPrimeUnder (w : HeightOneSpectrum (𝓞 L)) : ℕ :=
 
 omit [NumberField L] in
 theorem under_int_ne_bot (w : HeightOneSpectrum (𝓞 L)) : w.asIdeal.under ℤ ≠ ⊥ :=
-  mt Ideal.eq_bot_of_comap_eq_bot w.ne_bot
+  mt Ideal.eq_bot_of_under_eq_bot w.ne_bot
 
 
 omit [NumberField L] in

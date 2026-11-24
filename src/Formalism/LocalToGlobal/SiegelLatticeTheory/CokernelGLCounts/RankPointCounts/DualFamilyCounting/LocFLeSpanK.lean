@@ -146,7 +146,7 @@ theorem coords (h𝔭 : 𝔭.IsPrime) (hL : IsLatIn X L) {x : V} (hx : x ∈ X) 
     rw [← hL.2] at hx
     refine (Submodule.span_le.mpr ?_) hx
     intro y hy
-    haveI := h𝔭
+    have := h𝔭
     have h1 : y ∈ locF 𝔭 L := Formalism.HermitianLattices.Ext.L3.localizedQuotients.le_locF 𝔭 L hy
     rw [← hloc] at h1
     exact locF_le_spanK h𝔭 h1
@@ -157,7 +157,7 @@ theorem coords (h𝔭 : 𝔭.IsPrime) (hL : IsLatIn X L) {x : V} (hx : x ∈ X) 
 
 theorem mem_B_iff (h𝔭 : 𝔭.IsPrime) (hL : IsLatIn X L) (x : V) :
     x ∈ locF 𝔭 L ↔ x ∈ X ∧ ∀ i, h (b i) x / jK (ι (a i)) ∈ HU.SP K 𝔭 := by
-  haveI := h𝔭
+  have := h𝔭
   have hdiag' : ∀ i, h (b i) (b i) = jK (ι (a i)) := fun i => by
     rw [hdiag i]; exact (coe_iota_eq_algebraMap_coe (a i)).symm
   have key : ∀ w ∈ Submodule.span (𝓞 K) (Set.range b), ∀ i,
@@ -193,7 +193,7 @@ theorem mem_B_iff (h𝔭 : 𝔭.IsPrime) (hL : IsLatIn X L) (x : V) :
 
 theorem mem_locF_dualIn_iff (hF : IsFixF K F) (h𝔭 : 𝔭.IsMaximal) (hL : IsLatIn X L) (x : V) :
     x ∈ locF 𝔭 (dualIn h X L) ↔ x ∈ X ∧ ∀ i, h (b i) x ∈ HU.SP K 𝔭 := by
-  haveI := h𝔭.isPrime
+  have := h𝔭.isPrime
   constructor
   · intro hx
     obtain ⟨s, hs, hsx⟩ := hx

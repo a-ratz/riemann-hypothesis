@@ -60,7 +60,7 @@ theorem hom_descends : ∀ (K Ω : Type) [Field K] [IsAlgClosed K] [CharZero K] 
   intro K Ω _ _ _ _ j A A' _ _ B B' _ _ b b' hA hA' hB hB' f hf
   let Ωb := AlgebraicClosure Ω
   let io : Ω →+* Ωb := algebraMap Ω Ωb
-  letI : Algebra K Ωb := (io.comp j).toAlgebra
+  let : Algebra K Ωb := (io.comp j).toAlgebra
   have hJ : spMap io ≫ spMap j = spMap (algebraMap K Ωb) := by
     rw [← Spec.map_comp, ← CommRingCat.ofHom_comp]
 
@@ -98,8 +98,8 @@ theorem hom_descends : ∀ (K Ω : Type) [Field K] [IsAlgClosed K] [CharZero K] 
   obtain ⟨g, hg, hge⟩ := GlobalTheory.T.exists_mon_hom_over_algebraic_closure K Ωb A A' hA hA' fb hfbm
   let L := algebraicClosure K Ωb
   have hbij : Function.Bijective (algebraMap K L) := IsAlgClosed.algebraMap_bijective_of_isIntegral
-  haveI : IsIso (CommRingCat.ofHom (algebraMap K L)) := (ConcreteCategory.isIso_iff_bijective _).2 hbij
-  haveI : IsIso (spMap (algebraMap K L)) := by unfold spMap; infer_instance
+  have : IsIso (CommRingCat.ofHom (algebraMap K L)) := (ConcreteCategory.isIso_iff_bijective _).2 hbij
+  have : IsIso (spMap (algebraMap K L)) := by unfold spMap; infer_instance
   let q := pullback.fst A.hom (spMap (algebraMap K L))
   let q' := pullback.fst A'.hom (spMap (algebraMap K L))
 

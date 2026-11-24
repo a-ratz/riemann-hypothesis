@@ -298,7 +298,7 @@ theorem exists_determining_lattice (P : HeightOneSpectrum (𝓞 E)) (N : Submodu
   have : Module.Projective (𝓞 E) N := Module.Flat.projective_of_finitePresentation
   have : Finite (𝓞 E ⧸ P.asIdeal) := Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   have hr : Module.finrank (𝓞 E) N ≤ n := by
-    letI : Submodule.IsLattice E N := hN
+    let : Submodule.IsLattice E N := hN
     rw [← Submodule.IsLattice.finrank_span_eq_finrank E N]
     simpa using Submodule.finrank_le (Submodule.span E (N : Set (Sp E n)))
   obtain ⟨v, hv⟩ := exists_determining (R := 𝓞 E) (N := N) P.asIdeal
@@ -326,7 +326,7 @@ theorem card_fibre_le (ST SG : Finset (HeightOneSpectrum (𝓞 E))) (N : Submodu
     have := d0.2.lat
     rwa [show d0.1.N = N from hd0] at this
   choose v hv using fun P => exists_determining_lattice P N hlat
-  haveI hfin : ∀ P : HeightOneSpectrum (𝓞 E), Finite (𝓞 E ⧸ P.asIdeal) := fun P =>
+  have hfin : ∀ P : HeightOneSpectrum (𝓞 E), Finite (𝓞 E ⧸ P.asIdeal) := fun P =>
     Ideal.finiteQuotientOfFreeOfNeBot _ P.ne_bot
   let Φ : DecoSet (E := E) (n := n) (ST := ST) (SG := SG) →
       (∀ P : ST, Fin n → 𝓞 E ⧸ P.1.asIdeal) × (∀ w : SG, Fin n → Fin n → 𝓞 E ⧸ w.1.asIdeal) :=
@@ -540,7 +540,7 @@ theorem card_orbits_le_exp {D : D7} {N : NumDatum} {X : Fields} {s : Seam D X} {
   have hfib := GlobalTheory.ColumnClassLog.fibre_bound_le hP u n hn SG hSG
   rw [hf, hg 0, hg 1] at hfib
   have hsub : ∏ P ∈ ST, Ideal.absNorm P.asIdeal ^ n ≤ ∏ P ∈ Pr.vT u, Ideal.absNorm P.asIdeal ^ n := by
-    refine Finset.prod_le_prod_of_subset_of_one_le' hST fun P hP' _ => ?_
+    refine Finset.prod_le_prod_of_subset_of_one_le hST fun P hP' _ => ?_
     rw [hP.vT_norm u P hP']
     exact Nat.one_le_pow _ _ (hP.T_prime u).pos
   have hfib' := (Nat.mul_le_mul_right _ hsub).trans hfib

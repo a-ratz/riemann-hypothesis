@@ -173,7 +173,7 @@ theorem reForm_apply_alt (x y : Fin g → ℂ) : R.realPartBilinForm x y = (R.ip
 theorem normSq_nonneg_bis (v : Λ) : 0 ≤ R.normSq v := R.ip_self_re_nonneg _
 
 theorem integral_form_sq_le_mul_normSq (x y : Λ) : ((R.form x y : ℤ) : ℝ) ^ 2 ≤ R.normSq x * R.normSq y := by
-  letI := R.hermitianSemiInnerProductCore
+  let := R.hermitianSemiInnerProductCore
   have h := InnerProductSpace.Core.inner_mul_inner_self_le (𝕜 := ℂ) (R.P y) (R.P x)
   have h1 : ‖R.ip (R.P x) (R.P y)‖ = ‖R.ip (R.P y) (R.P x)‖ := by
     rw [← R.conj_hermitianForm_symm (R.P x) (R.P y), RCLike.norm_conj]
@@ -187,8 +187,8 @@ theorem integral_form_sq_le_mul_normSq (x y : Λ) : ((R.form x y : ℤ) : ℝ) ^
     _ ≤ R.normSq x * R.normSq y := by nlinarith
 
 theorem exists_pos_le_sqrt_normSq : ∃ c : ℝ, 0 < c ∧ ∀ v : Λ, v ≠ 0 → c ≤ √(R.normSq v) := by
-  haveI := R.free
-  haveI := R.fin
+  have := R.free
+  have := R.fin
   let e := Module.finBasis ℤ Λ
   set S : ℝ := 1 + ∑ i, √(R.normSq (e i)) with hS
   have hS0 : 0 < S := by
@@ -265,11 +265,11 @@ theorem card_le_of_isNzFamily {σ : Ψ → (𝓞 E →+* ℂ)} {m : ℕ} (hm : R
 
 include R in
 theorem free_finite_submodule (I : Submodule (𝓞 E) Λ) : Module.Free ℤ I ∧ Module.Finite ℤ I := by
-  haveI := R.free
-  haveI := R.fin
+  have := R.free
+  have := R.fin
   have hinj : Function.Injective (I.subtype.toAddMonoidHom.toIntLinearMap) := Subtype.val_injective
-  haveI hfin : Module.Finite ℤ I := Module.Finite.of_injective _ hinj
-  haveI : Module.IsTorsionFree ℤ I := Function.Injective.moduleIsTorsionFree _ hinj (fun _ _ => map_smul _ _ _)
+  have hfin : Module.Finite ℤ I := Module.Finite.of_injective _ hinj
+  have : Module.IsTorsionFree ℤ I := Function.Injective.moduleIsTorsionFree _ hinj (fun _ _ => map_smul _ _ _)
   exact ⟨Module.free_of_finite_type_torsion_free', hfin⟩
 
 theorem neg_log_covolume_le {σ : Ψ → (𝓞 E →+* ℂ)} {m : ℕ} (hσ : IsCMFam σ) (hm : R.HasRank σ m) (hm1 : 1 ≤ m) (τ : Ψ)
@@ -362,9 +362,9 @@ theorem cuspW_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (g : �
     have h := hm τ
     rw [Module.finrank_zero_of_subsingleton] at h
     omega
-  haveI : Nontrivial Λ := by
-    haveI := R.free
-    haveI := R.fin
+  have : Nontrivial Λ := by
+    have := R.free
+    have := R.fin
     exact Module.nontrivial_of_finrank_pos (R := ℤ) (by rw [R.rank]; omega)
   have hlam := R.firstMinimum_pos_ter
   set bound : ℝ := Fintype.card Ψ * m * (2 * max 0 (Real.log (1 / R.lam1)) + Real.log (2 * Fintype.card Ψ * m * (|(discr E : ℝ)| ^ (1 / (Module.finrank ℚ E : ℝ))))) with hbound

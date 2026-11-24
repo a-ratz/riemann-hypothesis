@@ -63,7 +63,7 @@ theorem integral_mul_left {m n : ℕ} (μ : Measure (Mx D m n)) (𝓨 : Set (Mx 
     (hφ : ∀ γ ∈ GlobalTheory.MixModel.ratMx D m n, ∀ a, φ (γ + a) = φ a) :
     ∫ a in 𝓨, φ (P * a) ∂μ = ∫ a in 𝓨, φ a ∂μ := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.MixModel.lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
   let eA : Mx D m n ≃+ Mx D m n :=
     { toFun := fun a => P * a
       invFun := fun a => Q * a
@@ -74,7 +74,7 @@ theorem integral_mul_left {m n : ℕ} (μ : Measure (Mx D m n)) (𝓨 : Set (Mx 
   have hc' : Continuous (fun a : Mx D m n => Q * a) := continuous_const.matrix_mul continuous_id
   let eH : Mx D m n ≃ₜ Mx D m n := ⟨eA.toEquiv, hc, hc'⟩
   let eM : Mx D m n ≃ᵐ Mx D m n := eH.toMeasurableEquiv
-  haveI := h.1
+  have := h.1
   have hHaar : (μ.map eM).IsAddHaarMeasure := AddEquiv.isAddHaarMeasure_map μ eA hc hc'
   have hmp : MeasurePreserving eM μ (μ.map eM) := ⟨eM.measurable, rfl⟩
   have hmp' : MeasurePreserving eM.symm (μ.map eM) μ := MeasurePreserving.symm eM hmp

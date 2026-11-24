@@ -95,7 +95,7 @@ theorem lastDet_eq (Y : Gl r k) : lastDet Y = (-1) ^ r * (Cm Y).det := by
   choose p hp1 hp2 hp3 using vrow_poly Y
   let T : Matrix (Fin r) (Fin r) k := Matrix.of fun i j => (p i).coeff j
   have hT : T.det = 1 := by
-    rw [Matrix.det_of_lowerTriangular T (fun i j hij => hp2 i j hij)]
+    rw [det_of_isLowerTriangular T (fun i j hij => hp2 i j hij)]
     exact Finset.prod_eq_one fun i _ => hp1 i
   have hmin : (Matrix.of fun (i j : Fin r) => vrow Y ((i : ℕ) + 1) (Fin.castSucc j)) = T * Cm Y := by
     ext i j

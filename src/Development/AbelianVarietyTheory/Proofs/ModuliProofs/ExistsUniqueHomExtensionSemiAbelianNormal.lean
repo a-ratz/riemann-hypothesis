@@ -91,7 +91,7 @@ theorem mem_range_or_exists_dvr {W Z : Scheme.{0}} (i : W ⟶ Z) [IsPreimmersion
 theorem finite_torsion_points {X : Scheme.{0}} {G : Over X} [GrpObj G] (hG : IsSemiAbelian G)
     {Ω : Type} [Field Ω] [IsAlgClosed Ω] (t : Sp Ω ⟶ X) {n : ℕ} (hn : 0 < n) :
     Finite {x : Over.mk t ⟶ G // x ^ n = 1} := by
-  haveI := hG.comm
+  have := hG.comm
   have := (semiAbelian_torsion_finite_and_closedPoint_finiteOrder AbTorsionFinite.finite_torsion).1
     Ω ((Over.pullback t).obj G) (hG.fibres Ω t) n hn
   let e := TorsionLift.ptsEquiv t G (𝟙_ (Over (Sp Ω))) t (Category.id_comp _)

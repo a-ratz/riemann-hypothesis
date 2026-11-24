@@ -95,7 +95,7 @@ theorem exists_common_pullback_dvr : ∀ (Y : Scheme.{0}) (G : Over Y) [GrpObj G
   obtain ⟨E, ⟨hE, hEω⟩, -⟩ := GlobalTheory.semiAbelianHomExtension_holds.generic_existsUnique_iso_of_extensions
     (GlobalTheory.Published.SemiAbelianHomExtension.isNormalScheme_spec V')
     (GlobalTheory.IsGenericPointHom.fractionField V' (FractionRing V')) hG' hG'' hω hω''
-  haveI := hE
+  have := hE
   let β' := E.hom.left ≫ pullback.fst G.hom ξ
   have hβ' : IsGrpPullback ((Over.pullback (spMap fV)).obj Gu) G ξ β' :=
     IsGrpPullback.congr ((ReciprocityTheory.ChartRestriction.G.Geo.Tor.isGrpPullback_of_iso E).comp hG''p) (Category.id_comp _) rfl
@@ -111,7 +111,7 @@ theorem exists_common_pullback_dvr : ∀ (Y : Scheme.{0}) (G : Over Y) [GrpObj G
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.flat_and_isSeparated_of_isSemiAbelian _ hG'
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.flat_and_isSeparated_of_isSemiAbelian _ hG
   obtain ⟨_, _⟩ := GlobalTheory.ExtUnique.spec_fractionRing V' (FractionRing V')
-  haveI : IsSchemeTheoreticallyDominant ω := .of_isPullback hω.1.flip
+  have : IsSchemeTheoreticallyDominant ω := .of_isPullback hω.1.flip
   have key : ω ≫ F'.left = eK.left ≫ ω := by
     apply pullback.hom_ext
     · rw [Category.assoc, hF'f, ← Category.assoc, hωf, Category.assoc, hωf, hF]

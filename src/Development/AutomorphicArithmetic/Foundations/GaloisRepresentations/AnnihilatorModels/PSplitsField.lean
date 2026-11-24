@@ -91,8 +91,8 @@ theorem UpperTheory.Gal.crystallineComparison.splitsField_of :
   intro R S K _ _ _ _ _ _ hE
   classical
   have hfin : Module.Finite K (K ⊗[R] S) := Algebra.FormallyUnramified.finite_of_free K (K ⊗[R] S)
-  haveI : IsArtinianRing (K ⊗[R] S) := isArtinian_of_tower K inferInstance
-  haveI : Finite (PrimeSpectrum (K ⊗[R] S)) := inferInstance
+  have : IsArtinianRing (K ⊗[R] S) := isArtinian_of_tower K inferInstance
+  have : Finite (PrimeSpectrum (K ⊗[R] S)) := inferInstance
   let e := Algebra.FormallyEtale.equivPiOfIsSepClosed K (K ⊗[R] S)
   let F := splitMap (R := R) (S := S) (B := K) (I := S →ₐ[R] K) (fun z => z)
   let L : (S →ₐ[R] K) → ((K ⊗[R] S) →ₐ[K] K) := fun ψ => (Pi.evalAlgHom K (fun _ => K) ψ).comp F
@@ -120,7 +120,7 @@ theorem UpperTheory.Gal.crystallineComparison.splitsField_of :
     refine ⟨ψ, ?_⟩
     have h1 := hLe ψ (e.symm (Pi.single p 1))
     rw [hg] at h1
-    simp only [g, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_coe,
+    simp only [g, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgHom.coe_ofClass,
       AlgEquiv.apply_symm_apply, Pi.evalAlgHom_apply] at h1
     by_contra hne
     simp [Pi.single_apply, hne] at h1

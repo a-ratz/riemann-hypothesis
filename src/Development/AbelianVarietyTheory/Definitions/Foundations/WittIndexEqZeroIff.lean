@@ -331,7 +331,7 @@ theorem isClosed_act_sub_mem (W : Submodule E V.V) (y z : Fin V.rank → R ⊗[F
       (LinearEquiv.injective _) (IsModuleTopology.continuous_of_linearMap
         (Algebra.TensorProduct.basis R (Module.finBasis F E)).equivFun.toLinearMap)
   have hm : Continuous fun g : HA R hc.sig V.gram => (HA.mat _ hc.sig V.gram g).1 :=
-    Units.continuous_val.comp continuous_subtype_val
+    Units.continuous_val.comp continuous_subtypeVal
   simp only [mem_extSub_iff_of_ker V _ T 1 h1 h2]
   exact isClosed_eq (continuous_const.matrix_mulVec ((hm.matrix_mulVec continuous_const).sub continuous_const))
     continuous_const

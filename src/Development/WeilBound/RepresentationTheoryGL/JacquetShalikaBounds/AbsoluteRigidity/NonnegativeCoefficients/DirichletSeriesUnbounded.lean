@@ -81,7 +81,7 @@ theorem cpow_pow (hq : ∀ w, (0 : ℝ) < q w) (σ : ℝ) (p : W × ℕ) :
   have h1 : (q p.1 : ℂ) = ((q p.1 : ℝ) : ℂ) := by push_cast; rfl
   have h2 : (-(σ : ℂ)) = ((-σ : ℝ) : ℂ) := by push_cast; ring
   rw [h1, h2, ← Complex.ofReal_cpow (hq p.1).le, ← Complex.ofReal_pow, Real.rpow_def_of_pos (hq p.1),
-    ← Real.exp_nat_mul]
+    ← Real.exp_natCast_mul]
   congr 2
   simp only [ll]
   push_cast

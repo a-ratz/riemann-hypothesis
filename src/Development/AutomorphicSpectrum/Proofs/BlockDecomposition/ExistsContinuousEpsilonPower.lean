@@ -61,8 +61,8 @@ theorem pow_sub_one_mem (hl : (l : S) = 0) (hx : x - 1 ∈ Ideal.span {ϖ}) (m :
   rcases subsingleton_or_nontrivial S with h | h
   · rw [Subsingleton.elim (x ^ l ^ m - 1) 0]
     exact zero_mem _
-  · haveI : CharP S l := (CharP.charP_iff_prime_eq_zero Fact.out).2 hl
-    haveI : ExpChar S l := ExpChar.prime Fact.out
+  · have : CharP S l := (CharP.charP_iff_prime_eq_zero Fact.out).2 hl
+    have : ExpChar S l := ExpChar.prime Fact.out
     have e : x ^ l ^ m - 1 = (x - 1) ^ l ^ m := by
       rw [sub_pow_char_pow, one_pow]
     rw [e, ← Ideal.span_singleton_pow]
@@ -128,7 +128,7 @@ theorem exists_fn (A : PAlg l) (x : A.A) (hx : x - 1 ∈ Ideal.span {A.pi}) :
       (∀ (m : ℕ) (z : ℤ_[l]), Hom.f (A.evCont z) η - x ^ (PadicInt.toZModPow m z).val ∈
         Ideal.span {A.pi ^ (l ^ m)}) ∧
       ∀ z : ℤ_[l], Hom.f (A.evCont (z + 1)) η = x * Hom.f (A.evCont z) η := by
-  haveI hc : IsAdicComplete (Ideal.span {A.pi}) A.A := A.compl
+  have hc : IsAdicComplete (Ideal.span {A.pi}) A.A := A.compl
   have hl : (l : A.A) = 0 := A.natCast_l
   choose L hL using fun z : ℤ_[l] => exists_lim (ϖ := A.pi) hl hx
     (fun m => (PadicInt.toZModPow m z).val) (fun m m' h => val_modEq h z)

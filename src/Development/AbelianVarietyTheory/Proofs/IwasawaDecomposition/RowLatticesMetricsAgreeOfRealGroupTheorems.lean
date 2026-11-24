@@ -858,7 +858,7 @@ theorem metric_base_fixed : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I
     exact_mod_cast Nat.card_pos
   have hv0 : A3.A.v0 = InfinitePlace.mk D.what₂.embLL := R.hv0
   have hcx : ∃ a : D.what₂.LL, star (A3.A.v0.embedding a) ≠ A3.A.v0.embedding a := by
-    haveI := (GlobalTheory.ptField_main D).1
+    have := (GlobalTheory.ptField_main D).1
     exact exists_nonreal _ (IsTotallyComplex.isComplex _)
   refine majAt_eq_of_diag _ _ _ _ _ Z.eRR0.toLinearMap hcx ?_ x y
   intro x

@@ -51,7 +51,7 @@ namespace GlobalTheory.FibrePowerProper
 theorem isProper_hom_of_iso {T : Scheme.{0}} {X Y : Over T} (e : X ≅ Y) (h : IsProper Y.hom) :
     IsProper X.hom := by
   have hw : X.hom = e.hom.left ≫ Y.hom := (Over.w e.hom).symm
-  haveI : IsIso e.hom.left := (Over.forget T).map_isIso e.hom
+  have : IsIso e.hom.left := (Over.forget T).map_isIso e.hom
   rw [hw]
   infer_instance
 
@@ -60,7 +60,7 @@ theorem isProper_prod_hom {T : Scheme.{0}} (X Y : Over T) (hX : IsProper X.hom)
   have h1 : (X ⨯ Y).hom = (Over.prodLeftIsoPullback X Y).hom ≫ pullback.fst X.hom Y.hom ≫ X.hom := by
     rw [← Category.assoc, Over.prodLeftIsoPullback_hom_fst]
     exact (Over.w (prod.fst : X ⨯ Y ⟶ X)).symm
-  have hfst : IsProper (pullback.fst X.hom Y.hom) := by haveI := hY; infer_instance
+  have hfst : IsProper (pullback.fst X.hom Y.hom) := by have := hY; infer_instance
   rw [h1]
   infer_instance
 

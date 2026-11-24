@@ -120,13 +120,13 @@ theorem exists_gen (w : HeightOneSpectrum (𝓞 D.host.E)) :
     rw [FractionalIdeal.eq_zero_iff]
     intro a ha
     have := hle a ha
-    rw [h, map_zero, le_zero_iff, map_eq_zero] at this
+    rw [h, map_zero, nonpos_iff_eq_zero, map_eq_zero] at this
     exact (map_eq_zero π).1 this
   refine ⟨a₀, ?_, h0, fun a ha => ?_⟩
   · show a₀ ∈ (D.host.AA : Submodule (𝓞 D.host.E) D.host.E)
     rw [← hs]; exact Submodule.subset_span ha₀
   · show Valued.v ((π a₀)⁻¹ * π a) ≤ 1
-    rw [Valuation.map_mul, map_inv₀, inv_mul_le_one₀ (zero_lt_iff.2 ((map_ne_zero _).2 h0))]
+    rw [Valuation.map_mul, map_inv₀, inv_mul_le_one₀ (pos_iff_ne_zero.2 ((map_ne_zero _).2 h0))]
     exact hle a ha
 
 theorem mul_vecMulVec_mul_apply {K : Type} [CommRing K] {m n : ℕ} (A : Matrix (Fin m) (Fin m) K)

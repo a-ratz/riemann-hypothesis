@@ -141,29 +141,29 @@ theorem range_le_fnField {Ω₂ Ω : Type} [Field Ω₂] [Field Ω] (i : Ω₂ �
 
 private theorem finiteDimensional_of_subfield_le {Ω : Type} [Field Ω] (S T : Subfield Ω) (h : S ≤ T) [FiniteDimensional S Ω] :
     FiniteDimensional T Ω := by
-  letI : Algebra S T := (Subfield.inclusion h).toAlgebra
-  haveI : IsScalarTower S T Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  let : Algebra S T := (Subfield.inclusion h).toAlgebra
+  have : IsScalarTower S T Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
   exact Module.Finite.of_restrictScalars_finite S T Ω
 
 private theorem trdeg_eq_of_finrank_fieldRange_pos {Ω₂ Ω : Type} [Field Ω₂] [Field Ω] [Algebra ℚ Ω₂] [Algebra ℚ Ω] (i : Ω₂ →+* Ω)
     (d : ℕ) (hZ : Algebra.trdeg ℤ Ω₂ = d) (hfin : 0 < Module.finrank i.fieldRange Ω) :
     Algebra.trdeg ℚ Ω = d := by
   have hQ : Algebra.trdeg ℚ Ω₂ = d := by
-    haveI := IsLocalization.isAlgebraic ℚ (nonZeroDivisors ℤ)
+    have := IsLocalization.isAlgebraic ℚ (nonZeroDivisors ℤ)
     have h := _root_.trdeg_add_eq ℤ ℚ (A := Ω₂)
     rw [_root_.trdeg_eq_zero, zero_add, hZ] at h
     exact h
-  letI : Algebra Ω₂ Ω := i.toAlgebra
-  haveI : IsScalarTower ℚ Ω₂ Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
-  letI : Algebra Ω₂ i.fieldRange := i.rangeRestrictField.toAlgebra
-  haveI : IsScalarTower Ω₂ i.fieldRange Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
-  haveI : Module.Finite i.fieldRange Ω := Module.finite_of_finrank_pos hfin
-  haveI : Module.Finite Ω₂ i.fieldRange := by
+  let : Algebra Ω₂ Ω := i.toAlgebra
+  have : IsScalarTower ℚ Ω₂ Ω := IsScalarTower.of_algebraMap_eq' (RingHom.ext_rat _ _)
+  let : Algebra Ω₂ i.fieldRange := i.rangeRestrictField.toAlgebra
+  have : IsScalarTower Ω₂ i.fieldRange Ω := IsScalarTower.of_algebraMap_eq fun x => rfl
+  have : Module.Finite i.fieldRange Ω := Module.finite_of_finrank_pos hfin
+  have : Module.Finite Ω₂ i.fieldRange := by
     refine Module.Finite.of_surjective (Algebra.linearMap Ω₂ i.fieldRange) ?_
     rintro ⟨z, hz⟩
     obtain ⟨x, rfl⟩ := RingHom.mem_fieldRange.1 hz
     exact ⟨x, Subtype.ext rfl⟩
-  haveI : Module.Finite Ω₂ Ω := Module.Finite.trans i.fieldRange Ω
+  have : Module.Finite Ω₂ Ω := Module.Finite.trans i.fieldRange Ω
   have h := _root_.trdeg_add_eq ℚ Ω₂ (A := Ω)
   rw [_root_.trdeg_eq_zero (R := Ω₂) (A := Ω), add_zero, hQ] at h
   exact h.symm
@@ -174,10 +174,10 @@ theorem numMap : NumMap := by
   have hiy : ∀ b, ∃ j, i (y ⟨b, j⟩) ≠ 0 := fun b => by
     obtain ⟨j, hj⟩ := hy b
     exact ⟨j, (map_ne_zero i).2 hj⟩
-  haveI : FiniteDimensional i.fieldRange Ω := Module.finite_of_finrank_pos hfin
+  have : FiniteDimensional i.fieldRange Ω := Module.finite_of_finrank_pos hfin
   have hFD : ∀ (k : Type) [Field k] [Algebra k Ω], FiniteDimensional (fnField k fun x => i (y x)) Ω := by
     intro k _ _
-    haveI := finiteDimensional_of_subfield_le i.fieldRange _ (range_le_fnField i hb hy k)
+    have := finiteDimensional_of_subfield_le i.fieldRange _ (range_le_fnField i hb hy k)
     exact this
   have heq : (fnField ℚ fun x => i (y x)).toSubfield = i.fieldRange := by
     refine le_antisymm ?_ (range_le_fnField i hb hy ℚ)

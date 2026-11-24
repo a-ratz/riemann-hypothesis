@@ -157,7 +157,7 @@ theorem sturm_coef_zero : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N), 0 <
   intro k L N ε hL hN
   have hΓ : (1 : ℝ) ∈ (Gamma1 L : Subgroup (GL (Fin 2) ℝ)).strictPeriods := by
     simp [strictPeriods_Gamma1]
-  haveI : NeZero L := ⟨hL.ne'⟩
+  have : NeZero L := ⟨hL.ne'⟩
   obtain ⟨m, hm⟩ := exists_sturmBound_modularForm_arithmetic hΓ (k : ℤ)
   refine ⟨m, fun a ha hz => ?_⟩
   obtain ⟨f, hf⟩ := _root_.GlobalTheory.EisM.modularForm_gammaOne_of_MF k L N ε a hL hN ha

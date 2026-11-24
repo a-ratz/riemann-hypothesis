@@ -78,7 +78,7 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.secSurj_of :
     intro g hg a
     obtain ⟨c, y', rfl⟩ := hOM p D hstd.m1 a
     have h1 : g ≫ M.univ.act.act (algebraMap (𝓞 D.F) D.O (p : 𝓞 D.F)) = 1 := hGk g hg _ hpw
-    haveI := M.univ.act.hom y'
+    have := M.univ.act.hom y'
     rw [GlobalTheory.UPel.HT.OActN.add, hcm, Algebra.commutes, GlobalTheory.UPel.HT.OActN.mul, ← Category.assoc, h1]
     simp only [Hom.one_def, Category.assoc, IsMonHom.one_hom]
     rw [← Hom.one_def, _root_.mul_one]
@@ -90,8 +90,8 @@ theorem UpperTheory.Gal.crystallineComparison.Mod.secSurj_of :
     rw [hGc, hstd.norm]
     exact pow_ne_zero _ (pow_ne_zero _ (Fact.out : Nat.Prime p).ne_zero)
   have hfin : Finite (G.comap Φ) := Nat.finite_of_card_ne_zero (hcard ▸ hne)
-  haveI := o₁.ab
-  haveI := IsAbelianScheme.proper (A := o₁.A)
+  have := o₁.ab
+  have := IsAbelianScheme.proper (A := o₁.A)
   obtain ⟨G', _, i, hi1, hi2, hi3, hi4, hi5, hi6, hi7, hi8⟩ := hCS K o₁.A inferInstance (G.comap Φ) hfin
   have hΦact : ∀ u a, Φ (u ≫ o₁.act.act a) = Φ u ≫ M.univ.act.act a := fun u a =>
     Over.OverMorphism.ext (by rw [hΦl, Over.comp_left, Over.comp_left, hΦl, Category.assoc, Category.assoc, m.act])

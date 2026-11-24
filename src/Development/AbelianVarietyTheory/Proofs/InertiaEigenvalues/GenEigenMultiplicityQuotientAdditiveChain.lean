@@ -132,7 +132,7 @@ theorem stab (N : Module.End k U) (Q S : Submodule k U) (hQ : ∀ y ∈ Q, N y �
     apply Submodule.map_mono
     rintro _ ⟨y, hy, rfl⟩
     exact ⟨(N ^ m) y, pow_mem N Q hQ m y hy, by rw [pow_add, Module.End.mul_apply]⟩
-  haveI := hfin M
+  have := hfin M
   exact (Submodule.eq_of_le_of_finrank_le h1 (hM _)).ge
 
 theorem gen_sup (N : Module.End k U) (P Q S : Submodule k U) (hSQ : S ≤ Q) (hQP : Q ≤ P)
@@ -165,10 +165,10 @@ theorem main : ∀ {k U : Type} [Field k] [AddCommGroup U] [Module k U] (T : Mod
     have : N y = T y - x • y := by simp [hN, Module.algebraMap_end_apply]
     rw [this]
     exact A.sub_mem (hA y hy) (A.smul_mem x hy)
-  haveI hP := fin_map P S hfin
+  have hP := fin_map P S hfin
   have hf : ∀ A : Submodule k U, A ≤ P → FiniteDimensional k (A.map S.mkQ) := fun A hA =>
     Submodule.finiteDimensional_of_le (Submodule.map_mono hA)
-  haveI := hf Q hQP
+  have := hf Q hQP
   have hSG : S ≤ ⨆ m : ℕ, S.comap (N ^ m) := fun y hy =>
     (mem_gen N S (hst S hS) y).2 ⟨0, by simpa using hy⟩
   have h1 := gen_sup N P Q S hSQ hQP (hst Q hQ) (hst S hS)
@@ -178,9 +178,9 @@ theorem main : ∀ {k U : Type} [Field k] [AddCommGroup U] [Module k U] (T : Mod
   rw [h1, h2]
   set A := P ⊓ G with hA
   have hSA : S ≤ A := le_inf (hSQ.trans hQP) hSG
-  haveI := hf A inf_le_left
-  haveI := hf (A ⊔ Q) (sup_le inf_le_left hQP)
-  haveI := hf (A ⊓ Q) (inf_le_right.trans hQP)
+  have := hf A inf_le_left
+  have := hf (A ⊔ Q) (sup_le inf_le_left hQP)
+  have := hf (A ⊓ Q) (inf_le_right.trans hQP)
   have e1 := finrank_quot A S S le_rfl hSA
   have e2 := finrank_quot (A ⊔ Q) Q S hSQ le_sup_right
   have e3 := finrank_quot (A ⊓ Q) S S le_rfl (le_inf hSA hSQ)

@@ -109,7 +109,7 @@ theorem upper_inj {p : ℕ} {u u' : G.UT p → ℂ} (h : G.upper u = G.upper u')
   funext p
   have h1 := congrFun (congrFun h p.1.1) p.1.2
   simp only [G.upper, G.strictUpper, Matrix.add_apply, Matrix.of_apply, Matrix.one_apply_ne (ne_of_lt p.2),
-    zero_add, dif_pos p.2] at h1
+    zero_add, dite_eq_left p.2] at h1
   exact h1
 
 theorem kr_eq_integral_krI_psiR {k p ρ : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
@@ -196,7 +196,7 @@ theorem kr_eq_integral_krI_psiR {k p ρ : ℕ} {Wp Wq : Type} [NormedAddCommGrou
   have hSB : StandardBorelSpace (LeftFubiniLemmas.XR k p ρ) := inferInstance
   have : StandardBorelSpace S := hSm.standardBorel
   have hemb : MeasurableEmbedding (fun s : S => LeftFubiniLemmas.PsiR (s : LeftFubiniLemmas.XR k p ρ)) :=
-    (hcont.measurable.comp measurable_subtype_coe).measurableEmbedding
+    (hcont.measurable.comp measurable_subtypeVal).measurableEmbedding
       (fun a b hab => Subtype.ext (hinj a.2 b.2 hab))
   rw [LeftFubiniLemmas.kr_eq_int]
   calc ∫ q, LeftFubiniLemmas.KrI B0 H y₀ q ∂(B0.μW'.prod B0.μN)
@@ -204,13 +204,13 @@ theorem kr_eq_integral_krI_psiR {k p ρ : ℕ} {Wp Wq : Type} [NormedAddCommGrou
     _ = ∫ q, LeftFubiniLemmas.KrI B0 H y₀ q ∂((Measure.comap Subtype.val (LeftFubiniLemmas.muR (p := p) Bj)).map
           (fun s : S => LeftFubiniLemmas.PsiR (s : LeftFubiniLemmas.XR k p ρ))) := by
         rw [show (fun s : S => LeftFubiniLemmas.PsiR (s : LeftFubiniLemmas.XR k p ρ)) = LeftFubiniLemmas.PsiR ∘ Subtype.val from rfl,
-          ← Measure.map_map hcont.measurable measurable_subtype_coe, map_comap_subtype_coe hSm, hres]
+          ← Measure.map_map hcont.measurable measurable_subtypeVal, map_comap_subtypeVal hSm, hres]
     _ = ∫ s : S, LeftFubiniLemmas.KrI B0 H y₀ (LeftFubiniLemmas.PsiR (s : LeftFubiniLemmas.XR k p ρ)) ∂(Measure.comap Subtype.val (LeftFubiniLemmas.muR (p := p) Bj)) :=
         hemb.integral_map _
     _ = ∫ s, LeftFubiniLemmas.KrI B0 H y₀ (LeftFubiniLemmas.PsiR s) ∂((Measure.comap Subtype.val (LeftFubiniLemmas.muR (p := p) Bj)).map
           (Subtype.val : S → LeftFubiniLemmas.XR k p ρ)) :=
-        ((MeasurableEmbedding.subtype_coe hSm).integral_map (fun s => LeftFubiniLemmas.KrI B0 H y₀ (LeftFubiniLemmas.PsiR s))).symm
-    _ = _ := by rw [map_comap_subtype_coe hSm, hres]
+        ((MeasurableEmbedding.subtypeVal hSm).integral_map (fun s => LeftFubiniLemmas.KrI B0 H y₀ (LeftFubiniLemmas.PsiR s))).symm
+    _ = _ := by rw [map_comap_subtypeVal hSm, hres]
 
 end Formalism.FourierDecayAlt.P.PBQ
 end -- clump:auto
@@ -342,13 +342,13 @@ theorem cd_Wm (i j : Fin n) :
     ContDiffOn ℝ ∞ (fun Z : Fin n → Fin n → ℂ => Wm (Matrix.of Z) i j) {Z | (Matrix.of Z).det ≠ 0} := by
   simp only [Wm, blkJ, colJ, Matrix.of_apply]
   by_cases hij : (i : ℕ) < j
-  · simp only [dif_pos hij, Matrix.mulVec, dotProduct, Pi.neg_apply]
+  · simp only [dite_eq_left hij, Matrix.mulVec, dotProduct, Pi.neg_apply]
     have hg : ContDiff ℝ ∞ (fun Z : Fin n → Fin n → ℂ => fun a b : Fin j =>
         gram (Matrix.of Z) (Fin.castLE j.isLt.le a) (Fin.castLE j.isLt.le b)) :=
       contDiff_pi.2 fun a => contDiff_pi.2 fun b => cd_gram _ _
     refine ContDiffOn.neg (ContDiffOn.sum fun c _ => ContDiffOn.mul ?_ (cd_gram _ _).contDiffOn)
     exact (cd_inv (m := j) ⟨i, hij⟩ c).comp hg.contDiffOn fun Z hZ => det_gram_castLE_ne_zero_of_det_ne_zero Z hZ j j.isLt.le
-  · simp only [dif_neg hij]
+  · simp only [dite_eq_right hij]
     split_ifs <;> exact contDiffOn_const
 
 theorem cd_Sm (i j : Fin n) :
@@ -386,9 +386,9 @@ theorem upper_utc {M : Matrix (Fin n) (Fin n) ℂ} (hM : M ∈ C2.UTset n) : G.u
   ext i j
   simp only [G.upper, G.strictUpper, StabilizerDisintegration.utc, Matrix.add_apply, Matrix.one_apply, Matrix.of_apply]
   rcases lt_trichotomy i j with h | rfl | h
-  · rw [dite_eq_left h, if_neg (ne_of_lt h), zero_add]
-  · rw [dite_eq_right (lt_irrefl _), if_pos rfl, hM.2, add_zero]
-  · rw [dite_eq_right (not_lt.2 h.le), if_neg (ne_of_gt h), hM.1 i j h, add_zero]
+  · rw [dite_eq_left h, ite_eq_right (ne_of_lt h), zero_add]
+  · rw [dite_eq_right (lt_irrefl _), ite_eq_left rfl, hM.2, add_zero]
+  · rw [dite_eq_right (not_lt.2 h.le), ite_eq_right (ne_of_gt h), hM.1 i j h, add_zero]
 
 theorem upper_ut (v : G.UT n → ℂ) : G.upper v ∈ C2.UTset n := by
   refine ⟨fun i j h => ?_, fun i => ?_⟩
@@ -856,7 +856,7 @@ theorem left_average_formula : Formalism.FourierDecayAlt.P.CutMK.LeftAvg := by
     have hh := hx.1
     have uh : IsUnit (Matrix.of x.1.1 : B.Mat k 0).det := hWs.unit _ hh
     unfold PBQ.pbI PBQ.sP PBQ.cP
-    rw [if_pos hx, hν, inv_one, Matrix.mul_one, Formalism.FourierDecayAlt.P.Dx2.MN.castM_rfl, hK _ hh x.2,
+    rw [ite_eq_left hx, hν, inv_one, Matrix.mul_one, Formalism.FourierDecayAlt.P.Dx2.MN.castM_rfl, hK _ hh x.2,
       Formalism.FourierDecayAlt.P.Qx5.psi_one Bj.z_mem, one_mul]
     have e : (Bj.π (Matrix.of x.1.1)).comp (Bj.π (Matrix.of x.1.1)⁻¹) = ContinuousLinearMap.id ℂ Wp := by
       rw [← Bj.π_rep.2 _ hh _ (hWs.inv_mem _ hh), Matrix.mul_nonsing_inv _ uh, Bj.π_rep.1]

@@ -133,9 +133,9 @@ theorem rootsOfUnity_map_bijective_of_henselian : ∀ (R : Type) [CommRing R] [H
     ∀ z : Kˣ, z ^ n = 1 → ∃ u : Rˣ, u ^ n = 1 ∧ Units.map φ.toMonoidHom u = z := by
   intro R _ _ _ K _ φ n hn0 hn
   refine ⟨fun u v hu hv huv => units_rootOfUnity_map_injective φ n hn u v hu hv huv, ?_⟩
-  haveI : NeZero n := ⟨hn0.ne'⟩
+  have : NeZero n := ⟨hn0.ne'⟩
   set ρ := IsLocalRing.residue R
-  haveI : NeZero (n : IsLocalRing.ResidueField R) :=
+  have : NeZero (n : IsLocalRing.ResidueField R) :=
     ⟨by simpa [ρ] using (IsLocalRing.residue_ne_zero_iff_isUnit (n : R)).2 hn⟩
   let f := restrictRootsOfUnity φ n
   let g := restrictRootsOfUnity ρ n

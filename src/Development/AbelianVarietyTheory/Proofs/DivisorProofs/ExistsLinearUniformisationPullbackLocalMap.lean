@@ -67,7 +67,7 @@ namespace GlobalTheory.LocalPull
 
 theorem exists_pelUnif_pull : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (R V : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CommRing V] [IsDomain V] [IsLocalRing V], GlobalTheory.Mum.Base R → GlobalTheory.Mum.Base V → ∀ (t : SAB H (Sp R)) (P : PELUnif (maximalIdeal R) t) (θ : R →+* V), IsLocalHom θ → ∀ f : R, θ f ≠ 0 → (∀ y, PsiUnitOn P.D.toPre y (PrimeSpectrum.basicOpen f : Set (PrimeSpectrum R))) → ∃ (t' : SAB H (Sp V)) (P' : PELUnif (maximalIdeal V) t') (hD : IsPullDeg θ P.D.toPre P'.D.toPre), Nonempty (SABMap t' t (spMap θ)) ∧ (∀ (x : 𝓞 E) y, hD.xe (x • y) = x • hD.xe y) ∧ (letI := H.starRing; ∀ x, P'.oD.onB.act x ≫ hD.e.hom = hD.e.hom ≫ (Over.pullback (specOf θ)).map (P.oD.onB.act x)) := by
   intro E _ _ _ H R V _ _ _ _ _ _ hR hV t P θ hθ f hf hψ
-  letI := H.starRing
+  let := H.starRing
   obtain ⟨-, -, -, h4, h5⟩ := GlobalTheory.firstFiveLaws
   have aR := hR.1
   have aV := hV.1
@@ -93,7 +93,7 @@ theorem exists_pelUnif_pull : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
       rw [genericPoint_eq_bot_of_affine]
       apply PrimeSpectrum.ext
       show Ideal.comap (algebraMap V (FractionRing V)) z.asIdeal = ⊥
-      haveI := z.isPrime
+      have := z.isPrime
       rw [Ideal.eq_bot_of_prime z.asIdeal]
       exact Ideal.comap_bot_of_injective _ (IsFractionRing.injective V (FractionRing V))
     show (specOf θ).base ((jK V).base z) ∈ W
@@ -109,7 +109,7 @@ theorem exists_pelUnif_pull : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
     exact ⟨wK, gK⟩
   have hMK : (P.U.LG.L.pull (pullback.fst t.G.hom x)).IsLB := pull_isLB P.U.LG.isLB _
   have hp : IsProper tK.G.hom := GlobalTheory.ZH.isProper_hom_of_relAmple hamp
-  haveI := hp
+  have := hp
   have hA : RelAmple tK.G tK.PP.L :=
     GlobalTheory.ModelAbLocus.relAmple_of_lbIso_pull (f := 𝟙 _) (φ := 𝟙 _) (IsPullback.of_horiz_isIso ⟨by simp⟩) hMK tK.PP.isLB
       (hLK.chartPull (chartPullId _) (Geo.Tor.chartPullPull _ _ _ rfl)) hamp

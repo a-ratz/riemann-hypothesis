@@ -54,7 +54,7 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.Q Fo
 
 theorem sfinite_of_isHaarOn {k r : ℕ} (U : Set (B.Mat k r)) (μ : Measure (Mt k r)) (h : B.IsHaarOn U μ) :
     SFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
+  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
   infer_instance
 
 end Formalism.FourierDecayAlt.P5

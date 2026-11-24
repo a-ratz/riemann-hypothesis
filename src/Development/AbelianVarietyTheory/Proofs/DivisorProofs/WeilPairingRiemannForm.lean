@@ -90,7 +90,7 @@ theorem exists_thetaGrp (A : Over (Sp ℂ)) [GrpObj A] [IsCommMonObj A] (hA : Is
     ∃ θ : Out.ThetaGrp A L k (Out.overRes (⊤ : (𝟙_ (Over (Sp ℂ))).left.Opens)),
       θ.pt = Out.overResι ⊤ ≫ x := by
   obtain ⟨M, rfl, ⟨c⟩⟩ := exists_cubical A hA L hL
-  haveI : Subsingleton (Sp ℂ) := inferInstanceAs (Subsingleton (PrimeSpectrum ℂ))
+  have : Subsingleton (Sp ℂ) := inferInstanceAs (Subsingleton (PrimeSpectrum ℂ))
   let p₀ : (Out.overRes (⊤ : (𝟙_ (Over (Sp ℂ))).left.Opens)).left := ⟨(default : PrimeSpectrum ℂ), trivial⟩
   have hT : ∀ p : (Out.overRes (⊤ : (𝟙_ (Over (Sp ℂ))).left.Opens)).left, p = p₀ := fun p =>
     Subtype.ext (Subsingleton.elim (α := PrimeSpectrum ℂ) _ _)
@@ -244,7 +244,7 @@ theorem thetaGrp_in_frame {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} (hL : L
       have ee := ThetaGroupFrame.exp_herm_eq hH l a N hN
       have eb : cexp (Real.pi * (b ⬝ᵥ Hm.mulVec (star l))) ^ k =
           cexp (Real.pi * ((a : Fin n → ℂ) ⬝ᵥ Hm.mulVec (star l))) := by
-        rw [← Complex.exp_nat_mul, hb, smul_dotProduct, smul_eq_mul]
+        rw [← exp_natCast_mul, hb, smul_dotProduct, smul_eq_mul]
         congr 1
         field_simp
       simp only [G]

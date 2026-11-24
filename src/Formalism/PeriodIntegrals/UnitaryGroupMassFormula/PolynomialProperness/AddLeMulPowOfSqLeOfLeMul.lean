@@ -71,7 +71,7 @@ lemma frame_mulVec_fmul {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} {σ : B.Ma
   rw [mul_comm (c a b)]
 
 lemma ut_det {m : ℕ} {v : Matrix (Fin m) (Fin m) ℂ} (hv : v ∈ UTset m) : v.det = 1 := by
-  rw [Matrix.det_of_upperTriangular hv.1]
+  rw [det_of_isUpperTriangular hv.1]
   simp [hv.2]
 
 lemma ut_mul_inv {m : ℕ} {v : Matrix (Fin m) (Fin m) ℂ} (hv : v ∈ UTset m) : v * v⁻¹ = 1 := Matrix.mul_nonsing_inv v (by rw [ut_det hv]; exact isUnit_one)

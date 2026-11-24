@@ -96,7 +96,7 @@ private theorem coeff_eq (C : Type) [Field C] [CharZero C] (OE : Type) [CommRing
     (τ : OE →+* C) : m τ = n τ := by
   have li : LinearIndependent C (fun τ : OE →+* C => (τ : OE → C)) :=
     (linearIndependent_monoidHom OE C).comp (fun τ : OE →+* C => (τ : OE →* C))
-      RingHom.coe_monoidHom_injective
+      RingHom.toMonoidHom_injective
   have := Fintype.linearIndependent_iffₛ.1 li (fun τ => (m τ : C)) (fun τ => (n τ : C))
     (by funext a; simpa [Finset.sum_apply] using h a) τ
   exact_mod_cast this
@@ -111,8 +111,8 @@ private def trHom {O OE : Type} [CommRing O] [CommRing OE] {d : ℕ} (ρ : OE �
 
 theorem eigDim_add_transpose : ∀ (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (O : Type) [CommRing O] [Algebra O C] (OE : Type) [CommRing OE] [IsDomain OE] [CharZero OE] [Module.Free ℤ OE] [Module.Finite ℤ OE] (d r g : ℕ) (A : Matrix (Fin d) (Fin r) O) (B : Matrix (Fin g) (Fin d) O), SplitEx A B → ∀ (ρ : OE →+* Matrix (Fin d) (Fin d) O) (ρA : OE →+* Matrix (Fin r) (Fin r) O) (ρB : OE →+* Matrix (Fin g) (Fin g) O), (∀ a, B * ρ a = ρB a * B) → (∀ a, ρ a * A = A * ρA a) → ∀ τ : OE →+* C, eigDim C ρ τ = eigDim C ρA τ + eigDim C ρB τ ∧ eigDim C (fun a => (ρ a)ᵀ) τ = eigDim C ρ τ := by
   intro C _ _ _ O _ _ OE _ _ _ _ _ d r g A B hS ρ ρA ρB hB hA τ
-  haveI : Finite (OE →+* C) := (GlobalTheory.order_rep_diagonalisable C OE).1
-  letI : Fintype (OE →+* C) := Fintype.ofFinite _
+  have : Finite (OE →+* C) := (GlobalTheory.order_rep_diagonalisable C OE).1
+  let : Fintype (OE →+* C) := Fintype.ofFinite _
   obtain ⟨-, A', B', h1, h2, h3⟩ := hS
   constructor
   · refine coeff_eq C OE (fun τ => eigDim C ρ τ) (fun τ => eigDim C ρA τ + eigDim C ρB τ) (fun a => ?_) τ

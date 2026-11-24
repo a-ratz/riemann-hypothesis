@@ -71,8 +71,8 @@ theorem isCovolOne_map {μ : Measure (Mx D m n)} {𝓕 : Set (Mx D m n)} (h : Is
     (hr : ∀ x, e x ∈ ratMx D m n ↔ x ∈ ratMx D m n) :
     IsCovolOne (ratMx D m n) (μ.map e) (e '' 𝓕) ∧ MeasurableEmbedding e := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := lattice_Mx D m n
-  haveI : BorelSpace (Mx D m n) := ⟨rfl⟩
-  haveI := h.1
+  have : BorelSpace (Mx D m n) := ⟨rfl⟩
+  have := h.1
   let f : Mx D m n ≃ₜ Mx D m n := { e.toEquiv with continuous_toFun := he, continuous_invFun := he' }
   have hemb : MeasurableEmbedding e := f.measurableEmbedding
   refine ⟨⟨e.isAddHaarMeasure_map μ he he', ?_, ?_⟩, hemb⟩

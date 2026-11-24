@@ -134,11 +134,11 @@ theorem exists_extension {A B C : Type} [CommRing A] [IsDomain A] [CommRing B] [
     (φ : A →+* B) (hφ : Function.Injective φ) (hint : φ.IsIntegral) (e : A →+* C)
     (he : Function.Injective e) (h1 : ∀ a, ‖e a‖ ≤ 1) :
     ∃ g : B →+* C, Function.Injective g ∧ (∀ a, g (φ a) = e a) ∧ ∀ b, ‖g b‖ ≤ 1 := by
-  letI : Algebra A B := φ.toAlgebra
-  letI : Algebra A C := e.toAlgebra
-  haveI : Algebra.IsIntegral A B := ⟨hint⟩
-  haveI : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hφ
-  haveI : FaithfulSMul A C := (faithfulSMul_iff_algebraMap_injective A C).2 he
+  let : Algebra A B := φ.toAlgebra
+  let : Algebra A C := e.toAlgebra
+  have : Algebra.IsIntegral A B := ⟨hint⟩
+  have : FaithfulSMul A B := (faithfulSMul_iff_algebraMap_injective A B).2 hφ
+  have : FaithfulSMul A C := (faithfulSMul_iff_algebraMap_injective A C).2 he
   let g : B →ₐ[A] C := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -146,7 +146,7 @@ theorem exists_extension {A B C : Type} [CommRing A] [IsDomain A] [CommRing B] [
       @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
   refine ⟨g.toRingHom, ?_, fun a => g.commutes a, fun b => ?_⟩
   · rw [RingHom.injective_iff_ker_eq_bot]
-    refine Ideal.eq_bot_of_comap_eq_bot (R := A) ?_
+    refine Ideal.eq_bot_of_under_eq_bot (R := A) ?_
     rw [eq_bot_iff]
     intro a ha
     have : g (algebraMap A B a) = 0 := ha
@@ -157,8 +157,8 @@ theorem exists_extension {A B C : Type} [CommRing A] [IsDomain A] [CommRing B] [
     let e' : A →+* v.integer := e.codRestrict v.integer (fun a => by
       rw [Valuation.mem_integer_iff]
       exact_mod_cast h1 a)
-    letI : Algebra A v.integer := e'.toAlgebra
-    haveI : IsScalarTower A v.integer C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+    let : Algebra A v.integer := e'.toAlgebra
+    have : IsScalarTower A v.integer C := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
     have hb' : IsIntegral v.integer (g b) := hb.tower_top
     have := (Valuation.integer.integers v).isIntegral_iff_v_le_one.1 hb'
     exact_mod_cast this
@@ -178,7 +178,7 @@ theorem finite_extension_ramification_embedding :
   have hφp : φ p ≠ 0 := fun h => hp.ne_zero (hφ (h.trans (map_zero φ).symm))
   obtain ⟨n, u, hu⟩ := IsDiscreteValuationRing.eq_unit_mul_pow_irreducible hφp hq
   have hn : 0 < n := by
-    haveI : IsLocalHom φ := hint.isLocalHom hφ
+    have : IsLocalHom φ := hint.isLocalHom hφ
     rcases n with _ | n
     · exfalso
       apply hp.not_isUnit

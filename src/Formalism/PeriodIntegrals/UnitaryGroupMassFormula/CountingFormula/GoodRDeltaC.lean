@@ -130,8 +130,8 @@ theorem mem_of_isIntegral_fp (L : LocAt F E sig p) {s : L.Fp} (hs : IsIntegral �
   exact (Valuation.integer.integers (ValuativeRel.valuation L.Fp)).mem_of_integral hs
 
 theorem trace_mem (L : LocAt F E sig p) {y : L.Ep} (hy : y ∈ L.O) : Algebra.trace L.Fp L.Ep y ∈ 𝒪[L.Fp] := by
-  haveI := L.free
-  haveI := PI.ProdFormulaE.Base.finite L
+  have := L.free
+  have := PI.ProdFormulaE.Base.finite L
   let b : Module.Basis (Fin 2) L.Fp L.Ep := Module.finBasisOfFinrankEq L.Fp L.Ep L.rank
   exact mem_of_isIntegral_fp L (DeltaB.trace_isIntegral_rank2 b ((L.O_def y).mp hy))
 

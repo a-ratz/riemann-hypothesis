@@ -139,7 +139,7 @@ theorem exists_isPosDef_of_basis {X : Type} [AddCommGroup X] {n : ℕ} (b : Modu
     · simp [Pi.single_apply, h]
   refine ⟨B₀, fun y z => ?_, (isPosDef_iff_basis b B₀).2 fun c hc => ?_⟩
   · simp only [B₀, LinearMap.sum_apply, toReal_apply, GlobalTheory.RedTh.sqForm_apply, mul_comm]
-  · simp only [hv, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  · simp only [hv, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
     obtain ⟨i, hi⟩ := Function.ne_iff.1 hc
     exact Finset.sum_pos' (fun j _ => mul_self_nonneg _) ⟨i, Finset.mem_univ _, mul_self_pos.2 hi⟩
 
@@ -234,15 +234,15 @@ theorem multCellsAmong_of_isPolyFan : ∀ (O : Type) [CommRing O] [IsDedekindDom
   intro O _ _ _ _ bar hb q φ hφ M
   classical
   obtain ⟨n, R, hR, hcls⟩ := hb.classes q
-  haveI hfin : ∀ k, Module.Finite O (R k) := fun k => (hR k).1
+  have hfin : ∀ k, Module.Finite O (R k) := fun k => (hR k).1
   have key : ∀ k, ∃ T : Set (LinearMap.BilinForm ℤ (R k)), T.Finite ∧
       ∀ (m : ℕ) (δ : Fin m → LinearMap.BilinForm ℤ (R k)) (h : IsCell bar φ δ), LinearIndependent ℤ δ →
         (∀ i, IsPrim bar (⟨δ i, h.mem i⟩ : balForms bar (R k))) →
         ∃ e : (R k) ≃ₗ[O] (R k), ∀ i, pull e.toLinearMap (δ i) ∈ T := fun k => by
-    haveI := (hR k).2.1
+    have := (hR k).2.1
     exact perModule bar φ (R k) (hφ (R k) (hR k).2.2)
   choose T hTfin hT using key
-  haveI : ∀ k, Finite (T k) := fun k => (hTfin k).to_subtype
+  have : ∀ k, Finite (T k) := fun k => (hTfin k).to_subtype
   let D := Σ k : Fin n, Σ m : Fin (Nat.card (T k) + 1), (Fin m → T k)
   let g : D → FormFamily O := fun d => ⟨R d.1, d.2.1, fun i => (d.2.2 i : LinearMap.BilinForm ℤ (R d.1))⟩
   obtain ⟨N, ⟨eq⟩⟩ := Finite.exists_equiv_fin D
@@ -484,8 +484,8 @@ theorem isTwG_starLab {O : Type} [CommRing O] (w0 : O) {lab w : InvFun O}
   rw [← GlobalTheory.LocM.InvFun.eval_pi, ← GlobalTheory.LocM.InvFun.eval_pi, starLab_eval, starLab_eval,
     GlobalTheory.LocM.InvFun.eval_pi, GlobalTheory.LocM.InvFun.eval_pi, hl σ hσ n B]
   by_cases hc : IsCentreRay w (Fin n → O) B
-  · rw [if_pos (hiff.mpr hc), if_pos hc]
-  · rw [if_neg (mt hiff.mp hc), if_neg hc]
+  · rw [ite_eq_left (hiff.mpr hc), ite_eq_left hc]
+  · rw [ite_eq_right (mt hiff.mp hc), ite_eq_right hc]
 
 theorem exists_isTwG_simpLab_star : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZero O] [Module.Finite ℤ O] (bar : O → O) (w0 : O), CMOrd O bar → ∀ (q : ℕ) (φ lab w ψ' : InvFun O),
     (∀ (X : Type) [AddCommGroup X] [Module O X] [Module.Finite O X] [Module.Projective O X], Dominates bar X) →
@@ -907,7 +907,7 @@ theorem exists_round_lt_maxMult : ∀ (O : Type) [CommRing O] [IsDedekindDomain 
       SimpLab bar q φ' lab' ∧ Subordinate bar q φ' φ ∧ maxMult bar q φ' < maxMult bar q φ := by
   intro O _ _ _ _ bar w0 hb q φ lab hD hP hT hL hS hfin h2
   set M := (maxMult bar q φ).toNat with hMdef
-  have hMe : maxMult bar q φ = M := (ENat.coe_toNat hfin.ne).symm
+  have hMe : maxMult bar q φ = M := (ENat.natCast_toNat hfin.ne).symm
   have hM2 : 2 ≤ M := by rw [hMe] at h2; exact_mod_cast h2
   obtain ⟨n, hn⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fan.MultipleCells.multCellsAmong_of_isPolyFan O bar hb q φ hP M
   have key : ∀ (n : ℕ) (φ lab : InvFun O), IsPolyFan bar q φ → IsTwG w0 φ → IsTwG w0 lab →
@@ -955,13 +955,13 @@ theorem maxMult_lt_top : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZ
     haveI := (hR k).2.1
     GlobalTheory.PolFan.MultBound.perModule (hφ (R k) (hR k).2.2) (_root_.GlobalTheory.CompanionTheory.Ar.Fan.PsdConeMembership.toReal_mem_psdCone_of_nonneg O bar hCM (R k))
   choose C hC using hC
-  refine lt_of_le_of_lt (b := ((Finset.univ.sup C : ℕ) : ℕ∞)) ?_ (ENat.coe_lt_top _)
+  refine lt_of_le_of_lt (b := ((Finset.univ.sup C : ℕ) : ℕ∞)) ?_ (ENat.natCast_lt_top _)
   unfold maxMult
   refine iSup_le fun X => iSup_le fun _ => iSup_le fun _ => iSup_le fun _ => iSup_le fun _ =>
     iSup_le fun hq => iSup_le fun m => iSup_le fun δ => iSup_le fun h => iSup_le fun hli =>
       iSup_le fun hpr => ?_
   obtain ⟨k, ⟨e⟩⟩ := hcls X hq
-  haveI := (hR k).1
+  have := (hR k).1
   obtain ⟨h', hli', hpr', heq⟩ := GlobalTheory.PolFan.MultBound.transport e.symm h hli hpr
   have hle := (hC k m _ h' hli' hpr').trans (Finset.le_sup (f := C) (Finset.mem_univ k))
   rw [← heq]

@@ -62,8 +62,8 @@ private theorem avg_const {H : Type} [Group H] (u : H → ℂ) (c : ℂ) (hu : �
     simp [rStab]
   unfold avg
   rw [hs]
-  haveI : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
-  haveI : Unique (H ⧸ (⊤ : Subgroup H)) := Unique.mk' _
+  have : Subsingleton (H ⧸ (⊤ : Subgroup H)) := QuotientGroup.subsingleton_quotient_top
+  have : Unique (H ⧸ (⊤ : Subgroup H)) := Unique.mk' _
   simp [finsum_unique]
 
 private theorem cv_sum (K : Subgroup G) (f g : G → ℂ)
@@ -269,7 +269,7 @@ theorem twSwap : OrbFub → TwSwap := by
     rw [GlobalTheory.TwOrbConj.map_conj_self T hg'] at h
     rw [h]
     exact ⟨n, hn, by simp [MulAut.conj_apply]⟩
-  haveI : C.Normal := ⟨fun n hn g' => by
+  have : C.Normal := ⟨fun n hn g' => by
     have hn' : (n : G) ∈ cptPart T := Subgroup.mem_subgroupOf.1 hn
     exact Subgroup.mem_subgroupOf.2 (by simpa using hNorm g' g'.2 n hn')⟩
   have hidx : ∀ x : G, (MulAction.stabilizer T (x : G ⧸ K)).relIndex C =
@@ -316,7 +316,7 @@ theorem twSwap : OrbFub → TwSwap := by
     have h2 : g (y.out⁻¹ * δ * θ (Quotient.out o : G ⧸ K).out) ≠ 0 := right_ne_zero_of_mul hy
     obtain ⟨t, ht, k, hk, hd⟩ := DoubleCoset.mk_out_eq_mul T K (Quotient.out o : G ⧸ K).out
     refine ⟨DoubleCoset.mk T K (Quotient.out o : G ⧸ K).out, ?_, ?_⟩
-    · rw [Set.mem_setOf_eq, hd]
+    · rw [Set.mem_ofPred_eq, hd]
       generalize (Quotient.out o : G ⧸ K).out = x at h1 h2
       have htδ : t * δ = δ * θ t := ht
       have e : (t * x * k)⁻¹ * δ * θ (t * x * k) =

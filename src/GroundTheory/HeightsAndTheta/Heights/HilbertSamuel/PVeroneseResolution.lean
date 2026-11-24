@@ -111,7 +111,7 @@ lemma ae_chartVec_ne (j : Fin (N + 1)) : ∀ᵐ y : Fin N → ℂ, chartVec j y 
   · rw [ae_iff]
     have hset : {y : Fin N → ℂ | ¬ chartVec j y 0 ≠ 0} = Function.eval k ⁻¹' {0} := by
       ext y
-      simp only [ne_eq, not_not, mem_setOf_eq, mem_preimage, Function.eval, mem_singleton_iff]
+      simp only [ne_eq, not_not, mem_ofPred_eq, mem_preimage, Function.eval, mem_singleton_iff]
       rw [hk, chartVec_succAbove]
     rw [hset, volume_pi]
     exact Measure.pi_eval_preimage_null _ (measure_singleton 0)

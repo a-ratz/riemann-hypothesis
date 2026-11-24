@@ -471,7 +471,7 @@ theorem eventually_l1_exp {ε : ℝ} (hε : 0 < ε) :
       l1 (NormedSpace.exp Z - 1 - Z) ≤ ε * l1 Z := by
   let : NormedRing (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) := Matrix.linftyOpNormedRing
   let : NormedAlgebra ℂ (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) := Matrix.linftyOpNormedAlgebra
-  have : CompleteSpace (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) := FiniteDimensional.complete ℂ _
+  have : CompleteSpace (Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) := FiniteDimensional.completeSpace ℂ _
   have hrow : ∀ (Z : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ) i, ∑ j, ‖Z i j‖ ≤ ‖Z‖ := by
     intro Z i
     rw [Matrix.linfty_opNorm_def]
@@ -645,7 +645,7 @@ theorem mp_colrow {ι : Type} [Fintype ι] (s : ι → ℂ) (hs : ∀ i, ‖s i�
   have hA := (hsh1.comp ((MeasurePreserving.id volume).prod hI)).smul_measure ((2 : ℝ≥0∞) ^ n * 2 ^ n)
   have hB := ((MeasurePreserving.id volume).prod hS).comp
     (hsh2.comp ((MeasurePreserving.id (volume : Measure (ι → ℂ))).prod hsc))
-  haveI : SFinite (((2 : ℝ≥0∞) ^ n • volume : Measure (ι → ℂ))) := inferInstance
+  have : SFinite (((2 : ℝ≥0∞) ^ n • volume : Measure (ι → ℂ))) := inferInstance
   rw [Measure.prod_smul_right] at hB
   rw [Measure.prod_smul_left, Measure.prod_smul_right, smul_smul]
   convert hB.comp hA using 1
@@ -840,8 +840,8 @@ theorem omega_split : ∀ (P Q P' Q' : ℕ) (e : Option (Fin P' ⊕ Fin Q') ≃ 
         Complex.I • (ab.2 : Matrix (Fin A ⊕ Fin B) (Fin A ⊕ Fin B) ℂ))) := by
     intro A B
     refine continuous_pi fun ij => ?_
-    exact ((continuous_subtype_val.comp continuous_fst).add
-      ((continuous_subtype_val.comp continuous_snd).const_smul Complex.I)).matrix_elem ij.1 ij.2
+    exact ((continuous_subtypeVal.comp continuous_fst).add
+      ((continuous_subtypeVal.comp continuous_snd).const_smul Complex.I)).matrix_elem ij.1 ij.2
   have hm : Measurable D.symm := D.symm.continuous.measurable
   have hω : IsOmegaLeb (ν.map D.symm) := by
     refine ⟨D.symm.isAddHaarMeasure_map ν, ?_⟩
@@ -868,7 +868,7 @@ theorem omega_split : ∀ (P Q P' Q' : ℕ) (e : Option (Fin P' ⊕ Fin Q') ≃ 
     · rw [(hf' _).2.1]; rfl
     · rw [(hf' _).2.2.2]; rfl
   have hopen : IsOpen (ballU P Q r) :=
-    isOpen_lt (continuous_matrixEntryAbsSum.comp continuous_subtype_val) continuous_const
+    isOpen_lt (continuous_matrixEntryAbsSum.comp continuous_subtypeVal) continuous_const
   rw [GlobalTheory.CompactDualUnique.isOmegaLeb_unique hl hω, Measure.map_apply hm hopen.measurableSet]
   have hset : D.symm ⁻¹' ballU P Q r = {p | tanGauge p.1 +
       l1 (p.2 : Matrix (Fin P' ⊕ Fin Q') (Fin P' ⊕ Fin Q') ℂ) < r} := by
@@ -880,7 +880,7 @@ theorem omega_split : ∀ (P Q P' Q' : ℕ) (e : Option (Fin P' ⊕ Fin Q') ≃ 
     rfl
   rw [hset]
   simp only [ν, μ, hn]
-  rw [Measure.prod_smul_right, Measure.prod_smul_left, Measure.smul_apply, smul_eq_mul]
+  rw [Measure.prod_smul_right, Measure.prod_smul_left, smul_apply, smul_eq_mul]
   rfl
 
 end GlobalTheory.OmegaSplit
@@ -915,14 +915,14 @@ theorem addHaar_sublevel {V : Type} [AddCommGroup V] [Module ℝ V] [Topological
   constructor
   · intro t r ht hr
     let m : Measure (Fin (Module.finrank ℝ V) → ℝ) := lam.map φ
-    haveI : m.IsAddHaarMeasure := φ.isAddHaarMeasure_map lam
+    have : m.IsAddHaarMeasure := φ.isAddHaarMeasure_map lam
     have hm : ∀ ρ : ℝ, lam {x | N x < ρ} = m {z | N (φ.symm z) < ρ} := fun ρ => by
       refine Eq.trans ?_ (Measure.map_apply φ.continuous.measurable
         (isOpen_lt (hc.comp φ.symm.continuous) continuous_const).measurableSet).symm
       congr 1; ext x; simp
     have e : {z | N (φ.symm z) < t * r} = t • {z | N (φ.symm z) < r} := by
       ext z
-      rw [Set.mem_smul_set_iff_inv_smul_mem₀ ht.ne', Set.mem_setOf_eq, Set.mem_setOf_eq, map_smul,
+      rw [Set.mem_smul_set_iff_inv_smul_mem₀ ht.ne', Set.mem_ofPred_eq, Set.mem_ofPred_eq, map_smul,
         hs _ _ (inv_pos.2 ht).le, inv_mul_lt_iff₀ ht]
     rw [hm, hm, e, Measure.addHaar_smul_of_nonneg m ht.le]
     simp
@@ -930,7 +930,7 @@ theorem addHaar_sublevel {V : Type} [AddCommGroup V] [Module ℝ V] [Topological
     have h0 : N 0 = 0 := by simpa using hs 0 0 le_rfl
     exact ⟨(isOpen_lt hc continuous_const).measure_ne_zero lam ⟨0, by simpa [h0] using hr⟩,
       ((measure_mono (show {x | N x < r} ⊆ {x | N x ≤ r} from fun ⦃x⦄ hx => by
-        simp only [Set.mem_setOf_eq] at hx ⊢
+        simp only [Set.mem_ofPred_eq] at hx ⊢
         exact hx.le)).trans_lt (hK r).measure_lt_top).ne⟩
 
 theorem isCompact_matrixEntryAbsSum_sublevel (r : ℝ) :
@@ -950,13 +950,13 @@ theorem ballU_props {lam : Measure (lieU P Q)} (h : IsOmegaLeb lam) :
     (∀ t r : ℝ, 0 < t → 0 < r → lam (ballU P Q (t * r)) =
       ENNReal.ofReal (t ^ Module.finrank ℝ (lieU P Q)) * lam (ballU P Q r)) ∧
     ∀ r : ℝ, 0 < r → lam (ballU P Q r) ≠ 0 ∧ lam (ballU P Q r) ≠ ⊤ := by
-  haveI : BorelSpace (lieU P Q) := ⟨rfl⟩
-  haveI := h.1
+  have : BorelSpace (lieU P Q) := ⟨rfl⟩
+  have := h.1
   refine addHaar_sublevel lam (fun X => l1 (X : Matrix (Fin P ⊕ Fin Q) (Fin P ⊕ Fin Q) ℂ))
-    (continuous_matrixEntryAbsSum.comp continuous_subtype_val) (fun t x ht => ?_) fun r => ?_
+    (continuous_matrixEntryAbsSum.comp continuous_subtypeVal) (fun t x ht => ?_) fun r => ?_
   · simp only [l1, Finset.mul_sum, SetLike.val_smul, Matrix.smul_apply, norm_smul,
       Real.norm_eq_abs, abs_of_nonneg ht]
-  · exact (Submodule.closed_of_finiteDimensional
+  · exact (Submodule.isClosed_of_finiteDimensional
       (lieU P Q)).isClosedEmbedding_subtypeVal.isCompact_preimage (isCompact_matrixEntryAbsSum_sublevel r)
 
 theorem tanBall_props :
@@ -964,7 +964,7 @@ theorem tanBall_props :
       ENNReal.ofReal (t ^ Module.finrank ℝ (ℝ × Sp P Q)) * volume {x : ℝ × Sp P Q | tanGauge x < r}) ∧
     ∀ r : ℝ, 0 < r → (volume : Measure (ℝ × Sp P Q)) {x | tanGauge x < r} ≠ 0 ∧
       (volume : Measure (ℝ × Sp P Q)) {x | tanGauge x < r} ≠ ⊤ := by
-  haveI : (volume : Measure (ℝ × Sp P Q)).IsAddHaarMeasure :=
+  have : (volume : Measure (ℝ × Sp P Q)).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure _ _
   refine addHaar_sublevel volume tanGauge continuous_tanGauge (fun t x ht => ?_) fun r => ?_
   · simp only [tanGauge, Prod.smul_fst, Prod.smul_snd, smul_eq_mul, abs_mul, abs_of_nonneg ht,
@@ -1032,8 +1032,8 @@ theorem ptGauge_act_le (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ Fin Q)) (g
     Finset.sum_le_sum fun i _ => Finset.single_le_sum (f := fun j => ‖(UpqT.mat g - 1) i j‖)
       (fun _ _ => norm_nonneg _) (Finset.mem_univ _)
   rw [← e.sum_comp, Fintype.sum_option] at h2
-  simp only [Matrix.sub_apply, Matrix.one_apply, e.injective.eq_iff, if_true, reduceCtorEq,
-    if_false, sub_zero] at h2
+  simp only [Matrix.sub_apply, Matrix.one_apply, e.injective.eq_iff, ite_true, reduceCtorEq,
+    ite_false, sub_zero] at h2
   simp only [ptGauge, h1]
   linarith [norm_nonneg (UpqT.mat g (e none) (e none) - 1)]
 
@@ -1048,26 +1048,26 @@ theorem const_mul_density (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ Fin Q))
     κ * a = a' := by
   obtain ⟨i1, i2, i3, i4, i5, -⟩ := GlobalTheory.UpqTopology.upq_lcsc P Q
   obtain ⟨i1', i2', i3', i4', i5', -⟩ := GlobalTheory.UpqTopology.upq_lcsc P' Q'
-  haveI : BorelSpace (lieU P' Q') := ⟨rfl⟩
+  have : BorelSpace (lieU P' Q') := ⟨rfl⟩
   obtain ⟨σ, hσ, hσe⟩ := _root_.GlobalTheory.TangentSection.exists_tangent_section P Q P' Q' e
   have ⟨lam, hl, _⟩ := h
   have ⟨lam', hl', _⟩ := h'
-  haveI := hl'.1
-  haveI : LocallyCompactSpace (Matrix (Fin P' ⊕ Fin Q') (Fin P' ⊕ Fin Q') ℂ) :=
+  have := hl'.1
+  have : LocallyCompactSpace (Matrix (Fin P' ⊕ Fin Q') (Fin P' ⊕ Fin Q') ℂ) :=
     inferInstanceAs (LocallyCompactSpace ((Fin P' ⊕ Fin Q') → (Fin P' ⊕ Fin Q') → ℂ))
-  haveI : SecondCountableTopology (Matrix (Fin P' ⊕ Fin Q') (Fin P' ⊕ Fin Q') ℂ) :=
+  have : SecondCountableTopology (Matrix (Fin P' ⊕ Fin Q') (Fin P' ⊕ Fin Q') ℂ) :=
     inferInstanceAs (SecondCountableTopology ((Fin P' ⊕ Fin Q') → (Fin P' ⊕ Fin Q') → ℂ))
-  haveI : LocallyCompactSpace (lieU P' Q') :=
-    (Submodule.closed_of_finiteDimensional (lieU P' Q')).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology (lieU P' Q') :=
+  have : LocallyCompactSpace (lieU P' Q') :=
+    (Submodule.isClosed_of_finiteDimensional (lieU P' Q')).isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology (lieU P' Q') :=
     TopologicalSpace.Subtype.secondCountableTopology _
   set ν := fib (sg (e none)) with hν
-  haveI : IsFiniteMeasureOnCompacts ν := (_root_.GlobalTheory.FibreInvariance.fibre_finite_invariant P Q fib _ hf (sg_ne_zero _)).1
-  haveI : IsLocallyFiniteMeasure ν := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
+  have : IsFiniteMeasureOnCompacts ν := (_root_.GlobalTheory.FibreInvariance.fibre_finite_invariant P Q fib _ hf (sg_ne_zero _)).1
+  have : IsLocallyFiniteMeasure ν := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
   have h1 := _root_.GlobalTheory.SublevelDensity.tendsto_prod_density _ _ _ _ ν volume μ' lam' (ptGauge e) tanGauge gauge
     (fun X => l1 (X : Matrix (Fin P' ⊕ Fin Q') (Fin P' ⊕ Fin Q') ℂ)) _ a'
     (continuous_ptGauge e).measurable continuous_tanGauge.measurable continuous_gauge.measurable
-    (continuous_matrixEntryAbsSum.comp continuous_subtype_val).measurable (ptGauge_nonneg e) tanGauge_nonneg
+    (continuous_matrixEntryAbsSum.comp continuous_subtypeVal).measurable (ptGauge_nonneg e) tanGauge_nonneg
     (fun _ => weightAbsEntrySum_nonneg _) (fun _ => weightAbsEntrySum_nonneg _) (by simp) ha' tanBall_props.2
     (ballU_props hl').2 (tendsto_fib e he hf) (tendsto_gauge ha' h' hl')
   have h20 : (2 : ℝ≥0∞) ^ (P' + Q') ≠ 0 := by simp
@@ -1137,10 +1137,10 @@ theorem formula_base (c : CDHaar) (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕
       ENNReal.ofReal (cM (P + Q)) * ∫⁻ g, f g ∂(c.cd P Q) := by
   obtain ⟨a, ha0, hat, ha1, ha2⟩ := c.trick P Q
   obtain ⟨a', -, hat', ha1', ha2'⟩ := c.trick P' Q'
-  haveI := c.haar P' Q'
-  haveI := c.haar (P' + Q') 0
-  haveI := c.prob (P' + Q')
-  haveI := c.prob (P + Q)
+  have := c.haar P' Q'
+  have := c.haar (P' + Q') 0
+  have := c.prob (P' + Q')
+  have := c.prob (P + Q)
   obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.QuadricHaar.quadric_haar P Q P' Q' _ _ j _ _ _ hjc hjr (_root_.GlobalTheory.FibreInvariance.fibre_finite_invariant P Q fib _ hf (sg_ne_zero _)).1
     (GlobalTheory.RealPlaceCompare.ae_qf hf _) (_root_.GlobalTheory.FibreInvariance.fibre_finite_invariant P Q fib _ hf (sg_ne_zero (e none))).2
     (c.haar P Q) (c.haar P' Q')
@@ -1195,8 +1195,8 @@ theorem quotFormula (c : CDHaar) (e : Option (Fin P' ⊕ Fin Q') ≃ (Fin P ⊕ 
         change act _ _ = _
         rw [GlobalTheory.RealPlaceCompare.act_mul, GlobalTheory.RealPlaceCompare.act_mul, hg₀, hg, hinv]
       exact ⟨k, by change j k = g; rw [hj, hk]; group⟩
-  · haveI := c.haar P Q
-    haveI := GlobalTheory.UpqUnimodular.isMulRightInvariant_of_isHaarMeasure P Q _ (c.haar P Q)
+  · have := c.haar P Q
+    have := GlobalTheory.UpqUnimodular.isMulRightInvariant_of_isHaarMeasure P Q _ (c.haar P Q)
     have H := formula_base c e he hf j₀ hj₀ hjc₀ hjr₀ (s := fun y => s y * g₀)
       ⟨hs.1.mul_const g₀, fun y hy => by rw [GlobalTheory.RealPlaceCompare.act_mul, hg₀, hs.2 y hy]⟩
       (f := fun g => f (g * g₀⁻¹)) (hfm.comp (measurable_mul_const _))

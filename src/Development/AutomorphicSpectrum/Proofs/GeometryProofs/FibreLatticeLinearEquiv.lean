@@ -207,7 +207,7 @@ theorem fderiv_eq_zero_of_affine (D : Fin g → ℂ) (U : A.left.Opens) (hU : Is
   have H := (df.hasFDerivAt.mul dqn.hasFDerivAt).congr_of_eventuallyEq
     (f₁ := fun z => valAt' (u.ex z).left U p) (hev.mono fun z hz => (hval z hz).symm)
   have H2 := congrArg (fun T => T D) H.fderiv
-  simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, hD, smul_eq_mul, mul_zero,
+  simp only [add_apply, smul_apply, hD, smul_eq_mul, mul_zero,
     zero_add] at H2
   have hne : valAt' (u.ex 0).left U (q ^ n) ≠ 0 := by
     rw [GlobalTheory.valAt'_pow _ h0]
@@ -218,8 +218,8 @@ end Germ
 
 theorem eq_of_isDiff_of_not_isTangent : ∀ (A : Over (Sp ℂ)) [GrpObj A] (L : LB A.left) (g : ℕ) (u : HolUnif A L g), SmoothOfRelativeDimension g A.hom → ConnectedSpace A.left → ∀ (v : epsR ℂ ⟶ A), ¬ IsTangent v → ∀ (w w' : Fin g → ℂ), u.IsDiff w v → u.IsDiff w' v → w = w' := by
   intro A _ L g u hs hc v _ w w' h h'
-  haveI : Smooth A.hom := SmoothOfRelativeDimension.smooth g A.hom
-  haveI : PreirreducibleSpace A.left := ⟨by
+  have : Smooth A.hom := SmoothOfRelativeDimension.smooth g A.hom
+  have : PreirreducibleSpace A.left := ⟨by
     have := GlobalTheory.KeyFam.isPreirreducible_connectedComponent_of_smooth A.hom (Classical.arbitrary A.left)
     rwa [PreconnectedSpace.connectedComponent_eq_univ] at this⟩
   have hcomm : ∀ x y : 𝟙_ (Over (Sp ℂ)) ⟶ A, x * y = y * x := fun x y => by
@@ -280,10 +280,10 @@ theorem holOn_ex (u : HolUnif A L g) : HolOn Set.univ u.ex := fun U f => by
 theorem compactSpace_points (u : HolUnif A L g) : CompactSpace (𝟙_ (Over (Sp ℂ)) ⟶ A) := by
   have hc : Continuous u.ex :=
     continuous_iff_continuousAt.2 fun z => (holOn_ex u).continuousAt (Set.mem_univ z)
-  haveI := u.discrete
-  haveI := holUnif_isZLattice u
-  haveI : Module.Free ℤ u.Λ := ZLattice.module_free ℝ u.Λ
-  haveI : Module.Finite ℤ u.Λ := ZLattice.module_finite ℝ u.Λ
+  have := u.discrete
+  have := holUnif_isZLattice u
+  have : Module.Free ℤ u.Λ := ZLattice.module_free ℝ u.Λ
+  have : Module.Finite ℤ u.Λ := ZLattice.module_finite ℝ u.Λ
   let b := (Module.Free.chooseBasis ℤ u.Λ).ofZLatticeBasis ℝ u.Λ
   have hK : IsCompact (closure (ZSpan.fundamentalDomain b)) :=
     Metric.isCompact_of_isClosed_isBounded isClosed_closure
@@ -348,7 +348,7 @@ theorem eq_relativeDimension : ∀ (A : Over (Sp ℂ)) [GrpObj A] (L : LB A.left
   have hF := EndoLinear.fderiv_lifts (fun v => (hφ.exp v).toMul)
     (fun z w => congrArg Additive.toMul (hφ.exp.map_add z w)) hφ.periodLattice (fun z => Iff.rfl)
     inferInstance u.ex u.ex_add _ hG0 hGa.differentiableAt hGe
-  haveI := u.discrete
+  have := u.discrete
   exact eq_of_linear_lift u.ex (fun v => (hφ.exp v).toMul)
     (fun z w => congrArg Additive.toMul (hφ.exp.map_add z w)) u.ex_onto u.Λ hφ.periodLattice u.ker
     (fun z => Iff.rfl) (fderiv ℂ (fun w => hφ.log (φ (u.ex w))) 0).toLinearMap hF

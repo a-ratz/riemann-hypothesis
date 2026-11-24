@@ -94,7 +94,7 @@ private theorem absNil_eig {T W : Type} [CommGroup T] [AddCommGroup W] [Module �
         exact ⟨v, hv, hv0, fun t => (hsc t).imp fun μ h => h v hv⟩
       · push_neg at hsc
         obtain ⟨t0, ht0⟩ := hsc
-        haveI : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS
+        have : Nontrivial S := Submodule.nontrivial_iff_ne_bot.2 hS
         obtain ⟨μ, hμ⟩ := Module.End.exists_eigenvalue ((θ t0 : Module.End ℂ W).restrict (fun v hv => hinv t0 v hv))
         obtain ⟨w, hw⟩ := hμ.exists_hasEigenvector
         have hw1 : (θ t0 : Module.End ℂ W) w = μ • (w : W) := by
@@ -342,7 +342,7 @@ private theorem nilKill_dc {A M A' M' G : Type} [CommRing A] [AddCommGroup M] [M
     [Module A' M'] [Group G] (ρ : Representation A G M) (ρ' : Representation A' G M') (K K' : Subgroup G) (x : G)
     (hx : FinOrb K K' x) (f : M →+ M') (hf : ∀ g m, f (ρ g m) = ρ' g (f m)) (m : M) :
     dc ρ' K K' x (f m) = f (dc ρ K K' x m) := by
-  haveI : Fintype (MulAction.orbit K (x : G ⧸ K')) := Set.Finite.fintype hx
+  have : Fintype (MulAction.orbit K (x : G ⧸ K')) := Set.Finite.fintype hx
   unfold dc
 
   rw [finsum_eq_sum_of_fintype, finsum_eq_sum_of_fintype, LinearMap.sum_apply, LinearMap.sum_apply, map_sum]

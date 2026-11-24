@@ -134,8 +134,8 @@ theorem UpperTheory.galois_character_of_algebraic_hecke :
     rw [h4] at h3
     exact h3
   · obtain ⟨p1, w1⟩ := h2 O Bw hj
-    have p3 := P.aut.berger.isPstAt T Bw _ (hct.comp continuous_subtype_val) (H1 w A h O Bw hj).1
-    have c2 := (continuous_rank_one_rep hμ).comp (continuous_subtype_val (p := fun x => x ∈ Dec (F := K) A))
+    have p3 := P.aut.berger.isPstAt T Bw _ (hct.comp continuous_subtypeVal) (H1 w A h O Bw hj).1
+    have c2 := (continuous_rank_one_rep hμ).comp (continuous_subtypeVal (p := fun x => x ∈ Dec (F := K) A))
     have p2 := P.aut.berger.isPstAt T Bw ((GlobalTheory.TripleGal.rk1 μ).comp (Dec (F := K) A).subtype) c2
       (GlobalTheory.Published.heckeLAdicCharacterAbove_iff.1 P.aut.chA K Ω l _ _ ⟨T⟩ ι art hart κ m μ hκ hμ hL w A h O Bw hj).1
     refine ⟨p3, ?_⟩
@@ -144,7 +144,7 @@ theorem UpperTheory.galois_character_of_algebraic_hecke :
           (Matrix.GeneralLinearGroup.det.comp ((GlobalTheory.TripleGal.rk1 μ).comp (Dec (F := K) A).subtype)) := by
       exact tw_comp R μ _
     rw [htw] at p3 ⊢
-    rw [GlobalTheory.T.fontaineParameter_twist_potentiallySemistable l _ _ ⟨T⟩ ι K Ω A w h O Bw hj n _ _ (hcR.comp continuous_subtype_val) c2 p1 p2 p3,
+    rw [GlobalTheory.T.fontaineParameter_twist_potentiallySemistable l _ _ ⟨T⟩ ι K Ω A w h O Bw hj n _ _ (hcR.comp continuous_subtypeVal) c2 p1 p2 p3,
       P.aut.chW K Ω l _ _ ⟨T⟩ ι art hart κ m μ hκ hμ hL w A h O Bw hj _ hc a ha]
     refine ((UpperTheory.V.Lev.ssCalc K Ω A w h).2.2 _ _ _ ?_).2 w1
     rw [← HL.one _ hc.1]
@@ -305,7 +305,7 @@ private theorem part_tw {F Ω : Type} [Field F] [NumberField F] [Field Ω] [Alge
     {ph : Ine (F := F) A →* (Qbar l)ˣ} (H : W.IsWtPart h κ wt ph) {β : G F Ω →* (Qbar l)ˣ} (hβ : IsOpen (β.ker : Set (G F Ω))) :
     W.IsWtPart h (κ * β.comp (Dec (F := F) A).subtype) wt (ph * (β.comp (Ine (F := F) A).subtype)⁻¹) := by
   refine ⟨Subgroup.isOpen_mono (H₁ := ph.ker ⊓ β.ker.comap (Ine (F := F) A).subtype) (fun g hg => ?_)
-    (H.1.inter (hβ.preimage continuous_subtype_val)), fun a ha g => ?_⟩
+    (H.1.inter (hβ.preimage continuous_subtypeVal)), fun a ha g => ?_⟩
   · have h1 : ph g = 1 := hg.1
     have h2 : β g = 1 := hg.2
     change ph g * (β g)⁻¹ = 1

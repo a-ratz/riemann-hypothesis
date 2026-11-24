@@ -148,7 +148,7 @@ theorem exists_emb (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) 
     rw [mem_algebraicClosure_iff]
     exact (Algebra.IsAlgebraic.isAlgebraic (R := ℚ) x).algHom D.host.φ₀.toRatAlgHom
   refine ⟨lam.comp (D.host.φ₀.codRestrict Qbar hm), fun x => ?_⟩
-  simp only [lamC, dif_pos (hm x)]
+  simp only [lamC, dite_eq_left (hm x)]
   rfl
 
 theorem exists_sqrt_host (D : D7) : ∃ b : 𝓞 D.host.K, ((b : D.host.K) : D.host.E) ^ 2 = -(D.host.d : D.host.E) ∧
@@ -168,7 +168,7 @@ theorem idem_mem (D : D7) {p : ℕ} [Fact p.Prime] (lam : Qbar →+* ℂ_[p]) (h
   obtain ⟨ψ, hψ⟩ := exists_emb D lam
   obtain ⟨b, hb, hc⟩ := exists_sqrt_host D
   let ι : ℤ_[p] →+* ℂ_[p] := (algebraMap ℚ_[p] ℂ_[p]).comp PadicInt.Coe.ringHom
-  have hι : Continuous ι := (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtype_val
+  have hι : Continuous ι := (continuous_algebraMap ℚ_[p] ℂ_[p]).comp continuous_subtypeVal
   set s := ψ ((b : D.host.K) : D.host.E) with hsdef
   have hs2 : s ^ 2 = -(D.host.d : ℂ_[p]) := by rw [hsdef, ← map_pow, hb]; simp
   obtain ⟨z, hz, hu⟩ : ∃ z : ℤ_[p], ι z = s ∧ IsUnit (2 * z) := by

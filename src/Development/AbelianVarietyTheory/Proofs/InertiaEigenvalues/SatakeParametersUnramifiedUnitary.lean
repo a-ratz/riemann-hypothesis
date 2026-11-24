@@ -199,7 +199,7 @@ theorem finite_support_comp (p : G →* H) (hp : Function.Surjective p) {K : Sub
     (hh : IsBiInv K h) (hf : {d : H ⧸ K | h d.out ≠ 0}.Finite) :
     {c : G ⧸ K.comap p | h (p c.out) ≠ 0}.Finite := by
   refine (hf.preimage (quotMap_bijective p hp K).1.injOn).subset fun c hc => ?_
-  simp only [Set.mem_preimage, Set.mem_setOf_eq] at hc ⊢
+  simp only [Set.mem_preimage, Set.mem_ofPred_eq] at hc ⊢
   have hk : (quotMap p K c).out⁻¹ * p c.out ∈ K := by
     rw [← QuotientGroup.eq, QuotientGroup.out_eq', ← quotMap_mk, QuotientGroup.out_eq']
   have e1 := hh 1 ⟨_, hk⟩ (quotMap p K c).out

@@ -122,20 +122,20 @@ theorem bergOn_le_supConst : GlobalTheory.Published.TamagawaSpecialUnitary → �
   have hP'm : P' ∈ Formalism.L2.Pj.holSub (U σ).X la := by
     refine Formalism.L2.Pj.holCusp_mem_holSub _ _ fun k => ?_
     by_cases hk : k ∈ S
-    · simp only [hP', if_pos hk]
+    · simp only [hP', ite_eq_left hk]
       exact Formalism.L2.Pj.holSub_comp_SS _ _ _ hP k
-    · simp only [hP', if_neg hk]
+    · simp only [hP', ite_eq_right hk]
       exact (ReciprocityTheory.ChartRestriction.G.FD.siegelSpaceAlgebra_holds (E := D.host.E) D.R.r ((U σ).X k) (la k) (la k) 0).1.1
   have hpt : ∀ z : Σ k, ReciprocityTheory.ChartRestriction.G.FD.Frame ((U σ).X k).Ψ D.R.r,
       AllWt.ptN la P' z = if z.1 ∈ S then AllWt.ptN la P z else 0 := fun z => by
     by_cases hz : z.1 ∈ S
-    · simp only [AllWt.ptN, hP', if_pos hz]
-    · simp only [AllWt.ptN, hP', if_neg hz]
+    · simp only [AllWt.ptN, hP', ite_eq_left hz]
+    · simp only [AllWt.ptN, hP', ite_eq_right hz]
       exact Formalism.L2.Pj.pnorm_zero _ _ _
 
   have h1 : ENNReal.ofReal (AllWt.ptN la P ⟨y.1, y.2.1⟩) ^ 2 ≤ Formalism.L2.Pj.supE (U σ).X la P' ^ 2 := by
     have e : AllWt.ptN la P ⟨y.1, y.2.1⟩ = AllWt.ptN la P' ⟨y.1, y.2.1⟩ := by
-      rw [hpt, if_pos hyS]
+      rw [hpt, ite_eq_left hyS]
     rw [e]
     gcongr
     exact le_iSup (fun p : Formalism.L2.Pj.FPt (U σ).X => ENNReal.ofReal (((U σ).X p.1).pnorm (la p.1) (P' p.1) p.2)) y
@@ -150,7 +150,7 @@ theorem bergOn_le_supConst : GlobalTheory.Published.TamagawaSpecialUnitary → �
       apply hq
       have : ¬ (dict σ q.out).1 ∈ S := fun h => hn ((key _).2 h)
       show AllWt.ptN la P' (dict σ q.out) = 0
-      rw [hpt, if_neg this]
+      rw [hpt, ite_eq_right this]
     unfold AllWt.petE
     have hrestrict : eLpNorm' (fun q : AutQ (D.sp.W j) => AllWt.ptN la P' (dict σ q.out)) 2
         ((muQ1 (D.sp.W j)).restrict Cl) =

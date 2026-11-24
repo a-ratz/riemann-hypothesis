@@ -108,7 +108,7 @@ theorem exists_comp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     intro g w; simp only [hk, ← Matrix.mul_assoc, hA', Matrix.one_mul]
   refine ⟨k, ?_, fun g w => (hCk g w).symm, fun g w => ?_, fun w X X' h => ?_⟩
   · have h1 : Continuous (fun g : UG (cA σ) J => ((g.1 : Matrix β β (AE F E)))) :=
-      Units.continuous_val.comp continuous_subtype_val
+      Units.continuous_val.comp continuous_subtypeVal
     refine continuous_pi fun w => ?_
     exact (continuous_const.matrix_mul (h1.matrix_map (GlobalTheory.ContMapReal.continuous_piInf (τ w)))).matrix_mul
       continuous_const

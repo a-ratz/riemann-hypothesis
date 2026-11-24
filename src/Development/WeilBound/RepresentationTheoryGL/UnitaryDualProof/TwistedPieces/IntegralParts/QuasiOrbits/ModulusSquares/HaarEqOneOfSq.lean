@@ -153,7 +153,7 @@ theorem haar_eq_one_of_sq (u : kˣ) (hu : u ^ 2 = 1) : MeasureTheory.distribHaar
 theorem infinite_local : Infinite k := by
   obtain ⟨r, hr0, hr1⟩ := Valuation.IsNontrivial.exists_lt_one (v := valuation k)
   have hs : StrictAnti (fun m : ℕ => valuation k r ^ m) :=
-    pow_right_strictAnti₀ (zero_lt_iff.2 ((Valuation.ne_zero_iff _).2 hr0)) hr1
+    pow_right_strictAnti₀ (pos_iff_ne_zero.2 ((Valuation.ne_zero_iff _).2 hr0)) hr1
   exact Infinite.of_injective (fun m : ℕ => r ^ m)
     (fun a b hab => hs.injective (by simp only [← map_pow, hab]))
 

@@ -62,7 +62,7 @@ theorem lintegral_Ici_rpow {b p : ℝ} (hb : 0 < b) (hp : p < 0) :
 theorem mem_cone_cons {m : ℕ} {c x : ℝ} (y : Fin (m + 1) → ℝ) :
     (Fin.cons x y : Fin (m + 2) → ℝ) ∈ GlobalTheory.SiegelSet.cone (m + 2) c ↔
       (0 < x ∧ c * y 0 ≤ x) ∧ y ∈ GlobalTheory.SiegelSet.cone (m + 1) c := by
-  simp only [GlobalTheory.SiegelSet.cone, Set.mem_setOf_eq]
+  simp only [GlobalTheory.SiegelSet.cone, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hpos, hstep, hlast⟩
     refine ⟨⟨by simpa using hpos 0, by simpa using hstep 0 1 (by simp)⟩, fun i => by simpa using hpos i.succ,
@@ -85,7 +85,7 @@ theorem mem_cone_cons {m : ℕ} {c x : ℝ} (y : Fin (m + 1) → ℝ) :
 
 theorem mem_cone_one {c x : ℝ} (hc : 0 < c) :
     (fun _ => x : Fin 1 → ℝ) ∈ GlobalTheory.SiegelSet.cone 1 c ↔ c ≤ x := by
-  simp only [GlobalTheory.SiegelSet.cone, Set.mem_setOf_eq]
+  simp only [GlobalTheory.SiegelSet.cone, Set.mem_ofPred_eq]
   constructor
   · rintro ⟨_, _, hlast⟩
     exact hlast 0 rfl
@@ -133,7 +133,7 @@ theorem lintegral_cone_lt_top {c : ℝ} (hc : 0 < c) : ∀ (m : ℕ) (a : ℕ �
       have h := ha (k + 1) (by omega)
       rw [Finset.sum_range_succ', Finset.sum_range_succ'] at h
       rw [Finset.sum_range_succ']
-      simp only [ha', if_pos, Nat.add_eq_zero_iff, one_ne_zero, and_false, if_false] at *
+      simp only [ha', ite_eq_left, Nat.add_eq_zero_iff, one_ne_zero, and_false, ite_false] at *
       linarith
     set K : ℝ≥0∞ := ENNReal.ofReal (c ^ a 0 / (-a 0))
     set e := MeasurableEquiv.piFinSuccAbove (fun _ : Fin (m + 2) => ℝ) 0
@@ -174,7 +174,7 @@ theorem lintegral_cone_lt_top {c : ℝ} (hc : 0 < c) : ∀ (m : ℕ) (a : ℕ �
         have h2 : 0 ≤ c ^ a 0 / (-a 0) := div_nonneg (Real.rpow_nonneg hc.le _) (by linarith)
         have h0 : ENNReal.ofReal ((c * y 0) ^ a 0 / (-a 0)) * ENNReal.ofReal (y 0 ^ (a ((0 : Fin (m + 1)).val + 1) - 1))
             = K * ENNReal.ofReal (y 0 ^ (a' (0 : Fin (m + 1)).val - 1)) := by
-          simp only [K, ha', Fin.val_zero, zero_add, if_true]
+          simp only [K, ha', Fin.val_zero, zero_add, ite_true]
           rw [← ENNReal.ofReal_mul h1, ← ENNReal.ofReal_mul h2]
           congr 1
           rw [Real.mul_rpow hc.le hy0.le, show a 0 + a 1 - 1 = (a 1 - 1) + a 0 by ring, Real.rpow_add hy0]
@@ -190,7 +190,7 @@ theorem lintegral_cone_lt_top {c : ℝ} (hc : 0 < c) : ∀ (m : ℕ) (a : ℕ �
     exact ENNReal.mul_lt_top ENNReal.ofReal_lt_top (ih a' hsum)
 
 theorem measurableSet_cone (r : ℕ) (c : ℝ) : MeasurableSet (GlobalTheory.SiegelSet.cone r c) := by
-  simp only [GlobalTheory.SiegelSet.cone, Set.setOf_and, Set.setOf_forall]
+  simp only [GlobalTheory.SiegelSet.cone, Set.ofPred_and, Set.ofPred_forall]
   exact (MeasurableSet.iInter fun i => measurableSet_lt measurable_const (measurable_pi_apply i)).inter
     ((MeasurableSet.iInter fun i => MeasurableSet.iInter fun j => MeasurableSet.iInter fun _ =>
       measurableSet_le (measurable_const.mul (measurable_pi_apply j)) (measurable_pi_apply i)).inter

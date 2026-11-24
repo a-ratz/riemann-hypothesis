@@ -90,13 +90,13 @@ theorem term_apply_of_injOn {p : ℕ} (x : Cube.Term A p) (t : {s : Finset κ //
     ψ.term p x t = PD.sortSign τ t.1 • ψ.app t.1 (x ⟨t.1.image τ, card_image t h⟩) := by
   unfold term
   simp only [LinearMap.coe_mk, AddHom.coe_mk]
-  rw [dif_pos h]
+  rw [dite_eq_left h]
 
 theorem term_apply_of_not_injOn {p : ℕ} (x : Cube.Term A p) (t : {s : Finset κ // s.card = p})
     (h : ¬ Set.InjOn τ (t.1 : Set κ)) : ψ.term p x t = 0 := by
   unfold term
   simp only [LinearMap.coe_mk, AddHom.coe_mk]
-  rw [dif_neg h]
+  rw [dite_eq_right h]
 
 end Cube.PullHom
 

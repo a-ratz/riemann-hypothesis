@@ -240,7 +240,7 @@ theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7
   obtain ⟨hw₀, hi₀⟩ := GlobalTheory.T.conjugateSplitPlace_eq_conjugatePlace_and_embedding D s _ hconj
   obtain ⟨ψ₀, ξ, hψ, hξ, hU⟩ := P.H.level.uni i j hj k v (GlobalTheory.TypeTame.conjSP s) hw₀
   have hcc : ∀ x : D.host.E, D.host.conj (D.host.conj x) = x := fun x => by
-    letI := Formalism.BasicNotions.Host.cmStar D.host
+    let := Formalism.BasicNotions.Host.cmStar D.host
     rw [← GlobalTheory.DimPartsCompare.star_conj, ← GlobalTheory.DimPartsCompare.star_conj, star_star]
   have hcsd : IsCSD D.host (P.tp.tup (D.nd.mu i) j) := by
     have := (P.chr.csd _).1 (D.naut.muC_csd i)

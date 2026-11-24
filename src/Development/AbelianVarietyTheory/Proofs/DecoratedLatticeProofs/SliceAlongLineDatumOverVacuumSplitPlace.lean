@@ -65,7 +65,7 @@ variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [Is
 
 theorem col_mem_SB {n n' : Type} {Ψ : Matrix n n' k → ℂ} {a : (n → k) → ℂ}
     (h : tensCol Ψ a ∈ SB (Matrix n (n' ⊕ Fin 1) k)) (hΨ : Ψ ≠ 0) : a ∈ SB (n → k) := by
-  haveI : T2Space k := GlobalTheory.SplitWeil.t2Space k
+  have : T2Space k := GlobalTheory.SplitWeil.t2Space k
   obtain ⟨x₀, hx₀⟩ : ∃ x₀, Ψ x₀ ≠ 0 := by
     by_contra h0
     push_neg at h0
@@ -90,7 +90,7 @@ theorem sb_of_sbHalf (p : SplitPt D k) {n n' : Type} [Fintype n] [DecidableEq n]
     (hT : IsSelfDualC T LT) {Φ : WO S T → ℂ} (hΦ : IsSBHalf p.e (latO S T (LS : Set _) (LT : Set _) (· = p.v)) Φ) :
     (fun x => Φ (HalfInd.wr α β x)) ∈ SB (Matrix n n' k) := by
   classical
-  haveI := Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := n) (n' := n')
+  have := Comm.t2Space_matrix_of_isNonarchimedeanLocalField (k := k) (n := n) (n' := n')
   have : CharZero k := charZero_of_injective_ringHom (f := p.pr.comp (incA D)) (RingHom.injective _)
   obtain ⟨-, k0, hk0, hinv, hsup⟩ := hΦ
   obtain ⟨hUc, hUo⟩ := HalfInd.compact_open α β hS hT
@@ -127,10 +127,10 @@ theorem extFun_wr (p : SplitPt D k) {n n' : Type} [Fintype n] [DecidableEq n] [F
   funext t
   unfold extFun
   by_cases ht : IsHalf p.e t
-  · rw [if_pos ht]
+  · rw [ite_eq_left ht]
     beta_reduce
     rw [HalfInd.wr_rd α β ht]
-  · rw [if_neg ht]
+  · rw [ite_eq_right ht]
     by_contra h
     exact ht (hΦ t (Ne.symm h))
 

@@ -59,7 +59,7 @@ namespace GlobalTheory.PMon.SubquotientAlgEquiv
 theorem exists_cols_isUnit {F : Type} [CommRing F] (hF : IsField F) {b n : Type} [Fintype b] [DecidableEq b]
     [Fintype n] [DecidableEq n] (X : Matrix b n F) (Z : Matrix n b F) (h : X * Z = 1) :
     ∃ e : b → n, IsUnit (X.submatrix id e) := by
-  letI : Field F := hF.toField
+  let : Field F := hF.toField
   have h1 : X.rank = Fintype.card b := by
     apply le_antisymm (Matrix.rank_le_card_height X)
     have := Matrix.rank_mul_le_left X Z
@@ -68,14 +68,14 @@ theorem exists_cols_isUnit {F : Type} [CommRing F] (hF : IsField F) {b n : Type}
   have h2 : Module.finrank F (Submodule.span F (Set.range X.col)) = Fintype.card b := by
     exact (Matrix.finrank_span_range_col X).trans h1
   obtain ⟨κ, e, he, hspan, hli⟩ := exists_linearIndependent' F X.col
-  haveI : Finite κ := Finite.of_injective e he
-  letI : Fintype κ := Fintype.ofFinite κ
+  have : Finite κ := Finite.of_injective e he
+  let : Fintype κ := Fintype.ofFinite κ
   have h3 : Fintype.card κ = Fintype.card b := by
     rw [← finrank_span_eq_card hli, hspan, h2]
   let τ : b ≃ κ := Fintype.equivOfCardEq h3.symm
   refine ⟨e ∘ τ, ?_⟩
   have h4 : LinearIndependent F (X.submatrix id (e ∘ τ)).col := hli.comp τ τ.injective
-  exact Matrix.linearIndependent_cols_iff_isUnit.mp h4
+  exact Matrix.linearIndependent_col_iff_isUnit.mp h4
 
 end GlobalTheory.PMon.SubquotientAlgEquiv
 

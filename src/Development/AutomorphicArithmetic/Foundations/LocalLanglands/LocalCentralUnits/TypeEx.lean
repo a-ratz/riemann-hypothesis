@@ -95,8 +95,8 @@ private theorem exists_cusp {n : ℕ} (hn : 0 < n) (σ : IrrRep (GL (Fin n) (w.a
     apply hinj
     rw [map_zero]
     exact hfin b hb hne (φ u) (fun x hx => by rw [← hφ, hu x hx])
-  · haveI := GlobalTheory.SerOSys.ZSum.isIrreducible_of_simple τ hsimp
-    haveI : Nontrivial τ.V :=
+  · have := GlobalTheory.SerOSys.ZSum.isIrreducible_of_simple τ hsimp
+    have : Nontrivial τ.V :=
       IsSimpleModule.nontrivial (MonoidAlgebra ℂ (Gn g n)) (Representation.asModule τ.ρ)
     obtain ⟨u, hu⟩ := exists_ne (0 : τ.V)
     refine ⟨(GlobalTheory.GLp.fixK1 π).subtype ∘ₗ φ, fun h0 => hu (hinj ?_), fun k x => ?_⟩
@@ -159,7 +159,7 @@ private theorem fixed_eq_range {n : ℕ} (τ : FDRep ℂ (Gn g n)) (hτ : IsCusp
       obtain ⟨k, rfl⟩ := GlobalTheory.GLp.Model.red_surjective n x
       rw [LinearMap.mem_ker] at hv ⊢
       rw [hφ, hv, map_zero]⟩
-    haveI := GlobalTheory.SerOSys.ZSum.isIrreducible_of_simple τ (DiscreteGroups.sglob.DzType.Kon.simple_of_isIrr τ hτ.2.1)
+    have := GlobalTheory.SerOSys.ZSum.isIrreducible_of_simple τ (DiscreteGroups.sglob.DzType.Kon.simple_of_isIrr τ hτ.2.1)
     rcases eq_bot_or_eq_top S with h | h
     · exact congrArg Subrepresentation.toSubmodule h
     · exfalso
@@ -172,7 +172,7 @@ private theorem fixed_eq_range {n : ℕ} (τ : FDRep ℂ (Gn g n)) (hτ : IsCusp
       rw [LinearMap.mem_ker] at hu'
       rw [hu', LinearMap.zero_apply]
   have inj : Function.Injective φ := LinearMap.ker_eq_bot.1 hker
-  haveI : Nontrivial τ := by
+  have : Nontrivial τ := by
     by_contra hn
     rw [not_nontrivial_iff_subsingleton] at hn
     exact h0 (LinearMap.ext fun u => by rw [Subsingleton.elim u 0, map_zero, map_zero])

@@ -171,7 +171,7 @@ theorem closure_integral (𝔪 : Ideal (𝓞 K)) :
 theorem exists_integral (𝔪 I : Ideal (𝓞 K)) (hI : I ≠ ⊥) (hc : IsCoprime I 𝔪) :
     ∃ J : idealsPrimeTo 𝔪, (J.1 : FractionalIdeal (𝓞 K)⁰ K) = I := by
   refine ⟨⟨Units.mk0 (I : FractionalIdeal (𝓞 K)⁰ K) (FractionalIdeal.coeIdeal_ne_zero.2 hI), fun 𝔭 hp => ?_⟩, rfl⟩
-  rw [Units.val_mk0, FractionalIdeal.count_coe K 𝔭 hI]
+  rw [Units.val_mk0, FractionalIdeal.count_coeIdeal K 𝔭 hI]
   norm_cast
   by_contra hne
   have hd : 𝔭.asIdeal ∣ I := (Associates.count_ne_zero_iff_dvd hI 𝔭.irreducible).1 hne
@@ -208,10 +208,10 @@ theorem mem_rayPrincipal_iff (𝔪 I : Ideal (𝓞 K)) (J : idealsPrimeTo 𝔪)
 variable (L : Type) [Field L] [NumberField L] [Algebra K L]
 
 theorem exists_isFrob [IsGalois K L] (𝔭 : HeightOneSpectrum (𝓞 K)) : ∃ σ, IsFrob L 𝔭 σ := by
-  haveI := 𝔭.isPrime
+  have := 𝔭.isPrime
   obtain ⟨⟨P, hP, hl⟩⟩ := Ideal.nonempty_primesOver (S := 𝓞 L) 𝔭.asIdeal
   have hP0 : P ≠ ⊥ := Ideal.ne_bot_of_liesOver_of_ne_bot 𝔭.ne_bot P
-  haveI : Finite (𝓞 L ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP0
+  have : Finite (𝓞 L ⧸ P) := Ideal.finiteQuotientOfFreeOfNeBot P hP0
   obtain ⟨σ, hσ⟩ := IsArithFrobAt.exists_of_isInvariant (𝓞 K) (L ≃ₐ[K] L) P
   refine ⟨σ, P, hP, hl, fun x => ?_⟩
   have := hσ x
@@ -247,7 +247,7 @@ theorem heckeIdeal_eq [IsAbelianGalois K L] (𝔪 : Ideal (𝓞 K)) (ψ : ideals
   rw [finprod_gen] at this
   refine Eq.trans ?_ this.symm
   refine finprod_congr fun 𝔭 => ?_
-  have hc := FractionalIdeal.count_coe K 𝔭 hI
+  have hc := FractionalIdeal.count_coeIdeal K 𝔭 hI
   rw [← hJ] at hc
   by_cases h : 𝔭.asIdeal ∣ 𝔪
   · have h0 := J.2 𝔭 h
@@ -265,7 +265,7 @@ theorem forall_heckeIdeal_iff [IsAbelianGalois K L] (𝔪 : Ideal (𝓞 K)) (ψ 
   constructor
   · intro h
     by_contra hne
-    letI : CommGroup (L ≃ₐ[K] L) := { (inferInstance : Group (L ≃ₐ[K] L)) with mul_comm := mul_comm' }
+    let : CommGroup (L ≃ₐ[K] L) := { (inferInstance : Group (L ≃ₐ[K] L)) with mul_comm := mul_comm' }
     obtain ⟨χ, hχ⟩ := CommGroup.exists_apply_ne_one_of_hasEnoughRootsOfUnity (L ≃ₐ[K] L) ℂ hne
     have := h χ
     rw [heckeIdeal_eq L 𝔪 ψ hψ χ I hI J hJ] at this
@@ -284,7 +284,7 @@ theorem clauses_iff [IsAbelianGalois K L] (𝔪 : Ideal (𝓞 K)) :
         UnramIn L 𝔭 ∧ IsFrob L 𝔭 (Art (primeClass 𝔪 𝔭 h)) := by
   constructor
   · rintro ⟨hu, hg, hk⟩
-    letI : CommGroup (L ≃ₐ[K] L) := { (inferInstance : Group (L ≃ₐ[K] L)) with mul_comm := mul_comm' }
+    let : CommGroup (L ≃ₐ[K] L) := { (inferInstance : Group (L ≃ₐ[K] L)) with mul_comm := mul_comm' }
     choose fr hfr using exists_isFrob (K := K) L
     let ψ : idealsPrimeTo 𝔪 →* (L ≃ₐ[K] L) := extend 𝔪 fr
     have hψ : ∀ 𝔭 h, UnramIn L 𝔭 ∧ IsFrob L 𝔭 (ψ (primeElt 𝔪 𝔭 h)) := fun 𝔭 h =>

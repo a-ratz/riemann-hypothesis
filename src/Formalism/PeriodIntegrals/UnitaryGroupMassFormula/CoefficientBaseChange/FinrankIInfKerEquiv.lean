@@ -136,8 +136,8 @@ end Coef
 
 theorem coefCrysGen_of (hI : InvBaseChange) : Formalism.MainNotions.N.GlobalTheory.CoefCrysGen := by
   intro G _ _ Qp K₀ K _ _ _ _ _ _ _ B BdR _ _ _ _ _ _ _ _ _ _ _ PD LL LL' _ _ _ _ f k M hM
-  letI : Algebra LL LL' := f.toRingHom.toAlgebra
-  haveI : IsScalarTower Qp LL LL' := IsScalarTower.of_algebraMap_eq (fun x => (f.commutes x).symm)
+  let : Algebra LL LL' := f.toRingHom.toAlgebra
+  have : IsScalarTower Qp LL LL' := IsScalarTower.of_algebraMap_eq (fun x => (f.commutes x).symm)
   have key := finrank_fix_coef (LL' := LL') (BB := B) hI (fun g => M g)
     (fun g => ((PD.actB g).toAlgHom.toLinearMap).restrictScalars Qp)
   unfold Formalism.WeaklyAdmissibleFiltrations.IsCrys at hM ⊢

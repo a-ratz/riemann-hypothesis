@@ -90,12 +90,12 @@ lemma sum_lt_le (b : Fin d → E) (hr : IsRed b) (i : Fin d) :
       (2 * 2 ^ i.val - 2) * ‖gs b i‖ ^ 2 := by
   rcases Nat.eq_zero_or_pos i.val with h0 | hpos
   · have hE : univ.filter (fun j : Fin d => j < i) = ∅ := by
-      rw [Finset.filter_eq_empty_iff]; intro j _; rw [Fin.lt_iff_val_lt_val, h0]; omega
+      rw [Finset.filter_eq_empty_iff]; intro j _; rw [Fin.lt_def, h0]; omega
     rw [hE, sum_empty, h0]; simp
   · obtain ⟨n, hn⟩ : ∃ n, i.val = n + 1 := ⟨i.val - 1, by omega⟩
     have hnd : n < d := by have := i.isLt; omega
     have hset : univ.filter (fun j : Fin d => j < i) = univ.filter (fun j : Fin d => j.val ≤ n) := by
-      ext j; simp only [mem_filter, mem_univ, true_and, Fin.lt_iff_val_lt_val]; omega
+      ext j; simp only [mem_filter, mem_univ, true_and, Fin.lt_def]; omega
     rw [hset]
     have h1 := sum_gs_le b hr.2.2 n hnd
     have h2 := hr.2.2 i ⟨n, hnd⟩ hn
@@ -127,7 +127,7 @@ lemma norm_sq_le_pow_gs (b : Fin d → E) (hr : IsRed b) (i : Fin d) :
       have hq : mu b i j ^ 2 ≤ 1 / 4 := by
         nlinarith [abs_nonneg (mu b i j), sq_abs (mu b i j)]
       have := mul_le_mul_of_nonneg_right hq (sq_nonneg ‖gs b j‖)
-      simp only [h, h.ne, if_true, if_false, add_zero]
+      simp only [h, h.ne, ite_true, ite_false, add_zero]
       linarith
     · subst h; simp [mu_self b hb]
     · simp [mu_of_lt b h, h.ne', not_lt.mpr h.le]

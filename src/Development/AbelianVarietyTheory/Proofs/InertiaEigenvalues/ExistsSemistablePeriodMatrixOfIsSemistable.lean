@@ -103,7 +103,7 @@ theorem exists_periodMatrix_of_finrank (F E : Type) [Field F] [Field E] [Algebra
         (by congr 1)
     rw [h2, hdim] at h1
     exact Nat.eq_of_mul_eq_mul_left finrank_pos h1
-  haveI : Module.Finite E ↥WE := Module.finite_of_finrank_pos (by rw [hfr]; exact Fintype.card_pos)
+  have : Module.Finite E ↥WE := Module.finite_of_finrank_pos (by rw [hfr]; exact Fintype.card_pos)
   let b : Basis n E ↥WE := (Module.finBasisOfFinrankEq E ↥WE hfr).reindex (Fintype.equivFin n).symm
   let v : n → (n → B) := fun j => (b j : n → B)
   have hv : ∀ g j, ((A g).map (algebraMap F B)).mulVec (fun i => act g (v j i)) = v j :=
@@ -181,8 +181,8 @@ theorem exists_periodMatrix_of_isSst : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrim
   intro l _ P AI T n _ _ K V _ _ b ρ h
   obtain ⟨hdom, hreg, hu⟩ := stRegular l P AI ⟨T⟩
   obtain ⟨e, -, -, he⟩ := _root_.GlobalTheory.tensorBasisCoords ℚ_[l] (Bst P) V n b
-  haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
+  have : FiniteDimensional ℚ_[l] ↥K.1 := K.2
+  have : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     FiniteDimensional.of_injective
       (IntermediateField.inclusion (inf_le_left : K0 K ≤ K.1)).toLinearMap
       (IntermediateField.inclusion_injective (inf_le_left : K0 K ≤ K.1))

@@ -58,7 +58,7 @@ private theorem card_touch_le {n : ℕ} (T : Finset (Fin n × Fin n)) (hT : T �
   have := Finset.card_le_card_of_injOn (s := T.filter fun p => p.1 = j ∨ p.2 = j) (t := Finset.univ)
     (fun p : Fin n × Fin n => if p.1 = j then p.2 else p.1) (fun _ _ => by simp) (by
       rintro ⟨a, b⟩ hp ⟨c, d⟩ hq h
-      simp only [Finset.coe_filter, Set.mem_setOf_eq] at hp hq
+      simp only [Finset.coe_filter, Set.mem_ofPred_eq] at hp hq
       have h1 : a < b := by simpa [pairs] using hT hp.1
       have h2 : c < d := by simpa [pairs] using hT hq.1
       have h3 := hp.2
@@ -79,7 +79,7 @@ private theorem bd_insert {n : ℕ} {T : Finset (Fin n × Fin n)} {p : Fin n × 
   rw [Finset.filter_insert]
   by_cases hj : j = k
   · subst hj
-    rw [if_pos (by tauto), Finset.card_insert_of_notMem (by simp [hp])]
+    rw [ite_eq_left (by tauto), Finset.card_insert_of_notMem (by simp [hp])]
     simp only [Pi.add_apply, Pi.single_eq_same]
     push_cast
     omega

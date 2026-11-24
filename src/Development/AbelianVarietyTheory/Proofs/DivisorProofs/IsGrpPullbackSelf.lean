@@ -102,7 +102,7 @@ theorem exists_section_generic {R : Type} [CommRing R] [IsDomain R] [IsNoetheria
   let ρ : Over.mk (spMap κ ≫ jK R) ⟶ Over.mk (jK R) := Over.homMk (spMap κ) rfl
   have e₀ : x = ρ ≫ x₀ := Over.OverMorphism.ext h₀
   have hfl : Flat (spMap κ) := by
-    letI := κ.toAlgebra
+    let := κ.toAlgebra
     exact (HasRingHomProperty.Spec_iff (P := @Flat)).2 (RingHom.flat_algebraMap_iff.2 inferInstance)
   have hsu : Surjective (spMap κ) := ⟨fun p => ⟨Classical.arbitrary _, Subsingleton.elim (α := Sp (FractionRing R)) _ _⟩⟩
   have hepi : Epi ρ.left := Flat.epi_of_flat_of_surjective (spMap κ)
@@ -480,8 +480,8 @@ theorem l2 : ∀ (R₀ : Type) [CommRing R₀] [IsDomain R₀] [IsNoetherianRing
   obtain ⟨σ, hσ, hσx⟩ := l2a R₀ A n hA hnR hT (AlgebraicClosure K) t' (z ≫ x)
     (by rw [← MonObj.comp_pow, hx, MonObj.comp_one])
   refine ⟨σ, hσ, ?_⟩
-  haveI : PreconnectedSpace (Over.mk t).left := inferInstanceAs (PreconnectedSpace (Sp K))
-  haveI : Nonempty (Over.mk t').left := inferInstanceAs (Nonempty (Sp (AlgebraicClosure K)))
+  have : PreconnectedSpace (Over.mk t).left := inferInstanceAs (PreconnectedSpace (Sp K))
+  have : Nonempty (Over.mk t').left := inferInstanceAs (Nonempty (Sp (AlgebraicClosure K)))
   refine eq_of_comp_eq A hA hnΓ (Over.mk t) _ x (by rw [← MonObj.comp_pow, hσ, MonObj.comp_one]) hx (Over.mk t') z ?_
   rw [← Category.assoc, show z ≫ toUnit (Over.mk t) = toUnit (Over.mk t') from toUnit_unique _ _, hσx]
 
@@ -557,8 +557,8 @@ theorem level_spreads : ∀ (n : ℕ), 3 ≤ n → Odd n → ∀ (R₀ : Type) [
   obtain ⟨g1, g2, g3⟩ := c₀.geom (AlgebraicClosure K) x₀ ((iK.comp κ).comp b)
     (Units.map ((iK.comp κ).comp b).toMonoidHom ζU) (by rw [← Spec.map_comp]; rfl) rfl
   let T₀ : Over (Sp R₀) := Over.mk ((Over.mk x₀).hom ≫ spMap κ)
-  haveI : Nonempty T₀.left := inferInstanceAs (Nonempty (Sp (AlgebraicClosure K)))
-  haveI : Nonempty (Over.mk (spMap ρ)).left := inferInstanceAs (Nonempty (Sp k))
+  have : Nonempty T₀.left := inferInstanceAs (Nonempty (Sp (AlgebraicClosure K)))
+  have : Nonempty (Over.mk (spMap ρ)).left := inferInstanceAs (Nonempty (Sp k))
   have push : ∀ a, GlobalTheory.ObjPull.pushEquiv hφ (Over.mk x₀) (toUnit _ ≫ c₀.lev a) = toUnit T₀ ≫ σ a := fun a => by
     apply Over.OverMorphism.ext
     rw [GlobalTheory.ObjPull.pushEquiv_left, Over.comp_left, Over.comp_left, Category.assoc, hcomp,

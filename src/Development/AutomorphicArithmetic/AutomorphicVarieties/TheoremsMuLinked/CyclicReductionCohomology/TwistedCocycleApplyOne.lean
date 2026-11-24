@@ -103,8 +103,8 @@ private theorem tw_lc {Γ R : Type} [TopologicalSpace Γ] {n : ℕ} (f : Γ → 
 private theorem tw_core {Γ : Type} [Group Γ] [TopologicalSpace Γ] [IsTopologicalGroup Γ] [CompactSpace Γ]
     (K P : Subgroup Γ) [P.Normal] (hK : IsOpen (K : Set Γ)) (hP : P ≤ K) :
     ∃ U : OpenNormalSubgroup Γ, P ≤ U.toSubgroup ∧ U.toSubgroup ≤ K := by
-  haveI : Finite (Γ ⧸ K) := Subgroup.quotient_finite_of_isOpen K hK
-  haveI : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
+  have : Finite (Γ ⧸ K) := Subgroup.quotient_finite_of_isOpen K hK
+  have : K.FiniteIndex := Subgroup.finiteIndex_of_finite_quotient
   have hc : IsClosed (K.normalCore : Set Γ) := Subgroup.normalCore_isClosed K (K.isClosed_of_isOpen hK)
   have ho : IsOpen (K.normalCore : Set Γ) := Subgroup.isOpen_of_isClosed_of_finiteIndex _ hc
   exact ⟨{ toSubgroup := K.normalCore, isOpen' := ho, isNormal' := inferInstance },
@@ -132,13 +132,13 @@ private theorem phEq_one (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T :
     simp [epsm]
   have c2 : IsLocallyConstant fun g : G0.G₀ => epsm O G0 m g := by
     have hc : Continuous fun g : G0.G₀ => ((G0.ε g : ℤ_[l]ˣ) : ℤ_[l]) :=
-      Units.continuous_val.comp (G0.ε_cont.comp continuous_subtype_val)
+      Units.continuous_val.comp (G0.ε_cont.comp continuous_subtypeVal)
     rw [IsLocallyConstant.iff_eventually_eq]
     intro g0
     have ho : IsOpen {a : ℤ_[l] | PadicInt.toZModPow m a = 1} := by
       have : {a : ℤ_[l] | PadicInt.toZModPow m a = 1} = Metric.closedBall 1 ((l : ℝ) ^ (-(m : ℤ))) := by
         ext a
-        rw [Set.mem_setOf_eq, Metric.mem_closedBall, dist_eq_norm, PadicInt.norm_le_pow_iff_mem_span_pow,
+        rw [Set.mem_ofPred_eq, Metric.mem_closedBall, dist_eq_norm, PadicInt.norm_le_pow_iff_mem_span_pow,
           ← PadicInt.ker_toZModPow, RingHom.mem_ker, map_sub, map_one, sub_eq_zero]
       rw [this]
       exact IsUltrametricDist.isOpen_closedBall _ (zpow_ne_zero _ (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero))
@@ -151,13 +151,13 @@ private theorem phEq_one (l : ℕ) [Fact l.Prime] (L : Loc) (G0 : Glob l L) (T :
     rw [inv_mul_cancel_right, h2, one_mul] at h3
     exact h3
   obtain ⟨U, hU⟩ := tw_U (K := G0.G₀) (fun g => y.ρ0 m g) z (fun g => epsm O G0 m g) r1 r2 e1 em hz c1 c2 cz
-  haveI := T.H.isNormal'
+  have := T.H.isNormal'
   obtain ⟨hn, -, hle, -⟩ := pl_props l G0.Γ T.H.toSubgroup T.H.toOpenSubgroup.isOpen
   have hsub : ∀ g : G0.G₀, (g : G0.Γ) ∈ PL l T.H.toSubgroup → g ∈ U := fun g hg => by
     obtain ⟨a1, a2, a3⟩ := plKill l L G0 T O n y m G0 (Glob.Hom.refl G0) hPL z cz hz g hg
     exact (hU g).2 ⟨a2, a3, a1⟩
   obtain ⟨V, v1, v2⟩ := tw_core (U.toSubgroup.map G0.η.ker.subtype) (PL l T.H.toSubgroup)
-    (G0.η_open.isOpenMap_subtype_val _ U.toOpenSubgroup.isOpen)
+    (G0.η_open.isOpenMap_subtypeVal _ U.toOpenSubgroup.isOpen)
     fun a ha => ⟨⟨a, T.H_η a (hle ha)⟩, hsub _ ha, rfl⟩
   filter_upwards [T.ph_lim V j v1] with N hN
   obtain ⟨u, hu, e⟩ := v2 hN

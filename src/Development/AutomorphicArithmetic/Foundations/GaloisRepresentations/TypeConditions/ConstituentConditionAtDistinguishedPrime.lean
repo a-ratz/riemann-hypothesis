@@ -754,7 +754,7 @@ theorem crys_unram_of_lgc : ∀ D : D7, SumRepresentations.tie0 D → SumReprese
       rw [e, map_mul, map_mul, h2, mul_one, ← map_mul, mul_inv_cancel, map_one]
     apply Units.ext
     have h4 := congrArg (fun u : GL (Fin D.R.nV) (Qbar (D.nd.l i)) => u.val) h3
-    simp only [mapRep, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, Units.val_one] at h4
+    simp only [mapRep, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, Units.val_one] at h4
     refine Matrix.map_injective (SumRepresentations.iotaOQ_injective D.nd D.naut i) ?_
     show (r x σ).val.map (iotaOQ D.nd D.naut i) = (1 : Matrix (Fin D.R.nV) (Fin D.R.nV) (D.nd.O i)).map (iotaOQ D.nd D.naut i)
     rw [Matrix.map_one _ (map_zero _) (map_one _)]
@@ -1021,7 +1021,7 @@ theorem span_pair {k Γ : Type} [Field k] [Monoid Γ] {a t : ℕ} (ha : 2 ≤ a)
     obtain ⟨w', hw'⟩ := h1 N'
     have := B.sub_mem (span_mul_mem (R := k) _ hw hw') (span_mul_mem (R := k) _ hw' hw)
     simpa [mul_comm w w'] using this
-  haveI : Nontrivial (Fin a) := Fin.nontrivial_iff_two_le.2 ha
+  have : Nontrivial (Fin a) := Fin.nontrivial_iff_two_le.2 ha
   have h5 : ∀ i : Fin a, (single i i (1 : k), (0 : Fin t → k)) ∈ B := fun i => by
     obtain ⟨j, hj⟩ := exists_ne i
     have e := h3 (single i j 1) _ (h4 (single j j 1) (single j i 1))
@@ -1072,8 +1072,8 @@ theorem core {O K k Γ : Type} [CommRing O] [Field K] [Field k] [Monoid Γ] (f :
     (hρ : Submodule.span k (Set.range ρ) = ⊤)
     (h1 : ∀ g, f (r g).trace = 2 * (σ g).trace + (υ g).trace)
     (h2 : ∀ g, res (r g).trace = (ρ g).trace + ∑ j, χ j g) (ν : Fin (a + t) → k) (hν : Function.Injective ν) : False := by
-  letI := f.toAlgebra
-  letI := res.toAlgebra
+  let := f.toAlgebra
+  let := res.toAlgebra
   let Φ := r.prod ((σ.prod υ).prod (ρ.prod (Pi.monoidHom χ)))
   let S := Submodule.span O (Set.range Φ)
   have hS : ∀ p ∈ S, f p.1.trace = 2 * p.2.1.1.trace + p.2.1.2.trace ∧ res p.1.trace = p.2.2.1.trace + ∑ j, p.2.2.2 j := by
@@ -1139,7 +1139,7 @@ open GlobalTheory.IndefiniteRowSideFullHecke.CongruenceModuleMatrices GlobalTheo
 
 theorem cyc_onto (D : D7) (i : D.nd.Loc) (k : Fin 2) (hl : D.nd.l i = D.host.g k) (u : ℤ_[D.nd.l i]ˣ) :
     ∃ g : GE D.nd, cycZ (F := D.host.E) (Ω := D.nd.Om) (D.nd.l i) g = u := by
-  haveI : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
+  have : IsAlgClosed D.nd.Om := IsAlgClosure.isAlgClosed D.host.E
   obtain ⟨w, hw⟩ := GlobalTheory.OChoose.placesOver_nonempty D.host.E (D.nd.l i) (D.nd.lPrime i).out
   have h1 : (D.nbr i w hw).Kw.1 = ⊥ := IntermediateField.finrank_eq_one_iff.1 ((GlobalTheory.TypeDegOne.degree_one D i k hl).2 w hw)
   obtain ⟨σ, -, hσu⟩ := GlobalTheory.Cyc.exists_inertia_cycZ_eq (D.nd.l i) u
@@ -1167,7 +1167,7 @@ def chiBar (D : D7) (i : D.nd.Loc) (j : Fin D.R.t) : GE D.nd →* IsLocalRing.Re
 
 theorem chiBar_inj (D : D7) (i : D.nd.Loc) (k : Fin 2) (hl : D.nd.l i = D.host.g k) : Function.Injective (chiBar D i) := by
   intro j j' e
-  haveI := charP_res D i
+  have := charP_res D i
   have hp : (D.nd.l i).Prime := (D.nd.lPrime i).out
   have hbig : 16 * D.R.t ^ 2 < D.nd.l i := hl ▸ DiscreteGroups.sglob.DzType.big_of_le_nV D k (by unfold Ranks.nV; omega)
   obtain ⟨ζ, hζ⟩ := IsCyclic.exists_ofOrder_eq_natCard (α := (ZMod (D.nd.l i))ˣ)
@@ -1224,7 +1224,7 @@ theorem noDouble_of_live (D : D7) (h5 : SumRepresentations.adm5 D) (i : D.nd.Loc
         Matrix (Fin (d + d + u)) (Fin (d + d + u)) K')) : False := by
   classical
   obtain ⟨π, -, r0, ρ0, hr0, ⟨e0, he0⟩, habs⟩ := hL
-  haveI := charP_res D i
+  have := charP_res D i
   have hbig : 16 * D.R.nV ^ 2 < D.nd.l i := hl ▸ DiscreteGroups.sglob.DzType.big_of_le_nV D k le_rfl
   have hn : D.R.nV = D.R.r + D.R.t := rfl
   have hr2 : 2 ≤ D.R.r := by have := D.R.two_le_m; have := D.R.m_add_three_le_k; unfold Ranks.r; omega
@@ -1385,7 +1385,7 @@ theorem crys_unram_of_lgc (D : D7) (htie : SumRepresentations.tie0 D) (hadm : Su
       rw [e, map_mul, map_mul, h2, mul_one, ← map_mul, mul_inv_cancel, map_one]
     apply Units.ext
     have h4 := congrArg (fun u : GL (Fin D.R.nV) (Qbar (D.nd.l i)) => u.val) h3
-    simp only [mapRep, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_coe, Units.val_one] at h4
+    simp only [mapRep, MonoidHom.comp_apply, Units.coe_map, MonoidHom.coe_ofClass, Units.val_one] at h4
     refine Matrix.map_injective (SumRepresentations.iotaOQ_injective D.nd D.naut i) ?_
     show (r x σ).val.map (iotaOQ D.nd D.naut i) = (1 : Matrix (Fin D.R.nV) (Fin D.R.nV) (D.nd.O i)).map (iotaOQ D.nd D.naut i)
     rw [Matrix.map_one _ (map_zero _) (map_one _)]
@@ -1400,7 +1400,7 @@ theorem constituentCondition_of_noRepeatedFactor (D : D7) (i : D.nd.Loc) (r : D.
           Matrix.reindex (finCongr h) (finCongr h) ((SumRepresentations.At.sumRep (SumRepresentations.At.sumRep σ σ) υ g : GL (Fin (d + d + u)) K') :
             Matrix (Fin (d + d + u)) (Fin (d + d + u)) K')) → False) : DistinctAbsIrredConstituents D.nd i r := by
   classical
-  letI alg : Algebra (Kf D.nd i) (Qbar (D.nd.l i)) := (D.naut.iotaQ i).toAlgebra
+  let alg : Algebra (Kf D.nd i) (Qbar (D.nd.l i)) := (D.naut.iotaQ i).toAlgebra
   have hss : ∀ x, IsSSRep (mapRep (algebraMap (Kf D.nd i) (AlgebraicClosure (Kf D.nd i)))
       (mapRep (algebraMap (D.nd.O i) (Kf D.nd i)) (r x))) := by
     intro x
@@ -1409,7 +1409,7 @@ theorem constituentCondition_of_noRepeatedFactor (D : D7) (i : D.nd.Loc) (r : D.
       solve_by_elim* (maxDepth := 2) only [*,
         @_root_.DivisionSemiring.to_moduleIsTorsionFree,
         @_root_.Algebra.IsIntegral.isAlgebraic, @_root_.inferInstance])
-    letI : Algebra (AlgebraicClosure (Kf D.nd i)) (Qbar (D.nd.l i)) := f.toRingHom.toAlgebra
+    let : Algebra (AlgebraicClosure (Kf D.nd i)) (Qbar (D.nd.l i)) := f.toRingHom.toAlgebra
     apply SumRepresentations.isSSRep_descent (L := Qbar (D.nd.l i))
     have e : ((algebraMap (AlgebraicClosure (Kf D.nd i)) (Qbar (D.nd.l i))).comp
         (algebraMap (Kf D.nd i) (AlgebraicClosure (Kf D.nd i)))).comp (algebraMap (D.nd.O i) (Kf D.nd i)) =
@@ -1438,7 +1438,7 @@ theorem constituentCondition_of_noRepeatedFactor (D : D7) (i : D.nd.Loc) (r : D.
         mapRep (iotaOQ D.nd D.naut i) (r x) := by
       rw [← mapRep_comp, e']
     have hssK : IsSSRep (mapRep ((algebraMap (Kf D.nd i) K').comp (algebraMap (D.nd.O i) (Kf D.nd i))) (r x)) := by
-      letI : Algebra K' (Qbar (D.nd.l i)) := f'.toRingHom.toAlgebra
+      let : Algebra K' (Qbar (D.nd.l i)) := f'.toRingHom.toAlgebra
       apply SumRepresentations.isSSRep_descent (L := Qbar (D.nd.l i))
       show IsSSRep (mapRep f'.toRingHom _)
       rw [hQ]; exact (hr x).2.1

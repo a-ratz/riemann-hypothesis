@@ -692,7 +692,7 @@ theorem idx_split : ∀ (D : D7) (T : HSp D) (v : HeightOneSpectrum (𝓞 D.host
     rw [invT_val, htinv, Matrix.diagonal_apply, Matrix.diagonal_apply]
     by_cases hij : i = j
     · subst hij; simp [map_zpow₀]
-    · rw [if_neg (Ne.symm hij), if_neg hij, map_zero]
+    · rw [ite_eq_right (Ne.symm hij), ite_eq_right hij, map_zero]
   have hunif : IsUnifV D.host.E w' (c ϖ) := by
     unfold IsUnifV at hϖ ⊢
     rw [hc, hϖ]

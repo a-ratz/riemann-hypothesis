@@ -112,7 +112,7 @@ theorem maxV_ne (Q P : HeightOneSpectrum (𝓞 E)) (h : Q ≠ P) :
     exact Q.valuation_le_one r
   · have : ¬ P.asIdeal ≤ Q.asIdeal := fun hle =>
       h (HeightOneSpectrum.ext (P.isMaximal.eq_of_le Q.isPrime.ne_top hle).symm)
-    obtain ⟨r, hr, hr'⟩ := SetLike.not_le_iff_exists.1 this
+    obtain ⟨r, hr, hr'⟩ := IsConcreteLE.not_le_iff_exists.1 this
     exact ⟨algebraMap _ _ r, (FractionalIdeal.mem_coeIdeal _).2 ⟨r, hr, rfl⟩,
       (HeightOneSpectrum.valuation_eq_one_iff_notMem Q).2 hr'⟩
 
@@ -120,12 +120,12 @@ omit [StarRing E] in
 theorem maxV_inv {Q P : HeightOneSpectrum (𝓞 E)} {γ : WithZero (Multiplicative ℤ)} (h0 : γ ≠ 0)
     (h : MaxV Q ((P.asIdeal : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) γ) :
     MaxV Q (((P.asIdeal : FractionalIdeal (𝓞 E)⁰ E)⁻¹ : FractionalIdeal (𝓞 E)⁰ E) : Submodule (𝓞 E) E) γ⁻¹ :=
-  h.inv h0 (by rw [← FractionalIdeal.coe_mul, mul_inv_cancel₀ (ne0 P), FractionalIdeal.coe_one])
+  h.inv h0 (by rw [← FractionalIdeal.coeToSubmodule_mul, mul_inv_cancel₀ (ne0 P), FractionalIdeal.coeToSubmodule_one])
 
 theorem mem_vp (P : HeightOneSpectrum (𝓞 E)) (x : E) :
     x ∈ vpIdeal P ↔ ∀ r ∈ (conjPrime₂ P).asIdeal, ∃ s ∈ P.asIdeal, algebraMap _ E s = x * algebraMap _ E r := by
   unfold vpIdeal
-  rw [← div_eq_mul_inv, FractionalIdeal.mem_coe, FractionalIdeal.mem_div_iff_of_ne_zero (ne0 _)]
+  rw [← div_eq_mul_inv, FractionalIdeal.mem_coeToSubmodule, FractionalIdeal.mem_div_iff_of_ne_zero (ne0 _)]
   constructor
   · intro h r hr
     exact (FractionalIdeal.mem_coeIdeal _).1 (h _ ((FractionalIdeal.mem_coeIdeal _).2 ⟨r, hr, rfl⟩))
@@ -169,16 +169,16 @@ theorem vp_main : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (P : Hei
     rwa [conjP_conjP'] at this
   · simpa using star_mem_vp _ _ h
   · unfold vpIdeal
-    rw [conjP_conjP', ← FractionalIdeal.coe_mul, mul_assoc, inv_mul_cancel_left₀ (ne0 _), mul_inv_cancel₀ (ne0 _),
-      FractionalIdeal.coe_one]
+    rw [conjP_conjP', ← FractionalIdeal.coeToSubmodule_mul, mul_assoc, inv_mul_cancel_left₀ (ne0 _), mul_inv_cancel₀ (ne0 _),
+      FractionalIdeal.coeToSubmodule_one]
   · have := (maxV_self P).mul (maxV_inv one_ne_zero (maxV_ne P _ hP))
-    rw [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
+    rw [inv_one, mul_one, ← FractionalIdeal.coeToSubmodule_mul] at this
     exact this
   · have := (maxV_ne _ P hP.symm).mul (maxV_inv WithZero.exp_ne_zero (maxV_self (conjPrime₂ P)))
-    rw [one_mul, ← WithZero.exp_neg, neg_neg, ← FractionalIdeal.coe_mul] at this
+    rw [one_mul, ← WithZero.exp_neg, neg_neg, ← FractionalIdeal.coeToSubmodule_mul] at this
     exact this
   · have := (maxV_ne Q P h1).mul (maxV_inv one_ne_zero (maxV_ne Q _ h2))
-    rw [inv_one, mul_one, ← FractionalIdeal.coe_mul] at this
+    rw [inv_one, mul_one, ← FractionalIdeal.coeToSubmodule_mul] at this
     exact this
 
 end GlobalTheory.CharVal.Vp
@@ -287,7 +287,7 @@ theorem val_emb_eq_one {φ : E →+* K} {w : HeightOneSpectrum (𝓞 K)} {Q : He
   have h2 := val_emb_le_one h (x := x⁻¹) (by rw [map_inv₀, hx, inv_one])
   have hx0 : x ≠ 0 := by rintro rfl; simp at hx
   have h0 : w.valuation K (φ x) ≠ 0 := by simpa using hx0
-  rw [map_inv₀, map_inv₀, inv_le_one₀ (zero_lt_iff.2 h0)] at h2
+  rw [map_inv₀, map_inv₀, inv_le_one₀ (pos_iff_ne_zero.2 h0)] at h2
   exact le_antisymm h1 h2
 
 theorem val_emb_zpow {φ : E →+* K} {w : HeightOneSpectrum (𝓞 K)} {Q : HeightOneSpectrum (𝓞 E)}
@@ -526,7 +526,7 @@ theorem of_normOne (hs : s.Ok) {𝔞 : TaylorLogMetric.IdE D} (h : TaylorLogMetr
 theorem chi_span (hs : s.Ok) (hχ : TaylorLogMetric.IsChi D χ) {y : X.E} (hy : star y * y = 1) :
     χ (idTo s (Submodule.span (𝓞 X.E) {y})) = s.σ₀ (∏ τ, X.emb τ y ^ (-1 : ℤ)) := by
   obtain ⟨-, -, -, t4, -⟩ := GlobalTheory.IdealTransport.transport D X s
-  letI := D.host.cmStar
+  let := D.host.cmStar
   have hst : star (s.iE y) = s.iE (star y) := by
     apply D.host.φ₀.injective
     rw [hs.2]
@@ -690,7 +690,7 @@ theorem finOrder_apply {ξ : Chr F E L} (h : IsOfFinOrder ξ) (y : (AfE F E)ˣ) 
 theorem finOrder_unifVal {ξ : Chr F E L} (h : IsOfFinOrder ξ) (P : HeightOneSpectrum (𝓞 E)) : IsOfFinOrder (unifVal ξ P) := by
   unfold unifVal
   split_ifs with H
-  · obtain ⟨b, hb1, hb2⟩ := SetLike.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
+  · obtain ⟨b, hb1, hb2⟩ := IsConcreteLE.exists_of_lt (Ideal.pow_lt_self P.asIdeal P.ne_bot P.isPrime.ne_top 2 le_rfl)
     obtain ⟨y, y₀, a1, a2, a3, a4⟩ := GlobalTheory.SuppIdele.exists_supported_idele F E P (P.under (𝓞 F)) b rfl
     rw [← H.choose_spec (P.under (𝓞 F)) rfl y y₀ b a1 hb1 hb2 a2 a3 a4]
     exact finOrder_apply h y
@@ -740,7 +740,7 @@ theorem ordDet_vpLat {P Q : HeightOneSpectrum (𝓞 E)} (hP : P ≠ conjPrime₂
   have e1 : LinearEquiv.smulOfNeZero E (Sp E 1) a ha0 x ∈ localization₂ Q.asIdeal (vpLat P) ↔ a * x 0 ∈ localization₂ Q.asIdeal (vpIdeal P) :=
     Iff.rfl
   rw [e1, h.mem_locP exp_ne_zero, stdAt, mem_localization_standardLattice, Fin.forall_fin_one, intAt_iff, map_mul, ha,
-    mul_le_iff_le_one_right (zero_lt_iff.2 exp_ne_zero)]
+    mul_le_iff_le_one_right (pos_iff_ne_zero.2 exp_ne_zero)]
 
 end Frames
 
@@ -998,7 +998,7 @@ theorem muAtT_unit (hZ : Z.Ok) (ht : Z.Ch.Tied Z.sig0 (fun j τ => (Z.W.row τ).
   unfold muAtT
   by_cases hP : P.1 ∈ Z.Pr.vGs
   · refine key _ _ (val_q_vG hZ.fields hZ.primes hP) ?_
-    rw [if_pos hP]
+    rw [ite_eq_left hP]
     have h1 := hc i.1 i.2 P hP (Units.mk0 _ (Proof.NormalFormAtPrime.qOf_ne_zero P.1)) rfl
     have h2 : Z.sig0 ((cst.muq (i.1 + 1) P * ((qVal (mu : Chr Z.X.F Z.X.E Z.X.K) P.1 : Z.X.Kˣ) : Z.X.K))⁻¹) =
         (((m0 i).locK P.1 (Units.mk0 _ (Proof.NormalFormAtPrime.qOf_ne_zero P.1)) : ℂˣ) : ℂ) := by
@@ -1012,7 +1012,7 @@ theorem muAtT_unit (hZ : Z.Ok) (ht : Z.Ch.Tied Z.sig0 (fun j τ => (Z.W.row τ).
     have hd := Proof.NormalFormAtPrime.degOne_of_split hZ.fields.rankE hgood.1 hgood.2.1 (P := P.1) (e ▸ hsel v)
     refine key _ _ (val_natCast_of_notMem_sq (Ideal.absNorm_mem _) hd.2) ?_
     have hg : ∀ k, ((Z.Pr.g k : ℕ) : 𝓞 Z.X.E) ∉ P.1.asIdeal := fun k h => hG k v ((natCast_mem_sel hsel v _).1 (e ▸ h)) hv
-    rw [if_neg hP, muqT, dite_eq_left i.2, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val, map_mul, map_inv₀, map_inv₀,
+    rw [ite_eq_right hP, muqT, dite_eq_left i.2, Units.val_mul, Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val, map_mul, map_inv₀, map_inv₀,
       hq, muVal_unit hZ ht i hg hTP hw]
     simp
 
@@ -1064,7 +1064,7 @@ theorem muOff_vpLat (hZ : Z.Ok) (ht : Z.Ch.Tied Z.sig0 (fun j τ => (Z.W.row τ)
   have hε2 : (ε : ℚ) * ε = 1 := by rcases hε with ⟨-, rfl⟩ | ⟨-, rfl⟩ <;> norm_num
   have hoff : muOff sel (rowSG Z.Pr sel mu) (mUof Z.Ch mu i.1) (vpLat P) = ((mUof Z.Ch mu i.1 (sel v₀) : Z.X.Kˣ) : Z.X.K) ^ ε := by
     unfold muOff
-    rw [finprod_eq_single _ v₀, if_neg hno, hord, Units.val_zpow_eq_zpow_val]
+    rw [finprod_eq_single _ v₀, ite_eq_right hno, hord, Units.val_zpow_eq_zpow_val]
     intro v hv
     split_ifs
     · rfl

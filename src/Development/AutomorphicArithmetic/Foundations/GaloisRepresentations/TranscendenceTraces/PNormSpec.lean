@@ -51,13 +51,13 @@ theorem UpperTheory.Gal.TranscendenceTraces.normSpec_of :
   unfold NormSpec
   intro A B _ _ _ _ _ _
   set p := Spec.map (CommRingCat.ofHom (algebraMap A B)) with hp
-  haveI : IsFinite p := by
+  have : IsFinite p := by
     rw [hp, IsFinite.SpecMap_iff]
     exact RingHom.finite_algebraMap.mpr inferInstance
   obtain ⟨T, π, ι, σ, c, hπi, hπs, hι, hσ, hsym, hgen⟩ := hS A B
-  haveI := hπi
-  haveI := hπs
-  haveI := hι
+  have := hπi
+  have := hπs
+  have := hι
   have hk : ∀ s : ↥(Spec (CommRingCat.of B)), ∃ (Ω : Type) (_ : Field Ω) (_ : IsAlgClosed Ω)
       (y : gp Ω ⟶ Spec (CommRingCat.of B)), pt y = s := fun s => hPE _ s
   choose Ωk fk ak yk hyk using hk
@@ -66,8 +66,8 @@ theorem UpperTheory.Gal.TranscendenceTraces.normSpec_of :
   have hm : ∀ j (Ω : Type) [Field Ω] [IsAlgClosed Ω] (z : gp Ω ⟶ Spec (CommRingCat.of B)),
       c j = pt z → m j = mult p Ω z := by
     intro j Ω _ _ z hz
-    letI := fk (c j)
-    letI := ak (c j)
+    let := fk (c j)
+    let := ak (c j)
     exact hMP p (Ωk (c j)) Ω (yk (c j)) z ((hyk (c j)).trans hz)
   have hSy : UpperTheory.Gal.TranscendenceTraces.Sym π σ m := by
     unfold UpperTheory.Gal.TranscendenceTraces.Sym
@@ -88,7 +88,7 @@ theorem UpperTheory.Gal.TranscendenceTraces.normSpec_of :
   obtain ⟨⟨j0, hj0, huniq⟩, hcj⟩ := hgen Ω x z hx.symm hbot
   have hset : {j | x ≫ σ j = z} = {j0} := by
     ext j
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_ofPred_eq, Set.mem_singleton_iff]
     constructor
     · exact huniq j
     · rintro rfl

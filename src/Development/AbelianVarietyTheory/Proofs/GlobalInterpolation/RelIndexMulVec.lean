@@ -112,9 +112,9 @@ theorem val_irreducible (P : HeightOneSpectrum (𝓞 E)) [IsDiscreteValuationRin
 
 theorem relIndex_mulVec : ∀ (E : Type) [Field E] [NumberField E] (ι : Type) [Fintype ι] [DecidableEq ι] (P : HeightOneSpectrum (𝓞 E)) (M : Matrix ι ι E) (L₀ L₁ : AddSubgroup (ι → E)), M.det ≠ 0 → (∀ x, x ∈ L₀ ↔ ∀ i, IntAt P (x i)) → (∀ x, x ∈ L₁ ↔ ∃ y ∈ L₀, x = M.mulVec y) → L₁ ≤ L₀ → ((L₁.relIndex L₀ : ℕ) : ℚ) = ((Ideal.absNorm P.asIdeal : ℕ) : ℚ) ^ ordE P M.det := by
   intro E _ _ ι _ _ P M L₀ L₁ hdet h0 h1 hle
-  haveI := P.isPrime
-  haveI := P.isMaximal
-  haveI : IsDiscreteValuationRing (locRing P) :=
+  have := P.isPrime
+  have := P.isMaximal
+  have : IsDiscreteValuationRing (locRing P) :=
     IsLocalization.AtPrime.isDiscreteValuationRing_of_dedekind_domain (𝓞 E) P.ne_bot (locRing P)
   obtain ⟨p, hp⟩ := IsDiscreteValuationRing.exists_irreducible (locRing P)
   have hent : ∀ i j, M i j ∈ locRing P := by

@@ -115,7 +115,7 @@ theorem integrable_cpt (hL : LgFacts) [MeasurableSpace (G n)] [BorelSpace (G n)]
   refine hcont.integrable_of_hasCompactSupport ?_
   refine HasCompactSupport.intro hK ?_
   intro y hy
-  simp only [Set.mem_setOf_eq, not_le] at hy
+  simp only [Set.mem_ofPred_eq, not_le] at hy
   exact hR _ ((Matrix.isUnit_iff_isUnit_det _).1 y.isUnit |>.ne_zero) hy
 
 end PositivityTheory.RgBcC.LfSt.ChainPf.Loc

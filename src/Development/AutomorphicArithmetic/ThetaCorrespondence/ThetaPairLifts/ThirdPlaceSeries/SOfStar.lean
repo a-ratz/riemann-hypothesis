@@ -109,7 +109,7 @@ theorem UpperTheory.exists_continuous_ringEquiv_padic_of_totally_split :
     · intro h
       rw [h, Ideal.under, Ideal.mem_comap, map_natCast] at hpv
       exact hpv
-  haveI : w.asIdeal.LiesOver v.asIdeal := (hlies w).1 hw
+  have : w.asIdeal.LiesOver v.asIdeal := (hlies w).1 hw
   have hcardS : Fintype.card (PlacesOver E v) = Module.finrank ℚ E := by
     rw [← hcard, ← Nat.card_coe_set_eq, ← Nat.card_eq_fintype_card]
     exact Nat.card_congr (Equiv.subtypeEquivRight fun u => (hlies u).symm)
@@ -162,12 +162,12 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 theorem star_guard {y : WD h} (k : NcW y) : (IsQpBig w y.lpDim ∧ TmW y ∧ UpperTheory.GalStar.Sqf y) ∨ Tor y := by
   by_cases hs : ∃ p : ℕ, p.Prime ∧ w ∈ placesOver E p ∧ (placesOver E p).ncard = Module.finrank ℚ E ∧
       (y.lpDim = 1 ∨ 16 * y.lpDim ^ 2 < p)
-  · have ht : thr w y.lpDim = 2 := if_pos hs
+  · have ht : thr w y.lpDim = 2 := ite_eq_left hs
     obtain ⟨p, hp, hw, hc, hb⟩ := hs
-    haveI : Fact p.Prime := ⟨hp⟩
+    have : Fact p.Prime := ⟨hp⟩
     obtain ⟨i, hi⟩ := UpperTheory.exists_continuous_ringEquiv_padic_of_totally_split E w p hw hc
     exact Or.inl ⟨⟨p, inferInstance, i, hi, hb⟩, k.1, fun γ hγ hg z hz => k.2.2 γ hγ hg z (by rwa [ht])⟩
-  · exact Or.inr (tor_of_ncW (if_neg hs) k)
+  · exact Or.inr (tor_of_ncW (ite_eq_right hs) k)
 
 theorem tor_of_unr {y : WD h} (u : y.unr) : Tor y := fun s t => by
   have hd : deg ⁅s, t⁆ = 0 := by simp [commutatorElement_def]

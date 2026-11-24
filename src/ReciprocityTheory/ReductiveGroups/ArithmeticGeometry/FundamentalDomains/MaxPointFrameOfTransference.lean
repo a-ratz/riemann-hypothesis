@@ -117,7 +117,7 @@ lemma exists_Z (X : Data E r) {x : Frame X.Ψ r} (hx : x ∈ X.dom) (τ : X.Ψ)
   have hcomb : ∀ w' : Fin X.p0 → ℂ, ∃ w : Fin r → ℂ, (∀ j : Fin r, X.p0 ≤ (j : ℕ) → w j = 0) ∧
       (w' ≠ 0 → w ≠ 0) ∧ Q *ᵥ ∑ j, w j • y j = ∑ a, w' a • c a := by
     intro w'
-    refine ⟨fun j => if h : (j : ℕ) < X.p0 then w' ⟨j, h⟩ else 0, fun j hj => dif_neg (by omega), ?_, ?_⟩
+    refine ⟨fun j => if h : (j : ℕ) < X.p0 then w' ⟨j, h⟩ else 0, fun j hj => dite_eq_right (by omega), ?_, ?_⟩
     · intro hw' hw
       apply hw'
       funext a
@@ -228,7 +228,7 @@ theorem latticeBoundAtMaximum_of_transference (hD5 : CoveringRadiusStatement) : 
   ·
     subst hr0
     have hp : X.p0 = 0 := Nat.le_zero.mp X.p0_le
-    haveI : IsEmpty (Fin X.p0) := by rw [hp]; infer_instance
+    have : IsEmpty (Fin X.p0) := by rw [hp]; infer_instance
     refine ⟨fun j => j.elim0, 0, ?_, ?_⟩
     · show (⨆ τ : X.Ψ, Data.opN (Matrix.of ((0 : X.Coord) τ))) ≤ ρ / 3
       refine Real.iSup_le (fun τ => ?_) (by linarith)
@@ -253,7 +253,7 @@ theorem latticeBoundAtMaximum_of_transference (hD5 : CoveringRadiusStatement) : 
       | exact QuadraticCoefficientForms.card_Psi_pos
       | exact QuadraticCoefficientForms.card_Psi_pos (X := X.toData)
       | exact QuadraticCoefficientForms.card_Psi_pos X.toData
-    haveI : Nonempty X.Ψ := Fintype.card_pos_iff.mp hcardpos
+    have : Nonempty X.Ψ := Fintype.card_pos_iff.mp hcardpos
     have hdet : ∀ τ : X.Ψ, (mat x0 τ).det ≠ 0 := fun τ => (hx0 τ).1
     have hc0 : (0 : ℝ) < Fintype.card X.Ψ := by exact_mod_cast hcardpos
     have hc1 : (1 : ℝ) ≤ Fintype.card X.Ψ := by exact_mod_cast hcardpos

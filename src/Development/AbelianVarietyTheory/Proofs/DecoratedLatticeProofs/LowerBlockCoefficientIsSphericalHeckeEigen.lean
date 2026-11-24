@@ -106,7 +106,7 @@ theorem inv_mul_mem {ϖ : kˣ} (hϖ : valuation k (ϖ : k) = uniformizer k) {x :
     (ϖ : k)⁻¹ * x ∈ 𝒪[k] := by
   show valuation k _ ≤ 1
   have h0 : valuation k (ϖ : k) ≠ 0 := by simp
-  rw [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.2 h0), mul_one, hϖ, le_uniformizer_iff]
+  rw [map_mul, map_inv₀, inv_mul_le_iff₀ (pos_iff_ne_zero.2 h0), mul_one, hϖ, le_uniformizer_iff]
   exact hx
 
 def redMap (ϖ : kˣ) (hϖ : valuation k (ϖ : k) = uniformizer k) : maxLat k A D →+ (D → A → 𝓀[k]) where
@@ -170,12 +170,12 @@ theorem GlobalTheory.LowerHecke.exists_finset_reps_maxLat_mod_mul : ∀ (k : Typ
       exact (GlobalTheory.StepData.residue_eq_zero_iff_lt _).1 this
     refine ⟨Q * ((ϖ : k)⁻¹ • (ν : Matrix D A k)), hQ.mul_maxM (fun i a => by simpa using hμ i a), ?_⟩
     rw [← Matrix.mul_assoc, hgQ, Matrix.smul_mul, Matrix.one_mul, smul_smul, mul_inv_cancel₀ ϖ.ne_zero, one_smul]
-  haveI : Finite (M ⧸ (redMap (D := D) (A := A) ϖ hϖ).ker) :=
+  have : Finite (M ⧸ (redMap (D := D) (A := A) ϖ hϖ).ker) :=
     Finite.of_equiv _ (QuotientAddGroup.quotientKerEquivRange _).symm.toEquiv
-  haveI : (redMap (D := D) (A := A) ϖ hϖ).ker.FiniteIndex := AddSubgroup.finiteIndex_of_finite_quotient
-  haveI : H.FiniteIndex := AddSubgroup.finiteIndex_of_le hK
-  haveI : Finite (M ⧸ H) := AddSubgroup.finite_quotient_of_finiteIndex
-  letI := Fintype.ofFinite (M ⧸ H)
+  have : (redMap (D := D) (A := A) ϖ hϖ).ker.FiniteIndex := AddSubgroup.finiteIndex_of_finite_quotient
+  have : H.FiniteIndex := AddSubgroup.finiteIndex_of_le hK
+  have : Finite (M ⧸ H) := AddSubgroup.finite_quotient_of_finiteIndex
+  let := Fintype.ofFinite (M ⧸ H)
   refine ⟨Finset.univ.image fun q : M ⧸ H => ((Quotient.out q : M) : Matrix D A k), ?_, ?_⟩
   · intro ν hν
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hν
@@ -264,7 +264,7 @@ theorem _root_.GlobalTheory.T.exists_finset_reps_maximalIdealMatrix_mod_mul :
   have scaleMem {x : k} (hx : valuation k x < 1) : (ϖ : k)⁻¹ * x ∈ 𝒪[k] := by
     change valuation k _ ≤ 1
     have h0 : valuation k (ϖ : k) ≠ 0 := by simp
-    rw [map_mul, map_inv₀, inv_mul_le_iff₀ (zero_lt_iff.2 h0), mul_one, hϖ, le_uniformizer_iff]
+    rw [map_mul, map_inv₀, inv_mul_le_iff₀ (pos_iff_ne_zero.2 h0), mul_one, hϖ, le_uniformizer_iff]
     exact hx
   let redMap : M →+ (D → A → 𝓀[k]) :=
     { toFun := fun ν i a =>
@@ -370,7 +370,7 @@ theorem exists_lowU_diag_coset : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
     rw [h0, map_zero] at ha; exact zero_ne_one ha
   have hainvI : IsIntM a⁻¹ := isIntM_inv haI ha
   have hinva : a⁻¹ * a = 1 := Matrix.nonsing_inv_mul a ha0
-  letI : Invertible a := Matrix.invertibleOfIsUnitDet a ha0
+  let : Invertible a := Matrix.invertibleOfIsUnitDet a ha0
   set E := e - c * a⁻¹ * b with hE_def
   have hjE : j.1.det = a.det * E.det := by
     rw [← fromBlocks_toBlocks j.1, Matrix.det_fromBlocks₁₁, Matrix.invOf_eq_nonsing_inv]

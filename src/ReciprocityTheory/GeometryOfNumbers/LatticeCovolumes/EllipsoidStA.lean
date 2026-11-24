@@ -74,7 +74,7 @@ lemma norm_sq_convex_comb {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b
 
 lemma sqBall_convex (r : ℕ) (R : ℝ) : Convex ℝ (sqBall r E R) := by
   intro u hu v hv a b ha hb hab
-  simp only [sqBall, Set.mem_setOf_eq] at hu hv ⊢
+  simp only [sqBall, Set.mem_ofPred_eq] at hu hv ⊢
   calc ∑ k, ‖(a • u + b • v) k‖ ^ 2 = ∑ k, ‖a • u k + b • v k‖ ^ 2 := rfl
     _ ≤ ∑ k, (a * ‖u k‖ ^ 2 + b * ‖v k‖ ^ 2) :=
         Finset.sum_le_sum fun k _ => norm_sq_convex_comb ha hb hab _ _
@@ -89,7 +89,7 @@ lemma sqBall_neg (r : ℕ) (R : ℝ) : ∀ u ∈ sqBall r E R, -u ∈ sqBall r E
 
 lemma sqBall_subset (r : ℕ) (R : ℝ) : sqBall r E R ⊆ Metric.closedBall 0 |R| := by
   intro u hu
-  simp only [sqBall, Set.mem_setOf_eq] at hu
+  simp only [sqBall, Set.mem_ofPred_eq] at hu
   rw [mem_closedBall_zero_iff]
   refine (pi_norm_le_iff_of_nonneg (abs_nonneg R)).2 fun k => ?_
   have hk : ‖u k‖ ^ 2 ≤ R ^ 2 :=

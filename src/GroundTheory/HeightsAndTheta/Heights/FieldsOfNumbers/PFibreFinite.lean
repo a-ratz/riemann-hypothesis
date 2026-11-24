@@ -79,8 +79,8 @@ theorem FibreFinite.proof : FibreFinite.Statement.{u} := by
     simp only [natCast_withBot_withTop] at hPn
     have := WithTop.coe_inj.mp (WithBot.coe_inj.mp hPn)
     omega
-  obtain ⟨f, hfQ, hfP⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hP'Q hne')
-  obtain ⟨g, hgW, hgQ⟩ := SetLike.exists_of_lt (lt_of_le_of_ne hQW' hne)
+  obtain ⟨f, hfQ, hfP⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hP'Q hne')
+  obtain ⟨g, hgW, hgQ⟩ := IsConcreteLE.exists_of_lt (lt_of_le_of_ne hQW' hne)
   have h1 := ringKrullDim_add_one_le hP'Q hfP hfQ
   have h2 := ringKrullDim_add_one_le hQW' hgQ hgW
   obtain ⟨D, -, hD⟩ := exists_ringKrullDim_eq

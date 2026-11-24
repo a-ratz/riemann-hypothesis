@@ -85,8 +85,8 @@ theorem _root_.GlobalTheory.ideal_map_colon_eq_of_flat : ∀ {A R : Type} [CommR
     have hmapI : (Ideal.span (Set.range b)).map φ = Ideal.span (Set.range (φ ∘ b)) := by
       rw [Ideal.map_span, ← Set.range_comp]
     choose c hc using fun i => Ideal.mem_span_range_iff_exists_fun.mp (hmapI ▸ hs i)
-    letI := φ.toAlgebra
-    haveI : Module.Flat A R := hφ
+    let := φ.toAlgebra
+    have : Module.Flat A R := hφ
     let f : (Fin n → A) →ₗ[A] A × (Fin n × Fin m → A) :=
       LinearMap.prod (Fintype.linearCombination A a)
         (LinearMap.pi fun p => -(b p.2) • LinearMap.proj p.1)

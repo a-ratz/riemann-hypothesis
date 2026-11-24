@@ -116,7 +116,7 @@ lemma toM_inv (ε : Fin n → Bool) (g : UJ ε) : toM g⁻¹ = Jm ε * (toM g)�
   Units.inv_eq_of_mul_eq_one_left (left_inv_of_inUJ ε _ g.2)
 
 lemma continuous_toM (ε : Fin n → Bool) : Continuous (fun g : UJ ε => toM g) :=
-  Units.continuous_val.comp continuous_subtype_val
+  Units.continuous_val.comp continuous_subtypeVal
 
 lemma isClosed_inUJ (ε : Fin n → Bool) : IsClosed {g : Matrix (Fin n) (Fin n) ℂ | inUJ ε g} := by
   unfold inUJ

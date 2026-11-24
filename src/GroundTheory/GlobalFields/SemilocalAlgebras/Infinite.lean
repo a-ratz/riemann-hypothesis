@@ -201,7 +201,7 @@ theorem denseRange_algebraMap_piPlacesOver :
 theorem tensorPiHom_surjective : Function.Surjective (tensorPiHom (L := L) v) := by
   let f := (tensorPiHom (L := L) v).toLinearMap
   have hclosed : IsClosed (LinearMap.range f : Set (PiPlacesOver (L := L) v)) :=
-    (LinearMap.range f).closed_of_finiteDimensional
+    (LinearMap.range f).isClosed_of_finiteDimensional
   have hsub : Set.range (algebraMap L (PiPlacesOver (L := L) v)) ⊆ LinearMap.range f := by
     rintro _ ⟨l, rfl⟩
     refine ⟨1 ⊗ₜ l, ?_⟩

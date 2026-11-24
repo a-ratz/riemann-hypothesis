@@ -73,7 +73,7 @@ theorem integral_comp_linearEquiv {k : Type} [Field k] [ValuativeRel k] [Topolog
     {V : Type} [AddCommGroup V] [Module k V] [Module.Finite k V] [TopologicalSpace V] [IsModuleTopology k V]
     [MeasurableSpace V] [BorelSpace V] (μ : Measure V) [μ.IsAddHaarMeasure] (L : V ≃ₗ[k] V) (f : V → ℂ) :
     ∫ y, f (L y) ∂μ = (((distribHaarChar k (LinearEquiv.det L) : ℝ≥0) : ℝ) : ℂ)⁻¹ * ∫ y, f y ∂μ := by
-  haveI : IsTopologicalAddGroup V := IsModuleTopology.topologicalAddGroup k V
+  have : IsTopologicalAddGroup V := IsModuleTopology.isTopologicalAddGroup k V
   let n := Module.finrank k V
   let e0 : V ≃ₗ[k] (Fin n → k) := (Module.finBasis k V).equivFun
   let e : V ≃L[k] (Fin n → k) :=
@@ -82,7 +82,7 @@ theorem integral_comp_linearEquiv {k : Type} [Field k] [ValuativeRel k] [Topolog
       continuous_invFun := IsModuleTopology.continuous_of_linearMap e0.symm.toLinearMap }
   borelize (Fin n → k)
   let ν : Measure (Fin n → k) := μ.map e
-  haveI : ν.IsAddHaarMeasure := e.isAddHaarMeasure_map μ
+  have : ν.IsAddHaarMeasure := e.isAddHaarMeasure_map μ
   let L' : (Fin n → k) ≃ₗ[k] (Fin n → k) := (e0.symm.trans L).trans e0
   set c : ℝ≥0 := distribHaarChar k (LinearEquiv.det L) with hc
   have hd : distribHaarChar (Fin n → k) L' = c := by
@@ -99,7 +99,7 @@ theorem integral_comp_linearEquiv {k : Type} [Field k] [ValuativeRel k] [Topolog
     exact Set.preimage_image_eq s e.injective
   have hm : μ.map Lh.toMeasurableEquiv = c⁻¹ • μ := by
     ext s _
-    rw [MeasurableEquiv.map_apply, Measure.smul_apply, ← hν, ← hν s]
+    rw [MeasurableEquiv.map_apply, smul_apply, ← hν, ← hν s]
     have h := distribHaarChar_mul ν L' (e '' (Lh ⁻¹' s))
     have hs : L' • (e '' (Lh ⁻¹' s)) = e '' s := by
       ext z
@@ -126,9 +126,9 @@ theorem integral_comp_matrix : ∀ (F : Type) [Field F] [ValuativeRel F] [Topolo
     @MeasureTheory.Measure.IsAddHaarMeasure _ _ _ (borel _) μ →
     ∫ x, φ (L x) ∂μ = ((((MeasureTheory.distribHaarChar F (Units.mk0 _ hL) : NNReal) : ℝ) : ℂ))⁻¹ * ∫ x, φ x ∂μ := by
   intro F _ _ _ _ a b L hL φ μ hμ
-  letI : MeasurableSpace (Matrix (Fin a) (Fin b) F) := borel _
-  haveI : BorelSpace (Matrix (Fin a) (Fin b) F) := ⟨rfl⟩
-  haveI : IsModuleTopology F (Matrix (Fin a) (Fin b) F) :=
+  let : MeasurableSpace (Matrix (Fin a) (Fin b) F) := borel _
+  have : BorelSpace (Matrix (Fin a) (Fin b) F) := ⟨rfl⟩
+  have : IsModuleTopology F (Matrix (Fin a) (Fin b) F) :=
     show IsModuleTopology F (Fin a → Fin b → F) from inferInstance
   let Le := LinearMap.equivOfDetNeZero L hL
   have hdet : LinearEquiv.det Le = Units.mk0 _ hL := by

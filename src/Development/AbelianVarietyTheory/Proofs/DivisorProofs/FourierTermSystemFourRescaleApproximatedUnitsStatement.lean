@@ -66,7 +66,7 @@ theorem four_rescale : ∀ (O : Type) [CommRing O] (bar : O → O) (q s : ℕ) (
 
   have hmax : ∀ (y : Φ.Y) (x : A), x ∈ maximalIdeal A → Φ.ev y x ∈ maximalIdeal (Φ.V y) := by
     intro y x hx
-    haveI := Φ.ev_loc y
+    have := Φ.ev_loc y
     rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
     intro hu
     exact (IsLocalRing.mem_maximalIdeal _ |>.mp hx) (isUnit_of_map_unit (Φ.ev y) x hu)

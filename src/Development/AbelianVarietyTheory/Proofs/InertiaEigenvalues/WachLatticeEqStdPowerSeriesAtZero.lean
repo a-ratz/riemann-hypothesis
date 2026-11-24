@@ -78,7 +78,7 @@ theorem conv_finite (e : PowerSeries L) {u : ℤ → M} (hu : Bd u) (k : ℤ) :
   obtain ⟨m, hm⟩ := hu
   refine (Set.finite_le_nat (k - m).toNat).subset fun j hj => ?_
   by_contra h
-  simp only [Set.mem_setOf_eq, not_le] at h
+  simp only [Set.mem_ofPred_eq, not_le] at h
   apply hj
   have : k - (j : ℤ) < m := by omega
   simp [hm _ this]
@@ -371,7 +371,7 @@ theorem pow_mem (W : LocWach PD LL O v n) (T : LocLat G Qp LL O) {M : Type} [Add
     { carrier := {x | e x ∈ Λ}
       zero_mem' := by simp
       add_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, map_add (f := _)] at ha hb ⊢
+        simp only [Set.mem_ofPred_eq, map_add (f := _)] at ha hb ⊢
         exact Λ.add_mem ha hb
       smul_mem' := fun a x hx => hs a x hx }
   let U' : Submodule (LetA O n) (W.DD T) := U.map (W.N T).subtype
@@ -670,7 +670,7 @@ theorem lat_one_std : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F :
   obtain ⟨ζ, -, -, hζ⟩ := GlobalTheory.exists_isPt_primitiveRoot (HW l) h i
   have hF := down s i ζ hζ (_root_.GlobalTheory.NL.FullLevel.full_lat D HW F Cm l K s LL h T hT _ ζ hζ)
   have hG := _root_.GlobalTheory.NL.GradedLat.graded_of_level_le D HW F Cm l K s LL h T hT i 1 (one_pow _) hF
-  haveI : Module.Finite (AA K LL) ↥(W.N T) := Module.Finite.iff_fg.2 (W.N_fg T)
+  have : Module.Finite (AA K LL) ↥(W.N T) := Module.Finite.iff_fg.2 (W.N_fg T)
   set_option synthInstance.maxHeartbeats 200000 in
   have hex : ∀ (a : AA K LL) (x : ↥(W.N T)),
       ex C h T i 1 (a • x) = conv (W.lev i 1 a) (ex C h T i 1 x) := by

@@ -74,7 +74,7 @@ theorem mem_maxIdeal_pow_iff {ϖ : kˣ} (hϖ : IsUnif ϖ) (n : ℕ) (r : 𝒪[k]
 theorem natDatum_setCols_eq {ϖ : kˣ} {n : ℕ} {Φ : Matrix A C k → ℂ} (hΦ : IsNatDatum ϖ n Φ) (P : Finset C)
     (Y : Matrix A C k) {U V : Matrix A P k} (h : ∀ i j, U i j - V i j ∈ cball (ϖ ^ n)) :
     Φ (setCols P Y U) = Φ (setCols P Y V) := by
-  have h0 : 0 < valuation k ((ϖ ^ n : kˣ) : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k ((ϖ ^ n : kˣ) : k) := pos_iff_ne_zero.2 (by simp)
   have hZ : setCols P 0 (U - V) ∈ matLat A ((ϖ ^ n) • stdLat k C) := by
     rw [mem_matLat]
     intro i
@@ -82,8 +82,8 @@ theorem natDatum_setCols_eq {ϖ : kˣ} {n : ℕ} {Φ : Matrix A C k → ℂ} (h�
     intro j
     by_cases hj : j ∈ P
     · have h1 := h i ⟨j, hj⟩
-      simp only [cball, Set.mem_setOf_eq] at h1
-      simp only [Pi.smul_apply, Matrix.row, setCols, of_apply, dif_pos hj, Matrix.sub_apply, Units.smul_def,
+      simp only [cball, Set.mem_ofPred_eq] at h1
+      simp only [Pi.smul_apply, Matrix.row, setCols, of_apply, dite_eq_left hj, Matrix.sub_apply, Units.smul_def,
         smul_eq_mul]
       rw [Valuation.mem_integer_iff, map_mul, Units.val_inv_eq_inv_val, map_inv₀, inv_mul_le_iff₀ h0, mul_one]
       exact h1
@@ -106,7 +106,7 @@ theorem psi_pairCols_eq {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) {ϖ : 
   refine Valuation.map_sum_le _ fun i _ => Valuation.map_sum_le _ fun j _ => ?_
   have h2 := h i j
   have h3 := hY i j j.2
-  rw [cball, Set.mem_setOf_eq] at h2
+  rw [cball, Set.mem_ofPred_eq] at h2
   rw [Valuation.mem_integer_iff, map_mul] at h3
   rw [map_mul, Matrix.sub_apply]
   exact (mul_le_mul' h2 le_rfl).trans (by rw [mul_comm] at h3 ⊢; exact h3)
@@ -119,10 +119,10 @@ theorem fourierInt_eq_fourierSum : ∀ (k : Type) [Field k] [ValuativeRel k] [To
     ∀ (P : Finset C) (n : ℕ) (Φ : Matrix A C k → ℂ), IsNatDatum ϖ n Φ →
       fourierInt ψ m P Φ = fourierSum ψ ϖ n P Φ := by
   intro k _ _ _ _ _ _ A C _ _ _ ψ m ϖ hϖ hψ hm P n Φ hΦ
-  haveI := secondCountable k
-  haveI := t2Space k
-  haveI := hm.1
-  have h0 : 0 < valuation k ((ϖ ^ n : kˣ) : k) := zero_lt_iff.2 (by simp)
+  have := secondCountable k
+  have := t2Space k
+  have := hm.1
+  have h0 : 0 < valuation k ((ϖ ^ n : kˣ) : k) := pos_iff_ne_zero.2 (by simp)
   funext Y
   rw [fourierSum_apply]
   split_ifs with hY

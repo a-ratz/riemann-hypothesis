@@ -157,13 +157,13 @@ theorem finite_quot : ∀ (O V : Type) [CommRing O] [AddCommGroup V] [Module O V
     Finite (O ⧸ Ideal.span {ϖ}) → T.FG →
     Finite (O ⧸ Ideal.span {ϖ ^ r}) ∧ Finite (↥T ⧸ (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥T)) := by
   intro O V _ _ _ T ϖ r hF hT
-  haveI := hF
+  have := hF
   have h1 : Finite (O ⧸ Ideal.span {ϖ ^ r}) := by
     rw [← Ideal.span_singleton_pow]
     exact Ideal.finite_quotient_pow ⟨{ϖ}, by simp⟩ r
   refine ⟨h1, ?_⟩
-  haveI : Module.Finite O ↥T := Module.Finite.iff_fg.2 hT
-  haveI : Module.Finite (O ⧸ Ideal.span {ϖ ^ r}) (↥T ⧸ (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥T)) :=
+  have : Module.Finite O ↥T := Module.Finite.iff_fg.2 hT
+  have : Module.Finite (O ⧸ Ideal.span {ϖ ^ r}) (↥T ⧸ (Ideal.span {ϖ ^ r} • ⊤ : Submodule O ↥T)) :=
     Module.Finite.of_restrictScalars_finite O _ _
   exact Module.finite_of_finite (O ⧸ Ideal.span {ϖ ^ r})
 
@@ -184,8 +184,8 @@ theorem cobO_iff : ∀ (G : Type) [Group G] [TopologicalSpace G] (Qp K₀ K : Ty
         ∀ g h, Ideal.Quotient.mk _ (u g) * f h - f (g * h) + f g = zb (g, h)) := by
   intro G _ _ Qp K₀ K _ _ _ _ _ _ _ B BdR _ _ _ _ _ _ _ _ _ _ _ _ PD hTop LL _ _ _ O _ _ hG L1 hL1 ϖ hϖ r u hu z zb hz
   have hG0 : ∃ hO : IsDomain O, @IsDiscreteValuationRing O _ hO ∧ IsFractionRing O LL := hG.1
-  haveI hDom : IsDomain O := hG0.choose
-  haveI hFrac : IsFractionRing O LL := hG0.choose_spec.2
+  have hDom : IsDomain O := hG0.choose
+  have hFrac : IsFractionRing O LL := hG0.choose_spec.2
   have inj := IsFractionRing.injective O LL
   have h0 : algebraMap O LL ϖ ≠ 0 := by
     simpa using inj.ne hϖ.ne_zero
@@ -316,7 +316,7 @@ theorem cob_of_chars {G : Type} [Group G] [TopologicalSpace G] {N : ℕ} {χ : G
       have := Ideal.Quotient.eq_zero_iff_mem.mpr hN
       simpa using this
     rw [nsmul_eq_mul, this, zero_mul]
-  letI : Module (ZMod N) (O ⧸ I) := AddCommGroup.zmodModule hNz
+  let : Module (ZMod N) (O ⧸ I) := AddCommGroup.zmodModule hNz
   have hsm : ∀ g (x : O ⧸ I), (χ g : ZMod N) • x = Ideal.Quotient.mk I (u g) * x := by
     intro g x
     obtain ⟨k, hk, hkI⟩ := hu g
@@ -345,7 +345,7 @@ theorem exists_nat_rep {l : ℕ} [Fact l.Prime] {LL O : Type} [Field LL] [Algebr
     (hv : algebraMap O LL v = algebraMap ℚ_[l] LL (x : ℚ_[l])) :
     ∃ k : ℕ, (k : ZMod (l ^ n)) = PadicInt.toZModPow n x ∧ (k : O) - v ∈ I := by
   have hlp : l.Prime := Fact.out
-  haveI : NeZero (l ^ n) := ⟨(pow_pos hlp.pos n).ne'⟩
+  have : NeZero (l ^ n) := ⟨(pow_pos hlp.pos n).ne'⟩
   refine ⟨(PadicInt.toZModPow n x).val, ZMod.natCast_zmod_val _, ?_⟩
   have h0 : (((PadicInt.toZModPow n x).val : ℕ) : ℤ_[l]) - x ∈ RingHom.ker (PadicInt.toZModPow (p := l) n) := by
     rw [RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_self]

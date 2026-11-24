@@ -129,10 +129,10 @@ structure IsInvForm (b : thetaSub ψ V W →ₗ⋆[ℂ] thetaSub ψ V W →ₗ[�
 theorem exists_invForm (hω : IsWeilDatumO ψ V W χV χW ω) :
     ∃ b : thetaSub ψ V W →ₗ⋆[ℂ] thetaSub ψ V W →ₗ[ℂ] ℂ, IsInvForm ω b := by
   obtain ⟨i1, i2, i3, i4, i5, K, hK, hKc⟩ := GlobalTheory.AdelicMatrixLattice.lattice D W V
-  haveI : BorelSpace (WO V W) := ⟨rfl⟩
+  have : BorelSpace (WO V W) := ⟨rfl⟩
   have hN := GlobalTheory.exists_normalise_meanSquare_of_cocompact (WO V W) (ratL W V) K hK hKc
   obtain ⟨μ, 𝓕, hμ⟩ := (hN (fun _ => 1) continuous_const (fun h => one_ne_zero (congrFun h 0)) (fun _ _ _ => rfl)).1
-  haveI : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
+  have : IsFiniteMeasure (μ.restrict 𝓕) := ⟨by rw [Measure.restrict_apply_univ, hμ.2.2]; exact ENNReal.one_lt_top⟩
   have hI : ∀ x y : thetaSub ψ V W, Integrable (fun w => x.1 w * conj (y.1 w)) (μ.restrict 𝓕) := fun x y =>
     GlobalTheory.WeilInner.integrable_mul_conj _ x.2.cont.measurable y.2.cont.measurable
       (GlobalTheory.OrientedHeis.theta_bounded hω.std x.2) (GlobalTheory.OrientedHeis.theta_bounded hω.std y.2)
@@ -184,7 +184,7 @@ theorem exists_kop (h1 : LowSm M) (h2 : GlobalTheory.IndefiniteRowSideFullHecke.
     ∃ g : Formalism.REAL.Kset (M.ε τ) → lowT M τ →ₗ[ℂ] lowT M τ,
       (∀ k x, ((g k x : M.sm τ) : M.H τ) = M.σ τ k ((x : M.sm τ) : M.H τ)) ∧ (∀ k x, ‖g k x‖ = ‖x‖) ∧
       ∀ U : Submodule ℂ (lowT M τ), (∀ k, ∀ x ∈ U, g k x ∈ U) → U = ⊥ ∨ U = ⊤ := by
-  haveI := (h2 τ).1
+  have := (h2 τ).1
   refine ⟨Module.Finite.of_injective (((M.sm τ).subtype ∘ₗ (lowT M τ).subtype).codRestrict
     (lowKSub (M.ε τ) (M.lam τ) (M.σ τ)) fun x => x.2) fun x y h =>
       Subtype.ext (Subtype.ext (by exact congrArg (fun z : lowKSub (M.ε τ) (M.lam τ) (M.σ τ) => (z : M.H τ)) h)), ?_⟩
@@ -367,7 +367,7 @@ theorem exists_isometry {K X ι : Type} [Field K] [AddCommGroup X] [Module K X] 
     (hp : ∀ a b, ⟪c₁' (bX a), c₁' (bX b)⟫_ℂ = ⟪c₁ (bX a), c₁ (bX b)⟫_ℂ)
     (hr : ∀ γ ∈ GQ V, ∃ r : X → X, (∀ v, c₁ (r v) = c.ρ γ (c₁ v)) ∧ ∀ v, c₁' (r v) = c'.ρ γ (c₁' v)) :
     ∃ Φ : c.W ≃ₗ[ℂ] c'.W, (∀ v, Φ (c₁ v) = c₁' v) ∧ (∀ x, ‖Φ x‖ = ‖x‖) ∧ ∀ h x, Φ (c.ρ h x) = c'.ρ h (Φ x) := by
-  haveI := Fintype.ofFinite ι
+  have := Fintype.ofFinite ι
   let b1 := Module.Basis.mk i1 s1.ge
   let b2 := Module.Basis.mk i2 s2.ge
   let Φ := b1.equiv b2 (Equiv.refl _)

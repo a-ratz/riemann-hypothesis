@@ -125,7 +125,7 @@ theorem exists_den_of_isCompact :
     letI := tensTop (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
     ∀ C : Set (AE F E), IsCompact C → ∃ d : 𝓞 F, d ≠ 0 ∧ ∀ x ∈ C, (d : F) • x ∈ SS F E := by
   classical
-  letI := tensTop (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
+  let := tensTop (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F)
   intro C hC
   obtain ⟨n, b, hb⟩ := exists_basis_mem_intOE (F := F) (E := E)
   have hsm : ∀ (r : 𝓞 F) (a : AF F), a ∈ intAd F → algebraMap (𝓞 F) F r • a ∈ intAd F := by

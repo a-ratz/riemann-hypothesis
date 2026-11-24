@@ -179,8 +179,8 @@ theorem cwLin_of {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerProductSpac
 
 theorem uniq_of (hBd : Bounded) (hCL : CutLim) (hTC : TorConj) (hAd : DsAd) (hF : Factor) : BesselMapUniqGap := by
   intro k r ε lam h H _ _ σ z c u Wp _ _ π hk hg hh hl hσ hz hT hc hπ B₁ B₂ hB₁ hB₂
-  haveI : CompleteSpace H := by obtain ⟨P, -, h1, -⟩ := hσ; exact h1
-  haveI : FiniteDimensional ℂ Wp := by obtain ⟨g, -, -, h1, -⟩ := hπ; exact h1
+  have : CompleteSpace H := by obtain ⟨P, -, h1, -⟩ := hσ; exact h1
+  have : FiniteDimensional ℂ Wp := by obtain ⟨g, -, -, h1, -⟩ := hπ; exact h1
   obtain ⟨hrep, hiso, hcont, hirr⟩ := TopTA.pi_facts (u := u) (π := π) hz hT hπ
   obtain ⟨D, hDz, hDπ, hD⟩ := stDiagExists multiplicity_one_hypotheses_hold k r Wp z π hk hz hT hrep hiso hcont hirr
   subst hDz hDπ

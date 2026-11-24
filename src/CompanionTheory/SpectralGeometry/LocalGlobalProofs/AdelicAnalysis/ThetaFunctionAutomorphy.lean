@@ -150,10 +150,10 @@ open scoped ENNReal NNReal MatrixGroups Kronecker
 theorem muF_latN : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F)), lf.IsAddHaarMeasure → lf (Oh F) = 1 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (B : Matrix ι ι F) (N : ℕ), 0 < N → (muF B lf (latN F ι N : Set (ι → A F))).toReal = kap F ^ Fintype.card ι * (Real.sqrt |((Algebra.norm ℚ B.det : ℚ) : ℝ)|)⁻¹ * (((N : ℝ) ^ Module.finrank ℚ F)⁻¹) ^ Fintype.card ι := by
   intro F _ _ _ _ lf hH h1 ι _ _ B N hN
   obtain ⟨hlc, hsc, ht2, -, hopen, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
-  haveI := hlc
-  haveI := hsc
-  haveI := ht2
-  haveI : SigmaFinite lf := inferInstance
+  have := hlc
+  have := hsc
+  have := ht2
+  have : SigmaFinite lf := inferInstance
   have hscale := (_root_.GlobalTheory.CompanionTheory.SW.Core.Scale.lf_scale F lf hH h1).1
   have hNF : ((N : F)) ≠ 0 := Nat.cast_ne_zero.mpr hN.ne'
   have hnorm : ((Algebra.norm ℚ (N : F) : ℚ) : ℝ) = (N : ℝ) ^ Module.finrank ℚ F := by
@@ -177,7 +177,7 @@ theorem muF_latN : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A 
       obtain ⟨y, hy, e⟩ := h i
       exact ⟨y, hy, e.symm⟩
   have hk : 0 ≤ kap F := inv_nonneg.mpr (Real.sqrt_nonneg _)
-  rw [hset, muF, Measure.smul_apply, Measure.pi_pi, smul_eq_mul, Finset.prod_const,
+  rw [hset, muF, smul_apply, Measure.pi_pi, smul_eq_mul, Finset.prod_const,
     Finset.card_univ, hlf, ENNReal.toReal_mul, ENNReal.toReal_pow,
     ENNReal.toReal_ofReal (by positivity), ENNReal.toReal_ofReal]
   positivity
@@ -828,12 +828,12 @@ theorem rational_coset_param : ∀ (F : Type) [Field F] [NumberField F] (ι : Ty
 
     simp only [emb, gM, EM, Matrix.mulVec, dotProduct, Matrix.smul_apply, Matrix.kroneckerMap_apply,
     Matrix.one_apply, Pi.add_apply, map_add, map_mul, map_sum, map_natCast, map_intCast,
-    Fintype.sum_prod_type, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true,
+    Fintype.sum_prod_type, ite_mul, one_mul, zero_mul, Finset.sum_ite_eq, Finset.mem_univ, ite_true,
     nsmul_eq_mul, Finset.mul_sum]
     congr 1
     rw [Finset.sum_eq_single i (fun j _ hj => by simp [Ne.symm hj]) (by simp)]
     refine Finset.sum_congr rfl fun v _ => ?_
-    rw [if_pos rfl]
+    rw [ite_eq_left rfl]
     ring
 
 end GlobalTheory.CompanionTheory.SW.ThW
@@ -1175,8 +1175,8 @@ theorem compact_subgroup_and_level :
     ∀ (V : Type) [AddCommGroup V] [TopologicalSpace V] [MeasurableSpace V] (χ : V → V → ℂ) (μ : Measure V), NADual V χ μ → (∀ K : Set V, IsCompact K → ∃ L : AddSubgroup V, IsCompact (L : Set V) ∧ IsOpen (L : Set V) ∧ K ⊆ L) ∧ ∀ φ : V → ℂ, SB φ → ∃ L L' : AddSubgroup V, IsCompact (L : Set V) ∧ IsOpen (L : Set V) ∧ IsCompact (L' : Set V) ∧ IsOpen (L' : Set V) ∧ L' ≤ L ∧ (∀ x, x ∉ L → φ x = 0) ∧ ∀ x, ∀ l ∈ L', φ (x + l) = φ x := by
   intro V _ _ _ χ μ h
   obtain ⟨hG, hT, -, -, -, -, hnb, hcov, -⟩ := h
-  haveI := hG
-  haveI := hT
+  have := hG
+  have := hT
   have cover : ∀ K : Set V, IsCompact K →
       ∃ L : AddSubgroup V, IsCompact (L : Set V) ∧ IsOpen (L : Set V) ∧ K ⊆ L := by
     intro K hK
@@ -1242,7 +1242,7 @@ theorem sb_eq_sum_coset_indicators :
       ∃ s : Finset V, ∀ x, φ x = ∑ a ∈ s, φ a * Set.indicator {y | y - a ∈ L'} (fun _ => (1 : ℂ)) x := by
   intro V _ _ _ χ μ h φ hφ L' hL' hinv
   classical
-  haveI : IsTopologicalAddGroup V := h.1
+  have : IsTopologicalAddGroup V := h.1
   obtain ⟨t, ht⟩ := hφ.2.isCompact.elim_finite_subcover (fun a : V => {y | y - a ∈ L'})
     (fun a => hL'.preimage (continuous_id.sub continuous_const))
     (fun x _ => Set.mem_iUnion.2 ⟨x, by simp [L'.zero_mem]⟩)
@@ -1264,9 +1264,9 @@ theorem sb_eq_sum_coset_indicators :
     intro q
     by_cases hq : q = (x : V ⧸ L')
     · subst hq
-      rw [if_pos rfl, Set.indicator_of_mem (show x ∈ {y | y - ((x : V ⧸ L')).out ∈ L'} from (key _).2 rfl),
+      rw [ite_eq_left rfl, Set.indicator_of_mem (show x ∈ {y | y - ((x : V ⧸ L')).out ∈ L'} from (key _).2 rfl),
         hval, mul_one]
-    · rw [if_neg hq, Set.indicator_of_notMem (show x ∉ {y | y - q.out ∈ L'} from fun hx => hq ((key _).1 hx)),
+    · rw [ite_eq_right hq, Set.indicator_of_notMem (show x ∉ {y | y - q.out ∈ L'} from fun hx => hq ((key _).1 hx)),
         mul_zero]
   simp only [hterm, Finset.sum_ite_eq']
   split_ifs with hx
@@ -1339,7 +1339,7 @@ theorem sb_eq_sum_rational_coset_indicators :
     have hset : {y | y - a ∈ latN F ι N} = {y | y - toA (r a) ∈ latN F ι N} := by
       ext y
       have e : y - toA (r a) = (y - a) + (a - toA (r a)) := by abel
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       rw [e]
       exact (AddSubgroup.add_mem_cancel_right _ (hrl a)).symm
     rw [hset]
@@ -1553,13 +1553,13 @@ theorem map_eq_self {V : Type} [AddCommGroup V] [TopologicalSpace V] [Measurable
     (hes : Continuous e.symm) (hχ : ∀ x y, χ (e x) (e y) = χ x y) :
     Measure.map e μ = μ := by
   obtain ⟨hTG, hT2, hLC, hSC, hBS, hHaar, -, hEx, -, -, -, -, hPerp⟩ := hD
-  haveI := hTG
-  haveI := hT2
-  haveI := hLC
-  haveI := hSC
-  haveI := hBS
-  haveI := hHaar
-  haveI : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
+  have := hTG
+  have := hT2
+  have := hLC
+  have := hSC
+  have := hBS
+  have := hHaar
+  have : (μ.map e).IsAddHaarMeasure := e.isAddHaarMeasure_map μ he hes
   obtain ⟨c, hc⟩ : ∃ c : ℝ≥0, μ.map e = c • μ :=
     ⟨_, Measure.isAddLeftInvariant_eq_smul (μ.map e) μ⟩
   let t : V ≃ₜ V := { toEquiv := e.toEquiv, continuous_toFun := he, continuous_invFun := hes }
@@ -1568,7 +1568,7 @@ theorem map_eq_self {V : Type} [AddCommGroup V] [TopologicalSpace V] [Measurable
     have hm : MeasurableSet (e '' A) := (t.isOpenMap A hA).measurableSet
     have h1 : (μ.map e) (e '' A) = (c • μ) (e '' A) := by rw [hc]
     rw [Measure.map_apply he.measurable hm, Set.preimage_image_eq _ e.injective,
-      Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h1
+      smul_apply, ENNReal.smul_def, smul_eq_mul] at h1
     exact h1
   obtain ⟨L, hLc, hLo, -⟩ := hEx 0
   have hset : ((L.map e.toAddMonoidHom : AddSubgroup V) : Set V) = e '' (L : Set V) := by
@@ -1600,7 +1600,7 @@ theorem orth_meas : ∀ (R : Type) [CommRing R] [TopologicalSpace R] [Measurable
           ∀ y, fou (chiB ψ B) μ (fun x => φ (g *ᵥ x)) y = fou (chiB ψ B) μ φ (g *ᵥ y) := by
   intro R _ _ _ ι _ _ ψ h B μ hQ g hdet hg
   obtain ⟨hTR, -, -, -, -, hD⟩ := hQ
-  haveI := hTR
+  have := hTR
   have hBS : BorelSpace (ι → R) := hD.2.2.2.2.1
   have he : Continuous (mulVecEquiv g hdet) :=
     Continuous.matrix_mulVec continuous_const continuous_id

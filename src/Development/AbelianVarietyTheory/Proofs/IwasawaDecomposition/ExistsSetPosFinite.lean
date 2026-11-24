@@ -64,7 +64,7 @@ theorem haar_eq_of_eq_on_set {G : Type} [Group G] [TopologicalSpace G] [IsTopolo
 theorem exists_set_pos_finite (cd : CDHaar) (P Q : ℕ) :
     ∃ B : Set (UpqT P Q), MeasurableSet B ∧ cd.cd P Q B ≠ 0 ∧ cd.cd P Q B ≠ ⊤ := by
   obtain ⟨_, _, _, _, _, _⟩ := GlobalTheory.UpqTopology.upq_lcsc P Q
-  haveI := cd.haar P Q
+  have := cd.haar P Q
   obtain ⟨K, hK, hK1⟩ := exists_compact_mem_nhds (1 : UpqT P Q)
   exact ⟨K, hK.measurableSet, (Measure.measure_pos_of_mem_nhds _ hK1).ne', hK.measure_lt_top.ne⟩
 
@@ -77,11 +77,11 @@ theorem volMeas_unique : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   have hB := hB A hA
   choose B hBm hB0 hBt using fun ρ : I => exists_set_pos_finite cd (W.sig (τ ρ)).1 (W.sig (τ ρ)).2
   obtain ⟨_, _, _⟩ := GlobalTheory.AdelicUnitaryTop.lcsc_adelicUnitary F E cm.sig W.rank W.gram
-  haveI : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
-  haveI : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
-  haveI : IsTopologicalGroup (HA (AF F) cm.sig W.gram) :=
+  have : IsModuleTopology (AF F) (AF F ⊗[F] E) := ⟨rfl⟩
+  have : IsTopologicalRing (AF F ⊗[F] E) := IsModuleTopology.isTopologicalRing (AF F) _
+  have : IsTopologicalGroup (HA (AF F) cm.sig W.gram) :=
     inferInstanceAs (IsTopologicalGroup (HR (AF F) cm.sig W.gram))
-  haveI : BorelSpace (HA (AF F) cm.sig W.gram) := ⟨rfl⟩
+  have : BorelSpace (HA (AF F) cm.sig W.gram) := ⟨rfl⟩
   refine haar_eq_of_eq_on_set μ μ' _ ((hB B hBm).trans (hB' B hBm).symm) ?_ ?_
   · rw [hB' B hBm]
     exact Finset.prod_ne_zero_iff.2 fun ρ _ => hB0 ρ

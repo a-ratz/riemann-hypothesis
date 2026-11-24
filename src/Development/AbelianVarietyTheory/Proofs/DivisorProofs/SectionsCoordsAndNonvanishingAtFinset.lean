@@ -343,7 +343,7 @@ theorem main : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space Y] [Second
     have hnu : ‖u v‖ ^ 2 = ‖D i y‖ ^ 2 * Real.exp (-(2 * k * (q v).re)) := by
       simp only [hu, norm_mul, Complex.norm_exp, mul_pow]
       congr 1
-      rw [← Real.exp_nat_mul]
+      rw [← Real.exp_natCast_mul]
       congr 1
       simp [Complex.neg_re, Complex.mul_re]
       ring
@@ -771,7 +771,7 @@ theorem peak_section : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space Y]
           (‖f (A.chart i y)‖ ^ 2 * Real.exp (-A.ph (A.kap + G) i y)) *
           Real.exp (-(A.ph H i y - 2 * (q (A.chart i y)).re) * k) := by
         rw [A.g_self _ i hs, one_mul, norm_mul, Complex.norm_exp, ← add_assoc,
-          A.ph_add _ (k • H) i y hs, A.aap_ph_nsmul H k i hs, mul_pow, ← Real.exp_nat_mul,
+          A.ph_add _ (k • H) i y hs, A.aap_ph_nsmul H k i hs, mul_pow, ← Real.exp_natCast_mul,
           mul_assoc, mul_assoc, ← Real.exp_add, ← Real.exp_add]
         congr 2
         simp

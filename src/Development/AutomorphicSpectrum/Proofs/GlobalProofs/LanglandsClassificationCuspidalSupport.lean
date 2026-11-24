@@ -146,7 +146,7 @@ theorem intertw_of_subsingleton {G V W : Type} [Group G] [Subsingleton G] [AddCo
 theorem embeds_zero (Q : Irr k 0) : Embeds 0 Q := by
   have hQ := Q.irr
   have := nontrivial_of_irreducible hQ
-  haveI : Subsingleton (GL (Fin 0) k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
+  have : Subsingleton (GL (Fin 0) k) := ⟨fun _ _ => Units.ext (Subsingleton.elim _ _)⟩
   obtain ⟨v, hv⟩ := exists_ne (0 : Q.V)
   obtain ⟨f, hf⟩ : ∃ f : Module.Dual ℂ Q.V, f v ≠ 0 := by
     by_contra h
@@ -162,7 +162,7 @@ theorem embeds_zero (Q : Irr k 0) : Embeds 0 Q := by
     · have h' : LinearMap.ker f = ⊤ := congrArg Subrepresentation.toSubmodule h
       exact absurd (LinearMap.ker_eq_top.1 h' ▸ rfl : f v = 0) hf
   let u : Fin 0 → IrrGL (k := k) := fun a => a.elim0
-  haveI : IsEmpty (Σ a, Fin (u a).1) := ⟨fun x => x.1.elim0⟩
+  have : IsEmpty (Σ a, Fin (u a).1) := ⟨fun x => x.1.elim0⟩
   let e : (Σ a, Fin (u a).1) ≃ Fin 0 := Equiv.equivOfIsEmpty _ _
   let L := GlobalTheory.EmptyProd.lineEquiv (k := k) e fun a => (u a).rep
   exact ⟨0, u, e, fun a => a.elim0,

@@ -521,7 +521,7 @@ theorem SRel_of : SRel := by
       unfold Cyc
       rw [(LateralTheory.Q.SChainPf.SChain_of _).2.1, h0, map_zero])
   refine ⟨fun t => (n t : ZMod (l ^ ν)), t, ?_, h2⟩
-  rw [ZMod.coe_int_isUnit_iff_isCoprime, Nat.cast_pow]
+  rw [ZMod.isUnit_intCast_iff_isCoprime, Nat.cast_pow]
   exact ((Nat.prime_iff_prime_int.1 hl.out).irreducible.coprime_iff_not_dvd.2 h1).pow_left
 
 end LateralTheory.Q.SRelT

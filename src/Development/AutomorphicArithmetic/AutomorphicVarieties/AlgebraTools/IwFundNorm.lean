@@ -118,7 +118,7 @@ private theorem conj_entry (x : kˣ) (a : Fin n → ℤ) (w : Equiv.Perm (Fin n)
 private theorem bd_conj (x : kˣ) (a : Fin n → ℤ) (w : Equiv.Perm (Fin n))
     (hw : ∀ i j, (if w j < w i then 1 else 0 : ℤ) = (a i - a j) + (if j < i then 1 else 0)) (g : GL (Fin n) k) :
     Bd x (pm k n w * pw x a * g * (pm k n w * pw x a)⁻¹) ↔ Bd x g := by
-  have h0 : 0 < valuation k (x : k) := zero_lt_iff.2 (by simp)
+  have h0 : 0 < valuation k (x : k) := pos_iff_ne_zero.2 (by simp)
   unfold Bd
   rw [w.surjective.forall₂]
   refine forall₂_congr fun i j => ?_

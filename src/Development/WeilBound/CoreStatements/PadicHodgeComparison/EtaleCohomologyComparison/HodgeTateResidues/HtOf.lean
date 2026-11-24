@@ -192,7 +192,7 @@ theorem co_abs {W : Type 1} [AddCommGroup W] [Module B W] {m r : ℕ} (hr : r < 
         rw [AddEquiv.symm_apply_eq, hg, he a ha n b y hn]
       show coT (g.symm (b • μ a y)) a φ = _
       rw [hw]
-      simp only [coT, AddMonoidHom.coe_mk, ZeroHom.coe_mk, dif_pos ha, Pi.single_eq_same, one_tmul, h3 _ n b hn]
+      simp only [coT, AddMonoidHom.coe_mk, ZeroHom.coe_mk, dite_eq_left ha, Pi.single_eq_same, one_tmul, h3 _ n b hn]
     · intro a' ha' a hne b y
       obtain ⟨n, hn⟩ := h2 ⟨r - a', by omega⟩ b
       have hw : g.symm (b • μ a' y) = Pi.single (⟨r - a', by omega⟩ : Fin m) (n ⊗ₜ e a' ha' y) := by
@@ -375,8 +375,8 @@ variable (l : ℕ) [Fact l.Prime] (K : IntermediateField ℚ_[l] (PadicAlgCl l))
 
 theorem coEx : CoEx l K := by
   intro Y m L M hM r j hr
-  haveI := AdicGeo.proper_p hM.1
-  haveI := hM.2
+  have := AdicGeo.proper_p hM.1
+  have := hM.2
   obtain ⟨U⟩ := (cov_ex M.q).1 inferInstance
   exact CoB.main L.γB M.q L.θ U L.tB_mem m L.ker_θ L.pdB L.nil L.gr r j hr
 
@@ -1026,8 +1026,8 @@ theorem sq4 (m₁ : CH.Mor F₁ F₂ σ₁) (m₂ : CH.Mor F₂ F₄ σ₂) (m�
     (hτ : ∀ (T : C₄) (x : F₁.obj (m₁.G.obj (m₂.G.obj T))),
       m₄.τ T (m₃.τ _ ((F₁.map (η.app T)).hom x)) = m₂.τ T (m₁.τ _ x)) (j : ℕ) (x : CH.H F₁ j) :
     m₂.pull j (m₁.pull j x) = m₄.pull j (m₃.pull j x) := by
-  haveI : RingHomCompTriple σ₁ σ₂ (σ₂.comp σ₁) := ⟨rfl⟩
-  haveI : RingHomCompTriple σ₃ σ₄ (σ₂.comp σ₁) := ⟨RingHom.ext hσ⟩
+  have : RingHomCompTriple σ₁ σ₂ (σ₂.comp σ₁) := ⟨rfl⟩
+  have : RingHomCompTriple σ₃ σ₄ (σ₂.comp σ₁) := ⟨RingHom.ext hσ⟩
   rw [pull_pull (σ₂.comp σ₁), pull_pull (σ₂.comp σ₁)]
   exact CrystallineSemistableComparison.P.prism (m₁.comp m₂) (m₃.comp m₄) η hτ j x
 
@@ -1509,8 +1509,8 @@ theorem rS_tr (r j n : ℕ) (x : CH.H (Y.SS M r (n + 1)).fn j) :
     (fun _ _ => rfl) (Y.c_surj (n + 1)) r j x
 
 theorem ex [FiniteDimensional ℚ_[l] K] (hM : M.Sm) (r j : ℕ) (hr : r < m) (x : Y.Fam M r j) (hx : CB.Comp x) : ∃! w, L.Rho x w := by
-  haveI := AdicGeo.proper_p hM.1
-  haveI : IsDiscreteValuationRing (OK l K) := OK_dvr
+  have := AdicGeo.proper_p hM.1
+  have : IsDiscreteValuationRing (OK l K) := OK_dvr
   obtain ⟨U⟩ := (cov_ex M.p).1 hM.2
   obtain ⟨k, h1, h2⟩ := lift_gr afgA L.γ l m ok_dv (tf_dom (Fact.out : l.Prime).ne_zero ok_dv (by omega)) L.lat M.p U r hr j
   obtain ⟨z, hz⟩ := h1 (fun n => (L.rS M r n).pull j (x n)) fun n =>

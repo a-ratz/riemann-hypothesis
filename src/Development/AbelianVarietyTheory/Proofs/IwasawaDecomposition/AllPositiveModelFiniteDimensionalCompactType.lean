@@ -159,7 +159,7 @@ theorem model_allPos : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M 
   rw [hε] at hT'
   have hTtop : T = ⊤ := by
     obtain ⟨hfd, hst, -, ⟨v, hv, hv0, -⟩, -⟩ := hT'
-    refine (hirr T T.closed_of_finiteDimensional fun g hg => hst g ?_).resolve_left ?_
+    refine (hirr T T.isClosed_of_finiteDimensional fun g hg => hst g ?_).resolve_left ?_
     · rw [hε] at hg
       exact mem_Kset_of_mem_UJset hg
     · exact (Submodule.ne_bot_iff _).2 ⟨v, hv, hv0⟩
@@ -168,7 +168,7 @@ theorem model_allPos : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M 
     have := hT'.1
     exact Module.Finite.equiv Submodule.topEquiv
   refine ⟨hfd, ?_, hε ▸ hrep, hT'⟩
-  refine (hirr (M.sm τ) (M.sm τ).closed_of_finiteDimensional fun u hu v hv => ?_).resolve_left
+  refine (hirr (M.sm τ) (M.sm τ).isClosed_of_finiteDimensional fun u hu v hv => ?_).resolve_left
     (GlobalTheory.GardingVec.sm_ne_bot D V S M τ)
   have hle : (M.sm τ).map (M.σ τ u : M.H τ →ₗ[ℂ] M.H τ) ≤ M.sm τ := by
     refine (Submodule.map_span_le _ _ _).2 fun w hw => Submodule.subset_span ?_

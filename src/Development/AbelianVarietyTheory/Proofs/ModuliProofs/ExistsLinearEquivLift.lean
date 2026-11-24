@@ -138,7 +138,7 @@ theorem linear_lift_unique {e : W → Q} (h : ∀ z w, e (z + w) = e z * e w) {r
 theorem fderiv_lift {x : V → Q} {e : W → Q} (hx : ∀ z w, x (z + w) = x z * x w) (h : ∀ z w, e (z + w) = e z * e w)
     (hs : Function.Surjective e) {r : ℝ} (hr : 0 < r) (hk : ∀ z, ‖z‖ < r → e z = 1 → z = 0) {ζ : V → W}
     (hd : DifferentiableAt ℂ ζ 0) (hζ : ∀ᶠ z in 𝓝 0, e (ζ z) = x z) (z : V) : e (fderiv ℂ ζ 0 z) = x z := by
-  letI : CommGroup Q := { (inferInstance : Group Q) with
+  let : CommGroup Q := { (inferInstance : Group Q) with
     mul_comm := fun a b => by
       obtain ⟨a, rfl⟩ := hs a
       obtain ⟨b, rfl⟩ := hs b
@@ -153,7 +153,7 @@ theorem exists_linearEquiv_lift [FiniteDimensional ℂ V] [FiniteDimensional ℂ
     (hs : Function.Surjective e) (hkx : IsDiscrete {z | x z = 1})
     {r : ℝ} (hr : 0 < r) (hk : ∀ z, ‖z‖ < r → e z = 1 → z = 0) {ζ : V → W}
     (hd : DifferentiableAt ℂ ζ 0) (hζ : ∀ᶠ z in 𝓝 0, e (ζ z) = x z) : ∃ L : V ≃L[ℂ] W, ∀ z, e (L z) = x z := by
-  letI : CommGroup Q := { (inferInstance : Group Q) with
+  let : CommGroup Q := { (inferInstance : Group Q) with
     mul_comm := fun a b => by
       obtain ⟨a, rfl⟩ := hs a
       obtain ⟨b, rfl⟩ := hs b
@@ -240,16 +240,16 @@ theorem one_left (y : Sp ℂ ⟶ X) : (1 : Over.mk y ⟶ G).left = y ≫ η[G].l
 theorem eq_one_of_mem_range [IsSeparated G.hom] {y : Sp ℂ ⟶ X} (x : Over.mk y ⟶ G)
     (hx : x.left (default : PrimeSpectrum ℂ) ∈ Set.range η[G].left) : x = 1 := by
   have hw : η[G].left ≫ G.hom = 𝟙 _ := Over.w η[G]
-  haveI : IsClosedImmersion (η[G].left ≫ G.hom) := hw ▸ inferInstance
-  haveI : IsClosedImmersion η[G].left := IsClosedImmersion.of_comp _ G.hom
-  haveI : IsReduced (Over.mk y).left := inferInstanceAs (IsReduced (Sp ℂ))
-  haveI : Surjective (pullback.fst x.left η[G].left) := ⟨fun p => by
+  have : IsClosedImmersion (η[G].left ≫ G.hom) := hw ▸ inferInstance
+  have : IsClosedImmersion η[G].left := IsClosedImmersion.of_comp _ G.hom
+  have : IsReduced (Over.mk y).left := inferInstanceAs (IsReduced (Sp ℂ))
+  have : Surjective (pullback.fst x.left η[G].left) := ⟨fun p => by
     have : p = (default : PrimeSpectrum ℂ) := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
     subst this
     change _ ∈ Set.range _
     rw [Scheme.Pullback.range_fst]
     exact hx⟩
-  haveI := isIso_of_isClosedImmersion_of_surjective (pullback.fst x.left η[G].left)
+  have := isIso_of_isClosedImmersion_of_surjective (pullback.fst x.left η[G].left)
   have e : x.left = (inv (pullback.fst x.left η[G].left) ≫ pullback.snd _ _) ≫ η[G].left := by
     rw [Category.assoc, ← pullback.condition, IsIso.inv_hom_id_assoc]
   have e' : inv (pullback.fst x.left η[G].left) ≫ pullback.snd _ _ = y := by
@@ -263,8 +263,8 @@ theorem isOpen_ne_one [IsSeparated G.hom] {V : Type} [NormedAddCommGroup V] [Nor
     {y : V → (Sp ℂ ⟶ X)} {x : ∀ b, Over.mk (y b) ⟶ G} (hx : IsHolTo B (fun b => (x b).left)) :
     IsOpen {b ∈ B | x b ≠ 1} := by
   have hw : η[G].left ≫ G.hom = 𝟙 _ := Over.w η[G]
-  haveI : IsClosedImmersion (η[G].left ≫ G.hom) := hw ▸ inferInstance
-  haveI : IsClosedImmersion η[G].left := IsClosedImmersion.of_comp _ G.hom
+  have : IsClosedImmersion (η[G].left ≫ G.hom) := hw ▸ inferInstance
+  have : IsClosedImmersion η[G].left := IsClosedImmersion.of_comp _ G.hom
   let U : G.left.Opens := ⟨(Set.range η[G].left)ᶜ, η[G].left.isClosedEmbedding.isClosed_range.isOpen_compl⟩
   convert (hx U 0).1 using 3 with b
   refine and_congr_right fun _ => ?_

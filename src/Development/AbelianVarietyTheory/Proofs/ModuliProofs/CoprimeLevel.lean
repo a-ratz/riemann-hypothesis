@@ -120,7 +120,7 @@ namespace GlobalTheory.Models
 
 theorem exists_prime_gt_neg_not_isSquare (d : ℕ) (hd : d.Prime) (hd4 : d % 4 = 3) (b : ℕ) :
     ∃ n : ℕ, b < n ∧ n.Prime ∧ Odd n ∧ ¬ IsSquare (-(d : ZMod n)) := by
-  haveI : NeZero (4 * d) := ⟨by have := hd.pos; omega⟩
+  have : NeZero (4 * d) := ⟨by have := hd.pos; omega⟩
   obtain ⟨n, hn, hp, hmod⟩ :=
     Nat.forall_exists_prime_gt_and_eq_mod (q := 4 * d) (a := -1) isUnit_one.neg (max b d)
   have hdvd : 4 * d ∣ n + 1 := by
@@ -136,8 +136,8 @@ theorem exists_prime_gt_neg_not_isSquare (d : ℕ) (hd : d.Prime) (hd4 : d % 4 =
     push_cast at this
     exact eq_neg_of_add_eq_zero_left this
   have hlt : d < n := lt_of_le_of_lt (le_max_right _ _) hn
-  haveI : Fact n.Prime := ⟨hp⟩
-  haveI : Fact d.Prime := ⟨hd⟩
+  have : Fact n.Prime := ⟨hp⟩
+  have : Fact d.Prime := ⟨hd⟩
   refine ⟨n, lt_of_le_of_lt (le_max_left _ _) hn, hp, by rw [Nat.odd_iff]; omega, ?_⟩
   have h1 : IsSquare (d : ZMod n) := by
     rw [ZMod.exists_sq_eq_prime_iff_of_mod_four_eq_three h4 hd4 hlt.ne', hdn,
@@ -168,7 +168,7 @@ theorem exists_eq_of_mem_adjoin_quadratic_generator (H : Host E) {a : 𝓞 E} (h
 theorem bar_mem_of_mem (H : Host E) {n : ℕ} (hn : AuxiliaryInertOddPrime H n) (P : Ideal (𝓞 E)) (hP : P.IsPrime)
     (hnP : (n : 𝓞 E) ∈ P) {a : 𝓞 E} (ha : a ∈ Algebra.adjoin ℤ {H.w0}) (haP : a ∈ P) : H.bar a ∈ P := by
   obtain ⟨hp, hodd, hsq, -⟩ := hn
-  haveI : Fact n.Prime := ⟨hp⟩
+  have : Fact n.Prime := ⟨hp⟩
   have key : ∀ m : ℤ, (m : 𝓞 E) ∈ P → (n : ℤ) ∣ m := by
     intro m hm
     by_contra h
@@ -239,7 +239,7 @@ theorem AuxiliaryInertOddPrime.coprime_level {H : Host E} {n : ℕ} (hn : Auxili
     have h2 : Algebra.norm ℤ (n : 𝓞 E) = (n : ℤ) ^ Module.finrank ℤ (𝓞 E) := by
       rw [← Algebra.norm_algebraMap]; simp
     rw [h2, isUnit_pow_iff Module.finrank_pos.ne'] at h1
-    exact (Nat.prime_iff_prime_int.mp hn.1).not_unit h1
+    exact (Nat.prime_iff_prime_int.mp hn.1).not_isUnit h1
   obtain ⟨P, hP, hle⟩ := Ideal.exists_le_maximal _ hnu
   have hnP : (n : 𝓞 E) ∈ P := hle (Ideal.mem_span_singleton_self _)
   have hM : l.Mb * l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E) ≤ P := by
@@ -249,7 +249,7 @@ theorem AuxiliaryInertOddPrime.coprime_level {H : Host E} {n : ℕ} (hn : Auxili
   rcases hP.isPrime.mul_le.mp hM with h | h
   · exact not_Mb_le H hn l P hP.isPrime hnP h
   · rw [Ideal.map_le_iff_le_comap] at h
-    haveI := hP.isPrime
+    have := hP.isPrime
     refine not_Mb_le H hn l _ (Ideal.comap_isPrime _ P) ?_ h
     rw [Ideal.mem_comap, map_natCast]
     exact hnP

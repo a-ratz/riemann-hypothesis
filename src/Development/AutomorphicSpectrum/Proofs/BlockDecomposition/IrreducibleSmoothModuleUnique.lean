@@ -264,7 +264,7 @@ theorem lie_skew_mem_of_cpt_stable : ∀ (E : Type) [Field E] [NumberField E] [_
   have hfin : FiniteDimensional ℂ W' := by
     have := hf
     exact inferInstance
-  have hcl : IsClosed (W' : Set (GA E a → ℂ)) := W'.closed_of_finiteDimensional
+  have hcl : IsClosed (W' : Set (GA E a → ℂ)) := W'.isClosed_of_finiteDimensional
   let G : ℝ → GA E a → ℂ := fun t g => φ.1 (g * infGL E a (c t))
   have hG : ∀ t, G t ∈ W' := fun t =>
     ⟨cptRep E a ⟨(c t).val, hu hX t⟩ φ, hK _ _ hφ, funext fun g => by
@@ -404,7 +404,7 @@ lemma le_bnd {l : List ι} {k : ℕ} (hl : l.length = k) (e : Fin m) :
     simp [hl]
   have h := Finset.le_sup (f := fun p : List ι × Fin m => ‖j (GlobalTheory.CompanionTheory.AnalyticWord.word Z p.1 (y p.2))‖₊) hmem
   unfold GlobalTheory.CompanionTheory.AnalyticWord.bnd
-  exact (coe_nnnorm _).symm.trans_le (NNReal.coe_le_coe.2 h)
+  exact (coe_nnNorm _).symm.trans_le (NNReal.coe_le_coe.2 h)
 
 lemma bnd_le {k : ℕ} {B : ℝ} (hB : 0 ≤ B)
     (h : ∀ (l : List ι) (e : Fin m), l.length = k → ‖j (word Z l (y e))‖ ≤ B) :
@@ -415,7 +415,7 @@ lemma bnd_le {k : ℕ} {B : ℝ} (hB : 0 ≤ B)
     refine Finset.sup_le fun p hp => ?_
     rw [Finset.mem_product, Set.Finite.mem_toFinset] at hp
     show ‖j (GlobalTheory.CompanionTheory.AnalyticWord.word Z p.1 (y p.2))‖₊ ≤ B.toNNReal
-    rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_toNNReal _ hB]
+    rw [← NNReal.coe_le_coe, coe_nnNorm, Real.coe_toNNReal _ hB]
     exact h p.1 p.2 hp.1
   calc _ ≤ ((B.toNNReal : NNReal) : ℝ) := NNReal.coe_le_coe.2 hs
     _ = B := Real.coe_toNNReal _ hB
@@ -1025,7 +1025,7 @@ theorem single_mem {S : Subgroup (GL n (ι → ℂ))}
     · intro i j
       by_cases h : i = j
       · subst h
-        simp only [Matrix.diagonal_apply_eq, if_true]
+        simp only [Matrix.diagonal_apply_eq, ite_true]
         have h1 : HasDerivAt (fun t : ℝ => (t : ℂ) * Complex.log (D i)) (Complex.log (D i)) 0 := by
           simpa using (Complex.ofRealCLM.hasDerivAt (x := (0 : ℝ))).mul_const (Complex.log (D i))
         simpa using h1.cexp

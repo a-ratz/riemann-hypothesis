@@ -148,7 +148,7 @@ theorem glue2 : Glue2 := by
   have he : 1 ≤ e := hNf.e_pos
   obtain ⟨N, χ, θ, α, v, B, cc, c₁, d₁, hN5, hgN, -, hlN, hχg, hα, hαq, hEig, hχm1, hθm1, hMeasMu, hv, hc1, hd1, hc1cop, hd1cop, hc1e, hd1e⟩ :=
     hCh l hl2 ι e he g hgM hgl ψ 1 one_pos (by simpa using (Fact.out : Nat.Prime l).one_lt.ne')
-  haveI : NeZero N := ⟨by omega⟩
+  have : NeZero N := ⟨by omega⟩
   let ε : Ω →+* ℂ := (IsAlgClosed.lift (R := ℚ) (S := Ω) (M := ℂ)).toRingHom
   obtain ⟨X⟩ := hTow Ω ε
   let ψ₀ : ZMod l → Qbar l := fun x => ι.symm (ψ x)
@@ -369,7 +369,7 @@ open UpperTheory.V.Z.Kato.Joint GlobalTheory.EisM
 theorem UpperTheory.V.Z.Kato.Joint.avgMF :
     UpperTheory.V.Z.Kato.Joint.AvgMF := by
   intro k l N m θ χ f t α B c hp hk hodd hN hlN hm hχ hf hα hE
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hsq : ∀ ν : DirichletCharacter ℂ N, ν (-1) * ν (-1) = 1 := fun ν => by rw [← map_mul]; simp
   have hform : ∀ ν : DirichletCharacter ℂ N, ν (-1) = -θ (-1) → MF k (N * l) (ch (θ⁻¹ * ν)) (frm l N m k θ ν f) :=
     fun ν hν => (GlobalTheory.iterU_level_val_stable k N l m (θ⁻¹ * ν) (fun _ => 0) α B c _ (by omega) hp hα
@@ -439,10 +439,10 @@ theorem chiFix : ChiFix := by
   refine ⟨fun d => if d.Coprime N then χd d else 0, ?_, ?_, ?_, ?_⟩
   · intro d hd
     dsimp only
-    rw [if_pos hd]
+    rw [ite_eq_left hd]
   · intro d hd
     dsimp only
-    rw [if_pos hd]
+    rw [ite_eq_left hd]
     rcases Nat.eq_zero_or_pos N with hN | hN
     · subst hN
       have hd1 : d = 1 := Nat.coprime_zero_right d |>.1 hd
@@ -460,23 +460,23 @@ theorem chiFix : ChiFix := by
     by_cases ha : a.Coprime N
     · by_cases hb : b.Coprime N
       · have hab : (a * b).Coprime N := Nat.Coprime.mul_left ha hb
-        rw [if_pos hab, if_pos ha, if_pos hb]
+        rw [ite_eq_left hab, ite_eq_left ha, ite_eq_left hb]
         apply hinj
         rw [hFm, hχ _ hab, hχ _ ha, hχ _ hb, Nat.cast_mul, map_mul]
       · have hab : ¬ (a * b).Coprime N := fun h => hb (Nat.Coprime.coprime_mul_left h)
-        rw [if_neg hab, if_neg hb, mul_zero]
+        rw [ite_eq_right hab, ite_eq_right hb, mul_zero]
     · have hab : ¬ (a * b).Coprime N := fun h => ha (Nat.Coprime.coprime_mul_right h)
-      rw [if_neg hab, if_neg ha, zero_mul]
+      rw [ite_eq_right hab, ite_eq_right ha, zero_mul]
   · intro a b hab
     dsimp only
     have hiff : a.Coprime N ↔ b.Coprime N := by rw [hcop a, hcop b, hab]
     by_cases ha : a.Coprime N
     · have hb : b.Coprime N := hiff.1 ha
-      rw [if_pos ha, if_pos hb]
+      rw [ite_eq_left ha, ite_eq_left hb]
       apply hinj
       rw [hχ _ ha, hχ _ hb, (ZMod.natCast_eq_natCast_iff' a b N).2 hab]
     · have hb : ¬ b.Coprime N := fun h => ha (hiff.2 h)
-      rw [if_neg ha, if_neg hb]
+      rw [ite_eq_right ha, ite_eq_right hb]
 
 end UpperTheory.V.Z.Kato.Joint
 
@@ -501,7 +501,7 @@ private theorem cont_of_apply [IsAlgClosure ℚ Ω] {Y : Type} [TopologicalSpace
     (h : ∀ s t : G ℚ Ω, s ζ = t ζ → f s = f t) : Continuous f := by
   have hint : IsIntegral ℚ ζ :=
     ((IsAlgClosure.isAlgebraic (R := ℚ) (K := Ω)).isAlgebraic ζ).isIntegral
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ}) :=
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ {ζ}) :=
     IntermediateField.adjoin.finiteDimensional hint
   have hH : IsOpen (((IntermediateField.adjoin ℚ {ζ}).fixingSubgroup : Subgroup (Ω ≃ₐ[ℚ] Ω)) :
       Set (Ω ≃ₐ[ℚ] Ω)) := IntermediateField.fixingSubgroup_isOpen _
@@ -554,14 +554,14 @@ theorem UpperTheory.V.Z.Kato.Joint.detIne :
     UpperTheory.V.Z.Kato.Joint.DetIne := by
   intro l _ Ω _ _ _ ι e S A W g χ hN hK hl hAtt s hs
   have hM : g.M ≠ 0 := g.pos.ne'
-  haveI : NeZero g.M := ⟨hM⟩
+  have : NeZero g.M := ⟨hM⟩
   have hl0 : l ≠ 0 := (Fact.out : l.Prime).ne_zero
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NeZero ((g.M : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hM⟩
-  haveI : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hl0⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω g.M
-  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NeZero ((g.M : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hM⟩
+  have : NeZero ((l : ℕ) : Ω) := ⟨Nat.cast_ne_zero.2 hl0⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω g.M
+  obtain ⟨η, hη⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   let F : Ω → Qbar l := fun x =>
     ι.symm (g.χ ((Classical.epsilon (fun k : ℕ => ζ ^ k = x) : ℕ) : ZMod g.M))
   have hF : ∀ k : ℕ, F (ζ ^ k) = ι.symm (g.χ k) := by
@@ -611,7 +611,7 @@ theorem UpperTheory.V.Z.Kato.Joint.detIne :
     refine GlobalTheory.Published.ChebotarevDegreeOne.eq_of_frob GlobalTheory.Published.chebotarevDegreeOne'
       (hbad.union (Ideal.finite_factors hI)) hfc hf'c ?_
     intro w hw _ B hB σ hσ
-    simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hw
+    simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_not] at hw
     obtain ⟨hP, hdiv⟩ := hw
     have hlw : ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal := by
       intro h4
@@ -865,7 +865,7 @@ private theorem wsum {N : ℕ} [NeZero N] (θ : DirichletCharacter ℂ N) (u : (
     ∑ x : ZMod N, hz θ x / 2 * ((if A = x * u then c else 0) + (if -A = x * u then s * c else 0)) =
       θ u * ((1 + s * θ (-1)) / 2) * (hz θ A * c) := by
   have h : ∀ (A x : ZMod N), A = x * u ↔ A * (u⁻¹ : (ZMod N)ˣ) = x := fun A x => (Units.mul_inv_eq_iff_eq_mul u).symm
-  simp only [h, mul_add, Finset.sum_add_distrib, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  simp only [h, mul_add, Finset.sum_add_distrib, mul_ite, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
   rw [hz_unit, hz_unit, hz_neg]
   ring
 
@@ -902,7 +902,7 @@ private theorem ee_eq {l : ℕ} [hl : Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ
   generalize s / d = B at hs ⊢
   simp only [← ZMod.intCast_eq_intCast_iff, hs, ite_not, Int.cast_neg, Int.cast_natCast, twb, neg_eq_iff_eq_neg]
   by_cases h : ¬ l ∣ d ∧ ¬ l ∣ B
-  · rw [if_pos h, if_pos h]
+  · rw [ite_eq_left h, ite_eq_left h]
     have hu : IsUnit (d : ZMod (l ^ m)) :=
       (ZMod.isUnit_iff_coprime d (l ^ m)).mpr (Nat.Coprime.pow_right m ((hl.out.coprime_iff_not_dvd.mpr h.1).symm))
     have h1 : ψ⁻¹ (d : ZMod (l ^ m)) = ψ ((d : ZMod (l ^ m))⁻¹) := by
@@ -915,14 +915,14 @@ private theorem ee_eq {l : ℕ} [hl : Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ
       rw [← map_mul]; simp
     rw [← neg_one_mul (d : ZMod (l ^ m)), map_mul, h1, h2]
     split_ifs <;> simp [sub_mul]
-  · rw [if_neg h, if_neg h, map_zero]
+  · rw [ite_eq_right h, ite_eq_right h, map_zero]
 
 theorem ser_eq_Zm {l : ℕ} [hl : Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ) (N : ℕ) [NeZero N] (θ : DirichletCharacter ℂ N) (m k : ℕ)
     (ψ : DirichletCharacter (PadicAlgCl l) (l ^ m)) (a b : ℤ) (hk : 3 ≤ k) (ho : Odd k) (ha : IsCoprime a N) (i : ℕ) :
     ι (ser ι N θ m k ψ a b i) = θ (a : ZMod N) * ((1 + ι (ψ (-1)) * θ (-1)) / 2) *
       (Uo l)^[m] (Zm k l (hat θ) (twb N (ι (ψ (-1))) b)
         fun A d => ι (ψ ((A : ZMod (l ^ m)) * (d : ZMod (l ^ m))⁻¹))) i := by
-  obtain ⟨u, hu⟩ : IsUnit (a : ZMod N) := (ZMod.coe_int_isUnit_iff_isCoprime a N).mpr ha.symm
+  obtain ⟨u, hu⟩ : IsUnit (a : ZMod N) := (ZMod.isUnit_intCast_iff_isCoprime a N).mpr ha.symm
   have hff : ∀ s : ℕ, ∑ x : ZMod N, hat θ (x.val : ℤ) / 2 * ι (ffMu N l m k ψ ((x.val : ℤ) * a) s) =
       θ (a : ZMod N) * ((1 + ι (ψ (-1)) * θ (-1)) / 2) * ∑ p ∈ s.divisorsAntidiagonal, if l ∣ s then 0 else
         hat θ p.1 * (ι (ψ p.1) * (p.1 : ℂ) ^ (k - 2)) := by
@@ -932,7 +932,7 @@ theorem ser_eq_Zm {l : ℕ} [hl : Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ) (N
     refine Finset.sum_congr rfl fun p _ => ?_
     by_cases h : l ∣ s
     · simp [h]
-    · simp only [h, if_false, Int.cast_mul, Int.cast_natCast, ZMod.natCast_zmod_val, ← hu]
+    · simp only [h, ite_false, Int.cast_mul, Int.cast_natCast, ZMod.natCast_zmod_val, ← hu]
       exact wsum θ u _ _ _
   rw [Uo_iterate, ser, up]
   generalize l ^ m * i = n
@@ -979,21 +979,21 @@ private theorem ind_sum {N : ℕ} [NeZero N] (ν : DirichletCharacter ℂ N) (v 
   · obtain ⟨w, rfl⟩ := hB
     have h : ∀ u : (ZMod N)ˣ, ((w : ZMod N) = (u : ZMod N) * v) ↔ w * v⁻¹ = u := fun u => by
       rw [← Units.val_mul, Units.val_inj, mul_inv_eq_iff_eq_mul]
-    simp only [h, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true, Units.val_mul, map_mul]
+    simp only [h, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true, Units.val_mul, map_mul]
     rw [mul_comm, MulChar.inv_apply_eq_inv']
     congr 1
     refine eq_inv_of_mul_eq_one_right ?_
     rw [← map_mul]; simp
   · rw [MulChar.map_nonunit _ hB, mul_zero]
     refine Finset.sum_eq_zero fun u _ => ?_
-    rw [if_neg, mul_zero]
+    rw [ite_eq_right, mul_zero]
     rintro rfl
     exact hB (u * v).isUnit
 
 private theorem twb_sum {N : ℕ} [NeZero N] (θ χ : DirichletCharacter ℂ N) (hχ : χ (-1) = -1) (b : ℤ) (hb : IsCoprime b N) (B : ℤ) :
     ∑ u : (ZMod N)ˣ, (θ * χ) u * twb N (θ (-1)) (((u : ZMod N).val : ℤ) * b) B =
       2 * (θ * χ)⁻¹ (b : ZMod N) * ch (θ * χ) B := by
-  obtain ⟨v, hv⟩ : IsUnit (b : ZMod N) := (ZMod.coe_int_isUnit_iff_isCoprime b N).mpr hb.symm
+  obtain ⟨v, hv⟩ : IsUnit (b : ZMod N) := (ZMod.isUnit_intCast_iff_isCoprime b N).mpr hb.symm
   have h1 := ind_sum (θ * χ) v B
   have h2 := ind_sum (θ * χ) v (-B)
   have h3 : (θ * χ) (-(B : ZMod N)) = -θ (-1) * (θ * χ) B := by
@@ -1037,9 +1037,9 @@ theorem UpperTheory.V.Z.Kato.Joint.avgEq :
   · have e1 : (a : ZMod N) = a' := (ZMod.intCast_eq_intCast_iff _ _ _).mpr haa
     have e2 : (b : ZMod N) = b' := (ZMod.intCast_eq_intCast_iff _ _ _).mpr hbb
     have ha' : IsCoprime a' N := by
-      refine ((ZMod.coe_int_isUnit_iff_isCoprime a' N).mp ?_).symm
+      refine ((ZMod.isUnit_intCast_iff_isCoprime a' N).mp ?_).symm
       rw [← e1]
-      exact (ZMod.coe_int_isUnit_iff_isCoprime a N).mpr ha.symm
+      exact (ZMod.isUnit_intCast_iff_isCoprime a N).mpr ha.symm
     have e3 : twb N (ι (ψ (-1))) b = twb N (ι (ψ (-1))) b' := by
       funext B; simp only [twb, e2]
     funext i
@@ -1120,7 +1120,7 @@ private theorem cg_cases {l : ℕ} [Fact l.Prime] {κ₀ κ : Qbar l} (hκ : κ 
   refine ⟨N, fun m hm c₀ v a p s X b g w hv ha hp hs h1 h2 => ?_⟩
   have hu : ‖v * a ^ m‖ = 1 := by rw [norm_mul, norm_pow, hv, ha, one_pow, one_mul]
   by_cases hE : p = s
-  · rw [if_pos hE]
+  · rw [ite_eq_left hE]
     have h3 := hN m hm c₀ (v * a ^ m) X (κ * b * g * w) hu (h1 hE)
     have e1 : v * a ^ m * (κ₀ / κ) * (κ * b * g * w) = v * κ₀ * a ^ m * (b * g * w) := by
       field_simp
@@ -1129,7 +1129,7 @@ private theorem cg_cases {l : ℕ} [Fact l.Prime] {κ₀ κ : Qbar l} (hκ : κ 
     exact h3
   · have hps : p ^ 2 = s ^ 2 := by rw [hp, hs]
     have hO : p = -s := (sq_eq_sq_iff_eq_or_eq_neg.1 hps).resolve_left hE
-    rw [if_neg hE]
+    rw [ite_eq_right hE]
     have h3 := hN m hm c₀ (v * a ^ m) X 0 hu (h2 hO)
     have e2 : v * a ^ m * (κ₀ / κ) * X = v * (κ₀ / κ) * a ^ m * X := by ring
     rw [mul_zero, e2] at h3
@@ -1240,26 +1240,26 @@ open UpperTheory.V.Z.Kato.Joint
 private theorem apply_eq_pow_cycMod_of_pow_eq_one (l : ℕ) [Fact (Nat.Prime l)] (Ω : Type) [Field Ω] [Algebra ℚ Ω]
     [IsAlgClosure ℚ Ω] (s : G ℚ Ω) (ζ : Ω) (hζ : ζ ^ l = 1) :
     s ζ = ζ ^ ((cycMod ℚ Ω l 1 s : ZMod (l ^ 1)).val) := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).1 inferInstance
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.2 (Fact.out : Nat.Prime l).ne_zero⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).1 inferInstance
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.2 (Fact.out : Nat.Prime l).ne_zero⟩
   exact cyclotomicCharacter.spec l (n := 1) (MulSemiringAction.toRingAut (G ℚ Ω) Ω s) ζ
     (by rwa [pow_one])
 
 private theorem cyc1_surjective (l : ℕ) [Fact (Nat.Prime l)] (Ω : Type) [Field Ω] [Algebra ℚ Ω]
     [IsAlgClosure ℚ Ω] (u : (ZMod l)ˣ) : ∃ s : G ℚ Ω, cyc1 l s = u := by
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  haveI : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).1 inferInstance
-  haveI : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.2 (Fact.out : Nat.Prime l).ne_zero⟩
-  haveI : NeZero l := ⟨(Fact.out : Nat.Prime l).ne_zero⟩
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω l
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
+  have : CharZero Ω := (RingHom.charZero_iff (algebraMap ℚ Ω).injective).1 inferInstance
+  have : NeZero (l : Ω) := ⟨Nat.cast_ne_zero.2 (Fact.out : Nat.Prime l).ne_zero⟩
+  have : NeZero l := ⟨(Fact.out : Nat.Prime l).ne_zero⟩
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω l
   set K := IntermediateField.adjoin ℚ ({ζ} : Set Ω) with hK
-  haveI : IsCyclotomicExtension {l} ℚ K := by
+  have : IsCyclotomicExtension {l} ℚ K := by
     convert hζ.intermediateField_adjoin_isCyclotomicExtension ℚ
     exact Subsingleton.elim _ _
-  haveI : NumberField K := IsCyclotomicExtension.numberField {l} ℚ K
-  haveI : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq (fun x => by simp)
+  have : NumberField K := IsCyclotomicExtension.numberField {l} ℚ K
+  have : IsScalarTower ℚ K Ω := IsScalarTower.of_algebraMap_eq (fun x => by simp)
   let σ := (IsCyclotomicExtension.Rat.galEquivZMod l K).symm u
   let ζK : K := ⟨ζ, IntermediateField.mem_adjoin_simple_self ℚ ζ⟩
   have hζK : ζK ^ l = 1 := Subtype.ext (by simpa using hζ.pow_eq_one)
@@ -1352,7 +1352,7 @@ private theorem sm_sys {W : R2 Ω l} {c : Coef l} {y : G ℚ Ω → Fin 2 → Qb
     refine ⟨B, hB, a • x, fun s hs => ?_⟩
     simp only [hx s hs, Matrix.mulVec_smul, smul_sub]
   · obtain ⟨Y, P, u, b, k1, k2, k3, k4, k5, k6, k7, k8, k9⟩ := h5 n hn w hw hd ψ hk hs
-    haveI : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ n) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     refine ⟨fun s x => a • Y s x, P, u, a • b, ?_, fun s x i => c.O.mul_mem ha (k2 s x i), k3, k4,
       fun i => c.O.mul_mem ha (k5 i), fun s t x => ?_, fun s => ?_, k8, fun q hq hl => ?_⟩
     · exact k1.const_smul a
@@ -1380,7 +1380,7 @@ private theorem sm_iw {c : Coef l} {A : ValuationSubring Ω} {ν : G ℚ Ω → 
     have hu : Units.map (ZMod.castHom (pow_dvd_pow l (Nat.le_succ r)) (ZMod (l ^ r))).toMonoidHom
         (ZMod.unitOfCoprime d (Nat.Coprime.pow_right (r + 1) hd)) = ZMod.unitOfCoprime d (Nat.Coprime.pow_right r hd) := by
       ext
-      simp only [Units.coe_map, ZMod.coe_unitOfCoprime, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, map_natCast]
+      simp only [Units.coe_map, ZMod.coe_unitOfCoprime, RingHom.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, map_natCast]
     symm
     refine Finset.sum_equiv (Equiv.mulRight (ZMod.unitOfCoprime d (Nat.Coprime.pow_right (r + 1) hd))) (fun i => ?_)
       (fun i _ => rfl)
@@ -1395,7 +1395,7 @@ private theorem sm_eta {r n : ℕ} (hr : 1 ≤ r) (hn : n ≤ r) (e : ℕ) (ψ :
     ‖((((x : ZMod (l ^ r)).val : ℕ) : Qbar l) ^ e)⁻¹ * chiK l ψ r x - (d : Qbar l) ^ e *
       ((((((x * ZMod.unitOfCoprime d (Nat.Coprime.pow_right r hd) : (ZMod (l ^ r))ˣ) : ZMod (l ^ r)).val : ℕ) : Qbar l) ^ e)⁻¹ *
         chiK l ψ r (x * ZMod.unitOfCoprime d (Nat.Coprime.pow_right r hd)))‖ ≤ ‖(l : Qbar l) ^ n‖ := by
-  haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+  have : NeZero (l ^ r) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
   unfold chiK
   set z := x * ZMod.unitOfCoprime d (Nat.Coprime.pow_right r hd) with hz
   have hmod : (z : ZMod (l ^ r)).val ≡ (x : ZMod (l ^ r)).val * d [MOD l ^ r] := by
@@ -1637,7 +1637,7 @@ theorem UpperTheory.V.Z.Kato.Joint.rhsEq :
         rw [hδ _ (ZMod.val_coe_unit_coprime u), ZMod.natCast_zmod_val]
       rw [this, map_smul, smul_eq_mul, ← hlG]
       ring
-    haveI : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
+    have : NeZero (l ^ m) := ⟨pow_ne_zero _ (Fact.out : l.Prime).ne_zero⟩
     rw [sum_units (l ^ m) ψ (fun a => z ^ a.val)]
     simp only [map_add (f := _), map_sub, map_smul, smul_eq_mul, hav _ _ h1 h1, hav _ _ hc' h1, hav _ _ h1 hd', hav _ _ hc' hd',
       Fin.sum_univ_four, smB, smT, Int.cast_natCast, Int.cast_one, map_one]

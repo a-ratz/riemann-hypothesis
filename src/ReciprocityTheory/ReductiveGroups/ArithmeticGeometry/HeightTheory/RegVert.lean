@@ -63,8 +63,8 @@ theorem regVert_eq_of_le_height_one {A : Type*} [CommRing A] [IsDomain A] {Q P :
   have hbot : (⊥ : Ideal A) < Q := bot_lt_iff_ne_bot.mpr hQ
   have hQle : Q.height ≤ 1 := hP ▸ Ideal.height_mono hQP
   have hQfin : Q.height ≠ ⊤ := ne_top_of_le_ne_top (by simp) hQle
-  haveI : Q.FiniteHeight := ⟨Or.inr hQfin⟩
-  haveI : (⊥ : Ideal A).FiniteHeight := ⟨Or.inr (by simp)⟩
+  have : Q.FiniteHeight := ⟨Or.inr hQfin⟩
+  have : (⊥ : Ideal A).FiniteHeight := ⟨Or.inr (by simp)⟩
   have h1 : (⊥ : Ideal A).height + 1 ≤ Q.height := by
     first
     | exact ENat.add_one_le_of_lt (Ideal.height_strict_mono_of_isPrime hbot)
@@ -91,7 +91,7 @@ theorem regVert_valuationRing {A : Type*} [CommRing A] [IsDomain A] [IsNoetheria
       | exact Ideal.height_bot
     rw [h0] at hP
     exact zero_ne_one hP
-  haveI : IsNoetherianRing (Localization.AtPrime P) :=
+  have : IsNoetherianRing (Localization.AtPrime P) :=
     IsLocalization.isNoetherianRing P.primeCompl _ inferInstance
   have hinj : Function.Injective (algebraMap A (Localization.AtPrime P)) :=
     IsLocalization.injective _ P.primeCompl_le_nonZeroDivisors
@@ -109,10 +109,10 @@ theorem regVert_valuationRing {A : Type*} [CommRing A] [IsDomain A] [IsNoetheria
   have hnf : ¬ IsField (Localization.AtPrime P) := by
     rw [IsLocalRing.isField_iff_maximalIdeal_eq]
     exact hmne
-  haveI : IsDomain (Localization.AtPrime P) := by
+  have : IsDomain (Localization.AtPrime P) := by
     first
     | infer_instance
-  haveI hic : IsIntegrallyClosed (Localization.AtPrime P) := by
+  have hic : IsIntegrallyClosed (Localization.AtPrime P) := by
     first
     | exact isIntegrallyClosed_of_isLocalization P.primeCompl P.primeCompl_le_nonZeroDivisors
     | exact isIntegrallyClosed_of_isLocalization (S := Localization.AtPrime P) P.primeCompl
@@ -120,7 +120,7 @@ theorem regVert_valuationRing {A : Type*} [CommRing A] [IsDomain A] [IsNoetheria
   have huniq : ∃! Q' : Ideal (Localization.AtPrime P), Q' ≠ ⊥ ∧ Q'.IsPrime := by
     refine ⟨IsLocalRing.maximalIdeal _, ⟨hmne, inferInstance⟩, ?_⟩
     rintro Q' ⟨hQ'ne, hQ'p⟩
-    haveI := hQ'p
+    have := hQ'p
     have hc : Q'.under A ≤ P := by
       exact (Ideal.comap_mono (IsLocalRing.le_maximalIdeal hQ'p.ne_top)).trans hcm.le
     have hcne : Q'.under A ≠ ⊥ := by

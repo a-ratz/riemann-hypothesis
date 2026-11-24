@@ -212,7 +212,7 @@ theorem sgn_of_rat {ψ : AddChar (AF D.host.F) ℂ} (hψ : Continuous ψ) (w : A
   · have hm : finTens (algebraMap D.host.F (Af D.host.F) (a : D.host.F)) M ∈ latO S T LS LT fun _ => True :=
       finTens_mem_latO (fun v => by
         rw [AlgHom.commutes]; exact v.coe_algebraMap_mem (𝓞 D.host.F) D.host.F a) hM
-    rw [Set.mem_setOf_eq, finTens_algebraMap] at *
+    rw [Set.mem_ofPred_eq, finTens_algebraMap] at *
     exact congrFun (h _ hm) x
 
 theorem sum_EF {r : ℕ} (hr : T.rank = r) (X : Data D.host.E r) (hS : S.gram = 1) (hX : IsMod T hr X)

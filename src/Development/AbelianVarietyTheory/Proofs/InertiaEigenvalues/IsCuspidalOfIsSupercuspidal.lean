@@ -79,7 +79,7 @@ theorem exists_dual_infinite {Q : Type} [AddCommGroup Q] [Module ℂ Q] (w : ℕ
     obtain ⟨φ, hφ⟩ := LinearMap.exists_extend φ'
     exact ⟨φ, fun r => LinearMap.congr_fun hφ ⟨w r, hmem r⟩⟩
   by_cases hfin : s.Finite
-  · haveI : Finite s := hfin.to_subtype
+  · have : Finite s := hfin.to_subtype
     have hne : ∀ r, ∃ i, B.repr ⟨w r, hmem r⟩ i ≠ 0 := by
       intro r
       by_contra hc
@@ -119,7 +119,7 @@ theorem exists_smooth_form_eq {G V : Type} [Group G] [TopologicalSpace G] [IsTop
       { carrier := {g | π.dual g l = l}
         mul_mem' := by
           intro x y hx hy
-          simp only [Set.mem_setOf_eq, map_mul, Module.End.mul_apply] at *
+          simp only [Set.mem_ofPred_eq, map_mul, Module.End.mul_apply] at *
           rw [hy, hx]
         one_mem' := by
           show π.dual 1 l = l
@@ -185,7 +185,7 @@ theorem false_of_infinite {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
   set K' := CentralExponent.cong (n := n) (1 : (ValueGroupWithZero k)ˣ) le_rfl with hK'
   have hOpen : IsOpen (K' : Set (GL n k)) := by
     change IsOpen {g : GL n k | ∀ i j, valuation k ((g.val - 1) i j) < 1}
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
     have hBall : IsOpen {x : k | valuation k x < 1} := by
       refine isOpen_iff_mem_nhds.2 fun x hx => (IsValuativeTopology.mem_nhds_iff).2 ⟨1, ?_⟩
@@ -252,7 +252,7 @@ theorem false_of_infinite {k : Type} [Field k] [ValuativeRel k] [TopologicalSpac
     obtain ⟨g, hg, hgc⟩ := this
     exact ⟨⟨g, hg⟩, ζ, hζ, c, hrc, hgc⟩
   choose g ζ hζ c hAc hgc using hch
-  haveI : Infinite S := hS.to_subtype
+  have : Infinite S := hS.to_subtype
   obtain ⟨g0, hg0⟩ := Finite.exists_infinite_fiber g
   have two : ∀ r₁ r₂ : S, g r₁ = g r₂ → (r₁ : ℕ) < r₂ → False := by
     intro r₁ r₂ hg hlt
@@ -323,7 +323,7 @@ theorem isCuspidal_of_isSupercuspidal : ∀ (k : Type) [Field k] [ValuativeRel k
     refine ⟨γ, hγ, fun g hg => hTU ?_⟩
     have hMem := hTγ (g.val - 1)
     have hg' : ∀ i j, valuation k ((g.val - 1) i j) < γ := hg
-    rw [Set.mem_preimage, Set.mem_preimage, if_pos hg', sub_add_cancel] at hMem
+    rw [Set.mem_preimage, Set.mem_preimage, ite_eq_left hg', sub_add_cancel] at hMem
     exact hMem
   obtain ⟨γ, hγ, hK⟩ := hFix
   let K := CentralExponent.cong (n := Fin N) γ hγ
@@ -331,7 +331,7 @@ theorem isCuspidal_of_isSupercuspidal : ∀ (k : Type) [Field k] [ValuativeRel k
   let C₀ := K ⊓ parabLower k (two e)
   have hOpen : IsOpen (K : Set (GL (Fin N) k)) := by
     change IsOpen {g : GL (Fin N) k | ∀ i j, valuation k ((g.val - 1) i j) < γ}
-    simp only [Set.setOf_forall]
+    simp only [Set.ofPred_forall]
     refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
     have hBall : IsOpen {x : k | valuation k x < γ} := by
       refine isOpen_iff_mem_nhds.2 fun x hx => (IsValuativeTopology.mem_nhds_iff).2 ⟨γ, ?_⟩
@@ -393,7 +393,7 @@ theorem isCuspidal_of_isSupercuspidal : ∀ (k : Type) [Field k] [ValuativeRel k
     rcases i with i | i <;> rcases j with j | j
     · simpa [mul_comm, mul_left_comm] using hEntry
     · simp [(mem_parabLower_two k).1 hc' i j, Matrix.one_apply]
-    · simp only [Matrix.one_apply, EmbeddingLike.apply_eq_iff_eq, reduceCtorEq, if_false, sub_zero] at hEntry ⊢
+    · simp only [Matrix.one_apply, EmbeddingLike.apply_eq_iff_eq, reduceCtorEq, ite_false, sub_zero] at hEntry ⊢
       simpa using (mul_le_of_le_one_right' hz1).trans_lt hEntry
     · simpa using hEntry
   obtain ⟨l, hl, hll⟩ := exists_smooth_form_eq hπ.1 hOpen hCompact A

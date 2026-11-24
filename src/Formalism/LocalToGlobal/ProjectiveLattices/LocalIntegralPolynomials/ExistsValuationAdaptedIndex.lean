@@ -91,7 +91,7 @@ theorem C_mem_intPoly {σ : Type} {W : Subring Ω} {a : Ω} (ha : a ∈ W) : (C 
 theorem X_mem_intPoly {σ : Type} {W : Subring Ω} (s : σ) : (X s : MvPolynomial σ Ω) ∈ intPoly σ W := by
   intro e
   classical
-  rw [coeff_X']
+  rw [coeff_X]
   split_ifs
   exacts [W.one_mem, W.zero_mem]
 

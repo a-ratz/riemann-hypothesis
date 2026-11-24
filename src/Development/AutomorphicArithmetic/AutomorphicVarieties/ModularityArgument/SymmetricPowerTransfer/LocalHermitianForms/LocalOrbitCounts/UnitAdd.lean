@@ -131,7 +131,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc UpperTheory.V.
 theorem UpperTheory.exists_discriminant_normal_form :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → τ ∈ (algebraMap O K).range → ∀ (s : O) (ε : Oˣ), τ ^ 2 - 4 = algebraMap O K (ε * s ^ 2) → ∃ (π : O) (n : ℕ) (e : Oˣ) (h : O) (x : Etau K τ), Cond π n e h x ∧ Ideal.span {s} = Ideal.span {π ^ n} := by
   intro O K _ _ _ _ _ Δ τ hL hτ hτr s ε hs
-  haveI := hL.frac
+  have := hL.frac
   have inj : Function.Injective (algebraMap O K) := IsFractionRing.injective O K
   obtain ⟨t, rfl⟩ := hτr
   have hs0 : s ≠ 0 := by
@@ -220,7 +220,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc UpperTheory.V.
 theorem UpperTheory.isSquare_sq_sub_four_iff_isSquare_unit :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → ∀ (π : O) (n : ℕ) (e : Oˣ) (h : O) (x : Etau K τ), Cond π n e h x → (IsSquare (τ ^ 2 - 4) ↔ IsSquare (e : O)) := by
   intro O K _ _ _ _ _ Δ τ L hD π n e h x hc
-  haveI := L.frac
+  have := L.frac
   have E : (ω - algebraMap O (Etau K τ) h) * (ω - algebraMap O (Etau K τ) h) = algebraMap O (Etau K τ) (π ^ n * π ^ n * e) := by
     rw [hc.om, add_sub_cancel_left]
     simp only [yy, smul_mul_smul_comm, hc.sq]
@@ -395,7 +395,7 @@ private theorem pt_eq {k : Type} [Field k] {α β γ δ : k} (h1 : α ≠ 0 ∨ 
     simp [ha, hc, hb]
   · have hd : δ ≠ 0 := h2.resolve_left (not_not.mpr hc)
     simp [ha, hc, hd]
-  · simp only [ha, hc, if_false, Option.some.injEq]
+  · simp only [ha, hc, ite_false, Option.some.injEq]
     rw [div_eq_div_iff ha hc]
     constructor <;> intro h <;> linear_combination -h
 
@@ -406,7 +406,7 @@ private theorem gu_coords (L : IsLoc O Δ) {π : O} {n : ℕ} {e : Oˣ} {h : O} 
     {u : (Etau K τ)ˣ} (hu : u ∈ Gu O τ) :
     ∃ a b : O, (u : Etau K τ) = el x a b ∧ IsUnit (a ^ 2 - (e : O) * b ^ 2) := by
   have hinj : Function.Injective (algebraMap O K) := by
-    haveI := L.frac
+    have := L.frac
     exact IsFractionRing.injective O K
   have hx := c.sq
   have h0 : x.im ≠ 0 := c.gen.im_ne
@@ -441,7 +441,7 @@ private theorem count (L : IsLoc O Δ) {π : O} {n : ℕ} {e : Oˣ} {h : O} {x :
       1 + {t : IsLocalRing.ResidueField O | t ^ 2 * IsLocalRing.residue O (e : O) ≠ 1}.ncard := by
   classical
   have hinj : Function.Injective (algebraMap O K) := by
-    haveI := L.frac
+    have := L.frac
     exact IsFractionRing.injective O K
   have h0 : x.im ≠ 0 := c.gen.im_ne
   have hx := c.sq
@@ -482,7 +482,7 @@ private theorem count (L : IsLoc O Δ) {π : O} {n : ℕ} {e : Oˣ} {h : O} {x :
   have hrange : Set.range f =
       insert none (Option.some '' {t : IsLocalRing.ResidueField O | t ^ 2 * r (e : O) ≠ 1}) := by
     ext w
-    simp only [Set.mem_range, Set.mem_insert_iff, Set.mem_image, Set.mem_setOf_eq]
+    simp only [Set.mem_range, Set.mem_insert_iff, Set.mem_image, Set.mem_ofPred_eq]
     constructor
     · rintro ⟨g, rfl⟩
       by_cases ha : r (A g) = 0
@@ -512,7 +512,7 @@ private theorem count (L : IsLoc O Δ) {π : O} {n : ℕ} {e : Oˣ} {h : O} {x :
         obtain ⟨h1, h2⟩ := el_inj hinj h0 ((hAB g).symm.trans hg)
         simp [f, pt, h1, h2, r]
   rw [hrange]
-  haveI := L.fin
+  have := L.fin
   rw [Nat.card_coe_set_eq, Set.ncard_insert_of_notMem (by simp) (Set.toFinite _),
     Set.ncard_image_of_injective _ (Option.some_injective _), add_comm]
 
@@ -524,7 +524,7 @@ theorem UpperTheory.relIndex_stabilizer_level_one_of_isSquare_unit :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → ∀ (π : O) (n : ℕ) (e : Oˣ) (h : O) (x : Etau K τ), Cond π n e h x → (¬ IsSquare (e : O) → (Hu O (yy π 1 x)).relIndex (Gu O τ) = Nat.card (IsLocalRing.ResidueField O) + 1) ∧ (IsSquare (e : O) → (Hu O (yy π 1 x)).relIndex (Gu O τ) + 1 = Nat.card (IsLocalRing.ResidueField O)) := by
   intro O K _ _ _ _ _ Δ τ L hτ π n e h x c
   have hc := UpperTheory.IdxOne.count L c
-  haveI := L.fin
+  have := L.fin
   have he0 : IsLocalRing.residue O (e : O) ≠ 0 := by
     rw [Ne, IsLocalRing.residue_eq_zero_iff]
     exact fun hm => (IsLocalRing.mem_maximalIdeal _).mp hm e.isUnit
@@ -533,7 +533,7 @@ theorem UpperTheory.relIndex_stabilizer_level_one_of_isSquare_unit :
     rw [hc]
     have hS : {t : IsLocalRing.ResidueField O | t ^ 2 * IsLocalRing.residue O (e : O) ≠ 1} = Set.univ := by
       ext t
-      simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+      simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
       intro ht
       apply hns
       have ht0 : t ≠ 0 := by
@@ -574,7 +574,7 @@ theorem UpperTheory.relIndex_stabilizer_level_one_of_isSquare_unit :
       · exact inv_ne_zero ha0 h
     have hC : {t : IsLocalRing.ResidueField O | t ^ 2 * IsLocalRing.residue O (e : O) ≠ 1}ᶜ = {a⁻¹, -a⁻¹} := by
       ext t
-      simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_not, Set.mem_insert_iff, Set.mem_singleton_iff, hea]
+      simp only [Set.mem_compl_iff, Set.mem_ofPred_eq, not_not, Set.mem_insert_iff, Set.mem_singleton_iff, hea]
       have haa : a * a⁻¹ = 1 := mul_inv_cancel₀ ha0
       constructor
       · intro ht
@@ -783,7 +783,7 @@ end UpperTheory.HilbertUnitGroup
 theorem UpperTheory.relIndex_stabilizer_succ_eq_card_residueField :
     ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] (Δ τ : K), IsLoc O Δ → τ ^ 2 - 4 ≠ 0 → ∀ (π : O) (n : ℕ) (e : Oˣ) (h : O) (x : Etau K τ), Cond π n e h x → ∀ m : ℕ, 1 ≤ m → (Hu O (yy π (m + 1) x)).relIndex (Hu O (yy π m x)) = Nat.card (IsLocalRing.ResidueField O) := by
   intro O K _ _ _ _ _ Δ τ L _ π n e h x hC m hm
-  haveI := L.frac
+  have := L.frac
   have hinj : Function.Injective (algebraMap O K) := IsFractionRing.injective O K
   have hπ := hC.irr
   have hp : algebraMap O K (π ^ m) ≠ 0 := fun h0 =>
@@ -956,7 +956,7 @@ private theorem ev_odd (L : IsLoc O Δ) {g y : K} (hg0 : g ≠ 0) (hg : ¬ EvenV
 
 private theorem ev_pow (L : IsLoc O Δ) {π : O} (hπ : Irreducible π) (k : ℕ) :
     EvenVal O (algebraMap O K (π ^ k)) ↔ Even k := by
-  haveI := L.frac
+  have := L.frac
   have hinj := IsFractionRing.injective O K
   have hπ0 : algebraMap O K π ≠ 0 := by
     intro h
@@ -981,7 +981,7 @@ theorem UpperTheory.V.Z.Sym.Loc.pKappa :
   classical
   obtain ⟨π, n, e, h, x, hC, hspan⟩ := UpperTheory.exists_discriminant_normal_form O K Δ τ L hD hτ s ε hDs
   have hπ : Irreducible π := hC.irr
-  haveI := L.frac
+  have := L.frac
   have hinj := IsFractionRing.injective O K
   have hπ0 : algebraMap O K π ≠ 0 := by
     intro h0
@@ -1068,7 +1068,7 @@ theorem UpperTheory.V.Z.Sym.Loc.pKappa :
         Set.ncard_union_eq (disj _) (PS.gs_fin L hD t 1) (PS.gs_fin L hD t b), PS.gs_ncard (↑t) b, hnb',
         ← Units.val_mul]
       exact Nat.cast_add _ _
-    haveI : Unique (Kˣ ⧸ NE τ) :=
+    have : Unique (Kˣ ⧸ NE τ) :=
       { default := 1
         uniq := fun u => by
           obtain ⟨a, rfl⟩ := QuotientGroup.mk_surjective u
@@ -1084,8 +1084,8 @@ theorem UpperTheory.V.Z.Sym.Loc.pKappa :
           = (t0 : K) * algebraMap O K (π ^ (n + m)) * algebraMap O K π by ring,
         ev_odd L hπ0 hodd (mul_ne_zero (Units.ne_zero t0) (hP m))]
       by_cases hE : EvenVal O ((t0 : K) * algebraMap O K (π ^ (n + m)))
-      · rw [if_pos hE, if_neg (not_not.2 hE), add_zero]
-      · rw [if_neg hE, if_pos hE, zero_add]
+      · rw [ite_eq_left hE, ite_eq_right (not_not.2 hE), add_zero]
+      · rw [ite_eq_right hE, ite_eq_left hE, zero_add]
     rw [hL.2.2.2 _ _ hD hsq, one_mul, hp, hcount, hcount, ← Finset.sum_add_distrib, Finset.sum_congr rfl (hterm _)]
     exact_mod_cast sum_split r q r0 r1 rs n
   · have hE : ¬ IsSquare (e : O) := fun h' => hsq (hDe.2 h')
@@ -1102,7 +1102,7 @@ theorem UpperTheory.V.Z.Sym.Loc.pKappa :
     have hGs : ∀ (t : K) (a : (Etau K τ)ˣ), PS.Gs O τ t a = PS.Gs O τ t 1 := by
       intro t a
       ext S
-      simp only [PS.Gs, Set.mem_setOf_eq, hCt, Subgroup.mem_top, true_and, one_mul]
+      simp only [PS.Gs, Set.mem_ofPred_eq, hCt, Subgroup.mem_top, true_and, one_mul]
       constructor
       · rintro ⟨hf, c, hc⟩
         exact ⟨hf, a * c, hc⟩
@@ -1162,7 +1162,7 @@ open QuadraticAlgebra UpperTheory.V.Z.Sym UpperTheory.V.Z.Sym.Loc
 private theorem res_rep {k : Type} [Field k] [Finite k] (h2 : (2 : k) ≠ 0) {e u : k} (he : e ≠ 0) (he1 : 1 - e ≠ 0) (hu : u ≠ 0) :
     ∃ a b : k, a ≠ 0 ∧ a ^ 2 - e * b ^ 2 = u := by
   classical
-  haveI := Fintype.ofFinite k
+  have := Fintype.ofFinite k
   have hodd : Fintype.card k % 2 = 1 := by
     have hc : ringChar k ≠ 2 := by
       intro hc
@@ -1194,8 +1194,8 @@ private theorem res_rep {k : Type} [Field k] [Finite k] (h2 : (2 : k) ≠ 0) {e 
 private theorem int_rep {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field K] [Algebra O K] {Δ : K} (L : IsLoc O Δ)
     (e u : Oˣ) (he : IsUnit (1 - (e : O))) : ∃ (x : Oˣ) (y : O), (x : O) ^ 2 - e * y ^ 2 = u := by
   classical
-  haveI := L.fin
-  haveI : IsAdicComplete (IsLocalRing.maximalIdeal O) O := L.compl
+  have := L.fin
+  have : IsAdicComplete (IsLocalRing.maximalIdeal O) O := L.compl
   have hu0 : IsLocalRing.residue O u ≠ 0 := (u.isUnit.map (IsLocalRing.residue O)).ne_zero
   have he0 : IsLocalRing.residue O e ≠ 0 := (e.isUnit.map (IsLocalRing.residue O)).ne_zero
   have he1 : 1 - IsLocalRing.residue O e ≠ 0 := by
@@ -1414,7 +1414,7 @@ private theorem root_tr {K : Type} [Field K] {τ : K} {u : Etau K τ} (hu : u ^ 
   have e1 := congrArg QuadraticAlgebra.re hu
   have e2 := congrArg QuadraticAlgebra.im hu
   simp only [pow_two, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_neg,
-    QuadraticAlgebra.im_neg, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im] at e1 e2
+    QuadraticAlgebra.im_neg, re_omega, im_omega] at e1 e2
   simp only [QuadraticAlgebra.norm_def] at hn
   show (2 * x + τ * y) ^ 2 = 2 - τ
   linear_combination 2 * e1 + 2 * hn + τ * e2
@@ -1428,7 +1428,7 @@ private theorem move {K : Type} [Field K] {Δ τ : K} (h2 : (2 : K) ≠ 0) (hΔ 
   have e1 := congrArg QuadraticAlgebra.re hu
   have e2 := congrArg QuadraticAlgebra.im hu
   simp only [pow_two, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_neg,
-    QuadraticAlgebra.im_neg, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im] at e1 e2
+    QuadraticAlgebra.im_neg, re_omega, im_omega] at e1 e2
   simp only [QuadraticAlgebra.norm_def] at hn
   have h0 : (2 + τ) * (b * (a + b)) = 0 := by linear_combination e2 + hn - e1
   have hb0 : b ≠ 0 := by
@@ -1453,9 +1453,9 @@ private theorem move {K : Type} [Field K] {Δ τ : K} (h2 : (2 : K) ≠ 0) (hΔ 
     have hz1 : star (z : Etau K τ) * (⟨c, c⟩ : Etau K τ) = 1 := by
       rw [hz]
       refine QuadraticAlgebra.ext ?_ ?_
-      · simp only [QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+      · simp only [QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
         linear_combination hc
-      · simp only [QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+      · simp only [QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
         ring
     have hz2 : star (((z⁻¹ : (Etau K τ)ˣ) : Etau K τ)) * star (z : Etau K τ) = 1 := by
       rw [← star_mul', Units.inv_mul, star_one]
@@ -1482,23 +1482,23 @@ private theorem move {K : Type} [Field K] {Δ τ : K} (h2 : (2 : K) ≠ 0) (hΔ 
     mul_ne_zero (mul_ne_zero (mul_ne_zero (mul_ne_zero h4 (pow_ne_zero _ hb0)) (pow_ne_zero _ hi)) hΔ) hD
   have hM : y0 * star (sigL y0) = M := by
     refine QuadraticAlgebra.ext (QuadraticAlgebra.ext ?_ ?_) (QuadraticAlgebra.ext ?_ ?_)
-    · simp only [y0, M, sigL, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, M, sigL, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       linear_combination hp + (2 + τ) * eb
-    · simp only [y0, M, sigL, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, M, sigL, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       ring
-    · simp only [y0, M, sigL, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, M, sigL, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       ring
-    · simp only [y0, M, sigL, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, M, sigL, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       ring
   have hMM : M * M = κ • (1 : EL Δ τ) := by
     refine QuadraticAlgebra.ext (QuadraticAlgebra.ext ?_ ?_) (QuadraticAlgebra.ext ?_ ?_)
-    · simp only [M, hκdef, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [M, hκdef, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       ring
-    · simp only [M, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [M, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       ring
-    · simp only [M, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [M, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       ring
-    · simp only [M, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [M, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       ring
   have hinv : y0 * (star (sigL y0) * (κ⁻¹ • M)) = 1 := by
     rw [← mul_assoc, hM, mul_smul_comm, hMM, smul_smul, inv_mul_cancel₀ hκ, one_smul]
@@ -1507,13 +1507,13 @@ private theorem move {K : Type} [Field K] {Δ τ : K} (h2 : (2 : K) ≠ 0) (hΔ 
     rw [hZi]
     obtain ⟨n1, n2⟩ := ν
     refine QuadraticAlgebra.ext (QuadraticAlgebra.ext ?_ ?_) (QuadraticAlgebra.ext ?_ ?_)
-    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       linear_combination n1 * (c * hp - (1 + b * p1) * hc + eb) + Δ * n2 * ((-b * p2) * hc)
-    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       linear_combination n1 * ((-b * p2) * hc) + n2 * (c * hp - (1 + b * p1) * hc + eb)
-    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       linear_combination n1 * (c * hp + (b * p1 - 1) * hc + eb) + Δ * n2 * ((b * p2) * hc)
-    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       linear_combination n1 * ((b * p2) * hc) + n2 * (c * hp + (b * p1 - 1) * hc + eb)
   let y : (EL Δ τ)ˣ := Units.mkOfMulEqOne y0 _ hinv
   refine ⟨y, ?_, ?_⟩
@@ -1524,13 +1524,13 @@ private theorem move {K : Type} [Field K] {Δ τ : K} (h2 : (2 : K) ≠ 0) (hΔ 
   · intro t
     show (t • (1 : EL Δ τ)) * y0 * star (sigL y0) = _
     refine QuadraticAlgebra.ext (QuadraticAlgebra.ext ?_ ?_) (QuadraticAlgebra.ext ?_ ?_)
-    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       linear_combination t * hp + t * (2 + τ) * eb
-    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       linear_combination t * τ * hgr
-    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       ring
-    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, QuadraticAlgebra.omega_re, QuadraticAlgebra.omega_im, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
+    · simp only [y0, sigL, ofE, QuadraticAlgebra.re_mul, QuadraticAlgebra.im_mul, QuadraticAlgebra.re_smul, QuadraticAlgebra.im_smul, QuadraticAlgebra.re_add, QuadraticAlgebra.im_add, QuadraticAlgebra.re_sub, QuadraticAlgebra.im_sub, QuadraticAlgebra.re_neg, QuadraticAlgebra.im_neg, QuadraticAlgebra.re_star, QuadraticAlgebra.im_star, QuadraticAlgebra.re_one, QuadraticAlgebra.im_one, QuadraticAlgebra.re_zero, QuadraticAlgebra.im_zero, re_omega, im_omega, QuadraticAlgebra.algebraMap_re, QuadraticAlgebra.algebraMap_im, smul_eq_mul]
       linear_combination (-2 * t) * hgr
 
 private theorem hs_sq {K : Type} [Field K] (D x : K) : hs D x * hs D x = 1 := by
@@ -1543,7 +1543,7 @@ theorem UpperTheory.V.Z.Sym.Loc.kapM :
   intro O K _ _ _ _ _ Δ τ L hD hu0e s ε hm h2τ c hc z hz lam hlam hT
   classical
   obtain ⟨u0, hu0⟩ := hu0e
-  haveI := L.frac
+  have := L.frac
   have hinj := IsFractionRing.injective O K
   have hunit : ∀ x : O, IsUnit x → algebraMap O K x ≠ 0 := fun x hx => (hx.map (algebraMap O K)).ne_zero
   have hevu : ∀ x : Oˣ, EvenVal O (algebraMap O K x) := fun x => ⟨x, 1, one_ne_zero, by simp⟩
@@ -1651,7 +1651,7 @@ theorem UpperTheory.V.Z.Sym.Loc.kapM :
   have hsDD : hs (τ ^ 2 - 4) (τ ^ 2 - 4) = 1 := by
     have h8 : hs (τ ^ 2 - 4) (-(τ ^ 2 - 4)) = 1 := by
       unfold UpperTheory.V.Z.Sym.Loc.hs
-      rw [if_pos ⟨0, 1, by ring⟩]
+      rw [ite_eq_left ⟨0, 1, by ring⟩]
     have h9 : hs (τ ^ 2 - 4) (-1) = 1 := hL.2.1 _ _ hDv ⟨-1, 1, one_ne_zero, by simp⟩
     have h10 := hsMul O K Δ L (τ ^ 2 - 4) (-1) (-(τ ^ 2 - 4)) hD (by norm_num) (neg_ne_zero.2 hD)
     rw [show (-1 : K) * -(τ ^ 2 - 4) = τ ^ 2 - 4 by ring, h9, h8, one_mul] at h10

@@ -95,7 +95,7 @@ theorem exists_shift (B : AddSubgroup A) (Z' : AddSubgroup Z) (g : A → Z) (p :
     show β' _ = β' _
     rw [hq]
   · have h : good (a : A ⧸ B) := ⟨a, rfl, hpa, hga⟩
-    simp only [β', dif_pos h]
+    simp only [β', dite_eq_left h]
     exact key _ h.choose_spec.2.1 h.choose_spec.2.2 _
       (hφ _ h.choose_spec.2.1 h.choose_spec.2.2).choose_spec.1 _
       ((hφ _ h.choose_spec.2.1 h.choose_spec.2.2).choose_spec.2 z hz).choose_spec a
@@ -305,7 +305,7 @@ theorem card_lift_matrix [Finite A] (π : A →+* A') (hπ : Function.Surjective
       Nat.card (entSub m r (RingHom.ker π)) *
         Nat.card {X' : Matrix m r A' // p' X' ∧ X'ᴴ * (H.map π) * X' = T.map π} := by
   classical
-  haveI : Finite (Matrix m r A) := inferInstanceAs (Finite (m → r → A))
+  have : Finite (Matrix m r A) := inferInstanceAs (Finite (m → r → A))
   let f : Matrix m r A →+ Matrix m r A' :=
     { toFun := fun X => X.map π
       map_zero' := by ext i j; simp

@@ -233,7 +233,7 @@ theorem rootChar_eq_iff {ζ : G} {n : ℕ} (hn : 0 < n) (h : IsPrimitiveRoot ζ 
 
 theorem exists_rootChar_eq [Module.Free ℤ X] {F : Type} [CommRing F] [IsDomain F] {ζ : Fˣ} {n : ℕ} (hn : 0 < n)
     (h : IsPrimitiveRoot ζ n) (t : Multiplicative X →* Fˣ) (ht : t ^ n = 1) : ∃ f, rootChar ζ f = t := by
-  haveI : NeZero n := ⟨hn.ne'⟩
+  have : NeZero n := ⟨hn.ne'⟩
   let b := Module.Free.chooseBasis ℤ X
   have hi : ∀ i, ∃ m : ℕ, ζ ^ m = t (Multiplicative.ofAdd (b i)) := fun i => by
     obtain ⟨m, -, hm⟩ := h.eq_pow_of_mem_rootsOfUnity (ξ := t (Multiplicative.ofAdd (b i)))

@@ -133,7 +133,7 @@ theorem leviEx : LeviEx := by
     exact RingOfIntegers.not_isField E
       (isField_of_isIntegral_of_isField (IsFractionRing.injective (𝓞 E) E) (Field.toIsField E))
   have su : Function.Surjective P.mulVec := fun z => by
-    letI := hFull
+    let := hFull
     have hz : z ∈ Submodule.span E (W.L : Set (Fin d → E)) := by
       rw [Submodule.IsFullLattice.span_eq_top]
       exact Submodule.mem_top

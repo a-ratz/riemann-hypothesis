@@ -341,7 +341,7 @@ theorem exists_dual {Ω : Type} [Field Ω] {r : ℕ} (b : Fin r → Fin r → Ω
       ∀ e : Fin r → Ω, e = ∑ q, (b q ⬝ᵥ e) • d q := by
   classical
   let M : Matrix (Fin r) (Fin r) Ω := Matrix.of b
-  have hu : IsUnit M := Matrix.linearIndependent_rows_iff_isUnit.mp hli
+  have hu : IsUnit M := Matrix.linearIndependent_row_iff_isUnit.mp hli
   have hdet : IsUnit M.det := (Matrix.isUnit_iff_isUnit_det M).mp hu
   have hrow : ∀ p q, b p ⬝ᵥ (fun i => M⁻¹ i q) = if p = q then 1 else 0 := by
     intro p q
@@ -536,7 +536,7 @@ theorem dotDualRevBasis (Ω : Type) [Field Ω] (r : ℕ) (w : Module.Basis (Fin 
   by_cases hr : r = 0
   · subst hr
     exact ⟨w, fun i => i.elim0⟩
-  haveI : Nonempty (Fin r) := ⟨⟨0, Nat.pos_of_ne_zero hr⟩⟩
+  have : Nonempty (Fin r) := ⟨⟨0, Nat.pos_of_ne_zero hr⟩⟩
   refine ⟨basisOfLinearIndependentOfCardEqFinrank hli hcard, ?_⟩
   intro i j
   rw [coe_basisOfLinearIndependentOfCardEqFinrank]
@@ -578,7 +578,7 @@ theorem tri_inv {Ω : Type} [Field Ω] {r : ℕ} (w w' : Module.Basis (Fin r) Ω
     (∀ i j, i < j → w'.repr (w i) j = 0) ∧ ∀ i, w'.repr (w i) i * w.repr (w' i) i = 1 := by
   have hAB := w.toMatrix_mul_toMatrix_flip w'
   have hBA := w'.toMatrix_mul_toMatrix_flip w
-  letI : Invertible (w.toMatrix w') := ⟨w'.toMatrix w, hBA, hAB⟩
+  let : Invertible (w.toMatrix w') := ⟨w'.toMatrix w, hBA, hAB⟩
   have hA : (w.toMatrix w').BlockTriangular id := by
     intro i j hji
     rw [Module.Basis.toMatrix_apply]

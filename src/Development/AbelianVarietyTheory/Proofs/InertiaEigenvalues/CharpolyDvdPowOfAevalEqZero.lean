@@ -111,7 +111,7 @@ theorem exists_aeval_eq {K : UQ} (B : InvAlg K) (hsep : B.P.Separable) (y : B.A)
   have hP : eval₂ (↑(Algebra.ofId K.E B.A)) B.g B.P = 0 := aeval_g_P B
   let φ := AdjoinRoot.liftAlgHom B.P (Algebra.ofId K.E B.A) B.g hP
   let pb := AdjoinRoot.powerBasis' hm
-  haveI : Module.Finite K.E (AdjoinRoot B.P) := pb.finite
+  have : Module.Finite K.E (AdjoinRoot B.P) := pb.finite
   have hrank : Module.finrank K.E (AdjoinRoot B.P) = Module.finrank K.E B.A := by
     rw [pb.finrank, AdjoinRoot.powerBasis'_dim]
     exact LinearMap.charpoly_natDegree _

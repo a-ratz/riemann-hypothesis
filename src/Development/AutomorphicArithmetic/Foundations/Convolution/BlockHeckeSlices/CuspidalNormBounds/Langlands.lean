@@ -248,7 +248,7 @@ private theorem exists_form' {ψ : AdelicGLn.AdelicGL E n → ℂ} (hψ : IsLeft
       exact Lp.coeFn_zero _ _ _
     have h2 : (fun y : normOneGL (K := E) (n := n) => ψ y) =ᵐ[μ] 0 :=
       QuasiMeasurePreserving.ae_eq_comp (quasiMeasurePreserving_mk _ μ) h1
-    exact hx (congrFun ((Continuous.ae_eq_iff_eq μ (hc.comp continuous_subtype_val) continuous_const).1 h2) x)
+    exact hx (congrFun ((Continuous.ae_eq_iff_eq μ (hc.comp continuous_subtypeVal) continuous_const).1 h2) x)
   obtain ⟨V, hV, f, hf, hi, hk⟩ := exists_form μ hv hv0
   refine ⟨V, hV, f, hf, fun hz => hi ?_, fun x hx => hk x ?_⟩
   · rw [L2.inner_def, ← hz]
@@ -572,7 +572,7 @@ variable {E : Type} [Field E] [NumberField E] [_root_.NumberField.IsTotallyCompl
 
 omit [_root_.NumberField.IsTotallyComplex E] in
 private theorem ct_top {n : ℕ} (φ : GA E n → ℂ) (g : GA E n) : AutomorphicForm.constantTerm n φ g = φ g := by
-  haveI : IsEmpty (AutomorphicForm.UPos n n) := ⟨fun p => by have := p.2.2; have := p.1.2.2; omega⟩
+  have : IsEmpty (AutomorphicForm.UPos n n) := ⟨fun p => by have := p.2.2; have := p.1.2.2; omega⟩
   have h1 : AutomorphicForm.unipFundamentalDomain E n n = Set.univ := by
     ext X
     simp [AutomorphicForm.unipFundamentalDomain]

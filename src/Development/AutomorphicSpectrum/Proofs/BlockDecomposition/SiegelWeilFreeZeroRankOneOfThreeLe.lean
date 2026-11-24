@@ -176,13 +176,13 @@ theorem mass_dilated_lattice : ∀ (F E : Type) [Field F] [NumberField F] [Field
   intro F E _ _ _ _ _ σ hσ M J hJ hM h₀ d b v lam hlam m hm a e ha h1 h2
   have hloc := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   obtain ⟨i1, i2, i3, i4, -⟩ := id hloc
-  haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  haveI : lam.IsAddHaarMeasure := hlam.1
+  have : BorelSpace (Fv F v) := ⟨rfl⟩
+  have : lam.IsAddHaarMeasure := hlam.1
   obtain ⟨j1, j2, j3, j4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
-  haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
+  have : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hK, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Fv F v) d b lam ‹_›
-  haveI := hK
-  haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
+  have := hK
+  have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
   have hd : d = 2 := by
     rw [← hσ.2.2.1, Module.finrank_eq_card_basis b, Fintype.card_fin]
   subst hd
@@ -229,7 +229,7 @@ theorem mass_dilated_lattice : ∀ (F E : Type) [Field F] [NumberField F] [Field
     push_cast
     rfl
   have hτm : Measurable τ := by
-    haveI : BorelSpace (HermR (Fv F v) σ 1) := ⟨rfl⟩
+    have : BorelSpace (HermR (Fv F v) σ 1) := ⟨rfl⟩
     exact (continuous_nsmul (a ^ 2)).measurable
   have hc := GlobalTheory.CompanionTheory.SW.Dil.coordHerm_map (Fv F v) σ hσ b lam _ ht2 _ hs2 τ hτm hτe
   have hτ : ∀ S, (τ S : Matrix (Fin 1) (Fin 1) (Fv F v ⊗[F] E)) = cT (sigR (Fv F v) σ) g * S * g := by
@@ -258,7 +258,7 @@ theorem mass_dilated_lattice : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hA : MeasurableSet (latV b v : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)) :=
     GlobalTheory.CompanionTheory.SW.Growth.measurable_latV b v
   have key2 := congrArg (fun μ' : Measure (Fin 1 → Fin M → Fv F v ⊗[F] E) => μ' (latV b v)) key
-  simp only [Measure.smul_apply, Measure.map_apply hrmap hA] at key2
+  simp only [smul_apply, Measure.map_apply hrmap hA] at key2
   have e1 : ((q ^ e) ^ 2) ^ M = q ^ (2 * e) * q ^ (e * (2 * M - 2)) := by
     rw [← pow_add, ← pow_mul, ← pow_mul]
     congr 1
@@ -277,7 +277,7 @@ theorem mass_dilated_lattice : ∀ (F E : Type) [Field F] [NumberField F] [Field
       (fun X => rmul (Fv F v) X g) ⁻¹' (latV b v) := by
     rw [hrm]
     ext X
-    simp only [Set.mem_preimage, Set.mem_setOf_eq, hf, hcast]
+    simp only [Set.mem_preimage, Set.mem_ofPred_eq, hf, hcast]
   have hof : ENNReal.ofReal ((Ideal.absNorm v.asIdeal : ℝ) ^ (e * (2 * M - 2))) =
       ((q ^ (e * (2 * M - 2)) : ℝ≥0) : ℝ≥0∞) := by
     rw [← ENNReal.ofReal_coe_nnreal]
@@ -416,7 +416,7 @@ theorem mod_rat [MeasurableSpace (A F)] [BorelSpace (A F)] {lf : Measure (A F)} 
   have h2 := (_root_.GlobalTheory.CompanionTheory.SW.Core.PiScale.pi_scale F lf hlf h1 ι).2 (uA a) s hs
   have h3 := (_root_.GlobalTheory.CompanionTheory.SW.Core.Scale.lf_scale F lf hlf h1).1 a a.ne_zero _ (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.1.measurableSet
   rw [h1, mul_one] at h3
-  rw [muF, Measure.smul_apply, Measure.smul_apply, h2, smul_eq_mul, smul_eq_mul, mul_left_comm, ← pow_mul,
+  rw [muF, smul_apply, smul_apply, h2, smul_eq_mul, smul_eq_mul, mul_left_comm, ← pow_mul,
     ENNReal.ofReal_pow (by positivity), hc, mul_comm M 2]
   exact congrArg (fun t => t ^ (2 * M) * _) h3
 
@@ -482,7 +482,7 @@ open GlobalTheory.CompanionTheory.SW.CoefTheta
 
 theorem fourier_coefficient_any : ∀ (F : Type) [Field F] [NumberField F], ∀ [MeasurableSpace (A F)] [BorelSpace (A F)], ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → ∀ (Ω : Type) [MeasurableSpace Ω] (Pr : Measure Ω) (gf : Ω → Matrix ι ι (A F)) (gi : Ω → InfinitePlace F → Matrix ι ι ℝ), CountData M B ρ Pr gf gi → ∀ a : ℕ, 0 < a → ∀ β : F, ∀ N : ℕ, 0 < N → (∃ r : 𝓞 F, (r : F) = (N : F) * β) → (∀ y : ι → A F, (∀ i, (a : A F) * y i ∈ Oh F) → (N : A F) * qf (hf F) (Bf B) y ∈ Oh F) → ∀ D : Set (InfinitePlace F → ℝ), IsAddFundamentalDomain (latR ρ N) D volume → ∃ I : ℝ≥0, ∫⁻ ω, ∑' x : {x : ι → F // qf (1 / 2 : F) B x = β}, ‖thTerm B ρ P (gf ω) (gi ω) (indL a) (fun _ => Complex.I) x.1‖ₑ ∂Pr = (I : ℝ≥0∞) ∧ IntegrableOn (fun x : InfinitePlace F → ℝ => (∫ ω, theta B ρ P (gf ω) (gi ω) (indL a) (fun w => (x w : ℂ) + Complex.I) ∂Pr) * Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ))) D volume ∧ ∫ x in D, (∫ ω, theta B ρ P (gf ω) (gi ω) (indL a) (fun w => (x w : ℂ) + Complex.I) ∂Pr) * Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ)) = ((volume D).toReal : ℂ) * ((I : ℝ) : ℂ) := by
   intro F _ _ _ _ ι _ _ M B ρ P hQ Ω _ Pr gf gi hC a ha β N hN hNβ hint D hD
-  haveI : Countable F := countable_field
+  have : Countable F := countable_field
   obtain ⟨hTR, -, -, -, hρ, -, -⟩ := id hQ
   obtain ⟨hprob, -, -, hOrth, -⟩ := id hC
   obtain ⟨-, -, hT2, hOc, hOo, -, hmem, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
@@ -513,7 +513,7 @@ theorem fourier_coefficient_any : ∀ (F : Type) [Field F] [NumberField F], ∀ 
     exact ENNReal.add_ne_top.mpr ⟨ENNReal.one_ne_top, hnz⟩
   have hpos : ∀ z ω, s z ω = ((‖s z ω‖ : ℝ) : ℂ) := fun z ω => thTerm_nonneg B ρ P (gf ω) (gi ω) a z
   set Sel : Set (ι → F) := {z | qf (1 / 2 : F) B z = β} with hSel
-  haveI : IsFiniteMeasure ((volume : Measure (InfinitePlace F → ℝ)).restrict D) :=
+  have : IsFiniteMeasure ((volume : Measure (InfinitePlace F → ℝ)).restrict D) :=
     ⟨by rw [Measure.restrict_apply_univ, hvol]; exact ENNReal.ofReal_lt_top⟩
   have hv : Continuous fun x : InfinitePlace F → ℝ =>
       Complex.exp (-(2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, ρ w β * x w : ℝ) : ℂ)) := by
@@ -586,8 +586,8 @@ theorem fourier_coeff_eis_any : ∀ (F : Type) [Field F] [NumberField F] [Measur
   obtain ⟨-, hψ'⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.StdChar.main F
   obtain ⟨hψ1, hψO, -⟩ := hψ' ψ hψ
   obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.EiBound.ei_bound F lf hlf h1 ψ hψ ι M B ρ P hQ hM φ hφ 1 one_pos
-  haveI := hLcount
-  haveI : lf.IsAddHaarMeasure := hlf
+  have := hLcount
+  have : lf.IsAddHaarMeasure := hlf
 
   set Φ := fstar ψ (hf F) (Bf B) (muF B lf) φ with hΦdef
   set c : (InfinitePlace F → ℝ) → ℂ := fun x => cG B ρ P (fun w => (x w : ℂ) + Complex.I) with hcdef
@@ -689,7 +689,7 @@ theorem fourier_coeff_eis_any : ∀ (F : Type) [Field F] [NumberField F] [Measur
     rw [h7, one_mul] at h6
     exact h6
   have hDfin : volume D ≠ ⊤ := by rw [hvol]; exact ENNReal.ofReal_ne_top
-  haveI : IsFiniteMeasure (volume.restrict D) :=
+  have : IsFiniteMeasure (volume.restrict D) :=
     ⟨by rw [Measure.restrict_apply_univ]; exact lt_top_iff_ne_top.2 hDfin⟩
   set T : F → (InfinitePlace F → ℝ) → ℂ := fun b x => Φ (al b) * c (x + j b) * e x with hT
   have hTnorm : ∀ b x, ‖T b x‖ = ‖Φ (al b) * c (x + j b)‖ := by
@@ -768,7 +768,7 @@ theorem fourier_coeff_eis_any : ∀ (F : Type) [Field F] [NumberField F] [Measur
         exact Oh_mul_mem F _ _ (hOr _) hz
       simp only [hG]
       rw [hper z hz y, h11, AddChar.map_add_eq_mul, hψO _ h12, mul_one]
-    haveI : Countable (F ⧸ H) := Function.Surjective.countable (f := fun b : F => (b : F ⧸ H))
+    have : Countable (F ⧸ H) := Function.Surjective.countable (f := fun b : F => (b : F ⧸ H))
       (fun q => ⟨q.out, QuotientAddGroup.out_eq' q⟩)
     have hsum := hasSum_integral_cosets (A F) (F ⧸ H) lf (fun q => al q.out) W (hWopen N hN) hcov hdis G hGint hGper
     have h13 : ∀ q : F ⧸ H, G (al q.out) = Φ (al q.out) * e (-(j q.out)) := by
@@ -846,7 +846,7 @@ theorem core_zero : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
     (fun x hx y => by
       rw [Nat.cast_mul, mul_assoc]
       exact (n1 _ (PositivityTheory.PlacePermOperatorBicommutantSpan.oh_mul (PositivityTheory.PlacePermOperatorBicommutantSpan.oh_nat N₂) hx)).2 y) D hD
-  haveI : IsProbabilityMeasure Pr := hC.1
+  have : IsProbabilityMeasure Pr := hC.1
 
   have hsplit : ∀ ω, ∑' x : {x : ι → F // qf (1 / 2 : F) B x = 0},
       ‖thTerm B ρ P (gf ω) (gi ω) (indL a) (fun _ => Complex.I) x.1‖ₑ =
@@ -883,7 +883,7 @@ theorem core_zero : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
       congr 2
       simp [Finset.mul_sum]
     · rw [Set.indicator_of_notMem (by exact hx), thTerm, indL,
-        Set.indicator_of_notMem (s := {x : ι → A F | ∀ i, (a : A F) * x i ∈ Oh F}) hx, zero_mul, enorm_zero]
+        Set.indicator_of_notMem (s := {x : ι → A F | ∀ i, (a : A F) * x i ∈ Oh F}) hx, zero_mul, eNorm_zero]
   · have hk : 0 < kap F := inv_pos.2 (Real.sqrt_pos.2 (abs_pos.2 (by exact_mod_cast discr_ne_zero F)))
     have hsq : 0 < Real.sqrt |((Algebra.norm ℚ B.det : ℚ) : ℝ)| :=
       Real.sqrt_pos.2 (abs_pos.2 (by exact_mod_cast Algebra.norm_ne_zero_iff.2 hdet))
@@ -952,7 +952,7 @@ attribute [local instance] GlobalTheory.CompanionTheory.SW.EulerDens.instLCv Glo
 theorem hasProd_free_mass_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 3 ≤ M → ∀ (h₀ : ∀ a b : Fin 1, σ ((0 : Matrix (Fin 1) (Fin 1) E) b a) = (0 : Matrix (Fin 1) (Fin 1) E) a b), ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), (∀ v, IsStdV v (lam v)) → ∀ (m : ∀ v : HeightOneSpectrum (𝓞 F), HermR (Fv F v) σ 1 → Measure (Fin 1 → Fin M → Fv F v ⊗[F] E)), (∀ v, IsGramFibFree (Fv F v) σ J 1 (coordW (Fv F v) b (lam v) 1 M) (coordHerm (Fv F v) σ b (lam v) 1) (m v)) → ∀ (lf : Measure (Af F)), lf.IsAddHaarMeasure → lf {x | ∀ v, x v ∈ v.adicCompletionIntegers F} = 1 → ∀ a : ℕ, 0 < a → ∀ D : Af F → ℝ, Continuous D → (∀ y, 0 ≤ D y) → (∀ U : Set (Af F), MeasurableSet U → coordW (Af F) b lf 1 M {X | (∀ v, projV v X ∈ {X : (Fin 1 → Fin M → Fv F v ⊗[F] E) | (fun p i => (a : Fv F v ⊗[F] E) * X p i) ∈ latV b v}) ∧ algebraMap F (Af F) (1 / 2) * Algebra.trace (Af F) (Af F ⊗[F] E) (gramR (Af F) σ J X 0 0) ∈ U} = ∫⁻ y in U, ENNReal.ofReal (D y) ∂lf) → HasProd (fun v => (m v (hermOf (Fv F v) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀) {X : (Fin 1 → Fin M → Fv F v ⊗[F] E) | (fun p i => (a : Fv F v ⊗[F] E) * X p i) ∈ latV b v}).toReal) (D 0) := by
   intro F E _ _ _ _ _ σ hcm M J hJ hM h₀ d b lam hlam m hm lf hlf hlf1 a ha D hDc hD0 hUD
   classical
-  haveI : FiniteDimensional F E := Module.Finite.of_basis b
+  have : FiniteDimensional F E := Module.Finite.of_basis b
   have hUD' : ∀ U : Set (Af F), MeasurableSet U →
       coordW (Af F) b lf 1 M {X | (∀ v, projV v X ∈ sA b v a) ∧ qF (Af F) σ J X ∈ U} =
         ∫⁻ y in U, ENNReal.ofReal (D y) ∂lf := hUD
@@ -1060,7 +1060,7 @@ theorem lintegral_thetaMeas_gauss_frames : ∀ (F E : Type) [Field F] [NumberFie
   intro F E _ _ _ _ _ σ hσ M J hJ d b B hB ρ e hom hρ Pm μ 𝓕 hμ h𝓕 a ha
   obtain ⟨⟨h1, h2, h3⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨hR, -, -, -, -, -, -, hBor, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (AF F)
-  haveI := hBor 1 M
+  have := hBor 1 M
   have hA := _root_.GlobalTheory.CompanionTheory.SW.BB.measurableSet_natMul_int F E σ hσ d M b a
   have hproj : Continuous (projInf : (Fin 1 → Fin M → AF F ⊗[F] E) → _) :=
     (_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hσ d b 1 M).1
@@ -1107,8 +1107,8 @@ theorem estimate_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       exact (map_ne_zero _).2 hBd
   choose Pm hPd hPm using hP
   obtain ⟨lf, hlf, hlf1⟩ := _root_.GlobalTheory.CompanionTheory.AdeleHaar.exists_haar_integral_one F
-  haveI : BorelSpace (Af F) := ⟨rfl⟩
-  haveI := _root_.GlobalTheory.CompanionTheory.SW.BB.isProbabilityMeasure_prH F E σ hCM M J hJ μ 𝓕 hμ h𝓕
+  have : BorelSpace (Af F) := ⟨rfl⟩
+  have := _root_.GlobalTheory.CompanionTheory.SW.BB.isProbabilityMeasure_prH F E σ hCM M J hJ μ 𝓕 hμ h𝓕
   obtain ⟨hgi, hgf⟩ := _root_.GlobalTheory.CompanionTheory.SW.BB.ginf_gfin_measurable F E σ hCM M J hJ d b e he
   obtain ⟨hii, hif⟩ := _root_.GlobalTheory.CompanionTheory.SW.BB.ginf_gfin_isometry F E σ M J d b B ρ e heρ
     (fun h => ((hBR (AF F)).2 h _ (fun p q => rfl)).1)
@@ -1122,14 +1122,14 @@ theorem estimate_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
       ∂(minf (hermOf (Ainf F) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀)) =
       ENNReal.ofReal ((Real.sqrt |(discr F : ℝ)|)⁻¹ ^ (2 * M - 1) * Dinf (fun _ => 0)) := by
     obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
-    haveI : BorelSpace (Ainf F) := ⟨rfl⟩
+    have : BorelSpace (Ainf F) := ⟨rfl⟩
     obtain ⟨hK1, hK2, hK3⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Ainf F) d b laminf hinf.1
     obtain ⟨t1, t2, t3, t4, t5, t6, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
     have hDcont : Continuous fun S : HermR (Ainf F) σ 1 =>
         (Real.sqrt |(discr F : ℝ)|)⁻¹ ^ (2 * M - 1) * Dinf (e (algebraMap F (Ainf F) (1 / 2) *
           Algebra.trace (Ainf F) (Ainf F ⊗[F] E) ((S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) 0 0))) := by
       refine continuous_const.mul (hDc.comp (he.continuous.comp (continuous_const.mul (t6.comp ?_))))
-      exact (continuous_apply_apply 0 0).comp continuous_subtype_val
+      exact (continuous_apply_apply 0 0).comp continuous_subtypeVal
     have h := _root_.GlobalTheory.CompanionTheory.WeilSiegel.Inf0.fibre_rapid_zero_eq_density F E σ hCM M J hJ hM h₀ d b (coordW (Ainf F) b laminf 1 M)
       (coordHerm (Ainf F) σ b laminf 1) minf (hK2 1 M) (hK3 1) hminf (gaussQ e b Pm) hgc
       (fun X => (Real.exp_pos _).le) (hgr hPd) _ hDcont
@@ -1297,7 +1297,7 @@ theorem measurableSet_free (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have m2 : MeasurableSet {X : Fin 1 → Fin M → AF F ⊗[F] E | LinearIndependent (Ainf F ⊗[F] E) (projInf X)} :=
     (o1.preimage c1).measurableSet
   have m3 : MeasurableSet {X : Fin 1 → Fin M → AF F ⊗[F] E | ∀ v, LinearIndependent (Fv F v ⊗[F] E) (projV v (projFin X))} := by
-    rw [Set.setOf_forall]
+    rw [Set.ofPred_forall]
     exact MeasurableSet.iInter fun v => (((o2 v).preimage (c3 v)).preimage c2).measurableSet
   exact m1.inter (m2.inter m3)
 
@@ -1388,7 +1388,7 @@ theorem one_vector_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
       (cS S : ℝ) = cS (insert v S) * (m0 v (latV b v)).toReal := by
     intro S _ v hv
     have hlatm : MeasurableSet (latV b v : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)) := by
-      haveI := GlobalTheory.CompanionTheory.SW.Fact.borel_tup σ hcm (Fv F v) (hLv v) 1 M
+      have := GlobalTheory.CompanionTheory.SW.Fact.borel_tup σ hcm (Fv F v) (hLv v) 1 M
       exact ((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hcm d b 1 M).2.2.2.1 v).2.measurableSet
     let φ0 : ∀ w : HeightOneSpectrum (𝓞 F), (Fin 1 → Fin M → Fv F w ⊗[F] E) → ℝ≥0∞ :=
       fun w => (B w).indicator 1

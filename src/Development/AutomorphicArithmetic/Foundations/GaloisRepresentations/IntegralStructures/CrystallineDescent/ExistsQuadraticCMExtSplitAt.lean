@@ -170,15 +170,15 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.decGen :
       rw [Subgroup.coe_inv]
       calc ((x : G F Ω)⁻¹) z = ((x : G F Ω)⁻¹) ((x : G F Ω) ((φ ^ (-a)) z)) := by rw [hw]
         _ = (φ ^ (-a)) z := by rw [← AlgEquiv.mul_apply, inv_mul_cancel, AlgEquiv.one_apply]
-  haveI : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
-  haveI : Finite X := hX.to_subtype
-  haveI : FiniteDimensional F (IntermediateField.adjoin F X) :=
+  have : Algebra.IsAlgebraic F Ω := IsAlgClosure.isAlgebraic
+  have : Finite X := hX.to_subtype
+  have : FiniteDimensional F (IntermediateField.adjoin F X) :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => (Algebra.IsAlgebraic.isAlgebraic x).isIntegral)
   let O : Set (Dec A) := Subtype.val ⁻¹' ((fun σ : G F Ω => g⁻¹ * σ) ⁻¹'
     ((IntermediateField.adjoin F X).fixingSubgroup : Set (G F Ω)))
   have hO : IsOpen O :=
     ((IntermediateField.adjoin F X).fixingSubgroup_isOpen.preimage (continuous_const_mul g⁻¹)).preimage
-      continuous_subtype_val
+      continuous_subtypeVal
   have hgO : (⟨g, hg⟩ : Dec A) ∈ O := by
     show g⁻¹ * g ∈ (IntermediateField.adjoin F X).fixingSubgroup
     rw [inv_mul_cancel]
@@ -274,12 +274,12 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.inertSplit :
     DecGen → InertSplit := by
   intro hD Y Ω _ _ _ _ _ _ A u hu x a hx hI hg h hh
   obtain ⟨g, hgD, hgY⟩ := hg
-  haveI : IsAlgClosure (maximalRealSubfield Y) Ω := IsAlgClosure.ofAlgebraic _ Y Ω
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
+  have : IsAlgClosure (maximalRealSubfield Y) Ω := IsAlgClosure.ofAlgebraic _ Y Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
   obtain ⟨v, hv⟩ : ∃ v : HeightOneSpectrum (𝓞 (maximalRealSubfield Y)), IsPlaceOver A v := by
     refine ⟨⟨u.asIdeal.comap (algebraMap (𝓞 (maximalRealSubfield Y)) (𝓞 Y)), Ideal.IsPrime.comap _, ?_⟩, ?_⟩
     · intro hb
-      exact u.ne_bot (Ideal.eq_bot_of_comap_eq_bot hb)
+      exact u.ne_bot (Ideal.eq_bot_of_under_eq_bot hb)
     · intro z
       exact hu (algebraMap (𝓞 (maximalRealSubfield Y)) (𝓞 Y) z)
   obtain ⟨φ, hφ⟩ := exists_isFrob hv
@@ -435,22 +435,22 @@ private theorem algebraMap_ratInt_eq_intCast_ringOfIntegersEquiv {Ω : Type} [Fi
 theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.primeWith :
     DecGen → PrimeWith := by
   intro hDec Y Ω _ _ _ _ _ δ q hq hδ g hg hgg M ζ hM hζ B
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ Y Ω
-  haveI : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed Y, inferInstance⟩
-  haveI : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ Y Ω
+  have : IsAlgClosure ℚ Ω := ⟨IsAlgClosure.isAlgClosed Y, inferInstance⟩
+  have : Normal ℚ Ω := IsAlgClosure.normal ℚ Ω
   obtain ⟨α, hα⟩ := Field.exists_primitive_element ℚ Y
   set X : Set Ω := insert δ (insert ζ (Set.range (fun j : Y →+* Ω => j α))) with hXdef
   have hXfin : X.Finite := ((Set.finite_range _).insert _).insert _
-  haveI : Finite X := hXfin.to_subtype
+  have : Finite X := hXfin.to_subtype
   set K : IntermediateField ℚ Ω := IntermediateField.adjoin ℚ X with hKdef
-  haveI : FiniteDimensional ℚ K :=
+  have : FiniteDimensional ℚ K :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   set L : IntermediateField ℚ Ω := IntermediateField.normalClosure ℚ K Ω with hLdef
   have hKL : K ≤ L := K.le_normalClosure
-  haveI : FiniteDimensional ℚ L := inferInstance
-  haveI : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
-  haveI : IsGalois ℚ L := IsGalois.normalClosure ℚ K Ω
+  have : FiniteDimensional ℚ L := inferInstance
+  have : IsGalois ℚ Ω := IsAlgClosure.isGalois ℚ Ω
+  have : IsGalois ℚ L := IsGalois.normalClosure ℚ K Ω
   have hXL : ∀ x ∈ X, x ∈ L := fun x hx => hKL (IntermediateField.subset_adjoin ℚ X hx)
   set gA : Ω ≃ₐ[ℚ] Ω := g.toRatAlgEquiv with hgA
   have hgAapp : ∀ z, gA z = g z := fun z => rfl
@@ -458,13 +458,13 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.primeWith :
   have hS : S.Finite := by
     have hfin : (⋃ n ∈ Finset.range (B + M + 1),
         {I : Ideal (𝓞 ℚ) | Ideal.absNorm I = n}).Finite :=
-      Set.Finite.biUnion (Finset.finite_toSet _) (fun n _ => Ideal.finite_setOf_absNorm_eq n)
+      Set.Finite.biUnion (Finset.finite_toSet _) (fun n _ => Ring.HasFiniteQuotients.finite_absNorm_eq n)
     refine (hfin.preimage (f := fun v : HeightOneSpectrum (𝓞 ℚ) => v.asIdeal) ?_).subset ?_
     · intro a _ b _ hab
       exact HeightOneSpectrum.ext hab
     · intro w hw
-      simp only [hSdef, Set.mem_setOf_eq, pw_normV] at hw
-      simp only [Set.mem_preimage, Set.mem_iUnion, Set.mem_setOf_eq, Finset.mem_range,
+      simp only [hSdef, Set.mem_ofPred_eq, pw_normV] at hw
+      simp only [Set.mem_preimage, Set.mem_iUnion, Set.mem_ofPred_eq, Finset.mem_range,
         Finset.mem_coe, exists_prop]
       exact ⟨_, by omega, rfl⟩
   obtain ⟨v, hvS, -, B0, hB0, hIne, φ, hφ, hφg⟩ :=
@@ -473,7 +473,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.primeWith :
   have hp : p.Prime := by
     set e := Rat.ringOfIntegersEquiv with hedef
     set J : Ideal ℤ := Ideal.map e v.asIdeal with hJdef
-    haveI : J.IsPrime := Ideal.map_isPrime_of_equiv e
+    have : J.IsPrime := Ideal.map_isPrime_of_equiv e
     have hJ0 : J ≠ ⊥ := fun hJ => v.ne_bot ((Ideal.map_eq_bot_iff_of_injective e.injective).1 hJ)
     have hJp : Prime J := Ideal.prime_of_isPrime hJ0 inferInstance
     have hcard : Ideal.absNorm v.asIdeal = Ideal.absNorm J := by
@@ -483,7 +483,7 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.primeWith :
     rw [hpdef, pw_normV, hcard]
     exact (Int.prime_absNorm J).2 hJp
   have hpB : B + M < p := by
-    simp only [hSdef, Set.mem_setOf_eq, not_le] at hvS
+    simp only [hSdef, Set.mem_ofPred_eq, not_le] at hvS
     exact hvS
   have hφL : ∀ x ∈ L, φ x = g x := by
     intro x hx
@@ -696,8 +696,8 @@ open UpperTheory.Gal.UnramifiedFromSplittingCriterion
 
 private theorem exists_conj (Ω : Type) [Field Ω] [CharZero Ω] [IsAlgClosed Ω] [Algebra.IsAlgebraic ℚ Ω] :
     ∃ (j : Ω →+* ℂ) (c : Ω ≃+* Ω), ∀ z, j (c z) = starRingEnd ℂ (j z) := by
-  haveI : Normal ℚ Ω := normal_iff.2 fun x => ⟨Algebra.IsIntegral.isIntegral x, IsAlgClosed.splits _⟩
-  haveI : IsGalois ℚ Ω := ⟨⟩
+  have : Normal ℚ Ω := normal_iff.2 fun x => ⟨Algebra.IsIntegral.isIntegral x, IsAlgClosed.splits _⟩
+  have : IsGalois ℚ Ω := ⟨⟩
   let j : Ω →+* ℂ := (IsAlgClosed.lift (R := ℚ) (M := ℂ) (S := Ω) : Ω →ₐ[ℚ] ℂ).toRingHom
   obtain ⟨σ, hσ⟩ := ComplexEmbedding.exists_comp_symm_eq_of_comp_eq (k := ℚ) j
     (ComplexEmbedding.conjugate j) (Subsingleton.elim _ _)
@@ -727,10 +727,10 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.twoPrimes :
     PrimeWith → TwoPrimes := by
   intro PW E Y Ω _ _ _ _ _ _ _ _ δ hδ M B hM
   obtain ⟨⟨q, hq0, hq⟩, hspan, s, hsE, hsδ⟩ := hδ
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Y
-  haveI : Algebra.IsAlgebraic Y Ω := IsAlgClosure.isAlgebraic
-  haveI : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ Y Ω
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Y
+  have : Algebra.IsAlgebraic Y Ω := IsAlgClosure.isAlgebraic
+  have : Algebra.IsAlgebraic ℚ Ω := Algebra.IsAlgebraic.trans ℚ Y Ω
   obtain ⟨j0, c, hc⟩ := exists_conj Ω
   have hδ2 : (algebraMap Y Ω δ) ^ 2 = (q : Ω) := by rw [← map_pow, hq, map_natCast]
   have hcc : ∀ z, c (c z) = z := fun z => j0.injective (by rw [hc, hc, Complex.conj_conj])
@@ -740,8 +740,8 @@ theorem UpperTheory.Gal.UnramifiedFromSplittingCriterion.twoPrimes :
   have hcroot : ∀ ξ : Ω, ξ ^ M = 1 → c ξ = ξ⁻¹ := fun ξ h => j0.injective (by
     have h1 : (j0 ξ) ^ M = 1 := by rw [← map_pow, h, map_one]
     rw [hc, map_inv₀, Complex.inv_eq_conj (Complex.norm_eq_one_of_pow_eq_one h1 hM.ne')])
-  haveI : NeZero (M : Ω) := ⟨Nat.cast_ne_zero.2 hM.ne'⟩
-  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
+  have : NeZero (M : Ω) := ⟨Nat.cast_ne_zero.2 hM.ne'⟩
+  obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_isPrimitiveRoot Ω M
   have hsc : ∀ (j : E →+* Ω) (x : E), s (c (j x)) = c (j x) :=
     fun j x => hsE ((c : Ω →+* Ω).comp j) x
   have hsinv : ∀ (j : E →+* Ω) (x : E), s.symm (j x) = j x := fun j x => by
@@ -810,10 +810,10 @@ theorem UpperTheory.Gal.Int.Core.exists_quadratic_CM_ext_split_at : UpperTheory.
     rw [Nat.cast_mul]
     exact v.asIdeal.mul_mem_right _ (Ideal.absNorm_mem v.asIdeal)
   let F := maximalRealSubfield Y
-  haveI : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed Y, Algebra.IsAlgebraic.trans _ Y Ω⟩
-  haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Y
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
-  haveI : IsAlgClosure ℚ Ω := ⟨inferInstance, Algebra.IsAlgebraic.trans ℚ Y Ω⟩
+  have : IsAlgClosure F Ω := ⟨IsAlgClosure.isAlgClosed Y, Algebra.IsAlgebraic.trans _ Y Ω⟩
+  have : IsAlgClosed Ω := IsAlgClosure.isAlgClosed Y
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap Y Ω).injective
+  have : IsAlgClosure ℚ Ω := ⟨inferInstance, Algebra.IsAlgebraic.trans ℚ Y Ω⟩
   have hRfin := GlobalTheory.T.finite_places_inertia_not_le_openSubgroup Ω F (fixGrp F Ω Y) (isOpen_fixGrp F Ω Y)
   have hQfin := GlobalTheory.T.finite_places_inertia_not_le_openSubgroup Ω ℚ (fixGrp ℚ Ω Y) (isOpen_fixGrp ℚ Ω Y)
   set R := hRfin.toFinset with hRdef
@@ -1048,7 +1048,7 @@ theorem UpperTheory.Gal.Int.Core.exists_quadratic_CM_ext_split_at : UpperTheory.
            mem_Ine.2 ⟨(GlobalTheory.AboveL.mem_dec_congr A (restrict_to_real σ) σ (fun _ => rfl)).2 (Ine_le_Dec A hσ), (mem_Ine.1 hσ).2⟩
          obtain ⟨h3, h4⟩ := (hall w hw A hA).2.1 _ hσ'
          exact hfixQ _ σ h3 h4
-       haveI : IsAlgClosure (maximalRealSubfield ↥Q.K) Ω :=
+       have : IsAlgClosure (maximalRealSubfield ↥Q.K) Ω :=
          ⟨IsAlgClosure.isAlgClosed ↥Q.K, Algebra.IsAlgebraic.trans _ ↥Q.K Ω⟩
        have hAv : IsPlaceOver A (w.under (𝓞 (maximalRealSubfield ↥Q.K))) := fun x => by
          rw [IsScalarTower.algebraMap_apply (maximalRealSubfield ↥Q.K) ↥Q.K Ω]
@@ -1092,7 +1092,7 @@ theorem UpperTheory.Gal.Int.Core.exists_quadratic_CM_ext_split_at : UpperTheory.
       have hu3 : Algebra.IsUnramifiedAt ℤ v.asIdeal := Algebra.FormallyUnramified.comp ℤ (𝓞 ℚ) _
       rw [← Ideal.dvd_iff_le]
       exact not_dvd_differentIdeal_iff.2 hu3
-  · haveI : Fact q.Prime := ⟨hq⟩
+  · have : Fact q.Prime := ⟨hq⟩
     have h1 : q ∣ c := by
       refine (GlobalTheory.CMFam.dvd_of_mem (w.under (𝓞 Y)) hq ?_ (Ideal.absNorm_mem (w.under (𝓞 Y)).asIdeal)).trans (hcT _ hw)
       show algebraMap (𝓞 Y) (𝓞 ↥Q.K) _ ∈ w.asIdeal

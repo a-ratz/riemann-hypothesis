@@ -64,11 +64,11 @@ theorem exists_trOne (D : Formalism.BasicNotions.D7) : ∃ x : D.host.E, IsInteg
 
 theorem trace_iE_eq_one (D : Formalism.BasicNotions.D7) (p : PlF D) (x : D.host.E) (hx1 : x + D.host.conj x = 1) :
     Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep ((D.s.atP p).ιE x) = 1 := by
-  haveI := (D.s.atP p).free
-  haveI : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep := by
+  have := (D.s.atP p).free
+  have : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep := by
     first
       | exact Module.finite_of_finrank_pos (by rw [(D.s.atP p).rank]; norm_num)
-  haveI : CharZero (D.s.atP p).Fp := (D.s.atP p).char0
+  have : CharZero (D.s.atP p).Fp := (D.s.atP p).char0
   have hsum : (D.s.atP p).ιE x + (D.s.atP p).cj ((D.s.atP p).ιE x) = 1 := by
     rw [(D.s.atP p).cj_ιE, D.conjF_eq, ← map_add (f := _), hx1, map_one]
   have hinv : Algebra.trace (D.s.atP p).Fp (D.s.atP p).Ep ((D.s.atP p).cj ((D.s.atP p).ιE x)) =
@@ -125,8 +125,8 @@ theorem trace_tower_theta {ℓ : ℕ} [Fact ℓ.Prime] {Fp Ep : Type} [Field Fp]
     (θ : Ep) (hθ : Algebra.trace Fp Ep θ = 1) (z : Fp) :
     (letI := ((algebraMap Fp Ep).comp (algebraMap ℚ_[ℓ] Fp)).toAlgebra;
       Algebra.trace ℚ_[ℓ] Ep (θ * algebraMap Fp Ep z)) = Algebra.trace ℚ_[ℓ] Fp z := by
-  letI : Algebra ℚ_[ℓ] Ep := ((algebraMap Fp Ep).comp (algebraMap ℚ_[ℓ] Fp)).toAlgebra
-  haveI : IsScalarTower ℚ_[ℓ] Fp Ep := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra ℚ_[ℓ] Ep := ((algebraMap Fp Ep).comp (algebraMap ℚ_[ℓ] Fp)).toAlgebra
+  have : IsScalarTower ℚ_[ℓ] Fp Ep := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have h1 : Algebra.trace Fp Ep (θ * algebraMap Fp Ep z) = z := by
     rw [mul_comm, ← Algebra.smul_def, map_smul, hθ, smul_eq_mul, mul_one]
   have h2 := Algebra.trace_trace (R := ℚ_[ℓ]) (S := Fp) (T := Ep) (θ * algebraMap Fp Ep z)
@@ -140,10 +140,10 @@ theorem trace_dual_lattice : TrDual := by
   obtain ⟨-, -, -, hO, hpsi, -⟩ := h
   obtain ⟨x, hxint, hx1⟩ := exists_trOne D
   have htr := trace_iE_eq_one D p x hx1
-  haveI : Fact (Loc.resChar p).Prime := (D.s.atP p).ellPrime
-  haveI := (D.s.atP p).qlFin
-  haveI := (D.s.atP p).free
-  haveI : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep := by
+  have : Fact (Loc.resChar p).Prime := (D.s.atP p).ellPrime
+  have := (D.s.atP p).qlFin
+  have := (D.s.atP p).free
+  have : Module.Finite (D.s.atP p).Fp (D.s.atP p).Ep := by
     first
       | exact Module.finite_of_finrank_pos (by rw [(D.s.atP p).rank]; norm_num)
   have hθO : (D.s.atP p).ιE x ∈ (D.s.atP p).O := by

@@ -127,15 +127,15 @@ theorem ker_keyJ {T : C} (c x : TrivSqZeroExt (F.obj T) (Om R (F.obj T) j)) (m�
 theorem hasLoc_omjExt (H : Desc.HasLoc F) : Desc.HasLoc (omjExt F j) := by
   intro T c
   obtain ⟨T', l, h1, h2, h3, h4⟩ := H T c.fst
-  letI : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
-  haveI : IsScalarTower R (F.obj T) (F.obj T') :=
+  let : Algebra (F.obj T) (F.obj T') := (mp F l : F.obj T →+* F.obj T').toAlgebra
+  have : IsScalarTower R (F.obj T) (F.obj T') :=
     IsScalarTower.of_algebraMap_eq fun r ↦ ((mp F l).commutes r).symm
-  haveI := FormExt.isLocalization_of_data F l c.fst h1 h2 h3
-  haveI : Algebra.FormallyEtale (F.obj T) (F.obj T') :=
+  have := FormExt.isLocalization_of_data F l c.fst h1 h2 h3
+  have : Algebra.FormallyEtale (F.obj T) (F.obj T') :=
     Algebra.FormallyEtale.of_isLocalization (Submonoid.powers c.fst)
   have hb := GlobalTheory.TopForm.isBaseChange_exteriorPower
     (KaehlerDifferential.isBaseChange_of_formallyEtale R (F.obj T) (F.obj T')) j
-  haveI := (isLocalizedModule_iff_isBaseChange (Submonoid.powers c.fst) (F.obj T') _).2 hb
+  have := (isLocalizedModule_iff_isBaseChange (Submonoid.powers c.fst) (F.obj T') _).2 hb
   have hp : ∀ ω, pOm F j l ω =
       GlobalTheory.exteriorPowerMapOver (F.obj T') j (KaehlerDifferential.map R R (F.obj T) (F.obj T')) ω :=
     mOm_eq_exteriorPowerMapOver _ (fun _ ↦ rfl) j

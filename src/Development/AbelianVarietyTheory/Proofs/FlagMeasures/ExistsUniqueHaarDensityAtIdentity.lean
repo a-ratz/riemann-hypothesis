@@ -176,7 +176,7 @@ theorem exp_strict (η : ℝ) (hη : 0 < η) : ∃ ρ : ℝ, 0 < ρ ∧ ∀ A B 
   have h4 := @h3 (A, B) (by
     rw [Prod.dist_eq, dist_zero_right, dist_zero_right]
     exact max_lt ((op_le_sumAbs A).trans_lt hA) ((op_le_sumAbs B).trans_lt hB))
-  simp only [ContinuousLinearMap.one_apply] at h4
+  simp only [one_apply_eq_self] at h4
   have h5 := op_le_sumAbs (A - B)
   have h6 := sumAbs_nonneg (A - B)
   calc _ ≤ _ := sumAbs_le_op _
@@ -263,7 +263,7 @@ theorem density_of_chart (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V]
   have hν : ∀ A : Set V, MeasurableSet A → ν A = μ (φ '' (A ∩ Metric.ball 0 δ)) := by
     intro A hA
     simp only [ν]
-    rw [Measure.map_apply measurable_subtype_coe hA, hψ.comap_apply]
+    rw [Measure.map_apply measurable_subtypeVal hA, hψ.comap_apply]
     congr 1
     rw [Set.inter_comm, ← Subtype.image_preimage_coe, Set.image_image]
     rfl
@@ -271,7 +271,7 @@ theorem density_of_chart (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V]
     intro x r h
     rw [hν _ Metric.isOpen_ball.measurableSet, Set.inter_eq_left.2]
     exact Metric.ball_subset_ball' (by simpa [add_comm] using h)
-  haveI : IsFiniteMeasure ν := ⟨by
+  have : IsFiniteMeasure ν := ⟨by
     rw [hν _ MeasurableSet.univ, Set.univ_inter]
     exact hfin⟩
   obtain ⟨c, h0, ht, hlim⟩ := GlobalTheory.exists_density_origin_of_almost_homogeneous V l ν (by
@@ -392,13 +392,13 @@ def expL (S : Set (Matrix (Fin m) (Fin m) ℂ)) (X : lieE S) : Matrix (Fin m) (F
   NormedSpace.exp (unrealify (X : EuclideanSpace ℝ _))
 
 theorem continuous_expL (S : Set (Matrix (Fin m) (Fin m) ℂ)) : Continuous (expL S) :=
-  GlobalTheory.UpqExpChart.continuous_matExp.comp (continuous_unrealify.comp continuous_subtype_val)
+  GlobalTheory.UpqExpChart.continuous_matExp.comp (continuous_unrealify.comp continuous_subtypeVal)
 
 theorem expL_zero (S : Set (Matrix (Fin m) (Fin m) ℂ)) : expL S 0 = 1 := by
   simp [expL, unrealify_zero]
 
 theorem isOpen_near_one (δ : ℝ) : IsOpen {g : Matrix (Fin m) (Fin m) ℂ | ∀ i j, ‖(g - 1) i j‖ < δ} := by
-  simp only [Set.setOf_forall]
+  simp only [Set.ofPred_forall]
   refine isOpen_iInter_of_finite fun i => isOpen_iInter_of_finite fun j => ?_
   exact isOpen_lt (by fun_prop) continuous_const
 

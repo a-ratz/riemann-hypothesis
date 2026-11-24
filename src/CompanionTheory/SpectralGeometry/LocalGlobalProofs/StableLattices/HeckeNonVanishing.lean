@@ -110,7 +110,7 @@ theorem exists_nnPlus_ne {m : ℕ} {M : Type} [AddCommGroup M] [Module ℂ M]
     simpa [pow_ne_zero] using h
   have hexp := (capelliExpand (𝒰 := Module.End ℂ M) m E (w - 1) hE).2 0 0
   have happ := LinearMap.congr_fun hexp v
-  simp only [if_true, LinearMap.sum_apply, LinearMap.smul_apply, Module.End.mul_apply, hmin, map_zero,
+  simp only [ite_true, LinearMap.sum_apply, LinearMap.smul_apply, Module.End.mul_apply, hmin, map_zero,
     smul_zero, Finset.sum_const_zero] at happ
   exact hv0 (hinj happ.symm)
 
@@ -118,7 +118,7 @@ theorem nonVan : NonVan := by
   intro n X χ s hX hnt hfree
   have hQ := GlobalTheory.CompanionTheory.RgExhHecke.qdetEq
   obtain ⟨k, hk⟩ := hX
-  haveI := hnt
+  have := hnt
   cases n with
   | zero => exact s.elim0
   | succ m =>

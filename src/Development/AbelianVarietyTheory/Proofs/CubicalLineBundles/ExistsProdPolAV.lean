@@ -107,12 +107,12 @@ theorem exists_prod_polAV : Out.Laws → ∀ (R : Type) [CommRing R] [IsNoetheri
   have last : LBIso (M.div (P.L.pull p.left)) (P'.L.pull q.left) := by
     refine (cls_eq_iff hd (pull_isLB P'.isLB _)).1 ?_
     rw [cls_div hM (pull_isLB P.isLB p.left), eM, cls_pull P.isLB, cls_pull P'.isLB, add_sub_cancel_left]
-  haveI := P.isAb.proper
-  haveI := P'.isAb.proper
-  haveI := hB.proper
+  have := P.isAb.proper
+  have := P'.isAb.proper
+  have := hB.proper
   have hdim : SmoothOfRelativeDimension (P.g + P'.g) (P.A ⊗ P'.A).hom := by
-    haveI := P.smoothDim
-    haveI : SmoothOfRelativeDimension P'.g (pullback.fst P.A.hom P'.A.hom) :=
+    have := P.smoothDim
+    have : SmoothOfRelativeDimension P'.g (pullback.fst P.A.hom P'.A.hom) :=
       (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback
         (IsPullback.of_hasPullback _ _).flip P'.smoothDim
     rw [add_comm]

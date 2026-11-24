@@ -201,7 +201,7 @@ theorem unipotent_block_mul_add {R : Type} [CommRing R] {n : ℕ} (b c : Matrix 
 theorem continuous_nb {D : D7} {p : ℕ} {nb : hermA D p → G D p} (hnb : IsNMap nb) : Continuous nb := by
   have emb := isEmbedding_matHom (AF D.host.F) D.sp.cm.sig (Jst D p)
   rw [emb.continuous_iff, Units.continuous_iff]
-  have hv : Continuous fun b : hermA D p => (b.1 : Mx D p p) := continuous_subtype_val
+  have hv : Continuous fun b : hermA D p => (b.1 : Mx D p p) := continuous_subtypeVal
   have hm : ∀ b, (AdelicU.matHom _ D.sp.cm.sig (Jst D p) (nb b)).1 = blk4 1 b.1 0 1 := hnb
   constructor
   · refine (continuous_unipotent_block_family hv).congr fun b => ?_
@@ -866,8 +866,8 @@ theorem idem_eq {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) :
   · rw [RingHom.map_sub, he.2 v, sub_eq_zero]
     change _ = evFin D.host.F v (sS S 1) ⊗ₜ[D.host.F] (1 : D.host.E)
     by_cases h : v ∈ S
-    · rw [if_pos h, evFin_sS_one_mem h]; rfl
-    · rw [if_neg h, evFin_sS_one_not h, TensorProduct.zero_tmul]
+    · rw [ite_eq_left h, evFin_sS_one_mem h]; rfl
+    · rw [ite_eq_right h, evFin_sS_one_not h, TensorProduct.zero_tmul]
 
 theorem unit_AE {S : Finset (Pl D)} {e : AE D} (he : IsIdem S e) :
     IsOpen {z : AE D | IsUnit (1 - e + e * z)} ∧
@@ -915,11 +915,11 @@ theorem mem_cell_iff {e : AE D} (hee : e * e = e) (g : G D p) : g ∈ cell e ↔
   isUnit_mix_iff hee (cB g)
 
 theorem continuous_cB : Continuous (cB : G D p → Mx D p p) := by
-  have hm : Continuous (mat : G D p → Mx D (p + p) (p + p)) := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous (mat : G D p → Mx D (p + p) (p + p)) := Units.continuous_val.comp continuous_subtypeVal
   exact continuous_matrix fun i j => hm.matrix_elem _ _
 
 theorem continuous_dB : Continuous (dB : G D p → Mx D p p) := by
-  have hm : Continuous (mat : G D p → Mx D (p + p) (p + p)) := Units.continuous_val.comp continuous_subtype_val
+  have hm : Continuous (mat : G D p → Mx D (p + p) (p + p)) := Units.continuous_val.comp continuous_subtypeVal
   exact continuous_matrix fun i j => hm.matrix_elem _ _
 
 theorem cell_eq {e : AE D} (hee : e * e = e) :
@@ -974,7 +974,7 @@ theorem cellAlg : IdemEx → CellAlg := by
     isB_tau (exists_isB hee hce ((mem_cell_iff hee g).1 hg))
   have hcell : ∀ {g : G D p} {x : hermS D p e}, IsB e g x → g ∈ cell e := fun h => (mem_cell_iff hee _).2 h.1
   refine ⟨tau e, ?_, ?_, ?_⟩
-  · refine ⟨?_, ?_, ?_, continuousOn_tau he hee hce, (continuous_nb hnb).comp continuous_subtype_val,
+  · refine ⟨?_, ?_, ?_, continuousOn_tau he hee hce, (continuous_nb hnb).comp continuous_subtypeVal,
       fun x y => isNMap_add hnb x.1 y.1⟩
     · rw [cell_eq hee]
       exact (unit_AE he).1.preimage (continuous_cB.matrix_det (R := AE D))

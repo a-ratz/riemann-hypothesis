@@ -234,7 +234,7 @@ theorem fundamentalDomain_of_parts {E : Type} [Field E] [NumberField E] [IsCMFie
       have hlin : Differentiable ℂ (fun t : ℂ => t • Z) := differentiable_id.smul_const Z
       refine (hG.comp hlin.differentiableOn ?_).mul_const _
       intro t ht
-      simp only [Set.mem_setOf_eq]
+      simp only [Set.mem_ofPred_eq]
       have h := hzt t (mem_closedBall_zero_iff.mp ht)
       linarith
     have hγb : ∀ t ∈ closedBall (0 : ℂ) ρ, ‖γ t‖ ≤ Real.exp (9 / 4) * S := by

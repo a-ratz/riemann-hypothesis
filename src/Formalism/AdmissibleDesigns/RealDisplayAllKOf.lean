@@ -143,7 +143,7 @@ theorem bkbConv : StatBKbConv := by
       show φ0 (e.symm ⟨ψ t, LinearMap.mem_range_self ψ t⟩) = pr x t
       rw [LinearMap.quotKerEquivRange_symm_apply_image]
       try rfl
-    haveI hnz : NoZeroSMulDivisors O (HV' ⧸ HfV') := by
+    have hnz : NoZeroSMulDivisors O (HV' ⧸ HfV') := by
       refine ⟨fun {c v} hcv => ?_⟩
       by_cases hc : c = 0
       · exact Or.inl hc
@@ -154,7 +154,7 @@ theorem bkbConv : StatBKbConv := by
           rw [algebraMap_smul]
           exact hcv
         exact (smul_eq_zero.1 h').resolve_left hc'
-    haveI : Module.Free O (LinearMap.range ψ) := Module.free_of_finite_type_torsion_free'
+    have : Module.Free O (LinearMap.range ψ) := Module.free_of_finite_type_torsion_free'
     let b := Module.Free.chooseBasis O (LinearMap.range ψ)
     have hcex : ∀ i, ∃ y : FractionRing O, Formalism.RepresentationBoundsCohomology.LOC.toKO O y = φbar (b i) :=
       fun i => Submodule.mkQ_surjective _ _
@@ -904,7 +904,7 @@ theorem psiCont (p : ℕ) (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuat
     refine ⟨?_, inferInstance, ?_⟩
     · exact Module.Finite.of_injective (Y.subtype.restrictScalars O) Subtype.val_injective
     · exact ⟨Continuous.subtype_mk (f := fun q : O × Y => q.1 • (q.2 : A))
-        (continuous_fst.smul (continuous_subtype_val.comp continuous_snd)) _⟩
+        (continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)) _⟩
   obtain ⟨a, ha, hka⟩ : ∃ a : O, a ≠ 0 ∧ ∀ y : Y, a • ψ y = 0 := by
     obtain ⟨s, hs⟩ := hfg.fg.fg_top
     choose f hf0 hf using fun y : Y => ko_tors O (ψ y)
@@ -1017,18 +1017,18 @@ theorem h2Map_injective_statement : H2MapInjective := by
 
 theorem clause4 : CupClause := by
   intro O _ _ _ _ A T' G _ _ _ _ _ _ _ _ r χ E Dw _ ε hA hNat z hz hzc hfz
-  haveI : IsNoetherian O A := by
-    haveI := hA.fg
+  have : IsNoetherian O A := by
+    have := hA.fg
     infer_instance
-  haveI := hA.t2
-  haveI := hA.csmul
-  haveI : ContinuousConstSMul O (Ymod r χ E) :=
-    ⟨fun a => continuous_induced_rng.2 ((continuous_const_smul a).comp continuous_subtype_val)⟩
+  have := hA.t2
+  have := hA.csmul
+  have : ContinuousConstSMul O (Ymod r χ E) :=
+    ⟨fun a => continuous_induced_rng.2 ((continuous_const_smul a).comp continuous_subtypeVal)⟩
   let i : Ymod r χ E →ₗ[O] A := (Ymod r χ E).subtype.restrictScalars O
   have hYfg : ReciprocityTheory.ChartRestriction.T2.IsFGTop O (Ymod r χ E) :=
     ⟨Module.Finite.of_injective i Subtype.val_injective, inferInstance,
-      ⟨continuous_induced_rng.2 (continuous_fst.smul (continuous_subtype_val.comp continuous_snd))⟩⟩
-  exact h2Map_injective_statement O Dw (ε.comp Dw.subtype) hNat (Ymod r χ E) A hYfg hA i continuous_subtype_val
+      ⟨continuous_induced_rng.2 (continuous_fst.smul (continuous_subtypeVal.comp continuous_snd))⟩⟩
+  exact h2Map_injective_statement O Dw (ε.comp Dw.subtype) hNat (Ymod r χ E) A hYfg hA i continuous_subtypeVal
     Subtype.val_injective z hz hzc hfz
 
 end Formalism.RepresentationBoundsCohomology.T2
@@ -1152,7 +1152,7 @@ theorem clause5Row : StatClause5Row := by
     rw [e1, map_add (f := _), map_add (f := _), hπ, hv]
   have e2 : clsRow D v (fun g => π (a g)) = Submodule.Quotient.mk ⟨_, ht⟩ := by
     unfold clsRow
-    exact dif_pos ht
+    exact dite_eq_left ht
   rw [e2]
   refine clause5Gen D _ u hu (ReciprocityTheory.ChartRestriction.T2.contAction_quotient hT D.T D.stT) hk b hb _ ht c hc fun g k => ?_
   have h4 := hcob g k
@@ -1289,7 +1289,7 @@ theorem lc_of_torsion (p : ℕ) {O : Type} [CommRing O] [IsDomain O] [IsDiscrete
     refine ⟨?_, inferInstance, ?_⟩
     · exact Module.Finite.of_injective ((Ymod r χ E).subtype.restrictScalars O) Subtype.val_injective
     · exact ⟨Continuous.subtype_mk (f := fun q : O × (Ymod r χ E) => q.1 • (q.2 : A))
-        (continuous_fst.smul (continuous_subtype_val.comp continuous_snd)) _⟩
+        (continuous_fst.smul (continuous_subtypeVal.comp continuous_snd)) _⟩
   obtain ⟨a, ha, hka⟩ : ∃ a : O, a ≠ 0 ∧ ∀ y : Ymod r χ E, a • ψ y = 0 := by
     obtain ⟨s, hs⟩ := hfg.fg.fg_top
     choose f hf0 hf using fun y : Ymod r χ E => htors (ψ y)
@@ -1522,7 +1522,7 @@ theorem realDisplayAllK_of (ℓ : ℕ) [Fact ℓ.Prime] (O : Type) [CommRing O] 
     · rw [kRowRange O (VT w) (VT' w) _ (Dat w) _ _ (uD w) (huD w) (hRows w hw).2.2.2.1.openT]
       exact hres 0 w
     · exact inRowReal_of ℓ r χ E (decs Ek Aw w) ρ₁ inc π (Dat w) (vD w) (hpD w) (heD w) (Fs w) (Hf₁ w) hO hA hinc
-        (hur.comp continuous_subtype_val) (hRows w hw).2.2.2.2.2.2.2.2.2
+        (hur.comp continuous_subtypeVal) (hRows w hw).2.2.2.2.2.2.2.2.2
   have hk : ∀ w, Function.Injective (kRow (Dat w) _ (uD w) (huD w)) :=
     fun w => kRowInj O (VT w) (VT' w) _ (Dat w) _ _ (uD w) (huD w)
   have hcycw : ∀ w, IsCycOn ℓ (decs Ek Aw w) (ε.comp (decs Ek Aw w).subtype) :=

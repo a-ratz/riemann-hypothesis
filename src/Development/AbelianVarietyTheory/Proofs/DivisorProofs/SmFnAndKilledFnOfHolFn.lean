@@ -61,9 +61,9 @@ variable {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι]
 set_option backward.isDefEq.respectTransparency false in
 theorem contDiff_exp_entry (X : Mt n) (a b : Fin n) :
     ContDiff ℝ ∞ fun t : ℝ => NormedSpace.exp (t • X) a b := by
-  letI : NormedRing (Mt n) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Mt n) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Mt n) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Mt n) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Mt n) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Mt n) := FiniteDimensional.completeSpace ℝ _
   let L : Mt n →ₗ[ℝ] ℂ := { toFun := fun M => M a b, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
   rw [contDiff_iff_contDiffAt]
   intro t
@@ -77,9 +77,9 @@ theorem contDiff_exp_entry (X : Mt n) (a b : Fin n) :
 set_option backward.isDefEq.respectTransparency false in
 theorem hasDerivAt_exp_entry (X : Mt n) (a b : Fin n) :
     HasDerivAt (fun t : ℝ => NormedSpace.exp (t • X) a b) (X a b) 0 := by
-  letI : NormedRing (Mt n) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Mt n) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Mt n) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Mt n) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Mt n) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Mt n) := FiniteDimensional.completeSpace ℝ _
   let L : Mt n →ₗ[ℝ] ℂ := { toFun := fun M => M a b, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
   have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) X (0 : ℝ)
   rw [zero_smul, NormedSpace.exp_zero, one_mul] at h
@@ -89,7 +89,7 @@ private theorem isOpen_frDom' (H : Mt n) (q : ℕ) : IsOpen (frDom H q) := by
   have e : frDom H q = {x : Mt n | x.det ≠ 0} ∩ ⋂ i : Fin (n + 1), {x : Mt n |
       0 < ReciprocityTheory.ChartRestriction.G.FD.psgn q i * (ReciprocityTheory.ChartRestriction.G.FD.lminor (-(xᴴ * H * x)) i).re} := by
     ext x
-    simp only [frDom, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
+    simp only [frDom, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [e]
   refine IsOpen.inter (isOpen_ne_fun continuous_id.matrix_det continuous_const)
     (isOpen_iInter_of_finite fun i => ?_)
@@ -100,7 +100,7 @@ private theorem isOpen_frDom' (H : Mt n) (q : ℕ) : IsOpen (frDom H q) := by
 theorem isOpen_frDoms (Hm : ι → Mt n) (q : ι → ℕ) : IsOpen (frDoms Hm q) := by
   have e : frDoms Hm q = ⋂ τ, (fun x : ι → Fin n → Fin n → ℂ => (Matrix.of (x τ) : Mt n)) ⁻¹' frDom (Hm τ) (q τ) := by
     ext x
-    simp only [frDoms, Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage]
+    simp only [frDoms, Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage]
   rw [e]
   exact isOpen_iInter_of_finite fun τ => (isOpen_frDom' (Hm τ) (q τ)).preimage (continuous_apply τ)
 
@@ -140,7 +140,7 @@ private theorem lminor_neg_diagonal_neg_sgn_eq_psgn (q : ℕ) (i : Fin (n + 1)) 
       = ((ReciprocityTheory.ChartRestriction.G.FD.psgn q i : ℝ) : ℂ) := by
   unfold ReciprocityTheory.ChartRestriction.G.FD.lminor ReciprocityTheory.ChartRestriction.G.FD.psgn
   rw [← Matrix.diagonal_neg, neg_neg, Matrix.submatrix_diagonal _ _ (Fin.castLE_injective _), Matrix.det_diagonal]
-  simp only [Function.comp_apply, Pi.neg_apply, neg_neg, Fin.coe_castLE]
+  simp only [Function.comp_apply, Pi.neg_apply, neg_neg, Fin.val_castLE]
   rw [Complex.ofReal_prod]
   exact Fin.prod_univ_eq_prod_range (fun a => ((ReciprocityTheory.ChartRestriction.G.FD.sgn q a : ℝ) : ℂ)) i
 
@@ -174,9 +174,9 @@ theorem one_mem_UH (H : Mt n) : (1 : Mt n) ∈ Formalism.QuantumDeterminants.UH 
 
 private theorem exp_smul_mem_UH_of_mem_lieH (H X : Mt n) (hX : X ∈ lieH H) (t : ℝ) :
     NormedSpace.exp (t • X) ∈ Formalism.QuantumDeterminants.UH H := by
-  letI : NormedRing (Mt n) := Matrix.linftyOpNormedRing
-  letI : NormedAlgebra ℝ (Mt n) := Matrix.linftyOpNormedAlgebra
-  haveI : CompleteSpace (Mt n) := FiniteDimensional.complete ℝ _
+  let : NormedRing (Mt n) := Matrix.linftyOpNormedRing
+  let : NormedAlgebra ℝ (Mt n) := Matrix.linftyOpNormedAlgebra
+  have : CompleteSpace (Mt n) := FiniteDimensional.completeSpace ℝ _
   have hX' : Xᴴ * H + H * X = 0 := hX
   let F : ℝ → Mt n := fun s => NormedSpace.exp (s • Xᴴ) * H * NormedSpace.exp (s • X)
   have hd : ∀ s, HasDerivAt F 0 s := by

@@ -86,7 +86,7 @@ private theorem exists_close_vector_ultrametric (k : Type) [NormedField k] [IsUl
       push_neg at hcon
       exact hp0ne (funext hcon)
     obtain ⟨j, hj⟩ := hex
-    haveI : Nonempty X := ⟨j⟩
+    have : Nonempty X := ⟨j⟩
     obtain ⟨i0, hi0⟩ := Finite.exists_max (fun i => ‖p0 i‖)
     have hne : p0 i0 ≠ 0 := by
       intro h0

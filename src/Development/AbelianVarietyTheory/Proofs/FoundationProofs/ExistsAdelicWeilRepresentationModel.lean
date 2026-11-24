@@ -370,7 +370,7 @@ theorem cmTraceAdditiveCharacter_zero : psi0 D cc δ 0 = 1 := by simp [psi0, ee]
 
 theorem embT_conj (τ : D.what₂.Tau) (a : D.host.E) :
     embT D τ (D.host.conj a) = (starRingEnd ℂ) (embT D τ a) := by
-  haveI : IsCMField D.host.E := D.host.isCMField_hostE
+  have : IsCMField D.host.E := D.host.isCMField_hostE
   have h : D.host.conj a = IsCMField.complexConj D.host.E a := by
     apply D.host.φ₀.injective
     rw [IsCMField.complexEmbedding_complexConj]

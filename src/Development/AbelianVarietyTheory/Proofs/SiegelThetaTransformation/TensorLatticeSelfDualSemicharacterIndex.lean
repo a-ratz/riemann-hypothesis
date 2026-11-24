@@ -364,7 +364,7 @@ theorem epsW_semichar {M : ℕ} {Λ : Lt E n} (hΛ : Λ ∈ Vset E n M) {L : Lt 
     (tens_selfDual hΛ hL y).1 hy _ (smul_mem_tens hΛ hw hy')
   constructor
   · obtain ⟨k, hk⟩ := hint y hy
-    rw [epsW, hk, ← Complex.exp_nat_mul, ← Complex.exp_int_mul_two_pi_mul_I k]
+    rw [epsW, hk, ← exp_natCast_mul, ← Complex.exp_int_mul_two_pi_mul_I k]
     congr 1
     push_cast
     ring

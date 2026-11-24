@@ -92,7 +92,7 @@ theorem UpperTheory.orbitalFiber_pushforward_eq_zero :
     exact (hmem y₀).mp hy₀
   have hset : ((S.filter fun y => q y = o : Finset Y) : Set Y) = orbit H o.out := by
     ext y
-    simp only [Finset.coe_filter, Set.mem_setOf_eq]
+    simp only [Finset.coe_filter, Set.mem_ofPred_eq]
     constructor
     · exact fun h => (hout o y).mp h.2
     · intro h
@@ -128,7 +128,7 @@ theorem UpperTheory.orbitalFiber_pushforward :
   intro H X' X _ _ _ H₀ q k hN hq hH₀ hk hT hfin hidx
   classical
   let F : orbitRel.Quotient H X → Set X' := fun i => {y | q y = Quotient.out i}
-  letI act : ∀ i : orbitRel.Quotient H X, MulAction (stabilizer H (Quotient.out i)) (F i) := fun i =>
+  let act : ∀ i : orbitRel.Quotient H X, MulAction (stabilizer H (Quotient.out i)) (F i) := fun i =>
     { smul := fun h y => ⟨(h : H) • (y : X'), by
           show q ((h : H) • (y : X')) = Quotient.out i
           rw [hq, show q (y : X') = Quotient.out i from y.2]

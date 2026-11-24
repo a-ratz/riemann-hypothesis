@@ -91,7 +91,7 @@ theorem ValCentreZ.proof : ValCentreZ.Statement := by
     have hle : R.valuation (r p : L) * R.valuation (toFrac P (X ⟨p.1, j p.1⟩)) ≤
         1 * R.valuation (toFrac P (X ⟨p.1, j p.1⟩)) := by
       rw [one_mul]; exact (le_of_eq h).trans (hjmax p.1 p.2)
-    exact le_of_mul_le_mul_right hle (zero_lt_iff.mpr hvj)
+    exact le_of_mul_le_mul_right hle (pos_iff_ne_zero.mpr hvj)
 
   have hmem : ∀ g, (chartHom r g : L) ∈ R := by
     intro g

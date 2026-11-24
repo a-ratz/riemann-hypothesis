@@ -93,7 +93,7 @@ theorem layer_le_genSub (k : ℕ) : layer ε E V k ≤ genSub E V := by
   have hStable : ∀ a b, ∀ v ∈ genSub E V, E a b v ∈ genSub E V := by
     intro a b v hv
     unfold genSub at hv ⊢
-    simp only [Submodule.mem_sInf, Set.mem_setOf_eq] at hv ⊢
+    simp only [Submodule.mem_sInf, Set.mem_ofPred_eq] at hv ⊢
     intro T hT
     exact hT.2 a b v (hv T hT)
   exact layer_le_of_stable hVT hStable k

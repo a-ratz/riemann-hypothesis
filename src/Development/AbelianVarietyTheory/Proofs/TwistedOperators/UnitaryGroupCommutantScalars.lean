@@ -226,7 +226,7 @@ namespace GlobalTheory.RegSS
 open UComm in
 theorem unitaryCommutant : UnitaryCommutant := by
   intro A _ _ hA σ hσ n _ _ J hH hJ a hcomm
-  letI := hA.toField
+  let := hA.toField
   rcases isEmpty_or_nonempty n with hn | hn
   · exact ⟨0, by ext i; exact isEmptyElim i⟩
   obtain ⟨w, hw⟩ := exists_nonisotropic σ hσ hH hJ hn

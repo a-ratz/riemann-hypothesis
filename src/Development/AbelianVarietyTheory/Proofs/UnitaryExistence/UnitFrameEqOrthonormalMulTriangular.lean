@@ -151,7 +151,7 @@ theorem det_uMat (A : Matrix (Fin n) (Fin n) ℂ) : (uMat A).det = 1 := by
   simp only [uMat_diag, Finset.prod_const_one]
 
 theorem inv_uMat_upper (A : Matrix (Fin n) (Fin n) ℂ) : (uMat A)⁻¹.BlockTriangular id := by
-  haveI := Matrix.invertibleOfIsUnitDet (uMat A) (by rw [det_uMat]; exact isUnit_one)
+  have := Matrix.invertibleOfIsUnitDet (uMat A) (by rw [det_uMat]; exact isUnit_one)
   exact Matrix.blockTriangular_inv_of_blockTriangular (uMat_upper A)
 
 theorem inv_uMat_diag (A : Matrix (Fin n) (Fin n) ℂ) (i : Fin n) : (uMat A)⁻¹ i i = 1 := by

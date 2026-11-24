@@ -96,7 +96,7 @@ theorem finHom_eq (V : HSp D) (g : GA D V) :
     ((finHom V g : GL _ _) : Matrix (Fin V.rank) (Fin V.rank) _) = finMat D.sp.cm.sig V.gram g := rfl
 
 theorem reW_continuous (S T : HSp D) (b : Module.Basis (Fin S.rank) D.host.E S.V) : Continuous (reW S T b) := by
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   unfold reW
   exact continuous_id.matrix_mul continuous_const
 
@@ -134,7 +134,7 @@ theorem reWinv_add (x y : WO S T) : reWinv S T b (x + y) = reWinv S T b x + reWi
   Matrix.add_mul (x : Matrix (Fin T.rank) (Fin S.rank) (AE D)) y _
 
 theorem reWinv_continuous : Continuous (reWinv S T b) := by
-  haveI : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
+  have : IsTopologicalRing (AE D) := IsModuleTopology.isTopologicalRing (AF D.host.F) (AE D)
   unfold reWinv
   exact continuous_id.matrix_mul continuous_const
 

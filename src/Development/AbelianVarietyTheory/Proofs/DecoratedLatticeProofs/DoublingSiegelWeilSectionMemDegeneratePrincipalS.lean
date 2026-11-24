@@ -123,7 +123,7 @@ theorem swSec_mem_degPS : GlobalTheory.Published.WeilRepresentationUnitaryPair �
   refine (mem_degPS A a).2 ⟨GlobalTheory.T.siegelWeilSection_degeneratePrincipalSeries_law hW D ψ A B χB omh hω ν 𝓕 hν φ hφ,
     (GlobalTheory.T.siegelWeilSection_integrable_and_continuous D ψ A B χB omh hω ν 𝓕 hν φ hφ).2, ?_⟩
   let S := Submodule.span ℂ {f : WO (dblSp A) B → ℂ | ∃ k ∈ Khat A a, f = omh (k, 1) φ}
-  haveI : FiniteDimensional ℂ S := hK
+  have : FiniteDimensional ℂ S := hK
   have hS : S ≤ intSub A B omh ν 𝓕 := Submodule.span_le.2 (by
     rintro _ ⟨k, -, rfl⟩
     exact hint _ (hω.om_pres _ _ hφ))

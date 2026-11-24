@@ -98,7 +98,7 @@ theorem UpperTheory.exists_residue_map_padicAlgCl_integers :
   let A : Subring (PadicAlgCl l) :=
     { carrier := {x | ‖x‖ ≤ 1}
       mul_mem' := fun {a b} ha hb => by
-        simp only [Set.mem_setOf_eq, norm_mul] at *
+        simp only [Set.mem_ofPred_eq, norm_mul] at *
         exact mul_le_one₀ ha (norm_nonneg _) hb
       one_mem' := by simp
       add_mem' := fun {a b} ha hb => (hna a b).trans (max_le ha hb)
@@ -128,7 +128,7 @@ theorem UpperTheory.exists_residue_map_padicAlgCl_integers :
     have : (⟨_, hinv⟩ : A) * x = 1 := Subtype.ext (inv_mul_cancel₀ hx0)
     rw [← this]
     exact J.mul_mem_left _ hxJ
-  haveI := hmax
+  have := hmax
   have hl : ‖((l : A) : PadicAlgCl l)‖ < 1 := by
     have h := congrArg NNReal.toReal (PadicAlgCl.valuation_p l)
     rw [PadicAlgCl.valuation_coe] at h
@@ -294,7 +294,7 @@ open Finset
 namespace UpperTheory.V.X
 
 private theorem unit_of_odd (n : ℕ) (x : ℤ) (hx : Odd x) : IsUnit (x : ZMod (2 ^ n)) := by
-  rw [ZMod.coe_int_isUnit_iff_isCoprime]
+  rw [ZMod.isUnit_intCast_iff_isCoprime]
   push_cast
   apply IsCoprime.pow_left
   obtain ⟨t, rfl⟩ := hx
@@ -435,11 +435,11 @@ theorem lx_core {k : Type} [Field k] (l : ℕ) [Fact l.Prime] [CharP k l] (hl : 
         rintro rfl
         rw [map_neg, map_one] at hp
         exact hne hp
-      rw [mul_one, hxs, ← mul_sub, hd, if_pos hp, if_neg hx']
+      rw [mul_one, hxs, ← mul_sub, hd, ite_eq_left hp, ite_eq_right hx']
       by_cases hx1 : x = 1
       · subst hx1
-        rw [hv1, if_pos hs1, if_pos rfl, h1, map_one]; ring
-      · rw [if_neg hx1, if_neg]
+        rw [hv1, ite_eq_left hs1, ite_eq_left rfl, h1, map_one]; ring
+      · rw [ite_eq_right hx1, ite_eq_right]
         · ring
         · intro hlt'
           apply hx1
@@ -462,12 +462,12 @@ theorem lx_core {k : Type} [Field k] (l : ℕ) [Fact l.Prime] [CharP k l] (hl : 
         exact hp (map_one π)
       have hd' := hd (x + s)
       rw [add_sub_cancel_right] at hd'
-      rw [mul_one, hxs, ← mul_sub, ← neg_sub, hd', if_neg hp, if_neg hx']
+      rw [mul_one, hxs, ← mul_sub, ← neg_sub, hd', ite_eq_right hp, ite_eq_right hx']
       by_cases hx1 : x = -1
       · subst hx1
-        rw [hvs, if_pos (by omega), if_pos rfl]
+        rw [hvs, ite_eq_left (by omega), ite_eq_left rfl]
         linear_combination hodd
-      · rw [if_neg hx1, if_neg]
+      · rw [ite_eq_right hx1, ite_eq_right]
         · ring
         · intro hlt'
           apply hx1
@@ -481,7 +481,7 @@ theorem lx_core {k : Type} [Field k] (l : ℕ) [Fact l.Prime] [CharP k l] (hl : 
   have hev : Even (2 ^ e) := (Nat.even_pow.2 ⟨even_two, by omega⟩)
   have hm1 : ξ (-1) ^ (2 ^ e) = 1 := by
     rw [← map_pow, hev.neg_one_pow, map_one]
-  rw [if_pos (by simp), if_pos (by simp [hm1])] at hS
+  rw [ite_eq_left (by simp), ite_eq_left (by simp [hm1])] at hS
   have hx0 : IsUnit (1 + 2 ^ (m + e - 1) : ZMod (2 ^ (m + e))) := by
     by_contra h
     rw [hz _ h] at hh
@@ -626,7 +626,7 @@ theorem lx_partial {K : Type} [Field K] [CharZero K] (f N : ℕ) [NeZero N] (hf 
     simp only [this]
     rw [Finset.sum_comm]
     refine Finset.sum_congr rfl fun a _ => ?_
-    simp only [ψ, ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq, mem_univ, if_true]
+    simp only [ψ, ite_mul, mul_ite, zero_mul, mul_zero, Finset.sum_ite_eq, mem_univ, ite_true]
     ring
 
 end UpperTheory.V.X
@@ -721,7 +721,7 @@ private theorem UpperTheory.V.X.prodX_nat {R : Type} [CommRing R] {f n : ℕ} (�
   by_cases h : IsCoprime a ((f * 2 ^ n : ℕ) : ℤ)
   · rw [DirichletCharacter.changeLevel_eq_cast_of_dvd' φ _ h, DirichletCharacter.changeLevel_eq_cast_of_dvd' ξ _ h]
   · have hnu : ¬IsUnit (a : ZMod (f * 2 ^ n)) := fun hu =>
-      h (isCoprime_comm.1 ((ZMod.coe_int_isUnit_iff_isCoprime _ _).1 hu))
+      h (isCoprime_comm.1 ((ZMod.isUnit_intCast_iff_isCoprime _ _).1 hu))
     rw [MulChar.map_nonunit _ hnu, zero_mul]
     have hc : ¬IsCoprime a (f : ℤ) ∨ ¬IsCoprime a ((2 ^ n : ℕ) : ℤ) := by
       by_contra hc
@@ -730,8 +730,8 @@ private theorem UpperTheory.V.X.prodX_nat {R : Type} [CommRing R] {f n : ℕ} (�
       push_cast at hc ⊢
       exact hc.1.mul_right hc.2
     rcases hc with hc | hc
-    · rw [MulChar.map_nonunit φ (fun hu => hc (isCoprime_comm.1 ((ZMod.coe_int_isUnit_iff_isCoprime _ _).1 hu))), zero_mul]
-    · rw [MulChar.map_nonunit ξ (fun hu => hc (isCoprime_comm.1 ((ZMod.coe_int_isUnit_iff_isCoprime _ _).1 hu))), mul_zero]
+    · rw [MulChar.map_nonunit φ (fun hu => hc (isCoprime_comm.1 ((ZMod.isUnit_intCast_iff_isCoprime _ _).1 hu))), zero_mul]
+    · rw [MulChar.map_nonunit ξ (fun hu => hc (isCoprime_comm.1 ((ZMod.isUnit_intCast_iff_isCoprime _ _).1 hu))), mul_zero]
 
 private theorem UpperTheory.V.X.genB_prodX {K : Type} [Field K] [CharZero K] {f n : ℕ} (hf : 0 < f) (φ : DirichletCharacter K f)
     (ξ : DirichletCharacter K (2 ^ n)) (hodd : φ (-1) * ξ (-1) = -1) :
@@ -743,14 +743,14 @@ private theorem UpperTheory.V.X.genB_prodX {K : Type} [Field K] [CharZero K] {f 
     rw [h, hodd]
   have hN1 : f * 2 ^ n ≠ 1 := by
     intro h1
-    haveI : Subsingleton (ZMod (f * 2 ^ n)) := by
+    have : Subsingleton (ZMod (f * 2 ^ n)) := by
       rw [h1]
       infer_instance
     have e : (-1 : ZMod (f * 2 ^ n)) = 1 := Subsingleton.elim _ _
     rw [e, MulChar.map_one] at hneg
     norm_num at hneg
-  haveI : NeZero (f * 2 ^ n) := ⟨(Nat.mul_pos hf (by positivity)).ne'⟩
-  haveI : Nontrivial (ZMod (f * 2 ^ n)) := ZMod.nontrivial_iff.2 hN1
+  have : NeZero (f * 2 ^ n) := ⟨(Nat.mul_pos hf (by positivity)).ne'⟩
+  have : Nontrivial (ZMod (f * 2 ^ n)) := ZMod.nontrivial_iff.2 hN1
   have hsum : ∑ a, (prodX φ ξ) a = 0 := by
     refine MulChar.sum_eq_zero_of_ne_one (fun h1 => ?_)
     rw [h1, MulChar.one_apply isUnit_one.neg] at hneg
@@ -784,7 +784,7 @@ theorem UpperTheory.V.X.lemmaX :
   intro l _ d f n φ ξ hX
   obtain ⟨k, _, _, A, red, hA, hred⟩ := UpperTheory.exists_residue_map_padicAlgCl_integers l
   have hlp : l.Prime := Fact.out
-  haveI : ExpChar k l := ExpChar.prime hlp
+  have : ExpChar k l := ExpChar.prime hlp
   have hq1 : 1 < l ^ d := Nat.one_lt_pow hX.d_pos.ne' hlp.one_lt
   have hl2 : l ≠ 2 := by
     intro h
@@ -913,7 +913,7 @@ theorem UpperTheory.V.X.lemmaX :
       rw [hprod, ← hfrob, ← mul_pow, hprod, one_pow]
     exact mul_right_cancel₀ hne0 h'
   have hφB : ∀ a : ℕ, φ (a : ZMod f) ∈ B := fun a => fixB _ (hφq _)
-  haveI : NeZero (2 ^ (m + e)) := ⟨by positivity⟩
+  have : NeZero (2 ^ (m + e)) := ⟨by positivity⟩
   have hcop : f.Coprime (2 ^ (m + e)) := Nat.Coprime.pow_right _ (Nat.coprime_two_right.2 hX.f_odd)
   obtain ⟨g, c, hgB, hcB, hshift, hsumid⟩ := lx_partial (K := PadicAlgCl l) f (2 ^ (m + e)) hX.f_odd.pos hcop
     (fun a => φ (a : ZMod f)) (fun a => by simp [Nat.cast_add, ZMod.natCast_self]) B hφB hinvN
@@ -968,12 +968,12 @@ theorem UpperTheory.V.X.lemmaX :
       congr 1
       apply Subtype.ext
       show g u - g (u - _) = ((2 ^ e : ℕ) : PadicAlgCl l) * c - φ _
-      rw [h, if_pos hlt]
+      rw [h, ite_eq_left hlt]
     · rw [sub_zero]
       congr 1
       apply Subtype.ext
       show g u - g (u - _) = ((2 ^ e : ℕ) : PadicAlgCl l) * c
-      rw [h, if_neg hlt, sub_zero]
+      rw [h, ite_eq_right hlt, sub_zero]
   have hφk1 : red ⟨φ ((1 : ℕ) : ZMod f), hφA 1⟩ = 1 := by
     have e0 : (⟨φ ((1 : ℕ) : ZMod f), hφA 1⟩ : A) = 1 := Subtype.ext (by simp)
     rw [e0, map_one]

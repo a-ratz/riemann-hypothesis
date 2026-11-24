@@ -79,8 +79,8 @@ theorem multilinear_translates_zero : ∀ (ι : Type) [Fintype ι] (H : ι → T
         intro j x
         rw [MultilinearMap.toLinearMap_apply, mul_assoc, ← hnorm]
         exact hL _
-      have hden : DenseRange (Sm a).subtypeL := (hd a).denseRange_val
-      have hui : IsUniformInducing (Sm a).subtypeL := isUniformEmbedding_subtype_val.isUniformInducing
+      have hden : DenseRange (Sm a).subtypeL := (hd a).denseRange_subtypeVal
+      have hui : IsUniformInducing (Sm a).subtypeL := isUniformEmbedding_subtypeVal.isUniformInducing
       let Λ : Fin n → (H a →L[ℂ] ℂ) := fun j =>
         (c j * ∏ i ∈ s, ⟪φ i, (v j i : H i)⟫_ℂ) •
           ((L.toLinearMap (s.piecewise u (w j g)) a).mkContinuous _ (hbd j)).extend (Sm a).subtypeL

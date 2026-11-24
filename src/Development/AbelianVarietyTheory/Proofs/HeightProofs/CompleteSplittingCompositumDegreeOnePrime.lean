@@ -171,7 +171,7 @@ theorem ncard_over_congr {K M M' : Type} [Field K] [NumberField K] [Field M] [Nu
       rwa [Ideal.map_comap_of_surjective φ φ.surjective, Ideal.map_bot] at h')⟩ : HeightOneSpectrum (𝓞 M)))
     ?_ ?_ ?_
   · intro Q hQ
-    simp only [Set.mem_setOf_eq] at hQ ⊢
+    simp only [Set.mem_ofPred_eq] at hQ ⊢
     rw [hcomp, hQ]
   · intro Q₁ Q₂ _ _ h
     apply HeightOneSpectrum.ext
@@ -181,7 +181,7 @@ theorem ncard_over_congr {K M M' : Type} [Field K] [NumberField K] [Field M] [Nu
     refine ⟨⟨Q.asIdeal.comap φ.symm, Ideal.comap_isPrime φ.symm Q.asIdeal, fun h => Q.ne_bot (by
       have h' := congrArg (Ideal.map φ.symm) h
       rwa [Ideal.map_comap_of_surjective φ.symm φ.symm.surjective, Ideal.map_bot] at h')⟩, ?_, ?_⟩
-    · simp only [Set.mem_setOf_eq] at hQ ⊢
+    · simp only [Set.mem_ofPred_eq] at hQ ⊢
       rw [← hQ, ← hcomp]
       congr 1
       ext x
@@ -202,21 +202,21 @@ theorem ncard_eq_finrank_of_generated (K L M M' : Type) [Field K] [NumberField K
     {Q : HeightOneSpectrum (𝓞 M') | Q.asIdeal.comap (algebraMap (𝓞 L) (𝓞 M')) = 𝔓.asIdeal}.ncard =
       Module.finrank L M' := by
   classical
-  haveI : IsGalois K (AlgebraicClosure M') := IsAlgClosure.isGalois K _
+  have : IsGalois K (AlgebraicClosure M') := IsAlgClosure.isGalois K _
   set N : IntermediateField K (AlgebraicClosure M') :=
     IntermediateField.normalClosure K M' (AlgebraicClosure M') with hN
-  haveI : FiniteDimensional K N := normalClosure.is_finiteDimensional K M' (AlgebraicClosure M')
-  haveI : IsGalois K N := IsGalois.normalClosure K M' (AlgebraicClosure M')
-  haveI : IsScalarTower ℚ K N := IsScalarTower.of_algebraMap_eq (fun x => by
+  have : FiniteDimensional K N := normalClosure.is_finiteDimensional K M' (AlgebraicClosure M')
+  have : IsGalois K N := IsGalois.normalClosure K M' (AlgebraicClosure M')
+  have : IsScalarTower ℚ K N := IsScalarTower.of_algebraMap_eq (fun x => by
     rw [eq_ratCast (algebraMap ℚ N), eq_ratCast (algebraMap ℚ K), map_ratCast])
-  haveI : FiniteDimensional ℚ N := Module.Finite.trans K N
-  haveI : NumberField N := NumberField.mk
-  letI : Algebra L N := ((algebraMap M' N).comp (algebraMap L M')).toAlgebra
-  haveI : IsScalarTower L M' N := IsScalarTower.of_algebraMap_eq' rfl
-  haveI : IsScalarTower K L N := IsScalarTower.of_algebraMap_eq (fun x => by
+  have : FiniteDimensional ℚ N := Module.Finite.trans K N
+  have : NumberField N := NumberField.mk
+  let : Algebra L N := ((algebraMap M' N).comp (algebraMap L M')).toAlgebra
+  have : IsScalarTower L M' N := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower K L N := IsScalarTower.of_algebraMap_eq (fun x => by
     show algebraMap K N x = algebraMap M' N (algebraMap L M' (algebraMap K L x))
     rw [← IsScalarTower.algebraMap_apply K L M', ← IsScalarTower.algebraMap_apply K M' N])
-  haveI : IsGalois L N := IsGalois.tower_top_of_isGalois K L N
+  have : IsGalois L N := IsGalois.tower_top_of_isGalois K L N
   let ι : M' →ₐ[L] N := IsScalarTower.toAlgHom L M' N
   let g : M →ₐ[K] N := (IsScalarTower.toAlgHom K M' N).comp f
   have h1 : {Q : HeightOneSpectrum (𝓞 g.fieldRange) |
@@ -247,11 +247,11 @@ theorem ncard_eq_finrank_of_generated (K L M M' : Type) [Field K] [NumberField K
 
 theorem ncard_eq_finrank_adjoin : ∀ (K L : IntermediateField ℚ ℂ) [NumberField K] [NumberField L] (h : K ≤ L) (S : Set ℂ) [NumberField (IntermediateField.adjoin K S)] [NumberField (IntermediateField.adjoin L S)] (𝔭 : HeightOneSpectrum (𝓞 K)) (𝔓 : HeightOneSpectrum (𝓞 L)), 𝔓.asIdeal.comap (RingOfIntegers.mapRingHom (IntermediateField.inclusion h).toRingHom) = 𝔭.asIdeal → Ideal.absNorm 𝔓.asIdeal = Ideal.absNorm 𝔭.asIdeal → {Q : HeightOneSpectrum (𝓞 (IntermediateField.adjoin K S)) | Q.asIdeal.comap (algebraMap (𝓞 K) (𝓞 (IntermediateField.adjoin K S))) = 𝔭.asIdeal}.ncard = Module.finrank K (IntermediateField.adjoin K S) → {Q : HeightOneSpectrum (𝓞 (IntermediateField.adjoin L S)) | Q.asIdeal.comap (algebraMap (𝓞 L) (𝓞 (IntermediateField.adjoin L S))) = 𝔓.asIdeal}.ncard = Module.finrank L (IntermediateField.adjoin L S) := by
   intro K L _ _ h S _ _ 𝔭 𝔓 hover hnorm hsplit
-  letI : Algebra K L := (IntermediateField.inclusion h).toRingHom.toAlgebra
-  haveI : IsScalarTower K L ℂ := IsScalarTower.of_algebraMap_eq (fun x => rfl)
-  letI : Algebra K (IntermediateField.adjoin L S) :=
+  let : Algebra K L := (IntermediateField.inclusion h).toRingHom.toAlgebra
+  have : IsScalarTower K L ℂ := IsScalarTower.of_algebraMap_eq (fun x => rfl)
+  let : Algebra K (IntermediateField.adjoin L S) :=
     ((algebraMap L (IntermediateField.adjoin L S)).comp (algebraMap K L)).toAlgebra
-  haveI : IsScalarTower K L (IntermediateField.adjoin L S) := IsScalarTower.of_algebraMap_eq' rfl
+  have : IsScalarTower K L (IntermediateField.adjoin L S) := IsScalarTower.of_algebraMap_eq' rfl
   have hle : IntermediateField.adjoin K S ≤ (IntermediateField.adjoin L S).restrictScalars K :=
     IntermediateField.adjoin_le_iff.mpr (fun z hz => IntermediateField.subset_adjoin L S hz)
   let f : IntermediateField.adjoin K S →ₐ[K] IntermediateField.adjoin L S :=

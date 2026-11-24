@@ -90,7 +90,7 @@ def bc : NablaT O N lam →ₛₗ[φ] NablaT K N lam :=
 
 theorem bc_tprod (m : ∀ τ, dualWeyl O N N (res N (lam τ))) :
     bc φ N lam (PiTensorProduct.tprod O m) = PiTensorProduct.tprod K fun τ => dwMap φ N _ (m τ) := by
-  letI : Module O (NablaT K N lam) := Module.compHom _ φ
+  let : Module O (NablaT K N lam) := Module.compHom _ φ
   exact PiTensorProduct.lift.tprod m
 
 end Tensor
@@ -128,7 +128,7 @@ theorem linInd_mapRange {O K P : Type} [CommRing O] [IsDomain O] [Field K] (φ :
     (hφ : Function.Injective φ) {n : ℕ} {y : Fin n → P →₀ O} (hy : LinearIndependent O y) :
     LinearIndependent K (fun a => Finsupp.mapRange φ φ.map_zero (y a)) := by
   classical
-  letI : Algebra (FractionRing O) K := (IsFractionRing.lift hφ).toAlgebra
+  let : Algebra (FractionRing O) K := (IsFractionRing.lift hφ).toAlgebra
   let Lq : (P →₀ O) →ₗ[O] (P →₀ FractionRing O) := Finsupp.mapRange.linearMap (Algebra.linearMap O (FractionRing O))
   have h1 : LinearIndependent O fun a => Lq (y a) :=
     hy.map' Lq (LinearMap.ker_eq_bot.2 fun a b hab => Finsupp.ext fun p =>
@@ -185,7 +185,7 @@ variable {O K : Type} [CommRing O] [IsDomain O] [Field K] (φ : O →+* K) (N : 
 theorem exists_bases (hφ : Function.Injective φ) (ν : Fin N → ℕ) :
     ∃ (P : Type) (_ : Finite P) (BO : Module.Basis P O (dualWeyl O N N ν))
       (BK : Module.Basis P K (dualWeyl K N N ν)), ∀ p, dwMap φ N ν (BO p) = BK p := by
-  letI : Algebra O K := φ.toAlgebra
+  let : Algebra O K := φ.toAlgebra
   obtain ⟨b, hb, -⟩ := sSBasis O N N ν
   have hK := Formalism.GradedWeylDivisibility.ldlat_linInd_base (K := K) hφ hb.1
   have hsK := Formalism.GradedWeylDivisibility.span_map_weightBasis_eq_dualWeyl (K := K) hb

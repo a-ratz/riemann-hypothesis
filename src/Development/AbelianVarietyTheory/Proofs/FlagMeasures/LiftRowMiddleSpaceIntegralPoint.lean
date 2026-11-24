@@ -311,29 +311,29 @@ theorem lift_row : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       congr 1
       funext i
       simp [hy]
-    rw [hent w, if_neg (nEW a j), if_neg (nWS j a), if_pos rfl, hlt w j, hAy]
+    rw [hent w, ite_eq_right (nEW a j), ite_eq_right (nWS j a), ite_eq_left rfl, hlt w j, hAy]
     simp [herm, Matrix.mulVec_neg, star_neg]
   · rcases β with p | b | p | b
     · change gM A _ w (eI k r p.1.1) (eI k r p.1.2) = 0
       have hne : p.1.1 ≠ p.1.2 := p.2.ne
       have h1 : eI k r p.1.2 ≠ esI k r a := nES _ _
-      rw [hent w, if_neg (nEE _ _ hne), if_neg h1, herm_bvec_eI, hzS]
+      rw [hent w, ite_eq_right (nEE _ _ hne), ite_eq_right h1, herm_bvec_eI, hzS]
       simp
     · have hba : b ≠ a := fun h => hβ (by rw [h])
       show (fun j => gM A _ w (eI k r b) (wI k r j)) = (0 : Fin (k + 1) → ℂ)
       funext j
-      rw [hent w, if_neg (nEW b j), if_neg (nWS j a), if_neg (nEE _ _ hba)]
+      rw [hent w, ite_eq_right (nEW b j), ite_eq_right (nWS j a), ite_eq_right (nEE _ _ hba)]
       simp
     · change gM A _ w (eI k r p.1.1) (esI k r p.1.2) = 0
       have hh : herm (Hpk k r) (bvec (esI k r p.1.2)) ((A w).mulVec fun l => w.embedding (y l)) = 0 := by
         rw [herm_bvec_esI, hzE]
         simp
-      rw [hent w, if_neg (nES _ _), hh]
+      rw [hent w, ite_eq_right (nES _ _), hh]
       by_cases h2 : p.1.2 = a
       · have h1 : p.1.1 ≠ a := h2 ▸ p.2.ne
-        rw [h2, if_pos rfl, if_neg (nEE _ _ h1), hzE]
+        rw [h2, ite_eq_left rfl, ite_eq_right (nEE _ _ h1), hzE]
         simp
-      · rw [if_neg (nSS _ _ h2)]
+      · rw [ite_eq_right (nSS _ _ h2)]
         simp
     · change (gM A _ w (eI k r b) (esI k r b)).im = 0
       have hba : b ≠ a := by
@@ -341,7 +341,7 @@ theorem lift_row : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
         change 2 * r - 2 * b.val ≤ r - b.val at hdeg
         have := b.isLt
         omega
-      rw [hent w, if_neg (nES _ _), if_neg (nSS _ _ hba), if_neg (nEE _ _ hba)]
+      rw [hent w, ite_eq_right (nES _ _), ite_eq_right (nSS _ _ hba), ite_eq_right (nEE _ _ hba)]
       simp
 
 end GlobalTheory.SnMass.VolN.RowLift

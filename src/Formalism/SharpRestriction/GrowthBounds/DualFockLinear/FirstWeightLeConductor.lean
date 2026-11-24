@@ -191,8 +191,8 @@ private theorem not_isUnit_p_of_hidaSetting {p n' : ℕ} {W Qq O Kf : Type} [Com
     {ι : Qq →+* Kf} {σ : Qq ≃+* Qq} {j : W →+* O} {w : O} (hS : HidaSetting p n' W Qq O Kf ι σ j w) :
     ¬ IsUnit ((p : ℕ) : O) := by
   intro hu
-  letI : Algebra W O := j.toAlgebra
-  haveI : Module.Finite W O := hS.finite
+  let : Algebra W O := j.toAlgebra
+  have : Module.Finite W O := hS.finite
   have hfg : (⊤ : Submodule W O).FG := Module.Finite.fg_top
   have hpm : Ideal.span {((p : ℕ) : W)} ≤ IsLocalRing.maximalIdeal W := by
     rw [Ideal.span_le, Set.singleton_subset_iff]
@@ -213,12 +213,12 @@ private theorem not_isUnit_p_of_hidaSetting {p n' : ℕ} {W Qq O Kf : Type} [Com
 
 theorem formCoreSKX_of (h : FormCoreGX) : FormCoreSKX := by
   intro p n' W Qq O Kf _ _ _ _ _ _ _ _ _ _ ι σ j w hS m lam hlam
-  haveI : Fact p.Prime := ⟨hS.prime⟩
-  haveI := hS.frac_O
-  haveI := hS.frac_alt
-  haveI : CharZero W := charZero_of_irreducible_natCast hS.prime hS.p_unif
-  haveI : CharZero Qq := charZero_of_injective_algebraMap (IsFractionRing.injective W Qq)
-  haveI : CharZero Kf := charZero_of_injective_ringHom ι.injective
+  have : Fact p.Prime := ⟨hS.prime⟩
+  have := hS.frac_O
+  have := hS.frac_alt
+  have : CharZero W := charZero_of_irreducible_natCast hS.prime hS.p_unif
+  have : CharZero Qq := charZero_of_injective_algebraMap (IsFractionRing.injective W Qq)
+  have : CharZero Kf := charZero_of_injective_ringHom ι.injective
   obtain ⟨B, hc, hrow, hnd, hint, hbd, hzero⟩ :=
     h p O Kf (not_isUnit_p_of_hidaSetting hS) (m + 1) (m + 1) le_rfl (nuOf lam) (nuOf_antitone hlam)
   refine ⟨B, hc, hrow, hnd, hint, ?_⟩
@@ -228,7 +228,7 @@ theorem formCoreSKX_of (h : FormCoreGX) : FormCoreSKX := by
     rw [hE, pow_zero, one_smul]
     exact hzero (fun t => by have := nuOf_le_ellWt hlam t; omega) Q hQ P hP
   · have hE : expN p m lam = sExp p (m + 1) (ellWt lam) := by
-      simp only [expN, if_neg h0, sExp, N0, deF]
+      simp only [expN, ite_eq_right h0, sExp, N0, deF]
     rw [hE]
     exact hbd _ (Or.inl (nuOf_le_ellWt hlam)) Q hQ P hP
 
@@ -519,7 +519,7 @@ theorem test_side_explicit_identification : Formalism.MainNotions.TestSideCounti
     unfold Vsp
     congr 1
     funext s
-    rw [if_pos (hanti s)]
+    rw [ite_eq_left (hanti s)]
   obtain ⟨Ψ, hform, hΨ⟩ := ten_sideX O Kf p lam0 hd (fun s => expN p m (lamAt lam0 s)) β hβ cs hcs (Vsp Kf lam0) hV
   have hκ : (p : Kf) ^ ((kap1 p lam0 : ℕ) : ℤ) = (p : Kf) ^ (∑ s, expN p m (lamAt lam0 s)) := by
     rw [zpow_natCast]
@@ -680,7 +680,7 @@ theorem opFAt_of_ten (hT : TenOp) {p n' : ℕ} {W Qq O Kf : Type} [CommRing W] [
     unfold Vsp
     congr 1
     funext t
-    rw [if_pos (hanti t)]
+    rw [ite_eq_left (hanti t)]
   obtain ⟨L, a, hL, hmain⟩ := hT Kf n' m hm (vecE n') TT d c0 (fun t => nuOf (lamAt rest t))
     (fun t => Formalism.L2.G.Model.TS.nuOf_antitone (hanti t)) h0 h1 β (hV ▸ β.2) s (hV ▸ s.2)
   set A : Fin n' → Matrix (Fin (m + 1)) (Fin (m + 1)) Kf := fun x => Aa (vecE n' x) (la_tw ι σ x.val hmat)⁻¹ with hA

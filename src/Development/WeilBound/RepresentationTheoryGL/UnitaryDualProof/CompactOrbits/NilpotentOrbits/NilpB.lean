@@ -317,7 +317,7 @@ theorem phiP [CharZero k] : PhiP (k := k) := by
   have hΦ : ∀ f ∈ supportedIn (Set.univ : Set (Sp k n)), Φ f = phi0 ψ ν hZ h f := by
     intro f hf
     have e1 : (supportedIn (Set.univ : Set (Sp k n))).projectionOnto q hq f = ⟨f, hf⟩ :=
-      Submodule.linearProjOfIsCompl_apply_left hq ⟨f, hf⟩
+      Submodule.projectionOnto_apply_left hq ⟨f, hf⟩
     simp only [Φ, LinearMap.comp_apply, e1]
     rfl
   let κ : ℂ := (((distribHaarChar k (GeneralLinearGroup.det (Gu hZ h)) : NNReal) : ℝ) : ℂ)⁻¹ *
@@ -573,7 +573,7 @@ theorem reps [CharZero k] : Reps (k := k) := by
   have hb : ∀ (p : S) (m : M) (ℓ σ : ℕ),
       Nat.card {a : (F p).ι m // (F p).l m a = ℓ ∧ (F p).s m a = σ} < n + 1 := by
     intro p m ℓ σ
-    haveI := (F p).fι m
+    have := (F p).fι m
     exact Nat.lt_succ_of_le ((Finite.card_subtype_le _).trans ((F p).card_le m))
   let τ : S → M → Fin (n + 1) → Fin (n + 1) → Fin (n + 1) := fun p m ℓ σ =>
     ⟨Nat.card {a : (F p).ι m // (F p).l m a = ℓ.1 ∧ (F p).s m a = σ.1}, hb p m ℓ σ⟩
@@ -885,14 +885,14 @@ theorem stepMod_pf (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
     [CharZero k] : StepMod (k := k) := by
   intro n Z hZ t p g hg hgp hp2 K hKG hKo hKc L hLo hLK hLn hLn' C U hC hU hUC hCinv hCsig ξ hξ hξC
   classical
-  haveI : T2Space (SpT k n) := t2Sp
-  haveI : LocallyCompactSpace (SpT k n) := lcSp
-  haveI : TotallyDisconnectedSpace (SpT k n) := tdSp
-  haveI : ContinuousSMul (GL (Fin n) k) (SpT k n) := contSMul
-  haveI : LocallyCompactSpace (GzS Z) := lcH Z
-  haveI : TotallyDisconnectedSpace (GzS Z) := tdH Z
-  haveI : SigmaCompactSpace (GzS Z) := scH Z
-  haveI : ContinuousSMul (GzS Z) (SpT k n) := contSMulH Z
+  have : T2Space (SpT k n) := t2Sp
+  have : LocallyCompactSpace (SpT k n) := lcSp
+  have : TotallyDisconnectedSpace (SpT k n) := tdSp
+  have : ContinuousSMul (GL (Fin n) k) (SpT k n) := contSMul
+  have : LocallyCompactSpace (GzS Z) := lcH Z
+  have : TotallyDisconnectedSpace (GzS Z) := tdH Z
+  have : SigmaCompactSpace (GzS Z) := scH Z
+  have : ContinuousSMul (GzS Z) (SpT k n) := contSMulH Z
 
   let gH : GzS Z := ⟨g, hg⟩
   set K' : Subgroup (GL (Fin n) k) := K.map (MulAut.conj g).toMonoidHom with hK'def
@@ -927,7 +927,7 @@ theorem stepMod_pf (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
   have hU₁o : IsOpen U₁ := by
     have e : U₁ = UU ∩ ⋃ h : GzS Z, (fun q => act (h : GL (Fin n) k) q) ⁻¹' U := by
       ext q
-      simp only [U₁, UU, Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iUnion, Set.mem_preimage]
+      simp only [U₁, UU, Set.mem_ofPred_eq, Set.mem_inter_iff, Set.mem_iUnion, Set.mem_preimage]
       constructor
       · rintro ⟨h2, h, hh, hq⟩
         exact ⟨h2, ⟨h, hh⟩, hq⟩

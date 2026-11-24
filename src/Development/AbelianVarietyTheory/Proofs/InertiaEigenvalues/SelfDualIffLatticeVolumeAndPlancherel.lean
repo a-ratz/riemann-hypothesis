@@ -71,17 +71,17 @@ theorem isLC_indicator_one {X : Type} [TopologicalSpace X] (s : Set X) (h : IsCl
   rw [Set.indicator_preimage, Set.ite]
   refine (IsOpen.inter ?_ h.isOpen).union ?_
   · rw [Set.preimage_const]; split_ifs <;> simp
-  · rw [Set.diff_eq]
+  · rw [Set.sdiff_eq]
     refine IsOpen.inter ?_ h.isClosed.isOpen_compl
     change IsOpen ((fun _ : X => (0:ℂ)) ⁻¹' B)
     rw [Set.preimage_const]; split_ifs <;> simp
 
 theorem topo : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (V : Type) [AddCommGroup V] [Module F V] [Module.Finite F V] [TopologicalSpace V] [IsModuleTopology F V], LocallyCompactSpace V ∧ SecondCountableTopology V ∧ T2Space V ∧ IsTopologicalAddGroup V := by
   intro F E _ _ _ _ _ V _ _ _ _ _
-  haveI := (inferInstance : Unram F E).lcF
-  haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  haveI : ContinuousAdd V := IsModuleTopology.toContinuousAdd F V
-  haveI : ContinuousNeg V := ⟨by
+  have := (inferInstance : Unram F E).lcF
+  have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
+  have : ContinuousAdd V := IsModuleTopology.toContinuousAdd F V
+  have : ContinuousNeg V := ⟨by
     have := IsModuleTopology.continuous_of_linearMap (R := F) (A := V) (B := V) (-LinearMap.id)
     exact this⟩
   let e : V ≃ₗ[F] (Fin (Module.finrank F V) → F) := (Module.finBasis F V).equivFun
@@ -97,7 +97,7 @@ theorem orth : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
   · rw [Set.indicator_of_mem hy, setIntegral_congr_fun hMo.measurableSet (fun x hx => hy x hx)]
     simp [Measure.real]
   · rw [Set.indicator_of_notMem hy]
-    simp only [Set.mem_setOf_eq, not_forall] at hy
+    simp only [Set.mem_ofPred_eq, not_forall] at hy
     obtain ⟨x0, hx0, hne⟩ := hy
     have ht := integral_add_left_eq_self (μ := μ) (fun x => (M : Set V).indicator (fun x => ψ (β x y)) x) x0
     have hpt : ∀ x, (M : Set V).indicator (fun x => ψ (β x y)) (x0 + x) =
@@ -118,7 +118,7 @@ theorem orth : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
     · exact h
 theorem planch : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (V : Type) [AddCommGroup V] [Module F V] [Module.Finite F V] [TopologicalSpace V] [IsModuleTopology F V] [MeasurableSpace V] [BorelSpace V] [LocallyCompactSpace V] [SecondCountableTopology V] [T2Space V] [IsTopologicalAddGroup V] (β : LinearMap.BilinForm F V), β.IsSymm → β.Nondegenerate → ∀ μ : Measure V, SelfDual μ (fun x y => ψ (β x y)) → ∀ f, IsTest f → ∫ y, ‖fourB μ (fun x y => ψ (β x y)) f y‖ ^ 2 ∂μ = ∫ x, ‖f x‖ ^ 2 ∂μ := by
   intro F E _ _ _ _ _ ψ hψ V _ _ _ _ _ _ _ _ _ _ _ β hβs hβn μ hsd f hf
-  haveI := hsd.1
+  have := hsd.1
   have hψ' := (_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ
   have hI := _root_.GlobalTheory.JR.SelfDualUniq.selfDual_exists_unique_isTest F E ψ hψ V β hβs hβn
   set B : V → V → ℂ := fun x y => ψ (β x y) with hB
@@ -179,12 +179,12 @@ open GlobalTheory.JR.SelfDualLat in
 theorem GlobalTheory.JR.selfDual_iff_lattice_volume_and_plancherel : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (ψ : AddChar F ℂ), IsStdChar ψ → ∀ (V : Type) [AddCommGroup V] [Module F V] [Module.Finite F V] [TopologicalSpace V] [IsModuleTopology F V] [MeasurableSpace V] [BorelSpace V] (β : LinearMap.BilinForm F V), β.IsSymm → β.Nondegenerate → ∀ μ : Measure V, μ.IsAddHaarMeasure → (∀ M : AddSubgroup V, IsOpen (M : Set V) → IsCompact (M : Set V) → (SelfDual μ (fun x y => ψ (β x y)) ↔ μ M * μ {y | ∀ x ∈ M, ψ (β x y) = 1} = 1) ∧ ∀ y, ∫ x in (M : Set V), ψ (β x y) ∂μ = Set.indicator {y | ∀ x ∈ M, ψ (β x y) = 1} (fun _ => ((μ M).toReal : ℂ)) y) ∧ (SelfDual μ (fun x y => ψ (β x y)) → ∀ f, IsTest f → ∫ y, ‖fourB μ (fun x y => ψ (β x y)) f y‖ ^ 2 ∂μ = ∫ x, ‖f x‖ ^ 2 ∂μ) := by
   intro F E _ _ _ _ _ ψ hψ V _ _ _ _ _ _ _ β hβs hβn μ hμ
   obtain ⟨hLC, hSC, hT2, hTG⟩ := topo F E V
-  haveI := hLC; haveI := hSC; haveI := hT2; haveI := hTG
+  have := hLC; have := hSC; have := hT2; have := hTG
   have hI := _root_.GlobalTheory.JR.SelfDualUniq.selfDual_exists_unique_isTest F E ψ hψ V β hβs hβn
   have fwd : ∀ ν : Measure V, SelfDual ν (fun x y => ψ (β x y)) → ∀ M : AddSubgroup V, IsOpen (M : Set V) →
       IsCompact (M : Set V) → ν M * ν {y | ∀ x ∈ M, ψ (β x y) = 1} = 1 := by
     intro ν hν M hMo hMc
-    haveI := hν.1
+    have := hν.1
     set P : Set V := {y | ∀ x ∈ M, ψ (β x y) = 1} with hP
     set g : V → ℂ := (M : Set V).indicator (fun _ => 1) with hg
     have hMcl : IsClosed (M : Set V) := AddSubgroup.isClosed_of_isOpen M hMo
@@ -226,12 +226,12 @@ theorem GlobalTheory.JR.selfDual_iff_lattice_volume_and_plancherel : ∀ (F E : 
   refine ⟨fun M hMo hMc => ⟨⟨fun hsd => fwd μ hsd M hMo hMc, fun h => ?_⟩, orth F E ψ hψ V β μ hμ M hMo hMc⟩,
     fun hsd f hf => planch F E ψ hψ V β hβs hβn μ hsd f hf⟩
   obtain ⟨⟨μ0, hμ0, -⟩, -⟩ := hI
-  haveI := hμ0.1
+  have := hμ0.1
   have hsc : μ = Measure.addHaarScalarFactor μ μ0 • μ0 := Measure.isAddLeftInvariant_eq_smul μ μ0
   set c := Measure.addHaarScalarFactor μ μ0 with hcdef
   have h0 := fwd μ0 hμ0 M hMo hMc
   rw [hsc] at h
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul] at h
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul] at h
   have hcc : ((c * c : NNReal) : ENNReal) = 1 := by
     calc ((c * c : NNReal) : ENNReal) = (c : ENNReal) * c * (μ0 M * μ0 {y | ∀ x ∈ M, ψ (β x y) = 1}) := by
           rw [h0, mul_one, ENNReal.coe_mul]

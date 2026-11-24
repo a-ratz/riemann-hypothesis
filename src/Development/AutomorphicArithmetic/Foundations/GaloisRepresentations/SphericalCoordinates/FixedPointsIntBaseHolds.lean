@@ -195,13 +195,13 @@ private theorem exists_coords {K C V : Type} [Field K] [Ring C] [Algebra K C] [A
     (hdim : Module.finrank ℚ V = n * Module.finrank ℚ K) :
     ∃ (kp : V ≃+ (Fin n → K)) (σ : C ≃ₐ[K] Matrix (Fin n) (Fin n) K), ∀ c w, kp (rep c w) = σ c *ᵥ kp w := by
   let f : K →+* Module.End ℚ V := (rep : C →+* Module.End ℚ V).comp (algebraMap K C)
-  letI : Module K V := Module.compHom V f
+  let : Module K V := Module.compHom V f
   have hsm : ∀ (x : K) (w : V), x • w = rep (algebraMap K C x) w := fun _ _ => rfl
-  haveI : IsScalarTower ℚ K V := by
+  have : IsScalarTower ℚ K V := by
     refine ⟨fun q x w => ?_⟩
     rw [hsm, hsm, ← IsScalarTower.toAlgHom_apply ℚ K C, map_smul, map_smul]
     rfl
-  haveI : Module.Finite K V := Module.Finite.of_restrictScalars_finite ℚ K V
+  have : Module.Finite K V := Module.Finite.of_restrictScalars_finite ℚ K V
   have hfin : Module.finrank K V = n := by
     have h := Module.finrank_mul_finrank ℚ K V
     have hpos : 0 < Module.finrank ℚ K := Module.finrank_pos
@@ -240,8 +240,8 @@ private theorem exists_coords {K C V : Type} [Field K] [Ring C] [Algebra K C] [A
 theorem UpperTheory.Gal.W2.fMat_of :
     UpperTheory.Gal.W2.FMat := by
   intro p _ D G L hm
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   have hK : Module.finrank ℚ G.F = Module.finrank ℚ D.F :=
     ((AlgEquiv.ofRingEquiv (f := L.e) (fun q => map_ratCast L.e q)).toLinearEquiv.finrank_eq).symm
   have hdim : Module.finrank ℚ (VQ D) = G.n * Module.finrank ℚ G.F := by
@@ -752,12 +752,12 @@ theorem gUnif_of : ModelEx → GenCmp → GenPts → BaseC → GFine → GUnif :
   have hsq : (j ≫ pullback.fst M.s (spMap (RingHom.id ℂ))) ≫ M.s = X.s := by
     rw [Category.assoc, pullback.condition, ← Category.assoc, hjs, hid, Category.comp_id]
   obtain ⟨hX, hL', hXf⟩ := hF p D b gb N M X ρ h hL _ hsq hjG hpts hfine
-  haveI := hjo
-  haveI := hjc
+  have := hjo
+  have := hjc
   have hsm : SmoothOfRelativeDimension (D.n - 1) X.s := by
     have h1 : SmoothOfRelativeDimension (D.a * (D.n - 1)) M.s := M.smooth
     rw [ha, Nat.one_mul] at h1
-    haveI : SmoothOfRelativeDimension (D.n - 1) (pullback.snd M.s (spMap (RingHom.id ℂ))) :=
+    have : SmoothOfRelativeDimension (D.n - 1) (pullback.snd M.s (spMap (RingHom.id ℂ))) :=
       (smoothOfRelativeDimension_isStableUnderBaseChange (D.n - 1)).of_isPullback
         (IsPullback.of_hasPullback _ _) h1
     have h3 : SmoothOfRelativeDimension (0 + (D.n - 1))
@@ -765,14 +765,14 @@ theorem gUnif_of : ModelEx → GenCmp → GenPts → BaseC → GFine → GUnif :
     rw [Nat.zero_add, hjs] at h3
     exact h3
   have hqc : QuasiCompact X.s := by
-    haveI : QuasiCompact M.s := quasiCompact_of_qProj M.qproj
+    have : QuasiCompact M.s := quasiCompact_of_qProj M.qproj
     rw [← hjs]
     infer_instance
   have hsep : IsSeparated X.s := by
-    haveI : IsSeparated M.s := by
+    have : IsSeparated M.s := by
       obtain ⟨K, i, hi, -, hiK⟩ := M.qproj
-      haveI := hi
-      haveI := isProper_str ℂ K
+      have := hi
+      have := isProper_str ℂ K
       rw [← hiK]
       infer_instance
     rw [← hjs]
@@ -1225,8 +1225,8 @@ private theorem equiv_of_spans {V A B : Type} [AddCommGroup V] [Module ℚ V] [F
 theorem UpperTheory.Gal.W2.perExt_of :
     UpperTheory.Gal.W2.PerExt := by
   intro p _ D G L A β ρ Q hQ
-  haveI : Module.Finite ℤ D.La := D.finLa
-  haveI : Module.Finite ℚ (VQ D) := Module.Finite.base_change ℤ ℚ D.La
+  have : Module.Finite ℤ D.La := D.finLa
+  have : Module.Finite ℚ (VQ D) := Module.Finite.base_change ℤ ℚ D.La
   refine equiv_of_spans A.th Q A.span hQ.2.1 A.dim ?_
   rw [← A.dim, A.dimg]
   simp [Module.finrank_pi_fintype, Complex.finrank_real_complex, mul_comm]
@@ -1416,14 +1416,14 @@ theorem UpperTheory.Gal.W2.placeT_of :
       have hx : ∀ x, v.embedding (L.e x) = t₀ x := fun x => by rw [h]; exact hφ x
       refine ⟨?_, hx⟩
       unfold sgnV
-      rw [if_pos (by rw [hx, hρ])]
+      rw [ite_eq_left (by rw [hx, hρ])]
     · right
       have hx : ∀ x, v.embedding (L.e x) = (starRingEnd ℂ) (t₀ x) := fun x => by
         rw [h, ComplexEmbedding.conjugate_coe_eq, hφ]
       have hω : v.embedding (L.e (D.ω : D.F)) ≠ D.ρc := by rw [hx, hρ]; exact hne
       refine ⟨?_, fun hall => hω (by rw [hall, hρ]), fun x => by rw [hx, Complex.conj_conj]⟩
       unfold sgnV
-      rw [if_neg hω]
+      rw [ite_eq_right hω]
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.PPlaceT =====
@@ -1487,7 +1487,7 @@ theorem UpperTheory.Gal.W2.powSm_of :
   refine ⟨hsm, ?_, ?_, ?_⟩
   · infer_instance
   · infer_instance
-  · haveI : Smooth ((KS.pow A k).hom ≫ s) := hsm.smooth
+  · have : Smooth ((KS.pow A k).hom ≫ s) := hsm.smooth
     infer_instance
 end -- clump:auto
 end -- clump:auto
@@ -1782,7 +1782,7 @@ theorem UpperTheory.Gal.W2.rigid_of :
     refine GlobalTheory.ExpUnique.end_eq_one_of_invariant D'.La σw (fun a b hab => w.injective hab)
       (fun a => (hermForm Hm (P a) (P a)).re) (fun c => ?_) (fun a => ?_) N hN fun a => ?_
     · refine Set.Finite.of_finite_image (f := P) ((Metric.finite_isBounded_inter_isClosed
-        (s := P.range) DiscreteTopology.isDiscrete (hbd c) AddSubgroup.isClosed_of_discrete).subset ?_) hinj.injOn
+        (s := P.range) DiscreteTopology.isDiscrete (hbd c) AddSubgroup.isClosed_of_discreteTopology).subset ?_) hinj.injOn
       rintro _ ⟨a, ha, rfl⟩
       exact ⟨ha, a, rfl⟩
     · have h1 : h (Complex.I • P a) = Complex.I • h (P a) := map_smul h _ _

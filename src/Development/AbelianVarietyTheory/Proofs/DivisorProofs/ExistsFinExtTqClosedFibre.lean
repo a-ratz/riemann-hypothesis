@@ -122,7 +122,7 @@ theorem exists_cover_step (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (
     ∃ (R' : Type) (_ : CommRing R') (_ : IsDomain R') (_ : IsLocalRing R') (ρ : R →+* R') (_ : IsLocalHom ρ)
       (β : ResidueField R' →+* Ω), GlobalTheory.TorRef.IsCN R' ∧ Function.Injective ρ ∧ ρ.Finite ∧
       β.comp (ResidueField.map ρ) = e₀ ∧ t ∈ Set.range β := by
-  letI : Algebra (ResidueField R) Ω := e₀.toAlgebra
+  let : Algebra (ResidueField R) Ω := e₀.toAlgebra
   have hint : IsIntegral (ResidueField R) t := ⟨q, hq, hqt⟩
   set p := minpoly (ResidueField R) t with hpdef
   have hpm : p.Monic := minpoly.monic hint
@@ -150,13 +150,13 @@ theorem exists_cover_step (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (
     rw [← hPmap, Polynomial.eval₂_map, hres, ← hσ]
     show Polynomial.eval₂ (((residue R').comp σ).comp (AdjoinRoot.of P)) (((residue R').comp σ) (AdjoinRoot.root P)) P = 0
     rw [← Polynomial.hom_eval₂, AdjoinRoot.eval₂_root, map_zero]
-  haveI : Fact (Irreducible p) := ⟨hirr⟩
+  have : Fact (Irreducible p) := ⟨hirr⟩
   let gam : AdjoinRoot p →+* ResidueField R' := AdjoinRoot.lift (ResidueField.map ρ) r hr
   let del : AdjoinRoot p →+* Ω := AdjoinRoot.lift e₀ t hpt
-  letI : Algebra (AdjoinRoot p) (ResidueField R') := gam.toAlgebra
-  letI : Algebra (AdjoinRoot p) Ω := del.toAlgebra
+  let : Algebra (AdjoinRoot p) (ResidueField R') := gam.toAlgebra
+  let : Algebra (AdjoinRoot p) Ω := del.toAlgebra
   have hintR : ρ.IsIntegral := hfin'.to_isIntegral
-  haveI : Algebra.IsIntegral (AdjoinRoot p) (ResidueField R') := by
+  have : Algebra.IsIntegral (AdjoinRoot p) (ResidueField R') := by
     constructor
     intro y
     obtain ⟨x, rfl⟩ := IsLocalRing.residue_surjective y
@@ -212,9 +212,9 @@ theorem exists_finExt_tq_closedFibre : ∀ (R : Type) [CommRing R] [IsDomain R] 
   intro R _ _ _ hR G _ _ hG
   have hcn : GlobalTheory.TorRef.IsCN R := ⟨hR.1.1, hR.1.2.2.1, hR.1.2.2.2, hR.2⟩
   have h₀ : IsSemiAbelian ((Over.pullback (spMap (residue R))).obj G) := IsSemiAbelian.pullback _ G hG
-  haveI := h₀.smooth
-  haveI := h₀.quasiCompact
-  haveI := h₀.separated
+  have := h₀.smooth
+  have := h₀.quasiCompact
+  have := h₀.separated
   let k := ResidueField R
   let Ω := AlgebraicClosure k
   obtain ⟨T⟩ := h₀.fibres Ω (spMap (algebraMap k Ω))

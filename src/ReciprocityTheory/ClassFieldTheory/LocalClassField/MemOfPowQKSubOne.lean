@@ -54,9 +54,9 @@ variable {p : ℕ} [Fact p.Prime]
 noncomputable def red (x : PadicAlgCl p) : kbar p :=
   open Classical in if h : ‖x‖ ≤ 1 then res ⟨x, mem_Obar_iff.2 h⟩ else 0
 
-theorem red_coe (x : Obar p) : red (x : PadicAlgCl p) = res x := dif_pos (norm_le_one x)
+theorem red_coe (x : Obar p) : red (x : PadicAlgCl p) = res x := dite_eq_left (norm_le_one x)
 
-theorem red_of_le {x : PadicAlgCl p} (h : ‖x‖ ≤ 1) : red x = res ⟨x, mem_Obar_iff.2 h⟩ := dif_pos h
+theorem red_of_le {x : PadicAlgCl p} (h : ‖x‖ ≤ 1) : red x = res ⟨x, mem_Obar_iff.2 h⟩ := dite_eq_left h
 
 theorem red_eq_iff {x y : PadicAlgCl p} (hx : ‖x‖ ≤ 1) (hy : ‖y‖ ≤ 1) : red x = red y ↔ ‖x - y‖ < 1 := by
   rw [red_of_le hx, red_of_le hy, res_eq_iff]
@@ -80,7 +80,7 @@ theorem mem_resK_of_pow (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (hK : Fin
   have := Fintype.ofFinite (resK p K)
   have hq := one_lt_qK K hK
   set P : (kbar p)[X] := X ^ qK p K - X with hP
-  have hP0 : P ≠ 0 := FiniteField.X_pow_card_sub_X_ne_zero hq
+  have hP0 : P ≠ 0 := X_pow_sub_X_ne_zero hq
   have hdeg : P.natDegree = qK p K := Polynomial.natDegree_X_pow_sub_X (R := (kbar p)) hq
   let T : Finset (kbar p) := (Finset.univ : Finset (resK p K)).image Subtype.val
   have hT : T.card = qK p K := by
@@ -104,7 +104,7 @@ theorem mem_resK_of_pow (K : IntermediateField ℚ_[p] (PadicAlgCl p)) (hK : Fin
 
 theorem exists_primitiveRoot {m : ℕ} (hm : m ≠ 0) : ∃ ζ : PadicAlgCl p, IsPrimitiveRoot ζ m := by
   have : NeZero m := ⟨hm⟩
-  exact HasEnoughRootsOfUnity.exists_primitiveRoot (PadicAlgCl p) m
+  exact HasEnoughRootsOfUnity.exists_isPrimitiveRoot (PadicAlgCl p) m
 
 theorem exists_lift_root {m : ℕ} (hm : ¬ p ∣ m) {c : kbar p} (hc : c ^ m = 1) :
     ∃ ζ : PadicAlgCl p, ζ ^ m = 1 ∧ red ζ = c := by

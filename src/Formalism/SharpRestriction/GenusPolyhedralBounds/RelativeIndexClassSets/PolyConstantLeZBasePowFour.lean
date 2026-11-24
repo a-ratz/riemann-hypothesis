@@ -142,7 +142,7 @@ theorem f_le_condE (D : D7) : (D.R.f : ℝ) ≤ (condE D : ℝ) := by
   have h : Module.finrank ℚ D.host.E = 4 * D.R.ord := D.host.der.finrank_E
   have hN : 0 < D.host.QS * D.host.q * D.host.d :=
     Nat.mul_pos (Nat.mul_pos D.host.QS_pos D.host.hyp.1.pos) D.host.hyp.2.1.pos
-  haveI : NeZero (D.host.QS * D.host.q * D.host.d) := ⟨hN.ne'⟩
+  have : NeZero (D.host.QS * D.host.q * D.host.d) := ⟨hN.ne'⟩
   have hinj : Function.Injective D.host.cycEmb.toLinearMap := D.host.cycEmb.toRingHom.injective
   have h1 := LinearMap.finrank_le_finrank_of_injective hinj
   have h2 : Module.finrank ℚ (CyclotomicField (D.host.QS * D.host.q * D.host.d) ℚ) =

@@ -130,7 +130,7 @@ theorem fin_step (hF : MulF) (hkn : k ≤ n) (h : Matrix (Fin n) (Fin n) (Ad E))
     (w : HeightOneSpectrum (𝓞 E)) (h0 : nF ((h * A).map (cW w)) ≠ 0) (h1 : nF (A.map (cW w)) ≠ 0) :
     Real.log (nF ((h * A).map (cW w))) ≤
       n * Real.posLog (⨆ p : Fin n × Fin n, ‖cW w (h p.1 p.2)‖) + Real.log (nF (A.map (cW w))) := by
-  haveI := ultra w
+  have := ultra w
   have hm : (h * A).map (cW w) = h.map (cW w) * A.map (cW w) := Matrix.map_mul
   have hle := (hF (w.adicCompletion E) (Fin n) (Fin n) (Fin k) (A.map (cW w))).1 (h.map (cW w))
   simp only [Fintype.card_fin] at hle

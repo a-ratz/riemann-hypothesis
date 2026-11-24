@@ -49,8 +49,8 @@ namespace UpperTheory.V.Ws
 variable {Ω : Type} [Field Ω] [CharZero Ω] [IsAlgClosure ℚ Ω] {l : ℕ} [Fact l.Prime] {c : Coef l} {D : Raw Ω c}
 
 theorem continuous_resLe {F L : IntermediateField ℚ Ω} (h : F ≤ L) : Continuous (resLe h) := by
-  letI : Algebra F L := (IntermediateField.inclusion h).toRingHom.toAlgebra
-  haveI : IsScalarTower F L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra F L := (IntermediateField.inclusion h).toRingHom.toAlgebra
+  have : IsScalarTower F L Ω := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact Af.continuous_restrictScalarsHom F L Ω
 
 namespace Link

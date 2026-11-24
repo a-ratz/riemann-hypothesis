@@ -61,7 +61,7 @@ theorem penXi_isLocFac_of_allTrue : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.
     GlobalTheory.LocMod.IsLocFac (I.rec7 l Z) (_root_.GlobalTheory.Fam.pk_z W).ψ _ _ (a.pl n).1 ((a.G n).cg (a.G n).s) (_root_.GlobalTheory.Fam.PenLoc.penXi_alt a n) := by
   intro B X I l Z L hT Gi Gl Kc Yd cX ex W hW u a ha hat row col n
   have hR := (ha.tie row col).2
-  letI := (a.G n).fld; letI := (a.G n).val; letI := (a.G n).top; letI := (a.G n).loc; letI := (a.G n).mea; letI := (a.G n).bor
+  let := (a.G n).fld; let := (a.G n).val; let := (a.G n).top; let := (a.G n).loc; let := (a.G n).mea; let := (a.G n).bor
   have hs : (a.G n).s + 1 + 1 = B.R.m := (a.G n).hs
   have hid := (hR.idem n).1
   have hpf := GlobalTheory.LocMod.SymChainAt.place_facts (a.G n).q hid

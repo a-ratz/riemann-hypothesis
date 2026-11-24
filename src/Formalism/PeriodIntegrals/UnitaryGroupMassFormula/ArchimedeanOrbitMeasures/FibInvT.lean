@@ -57,7 +57,7 @@ theorem fibTrans {D : D7} (X : HidaSetting D) (μinf : Measure (TupI X)) (νinf 
     (g : HA (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) (hS : μinf.map (fun y => g • y) = μinf) :
     IsFibreFamily μinf (gramR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) Subtype.val (IndI X) νinf Set.univ
       (fun b => (fibInf b).map (fun y => g • y)) := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
   have hm : Measurable (fun y : TupI X => g • y) := measurable_smul_tupI X g
   have hinv : ∀ b : HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS), (fun y : TupI X => g • y) ⁻¹' ((gramR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) ⁻¹' {(b : Matrix (Fin (D.R.rS + 1 + D.R.rS)) (Fin (D.R.rS + 1 + D.R.rS)) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E))} ∩ IndI X) =
       (gramR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) ⁻¹' {(b : Matrix (Fin (D.R.rS + 1 + D.R.rS)) (Fin (D.R.rS + 1 + D.R.rS)) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E))} ∩ IndI X := by
@@ -99,14 +99,14 @@ theorem fibEqI {D : D7} (X : HidaSetting D) (ψ : AddChar (AF X.B.I.F) ℂ) (μi
     (hν : SdHerm X.B.I.F X.B.I.E X.B.I.cm.sig (Ainf X.B.I.F) (psiInf X.B.I.F ψ) (D.R.rS + 1 + D.R.rS) νinf)
     (h1 : IsFibreFamily μinf (gramR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) Subtype.val (IndI X) νinf Set.univ fib1)
     (h2 : IsFibreFamily μinf (gramR (Ainf X.B.I.F) X.B.I.cm.sig X.B.I.J) Subtype.val (IndI X) νinf Set.univ fib2) : fib1 = fib2 := by
-  haveI : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
-  haveI := hμ.1
-  haveI := hν.1
-  haveI : BorelSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) := ⟨rfl⟩
-  haveI : LocallyCompactSpace (Matrix (Fin (D.R.rS + 1 + D.R.rS)) (Fin (D.R.rS + 1 + D.R.rS)) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) :=
+  have : FiniteDimensional X.B.I.F X.B.I.E := fd_of X
+  have := hμ.1
+  have := hν.1
+  have : BorelSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) := ⟨rfl⟩
+  have : LocallyCompactSpace (Matrix (Fin (D.R.rS + 1 + D.R.rS)) (Fin (D.R.rS + 1 + D.R.rS)) (Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E)) :=
     inferInstanceAs (LocallyCompactSpace (Fin (D.R.rS + 1 + D.R.rS) → Fin (D.R.rS + 1 + D.R.rS) →
       Ainf X.B.I.F ⊗[X.B.I.F] X.B.I.E))
-  haveI : LocallyCompactSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) :=
+  have : LocallyCompactSpace (HermR (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)) :=
     (isClosed_HermRP (Ainf X.B.I.F) X.B.I.cm.sig (D.R.rS + 1 + D.R.rS)).isClosedEmbedding_subtypeVal.locallyCompactSpace
   exact FU.fib_eq h1 h2 (continuous_gramHI X) (fun _ => rfl) Subtype.val_injective (isOpen_IndI X)
 

@@ -115,11 +115,11 @@ theorem GlobalTheory.UPoinc.exists_urechart_affine : ∀ (E : Type) [Field E] [N
     GlobalTheory.Poinc.hypS_of_generic_ringOn X.o₁ X.Ω₁ X.M U hUa hne X.normal X.S.R X.ρ.P P' P₀ _ _ _ ha ha' hL hL' X.ρ.hypS
 
   obtain ⟨⟨hLw, -⟩, -⟩ := GlobalTheory.lawsAndExpansions
-  haveI := RatModel.isFractionRing_ringOn hUa hne
-  haveI := TorsExtend.isIntegrallyClosed_ringOn X.M ((isNormalScheme_iff_pred _).1 X.normal) hUa hne
-  haveI := ArithBase.ded (o := X.o₁) (Ω := X.Ω₁)
+  have := RatModel.isFractionRing_ringOn hUa hne
+  have := TorsExtend.isIntegrallyClosed_ringOn X.M ((isNormalScheme_iff_pred _).1 X.normal) hUa hne
+  have := ArithBase.ded (o := X.o₁) (Ω := X.Ω₁)
   have fg : (X.M.ringOn U).FG := GlobalTheory.Poinc.fg_ringOn_of_isAffineOpen _ _ X.M U hUa hne
-  haveI : IsNoetherianRing (X.M.ringOn U) := isNoetherianRing_of_fg fg
+  have : IsNoetherianRing (X.M.ringOn U) := isNoetherianRing_of_fg fg
   have hn : 1 ≤ X.S.r * X.S.N := Nat.mul_pos X.S.r_pos (le_trans one_le_two X.S.N_ge)
   have hu : IsUnit ((X.S.r * X.S.N : ℕ) : X.M.ringOn U) := by
     have := X.S.unit.map (algebraMap X.o₁ (X.M.ringOn U))

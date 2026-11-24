@@ -87,9 +87,9 @@ theorem FiniteProjHomInjective.proof : FiniteProjHomInjective.Statement := by
     have hg : StrictMono g := by
       intro q₁ q₂ hq
       have hlt : q₁.asIdeal < q₂.asIdeal := hq
-      obtain ⟨hle, x, hx2, hx1⟩ := SetLike.lt_iff_le_and_exists.mp hlt
+      obtain ⟨hle, x, hx2, hx1⟩ := IsConcreteLE.lt_iff_le_and_exists.mp hlt
       show q₁.asIdeal.comap (algebraMap _ _) < q₂.asIdeal.comap (algebraMap _ _)
-      exact Ideal.comap_lt_comap_of_integral_mem_sdiff hle ⟨hx2, hx1⟩ (hint x)
+      exact Ideal.under_lt_under_of_integral_mem_sdiff hle ⟨hx2, hx1⟩ (hint x)
     have h1 : ringKrullDim (MvPolynomial (Fin n) ℂ ⧸ J) ≤
         ringKrullDim (MvPolynomial (Fin d) ℂ ⧸ Ideal.span {p}) := by
       rw [ringKrullDim_quotient (Ideal.span {p})]

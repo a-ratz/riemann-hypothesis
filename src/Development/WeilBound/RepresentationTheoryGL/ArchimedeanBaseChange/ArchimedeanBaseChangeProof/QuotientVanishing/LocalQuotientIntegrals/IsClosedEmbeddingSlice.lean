@@ -73,8 +73,8 @@ theorem exists_haar_map {G H : Type} [Group G] [TopologicalSpace G] [IsTopologic
       left_inv := fun x => Subtype.ext (e.symm_apply_apply x)
       right_inv := fun y => Subtype.ext (e.apply_symm_apply y)
       map_mul' := fun x y => Subtype.ext (map_mul e (x : G) y)
-      continuous_toFun := (e.continuous.comp continuous_subtype_val).subtype_mk _
-      continuous_invFun := (e.symm.continuous.comp continuous_subtype_val).subtype_mk hinv }
+      continuous_toFun := (e.continuous.comp continuous_subtypeVal).subtype_mk _
+      continuous_invFun := (e.symm.continuous.comp continuous_subtypeVal).subtype_mk hinv }
   refine ⟨ν.map ψ, ContinuousMulEquiv.isHaarMeasure_map ν ψ, ⟨?_⟩⟩
   have hψ : Measurable ψ := ψ.continuous.measurable
   have hi : Measurable (Inv.inv : S → S) := continuous_inv.measurable

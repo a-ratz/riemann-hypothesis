@@ -241,7 +241,7 @@ theorem piU_rieszJ : ∀ (D : D7) (X : Formalism.L2.SG.HidaSetting.HidaSetting D
   have hSi := hinf_le_sinf X u _ ((Hinf X u).inv_mem hs)
   refine ext_inner_left ℂ fun η => ?_
   have hη : X.piU u s (X.piU u s⁻¹ η) = η := by
-    rw [← ContinuousLinearMap.mul_apply, ← hrep.2.1 _ hS _ hSi, mul_inv_cancel, hrep.1]
+    rw [← mul_apply_eq_comp, ← hrep.2.1 _ hS _ hSi, mul_inv_cancel, hrep.1]
     rfl
   rw [← hη, hrep.2.2.1 s hS, inner_rieszJ, inner_rieszJ, tr.J_eqv s hs _ z' z hz]
 
@@ -803,9 +803,9 @@ theorem GlobalTheory.MiTop.exists_linear_isometry_colForm_rTrans_of_pin : ∀ {D
     refine (_root_.GlobalTheory.MiTop.CenIsom.ipC_colDictL_rtr_eq W.S hB.fin u δ hδ (col x) (col y) (mv (col x)) (mv (col y)) (hmv _) (hmv _)).trans ?_
     exact congrArg₂ ((D.fm u).ipC 0) (hcol x) (hcol y)
   let Li := fL.isometryOfInner hinner
-  haveI : FiniteDimensional ℂ (D.mem u).A.Mu0 := (D.mem u).A.Mu0_fd
-  haveI : FiniteDimensional ℂ (D.mem u).A.Mram := Submodule.finiteDimensional_of_le hram
-  haveI : FiniteDimensional ℂ (D.what₂.Mu u) := LinearEquiv.finiteDimensional (D.eMu u).symm
+  have : FiniteDimensional ℂ (D.mem u).A.Mu0 := (D.mem u).A.Mu0_fd
+  have : FiniteDimensional ℂ (D.mem u).A.Mram := Submodule.finiteDimensional_of_le hram
+  have : FiniteDimensional ℂ (D.what₂.Mu u) := LinearEquiv.finiteDimensional (D.eMu u).symm
   have hsurj : Function.Surjective Li := (LinearMap.injective_iff_surjective (f := Li.toLinearMap)).1 Li.injective
   refine ⟨LinearIsometryEquiv.ofSurjective Li hsurj, ?_⟩
   intro φ C C₀ hC hC₀ ξ

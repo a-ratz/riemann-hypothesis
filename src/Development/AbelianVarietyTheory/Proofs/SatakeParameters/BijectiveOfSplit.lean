@@ -89,7 +89,7 @@ variable (v : HeightOneSpectrum (𝓞 K)) (u : HeightOneSpectrum (𝓞 M)) [u.as
 
 theorem bijective_of_split (he : u.asIdeal.ramificationIdx (𝓞 K) = 1) (hf : u.asIdeal.inertiaDeg (𝓞 K) = 1) :
     Function.Bijective (GroundTheory.Global.adicCompletionMap v u) := by
-  letI : Algebra (v.adicCompletion K) (u.adicCompletion M) := (GroundTheory.Global.adicCompletionMap v u).toAlgebra
+  let : Algebra (v.adicCompletion K) (u.adicCompletion M) := (GroundTheory.Global.adicCompletionMap v u).toAlgebra
   have : ContinuousSMul (v.adicCompletion K) (u.adicCompletion M) :=
     continuousSMul_of_algebraMap _ _ (GroundTheory.Global.continuous_adicCompletionMap v u)
   have : IsScalarTower K (v.adicCompletion K) (u.adicCompletion M) :=
@@ -109,7 +109,7 @@ theorem normU_of_split (he : u.asIdeal.ramificationIdx (𝓞 K) = 1) (hf : u.asI
       ∀ y : (u.adicCompletion M)ˣ, ((GlobalTheory.BCChar.normU v u y : (v.adicCompletion K)ˣ) : v.adicCompletion K) =
         (RingEquiv.ofBijective _ (bijective_of_split v u he hf)).symm y := by
   set i := RingEquiv.ofBijective _ (bijective_of_split v u he hf)
-  letI : Algebra (v.adicCompletion K) (u.adicCompletion M) := (GroundTheory.Global.adicCompletionMap v u).toAlgebra
+  let : Algebra (v.adicCompletion K) (u.adicCompletion M) := (GroundTheory.Global.adicCompletionMap v u).toAlgebra
   have : ContinuousSMul (v.adicCompletion K) (u.adicCompletion M) :=
     continuousSMul_of_algebraMap _ _ (GroundTheory.Global.continuous_adicCompletionMap v u)
   have : IsScalarTower K (v.adicCompletion K) (u.adicCompletion M) :=

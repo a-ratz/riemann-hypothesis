@@ -57,7 +57,7 @@ variable {G : Type} [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
   [MeasurableSpace G] [BorelSpace G] (H : Subgroup G)
 
 theorem measurable_translate (g : G) : Measurable (fun h : H => g * (h : G)) :=
-  (continuous_const.mul continuous_subtype_val).measurable
+  (continuous_const.mul continuous_subtypeVal).measurable
 
 noncomputable def cosetMeasure (ν : Measure H) [ν.IsMulLeftInvariant] : G ⧸ H → Measure G :=
   Quotient.lift (fun g : G => ν.map (fun h : H => g * (h : G))) (by
@@ -100,16 +100,16 @@ theorem cosetMeasure_lt_top (hH : IsClosed (H : Set G)) (ν : Measure H) [ν.IsH
 theorem measurable_cosetMeasure_open (hH : IsClosed (H : Set G)) (ν : Measure H)
     [ν.IsHaarMeasure] [MeasurableSpace (G ⧸ H)] [BorelSpace (G ⧸ H)] {U : Set G}
     (hU : IsOpen U) : Measurable (fun q : G ⧸ H => cosetMeasure H ν q U) := by
-  haveI : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  haveI : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology _
-  haveI : IsLocallyFiniteMeasure ν := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
-  haveI : ν.Regular := inferInstance
+  have : LocallyCompactSpace H := hH.isClosedEmbedding_subtypeVal.locallyCompactSpace
+  have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology _
+  have : IsLocallyFiniteMeasure ν := isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
+  have : ν.Regular := inferInstance
   refine measurable_of_Ioi fun c => IsOpen.measurableSet ?_
   rw [← (QuotientGroup.isQuotientMap_mk H).isOpen_preimage, isOpen_iff_mem_nhds]
   intro g hg
   simp only [Set.mem_preimage, Set.mem_Ioi, cosetMeasure_apply H ν g hU.measurableSet] at hg
   have hO : IsOpen ((fun h : H => g * (h : G)) ⁻¹' U) :=
-    hU.preimage (continuous_const.mul continuous_subtype_val)
+    hU.preimage (continuous_const.mul continuous_subtypeVal)
   obtain ⟨K, hKU, hK, hc⟩ := hO.exists_lt_isCompact hg
   have hev : ∀ᶠ x in nhds g, ∀ h ∈ K, x * (h : G) ∈ U := by
     refine hK.eventually_forall_of_forall_eventually fun h hh => ?_
@@ -125,7 +125,7 @@ theorem measurable_cosetMeasure (hH : IsClosed (H : Set G)) (ν : Measure H)
   let K := CompactExhaustion.choice G
   have hres : ∀ n, Measurable (fun q => (cosetMeasure H ν q).restrict (interior (K n))) := by
     intro n
-    haveI : ∀ q, IsFiniteMeasure ((cosetMeasure H ν q).restrict (interior (K n))) := fun q =>
+    have : ∀ q, IsFiniteMeasure ((cosetMeasure H ν q).restrict (interior (K n))) := fun q =>
       isFiniteMeasure_restrict.mpr ((measure_mono interior_subset).trans_lt
         (cosetMeasure_lt_top H hH ν q (K.isCompact n))).ne
     have key : ∀ s : Set G, IsOpen s →
@@ -171,10 +171,10 @@ theorem quotientFormula_bind (hH : IsClosed (H : Set G)) (ν : Measure H)
 theorem isHaarMeasure_bind (hH : IsClosed (H : Set G)) (ν : Measure H)
     [ν.IsHaarMeasure] [MeasurableSpace (G ⧸ H)] [BorelSpace (G ⧸ H)] (μ : Measure (G ⧸ H))
     (hμ : IsInvariantRadon H μ) : (μ.bind (cosetMeasure H ν)).IsHaarMeasure := by
-  haveI := hμ.finiteOnCompacts
-  haveI := hμ.invariant
+  have := hμ.finiteOnCompacts
+  have := hμ.invariant
   have hm := measurable_cosetMeasure H hH ν
-  haveI hfin : IsFiniteMeasureOnCompacts (μ.bind (cosetMeasure H ν)) := by
+  have hfin : IsFiniteMeasureOnCompacts (μ.bind (cosetMeasure H ν)) := by
     refine ⟨fun K hK => ?_⟩
     rw [Measure.bind_apply hK.measurableSet hm.aemeasurable]
     have hC : ν (Subtype.val ⁻¹' (K⁻¹ * K)) < ⊤ :=
@@ -198,7 +198,7 @@ theorem isHaarMeasure_bind (hH : IsClosed (H : Set G)) (ν : Measure H)
           simp [this]
     refine (lintegral_mono hle).trans_lt ((lintegral_indicator_const_le _ _).trans_lt ?_)
     exact ENNReal.mul_lt_top hC hπ.measure_lt_top
-  haveI hinv : (μ.bind (cosetMeasure H ν)).IsMulLeftInvariant := by
+  have hinv : (μ.bind (cosetMeasure H ν)).IsMulLeftInvariant := by
     refine (forall_measure_preimage_mul_iff _).mp fun a s hs => ?_
     rw [Measure.bind_apply hs hm.aemeasurable,
       Measure.bind_apply (measurable_const_mul a hs) hm.aemeasurable]
@@ -223,10 +223,10 @@ theorem isHaarMeasure_bind (hH : IsClosed (H : Set G)) (ν : Measure H)
     rw [h0] at h1
     exact mul_ne_zero (isOpen_univ.measure_ne_zero ν Set.univ_nonempty)
       (Measure.measure_univ_ne_zero.mpr hμ.ne_zero) h1.symm
-  haveI : IsLocallyFiniteMeasure (μ.bind (cosetMeasure H ν)) :=
+  have : IsLocallyFiniteMeasure (μ.bind (cosetMeasure H ν)) :=
     isLocallyFiniteMeasure_of_isFiniteMeasureOnCompacts
-  haveI : NeZero (μ.bind (cosetMeasure H ν)) := ⟨hne⟩
-  haveI : (μ.bind (cosetMeasure H ν)).IsOpenPosMeasure :=
+  have : NeZero (μ.bind (cosetMeasure H ν)) := ⟨hne⟩
+  have : (μ.bind (cosetMeasure H ν)).IsOpenPosMeasure :=
     isOpenPosMeasure_of_mulLeftInvariant_of_regular
   exact {}
 

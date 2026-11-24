@@ -86,7 +86,7 @@ theorem zs_iter_Uo {R : Type*} [CommRing R] (l r : ℕ) (a : ℕ → R) (n : ℕ
 
 theorem zs_norm_char_le_one {l : ℕ} [Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ) {N : ℕ} (hN : 0 < N)
     (θ : DirichletCharacter ℂ N) (z : ZMod N) : ‖ι.symm (θ z)‖ ≤ 1 := by
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   by_cases hz : IsUnit z
   · obtain ⟨u, rfl⟩ := hz
     have h1 : (θ (u : ZMod N)) ^ Fintype.card (ZMod N)ˣ = 1 := by
@@ -99,7 +99,7 @@ theorem zs_norm_char_le_one {l : ℕ} [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
 theorem zs_norm_exp {l : ℕ} [Fact l.Prime] (ι : PadicAlgCl l ≃+* ℂ) {N : ℕ} (hN : 0 < N) (y : ℕ) (d : ℤ) :
     ‖ι.symm (cexp (2 * π * Complex.I * (y * d) / N))‖ = 1 := by
   have h1 : (cexp (2 * π * Complex.I * (y * d) / N)) ^ N = 1 := by
-    rw [← Complex.exp_nat_mul, Complex.exp_eq_one_iff]
+    rw [← exp_natCast_mul, Complex.exp_eq_one_iff]
     refine ⟨(y : ℤ) * d, ?_⟩
     have : (N : ℂ) ≠ 0 := by exact_mod_cast hN.ne'
     push_cast
@@ -193,7 +193,7 @@ lemma measMu_zm_congr (k l : ℕ) (u v : ℤ → ℂ) (F G : ℕ → ℕ → ℂ
 lemma measMu_quo_succ {l : ℕ} (hp : l.Prime) (m : ℕ) (f : ZMod (l ^ m) → ℂ) (f' : ZMod (l ^ (m + 1)) → ℂ)
     (h : ∀ x : ℕ, f' x = f x) (x y : ℕ) (hy : ¬ l ∣ y) :
     f' ((x : ZMod (l ^ (m + 1))) * (y : ZMod (l ^ (m + 1)))⁻¹) = f ((x : ZMod (l ^ m)) * (y : ZMod (l ^ m))⁻¹) := by
-  haveI : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hcop : y.Coprime (l ^ (m + 1)) :=
     Nat.Coprime.pow_right _ ((Nat.coprime_comm).mp ((Nat.Prime.coprime_iff_not_dvd hp).mpr hy))
   have hdvd : l ^ m ∣ l ^ (m + 1) := pow_dvd_pow l (Nat.le_succ m)
@@ -210,7 +210,7 @@ lemma measMu_quo_succ {l : ℕ} (hp : l.Prime) (m : ℕ) (f : ZMod (l ^ m) → �
 
 lemma measMu_parity_succ {l : ℕ} (hp : l.Prime) (m : ℕ) (f : ZMod (l ^ m) → ℂ) (f' : ZMod (l ^ (m + 1)) → ℂ)
     (h : ∀ x : ℕ, f' x = f x) (s : ℂ) (hf : ∀ y, f (-y) = s * f y) : ∀ y, f' (-y) = s * f' y := by
-  haveI : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
+  have : NeZero (l ^ (m + 1)) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hdvd : l ^ m ∣ l ^ (m + 1) := pow_dvd_pow l (Nat.le_succ m)
   have hc : ∀ w : ZMod (l ^ (m + 1)), f' w = f (ZMod.castHom hdvd (ZMod (l ^ m)) w) := by
     intro w
@@ -282,7 +282,7 @@ theorem measMu_of_eig : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
   intro l _ ι e N χ θ ψ α B c he hN hlN hα hkill hU hθ hχ
   have hp : l.Prime := Fact.out
   have hα0 : α ≠ 0 := by rintro rfl; simp at hα
-  haveI : NeZero N := ⟨hN.ne'⟩
+  have : NeZero N := ⟨hN.ne'⟩
   have hψsq : ψ (-1) * ψ (-1) = 1 := by rw [← map_mul]; simp
   have hE2 : ((-1 : ℂ) ^ e) ^ 2 = 1 := by rw [← pow_mul, mul_comm, pow_mul]; simp
   set s : ℂ := (-1) ^ e * ψ (-1) with hs
@@ -395,7 +395,7 @@ theorem measMu_of_eig : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
       unfold hat
       refine F.sum_mem fun y _ => F.mul_mem (hθF _) ?_
       have : cexp (2 * π * Complex.I * (y * d) / N) = ζ ^ ((y : ℤ) * d) := by
-        rw [hζ, ← Complex.exp_int_mul]; congr 1; push_cast; ring
+        rw [hζ, ← exp_intCast_mul]; congr 1; push_cast; ring
       rw [this]
       exact F.zpow_mem hζF _
     have htwF : ∀ B' : ℤ, tw2 N s B' ∈ F := by

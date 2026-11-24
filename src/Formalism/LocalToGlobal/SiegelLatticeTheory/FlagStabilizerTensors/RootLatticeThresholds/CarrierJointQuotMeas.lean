@@ -98,7 +98,7 @@ theorem pi_withDensity {ι : Type*} [Fintype ι] {E : ι → Type*} [∀ i, Meas
     (μ : (i : ι) → Measure (E i)) [∀ i, SigmaFinite (μ i)] (f : (i : ι) → E i → ℝ≥0∞)
     (hf : ∀ i, Measurable (f i)) (hfin : ∀ i x, f i x ≠ ⊤) :
     Measure.pi (fun i => (μ i).withDensity (f i)) = (Measure.pi μ).withDensity (fun x => ∏ i, f i (x i)) := by
-  haveI : ∀ i, SigmaFinite ((μ i).withDensity (f i)) := fun i =>
+  have : ∀ i, SigmaFinite ((μ i).withDensity (f i)) := fun i =>
     SigmaFinite.withDensity_of_ne_top (Filter.Eventually.of_forall (hfin i))
   refine Measure.pi_eq fun s hs => ?_
   rw [withDensity_apply _ (MeasurableSet.univ_pi hs), Measure.restrict_pi_pi,
@@ -201,18 +201,18 @@ theorem ooQuot_pin (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.wha
   have key : ∀ w : Point D.host.E (D.R.rS + 1),
       ∃ ν : ∀ v : InfinitePlace X.B.I.F, Measure (Formalism.REAL.UJ (X.B.I.ε v)), OkPt X u u' w →
         LocPinAt X u u' w ν ∧ ∀ y : ∀ v, X.Vloc u' v,
-          (haveI := FiniteDimensional.complete ℂ (X.Vpi u);
+          (haveI := FiniteDimensional.completeSpace ℂ (X.Vpi u);
             Formalism.L2.SG.TermOp.OO (νq (gamW X u u' w)) Set.univ (X.Wu u) (X.Wu u') (gamW X u u' w))
               (X.tensU u' y) =
-          X.tensU u (fun v => (haveI := FiniteDimensional.complete ℂ (X.Vloc u v);
+          X.tensU u (fun v => (haveI := FiniteDimensional.completeSpace ℂ (X.Vloc u v);
             Jv (ν v) (X.Wloc u v) (X.Wloc u' v) ((gamW X u u' w) v)) (y v)) := by
     intro w
     by_cases hw : OkPt X u u' w
     · obtain ⟨μR, hH, hQ, hM⟩ := hN.2 w hw.1
-      haveI : SigmaFinite μR := hH.1
+      have : SigmaFinite μR := hH.1
       choose μRv hHv hIv hMv b hbm hbt hb1 using hLU w hw μR hH hM
       have hprod : μR = Measure.pi μRv := hGP w hw μR hH hM μRv fun v => ⟨hHv v, hMv v⟩
-      haveI : ∀ v, SigmaFinite (μRv v) := fun v => (hHv v).1
+      have : ∀ v, SigmaFinite (μRv v) := fun v => (hHv v).1
       have hσ : ∀ v, SigmaFinite ((Formalism.REAL.muG (X.B.I.ε v)).withDensity (b v)) :=
         fun v => SigmaFinite.withDensity_of_ne_top' (hbt v)
       have hBm : Measurable fun x : X.B.I.Ginf => ∏ v, b v (x v) :=
@@ -225,7 +225,7 @@ theorem ooQuot_pin (X : Formalism.L2.SG.HidaSetting.HidaSetting D) (u u' : D.wha
         refine this.trans ?_
         exact Finset.prod_eq_one fun v _ => hb1 v (x v)
       have hinvG : μR.map (fun s => s⁻¹) = μR := by
-        haveI : ∀ v, SigmaFinite ((μRv v).map (fun s => s⁻¹)) := fun v => by rw [hIv v]; infer_instance
+        have : ∀ v, SigmaFinite ((μRv v).map (fun s => s⁻¹)) := fun v => by rw [hIv v]; infer_instance
         rw [hprod]
         have := Measure.pi_map_pi (μ := μRv) (f := fun _ s => s⁻¹) (fun v => measurable_inv.aemeasurable)
         refine this.trans ?_

@@ -80,8 +80,8 @@ theorem valLe_of_vK {p : ℕ} (S : UniformizedDVR p O) (D : ℕ) (a : O)
     ha (IsDiscreteValuationRing.addVal_eq_top_iff.mp h0)
   have hne' : IsDiscreteValuationRing.addVal O (p : O) ≠ ⊤ := fun h0 =>
     S.p_ne (IsDiscreteValuationRing.addVal_eq_top_iff.mp h0)
-  have e1 : IsDiscreteValuationRing.addVal O a = (nv a : ℕ∞) := (ENat.coe_toNat hne).symm
-  have e2 : IsDiscreteValuationRing.addVal O (p : O) = (ramE p O : ℕ∞) := (ENat.coe_toNat hne').symm
+  have e1 : IsDiscreteValuationRing.addVal O a = (nv a : ℕ∞) := (ENat.natCast_toNat hne).symm
+  have e2 : IsDiscreteValuationRing.addVal O (p : O) = (ramE p O : ℕ∞) := (ENat.natCast_toNat hne').symm
   have hdvd : a ∣ (p : O) ^ D := by
     rw [← IsDiscreteValuationRing.addVal_le_iff_dvd, IsDiscreteValuationRing.addVal_pow, e1, e2,
       nsmul_eq_mul]

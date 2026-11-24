@@ -81,7 +81,7 @@ theorem valuation_le_one_of_map (f : k ≃+* k') (hf : Continuous f) {x : k}
   have h1 : valuation k x⁻¹ < 1 := by rw [map_inv₀]; exact inv_lt_one_of_one_lt₀ h
   have h2 := GlobalTheory.TypeRec.TwistInert.valuation_lt_one_map f.toRingHom hf h1
   have hfx : f x ≠ 0 := (map_ne_zero f).2 hx0
-  have hw : 0 < valuation k' (f x) := by rw [zero_lt_iff]; exact (Valuation.ne_zero_iff _).2 hfx
+  have hw : 0 < valuation k' (f x) := by rw [pos_iff_ne_zero]; exact (Valuation.ne_zero_iff _).2 hfx
   simp only [RingEquiv.toRingHom_eq_coe, RingHom.coe_coe, map_inv₀] at h2
   exact absurd ((inv_lt_one₀ hw).1 h2) (not_lt.2 hx)
 
@@ -95,7 +95,7 @@ theorem valuation_lt_one_of_map (f : k ≃+* k') (hf : Continuous f) {x : k}
   have h2 := GlobalTheory.LastCompare.map_mem_integer f.toMonoidHom hf h1
   rw [Valuation.mem_integer_iff] at h2
   have hfx : f x ≠ 0 := (map_ne_zero f).2 hx0
-  have hw : 0 < valuation k' (f x) := by rw [zero_lt_iff]; exact (Valuation.ne_zero_iff _).2 hfx
+  have hw : 0 < valuation k' (f x) := by rw [pos_iff_ne_zero]; exact (Valuation.ne_zero_iff _).2 hfx
   have h3 : valuation k' (f x⁻¹) ≤ 1 := h2
   rw [map_inv₀, map_inv₀] at h3
   exact absurd hx (not_lt.2 ((inv_le_one₀ hw).1 h3))

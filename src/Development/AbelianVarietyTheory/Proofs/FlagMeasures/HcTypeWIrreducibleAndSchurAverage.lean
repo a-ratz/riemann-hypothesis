@@ -75,7 +75,7 @@ theorem avg_sq {X V ι : Type} [MeasurableSpace X] (μ : Measure X) [IsProbabili
   refine ⟨hci w, ?_⟩
   rcases subsingleton_or_nontrivial V with hV | hV
   · rw [Subsingleton.elim w 0]; simp
-  haveI : CompleteSpace V := FiniteDimensional.complete ℂ V
+  have : CompleteSpace V := FiniteDimensional.completeSpace ℂ V
   let Fy : V → X → V := fun y x => ⟪f x, y⟫_ℂ • f x
   have hFm : ∀ y, AEStronglyMeasurable (Fy y) μ := fun y =>
     (hf.inner (aestronglyMeasurable_const (b := y))).smul hf
@@ -166,7 +166,7 @@ theorem avg_UW [FiniteDimensional ℂ Wp] {z : Fin (2 * r + k + 1) → ℂ} {π 
     (hH : IsHaarOn (UWset k r z) μW) (h1 : μW Set.univ = 1) (w ξ : Wp) :
     ∫⁻ h, (‖⟪w, π (Matrix.of h) ξ⟫_ℂ‖₊ : ℝ≥0∞) ^ 2 ∂μW =
       ENNReal.ofReal (‖w‖ ^ 2 * ‖ξ‖ ^ 2 / Module.finrank ℂ Wp) := by
-  haveI : IsProbabilityMeasure μW := ⟨h1⟩
+  have : IsProbabilityMeasure μW := ⟨h1⟩
   have hW := isClosedSub_UWset (k := k) (r := r) z
   have hae : ∀ᵐ x ∂μW, Matrix.of x ∈ UWset k r z := ae_iff.mpr hH.2.2.1
   have hof : Continuous (fun y : Mt k r => (Matrix.of y : Mat k r)) := continuous_id
@@ -183,7 +183,7 @@ theorem avg_UW [FiniteDimensional ℂ Wp] {z : Fin (2 * r + k + 1) → ℂ} {π 
     (fun s => lmulM (s : Mat k r))
     (fun s => ⟨(hlm s).measurable, hH.2.2.2 s s.2⟩)
     (fun s => hae.mono fun x hx => DFunLike.congr_fun (hU.1.2 s s.2 _ hx) ξ)
-    (fun S hS => hI S S.closed_of_finiteDimensional fun g hg => hS ⟨g, hg⟩) w
+    (fun S hS => hI S S.isClosed_of_finiteDimensional fun g hg => hS ⟨g, hg⟩) w
   rw [← hv, ofReal_integral_eq_lintegral_ofReal hi (Filter.Eventually.of_forall fun x => by positivity)]
   refine lintegral_congr fun x => ?_
   rw [ENNReal.ofReal_pow (norm_nonneg _), ofReal_norm]

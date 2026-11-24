@@ -308,7 +308,7 @@ theorem basis_of (hI : Iwa) (hD : CayleyBlocksInvertible) (hM : Mult) (hC : CycS
   have hEvd : ∀ i l, Differentiable ℂ (fun w => Ev w i l) := by
     intro i l
     have hcg : Continuous (fun k : KR n => (kk l : GR n) * (k : GR n) * yy i) :=
-      (continuous_const.mul continuous_subtype_val).mul continuous_const
+      (continuous_const.mul continuous_subtypeVal).mul continuous_const
     have hpos : ∀ k : KR n, 0 < hLoc ((kk l : GR n) * (k : GR n) * yy i) := fun k => hLoc_pos hD _
     have h := (hH (KR n) ν univ isCompact_univ (by simp) univ
       (fun k w => κ k * ((hLoc ((kk l : GR n) * (k : GR n) * yy i) : ℂ) ^ w * F0 p q e ((kk l : GR n) * (k : GR n) * yy i)))
@@ -583,7 +583,7 @@ theorem cont_hz (hD : CayleyBlocksInvertible) (hL : LocData ε c t p q e sL ρ) 
     rw [split_mul, ← mul_assoc y (k : GR n) b, (h _).1, (h _).2 1, hL.vac]
   rw [hfun]
   have hc : Continuous fun k : KR n => y * (k : GR n) * b :=
-    (continuous_const.mul continuous_subtype_val).mul continuous_const
+    (continuous_const.mul continuous_subtypeVal).mul continuous_const
   refine Continuous.mul ?_ (continuous_const.mul ((continuous_weight_factor hD p q e).comp hc))
   refine Continuous.cpow ?_ continuous_const (fun k => ?_)
   · exact Complex.continuous_ofReal.comp (continuous_const.mul ((continuous_hLoc hD).comp hc))
@@ -650,7 +650,7 @@ theorem farId [MeasurableSpace (KR n)] [BorelSpace (KR n)] (hD : CayleyBlocksInv
       ∑ j, M (z - s₀) i j * GlobalTheory.Eis.cosetSum Pp Γ (hz Ht sec s₀ z (QQ j)) g := by
   classical
   have hCc : IsCompact (range fun k : KR n => g * ι ((k : GR n) * yy i)) :=
-    isCompact_range (continuous_const.mul (hG.ιcont.comp (continuous_subtype_val.mul continuous_const)))
+    isCompact_range (continuous_const.mul (hG.ιcont.comp (continuous_subtypeVal.mul continuous_const)))
   obtain ⟨u, hu, hbu⟩ := hmaj _ hCc
   obtain ⟨B, hB⟩ := isCompact_univ.exists_bound_of_continuousOn hκ.continuousOn
   set B' := max B 0 with hB'
@@ -822,11 +822,11 @@ theorem genCore_of (hP : ProjOp) (hT : TSGenC) (hB : Basis) (hFar : FarRightC) (
     (hH : HolParam) (hG : Glue) : GenCore := by
   intro m n ε c t p q e sL ρ hL G _ _ _ _ _ _ Pp Γ ι s₀ Ht sec I hD hV P g
   show HolValueAt (fun z => GlobalTheory.Eis.cosetSum Pp Γ (hz Ht sec s₀ z P) g) s₀ (I P g)
-  letI : MeasurableSpace (KR n) := borel (KR n)
-  haveI : BorelSpace (KR n) := ⟨rfl⟩
+  let : MeasurableSpace (KR n) := borel (KR n)
+  have : BorelSpace (KR n) := ⟨rfl⟩
   obtain ⟨W, hWfin, hPW, hWst, -⟩ := hL.kfin P
   obtain ⟨ν, κ, hν, hκ, hrep, hproj⟩ := hP m n ε c t p q e sL ρ hL W hWfin hWst
-  haveI := hν
+  have := hν
   obtain ⟨N, yy, QQ, cc, M, hQW, hPsum, hM0, hMd, hF0, hMrel⟩ :=
     hB m n ε c t p q e sL ρ hL W hWfin hWst ν κ hν hκ hrep hproj P hPW
   obtain ⟨σF, -, hFsum, hFrel⟩ := hFar m n ε c t p q e sL ρ hL G Pp Γ ι s₀ Ht sec I hD
@@ -842,7 +842,7 @@ theorem genCore_of (hP : ProjOp) (hT : TSGenC) (hB : Basis) (hFar : FarRightC) (
   have hDt : Differentiable ℂ fun z => (M (z - s₀)).det := diffDet_lemma_3 hMdiff
   have hadj : ∀ j i, Differentiable ℂ fun z => (M (z - s₀)).adjugate j i := diffAdj_lemma_4 hMdiff
   have hιc : ∀ i, Continuous fun y : KR n × ℂ => g * ι (↑y.1 * yy i) := fun i =>
-    continuous_const.mul (hD.ιcont.comp ((continuous_subtype_val.comp continuous_fst).mul continuous_const))
+    continuous_const.mul (hD.ιcont.comp ((continuous_subtypeVal.comp continuous_fst).mul continuous_const))
   obtain ⟨Ψ, hΨ⟩ : ∃ Ψ : Fin N → ℂ → ℂ, ∀ i z, Ψ i z = ∫ k, κ k * E z (g * ι (↑k * yy i)) ∂ν :=
     ⟨_, fun _ _ => rfl⟩
   obtain ⟨Λ, hΛ⟩ : ∃ Λ : Fin N → ℂ → ℂ, ∀ i z, Λ i z = ∫ k, κ k * Fv z (g * ι (↑k * yy i)) ∂ν :=
@@ -1189,11 +1189,11 @@ private theorem hv_sum_lemma_6 {s₀ : ℂ} {ι : Type*} (T : Finset ι) {f : ι
 theorem absThm_gen (hV : VacOut) (hP : ProjOp) (hT : TSGen) (hB : Basis) (hFar : FarRight) (hS : SecZero) (hLC : LC)
     (hH : HolParam) (hG : Glue) : AbsThm := by
   intro m n ε c t p q e sL ρ hL hGS G _ _ _ _ _ _ Pp Γ ι s₀ Ht sec I Λ hD P g
-  letI : MeasurableSpace ↥(KR n) := borel _
-  haveI : BorelSpace ↥(KR n) := ⟨rfl⟩
+  let : MeasurableSpace ↥(KR n) := borel _
+  have : BorelSpace ↥(KR n) := ⟨rfl⟩
   obtain ⟨W, hWfd, hPW, hWst, -⟩ := hL.kfin P
   obtain ⟨ν, κ, hν, hκ, hproj, hlift⟩ := hP m n ε c t p q e sL ρ hL W hWfd hWst
-  haveI := hν
+  have := hν
   obtain ⟨N, yy, QQ, cc, M, hQW, hPc, hM0, hMd, hyy, hint⟩ :=
     hB m n ε c t p q e sL ρ hL W hWfd hWst ν κ hν hκ hproj hlift P hPW
   obtain ⟨σf, hEdiff, hsum, hfar⟩ := hFar m n ε c t p q e sL ρ hL G Pp Γ ι s₀ Ht sec I Λ hD
@@ -1210,7 +1210,7 @@ theorem absThm_gen (hV : VacOut) (hP : ProjOp) (hT : TSGen) (hB : Basis) (hFar :
     hT m n ε c t p q e sL ρ hL G Pp Γ ι s₀ Ht sec I Λ hD W hWfd hWst ν κ hν hκ hproj hlift x (yy i)
       (QQ i) (hQW i) (hyy i)
   have hmap : ∀ i, Continuous fun k : ↥(KR n) => g * ι (↑k * yy i) := fun i =>
-    continuous_const.mul (hD.ιcont.comp ((continuous_mul_const (yy i)).comp continuous_subtype_val))
+    continuous_const.mul (hD.ιcont.comp ((continuous_mul_const (yy i)).comp continuous_subtypeVal))
   have hAh : ∀ i, DifferentiableOn ℂ (fun z => ∫ k, κ k * F z (g * ι (↑k * yy i)) ∂ν) (Metric.ball s₀ r) := by
     intro i
     refine (hH (↥(KR n)) ν univ isCompact_univ (by simp) (Metric.ball s₀ r)
@@ -1329,10 +1329,10 @@ open PositivityTheory.Rg.Sw
 theorem tsGen_of (hD : CayleyBlocksInvertible) (hK : KAK) (hM : Mult) (hS : SecZero) (hDF : DerivativeVacuumDilations)
     (hH : HolParam) (hLC : LC) (hT : TSBFacts) : TSGen := by
   intro m n ε c t p q e sL ρ hL G _ _ _ _ _ _ Pp Γ ι s₀ Ht sec I Λ hG _ _ W hWf hWρ ν κ hν hκ hfix hproj gpt y Q hQW hQ
-  haveI := hν
-  haveI : FiniteDimensional ℂ W := hWf
+  have := hν
+  have : FiniteDimensional ℂ W := hWf
   obtain ⟨hKc, hmRc, hF0c, hdilex, hdilmat, hext⟩ := hT hD n p q e
-  haveI := hKc
+  have := hKc
   have hc0 : 0 < c := hL.cpos
   have hIsec : ∀ Q1 Q2 : PX m n, (∀ y', sL Q1 y' = sL Q2 y') → I Q1 gpt = I Q2 gpt := by
     intro Q1 Q2 h12
@@ -1426,7 +1426,7 @@ theorem tsGen_of (hD : CayleyBlocksInvertible) (hK : KAK) (hM : Mult) (hS : SecZ
       intro r
       set Q0 : PX m n := (dil c X ^ r) 1
       obtain ⟨Wr, hWrf, hQ0Wr, hWrρ, hWrc⟩ := hL.kfin Q0
-      haveI : FiniteDimensional ℂ Wr := hWrf
+      have : FiniteDimensional ℂ Wr := hWrf
       have hinK : ∀ k : KR n, InK (mR ((k : GR n) * k1)) := fun k => inK_mul k k1 hk1
 
       have hcont_l : ∀ l : PX m n →ₗ[ℂ] ℂ, Continuous (fun k : KR n => κ k * l (ρ ((k : GR n) * k1) Q0)) := by
@@ -1577,10 +1577,10 @@ open PositivityTheory.Rg.Sw
 theorem tsGenC_of (hD : CayleyBlocksInvertible) (hK : KAK) (hM : Mult) (hS : SecZero) (hDF : DerivativeVacuumDilations)
     (hH : HolParam) (hLC : LC) (hT : TSBFacts) : TSGenC := by
   intro m n ε c t p q e sL ρ hL G _ _ _ _ _ _ Pp Γ ι s₀ Ht sec I hG _ _ W hWf hWρ ν κ hν hκ hfix hproj gpt y Q hQW hQ
-  haveI := hν
-  haveI : FiniteDimensional ℂ W := hWf
+  have := hν
+  have : FiniteDimensional ℂ W := hWf
   obtain ⟨hKc, hmRc, hF0c, hdilex, hdilmat, hext⟩ := hT hD n p q e
-  haveI := hKc
+  have := hKc
   have hc0 : 0 < c := hL.cpos
   have hIsec : ∀ Q1 Q2 : PX m n, (∀ y', sL Q1 y' = sL Q2 y') → I Q1 gpt = I Q2 gpt := by
     intro Q1 Q2 h12
@@ -1674,7 +1674,7 @@ theorem tsGenC_of (hD : CayleyBlocksInvertible) (hK : KAK) (hM : Mult) (hS : Sec
       intro r
       set Q0 : PX m n := (dil c X ^ r) 1
       obtain ⟨Wr, hWrf, hQ0Wr, hWrρ, hWrc⟩ := hL.kfin Q0
-      haveI : FiniteDimensional ℂ Wr := hWrf
+      have : FiniteDimensional ℂ Wr := hWrf
       have hinK : ∀ k : KR n, InK (mR ((k : GR n) * k1)) := fun k => inK_mul k k1 hk1
 
       have hcont_l : ∀ l : PX m n →ₗ[ℂ] ℂ, Continuous (fun k : KR n => κ k * l (ρ ((k : GR n) * k1) Q0)) := by

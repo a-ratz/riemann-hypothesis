@@ -114,7 +114,7 @@ theorem smooth_of_continuous {n : ℕ} {ε : Fin n → Bool} {B : Type} [NormedR
     (hψ.smul hb).integrable_of_hasCompactSupport hψc.smul_right
   have hψi : Integrable (fun g : UJ ε => φ (toM g)) μ := hψ.integrable_of_hasCompactSupport hψc
   have hpos : 0 < ∫ g : UJ ε, φ (toM g) ∂μ :=
-    hψ.integral_pos_of_hasCompactSupport_nonneg_nonzero (x := 1) hψc (fun g => hφ0 _)
+    hψ.integral_pos_of_hasCompactSupport_nonneg_ne_zero (x := 1) hψc (fun g => hφ0 _)
       (by show φ 1 ≠ 0; rw [hφ1]; exact one_ne_zero)
   set c := ∫ g : UJ ε, φ (toM g) ∂μ with hc
   set A := ∫ g : UJ ε, φ (toM g) • σ (toM g) ∂μ with hA
@@ -270,7 +270,7 @@ theorem rdV_skew (hs : SmoothOnGV ε π) (h1 : π 1 = 1) (hiso : ∀ g, inUJ ε 
       ⟨(π (NormedSpace.exp ((t : ℂ) • X))).toLinearMap, hiso _ (exp_indefinite_unitary_holds n ε X hX t)⟩ x y
   rw [hc] at h
   have h0 := h.unique (hasDerivAt_const (0 : ℝ) _)
-  simp only [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, h1, ContinuousLinearMap.one_apply] at h0
+  simp only [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, h1, one_apply_eq_self] at h0
   linear_combination h0
 
 end Unit
@@ -285,7 +285,7 @@ theorem exists_derived_action : ∀ (k : ℕ) (W : Type) [NormedAddCommGroup W] 
       ∀ Z : Matrix (Fin k) (Fin k) ℂ, Zᴴ = -Z → ∀ v,
         HasDerivAt (fun t : ℝ => π (NormedSpace.exp ((t : ℂ) • Z)) v) (∑ a, ∑ b, Z a b • E a b v) 0 := by
   intro k W _ _ _ π ⟨⟨h1, hmul⟩, hiso, hcont⟩
-  have : CompleteSpace W := FiniteDimensional.complete ℂ W
+  have : CompleteSpace W := FiniteDimensional.completeSpace ℂ W
   have hmul' : ∀ a, inUJ (PI.UpqRep.allPos k) a → ∀ b, inUJ (PI.UpqRep.allPos k) b → π (a * b) = π a * π b := hmul
   have hs : SmoothOnGV (PI.UpqRep.allPos k) π :=
     smooth_of_continuous h1 hmul' (continuousOn_clm_apply.2 hcont)
@@ -306,8 +306,8 @@ theorem exists_derived_action : ∀ (k : ℕ) (W : Type) [NormedAddCommGroup W] 
         cpart2 (PI.UpqRep.allPos k) (Matrix.single a b (1 : ℂ)) := by
       simp only [cpart2, Jm_allPos, Matrix.one_mul, Matrix.mul_one, conjTranspose_single, star_one, add_comm]
     have e3 := (rdLinV k _ _ π π _ _ (-1) 0 1 hs hs h1' h1' hone).2.1
-    simp only [EabV, EcV, e1, e2, e3, sgn, PI.UpqRep.allPos, if_true, ContinuousLinearMap.coe_coe,
-      ContinuousLinearMap.add_apply, ContinuousLinearMap.smul_apply, inner_add_left, inner_add_right,
+    simp only [EabV, EcV, e1, e2, e3, sgn, PI.UpqRep.allPos, ite_true, ContinuousLinearMap.coe_coe,
+      add_apply, smul_apply, inner_add_left, inner_add_right,
       inner_smul_left, inner_smul_right]
     have s1 := rdV_skew hs h1 hiso h1' x y
     have s2 := rdV_skew hs h1 hiso h2' x y

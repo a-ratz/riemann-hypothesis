@@ -91,7 +91,7 @@ omit [TopologicalSpace V] [IsTopologicalAddGroup V] [MeasurableSpace V] [BorelSp
 theorem cos_inter_eq (Λ0 : AddSubgroup V) (Hn : AddSubgroup X) (G : V → X) (y : V) (T : X) :
     {x | x - y ∈ Λ0} ∩ G ⁻¹' {z | z - T ∈ Hn} = (fun x => -y + x) ⁻¹' hlev Λ0 Hn G y T := by
   ext x
-  simp only [mem_inter_iff, mem_setOf_eq, mem_preimage, hlev, neg_add_eq_sub, add_sub_cancel]
+  simp only [mem_inter_iff, mem_ofPred_eq, mem_preimage, hlev, neg_add_eq_sub, add_sub_cancel]
 
 theorem cos_ratio (μ : Measure V) (ν : Measure X) [μ.IsAddHaarMeasure] [ν.IsAddHaarMeasure]
     (Λ : ℕ → AddSubgroup V) (H : ℕ → AddSubgroup X) (hΛo : ∀ n, IsOpen (Λ n : Set V))
@@ -137,7 +137,7 @@ theorem fibCos (μ : Measure V) (ν : Measure X) [μ.IsAddHaarMeasure] [ν.IsAdd
   have hQc : IsCompact {x | x - y ∈ Λ 0} := by
     have : {x | x - y ∈ Λ 0} = (fun w => w + y) '' (Λ 0 : Set V) := by
       ext z
-      simp only [mem_setOf_eq, mem_image, SetLike.mem_coe]
+      simp only [mem_ofPred_eq, mem_image, SetLike.mem_coe]
       constructor
       · intro hz
         exact ⟨z - y, hz, by abel⟩
@@ -210,7 +210,7 @@ theorem fibLat_holds : FibLat := by
     have hcos : ∀ y, q ⁻¹' {q y} = {x | x - y ∈ Λ 0} := by
       intro y
       ext x
-      simp only [mem_preimage, mem_singleton_iff, mem_setOf_eq, q]
+      simp only [mem_preimage, mem_singleton_iff, mem_ofPred_eq, q]
       exact QuotientAddGroup.eq_iff_sub_mem
     have hcount : ∀ n, μ (Pn n) * ν (H 0) = (Tf.card : ENNReal) * (μ (Λ 0) * ν (H n)) := by
       intro n
@@ -235,7 +235,7 @@ theorem fibLat_holds : FibLat := by
         have e : Pn n ∩ q ⁻¹' {q y} = {x | x - y ∈ Λ 0} ∩ G ⁻¹' {z | z - T ∈ H n} := by
           rw [hcos]
           ext x
-          simp only [hPndef, mem_inter_iff, mem_setOf_eq, mem_preimage]
+          simp only [hPndef, mem_inter_iff, mem_ofPred_eq, mem_preimage]
           constructor
           · rintro ⟨⟨_, hxS⟩, hxy⟩
             exact ⟨hxy, hxS⟩

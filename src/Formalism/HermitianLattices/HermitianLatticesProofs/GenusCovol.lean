@@ -475,7 +475,7 @@ theorem genusCovol_dualBasis (h : V →ₗ⋆[K] V →ₗ[K] K) (N : ℕ)
         intro k
         rw [inner_sum]
         simp_rw [← Int.cast_smul_eq_zsmul ℝ, real_inner_smul_right, hbv, hRdelta]
-        simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, if_true]
+        simp only [mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
         simp only [bR, Basis.ofZLatticeBasis_apply, ← hmι, ← hb, hc]
         simp
       rw [e]
@@ -537,9 +537,9 @@ theorem genusCovol_sq (h : V →ₗ⋆[K] V →ₗ[K] K)
   set NE := zmap ι (A ⊓ genusCovol_tdual h A) with hNE
   have hNΛ : NE ≤ Λ := genusCovol_zmap_mono N ι inf_le_left
   have hNT : NE ≤ Submodule.span ℤ (Set.range bv) := hE2 ▸ genusCovol_zmap_mono N ι inf_le_right
-  haveI : DiscreteTopology NE :=
+  have : DiscreteTopology NE :=
     DiscreteTopology.of_subset (s := (Λ : Set (EuclideanSpace ℝ (Fin N)))) inferInstance hNΛ
-  haveI : IsZLattice ℝ NE := by
+  have : IsZLattice ℝ NE := by
     refine ⟨?_⟩
     rw [eq_top_iff, ← IsZLattice.span_top (K := ℝ) (L := Λ), Submodule.span_le]
     intro v hv

@@ -910,10 +910,10 @@ theorem exists_level [IsLocalRing R] (hwL : IsCPMap U'.P U.P (𝟙 _) (𝟙 G.le
   obtain ⟨u, hu, hu'⟩ := LevelComparison.exists_comparison D.P.isLB D'.P.isLB U.P.L.isLB U'.P.L.isLB
     (U.w_gen e) (U'.w_gen e) hwL.gen
   have inv := GlobalTheory.T.preUniformisation_comparison_torus_invariant R I D D' A A' G U U' wL hw hwL e β hq u hu hu'
-  haveI := (U'.gt e).q_flat
-  haveI := (U'.gt e).q_surj
-  haveI := (U'.gt e).q_affine
-  haveI := (U.gt e).q_hom
+  have := (U'.gt e).q_flat
+  have := (U'.gt e).q_surj
+  have := (U'.gt e).q_affine
+  have := (U.gt e).q_hom
   have hql : (U'.gt e).q.left ≫ β.hom.left = (U.gt e).q.left := congrArg (·.left) hq
   obtain ⟨v, hv, hv'⟩ := LevelComparison.exists_iso_descend (U'.gt e).q.left (fstG I e D'.P.A).left
     (β.hom.left ≫ (fstG I e D.P.A).left) (p := (U.gt e).pG.left) (p' := (U'.gt e).pG.left)

@@ -47,8 +47,8 @@ open GlobalTheory.Mum
 namespace GlobalTheory.Mum
 
 theorem Modif.flat_gp (R : Type) [CommRing R] [IsDomain R] (M : Modif R) : Flat M.gp := by
-  haveI := M.integral
-  haveI := M.dominant
+  have := M.integral
+  have := M.dominant
   refine Flat.of_stalkMap _ fun x => ?_
   have hx : M.gp.base x = genericPoint M.S := by
     have hd : DenseRange M.gp.base := M.gp.denseRange
@@ -62,7 +62,7 @@ theorem Modif.flat_gp (R : Type) [CommRing R] [IsDomain R] (M : Modif R) : Flat 
     exact hg.eq (genericPoint_spec M.S)
   have hF : IsField (M.S.presheaf.stalk (M.gp.base x)) := by
     rw [hx]; exact Field.toIsField _
-  letI : Field (M.S.presheaf.stalk (M.gp.base x)) := hF.toField
+  let : Field (M.S.presheaf.stalk (M.gp.base x)) := hF.toField
   unfold RingHom.Flat
   exact inferInstance
 

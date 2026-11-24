@@ -323,7 +323,7 @@ theorem _root_.GlobalTheory.WigSh.contraction_maps_at_representatives :
     have hex : ∃ g, Rep γ g := by
       obtain ⟨g, hg, hZ, hd⟩ := hexist k r Wp Wq D ν' m₀ γ hbase hγ hpos
       exact ⟨g, hg, hZ, hd⟩
-    simp only [rep, dif_pos hex]
+    simp only [rep, dite_eq_left hex]
     exact hex.choose_spec
   have rep_eq : ∀ γ, _root_.Formalism.FourierDecayAlt.D.IsLocPt γ (r + 1) →
       0 < _root_.Formalism.FourierDecayAlt.D.ptG (_root_.Formalism.QuantumDeterminants.Tz k r D.z * _root_.Formalism.QuantumDeterminants.Tz k r D.z') r γ → ∀ g, Rep γ g →
@@ -521,8 +521,8 @@ theorem exists_linearEquiv_of_irreducible_capelli :
       (∀ w v, qdet E₁ w v = cpol m w • v) → (∀ w v, qdet E₂ w v = cpol m w • v) →
       ∃ T : V₁ ≃ₗ[ℂ] V₂, ∀ a b x, T (E₁ a b x) = E₂ a b (T x) := by
   intro V₁ _ _ _ V₂ _ _ _ n E₁ E₂ m g₁ g₂ i₁ i₂ c₁ c₂
-  haveI := i₁.1
-  haveI := i₂.1
+  have := i₁.1
+  have := i₂.1
   obtain ⟨ν₁, v₁, -, hv₁, hw₁, -⟩ := Formalism.FourierDecayAlt.P.exists_singular_maximal_vector V₁ n E₁ g₁ ⊤
     (fun _ _ _ _ => Submodule.mem_top) top_ne_bot
   obtain ⟨ν₂, v₂, -, hv₂, hw₂, -⟩ := Formalism.FourierDecayAlt.P.exists_singular_maximal_vector V₂ n E₂ g₂ ⊤
@@ -560,8 +560,8 @@ theorem intertwiner_exp_of_intertwiner {V₁ : Type} [NormedAddCommGroup V₁] [
     {V₂ : Type} [NormedAddCommGroup V₂] [NormedSpace ℂ V₂] [FiniteDimensional ℂ V₂]
     (T : V₁ →ₗ[ℂ] V₂) {A₁ : V₁ →L[ℂ] V₁} {A₂ : V₂ →L[ℂ] V₂} (h : ∀ v, T (A₁ v) = A₂ (T v)) (v : V₁) :
     T (NormedSpace.exp A₁ v) = NormedSpace.exp A₂ (T v) := by
-  have : CompleteSpace V₁ := FiniteDimensional.complete ℂ V₁
-  have : CompleteSpace V₂ := FiniteDimensional.complete ℂ V₂
+  have : CompleteSpace V₁ := FiniteDimensional.completeSpace ℂ V₁
+  have : CompleteSpace V₂ := FiniteDimensional.completeSpace ℂ V₂
   have hp : ∀ n : ℕ, ∀ v, T ((A₁ ^ n) v) = (A₂ ^ n) (T v) := by
     intro n
     induction n with
@@ -772,7 +772,7 @@ theorem haarOn_UW_eq_of_mass_one {k r : ℕ} (z : Fin (2 * r + k + 1) → ℂ) (
     (h1 : μ Set.univ = 1) (h2 : ν Set.univ = 1) : ν = μ := by
   obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r _ μ ν (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) hμ hν.conc hν.left hν.finite_compact
   have h3 := congrArg (fun m : Measure (Mt k r) => m Set.univ) hc
-  simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, h1, h2, mul_one] at h3
+  simp only [smul_apply, ENNReal.smul_def, smul_eq_mul, h1, h2, mul_one] at h3
   have h4 : c = 1 := by exact_mod_cast h3.symm
   rw [hc, h4, one_smul]
 

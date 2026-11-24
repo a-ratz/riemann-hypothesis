@@ -157,7 +157,7 @@ theorem isSubquotient_of_eigenform {n : ℕ} {V : Type} [AddCommGroup V] [Module
     rw [f.isIntertwining]
     have : f v = 0 := hv
     rw [this, map_zero]⟩
-  haveI := hirr
+  have := hirr
   rcases eq_bot_or_eq_top K with h | h
   · intro v hv
     have : v ∈ K.toSubmodule := hv
@@ -171,13 +171,13 @@ theorem exists_eigenform_jacBU {n : ℕ} {V : Type} [AddCommGroup V] [Module ℂ
     (hI : fixed π (iwahori k (Fin n)) ≠ ⊥) :
     ∃ (χ : (Fin n → kˣ) →* ℂˣ) (l : Jacquet π (unipB k (Fin n)) →ₗ[ℂ] ℂ), l ≠ 0 ∧
       (∀ g v, l (jacBU π g v) = (χ g : ℂ) * l v) ∧ ∀ h ∈ torusO k (Fin n), χ h = 1 := by
-  haveI := hadm.2 _ (SmGL.IwahoriOnto.isOpen_iwahori k (Fin n))
+  have := hadm.2 _ (SmGL.IwahoriOnto.isOpen_iwahori k (Fin n))
     (SmGL.IwahoriOnto.isCompact_iwahori k (Fin n))
   have hb := GlobalTheory.Published.BorelCasselman_holds k (Fin n) V π hadm
-  haveI : FiniteDimensional ℂ (fixed (jacBU π) (torusO k (Fin n))) :=
+  have : FiniteDimensional ℂ (fixed (jacBU π) (torusO k (Fin n))) :=
     Module.Finite.of_surjective _ hb.2
-  haveI : Nontrivial (fixed π (iwahori k (Fin n))) := Submodule.nontrivial_iff_ne_bot.2 hI
-  haveI : Nontrivial (fixed (jacBU π) (torusO k (Fin n))) := hb.1.nontrivial
+  have : Nontrivial (fixed π (iwahori k (Fin n))) := Submodule.nontrivial_iff_ne_bot.2 hI
+  have : Nontrivial (fixed (jacBU π) (torusO k (Fin n))) := hb.1.nontrivial
   exact exists_eigenform (isSmooth_jacBU hadm.1) (SmGL.UnramFixed.isCompact_torusO k (Fin n)) mul_comm
     fun _ => by rw [Subgroup.normalizer_eq_top]; trivial
 

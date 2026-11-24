@@ -237,8 +237,8 @@ theorem ModPG.span_φ (D : ModPG R n V) (i : ZMod n) {ι : Type} (b : Module.Bas
 
 theorem ModPG.linearIndependent_φ (D : ModPG R n V) (i : ZMod n) {ι : Type} (b : Module.Basis ι k⸨X⸩ V) :
     LinearIndependent k⸨X⸩ fun j => D.φ i (b j) := by
-  haveI := D.fin
-  haveI := FiniteDimensional.fintypeBasisIndex b
+  have := D.fin
+  have := FiniteDimensional.fintypeBasisIndex b
   exact linearIndependent_of_top_le_span_of_card_eq_finrank (D.span_φ i b).ge
     (Module.finrank_eq_card_basis b).symm
 
@@ -338,7 +338,7 @@ theorem frob_X_ne (l : ℕ) [Fact l.Prime] : frob k l PowerSeries.X ≠ 0 := by
 
 theorem frob_mob (l : ℕ) [Fact l.Prime] [CharP k l] (f : k⟦X⟧) :
     frob k l (mob 1 f) = mob 1 (frob k l f) := by
-  haveI : CharP k⟦X⟧ l := charP_of_injective_algebraMap (algebraMap k k⟦X⟧).injective l
+  have : CharP k⟦X⟧ l := charP_of_injective_algebraMap (algebraMap k k⟦X⟧).injective l
   have key : frob k l (PowerSeries.X * inv1 1) = mob 1 (PowerSeries.X ^ l) := by
     have h0 := powerSeries_oneAddConstMulX_mul_inv (1 : k)
     rw [map_one, one_mul] at h0

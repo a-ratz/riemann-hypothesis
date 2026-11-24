@@ -502,7 +502,7 @@ theorem not_up_self {P : M.Par} {l : ℕ} (hl : l ∈ Finset.Icc 1 (P.k - 1)) (�
   intro h
   rw [Finset.mem_Icc] at hl
   have := h ⟨l - 1, by omega⟩
-  rw [if_pos (by show l - 1 + 1 = l; omega)] at this
+  rw [ite_eq_left (by show l - 1 + 1 = l; omega)] at this
   omega
 
 variable {P : M.Par} {A : Type} [Ring A] [StarRing A] [Algebra ℂ A]
@@ -667,7 +667,7 @@ theorem exists_fderiv_log {m : ℕ} (γ : ℝ) (hγ : 0 < γ) (c : Fin m → ℂ
       Real.log_prod (fun a _ => hx' a)]
     simp [R, J, pr, Complex.normSq_apply]
   · intro l w
-    rw [ContinuousLinearMap.sum_apply, Finset.sum_eq_single l]
+    rw [sum_apply, Finset.sum_eq_single l]
     · simp [R, J, pr, Complex.normSq_apply]
       ring
     · intro b _ hb
@@ -685,7 +685,7 @@ theorem euler_mul {m : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ 
         ((LE.ld (q + 1) φ (Complex.normSq (∏ a, c a) * γ) : ℝ) : ℂ) • f c := by
   obtain ⟨D, hD, hDl⟩ := exists_fderiv_log γ hγ c hc
   have hh : Differentiable ℝ (iteratedDeriv q fun u : ℝ => φ (Real.exp u)) :=
-    ContDiff.differentiable_iteratedDeriv q hφ (by exact_mod_cast ENat.coe_lt_top q)
+    ContDiff.differentiable_iteratedDeriv q hφ (by exact_mod_cast ENat.natCast_lt_top q)
   have h1 : HasDerivAt (iteratedDeriv q fun u : ℝ => φ (Real.exp u))
       (LE.ld (q + 1) φ (Complex.normSq (∏ a, c a) * γ)) (Real.log (Complex.normSq (∏ a, c a) * γ)) := by
     rw [LE.ld, iteratedDeriv_succ]
@@ -706,7 +706,7 @@ theorem euler_mul {m : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ 
   have e2 : star (c l) * (((c l).re : ℂ) + Complex.I * (c l).im) = (Complex.normSq (c l) : ℝ) := by
     apply Complex.ext <;> simp [Complex.normSq_apply] <;> ring
   constructor
-  · simp only [pOp, if_pos hc, wirt, key]
+  · simp only [pOp, ite_eq_left hc, wirt, key]
     simp only [Complex.one_re, Complex.one_im, Complex.I_re, Complex.I_im]
     push_cast
     match_scalars
@@ -714,7 +714,7 @@ theorem euler_mul {m : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ 
     · field_simp
       linear_combination (LE.ld (q + 1) φ (Complex.normSq (∏ a, c a) * γ) : ℂ) * e1
     · ring
-  · simp only [pbOp, if_pos hc, wirtBar, key]
+  · simp only [pbOp, ite_eq_left hc, wirtBar, key]
     simp only [Complex.one_re, Complex.one_im, Complex.I_re, Complex.I_im]
     push_cast
     match_scalars
@@ -1277,10 +1277,10 @@ private lemma mem_inv_of_mem_ofWord_inv {A S : Type} [Ring A] [StarRing A] [Alge
     intro Z hZ
     simp only [_root_.Formalism.FourierDecayAlt.Fr.ofWord] at hZ
     by_cases hl : l.plus = true
-    · rw [if_pos hl] at hZ
+    · rw [ite_eq_left hl] at hZ
       unfold _root_.Formalism.FourierDecayAlt.Fr.FrameData.plus at hZ
       exact ih Z (Set.mem_of_mem_inter_left hZ)
-    · rw [if_neg hl] at hZ
+    · rw [ite_eq_right hl] at hZ
       unfold _root_.Formalism.FourierDecayAlt.Fr.FrameData.minus at hZ
       exact ih Z (Set.mem_of_mem_inter_left hZ)
 
@@ -1600,7 +1600,7 @@ theorem letterCol_mem : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] [Algebr
   have hR2 : d.L.R0v l.pt ∈ hats d.L := by simp [hats]
   unfold TL.letterCol
   by_cases hp : l.plus
-  · simp only [hp, if_true]
+  · simp only [hp, ite_true]
     fin_cases i
     · refine io_mem (a := TL.aP L l.pt) ?_ e e'
       rw [TL.aP, eζi, eA, j1]
@@ -1613,7 +1613,7 @@ theorem letterCol_mem : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] [Algebr
         rwa [LevelData.R0, ← mul_assoc, ← mul_assoc, i2] at this
       · rw [ColumnLift.s1p, bounded_comm d (hE f f') (fun b h => (hb b h).1 _ (by simp [LevelData.fns])), mul_assoc, j1]
         exact bounded_mul_mem d (hE f f') (one_mem _) hA1
-  · simp only [hp, Bool.false_eq_true, if_false]
+  · simp only [hp, Bool.false_eq_true, ite_false]
     fin_cases i
     · refine io_mem (a := TL.aM L l.pt) ?_ e e'
       rw [TL.aM, eζbi, eAv, j2]

@@ -242,7 +242,7 @@ theorem slm_hint {V : Set (Matrix (Fin n) (Fin n) ℂ)} (hV : IsOpen V)
   have hZe : ∀ a b, ContinuousOn (fun q => (slmJi ε (γ q) * fderiv ℝ γ q W) a b) V :=
     fun a b => ((slm_cd_iff.mp (slm_cd_mul (slm_mc hγ) hfdW)) a b).continuousOn
   have hcx : Continuous (fun p : ℝ × Formalism.REAL.UJ ε => Formalism.MainNotions.S.umat p.2) :=
-    (Units.continuous_val.comp continuous_subtype_val).comp continuous_snd
+    (Units.continuous_val.comp continuous_subtypeVal).comp continuous_snd
   have hSc : Continuous (fun p : ℝ × Formalism.REAL.UJ ε =>
       slmSum ε γ F W (q + slmCl p.1 • W) (Formalism.MainNotions.S.umat p.2)) := by
     unfold slmSum

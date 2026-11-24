@@ -134,7 +134,7 @@ private theorem ph1_mem_integers_of_mem_O {y : E} (hy : y ∈ M.L.O) : ph1 g y �
   have heq : y * g.e.symm (1, 0) + M.L.cj (y * g.e.symm (1, 0)) = algebraMap F E (ph1 g y) := by
     apply g.e.injective
     refine Prod.ext ?_ ?_ <;> simp [g.e_cj, firstProj_apply]
-  haveI : Nontrivial E := g.e.toEquiv.nontrivial
+  have : Nontrivial E := g.e.toEquiv.nontrivial
   exact Formalism.MainNotions.LocalModelPeriodLattices.mem_OF_of_mem_O M.L _ (heq ▸ hw)
 
 theorem duU_c_int (hs : M.split = some g) (c : Ix r → E)

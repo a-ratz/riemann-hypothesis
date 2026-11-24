@@ -74,8 +74,8 @@ theorem exists_dividing {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : ValuationSu
     (hc : ∀ i, c i ∈ E ∧ IsIntegral ℤ ((D : Ω) * c i))
     (hne : ∃ i, c i ≠ 0) : ∃ i0, c i0 ≠ 0 ∧ ∀ i, c i * (c i0)⁻¹ ∈ A := by
   classical
-  haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
-  haveI : NumberField E := by
+  have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap ℚ Ω).injective
+  have : NumberField E := by
     refine { to_charZero := inferInstance, to_finiteDimensional := ?_ }
     convert ‹FiniteDimensional ℚ E›
     exact Subsingleton.elim _ _
@@ -119,7 +119,7 @@ theorem exists_dividing {Ω : Type} [Field Ω] [Algebra ℚ Ω] (A : ValuationSu
   have hmax' : ∀ j ∈ s0, v (c j) ≤ v (c i0) := by
     intro j hj
     by_cases hcj : c j = 0
-    · rw [hcj, map_zero]; exact zero_le'
+    · rw [hcj, map_zero]; exact zero_le
     · exact hmax j (Finset.mem_filter.2 ⟨hj, hcj⟩)
   refine ⟨i0, hi0, fun i => ?_⟩
   have h1 := hs0 i
@@ -150,8 +150,8 @@ theorem prim_of_bounded : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClos
   ∀ (l : ℕ) [Fact l.Prime] (A : ValuationSubring Ω), ((l : ℕ) : Ω) ∈ A.nonunits → ∀ a : X.K, a ≠ 0 → (∃ (S : Finset Ω) (D : ℕ), 0 < D ∧ ∀ r, (X.exp a).coeff r ∈ IntermediateField.adjoin ℚ (S : Set Ω) ∧ IsIntegral ℤ ((D : Ω) * (X.exp a).coeff r)) → ∃ κ : Ω, κ ≠ 0 ∧ Prim A (X.exp (algebraMap Ω X.K κ * a)) ∧ ∃ S : Finset Ω, ∀ r, (X.exp (algebraMap Ω X.K κ * a)).coeff r ∈ IntermediateField.adjoin ℚ (S : Set Ω) := by
   intro Ω _ _ _ ε X _ l _ A _ a ha hb
   obtain ⟨S, D, hD, hc⟩ := hb
-  haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  haveI : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (S : Set Ω)) :=
+  have : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
+  have : FiniteDimensional ℚ (IntermediateField.adjoin ℚ (S : Set Ω)) :=
     IntermediateField.finiteDimensional_adjoin (fun x _ => Algebra.IsIntegral.isIntegral x)
   have hne : ∃ r, (X.exp a).coeff r ≠ 0 := by
     by_contra h
@@ -246,9 +246,9 @@ theorem exists_prim_frac_level_one : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω]
     exact hf (by simpa using hPQ)
   have hfQ : f * Q = P := by rw [hPQ, div_mul_cancel₀ _ hQ0]
   obtain ⟨M', hM', hQM'⟩ := X.level Q
-  haveI : NeZero M' := ⟨hM'.ne'⟩
-  haveI : (CongruenceSubgroup.Gamma M').Normal := CongruenceSubgroup.Gamma_normal M'
-  haveI : Fintype (SL(2, ℤ) ⧸ CongruenceSubgroup.Gamma M') := Fintype.ofFinite _
+  have : NeZero M' := ⟨hM'.ne'⟩
+  have : (CongruenceSubgroup.Gamma M').Normal := CongruenceSubgroup.Gamma_normal M'
+  have : Fintype (SL(2, ℤ) ⧸ CongruenceSubgroup.Gamma M') := Fintype.ofFinite _
   have tq : ∀ g g' : SL(2, ℤ), g⁻¹ * g' ∈ CongruenceSubgroup.Gamma M' → X.sl (ofSL g') Q = X.sl (ofSL g) Q := by
     intro g g' h
     have hc : g * (g⁻¹ * g') * g⁻¹ ∈ CongruenceSubgroup.Gamma M' :=

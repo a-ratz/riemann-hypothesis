@@ -160,12 +160,12 @@ open scoped TensorProduct in
 theorem exists_lift_geom (R S : Type) [CommRing R] [CommRing S] [Algebra R S]
     [Algebra.FiniteType R S] [Module.FaithfullyFlat R S] (k : Type) [Field k] [IsAlgClosed k]
     (χ : R →+* k) : ∃ χ' : S →+* k, χ'.comp (algebraMap R S) = χ := by
-  letI : Algebra R k := χ.toAlgebra
-  haveI : Nontrivial (k ⊗[R] S) := inferInstance
+  let : Algebra R k := χ.toAlgebra
+  have : Nontrivial (k ⊗[R] S) := inferInstance
   obtain ⟨m, hm⟩ := Ideal.exists_maximal (k ⊗[R] S)
-  letI : Field ((k ⊗[R] S) ⧸ m) := Ideal.Quotient.field m
-  haveI : Algebra.FiniteType k (k ⊗[R] S) := inferInstance
-  haveI : Module.Finite k ((k ⊗[R] S) ⧸ m) := finite_of_finite_type_of_isJacobsonRing k _
+  let : Field ((k ⊗[R] S) ⧸ m) := Ideal.Quotient.field m
+  have : Algebra.FiniteType k (k ⊗[R] S) := inferInstance
+  have : Module.Finite k ((k ⊗[R] S) ⧸ m) := finite_of_finite_type_of_isJacobsonRing k _
   let g : ((k ⊗[R] S) ⧸ m) →ₐ[k] k := (by
     refine @_root_.IsAlgClosed.lift _ _ _ _ _ _ _ _ _ _ _ ?_ ?_ ?_
     solve_by_elim* (maxDepth := 2) only [*,
@@ -188,8 +188,8 @@ theorem exists_preimage_of_geom (R S : Type) [CommRing R] [CommRing S] [Algebra 
     (h : ∀ (k : Type) [Field k] [IsAlgClosed k] (χ₁ χ₂ : S →+* k),
       χ₁.comp (algebraMap R S) = χ₂.comp (algebraMap R S) → χ₁ w = χ₂ w) :
     ∃ u : R, algebraMap R S u = w := by
-  haveI := GlobalTheory.isReduced_algebra_of_smooth_of_isReduced R S
-  haveI := GlobalTheory.isReduced_algebra_of_smooth_of_isReduced S (S ⊗[R] S)
+  have := GlobalTheory.isReduced_algebra_of_smooth_of_isReduced R S
+  have := GlobalTheory.isReduced_algebra_of_smooth_of_isReduced S (S ⊗[R] S)
   have key : w ⊗ₜ[R] (1 : S) = (1 : S) ⊗ₜ[R] w := by
     refine eq_of_forall_geom _ _ fun k _ _ χ => ?_
     refine h k (χ.comp Algebra.TensorProduct.includeLeftRingHom)
@@ -214,9 +214,9 @@ theorem exists_of_finite_cover (K B : Type) [CommRing K] [CommRing B] [Algebra K
     (hval : ∀ i (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra K Ω] (χ' : A i →ₐ[K] Ω),
       χ' (a i) = F Ω (χ'.comp (IsScalarTower.toAlgHom K B (A i)))) :
     ∃ b : B, ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra K Ω] (χ : B →ₐ[K] Ω), χ b = F Ω χ := by
-  haveI : Algebra.Smooth B (∀ i, A i) := ⟨inferInstance, inferInstance⟩
-  haveI : Module.Flat B (∀ i, A i) := inferInstance
-  haveI : Module.FaithfullyFlat B (∀ i, A i) := by
+  have : Algebra.Smooth B (∀ i, A i) := ⟨inferInstance, inferInstance⟩
+  have : Module.Flat B (∀ i, A i) := inferInstance
+  have : Module.FaithfullyFlat B (∀ i, A i) := by
     refine Module.FaithfullyFlat.of_comap_surjective fun p => ?_
     obtain ⟨i, Q, hQ⟩ := hcov p
     refine ⟨PrimeSpectrum.comap (Pi.evalRingHom A i) Q, ?_⟩
@@ -237,7 +237,7 @@ theorem exists_of_finite_cover (K B : Type) [CommRing K] [CommRing B] [Algebra K
     rw [hψ]
     exact hval i Ω ψa
   obtain ⟨b, hb⟩ := exists_preimage_of_geom B (∀ i, A i) a fun k _ _ χ₁ χ₂ h12 => by
-    letI : Algebra K k := (χ₁.comp ((algebraMap B (∀ i, A i)).comp (algebraMap K B))).toAlgebra
+    let : Algebra K k := (χ₁.comp ((algebraMap B (∀ i, A i)).comp (algebraMap K B))).toAlgebra
     have h12' : ∀ y, χ₁ (algebraMap B (∀ i, A i) y) = χ₂ (algebraMap B (∀ i, A i) y) :=
       fun y => RingHom.congr_fun h12 y
     obtain ⟨ρ₁, hρ₁, e₁⟩ := key k χ₁ fun x => rfl
@@ -258,11 +258,11 @@ namespace GlobalTheory.SmoothLocalDescent
 theorem exists_of_smooth_locally : ∀ (K B : Type) [CommRing K] [CommRing B] [Algebra K B] [IsReduced B] (F : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra K Ω], (B →ₐ[K] Ω) → Ω), (∀ q : PrimeSpectrum B, ∃ (B' : Type) (_ : CommRing B') (_ : Algebra B B') (_ : Algebra K B') (_ : IsScalarTower K B B') (b' : B'), Algebra.Smooth B B' ∧ q ∈ Set.range (PrimeSpectrum.comap (algebraMap B B')) ∧ ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra K Ω] (χ' : B' →ₐ[K] Ω), χ' b' = F Ω (χ'.comp (IsScalarTower.toAlgHom K B B'))) → ∃ b : B, ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra K Ω] (χ : B →ₐ[K] Ω), χ b = F Ω χ := by
   intro K B _ _ _ _ F h
   choose B' iR iB iK iT b' hsm hq hval using h
-  letI : ∀ q, CommRing (B' q) := iR
-  letI : ∀ q, Algebra B (B' q) := iB
-  letI : ∀ q, Algebra K (B' q) := iK
-  haveI : ∀ q, IsScalarTower K B (B' q) := iT
-  haveI : ∀ q, Algebra.Smooth B (B' q) := hsm
+  let : ∀ q, CommRing (B' q) := iR
+  let : ∀ q, Algebra B (B' q) := iB
+  let : ∀ q, Algebra K (B' q) := iK
+  have : ∀ q, IsScalarTower K B (B' q) := iT
+  have : ∀ q, Algebra.Smooth B (B' q) := hsm
   let U : PrimeSpectrum B → Set (PrimeSpectrum B) := fun q =>
     Set.range (PrimeSpectrum.comap (algebraMap B (B' q)))
   have hopen : ∀ q, IsOpen (U q) := fun q => by

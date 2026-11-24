@@ -115,21 +115,21 @@ theorem finsum_restrictedFamily_eq_prod_finsum : ∀ (V W : Type) [Fintype W] (C
     intro v hv
     by_contra h
     exact hv (by simpa [hSdef] using h)
-  haveI : ∀ v, Fintype (X v) := fun v => (hX v).fintype
-  haveI : ∀ w, Fintype (Y w) := fun w => Fintype.ofFinite _
+  have : ∀ v, Fintype (X v) := fun v => (hX v).fintype
+  have : ∀ w, Fintype (Y w) := fun w => Fintype.ofFinite _
   let Sub := {p : (∀ v, X v) × (∀ w, Y w) // ∀ᶠ v in cofinite, (p.1 v).1 = 1}
   let F : Sub → ℂ := fun p => (∏ᶠ v, o v (p.1.1 v)) * ∏ w, oa w (p.1.2 w)
   let emb : (∀ v : S, X v) × (∀ w, Y w) → Sub := fun t =>
     ⟨(fun v => if h : v ∈ S then t.1 ⟨v, h⟩ else ⟨1, (hS v h).1⟩, t.2), by
       refine Filter.eventually_cofinite.2 (S.finite_toSet.subset fun v hv => ?_)
       by_contra h
-      simp [dif_neg (show v ∉ S from h)] at hv⟩
+      simp [dite_eq_right (show v ∉ S from h)] at hv⟩
   have hmul : ∀ p : Sub, (Function.mulSupport fun v => o v (p.1.1 v)).Finite := by
     intro p
     refine (S.finite_toSet.union (Filter.eventually_cofinite.1 p.2)).subset ?_
     intro v hv
     by_contra h
-    simp only [Set.mem_union, Finset.mem_coe, Set.mem_setOf_eq, not_or, not_not] at h
+    simp only [Set.mem_union, Finset.mem_coe, mem_ofPred_eq, not_or, not_not] at h
     exact hv (((hS v h.1).2 _).1 h.2)
   have hsupp : Function.support F ⊆ Set.range emb := by
     intro p hp
@@ -144,8 +144,8 @@ theorem finsum_restrictedFamily_eq_prod_finsum : ∀ (V W : Type) [Fintype W] (C
     apply Prod.ext
     · funext v
       by_cases hv : v ∈ S
-      · simp only [emb, dif_pos hv]
-      · simp only [emb, dif_neg hv]
+      · simp only [emb, dite_eq_left hv]
+      · simp only [emb, dite_eq_right hv]
         exact Subtype.ext (h1 v hv).symm
     · rfl
   have hinj : Function.Injective emb := by
@@ -155,7 +155,7 @@ theorem finsum_restrictedFamily_eq_prod_finsum : ∀ (V W : Type) [Fintype W] (C
     obtain ⟨h1, h2⟩ := h'
     refine Prod.ext (funext fun v => ?_) h2
     have := congrFun h1 v.1
-    simpa only [dif_pos v.2] using this
+    simpa only [dite_eq_left v.2] using this
   have hval : ∀ t, F (emb t) = (∏ v : S, o v (t.1 v)) * ∏ w, oa w (t.2 w) := by
     intro t
     show (∏ᶠ v, o v ((emb t).1.1 v)) * ∏ w, oa w (t.2 w) = _
@@ -163,11 +163,11 @@ theorem finsum_restrictedFamily_eq_prod_finsum : ∀ (V W : Type) [Fintype W] (C
     rw [finprod_eq_prod_of_mulSupport_subset _ (s := S) ?_]
     · rw [← Finset.prod_coe_sort S]
       refine Finset.prod_congr rfl fun v _ => ?_
-      simp only [emb, dif_pos v.2]
+      simp only [emb, dite_eq_left v.2]
     · intro v hv
       by_contra h
       apply hv
-      simp only [emb, dif_neg (show v ∉ S from h)]
+      simp only [emb, dite_eq_right (show v ∉ S from h)]
       exact ((hS v h).2 _).1 rfl
   have hsupp' : Function.support F ⊆ ↑(Finset.univ.image emb) := by
     intro p hp
@@ -322,9 +322,9 @@ theorem exists_isCentProd_torus : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   rw [hγA] at hγf hγa
   replace hγf : ∀ v, gam (hf v) = proj σ J v (ratEmb σ J γ) := hγf
   replace hγa : ∀ w, gam (ha w) = projArch σ J w (ratEmb σ J γ) := hγa
-  haveI : T2Space (AF F) := by
-    haveI : T2Space (InfiniteAdeleRing F) := inferInstanceAs (T2Space (∀ w : InfinitePlace F, w.Completion))
-    haveI : T2Space (FiniteAdeleRing (𝓞 F) F) := inferInstanceAs (T2Space (RestrictedProduct
+  have : T2Space (AF F) := by
+    have : T2Space (InfiniteAdeleRing F) := inferInstanceAs (T2Space (∀ w : InfinitePlace F, w.Completion))
+    have : T2Space (FiniteAdeleRing (𝓞 F) F) := inferInstanceAs (T2Space (RestrictedProduct
       (fun v : HeightOneSpectrum (𝓞 F) => v.adicCompletion F)
       (fun v => (v.adicCompletionIntegers F : Set (v.adicCompletion F))) cofinite))
     exact inferInstanceAs (T2Space (InfiniteAdeleRing F × FiniteAdeleRing (𝓞 F) F))
@@ -351,8 +351,8 @@ theorem exists_isCentProd_torus : ∀ (F E : Type) [Field F] [NumberField F] [Fi
       · rintro ⟨δ, hδ⟩
         have h1 : δ * γ = γ * δ := ratEmb_injective σ J (by
           rw [map_mul, map_mul, hδ]; exact mem_cent.1 (e t).2)
-        letI : TopologicalSpace F := ⊥
-        haveI : DiscreteTopology F := ⟨rfl⟩
+        let : TopologicalSpace F := ⊥
+        have : DiscreteTopology F := ⟨rfl⟩
         obtain ⟨e₀, he₀, -⟩ := exists_equiv hσ hJ h₀ hγ₀
         obtain ⟨s, hs⟩ := e₀.surjective ⟨diagH σ J F δ, mem_cent.2 (by rw [← map_mul, ← map_mul, h1])⟩
         obtain ⟨s, rfl⟩ := diagH_surjective (star' P) (one₁ P) s
@@ -643,8 +643,8 @@ end Bridge
 theorem rational_eq_local : ∀ (E : Type) [Field E] [NumberField E] (F : Subfield E) [NumberField F] (σ : E →ₐ[F] E), IsCMExt F E σ → Algebra.Unramified (𝓞 F) (𝓞 E) → ∀ (r : ℕ) (P : PPol σ r) (J : Matrix (Fin r) (Fin r) E), IsHermND σ J → (∀ q q' : Cls P F, q ∈ XSet P F J → q' ∈ XSet P F J → (∀ v : HeightOneSpectrum (𝓞 F), ∃ a : Cls P (Fv F v), MapsCls P (k := F) (Algebra.ofId F (Fv F v)) q a ∧ MapsCls P (k := F) (Algebra.ofId F (Fv F v)) q' a) → (∀ w : InfinitePlace F, ∃ a : Cls P w.Completion, MapsCls P (k := F) (Algebra.ofId F w.Completion) q a ∧ MapsCls P (k := F) (Algebra.ofId F w.Completion) q' a) → q = q') ∧ ∀ (qf : ∀ v : HeightOneSpectrum (𝓞 F), Cls P (Fv F v)) (qa : ∀ w : InfinitePlace F, Cls P w.Completion), (∀ v, qf v ∈ XSet P (Fv F v) J) → (∀ w, qa w ∈ XSet P w.Completion J) → (∀ᶠ v in cofinite, qf v = 1) → ∃ q : Cls P F, q ∈ XSet P F J ∧ (∀ v : HeightOneSpectrum (𝓞 F), MapsCls P (k := F) (Algebra.ofId F (Fv F v)) q (qf v)) ∧ ∀ w : InfinitePlace F, MapsCls P (k := F) (Algebra.ofId F w.Completion) q (qa w) := by
   intro E _ _ F _ σ hcm hur r P J hJ
   obtain ⟨h1, h2, h3, h4⟩ := hcm
-  haveI : Algebra.IsQuadraticExtension F E := ⟨h3⟩
-  haveI : IsCMField E := IsCMField.ofCMExtension F E
+  have : Algebra.IsQuadraticExtension F E := ⟨h3⟩
+  have : IsCMField E := IsCMField.ofCMExtension F E
   obtain rfl : F = maximalRealSubfield E := CMExtension.eq_maximalRealSubfield E F
   obtain rfl : σ = (IsCMField.complexConj E).toAlgHom := by
     obtain ⟨φ⟩ : Nonempty (E →+* ℂ) := inferInstance

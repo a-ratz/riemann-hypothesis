@@ -133,7 +133,7 @@ theorem teich_ext {O : Type} [CommRing O] [IsLocalRing O] [Finite (ResidueField 
       omega
     rw [Finset.sum_congr rfl this, Finset.sum_const, Finset.card_range, nsmul_eq_mul]
     refine mul_ne_zero ?_ (pow_ne_zero _ ((residue_ne_zero_iff_isUnit _).2 y.isUnit))
-    haveI := Fintype.ofFinite (ResidueField O)
+    have := Fintype.ofFinite (ResidueField O)
     rw [hN, Nat.cast_sub Nat.card_pos, Nat.card_eq_fintype_card, FiniteField.cast_card_eq_zero]
     simp
   exact Units.ext (sub_eq_zero.1 (hu.mul_right_eq_zero.1 e))
@@ -141,7 +141,7 @@ theorem teich_ext {O : Type} [CommRing O] [IsLocalRing O] [Finite (ResidueField 
 theorem typeFor_up (hp : ∀ g, h.p (toGS Ω V.S' g) = toGS Ω V0.S' g) (ι : Qbar l ≃+* ℂ) {m : ℕ}
     (τ₀ : KT n (wt s) →* GL (Fin m) c.O) (ht : TypeFor r ι τ₀) : TypeFor (rUp h) ι τ₀ := by
   intro t' ht'
-  haveI : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
+  have : Finite (ResidueField c.O) := Module.finite_of_finite (ResidueField ℤ_[l])
   have hk : ∀ i, (p0 h).ker ≤ (t' i).ker := fun i g hg => by
     refine teich_ext _ _ ?_ (ht' i g).2 (one_pow _)
     rw [(ht' i g).1, rUp_chib, MonoidHom.mem_ker.1 hg, map_one]

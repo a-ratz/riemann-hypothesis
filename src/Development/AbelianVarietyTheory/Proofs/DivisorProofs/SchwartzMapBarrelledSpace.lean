@@ -181,7 +181,7 @@ end SchwartzComplete
 theorem schwartzMap_barrelledSpace : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V]
     [FiniteDimensional ℝ V], BarrelledSpace ℂ (SchwartzMap V ℂ) := by
   intro V _ _ _
-  haveI : (𝓤 𝓢(V, ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
+  have : (𝓤 𝓢(V, ℂ)).IsCountablyGenerated := IsUniformAddGroup.uniformity_countably_generated
   infer_instance
 
 end GlobalTheory

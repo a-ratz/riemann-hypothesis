@@ -351,16 +351,16 @@ def of : B.Sec →+ SecC p σ B :=
   (TensorProduct.mk k ℂ B.Sec 1).toAddMonoidHom
 
 theorem of_smul (a : k) (s : B.Sec) : of p σ (algX p ⊤ a • s) = σ a • of p σ s := by
-  letI := σ.toAlgebra
-  letI := secModuleBase p B
+  let := σ.toAlgebra
+  let := secModuleBase p B
   show (1 : ℂ) ⊗ₜ[k] (a • s) = σ a • ((1 : ℂ) ⊗ₜ[k] s)
   rw [← TensorProduct.smul_tmul, TensorProduct.smul_tmul', Algebra.smul_def, mul_one, smul_eq_mul,
     mul_one]
   rfl
 
 theorem span_range_of : Submodule.span ℂ (range (of p σ : B.Sec → _)) = ⊤ := by
-  letI := σ.toAlgebra
-  letI := secModuleBase p B
+  let := σ.toAlgebra
+  let := secModuleBase p B
   refine eq_top_iff.2 fun x _ => ?_
   refine TensorProduct.induction_on (motive := fun x : ℂ ⊗[k] B.Sec =>
     @id (SecC p σ B) x ∈ Submodule.span ℂ (range (of p σ : B.Sec → SecC p σ B))) x ?_ ?_ ?_
@@ -384,10 +384,10 @@ def lift {E : Type*} [AddCommGroup E] [Module ℂ E] (φ : B.Sec →+ E)
 
 @[simp] theorem lift_of {E : Type*} [AddCommGroup E] [Module ℂ E] (φ : B.Sec →+ E)
     (h : ∀ a s, φ (algX p ⊤ a • s) = σ a • φ s) (s : B.Sec) : lift φ h (of p σ s) = φ s := by
-  letI := σ.toAlgebra
-  letI := secModuleBase p B
-  letI : Module k E := Module.compHom E σ
-  haveI : IsScalarTower k ℂ E := ⟨fun a c x => mul_smul (σ a) c x⟩
+  let := σ.toAlgebra
+  let := secModuleBase p B
+  let : Module k E := Module.compHom E σ
+  have : IsScalarTower k ℂ E := ⟨fun a c x => mul_smul (σ a) c x⟩
   show LinearMap.liftBaseChange ℂ _ ((1 : ℂ) ⊗ₜ[k] s) = φ s
   rw [LinearMap.liftBaseChange_tmul, one_smul]
   rfl

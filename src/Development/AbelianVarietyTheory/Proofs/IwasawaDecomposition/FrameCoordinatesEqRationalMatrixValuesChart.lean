@@ -75,7 +75,7 @@ theorem GlobalTheory.LieBase.coords_eq_ratVal_of_chart : ∀ (E : Type) [Field E
   intro E _ _ _ H Dw l Xo c O _ β Z σ F _ e X j f₀ S A₀ hj _hoi hT V φ Φ hV A
   classical
   have hVa : IsAffineOpen V.1 := V.2
-  haveI : Mono (LogKS.chart V) := inferInstanceAs (Mono hVa.fromSpec)
+  have : Mono (LogKS.chart V) := inferInstanceAs (Mono hVa.fromSpec)
   have hmem : ∀ z : GlobalTheory.CxPts X.str (σ.comp e.toRingHom), cxOf e σ hj z ∈ ptsIn (genStr Z) σ V.1 →
       under z ∈ j ⁻¹ᵁ V.1 := fun z hz => mem_ptsIn.1 hz
   by_cases hη : genericPoint X.X ∈ j ⁻¹ᵁ V.1

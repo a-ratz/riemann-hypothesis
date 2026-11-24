@@ -119,13 +119,13 @@ private theorem eq_zero_of_isHomogeneous_of_forall_lin_pow_eq_zero {ι : Type} [
       simp
     have hc := congrArg (AddMonoidAlgebra.coeff · d) hQ
     rw [hQdef, MvPolynomial.coeff_sum, Finset.sum_eq_single (⇑d)] at hc
-    · rw [Finsupp.equivFunOnFinite_symm_coe, MvPolynomial.coeff_monomial, if_pos rfl,
+    · rw [Finsupp.equivFunOnFinite_symm_coe, MvPolynomial.coeff_monomial, ite_eq_left rfl,
         MvPolynomial.coeff_zero] at hc
       have hne : (Nat.multinomial Finset.univ ⇑d : ℝ) ≠ 0 := by
         exact_mod_cast (Nat.multinomial_pos _ _).ne'
       exact (mul_eq_zero.mp hc).resolve_left hne
     · intro b _ hb
-      rw [MvPolynomial.coeff_monomial, if_neg]
+      rw [MvPolynomial.coeff_monomial, ite_eq_right]
       intro heq
       apply hb
       rw [← heq]

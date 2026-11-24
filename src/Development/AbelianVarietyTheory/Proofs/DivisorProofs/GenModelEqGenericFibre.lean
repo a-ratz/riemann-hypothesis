@@ -752,7 +752,7 @@ theorem pow_eq_one_geom {gb : GBase D.toG R'} {N : ℕ} {t : S ⟶ Sp R'} (o : G
     (hg : ∃ u : (o.P.pull (lift (snd o.A (Over.mk x₀) ≫ g) (fst o.A (Over.mk x₀))).left).Gen, u.IsGen) :
     g ^ e = 1 := by
   obtain ⟨β, hβ⟩ := exists_spMap (x₀ ≫ t)
-  haveI := charZero_of_hom β
+  have := charZero_of_hom β
   obtain ⟨I, -⟩ := o.geom k x₀ β hβ
   obtain ⟨y, hy⟩ : ∃ y : D.La, I.ev M y = g := (I.onto M hM g).1 hn
   have key : ∀ z : D.La, (M : ℤ) ∣ D.EF y z := by
@@ -812,7 +812,7 @@ theorem genericObject_kernelCondition {gb : GBase D.toG R'} {N : ℕ} {t : S ⟶
 theorem geomFull {b : Base D R'} {N : ℕ} (hN : N.Coprime p) {t : S ⟶ Sp R'} (o : Obj b N t) : GeomFull o t := by
   intro k _ _ x β hβ
   have hp : p.Prime := Fact.out
-  haveI := charZero_of_hom β
+  have := charZero_of_hom β
   have hG : Out.GlobalFnsSt := GlobalTheory.globalFns_holds
   have hN0 : 0 < N := Nat.pos_of_ne_zero fun h => hp.one_lt.ne' ((Nat.coprime_zero_left p).1 (h ▸ hN))
   have hB : IsAbelianScheme (G2 o.A) := AbelianSchemeGerms.isAbelianScheme_tensor _ _ o.ab o.ab
@@ -822,10 +822,10 @@ theorem geomFull {b : Base D R'} {N : ℕ} (hN : N.Coprime p) {t : S ⟶ Sp R'} 
   let E : ℕ → Q → Q → kˣ → Prop := fun n g g' z =>
     Out.WeilIs o.A (o.P.pull (lift (𝟙 o.A) (𝟙 o.A)).left) n g g' (unitOn z)
   have amul : ∀ c a b, act c (a * b) = act c a * act c b := fun c a b => by
-    haveI := o.act.hom c
+    have := o.act.hom c
     exact MonObj.mul_comp _ _ _
   have apow : ∀ c (a : Q) n, a ^ n = 1 → act c a ^ n = 1 := fun c a n h => by
-    haveI := o.act.hom c
+    have := o.act.hom c
     show (a ≫ _) ^ n = 1
     rw [← MonObj.pow_comp, h, MonObj.one_comp]
   have powl : ∀ (n : ℕ) (a b : Q), (lift a b) ^ n = lift (a ^ n) (b ^ n) := by

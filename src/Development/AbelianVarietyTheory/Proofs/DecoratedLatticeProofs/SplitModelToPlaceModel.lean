@@ -184,7 +184,7 @@ theorem map_mem_integer {k k' : Type} [Field k] [ValuativeRel k] [TopologicalSpa
   by_contra h
   rw [Valuation.mem_integer_iff, not_le] at h
   have hK : IsCompact (φ '' (𝒪[k] : Set k)) := (isCompact_iff_compactSpace.2 (inferInstance : CompactSpace 𝒪[k])).image hφ
-  haveI : MulArchimedean (ValueGroupWithZero k') := ValuativeRel.isRankLeOne_iff_mulArchimedean.1 inferInstance
+  have : MulArchimedean (ValueGroupWithZero k') := ValuativeRel.isRankLeOne_iff_mulArchimedean.1 inferInstance
   have h0 : valuation k' (φ a) ≠ 0 := (zero_lt_one.trans h).ne'
   have hU : ∀ n : ℕ, IsOpen {y : k' | valuation k' y < valuation k' (φ a) ^ n} := fun n => by
     rw [isOpen_iff_mem_nhds]

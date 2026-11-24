@@ -70,9 +70,9 @@ namespace GlobalTheory.NrmVol
 theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
     MeasurableSet (GlobalTheory.NrmVol.suppQ (a := a) (b := b) v r) := by
   intro D v a b r
-  haveI : BorelSpace (Fv D.host.F v) := ⟨rfl⟩
-  haveI := GlobalTheory.SplitWeil.secondCountable (Fv D.host.F v)
-  haveI : OpensMeasurableSpace (Matrix (Fin b) (Fin a) (Fv D.host.F v)) :=
+  have : BorelSpace (Fv D.host.F v) := ⟨rfl⟩
+  have := GlobalTheory.SplitWeil.secondCountable (Fv D.host.F v)
+  have : OpensMeasurableSpace (Matrix (Fin b) (Fin a) (Fv D.host.F v)) :=
     inferInstanceAs (OpensMeasurableSpace (Fin b → Fin a → Fv D.host.F v))
   have hentry : ∀ i j, Continuous fun x : Matrix (Fin b) (Fin a) (Fv D.host.F v) => x i j :=
     fun i j => (continuous_apply j).comp (continuous_apply i)
@@ -80,8 +80,8 @@ theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
     refine continuous_pi fun i => continuous_pi fun j => ?_
     unfold topL
     by_cases h : i.val < b ∧ j.val < a
-    · simp only [dif_pos h]; exact hentry _ _
-    · simp only [dif_neg h]; exact continuous_const
+    · simp only [dite_eq_left h]; exact hentry _ _
+    · simp only [dite_eq_right h]; exact continuous_const
   have hdet : Continuous fun x : Matrix (Fin b) (Fin a) (Fv D.host.F v) => (topL r x).det :=
     htop.matrix_det
   have hball : IsOpen {y : Fv D.host.F v | Valued.v y < 1} := by
@@ -103,7 +103,7 @@ theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
     have : {x : Matrix (Fin b) (Fin a) (Fv D.host.F v) | ∀ i j, x i j ∈ v.adicCompletionIntegers D.host.F} =
         ⋂ i, ⋂ j, (fun x : Matrix (Fin b) (Fin a) (Fv D.host.F v) => x i j) ⁻¹' {y | Valued.v y ≤ 1} := by
       ext x
-      simp only [Set.mem_setOf_eq, Set.mem_iInter, Set.mem_preimage,
+      simp only [Set.mem_ofPred_eq, Set.mem_iInter, Set.mem_preimage,
         HeightOneSpectrum.mem_adicCompletionIntegers]
     rw [this]
     exact MeasurableSet.iInter fun i => MeasurableSet.iInter fun j => (hcb.preimage (hentry i j)).measurableSet
@@ -111,7 +111,7 @@ theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
       ∀ i j, r ≤ i.val → j.val < r → Valued.v (x i j) < 1} := by
     have : {x : Matrix (Fin b) (Fin a) (Fv D.host.F v) | ∀ i j, r ≤ i.val → j.val < r → Valued.v (x i j) < 1} =
         ⋂ i, ⋂ j, {x : Matrix (Fin b) (Fin a) (Fv D.host.F v) | r ≤ i.val → j.val < r → Valued.v (x i j) < 1} := by
-      ext x; simp only [Set.mem_setOf_eq, Set.mem_iInter]
+      ext x; simp only [Set.mem_ofPred_eq, Set.mem_iInter]
     rw [this]
     refine MeasurableSet.iInter fun i => MeasurableSet.iInter fun j => ?_
     by_cases hij : r ≤ i.val ∧ j.val < r
@@ -123,7 +123,7 @@ theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
     · have : {x : Matrix (Fin b) (Fin a) (Fv D.host.F v) | r ≤ i.val → j.val < r → Valued.v (x i j) < 1} =
           Set.univ := by
         ext x
-        simp only [Set.mem_setOf_eq, Set.mem_univ, iff_true]
+        simp only [Set.mem_ofPred_eq, Set.mem_univ, iff_true]
         intro h h'
         exact absurd ⟨h, h'⟩ hij
       rw [this]
@@ -133,7 +133,7 @@ theorem measurableSet_suppQ : ∀ (D : D7) (v : FinPl D) (a b r : ℕ),
         {x | ∀ i j, x i j ∈ v.adicCompletionIntegers D.host.F} ∩
         {x | ∀ i j, r ≤ i.val → j.val < r → Valued.v (x i j) < 1} := by
     ext x
-    simp only [suppQ, Set.mem_setOf_eq, Set.mem_inter_iff, and_assoc]
+    simp only [suppQ, Set.mem_ofPred_eq, Set.mem_inter_iff, and_assoc]
   rw [this]
   exact ((h1.inter h2).inter h3).inter h4
 

@@ -245,15 +245,15 @@ theorem isCompact_intSet (b : Module.Basis κ ℤ D.La) (L : Link D G) :
 theorem exists_level_eq_KN : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (G : HTGroup p) (L : Link D G) (N : ℕ),
     0 < N → ∃ Lv : G.Level, Lv.K.toSubgroup = L.KN N := by
   intro p _ D G L N hN
-  haveI := D.freeLa
-  haveI := D.finLa
+  have := D.freeLa
+  have := D.finLa
   set b := Module.Free.chooseBasis ℤ D.La
-  haveI : T2Space (AfP p) := inferInstanceAs
+  have : T2Space (AfP p) := inferInstanceAs
     (T2Space (Πʳ v : AwayP p, [v.1.adicCompletion ℚ, v.1.adicCompletionIntegers ℚ]))
-  haveI : T2Space (AfP p ⊗[ℚ] G.C) := LevelExists.t2Space_tensor_rat_finite_algebra_moduleTopology (AfP p) G.C
+  have : T2Space (AfP p ⊗[ℚ] G.C) := LevelExists.t2Space_tensor_rat_finite_algebra_moduleTopology (AfP p) G.C
   set xg : G.GAf → AfP p ⊗[ℚ] G.C :=
     fun g => (((g : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ).1 : (AfP p ⊗[ℚ] G.C)ˣ) : AfP p ⊗[ℚ] G.C) with hxgdef
-  have hxg : Continuous xg := Units.continuous_val.comp (continuous_fst.comp continuous_subtype_val)
+  have hxg : Continuous xg := Units.continuous_val.comp (continuous_fst.comp continuous_subtypeVal)
   have hxgi : Continuous (fun g : G.GAf => xg g⁻¹) := hxg.comp continuous_inv
 
   set box : Set (Matrix (Module.Free.ChooseBasisIndex ℤ D.La) (Module.Free.ChooseBasisIndex ℤ D.La) (AfP p)) :=

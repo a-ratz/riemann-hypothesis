@@ -62,7 +62,7 @@ namespace GlobalTheory.Dec.FormF
 variable {n : ℕ}
 
 lemma toMK_cont (ε : Fin n → Bool) : Continuous (fun k : KG ε => toMK k) :=
-  (isClosedEmbeddingMatrix n ε).1.continuous.comp continuous_subtype_val
+  (isClosedEmbeddingMatrix n ε).1.continuous.comp continuous_subtypeVal
 
 lemma inner_rep {G : Set (Matrix (Fin n) (Fin n) ℂ)} {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (h : IsURepOn G σ) {g : Matrix (Fin n) (Fin n) ℂ} (hg : g ∈ G)
@@ -73,11 +73,11 @@ lemma inner_rep_K {ε : Fin n → Bool} {H : Type} [NormedAddCommGroup H] [Inner
     {σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (h : IsURepOn (Kset ε) σ) {g : Matrix (Fin n) (Fin n) ℂ}
     (hg : g ∈ Kset ε) (x y : H) : ⟪σ g x, y⟫_ℂ = ⟪x, σ (star g) y⟫_ℂ := by
   rw [← inner_rep h hg x, ← ContinuousLinearMap.comp_apply (σ g) (σ (star g)), ← h.1.2 _ hg _ (Kset_star ε hg),
-    Unitary.mul_star_self_of_mem hg.1, h.1.1, ContinuousLinearMap.one_apply]
+    Unitary.mul_star_self_of_mem hg.1, h.1.1, one_apply_eq_self]
 
 theorem rangeType : ∀ (n : ℕ) (ε : Fin n → Bool) (abelian₂ : Fin n → ℝ) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (S : Submodule ℂ H) (H' : Type) [NormedAddCommGroup H'] [InnerProductSpace ℂ H'] (σ' : Matrix (Fin n) (Fin n) ℂ → (H' →L[ℂ] H')) (T : S →L[ℂ] H'), IsKTypeOf ε σ abelian₂ S → (∀ k ∈ Kset ε, ∀ x y : S, (y : H) = σ k x → T y = σ' k (T x)) → T ≠ 0 → IsKTypeOf ε σ' abelian₂ (LinearMap.range (T : S →ₗ[ℂ] H')) := by
   intro n ε abelian₂ H _ _ σ S H' _ _ σ' T hS hT hT0
-  haveI := hS.1
+  have := hS.1
   have hinj : Function.Injective T := by
     rcases hS.2.2.1 ((LinearMap.ker (T : S →ₗ[ℂ] H')).map S.subtype) (Submodule.map_subtype_le _ _) (by
       rintro k hk _ ⟨x, hx, rfl⟩
@@ -141,9 +141,9 @@ theorem rangeType : ∀ (n : ℕ) (ε : Fin n → Bool) (abelian₂ : Fin n → 
 
 theorem psEntry : PhiPos → ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ) (W : Type) [NormedAddCommGroup W] [InnerProductSpace ℂ W] (τ : Matrix (Fin n) (Fin n) ℂ → (W →L[ℂ] W)) (w : W), FiniteDimensional ℂ W → (∀ v : W, ContinuousOn (fun k => τ k v) (Kset ε)) → ∀ x : Matrix (Fin n) (Fin n) ℂ, x.PosDef → ∀ u y : W, ⟪y, ps ε lam τ w x u⟫_ℂ = (Module.finrank ℂ W : ℂ) * ∫ k : KG ε, Phi lam ((toMK k)⁻¹ * x * toMK k) * (⟪y, τ (toMK k) w⟫_ℂ * ⟪τ (toMK k) w, u⟫_ℂ) ∂(muK ε) := by
   intro hP n ε lam W _ _ τ w hW hτ x hx u y
-  haveI := FiniteDimensional.complete ℂ W
+  have := FiniteDimensional.completeSpace ℂ W
   have hk : Continuous (fun k : KG ε => toMK k) :=
-    (isClosedEmbeddingMatrix n ε).1.continuous.comp continuous_subtype_val
+    (isClosedEmbeddingMatrix n ε).1.continuous.comp continuous_subtypeVal
   have h1 : Continuous (fun k : KG ε => τ (toMK k) w) := (hτ w).comp_continuous hk fun k => k.2
   have h2 : Continuous (fun k : KG ε => Phi lam ((toMK k)⁻¹ * x * toMK k)) := by
     have e : ∀ k : KG ε, (toMK k)⁻¹ = (toMK k)ᴴ := fun k => K_inv k.2
@@ -158,7 +158,7 @@ theorem psEntry : PhiPos → ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n �
     h2.smul (((StrongDual.smulRightL ℂ W W).continuous.comp ((innerSL ℂ).continuous.comp h1)).clm_apply h1)
   have h4 := h3.integrable_of_hasCompactSupport (μ := muK ε) (HasCompactSupport.of_compactSpace _)
   unfold ps
-  rw [ContinuousLinearMap.smul_apply, inner_smul_right, ContinuousLinearMap.integral_apply h4,
+  rw [smul_apply, inner_smul_right, ContinuousLinearMap.integral_apply h4,
     ← integral_inner (h4.apply_continuousLinearMap u)]
   congr 2
   funext k
@@ -182,9 +182,9 @@ theorem muConj : ∀ (n : ℕ) (ε : Fin n → Bool) (F : Matrix (Fin n) (Fin n)
         change (toMK a * toMK b).map star = (toMK a).map star * (toMK b).map star
         exact map_star_mul _ _)
       continuous_toFun := hcont, continuous_invFun := hcont }
-  haveI := (compact_haar_holds n ε).1
-  haveI : IsProbabilityMeasure ((muK ε).map e) := inferInstance
-  haveI : ((muK ε).map e).IsHaarMeasure := e.isHaarMeasure_map _
+  have := (compact_haar_holds n ε).1
+  have : IsProbabilityMeasure ((muK ε).map e) := inferInstance
+  have : ((muK ε).map e).IsHaarMeasure := e.isHaarMeasure_map _
   have h : (muK ε).map e = muK ε := Measure.isHaarMeasure_eq_of_isProbabilityMeasure _ _
   have := integral_map_equiv (μ := muK ε) e.toHomeomorph.toMeasurableEquiv (fun k => F (toMK k))
   rw [show (muK ε).map e.toHomeomorph.toMeasurableEquiv = muK ε from h] at this
@@ -217,8 +217,8 @@ theorem avgMap : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Type) [NormedAddCommGr
 
 theorem avgSchur : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Type) [NormedAddCommGroup W] [InnerProductSpace ℂ W] (ρ : Matrix (Fin n) (Fin n) ℂ → (W →L[ℂ] W)) (w : W), FiniteDimensional ℂ W → IsURepOn (Kset ε) ρ → (∀ S : Submodule ℂ W, IsKStableOn ε ρ S → S = ⊥ ∨ S = ⊤) → w ≠ 0 → ∃ c : ℂ, c ≠ 0 ∧ ∀ (x : W) (φ : W →L[ℂ] ℂ), ∫ k : KG ε, ⟪ρ (toMK k) w, x⟫_ℂ * φ (ρ (toMK k) w) ∂(muK ε) = c * φ x := by
   intro n ε W _ _ ρ w hW hρ hirr hw
-  haveI := FiniteDimensional.complete ℂ W
-  haveI : Nontrivial W := ⟨⟨w, 0, hw⟩⟩
+  have := FiniteDimensional.completeSpace ℂ W
+  have : Nontrivial W := ⟨⟨w, 0, hw⟩⟩
   obtain ⟨T, hT, hTi⟩ := avgMap n ε W ρ w W ρ w hW hρ inferInstance hρ
   obtain ⟨c, hc⟩ := Module.End.exists_eigenvalue (T : W →ₗ[ℂ] W)
   have hTc : ∀ x, T x = c • x := by
@@ -240,7 +240,7 @@ theorem avgSchur : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Type) [NormedAddComm
     rw [innerSL_apply_apply, ← inner_conj_symm, Complex.conj_mul']; simp
   simp only [e, integral_ofReal] at h0
   have hc2 : Continuous (fun k : KG ε => ‖⟪w, ρ (toMK k) w⟫_ℂ‖ ^ 2) := (continuous_const.inner h1).norm.pow 2
-  have hpos := hc2.integral_pos_of_hasCompactSupport_nonneg_nonzero (μ := muK ε) (x := 1)
+  have hpos := hc2.integral_pos_of_hasCompactSupport_nonneg_ne_zero (μ := muK ε) (x := 1)
     (HasCompactSupport.of_compactSpace _) (fun k => by positivity) (by
       have : toMK (1 : KG ε) = 1 := rfl
       simpa [this, hρ.1.1] using hw)

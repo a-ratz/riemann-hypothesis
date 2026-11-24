@@ -106,7 +106,7 @@ theorem localAlg_frob_fixed_isField_and_pth_roots :
   have hfinA : Module.Finite k (Algebra.adjoin k (T : Set A)) :=
     Algebra.finite_adjoin_of_finite_of_isIntegral T.finite_toSet hint
   rw [hT] at hfinA
-  haveI : Module.Finite k A := Module.Finite.equiv (Subalgebra.topEquiv (R := k) (A := A)).toLinearEquiv
+  have : Module.Finite k A := Module.Finite.equiv (Subalgebra.topEquiv (R := k) (A := A)).toLinearEquiv
 
   have hpk : ((p ^ f : ℕ) : k) = 0 := by
     rw [CharP.cast_eq_zero_iff k p]; exact dvd_pow_self p hf.ne'
@@ -117,7 +117,7 @@ theorem localAlg_frob_fixed_isField_and_pth_roots :
     rw [hfix t ht] at h1
     rw [h1, ← Nat.cast_smul_eq_nsmul k, hpk, zero_smul]
     rfl
-  haveI : Subsingleton (Ω[A⁄k]) := by
+  have : Subsingleton (Ω[A⁄k]) := by
     constructor
     intro x y
     have hx : ∀ z : Ω[A⁄k], z = 0 := by
@@ -130,15 +130,15 @@ theorem localAlg_frob_fixed_isField_and_pth_roots :
       have := Submodule.span_mono (R := A) this hz
       simpa using this
     rw [hx x, hx y]
-  haveI : Algebra.FormallyUnramified k A := ⟨inferInstance⟩
-  haveI : IsReduced A := Algebra.FormallyUnramified.isReduced_of_field k A
-  haveI : IsArtinianRing A := IsArtinianRing.of_finite k A
+  have : Algebra.FormallyUnramified k A := ⟨inferInstance⟩
+  have : IsReduced A := Algebra.FormallyUnramified.isReduced_of_field k A
+  have : IsArtinianRing A := IsArtinianRing.of_finite k A
   have hField : IsField A := IsArtinianRing.isField_of_isReduced_of_isLocalRing A
   refine ⟨hField, ?_⟩
   intro y a hy
-  letI : Field A := hField.toField
-  haveI : Algebra.IsSeparable k A := Algebra.FormallyUnramified.isSeparable k A
-  haveI : ExpChar k p := ExpChar.prime hp.out
+  let : Field A := hField.toField
+  have : Algebra.IsSeparable k A := Algebra.FormallyUnramified.isSeparable k A
+  have : ExpChar k p := ExpChar.prime hp.out
   have hmem : y ∈ perfectClosure k A := by
     rw [mem_perfectClosure_iff_pow_mem p]
     exact ⟨1, by rw [pow_one, hy]; exact ⟨a, rfl⟩⟩
@@ -180,7 +180,7 @@ theorem residue_core : ∀ (p : ℕ) [Fact p.Prime] (O Ω : Type) [CommRing O] [
       rw [map_zero] at hx1
       exact zero_ne_one hx1
     obtain ⟨P, hPm, hP⟩ := (hv x⁻¹).1 (by rw [map_inv₀, hx1, inv_one])
-    letI : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx0)
+    let : Invertible x⁻¹ := invertibleOfNonzero (inv_ne_zero hx0)
     have h1 := Polynomial.eval₂_reverse_mul_pow (algebraMap O Ω) x⁻¹ P
     rw [hP, invOf_eq_inv, inv_inv] at h1
     have h2 : Polynomial.eval₂ (algebraMap O Ω) x P.reverse = 0 :=
@@ -216,9 +216,9 @@ theorem residue_core : ∀ (p : ℕ) [Fact p.Prime] (O Ω : Type) [CommRing O] [
   have hpI : (p : Algebra.adjoin O (T : Set Ω)) ∈ I := by
     rw [memI]
     simpa using hpπ
-  haveI hmaxI := hmax
-  letI hk : Field (O ⧸ Ideal.span {(p : O)}) := Ideal.Quotient.field _
-  haveI : CharP (O ⧸ Ideal.span {(p : O)}) p :=
+  have hmaxI := hmax
+  let hk : Field (O ⧸ Ideal.span {(p : O)}) := Ideal.Quotient.field _
+  have : CharP (O ⧸ Ideal.span {(p : O)}) p :=
     CharP.quotient O p (fun hu => hmax.ne_top (Ideal.span_singleton_eq_top.2 hu))
   let φ : (O ⧸ Ideal.span {(p : O)}) →+* Algebra.adjoin O (T : Set Ω) ⧸ I :=
     Ideal.Quotient.lift _ ((Ideal.Quotient.mk I).comp (algebraMap O _)) (by
@@ -226,13 +226,13 @@ theorem residue_core : ∀ (p : ℕ) [Fact p.Prime] (O Ω : Type) [CommRing O] [
       obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.1 ha
       rw [RingHom.comp_apply, Ideal.Quotient.eq_zero_iff_mem, map_mul, map_natCast]
       exact I.mul_mem_left _ hpI)
-  letI : Algebra (O ⧸ Ideal.span {(p : O)}) (Algebra.adjoin O (T : Set Ω) ⧸ I) := φ.toAlgebra
-  haveI hnt : Nontrivial (Algebra.adjoin O (T : Set Ω) ⧸ I) := Ideal.Quotient.nontrivial_iff.2 (by
+  let : Algebra (O ⧸ Ideal.span {(p : O)}) (Algebra.adjoin O (T : Set Ω) ⧸ I) := φ.toAlgebra
+  have hnt : Nontrivial (Algebra.adjoin O (T : Set Ω) ⧸ I) := Ideal.Quotient.nontrivial_iff.2 (by
     intro h
     have h1 : (1 : Algebra.adjoin O (T : Set Ω)) ∈ I := by rw [h]; exact Submodule.mem_top
     have := hvI 1 h1
     simp at this)
-  haveI : IsLocalRing (Algebra.adjoin O (T : Set Ω) ⧸ I) := by
+  have : IsLocalRing (Algebra.adjoin O (T : Set Ω) ⧸ I) := by
     refine { toNontrivial := hnt, isUnit_or_isUnit_of_add_one := ?_ }
     intro a b hab
     obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective a
@@ -366,7 +366,7 @@ theorem not_pow_mod_max : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [A
   intro p _ Ω _ _ hclo S hS y hy hyint
   rintro ⟨m, hm, hmint⟩
   classical
-  haveI := Basic.charZero_of_isClo hclo
+  have := Basic.charZero_of_isClo hclo
   obtain ⟨hdom, hdvr, hirr⟩ := completed_laurent_isDVR p
   have huni := (IsDiscreteValuationRing.irreducible_iff_uniformizer _).1 hirr
   have hmax : (Ideal.span {(p : O0 p)}).IsMaximal := by
@@ -389,8 +389,8 @@ theorem not_pow_mod_max : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [A
     have hinv : IsInt (p := p) ((p : Ω)⁻¹) := (hv _).1 (by rw [map_inv₀, heq, inv_one])
     exact Basic.not_cong_one_zero hclo 1 one_ne_zero
       ⟨(p : Ω)⁻¹, hinv, by rw [sub_zero, pow_one, mul_inv_cancel₀ hp0]⟩
-  letI : Algebra ℤ_[p] Ω := ((algebraMap (O0 p) Ω).comp (algebraMap ℤ_[p] (O0 p))).toAlgebra
-  haveI : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
+  let : Algebra ℤ_[p] Ω := ((algebraMap (O0 p) Ω).comp (algebraMap ℤ_[p] (O0 p))).toAlgebra
+  have : IsScalarTower ℤ_[p] (O0 p) Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   have hinj : Function.Injective (algebraMap ℤ_[p] Ω) := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro x hx

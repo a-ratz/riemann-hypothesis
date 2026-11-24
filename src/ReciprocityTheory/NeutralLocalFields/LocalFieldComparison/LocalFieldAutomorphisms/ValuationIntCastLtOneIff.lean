@@ -130,7 +130,7 @@ theorem mem_comap_ball (ι : Ω →+* PadicAlgCl p) (x : Ω) :
     x ∈ ((PadicAlgCl.valued p).v.valuationSubring.comap ι) ↔ ‖ι x‖ ≤ 1 := by
   rw [ValuationSubring.mem_comap, Valuation.mem_valuationSubring_iff]
   show ‖ι x‖₊ ≤ 1 ↔ ‖ι x‖ ≤ 1
-  rw [← NNReal.coe_le_coe, coe_nnnorm, NNReal.coe_one]
+  rw [← NNReal.coe_le_coe, coe_nnNorm, NNReal.coe_one]
 
 
 variable (F) in

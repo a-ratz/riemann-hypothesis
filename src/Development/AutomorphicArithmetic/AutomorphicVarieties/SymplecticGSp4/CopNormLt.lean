@@ -167,7 +167,7 @@ private theorem cop_bdd {l : ℕ} [Fact l.Prime] {R : Type} [CommRing R] [IsNoet
     (hc : ∀ x, (F x).fst ∈ c.O) : ∃ C : ℝ, 0 ≤ C ∧ ∀ x, ‖(F x).snd‖ ≤ C := by
   classical
   let f : R →ₐ[ℤ_[l]] c.O := ((TrivSqZeroExt.fstHom ℤ_[l] _ _).comp F).codRestrict c.O hc
-  haveI : Module.Finite ℤ_[l] f.range := Module.Finite.of_injective f.range.val.toLinearMap Subtype.val_injective
+  have : Module.Finite ℤ_[l] f.range := Module.Finite.of_injective f.range.val.toLinearMap Subtype.val_injective
   obtain ⟨r, s, hs⟩ := Module.Finite.exists_fin (R := ℤ_[l]) (M := f.range)
   choose b hb using fun i => f.rangeRestrict_surjective (s i)
   obtain ⟨P, hP⟩ : (RingHom.ker f).FG := IsNoetherian.noetherian _
@@ -230,8 +230,8 @@ private theorem cop_main {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDom
     (∃ a : ℝ, a < 1 ∧ 0 ≤ a ∧ ∀ n, ∀ x ∈ maximalIdeal R ^ n, ‖(F x).fst‖ ≤ a ^ n) ∧
     (∃ K : IntermediateField ℚ_[l] (PadicAlgCl l), FiniteDimensional ℚ_[l] K ∧ ∀ x, (F x).fst ∈ K ∧ (F x).snd ∈ K) ∧
     ∀ ε : ℝ, 0 < ε → ∃ n, ∀ x ∈ maximalIdeal R ^ n, ‖(F x).snd‖ ≤ ε := by
-  letI : Algebra ℤ_[l] R := ((algebraMap O R).comp (algebraMap ℤ_[l] O)).toAlgebra
-  haveI : IsScalarTower ℤ_[l] O R := IsScalarTower.of_algebraMap_eq fun _ => rfl
+  let : Algebra ℤ_[l] R := ((algebraMap O R).comp (algebraMap ℤ_[l] O)).toAlgebra
+  have : IsScalarTower ℤ_[l] O R := IsScalarTower.of_algebraMap_eq fun _ => rfl
   let f : R →ₐ[O] PadicAlgCl l := UpperTheory.V.U3.dualFst F
   have hm : ∀ x ∈ maximalIdeal R, ‖(F x).fst‖ < 1 := cop_norm_lt (f.restrictScalars ℤ_[l])
   have h1 : ∀ x, ‖(F x).fst‖ ≤ 1 := by
@@ -244,7 +244,7 @@ private theorem cop_main {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDom
     rw [h2]
     exact (IsUltrametricDist.norm_add_le_max _ _).trans (max_le (hm _ hc).le ((cop_intIff _).1 h3))
   obtain ⟨E, hE⟩ := UpperTheory.V.Loc.ptFin (l := l) R F hm
-  haveI : FiniteDimensional ℚ_[l] E.1 := E.2
+  have : FiniteDimensional ℚ_[l] E.1 := E.2
   obtain ⟨c', hc'⟩ := cop_coef E.1
   have hc : ∀ x, (F x).fst ∈ c'.O := fun x => hc' _ (hE x).1 (h1 x)
   obtain ⟨a, ha1, ha0, ha⟩ := cop_geom (maximalIdeal R) (f : R →+* PadicAlgCl l) h1 hm

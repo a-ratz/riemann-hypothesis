@@ -129,7 +129,7 @@ theorem exists_reps_of_relIndex_ne_zero {M : Type*} [AddCommGroup M] {A B : AddS
     (h : A.relIndex B ≠ 0) :
     ∃ R : Finset M, (∀ y ∈ R, y ∈ B) ∧ ∀ y ∈ B, ∃! r ∈ R, y - r ∈ A := by
   classical
-  haveI : Fintype (B ⧸ A.addSubgroupOf B) := AddSubgroup.fintypeOfIndexNeZero h
+  have : Fintype (B ⧸ A.addSubgroupOf B) := AddSubgroup.fintypeOfIndexNeZero h
   refine ⟨Finset.univ.image fun q : B ⧸ A.addSubgroupOf B => (q.out : M), ?_, fun y hy => ?_⟩
   · intro y hy
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.1 hy
@@ -243,7 +243,7 @@ theorem exists_coe_eq_span_det {Λ Λ' : Submodule (𝓞 K) (Fin n → K)} (hle 
         (by rwa [Submodule.map_comap_eq_of_surjective hsurj]))
       (hstd.trans (Submodule.comap_mono hY))
     refine ⟨FractionalIdeal.spanSingleton _ (δ ^ n) * J, ?_, ?_⟩
-    · rw [FractionalIdeal.coe_mul, FractionalIdeal.coe_spanSingleton, hJ, Submodule.span_mul_span,
+    · rw [FractionalIdeal.coeToSubmodule_mul, FractionalIdeal.coeToSubmodule_spanSingleton, hJ, Submodule.span_mul_span,
         Set.singleton_mul]
       congr 1
       ext x

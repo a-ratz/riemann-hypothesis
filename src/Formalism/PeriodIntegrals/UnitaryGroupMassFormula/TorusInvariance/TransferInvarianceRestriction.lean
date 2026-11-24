@@ -68,7 +68,7 @@ variable {k r : ℕ}
 
 lemma glev_mul' {i : Fin (r + 1)} {g h : Mx k r} (hg : g ∈ Glev k r i) (hh : h ∈ Glev k r i) :
     g * h ∈ Glev k r i := by
-  simp only [Glev, UH, Set.mem_setOf_eq] at hg hh ⊢
+  simp only [Glev, UH, Set.mem_ofPred_eq] at hg hh ⊢
   obtain ⟨hgU, hgF⟩ := hg
   obtain ⟨hhU, hhF⟩ := hh
   refine ⟨?_, fun a ha => ⟨?_, ?_⟩⟩
@@ -81,7 +81,7 @@ theorem transfer_invariance_group_mul : StepGrp := fun _ _ _ _ hg _ hh => glev_m
 
 lemma glev_unit {i : Fin (r + 1)} {g : Mx k r} (hg : g ∈ Glev k r i) : g * g⁻¹ = 1 ∧ g⁻¹ * g = 1 := by
   have hU : gᴴ * Hpk k r * g = Hpk k r := by
-    simp only [Glev, UH, Set.mem_setOf_eq] at hg
+    simp only [Glev, UH, Set.mem_ofPred_eq] at hg
     exact hg.1
   have hl : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
     rw [show Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) by simp only [mul_assoc], hU, hpk_sq]
@@ -95,7 +95,7 @@ lemma inv_fix {g : Mx k r} (hu : g⁻¹ * g = 1) {v : Fin (2 * r + k + 1) → �
 
 lemma glev_inv {i : Fin (r + 1)} {g : Mx k r} (hg : g ∈ Glev k r i) : g⁻¹ ∈ Glev k r i := by
   have hu := glev_unit hg
-  simp only [Glev, UH, Set.mem_setOf_eq] at hg ⊢
+  simp only [Glev, UH, Set.mem_ofPred_eq] at hg ⊢
   obtain ⟨hU, hF⟩ := hg
   refine ⟨?_, fun a ha => ⟨inv_fix hu.2 (hF a ha).1, inv_fix hu.2 (hF a ha).2⟩⟩
   calc (g⁻¹)ᴴ * Hpk k r * g⁻¹ = (g⁻¹)ᴴ * (gᴴ * Hpk k r * g) * g⁻¹ := by rw [hU]
@@ -212,7 +212,7 @@ lemma bvec_posL_outer {i : Fin (r + 1)} (a : Fin (mdim k r i)) (q : Fin (2 * r +
 lemma n_fix {z : Fin (2 * r + k + 1) → ℂ} {i : Fin (r + 1)} (hz : inWb k r z) {m : Mx k r}
     (hm : m ∈ Nlev k r i) : m *ᵥ fvec k r z i = fvec k r z i := by
   unfold Nlev at hm
-  simp only [QuantumDeterminants.Nset, Set.mem_inter_iff, Set.mem_setOf_eq] at hm
+  simp only [QuantumDeterminants.Nset, Set.mem_inter_iff, Set.mem_ofPred_eq] at hm
   obtain ⟨⟨_, hcol, hmid⟩, hG⟩ := hm
   unfold inWb at hz
   unfold fvec
@@ -238,7 +238,7 @@ lemma n_fix {z : Fin (2 * r + k + 1) → ℂ} {i : Fin (r + 1)} (hz : inWb k r z
         · rw [hz x (Or.inr (by omega)), mul_zero]
       · intro j _ hj
         by_cases hjm : r ≤ j.val ∧ j.val ≤ r + k
-        · rw [hmid x j hjm.1 hjm.2 hx, if_neg (Ne.symm hj), zero_mul]
+        · rw [hmid x j hjm.1 hjm.2 hx, ite_eq_right (Ne.symm hj), zero_mul]
         · rw [hz j (by omega), mul_zero]
       · intro h
         exact absurd (Finset.mem_univ _) h
@@ -250,7 +250,7 @@ lemma n_fix {z : Fin (2 * r + k + 1) → ℂ} {i : Fin (r + 1)} (hz : inWb k r z
 
 lemma h_fix {z : Fin (2 * r + k + 1) → ℂ} {i : Fin (r + 1)} {h : Mx k r} (hh : h ∈ UWset k r z) :
     h *ᵥ fvec k r z i = fvec k r z i := by
-  simp only [UWset, Set.mem_setOf_eq] at hh
+  simp only [UWset, Set.mem_ofPred_eq] at hh
   unfold fvec
   split_ifs with hi
   · exact (hh.2.1 _).1
@@ -260,9 +260,9 @@ theorem transfer_invariance_smooth : StepS := by
   intro k r z i hz
   have hUW : ∀ h ∈ UWset k r z, h ∈ Glev k r i := by
     intro h hh
-    simp only [UWset, Glev, Set.mem_setOf_eq] at hh ⊢
+    simp only [UWset, Glev, Set.mem_ofPred_eq] at hh ⊢
     exact ⟨hh.1, fun a _ => hh.2.1 a⟩
-  simp only [Slev, Set.mem_setOf_eq]
+  simp only [Slev, Set.mem_ofPred_eq]
   refine ⟨⟨1, ?_, 1, ?_, (mul_one 1).symm⟩, ?_⟩
   · simp [UWset, UH]
   · simp [Nlev, QuantumDeterminants.Nset, Glev, UH, Matrix.one_apply]
@@ -315,7 +315,7 @@ theorem transfer_invariance_vector : StepVec := by
     simp only [blk, Matrix.one_apply]
     by_cases h : a = b
     · simp [h]
-    · rw [if_neg (fun e => h (posL_inj e)), if_neg h]
+    · rw [ite_eq_right (fun e => h (posL_inj e)), ite_eq_right h]
   have mv_blk : ∀ s ∈ Glev k r i, ∀ v : Fin (2 * r + k + 1) → ℂ,
       (blk i s *ᵥ fun j => v (posL k r i j)) = fun j => (s *ᵥ v) (posL k r i j) := by
     intro s hs v
@@ -338,7 +338,7 @@ theorem transfer_invariance_vector : StepVec := by
   · obtain ⟨hsG, hsf⟩ := hS.2 s hs
     have hu := glev_unit hsG
     have hsU : s ∈ UH (Hpk k r) := by
-      simp only [Glev, Set.mem_setOf_eq] at hsG
+      simp only [Glev, Set.mem_ofPred_eq] at hsG
       exact hsG.1
     have hinv : s⁻¹ *ᵥ fvec k r z i = fvec k r z i := inv_fix hu.2 hsf
     constructor
@@ -354,7 +354,7 @@ theorem transfer_invariance_vector : StepVec := by
     have hiG := glev_inv hsG
     have hsU : s' ∈ UH (Hpk k r) := by
       have h0 := hsG
-      simp only [Glev, Set.mem_setOf_eq] at h0
+      simp only [Glev, Set.mem_ofPred_eq] at h0
       exact h0.1
     refine ⟨?_, ?_, ?_, ?_, fun g hg => ⟨?_, ?_⟩⟩
     · rw [← blk_mul _ _ hsG, hu.1, blk_one]
